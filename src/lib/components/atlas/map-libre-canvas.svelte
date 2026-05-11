@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '$lib/data/constants.js';
+	import { handleMapKeydown, type MapHandle } from './internal/map-keyboard.js';
 
 	type Viewport = { center: [number, number]; zoom: number; bbox: [number, number, number, number] };
 
 	type Props = {
 		initialBbox?: [number, number, number, number];
 		initialZoom?: number;
+		initialCenter?: [number, number];
 		styleUrl?: string;
 		maxBounds?: [[number, number], [number, number]] | null;
 		minZoom?: number;
@@ -14,6 +16,8 @@
 		onMoveEnd?: (v: Viewport) => void;
 		onClick?: (lngLat: [number, number]) => void;
 		onLoad?: (map: unknown) => void;
+		onClearSelection?: () => void;
+		onMapHandle?: (handle: MapHandle) => void;
 	};
 
 	// Berlin-Bbox mit kleinem Padding fuer Pan-Komfort am Rand.
@@ -25,19 +29,34 @@
 	let {
 		initialBbox = BERLIN_BBOX_ARRAY,
 		initialZoom = DEFAULT_ZOOM,
+		initialCenter = BERLIN_CENTER,
 		styleUrl = '/map-style.json',
 		maxBounds = BERLIN_MAX_BOUNDS,
 		minZoom = 9,
 		maxZoom = 19,
 		onMoveEnd,
 		onClick,
-		onLoad
+		onLoad,
+		onClearSelection,
+		onMapHandle
 	}: Props = $props();
 
 	let container: HTMLDivElement | undefined = $state();
 	let isReady = $state(false);
 	let loadError = $state<string | null>(null);
 	let mapInstance: { remove: () => void } | null = null;
+	let mapHandle: MapHandle | null = null;
+
+	function prefersReducedMotion(): boolean {
+		return typeof window !== 'undefined' && window.matchMedia
+			? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+			: false;
+	}
+
+	function onKeyDown(e: KeyboardEvent): void {
+		if (!mapHandle) return;
+		handleMapKeydown(e, mapHandle, prefersReducedMotion(), onClearSelection);
+	}
 
 	onMount(() => {
 		if (!container) return;
@@ -59,14 +78,32 @@
 					container,
 					style: styleUrl,
 					bounds: initialBbox,
-					center: BERLIN_CENTER,
+					center: initialCenter,
 					zoom: initialZoom,
 					minZoom,
 					maxZoom,
 					maxBounds: maxBounds ?? undefined,
+					keyboard: false,
 					attributionControl: { compact: true }
 				});
 				mapInstance = map as unknown as { remove: () => void };
+				mapHandle = {
+					panBy: (offset, options) => map.panBy(offset, options),
+					zoomIn: (options) => map.zoomIn(options),
+					zoomOut: (options) => map.zoomOut(options),
+					fitBounds: (bbox) =>
+						map.fitBounds(
+							[
+								[bbox[0], bbox[1]],
+								[bbox[2], bbox[3]]
+							],
+							{ animate: !prefersReducedMotion() }
+						),
+					jumpTo: (opt) => map.jumpTo(opt),
+					getCanvasWidth: () => map.getCanvas().clientWidth,
+					getCanvasHeight: () => map.getCanvas().clientHeight
+				};
+				onMapHandle?.(mapHandle);
 				map.on('load', () => {
 					isReady = true;
 					onLoad?.(map);
@@ -100,11 +137,13 @@
 
 <div class="relative h-full w-full">
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div
 		bind:this={container}
 		role="application"
 		tabindex="0"
 		aria-describedby="map-help"
+		onkeydown={onKeyDown}
 		class="h-full w-full"
 	></div>
 
