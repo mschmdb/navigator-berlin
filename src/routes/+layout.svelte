@@ -1,21 +1,25 @@
 <script lang="ts">
-	import './layout.css';
+	import '../app.css';
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { locales, localizeHref } from '$lib/paraglide/runtime';
-	import favicon from '$lib/assets/favicon.svg';
+	import SkipLink from '$lib/components/atlas/skip-link.svelte';
+	import MetaFooter from '$lib/components/atlas/meta-footer.svelte';
 
 	let { children } = $props();
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
-{@render children()}
+<SkipLink />
+
+<main id="main">
+	{@render children()}
+</main>
+
+<MetaFooter />
 
 <div style="display:none">
 	{#each locales as locale (locale)}
-		<a
-			href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}
-		>{locale}</a>
+		<a href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}>{locale}</a>
 	{/each}
 </div>

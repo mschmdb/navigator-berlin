@@ -3,13 +3,24 @@ import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { FontaineTransform } from 'fontaine';
 
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
 		sveltekit(),
-		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
+		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' }),
+		FontaineTransform.vite({
+			fallbacks: ['system-ui', 'Georgia', 'ui-monospace'],
+			resolvePath: (id) => new URL(`./static${id}`, import.meta.url)
+		})
 	],
+	resolve: {
+		dedupe: ['svelte', 'svelte/internal']
+	},
+	optimizeDeps: {
+		exclude: ['bits-ui']
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
