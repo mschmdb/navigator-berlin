@@ -27,9 +27,12 @@ test-results
 src/lib/paraglide
 project.inlang/cache/
 
-# BMAD intermediates (DO NOT ignore _bmad/ — skill source is versioned)
+# BMAD intermediates (DO NOT ignore _bmad/, skill source is versioned)
 _bmad-output/
 _user-input/
+
+# Build pipeline cache (Story 1.3)
+.cache/
 
 # Claude Code session transcripts (PII)
 .claude/projects/
