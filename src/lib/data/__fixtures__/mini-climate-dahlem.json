@@ -1,0 +1,19 @@
+{
+	"stationId": "00403",
+	"name": "Berlin-Dahlem",
+	"coordinates": [13.301, 52.4517],
+	"elevation": 51,
+	"firstYear": 1719,
+	"summerDays": [
+		{ "year": 1950, "count": 12 },
+		{ "year": 2020, "count": 45 }
+	],
+	"frostDays": [
+		{ "year": 1950, "count": 92 },
+		{ "year": 2020, "count": 41 }
+	],
+	"hotDays": [
+		{ "year": 1950, "count": 1 },
+		{ "year": 2020, "count": 18 }
+	]
+}

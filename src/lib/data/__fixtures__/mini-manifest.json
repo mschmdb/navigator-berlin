@@ -1,0 +1,43 @@
+{
+	"schemaVersion": 1,
+	"generatedAt": "2026-05-11T14:23:00.000Z",
+	"layers": [
+		{
+			"slug": "bezirke",
+			"filename": "bezirke.a1b2c3d4.geojson",
+			"sourceUrl": "https://daten.odis-berlin.de/de/dataset/bezirksgrenzen",
+			"fetchedAt": "2026-05-11T14:21:33.000Z",
+			"license": "dl-de/zero-2-0",
+			"sha256": "a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd",
+			"bundleGroup": "A: Boundaries",
+			"zoomThresholds": { "min": 8, "max": 12 },
+			"geometryType": "MultiPolygon",
+			"featureCount": 2
+		},
+		{
+			"slug": "mietspiegel-wohnlage",
+			"filename": "mietspiegel-wohnlage.f9e8d7c6.geojson",
+			"sourceUrl": "https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt/s_wohnlagen2024",
+			"fetchedAt": "2026-05-11T14:22:01.000Z",
+			"license": "dl-de/by-2-0",
+			"sha256": "f9e8d7c6b5a4938271605040302010ffeeddccbbaa99887766554433221100ab",
+			"bundleGroup": "B: Wohn-Daten",
+			"zoomThresholds": { "min": 12, "max": 18 },
+			"geometryType": "Polygon",
+			"featureCount": 3
+		},
+		{
+			"slug": "trinkbrunnen",
+			"filename": "trinkbrunnen.beefdead.geojson",
+			"sourceUrl": "https://overpass-api.de/api/interpreter",
+			"fetchedAt": "2026-05-11T14:22:30.000Z",
+			"license": "ODbL 1.0",
+			"sha256": "beefdeadc0ffee00112233445566778899aabbccddeeff00112233445566aabb",
+			"bundleGroup": "C: Umwelt",
+			"zoomThresholds": { "min": 14, "max": 18 },
+			"seasonality": { "from": "05-01", "to": "10-31" },
+			"geometryType": "Point",
+			"featureCount": 3
+		}
+	]
+}

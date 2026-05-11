@@ -1,0 +1,47 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"properties": {
+				"NAME": "Mitte",
+				"SCHLUESSEL": "01",
+				"EINWOHNER": 384172,
+				"FLAECHE_HA": 3947
+			},
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[13.34, 52.51],
+						[13.42, 52.51],
+						[13.42, 52.55],
+						[13.34, 52.55],
+						[13.34, 52.51]
+					]
+				]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"NAME": "Friedrichshain-Kreuzberg",
+				"SCHLUESSEL": "02",
+				"EINWOHNER": 290386,
+				"FLAECHE_HA": 2027
+			},
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[13.42, 52.495],
+						[13.47, 52.495],
+						[13.47, 52.525],
+						[13.42, 52.525],
+						[13.42, 52.495]
+					]
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,53 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"properties": { "wohnlage": "einfach" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[13.36, 52.515],
+						[13.40, 52.515],
+						[13.40, 52.525],
+						[13.36, 52.525],
+						[13.36, 52.515]
+					]
+				]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "wohnlage": "mittel" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[13.42, 52.500],
+						[13.46, 52.500],
+						[13.46, 52.520],
+						[13.42, 52.520],
+						[13.42, 52.500]
+					]
+				]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "wohnlage": "gut" },
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[13.30, 52.480],
+						[13.33, 52.480],
+						[13.33, 52.500],
+						[13.30, 52.500],
+						[13.30, 52.480]
+					]
+				]
+			}
+		}
+	]
+}
