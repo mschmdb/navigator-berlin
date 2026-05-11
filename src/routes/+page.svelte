@@ -4,7 +4,7 @@
 	let dialogOpen = $state(false);
 </script>
 
-<section class="mx-auto max-w-[1024px] px-4 py-12">
+<main id="main" class="mx-auto max-w-[1024px] px-4 py-12">
 	<header class="mb-8 flex items-baseline gap-3">
 		<img src="/logo-mark.svg" alt="" class="h-9 w-9 self-center" />
 		<h1 class="font-sans text-2xl font-light tracking-wide text-ink">navigator.berlin</h1>
@@ -66,4 +66,4 @@
 		<p class="text-3xl">text-3xl :h2-Level</p>
 		<p class="text-4xl">text-4xl :h1-Level (auf Mobile = text-2xl)</p>
 	</div>
-</section>
+</main>

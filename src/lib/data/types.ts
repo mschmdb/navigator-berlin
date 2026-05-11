@@ -66,6 +66,19 @@ export interface FaqEntry {
 	answer: string;
 }
 
+export interface GeocodeSuggestion {
+	id: string;
+	displayName: string;
+	lat: number;
+	lng: number;
+	type: string;
+	addresstype: string;
+	bezirk?: string;
+	kiez?: string;
+	postcode?: string;
+	bbox?: [number, number, number, number];
+}
+
 export interface KiezProfile {
 	slug: string;
 	name: string;

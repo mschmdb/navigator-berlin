@@ -7,7 +7,10 @@ const config = {
 		runes: ({ filename }) => filename.split(/[/\\]/).includes('node_modules') ? undefined : true,
 		experimental: { async: true }
 	},
-	kit: { adapter: adapter() }
+	kit: {
+		adapter: adapter(),
+		experimental: { remoteFunctions: true }
+	}
 };
 
 export default config;

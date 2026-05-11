@@ -20,5 +20,7 @@ export type {
 	ClimateStation,
 	ClimateData,
 	YearValue,
-	FaqEntry
+	FaqEntry,
+	GeocodeSuggestion
 } from './types.js';
+export { BERLIN_BBOX, isInBerlin } from './constants.js';

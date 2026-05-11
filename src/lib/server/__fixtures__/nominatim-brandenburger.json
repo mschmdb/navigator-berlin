@@ -1,0 +1,67 @@
+[
+	{
+		"place_id": 12345,
+		"licence": "Data © OpenStreetMap contributors, ODbL 1.0.",
+		"osm_type": "way",
+		"osm_id": 100001,
+		"lat": "52.5162746",
+		"lon": "13.3777041",
+		"category": "tourism",
+		"type": "attraction",
+		"place_rank": 30,
+		"importance": 0.85,
+		"addresstype": "tourism",
+		"display_name": "Brandenburger Tor, Pariser Platz, Mitte, Berlin, 10117, Deutschland",
+		"name": "Brandenburger Tor",
+		"address": {
+			"tourism": "Brandenburger Tor",
+			"road": "Pariser Platz",
+			"suburb": "Mitte",
+			"city_district": "Mitte",
+			"city": "Berlin",
+			"state": "Berlin",
+			"postcode": "10117",
+			"country": "Deutschland"
+		},
+		"boundingbox": ["52.5158", "52.5167", "13.3770", "13.3784"]
+	},
+	{
+		"place_id": 67890,
+		"licence": "Data © OpenStreetMap contributors, ODbL 1.0.",
+		"osm_type": "way",
+		"osm_id": 200002,
+		"lat": "52.5163",
+		"lon": "13.3779",
+		"category": "highway",
+		"type": "primary",
+		"place_rank": 26,
+		"importance": 0.6,
+		"addresstype": "road",
+		"display_name": "Pariser Platz, Mitte, Berlin, 10117, Deutschland",
+		"name": "Pariser Platz",
+		"address": {
+			"road": "Pariser Platz",
+			"city_district": "Mitte",
+			"city": "Berlin",
+			"postcode": "10117"
+		},
+		"boundingbox": ["52.5160", "52.5167", "13.3770", "13.3785"]
+	},
+	{
+		"place_id": 99999,
+		"licence": "Data © OpenStreetMap contributors, ODbL 1.0.",
+		"osm_type": "node",
+		"osm_id": 300003,
+		"lat": "48.137154",
+		"lon": "11.575396",
+		"category": "place",
+		"type": "city",
+		"place_rank": 16,
+		"importance": 0.8,
+		"addresstype": "city",
+		"display_name": "Muenchen, Bayern, Deutschland",
+		"name": "Muenchen",
+		"address": { "city": "Muenchen", "state": "Bayern", "country": "Deutschland" },
+		"boundingbox": ["48.0", "48.3", "11.4", "11.7"]
+	}
+]

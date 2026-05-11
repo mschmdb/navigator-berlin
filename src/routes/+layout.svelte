@@ -12,9 +12,7 @@
 
 <SkipLink />
 
-<main id="main">
-	{@render children()}
-</main>
+{@render children()}
 
 <MetaFooter />
 

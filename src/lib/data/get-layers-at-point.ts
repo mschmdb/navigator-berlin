@@ -7,23 +7,14 @@ import type { LayerHit, LayerMetadata } from './types.js';
 import { loadManifest } from './manifest.js';
 import { fetchLayer } from './internal/layer-fetch.js';
 import { getIndex } from './internal/spatial-index.js';
+import { isInBerlin } from './constants.js';
 
-const BERLIN_BBOX = { minLng: 13.0883, minLat: 52.3382, maxLng: 13.7611, maxLat: 52.6755 };
 const POINT_LAYER_DISTANCE_KM = 0.05;
 
 const resultCache = new LRUCache<string, LayerHit[]>({ max: 200 });
 
 export function _resetLayerHitCache(): void {
 	resultCache.clear();
-}
-
-function inBerlin(lat: number, lng: number): boolean {
-	return (
-		lng >= BERLIN_BBOX.minLng &&
-		lng <= BERLIN_BBOX.maxLng &&
-		lat >= BERLIN_BBOX.minLat &&
-		lat <= BERLIN_BBOX.maxLat
-	);
 }
 
 function inSeason(seasonality: { from: string; to: string }, now: Date = new Date()): boolean {
@@ -98,7 +89,7 @@ export async function getLayersAtPoint(
 	lng: number,
 	fetchFn: typeof fetch = fetch
 ): Promise<LayerHit[]> {
-	if (!inBerlin(lat, lng)) return [];
+	if (!isInBerlin(lat, lng)) return [];
 	const key = `${lat.toFixed(6)},${lng.toFixed(6)}`;
 	const cached = resultCache.get(key);
 	if (cached) return cached;
