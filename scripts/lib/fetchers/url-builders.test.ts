@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildWfsUrl } from './fis-broker.js';
 import { buildOverpassRequest } from './overpass.js';
-import { buildDwdZipUrl } from './dwd-cdc.js';
+import { buildDwdZipUrlSimple } from './dwd-cdc.js';
 
 describe('FIS-Broker WFS URL-Builder', () => {
 	it('setzt WFS-Standard-Params', () => {
@@ -13,7 +13,7 @@ describe('FIS-Broker WFS URL-Builder', () => {
 		expect(u.searchParams.get('SERVICE')).toBe('WFS');
 		expect(u.searchParams.get('VERSION')).toBe('2.0.0');
 		expect(u.searchParams.get('REQUEST')).toBe('GetFeature');
-		expect(u.searchParams.get('typeName')).toBe('fis:s_plz');
+		expect(u.searchParams.get('typeNames')).toBe('fis:s_plz');
 		expect(u.searchParams.get('srsName')).toBe('EPSG:4326');
 		expect(u.searchParams.get('outputFormat')).toBe('application/json');
 	});
@@ -45,14 +45,14 @@ describe('Overpass POST-Body-Builder', () => {
 
 describe('DWD ZIP-URL-Builder', () => {
 	it('pad-left station-id auf 5 chars + hist suffix', () => {
-		const url = buildDwdZipUrl('403', 'historical');
+		const url = buildDwdZipUrlSimple('403', 'historical');
 		expect(url).toBe(
 			'https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/historical/tageswerte_KL_00403_hist.zip'
 		);
 	});
 
 	it('recent variante mit akt suffix', () => {
-		const url = buildDwdZipUrl('00400', 'recent');
+		const url = buildDwdZipUrlSimple('00400', 'recent');
 		expect(url).toContain('/recent/tageswerte_KL_00400_akt.zip');
 	});
 });

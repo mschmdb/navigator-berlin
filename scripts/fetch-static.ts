@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { SOURCES, DWD_STATIONS } from './lib/sources.js';
 import { fetchOdisGeoJson } from './lib/fetchers/odis.js';
@@ -47,6 +47,12 @@ async function fetchSource(slug: string): Promise<{ raw: string; sourceUrl: stri
 	}
 }
 
+async function cleanStaleHashFiles(slug: string): Promise<void> {
+	const files = await readdir(OUT_LAYERS).catch(() => []);
+	const stale = files.filter((f) => /^[a-z0-9-]+\.[0-9a-f]{8}\.geojson$/.test(f) && f.startsWith(`${slug}.`));
+	for (const f of stale) await unlink(join(OUT_LAYERS, f));
+}
+
 async function processLayer(slug: string, fetchedAt: string): Promise<LayerEntry> {
 	const source = SOURCES.find((s) => s.slug === slug)!;
 	const { raw } = await fetchSource(slug);
@@ -55,6 +61,7 @@ async function processLayer(slug: string, fetchedAt: string): Promise<LayerEntry
 	const simplified = await simplifyGeoJSON(JSON.stringify(wgs84), source.simplifyProfile);
 	const buf = Buffer.from(simplified);
 	const entry = buildLayerEntry(source, buf, fetchedAt);
+	await cleanStaleHashFiles(slug);
 	await writeFile(join(OUT_LAYERS, entry.filename), buf);
 	return entry;
 }
@@ -83,15 +90,20 @@ async function processClimateStation(station: (typeof DWD_STATIONS)[number]): Pr
 
 async function main(): Promise<void> {
 	await ensureDirs();
+	const strict = !process.argv.includes('--graceful');
 	const fetchedAt = new Date().toISOString();
 	const entries: LayerEntry[] = [];
+	const failed: Array<{ slug: string; error: string }> = [];
+
 	for (const source of SOURCES) {
 		console.log(`[fetch] ${source.slug} (${source.kind})`);
 		try {
 			entries.push(await processLayer(source.slug, fetchedAt));
 		} catch (err) {
-			console.error(`[fetch] FAILED ${source.slug}:`, err);
-			throw err;
+			const msg = err instanceof Error ? err.message : String(err);
+			console.error(`[fetch] FAILED ${source.slug}: ${msg}`);
+			failed.push({ slug: source.slug, error: msg });
+			if (strict) throw err;
 		}
 	}
 	for (const station of DWD_STATIONS) {
@@ -99,14 +111,20 @@ async function main(): Promise<void> {
 		try {
 			await processClimateStation(station);
 		} catch (err) {
-			console.error(`[climate] FAILED ${station.slug}:`, err);
-			throw err;
+			const msg = err instanceof Error ? err.message : String(err);
+			console.error(`[climate] FAILED ${station.slug}: ${msg}`);
+			failed.push({ slug: `climate:${station.slug}`, error: msg });
+			if (strict) throw err;
 		}
 	}
 	const manifest = buildManifest(entries, fetchedAt);
 	validateManifest(manifest);
 	await writeFile(join(OUT_LAYERS, 'MANIFEST.json'), JSON.stringify(manifest, null, 2));
 	console.log(`[manifest] wrote ${entries.length} layers`);
+	if (failed.length > 0) {
+		console.log(`\n[summary] ${entries.length} succeeded, ${failed.length} failed:`);
+		for (const f of failed) console.log(`  - ${f.slug}: ${f.error}`);
+	}
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

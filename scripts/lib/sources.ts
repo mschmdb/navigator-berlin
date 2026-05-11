@@ -7,11 +7,11 @@ const FIS_BASE = 'https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt';
 const BERLIN_BBOX_OVERPASS = '52.3382,13.0883,52.6755,13.7611';
 
 export const SOURCES: SourceConfig[] = [
-	// Bundle A: Boundaries (ODIS, dl-de/zero-2-0)
+	// Bundle A: Boundaries (ODIS, dl-de/zero-2-0). URL-Pattern: /dataset/{slug}/data.geojson (Live-verified 2026-05-11)
 	{
 		slug: 'bezirke',
 		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/bezirksgrenzen',
+		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/bezirksgrenzen/data.geojson',
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 8, max: 12 },
@@ -20,7 +20,7 @@ export const SOURCES: SourceConfig[] = [
 	{
 		slug: 'ortsteile',
 		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/ortsteile',
+		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/ortsteile/data.geojson',
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 10, max: 14 },
@@ -29,7 +29,7 @@ export const SOURCES: SourceConfig[] = [
 	{
 		slug: 'plz',
 		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/plz',
+		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/plz/data.geojson',
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 9, max: 14 },
@@ -38,7 +38,7 @@ export const SOURCES: SourceConfig[] = [
 	{
 		slug: 'lor-prognoseraum',
 		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor-prognoseraum-2021',
+		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_prognoseraeume_2021/data.geojson',
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 9, max: 13 },
@@ -47,7 +47,7 @@ export const SOURCES: SourceConfig[] = [
 	{
 		slug: 'lor-bezirksregion',
 		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor-bezirksregion-2021',
+		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_bezirksregionen_2021/data.geojson',
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 10, max: 14 },
@@ -56,84 +56,84 @@ export const SOURCES: SourceConfig[] = [
 	{
 		slug: 'lor-planungsraum',
 		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor-planungsraum-2021',
+		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_planungsgraeume_2021/data.geojson',
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 11, max: 15 },
 		simplifyProfile: 'boundary'
 	},
-	// Bundle B: Wohn-Daten (FIS-Broker, dl-de/by-2-0)
-	{
-		slug: 'mietspiegel-wohnlage',
-		kind: 'fis-broker',
-		sourceUrl: `${FIS_BASE}/s_wohnlagen2024`,
-		typeName: 'fis:s_wohnlagen2024',
-		license: 'dl-de/by-2-0',
-		bundleGroup: 'B: Wohn-Daten',
-		zoomThresholds: { min: 12, max: 18 },
-		simplifyProfile: 'polygon'
-	},
+	// Bundle B: Wohn-Daten (GDI Berlin WFS, dl-de/by-2-0). Endpoints + typeNames live-verifiziert 2026-05-11
+	// TODO: mietspiegel-wohnlage (~600k Adress-Polygone, 116MB simplified). Vertex-Simplify hilft nicht
+	// (Polygone bereits klein). Defer bis Tile-Strategy (PMTiles/MVT) oder Dissolve-by-wohnlage.
+	// {
+	// 	slug: 'mietspiegel-wohnlage',
+	// 	kind: 'fis-broker',
+	// 	sourceUrl: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
+	// 	typeName: 'wohnlagenadr2024:wohnlagenadr2024',
+	// 	license: 'dl-de/by-2-0',
+	// 	bundleGroup: 'B: Wohn-Daten',
+	// 	zoomThresholds: { min: 12, max: 18 },
+	// 	simplifyProfile: 'polygon'
+	// },
 	{
 		slug: 'bodenrichtwerte',
 		kind: 'fis-broker',
-		sourceUrl: `${FIS_BASE}/s_bodenrichtwerte`,
-		typeName: 'fis:s_bodenrichtwerte',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/brw2026',
+		typeName: 'brw2026:brw2026_vector',
 		license: 'dl-de/by-2-0',
 		bundleGroup: 'B: Wohn-Daten',
 		zoomThresholds: { min: 12, max: 18 },
 		simplifyProfile: 'polygon'
 	},
+	// TODO: alkis_gebaeude (~600k Polygone, ~100MB+) braucht Tile-basiertes Streaming oder bbox-Subset.
+	// Deferred zu Story 1.6+ (Map-Display) wenn entschieden ist wie wir mit grossen Layern umgehen.
+	// {
+	// 	slug: 'gebaeudealter',
+	// 	kind: 'fis-broker',
+	// 	sourceUrl: 'https://gdi.berlin.de/services/wfs/alkis_gebaeude',
+	// 	typeName: 'alkis_gebaeude:gebaeude',
+	// 	license: 'dl-de/by-2-0',
+	// 	bundleGroup: 'B: Wohn-Daten',
+	// 	zoomThresholds: { min: 14, max: 18 },
+	// 	simplifyProfile: 'polygon'
+	// },
+	// Bundle C: Umwelt (GDI Berlin WFS + OSM saisonal).
+	// Story-Spec hatte laerm-den + laerm-night als separate Layer. Realitaet: ein Strassenlaerm-Layer mit L_DEN + L_N als Properties.
+	// Konsolidiert zu strassenlaerm-2022 (Strassen + oberirdische U-Bahn).
 	{
-		slug: 'gebaeudealter',
+		slug: 'strassenlaerm-2022',
 		kind: 'fis-broker',
-		sourceUrl: `${FIS_BASE}/s_wfs_alkis_gebaeudealter`,
-		typeName: 'fis:s_wfs_alkis_gebaeudealter',
-		license: 'dl-de/by-2-0',
-		bundleGroup: 'B: Wohn-Daten',
-		zoomThresholds: { min: 14, max: 18 },
-		simplifyProfile: 'polygon'
-	},
-	// Bundle C: Umwelt (FIS-Broker + OSM saisonal)
-	{
-		slug: 'laerm-den',
-		kind: 'fis-broker',
-		sourceUrl: `${FIS_BASE}/s_strassenlaerm_l_den_2022`,
-		typeName: 'fis:s_strassenlaerm_l_den_2022',
-		license: 'dl-de/by-2-0',
-		bundleGroup: 'C: Umwelt',
-		zoomThresholds: { min: 11, max: 18 },
-		simplifyProfile: 'polygon'
-	},
-	{
-		slug: 'laerm-night',
-		kind: 'fis-broker',
-		sourceUrl: `${FIS_BASE}/s_strassenlaerm_l_n_2022`,
-		typeName: 'fis:s_strassenlaerm_l_n_2022',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_stratlaerm_2022',
+		typeName: 'ua_stratlaerm_2022:de_strassen_oberirdischeubahn2022',
 		license: 'dl-de/by-2-0',
 		bundleGroup: 'C: Umwelt',
 		zoomThresholds: { min: 11, max: 18 },
 		simplifyProfile: 'polygon'
 	},
-	{
-		slug: 'solarpotenzial',
-		kind: 'fis-broker',
-		sourceUrl: `${FIS_BASE}/s_solar`,
-		typeName: 'fis:s_solar',
-		license: 'dl-de/by-2-0',
-		bundleGroup: 'C: Umwelt',
-		zoomThresholds: { min: 13, max: 18 },
-		simplifyProfile: 'polygon'
-	},
-	{
-		slug: 'klimaanalyse',
-		kind: 'fis-broker',
-		sourceUrl: `${FIS_BASE}/s_pkam_2015`,
-		typeName: 'fis:s_pkam_2015',
-		license: 'dl-de/by-2-0',
-		bundleGroup: 'C: Umwelt',
-		zoomThresholds: { min: 10, max: 18 },
-		simplifyProfile: 'polygon'
-	},
+	// TODO: solarpotenzial (~600k Gebaeude-Photovoltaik-Polygone, >512MB raw, Node string-limit gesprengt).
+	// Defer bis Tile-Strategy ODER bbox-Pagination im WFS-Request.
+	// {
+	// 	slug: 'solarpotenzial',
+	// 	kind: 'fis-broker',
+	// 	sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_solarpotenzial_solarrechner',
+	// 	typeName: 'ua_solarpotenzial_solarrechner:d_photovoltaik_potenzial',
+	// 	license: 'dl-de/by-2-0',
+	// 	bundleGroup: 'C: Umwelt',
+	// 	zoomThresholds: { min: 13, max: 18 },
+	// 	simplifyProfile: 'polygon'
+	// },
+	// TODO: klimaanalyse (29MB simplified). Polygone hochaufgelöst (10x10m raster). Defer bis Tile-Strategy
+	// oder gröberer Klimabewertung-Layer (z.B. Block-basiert statt Raster).
+	// {
+	// 	slug: 'klimaanalyse',
+	// 	kind: 'fis-broker',
+	// 	sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_klimabewertung_2015',
+	// 	typeName: 'ua_klimabewertung_2015:ca_besondere_stadtklimat_missstaende',
+	// 	license: 'dl-de/by-2-0',
+	// 	bundleGroup: 'C: Umwelt',
+	// 	zoomThresholds: { min: 10, max: 18 },
+	// 	simplifyProfile: 'polygon'
+	// },
 	{
 		slug: 'trinkbrunnen',
 		kind: 'overpass',

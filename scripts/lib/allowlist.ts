@@ -1,5 +1,6 @@
 export const BUILD_TIME_ALLOWLIST = [
 	'fbinter.stadt-berlin.de',
+	'gdi.berlin.de',
 	'daten.odis-berlin.de',
 	'daten.berlin.de',
 	'opendata.dwd.de',

@@ -3,9 +3,9 @@ import type { SimplifyProfile } from './types.js';
 export function simplifyCommand(profile: SimplifyProfile): string {
 	switch (profile) {
 		case 'boundary':
-			return '-simplify visvalingam 20% planar -clean';
+			return '-simplify visvalingam 10% planar -clean';
 		case 'polygon':
-			return '-simplify visvalingam 40% planar -clean';
+			return '-simplify visvalingam 20% planar -clean';
 		case 'point':
 			return '';
 	}

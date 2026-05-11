@@ -1,0 +1,834 @@
+{
+  "stationId": "00427",
+  "name": "Brandenburg-Schoenefeld",
+  "coordinates": [
+    13.5306,
+    52.3807
+  ],
+  "elevation": 46,
+  "firstYear": 1957,
+  "source": "DWD CDC daily KL 00427 historical",
+  "fetchedAt": "2026-05-11T16:13:20.625Z",
+  "summerDays": [
+    {
+      "year": 1957,
+      "count": 36
+    },
+    {
+      "year": 1958,
+      "count": 28
+    },
+    {
+      "year": 1959,
+      "count": 42
+    },
+    {
+      "year": 1960,
+      "count": 26
+    },
+    {
+      "year": 1961,
+      "count": 34
+    },
+    {
+      "year": 1962,
+      "count": 24
+    },
+    {
+      "year": 1963,
+      "count": 46
+    },
+    {
+      "year": 1964,
+      "count": 44
+    },
+    {
+      "year": 1965,
+      "count": 22
+    },
+    {
+      "year": 1966,
+      "count": 38
+    },
+    {
+      "year": 1967,
+      "count": 34
+    },
+    {
+      "year": 1968,
+      "count": 49
+    },
+    {
+      "year": 1969,
+      "count": 46
+    },
+    {
+      "year": 1970,
+      "count": 52
+    },
+    {
+      "year": 1971,
+      "count": 49
+    },
+    {
+      "year": 1972,
+      "count": 33
+    },
+    {
+      "year": 1973,
+      "count": 44
+    },
+    {
+      "year": 1974,
+      "count": 22
+    },
+    {
+      "year": 1975,
+      "count": 55
+    },
+    {
+      "year": 1976,
+      "count": 47
+    },
+    {
+      "year": 1977,
+      "count": 22
+    },
+    {
+      "year": 1978,
+      "count": 33
+    },
+    {
+      "year": 1979,
+      "count": 37
+    },
+    {
+      "year": 1980,
+      "count": 21
+    },
+    {
+      "year": 1981,
+      "count": 35
+    },
+    {
+      "year": 1982,
+      "count": 64
+    },
+    {
+      "year": 1983,
+      "count": 59
+    },
+    {
+      "year": 1984,
+      "count": 28
+    },
+    {
+      "year": 1985,
+      "count": 38
+    },
+    {
+      "year": 1986,
+      "count": 47
+    },
+    {
+      "year": 1987,
+      "count": 19
+    },
+    {
+      "year": 1988,
+      "count": 38
+    },
+    {
+      "year": 1989,
+      "count": 53
+    },
+    {
+      "year": 1990,
+      "count": 34
+    },
+    {
+      "year": 1991,
+      "count": 44
+    },
+    {
+      "year": 1992,
+      "count": 63
+    },
+    {
+      "year": 1993,
+      "count": 34
+    },
+    {
+      "year": 1994,
+      "count": 41
+    },
+    {
+      "year": 1995,
+      "count": 48
+    },
+    {
+      "year": 1996,
+      "count": 26
+    },
+    {
+      "year": 1997,
+      "count": 59
+    },
+    {
+      "year": 1998,
+      "count": 27
+    },
+    {
+      "year": 1999,
+      "count": 48
+    },
+    {
+      "year": 2000,
+      "count": 40
+    },
+    {
+      "year": 2001,
+      "count": 33
+    },
+    {
+      "year": 2002,
+      "count": 52
+    },
+    {
+      "year": 2003,
+      "count": 66
+    },
+    {
+      "year": 2004,
+      "count": 34
+    },
+    {
+      "year": 2005,
+      "count": 46
+    },
+    {
+      "year": 2006,
+      "count": 64
+    },
+    {
+      "year": 2007,
+      "count": 39
+    },
+    {
+      "year": 2008,
+      "count": 43
+    },
+    {
+      "year": 2009,
+      "count": 46
+    },
+    {
+      "year": 2010,
+      "count": 43
+    },
+    {
+      "year": 2011,
+      "count": 42
+    },
+    {
+      "year": 2012,
+      "count": 36
+    },
+    {
+      "year": 2013,
+      "count": 44
+    },
+    {
+      "year": 2014,
+      "count": 45
+    },
+    {
+      "year": 2015,
+      "count": 50
+    },
+    {
+      "year": 2016,
+      "count": 62
+    },
+    {
+      "year": 2017,
+      "count": 41
+    },
+    {
+      "year": 2018,
+      "count": 88
+    },
+    {
+      "year": 2019,
+      "count": 71
+    },
+    {
+      "year": 2020,
+      "count": 54
+    },
+    {
+      "year": 2021,
+      "count": 58
+    },
+    {
+      "year": 2022,
+      "count": 69
+    },
+    {
+      "year": 2023,
+      "count": 71
+    },
+    {
+      "year": 2024,
+      "count": 75
+    }
+  ],
+  "frostDays": [
+    {
+      "year": 1957,
+      "count": 90
+    },
+    {
+      "year": 1958,
+      "count": 106
+    },
+    {
+      "year": 1959,
+      "count": 89
+    },
+    {
+      "year": 1960,
+      "count": 72
+    },
+    {
+      "year": 1961,
+      "count": 63
+    },
+    {
+      "year": 1962,
+      "count": 97
+    },
+    {
+      "year": 1963,
+      "count": 112
+    },
+    {
+      "year": 1964,
+      "count": 98
+    },
+    {
+      "year": 1965,
+      "count": 101
+    },
+    {
+      "year": 1966,
+      "count": 84
+    },
+    {
+      "year": 1967,
+      "count": 67
+    },
+    {
+      "year": 1968,
+      "count": 93
+    },
+    {
+      "year": 1969,
+      "count": 124
+    },
+    {
+      "year": 1970,
+      "count": 119
+    },
+    {
+      "year": 1971,
+      "count": 83
+    },
+    {
+      "year": 1972,
+      "count": 88
+    },
+    {
+      "year": 1973,
+      "count": 97
+    },
+    {
+      "year": 1974,
+      "count": 55
+    },
+    {
+      "year": 1975,
+      "count": 68
+    },
+    {
+      "year": 1976,
+      "count": 104
+    },
+    {
+      "year": 1977,
+      "count": 74
+    },
+    {
+      "year": 1978,
+      "count": 96
+    },
+    {
+      "year": 1979,
+      "count": 110
+    },
+    {
+      "year": 1980,
+      "count": 119
+    },
+    {
+      "year": 1981,
+      "count": 104
+    },
+    {
+      "year": 1982,
+      "count": 92
+    },
+    {
+      "year": 1983,
+      "count": 83
+    },
+    {
+      "year": 1984,
+      "count": 104
+    },
+    {
+      "year": 1985,
+      "count": 110
+    },
+    {
+      "year": 1986,
+      "count": 85
+    },
+    {
+      "year": 1987,
+      "count": 101
+    },
+    {
+      "year": 1988,
+      "count": 78
+    },
+    {
+      "year": 1989,
+      "count": 70
+    },
+    {
+      "year": 1990,
+      "count": 52
+    },
+    {
+      "year": 1991,
+      "count": 84
+    },
+    {
+      "year": 1992,
+      "count": 76
+    },
+    {
+      "year": 1993,
+      "count": 90
+    },
+    {
+      "year": 1994,
+      "count": 68
+    },
+    {
+      "year": 1995,
+      "count": 103
+    },
+    {
+      "year": 1996,
+      "count": 132
+    },
+    {
+      "year": 1997,
+      "count": 117
+    },
+    {
+      "year": 1998,
+      "count": 77
+    },
+    {
+      "year": 1999,
+      "count": 86
+    },
+    {
+      "year": 2000,
+      "count": 62
+    },
+    {
+      "year": 2001,
+      "count": 98
+    },
+    {
+      "year": 2002,
+      "count": 76
+    },
+    {
+      "year": 2003,
+      "count": 119
+    },
+    {
+      "year": 2004,
+      "count": 95
+    },
+    {
+      "year": 2005,
+      "count": 105
+    },
+    {
+      "year": 2006,
+      "count": 91
+    },
+    {
+      "year": 2007,
+      "count": 62
+    },
+    {
+      "year": 2008,
+      "count": 62
+    },
+    {
+      "year": 2009,
+      "count": 84
+    },
+    {
+      "year": 2010,
+      "count": 117
+    },
+    {
+      "year": 2011,
+      "count": 80
+    },
+    {
+      "year": 2012,
+      "count": 82
+    },
+    {
+      "year": 2013,
+      "count": 94
+    },
+    {
+      "year": 2014,
+      "count": 55
+    },
+    {
+      "year": 2015,
+      "count": 70
+    },
+    {
+      "year": 2016,
+      "count": 76
+    },
+    {
+      "year": 2017,
+      "count": 74
+    },
+    {
+      "year": 2018,
+      "count": 72
+    },
+    {
+      "year": 2019,
+      "count": 55
+    },
+    {
+      "year": 2020,
+      "count": 52
+    },
+    {
+      "year": 2021,
+      "count": 82
+    },
+    {
+      "year": 2022,
+      "count": 77
+    },
+    {
+      "year": 2023,
+      "count": 66
+    },
+    {
+      "year": 2024,
+      "count": 55
+    }
+  ],
+  "hotDays": [
+    {
+      "year": 1957,
+      "count": 10
+    },
+    {
+      "year": 1958,
+      "count": 5
+    },
+    {
+      "year": 1959,
+      "count": 8
+    },
+    {
+      "year": 1960,
+      "count": 4
+    },
+    {
+      "year": 1961,
+      "count": 8
+    },
+    {
+      "year": 1962,
+      "count": 3
+    },
+    {
+      "year": 1963,
+      "count": 10
+    },
+    {
+      "year": 1964,
+      "count": 13
+    },
+    {
+      "year": 1965,
+      "count": 2
+    },
+    {
+      "year": 1966,
+      "count": 3
+    },
+    {
+      "year": 1967,
+      "count": 4
+    },
+    {
+      "year": 1968,
+      "count": 8
+    },
+    {
+      "year": 1969,
+      "count": 11
+    },
+    {
+      "year": 1970,
+      "count": 5
+    },
+    {
+      "year": 1971,
+      "count": 17
+    },
+    {
+      "year": 1972,
+      "count": 10
+    },
+    {
+      "year": 1973,
+      "count": 9
+    },
+    {
+      "year": 1974,
+      "count": 5
+    },
+    {
+      "year": 1975,
+      "count": 13
+    },
+    {
+      "year": 1976,
+      "count": 11
+    },
+    {
+      "year": 1977,
+      "count": 3
+    },
+    {
+      "year": 1978,
+      "count": 8
+    },
+    {
+      "year": 1979,
+      "count": 7
+    },
+    {
+      "year": 1980,
+      "count": 2
+    },
+    {
+      "year": 1981,
+      "count": 6
+    },
+    {
+      "year": 1982,
+      "count": 16
+    },
+    {
+      "year": 1983,
+      "count": 12
+    },
+    {
+      "year": 1984,
+      "count": 5
+    },
+    {
+      "year": 1985,
+      "count": 4
+    },
+    {
+      "year": 1986,
+      "count": 10
+    },
+    {
+      "year": 1987,
+      "count": 2
+    },
+    {
+      "year": 1988,
+      "count": 5
+    },
+    {
+      "year": 1989,
+      "count": 11
+    },
+    {
+      "year": 1990,
+      "count": 9
+    },
+    {
+      "year": 1991,
+      "count": 8
+    },
+    {
+      "year": 1992,
+      "count": 14
+    },
+    {
+      "year": 1993,
+      "count": 0
+    },
+    {
+      "year": 1994,
+      "count": 20
+    },
+    {
+      "year": 1995,
+      "count": 17
+    },
+    {
+      "year": 1996,
+      "count": 2
+    },
+    {
+      "year": 1997,
+      "count": 11
+    },
+    {
+      "year": 1998,
+      "count": 6
+    },
+    {
+      "year": 1999,
+      "count": 6
+    },
+    {
+      "year": 2000,
+      "count": 9
+    },
+    {
+      "year": 2001,
+      "count": 10
+    },
+    {
+      "year": 2002,
+      "count": 7
+    },
+    {
+      "year": 2003,
+      "count": 16
+    },
+    {
+      "year": 2004,
+      "count": 5
+    },
+    {
+      "year": 2005,
+      "count": 7
+    },
+    {
+      "year": 2006,
+      "count": 21
+    },
+    {
+      "year": 2007,
+      "count": 5
+    },
+    {
+      "year": 2008,
+      "count": 14
+    },
+    {
+      "year": 2009,
+      "count": 7
+    },
+    {
+      "year": 2010,
+      "count": 15
+    },
+    {
+      "year": 2011,
+      "count": 5
+    },
+    {
+      "year": 2012,
+      "count": 12
+    },
+    {
+      "year": 2013,
+      "count": 9
+    },
+    {
+      "year": 2014,
+      "count": 11
+    },
+    {
+      "year": 2015,
+      "count": 19
+    },
+    {
+      "year": 2016,
+      "count": 12
+    },
+    {
+      "year": 2017,
+      "count": 6
+    },
+    {
+      "year": 2018,
+      "count": 32
+    },
+    {
+      "year": 2019,
+      "count": 30
+    },
+    {
+      "year": 2020,
+      "count": 17
+    },
+    {
+      "year": 2021,
+      "count": 12
+    },
+    {
+      "year": 2022,
+      "count": 21
+    },
+    {
+      "year": 2023,
+      "count": 13
+    },
+    {
+      "year": 2024,
+      "count": 21
+    }
+  ]
+}

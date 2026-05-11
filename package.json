@@ -15,7 +15,7 @@
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright install && playwright test",
-		"fetch": "tsx scripts/fetch-static.ts"
+		"data:fetch": "tsx scripts/fetch-static.ts"
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "^4.11.3",

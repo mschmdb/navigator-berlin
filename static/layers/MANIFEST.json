@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-11T16:12:45.604Z",
+  "layers": [
+    {
+      "slug": "bezirke",
+      "filename": "bezirke.c8a6e03b.geojson",
+      "sourceUrl": "https://daten.odis-berlin.de/de/dataset/bezirksgrenzen/data.geojson",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "c8a6e03b187dfdd622b1852774b545c45bacbf68fec68184224b585f90e5c6e7",
+      "bundleGroup": "A: Boundaries",
+      "zoomThresholds": {
+        "min": 8,
+        "max": 12
+      },
+      "geometryType": "Polygon",
+      "featureCount": 12
+    },
+    {
+      "slug": "ortsteile",
+      "filename": "ortsteile.210c8259.geojson",
+      "sourceUrl": "https://daten.odis-berlin.de/de/dataset/ortsteile/data.geojson",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "210c8259fc22c0a2f34cd5b499acb33ff2d02613348d312c5a5a1464b6062023",
+      "bundleGroup": "A: Boundaries",
+      "zoomThresholds": {
+        "min": 10,
+        "max": 14
+      },
+      "geometryType": "Polygon",
+      "featureCount": 96
+    },
+    {
+      "slug": "plz",
+      "filename": "plz.13391ee7.geojson",
+      "sourceUrl": "https://daten.odis-berlin.de/de/dataset/plz/data.geojson",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "13391ee770aeea46034a2c35c97b99c11a6f5eebad9812b384b109cad8561d9e",
+      "bundleGroup": "A: Boundaries",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 14
+      },
+      "geometryType": "Polygon",
+      "featureCount": 190
+    },
+    {
+      "slug": "lor-prognoseraum",
+      "filename": "lor-prognoseraum.bc290d94.geojson",
+      "sourceUrl": "https://daten.odis-berlin.de/de/dataset/lor_prognoseraeume_2021/data.geojson",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "bc290d94ed52f3912fc636234ea5eaa36dc83dde6ad90c9cea61c86bf660e82d",
+      "bundleGroup": "A: Boundaries",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 13
+      },
+      "geometryType": "Polygon",
+      "featureCount": 58
+    },
+    {
+      "slug": "lor-bezirksregion",
+      "filename": "lor-bezirksregion.1c59cfeb.geojson",
+      "sourceUrl": "https://daten.odis-berlin.de/de/dataset/lor_bezirksregionen_2021/data.geojson",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "1c59cfebd491339bee005c6523e9031290dc5ddb6ec27087595cef1892ae1e3b",
+      "bundleGroup": "A: Boundaries",
+      "zoomThresholds": {
+        "min": 10,
+        "max": 14
+      },
+      "geometryType": "Polygon",
+      "featureCount": 143
+    },
+    {
+      "slug": "lor-planungsraum",
+      "filename": "lor-planungsraum.bef30c40.geojson",
+      "sourceUrl": "https://daten.odis-berlin.de/de/dataset/lor_planungsgraeume_2021/data.geojson",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "bef30c40cf572c12ba3fc52d94ef80528c9187b3fc9261bfc72902f10af24576",
+      "bundleGroup": "A: Boundaries",
+      "zoomThresholds": {
+        "min": 11,
+        "max": 15
+      },
+      "geometryType": "Polygon",
+      "featureCount": 542
+    },
+    {
+      "slug": "bodenrichtwerte",
+      "filename": "bodenrichtwerte.e978b8c0.geojson",
+      "sourceUrl": "https://gdi.berlin.de/services/wfs/brw2026",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "e978b8c0c060740a0cd81c61c84f792de1e7496547ee5a08ff3d2011a94d682d",
+      "bundleGroup": "B: Wohn-Daten",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Polygon",
+      "featureCount": 1424
+    },
+    {
+      "slug": "strassenlaerm-2022",
+      "filename": "strassenlaerm-2022.6d3d4526.geojson",
+      "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_stratlaerm_2022",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "6d3d4526cb0f85853c3cfd9fd1e660a9f1f373225aed132ef7dec0dd6e107f8e",
+      "bundleGroup": "C: Umwelt",
+      "zoomThresholds": {
+        "min": 11,
+        "max": 18
+      },
+      "geometryType": "LineString",
+      "featureCount": 5762
+    },
+    {
+      "slug": "trinkbrunnen",
+      "filename": "trinkbrunnen.afe07229.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "ODbL 1.0",
+      "sha256": "afe07229b430f29aae4cd96b1d9ada81500453a0cbfbe5d199a6b3b870bb1c69",
+      "bundleGroup": "C: Umwelt",
+      "zoomThresholds": {
+        "min": 14,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 0,
+      "seasonality": {
+        "from": "05-01",
+        "to": "10-31"
+      }
+    },
+    {
+      "slug": "stolpersteine",
+      "filename": "stolpersteine.c5eae04f.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-05-11T16:12:45.604Z",
+      "license": "ODbL 1.0",
+      "sha256": "c5eae04ffdc28291046d89071d1d935f7b1547030046a5aa54996fe379b284bd",
+      "bundleGroup": "D: Memorial",
+      "zoomThresholds": {
+        "min": 14,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 0
+    }
+  ]
+}
