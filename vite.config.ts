@@ -21,6 +21,25 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['bits-ui']
 	},
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks(id: string): string | undefined {
+					if (id.includes('node_modules/maplibre-gl')) return 'maplibre';
+					if (
+						id.includes('node_modules/layerchart') ||
+						id.includes('node_modules/d3-scale') ||
+						id.includes('node_modules/d3-interpolate') ||
+						id.includes('node_modules/d3-array')
+					)
+						return 'layerchart';
+					if (id.includes('node_modules/@turf/') || id.includes('node_modules/rbush'))
+						return 'turf';
+					return undefined;
+				}
+			}
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

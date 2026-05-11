@@ -1,0 +1,152 @@
+{
+	"version": 8,
+	"name": "navigator-berlin-plex",
+	"metadata": {
+		"description": "Plex Cartography style for navigator.berlin. Cloud Dancer background, Plex-Sans labels (Phase 2 after fontnik fix), Noto Sans fallback Phase 1."
+	},
+	"glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+	"sources": {
+		"openmaptiles": {
+			"type": "vector",
+			"url": "https://tiles.openfreemap.org/planet"
+		}
+	},
+	"sprite": "",
+	"layers": [
+		{
+			"id": "background",
+			"type": "background",
+			"paint": { "background-color": "#ECEAE0" }
+		},
+		{
+			"id": "landuse_park",
+			"type": "fill",
+			"source": "openmaptiles",
+			"source-layer": "landuse",
+			"filter": ["==", "class", "park"],
+			"paint": { "fill-color": "#E5E3D5", "fill-opacity": 0.6 }
+		},
+		{
+			"id": "landuse_residential",
+			"type": "fill",
+			"source": "openmaptiles",
+			"source-layer": "landuse",
+			"filter": ["==", "class", "residential"],
+			"paint": { "fill-color": "#F0EDE3", "fill-opacity": 0.4 }
+		},
+		{
+			"id": "water",
+			"type": "fill",
+			"source": "openmaptiles",
+			"source-layer": "water",
+			"paint": { "fill-color": "#D6DBE0", "fill-opacity": 0.85 }
+		},
+		{
+			"id": "building",
+			"type": "fill",
+			"source": "openmaptiles",
+			"source-layer": "building",
+			"minzoom": 13,
+			"paint": {
+				"fill-color": "#DCD9CD",
+				"fill-opacity": 0.6,
+				"fill-outline-color": "#C8C6BB"
+			}
+		},
+		{
+			"id": "road_minor",
+			"type": "line",
+			"source": "openmaptiles",
+			"source-layer": "transportation",
+			"filter": [
+				"all",
+				["in", "class", "minor", "service", "residential"]
+			],
+			"minzoom": 12,
+			"paint": { "line-color": "#C8C6BB", "line-width": 0.4 }
+		},
+		{
+			"id": "road_secondary",
+			"type": "line",
+			"source": "openmaptiles",
+			"source-layer": "transportation",
+			"filter": ["in", "class", "secondary", "tertiary"],
+			"paint": { "line-color": "#989488", "line-width": 0.6 }
+		},
+		{
+			"id": "road_primary",
+			"type": "line",
+			"source": "openmaptiles",
+			"source-layer": "transportation",
+			"filter": ["==", "class", "primary"],
+			"paint": { "line-color": "#74726A", "line-width": 0.8 }
+		},
+		{
+			"id": "road_motorway",
+			"type": "line",
+			"source": "openmaptiles",
+			"source-layer": "transportation",
+			"filter": ["==", "class", "motorway"],
+			"paint": { "line-color": "#5F5F5A", "line-width": 1 }
+		},
+		{
+			"id": "boundary_district",
+			"type": "line",
+			"source": "openmaptiles",
+			"source-layer": "boundary",
+			"filter": [">=", "admin_level", 4],
+			"paint": {
+				"line-color": "#989488",
+				"line-width": 0.6,
+				"line-dasharray": [3, 2]
+			}
+		},
+		{
+			"id": "boundary_country",
+			"type": "line",
+			"source": "openmaptiles",
+			"source-layer": "boundary",
+			"filter": ["<=", "admin_level", 2],
+			"paint": {
+				"line-color": "#74726A",
+				"line-width": 1.2,
+				"line-dasharray": [4, 2]
+			}
+		},
+		{
+			"id": "place_suburb",
+			"type": "symbol",
+			"source": "openmaptiles",
+			"source-layer": "place",
+			"filter": ["in", "class", "suburb", "neighbourhood"],
+			"minzoom": 11,
+			"layout": {
+				"text-field": ["coalesce", ["get", "name:de"], ["get", "name:latin"]],
+				"text-font": ["Noto Sans Regular"],
+				"text-size": 12
+			},
+			"paint": {
+				"text-color": "#4A4A46",
+				"text-halo-color": "#ECEAE0",
+				"text-halo-width": 1
+			}
+		},
+		{
+			"id": "place_city",
+			"type": "symbol",
+			"source": "openmaptiles",
+			"source-layer": "place",
+			"filter": ["==", "class", "city"],
+			"layout": {
+				"text-field": ["coalesce", ["get", "name:de"], ["get", "name:latin"]],
+				"text-font": ["Noto Sans Regular"],
+				"text-size": 14
+			},
+			"paint": {
+				"text-color": "#141414",
+				"text-halo-color": "#ECEAE0",
+				"text-halo-width": 1.2
+			}
+		}
+	]
+}
