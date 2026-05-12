@@ -6,7 +6,7 @@
 
 	let { children } = $props();
 
-	const geocode = async (q: string): Promise<GeocodeSuggestion[]> => geocodeAddress({ q });
+	const geocode = async (q: string): Promise<GeocodeSuggestion[]> => geocodeAddress({ q }).run();
 
 	const selection = provideAddressSelection();
 

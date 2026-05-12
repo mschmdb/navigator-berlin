@@ -13,6 +13,7 @@
 </script>
 
 <header
+	style="min-height: var(--header-height, 56px)"
 	class="sticky top-0 z-30 border-b border-rule bg-bg/95 py-2"
 >
 	<div class="mx-auto flex max-w-[1440px] items-center gap-4 px-4">

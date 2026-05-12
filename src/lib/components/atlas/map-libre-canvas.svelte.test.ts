@@ -18,14 +18,28 @@ describe('map-libre-canvas.svelte', () => {
 		await expect.element(page.getByTestId('map-skeleton')).toBeInTheDocument();
 	});
 
-	it('rendert sr-only map-help + map-status A11y-Hooks', async () => {
+	it('rendert sr-only map-help A11y-Hook', async () => {
 		render(MapLibreCanvas, {});
 		const help = page.getByText(/Pfeiltasten zum Verschieben/);
 		await expect.element(help).toBeInTheDocument();
 		const helpEl = (await help.element()) as HTMLElement;
 		expect(helpEl.id).toBe('map-help');
 		expect(helpEl.className).toMatch(/sr-only/);
-		const status = (await page.getByTestId('map-status').element()) as HTMLElement;
-		expect(status.getAttribute('aria-live')).toBe('polite');
+	});
+
+	it('rendert KEIN lokales map-status div (globale Live-Region in +layout.svelte)', async () => {
+		render(MapLibreCanvas, {});
+		await expect.element(page.getByTestId('map-status')).not.toBeInTheDocument();
+	});
+
+	it('Help-Text deckt Home + Tab + Enter + Escape + Layer-Hinweis ab', async () => {
+		render(MapLibreCanvas, {});
+		const helpEl = (await page.getByText(/Pfeiltasten zum Verschieben/).element()) as HTMLElement;
+		const txt = helpEl.textContent ?? '';
+		expect(txt).toMatch(/Home/);
+		expect(txt).toMatch(/Tab/);
+		expect(txt).toMatch(/Enter/);
+		expect(txt).toMatch(/Escape/);
+		expect(txt).toMatch(/Bezirke|Stolperstein|Lärm/);
 	});
 });

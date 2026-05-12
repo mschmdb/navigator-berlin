@@ -1,14 +1,24 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import MapLibreCanvas from '$lib/components/atlas/map-libre-canvas.svelte';
 	import MapControls from '$lib/components/atlas/map-controls.svelte';
+	import MapAccessibilityLayer from '$lib/components/atlas/map-accessibility-layer.svelte';
+	import InspectorPanel from '$lib/components/atlas/inspector-panel.svelte';
+	import BottomSheet from '$lib/components/atlas/inspector-panel/bottom-sheet.svelte';
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
 	import { createPlexMarker } from '$lib/components/atlas/internal/map-markers.js';
+	import { announceGlobal } from '$lib/utils/aria-live.js';
 	import { serializeViewport } from '$lib/utils/url-state.js';
 	import { debounce } from '$lib/utils/debounce.js';
 	import { matchZoomForType } from '$lib/utils/zoom-mapping.js';
 	import { reverseGeocodeAddress } from '$lib/data/geocode.remote.js';
 	import { useAddressSelection } from '$lib/state/address-selection.svelte.js';
+	import { getUiState, type SheetSnapVh } from '$lib/state/ui-context.svelte.js';
+	import { loadManifest } from '$lib/data/manifest.js';
+	import { getLayersAtPoint } from '$lib/data/get-layers-at-point.js';
+	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data/types.js';
+	import { useViewport } from '$lib/utils/use-viewport.svelte.js';
 
 	type Viewport = { center: [number, number]; zoom: number; bbox: [number, number, number, number] };
 	type Props = { data: import('./$types').PageData };
@@ -16,9 +26,18 @@
 	let { data }: Props = $props();
 
 	const selection = useAddressSelection();
+	const ui = getUiState();
+	const viewport = useViewport('desktop');
 
 	let mapHandle: MapHandle | null = $state.raw(null);
 	let rawMap: unknown = null;
+	let a11yMap = $state.raw<{
+		queryRenderedFeatures: (geom?: unknown, opts?: { layers?: string[] }) => unknown[];
+		on: (event: string, handler: () => void) => unknown;
+		off: (event: string, handler: () => void) => unknown;
+	} | null>(null);
+	let manifestLayers = $state<LayerMetadata[]>([]);
+	let selectedFeatureId = $state<string | null>(null);
 	let currentMarker: { remove: () => void; getLngLat: () => { lng: number; lat: number } } | null =
 		null;
 	let MarkerCtor:
@@ -35,11 +54,11 @@
 	const VIEWPORT_KEYS = ['bbox', 'zoom', 'center'] as const;
 	const ADDRESS_KEYS = ['address', 'q'] as const;
 
-	const syncViewport = debounce((viewport: Viewport) => {
+	const syncViewport = debounce((v: Viewport) => {
 		const url = new URL(window.location.href);
 		for (const key of VIEWPORT_KEYS) url.searchParams.delete(key);
-		const params = serializeViewport(viewport);
-		for (const [k, v] of params) url.searchParams.set(k, v);
+		const params = serializeViewport(v);
+		for (const [k, v2] of params) url.searchParams.set(k, v2);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
 			replaceState: true,
@@ -48,8 +67,8 @@
 		});
 	}, 500);
 
-	function onMoveEnd(viewport: Viewport) {
-		syncViewport(viewport);
+	function onMoveEnd(v: Viewport) {
+		syncViewport(v);
 	}
 
 	function onMapHandle(handle: MapHandle) {
@@ -58,6 +77,7 @@
 
 	async function onMapLoad(map: unknown) {
 		rawMap = map;
+		a11yMap = map as typeof a11yMap;
 		if (!MarkerCtor) {
 			const mod = (await import('maplibre-gl')) as unknown as {
 				Marker?: typeof MarkerCtor;
@@ -67,9 +87,25 @@
 		}
 	}
 
+	onMount(() => {
+		void (async () => {
+			try {
+				const manifest = await loadManifest();
+				manifestLayers = manifest.layers;
+			} catch {
+				manifestLayers = [];
+			}
+		})();
+	});
+
 	function clearMarker() {
 		currentMarker?.remove();
 		currentMarker = null;
+		selectedFeatureId = null;
+		announceGlobal('Auswahl entfernt');
+		ui.inspectorOpen = false;
+		ui.selectedAddress = null;
+		ui.selectedLayerHits = [];
 		const url = new URL(window.location.href);
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
@@ -100,6 +136,17 @@
 		});
 	}
 
+	async function openInspectorFor(suggestion: GeocodeSuggestion) {
+		ui.selectedAddress = suggestion;
+		try {
+			ui.selectedLayerHits = await getLayersAtPoint(suggestion.lat, suggestion.lng);
+		} catch {
+			ui.selectedLayerHits = [];
+		}
+		ui.inspectorOpen = true;
+		announceGlobal(`Inspektor geöffnet für ${suggestion.displayName}`);
+	}
+
 	async function onClick(lngLat: [number, number]) {
 		if (currentMarker) {
 			const m = currentMarker.getLngLat();
@@ -111,14 +158,43 @@
 			}
 		}
 		try {
-			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] });
+			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] }).run();
 			if (suggestion) {
 				await placeMarker([suggestion.lng, suggestion.lat], suggestion.displayName);
-			} else {
-				await placeMarker(lngLat);
+				const bezirkPart = suggestion.bezirk ? `, Bezirk ${suggestion.bezirk}` : '';
+				announceGlobal(`Adresse ausgewählt: ${suggestion.displayName}${bezirkPart}`);
+				await openInspectorFor(suggestion);
+				return;
 			}
 		} catch {
-			await placeMarker(lngLat);
+			announceGlobal('Adresse konnte nicht aufgelöst werden, Punkt-Auswahl');
+		}
+		await placeMarker(lngLat);
+		const synthetic: GeocodeSuggestion = {
+			id: `point-${lngLat[0].toFixed(5)}-${lngLat[1].toFixed(5)}`,
+			displayName: `Punkt ${lngLat[1].toFixed(4)}, ${lngLat[0].toFixed(4)}`,
+			lat: lngLat[1],
+			lng: lngLat[0],
+			type: 'point',
+			addresstype: 'point'
+		};
+		announceGlobal(`Punkt ausgewählt: ${lngLat[1].toFixed(4)}, ${lngLat[0].toFixed(4)}`);
+		await openInspectorFor(synthetic);
+	}
+
+	async function onSelectAccessibleFeature(feature: {
+		id: string;
+		centroid: [number, number];
+		description: string;
+		layerName: string;
+		geometryType: 'Point' | 'Polygon' | 'MultiPolygon';
+	}) {
+		selectedFeatureId = feature.id;
+		if (rawMap)
+			flyToSuggestion({ lng: feature.centroid[0], lat: feature.centroid[1], addresstype: 'street' });
+		announceGlobal(`${feature.layerName}: ${feature.description}`);
+		if (feature.geometryType === 'Point') {
+			await placeMarker(feature.centroid);
 		}
 	}
 
@@ -170,11 +246,37 @@
 		if (!rawMap || !MarkerCtor) return;
 		flyToSuggestion(s);
 		void placeMarker([s.lng, s.lat], s.displayName);
+		const bezirkPart = s.bezirk ? `, Bezirk ${s.bezirk}` : '';
+		announceGlobal(`Karte gezoomt auf ${s.displayName}${bezirkPart}`);
+		void openInspectorFor(s);
 	});
+
+	function setSnap(vh: SheetSnapVh) {
+		ui.sheetSnapVh = vh;
+	}
+
+	function closeInspector() {
+		ui.inspectorOpen = false;
+	}
+
+	const showSidePanel = $derived(
+		viewport.breakpoint !== 'mobile' && ui.inspectorOpen && ui.selectedAddress !== null
+	);
+	const showBottomSheet = $derived(
+		viewport.breakpoint === 'mobile' && ui.inspectorOpen && ui.selectedAddress !== null
+	);
 </script>
 
-<section class="flex h-[calc(100vh-120px)] flex-col">
-	<div class="relative h-[70vh] w-full">
+<section
+	class={[
+		'flex h-[calc(100vh-120px)] flex-col',
+		showSidePanel && 'lg:grid lg:h-[calc(100vh-120px)] lg:grid-cols-[6fr_4fr] lg:grid-rows-1'
+	]
+		.filter(Boolean)
+		.join(' ')}
+	data-testid="atlas-shell"
+>
+	<div class="relative min-h-0 w-full flex-1 lg:h-full lg:flex-none">
 		<MapLibreCanvas
 			initialBbox={data.initialBbox}
 			initialCenter={data.initialCenter}
@@ -186,13 +288,32 @@
 			onLoad={onMapLoad}
 		/>
 		<MapControls {onPan} {onZoom} />
+		<MapAccessibilityLayer
+			map={a11yMap}
+			layers={manifestLayers}
+			{selectedFeatureId}
+			onSelectFeature={onSelectAccessibleFeature}
+		/>
 	</div>
-	<aside
-		class="flex-1 border-t border-rule bg-bg-elevated p-6 text-ink"
-		aria-label="Adress-Inspector"
-	>
-		<p class="text-base text-ink-muted">
-			Inspector-Panel kommt in Story 1.9. Adresse via Header-Suche oder Karten-Klick.
-		</p>
-	</aside>
+
+	{#if showSidePanel}
+		<aside
+			class="border-t border-rule bg-bg-elevated lg:border-l lg:border-t-0"
+			aria-label="Adress-Inspector-Bereich"
+			data-testid="inspector-slot"
+		>
+			<InspectorPanel layerMeta={manifestLayers} />
+		</aside>
+	{/if}
+	{#if showBottomSheet}
+		<BottomSheet
+			open
+			snapVh={ui.sheetSnapVh}
+			onSnap={setSnap}
+			onClose={closeInspector}
+			ariaLabel="Adress-Inspektor"
+		>
+			<InspectorPanel layerMeta={manifestLayers} variant="sheet" />
+		</BottomSheet>
+	{/if}
 </section>

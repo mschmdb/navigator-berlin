@@ -174,7 +174,9 @@
 	{/if}
 
 	<p id="map-help" class="sr-only">
-		Karte interaktiv. Pfeiltasten zum Verschieben, Plus und Minus zum Zoomen, Tab fuer POI-Liste.
+		Berlin-Karte. Pfeiltasten zum Verschieben, Plus und Minus zum Zoomen, Home für
+		Berlin-Übersicht, Tab um durch sichtbare Orte und Grenzen zu navigieren, Enter zum Auswählen,
+		Escape zum Abwählen. Die Karte zeigt Layer wie Bezirke, LOR-Regionen, Stolpersteine und
+		Lärmkarten, sichtbar abhängig vom Zoom-Level.
 	</p>
-	<div data-testid="map-status" aria-live="polite" class="sr-only"></div>
 </div>
