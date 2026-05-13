@@ -1,6 +1,13 @@
 import type { Bundle, LayerHit, LayerMetadata } from '$lib/data';
 
-export type SectionKey = 'boundaries' | 'wohn' | 'umwelt' | 'memorial' | 'klima';
+export type SectionKey =
+	| 'boundaries'
+	| 'wohn'
+	| 'umwelt'
+	| 'memorial'
+	| 'sozial'
+	| 'mobilitaet'
+	| 'klima';
 
 export interface InspectorSection {
 	key: SectionKey;
@@ -13,6 +20,8 @@ export const SECTION_ORDER: readonly SectionKey[] = [
 	'wohn',
 	'umwelt',
 	'memorial',
+	'sozial',
+	'mobilitaet',
 	'klima'
 ];
 
@@ -21,6 +30,8 @@ export const SECTION_LABELS: Record<SectionKey, string> = {
 	wohn: 'Wohn-Daten',
 	umwelt: 'Umwelt',
 	memorial: 'Memorial',
+	sozial: 'Soziale Infrastruktur',
+	mobilitaet: 'Mobilität',
 	klima: 'Klima'
 };
 
@@ -28,17 +39,12 @@ const BUNDLE_TO_SECTION: Record<Bundle, SectionKey> = {
 	'A: Boundaries': 'boundaries',
 	'B: Wohn-Daten': 'wohn',
 	'C: Umwelt': 'umwelt',
-	'D: Memorial': 'memorial'
+	'D: Memorial': 'memorial',
+	'E: Soziale Infrastruktur': 'sozial',
+	'F: Mobilität': 'mobilitaet'
 };
 
-const BOUNDARY_ORDER = [
-	'bezirke',
-	'ortsteile',
-	'lor-prognoseraum',
-	'lor-bezirksregion',
-	'lor-planungsraum',
-	'plz'
-];
+const BOUNDARY_ORDER = ['bezirke', 'ortsteile', 'plz'];
 
 function bundleFor(slug: string, metaBySlug: Map<string, LayerMetadata>): Bundle | null {
 	const meta = metaBySlug.get(slug);
@@ -64,6 +70,8 @@ export function groupHitsBySection(
 		wohn: [],
 		umwelt: [],
 		memorial: [],
+		sozial: [],
+		mobilitaet: [],
 		klima: []
 	};
 	for (const hit of hits) {

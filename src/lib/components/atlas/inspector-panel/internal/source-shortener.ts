@@ -31,12 +31,15 @@ export function shortenLicense(license: License): string {
 	return LICENSE_SHORT[license] ?? license;
 }
 
-const TWO_YEARS_MS = 1000 * 60 * 60 * 24 * 365 * 2;
+// Berlin-Geodaten haben oft mehrjährige Aktualisierungszyklen (LOR alle ~5J,
+// Umweltatlas alle ~4J, BRW jährlich). Veraltet ab >5 Jahre.
+const OUTDATED_YEARS = 5;
+const OUTDATED_MS = 1000 * 60 * 60 * 24 * 365 * OUTDATED_YEARS;
 
 export function isOutdated(updatedAt: string, now: Date = new Date()): boolean {
 	const updated = new Date(updatedAt).getTime();
 	if (Number.isNaN(updated)) return false;
-	return now.getTime() - updated > TWO_YEARS_MS;
+	return now.getTime() - updated > OUTDATED_MS;
 }
 
 export function formatYearMonth(updatedAt: string): string {

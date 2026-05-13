@@ -2,7 +2,7 @@ import { LRUCache } from 'lru-cache';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import distance from '@turf/distance';
 import { point } from '@turf/helpers';
-import type { Feature, Point, Polygon, MultiPolygon } from 'geojson';
+import type { Feature, LineString, MultiLineString, Point, Polygon, MultiPolygon } from 'geojson';
 import type { LayerHit, LayerMetadata } from './types.js';
 import { loadManifest } from './manifest.js';
 import { fetchLayer } from './internal/layer-fetch.js';
@@ -10,6 +10,7 @@ import { getIndex } from './internal/spatial-index.js';
 import { isInBerlin } from './constants.js';
 
 const POINT_LAYER_DISTANCE_KM = 0.05;
+const LINE_LAYER_DISTANCE_KM = 0.03;
 
 const resultCache = new LRUCache<string, LayerHit[]>({ max: 200 });
 
@@ -35,7 +36,7 @@ function makeHit(
 		layer: layer.slug,
 		value,
 		source: layer.sourceUrl,
-		updatedAt: layer.fetchedAt,
+		updatedAt: layer.sourceUpdatedAt ?? layer.fetchedAt,
 		license: layer.license
 	};
 	if (reason) hit.reason = reason;
@@ -48,11 +49,18 @@ async function hitForLayer(
 	lng: number,
 	fetchFn: typeof fetch
 ): Promise<LayerHit | null> {
+	if (layer.inspectorRelevant === false) return null;
 	if (layer.seasonality && !inSeason(layer.seasonality)) {
 		return makeHit(layer, null, 'seasonal');
 	}
 
 	const fc = await fetchLayer(layer.filename, fetchFn);
+	if (!Array.isArray(fc?.features) || fc.features.length === 0) {
+		// Defensiv: leere FeatureCollection ODER nicht-GeoJSON-Format (z.B. raw Overpass
+		// für stolpersteine/trinkbrunnen, Story 1.3 Pipeline-Bug).
+		if (layer.geometryType === 'Point') return null;
+		return makeHit(layer, null, 'no-coverage');
+	}
 	const idx = await getIndex(layer.filename, fetchFn);
 	const bboxQuery = {
 		minX: lng - 0.001,
@@ -72,6 +80,25 @@ async function hitForLayer(
 			}
 		}
 		return null;
+	}
+
+	if (layer.geometryType === 'LineString') {
+		// Schienen/Strassen-Layer: vertex-nearest Heuristik (Bbox-Candidates + Punkt-zu-Vertex).
+		// Echte Punkt-Linie-Distanz für Phase 2.
+		for (const cand of candidates) {
+			const feat = fc.features[cand.featureIndex] as Feature<LineString | MultiLineString>;
+			const coords =
+				feat.geometry.type === 'LineString'
+					? feat.geometry.coordinates
+					: feat.geometry.coordinates.flat();
+			for (const [flng, flat] of coords) {
+				const km = distance([flng, flat], [lng, lat], { units: 'kilometers' });
+				if (km <= LINE_LAYER_DISTANCE_KM) {
+					return makeHit(layer, feat.properties);
+				}
+			}
+		}
+		return makeHit(layer, null, 'no-coverage');
 	}
 
 	const queryPoint = point([lng, lat]);

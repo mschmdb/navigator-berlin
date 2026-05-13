@@ -25,7 +25,7 @@ describe('loadManifest', () => {
 		const fn = fetchMock(miniManifest);
 		const manifest = await loadManifest(fn as unknown as typeof fetch);
 		expect(manifest.schemaVersion).toBe(1);
-		expect(manifest.layers).toHaveLength(3);
+		expect(manifest.layers).toHaveLength(4);
 		expect(fn).toHaveBeenCalledWith('/layers/MANIFEST.json');
 	});
 

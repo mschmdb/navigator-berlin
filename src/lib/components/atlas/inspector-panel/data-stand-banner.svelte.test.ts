@@ -26,17 +26,17 @@ describe('data-stand-banner.svelte', () => {
 		await expect.element(page.getByTestId('banner-outdated')).not.toBeInTheDocument();
 	});
 
-	it('zeigt Outdated-Pille bei >2 Jahre altem Datum', async () => {
-		const oldHit: LayerHit = { ...baseHit, updatedAt: '2022-01-01T00:00:00Z' };
+	it('zeigt Outdated-Pille bei >5 Jahre altem Datum', async () => {
+		const oldHit: LayerHit = { ...baseHit, updatedAt: '2019-01-01T00:00:00Z' };
 		render(DataStandBanner, { hit: oldHit });
 		await expect.element(page.getByTestId('banner-outdated')).toBeInTheDocument();
 	});
 
 	it('Outdated-Pille hat Tooltip mit genauem Datum', async () => {
-		const oldHit: LayerHit = { ...baseHit, updatedAt: '2020-08-20T00:00:00Z' };
+		const oldHit: LayerHit = { ...baseHit, updatedAt: '2018-08-20T00:00:00Z' };
 		render(DataStandBanner, { hit: oldHit });
 		const pille = (await page.getByTestId('banner-outdated').element()) as HTMLElement;
-		expect(pille.getAttribute('title')).toBe('Datenstand: 2020-08-20T00:00:00Z');
+		expect(pille.getAttribute('title')).toBe('Datenstand: 2018-08-20T00:00:00Z');
 	});
 
 	it('ODIS-Quelle wird zu "ODIS Berlin"', async () => {

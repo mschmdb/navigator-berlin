@@ -14,6 +14,7 @@ const miniManifest = load('./__fixtures__/mini-manifest.json');
 const miniBezirke = load('./__fixtures__/mini-bezirke.geojson');
 const miniMietspiegel = load('./__fixtures__/mini-mietspiegel.geojson');
 const miniTrinkbrunnen = load('./__fixtures__/mini-trinkbrunnen.geojson');
+const miniStrassenlaerm = load('./__fixtures__/mini-strassenlaerm.geojson');
 
 const fetchMock = () =>
 	vi.fn(async (url: string) => {
@@ -25,6 +26,8 @@ const fetchMock = () =>
 			return new Response(JSON.stringify(miniMietspiegel), { status: 200 });
 		if (url === '/layers/trinkbrunnen.beefdead.geojson')
 			return new Response(JSON.stringify(miniTrinkbrunnen), { status: 200 });
+		if (url === '/layers/strassenlaerm-2022.deadcafe.geojson')
+			return new Response(JSON.stringify(miniStrassenlaerm), { status: 200 });
 		return new Response('404', { status: 404 });
 	});
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { Layers } from '@lucide/svelte';
 	import AddressSearch from './address-search.svelte';
 	import type { GeocodeSuggestion } from '$lib/data';
 
@@ -7,9 +8,17 @@
 		geocode: (q: string) => Promise<GeocodeSuggestion[]>;
 		onSelect?: (suggestion: GeocodeSuggestion) => void;
 		langSwitcher?: Snippet;
+		activeLayerCount?: number;
+		onOpenLayerPalette?: () => void;
 	};
 
-	let { geocode, onSelect, langSwitcher }: Props = $props();
+	let {
+		geocode,
+		onSelect,
+		langSwitcher,
+		activeLayerCount = 0,
+		onOpenLayerPalette
+	}: Props = $props();
 </script>
 
 <header
@@ -24,6 +33,27 @@
 		<div class="min-w-0 flex-1">
 			<AddressSearch variant="header" {geocode} {onSelect} />
 		</div>
+		{#if onOpenLayerPalette}
+			<button
+				type="button"
+				data-testid="header-layer-trigger"
+				onclick={onOpenLayerPalette}
+				aria-label="Layer-Palette öffnen"
+				aria-haspopup="dialog"
+				class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center border border-rule text-ink hover:bg-bg"
+			>
+				<Layers size={18} aria-hidden="true" />
+				{#if activeLayerCount > 0}
+					<span
+						data-testid="header-layer-badge"
+						aria-hidden="true"
+						class="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 font-mono text-[10px] text-bg"
+					>
+						{activeLayerCount}
+					</span>
+				{/if}
+			</button>
+		{/if}
 		{#if langSwitcher}
 			<div class="shrink-0">{@render langSwitcher()}</div>
 		{/if}

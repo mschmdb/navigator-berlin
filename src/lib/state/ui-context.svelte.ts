@@ -5,12 +5,16 @@ const KEY = Symbol('ui-state');
 
 export type SheetSnapVh = 40 | 70 | 100;
 
+export const RECENT_LAYERS_MAX = 5;
+
 export interface UiState {
 	inspectorOpen: boolean;
 	selectedAddress: GeocodeSuggestion | null;
 	selectedLayerHits: LayerHit[];
 	activeLayerSlugs: string[];
+	recentLayerSlugs: string[];
 	sheetSnapVh: SheetSnapVh;
+	paletteOpen: boolean;
 }
 
 export function createUiState(): UiState {
@@ -19,7 +23,9 @@ export function createUiState(): UiState {
 		selectedAddress: null,
 		selectedLayerHits: [],
 		activeLayerSlugs: [],
-		sheetSnapVh: 40
+		recentLayerSlugs: [],
+		sheetSnapVh: 40,
+		paletteOpen: false
 	});
 	setContext(KEY, state);
 	return state;
@@ -33,4 +39,23 @@ export function getUiState(): UiState {
 		);
 	}
 	return ctx;
+}
+
+export function toggleLayer(state: UiState, slug: string): void {
+	const activeIdx = state.activeLayerSlugs.indexOf(slug);
+	if (activeIdx >= 0) {
+		state.activeLayerSlugs.splice(activeIdx, 1);
+	} else {
+		state.activeLayerSlugs.push(slug);
+	}
+	const recentIdx = state.recentLayerSlugs.indexOf(slug);
+	if (recentIdx >= 0) state.recentLayerSlugs.splice(recentIdx, 1);
+	state.recentLayerSlugs.unshift(slug);
+	if (state.recentLayerSlugs.length > RECENT_LAYERS_MAX) {
+		state.recentLayerSlugs.length = RECENT_LAYERS_MAX;
+	}
+}
+
+export function clearLayers(state: UiState): void {
+	state.activeLayerSlugs.length = 0;
 }

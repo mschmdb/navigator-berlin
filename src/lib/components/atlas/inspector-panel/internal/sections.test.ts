@@ -63,21 +63,19 @@ describe('groupHitsBySection', () => {
 		expect(total).toBe(0);
 	});
 
-	it('Boundaries werden hierarchisch sortiert (Bezirk → Ortsteil → LOR → PLZ)', () => {
+	it('Boundaries werden hierarchisch sortiert (Bezirk → Ortsteil → PLZ)', () => {
 		const layerMeta = [
 			meta('plz', 'A: Boundaries'),
 			meta('bezirke', 'A: Boundaries'),
-			meta('lor-planungsraum', 'A: Boundaries'),
 			meta('ortsteile', 'A: Boundaries')
 		];
 		const hits = [
 			hit('plz', '10243'),
-			hit('lor-planungsraum', 'PR-123'),
 			hit('bezirke', 'Friedrichshain'),
 			hit('ortsteile', 'Friedrichshain-Süd')
 		];
 		const result = groupHitsBySection(hits, layerMeta);
 		const order = result.find((s) => s.key === 'boundaries')?.hits.map((h) => h.layer);
-		expect(order).toEqual(['bezirke', 'ortsteile', 'lor-planungsraum', 'plz']);
+		expect(order).toEqual(['bezirke', 'ortsteile', 'plz']);
 	});
 });

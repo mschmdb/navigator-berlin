@@ -36,6 +36,49 @@ describe('site-header.svelte', () => {
 		await expect.element(page.getByTestId('lang-switch')).toBeInTheDocument();
 	});
 
+	it('rendert Layer-Trigger wenn onOpenLayerPalette gegeben', async () => {
+		let opened = 0;
+		render(SiteHeader, {
+			geocode: async () => [],
+			activeLayerCount: 2,
+			onOpenLayerPalette: () => {
+				opened += 1;
+			}
+		});
+		const trigger = page.getByTestId('header-layer-trigger');
+		await expect.element(trigger).toBeInTheDocument();
+		const el = (await trigger.element()) as HTMLButtonElement;
+		expect(el.getAttribute('aria-label')).toMatch(/layer/i);
+		await trigger.click();
+		expect(opened).toBe(1);
+	});
+
+	it('Layer-Trigger zeigt Badge mit activeLayerCount', async () => {
+		render(SiteHeader, {
+			geocode: async () => [],
+			activeLayerCount: 3,
+			onOpenLayerPalette: () => {}
+		});
+		const badge = page.getByTestId('header-layer-badge');
+		const el = (await badge.element()) as HTMLElement;
+		expect(el.textContent?.trim()).toBe('3');
+	});
+
+	it('Layer-Trigger ohne onOpenLayerPalette wird nicht gerendert', async () => {
+		render(SiteHeader, { geocode: async () => [] });
+		await expect.element(page.getByTestId('header-layer-trigger')).not.toBeInTheDocument();
+	});
+
+	it('Layer-Badge versteckt wenn count=0', async () => {
+		render(SiteHeader, {
+			geocode: async () => [],
+			activeLayerCount: 0,
+			onOpenLayerPalette: () => {}
+		});
+		await expect.element(page.getByTestId('header-layer-trigger')).toBeInTheDocument();
+		await expect.element(page.getByTestId('header-layer-badge')).not.toBeInTheDocument();
+	});
+
 	it('Header hat banner-role + sticky+ hairline-Bottom', async () => {
 		render(SiteHeader, { geocode: async () => [] });
 		const banner = page.getByRole('banner');

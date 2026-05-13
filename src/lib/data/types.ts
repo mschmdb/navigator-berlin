@@ -21,6 +21,7 @@ export interface LayerMetadata {
 	filename: string;
 	sourceUrl: string;
 	fetchedAt: string;
+	sourceUpdatedAt?: string;
 	license: License;
 	sha256: string;
 	bundleGroup: Bundle;
@@ -28,6 +29,7 @@ export interface LayerMetadata {
 	seasonality?: { from: string; to: string };
 	geometryType: GeometryType;
 	featureCount: number;
+	inspectorRelevant?: boolean;
 }
 
 export interface Manifest {

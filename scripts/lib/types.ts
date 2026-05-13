@@ -1,4 +1,10 @@
-export type Bundle = 'A: Boundaries' | 'B: Wohn-Daten' | 'C: Umwelt' | 'D: Memorial';
+export type Bundle =
+	| 'A: Boundaries'
+	| 'B: Wohn-Daten'
+	| 'C: Umwelt'
+	| 'D: Memorial'
+	| 'E: Soziale Infrastruktur'
+	| 'F: Mobilität';
 export type License =
 	| 'dl-de/zero-2-0'
 	| 'dl-de/by-2-0'
@@ -30,6 +36,11 @@ export interface SourceConfig {
 	zoomThresholds: ZoomRange;
 	seasonality?: Seasonality;
 	simplifyProfile: SimplifyProfile;
+	/** Stichtag / Erhebungsjahr aus Quellen-Metadaten (ISO-Date). Fallback in Inspector: fetchedAt. */
+	sourceUpdatedAt?: string;
+	/** Default true. Wenn false, wird Layer im getLayersAtPoint übersprungen
+	 * (z.B. ÖPNV-Stationen / Verkehrsnetze: kein Adress-Hit-Konzept, Map-Only). */
+	inspectorRelevant?: boolean;
 }
 
 export interface LayerEntry {
@@ -37,6 +48,7 @@ export interface LayerEntry {
 	filename: string;
 	sourceUrl: string;
 	fetchedAt: string;
+	sourceUpdatedAt?: string;
 	license: License;
 	sha256: string;
 	bundleGroup: Bundle;
@@ -44,6 +56,7 @@ export interface LayerEntry {
 	seasonality?: Seasonality;
 	geometryType: GeometryType;
 	featureCount: number;
+	inspectorRelevant?: boolean;
 }
 
 export interface Manifest {

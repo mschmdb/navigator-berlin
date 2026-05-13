@@ -1,0 +1,27 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"properties": { "importid": 1, "name": "Track_1", "gruppe_txt": "U-Bahn" },
+			"geometry": {
+				"type": "LineString",
+				"coordinates": [
+					[13.3795, 52.5195],
+					[13.3805, 52.5205]
+				]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": { "importid": 2, "name": "Track_2", "gruppe_txt": "Tram" },
+			"geometry": {
+				"type": "LineString",
+				"coordinates": [
+					[13.6, 52.6],
+					[13.61, 52.61]
+				]
+			}
+		}
+	]
+}

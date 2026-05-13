@@ -38,6 +38,18 @@
 			"seasonality": { "from": "05-01", "to": "10-31" },
 			"geometryType": "Point",
 			"featureCount": 3
+		},
+		{
+			"slug": "strassenlaerm-2022",
+			"filename": "strassenlaerm-2022.deadcafe.geojson",
+			"sourceUrl": "https://daten.odis-berlin.de/de/dataset/strassenverkehr",
+			"fetchedAt": "2026-05-11T14:22:45.000Z",
+			"license": "dl-de/by-2-0",
+			"sha256": "deadcafe00112233445566778899aabbccddeeff00112233445566778899aabb",
+			"bundleGroup": "C: Umwelt",
+			"zoomThresholds": { "min": 12, "max": 18 },
+			"geometryType": "LineString",
+			"featureCount": 2
 		}
 	]
 }

@@ -5,6 +5,7 @@
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
 	import PermalinkButton from './inspector-panel/permalink-button.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
+	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 
 	type Props = {
 		layerMeta?: readonly LayerMetadata[];
@@ -87,7 +88,7 @@
 							{#each section.hits as hit (hit.layer)}
 								<LayerHitRow
 									{hit}
-									layerName={hit.layer}
+									layerName={getLayerDisplayName(hit.layer)}
 									{lang}
 									addressDisplayName={addressName}
 								/>

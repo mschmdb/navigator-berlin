@@ -92,6 +92,45 @@ describe('serializeLayers / parseLayers', () => {
 	});
 });
 
+describe('sortLayerSlugsByBundle', () => {
+	const LAYERS = [
+		{ slug: 'stolpersteine', bundleGroup: 'D: Memorial' as const },
+		{ slug: 'mietspiegel-wohnlage', bundleGroup: 'B: Wohn-Daten' as const },
+		{ slug: 'plz', bundleGroup: 'A: Boundaries' as const },
+		{ slug: 'bezirke', bundleGroup: 'A: Boundaries' as const },
+		{ slug: 'laerm-night', bundleGroup: 'C: Umwelt' as const },
+		{ slug: 'laerm-den', bundleGroup: 'C: Umwelt' as const }
+	];
+
+	it('sortiert nach Bundle A→B→C→D, alphabetisch innerhalb', async () => {
+		const { sortLayerSlugsByBundle } = await import('./url-state.js');
+		const sorted = sortLayerSlugsByBundle(
+			['stolpersteine', 'plz', 'mietspiegel-wohnlage', 'bezirke', 'laerm-night'],
+			LAYERS
+		);
+		expect(sorted).toEqual([
+			'bezirke',
+			'plz',
+			'mietspiegel-wohnlage',
+			'laerm-night',
+			'stolpersteine'
+		]);
+	});
+
+	it('unbekannte Slugs landen am Ende, deterministisch alphabetisch', async () => {
+		const { sortLayerSlugsByBundle } = await import('./url-state.js');
+		const sorted = sortLayerSlugsByBundle(['unknown-z', 'bezirke', 'unknown-a'], LAYERS);
+		expect(sorted).toEqual(['bezirke', 'unknown-a', 'unknown-z']);
+	});
+
+	it('Idempotent: doppelter Sort liefert gleiches Ergebnis', async () => {
+		const { sortLayerSlugsByBundle } = await import('./url-state.js');
+		const a = sortLayerSlugsByBundle(['laerm-den', 'bezirke'], LAYERS);
+		const b = sortLayerSlugsByBundle(a, LAYERS);
+		expect(a).toEqual(b);
+	});
+});
+
 describe('serializeAddress / parseAddress', () => {
 	it('schreibt q + lng/lat mit 5 Nachkommastellen', () => {
 		const patch = serializeAddress({ q: 'Pariser Platz 1', lat: 52.51631234, lng: 13.37771234 });

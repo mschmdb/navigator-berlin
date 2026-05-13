@@ -1,9 +1,5 @@
 import type { SourceConfig } from './types.js';
 
-// TODO Story 1.3 live-verify: FIS-Broker typeName-Slugs gegen aktuellen Katalog abgleichen.
-// Stand Mai 2026 sind diese Werte aus Story-Spec uebernommen, brauchen Verifikation per WFS GetCapabilities-Request.
-const FIS_BASE = 'https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt';
-
 const BERLIN_BBOX_OVERPASS = '52.3382,13.0883,52.6755,13.7611';
 
 export const SOURCES: SourceConfig[] = [
@@ -15,7 +11,8 @@ export const SOURCES: SourceConfig[] = [
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 8, max: 12 },
-		simplifyProfile: 'boundary'
+		simplifyProfile: 'boundary',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
 	},
 	{
 		slug: 'ortsteile',
@@ -24,7 +21,8 @@ export const SOURCES: SourceConfig[] = [
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 10, max: 14 },
-		simplifyProfile: 'boundary'
+		simplifyProfile: 'boundary',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
 	},
 	{
 		slug: 'plz',
@@ -33,35 +31,11 @@ export const SOURCES: SourceConfig[] = [
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'A: Boundaries',
 		zoomThresholds: { min: 9, max: 14 },
-		simplifyProfile: 'boundary'
+		simplifyProfile: 'boundary',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
 	},
-	{
-		slug: 'lor-prognoseraum',
-		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_prognoseraeume_2021/data.geojson',
-		license: 'dl-de/zero-2-0',
-		bundleGroup: 'A: Boundaries',
-		zoomThresholds: { min: 9, max: 13 },
-		simplifyProfile: 'boundary'
-	},
-	{
-		slug: 'lor-bezirksregion',
-		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_bezirksregionen_2021/data.geojson',
-		license: 'dl-de/zero-2-0',
-		bundleGroup: 'A: Boundaries',
-		zoomThresholds: { min: 10, max: 14 },
-		simplifyProfile: 'boundary'
-	},
-	{
-		slug: 'lor-planungsraum',
-		kind: 'odis',
-		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_planungsgraeume_2021/data.geojson',
-		license: 'dl-de/zero-2-0',
-		bundleGroup: 'A: Boundaries',
-		zoomThresholds: { min: 11, max: 15 },
-		simplifyProfile: 'boundary'
-	},
+	// LOR-Layer komplett entfernt: rein Verwaltungs-IDs, keine User-Relevanz.
+	// Umweltatlas-Layer haben LOR-Planungsraum-Granularität bereits eingebaut.
 	// Bundle B: Wohn-Daten (GDI Berlin WFS, dl-de/by-2-0). Endpoints + typeNames live-verifiziert 2026-05-11
 	// TODO: mietspiegel-wohnlage (~600k Adress-Polygone, 116MB simplified). Vertex-Simplify hilft nicht
 	// (Polygone bereits klein). Defer bis Tile-Strategy (PMTiles/MVT) oder Dissolve-by-wohnlage.
@@ -83,7 +57,8 @@ export const SOURCES: SourceConfig[] = [
 		license: 'dl-de/by-2-0',
 		bundleGroup: 'B: Wohn-Daten',
 		zoomThresholds: { min: 12, max: 18 },
-		simplifyProfile: 'polygon'
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2026-01-01T00:00:00.000Z'
 	},
 	// TODO: alkis_gebaeude (~600k Polygone, ~100MB+) braucht Tile-basiertes Streaming oder bbox-Subset.
 	// Deferred zu Story 1.6+ (Map-Display) wenn entschieden ist wie wir mit grossen Layern umgehen.
@@ -97,18 +72,63 @@ export const SOURCES: SourceConfig[] = [
 	// 	zoomThresholds: { min: 14, max: 18 },
 	// 	simplifyProfile: 'polygon'
 	// },
-	// Bundle C: Umwelt (GDI Berlin WFS + OSM saisonal).
-	// Story-Spec hatte laerm-den + laerm-night als separate Layer. Realitaet: ein Strassenlaerm-Layer mit L_DEN + L_N als Properties.
-	// Konsolidiert zu strassenlaerm-2022 (Strassen + oberirdische U-Bahn).
+	// Bundle C: Umwelt (Umweltatlas WFS + OSM saisonal).
+	// Umweltgerechtigkeit 2023/2024: 542 LOR-Planungsraum-Polygone, ordinal-3-Stufen (gering/mittel/hoch).
+	// Ersetzt urspruengliche strassenlaerm-2022-Quelle (Schienenverkehrs-LineStrings) durch flaechige Laermbelastung.
 	{
-		slug: 'strassenlaerm-2022',
+		slug: 'laerm-2023',
 		kind: 'fis-broker',
-		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_stratlaerm_2022',
-		typeName: 'ua_stratlaerm_2022:de_strassen_oberirdischeubahn2022',
-		license: 'dl-de/by-2-0',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023',
+		typeName: 'ua_umweltgerechtigkeit2023:a_laerm2023',
+		license: 'dl-de/zero-2-0',
 		bundleGroup: 'C: Umwelt',
-		zoomThresholds: { min: 11, max: 18 },
-		simplifyProfile: 'polygon'
+		zoomThresholds: { min: 9, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
+	},
+	{
+		slug: 'luft-2023',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023',
+		typeName: 'ua_umweltgerechtigkeit2023:b_luft2023',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 9, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
+	},
+	{
+		slug: 'gruenversorgung-2023',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023',
+		typeName: 'ua_umweltgerechtigkeit2023:c_gruen2023',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 9, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
+	},
+	{
+		slug: 'bioklima-2023',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023',
+		typeName: 'ua_umweltgerechtigkeit2023:d_bioklima2023',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 9, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
+	},
+	{
+		slug: 'umweltgerechtigkeit-2023',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023',
+		typeName: 'ua_umweltgerechtigkeit2023:z_gesamt_umwelt2023',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 9, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
 	},
 	// TODO: solarpotenzial (~600k Gebaeude-Photovoltaik-Polygone, >512MB raw, Node string-limit gesprengt).
 	// Defer bis Tile-Strategy ODER bbox-Pagination im WFS-Request.
@@ -155,6 +175,270 @@ export const SOURCES: SourceConfig[] = [
 		bundleGroup: 'D: Memorial',
 		zoomThresholds: { min: 14, max: 18 },
 		simplifyProfile: 'point'
+	},
+	// Bundle C erweitert: Klima-Analyse 2022 (3 ausgewählte Sub-Layer aus 45 typeNames)
+	{
+		slug: 'klima-pet-2022',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022',
+		typeName: 'ua_klimaanalyse_2022:pa_ua_pet_siedlg_2022',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-06-01T00:00:00.000Z'
+	},
+	{
+		slug: 'klima-kaltlufteinwirkbereich-2022',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022',
+		typeName: 'ua_klimaanalyse_2022:td_kak_kaltlufteinwirkbereich_siedlungsfl_2022',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-06-01T00:00:00.000Z',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'klima-leitbahnkorridor-2022',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022',
+		typeName: 'ua_klimaanalyse_2022:tk_kak_leitbahnkorridor_2022',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 10, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-06-01T00:00:00.000Z',
+		inspectorRelevant: false
+	},
+	// Bundle B erweitert: Mietspiegel-Wohnlagen 2024 + Milieuschutz
+	{
+		slug: 'wohnlagen-2024',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
+		typeName: 'wohnlagenadr2024:wohnlagenadr2024',
+		license: 'dl-de/by-2-0',
+		bundleGroup: 'B: Wohn-Daten',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		sourceUpdatedAt: '2024-06-10T00:00:00.000Z'
+	},
+	{
+		slug: 'milieuschutz-erhaltungsmiete',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/erhaltungsverordnungsgebiete',
+		typeName: 'erhaltungsverordnungsgebiete:erhaltgeb_em',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'B: Wohn-Daten',
+		zoomThresholds: { min: 10, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2025-01-01T00:00:00.000Z'
+	},
+	{
+		slug: 'milieuschutz-staedtebau',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/erhaltungsverordnungsgebiete',
+		typeName: 'erhaltungsverordnungsgebiete:erhaltgeb_es',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'B: Wohn-Daten',
+		zoomThresholds: { min: 10, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2025-01-01T00:00:00.000Z'
+	},
+	// Bundle E: Soziale Infrastruktur
+	{
+		slug: 'kitas-2024',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/kita',
+		typeName: 'kita:kita',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		sourceUpdatedAt: '2024-12-31T00:00:00.000Z'
+	},
+	{
+		slug: 'schulen-2024',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/schulen',
+		typeName: 'schulen:schulen',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'point',
+		sourceUpdatedAt: '2025-01-01T00:00:00.000Z'
+	},
+	{
+		slug: 'einschulbereiche-2024',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/schulen',
+		typeName: 'schulen:schulen_esb',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2025-01-01T00:00:00.000Z'
+	},
+	{
+		slug: 'krankenhaeuser-plan',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/krankenhaeuser',
+		typeName: 'krankenhaeuser:plankrankenhaeuser',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'point',
+		sourceUpdatedAt: '2023-03-30T00:00:00.000Z'
+	},
+	{
+		slug: 'krankenhaeuser-weitere',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/krankenhaeuser',
+		typeName: 'krankenhaeuser:weitere_krankenhaeuser',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'point',
+		sourceUpdatedAt: '2023-03-30T00:00:00.000Z'
+	},
+	{
+		slug: 'sportanlagen-2024',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/sportstandorte',
+		typeName: 'sportstandorte:sportstandorte',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'point',
+		sourceUpdatedAt: '2025-07-30T00:00:00.000Z'
+	},
+	{
+		slug: 'gruenanlagen',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/gruenanlagen',
+		typeName: 'gruenanlagen:gruenanlagen',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2026-04-09T00:00:00.000Z',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'spielplaetze',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/gruenanlagen',
+		typeName: 'gruenanlagen:spielplaetze',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2026-04-09T00:00:00.000Z',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'schwimmbaeder',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/schwimmbaeder_berlin',
+		typeName: 'schwimmbaeder_berlin:schwimmbaeder',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'point',
+		sourceUpdatedAt: '2026-04-21T00:00:00.000Z'
+	},
+	// Bundle F: Mobilität — alle Map-Only, kein Inspector-Hit-Konzept.
+	// Adresse ist nie "auf" einer Trasse oder einem Stop. „Nächste Haltestelle"-Berechnung Phase 2.
+	{
+		slug: 'radverkehrsnetz-2025',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/radverkehrsnetz',
+		typeName: 'radverkehrsnetz:radverkehrsnetz',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2025-07-07T00:00:00.000Z',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'fahrradstrassen-2024',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/fahrradstrassen',
+		typeName: 'fahrradstrassen:fahrradstrassen',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-06-07T00:00:00.000Z',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'ubahn-stationen',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:60];(node["railway"="station"]["station"="subway"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'sbahn-stationen',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:60];(node["railway"="station"]["station"="light_rail"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 10, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'tram-haltestellen',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:60];(node["railway"="tram_stop"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'bus-haltestellen',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(node["highway"="bus_stop"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 14, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'ubahn-netz',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(way["railway"="subway"](${BERLIN_BBOX_OVERPASS}););out geom;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 10, max: 18 },
+		simplifyProfile: 'polygon',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'tram-netz',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(way["railway"="tram"](${BERLIN_BBOX_OVERPASS}););out geom;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'polygon',
+		inspectorRelevant: false
 	}
 ];
 

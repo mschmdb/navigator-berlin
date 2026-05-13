@@ -11,7 +11,14 @@ const LicenseSchema = v.picklist([
 	'Geodatenzugangsgesetz'
 ]);
 
-const BundleSchema = v.picklist(['A: Boundaries', 'B: Wohn-Daten', 'C: Umwelt', 'D: Memorial']);
+const BundleSchema = v.picklist([
+	'A: Boundaries',
+	'B: Wohn-Daten',
+	'C: Umwelt',
+	'D: Memorial',
+	'E: Soziale Infrastruktur',
+	'F: Mobilität'
+]);
 
 const GeometryTypeSchema = v.picklist(['Point', 'Polygon', 'MultiPolygon', 'LineString']);
 
@@ -30,13 +37,15 @@ const LayerEntrySchema = v.object({
 	filename: v.pipe(v.string(), v.regex(/^[a-z0-9-]+\.[0-9a-f]{8}\.geojson$/)),
 	sourceUrl: v.pipe(v.string(), v.url()),
 	fetchedAt: v.pipe(v.string(), v.isoTimestamp()),
+	sourceUpdatedAt: v.optional(v.pipe(v.string(), v.isoTimestamp())),
 	license: LicenseSchema,
 	sha256: v.pipe(v.string(), v.regex(/^[0-9a-f]{64}$/)),
 	bundleGroup: BundleSchema,
 	zoomThresholds: ZoomSchema,
 	seasonality: v.optional(SeasonalitySchema),
 	geometryType: GeometryTypeSchema,
-	featureCount: v.pipe(v.number(), v.integer(), v.minValue(0))
+	featureCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
+	inspectorRelevant: v.optional(v.boolean())
 });
 
 const ManifestValibot = v.object({
@@ -94,6 +103,8 @@ export function buildLayerEntry(
 		featureCount: featureCount(content)
 	};
 	if (source.seasonality) entry.seasonality = source.seasonality;
+	if (source.sourceUpdatedAt) entry.sourceUpdatedAt = source.sourceUpdatedAt;
+	if (source.inspectorRelevant === false) entry.inspectorRelevant = false;
 	return entry;
 }
 

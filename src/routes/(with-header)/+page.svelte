@@ -9,16 +9,28 @@
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
 	import { createPlexMarker } from '$lib/components/atlas/internal/map-markers.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { serializeViewport } from '$lib/utils/url-state.js';
+	import { serializeViewport, serializeLayers, sortLayerSlugsByBundle } from '$lib/utils/url-state.js';
 	import { debounce } from '$lib/utils/debounce.js';
 	import { matchZoomForType } from '$lib/utils/zoom-mapping.js';
 	import { reverseGeocodeAddress } from '$lib/data/geocode.remote.js';
 	import { useAddressSelection } from '$lib/state/address-selection.svelte.js';
 	import { getUiState, type SheetSnapVh } from '$lib/state/ui-context.svelte.js';
-	import { loadManifest } from '$lib/data/manifest.js';
+	import { loadManifest, getLayerEntry } from '$lib/data/manifest.js';
 	import { getLayersAtPoint } from '$lib/data/get-layers-at-point.js';
+	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
 	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data/types.js';
 	import { useViewport } from '$lib/utils/use-viewport.svelte.js';
+	import { SvelteSet } from 'svelte/reactivity';
+	import LayerPalette from '$lib/components/atlas/layer-palette.svelte';
+	import {
+		buildLayerSpec,
+		type MapLibreLayerSpec
+	} from '$lib/components/atlas/internal/layer-style-builder.js';
+	import {
+		diffLayerSlugs,
+		sourceIdFor,
+		layerIdFor
+	} from '$lib/components/atlas/internal/layer-diff.js';
 
 	type Viewport = { center: [number, number]; zoom: number; bbox: [number, number, number, number] };
 	type Props = { data: import('./$types').PageData };
@@ -30,7 +42,7 @@
 	const viewport = useViewport('desktop');
 
 	let mapHandle: MapHandle | null = $state.raw(null);
-	let rawMap: unknown = null;
+	let rawMap = $state.raw<unknown>(null);
 	let a11yMap = $state.raw<{
 		queryRenderedFeatures: (geom?: unknown, opts?: { layers?: string[] }) => unknown[];
 		on: (event: string, handler: () => void) => unknown;
@@ -53,6 +65,7 @@
 
 	const VIEWPORT_KEYS = ['bbox', 'zoom', 'center'] as const;
 	const ADDRESS_KEYS = ['address', 'q'] as const;
+	const LAYERS_KEY = 'layers';
 
 	const syncViewport = debounce((v: Viewport) => {
 		const url = new URL(window.location.href);
@@ -88,6 +101,9 @@
 	}
 
 	onMount(() => {
+		if (data.activeLayers?.length) {
+			ui.activeLayerSlugs = [...data.activeLayers];
+		}
 		void (async () => {
 			try {
 				const manifest = await loadManifest();
@@ -96,6 +112,85 @@
 				manifestLayers = [];
 			}
 		})();
+	});
+
+	const syncLayers = debounce((slugs: string[]) => {
+		const url = new URL(window.location.href);
+		url.searchParams.delete(LAYERS_KEY);
+		const ordered = sortLayerSlugsByBundle(slugs, manifestLayers);
+		const csv = serializeLayers(ordered);
+		if (csv) url.searchParams.set(LAYERS_KEY, csv);
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		void goto(`?${url.searchParams.toString()}`, {
+			replaceState: true,
+			keepFocus: true,
+			noScroll: true
+		});
+	}, 200);
+
+	let layersSyncBootstrapped = false;
+	$effect(() => {
+		const slugs = ui.activeLayerSlugs;
+		if (!layersSyncBootstrapped) {
+			layersSyncBootstrapped = true;
+			return;
+		}
+		syncLayers([...slugs]);
+	});
+
+	type MapWithLayers = {
+		addSource: (id: string, source: { type: 'geojson'; data: unknown }) => void;
+		removeSource: (id: string) => void;
+		addLayer: (spec: MapLibreLayerSpec) => void;
+		removeLayer: (id: string) => void;
+		getLayer: (id: string) => unknown;
+		getSource: (id: string) => unknown;
+	};
+
+	let renderedSlugs: string[] = [];
+	const layerRenderInflight = new SvelteSet<string>();
+
+	async function renderLayers(slugs: readonly string[]): Promise<void> {
+		if (!rawMap) return;
+		const map = rawMap as MapWithLayers;
+		const { toAdd, toRemove } = diffLayerSlugs(renderedSlugs, slugs);
+		for (const slug of toRemove) {
+			const layerId = layerIdFor(slug);
+			const sourceId = sourceIdFor(slug);
+			if (map.getLayer(layerId)) map.removeLayer(layerId);
+			if (map.getSource(sourceId)) map.removeSource(sourceId);
+		}
+		const reduced = prefersReducedMotion();
+		await Promise.all(
+			toAdd.map(async (slug) => {
+				if (layerRenderInflight.has(slug)) return;
+				const meta = getLayerEntry(slug);
+				if (!meta) return;
+				layerRenderInflight.add(slug);
+				try {
+					const fc = await fetchLayer(meta.filename);
+					if (!rawMap) return;
+					const sourceId = sourceIdFor(slug);
+					if (!map.getSource(sourceId)) {
+						map.addSource(sourceId, { type: 'geojson', data: fc });
+					}
+					for (const spec of buildLayerSpec(slug, sourceId, { reducedMotion: reduced })) {
+						if (!map.getLayer(spec.id)) map.addLayer(spec);
+					}
+				} catch {
+					// Layer-Fetch fehlgeschlagen, still aufgeben (Story 1.4 Error-Path)
+				} finally {
+					layerRenderInflight.delete(slug);
+				}
+			})
+		);
+		renderedSlugs = [...slugs];
+	}
+
+	$effect(() => {
+		const slugs = ui.activeLayerSlugs;
+		if (!rawMap || manifestLayers.length === 0) return;
+		void renderLayers(slugs);
 	});
 
 	function clearMarker() {
@@ -317,3 +412,5 @@
 		</BottomSheet>
 	{/if}
 </section>
+
+<LayerPalette layers={manifestLayers} />

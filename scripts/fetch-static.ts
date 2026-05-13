@@ -4,6 +4,7 @@ import { SOURCES, DWD_STATIONS } from './lib/sources.js';
 import { fetchOdisGeoJson } from './lib/fetchers/odis.js';
 import { fetchFisBrokerWfs } from './lib/fetchers/fis-broker.js';
 import { fetchOverpass } from './lib/fetchers/overpass.js';
+import { overpassToGeoJSON, isOverpassResponse } from './lib/fetchers/overpass-to-geojson.js';
 import { fetchDwdZip, extractProduktTageswerteCsv } from './lib/fetchers/dwd-cdc.js';
 import { parseDwdKlCsv, aggregateYearly } from './lib/dwd.js';
 import { reprojectGeoJSON } from './lib/reproject.js';
@@ -57,7 +58,8 @@ async function processLayer(slug: string, fetchedAt: string): Promise<LayerEntry
 	const source = SOURCES.find((s) => s.slug === slug)!;
 	const { raw } = await fetchSource(slug);
 	const parsed = JSON.parse(raw);
-	const wgs84 = reprojectGeoJSON(parsed, 'EPSG:4326', 'EPSG:4326');
+	const asGeoJson = isOverpassResponse(parsed) ? overpassToGeoJSON(parsed) : parsed;
+	const wgs84 = reprojectGeoJSON(asGeoJson, 'EPSG:4326', 'EPSG:4326');
 	const simplified = await simplifyGeoJSON(JSON.stringify(wgs84), source.simplifyProfile);
 	const buf = Buffer.from(simplified);
 	const entry = buildLayerEntry(source, buf, fetchedAt);

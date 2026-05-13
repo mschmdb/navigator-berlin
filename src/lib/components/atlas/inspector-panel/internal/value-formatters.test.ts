@@ -23,10 +23,67 @@ describe('formatLayerValue', () => {
 		});
 	});
 
-	it('Bodenrichtwerte numeric → "€/m²"', () => {
+	it('Bodenrichtwerte numeric primitive → "€/m²" mit Tausender-Trennung', () => {
 		expect(formatLayerValue('bodenrichtwerte', 4200)).toEqual({
-			text: '4200 €/m²',
+			text: '4.200 €/m²',
 			isNumeric: true
+		});
+	});
+
+	it('Bodenrichtwerte Props-Objekt → brw + nutzung', () => {
+		expect(
+			formatLayerValue('bodenrichtwerte', { brw: 1500, nutzung: 'W - Wohngebiet', gfz: 1.2 })
+		).toEqual({
+			text: '1.500 €/m² · W - Wohngebiet',
+			isNumeric: true
+		});
+	});
+
+	it('Bodenrichtwerte Props ohne brw → Fallback', () => {
+		expect(formatLayerValue('bodenrichtwerte', { nutzung: 'foo' })).toEqual({
+			text: 'Daten nicht vorhanden',
+			isNumeric: false
+		});
+	});
+
+	it('Bezirke Props-Objekt → Gemeinde_name', () => {
+		expect(
+			formatLayerValue('bezirke', { Gemeinde_name: 'Pankow', Land_name: 'Berlin' })
+		).toEqual({
+			text: 'Pankow',
+			isNumeric: false
+		});
+	});
+
+	it('Ortsteile Props-Objekt → OTEIL + BEZIRK', () => {
+		expect(
+			formatLayerValue('ortsteile', { OTEIL: 'Friedrichshain', BEZIRK: 'Friedrichshain-Kreuzberg' })
+		).toEqual({
+			text: 'Friedrichshain · Friedrichshain-Kreuzberg',
+			isNumeric: false
+		});
+	});
+
+	it('PLZ Props-Objekt → plz-String', () => {
+		expect(formatLayerValue('plz', { plz: '10115' })).toEqual({
+			text: '10115',
+			isNumeric: false
+		});
+	});
+
+	it('LOR-Bezirksregion Props-Objekt → Name + ID', () => {
+		expect(
+			formatLayerValue('lor-bezirksregion', { BZR_NAME: 'MV Nord', BZR_ID: '126011' })
+		).toEqual({
+			text: 'MV Nord (126011)',
+			isNumeric: false
+		});
+	});
+
+	it('Strassenlaerm-2022 → gruppe_txt', () => {
+		expect(formatLayerValue('strassenlaerm-2022', { gruppe_txt: 'U-Bahn' })).toEqual({
+			text: 'Schienenverkehr: U-Bahn',
+			isNumeric: false
 		});
 	});
 

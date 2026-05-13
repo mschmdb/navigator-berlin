@@ -14,6 +14,7 @@ const miniManifest = load('./__fixtures__/mini-manifest.json');
 const miniBezirke = load('./__fixtures__/mini-bezirke.geojson');
 const miniMietspiegel = load('./__fixtures__/mini-mietspiegel.geojson');
 const miniTrinkbrunnen = load('./__fixtures__/mini-trinkbrunnen.geojson');
+const miniStrassenlaerm = load('./__fixtures__/mini-strassenlaerm.geojson');
 
 const buildFetchMock = () => {
 	return vi.fn(async (url: string) => {
@@ -25,6 +26,8 @@ const buildFetchMock = () => {
 			return new Response(JSON.stringify(miniMietspiegel), { status: 200 });
 		if (url === '/layers/trinkbrunnen.beefdead.geojson')
 			return new Response(JSON.stringify(miniTrinkbrunnen), { status: 200 });
+		if (url === '/layers/strassenlaerm-2022.deadcafe.geojson')
+			return new Response(JSON.stringify(miniStrassenlaerm), { status: 200 });
 		return new Response('404', { status: 404 });
 	});
 };
@@ -91,6 +94,51 @@ describe('getLayersAtPoint', () => {
 		expect(brunnen?.reason).toBe('seasonal');
 		expect(brunnen?.value).toBeNull();
 		vi.useRealTimers();
+	});
+
+	it('LineString-Layer wirft NICHT (Regression: strassenlaerm-2022 brach komplette Hits-Liste)', async () => {
+		const fn = buildFetchMock();
+		const hits = await getLayersAtPoint(52.52, 13.38, fn as unknown as typeof fetch);
+		expect(hits.length).toBeGreaterThan(0);
+		const laerm = hits.find((h) => h.layer === 'strassenlaerm-2022');
+		expect(laerm).toBeDefined();
+	});
+
+	it('LineString-Hit bei Punkt nahe Vertex (<30m)', async () => {
+		const fn = buildFetchMock();
+		const hits = await getLayersAtPoint(52.5195, 13.3795, fn as unknown as typeof fetch);
+		const laerm = hits.find((h) => h.layer === 'strassenlaerm-2022');
+		expect(laerm?.value).toEqual({ importid: 1, name: 'Track_1', gruppe_txt: 'U-Bahn' });
+	});
+
+	it('LineString no-coverage bei Punkt fernab', async () => {
+		const fn = buildFetchMock();
+		const hits = await getLayersAtPoint(52.52, 13.38, fn as unknown as typeof fetch);
+		const laerm = hits.find((h) => h.layer === 'strassenlaerm-2022');
+		expect(laerm?.reason).toBe('no-coverage');
+		expect(laerm?.value).toBeNull();
+	});
+
+	it('inspectorRelevant=false → Layer wird übersprungen (Mobility-Style)', async () => {
+		// Patch miniManifest in-place mit irrelevant-Flag auf strassenlaerm
+		const patched = JSON.parse(JSON.stringify(miniManifest));
+		const target = patched.layers.find((l: { slug: string }) => l.slug === 'strassenlaerm-2022');
+		target.inspectorRelevant = false;
+		const fn = vi.fn(async (url: string) => {
+			if (url === '/layers/MANIFEST.json')
+				return new Response(JSON.stringify(patched), { status: 200 });
+			if (url === '/layers/bezirke.a1b2c3d4.geojson')
+				return new Response(JSON.stringify(miniBezirke), { status: 200 });
+			if (url === '/layers/mietspiegel-wohnlage.f9e8d7c6.geojson')
+				return new Response(JSON.stringify(miniMietspiegel), { status: 200 });
+			if (url === '/layers/trinkbrunnen.beefdead.geojson')
+				return new Response(JSON.stringify(miniTrinkbrunnen), { status: 200 });
+			if (url === '/layers/strassenlaerm-2022.deadcafe.geojson')
+				return new Response(JSON.stringify(miniStrassenlaerm), { status: 200 });
+			return new Response('404', { status: 404 });
+		});
+		const hits = await getLayersAtPoint(52.52, 13.38, fn as unknown as typeof fetch);
+		expect(hits.find((h) => h.layer === 'strassenlaerm-2022')).toBeUndefined();
 	});
 
 	it('Bezirk-Hit traegt source + updatedAt + license aus Manifest (MUST-Rule #12)', async () => {

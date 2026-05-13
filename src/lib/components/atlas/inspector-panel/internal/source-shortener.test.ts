@@ -48,16 +48,20 @@ describe('shortenLicense', () => {
 describe('isOutdated', () => {
 	const now = new Date('2026-05-12T00:00:00Z');
 
-	it('Datum <2 Jahre → false', () => {
+	it('Datum <5 Jahre → false (Berlin-Geodaten haben oft mehrjährige Zyklen)', () => {
 		expect(isOutdated('2025-01-01T00:00:00Z', now)).toBe(false);
+		expect(isOutdated('2024-01-01T00:00:00Z', now)).toBe(false);
+		expect(isOutdated('2022-01-01T00:00:00Z', now)).toBe(false);
+		expect(isOutdated('2021-06-01T00:00:00Z', now)).toBe(false);
 	});
 
-	it('Datum >2 Jahre → true', () => {
-		expect(isOutdated('2023-01-01T00:00:00Z', now)).toBe(true);
+	it('Datum >5 Jahre → true', () => {
+		expect(isOutdated('2020-01-01T00:00:00Z', now)).toBe(true);
+		expect(isOutdated('2018-01-01T00:00:00Z', now)).toBe(true);
 	});
 
-	it('Grenze: knapp <2 Jahre → false', () => {
-		expect(isOutdated('2024-06-01T00:00:00Z', now)).toBe(false);
+	it('Grenze: knapp <5 Jahre → false', () => {
+		expect(isOutdated('2021-06-01T00:00:00Z', now)).toBe(false);
 	});
 
 	it('Invalid date → false (kein false-positive)', () => {

@@ -3,7 +3,25 @@ import { render } from 'vitest-browser-svelte';
 import { mount, unmount } from 'svelte';
 import UiContextProbe from './ui-context-probe.svelte';
 import MissingProvider from './ui-context-missing-provider.svelte';
-import { createUiState, getUiState } from './ui-context.svelte.js';
+import {
+	createUiState,
+	getUiState,
+	toggleLayer,
+	clearLayers,
+	type UiState
+} from './ui-context.svelte.js';
+
+function makeState(): UiState {
+	return {
+		inspectorOpen: false,
+		selectedAddress: null,
+		selectedLayerHits: [],
+		activeLayerSlugs: [],
+		recentLayerSlugs: [],
+		sheetSnapVh: 40,
+		paletteOpen: false
+	};
+}
 
 describe('ui-context', () => {
 	it('createUiState initialisiert Default-State', async () => {
@@ -14,7 +32,9 @@ describe('ui-context', () => {
 		expect(state.selectedAddress).toBeNull();
 		expect(state.selectedLayerHits).toEqual([]);
 		expect(state.activeLayerSlugs).toEqual([]);
+		expect(state.recentLayerSlugs).toEqual([]);
 		expect(state.sheetSnapVh).toBe(40);
+		expect(state.paletteOpen).toBe(false);
 	});
 
 	it('createUiState reagiert auf Mutation reaktiv', async () => {
@@ -36,5 +56,55 @@ describe('ui-context', () => {
 	it('exporte createUiState + getUiState sind Funktionen', () => {
 		expect(typeof createUiState).toBe('function');
 		expect(typeof getUiState).toBe('function');
+	});
+
+	describe('toggleLayer', () => {
+		it('fügt unbekannten Slug zu activeLayerSlugs hinzu', () => {
+			const s = makeState();
+			toggleLayer(s, 'bezirke');
+			expect(s.activeLayerSlugs).toEqual(['bezirke']);
+		});
+
+		it('entfernt bekannten Slug aus activeLayerSlugs', () => {
+			const s = makeState();
+			s.activeLayerSlugs = ['bezirke', 'plz'];
+			toggleLayer(s, 'bezirke');
+			expect(s.activeLayerSlugs).toEqual(['plz']);
+		});
+
+		it('aktualisiert recentLayerSlugs als LRU (most-recent first)', () => {
+			const s = makeState();
+			toggleLayer(s, 'bezirke');
+			toggleLayer(s, 'plz');
+			toggleLayer(s, 'mietspiegel-wohnlage');
+			expect(s.recentLayerSlugs).toEqual(['mietspiegel-wohnlage', 'plz', 'bezirke']);
+		});
+
+		it('LRU dedupliziert bei wiederholtem Toggle', () => {
+			const s = makeState();
+			toggleLayer(s, 'bezirke');
+			toggleLayer(s, 'plz');
+			toggleLayer(s, 'bezirke');
+			expect(s.recentLayerSlugs).toEqual(['bezirke', 'plz']);
+		});
+
+		it('LRU kappt bei max 5 Einträgen', () => {
+			const s = makeState();
+			['a', 'b', 'c', 'd', 'e', 'f'].forEach((slug) => toggleLayer(s, slug));
+			expect(s.recentLayerSlugs).toHaveLength(5);
+			expect(s.recentLayerSlugs[0]).toBe('f');
+			expect(s.recentLayerSlugs).not.toContain('a');
+		});
+	});
+
+	describe('clearLayers', () => {
+		it('leert activeLayerSlugs, lässt recentLayerSlugs unangetastet', () => {
+			const s = makeState();
+			s.activeLayerSlugs = ['bezirke', 'plz'];
+			s.recentLayerSlugs = ['plz', 'bezirke'];
+			clearLayers(s);
+			expect(s.activeLayerSlugs).toEqual([]);
+			expect(s.recentLayerSlugs).toEqual(['plz', 'bezirke']);
+		});
 	});
 });

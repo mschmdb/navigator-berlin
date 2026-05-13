@@ -86,6 +86,37 @@ export function serializeLayers(slugs: string[]): string {
 	return slugs.join(',');
 }
 
+const BUNDLE_ORDER: Record<string, number> = {
+	'A: Boundaries': 0,
+	'B: Wohn-Daten': 1,
+	'C: Umwelt': 2,
+	'D: Memorial': 3,
+	'E: Soziale Infrastruktur': 4,
+	'F: Mobilität': 5
+};
+
+const UNKNOWN_BUNDLE_RANK = 99;
+
+export interface LayerSlugLookup {
+	readonly slug: string;
+	readonly bundleGroup: string;
+}
+
+export function sortLayerSlugsByBundle(
+	slugs: readonly string[],
+	layers: readonly LayerSlugLookup[]
+): string[] {
+	const bySlug = new Map(layers.map((l) => [l.slug, l.bundleGroup] as const));
+	return [...slugs].sort((a, b) => {
+		const bundleA = bySlug.get(a);
+		const bundleB = bySlug.get(b);
+		const rankA = bundleA ? (BUNDLE_ORDER[bundleA] ?? UNKNOWN_BUNDLE_RANK) : UNKNOWN_BUNDLE_RANK;
+		const rankB = bundleB ? (BUNDLE_ORDER[bundleB] ?? UNKNOWN_BUNDLE_RANK) : UNKNOWN_BUNDLE_RANK;
+		if (rankA !== rankB) return rankA - rankB;
+		return a.localeCompare(b, 'de');
+	});
+}
+
 export function parseLayers(value: string | null): string[] {
 	if (!value) return [];
 	const seen = new Set<string>();

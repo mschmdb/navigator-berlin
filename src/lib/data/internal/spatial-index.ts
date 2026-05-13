@@ -15,11 +15,12 @@ export class FeatureIndex extends RBush<IndexedFeature> {}
 
 export function buildIndex(fc: FeatureCollection): FeatureIndex {
 	const idx = new FeatureIndex();
-	const items: IndexedFeature[] = fc.features.map((feature: Feature, featureIndex: number) => {
+	const features = Array.isArray(fc?.features) ? fc.features : [];
+	const items: IndexedFeature[] = features.map((feature: Feature, featureIndex: number) => {
 		const [minX, minY, maxX, maxY] = bbox(feature);
 		return { minX, minY, maxX, maxY, featureIndex };
 	});
-	idx.load(items);
+	if (items.length > 0) idx.load(items);
 	return idx;
 }
 

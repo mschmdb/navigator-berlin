@@ -46,9 +46,9 @@ describe('layer-hit-row.svelte', () => {
 		await expect.element(page.getByTestId('value-seasonal')).toBeInTheDocument();
 	});
 
-	it('Outdated (>2 Jahre) → data-state="outdated" + Pille', async () => {
+	it('Outdated (>5 Jahre) → data-state="outdated" + Pille', async () => {
 		render(LayerHitRow, {
-			hit: { ...recentHit, updatedAt: '2022-01-01T00:00:00Z' },
+			hit: { ...recentHit, updatedAt: '2019-01-01T00:00:00Z' },
 			layerName: 'Mietspiegel-Wohnlage'
 		});
 		const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
