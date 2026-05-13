@@ -7,6 +7,8 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'lor-bezirksregion': 'LOR-Bezirksregion (Kiez-Ebene, 138 in Berlin)',
 	'lor-planungsraum': 'LOR-Planungsraum (feinste Ebene)',
 	'mietspiegel-wohnlage': 'Wohnlagen-Bewertung im Berliner Mietspiegel',
+	'wohnlagen-2024':
+		'Mietspiegel-Wohnlage 2024 (Aggregat pro Kiez). Konkrete €/m² siehe offizieller Mietspiegel-Rechner.',
 	bodenrichtwerte: 'Durchschnittlicher Grundstückspreis pro Quadratmeter',
 	gebaeudealter: 'Baujahr-Klasse der Gebäude im Gebiet',
 	'laerm-den': 'Straßenverkehrs-Lärmpegel Tag/Abend/Nacht (24h-Mittel)',
@@ -19,4 +21,20 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 
 export function explainLayer(slug: string): string {
 	return LAYER_EXPLAIN_DE[slug] ?? '';
+}
+
+export interface LayerExternalLink {
+	readonly href: string;
+	readonly label: string;
+}
+
+const LAYER_EXTERNAL_LINK: Record<string, LayerExternalLink> = {
+	'wohnlagen-2024': {
+		href: 'https://mietspiegel.berlin.de/',
+		label: 'Mietpreise im Berliner Mietspiegel-Rechner nachschlagen'
+	}
+};
+
+export function getLayerExternalLink(slug: string): LayerExternalLink | null {
+	return LAYER_EXTERNAL_LINK[slug] ?? null;
 }

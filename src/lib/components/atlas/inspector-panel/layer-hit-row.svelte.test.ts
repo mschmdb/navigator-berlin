@@ -13,6 +13,44 @@ const recentHit: LayerHit = {
 };
 
 describe('layer-hit-row.svelte', () => {
+	it('rendert external-link für wohnlagen-2024 (Mietspiegel-Rechner)', async () => {
+		render(LayerHitRow, {
+			hit: {
+				layer: 'wohnlagen-2024',
+				value: { wol_mode: 'mittel', plr_name: 'Karlshorst', count_mittel: 12 },
+				source: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
+				updatedAt: '2024-06-10T00:00:00Z',
+				license: 'dl-de/by-2-0'
+			},
+			layerName: 'Mietspiegel-Wohnlage 2024'
+		});
+		const link = (await page.getByTestId('external-link').element()) as HTMLAnchorElement;
+		expect(link.href).toBe('https://mietspiegel.berlin.de/');
+		expect(link.getAttribute('target')).toBe('_blank');
+		expect(link.getAttribute('rel')).toMatch(/noopener/);
+		expect(link.textContent).toMatch(/Mietspiegel-Rechner/);
+	});
+
+	it('rendert keinen external-link für Layer ohne LAYER_EXTERNAL_LINK-Eintrag', async () => {
+		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
+		await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
+	});
+
+	it('versteckt external-link bei no-coverage', async () => {
+		render(LayerHitRow, {
+			hit: {
+				layer: 'wohnlagen-2024',
+				value: null,
+				reason: 'no-coverage',
+				source: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
+				updatedAt: '2024-06-10T00:00:00Z',
+				license: 'dl-de/by-2-0'
+			},
+			layerName: 'Mietspiegel-Wohnlage 2024'
+		});
+		await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
+	});
+
 	it('rendert with-value State default', async () => {
 		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
 		const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;

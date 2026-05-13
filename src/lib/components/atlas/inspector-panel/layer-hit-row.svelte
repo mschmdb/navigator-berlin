@@ -5,7 +5,7 @@
 	import type { Pathname } from '$app/types';
 	import DataStandBanner from './data-stand-banner.svelte';
 	import { formatLayerValue } from './internal/value-formatters.js';
-	import { explainLayer } from './internal/layer-explain.js';
+	import { explainLayer, getLayerExternalLink } from './internal/layer-explain.js';
 	import { isOutdated } from './internal/source-shortener.js';
 
 	type Props = {
@@ -21,6 +21,7 @@
 
 	const formatted = $derived(formatLayerValue(hit.layer, hit.value));
 	const explain = $derived(explainLayer(hit.layer));
+	const externalLink = $derived(getLayerExternalLink(hit.layer));
 	const outdated = $derived(isOutdated(hit.updatedAt));
 
 	const state: RowState = $derived.by(() => {
@@ -87,6 +88,18 @@
 			<p class="font-serif text-sm leading-snug text-ink-muted" data-testid="explain">
 				{explain}
 			</p>
+		{/if}
+		{#if externalLink && state !== 'no-coverage'}
+			<a
+				href={externalLink.href}
+				target="_blank"
+				rel="noopener noreferrer"
+				data-testid="external-link"
+				class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			>
+				<ExternalLink size={12} aria-hidden="true" />
+				{externalLink.label}
+			</a>
 		{/if}
 		<DataStandBanner {hit} />
 	</div>
