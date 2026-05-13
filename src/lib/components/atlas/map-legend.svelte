@@ -1,18 +1,29 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import type { Pathname } from '$app/types';
+	import type { LayerMetadata } from '$lib/data';
 	import { getLegendSpec } from './internal/layer-style-builder.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
+	import { getLayerExplainEntry } from './inspector-panel/internal/layer-explain.js';
+	import { shortenLicense } from './inspector-panel/internal/source-shortener.js';
 
 	type Props = {
 		activeLayerSlugs: readonly string[];
+		manifestLayers?: readonly LayerMetadata[];
+		lang?: string;
 	};
 
-	let { activeLayerSlugs }: Props = $props();
+	let { activeLayerSlugs, manifestLayers = [], lang = 'de' }: Props = $props();
+
+	const metaBySlug = $derived(new Map(manifestLayers.map((l) => [l.slug, l] as const)));
 
 	const entries = $derived(
 		activeLayerSlugs.map((slug) => ({
 			slug,
 			name: getLayerDisplayName(slug),
-			spec: getLegendSpec(slug)
+			spec: getLegendSpec(slug),
+			explain: getLayerExplainEntry(slug),
+			meta: metaBySlug.get(slug)
 		}))
 	);
 </script>
@@ -74,6 +85,68 @@
 						{/each}
 					</ul>
 				{/if}
+
+				<details data-testid={`legend-details-${entry.slug}`} class="group mt-1">
+					<summary
+						data-testid={`legend-summary-${entry.slug}`}
+						class="flex cursor-pointer list-none items-center gap-1 text-[11px] text-ink-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+					>
+						<span
+							aria-hidden="true"
+							class="font-mono text-[10px] transition-transform group-open:rotate-180"
+						>
+							▾
+						</span>
+						<span class="group-open:hidden">Mehr erklären</span>
+						<span class="hidden group-open:inline">Weniger</span>
+					</summary>
+
+					<div
+						data-testid={`legend-expand-${entry.slug}`}
+						class="mt-1.5 flex flex-col gap-1.5"
+					>
+						{#if entry.explain.long}
+							<p class="font-serif text-xs leading-snug text-ink-muted">
+								{entry.explain.long}
+							</p>
+						{/if}
+						{#if entry.explain.valueScaleExplain}
+							<p
+								data-testid={`legend-scale-${entry.slug}`}
+								class="font-mono text-[10px] text-ink-subtle"
+							>
+								{entry.explain.valueScaleExplain}
+							</p>
+						{/if}
+						{#if entry.meta}
+							<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px]">
+								<a
+									data-testid={`legend-source-link-${entry.slug}`}
+									href={entry.meta.sourceUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="text-accent underline underline-offset-2 hover:text-accent-strong"
+								>
+									Quelle
+								</a>
+								<span
+									data-testid={`legend-license-${entry.slug}`}
+									class="font-mono text-ink-subtle"
+									title={entry.meta.license}
+								>
+									{shortenLicense(entry.meta.license)}
+								</span>
+							</div>
+						{/if}
+						<a
+							data-testid={`legend-more-link-${entry.slug}`}
+							href={resolve(`/${lang}/layer/${entry.slug}` as Pathname)}
+							class="self-start text-[11px] font-medium text-accent underline-offset-2 hover:underline"
+						>
+							Mehr erfahren →
+						</a>
+					</div>
+				</details>
 			</section>
 		{/each}
 	</aside>

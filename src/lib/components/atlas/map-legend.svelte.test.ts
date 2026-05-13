@@ -2,6 +2,23 @@ import { page } from 'vitest/browser';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import MapLegend from './map-legend.svelte';
+import type { LayerMetadata } from '$lib/data';
+
+function meta(slug: string, opts: Partial<LayerMetadata> = {}): LayerMetadata {
+	return {
+		slug,
+		filename: `${slug}.geojson`,
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/example',
+		fetchedAt: '2026-01-01T00:00:00.000Z',
+		license: 'dl-de/zero-2-0',
+		sha256: 'a'.repeat(64),
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 8, max: 14 },
+		geometryType: 'Polygon',
+		featureCount: 1,
+		...opts
+	};
+}
 
 describe('map-legend.svelte', () => {
 	it('rendert nicht wenn activeLayerSlugs leer', async () => {
@@ -14,24 +31,24 @@ describe('map-legend.svelte', () => {
 		await expect.element(page.getByTestId('map-legend')).toBeInTheDocument();
 		await expect.element(page.getByTestId('legend-laerm-2023')).toBeInTheDocument();
 		await expect.element(page.getByText('Lärmbelastung (Umweltatlas 2023)')).toBeInTheDocument();
-		await expect.element(page.getByText('gering')).toBeInTheDocument();
-		await expect.element(page.getByText('mittel')).toBeInTheDocument();
-		await expect.element(page.getByText('hoch')).toBeInTheDocument();
+		await expect.element(page.getByText('gering', { exact: true })).toBeInTheDocument();
+		await expect.element(page.getByText('mittel', { exact: true })).toBeInTheDocument();
+		await expect.element(page.getByText('hoch', { exact: true })).toBeInTheDocument();
 	});
 
 	it('rendert gradient-Legend mit Range-Labels (choropleth-pet)', async () => {
 		render(MapLegend, { activeLayerSlugs: ['klima-pet-2022'] });
 		await expect.element(page.getByText('Gefühlte Temperatur (PET 14 Uhr, 2022)')).toBeInTheDocument();
-		await expect.element(page.getByText('kühl')).toBeInTheDocument();
-		await expect.element(page.getByText('heiß')).toBeInTheDocument();
+		await expect.element(page.getByText('kühl', { exact: true })).toBeInTheDocument();
+		await expect.element(page.getByText('heiß', { exact: true })).toBeInTheDocument();
 	});
 
 	it('rendert Wohnlage-Choropleth (3 Klassen)', async () => {
 		render(MapLegend, { activeLayerSlugs: ['wohnlagen-2024'] });
 		await expect.element(page.getByText('Mietspiegel-Wohnlage 2024')).toBeInTheDocument();
-		await expect.element(page.getByText('gut')).toBeInTheDocument();
-		await expect.element(page.getByText('mittel')).toBeInTheDocument();
-		await expect.element(page.getByText('einfach')).toBeInTheDocument();
+		await expect.element(page.getByText('gut', { exact: true })).toBeInTheDocument();
+		await expect.element(page.getByText('mittel', { exact: true })).toBeInTheDocument();
+		await expect.element(page.getByText('einfach', { exact: true })).toBeInTheDocument();
 	});
 
 	it('mehrere Layer → mehrere Legenden-Sektionen', async () => {
@@ -44,5 +61,93 @@ describe('map-legend.svelte', () => {
 	it('ÖPNV-Layer rendert point-marker', async () => {
 		render(MapLegend, { activeLayerSlugs: ['sbahn-stationen'] });
 		await expect.element(page.getByText('S-Bahn-Station', { exact: true })).toBeInTheDocument();
+	});
+
+	// Story 1.16 AC-3: Legend-Expand-Panel
+	describe('Story 1.16 Expand-Panel', () => {
+		it('Layer-Section ist standardmäßig kollabiert (details closed)', async () => {
+			const m = [meta('laerm-2023')];
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m });
+			const det = (await page
+				.getByTestId('legend-details-laerm-2023')
+				.element()) as HTMLDetailsElement;
+			expect(det.open).toBe(false);
+		});
+
+		it('Klick auf Summary expandiert Panel mit long-Explain', async () => {
+			const m = [meta('laerm-2023')];
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m });
+			await page.getByTestId('legend-summary-laerm-2023').click();
+			const expand = (await page
+				.getByTestId('legend-expand-laerm-2023')
+				.element()) as HTMLElement;
+			expect(expand.textContent).toMatch(/Lärm-Gesamtbelastung/);
+		});
+
+		it('Expand zeigt Source-URL als Link', async () => {
+			const m = [meta('laerm-2023', { sourceUrl: 'https://gdi.berlin.de/services/wfs/ua' })];
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m });
+			await page.getByTestId('legend-summary-laerm-2023').click();
+			const link = (await page
+				.getByTestId('legend-source-link-laerm-2023')
+				.element()) as HTMLAnchorElement;
+			expect(link.href).toBe('https://gdi.berlin.de/services/wfs/ua');
+			expect(link.target).toBe('_blank');
+		});
+
+		it('Expand zeigt License-Label (gekürzt)', async () => {
+			const m = [meta('laerm-2023', { license: 'dl-de/zero-2-0' })];
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m });
+			await page.getByTestId('legend-summary-laerm-2023').click();
+			const lic = (await page.getByTestId('legend-license-laerm-2023').element()) as HTMLElement;
+			expect(lic.textContent).toMatch(/dl-de\/zero/);
+		});
+
+		it('Expand zeigt valueScaleExplain falls vorhanden (klima-pet-2022)', async () => {
+			const m = [meta('klima-pet-2022')];
+			render(MapLegend, { activeLayerSlugs: ['klima-pet-2022'], manifestLayers: m });
+			await page.getByTestId('legend-summary-klima-pet-2022').click();
+			const scale = (await page
+				.getByTestId('legend-scale-klima-pet-2022')
+				.element()) as HTMLElement;
+			expect(scale.textContent).toMatch(/32 °C|extrem heiß/);
+		});
+
+		it('Expand zeigt Mehr-erfahren-Link auf /lang/layer/slug', async () => {
+			const m = [meta('laerm-2023')];
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m, lang: 'de' });
+			await page.getByTestId('legend-summary-laerm-2023').click();
+			const link = (await page
+				.getByTestId('legend-more-link-laerm-2023')
+				.element()) as HTMLAnchorElement;
+			expect(link.getAttribute('href')).toBe('/de/layer/laerm-2023');
+		});
+
+		it('Zweiter Click auf Summary kollabiert wieder', async () => {
+			const m = [meta('laerm-2023')];
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m });
+			const summary = page.getByTestId('legend-summary-laerm-2023');
+			await summary.click();
+			await summary.click();
+			const det = (await page
+				.getByTestId('legend-details-laerm-2023')
+				.element()) as HTMLDetailsElement;
+			expect(det.open).toBe(false);
+		});
+
+		it('Multi-Expand: zwei Layer gleichzeitig offen', async () => {
+			const m = [meta('laerm-2023'), meta('luft-2023')];
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023', 'luft-2023'], manifestLayers: m });
+			await page.getByTestId('legend-summary-laerm-2023').click();
+			await page.getByTestId('legend-summary-luft-2023').click();
+			const a = (await page
+				.getByTestId('legend-details-laerm-2023')
+				.element()) as HTMLDetailsElement;
+			const b = (await page
+				.getByTestId('legend-details-luft-2023')
+				.element()) as HTMLDetailsElement;
+			expect(a.open).toBe(true);
+			expect(b.open).toBe(true);
+		});
 	});
 });

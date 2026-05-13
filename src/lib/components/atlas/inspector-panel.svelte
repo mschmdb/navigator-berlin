@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { X } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
-	import { getUiState } from '$lib/state/ui-context.svelte.js';
+	import { getUiState, toggleLayer } from '$lib/state/ui-context.svelte.js';
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
 	import PermalinkButton from './inspector-panel/permalink-button.svelte';
 	import KlimaSection from './inspector-panel/klima-section.svelte';
@@ -91,6 +91,8 @@
 									{lang}
 									lat={ui.selectedAddress?.lat}
 									lng={ui.selectedAddress?.lng}
+									isActive={ui.activeLayerSlugs.includes(hit.layer)}
+									onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 								/>
 							{/each}
 						{/if}

@@ -5,6 +5,9 @@
 	import MapControls from '$lib/components/atlas/map-controls.svelte';
 	import MapAccessibilityLayer from '$lib/components/atlas/map-accessibility-layer.svelte';
 	import MapLegend from '$lib/components/atlas/map-legend.svelte';
+	import MapHoverTooltip, {
+		type MapHoverApi
+	} from '$lib/components/atlas/map-hover-tooltip.svelte';
 	import InspectorPanel from '$lib/components/atlas/inspector-panel.svelte';
 	import BottomSheet from '$lib/components/atlas/inspector-panel/bottom-sheet.svelte';
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
@@ -451,7 +454,12 @@
 			{selectedFeatureId}
 			onSelectFeature={onSelectAccessibleFeature}
 		/>
-		<MapLegend activeLayerSlugs={ui.activeLayerSlugs} />
+		<MapLegend activeLayerSlugs={ui.activeLayerSlugs} manifestLayers={manifestLayers} />
+		<MapHoverTooltip
+			map={rawMap as MapHoverApi | null}
+			activeLayerSlugs={ui.activeLayerSlugs}
+			isMobile={viewport.breakpoint === 'mobile'}
+		/>
 	</div>
 
 	{#if showSidePanel}

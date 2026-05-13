@@ -125,4 +125,29 @@ describe('layer-palette.svelte', () => {
 		const palette = (await page.getByTestId('layer-palette').element()) as HTMLElement;
 		expect(palette.textContent).toContain('3 aktiv');
 	});
+
+	it('Subline zeigt short-Explain unter jedem Layer-Name (Story 1.16 AC-2)', async () => {
+		render(Harness, { open: true, layers: LAYERS });
+		const subline = (await page
+			.getByTestId('palette-subline-bezirke')
+			.element()) as HTMLElement;
+		expect(subline.textContent).toMatch(/Verwaltungsbezirk/);
+	});
+
+	it('Subline nutzt Plex-Serif-Italic + ink-muted (UX-Spec)', async () => {
+		render(Harness, { open: true, layers: LAYERS });
+		const subline = (await page
+			.getByTestId('palette-subline-bezirke')
+			.element()) as HTMLElement;
+		expect(subline.className).toMatch(/font-serif/);
+		expect(subline.className).toMatch(/italic/);
+		expect(subline.className).toMatch(/text-ink-subtle|text-ink-muted/);
+	});
+
+	it('Subline ist nicht im DOM für Layer ohne Explain-Entry', async () => {
+		render(Harness, { open: true, layers: [meta('does-not-exist-yz', 'A: Boundaries')] });
+		await expect
+			.element(page.getByTestId('palette-subline-does-not-exist-yz'))
+			.not.toBeInTheDocument();
+	});
 });

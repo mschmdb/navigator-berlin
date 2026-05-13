@@ -214,4 +214,105 @@ describe('layer-hit-row.svelte', () => {
 		const link = (await page.getByTestId('disclaimer-source-link').element()) as HTMLAnchorElement;
 		expect(link.href).toMatch(/^https:\/\//);
 	});
+
+	// Story 1.16: Mehr-Toggle + Action-Icons
+	describe('Story 1.16 Mehr-Toggle + Action-Icons', () => {
+		const wohnlagenHit: LayerHit = {
+			layer: 'wohnlagen-2024',
+			value: { wol_mode: 'gut', plr_name: 'Mitte' },
+			source: 'https://gdi.berlin.de/services/wfs/wl',
+			updatedAt: '2024-06-10T00:00:00Z',
+			license: 'dl-de/by-2-0'
+		};
+
+		it('Mehr-Toggle existiert bei Layer mit long-Text (wohnlagen-2024)', async () => {
+			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
+			await expect.element(page.getByTestId('explain-more')).toBeInTheDocument();
+		});
+
+		it('Long-Text initial nicht sichtbar (Default kollabiert)', async () => {
+			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
+			await expect.element(page.getByTestId('explain-long')).not.toBeInTheDocument();
+		});
+
+		it('Click Mehr expandiert long-Text + valueScale', async () => {
+			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
+			await page.getByTestId('explain-more').click();
+			const long = (await page.getByTestId('explain-long').element()) as HTMLElement;
+			expect(long.textContent).toMatch(/Wohnlagen-Einstufung/);
+			const scale = (await page.getByTestId('explain-scale').element()) as HTMLElement;
+			expect(scale.textContent).toMatch(/einfach.*bestlage/);
+		});
+
+		it('Click Weniger (zweiter Click) kollabiert wieder', async () => {
+			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
+			const btn = page.getByTestId('explain-more');
+			await btn.click();
+			await btn.click();
+			await expect.element(page.getByTestId('explain-long')).not.toBeInTheDocument();
+		});
+
+		it('aria-expanded reflektiert Toggle-State', async () => {
+			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
+			const btn0 = (await page.getByTestId('explain-more').element()) as HTMLElement;
+			expect(btn0.getAttribute('aria-expanded')).toBe('false');
+			await page.getByTestId('explain-more').click();
+			const btn1 = (await page.getByTestId('explain-more').element()) as HTMLElement;
+			expect(btn1.getAttribute('aria-expanded')).toBe('true');
+		});
+
+		it('Eye-Icon (off-state) wenn isActive=false und onToggleLayer gesetzt', async () => {
+			let called = '';
+			render(LayerHitRow, {
+				hit: wohnlagenHit,
+				layerName: 'Mietspiegel-Wohnlage 2024',
+				isActive: false,
+				onToggleLayer: (slug: string) => {
+					called = slug;
+				}
+			});
+			const btn = (await page.getByTestId('map-toggle').element()) as HTMLElement;
+			expect(btn.getAttribute('data-state')).toBe('off');
+			expect(btn.getAttribute('aria-pressed')).toBe('false');
+			expect(btn.getAttribute('aria-label')).toMatch(/auf Karte zeigen/);
+			await page.getByTestId('map-toggle').click();
+			expect(called).toBe('wohnlagen-2024');
+		});
+
+		it('EyeOff-Icon (on-state) wenn isActive=true', async () => {
+			render(LayerHitRow, {
+				hit: wohnlagenHit,
+				layerName: 'Mietspiegel-Wohnlage 2024',
+				isActive: true,
+				onToggleLayer: () => {}
+			});
+			const btn = (await page.getByTestId('map-toggle').element()) as HTMLElement;
+			expect(btn.getAttribute('data-state')).toBe('on');
+			expect(btn.getAttribute('aria-pressed')).toBe('true');
+			expect(btn.getAttribute('aria-label')).toMatch(/von Karte entfernen/);
+		});
+
+		it('Kein Map-Toggle-Icon wenn onToggleLayer nicht übergeben', async () => {
+			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
+			await expect.element(page.getByTestId('map-toggle')).not.toBeInTheDocument();
+		});
+
+		it('Map-Toggle Touch-Target ≥ 32px', async () => {
+			render(LayerHitRow, {
+				hit: wohnlagenHit,
+				layerName: 'Mietspiegel-Wohnlage 2024',
+				onToggleLayer: () => {}
+			});
+			const btn = (await page.getByTestId('map-toggle').element()) as HTMLElement;
+			// h-8 w-8 = 2rem = 32px in default Tailwind
+			expect(btn.className).toMatch(/h-8/);
+			expect(btn.className).toMatch(/w-8/);
+		});
+
+		it('Learn-more aria-label aktualisiert auf "Mehr Details" (AC-7)', async () => {
+			render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
+			const link = (await page.getByTestId('learn-more').element()) as HTMLElement;
+			expect(link.getAttribute('aria-label')).toMatch(/Mehr Details/);
+		});
+	});
 });

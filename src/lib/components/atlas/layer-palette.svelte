@@ -9,6 +9,7 @@
 		groupLayersByBundle,
 		getLayerDisplayName
 	} from './internal/layer-palette-filter.js';
+	import { getLayerExplain } from './inspector-panel/internal/layer-explain.js';
 	import { shouldHandleSlash } from './internal/palette-shortcut.js';
 	import { classifyViewportWidth, type Breakpoint } from '$lib/utils/use-viewport.svelte.js';
 
@@ -139,6 +140,7 @@
 				<ul class="space-y-1.5">
 					{#each recentLayers as layer (layer.slug)}
 						{@const isOn = ui.activeLayerSlugs.includes(layer.slug)}
+						{@const subline = getLayerExplain(layer.slug, 'short')}
 						<li>
 							<button
 								type="button"
@@ -147,13 +149,23 @@
 								aria-pressed={isOn}
 								onclick={() => onToggle(layer.slug)}
 								class={[
-									'flex w-full min-h-[44px] items-center justify-between gap-2 border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
+									'flex w-full min-h-[44px] items-start justify-between gap-2 border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
 									isOn && 'bg-accent-soft'
 								]
 									.filter(Boolean)
 									.join(' ')}
 							>
-								<span class="font-medium text-ink">{getLayerDisplayName(layer.slug)}</span>
+								<span class="flex min-w-0 flex-1 flex-col">
+									<span class="font-medium text-ink">{getLayerDisplayName(layer.slug)}</span>
+									{#if subline}
+										<span
+											data-testid={`palette-subline-${layer.slug}`}
+											class="font-serif text-xs italic leading-snug text-ink-subtle"
+										>
+											{subline}
+										</span>
+									{/if}
+								</span>
 								<span class="font-mono text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
 							</button>
 						</li>
@@ -179,6 +191,7 @@
 					<ul class="space-y-1.5">
 						{#each group.layers as layer (layer.slug)}
 							{@const isOn = ui.activeLayerSlugs.includes(layer.slug)}
+							{@const subline = getLayerExplain(layer.slug, 'short')}
 							<li>
 								<button
 									type="button"
@@ -187,13 +200,23 @@
 									aria-pressed={isOn}
 									onclick={() => onToggle(layer.slug)}
 									class={[
-										'flex w-full min-h-[44px] items-center justify-between gap-2 border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
+										'flex w-full min-h-[44px] items-start justify-between gap-2 border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
 										isOn && 'bg-accent-soft'
 									]
 										.filter(Boolean)
 										.join(' ')}
 								>
-									<span class="font-medium text-ink">{getLayerDisplayName(layer.slug)}</span>
+									<span class="flex min-w-0 flex-1 flex-col">
+										<span class="font-medium text-ink">{getLayerDisplayName(layer.slug)}</span>
+										{#if subline}
+											<span
+												data-testid={`palette-subline-${layer.slug}`}
+												class="font-serif text-xs italic leading-snug text-ink-subtle"
+											>
+												{subline}
+											</span>
+										{/if}
+									</span>
 									<span class="font-mono text-xs text-ink-subtle">{group.bundle[0]}</span>
 								</button>
 							</li>

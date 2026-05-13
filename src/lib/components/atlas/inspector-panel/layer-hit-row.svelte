@@ -1,11 +1,14 @@
 <script lang="ts">
 	import type { LayerHit } from '$lib/data';
-	import { ExternalLink } from '@lucide/svelte';
+	import { ExternalLink, Eye, EyeOff } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
 	import DataStandBanner from './data-stand-banner.svelte';
 	import { formatLayerValue } from './internal/value-formatters.js';
-	import { explainLayer, getLayerExternalLink } from './internal/layer-explain.js';
+	import {
+		getLayerExplainEntry,
+		getLayerExternalLink
+	} from './internal/layer-explain.js';
 	import { isOutdated } from './internal/source-shortener.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
 	import type {
@@ -22,19 +25,41 @@
 		lang?: string;
 		lat?: number;
 		lng?: number;
+		isActive?: boolean;
+		onToggleLayer?: (slug: string) => void;
 	};
 
-	let { hit, layerName, lang = 'de', lat, lng }: Props = $props();
+	let {
+		hit,
+		layerName,
+		lang = 'de',
+		lat,
+		lng,
+		isActive = false,
+		onToggleLayer
+	}: Props = $props();
+
+	let showMore = $state(false);
+	function toggleMore(): void {
+		showMore = !showMore;
+	}
 
 	type RowState = 'with-value' | 'no-coverage' | 'seasonal' | 'outdated';
 
 	const formatted = $derived(formatLayerValue(hit.layer, hit.value));
-	const explain = $derived(explainLayer(hit.layer));
+	const explainEntry = $derived(getLayerExplainEntry(hit.layer));
+	const explain = $derived(explainEntry.short);
+	const hasMore = $derived(
+		Boolean(
+			explainEntry.long &&
+				(explainEntry.long !== explainEntry.short || explainEntry.valueScaleExplain)
+		)
+	);
 	const externalLink = $derived(getLayerExternalLink(hit.layer));
 	const outdated = $derived(isOutdated(hit.updatedAt));
 	const editorial = $derived(getEditorialConfig(hit.layer));
 
-	const state: RowState = $derived.by(() => {
+	const rowState: RowState = $derived.by(() => {
 		if (hit.reason === 'no-coverage') return 'no-coverage';
 		if (hit.reason === 'seasonal') return 'seasonal';
 		if (outdated) return 'outdated';
@@ -42,8 +67,8 @@
 	});
 
 	const valueText = $derived.by(() => {
-		if (state === 'no-coverage') return 'Daten nicht vorhanden';
-		if (state === 'seasonal') return 'Layer Mai–Oktober aktiv';
+		if (rowState === 'no-coverage') return 'Daten nicht vorhanden';
+		if (rowState === 'seasonal') return 'Layer Mai–Oktober aktiv';
 		return formatted.text;
 	});
 
@@ -52,16 +77,16 @@
 	const learnMoreHref = $derived(resolve(`/${lang}/layer/${hit.layer}` as Pathname));
 
 	const showSeasonalActivePill = $derived(
-		hit.layer === 'trinkbrunnen' && state === 'with-value'
+		hit.layer === 'trinkbrunnen' && rowState === 'with-value'
 	);
 	const showSeasonalOutOfSeasonPill = $derived(
-		hit.layer === 'trinkbrunnen' && state === 'seasonal'
+		hit.layer === 'trinkbrunnen' && rowState === 'seasonal'
 	);
 
 	const disclaimerVariants = $derived.by(() => {
 		if (!editorial) return [];
 		return editorial.disclaimerVariants.filter((v) => {
-			if (v === 'seasonal') return state === 'seasonal';
+			if (v === 'seasonal') return rowState === 'seasonal';
 			return true;
 		});
 	});
@@ -83,7 +108,7 @@
 	});
 
 	const showMauerDetail = $derived(
-		editorial?.customComponent === 'MauerSektorenDetail' && state === 'with-value'
+		editorial?.customComponent === 'MauerSektorenDetail' && rowState === 'with-value'
 	);
 </script>
 
@@ -91,7 +116,7 @@
 	role="group"
 	aria-label={groupLabel}
 	data-testid="layer-hit-row"
-	data-state={state}
+	data-state={rowState}
 	data-layer={hit.layer}
 	class="grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 border-b border-rule py-3 last:border-b-0"
 >
@@ -100,14 +125,14 @@
 			<span class="text-base font-medium text-ink" data-testid="layer-name">
 				{layerName}
 			</span>
-			{#if state === 'no-coverage'}
+			{#if rowState === 'no-coverage'}
 				<span
 					class="font-serif italic text-ink-subtle"
 					data-testid="value-no-coverage"
 				>
 					Daten nicht vorhanden
 				</span>
-			{:else if state === 'seasonal'}
+			{:else if rowState === 'seasonal'}
 				<span class="font-mono text-sm text-ink-muted" data-testid="value-seasonal">
 					Layer Mai–Oktober aktiv
 				</span>
@@ -141,7 +166,35 @@
 				{explain}
 			</p>
 		{/if}
-		{#if externalLink && state !== 'no-coverage'}
+		{#if hasMore}
+			{#if showMore}
+				<p
+					data-testid="explain-long"
+					class="font-serif text-sm leading-snug text-ink-muted"
+				>
+					{explainEntry.long}
+				</p>
+				{#if explainEntry.valueScaleExplain}
+					<p
+						data-testid="explain-scale"
+						class="font-mono text-xs text-ink-subtle"
+					>
+						{explainEntry.valueScaleExplain}
+					</p>
+				{/if}
+			{/if}
+			<button
+				type="button"
+				data-testid="explain-more"
+				data-state={showMore ? 'open' : 'closed'}
+				aria-expanded={showMore}
+				onclick={toggleMore}
+				class="self-start text-xs font-medium text-accent underline-offset-2 hover:underline"
+			>
+				{showMore ? 'Weniger' : 'Mehr'}
+			</button>
+		{/if}
+		{#if externalLink && rowState !== 'no-coverage'}
 			<a
 				href={externalLink.href}
 				target="_blank"
@@ -167,8 +220,11 @@
 			<MauerSektorenDetail fetchedAt={hit.updatedAt} />
 		{/if}
 	</div>
-	<div class="flex shrink-0 items-start gap-3 pt-1 text-sm">
-		{#if state === 'outdated'}
+	<div
+		class="flex shrink-0 flex-col items-end gap-1.5 pt-1 text-sm"
+		data-testid="layer-hit-row-actions"
+	>
+		{#if rowState === 'outdated'}
 			<span
 				data-testid="outdated-pill"
 				class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-state-warning"
@@ -177,14 +233,44 @@
 				Veraltet
 			</span>
 		{/if}
-		<a
-			href={learnMoreHref}
-			class="inline-flex items-center gap-1 text-ink-muted hover:text-ink"
-			data-testid="learn-more"
-			aria-label={`Mehr erfahren über ${layerName}`}
-		>
-			<ExternalLink size={14} aria-hidden="true" />
-			<span class="sr-only">Mehr erfahren</span>
-		</a>
+		<div class="flex items-center gap-1">
+			{#if onToggleLayer}
+				<button
+					type="button"
+					data-testid="map-toggle"
+					data-state={isActive ? 'on' : 'off'}
+					aria-pressed={isActive}
+					aria-label={isActive
+						? `${layerName} von Karte entfernen`
+						: `${layerName} auf Karte zeigen`}
+					title={isActive
+						? `${layerName} von Karte entfernen`
+						: `${layerName} auf Karte zeigen`}
+					onclick={() => onToggleLayer?.(hit.layer)}
+					class={[
+						'inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:text-ink',
+						isActive && 'text-accent hover:text-accent-strong'
+					]
+						.filter(Boolean)
+						.join(' ')}
+				>
+					{#if isActive}
+						<EyeOff size={16} aria-hidden="true" />
+					{:else}
+						<Eye size={16} aria-hidden="true" />
+					{/if}
+				</button>
+			{/if}
+			<a
+				href={learnMoreHref}
+				class="inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:text-ink"
+				data-testid="learn-more"
+				aria-label={`Mehr Details über ${layerName}`}
+				title={`Mehr Details über ${layerName}`}
+			>
+				<ExternalLink size={14} aria-hidden="true" />
+				<span class="sr-only">Mehr Details</span>
+			</a>
+		</div>
 	</div>
 </div>

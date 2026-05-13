@@ -36,6 +36,7 @@
 
 generated: 2026-05-11
 last_updated: 2026-05-13
+# story 1-16 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-13, TDD-first per ADR-012; Multi-Surface Explain: Palette-Subline + Legend-Expand + Map-Hover-Tooltip + Detail-Page + Inspector-Mehr-Toggle + Eye/EyeOff Action-Icon-Split; Live-Bug behoben: Route ohne [lang]-Param wegen paraglide-reroute; E2E + axe deferred to CI; 1 pre-existing failing client-test climate-long-view out-of-scope)
 project: navigator.berlin
 # story 1-1..1-12 promoted backlog → ready-for-dev; epic-1 backlog → in-progress (2026-05-11)
 # story 1-1 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-11, commit 407e6ea)
@@ -51,6 +52,14 @@ project: navigator.berlin
 # story 1-10d created ready-for-dev → in-progress → scope-revision → review (2026-05-13, Mietspiegel-Tabelle nicht offen lizenziert; gepivotet zu externem Link auf mietspiegel.berlin.de via getLayerExternalLink + LayerHitRow-Render)
 # story 1-11 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-13, TDD-first per ADR-012; pragmatic-Pivot weg von LayerChart-v2-Components zu reinem d3-scale + SVG für deterministisches a11y-Markup; AccessibleChart-Wrapper + ClimateSparkline + ClimateLongView (Dahlem-only) + KlimaSection in inspector-panel; 514 Unit-Tests grün; E2E + axe-CI-Run deferred)
 # story 1-12 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-13, TDD-first per ADR-012; editorial-config + disclaimer + stolperstein-detail + mauer-stub + seasonality + contact-util; 100 scoped Unit-Tests grün; Scope-Pivot: Per-Row-Mailto raus wegen Clutter, Footer-Feedback-Page deferred zu Phase 2; ErrorFeedbackMailto-Komponente + buildErrorReportMailto-Utility bleiben für künftige Konsumierung; E2E + axe-CI-Run deferred)
+# stories 1-13, 1-14, 1-15, 1-16 created backlog → ready-for-dev (2026-05-13, Epic-1-Gap-Closure-Wave nach User-Review):
+#   1-13 sbahn-netz: Pipeline-Source für fehlenden S-Bahn-Linien-Layer (Stations existieren bereits)
+#   1-14 multi-layer-diff: Active-Layer-Pille-Toolbar + Outline-Cascade für Multi-Layer-Lesbarkeit
+#   1-15 poi-popover-lucide-icons: Pin-Hover/Tap-Popover + Lucide-Icon-Pins (statt bunte Kreise) für Pin-Differenzierung
+#   1-16 layer-explain-coverage: Layer-Explain in Palette + Legend + Hover + Detail-Page; Manifest-Coverage-Guard
+#   Empfohlene Reihenfolge: 1-16 → 1-15 → 1-13 → 1-14 (Quickwin-Stack zuerst)
+# story 1-17 created backlog → ready-for-dev (2026-05-13, User-Review-Feedback): Climate-Charts-Rework mit LayerChart v2 (Story 1.11 hatte LayerChart spezifiziert, dann pivotiert auf d3-scale-SVG ohne Hover/Tooltip, User-unzufrieden mit non-interactive Charts + Layout-Sprengung); AccessibleChart-Komponente wird deprecated
+# story 1-18 created backlog → ready-for-dev (2026-05-13, User-Review-Feedback): Inspector-UX-Rework — Value-Chips (Color-Coded Severity), Compact-DataStandBanner, Section-Header-Subtler, Empty-Section-Hide-Toggle, Layer-Name-Dedup, Layout-Density-Optimierung; baut auf Story 1.16 Action-Icons + Mehr-Toggle
 project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
@@ -72,6 +81,12 @@ development_status:
   1-10d-mietspiegel-preis-lookup: review
   1-11-klima-heritage-visualisierung: review
   1-12-editorial-verantwortung-pattern: review
+  1-13-sbahn-netz: ready-for-dev
+  1-14-multi-layer-diff: ready-for-dev
+  1-15-poi-popover-lucide-icons: ready-for-dev
+  1-16-layer-explain-coverage: review
+  1-17-climate-charts-layerchart-rework: ready-for-dev
+  1-18-inspector-ux-rework: ready-for-dev
   epic-1-retrospective: optional
 
   # Epic 2: SEO/AEO Discovery + LLM-Agent Integration
