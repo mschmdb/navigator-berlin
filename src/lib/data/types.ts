@@ -3,6 +3,8 @@ import type { MultiPolygon, Polygon } from 'geojson';
 
 export type { License, Bundle, GeometryType };
 
+export type LayerFormat = 'geojson' | 'pmtiles';
+
 export type Locale = 'de' | 'en' | 'tr' | 'uk' | 'ar' | 'es' | 'fr' | 'it';
 
 export type LayerHitReason = 'no-coverage' | 'outdated' | 'seasonal';
@@ -30,6 +32,7 @@ export interface LayerMetadata {
 	geometryType: GeometryType;
 	featureCount: number;
 	inspectorRelevant?: boolean;
+	format?: LayerFormat;
 }
 
 export interface Manifest {

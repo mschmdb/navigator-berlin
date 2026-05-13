@@ -14,7 +14,7 @@ describe('layer-style-builder.getStyleProfile', () => {
 		expect(getStyleProfile('ortsteile')).toBe('boundary');
 		expect(getStyleProfile('plz')).toBe('boundary');
 		expect(getStyleProfile('bodenrichtwerte')).toBe('choropleth-brw');
-		expect(getStyleProfile('wohnlagen-2024')).toBe('point-wohnlage');
+		expect(getStyleProfile('wohnlagen-2024')).toBe('choropleth-wohnlage-3');
 		expect(getStyleProfile('milieuschutz-erhaltungsmiete')).toBe('polygon-outline-soft');
 		expect(getStyleProfile('laerm-2023')).toBe('choropleth-belastung-3');
 		expect(getStyleProfile('umweltgerechtigkeit-2023')).toBe('choropleth-mehrfach');

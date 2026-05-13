@@ -4,6 +4,7 @@
 	import MapLibreCanvas from '$lib/components/atlas/map-libre-canvas.svelte';
 	import MapControls from '$lib/components/atlas/map-controls.svelte';
 	import MapAccessibilityLayer from '$lib/components/atlas/map-accessibility-layer.svelte';
+	import MapLegend from '$lib/components/atlas/map-legend.svelte';
 	import InspectorPanel from '$lib/components/atlas/inspector-panel.svelte';
 	import BottomSheet from '$lib/components/atlas/inspector-panel/bottom-sheet.svelte';
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
@@ -18,6 +19,7 @@
 	import { loadManifest, getLayerEntry } from '$lib/data/manifest.js';
 	import { getLayersAtPoint } from '$lib/data/get-layers-at-point.js';
 	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
+	import { queryPmtilesAt, type MapLibreLike } from '$lib/data/internal/pmtiles-query.js';
 	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data/types.js';
 	import { useViewport } from '$lib/utils/use-viewport.svelte.js';
 	import { SvelteSet } from 'svelte/reactivity';
@@ -138,10 +140,12 @@
 		syncLayers([...slugs]);
 	});
 
+	type GeoJsonSource = { type: 'geojson'; data: unknown };
+	type VectorSource = { type: 'vector'; url: string };
 	type MapWithLayers = {
-		addSource: (id: string, source: { type: 'geojson'; data: unknown }) => void;
+		addSource: (id: string, source: GeoJsonSource | VectorSource) => void;
 		removeSource: (id: string) => void;
-		addLayer: (spec: MapLibreLayerSpec) => void;
+		addLayer: (spec: MapLibreLayerSpec & { 'source-layer'?: string }) => void;
 		removeLayer: (id: string) => void;
 		getLayer: (id: string) => unknown;
 		getSource: (id: string) => unknown;
@@ -149,6 +153,21 @@
 
 	let renderedSlugs: string[] = [];
 	const layerRenderInflight = new SvelteSet<string>();
+	let pmtilesProtocolRegistered = false;
+
+	async function ensurePmtilesProtocol(): Promise<void> {
+		if (pmtilesProtocolRegistered) return;
+		const [{ Protocol }, maplibreModule] = await Promise.all([
+			import('pmtiles'),
+			import('maplibre-gl')
+		]);
+		const maplibre = (maplibreModule.default ?? maplibreModule) as {
+			addProtocol?: (name: string, fn: unknown) => void;
+		};
+		const protocol = new Protocol();
+		maplibre.addProtocol?.('pmtiles', protocol.tile);
+		pmtilesProtocolRegistered = true;
+	}
 
 	async function renderLayers(slugs: readonly string[]): Promise<void> {
 		if (!rawMap) return;
@@ -168,14 +187,30 @@
 				if (!meta) return;
 				layerRenderInflight.add(slug);
 				try {
-					const fc = await fetchLayer(meta.filename);
-					if (!rawMap) return;
 					const sourceId = sourceIdFor(slug);
-					if (!map.getSource(sourceId)) {
-						map.addSource(sourceId, { type: 'geojson', data: fc });
-					}
-					for (const spec of buildLayerSpec(slug, sourceId, { reducedMotion: reduced })) {
-						if (!map.getLayer(spec.id)) map.addLayer(spec);
+					if (meta.format === 'pmtiles') {
+						await ensurePmtilesProtocol();
+						if (!rawMap) return;
+						if (!map.getSource(sourceId)) {
+							map.addSource(sourceId, {
+								type: 'vector',
+								url: `pmtiles:///layers/${meta.filename}`
+							});
+						}
+						for (const spec of buildLayerSpec(slug, sourceId, { reducedMotion: reduced })) {
+							if (!map.getLayer(spec.id)) {
+								map.addLayer({ ...spec, 'source-layer': slug });
+							}
+						}
+					} else {
+						const fc = await fetchLayer(meta.filename);
+						if (!rawMap) return;
+						if (!map.getSource(sourceId)) {
+							map.addSource(sourceId, { type: 'geojson', data: fc });
+						}
+						for (const spec of buildLayerSpec(slug, sourceId, { reducedMotion: reduced })) {
+							if (!map.getLayer(spec.id)) map.addLayer(spec);
+						}
 					}
 				} catch {
 					// Layer-Fetch fehlgeschlagen, still aufgeben (Story 1.4 Error-Path)
@@ -231,10 +266,20 @@
 		});
 	}
 
+	function pmtilesQuery(slug: string, lng: number, lat: number): Record<string, unknown> | null {
+		if (!rawMap) return null;
+		return queryPmtilesAt(rawMap as unknown as MapLibreLike, layerIdFor(slug), lng, lat);
+	}
+
 	async function openInspectorFor(suggestion: GeocodeSuggestion) {
 		ui.selectedAddress = suggestion;
 		try {
-			ui.selectedLayerHits = await getLayersAtPoint(suggestion.lat, suggestion.lng);
+			ui.selectedLayerHits = await getLayersAtPoint(
+				suggestion.lat,
+				suggestion.lng,
+				undefined,
+				pmtilesQuery
+			);
 		} catch {
 			ui.selectedLayerHits = [];
 		}
@@ -389,6 +434,7 @@
 			{selectedFeatureId}
 			onSelectFeature={onSelectAccessibleFeature}
 		/>
+		<MapLegend activeLayerSlugs={ui.activeLayerSlugs} />
 	</div>
 
 	{#if showSidePanel}

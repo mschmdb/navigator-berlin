@@ -43,15 +43,24 @@ function makeHit(
 	return hit;
 }
 
+export type PmtilesQueryFn = (slug: string, lng: number, lat: number) => Record<string, unknown> | null;
+
 async function hitForLayer(
 	layer: LayerMetadata,
 	lat: number,
 	lng: number,
-	fetchFn: typeof fetch
+	fetchFn: typeof fetch,
+	pmtilesQuery?: PmtilesQueryFn
 ): Promise<LayerHit | null> {
 	if (layer.inspectorRelevant === false) return null;
 	if (layer.seasonality && !inSeason(layer.seasonality)) {
 		return makeHit(layer, null, 'seasonal');
+	}
+	if (layer.format === 'pmtiles') {
+		if (!pmtilesQuery) return null;
+		const props = pmtilesQuery(layer.slug, lng, lat);
+		if (props) return makeHit(layer, props);
+		return makeHit(layer, null, 'no-coverage');
 	}
 
 	const fc = await fetchLayer(layer.filename, fetchFn);
@@ -114,16 +123,19 @@ async function hitForLayer(
 export async function getLayersAtPoint(
 	lat: number,
 	lng: number,
-	fetchFn: typeof fetch = fetch
+	fetchFn: typeof fetch = fetch,
+	pmtilesQuery?: PmtilesQueryFn
 ): Promise<LayerHit[]> {
 	if (!isInBerlin(lat, lng)) return [];
-	const key = `${lat.toFixed(6)},${lng.toFixed(6)}`;
+	// Cache-Key inkludiert pmtilesQuery-Verfügbarkeit, damit PMTiles-Hits nicht
+	// gecached werden bevor die Map geladen ist.
+	const key = `${lat.toFixed(6)},${lng.toFixed(6)}|${pmtilesQuery ? '1' : '0'}`;
 	const cached = resultCache.get(key);
 	if (cached) return cached;
 
 	const manifest = await loadManifest(fetchFn);
 	const results = await Promise.all(
-		manifest.layers.map((layer) => hitForLayer(layer, lat, lng, fetchFn))
+		manifest.layers.map((layer) => hitForLayer(layer, lat, lng, fetchFn, pmtilesQuery))
 	);
 	const hits = results.filter((h): h is LayerHit => h !== null);
 	resultCache.set(key, hits);

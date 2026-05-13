@@ -4,68 +4,45 @@ import { render } from 'vitest-browser-svelte';
 import MapLegend from './map-legend.svelte';
 
 describe('map-legend.svelte', () => {
-	it('rendert nicht wenn activeLayers leer', async () => {
-		const { container } = render(MapLegend, { activeLayers: [] });
+	it('rendert nicht wenn activeLayerSlugs leer', async () => {
+		const { container } = render(MapLegend, { activeLayerSlugs: [] });
 		expect(container.querySelector('[data-testid="map-legend"]')).toBeNull();
 	});
 
-	it('rendert pro Layer Name + Min/Max', async () => {
-		render(MapLegend, {
-			activeLayers: [
-				{
-					slug: 'mietspiegel',
-					name: 'Mietspiegel Wohnlage',
-					valueRange: { min: 1, max: 4 },
-					scale: 'sequential'
-				}
-			]
-		});
+	it('rendert categorical-Legend für choropleth-belastung-3 (laerm-2023)', async () => {
+		render(MapLegend, { activeLayerSlugs: ['laerm-2023'] });
 		await expect.element(page.getByTestId('map-legend')).toBeInTheDocument();
-		await expect.element(page.getByText('Mietspiegel Wohnlage')).toBeInTheDocument();
-		await expect.element(page.getByText('1')).toBeInTheDocument();
-		await expect.element(page.getByText('4')).toBeInTheDocument();
+		await expect.element(page.getByTestId('legend-laerm-2023')).toBeInTheDocument();
+		await expect.element(page.getByText('Lärmbelastung (Umweltatlas 2023)')).toBeInTheDocument();
+		await expect.element(page.getByText('gering')).toBeInTheDocument();
+		await expect.element(page.getByText('mittel')).toBeInTheDocument();
+		await expect.element(page.getByText('hoch')).toBeInTheDocument();
 	});
 
-	it('Sequential-Scale liefert Gradient-Bar', async () => {
-		render(MapLegend, {
-			activeLayers: [
-				{
-					slug: 's1',
-					name: 'Seq',
-					valueRange: { min: 0, max: 10 },
-					scale: 'sequential'
-				}
-			]
-		});
-		const bar = (await page.getByTestId('legend-gradient-s1').element()) as HTMLElement;
-		expect(bar.style.background).toMatch(/linear-gradient/);
+	it('rendert gradient-Legend mit Range-Labels (choropleth-pet)', async () => {
+		render(MapLegend, { activeLayerSlugs: ['klima-pet-2022'] });
+		await expect.element(page.getByText('Gefühlte Temperatur (PET 14 Uhr, 2022)')).toBeInTheDocument();
+		await expect.element(page.getByText('kühl')).toBeInTheDocument();
+		await expect.element(page.getByText('heiß')).toBeInTheDocument();
 	});
 
-	it('Divergent-Scale: Gradient hat 3 Stops', async () => {
-		render(MapLegend, {
-			activeLayers: [
-				{
-					slug: 'd1',
-					name: 'Div',
-					valueRange: { min: -5, max: 5 },
-					scale: 'divergent'
-				}
-			]
-		});
-		const bar = (await page.getByTestId('legend-gradient-d1').element()) as HTMLElement;
-		expect(bar.style.background).toMatch(/linear-gradient/);
-		const stops = (bar.style.background.match(/,/g) || []).length;
-		expect(stops).toBeGreaterThanOrEqual(3);
+	it('rendert Wohnlage-Choropleth (3 Klassen)', async () => {
+		render(MapLegend, { activeLayerSlugs: ['wohnlagen-2024'] });
+		await expect.element(page.getByText('Mietspiegel-Wohnlage 2024')).toBeInTheDocument();
+		await expect.element(page.getByText('gut')).toBeInTheDocument();
+		await expect.element(page.getByText('mittel')).toBeInTheDocument();
+		await expect.element(page.getByText('einfach')).toBeInTheDocument();
 	});
 
-	it('mehrere Layer → mehrere Legenden-Items', async () => {
-		render(MapLegend, {
-			activeLayers: [
-				{ slug: 'a', name: 'A', valueRange: { min: 0, max: 1 }, scale: 'sequential' },
-				{ slug: 'b', name: 'B', valueRange: { min: 0, max: 1 }, scale: 'sequential' }
-			]
-		});
-		await expect.element(page.getByText('A')).toBeInTheDocument();
-		await expect.element(page.getByText('B')).toBeInTheDocument();
+	it('mehrere Layer → mehrere Legenden-Sektionen', async () => {
+		render(MapLegend, { activeLayerSlugs: ['bezirke', 'laerm-2023', 'ubahn-stationen'] });
+		await expect.element(page.getByTestId('legend-bezirke')).toBeInTheDocument();
+		await expect.element(page.getByTestId('legend-laerm-2023')).toBeInTheDocument();
+		await expect.element(page.getByTestId('legend-ubahn-stationen')).toBeInTheDocument();
+	});
+
+	it('ÖPNV-Layer rendert point-marker', async () => {
+		render(MapLegend, { activeLayerSlugs: ['sbahn-stationen'] });
+		await expect.element(page.getByText('S-Bahn-Station', { exact: true })).toBeInTheDocument();
 	});
 });

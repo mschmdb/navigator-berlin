@@ -61,12 +61,23 @@ function formatUmweltatlasKategorie(value: unknown, prefix: string): FormattedVa
 }
 
 function formatWohnlage(value: unknown): FormattedValue {
-	const wol = pickProp(value, 'wol');
-	if (typeof wol !== 'string') return FALLBACK;
-	const strasse = firstString(value, 'strasse');
-	const hnr = firstString(value, 'hnr');
-	const addr = strasse && hnr ? ` · ${strasse} ${hnr}` : '';
-	return { text: `${wol} Wohnlage${addr}`, isNumeric: false };
+	const mode = pickProp(value, 'wol_mode');
+	if (typeof mode !== 'string' || mode === 'unbekannt') return FALLBACK;
+	const plr = pickProp(value, 'plr_name');
+	const total = pickProp(value, 'count_total');
+	const counts: string[] = [];
+	for (const [k, label] of [
+		['count_einfach', 'einfach'],
+		['count_mittel', 'mittel'],
+		['count_gut', 'gut']
+	] as const) {
+		const c = pickProp(value, k);
+		if (typeof c === 'number' && c > 0) counts.push(`${c} ${label}`);
+	}
+	const plrPart = typeof plr === 'string' ? ` · ${plr}` : '';
+	const breakdown =
+		counts.length > 0 && typeof total === 'number' ? ` (${counts.join(', ')})` : '';
+	return { text: `Wohnlage überwiegend ${mode}${plrPart}${breakdown}`, isNumeric: false };
 }
 
 function formatMilieuschutz(value: unknown): FormattedValue {

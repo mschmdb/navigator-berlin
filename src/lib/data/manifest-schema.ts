@@ -30,9 +30,11 @@ const SeasonalitySchema = v.object({
 	to: v.pipe(v.string(), v.regex(/^\d{2}-\d{2}$/))
 });
 
+const FormatSchema = v.picklist(['geojson', 'pmtiles']);
+
 const LayerMetadataSchema = v.object({
 	slug: v.pipe(v.string(), v.regex(/^[a-z0-9-]+$/)),
-	filename: v.pipe(v.string(), v.regex(/^[a-z0-9-]+\.[0-9a-f]{8}\.geojson$/)),
+	filename: v.pipe(v.string(), v.regex(/^[a-z0-9-]+\.[0-9a-f]{8}\.(geojson|pmtiles)$/)),
 	sourceUrl: v.pipe(v.string(), v.url()),
 	fetchedAt: v.pipe(v.string(), v.isoTimestamp()),
 	sourceUpdatedAt: v.optional(v.pipe(v.string(), v.isoTimestamp())),
@@ -43,7 +45,8 @@ const LayerMetadataSchema = v.object({
 	seasonality: v.optional(SeasonalitySchema),
 	geometryType: GeometryTypeSchema,
 	featureCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
-	inspectorRelevant: v.optional(v.boolean())
+	inspectorRelevant: v.optional(v.boolean()),
+	format: v.optional(FormatSchema)
 });
 
 export const ManifestSchema = v.object({

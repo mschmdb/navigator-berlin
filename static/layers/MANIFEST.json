@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-13T06:36:41.520Z",
+  "generatedAt": "2026-05-13T10:49:45.462Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -232,18 +232,18 @@
     },
     {
       "slug": "wohnlagen-2024",
-      "filename": "wohnlagen-2024.6913a643.geojson",
+      "filename": "wohnlagen-2024.f214324f.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/wohnlagenadr2024",
-      "fetchedAt": "2026-05-13T06:36:41.520Z",
+      "fetchedAt": "2026-05-13T10:49:45.462Z",
       "license": "dl-de/by-2-0",
-      "sha256": "6913a6435e194dff2bf26ab33290b680a5188b754b7d0c81eae08bd7d223d9db",
+      "sha256": "f214324fc5370ce59eb91439e084b4001893fadb2ceffd7fc13daa98cc497ade",
       "bundleGroup": "B: Wohn-Daten",
       "zoomThresholds": {
-        "min": 13,
+        "min": 9,
         "max": 18
       },
-      "geometryType": "Point",
-      "featureCount": 401095,
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
       "sourceUpdatedAt": "2024-06-10T00:00:00.000Z"
     },
     {

@@ -8,6 +8,7 @@ export type StyleProfile =
 	| 'choropleth-status-3'
 	| 'choropleth-mehrfach'
 	| 'choropleth-pet'
+	| 'choropleth-wohnlage-3'
 	| 'polygon-highlight'
 	| 'polygon-outline-soft'
 	| 'point'
@@ -45,7 +46,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	plz: 'boundary',
 	// B: Wohn-Daten
 	bodenrichtwerte: 'choropleth-brw',
-	'wohnlagen-2024': 'point-wohnlage',
+	'wohnlagen-2024': 'choropleth-wohnlage-3',
 	'milieuschutz-erhaltungsmiete': 'polygon-outline-soft',
 	'milieuschutz-staedtebau': 'polygon-outline-soft',
 	// C: Umwelt — Umweltatlas-Indikatoren
@@ -91,6 +92,159 @@ export function getStyleProfile(slug: string): StyleProfile {
 
 export function getTransitionDurationMs(options: BuildOptions = {}): number {
 	return options.reducedMotion ? 0 : TRANSITION_MS;
+}
+
+export interface LegendItem {
+	readonly color: string;
+	readonly label: string;
+}
+
+export interface LegendSpec {
+	readonly kind: 'categorical' | 'gradient' | 'line' | 'point';
+	readonly items: readonly LegendItem[];
+	/** Nur für gradient: Min/Max-Label am Rand. */
+	readonly range?: readonly [string, string];
+}
+
+const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
+	boundary: {
+		kind: 'line',
+		items: [{ color: COLORS.accent, label: 'Grenze' }]
+	},
+	'choropleth-brw': {
+		kind: 'gradient',
+		items: [
+			{ color: COLORS.accentSoft, label: '10 €/m²' },
+			{ color: COLORS.chartCat6, label: '100' },
+			{ color: COLORS.chartCat2, label: '1.000' },
+			{ color: COLORS.vermillion, label: '10.000' }
+		],
+		range: ['niedrig', 'hoch']
+	},
+	'choropleth-belastung-3': {
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.accentSoft, label: 'gering' },
+			{ color: COLORS.chartCat2, label: 'mittel' },
+			{ color: COLORS.vermillion, label: 'hoch' }
+		]
+	},
+	'choropleth-versorgung-3': {
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.chartCat3, label: 'gut' },
+			{ color: COLORS.chartCat5, label: 'mittel' },
+			{ color: COLORS.vermillion, label: 'schlecht' }
+		]
+	},
+	'choropleth-status-3': {
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.chartCat3, label: 'hoher Status' },
+			{ color: COLORS.chartCat5, label: 'mittlerer Status' },
+			{ color: COLORS.vermillion, label: 'niedriger Status' }
+		]
+	},
+	'choropleth-mehrfach': {
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.accentSoft, label: 'keinfach' },
+			{ color: COLORS.chartCat6, label: 'einfach' },
+			{ color: COLORS.chartCat5, label: 'zweifach' },
+			{ color: COLORS.chartCat2, label: 'dreifach' },
+			{ color: COLORS.vermillion, label: 'vierfach' }
+		]
+	},
+	'choropleth-pet': {
+		kind: 'gradient',
+		items: [
+			{ color: COLORS.chartCat6, label: '28 °C' },
+			{ color: COLORS.chartCat5, label: '34' },
+			{ color: COLORS.chartCat2, label: '38' },
+			{ color: COLORS.vermillion, label: '42' }
+		],
+		range: ['kühl', 'heiß']
+	},
+	'choropleth-wohnlage-3': {
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.chartCat3, label: 'gut' },
+			{ color: COLORS.chartCat5, label: 'mittel' },
+			{ color: COLORS.vermillion, label: 'einfach' }
+		]
+	},
+	'polygon-highlight': {
+		kind: 'categorical',
+		items: [{ color: COLORS.chartCat3, label: 'betroffen' }]
+	},
+	'polygon-outline-soft': {
+		kind: 'categorical',
+		items: [{ color: COLORS.accentSoft, label: 'Fläche' }]
+	},
+	point: {
+		kind: 'point',
+		items: [{ color: COLORS.accent, label: 'Standort' }]
+	},
+	'point-wohnlage': {
+		kind: 'point',
+		items: [
+			{ color: COLORS.chartCat3, label: 'gut' },
+			{ color: COLORS.chartCat5, label: 'mittel' },
+			{ color: COLORS.vermillion, label: 'einfach' }
+		]
+	},
+	'point-ubahn': {
+		kind: 'point',
+		items: [{ color: COLORS.indigo, label: 'U-Bahn-Station' }]
+	},
+	'point-sbahn': {
+		kind: 'point',
+		items: [{ color: COLORS.chartCat3, label: 'S-Bahn-Station' }]
+	},
+	'point-tram': {
+		kind: 'point',
+		items: [{ color: COLORS.vermillion, label: 'Tram-Haltestelle' }]
+	},
+	'point-bus': {
+		kind: 'point',
+		items: [{ color: COLORS.chartCat5, label: 'Bus-Haltestelle' }]
+	},
+	'point-bildung': {
+		kind: 'point',
+		items: [{ color: COLORS.chartCat4, label: 'Bildungs-Standort' }]
+	},
+	'point-gesundheit': {
+		kind: 'point',
+		items: [{ color: COLORS.vermillion, label: 'Gesundheits-Standort' }]
+	},
+	'point-freizeit': {
+		kind: 'point',
+		items: [{ color: COLORS.chartCat3, label: 'Freizeit-Standort' }]
+	},
+	'line-radverkehr': {
+		kind: 'line',
+		items: [
+			{ color: COLORS.vermillion, label: 'Radvorrangnetz' },
+			{ color: COLORS.chartCat3, label: 'Ergänzungsnetz' }
+		]
+	},
+	'line-rail-ubahn': {
+		kind: 'line',
+		items: [{ color: COLORS.indigo, label: 'U-Bahn-Trasse' }]
+	},
+	'line-rail-tram': {
+		kind: 'line',
+		items: [{ color: COLORS.vermillion, label: 'Tram-Trasse' }]
+	},
+	'line-fahrradstrasse': {
+		kind: 'line',
+		items: [{ color: COLORS.chartCat3, label: 'Fahrradstraße' }]
+	}
+};
+
+export function getLegendSpec(slug: string): LegendSpec {
+	const profile = getStyleProfile(slug);
+	return LEGEND_BY_PROFILE[profile];
 }
 
 export function buildLayerSpec(
@@ -256,6 +410,30 @@ export function buildLayerSpec(
 						'circle-radius': 4,
 						'circle-stroke-color': COLORS.bg,
 						'circle-stroke-width': 1
+					}
+				}
+			];
+		case 'choropleth-wohnlage-3':
+			// Mietspiegel-Wohnlage Aggregat: `wol_mode` ∈ {einfach, mittel, gut, unbekannt}.
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'match',
+							['get', 'wol_mode'],
+							'einfach',
+							COLORS.vermillion,
+							'mittel',
+							COLORS.chartCat5,
+							'gut',
+							COLORS.chartCat3,
+							COLORS.accentSoft
+						],
+						'fill-opacity': 0.55,
+						'fill-outline-color': COLORS.accent
 					}
 				}
 			];

@@ -8,6 +8,9 @@ export function simplifyCommand(profile: SimplifyProfile): string {
 			return '-simplify visvalingam 20% planar -clean';
 		case 'point':
 			return '';
+		case 'tiles':
+			// Tiles-Profile delegiert Simplifizierung an tippecanoe. Hier keine mapshaper-Operation.
+			return '';
 	}
 }
 
@@ -22,7 +25,7 @@ export async function simplifyGeoJSON(
 	geojson: string,
 	profile: SimplifyProfile
 ): Promise<string> {
-	if (profile === 'point') return geojson;
+	if (profile === 'point' || profile === 'tiles') return geojson;
 	const mapshaper = (await import('mapshaper')) as unknown as { default?: MapshaperApi } & MapshaperApi;
 	const api: MapshaperApi = mapshaper.default ?? (mapshaper as MapshaperApi);
 	const cmd = `-i input.json ${simplifyCommand(profile)} -o output.json format=geojson`;

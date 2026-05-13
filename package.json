@@ -78,6 +78,7 @@
 		"layerchart": "2.0.0-next.63",
 		"lru-cache": "^11.3.6",
 		"maplibre-gl": "^5.24.0",
+		"pmtiles": "^4.4.1",
 		"rbush": "^4.0.1",
 		"valibot": "^1.4.0",
 		"webmcp": "^0.0.1"

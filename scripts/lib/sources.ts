@@ -213,6 +213,10 @@ export const SOURCES: SourceConfig[] = [
 		inspectorRelevant: false
 	},
 	// Bundle B erweitert: Mietspiegel-Wohnlagen 2024 + Milieuschutz
+	// Mietspiegel-Wohnlage 2024 als LOR-Planungsraum-Choropleth-Aggregat (Mode-Klasse pro Polygon).
+	// Pipeline: Standard-Fetch liefert 401k Adress-Points; one-off-Aggregator-Script joint auf
+	// LOR-Geometrie und schreibt 542-Polygon-GeoJSON. Story 1.10c PMTiles-Path archiviert
+	// (siehe Completion Notes), Adress-Genauigkeit gegen Flächen-Choropleth getauscht.
 	{
 		slug: 'wohnlagen-2024',
 		kind: 'fis-broker',
@@ -220,8 +224,8 @@ export const SOURCES: SourceConfig[] = [
 		typeName: 'wohnlagenadr2024:wohnlagenadr2024',
 		license: 'dl-de/by-2-0',
 		bundleGroup: 'B: Wohn-Daten',
-		zoomThresholds: { min: 13, max: 18 },
-		simplifyProfile: 'point',
+		zoomThresholds: { min: 9, max: 18 },
+		simplifyProfile: 'polygon',
 		sourceUpdatedAt: '2024-06-10T00:00:00.000Z'
 	},
 	{

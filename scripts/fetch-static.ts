@@ -1,16 +1,18 @@
-import { mkdir, readdir, unlink, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import type { FeatureCollection } from 'geojson';
 import { SOURCES, DWD_STATIONS } from './lib/sources.js';
 import { fetchOdisGeoJson } from './lib/fetchers/odis.js';
 import { fetchFisBrokerWfs } from './lib/fetchers/fis-broker.js';
 import { fetchOverpass } from './lib/fetchers/overpass.js';
 import { overpassToGeoJSON, isOverpassResponse } from './lib/fetchers/overpass-to-geojson.js';
+import { runTippecanoe } from './lib/fetchers/tippecanoe.js';
 import { fetchDwdZip, extractProduktTageswerteCsv } from './lib/fetchers/dwd-cdc.js';
 import { parseDwdKlCsv, aggregateYearly } from './lib/dwd.js';
 import { reprojectGeoJSON } from './lib/reproject.js';
 import { simplifyGeoJSON } from './lib/simplify.js';
 import { buildLayerEntry, buildManifest, validateManifest } from './lib/manifest.js';
-import type { ClimateBundle, LayerEntry } from './lib/types.js';
+import type { ClimateBundle, GeometryType, LayerEntry } from './lib/types.js';
 
 const CACHE_DIR = '.cache';
 const OUT_LAYERS = 'static/layers';
@@ -50,8 +52,27 @@ async function fetchSource(slug: string): Promise<{ raw: string; sourceUrl: stri
 
 async function cleanStaleHashFiles(slug: string): Promise<void> {
 	const files = await readdir(OUT_LAYERS).catch(() => []);
-	const stale = files.filter((f) => /^[a-z0-9-]+\.[0-9a-f]{8}\.geojson$/.test(f) && f.startsWith(`${slug}.`));
+	const stale = files.filter(
+		(f) => /^[a-z0-9-]+\.[0-9a-f]{8}\.(geojson|pmtiles)$/.test(f) && f.startsWith(`${slug}.`)
+	);
 	for (const f of stale) await unlink(join(OUT_LAYERS, f));
+}
+
+function detectGeoJsonStats(geojson: string): { geometryType: GeometryType; featureCount: number } {
+	try {
+		const fc = JSON.parse(geojson) as FeatureCollection;
+		const first = fc.features?.[0]?.geometry?.type;
+		const supported: ReadonlySet<GeometryType> = new Set([
+			'Point',
+			'Polygon',
+			'MultiPolygon',
+			'LineString'
+		]);
+		const geometryType = (first && supported.has(first as GeometryType) ? first : 'Point') as GeometryType;
+		return { geometryType, featureCount: fc.features?.length ?? 0 };
+	} catch {
+		return { geometryType: 'Point', featureCount: 0 };
+	}
 }
 
 async function processLayer(slug: string, fetchedAt: string): Promise<LayerEntry> {
@@ -61,6 +82,29 @@ async function processLayer(slug: string, fetchedAt: string): Promise<LayerEntry
 	const asGeoJson = isOverpassResponse(parsed) ? overpassToGeoJSON(parsed) : parsed;
 	const wgs84 = reprojectGeoJSON(asGeoJson, 'EPSG:4326', 'EPSG:4326');
 	const simplified = await simplifyGeoJSON(JSON.stringify(wgs84), source.simplifyProfile);
+
+	if (source.simplifyProfile === 'tiles') {
+		const stats = detectGeoJsonStats(simplified);
+		const tmpGeoJson = join(CACHE_DIR, 'tippecanoe', `${slug}.geojson`);
+		const tmpPmtiles = join(CACHE_DIR, 'tippecanoe', `${slug}.pmtiles`);
+		await mkdir(join(CACHE_DIR, 'tippecanoe'), { recursive: true });
+		await writeFile(tmpGeoJson, simplified);
+		await runTippecanoe(tmpGeoJson, tmpPmtiles, {
+			layerName: source.slug,
+			minZoom: source.zoomThresholds.min,
+			maxZoom: source.zoomThresholds.max
+		});
+		const buf = await readFile(tmpPmtiles);
+		const entry = buildLayerEntry(source, buf, fetchedAt, {
+			format: 'pmtiles',
+			geometryType: stats.geometryType,
+			featureCount: stats.featureCount
+		});
+		await cleanStaleHashFiles(slug);
+		await writeFile(join(OUT_LAYERS, entry.filename), buf);
+		return entry;
+	}
+
 	const buf = Buffer.from(simplified);
 	const entry = buildLayerEntry(source, buf, fetchedAt);
 	await cleanStaleHashFiles(slug);

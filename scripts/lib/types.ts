@@ -12,7 +12,8 @@ export type License =
 	| 'ODbL 1.0'
 	| 'Geodatenzugangsgesetz';
 export type GeometryType = 'Point' | 'Polygon' | 'MultiPolygon' | 'LineString';
-export type SimplifyProfile = 'boundary' | 'polygon' | 'point';
+export type SimplifyProfile = 'boundary' | 'polygon' | 'point' | 'tiles';
+export type LayerFormat = 'geojson' | 'pmtiles';
 export type SourceKind = 'fis-broker' | 'odis' | 'overpass' | 'dwd';
 
 export interface ZoomRange {
@@ -41,6 +42,8 @@ export interface SourceConfig {
 	/** Default true. Wenn false, wird Layer im getLayersAtPoint übersprungen
 	 * (z.B. ÖPNV-Stationen / Verkehrsnetze: kein Adress-Hit-Konzept, Map-Only). */
 	inspectorRelevant?: boolean;
+	/** Default 'geojson'. 'pmtiles' für Heavy-Layer via tippecanoe-Pipeline. */
+	format?: LayerFormat;
 }
 
 export interface LayerEntry {
@@ -57,6 +60,7 @@ export interface LayerEntry {
 	geometryType: GeometryType;
 	featureCount: number;
 	inspectorRelevant?: boolean;
+	format?: LayerFormat;
 }
 
 export interface Manifest {
