@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 	type Props = { langSwitcher?: Snippet };
 	let { langSwitcher }: Props = $props();
 </script>
@@ -17,7 +18,7 @@
 			<span aria-hidden="true">·</span>
 			<a href="/architektur" class="hover:text-accent">Architektur</a>
 			<span aria-hidden="true">·</span>
-			<a href="mailto:hallo@navigator.berlin" class="hover:text-accent">Kontakt</a>
+			<a href={`mailto:${FEEDBACK_EMAIL}`} class="hover:text-accent">Kontakt</a>
 		</nav>
 		{#if langSwitcher}{@render langSwitcher()}{/if}
 	</div>

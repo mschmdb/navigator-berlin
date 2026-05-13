@@ -1,21 +1,30 @@
 <script lang="ts">
 	import type { LayerHit } from '$lib/data';
-	import { ExternalLink, Mail } from '@lucide/svelte';
+	import { ExternalLink } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
 	import DataStandBanner from './data-stand-banner.svelte';
 	import { formatLayerValue } from './internal/value-formatters.js';
 	import { explainLayer, getLayerExternalLink } from './internal/layer-explain.js';
 	import { isOutdated } from './internal/source-shortener.js';
+	import { getEditorialConfig } from '../internal/editorial-config.js';
+	import type {
+		StolpersteinFeature,
+		StolpersteinProperties
+	} from '../internal/editorial-types.js';
+	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
+	import StolpersteinDetail from '../stolperstein-detail.svelte';
+	import MauerSektorenDetail from '../mauer-sektoren-detail.svelte';
 
 	type Props = {
 		hit: LayerHit;
 		layerName: string;
 		lang?: string;
-		addressDisplayName?: string;
+		lat?: number;
+		lng?: number;
 	};
 
-	let { hit, layerName, lang = 'de', addressDisplayName = '' }: Props = $props();
+	let { hit, layerName, lang = 'de', lat, lng }: Props = $props();
 
 	type RowState = 'with-value' | 'no-coverage' | 'seasonal' | 'outdated';
 
@@ -23,6 +32,7 @@
 	const explain = $derived(explainLayer(hit.layer));
 	const externalLink = $derived(getLayerExternalLink(hit.layer));
 	const outdated = $derived(isOutdated(hit.updatedAt));
+	const editorial = $derived(getEditorialConfig(hit.layer));
 
 	const state: RowState = $derived.by(() => {
 		if (hit.reason === 'no-coverage') return 'no-coverage';
@@ -39,15 +49,42 @@
 
 	const groupLabel = $derived(`${layerName}: ${valueText}`);
 
-	const mailHref = $derived(
-		`mailto:hallo@navigator.berlin?subject=${encodeURIComponent(
-			`Fehler im Eintrag: ${hit.layer}`
-		)}&body=${encodeURIComponent(
-			`Layer: ${hit.layer}\nAdresse: ${addressDisplayName}\nDatenstand: ${hit.updatedAt}`
-		)}`
+	const learnMoreHref = $derived(resolve(`/${lang}/layer/${hit.layer}` as Pathname));
+
+	const showSeasonalActivePill = $derived(
+		hit.layer === 'trinkbrunnen' && state === 'with-value'
+	);
+	const showSeasonalOutOfSeasonPill = $derived(
+		hit.layer === 'trinkbrunnen' && state === 'seasonal'
 	);
 
-	const learnMoreHref = $derived(resolve(`/${lang}/layer/${hit.layer}` as Pathname));
+	const disclaimerVariants = $derived.by(() => {
+		if (!editorial) return [];
+		return editorial.disclaimerVariants.filter((v) => {
+			if (v === 'seasonal') return state === 'seasonal';
+			return true;
+		});
+	});
+
+	function asStolpersteinProperties(v: unknown): StolpersteinProperties | null {
+		if (!v || typeof v !== 'object') return null;
+		return v as StolpersteinProperties;
+	}
+
+	const stolpersteinFeature = $derived.by((): StolpersteinFeature | null => {
+		if (editorial?.customComponent !== 'StolpersteinDetail') return null;
+		const props = asStolpersteinProperties(hit.value);
+		if (!props) return null;
+		return {
+			type: 'Feature',
+			geometry: { type: 'Point', coordinates: [lng ?? 0, lat ?? 0] },
+			properties: props
+		};
+	});
+
+	const showMauerDetail = $derived(
+		editorial?.customComponent === 'MauerSektorenDetail' && state === 'with-value'
+	);
 </script>
 
 <div
@@ -83,6 +120,21 @@
 					{valueText}
 				</span>
 			{/if}
+			{#if showSeasonalActivePill}
+				<span
+					data-testid="seasonal-pill-active"
+					class="inline-flex items-center rounded-sm bg-state-success/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-state-success"
+				>
+					aktiv (Mai–Oktober)
+				</span>
+			{:else if showSeasonalOutOfSeasonPill}
+				<span
+					data-testid="seasonal-pill-outofseason"
+					class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-state-warning"
+				>
+					außerhalb der Saison
+				</span>
+			{/if}
 		</div>
 		{#if explain}
 			<p class="font-serif text-sm leading-snug text-ink-muted" data-testid="explain">
@@ -102,6 +154,18 @@
 			</a>
 		{/if}
 		<DataStandBanner {hit} />
+		{#each disclaimerVariants as variant (variant)}
+			<EditorialDisclaimer
+				{variant}
+				sourceUrl={editorial?.primarySourceUrl}
+			/>
+		{/each}
+		{#if stolpersteinFeature}
+			<StolpersteinDetail feature={stolpersteinFeature} fetchedAt={hit.updatedAt} />
+		{/if}
+		{#if showMauerDetail}
+			<MauerSektorenDetail fetchedAt={hit.updatedAt} />
+		{/if}
 	</div>
 	<div class="flex shrink-0 items-start gap-3 pt-1 text-sm">
 		{#if state === 'outdated'}
@@ -122,15 +186,5 @@
 			<ExternalLink size={14} aria-hidden="true" />
 			<span class="sr-only">Mehr erfahren</span>
 		</a>
-		<svelte:element
-			this={'a'}
-			href={mailHref}
-			class="inline-flex items-center gap-1 text-ink-muted hover:text-ink"
-			data-testid="report-error"
-			aria-label={`Fehler im Eintrag ${layerName} melden`}
-		>
-			<Mail size={14} aria-hidden="true" />
-			<span class="sr-only">Fehler melden</span>
-		</svelte:element>
 	</div>
 </div>

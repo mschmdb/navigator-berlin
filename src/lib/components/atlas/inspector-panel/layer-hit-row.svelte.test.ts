@@ -123,16 +123,10 @@ describe('layer-hit-row.svelte', () => {
 		await expect.element(page.getByTestId('data-stand-banner')).toBeInTheDocument();
 	});
 
-	it('Mailto-Link enthält slug und displayName', async () => {
-		render(LayerHitRow, {
-			hit: recentHit,
-			layerName: 'Mietspiegel-Wohnlage',
-			addressDisplayName: 'Boxhagener Straße 12'
-		});
-		const link = (await page.getByTestId('report-error').element()) as HTMLAnchorElement;
-		expect(link.href).toMatch(/^mailto:hallo@navigator\.berlin/);
-		expect(link.href).toMatch(/mietspiegel-wohnlage/);
-		expect(decodeURIComponent(link.href)).toMatch(/Boxhagener Straße 12/);
+	it('Inspector-Row enthält KEINEN Mailto-Link (Footer-Page deferred)', async () => {
+		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
+		await expect.element(page.getByTestId('error-feedback-mailto')).not.toBeInTheDocument();
+		await expect.element(page.getByTestId('report-error')).not.toBeInTheDocument();
 	});
 
 	it('Learn-more-Link nutzt lang-Prefix', async () => {
@@ -143,5 +137,81 @@ describe('layer-hit-row.svelte', () => {
 		});
 		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/layer/mietspiegel-wohnlage');
+	});
+
+	it('Editorial: legal-Disclaimer für mietspiegel-wohnlage sichtbar', async () => {
+		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
+		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+		expect(d.getAttribute('data-variant')).toBe('legal');
+		expect(d.textContent).toMatch(/rechtliche Aussage/);
+	});
+
+	it('Editorial: bodenrichtwerte-Layer zeigt legal-Disclaimer', async () => {
+		render(LayerHitRow, {
+			hit: { ...recentHit, layer: 'bodenrichtwerte', value: 4500 },
+			layerName: 'Bodenrichtwerte'
+		});
+		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+		expect(d.getAttribute('data-variant')).toBe('legal');
+	});
+
+	it('Editorial: trinkbrunnen INSEASON zeigt aktiv-Pille, KEINEN seasonal-Disclaimer', async () => {
+		render(LayerHitRow, {
+			hit: { ...recentHit, layer: 'trinkbrunnen', value: { name: 'Brunnen 1' } },
+			layerName: 'Trinkbrunnen'
+		});
+		await expect.element(page.getByTestId('seasonal-pill-active')).toBeInTheDocument();
+		await expect.element(page.getByTestId('editorial-disclaimer')).not.toBeInTheDocument();
+	});
+
+	it('Editorial: trinkbrunnen OUTOFSEASON zeigt warning-Pille + seasonal-Disclaimer', async () => {
+		render(LayerHitRow, {
+			hit: { ...recentHit, layer: 'trinkbrunnen', value: null, reason: 'seasonal' },
+			layerName: 'Trinkbrunnen'
+		});
+		await expect.element(page.getByTestId('seasonal-pill-outofseason')).toBeInTheDocument();
+		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+		expect(d.getAttribute('data-variant')).toBe('seasonal');
+	});
+
+	it('Editorial: stolpersteine-Hit rendert StolpersteinDetail', async () => {
+		render(LayerHitRow, {
+			hit: {
+				...recentHit,
+				layer: 'stolpersteine',
+				value: { person: 'Rosa Beispiel', inscription: 'Hier wohnte Rosa' }
+			},
+			layerName: 'Stolpersteine'
+		});
+		await expect.element(page.getByTestId('stolperstein-detail')).toBeInTheDocument();
+		const h = (await page.getByTestId('stolperstein-person').element()) as HTMLElement;
+		expect(h.textContent).toMatch(/Rosa Beispiel/);
+	});
+
+	it('Editorial: stolpersteine-Hit zeigt source-Disclaimer', async () => {
+		render(LayerHitRow, {
+			hit: {
+				...recentHit,
+				layer: 'stolpersteine',
+				value: { person: 'Rosa', inscription: 'x' }
+			},
+			layerName: 'Stolpersteine'
+		});
+		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+		expect(d.getAttribute('data-variant')).toBe('source');
+	});
+
+	it('Editorial: Layer ohne Config zeigt KEINEN Disclaimer', async () => {
+		render(LayerHitRow, {
+			hit: { ...recentHit, layer: 'gebaeudealter', value: 'vor 1949' },
+			layerName: 'Gebäudealter'
+		});
+		await expect.element(page.getByTestId('editorial-disclaimer')).not.toBeInTheDocument();
+	});
+
+	it('Editorial: Disclaimer rendert Source-Link wenn primarySourceUrl in Config', async () => {
+		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
+		const link = (await page.getByTestId('disclaimer-source-link').element()) as HTMLAnchorElement;
+		expect(link.href).toMatch(/^https:\/\//);
 	});
 });

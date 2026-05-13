@@ -2,7 +2,13 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import Harness from './inspector-panel-harness.svelte';
-import type { GeocodeSuggestion, LayerHit, LayerMetadata } from '$lib/data';
+import type {
+	GeocodeSuggestion,
+	LayerHit,
+	LayerMetadata,
+	ClimateStation,
+	ClimateData
+} from '$lib/data';
 
 const address: GeocodeSuggestion = {
 	id: 'way-1',
@@ -84,10 +90,85 @@ describe('inspector-panel.svelte', () => {
 		await expect.element(page.getByTestId('section-klima')).toBeInTheDocument();
 	});
 
-	it('Klima-Sektion zeigt Story-1.11-Placeholder wenn leer', async () => {
+	it('Klima-Sektion zeigt Lade-Hinweis wenn keine Station/Series', async () => {
 		render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
 		const placeholder = (await page.getByTestId('section-klima-empty').element()) as HTMLElement;
-		expect(placeholder.textContent).toMatch(/Story 1\.11/);
+		expect(placeholder.textContent).toMatch(/Klima-Daten/);
+	});
+
+	it('Klima-Sektion rendert Stations-Hinweis und 3 Sparklines bei valider Series', async () => {
+		const station: ClimateStation = {
+			id: '00433',
+			name: 'Berlin-Tempelhof',
+			coordinates: [13.4019, 52.4675],
+			firstYear: 1919
+		};
+		const series: ClimateData = {
+			stationId: '00433',
+			name: 'Berlin-Tempelhof',
+			coordinates: [13.4019, 52.4675],
+			elevation: 48,
+			firstYear: 1919,
+			summerDays: [
+				{ year: 1950, count: 10 },
+				{ year: 2024, count: 22 }
+			],
+			frostDays: [
+				{ year: 1950, count: 80 },
+				{ year: 2024, count: 35 }
+			],
+			hotDays: [
+				{ year: 1950, count: 2 },
+				{ year: 2024, count: 8 }
+			]
+		};
+		render(Harness, {
+			open: true,
+			address,
+			hits: [],
+			layerMeta: fullLayerMeta,
+			nearestStation: station,
+			climateSeries: series
+		});
+		const hint = (await page.getByTestId('klima-station-hint').element()) as HTMLElement;
+		expect(hint.textContent).toContain('Berlin-Tempelhof');
+		expect(hint.textContent).toContain('1919');
+		const grid = (await page.getByTestId('klima-sparkline-grid').element()) as HTMLElement;
+		const sparklines = grid.querySelectorAll('[data-testid="climate-sparkline"]');
+		expect(sparklines.length).toBe(3);
+		await expect.element(page.getByTestId('klima-long-view-slot')).not.toBeInTheDocument();
+	});
+
+	it('Klima-Sektion zeigt LongView NUR bei Station Dahlem (00403)', async () => {
+		const station: ClimateStation = {
+			id: '00403',
+			name: 'Berlin-Dahlem',
+			coordinates: [13.301, 52.4517],
+			firstYear: 1719
+		};
+		const series: ClimateData = {
+			stationId: '00403',
+			name: 'Berlin-Dahlem',
+			coordinates: [13.301, 52.4517],
+			elevation: 51,
+			firstYear: 1719,
+			summerDays: [{ year: 2024, count: 22 }],
+			frostDays: [{ year: 2024, count: 35 }],
+			hotDays: [{ year: 2024, count: 8 }],
+			annualMeanTemp: Array.from({ length: 200 }, (_, i) => ({
+				year: 1820 + i,
+				temp: 8 + i * 0.01
+			}))
+		};
+		render(Harness, {
+			open: true,
+			address,
+			hits: [],
+			layerMeta: fullLayerMeta,
+			nearestStation: station,
+			climateSeries: series
+		});
+		await expect.element(page.getByTestId('klima-long-view-slot')).toBeInTheDocument();
 	});
 
 	it('aria-live="polite" + aria-label gesetzt', async () => {

@@ -125,7 +125,7 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		kind: 'categorical',
 		items: [
 			{ color: COLORS.accentSoft, label: 'gering' },
-			{ color: COLORS.chartCat2, label: 'mittel' },
+			{ color: COLORS.vermillionSoft, label: 'mittel' },
 			{ color: COLORS.vermillion, label: 'hoch' }
 		]
 	},
@@ -300,7 +300,7 @@ export function buildLayerSpec(
 			];
 		case 'choropleth-belastung-3':
 			// Umweltatlas-Belastungs-Indikatoren (Laerm, Luft, Bioklima):
-			// `kategorie` ∈ {gering, mittel, hoch}. Sequentiell Cloud-Dancer → Vermillion.
+			// `kategorie` ∈ {gering, mittel, hoch}. Sequentiell Cloud-Dancer → Vermillion-Soft → Vermillion.
 			return [
 				{
 					id,
@@ -313,7 +313,7 @@ export function buildLayerSpec(
 							'gering',
 							COLORS.accentSoft,
 							'mittel',
-							COLORS.chartCat2,
+							COLORS.vermillionSoft,
 							'hoch',
 							COLORS.vermillion,
 							COLORS.bg

@@ -4,6 +4,7 @@
 	import { getUiState } from '$lib/state/ui-context.svelte.js';
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
 	import PermalinkButton from './inspector-panel/permalink-button.svelte';
+	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 
@@ -73,16 +74,14 @@
 				<section data-testid={`section-${section.key}`} data-section={section.key}>
 					<h3 class="font-serif text-lg text-ink">{section.label}</h3>
 					<div class="mt-2 divide-y divide-rule">
-						{#if section.hits.length === 0}
+						{#if section.key === 'klima'}
+							<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
+						{:else if section.hits.length === 0}
 							<p
 								class="py-3 font-serif italic text-ink-subtle"
 								data-testid={`section-${section.key}-empty`}
 							>
-								{#if section.key === 'klima'}
-									Klima-Sparklines kommen in Story 1.11. Nächstgelegene DWD-Station folgt.
-								{:else}
-									Keine Layer in dieser Sektion.
-								{/if}
+								Keine Layer in dieser Sektion.
 							</p>
 						{:else}
 							{#each section.hits as hit (hit.layer)}
@@ -90,7 +89,8 @@
 									{hit}
 									layerName={getLayerDisplayName(hit.layer)}
 									{lang}
-									addressDisplayName={addressName}
+									lat={ui.selectedAddress?.lat}
+									lng={ui.selectedAddress?.lng}
 								/>
 							{/each}
 						{/if}

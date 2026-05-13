@@ -18,6 +18,8 @@
 	import { getUiState, type SheetSnapVh } from '$lib/state/ui-context.svelte.js';
 	import { loadManifest, getLayerEntry } from '$lib/data/manifest.js';
 	import { getLayersAtPoint } from '$lib/data/get-layers-at-point.js';
+	import { getNearestClimateStation } from '$lib/data/get-climate-station.js';
+	import { getClimateSeries } from '$lib/data/get-climate-series.js';
 	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
 	import { queryPmtilesAt, type MapLibreLike } from '$lib/data/internal/pmtiles-query.js';
 	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data/types.js';
@@ -236,6 +238,8 @@
 		ui.inspectorOpen = false;
 		ui.selectedAddress = null;
 		ui.selectedLayerHits = [];
+		ui.nearestStation = null;
+		ui.climateSeries = null;
 		const url = new URL(window.location.href);
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
@@ -283,6 +287,19 @@
 		} catch {
 			ui.selectedLayerHits = [];
 		}
+		const station = getNearestClimateStation(suggestion.lat, suggestion.lng);
+		ui.nearestStation = station;
+		ui.climateSeries = null;
+		void (async () => {
+			try {
+				const data = await getClimateSeries(station.id);
+				if (ui.nearestStation?.id === station.id) {
+					ui.climateSeries = data;
+				}
+			} catch {
+				ui.climateSeries = null;
+			}
+		})();
 		ui.inspectorOpen = true;
 		announceGlobal(`Inspektor geöffnet für ${suggestion.displayName}`);
 	}

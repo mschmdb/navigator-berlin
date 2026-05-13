@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import type { LayerHit, GeocodeSuggestion } from '$lib/data';
+import type { LayerHit, GeocodeSuggestion, ClimateStation, ClimateData } from '$lib/data';
 
 const KEY = Symbol('ui-state');
 
@@ -15,6 +15,8 @@ export interface UiState {
 	recentLayerSlugs: string[];
 	sheetSnapVh: SheetSnapVh;
 	paletteOpen: boolean;
+	nearestStation: ClimateStation | null;
+	climateSeries: ClimateData | null;
 }
 
 export function createUiState(): UiState {
@@ -25,7 +27,9 @@ export function createUiState(): UiState {
 		activeLayerSlugs: [],
 		recentLayerSlugs: [],
 		sheetSnapVh: 40,
-		paletteOpen: false
+		paletteOpen: false,
+		nearestStation: null,
+		climateSeries: null
 	});
 	setContext(KEY, state);
 	return state;

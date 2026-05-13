@@ -8,6 +8,7 @@ export const COLORS = {
 	accent: '#2A3F7C',
 	accentSoft: '#E0E4F0',
 	vermillion: '#9E5520',
+	vermillionSoft: '#C99F7A',
 	indigo: '#2A3F7C',
 	chartCat1: '#2A3F7C',
 	chartCat2: '#9E5520',

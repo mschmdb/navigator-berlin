@@ -19,7 +19,9 @@ function makeState(): UiState {
 		activeLayerSlugs: [],
 		recentLayerSlugs: [],
 		sheetSnapVh: 40,
-		paletteOpen: false
+		paletteOpen: false,
+		nearestStation: null,
+		climateSeries: null
 	};
 }
 
@@ -35,6 +37,8 @@ describe('ui-context', () => {
 		expect(state.recentLayerSlugs).toEqual([]);
 		expect(state.sheetSnapVh).toBe(40);
 		expect(state.paletteOpen).toBe(false);
+		expect(state.nearestStation).toBeNull();
+		expect(state.climateSeries).toBeNull();
 	});
 
 	it('createUiState reagiert auf Mutation reaktiv', async () => {
