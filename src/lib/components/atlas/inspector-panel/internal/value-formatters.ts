@@ -1,3 +1,5 @@
+import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
+
 export interface FormattedValue {
 	text: string;
 	isNumeric: boolean;
@@ -52,12 +54,17 @@ function formatStrassenlaerm(value: unknown): FormattedValue {
 	return { text: `Schienenverkehr: ${gruppe}`, isNumeric: false };
 }
 
-function formatUmweltatlasKategorie(value: unknown, prefix: string): FormattedValue {
+function formatUmweltatlasKategorie(
+	value: unknown,
+	prefix: string,
+	mapKategorie?: (raw: string) => string
+): FormattedValue {
 	const kategorie = pickProp(value, 'kategorie');
 	const plr = pickProp(value, 'plr_name');
 	if (typeof kategorie !== 'string') return FALLBACK;
+	const display = mapKategorie ? mapKategorie(kategorie) : kategorie;
 	const suffix = typeof plr === 'string' ? ` · ${plr}` : '';
-	return { text: `${prefix}: ${kategorie}${suffix}`, isNumeric: false };
+	return { text: `${prefix}: ${display}${suffix}`, isNumeric: false };
 }
 
 function formatWohnlage(value: unknown): FormattedValue {
@@ -270,7 +277,7 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 		case 'bioklima-2023':
 			return formatUmweltatlasKategorie(value, 'Thermische Belastung');
 		case 'gruenversorgung-2023':
-			return formatUmweltatlasKategorie(value, 'Grünversorgung');
+			return formatUmweltatlasKategorie(value, 'Grünversorgung', mapGruenversorgungKategorie);
 		case 'umweltgerechtigkeit-2023':
 			return formatUmweltgerechtigkeit(value);
 		case 'klima-pet-2022':

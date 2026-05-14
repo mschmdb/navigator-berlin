@@ -1,12 +1,14 @@
 // Story 1.18 Value-Severity-Mapping. Pro Layer kategorisch oder via numerischer Schwelle.
 // Quellen für Schwellen: WHO Environmental-Noise-Guidelines + Umweltatlas-Berlin-Kategorien.
+// Story 1.22: Grünversorgung als Versorgungs-Skala invertiert (siehe severityFromGruenversorgung).
+
+import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
 
 export type SeverityLevel = 'success' | 'success-soft' | 'neutral' | 'warning' | 'danger';
 
 const NUMERIC_THRESHOLD_LAYERS = new Set(['laerm-2023', 'laerm-den', 'laerm-night']);
 const UMWELTATLAS_KATEGORIE_LAYERS = new Set([
 	'luft-2023',
-	'gruenversorgung-2023',
 	'bioklima-2023',
 	'thermische-belastung-2023'
 ]);
@@ -55,6 +57,19 @@ function severityFromUmweltatlasKategorie(kategorie: string): SeverityLevel {
 	if (v === 'niedrig' || v === 'gering' || v === 'gut' || v === 'sehr niedrig') return 'success';
 	if (v === 'mittel' || v === 'mittlere belastung') return 'warning';
 	if (v === 'hoch' || v === 'sehr hoch' || v === 'schlecht' || v === 'kritisch') return 'danger';
+	return 'neutral';
+}
+
+// Story 1.22: Grünversorgung als Versorgungs-Skala — invertiert ggü. Belastungs-Kategorien.
+// Roh-Daten (gut/mittel/schlecht) werden auf harmonisierte Skala gemappt; Severity bezieht
+// sich auf die harmonisierten Werte (sehr hoch/hoch = gut versorgt = success).
+function severityFromGruenversorgung(value: unknown): SeverityLevel {
+	const kat = pickKategorie(value);
+	if (!kat) return 'neutral';
+	const v = mapGruenversorgungKategorie(kat).toLowerCase().trim();
+	if (v === 'hoch' || v === 'sehr hoch') return 'success';
+	if (v === 'mittel') return 'success-soft';
+	if (v === 'gering' || v === 'sehr gering') return 'warning';
 	return 'neutral';
 }
 
@@ -108,6 +123,9 @@ export function getValueSeverity(slug: string, value: unknown): SeverityLevel {
 	}
 
 	switch (slug) {
+		case 'gruenversorgung-2023':
+			return severityFromGruenversorgung(value);
+
 		case 'mietspiegel-wohnlage':
 		case 'wohnlagen-2024':
 			return severityFromWohnlage(value);

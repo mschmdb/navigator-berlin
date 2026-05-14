@@ -156,4 +156,30 @@ describe('formatLayerValue', () => {
 			isNumeric: false
 		});
 	});
+
+	// Story 1.22: Grünversorgung-Skala harmonisiert auf gering/mittel/hoch.
+	describe('Grünversorgung Skala-Harmonisierung (Story 1.22)', () => {
+		it('schlecht → "Grünversorgung: gering"', () => {
+			expect(
+				formatLayerValue('gruenversorgung-2023', { kategorie: 'schlecht', plr_name: 'Pankow' })
+			).toEqual({ text: 'Grünversorgung: gering · Pankow', isNumeric: false });
+		});
+		it('gut → "Grünversorgung: hoch"', () => {
+			expect(
+				formatLayerValue('gruenversorgung-2023', { kategorie: 'gut', plr_name: 'Wilmersdorf' })
+			).toEqual({ text: 'Grünversorgung: hoch · Wilmersdorf', isNumeric: false });
+		});
+		it('mittel → "Grünversorgung: mittel" (unverändert)', () => {
+			expect(formatLayerValue('gruenversorgung-2023', { kategorie: 'mittel' })).toEqual({
+				text: 'Grünversorgung: mittel',
+				isNumeric: false
+			});
+		});
+		it('sehr gut → "Grünversorgung: sehr hoch"', () => {
+			expect(formatLayerValue('gruenversorgung-2023', { kategorie: 'sehr gut' })).toEqual({
+				text: 'Grünversorgung: sehr hoch',
+				isNumeric: false
+			});
+		});
+	});
 });

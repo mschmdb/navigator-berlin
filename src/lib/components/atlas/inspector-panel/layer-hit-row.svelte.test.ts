@@ -414,4 +414,59 @@ describe('layer-hit-row.svelte', () => {
 			expect(banner.className).toMatch(/text-\[10px\]/);
 		});
 	});
+
+	// Story 1.22: Grünversorgung-Skala harmonisiert (gering/mittel/hoch) + invertierte Severity.
+	describe('Story 1.22: Grünversorgung Skala-Harmonisierung', () => {
+		const gruenSource = 'https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023';
+
+		it('Grünversorgung "gut" (raw) → ValueChip "hoch" mit success-Severity', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'gruenversorgung-2023',
+					value: { kategorie: 'gut', plr_name: 'Wilmersdorf' },
+					source: gruenSource,
+					updatedAt: '2024-01-15T00:00:00Z',
+					license: 'dl-de/zero-2-0'
+				},
+				layerName: 'Grünversorgung 2023'
+			});
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.getAttribute('data-severity')).toBe('success');
+			expect(chip.textContent).toMatch(/hoch/);
+			expect(chip.textContent).not.toMatch(/gut/);
+		});
+
+		it('Grünversorgung "schlecht" (raw) → ValueChip "gering" mit warning-Severity', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'gruenversorgung-2023',
+					value: { kategorie: 'schlecht', plr_name: 'Pankow' },
+					source: gruenSource,
+					updatedAt: '2024-01-15T00:00:00Z',
+					license: 'dl-de/zero-2-0'
+				},
+				layerName: 'Grünversorgung 2023'
+			});
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.getAttribute('data-severity')).toBe('warning');
+			expect(chip.textContent).toMatch(/gering/);
+			expect(chip.textContent).not.toMatch(/schlecht/);
+		});
+
+		it('Grünversorgung "mittel" → ValueChip "mittel" mit success-soft-Severity', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'gruenversorgung-2023',
+					value: { kategorie: 'mittel', plr_name: 'Mitte' },
+					source: gruenSource,
+					updatedAt: '2024-01-15T00:00:00Z',
+					license: 'dl-de/zero-2-0'
+				},
+				layerName: 'Grünversorgung 2023'
+			});
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.getAttribute('data-severity')).toBe('success-soft');
+			expect(chip.textContent).toMatch(/mittel/);
+		});
+	});
 });

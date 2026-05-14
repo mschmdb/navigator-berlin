@@ -2,6 +2,8 @@
 // Trennt "Wert" (Chip) von "Kontext" (Kiez/PLR/Adresse) und liefert Fallback-Text für POIs
 // und Editorial-Layer ohne semantische Severity.
 
+import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
+
 export interface ChipData {
 	value: string;
 	unit?: string;
@@ -49,11 +51,15 @@ function fallback(text: string, context: string | null = null): LayerHitDisplay 
 	return { chip: null, fallbackText: text, context };
 }
 
-function umweltatlasDisplay(value: unknown): LayerHitDisplay {
+function umweltatlasDisplay(
+	value: unknown,
+	mapKategorie?: (raw: string) => string
+): LayerHitDisplay {
 	const kategorie = pickProp(value, 'kategorie');
 	const plr = pickProp(value, 'plr_name');
 	if (typeof kategorie !== 'string') return EMPTY;
-	return chipWithContext(kategorie, typeof plr === 'string' ? plr : null);
+	const display = mapKategorie ? mapKategorie(kategorie) : kategorie;
+	return chipWithContext(display, typeof plr === 'string' ? plr : null);
 }
 
 function laermNumericDisplay(value: unknown): LayerHitDisplay {
@@ -267,9 +273,10 @@ export function getLayerHitDisplay(slug: string, value: unknown): LayerHitDispla
 			return laermNumericDisplay(value);
 		case 'luft-2023':
 		case 'bioklima-2023':
-		case 'gruenversorgung-2023':
 		case 'thermische-belastung-2023':
 			return umweltatlasDisplay(value);
+		case 'gruenversorgung-2023':
+			return umweltatlasDisplay(value, mapGruenversorgungKategorie);
 		case 'umweltgerechtigkeit-2023':
 			return umweltgerechtigkeitDisplay(value);
 		case 'klima-pet-2022':

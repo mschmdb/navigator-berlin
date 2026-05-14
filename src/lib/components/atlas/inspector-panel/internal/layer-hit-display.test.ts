@@ -42,13 +42,25 @@ describe('getLayerHitDisplay()', () => {
 			expect(d.context).toBe('Mitte');
 		});
 
-		it('gruenversorgung-2023 kategorisch: chip + context', () => {
+		// Story 1.22: gruenversorgung-Skala harmonisiert auf gering/mittel/hoch (statt schlecht/gut).
+		it('gruenversorgung-2023 raw schlecht → chip "gering"', () => {
 			const d = getLayerHitDisplay('gruenversorgung-2023', {
 				kategorie: 'schlecht',
 				plr_name: 'Pankow'
 			});
-			expect(d.chip?.value).toBe('schlecht');
+			expect(d.chip?.value).toBe('gering');
 			expect(d.context).toBe('Pankow');
+		});
+		it('gruenversorgung-2023 raw gut → chip "hoch"', () => {
+			const d = getLayerHitDisplay('gruenversorgung-2023', {
+				kategorie: 'gut',
+				plr_name: 'Wilmersdorf'
+			});
+			expect(d.chip?.value).toBe('hoch');
+		});
+		it('gruenversorgung-2023 raw mittel → chip "mittel" (unverändert)', () => {
+			const d = getLayerHitDisplay('gruenversorgung-2023', { kategorie: 'mittel' });
+			expect(d.chip?.value).toBe('mittel');
 		});
 	});
 

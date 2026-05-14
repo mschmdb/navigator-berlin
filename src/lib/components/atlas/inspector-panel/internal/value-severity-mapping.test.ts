@@ -68,22 +68,47 @@ describe('getValueSeverity()', () => {
 		});
 	});
 
-	describe('Luft / Grünversorgung / Bioklima / Thermische Belastung', () => {
+	describe('Luft / Bioklima / Thermische Belastung (Belastungs-Skala)', () => {
 		it('niedrig → success', () => {
 			expect(getValueSeverity('luft-2023', { kategorie: 'niedrig' })).toBe('success');
-			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'gut' })).toBe('success');
 			expect(getValueSeverity('bioklima-2023', { kategorie: 'niedrig' })).toBe('success');
 		});
 		it('mittel → warning', () => {
 			expect(getValueSeverity('luft-2023', { kategorie: 'mittel' })).toBe('warning');
-			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'mittel' })).toBe('warning');
 		});
-		it('hoch / schlecht → danger', () => {
+		it('hoch / sehr hoch → danger', () => {
 			expect(getValueSeverity('luft-2023', { kategorie: 'hoch' })).toBe('danger');
-			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'schlecht' })).toBe(
-				'danger'
-			);
 			expect(getValueSeverity('bioklima-2023', { kategorie: 'sehr hoch' })).toBe('danger');
+		});
+	});
+
+	// Story 1.22: Grünversorgung nutzt invertierte Skala (mehr Grün = besser).
+	// Severity inverted: hoch/gut = success, gering/schlecht = warning.
+	describe('Grünversorgung (Versorgungs-Skala, invertiert)', () => {
+		it('hoch / gut (raw) → success', () => {
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'hoch' })).toBe('success');
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'gut' })).toBe('success');
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr hoch' })).toBe(
+				'success'
+			);
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr gut' })).toBe(
+				'success'
+			);
+		});
+		it('mittel → success-soft (User-Pattern Story 1.18: gegen Grau-Monotonie)', () => {
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'mittel' })).toBe(
+				'success-soft'
+			);
+		});
+		it('gering / schlecht (raw) / niedrig → warning', () => {
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'gering' })).toBe('warning');
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'schlecht' })).toBe(
+				'warning'
+			);
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'niedrig' })).toBe('warning');
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr gering' })).toBe(
+				'warning'
+			);
 		});
 	});
 
