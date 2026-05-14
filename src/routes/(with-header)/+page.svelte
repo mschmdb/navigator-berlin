@@ -21,6 +21,8 @@
 	import { getUiState, type SheetSnapVh } from '$lib/state/ui-context.svelte.js';
 	import { loadManifest, getLayerEntry } from '$lib/data/manifest.js';
 	import { getLayersAtPoint } from '$lib/data/get-layers-at-point.js';
+	import { hasBerlinBezirkHit } from '$lib/data/has-berlin-bezirk-hit.js';
+	import { isInBerlin } from '$lib/data/constants.js';
 	import { getNearestClimateStation } from '$lib/data/get-climate-station.js';
 	import { getClimateSeries } from '$lib/data/get-climate-series.js';
 	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
@@ -354,18 +356,37 @@
 		return queryPmtilesAt(rawMap as unknown as MapLibreLike, layerIdFor(slug), lng, lat);
 	}
 
-	async function openInspectorFor(suggestion: GeocodeSuggestion) {
-		ui.selectedAddress = suggestion;
+	let outsideBerlinHintVisible = $state(false);
+	let outsideBerlinHintTimer: ReturnType<typeof setTimeout> | null = null;
+
+	function showOutsideBerlinHint(): void {
+		outsideBerlinHintVisible = true;
+		if (outsideBerlinHintTimer) clearTimeout(outsideBerlinHintTimer);
+		outsideBerlinHintTimer = setTimeout(() => {
+			outsideBerlinHintVisible = false;
+			outsideBerlinHintTimer = null;
+		}, 4000);
+	}
+
+	async function openInspectorFor(suggestion: GeocodeSuggestion): Promise<boolean> {
+		let hits: Awaited<ReturnType<typeof getLayersAtPoint>>;
 		try {
-			ui.selectedLayerHits = await getLayersAtPoint(
+			hits = await getLayersAtPoint(
 				suggestion.lat,
 				suggestion.lng,
 				undefined,
 				pmtilesQuery
 			);
 		} catch {
-			ui.selectedLayerHits = [];
+			hits = [];
 		}
+		if (!hasBerlinBezirkHit(hits)) {
+			showOutsideBerlinHint();
+			announceGlobal('Bitte wähle eine Adresse innerhalb Berlins');
+			return false;
+		}
+		ui.selectedAddress = suggestion;
+		ui.selectedLayerHits = hits;
 		const station = getNearestClimateStation(suggestion.lat, suggestion.lng);
 		ui.nearestStation = station;
 		ui.climateSeries = null;
@@ -390,6 +411,7 @@
 					ui.oepnvStopIndex = null;
 				});
 		}
+		return true;
 	}
 
 	function detectPinSlugAtPoint(lngLat: [number, number]): string | null {
@@ -425,6 +447,13 @@
 				return;
 			}
 		}
+		// Brandenburg-Click-Guard (Phase 1: BBOX-Filter, cheap early-exit).
+		// Phase-2-Filter (bezirke-Polygon) sitzt in openInspectorFor.
+		if (!isInBerlin(lngLat[1], lngLat[0])) {
+			showOutsideBerlinHint();
+			announceGlobal('Bitte wähle eine Adresse innerhalb Berlins');
+			return;
+		}
 		// Story 1.15 AC-3: Click auf Pin-Layer setzt scroll-target fuer Inspector.
 		const pinSlug = detectPinSlugAtPoint(lngLat);
 		if (pinSlug) ui.scrollToLayerSlug = pinSlug;
@@ -434,7 +463,8 @@
 				await placeMarker([suggestion.lng, suggestion.lat], suggestion.displayName);
 				const bezirkPart = suggestion.bezirk ? `, Bezirk ${suggestion.bezirk}` : '';
 				announceGlobal(`Adresse ausgewählt: ${suggestion.displayName}${bezirkPart}`);
-				await openInspectorFor(suggestion);
+				const opened = await openInspectorFor(suggestion);
+				if (!opened) clearMarker();
 				return;
 			}
 		} catch {
@@ -450,7 +480,8 @@
 			addresstype: 'point'
 		};
 		announceGlobal(`Punkt ausgewählt: ${lngLat[1].toFixed(4)}, ${lngLat[0].toFixed(4)}`);
-		await openInspectorFor(synthetic);
+		const opened = await openInspectorFor(synthetic);
+		if (!opened) clearMarker();
 	}
 
 	async function onSelectAccessibleFeature(feature: {
@@ -626,6 +657,16 @@
 			activeLayerSlugs={ui.activeLayerSlugs}
 			isMobile={viewport.breakpoint === 'mobile'}
 		/>
+		{#if outsideBerlinHintVisible}
+			<div
+				class="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-sm border border-severity-warning/40 bg-severity-warning-bg px-3 py-2 font-sans text-sm text-severity-warning shadow-sm"
+				role="status"
+				aria-live="polite"
+				data-testid="outside-berlin-hint"
+			>
+				Bitte wähle eine Adresse innerhalb Berlins
+			</div>
+		{/if}
 	</div>
 
 	{#if showSidePanel}

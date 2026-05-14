@@ -44,6 +44,11 @@ export interface SourceConfig {
 	inspectorRelevant?: boolean;
 	/** Default 'geojson'. 'pmtiles' für Heavy-Layer via tippecanoe-Pipeline. */
 	format?: LayerFormat;
+	/** Optional. Wenn gesetzt: bei Polygon-NO-HIT wird nächstes Polygon innerhalb dieser
+	 * Distanz (km) als Hit gewertet. Fachlich sinnvoll für räumlich glatte Indikatoren
+	 * (z.B. Klima-Block-Geometrien, wo Adress-Geocoding im Hof/Straßenraum landet,
+	 * der außerhalb der Siedlungs-Polygone liegt). Story 1.25. */
+	nearestPolygonFallbackKm?: number;
 }
 
 export interface LayerEntry {
@@ -61,6 +66,8 @@ export interface LayerEntry {
 	featureCount: number;
 	inspectorRelevant?: boolean;
 	format?: LayerFormat;
+	/** siehe SourceConfig.nearestPolygonFallbackKm. */
+	nearestPolygonFallbackKm?: number;
 }
 
 export interface Manifest {

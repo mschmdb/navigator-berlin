@@ -46,7 +46,8 @@ const LayerMetadataSchema = v.object({
 	geometryType: GeometryTypeSchema,
 	featureCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	inspectorRelevant: v.optional(v.boolean()),
-	format: v.optional(FormatSchema)
+	format: v.optional(FormatSchema),
+	nearestPolygonFallbackKm: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))
 });
 
 export const ManifestSchema = v.object({

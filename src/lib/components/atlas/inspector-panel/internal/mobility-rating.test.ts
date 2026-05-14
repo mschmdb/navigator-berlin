@@ -90,3 +90,62 @@ describe('getMobilityRating', () => {
 		expect(getMobilityRating(nearest({})).label).toBe('Nicht angebunden');
 	});
 });
+
+describe('getMobilityRating residential soft-cutoff', () => {
+	function soft(distanceM: number, name = 'X'): NearestStop {
+		return {
+			name,
+			lat: 0,
+			lng: 0,
+			distanceM,
+			walkingMin: Math.ceil(distanceM / 80),
+			soft: true
+		};
+	}
+
+	it('rates "schwach" when residential + only soft stops present', () => {
+		const r = getMobilityRating(
+			nearest({ sbahn: soft(900) }),
+			{ isResidential: true }
+		);
+		expect(r.key).toBe('schwach');
+		expect(r.severity).toBe('warning');
+		expect(r.label).toBe('Schwach angebunden');
+	});
+
+	it('rates "keine" when NOT residential, even with soft stops', () => {
+		const r = getMobilityRating(
+			nearest({ sbahn: soft(900) }),
+			{ isResidential: false }
+		);
+		expect(r.key).toBe('keine');
+		expect(r.severity).toBe('danger');
+	});
+
+	it('rates "keine" when residential but no soft stops either', () => {
+		const r = getMobilityRating(nearest({}), { isResidential: true });
+		expect(r.key).toBe('keine');
+	});
+
+	it('ignores soft stops in scoring when hard stop exists', () => {
+		const r = getMobilityRating(
+			nearest({ ubahn: stop(200), sbahn: soft(1200) }),
+			{ isResidential: true }
+		);
+		expect(r.key).toBe('top');
+	});
+
+	it('isResidential default false: no schwach upgrade', () => {
+		const r = getMobilityRating(nearest({ sbahn: soft(900) }));
+		expect(r.key).toBe('keine');
+	});
+
+	it('schwach score is 0 (soft stops contribute no score)', () => {
+		const r = getMobilityRating(
+			nearest({ sbahn: soft(900), bus: soft(800) }),
+			{ isResidential: true }
+		);
+		expect(r.key).toBe('schwach');
+		expect(r.score).toBe(0);
+	});
+});

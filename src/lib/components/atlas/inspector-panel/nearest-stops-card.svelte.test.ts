@@ -165,4 +165,85 @@ describe('NearestStopsCard', () => {
 		expect(badge?.getAttribute('data-rating')).toBe('keine');
 		expect(badge?.getAttribute('data-severity')).toBe('danger');
 	});
+
+	describe('residential soft-cutoff (Story 1.21)', () => {
+		// Karow-like fixture: residential address with only S-Bahn ~900m away.
+		const KAROW_ADDR = { lat: 52.523, lng: 13.4544 };
+		const KAROW_FAR_INDEX: OepnvStopIndex = {
+			ubahn: [],
+			sbahn: [{ name: 'Karow', lat: 52.5159, lng: 13.4544 }], // ~880m walking
+			tram: [],
+			bus: []
+		};
+
+		it('renders soft stop (>600m) when isResidential', () => {
+			const screen = render(NearestStopsCard, {
+				address: KAROW_ADDR,
+				index: KAROW_FAR_INDEX,
+				isResidential: true
+			});
+			const row = screen.container.querySelector(
+				'[data-testid="nearest-stop-row"][data-modus="sbahn"]'
+			);
+			expect(row).not.toBeNull();
+			expect(row?.getAttribute('data-soft')).toBe('true');
+			expect(row?.getAttribute('data-severity')).toBe('warning');
+		});
+
+		it('badge shows "schwach" + warning severity for residential + soft-only', () => {
+			const screen = render(NearestStopsCard, {
+				address: KAROW_ADDR,
+				index: KAROW_FAR_INDEX,
+				isResidential: true
+			});
+			const badge = screen.container.querySelector('[data-testid="mobility-rating-badge"]');
+			expect(badge?.getAttribute('data-rating')).toBe('schwach');
+			expect(badge?.getAttribute('data-severity')).toBe('warning');
+			expect(badge?.textContent).toMatch(/Schwach angebunden/);
+		});
+
+		it('does NOT render soft stops when isResidential is false (default)', () => {
+			const screen = render(NearestStopsCard, {
+				address: KAROW_ADDR,
+				index: KAROW_FAR_INDEX
+				// isResidential omitted (defaults to false)
+			});
+			const rows = screen.container.querySelectorAll('[data-testid="nearest-stop-row"]');
+			expect(rows.length).toBe(0);
+			const empty = screen.container.querySelector('[data-testid="nearest-stops-empty"]');
+			expect(empty).not.toBeNull();
+		});
+
+		it('empty-state when residential but no stop within 1500m either', () => {
+			const screen = render(NearestStopsCard, {
+				address: { lat: 52.3, lng: 13.0 },
+				index: INDEX_FULL,
+				isResidential: true
+			});
+			const empty = screen.container.querySelector('[data-testid="nearest-stops-empty"]');
+			expect(empty).not.toBeNull();
+		});
+
+		it('hard stops still preferred over soft stops with same modus', () => {
+			const mixed: OepnvStopIndex = {
+				ubahn: [],
+				sbahn: [
+					{ name: 'NearHit', lat: 52.522, lng: 13.4544 }, // ~145m
+					{ name: 'FarHit', lat: 52.5159, lng: 13.4544 } // ~880m, soft
+				],
+				tram: [],
+				bus: []
+			};
+			const screen = render(NearestStopsCard, {
+				address: KAROW_ADDR,
+				index: mixed,
+				isResidential: true
+			});
+			const row = screen.container.querySelector(
+				'[data-testid="nearest-stop-row"][data-modus="sbahn"]'
+			);
+			expect(row?.textContent).toContain('NearHit');
+			expect(row?.getAttribute('data-soft')).toBeNull();
+		});
+	});
 });

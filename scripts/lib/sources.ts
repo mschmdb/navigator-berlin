@@ -186,7 +186,12 @@ export const SOURCES: SourceConfig[] = [
 		bundleGroup: 'C: Umwelt',
 		zoomThresholds: { min: 11, max: 18 },
 		simplifyProfile: 'polygon',
-		sourceUpdatedAt: '2024-06-01T00:00:00.000Z'
+		sourceUpdatedAt: '2024-06-01T00:00:00.000Z',
+		// Story 1.25: Berliner Senat publiziert PET nur auf Siedlungs-Polygonen
+		// (Wohnblock-Geometrie). Adress-Geocoding landet oft im Hof/Straßenraum
+		// und schlägt Punkt-in-Polygon fehl. PET ist räumlich glatt, daher
+		// nächstes Polygon im 50m-Radius als Hit akzeptieren.
+		nearestPolygonFallbackKm: 0.05
 	},
 	{
 		slug: 'klima-kaltlufteinwirkbereich-2022',

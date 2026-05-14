@@ -33,6 +33,9 @@ export interface LayerMetadata {
 	featureCount: number;
 	inspectorRelevant?: boolean;
 	format?: LayerFormat;
+	/** Wenn gesetzt: get-layers-at-point akzeptiert bei Polygon-NO-HIT das nächste
+	 * Polygon innerhalb dieser Distanz (km). Story 1.25. */
+	nearestPolygonFallbackKm?: number;
 }
 
 export interface Manifest {

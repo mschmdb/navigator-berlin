@@ -245,7 +245,8 @@ function renderOepnv(input: LlmExportInput, lines: string[]): void {
 	for (const { key, label } of MODI) {
 		const stop = nearest[key];
 		if (!stop) continue;
-		lines.push(`- ${label}: ${stop.name} · ${stop.distanceM} m · ${stop.walkingMin} min`);
+		const softSuffix = stop.soft ? ' · schwach (außerhalb 600 m)' : '';
+		lines.push(`- ${label}: ${stop.name} · ${stop.distanceM} m · ${stop.walkingMin} min${softSuffix}`);
 	}
 	lines.push('');
 }

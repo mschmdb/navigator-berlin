@@ -117,7 +117,90 @@ async function hitForLayer(
 			return makeHit(layer, feat.properties);
 		}
 	}
+
+	// Story 1.25: Wenn Layer nearestPolygonFallbackKm definiert (z.B. klima-pet-2022),
+	// suche nächstes Polygon im erweiterten Radius. Adress-Geocoding landet bei
+	// Block-Geometrie-Layern oft im Hof/Straßenraum direkt neben dem zuständigen Polygon.
+	const fallbackKm = layer.nearestPolygonFallbackKm;
+	if (typeof fallbackKm === 'number' && fallbackKm > 0) {
+		const pad = Math.max(0.001, fallbackKm * 0.012);
+		const wideCandidates = idx.search({
+			minX: lng - pad,
+			minY: lat - pad,
+			maxX: lng + pad,
+			maxY: lat + pad
+		});
+		let nearestKm = Infinity;
+		let nearestFeat: Feature<Polygon | MultiPolygon> | null = null;
+		for (const cand of wideCandidates) {
+			const feat = fc.features[cand.featureIndex] as Feature<Polygon | MultiPolygon>;
+			const km = pointToPolygonDistanceKm(lat, lng, feat);
+			if (km < nearestKm) {
+				nearestKm = km;
+				nearestFeat = feat;
+			}
+		}
+		if (nearestFeat && nearestKm <= fallbackKm) {
+			return makeHit(layer, nearestFeat.properties);
+		}
+	}
+
 	return makeHit(layer, null, 'no-coverage');
+}
+
+const METERS_PER_DEG_LAT = 111_320;
+
+function pointToPolygonDistanceKm(
+	lat: number,
+	lng: number,
+	feat: Feature<Polygon | MultiPolygon>
+): number {
+	const polygons =
+		feat.geometry.type === 'Polygon' ? [feat.geometry.coordinates] : feat.geometry.coordinates;
+	const cosLat = Math.cos((lat * Math.PI) / 180);
+	const py = lat * METERS_PER_DEG_LAT;
+	const px = lng * METERS_PER_DEG_LAT * cosLat;
+	let minMeters = Infinity;
+	for (const poly of polygons) {
+		for (const ring of poly) {
+			for (let i = 0; i < ring.length - 1; i++) {
+				const [ax, ay] = ring[i];
+				const [bx, by] = ring[i + 1];
+				const axM = ax * METERS_PER_DEG_LAT * cosLat;
+				const ayM = ay * METERS_PER_DEG_LAT;
+				const bxM = bx * METERS_PER_DEG_LAT * cosLat;
+				const byM = by * METERS_PER_DEG_LAT;
+				const meters = pointToSegmentMeters(px, py, axM, ayM, bxM, byM);
+				if (meters < minMeters) minMeters = meters;
+			}
+		}
+	}
+	return minMeters / 1000;
+}
+
+function pointToSegmentMeters(
+	px: number,
+	py: number,
+	ax: number,
+	ay: number,
+	bx: number,
+	by: number
+): number {
+	const dx = bx - ax;
+	const dy = by - ay;
+	const lenSq = dx * dx + dy * dy;
+	if (lenSq === 0) {
+		const ex = px - ax;
+		const ey = py - ay;
+		return Math.sqrt(ex * ex + ey * ey);
+	}
+	let t = ((px - ax) * dx + (py - ay) * dy) / lenSq;
+	t = Math.max(0, Math.min(1, t));
+	const cx = ax + t * dx;
+	const cy = ay + t * dy;
+	const ex = px - cx;
+	const ey = py - cy;
+	return Math.sqrt(ex * ex + ey * ey);
 }
 
 export async function getLayersAtPoint(

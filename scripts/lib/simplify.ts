@@ -3,9 +3,12 @@ import type { SimplifyProfile } from './types.js';
 export function simplifyCommand(profile: SimplifyProfile): string {
 	switch (profile) {
 		case 'boundary':
-			return '-simplify visvalingam 10% planar -clean';
+			// keep-shapes verhindert, dass nach Simplifizierung entstandene Slivers
+			// durch -clean entfernt werden. Story 1.25: 20%-Profil ohne keep-shapes
+			// hat 3826 von 16217 PET-Polygonen verschluckt.
+			return '-simplify visvalingam 10% planar keep-shapes -clean';
 		case 'polygon':
-			return '-simplify visvalingam 20% planar -clean';
+			return '-simplify visvalingam 20% planar keep-shapes -clean';
 		case 'point':
 			return '';
 		case 'tiles':

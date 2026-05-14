@@ -1,4 +1,5 @@
 export const MAX_WALKING_DISTANCE_M = 600;
+export const EXTENDED_WALKING_DISTANCE_M = 1500;
 export const WALKING_SPEED_M_PER_MIN = 80;
 export const DETOUR_FACTOR = 1.3;
 

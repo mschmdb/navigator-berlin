@@ -2,8 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
 	findNearestStop,
 	findAllNearestStops,
+	findAllNearestStopsWithSoft,
 	type AddressPoint
 } from './nearest-oepnv-stop.js';
+import { EXTENDED_WALKING_DISTANCE_M } from '$lib/utils/oepnv-walking.js';
 import type { OepnvStop, OepnvStopIndex } from '$lib/data';
 
 const FRANKFURTER_TOR: AddressPoint = { lat: 52.5159, lng: 13.4544 };
@@ -104,5 +106,86 @@ describe('findAllNearestStops', () => {
 		expect(result.sbahn).toBeNull();
 		expect(result.tram).toBeNull();
 		expect(result.bus).toBeNull();
+	});
+});
+
+describe('findNearestStop with soft-cutoff', () => {
+	it('marks stop > softCutoff as soft', () => {
+		const farStop: OepnvStop = {
+			name: 'Karow',
+			lat: 52.523,
+			lng: 13.4544 // ~880m crow-flight from FT
+		};
+		const res = findNearestStop(FRANKFURTER_TOR, [farStop], 1500, 600);
+		expect(res).not.toBeNull();
+		expect(res?.soft).toBe(true);
+		expect(res?.distanceM).toBeGreaterThan(600);
+	});
+
+	it('does not mark stop within softCutoff as soft', () => {
+		const closeStop: OepnvStop = {
+			name: 'Close',
+			lat: 52.5165,
+			lng: 13.4544
+		};
+		const res = findNearestStop(FRANKFURTER_TOR, [closeStop], 1500, 600);
+		expect(res).not.toBeNull();
+		expect(res?.soft).toBeFalsy();
+	});
+
+	it('returns null beyond hard max even with extended threshold', () => {
+		const veryFar: OepnvStop = { name: 'Far', lat: 52.55, lng: 13.4544 };
+		const res = findNearestStop(FRANKFURTER_TOR, [veryFar], 1500, 600);
+		expect(res).toBeNull();
+	});
+
+	it('default softCutoff equals maxDistance (no soft flag set when not requested)', () => {
+		const stops: OepnvStop[] = [{ name: 'X', lat: 52.5165, lng: 13.4544 }];
+		const res = findNearestStop(FRANKFURTER_TOR, stops);
+		expect(res?.soft).toBeFalsy();
+	});
+});
+
+describe('findAllNearestStopsWithSoft', () => {
+	const FAR_BUT_SOFT: OepnvStopIndex = {
+		ubahn: [],
+		sbahn: [{ name: 'Karow', lat: 52.523, lng: 13.4544 }], // ~880m → soft
+		tram: [],
+		bus: [{ name: 'Close', lat: 52.5165, lng: 13.4544 }] // ~85m → hard
+	};
+
+	it('marks far stops as soft, near stops as not soft', () => {
+		const result = findAllNearestStopsWithSoft(FRANKFURTER_TOR, FAR_BUT_SOFT);
+		expect(result.sbahn?.soft).toBe(true);
+		expect(result.bus?.soft).toBeFalsy();
+	});
+
+	it('respects custom maxDistance + softCutoff', () => {
+		const result = findAllNearestStopsWithSoft(FRANKFURTER_TOR, FAR_BUT_SOFT, {
+			maxDistanceM: 1500,
+			softCutoffM: 50
+		});
+		// Bus is ~87m walking → soft when cutoff = 50
+		expect(result.bus?.soft).toBe(true);
+	});
+
+	it('returns null per modus when nothing in range', () => {
+		const empty: OepnvStopIndex = { ubahn: [], sbahn: [], tram: [], bus: [] };
+		const result = findAllNearestStopsWithSoft(FRANKFURTER_TOR, empty);
+		expect(result.ubahn).toBeNull();
+	});
+
+	it('defaults to EXTENDED_WALKING_DISTANCE_M / MAX_WALKING_DISTANCE_M', () => {
+		expect(EXTENDED_WALKING_DISTANCE_M).toBe(1500);
+		// Sanity: a 700m stop is inside default extended range, marked soft
+		const stop: OepnvStopIndex = {
+			ubahn: [{ name: 'S', lat: 52.5208, lng: 13.4544 }], // ~545m crow → ~709m walking
+			sbahn: [],
+			tram: [],
+			bus: []
+		};
+		const result = findAllNearestStopsWithSoft(FRANKFURTER_TOR, stop);
+		expect(result.ubahn).not.toBeNull();
+		expect(result.ubahn?.soft).toBe(true);
 	});
 });

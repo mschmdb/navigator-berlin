@@ -294,6 +294,36 @@ describe('buildLlmExportMarkdown — Mobilität-Section', () => {
 		// sbahn = null → kein S-Bahn-Zeile
 		expect(md).not.toMatch(/^- S-Bahn:/m);
 	});
+
+	it('markiert soft-Stops mit "schwach angebunden"-Hinweis (Story 1.21)', () => {
+		const soft: Record<Modus, NearestStop | null> = {
+			ubahn: null,
+			sbahn: {
+				name: 'S Karow',
+				lat: 52.6,
+				lng: 13.5,
+				distanceM: 880,
+				walkingMin: 12,
+				soft: true
+			},
+			tram: null,
+			bus: null
+		};
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			oepnv: {
+				nearest: soft,
+				rating: {
+					key: 'schwach',
+					label: 'Schwach angebunden',
+					severity: 'warning',
+					score: 0
+				}
+			}
+		});
+		expect(md).toContain('Schwach angebunden');
+		expect(md).toMatch(/S-Bahn:.*S Karow.*880.*12 min.*schwach/);
+	});
 });
 
 describe('buildLlmExportMarkdown — Footer', () => {

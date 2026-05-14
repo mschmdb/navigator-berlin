@@ -9,8 +9,12 @@
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
-	import { findAllNearestStops } from './inspector-panel/internal/nearest-oepnv-stop.js';
+	import {
+		findAllNearestStops,
+		findAllNearestStopsWithSoft
+	} from './inspector-panel/internal/nearest-oepnv-stop.js';
 	import { getMobilityRating } from './inspector-panel/internal/mobility-rating.js';
+	import { isResidentialLocation } from './inspector-panel/internal/residential-location.js';
 	import { buildLlmExportMarkdown } from '$lib/utils/llm-export-builder.js';
 	import { buildOgImageUrl } from '$lib/utils/og-image-url.js';
 	import { formatLayerValue } from './inspector-panel/internal/value-formatters.js';
@@ -103,11 +107,17 @@
 		};
 	});
 
+	const isResidential = $derived(isResidentialLocation(ui.selectedLayerHits));
+
 	const llmMarkdown = $derived.by(() => {
 		const addr = ui.selectedAddress;
 		if (!addr) return '';
 		const point = { lat: addr.lat, lng: addr.lng };
-		const nearest = ui.oepnvStopIndex ? findAllNearestStops(point, ui.oepnvStopIndex) : null;
+		const nearest = ui.oepnvStopIndex
+			? isResidential
+				? findAllNearestStopsWithSoft(point, ui.oepnvStopIndex)
+				: findAllNearestStops(point, ui.oepnvStopIndex)
+			: null;
 		return buildLlmExportMarkdown({
 			address: {
 				displayName: addr.displayName,
@@ -121,7 +131,9 @@
 			layerHits: ui.selectedLayerHits,
 			layerMeta,
 			climate: ui.nearestStation ? { station: ui.nearestStation, series: ui.climateSeries } : null,
-			oepnv: nearest ? { nearest, rating: getMobilityRating(nearest) } : null
+			oepnv: nearest
+				? { nearest, rating: getMobilityRating(nearest, { isResidential }) }
+				: null
 		});
 	});
 
@@ -155,7 +167,9 @@
 
 	const hasNearestStops = $derived.by(() => {
 		if (!nearestAddressPoint || !ui.oepnvStopIndex) return false;
-		const result = findAllNearestStops(nearestAddressPoint, ui.oepnvStopIndex);
+		const result = isResidential
+			? findAllNearestStopsWithSoft(nearestAddressPoint, ui.oepnvStopIndex)
+			: findAllNearestStops(nearestAddressPoint, ui.oepnvStopIndex);
 		return !!(result.ubahn || result.sbahn || result.tram || result.bus);
 	});
 
@@ -218,6 +232,7 @@
 								<NearestStopsCard
 									address={nearestAddressPoint}
 									index={ui.oepnvStopIndex}
+									{isResidential}
 								/>
 							{/if}
 							{#if section.key === 'klima'}

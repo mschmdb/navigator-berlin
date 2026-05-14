@@ -3,18 +3,21 @@ import { simplifyCommand, simplifyGeoJSON } from './simplify.js';
 import type { SimplifyProfile } from './types.js';
 
 describe('simplifyCommand', () => {
-	it('boundary: visvalingam 10% planar + clean (strict for size)', () => {
+	it('boundary: visvalingam 10% planar + clean + keep-shapes (Story 1.25: kein Feature-Loss)', () => {
 		const cmd = simplifyCommand('boundary');
 		expect(cmd).toContain('-simplify');
 		expect(cmd).toContain('visvalingam');
 		expect(cmd).toContain('10%');
 		expect(cmd).toContain('planar');
+		expect(cmd).toContain('keep-shapes');
 		expect(cmd).toContain('-clean');
 	});
 
-	it('polygon: visvalingam 20% (strict for size)', () => {
+	it('polygon: visvalingam 20% + keep-shapes (Story 1.25: kein Feature-Loss durch -clean)', () => {
 		const cmd = simplifyCommand('polygon');
 		expect(cmd).toContain('20%');
+		expect(cmd).toContain('keep-shapes');
+		expect(cmd).toContain('-clean');
 	});
 
 	it('point: no-op (leerer command)', () => {

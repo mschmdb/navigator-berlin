@@ -60,6 +60,17 @@ describe('buildLayerEntry', () => {
 		expect(entry.featureCount).toBe(0);
 		expect(entry.geometryType).toBe('Point');
 	});
+
+	it('reicht nearestPolygonFallbackKm aus SourceConfig durch (Story 1.25)', () => {
+		const src: SourceConfig = { ...fakeSource, nearestPolygonFallbackKm: 0.05 };
+		const entry = buildLayerEntry(src, fakeGeoJson, '2026-05-11T14:21:33Z');
+		expect(entry.nearestPolygonFallbackKm).toBe(0.05);
+	});
+
+	it('lässt nearestPolygonFallbackKm undefined wenn Source es nicht setzt', () => {
+		const entry = buildLayerEntry(fakeSource, fakeGeoJson, '2026-05-11T14:21:33Z');
+		expect(entry.nearestPolygonFallbackKm).toBeUndefined();
+	});
 });
 
 describe('validateManifest', () => {

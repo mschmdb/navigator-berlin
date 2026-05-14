@@ -6,6 +6,7 @@ export type MobilityRatingKey =
 	| 'gut'
 	| 'solide'
 	| 'ausreichend'
+	| 'schwach'
 	| 'keine';
 
 export interface MobilityRating {
@@ -15,11 +16,17 @@ export interface MobilityRating {
 	score: number;
 }
 
+export interface MobilityRatingOptions {
+	/** When true, allow upgrading "keine" to "schwach" if soft stops exist (Story 1.21). */
+	isResidential?: boolean;
+}
+
 const LABEL: Record<MobilityRatingKey, string> = {
 	top: 'Sehr gut angebunden',
 	gut: 'Gut angebunden',
 	solide: 'Solide angebunden',
 	ausreichend: 'Ausreichend angebunden',
+	schwach: 'Schwach angebunden',
 	keine: 'Nicht angebunden'
 };
 
@@ -28,6 +35,7 @@ const SEVERITY: Record<MobilityRatingKey, SeverityLevel> = {
 	gut: 'success',
 	solide: 'success-soft',
 	ausreichend: 'neutral',
+	schwach: 'warning',
 	keine: 'danger'
 };
 
@@ -57,6 +65,19 @@ function rating(key: MobilityRatingKey, score: number): MobilityRating {
 	return { key, label: LABEL[key], severity: SEVERITY[key], score };
 }
 
+function hardStop(stop: NearestStop | null): NearestStop | null {
+	return stop && !stop.soft ? stop : null;
+}
+
+function anySoftStop(nearest: Record<Modus, NearestStop | null>): boolean {
+	return (
+		!!nearest.ubahn?.soft ||
+		!!nearest.sbahn?.soft ||
+		!!nearest.tram?.soft ||
+		!!nearest.bus?.soft
+	);
+}
+
 function minDistance(stops: Array<NearestStop | null>): number | null {
 	let min = Infinity;
 	for (const s of stops) {
@@ -66,15 +87,21 @@ function minDistance(stops: Array<NearestStop | null>): number | null {
 }
 
 export function getMobilityRating(
-	nearest: Record<Modus, NearestStop | null>
+	nearest: Record<Modus, NearestStop | null>,
+	options: MobilityRatingOptions = {}
 ): MobilityRating {
-	const rapid = minDistance([nearest.ubahn, nearest.sbahn]);
-	const tram = nearest.tram?.distanceM ?? null;
-	const bus = nearest.bus?.distanceM ?? null;
+	const rapid = minDistance([hardStop(nearest.ubahn), hardStop(nearest.sbahn)]);
+	const tram = hardStop(nearest.tram)?.distanceM ?? null;
+	const bus = hardStop(nearest.bus)?.distanceM ?? null;
 
 	const score = rapidScore(rapid) + tramScore(tram) + busScore(bus);
 
-	if (score === 0) return rating('keine', score);
+	if (score === 0) {
+		if (options.isResidential && anySoftStop(nearest)) {
+			return rating('schwach', 0);
+		}
+		return rating('keine', 0);
+	}
 	if (score >= 4) return rating('top', score);
 	if (score >= 2.5) return rating('gut', score);
 	if (score >= 1.5) return rating('solide', score);

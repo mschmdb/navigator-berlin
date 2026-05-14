@@ -48,7 +48,8 @@ const LayerEntrySchema = v.object({
 	geometryType: GeometryTypeSchema,
 	featureCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	inspectorRelevant: v.optional(v.boolean()),
-	format: v.optional(FormatSchema)
+	format: v.optional(FormatSchema),
+	nearestPolygonFallbackKm: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))
 });
 
 const ManifestValibot = v.object({
@@ -121,6 +122,9 @@ export function buildLayerEntry(
 	if (source.sourceUpdatedAt) entry.sourceUpdatedAt = source.sourceUpdatedAt;
 	if (source.inspectorRelevant === false) entry.inspectorRelevant = false;
 	if (format !== 'geojson') entry.format = format;
+	if (typeof source.nearestPolygonFallbackKm === 'number') {
+		entry.nearestPolygonFallbackKm = source.nearestPolygonFallbackKm;
+	}
 	return entry;
 }
 

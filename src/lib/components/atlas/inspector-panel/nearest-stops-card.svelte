@@ -5,6 +5,7 @@
 	import { walkingSeverity } from '$lib/utils/oepnv-walking.js';
 	import {
 		findAllNearestStops,
+		findAllNearestStopsWithSoft,
 		type Modus,
 		type NearestStop
 	} from './internal/nearest-oepnv-stop.js';
@@ -13,9 +14,10 @@
 	type Props = {
 		address: { lat: number; lng: number } | null;
 		index: OepnvStopIndex | null;
+		isResidential?: boolean;
 	};
 
-	let { address, index }: Props = $props();
+	let { address, index, isResidential = false }: Props = $props();
 
 	const MODUS_LABEL: Record<Modus, string> = {
 		ubahn: 'U-Bahn',
@@ -37,7 +39,9 @@
 
 	const nearestPerModus = $derived.by(() => {
 		if (!address || !index) return null;
-		return findAllNearestStops(address, index);
+		return isResidential
+			? findAllNearestStopsWithSoft(address, index)
+			: findAllNearestStops(address, index);
 	});
 
 	const entries = $derived.by<ModusEntry[]>(() => {
@@ -52,11 +56,12 @@
 
 	const rating = $derived.by(() => {
 		if (!nearestPerModus) return null;
-		return getMobilityRating(nearestPerModus);
+		return getMobilityRating(nearestPerModus, { isResidential });
 	});
 
 	function rowAriaLabel(modus: Modus, stop: NearestStop): string {
-		return `${MODUS_LABEL[modus]} ${stop.name}, ${stop.distanceM} Meter Fußweg, ungefähr ${stop.walkingMin} ${stop.walkingMin === 1 ? 'Minute' : 'Minuten'}`;
+		const softPart = stop.soft ? ', schwach angebunden' : '';
+		return `${MODUS_LABEL[modus]} ${stop.name}, ${stop.distanceM} Meter Fußweg, ungefähr ${stop.walkingMin} ${stop.walkingMin === 1 ? 'Minute' : 'Minuten'}${softPart}`;
 	}
 </script>
 
@@ -113,18 +118,21 @@
 					class="py-1 font-mono text-xs text-ink-subtle"
 					data-testid="nearest-stops-empty"
 				>
-					Keine ÖPNV-Haltestelle im Umkreis von 600m
+					{isResidential
+						? 'Keine ÖPNV-Haltestelle im Umkreis von 1500m'
+						: 'Keine ÖPNV-Haltestelle im Umkreis von 600m'}
 				</p>
 			{:else}
 				<ul class="divide-y divide-rule/40">
 					{#each entries as { modus, stop } (modus)}
 						{@const Icon = MODUS_ICON[modus]}
-						{@const sev = walkingSeverity(stop.distanceM)}
+						{@const sev = stop.soft ? 'warning' : walkingSeverity(stop.distanceM)}
 						<li
 							class="flex min-h-[36px] items-center gap-3 py-1.5"
 							data-testid="nearest-stop-row"
 							data-modus={modus}
 							data-severity={sev}
+							data-soft={stop.soft ? 'true' : null}
 							aria-label={rowAriaLabel(modus, stop)}
 						>
 							<span
