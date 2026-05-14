@@ -23,7 +23,8 @@ function makeState(): UiState {
 		nearestStation: null,
 		climateSeries: null,
 		scrollToLayerSlug: null,
-		hiddenLayerSlugs: []
+		hiddenLayerSlugs: [],
+		oepnvStopIndex: null
 	};
 }
 
@@ -42,6 +43,7 @@ describe('ui-context', () => {
 		expect(state.nearestStation).toBeNull();
 		expect(state.climateSeries).toBeNull();
 		expect(state.scrollToLayerSlug).toBeNull();
+		expect(state.oepnvStopIndex).toBeNull();
 	});
 
 	it('createUiState reagiert auf Mutation reaktiv', async () => {

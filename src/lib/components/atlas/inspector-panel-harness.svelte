@@ -5,7 +5,8 @@
 		GeocodeSuggestion,
 		LayerMetadata,
 		ClimateStation,
-		ClimateData
+		ClimateData,
+		OepnvStopIndex
 	} from '$lib/data';
 	import InspectorPanel from './inspector-panel.svelte';
 
@@ -16,6 +17,7 @@
 		layerMeta?: LayerMetadata[];
 		nearestStation?: ClimateStation | null;
 		climateSeries?: ClimateData | null;
+		oepnvStopIndex?: OepnvStopIndex | null;
 	};
 
 	let {
@@ -24,7 +26,8 @@
 		hits = [],
 		layerMeta = [],
 		nearestStation = null,
-		climateSeries = null
+		climateSeries = null,
+		oepnvStopIndex = null
 	}: Props = $props();
 
 	const ui = createUiState();
@@ -35,6 +38,7 @@
 		ui.selectedLayerHits = hits;
 		ui.nearestStation = nearestStation;
 		ui.climateSeries = climateSeries;
+		ui.oepnvStopIndex = oepnvStopIndex;
 	});
 </script>
 

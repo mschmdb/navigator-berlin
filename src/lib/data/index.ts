@@ -5,6 +5,8 @@ export { getBezirkProfile } from './get-bezirk-profile.js';
 export { getLayerMetadata } from './get-layer-metadata.js';
 export { getNearestClimateStation, CLIMATE_STATIONS } from './get-climate-station.js';
 export { getClimateSeries } from './get-climate-series.js';
+export { getOepnvStopIndex } from './get-oepnv-stop-index.js';
+export type { OepnvStopIndex, OepnvStop } from './get-oepnv-stop-index.js';
 
 export type {
 	License,

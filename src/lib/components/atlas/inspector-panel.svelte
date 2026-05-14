@@ -5,9 +5,11 @@
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
 	import PermalinkButton from './inspector-panel/permalink-button.svelte';
 	import KlimaSection from './inspector-panel/klima-section.svelte';
+	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
+	import { findAllNearestStops } from './inspector-panel/internal/nearest-oepnv-stop.js';
 
 	type Props = {
 		layerMeta?: readonly LayerMetadata[];
@@ -75,8 +77,21 @@
 		});
 	});
 
+	const nearestAddressPoint = $derived(
+		ui.selectedAddress
+			? { lat: ui.selectedAddress.lat, lng: ui.selectedAddress.lng }
+			: null
+	);
+
+	const hasNearestStops = $derived.by(() => {
+		if (!nearestAddressPoint || !ui.oepnvStopIndex) return false;
+		const result = findAllNearestStops(nearestAddressPoint, ui.oepnvStopIndex);
+		return !!(result.ubahn || result.sbahn || result.tram || result.bus);
+	});
+
 	function shouldRenderSection(sectionKey: string, hitCount: number): boolean {
 		if (sectionKey === 'klima') return true;
+		if (sectionKey === 'mobilitaet' && hasNearestStops) return true;
 		if (hitCount > 0) return true;
 		return showEmptySections;
 	}
@@ -128,28 +143,36 @@
 								>
 							{/if}
 						</h3>
-						<div class="mt-2 divide-y divide-rule">
+						<div class="mt-2 space-y-3">
+							{#if section.key === 'mobilitaet'}
+								<NearestStopsCard
+									address={nearestAddressPoint}
+									index={ui.oepnvStopIndex}
+								/>
+							{/if}
 							{#if section.key === 'klima'}
 								<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
-							{:else if section.hits.length === 0}
+							{:else if section.hits.length === 0 && section.key !== 'mobilitaet'}
 								<p
 									class="py-2 font-mono text-xs text-ink-subtle"
 									data-testid={`section-${section.key}-empty`}
 								>
 									{section.label} · keine Daten an dieser Adresse
 								</p>
-							{:else}
-								{#each section.hits as hit (hit.layer)}
-									<LayerHitRow
-										{hit}
-										layerName={getLayerDisplayName(hit.layer)}
-										{lang}
-										lat={ui.selectedAddress?.lat}
-										lng={ui.selectedAddress?.lng}
-										isActive={ui.activeLayerSlugs.includes(hit.layer)}
-										onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-									/>
-								{/each}
+							{:else if section.hits.length > 0}
+								<div class="divide-y divide-rule">
+									{#each section.hits as hit (hit.layer)}
+										<LayerHitRow
+											{hit}
+											layerName={getLayerDisplayName(hit.layer)}
+											{lang}
+											lat={ui.selectedAddress?.lat}
+											lng={ui.selectedAddress?.lng}
+											isActive={ui.activeLayerSlugs.includes(hit.layer)}
+											onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+										/>
+									{/each}
+								</div>
 							{/if}
 						</div>
 					</section>

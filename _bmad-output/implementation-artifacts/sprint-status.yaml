@@ -36,6 +36,7 @@
 
 generated: 2026-05-11
 last_updated: 2026-05-14
+# story 1-19 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-14, TDD-first per ADR-012; Walking-Distance-Util + Build-Pipeline + Loader + Nearest-Finder + Card + Inspector-Integration; User-Pivot: Berechnungs-Subline + ValueChip pro Row mit walking-severity + Gesamt-Mobility-Rating-Badge Score-basiert (U/S höher gewichtet); Browser-Test-Zombie-Bug behoben durch Auto-Load-Move von Component zu +page.svelte::openInspectorFor; 110 neue Tests grün; E2E + axe-CI-Run deferred)
 # story 1-18 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-14, TDD-first per ADR-012; Inspector-UX-Rework Value-Chips + Compact-Density; 5 Severity-Tokens WCAG-AA + ValueChip-Komponente + getLayerHitDisplay-Modul + Compact-DataStandBanner 10px + Section-Header Plex-Mono uppercase + Empty-Section-Toggle localStorage; User-Pivots: Wohnlage mittel neutral→success-soft gegen Grau-Monotonie, Umweltgerechtigkeit zweifach→2× belastet für Klarheit; +92 neue Tests grün; E2E + axe-CI-Run deferred)
 # story 1-19 created backlog → ready-for-dev (2026-05-14, User-Request): Nächste ÖPNV-Stops in Inspector-Mobilität — Walking-Distance Crow-Flight × 1.3 Heuristik, Threshold ≤600m, 1 Nearest pro Modus (U/S/Tram/Bus) mit Name + Distanz + Geh-Minuten; Build-time Stop-Index aus existierenden GeoJSON-Files; lazy-load + Cache; NearestStopsCard oben in Mobilität-Section
 # story 1-17 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-14, TDD-first per ADR-012; ClimateSparkline+ClimateLongView auf LayerChart v2.0.0-next.63 migriert; AccessibleChart entfernt; KlimaSection Lazy-Load + Skeleton; User-Review-Pivots: Null-Counts gefiltert + yBaseline=null für korrekte Min/Max-Visual-Match, Definition-Subline pro Metric (DWD-Schwellwerte); +30 neue Unit-Tests grün; Brush + DataTable-Session-Persistenz scope-cut, E2E + axe deferred to CI; Design-UX-Iteration deferred zu Story 1.18)
@@ -93,7 +94,7 @@ development_status:
   1-16-layer-explain-coverage: review
   1-17-climate-charts-layerchart-rework: review
   1-18-inspector-ux-rework: review
-  1-19-naechste-oepnv-stops: ready-for-dev
+  1-19-naechste-oepnv-stops: review
   epic-1-retrospective: optional
 
   # Epic 2: SEO/AEO Discovery + LLM-Agent Integration

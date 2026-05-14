@@ -1,5 +1,11 @@
 import { getContext, setContext } from 'svelte';
-import type { LayerHit, GeocodeSuggestion, ClimateStation, ClimateData } from '$lib/data';
+import type {
+	LayerHit,
+	GeocodeSuggestion,
+	ClimateStation,
+	ClimateData,
+	OepnvStopIndex
+} from '$lib/data';
 
 const KEY = Symbol('ui-state');
 
@@ -21,6 +27,8 @@ export interface UiState {
 	scrollToLayerSlug: string | null;
 	/** Story 1.14: per-Layer Soft-Hide aus MapLegend (Eye-Toggle). */
 	hiddenLayerSlugs: string[];
+	/** Story 1.19: ÖPNV-Stop-Index für Nearest-Stop-Berechnung im Inspector. */
+	oepnvStopIndex: OepnvStopIndex | null;
 }
 
 export function createUiState(): UiState {
@@ -35,7 +43,8 @@ export function createUiState(): UiState {
 		nearestStation: null,
 		climateSeries: null,
 		scrollToLayerSlug: null,
-		hiddenLayerSlugs: []
+		hiddenLayerSlugs: [],
+		oepnvStopIndex: null
 	});
 	setContext(KEY, state);
 	return state;

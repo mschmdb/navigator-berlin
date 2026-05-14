@@ -7,7 +7,8 @@ import type {
 	LayerHit,
 	LayerMetadata,
 	ClimateStation,
-	ClimateData
+	ClimateData,
+	OepnvStopIndex
 } from '$lib/data';
 
 const address: GeocodeSuggestion = {
@@ -333,5 +334,58 @@ describe('inspector-panel.svelte', () => {
 		expect(after).toBe(before);
 		const newHeader = (await page.getByTestId('inspector-address').element()) as HTMLElement;
 		expect(newHeader.textContent).toMatch(/Andere Straße 5/);
+	});
+
+	describe('Story 1.19: NearestStopsCard in Mobilität-Section', () => {
+		const oepnvIndex: OepnvStopIndex = {
+			ubahn: [{ name: 'Frankfurter Tor', lat: 52.5159, lng: 13.4544 }],
+			sbahn: [],
+			tram: [{ name: 'Boxhagener Straße', lat: 52.5104, lng: 13.4592 }],
+			bus: [{ name: 'Petersburger Straße', lat: 52.516, lng: 13.4555 }]
+		};
+
+		it('rendert NearestStopsCard in Mobilität-Section bei vorhandenem Stop-Index', async () => {
+			window.localStorage.removeItem('nav.inspector.showEmptySections');
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'X')],
+				layerMeta: fullLayerMeta,
+				oepnvStopIndex: oepnvIndex
+			});
+			await expect.element(page.getByTestId('section-mobilitaet')).toBeInTheDocument();
+			await expect.element(page.getByTestId('nearest-stops-card')).toBeInTheDocument();
+		});
+
+		it('Mobilität-Section bleibt ausgeblendet wenn kein Stop-Index UND keine Hits', async () => {
+			window.localStorage.removeItem('nav.inspector.showEmptySections');
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'X')],
+				layerMeta: fullLayerMeta,
+				oepnvStopIndex: null
+			});
+			await expect.element(page.getByTestId('section-mobilitaet')).not.toBeInTheDocument();
+		});
+
+		it('Card oberhalb von Layer-Hits in Mobilität-Section', async () => {
+			const mobilitaetMeta = meta('ubahn-stationen', 'F: Mobilität');
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('ubahn-stationen', 'U5')],
+				layerMeta: [...fullLayerMeta, mobilitaetMeta],
+				oepnvStopIndex: oepnvIndex
+			});
+			const section = (await page.getByTestId('section-mobilitaet').element()) as HTMLElement;
+			const cardEl = section.querySelector('[data-testid="nearest-stops-card"]');
+			const hitEl = section.querySelector('[data-testid="layer-hit-row"]');
+			expect(cardEl).not.toBeNull();
+			expect(hitEl).not.toBeNull();
+			if (cardEl && hitEl) {
+				expect(cardEl.compareDocumentPosition(hitEl) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+			}
+		});
 	});
 });

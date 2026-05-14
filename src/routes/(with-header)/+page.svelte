@@ -23,6 +23,7 @@
 	import { getLayersAtPoint } from '$lib/data/get-layers-at-point.js';
 	import { getNearestClimateStation } from '$lib/data/get-climate-station.js';
 	import { getClimateSeries } from '$lib/data/get-climate-series.js';
+	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
 	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
 	import { queryPmtilesAt, type MapLibreLike } from '$lib/data/internal/pmtiles-query.js';
 	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data/types.js';
@@ -376,6 +377,15 @@
 		})();
 		ui.inspectorOpen = true;
 		announceGlobal(`Inspektor geöffnet für ${suggestion.displayName}`);
+		if (!ui.oepnvStopIndex) {
+			void getOepnvStopIndex()
+				.then((idx) => {
+					ui.oepnvStopIndex = idx;
+				})
+				.catch(() => {
+					ui.oepnvStopIndex = null;
+				});
+		}
 	}
 
 	function detectPinSlugAtPoint(lngLat: [number, number]): string | null {
