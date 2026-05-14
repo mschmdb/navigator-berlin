@@ -7,7 +7,12 @@ export type LayerFormat = 'geojson' | 'pmtiles';
 
 export type Locale = 'de' | 'en' | 'tr' | 'uk' | 'ar' | 'es' | 'fr' | 'it';
 
-export type LayerHitReason = 'no-coverage' | 'outdated' | 'seasonal';
+export type LayerHitReason =
+	| 'no-coverage'
+	| 'outdated'
+	| 'seasonal'
+	| 'coverage-out-of-scope'
+	| 'out-of-concept';
 
 export interface LayerHit {
 	layer: string;
@@ -36,6 +41,10 @@ export interface LayerMetadata {
 	/** Wenn gesetzt: get-layers-at-point akzeptiert bei Polygon-NO-HIT das nächste
 	 * Polygon innerhalb dieser Distanz (km). Story 1.25. */
 	nearestPolygonFallbackKm?: number;
+	/** Optional. Räumlicher Geltungsbereich des Datensatzes als [minLng, minLat, maxLng, maxLat].
+	 * Punkte außerhalb liefern reason='coverage-out-of-scope' statt 'no-coverage'.
+	 * Default fehlt = ganz Berlin (kein Vor-Filter). Story 1.23. */
+	coverageBbox?: [number, number, number, number];
 }
 
 export interface Manifest {

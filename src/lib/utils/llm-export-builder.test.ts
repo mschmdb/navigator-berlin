@@ -234,6 +234,62 @@ describe('buildLlmExportMarkdown — Sections', () => {
 		const md = buildLlmExportMarkdown(fullInput());
 		expect(md).toMatch(/Editorial sensible, bitte nicht algorithmisch interpretieren/);
 	});
+
+	// Story 1.23: Reason-aufdröseln im LLM-Export
+	it('Reason coverage-out-of-scope → "Datensatz deckt diese Lage nicht ab"', () => {
+		const input: LlmExportInput = {
+			...fullInput(),
+			layerHits: [
+				{
+					layer: 'wohnlagen-2024',
+					value: null,
+					reason: 'coverage-out-of-scope',
+					source: 'Mietspiegel Berlin 2024',
+					updatedAt: '2024-05-01',
+					license: 'dl-de/by-2-0'
+				}
+			]
+		};
+		const md = buildLlmExportMarkdown(input);
+		expect(md).toMatch(/Mietspiegel-Wohnlage.*Datensatz deckt diese Lage nicht ab/i);
+		expect(md).not.toMatch(/Mietspiegel-Wohnlage.*Daten nicht vorhanden/);
+	});
+
+	it('Reason out-of-concept → "Nicht ausgewiesen für diese Lage"', () => {
+		const input: LlmExportInput = {
+			...fullInput(),
+			layerHits: [
+				{
+					layer: 'wohnlagen-2024',
+					value: null,
+					reason: 'out-of-concept',
+					source: 'Mietspiegel Berlin 2024',
+					updatedAt: '2024-05-01',
+					license: 'dl-de/by-2-0'
+				}
+			]
+		};
+		const md = buildLlmExportMarkdown(input);
+		expect(md).toMatch(/Nicht ausgewiesen für diese Lage/);
+	});
+
+	it('Reason no-coverage → "Daten nicht vorhanden" (Default-Wording)', () => {
+		const input: LlmExportInput = {
+			...fullInput(),
+			layerHits: [
+				{
+					layer: 'wohnlagen-2024',
+					value: null,
+					reason: 'no-coverage',
+					source: 'Mietspiegel Berlin 2024',
+					updatedAt: '2024-05-01',
+					license: 'dl-de/by-2-0'
+				}
+			]
+		};
+		const md = buildLlmExportMarkdown(input);
+		expect(md).toMatch(/Daten nicht vorhanden/);
+	});
 });
 
 describe('buildLlmExportMarkdown — Klima-Section', () => {

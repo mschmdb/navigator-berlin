@@ -7,6 +7,7 @@
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
+	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
 	import {
@@ -36,7 +37,8 @@
 
 	const ui = getUiState();
 
-	const sections = $derived(groupHitsBySection(ui.selectedLayerHits, layerMeta));
+	const enrichedHits = $derived(applyApplicabilityReasons(ui.selectedLayerHits));
+	const sections = $derived(groupHitsBySection(enrichedHits, layerMeta));
 
 	const EMPTY_SECTIONS_KEY = 'nav.inspector.showEmptySections';
 	let showEmptySections = $state(false);
@@ -92,7 +94,7 @@
 		const addr = ui.selectedAddress;
 		if (!addr) return null;
 		const topLayers: string[] = [];
-		for (const hit of ui.selectedLayerHits) {
+		for (const hit of enrichedHits) {
 			if (topLayers.length >= 3) break;
 			const formatted = formatLayerValue(hit.layer, hit.value);
 			if (formatted.text === 'Daten nicht vorhanden') continue;
@@ -128,7 +130,7 @@
 			},
 			permalinkUrl: shareOpen ? currentHref() : '',
 			generatedAt: new Date().toISOString(),
-			layerHits: ui.selectedLayerHits,
+			layerHits: enrichedHits,
 			layerMeta,
 			climate: ui.nearestStation ? { station: ui.nearestStation, series: ui.climateSeries } : null,
 			oepnv: nearest

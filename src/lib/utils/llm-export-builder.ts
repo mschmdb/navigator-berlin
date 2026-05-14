@@ -79,9 +79,20 @@ function renderHeader(input: LlmExportInput, lines: string[]): void {
 	lines.push('');
 }
 
+function reasonText(hit: LayerHit): string | null {
+	if (hit.reason === 'coverage-out-of-scope') return 'Datensatz deckt diese Lage nicht ab';
+	if (hit.reason === 'out-of-concept') return 'Nicht ausgewiesen für diese Lage';
+	if (hit.reason === 'seasonal') return 'Layer Mai–Oktober aktiv';
+	if (hit.reason === 'no-coverage') return 'Daten nicht vorhanden';
+	return null;
+}
+
 function renderHit(hit: LayerHit, lines: string[]): void {
 	const display = getLayerDisplayName(hit.layer);
-	const formatted = formatLayerValue(hit.layer, hit.value);
+	const reasonLabel = reasonText(hit);
+	const formatted = reasonLabel
+		? { text: reasonLabel, isNumeric: false }
+		: formatLayerValue(hit.layer, hit.value);
 	const explain = getLayerExplainEntry(hit.layer);
 	const editorial = getEditorialConfig(hit.layer);
 

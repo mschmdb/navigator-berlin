@@ -71,6 +71,20 @@ describe('buildLayerEntry', () => {
 		const entry = buildLayerEntry(fakeSource, fakeGeoJson, '2026-05-11T14:21:33Z');
 		expect(entry.nearestPolygonFallbackKm).toBeUndefined();
 	});
+
+	it('reicht coverageBbox aus SourceConfig durch (Story 1.23)', () => {
+		const src: SourceConfig = {
+			...fakeSource,
+			coverageBbox: [13.2, 52.4, 13.5, 52.6]
+		};
+		const entry = buildLayerEntry(src, fakeGeoJson, '2026-05-11T14:21:33Z');
+		expect(entry.coverageBbox).toEqual([13.2, 52.4, 13.5, 52.6]);
+	});
+
+	it('lässt coverageBbox undefined wenn Source es nicht setzt', () => {
+		const entry = buildLayerEntry(fakeSource, fakeGeoJson, '2026-05-11T14:21:33Z');
+		expect(entry.coverageBbox).toBeUndefined();
+	});
 });
 
 describe('validateManifest', () => {
@@ -101,5 +115,28 @@ describe('validateManifest', () => {
 		const parsed = ManifestSchema.parse(JSON.parse(json));
 		expect(parsed.schemaVersion).toBe(1);
 		expect(parsed.layers).toHaveLength(1);
+	});
+
+	it('coverageBbox roundtrip durch Schema (Story 1.23)', () => {
+		const src: SourceConfig = {
+			...fakeSource,
+			coverageBbox: [13.2, 52.4, 13.5, 52.6]
+		};
+		const entry = buildLayerEntry(src, fakeGeoJson, '2026-05-11T14:21:33Z');
+		const m: Manifest = {
+			schemaVersion: 1,
+			generatedAt: '2026-05-11T14:23:00Z',
+			layers: [entry]
+		};
+		const parsed = ManifestSchema.parse(JSON.parse(JSON.stringify(m)));
+		expect(parsed.layers[0].coverageBbox).toEqual([13.2, 52.4, 13.5, 52.6]);
+	});
+
+	it('coverageBbox mit minLng>=maxLng wirft (Schema-Check)', () => {
+		const broken = {
+			...validManifest,
+			layers: [{ ...validManifest.layers[0], coverageBbox: [13.5, 52.4, 13.2, 52.6] }]
+		};
+		expect(() => validateManifest(broken as unknown as Manifest)).toThrow();
 	});
 });

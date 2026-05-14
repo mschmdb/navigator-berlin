@@ -49,7 +49,16 @@ const LayerEntrySchema = v.object({
 	featureCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	inspectorRelevant: v.optional(v.boolean()),
 	format: v.optional(FormatSchema),
-	nearestPolygonFallbackKm: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))
+	nearestPolygonFallbackKm: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
+	coverageBbox: v.optional(
+		v.pipe(
+			v.tuple([v.number(), v.number(), v.number(), v.number()]),
+			v.check(
+				([minLng, minLat, maxLng, maxLat]) => minLng < maxLng && minLat < maxLat,
+				'coverageBbox must have minLng<maxLng and minLat<maxLat'
+			)
+		)
+	)
 });
 
 const ManifestValibot = v.object({
@@ -124,6 +133,9 @@ export function buildLayerEntry(
 	if (format !== 'geojson') entry.format = format;
 	if (typeof source.nearestPolygonFallbackKm === 'number') {
 		entry.nearestPolygonFallbackKm = source.nearestPolygonFallbackKm;
+	}
+	if (source.coverageBbox) {
+		entry.coverageBbox = source.coverageBbox;
 	}
 	return entry;
 }

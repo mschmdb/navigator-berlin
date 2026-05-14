@@ -223,6 +223,74 @@ describe('getLayersAtPoint', () => {
 		});
 	});
 
+	describe('coverageBbox (Story 1.23, Datensatz-Geltungsbereich)', () => {
+		const patchManifestWithCoverage = (slug: string, bbox: [number, number, number, number]) => {
+			const patched = JSON.parse(JSON.stringify(miniManifest));
+			const target = patched.layers.find((l: { slug: string }) => l.slug === slug);
+			target.coverageBbox = bbox;
+			return patched;
+		};
+
+		const buildFetchMockWithManifest = (manifestOverride: unknown) => {
+			return vi.fn(async (url: string) => {
+				if (url === '/layers/MANIFEST.json')
+					return new Response(JSON.stringify(manifestOverride), { status: 200 });
+				if (url === '/layers/bezirke.a1b2c3d4.geojson')
+					return new Response(JSON.stringify(miniBezirke), { status: 200 });
+				if (url === '/layers/mietspiegel-wohnlage.f9e8d7c6.geojson')
+					return new Response(JSON.stringify(miniMietspiegel), { status: 200 });
+				if (url === '/layers/trinkbrunnen.beefdead.geojson')
+					return new Response(JSON.stringify(miniTrinkbrunnen), { status: 200 });
+				if (url === '/layers/strassenlaerm-2022.deadcafe.geojson')
+					return new Response(JSON.stringify(miniStrassenlaerm), { status: 200 });
+				return new Response('404', { status: 404 });
+			});
+		};
+
+		it('Punkt INNERHALB coverageBbox: normaler Hit (kein coverage-out-of-scope)', async () => {
+			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [
+				13.3, 52.5, 13.41, 52.53
+			]);
+			const fn = buildFetchMockWithManifest(patched);
+			const hits = await getLayersAtPoint(52.52, 13.38, fn as unknown as typeof fetch);
+			const wohnlage = hits.find((h) => h.layer === 'mietspiegel-wohnlage');
+			expect(wohnlage?.value).toEqual({ wohnlage: 'einfach' });
+			expect(wohnlage?.reason).toBeUndefined();
+		});
+
+		it('Punkt AUSSERHALB coverageBbox: reason=coverage-out-of-scope', async () => {
+			// Coverage-Bbox: Mitte-Inner; Punkt: Außerhalb (Karow analog)
+			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [
+				13.3, 52.5, 13.41, 52.53
+			]);
+			const fn = buildFetchMockWithManifest(patched);
+			const hits = await getLayersAtPoint(52.6, 13.48, fn as unknown as typeof fetch);
+			const wohnlage = hits.find((h) => h.layer === 'mietspiegel-wohnlage');
+			expect(wohnlage?.value).toBeNull();
+			expect(wohnlage?.reason).toBe('coverage-out-of-scope');
+		});
+
+		it('Coverage-Check umgeht Feature-Fetch (keine GeoJSON-Datei-Anfrage)', async () => {
+			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [
+				13.3, 52.5, 13.41, 52.53
+			]);
+			const fn = buildFetchMockWithManifest(patched);
+			await getLayersAtPoint(52.6, 13.48, fn as unknown as typeof fetch);
+			const wohnlageFetched = fn.mock.calls.some(
+				(c) => typeof c[0] === 'string' && c[0].includes('mietspiegel-wohnlage')
+			);
+			expect(wohnlageFetched).toBe(false);
+		});
+
+		it('Layer OHNE coverageBbox: keine coverage-out-of-scope-Logic (default ganz-Berlin)', async () => {
+			const fn = buildFetchMock();
+			const hits = await getLayersAtPoint(52.55, 13.5, fn as unknown as typeof fetch);
+			const wohnlage = hits.find((h) => h.layer === 'mietspiegel-wohnlage');
+			// Punkt außerhalb Mini-Polygon-Coverage → no-coverage (unverändert), nicht coverage-out-of-scope
+			expect(wohnlage?.reason).toBe('no-coverage');
+		});
+	});
+
 	it('Bezirk-Hit traegt source + updatedAt + license aus Manifest (MUST-Rule #12)', async () => {
 		const fn = buildFetchMock();
 		const hits = await getLayersAtPoint(52.52, 13.38, fn as unknown as typeof fetch);

@@ -46,7 +46,13 @@
 		showMore = !showMore;
 	}
 
-	type RowState = 'with-value' | 'no-coverage' | 'seasonal' | 'outdated';
+	type RowState =
+		| 'with-value'
+		| 'no-coverage'
+		| 'coverage-out-of-scope'
+		| 'out-of-concept'
+		| 'seasonal'
+		| 'outdated';
 
 	const display = $derived(getLayerHitDisplay(hit.layer, hit.value));
 	const severity = $derived(getValueSeverity(hit.layer, hit.value));
@@ -63,6 +69,8 @@
 	const editorial = $derived(getEditorialConfig(hit.layer));
 
 	const rowState: RowState = $derived.by(() => {
+		if (hit.reason === 'coverage-out-of-scope') return 'coverage-out-of-scope';
+		if (hit.reason === 'out-of-concept') return 'out-of-concept';
 		if (hit.reason === 'no-coverage') return 'no-coverage';
 		if (hit.reason === 'seasonal') return 'seasonal';
 		if (outdated) return 'outdated';
@@ -71,6 +79,8 @@
 
 	const valueText = $derived.by(() => {
 		if (rowState === 'no-coverage') return 'Daten nicht vorhanden';
+		if (rowState === 'coverage-out-of-scope') return 'Datensatz deckt diese Lage nicht ab';
+		if (rowState === 'out-of-concept') return 'Nicht ausgewiesen für diese Lage';
 		if (rowState === 'seasonal') return 'Layer Mai–Oktober aktiv';
 		if (display.chip) {
 			return display.chip.unit
@@ -152,6 +162,20 @@
 					data-testid="value-no-coverage"
 				>
 					Daten nicht vorhanden
+				</span>
+			{:else if rowState === 'coverage-out-of-scope'}
+				<span
+					class="font-serif italic text-ink-subtle text-sm"
+					data-testid="value-coverage-out-of-scope"
+				>
+					Datensatz deckt diese Lage nicht ab
+				</span>
+			{:else if rowState === 'out-of-concept'}
+				<span
+					class="font-serif italic text-ink-subtle text-sm"
+					data-testid="value-out-of-concept"
+				>
+					Nicht ausgewiesen für diese Lage
 				</span>
 			{:else if rowState === 'seasonal'}
 				<span class="font-mono text-sm text-ink-muted" data-testid="value-seasonal">
@@ -246,7 +270,7 @@
 			{showMore ? 'Weniger' : 'Mehr'}
 		</button>
 	{/if}
-	{#if externalLink && rowState !== 'no-coverage'}
+	{#if externalLink && rowState === 'with-value'}
 		<a
 			href={externalLink.href}
 			target="_blank"

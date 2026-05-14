@@ -47,7 +47,16 @@ const LayerMetadataSchema = v.object({
 	featureCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	inspectorRelevant: v.optional(v.boolean()),
 	format: v.optional(FormatSchema),
-	nearestPolygonFallbackKm: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))
+	nearestPolygonFallbackKm: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
+	coverageBbox: v.optional(
+		v.pipe(
+			v.tuple([v.number(), v.number(), v.number(), v.number()]),
+			v.check(
+				([minLng, minLat, maxLng, maxLat]) => minLng < maxLng && minLat < maxLat,
+				'coverageBbox must have minLng<maxLng and minLat<maxLat'
+			)
+		)
+	)
 });
 
 export const ManifestSchema = v.object({

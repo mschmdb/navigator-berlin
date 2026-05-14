@@ -49,6 +49,10 @@ export interface SourceConfig {
 	 * (z.B. Klima-Block-Geometrien, wo Adress-Geocoding im Hof/Straßenraum landet,
 	 * der außerhalb der Siedlungs-Polygone liegt). Story 1.25. */
 	nearestPolygonFallbackKm?: number;
+	/** Optional. Räumlicher Geltungsbereich als [minLng, minLat, maxLng, maxLat].
+	 * Manuelle Konfiguration; Punkte außerhalb liefern reason='coverage-out-of-scope'.
+	 * Story 1.23. */
+	coverageBbox?: [number, number, number, number];
 }
 
 export interface LayerEntry {
@@ -68,6 +72,8 @@ export interface LayerEntry {
 	format?: LayerFormat;
 	/** siehe SourceConfig.nearestPolygonFallbackKm. */
 	nearestPolygonFallbackKm?: number;
+	/** siehe SourceConfig.coverageBbox. */
+	coverageBbox?: [number, number, number, number];
 }
 
 export interface Manifest {

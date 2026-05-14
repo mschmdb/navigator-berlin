@@ -415,6 +415,98 @@ describe('layer-hit-row.svelte', () => {
 		});
 	});
 
+	// Story 1.23: Reason aufdröseln (Geltungsbereich / nicht-anwendbar / Lücke)
+	describe('Story 1.23: Reason-Wording', () => {
+		it('coverage-out-of-scope → "Datensatz deckt diese Lage nicht ab" + data-state', async () => {
+			render(LayerHitRow, {
+				hit: {
+					...recentHit,
+					layer: 'klima-pet-2022',
+					value: null,
+					reason: 'coverage-out-of-scope'
+				},
+				layerName: 'Klima PET 2022'
+			});
+			const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
+			expect(row.getAttribute('data-state')).toBe('coverage-out-of-scope');
+			const val = (await page
+				.getByTestId('value-coverage-out-of-scope')
+				.element()) as HTMLElement;
+			expect(val.textContent).toMatch(/Datensatz deckt diese Lage nicht ab/);
+		});
+
+		it('out-of-concept → "Nicht ausgewiesen für diese Lage" + data-state', async () => {
+			render(LayerHitRow, {
+				hit: {
+					...recentHit,
+					layer: 'milieuschutz-erhaltungsmiete',
+					value: null,
+					reason: 'out-of-concept'
+				},
+				layerName: 'Milieuschutz Erhaltungsmiete'
+			});
+			const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
+			expect(row.getAttribute('data-state')).toBe('out-of-concept');
+			const val = (await page.getByTestId('value-out-of-concept').element()) as HTMLElement;
+			expect(val.textContent).toMatch(/Nicht ausgewiesen für diese Lage/);
+		});
+
+		it('no-coverage Wording bleibt "Daten nicht vorhanden" (echte Lücke)', async () => {
+			render(LayerHitRow, {
+				hit: { ...recentHit, value: null, reason: 'no-coverage' },
+				layerName: 'Mietspiegel-Wohnlage'
+			});
+			const val = (await page.getByTestId('value-no-coverage').element()) as HTMLElement;
+			expect(val.textContent).toMatch(/Daten nicht vorhanden/);
+		});
+
+		it('external-link bei coverage-out-of-scope ausgeblendet', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'wohnlagen-2024',
+					value: null,
+					reason: 'coverage-out-of-scope',
+					source: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
+					updatedAt: '2024-06-10T00:00:00Z',
+					license: 'dl-de/by-2-0'
+				},
+				layerName: 'Mietspiegel-Wohnlage 2024'
+			});
+			await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
+		});
+
+		it('external-link bei out-of-concept ausgeblendet', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'wohnlagen-2024',
+					value: null,
+					reason: 'out-of-concept',
+					source: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
+					updatedAt: '2024-06-10T00:00:00Z',
+					license: 'dl-de/by-2-0'
+				},
+				layerName: 'Mietspiegel-Wohnlage 2024'
+			});
+			await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
+		});
+
+		it('aria-label kombiniert Layer-Name + Reason-Wording (coverage-out-of-scope)', async () => {
+			render(LayerHitRow, {
+				hit: {
+					...recentHit,
+					layer: 'klima-pet-2022',
+					value: null,
+					reason: 'coverage-out-of-scope'
+				},
+				layerName: 'Klima PET 2022'
+			});
+			const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
+			expect(row.getAttribute('aria-label')).toMatch(
+				/Klima PET 2022.*Datensatz deckt diese Lage nicht ab/
+			);
+		});
+	});
+
 	// Story 1.22: Grünversorgung-Skala harmonisiert (gering/mittel/hoch) + invertierte Severity.
 	describe('Story 1.22: Grünversorgung Skala-Harmonisierung', () => {
 		const gruenSource = 'https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023';

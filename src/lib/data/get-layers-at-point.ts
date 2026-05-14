@@ -45,6 +45,16 @@ function makeHit(
 
 export type PmtilesQueryFn = (slug: string, lng: number, lat: number) => Record<string, unknown> | null;
 
+function isInCoverageBbox(
+	lat: number,
+	lng: number,
+	bbox: [number, number, number, number] | undefined
+): boolean {
+	if (!bbox) return true;
+	const [minLng, minLat, maxLng, maxLat] = bbox;
+	return lng >= minLng && lng <= maxLng && lat >= minLat && lat <= maxLat;
+}
+
 async function hitForLayer(
 	layer: LayerMetadata,
 	lat: number,
@@ -53,6 +63,9 @@ async function hitForLayer(
 	pmtilesQuery?: PmtilesQueryFn
 ): Promise<LayerHit | null> {
 	if (layer.inspectorRelevant === false) return null;
+	if (!isInCoverageBbox(lat, lng, layer.coverageBbox)) {
+		return makeHit(layer, null, 'coverage-out-of-scope');
+	}
 	if (layer.seasonality && !inSeason(layer.seasonality)) {
 		return makeHit(layer, null, 'seasonal');
 	}
