@@ -64,7 +64,6 @@ function formatWohnlage(value: unknown): FormattedValue {
 	const mode = pickProp(value, 'wol_mode');
 	if (typeof mode !== 'string' || mode === 'unbekannt') return FALLBACK;
 	const plr = pickProp(value, 'plr_name');
-	const total = pickProp(value, 'count_total');
 	const counts: string[] = [];
 	for (const [k, label] of [
 		['count_einfach', 'einfach'],
@@ -75,8 +74,8 @@ function formatWohnlage(value: unknown): FormattedValue {
 		if (typeof c === 'number' && c > 0) counts.push(`${c} ${label}`);
 	}
 	const plrPart = typeof plr === 'string' ? ` · ${plr}` : '';
-	const breakdown =
-		counts.length > 0 && typeof total === 'number' ? ` (${counts.join(', ')})` : '';
+	// Breakdown nur bei genuiner Mischung mehrerer Buckets; einzelner Count dupliziert die "überwiegend"-Aussage.
+	const breakdown = counts.length > 1 ? ` (${counts.join(', ')})` : '';
 	return { text: `Wohnlage überwiegend ${mode}${plrPart}${breakdown}`, isNumeric: false };
 }
 

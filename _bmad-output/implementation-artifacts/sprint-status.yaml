@@ -36,7 +36,16 @@
 
 generated: 2026-05-11
 last_updated: 2026-05-14
+# story 1-20 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-14, TDD-first per ADR-012; ShareSheet im Inspector-Footer (Permalink/KI-Markdown/Print/Native-Share) + OG-Card via Satori+@resvg/resvg-js+wawoff2-Decode der @fontsource-woff2 + Print-CSS für A4-Wohnungssuche-Ausdruck + og:* + twitter:* Meta-Tags; PermalinkButton-Migration (Komponente + Tests gelöscht); Bug-Fix Live-Dev: ShareSheet auf fixed-positioning weil overflow-auto-Inspector-Parent absolute-Popover clippt; Print verifiziert vom User; 54 neue Unit-Tests + 10 E2E-Tests; type-check 0 Errors; User-Review-Wave-2 Klima-KI-Erweiterung (Min/Max/Latest + Normalperioden 1961-1990 + 1991-2020) + value-formatters Wohnlage count-breakdown nur bei Multi-Bucket; +3 Klima-Tests grün; Permalink-Domain via SvelteKit-ORIGIN-env in prod; E2E-Run + axe-CI-Run + Twitter-Card-Validator deferred zu Production-Deploy)
+# stories 1-21..1-25 created backlog → ready-for-dev (2026-05-14, User-Review-Wave-2-Feedback):
+#   1-21 mobility-soft-cutoff: Wohnadress-Detektor via Bodenrichtwert-Nutzungsart, Soft-Cutoff > 600 m, neue Rating-Keys solide/schwach/nicht-angebunden
+#   1-22 skala-harmonisierung-gruenversorgung: gering/mittel/hoch/sehr hoch durchgängig auch für Grün; Severity-Inversion via Layer-Mapping
+#   1-23 datenfehlt-reason-aufdroeseln: LayerHitReason coverage-out-of-scope + Applicability-Check + Wording-Map (Datensatz-Coverage vs Konzept-nicht-anwendbar vs echte Lücke)
+#   1-24 klima-normalperioden-ui: ClimateSparkline mit Mittel 1961-1990 + 1991-2020 pro Indikator; Util-Refactor aus llm-export-builder
+#   1-25 klima-pet-2022-coverage-bug: Investigation Wörther Str (Prenzlauer Berg) ohne PET-Wert; Pipeline-Verify oder Coverage-Reason
+#   Empfohlene Reihenfolge: 1-25 (Bug-Investigation zuerst) → 1-23 (Reason-Pattern) → 1-22 (Schema-Harmonisierung) → 1-21 (Mobility-Soft) → 1-24 (Klima-UI)
 # story 1-19 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-14, TDD-first per ADR-012; Walking-Distance-Util + Build-Pipeline + Loader + Nearest-Finder + Card + Inspector-Integration; User-Pivot: Berechnungs-Subline + ValueChip pro Row mit walking-severity + Gesamt-Mobility-Rating-Badge Score-basiert (U/S höher gewichtet); Browser-Test-Zombie-Bug behoben durch Auto-Load-Move von Component zu +page.svelte::openInspectorFor; 110 neue Tests grün; E2E + axe-CI-Run deferred)
+# story 1-20 created backlog → ready-for-dev (2026-05-14, User-Request post Story 1.19): Share-Sheet mit OG-Card — Inspector-Footer Share-Button öffnet Popover/Bottom-Sheet mit 4 minimalen Optionen (Permalink, KI-Markdown-Export, Drucken, Native-Share), Inline-Feedback-State statt Toast (NEVER toast hart-Regel), OG-Image-Endpoint via Satori + Resvg + dynamische og:image-Meta-Tags für Social-Card-Rendering. Phase-2-Backlog: Wohnungsgesuch-Vorlage, QR-Code, JSON-Export.
 # story 1-18 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-14, TDD-first per ADR-012; Inspector-UX-Rework Value-Chips + Compact-Density; 5 Severity-Tokens WCAG-AA + ValueChip-Komponente + getLayerHitDisplay-Modul + Compact-DataStandBanner 10px + Section-Header Plex-Mono uppercase + Empty-Section-Toggle localStorage; User-Pivots: Wohnlage mittel neutral→success-soft gegen Grau-Monotonie, Umweltgerechtigkeit zweifach→2× belastet für Klarheit; +92 neue Tests grün; E2E + axe-CI-Run deferred)
 # story 1-19 created backlog → ready-for-dev (2026-05-14, User-Request): Nächste ÖPNV-Stops in Inspector-Mobilität — Walking-Distance Crow-Flight × 1.3 Heuristik, Threshold ≤600m, 1 Nearest pro Modus (U/S/Tram/Bus) mit Name + Distanz + Geh-Minuten; Build-time Stop-Index aus existierenden GeoJSON-Files; lazy-load + Cache; NearestStopsCard oben in Mobilität-Section
 # story 1-17 promoted ready-for-dev → in-progress → review (dev-story session 2026-05-14, TDD-first per ADR-012; ClimateSparkline+ClimateLongView auf LayerChart v2.0.0-next.63 migriert; AccessibleChart entfernt; KlimaSection Lazy-Load + Skeleton; User-Review-Pivots: Null-Counts gefiltert + yBaseline=null für korrekte Min/Max-Visual-Match, Definition-Subline pro Metric (DWD-Schwellwerte); +30 neue Unit-Tests grün; Brush + DataTable-Session-Persistenz scope-cut, E2E + axe deferred to CI; Design-UX-Iteration deferred zu Story 1.18)
@@ -95,6 +104,12 @@ development_status:
   1-17-climate-charts-layerchart-rework: review
   1-18-inspector-ux-rework: review
   1-19-naechste-oepnv-stops: review
+  1-20-share-sheet-og-card: review
+  1-21-mobility-soft-cutoff: ready-for-dev
+  1-22-skala-harmonisierung-gruenversorgung: ready-for-dev
+  1-23-datenfehlt-reason-aufdroeseln: ready-for-dev
+  1-24-klima-normalperioden-ui: ready-for-dev
+  1-25-klima-pet-2022-coverage-bug: ready-for-dev
   epic-1-retrospective: optional
 
   # Epic 2: SEO/AEO Discovery + LLM-Agent Integration

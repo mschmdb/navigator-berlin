@@ -1,15 +1,20 @@
 <script lang="ts">
-	import { X } from '@lucide/svelte';
+	import { Share2, X } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
 	import { getUiState, toggleLayer } from '$lib/state/ui-context.svelte.js';
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
-	import PermalinkButton from './inspector-panel/permalink-button.svelte';
+	import ShareSheet from './inspector-panel/share-sheet.svelte';
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
 	import { findAllNearestStops } from './inspector-panel/internal/nearest-oepnv-stop.js';
+	import { getMobilityRating } from './inspector-panel/internal/mobility-rating.js';
+	import { buildLlmExportMarkdown } from '$lib/utils/llm-export-builder.js';
+	import { buildOgImageUrl } from '$lib/utils/og-image-url.js';
+	import { formatLayerValue } from './inspector-panel/internal/value-formatters.js';
+	import { page } from '$app/state';
 
 	type Props = {
 		layerMeta?: readonly LayerMetadata[];
@@ -55,13 +60,78 @@
 		ui.inspectorOpen = false;
 	}
 
-	async function copyPermalink(): Promise<void> {
-		if (typeof navigator !== 'undefined' && navigator.clipboard) {
-			await navigator.clipboard.writeText(window.location.href);
-		}
+	const addressName = $derived(ui.selectedAddress?.displayName ?? '');
+
+	let shareOpen = $state(false);
+	let shareTriggerEl: HTMLButtonElement | undefined = $state();
+
+	function openShare(): void {
+		shareOpen = true;
 	}
 
-	const addressName = $derived(ui.selectedAddress?.displayName ?? '');
+	function closeShare(): void {
+		shareOpen = false;
+		shareTriggerEl?.focus();
+	}
+
+	function currentHref(): string {
+		if (typeof window === 'undefined') return '';
+		return window.location.href;
+	}
+
+	function currentOrigin(): string {
+		if (typeof window === 'undefined') return '';
+		return window.location.origin;
+	}
+
+	const ogImageInput = $derived.by(() => {
+		const addr = ui.selectedAddress;
+		if (!addr) return null;
+		const topLayers: string[] = [];
+		for (const hit of ui.selectedLayerHits) {
+			if (topLayers.length >= 3) break;
+			const formatted = formatLayerValue(hit.layer, hit.value);
+			if (formatted.text === 'Daten nicht vorhanden') continue;
+			topLayers.push(`${getLayerDisplayName(hit.layer)}: ${formatted.text}`);
+		}
+		return {
+			address: addr.displayName,
+			lat: addr.lat,
+			lng: addr.lng,
+			bezirk: addr.bezirk,
+			topLayers
+		};
+	});
+
+	const llmMarkdown = $derived.by(() => {
+		const addr = ui.selectedAddress;
+		if (!addr) return '';
+		const point = { lat: addr.lat, lng: addr.lng };
+		const nearest = ui.oepnvStopIndex ? findAllNearestStops(point, ui.oepnvStopIndex) : null;
+		return buildLlmExportMarkdown({
+			address: {
+				displayName: addr.displayName,
+				lat: addr.lat,
+				lng: addr.lng,
+				bezirk: addr.bezirk,
+				postcode: addr.postcode
+			},
+			permalinkUrl: shareOpen ? currentHref() : '',
+			generatedAt: new Date().toISOString(),
+			layerHits: ui.selectedLayerHits,
+			layerMeta,
+			climate: ui.nearestStation ? { station: ui.nearestStation, series: ui.climateSeries } : null,
+			oepnv: nearest ? { nearest, rating: getMobilityRating(nearest) } : null
+		});
+	});
+
+	const ogImageUrl = $derived(shareOpen ? buildOgImageUrl(ogImageInput, currentOrigin()) : null);
+	const permalinkUrl = $derived(shareOpen ? currentHref() : '');
+	const nativeShareData = $derived<ShareData>({
+		title: addressName ? `${addressName} · Berlin Navigator` : 'Berlin Navigator',
+		text: ogImageInput?.topLayers.join(' · ') ?? '',
+		url: permalinkUrl || currentHref()
+	});
 
 	let panelEl: HTMLElement | undefined = $state();
 
@@ -180,6 +250,12 @@
 			{/each}
 		</div>
 
+		<div data-testid="inspector-print-meta">
+			<p>{addressName}</p>
+			<p>navigator.berlin · {new Date().toLocaleDateString('de-DE')}</p>
+			<p>{page.url.toString()}</p>
+		</div>
+
 		<footer class="border-t border-rule px-6 py-3 flex items-center justify-between gap-3">
 			<button
 				type="button"
@@ -190,7 +266,33 @@
 			>
 				{showEmptySections ? 'Leere Sektionen ausblenden' : 'Leere Sektionen einblenden'}
 			</button>
-			<PermalinkButton onCopy={copyPermalink} />
+			<div class="relative">
+				<button
+					type="button"
+					bind:this={shareTriggerEl}
+					onclick={openShare}
+					aria-haspopup="dialog"
+					aria-expanded={shareOpen}
+					aria-controls="inspector-share-sheet"
+					data-testid="share-sheet-trigger"
+					class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+				>
+					<Share2 size={14} aria-hidden="true" />
+					<span>Teilen</span>
+				</button>
+				<div id="inspector-share-sheet">
+					<ShareSheet
+						open={shareOpen}
+						onClose={closeShare}
+						{permalinkUrl}
+						llmExportText={llmMarkdown}
+						{ogImageUrl}
+						{addressName}
+						variant={variant === 'sheet' ? 'sheet' : 'popover'}
+						{nativeShareData}
+					/>
+				</div>
+			</div>
 		</footer>
 	</section>
 {/if}

@@ -52,11 +52,11 @@ test('Close-Button schließt Inspektor', async ({ page }) => {
 	await expect(page.getByTestId('inspector-panel')).toHaveCount(0);
 });
 
-test('Permalink-Button kopiert URL in Clipboard', async ({ page }) => {
+test('Share-Sheet kopiert Permalink in Clipboard', async ({ page }) => {
 	await selectAddress(page);
-	await page.getByTestId('permalink-button').click();
-	const status = page.getByTestId('permalink-status');
-	await expect(status).toContainText('URL kopiert');
+	await page.getByTestId('share-sheet-trigger').click();
+	await expect(page.getByTestId('share-sheet')).toBeVisible();
+	await page.getByTestId('share-option-permalink').click();
 	const clip = await page.evaluate(() => navigator.clipboard.readText());
 	expect(clip).toContain('http');
 });

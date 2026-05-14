@@ -6,7 +6,7 @@
 </script>
 
 <footer
-	class="mt-16 border-t border-rule py-6 font-sans text-xs text-ink-subtle"
+	class="mt-16 border-t border-rule py-6 font-sans text-xs text-ink-subtle print:hidden"
 >
 	<div class="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4">
 		<nav aria-label="Meta-Navigation" class="flex flex-wrap gap-x-4 gap-y-2">

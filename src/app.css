@@ -266,3 +266,114 @@ body {
 .tabular {
 	font-feature-settings: 'tnum';
 }
+
+/* Story 1.20 Print-CSS — Inspector als wohnungssuche-tauglicher Ausdruck */
+@media print {
+	html,
+	body {
+		background: #ffffff !important;
+		color: #000000 !important;
+	}
+
+	:root {
+		--bg: #ffffff;
+		--bg-elevated: #ffffff;
+		--ink: #000000;
+		--ink-muted: #1a1a1a;
+		--ink-subtle: #404040;
+		--rule: #b0b0b0;
+		--rule-strong: #000000;
+		--accent: #000000;
+		--severity-success: #000000;
+		--severity-success-bg: transparent;
+		--severity-success-soft: #000000;
+		--severity-success-soft-bg: transparent;
+		--severity-neutral: #000000;
+		--severity-neutral-bg: transparent;
+		--severity-warning: #000000;
+		--severity-warning-bg: transparent;
+		--severity-danger: #000000;
+		--severity-danger-bg: transparent;
+	}
+
+	[data-testid='share-sheet'],
+	[data-testid='share-sheet-trigger'],
+	[data-testid='inspector-close'],
+	[data-testid='toggle-empty-sections'],
+	#global-aria-live,
+	#global-aria-live-assertive,
+	#nav-skip-link,
+	.print-hide {
+		display: none !important;
+	}
+
+	[data-testid='atlas-shell'] {
+		display: block !important;
+		height: auto !important;
+		min-height: 0 !important;
+	}
+
+	[data-testid='atlas-shell'] > div:first-child {
+		display: none !important;
+	}
+
+	[data-testid='inspector-slot'],
+	[data-testid='bottom-sheet'] {
+		border: none !important;
+		width: 100% !important;
+		height: auto !important;
+		position: static !important;
+		max-height: none !important;
+		box-shadow: none !important;
+	}
+
+	[data-testid='inspector-panel'] {
+		height: auto !important;
+		overflow: visible !important;
+		background: #ffffff !important;
+		color: #000000 !important;
+	}
+
+	[data-testid='inspector-panel'] > header {
+		position: static !important;
+		border-bottom: 1pt solid #000 !important;
+	}
+
+	[data-testid='layer-hit-row'],
+	[data-testid^='section-'] {
+		page-break-inside: avoid;
+		break-inside: avoid;
+	}
+
+	[data-testid='value-chip'] {
+		background: transparent !important;
+		border: 1pt solid #000 !important;
+		color: #000 !important;
+		font-weight: 600 !important;
+		padding: 0.05rem 0.4rem !important;
+	}
+
+	[data-testid='inspector-print-meta'] {
+		display: block !important;
+		margin-top: 1.5rem;
+		padding-top: 0.75rem;
+		border-top: 1pt solid #000;
+		font-family: var(--font-mono);
+		font-size: 9pt;
+		color: #000;
+	}
+
+	a[href]:after {
+		content: '';
+	}
+
+	@page {
+		size: A4;
+		margin: 14mm 12mm 14mm 12mm;
+	}
+}
+
+/* Print-only block: hidden on screen, visible in print */
+[data-testid='inspector-print-meta'] {
+	display: none;
+}

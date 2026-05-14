@@ -30,6 +30,10 @@
 	import { useViewport } from '$lib/utils/use-viewport.svelte.js';
 	import { SvelteSet } from 'svelte/reactivity';
 	import LayerPalette from '$lib/components/atlas/layer-palette.svelte';
+	import { page } from '$app/state';
+	import { buildOgDescription, buildOgImageUrl, type OgImageInput } from '$lib/utils/og-image-url.js';
+	import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
+	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 	import {
 		buildLayerSpec,
 		type MapLibreLayerSpec
@@ -532,7 +536,54 @@
 	const showBottomSheet = $derived(
 		viewport.breakpoint === 'mobile' && ui.inspectorOpen && ui.selectedAddress !== null
 	);
+
+	const ogInput = $derived.by<OgImageInput | null>(() => {
+		const addr = ui.selectedAddress;
+		if (!addr) return null;
+		const topLayers: string[] = [];
+		for (const hit of ui.selectedLayerHits) {
+			if (topLayers.length >= 3) break;
+			const formatted = formatLayerValue(hit.layer, hit.value);
+			if (formatted.text === 'Daten nicht vorhanden') continue;
+			topLayers.push(`${getLayerDisplayName(hit.layer)}: ${formatted.text}`);
+		}
+		return {
+			address: addr.displayName,
+			lat: addr.lat,
+			lng: addr.lng,
+			bezirk: addr.bezirk,
+			topLayers
+		};
+	});
+
+	const ogTitle = $derived(
+		ogInput ? `${ogInput.address} · Berlin Navigator` : 'Berlin Navigator · Adress-Atlas'
+	);
+	const ogDescription = $derived(
+		ogInput
+			? buildOgDescription(ogInput)
+			: 'Adress-Atlas mit Wohn-, Umwelt-, Klima- und Mobilitäts-Daten für Berlin.'
+	);
+	const ogImageUrl = $derived(buildOgImageUrl(ogInput, page.url.origin));
+	const canonicalUrl = $derived(`${page.url.origin}${page.url.pathname}${page.url.search}`);
 </script>
+
+<svelte:head>
+	<title>{ogTitle}</title>
+	<meta name="description" content={ogDescription} />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:title" content={ogTitle} />
+	<meta property="og:description" content={ogDescription} />
+	<meta property="og:image" content={ogImageUrl} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={ogTitle} />
+	<meta name="twitter:description" content={ogDescription} />
+	<meta name="twitter:image" content={ogImageUrl} />
+</svelte:head>
 
 <section
 	class={[

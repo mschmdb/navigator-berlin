@@ -193,14 +193,16 @@ describe('inspector-panel.svelte', () => {
 		await expect.element(page.getByTestId('inspector-panel')).not.toBeInTheDocument();
 	});
 
-	it('Permalink-Button im Footer ruft clipboard.writeText', async () => {
+	it('Share-Sheet-Trigger im Footer öffnet Share-Sheet mit Permalink-Option', async () => {
 		const writeText = vi.fn(async () => {});
 		Object.defineProperty(window.navigator, 'clipboard', {
 			value: { writeText },
 			configurable: true
 		});
 		render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
-		await page.getByTestId('permalink-button').click();
+		await page.getByTestId('share-sheet-trigger').click();
+		await expect.element(page.getByTestId('share-sheet')).toBeInTheDocument();
+		await page.getByTestId('share-option-permalink').click();
 		expect(writeText).toHaveBeenCalledTimes(1);
 	});
 
