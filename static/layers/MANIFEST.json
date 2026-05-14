@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-13T10:49:45.462Z",
+  "generatedAt": "2026-05-14T07:00:21.198Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -552,6 +552,22 @@
       },
       "geometryType": "LineString",
       "featureCount": 2511,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "sbahn-netz",
+      "filename": "sbahn-netz.e9aa294c.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-05-14T07:00:21.198Z",
+      "license": "ODbL 1.0",
+      "sha256": "e9aa294ca1a55203e0363d0b60b12c0a680070ab4084680ad42af8384b5433dd",
+      "bundleGroup": "F: Mobilität",
+      "zoomThresholds": {
+        "min": 10,
+        "max": 18
+      },
+      "geometryType": "LineString",
+      "featureCount": 2441,
       "inspectorRelevant": false
     }
   ]

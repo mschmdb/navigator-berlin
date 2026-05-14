@@ -5,88 +5,137 @@ import type { YearValue } from '$lib/data';
 
 function buildSeries(): YearValue[] {
 	const out: YearValue[] = [];
-	for (let y = 1719; y <= 2024; y++) {
-		out.push({ year: y, temp: 8 + (y - 1719) * 0.005 + Math.sin(y) * 0.3 });
+	for (let y = 1881; y <= 2024; y++) {
+		out.push({ year: y, temp: 8 + (y - 1881) * 0.01 + Math.sin(y) * 0.3 });
 	}
 	return out;
 }
 
 const SERIES = buildSeries();
 
-describe('ClimateLongView', () => {
-	it('rendert figure mit Dahlem-Title', async () => {
+describe('ClimateLongView (LayerChart rewrite)', () => {
+	it('exposes accessible figure with aria-labelledby + aria-describedby', async () => {
 		const screen = render(ClimateLongView, {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
 		});
-		const title = screen.container.querySelector('svg title');
+		const figure = screen.container.querySelector(
+			'[data-testid="climate-long-view-figure"]'
+		);
+		expect(figure).not.toBeNull();
+		expect(figure?.getAttribute('role')).toBe('img');
+		const titleId = figure?.getAttribute('aria-labelledby');
+		const descId = figure?.getAttribute('aria-describedby');
+		const title = screen.container.querySelector(`#${titleId}`);
+		const desc = screen.container.querySelector(`#${descId}`);
 		expect(title?.textContent).toContain('Jahresmitteltemperatur');
 		expect(title?.textContent).toContain('Berlin-Dahlem');
+		expect(desc?.textContent).toContain('Berlin-Dahlem');
 	});
 
-	it('rendert default Berlin-Narrative-Markers (6)', async () => {
+	it('uses 180px compact hero height per AC-4', async () => {
 		const screen = render(ClimateLongView, {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
 		});
-		const markers = screen.container.querySelectorAll('[data-testid="long-view-marker"]');
-		expect(markers.length).toBe(6);
+		const root = screen.container.querySelector('.lc-root-container');
+		expect(root).not.toBeNull();
+		const heightPx = root ? parseFloat(getComputedStyle(root).height) : 0;
+		expect(heightPx).toBeGreaterThanOrEqual(170);
+		expect(heightPx).toBeLessThanOrEqual(190);
 	});
 
-	it('akzeptiert Custom-Marker-Liste', async () => {
+	it('renders LayerChart container with SVG layer', async () => {
+		const screen = render(ClimateLongView, {
+			series: SERIES,
+			stationName: 'Berlin-Dahlem'
+		});
+		const root = screen.container.querySelector('.lc-root-container');
+		expect(root).not.toBeNull();
+		const svg = root?.querySelector('svg');
+		expect(svg).not.toBeNull();
+	});
+
+	it('renders main annual temperature spline (≥ 1 path with data)', async () => {
+		const screen = render(ClimateLongView, {
+			series: SERIES,
+			stationName: 'Berlin-Dahlem'
+		});
+		const paths = screen.container.querySelectorAll(
+			'.lc-root-container svg path'
+		);
+		const dataPaths = Array.from(paths).filter(
+			(p) => (p.getAttribute('d') ?? '').length > 50
+		);
+		expect(dataPaths.length).toBeGreaterThanOrEqual(1);
+	});
+
+	it('renders rolling-mean line as second series', async () => {
+		const screen = render(ClimateLongView, {
+			series: SERIES,
+			stationName: 'Berlin-Dahlem'
+		});
+		const paths = screen.container.querySelectorAll(
+			'.lc-root-container svg path'
+		);
+		const longPaths = Array.from(paths).filter(
+			(p) => (p.getAttribute('d') ?? '').length > 50
+		);
+		expect(longPaths.length).toBeGreaterThanOrEqual(2);
+	});
+
+	it('renders narrative markers (default Berlin set within range)', async () => {
+		const screen = render(ClimateLongView, {
+			series: SERIES,
+			stationName: 'Berlin-Dahlem'
+		});
+		const markers = screen.container.querySelectorAll(
+			'[data-testid="long-view-marker"]'
+		);
+		expect(markers.length).toBeGreaterThanOrEqual(4);
+	});
+
+	it('accepts custom marker list', async () => {
 		const screen = render(ClimateLongView, {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem',
-			narrativeMarkers: [{ year: 1800, label: 'Custom' }]
+			narrativeMarkers: [{ year: 1900, label: 'Custom-Marker' }]
 		});
-		const markers = screen.container.querySelectorAll('[data-testid="long-view-marker"]');
+		const markers = screen.container.querySelectorAll(
+			'[data-testid="long-view-marker"]'
+		);
 		expect(markers.length).toBe(1);
-		expect(markers[0].textContent).toContain('Custom');
+		expect(markers[0].textContent).toContain('Custom-Marker');
 	});
 
-	it('zeichnet 30-Jahr-Mittel als sekundäre Path-Linie', async () => {
-		const screen = render(ClimateLongView, {
-			series: SERIES,
-			stationName: 'Berlin-Dahlem'
-		});
-		const rolling = screen.container.querySelector('path[data-testid="long-view-rolling"]');
-		expect(rolling).not.toBeNull();
-	});
-
-	it('zeichnet Haupt-Temperatur-Linie', async () => {
-		const screen = render(ClimateLongView, {
-			series: SERIES,
-			stationName: 'Berlin-Dahlem'
-		});
-		const line = screen.container.querySelector('path[data-testid="long-view-line"]');
-		expect(line).not.toBeNull();
-		expect(line?.getAttribute('d')?.length ?? 0).toBeGreaterThan(50);
-	});
-
-	it('rendert Höhe 280px (Hero-Chart)', async () => {
-		const screen = render(ClimateLongView, {
-			series: SERIES,
-			stationName: 'Berlin-Dahlem'
-		});
-		const svg = screen.container.querySelector('svg');
-		expect(svg?.getAttribute('height')).toBe('280');
-	});
-
-	it('figcaption nennt °C als Einheit', async () => {
+	it('figcaption shows Min, Max, Latest with °C unit', async () => {
 		const screen = render(ClimateLongView, {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
 		});
 		const fc = screen.container.querySelector('[data-testid="chart-figcaption"]');
 		expect(fc?.textContent).toContain('°C');
+		expect(fc?.textContent).toMatch(/Min/);
+		expect(fc?.textContent).toMatch(/Latest/);
 	});
 
-	it('rendert auch bei leerer Serie ohne Crash', async () => {
+	it('renders DataTableAlternative toggle for table alternative', async () => {
+		const screen = render(ClimateLongView, {
+			series: SERIES,
+			stationName: 'Berlin-Dahlem'
+		});
+		const toggle = screen.container.querySelector('[data-testid="table-toggle"]');
+		expect(toggle).not.toBeNull();
+	});
+
+	it('renders empty state without crashing on empty series', async () => {
 		const screen = render(ClimateLongView, {
 			series: [],
 			stationName: 'Berlin-Dahlem'
 		});
-		const figure = screen.container.querySelector('[data-testid="accessible-chart"]');
+		const figure = screen.container.querySelector(
+			'[data-testid="climate-long-view-figure"]'
+		);
 		expect(figure).not.toBeNull();
 	});
 });

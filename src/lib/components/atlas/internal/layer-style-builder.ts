@@ -1,4 +1,6 @@
 import { COLORS } from './colors.js';
+import { hasPinIcon } from './pin-icon-mapping.js';
+import { pinImageId } from './pin-sprite-renderer.js';
 
 export type StyleProfile =
 	| 'boundary'
@@ -23,14 +25,33 @@ export type StyleProfile =
 	| 'line-radverkehr'
 	| 'line-rail-ubahn'
 	| 'line-rail-tram'
+	| 'line-rail-sbahn'
 	| 'line-fahrradstrasse';
 
 export interface MapLibreLayerSpec {
 	id: string;
-	type: 'line' | 'fill' | 'circle';
+	type: 'line' | 'fill' | 'circle' | 'symbol';
 	source: string;
 	paint?: Record<string, unknown>;
 	layout?: Record<string, unknown>;
+}
+
+// Story 1.15: Pin-Icon-Layer (type=symbol) fuer 12 Point-Layer mit Lucide-Icons.
+// Sprite-Image wird zur Laufzeit per map.addImage(pinImageId(slug), ...) registriert.
+function buildPinSymbolSpec(slug: string, sourceId: string): MapLibreLayerSpec {
+	return {
+		id: `navigator-layer-${slug}`,
+		type: 'symbol',
+		source: sourceId,
+		layout: {
+			'icon-image': pinImageId(slug),
+			// Native Pin = 28px; geschrumpft: ~11px <Zoom 11, ~14px Zoom 13, ~17px Zoom 16.
+			'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.4, 13, 0.5, 16, 0.6],
+			'icon-allow-overlap': true,
+			'icon-ignore-placement': true,
+			'icon-anchor': 'center'
+		}
+	};
 }
 
 export interface BuildOptions {
@@ -81,7 +102,8 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'tram-haltestellen': 'point-tram',
 	'bus-haltestellen': 'point-bus',
 	'ubahn-netz': 'line-rail-ubahn',
-	'tram-netz': 'line-rail-tram'
+	'tram-netz': 'line-rail-tram',
+	'sbahn-netz': 'line-rail-sbahn'
 };
 
 const TRANSITION_MS = 200;
@@ -236,6 +258,10 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		kind: 'line',
 		items: [{ color: COLORS.vermillion, label: 'Tram-Trasse' }]
 	},
+	'line-rail-sbahn': {
+		kind: 'line',
+		items: [{ color: COLORS.mobilitySbahn, label: 'S-Bahn-Trasse' }]
+	},
 	'line-fahrradstrasse': {
 		kind: 'line',
 		items: [{ color: COLORS.chartCat3, label: 'Fahrradstraße' }]
@@ -255,6 +281,11 @@ export function buildLayerSpec(
 ): MapLibreLayerSpec[] {
 	const profile = getStyleProfile(slug);
 	const id = `navigator-layer-${slug}`;
+
+	// Story 1.15: Pin-Icon-Layer haben Vorrang vor Circle-Profilen.
+	if (hasPinIcon(slug)) {
+		return [buildPinSymbolSpec(slug, sourceId)];
+	}
 
 	switch (profile) {
 		case 'boundary':
@@ -654,6 +685,19 @@ export function buildLayerSpec(
 						'line-color': COLORS.vermillion,
 						'line-width': 1.25,
 						'line-opacity': 0.7
+					}
+				}
+			];
+		case 'line-rail-sbahn':
+			return [
+				{
+					id,
+					type: 'line',
+					source: sourceId,
+					paint: {
+						'line-color': COLORS.mobilitySbahn,
+						'line-width': ['interpolate', ['linear'], ['zoom'], 10, 1.5, 13, 2, 16, 3],
+						'line-opacity': 0.85
 					}
 				}
 			];

@@ -4,7 +4,8 @@
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
 	import DataStandBanner from './data-stand-banner.svelte';
-	import { formatLayerValue } from './internal/value-formatters.js';
+	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
+	import { getValueSeverity } from './internal/value-severity-mapping.js';
 	import {
 		getLayerExplainEntry,
 		getLayerExternalLink
@@ -18,6 +19,7 @@
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import StolpersteinDetail from '../stolperstein-detail.svelte';
 	import MauerSektorenDetail from '../mauer-sektoren-detail.svelte';
+	import ValueChip from '../value-chip.svelte';
 
 	type Props = {
 		hit: LayerHit;
@@ -46,7 +48,8 @@
 
 	type RowState = 'with-value' | 'no-coverage' | 'seasonal' | 'outdated';
 
-	const formatted = $derived(formatLayerValue(hit.layer, hit.value));
+	const display = $derived(getLayerHitDisplay(hit.layer, hit.value));
+	const severity = $derived(getValueSeverity(hit.layer, hit.value));
 	const explainEntry = $derived(getLayerExplainEntry(hit.layer));
 	const explain = $derived(explainEntry.short);
 	const hasMore = $derived(
@@ -69,7 +72,13 @@
 	const valueText = $derived.by(() => {
 		if (rowState === 'no-coverage') return 'Daten nicht vorhanden';
 		if (rowState === 'seasonal') return 'Layer Mai–Oktober aktiv';
-		return formatted.text;
+		if (display.chip) {
+			return display.chip.unit
+				? `${display.chip.value} ${display.chip.unit}`
+				: display.chip.value;
+		}
+		if (display.fallbackText) return display.fallbackText;
+		return 'Daten nicht vorhanden';
 	});
 
 	const groupLabel = $derived(`${layerName}: ${valueText}`);
@@ -118,16 +127,28 @@
 	data-testid="layer-hit-row"
 	data-state={rowState}
 	data-layer={hit.layer}
-	class="grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 border-b border-rule py-3 last:border-b-0"
+	class="flex flex-col gap-1.5 border-b border-rule py-3 last:border-b-0"
 >
-	<div class="flex flex-col gap-1">
-		<div class="flex flex-wrap items-baseline gap-x-3">
-			<span class="text-base font-medium text-ink" data-testid="layer-name">
-				{layerName}
-			</span>
-			{#if rowState === 'no-coverage'}
+	<div class="flex items-start justify-between gap-3">
+		<span class="text-base font-medium text-ink leading-tight pt-1" data-testid="layer-name">
+			{layerName}
+		</span>
+		<div class="flex shrink-0 items-center gap-1" data-testid="layer-hit-row-actions">
+			{#if rowState === 'with-value' && display.chip}
+				<ValueChip
+					{severity}
+					value={display.chip.value}
+					unit={display.chip.unit}
+					numeric={display.chip.numeric}
+					{layerName}
+				/>
+			{:else if rowState === 'with-value' && display.fallbackText}
+				<span class="text-base font-semibold text-ink" data-testid="value">
+					{display.fallbackText}
+				</span>
+			{:else if rowState === 'no-coverage'}
 				<span
-					class="font-serif italic text-ink-subtle"
+					class="font-serif italic text-ink-subtle text-sm"
 					data-testid="value-no-coverage"
 				>
 					Daten nicht vorhanden
@@ -136,15 +157,8 @@
 				<span class="font-mono text-sm text-ink-muted" data-testid="value-seasonal">
 					Layer Mai–Oktober aktiv
 				</span>
-			{:else if formatted.isNumeric}
-				<span class="font-mono text-base font-semibold text-ink tabular-nums" data-testid="value">
-					{valueText}
-				</span>
-			{:else}
-				<span class="text-base font-semibold text-ink" data-testid="value">
-					{valueText}
-				</span>
 			{/if}
+
 			{#if showSeasonalActivePill}
 				<span
 					data-testid="seasonal-pill-active"
@@ -160,80 +174,7 @@
 					außerhalb der Saison
 				</span>
 			{/if}
-		</div>
-		{#if explain}
-			<p class="font-serif text-sm leading-snug text-ink-muted" data-testid="explain">
-				{explain}
-			</p>
-		{/if}
-		{#if hasMore}
-			{#if showMore}
-				<p
-					data-testid="explain-long"
-					class="font-serif text-sm leading-snug text-ink-muted"
-				>
-					{explainEntry.long}
-				</p>
-				{#if explainEntry.valueScaleExplain}
-					<p
-						data-testid="explain-scale"
-						class="font-mono text-xs text-ink-subtle"
-					>
-						{explainEntry.valueScaleExplain}
-					</p>
-				{/if}
-			{/if}
-			<button
-				type="button"
-				data-testid="explain-more"
-				data-state={showMore ? 'open' : 'closed'}
-				aria-expanded={showMore}
-				onclick={toggleMore}
-				class="self-start text-xs font-medium text-accent underline-offset-2 hover:underline"
-			>
-				{showMore ? 'Weniger' : 'Mehr'}
-			</button>
-		{/if}
-		{#if externalLink && rowState !== 'no-coverage'}
-			<a
-				href={externalLink.href}
-				target="_blank"
-				rel="noopener noreferrer"
-				data-testid="external-link"
-				class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
-			>
-				<ExternalLink size={12} aria-hidden="true" />
-				{externalLink.label}
-			</a>
-		{/if}
-		<DataStandBanner {hit} />
-		{#each disclaimerVariants as variant (variant)}
-			<EditorialDisclaimer
-				{variant}
-				sourceUrl={editorial?.primarySourceUrl}
-			/>
-		{/each}
-		{#if stolpersteinFeature}
-			<StolpersteinDetail feature={stolpersteinFeature} fetchedAt={hit.updatedAt} />
-		{/if}
-		{#if showMauerDetail}
-			<MauerSektorenDetail fetchedAt={hit.updatedAt} />
-		{/if}
-	</div>
-	<div
-		class="flex shrink-0 flex-col items-end gap-1.5 pt-1 text-sm"
-		data-testid="layer-hit-row-actions"
-	>
-		{#if rowState === 'outdated'}
-			<span
-				data-testid="outdated-pill"
-				class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-state-warning"
-				title={`Datenstand: ${hit.updatedAt}`}
-			>
-				Veraltet
-			</span>
-		{/if}
-		<div class="flex items-center gap-1">
+
 			{#if onToggleLayer}
 				<button
 					type="button"
@@ -273,4 +214,58 @@
 			</a>
 		</div>
 	</div>
+
+	{#if display.context}
+		<p class="text-sm text-ink-muted" data-testid="row-context">{display.context}</p>
+	{/if}
+
+	{#if explain}
+		<p class="font-serif text-sm leading-snug text-ink-muted" data-testid="explain">
+			{explain}
+		</p>
+	{/if}
+	{#if hasMore}
+		{#if showMore}
+			<p data-testid="explain-long" class="font-serif text-sm leading-snug text-ink-muted">
+				{explainEntry.long}
+			</p>
+			{#if explainEntry.valueScaleExplain}
+				<p data-testid="explain-scale" class="font-mono text-xs text-ink-subtle">
+					{explainEntry.valueScaleExplain}
+				</p>
+			{/if}
+		{/if}
+		<button
+			type="button"
+			data-testid="explain-more"
+			data-state={showMore ? 'open' : 'closed'}
+			aria-expanded={showMore}
+			onclick={toggleMore}
+			class="self-start text-xs font-medium text-accent underline-offset-2 hover:underline"
+		>
+			{showMore ? 'Weniger' : 'Mehr'}
+		</button>
+	{/if}
+	{#if externalLink && rowState !== 'no-coverage'}
+		<a
+			href={externalLink.href}
+			target="_blank"
+			rel="noopener noreferrer"
+			data-testid="external-link"
+			class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+		>
+			<ExternalLink size={12} aria-hidden="true" />
+			{externalLink.label}
+		</a>
+	{/if}
+	<DataStandBanner {hit} />
+	{#each disclaimerVariants as variant (variant)}
+		<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
+	{/each}
+	{#if stolpersteinFeature}
+		<StolpersteinDetail feature={stolpersteinFeature} fetchedAt={hit.updatedAt} />
+	{/if}
+	{#if showMauerDetail}
+		<MauerSektorenDetail fetchedAt={hit.updatedAt} />
+	{/if}
 </div>

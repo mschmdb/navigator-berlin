@@ -19,7 +19,8 @@ export default defineConfig({
 		dedupe: ['svelte', 'svelte/internal']
 	},
 	optimizeDeps: {
-		exclude: ['bits-ui']
+		exclude: ['bits-ui'],
+		include: ['layerchart']
 	},
 	build: {
 		rollupOptions: {

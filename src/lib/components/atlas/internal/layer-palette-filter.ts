@@ -11,13 +11,13 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'milieuschutz-erhaltungsmiete': 'Milieuschutz: Erhaltungsmiete',
 	'milieuschutz-staedtebau': 'Milieuschutz: Städtebau',
 	// C: Umwelt — Umweltatlas
-	'laerm-2023': 'Lärmbelastung (Umweltatlas 2023)',
-	'luft-2023': 'Luftbelastung (Umweltatlas 2023)',
-	'bioklima-2023': 'Thermische Belastung (Umweltatlas 2023)',
-	'gruenversorgung-2023': 'Grünversorgung (Umweltatlas 2023)',
-	'umweltgerechtigkeit-2023': 'Umweltgerechtigkeit gesamt (2023)',
+	'laerm-2023': 'Lärmbelastung 2023',
+	'luft-2023': 'Luftbelastung 2023',
+	'bioklima-2023': 'Thermische Belastung 2023',
+	'gruenversorgung-2023': 'Grünversorgung 2023',
+	'umweltgerechtigkeit-2023': 'Umweltgerechtigkeit 2023',
 	// C: Umwelt — Klimaanalyse 2022
-	'klima-pet-2022': 'Gefühlte Temperatur (PET 14 Uhr, 2022)',
+	'klima-pet-2022': 'Gefühlte Temperatur 2022',
 	'klima-kaltlufteinwirkbereich-2022': 'Kaltluft-Einwirkbereich (2022)',
 	'klima-leitbahnkorridor-2022': 'Kaltluft-Leitbahn-Korridor (2022)',
 	gruenanlagen: 'Grünanlagen',
@@ -41,7 +41,8 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'tram-haltestellen': 'Tram-Haltestellen',
 	'bus-haltestellen': 'Bus-Haltestellen',
 	'ubahn-netz': 'U-Bahn-Netz',
-	'tram-netz': 'Tram-Netz'
+	'tram-netz': 'Tram-Netz',
+	'sbahn-netz': 'S-Bahn-Netz'
 };
 
 export const BUNDLE_ORDER: readonly Bundle[] = [

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
 	shortenSource,
+	shortenSourceCompact,
 	shortenLicense,
 	isOutdated,
 	formatYearMonth
@@ -24,6 +25,36 @@ describe('shortenSource', () => {
 	});
 	it('Invalid URL → Input as-is', () => {
 		expect(shortenSource('not-a-url')).toBe('not-a-url');
+	});
+});
+
+describe('shortenSourceCompact (Story 1.18 Banner)', () => {
+	it('FIS-Broker → "FIS"', () => {
+		expect(shortenSourceCompact('https://fbinter.stadt-berlin.de/x')).toBe('FIS');
+	});
+	it('ODIS → "ODIS"', () => {
+		expect(shortenSourceCompact('https://daten.odis-berlin.de/x')).toBe('ODIS');
+	});
+	it('DWD → "DWD"', () => {
+		expect(shortenSourceCompact('https://opendata.dwd.de/x')).toBe('DWD');
+	});
+	it('Overpass → "OSM"', () => {
+		expect(shortenSourceCompact('https://overpass-api.de/api')).toBe('OSM');
+	});
+	it('GDI → "gdi"', () => {
+		expect(shortenSourceCompact('https://gdi.berlin.de/services/x')).toBe('gdi');
+	});
+	it('Mietspiegel → "mietspiegel"', () => {
+		expect(shortenSourceCompact('https://mietspiegel.berlin.de/')).toBe('mietspiegel');
+	});
+	it('Unknown .berlin.de Hostname strippt Suffix', () => {
+		expect(shortenSourceCompact('https://foo.berlin.de/x')).toBe('foo');
+	});
+	it('Sonstige Hostname unverändert', () => {
+		expect(shortenSourceCompact('https://example.org/x')).toBe('example.org');
+	});
+	it('Invalid URL → unverändert', () => {
+		expect(shortenSourceCompact('not-a-url')).toBe('not-a-url');
 	});
 });
 

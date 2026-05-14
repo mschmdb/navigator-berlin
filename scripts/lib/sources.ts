@@ -443,6 +443,21 @@ export const SOURCES: SourceConfig[] = [
 		zoomThresholds: { min: 12, max: 18 },
 		simplifyProfile: 'polygon',
 		inspectorRelevant: false
+	},
+	{
+		slug: 'sbahn-netz',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		// S-Bahn-Berlin nutzt railway=rail (NICHT light_rail für Geometrie). Differenzierung via
+		// route=light_rail-Relations + operator~"S-Bahn Berlin" (OSM-Tagging-Realität: network=VBB,
+		// operator="S-Bahn Berlin GmbH"). `way(r)` extrahiert Member-Ways der gematchten Relationen;
+		// `out geom` liefert vollständige LineString-Geometrie.
+		overpassQL: `[out:json][timeout:180];relation["route"="light_rail"]["operator"~"S-Bahn Berlin"](${BERLIN_BBOX_OVERPASS});way(r);out geom;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'F: Mobilität',
+		zoomThresholds: { min: 10, max: 18 },
+		simplifyProfile: 'polygon',
+		inspectorRelevant: false
 	}
 ];
 

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { LayerHit } from '$lib/data';
+	import { Info } from '@lucide/svelte';
 	import {
-		shortenSource,
+		shortenSourceCompact,
 		shortenLicense,
 		isOutdated,
 		formatYearMonth
@@ -10,18 +11,34 @@
 	type Props = { hit: LayerHit };
 	let { hit }: Props = $props();
 
-	const sourceShort = $derived(shortenSource(hit.source));
+	const sourceShort = $derived(shortenSourceCompact(hit.source));
 	const licenseShort = $derived(shortenLicense(hit.license));
 	const formattedDate = $derived(formatYearMonth(hit.updatedAt));
 	const outdated = $derived(isOutdated(hit.updatedAt));
+
+	let hostname = $derived.by(() => {
+		try {
+			return new URL(hit.source).hostname;
+		} catch {
+			return hit.source;
+		}
+	});
 </script>
 
 <p
-	class="font-mono text-xs text-ink-subtle flex flex-wrap items-baseline gap-x-2"
+	class="font-mono text-[10px] text-ink-subtle flex flex-wrap items-baseline gap-x-2"
 	data-testid="data-stand-banner"
 >
 	<span data-testid="banner-text">
-		Stand: {formattedDate} · Quelle: {sourceShort} · {licenseShort}
+		{formattedDate} · {sourceShort} · {licenseShort}
+	</span>
+	<span
+		data-testid="banner-source-info"
+		class="inline-flex items-center text-ink-subtle hover:text-ink-muted"
+		title={`Quelle: ${hostname}`}
+		aria-label={`Quelle: ${hostname}`}
+	>
+		<Info size={10} aria-hidden="true" />
 	</span>
 	{#if outdated}
 		<span

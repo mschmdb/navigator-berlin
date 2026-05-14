@@ -120,7 +120,7 @@ test.describe('Reduced-Motion: keine SVG-Transitions', () => {
 		const sparkline = page.getByTestId('climate-sparkline').first();
 		await expect(sparkline).toBeVisible({ timeout: 15000 });
 		const transition = await sparkline.evaluate((el) => {
-			const path = el.querySelector('path[data-testid="sparkline-line"]') as SVGElement | null;
+			const path = el.querySelector('.lc-root-container svg path') as SVGElement | null;
 			if (!path) return null;
 			return getComputedStyle(path).transitionDuration;
 		});

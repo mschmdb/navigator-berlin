@@ -171,6 +171,10 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		short: 'Straßenbahn-Linie (BVG)',
 		long: 'BVG-Straßenbahn-Linienverlauf, vor allem im Ostteil Berlins, 22 Linien. Quelle: BVG Geo-Daten.'
 	},
+	'sbahn-netz': {
+		short: 'S-Bahn-Linien-Netz Berlin (Betreiber: S-Bahn Berlin GmbH)',
+		long: 'Linienverlauf des Berliner S-Bahn-Netzes, betrieben von der S-Bahn Berlin GmbH (DB-Konzern-Tochter). 16 Linien, rund 330 km Streckennetz, dichteste Verkehrsachsen in Berlin und Umland. Quelle: OpenStreetMap-Routen-Relationen (ODbL 1.0).'
+	},
 
 	// Legacy / non-Manifest-Slugs (Story 1.3 Re-Run TODO):
 	// referenziert in value-formatters.ts und Tests, halten wir bis Refactor.

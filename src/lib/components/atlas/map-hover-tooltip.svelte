@@ -14,6 +14,8 @@
 			point: HoverPoint,
 			opts: { layers: string[] }
 		) => readonly HoverFeature[];
+		/** Optionaler Layer-Existence-Check; defensive Filter gegen Race-Condition. */
+		getLayer?: (id: string) => unknown | undefined;
 	}
 </script>
 
@@ -42,7 +44,16 @@
 
 	function onMouseMove(e: HoverEvent): void {
 		if (!map) return;
-		const features = map.queryRenderedFeatures(e.point, { layers: layerIds });
+		// Defensive Filter: queryRenderedFeatures wirft wenn LayerID fehlt (Race waehrend
+		// Symbol-Sprite-Loading oder Layer-Add-Cycle). map.getLayer ist falsy bei missing.
+		const existing = map.getLayer
+			? layerIds.filter((id) => Boolean(map.getLayer!(id)))
+			: layerIds;
+		if (existing.length === 0) {
+			visible = false;
+			return;
+		}
+		const features = map.queryRenderedFeatures(e.point, { layers: existing });
 		const topmost = pickTopmostHover(features);
 		if (!topmost) {
 			visible = false;
@@ -84,25 +95,49 @@
 	<div
 		data-testid="map-hover-tooltip"
 		data-slug={content.slug}
+		data-variant={content.kind}
 		role="tooltip"
 		aria-live="polite"
 		class="pointer-events-none absolute z-30 max-w-xs border border-rule bg-bg-elevated/95 px-2.5 py-1.5 text-xs text-ink shadow-lg backdrop-blur-sm"
 		style="left: {pos.x + 12}px; top: {pos.y + 12}px;"
 	>
-		<p class="font-serif text-sm font-semibold text-ink">{content.layerName}</p>
-		<p class="font-mono text-xs text-ink" data-testid="hover-tooltip-value">
-			{content.valueText}
-		</p>
-		{#if content.shortExplain}
+		{#if content.kind === 'poi'}
 			<p
-				class="font-serif text-[11px] italic leading-snug text-ink-muted"
-				data-testid="hover-tooltip-explain"
+				class="font-serif text-sm font-semibold text-ink"
+				data-testid="poi-popover-title"
 			>
-				{content.shortExplain}
+				{content.poiTitle ?? content.layerName}
+			</p>
+			{#if content.poiSubtitle}
+				<p
+					class="font-sans text-xs leading-snug text-ink-muted"
+					data-testid="poi-popover-subtitle"
+				>
+					{content.poiSubtitle}
+				</p>
+			{/if}
+			<p
+				class="mt-1 font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+				data-testid="poi-popover-hint"
+			>
+				{content.hint}
+			</p>
+		{:else}
+			<p class="font-serif text-sm font-semibold text-ink">{content.layerName}</p>
+			<p class="font-mono text-xs text-ink" data-testid="hover-tooltip-value">
+				{content.valueText}
+			</p>
+			{#if content.shortExplain}
+				<p
+					class="font-serif text-[11px] italic leading-snug text-ink-muted"
+					data-testid="hover-tooltip-explain"
+				>
+					{content.shortExplain}
+				</p>
+			{/if}
+			<p class="mt-1 font-sans text-[10px] uppercase tracking-wide text-ink-subtle">
+				{content.hint}
 			</p>
 		{/if}
-		<p class="mt-1 font-sans text-[10px] uppercase tracking-wide text-ink-subtle">
-			{content.hint}
-		</p>
 	</div>
 {/if}

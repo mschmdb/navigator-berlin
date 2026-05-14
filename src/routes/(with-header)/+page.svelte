@@ -13,7 +13,7 @@
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
 	import { createPlexMarker } from '$lib/components/atlas/internal/map-markers.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { serializeViewport, serializeLayers, sortLayerSlugsByBundle } from '$lib/utils/url-state.js';
+	import { serializeViewport, serializeLayers } from '$lib/utils/url-state.js';
 	import { debounce } from '$lib/utils/debounce.js';
 	import { matchZoomForType } from '$lib/utils/zoom-mapping.js';
 	import { reverseGeocodeAddress } from '$lib/data/geocode.remote.js';
@@ -34,10 +34,19 @@
 		type MapLibreLayerSpec
 	} from '$lib/components/atlas/internal/layer-style-builder.js';
 	import {
+		buildLayerSpecCascade,
+		computeCascadeVariants,
+		isPolygonSlug
+	} from '$lib/components/atlas/internal/layer-style-cascade.js';
+	import { sortSlugsByBundleStable } from '$lib/components/atlas/internal/layer-order-sorting.js';
+	import { applyHiddenSlugs, exceedsPolygonLimit } from '$lib/components/atlas/internal/layer-visibility.js';
+	import { toggleLayerHidden, removeLayer as removeUiLayer } from '$lib/state/ui-context.svelte.js';
+	import {
 		diffLayerSlugs,
 		sourceIdFor,
 		layerIdFor
 	} from '$lib/components/atlas/internal/layer-diff.js';
+	import { PIN_LAYER_SLUGS } from '$lib/components/atlas/internal/pin-icon-mapping.js';
 
 	type Viewport = { center: [number, number]; zoom: number; bbox: [number, number, number, number] };
 	type Props = { data: import('./$types').PageData };
@@ -124,8 +133,8 @@
 	const syncLayers = debounce((slugs: string[]) => {
 		const url = new URL(window.location.href);
 		url.searchParams.delete(LAYERS_KEY);
-		const ordered = sortLayerSlugsByBundle(slugs, manifestLayers);
-		const csv = serializeLayers(ordered);
+		// Story 1.14 AC-5: Aktivierungs-Reihenfolge persistieren, kein Bundle-Re-Sort.
+		const csv = serializeLayers(slugs);
 		if (csv) url.searchParams.set(LAYERS_KEY, csv);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
@@ -157,6 +166,7 @@
 	};
 
 	let renderedSlugs: string[] = [];
+	let renderedVariantBySlug: Record<string, string> = {};
 	const layerRenderInflight = new SvelteSet<string>();
 	let pmtilesProtocolRegistered = false;
 
@@ -174,64 +184,125 @@
 		pmtilesProtocolRegistered = true;
 	}
 
-	async function renderLayers(slugs: readonly string[]): Promise<void> {
+	function specsForSlug(
+		slug: string,
+		sourceId: string,
+		variant: string,
+		reduced: boolean
+	): MapLibreLayerSpec[] {
+		if (isPolygonSlug(slug) && (variant === 'fill' || variant === 'outline' || variant === 'outline-dash')) {
+			return buildLayerSpecCascade(slug, sourceId, variant, { reducedMotion: reduced });
+		}
+		return buildLayerSpec(slug, sourceId, { reducedMotion: reduced });
+	}
+
+	async function renderLayers(activeSlugs: readonly string[]): Promise<void> {
 		if (!rawMap) return;
 		const map = rawMap as MapWithLayers;
-		const { toAdd, toRemove } = diffLayerSlugs(renderedSlugs, slugs);
+		// Story 1.14: Eye-Toggle blendet aktive Layer aus, ohne sie aus activeLayerSlugs zu entfernen.
+		const visible = applyHiddenSlugs(activeSlugs, ui.hiddenLayerSlugs);
+		// Story 1.14 AC-5: Bundle-Order A→F (innerhalb Bundle = Aktivierungs-Reihenfolge).
+		const ordered = sortSlugsByBundleStable(visible, manifestLayers);
+		const cascade = computeCascadeVariants(ordered);
+
+		const variantBySlug: Record<string, string> = {};
+		for (const slug of ordered) {
+			variantBySlug[slug] = isPolygonSlug(slug) ? cascade.get(slug) ?? 'fill' : 'non-polygon';
+		}
+
+		const visibleSet = new Set(ordered);
+		const { toRemove } = diffLayerSlugs(renderedSlugs, ordered);
+
+		// 1. remove sources for slugs no longer visible
 		for (const slug of toRemove) {
 			const layerId = layerIdFor(slug);
 			const sourceId = sourceIdFor(slug);
 			if (map.getLayer(layerId)) map.removeLayer(layerId);
 			if (map.getSource(sourceId)) map.removeSource(sourceId);
 		}
+
+		// 2. for slugs whose variant changed but still visible: remove layer (keep source)
+		for (const slug of renderedSlugs) {
+			if (!visibleSet.has(slug)) continue;
+			if (renderedVariantBySlug[slug] === variantBySlug[slug]) continue;
+			const layerId = layerIdFor(slug);
+			if (map.getLayer(layerId)) map.removeLayer(layerId);
+		}
+
 		const reduced = prefersReducedMotion();
-		await Promise.all(
-			toAdd.map(async (slug) => {
-				if (layerRenderInflight.has(slug)) return;
-				const meta = getLayerEntry(slug);
-				if (!meta) return;
+		// 3. Re-add layers in Bundle-Order so MapLibre z-stack respects A unten / F oben.
+		for (const slug of ordered) {
+			if (layerRenderInflight.has(slug)) continue;
+			const meta = getLayerEntry(slug);
+			if (!meta) continue;
+			const sourceId = sourceIdFor(slug);
+			const variant = variantBySlug[slug] ?? 'fill';
+			const layerId = layerIdFor(slug);
+
+			// Source ensure (async fetch only on first add).
+			if (!map.getSource(sourceId)) {
 				layerRenderInflight.add(slug);
 				try {
-					const sourceId = sourceIdFor(slug);
 					if (meta.format === 'pmtiles') {
 						await ensurePmtilesProtocol();
 						if (!rawMap) return;
-						if (!map.getSource(sourceId)) {
-							map.addSource(sourceId, {
-								type: 'vector',
-								url: `pmtiles:///layers/${meta.filename}`
-							});
-						}
-						for (const spec of buildLayerSpec(slug, sourceId, { reducedMotion: reduced })) {
-							if (!map.getLayer(spec.id)) {
-								map.addLayer({ ...spec, 'source-layer': slug });
-							}
-						}
+						map.addSource(sourceId, {
+							type: 'vector',
+							url: `pmtiles:///layers/${meta.filename}`
+						});
 					} else {
 						const fc = await fetchLayer(meta.filename);
 						if (!rawMap) return;
-						if (!map.getSource(sourceId)) {
-							map.addSource(sourceId, { type: 'geojson', data: fc });
-						}
-						for (const spec of buildLayerSpec(slug, sourceId, { reducedMotion: reduced })) {
-							if (!map.getLayer(spec.id)) map.addLayer(spec);
-						}
+						map.addSource(sourceId, { type: 'geojson', data: fc });
 					}
 				} catch {
-					// Layer-Fetch fehlgeschlagen, still aufgeben (Story 1.4 Error-Path)
-				} finally {
 					layerRenderInflight.delete(slug);
+					continue;
 				}
-			})
-		);
-		renderedSlugs = [...slugs];
+				layerRenderInflight.delete(slug);
+			}
+
+			// Layer ensure: re-add wenn nicht da ODER variant changed (variant change removed layer above).
+			if (!map.getLayer(layerId)) {
+				const specs = specsForSlug(slug, sourceId, variant, reduced);
+				for (const spec of specs) {
+					if (!map.getLayer(spec.id)) {
+						const merged = meta.format === 'pmtiles' ? { ...spec, 'source-layer': slug } : spec;
+						map.addLayer(merged);
+					}
+				}
+			}
+		}
+
+		renderedSlugs = [...ordered];
+		renderedVariantBySlug = variantBySlug;
 	}
 
 	$effect(() => {
+		// reactive deps: activeLayerSlugs, hiddenLayerSlugs, manifestLayers
 		const slugs = ui.activeLayerSlugs;
+		const _hidden = ui.hiddenLayerSlugs;
+		void _hidden;
 		if (!rawMap || manifestLayers.length === 0) return;
 		void renderLayers(slugs);
 	});
+
+	const cascadeForLegend = $derived(
+		computeCascadeVariants(
+			sortSlugsByBundleStable(
+				applyHiddenSlugs(ui.activeLayerSlugs, ui.hiddenLayerSlugs),
+				manifestLayers
+			)
+		)
+	);
+	const legendLimitWarning = $derived(exceedsPolygonLimit(ui.activeLayerSlugs));
+
+	function onLegendToggleHidden(slug: string): void {
+		toggleLayerHidden(ui, slug);
+	}
+	function onLegendRemove(slug: string): void {
+		removeUiLayer(ui, slug);
+	}
 
 	function clearMarker() {
 		currentMarker?.remove();
@@ -307,6 +378,29 @@
 		announceGlobal(`Inspektor geöffnet für ${suggestion.displayName}`);
 	}
 
+	function detectPinSlugAtPoint(lngLat: [number, number]): string | null {
+		if (!rawMap) return null;
+		const m = rawMap as {
+			project?: (ll: [number, number]) => { x: number; y: number };
+			queryRenderedFeatures?: (
+				point: { x: number; y: number },
+				opts: { layers: string[] }
+			) => Array<{ layer: { id: string } }>;
+			getLayer?: (id: string) => unknown;
+		};
+		if (!m.project || !m.queryRenderedFeatures || !m.getLayer) return null;
+		const pinIds = [...PIN_LAYER_SLUGS]
+			.map((s) => layerIdFor(s))
+			.filter((id) => Boolean(m.getLayer!(id)));
+		if (pinIds.length === 0) return null;
+		const pt = m.project(lngLat);
+		const hits = m.queryRenderedFeatures(pt, { layers: pinIds });
+		const top = hits[0];
+		if (!top) return null;
+		const prefix = 'navigator-layer-';
+		return top.layer.id.startsWith(prefix) ? top.layer.id.slice(prefix.length) : null;
+	}
+
 	async function onClick(lngLat: [number, number]) {
 		if (currentMarker) {
 			const m = currentMarker.getLngLat();
@@ -317,6 +411,9 @@
 				return;
 			}
 		}
+		// Story 1.15 AC-3: Click auf Pin-Layer setzt scroll-target fuer Inspector.
+		const pinSlug = detectPinSlugAtPoint(lngLat);
+		if (pinSlug) ui.scrollToLayerSlug = pinSlug;
 		try {
 			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] }).run();
 			if (suggestion) {
@@ -454,7 +551,15 @@
 			{selectedFeatureId}
 			onSelectFeature={onSelectAccessibleFeature}
 		/>
-		<MapLegend activeLayerSlugs={ui.activeLayerSlugs} manifestLayers={manifestLayers} />
+		<MapLegend
+			activeLayerSlugs={ui.activeLayerSlugs}
+			manifestLayers={manifestLayers}
+			hiddenSlugs={ui.hiddenLayerSlugs}
+			cascadeVariants={cascadeForLegend}
+			showLimitWarning={legendLimitWarning}
+			onToggleHidden={onLegendToggleHidden}
+			onRemove={onLegendRemove}
+		/>
 		<MapHoverTooltip
 			map={rawMap as MapHoverApi | null}
 			activeLayerSlugs={ui.activeLayerSlugs}

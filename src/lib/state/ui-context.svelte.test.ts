@@ -21,7 +21,9 @@ function makeState(): UiState {
 		sheetSnapVh: 40,
 		paletteOpen: false,
 		nearestStation: null,
-		climateSeries: null
+		climateSeries: null,
+		scrollToLayerSlug: null,
+		hiddenLayerSlugs: []
 	};
 }
 
@@ -39,6 +41,7 @@ describe('ui-context', () => {
 		expect(state.paletteOpen).toBe(false);
 		expect(state.nearestStation).toBeNull();
 		expect(state.climateSeries).toBeNull();
+		expect(state.scrollToLayerSlug).toBeNull();
 	});
 
 	it('createUiState reagiert auf Mutation reaktiv', async () => {
@@ -98,6 +101,19 @@ describe('ui-context', () => {
 			expect(s.recentLayerSlugs).toHaveLength(5);
 			expect(s.recentLayerSlugs[0]).toBe('f');
 			expect(s.recentLayerSlugs).not.toContain('a');
+		});
+	});
+
+	describe('scrollToLayerSlug (Story 1.15 Pin-Click)', () => {
+		it('Initialwert ist null', () => {
+			const s = makeState();
+			expect(s.scrollToLayerSlug).toBeNull();
+		});
+
+		it('kann gesetzt werden um Inspector-Scroll-Target zu signalisieren', () => {
+			const s = makeState();
+			s.scrollToLayerSlug = 'stolpersteine';
+			expect(s.scrollToLayerSlug).toBe('stolpersteine');
 		});
 	});
 

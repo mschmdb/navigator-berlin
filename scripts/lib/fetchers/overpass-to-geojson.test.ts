@@ -84,6 +84,44 @@ describe('overpassToGeoJSON', () => {
 		expect(feat.geometry.type).toBe('Polygon');
 	});
 
+	it('way mit area=yes wird Polygon auch ohne building-tag', () => {
+		const out = overpassToGeoJSON({
+			elements: [
+				{
+					type: 'way',
+					id: 81,
+					geometry: [
+						{ lat: 0, lon: 0 },
+						{ lat: 0, lon: 1 },
+						{ lat: 1, lon: 1 },
+						{ lat: 0, lon: 0 }
+					],
+					tags: { area: 'yes' }
+				}
+			]
+		});
+		expect(out.features[0].geometry.type).toBe('Polygon');
+	});
+
+	it('geschlossene way ohne polygon-implying-tag bleibt LineString (z.B. Schienen-Ring)', () => {
+		const out = overpassToGeoJSON({
+			elements: [
+				{
+					type: 'way',
+					id: 82,
+					geometry: [
+						{ lat: 0, lon: 0 },
+						{ lat: 0, lon: 1 },
+						{ lat: 1, lon: 1 },
+						{ lat: 0, lon: 0 }
+					],
+					tags: { railway: 'rail', usage: 'main' }
+				}
+			]
+		});
+		expect(out.features[0].geometry.type).toBe('LineString');
+	});
+
 	it('way ohne geometry → übersprungen', () => {
 		const out = overpassToGeoJSON({ elements: [{ type: 'way', id: 10 }] });
 		expect(out.features).toHaveLength(0);

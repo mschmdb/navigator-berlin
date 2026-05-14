@@ -84,32 +84,34 @@ describe('layer-hit-row.svelte', () => {
 		await expect.element(page.getByTestId('value-seasonal')).toBeInTheDocument();
 	});
 
-	it('Outdated (>5 Jahre) → data-state="outdated" + Pille', async () => {
+	it('Outdated (>5 Jahre) → data-state="outdated" + banner-outdated-Pille', async () => {
 		render(LayerHitRow, {
 			hit: { ...recentHit, updatedAt: '2019-01-01T00:00:00Z' },
 			layerName: 'Mietspiegel-Wohnlage'
 		});
 		const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
 		expect(row.getAttribute('data-state')).toBe('outdated');
-		await expect.element(page.getByTestId('outdated-pill')).toBeInTheDocument();
+		await expect.element(page.getByTestId('banner-outdated')).toBeInTheDocument();
 	});
 
-	it('Numeric Wert nutzt Mono + tabular-nums', async () => {
+	it('Numeric Wert nutzt Mono + tabular-nums im ValueChip', async () => {
 		render(LayerHitRow, {
 			hit: { ...recentHit, layer: 'laerm-den', value: 65 },
 			layerName: 'Lärm Tag/Abend/Nacht'
 		});
-		const val = (await page.getByTestId('value').element()) as HTMLElement;
+		const val = (await page.getByTestId('value-chip-value').element()) as HTMLElement;
 		expect(val.className).toMatch(/font-mono/);
 		expect(val.className).toMatch(/tabular-nums/);
-		expect(val.textContent?.trim()).toBe('65 dB');
+		expect(val.textContent?.trim()).toMatch(/65\s*dB/);
 	});
 
-	it('Kategorischer Wert nutzt Sans + Semibold', async () => {
+	it('Kategorischer Wert: ValueChip mit Semibold (kein tabular-nums)', async () => {
 		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
-		const val = (await page.getByTestId('value').element()) as HTMLElement;
-		expect(val.className).toMatch(/font-semibold/);
+		const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+		expect(chip.className).toMatch(/font-semibold/);
+		const val = (await page.getByTestId('value-chip-value').element()) as HTMLElement;
 		expect(val.className).not.toMatch(/font-mono/);
+		expect(val.className).not.toMatch(/tabular-nums/);
 	});
 
 	it('rendert Layer-Explain-Text aus LAYER_EXPLAIN_DE', async () => {
@@ -313,6 +315,103 @@ describe('layer-hit-row.svelte', () => {
 			render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
 			const link = (await page.getByTestId('learn-more').element()) as HTMLElement;
 			expect(link.getAttribute('aria-label')).toMatch(/Mehr Details/);
+		});
+	});
+
+	describe('Story 1.18: Value-Chips + Layout', () => {
+		const laermKatHit: LayerHit = {
+			layer: 'laerm-2023',
+			value: { kategorie: 'mittel', plr_name: 'Teutoburger Platz' },
+			source: 'https://gdi.berlin.de/services/wfs/laerm',
+			updatedAt: '2024-01-15T00:00:00Z',
+			license: 'dl-de/by-2-0'
+		};
+
+		it('Severity-Chip rendert für kategorischen Wert', async () => {
+			render(LayerHitRow, { hit: laermKatHit, layerName: 'Lärmbelastung 2023' });
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.getAttribute('data-severity')).toBe('warning');
+			expect(chip.textContent).toMatch(/mittel/);
+		});
+
+		it('Kontext-Subline zeigt Kiez/PLR-Name', async () => {
+			render(LayerHitRow, { hit: laermKatHit, layerName: 'Lärmbelastung 2023' });
+			const ctx = (await page.getByTestId('row-context').element()) as HTMLElement;
+			expect(ctx.textContent).toMatch(/Teutoburger Platz/);
+		});
+
+		it('Layer-Name 1× sichtbar (Dedup): keine doppelte "Lärmbelastung"-Erwähnung im Layer-Name', async () => {
+			render(LayerHitRow, { hit: laermKatHit, layerName: 'Lärmbelastung 2023' });
+			const nameEl = (await page.getByTestId('layer-name').element()) as HTMLElement;
+			expect(nameEl.textContent).toBe('Lärmbelastung 2023');
+			// Chip-Text enthält "mittel" NICHT die Layer-Bezeichnung
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.textContent).not.toMatch(/Lärmbelastung/);
+		});
+
+		it('danger-Severity für hohe Lärmbelastung', async () => {
+			render(LayerHitRow, {
+				hit: { ...laermKatHit, value: { kategorie: 'hoch', plr_name: 'X' } },
+				layerName: 'Lärmbelastung 2023'
+			});
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.getAttribute('data-severity')).toBe('danger');
+		});
+
+		it('success-Severity für niedrige Lärmbelastung', async () => {
+			render(LayerHitRow, {
+				hit: { ...laermKatHit, value: { kategorie: 'niedrig', plr_name: 'X' } },
+				layerName: 'Lärmbelastung 2023'
+			});
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.getAttribute('data-severity')).toBe('success');
+		});
+
+		it('Bodenrichtwerte numerisch: neutral-Chip mit €/m²-Unit', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'bodenrichtwerte',
+					value: { brw: 5000, nutzung: 'W - Wohngebiet' },
+					source: 'https://fbinter.stadt-berlin.de/x',
+					updatedAt: '2025-01-01T00:00:00Z',
+					license: 'dl-de/zero-2-0'
+				},
+				layerName: 'Bodenrichtwerte'
+			});
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.getAttribute('data-severity')).toBe('neutral');
+			expect(chip.textContent).toMatch(/5\.000/);
+			expect(chip.textContent).toMatch(/€\/m²/);
+			const ctx = (await page.getByTestId('row-context').element()) as HTMLElement;
+			expect(ctx.textContent).toMatch(/W - Wohngebiet/);
+		});
+
+		it('Stolperstein: KEIN Chip (Editorial), fallback-Text rendert', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'stolpersteine',
+					value: { person: 'Rosa Beispiel', inscription: 'x' },
+					source: 'https://overpass-api.de/api',
+					updatedAt: '2025-06-01T00:00:00Z',
+					license: 'ODbL 1.0'
+				},
+				layerName: 'Stolpersteine'
+			});
+			await expect.element(page.getByTestId('value-chip')).not.toBeInTheDocument();
+			const val = (await page.getByTestId('value').element()) as HTMLElement;
+			expect(val.textContent).toMatch(/Rosa Beispiel/);
+		});
+
+		it('aria-label kombiniert Layer-Name + Wert', async () => {
+			render(LayerHitRow, { hit: laermKatHit, layerName: 'Lärmbelastung 2023' });
+			const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
+			expect(row.getAttribute('aria-label')).toMatch(/Lärmbelastung 2023.*mittel/);
+		});
+
+		it('DataStandBanner ist im Row vorhanden (10px-Format)', async () => {
+			render(LayerHitRow, { hit: laermKatHit, layerName: 'Lärmbelastung 2023' });
+			const banner = (await page.getByTestId('data-stand-banner').element()) as HTMLElement;
+			expect(banner.className).toMatch(/text-\[10px\]/);
 		});
 	});
 });

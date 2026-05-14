@@ -1,21 +1,44 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
+	import { Eye, EyeOff, X } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
 	import { getLegendSpec } from './internal/layer-style-builder.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 	import { getLayerExplainEntry } from './inspector-panel/internal/layer-explain.js';
 	import { shortenLicense } from './inspector-panel/internal/source-shortener.js';
+	import { isPolygonSlug, type CascadeVariant } from './internal/layer-style-cascade.js';
 
 	type Props = {
 		activeLayerSlugs: readonly string[];
 		manifestLayers?: readonly LayerMetadata[];
+		hiddenSlugs?: readonly string[];
+		cascadeVariants?: ReadonlyMap<string, CascadeVariant>;
+		showLimitWarning?: boolean;
 		lang?: string;
+		onToggleHidden?: (slug: string) => void;
+		onRemove?: (slug: string) => void;
 	};
 
-	let { activeLayerSlugs, manifestLayers = [], lang = 'de' }: Props = $props();
+	let {
+		activeLayerSlugs,
+		manifestLayers = [],
+		hiddenSlugs = [],
+		cascadeVariants,
+		showLimitWarning = false,
+		lang = 'de',
+		onToggleHidden,
+		onRemove
+	}: Props = $props();
 
 	const metaBySlug = $derived(new Map(manifestLayers.map((l) => [l.slug, l] as const)));
+	const hiddenSet = $derived(new Set(hiddenSlugs));
+
+	const VARIANT_LABEL: Record<CascadeVariant, string> = {
+		fill: 'gefüllt',
+		outline: 'Outline',
+		'outline-dash': 'Outline gestrichelt'
+	};
 
 	const entries = $derived(
 		activeLayerSlugs.map((slug) => ({
@@ -23,7 +46,9 @@
 			name: getLayerDisplayName(slug),
 			spec: getLegendSpec(slug),
 			explain: getLayerExplainEntry(slug),
-			meta: metaBySlug.get(slug)
+			meta: metaBySlug.get(slug),
+			hidden: hiddenSet.has(slug),
+			variant: cascadeVariants && isPolygonSlug(slug) ? cascadeVariants.get(slug) : undefined
 		}))
 	);
 </script>
@@ -37,9 +62,60 @@
 		{#each entries as entry (entry.slug)}
 			<section
 				data-testid={`legend-${entry.slug}`}
-				class="flex flex-col gap-1.5 border-b border-rule pb-2 last:border-b-0 last:pb-0"
+				data-hidden={entry.hidden}
+				class={[
+					'flex flex-col gap-1.5 border-b border-rule pb-2 last:border-b-0 last:pb-0',
+					entry.hidden && 'opacity-50'
+				]
+					.filter(Boolean)
+					.join(' ')}
 			>
-				<p class="font-sans text-sm font-medium text-ink">{entry.name}</p>
+				<div class="flex items-start justify-between gap-2">
+					<div class="flex min-w-0 flex-1 flex-col gap-0.5">
+						<p class="font-sans text-sm font-medium text-ink">{entry.name}</p>
+						{#if entry.variant}
+							<span
+								data-testid={`legend-variant-${entry.slug}`}
+								data-variant={entry.variant}
+								class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+							>
+								{VARIANT_LABEL[entry.variant]}
+							</span>
+						{/if}
+					</div>
+					<div class="flex shrink-0 items-center gap-0.5">
+						{#if onToggleHidden}
+							<button
+								type="button"
+								data-testid={`legend-eye-${entry.slug}`}
+								aria-pressed={entry.hidden}
+								aria-label={entry.hidden
+									? `${entry.name} einblenden`
+									: `${entry.name} ausblenden`}
+								onclick={() => onToggleHidden!(entry.slug)}
+								class="p-0.5 text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+							>
+								{#if entry.hidden}
+									<EyeOff size={14} aria-hidden="true" />
+								{:else}
+									<Eye size={14} aria-hidden="true" />
+								{/if}
+							</button>
+						{/if}
+						{#if onRemove}
+							<button
+								type="button"
+								data-testid={`legend-remove-${entry.slug}`}
+								aria-label={`${entry.name} aus aktiven Layern entfernen`}
+								onclick={() => onRemove!(entry.slug)}
+								class="p-0.5 text-ink-muted hover:text-vermillion focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+							>
+								<X size={14} aria-hidden="true" />
+							</button>
+						{/if}
+					</div>
+				</div>
+
 				{#if entry.spec.kind === 'gradient'}
 					<div
 						aria-hidden="true"
@@ -72,6 +148,12 @@
 										aria-hidden="true"
 										class="inline-block h-2.5 w-2.5 rounded-full"
 										style={`background:${item.color}; border:1px solid var(--color-bg)`}
+									></span>
+								{:else if entry.variant === 'outline' || entry.variant === 'outline-dash'}
+									<span
+										aria-hidden="true"
+										class="inline-block h-2.5 w-3.5 rounded-sm"
+										style={`background:transparent; border:1.5px ${entry.variant === 'outline-dash' ? 'dashed' : 'solid'} ${item.color}`}
 									></span>
 								{:else}
 									<span
@@ -149,5 +231,16 @@
 				</details>
 			</section>
 		{/each}
+
+		{#if showLimitWarning}
+			<p
+				data-testid="legend-limit-warning"
+				role="status"
+				aria-live="polite"
+				class="border-t border-rule pt-2 font-mono text-[10px] leading-snug text-vermillion"
+			>
+				Mehr als 3 Polygon-Layer aktiv. Lesbarkeit eingeschränkt, ein Layer per Auge ausblenden.
+			</p>
+		{/if}
 	</aside>
 {/if}

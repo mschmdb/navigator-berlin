@@ -8,12 +8,35 @@ const SOURCE_SHORT_BY_PREFIX: ReadonlyArray<readonly [string, string]> = [
 	['https://overpass-api.de', 'OpenStreetMap']
 ];
 
+// Story 1.18: Ultra-kompakte Tokens für Inspector-Banner (10px Footer).
+const SOURCE_COMPACT_BY_PREFIX: ReadonlyArray<readonly [string, string]> = [
+	['https://fbinter.stadt-berlin.de', 'FIS'],
+	['https://daten.odis-berlin.de', 'ODIS'],
+	['https://daten.berlin.de', 'ODIS'],
+	['https://opendata.dwd.de', 'DWD'],
+	['https://overpass-api.de', 'OSM'],
+	['https://gdi.berlin.de', 'gdi'],
+	['https://mietspiegel.berlin.de', 'mietspiegel']
+];
+
 export function shortenSource(url: string): string {
 	for (const [prefix, short] of SOURCE_SHORT_BY_PREFIX) {
 		if (url.startsWith(prefix)) return short;
 	}
 	try {
 		return new URL(url).hostname;
+	} catch {
+		return url;
+	}
+}
+
+export function shortenSourceCompact(url: string): string {
+	for (const [prefix, short] of SOURCE_COMPACT_BY_PREFIX) {
+		if (url.startsWith(prefix)) return short;
+	}
+	try {
+		const host = new URL(url).hostname;
+		return host.replace(/\.berlin\.de$/, '').replace(/^www\./, '');
 	} catch {
 		return url;
 	}

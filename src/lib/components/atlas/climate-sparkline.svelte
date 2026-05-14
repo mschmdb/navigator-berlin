@@ -4,11 +4,10 @@
 
 <script lang="ts">
 	import type { YearValue } from '$lib/data';
-	import AccessibleChart, {
-		type ChartScales,
-		type YearPoint
-	} from './accessible-chart.svelte';
+	import { LineChart, Tooltip } from 'layerchart';
+	import DataTableAlternative, { type TableColumn } from './data-table-alternative.svelte';
 	import { linearRegression } from '$lib/utils/regression.js';
+	import { announceGlobal } from '$lib/utils/aria-live.js';
 
 	type Props = {
 		series: readonly YearValue[];
@@ -31,150 +30,213 @@
 		hot: 'Heiße Tage'
 	};
 
-	const points = $derived<YearPoint[]>(
-		series.map((d) => ({ year: d.year, value: d.count ?? 0 }))
+	const DEFINITIONS: Record<ClimateMetric, string> = {
+		summer: 'Tage mit Tagesmaximum ≥ 25 °C',
+		frost: 'Tage mit Tagesminimum < 0 °C',
+		hot: 'Tage mit Tagesmaximum ≥ 30 °C'
+	};
+
+	type Row = { year: number; value: number; trend: number };
+
+	const points = $derived(
+		series
+			.filter((d) => typeof d.count === 'number')
+			.map((d) => ({ year: d.year, value: d.count as number }))
 	);
 
-	const stats = $derived.by(() => {
-		if (points.length === 0) {
-			return { min: 0, max: 0, latest: 0, latestYear: 0, first: 0, firstYear: 0, avg: 0 };
-		}
-		const values = points.map((p) => p.value);
-		const sum = values.reduce((a, b) => a + b, 0);
-		const min = Math.min(...values);
-		const max = Math.max(...values);
-		const latest = points[points.length - 1]!.value;
-		const latestYear = points[points.length - 1]!.year;
-		const first = points[0]!.value;
-		const firstYear = points[0]!.year;
-		const avg = sum / values.length;
-		return { min, max, latest, latestYear, first, firstYear, avg };
-	});
-
-	const trend = $derived.by(() => {
+	const fit = $derived.by(() => {
 		if (points.length < 2) return null;
-		const fit = linearRegression(
+		return linearRegression(
 			points,
 			(p) => p.year,
 			(p) => p.value
 		);
-		const xa = points[0]!.year;
-		const xb = points[points.length - 1]!.year;
+	});
+
+	const rows = $derived<Row[]>(
+		fit
+			? points.map((p) => ({ year: p.year, value: p.value, trend: fit.predict(p.year) }))
+			: points.map((p) => ({ year: p.year, value: p.value, trend: p.value }))
+	);
+
+	const stats = $derived.by(() => {
+		if (rows.length === 0) return null;
+		const values = rows.map((r) => r.value);
 		return {
-			direction: fit.slope > 0.05 ? 'steigend' : fit.slope < -0.05 ? 'fallend' : 'stabil',
-			predictA: fit.predict(xa),
-			predictB: fit.predict(xb),
-			xa,
-			xb
+			min: Math.min(...values),
+			max: Math.max(...values),
+			latest: rows[rows.length - 1]!.value,
+			firstYear: rows[0]!.year,
+			latestYear: rows[rows.length - 1]!.year,
+			avg: values.reduce((a, b) => a + b, 0) / values.length
 		};
 	});
 
 	const description = $derived(
-		points.length === 0
+		stats === null
 			? `Keine Daten für ${SHORT_LABELS[metric]} an DWD-Station ${stationName}.`
-			: `Sparkline ${SHORT_LABELS[metric]} pro Jahr seit ${stats.firstYear} für DWD-Station ${stationName}. Aktueller Wert ${stats.latest} ${unit}, Mittelwert ${stats.avg.toFixed(1)}, Trend ${trend?.direction ?? 'unbekannt'}.`
+			: `Sparkline ${SHORT_LABELS[metric]} pro Jahr seit ${stats.firstYear} für DWD-Station ${stationName}. Aktueller Wert ${stats.latest} ${unit}, Mittelwert ${stats.avg.toFixed(1)}.`
 	);
 
 	const figcaption = $derived(
-		points.length === 0
-			? `Keine Daten verfügbar.`
+		stats === null
+			? 'Keine Daten verfügbar.'
 			: `Min: ${stats.min} · Max: ${stats.max} · Latest: ${stats.latest} ${unit}`
 	);
 
 	const chartId = $derived(
 		`sparkline-${metric}-${stationName.replace(/\W+/g, '-').toLowerCase()}`
 	);
+	const titleId = $derived(`chart-title-${chartId}`);
+	const descId = $derived(`chart-desc-${chartId}`);
 
-	function pathFor(scales: ChartScales): string {
-		if (points.length === 0) return '';
-		const { xScale, yScale } = scales;
-		return points
-			.map(
-				(p, i) =>
-					`${i === 0 ? 'M' : 'L'} ${xScale(p.year).toFixed(2)} ${yScale(p.value).toFixed(2)}`
-			)
-			.join(' ');
+	let focusedIndex = $state(-1);
+
+	function announceFocus(idx: number): void {
+		const r = rows[idx];
+		if (!r) return;
+		announceGlobal(
+			`${SHORT_LABELS[metric]} ${r.year}, ${r.value} ${unit}, Trend ${Math.round(r.trend)} ${unit}`
+		);
 	}
 
-	function trendPath(scales: ChartScales): string {
-		if (!trend) return '';
-		const { xScale, yScale } = scales;
-		return `M ${xScale(trend.xa).toFixed(2)} ${yScale(trend.predictA).toFixed(2)} L ${xScale(trend.xb).toFixed(2)} ${yScale(trend.predictB).toFixed(2)}`;
+	function onKeydown(event: KeyboardEvent): void {
+		if (rows.length === 0) return;
+		let next = focusedIndex;
+		if (event.key === 'ArrowRight') {
+			next = focusedIndex < 0 ? 0 : Math.min(rows.length - 1, focusedIndex + 1);
+		} else if (event.key === 'ArrowLeft') {
+			next = focusedIndex < 0 ? rows.length - 1 : Math.max(0, focusedIndex - 1);
+		} else if (event.key === 'Home') {
+			next = 0;
+		} else if (event.key === 'End') {
+			next = rows.length - 1;
+		} else {
+			return;
+		}
+		event.preventDefault();
+		focusedIndex = next;
+		announceFocus(next);
 	}
+
+	const tableColumns = $derived<TableColumn<Row>[]>([
+		{ key: 'year', label: 'Jahr', sortable: true, accessor: (r) => r.year },
+		{
+			key: 'value',
+			label: unit,
+			sortable: true,
+			accessor: (r) => r.value,
+			format: (v) => String(v)
+		}
+	]);
+
+	const tableRows = $derived([...rows].sort((a, b) => b.year - a.year));
 </script>
 
 <div class="climate-sparkline" data-testid="climate-sparkline" data-metric={metric}>
 	<h4
-		class="mb-1 font-serif text-sm text-ink"
+		class="mb-0.5 font-serif text-sm text-ink"
 		data-testid="climate-sparkline-heading"
+		id={titleId}
 	>
 		{SHORT_LABELS[metric]}
 	</h4>
-	<AccessibleChart
-		{chartId}
-		title={TITLES[metric]}
-		{description}
-		series={points}
-		{figcaption}
-		width={320}
-		height={90}
-		padding={{ top: 14, right: 36, bottom: 16, left: 8 }}
-		tableCaption={`${SHORT_LABELS[metric]} bei ${stationName}`}
-		tableValueLabel={unit}
+	<p
+		class="mb-1 font-serif text-xs italic text-ink-subtle"
+		data-testid="climate-sparkline-definition"
 	>
-		{#snippet children(scales)}
-			{@const linePath = pathFor(scales)}
-			{@const tPath = trendPath(scales)}
-			{#if tPath}
-				<path
-					d={tPath}
-					data-testid="sparkline-trend"
-					stroke="var(--chart-line-secondary, currentColor)"
-					stroke-width="1"
-					stroke-dasharray="2 2"
-					fill="none"
-					opacity="0.7"
-				/>
-			{/if}
-			{#if linePath}
-				<path
-					d={linePath}
-					data-testid="sparkline-line"
-					stroke="var(--chart-line, currentColor)"
-					stroke-width="1.5"
-					fill="none"
-				/>
-			{/if}
-			{#if points.length > 0}
-				{@const last = points[points.length - 1]}
-				{@const lx = scales.xScale(last.year)}
-				{@const ly = scales.yScale(last.value)}
-				<circle cx={lx} cy={ly} r="2.5" fill="var(--chart-line, currentColor)" />
-				<text
-					x={lx - 4}
-					y={ly - 6}
-					data-testid="sparkline-annotation-latest"
-					class="font-mono"
-					font-size="10"
-					text-anchor="end"
-					fill="var(--ink, currentColor)"
-				>
-					{last.value}
-				</text>
-			{/if}
-			{#if scales.focused}
-				{@const fx = scales.xScale(scales.focused.year)}
-				{@const fy = scales.yScale(scales.focused.value)}
-				<circle
-					cx={fx}
-					cy={fy}
-					r="4"
-					fill="none"
-					stroke="var(--focus-ring, currentColor)"
-					stroke-width="1.5"
-					data-testid="sparkline-focus"
-				/>
-			{/if}
-		{/snippet}
-	</AccessibleChart>
+		{DEFINITIONS[metric]}
+	</p>
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+	<figure
+		role="img"
+		aria-labelledby={titleId}
+		aria-describedby={descId}
+		tabindex={rows.length > 0 ? 0 : -1}
+		data-testid="climate-sparkline-figure"
+		data-chart-id={chartId}
+		data-focused-index={focusedIndex}
+		onkeydown={onKeydown}
+		class="climate-sparkline-figure relative block w-full focus:outline focus:outline-2 focus:outline-rule-strong focus:outline-offset-2"
+	>
+		<span id={descId} class="sr-only">{description}</span>
+		<span class="sr-only">{TITLES[metric]}</span>
+		{#if rows.length > 0 && stats}
+			<LineChart
+				data={rows}
+				x="year"
+				height={64}
+				padding={{ top: 12, right: 36, bottom: 8, left: 8 }}
+				yBaseline={null}
+				yPadding={[6, 6]}
+				series={[
+					{
+						key: 'value',
+						label: SHORT_LABELS[metric],
+						color: 'var(--chart-line, currentColor)'
+					},
+					{
+						key: 'trend',
+						label: 'Trend',
+						color: 'var(--chart-line-secondary, currentColor)',
+						props: { 'stroke-dasharray': '2 2' }
+					}
+				]}
+				axis={false}
+				grid={false}
+				rule={false}
+				annotations={[
+					{
+						type: 'point',
+						x: stats.latestYear,
+						y: stats.latest,
+						r: 2.5,
+						label: String(stats.latest),
+						labelPlacement: 'right',
+						labelXOffset: 4
+					}
+				]}
+			>
+				{#snippet tooltip({ context })}
+					{@const data = context.tooltip.data as Row | null}
+					{#if data}
+						<Tooltip.Root>
+							<Tooltip.Header value={String(data.year)} />
+							<Tooltip.List>
+								<Tooltip.Item
+									label={SHORT_LABELS[metric]}
+									value={`${data.value} ${unit}`}
+								/>
+								<Tooltip.Item
+									label="Trend"
+									value={`${Math.round(data.trend)} ${unit}`}
+								/>
+							</Tooltip.List>
+						</Tooltip.Root>
+					{/if}
+				{/snippet}
+			</LineChart>
+			<span
+				data-testid="sparkline-annotation-latest"
+				class="sr-only"
+				aria-hidden="true"
+			>
+				{stats.latest}
+			</span>
+		{/if}
+		<figcaption
+			class="mt-1 font-mono text-xs text-ink-subtle"
+			data-testid="chart-figcaption"
+		>
+			{figcaption}
+		</figcaption>
+	</figure>
+	<div class="mt-2">
+		<DataTableAlternative
+			columns={tableColumns}
+			rows={tableRows}
+			caption={`${SHORT_LABELS[metric]} bei ${stationName}`}
+		/>
+	</div>
 </div>

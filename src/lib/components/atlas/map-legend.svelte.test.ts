@@ -30,7 +30,7 @@ describe('map-legend.svelte', () => {
 		render(MapLegend, { activeLayerSlugs: ['laerm-2023'] });
 		await expect.element(page.getByTestId('map-legend')).toBeInTheDocument();
 		await expect.element(page.getByTestId('legend-laerm-2023')).toBeInTheDocument();
-		await expect.element(page.getByText('Lärmbelastung (Umweltatlas 2023)')).toBeInTheDocument();
+		await expect.element(page.getByText('Lärmbelastung 2023')).toBeInTheDocument();
 		await expect.element(page.getByText('gering', { exact: true })).toBeInTheDocument();
 		await expect.element(page.getByText('mittel', { exact: true })).toBeInTheDocument();
 		await expect.element(page.getByText('hoch', { exact: true })).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('map-legend.svelte', () => {
 
 	it('rendert gradient-Legend mit Range-Labels (choropleth-pet)', async () => {
 		render(MapLegend, { activeLayerSlugs: ['klima-pet-2022'] });
-		await expect.element(page.getByText('Gefühlte Temperatur (PET 14 Uhr, 2022)')).toBeInTheDocument();
+		await expect.element(page.getByText('Gefühlte Temperatur 2022')).toBeInTheDocument();
 		await expect.element(page.getByText('kühl', { exact: true })).toBeInTheDocument();
 		await expect.element(page.getByText('heiß', { exact: true })).toBeInTheDocument();
 	});
@@ -148,6 +148,137 @@ describe('map-legend.svelte', () => {
 				.element()) as HTMLDetailsElement;
 			expect(a.open).toBe(true);
 			expect(b.open).toBe(true);
+		});
+	});
+
+	// Story 1.14 AC-1, AC-3, AC-4
+	describe('Story 1.14 Eye/Remove/Cascade/Limit', () => {
+		it('Eye-Toggle nicht im DOM ohne onToggleHidden-Callback (Backward-Compat)', async () => {
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'] });
+			await expect
+				.element(page.getByTestId('legend-eye-laerm-2023'))
+				.not.toBeInTheDocument();
+		});
+
+		it('Remove-Button nicht im DOM ohne onRemove-Callback (Backward-Compat)', async () => {
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'] });
+			await expect
+				.element(page.getByTestId('legend-remove-laerm-2023'))
+				.not.toBeInTheDocument();
+		});
+
+		it('Eye-Toggle ruft onToggleHidden mit Slug auf', async () => {
+			let toggled: string | null = null;
+			render(MapLegend, {
+				activeLayerSlugs: ['laerm-2023'],
+				onToggleHidden: (slug: string) => {
+					toggled = slug;
+				}
+			});
+			await page.getByTestId('legend-eye-laerm-2023').click();
+			expect(toggled).toBe('laerm-2023');
+		});
+
+		it('Remove-Button ruft onRemove mit Slug auf', async () => {
+			let removed: string | null = null;
+			render(MapLegend, {
+				activeLayerSlugs: ['laerm-2023'],
+				onRemove: (slug: string) => {
+					removed = slug;
+				}
+			});
+			await page.getByTestId('legend-remove-laerm-2023').click();
+			expect(removed).toBe('laerm-2023');
+		});
+
+		it('hiddenSlugs setzt aria-pressed=true auf Eye-Toggle', async () => {
+			render(MapLegend, {
+				activeLayerSlugs: ['laerm-2023'],
+				hiddenSlugs: ['laerm-2023'],
+				onToggleHidden: () => {}
+			});
+			const btn = (await page
+				.getByTestId('legend-eye-laerm-2023')
+				.element()) as HTMLElement;
+			expect(btn.getAttribute('aria-pressed')).toBe('true');
+		});
+
+		it('hiddenSlugs markiert Section data-hidden=true', async () => {
+			render(MapLegend, {
+				activeLayerSlugs: ['laerm-2023'],
+				hiddenSlugs: ['laerm-2023'],
+				onToggleHidden: () => {}
+			});
+			const sec = (await page.getByTestId('legend-laerm-2023').element()) as HTMLElement;
+			expect(sec.getAttribute('data-hidden')).toBe('true');
+		});
+
+		it('Eye-Button hat aria-label das Toggle-Status reflektiert', async () => {
+			render(MapLegend, {
+				activeLayerSlugs: ['laerm-2023'],
+				onToggleHidden: () => {}
+			});
+			const btn = (await page
+				.getByTestId('legend-eye-laerm-2023')
+				.element()) as HTMLElement;
+			expect(btn.getAttribute('aria-label')?.toLowerCase()).toMatch(/ausblenden|hide/);
+		});
+
+		it('cascadeVariants rendert Variant-Badge fill/outline/outline-dash', async () => {
+			const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>([
+				['laerm-2023', 'fill'],
+				['wohnlagen-2024', 'outline'],
+				['klima-pet-2022', 'outline-dash']
+			]);
+			render(MapLegend, {
+				activeLayerSlugs: ['laerm-2023', 'wohnlagen-2024', 'klima-pet-2022'],
+				cascadeVariants: variants
+			});
+			const a = (await page
+				.getByTestId('legend-variant-laerm-2023')
+				.element()) as HTMLElement;
+			const b = (await page
+				.getByTestId('legend-variant-wohnlagen-2024')
+				.element()) as HTMLElement;
+			const c = (await page
+				.getByTestId('legend-variant-klima-pet-2022')
+				.element()) as HTMLElement;
+			expect(a.getAttribute('data-variant')).toBe('fill');
+			expect(b.getAttribute('data-variant')).toBe('outline');
+			expect(c.getAttribute('data-variant')).toBe('outline-dash');
+		});
+
+		it('cascadeVariants rendert KEIN Variant-Badge fuer non-polygon-Slugs', async () => {
+			const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>();
+			render(MapLegend, {
+				activeLayerSlugs: ['ubahn-netz', 'kitas-2024'],
+				cascadeVariants: variants
+			});
+			await expect
+				.element(page.getByTestId('legend-variant-ubahn-netz'))
+				.not.toBeInTheDocument();
+			await expect
+				.element(page.getByTestId('legend-variant-kitas-2024'))
+				.not.toBeInTheDocument();
+		});
+
+		it('showLimitWarning rendert aria-live Footer', async () => {
+			render(MapLegend, {
+				activeLayerSlugs: ['laerm-2023'],
+				showLimitWarning: true
+			});
+			const w = page.getByTestId('legend-limit-warning');
+			await expect.element(w).toBeInTheDocument();
+			const el = (await w.element()) as HTMLElement;
+			expect(el.getAttribute('aria-live')).toBe('polite');
+		});
+
+		it('showLimitWarning false rendert keinen Footer', async () => {
+			render(MapLegend, {
+				activeLayerSlugs: ['laerm-2023'],
+				showLimitWarning: false
+			});
+			await expect.element(page.getByTestId('legend-limit-warning')).not.toBeInTheDocument();
 		});
 	});
 });

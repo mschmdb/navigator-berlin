@@ -2,6 +2,9 @@
 	import { onMount } from 'svelte';
 	import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '$lib/data/constants.js';
 	import { handleMapKeydown, type MapHandle } from './internal/map-keyboard.js';
+	import { PIN_ICON_MAP } from './internal/pin-icon-mapping.js';
+	import { registerPinIcons, type PinAddImageMap } from './internal/pin-sprite-renderer.js';
+	import { COLORS } from './internal/colors.js';
 
 	type Viewport = { center: [number, number]; zoom: number; bbox: [number, number, number, number] };
 
@@ -105,8 +108,34 @@
 				};
 				onMapHandle?.(mapHandle);
 				map.on('load', () => {
+					const pinMap: PinAddImageMap = {
+						hasImage: (id) => (map as unknown as { hasImage: (id: string) => boolean }).hasImage(id),
+						addImage: (id, image) =>
+							(map as unknown as { addImage: (id: string, image: unknown) => void }).addImage(
+								id,
+								image
+							)
+					};
+					void registerPinIcons(pinMap, PIN_ICON_MAP, (token) => COLORS[token]);
 					isReady = true;
 					onLoad?.(map);
+				});
+				// Fallback fuer den Fall, dass Symbol-Layer vor Sprite-Registrierung referenziert wird.
+				map.on('styleimagemissing', (e: { id: string }) => {
+					const slug = e.id.startsWith('navigator-pin-')
+						? e.id.slice('navigator-pin-'.length)
+						: null;
+					if (!slug) return;
+					const spec = PIN_ICON_MAP[slug];
+					if (!spec) return;
+					const m = map as unknown as {
+						hasImage: (id: string) => boolean;
+						addImage: (id: string, image: unknown) => void;
+					};
+					if (m.hasImage(e.id)) return;
+					void registerPinIcons({ hasImage: m.hasImage.bind(m), addImage: m.addImage.bind(m) }, {
+						[slug]: spec
+					}, (token) => COLORS[token]);
 				});
 				map.on('moveend', () => {
 					const c = map.getCenter();

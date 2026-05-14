@@ -98,6 +98,87 @@ describe('map-hover-tooltip.svelte', () => {
 		}
 	});
 
+	it('Filtert layerIds via getLayer (Race-Schutz gegen missing-Layer-Throw)', async () => {
+		// Wenn getLayer Falsy zurueckliefert, soll queryRenderedFeatures NICHT mit dem
+		// fehlenden Layer aufgerufen werden — Story 1.15 Bugfix: Symbol-Layer pre-mount.
+		const handlers: Record<string, ((e: HoverEvent) => void)[]> = {};
+		let querySpy: { layers: string[] } | null = null as { layers: string[] } | null;
+		const api: MapHoverApi = {
+			on: (event, handler) => {
+				(handlers[event] ??= []).push(handler);
+			},
+			off: (event, handler) => {
+				handlers[event] = (handlers[event] ?? []).filter((h) => h !== handler);
+			},
+			queryRenderedFeatures: (_point, opts) => {
+				querySpy = opts;
+				return [];
+			},
+			getLayer: (id: string) =>
+				id === 'navigator-layer-bezirke' ? { id } : undefined
+		};
+		render(MapHoverTooltip, {
+			map: api,
+			activeLayerSlugs: ['bezirke', 'stolpersteine']
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		for (const h of handlers['mousemove'] ?? []) h({ point: { x: 1, y: 1 } });
+		expect(querySpy?.layers).toEqual(['navigator-layer-bezirke']);
+	});
+
+	it('POI-Hit (kitas-2024) zeigt Title + "Mehr im Inspektor"-Hint (Story 1.15)', async () => {
+		const { api, fire } = makeFakeMap([
+			[
+				{
+					layer: { id: 'navigator-layer-kitas-2024' },
+					properties: { name: 'Kita Sonnenschein' }
+				}
+			]
+		]);
+		render(MapHoverTooltip, { map: api, activeLayerSlugs: ['kitas-2024'] });
+		await new Promise((r) => setTimeout(r, 10));
+		fire('mousemove', { point: { x: 100, y: 100 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const tip = (await page.getByTestId('map-hover-tooltip').element()) as HTMLElement;
+		expect(tip.dataset.variant).toBe('poi');
+		const title = (await page.getByTestId('poi-popover-title').element()) as HTMLElement;
+		expect(title.textContent).toMatch(/Kita Sonnenschein/);
+		const hint = (await page.getByTestId('poi-popover-hint').element()) as HTMLElement;
+		expect(hint.textContent).toMatch(/Inspektor/);
+	});
+
+	it('Stolperstein-POI ohne person zeigt "Stolperstein" — KEIN "Unbekannte Person"', async () => {
+		const { api, fire } = makeFakeMap([
+			[{ layer: { id: 'navigator-layer-stolpersteine' }, properties: {} }]
+		]);
+		render(MapHoverTooltip, { map: api, activeLayerSlugs: ['stolpersteine'] });
+		await new Promise((r) => setTimeout(r, 10));
+		fire('mousemove', { point: { x: 100, y: 100 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const title = (await page.getByTestId('poi-popover-title').element()) as HTMLElement;
+		expect(title.textContent).toMatch(/^\s*Stolperstein\s*$/);
+		expect(title.textContent).not.toMatch(/Unbekannte/i);
+	});
+
+	it('POI-Hit mit subtitle (Schule + Schulart) zeigt subtitle separat', async () => {
+		const { api, fire } = makeFakeMap([
+			[
+				{
+					layer: { id: 'navigator-layer-schulen-2024' },
+					properties: { name: 'Grundschule am Park', schulart: 'Grundschule' }
+				}
+			]
+		]);
+		render(MapHoverTooltip, { map: api, activeLayerSlugs: ['schulen-2024'] });
+		await new Promise((r) => setTimeout(r, 10));
+		fire('mousemove', { point: { x: 100, y: 100 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const subtitle = (await page
+			.getByTestId('poi-popover-subtitle')
+			.element()) as HTMLElement;
+		expect(subtitle.textContent).toMatch(/Grundschule/);
+	});
+
 	it('Topmost-Feature wird gewählt bei mehreren Treffern', async () => {
 		const { api, fire } = makeFakeMap([
 			[

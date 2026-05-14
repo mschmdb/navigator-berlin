@@ -15,7 +15,31 @@ export const COLORS = {
 	chartCat3: '#0E6549',
 	chartCat4: '#74488E',
 	chartCat5: '#856310',
-	chartCat6: '#366AA0'
+	chartCat6: '#366AA0',
+	// Story 1.15 POI-Pin-Tokens. Semantische Farbcodes pro Bundle (Memorial, Umwelt, Sozial, Mobility).
+	memorialStolperstein: '#B08C57',
+	umweltTrinkbrunnen: '#1565C0',
+	sozialKita: '#74488E',
+	sozialSchule: '#0E6549',
+	sozialKrankenhaus: '#B71C1C',
+	sozialKrankenhausSecondary: '#E57373',
+	sozialSport: '#E65100',
+	sozialSchwimmbad: '#00838F',
+	mobilityUbahn: '#003365',
+	mobilitySbahn: '#006F35',
+	mobilityTram: '#DD1F26',
+	mobilityBus: '#6A2A82',
+	// Story 1.18 Severity-Tokens (Inspector Value-Chips). Hex-Duplikate aus app.css.
+	severitySuccess: '#1F5A2E',
+	severitySuccessBg: '#E8F2EA',
+	severitySuccessSoft: '#2D7A3E',
+	severitySuccessSoftBg: '#EFF6F1',
+	severityNeutral: '#4A4A46',
+	severityNeutralBg: '#F2F0EC',
+	severityWarning: '#8C4A0E',
+	severityWarningBg: '#FBEEDD',
+	severityDanger: '#8C2A14',
+	severityDangerBg: '#F8E4DF'
 } as const;
 
 export type ColorToken = keyof typeof COLORS;

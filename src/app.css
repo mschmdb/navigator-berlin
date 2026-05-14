@@ -138,6 +138,18 @@
 	--state-success: #0E6549;
 	--state-info: var(--accent);
 
+	/* Story 1.18 Severity-Tokens (Value-Chips). WCAG-AA Text-on-Background bei text-sm semibold. */
+	--severity-success: #1F5A2E;
+	--severity-success-bg: #E8F2EA;
+	--severity-success-soft: #2D7A3E;
+	--severity-success-soft-bg: #EFF6F1;
+	--severity-neutral: #4A4A46;
+	--severity-neutral-bg: #F2F0EC;
+	--severity-warning: #8C4A0E;
+	--severity-warning-bg: #FBEEDD;
+	--severity-danger: #8C2A14;
+	--severity-danger-bg: #F8E4DF;
+
 	--chart-grid: var(--rule);
 	--chart-axis: var(--rule-strong);
 	--chart-axis-text: var(--ink-muted);
@@ -156,6 +168,20 @@
 	--chart-cat-5: #856310;
 	--chart-cat-6: #366AA0;
 	--vermillion-soft: #C99F7A;
+
+	/* Story 1.15 POI-Pin-Tokens. */
+	--memorial-stolperstein: #B08C57;
+	--umwelt-trinkbrunnen: #1565C0;
+	--sozial-kita: #74488E;
+	--sozial-schule: #0E6549;
+	--sozial-krankenhaus: #B71C1C;
+	--sozial-krankenhaus-secondary: #E57373;
+	--sozial-sport: #E65100;
+	--sozial-schwimmbad: #00838F;
+	--mobility-ubahn: #003365;
+	--mobility-sbahn: #006F35;
+	--mobility-tram: #DD1F26;
+	--mobility-bus: #6A2A82;
 
 	--header-height: 56px;
 }
@@ -176,6 +202,17 @@
 	--color-state-warning: var(--state-warning);
 	--color-state-success: var(--state-success);
 	--color-state-info: var(--state-info);
+
+	--color-severity-success: var(--severity-success);
+	--color-severity-success-bg: var(--severity-success-bg);
+	--color-severity-success-soft: var(--severity-success-soft);
+	--color-severity-success-soft-bg: var(--severity-success-soft-bg);
+	--color-severity-neutral: var(--severity-neutral);
+	--color-severity-neutral-bg: var(--severity-neutral-bg);
+	--color-severity-warning: var(--severity-warning);
+	--color-severity-warning-bg: var(--severity-warning-bg);
+	--color-severity-danger: var(--severity-danger);
+	--color-severity-danger-bg: var(--severity-danger-bg);
 
 	--font-sans: var(--font-sans);
 	--font-serif: var(--font-serif);

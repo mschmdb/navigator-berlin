@@ -150,4 +150,5 @@ describe('layer-palette.svelte', () => {
 			.element(page.getByTestId('palette-subline-does-not-exist-yz'))
 			.not.toBeInTheDocument();
 	});
+
 });

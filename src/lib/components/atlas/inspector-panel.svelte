@@ -7,6 +7,7 @@
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
+	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
 
 	type Props = {
 		layerMeta?: readonly LayerMetadata[];
@@ -26,6 +27,28 @@
 
 	const sections = $derived(groupHitsBySection(ui.selectedLayerHits, layerMeta));
 
+	const EMPTY_SECTIONS_KEY = 'nav.inspector.showEmptySections';
+	let showEmptySections = $state(false);
+
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		try {
+			showEmptySections = window.localStorage.getItem(EMPTY_SECTIONS_KEY) === '1';
+		} catch {
+			showEmptySections = false;
+		}
+	});
+
+	function toggleEmptySections(): void {
+		showEmptySections = !showEmptySections;
+		if (typeof window === 'undefined') return;
+		try {
+			window.localStorage.setItem(EMPTY_SECTIONS_KEY, showEmptySections ? '1' : '0');
+		} catch {
+			// localStorage may be unavailable (private mode); state stays in-memory.
+		}
+	}
+
 	function close(): void {
 		ui.inspectorOpen = false;
 	}
@@ -37,10 +60,31 @@
 	}
 
 	const addressName = $derived(ui.selectedAddress?.displayName ?? '');
+
+	let panelEl: HTMLElement | undefined = $state();
+
+	$effect(() => {
+		const target = ui.scrollToLayerSlug;
+		if (!target || !panelEl) return;
+		const reduced =
+			typeof window !== 'undefined' &&
+			window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+		queueMicrotask(() => {
+			scrollToLayerHitRow(panelEl ?? null, target, { reducedMotion: reduced ?? false });
+			ui.scrollToLayerSlug = null;
+		});
+	});
+
+	function shouldRenderSection(sectionKey: string, hitCount: number): boolean {
+		if (sectionKey === 'klima') return true;
+		if (hitCount > 0) return true;
+		return showEmptySections;
+	}
 </script>
 
 {#if ui.inspectorOpen && ui.selectedAddress}
 	<section
+		bind:this={panelEl}
 		aria-live="polite"
 		aria-atomic="false"
 		aria-label={`Layer-Daten für ${addressName}`}
@@ -69,39 +113,60 @@
 			</button>
 		</header>
 
-		<div class="flex-1 space-y-6 px-6 py-4">
+		<div class="flex-1 space-y-4 px-6 py-4">
 			{#each sections as section (section.key)}
-				<section data-testid={`section-${section.key}`} data-section={section.key}>
-					<h3 class="font-serif text-lg text-ink">{section.label}</h3>
-					<div class="mt-2 divide-y divide-rule">
-						{#if section.key === 'klima'}
-							<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
-						{:else if section.hits.length === 0}
-							<p
-								class="py-3 font-serif italic text-ink-subtle"
-								data-testid={`section-${section.key}-empty`}
-							>
-								Keine Layer in dieser Sektion.
-							</p>
-						{:else}
-							{#each section.hits as hit (hit.layer)}
-								<LayerHitRow
-									{hit}
-									layerName={getLayerDisplayName(hit.layer)}
-									{lang}
-									lat={ui.selectedAddress?.lat}
-									lng={ui.selectedAddress?.lng}
-									isActive={ui.activeLayerSlugs.includes(hit.layer)}
-									onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-								/>
-							{/each}
-						{/if}
-					</div>
-				</section>
+				{#if shouldRenderSection(section.key, section.hits.length)}
+					<section data-testid={`section-${section.key}`} data-section={section.key}>
+						<h3
+							class="font-mono text-xs uppercase tracking-wide text-ink-muted border-t border-rule pt-4 flex items-baseline gap-2"
+							data-testid={`section-header-${section.key}`}
+						>
+							<span>{section.label}</span>
+							{#if section.hits.length > 0}
+								<span class="text-ink-subtle" data-testid={`section-count-${section.key}`}
+									>({section.hits.length})</span
+								>
+							{/if}
+						</h3>
+						<div class="mt-2 divide-y divide-rule">
+							{#if section.key === 'klima'}
+								<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
+							{:else if section.hits.length === 0}
+								<p
+									class="py-2 font-mono text-xs text-ink-subtle"
+									data-testid={`section-${section.key}-empty`}
+								>
+									{section.label} · keine Daten an dieser Adresse
+								</p>
+							{:else}
+								{#each section.hits as hit (hit.layer)}
+									<LayerHitRow
+										{hit}
+										layerName={getLayerDisplayName(hit.layer)}
+										{lang}
+										lat={ui.selectedAddress?.lat}
+										lng={ui.selectedAddress?.lng}
+										isActive={ui.activeLayerSlugs.includes(hit.layer)}
+										onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+									/>
+								{/each}
+							{/if}
+						</div>
+					</section>
+				{/if}
 			{/each}
 		</div>
 
-		<footer class="border-t border-rule px-6 py-3">
+		<footer class="border-t border-rule px-6 py-3 flex items-center justify-between gap-3">
+			<button
+				type="button"
+				data-testid="toggle-empty-sections"
+				aria-pressed={showEmptySections}
+				onclick={toggleEmptySections}
+				class="text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline"
+			>
+				{showEmptySections ? 'Leere Sektionen ausblenden' : 'Leere Sektionen einblenden'}
+			</button>
 			<PermalinkButton onCopy={copyPermalink} />
 		</footer>
 	</section>

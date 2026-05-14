@@ -134,14 +134,33 @@ async function processClimateStation(station: (typeof DWD_STATIONS)[number]): Pr
 	await writeFile(target, JSON.stringify(bundle, null, 2));
 }
 
+function parseSlugFilter(argv: readonly string[]): readonly string[] | null {
+	const positional = argv
+		.slice(2)
+		.filter((a) => !a.startsWith('--'))
+		.map((a) => a.trim())
+		.filter((a) => a.length > 0);
+	return positional.length > 0 ? positional : null;
+}
+
 async function main(): Promise<void> {
 	await ensureDirs();
 	const strict = !process.argv.includes('--graceful');
+	const slugFilter = parseSlugFilter(process.argv);
 	const fetchedAt = new Date().toISOString();
 	const entries: LayerEntry[] = [];
 	const failed: Array<{ slug: string; error: string }> = [];
 
-	for (const source of SOURCES) {
+	const targetSources = slugFilter
+		? SOURCES.filter((s) => slugFilter.includes(s.slug))
+		: SOURCES;
+	if (slugFilter) {
+		const unknown = slugFilter.filter((s) => !SOURCES.some((src) => src.slug === s));
+		if (unknown.length > 0) throw new Error(`Unknown slug(s): ${unknown.join(', ')}`);
+		console.log(`[fetch] slug-filter active: ${slugFilter.join(', ')}`);
+	}
+
+	for (const source of targetSources) {
 		console.log(`[fetch] ${source.slug} (${source.kind})`);
 		try {
 			entries.push(await processLayer(source.slug, fetchedAt));
@@ -152,21 +171,36 @@ async function main(): Promise<void> {
 			if (strict) throw err;
 		}
 	}
-	for (const station of DWD_STATIONS) {
-		console.log(`[climate] ${station.slug}`);
-		try {
-			await processClimateStation(station);
-		} catch (err) {
-			const msg = err instanceof Error ? err.message : String(err);
-			console.error(`[climate] FAILED ${station.slug}: ${msg}`);
-			failed.push({ slug: `climate:${station.slug}`, error: msg });
-			if (strict) throw err;
+	if (!slugFilter) {
+		for (const station of DWD_STATIONS) {
+			console.log(`[climate] ${station.slug}`);
+			try {
+				await processClimateStation(station);
+			} catch (err) {
+				const msg = err instanceof Error ? err.message : String(err);
+				console.error(`[climate] FAILED ${station.slug}: ${msg}`);
+				failed.push({ slug: `climate:${station.slug}`, error: msg });
+				if (strict) throw err;
+			}
 		}
 	}
-	const manifest = buildManifest(entries, fetchedAt);
+
+	// Bei slug-filter: existierendes MANIFEST mergen statt überschreiben.
+	let finalEntries = entries;
+	const manifestPath = join(OUT_LAYERS, 'MANIFEST.json');
+	if (slugFilter) {
+		const existingRaw = await readFile(manifestPath, 'utf-8').catch(() => null);
+		if (existingRaw) {
+			const existing = JSON.parse(existingRaw) as { layers: LayerEntry[] };
+			const updatedSlugs = new Set(entries.map((e) => e.slug));
+			const kept = existing.layers.filter((l) => !updatedSlugs.has(l.slug));
+			finalEntries = [...kept, ...entries];
+		}
+	}
+	const manifest = buildManifest(finalEntries, fetchedAt);
 	validateManifest(manifest);
-	await writeFile(join(OUT_LAYERS, 'MANIFEST.json'), JSON.stringify(manifest, null, 2));
-	console.log(`[manifest] wrote ${entries.length} layers`);
+	await writeFile(manifestPath, JSON.stringify(manifest, null, 2));
+	console.log(`[manifest] wrote ${finalEntries.length} layers`);
 	if (failed.length > 0) {
 		console.log(`\n[summary] ${entries.length} succeeded, ${failed.length} failed:`);
 		for (const f of failed) console.log(`  - ${f.slug}: ${f.error}`);

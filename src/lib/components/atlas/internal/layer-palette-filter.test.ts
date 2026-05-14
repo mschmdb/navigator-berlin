@@ -84,6 +84,10 @@ describe('getLayerDisplayName', () => {
 	it('liefert deutschen Namen für bekannten Slug', () => {
 		expect(getLayerDisplayName('bodenrichtwerte')).toBe('Bodenrichtwerte (EUR/m²)');
 	});
+
+	it('liefert "S-Bahn-Netz" für sbahn-netz (Story 1.13)', () => {
+		expect(getLayerDisplayName('sbahn-netz')).toBe('S-Bahn-Netz');
+	});
 });
 
 describe('BUNDLE_ORDER', () => {

@@ -133,6 +133,10 @@ describe('inspector-panel.svelte', () => {
 		const hint = (await page.getByTestId('klima-station-hint').element()) as HTMLElement;
 		expect(hint.textContent).toContain('Berlin-Tempelhof');
 		expect(hint.textContent).toContain('1919');
+		await vi.waitUntil(
+			() => page.getByTestId('klima-sparkline-grid').query() !== null,
+			{ timeout: 5000, interval: 50 }
+		);
 		const grid = (await page.getByTestId('klima-sparkline-grid').element()) as HTMLElement;
 		const sparklines = grid.querySelectorAll('[data-testid="climate-sparkline"]');
 		expect(sparklines.length).toBe(3);
@@ -168,6 +172,10 @@ describe('inspector-panel.svelte', () => {
 			nearestStation: station,
 			climateSeries: series
 		});
+		await vi.waitUntil(
+			() => page.getByTestId('klima-long-view-slot').query() !== null,
+			{ timeout: 5000, interval: 50 }
+		);
 		await expect.element(page.getByTestId('klima-long-view-slot')).toBeInTheDocument();
 	});
 
@@ -204,6 +212,103 @@ describe('inspector-panel.svelte', () => {
 		});
 		const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
 		expect(row.getAttribute('data-state')).toBe('no-coverage');
+	});
+
+	describe('Story 1.18: Section-Header + Empty-Section-Toggle', () => {
+		it('Section-Header nutzt Plex-Mono uppercase mit border-t (AC-5)', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Friedrichshain')],
+				layerMeta: fullLayerMeta
+			});
+			const h = (await page.getByTestId('section-header-boundaries').element()) as HTMLElement;
+			expect(h.className).toMatch(/font-mono/);
+			expect(h.className).toMatch(/text-xs/);
+			expect(h.className).toMatch(/uppercase/);
+			expect(h.className).toMatch(/border-t/);
+		});
+
+		it('Section-Count-Suffix zeigt Hit-Anzahl (AC-5)', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'X')],
+				layerMeta: fullLayerMeta
+			});
+			const count = (await page
+				.getByTestId('section-count-boundaries')
+				.element()) as HTMLElement;
+			expect(count.textContent).toMatch(/\(1\)/);
+		});
+
+		it('Empty-Section default ausgeblendet außer Klima (AC-6)', async () => {
+			window.localStorage.removeItem('nav.inspector.showEmptySections');
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'X')],
+				layerMeta: [...fullLayerMeta, meta('kitas-2024', 'E: Soziale Infrastruktur')]
+			});
+			await expect.element(page.getByTestId('section-sozial')).not.toBeInTheDocument();
+			await expect.element(page.getByTestId('section-mobilitaet')).not.toBeInTheDocument();
+			await expect.element(page.getByTestId('section-klima')).toBeInTheDocument();
+			await expect.element(page.getByTestId('section-boundaries')).toBeInTheDocument();
+		});
+
+		it('Footer-Toggle blendet leere Sektionen ein (AC-6)', async () => {
+			window.localStorage.removeItem('nav.inspector.showEmptySections');
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'X')],
+				layerMeta: fullLayerMeta
+			});
+			await page.getByTestId('toggle-empty-sections').click();
+			await expect.element(page.getByTestId('section-sozial')).toBeInTheDocument();
+			await expect.element(page.getByTestId('section-mobilitaet')).toBeInTheDocument();
+		});
+
+		it('Toggle-State in localStorage persistiert (AC-6)', async () => {
+			window.localStorage.removeItem('nav.inspector.showEmptySections');
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'X')],
+				layerMeta: fullLayerMeta
+			});
+			await page.getByTestId('toggle-empty-sections').click();
+			expect(window.localStorage.getItem('nav.inspector.showEmptySections')).toBe('1');
+			await page.getByTestId('toggle-empty-sections').click();
+			expect(window.localStorage.getItem('nav.inspector.showEmptySections')).toBe('0');
+		});
+
+		it('Empty-Section-Compact rendert Plex-Mono 1-Zeile mit Trenner (AC-6)', async () => {
+			window.localStorage.setItem('nav.inspector.showEmptySections', '1');
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'X')],
+				layerMeta: fullLayerMeta
+			});
+			const empty = (await page.getByTestId('section-sozial-empty').element()) as HTMLElement;
+			expect(empty.className).toMatch(/font-mono/);
+			expect(empty.className).toMatch(/text-xs/);
+			expect(empty.textContent).toMatch(/Soziale Infrastruktur ·/);
+			expect(empty.textContent).toMatch(/keine Daten/);
+			window.localStorage.removeItem('nav.inspector.showEmptySections');
+		});
+
+		it('Klima-Section IMMER sichtbar auch bei 0 Hits (AC-6)', async () => {
+			window.localStorage.removeItem('nav.inspector.showEmptySections');
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'X')],
+				layerMeta: fullLayerMeta
+			});
+			await expect.element(page.getByTestId('section-klima')).toBeInTheDocument();
+		});
 	});
 
 	it('Mount-Id stabil bei Re-Selection (kein Re-Mount)', async () => {

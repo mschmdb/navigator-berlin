@@ -17,6 +17,10 @@ export interface UiState {
 	paletteOpen: boolean;
 	nearestStation: ClimateStation | null;
 	climateSeries: ClimateData | null;
+	/** Story 1.15 AC-3: nach Pin-Click Inspector zur passenden Layer-Hit-Row scrollen. */
+	scrollToLayerSlug: string | null;
+	/** Story 1.14: per-Layer Soft-Hide aus MapLegend (Eye-Toggle). */
+	hiddenLayerSlugs: string[];
 }
 
 export function createUiState(): UiState {
@@ -29,7 +33,9 @@ export function createUiState(): UiState {
 		sheetSnapVh: 40,
 		paletteOpen: false,
 		nearestStation: null,
-		climateSeries: null
+		climateSeries: null,
+		scrollToLayerSlug: null,
+		hiddenLayerSlugs: []
 	});
 	setContext(KEY, state);
 	return state;
@@ -62,4 +68,18 @@ export function toggleLayer(state: UiState, slug: string): void {
 
 export function clearLayers(state: UiState): void {
 	state.activeLayerSlugs.length = 0;
+	state.hiddenLayerSlugs.length = 0;
+}
+
+export function toggleLayerHidden(state: UiState, slug: string): void {
+	const idx = state.hiddenLayerSlugs.indexOf(slug);
+	if (idx >= 0) state.hiddenLayerSlugs.splice(idx, 1);
+	else state.hiddenLayerSlugs.push(slug);
+}
+
+export function removeLayer(state: UiState, slug: string): void {
+	const activeIdx = state.activeLayerSlugs.indexOf(slug);
+	if (activeIdx >= 0) state.activeLayerSlugs.splice(activeIdx, 1);
+	const hiddenIdx = state.hiddenLayerSlugs.indexOf(slug);
+	if (hiddenIdx >= 0) state.hiddenLayerSlugs.splice(hiddenIdx, 1);
 }

@@ -46,8 +46,13 @@ function wayToFeature(way: OverpassWay): Feature<LineString | Polygon> | null {
 	const first = coords[0];
 	const last = coords[coords.length - 1];
 	const closed = coords.length >= 4 && first[0] === last[0] && first[1] === last[1];
-	const properties = { osmId: way.id, osmType: 'way', ...(way.tags ?? {}) };
-	if (closed) {
+	const tags = way.tags ?? {};
+	const properties = { osmId: way.id, osmType: 'way', ...tags };
+	// OSM-Spec: closed way ist Polygon nur bei explizitem area=yes oder Polygon-Tags
+	// (building, landuse, leisure, natural=water etc.). Andernfalls LineString
+	// (z.B. Ringbahn-Tracks haben geschlossene Geometrie, sind aber Linien).
+	const isExplicitArea = tags.area === 'yes' || polygonImplyingTag(tags);
+	if (closed && isExplicitArea) {
 		return {
 			type: 'Feature',
 			id: way.id,
@@ -61,6 +66,21 @@ function wayToFeature(way: OverpassWay): Feature<LineString | Polygon> | null {
 		properties,
 		geometry: { type: 'LineString', coordinates: coords }
 	};
+}
+
+const POLYGON_TAGS: ReadonlySet<string> = new Set([
+	'building',
+	'landuse',
+	'leisure',
+	'amenity',
+	'natural'
+]);
+
+function polygonImplyingTag(tags: Record<string, string>): boolean {
+	for (const key of POLYGON_TAGS) {
+		if (tags[key]) return true;
+	}
+	return false;
 }
 
 export function overpassToGeoJSON(input: unknown): FeatureCollection {
