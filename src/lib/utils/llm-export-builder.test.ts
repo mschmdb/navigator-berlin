@@ -323,6 +323,14 @@ describe('buildLlmExportMarkdown — Klima-Section', () => {
 		expect(md).toMatch(/Mittel.*1991.2020.*10,5.*°C/);
 	});
 
+	it('Sommertage mit Min/Max/Latest + Normalperioden 30 bzw 38', () => {
+		const md = buildLlmExportMarkdown(fullInput());
+		expect(md).toContain('Sommertage');
+		expect(md).toMatch(/Sommertage.*Min:.*Max:.*Latest:/);
+		expect(md).toMatch(/Sommertage.*1961.1990.*30/);
+		expect(md).toMatch(/Sommertage.*1991.2020.*38/);
+	});
+
 	it('skippt Klima-Section wenn keine Station angegeben', () => {
 		const md = buildLlmExportMarkdown({ ...fullInput(), climate: null });
 		expect(md).not.toContain('## Klima');

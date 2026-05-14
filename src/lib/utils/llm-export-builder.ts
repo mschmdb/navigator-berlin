@@ -5,6 +5,13 @@ import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palett
 import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
 import { getEditorialConfig } from '$lib/components/atlas/internal/editorial-config.js';
 import { DISCLAIMER_TEXTS_DE } from '$lib/components/atlas/editorial-disclaimer.svelte';
+import {
+	NORMAL_OLD,
+	NORMAL_NEW,
+	getNormalperiodMean,
+	yearValuesToNumeric,
+	type NumericYearPoint
+} from './normalperiod.js';
 import type {
 	NearestStop,
 	Modus
@@ -131,37 +138,7 @@ function renderSections(input: LlmExportInput, lines: string[]): void {
 	}
 }
 
-const NORMAL_OLD = { from: 1961, to: 1990 };
-const NORMAL_NEW = { from: 1991, to: 2020 };
-
-interface NumericPoint {
-	year: number;
-	value: number;
-}
-
-function toNumeric<T extends { year: number; count?: number; temp?: number }>(
-	values: readonly T[] | undefined,
-	field: 'count' | 'temp'
-): NumericPoint[] {
-	if (!values) return [];
-	const out: NumericPoint[] = [];
-	for (const v of values) {
-		const raw = v[field];
-		if (typeof raw === 'number' && Number.isFinite(raw)) {
-			out.push({ year: v.year, value: raw });
-		}
-	}
-	return out;
-}
-
-function meanInRange(points: readonly NumericPoint[], from: number, to: number): number | null {
-	const inRange = points.filter((p) => p.year >= from && p.year <= to);
-	if (inRange.length === 0) return null;
-	const sum = inRange.reduce((acc, p) => acc + p.value, 0);
-	return sum / inRange.length;
-}
-
-function minMaxLatest(points: readonly NumericPoint[]): { min: NumericPoint; max: NumericPoint; latest: NumericPoint } | null {
+function minMaxLatest(points: readonly NumericYearPoint[]): { min: NumericYearPoint; max: NumericYearPoint; latest: NumericYearPoint } | null {
 	if (points.length === 0) return null;
 	let min = points[0]!;
 	let max = points[0]!;
@@ -176,14 +153,14 @@ function minMaxLatest(points: readonly NumericPoint[]): { min: NumericPoint; max
 
 function renderClimateIndicator(
 	label: string,
-	points: readonly NumericPoint[],
+	points: readonly NumericYearPoint[],
 	formatVal: (n: number) => string,
 	lines: string[]
 ): void {
 	const mml = minMaxLatest(points);
 	if (!mml) return;
-	const oldMean = meanInRange(points, NORMAL_OLD.from, NORMAL_OLD.to);
-	const newMean = meanInRange(points, NORMAL_NEW.from, NORMAL_NEW.to);
+	const oldMean = getNormalperiodMean(points, NORMAL_OLD.from, NORMAL_OLD.to);
+	const newMean = getNormalperiodMean(points, NORMAL_NEW.from, NORMAL_NEW.to);
 	const parts: string[] = [
 		`Min: ${formatVal(mml.min.value)} (${mml.min.year})`,
 		`Max: ${formatVal(mml.max.value)} (${mml.max.year})`,
@@ -208,11 +185,12 @@ function renderClimate(input: LlmExportInput, lines: string[]): void {
 	if (series) {
 		const fmtInt = (n: number): string => `${Math.round(n)}`;
 		const fmtTemp = (n: number): string => `${formatNumber(n)} °C`;
-		renderClimateIndicator('Heiße Tage (>30 °C)', toNumeric(series.hotDays, 'count'), fmtInt, lines);
-		renderClimateIndicator('Frost-Tage', toNumeric(series.frostDays, 'count'), fmtInt, lines);
+		renderClimateIndicator('Sommertage (≥25 °C)', yearValuesToNumeric(series.summerDays, 'count'), fmtInt, lines);
+		renderClimateIndicator('Heiße Tage (>30 °C)', yearValuesToNumeric(series.hotDays, 'count'), fmtInt, lines);
+		renderClimateIndicator('Frost-Tage', yearValuesToNumeric(series.frostDays, 'count'), fmtInt, lines);
 		renderClimateIndicator(
 			'Jahres-Mittelwert',
-			toNumeric(series.annualMeanTemp, 'temp'),
+			yearValuesToNumeric(series.annualMeanTemp, 'temp'),
 			fmtTemp,
 			lines
 		);

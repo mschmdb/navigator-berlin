@@ -119,6 +119,55 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 		expect(fc?.textContent).toMatch(/Latest/);
 	});
 
+	it('Normalperioden-Footer rendert beide Mittel für annualMeanTemp (AC-4)', async () => {
+		const screen = render(ClimateLongView, {
+			series: SERIES,
+			stationName: 'Berlin-Dahlem'
+		});
+		const oldRow = screen.container.querySelector(
+			'[data-testid="climate-long-view-normal-old"]'
+		);
+		const newRow = screen.container.querySelector(
+			'[data-testid="climate-long-view-normal-new"]'
+		);
+		expect(oldRow?.textContent).toContain('Mittel 1961–1990');
+		expect(oldRow?.textContent).toMatch(/°C/);
+		expect(newRow?.textContent).toContain('Mittel 1991–2020');
+		expect(newRow?.textContent).toMatch(/°C/);
+	});
+
+	it('Normalperioden in Plex-Mono dezent (AC-2 Style)', async () => {
+		const screen = render(ClimateLongView, {
+			series: SERIES,
+			stationName: 'Berlin-Dahlem'
+		});
+		const oldRow = screen.container.querySelector(
+			'[data-testid="climate-long-view-normal-old"]'
+		) as HTMLElement | null;
+		expect(oldRow).not.toBeNull();
+		expect(oldRow!.className).toMatch(/font-mono/);
+		expect(oldRow!.className).toMatch(/text-ink-subtle/);
+	});
+
+	it('Normalperioden fehlen wenn keine Jahre im Range', async () => {
+		const recent: YearValue[] = [
+			{ year: 2022, temp: 10.5 },
+			{ year: 2024, temp: 11.1 }
+		];
+		const screen = render(ClimateLongView, {
+			series: recent,
+			stationName: 'Berlin-Dahlem'
+		});
+		const oldRow = screen.container.querySelector(
+			'[data-testid="climate-long-view-normal-old"]'
+		);
+		const newRow = screen.container.querySelector(
+			'[data-testid="climate-long-view-normal-new"]'
+		);
+		expect(oldRow).toBeNull();
+		expect(newRow).toBeNull();
+	});
+
 	it('renders DataTableAlternative toggle for table alternative', async () => {
 		const screen = render(ClimateLongView, {
 			series: SERIES,

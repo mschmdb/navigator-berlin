@@ -9,6 +9,11 @@
 	} from './internal/narrative-markers.js';
 	import { rollingMean } from '$lib/utils/rolling-mean.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
+	import {
+		NORMAL_OLD,
+		NORMAL_NEW,
+		getNormalperiodMean
+	} from '$lib/utils/normalperiod.js';
 
 	type Props = {
 		series: readonly YearValue[];
@@ -70,6 +75,17 @@
 			? 'Keine Daten verfügbar.'
 			: `Min: ${stats.min.toFixed(1)} ${unit} · Max: ${stats.max.toFixed(1)} ${unit} · Latest: ${stats.latest.toFixed(2)} ${unit}`
 	);
+
+	const normalOldMean = $derived(
+		getNormalperiodMean(points, NORMAL_OLD.from, NORMAL_OLD.to)
+	);
+	const normalNewMean = $derived(
+		getNormalperiodMean(points, NORMAL_NEW.from, NORMAL_NEW.to)
+	);
+
+	function formatMean(n: number): string {
+		return `${n.toFixed(2)} ${unit}`;
+	}
 
 	const chartId = $derived(
 		`long-view-${stationName.replace(/\W+/g, '-').toLowerCase()}`
@@ -256,7 +272,23 @@
 			class="mt-1 font-mono text-xs text-ink-subtle"
 			data-testid="chart-figcaption"
 		>
-			{figcaption}
+			<span class="block">{figcaption}</span>
+			{#if normalOldMean !== null}
+				<span
+					class="mt-0.5 block font-mono text-xs text-ink-subtle"
+					data-testid="climate-long-view-normal-old"
+				>
+					Mittel 1961–1990: {formatMean(normalOldMean)}
+				</span>
+			{/if}
+			{#if normalNewMean !== null}
+				<span
+					class="block font-mono text-xs text-ink-subtle"
+					data-testid="climate-long-view-normal-new"
+				>
+					Mittel 1991–2020: {formatMean(normalNewMean)}
+				</span>
+			{/if}
 		</figcaption>
 	</figure>
 	<div class="mt-2">

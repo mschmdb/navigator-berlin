@@ -240,6 +240,94 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 		expect(figure?.getAttribute('data-focused-index')).toBe('0');
 	});
 
+	it('Normalperioden-Footer rendert beide Mittel wenn Daten beide Ranges abdecken (AC-2)', async () => {
+		const series: YearValue[] = [
+			// NORMAL_OLD 1961-1990
+			{ year: 1965, count: 4 },
+			{ year: 1975, count: 5 },
+			{ year: 1985, count: 6 },
+			// NORMAL_NEW 1991-2020
+			{ year: 1995, count: 9 },
+			{ year: 2005, count: 11 },
+			{ year: 2015, count: 13 },
+			// Latest außerhalb 2020
+			{ year: 2024, count: 18 }
+		];
+		const screen = render(ClimateSparkline, {
+			series,
+			metric: 'hot',
+			stationName: 'Berlin-Dahlem'
+		});
+		const oldRow = screen.container.querySelector(
+			'[data-testid="climate-sparkline-normal-old"]'
+		);
+		const newRow = screen.container.querySelector(
+			'[data-testid="climate-sparkline-normal-new"]'
+		);
+		expect(oldRow?.textContent).toContain('Mittel 1961–1990');
+		expect(oldRow?.textContent).toContain('5');
+		expect(newRow?.textContent).toContain('Mittel 1991–2020');
+		expect(newRow?.textContent).toContain('11');
+	});
+
+	it('Normalperioden in Plex-Mono dezent (AC-2 Style)', async () => {
+		const screen = render(ClimateSparkline, {
+			series: SUMMER,
+			metric: 'summer',
+			stationName: 'Berlin-Dahlem'
+		});
+		const oldRow = screen.container.querySelector(
+			'[data-testid="climate-sparkline-normal-old"]'
+		) as HTMLElement | null;
+		expect(oldRow).not.toBeNull();
+		const cls = oldRow!.className;
+		expect(cls).toMatch(/font-mono/);
+		expect(cls).toMatch(/text-ink-subtle/);
+	});
+
+	it('Tempelhof-Szenario: Frost 1919-Start, Normal 1961-1990 nur aus In-Range-Jahren', async () => {
+		const tempelhof: YearValue[] = [
+			{ year: 1919, count: 50 },
+			{ year: 1950, count: 30 },
+			{ year: 1970, count: 20 },
+			{ year: 1980, count: 18 },
+			{ year: 1990, count: 16 },
+			{ year: 2000, count: 12 },
+			{ year: 2024, count: 5 }
+		];
+		const screen = render(ClimateSparkline, {
+			series: tempelhof,
+			metric: 'frost',
+			stationName: 'Berlin-Tempelhof'
+		});
+		const oldRow = screen.container.querySelector(
+			'[data-testid="climate-sparkline-normal-old"]'
+		);
+		// Mittel = (20 + 18 + 16) / 3 = 18 — 1919 + 1950 NOT included
+		expect(oldRow?.textContent).toContain('18');
+		expect(oldRow?.textContent).not.toContain('50');
+	});
+
+	it('Normalperioden-Zeile fehlt wenn keine Jahre im Range (AC-4 Fehlende Jahre → null)', async () => {
+		const onlyRecent: YearValue[] = [
+			{ year: 2022, count: 7 },
+			{ year: 2024, count: 9 }
+		];
+		const screen = render(ClimateSparkline, {
+			series: onlyRecent,
+			metric: 'hot',
+			stationName: 'Berlin-Dahlem'
+		});
+		const oldRow = screen.container.querySelector(
+			'[data-testid="climate-sparkline-normal-old"]'
+		);
+		const newRow = screen.container.querySelector(
+			'[data-testid="climate-sparkline-normal-new"]'
+		);
+		expect(oldRow).toBeNull();
+		expect(newRow).toBeNull();
+	});
+
 	it('renders empty state without crashing when series is empty', async () => {
 		const screen = render(ClimateSparkline, {
 			series: [],
