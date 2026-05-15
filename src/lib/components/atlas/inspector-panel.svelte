@@ -1,7 +1,16 @@
 <script lang="ts">
-	import { Share2, X } from '@lucide/svelte';
+	import { Share2, X, Bookmark, BookmarkCheck, Check } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
-	import { getUiState, toggleLayer } from '$lib/state/ui-context.svelte.js';
+	import {
+		getUiState,
+		toggleLayer,
+		addBookmark
+	} from '$lib/state/ui-context.svelte.js';
+	import {
+		createBookmark,
+		isBookmarked,
+		persistBookmarks
+	} from '$lib/state/bookmark-store.js';
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
 	import ShareSheet from './inspector-panel/share-sheet.svelte';
 	import KlimaSection from './inspector-panel/klima-section.svelte';
@@ -64,6 +73,46 @@
 
 	function close(): void {
 		ui.inspectorOpen = false;
+	}
+
+	const addressBookmarked = $derived.by(() => {
+		if (!ui.selectedAddress) return false;
+		return isBookmarked(
+			{ schemaVersion: 1, bookmarks: ui.bookmarks },
+			ui.selectedAddress.lat,
+			ui.selectedAddress.lng
+		);
+	});
+
+	let inspectorSaveJustHappened = $state(false);
+	let inspectorSaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+	function handleInspectorBookmark(): void {
+		const addr = ui.selectedAddress;
+		if (!addr) return;
+		if (addressBookmarked) {
+			ui.bookmarksDialogOpen = true;
+			return;
+		}
+		const bm = createBookmark({
+			displayName: addr.displayName,
+			lat: addr.lat,
+			lng: addr.lng,
+			bezirk: addr.bezirk,
+			postcode: addr.postcode
+		});
+		const ok = addBookmark(ui, bm);
+		if (!ok) return;
+		persistBookmarks(typeof window === 'undefined' ? null : localStorage, {
+			schemaVersion: 1,
+			bookmarks: ui.bookmarks
+		});
+		inspectorSaveJustHappened = true;
+		if (inspectorSaveTimer) clearTimeout(inspectorSaveTimer);
+		inspectorSaveTimer = setTimeout(() => {
+			inspectorSaveJustHappened = false;
+			inspectorSaveTimer = null;
+		}, 1800);
 	}
 
 	const addressName = $derived(ui.selectedAddress?.displayName ?? '');
@@ -214,6 +263,71 @@
 			</button>
 		</header>
 
+		<div
+			data-testid="inspector-toolbar"
+			class="sticky top-[var(--header-height,56px)] z-10 flex items-center justify-between gap-3 border-b border-rule bg-bg-elevated px-6 py-2"
+		>
+			<button
+				type="button"
+				data-testid="toggle-empty-sections"
+				aria-pressed={showEmptySections}
+				onclick={toggleEmptySections}
+				class="text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline"
+			>
+				{showEmptySections ? 'Leere Sektionen ausblenden' : 'Leere Sektionen einblenden'}
+			</button>
+			<div class="flex items-center gap-3">
+				<button
+					type="button"
+					data-testid="inspector-bookmark-trigger"
+					data-bookmarked={addressBookmarked ? 'true' : 'false'}
+					onclick={handleInspectorBookmark}
+					aria-label={addressBookmarked
+						? 'Adresse ist gespeichert · Bookmark-Liste öffnen'
+						: 'Adresse als Bookmark speichern'}
+					class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+				>
+					{#if inspectorSaveJustHappened}
+						<Check size={14} aria-hidden="true" />
+						<span data-testid="inspector-bookmark-confirmation">Gespeichert</span>
+					{:else if addressBookmarked}
+						<BookmarkCheck size={14} aria-hidden="true" />
+						<span>Gespeichert</span>
+					{:else}
+						<Bookmark size={14} aria-hidden="true" />
+						<span>Bookmark</span>
+					{/if}
+				</button>
+				<div class="relative">
+					<button
+						type="button"
+						bind:this={shareTriggerEl}
+						onclick={openShare}
+						aria-haspopup="dialog"
+						aria-expanded={shareOpen}
+						aria-controls="inspector-share-sheet"
+						data-testid="share-sheet-trigger"
+						class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+					>
+						<Share2 size={14} aria-hidden="true" />
+						<span>Teilen</span>
+					</button>
+					<div id="inspector-share-sheet">
+						<ShareSheet
+							open={shareOpen}
+							onClose={closeShare}
+							{permalinkUrl}
+							llmExportText={llmMarkdown}
+							{ogImageUrl}
+							{addressName}
+							variant={variant === 'sheet' ? 'sheet' : 'popover'}
+							{nativeShareData}
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="flex-1 space-y-4 px-6 py-4">
 			{#each sections as section (section.key)}
 				{#if shouldRenderSection(section.key, section.hits.length)}
@@ -273,43 +387,5 @@
 			<p>{page.url.toString()}</p>
 		</div>
 
-		<footer class="border-t border-rule px-6 py-3 flex items-center justify-between gap-3">
-			<button
-				type="button"
-				data-testid="toggle-empty-sections"
-				aria-pressed={showEmptySections}
-				onclick={toggleEmptySections}
-				class="text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline"
-			>
-				{showEmptySections ? 'Leere Sektionen ausblenden' : 'Leere Sektionen einblenden'}
-			</button>
-			<div class="relative">
-				<button
-					type="button"
-					bind:this={shareTriggerEl}
-					onclick={openShare}
-					aria-haspopup="dialog"
-					aria-expanded={shareOpen}
-					aria-controls="inspector-share-sheet"
-					data-testid="share-sheet-trigger"
-					class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
-				>
-					<Share2 size={14} aria-hidden="true" />
-					<span>Teilen</span>
-				</button>
-				<div id="inspector-share-sheet">
-					<ShareSheet
-						open={shareOpen}
-						onClose={closeShare}
-						{permalinkUrl}
-						llmExportText={llmMarkdown}
-						{ogImageUrl}
-						{addressName}
-						variant={variant === 'sheet' ? 'sheet' : 'popover'}
-						{nativeShareData}
-					/>
-				</div>
-			</div>
-		</footer>
 	</section>
 {/if}

@@ -8,8 +8,12 @@ import {
 	getUiState,
 	toggleLayer,
 	clearLayers,
+	addBookmark,
+	removeBookmark,
+	clearBookmarks,
 	type UiState
 } from './ui-context.svelte.js';
+import type { Bookmark } from './bookmark-schema.js';
 
 function makeState(): UiState {
 	return {
@@ -24,7 +28,20 @@ function makeState(): UiState {
 		climateSeries: null,
 		scrollToLayerSlug: null,
 		hiddenLayerSlugs: [],
-		oepnvStopIndex: null
+		oepnvStopIndex: null,
+		bookmarks: [],
+		bookmarksDialogOpen: false
+	};
+}
+
+function makeBookmark(overrides: Partial<Bookmark> = {}): Bookmark {
+	return {
+		id: '11111111-1111-4111-8111-111111111111',
+		displayName: 'Test-Adresse',
+		lat: 52.5,
+		lng: 13.4,
+		createdAt: '2026-05-15T10:00:00.000Z',
+		...overrides
 	};
 }
 
@@ -127,6 +144,61 @@ describe('ui-context', () => {
 			clearLayers(s);
 			expect(s.activeLayerSlugs).toEqual([]);
 			expect(s.recentLayerSlugs).toEqual(['plz', 'bezirke']);
+		});
+	});
+
+	describe('bookmarks (Story 1.26)', () => {
+		it('initial: leeres bookmarks-Array + Dialog zu', () => {
+			const s = makeState();
+			expect(s.bookmarks).toEqual([]);
+			expect(s.bookmarksDialogOpen).toBe(false);
+		});
+
+		it('addBookmark fügt Bookmark hinzu, returns true', () => {
+			const s = makeState();
+			const ok = addBookmark(s, makeBookmark());
+			expect(ok).toBe(true);
+			expect(s.bookmarks).toHaveLength(1);
+		});
+
+		it('addBookmark Dedup (gleiche lat/lng): returns false, kein Add', () => {
+			const s = makeState();
+			addBookmark(s, makeBookmark({ id: '11111111-1111-4111-8111-111111111111' }));
+			const ok = addBookmark(
+				s,
+				makeBookmark({ id: '22222222-2222-4222-8222-222222222222', lat: 52.5, lng: 13.4 })
+			);
+			expect(ok).toBe(false);
+			expect(s.bookmarks).toHaveLength(1);
+		});
+
+		it('addBookmark Quota (>50): returns false', () => {
+			const s = makeState();
+			for (let i = 0; i < 50; i++) {
+				const id = `${i.toString(16).padStart(8, '0')}-1111-4111-8111-111111111111`;
+				addBookmark(s, makeBookmark({ id, lat: 52.5 + i * 0.001, lng: 13.4 }));
+			}
+			const ok = addBookmark(
+				s,
+				makeBookmark({ id: 'ffffffff-1111-4111-8111-111111111111', lat: 52.6, lng: 13.5 })
+			);
+			expect(ok).toBe(false);
+			expect(s.bookmarks).toHaveLength(50);
+		});
+
+		it('removeBookmark entfernt nach ID', () => {
+			const s = makeState();
+			const bm = makeBookmark();
+			addBookmark(s, bm);
+			removeBookmark(s, bm.id);
+			expect(s.bookmarks).toHaveLength(0);
+		});
+
+		it('clearBookmarks leert Liste', () => {
+			const s = makeState();
+			addBookmark(s, makeBookmark());
+			clearBookmarks(s);
+			expect(s.bookmarks).toEqual([]);
 		});
 	});
 });

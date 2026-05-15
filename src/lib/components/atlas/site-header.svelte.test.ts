@@ -89,4 +89,69 @@ describe('site-header.svelte', () => {
 		expect(el.className).toMatch(/border-b/);
 		expect(el.className).toMatch(/border-rule/);
 	});
+
+	describe('Bookmark-Trigger (Story 1.26)', () => {
+		it('rendert Bookmark-Trigger wenn onOpenBookmarks gegeben', async () => {
+			let opened = 0;
+			render(SiteHeader, {
+				geocode: async () => [],
+				onOpenBookmarks: () => {
+					opened += 1;
+				}
+			});
+			const trigger = page.getByTestId('header-bookmark-trigger');
+			await expect.element(trigger).toBeInTheDocument();
+			const el = (await trigger.element()) as HTMLButtonElement;
+			expect(el.getAttribute('aria-label')).toMatch(/bookmark/i);
+			expect(el.getAttribute('aria-haspopup')).toBe('dialog');
+			await trigger.click();
+			expect(opened).toBe(1);
+		});
+
+		it('Bookmark-Badge zeigt count wenn > 0', async () => {
+			render(SiteHeader, {
+				geocode: async () => [],
+				bookmarkCount: 3,
+				onOpenBookmarks: () => {}
+			});
+			const badge = page.getByTestId('header-bookmark-badge');
+			const el = (await badge.element()) as HTMLElement;
+			expect(el.textContent?.trim()).toBe('3');
+		});
+
+		it('Bookmark-Badge versteckt wenn count=0', async () => {
+			render(SiteHeader, {
+				geocode: async () => [],
+				bookmarkCount: 0,
+				onOpenBookmarks: () => {}
+			});
+			await expect.element(page.getByTestId('header-bookmark-trigger')).toBeInTheDocument();
+			await expect.element(page.getByTestId('header-bookmark-badge')).not.toBeInTheDocument();
+		});
+
+		it('Icon-Variant gefüllt wenn currentAddressBookmarked=true', async () => {
+			render(SiteHeader, {
+				geocode: async () => [],
+				currentAddressBookmarked: true,
+				onOpenBookmarks: () => {}
+			});
+			const trigger = (await page.getByTestId('header-bookmark-trigger').element()) as HTMLElement;
+			expect(trigger.getAttribute('data-bookmarked')).toBe('true');
+		});
+
+		it('Icon-Variant outline wenn currentAddressBookmarked=false', async () => {
+			render(SiteHeader, {
+				geocode: async () => [],
+				currentAddressBookmarked: false,
+				onOpenBookmarks: () => {}
+			});
+			const trigger = (await page.getByTestId('header-bookmark-trigger').element()) as HTMLElement;
+			expect(trigger.getAttribute('data-bookmarked')).toBe('false');
+		});
+
+		it('Bookmark-Trigger ohne onOpenBookmarks wird nicht gerendert', async () => {
+			render(SiteHeader, { geocode: async () => [] });
+			await expect.element(page.getByTestId('header-bookmark-trigger')).not.toBeInTheDocument();
+		});
+	});
 });

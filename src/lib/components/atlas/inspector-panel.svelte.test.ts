@@ -193,7 +193,7 @@ describe('inspector-panel.svelte', () => {
 		await expect.element(page.getByTestId('inspector-panel')).not.toBeInTheDocument();
 	});
 
-	it('Share-Sheet-Trigger im Footer öffnet Share-Sheet mit Permalink-Option', async () => {
+	it('Share-Sheet-Trigger im Toolbar öffnet Share-Sheet mit Permalink-Option', async () => {
 		const writeText = vi.fn(async () => {});
 		Object.defineProperty(window.navigator, 'clipboard', {
 			value: { writeText },
@@ -204,6 +204,35 @@ describe('inspector-panel.svelte', () => {
 		await expect.element(page.getByTestId('share-sheet')).toBeInTheDocument();
 		await page.getByTestId('share-option-permalink').click();
 		expect(writeText).toHaveBeenCalledTimes(1);
+	});
+
+	describe('Inspector-Toolbar (Story 1.26 Pivot)', () => {
+		it('Toolbar steht oben (vor section-content)', async () => {
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
+			const panel = (await page.getByTestId('inspector-panel').element()) as HTMLElement;
+			const toolbar = panel.querySelector('[data-testid="inspector-toolbar"]');
+			const firstSection = panel.querySelector('[data-section]');
+			expect(toolbar).not.toBeNull();
+			if (toolbar && firstSection) {
+				const pos = toolbar.compareDocumentPosition(firstSection);
+				expect(pos & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+			}
+		});
+
+		it('Inspector-Bookmark-Trigger sichtbar in Toolbar', async () => {
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
+			await expect
+				.element(page.getByTestId('inspector-bookmark-trigger'))
+				.toBeInTheDocument();
+		});
+
+		it('Bookmark-Click bei nicht-gespeicherter Adresse zeigt Konfirmation', async () => {
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
+			await page.getByTestId('inspector-bookmark-trigger').click();
+			await expect
+				.element(page.getByTestId('inspector-bookmark-confirmation'))
+				.toBeInTheDocument();
+		});
 	});
 
 	it('LayerHitRow erhält no-coverage-State weiter', async () => {
