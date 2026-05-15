@@ -4,6 +4,7 @@ import { page } from 'vitest/browser';
 import Page from './+page.svelte';
 import type { LayerDetail } from '$lib/data/get-layer-detail.js';
 import type { LayerMetadata } from '$lib/data';
+import type { LayerMethodology } from '$lib/data/layer-methodology.js';
 
 function makeMeta(slug: string, overrides: Partial<LayerMetadata> = {}): LayerMetadata {
 	return {
@@ -22,7 +23,23 @@ function makeMeta(slug: string, overrides: Partial<LayerMetadata> = {}): LayerMe
 	};
 }
 
-function detail(slug = 'laerm-2023'): LayerDetail {
+function methodology(): LayerMethodology {
+	return {
+		calculation:
+			'Modellierte Lärm-Gesamtbelastung pro LOR-Planungsraum aus dem Umweltatlas 2023.',
+		coverageGaps: ['Modellwerte, keine flächendeckenden Mess-Stationen.'],
+		omissions: ['Keine Trennung nach Quelle (Straße, Schiene, Flug).'],
+		relatedLayers: ['luft-2023'],
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'alle 5 Jahre',
+		authority: 'Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt'
+	};
+}
+
+function detail(
+	slug = 'laerm-2023',
+	overrides: Partial<LayerDetail> = {}
+): LayerDetail {
 	return {
 		slug,
 		lang: 'de',
@@ -32,7 +49,9 @@ function detail(slug = 'laerm-2023'): LayerDetail {
 			long: 'Kategorisierte Lärm-Gesamtbelastung pro Planungsraum aus dem Berliner Umweltatlas 2023.',
 			valueScaleExplain: 'niedrig bis sehr hoch'
 		},
-		meta: makeMeta(slug)
+		meta: makeMeta(slug),
+		methodology: methodology(),
+		...overrides
 	};
 }
 
@@ -109,5 +128,68 @@ describe('layer-detail +page.svelte', () => {
 		render(Page, { data: { detail: detail() } });
 		const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
 		expect(article.textContent).toMatch(/C: Umwelt/);
+	});
+
+	it('rendert Methodology-Section „Berechnung"', async () => {
+		render(Page, { data: { detail: detail() } });
+		const sec = (await page.getByTestId('layer-detail-methodology').element()) as HTMLElement;
+		expect(sec.textContent).toMatch(/Berechnung/);
+		expect(sec.textContent).not.toMatch(/Wie berechnet/);
+		expect(sec.textContent).toMatch(/Modellierte Lärm-Gesamtbelastung/);
+	});
+
+	it('rendert Coverage-Gaps-Section nur wenn coverageGaps gefüllt', async () => {
+		render(Page, { data: { detail: detail() } });
+		const sec = (await page
+			.getByTestId('layer-detail-coverage-gaps')
+			.element()) as HTMLElement;
+		expect(sec.textContent).toMatch(/Modellwerte/);
+	});
+
+	it('rendert Omissions-Section nur wenn omissions gefüllt', async () => {
+		render(Page, { data: { detail: detail() } });
+		const sec = (await page.getByTestId('layer-detail-omissions').element()) as HTMLElement;
+		expect(sec.textContent).toMatch(/Trennung nach Quelle/);
+	});
+
+	it('rendert Related-Layers-Section mit Auto-Link', async () => {
+		render(Page, { data: { detail: detail() } });
+		const sec = (await page.getByTestId('layer-detail-related').element()) as HTMLElement;
+		const link = sec.querySelector('a[href="/layer/luft-2023"]');
+		expect(link, 'Auto-Link zu /layer/luft-2023').not.toBeNull();
+		expect(link?.textContent).toMatch(/Luft/);
+	});
+
+	it('rendert Methodik-Banner mit Link auf /methodik', async () => {
+		render(Page, { data: { detail: detail() } });
+		const banner = (await page
+			.getByTestId('layer-detail-methodik-link')
+			.element()) as HTMLElement;
+		const link = banner.querySelector('a');
+		expect(link?.getAttribute('href')).toMatch(/^\/methodik/);
+	});
+
+	it('blendet Sections mit leerem Inhalt aus (kein Coverage-Gaps wenn fehlt)', async () => {
+		const d = detail('laerm-2023', {
+			methodology: { ...methodology(), coverageGaps: undefined, omissions: undefined }
+		});
+		render(Page, { data: { detail: d } });
+		await expect
+			.element(page.getByTestId('layer-detail-coverage-gaps'))
+			.not.toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('layer-detail-omissions'))
+			.not.toBeInTheDocument();
+	});
+
+	it('zeigt „Methodik in Vorbereitung"-Banner wenn methodology null', async () => {
+		const d = detail('laerm-2023', { methodology: null });
+		render(Page, { data: { detail: d } });
+		const banner = (await page
+			.getByTestId('layer-detail-methodology-empty')
+			.element()) as HTMLElement;
+		expect(banner.textContent).toMatch(/Methodik in Vorbereitung/);
+		expect(banner.querySelector('a[href*="methodik"]')).not.toBeNull();
+		expect(banner.querySelector('[data-testid="error-feedback-mailto"]')).not.toBeNull();
 	});
 });

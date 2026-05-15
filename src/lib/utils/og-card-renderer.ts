@@ -115,7 +115,7 @@ function buildHeader(params: OgParams): SatoriNode {
 
 function buildLayerList(params: OgParams): SatoriNode {
 	if (params.topLayers.length === 0) {
-		return text('Atlas-Snapshot zur Adresse', {
+		return text('Daten zur Adresse', {
 			fontFamily: 'Plex Sans',
 			fontSize: 24,
 			color: COLOR_INK_MUTED

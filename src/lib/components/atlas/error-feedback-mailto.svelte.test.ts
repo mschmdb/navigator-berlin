@@ -10,10 +10,10 @@ describe('error-feedback-mailto.svelte', () => {
 		expect(a.textContent).toMatch(/Fehler im Eintrag/);
 	});
 
-	it('href startet mit mailto:hallo@navigator.berlin', async () => {
+	it('href startet mit mailto:hey@navigator.berlin', async () => {
 		render(ErrorFeedbackMailto, { layerSlug: 'x', layerName: 'X' });
 		const a = (await page.getByTestId('error-feedback-mailto').element()) as HTMLAnchorElement;
-		expect(a.getAttribute('href')).toMatch(/^mailto:hallo@navigator\.berlin/);
+		expect(a.getAttribute('href')).toMatch(/^mailto:hey@navigator\.berlin/);
 	});
 
 	it('href enthält Layer-Subject URL-encoded', async () => {

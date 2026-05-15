@@ -66,7 +66,7 @@ describe('buildOgDescription', () => {
 
 	it('Fallback ohne topLayers', () => {
 		const text = buildOgDescription({ ...FULL, topLayers: [] });
-		expect(text).toMatch(/Atlas/i);
+		expect(text).toMatch(/Daten zur Adresse/);
 		expect(text.length).toBeGreaterThan(0);
 	});
 

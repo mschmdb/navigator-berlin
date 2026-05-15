@@ -4,7 +4,7 @@ import { BERLIN_BBOX, isInBerlin } from '$lib/data/constants.js';
 import { nominatimBucket } from './rate-limit.js';
 
 const DEFAULT_ENDPOINT = 'https://nominatim.openstreetmap.org';
-const USER_AGENT = 'navigator.berlin/1.0 (mailto:hallo@navigator.berlin)';
+const USER_AGENT = 'navigator.berlin/1.0 (mailto:hey@navigator.berlin)';
 const TIMEOUT_MS = 5000;
 const MAX_RESULTS = 10;
 

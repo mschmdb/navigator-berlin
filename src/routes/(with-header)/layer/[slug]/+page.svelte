@@ -7,6 +7,8 @@
 		formatYearMonth
 	} from '$lib/components/atlas/inspector-panel/internal/source-shortener.js';
 	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
+	import ErrorFeedbackMailto from '$lib/components/atlas/error-feedback-mailto.svelte';
+	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
@@ -14,6 +16,7 @@
 	const detail = $derived(data.detail);
 	const meta = $derived(detail.meta);
 	const explain = $derived(detail.explain);
+	const methodology = $derived(detail.methodology);
 	const inspectorHref = $derived(
 		resolve(`/?layers=${encodeURIComponent(detail.slug)}` as Pathname)
 	);
@@ -111,6 +114,146 @@
 				{/if}
 			</dl>
 		</section>
+	{/if}
+
+	{#if methodology}
+		<section
+			data-testid="layer-detail-methodology"
+			aria-labelledby="layer-detail-methodology-h"
+			class="flex flex-col gap-2 border border-rule p-4"
+		>
+			<h2
+				id="layer-detail-methodology-h"
+				class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted"
+			>
+				Berechnung
+			</h2>
+			{#if methodology.calculation}
+				<p class="font-serif text-base leading-relaxed text-ink">
+					{methodology.calculation}
+				</p>
+			{/if}
+			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
+				{#if methodology.aggregationLevel}
+					<dt class="font-mono text-xs text-ink-subtle">Aggregation</dt>
+					<dd class="font-mono text-xs text-ink">{methodology.aggregationLevel}</dd>
+				{/if}
+				{#if methodology.authority}
+					<dt class="font-mono text-xs text-ink-subtle">Pflege</dt>
+					<dd class="text-ink">{methodology.authority}</dd>
+				{/if}
+				{#if methodology.updateFrequency}
+					<dt class="font-mono text-xs text-ink-subtle">Aktualisierung</dt>
+					<dd class="text-ink">{methodology.updateFrequency}</dd>
+				{/if}
+			</dl>
+		</section>
+
+		{#if methodology.coverageGaps && methodology.coverageGaps.length > 0}
+			<section
+				data-testid="layer-detail-coverage-gaps"
+				aria-labelledby="layer-detail-coverage-h"
+				class="flex flex-col gap-2 border border-rule p-4"
+			>
+				<h2
+					id="layer-detail-coverage-h"
+					class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted"
+				>
+					Coverage-Lücken
+				</h2>
+				<ul class="list-disc pl-5 font-serif text-base text-ink">
+					{#each methodology.coverageGaps as gap (gap)}
+						<li>{gap}</li>
+					{/each}
+				</ul>
+			</section>
+		{/if}
+
+		{#if methodology.omissions && methodology.omissions.length > 0}
+			<section
+				data-testid="layer-detail-omissions"
+				aria-labelledby="layer-detail-omissions-h"
+				class="flex flex-col gap-2 border border-rule p-4"
+			>
+				<h2
+					id="layer-detail-omissions-h"
+					class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted"
+				>
+					Was wir NICHT zeigen
+				</h2>
+				<ul class="list-disc pl-5 font-serif text-base text-ink">
+					{#each methodology.omissions as o (o)}
+						<li>{o}</li>
+					{/each}
+				</ul>
+			</section>
+		{/if}
+
+		{#if methodology.relatedLayers && methodology.relatedLayers.length > 0}
+			<section
+				data-testid="layer-detail-related"
+				aria-labelledby="layer-detail-related-h"
+				class="flex flex-col gap-2 border border-rule p-4"
+			>
+				<h2
+					id="layer-detail-related-h"
+					class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted"
+				>
+					Verwandte Layer
+				</h2>
+				<ul class="flex flex-wrap gap-x-4 gap-y-1.5 text-base">
+					{#each methodology.relatedLayers as relSlug (relSlug)}
+						<li>
+							<a
+								href={`/layer/${relSlug}`}
+								class="text-accent underline underline-offset-2 hover:text-accent-strong"
+							>
+								{getLayerDisplayName(relSlug)}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</section>
+		{/if}
+
+		<aside
+			data-testid="layer-detail-methodik-link"
+			class="border border-rule bg-bg p-3"
+		>
+			<p class="font-mono text-xs text-ink-muted">
+				<a
+					href="/methodik"
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				>
+					Methodik
+				</a>
+				· Datenarchitektur, Aggregations-Ebenen, was wir nicht zeigen.
+			</p>
+		</aside>
+	{:else}
+		<aside
+			data-testid="layer-detail-methodology-empty"
+			class="flex flex-col gap-2 border border-rule bg-bg p-4"
+		>
+			<p class="font-serif text-base text-ink">
+				Methodik in Vorbereitung. Wir dokumentieren diesen Layer derzeit noch nicht
+				vollständig.
+			</p>
+			<p class="font-mono text-xs text-ink-muted">
+				<a
+					href="/methodik"
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				>
+					Methodik öffnen
+				</a>
+			</p>
+			<ErrorFeedbackMailto
+				layerSlug={detail.slug}
+				layerName={detail.layerName}
+				sourceUrl={meta.sourceUrl}
+				fetchedAt={meta.fetchedAt}
+			/>
+		</aside>
 	{/if}
 
 	<a

@@ -65,4 +65,29 @@ describe('buildLayerDetail', () => {
 		const d = buildLayerDetail('laerm-2023', 'en', sampleManifest);
 		expect(d?.lang).toBe('en');
 	});
+
+	it('liefert methodology aus LAYER_METHODOLOGY_DE für bekannten Slug', () => {
+		const d = buildLayerDetail('laerm-2023', 'de', sampleManifest);
+		expect(d?.methodology).toBeDefined();
+		expect(d?.methodology?.aggregationLevel).toBe('lor-planungsraum');
+		expect(d?.methodology?.relatedLayers).toContain('luft-2023');
+	});
+
+	it('methodology ist null wenn Slug keinen LayerMethodology-Eintrag hat', () => {
+		const manifestWithoutMethodology = {
+			...sampleManifest,
+			layers: [
+				{
+					...sampleManifest.layers[0],
+					slug: 'unknown-layer-without-methodology'
+				}
+			]
+		};
+		const d = buildLayerDetail(
+			'unknown-layer-without-methodology',
+			'de',
+			manifestWithoutMethodology
+		);
+		expect(d?.methodology).toBeNull();
+	});
 });

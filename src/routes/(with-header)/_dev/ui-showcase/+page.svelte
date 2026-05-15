@@ -11,8 +11,8 @@
 	</header>
 
 	<p class="mb-8 max-w-[64ch] text-base text-ink">
-		Cross-Layer Berlin Atlas: adressgenaue Multi-Layer-Inspektion (Klima, Lärm, Mobilität, Heritage,
-		demografische Daten) auf einer offenen Karte.
+		Adressgenaue Multi-Layer-Inspektion für Berlin: Klima, Lärm, Mobilität, Heritage,
+		demografische Daten auf einer Karte.
 	</p>
 
 	<div class="mb-12 flex flex-wrap items-center gap-3">

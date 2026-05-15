@@ -8,6 +8,7 @@ import {
 	getEditorialConfig
 } from '$lib/components/atlas/internal/editorial-config.js';
 import type { EditorialConfig } from '$lib/components/atlas/internal/editorial-types.js';
+import { getLayerMethodology, type LayerMethodology } from './layer-methodology.js';
 
 export interface LayerDetail {
 	readonly slug: string;
@@ -16,6 +17,7 @@ export interface LayerDetail {
 	readonly explain: LayerExplain;
 	readonly meta: LayerMetadata;
 	readonly editorial?: EditorialConfig;
+	readonly methodology: LayerMethodology | null;
 }
 
 export function buildLayerDetail(
@@ -31,6 +33,7 @@ export function buildLayerDetail(
 		layerName: getLayerDisplayName(slug),
 		explain: getLayerExplainEntry(slug),
 		meta,
-		editorial: getEditorialConfig(slug)
+		editorial: getEditorialConfig(slug),
+		methodology: getLayerMethodology(slug)
 	};
 }

@@ -419,4 +419,18 @@ describe('inspector-panel.svelte', () => {
 			}
 		});
 	});
+
+	describe('Story 1.29 Pivot: Inspector zeigt KEINEN Methodik-Link pro Section (User-Feedback)', () => {
+		it('Methodik-Link pro Section entfernt — Footer-Link reicht', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Mitte')],
+				layerMeta: fullLayerMeta
+			});
+			const section = (await page.getByTestId('section-boundaries').element()) as HTMLElement;
+			const link = section.querySelector('[data-testid^="section-methodik-link-"]');
+			expect(link, 'Methodik-Link soll NICHT pro Section sichtbar sein').toBeNull();
+		});
+	});
 });

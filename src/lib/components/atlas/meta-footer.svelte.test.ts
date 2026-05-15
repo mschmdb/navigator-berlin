@@ -11,11 +11,25 @@ describe('meta-footer.svelte', () => {
 		await expect.element(footer).toBeInTheDocument();
 	});
 
-	it('enthaelt alle 5 Meta-Links (Impressum, Datenschutz, Lizenzen, Architektur, Kontakt)', async () => {
+	it('enthaelt alle 6 Meta-Links (Methodik, Impressum, Datenschutz, Lizenzen, Architektur, Kontakt)', async () => {
 		render(MetaFooter, {});
-		for (const name of ['Impressum', 'Datenschutz', 'Lizenzen', 'Architektur', 'Kontakt']) {
+		for (const name of [
+			'Methodik',
+			'Impressum',
+			'Datenschutz',
+			'Lizenzen',
+			'Architektur',
+			'Kontakt'
+		]) {
 			await expect.element(page.getByRole('link', { name })).toBeInTheDocument();
 		}
+	});
+
+	it('Methodik-Link zeigt auf /methodik', async () => {
+		render(MetaFooter, {});
+		const link = page.getByRole('link', { name: 'Methodik' });
+		const el = (await link.element()) as HTMLAnchorElement;
+		expect(el.getAttribute('href')).toBe('/methodik');
 	});
 
 	it('hat aria-label Meta-Navigation', async () => {

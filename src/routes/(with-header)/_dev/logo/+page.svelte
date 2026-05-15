@@ -67,7 +67,7 @@
 		visually-hidden Label für Screenreader.
 	</p>
 	<div class="flex items-center gap-12 border border-rule p-6">
-		<AnimatedLogo variant="loop" size={192} loadingLabel="Atlas wird geladen" />
+		<AnimatedLogo variant="loop" size={192} loadingLabel="Karte wird geladen" />
 		<AnimatedLogo variant="loop" size={64} loadingLabel="Adresse wird gesucht" />
 		<AnimatedLogo variant="loop" size={32} loadingLabel="Lädt" />
 	</div>

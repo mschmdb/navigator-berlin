@@ -1,4 +1,4 @@
-export const FEEDBACK_EMAIL = 'hallo@navigator.berlin';
+export const FEEDBACK_EMAIL = 'hey@navigator.berlin';
 
 export interface ErrorReportContext {
 	layerSlug: string;

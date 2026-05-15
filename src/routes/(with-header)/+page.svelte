@@ -588,12 +588,12 @@
 	});
 
 	const ogTitle = $derived(
-		ogInput ? `${ogInput.address} · Berlin Navigator` : 'Berlin Navigator · Adress-Atlas'
+		ogInput ? `${ogInput.address} · Berlin Navigator` : 'navigator.berlin · Adress-Daten'
 	);
 	const ogDescription = $derived(
 		ogInput
 			? buildOgDescription(ogInput)
-			: 'Adress-Atlas mit Wohn-, Umwelt-, Klima- und Mobilitäts-Daten für Berlin.'
+			: 'Adress-Daten zu Wohn-, Umwelt-, Klima- und Mobilitäts-Layern für Berlin.'
 	);
 	const ogImageUrl = $derived(buildOgImageUrl(ogInput, page.url.origin));
 	const canonicalUrl = $derived(`${page.url.origin}${page.url.pathname}${page.url.search}`);

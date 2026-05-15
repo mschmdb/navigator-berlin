@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { FEEDBACK_EMAIL, buildErrorReportMailto } from './contact.js';
 
 describe('FEEDBACK_EMAIL', () => {
-	it('ist hallo@navigator.berlin', () => {
-		expect(FEEDBACK_EMAIL).toBe('hallo@navigator.berlin');
+	it('ist hey@navigator.berlin', () => {
+		expect(FEEDBACK_EMAIL).toBe('hey@navigator.berlin');
 	});
 });
 

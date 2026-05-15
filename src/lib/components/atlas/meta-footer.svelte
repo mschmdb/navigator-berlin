@@ -10,11 +10,13 @@
 >
 	<div class="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4">
 		<nav aria-label="Meta-Navigation" class="flex flex-wrap gap-x-4 gap-y-2">
-			<a href="/impressum" class="hover:text-accent">Impressum</a>
+			<a href="/methodik" class="hover:text-accent">Methodik</a>
+			<span aria-hidden="true">·</span>
+			<a href="/lizenzen" class="hover:text-accent">Lizenzen</a>
 			<span aria-hidden="true">·</span>
 			<a href="/datenschutz" class="hover:text-accent">Datenschutz</a>
 			<span aria-hidden="true">·</span>
-			<a href="/lizenzen" class="hover:text-accent">Lizenzen</a>
+			<a href="/impressum" class="hover:text-accent">Impressum</a>
 			<span aria-hidden="true">·</span>
 			<a href="/architektur" class="hover:text-accent">Architektur</a>
 			<span aria-hidden="true">·</span>

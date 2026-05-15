@@ -29,7 +29,7 @@ export function buildOgImageUrl(input: OgImageInput | null, baseUrl: string): st
 export function buildOgDescription(input: OgImageInput | null): string {
 	if (!input) return '';
 	if (input.topLayers.length === 0) {
-		return `Atlas-Daten zur Adresse ${input.address}.`;
+		return `Daten zur Adresse ${input.address}.`;
 	}
-	return `Atlas-Daten zur Adresse: ${input.topLayers.slice(0, MAX_TOP_LAYERS).join(', ')}.`;
+	return `Daten zur Adresse: ${input.topLayers.slice(0, MAX_TOP_LAYERS).join(', ')}.`;
 }

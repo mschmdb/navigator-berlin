@@ -23,7 +23,7 @@
 		variant = 'one-shot',
 		size = 96,
 		title = 'navigator.berlin',
-		loadingLabel = 'Atlas wird geladen',
+		loadingLabel = 'Karte wird geladen',
 		density = 'auto',
 		class: className = ''
 	}: Props = $props();
