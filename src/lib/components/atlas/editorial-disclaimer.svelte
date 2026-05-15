@@ -5,7 +5,15 @@
 		legal: 'Ersetzt keine rechtliche Aussage.',
 		historic: 'Historischer Stand. Geometrie aus OpenStreetMap-Community-Daten.',
 		seasonal: 'Layer aktiv Mai–Oktober. November–April außerhalb der Saison.',
-		source: 'Personen-Hintergrund aus zitierter Quelle. Nicht algorithmisch generiert.'
+		source: 'Personen-Hintergrund aus zitierter Quelle. Nicht algorithmisch generiert.',
+		'compare-stolperstein':
+			'Stolpersteine sind Erinnerung an NS-Opfer, kein Wohn-Bewertungs-Kriterium. Wir zählen nur, ohne zu vergleichen oder zu werten.',
+		'compare-mietspiegel':
+			'Mietspiegel-Wohnlage ist keine Wohnqualität. Niedrigere Stufe heißt nicht „schlechter".',
+		'compare-bodenrichtwerte':
+			'Höherer Bodenrichtwert kann teurere Miete bedeuten, oft aber auch bessere Versorgung. Wir zeigen die Differenz, ohne Bewertung.',
+		'compare-stigma-footer':
+			'Aggregierte Daten pro Lage spiegeln statistische Mittel wider, nicht individuelle Wohnsituationen.'
 	};
 </script>
 

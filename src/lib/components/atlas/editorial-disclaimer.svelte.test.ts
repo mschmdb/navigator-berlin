@@ -67,4 +67,35 @@ describe('editorial-disclaimer.svelte', () => {
 		const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
 		expect(el.id).toBe('disclaimer-mietspiegel');
 	});
+
+	describe('Compare-Variants (Story 1.27)', () => {
+		it('compare-stolperstein → Erinnerung-Würde-Hinweis', async () => {
+			render(EditorialDisclaimer, { variant: 'compare-stolperstein' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Erinnerung an NS-Opfer/);
+			expect(el.textContent).toMatch(/kein Wohn-Bewertungs-Kriterium/);
+			expect(el.getAttribute('data-variant')).toBe('compare-stolperstein');
+		});
+
+		it('compare-mietspiegel → Wohnlage-ist-keine-Wohnqualität-Hinweis', async () => {
+			render(EditorialDisclaimer, { variant: 'compare-mietspiegel' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Mietspiegel-Wohnlage/);
+			expect(el.textContent).toMatch(/Wohnqualität|nicht „schlechter"/);
+		});
+
+		it('compare-bodenrichtwerte → ohne-Bewertung-Hinweis', async () => {
+			render(EditorialDisclaimer, { variant: 'compare-bodenrichtwerte' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Bodenrichtwert/);
+			expect(el.textContent).toMatch(/ohne Bewertung|Differenz/);
+		});
+
+		it('compare-stigma-footer → Aggregat-Hinweis (statistische Mittel)', async () => {
+			render(EditorialDisclaimer, { variant: 'compare-stigma-footer' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Aggregierte Daten|statistische Mittel/);
+			expect(el.textContent).toMatch(/individuelle Wohnsituationen/);
+		});
+	});
 });

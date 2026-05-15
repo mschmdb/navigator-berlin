@@ -5,7 +5,10 @@ import {
 	parseViewport,
 	serializeAddress,
 	serializeLayers,
-	serializeViewport
+	serializeViewport,
+	serializeComparison,
+	parseComparison,
+	buildComparePermalink
 } from './url-state.js';
 
 describe('serializeViewport', () => {
@@ -166,5 +169,115 @@ describe('serializeAddress / parseAddress', () => {
 		const patch = serializeAddress({ lat: 52.5, lng: 13.4 });
 		expect(patch.get('q')).toBeNull();
 		expect(patch.get('address')).toBe('13.40000,52.50000');
+	});
+});
+
+describe('serializeComparison / parseComparison (Story 1.27)', () => {
+	it('serialisiert a + b + active=true → a, b, compare=1', () => {
+		const params = serializeComparison({
+			a: [13.37771234, 52.51631234],
+			b: [13.42201234, 52.51901234],
+			active: true
+		});
+		expect(params.get('a')).toBe('13.37771,52.51631');
+		expect(params.get('b')).toBe('13.42201,52.51901');
+		expect(params.get('compare')).toBe('1');
+	});
+
+	it('active=false → kein compare-Param', () => {
+		const params = serializeComparison({
+			a: [13.4, 52.5],
+			b: [13.5, 52.5],
+			active: false
+		});
+		expect(params.get('compare')).toBeNull();
+	});
+
+	it('a ohne b mit active=true → a + compare=1, b weggelassen', () => {
+		const params = serializeComparison({ a: [13.4, 52.5], active: true });
+		expect(params.get('a')).toBe('13.40000,52.50000');
+		expect(params.get('b')).toBeNull();
+		expect(params.get('compare')).toBe('1');
+	});
+
+	it('leerer State → leere URLSearchParams', () => {
+		const params = serializeComparison({ active: false });
+		expect([...params.keys()]).toEqual([]);
+	});
+
+	it('parseComparison roundtrip mit beiden Adressen', () => {
+		const original = {
+			a: [13.37771, 52.51631] as [number, number],
+			b: [13.42201, 52.51901] as [number, number],
+			active: true
+		};
+		const params = serializeComparison(original);
+		const parsed = parseComparison(params);
+		expect(parsed.a).toEqual([13.37771, 52.51631]);
+		expect(parsed.b).toEqual([13.42201, 52.51901]);
+		expect(parsed.active).toBe(true);
+	});
+
+	it('parseComparison mit compare=1 aber ohne b → active=false (Fallback per AC-7)', () => {
+		const parsed = parseComparison(new URLSearchParams('a=13.4,52.5&compare=1'));
+		expect(parsed.a).toEqual([13.4, 52.5]);
+		expect(parsed.b).toBeUndefined();
+		expect(parsed.active).toBe(false);
+	});
+
+	it('parseComparison toleriert invalid Coordinates', () => {
+		const parsed = parseComparison(new URLSearchParams('a=foo,bar&b=200,100&compare=1'));
+		expect(parsed.a).toBeUndefined();
+		expect(parsed.b).toBeUndefined();
+		expect(parsed.active).toBe(false);
+	});
+
+	it('parseComparison toleriert komplett leere Params', () => {
+		const parsed = parseComparison(new URLSearchParams(''));
+		expect(parsed).toEqual({ active: false });
+	});
+});
+
+describe('buildComparePermalink (Story 1.27)', () => {
+	it('baut vollständigen Permalink mit a + b + compare=1', () => {
+		const url = buildComparePermalink(
+			'https://navigator.berlin',
+			{
+				a: [13.37771, 52.51631],
+				b: [13.42201, 52.51901],
+				active: true
+			},
+			[]
+		);
+		expect(url).toBe(
+			'https://navigator.berlin/?a=13.37771%2C52.51631&b=13.42201%2C52.51901&compare=1'
+		);
+	});
+
+	it('berücksichtigt Layer-CSV via `layers`-Param', () => {
+		const url = buildComparePermalink(
+			'https://navigator.berlin',
+			{ a: [13.4, 52.5], b: [13.5, 52.5], active: true },
+			['mietspiegel-wohnlage', 'laerm-night']
+		);
+		expect(url).toContain('layers=mietspiegel-wohnlage%2Claerm-night');
+	});
+
+	it('ohne active=true (single-mode) → kein compare=1', () => {
+		const url = buildComparePermalink(
+			'https://navigator.berlin',
+			{ a: [13.4, 52.5], active: false },
+			[]
+		);
+		expect(url).not.toContain('compare=1');
+	});
+
+	it('akzeptiert Origin mit Pfad-Suffix', () => {
+		const url = buildComparePermalink(
+			'https://navigator.berlin/de',
+			{ a: [13.4, 52.5], b: [13.5, 52.5], active: true },
+			[]
+		);
+		expect(url.startsWith('https://navigator.berlin/de')).toBe(true);
 	});
 });

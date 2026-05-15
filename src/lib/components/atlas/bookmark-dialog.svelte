@@ -108,6 +108,11 @@
 	}
 
 	function handleSelect(bookmark: Bookmark): void {
+		if (showCompareAction && onCompareSelect) {
+			onCompareSelect(bookmark);
+			close();
+			return;
+		}
 		const suggestion = bookmarkToSuggestion(bookmark);
 		selection.set(suggestion);
 		close();

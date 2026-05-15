@@ -26,12 +26,17 @@
 		type AccessibleFeatureInput
 	} from './internal/feature-describer.js';
 
+	type CompareAddressInfo = { displayName: string };
+
 	type Props = {
 		map: AccessibilityMapLike | null;
 		layers: LayerMetadata[];
 		selectedFeatureId?: string | null;
 		maxItems?: number;
 		onSelectFeature?: (feature: AccessibleFeature) => void;
+		compareA?: CompareAddressInfo | null;
+		compareB?: CompareAddressInfo | null;
+		onSelectCompareSide?: (side: 'a' | 'b') => void;
 	};
 
 	let {
@@ -39,7 +44,10 @@
 		layers,
 		selectedFeatureId = null,
 		maxItems = 50,
-		onSelectFeature
+		onSelectFeature,
+		compareA = null,
+		compareB = null,
+		onSelectCompareSide
 	}: Props = $props();
 
 	let visibleFeatures = $state<AccessibleFeature[]>([]);
@@ -148,6 +156,29 @@
 </script>
 
 <div class="sr-only focus-within:not-sr-only focus-within:fixed focus-within:left-4 focus-within:top-16 focus-within:z-40 focus-within:max-h-[60vh] focus-within:w-[min(28rem,calc(100vw-2rem))] focus-within:overflow-y-auto focus-within:rounded-sm focus-within:border focus-within:border-rule focus-within:bg-bg-elevated focus-within:p-4 focus-within:shadow-lg">
+	{#if compareA && compareB}
+		<div
+			data-testid="map-a11y-compare-buttons"
+			class="mb-3 flex flex-col gap-1 border-b border-rule pb-3"
+		>
+			<button
+				type="button"
+				data-testid="map-a11y-compare-a"
+				onclick={() => onSelectCompareSide?.('a')}
+				class="w-full border border-rule bg-bg px-3 py-2 text-left text-sm text-ink hover:bg-bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+			>
+				<span class="block font-medium">Adresse A: {compareA.displayName}</span>
+			</button>
+			<button
+				type="button"
+				data-testid="map-a11y-compare-b"
+				onclick={() => onSelectCompareSide?.('b')}
+				class="w-full border border-rule bg-bg px-3 py-2 text-left text-sm text-ink hover:bg-bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+			>
+				<span class="block font-medium">Adresse B: {compareB.displayName}</span>
+			</button>
+		</div>
+	{/if}
 	<p id="map-a11y-layer-heading" class="text-sm font-semibold text-ink">
 		Sichtbare Orte und Grenzen auf der Karte
 	</p>

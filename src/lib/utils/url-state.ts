@@ -146,6 +146,62 @@ export function serializeAddress(state: AddressState): URLSearchParams {
 	return params;
 }
 
+export interface ComparisonState {
+	a?: LngLat;
+	b?: LngLat;
+	active: boolean;
+}
+
+function parseLngLat(raw: string | null): LngLat | undefined {
+	if (!raw) return undefined;
+	const parts = raw.split(',').map((s) => parseFloat(s));
+	if (parts.length !== 2) return undefined;
+	const [lng, lat] = parts as [number, number];
+	if (!isValidLng(lng) || !isValidLat(lat)) return undefined;
+	return [lng, lat];
+}
+
+export function serializeComparison(state: ComparisonState): URLSearchParams {
+	const params = new URLSearchParams();
+	if (state.a) {
+		const [lng, lat] = state.a;
+		if (isValidLng(lng) && isValidLat(lat)) {
+			params.set('a', `${fixCoord(lng)},${fixCoord(lat)}`);
+		}
+	}
+	if (state.b) {
+		const [lng, lat] = state.b;
+		if (isValidLng(lng) && isValidLat(lat)) {
+			params.set('b', `${fixCoord(lng)},${fixCoord(lat)}`);
+		}
+	}
+	if (state.active) params.set('compare', '1');
+	return params;
+}
+
+export function parseComparison(params: URLSearchParams): ComparisonState {
+	const out: ComparisonState = { active: false };
+	const a = parseLngLat(params.get('a'));
+	const b = parseLngLat(params.get('b'));
+	if (a) out.a = a;
+	if (b) out.b = b;
+	// AC-7: compare=1 ohne b fällt auf single-mode zurück
+	if (params.get('compare') === '1' && a && b) out.active = true;
+	return out;
+}
+
+export function buildComparePermalink(
+	origin: string,
+	state: ComparisonState,
+	layers: readonly string[]
+): string {
+	const params = serializeComparison(state);
+	if (layers.length > 0) params.set('layers', serializeLayers([...layers]));
+	const base = origin.endsWith('/') ? origin : `${origin}/`;
+	const query = params.toString();
+	return query ? `${base}?${query}` : base;
+}
+
 export function parseAddress(params: URLSearchParams): AddressState {
 	const out: AddressState = {};
 	const address = params.get('address');

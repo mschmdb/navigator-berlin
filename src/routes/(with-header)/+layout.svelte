@@ -4,8 +4,9 @@
 	import { geocodeAddress } from '$lib/data/geocode.remote.js';
 	import type { GeocodeSuggestion } from '$lib/data';
 	import { provideAddressSelection } from '$lib/state/address-selection.svelte.js';
-	import { getUiState } from '$lib/state/ui-context.svelte.js';
-	import { isBookmarked } from '$lib/state/bookmark-store.js';
+	import { getUiState, setComparisonAddress } from '$lib/state/ui-context.svelte.js';
+	import { isBookmarked, bookmarkToSuggestion } from '$lib/state/bookmark-store.js';
+	import type { Bookmark } from '$lib/state/bookmark-schema.js';
 
 	let { children } = $props();
 
@@ -35,6 +36,12 @@
 				)
 			: false
 	);
+
+	const inComparePickMode = $derived(ui.compareMode && !ui.comparisonAddress);
+
+	function handleCompareSelect(bookmark: Bookmark): void {
+		setComparisonAddress(ui, bookmarkToSuggestion(bookmark));
+	}
 </script>
 
 <SiteHeader
@@ -51,4 +58,7 @@
 	{@render children()}
 </main>
 
-<BookmarkDialog />
+<BookmarkDialog
+	showCompareAction={inComparePickMode}
+	onCompareSelect={handleCompareSelect}
+/>

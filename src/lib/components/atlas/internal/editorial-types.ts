@@ -1,6 +1,14 @@
 import type { Feature, Point } from 'geojson';
 
-export type DisclaimerVariant = 'legal' | 'historic' | 'seasonal' | 'source';
+export type DisclaimerVariant =
+	| 'legal'
+	| 'historic'
+	| 'seasonal'
+	| 'source'
+	| 'compare-stolperstein'
+	| 'compare-mietspiegel'
+	| 'compare-bodenrichtwerte'
+	| 'compare-stigma-footer';
 
 export type EditorialCustomComponent = 'StolpersteinDetail' | 'MauerSektorenDetail';
 

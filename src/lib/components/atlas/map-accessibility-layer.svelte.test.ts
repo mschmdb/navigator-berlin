@@ -231,4 +231,71 @@ describe('MapAccessibilityLayer', () => {
 		const empty = page.getByText(/Keine sichtbaren Features/);
 		await expect.element(empty).toBeInTheDocument();
 	});
+
+	describe('Compare-Marker (Story 1.27)', () => {
+		it('rendert Compare-Buttons wenn beide Adressen gesetzt', async () => {
+			const map = createFakeMap([]);
+			render(MapAccessibilityLayer, {
+				props: {
+					map,
+					layers: [bezirkeLayer],
+					compareA: { displayName: 'Karl-Marx-Allee 1' },
+					compareB: { displayName: 'Sonnenallee 100' }
+				}
+			});
+			await expect.element(page.getByTestId('map-a11y-compare-buttons')).toBeInTheDocument();
+			const aBtn = (await page.getByTestId('map-a11y-compare-a').element()) as HTMLElement;
+			expect(aBtn.textContent).toMatch(/Karl-Marx-Allee 1/);
+			const bBtn = (await page.getByTestId('map-a11y-compare-b').element()) as HTMLElement;
+			expect(bBtn.textContent).toMatch(/Sonnenallee 100/);
+		});
+
+		it('Tab-Reihenfolge: Compare-A vor Compare-B (DOM-Order)', async () => {
+			const map = createFakeMap([]);
+			render(MapAccessibilityLayer, {
+				props: {
+					map,
+					layers: [bezirkeLayer],
+					compareA: { displayName: 'A' },
+					compareB: { displayName: 'B' }
+				}
+			});
+			const aBtn = (await page.getByTestId('map-a11y-compare-a').element()) as HTMLElement;
+			const bBtn = (await page.getByTestId('map-a11y-compare-b').element()) as HTMLElement;
+			expect(aBtn.compareDocumentPosition(bBtn) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+		});
+
+		it('Klick ruft onSelectCompareSide mit "a" oder "b"', async () => {
+			const map = createFakeMap([]);
+			const onSelect = vi.fn();
+			render(MapAccessibilityLayer, {
+				props: {
+					map,
+					layers: [bezirkeLayer],
+					compareA: { displayName: 'A' },
+					compareB: { displayName: 'B' },
+					onSelectCompareSide: onSelect
+				}
+			});
+			await page.getByTestId('map-a11y-compare-b').click();
+			expect(onSelect).toHaveBeenCalledWith('b');
+			await page.getByTestId('map-a11y-compare-a').click();
+			expect(onSelect).toHaveBeenCalledWith('a');
+		});
+
+		it('keine Compare-Buttons wenn nur eine Adresse vorhanden', async () => {
+			const map = createFakeMap([]);
+			render(MapAccessibilityLayer, {
+				props: {
+					map,
+					layers: [bezirkeLayer],
+					compareA: { displayName: 'A' },
+					compareB: null
+				}
+			});
+			await expect
+				.element(page.getByTestId('map-a11y-compare-buttons'))
+				.not.toBeInTheDocument();
+		});
+	});
 });

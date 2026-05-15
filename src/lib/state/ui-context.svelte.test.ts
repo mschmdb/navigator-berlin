@@ -11,8 +11,17 @@ import {
 	addBookmark,
 	removeBookmark,
 	clearBookmarks,
+	toggleCompareMode,
+	setComparisonAddress,
+	exitCompareMode,
 	type UiState
 } from './ui-context.svelte.js';
+import type {
+	GeocodeSuggestion,
+	LayerHit,
+	ClimateStation,
+	ClimateData
+} from '$lib/data';
 import type { Bookmark } from './bookmark-schema.js';
 
 function makeState(): UiState {
@@ -30,7 +39,25 @@ function makeState(): UiState {
 		hiddenLayerSlugs: [],
 		oepnvStopIndex: null,
 		bookmarks: [],
-		bookmarksDialogOpen: false
+		bookmarksDialogOpen: false,
+		compareMode: false,
+		comparisonAddress: null,
+		comparisonLayerHits: [],
+		comparisonClimateStation: null,
+		comparisonClimateSeries: null,
+		comparisonLoading: false
+	};
+}
+
+function makeAddress(overrides: Partial<GeocodeSuggestion> = {}): GeocodeSuggestion {
+	return {
+		id: 'addr-b',
+		displayName: 'Karl-Marx-Allee 1, Berlin',
+		lat: 52.519,
+		lng: 13.422,
+		type: 'address',
+		addresstype: 'building',
+		...overrides
 	};
 }
 
@@ -199,6 +226,101 @@ describe('ui-context', () => {
 			addBookmark(s, makeBookmark());
 			clearBookmarks(s);
 			expect(s.bookmarks).toEqual([]);
+		});
+	});
+
+	describe('compare-mode (Story 1.27)', () => {
+		it('initial: compareMode=false, alle Compare-Felder leer/null', () => {
+			const s = makeState();
+			expect(s.compareMode).toBe(false);
+			expect(s.comparisonAddress).toBeNull();
+			expect(s.comparisonLayerHits).toEqual([]);
+			expect(s.comparisonClimateStation).toBeNull();
+			expect(s.comparisonClimateSeries).toBeNull();
+			expect(s.comparisonLoading).toBe(false);
+		});
+
+		it('toggleCompareMode aktiviert Modus (false → true)', () => {
+			const s = makeState();
+			toggleCompareMode(s);
+			expect(s.compareMode).toBe(true);
+		});
+
+		it('toggleCompareMode deaktiviert Modus und clearant alle Compare-Felder', () => {
+			const s = makeState();
+			s.compareMode = true;
+			s.comparisonAddress = makeAddress();
+			s.comparisonLayerHits = [
+				{ layer: 'bezirke', value: 'Mitte', source: 'x', updatedAt: '2024-01-01', license: 'CC BY 4.0' } as LayerHit
+			];
+			s.comparisonClimateStation = { id: 's1', name: 'Dahlem', coordinates: [13.3, 52.5], firstYear: 1950 } as ClimateStation;
+			s.comparisonClimateSeries = { stationId: 's1' } as unknown as ClimateData;
+			s.comparisonLoading = true;
+			toggleCompareMode(s);
+			expect(s.compareMode).toBe(false);
+			expect(s.comparisonAddress).toBeNull();
+			expect(s.comparisonLayerHits).toEqual([]);
+			expect(s.comparisonClimateStation).toBeNull();
+			expect(s.comparisonClimateSeries).toBeNull();
+			expect(s.comparisonLoading).toBe(false);
+		});
+
+		it('setComparisonAddress(addr) setzt Adresse', () => {
+			const s = makeState();
+			const addr = makeAddress();
+			setComparisonAddress(s, addr);
+			expect(s.comparisonAddress).toBe(addr);
+		});
+
+		it('setComparisonAddress(null) leert Adresse + abhängige Daten', () => {
+			const s = makeState();
+			s.comparisonAddress = makeAddress();
+			s.comparisonLayerHits = [
+				{ layer: 'bezirke', value: 'Mitte', source: 'x', updatedAt: '2024-01-01', license: 'CC BY 4.0' } as LayerHit
+			];
+			s.comparisonClimateStation = { id: 's1', name: 'Dahlem', coordinates: [13.3, 52.5], firstYear: 1950 } as ClimateStation;
+			s.comparisonClimateSeries = { stationId: 's1' } as unknown as ClimateData;
+			setComparisonAddress(s, null);
+			expect(s.comparisonAddress).toBeNull();
+			expect(s.comparisonLayerHits).toEqual([]);
+			expect(s.comparisonClimateStation).toBeNull();
+			expect(s.comparisonClimateSeries).toBeNull();
+		});
+
+		it('setComparisonAddress(neuAddr) ersetzt Adresse und leert Layer-Hits/Klima (Re-Fetch-Trigger)', () => {
+			const s = makeState();
+			const addrA = makeAddress({ id: 'a', displayName: 'A' });
+			const addrB = makeAddress({ id: 'b', displayName: 'B' });
+			setComparisonAddress(s, addrA);
+			s.comparisonLayerHits = [
+				{ layer: 'bezirke', value: 'Mitte', source: 'x', updatedAt: '2024-01-01', license: 'CC BY 4.0' } as LayerHit
+			];
+			setComparisonAddress(s, addrB);
+			expect(s.comparisonAddress).toBe(addrB);
+			expect(s.comparisonLayerHits).toEqual([]);
+		});
+
+		it('exitCompareMode setzt compareMode=false und clearant alle Compare-Felder', () => {
+			const s = makeState();
+			s.compareMode = true;
+			s.comparisonAddress = makeAddress();
+			s.comparisonLayerHits = [
+				{ layer: 'bezirke', value: 'Mitte', source: 'x', updatedAt: '2024-01-01', license: 'CC BY 4.0' } as LayerHit
+			];
+			s.comparisonLoading = true;
+			exitCompareMode(s);
+			expect(s.compareMode).toBe(false);
+			expect(s.comparisonAddress).toBeNull();
+			expect(s.comparisonLayerHits).toEqual([]);
+			expect(s.comparisonLoading).toBe(false);
+		});
+
+		it('comparisonLoading kann manuell toggled werden für Skeleton-State', () => {
+			const s = makeState();
+			s.comparisonLoading = true;
+			expect(s.comparisonLoading).toBe(true);
+			s.comparisonLoading = false;
+			expect(s.comparisonLoading).toBe(false);
 		});
 	});
 });

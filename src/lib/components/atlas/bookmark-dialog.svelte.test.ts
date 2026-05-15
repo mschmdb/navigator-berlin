@@ -131,6 +131,21 @@ describe('bookmark-dialog', () => {
 		await expect.element(page.getByTestId('bookmark-compare')).not.toBeInTheDocument();
 	});
 
+	it('Row-Click in showCompareAction-Mode ruft onCompareSelect (Story 1.27)', async () => {
+		const bm = makeBookmark();
+		render(Harness, {
+			open: true,
+			initialBookmarks: [bm],
+			showCompareAction: true
+		});
+		await page.getByTestId('bookmark-select').click();
+		const dump = (await page.getByTestId('ui-dump').element()) as HTMLElement;
+		const state = JSON.parse(dump.textContent ?? '{}');
+		expect(state.comparePicks).toContain(bm.id);
+		expect(state.selectedId).toBeNull();
+		expect(state.open).toBe(false);
+	});
+
 	it('Counter zeigt Anzahl/MAX', async () => {
 		render(Harness, { open: true, initialBookmarks: [makeBookmark()] });
 		const counter = (await page.getByTestId('bookmark-counter').element()) as HTMLElement;

@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { Share2, X, Bookmark, BookmarkCheck, Check } from '@lucide/svelte';
+	import { Share2, X, Bookmark, BookmarkCheck, Check, GitCompare } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
 	import {
 		getUiState,
 		toggleLayer,
-		addBookmark
+		addBookmark,
+		toggleCompareMode
 	} from '$lib/state/ui-context.svelte.js';
+	import { featureFlags } from '$lib/data/feature-flags.js';
 	import {
 		createBookmark,
 		isBookmarked,
@@ -298,6 +300,19 @@
 						<span>Bookmark</span>
 					{/if}
 				</button>
+				{#if featureFlags.compareMode}
+					<button
+						type="button"
+						onclick={() => toggleCompareMode(ui)}
+						data-testid="compare-trigger"
+						aria-label="Mit Adresse vergleichen"
+						aria-pressed={ui.compareMode}
+						class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+					>
+						<GitCompare size={14} aria-hidden="true" />
+						<span>Vergleichen</span>
+					</button>
+				{/if}
 				<div class="relative">
 					<button
 						type="button"

@@ -9,6 +9,7 @@
 		type MapHoverApi
 	} from '$lib/components/atlas/map-hover-tooltip.svelte';
 	import InspectorPanel from '$lib/components/atlas/inspector-panel.svelte';
+	import ComparePanel from '$lib/components/atlas/compare-panel/compare-panel.svelte';
 	import BottomSheet from '$lib/components/atlas/inspector-panel/bottom-sheet.svelte';
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
 	import { createPlexMarker } from '$lib/components/atlas/internal/map-markers.js';
@@ -47,7 +48,13 @@
 	} from '$lib/components/atlas/internal/layer-style-cascade.js';
 	import { sortSlugsByBundleStable } from '$lib/components/atlas/internal/layer-order-sorting.js';
 	import { applyHiddenSlugs, exceedsPolygonLimit } from '$lib/components/atlas/internal/layer-visibility.js';
-	import { toggleLayerHidden, removeLayer as removeUiLayer } from '$lib/state/ui-context.svelte.js';
+	import {
+		toggleLayerHidden,
+		removeLayer as removeUiLayer,
+		setComparisonAddress,
+		exitCompareMode
+	} from '$lib/state/ui-context.svelte.js';
+	import { geocodeAddress } from '$lib/data/geocode.remote.js';
 	import {
 		diffLayerSlugs,
 		sourceIdFor,
@@ -438,6 +445,15 @@
 	}
 
 	async function onClick(lngLat: [number, number]) {
+		if (ui.compareMode && ui.selectedAddress) {
+			if (!isInBerlin(lngLat[1], lngLat[0])) {
+				showOutsideBerlinHint();
+				announceGlobal('Bitte wähle eine Adresse innerhalb Berlins');
+				return;
+			}
+			pendingReplaceLngLat = lngLat;
+			return;
+		}
 		if (currentMarker) {
 			const m = currentMarker.getLngLat();
 			const dx = m.lng - lngLat[0];
@@ -561,11 +577,166 @@
 		ui.inspectorOpen = false;
 	}
 
+	let pendingReplaceLngLat = $state<[number, number] | null>(null);
+
+	async function geocodeForCompare(q: string): Promise<GeocodeSuggestion[]> {
+		try {
+			return await geocodeAddress({ q }).run();
+		} catch {
+			return [];
+		}
+	}
+
+	$effect(() => {
+		const addr = ui.comparisonAddress;
+		if (!addr) return;
+		ui.comparisonLoading = true;
+		void (async () => {
+			try {
+				const hits = await getLayersAtPoint(addr.lat, addr.lng, undefined, pmtilesQuery);
+				if (ui.comparisonAddress?.id === addr.id) {
+					ui.comparisonLayerHits = hits;
+				}
+			} catch {
+				ui.comparisonLayerHits = [];
+			}
+			try {
+				const station = getNearestClimateStation(addr.lat, addr.lng);
+				if (ui.comparisonAddress?.id === addr.id) {
+					ui.comparisonClimateStation = station;
+				}
+				const series = await getClimateSeries(station.id);
+				if (ui.comparisonAddress?.id === addr.id) {
+					ui.comparisonClimateSeries = series;
+				}
+			} catch {
+				ui.comparisonClimateStation = null;
+				ui.comparisonClimateSeries = null;
+			}
+			if (ui.comparisonAddress?.id === addr.id) {
+				ui.comparisonLoading = false;
+			}
+		})();
+	});
+
+	const COMPARE_SOURCE_ID = 'compare-markers';
+	const COMPARE_LAYER_ID = 'compare-markers-symbol';
+
+	function buildCompareMarkerFc(
+		a: GeocodeSuggestion,
+		b: GeocodeSuggestion
+	): GeoJSON.FeatureCollection {
+		return {
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: { type: 'Point', coordinates: [a.lng, a.lat] },
+					properties: { label: 'A', name: a.displayName }
+				},
+				{
+					type: 'Feature',
+					geometry: { type: 'Point', coordinates: [b.lng, b.lat] },
+					properties: { label: 'B', name: b.displayName }
+				}
+			]
+		};
+	}
+
+	function removeCompareMarkers(): void {
+		if (!rawMap) return;
+		const map = rawMap as MapWithLayers;
+		if (map.getLayer(COMPARE_LAYER_ID)) map.removeLayer(COMPARE_LAYER_ID);
+		if (map.getSource(COMPARE_SOURCE_ID)) map.removeSource(COMPARE_SOURCE_ID);
+	}
+
+	$effect(() => {
+		const a = ui.selectedAddress;
+		const b = ui.comparisonAddress;
+		const active = ui.compareMode;
+		if (!rawMap) return;
+		if (!active || !a || !b) {
+			removeCompareMarkers();
+			return;
+		}
+		const map = rawMap as MapWithLayers & {
+			fitBounds?: (
+				bounds: [[number, number], [number, number]],
+				opts: { padding: number; essential?: boolean }
+			) => void;
+		};
+		const fc = buildCompareMarkerFc(a, b);
+		const existing = map.getSource(COMPARE_SOURCE_ID) as
+			| { setData?: (data: unknown) => void }
+			| undefined;
+		if (existing?.setData) {
+			existing.setData(fc);
+		} else {
+			if (map.getLayer(COMPARE_LAYER_ID)) map.removeLayer(COMPARE_LAYER_ID);
+			if (map.getSource(COMPARE_SOURCE_ID)) map.removeSource(COMPARE_SOURCE_ID);
+			map.addSource(COMPARE_SOURCE_ID, { type: 'geojson', data: fc });
+			map.addLayer({
+				id: COMPARE_LAYER_ID,
+				type: 'symbol',
+				source: COMPARE_SOURCE_ID,
+				layout: {
+					'text-field': ['get', 'label'],
+					'text-font': ['IBM Plex Mono Bold'],
+					'text-size': 16,
+					'text-allow-overlap': true
+				},
+				paint: {
+					'text-color': '#ffffff',
+					'text-halo-color': '#0044ff',
+					'text-halo-width': 4
+				}
+			} as MapLibreLayerSpec);
+		}
+		if (map.fitBounds) {
+			const minLng = Math.min(a.lng, b.lng);
+			const maxLng = Math.max(a.lng, b.lng);
+			const minLat = Math.min(a.lat, b.lat);
+			const maxLat = Math.max(a.lat, b.lat);
+			map.fitBounds(
+				[
+					[minLng, minLat],
+					[maxLng, maxLat]
+				],
+				{ padding: 100, essential: true }
+			);
+		}
+	});
+
+	async function applyReplace(target: 'a' | 'b'): Promise<void> {
+		const lngLat = pendingReplaceLngLat;
+		pendingReplaceLngLat = null;
+		if (!lngLat) return;
+		try {
+			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] }).run();
+			if (!suggestion) return;
+			if (target === 'a') {
+				selection.set(suggestion);
+				await placeMarker([suggestion.lng, suggestion.lat], suggestion.displayName);
+				await openInspectorFor(suggestion);
+			} else {
+				setComparisonAddress(ui, suggestion);
+			}
+		} catch {
+			// Reverse-Geocode hat keinen Treffer; Replace abbrechen.
+		}
+	}
+
+	function openBookmarkPickerForCompare(): void {
+		ui.bookmarksDialogOpen = true;
+	}
+
 	const showSidePanel = $derived(
-		viewport.breakpoint !== 'mobile' && ui.inspectorOpen && ui.selectedAddress !== null
+		viewport.breakpoint !== 'mobile' &&
+			((ui.inspectorOpen && ui.selectedAddress !== null) || ui.compareMode)
 	);
 	const showBottomSheet = $derived(
-		viewport.breakpoint === 'mobile' && ui.inspectorOpen && ui.selectedAddress !== null
+		viewport.breakpoint === 'mobile' &&
+			((ui.inspectorOpen && ui.selectedAddress !== null) || ui.compareMode)
 	);
 
 	const ogInput = $derived.by<OgImageInput | null>(() => {
@@ -642,6 +813,18 @@
 			layers={manifestLayers}
 			{selectedFeatureId}
 			onSelectFeature={onSelectAccessibleFeature}
+			compareA={ui.compareMode && ui.selectedAddress
+				? { displayName: ui.selectedAddress.displayName }
+				: null}
+			compareB={ui.compareMode && ui.comparisonAddress
+				? { displayName: ui.comparisonAddress.displayName }
+				: null}
+			onSelectCompareSide={(side) => {
+				const targetEl = document.querySelector(
+					side === 'a' ? '[data-testid="compare-address-a"]' : '[data-testid="compare-address-b"]'
+				) as HTMLElement | null;
+				targetEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}}
 		/>
 		<MapLegend
 			activeLayerSlugs={ui.activeLayerSlugs}
@@ -672,10 +855,18 @@
 	{#if showSidePanel}
 		<aside
 			class="border-t border-rule bg-bg-elevated lg:border-l lg:border-t-0"
-			aria-label="Adress-Inspector-Bereich"
+			aria-label={ui.compareMode ? 'Adress-Vergleich' : 'Adress-Inspector-Bereich'}
 			data-testid="inspector-slot"
 		>
-			<InspectorPanel layerMeta={manifestLayers} />
+			{#if ui.compareMode}
+				<ComparePanel
+					layerMeta={manifestLayers}
+					geocode={geocodeForCompare}
+					onOpenBookmarkPicker={openBookmarkPickerForCompare}
+				/>
+			{:else}
+				<InspectorPanel layerMeta={manifestLayers} />
+			{/if}
 		</aside>
 	{/if}
 	{#if showBottomSheet}
@@ -683,11 +874,63 @@
 			open
 			snapVh={ui.sheetSnapVh}
 			onSnap={setSnap}
-			onClose={closeInspector}
-			ariaLabel="Adress-Inspektor"
+			onClose={ui.compareMode ? () => exitCompareMode(ui) : closeInspector}
+			ariaLabel={ui.compareMode ? 'Adress-Vergleich' : 'Adress-Inspektor'}
 		>
-			<InspectorPanel layerMeta={manifestLayers} variant="sheet" />
+			{#if ui.compareMode}
+				<ComparePanel
+					layerMeta={manifestLayers}
+					geocode={geocodeForCompare}
+					onOpenBookmarkPicker={openBookmarkPickerForCompare}
+				/>
+			{:else}
+				<InspectorPanel layerMeta={manifestLayers} variant="sheet" />
+			{/if}
 		</BottomSheet>
+	{/if}
+	{#if pendingReplaceLngLat}
+		<div
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="compare-replace-title"
+			data-testid="compare-replace-dialog"
+			class="fixed inset-0 z-50 flex items-center justify-center bg-bg/70 p-4"
+		>
+			<div class="w-full max-w-sm border border-rule bg-bg-elevated p-5 shadow-md">
+				<h3 id="compare-replace-title" class="font-serif text-lg text-ink">
+					Welche Adresse ersetzen?
+				</h3>
+				<p class="mt-2 font-sans text-sm text-ink-muted">
+					Du bist im Vergleichs-Modus. Klick auf die Karte hat eine neue Adresse erfasst.
+				</p>
+				<div class="mt-4 flex flex-wrap gap-2">
+					<button
+						type="button"
+						data-testid="compare-replace-a"
+						onclick={() => void applyReplace('a')}
+						class="border-b border-rule-strong px-3 py-2 text-sm hover:bg-bg"
+					>
+						Adresse A ersetzen
+					</button>
+					<button
+						type="button"
+						data-testid="compare-replace-b"
+						onclick={() => void applyReplace('b')}
+						class="border-b border-rule-strong px-3 py-2 text-sm hover:bg-bg"
+					>
+						Adresse B ersetzen
+					</button>
+					<button
+						type="button"
+						data-testid="compare-replace-cancel"
+						onclick={() => (pendingReplaceLngLat = null)}
+						class="px-3 py-2 text-sm text-ink-muted hover:text-ink"
+					>
+						Abbrechen
+					</button>
+				</div>
+			</div>
+		</div>
 	{/if}
 </section>
 

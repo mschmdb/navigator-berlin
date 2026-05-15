@@ -39,6 +39,13 @@ export interface UiState {
 	/** Story 1.26: lokale Adress-Bookmarks (LocalStorage-Mirror, siehe ADR-004). */
 	bookmarks: Bookmark[];
 	bookmarksDialogOpen: boolean;
+	/** Story 1.27: Side-by-Side-Compare-Modus. */
+	compareMode: boolean;
+	comparisonAddress: GeocodeSuggestion | null;
+	comparisonLayerHits: LayerHit[];
+	comparisonClimateStation: ClimateStation | null;
+	comparisonClimateSeries: ClimateData | null;
+	comparisonLoading: boolean;
 }
 
 export function createUiState(): UiState {
@@ -56,7 +63,13 @@ export function createUiState(): UiState {
 		hiddenLayerSlugs: [],
 		oepnvStopIndex: null,
 		bookmarks: [],
-		bookmarksDialogOpen: false
+		bookmarksDialogOpen: false,
+		compareMode: false,
+		comparisonAddress: null,
+		comparisonLayerHits: [],
+		comparisonClimateStation: null,
+		comparisonClimateSeries: null,
+		comparisonLoading: false
 	});
 	setContext(KEY, state);
 	return state;
@@ -124,4 +137,34 @@ export function removeBookmark(state: UiState, id: string): void {
 
 export function clearBookmarks(state: UiState): void {
 	state.bookmarks = [];
+}
+
+function clearComparisonData(state: UiState): void {
+	state.comparisonLayerHits = [];
+	state.comparisonClimateStation = null;
+	state.comparisonClimateSeries = null;
+}
+
+export function toggleCompareMode(state: UiState): void {
+	state.compareMode = !state.compareMode;
+	if (!state.compareMode) {
+		state.comparisonAddress = null;
+		clearComparisonData(state);
+		state.comparisonLoading = false;
+	}
+}
+
+export function setComparisonAddress(
+	state: UiState,
+	address: GeocodeSuggestion | null
+): void {
+	state.comparisonAddress = address;
+	clearComparisonData(state);
+}
+
+export function exitCompareMode(state: UiState): void {
+	state.compareMode = false;
+	state.comparisonAddress = null;
+	clearComparisonData(state);
+	state.comparisonLoading = false;
 }

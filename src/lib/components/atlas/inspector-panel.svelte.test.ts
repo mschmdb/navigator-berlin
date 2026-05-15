@@ -233,6 +233,21 @@ describe('inspector-panel.svelte', () => {
 				.element(page.getByTestId('inspector-bookmark-confirmation'))
 				.toBeInTheDocument();
 		});
+
+		it('Compare-Trigger sichtbar in Toolbar (Story 1.27)', async () => {
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
+			const trigger = (await page.getByTestId('compare-trigger').element()) as HTMLElement;
+			expect(trigger).toBeTruthy();
+			expect(trigger.getAttribute('aria-label')).toMatch(/vergleichen/i);
+			expect(trigger.getAttribute('aria-pressed')).toBe('false');
+		});
+
+		it('Compare-Trigger-Click setzt aria-pressed auf true (Story 1.27)', async () => {
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
+			await page.getByTestId('compare-trigger').click();
+			const trigger = (await page.getByTestId('compare-trigger').element()) as HTMLElement;
+			expect(trigger.getAttribute('aria-pressed')).toBe('true');
+		});
 	});
 
 	it('LayerHitRow erhält no-coverage-State weiter', async () => {
