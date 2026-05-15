@@ -4,7 +4,9 @@
  */
 export const featureFlags = Object.freeze({
 	/** Story 1.27: Side-by-Side Adress-Vergleich (Compare-Modus). */
-	compareMode: true
+	compareMode: true,
+	/** Story 1.28: Kiez-Score Cross-Layer-Index als Inspector-Section + Karten-Layer. */
+	kiezScore: true
 });
 
 export type FeatureFlag = keyof typeof featureFlags;

@@ -36,6 +36,22 @@
 
 generated: 2026-05-11
 last_updated: 2026-05-15
+# story 2-7 created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-WebMCP): 5 Tools + URI-Resources + 3 Prompt-Templates + WebMCP-Manifest; 8 ACs + 8 Task-Cluster + 5 Open-Questions; Spec-Status-Risiko aufgedeckt: webmcp@^0.0.1-Dep ist Empty-Stub-NPM-Package (nur README), @mcp-b/global-Existenz zum Dev-Start prüfen + Polyfill-Alternative bereithalten; ADR-002-webmcp.md ist Proposed-Stub mit leeren Sektionen — diese Story füllt aus; native navigator.modelContext Chrome 146+ Conditional-Polyfill-Load; strikte Datenpfad-Delegation an $lib/data/ (kein eigener Datenpfad in webmcp-Tools, Architecture-Boundary); snake_case-Konvention für JSON-Tool-Names + Param-Names mit case-mapper an Tool-Boundary; FR40-Provenance source/updated_at/license bleibt in allen Tool-Outputs durchgereicht (LLM-Zitierbarkeit); 5 Tools delegieren an: geocode.remote.ts, getLayersAtPoint, getKiezProfile, getLayerMetadata, list-layers-variant; Manifest Doppel-Serving via static/webmcp-manifest.json + routes/+server.ts; manueller Verifikations-Pfad via Claude-Browser-Extension oder MCP-Inspector-CLI (kein headless E2E)
+# story 1-31 Pre-Implementation-Schärfungen (2026-05-15, User-UX-Review-Iteration 2): 6 Konflikte gefixt + 3 Kleinkram. (1) Pan-Compass: Position oben rechts hart-locked (kein Border, Konvention Google/MapLibre, Attribution unten bleibt sauber). (2) `/`-Shortcut hart-reserviert für LayerPalette, Adress-Suche im Inspector ausschließlich via Icon-Klick/Hover (`s` zu Phase-2-Backlog) → AC-2 + AC-3 widerspruchsfrei. (3) Mobilität-Pivot-Path entkoppelt: `kiez-score-mobilitaet: { family: 'gut', pendingValidation: true }` + experimentell-Banner; Code-Sprint geht durch, User-Smoke-Test läuft asynchron, Pivot zu Punkt-Dichte-Layer ggf. als Folge-Story. (4) Token-System auf **3 Familien × 5 Stufen = 15 Tokens** statt 3×4 (sauber für 5-stufige Umweltgerechtigkeit, 4-stufige Profile nutzen Sub-Set {1,2,4,5}, 3-stufige {1,3,5}, 5-stufige alle). (5) MapLibre-Attribution: `attributionControl: false` + Custom-Svelte-Komponente `<MapAttribution>` mit Plex-Sans + text-shadow-Halo statt MapLibre-Internal-CSS-Frickelei (Lizenz-Sichtbarkeit bleibt erfüllt). (6) Direktiven-Patch in **zwei Files**: AC-13a `_user-input/navigator-berlin-design.md` (Radius Zeile 15 + Choropleth-Skalen Zeile 113), AC-13b `_bmad-output/planning-artifacts/ux-design-specification.md` (LayerPalette Zeile 557 + Tastatur-Shortcuts-Sektion mit `/`-Reservierung). Kleinkram: axe-CI-Run aus AC-15 raus (gehört zu CI-Setup, nicht Story), Kontrast-Auto-Justierer mit max 10 Iterationen + Build-Fail-Throw bei Nicht-Erreichung, Layer-Synonyme NFD-normalize für Umlaut-Toleranz („gruen" findet „grün", „laerm" findet „Lärm"). Story 1-31 jetzt 15 ACs / 11 Tasks, widerspruchsfrei.
+# story 2-6 created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-OG-Pipeline): Karten-Snapshots + Satori-Overlay für ~380 PNGs (Bezirk/Kiez/Layer × DE/EN); 8 ACs + 7 Task-Cluster + 5 Open-Questions; Re-use bestehender 1.20-Pipeline (loadDefaultOgFonts/renderOgCardPng aus og-card-renderer.ts) + Memory project_satori_font_pipeline.md (kein woff2, kein Variable, sequenzielles wawoff2); zwei separate Build-Steps: og:snapshots (Karten-PNG via Headless-Playwright) + og:images (Satori-Overlay mit Plex-Brand + Top-3-Stats); Empfehlungen: Top-3 fix L_DEN+PET+Stationen/km² statt Abweichungs-basiert, ohne Filename-Hash + 24h-Cache, static/og/ gitignored als Build-Output; konsumiert 2.0 (Top-3-Aggregat) + 2.3/2.4/2.5a (Meta-Tag-Konsumenten); Build-Zeit-Risiko bei Story-2.4-Variante-B (1.084 Kiez-Routen würden ~1000 PNGs erzeugen, Pipeline-Cap auf Top-50-Kieze möglich); Layer-OG-Bilder anders strukturiert (Layer-Concept-Card statt Bezirks-Wert)
+# epic-1 closure (2026-05-15, User-Sign-off): Alle 30 Stories review → done (1-1..1-30 inkl. 1-10c + 1-10d). epic-1 in-progress → done. epic-1-retrospective bleibt optional. Live-User-Verify positiv (Atlas-Charakter, Severity-Chips, Compare-Tabelle, Layer-Detail-Pages, Map-Style funktionieren laut UX-Review). UX-Refinements aus User-Review als Story 1-31 nachgezogen.
+# story 1-31 created backlog → ready-for-dev (2026-05-15, User-UX-Review post-Epic-1-Closure): UI/UX-Polish-Wave aus 7-Punkte-Feedback + Layer-Einstieg-Korrektur per User-Pivot: Karten-Steuerung-Lautstärke runter (Pan-Cluster → dezenter Compass-Pop-Out, kein Border, Glyph in ink-muted), Such-Bar-Kollaps im Inspector-Mode (Icon-Button für Adress-Suche, Mobile bleibt Sticky-Sheet), LayerPalette-Doppel-Einstieg (Stack-Icon-Klick UND `/`-Shortcut öffnen DASSELBE Overlay; Empty-State zeigt „Meistgenutzt"-Section + „Nach Thema"-Bundle-Pills statt leerer Suchbox; LAYER_SYNONYMS_DE-Index: Kita→kitas-2024, Hitze→PET, Sozial→MSS+kiez-score-soziale-lage, …), Bookmark-Badge-Pivot (kein blaues Notification-Badge sondern Mono-Inventar-Zahl rechts vom Icon), Inspector-Header-Straffung (Straßenname-h1 + Plex-Sans-Subline „Kiez · Bezirk · PLZ" statt 5-zeilige Adresse, „Leere Sektionen"-Toggle aus Aktions-Zeile raus in eigene Hairline), Panel-Breite kontextabhängig (clamp 360-420 single / 480-600 compare / Bottom-Sheet Mobile), Choropleth-Skalen-System: 3 Familien (Last=Vermillion, Gut=Grün, Strukturell=Indigo) für ALLE Choropleth-Layer (nicht nur Soziale Lage); 12 Tokens (3×4) mit OKLCH-Interpolation + Build-Time-Kontrast-Check (Stufe 1 ≥ 3:1 gegen `--bg #ECEAE0` per SC 1.4.11, sonst auto-dunkler), Endpoint pro Familie = existierendes Severity/Accent-Token; Klassifikations-Methode pro Layer explizit (Manuelle Schwellen für Lärm/Luft/Bioklima/Umweltgerechtigkeit/Wohnlage/MSS, Equal Interval für PET, Quantile für Bodenrichtwerte wegen Long-Tail, Manuelle Quartile 0/26/51/76 für Kiez-Score 0-100); Mobilität-Smoke-Test-Kriterium explizit (3 Test-Personen ohne Stadtplan-BG, ohne Legende, „Was wird dargestellt?"-Frage, Pivot bei ≥ 1/3 Grün-/Vegetation-Antwort); Stigma-Regel verallgemeinert: Umwelt-Daten dürfen Last/Gut, Menschen-Daten (Sozial/Wohnen/Boden/Einwohner) zwingend Strukturell; Bezeichnung „Strukturell" statt „Neutral" (Daten sind nicht neutral, nur die Darstellung); keine 4. Familie für Hitze (PET bleibt in Last, Disambiguierung über Werte+Einheit); Mobilität-Smoke-Test pflicht (Grün könnte mit Vegetation verwechselt werden, sonst Pivot zu Punkt-Dichte-Layer); Profile-Refactor: 10 Layer-spezifische Choropleth-Profile → 3 generische `choropleth-{last,gut,strukturell}` + zentrales Mapping; Mikro-Details (Sticky-Header-Schatten weg per Direktive Zeile 15, Scrollbar dünn, Footer-Attribution ohne Background-Pille mit Plex-Halo wie Berlin-Label, Vergleichs-Header Plex-Sans-Caps A:/B: identische Struktur, Kiez-Score-Quellen Master-Toggle statt Treppe), Direktiven-Patch ux-design-specification.md Zeile 557 (Desktop-Klick-Variante für LayerPalette nachgezogen, Empty-State + Synonyme dokumentiert), Radius-Token-Refactor 2/4/6 px Spec-Lücke gefixt (xs 2 px Chips, sm 4 px Buttons, md 6 px Container) gegen Pixel-Brutalism-vs-Plex-Serif-Kollision plus Begründungs-Zeile direkt nach Schatten/Gradienten-Verbot Zeile 15, Severity-Chips bleiben xs (Zustands-Anzeige, kein Tag). Top-3 Prio: LayerPalette-Doppel-Einstieg + Karten-Steuerung-Entlautung + Inspector-Header-Straffung. Bonus #4: Choropleth-Sequenz, #5: Radius-Tokens. Open-Q: `/`-Shortcut-Bindung an Layer vs Adress-Suche (Vorschlag: `/` für Layer, Adress-Icon-Klick reicht).
+# story 2-5b created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-FAQ-Templates): YAML-Templates pro Cluster × Locale + Build-Step render-faq.ts + faq-section.svelte mit FAQPage-JSON-LD + Stigma-Lint; 8 ACs + 9 Task-Cluster + 5 Open-Questions; Phase-1-Scope-Reduce auf 5 Cluster (Lärm-Pilot + 4 Stretch: Luft/Klima/Wohnen/Verkehr) statt 9 Cluster (Grün/Bildung/Heritage/Score Phase-2-Backlog); Co-Design-Session-Pflicht mit User für Lärm-Pilot vor Massen-Templating (Tonalität, Slot-Konventionen, Quellen-Footer in docs/faq-template-style-guide.md); deterministische Slot-Substitution NO LLM-Polish per Methodik-Statement; <details>-Pattern Empfehlung statt Bits-UI-Accordion für Progressive-Enhancement; konsumiert Story 2.0 (faq_qna + getFaqQna-Stub auszufüllen), 2.2 (buildFaqPage), 2.3/2.4/1.29 (Page-Slots); Stigma-Disziplin: Score-Cluster ohne „Lebenswert", Wohnen/MSS-Cluster aggregiert ohne Single-Adress-Stigma, Heritage ohne Personen-Biografien; Begriffs-Lint-Test (DE/EN-Blacklist); js-yaml + Valibot-Schema; geschätztes Output-Volumen Phase-1 5 Cluster ≈ 9.600 gerenderte Q&As
+# story 2-5a created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-Layer-EN-Variante): Layer-Detail-Page Locale-aware mit EN-Bundle + Dataset-JSON-LD inkl. inLanguage + Translation-Disclaimer; 8 ACs + 9 Task-Cluster + 5 Open-Questions; Refactor LAYER_EXPLAIN_DE/LAYER_METHODOLOGY_DE/getLayerDisplayName → Record<Locale, ...>-Pattern (Variante A Recommended, in-place TS-Map-Erweiterung); buildLayerDetail nutzt endlich lang-Param + neues effectiveLocale-Feld + DE-Fallback bei fehlendem EN; 42 Slugs × 2 Locales = 84 prerendered Layer-Routen; Story 2.2 buildDataset bekommt inLanguage-Property (additive, Cross-Story-Hand-off); neue translation-disclaimer.svelte mit 3 Varianten (EN-mit-EN-Content, EN-mit-DE-Fallback, DE-nichts); zentrale authorities.ts für DE→EN-Behörden-Mapping; Übersetzungs-Sprint T8 für alle 42 Slugs (displayName/explain/methodology); Build-Budget-Warning durch kombinierte 84 (2.5a) + 24 (2.3) + 276/1084 (2.4) Routen
+# story 2-4 created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-Kiez-Page): 8 ACs + 7 Task-Cluster + 5 Open-Questions; CRITICAL Daten-Konflikt aufgedeckt: Epic-Wortlaut „138 LOR-Bezirksregionen" aber lor-bezirksregion-Layer wurde mit Story 1.10 entfernt + getKiezProfile zeigt auf nicht-mehr-existenten Slug = Live-broken, lor-planungsraum hat 542 Features; 3 Varianten beschrieben (A: 138-BR re-introducen + Score-Aggregation, B: 542 Planungsraum als Kiez-Set + Build-Risk, C: Hybrid), Empfehlung A; konsumiert 2.0 (kiez_stats) + 2.1 (SeoHead+Sitemap) + 2.2 (Place+AdminArea+BreadcrumbList) + 2.3 (map-embed-Komponente) + 1.28 (kiez-scores.json + kiez-score-section); neue kiez-hero.svelte + getKiezScoreBySlug-Erweiterung; Score-Aggregation pro Kiez bei Variante A nötig (Flächen-gewichtetes Mittel der enthaltenen Planungsräume); Soziale-Lage NUR via Score-Section (Stigma-Schutz), NICHT im Steckbrief (Recommendation Open-Q5); Build-Zeit-Budget < 5 Min für 276 Routen (A) oder Spike pflicht bei 1.084 Routen (B)
+# story 1-28 erweitert nach User-Review (2026-05-15, dev-story Folge-Iteration): FÜNFTE Dimension „Versorgung" neu (Kita 500m/0.25 + Schule 800m/0.25 + Krankenhaus 2000m/0.20 + Spielplatz 400m/0.15 + Grünanlage 600m/0.15), DIMENSION_WEIGHTS auf 5× 0.20 angepasst; neue poi-distance-Normalize-Strategy + buildPoiIndex/nearestPoiDistanceM/buildPoiDistanceHits in build-helpers.ts (Haversine + Centroid-Fallback für Polygone via @turf/center); Manifest-Augmentation für virtual Bundle-G-Layer in build-kiez-scores.ts: die 5 kiez-score-{dim}.{hash}.geojson liegen nun mit Hash in static/layers/ + Manifest-Eintrag mit dummy sourceUrl navigator.berlin/derived/{slug}, sourceUpdatedAt=generatedAt, sha256, geometryType MultiPolygon, bundleGroup G: Kiez-Score, inspectorRelevant: false, mapRelevant: true; LayerPalette zeigt jetzt 5 Kiez-Score-Layer in Bundle G + LayerExplain-Coverage-Guard für alle 5 Slugs in layer-explain.ts ergänzt; Methodik-Page + Disclaimer-Text + LLM-Export-Footer auf 5 Dim umgeschrieben (Gewichts-Tabelle 5× 0.20); LayerMethodology-Eintrag kiez-score-versorgung mit POI-Liste + Threshold-Details; +9 neue Unit-Tests (Versorgungs-Score 3, Display-Label 1, Section-Render 1, derived-Layers 1, normalize-aliases 3); 1425/1425 unit-suite grün; type-check 0 Errors über 5544 Files; Soziale Lage bleibt rein MSS-Status (neutral, Stigma-Schutz unverändert)
+# story 2-3 created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-Bezirks-Page): 12 Bezirke × 2 Locales = 24 prerendered Routen unter /bezirk/[slug]; 8 ACs + 6 Task-Cluster + 5 Open-Questions; konsumiert Story-2.0-Aggregat (getBezirkStats), Story-2.1-SeoHead, Story-2.2-JsonLd-Generators (Place + AdministrativeArea + BreadcrumbList); neue bezirk-hero.svelte (UX-DR43 Long-Form, max 72ch, Plex-Serif h1) + map-embed.svelte (separate ~150-LOC-Komponente statt map-libre-canvas-Erweiterung wegen 500-LOC-Risk); FAQ-Section bleibt Placeholder bis Story 2.5b; BEZIRK_PAGES_SOURCE für Sitemap-Pattern aus 2.1; Progressive-Enhancement (FR33) via noscript-SVG-Fallback + Plain-HTML-Steckbrief; Reihenfolge-Empfehlung: Dev-Start erst nach Story 2.0 review (Open-Q1) damit getBezirkStats real verfügbar
+# story 1-28 promoted ready-for-dev → in-progress → review (2026-05-15, dev-story session, TDD-first per ADR-012; Naming-Pivot „Lebensqualität-Index" → „Kiez-Score" per Memory project_kiez_score_naming.md; vierte Dimension `soziale-lage` aus mss-gesamtindex-2025 (Gewichte 4× 0.25 statt 3× 0.33) per Memory project_mss_kiez_score_input.md; Pipeline-Foundation in scripts/lib/kiez-score/: types/dimension-config/normalize/compute-score/pipeline/build-helpers/nearest-stops/output-schema; Build-Script scripts/build-kiez-scores.ts schreibt static/kiez-scores/kiez-scores.json (542 LOR-Scores) + static/kiez-scores/layers/kiez-score-{dim}.geojson; Runtime-Adapter get-kiez-score.ts mit LOR-Spatial-Lookup + Mobility-Override + LRU-Cache + 404-graceful; Inspector-Section kiez-score-section.svelte + kiez-score-dimension-row.svelte mit Plex-Mono-Header, ValueChip pro Dim, Source-Expand-Toggle, Stand-Footer, Methodik-Link auf /methodik/kiez-score; Soziale-Lage hart-neutral (ValueChip-Severity 'neutral' für Stigma-Schutz, kein Rot-Grün-Choropleth); Editorial-Disclaimer-Variant kiez-score-explainer mit MSS-Anteil-Benennung; Methodik-Sub-Page /methodik/kiez-score (prerender, H1 „Wo lebt es sich gut?", 8 Sections); 4 LayerMethodology-Einträge in layer-methodology.ts; Bundle G: Kiez-Score in types.ts/manifest-schema/url-state/layer-palette-filter/layer-order-sorting + 2 neue Style-Profile choropleth-kiez-score-ordinal-4 + choropleth-kiez-score-soziale-lage (neutral) + LAYER_EXPLAIN_DE; LLM-Export-Builder um renderKiezScore-Section mit Stigma-Hinweis erweitert; +75 neue Unit-Tests; 1421/1421 unit-suite grün; type-check 0 Errors über 5543 Files; Pipeline-Bug-Fix Bonus: ODIS-LOR-Endpoint liefert UTM-33 statt WGS84 (anders als bezirke/ortsteile/plz), pre-existing reprojectGeoJSON no-op gefixt via neues detectGeoJsonCrs in scripts/lib/reproject.ts + dynamische CRS-Selection in fetch-static.ts; gruenversorgung-ordinal-4-Aliase (schlecht/gut/sehr gut → ordinal-4-Buckets) in normalize.ts ergänzt nach Live-Datenstruktur; Karten-Layer-Manifest-Augmentation für virtual-Layer in LayerPalette deferred zu Folge-Story (Style-Profile + Methodology + LayerExplain stehen bereit, GeoJSONs gebaut, nur Manifest-Entry-Augmentation fehlt); E2E kiez-score-flow.e2e.ts mit 4 Cases inkl. Stigma-Severity-Guard angelegt — Run deferred zu CI/User-Verify; Begriff „Lebensqualität"/„Lebenswert" durchgängig ersetzt per Memory feedback_no_lebenswert.md)
+# story 2-2 created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-JSON-LD-Lib): typed Schema.org-Generators via schema-dts (Place/AdministrativeArea/Dataset/FAQPage/WebSite+SearchAction/BreadcrumbList) + JsonLd-Komponente mit XSS-Escape-Helper (`</`→`<\/`); 8 ACs + 7 Task-Cluster + 5 Open-Questions; WebSite-JSON-LD im Root-Layout (global); Methodik-Migration vom inline `{@html JSON.stringify}`-Bug auf typed JsonLd-Komponente; Layer-Detail-Page bekommt Dataset-JSON-LD inkl. License-URL-Mapping (dl-de/zero|by, CC BY 4.0, ODbL 1.0 → schema.org-URLs); Bezirk/Kiez/Ranking-Generators getestet aber nicht eingebaut (Routen existieren noch nicht — Stories 2.3/2.4/2.9b konsumieren); Origin als Builder-Param (kein implizites Reading), konsistent mit Story 2.1
+# story 2-1 created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-SEO-Foundation): sitemap.xml-Index + sitemap-de/en + robots.txt + Canonical/hreflang/Title/Description-Cleanup; 8 ACs + 7 Task-Cluster + 5 Open-Questions; Bug-Fix Root-Canonical (page.url.search raus, sonst Duplicate-Content für jeden ?bbox/?layers/?address-State); neue SeoHead-Komponente (DRY für 4 bestehende Pages plus Folge-Story-Routen); SitemapSource-Pattern als offene Schnittstelle damit Stories 2.3/2.4/2.9b ihre Routen ohne Endpoint-Edit registrieren; Root-prerender deferred zu Story 2.11 (Welcome-Overlay liefert prerenderable Initial-Frame), nur SEO-Head-Migration in 2.1; super-sitemap NICHT installiert (eigener Builder), Pure-Function-TDD per ADR-012
+# story 2-0 created backlog → ready-for-dev (2026-05-15, create-story session, Epic-2-Foundation): Postgres-Aggregat-Schicht via Drizzle + scripts/aggregate-data.ts; 8 ACs + 8 Task-Cluster + 5 Open-Questions für Dev-Start; Pfad-Korrektur src/lib/server/db/ statt epic-Wortlaut src/lib/db/ wegen SvelteKit-Server-only-Boundary; Schema-Empfehlung JSONB pro Cluster (laerm/luft/gruen/klima/wohnen/oepnv/bildung) inkl. AggregateValue<T>-Provenance (FR40); Score-Tables/FAQ/llms_content nur Schema in 2-0, Befüllung deferred zu 2.9a/2.5b/2.8; epic-2 backlog → in-progress (erster Story-Start)
+# sprint-planning refresh 2026-05-15: Epic 5 + Epic 6 added (Distribution/Pflege + Wahldaten), Epic 2 restructured (2-0/2-5a/2-5b/2-9a/2-9b/2-11 added), Epic 3 reduced to DE/EN-Coverage (was 8-Sprachen+RTL, scope-cut per User-Lock 2026-05-15), Epic 4 story-slugs refreshed (4-1 hetzner-cpx22-explicit, 4-5 EN-variante, 4-6 de-en). Orphans 1-13..1-25 + 1-30 + 1-10c/d preserved under Epic 1 (Story-Files + review-Status existieren, in epics.md fehlen sie als Header)
+# story 1-30 promoted ready-for-dev → in-progress → review (2026-05-15, dev-story session, TDD-first per ADR-012; MSS-vor-Kiez-Score-Reihenfolge per User-Request: 1.30 Foundation zuerst, dann 1.28 erweitert um 4. Dimension „Soziale Lage" aus MSS — Editorial-Decision umgekehrt aus User-Pivot: ursprünglich „MSS NICHT in Kiez-Score", jetzt MSS als 4. Dimension; Stigma-Schutz erhalten via categorical-neutral + Disclaimer + ohne Composite-Single-Score auf Karte; WFS-Spike live verifiziert 542 Planungsräume + Schema plr_id/plr_name/si_v/di_v/sdi_v/sdi_n/kom/ew/zeit + 3 kom-Validity-Werte (gültig/Ausreißer/EW-unter-300); Pipeline-Eintrag scripts/lib/sources.ts → 1.26 MB GeoJSON; Inspector-Surfaces value-formatters/layer-hit-display/value-severity-mapping/layer-compare/editorial-config alle MSS-aware + immer severity neutral; applicability-Pattern um intrinsic-out-of-concept-Check erweitert (kom != gültig → out-of-concept, value-internal-Check statt cross-layer); choropleth-mss-12 ohne harten Rot-Grün-Sprung: 4 Status-Stufen über neutrale Plex-Cartography-Hues (chartCat6/chartCat4/vermillionSoft/chartCat5, KEIN vermillion) + 3 Dynamik-Stufen über fill-opacity 0.7/0.55/0.4; DisclaimerVariant-Union um mss-aggregat + compare-mss-aggregat erweitert + DISCLAIMER_TEXTS_DE; LayerMethodology + Methodik-Page Sub-h3 „Soziale Lage (MSS 2025)" in Aggregat-Indizes-Section; 1346/1346 unit-suite grün (+20 vs. Baseline 1326), type-check 0 Errors über 5525 Files; sources.ts 516 LOC über 500-Budget — Refactor deferred zu Folge-Iteration; E2E mss-flow.e2e.ts + axe deferred zu CI/User-Verify; 1.28-Scope-Update vor Dev-Start nötig: vierte Dimension soziale-lage, Gewichts-Verteilung 4× 0.25, Disclaimer-Variant livability-explainer muss MSS-Anteil + Stigma-Schutz explizit nennen)
 # story 1-30 created backlog → ready-for-dev (2026-05-15, User-Discovery SenStadt MSS 2025 daten.berlin.de): Monitoring Soziale Stadtentwicklung Gesamtindex „Soziale Ungleichheit" als Inspector-Layer; LOR-Planungsraum-Aggregation; WFS-Endpoint https://gdi.berlin.de/services/wfs/mss_2025 FeatureType mss_2025:mss2025_indizes_542; dl-de/zero-2-0; User-Decisions: NUR Gesamtindex (keine Einzel-Indikatoren — Begründung: Einzelwerte schärfer/stigmatisierender als Aggregat), Inspector-Anzeige inkl., Compare-Profile categorical-neutral, Severity neutral, Choropleth ohne Rot-Grün, Disclaimer pflicht; 9 ACs + 8 Tasks; Phase-2-Backlog für Bi-variate-Choropleth + Einzel-Indikatoren-Set verworfen; Methodik-Page-Integration via Story 1.29-Pattern; Open-Q: Status-Wording, Bivariate-Style, 1.28-Verknüpfung
 # story 1-27 Live-Review-Refinements (2026-05-15): 3 Bugs aus User-Browser-Verify gefixt — (1) mietspiegel-wohnlage + wohnlagen-2024 profile von ordinal-higher-better auf categorical-neutral (Editorial-Würde, niedrigere Stufe ≠ schlechter), (2) laerm-2023 profile von numeric-lower-better auf ordinal-lower-better (kategorische Roh-Daten gering/mittel/hoch, laerm-den/-night bleiben numeric), (3) Compare-Row Diff-Indikator-Cleanup: nur EIN ArrowUp in besserer Zelle (vorher doppelter ArrowDown-in-A + ArrowUp-in-B bei b-better) + Equal-Minus/Diff-Pfeil nur bei evaluativen Profilen, plus Mietspiegel/Wohnlage-ValueChip-Severity-Override auf neutral (kein „mittel"-Konflikt grün/gelb mit Belastungs-Layern); Lucide-Icon color-Prop via CSS-Variable statt class= für robusten Render; 1324/1324 unit-suite grün, type-check 0 Errors
 # story 1-27 promoted ready-for-dev → in-progress → review (2026-05-15, TDD-first per ADR-012; Foundation-Scope-Split: Tasks 1+2+3+7 als pure-Logic-Foundation, dann UI-Tasks 4+5+6+8+9+10 in Folge-Iteration der gleichen Session; User-Decisions Open-Q3 Vanilla-Dialog für Map-Click-Replace, Open-Q7 zwei Sparklines für Klima-Compare deferred; feature-flags.ts neu mit compareMode=true frozen, ui-context erweitert um compareMode/comparisonAddress/comparisonLayerHits/comparisonClimateStation/comparisonClimateSeries/comparisonLoading + toggleCompareMode/setComparisonAddress/exitCompareMode, layer-compare.ts mit 8 Profilen + LAYER_COMPARE_PROFILE für alle 32 Slugs + Editorial-Schutz für stolpersteine/bodenrichtwerte/milieuschutz (NIE a-better/b-better), url-state.ts um ComparisonState + serializeComparison/parseComparison/buildComparePermalink ergänzt mit AC-7-Fallback compare=1 ohne b → active=false, DisclaimerVariant-Union um 4 Compare-Variants erweitert + DISCLAIMER_TEXTS_DE-Map; UI-Iteration: Compare-Trigger im Inspector-Toolbar (Pivot Footer → Toolbar per Memory feedback_inspector_toolbar_top.md), ComparePanel als Top-Level-Replacement mit Header+B-Picker+Loading+Table+Stigma-Footer (Sub-Komponenten compare-row + merge-sections statt 4 separate Files für LOC-Budget), Mobile-Tab-Switcher via CSS-data-active-tab+Style-Block + @media print Override, Map-Marker A/B als Symbol-Layer mit Plex-Mono-Bold-Halo statt Sprite-Build, Vanilla-Replace-Dialog mit 3 Buttons + Esc, $effect-Parallel-Fetch Layer-Hits+Climate-Station+Climate-Series mit Race-Guard via comparisonAddress.id, fitBounds-Padding-100, Map-A11y-Layer um compareA/compareB/onSelectCompareSide erweitert + scrollIntoView auf compare-address-a/b, Bookmark-Dialog showCompareAction-handleSelect-Pivot statt neuer mode-Prop (minimal-invasiv aus Story 1.26-Setup) + Layout-Wiring; 1323/1323 Unit-Suite grün (+94 vs. Baseline 1229: Foundation +58 + UI +36), type-check 0 Errors über 5525 Files; E2E compare-flow.e2e.ts mit 4 Cases inkl. axe angelegt — Run deferred zu CI/User-Verify analog Stories 1.13–1.26; Klima-Sparkline-Cells in Compare-Table deferred zu Folge-Iteration da Layout-Pivot Sparkline-in-Cell separate UX-Entscheidung)
@@ -99,69 +115,102 @@ story_location: _bmad-output/implementation-artifacts
 
 development_status:
   # Epic 1: Cross-Layer Address Inspector (Defining Experience)
-  epic-1: in-progress
-  1-1-repository-initialisierung-mit-stack-foundation: review
-  1-2-design-token-foundation-mit-cloud-dancer-plex: review
-  1-3-build-zeit-daten-pipeline-mit-manifest: review
-  1-4-daten-zugriffs-abstraktion: review
-  1-5-adress-suche-mit-geocoding-proxy: review
-  1-6-maplibre-plex-cartography-mit-glyph-pack: review
-  1-7-karten-interaktion-url-state-sync: review
-  1-8-karten-accessibility-layer: review
-  1-9-inspektor-panel-mit-layer-hits: review
-  1-10-layer-toggle-palette: review
-  1-10c-pmtiles-pipeline: review
-  1-10d-mietspiegel-preis-lookup: review
-  1-11-klima-heritage-visualisierung: review
-  1-12-editorial-verantwortung-pattern: review
-  1-13-sbahn-netz: review
-  1-14-multi-layer-diff: review
-  1-15-poi-popover-lucide-icons: review
-  1-16-layer-explain-coverage: review
-  1-17-climate-charts-layerchart-rework: review
-  1-18-inspector-ux-rework: review
-  1-19-naechste-oepnv-stops: review
-  1-20-share-sheet-og-card: review
-  1-21-mobility-soft-cutoff: review
-  1-22-skala-harmonisierung-gruenversorgung: review
-  1-23-datenfehlt-reason-aufdroeseln: review
-  1-24-klima-normalperioden-ui: review
-  1-25-klima-pet-2022-coverage-bug: review
-  1-26-adress-bookmarks-localstorage: review
-  1-27-adress-vergleich: review
-  1-28-livability-index: ready-for-dev
-  1-29-atlas-methodik-pattern: review
-  1-30-mss-soziale-stadtentwicklung: ready-for-dev
+  epic-1: done
+  1-1-repository-initialisierung-mit-stack-foundation: done
+  1-2-design-token-foundation-mit-cloud-dancer-plex: done
+  1-3-build-zeit-daten-pipeline-mit-manifest: done
+  1-4-daten-zugriffs-abstraktion: done
+  1-5-adress-suche-mit-geocoding-proxy: done
+  1-6-maplibre-plex-cartography-mit-glyph-pack: done
+  1-7-karten-interaktion-url-state-sync: done
+  1-8-karten-accessibility-layer: done
+  1-9-inspektor-panel-mit-layer-hits: done
+  1-10-layer-toggle-palette: done
+  1-10c-pmtiles-pipeline: done
+  1-10d-mietspiegel-preis-lookup: done
+  1-11-klima-heritage-visualisierung: done
+  1-12-editorial-verantwortung-pattern: done
+  # Orphans 1-13..1-25 + 1-30: in epics.md nicht als Story-Header (Gap-Closure-Waves + 1.30 Discovery), Story-Files + review-Status existieren
+  1-13-sbahn-netz: done
+  1-14-multi-layer-diff: done
+  1-15-poi-popover-lucide-icons: done
+  1-16-layer-explain-coverage: done
+  1-17-climate-charts-layerchart-rework: done
+  1-18-inspector-ux-rework: done
+  1-19-naechste-oepnv-stops: done
+  1-20-share-sheet-og-card: done
+  1-21-mobility-soft-cutoff: done
+  1-22-skala-harmonisierung-gruenversorgung: done
+  1-23-datenfehlt-reason-aufdroeseln: done
+  1-24-klima-normalperioden-ui: done
+  1-25-klima-pet-2022-coverage-bug: done
+  1-26-adress-bookmarks-localstorage: done
+  1-27-adress-vergleich: done
+  1-28-livability-index: done
+  1-29-atlas-methodik-pattern: done
+  1-30-mss-soziale-stadtentwicklung: done
+  # Polish-Wave nach Epic-1-Closure aus User-UX-Review. Nicht epic-blocking.
+  1-31-atlas-ui-ux-polish: ready-for-dev
   epic-1-retrospective: optional
 
-  # Epic 2: SEO/AEO Discovery + LLM-Agent Integration
-  epic-2: backlog
-  2-1-seo-foundation-mit-sitemap-canonical-robots-txt: backlog
-  2-2-json-ld-generator-bibliothek: backlog
-  2-3-bezirks-pages-prerendered: backlog
-  2-4-kiez-pages-prerendered: backlog
-  2-5-layer-konzept-pages-faq-sektion: backlog
-  2-6-og-image-pipeline: backlog
-  2-7-webmcp-integration-mit-tools-resources-prompts: backlog
+  # Epic 2: Discovery-Surface + Aggregat-Layer (SEO/AEO/LLM)
+  epic-2: in-progress
+  2-0-postgres-aggregat-foundation-drizzle-build-step: ready-for-dev
+  2-1-seo-foundation-sitemap-canonical-robots-txt: ready-for-dev
+  2-2-json-ld-generator-bibliothek: ready-for-dev
+  2-3-bezirks-pages-prerendered: ready-for-dev
+  2-4-kiez-pages-prerendered: ready-for-dev
+  2-5a-layer-page-en-variante-dataset-jsonld: ready-for-dev
+  2-5b-faq-section-template-daten-slots: ready-for-dev
+  2-6-og-image-pipeline-bezirk-kiez-layer: ready-for-dev
+  2-7-webmcp-integration-tools-resources-prompts: ready-for-dev
   2-8-llms-txt-llms-full-txt-endpoints: backlog
+  2-9a-kiez-score-bezirks-score-aggregat-berechnung: backlog
+  2-9b-ranking-page-wo-lebt-es-sich-gut: backlog
+  2-11-welcome-overlay-root-address-cta: backlog
   epic-2-retrospective: optional
 
-  # Epic 3: 8-Sprachen-Internationalisierung mit RTL-Support
+  # Epic 3: i18n DE/EN-Coverage + Translation-Workflow
   epic-3: backlog
-  3-1-paraglide-setup-sprach-routing: backlog
-  3-2-languageswitcher-hreflang-cluster: backlog
-  3-3-translation-pipeline-mit-build-zeit-uebersetzung: backlog
-  3-4-rtl-support-fuer-arabisch: backlog
-  3-5-editorial-sensible-content-pattern: backlog
+  3-1-paraglide-setup-reduce-de-en: backlog
+  3-2-en-ui-coverage-komplett: backlog
+  3-3-languageswitcher-hreflang-cluster-de-en: backlog
+  3-4-accept-language-redirect-cookieless: backlog
+  3-5-translation-workflow-editorial-sensible-pattern: backlog
   epic-3-retrospective: optional
 
   # Epic 4: EU-FOSS Hosting + Compliance-Showcase
   epic-4: backlog
-  4-1-hetzner-coolify-traefik-production-setup: backlog
+  4-1-hetzner-cpx22-coolify-traefik-postgres-production-setup: backlog
   4-2-security-hardening-tls-csp-headers-crowdsec: backlog
-  4-3-github-actions-ci-mit-8-gates-lefthook: backlog
-  4-4-adr-verzeichnis-disaster-recovery-runbooks: backlog
-  4-5-lizenzen-page-lizenz-footer-auto-generiert: backlog
-  4-6-compliance-pages-impressum-datenschutz-barrierefreiheit: backlog
-  4-7-architektur-page-als-eu-foss-showcase: backlog
+  4-3-github-actions-ci-8-gates-lefthook: backlog
+  4-4-adr-nachzieher-disaster-recovery-runbooks: backlog
+  4-5-lizenzen-page-en-variante-auto-gen-coverage-test: backlog
+  4-6-compliance-pages-impressum-datenschutz-barrierefreiheit-de-en: backlog
+  4-7-architektur-page-eu-foss-showcase-de-en: backlog
   epic-4-retrospective: optional
+
+  # Epic 5: Distribution + Pflege + Owner-Realisation
+  epic-5: backlog
+  5-1-update-cadence-adr-github-actions-schedule: backlog
+  5-2-brand-asset-pack-press-kit: backlog
+  5-3-launch-sequencing-plan-channel-material: backlog
+  5-4-post-launch-monitoring-eu-foss: backlog
+  5-5-backup-restore-drill-staging: backlog
+  5-6-gdpr-dpia-dokument-beratungs-asset: backlog
+  5-7-sitemap-submission-search-console-setup: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: Wahldaten + Cross-Layer-Story
+  epic-6: backlog
+  6-0-wahl-daten-schema-pipeline-foundation: backlog
+  6-1-bezirksreform-2001-mapping: backlog
+  6-2-wahlbezirks-geometrie-layer-adress-lookup: backlog
+  6-3-inspector-section-wahlverhalten-hier: backlog
+  6-4-per-wahl-detail-page: backlog
+  6-5-briefwahl-asymmetrie-ui-pattern: backlog
+  6-6-volksentscheide-sub-layer: backlog
+  6-7-cross-layer-story-templates-wahl-variablen: backlog
+  6-8-webmcp-tools-wahldaten: backlog
+  6-9-json-ld-dataset-methodik-doku: backlog
+  epic-6-retrospective: optional

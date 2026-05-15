@@ -13,7 +13,13 @@
 		'compare-bodenrichtwerte':
 			'Höherer Bodenrichtwert kann teurere Miete bedeuten, oft aber auch bessere Versorgung. Wir zeigen die Differenz, ohne Bewertung.',
 		'compare-stigma-footer':
-			'Aggregierte Daten pro Lage spiegeln statistische Mittel wider, nicht individuelle Wohnsituationen.'
+			'Aggregierte Daten pro Lage spiegeln statistische Mittel wider, nicht individuelle Wohnsituationen.',
+		'mss-aggregat':
+			'Strukturelle Aggregat-Daten pro Planungsraum (rund 7.500 Einwohner:innen). Einzelne Adressen oder Personen sind dadurch nicht abgebildet. Stand: SenStadt MSS 2025.',
+		'compare-mss-aggregat':
+			'Wir zeigen die Stufe, ohne Bewertung. Niedriger Status heißt nicht „schlechter Kiez". Daten je Planungsraum, nicht je Adresse.',
+		'kiez-score-explainer':
+			'Kiez-Score aggregiert fünf Dimensionen pro Planungsraum (Ruhe & Luft, Grün, Mobilität, Soziale Lage, Versorgung). Die Soziale Lage spiegelt strukturelle MSS-Daten der Senatsverwaltung, keine Wohnqualität. Bezahlbarkeit absichtlich nicht enthalten.'
 	};
 </script>
 

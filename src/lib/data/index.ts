@@ -7,6 +7,20 @@ export { getNearestClimateStation, CLIMATE_STATIONS } from './get-climate-statio
 export { getClimateSeries } from './get-climate-series.js';
 export { getOepnvStopIndex } from './get-oepnv-stop-index.js';
 export type { OepnvStopIndex, OepnvStop } from './get-oepnv-stop-index.js';
+export {
+	getKiezScore,
+	loadKiezScores,
+	findLorIdContaining,
+	applyMobilityOverride,
+	_resetKiezScoreCache
+} from './get-kiez-score.js';
+export type { MobilityOverride } from './get-kiez-score.js';
+export type {
+	KiezScore,
+	KiezScoreDimension,
+	DimensionScore,
+	DimensionSource
+} from '../../../scripts/lib/kiez-score/types.js';
 
 export type {
 	License,

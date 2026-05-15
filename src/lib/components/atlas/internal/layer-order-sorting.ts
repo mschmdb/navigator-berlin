@@ -11,7 +11,8 @@ const BUNDLE_RANK: Record<Bundle, number> = {
 	'C: Umwelt': 2,
 	'D: Memorial': 3,
 	'E: Soziale Infrastruktur': 4,
-	'F: Mobilität': 5
+	'F: Mobilität': 5,
+	'G: Kiez-Score': 6
 };
 
 const UNKNOWN_RANK = 99;

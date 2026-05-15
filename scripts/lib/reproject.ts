@@ -57,3 +57,42 @@ export function reprojectGeoJSON(fc: FeatureCollection, from: CRS, to: CRS): Fea
 		}))
 	};
 }
+
+function firstCoordinate(geom: Geometry): Position | null {
+	switch (geom.type) {
+		case 'Point':
+			return geom.coordinates;
+		case 'MultiPoint':
+		case 'LineString':
+			return geom.coordinates[0] ?? null;
+		case 'MultiLineString':
+		case 'Polygon':
+			return geom.coordinates[0]?.[0] ?? null;
+		case 'MultiPolygon':
+			return geom.coordinates[0]?.[0]?.[0] ?? null;
+		case 'GeometryCollection':
+			for (const g of geom.geometries) {
+				const c = firstCoordinate(g);
+				if (c) return c;
+			}
+			return null;
+	}
+}
+
+/**
+ * Heuristische CRS-Erkennung: Berlin in WGS84 liegt bei ~13°/52° (Beträge < 200).
+ * In EPSG:25833 (UTM33N) liegen die Werte bei ~390000 / 5820000 (deutlich > 200).
+ * Andere ODIS-/Senats-Endpoints liefern uneinheitlich, daher Detection statt Source-Flag.
+ */
+export function detectGeoJsonCrs(fc: FeatureCollection): CRS {
+	for (const feat of fc.features) {
+		if (!feat.geometry) continue;
+		const coord = firstCoordinate(feat.geometry);
+		if (!coord) continue;
+		const [x, y] = coord;
+		if (typeof x !== 'number' || typeof y !== 'number') continue;
+		if (Math.abs(x) > 200 || Math.abs(y) > 200) return EPSG_25833;
+		return EPSG_4326;
+	}
+	return EPSG_4326;
+}

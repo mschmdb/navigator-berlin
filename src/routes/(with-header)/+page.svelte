@@ -27,6 +27,8 @@
 	import { getNearestClimateStation } from '$lib/data/get-climate-station.js';
 	import { getClimateSeries } from '$lib/data/get-climate-series.js';
 	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
+	import { getKiezScore } from '$lib/data/get-kiez-score.js';
+	import { findAllNearestStops } from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
 	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
 	import { queryPmtilesAt, type MapLibreLike } from '$lib/data/internal/pmtiles-query.js';
 	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data/types.js';
@@ -408,6 +410,7 @@
 			}
 		})();
 		ui.inspectorOpen = true;
+		ui.kiezScore = null;
 		announceGlobal(`Inspektor geöffnet für ${suggestion.displayName}`);
 		if (!ui.oepnvStopIndex) {
 			void getOepnvStopIndex()
@@ -418,6 +421,30 @@
 					ui.oepnvStopIndex = null;
 				});
 		}
+		void (async () => {
+			try {
+				const stopIndex = ui.oepnvStopIndex ?? (await getOepnvStopIndex());
+				const stops = findAllNearestStops(
+					{ lat: suggestion.lat, lng: suggestion.lng },
+					stopIndex,
+					1000
+				);
+				const override = {
+					nearestStops: {
+						ubahn: stops.ubahn ? { distanceM: stops.ubahn.distanceM } : null,
+						sbahn: stops.sbahn ? { distanceM: stops.sbahn.distanceM } : null,
+						tram: stops.tram ? { distanceM: stops.tram.distanceM } : null,
+						bus: stops.bus ? { distanceM: stops.bus.distanceM } : null
+					}
+				};
+				const score = await getKiezScore(suggestion.lat, suggestion.lng, undefined, override);
+				if (ui.selectedAddress?.id === suggestion.id) {
+					ui.kiezScore = score;
+				}
+			} catch {
+				if (ui.selectedAddress?.id === suggestion.id) ui.kiezScore = null;
+			}
+		})();
 		return true;
 	}
 
@@ -613,6 +640,24 @@
 				ui.comparisonClimateStation = null;
 				ui.comparisonClimateSeries = null;
 			}
+			try {
+				const stopIndex = ui.oepnvStopIndex ?? (await getOepnvStopIndex());
+				const stops = findAllNearestStops({ lat: addr.lat, lng: addr.lng }, stopIndex, 1000);
+				const override = {
+					nearestStops: {
+						ubahn: stops.ubahn ? { distanceM: stops.ubahn.distanceM } : null,
+						sbahn: stops.sbahn ? { distanceM: stops.sbahn.distanceM } : null,
+						tram: stops.tram ? { distanceM: stops.tram.distanceM } : null,
+						bus: stops.bus ? { distanceM: stops.bus.distanceM } : null
+					}
+				};
+				const score = await getKiezScore(addr.lat, addr.lng, undefined, override);
+				if (ui.comparisonAddress?.id === addr.id) {
+					ui.comparisonKiezScore = score;
+				}
+			} catch {
+				if (ui.comparisonAddress?.id === addr.id) ui.comparisonKiezScore = null;
+			}
 			if (ui.comparisonAddress?.id === addr.id) {
 				ui.comparisonLoading = false;
 			}
@@ -681,7 +726,7 @@
 				source: COMPARE_SOURCE_ID,
 				layout: {
 					'text-field': ['get', 'label'],
-					'text-font': ['IBM Plex Mono Bold'],
+					'text-font': ['Noto Sans Bold'],
 					'text-size': 16,
 					'text-allow-overlap': true
 				},

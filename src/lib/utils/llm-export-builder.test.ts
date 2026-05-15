@@ -405,3 +405,82 @@ describe('buildLlmExportMarkdown — Determinismus', () => {
 		expect(a).toBe(b);
 	});
 });
+
+describe('buildLlmExportMarkdown — Kiez-Score (Story 1.28)', () => {
+	it('rendert nichts wenn kiezScore null/undefined', () => {
+		const md = buildLlmExportMarkdown(fullInput());
+		expect(md).not.toContain('## Kiez-Score');
+	});
+
+	it('rendert Section mit Stufe + Quellen + Methodik-Hinweis', () => {
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			kiezScore: {
+				persona: 'allgemein',
+				dimensions: [
+					{
+						dimension: 'ruhe-luft',
+						value: 80,
+						sources: [
+							{
+								layer: 'laerm-2023',
+								rawValue: { kategorie: 'gering' },
+								normalizedValue: 100,
+								weight: 0.4
+							}
+						],
+						missingData: [],
+						dataStand: '2024-01-01T00:00:00.000Z'
+					},
+					{
+						dimension: 'gruen',
+						value: 60,
+						sources: [],
+						missingData: [],
+						dataStand: null
+					},
+					{
+						dimension: 'mobilitaet',
+						value: 70,
+						sources: [],
+						missingData: [],
+						dataStand: null
+					},
+					{
+						dimension: 'soziale-lage',
+						value: null,
+						sources: [],
+						missingData: ['mss-gesamtindex-2025'],
+						dataStand: null
+					}
+				],
+				missingDimensions: ['soziale-lage']
+			}
+		});
+		expect(md).toContain('## Kiez-Score');
+		expect(md).toContain('Ruhe & Luft: sehr hoch (80/100)');
+		expect(md).toContain('laerm-2023');
+		expect(md).toContain('Soziale Lage: Daten unzureichend');
+		expect(md).toMatch(/Methodik:.*\/methodik\/kiez-score/);
+	});
+
+	it('nennt MSS-Stigma-Schutz im Footer-Hinweis', () => {
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			kiezScore: {
+				persona: 'allgemein',
+				dimensions: [
+					{
+						dimension: 'soziale-lage',
+						value: 33,
+						sources: [],
+						missingData: [],
+						dataStand: null
+					}
+				],
+				missingDimensions: []
+			}
+		});
+		expect(md).toContain('keine Wohnqualität');
+	});
+});

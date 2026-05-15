@@ -85,6 +85,17 @@ describe('buildLayerEntry', () => {
 		const entry = buildLayerEntry(fakeSource, fakeGeoJson, '2026-05-11T14:21:33Z');
 		expect(entry.coverageBbox).toBeUndefined();
 	});
+
+	it('propagiert mapRelevant=false aus SourceConfig (Story 1.28)', () => {
+		const src: SourceConfig = { ...fakeSource, mapRelevant: false };
+		const entry = buildLayerEntry(src, fakeGeoJson, '2026-05-11T14:21:33Z');
+		expect(entry.mapRelevant).toBe(false);
+	});
+
+	it('lässt mapRelevant undefined wenn Source es nicht setzt (Default = sichtbar)', () => {
+		const entry = buildLayerEntry(fakeSource, fakeGeoJson, '2026-05-11T14:21:33Z');
+		expect(entry.mapRelevant).toBeUndefined();
+	});
 });
 
 describe('validateManifest', () => {
@@ -138,5 +149,17 @@ describe('validateManifest', () => {
 			layers: [{ ...validManifest.layers[0], coverageBbox: [13.5, 52.4, 13.2, 52.6] }]
 		};
 		expect(() => validateManifest(broken as unknown as Manifest)).toThrow();
+	});
+
+	it('mapRelevant=false roundtrip durch Schema (Story 1.28)', () => {
+		const src: SourceConfig = { ...fakeSource, mapRelevant: false };
+		const entry = buildLayerEntry(src, fakeGeoJson, '2026-05-11T14:21:33Z');
+		const m: Manifest = {
+			schemaVersion: 1,
+			generatedAt: '2026-05-11T14:23:00Z',
+			layers: [entry]
+		};
+		const parsed = ManifestSchema.parse(JSON.parse(JSON.stringify(m)));
+		expect(parsed.layers[0].mapRelevant).toBe(false);
 	});
 });

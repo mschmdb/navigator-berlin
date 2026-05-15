@@ -11,6 +11,9 @@ export type StyleProfile =
 	| 'choropleth-mehrfach'
 	| 'choropleth-pet'
 	| 'choropleth-wohnlage-3'
+	| 'choropleth-mss-12'
+	| 'choropleth-kiez-score-ordinal-4'
+	| 'choropleth-kiez-score-soziale-lage'
 	| 'polygon-highlight'
 	| 'polygon-outline-soft'
 	| 'point'
@@ -70,6 +73,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'wohnlagen-2024': 'choropleth-wohnlage-3',
 	'milieuschutz-erhaltungsmiete': 'polygon-outline-soft',
 	'milieuschutz-staedtebau': 'polygon-outline-soft',
+	'mss-gesamtindex-2025': 'choropleth-mss-12',
 	// C: Umwelt — Umweltatlas-Indikatoren
 	'laerm-2023': 'choropleth-belastung-3',
 	'luft-2023': 'choropleth-belastung-3',
@@ -103,7 +107,13 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'bus-haltestellen': 'point-bus',
 	'ubahn-netz': 'line-rail-ubahn',
 	'tram-netz': 'line-rail-tram',
-	'sbahn-netz': 'line-rail-sbahn'
+	'sbahn-netz': 'line-rail-sbahn',
+	// G: Kiez-Score (Story 1.28)
+	'kiez-score-ruhe-luft': 'choropleth-kiez-score-ordinal-4',
+	'kiez-score-gruen': 'choropleth-kiez-score-ordinal-4',
+	'kiez-score-mobilitaet': 'choropleth-kiez-score-ordinal-4',
+	'kiez-score-soziale-lage': 'choropleth-kiez-score-soziale-lage',
+	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4'
 };
 
 const TRANSITION_MS = 200;
@@ -193,6 +203,39 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 			{ color: COLORS.chartCat3, label: 'gut' },
 			{ color: COLORS.chartCat5, label: 'mittel' },
 			{ color: COLORS.vermillion, label: 'einfach' }
+		]
+	},
+	// Story 1.30: MSS-Gesamtindex Status × Dynamik. Neutrale Palette (kein Rot-Grün, kein
+	// Severity-Mapping), 4 Status-Stufen über Hue, 3 Dynamik-Stufen über Opacity.
+	'choropleth-mss-12': {
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.chartCat6, label: 'Status hoch' },
+			{ color: COLORS.chartCat4, label: 'Status mittel' },
+			{ color: COLORS.vermillionSoft, label: 'Status niedrig' },
+			{ color: COLORS.chartCat5, label: 'Status sehr niedrig' }
+		]
+	},
+	// Story 1.28: Kiez-Score 4-Stufen-Choropleth für Ruhe-Luft/Grün/Mobilität.
+	// Severity-Tokens-konsistent mit Inspector-ValueChip.
+	'choropleth-kiez-score-ordinal-4': {
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.vermillion, label: 'gering' },
+			{ color: COLORS.chartCat5, label: 'mittel' },
+			{ color: COLORS.chartCat4, label: 'hoch' },
+			{ color: COLORS.chartCat3, label: 'sehr hoch' }
+		]
+	},
+	// Story 1.28: Kiez-Score Soziale Lage. Neutrale Plex-Hues analog MSS-Pattern,
+	// kein Rot-Grün-Sprung, keine Severity-Wertung.
+	'choropleth-kiez-score-soziale-lage': {
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.chartCat6, label: 'Status sehr niedrig' },
+			{ color: COLORS.chartCat4, label: 'Status niedrig' },
+			{ color: COLORS.vermillionSoft, label: 'Status mittel' },
+			{ color: COLORS.chartCat5, label: 'Status hoch' }
 		]
 	},
 	'polygon-highlight': {
@@ -468,6 +511,44 @@ export function buildLayerSpec(
 					}
 				}
 			];
+		case 'choropleth-mss-12':
+			// Story 1.30: Status × Dynamik. Status = Hue (4 Stufen, neutrale Plex-Cartography-Töne,
+			// kein vermillion/Rot-Grün → Stigma-Schutz). Dynamik = Fill-Opacity (3 Stufen).
+			// "Planungsraum ohne Zuordnung" → sehr blasse Fläche.
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'match',
+							['get', 'si_v'],
+							'hoch',
+							COLORS.chartCat6,
+							'mittel',
+							COLORS.chartCat4,
+							'niedrig',
+							COLORS.vermillionSoft,
+							'sehr niedrig',
+							COLORS.chartCat5,
+							COLORS.bg
+						],
+						'fill-opacity': [
+							'match',
+							['get', 'di_v'],
+							'positiv',
+							0.7,
+							'stabil',
+							0.55,
+							'negativ',
+							0.4,
+							0.18
+						],
+						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
 		case 'choropleth-pet':
 			// PET 14 Uhr (gefühlte Temperatur, °C) — typischer Range ~28-42.
 			return [
@@ -711,6 +792,50 @@ export function buildLayerSpec(
 						'line-color': COLORS.chartCat3,
 						'line-width': 2.5,
 						'line-opacity': 0.85
+					}
+				}
+			];
+		case 'choropleth-kiez-score-ordinal-4':
+			// Erwartet Property `value` 0-100. 4 Buckets analog Inspector-ValueChip.
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'step',
+							['to-number', ['get', 'value'], -1],
+							COLORS.bg, // -1 = kein Wert (null)
+							0, COLORS.vermillion,
+							26, COLORS.chartCat5,
+							51, COLORS.chartCat4,
+							76, COLORS.chartCat3
+						],
+						'fill-opacity': 0.55,
+						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
+		case 'choropleth-kiez-score-soziale-lage':
+			// Neutrale Hue-Palette ohne Rot-Grün-Sprung. Stigma-Schutz für MSS-basierte Dimension.
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'step',
+							['to-number', ['get', 'value'], -1],
+							COLORS.bg,
+							0, COLORS.chartCat6,
+							26, COLORS.chartCat4,
+							51, COLORS.vermillionSoft,
+							76, COLORS.chartCat5
+						],
+						'fill-opacity': 0.55,
+						'fill-outline-color': COLORS.accent
 					}
 				}
 			];

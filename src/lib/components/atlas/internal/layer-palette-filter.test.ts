@@ -7,7 +7,11 @@ import {
 	BUNDLE_ORDER
 } from './layer-palette-filter.js';
 
-function makeLayer(slug: string, bundle: LayerMetadata['bundleGroup']): LayerMetadata {
+function makeLayer(
+	slug: string,
+	bundle: LayerMetadata['bundleGroup'],
+	overrides: Partial<LayerMetadata> = {}
+): LayerMetadata {
 	return {
 		slug,
 		filename: `${slug}.deadbeef.geojson`,
@@ -18,7 +22,8 @@ function makeLayer(slug: string, bundle: LayerMetadata['bundleGroup']): LayerMet
 		bundleGroup: bundle,
 		zoomThresholds: { min: 8, max: 14 },
 		geometryType: 'Polygon',
-		featureCount: 1
+		featureCount: 1,
+		...overrides
 	};
 }
 
@@ -74,6 +79,17 @@ describe('groupLayersByBundle', () => {
 		expect(groups).toHaveLength(1);
 		expect(groups[0].bundle).toBe('A: Boundaries');
 	});
+
+	it('blendet Layer mit mapRelevant=false aus (Story 1.28, z.B. lor-planungsraum)', () => {
+		const layers: LayerMetadata[] = [
+			makeLayer('bezirke', 'A: Boundaries'),
+			makeLayer('lor-planungsraum', 'A: Boundaries', { mapRelevant: false }),
+			makeLayer('plz', 'A: Boundaries')
+		];
+		const groups = groupLayersByBundle(layers);
+		expect(groups).toHaveLength(1);
+		expect(groups[0].layers.map((l) => l.slug)).toEqual(['bezirke', 'plz']);
+	});
 });
 
 describe('getLayerDisplayName', () => {
@@ -91,14 +107,15 @@ describe('getLayerDisplayName', () => {
 });
 
 describe('BUNDLE_ORDER', () => {
-	it('ist A → F', () => {
+	it('ist A → G (G = Kiez-Score, Story 1.28)', () => {
 		expect(BUNDLE_ORDER).toEqual([
 			'A: Boundaries',
 			'B: Wohn-Daten',
 			'C: Umwelt',
 			'D: Memorial',
 			'E: Soziale Infrastruktur',
-			'F: Mobilität'
+			'F: Mobilität',
+			'G: Kiez-Score'
 		]);
 	});
 });

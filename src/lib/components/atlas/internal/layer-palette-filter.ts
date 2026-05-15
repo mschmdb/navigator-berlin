@@ -10,6 +10,7 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'wohnlagen-2024': 'Mietspiegel-Wohnlage 2024',
 	'milieuschutz-erhaltungsmiete': 'Milieuschutz: Erhaltungsmiete',
 	'milieuschutz-staedtebau': 'Milieuschutz: Städtebau',
+	'mss-gesamtindex-2025': 'Soziale Lage (MSS 2025)',
 	// C: Umwelt — Umweltatlas
 	'laerm-2023': 'Lärmbelastung 2023',
 	'luft-2023': 'Luftbelastung 2023',
@@ -42,7 +43,13 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'bus-haltestellen': 'Bus-Haltestellen',
 	'ubahn-netz': 'U-Bahn-Netz',
 	'tram-netz': 'Tram-Netz',
-	'sbahn-netz': 'S-Bahn-Netz'
+	'sbahn-netz': 'S-Bahn-Netz',
+	// G: Kiez-Score (virtuelle Aggregat-Layer, Story 1.28)
+	'kiez-score-ruhe-luft': 'Kiez-Score · Ruhe & Luft',
+	'kiez-score-gruen': 'Kiez-Score · Grün',
+	'kiez-score-mobilitaet': 'Kiez-Score · Mobilität',
+	'kiez-score-soziale-lage': 'Kiez-Score · Soziale Lage',
+	'kiez-score-versorgung': 'Kiez-Score · Versorgung'
 };
 
 export const BUNDLE_ORDER: readonly Bundle[] = [
@@ -51,7 +58,8 @@ export const BUNDLE_ORDER: readonly Bundle[] = [
 	'C: Umwelt',
 	'D: Memorial',
 	'E: Soziale Infrastruktur',
-	'F: Mobilität'
+	'F: Mobilität',
+	'G: Kiez-Score'
 ];
 
 export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
@@ -60,7 +68,8 @@ export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
 	'C: Umwelt': 'C · Umwelt',
 	'D: Memorial': 'D · Memorial',
 	'E: Soziale Infrastruktur': 'E · Soziale Infrastruktur',
-	'F: Mobilität': 'F · Mobilität'
+	'F: Mobilität': 'F · Mobilität',
+	'G: Kiez-Score': 'G · Kiez-Score'
 };
 
 export interface LayerGroup {
@@ -87,8 +96,9 @@ export function filterLayers(
 }
 
 export function groupLayersByBundle(layers: readonly LayerMetadata[]): readonly LayerGroup[] {
+	const visible = layers.filter((l) => l.mapRelevant !== false);
 	return BUNDLE_ORDER.map((bundle) => {
-		const inBundle = layers
+		const inBundle = visible
 			.filter((l) => l.bundleGroup === bundle)
 			.slice()
 			.sort((a, b) => getLayerDisplayName(a.slug).localeCompare(getLayerDisplayName(b.slug), 'de'));

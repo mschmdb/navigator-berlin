@@ -33,6 +33,14 @@ export const EDITORIAL_CONFIG: Record<string, EditorialConfig> = {
 		feedbackMailto: true,
 		neverMachineTranslate: true
 	},
+	'mss-gesamtindex-2025': {
+		slug: 'mss-gesamtindex-2025',
+		disclaimerVariants: ['mss-aggregat'],
+		primarySourceUrl:
+			'https://daten.berlin.de/datensaetze/monitoring-soziale-stadtentwicklung-mss-2025-wms-39b8b768',
+		feedbackMailto: true,
+		neverMachineTranslate: true
+	},
 	'mauer-sektoren': {
 		slug: 'mauer-sektoren',
 		disclaimerVariants: ['historic'],

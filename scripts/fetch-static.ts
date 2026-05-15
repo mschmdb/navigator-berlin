@@ -9,7 +9,7 @@ import { overpassToGeoJSON, isOverpassResponse } from './lib/fetchers/overpass-t
 import { runTippecanoe } from './lib/fetchers/tippecanoe.js';
 import { fetchDwdZip, extractProduktTageswerteCsv } from './lib/fetchers/dwd-cdc.js';
 import { parseDwdKlCsv, aggregateYearly } from './lib/dwd.js';
-import { reprojectGeoJSON } from './lib/reproject.js';
+import { reprojectGeoJSON, detectGeoJsonCrs } from './lib/reproject.js';
 import { simplifyGeoJSON } from './lib/simplify.js';
 import { buildLayerEntry, buildManifest, validateManifest } from './lib/manifest.js';
 import type { ClimateBundle, GeometryType, LayerEntry } from './lib/types.js';
@@ -80,7 +80,11 @@ async function processLayer(slug: string, fetchedAt: string): Promise<LayerEntry
 	const { raw } = await fetchSource(slug);
 	const parsed = JSON.parse(raw);
 	const asGeoJson = isOverpassResponse(parsed) ? overpassToGeoJSON(parsed) : parsed;
-	const wgs84 = reprojectGeoJSON(asGeoJson, 'EPSG:4326', 'EPSG:4326');
+	const sourceCrs = detectGeoJsonCrs(asGeoJson);
+	const wgs84 = reprojectGeoJSON(asGeoJson, sourceCrs, 'EPSG:4326');
+	if (sourceCrs !== 'EPSG:4326') {
+		console.log(`[fetch] ${slug}: reprojected ${sourceCrs} → EPSG:4326`);
+	}
 	const simplified = await simplifyGeoJSON(JSON.stringify(wgs84), source.simplifyProfile);
 
 	if (source.simplifyProfile === 'tiles') {

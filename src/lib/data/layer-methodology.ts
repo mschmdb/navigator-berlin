@@ -108,6 +108,22 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 		authority: 'Bezirksämter Berlin · Bauämter',
 		relatedLayers: ['milieuschutz-erhaltungsmiete']
 	},
+	'mss-gesamtindex-2025': {
+		calculation:
+			'Monitoring Soziale Stadtentwicklung 2025: Gesamtindex aus zwei Achsen pro LOR-Planungsraum. Status-Index (sehr niedrig bis hoch) gewichtet Einkommen, Beschäftigung und Bildung. Dynamik-Index (negativ, stabil, positiv) zeigt die Veränderung gegenüber dem vorhergehenden MSS-Zyklus. Berechnung durch die Senatsverwaltung für Stadtentwicklung Berlin.',
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'rund alle zwei Jahre (MSS-Zyklus)',
+		authority: 'Senatsverwaltung für Stadtentwicklung Berlin',
+		coverageGaps: [
+			'Planungsräume mit unter 300 Einwohner:innen oder Ausreißer-Profil bleiben ohne Zuordnung.',
+			'Aggregat-Daten je rund 7.500 Einwohner:innen. Mikro-Lagen verschwinden im Mittel.'
+		],
+		omissions: [
+			'Einzel-Indikatoren wie Arbeitslosenquote oder Transferbezug-Quote werden bewusst nicht in der Adress-Anzeige ausgespielt. Sie wären auf Adress-Ebene schärfer und stigmatisierender als das Aggregat.',
+			'Keine Bewertung als „guter" oder „schlechter" Kiez. Niedriger Status spiegelt strukturelle Unterschiede in Einkommen, Beschäftigung und Bildung, keine Wohnqualität.'
+		],
+		relatedLayers: ['wohnlagen-2024', 'bodenrichtwerte', 'umweltgerechtigkeit-2023']
+	},
 
 	'laerm-2023': {
 		calculation:
@@ -373,6 +389,97 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 		updateFrequency: 'fortlaufend',
 		authority: `${SBAHN} · ${OSM} (ODbL 1.0)`,
 		relatedLayers: ['sbahn-stationen']
+	},
+
+	'kiez-score-ruhe-luft': {
+		calculation:
+			'Gewichtete Aggregation aus Lärm, Luft und thermischer Belastung pro Planungsraum (Lärm 0.4, Luft 0.4, Bioklima 0.2). Coverage-Fallback: Umweltgerechtigkeits-Aggregat. Normalisiert auf 0–100, Centroid-genau pro LOR-Polygon.',
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'alle 3 bis 5 Jahre (sync mit Umweltatlas-Update)',
+		authority: 'navigator.berlin (Eigenberechnung aus Senats-Daten)',
+		coverageGaps: [
+			'Modell-Werte, keine Mess-Stationen. Mikrolagen einzelner Adressen bleiben unsichtbar.'
+		],
+		omissions: [
+			'Innenraum-Belastung in Wohnungen nicht enthalten.',
+			'Keine getrennte Wertung nach Quelle (Straße, Schiene, Flug).'
+		],
+		relatedLayers: ['laerm-2023', 'luft-2023', 'bioklima-2023', 'umweltgerechtigkeit-2023']
+	},
+	'kiez-score-gruen': {
+		calculation:
+			'Pro-Kopf-Grünversorgung (Gewicht 0.6) plus Kaltluft-Einwirkbereich und Leitbahnkorridor (je Gewicht 0.2). 4-Stufen-Mapping gering bis sehr hoch, harmonisiert mit Story 1.22.',
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'alle 5 Jahre',
+		authority: 'navigator.berlin (Eigenberechnung aus Senats-Daten)',
+		coverageGaps: ['Private Gärten und Höfe zählen nicht zur öffentlichen Pro-Kopf-Versorgung.'],
+		omissions: ['Qualität und Pflege-Zustand der Parks nicht enthalten.'],
+		relatedLayers: [
+			'gruenversorgung-2023',
+			'klima-kaltlufteinwirkbereich-2022',
+			'klima-leitbahnkorridor-2022'
+		]
+	},
+	'kiez-score-mobilitaet': {
+		calculation:
+			'Distance-basiert vom Adress-Punkt zu nächster U-Bahn (0.35), S-Bahn (0.25), Tram (0.20) und Bus (0.10) Haltestelle plus Berlin-weite Radverkehrs-Presence (0.10). 0 m entspricht 100, 1.000 m entspricht 0, linear interpoliert.',
+		aggregationLevel: 'address',
+		updateFrequency: 'fortlaufend (OSM)',
+		authority: 'navigator.berlin (Eigenberechnung aus OSM-Stops + Berliner Radverkehrsnetz)',
+		coverageGaps: [
+			'Taktfrequenz und Linien-Angebot der Haltestelle nicht berücksichtigt.',
+			'Barrierefreiheit der Stops nicht gewertet.'
+		],
+		omissions: [
+			'Sharing-Angebote (Bike, Scooter, Car) nicht enthalten.',
+			'Fußwege-Qualität jenseits der Luftlinie nicht abgebildet.'
+		],
+		relatedLayers: [
+			'ubahn-stationen',
+			'sbahn-stationen',
+			'tram-haltestellen',
+			'bus-haltestellen',
+			'radverkehrsnetz-2025',
+			'fahrradstrassen-2024'
+		]
+	},
+	'kiez-score-soziale-lage': {
+		calculation:
+			'Status-Achse aus dem Monitoring Soziale Stadtentwicklung 2025 pro Planungsraum (sehr niedrig bis hoch), normalisiert auf 0–100. Stigma-Schutz: neutrale Farbskala, Kiez-Score-Disclaimer in jeder Surface, kein Composite-Score auf Karte. Planungsräume mit „kom != gültig" (Ausreißer, EW unter 300) bleiben ohne Wert.',
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'rund alle zwei Jahre (MSS-Zyklus)',
+		authority: 'navigator.berlin (Eigenberechnung aus SenStadt MSS 2025)',
+		coverageGaps: [
+			'Planungsräume mit unter 300 Einwohner:innen oder Ausreißer-Profil ohne Zuordnung.',
+			'Aggregat-Daten je rund 7.500 Einwohner:innen. Mikro-Lagen verschwinden.'
+		],
+		omissions: [
+			'Einzel-Indikatoren wie Arbeitslosenquote oder Transferbezug-Quote bewusst nicht ausgespielt (Stigma-Schutz).',
+			'Niedriger Status spiegelt strukturelle Unterschiede, keine Wohnqualität und keine Bewertung.'
+		],
+		relatedLayers: ['mss-gesamtindex-2025']
+	},
+	'kiez-score-versorgung': {
+		calculation:
+			'Distance-basiert vom LOR-Centroid bzw. Adress-Punkt zu nächster Kita (Gewicht 0.25, Threshold 500 m), Schule (0.25, 800 m), Plan-Krankenhaus (0.20, 2.000 m), Spielplatz (0.15, 400 m) und Grünanlage (0.15, 600 m). 0 m → 100, Threshold → 0, linear. Polygon-Layer (Spielplätze, Grünanlagen) nutzen den Geometrie-Mittelpunkt als POI-Punkt.',
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'jährlich (sync mit Bildungs- und Bezirks-Daten)',
+		authority: 'navigator.berlin (Eigenberechnung aus Senats-Daten und Bezirks-Registern)',
+		coverageGaps: [
+			'Belegungsquoten, Wartelisten und Trägerschaft sind im Score nicht berücksichtigt.',
+			'Polygon-Layer kollabieren zum Mittelpunkt. Ein langgezogener Park am Rand erscheint im Score zentriert.'
+		],
+		omissions: [
+			'Keine Qualitäts-Bewertung der Einrichtung (Layer zeigt nur Standort).',
+			'Privat-Krankenhäuser und Reha-Kliniken bleiben außen vor (nur Plan-Krankenhäuser).'
+		],
+		relatedLayers: [
+			'kitas-2024',
+			'schulen-2024',
+			'krankenhaeuser-plan',
+			'spielplaetze',
+			'gruenanlagen'
+		]
 	}
 };
 

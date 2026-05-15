@@ -35,6 +35,8 @@ export const LAYER_COMPARE_PROFILE: Record<string, CompareProfile> = {
 	'mietspiegel-wohnlage': 'categorical-neutral',
 	'milieuschutz-erhaltungsmiete': 'categorical-neutral',
 	'milieuschutz-staedtebau': 'categorical-neutral',
+	// Story 1.30: MSS-Gesamtindex — Editorial-neutral, kein Diff-Pfeil zwischen Status-Gruppen.
+	'mss-gesamtindex-2025': 'categorical-neutral',
 
 	// Umwelt — laerm-2023 ist kategorisch (gering/mittel/hoch), nur laerm-den/-night liefern echte dB
 	'laerm-2023': 'ordinal-lower-better',
@@ -243,6 +245,22 @@ function compareOrdinal(slug: string, a: string, b: string, higherIsBetter: bool
 	return { direction: aBetter ? 'a-better' : 'b-better' };
 }
 
+function extractCategoricalKey(slug: string, value: unknown): string | null {
+	if (typeof value === 'string') return value.toLowerCase().trim();
+	if (!value || typeof value !== 'object') return null;
+	const record = value as Record<string, unknown>;
+	// Story 1.30: MSS-Gruppe = Status + Dynamik (plr_name ist Kontext, kein Schlüssel).
+	if (slug === 'mss-gesamtindex-2025') {
+		const si = typeof record.si_v === 'string' ? record.si_v : null;
+		const di = typeof record.di_v === 'string' ? record.di_v : null;
+		if (si && di) return `${si}/${di}`.toLowerCase();
+		return null;
+	}
+	const k = record.kategorie ?? record.wol_mode ?? record.mode;
+	if (typeof k === 'string') return k.toLowerCase().trim();
+	return null;
+}
+
 function compareCategorical(slug: string, a: unknown, b: unknown): CompareResult {
 	const aPresent = isPresent(a);
 	const bPresent = isPresent(b);
@@ -254,10 +272,10 @@ function compareCategorical(slug: string, a: unknown, b: unknown): CompareResult
 				'Milieuschutz wirkt ambivalent: Schutz für Bewohner, kann aber Umzugschancen mindern.'
 		};
 	}
-	const aKey = typeof a === 'string' ? a : (extractKategorie(a) ?? JSON.stringify(a));
-	const bKey = typeof b === 'string' ? b : (extractKategorie(b) ?? JSON.stringify(b));
+	const aKey = extractCategoricalKey(slug, a) ?? (a !== null && a !== undefined ? JSON.stringify(a) : null);
+	const bKey = extractCategoricalKey(slug, b) ?? (b !== null && b !== undefined ? JSON.stringify(b) : null);
 	if (!aPresent && !bPresent) return { direction: 'equal' };
-	if (aKey === bKey) return { direction: 'equal' };
+	if (aKey !== null && bKey !== null && aKey === bKey) return { direction: 'equal' };
 	return { direction: 'not-comparable' };
 }
 

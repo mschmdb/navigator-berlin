@@ -241,10 +241,59 @@ function formatLor(value: unknown, idKey: string, nameKey: string): FormattedVal
 	return { text, isNumeric: false };
 }
 
+function formatMssGesamtindex(value: unknown): FormattedValue {
+	const si = firstString(value, 'si_v');
+	const di = firstString(value, 'di_v');
+	const plr = firstString(value, 'plr_name');
+	const kom = firstString(value, 'kom');
+	const plrSuffix = plr ? ` · ${plr}` : '';
+	if (kom && kom !== 'gültig') {
+		return {
+			text: `Aggregat nicht aussagekräftig${plrSuffix} (${kom})`,
+			isNumeric: false
+		};
+	}
+	if (!si || !di) return FALLBACK;
+	return { text: `Status ${si}, Dynamik ${di}${plrSuffix}`, isNumeric: false };
+}
+
 function formatStolperstein(value: unknown): FormattedValue {
 	const person = firstString(value, 'person', 'name', 'vorname_nachname');
 	if (person) return { text: `Für ${person}`, isNumeric: false };
 	return { text: 'Gedenkstein in der Nähe', isNumeric: false };
+}
+
+function kiezScoreStufe(value: number): 'gering' | 'mittel' | 'hoch' | 'sehr hoch' {
+	if (value <= 25) return 'gering';
+	if (value <= 50) return 'mittel';
+	if (value <= 75) return 'hoch';
+	return 'sehr hoch';
+}
+
+function kiezScoreNeutralStufe(value: number): string {
+	if (value <= 25) return 'Stufe sehr niedrig';
+	if (value <= 50) return 'Stufe niedrig';
+	if (value <= 75) return 'Stufe mittel';
+	return 'Stufe hoch';
+}
+
+function formatKiezScoreValue(
+	value: unknown,
+	dimensionLabel: string,
+	options: { neutral?: boolean } = {}
+): FormattedValue {
+	if (!value || typeof value !== 'object') return FALLBACK;
+	const obj = value as Record<string, unknown>;
+	const raw = obj.value;
+	if (raw === null || raw === undefined) {
+		return { text: `${dimensionLabel}: keine Zuordnung`, isNumeric: false };
+	}
+	const num = typeof raw === 'number' ? raw : Number(raw);
+	if (!Number.isFinite(num)) {
+		return { text: `${dimensionLabel}: keine Zuordnung`, isNumeric: false };
+	}
+	const stufe = options.neutral ? kiezScoreNeutralStufe(num) : kiezScoreStufe(num);
+	return { text: `${dimensionLabel}: ${stufe} (${Math.round(num)}/100)`, isNumeric: false };
 }
 
 export function formatLayerValue(slug: string, value: unknown): FormattedValue {
@@ -291,6 +340,8 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 		case 'milieuschutz-erhaltungsmiete':
 		case 'milieuschutz-staedtebau':
 			return formatMilieuschutz(value);
+		case 'mss-gesamtindex-2025':
+			return formatMssGesamtindex(value);
 		case 'kitas-2024':
 			return formatKita(value);
 		case 'schulen-2024':
@@ -327,6 +378,16 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return formatStolperstein(value);
 		case 'trinkbrunnen':
 			return { text: 'Trinkbrunnen vor Ort', isNumeric: false };
+		case 'kiez-score-ruhe-luft':
+			return formatKiezScoreValue(value, 'Ruhe & Luft');
+		case 'kiez-score-gruen':
+			return formatKiezScoreValue(value, 'Grün');
+		case 'kiez-score-mobilitaet':
+			return formatKiezScoreValue(value, 'Mobilität');
+		case 'kiez-score-versorgung':
+			return formatKiezScoreValue(value, 'Versorgung');
+		case 'kiez-score-soziale-lage':
+			return formatKiezScoreValue(value, 'Soziale Lage', { neutral: true });
 		// Legacy/fictitious Slugs (Story 1.3 Re-Run TODO):
 		case 'mietspiegel-wohnlage':
 			return { text: safeString(value), isNumeric: false };

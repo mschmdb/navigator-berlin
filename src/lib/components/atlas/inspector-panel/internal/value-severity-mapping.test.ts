@@ -191,4 +191,29 @@ describe('getValueSeverity()', () => {
 			expect(getValueSeverity('plz', '10405')).toBe('neutral');
 		});
 	});
+
+	describe('MSS-Gesamtindex 2025 (Story 1.30, Editorial: keine Bewertung)', () => {
+		it('Status hoch + positiv → neutral', () => {
+			expect(
+				getValueSeverity('mss-gesamtindex-2025', { si_v: 'hoch', di_v: 'positiv', kom: 'gültig' })
+			).toBe('neutral');
+		});
+		it('Status sehr niedrig + negativ → neutral (NIE danger, Editorial-Schutz)', () => {
+			expect(
+				getValueSeverity('mss-gesamtindex-2025', {
+					si_v: 'sehr niedrig',
+					di_v: 'negativ',
+					kom: 'gültig'
+				})
+			).toBe('neutral');
+		});
+		it('Planungsraum ohne Zuordnung → neutral', () => {
+			expect(
+				getValueSeverity('mss-gesamtindex-2025', {
+					si_v: 'Planungsraum ohne Zuordnung',
+					kom: 'ungültig (Ausreißer)'
+				})
+			).toBe('neutral');
+		});
+	});
 });

@@ -4,7 +4,8 @@ export type Bundle =
 	| 'C: Umwelt'
 	| 'D: Memorial'
 	| 'E: Soziale Infrastruktur'
-	| 'F: Mobilität';
+	| 'F: Mobilität'
+	| 'G: Kiez-Score';
 export type License =
 	| 'dl-de/zero-2-0'
 	| 'dl-de/by-2-0'
@@ -53,6 +54,10 @@ export interface SourceConfig {
 	 * Manuelle Konfiguration; Punkte außerhalb liefern reason='coverage-out-of-scope'.
 	 * Story 1.23. */
 	coverageBbox?: [number, number, number, number];
+	/** Default true. Wenn false, wird Layer in der LayerPalette / auf der Karte nicht angeboten.
+	 * Nutzbar für Build-Only-Datensätze (z.B. LOR-Planungsraum als Geometrie-Input für
+	 * den Kiez-Score-Build, ohne als sichtbarer Map-Layer aufzutauchen). Story 1.28. */
+	mapRelevant?: boolean;
 }
 
 export interface LayerEntry {
@@ -74,6 +79,8 @@ export interface LayerEntry {
 	nearestPolygonFallbackKm?: number;
 	/** siehe SourceConfig.coverageBbox. */
 	coverageBbox?: [number, number, number, number];
+	/** siehe SourceConfig.mapRelevant. */
+	mapRelevant?: boolean;
 }
 
 export interface Manifest {

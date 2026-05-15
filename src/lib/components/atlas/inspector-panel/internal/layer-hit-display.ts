@@ -244,6 +244,19 @@ function strassenlaermDisplay(value: unknown): LayerHitDisplay {
 	return chipWithContext(gruppe, 'Schienenverkehr');
 }
 
+function mssGesamtindexDisplay(value: unknown): LayerHitDisplay {
+	const si = firstString(value, 'si_v');
+	const di = firstString(value, 'di_v');
+	const plr = firstString(value, 'plr_name');
+	const kom = firstString(value, 'kom');
+	const context = plr ?? null;
+	if (kom && kom !== 'gültig') {
+		return { chip: null, fallbackText: 'Aggregat nicht aussagekräftig', context };
+	}
+	if (!si || !di) return EMPTY;
+	return chipWithContext(`${si}, ${di}`, context);
+}
+
 function klimaHighlight(value: unknown, label: string): LayerHitDisplay {
 	if (!value || (typeof value === 'object' && Object.keys(value as object).length === 0)) {
 		return EMPTY;
@@ -291,6 +304,8 @@ export function getLayerHitDisplay(slug: string, value: unknown): LayerHitDispla
 		case 'milieuschutz-erhaltungsmiete':
 		case 'milieuschutz-staedtebau':
 			return poiMilieuschutz(value);
+		case 'mss-gesamtindex-2025':
+			return mssGesamtindexDisplay(value);
 		case 'kitas-2024':
 			return poiKita(value);
 		case 'schulen-2024':

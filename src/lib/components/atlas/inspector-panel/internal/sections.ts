@@ -41,7 +41,12 @@ const BUNDLE_TO_SECTION: Record<Bundle, SectionKey> = {
 	'C: Umwelt': 'umwelt',
 	'D: Memorial': 'memorial',
 	'E: Soziale Infrastruktur': 'sozial',
-	'F: Mobilität': 'mobilitaet'
+	'F: Mobilität': 'mobilitaet',
+	// Kiez-Score-Layer rendern als eigene Top-Sektion über `kiez-score-section.svelte`.
+	// Sie liefern keine LayerHits in den Inspector-Sections, fallen daher auf 'boundaries'
+	// als No-Op-Mapping zurück und werden zusätzlich via `inspectorRelevant: false` aus
+	// `getLayersAtPoint` ausgeschlossen.
+	'G: Kiez-Score': 'boundaries'
 };
 
 const BOUNDARY_ORDER = ['bezirke', 'ortsteile', 'plz'];

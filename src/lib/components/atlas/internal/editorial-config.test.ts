@@ -6,7 +6,13 @@ import {
 } from './editorial-config.js';
 import type { DisclaimerVariant } from './editorial-types.js';
 
-const ALLOWED_VARIANTS: DisclaimerVariant[] = ['legal', 'historic', 'seasonal', 'source'];
+const ALLOWED_VARIANTS: DisclaimerVariant[] = [
+	'legal',
+	'historic',
+	'seasonal',
+	'source',
+	'mss-aggregat'
+];
 
 describe('EDITORIAL_CONFIG', () => {
 	it('mietspiegel-wohnlage hat legal-Variant + Source-URL', () => {

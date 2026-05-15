@@ -4,7 +4,8 @@ import type {
 	GeocodeSuggestion,
 	ClimateStation,
 	ClimateData,
-	OepnvStopIndex
+	OepnvStopIndex,
+	KiezScore
 } from '$lib/data';
 import type { Bookmark } from './bookmark-schema.js';
 import {
@@ -46,6 +47,10 @@ export interface UiState {
 	comparisonClimateStation: ClimateStation | null;
 	comparisonClimateSeries: ClimateData | null;
 	comparisonLoading: boolean;
+	/** Story 1.28: Kiez-Score (5 Dimensionen pro LOR-Planungsraum). */
+	kiezScore: KiezScore | null;
+	/** Story 1.28 + 1.27: Kiez-Score für Vergleichs-Adresse B. */
+	comparisonKiezScore: KiezScore | null;
 }
 
 export function createUiState(): UiState {
@@ -69,7 +74,9 @@ export function createUiState(): UiState {
 		comparisonLayerHits: [],
 		comparisonClimateStation: null,
 		comparisonClimateSeries: null,
-		comparisonLoading: false
+		comparisonLoading: false,
+		kiezScore: null,
+		comparisonKiezScore: null
 	});
 	setContext(KEY, state);
 	return state;
@@ -143,6 +150,7 @@ function clearComparisonData(state: UiState): void {
 	state.comparisonLayerHits = [];
 	state.comparisonClimateStation = null;
 	state.comparisonClimateSeries = null;
+	state.comparisonKiezScore = null;
 }
 
 export function toggleCompareMode(state: UiState): void {

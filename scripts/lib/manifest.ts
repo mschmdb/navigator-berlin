@@ -17,7 +17,8 @@ const BundleSchema = v.picklist([
 	'C: Umwelt',
 	'D: Memorial',
 	'E: Soziale Infrastruktur',
-	'F: Mobilität'
+	'F: Mobilität',
+	'G: Kiez-Score'
 ]);
 
 const GeometryTypeSchema = v.picklist(['Point', 'Polygon', 'MultiPolygon', 'LineString']);
@@ -58,7 +59,8 @@ const LayerEntrySchema = v.object({
 				'coverageBbox must have minLng<maxLng and minLat<maxLat'
 			)
 		)
-	)
+	),
+	mapRelevant: v.optional(v.boolean())
 });
 
 const ManifestValibot = v.object({
@@ -136,6 +138,9 @@ export function buildLayerEntry(
 	}
 	if (source.coverageBbox) {
 		entry.coverageBbox = source.coverageBbox;
+	}
+	if (source.mapRelevant === false) {
+		entry.mapRelevant = false;
 	}
 	return entry;
 }

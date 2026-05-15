@@ -34,8 +34,22 @@ export const SOURCES: SourceConfig[] = [
 		simplifyProfile: 'boundary',
 		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
 	},
-	// LOR-Layer komplett entfernt: rein Verwaltungs-IDs, keine User-Relevanz.
-	// Umweltatlas-Layer haben LOR-Planungsraum-Granularität bereits eingebaut.
+	// Story 1.28: LOR-Planungsraum re-introduced als Build-Only-Datensatz für den
+	// Kiez-Score (Pro-LOR-Score-Berechnung am Polygon-Centroid). Nicht in der
+	// LayerPalette / nicht als Karten-Layer (mapRelevant: false) und nicht im
+	// Inspector (inspectorRelevant: false). Vorher in Story 1.10 entfernt.
+	{
+		slug: 'lor-planungsraum',
+		kind: 'odis',
+		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_planungsgraeume_2021/data.geojson',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'A: Boundaries',
+		zoomThresholds: { min: 11, max: 15 },
+		simplifyProfile: 'boundary',
+		sourceUpdatedAt: '2021-01-01T00:00:00.000Z',
+		inspectorRelevant: false,
+		mapRelevant: false
+	},
 	// Bundle B: Wohn-Daten (GDI Berlin WFS, dl-de/by-2-0). Endpoints + typeNames live-verifiziert 2026-05-11
 	// TODO: mietspiegel-wohnlage (~600k Adress-Polygone, 116MB simplified). Vertex-Simplify hilft nicht
 	// (Polygone bereits klein). Defer bis Tile-Strategy (PMTiles/MVT) oder Dissolve-by-wohnlage.
@@ -254,6 +268,20 @@ export const SOURCES: SourceConfig[] = [
 		zoomThresholds: { min: 10, max: 18 },
 		simplifyProfile: 'polygon',
 		sourceUpdatedAt: '2025-01-01T00:00:00.000Z'
+	},
+	// Story 1.30: Monitoring Soziale Stadtentwicklung (MSS) 2025 Gesamtindex pro LOR-Planungsraum.
+	// Status × Dynamik = 12-Gruppen-Matrix. Adress-Hit liefert Aggregat-Stufe, KEINE Einzel-Indikatoren.
+	// `kom`-Feld != 'gültig' (Ausreißer / EW <300) wird in Inspector als out-of-concept gerendert.
+	{
+		slug: 'mss-gesamtindex-2025',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/mss_2025',
+		typeName: 'mss_2025:mss2025_indizes_542',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'B: Wohn-Daten',
+		zoomThresholds: { min: 9, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-12-01T00:00:00.000Z'
 	},
 	// Bundle E: Soziale Infrastruktur
 	{

@@ -1,4 +1,14 @@
-import type { ClimateData, ClimateStation, LayerHit, LayerMetadata } from '$lib/data';
+import type {
+	ClimateData,
+	ClimateStation,
+	KiezScore,
+	LayerHit,
+	LayerMetadata
+} from '$lib/data';
+import {
+	DIMENSION_LABELS_DE,
+	scaleFor
+} from '$lib/components/atlas/inspector-panel/internal/kiez-score-display.js';
 import { groupHitsBySection } from '$lib/components/atlas/inspector-panel/internal/sections.js';
 import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
 import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
@@ -44,6 +54,7 @@ export interface LlmExportInput {
 	readonly layerMeta: readonly LayerMetadata[];
 	readonly climate: LlmExportClimate | null;
 	readonly oepnv: LlmExportOepnv | null;
+	readonly kiezScore?: KiezScore | null;
 }
 
 const COORD_PRECISION = 5;
@@ -240,6 +251,39 @@ function renderOepnv(input: LlmExportInput, lines: string[]): void {
 	lines.push('');
 }
 
+function renderKiezScore(input: LlmExportInput, lines: string[]): void {
+	const score = input.kiezScore;
+	if (!score) return;
+	lines.push('## Kiez-Score');
+	lines.push('');
+	if (typeof score.overall === 'number') {
+		const overallScale = scaleFor(score.overall, 'ruhe-luft');
+		const stufe = overallScale ? overallScale.label : '—';
+		lines.push(`- Gesamt: ${stufe} (${Math.round(score.overall)}/100, Mittel über ${score.dimensions.filter((d) => d.value !== null).length} Dimensionen)`);
+	}
+	for (const dim of score.dimensions) {
+		const label = DIMENSION_LABELS_DE[dim.dimension];
+		if (dim.value === null) {
+			lines.push(`- ${label}: Daten unzureichend`);
+			continue;
+		}
+		const scale = scaleFor(dim.value, dim.dimension);
+		const stufe = scale ? scale.label : '—';
+		const sources = dim.sources
+			.filter((s) => s.normalizedValue !== null)
+			.map((s) => `${s.layer} (${Math.round(s.normalizedValue as number)}/100, Gewicht ${Math.round(s.weight * 100)}%)`)
+			.join(', ');
+		lines.push(`- ${label}: ${stufe} (${Math.round(dim.value)}/100)`);
+		if (sources) lines.push(`  Quellen: ${sources}`);
+		if (dim.dataStand) lines.push(`  Stand: ${formatDate(dim.dataStand)}`);
+	}
+	lines.push('');
+	lines.push(
+		'> Kiez-Score aggregiert fünf Dimensionen pro Planungsraum (rund 7.500 Einwohner:innen). Soziale Lage spiegelt strukturelle MSS-Daten, keine Wohnqualität. Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'
+	);
+	lines.push('');
+}
+
 function renderFooter(lines: string[]): void {
 	lines.push('---');
 	lines.push('');
@@ -250,6 +294,7 @@ function renderFooter(lines: string[]): void {
 export function buildLlmExportMarkdown(input: LlmExportInput): string {
 	const lines: string[] = [];
 	renderHeader(input, lines);
+	renderKiezScore(input, lines);
 	renderSections(input, lines);
 	renderClimate(input, lines);
 	renderOepnv(input, lines);

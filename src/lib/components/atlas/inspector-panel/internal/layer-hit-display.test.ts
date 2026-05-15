@@ -177,4 +177,36 @@ describe('getLayerHitDisplay()', () => {
 			expect(d.chip).toBeNull();
 		});
 	});
+
+	describe('MSS-Gesamtindex 2025 (Story 1.30)', () => {
+		it('gültiger Hit: chip="mittel, stabil", context=plr_name', () => {
+			const d = getLayerHitDisplay('mss-gesamtindex-2025', {
+				plr_name: 'Stülerstraße',
+				si_v: 'mittel',
+				di_v: 'stabil',
+				kom: 'gültig'
+			});
+			expect(d.chip?.value).toBe('mittel, stabil');
+			expect(d.chip?.numeric).toBe(false);
+			expect(d.context).toBe('Stülerstraße');
+		});
+
+		it('kom != gültig: fallbackText "Aggregat nicht aussagekräftig", chip=null', () => {
+			const d = getLayerHitDisplay('mss-gesamtindex-2025', {
+				plr_name: 'Pankower Tor',
+				si_v: 'Planungsraum ohne Zuordnung',
+				di_v: 'Planungsraum ohne Zuordnung',
+				kom: 'ungültig (EW unter 300)'
+			});
+			expect(d.chip).toBeNull();
+			expect(d.fallbackText).toMatch(/Aggregat nicht aussagekräftig/);
+			expect(d.context).toBe('Pankower Tor');
+		});
+
+		it('fehlende Status-/Dynamik-Felder → EMPTY', () => {
+			const d = getLayerHitDisplay('mss-gesamtindex-2025', { plr_name: 'X' });
+			expect(d.chip).toBeNull();
+			expect(d.fallbackText).toBeNull();
+		});
+	});
 });

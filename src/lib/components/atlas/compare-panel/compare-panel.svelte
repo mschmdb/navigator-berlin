@@ -9,8 +9,10 @@
 	import { mergeCompareSections, type CompareSection } from './internal/merge-sections.js';
 	import { getLayerDisplayName } from '../internal/layer-palette-filter.js';
 	import CompareRow from './compare-row.svelte';
+	import KiezScoreCompareBlock from './kiez-score-compare-block.svelte';
 	import AddressSearch from '../address-search.svelte';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
+	import { featureFlags } from '$lib/data/feature-flags.js';
 	import type { DisclaimerVariant } from '../internal/editorial-types.js';
 
 	type GeocodeFn = (q: string) => Promise<GeocodeSuggestion[]>;
@@ -129,6 +131,12 @@
 		{/if}
 
 		{#if ui.comparisonAddress && !ui.comparisonLoading}
+			{#if featureFlags.kiezScore && (ui.kiezScore !== null || ui.comparisonKiezScore !== null)}
+				<KiezScoreCompareBlock
+					scoreA={ui.kiezScore}
+					scoreB={ui.comparisonKiezScore}
+				/>
+			{/if}
 			<div
 				data-testid="compare-mobile-tabs"
 				role="tablist"

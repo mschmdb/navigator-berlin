@@ -228,6 +228,29 @@ describe('compareLayerValues — categorical-neutral (Bezirke, Milieuschutz)', (
 		expect(r.direction).toBe('not-comparable');
 		expect(r.advisory).toMatch(/Schutz|ambivalent/i);
 	});
+
+	// Story 1.30: MSS ist `categorical-neutral` → kein Diff-Pfeil, kein Bewertungs-Indikator.
+	it('MSS-Gesamtindex Profil = categorical-neutral', () => {
+		expect(getCompareProfile('mss-gesamtindex-2025')).toBe('categorical-neutral');
+	});
+
+	it('MSS gleiche Gruppe → equal (Schlüssel = si_v + di_v)', () => {
+		const r = compareLayerValues(
+			'mss-gesamtindex-2025',
+			{ si_v: 'mittel', di_v: 'stabil', plr_name: 'A', kom: 'gültig' },
+			{ si_v: 'mittel', di_v: 'stabil', plr_name: 'B', kom: 'gültig' }
+		);
+		expect(r.direction).toBe('equal');
+	});
+
+	it('MSS unterschiedliche Gruppe → not-comparable (kein Diff-Pfeil)', () => {
+		const r = compareLayerValues(
+			'mss-gesamtindex-2025',
+			{ si_v: 'hoch', di_v: 'positiv', kom: 'gültig' },
+			{ si_v: 'sehr niedrig', di_v: 'negativ', kom: 'gültig' }
+		);
+		expect(r.direction).toBe('not-comparable');
+	});
 });
 
 describe('compareLayerValues — presence-neutral-positive (Kaltluft, Leitbahn, Radverkehr, Grünanlage)', () => {

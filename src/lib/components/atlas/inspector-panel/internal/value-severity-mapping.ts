@@ -152,6 +152,10 @@ export function getValueSeverity(slug: string, value: unknown): SeverityLevel {
 		case 'plz':
 			return 'neutral';
 
+		// Story 1.30 MSS: Aggregat ist Faktum, keine Bewertung; KEIN Color-Coding (Stigma-Schutz).
+		case 'mss-gesamtindex-2025':
+			return 'neutral';
+
 		default:
 			return 'neutral';
 	}

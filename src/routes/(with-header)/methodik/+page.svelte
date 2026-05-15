@@ -187,8 +187,10 @@
 	<section id="cross-layer" aria-labelledby="cross-layer-h" class="flex flex-col gap-3">
 		<h2 id="cross-layer-h" class="font-serif text-2xl text-ink">Aggregat-Indizes</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Geplant ist ein Lebensqualität-Index aus drei Dimensionen: Ruhe und Luft, Grün, Mobilität.
-			Jede Dimension bleibt separat abrufbar.
+			Der Kiez-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und Luft, Grün,
+			Mobilität, Soziale Lage und Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze,
+			Grünanlagen). Jede Dimension bleibt separat abrufbar im Inspector und als eigener
+			Karten-Layer. Fünf mal 20 Prozent Gewicht, kein Composite-Score auf der Karte.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Es gibt keinen einzelnen „Berlin-Score". Aggregation auf eine Zahl würde Stigmatisierung
@@ -197,7 +199,29 @@
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Anti-Doppelzählung: umweltgerechtigkeit-2023 fasst bereits Lärm, Luft, Bioklima und Grün
-			zusammen. Indizes zählen es nicht zusätzlich.
+			zusammen. Indizes zählen es nicht zusätzlich, sondern greifen nur als Coverage-Fallback.
+		</p>
+		<p class="font-mono text-xs text-ink-muted">
+			Vollständige Methodik:
+			<a
+				href="/methodik/kiez-score"
+				data-testid="methodik-kiez-score-link"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				>/methodik/kiez-score</a
+			>
+		</p>
+		<h3 class="font-serif text-xl text-ink mt-2">Soziale Lage (MSS 2025)</h3>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Das Monitoring Soziale Stadtentwicklung der Senatsverwaltung Berlin liefert pro
+			Planungsraum einen Gesamtindex aus Status (Einkommen, Beschäftigung, Bildung) und
+			Dynamik (Veränderung). Wir zeigen nur diesen Aggregat-Wert, nicht die Einzel-Indikatoren
+			wie Arbeitslosen-Quote oder Transferbezugs-Anteil. Einzelwerte wären auf Adress-Ebene
+			schärfer und stigmatisierender.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Niedriger Status bedeutet nicht „schlechter Kiez". Die Stufe spiegelt strukturelle
+			Unterschiede, keine Wohnqualität. Choropleth-Farben sind neutral gehalten, kein
+			Rot-Grün. Quelle: SenStadt MSS 2025, Lizenz dl-de/zero-2-0.
 		</p>
 	</section>
 

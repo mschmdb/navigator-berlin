@@ -78,9 +78,24 @@ export function isLayerApplicable(slug: string, hits: readonly LayerHit[]): bool
 	return rule(buildContext(hits));
 }
 
+/**
+ * Story 1.30: MSS-Hit ist intrinsisch out-of-concept wenn das `kom`-Attribut der LOR-Geometrie
+ * den Aggregat-Wert disqualifiziert (Planungsräume mit EW <300 oder Ausreißer-Status). Pattern
+ * ist value-internal, nicht cross-layer.
+ */
+function intrinsicOutOfConcept(hit: LayerHit): boolean {
+	if (hit.layer !== 'mss-gesamtindex-2025') return false;
+	if (!hit.value || typeof hit.value !== 'object') return false;
+	const kom = (hit.value as Record<string, unknown>).kom;
+	return typeof kom === 'string' && kom !== 'gültig';
+}
+
 export function applyApplicabilityReasons(hits: readonly LayerHit[]): LayerHit[] {
 	const ctx = buildContext(hits);
 	return hits.map((hit) => {
+		if (hit.reason === undefined && intrinsicOutOfConcept(hit)) {
+			return { ...hit, reason: 'out-of-concept' };
+		}
 		if (hit.reason !== 'no-coverage') return hit;
 		const rule = APPLICABILITY_RULES[hit.layer];
 		if (!rule) return hit;

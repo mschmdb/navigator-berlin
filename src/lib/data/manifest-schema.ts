@@ -15,7 +15,8 @@ const BundleSchema = v.picklist([
 	'C: Umwelt',
 	'D: Memorial',
 	'E: Soziale Infrastruktur',
-	'F: Mobilität'
+	'F: Mobilität',
+	'G: Kiez-Score'
 ]);
 
 const GeometryTypeSchema = v.picklist(['Point', 'Polygon', 'MultiPolygon', 'LineString']);
@@ -56,7 +57,8 @@ const LayerMetadataSchema = v.object({
 				'coverageBbox must have minLng<maxLng and minLat<maxLat'
 			)
 		)
-	)
+	),
+	mapRelevant: v.optional(v.boolean())
 });
 
 export const ManifestSchema = v.object({

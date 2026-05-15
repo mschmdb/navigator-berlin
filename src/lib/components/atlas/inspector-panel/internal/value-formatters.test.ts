@@ -182,4 +182,77 @@ describe('formatLayerValue', () => {
 			});
 		});
 	});
+
+	// Story 1.30: MSS-Gesamtindex 2025 — Status × Dynamik aus LOR-Aggregat.
+	describe('MSS-Gesamtindex 2025 (Story 1.30)', () => {
+		it('gültiger Hit → "Status {si_v}, Dynamik {di_v} · {plr_name}"', () => {
+			expect(
+				formatLayerValue('mss-gesamtindex-2025', {
+					plr_id: '01100101',
+					plr_name: 'Stülerstraße',
+					si_v: 'mittel',
+					di_v: 'stabil',
+					sdi_v: 'Status mittel , Dynamik stabil',
+					sdi_n: 23,
+					kom: 'gültig',
+					ew: 3580
+				})
+			).toEqual({ text: 'Status mittel, Dynamik stabil · Stülerstraße', isNumeric: false });
+		});
+
+		it('sehr niedrig + negativ → vollständig formatiert', () => {
+			expect(
+				formatLayerValue('mss-gesamtindex-2025', {
+					plr_name: 'Beispiel',
+					si_v: 'sehr niedrig',
+					di_v: 'negativ',
+					kom: 'gültig'
+				})
+			).toEqual({
+				text: 'Status sehr niedrig, Dynamik negativ · Beispiel',
+				isNumeric: false
+			});
+		});
+
+		it('kom=ungültig (EW unter 300) → Aggregat-nicht-aussagekräftig', () => {
+			expect(
+				formatLayerValue('mss-gesamtindex-2025', {
+					plr_name: 'Pankower Tor',
+					si_v: 'Planungsraum ohne Zuordnung',
+					di_v: 'Planungsraum ohne Zuordnung',
+					kom: 'ungültig (EW unter 300)'
+				})
+			).toEqual({
+				text: 'Aggregat nicht aussagekräftig · Pankower Tor (ungültig (EW unter 300))',
+				isNumeric: false
+			});
+		});
+
+		it('kom=ungültig (Ausreißer) → Aggregat-nicht-aussagekräftig', () => {
+			expect(
+				formatLayerValue('mss-gesamtindex-2025', {
+					plr_name: 'Beispiel',
+					si_v: 'Planungsraum ohne Zuordnung',
+					di_v: 'Planungsraum ohne Zuordnung',
+					kom: 'ungültig (Ausreißer)'
+				})
+			).toEqual({
+				text: 'Aggregat nicht aussagekräftig · Beispiel (ungültig (Ausreißer))',
+				isNumeric: false
+			});
+		});
+
+		it('fehlende Status-/Dynamik-Felder → Fallback', () => {
+			expect(formatLayerValue('mss-gesamtindex-2025', { plr_name: 'X' })).toEqual({
+				text: 'Daten nicht vorhanden',
+				isNumeric: false
+			});
+		});
+
+		it('ohne plr_name → Status + Dynamik bleiben', () => {
+			expect(
+				formatLayerValue('mss-gesamtindex-2025', { si_v: 'hoch', di_v: 'positiv', kom: 'gültig' })
+			).toEqual({ text: 'Status hoch, Dynamik positiv', isNumeric: false });
+		});
+	});
 });

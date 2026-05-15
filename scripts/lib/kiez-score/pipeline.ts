@@ -1,0 +1,131 @@
+import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
+import center from '@turf/center';
+import { computeKiezScore } from './compute-score.js';
+import {
+	buildPolygonLayerHitsAtPoint,
+	buildPresenceLayerHits,
+	buildPoiIndex,
+	buildPoiDistanceHits,
+	type BuildLayerSpec
+} from './build-helpers.js';
+import {
+	findAllNearestStopsForBuild,
+	type OepnvStopIndexShape
+} from './nearest-stops.js';
+import { KIEZ_SCORE_DIMENSIONS, type KiezScore, type KiezScoreDimension } from './types.js';
+
+export interface PipelineInput {
+	lorFeatures: readonly Feature[];
+	polygonLayers: readonly BuildLayerSpec[];
+	presenceLayers: readonly string[];
+	/** POI-Layer für Versorgungs-Dim (Distance-from-Centroid). Points + Polygone (centroid-fallback). */
+	poiLayers?: readonly BuildLayerSpec[];
+	oepnvIndex: OepnvStopIndexShape;
+	lorIdFor?: (feat: Feature) => string | null;
+}
+
+export interface PipelineOutput {
+	schemaVersion: 1;
+	generatedAt: string;
+	scores: Record<string, KiezScore>;
+}
+
+export type KiezScoreLayerSlug =
+	| 'kiez-score-ruhe-luft'
+	| 'kiez-score-gruen'
+	| 'kiez-score-mobilitaet'
+	| 'kiez-score-soziale-lage'
+	| 'kiez-score-versorgung';
+
+export const KIEZ_SCORE_LAYER_SLUG_BY_DIMENSION: Record<KiezScoreDimension, KiezScoreLayerSlug> = {
+	'ruhe-luft': 'kiez-score-ruhe-luft',
+	gruen: 'kiez-score-gruen',
+	mobilitaet: 'kiez-score-mobilitaet',
+	'soziale-lage': 'kiez-score-soziale-lage',
+	versorgung: 'kiez-score-versorgung'
+};
+
+export interface DerivedLayerGeoJsons {
+	[slug: string]: FeatureCollection;
+}
+
+/**
+ * Erzeugt pro Kiez-Score-Dimension eine derived-FeatureCollection auf Basis der LOR-Polygone
+ * mit `properties.value` (0-100 oder null) + `properties.plr_id`. Konsumenten: Map-Layer-Render
+ * (`kiez-score-*`-Style-Profile).
+ */
+export function buildDerivedLayerGeojsons(
+	lorFeatures: readonly Feature[],
+	pipelineOutput: PipelineOutput,
+	idFn: (feat: Feature) => string | null = defaultLorIdFor
+): DerivedLayerGeoJsons {
+	const out: DerivedLayerGeoJsons = {};
+	for (const dimension of KIEZ_SCORE_DIMENSIONS) {
+		const slug = KIEZ_SCORE_LAYER_SLUG_BY_DIMENSION[dimension];
+		const features: Feature[] = [];
+		for (const lor of lorFeatures) {
+			if (lor.geometry.type !== 'Polygon' && lor.geometry.type !== 'MultiPolygon') continue;
+			const lorId = idFn(lor);
+			if (!lorId) continue;
+			const score = pipelineOutput.scores[lorId];
+			if (!score) continue;
+			const dim = score.dimensions.find((d) => d.dimension === dimension);
+			if (!dim) continue;
+			features.push({
+				type: 'Feature',
+				geometry: lor.geometry,
+				properties: {
+					plr_id: lorId,
+					value: dim.value,
+					dataStand: dim.dataStand
+				}
+			});
+		}
+		out[slug] = { type: 'FeatureCollection', features };
+	}
+	return out;
+}
+
+export const LOR_ID_CANDIDATE_KEYS = [
+	'plr_id',
+	'PLR_ID',
+	'PLR_NAME',
+	'spatial_alias',
+	'spatial_name',
+	'id'
+] as const;
+
+export function defaultLorIdFor(feat: Feature): string | null {
+	const props = feat.properties ?? {};
+	for (const key of LOR_ID_CANDIDATE_KEYS) {
+		const value = (props as Record<string, unknown>)[key];
+		if (typeof value === 'string' && value.length > 0) return value;
+		if (typeof value === 'number') return String(value);
+	}
+	return null;
+}
+
+export function buildKiezScoresFromInput(
+	input: PipelineInput,
+	generatedAt: string
+): PipelineOutput {
+	const idFn = input.lorIdFor ?? defaultLorIdFor;
+	const presenceHits = buildPresenceLayerHits(input.presenceLayers);
+	const poiIndex = buildPoiIndex(input.poiLayers ?? []);
+	const scores: Record<string, KiezScore> = {};
+	for (const lor of input.lorFeatures) {
+		if (lor.geometry.type !== 'Polygon' && lor.geometry.type !== 'MultiPolygon') continue;
+		const lorId = idFn(lor);
+		if (!lorId) continue;
+		const centroid = center(lor as Feature<Polygon | MultiPolygon>);
+		const [lng, lat] = centroid.geometry.coordinates as [number, number];
+		const polygonHits = buildPolygonLayerHitsAtPoint(lat, lng, input.polygonLayers);
+		const poiHits = buildPoiDistanceHits(lat, lng, poiIndex);
+		const stops = findAllNearestStopsForBuild({ lat, lng }, input.oepnvIndex);
+		scores[lorId] = computeKiezScore({
+			layerHits: [...polygonHits, ...presenceHits, ...poiHits],
+			nearestStops: stops
+		});
+	}
+	return { schemaVersion: 1, generatedAt, scores };
+}

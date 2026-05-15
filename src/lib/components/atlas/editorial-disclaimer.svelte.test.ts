@@ -98,4 +98,32 @@ describe('editorial-disclaimer.svelte', () => {
 			expect(el.textContent).toMatch(/individuelle Wohnsituationen/);
 		});
 	});
+
+	describe('MSS-Variants (Story 1.30)', () => {
+		it('mss-aggregat → Aggregat-Hinweis ohne Bewertung', async () => {
+			render(EditorialDisclaimer, { variant: 'mss-aggregat' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Planungsraum|Aggregat/);
+			expect(el.textContent).toMatch(/Einzelne Adressen|nicht abgebildet/);
+			expect(el.getAttribute('data-variant')).toBe('mss-aggregat');
+		});
+
+		it('compare-mss-aggregat → Bewertungs-Schutz-Hinweis', async () => {
+			render(EditorialDisclaimer, { variant: 'compare-mss-aggregat' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Stufe|ohne Bewertung/);
+			expect(el.textContent).toMatch(/Niedriger Status|nicht.*schlechter Kiez/i);
+		});
+	});
+
+	describe('Kiez-Score-Variant (Story 1.28)', () => {
+		it('kiez-score-explainer nennt MSS-Anteil + scope-Schnitte', async () => {
+			render(EditorialDisclaimer, { variant: 'kiez-score-explainer' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Kiez-Score/);
+			expect(el.textContent).toMatch(/Soziale Lage/);
+			expect(el.textContent).toMatch(/Bezahlbarkeit/);
+			expect(el.getAttribute('data-variant')).toBe('kiez-score-explainer');
+		});
+	});
 });

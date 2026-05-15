@@ -16,7 +16,8 @@
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright install && playwright test",
 		"data:fetch": "tsx scripts/fetch-static.ts",
-		"data:oepnv-index": "tsx scripts/build-oepnv-stop-index.ts"
+		"data:oepnv-index": "tsx scripts/build-oepnv-stop-index.ts",
+		"data:kiez-scores": "tsx scripts/build-kiez-scores.ts"
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "^4.11.3",

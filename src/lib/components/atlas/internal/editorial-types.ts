@@ -8,7 +8,10 @@ export type DisclaimerVariant =
 	| 'compare-stolperstein'
 	| 'compare-mietspiegel'
 	| 'compare-bodenrichtwerte'
-	| 'compare-stigma-footer';
+	| 'compare-stigma-footer'
+	| 'mss-aggregat'
+	| 'compare-mss-aggregat'
+	| 'kiez-score-explainer';
 
 export type EditorialCustomComponent = 'StolpersteinDetail' | 'MauerSektorenDetail';
 

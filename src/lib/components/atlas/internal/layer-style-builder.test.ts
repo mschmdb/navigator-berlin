@@ -75,11 +75,16 @@ describe('layer-style-builder.getStyleProfile', () => {
 			'bus-haltestellen',
 			'ubahn-netz',
 			'tram-netz',
-			'sbahn-netz'
+			'sbahn-netz',
+			'mss-gesamtindex-2025'
 		];
 		for (const slug of required) {
 			expect(LAYER_STYLE_PROFILE[slug]).toBeDefined();
 		}
+	});
+
+	it('MSS-Gesamtindex (Story 1.30) Profil = choropleth-mss-12 (neutral, kein Rot-Grün)', () => {
+		expect(getStyleProfile('mss-gesamtindex-2025')).toBe('choropleth-mss-12');
 	});
 });
 
@@ -180,6 +185,28 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(spec.paint?.['line-width']).toBeDefined();
 	});
 
+	it('choropleth-mss-12 (Story 1.30) nutzt si_v Status-Match und di_v Opacity-Match, NICHT vermillion/danger-Hue', () => {
+		const specs = buildLayerSpec('mss-gesamtindex-2025', SOURCE);
+		expect(specs).toHaveLength(1);
+		const spec = specs[0];
+		expect(spec.type).toBe('fill');
+		const fillColor = spec.paint?.['fill-color'] as unknown[];
+		expect(fillColor[0]).toBe('match');
+		const colorFlat = JSON.stringify(fillColor);
+		expect(colorFlat).toContain('si_v');
+		expect(colorFlat).toContain('hoch');
+		expect(colorFlat).toContain('sehr niedrig');
+		// Editorial-Schutz: KEIN vermillion (harter Rot-Ton = Stigma).
+		expect(colorFlat).not.toContain(COLORS.vermillion);
+		const fillOpacity = spec.paint?.['fill-opacity'] as unknown[];
+		expect(fillOpacity[0]).toBe('match');
+		const opFlat = JSON.stringify(fillOpacity);
+		expect(opFlat).toContain('di_v');
+		expect(opFlat).toContain('positiv');
+		expect(opFlat).toContain('stabil');
+		expect(opFlat).toContain('negativ');
+	});
+
 	it('Specs enthalten keine `*-transition`-Properties (MapLibre v5 JS-API)', () => {
 		const allSlugs = Object.keys(LAYER_STYLE_PROFILE);
 		for (const slug of allSlugs) {
@@ -207,6 +234,10 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'choropleth-status-3',
 			'choropleth-mehrfach',
 			'choropleth-pet',
+			'choropleth-wohnlage-3',
+			'choropleth-mss-12',
+			'choropleth-kiez-score-ordinal-4',
+			'choropleth-kiez-score-soziale-lage',
 			'polygon-highlight',
 			'polygon-outline-soft',
 			'point',
@@ -224,6 +255,31 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'line-rail-sbahn',
 			'line-fahrradstrasse'
 		];
-		expect(profiles).toHaveLength(23);
+		expect(profiles).toHaveLength(27);
+	});
+
+	it('Kiez-Score-Layer (Story 1.28) nutzen choropleth-kiez-score-ordinal-4 für 3 Dim + soziale-lage-Variante', () => {
+		expect(getStyleProfile('kiez-score-ruhe-luft')).toBe('choropleth-kiez-score-ordinal-4');
+		expect(getStyleProfile('kiez-score-gruen')).toBe('choropleth-kiez-score-ordinal-4');
+		expect(getStyleProfile('kiez-score-mobilitaet')).toBe('choropleth-kiez-score-ordinal-4');
+		expect(getStyleProfile('kiez-score-soziale-lage')).toBe('choropleth-kiez-score-soziale-lage');
+	});
+
+	it('choropleth-kiez-score-ordinal-4 nutzt value-property step-Stops für 4 Buckets', () => {
+		const specs = buildLayerSpec('kiez-score-ruhe-luft', SOURCE);
+		const fill = specs[0];
+		expect(fill.type).toBe('fill');
+		const color = (fill.paint as Record<string, unknown>)['fill-color'] as unknown[];
+		expect(color[0]).toBe('step');
+		expect(color).toContain(0);
+		expect(color).toContain(26);
+		expect(color).toContain(51);
+		expect(color).toContain(76);
+	});
+
+	it('choropleth-kiez-score-soziale-lage nutzt neutrale Plex-Hues (kein vermillion-danger)', () => {
+		const specs = buildLayerSpec('kiez-score-soziale-lage', SOURCE);
+		const color = (specs[0].paint as Record<string, unknown>)['fill-color'] as unknown[];
+		expect(color).not.toContain(COLORS.vermillion);
 	});
 });

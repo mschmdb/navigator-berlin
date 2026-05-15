@@ -45,6 +45,9 @@ export interface LayerMetadata {
 	 * Punkte außerhalb liefern reason='coverage-out-of-scope' statt 'no-coverage'.
 	 * Default fehlt = ganz Berlin (kein Vor-Filter). Story 1.23. */
 	coverageBbox?: [number, number, number, number];
+	/** Default true. Wenn false, wird Layer nicht in LayerPalette / nicht auf der Karte angeboten.
+	 * Nutzbar für Build-Only-Datensätze (z.B. LOR-Planungsraum als Kiez-Score-Input). Story 1.28. */
+	mapRelevant?: boolean;
 }
 
 export interface Manifest {

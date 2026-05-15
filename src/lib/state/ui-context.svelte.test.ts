@@ -45,7 +45,9 @@ function makeState(): UiState {
 		comparisonLayerHits: [],
 		comparisonClimateStation: null,
 		comparisonClimateSeries: null,
-		comparisonLoading: false
+		comparisonLoading: false,
+		kiezScore: null,
+		comparisonKiezScore: null
 	};
 }
 

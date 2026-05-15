@@ -46,6 +46,12 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		short: 'Städtebauliche Erhaltungsverordnung (Stadtbildschutz nach §172 BauGB)',
 		long: 'Gebiet mit städtebaulicher Erhaltungsverordnung zum Schutz des städtebaulichen Erscheinungsbildes. Abriss oder Veränderungen brauchen Genehmigung, häufig in Altbau- oder Gründerzeit-Quartieren.'
 	},
+	'mss-gesamtindex-2025': {
+		short: 'Strukturelle soziale Lage je Planungsraum (MSS 2025, SenStadt Berlin)',
+		long: 'Monitoring Soziale Stadtentwicklung 2025: aggregierter Gesamtindex aus Status- und Dynamik-Indikatoren pro LOR-Planungsraum (rund 7.500 Einwohner:innen). Strukturelle Aggregat-Größe, keine Bewertung einzelner Adressen oder Personen. Quelle: Senatsverwaltung für Stadtentwicklung Berlin.',
+		valueScaleExplain:
+			'Status hoch / mittel / niedrig / sehr niedrig kombiniert mit Dynamik positiv / stabil / negativ. Niedriger Status bedeutet nicht „schlechter Kiez", sondern strukturelle Unterschiede in Einkommen, Beschäftigung und Bildung.'
+	},
 
 	// C: Umwelt — Umweltatlas 2023
 	'laerm-2023': {
@@ -174,6 +180,33 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	'sbahn-netz': {
 		short: 'S-Bahn-Linien-Netz Berlin (Betreiber: S-Bahn Berlin GmbH)',
 		long: 'Linienverlauf des Berliner S-Bahn-Netzes, betrieben von der S-Bahn Berlin GmbH (DB-Konzern-Tochter). 16 Linien, rund 330 km Streckennetz, dichteste Verkehrsachsen in Berlin und Umland. Quelle: OpenStreetMap-Routen-Relationen (ODbL 1.0).'
+	},
+
+	// G: Kiez-Score (Story 1.28 · virtuelle Aggregat-Layer pro LOR-Planungsraum)
+	'kiez-score-ruhe-luft': {
+		short: 'Aggregat „Ruhe & Luft" pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Gewichtete Aggregation aus Lärm, Luft und thermischer Belastung pro LOR-Planungsraum. Cloud-Dancer-Skala: niedrig = stärker belastet, hoch = ruhiger und sauberer. Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Höher = ruhiger und sauberer'
+	},
+	'kiez-score-gruen': {
+		short: 'Aggregat „Grün" pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Pro-Kopf-Grünversorgung plus Kaltluft-Einwirkbereich und Leitbahnkorridor pro Planungsraum, gewichtet auf 0–100. Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Höher = mehr nutzbares Grün'
+	},
+	'kiez-score-mobilitaet': {
+		short: 'Aggregat „Mobilität" pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Distance-basiert vom Planungsraum-Centroid zu nächster U-Bahn, S-Bahn, Tram und Bus plus Radverkehrs-Presence. Pro Adresse wird der Wert mit der exakten Adress-Distance überschrieben. Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Höher = besser angebunden'
+	},
+	'kiez-score-soziale-lage': {
+		short: 'Aggregat „Soziale Lage" pro Planungsraum (MSS 2025, neutral)',
+		long: 'Status-Achse aus dem Monitoring Soziale Stadtentwicklung 2025 pro Planungsraum, normalisiert auf 0–100. Neutral dargestellt: niedriger Status bedeutet strukturelle Unterschiede, keine Wohnqualität. Stigma-Schutz. Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Stufe sehr niedrig bis hoch · keine Bewertung'
+	},
+	'kiez-score-versorgung': {
+		short: 'Aggregat „Versorgung" pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Distance vom Planungsraum-Centroid zu nächster Kita, Schule, Plan-Krankenhaus, Spielplatz und Grünanlage. Threshold pro POI individuell (Kita 500 m, Schule 800 m, Krankenhaus 2.000 m, Spielplatz 400 m, Grünanlage 600 m). Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Höher = bessere Versorgung mit Familien- und Gesundheits-Infrastruktur'
 	},
 
 	// Legacy / non-Manifest-Slugs (Story 1.3 Re-Run TODO):

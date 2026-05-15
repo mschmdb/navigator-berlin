@@ -141,4 +141,42 @@ describe('applyApplicabilityReasons', () => {
 		const result = applyApplicabilityReasons(hits);
 		expect(result.find((h) => h.layer === 'schulen-2024')?.reason).toBe('no-coverage');
 	});
+
+	// Story 1.30: MSS intrinsic check — kom != 'gültig' → out-of-concept (kein Cross-Layer-Pattern,
+	// sondern Property im Hit-Value selbst).
+	it('MSS kom=ungültig (EW unter 300) → out-of-concept', () => {
+		const hit: LayerHit = {
+			layer: 'mss-gesamtindex-2025',
+			value: { plr_name: 'X', si_v: 'Planungsraum ohne Zuordnung', kom: 'ungültig (EW unter 300)' },
+			source: sourceUrl,
+			updatedAt,
+			license
+		};
+		const result = applyApplicabilityReasons([hit]);
+		expect(result[0].reason).toBe('out-of-concept');
+	});
+
+	it('MSS kom=ungültig (Ausreißer) → out-of-concept', () => {
+		const hit: LayerHit = {
+			layer: 'mss-gesamtindex-2025',
+			value: { plr_name: 'X', kom: 'ungültig (Ausreißer)' },
+			source: sourceUrl,
+			updatedAt,
+			license
+		};
+		const result = applyApplicabilityReasons([hit]);
+		expect(result[0].reason).toBe('out-of-concept');
+	});
+
+	it('MSS kom=gültig → reason bleibt undefined', () => {
+		const hit: LayerHit = {
+			layer: 'mss-gesamtindex-2025',
+			value: { plr_name: 'X', si_v: 'mittel', di_v: 'stabil', kom: 'gültig' },
+			source: sourceUrl,
+			updatedAt,
+			license
+		};
+		const result = applyApplicabilityReasons([hit]);
+		expect(result[0].reason).toBeUndefined();
+	});
 });
