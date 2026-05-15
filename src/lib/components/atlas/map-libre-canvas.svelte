@@ -88,7 +88,7 @@
 					maxZoom,
 					maxBounds: maxBounds ?? undefined,
 					keyboard: false,
-					attributionControl: { compact: true }
+					attributionControl: false
 				});
 				mapInstance = map as unknown as { remove: () => void };
 				mapHandle = {

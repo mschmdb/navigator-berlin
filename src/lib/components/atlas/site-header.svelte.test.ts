@@ -154,4 +154,24 @@ describe('site-header.svelte', () => {
 			await expect.element(page.getByTestId('header-bookmark-trigger')).not.toBeInTheDocument();
 		});
 	});
+
+	describe('Such-Bar-Kollaps (Story 1.31 AC-2)', () => {
+		it('searchCollapsed=false rendert AddressSearch-Combobox', async () => {
+			render(SiteHeader, { geocode: async () => [], searchCollapsed: false });
+			await expect.element(page.getByRole('combobox')).toBeInTheDocument();
+			await expect.element(page.getByTestId('header-search-trigger')).not.toBeInTheDocument();
+		});
+
+		it('searchCollapsed=true rendert Search-Icon-Button statt Combobox', async () => {
+			render(SiteHeader, { geocode: async () => [], searchCollapsed: true });
+			await expect.element(page.getByTestId('header-search-trigger')).toBeInTheDocument();
+			await expect.element(page.getByRole('combobox')).not.toBeInTheDocument();
+		});
+
+		it('Klick auf Search-Icon-Button öffnet Overlay', async () => {
+			render(SiteHeader, { geocode: async () => [], searchCollapsed: true });
+			await page.getByTestId('header-search-trigger').click();
+			await expect.element(page.getByTestId('address-search-overlay')).toBeInTheDocument();
+		});
+	});
 });

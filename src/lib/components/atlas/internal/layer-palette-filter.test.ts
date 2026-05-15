@@ -55,6 +55,16 @@ describe('filterLayers', () => {
 		const out = filterLayers(LAYERS, 'postl');
 		expect(out.map((l) => l.slug)).toEqual(['plz']);
 	});
+
+	it('matched Synonym „Lärm" auf laerm-2023', () => {
+		const out = filterLayers(LAYERS, 'lärm');
+		expect(out.map((l) => l.slug)).toContain('laerm-2023');
+	});
+
+	it('matched Synonym „laerm" ohne Umlaut auf laerm-2023 (NFD-Toleranz)', () => {
+		const out = filterLayers(LAYERS, 'laerm');
+		expect(out.map((l) => l.slug)).toContain('laerm-2023');
+	});
 });
 
 describe('groupLayersByBundle', () => {

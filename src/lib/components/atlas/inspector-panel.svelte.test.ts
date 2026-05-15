@@ -66,10 +66,22 @@ describe('inspector-panel.svelte', () => {
 		await expect.element(page.getByTestId('inspector-panel')).not.toBeInTheDocument();
 	});
 
-	it('zeigt Adresse im Header', async () => {
+	it('zeigt Straßenname-Primary im Header (Story 1.31 AC-6)', async () => {
 		render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
 		const h = (await page.getByTestId('inspector-address').element()) as HTMLElement;
-		expect(h.textContent?.trim()).toBe(address.displayName);
+		expect(h.textContent?.trim()).toBe('Boxhagener Straße 12');
+		expect(h.getAttribute('title')).toBe(address.displayName);
+	});
+
+	it('rendert Subline (kiez · bezirk · plz) wenn vorhanden', async () => {
+		render(Harness, {
+			open: true,
+			address: { ...address, kiez: 'Boxhagener Kiez' },
+			hits: [],
+			layerMeta: fullLayerMeta
+		});
+		const sub = (await page.getByTestId('inspector-address-subline').element()) as HTMLElement;
+		expect(sub.textContent?.trim()).toBe('Boxhagener Kiez · Friedrichshain-Kreuzberg · 10245');
 	});
 
 	it('rendert alle 5 Sektionen in fester Reihenfolge', async () => {
@@ -262,7 +274,7 @@ describe('inspector-panel.svelte', () => {
 	});
 
 	describe('Story 1.18: Section-Header + Empty-Section-Toggle', () => {
-		it('Section-Header nutzt Plex-Mono uppercase mit border-t (AC-5)', async () => {
+		it('Section-Header nutzt uppercase + tracking-wide (Story 1.31: section-bordert-t am Section-Wrapper)', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -270,10 +282,11 @@ describe('inspector-panel.svelte', () => {
 				layerMeta: fullLayerMeta
 			});
 			const h = (await page.getByTestId('section-header-boundaries').element()) as HTMLElement;
-			expect(h.className).toMatch(/font-mono/);
 			expect(h.className).toMatch(/text-xs/);
 			expect(h.className).toMatch(/uppercase/);
-			expect(h.className).toMatch(/border-t/);
+			expect(h.className).toMatch(/tracking-wide/);
+			const sec = (await page.getByTestId('section-boundaries').element()) as HTMLElement;
+			expect(sec.className).toMatch(/border-t/);
 		});
 
 		it('Section-Count-Suffix zeigt Hit-Anzahl (AC-5)', async () => {
@@ -286,7 +299,7 @@ describe('inspector-panel.svelte', () => {
 			const count = (await page
 				.getByTestId('section-count-boundaries')
 				.element()) as HTMLElement;
-			expect(count.textContent).toMatch(/\(1\)/);
+			expect(count.textContent?.trim()).toBe('1');
 		});
 
 		it('Empty-Section default ausgeblendet außer Klima (AC-6)', async () => {

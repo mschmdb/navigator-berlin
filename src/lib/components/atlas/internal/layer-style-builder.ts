@@ -144,29 +144,35 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		items: [{ color: COLORS.accent, label: 'Grenze' }]
 	},
 	'choropleth-brw': {
+		// Story 1.31: BRW = Strukturell (Indigo). Bodenwerte sind ökonomisches Faktum,
+		// kein moralisches Urteil (kein Rot für „teuer"). Quantile-Klassifikation für Long-Tail.
 		kind: 'gradient',
 		items: [
-			{ color: COLORS.accentSoft, label: '10 €/m²' },
-			{ color: COLORS.chartCat6, label: '100' },
-			{ color: COLORS.chartCat2, label: '1.000' },
-			{ color: COLORS.vermillion, label: '10.000' }
+			{ color: COLORS.scaleStrukturell1, label: '10 €/m²' },
+			{ color: COLORS.scaleStrukturell2, label: '100' },
+			{ color: COLORS.scaleStrukturell4, label: '1.000' },
+			{ color: COLORS.scaleStrukturell5, label: '10.000' }
 		],
 		range: ['niedrig', 'hoch']
 	},
 	'choropleth-belastung-3': {
+		// Story 1.31: Last-Familie (Vermillion). Umwelt-Schaden ist Schaden, kein Stigma.
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.accentSoft, label: 'gering' },
-			{ color: COLORS.vermillionSoft, label: 'mittel' },
-			{ color: COLORS.vermillion, label: 'hoch' }
+			{ color: COLORS.scaleLast1, label: 'gering' },
+			{ color: COLORS.scaleLast3, label: 'mittel' },
+			{ color: COLORS.scaleLast5, label: 'hoch' }
 		]
 	},
 	'choropleth-versorgung-3': {
+		// Story 1.31: Gut-Familie (Grün). Hell→dunkel = besser.
+		// Achtung Richtung: Versorgung-3 hat „schlecht" als dunkelsten Wert (originale Logik
+		// invertiert). Wir lassen die Kategorial-Mapping-Reihenfolge bestehen, swappen aber Hue.
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.chartCat3, label: 'gut' },
-			{ color: COLORS.chartCat5, label: 'mittel' },
-			{ color: COLORS.vermillion, label: 'schlecht' }
+			{ color: COLORS.scaleGut5, label: 'gut' },
+			{ color: COLORS.scaleGut3, label: 'mittel' },
+			{ color: COLORS.scaleLast4, label: 'schlecht' }
 		]
 	},
 	'choropleth-status-3': {
@@ -178,64 +184,67 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		]
 	},
 	'choropleth-mehrfach': {
+		// Story 1.31: Last-Familie 5-stufig. Vermillion für Umweltgerechtigkeit-Mehrfach-Belastung.
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.accentSoft, label: 'keinfach' },
-			{ color: COLORS.chartCat6, label: 'einfach' },
-			{ color: COLORS.chartCat5, label: 'zweifach' },
-			{ color: COLORS.chartCat2, label: 'dreifach' },
-			{ color: COLORS.vermillion, label: 'vierfach' }
+			{ color: COLORS.scaleLast1, label: 'keinfach' },
+			{ color: COLORS.scaleLast2, label: 'einfach' },
+			{ color: COLORS.scaleLast3, label: 'zweifach' },
+			{ color: COLORS.scaleLast4, label: 'dreifach' },
+			{ color: COLORS.scaleLast5, label: 'vierfach' }
 		]
 	},
 	'choropleth-pet': {
+		// Story 1.31: Last-Gradient (Vermillion). Equal-Interval 28-42°C.
 		kind: 'gradient',
 		items: [
-			{ color: COLORS.chartCat6, label: '28 °C' },
-			{ color: COLORS.chartCat5, label: '34' },
-			{ color: COLORS.chartCat2, label: '38' },
-			{ color: COLORS.vermillion, label: '42' }
+			{ color: COLORS.scaleLast1, label: '28 °C' },
+			{ color: COLORS.scaleLast2, label: '34' },
+			{ color: COLORS.scaleLast4, label: '38' },
+			{ color: COLORS.scaleLast5, label: '42' }
 		],
 		range: ['kühl', 'heiß']
 	},
 	'choropleth-wohnlage-3': {
+		// Story 1.31: Mietspiegel-Wohnlage = Strukturell (Indigo). „Stufe, keine Wertung".
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.chartCat3, label: 'gut' },
-			{ color: COLORS.chartCat5, label: 'mittel' },
-			{ color: COLORS.vermillion, label: 'einfach' }
+			{ color: COLORS.scaleStrukturell1, label: 'einfach' },
+			{ color: COLORS.scaleStrukturell3, label: 'mittel' },
+			{ color: COLORS.scaleStrukturell5, label: 'gut' }
 		]
 	},
-	// Story 1.30: MSS-Gesamtindex Status × Dynamik. Neutrale Palette (kein Rot-Grün, kein
-	// Severity-Mapping), 4 Status-Stufen über Hue, 3 Dynamik-Stufen über Opacity.
 	'choropleth-mss-12': {
+		// Story 1.31: MSS = Strukturell (Indigo). Status × Dynamik bleibt Hue+Opacity-Combo,
+		// aber Hue ist Indigo-Sequenz statt vermillion-bunte-Matrix.
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.chartCat6, label: 'Status hoch' },
-			{ color: COLORS.chartCat4, label: 'Status mittel' },
-			{ color: COLORS.vermillionSoft, label: 'Status niedrig' },
-			{ color: COLORS.chartCat5, label: 'Status sehr niedrig' }
+			{ color: COLORS.scaleStrukturell1, label: 'Status sehr niedrig' },
+			{ color: COLORS.scaleStrukturell2, label: 'Status niedrig' },
+			{ color: COLORS.scaleStrukturell4, label: 'Status mittel' },
+			{ color: COLORS.scaleStrukturell5, label: 'Status hoch' }
 		]
 	},
-	// Story 1.28: Kiez-Score 4-Stufen-Choropleth für Ruhe-Luft/Grün/Mobilität.
-	// Severity-Tokens-konsistent mit Inspector-ValueChip.
 	'choropleth-kiez-score-ordinal-4': {
+		// Story 1.31: Kiez-Score-Gut-Layer (Ruhe-Luft/Grün/Versorgung/Mobilität) = Gut-Familie (Grün).
+		// Hell→dunkel = besser. Stage-Subset 4 = {1,2,4,5}.
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.vermillion, label: 'gering' },
-			{ color: COLORS.chartCat5, label: 'mittel' },
-			{ color: COLORS.chartCat4, label: 'hoch' },
-			{ color: COLORS.chartCat3, label: 'sehr hoch' }
+			{ color: COLORS.scaleGut1, label: 'gering' },
+			{ color: COLORS.scaleGut2, label: 'mittel' },
+			{ color: COLORS.scaleGut4, label: 'hoch' },
+			{ color: COLORS.scaleGut5, label: 'sehr hoch' }
 		]
 	},
-	// Story 1.28: Kiez-Score Soziale Lage. Neutrale Plex-Hues analog MSS-Pattern,
-	// kein Rot-Grün-Sprung, keine Severity-Wertung.
 	'choropleth-kiez-score-soziale-lage': {
+		// Story 1.31: Kiez-Score-Soziale-Lage = Strukturell (Indigo). Stage-Subset 4 = {1,2,4,5}.
+		// Kein Rot-Grün, keine Severity-Wertung. „Stufe, keine Wertung".
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.chartCat6, label: 'Status sehr niedrig' },
-			{ color: COLORS.chartCat4, label: 'Status niedrig' },
-			{ color: COLORS.vermillionSoft, label: 'Status mittel' },
-			{ color: COLORS.chartCat5, label: 'Status hoch' }
+			{ color: COLORS.scaleStrukturell1, label: 'Status sehr niedrig' },
+			{ color: COLORS.scaleStrukturell2, label: 'Status niedrig' },
+			{ color: COLORS.scaleStrukturell4, label: 'Status mittel' },
+			{ color: COLORS.scaleStrukturell5, label: 'Status hoch' }
 		]
 	},
 	'polygon-highlight': {
@@ -345,8 +354,8 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-brw':
-			// Bodenrichtwert EUR/m² · reale Range 0.6–60000, Median 500.
-			// Logarithmische Stops für robuste Verteilung.
+			// Story 1.31: BRW = Strukturell-Indigo, Quantile-Klassifikation für Long-Tail.
+			// Log10-Stops bleiben (näherungsweise Quantile-Effekt für 0.6-60000 EUR/m²).
 			return [
 				{
 					id,
@@ -357,15 +366,14 @@ export function buildLayerSpec(
 							'interpolate',
 							['linear'],
 							['log10', ['max', ['to-number', ['get', 'brw'], 1], 1]],
-							1, // 10 EUR
-							COLORS.accentSoft,
-							2, // 100 EUR
-							COLORS.chartCat6,
-							3, // 1.000 EUR
-							COLORS.chartCat2,
-							4 // 10.000 EUR
-							,
-							COLORS.vermillion
+							1,
+							COLORS.scaleStrukturell1,
+							2,
+							COLORS.scaleStrukturell2,
+							3,
+							COLORS.scaleStrukturell4,
+							4,
+							COLORS.scaleStrukturell5
 						],
 						'fill-opacity': 0.55,
 						'fill-outline-color': COLORS.accent
@@ -373,8 +381,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-belastung-3':
-			// Umweltatlas-Belastungs-Indikatoren (Laerm, Luft, Bioklima):
-			// `kategorie` ∈ {gering, mittel, hoch}. Sequentiell Cloud-Dancer → Vermillion-Soft → Vermillion.
+			// Story 1.31: Last-Familie Vermillion. Stage-Subset 3 = {1,3,5}.
 			return [
 				{
 					id,
@@ -385,11 +392,11 @@ export function buildLayerSpec(
 							'match',
 							['get', 'kategorie'],
 							'gering',
-							COLORS.accentSoft,
+							COLORS.scaleLast1,
 							'mittel',
-							COLORS.vermillionSoft,
+							COLORS.scaleLast3,
 							'hoch',
-							COLORS.vermillion,
+							COLORS.scaleLast5,
 							COLORS.bg
 						],
 						'fill-opacity': 0.55,
@@ -398,7 +405,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-versorgung-3':
-			// Gruenversorgung: `kategorie` ∈ {gut, mittel, schlecht}. Invertiert: gut=Indigo, schlecht=Vermillion.
+			// Story 1.31: Gut-Familie (Grün) für „gut/mittel", Last für „schlecht" (Mangelversorgung).
 			return [
 				{
 					id,
@@ -409,11 +416,11 @@ export function buildLayerSpec(
 							'match',
 							['get', 'kategorie'],
 							'gut',
-							COLORS.chartCat3,
+							COLORS.scaleGut5,
 							'mittel',
-							COLORS.chartCat5,
+							COLORS.scaleGut3,
 							'schlecht',
-							COLORS.vermillion,
+							COLORS.scaleLast4,
 							COLORS.bg
 						],
 						'fill-opacity': 0.55,
@@ -446,7 +453,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-mehrfach':
-			// Umweltgerechtigkeit-Gesamt: `kategorie` ∈ {keinfach/einfach/zweifach/dreifach/vierfach}.
+			// Story 1.31: Last-Familie 5-stufig (Vermillion). Umweltgerechtigkeit-Mehrfachbelastung.
 			return [
 				{
 					id,
@@ -457,15 +464,15 @@ export function buildLayerSpec(
 							'match',
 							['get', 'kategorie'],
 							'keinfach',
-							COLORS.accentSoft,
+							COLORS.scaleLast1,
 							'einfach',
-							COLORS.chartCat6,
+							COLORS.scaleLast2,
 							'zweifach',
-							COLORS.chartCat5,
+							COLORS.scaleLast3,
 							'dreifach',
-							COLORS.chartCat2,
+							COLORS.scaleLast4,
 							'vierfach',
-							COLORS.vermillion,
+							COLORS.scaleLast5,
 							COLORS.bg
 						],
 						'fill-opacity': 0.6,
@@ -488,7 +495,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-wohnlage-3':
-			// Mietspiegel-Wohnlage Aggregat: `wol_mode` ∈ {einfach, mittel, gut, unbekannt}.
+			// Story 1.31: Mietspiegel-Wohnlage = Strukturell (Indigo). „Stufe, keine Wertung".
 			return [
 				{
 					id,
@@ -499,12 +506,12 @@ export function buildLayerSpec(
 							'match',
 							['get', 'wol_mode'],
 							'einfach',
-							COLORS.vermillion,
+							COLORS.scaleStrukturell1,
 							'mittel',
-							COLORS.chartCat5,
+							COLORS.scaleStrukturell3,
 							'gut',
-							COLORS.chartCat3,
-							COLORS.accentSoft
+							COLORS.scaleStrukturell5,
+							COLORS.scaleStrukturell1
 						],
 						'fill-opacity': 0.55,
 						'fill-outline-color': COLORS.accent
@@ -512,9 +519,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-mss-12':
-			// Story 1.30: Status × Dynamik. Status = Hue (4 Stufen, neutrale Plex-Cartography-Töne,
-			// kein vermillion/Rot-Grün → Stigma-Schutz). Dynamik = Fill-Opacity (3 Stufen).
-			// "Planungsraum ohne Zuordnung" → sehr blasse Fläche.
+			// Story 1.31: MSS = Strukturell (Indigo-Sequenz). Status = Hue, Dynamik = Opacity bleibt.
 			return [
 				{
 					id,
@@ -525,13 +530,13 @@ export function buildLayerSpec(
 							'match',
 							['get', 'si_v'],
 							'hoch',
-							COLORS.chartCat6,
+							COLORS.scaleStrukturell5,
 							'mittel',
-							COLORS.chartCat4,
+							COLORS.scaleStrukturell4,
 							'niedrig',
-							COLORS.vermillionSoft,
+							COLORS.scaleStrukturell2,
 							'sehr niedrig',
-							COLORS.chartCat5,
+							COLORS.scaleStrukturell1,
 							COLORS.bg
 						],
 						'fill-opacity': [
@@ -550,7 +555,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-pet':
-			// PET 14 Uhr (gefühlte Temperatur, °C) — typischer Range ~28-42.
+			// Story 1.31: Last-Familie (Vermillion). Equal-Interval 28-42°C.
 			return [
 				{
 					id,
@@ -562,13 +567,13 @@ export function buildLayerSpec(
 							['linear'],
 							['to-number', ['get', 'pet14h'], 30],
 							28,
-							COLORS.chartCat6,
+							COLORS.scaleLast1,
 							34,
-							COLORS.chartCat5,
+							COLORS.scaleLast2,
 							38,
-							COLORS.chartCat2,
+							COLORS.scaleLast4,
 							42,
-							COLORS.vermillion
+							COLORS.scaleLast5
 						],
 						'fill-opacity': 0.55,
 						'fill-outline-color': COLORS.accent
@@ -796,29 +801,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-kiez-score-ordinal-4':
-			// Erwartet Property `value` 0-100. 4 Buckets analog Inspector-ValueChip.
-			return [
-				{
-					id,
-					type: 'fill',
-					source: sourceId,
-					paint: {
-						'fill-color': [
-							'step',
-							['to-number', ['get', 'value'], -1],
-							COLORS.bg, // -1 = kein Wert (null)
-							0, COLORS.vermillion,
-							26, COLORS.chartCat5,
-							51, COLORS.chartCat4,
-							76, COLORS.chartCat3
-						],
-						'fill-opacity': 0.55,
-						'fill-outline-color': COLORS.accent
-					}
-				}
-			];
-		case 'choropleth-kiez-score-soziale-lage':
-			// Neutrale Hue-Palette ohne Rot-Grün-Sprung. Stigma-Schutz für MSS-basierte Dimension.
+			// Story 1.31: Gut-Familie (Grün). Hell→dunkel = besser. Stage-Subset 4 = {1,2,4,5}.
 			return [
 				{
 					id,
@@ -829,10 +812,40 @@ export function buildLayerSpec(
 							'step',
 							['to-number', ['get', 'value'], -1],
 							COLORS.bg,
-							0, COLORS.chartCat6,
-							26, COLORS.chartCat4,
-							51, COLORS.vermillionSoft,
-							76, COLORS.chartCat5
+							0,
+							COLORS.scaleGut1,
+							26,
+							COLORS.scaleGut2,
+							51,
+							COLORS.scaleGut4,
+							76,
+							COLORS.scaleGut5
+						],
+						'fill-opacity': 0.55,
+						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
+		case 'choropleth-kiez-score-soziale-lage':
+			// Story 1.31: Strukturell-Familie (Indigo). „Stufe, keine Wertung".
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'step',
+							['to-number', ['get', 'value'], -1],
+							COLORS.bg,
+							0,
+							COLORS.scaleStrukturell1,
+							26,
+							COLORS.scaleStrukturell2,
+							51,
+							COLORS.scaleStrukturell4,
+							76,
+							COLORS.scaleStrukturell5
 						],
 						'fill-opacity': 0.55,
 						'fill-outline-color': COLORS.accent

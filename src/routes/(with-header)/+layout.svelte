@@ -52,6 +52,7 @@
 	bookmarkCount={ui.bookmarks.length}
 	{currentAddressBookmarked}
 	onOpenBookmarks={openBookmarks}
+	searchCollapsed={ui.inspectorOpen || ui.compareMode}
 />
 
 <main id="main">

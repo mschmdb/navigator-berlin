@@ -225,6 +225,35 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(getTransitionDurationMs({ reducedMotion: true })).toBe(0);
 	});
 
+	it('Strukturell-Familie (Story 1.31): mss/wohnlage/brw/kiez-score-soziale-lage enthalten KEIN Vermillion', () => {
+		const STRUKTURELL_SLUGS = [
+			'mss-gesamtindex-2025',
+			'wohnlagen-2024',
+			'bodenrichtwerte',
+			'kiez-score-soziale-lage'
+		];
+		for (const slug of STRUKTURELL_SLUGS) {
+			const specs = buildLayerSpec(slug, SOURCE);
+			const flat = JSON.stringify(specs);
+			expect(flat).not.toContain(COLORS.vermillion);
+			expect(flat).not.toContain(COLORS.scaleLast5); // primärer last-Token
+		}
+	});
+
+	it('Gut-Familie (Story 1.31): kiez-score-ruhe-luft/gruen/versorgung/mobilitaet enthalten KEIN Vermillion', () => {
+		const GUT_SLUGS = [
+			'kiez-score-ruhe-luft',
+			'kiez-score-gruen',
+			'kiez-score-versorgung',
+			'kiez-score-mobilitaet'
+		];
+		for (const slug of GUT_SLUGS) {
+			const specs = buildLayerSpec(slug, SOURCE);
+			const flat = JSON.stringify(specs);
+			expect(flat).not.toContain(COLORS.vermillion);
+		}
+	});
+
 	it('Type-Sicherheit: StyleProfile-Union deckt alle Profile ab', () => {
 		const profiles: StyleProfile[] = [
 			'boundary',

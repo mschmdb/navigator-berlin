@@ -137,13 +137,16 @@
 	data-testid="layer-hit-row"
 	data-state={rowState}
 	data-layer={hit.layer}
-	class="flex flex-col gap-1.5 border-b border-rule py-3 last:border-b-0"
+	class="-mx-2 flex flex-col gap-1.5 rounded-sm border-b border-rule px-2 py-3 transition-colors last:border-b-0 hover:bg-bg/50"
 >
-	<div class="flex items-start justify-between gap-3">
-		<span class="text-base font-medium text-ink leading-tight pt-1" data-testid="layer-name">
+	<div class="flex flex-col gap-1.5">
+		<span class="text-base font-medium text-ink leading-tight" data-testid="layer-name">
 			{layerName}
 		</span>
-		<div class="flex shrink-0 items-center gap-1" data-testid="layer-hit-row-actions">
+		<div
+			class="flex flex-wrap items-center justify-end gap-1.5"
+			data-testid="layer-hit-row-actions"
+		>
 			{#if rowState === 'with-value' && display.chip}
 				<ValueChip
 					{severity}
@@ -213,7 +216,7 @@
 						: `${layerName} auf Karte zeigen`}
 					onclick={() => onToggleLayer?.(hit.layer)}
 					class={[
-						'inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:text-ink',
+						'inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:bg-bg hover:text-ink',
 						isActive && 'text-accent hover:text-accent-strong'
 					]
 						.filter(Boolean)
@@ -228,7 +231,7 @@
 			{/if}
 			<a
 				href={learnMoreHref}
-				class="inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:text-ink"
+				class="inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:bg-bg hover:text-ink"
 				data-testid="learn-more"
 				aria-label={`Mehr Details über ${layerName}`}
 				title={`Mehr Details über ${layerName}`}

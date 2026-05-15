@@ -48,7 +48,7 @@
 	});
 
 	const inputBase =
-		'w-full bg-bg-elevated border border-rule-strong text-ink font-sans focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus';
+		'w-full bg-bg-elevated border border-rule-strong text-ink font-sans rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus';
 	const inputHero = `${inputBase} px-4 py-3 text-xl`;
 	const inputHeader = `${inputBase} pl-9 pr-3 py-2 text-base`;
 	const inputClass = $derived(variant === 'hero' ? inputHero : inputHeader);
@@ -83,7 +83,7 @@
 
 	<BitsCombobox.Portal>
 		<BitsCombobox.Content
-			class="z-50 mt-1 max-h-[60vh] overflow-auto border border-rule-strong bg-bg-elevated"
+			class="z-50 mt-1 max-h-[60vh] overflow-auto rounded-md border border-rule-strong bg-bg-elevated"
 		>
 			{#each suggestions as s (s.id)}
 				<BitsCombobox.Item

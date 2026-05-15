@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Layers, Bookmark, BookmarkCheck } from '@lucide/svelte';
+	import { Layers, Bookmark, BookmarkCheck, Search } from '@lucide/svelte';
 	import AddressSearch from './address-search.svelte';
+	import AddressSearchOverlay from './address-search-overlay.svelte';
 	import { AnimatedLogo } from '$lib/components/ui';
 	import type { GeocodeSuggestion } from '$lib/data';
 
@@ -14,6 +15,8 @@
 		bookmarkCount?: number;
 		currentAddressBookmarked?: boolean;
 		onOpenBookmarks?: () => void;
+		/** Story 1.31 AC-2: Such-Bar kollabiert zum Icon-Button im Inspector-Mode. */
+		searchCollapsed?: boolean;
 	};
 
 	let {
@@ -24,8 +27,21 @@
 		onOpenLayerPalette,
 		bookmarkCount = 0,
 		currentAddressBookmarked = false,
-		onOpenBookmarks
+		onOpenBookmarks,
+		searchCollapsed = false
 	}: Props = $props();
+
+	let overlayOpen = $state(false);
+	function openOverlay(): void {
+		overlayOpen = true;
+	}
+	function closeOverlay(): void {
+		overlayOpen = false;
+	}
+	function handleOverlaySelect(s: GeocodeSuggestion): void {
+		onSelect?.(s);
+		overlayOpen = false;
+	}
 </script>
 
 <header
@@ -38,24 +54,40 @@
 			<AnimatedLogo variant="one-shot" size={32} title="navigator.berlin" />
 			<span class="font-sans text-base font-light tracking-wide text-ink">navigator.berlin</span>
 		</a>
-		<div class="min-w-0 flex-1">
-			<AddressSearch variant="header" {geocode} {onSelect} />
-		</div>
+		{#if searchCollapsed}
+			<div class="min-w-0 flex-1"></div>
+			<button
+				type="button"
+				data-testid="header-search-trigger"
+				onclick={openOverlay}
+				aria-label="Adress-Suche öffnen"
+				aria-haspopup="dialog"
+				class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:bg-bg"
+			>
+				<Search size={18} aria-hidden="true" />
+			</button>
+		{:else}
+			<div class="min-w-0 flex-1">
+				<AddressSearch variant="header" {geocode} {onSelect} />
+			</div>
+		{/if}
 		{#if onOpenLayerPalette}
 			<button
 				type="button"
 				data-testid="header-layer-trigger"
 				onclick={onOpenLayerPalette}
-				aria-label="Layer-Palette öffnen"
+				aria-label={activeLayerCount > 0
+					? `${activeLayerCount} aktive Layer · Palette öffnen`
+					: 'Layer-Palette öffnen'}
 				aria-haspopup="dialog"
-				class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center border border-rule text-ink hover:bg-bg"
+				class="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-sm border border-rule px-2 text-ink hover:bg-bg"
 			>
 				<Layers size={18} aria-hidden="true" />
 				{#if activeLayerCount > 0}
 					<span
 						data-testid="header-layer-badge"
 						aria-hidden="true"
-						class="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 font-mono text-[10px] text-bg"
+						class="font-mono text-xs tabular-nums text-ink-muted"
 					>
 						{activeLayerCount}
 					</span>
@@ -68,9 +100,11 @@
 				data-testid="header-bookmark-trigger"
 				data-bookmarked={currentAddressBookmarked ? 'true' : 'false'}
 				onclick={onOpenBookmarks}
-				aria-label="Bookmark-Verwaltung öffnen"
+				aria-label={bookmarkCount > 0
+					? `${bookmarkCount} gespeicherte Adressen anzeigen`
+					: 'Bookmark-Verwaltung öffnen'}
 				aria-haspopup="dialog"
-				class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center border border-rule text-ink hover:bg-bg"
+				class="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-sm border border-rule px-2 text-ink hover:bg-bg"
 			>
 				{#if currentAddressBookmarked}
 					<BookmarkCheck size={18} aria-hidden="true" />
@@ -81,7 +115,7 @@
 					<span
 						data-testid="header-bookmark-badge"
 						aria-hidden="true"
-						class="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 font-mono text-[10px] text-bg"
+						class="font-mono text-xs tabular-nums text-ink-muted"
 					>
 						{bookmarkCount}
 					</span>
@@ -93,3 +127,10 @@
 		{/if}
 	</div>
 </header>
+
+<AddressSearchOverlay
+	open={overlayOpen}
+	{geocode}
+	onSelect={handleOverlaySelect}
+	onClose={closeOverlay}
+/>

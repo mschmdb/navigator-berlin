@@ -1,4 +1,5 @@
 import type { Bundle, LayerMetadata } from '$lib/data';
+import { matchSynonyms, normalizeQueryNfd } from './layer-synonyms.js';
 
 export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	// A: Boundaries
@@ -88,10 +89,14 @@ export function filterLayers(
 ): readonly LayerMetadata[] {
 	const q = query.trim().toLowerCase();
 	if (!q) return layers;
+	const qNfd = normalizeQueryNfd(query);
+	const synonymHits = new Set(matchSynonyms(query));
 	return layers.filter((l) => {
 		const slugMatch = l.slug.toLowerCase().includes(q);
 		const labelMatch = getLayerDisplayName(l.slug).toLowerCase().includes(q);
-		return slugMatch || labelMatch;
+		const labelNfdMatch = normalizeQueryNfd(getLayerDisplayName(l.slug)).includes(qNfd);
+		const synonymMatch = synonymHits.has(l.slug);
+		return slugMatch || labelMatch || labelNfdMatch || synonymMatch;
 	});
 }
 

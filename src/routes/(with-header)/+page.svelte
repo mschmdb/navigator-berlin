@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import MapLibreCanvas from '$lib/components/atlas/map-libre-canvas.svelte';
 	import MapControls from '$lib/components/atlas/map-controls.svelte';
+	import MapAttribution from '$lib/components/atlas/map-attribution.svelte';
 	import MapAccessibilityLayer from '$lib/components/atlas/map-accessibility-layer.svelte';
 	import MapLegend from '$lib/components/atlas/map-legend.svelte';
 	import MapHoverTooltip, {
@@ -835,10 +836,14 @@
 <section
 	class={[
 		'flex h-[calc(100vh-120px)] flex-col',
-		showSidePanel && 'lg:grid lg:h-[calc(100vh-120px)] lg:grid-cols-[6fr_4fr] lg:grid-rows-1'
+		showSidePanel &&
+			'lg:grid lg:h-[calc(100vh-120px)] lg:grid-cols-[1fr_var(--inspector-width)] lg:grid-rows-1'
 	]
 		.filter(Boolean)
 		.join(' ')}
+	style={ui.compareMode
+		? '--inspector-width: clamp(480px, 38vw, 600px);'
+		: '--inspector-width: clamp(360px, 28vw, 420px);'}
 	data-testid="atlas-shell"
 >
 	<div class="relative min-h-0 w-full flex-1 lg:h-full lg:flex-none">
@@ -853,6 +858,7 @@
 			onLoad={onMapLoad}
 		/>
 		<MapControls {onPan} {onZoom} />
+		<MapAttribution />
 		<MapAccessibilityLayer
 			map={a11yMap}
 			layers={manifestLayers}

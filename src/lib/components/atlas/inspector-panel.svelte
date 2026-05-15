@@ -21,6 +21,7 @@
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
+	import { extractStreetName, formatAddressSubline } from './internal/address-subline.js';
 	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
 	import {
 		findAllNearestStops,
@@ -119,6 +120,12 @@
 	}
 
 	const addressName = $derived(ui.selectedAddress?.displayName ?? '');
+	const addressPrimary = $derived(
+		ui.selectedAddress ? extractStreetName(ui.selectedAddress) : ''
+	);
+	const addressSubline = $derived(
+		ui.selectedAddress ? formatAddressSubline(ui.selectedAddress) : ''
+	);
 
 	let shareOpen = $state(false);
 	let shareTriggerEl: HTMLButtonElement | undefined = $state();
@@ -245,16 +252,27 @@
 		data-testid="inspector-panel"
 		data-mount-id={mountId}
 		data-variant={variant}
-		class="flex h-full flex-col overflow-auto bg-bg-elevated text-ink"
+		class="flex h-full flex-col overflow-x-hidden overflow-y-auto bg-bg-elevated text-ink"
 	>
 		<header
 			class="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-rule bg-bg-elevated px-6 pb-4 pt-5"
 		>
-			<div>
-				<p class="font-mono text-xs uppercase tracking-wide text-ink-subtle">Adresse</p>
-				<h2 class="font-serif text-xl leading-tight text-ink" data-testid="inspector-address">
-					{addressName}
+			<div class="min-w-0">
+				<h2
+					class="font-serif text-xl leading-tight text-ink"
+					data-testid="inspector-address"
+					title={addressName}
+				>
+					{addressPrimary || addressName}
 				</h2>
+				{#if addressSubline}
+					<p
+						data-testid="inspector-address-subline"
+						class="font-sans text-sm text-ink-muted"
+					>
+						{addressSubline}
+					</p>
+				{/if}
 			</div>
 			<button
 				type="button"
@@ -269,17 +287,8 @@
 
 		<div
 			data-testid="inspector-toolbar"
-			class="sticky top-[var(--header-height,56px)] z-10 flex items-center justify-between gap-3 border-b border-rule bg-bg-elevated px-6 py-2"
+			class="sticky top-[var(--header-height,56px)] z-10 flex items-center justify-end gap-3 border-b border-rule bg-bg-elevated px-6 py-2"
 		>
-			<button
-				type="button"
-				data-testid="toggle-empty-sections"
-				aria-pressed={showEmptySections}
-				onclick={toggleEmptySections}
-				class="text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline"
-			>
-				{showEmptySections ? 'Leere Sektionen ausblenden' : 'Leere Sektionen einblenden'}
-			</button>
 			<div class="flex items-center gap-3">
 				<button
 					type="button"
@@ -345,19 +354,39 @@
 			</div>
 		</div>
 
+		<div
+			data-testid="inspector-toggle-row"
+			class="flex items-center justify-end border-b border-rule px-6 py-1"
+		>
+			<button
+				type="button"
+				data-testid="toggle-empty-sections"
+				aria-pressed={showEmptySections}
+				onclick={toggleEmptySections}
+				class="font-mono text-xs text-ink-subtle underline-offset-2 hover:text-ink hover:underline"
+			>
+				{showEmptySections ? 'Leere Sektionen ausblenden' : 'Leere Sektionen einblenden'}
+			</button>
+		</div>
+
 		<div class="flex-1 space-y-4 px-6 py-4">
 			<KiezScoreSection score={ui.kiezScore} />
 			{#each sections as section (section.key)}
 				{#if shouldRenderSection(section.key, section.hits.length)}
-					<section data-testid={`section-${section.key}`} data-section={section.key}>
+					<section
+						data-testid={`section-${section.key}`}
+						data-section={section.key}
+						class="border-t border-rule pt-4"
+					>
 						<h3
-							class="font-mono text-xs uppercase tracking-wide text-ink-muted border-t border-rule pt-4 flex items-baseline gap-2"
+							class="mb-3 flex items-baseline gap-2 font-sans text-xs font-semibold uppercase tracking-wide text-ink-muted"
 							data-testid={`section-header-${section.key}`}
 						>
 							<span>{section.label}</span>
 							{#if section.hits.length > 0}
-								<span class="text-ink-subtle" data-testid={`section-count-${section.key}`}
-									>({section.hits.length})</span
+								<span
+									class="font-mono tabular-nums text-ink-subtle"
+									data-testid={`section-count-${section.key}`}>{section.hits.length}</span
 								>
 							{/if}
 						</h3>

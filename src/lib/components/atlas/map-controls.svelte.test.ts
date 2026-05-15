@@ -3,27 +3,40 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import MapControls from './map-controls.svelte';
 
+async function openCompass(): Promise<void> {
+	await page.getByTestId('compass-trigger').click();
+}
+
 describe('map-controls.svelte', () => {
-	it('rendert 4 Pan-Buttons + 2 Zoom-Buttons', async () => {
+	it('rendert Compass-Trigger + 2 Zoom-Buttons direkt sichtbar (Story 1.31 AC-1)', async () => {
 		render(MapControls, {});
-		await expect.element(page.getByRole('button', { name: /Norden/i })).toBeInTheDocument();
-		await expect.element(page.getByRole('button', { name: /Sueden|Süden/i })).toBeInTheDocument();
-		await expect.element(page.getByRole('button', { name: /Westen/i })).toBeInTheDocument();
-		await expect.element(page.getByRole('button', { name: /Osten/i })).toBeInTheDocument();
+		await expect.element(page.getByTestId('compass-trigger')).toBeInTheDocument();
 		await expect.element(page.getByRole('button', { name: /Hineinzoomen/i })).toBeInTheDocument();
 		await expect.element(page.getByRole('button', { name: /Herauszoomen/i })).toBeInTheDocument();
+	});
+
+	it('4 Pan-Buttons erst nach Compass-Klick verfügbar (Pop-Out)', async () => {
+		render(MapControls, {});
+		await openCompass();
+		await expect.element(page.getByRole('menuitem', { name: /Norden/i })).toBeInTheDocument();
+		await expect
+			.element(page.getByRole('menuitem', { name: /Sueden|Süden/i }))
+			.toBeInTheDocument();
+		await expect.element(page.getByRole('menuitem', { name: /Westen/i })).toBeInTheDocument();
+		await expect.element(page.getByRole('menuitem', { name: /Osten/i })).toBeInTheDocument();
 	});
 
 	it('Pan-Button feuert onPan(direction)', async () => {
 		const onPan = vi.fn();
 		render(MapControls, { onPan });
-		await page.getByRole('button', { name: /Norden/i }).click();
+		await openCompass();
+		await page.getByRole('menuitem', { name: /Norden/i }).click();
 		expect(onPan).toHaveBeenCalledWith('north');
-		await page.getByRole('button', { name: /Osten/i }).click();
+		await page.getByRole('menuitem', { name: /Osten/i }).click();
 		expect(onPan).toHaveBeenCalledWith('east');
-		await page.getByRole('button', { name: /Sueden|Süden/i }).click();
+		await page.getByRole('menuitem', { name: /Sueden|Süden/i }).click();
 		expect(onPan).toHaveBeenCalledWith('south');
-		await page.getByRole('button', { name: /Westen/i }).click();
+		await page.getByRole('menuitem', { name: /Westen/i }).click();
 		expect(onPan).toHaveBeenCalledWith('west');
 	});
 
@@ -36,10 +49,11 @@ describe('map-controls.svelte', () => {
 		expect(onZoom).toHaveBeenCalledWith(-1);
 	});
 
-	it('Touch-Target ≥ 44px', async () => {
+	it('Pan-Touch-Target ≥ 44px (Pop-Out-Buttons bleiben touch-safe)', async () => {
 		render(MapControls, {});
+		await openCompass();
 		const btn = (await page
-			.getByRole('button', { name: /Norden/i })
+			.getByRole('menuitem', { name: /Norden/i })
 			.element()) as HTMLButtonElement;
 		const style = window.getComputedStyle(btn);
 		const w = parseInt(style.width);
@@ -53,5 +67,17 @@ describe('map-controls.svelte', () => {
 		await expect
 			.element(page.getByRole('group', { name: /Karten-Steuerung/i }))
 			.toBeInTheDocument();
+	});
+
+	it('Compass-Trigger hat aria-haspopup=menu + aria-expanded toggle', async () => {
+		render(MapControls, {});
+		const trigger = (await page.getByTestId('compass-trigger').element()) as HTMLButtonElement;
+		expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
+		expect(trigger.getAttribute('aria-expanded')).toBe('false');
+		await trigger.click();
+		const triggerAfter = (await page
+			.getByTestId('compass-trigger')
+			.element()) as HTMLButtonElement;
+		expect(triggerAfter.getAttribute('aria-expanded')).toBe('true');
 	});
 });

@@ -40,7 +40,7 @@
 	data-severity={severity}
 	aria-label={ariaLabel}
 	class={[
-		'inline-flex min-h-8 items-center gap-1.5 rounded-sm px-2 py-1 font-sans text-sm font-semibold',
+		'inline-flex min-h-8 max-w-full items-center gap-1.5 rounded-xs px-2 py-1 font-sans text-sm font-semibold whitespace-normal',
 		SEVERITY_CLASSES[severity]
 	].join(' ')}
 >

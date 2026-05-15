@@ -7,7 +7,9 @@
 	import {
 		filterLayers,
 		groupLayersByBundle,
-		getLayerDisplayName
+		getLayerDisplayName,
+		BUNDLE_ORDER,
+		BUNDLE_LABEL_DE
 	} from './internal/layer-palette-filter.js';
 	import { getLayerExplain } from './inspector-panel/internal/layer-explain.js';
 	import { shouldHandleSlash } from './internal/palette-shortcut.js';
@@ -61,9 +63,37 @@
 		};
 	});
 
-	const filtered = $derived(filterLayers(layers, searchQuery));
+	let selectedBundle = $state<string | null>(null);
+
+	const filteredByQuery = $derived(filterLayers(layers, searchQuery));
+	const filtered = $derived(
+		selectedBundle
+			? filteredByQuery.filter((l) => l.bundleGroup === selectedBundle)
+			: filteredByQuery
+	);
 	const groups = $derived(groupLayersByBundle(filtered));
 	const activeCount = $derived(ui.activeLayerSlugs.length);
+	const hasQuery = $derived(searchQuery.trim().length > 0);
+	const showEmptyState = $derived(!hasQuery && !selectedBundle);
+
+	const FREQUENT_SLUGS = [
+		'kiez-score-ruhe-luft',
+		'kiez-score-gruen',
+		'laerm-2023',
+		'gruenanlagen',
+		'bodenrichtwerte'
+	] as const;
+
+	const frequentLayers = $derived.by(() => {
+		const bySlug = new Map(layers.map((l) => [l.slug, l] as const));
+		return FREQUENT_SLUGS.map((slug) => bySlug.get(slug)).filter(
+			(l): l is LayerMetadata => Boolean(l)
+		);
+	});
+
+	function selectBundle(bundle: string): void {
+		selectedBundle = selectedBundle === bundle ? null : bundle;
+	}
 
 	const recentLayers = $derived.by(() => {
 		const bySlug = new Map(layers.map((l) => [l.slug, l] as const));
@@ -93,6 +123,7 @@
 			queueMicrotask(() => searchInput?.focus());
 		} else {
 			searchQuery = '';
+			selectedBundle = null;
 		}
 	});
 </script>
@@ -117,7 +148,7 @@
 	</header>
 
 	<div class="border-b border-rule px-4 py-3">
-		<label class="flex items-center gap-2 border border-rule bg-bg-elevated px-3 py-2">
+		<label class="flex items-center gap-2 rounded-md border border-rule bg-bg-elevated px-3 py-2">
 			<Search size={16} aria-hidden="true" class="text-ink-subtle" />
 			<input
 				bind:this={searchInput}
@@ -132,6 +163,53 @@
 	</div>
 
 	<div class="flex-1 overflow-y-auto px-4 py-3">
+		{#if showEmptyState && frequentLayers.length > 0}
+			<section data-testid="palette-frequent" class="mb-4">
+				<h3 class="mb-2 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ink-muted">
+					<Clock size={14} aria-hidden="true" /> Meistgenutzt
+				</h3>
+				<ul class="space-y-1.5">
+					{#each frequentLayers as layer (layer.slug)}
+						{@const isOn = ui.activeLayerSlugs.includes(layer.slug)}
+						<li>
+							<button
+								type="button"
+								data-testid={`palette-frequent-${layer.slug}`}
+								data-state={isOn ? 'on' : 'off'}
+								aria-pressed={isOn}
+								onclick={() => onToggle(layer.slug)}
+								class={[
+									'flex w-full min-h-[44px] items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
+									isOn && 'bg-accent-soft'
+								]
+									.filter(Boolean)
+									.join(' ')}
+							>
+								<span class="font-medium text-ink">{getLayerDisplayName(layer.slug)}</span>
+								<span class="font-mono text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
+							</button>
+						</li>
+					{/each}
+				</ul>
+			</section>
+			<section data-testid="palette-categories" class="mb-4">
+				<h3 class="mb-2 font-sans text-sm font-medium uppercase tracking-wide text-ink-muted">
+					Nach Thema
+				</h3>
+				<div class="flex flex-wrap gap-2">
+					{#each BUNDLE_ORDER as bundle (bundle)}
+						<button
+							type="button"
+							data-testid={`palette-category-${bundle[0]}`}
+							onclick={() => selectBundle(bundle)}
+							class="inline-flex items-center rounded-sm border border-rule px-2 py-1 font-sans text-xs text-ink hover:bg-bg"
+						>
+							{BUNDLE_LABEL_DE[bundle]}
+						</button>
+					{/each}
+				</div>
+			</section>
+		{/if}
 		{#if isMobile && recentLayers.length > 0 && !searchQuery}
 			<section data-testid="palette-recent" class="mb-4">
 				<h3 class="mb-2 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ink-muted">
@@ -149,7 +227,7 @@
 								aria-pressed={isOn}
 								onclick={() => onToggle(layer.slug)}
 								class={[
-									'flex w-full min-h-[44px] items-start justify-between gap-2 border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
+									'flex w-full min-h-[44px] items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
 									isOn && 'bg-accent-soft'
 								]
 									.filter(Boolean)
@@ -174,11 +252,21 @@
 			</section>
 		{/if}
 
-		{#if groups.length === 0}
+		{#if selectedBundle && !showEmptyState}
+			<button
+				type="button"
+				data-testid="palette-bundle-clear"
+				onclick={() => (selectedBundle = null)}
+				class="mb-3 inline-flex items-center gap-1 font-mono text-xs text-ink-muted hover:text-ink hover:underline"
+			>
+				× {BUNDLE_LABEL_DE[selectedBundle as keyof typeof BUNDLE_LABEL_DE]} entfernen
+			</button>
+		{/if}
+		{#if groups.length === 0 && hasQuery}
 			<p data-testid="palette-empty" class="py-6 text-center font-serif italic text-ink-subtle">
 				Kein Layer matched „{searchQuery}".
 			</p>
-		{:else}
+		{:else if groups.length > 0}
 			{#each groups as group (group.bundle)}
 				<section
 					data-testid={`palette-group-${group.bundle[0]}`}
@@ -200,7 +288,7 @@
 									aria-pressed={isOn}
 									onclick={() => onToggle(layer.slug)}
 									class={[
-										'flex w-full min-h-[44px] items-start justify-between gap-2 border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
+										'flex w-full min-h-[44px] items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
 										isOn && 'bg-accent-soft'
 									]
 										.filter(Boolean)
@@ -263,7 +351,7 @@
 		data-testid="layer-palette"
 		data-variant="dialog"
 		tabindex="-1"
-		class="fixed left-1/2 top-1/2 z-50 flex max-h-[80vh] w-[600px] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col border border-rule-strong bg-bg-elevated text-ink shadow-lg"
+		class="fixed left-1/2 top-1/2 z-50 flex max-h-[80vh] w-[600px] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md border border-rule-strong bg-bg-elevated text-ink"
 	>
 		{@render paletteBody()}
 	</div>

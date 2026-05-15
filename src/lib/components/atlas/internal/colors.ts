@@ -39,7 +39,24 @@ export const COLORS = {
 	severityWarning: '#8C4A0E',
 	severityWarningBg: '#FBEEDD',
 	severityDanger: '#8C2A14',
-	severityDangerBg: '#F8E4DF'
+	severityDangerBg: '#F8E4DF',
+	// Story 1.31 AC-8/10 Choropleth-Scale-Tokens (3 Familien × 5 Stufen).
+	// Build-generated via scripts/lib/check-scale-contrast.ts.
+	scaleLast1: '#8F7972',
+	scaleLast2: '#90675B',
+	scaleLast3: '#905545',
+	scaleLast4: '#8F412E',
+	scaleLast5: '#8C2A14',
+	scaleGut1: '#79887A',
+	scaleGut2: '#647C66',
+	scaleGut3: '#4F7153',
+	scaleGut4: '#396641',
+	scaleGut5: '#1F5A2E',
+	scaleStrukturell1: '#797D88',
+	scaleStrukturell2: '#656E86',
+	scaleStrukturell3: '#515E83',
+	scaleStrukturell4: '#3D4F80',
+	scaleStrukturell5: '#2A3F7C'
 } as const;
 
 export type ColorToken = keyof typeof COLORS;

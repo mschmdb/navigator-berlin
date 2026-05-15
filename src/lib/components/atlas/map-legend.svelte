@@ -57,7 +57,7 @@
 	<aside
 		data-testid="map-legend"
 		aria-label="Karten-Legende"
-		class="pointer-events-auto absolute bottom-3 left-3 z-20 flex max-h-[60vh] max-w-xs flex-col gap-3 overflow-auto border border-rule bg-bg-elevated/95 p-3 text-xs text-ink shadow-lg backdrop-blur-sm"
+		class="pointer-events-auto absolute bottom-3 left-3 z-20 flex max-h-[60vh] max-w-xs flex-col gap-3 overflow-auto rounded-md border border-rule-strong bg-bg-elevated/95 p-3 text-xs text-ink backdrop-blur-sm"
 	>
 		{#each entries as entry (entry.slug)}
 			<section
