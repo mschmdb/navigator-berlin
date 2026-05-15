@@ -15,7 +15,8 @@ describe('site-header.svelte', () => {
 
 	it('rendert Wortmarke "navigator.berlin" mit Plex-Sans-Light + tracking-wide', async () => {
 		render(SiteHeader, { geocode: async () => [] });
-		const mark = page.getByText('navigator.berlin');
+		// Erstes Match ist <title>-Element im SVG-Logo (a11y-aria); zweites die Wortmarke.
+		const mark = page.getByText('navigator.berlin').nth(1);
 		await expect.element(mark).toBeInTheDocument();
 		const el = (await mark.element()) as HTMLSpanElement;
 		expect(el.className).toMatch(/font-sans/);

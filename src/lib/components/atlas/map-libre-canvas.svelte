@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '$lib/data/constants.js';
+	import { AnimatedLogo } from '$lib/components/ui';
 	import { handleMapKeydown, type MapHandle } from './internal/map-keyboard.js';
 	import { PIN_ICON_MAP } from './internal/pin-icon-mapping.js';
 	import { registerPinIcons, type PinAddImageMap } from './internal/pin-sprite-renderer.js';
@@ -179,10 +180,9 @@
 	{#if !isReady && !loadError}
 		<div
 			data-testid="map-skeleton"
-			aria-hidden="true"
-			class="pointer-events-none absolute inset-0 flex items-center justify-center bg-bg-elevated text-ink-muted"
+			class="pointer-events-none absolute inset-0 flex items-center justify-center bg-bg-elevated"
 		>
-			Karte wird geladen…
+			<AnimatedLogo variant="loop" size={96} loadingLabel="Karte wird geladen" />
 		</div>
 	{/if}
 

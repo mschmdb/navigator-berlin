@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import { Layers } from '@lucide/svelte';
 	import AddressSearch from './address-search.svelte';
+	import { AnimatedLogo } from '$lib/components/ui';
 	import type { GeocodeSuggestion } from '$lib/data';
 
 	type Props = {
@@ -28,7 +29,7 @@
 >
 	<div class="mx-auto flex max-w-[1440px] items-center gap-4 px-4">
 		<a href="/" aria-label="navigator.berlin Startseite" class="flex shrink-0 items-center gap-2">
-			<img src="/logo-mark.svg" alt="" class="h-8 w-8" />
+			<AnimatedLogo variant="one-shot" size={32} title="navigator.berlin" />
 			<span class="font-sans text-base font-light tracking-wide text-ink">navigator.berlin</span>
 		</a>
 		<div class="min-w-0 flex-1">

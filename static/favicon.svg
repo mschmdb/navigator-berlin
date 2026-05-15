@@ -1,6 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-	<rect width="16" height="16" fill="#ECEAE0"/>
-	<rect x="3" y="6" width="7" height="7" fill="none" stroke="#2A3F7C" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0.5"/>
-	<rect x="6" y="3" width="7" height="7" fill="none" stroke="#2A3F7C" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0.85"/>
-	<circle cx="9.5" cy="4.5" r="0.9" fill="#2A3F7C"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<rect width="100" height="100" fill="#ECEAE0" />
+	<path
+		d="M 49.37,76.93 24.83,67.68 13.08,74.65 8.0,69.64 17.78,49.53 11.34,47.91 15.87,36.34 12.79,33.45 23.87,33.41 24.27,25.0 29.74,25.3 32.07,18.33 35.48,19.02 34.55,25.23 41.64,26.04 55.53,20.15 53.12,17.93 56.72,15.28 62.18,21.56 60.31,32.45 78.96,45.28 73.25,57.47 84.52,57.97 91.44,62.51 92.0,64.33 87.22,64.37 89.25,70.51 77.95,84.72 77.18,76.65 56.76,72.85 54.72,67.68 49.11,69.96 Z"
+		fill="none"
+		stroke="#2A3F7C"
+		stroke-width="2"
+		stroke-linejoin="round"
+		stroke-linecap="round"
+	/>
+	<g fill="#2A3F7C">
+		<circle cx="49.37" cy="76.93" r="2.5" />
+		<circle cx="17.78" cy="49.53" r="2.5" />
+		<circle cx="12.79" cy="33.45" r="2.5" />
+		<circle cx="55.53" cy="20.15" r="2.5" />
+		<circle cx="73.25" cy="57.47" r="2.5" />
+		<circle cx="92.0" cy="64.33" r="2.5" />
+		<circle cx="87.22" cy="64.37" r="2.5" />
+		<circle cx="77.95" cy="84.72" r="2.5" />
+	</g>
 </svg>
