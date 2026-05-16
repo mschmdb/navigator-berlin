@@ -160,20 +160,39 @@
 	<div class="overflow-x-auto" data-testid="ranking-table-wrapper">
 		<table class="w-full font-sans text-sm" data-testid="ranking-table">
 			<thead>
-				<tr class="border-b border-rule text-left">
-					<th class="py-2 pr-3 font-semibold" scope="col">Rang</th>
-					<th class="py-2 pr-3 font-semibold" scope="col">
+				<tr class="border-b border-rule text-left align-bottom">
+					<th
+						class="whitespace-nowrap py-2 pr-3 font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
+						scope="col"
+					>
+						Rang
+					</th>
+					<th
+						class="whitespace-nowrap py-2 pr-3 font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
+						scope="col"
+					>
 						{view === 'kieze' ? 'Kiez' : 'Bezirk'}
 					</th>
 					{#if view === 'kieze'}
-						<th class="py-2 pr-3 font-semibold" scope="col">Bezirk</th>
+						<th
+							class="whitespace-nowrap py-2 pr-3 font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
+							scope="col"
+						>
+							Bezirk
+						</th>
 					{/if}
 					{#each SORT_KEYS as key (key)}
-						<th class="py-2 pr-3 font-semibold" scope="col">
+						<th
+							class="whitespace-nowrap py-2 pr-3 align-bottom"
+							scope="col"
+						>
 							<button
 								type="button"
 								data-testid={`ranking-sort-${key}`}
-								class="inline-flex items-center gap-1 font-semibold {sortKey === key ? 'text-ink' : 'text-ink-muted'} hover:text-ink"
+								class="inline-flex items-center gap-1 whitespace-nowrap font-mono text-[11px] uppercase tracking-wider {sortKey ===
+								key
+									? 'text-ink'
+									: 'text-ink-subtle'} hover:text-ink"
 								aria-pressed={sortKey === key}
 								onclick={() => toggleSort(key)}
 							>
