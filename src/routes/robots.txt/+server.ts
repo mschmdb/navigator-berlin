@@ -15,6 +15,8 @@ export const GET: RequestHandler = ({ url }) => {
 		'Allow: /',
 		'',
 		`Sitemap: ${origin}/sitemap.xml`,
+		'',
+		'# LLM-friendly: /llms.txt + /llms-full.txt (story 2.8)',
 		''
 	].join('\n');
 	return new Response(body, {
