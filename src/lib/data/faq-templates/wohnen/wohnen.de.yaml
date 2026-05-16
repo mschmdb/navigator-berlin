@@ -1,0 +1,64 @@
+cluster: wohnen
+locale: de
+templates:
+  - id: wohnen-wohnlage-bezirk
+    applicableTo: [bezirk]
+    requires: [wohnen.dominantWohnlage]
+    question: "Welche Wohnlage dominiert im Bezirk {name}?"
+    answer: >-
+      Im Bezirk {name} dominiert die {wohnenWohnlage} gemäß dem Berliner
+      Mietspiegel. Die Wohnlage ist eine raumbezogene Kategorie aus drei Stufen
+      (einfach, mittel, gut). Sie fasst Bebauungs- und Umfeld-Merkmale zusammen
+      und ist keine Bewertung der Lebensumstände einzelner Adressen.
+      Quelle: {wohnenSource}, Stand {wohnenStand}.
+
+  - id: wohnen-wohnlage-kiez
+    applicableTo: [kiez]
+    requires: [wohnen.dominantWohnlage]
+    question: "Welche Wohnlage dominiert im Kiez {name}?"
+    answer: >-
+      Der Kiez {name} liegt überwiegend in der {wohnenWohnlage} des Berliner
+      Mietspiegels. Die Stufe ist eine räumliche Kategorie aus dem Mietspiegel-
+      Verfahren und gilt jeweils für Blockseiten oder Häuserzeilen, nicht für
+      Einzeladressen.
+      Quelle: {wohnenSource}, Stand {wohnenStand}.
+
+  - id: wohnen-mss-bezirk
+    applicableTo: [bezirk]
+    requires: [wohnen.dominantMss]
+    question: "Wie schneidet {name} im Monitoring Soziale Stadtentwicklung ab?"
+    answer: >-
+      Das Monitoring Soziale Stadtentwicklung (MSS) ordnet Planungsräume in vier
+      Stufen nach sozio-ökonomischen Indikatoren ein. Für {name} ergibt der
+      aktuelle MSS einen Aggregat-Status. {wohnenMssBeschreibung}
+      Der Index bezieht sich auf den gesamten Raum, nicht auf einzelne Haushalte.
+
+  - id: wohnen-warum-keine-mietpreise
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Warum gibt navigator.berlin keine konkreten Mietpreise pro Adresse aus?"
+    answer: >-
+      Mietpreise hängen von Baujahr, Ausstattung, Lage und Stichtagen ab. Der
+      Berliner Mietspiegel liefert Spannen pro Wohnlage und Baualters-Klasse,
+      keine Punktwerte pro Adresse. Wir verlinken auf der Methodik-Seite den
+      offiziellen Mietspiegel-Rechner.
+
+  - id: wohnen-was-ist-brw
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Worin unterscheiden sich Bodenrichtwert und Mietspiegel?"
+    answer: >-
+      Der Bodenrichtwert beschreibt einen durchschnittlichen Grundstückspreis pro
+      Quadratmeter, geprüft durch den Gutachterausschuss. Der Mietspiegel
+      beschreibt ortsübliche Vergleichsmieten für Wohnraum. Beide Werte gelten
+      für Räume, nicht für Einzel-Adressen.
+
+  - id: wohnen-stigma-disclaimer
+    applicableTo: [bezirk, kiez]
+    requires: []
+    question: "Bewertet navigator.berlin Wohngebiete als gut oder schlecht?"
+    answer: >-
+      Nein. Wir geben kategoriale Werte aus offiziellen Datenquellen wieder
+      (Mietspiegel-Wohnlage, MSS, BRW). Diese Kategorien sind beschreibend, nicht
+      wertend. Bezeichnungen wie „beliebter Kiez" oder „guter Bezirk" verwenden
+      wir aus methodischen Gründen nicht.

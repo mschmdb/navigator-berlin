@@ -1,0 +1,51 @@
+cluster: gruen
+locale: de
+templates:
+  - id: gruen-versorgung-bezirk
+    applicableTo: [bezirk]
+    requires: [gruen.dominantVersorgung]
+    question: "Wie ist die Grünversorgung im Bezirk {name}?"
+    answer: >-
+      Im Bezirk {name} dominiert die Kategorie {gruenKategorie} für die
+      wohnungsnahe Grünversorgung. {gruenErklaerung}
+      Quelle: {gruenSource}, Stand {gruenStand}.
+
+  - id: gruen-versorgung-kiez
+    applicableTo: [kiez]
+    requires: [gruen.dominantVersorgung]
+    question: "Wie ist die Grünversorgung im Kiez {name}?"
+    answer: >-
+      Die wohnungsnahe Grünversorgung im Kiez {name} liegt in der Kategorie
+      {gruenKategorie}. {gruenErklaerung}
+      Quelle: {gruenSource}, Stand {gruenStand}.
+
+  - id: gruen-anzahl-anlagen
+    applicableTo: [bezirk]
+    requires: [gruen.gruenanlagenCount]
+    question: "Wie viele öffentliche Grünanlagen liegen in {name}?"
+    answer: >-
+      Im Bezirk {name} liegen {gruenanlagenCount} öffentlich gewidmete Grünanlagen
+      gemäß dem aktuellen Kataster der Senatsverwaltung. Privat-Gärten und
+      bewirtschaftete Kleingärten zählen nicht zu dieser Kategorie.
+
+  - id: gruen-was-bedeutet-versorgung
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Was bedeutet wohnungsnahe Grünversorgung?"
+    answer: >-
+      Die Senatsverwaltung berechnet pro Planungsraum, wie viele Quadratmeter
+      wohnungsnahe Grünfläche pro Einwohnerin im Einzugsbereich liegen.
+      Als Richtwert gelten 6 Quadratmeter pro Person. Erreicht oder verfehlt ein
+      Planungsraum diesen Wert, ergibt sich die Kategorie „hoch", „mittel" oder
+      „gering".
+
+  - id: gruen-rolle-hitze
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Welche Rolle spielen Grünflächen für Hitze-Mitigation?"
+    answer: >-
+      Bäume und größere Grünflächen senken die Lufttemperatur durch Verschattung
+      und Verdunstung. Stadtklima-Analysen zeigen, dass dicht bebaute Quartiere
+      mit wenig Vegetation an Sommertagen messbar wärmer bleiben als Gebiete mit
+      vergleichbarer Bebauung und mehr Grün. Die Klima-Kategorie auf dieser Karte
+      bildet das ab.

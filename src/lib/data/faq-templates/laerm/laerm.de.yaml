@@ -1,0 +1,84 @@
+cluster: laerm
+locale: de
+templates:
+  - id: laerm-dominant-bezirk
+    applicableTo: [bezirk]
+    requires: [laerm.dominantCategory]
+    question: "Wie laut ist es im Bezirk {name}?"
+    answer: >-
+      Im Bezirk {name} dominiert die Lärm-Klasse {laermKategorie}.
+      {laermErklaerung}
+      Datengrundlage: {laermSource}, Stand {laermStand}. Werte beziehen sich auf
+      LDEN, also den über 24 Stunden gewichteten Pegel.
+    editorialNote: >-
+      Die Berliner Lärmkartierung publiziert pro Planungsraum ordinale Pegel-Klassen
+      (niedrig, mittel, hoch). Wir geben hier keine konkreten dB-Werte aus, weil das
+      Aggregat keine Mittelwerte enthält.
+
+  - id: laerm-dominant-kiez
+    applicableTo: [kiez]
+    requires: [laerm.dominantCategory]
+    question: "Wie laut ist der Kiez {name}?"
+    answer: >-
+      Der Kiez {name} liegt überwiegend in der Lärm-Klasse {laermKategorie}.
+      {laermErklaerung}
+      Quelle: {laermSource}, Stand {laermStand}.
+
+  - id: laerm-warum-nacht-schaedlicher
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Warum gilt Nacht-Lärm als gesundheitlich relevanter?"
+    answer: >-
+      Lärm in der Nacht stört Schlafphasen, in denen sich Herz-Kreislauf-System und
+      Nerven erholen. Die Weltgesundheitsorganisation empfiehlt für Nacht-Lärm
+      (LNIGHT) einen Richtwert von 40 dB. Die Berliner Lärmkartierung weist daher
+      LDEN und LNIGHT getrennt aus.
+
+  - id: laerm-was-bedeutet-lden
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Was bedeutet der Wert LDEN?"
+    answer: >-
+      LDEN steht für „Level Day-Evening-Night" und ist ein über 24 Stunden
+      gewichteter Lärm-Mittelwert. Abend- und Nachtpegel gehen mit Aufschlägen
+      von 5 und 10 dB ein, weil Lärm dann stärker stört. Der Wert dient als
+      EU-weit einheitlicher Vergleichsmaßstab.
+
+  - id: laerm-wie-aktuell
+    applicableTo: [bezirk, kiez]
+    requires: [laerm.dominantCategory]
+    question: "Wie aktuell sind die Lärm-Daten für {name}?"
+    answer: >-
+      Die Berliner Lärmkartierung wird im EU-Rhythmus alle fünf Jahre neu
+      gerechnet. Die in {name} ausgewiesene Klasse {laermKategorie} stammt aus
+      der Kartierung {laermStand}.
+
+  - id: laerm-welche-quellen
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Welche Lärm-Quellen fließen in die Karte ein?"
+    answer: >-
+      Die strategische Lärmkartierung umfasst Straßen-, Schienen-, Flug- und
+      Industrie-Lärm separat. Auf der Karte zeigen wir den Straßen-Verkehrslärm
+      LDEN, weil er flächendeckend die größte Bevölkerung erreicht.
+
+  - id: laerm-was-tun-bei-belastung
+    applicableTo: [bezirk, kiez]
+    requires: []
+    question: "Was kann ich tun, wenn ich Lärm an meiner Adresse als belastend empfinde?"
+    answer: >-
+      Die Senatsverwaltung für Mobilität nimmt Hinweise zur strategischen
+      Lärmminderung im Aktionsplan auf. Beschwerden zu konkreten Quellen
+      (Baustellen, Gewerbe) gehen an das jeweils zuständige Bezirksamt oder
+      Ordnungsamt. Wir verlinken auf der Methodik-Seite die offiziellen
+      Anlaufstellen.
+
+  - id: laerm-warum-keine-db-werte
+    applicableTo: [layer]
+    requires: []
+    question: "Warum zeigt der Layer keine konkreten dB-Zahlen?"
+    answer: >-
+      Die offene Berliner Datengrundlage liefert pro Planungsraum eine Pegel-Klasse
+      (zum Beispiel „mittel" oder „hoch"), keine Punktwerte. Wir geben den Wert
+      genauso wieder, wie er publiziert wird, um keine Genauigkeit zu suggerieren,
+      die im Datensatz nicht enthalten ist.

@@ -1,0 +1,58 @@
+cluster: oepnv
+locale: de
+templates:
+  - id: oepnv-dichte-bezirk
+    applicableTo: [bezirk]
+    requires: [oepnv.stopsPerKm2]
+    question: "Wie dicht ist das ÖPNV-Netz im Bezirk {name}?"
+    answer: >-
+      Im Bezirk {name} liegen {oepnvStopsPerKm2} Haltestellen pro Quadratkilometer.
+      Das Netz gilt damit als {oepnvDichte}. {oepnvErklaerung}
+      Datengrundlage: {oepnvSource}, Stand {oepnvStand}.
+
+  - id: oepnv-dichte-kiez
+    applicableTo: [kiez]
+    requires: [oepnv.stopsPerKm2]
+    question: "Wie ist der Kiez {name} an den ÖPNV angebunden?"
+    answer: >-
+      Im Kiez {name} liegen {oepnvStopsPerKm2} Halte pro Quadratkilometer.
+      {oepnvErklaerung}
+      Quelle: {oepnvSource}, Stand {oepnvStand}.
+
+  - id: oepnv-was-bedeutet-dichte
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Was sagt die Haltedichte pro Quadratkilometer aus?"
+    answer: >-
+      Die Haltedichte ist ein erster grober Indikator für Anbindung. Sie sagt
+      nichts über Taktung, Linienführung oder Barrierefreiheit aus. Eine hohe
+      Dichte korreliert in Berlin häufig mit Innenstadt-Lagen und Verknüpfungs-
+      Knoten, eine niedrige Dichte mit Stadtrand-Bereichen.
+
+  - id: oepnv-walk-score-logik
+    applicableTo: [bezirk, kiez]
+    requires: []
+    question: "Berücksichtigt der Wert Fußwege oder Barrierefreiheit?"
+    answer: >-
+      Aktuell nicht. Der Wert zählt Haltepunkte innerhalb der Flächengrenzen und
+      teilt sie durch die Fläche. Wir verbessern den Indikator schrittweise um
+      Fußweg-Distanzen und Stationskategorien. Die Methodik-Seite dokumentiert
+      jede Erweiterung.
+
+  - id: oepnv-welche-modi
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Welche Verkehrsmittel fließen in die Haltedichte ein?"
+    answer: >-
+      Wir zählen U-Bahn-, S-Bahn-, Tram- und Bus-Haltestellen der BVG und der
+      S-Bahn Berlin GmbH zusammen. Regional-Bahn-Stationen werden zusätzlich
+      ausgewiesen, weil sie für Pendelverkehr relevant sind.
+
+  - id: oepnv-warum-nicht-fahrplandaten
+    applicableTo: [bezirk, kiez, layer]
+    requires: []
+    question: "Warum zeigt navigator.berlin keine Live-Fahrplan-Daten?"
+    answer: >-
+      Live-Daten erfordern Server-Caching, Lizenz-Kosten und stehen oft nur
+      kurzfristig zur Verfügung. Wir setzen bewusst auf statische Aggregate aus
+      offenen Datensätzen, die wir prüfen und versionieren können.
