@@ -3,10 +3,12 @@
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { locales, localizeHref } from '$lib/paraglide/runtime';
+	import { locales, localizeHref, getLocale } from '$lib/paraglide/runtime';
 	import { browser } from '$app/environment';
 	import SkipLink from '$lib/components/atlas/skip-link.svelte';
 	import MetaFooter from '$lib/components/atlas/meta-footer.svelte';
+	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import { buildWebSite } from '$lib/seo/index.js';
 	import { createUiState } from '$lib/state/ui-context.svelte.js';
 	import {
 		STORAGE_KEY,
@@ -53,7 +55,23 @@
 	});
 
 	let { children } = $props();
+
+	/**
+	 * Story 2.2 AC-3: WebSite-JSON-LD inkl. SearchAction im Root-Layout.
+	 * Phase 1 (Memory `project_i18n_phase_1_de_only`): Locale-Tag pro Paraglide-Locale.
+	 * Story 2.11 Pivot: wenn Atlas auf `/explore` wandert, `searchPath: '/explore'`.
+	 */
+	const websiteJsonLd = $derived(
+		buildWebSite({
+			origin: page.url.origin,
+			name: 'navigator.berlin',
+			locale: getLocale() === 'en' ? 'en-US' : 'de-DE',
+			description: 'Berliner Geo-Datenlayer pro Adresse. Statisch, ohne Cookies, ohne Login.'
+		})
+	);
 </script>
+
+<JsonLd data={websiteJsonLd} testid="website-jsonld" />
 
 <SkipLink />
 

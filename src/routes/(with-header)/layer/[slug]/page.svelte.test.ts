@@ -182,6 +182,34 @@ describe('layer-detail +page.svelte', () => {
 			.not.toBeInTheDocument();
 	});
 
+	it('rendert Dataset-JSON-LD mit license-URL + creator + distribution.contentUrl', async () => {
+		render(Page, { data: { detail: detail() } });
+		const script = document.querySelector(
+			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
+		);
+		expect(script).not.toBeNull();
+		const parsed = JSON.parse(script?.textContent ?? '{}');
+		expect(parsed['@type']).toBe('Dataset');
+		expect(parsed.name).toMatch(/Lärmbelastung/);
+		expect(parsed.license).toBe('https://www.govdata.de/dl-de/zero-2-0');
+		expect(parsed.creator?.['@type']).toBe('Organization');
+		expect(parsed.creator?.name).toMatch(/Senatsverwaltung/);
+		expect(parsed.distribution?.contentUrl).toMatch(/\/layers\/laerm-2023\.geojson$/);
+		expect(parsed.inLanguage).toBe('de-DE');
+	});
+
+	it('Dataset-JSON-LD nutzt navigator.berlin als creator-Fallback wenn authority fehlt', async () => {
+		const d = detail('laerm-2023', {
+			methodology: { ...methodology(), authority: undefined }
+		});
+		render(Page, { data: { detail: d } });
+		const script = document.querySelector(
+			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
+		);
+		const parsed = JSON.parse(script?.textContent ?? '{}');
+		expect(parsed.creator?.name).toBe('navigator.berlin');
+	});
+
 	it('zeigt „Methodik in Vorbereitung"-Banner wenn methodology null', async () => {
 		const d = detail('laerm-2023', { methodology: null });
 		render(Page, { data: { detail: d } });
