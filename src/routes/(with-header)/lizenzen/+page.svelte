@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import type { LayerMetadata, License } from '$lib/data';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
@@ -125,10 +127,12 @@
 	];
 </script>
 
-<svelte:head>
-	<title>Lizenzen · navigator.berlin</title>
-	<meta name="description" content="Lizenzen der Geo-Daten und der verwendeten Software." />
-</svelte:head>
+<SeoHead
+	title="Lizenzen · navigator.berlin"
+	description="Lizenzen der Geo-Daten und der verwendeten Software."
+	pathname={page.url.pathname}
+	origin={page.url.origin}
+/>
 
 <article
 	data-testid="lizenzen-page"

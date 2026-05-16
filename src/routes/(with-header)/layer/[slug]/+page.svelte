@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
 	import {
@@ -8,6 +9,7 @@
 	} from '$lib/components/atlas/inspector-panel/internal/source-shortener.js';
 	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
 	import ErrorFeedbackMailto from '$lib/components/atlas/error-feedback-mailto.svelte';
+	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
 	type Props = { data: import('./$types').PageData };
@@ -26,10 +28,12 @@
 	);
 </script>
 
-<svelte:head>
-	<title>{pageTitle}</title>
-	<meta name="description" content={pageDescription} />
-</svelte:head>
+<SeoHead
+	title={pageTitle}
+	description={pageDescription}
+	pathname={page.url.pathname}
+	origin={page.url.origin}
+/>
 
 <article
 	data-testid="layer-detail-page"
