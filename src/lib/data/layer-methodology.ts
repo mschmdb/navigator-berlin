@@ -1,4 +1,21 @@
 // TODO Story 3.1: i18n-Migration → Paraglide-Messages `layer.methodik.{slug}.*`.
+//
+// Phase 1 (Story 2.5a, DE-only): Authority-Strings sind aus zentraler Map
+// `$lib/data/authorities.ts` aufgelöst. EN-Coverage komplett auf Phase 3
+// verschoben (Memory `project_i18n_phase_1_de_only`). Spec-Struktur ist
+// i18n-ready: `authorityKey` löst per `resolveAuthority(key, locale)` auf,
+// Phase 3 muss nur EN-Strings in `authorities.ts` ergänzen — kein Refactor
+// hier.
+//
+// Composites (z.B. BVG-Stops aus OSM) werden via `authoritySuffix`
+// zusammengesetzt. Suffixe bleiben sprach-neutral (technische Lizenz-Marker).
+
+import {
+	AUTHORITY_SUFFIX_OSM_ODBL,
+	resolveAuthority,
+	type AuthorityKey,
+	type Locale
+} from './authorities.js';
 
 export const AGGREGATION_LEVELS = [
 	'address',
@@ -22,22 +39,28 @@ export interface LayerMethodology {
 	readonly authority?: string;
 }
 
-const SENATSVW_UMWELT =
-	'Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt · Umweltatlas Berlin';
-const ODIS = 'ODIS Berlin · Open Data Informationsstelle';
-const OSM = 'OpenStreetMap-Contributors';
-const SENATSVW_BILDUNG = 'Senatsverwaltung für Bildung, Jugend und Familie';
-const SENATSVW_GESUNDHEIT = 'Senatsverwaltung für Wissenschaft, Gesundheit und Pflege';
-const BVG = 'BVG · Berliner Verkehrsbetriebe (GTFS-Export VBB)';
-const SBAHN = 'S-Bahn Berlin GmbH (DB-Konzern) · Routen aus OpenStreetMap-Relationen';
+interface LayerMethodologySpec {
+	readonly calculation?: string;
+	readonly coverageGaps?: string[];
+	readonly omissions?: string[];
+	readonly relatedLayers?: string[];
+	readonly aggregationLevel?: AggregationLevel;
+	readonly updateFrequency?: string;
+	readonly authorityKey: AuthorityKey;
+	/**
+	 * Optionaler sprach-neutraler Suffix (z.B. OSM-Attribution + Lizenz-Marker).
+	 * Wird an den aufgelösten Authority-String angehängt.
+	 */
+	readonly authoritySuffix?: string;
+}
 
-export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
+const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 	bezirke: {
 		calculation:
 			'Polygone der 12 Berliner Verwaltungsbezirke aus dem Berliner Geoportal, vereinfacht via mapshaper visvalingam mit keep-shapes.',
 		aggregationLevel: 'bezirk',
 		updateFrequency: 'sehr selten (administrative Änderungen)',
-		authority: ODIS,
+		authorityKey: 'odis',
 		relatedLayers: ['ortsteile', 'plz']
 	},
 	ortsteile: {
@@ -45,7 +68,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Polygone der 96 statistischen Ortsteile, historisch oft eigene Gemeinden vor der Eingemeindung 1920. Quelle ODIS Berlin.',
 		aggregationLevel: 'bezirk',
 		updateFrequency: 'sehr selten',
-		authority: ODIS,
+		authorityKey: 'odis',
 		relatedLayers: ['bezirke', 'plz']
 	},
 	plz: {
@@ -53,7 +76,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Postleitzahlen-Gebiete für Berlin. Eine PLZ kann mehrere Ortsteile schneiden, deckt sich also nicht mit politischen Grenzen.',
 		aggregationLevel: 'bezirk',
 		updateFrequency: 'selten (Anpassung durch Deutsche Post)',
-		authority: ODIS,
+		authorityKey: 'odis',
 		relatedLayers: ['bezirke', 'ortsteile']
 	},
 
@@ -62,7 +85,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Vom Berliner Gutachterausschuss jährlich festgestellte Lagewerte für unbebauten Boden, blockweise aggregiert. Wert pro Quadratmeter, differenziert nach Nutzungsart.',
 		aggregationLevel: 'block',
 		updateFrequency: 'jährlich',
-		authority: 'Geschäftsstelle des Gutachterausschusses für Grundstückswerte in Berlin',
+		authorityKey: 'gutachterausschuss-grundstuecke',
 		coverageGaps: [
 			'Nur unbebaute Vergleichsbasis. Bebaute Grundstücke werden indirekt abgeleitet.',
 			'Sonderlagen (Bahnflächen, Friedhöfe, Wasser) erscheinen ohne Wert.'
@@ -78,7 +101,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Wohnlagen-Aggregat aus dem Berliner Mietspiegel 2024 pro LOR-Planungsraum, vom IBB Wohnungsmarktbericht abgeleitet. Ordinalskala einfach bis bestlage.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle zwei Jahre (Mietspiegel-Zyklus)',
-		authority: 'Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen · Mietspiegel-Geschäftsstelle',
+		authorityKey: 'senatsvw-mietspiegel',
 		coverageGaps: [
 			'Pro Planungsraum nur ein Wert. Block-Mikrolagen verschwinden.',
 			'Gewerbe- und Mischgebiete erscheinen ggf. ohne Wohnlagen-Eintrag.'
@@ -94,10 +117,8 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Polygone der sozialen Erhaltungsverordnungen nach §172 BauGB. Schutz vor Verdrängung durch Modernisierung und Umwandlung.',
 		aggregationLevel: 'block',
 		updateFrequency: 'unregelmäßig (Bezirksbeschlüsse)',
-		authority: 'Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen · Bezirksämter',
-		omissions: [
-			'Schutz vor Mieterhöhung kann Umzugschancen mindern. Layer wertet das nicht.'
-		],
+		authorityKey: 'senatsvw-stadtentwicklung-bezirke',
+		omissions: ['Schutz vor Mieterhöhung kann Umzugschancen mindern. Layer wertet das nicht.'],
 		relatedLayers: ['milieuschutz-staedtebau', 'wohnlagen-2024']
 	},
 	'milieuschutz-staedtebau': {
@@ -105,7 +126,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Polygone der städtebaulichen Erhaltungsverordnungen nach §172 BauGB zum Schutz des Stadtbildes (häufig Altbau- oder Gründerzeit-Quartiere).',
 		aggregationLevel: 'block',
 		updateFrequency: 'unregelmäßig',
-		authority: 'Bezirksämter Berlin · Bauämter',
+		authorityKey: 'bezirksamt-bauamt',
 		relatedLayers: ['milieuschutz-erhaltungsmiete']
 	},
 	'mss-gesamtindex-2025': {
@@ -113,7 +134,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Monitoring Soziale Stadtentwicklung 2025: Gesamtindex aus zwei Achsen pro LOR-Planungsraum. Status-Index (sehr niedrig bis hoch) gewichtet Einkommen, Beschäftigung und Bildung. Dynamik-Index (negativ, stabil, positiv) zeigt die Veränderung gegenüber dem vorhergehenden MSS-Zyklus. Berechnung durch die Senatsverwaltung für Stadtentwicklung Berlin.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'rund alle zwei Jahre (MSS-Zyklus)',
-		authority: 'Senatsverwaltung für Stadtentwicklung Berlin',
+		authorityKey: 'senatsvw-stadtentwicklung',
 		coverageGaps: [
 			'Planungsräume mit unter 300 Einwohner:innen oder Ausreißer-Profil bleiben ohne Zuordnung.',
 			'Aggregat-Daten je rund 7.500 Einwohner:innen. Mikro-Lagen verschwinden im Mittel.'
@@ -130,7 +151,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Modellierte Lärm-Gesamtbelastung pro LOR-Planungsraum aus dem Berliner Umweltatlas 2023. Aggregation in Kategorien gering bis sehr hoch.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 5 Jahre (EU-Umgebungslärm-Richtlinie)',
-		authority: SENATSVW_UMWELT,
+		authorityKey: 'senatsvw-umwelt',
 		coverageGaps: [
 			'Modellwerte, keine flächendeckenden Mess-Stationen.',
 			'Innenraum-Lärm in Wohnungen bleibt unberücksichtigt.'
@@ -146,10 +167,8 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Modellierte Stickoxid- und Feinstaub-Belastung pro LOR-Planungsraum aus dem Berliner Umweltatlas 2023. Verkehrsmodell plus Mess-Stationen.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 3 bis 5 Jahre',
-		authority: SENATSVW_UMWELT,
-		coverageGaps: [
-			'Aggregat pro Planungsraum, einzelne Hot-Spots gemittelt.'
-		],
+		authorityKey: 'senatsvw-umwelt',
+		coverageGaps: ['Aggregat pro Planungsraum, einzelne Hot-Spots gemittelt.'],
 		omissions: ['Pollen- und Allergen-Belastung sind nicht enthalten.'],
 		relatedLayers: ['laerm-2023', 'bioklima-2023', 'umweltgerechtigkeit-2023']
 	},
@@ -158,7 +177,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Bioklimatische Sommer-Belastung pro LOR-Planungsraum aus dem Umweltatlas 2023. Indikator für Hitzeinsel-Effekte und Versiegelung.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 5 Jahre',
-		authority: SENATSVW_UMWELT,
+		authorityKey: 'senatsvw-umwelt',
 		coverageGaps: ['Aggregat pro Planungsraum, Mikroklima im Hof unsichtbar.'],
 		relatedLayers: ['klima-pet-2022', 'gruenversorgung-2023', 'umweltgerechtigkeit-2023']
 	},
@@ -167,10 +186,8 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Pro-Kopf-Versorgung mit nutzbarem öffentlichem Grün pro LOR-Planungsraum aus dem Umweltatlas 2023. Skala gering bis sehr hoch.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 5 Jahre',
-		authority: SENATSVW_UMWELT,
-		omissions: [
-			'Private Gärten und Hofflächen zählen nicht zur Pro-Kopf-Versorgung.'
-		],
+		authorityKey: 'senatsvw-umwelt',
+		omissions: ['Private Gärten und Hofflächen zählen nicht zur Pro-Kopf-Versorgung.'],
 		relatedLayers: ['gruenanlagen', 'umweltgerechtigkeit-2023']
 	},
 	'umweltgerechtigkeit-2023': {
@@ -178,13 +195,11 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Kombinierter Index aus Lärm, Luft, Bioklima und Grünversorgung gewichtet mit sozialem Status. Identifiziert Mehrfachbelastung pro LOR-Planungsraum.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 3 bis 5 Jahre',
-		authority: SENATSVW_UMWELT,
+		authorityKey: 'senatsvw-umwelt',
 		coverageGaps: [
 			'Vor-Aggregat aus vier Einzel-Layern. Doppelzählung in Cross-Layer-Indices vermeiden.'
 		],
-		omissions: [
-			'Keine personenbezogene Bewertung, nur Stadtteil-Aggregat.'
-		],
+		omissions: ['Keine personenbezogene Bewertung, nur Stadtteil-Aggregat.'],
 		relatedLayers: ['laerm-2023', 'luft-2023', 'bioklima-2023', 'gruenversorgung-2023']
 	},
 
@@ -193,19 +208,23 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Physiologisch Äquivalente Temperatur (PET) an einem Hitzetag um 14 Uhr aus der Berliner Klimaanalyse 2022. Modelliert für 10×10 Meter Raster, hier auf Polygon-Geometrie reduziert.',
 		aggregationLevel: 'block',
 		updateFrequency: 'unregelmäßig (zuletzt 2022, davor 2015)',
-		authority: SENATSVW_UMWELT,
+		authorityKey: 'senatsvw-umwelt',
 		coverageGaps: [
 			'Nicht alle Stadtflächen modelliert. nearestPolygonFallbackKm fängt Lücken an Block-Rändern ab.'
 		],
 		omissions: ['Nachtwerte werden separat ausgewiesen.'],
-		relatedLayers: ['bioklima-2023', 'klima-kaltlufteinwirkbereich-2022', 'klima-leitbahnkorridor-2022']
+		relatedLayers: [
+			'bioklima-2023',
+			'klima-kaltlufteinwirkbereich-2022',
+			'klima-leitbahnkorridor-2022'
+		]
 	},
 	'klima-kaltlufteinwirkbereich-2022': {
 		calculation:
 			'Stadtgebiete, die nachts von Kaltluft aus Wäldern, Wiesen und Parks profitieren. Quelle: Berliner Klimaanalyse 2022.',
 		aggregationLevel: 'block',
 		updateFrequency: 'unregelmäßig',
-		authority: SENATSVW_UMWELT,
+		authorityKey: 'senatsvw-umwelt',
 		relatedLayers: ['klima-leitbahnkorridor-2022', 'klima-pet-2022']
 	},
 	'klima-leitbahnkorridor-2022': {
@@ -213,8 +232,10 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Talraum-Strukturen, Straßenzüge und Freiflächen, durch die nachts Kaltluft in die Stadt strömt.',
 		aggregationLevel: 'block',
 		updateFrequency: 'unregelmäßig',
-		authority: SENATSVW_UMWELT,
-		omissions: ['Bebauung in Korridoren bremst die Kühlung. Layer zeigt nur Geometrie, keine Verlustrechnung.'],
+		authorityKey: 'senatsvw-umwelt',
+		omissions: [
+			'Bebauung in Korridoren bremst die Kühlung. Layer zeigt nur Geometrie, keine Verlustrechnung.'
+		],
 		relatedLayers: ['klima-kaltlufteinwirkbereich-2022', 'klima-pet-2022']
 	},
 
@@ -223,7 +244,8 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Standorte der vor letzten frei gewählten Wohnorten verlegten Messing-Plaketten für NS-Opfer. Konzept Gunter Demnig, Daten aus OpenStreetMap, gepflegt von lokalen Initiativen.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'kontinuierlich (Verlegungen + OSM-Korrekturen)',
-		authority: `Stolpersteine-Initiativen Berlin · ${OSM} (ODbL 1.0)`,
+		authorityKey: 'stolpersteine-initiativen',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		coverageGaps: [
 			'Erfassung in OSM ist nicht vollständig. Nicht jedes verlegte Stein-Set ist gemappt.'
 		],
@@ -238,7 +260,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Anerkannte Berliner Kindertageseinrichtungen 2024 als Punkt-Layer. Trägerschaft öffentlich, kirchlich oder frei.',
 		aggregationLevel: 'address',
 		updateFrequency: 'jährlich',
-		authority: SENATSVW_BILDUNG,
+		authorityKey: 'senatsvw-bildung',
 		omissions: ['Keine Belegungsquoten oder Wartelisten-Daten.'],
 		relatedLayers: ['einschulbereiche-2024', 'schulen-2024']
 	},
@@ -247,8 +269,10 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Allgemeinbildende Schulen aus dem Berliner Schulverzeichnis 2024 als Punkt-Layer.',
 		aggregationLevel: 'address',
 		updateFrequency: 'jährlich',
-		authority: SENATSVW_BILDUNG,
-		omissions: ['Keine Schul-Qualitäts-Bewertung. Inspektions-Berichte separat über Senatsverwaltung.'],
+		authorityKey: 'senatsvw-bildung',
+		omissions: [
+			'Keine Schul-Qualitäts-Bewertung. Inspektions-Berichte separat über Senatsverwaltung.'
+		],
 		relatedLayers: ['einschulbereiche-2024', 'kitas-2024']
 	},
 	'einschulbereiche-2024': {
@@ -256,16 +280,15 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Räumlich definierte Grundschul-Einzugsbereiche. Kinder werden in der Regel der Schule des Einschulbereichs ihres Wohnorts zugewiesen.',
 		aggregationLevel: 'block',
 		updateFrequency: 'jährlich (zum Schuljahres-Wechsel)',
-		authority: SENATSVW_BILDUNG,
+		authorityKey: 'senatsvw-bildung',
 		omissions: ['Ausnahmen sind möglich, Layer zeigt nur die Regel-Zuordnung.'],
 		relatedLayers: ['schulen-2024']
 	},
 	'krankenhaeuser-plan': {
-		calculation:
-			'Kliniken aus dem Berliner Krankenhausplan mit gesetzlichem Versorgungsauftrag.',
+		calculation: 'Kliniken aus dem Berliner Krankenhausplan mit gesetzlichem Versorgungsauftrag.',
 		aggregationLevel: 'address',
 		updateFrequency: 'fortlaufend (Plan-Änderungen)',
-		authority: SENATSVW_GESUNDHEIT,
+		authorityKey: 'senatsvw-gesundheit',
 		relatedLayers: ['krankenhaeuser-weitere']
 	},
 	'krankenhaeuser-weitere': {
@@ -273,7 +296,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Private oder spezialisierte Kliniken außerhalb des Krankenhausplans, häufig Reha- oder Privatkliniken.',
 		aggregationLevel: 'address',
 		updateFrequency: 'fortlaufend',
-		authority: SENATSVW_GESUNDHEIT,
+		authorityKey: 'senatsvw-gesundheit',
 		relatedLayers: ['krankenhaeuser-plan']
 	},
 	'sportanlagen-2024': {
@@ -281,7 +304,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Sportstätten aus dem Bezirklichen Sportstättenverzeichnis 2024: Sportplätze, Hallen, Tennisanlagen, Schwimmbecken.',
 		aggregationLevel: 'address',
 		updateFrequency: 'jährlich',
-		authority: 'Senatsverwaltung für Inneres und Sport · Bezirksämter',
+		authorityKey: 'senatsvw-inneres-sport',
 		relatedLayers: ['schwimmbaeder', 'spielplaetze']
 	},
 	gruenanlagen: {
@@ -289,7 +312,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Öffentlich gewidmete Grün- und Erholungsflächen, gepflegt durch die Bezirks-Grünflächenämter.',
 		aggregationLevel: 'block',
 		updateFrequency: 'unregelmäßig (Bezirks-Pflege-Daten)',
-		authority: 'Bezirksämter Berlin · Grünflächenämter',
+		authorityKey: 'bezirksamt-gruenflaeche',
 		relatedLayers: ['gruenversorgung-2023', 'spielplaetze']
 	},
 	spielplaetze: {
@@ -297,7 +320,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Öffentlich zugängliche Kinderspielplätze aus dem Berliner Grünanlagen-Register.',
 		aggregationLevel: 'address',
 		updateFrequency: 'fortlaufend',
-		authority: 'Bezirksämter Berlin · Grünflächenämter',
+		authorityKey: 'bezirksamt-gruenflaeche',
 		omissions: ['Keine Geräte-Inventur, keine Sanierungs-Status-Daten.'],
 		relatedLayers: ['gruenanlagen']
 	},
@@ -306,7 +329,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Standorte der Berliner Bäder-Betriebe und vergleichbarer Einrichtungen: Hallenbäder, Sommerbäder, Kombibäder, Strandbäder.',
 		aggregationLevel: 'address',
 		updateFrequency: 'fortlaufend',
-		authority: 'Berliner Bäder-Betriebe (BBB) · Bezirksämter',
+		authorityKey: 'baeder-betriebe',
 		omissions: ['Saisonale Öffnungszeiten und Eintrittspreise sind nicht enthalten.']
 	},
 	trinkbrunnen: {
@@ -314,7 +337,8 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Standorte öffentlicher Trinkwasser-Brunnen der Berliner Wasserbetriebe, abgeleitet aus OpenStreetMap.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend (OSM)',
-		authority: `Berliner Wasserbetriebe · ${OSM} (ODbL 1.0)`,
+		authorityKey: 'wasser-betriebe',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		coverageGaps: ['Layer aktiv Mai bis Oktober. Außerhalb der Saison Frostschutz-Abschaltung.'],
 		relatedLayers: ['gruenanlagen']
 	},
@@ -324,7 +348,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Berliner Radverkehrsnetz inklusive Vorrangrouten 2025 nach dem Mobilitätsgesetz. Linien-Layer, abgeleitet aus offiziellen Geo-Daten.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'jährlich',
-		authority: 'Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt (SenMVKU)',
+		authorityKey: 'senatsvw-mvku',
 		relatedLayers: ['fahrradstrassen-2024']
 	},
 	'fahrradstrassen-2024': {
@@ -332,54 +356,55 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Straßen mit StVO-Zeichen 244.1 (Fahrradstraße). Andere Fahrzeuge nur ausnahmsweise und mit Schrittgeschwindigkeit.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'jährlich',
-		authority: 'SenMVKU',
+		authorityKey: 'senatsvw-mvku-short',
 		relatedLayers: ['radverkehrsnetz-2025']
 	},
 	'ubahn-stationen': {
-		calculation:
-			'BVG-U-Bahnhöfe aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.',
+		calculation: 'BVG-U-Bahnhöfe aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend (OSM)',
-		authority: `${BVG} · ${OSM} (ODbL 1.0)`,
+		authorityKey: 'bvg',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		relatedLayers: ['ubahn-netz']
 	},
 	'sbahn-stationen': {
-		calculation:
-			'S-Bahn-Bahnhöfe aus OpenStreetMap, abgeleitet aus VBB-GTFS-Stations-Set.',
+		calculation: 'S-Bahn-Bahnhöfe aus OpenStreetMap, abgeleitet aus VBB-GTFS-Stations-Set.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
-		authority: `${SBAHN} · ${OSM} (ODbL 1.0)`,
+		authorityKey: 'sbahn',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		relatedLayers: ['sbahn-netz']
 	},
 	'tram-haltestellen': {
-		calculation:
-			'BVG-Tram-Haltestellen aus OpenStreetMap, vor allem im Ostteil der Stadt.',
+		calculation: 'BVG-Tram-Haltestellen aus OpenStreetMap, vor allem im Ostteil der Stadt.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
-		authority: `${BVG} · ${OSM} (ODbL 1.0)`,
+		authorityKey: 'bvg',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		relatedLayers: ['tram-netz']
 	},
 	'bus-haltestellen': {
-		calculation:
-			'BVG-Bushaltestellen Stadt- und Regionalbusse aus OpenStreetMap.',
+		calculation: 'BVG-Bushaltestellen Stadt- und Regionalbusse aus OpenStreetMap.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
-		authority: `${BVG} · ${OSM} (ODbL 1.0)`
+		authorityKey: 'bvg',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL
 	},
 	'ubahn-netz': {
 		calculation:
 			'BVG-U-Bahn-Linienverlauf 9 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
-		authority: `${BVG} · ${OSM} (ODbL 1.0)`,
+		authorityKey: 'bvg',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		relatedLayers: ['ubahn-stationen']
 	},
 	'tram-netz': {
-		calculation:
-			'BVG-Straßenbahn-Linienverlauf 22 Linien aus OpenStreetMap.',
+		calculation: 'BVG-Straßenbahn-Linienverlauf 22 Linien aus OpenStreetMap.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
-		authority: `${BVG} · ${OSM} (ODbL 1.0)`,
+		authorityKey: 'bvg',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		relatedLayers: ['tram-haltestellen']
 	},
 	'sbahn-netz': {
@@ -387,7 +412,8 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Linienverlauf des Berliner S-Bahn-Netzes 16 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach operator S-Bahn Berlin GmbH.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
-		authority: `${SBAHN} · ${OSM} (ODbL 1.0)`,
+		authorityKey: 'sbahn',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		relatedLayers: ['sbahn-stationen']
 	},
 
@@ -396,7 +422,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Gewichtete Aggregation aus Lärm, Luft und thermischer Belastung pro Planungsraum (Lärm 0.4, Luft 0.4, Bioklima 0.2). Coverage-Fallback: Umweltgerechtigkeits-Aggregat. Normalisiert auf 0–100, Centroid-genau pro LOR-Polygon.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 3 bis 5 Jahre (sync mit Umweltatlas-Update)',
-		authority: 'navigator.berlin (Eigenberechnung aus Senats-Daten)',
+		authorityKey: 'navigator-eigenberechnung-senats-daten',
 		coverageGaps: [
 			'Modell-Werte, keine Mess-Stationen. Mikrolagen einzelner Adressen bleiben unsichtbar.'
 		],
@@ -411,7 +437,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Pro-Kopf-Grünversorgung (Gewicht 0.6) plus Kaltluft-Einwirkbereich und Leitbahnkorridor (je Gewicht 0.2). 4-Stufen-Mapping gering bis sehr hoch, harmonisiert mit Story 1.22.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 5 Jahre',
-		authority: 'navigator.berlin (Eigenberechnung aus Senats-Daten)',
+		authorityKey: 'navigator-eigenberechnung-senats-daten',
 		coverageGaps: ['Private Gärten und Höfe zählen nicht zur öffentlichen Pro-Kopf-Versorgung.'],
 		omissions: ['Qualität und Pflege-Zustand der Parks nicht enthalten.'],
 		relatedLayers: [
@@ -425,7 +451,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Distance-basiert vom Adress-Punkt zu nächster U-Bahn (0.35), S-Bahn (0.25), Tram (0.20) und Bus (0.10) Haltestelle plus Berlin-weite Radverkehrs-Presence (0.10). 0 m entspricht 100, 1.000 m entspricht 0, linear interpoliert.',
 		aggregationLevel: 'address',
 		updateFrequency: 'fortlaufend (OSM)',
-		authority: 'navigator.berlin (Eigenberechnung aus OSM-Stops + Berliner Radverkehrsnetz)',
+		authorityKey: 'navigator-eigenberechnung-osm-radverkehr',
 		coverageGaps: [
 			'Taktfrequenz und Linien-Angebot der Haltestelle nicht berücksichtigt.',
 			'Barrierefreiheit der Stops nicht gewertet.'
@@ -448,7 +474,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Status-Achse aus dem Monitoring Soziale Stadtentwicklung 2025 pro Planungsraum (sehr niedrig bis hoch), normalisiert auf 0–100. Stigma-Schutz: neutrale Farbskala, Kiez-Score-Disclaimer in jeder Surface, kein Composite-Score auf Karte. Planungsräume mit „kom != gültig" (Ausreißer, EW unter 300) bleiben ohne Wert.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'rund alle zwei Jahre (MSS-Zyklus)',
-		authority: 'navigator.berlin (Eigenberechnung aus SenStadt MSS 2025)',
+		authorityKey: 'navigator-eigenberechnung-mss-2025',
 		coverageGaps: [
 			'Planungsräume mit unter 300 Einwohner:innen oder Ausreißer-Profil ohne Zuordnung.',
 			'Aggregat-Daten je rund 7.500 Einwohner:innen. Mikro-Lagen verschwinden.'
@@ -464,7 +490,7 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 			'Distance-basiert vom LOR-Centroid bzw. Adress-Punkt zu nächster Kita (Gewicht 0.25, Threshold 500 m), Schule (0.25, 800 m), Plan-Krankenhaus (0.20, 2.000 m), Spielplatz (0.15, 400 m) und Grünanlage (0.15, 600 m). 0 m → 100, Threshold → 0, linear. Polygon-Layer (Spielplätze, Grünanlagen) nutzen den Geometrie-Mittelpunkt als POI-Punkt.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'jährlich (sync mit Bildungs- und Bezirks-Daten)',
-		authority: 'navigator.berlin (Eigenberechnung aus Senats-Daten und Bezirks-Registern)',
+		authorityKey: 'navigator-eigenberechnung-bezirke',
 		coverageGaps: [
 			'Belegungsquoten, Wartelisten und Trägerschaft sind im Score nicht berücksichtigt.',
 			'Polygon-Layer kollabieren zum Mittelpunkt. Ein langgezogener Park am Rand erscheint im Score zentriert.'
@@ -483,6 +509,48 @@ export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = {
 	}
 };
 
+function specToMethodology(spec: LayerMethodologySpec, locale: Locale): LayerMethodology {
+	const authorityBase = resolveAuthority(spec.authorityKey, locale);
+	const authority = spec.authoritySuffix ? `${authorityBase} ${spec.authoritySuffix}` : authorityBase;
+	return {
+		calculation: spec.calculation,
+		coverageGaps: spec.coverageGaps,
+		omissions: spec.omissions,
+		relatedLayers: spec.relatedLayers,
+		aggregationLevel: spec.aggregationLevel,
+		updateFrequency: spec.updateFrequency,
+		authority
+	};
+}
+
+function buildResolvedMap(locale: Locale): Record<string, LayerMethodology> {
+	const result: Record<string, LayerMethodology> = {};
+	for (const [slug, spec] of Object.entries(LAYER_METHODOLOGY_SPECS)) {
+		result[slug] = specToMethodology(spec, locale);
+	}
+	return result;
+}
+
+/**
+ * Resolved Methodology-Map für DE (Phase 1).
+ *
+ * Output-API bleibt rückwärtskompatibel: `authority` ist ein String. Phase 3
+ * wird `LAYER_METHODOLOGY_EN` (oder `LAYER_METHODOLOGY[locale]`) ergänzen ohne
+ * Schema-Bruch.
+ */
+export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = buildResolvedMap('de');
+
 export function getLayerMethodology(slug: string): LayerMethodology | null {
 	return LAYER_METHODOLOGY_DE[slug] ?? null;
 }
+
+/**
+ * Phase-3-Bereitstellung: liefert die rohe Spec inkl. `authorityKey`. Phase 3
+ * kann darauf basierend EN-Resolved-Map bauen oder Tests gegen Key-Coverage
+ * schreiben.
+ */
+export function getLayerMethodologySpec(slug: string): LayerMethodologySpec | null {
+	return LAYER_METHODOLOGY_SPECS[slug] ?? null;
+}
+
+export type { LayerMethodologySpec };
