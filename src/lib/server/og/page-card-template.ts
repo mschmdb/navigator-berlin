@@ -1,9 +1,9 @@
 /**
- * Satori-VDOM-Templates für Bezirks-, Kiez- und Layer-OG-Karten (Story 2.6).
+ * Satori-VDOM-Templates für Bezirks-, Kiez- und Layer-OG-Karten (Story 2.6,
+ * Pure-Satori-Pivot 2026-05-16).
  *
  * Layout-Pattern (alle drei Varianten):
- *   - 1200×630 Root mit Karten-Snapshot als `backgroundImage` (vom Caller als
- *     data-URI bereitgestellt; Pure-Function bleibt IO-frei).
+ *   - 1200×630 Root mit Brand-Color-Background (kein Map-Snapshot mehr).
  *   - Linker Spalten-Block 720 px breit, halbtransparente Panel-Card mit:
  *     Brand-Mark oben, Headline (Plex-Serif), Sub-Line (Plex-Sans),
  *     Stat-/Info-Reihe (Plex-Mono), Footer (URL + Stand).
@@ -176,28 +176,24 @@ function panel(input: PanelInput): SatoriNode {
 	);
 }
 
-function root(panelNode: SatoriNode, mapSnapshotDataUri: string | null): SatoriNode {
-	const style: Record<string, unknown> = {
-		width: OG_WIDTH,
-		height: OG_HEIGHT,
-		display: 'flex',
-		flexDirection: 'row',
-		backgroundColor: COLOR_BG
-	};
-	if (mapSnapshotDataUri) {
-		style.backgroundImage = `url(${mapSnapshotDataUri})`;
-		style.backgroundSize = `${OG_WIDTH}px ${OG_HEIGHT}px`;
-		style.backgroundRepeat = 'no-repeat';
-		style.backgroundPosition = 'center';
-	}
-	return node('div', style, [panelNode]);
+function root(panelNode: SatoriNode): SatoriNode {
+	return node(
+		'div',
+		{
+			width: OG_WIDTH,
+			height: OG_HEIGHT,
+			display: 'flex',
+			flexDirection: 'row',
+			backgroundColor: COLOR_BG
+		},
+		[panelNode]
+	);
 }
 
 export interface BezirkCardParams {
 	readonly bezirkName: string;
 	readonly slug: string;
 	readonly topStats: readonly Top3StatCard[];
-	readonly mapSnapshotDataUri?: string;
 }
 
 export function buildBezirkCardVdom(params: BezirkCardParams): SatoriNode {
@@ -214,7 +210,7 @@ export function buildBezirkCardVdom(params: BezirkCardParams): SatoriNode {
 		footerUrl: `/bezirk/${params.slug}`,
 		footerDate: newestStand
 	});
-	return root(panelNode, params.mapSnapshotDataUri ?? null);
+	return root(panelNode);
 }
 
 export interface KiezCardParams {
@@ -222,7 +218,6 @@ export interface KiezCardParams {
 	readonly slug: string;
 	readonly parentBezirkName: string;
 	readonly topStats: readonly Top3StatCard[];
-	readonly mapSnapshotDataUri?: string;
 }
 
 export function buildKiezCardVdom(params: KiezCardParams): SatoriNode {
@@ -239,7 +234,7 @@ export function buildKiezCardVdom(params: KiezCardParams): SatoriNode {
 		footerUrl: `/kiez/${params.slug}`,
 		footerDate: newestStand
 	});
-	return root(panelNode, params.mapSnapshotDataUri ?? null);
+	return root(panelNode);
 }
 
 export interface LayerCardParams {
@@ -249,7 +244,6 @@ export interface LayerCardParams {
 	readonly authority: string;
 	readonly license: string;
 	readonly sourceUpdatedAt: string;
-	readonly mapSnapshotDataUri?: string;
 }
 
 function layerInfoRow(params: LayerCardParams): SatoriNode {
@@ -306,5 +300,5 @@ export function buildLayerCardVdom(params: LayerCardParams): SatoriNode {
 		footerUrl: `/layer/${params.layerSlug}`,
 		footerDate
 	});
-	return root(panelNode, params.mapSnapshotDataUri ?? null);
+	return root(panelNode);
 }

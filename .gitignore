@@ -34,13 +34,20 @@ _user-input/
 # Build pipeline cache (Story 1.3)
 .cache/
 
-# Story 2.6: OG-Image-Pipeline build outputs (Karten-Snapshots + Satori-Cards)
+# Story 2.6: OG-Image-Pipeline build outputs (pure-Satori, Pivot 2026-05-16)
 # Build-Time-erzeugt via `pnpm og:all`, NICHT committed.
 # `static/og-default.png` (Story 1.20 Adress-Fallback) bleibt versioniert.
-/static/og/snapshots/
 /static/og/bezirk/
 /static/og/kiez/
 /static/og/layer/
 
 # Claude Code session transcripts (PII)
 .claude/projects/
+
+# Claude Code worktrees + runtime locks
+.claude/worktrees/
+.claude/scheduled_tasks.lock
+
+# Vitest-Browser visual-regression artifacts (auto-generated per test-run)
+**/__screenshots__/
+.vitest-attachments/

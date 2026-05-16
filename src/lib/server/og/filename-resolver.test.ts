@@ -2,9 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
 	ogTargetTypes,
 	buildOgFilename,
-	buildSnapshotFilename,
 	buildOgPath,
-	buildSnapshotPath,
 	buildOgPublicUrl,
 	type OgTargetType
 } from './filename-resolver.js';
@@ -35,14 +33,6 @@ describe('buildOgFilename', () => {
 	});
 });
 
-describe('buildSnapshotFilename', () => {
-	it('prefixes with type so all snapshots can share one flat dir', () => {
-		expect(buildSnapshotFilename('bezirk', 'mitte')).toBe('bezirk-mitte.png');
-		expect(buildSnapshotFilename('kiez', 'boxhagener-kiez')).toBe('kiez-boxhagener-kiez.png');
-		expect(buildSnapshotFilename('layer', 'laerm-2023')).toBe('layer-laerm-2023.png');
-	});
-});
-
 describe('buildOgPath', () => {
 	it('returns absolute filesystem path under static/og/{type}/{slug}.png', () => {
 		const path = buildOgPath('/repo', 'bezirk', 'mitte');
@@ -54,12 +44,6 @@ describe('buildOgPath', () => {
 		for (const t of types) {
 			expect(buildOgPath('/r', t, 'x')).toBe(`/r/static/og/${t}/x.png`);
 		}
-	});
-});
-
-describe('buildSnapshotPath', () => {
-	it('returns absolute path under static/og/snapshots/{type}-{slug}.png', () => {
-		expect(buildSnapshotPath('/r', 'bezirk', 'mitte')).toBe('/r/static/og/snapshots/bezirk-mitte.png');
 	});
 });
 

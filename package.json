@@ -22,9 +22,8 @@
 		"data:aggregate": "tsx scripts/aggregate-data.ts",
 		"data:aggregate-scores": "tsx scripts/aggregate-scores.ts",
 		"webmcp:manifest": "tsx scripts/build-webmcp-manifest.ts",
-		"og:snapshots": "tsx scripts/generate-og-snapshots.ts",
 		"og:images": "tsx scripts/generate-og-images.ts",
-		"og:all": "pnpm og:snapshots && pnpm og:images",
+		"og:all": "pnpm og:images",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "tsx scripts/db/migrate.ts"
 	},

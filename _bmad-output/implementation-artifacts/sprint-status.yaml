@@ -36,6 +36,7 @@
 
 generated: 2026-05-11
 last_updated: 2026-05-16
+# story 2-6 Pure-Satori-Pivot 2026-05-16 (User-Decision, post-merge): Map-Snapshot-Pipeline rückgebaut weil lokale Headless-Playwright-Builds System-OOM gerissen und produzierte Karten-PNGs unbrauchbar waren. Removed: scripts/generate-og-snapshots.ts, src/lib/server/og/snapshot-renderer.ts(+test), src/lib/server/og/overlay-builder.ts(+test), package.json-Script og:snapshots, filename-resolver buildSnapshotPath/buildSnapshotFilename. Page-Card-Template-Param mapSnapshotDataUri entfernt. AC-1 (Karten-Snapshot) obsolet, AC-6 reduziert auf og:images + og:all=og:images. Pure-Satori-Cards (Brand-Color-BG + Plex-Typo + Top-3-Stats) bleiben pro Page (193 PNGs DE-only Phase 1). 43 OG-Tests grün, pnpm check 0 Errors über 6107 Files. Wave 4 (Stories 2.3/2.5a/2.5b) im Background-Agent-Run abgebrochen wegen Playwright-OOM, Arbeit in salvage/2.3-bezirks-pages + salvage/2.5a-layer-en + salvage/2.5b-faq-templates branches gesichert, 10 stale Worktrees gepruned, Wave 4 wird foreground-sequenziell wiederaufgenommen.
 # story 2-9a promoted ready-for-dev → in-progress → review (dev-story wave-3 parallel-agent session 2026-05-16, TDD-first per ADR-012; 8 ACs erfüllt; 6 Task-Cluster fertig). Variante A multi-level (User-Decision): static/kiez-scores/kiez-scores.json bleibt Source-of-Truth auf 542 LOR-Planungsraum-Ebene (Story 1.28). 2.9a aggregiert flächen-gewichtet auf 143 LOR-Bezirksregionen + 12 Bezirke, schreibt Postgres bezirk_score + kiez_score als Build-Time-Cache via TRUNCATE+Insert. Epic-Wortlaut „Lärm/Luft/Klima/Grün/ÖPNV/Bildung" als superseded markiert in ADR-013; Dimensions bleiben 5× 0.20 (Ruhe-Luft/Grün/Mobilität/Soziale-Lage/Versorgung) per Memory project_kiez_score_dimensions. LOR-Hierarchie property-basiert (PLR_ID[:6]=BZR_ID, PLR_ID[:2]=BEZ-Code; 0 Mismatches in 542 PLR verifiziert auf ODIS-2021), kein Spatial-Containment nötig. Missing-Data-Policy 50%-Coverage-Threshold pro Dimension. Heerstraße-Slug-Kollision via Bezirks-Suffix. Open-Questions Locks: Q1 Variante A (User-Lock), Q2 separates scripts/aggregate-scores.ts (Single-Responsibility), Q3 property-basiertes Mapping ohne Spatial-Fallback, Q4 50%-Threshold, Q5 gleiche Methodik-Page mit Section-Ankern #kiez-score + #bezirks-score. Architektur: 3 Module unter 500 LOC + ADR-013 + docs/scoring-methodology.md + Methodik-Page-Erweiterung. 71 neue Tests grün, pnpm check 0 Errors über 6077 Files. Spot-Check 12 Bezirke: composites zwischen 42 (Mitte) und 54 (Steglitz-Zehlendorf), plausibel. Friedrichshain-Kreuzberg=43.5 (ruheLuft=27.5, gruen=31.1, mobilitaet=35.1, sozialeLage=61.3, versorgung=62.4). Konsumenten unblocked: Stories 2.3/2.4/2.9b/2.11/2.12.
 # story 2-6 promoted ready-for-dev → in-progress → review (dev-story wave-3 parallel-agent session 2026-05-16, TDD-first per ADR-012; 8 ACs erfüllt; AC-1 Karten-Snapshot via Headless Playwright + MapLibre (Variante A, User-Decision), AC-2 Satori-Overlay komponiert Snapshot via backgroundImage data-URI, AC-3 Top-3-Selector fix L_DEN/PET/Stationen-pro-km², AC-4 SeoHead ogImage-Prop bereits aus Story 2.1, AC-5 ohne Hash + max-age=86400, AC-6 og:snapshots/og:images/og:all + docs/data-pipeline.md, AC-7 gitignore + README + .gitkeep, AC-8 TDD 56 Tests grün. 8 neue Module unter src/lib/server/og/ + 2 Build-Scripts. DE-only Phase 1 strict: 193 PNGs (12 Bezirk + 143 Kiez + 38 Layer). Memory-Pflichten eingehalten: project_satori_font_pipeline (loadDefaultOgFonts aus Story 1.20, sequenzielles wawoff2), feedback_no_em_dashes, feedback_no_lebenswert, feedback_no_live_data. Smoke-Verify: bezirk/mitte + kiez/karlshorst + layer/laerm-2023 produzieren 1200×630 PNG. pnpm check 0 Errors über 6091 Files. T7.4 Social-Validator-Spotcheck = manueller Post-Deploy-Step. T7.5 Browser-Sharing-Verify blockiert auf 2.3/2.4/2.5a.
 # story 5-8-public-update-skill authored 2026-05-16 via bmad-create-story (Mary, Business-Analyst-Agent). Manual-Trigger Claude-Code-Skill `/publish-update` der aus Commit-Range Draft-Entries für /updates generiert (Story 2.13 Schema-Reuse). Allowlist-Filter (src/routes, src/lib/components, _content, MANIFEST) + Denylist-Override (.env, lefthook, coolify, docs/recovery, .github/workflows, _bmad-output) + Mixed-Commit-Schutz + Forbidden-Token-Lint (em-dash, lebenswert, hetzner, coolify, traefik, env-vars, commit-SHAs, mietpreis-€/m²). Output `_content/updates/_drafts/` (gitignored), Editorial-Gate via manuelle `git mv`-Promote. Subagent via `claude --print --append-system-prompt`. TDD-Pflicht für 6 Pure-Functions + 1 Subagent-Wrapper, Coverage ≥ 90%. Status ready-for-dev. Sequencing: 2.13 done (Schema-Source), 5.1 ready (Cadence-Heuristik-Hint), unabhängig von Epic 7. Authored als 5.8 statt 7.x weil Distribution/Pflege-Thema, nicht Knowledge-Layer.
@@ -179,7 +180,7 @@ development_status:
   2-2-json-ld-generator-bibliothek: review
   2-3-bezirks-pages-prerendered: ready-for-dev
   2-4-kiez-pages-prerendered: ready-for-dev
-  2-5a-layer-page-en-variante-dataset-jsonld: ready-for-dev
+  2-5a-layer-page-en-variante-dataset-jsonld: review  # scope-reduced 2026-05-16: DE-only refactor + authority centralization; EN-coverage deferred phase-3
   2-5b-faq-section-template-daten-slots: ready-for-dev
   2-6-og-image-pipeline-bezirk-kiez-layer: review
   2-7-webmcp-integration-tools-resources-prompts: review
@@ -215,12 +216,12 @@ development_status:
   # Epic 5: Distribution + Pflege + Owner-Realisation
   epic-5: in-progress
   5-1-update-cadence-adr-github-actions-schedule: ready-for-dev
-  5-2-brand-asset-pack-press-kit: backlog
-  5-3-launch-sequencing-plan-channel-material: backlog
-  5-4-post-launch-monitoring-eu-foss: backlog
-  5-5-backup-restore-drill-staging: backlog
-  5-6-gdpr-dpia-dokument-beratungs-asset: backlog
-  5-7-sitemap-submission-search-console-setup: backlog
+  5-2-brand-asset-pack-press-kit: ready-for-dev
+  5-3-launch-sequencing-plan-channel-material: ready-for-dev
+  5-4-post-launch-monitoring-eu-foss: ready-for-dev
+  5-5-backup-restore-drill-staging: ready-for-dev
+  5-6-gdpr-dpia-dokument-beratungs-asset: ready-for-dev
+  5-7-sitemap-submission-search-console-setup: ready-for-dev
   5-8-public-update-skill: ready-for-dev
   epic-5-retrospective: optional
 

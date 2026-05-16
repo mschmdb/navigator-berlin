@@ -1,16 +1,16 @@
 /**
- * Build-Step (Story 2.6 AC-2): rendert finale OG-Cards aus Karten-Snapshots
- * (von `og:snapshots` erzeugt) + Top-3-Aggregat-Werten + Satori-Overlay.
+ * Build-Step (Story 2.6, Pure-Satori-Pivot 2026-05-16): rendert finale
+ * OG-Cards aus Top-3-Aggregat-Werten + Satori-VDOM. Kein Map-Snapshot.
  *
  * Output: `static/og/{type}/{slug}.png` (gitignored).
  *
- * Snapshot-Source: `static/og/snapshots/{type}-{slug}.png`. Wenn fehlend →
- * Card wird ohne Karten-Hintergrund gerendert (Brand-Color-Background). Das
- * passiert bei Layer-Pages, wenn der Layer-Snapshot zu komplex war, oder wenn
- * Coolify-Build ohne Chromium läuft (Graceful-Degradation).
- *
  * Aggregat-Source: Postgres `bezirk_stats` + `kiez_stats` (Story 2.0). Wenn
  * DATABASE_URL fehlt → Placeholder-Werte, gleiches Pattern wie Story 2.8.
+ *
+ * Hintergrund Pivot: Headless-Playwright-Snapshot-Pipeline (alte AC-1)
+ * verworfen, weil lokale Builds System-OOM gerissen haben und produzierte
+ * PNGs unbrauchbar waren. Brand-Color-Background + Plex-Typo + Top-3-Stats
+ * tragen die Karte ausreichend.
  */
 
 import { mkdir, writeFile, access, readFile } from 'node:fs/promises';
@@ -27,14 +27,13 @@ import {
 	type LayerManifestEntry,
 	type GeoJsonFeatureCollection
 } from '../src/lib/server/og/og-pipeline.js';
-import { buildOgPath, buildSnapshotPath } from '../src/lib/server/og/filename-resolver.js';
+import { buildOgPath } from '../src/lib/server/og/filename-resolver.js';
 import {
 	buildBezirkCardVdom,
 	buildKiezCardVdom,
 	buildLayerCardVdom
 } from '../src/lib/server/og/page-card-template.js';
 import { renderPageCardPng } from '../src/lib/server/og/render-page-card.js';
-import { toBase64DataUri } from '../src/lib/server/og/overlay-builder.js';
 import { selectTopStatsForBezirkOrKiez, type Top3StatCard } from '../src/lib/server/og/top-stats-selector.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -91,13 +90,6 @@ async function fileExists(p: string): Promise<boolean> {
 	} catch {
 		return false;
 	}
-}
-
-async function readSnapshotDataUri(type: 'bezirk' | 'kiez' | 'layer', slug: string): Promise<string | undefined> {
-	const p = buildSnapshotPath(REPO_ROOT, type, slug);
-	if (!(await fileExists(p))) return undefined;
-	const buf = await readFile(p);
-	return toBase64DataUri(buf, 'image/png');
 }
 
 const PLACEHOLDER_STATS: readonly Top3StatCard[] = [
@@ -165,12 +157,10 @@ async function renderBezirk(
 					oepnv: row.oepnv as never
 				})
 			: PLACEHOLDER_STATS;
-		const mapSnapshotDataUri = await readSnapshotDataUri('bezirk', target.slug);
 		const vdom = buildBezirkCardVdom({
 			bezirkName: target.label,
 			slug: target.slug,
-			topStats,
-			mapSnapshotDataUri
+			topStats
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -200,14 +190,12 @@ async function renderKiez(
 					oepnv: row.oepnv as never
 				})
 			: PLACEHOLDER_STATS;
-		const mapSnapshotDataUri = await readSnapshotDataUri('kiez', target.slug);
 		const parentLabel = bezirkLabels.get(target.parentBezirkSlug) ?? target.parentBezirkSlug;
 		const vdom = buildKiezCardVdom({
 			kiezName: target.label,
 			slug: target.slug,
 			parentBezirkName: parentLabel,
-			topStats,
-			mapSnapshotDataUri
+			topStats
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -224,15 +212,13 @@ async function renderLayer(target: LayerTarget, args: CliArgs): Promise<'rendere
 	const outputPath = buildOgPath(REPO_ROOT, 'layer', target.slug);
 	if (!args.force && (await fileExists(outputPath))) return 'cached';
 	try {
-		const mapSnapshotDataUri = await readSnapshotDataUri('layer', target.slug);
 		const vdom = buildLayerCardVdom({
 			layerSlug: target.slug,
 			layerLabel: target.label,
 			bundleGroup: target.bundleGroup,
 			authority: target.authority,
 			license: target.license,
-			sourceUpdatedAt: target.sourceUpdatedAt,
-			mapSnapshotDataUri
+			sourceUpdatedAt: target.sourceUpdatedAt
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });

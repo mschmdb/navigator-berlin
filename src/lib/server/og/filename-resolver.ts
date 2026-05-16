@@ -1,13 +1,12 @@
 /**
- * OG-Image-Pfad-Konvention (Story 2.6).
+ * OG-Image-Pfad-Konvention (Story 2.6, Pure-Satori-Pivot 2026-05-16).
  *
  * Phase 1 ist DE-only (Memory `project_i18n_phase_1_de_only`). Pro Page-Type
  * + Slug existiert genau ein PNG, kein Locale-Suffix, kein Filename-Hash
  * (User-Decision Story 2.6 Open-Question 3: max-age=86400, kein immutable).
  *
  * Konvention:
- *   static/og/{type}/{slug}.png                  → finale OG-Card (Snapshot + Overlay)
- *   static/og/snapshots/{type}-{slug}.png        → Zwischen-Output Karten-Snapshot
+ *   static/og/{type}/{slug}.png                  → finale OG-Card (Satori-Only)
  *
  * Public-URL (Meta-Tag): `${origin}/og/{type}/{slug}.png`
  */
@@ -34,20 +33,9 @@ export function buildOgFilename(slug: string): string {
 	return `${slug}.png`;
 }
 
-/** `bezirk-mitte.png` für flachen Snapshot-Cache-Ordner. */
-export function buildSnapshotFilename(type: OgTargetType, slug: string): string {
-	assertValidSlug(slug);
-	return `${type}-${slug}.png`;
-}
-
 /** Filesystem-Pfad zur finalen OG-Card. */
 export function buildOgPath(repoRoot: string, type: OgTargetType, slug: string): string {
 	return `${repoRoot}/static/og/${type}/${buildOgFilename(slug)}`;
-}
-
-/** Filesystem-Pfad zum Snapshot-Cache-File. */
-export function buildSnapshotPath(repoRoot: string, type: OgTargetType, slug: string): string {
-	return `${repoRoot}/static/og/snapshots/${buildSnapshotFilename(type, slug)}`;
 }
 
 /**
