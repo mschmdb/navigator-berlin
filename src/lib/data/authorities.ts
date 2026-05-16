@@ -103,7 +103,7 @@ export const AUTHORITY_KEYS = Object.keys(AUTHORITIES) as AuthorityKey[];
  * Phase 3 (`project_i18n_phase_1_de_only`) füllt EN-Werte ohne Signatur-Bruch.
  */
 export function resolveAuthority(key: AuthorityKey, locale: Locale = 'de'): string {
-	const meta = AUTHORITIES[key];
+	const meta: AuthorityMeta = AUTHORITIES[key];
 	if (locale === 'en' && meta.en !== undefined) {
 		return meta.en;
 	}

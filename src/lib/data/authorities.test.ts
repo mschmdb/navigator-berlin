@@ -3,7 +3,8 @@ import {
 	AUTHORITIES,
 	AUTHORITY_KEYS,
 	resolveAuthority,
-	type AuthorityKey
+	type AuthorityKey,
+	type AuthorityMeta
 } from './authorities.js';
 
 describe('AUTHORITIES · Schema + Coverage', () => {
@@ -61,7 +62,7 @@ describe('Authority-Phase-3-Bereitschaft', () => {
 	it('Schema akzeptiert optionales EN-Feld pro Eintrag', () => {
 		// Test prüft Type-Compat: EN ist optional, kann später ohne Schema-Bruch
 		// gesetzt werden. Aktuell Phase 1 DE-only → keine EN-Werte vorhanden.
-		const sample = AUTHORITIES.odis;
+		const sample: AuthorityMeta = AUTHORITIES.odis;
 		expect(sample.de).toBeTruthy();
 		// EN darf undefined sein (Phase 1) ODER ein String sein (Phase 3)
 		const enType = typeof sample.en;
@@ -69,7 +70,7 @@ describe('Authority-Phase-3-Bereitschaft', () => {
 	});
 
 	it('Phase-1-Lock: aktuell sind keine EN-Strings gesetzt (Phase 3 deferred)', () => {
-		const withEn = AUTHORITY_KEYS.filter((key) => AUTHORITIES[key].en !== undefined);
+		const withEn = AUTHORITY_KEYS.filter((key) => (AUTHORITIES[key] as AuthorityMeta).en !== undefined);
 		expect(withEn).toEqual([]);
 	});
 });
