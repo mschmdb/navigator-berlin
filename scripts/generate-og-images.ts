@@ -16,6 +16,7 @@
  * Wenn DATABASE_URL fehlt → Placeholder-Werte „–" in allen Slots.
  */
 
+import 'dotenv/config';
 import { mkdir, writeFile, access, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -107,13 +108,17 @@ interface ScoreRow {
 }
 
 async function tryLoadBezirkScores(): Promise<Map<string, ScoreRow>> {
-	if (!process.env.DATABASE_URL) return new Map();
+	if (!process.env.DATABASE_URL) {
+		process.stderr.write('[og:images] WARN: DATABASE_URL not set — bezirk_score skipped\n');
+		return new Map();
+	}
 	try {
 		const { getDb } = await import('../src/lib/server/db/index.js');
 		const { bezirkScore } = await import('../src/lib/server/db/schema/index.js');
 		const rows = await getDb().select().from(bezirkScore);
 		const map = new Map<string, ScoreRow>();
 		for (const r of rows) map.set(r.slug, r as ScoreRow);
+		process.stdout.write(`[og:images] bezirk_score: ${map.size} rows loaded\n`);
 		return map;
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
@@ -123,13 +128,17 @@ async function tryLoadBezirkScores(): Promise<Map<string, ScoreRow>> {
 }
 
 async function tryLoadKiezScores(): Promise<Map<string, ScoreRow>> {
-	if (!process.env.DATABASE_URL) return new Map();
+	if (!process.env.DATABASE_URL) {
+		process.stderr.write('[og:images] WARN: DATABASE_URL not set — kiez_score skipped\n');
+		return new Map();
+	}
 	try {
 		const { getDb } = await import('../src/lib/server/db/index.js');
 		const { kiezScore } = await import('../src/lib/server/db/schema/index.js');
 		const rows = await getDb().select().from(kiezScore);
 		const map = new Map<string, ScoreRow>();
 		for (const r of rows) map.set(r.slug, r as ScoreRow);
+		process.stdout.write(`[og:images] kiez_score: ${map.size} rows loaded\n`);
 		return map;
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);

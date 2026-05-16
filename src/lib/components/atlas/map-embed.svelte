@@ -67,20 +67,24 @@
 					style: styleUrl,
 					center: [centerLng, centerLat],
 					zoom: 11,
-					bounds: [
-						[bbox[0], bbox[1]],
-						[bbox[2], bbox[3]]
-					],
-					fitBoundsOptions: { padding: 40 },
-					interactive: false,
 					attributionControl: false,
-					maxZoom: 17
+					maxZoom: 17,
+					dragRotate: false,
+					pitchWithRotate: false
 				});
 				map = instance as unknown as { remove: () => void };
 				instance.on('error', (e: { error?: Error }) => {
 					if (e?.error) console.warn('[map-embed]', e.error.message);
 				});
 				instance.on('load', () => {
+					instance.resize();
+					instance.fitBounds(
+						[
+							[bbox[0], bbox[1]],
+							[bbox[2], bbox[3]]
+						],
+						{ padding: 40, animate: false }
+					);
 					instance.addSource('bezirk-boundary', {
 						type: 'geojson',
 						data: featureGeom
@@ -98,6 +102,12 @@
 						paint: LINE_PAINT
 					});
 				});
+				// Layout-timing fallback: container can be 0x0 at mount in some
+				// SvelteKit-prerender + hydration paths. Trigger resize once on
+				// next frame so MapLibre rebuilds tile-pyramid for actual size.
+				if (typeof requestAnimationFrame !== 'undefined') {
+					requestAnimationFrame(() => instance.resize());
+				}
 			} catch {
 				mountFailed = true;
 			}
