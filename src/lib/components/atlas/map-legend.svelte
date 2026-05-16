@@ -222,7 +222,7 @@
 						{/if}
 						<a
 							data-testid={`legend-more-link-${entry.slug}`}
-							href={resolve(`/${lang}/layer/${entry.slug}` as Pathname)}
+							href={(resolve as (path: string) => string)(`/${lang}/layer/${entry.slug}`)}
 							class="self-start text-[11px] font-medium text-accent underline-offset-2 hover:underline"
 						>
 							Mehr erfahren →

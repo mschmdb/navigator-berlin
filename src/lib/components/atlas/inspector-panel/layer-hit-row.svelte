@@ -93,7 +93,9 @@
 
 	const groupLabel = $derived(`${layerName}: ${valueText}`);
 
-	const learnMoreHref = $derived(resolve(`/${lang}/layer/${hit.layer}` as Pathname));
+	const learnMoreHref = $derived(
+		(resolve as (path: string) => string)(`/${lang}/layer/${hit.layer}`)
+	);
 
 	const showSeasonalActivePill = $derived(
 		hit.layer === 'trinkbrunnen' && rowState === 'with-value'
