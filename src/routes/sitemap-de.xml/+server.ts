@@ -1,6 +1,7 @@
 import type { RequestHandler } from './$types';
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildSitemapXml, collectPrerenderedUrls } from '$lib/seo/sitemap-builder.js';
+import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 
 export const prerender = true;
 
@@ -15,15 +16,20 @@ export const prerender = true;
  * tried first but the unexpanded `[lang]` bracket leaks into the `Pathname`
  * union and breaks every `resolve(... as Pathname)` call in the codebase.
  * Two static routes are the simpler shape and match the DE-only roadmap.
+ *
+ * Story 2.3: Bezirks-Slugs werden hier zur Build-Time aus dem Bezirks-GeoJSON
+ * gelesen und im Context an `BEZIRK_PAGES_SOURCE` durchgereicht.
  */
 export const GET: RequestHandler = async ({ url, fetch }) => {
 	const manifest = await loadManifest(fetch);
 	const buildTimestamp = new Date().toISOString();
+	const bezirkSlugs = await readBezirkSlugsFromGeoJson();
 	const entries = collectPrerenderedUrls({
 		origin: url.origin,
 		locale: 'de',
 		manifest,
-		buildTimestamp
+		buildTimestamp,
+		bezirkSlugs
 	});
 	const body = buildSitemapXml(entries);
 	return new Response(body, {

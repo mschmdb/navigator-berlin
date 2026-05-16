@@ -120,18 +120,24 @@ export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
 };
 
 /**
- * All sources concatenated. Future stories (2.3 bezirks, 2.4 kiez, 2.9b ranking)
+ * All sources concatenated. Future stories (2.4 kiez, 2.9b ranking)
  * register new sources here without editing the per-language endpoint.
  *
  * Story 2.13 (`UPDATES_PAGES_SOURCE`): `/updates`-Index + alle `/updates/{slug}` Detail-Routes
  * (`$lib/seo/sources/updates.ts`, Build-Time-MD-Glob).
+ *
+ * Story 2.3 (`BEZIRK_PAGES_SOURCE`): 12 `/bezirk/{slug}` Detail-Routes; konsumiert
+ * Slug-Liste via `SitemapSourceContext.bezirkSlugs` (Endpoint-Route ist verantwortlich
+ * fürs Slug-Reading aus dem Bezirks-GeoJSON).
  */
 import { UPDATES_PAGES_SOURCE } from './sources/updates.js';
+import { BEZIRK_PAGES_SOURCE } from './sources/bezirk-pages.js';
 
 const ALL_SOURCES: readonly SitemapSource[] = [
 	STATIC_PAGES_SOURCE,
 	LAYER_DETAIL_SOURCE,
-	UPDATES_PAGES_SOURCE
+	UPDATES_PAGES_SOURCE,
+	BEZIRK_PAGES_SOURCE
 ];
 
 export function collectPrerenderedUrls(ctx: SitemapSourceContext): SitemapEntry[] {
