@@ -20,6 +20,7 @@
 		"data:oepnv-index": "tsx scripts/build-oepnv-stop-index.ts",
 		"data:kiez-scores": "tsx scripts/build-kiez-scores.ts",
 		"data:aggregate": "tsx scripts/aggregate-data.ts",
+		"data:aggregate-scores": "tsx scripts/aggregate-scores.ts",
 		"webmcp:manifest": "tsx scripts/build-webmcp-manifest.ts",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "tsx scripts/db/migrate.ts"
