@@ -13,6 +13,7 @@
 		loadBookmarks,
 		persistBookmarks
 	} from '$lib/state/bookmark-store.js';
+	import { mountWebMcpServer, unmountWebMcpServer } from '$lib/webmcp';
 
 	const ui = createUiState();
 
@@ -20,6 +21,18 @@
 		const initial = loadBookmarks(localStorage);
 		ui.bookmarks = initial.bookmarks;
 	}
+
+	$effect(() => {
+		if (!browser) return;
+		// Feuer-und-vergessen: Mount-Fehler werden nur in der Konsole geloggt,
+		// damit eine fehlende native API + fehlendes Polyfill die App nicht
+		// brickt.
+		mountWebMcpServer().catch((err: unknown) => {
+			const msg = err instanceof Error ? err.message : String(err);
+			console.warn('[webmcp] mount failed:', msg);
+		});
+		return () => unmountWebMcpServer();
+	});
 
 	$effect(() => {
 		if (!browser) return;
