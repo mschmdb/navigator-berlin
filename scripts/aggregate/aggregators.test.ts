@@ -104,19 +104,19 @@ describe('klima aggregate (T4.6)', () => {
 });
 
 describe('wohnen aggregate (T4.7)', () => {
-	it('combines wohnlage + mss distributions', () => {
+	it('combines wohnlage + mss distributions (mss uses si_v textual status)', () => {
 		const r = computeWohnenAggregate(
 			{
 				wohnlagenFeatures: [pt(1, 1, { wol: 2 }), pt(2, 2, { wol: 2 }), pt(3, 3, { wol: 3 })],
 				wohnlagenSourceUpdatedAt: T0,
-				mssFeatures: [polyAt(1, 1, { sdi_n: 3 })],
+				mssFeatures: [polyAt(1, 1, { si_v: 'mittel' })],
 				mssSourceUpdatedAt: T0
 			},
 			target
 		);
 		expect(r.dominantWohnlage?.value).toBe('2');
 		expect(r.wohnlageDistribution?.value['2']).toBeCloseTo(2 / 3);
-		expect(r.dominantMss?.value).toBe('3');
+		expect(r.dominantMss?.value).toBe('mittel');
 	});
 });
 

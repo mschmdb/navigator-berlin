@@ -153,12 +153,12 @@
 				<tbody>
 					{#each steckbrief as row (row.cluster)}
 						<tr class="border-b border-rule align-top">
-							<th scope="row" class="py-3 pr-4 font-semibold text-ink">{row.cluster}</th>
+							<th scope="row" class="py-3 pr-4 text-left font-semibold text-ink">{row.cluster}</th>
 							<td class="py-3 pr-4 text-ink">
 								<span>{row.value}</span>
 								<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
 							</td>
-							<td class="py-3 font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
+							<td class="py-3 text-left font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
 						</tr>
 					{/each}
 				</tbody>

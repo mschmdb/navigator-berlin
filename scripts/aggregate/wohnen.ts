@@ -4,8 +4,10 @@
  * Zwei Quellen:
  * - `wohnlagen-2024`: ~400k Adress-Punkte mit Property `wol` (Wohnlage-Code,
  *   typisch 1-5). Dominante Lage + Verteilung über Adresse-Counts.
- * - `mss-gesamtindex-2025`: 542 LOR-PLR-Polygone mit `sdi_n` (Soziale Lage,
- *   1-5 ordinal — Story 1.30). Dominante Gruppe + Verteilung.
+ * - `mss-gesamtindex-2025`: 542 LOR-PLR-Polygone mit `si_v` (MSS-Status-Text:
+ *   sehr niedrig / niedrig / mittel / hoch). `sdi_n` (1-99-Composite-Score)
+ *   ist NICHT die kategorische Quelle und führt zu „unbekannt"-Bucket im
+ *   Steckbrief; `si_v` ist die offizielle Status-Klasse (Story 1.30).
  */
 
 import type { Feature, Polygon, MultiPolygon } from 'geojson';
@@ -15,7 +17,7 @@ import type { WohnenAggregat } from './types.js';
 const SLUG_WOHNLAGEN = 'wohnlagen-2024';
 const SLUG_MSS = 'mss-gesamtindex-2025';
 const PROP_WOL = 'wol';
-const PROP_MSS = 'sdi_n';
+const PROP_MSS = 'si_v';
 
 export interface WohnenInput {
 	readonly wohnlagenFeatures: ReadonlyArray<Feature>;
@@ -25,7 +27,7 @@ export interface WohnenInput {
 }
 
 function toStringProp(features: ReadonlyArray<Feature>, prop: string): Feature[] {
-	// `wol` und `sdi_n` können als Number oder String kommen; normalisieren.
+	// `wol` und `si_v` können als Number oder String kommen; normalisieren.
 	return features.map((f) => ({
 		...f,
 		properties: f.properties

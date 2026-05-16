@@ -60,18 +60,26 @@
 					properties: {}
 				};
 				const bbox = turfBbox(featureGeom) as [number, number, number, number];
+				const centerLng = (bbox[0] + bbox[2]) / 2;
+				const centerLat = (bbox[1] + bbox[3]) / 2;
 				const instance = new maplibre.default.Map({
 					container,
 					style: styleUrl,
+					center: [centerLng, centerLat],
+					zoom: 11,
 					bounds: [
 						[bbox[0], bbox[1]],
 						[bbox[2], bbox[3]]
 					],
 					fitBoundsOptions: { padding: 40 },
 					interactive: false,
-					attributionControl: false
+					attributionControl: false,
+					maxZoom: 17
 				});
 				map = instance as unknown as { remove: () => void };
+				instance.on('error', (e: { error?: Error }) => {
+					if (e?.error) console.warn('[map-embed]', e.error.message);
+				});
 				instance.on('load', () => {
 					instance.addSource('bezirk-boundary', {
 						type: 'geojson',

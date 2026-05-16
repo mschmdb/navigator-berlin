@@ -27,9 +27,10 @@ export function describeWohnlageDe(raw: string | null | undefined): WohnlageDe {
 	return WOHNLAGE_MAP[raw.trim().toLowerCase()] ?? 'unbekannt';
 }
 
-export type MssDe = 'niedrig' | 'mittel' | 'hoch' | 'sehr hoch' | 'unbekannt';
+export type MssDe = 'sehr niedrig' | 'niedrig' | 'mittel' | 'hoch' | 'sehr hoch' | 'unbekannt';
 
 const MSS_MAP: Record<string, MssDe> = {
+	'sehr niedrig': 'sehr niedrig',
 	niedrig: 'niedrig',
 	mittel: 'mittel',
 	hoch: 'hoch',
@@ -49,6 +50,8 @@ export function describeMssDe(raw: string | null | undefined): MssDe {
 export function mssBeschreibungDe(raw: string | null | undefined): string {
 	const cat = describeMssDe(raw);
 	switch (cat) {
+		case 'sehr niedrig':
+			return 'Der Index zeigt für diesen Raum die niedrigste sozio-ökonomische Belastung in der Berliner Klassifikation.';
 		case 'niedrig':
 			return 'Der Index zeigt für diesen Raum aktuell wenig sozio-ökonomische Belastung.';
 		case 'mittel':
