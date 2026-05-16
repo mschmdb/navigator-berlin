@@ -20,8 +20,8 @@ describe('renderPageCardPng', () => {
 				dims: [
 					{ label: 'Ruhe', value: 27 },
 					{ label: 'Grün', value: 31 },
-					{ label: 'Mob.', value: 35 },
-					{ label: 'Vers.', value: 62 }
+					{ label: 'Mobilität', value: 35 },
+					{ label: 'Versorgung', value: 62 }
 				]
 			},
 			scoreUpdatedAt: 'Mai 2026'

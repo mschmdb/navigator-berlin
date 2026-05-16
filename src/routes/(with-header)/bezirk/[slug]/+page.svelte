@@ -84,4 +84,4 @@
 <JsonLd data={adminAreaJsonLd} testid="bezirk-administrative-area-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="bezirk-breadcrumb-jsonld" />
 
-<BezirkHero profile={data.profile} stats={data.stats} faq={data.faq} {ogImagePath} />
+<BezirkHero profile={data.profile} stats={data.stats} faq={data.faq} />

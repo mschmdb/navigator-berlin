@@ -1,9 +1,11 @@
 <!--
-	Story 2.3 T3: BezirkHero-Long-Form-Layout (UX-DR43).
+	Story 2.3 T3: BezirkHero-Long-Form-Layout (UX-DR43, Map-Embed entfernt
+	2026-05-16 per User-Decision — Karte trug auf Bezirks-Seite keinen Mehrwert
+	und schlug außerdem im Browser-Render fehl).
 
 	Rendert pro Bezirk: H1 (Plex-Serif), Lead-Absatz mit Einwohner-/Flächen-Daten,
-	read-only Karten-Embed mit Boundary-Highlight, Steckbrief-Tabelle aus
-	`bezirk_stats` (Story 2.0), FAQ-Section aus `faq_qna` (Story 2.5b).
+	Steckbrief-Tabelle aus `bezirk_stats` (Story 2.0), FAQ-Section aus
+	`faq_qna` (Story 2.5b).
 
 	Stats-Section rendert Placeholder wenn `stats === null` (DATABASE_URL fehlt
 	im Build oder Story-2.0-Aggregat noch nicht gelaufen). FAQ rendert sich
@@ -13,7 +15,6 @@
 	import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { bezirkStats } from '$lib/server/db/schema/index.js';
-	import MapEmbed from './map-embed.svelte';
 	import FaqSection from './faq-section.svelte';
 	import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
 	import { describeGruenversorgungDe } from '$lib/data/faq-helpers/gruen.js';
@@ -27,10 +28,9 @@
 		readonly profile: BezirkProfile;
 		readonly stats: BezirkStatsRow | null;
 		readonly faq: readonly FaqEntry[];
-		readonly ogImagePath?: string;
 	}
 
-	const { profile, stats, faq, ogImagePath }: Props = $props();
+	const { profile, stats, faq }: Props = $props();
 
 	const numberDe = new Intl.NumberFormat('de-DE');
 	const leadText = $derived.by(() => {
@@ -130,8 +130,6 @@
 		<h1 class="font-serif text-3xl text-ink md:text-4xl">{profile.name}</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">{leadText}</p>
 	</header>
-
-	<MapEmbed geometry={profile.geometry} label={profile.name} {ogImagePath} />
 
 	<section aria-labelledby="steckbrief-heading" class="space-y-4">
 		<h2 id="steckbrief-heading" class="font-serif text-2xl text-ink">Steckbrief</h2>

@@ -55,8 +55,8 @@ const fullScoreCard: ScoreCardData = {
 	dims: [
 		{ label: 'Ruhe', value: 27 },
 		{ label: 'Grün', value: 31 },
-		{ label: 'Mob.', value: 35 },
-		{ label: 'Vers.', value: 62 }
+		{ label: 'Mobilität', value: 35 },
+		{ label: 'Versorgung', value: 62 }
 	]
 };
 
@@ -65,8 +65,8 @@ const emptyScoreCard: ScoreCardData = {
 	dims: [
 		{ label: 'Ruhe', value: null },
 		{ label: 'Grün', value: null },
-		{ label: 'Mob.', value: null },
-		{ label: 'Vers.', value: null }
+		{ label: 'Mobilität', value: null },
+		{ label: 'Versorgung', value: null }
 	]
 };
 
@@ -90,9 +90,9 @@ describe('buildBezirkCardVdom', () => {
 		expect(joined).toContain('27');
 		expect(joined).toContain('Grün');
 		expect(joined).toContain('31');
-		expect(joined).toContain('Mob.');
+		expect(joined).toContain('Mobilität');
 		expect(joined).toContain('35');
-		expect(joined).toContain('Vers.');
+		expect(joined).toContain('Versorgung');
 		expect(joined).toContain('62');
 		expect(joined.toLowerCase()).toContain('kiez-score');
 	});

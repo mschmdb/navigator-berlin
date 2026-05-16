@@ -29,8 +29,8 @@ type ScoreLike = Pick<BezirkScore | KiezScore, 'composite' | 'ruheLuft' | 'gruen
 const DIM_LABELS = {
 	ruheLuft: 'Ruhe',
 	gruen: 'Grün',
-	mobilitaet: 'Mob.',
-	versorgung: 'Vers.'
+	mobilitaet: 'Mobilität',
+	versorgung: 'Versorgung'
 } as const;
 
 export function buildScoreCardData(score: ScoreLike | null | undefined): ScoreCardData {

@@ -55,24 +55,38 @@ function img(src: string, style: Record<string, unknown>): SatoriNode {
 	return { type: 'img', props: { src, style } };
 }
 
-function brandMark(logoDataUri: string | undefined): SatoriNode {
-	const children: SatoriNode[] = [];
+function brandMark(): SatoriNode {
+	return text('navigator.berlin', {
+		fontFamily: 'Plex Mono',
+		fontSize: 22,
+		color: COLOR_ACCENT,
+		fontWeight: 600,
+		letterSpacing: 0.5,
+		textTransform: 'uppercase' as const
+	});
+}
+
+function headerRow(logoDataUri: string | undefined): SatoriNode {
+	const children: SatoriNode[] = [brandMark()];
 	if (logoDataUri) {
-		children.push(img(logoDataUri, { width: 32, height: 32, display: 'flex' }));
+		children.push(
+			img(logoDataUri, {
+				width: 180,
+				height: 180,
+				display: 'flex',
+				marginLeft: 'auto'
+			})
+		);
 	}
-	children.push(
-		text('navigator.berlin', {
-			fontFamily: 'Plex Mono',
-			fontSize: 22,
-			color: COLOR_ACCENT,
-			fontWeight: 600,
-			letterSpacing: 0.5,
-			textTransform: 'uppercase' as const
-		})
-	);
 	return node(
 		'div',
-		{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 12 },
+		{
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'flex-start',
+			justifyContent: 'space-between',
+			width: '100%'
+		},
 		children
 	);
 }
@@ -193,14 +207,14 @@ interface PanelInput {
 
 function panel(input: PanelInput): SatoriNode {
 	const children: SatoriNode[] = [
-		brandMark(input.logoDataUri),
+		headerRow(input.logoDataUri),
 		text(input.headline, {
 			fontFamily: 'Plex Serif',
-			fontSize: 64,
+			fontSize: 72,
 			color: COLOR_INK,
 			lineHeight: 1.1,
 			marginTop: 8,
-			maxWidth: 600
+			maxWidth: 900
 		}),
 		text(input.subline, {
 			fontFamily: 'Plex Sans',
@@ -218,7 +232,7 @@ function panel(input: PanelInput): SatoriNode {
 			display: 'flex',
 			flexDirection: 'column',
 			justifyContent: 'space-between',
-			width: 720,
+			width: OG_WIDTH,
 			height: OG_HEIGHT,
 			padding: 56,
 			backgroundColor: COLOR_PANEL,

@@ -9,7 +9,7 @@ describe('buildScoreCardData', () => {
 		for (const dim of result.dims) expect(dim.value).toBeNull();
 	});
 
-	it('returns composite + 4 dim values (Ruhe / Grün / Mob. / Vers.) — Soziale Lage omitted', () => {
+	it('returns composite + 4 dim values (Ruhe / Grün / Mobilität / Versorgung) — Soziale Lage omitted', () => {
 		const score = {
 			composite: 43,
 			ruheLuft: 27,
@@ -19,7 +19,7 @@ describe('buildScoreCardData', () => {
 		};
 		const result = buildScoreCardData(score);
 		expect(result.composite).toBe(43);
-		expect(result.dims.map((d) => d.label)).toEqual(['Ruhe', 'Grün', 'Mob.', 'Vers.']);
+		expect(result.dims.map((d) => d.label)).toEqual(['Ruhe', 'Grün', 'Mobilität', 'Versorgung']);
 		expect(result.dims.map((d) => d.value)).toEqual([27, 31, 35, 62]);
 		// Stigma-Schutz: Soziale Lage darf nicht im Score-Card-Output erscheinen
 		expect(result.dims.some((d) => d.label.toLowerCase().includes('soz'))).toBe(false);
