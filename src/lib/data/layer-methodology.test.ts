@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
 	AGGREGATION_LEVELS,
 	getLayerMethodology,
+	getLayerMethodologySpec,
 	LAYER_METHODOLOGY_DE,
 	type AggregationLevel
 } from './layer-methodology.js';
+import { AUTHORITY_KEYS, resolveAuthority } from './authorities.js';
 
 const MANIFEST_SLUGS = [
 	'bezirke',
@@ -138,5 +140,42 @@ describe('Mietspiegel/Bodenrichtwerte-Methodik · keine Wertung', () => {
 	it('wohnlagen-2024-omissions verweisen auf Mietspiegel-Rechner', () => {
 		const m = getLayerMethodology('wohnlagen-2024');
 		expect(m?.omissions?.some((o) => /Mietspiegel|Mietpreis|€\/m²/.test(o))).toBe(true);
+	});
+});
+
+describe('Authority-Zentralisierung (Story 2.5a)', () => {
+	it('jeder Methodology-Spec referenziert einen gültigen AuthorityKey', () => {
+		for (const slug of MANIFEST_SLUGS) {
+			const spec = getLayerMethodologySpec(slug);
+			expect(spec, `Spec ${slug}`).not.toBeNull();
+			expect(AUTHORITY_KEYS, `${slug} authorityKey`).toContain(spec!.authorityKey);
+		}
+	});
+
+	it('resolved authority-String entspricht der zentralen Authority-Map', () => {
+		const m = getLayerMethodology('laerm-2023');
+		const spec = getLayerMethodologySpec('laerm-2023');
+		expect(spec).not.toBeNull();
+		expect(m?.authority).toBe(resolveAuthority(spec!.authorityKey, 'de'));
+	});
+
+	it('OSM-Composites enthalten ODbL-Lizenz-Suffix im resolved authority-String', () => {
+		const stolper = getLayerMethodology('stolpersteine');
+		expect(stolper?.authority).toMatch(/OpenStreetMap-Contributors \(ODbL 1\.0\)/);
+
+		const ubahn = getLayerMethodology('ubahn-stationen');
+		expect(ubahn?.authority).toMatch(/BVG/);
+		expect(ubahn?.authority).toMatch(/OpenStreetMap-Contributors \(ODbL 1\.0\)/);
+	});
+
+	it('Specs ohne Suffix bekommen genau den Authority-Klartext ohne Anhang', () => {
+		const m = getLayerMethodology('bezirke');
+		const spec = getLayerMethodologySpec('bezirke');
+		expect(spec?.authoritySuffix).toBeUndefined();
+		expect(m?.authority).toBe(resolveAuthority(spec!.authorityKey, 'de'));
+	});
+
+	it('getLayerMethodologySpec liefert null für unbekannten Slug', () => {
+		expect(getLayerMethodologySpec('does-not-exist-xyz')).toBeNull();
 	});
 });
