@@ -8,10 +8,17 @@
 
 export type GruenCategoryDe = 'gut' | 'mittel' | 'gering' | 'unbekannt';
 
+/**
+ * Quell-Layer `gruenversorgung-2023` publiziert die Werte `gut` / `mittel` /
+ * `schlecht`. Wir normalisieren + akzeptieren zusätzlich `hoch` / `niedrig` /
+ * `gering` damit der Helper robust gegenüber künftigen Layer-Wechseln bleibt.
+ */
 const NORMALISATION: Record<string, GruenCategoryDe> = {
+	gut: 'gut',
 	hoch: 'gut',
 	'sehr hoch': 'gut',
 	mittel: 'mittel',
+	schlecht: 'gering',
 	niedrig: 'gering',
 	gering: 'gering'
 };
