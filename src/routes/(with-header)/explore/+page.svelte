@@ -138,6 +138,20 @@
 		if (data.activeLayers?.length) {
 			ui.activeLayerSlugs = [...data.activeLayers];
 		}
+		// Story 2.12 Quick-Links: wenn `?address=lng,lat&q=…` gesetzt, bauen
+		// wir eine synthetische GeocodeSuggestion und triggern die Adress-
+		// Selection. Inspector öffnet sich dann automatisch.
+		if (typeof data.address?.lng === 'number' && typeof data.address?.lat === 'number') {
+			const displayName = data.address.q ?? `${data.address.lat.toFixed(5)}, ${data.address.lng.toFixed(5)}`;
+			selection.set({
+				id: `url-${data.address.lng.toFixed(5)}-${data.address.lat.toFixed(5)}`,
+				displayName,
+				lng: data.address.lng,
+				lat: data.address.lat,
+				type: 'point',
+				addresstype: 'point'
+			});
+		}
 		void (async () => {
 			try {
 				const manifest = await loadManifest();
