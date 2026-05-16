@@ -86,7 +86,7 @@
 	let selectedFeatureId = $state<string | null>(null);
 	let currentMarker: { remove: () => void; getLngLat: () => { lng: number; lat: number } } | null =
 		null;
-	let MarkerCtor:
+	let MarkerCtor = $state.raw<
 		| (new (options: { element: HTMLElement; anchor?: string }) => {
 				setLngLat: (ll: [number, number]) => {
 					addTo: (m: unknown) => {
@@ -95,7 +95,8 @@
 					};
 				};
 		  })
-		| null = null;
+		| null
+	>(null);
 
 	const VIEWPORT_KEYS = ['bbox', 'zoom', 'center'] as const;
 	const ADDRESS_KEYS = ['address', 'q'] as const;

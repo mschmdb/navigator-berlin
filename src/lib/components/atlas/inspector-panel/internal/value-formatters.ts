@@ -68,22 +68,49 @@ function formatUmweltatlasKategorie(
 }
 
 function formatWohnlage(value: unknown): FormattedValue {
-	const mode = pickProp(value, 'wol_mode');
-	if (typeof mode !== 'string' || mode === 'unbekannt') return FALLBACK;
-	const plr = pickProp(value, 'plr_name');
-	const counts: string[] = [];
-	for (const [k, label] of [
-		['count_einfach', 'einfach'],
-		['count_mittel', 'mittel'],
-		['count_gut', 'gut']
-	] as const) {
-		const c = pickProp(value, k);
-		if (typeof c === 'number' && c > 0) counts.push(`${c} ${label}`);
+	// Raw-Adress-Feature aus FIS-Broker (401k Punkte, sources.ts wohnlagen-2024)
+	// hat `wol` direkt pro Adresse. Aggregat-Variante mit `wol_mode` /
+	// `count_*` kommt aus dem (deferred) PLR-Polygon-Aggregator; wir
+	// behandeln beide Pfade damit zukünftige Aggregat-Migration nicht den
+	// Inspector bricht.
+	const aggregateMode = pickProp(value, 'wol_mode');
+	if (typeof aggregateMode === 'string' && aggregateMode !== 'unbekannt') {
+		const plr = pickProp(value, 'plr_name');
+		const counts: string[] = [];
+		for (const [k, label] of [
+			['count_einfach', 'einfach'],
+			['count_mittel', 'mittel'],
+			['count_gut', 'gut']
+		] as const) {
+			const c = pickProp(value, k);
+			if (typeof c === 'number' && c > 0) counts.push(`${c} ${label}`);
+		}
+		const plrPart = typeof plr === 'string' ? ` · ${plr}` : '';
+		const breakdown = counts.length > 1 ? ` (${counts.join(', ')})` : '';
+		return {
+			text: `Wohnlage überwiegend ${aggregateMode}${plrPart}${breakdown}`,
+			isNumeric: false
+		};
 	}
-	const plrPart = typeof plr === 'string' ? ` · ${plr}` : '';
-	// Breakdown nur bei genuiner Mischung mehrerer Buckets; einzelner Count dupliziert die "überwiegend"-Aussage.
-	const breakdown = counts.length > 1 ? ` (${counts.join(', ')})` : '';
-	return { text: `Wohnlage überwiegend ${mode}${plrPart}${breakdown}`, isNumeric: false };
+
+	const rawWol = pickProp(value, 'wol');
+	if (typeof rawWol === 'string' && rawWol.length > 0) {
+		const strasse = pickProp(value, 'strasse');
+		const hnr = pickProp(value, 'hnr');
+		const plr = pickProp(value, 'plr_name');
+		const addr = typeof strasse === 'string' && typeof hnr === 'string' ? `${strasse} ${hnr}` : null;
+		const tail =
+			addr && typeof plr === 'string'
+				? ` · ${addr}, ${plr}`
+				: addr
+					? ` · ${addr}`
+					: typeof plr === 'string'
+						? ` · ${plr}`
+						: '';
+		return { text: `Wohnlage ${rawWol}${tail}`, isNumeric: false };
+	}
+
+	return FALLBACK;
 }
 
 function formatMilieuschutz(value: unknown): FormattedValue {
