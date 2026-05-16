@@ -195,7 +195,8 @@
       "Bash(pnpm test:unit --run scripts/aggregate/laerm.test.ts)",
       "Bash(pnpm test:unit --run scripts/aggregate/)",
       "Bash(pnpm data:aggregate)",
-      "Bash(psql *)"
+      "Bash(psql *)",
+      "Skill(bmad-create-story)"
     ]
   }
 }
