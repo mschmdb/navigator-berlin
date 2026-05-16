@@ -11,10 +11,11 @@ describe('meta-footer.svelte', () => {
 		await expect.element(footer).toBeInTheDocument();
 	});
 
-	it('enthaelt alle 6 Meta-Links (Methodik, Impressum, Datenschutz, Lizenzen, Architektur, Kontakt)', async () => {
+	it('enthaelt alle 7 Meta-Links (Methodik, Updates, Impressum, Datenschutz, Lizenzen, Architektur, Kontakt)', async () => {
 		render(MetaFooter, {});
 		for (const name of [
 			'Methodik',
+			'Updates',
 			'Impressum',
 			'Datenschutz',
 			'Lizenzen',
@@ -23,6 +24,13 @@ describe('meta-footer.svelte', () => {
 		]) {
 			await expect.element(page.getByRole('link', { name })).toBeInTheDocument();
 		}
+	});
+
+	it('Updates-Link zeigt auf /updates (Story 2.13)', async () => {
+		render(MetaFooter, {});
+		const link = page.getByRole('link', { name: 'Updates' });
+		const el = (await link.element()) as HTMLAnchorElement;
+		expect(el.getAttribute('href')).toBe('/updates');
 	});
 
 	it('Methodik-Link zeigt auf /methodik', async () => {
