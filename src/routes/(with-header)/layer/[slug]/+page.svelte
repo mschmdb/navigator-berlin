@@ -10,6 +10,8 @@
 	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
 	import ErrorFeedbackMailto from '$lib/components/atlas/error-feedback-mailto.svelte';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
+	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import { buildDataset } from '$lib/seo/index.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
 	type Props = { data: import('./$types').PageData };
@@ -26,6 +28,26 @@
 	const pageDescription = $derived(
 		explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin.`
 	);
+
+	/**
+	 * Story 2.2 AC-5: Dataset-JSON-LD pro Layer-Detail-Page.
+	 * Phase 1 DE-only: `inLanguage: 'de-DE'` per Default in buildDataset.
+	 * EN-Variante kommt mit Story 2.5a (`inLanguage: 'en-US'`-Override).
+	 */
+	const datasetJsonLd = $derived(
+		buildDataset({
+			origin: page.url.origin,
+			name: detail.layerName,
+			description: explain.long || explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin.`,
+			license: meta.license,
+			dateModified: meta.sourceUpdatedAt ?? meta.fetchedAt,
+			creatorName: methodology?.authority,
+			contentUrl: `${page.url.origin}/layers/${meta.filename}`,
+			encodingFormat:
+				meta.format === 'pmtiles' ? 'application/vnd.pmtiles' : 'application/geo+json',
+			keywords: [meta.bundleGroup, detail.slug]
+		})
+	);
 </script>
 
 <SeoHead
@@ -34,6 +56,7 @@
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 />
+<JsonLd data={datasetJsonLd} testid="layer-dataset-jsonld" />
 
 <article
 	data-testid="layer-detail-page"

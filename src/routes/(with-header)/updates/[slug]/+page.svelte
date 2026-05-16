@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
+	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import FeedDiscoveryLinks from '$lib/components/seo/feed-discovery-links.svelte';
 	import {
 		CATEGORY_BADGE_CLASSES,
 		CATEGORY_LABEL_DE,
 		formatDateDe
 	} from '$lib/components/updates/category-label.js';
-	import { buildBlogPostingJsonLd } from '$lib/seo/json-ld-updates.js';
+	import { buildBlogPosting } from '$lib/seo/index.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
@@ -22,7 +23,7 @@
 	const pageDescription = $derived(entry.frontmatter.summary_de);
 
 	const jsonLd = $derived(
-		buildBlogPostingJsonLd({ entry, origin: page.url.origin })
+		buildBlogPosting({ entry, origin: page.url.origin })
 	);
 </script>
 
@@ -38,8 +39,8 @@
 	<meta property="og:type" content="article" />
 	<meta property="article:published_time" content={entry.frontmatter.date} />
 	<meta property="article:section" content={entry.frontmatter.category} />
-	{@html `<script type="application/ld+json" data-testid="updates-detail-jsonld">${JSON.stringify(jsonLd)}</script>`}
 </svelte:head>
+<JsonLd data={jsonLd} testid="updates-detail-jsonld" />
 
 <article
 	data-testid="updates-detail-page"

@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
+	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import FeedDiscoveryLinks from '$lib/components/seo/feed-discovery-links.svelte';
 	import UpdatesFilter from '$lib/components/updates/updates-filter.svelte';
 	import UpdatesEntryCard from '$lib/components/updates/updates-entry-card.svelte';
@@ -10,7 +11,7 @@
 		serializeCategoryFilter,
 		applyCategoryFilter
 	} from '$lib/content/updates/parse-filter.js';
-	import { buildBlogIndexJsonLd } from '$lib/seo/json-ld-updates.js';
+	import { buildBlogIndex } from '$lib/seo/index.js';
 	import type { UpdateCategory } from '$lib/content/updates/types.js';
 
 	type Props = { data: import('./$types').PageData };
@@ -51,7 +52,7 @@
 		'Daten-Refreshes, Feature-Releases und Methodik-Änderungen. Mit RSS, Atom und JSON-Feed.';
 
 	const blogJsonLd = $derived(
-		buildBlogIndexJsonLd({ entries, origin: page.url.origin })
+		buildBlogIndex({ entries, origin: page.url.origin })
 	);
 </script>
 
@@ -62,10 +63,7 @@
 	origin={page.url.origin}
 />
 <FeedDiscoveryLinks origin={page.url.origin} />
-
-<svelte:head>
-	{@html `<script type="application/ld+json" data-testid="updates-index-jsonld">${JSON.stringify(blogJsonLd)}</script>`}
-</svelte:head>
+<JsonLd data={blogJsonLd} testid="updates-index-jsonld" />
 
 <article
 	data-testid="updates-index-page"

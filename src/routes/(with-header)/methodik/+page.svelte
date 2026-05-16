@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
+	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 	import MethodikDatenTabelle from './methodik-daten-tabelle.svelte';
 	import MethodikPipelineDiagram from './methodik-pipeline-diagram.svelte';
@@ -28,8 +29,13 @@
 	const pageDescription =
 		'Wie navigator.berlin Daten verarbeitet, was wir zeigen, was wir bewusst weglassen.';
 
+	/**
+	 * Story 2.2 AC-4: Methodik-Page bleibt bei `TechArticle`. Inline-Object,
+	 * weil dieser Generator nicht in der Lib lebt (Methodik ist die einzige
+	 * Konsumentin). Typed via JSON-LD-Object-Shape, NICHT via schema-dts-Union.
+	 */
 	const jsonLd = $derived({
-		'@context': 'https://schema.org',
+		'@context': 'https://schema.org' as const,
 		'@type': 'TechArticle',
 		headline: 'Methodik der Daten',
 		description: pageDescription,
@@ -109,9 +115,7 @@
 	origin={page.url.origin}
 />
 
-<svelte:head>
-	{@html `<script type="application/ld+json" data-testid="methodik-jsonld">${JSON.stringify(jsonLd)}</script>`}
-</svelte:head>
+<JsonLd data={jsonLd} testid="methodik-jsonld" />
 
 <article
 	data-testid="methodik-page"

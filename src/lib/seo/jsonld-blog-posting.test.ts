@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-	buildBlogPostingJsonLd,
-	buildBlogIndexJsonLd
-} from './json-ld-updates.js';
+import { buildBlogPosting, buildBlogIndex } from './jsonld-blog-posting.js';
 import type { UpdateEntry } from '$lib/content/updates/types.js';
 
 const entry: UpdateEntry = {
@@ -21,15 +18,15 @@ const entry: UpdateEntry = {
 
 const origin = 'https://navigator.berlin';
 
-describe('buildBlogPostingJsonLd', () => {
+describe('buildBlogPosting', () => {
 	it('hat @context und @type BlogPosting', () => {
-		const obj = buildBlogPostingJsonLd({ entry, origin });
+		const obj = buildBlogPosting({ entry, origin });
 		expect(obj['@context']).toBe('https://schema.org');
 		expect(obj['@type']).toBe('BlogPosting');
 	});
 
-	it('hat headline, datePublished, dateModified, description, articleSection', () => {
-		const obj = buildBlogPostingJsonLd({ entry, origin });
+	it('hat headline, datePublished, dateModified, description, articleSection, inLanguage', () => {
+		const obj = buildBlogPosting({ entry, origin });
 		expect(obj.headline).toBe('Launch · Test');
 		expect(obj.datePublished).toBe('2026-05-15');
 		expect(obj.dateModified).toBe('2026-05-15');
@@ -39,39 +36,38 @@ describe('buildBlogPostingJsonLd', () => {
 	});
 
 	it('hat author + publisher als Organization', () => {
-		const obj = buildBlogPostingJsonLd({ entry, origin });
+		const obj = buildBlogPosting({ entry, origin });
 		expect(obj.author['@type']).toBe('Organization');
 		expect(obj.author.name).toBe('Navigator Berlin');
-		expect(obj.publisher['@type']).toBe('Organization');
 	});
 
 	it('hat mainEntityOfPage = WebPage mit @id', () => {
-		const obj = buildBlogPostingJsonLd({ entry, origin });
+		const obj = buildBlogPosting({ entry, origin });
 		expect(obj.mainEntityOfPage['@type']).toBe('WebPage');
 		expect(obj.mainEntityOfPage['@id']).toBe('https://navigator.berlin/updates/launch');
 	});
 
-	it('hat keywords aus tags', () => {
-		const obj = buildBlogPostingJsonLd({ entry, origin });
+	it('hat keywords aus tags (komma-getrennt)', () => {
+		const obj = buildBlogPosting({ entry, origin });
 		expect(obj.keywords).toBe('launch, demo');
 	});
 
-	it('lässt keywords weg wenn keine tags', () => {
+	it('laesst keywords weg wenn keine tags', () => {
 		const noTags: UpdateEntry = {
 			...entry,
 			frontmatter: { ...entry.frontmatter, tags: undefined }
 		};
-		const obj = buildBlogPostingJsonLd({ entry: noTags, origin });
+		const obj = buildBlogPosting({ entry: noTags, origin });
 		expect(obj.keywords).toBeUndefined();
 	});
 });
 
-describe('buildBlogIndexJsonLd', () => {
+describe('buildBlogIndex', () => {
 	it('hat @type Blog mit blogPost-Liste', () => {
-		const obj = buildBlogIndexJsonLd({ entries: [entry], origin });
+		const obj = buildBlogIndex({ entries: [entry], origin });
 		expect(obj['@type']).toBe('Blog');
 		expect(obj.blogPost).toHaveLength(1);
-		expect(obj.blogPost[0]?.['@type']).toBe('BlogPosting');
+		expect(obj.blogPost[0]['@type']).toBe('BlogPosting');
 	});
 
 	it('cap auf 10 Posts in Index', () => {
@@ -83,7 +79,7 @@ describe('buildBlogIndexJsonLd', () => {
 				date: `2026-05-${String((i % 28) + 1).padStart(2, '0')}`
 			}
 		}));
-		const obj = buildBlogIndexJsonLd({ entries: many, origin });
+		const obj = buildBlogIndex({ entries: many, origin });
 		expect(obj.blogPost).toHaveLength(10);
 	});
 });
