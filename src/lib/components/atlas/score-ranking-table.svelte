@@ -145,15 +145,15 @@
 	}
 
 	/**
-	 * 4-Bucket-Mapping für Score-Cell-Hintergrund (Story 2.9b + Memory
-	 * `project_compare_editorial_profiles` + Story 1.31 Choropleth-Family).
+	 * Score-Pill-Mapping (Story 2.9b + Story 1.31 Color-Family-System).
 	 *
-	 * Score-Werte 0-100 werden in 4 Stufen gebucketet (sehr niedrig / niedrig
-	 * / mittel / hoch). Höhere Werte bekommen stärkere Accent-Sättigung damit
-	 * Stärken/Schwächen pro Zeile auf einen Blick erkennbar sind.
+	 * 4 Buckets quer durch divergent rot → orange → hellgrün → grün, auf Basis
+	 * der existierenden Choropleth-Familie-Tokens (`--scale-last-*` Vermillion,
+	 * `--state-warning` Bernstein, `--scale-gut-*` Grün). Color-Mix-Tints
+	 * landen weich auf dem Cloud-Dancer-Background ohne Knall.
 	 *
-	 * Wichtig: Soziale-Lage-Spalte BEKOMMT KEINE Farbskala (Stigma-Schutz,
-	 * Story 1.31 Strukturell-Family). Sie bleibt neutral Plex-Mono.
+	 * Wichtig: Soziale-Lage-Spalte BEKOMMT KEINE Pille (Stigma-Schutz, Story
+	 * 1.31 Strukturell-Family — Memory `project_compare_editorial_profiles`).
 	 */
 	type ScoreBucket = 0 | 1 | 2 | 3 | 4;
 	function scoreBucket(value: number | null): ScoreBucket {
@@ -163,13 +163,14 @@
 		if (value >= 30) return 2;
 		return 1;
 	}
-	function cellClass(value: number | null, neutral = false): string {
-		const base = 'py-3 pr-3 font-mono text-ink';
-		if (neutral) return base;
+	function pillClass(value: number | null, neutral = false): string {
+		const base = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
+		if (neutral) return `${base} text-ink`;
 		const bucket = scoreBucket(value);
 		if (bucket === 0) return `${base} text-ink-muted`;
-		return `${base} cell-score-${bucket}`;
+		return `${base} score-pill-${bucket} text-ink`;
 	}
+	const cellPadding = 'py-3 pr-3';
 
 	const sozialActive = $derived(sortKey === 'sozialeLage');
 
@@ -302,14 +303,16 @@
 								{row.bezirkName ?? '–'}
 							</td>
 						{/if}
-						<td class={cellClass(row.composite)}>{formatScore(row.composite)}</td>
-						<td class={cellClass(row.ruheLuft)}>{formatScore(row.ruheLuft)}</td>
-						<td class={cellClass(row.gruen)}>{formatScore(row.gruen)}</td>
-						<td class={cellClass(row.mobilitaet)}>{formatScore(row.mobilitaet)}</td>
-						<td class="{cellClass(row.sozialeLage, true)} {sozialActive ? 'font-semibold' : ''}">
-							{formatScore(row.sozialeLage)}
+						<td class={cellPadding}><span class={pillClass(row.composite)}>{formatScore(row.composite)}</span></td>
+						<td class={cellPadding}><span class={pillClass(row.ruheLuft)}>{formatScore(row.ruheLuft)}</span></td>
+						<td class={cellPadding}><span class={pillClass(row.gruen)}>{formatScore(row.gruen)}</span></td>
+						<td class={cellPadding}><span class={pillClass(row.mobilitaet)}>{formatScore(row.mobilitaet)}</span></td>
+						<td class={cellPadding}>
+							<span class="{pillClass(row.sozialeLage, true)} {sozialActive ? 'font-semibold' : ''}">
+								{formatScore(row.sozialeLage)}
+							</span>
 						</td>
-						<td class={cellClass(row.versorgung)}>{formatScore(row.versorgung)}</td>
+						<td class={cellPadding}><span class={pillClass(row.versorgung)}>{formatScore(row.versorgung)}</span></td>
 					</tr>
 				{/each}
 			</tbody>
@@ -321,25 +324,40 @@
 		data-testid="ranking-legend"
 	>
 		<dt class="text-ink-muted">Skala:</dt>
-		<dd class="flex items-center gap-2"><span class="cell-score-1 inline-block size-4 rounded-sm" aria-hidden="true"></span> &lt; 30</dd>
-		<dd class="flex items-center gap-2"><span class="cell-score-2 inline-block size-4 rounded-sm" aria-hidden="true"></span> 30 – 49</dd>
-		<dd class="flex items-center gap-2"><span class="cell-score-3 inline-block size-4 rounded-sm" aria-hidden="true"></span> 50 – 69</dd>
-		<dd class="flex items-center gap-2"><span class="cell-score-4 inline-block size-4 rounded-sm" aria-hidden="true"></span> 70 – 100</dd>
+		<dd class="flex items-center gap-2">
+			<span class="score-pill-1 inline-block size-4 rounded-sm" aria-hidden="true"></span> &lt; 30
+		</dd>
+		<dd class="flex items-center gap-2">
+			<span class="score-pill-2 inline-block size-4 rounded-sm" aria-hidden="true"></span> 30 – 49
+		</dd>
+		<dd class="flex items-center gap-2">
+			<span class="score-pill-3 inline-block size-4 rounded-sm" aria-hidden="true"></span> 50 – 69
+		</dd>
+		<dd class="flex items-center gap-2">
+			<span class="score-pill-4 inline-block size-4 rounded-sm" aria-hidden="true"></span> 70 – 100
+		</dd>
 		<dd class="text-ink-muted">Soziale Lage: neutral (kein Farbverlauf)</dd>
 	</dl>
 </section>
 
 <style>
-	.cell-score-1 {
-		background-color: color-mix(in srgb, var(--color-accent, #2a3f7c) 6%, transparent);
+	/*
+	 * Re-use Story-1.31 Choropleth-Family-Tokens:
+	 *  - rot/orange-Spektrum: --scale-last-5 (Vermillion) + --state-warning (Bernstein)
+	 *  - grün-Spektrum: --scale-gut-3..5
+	 * Color-Mix-Tints landen weich auf Cloud-Dancer (--bg #ECEAE0).
+	 * Dunkler Ink-Text bleibt SC-1.4.3-konform auf den Tints.
+	 */
+	.score-pill-1 {
+		background-color: color-mix(in srgb, var(--scale-last-5, #8c2a14) 28%, var(--bg, #ecead0));
 	}
-	.cell-score-2 {
-		background-color: color-mix(in srgb, var(--color-accent, #2a3f7c) 14%, transparent);
+	.score-pill-2 {
+		background-color: color-mix(in srgb, var(--state-warning, #9e5520) 30%, var(--bg, #ecead0));
 	}
-	.cell-score-3 {
-		background-color: color-mix(in srgb, var(--color-accent, #2a3f7c) 24%, transparent);
+	.score-pill-3 {
+		background-color: color-mix(in srgb, var(--scale-gut-3, #4f7153) 32%, var(--bg, #ecead0));
 	}
-	.cell-score-4 {
-		background-color: color-mix(in srgb, var(--color-accent, #2a3f7c) 36%, transparent);
+	.score-pill-4 {
+		background-color: color-mix(in srgb, var(--scale-gut-5, #1f5a2e) 35%, var(--bg, #ecead0));
 	}
 </style>
