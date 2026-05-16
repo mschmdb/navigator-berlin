@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-16T07:03:25.286Z",
+  "generatedAt": "2026-05-16T17:31:14.417Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -251,18 +251,18 @@
     },
     {
       "slug": "wohnlagen-2024",
-      "filename": "wohnlagen-2024.c68925b5.geojson",
+      "filename": "wohnlagen-2024.514f79d6.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/wohnlagenadr2024",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
       "license": "dl-de/by-2-0",
-      "sha256": "c68925b5ab4e7ce0d3367e554069b3b22a00ddead9bb362db07ea95d8f7715ba",
+      "sha256": "514f79d6ff7dc2997083729b7b0fd120bc392a51a1c2542ec30370730caab7fa",
       "bundleGroup": "B: Wohn-Daten",
       "zoomThresholds": {
         "min": 9,
         "max": 18
       },
-      "geometryType": "Point",
-      "featureCount": 401095,
+      "geometryType": "Polygon",
+      "featureCount": 542,
       "sourceUpdatedAt": "2024-06-10T00:00:00.000Z"
     },
     {
@@ -640,6 +640,96 @@
       "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "inspectorRelevant": false,
       "mapRelevant": false
+    },
+    {
+      "slug": "kiez-score-ruhe-luft",
+      "filename": "kiez-score-ruhe-luft.07c7cc40.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-ruhe-luft",
+      "fetchedAt": "2026-05-16T17:18:08.485Z",
+      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "07c7cc4040f60c5e14feef2eef693b3b8a9a8367e2b2deb0784974d4cae993cd",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-gruen",
+      "filename": "kiez-score-gruen.f45513e5.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-gruen",
+      "fetchedAt": "2026-05-16T17:18:08.485Z",
+      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "f45513e502749de1352c182d8d415d27fdfb8da5539fb317fbc23a6b568160fe",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-mobilitaet",
+      "filename": "kiez-score-mobilitaet.29bf664d.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-mobilitaet",
+      "fetchedAt": "2026-05-16T17:18:08.485Z",
+      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "29bf664dfb737a6261cde9dac8e62571a6fce07ca395b0390cb8ba0e3f06e4a0",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-soziale-lage",
+      "filename": "kiez-score-soziale-lage.65329910.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-soziale-lage",
+      "fetchedAt": "2026-05-16T17:18:08.485Z",
+      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "65329910f91be19e72a344434a40a56e578fdaebe7cc3db17f64760fdc04f4a2",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-versorgung",
+      "filename": "kiez-score-versorgung.f57d975c.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-versorgung",
+      "fetchedAt": "2026-05-16T17:18:08.485Z",
+      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "f57d975cfe2a7fbe41e0773198959b83c82e5764dc4cac5f45f396cb0b59dcf4",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
     }
   ]
 }
