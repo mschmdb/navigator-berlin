@@ -15,7 +15,7 @@
 
 	const {
 		mapHref = '/explore',
-		screenshotSrc = '/berlin-navigator-laermbelastung.jpeg',
+		screenshotSrc = '/berlin-navigator-laermbelastung2.png',
 		screenshotAlt = 'Karten-Ansicht von navigator.berlin mit aktiver Lärmbelastungs-Schicht'
 	}: Props = $props();
 </script>
