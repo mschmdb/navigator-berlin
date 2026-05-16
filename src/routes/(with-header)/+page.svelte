@@ -38,6 +38,7 @@
 	import LayerPalette from '$lib/components/atlas/layer-palette.svelte';
 	import { page } from '$app/state';
 	import { buildOgDescription, buildOgImageUrl, type OgImageInput } from '$lib/utils/og-image-url.js';
+	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 	import {
@@ -813,25 +814,15 @@
 			: 'Adress-Daten zu Wohn-, Umwelt-, Klima- und Mobilitäts-Layern für Berlin.'
 	);
 	const ogImageUrl = $derived(buildOgImageUrl(ogInput, page.url.origin));
-	const canonicalUrl = $derived(`${page.url.origin}${page.url.pathname}${page.url.search}`);
 </script>
 
-<svelte:head>
-	<title>{ogTitle}</title>
-	<meta name="description" content={ogDescription} />
-	<link rel="canonical" href={canonicalUrl} />
-	<meta property="og:title" content={ogTitle} />
-	<meta property="og:description" content={ogDescription} />
-	<meta property="og:image" content={ogImageUrl} />
-	<meta property="og:image:width" content="1200" />
-	<meta property="og:image:height" content="630" />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content={canonicalUrl} />
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content={ogTitle} />
-	<meta name="twitter:description" content={ogDescription} />
-	<meta name="twitter:image" content={ogImageUrl} />
-</svelte:head>
+<SeoHead
+	title={ogTitle}
+	description={ogDescription}
+	pathname={page.url.pathname}
+	origin={page.url.origin}
+	ogImage={ogImageUrl}
+/>
 
 <section
 	class={[

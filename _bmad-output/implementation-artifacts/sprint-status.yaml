@@ -161,7 +161,7 @@ development_status:
   # Epic 2: Discovery-Surface + Aggregat-Layer (SEO/AEO/LLM)
   epic-2: in-progress
   2-0-postgres-aggregat-foundation-drizzle-build-step: ready-for-dev
-  2-1-seo-foundation-sitemap-canonical-robots-txt: in-progress
+  2-1-seo-foundation-sitemap-canonical-robots-txt: review
   2-2-json-ld-generator-bibliothek: ready-for-dev
   2-3-bezirks-pages-prerendered: ready-for-dev
   2-4-kiez-pages-prerendered: ready-for-dev

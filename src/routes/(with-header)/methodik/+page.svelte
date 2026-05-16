@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 	import MethodikDatenTabelle from './methodik-daten-tabelle.svelte';
 	import MethodikPipelineDiagram from './methodik-pipeline-diagram.svelte';
@@ -100,9 +102,14 @@
 	];
 </script>
 
+<SeoHead
+	title={pageTitle}
+	description={pageDescription}
+	pathname={page.url.pathname}
+	origin={page.url.origin}
+/>
+
 <svelte:head>
-	<title>{pageTitle}</title>
-	<meta name="description" content={pageDescription} />
 	{@html `<script type="application/ld+json" data-testid="methodik-jsonld">${JSON.stringify(jsonLd)}</script>`}
 </svelte:head>
 
