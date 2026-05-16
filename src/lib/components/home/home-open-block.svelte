@@ -7,44 +7,7 @@
 	dynamisch); bis dahin hardcoded.
 -->
 <script lang="ts">
-	interface Source {
-		readonly name: string;
-		readonly description: string;
-		readonly license: string;
-	}
-
-	const SOURCES: readonly Source[] = [
-		{
-			name: 'ODIS Berlin',
-			description: 'Open Data Informationsstelle · Bezirks- und LOR-Geometrien.',
-			license: 'dl-de/zero-2-0'
-		},
-		{
-			name: 'SenMVKU · Umweltatlas',
-			description: 'Lärmkartierung, Klima-Atlas, Grünversorgung, Bioklima.',
-			license: 'dl-de/zero-2-0'
-		},
-		{
-			name: 'OpenStreetMap',
-			description: 'Adress-Geocoding, POI-Daten, Routing-Graph.',
-			license: 'ODbL 1.0'
-		},
-		{
-			name: 'BVG · GTFS-VBB',
-			description: 'ÖPNV-Halte aus dem GTFS-Export des VBB.',
-			license: 'CC BY 4.0'
-		},
-		{
-			name: 'SenStadt · Mietspiegel',
-			description: 'Wohnlagen 2024 + Monitoring Soziale Stadtentwicklung 2025.',
-			license: 'dl-de/zero-2-0'
-		},
-		{
-			name: 'Geoportal Berlin · FIS-Broker',
-			description: 'Denkmal-Datenbank, Bauleitplanung, Grundstückswerte.',
-			license: 'dl-de/zero-2-0'
-		}
-	];
+	import { HOME_DATA_SOURCES } from '$lib/content/home-data-sources.js';
 </script>
 
 <section data-testid="home-open-block" class="space-y-6">
@@ -56,7 +19,7 @@
 		</p>
 	</header>
 	<ul class="grid gap-4 sm:grid-cols-2">
-		{#each SOURCES as s (s.name)}
+		{#each HOME_DATA_SOURCES as s (s.name)}
 			<li class="space-y-1 border-l-2 border-rule pl-4">
 				<p class="font-serif text-base font-semibold text-ink">{s.name}</p>
 				<p class="font-serif text-sm text-ink-muted">{s.description}</p>

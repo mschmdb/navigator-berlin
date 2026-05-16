@@ -6,6 +6,9 @@
 -->
 <script lang="ts">
 	import { ArrowRight } from '@lucide/svelte';
+	import { HOME_SCREENSHOTS } from '$lib/content/screenshot-manifest.js';
+
+	const HERO = HOME_SCREENSHOTS.heroHook;
 
 	interface Props {
 		readonly mapHref?: string;
@@ -15,8 +18,8 @@
 
 	const {
 		mapHref = '/explore',
-		screenshotSrc = '/berlin-navigator-laermbelastung2.webp',
-		screenshotAlt = 'Karten-Ansicht von navigator.berlin mit aktiver Lärmbelastungs-Schicht'
+		screenshotSrc = HERO.path,
+		screenshotAlt = HERO.alt
 	}: Props = $props();
 </script>
 
@@ -43,8 +46,8 @@
 			alt={screenshotAlt}
 			class="block h-full w-full object-cover"
 			loading="lazy"
-			width="1200"
-			height="630"
+			width={HERO.width}
+			height={HERO.height}
 		/>
 		<figcaption class="sr-only">
 			Vorschau der Karte mit Adress-Inspektor und ausgewählten Daten-Schichten.

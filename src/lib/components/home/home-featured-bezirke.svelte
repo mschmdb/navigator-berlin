@@ -6,35 +6,7 @@
 -->
 <script lang="ts">
 	import { ArrowUpRight } from '@lucide/svelte';
-
-	interface Featured {
-		readonly slug: string;
-		readonly displayName: string;
-		readonly teaser: string;
-	}
-
-	const FEATURED: readonly Featured[] = [
-		{
-			slug: 'mitte',
-			displayName: 'Mitte',
-			teaser: 'Regierungsviertel, Alexanderplatz, Wedding. Größte Bandbreite zwischen Hochpolitik und Mietshaus.'
-		},
-		{
-			slug: 'friedrichshain-kreuzberg',
-			displayName: 'Friedrichshain-Kreuzberg',
-			teaser: 'Dichteste Bevölkerung der Stadt. Lärmig, jung, im Wandel.'
-		},
-		{
-			slug: 'pankow',
-			displayName: 'Pankow',
-			teaser: 'Vom Prenzlauer Berg bis Buch und Französisch Buchholz. Stadtteile mit sehr unterschiedlicher Lage.'
-		},
-		{
-			slug: 'neukoelln',
-			displayName: 'Neukölln',
-			teaser: 'Vom Reuterkiez bis Rudow. Schauplatz fast jeder Berliner Debatte zu Wohnen und Stadtentwicklung.'
-		}
-	];
+	import { HOME_FEATURED_BEZIRKE } from '$lib/content/home-featured-bezirke.js';
 </script>
 
 <section data-testid="home-featured-bezirke" class="space-y-6">
@@ -46,7 +18,7 @@
 		</p>
 	</header>
 	<ul class="grid gap-4 md:grid-cols-2">
-		{#each FEATURED as b (b.slug)}
+		{#each HOME_FEATURED_BEZIRKE as b (b.slug)}
 			<li>
 				<a
 					href={`/bezirk/${b.slug}`}
