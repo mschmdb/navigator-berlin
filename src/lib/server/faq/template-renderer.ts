@@ -10,11 +10,15 @@ import type {
 	OepnvAggregat,
 	WohnenAggregat
 } from '$lib/server/db/schema/aggregate-types.js';
-import { describeLaermCategoryDe, laermErklaerungDe } from './helpers/laerm.js';
-import { describeGruenversorgungDe, gruenErklaerungDe } from './helpers/gruen.js';
-import { describeOepnvDichte, formatStopsPerKm2, oepnvErklaerungDe } from './helpers/oepnv.js';
-import { describeWohnlageDe, mssBeschreibungDe } from './helpers/wohnen.js';
-import { describePetKategorie, formatPet, petErklaerungDe } from './helpers/klima.js';
+import { describeLaermCategoryDe, laermErklaerungDe } from '$lib/data/faq-helpers/laerm.js';
+import { describeGruenversorgungDe, gruenErklaerungDe } from '$lib/data/faq-helpers/gruen.js';
+import {
+	describeOepnvDichte,
+	formatStopsPerKm2,
+	oepnvErklaerungDe
+} from '$lib/data/faq-helpers/oepnv.js';
+import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
+import { describePetKategorie, formatPet, petErklaerungDe } from '$lib/data/faq-helpers/klima.js';
 
 /**
  * Story 2.5b T3: Pure-Function-Slot-Renderer.

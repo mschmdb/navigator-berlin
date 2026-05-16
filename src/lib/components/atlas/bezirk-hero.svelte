@@ -15,11 +15,11 @@
 	import type { bezirkStats } from '$lib/server/db/schema/index.js';
 	import MapEmbed from './map-embed.svelte';
 	import FaqSection from './faq-section.svelte';
-	import { describeLaermCategoryDe } from '$lib/server/faq/helpers/laerm.js';
-	import { describeGruenversorgungDe } from '$lib/server/faq/helpers/gruen.js';
-	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/server/faq/helpers/wohnen.js';
-	import { describeOepnvDichte, formatStopsPerKm2 } from '$lib/server/faq/helpers/oepnv.js';
-	import { describePetKategorie, formatPet } from '$lib/server/faq/helpers/klima.js';
+	import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
+	import { describeGruenversorgungDe } from '$lib/data/faq-helpers/gruen.js';
+	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
+	import { describeOepnvDichte, formatStopsPerKm2 } from '$lib/data/faq-helpers/oepnv.js';
+	import { describePetKategorie, formatPet } from '$lib/data/faq-helpers/klima.js';
 
 	type BezirkStatsRow = InferSelectModel<typeof bezirkStats>;
 
