@@ -176,6 +176,7 @@ interface RenderedRow {
 	readonly slug: string;
 	readonly cluster: ClusterKey;
 	readonly locale: TemplateLocale;
+	readonly templateId: string;
 	readonly question: string;
 	readonly answer: string;
 }
@@ -200,6 +201,7 @@ async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[
 					slug: target.slug,
 					cluster,
 					locale,
+					templateId: template.id,
 					question: rendered.question,
 					answer: rendered.answer
 				});
@@ -220,6 +222,7 @@ async function upsertRows(rows: readonly RenderedRow[]): Promise<void> {
 			slug: r.slug,
 			cluster: r.cluster,
 			locale: r.locale,
+			templateId: r.templateId,
 			question: r.question,
 			answer: r.answer
 		}));
