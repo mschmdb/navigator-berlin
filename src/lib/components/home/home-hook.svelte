@@ -23,7 +23,7 @@
 <section data-testid="home-hook" class="grid gap-8 md:grid-cols-[1fr_1.2fr] md:items-center md:gap-10">
 	<div class="space-y-5">
 		<p class="font-serif text-xl leading-relaxed text-ink md:text-2xl">
-			Adresse eingeben. Schichten kombinieren. Quelle direkt daneben.
+			Adresse eingeben. Daten kombinieren. Quelle direkt daneben.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink-muted">
 			Lärmpegel pro Straßenzug. Hitze-Klasse pro Kiez. ÖPNV-Dichte pro Bezirk.
