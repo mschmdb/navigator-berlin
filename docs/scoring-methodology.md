@@ -1,0 +1,105 @@
+# Scoring-Methodik: Kiez-Score + Bezirks-Score
+
+Stand: 2026-05-16. Quelle Story 2.9a + ADR-013.
+
+Diese Doku beschreibt die transparente Berechnung der drei Aggregat-Ebenen Kiez-Score (Planungsraum), Kiez-Score (LOR-Bezirksregion) und Bezirks-Score (12 Berliner Bezirke). Für die Pipeline-Implementation siehe `scripts/lib/kiez-score/` und `scripts/aggregate-scores.ts`.
+
+## Übersicht
+
+Drei räumliche Ebenen, eine Methodik:
+
+| Ebene | Anzahl | Quelle | Berechnung |
+|-------|--------|--------|------------|
+| Planungsraum (PLR) | 542 | `static/kiez-scores/kiez-scores.json` (Story 1.28) | Source-of-Truth, 5 Dimensionen pro Adress-Centroid |
+| Bezirksregion (BR) | 143 | Postgres `kiez_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
+| Bezirk | 12 | Postgres `bezirk_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
+
+## Fünf Dimensionen
+
+Konsistent über alle drei Ebenen. Gewichte gleich (je 0.20). Werte zwischen 0 und 100, höher ist günstiger.
+
+1. **Ruhe-Luft.** Lärmbelastung (gewichtet 0.4), Luftgüte (0.4), Bioklima (0.2). Ordinal-3 Mapping (gering / mittel / hoch). Fallback Umweltgerechtigkeits-Aggregat.
+2. **Grün.** Pro-Kopf-Grünversorgung (0.6), Kaltluft-Einwirkbereich (0.2), Leitbahnkorridor (0.2).
+3. **Mobilität.** Distanz zur nächsten Haltestelle. U-Bahn (0.35), S-Bahn (0.25), Tram (0.20), Bus (0.10), Radverkehrs-Presence (0.10). Linear: 0 m gibt 100, 1.000 m gibt 0.
+4. **Soziale Lage.** MSS-Gesamtindex 2025 (Story 1.30), Status-Achse 4-stufig. „kom != gültig" Planungsräume bleiben ohne Wert (unter 300 Einwohner:innen oder Ausreißer). Niedriger Status heißt nicht „schlechter Kiez", sondern strukturelle Unterschiede.
+5. **Versorgung.** Distanz vom Planungsraum-Centroid zu Kita (0.25, 500 m), Schule (0.25, 800 m), Krankenhaus (0.20, 2.000 m), Spielplatz (0.15, 400 m), Grünanlage (0.15, 600 m). Polygon-Layer kollabieren zum Geometrie-Mittelpunkt.
+
+## Aggregations-Regel: Flächen-gewichtetes Mittel
+
+Pro Dimension d und Region R mit enthaltenen Planungsräumen P_1..P_n:
+
+```
+dim_value(R, d) = Σ (dim_value(P_i, d) × area(P_i)) / Σ area(P_i)
+                  über alle P_i mit dim_value(P_i, d) ≠ null
+```
+
+`area(P_i)` ist die GROESSE_M2-Property des LOR-Planungsraum-Features (ODIS-Datensatz 2021).
+
+`overall(R)` ist das ungewichtete Mittel über alle aggregierten Dimensionen mit `value ≠ null`. Damit bleibt die Kiez-Score-Definition aus Story 1.28 konsistent über die Ebenen.
+
+Beispiel: Bezirksregion enthält PLR mit Lärm-Werten 60 / 30 / 90 und Flächen 1 / 2 / 3 km². Gewichteter Wert ist (60·1 + 30·2 + 90·3) / (1 + 2 + 3) = 65.
+
+## Missing-Data-Policy
+
+Pro Dimension müssen mindestens 50 Prozent der Member-Planungsräume einen non-null Wert beitragen. Andernfalls wird die Dimension auf `null` gesetzt und im `missingData`-Array dokumentiert (z.B. `coverage:1/4-below-50%-threshold`).
+
+Falls alle fünf Dimensionen einer Region `null` sind, fehlt auch `overall`. Konsumenten interpretieren `null` als „nicht genug Daten für eine belastbare Aggregation".
+
+## Quartil-Klassifikation
+
+Werte 0 bis 100. Vier UI-Stufen für Choropleth-Skalen und Inspector-Anzeige:
+
+| Stufe | Bereich |
+|-------|---------|
+| gering | 0 bis 25 |
+| mittel | 26 bis 50 |
+| hoch | 51 bis 75 |
+| sehr hoch | 76 bis 100 |
+
+Karten-Choropleth-Familie nach Story 1.31:
+
+- Last (Vermillion) für umwelt-belastende Dimensionen
+- Gut (Grün) für wohltuende Dimensionen wie Versorgung oder Grün
+- Strukturell (Indigo) für Soziale Lage, Wohnen, Bodenrichtwerte (Stigma-Schutz)
+
+## LOR-Hierarchie
+
+Berliner LOR-Codes sind hierarchisch:
+
+```
+PLR_ID    = 8-stellig (z.B. 01100101)
+BZR_ID    = 6-stellig, gleich erste 6 Zeichen der PLR_ID
+BEZ-Code  = 2-stellig, gleich erste 2 Zeichen der PLR_ID
+```
+
+Mapping rein property-basiert, kein Spatial-Containment nötig. Verifiziert: 0 Mismatches in 542 Features (ODIS-Datensatz 2021).
+
+Slug-Disambiguation für doppelte BZR-Namen (z.B. Heerstraße existiert in Spandau und Charlottenburg-Wilmersdorf): Bezirks-Suffix wird angehängt, also `heerstrasse-spandau` und `heerstrasse-charlottenburg-wilmersdorf`. Eindeutige Namen bleiben ohne Suffix.
+
+## Editorial-Verantwortung
+
+- **Keine Wertung in der Benennung.** Der Score heißt Kiez-Score oder Bezirks-Score. Der Begriff „lebenswert" wird nicht verwendet, weil er NS-Sprachbezug hat.
+- **Soziale Lage ist stigma-sensitiv.** Choropleth-Familie ist Strukturell-Indigo, keine Rot-Grün-Sprünge, kein Pfeil-Indikator. Disclaimer pflicht: „Score ist statistisch, nicht normativ. Lebensqualität bemisst sich an persönlichen Prioritäten."
+- **Kein Composite-Choropleth auf der Karte.** Die Single-Score-Darstellung als Karte verstärkt „guter / schlechter Bezirk"-Wahrnehmung. Pro Dimension separate Choropleth-Layer sind okay.
+- **Adress-Punkt-Score bleibt im Inspector.** Bezirks- und Kiez-Scores sind statistische Lage-Beschreibungen, nicht Wohnungs-Bewertungen.
+
+## Build-Pipeline
+
+```
+pnpm data:fetch              # ODIS + OSM + WFS → static/layers/
+pnpm data:oepnv-index        # Halte-Punkte-Index
+pnpm data:kiez-scores        # 542 PLR-Scores (Story 1.28)
+pnpm data:aggregate          # bezirk_stats + kiez_stats (Story 2.0)
+pnpm data:aggregate-scores   # bezirk_score + kiez_score (Story 2.9a, dieser Doku)
+pnpm build                   # SvelteKit prerender
+```
+
+`aggregate-scores.ts` ist idempotent. Zweimal ausführen liefert identische Werte, nur `computed_at` ändert sich.
+
+## Referenzen
+
+- ADR-013 Score-Aggregations-Strategie
+- Story 1.28 Kiez-Score-Pipeline 542 PLR
+- Story 2.0 Postgres-Aggregat-Foundation
+- Story 2.9a Aggregat-Berechnung BR + Bezirk
+- `/methodik/kiez-score` Methodik-Page mit Section-Ankern `#dimensionen`, `#gewichte`, `#bezirks-score`

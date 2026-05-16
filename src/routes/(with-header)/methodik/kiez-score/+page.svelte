@@ -10,6 +10,8 @@
 		{ id: 'dimensionen', label: 'Dimensionen' },
 		{ id: 'gewichte', label: 'Gewichte' },
 		{ id: 'normalisierung', label: 'Normalisierung' },
+		{ id: 'kiez-score', label: 'Kiez-Score (Bezirksregion)' },
+		{ id: 'bezirks-score', label: 'Bezirks-Score' },
 		{ id: 'fehlt', label: 'Was fehlt und warum' },
 		{ id: 'quellen', label: 'Datenquellen' },
 		{ id: 'editorial', label: 'Editorial-Verantwortung' },
@@ -197,6 +199,52 @@
 			Aus den 0-bis-100-Werten innerhalb einer Dimension wird mit den Layer-Gewichten ein
 			gewichteter Mittelwert. Der Dimensions-Wert wird in vier UI-Stufen abgebildet: gering (0–25),
 			mittel (26–50), hoch (51–75), sehr hoch (76–100).
+		</p>
+	</section>
+
+	<section id="kiez-score" aria-labelledby="kiez-score-h" class="flex flex-col gap-3">
+		<h2 id="kiez-score-h" class="font-serif text-2xl text-ink">Kiez-Score (Bezirksregion)</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Die 542 Planungsraum-Werte werden zu 143 LOR-Bezirksregionen flächen-gewichtet aggregiert. Pro
+			Dimension wird ein gewichteter Mittelwert gebildet, wobei jeder Planungsraum mit seiner Fläche
+			gewichtet wird. Mindestens 50 Prozent der enthaltenen Planungsräume müssen einen Wert haben,
+			sonst bleibt die Dimension ohne Aggregat.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Der Composite-Score einer Bezirksregion entsteht als ungewichtetes Mittel der nicht-null-Werte
+			ihrer fünf Dimensionen, parallel zur Adress-Logik.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			LOR-Hierarchie: die ersten sechs Zeichen einer Planungsraum-ID ergeben die Bezirksregion-ID,
+			die ersten zwei den Bezirks-Code. Property-basiertes Mapping ohne Geometrie-Test. Falls zwei
+			Bezirksregionen denselben Namen tragen, wird der Bezirks-Slug als Suffix angehängt (z.B.
+			heerstrasse-spandau, heerstrasse-charlottenburg-wilmersdorf).
+		</p>
+	</section>
+
+	<section id="bezirks-score" aria-labelledby="bezirks-score-h" class="flex flex-col gap-3">
+		<h2 id="bezirks-score-h" class="font-serif text-2xl text-ink">Bezirks-Score</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Auf Bezirks-Ebene werden die 542 Planungsräume direkt flächen-gewichtet aggregiert, nicht über
+			die Bezirksregion-Zwischenebene. Damit bleibt das Gewicht jedes Planungsraums proportional zu
+			seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Stigma-Schutz: kein Composite-Choropleth auf der Karte. Die einzelne Bezirks-Zahl zeigt sich
+			nur in Steckbrief-Tabellen und im Ranking, immer mit Disclaimer. Pro Dimension darf eine
+			Choropleth gezeigt werden (Story 1.31 Familie-Mapping). Soziale Lage bleibt Strukturell-Indigo
+			ohne Rot-Grün-Sprünge.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Build-Pipeline: <code class="font-mono text-sm">pnpm data:aggregate-scores</code> liest die
+			Planungsraum-Quelle, baut die LOR-Hierarchie und schreibt die Aggregate idempotent in die
+			Postgres-Tabellen <code class="font-mono text-sm">bezirk_score</code> und
+			<code class="font-mono text-sm">kiez_score</code>. Details unter
+			<a
+				href="https://github.com/MatzeKitt/navigator.berlin/blob/main/docs/scoring-methodology.md"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong">
+				docs/scoring-methodology.md
+			</a>.
 		</p>
 	</section>
 
