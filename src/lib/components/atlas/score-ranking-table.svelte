@@ -23,17 +23,19 @@
 
 	const { kieze, bezirke }: Props = $props();
 
-	type SortKey =
+	type NumericSortKey =
 		| 'composite'
 		| 'ruheLuft'
 		| 'gruen'
 		| 'mobilitaet'
 		| 'sozialeLage'
 		| 'versorgung';
+	type StringSortKey = 'name' | 'bezirk';
+	type SortKey = NumericSortKey | StringSortKey;
 	type SortDir = 'asc' | 'desc';
 	type View = 'kieze' | 'bezirke';
 
-	const SORT_KEYS: readonly SortKey[] = [
+	const NUMERIC_SORT_KEYS: readonly NumericSortKey[] = [
 		'composite',
 		'ruheLuft',
 		'gruen',
@@ -41,8 +43,12 @@
 		'sozialeLage',
 		'versorgung'
 	];
+	const STRING_SORT_KEYS: readonly StringSortKey[] = ['name', 'bezirk'];
+	const ALL_SORT_KEYS: readonly SortKey[] = [...NUMERIC_SORT_KEYS, ...STRING_SORT_KEYS];
 
 	const COLUMN_LABEL: Record<SortKey, string> = {
+		name: 'Name',
+		bezirk: 'Bezirk',
 		composite: 'Score',
 		ruheLuft: 'Ruhe & Luft',
 		gruen: 'Grün',
@@ -51,9 +57,13 @@
 		versorgung: 'Versorgung'
 	};
 
+	function isNumericSortKey(key: SortKey): key is NumericSortKey {
+		return (NUMERIC_SORT_KEYS as readonly string[]).includes(key);
+	}
+
 	function readSort(params: URLSearchParams): SortKey {
 		const raw = params.get('sort');
-		return SORT_KEYS.includes(raw as SortKey) ? (raw as SortKey) : 'composite';
+		return ALL_SORT_KEYS.includes(raw as SortKey) ? (raw as SortKey) : 'composite';
 	}
 	function readDir(params: URLSearchParams): SortDir {
 		return params.get('dir') === 'asc' ? 'asc' : 'desc';
@@ -68,13 +78,29 @@
 
 	const rowsForView = $derived<readonly RankingRow[]>(view === 'kieze' ? kieze : bezirke);
 
+	const collator = new Intl.Collator('de-DE', { sensitivity: 'base' });
+
+	function compareString(a: string | null, b: string | null, dir: SortDir): number {
+		if (!a && !b) return 0;
+		if (!a) return 1;
+		if (!b) return -1;
+		const cmp = collator.compare(a, b);
+		return dir === 'asc' ? cmp : -cmp;
+	}
+
 	const sortedRows = $derived.by<readonly RankingRow[]>(() => {
 		const arr = [...rowsForView];
 		arr.sort((a, b) => {
+			if (sortKey === 'name') {
+				return compareString(a.displayName, b.displayName, sortDir);
+			}
+			if (sortKey === 'bezirk') {
+				return compareString(a.bezirkName, b.bezirkName, sortDir);
+			}
 			const av = a[sortKey];
 			const bv = b[sortKey];
 			if (av === null && bv === null) return 0;
-			if (av === null) return 1; // nulls always to the end
+			if (av === null) return 1;
 			if (bv === null) return -1;
 			return sortDir === 'asc' ? av - bv : bv - av;
 		});
@@ -96,12 +122,17 @@
 		if (key === sortKey) {
 			applyParams({ dir: sortDir === 'desc' ? 'asc' : 'desc' });
 		} else {
-			applyParams({ sort: key, dir: 'desc' });
+			applyParams({ sort: key, dir: isNumericSortKey(key) ? 'desc' : 'asc' });
 		}
 	}
 
 	function switchView(next: View): void {
-		applyParams({ view: next });
+		// Bezirke-view hat keine Bezirk-Spalte; falls aktiv: Sort auf Default zurücksetzen.
+		if (next === 'bezirke' && sortKey === 'bezirk') {
+			applyParams({ view: next, sort: 'composite', dir: 'desc' });
+		} else {
+			applyParams({ view: next });
+		}
 	}
 
 	function formatScore(value: number | null): string {
@@ -114,6 +145,21 @@
 	}
 
 	const sozialActive = $derived(sortKey === 'sozialeLage');
+
+	const sortDirLabel = $derived.by(() => {
+		if (sortKey === 'name' || sortKey === 'bezirk') {
+			return sortDir === 'asc' ? '· A → Z' : '· Z → A';
+		}
+		return sortDir === 'desc' ? '· hoch → niedrig' : '· niedrig → hoch';
+	});
+
+	const nameColumnLabel = $derived(view === 'kieze' ? 'Kiez' : 'Bezirk');
+
+	function headerButtonClass(active: boolean): string {
+		const base =
+			'inline-flex items-center gap-1 whitespace-nowrap font-mono text-[11px] uppercase tracking-wider hover:text-ink';
+		return active ? `${base} text-ink` : `${base} text-ink-subtle`;
+	}
 </script>
 
 <section data-testid="score-ranking" class="space-y-6">
@@ -142,7 +188,7 @@
 		</div>
 		<p class="font-mono text-xs text-ink-subtle">
 			Sortiert nach <span class="font-semibold text-ink">{COLUMN_LABEL[sortKey]}</span>
-			{sortDir === 'desc' ? '· hoch → niedrig' : '· niedrig → hoch'}
+			{sortDirLabel}
 		</p>
 	</div>
 
@@ -167,32 +213,42 @@
 					>
 						Rang
 					</th>
-					<th
-						class="whitespace-nowrap py-2 pr-3 font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
-						scope="col"
-					>
-						{view === 'kieze' ? 'Kiez' : 'Bezirk'}
+					<th class="whitespace-nowrap py-2 pr-3 align-bottom" scope="col">
+						<button
+							type="button"
+							data-testid="ranking-sort-name"
+							class={headerButtonClass(sortKey === 'name')}
+							aria-pressed={sortKey === 'name'}
+							onclick={() => toggleSort('name')}
+						>
+							{nameColumnLabel}
+							{#if sortKey === 'name'}
+								<span aria-hidden="true">{sortDir === 'desc' ? '↓' : '↑'}</span>
+							{/if}
+						</button>
 					</th>
 					{#if view === 'kieze'}
-						<th
-							class="whitespace-nowrap py-2 pr-3 font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
-							scope="col"
-						>
-							Bezirk
+						<th class="whitespace-nowrap py-2 pr-3 align-bottom" scope="col">
+							<button
+								type="button"
+								data-testid="ranking-sort-bezirk"
+								class={headerButtonClass(sortKey === 'bezirk')}
+								aria-pressed={sortKey === 'bezirk'}
+								onclick={() => toggleSort('bezirk')}
+							>
+								Bezirk
+								{#if sortKey === 'bezirk'}
+									<span aria-hidden="true">{sortDir === 'desc' ? '↓' : '↑'}</span>
+								{/if}
+							</button>
 						</th>
 					{/if}
-					{#each SORT_KEYS as key (key)}
-						<th
-							class="whitespace-nowrap py-2 pr-3 align-bottom"
-							scope="col"
-						>
+					{#each NUMERIC_SORT_KEYS as key (key)}
+						<th class="whitespace-nowrap py-2 pr-3 align-bottom" scope="col">
 							<button
 								type="button"
 								data-testid={`ranking-sort-${key}`}
-								class="inline-flex items-center gap-1 whitespace-nowrap font-mono text-[11px] uppercase tracking-wider {sortKey ===
-								key
-									? 'text-ink'
-									: 'text-ink-subtle'} hover:text-ink"
+								class={headerButtonClass(sortKey === key)}
 								aria-pressed={sortKey === key}
 								onclick={() => toggleSort(key)}
 							>
