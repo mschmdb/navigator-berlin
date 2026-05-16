@@ -21,7 +21,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 async function selectAddress(page: import('@playwright/test').Page) {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page
 		.locator('[data-testid="map-skeleton"]')
 		.waitFor({ state: 'detached', timeout: 15000 });

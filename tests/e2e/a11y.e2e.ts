@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Root (Karte) hat 0 axe-Violations', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const results = await new AxeBuilder({ page })
 		.withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
@@ -26,7 +26,7 @@ test('Wortmarke-Showcase (with-header) hat 0 axe-Violations', async ({ page }) =
 });
 
 test('Map-Help-Region Full-Text vorhanden', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const help = page.locator('#map-help');
 	await expect(help).toBeAttached();
@@ -40,14 +40,14 @@ test('Map-Help-Region Full-Text vorhanden', async ({ page }) => {
 });
 
 test('Map-Container hat aria-describedby auf Help-Region', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const app = page.locator('[role="application"]');
 	expect(await app.getAttribute('aria-describedby')).toBe('map-help');
 });
 
 test('Globale Live-Region existiert mit aria-live=polite (Story 1.9)', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const polite = page.locator('#global-aria-live');
 	await expect(polite).toBeAttached();
@@ -71,7 +71,7 @@ test('Escape löscht Selection (kein Marker mehr)', async ({ page }) => {
 });
 
 test('SkipLink springt zu main', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	await page.keyboard.press('Tab');
 	await page.keyboard.press('Enter');

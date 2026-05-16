@@ -98,7 +98,8 @@ export function buildSitemapIndexXml(entries: readonly SitemapIndexEntry[]): str
 export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 	if (ctx.locale !== 'de') return [];
 	return [
-		{ loc: `${ctx.origin}/`, lastmod: ctx.buildTimestamp, changefreq: 'weekly' },
+		{ loc: `${ctx.origin}/`, lastmod: ctx.buildTimestamp, changefreq: 'weekly', priority: 1.0 },
+		{ loc: `${ctx.origin}/explore`, lastmod: ctx.buildTimestamp, changefreq: 'weekly', priority: 0.9 },
 		{ loc: `${ctx.origin}/methodik`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
 		{ loc: `${ctx.origin}/lizenzen`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' }
 	];

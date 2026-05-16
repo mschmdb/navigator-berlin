@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Layers, Bookmark, BookmarkCheck, Search } from '@lucide/svelte';
+	import { Layers, Bookmark, BookmarkCheck, Search, Map as MapIcon } from '@lucide/svelte';
 	import AddressSearch from './address-search.svelte';
 	import AddressSearchOverlay from './address-search-overlay.svelte';
 	import { AnimatedLogo } from '$lib/components/ui';
@@ -17,6 +17,13 @@
 		onOpenBookmarks?: () => void;
 		/** Story 1.31 AC-2: Such-Bar kollabiert zum Icon-Button im Inspector-Mode. */
 		searchCollapsed?: boolean;
+		/**
+		 * Story 2.11: Wenn gesetzt, ersetzt das Atlas-CTA-Button die Such-Sektion
+		 * und zeigt auf den Atlas-Einstieg (typisch `/explore`). Layer- und
+		 * Bookmark-Trigger werden ohnehin nicht gerendert wenn die zugehörigen
+		 * Callbacks fehlen, sodass die Landing-Header-Variante kompakt bleibt.
+		 */
+		atlasCtaHref?: string;
 	};
 
 	let {
@@ -28,7 +35,8 @@
 		bookmarkCount = 0,
 		currentAddressBookmarked = false,
 		onOpenBookmarks,
-		searchCollapsed = false
+		searchCollapsed = false,
+		atlasCtaHref
 	}: Props = $props();
 
 	let overlayOpen = $state(false);
@@ -54,7 +62,17 @@
 			<AnimatedLogo variant="one-shot" size={32} title="navigator.berlin" />
 			<span class="font-sans text-base font-light tracking-wide text-ink">navigator.berlin</span>
 		</a>
-		{#if searchCollapsed}
+		{#if atlasCtaHref}
+			<div class="min-w-0 flex-1"></div>
+			<a
+				href={atlasCtaHref}
+				data-testid="header-atlas-cta"
+				class="inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-accent bg-accent px-3 font-mono text-xs uppercase tracking-wider text-bg hover:bg-ink hover:border-ink"
+			>
+				<MapIcon size={16} aria-hidden="true" />
+				Atlas öffnen
+			</a>
+		{:else if searchCollapsed}
 			<div class="min-w-0 flex-1"></div>
 			<button
 				type="button"

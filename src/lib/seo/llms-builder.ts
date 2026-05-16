@@ -98,7 +98,19 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 	out.push({
 		loc: `${ctx.origin}/`,
 		name: 'Startseite',
-		description: 'Atlas-Karte mit Adress-Inspektor',
+		description: 'Hero-Landing mit Einstieg in Atlas + Daten-Themen',
+		section: 'static'
+	});
+	out.push({
+		loc: `${ctx.origin}/explore`,
+		name: 'Atlas',
+		description: 'Karten-Inspector mit Adress-Suche und 38 Daten-Layern',
+		section: 'static'
+	});
+	out.push({
+		loc: `${ctx.origin}/wo-lebt-es-sich-gut`,
+		name: 'Kiez-Score-Ranking',
+		description: 'Alle 143 Kieze und 12 Bezirke nach 5 Dimensionen sortierbar',
 		section: 'static'
 	});
 	out.push({

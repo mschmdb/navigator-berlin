@@ -41,7 +41,7 @@ test('Adapter mountet ohne Fatal-Error in Console (Polyfill oder native)', async
 	page.on('console', (msg) => {
 		if (msg.type() === 'error') errors.push(msg.text());
 	});
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({
 		state: 'detached',
 		timeout: 15000

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import SiteHeader from '$lib/components/atlas/site-header.svelte';
 	import BookmarkDialog from '$lib/components/atlas/bookmark-dialog.svelte';
 	import { geocodeAddress } from '$lib/data/geocode.remote.js';
@@ -9,6 +10,14 @@
 	import type { Bookmark } from '$lib/state/bookmark-schema.js';
 
 	let { children } = $props();
+
+	/**
+	 * Story 2.11: Auf der Hero-Landing („/") zeigt der Header den Atlas-CTA
+	 * statt der Adress-Such-Bar. Atlas + Bookmark + Layer-Palette sind dort
+	 * irrelevant, weil der User noch nicht im Karten-Kontext steckt.
+	 */
+	const onLanding = $derived(page.url.pathname === '/');
+	const atlasCtaHref = $derived(onLanding ? '/explore' : undefined);
 
 	const geocode = async (q: string): Promise<GeocodeSuggestion[]> => geocodeAddress({ q }).run();
 
@@ -48,11 +57,12 @@
 	{geocode}
 	{onSelect}
 	activeLayerCount={ui.activeLayerSlugs.length}
-	onOpenLayerPalette={openLayerPalette}
+	onOpenLayerPalette={onLanding ? undefined : openLayerPalette}
 	bookmarkCount={ui.bookmarks.length}
 	{currentAddressBookmarked}
-	onOpenBookmarks={openBookmarks}
+	onOpenBookmarks={onLanding ? undefined : openBookmarks}
 	searchCollapsed={ui.inspectorOpen || ui.compareMode}
+	{atlasCtaHref}
 />
 
 <main id="main">

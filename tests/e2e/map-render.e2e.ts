@@ -9,19 +9,19 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('/ rendert Karten-Container mit role=application', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await expect(page.getByRole('application')).toBeVisible();
 });
 
 test('/ hat map-help sr-only Steuerungs-Anleitung', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	const help = page.locator('#map-help');
 	await expect(help).toHaveClass(/sr-only/);
 	await expect(help).toHaveText(/Pfeiltasten/);
 });
 
 test('/ hat aria-live map-status region', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	const status = page.getByTestId('map-status');
 	await expect(status).toHaveAttribute('aria-live', 'polite');
 });
@@ -31,7 +31,7 @@ test('/ laedt map-style.json (Network)', async ({ page }) => {
 	page.on('response', (res) => {
 		if (res.url().includes('map-style.json')) styleRequests.push(res.url());
 	});
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => undefined);
 	expect(styleRequests.length).toBeGreaterThanOrEqual(1);
 });

@@ -47,6 +47,6 @@ test('Wortmarke-Showcase rendert 6 Kandidaten', async ({ page }) => {
 });
 
 test('Root zeigt Header (Karte ist Hauptelement seit 2026-05-11)', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await expect(page.getByRole('banner')).toBeVisible();
 });

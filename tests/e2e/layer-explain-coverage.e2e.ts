@@ -9,7 +9,7 @@ async function waitForMap(page: import('@playwright/test').Page) {
 
 test.describe('Story 1.16 Layer-Explain-Coverage + Multi-Surface', () => {
 	test('Layer-Palette: Subline mit short-Explain unter Layer-Name (Lärm)', async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/explore');
 		await waitForMap(page);
 		await page.keyboard.press('/');
 		await expect(page.getByTestId('layer-palette')).toBeVisible();

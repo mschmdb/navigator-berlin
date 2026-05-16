@@ -8,7 +8,7 @@ async function waitForMap(page: import('@playwright/test').Page) {
 
 test.describe('Layer-Toggle-Palette', () => {
 	test('/-Shortcut öffnet Palette + Esc schließt', async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/explore');
 		await waitForMap(page);
 		await page.keyboard.press('/');
 		await expect(page.getByTestId('layer-palette')).toBeVisible();
@@ -17,14 +17,14 @@ test.describe('Layer-Toggle-Palette', () => {
 	});
 
 	test('Header-Layer-Trigger öffnet Palette', async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/explore');
 		await waitForMap(page);
 		await page.getByTestId('header-layer-trigger').click();
 		await expect(page.getByTestId('layer-palette')).toBeVisible();
 	});
 
 	test('Suche filtert Toggle-Liste', async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/explore');
 		await waitForMap(page);
 		await page.keyboard.press('/');
 		await page.getByTestId('palette-search').fill('mietspiegel');
@@ -33,7 +33,7 @@ test.describe('Layer-Toggle-Palette', () => {
 	});
 
 	test('Toggle aktiviert Layer + schreibt URL-Param', async ({ page }) => {
-		await page.goto('/');
+		await page.goto('/explore');
 		await waitForMap(page);
 		await page.keyboard.press('/');
 		await page.getByTestId('palette-toggle-bezirke').click();
@@ -60,7 +60,7 @@ test.describe('Layer-Toggle-Palette', () => {
 
 	test('Mobile-Viewport rendert Bottom-Sheet-Variante', async ({ page }) => {
 		await page.setViewportSize({ width: 375, height: 812 });
-		await page.goto('/');
+		await page.goto('/explore');
 		await waitForMap(page);
 		await page.getByTestId('header-layer-trigger').click();
 		const palette = page.getByTestId('layer-palette');

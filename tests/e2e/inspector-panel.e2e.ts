@@ -22,7 +22,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 async function selectAddress(page: import('@playwright/test').Page) {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const input = page.getByRole('combobox');
 	await input.click();
@@ -74,7 +74,7 @@ test('Re-Selection: Inspektor-Mount-ID bleibt stabil (kein Re-Mount)', async ({ 
 });
 
 test('Globale ARIA-Live-Region existiert im Layout', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await expect(page.locator('#global-aria-live')).toHaveCount(1);
 	await expect(page.locator('#global-aria-live-assertive')).toHaveCount(1);
 	await expect(page.locator('#map-status')).toHaveCount(0);

@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Map-Controls sind rendered + a11y', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	const group = page.getByRole('group', { name: /Karten-Steuerung/i });
 	await expect(group).toBeVisible();
 	await expect(group.getByRole('button', { name: /Hineinzoomen/i })).toBeVisible();
@@ -19,7 +19,7 @@ test('Map-Controls sind rendered + a11y', async ({ page }) => {
 });
 
 test('Zoom-Button updates URL nach Debounce', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	// Map fully initialised (moveend fires after first paint settle)
 	await page.waitForTimeout(800);
@@ -40,7 +40,7 @@ test('Deeplink ?bbox lädt Viewport direkt (kein Flicker)', async ({ page }) => 
 });
 
 test('Tab → Karten-Container fokussierbar', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[role="application"]').focus();
 	await expect(page.locator('[role="application"]')).toBeFocused();
 });

@@ -29,7 +29,7 @@ async function activeLabel(page: Page): Promise<string> {
 }
 
 test('SkipLink ist erstes fokussierbares Element', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	await page.keyboard.press('Tab');
 	const label = await activeLabel(page);
@@ -37,7 +37,7 @@ test('SkipLink ist erstes fokussierbares Element', async ({ page }) => {
 });
 
 test('Tab-Reihenfolge: SkipLink → Logo → AddressSearch → Map-Container', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 
 	await page.keyboard.press('Tab');
@@ -63,7 +63,7 @@ test('Tab-Reihenfolge: SkipLink → Logo → AddressSearch → Map-Container', a
 });
 
 test('Shift+Tab kehrt Reihenfolge um', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	await page.locator('[role="application"]').focus();
 	await page.keyboard.press('Shift+Tab');
@@ -72,7 +72,7 @@ test('Shift+Tab kehrt Reihenfolge um', async ({ page }) => {
 });
 
 test('Map-Container ist via Tabindex erreichbar', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const map = page.locator('[role="application"]');
 	await map.focus();
@@ -81,7 +81,7 @@ test('Map-Container ist via Tabindex erreichbar', async ({ page }) => {
 });
 
 test('Keine tabindex>0 Hacks in DOM', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/explore');
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const positives = await page.evaluate(() => {
 		const all = Array.from(document.querySelectorAll('[tabindex]')) as HTMLElement[];

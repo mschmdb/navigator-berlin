@@ -121,11 +121,12 @@ describe('buildSitemapIndexXml', () => {
 });
 
 describe('STATIC_PAGES_SOURCE', () => {
-	it('emits root, methodik, lizenzen for DE locale', () => {
+	it('emits root, /explore, methodik, lizenzen for DE locale (Story 2.11 split)', () => {
 		const entries = STATIC_PAGES_SOURCE(ctx());
 		const locs = entries.map((e) => e.loc);
 		expect(locs).toEqual([
 			'https://navigator.berlin/',
+			'https://navigator.berlin/explore',
 			'https://navigator.berlin/methodik',
 			'https://navigator.berlin/lizenzen'
 		]);
