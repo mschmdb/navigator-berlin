@@ -132,12 +132,14 @@ export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
  */
 import { UPDATES_PAGES_SOURCE } from './sources/updates.js';
 import { BEZIRK_PAGES_SOURCE } from './sources/bezirk-pages.js';
+import { KIEZ_PAGES_SOURCE } from './sources/kiez-pages.js';
 
 const ALL_SOURCES: readonly SitemapSource[] = [
 	STATIC_PAGES_SOURCE,
 	LAYER_DETAIL_SOURCE,
 	UPDATES_PAGES_SOURCE,
-	BEZIRK_PAGES_SOURCE
+	BEZIRK_PAGES_SOURCE,
+	KIEZ_PAGES_SOURCE
 ];
 
 export function collectPrerenderedUrls(ctx: SitemapSourceContext): SitemapEntry[] {

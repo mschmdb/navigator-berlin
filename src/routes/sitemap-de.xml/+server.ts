@@ -2,6 +2,7 @@ import type { RequestHandler } from './$types';
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildSitemapXml, collectPrerenderedUrls } from '$lib/seo/sitemap-builder.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
+import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
 
 export const prerender = true;
 
@@ -23,13 +24,17 @@ export const prerender = true;
 export const GET: RequestHandler = async ({ url, fetch }) => {
 	const manifest = await loadManifest(fetch);
 	const buildTimestamp = new Date().toISOString();
-	const bezirkSlugs = await readBezirkSlugsFromGeoJson();
+	const [bezirkSlugs, kiezSlugs] = await Promise.all([
+		readBezirkSlugsFromGeoJson(),
+		readKiezSlugsFromGeoJson()
+	]);
 	const entries = collectPrerenderedUrls({
 		origin: url.origin,
 		locale: 'de',
 		manifest,
 		buildTimestamp,
-		bezirkSlugs
+		bezirkSlugs,
+		kiezSlugs
 	});
 	const body = buildSitemapXml(entries);
 	return new Response(body, {
