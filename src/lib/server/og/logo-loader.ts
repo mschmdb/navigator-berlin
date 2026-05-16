@@ -29,13 +29,26 @@ function transparentBackground(svg: string): string {
 	);
 }
 
+/**
+ * Crop viewBox auf tatsächliche Berlin-Boundary-Bounds (statt 0-100 mit ~15 %
+ * Whitespace oben/unten). Bounding-Box manuell aus den SVG-Linien-Koordinaten
+ * abgeleitet: x∈[8, 92], y∈[18, 77]; mit 2 px Padding → "6 16 88 63".
+ *
+ * Ohne diesen Crop sitzt das Logo in der OG-Card vertikal versetzt unter der
+ * Brand-Mark-Baseline, weil das viewBox-0-0-100-100 ~16 % leeres Padding oben
+ * vorhält.
+ */
+function cropViewBox(svg: string): string {
+	return svg.replace(/viewBox="0 0 100 100"/, 'viewBox="6 16 88 63"');
+}
+
 export async function loadLogoDataUri(
 	repoRoot: string,
 	filename = 'logo-mark-header.svg'
 ): Promise<string> {
 	const filePath = path.join(repoRoot, 'static', filename);
 	const raw = await readFile(filePath, 'utf-8');
-	const cleaned = transparentBackground(resolveCssVars(raw));
+	const cleaned = cropViewBox(transparentBackground(resolveCssVars(raw)));
 	const base64 = Buffer.from(cleaned, 'utf-8').toString('base64');
 	return `data:image/svg+xml;base64,${base64}`;
 }

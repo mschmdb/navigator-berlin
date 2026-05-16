@@ -71,10 +71,11 @@ function headerRow(logoDataUri: string | undefined): SatoriNode {
 	if (logoDataUri) {
 		children.push(
 			img(logoDataUri, {
-				width: 180,
-				height: 180,
+				width: 140,
+				height: 105,
 				display: 'flex',
-				marginLeft: 'auto'
+				marginLeft: 'auto',
+				marginTop: -8
 			})
 		);
 	}
@@ -206,32 +207,41 @@ interface PanelInput {
 }
 
 function panel(input: PanelInput): SatoriNode {
-	const children: SatoriNode[] = [
-		headerRow(input.logoDataUri),
-		text(input.headline, {
-			fontFamily: 'Plex Serif',
-			fontSize: 72,
-			color: COLOR_INK,
-			lineHeight: 1.1,
-			marginTop: 8,
-			maxWidth: 900
-		}),
-		text(input.subline, {
-			fontFamily: 'Plex Sans',
-			fontSize: 26,
-			color: COLOR_INK_MUTED,
-			marginTop: 4
-		})
-	];
-	if (input.mid) children.push(input.mid);
-	children.push(footer(input.footerUrl, input.footerDate));
+	const titleBlock = node(
+		'div',
+		{ display: 'flex', flexDirection: 'column', marginTop: 36 },
+		[
+			text(input.headline, {
+				fontFamily: 'Plex Serif',
+				fontSize: 72,
+				color: COLOR_INK,
+				lineHeight: 1.05,
+				maxWidth: 900
+			}),
+			text(input.subline, {
+				fontFamily: 'Plex Sans',
+				fontSize: 24,
+				color: COLOR_INK_MUTED,
+				marginTop: 12
+			})
+		]
+	);
+
+	const children: SatoriNode[] = [headerRow(input.logoDataUri), titleBlock];
+	if (input.mid) {
+		children.push(
+			node('div', { display: 'flex', marginTop: 40, width: '100%' }, input.mid)
+		);
+	}
+	children.push(
+		node('div', { display: 'flex', marginTop: 'auto', width: '100%' }, footer(input.footerUrl, input.footerDate))
+	);
 
 	return node(
 		'div',
 		{
 			display: 'flex',
 			flexDirection: 'column',
-			justifyContent: 'space-between',
 			width: OG_WIDTH,
 			height: OG_HEIGHT,
 			padding: 56,
