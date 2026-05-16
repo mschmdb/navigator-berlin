@@ -34,6 +34,24 @@ export const SOURCES: SourceConfig[] = [
 		simplifyProfile: 'boundary',
 		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
 	},
+	// Story 2.0: LOR-Bezirksregion (138 BZR) re-introduced als Kiez-Grain für die
+	// Aggregat-Schicht (bezirk_stats/kiez_stats in Postgres) und für Story 2.4
+	// (Kiez-Pages prerendered). In Story 1.10 entfernt; bestehender Code in
+	// get-kiez-profile.ts + layer-explain.ts + value-formatters.ts blieb damals
+	// stehen und wird jetzt wieder valide. mapRelevant/inspectorRelevant erstmal
+	// false (Story 2.4 kann später aktivieren falls Picker gewünscht).
+	{
+		slug: 'lor-bezirksregion',
+		kind: 'odis',
+		sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_bezirksregionen_2021/data.geojson',
+		license: 'dl-de/zero-2-0',
+		bundleGroup: 'A: Boundaries',
+		zoomThresholds: { min: 12, max: 13 },
+		simplifyProfile: 'boundary',
+		sourceUpdatedAt: '2021-01-01T00:00:00.000Z',
+		inspectorRelevant: false,
+		mapRelevant: false
+	},
 	// Story 1.28: LOR-Planungsraum re-introduced als Build-Only-Datensatz für den
 	// Kiez-Score (Pro-LOR-Score-Berechnung am Polygon-Centroid). Nicht in der
 	// LayerPalette / nicht als Karten-Layer (mapRelevant: false) und nicht im
@@ -189,6 +207,24 @@ export const SOURCES: SourceConfig[] = [
 		bundleGroup: 'D: Memorial',
 		zoomThresholds: { min: 14, max: 18 },
 		simplifyProfile: 'point'
+	},
+	// Story 2.0: Baudenkmale Berlin (Heritage-Cluster für bezirk_stats/kiez_stats).
+	// FIS-Broker WFS 2.0, ~9553 MultiPolygon-Features (Stand 2024). Wir nutzen den
+	// Layer build-only als Heritage-Dichte-Signal (Count-per-Area); nicht mapRelevant
+	// und nicht inspectorRelevant, weil 9553 Polygone Layer-Toggle-Palette + Inspector
+	// nicht skalieren würden. Für Map-Display in Folge-Story ggf. tiles-Profil.
+	{
+		slug: 'denkmal-2024',
+		kind: 'fis-broker',
+		sourceUrl: 'https://gdi.berlin.de/services/wfs/denkmale',
+		typeName: 'denkmale:denkmale',
+		license: 'dl-de/by-2-0',
+		bundleGroup: 'D: Memorial',
+		zoomThresholds: { min: 14, max: 18 },
+		simplifyProfile: 'polygon',
+		sourceUpdatedAt: '2024-01-01T00:00:00.000Z',
+		inspectorRelevant: false,
+		mapRelevant: false
 	},
 	// Bundle C erweitert: Klima-Analyse 2022 (3 ausgewählte Sub-Layer aus 45 typeNames)
 	{

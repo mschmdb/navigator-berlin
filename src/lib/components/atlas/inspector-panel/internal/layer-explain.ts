@@ -101,6 +101,10 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		short: 'Gedenkstein für Opfer des Nationalsozialismus',
 		long: 'Vor letzten frei gewählten Wohnorten verlegte Messing-Plaketten, die Namen und Schicksal von NS-Opfern bewahren. Konzept Gunter Demnig. Daten aus OpenStreetMap, kuratiert von lokalen Stolpersteine-Initiativen.'
 	},
+	'denkmal-2024': {
+		short: 'Eingetragenes Bau- oder Gartendenkmal Berlins',
+		long: 'Objekte aus der Berliner Denkmalliste (Landesdenkmalamt). Umfasst Baudenkmale, Gartendenkmale, Bodendenkmale und Denkmalbereiche. Datengrundlage für Heritage-Dichte-Aggregat pro Bezirk/Kiez.'
+	},
 	trinkbrunnen: {
 		short: 'Öffentlicher Trinkwasser-Brunnen (Mai bis Oktober aktiv)',
 		long: 'Von den Berliner Wasserbetrieben betriebener öffentlicher Trinkbrunnen. Saisonal aktiv: Mai bis Oktober wegen Frostschutz. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
