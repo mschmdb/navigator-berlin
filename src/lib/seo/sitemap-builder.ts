@@ -122,8 +122,17 @@ export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
 /**
  * All sources concatenated. Future stories (2.3 bezirks, 2.4 kiez, 2.9b ranking)
  * register new sources here without editing the per-language endpoint.
+ *
+ * Story 2.13 (`UPDATES_PAGES_SOURCE`): `/updates`-Index + alle `/updates/{slug}` Detail-Routes
+ * (`$lib/seo/sources/updates.ts`, Build-Time-MD-Glob).
  */
-const ALL_SOURCES: readonly SitemapSource[] = [STATIC_PAGES_SOURCE, LAYER_DETAIL_SOURCE];
+import { UPDATES_PAGES_SOURCE } from './sources/updates.js';
+
+const ALL_SOURCES: readonly SitemapSource[] = [
+	STATIC_PAGES_SOURCE,
+	LAYER_DETAIL_SOURCE,
+	UPDATES_PAGES_SOURCE
+];
 
 export function collectPrerenderedUrls(ctx: SitemapSourceContext): SitemapEntry[] {
 	const out: SitemapEntry[] = [];

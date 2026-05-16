@@ -163,9 +163,14 @@ describe('LAYER_DETAIL_SOURCE', () => {
 });
 
 describe('collectPrerenderedUrls', () => {
-	it('aggregates static pages and layer detail entries', () => {
+	it('aggregates static pages and layer detail entries plus updates pages', () => {
 		const entries = collectPrerenderedUrls(ctx());
-		expect(entries.length).toBe(6); // 3 static + 3 layers
+		// 3 static + 3 layers + 1 updates-index + N updates-detail (real glob from _content/updates).
+		// Floor: 6 minimum (static + layers) without the updates source.
+		expect(entries.length).toBeGreaterThanOrEqual(6);
+		const locs = entries.map((e) => e.loc);
+		expect(locs).toContain('https://navigator.berlin/methodik');
+		expect(locs).toContain('https://navigator.berlin/layer/bezirke');
 	});
 
 	it('returns empty for EN locale phase 1', () => {

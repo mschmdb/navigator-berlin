@@ -12,6 +12,8 @@
 		<nav aria-label="Meta-Navigation" class="flex flex-wrap gap-x-4 gap-y-2">
 			<a href="/methodik" class="hover:text-accent">Methodik</a>
 			<span aria-hidden="true">·</span>
+			<a href="/updates" class="hover:text-accent">Updates</a>
+			<span aria-hidden="true">·</span>
 			<a href="/lizenzen" class="hover:text-accent">Lizenzen</a>
 			<span aria-hidden="true">·</span>
 			<a href="/datenschutz" class="hover:text-accent">Datenschutz</a>
