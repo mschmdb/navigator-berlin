@@ -31,12 +31,12 @@
 {#if items.length > 0}
 	<section data-testid="home-top-kieze" class="space-y-6">
 		<header class="flex items-baseline justify-between gap-4">
-			<h2 class="font-serif text-2xl text-ink">Kieze nach Score</h2>
+			<h2 class="font-serif text-2xl text-ink md:text-3xl">143 Kieze nach Score</h2>
 			<a
 				href="/wo-lebt-es-sich-gut"
 				class="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
 			>
-				Vollständiges Ranking
+				Ranking ansehen
 				<ArrowUpRight size={14} aria-hidden="true" />
 			</a>
 		</header>
@@ -57,8 +57,8 @@
 			{/each}
 		</ol>
 		<p class="font-serif text-sm text-ink-muted">
-			Score 0–100 aus 5 Dimensionen (Ruhe & Luft, Grün, Mobilität, Soziale Lage, Versorgung),
-			gleichgewichtet. Beschreibt statistische Verteilung, nicht Wertung einzelner Adressen.
+			Fünf Dimensionen, gleich gewichtet, 0–100. Beschreibt Verteilung, nicht Wertung
+			einzelner Adressen oder Personen.
 		</p>
 	</section>
 {/if}

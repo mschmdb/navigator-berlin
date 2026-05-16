@@ -56,10 +56,10 @@
 
 <section data-testid="home-layer-teasers" class="space-y-6">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink">Datenquellen im Atlas</h2>
+		<h2 class="font-serif text-2xl text-ink md:text-3xl">38 Datensätze</h2>
 		<p class="font-serif text-base text-ink-muted">
-			Fünf von 38 Datenquellen, die im Atlas zusammenkommen. Pro Quelle Methodik,
-			Lizenz, Stand-Datum verlinkt.
+			Fünf davon sehr verkürzt. Pro Schicht eigene Detail-Seite mit Methodik,
+			Lizenz und Stand-Datum.
 		</p>
 	</header>
 	<ul class="grid gap-4 sm:grid-cols-2">

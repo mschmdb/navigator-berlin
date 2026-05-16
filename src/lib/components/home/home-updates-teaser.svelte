@@ -31,7 +31,7 @@
 {#if items.length > 0}
 	<section data-testid="home-updates-teaser" class="space-y-6">
 		<header class="flex items-baseline justify-between gap-4">
-			<h2 class="font-serif text-2xl text-ink">Aktuelle Updates</h2>
+			<h2 class="font-serif text-2xl text-ink md:text-3xl">Letzte Updates</h2>
 			<a
 				href="/updates"
 				class="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
