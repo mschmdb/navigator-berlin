@@ -1,0 +1,172 @@
+<!--
+	Story 2.3 T3: BezirkHero-Long-Form-Layout (UX-DR43).
+
+	Rendert pro Bezirk: H1 (Plex-Serif), Lead-Absatz mit Einwohner-/Flächen-Daten,
+	read-only Karten-Embed mit Boundary-Highlight, Steckbrief-Tabelle aus
+	`bezirk_stats` (Story 2.0), FAQ-Section aus `faq_qna` (Story 2.5b).
+
+	Stats-Section rendert Placeholder wenn `stats === null` (DATABASE_URL fehlt
+	im Build oder Story-2.0-Aggregat noch nicht gelaufen). FAQ rendert sich
+	selbst aus wenn leer (siehe `faq-section.svelte`).
+-->
+<script lang="ts">
+	import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
+	import type { InferSelectModel } from 'drizzle-orm';
+	import type { bezirkStats } from '$lib/server/db/schema/index.js';
+	import MapEmbed from './map-embed.svelte';
+	import FaqSection from './faq-section.svelte';
+	import { describeLaermCategoryDe } from '$lib/server/faq/helpers/laerm.js';
+	import { describeGruenversorgungDe } from '$lib/server/faq/helpers/gruen.js';
+	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/server/faq/helpers/wohnen.js';
+	import { describeOepnvDichte, formatStopsPerKm2 } from '$lib/server/faq/helpers/oepnv.js';
+	import { describePetKategorie, formatPet } from '$lib/server/faq/helpers/klima.js';
+
+	type BezirkStatsRow = InferSelectModel<typeof bezirkStats>;
+
+	interface Props {
+		readonly profile: BezirkProfile;
+		readonly stats: BezirkStatsRow | null;
+		readonly faq: readonly FaqEntry[];
+		readonly ogImagePath?: string;
+	}
+
+	const { profile, stats, faq, ogImagePath }: Props = $props();
+
+	const numberDe = new Intl.NumberFormat('de-DE');
+	const leadText = $derived(
+		`Bezirk ${profile.name}, ${numberDe.format(profile.einwohner)} Einwohner:innen, ${numberDe.format(profile.flaecheHa)} ha. Daten zu Wohnen, Umwelt, Klima und Mobilität auf dieser Seite.`
+	);
+
+	interface SteckbriefRow {
+		readonly cluster: string;
+		readonly value: string;
+		readonly source: string;
+		readonly sourceUpdatedAt: string;
+	}
+
+	function formatStand(iso: string): string {
+		const date = new Date(iso);
+		if (isNaN(date.getTime())) return iso;
+		return date.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+	}
+
+	function buildSteckbrief(row: BezirkStatsRow): SteckbriefRow[] {
+		const out: SteckbriefRow[] = [];
+		if (row.laerm.dominantCategory) {
+			const raw =
+				typeof row.laerm.dominantCategory.value === 'string'
+					? row.laerm.dominantCategory.value
+					: null;
+			out.push({
+				cluster: 'Lärm',
+				value: describeLaermCategoryDe(raw),
+				source: row.laerm.dominantCategory.layer,
+				sourceUpdatedAt: formatStand(row.laerm.dominantCategory.sourceUpdatedAt)
+			});
+		}
+		const gruen = row.gruen.dominantVersorgung;
+		if (gruen) {
+			const raw = typeof gruen.value === 'string' ? gruen.value : null;
+			out.push({
+				cluster: 'Grünversorgung',
+				value: describeGruenversorgungDe(raw),
+				source: gruen.layer,
+				sourceUpdatedAt: formatStand(gruen.sourceUpdatedAt)
+			});
+		}
+		const pet = row.klima.meanPet;
+		if (pet && typeof pet.value === 'number') {
+			out.push({
+				cluster: 'Klima · PET',
+				value: `${formatPet(pet.value)} (${describePetKategorie(pet.value)})`,
+				source: pet.layer,
+				sourceUpdatedAt: formatStand(pet.sourceUpdatedAt)
+			});
+		}
+		const stops = row.oepnv.stopsPerKm2;
+		if (stops && typeof stops.value === 'number') {
+			out.push({
+				cluster: 'ÖPNV-Dichte',
+				value: `${formatStopsPerKm2(stops.value)} (${describeOepnvDichte(stops.value)})`,
+				source: stops.layer,
+				sourceUpdatedAt: formatStand(stops.sourceUpdatedAt)
+			});
+		}
+		const wohnlage = row.wohnen.dominantWohnlage;
+		if (wohnlage) {
+			const raw = typeof wohnlage.value === 'string' ? wohnlage.value : null;
+			out.push({
+				cluster: 'Wohnlage',
+				value: describeWohnlageDe(raw),
+				source: wohnlage.layer,
+				sourceUpdatedAt: formatStand(wohnlage.sourceUpdatedAt)
+			});
+		}
+		const mss = row.wohnen.dominantMss;
+		if (mss) {
+			const raw = typeof mss.value === 'string' ? mss.value : null;
+			out.push({
+				cluster: 'Soziale Lage (MSS)',
+				value: mssBeschreibungDe(raw),
+				source: mss.layer,
+				sourceUpdatedAt: formatStand(mss.sourceUpdatedAt)
+			});
+		}
+		return out;
+	}
+
+	const steckbrief = $derived(stats ? buildSteckbrief(stats) : []);
+</script>
+
+<article class="mx-auto max-w-3xl space-y-10 px-4 py-10" data-testid="bezirk-hero">
+	<header class="space-y-4">
+		<h1 class="font-serif text-3xl text-ink md:text-4xl">{profile.name}</h1>
+		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">{leadText}</p>
+	</header>
+
+	<MapEmbed geometry={profile.geometry} label={profile.name} {ogImagePath} />
+
+	<section aria-labelledby="steckbrief-heading" class="space-y-4">
+		<h2 id="steckbrief-heading" class="font-serif text-2xl text-ink">Steckbrief</h2>
+		{#if !stats}
+			<p class="font-serif text-base text-ink-muted">
+				Aggregat-Werte werden mit dem nächsten Daten-Build freigeschaltet.
+			</p>
+		{:else if steckbrief.length === 0}
+			<p class="font-serif text-base text-ink-muted">Keine Aggregat-Werte verfügbar.</p>
+		{:else}
+			<table class="w-full font-sans text-base" data-testid="bezirk-steckbrief">
+				<thead>
+					<tr class="border-b border-rule text-left">
+						<th class="py-2 pr-4 font-semibold">Cluster</th>
+						<th class="py-2 pr-4 font-semibold">Wert</th>
+						<th class="py-2 font-semibold">Stand</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each steckbrief as row (row.cluster)}
+						<tr class="border-b border-rule align-top">
+							<th scope="row" class="py-3 pr-4 font-semibold text-ink">{row.cluster}</th>
+							<td class="py-3 pr-4 text-ink">
+								<span>{row.value}</span>
+								<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
+							</td>
+							<td class="py-3 font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		{/if}
+	</section>
+
+	{#if faq.length > 0}
+		<FaqSection items={faq} pageType="bezirk" />
+	{:else}
+		<section aria-labelledby="faq-placeholder-heading" class="space-y-3">
+			<h2 id="faq-placeholder-heading" class="font-serif text-2xl text-ink">Häufige Fragen</h2>
+			<p class="font-serif text-base text-ink-muted">
+				FAQ-Einträge werden mit dem nächsten Daten-Build aus Story 2.5b ergänzt.
+			</p>
+		</section>
+	{/if}
+</article>
