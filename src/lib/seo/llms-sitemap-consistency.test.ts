@@ -62,14 +62,22 @@ const ctx: LlmsSourceContext = {
 };
 
 describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
-	it('every sitemap URL is also exposed via llms.txt source entries', () => {
+	it('every sitemap URL (outside feed-domains) is also exposed via llms.txt source entries', () => {
+		// /updates-Routes haben eigene LLM-Discovery via RSS/Atom/JSON-Feed (Story 2.13).
+		// llms.txt enumeriert nicht jeden Blog-Post, sondern editoriale Site-Struktur.
+		const FEED_DOMAINS = ['/updates'];
+		const isFeedRoute = (loc: string) =>
+			FEED_DOMAINS.some((prefix) => loc.startsWith(`${ctx.origin}${prefix}`));
+
 		const sitemapUrls = new Set(
 			collectPrerenderedUrls({
 				origin: ctx.origin,
 				locale: ctx.locale,
 				manifest: ctx.manifest,
 				buildTimestamp: ctx.buildTimestamp
-			}).map((e) => e.loc)
+			})
+				.map((e) => e.loc)
+				.filter((loc) => !isFeedRoute(loc))
 		);
 
 		const llmsUrls = new Set(collectLlmsSourceEntries(ctx).map((e) => e.loc));
