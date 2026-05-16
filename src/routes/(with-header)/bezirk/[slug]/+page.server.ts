@@ -3,12 +3,9 @@ import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
+import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
-import type { InferSelectModel } from 'drizzle-orm';
-import type { bezirkStats } from '$lib/server/db/schema/index.js';
-
-type BezirkStatsRow = InferSelectModel<typeof bezirkStats>;
 
 export const prerender = true;
 
@@ -22,11 +19,11 @@ export const entries: EntryGenerator = async () => {
 	return slugs.map((slug) => ({ slug }));
 };
 
-async function tryLoadBezirkStats(slug: string): Promise<BezirkStatsRow | null> {
+async function tryLoadBezirkStats(slug: string): Promise<BezirkStats | null> {
 	if (!process.env.DATABASE_URL) return null;
 	try {
 		const { getBezirkStats } = await import('$lib/server/db/queries/get-bezirk-stats.js');
-		return (await getBezirkStats(slug)) as BezirkStatsRow | null;
+		return (await getBezirkStats(slug)) as BezirkStats | null;
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
 		process.stderr.write(`[bezirk-page] WARN: bezirk_stats unavailable (${msg})\n`);
@@ -46,11 +43,11 @@ async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
 	}
 }
 
-export interface BezirkPageData {
+export type BezirkPageData = {
 	readonly profile: BezirkProfile;
-	readonly stats: BezirkStatsRow | null;
+	readonly stats: BezirkStats | null;
 	readonly faq: readonly FaqEntry[];
-}
+};
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	const slug = params.slug;
