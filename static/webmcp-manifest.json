@@ -1,0 +1,416 @@
+{
+  "spec_version": "0.3.0",
+  "name": "navigator.berlin",
+  "description": "Cross-layer address inspector for Berlin: combines noise, air quality, green coverage, mobility, residential quality and Kiez-Score data with full source citations.",
+  "homepage": "https://navigator.berlin",
+  "license": "CC BY 4.0",
+  "attribution": "Tool outputs from navigator.berlin. Underlying datasets carry their own licenses (dl-de/by-2-0, dl-de/zero-2-0, ODbL, CC BY 4.0). Always cite the source URL and license per tool output.",
+  "tools": [
+    {
+      "name": "address_lookup",
+      "description": "Search Berlin addresses, streets, and POIs. Returns up to N candidates with coordinates and administrative context (Bezirk, Kiez, postcode). Backed by OSM Nominatim, biased to Berlin.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "display_name": {
+              "type": "string"
+            },
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            },
+            "bezirk": {
+              "type": "string"
+            },
+            "kiez": {
+              "type": "string"
+            },
+            "postcode": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "display_name",
+            "lat",
+            "lng"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cross_layer_query",
+      "description": "Query all configured Berlin data layers at a geographic point (lat, lng) and return one structured hit per layer with full provenance (source, updated_at, license, reason).",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "layer": {
+              "type": "string"
+            },
+            "value": {},
+            "source": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            },
+            "license": {
+              "type": "string"
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "layer",
+            "value",
+            "source",
+            "updated_at",
+            "license"
+          ]
+        }
+      }
+    },
+    {
+      "name": "list_layers_at_point",
+      "description": "Lightweight discovery: list which Berlin data layers cover a given point. Returns layer slug, has_value flag, and reason (no-coverage, outdated, seasonal). Use this to decide which deeper queries to run.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "layer": {
+              "type": "string"
+            },
+            "has_value": {
+              "type": "boolean"
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "layer",
+            "has_value"
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_kiez_profile",
+      "description": "Return the public profile of a Berlin Kiez (LOR Bezirksregion) by slug. Includes name, Bezirk, population, area, centroid, and a list of data sources with license + updated_at provenance.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "locale": {
+            "type": "string",
+            "enum": [
+              "de",
+              "en"
+            ]
+          }
+        },
+        "required": [
+          "slug"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "bezirk": {
+            "type": "string"
+          },
+          "einwohner": {
+            "type": "number"
+          },
+          "flaeche_ha": {
+            "type": "number"
+          },
+          "centroid": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "data_sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "layer": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "updated_at": {
+                  "type": "string"
+                },
+                "license": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "layer",
+                "source",
+                "updated_at",
+                "license"
+              ]
+            }
+          }
+        },
+        "required": [
+          "name",
+          "slug",
+          "bezirk",
+          "einwohner",
+          "flaeche_ha",
+          "centroid",
+          "data_sources"
+        ]
+      }
+    },
+    {
+      "name": "get_layer_metadata",
+      "description": "Return rich metadata for a single data layer by slug: source URL, license, license URL, geometry type, feature count, last update, and methodology summary.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "locale": {
+            "type": "string",
+            "enum": [
+              "de",
+              "en"
+            ]
+          }
+        },
+        "required": [
+          "slug"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "bundle": {
+            "type": "string"
+          },
+          "geometry_type": {
+            "type": "string"
+          },
+          "feature_count": {
+            "type": "number"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "license_url": {
+            "type": "string"
+          },
+          "methodology": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "summary": {
+                "type": "string"
+              },
+              "aggregation_level": {
+                "type": "string"
+              },
+              "source_layers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "bundle",
+          "geometry_type",
+          "feature_count",
+          "source_url",
+          "updated_at",
+          "license",
+          "license_url"
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri_template": "navigator://address/current",
+      "name": "active-address",
+      "description": "The address currently selected in the navigator.berlin Inspector (display name, lat/lng, Bezirk, Kiez, postcode). Empty when no address is active."
+    },
+    {
+      "uri_template": "navigator://layers/active",
+      "name": "loaded-layers",
+      "description": "Currently active and soft-hidden layer slugs in the live UI state. Reflects user-toggled data layers in real time."
+    },
+    {
+      "uri_template": "navigator://bezirk/{slug}",
+      "name": "bezirk-profile-ref",
+      "description": "Read-only reference to a Berlin Bezirk by slug. Fetch the actual profile via the `get_kiez_profile` tool (Bezirk-level via separate tool)."
+    },
+    {
+      "uri_template": "navigator://kiez/{slug}",
+      "name": "kiez-profile-ref",
+      "description": "Read-only reference to a Berlin Kiez (LOR Bezirksregion) by slug. Fetch the actual profile via the `get_kiez_profile` tool."
+    }
+  ],
+  "prompts": [
+    {
+      "name": "address_overview",
+      "description": "Summarize what is notable about a Berlin address (noise, air, green, mobility, housing) using cross_layer_query and get_kiez_profile, with full source citations.",
+      "arguments": [
+        {
+          "name": "address",
+          "description": "Human-readable address string or display name.",
+          "required": true
+        }
+      ],
+      "supported_locales": [
+        "de",
+        "en"
+      ]
+    },
+    {
+      "name": "compare_kieze",
+      "description": "Compare two Berlin Kieze (LOR Bezirksregionen) by slug using get_kiez_profile, with cited differences across population, area, and data coverage.",
+      "arguments": [
+        {
+          "name": "slug_a",
+          "description": "Slug of the first Kiez.",
+          "required": true
+        },
+        {
+          "name": "slug_b",
+          "description": "Slug of the second Kiez.",
+          "required": true
+        }
+      ],
+      "supported_locales": [
+        "de",
+        "en"
+      ]
+    },
+    {
+      "name": "explain_layer",
+      "description": "Explain a single navigator.berlin data layer (by slug) to a non-expert: source, license, methodology, gaps, citations.",
+      "arguments": [
+        {
+          "name": "slug",
+          "description": "Layer slug, e.g. `laerm-2023` or `wohnlagen-2024`.",
+          "required": true
+        }
+      ],
+      "supported_locales": [
+        "de",
+        "en"
+      ]
+    }
+  ]
+}
