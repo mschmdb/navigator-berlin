@@ -21,6 +21,9 @@
 		"data:kiez-scores": "tsx scripts/build-kiez-scores.ts",
 		"data:aggregate": "tsx scripts/aggregate-data.ts",
 		"webmcp:manifest": "tsx scripts/build-webmcp-manifest.ts",
+		"og:snapshots": "tsx scripts/generate-og-snapshots.ts",
+		"og:images": "tsx scripts/generate-og-images.ts",
+		"og:all": "pnpm og:snapshots && pnpm og:images",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "tsx scripts/db/migrate.ts"
 	},

@@ -36,6 +36,9 @@
 
 generated: 2026-05-11
 last_updated: 2026-05-16
+# story 2-6 promoted ready-for-dev → in-progress → review (dev-story wave-3 isolated-worktree session 2026-05-16, TDD-first per ADR-012; 8 ACs erfüllt; AC-1 Karten-Snapshot-Pipeline via Headless Playwright + MapLibre (Variante A, User-Decision), AC-2 Satori-Overlay komponiert Snapshot via backgroundImage data-URI, AC-3 Top-3-Selector fix L_DEN(ordinal)/PET(°C)/Stationen-pro-km² mit Placeholder „–", AC-4 SeoHead ogImage-Prop bereits aus Story 2.1 vorhanden, AC-5 ohne Hash + Static-Default max-age=86400 (User-Decision), AC-6 3 neue package.json-Scripts og:snapshots/og:images/og:all + docs/data-pipeline.md, AC-7 gitignore + README + .gitkeep, AC-8 TDD 56 Tests / 8 Files grün. 8 neue Module unter src/lib/server/og/ (filename-resolver, top-stats-selector, page-card-template, render-page-card, snapshot-renderer, overlay-builder, og-pipeline + Tests) + 2 Build-Scripts + 1 gitignore-Test. DE-only Phase 1 strict: 193 PNGs total (12 Bezirk + 143 Kiez + 38 Layer ohne EN-Duplikat) per Memory project_i18n_phase_1_de_only. Memory-Pflichten eingehalten: project_satori_font_pipeline (Font-Loading via loadDefaultOgFonts aus Story 1.20, sequenzielles wawoff2, kein woff2/Variable), feedback_no_em_dashes (Tests verifizieren U+2014-Absenz), feedback_no_lebenswert (Test), feedback_no_live_data (Layer-Card Test verifiziert „live"/„aktuell"-Absenz). Smoke-Verify: bezirk/mitte + kiez/karlshorst + layer/laerm-2023 produzieren 1200×630 PNG (Snapshot + Final-Card). pnpm check 0 Errors / 0 Warnings über 6091 Files. Pre-existing DB-Tests (queries.test.ts 11 Failures wegen fehlendem DATABASE_URL) out-of-scope, identisch vor und nach Diff. T7.4 Social-Validator-Spotcheck = manueller Post-Deploy-Step (AC-8). T7.5 Browser-Sharing-Verify blockiert auf Stories 2.3/2.4/2.5a (Page-Routes noch ready-for-dev).
+# story 5-8-public-update-skill authored 2026-05-16 via bmad-create-story (Mary, Business-Analyst-Agent). Manual-Trigger Claude-Code-Skill `/publish-update` der aus Commit-Range Draft-Entries für /updates generiert (Story 2.13 Schema-Reuse). Allowlist-Filter (src/routes, src/lib/components, _content, MANIFEST) + Denylist-Override (.env, lefthook, coolify, docs/recovery, .github/workflows, _bmad-output) + Mixed-Commit-Schutz + Forbidden-Token-Lint (em-dash, lebenswert, hetzner, coolify, traefik, env-vars, commit-SHAs, mietpreis-€/m²). Output `_content/updates/_drafts/` (gitignored), Editorial-Gate via manuelle `git mv`-Promote. Subagent via `claude --print --append-system-prompt`. TDD-Pflicht für 6 Pure-Functions + 1 Subagent-Wrapper, Coverage ≥ 90%. Status ready-for-dev. Sequencing: 2.13 done (Schema-Source), 5.1 ready (Cadence-Heuristik-Hint), unabhängig von Epic 7. Authored als 5.8 statt 7.x weil Distribution/Pflege-Thema, nicht Knowledge-Layer.
+# sprint-planning refresh 2026-05-16 (afternoon): (1) Story 2-0 ready-for-dev → review (file Status: review, prior YAML stale gegenüber dev-story session 2026-05-16 — keine downgrade). (2) Epic 7 „System-Dokumentation" hinzugefügt (6 Stories 7-1..7-6 alle backlog, retrospektive optional) — Epic existiert in epics.md aber fehlte in sprint-status, jetzt synchron. Status alle anderen Stories ohne Änderung; Auto-Detection ergab keine weiteren Diskrepanzen (alle Story-Files matchen oder YAML hält fortschrittlicheren Status korrekt).
 # story 2-8 promoted ready-for-dev → in-progress → review (dev-story wave-2 parallel-agent session 2026-05-16, TDD-first per ADR-012; 8 ACs erfüllt; 6 Task-Cluster fertig, T2 superseded durch User-Decision Variante B). User-decisions: DE-only Phase 1 (kein /en/llms.txt, kein unified, Memory project_i18n_phase_1_de_only), Stigma-Lint zentralisiert in $lib/seo/banned-words.ts mit „lebenswert"+„lebensqualität"-Lemma-Pattern (deutsche Flexion, case-insensitive, Wort-Grenze, Replacement [REDAKTIONSFEHLER]), On-the-Fly-Render (Variante B, kein llms_content-Cache, Graceful-Fallback wenn DATABASE_URL fehlt), Top-50-Kieze nach topRank in llms-full.txt (Rest URL-only), max-age=3600. Architektur: pure-function Builder in $lib/seo/llms-builder.ts (URL-Pattern spiegelt sitemap-builder STATIC_PAGES_SOURCE + LAYER_DETAIL_SOURCE für Konsistenz, plus Bezirk-/Kiez-Pages aus DB); 4 Renderer in $lib/server/llms/ (bezirk/kiez/layer/site-intro) plus shared internal/aggregate-renderer.ts; data-collector.ts orchestriert DB-Reads mit try/catch-Fallback. Routes /llms.txt + /llms-full.txt prerender=true mit Content-Type text/markdown; charset=utf-8 + Cache-Control public, max-age=3600. Robots.txt um „# LLM-friendly: /llms.txt + /llms-full.txt"-Hinweis erweitert. 78 neue Unit-Tests (10 banned-words + 6 site-intro + 11 bezirk + 9 kiez + 9 layer + 18 builder + 4 sitemap-consistency + 11 endpoints), 0 Type-Errors, 0 Warnings. Pre-existing DB-Tests aus Story 2.0 schlagen weiter mit fehlender DATABASE_URL fehl (out-of-scope, identisch vor und nach Diff).
 # story 2-13 promoted backlog → in-progress → review (dev-story wave-2 parallel-agent session 2026-05-16, TDD-first per ADR-012); 11 von 15 ACs erfüllt (AC-1..AC-10, AC-12, AC-15); 4 ACs deferred: AC-11 Hero-Teaser-Slot bis Story 2.11 (loadUpdatesFromModules + latestUpdates(n) bereits exportiert + getestet, 2.11 konsumiert), AC-13 EN-Locale per Phase-1-DE-only-Lock (memory project_i18n_phase_1_de_only), AC-14 Phase-Coming-Soon-Guard bis Story 2.11 phase.ts existiert, T10.6 E2E updates-flow.e2e.ts bis CI-Setup-Story; Open-Questions Locks: Q1 Sanitization Option A Custom-Regex-Whitelist in $lib/seo/markdown-sanitizer.ts (Trusted-Source Git-Review-Barriere reicht, DOMPurify-Bundle 30 KB gespart), Q2 Detail-Page-Only Render-Pattern (kein Inline-Disclosure-SEO-Cannibalization), Q3 DE-only Feed Phase 1, Q4 tags optional max 8 lowercase-kebab, Q5 DOMPurify Cure53 EU-Berlin kein Issue; Deps marked@^14.1.4 + gray-matter@^4.0.3 (MIT, EU-safe, lokal gebundlet); JSON-LD-Inline-Helper unter $lib/seo/json-ld-updates.ts mit TODO-Verweis auf Story 2.2 Refactor; Routes-File-Layout: src/routes/(with-header)/updates/+page.{svelte,server.ts} + [slug]/+page.{svelte,server.ts} + src/routes/updates/{rss.xml,atom.xml,feed.json}/+server.ts alle prerender=true; Sitemap-Source UPDATES_PAGES_SOURCE registriert in ALL_SOURCES (Index priority 0.6, Detail 0.7, lastmod aus Frontmatter); Footer-Link /updates zwischen /methodik und /lizenzen + 2 neue Footer-Tests; Initial-Content 2 Entries _content/updates/2026-05-16-launch.md + 2026-05-15-kiez-score-versorgungs-dimension.md; 117 neue Unit-Tests in 16 Files grün + 14 Komponenten-Tests grün; pnpm check 0 Errors über 6056 Files; Build-Verify: alle Updates-Routen prerendert in .svelte-kit/output/prerendered/pages/updates/; pre-existing webmcp-Build-Fails out-of-scope; Files <500 LOC, kein any, keine em-dashes, kein „lebenswert", inline-aria-live-Feedback statt Toast (memory feedback_no_toast).
 # story 2-1 promoted ready-for-dev → in-progress → review (dev-story wave-1 parallel-agent session 2026-05-16, TDD-first per ADR-012; 8 ACs erfüllt; SEO-Foundation = pure-function lib $lib/seo/ (canonical + hreflang + sitemap-builder) + SeoHead-Komponente; 4 Page-Migrations Root/Methodik/Lizenzen/Layer-Detail; neue Endpoints /sitemap.xml + /sitemap-de.xml + /robots.txt alle prerender=true; Layer-[slug] entries-Hook aus MANIFEST.json → 65+ static pages; Root-Canonical-Bug gefixed (page.url.search raus); DE-only Phase 1 strict (kein hreflang-en, kein sitemap-en.xml, kein /en-Variante); Root-prerender DEFERRED nach Story 2.11 Welcome-Overlay; Pivot routes/sitemap-[lang]/+server.ts → static routes/sitemap-de.xml/+server.ts weil [lang]-Bracket Pathname-Type-Cast bricht; svelte.config.js kit.prerender.entries + handleHttpError tolerant für yet-to-ship /datenschutz, /impressum, /architektur; static/robots.txt deleted zugunsten Route; 77 Unit-Tests grün, 0 Type-Errors; Build prerendert alle erwarteten Files. Adapter-Node @resvg/resvg-js-Bug bereits vor Story-2.1 auf main, out-of-scope.
@@ -170,14 +173,14 @@ development_status:
 
   # Epic 2: Discovery-Surface + Aggregat-Layer (SEO/AEO/LLM)
   epic-2: in-progress
-  2-0-postgres-aggregat-foundation-drizzle-build-step: ready-for-dev
+  2-0-postgres-aggregat-foundation-drizzle-build-step: review
   2-1-seo-foundation-sitemap-canonical-robots-txt: review
   2-2-json-ld-generator-bibliothek: ready-for-dev
   2-3-bezirks-pages-prerendered: ready-for-dev
   2-4-kiez-pages-prerendered: ready-for-dev
   2-5a-layer-page-en-variante-dataset-jsonld: ready-for-dev
   2-5b-faq-section-template-daten-slots: ready-for-dev
-  2-6-og-image-pipeline-bezirk-kiez-layer: ready-for-dev
+  2-6-og-image-pipeline-bezirk-kiez-layer: review
   2-7-webmcp-integration-tools-resources-prompts: review
   2-8-llms-txt-llms-full-txt-endpoints: review
   2-9a-kiez-score-bezirks-score-aggregat-berechnung: ready-for-dev
@@ -209,14 +212,15 @@ development_status:
   epic-4-retrospective: optional
 
   # Epic 5: Distribution + Pflege + Owner-Realisation
-  epic-5: backlog
-  5-1-update-cadence-adr-github-actions-schedule: backlog
+  epic-5: in-progress
+  5-1-update-cadence-adr-github-actions-schedule: ready-for-dev
   5-2-brand-asset-pack-press-kit: backlog
   5-3-launch-sequencing-plan-channel-material: backlog
   5-4-post-launch-monitoring-eu-foss: backlog
   5-5-backup-restore-drill-staging: backlog
   5-6-gdpr-dpia-dokument-beratungs-asset: backlog
   5-7-sitemap-submission-search-console-setup: backlog
+  5-8-public-update-skill: ready-for-dev
   epic-5-retrospective: optional
 
   # Epic 6: Wahldaten + Cross-Layer-Story
@@ -232,3 +236,13 @@ development_status:
   6-8-webmcp-tools-wahldaten: backlog
   6-9-json-ld-dataset-methodik-doku: backlog
   epic-6-retrospective: optional
+
+  # Epic 7: System-Dokumentation (Owner + LLM-Konsum) — Phase 1 parallel zu Epic 4/5
+  epic-7: backlog
+  7-1-auto-doc-skill-foundation: backlog
+  7-2-docs-tree-struktur-index: backlog
+  7-3-system-map-service-topology: backlog
+  7-4-data-pipeline-atlas: backlog
+  7-5-owner-recovery-playbook-secrets-map: backlog
+  7-6-llm-konsum-optimierung: backlog
+  epic-7-retrospective: optional
