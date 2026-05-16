@@ -1,16 +1,19 @@
 /**
- * Build-Step (Story 2.6, Pure-Satori-Pivot 2026-05-16): rendert finale
- * OG-Cards aus Top-3-Aggregat-Werten + Satori-VDOM. Kein Map-Snapshot.
+ * Build-Step (Story 2.6, Score-Card-Pivot 2026-05-16): rendert OG-Cards aus
+ * Postgres `bezirk_score` / `kiez_score` (Story 2.9a) + Brand-Logo. Kein
+ * Map-Snapshot, kein Headless-Playwright.
  *
  * Output: `static/og/{type}/{slug}.png` (gitignored).
  *
- * Aggregat-Source: Postgres `bezirk_stats` + `kiez_stats` (Story 2.0). Wenn
- * DATABASE_URL fehlt → Placeholder-Werte, gleiches Pattern wie Story 2.8.
+ * Bezirk + Kiez: Composite-Score + 4 Dimensionen (Ruhe / Grün / Mob /
+ * Versorgung). Soziale-Lage bewusst off-card per Stigma-Schutz (User-Lock
+ * 2026-05-16).
  *
- * Hintergrund Pivot: Headless-Playwright-Snapshot-Pipeline (alte AC-1)
- * verworfen, weil lokale Builds System-OOM gerissen haben und produzierte
- * PNGs unbrauchbar waren. Brand-Color-Background + Plex-Typo + Top-3-Stats
- * tragen die Karte ausreichend.
+ * Layer-Card: Authority + License + Stand (unverändert aus Story 2.6).
+ *
+ * Brand-Logo: `static/logo-mark.svg` als data:image/svg+xml-URI in Top-Left.
+ *
+ * Wenn DATABASE_URL fehlt → Placeholder-Werte „–" in allen Slots.
  */
 
 import { mkdir, writeFile, access, readFile } from 'node:fs/promises';
@@ -34,7 +37,8 @@ import {
 	buildLayerCardVdom
 } from '../src/lib/server/og/page-card-template.js';
 import { renderPageCardPng } from '../src/lib/server/og/render-page-card.js';
-import { selectTopStatsForBezirkOrKiez, type Top3StatCard } from '../src/lib/server/og/top-stats-selector.js';
+import { buildScoreCardData, type ScoreCardData } from '../src/lib/server/og/score-card-data.js';
+import { loadLogoDataUri } from '../src/lib/server/og/logo-loader.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -92,75 +96,70 @@ async function fileExists(p: string): Promise<boolean> {
 	}
 }
 
-const PLACEHOLDER_STATS: readonly Top3StatCard[] = [
-	{ label: 'Lärm', value: '–', layer: null, sourceUpdatedAt: null },
-	{ label: 'PET', value: '–', layer: null, sourceUpdatedAt: null },
-	{ label: 'Stationen', value: '–', layer: null, sourceUpdatedAt: null }
-];
-
-interface BezirkStatsRow {
+interface ScoreRow {
 	readonly slug: string;
-	readonly laerm: unknown;
-	readonly klima: unknown;
-	readonly oepnv: unknown;
+	readonly composite: number;
+	readonly ruheLuft: number | null;
+	readonly gruen: number | null;
+	readonly mobilitaet: number | null;
+	readonly versorgung: number | null;
+	readonly computedAt: Date | null;
 }
 
-async function tryLoadBezirkStats(): Promise<Map<string, BezirkStatsRow>> {
-	if (!process.env.DATABASE_URL) {
-		return new Map();
-	}
+async function tryLoadBezirkScores(): Promise<Map<string, ScoreRow>> {
+	if (!process.env.DATABASE_URL) return new Map();
 	try {
 		const { getDb } = await import('../src/lib/server/db/index.js');
-		const { bezirkStats } = await import('../src/lib/server/db/schema/index.js');
-		const rows = await getDb().select().from(bezirkStats);
-		const map = new Map<string, BezirkStatsRow>();
-		for (const r of rows) map.set(r.slug, r as BezirkStatsRow);
+		const { bezirkScore } = await import('../src/lib/server/db/schema/index.js');
+		const rows = await getDb().select().from(bezirkScore);
+		const map = new Map<string, ScoreRow>();
+		for (const r of rows) map.set(r.slug, r as ScoreRow);
 		return map;
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[og:images] WARN: bezirk_stats unavailable (${msg}), using placeholders\n`);
+		process.stderr.write(`[og:images] WARN: bezirk_score unavailable (${msg}), placeholders\n`);
 		return new Map();
 	}
 }
 
-async function tryLoadKiezStats(): Promise<Map<string, BezirkStatsRow>> {
-	if (!process.env.DATABASE_URL) {
-		return new Map();
-	}
+async function tryLoadKiezScores(): Promise<Map<string, ScoreRow>> {
+	if (!process.env.DATABASE_URL) return new Map();
 	try {
 		const { getDb } = await import('../src/lib/server/db/index.js');
-		const { kiezStats } = await import('../src/lib/server/db/schema/index.js');
-		const rows = await getDb().select().from(kiezStats);
-		const map = new Map<string, BezirkStatsRow>();
-		for (const r of rows) map.set(r.slug, r as BezirkStatsRow);
+		const { kiezScore } = await import('../src/lib/server/db/schema/index.js');
+		const rows = await getDb().select().from(kiezScore);
+		const map = new Map<string, ScoreRow>();
+		for (const r of rows) map.set(r.slug, r as ScoreRow);
 		return map;
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[og:images] WARN: kiez_stats unavailable (${msg}), using placeholders\n`);
+		process.stderr.write(`[og:images] WARN: kiez_score unavailable (${msg}), placeholders\n`);
 		return new Map();
 	}
+}
+
+function formatStand(date: Date | null): string | null {
+	if (!date) return null;
+	return date.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
 }
 
 async function renderBezirk(
 	target: BezirkTarget,
-	stats: Map<string, BezirkStatsRow>,
+	scores: Map<string, ScoreRow>,
+	logoDataUri: string | undefined,
 	args: CliArgs
 ): Promise<'rendered' | 'cached' | 'failed'> {
 	const outputPath = buildOgPath(REPO_ROOT, 'bezirk', target.slug);
 	if (!args.force && (await fileExists(outputPath))) return 'cached';
 	try {
-		const row = stats.get(target.slug);
-		const topStats = row
-			? selectTopStatsForBezirkOrKiez({
-					laerm: row.laerm as never,
-					klima: row.klima as never,
-					oepnv: row.oepnv as never
-				})
-			: PLACEHOLDER_STATS;
+		const row = scores.get(target.slug) ?? null;
+		const scoreCard: ScoreCardData = buildScoreCardData(row);
 		const vdom = buildBezirkCardVdom({
 			bezirkName: target.label,
 			slug: target.slug,
-			topStats
+			scoreCard,
+			scoreUpdatedAt: formatStand(row?.computedAt ?? null),
+			logoDataUri
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -175,27 +174,24 @@ async function renderBezirk(
 
 async function renderKiez(
 	target: KiezTarget,
-	stats: Map<string, BezirkStatsRow>,
+	scores: Map<string, ScoreRow>,
 	bezirkLabels: Map<string, string>,
+	logoDataUri: string | undefined,
 	args: CliArgs
 ): Promise<'rendered' | 'cached' | 'failed'> {
 	const outputPath = buildOgPath(REPO_ROOT, 'kiez', target.slug);
 	if (!args.force && (await fileExists(outputPath))) return 'cached';
 	try {
-		const row = stats.get(target.slug);
-		const topStats = row
-			? selectTopStatsForBezirkOrKiez({
-					laerm: row.laerm as never,
-					klima: row.klima as never,
-					oepnv: row.oepnv as never
-				})
-			: PLACEHOLDER_STATS;
+		const row = scores.get(target.slug) ?? null;
+		const scoreCard: ScoreCardData = buildScoreCardData(row);
 		const parentLabel = bezirkLabels.get(target.parentBezirkSlug) ?? target.parentBezirkSlug;
 		const vdom = buildKiezCardVdom({
 			kiezName: target.label,
 			slug: target.slug,
 			parentBezirkName: parentLabel,
-			topStats
+			scoreCard,
+			scoreUpdatedAt: formatStand(row?.computedAt ?? null),
+			logoDataUri
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -208,7 +204,11 @@ async function renderKiez(
 	}
 }
 
-async function renderLayer(target: LayerTarget, args: CliArgs): Promise<'rendered' | 'cached' | 'failed'> {
+async function renderLayer(
+	target: LayerTarget,
+	logoDataUri: string | undefined,
+	args: CliArgs
+): Promise<'rendered' | 'cached' | 'failed'> {
 	const outputPath = buildOgPath(REPO_ROOT, 'layer', target.slug);
 	if (!args.force && (await fileExists(outputPath))) return 'cached';
 	try {
@@ -218,7 +218,8 @@ async function renderLayer(target: LayerTarget, args: CliArgs): Promise<'rendere
 			bundleGroup: target.bundleGroup,
 			authority: target.authority,
 			license: target.license,
-			sourceUpdatedAt: target.sourceUpdatedAt
+			sourceUpdatedAt: target.sourceUpdatedAt,
+			logoDataUri
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -228,6 +229,16 @@ async function renderLayer(target: LayerTarget, args: CliArgs): Promise<'rendere
 		const msg = err instanceof Error ? err.message : String(err);
 		process.stderr.write(`[og:images] layer/${target.slug} failed: ${msg}\n`);
 		return 'failed';
+	}
+}
+
+async function tryLoadLogo(): Promise<string | undefined> {
+	try {
+		return await loadLogoDataUri(REPO_ROOT);
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[og:images] WARN: logo unavailable (${msg})\n`);
+		return undefined;
 	}
 }
 
@@ -259,29 +270,32 @@ async function main(): Promise<void> {
 		layers = layers.filter((t) => t.slug === args.slug);
 	}
 
-	const bezirkStats = bezirks.length > 0 ? await tryLoadBezirkStats() : new Map();
-	const kiezStats = kieze.length > 0 ? await tryLoadKiezStats() : new Map();
+	const [bezirkScores, kiezScores, logoDataUri] = await Promise.all([
+		bezirks.length > 0 ? tryLoadBezirkScores() : Promise.resolve(new Map<string, ScoreRow>()),
+		kieze.length > 0 ? tryLoadKiezScores() : Promise.resolve(new Map<string, ScoreRow>()),
+		tryLoadLogo()
+	]);
 
 	let rendered = 0;
 	let cached = 0;
 	let failed = 0;
 
 	for (const t of bezirks) {
-		const r = await renderBezirk(t, bezirkStats, args);
+		const r = await renderBezirk(t, bezirkScores, logoDataUri, args);
 		if (r === 'rendered') rendered++;
 		else if (r === 'cached') cached++;
 		else failed++;
 		process.stdout.write(`[og:images] bezirk/${t.slug}: ${r}\n`);
 	}
 	for (const t of kieze) {
-		const r = await renderKiez(t, kiezStats, bezirkLabels, args);
+		const r = await renderKiez(t, kiezScores, bezirkLabels, logoDataUri, args);
 		if (r === 'rendered') rendered++;
 		else if (r === 'cached') cached++;
 		else failed++;
 		process.stdout.write(`[og:images] kiez/${t.slug}: ${r}\n`);
 	}
 	for (const t of layers) {
-		const r = await renderLayer(t, args);
+		const r = await renderLayer(t, logoDataUri, args);
 		if (r === 'rendered') rendered++;
 		else if (r === 'cached') cached++;
 		else failed++;

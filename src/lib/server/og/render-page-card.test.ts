@@ -15,11 +15,16 @@ describe('renderPageCardPng', () => {
 		const vdom = buildBezirkCardVdom({
 			bezirkName: 'Mitte',
 			slug: 'mitte',
-			topStats: [
-				{ label: 'Lärm', value: 'Hoch', layer: 'laerm-2023', sourceUpdatedAt: '2023-01-01' },
-				{ label: 'PET', value: '32.5 °C', layer: 'klima-pet-2022', sourceUpdatedAt: '2022-08-01' },
-				{ label: 'Stationen', value: '8.2/km²', layer: 'oepnv', sourceUpdatedAt: '2025-01-01' }
-			]
+			scoreCard: {
+				composite: 43,
+				dims: [
+					{ label: 'Ruhe', value: 27 },
+					{ label: 'Grün', value: 31 },
+					{ label: 'Mob.', value: 35 },
+					{ label: 'Vers.', value: 62 }
+				]
+			},
+			scoreUpdatedAt: 'Mai 2026'
 		});
 		const png = await renderPageCardPng(vdom);
 		// PNG magic bytes: 89 50 4E 47 0D 0A 1A 0A

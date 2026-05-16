@@ -1,23 +1,24 @@
 /**
  * Satori-VDOM-Templates für Bezirks-, Kiez- und Layer-OG-Karten (Story 2.6,
- * Pure-Satori-Pivot 2026-05-16).
+ * Score-Card-Pivot 2026-05-16: Bezirk + Kiez tragen jetzt Kiez-Score-Composite
+ * + 4 Dimensionen statt Top-3-Aggregate; Soziale-Lage off-card per Stigma-
+ * Schutz). Layer-Card behält Quelle/Lizenz/Stand-Layout aus Story 2.6.
  *
- * Layout-Pattern (alle drei Varianten):
- *   - 1200×630 Root mit Brand-Color-Background (kein Map-Snapshot mehr).
- *   - Linker Spalten-Block 720 px breit, halbtransparente Panel-Card mit:
- *     Brand-Mark oben, Headline (Plex-Serif), Sub-Line (Plex-Sans),
- *     Stat-/Info-Reihe (Plex-Mono), Footer (URL + Stand).
+ * Layout (Bezirk/Kiez):
+ *   - 1200×630 Root mit Brand-Color-Background.
+ *   - 720 px Panel-Card linksbündig mit:
+ *     Logo + Brand-Mark · Headline (Plex-Serif) · Sub-Line · Composite-Hero
+ *     · 4 Dim-Mini · Footer (URL + Stand).
  *
- * Re-use bestehender Brand-Tokens aus `src/lib/utils/og-card-renderer.ts`
- * (Story 1.20). Schriftarten kommen via `loadDefaultOgFonts` (Plex Sans/Serif/Mono),
- * Memory `project_satori_font_pipeline.md` (kein woff2 direkt, kein Variable-Font,
- * sequenzielles wawoff2). Diese Datei ist Pure-VDOM, Font-Loading liegt im Aufrufer.
+ * Font-Loading via `loadDefaultOgFonts` aus Story 1.20 (Memory
+ * `project_satori_font_pipeline`: kein woff2 direkt, kein Variable-Font,
+ * sequenzielles wawoff2). Pure-VDOM, IO im Aufrufer.
  *
- * Pure-Function-Tests in `./page-card-template.test.ts` validieren Text-Nodes
- * pro Layout-Variante.
+ * Tests in `./page-card-template.test.ts`.
  */
 
-import type { Top3StatCard } from './top-stats-selector.js';
+import type { ScoreCardData } from './score-card-data.js';
+import { formatScoreValue } from './score-card-data.js';
 
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
@@ -50,18 +51,69 @@ function text(value: string, style: Record<string, unknown>): SatoriNode {
 	return node('div', style, value);
 }
 
-function brandMark(): SatoriNode {
-	return text('navigator.berlin', {
-		fontFamily: 'Plex Mono',
-		fontSize: 22,
-		color: COLOR_ACCENT,
-		fontWeight: 600,
-		letterSpacing: 0.5,
-		textTransform: 'uppercase' as const
-	});
+function img(src: string, style: Record<string, unknown>): SatoriNode {
+	return { type: 'img', props: { src, style } };
 }
 
-function statRow(stat: Top3StatCard): SatoriNode {
+function brandMark(logoDataUri: string | undefined): SatoriNode {
+	const children: SatoriNode[] = [];
+	if (logoDataUri) {
+		children.push(img(logoDataUri, { width: 32, height: 32, display: 'flex' }));
+	}
+	children.push(
+		text('navigator.berlin', {
+			fontFamily: 'Plex Mono',
+			fontSize: 22,
+			color: COLOR_ACCENT,
+			fontWeight: 600,
+			letterSpacing: 0.5,
+			textTransform: 'uppercase' as const
+		})
+	);
+	return node(
+		'div',
+		{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 12 },
+		children
+	);
+}
+
+function compositeHero(composite: number | null): SatoriNode {
+	return node(
+		'div',
+		{
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'flex-end',
+			gap: 14,
+			paddingTop: 12
+		},
+		[
+			text(formatScoreValue(composite), {
+				fontFamily: 'Plex Serif',
+				fontSize: 96,
+				color: COLOR_INK,
+				lineHeight: 1
+			}),
+			text('/ 100', {
+				fontFamily: 'Plex Mono',
+				fontSize: 28,
+				color: COLOR_INK_SUBTLE,
+				paddingBottom: 12
+			}),
+			text('Kiez-Score', {
+				fontFamily: 'Plex Sans',
+				fontSize: 20,
+				color: COLOR_INK_MUTED,
+				textTransform: 'uppercase' as const,
+				letterSpacing: 0.5,
+				paddingBottom: 18,
+				marginLeft: 12
+			})
+		]
+	);
+}
+
+function dimCell(label: string, value: number | null): SatoriNode {
 	return node(
 		'div',
 		{
@@ -72,16 +124,16 @@ function statRow(stat: Top3StatCard): SatoriNode {
 			flex: 1
 		},
 		[
-			text(stat.label, {
+			text(label, {
 				fontFamily: 'Plex Sans',
-				fontSize: 18,
+				fontSize: 16,
 				color: COLOR_INK_SUBTLE,
 				textTransform: 'uppercase' as const,
 				letterSpacing: 0.4
 			}),
-			text(stat.value, {
+			text(formatScoreValue(value), {
 				fontFamily: 'Plex Mono',
-				fontSize: 30,
+				fontSize: 28,
 				color: COLOR_INK,
 				lineHeight: 1.2
 			})
@@ -89,18 +141,18 @@ function statRow(stat: Top3StatCard): SatoriNode {
 	);
 }
 
-function statsRow(stats: readonly Top3StatCard[]): SatoriNode {
+function dimsRow(scoreCard: ScoreCardData): SatoriNode {
 	return node(
 		'div',
 		{
 			display: 'flex',
 			flexDirection: 'row',
-			gap: 28,
+			gap: 24,
 			width: '100%',
-			paddingTop: 24,
+			paddingTop: 20,
 			borderTop: `2px solid ${COLOR_RULE}`
 		},
-		stats.map(statRow)
+		scoreCard.dims.map((d) => dimCell(d.label, d.value))
 	);
 }
 
@@ -136,11 +188,12 @@ interface PanelInput {
 	readonly mid?: SatoriNode;
 	readonly footerUrl: string;
 	readonly footerDate: string | null;
+	readonly logoDataUri?: string;
 }
 
 function panel(input: PanelInput): SatoriNode {
 	const children: SatoriNode[] = [
-		brandMark(),
+		brandMark(input.logoDataUri),
 		text(input.headline, {
 			fontFamily: 'Plex Serif',
 			fontSize: 64,
@@ -190,25 +243,30 @@ function root(panelNode: SatoriNode): SatoriNode {
 	);
 }
 
+function scoreMid(scoreCard: ScoreCardData): SatoriNode {
+	return node(
+		'div',
+		{ display: 'flex', flexDirection: 'column', gap: 16 },
+		[compositeHero(scoreCard.composite), dimsRow(scoreCard)]
+	);
+}
+
 export interface BezirkCardParams {
 	readonly bezirkName: string;
 	readonly slug: string;
-	readonly topStats: readonly Top3StatCard[];
+	readonly scoreCard: ScoreCardData;
+	readonly scoreUpdatedAt?: string | null;
+	readonly logoDataUri?: string;
 }
 
 export function buildBezirkCardVdom(params: BezirkCardParams): SatoriNode {
-	const newestStand =
-		params.topStats
-			.map((s) => s.sourceUpdatedAt)
-			.filter((d): d is string => typeof d === 'string')
-			.sort()
-			.at(-1) ?? null;
 	const panelNode = panel({
 		headline: params.bezirkName,
 		subline: 'Bezirk Berlin',
-		mid: statsRow(params.topStats),
+		mid: scoreMid(params.scoreCard),
 		footerUrl: `/bezirk/${params.slug}`,
-		footerDate: newestStand
+		footerDate: params.scoreUpdatedAt ?? null,
+		logoDataUri: params.logoDataUri
 	});
 	return root(panelNode);
 }
@@ -217,22 +275,19 @@ export interface KiezCardParams {
 	readonly kiezName: string;
 	readonly slug: string;
 	readonly parentBezirkName: string;
-	readonly topStats: readonly Top3StatCard[];
+	readonly scoreCard: ScoreCardData;
+	readonly scoreUpdatedAt?: string | null;
+	readonly logoDataUri?: string;
 }
 
 export function buildKiezCardVdom(params: KiezCardParams): SatoriNode {
-	const newestStand =
-		params.topStats
-			.map((s) => s.sourceUpdatedAt)
-			.filter((d): d is string => typeof d === 'string')
-			.sort()
-			.at(-1) ?? null;
 	const panelNode = panel({
 		headline: params.kiezName,
 		subline: `Kiez · ${params.parentBezirkName}`,
-		mid: statsRow(params.topStats),
+		mid: scoreMid(params.scoreCard),
 		footerUrl: `/kiez/${params.slug}`,
-		footerDate: newestStand
+		footerDate: params.scoreUpdatedAt ?? null,
+		logoDataUri: params.logoDataUri
 	});
 	return root(panelNode);
 }
@@ -244,6 +299,7 @@ export interface LayerCardParams {
 	readonly authority: string;
 	readonly license: string;
 	readonly sourceUpdatedAt: string;
+	readonly logoDataUri?: string;
 }
 
 function layerInfoRow(params: LayerCardParams): SatoriNode {
@@ -298,7 +354,8 @@ export function buildLayerCardVdom(params: LayerCardParams): SatoriNode {
 		subline: params.bundleGroup,
 		mid: layerInfoRow(params),
 		footerUrl: `/layer/${params.layerSlug}`,
-		footerDate
+		footerDate,
+		logoDataUri: params.logoDataUri
 	});
 	return root(panelNode);
 }
