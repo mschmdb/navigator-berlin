@@ -23,9 +23,17 @@
 
 	const pageTitle = $derived(`Bezirk ${name} · navigator.berlin`);
 	const numberDe = new Intl.NumberFormat('de-DE');
-	const pageDescription = $derived(
-		`Bezirk ${name}: ${numberDe.format(data.profile.einwohner)} Einwohner:innen, ${numberDe.format(data.profile.flaecheHa)} ha. Daten zu Wohnen, Umwelt, Klima und Mobilität.`
-	);
+	const pageDescription = $derived.by(() => {
+		const parts: string[] = [];
+		if (data.profile.einwohner > 0) {
+			parts.push(`${numberDe.format(data.profile.einwohner)} Einwohner:innen`);
+		}
+		if (data.profile.flaecheHa > 0) {
+			parts.push(`${numberDe.format(data.profile.flaecheHa)} ha`);
+		}
+		const suffix = parts.length > 0 ? `: ${parts.join(', ')}` : '';
+		return `Bezirk ${name}${suffix}. Daten zu Wohnen, Umwelt, Klima und Mobilität.`;
+	});
 
 	const placeJsonLd = $derived(
 		buildPlace({

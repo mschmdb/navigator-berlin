@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import center from '@turf/center';
+import turfArea from '@turf/area';
 import type { Feature, MultiPolygon, Polygon } from 'geojson';
 import type { BezirkProfile, Locale } from './types.js';
 import { loadManifest } from './manifest.js';
@@ -8,6 +9,15 @@ import { normalizeSlug } from './internal/slug.js';
 import { getLayersAtPoint } from './get-layers-at-point.js';
 
 const BEZIRKE_SLUG = 'bezirke';
+
+function readBezirkName(props: Record<string, unknown>): string | null {
+	const candidates = ['Gemeinde_name', 'NAME', 'name'] as const;
+	for (const key of candidates) {
+		const v = props[key];
+		if (typeof v === 'string' && v.length > 0) return v;
+	}
+	return null;
+}
 
 export async function getBezirkProfile(
 	_lang: Locale,
@@ -21,22 +31,31 @@ export async function getBezirkProfile(
 
 	const fc = await fetchLayer(layer.filename, fetchFn);
 	const feature = fc.features.find((f) => {
-		const name = (f.properties as Record<string, unknown>)?.NAME;
-		if (typeof name !== 'string') return false;
+		const name = readBezirkName((f.properties ?? {}) as Record<string, unknown>);
+		if (!name) return false;
 		return normalizeSlug(name) === normalized;
 	}) as Feature<Polygon | MultiPolygon> | undefined;
 
 	if (!feature) throw error(404, `Bezirk not found: ${slug}`);
 
-	const props = feature.properties as Record<string, unknown>;
+	const props = (feature.properties ?? {}) as Record<string, unknown>;
+	const name = readBezirkName(props) ?? slug;
 	const centroid = center(feature).geometry.coordinates as [number, number];
 	const coverage = await getLayersAtPoint(centroid[1], centroid[0], fetchFn);
 
+	const einwohnerRaw = props.EINWOHNER ?? props.einwohner;
+	const flaecheRaw = props.FLAECHE_HA ?? props.flaeche_ha;
+	const einwohner = typeof einwohnerRaw === 'number' ? einwohnerRaw : 0;
+	const flaecheHa =
+		typeof flaecheRaw === 'number'
+			? flaecheRaw
+			: Math.round(turfArea(feature) / 10000);
+
 	return {
 		slug: normalized,
-		name: String(props.NAME),
-		einwohner: Number(props.EINWOHNER ?? 0),
-		flaecheHa: Number(props.FLAECHE_HA ?? 0),
+		name,
+		einwohner,
+		flaecheHa,
 		centroid,
 		geometry: feature.geometry,
 		ortsteilSlugs: [],

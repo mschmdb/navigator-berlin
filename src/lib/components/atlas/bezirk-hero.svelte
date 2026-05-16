@@ -33,9 +33,16 @@
 	const { profile, stats, faq, ogImagePath }: Props = $props();
 
 	const numberDe = new Intl.NumberFormat('de-DE');
-	const leadText = $derived(
-		`Bezirk ${profile.name}, ${numberDe.format(profile.einwohner)} Einwohner:innen, ${numberDe.format(profile.flaecheHa)} ha. Daten zu Wohnen, Umwelt, Klima und Mobilität auf dieser Seite.`
-	);
+	const leadText = $derived.by(() => {
+		const parts: string[] = [`Bezirk ${profile.name}`];
+		if (profile.einwohner > 0) {
+			parts.push(`${numberDe.format(profile.einwohner)} Einwohner:innen`);
+		}
+		if (profile.flaecheHa > 0) {
+			parts.push(`${numberDe.format(profile.flaecheHa)} ha`);
+		}
+		return `${parts.join(', ')}. Daten zu Wohnen, Umwelt, Klima und Mobilität auf dieser Seite.`;
+	});
 
 	interface SteckbriefRow {
 		readonly cluster: string;
