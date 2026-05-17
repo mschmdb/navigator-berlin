@@ -23,6 +23,7 @@
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 	import { extractStreetName, formatAddressSubline } from './internal/address-subline.js';
+	import { trackEvent } from '$lib/utils/plausible.js';
 	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
 	import {
 		findAllNearestStops,
@@ -112,6 +113,7 @@
 			schemaVersion: 1,
 			bookmarks: ui.bookmarks
 		});
+		trackEvent('Bookmark', addr.bezirk ? { bezirk: addr.bezirk } : undefined);
 		inspectorSaveJustHappened = true;
 		if (inspectorSaveTimer) clearTimeout(inspectorSaveTimer);
 		inspectorSaveTimer = setTimeout(() => {
@@ -133,6 +135,7 @@
 
 	function openShare(): void {
 		shareOpen = true;
+		trackEvent('Share');
 	}
 
 	function closeShare(): void {
@@ -316,7 +319,10 @@
 				{#if featureFlags.compareMode}
 					<button
 						type="button"
-						onclick={() => toggleCompareMode(ui)}
+						onclick={() => {
+							if (!ui.compareMode) trackEvent('Compare');
+							toggleCompareMode(ui);
+						}}
 						data-testid="compare-trigger"
 						aria-label="Mit Adresse vergleichen"
 						aria-pressed={ui.compareMode}

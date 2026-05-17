@@ -2,6 +2,7 @@
 	import { Combobox as BitsCombobox } from 'bits-ui';
 	import Search from '@lucide/svelte/icons/search';
 	import { debounce } from '$lib/utils/debounce.js';
+	import { trackEvent } from '$lib/utils/plausible.js';
 	import type { GeocodeSuggestion } from '$lib/data';
 
 	type Variant = 'hero' | 'header';
@@ -61,7 +62,10 @@
 	items={suggestions.map((s) => ({ value: s.id, label: s.displayName }))}
 	onValueChange={(id) => {
 		const picked = suggestions.find((s) => s.id === id);
-		if (picked) onSelect?.(picked);
+		if (picked) {
+			trackEvent('Search', { source: variant });
+			onSelect?.(picked);
+		}
 	}}
 >
 	<div class="relative inline-block w-full">

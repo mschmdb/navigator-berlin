@@ -15,6 +15,7 @@
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
 	import { createPlexMarker } from '$lib/components/atlas/internal/map-markers.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
+	import { trackEvent } from '$lib/utils/plausible.js';
 	import { serializeViewport, serializeLayers } from '$lib/utils/url-state.js';
 	import { debounce } from '$lib/utils/debounce.js';
 	import { matchZoomForType } from '$lib/utils/zoom-mapping.js';
@@ -800,6 +801,7 @@
 			return;
 		}
 		locating = true;
+		trackEvent('Locate');
 		try {
 			const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
 				navigator.geolocation.getCurrentPosition(resolve, reject, {

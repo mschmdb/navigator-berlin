@@ -9,13 +9,14 @@
  * `home-quick-links.test.ts` validiert dass die Werte stabil bleiben (kein
  * Auswurf ausserhalb Berlin-Bbox + WGS84-Plausibilität).
  *
- * Editorial-Auswahl per Memory `project_parallel_wave_plan` (2.12 spec):
- * Brandenburger Tor / Alexanderplatz / Görlitzer Park / Tempelhofer Feld /
- * Schloss Charlottenburg. Klassische Touri-/Civic-Anker quer durch die
- * Bezirke damit Demo-Klick immer was Bekanntes trifft.
+ * Editorial-Auswahl per User-Copy-Revision 2026-05-17:
+ * Pariser Platz / Görlitzer Park / Tempelhofer Feld / Hermannplatz / Frohnau.
+ * Mix aus Touri-Anker, Park-mit-Debatte, Freifläche, Innenstadt-Knoten und
+ * Nord-Stadtrand für Daten-Bandbreiten-Demo.
  */
 export interface HomeQuickLink {
 	readonly label: string;
+	readonly description: string;
 	readonly query: string;
 	readonly lng: number;
 	readonly lat: number;
@@ -23,34 +24,44 @@ export interface HomeQuickLink {
 
 export const HOME_QUICK_LINKS: readonly HomeQuickLink[] = [
 	{
-		label: 'Brandenburger Tor',
+		label: 'Pariser Platz',
+		description:
+			'Touristenmagnet am Brandenburger Tor. Wie die Daten den Ort beschreiben, an dem jeder schon einmal stand.',
 		query: 'Pariser Platz, 10117 Berlin',
 		lng: 13.3777,
 		lat: 52.5163
 	},
 	{
-		label: 'Alexanderplatz',
-		query: 'Alexanderplatz, 10178 Berlin',
-		lng: 13.4127,
-		lat: 52.5219
-	},
-	{
 		label: 'Görlitzer Park',
+		description:
+			'Kreuzberger Park, Dauerthema in der Stadtdebatte. Lärm, Grün und soziale Lage an einem Punkt.',
 		query: 'Görlitzer Park, 10997 Berlin',
 		lng: 13.4395,
 		lat: 52.4986
 	},
 	{
 		label: 'Tempelhofer Feld',
+		description:
+			'Stillgelegter Flughafen, heute Berlins größte Freifläche. Kühler als die Umgebung, sichtbar im Klima-Atlas.',
 		query: 'Tempelhofer Feld, 12101 Berlin',
 		lng: 13.4019,
 		lat: 52.4757
 	},
 	{
-		label: 'Schloss Charlottenburg',
-		query: 'Spandauer Damm 20-24, 14059 Berlin',
-		lng: 13.2966,
-		lat: 52.5208
+		label: 'Hermannplatz',
+		description:
+			'Knotenpunkt zwischen Kreuzberg und Neukölln, U7 kreuzt U8. Wie eine dichte Innenstadtkreuzung in den Daten aussieht.',
+		query: 'Hermannplatz, 10967 Berlin',
+		lng: 13.4239,
+		lat: 52.4861
+	},
+	{
+		label: 'Frohnau',
+		description:
+			'Villenort im Norden Reinickendorfs, hinter dem Bahnhof beginnt Brandenburg. Wie stark sich Berlin nach Norden verändert.',
+		query: 'Bahnhof Frohnau, 13465 Berlin',
+		lng: 13.2837,
+		lat: 52.6311
 	}
 ];
 

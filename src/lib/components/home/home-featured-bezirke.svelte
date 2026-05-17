@@ -19,10 +19,10 @@
 	</header>
 	<ul class="grid gap-4 md:grid-cols-2">
 		{#each HOME_FEATURED_BEZIRKE as b (b.slug)}
-			<li>
+			<li class="flex">
 				<a
 					href={`/bezirk/${b.slug}`}
-					class="group flex flex-col gap-2 rounded border border-rule p-5 hover:border-accent"
+					class="group flex h-full w-full flex-col gap-2 rounded border border-rule p-5 hover:border-accent"
 				>
 					<span class="flex items-center justify-between gap-2">
 						<span class="font-serif text-xl text-ink group-hover:text-accent">{b.displayName}</span>

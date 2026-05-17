@@ -13,9 +13,9 @@
 
 <section data-testid="home-quick-links" class="space-y-4">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">5 Adressen zum Probieren</h2>
+		<h2 class="font-serif text-2xl text-ink md:text-3xl">Fünf Orte zum Anfangen</h2>
 		<p class="font-serif text-base text-ink-muted">
-			Klick öffnet die Karte mit ausgewählter Adresse und allen Daten-Schichten am Punkt.
+			Ein Klick öffnet die Karte am Punkt, mit allen Daten-Schichten daneben.
 		</p>
 	</header>
 	<ul class="flex flex-wrap gap-2">
@@ -24,6 +24,7 @@
 				<a
 					href={buildQuickLinkHref(q)}
 					data-testid={`home-quick-link-${q.label}`}
+					title={q.description}
 					class="inline-flex items-center gap-2 rounded border border-rule px-3 py-2 font-sans text-sm text-ink hover:border-accent hover:text-accent"
 				>
 					<MapPin size={14} aria-hidden="true" />
