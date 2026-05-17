@@ -21,8 +21,13 @@ const config = {
 			// Wir warnen, statt zu fehlen.
 			handleHttpError: ({ path, referrer, message }) => {
 				const KNOWN_MISSING = ['/datenschutz', '/impressum', '/architektur'];
+				const COMPOSITE_LAYER_SLUGS = ['oepnv-composite'];
 				if (KNOWN_MISSING.some((p) => path === p || path.startsWith(`${p}#`))) {
 					console.warn(`[prerender] Warning: ${message} (referrer: ${referrer})`);
+					return;
+				}
+				if (COMPOSITE_LAYER_SLUGS.some((s) => path === `/layer/${s}`)) {
+					console.warn(`[prerender] Composite layer not yet routable: ${path} (referrer: ${referrer})`);
 					return;
 				}
 				throw new Error(message);
