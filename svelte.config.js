@@ -11,6 +11,10 @@ const config = {
 		adapter: adapter(),
 		experimental: { remoteFunctions: true },
 		prerender: {
+			// Production-Origin für robots.txt/sitemap.xml während Prerender. Ohne diesen
+			// Override liefert `url.origin` `http://sveltekit-prerender` (SvelteKit-Default)
+			// → robots.txt + sitemap-index verlinken kaputt.
+			origin: 'https://navigator.berlin',
 			// `robots.txt`, `sitemap.xml`, `sitemap-de.xml` haben keine internen Links und
 			// werden vom Crawler nicht entdeckt. Story 2.1 zwingt sie als Entry-Points
 			// in den prerender. Falls weitere standalone-Endpoints dazukommen, hier ergaenzen.
