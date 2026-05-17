@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 
 	const pageTitle = 'Methodik des Kiez-Scores - Berlin in Daten - navigator.berlin';
@@ -80,10 +82,14 @@
 	];
 </script>
 
-<svelte:head>
-	<title>{pageTitle}</title>
-	<meta name="description" content={pageDescription} />
-</svelte:head>
+<SeoHead
+	title={pageTitle}
+	description={pageDescription}
+	pathname={page.url.pathname}
+	origin={page.url.origin}
+	ogImage={`${page.url.origin}/og/page/methodik-kiez-score.png`}
+	ogImageAlt="navigator.berlin Kiez-Score Methodik"
+/>
 
 <article
 	data-testid="methodik-kiez-score-page"

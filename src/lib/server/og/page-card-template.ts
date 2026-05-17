@@ -1,18 +1,20 @@
 /**
- * Satori-VDOM-Templates für Bezirks-, Kiez- und Layer-OG-Karten (Story 2.6,
- * Score-Card-Pivot 2026-05-16: Bezirk + Kiez tragen jetzt Kiez-Score-Composite
- * + 4 Dimensionen statt Top-3-Aggregate; Soziale-Lage off-card per Stigma-
- * Schutz). Layer-Card behält Quelle/Lizenz/Stand-Layout aus Story 2.6.
+ * Satori-VDOM-Templates für OG-Cards: Bezirk/Kiez (Score-Hero + Dim-Bars),
+ * Layer (Quelle/Lizenz/Stand), Page (Hero-Typo + Body).
  *
- * Layout (Bezirk/Kiez):
- *   - 1200×630 Root mit Brand-Color-Background.
- *   - 720 px Panel-Card linksbündig mit:
- *     Logo + Brand-Mark · Headline (Plex-Serif) · Sub-Line · Composite-Hero
- *     · 4 Dim-Mini · Footer (URL + Stand).
+ * Render-Resolution = 1200×630 (OG-Spec). Supersample-then-Downsample passiert
+ * in `render-page-card.ts` (Satori bei 1200×630 → resvg zoom 2 → sharp lanczos3
+ * downsample → 1200×630 PNG). Direkt-2×-Auslieferung war blurry weil
+ * LinkedIn/Twitter aggressiv re-encoden (Vercel-Issue #60813).
  *
- * Font-Loading via `loadDefaultOgFonts` aus Story 1.20 (Memory
- * `project_satori_font_pipeline`: kein woff2 direkt, kein Variable-Font,
- * sequenzielles wawoff2). Pure-VDOM, IO im Aufrufer.
+ * Layout-Grundprinzip (2026-05-17 Redesign):
+ *   - Hero-Typografie füllt links ~60 % der Breite
+ *   - Right-Half: Data-Viz (dim-bars) oder Watermark (Berlin-Outline)
+ *   - Accent-Footer-Strip ankert die Komposition
+ *   - 70 % Whitespace = vermeiden
+ *
+ * Font-Loading via Story-1.20-Pipeline (Memory `project_satori_font_pipeline`).
+ * Pure-VDOM, IO im Aufrufer.
  *
  * Tests in `./page-card-template.test.ts`.
  */
@@ -20,20 +22,21 @@
 import type { ScoreCardData } from './score-card-data.js';
 import { formatScoreValue } from './score-card-data.js';
 
-// Render-Resolution. OG-Spec ist 1200×630, aber LinkedIn/Twitter scalen
-// mehrfach (Feed-Card 480×252, Detail 1200×630). 2× rendern + Server
-// liefert hi-res = sharper auf hi-DPI-Displays + bei LinkedIn-Re-Compression.
-// og:image:width/height-Meta-Tag bleibt 1200×630 (Spec-Konformität).
-export const OG_WIDTH = 2400;
-export const OG_HEIGHT = 1260;
+// OG-Spec-Dimensions. Supersample im Render-Layer, hier 1× authoring.
+export const OG_WIDTH = 1200;
+export const OG_HEIGHT = 630;
 
 const COLOR_BG = '#ECEAE0';
-const COLOR_PANEL = 'rgba(236, 234, 224, 0.92)';
 const COLOR_INK = '#141414';
 const COLOR_INK_MUTED = '#4A4A46';
 const COLOR_INK_SUBTLE = '#5F5F5A';
 const COLOR_RULE = '#C8C6BB';
 const COLOR_ACCENT = '#2A3F7C';
+const COLOR_ACCENT_SOFT = '#D8D5C7';
+
+const PAD_X = 56;
+const PAD_Y = 44;
+const FOOTER_HEIGHT = 56;
 
 export interface SatoriNode {
 	type: string;
@@ -62,24 +65,34 @@ function img(src: string, style: Record<string, unknown>): SatoriNode {
 function brandMark(): SatoriNode {
 	return text('navigator.berlin', {
 		fontFamily: 'Plex Mono',
-		fontSize: 22,
+		fontSize: 14,
 		color: COLOR_ACCENT,
 		fontWeight: 600,
-		letterSpacing: 0.5,
+		letterSpacing: 0.6,
 		textTransform: 'uppercase' as const
 	});
 }
 
-function headerRow(logoDataUri: string | undefined): SatoriNode {
+function watermark(dataUri: string, opacity: number): SatoriNode {
+	return img(dataUri, {
+		position: 'absolute',
+		right: -90,
+		top: 60,
+		width: 540,
+		height: 540,
+		opacity
+	});
+}
+
+function headerBrand(logoDataUri: string | undefined): SatoriNode {
 	const children: SatoriNode[] = [brandMark()];
 	if (logoDataUri) {
 		children.push(
 			img(logoDataUri, {
-				width: 140,
-				height: 105,
+				width: 64,
+				height: 48,
 				display: 'flex',
-				marginLeft: 'auto',
-				marginTop: -8
+				marginLeft: 'auto'
 			})
 		);
 	}
@@ -88,11 +101,67 @@ function headerRow(logoDataUri: string | undefined): SatoriNode {
 		{
 			display: 'flex',
 			flexDirection: 'row',
-			alignItems: 'flex-start',
+			alignItems: 'center',
 			justifyContent: 'space-between',
 			width: '100%'
 		},
 		children
+	);
+}
+
+function titleBlock(headline: string, subline: string, maxWidth: number): SatoriNode {
+	return node(
+		'div',
+		{ display: 'flex', flexDirection: 'column', marginTop: 16 },
+		[
+			text(headline, {
+				fontFamily: 'Plex Serif',
+				fontSize: 64,
+				color: COLOR_INK,
+				lineHeight: 1.02,
+				maxWidth,
+				fontWeight: 600
+			}),
+			text(subline, {
+				fontFamily: 'Plex Sans',
+				fontSize: 18,
+				color: COLOR_INK_MUTED,
+				marginTop: 8,
+				textTransform: 'uppercase' as const,
+				letterSpacing: 1
+			})
+		]
+	);
+}
+
+function footerStrip(urlPath: string, standDate: string | null): SatoriNode {
+	return node(
+		'div',
+		{
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			width: '100%',
+			height: FOOTER_HEIGHT,
+			paddingLeft: PAD_X,
+			paddingRight: PAD_X,
+			backgroundColor: COLOR_ACCENT
+		},
+		[
+			text(urlPath || '/', {
+				fontFamily: 'Plex Mono',
+				fontSize: 16,
+				color: '#FFFFFF',
+				fontWeight: 500
+			}),
+			text(standDate ? `Stand ${standDate}` : 'navigator.berlin', {
+				fontFamily: 'Plex Mono',
+				fontSize: 14,
+				color: '#E8E5D8',
+				letterSpacing: 0.4
+			})
+		]
 	);
 }
 
@@ -101,181 +170,201 @@ function compositeHero(composite: number | null): SatoriNode {
 		'div',
 		{
 			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'flex-end',
-			gap: 14,
-			paddingTop: 12
+			flexDirection: 'column',
+			alignItems: 'flex-start'
 		},
 		[
-			text(formatScoreValue(composite), {
-				fontFamily: 'Plex Serif',
-				fontSize: 96,
-				color: COLOR_INK,
-				lineHeight: 1
-			}),
-			text('/ 100', {
-				fontFamily: 'Plex Mono',
-				fontSize: 28,
-				color: COLOR_INK_SUBTLE,
-				paddingBottom: 12
-			}),
+			node(
+				'div',
+				{
+					display: 'flex',
+					flexDirection: 'row',
+					alignItems: 'baseline',
+					gap: 8
+				},
+				[
+					text(formatScoreValue(composite), {
+						fontFamily: 'Plex Serif',
+						fontSize: 180,
+						color: COLOR_INK,
+						lineHeight: 0.9,
+						fontWeight: 600
+					}),
+					text('/ 100', {
+						fontFamily: 'Plex Mono',
+						fontSize: 28,
+						color: COLOR_INK_SUBTLE,
+						fontWeight: 500
+					})
+				]
+			),
 			text('Kiez-Score', {
 				fontFamily: 'Plex Sans',
-				fontSize: 20,
-				color: COLOR_INK_MUTED,
+				fontSize: 16,
+				color: COLOR_ACCENT,
 				textTransform: 'uppercase' as const,
-				letterSpacing: 0.5,
-				paddingBottom: 18,
-				marginLeft: 12
+				letterSpacing: 2,
+				marginTop: 4,
+				fontWeight: 600
 			})
 		]
 	);
 }
 
-function dimCell(label: string, value: number | null): SatoriNode {
+function dimBar(label: string, value: number | null): SatoriNode {
+	const pct = typeof value === 'number' && Number.isFinite(value)
+		? Math.max(0, Math.min(100, value))
+		: 0;
+	const valueLabel = formatScoreValue(value);
 	return node(
 		'div',
 		{
 			display: 'flex',
-			flexDirection: 'column',
-			gap: 4,
-			minWidth: 0,
-			flex: 1
+			flexDirection: 'row',
+			alignItems: 'center',
+			gap: 14,
+			width: '100%'
 		},
 		[
 			text(label, {
 				fontFamily: 'Plex Sans',
-				fontSize: 16,
+				fontSize: 14,
 				color: COLOR_INK_SUBTLE,
 				textTransform: 'uppercase' as const,
-				letterSpacing: 0.4
+				letterSpacing: 1,
+				width: 110,
+				fontWeight: 600
 			}),
-			text(formatScoreValue(value), {
+			node(
+				'div',
+				{
+					display: 'flex',
+					flex: 1,
+					height: 10,
+					backgroundColor: COLOR_ACCENT_SOFT,
+					borderRadius: 5
+				},
+				[
+					node(
+						'div',
+						{
+							display: 'flex',
+							width: `${pct}%`,
+							height: 10,
+							backgroundColor: COLOR_ACCENT,
+							borderRadius: 5
+						},
+						[]
+					)
+				]
+			),
+			text(valueLabel, {
 				fontFamily: 'Plex Mono',
-				fontSize: 28,
+				fontSize: 22,
 				color: COLOR_INK,
-				lineHeight: 1.2
+				width: 48,
+				textAlign: 'right' as const,
+				fontWeight: 500
 			})
 		]
 	);
 }
 
-function dimsRow(scoreCard: ScoreCardData): SatoriNode {
-	return node(
-		'div',
-		{
-			display: 'flex',
-			flexDirection: 'row',
-			gap: 24,
-			width: '100%',
-			paddingTop: 20,
-			borderTop: `2px solid ${COLOR_RULE}`
-		},
-		scoreCard.dims.map((d) => dimCell(d.label, d.value))
-	);
-}
-
-function footer(urlPath: string, standDate: string | null): SatoriNode {
-	return node(
-		'div',
-		{
-			display: 'flex',
-			justifyContent: 'space-between',
-			alignItems: 'center',
-			paddingTop: 20,
-			borderTop: `1px solid ${COLOR_RULE}`,
-			width: '100%'
-		},
-		[
-			text(urlPath, {
-				fontFamily: 'Plex Mono',
-				fontSize: 18,
-				color: COLOR_ACCENT
-			}),
-			text(standDate ? `Stand ${standDate}` : 'Stand: navigator.berlin', {
-				fontFamily: 'Plex Mono',
-				fontSize: 16,
-				color: COLOR_INK_SUBTLE
-			})
-		]
-	);
-}
-
-interface PanelInput {
-	readonly headline: string;
-	readonly subline: string;
-	readonly mid?: SatoriNode;
-	readonly footerUrl: string;
-	readonly footerDate: string | null;
-	readonly logoDataUri?: string;
-}
-
-function panel(input: PanelInput): SatoriNode {
-	const titleBlock = node(
-		'div',
-		{ display: 'flex', flexDirection: 'column', marginTop: 36 },
-		[
-			text(input.headline, {
-				fontFamily: 'Plex Serif',
-				fontSize: 72,
-				color: COLOR_INK,
-				lineHeight: 1.05,
-				maxWidth: 900
-			}),
-			text(input.subline, {
-				fontFamily: 'Plex Sans',
-				fontSize: 24,
-				color: COLOR_INK_MUTED,
-				marginTop: 12
-			})
-		]
-	);
-
-	const children: SatoriNode[] = [headerRow(input.logoDataUri), titleBlock];
-	if (input.mid) {
-		children.push(
-			node('div', { display: 'flex', marginTop: 40, width: '100%' }, input.mid)
-		);
-	}
-	children.push(
-		node('div', { display: 'flex', marginTop: 'auto', width: '100%' }, footer(input.footerUrl, input.footerDate))
-	);
-
+function dimBarStack(scoreCard: ScoreCardData): SatoriNode {
 	return node(
 		'div',
 		{
 			display: 'flex',
 			flexDirection: 'column',
-			width: OG_WIDTH,
-			height: OG_HEIGHT,
-			padding: 56,
-			backgroundColor: COLOR_PANEL,
-			fontFamily: 'Plex Sans',
-			color: COLOR_INK
+			gap: 16,
+			width: '100%'
 		},
-		children
+		scoreCard.dims.map((d) => dimBar(d.label, d.value))
 	);
 }
 
-function root(panelNode: SatoriNode): SatoriNode {
+function scoreSplitRow(scoreCard: ScoreCardData): SatoriNode {
 	return node(
 		'div',
 		{
-			width: OG_WIDTH,
-			height: OG_HEIGHT,
 			display: 'flex',
 			flexDirection: 'row',
-			backgroundColor: COLOR_BG
+			alignItems: 'center',
+			gap: 48,
+			width: '100%',
+			marginTop: 12
 		},
-		[panelNode]
+		[
+			node(
+				'div',
+				{ display: 'flex', width: 340, flexShrink: 0 },
+				compositeHero(scoreCard.composite)
+			),
+			node(
+				'div',
+				{ display: 'flex', flex: 1, flexDirection: 'column' },
+				dimBarStack(scoreCard)
+			)
+		]
 	);
 }
 
-function scoreMid(scoreCard: ScoreCardData): SatoriNode {
+interface CanvasOptions {
+	readonly mid: SatoriNode;
+	readonly headline: string;
+	readonly subline: string;
+	readonly footerUrl: string;
+	readonly footerDate: string | null;
+	readonly logoDataUri?: string;
+	readonly watermarkDataUri?: string;
+	readonly watermarkOpacity?: number;
+	readonly headlineMaxWidth?: number;
+}
+
+function canvas(opts: CanvasOptions): SatoriNode {
+	const contentChildren: SatoriNode[] = [
+		headerBrand(opts.logoDataUri),
+		titleBlock(opts.headline, opts.subline, opts.headlineMaxWidth ?? 1000),
+		node('div', { display: 'flex', flex: 1, width: '100%', marginTop: 24 }, opts.mid)
+	];
+
+	const layers: SatoriNode[] = [];
+	if (opts.watermarkDataUri) {
+		layers.push(watermark(opts.watermarkDataUri, opts.watermarkOpacity ?? 0.12));
+	}
+	layers.push(
+		node(
+			'div',
+			{
+				position: 'relative',
+				display: 'flex',
+				flexDirection: 'column',
+				width: '100%',
+				flex: 1,
+				paddingLeft: PAD_X,
+				paddingRight: PAD_X,
+				paddingTop: PAD_Y,
+				paddingBottom: PAD_Y,
+				fontFamily: 'Plex Sans',
+				color: COLOR_INK
+			},
+			contentChildren
+		)
+	);
+	layers.push(footerStrip(opts.footerUrl, opts.footerDate));
+
 	return node(
 		'div',
-		{ display: 'flex', flexDirection: 'column', gap: 16 },
-		[compositeHero(scoreCard.composite), dimsRow(scoreCard)]
+		{
+			position: 'relative',
+			width: OG_WIDTH,
+			height: OG_HEIGHT,
+			display: 'flex',
+			flexDirection: 'column',
+			backgroundColor: COLOR_BG,
+			overflow: 'hidden'
+		},
+		layers
 	);
 }
 
@@ -285,18 +374,20 @@ export interface BezirkCardParams {
 	readonly scoreCard: ScoreCardData;
 	readonly scoreUpdatedAt?: string | null;
 	readonly logoDataUri?: string;
+	readonly watermarkDataUri?: string;
 }
 
 export function buildBezirkCardVdom(params: BezirkCardParams): SatoriNode {
-	const panelNode = panel({
+	return canvas({
 		headline: params.bezirkName,
-		subline: 'Bezirk Berlin',
-		mid: scoreMid(params.scoreCard),
+		subline: 'Bezirk Berlin · Kiez-Score',
+		mid: scoreSplitRow(params.scoreCard),
 		footerUrl: `/bezirk/${params.slug}`,
 		footerDate: params.scoreUpdatedAt ?? null,
-		logoDataUri: params.logoDataUri
+		logoDataUri: params.logoDataUri,
+		watermarkDataUri: params.watermarkDataUri,
+		watermarkOpacity: 0.08
 	});
-	return root(panelNode);
 }
 
 export interface KiezCardParams {
@@ -306,18 +397,21 @@ export interface KiezCardParams {
 	readonly scoreCard: ScoreCardData;
 	readonly scoreUpdatedAt?: string | null;
 	readonly logoDataUri?: string;
+	readonly watermarkDataUri?: string;
 }
 
 export function buildKiezCardVdom(params: KiezCardParams): SatoriNode {
-	const panelNode = panel({
+	return canvas({
 		headline: params.kiezName,
 		subline: `Kiez · ${params.parentBezirkName}`,
-		mid: scoreMid(params.scoreCard),
+		mid: scoreSplitRow(params.scoreCard),
 		footerUrl: `/kiez/${params.slug}`,
 		footerDate: params.scoreUpdatedAt ?? null,
-		logoDataUri: params.logoDataUri
+		logoDataUri: params.logoDataUri,
+		watermarkDataUri: params.watermarkDataUri,
+		watermarkOpacity: 0.08,
+		headlineMaxWidth: 900
 	});
-	return root(panelNode);
 }
 
 export interface LayerCardParams {
@@ -328,30 +422,34 @@ export interface LayerCardParams {
 	readonly license: string;
 	readonly sourceUpdatedAt: string;
 	readonly logoDataUri?: string;
+	readonly watermarkDataUri?: string;
+}
+
+function layerInfoCell(label: string, value: string): SatoriNode {
+	return node(
+		'div',
+		{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0, flex: 1 },
+		[
+			text(label, {
+				fontFamily: 'Plex Sans',
+				fontSize: 12,
+				color: COLOR_INK_SUBTLE,
+				textTransform: 'uppercase' as const,
+				letterSpacing: 1.2,
+				fontWeight: 600
+			}),
+			text(value, {
+				fontFamily: 'Plex Mono',
+				fontSize: 18,
+				color: COLOR_INK,
+				lineHeight: 1.3,
+				maxWidth: 280
+			})
+		]
+	);
 }
 
 function layerInfoRow(params: LayerCardParams): SatoriNode {
-	const cell = (label: string, value: string): SatoriNode =>
-		node(
-			'div',
-			{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, flex: 1 },
-			[
-				text(label, {
-					fontFamily: 'Plex Sans',
-					fontSize: 16,
-					color: COLOR_INK_SUBTLE,
-					textTransform: 'uppercase' as const,
-					letterSpacing: 0.4
-				}),
-				text(value, {
-					fontFamily: 'Plex Mono',
-					fontSize: 20,
-					color: COLOR_INK,
-					lineHeight: 1.25,
-					maxWidth: 280
-				})
-			]
-		);
 	const standValue = params.sourceUpdatedAt && params.sourceUpdatedAt.length > 0
 		? params.sourceUpdatedAt
 		: '–';
@@ -360,17 +458,35 @@ function layerInfoRow(params: LayerCardParams): SatoriNode {
 		{
 			display: 'flex',
 			flexDirection: 'row',
-			gap: 24,
+			gap: 32,
 			width: '100%',
-			paddingTop: 24,
+			paddingTop: 20,
+			marginTop: 'auto',
 			borderTop: `2px solid ${COLOR_RULE}`
 		},
 		[
-			cell('Quelle', params.authority),
-			cell('Lizenz', params.license),
-			cell('Stand', standValue)
+			layerInfoCell('Quelle', params.authority),
+			layerInfoCell('Lizenz', params.license),
+			layerInfoCell('Stand', standValue)
 		]
 	);
+}
+
+export function buildLayerCardVdom(params: LayerCardParams): SatoriNode {
+	const footerDate = params.sourceUpdatedAt && params.sourceUpdatedAt.length > 0
+		? params.sourceUpdatedAt
+		: null;
+	return canvas({
+		headline: params.layerLabel,
+		subline: params.bundleGroup,
+		mid: layerInfoRow(params),
+		footerUrl: `/layer/${params.layerSlug}`,
+		footerDate,
+		logoDataUri: params.logoDataUri,
+		watermarkDataUri: params.watermarkDataUri,
+		watermarkOpacity: 0.06,
+		headlineMaxWidth: 1000
+	});
 }
 
 export interface PageCardParams {
@@ -380,53 +496,39 @@ export interface PageCardParams {
 	readonly footerUrl: string;
 	readonly footerDate?: string | null;
 	readonly logoDataUri?: string;
+	readonly watermarkDataUri?: string;
 }
 
-function pageBodyText(body: string): SatoriNode {
+function pageBody(body: string): SatoriNode {
 	return node(
 		'div',
 		{
 			display: 'flex',
 			flexDirection: 'column',
 			width: '100%',
-			paddingTop: 24,
-			borderTop: `2px solid ${COLOR_RULE}`
+			maxWidth: 760
 		},
 		[
 			text(body, {
 				fontFamily: 'Plex Serif',
-				fontSize: 26,
+				fontSize: 24,
 				color: COLOR_INK,
-				lineHeight: 1.4,
-				maxWidth: '100%'
+				lineHeight: 1.45
 			})
 		]
 	);
 }
 
 export function buildPageCardVdom(params: PageCardParams): SatoriNode {
-	const panelNode = panel({
+	return canvas({
 		headline: params.headline,
 		subline: params.subline,
-		mid: pageBodyText(params.body),
+		mid: pageBody(params.body),
 		footerUrl: params.footerUrl,
 		footerDate: params.footerDate ?? null,
-		logoDataUri: params.logoDataUri
+		logoDataUri: params.logoDataUri,
+		watermarkDataUri: params.watermarkDataUri,
+		watermarkOpacity: 0.14,
+		headlineMaxWidth: 760
 	});
-	return root(panelNode);
-}
-
-export function buildLayerCardVdom(params: LayerCardParams): SatoriNode {
-	const footerDate = params.sourceUpdatedAt && params.sourceUpdatedAt.length > 0
-		? params.sourceUpdatedAt
-		: null;
-	const panelNode = panel({
-		headline: params.layerLabel,
-		subline: params.bundleGroup,
-		mid: layerInfoRow(params),
-		footerUrl: `/layer/${params.layerSlug}`,
-		footerDate,
-		logoDataUri: params.logoDataUri
-	});
-	return root(panelNode);
 }

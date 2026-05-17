@@ -132,6 +132,8 @@
 	description="Lizenzen der Geo-Daten und der verwendeten Software."
 	pathname={page.url.pathname}
 	origin={page.url.origin}
+	ogImage={`${page.url.origin}/og/page/lizenzen.png`}
+	ogImageAlt="navigator.berlin Lizenzen"
 />
 
 <article

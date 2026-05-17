@@ -8,6 +8,8 @@
 	description="navigator.berlin läuft auf einem EU-FOSS-Stack: Open-Source-Software, Hosting in Deutschland, keine US-Cloud-Anbieter, kein Tracking."
 	pathname={page.url.pathname}
 	origin={page.url.origin}
+	ogImage={`${page.url.origin}/og/page/architektur.png`}
+	ogImageAlt="navigator.berlin Architektur"
 />
 
 <main class="mx-auto max-w-2xl px-4 py-12">

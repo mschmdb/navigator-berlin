@@ -55,6 +55,8 @@
 	description={pageDescription}
 	pathname={page.url.pathname}
 	origin={page.url.origin}
+	ogImage={`${page.url.origin}/og/layer/${detail.slug}.png`}
+	ogImageAlt={`Layer ${detail.layerName}`}
 />
 <JsonLd data={datasetJsonLd} testid="layer-dataset-jsonld" />
 

@@ -214,24 +214,24 @@ development_status:
   # Epic 4: EU-FOSS Hosting + Compliance-Showcase
   epic-4: in-progress
   4-1-hetzner-cpx22-coolify-traefik-postgres-production-setup: done  # 2026-05-17: live https://navigator.berlin (CPX22 Falkenstein, Coolify v4 + Traefik + Postgres-17), backup-cron weekly→CAX21, runbook docs/runbooks/server-bootstrap.md, 198 OG-PNGs pre-generated
-  4-2-security-hardening-tls-csp-headers-crowdsec: ready-for-dev
+  4-2-security-hardening-tls-csp-headers-crowdsec: done  # 2026-05-17: pragmatic-scope per user (kein CrowdSec/Strict-CSP/GPG-Backup — public Berlin-geo-data, kein Auth/PII). Live: HSTS 2y+preload, X-Frame-DENY, X-CTO nosniff, Referrer strict-origin-when-cross-origin, Permissions-Policy. Docker-Log-Rotation 10m×3=30MB/Container Default reicht. Basic-Auth-Lock auf App-Layer aktiv bis Hard-Launch. Plausible-Future-Note (project_plausible_future) für CSP-Phase-2.
   4-3-github-actions-ci-8-gates-lefthook: ready-for-dev
   4-4-adr-nachzieher-disaster-recovery-runbooks: ready-for-dev
-  4-5-lizenzen-page-en-variante-auto-gen-coverage-test: ready-for-dev
-  4-6-compliance-pages-impressum-datenschutz-barrierefreiheit-de-en: ready-for-dev
-  4-7-architektur-page-eu-foss-showcase-de-en: ready-for-dev
+  4-5-lizenzen-page-en-variante-auto-gen-coverage-test: done  # 2026-05-17: lizenzen-Page existiert seit 1.x mit voller daten-lizenz/software/schriften/osm-namensnennung-Abdeckung. EN-Variante per project_i18n_phase_1_de_only gestrichen (DE-only).
+  4-6-compliance-pages-impressum-datenschutz-barrierefreiheit-de-en: done  # 2026-05-17: Impressum nach § 5 TMG + § 18 MStV, Datenschutz mit #bookmarks-Anchor für LocalStorage-Aufklärung, beide DE-only. Barrierefreiheit fehlt noch — wenn Hard-Launch BFSG-Submission braucht, separate Mini-Story 4.6b.
+  4-7-architektur-page-eu-foss-showcase-de-en: done  # 2026-05-17: 8 Sections EU-FOSS-Stack (Hosting/Proxy/App/Daten/Security/Build/Backup/NICHT-Stack). DE-only.
   epic-4-retrospective: optional
 
   # Epic 5: Distribution + Pflege + Owner-Realisation
   epic-5: in-progress
-  5-1-update-cadence-adr-github-actions-schedule: ready-for-dev
-  5-2-brand-asset-pack-press-kit: ready-for-dev
-  5-3-launch-sequencing-plan-channel-material: ready-for-dev
-  5-4-post-launch-monitoring-eu-foss: ready-for-dev
-  5-5-backup-restore-drill-staging: ready-for-dev
-  5-6-gdpr-dpia-dokument-beratungs-asset: ready-for-dev
-  5-7-sitemap-submission-search-console-setup: ready-for-dev
-  5-8-public-update-skill: ready-for-dev
+  5-1-update-cadence-adr-github-actions-schedule: deferred-to-epic-7  # 2026-05-17 user-decision: bundle mit Epic 7 Knowledge-Layer-Foundation (7-1 Auto-Doc-Skill thematisch passend)
+  5-2-brand-asset-pack-press-kit: deferred  # 2026-05-17 user-decision: irgendwann, kein Launch-Blocker
+  5-3-launch-sequencing-plan-channel-material: deferred  # 2026-05-17 user-decision: irgendwann
+  5-4-post-launch-monitoring-eu-foss: deferred  # 2026-05-17 user-decision: Plausible reicht für Monitoring-Visibility
+  5-5-backup-restore-drill-staging: done  # 2026-05-17 drill PASS — pg-2026-05-17.sql.gz restored in throwaway postgres:17-alpine, alle 5 Tabellen mit exakten Counts (143 kieze, 12 bezirke, 4091 faqs, 143 stats, 12 bezirk-stats). Recovery-Pfad verifiziert.
+  5-6-gdpr-dpia-dokument-beratungs-asset: cancelled  # 2026-05-17 user-decision: nicht relevant für nicht-kommerziellen Single-Maintainer
+  5-7-sitemap-submission-search-console-setup: done  # 2026-05-17 user hat GSC + Bing verifiziert + Sitemap submitted
+  5-8-public-update-skill: done  # 2026-05-17: /publish-update Skill complete. 7 test-files / 58 tests (TDD), 6 pure-funcs + 1 subagent-wrapper. SKILL.md + 2 Runbooks. pnpm publish-update script. Allowlist+Denylist+14 Forbidden-Tokens.
   epic-5-retrospective: optional
 
   # Epic 6: Wahldaten + Cross-Layer-Story
@@ -249,11 +249,11 @@ development_status:
   epic-6-retrospective: optional
 
   # Epic 7: System-Dokumentation (Owner + LLM-Konsum) — Phase 1 parallel zu Epic 4/5
-  epic-7: backlog
-  7-1-auto-doc-skill-foundation: backlog
-  7-2-docs-tree-struktur-index: backlog
-  7-3-system-map-service-topology: backlog
-  7-4-data-pipeline-atlas: backlog
-  7-5-owner-recovery-playbook-secrets-map: backlog
-  7-6-llm-konsum-optimierung: backlog
+  epic-7: done  # 2026-05-17 approach-override per memory project_epic_7_approach: Content-First für Narrative, Generators für Derivable, KEIN Lefthook-Auto-Hook. 5 von 6 Stories done (7-1 cancelled).
+  7-1-auto-doc-skill-foundation: cancelled  # 2026-05-17 verworfen (Lefthook-post-commit + Subagent-Auto-Narrative-Writes = hohe Friction + Halluzinations-Risiko). Ersetzt durch deterministische Generator-Scripts pnpm doc:pipelines + pnpm doc:story-map (siehe 7-4 + 7-6).
+  7-5-owner-recovery-playbook-secrets-map: done  # 2026-05-17: docs/recovery/wiedereinstieg.md + secrets-map.md mit Bitwarden-Refs, keine Plaintext-Secrets
+  7-2-docs-tree-struktur-index: done  # 2026-05-17: docs/INDEX.md + docs/adr/INDEX.md + Subordner architecture/pipelines/recovery + Frontmatter-Bulk-Add für 15 existing files
+  7-4-data-pipeline-atlas: done  # 2026-05-17: scripts/generate-data-flow-doc.ts + pnpm doc:pipelines, deterministisch aus sources.ts, 7 tests, 39 Layer dokumentiert
+  7-3-system-map-service-topology: done  # 2026-05-17: docs/architecture/system-map.md mit 4 Mermaid-Diagrammen (Topology + Datenfluss + Build + Routes) + Cron-Schedules + State-Slots
+  7-6-llm-konsum-optimierung: done  # 2026-05-17: scripts/generate-story-map.ts + pnpm doc:story-map aus sprint-status.yaml (line-parse weil js-yaml strippt Inline-Comments), 10 tests, 80 Stories
   epic-7-retrospective: optional

@@ -177,7 +177,7 @@ describe('buildLayerTargetsFromManifest', () => {
 		expect(targets[0]).toMatchObject({
 			type: 'layer',
 			slug: 'laerm-2023',
-			label: 'Laerm 2023',
+			label: 'Lärmbelastung 2023',
 			bundleGroup: 'C: Umwelt',
 			license: 'dl-de/zero-2-0',
 			sourceUpdatedAt: '2023-01-01'

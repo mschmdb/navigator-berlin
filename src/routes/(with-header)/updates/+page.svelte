@@ -61,6 +61,8 @@
 	description={pageDescription}
 	pathname={page.url.pathname}
 	origin={page.url.origin}
+	ogImage={`${page.url.origin}/og/page/updates.png`}
+	ogImageAlt="navigator.berlin Updates"
 />
 <FeedDiscoveryLinks origin={page.url.origin} />
 <JsonLd data={blogJsonLd} testid="updates-index-jsonld" />

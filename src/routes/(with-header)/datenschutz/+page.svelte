@@ -9,6 +9,8 @@
 	description="Datenschutzerklärung für navigator.berlin. Kein Tracking, keine Cookies, keine personenbezogenen Daten."
 	pathname={page.url.pathname}
 	origin={page.url.origin}
+	ogImage={`${page.url.origin}/og/page/datenschutz.png`}
+	ogImageAlt="navigator.berlin Datenschutz"
 />
 
 <main class="mx-auto max-w-2xl px-4 py-12">

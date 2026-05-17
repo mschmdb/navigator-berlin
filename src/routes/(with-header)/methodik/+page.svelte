@@ -113,6 +113,8 @@
 	description={pageDescription}
 	pathname={page.url.pathname}
 	origin={page.url.origin}
+	ogImage={`${page.url.origin}/og/page/methodik.png`}
+	ogImageAlt="navigator.berlin Methodik"
 />
 
 <JsonLd data={jsonLd} testid="methodik-jsonld" />

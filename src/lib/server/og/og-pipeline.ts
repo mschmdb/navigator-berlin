@@ -14,6 +14,7 @@
  */
 
 import { normalizeSlug } from '$lib/data/internal/slug.js';
+import { LAYER_EXPLAIN_DE } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
 export type Bbox4 = readonly [minLon: number, minLat: number, maxLon: number, maxLat: number];
 
@@ -173,6 +174,10 @@ function labelFromSlug(slug: string): string {
 		.join(' ');
 }
 
+function layerDisplayLabel(slug: string): string {
+	return LAYER_EXPLAIN_DE[slug] ?? labelFromSlug(slug);
+}
+
 function stripIsoTime(isoDate: string | undefined): string {
 	if (!isoDate) return '';
 	return isoDate.slice(0, 10);
@@ -182,7 +187,7 @@ export function buildLayerTargetsFromManifest(entries: readonly LayerManifestEnt
 	return entries.map((e) => ({
 		type: 'layer' as const,
 		slug: e.slug,
-		label: labelFromSlug(e.slug),
+		label: layerDisplayLabel(e.slug),
 		bundleGroup: e.bundleGroup,
 		authority: authorityFromSourceUrl(e.sourceUrl),
 		license: e.license,

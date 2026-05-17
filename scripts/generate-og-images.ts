@@ -41,6 +41,7 @@ import {
 import { renderPageCardPng } from '../src/lib/server/og/render-page-card.js';
 import { buildScoreCardData, type ScoreCardData } from '../src/lib/server/og/score-card-data.js';
 import { loadLogoDataUri } from '../src/lib/server/og/logo-loader.js';
+import { loadWatermarkDataUri } from '../src/lib/server/og/watermark-loader.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -69,6 +70,55 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		subline: 'Kiez- und Bezirks-Ranking',
 		body: '143 Berliner Kieze, 12 Bezirke. Fünf Dimensionen: Ruhe, Grün, Mobilität, soziale Lage, Versorgung. Gleich gewichtet, 0 bis 100.',
 		footerUrl: '/wo-lebt-es-sich-gut'
+	},
+	{
+		slug: 'methodik',
+		headline: 'Methodik',
+		subline: 'Wie wir Daten verarbeiten',
+		body: 'Quellen, Lizenzen, Stand-Daten, Aggregations-Regeln. Was wir explizit nicht tun: keine LLM-Biografien, kein Lebensqualitäts-Single-Score, keine Werbung.',
+		footerUrl: '/methodik'
+	},
+	{
+		slug: 'methodik-kiez-score',
+		headline: 'Kiez-Score',
+		subline: 'Methodik · 5 Dimensionen',
+		body: 'Ruhe, Grün, Mobilität, soziale Lage, Versorgung. Pro Dimension 0 bis 100, gleich gewichtet zum Composite. Quellen und Berechnung offen dokumentiert.',
+		footerUrl: '/methodik/kiez-score'
+	},
+	{
+		slug: 'lizenzen',
+		headline: 'Lizenzen',
+		subline: 'Daten und Software',
+		body: 'Geo-Daten unter Datenlizenz Deutschland, Creative Commons und Open Database License. Software unter MIT, BSD und Apache. Schriften unter SIL OFL 1.1.',
+		footerUrl: '/lizenzen'
+	},
+	{
+		slug: 'architektur',
+		headline: 'Architektur',
+		subline: 'Wie das Ding gebaut ist',
+		body: 'SvelteKit auf Node, Postgres für Aggregate, MapLibre + PMTiles fürs Rendern. Static-only-Daten, kein Live-Backend, kein User-Login. Open-Source-Stack.',
+		footerUrl: '/architektur'
+	},
+	{
+		slug: 'datenschutz',
+		headline: 'Datenschutz',
+		subline: 'Was wir speichern',
+		body: 'Kein Login, keine Cookies, keine personalisierte Werbung. Cookieless Analytics via Plausible-Self-Host. Search-Queries gehen anonymisiert an Photon-OSM.',
+		footerUrl: '/datenschutz'
+	},
+	{
+		slug: 'impressum',
+		headline: 'Impressum',
+		subline: 'Verantwortlich nach §5 TMG',
+		body: 'Matze Schmidbauer, Berlin. Kontakt: ms@fliege.dev. Inhaltlich verantwortlich für alle Daten-Aggregationen, Layer-Beschreibungen und Methodik-Dokumentation.',
+		footerUrl: '/impressum'
+	},
+	{
+		slug: 'updates',
+		headline: 'Updates',
+		subline: 'Daten · Features · Methodik',
+		body: 'Wann welcher Datensatz refreshed wurde, welches Feature neu ist, welche Methodik-Änderung wir dokumentiert haben. Per RSS, Atom oder JSON-Feed abonnierbar.',
+		footerUrl: '/updates'
 	}
 ];
 
@@ -85,7 +135,7 @@ function parseArgs(argv: readonly string[]): CliArgs {
 	for (const arg of argv) {
 		if (arg.startsWith('--type=')) {
 			const v = arg.slice('--type='.length);
-			if (v === 'bezirk' || v === 'kiez' || v === 'layer' || v === 'all') type = v;
+			if (v === 'bezirk' || v === 'kiez' || v === 'layer' || v === 'page' || v === 'all') type = v;
 		} else if (arg.startsWith('--slug=')) {
 			slug = arg.slice('--slug='.length);
 		} else if (arg === '--force') {
@@ -182,6 +232,7 @@ async function renderBezirk(
 	target: BezirkTarget,
 	scores: Map<string, ScoreRow>,
 	logoDataUri: string | undefined,
+	watermarkDataUri: string | undefined,
 	args: CliArgs
 ): Promise<'rendered' | 'cached' | 'failed'> {
 	const outputPath = buildOgPath(REPO_ROOT, 'bezirk', target.slug);
@@ -194,7 +245,8 @@ async function renderBezirk(
 			slug: target.slug,
 			scoreCard,
 			scoreUpdatedAt: formatStand(row?.computedAt ?? null),
-			logoDataUri
+			logoDataUri,
+			watermarkDataUri
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -212,6 +264,7 @@ async function renderKiez(
 	scores: Map<string, ScoreRow>,
 	bezirkLabels: Map<string, string>,
 	logoDataUri: string | undefined,
+	watermarkDataUri: string | undefined,
 	args: CliArgs
 ): Promise<'rendered' | 'cached' | 'failed'> {
 	const outputPath = buildOgPath(REPO_ROOT, 'kiez', target.slug);
@@ -226,7 +279,8 @@ async function renderKiez(
 			parentBezirkName: parentLabel,
 			scoreCard,
 			scoreUpdatedAt: formatStand(row?.computedAt ?? null),
-			logoDataUri
+			logoDataUri,
+			watermarkDataUri
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -242,6 +296,7 @@ async function renderKiez(
 async function renderPage(
 	target: PageTarget,
 	logoDataUri: string | undefined,
+	watermarkDataUri: string | undefined,
 	args: CliArgs
 ): Promise<'rendered' | 'cached' | 'failed'> {
 	const outputPath = buildOgPath(REPO_ROOT, 'page', target.slug);
@@ -252,7 +307,8 @@ async function renderPage(
 			subline: target.subline,
 			body: target.body,
 			footerUrl: target.footerUrl,
-			logoDataUri
+			logoDataUri,
+			watermarkDataUri
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -268,6 +324,7 @@ async function renderPage(
 async function renderLayer(
 	target: LayerTarget,
 	logoDataUri: string | undefined,
+	watermarkDataUri: string | undefined,
 	args: CliArgs
 ): Promise<'rendered' | 'cached' | 'failed'> {
 	const outputPath = buildOgPath(REPO_ROOT, 'layer', target.slug);
@@ -280,7 +337,8 @@ async function renderLayer(
 			authority: target.authority,
 			license: target.license,
 			sourceUpdatedAt: target.sourceUpdatedAt,
-			logoDataUri
+			logoDataUri,
+			watermarkDataUri
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });
@@ -299,6 +357,16 @@ async function tryLoadLogo(): Promise<string | undefined> {
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
 		process.stderr.write(`[og:images] WARN: logo unavailable (${msg})\n`);
+		return undefined;
+	}
+}
+
+async function tryLoadWatermark(): Promise<string | undefined> {
+	try {
+		return await loadWatermarkDataUri(REPO_ROOT);
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[og:images] WARN: watermark unavailable (${msg})\n`);
 		return undefined;
 	}
 }
@@ -334,10 +402,11 @@ async function main(): Promise<void> {
 		pages = pages.filter((t) => t.slug === args.slug);
 	}
 
-	const [bezirkScores, kiezScores, logoDataUri] = await Promise.all([
+	const [bezirkScores, kiezScores, logoDataUri, watermarkDataUri] = await Promise.all([
 		bezirks.length > 0 ? tryLoadBezirkScores() : Promise.resolve(new Map<string, ScoreRow>()),
 		kieze.length > 0 ? tryLoadKiezScores() : Promise.resolve(new Map<string, ScoreRow>()),
-		tryLoadLogo()
+		tryLoadLogo(),
+		tryLoadWatermark()
 	]);
 
 	let rendered = 0;
@@ -345,28 +414,28 @@ async function main(): Promise<void> {
 	let failed = 0;
 
 	for (const t of bezirks) {
-		const r = await renderBezirk(t, bezirkScores, logoDataUri, args);
+		const r = await renderBezirk(t, bezirkScores, logoDataUri, watermarkDataUri, args);
 		if (r === 'rendered') rendered++;
 		else if (r === 'cached') cached++;
 		else failed++;
 		process.stdout.write(`[og:images] bezirk/${t.slug}: ${r}\n`);
 	}
 	for (const t of kieze) {
-		const r = await renderKiez(t, kiezScores, bezirkLabels, logoDataUri, args);
+		const r = await renderKiez(t, kiezScores, bezirkLabels, logoDataUri, watermarkDataUri, args);
 		if (r === 'rendered') rendered++;
 		else if (r === 'cached') cached++;
 		else failed++;
 		process.stdout.write(`[og:images] kiez/${t.slug}: ${r}\n`);
 	}
 	for (const t of layers) {
-		const r = await renderLayer(t, logoDataUri, args);
+		const r = await renderLayer(t, logoDataUri, watermarkDataUri, args);
 		if (r === 'rendered') rendered++;
 		else if (r === 'cached') cached++;
 		else failed++;
 		process.stdout.write(`[og:images] layer/${t.slug}: ${r}\n`);
 	}
 	for (const t of pages) {
-		const r = await renderPage(t, logoDataUri, args);
+		const r = await renderPage(t, logoDataUri, watermarkDataUri, args);
 		if (r === 'rendered') rendered++;
 		else if (r === 'cached') cached++;
 		else failed++;
