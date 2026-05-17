@@ -90,3 +90,13 @@ Inline-HTML im Body ist erlaubt, aber Block-Liste greift. Kein externes JS, kein
 - Marketing-Slots
 - Release-Notes mit Versionsnummern
 - Tweet-Stream-Klone
+
+## Skill-Workflow-Alternative
+
+Statt manuell jeden Entry zu schreiben, kann der Claude-Code-Skill `/publish-update` aus einem Commit-Range Draft-Entries generieren. Siehe [publish-update-skill.md](./publish-update-skill.md).
+
+Manueller Workflow (dieses Runbook) bleibt gültig:
+
+- Bei kleinen Hand-Tweaks (1 Update, klar formulierbar in 5 Min) ist Manual schneller.
+- Bei größeren Refactor-Sweeps (5-30 Commits) ist Skill effizienter.
+- Beide Wege landen am Ende mit Editorial-Review im selben `_content/updates/`-Folder.

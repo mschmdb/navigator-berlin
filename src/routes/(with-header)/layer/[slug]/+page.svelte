@@ -22,7 +22,7 @@
 	const explain = $derived(detail.explain);
 	const methodology = $derived(detail.methodology);
 	const inspectorHref = $derived(
-		(resolve as (path: string) => string)(`/?layers=${encodeURIComponent(detail.slug)}`)
+		(resolve as (path: string) => string)(`/explore?layers=${encodeURIComponent(detail.slug)}`)
 	);
 	const pageTitle = $derived(`${detail.layerName} · Berlin Navigator`);
 	const pageDescription = $derived(

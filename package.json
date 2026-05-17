@@ -27,7 +27,8 @@
 		"og:images": "tsx scripts/generate-og-images.ts",
 		"og:all": "pnpm og:images",
 		"db:generate": "drizzle-kit generate",
-		"db:migrate": "tsx scripts/db/migrate.ts"
+		"db:migrate": "tsx scripts/db/migrate.ts",
+		"publish-update": "tsx scripts/publish-update/main.ts"
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "^4.11.3",
