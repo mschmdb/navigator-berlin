@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"prebuild": "pnpm db:migrate && pnpm data:aggregate && pnpm data:aggregate-scores",
+		"prebuild": "pnpm db:migrate && pnpm data:aggregate && pnpm data:aggregate-scores && pnpm data:faq && pnpm og:images",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
