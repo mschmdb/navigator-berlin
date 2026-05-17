@@ -13,8 +13,17 @@
 -->
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import type { RankingRow } from '$lib/data/ranking-types.js';
+
+	// Bei Prerender (SSR statischer Build) wirft SvelteKit beim Zugriff auf
+	// url.searchParams. URL-State (sort/dir/view) ist nur browser-relevant —
+	// auf dem Server-Render starten alle mit Default, Client hydratiert.
+	const EMPTY_SEARCH = new URLSearchParams();
+	function searchParams(): URLSearchParams {
+		return browser ? page.url.searchParams : EMPTY_SEARCH;
+	}
 
 	interface Props {
 		readonly kieze: readonly RankingRow[];
@@ -72,9 +81,9 @@
 		return params.get('view') === 'bezirke' ? 'bezirke' : 'kieze';
 	}
 
-	const sortKey = $derived<SortKey>(readSort(page.url.searchParams));
-	const sortDir = $derived<SortDir>(readDir(page.url.searchParams));
-	const view = $derived<View>(readView(page.url.searchParams));
+	const sortKey = $derived<SortKey>(readSort(searchParams()));
+	const sortDir = $derived<SortDir>(readDir(searchParams()));
+	const view = $derived<View>(readView(searchParams()));
 
 	const rowsForView = $derived<readonly RankingRow[]>(view === 'kieze' ? kieze : bezirke);
 
@@ -108,7 +117,7 @@
 	});
 
 	function applyParams(updates: Record<string, string | null>): void {
-		const params = new URLSearchParams(page.url.searchParams);
+		const params = new URLSearchParams(searchParams());
 		for (const [key, value] of Object.entries(updates)) {
 			if (value === null) params.delete(key);
 			else params.set(key, value);
