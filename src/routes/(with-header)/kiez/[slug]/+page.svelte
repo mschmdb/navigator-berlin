@@ -26,8 +26,8 @@
 
 	const pageTitle = $derived(
 		bezirkName.length > 0
-			? `Kiez ${name} (${bezirkName}) · navigator.berlin`
-			: `Kiez ${name} · navigator.berlin`
+			? `Kiez ${name} (${bezirkName}) - Berlin in Daten - navigator.berlin`
+			: `Kiez ${name} - Berlin in Daten - navigator.berlin`
 	);
 
 	const numberDe = new Intl.NumberFormat('de-DE');

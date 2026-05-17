@@ -128,7 +128,7 @@
 </script>
 
 <SeoHead
-	title="Lizenzen · navigator.berlin"
+	title="Lizenzen - Berlin in Daten - navigator.berlin"
 	description="Lizenzen der Geo-Daten und der verwendeten Software."
 	pathname={page.url.pathname}
 	origin={page.url.origin}

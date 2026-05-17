@@ -4,7 +4,7 @@
 </script>
 
 <SeoHead
-	title="Architektur · navigator.berlin"
+	title="Architektur - Berlin in Daten - navigator.berlin"
 	description="navigator.berlin läuft auf einem EU-FOSS-Stack: Open-Source-Software, Hosting in Deutschland, keine US-Cloud-Anbieter, kein Tracking."
 	pathname={page.url.pathname}
 	origin={page.url.origin}

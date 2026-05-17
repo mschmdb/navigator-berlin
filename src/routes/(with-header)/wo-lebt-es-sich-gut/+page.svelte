@@ -17,7 +17,7 @@
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
-	const pageTitle = 'Wo lebt es sich gut? · navigator.berlin';
+	const pageTitle = 'Wo lebt es sich gut? - Berlin in Daten - navigator.berlin';
 	const pageDescription =
 		'Kiez-Score-Ranking aus 5 Dimensionen: alle 143 Kieze und 12 Bezirke nach aggregiertem Score. Methodik offen, Quellen verlinkt, keine evaluative Sprache.';
 	const ogImagePath = '/og/page/wo-lebt-es-sich-gut.png';

@@ -21,7 +21,7 @@
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
-	const pageTitle = 'navigator.berlin · Berlin in Daten';
+	const pageTitle = 'Home - Berlin in Daten - navigator.berlin';
 	const pageDescription =
 		'Eine Berliner Adresse, ein Kiez, ein Bezirk. Daten zu Lärm, Klima, Grün, Mobilität, Wohnen, Versorgung und sozialer Lage. Aus offenen Senats-Quellen. Mit Quelle und Stand.';
 	const ogImagePath = '/og/page/home.png';

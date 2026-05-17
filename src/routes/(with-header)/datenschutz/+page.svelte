@@ -5,7 +5,7 @@
 </script>
 
 <SeoHead
-	title="Datenschutz · navigator.berlin"
+	title="Datenschutz - Berlin in Daten - navigator.berlin"
 	description="Datenschutzerklärung für navigator.berlin. Kein Tracking, keine Cookies, keine personenbezogenen Daten."
 	pathname={page.url.pathname}
 	origin={page.url.origin}

@@ -865,7 +865,9 @@
 	});
 
 	const ogTitle = $derived(
-		ogInput ? `${ogInput.address} · Berlin Navigator` : 'navigator.berlin · Adress-Daten'
+		ogInput
+			? `${ogInput.address} - Berlin in Daten - navigator.berlin`
+			: 'Atlas - Berlin in Daten - navigator.berlin'
 	);
 	const ogDescription = $derived(
 		ogInput

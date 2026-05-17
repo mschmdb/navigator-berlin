@@ -206,7 +206,9 @@
 	const ogImageUrl = $derived(shareOpen ? buildOgImageUrl(ogImageInput, currentOrigin()) : null);
 	const permalinkUrl = $derived(shareOpen ? currentHref() : '');
 	const nativeShareData = $derived<ShareData>({
-		title: addressName ? `${addressName} · Berlin Navigator` : 'Berlin Navigator',
+		title: addressName
+			? `${addressName} - Berlin in Daten - navigator.berlin`
+			: 'navigator.berlin',
 		text: ogImageInput?.topLayers.join(' · ') ?? '',
 		url: permalinkUrl || currentHref()
 	});

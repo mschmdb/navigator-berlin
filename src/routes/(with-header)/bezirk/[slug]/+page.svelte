@@ -21,7 +21,7 @@
 	const ogImagePath = $derived(`/og/bezirk/${slug}.png`);
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 
-	const pageTitle = $derived(`Bezirk ${name} · navigator.berlin`);
+	const pageTitle = $derived(`Bezirk ${name} - Berlin in Daten - navigator.berlin`);
 	const numberDe = new Intl.NumberFormat('de-DE');
 	const pageDescription = $derived.by(() => {
 		const parts: string[] = [];

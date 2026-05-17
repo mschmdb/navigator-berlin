@@ -47,7 +47,7 @@
 		applyCategoryFilter(entries, new Set(filterValue))
 	);
 
-	const pageTitle = 'Updates · navigator.berlin';
+	const pageTitle = 'Updates - Berlin in Daten - navigator.berlin';
 	const pageDescription =
 		'Daten-Refreshes, Feature-Releases und Methodik-Änderungen. Mit RSS, Atom und JSON-Feed.';
 

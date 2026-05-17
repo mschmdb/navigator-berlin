@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 
-	const pageTitle = 'Wo lebt es sich gut? · Methodik des Kiez-Scores · navigator.berlin';
+	const pageTitle = 'Methodik des Kiez-Scores - Berlin in Daten - navigator.berlin';
 	const pageDescription =
 		'Wie der Kiez-Score aus fünf Dimensionen pro Planungsraum entsteht. Ruhe & Luft, Grün, Mobilität, Soziale Lage, Versorgung. Gewichte, Normalisierung, was bewusst fehlt.';
 

@@ -5,7 +5,7 @@
 </script>
 
 <SeoHead
-	title="Impressum · navigator.berlin"
+	title="Impressum - Berlin in Daten - navigator.berlin"
 	description="Impressum nach § 5 TMG für navigator.berlin."
 	pathname={page.url.pathname}
 	origin={page.url.origin}

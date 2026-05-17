@@ -24,7 +24,7 @@
 	const inspectorHref = $derived(
 		(resolve as (path: string) => string)(`/explore?layers=${encodeURIComponent(detail.slug)}`)
 	);
-	const pageTitle = $derived(`${detail.layerName} · Berlin Navigator`);
+	const pageTitle = $derived(`${detail.layerName} - Berlin in Daten - navigator.berlin`);
 	const pageDescription = $derived(
 		explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin.`
 	);

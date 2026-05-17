@@ -19,7 +19,9 @@
 	const categoryLabel = $derived(CATEGORY_LABEL_DE[entry.frontmatter.category]);
 	const categoryClass = $derived(CATEGORY_BADGE_CLASSES[entry.frontmatter.category]);
 
-	const pageTitle = $derived(`${entry.frontmatter.title_de} · Navigator Berlin Updates`);
+	const pageTitle = $derived(
+		`${entry.frontmatter.title_de} - Berlin in Daten - navigator.berlin`
+	);
 	const pageDescription = $derived(entry.frontmatter.summary_de);
 
 	const jsonLd = $derived(

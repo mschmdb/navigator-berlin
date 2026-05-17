@@ -25,7 +25,7 @@
 		{ id: 'feedback', label: 'Feedback' }
 	];
 
-	const pageTitle = 'Methodik · navigator.berlin';
+	const pageTitle = 'Methodik - Berlin in Daten - navigator.berlin';
 	const pageDescription =
 		'Wie navigator.berlin Daten verarbeitet, was wir zeigen, was wir bewusst weglassen.';
 
