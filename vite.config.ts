@@ -19,14 +19,30 @@ export default defineConfig({
 		dedupe: ['svelte', 'svelte/internal']
 	},
 	ssr: {
-		// Natives (.node + wasm) niemals bündeln, sonst Rollup PARSE_ERROR auf Binary-Magic-Bytes
-		external: ['@resvg/resvg-js', 'wawoff2', 'fontnik', 'better-sqlite3']
+		// Natives (.node + wasm) niemals bündeln, sonst Rollup PARSE_ERROR auf Binary-Magic-Bytes.
+		// Liste enthält Top-Level UND alle platform-spezifischen Sub-Pakete (npm-optionalDependencies).
+		external: [
+			'@resvg/resvg-js',
+			'@resvg/resvg-js-linux-x64-gnu',
+			'@resvg/resvg-js-linux-x64-musl',
+			'@resvg/resvg-js-linux-arm64-gnu',
+			'@resvg/resvg-js-linux-arm64-musl',
+			'@resvg/resvg-js-darwin-x64',
+			'@resvg/resvg-js-darwin-arm64',
+			'wawoff2',
+			'fontnik',
+			'better-sqlite3'
+		],
+		noExternal: ['satori']
 	},
 	optimizeDeps: {
 		exclude: ['bits-ui'],
 		include: ['layerchart']
 	},
 	build: {
+		commonjsOptions: {
+			ignoreDynamicRequires: true
+		},
 		rollupOptions: {
 			output: {
 				manualChunks(id: string): string | undefined {
