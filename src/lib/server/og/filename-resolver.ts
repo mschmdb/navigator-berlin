@@ -13,7 +13,7 @@
 
 const SLUG_INVALID_RE = /[\\/]|^\./;
 
-export const ogTargetTypes = ['bezirk', 'kiez', 'layer'] as const;
+export const ogTargetTypes = ['bezirk', 'kiez', 'layer', 'page'] as const;
 export type OgTargetType = (typeof ogTargetTypes)[number];
 
 export function isOgTargetType(value: string): value is OgTargetType {

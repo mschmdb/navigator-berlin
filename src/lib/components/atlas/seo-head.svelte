@@ -25,6 +25,8 @@
 		/** Optional OG image dimensions for richer previews. */
 		ogImageWidth?: number;
 		ogImageHeight?: number;
+		/** Optional alt-text für og:image (a11y + LinkedIn-Preview-Tool). */
+		ogImageAlt?: string;
 		/**
 		 * Active locales for the hreflang cluster. Phase 1 default: `['de']` only
 		 * (memory `project_i18n_phase_1_de_only`). When EN coverage lands (story 3.1/3.2),
@@ -42,6 +44,7 @@
 		ogImage,
 		ogImageWidth = 1200,
 		ogImageHeight = 630,
+		ogImageAlt,
 		locales = ['de']
 	}: Props = $props();
 
@@ -60,13 +63,21 @@
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={canonicalUrl} />
 	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="navigator.berlin" />
+	<meta property="og:locale" content="de_DE" />
 	{#if ogImage}
 		<meta property="og:image" content={ogImage} />
 		<meta property="og:image:width" content={String(ogImageWidth)} />
 		<meta property="og:image:height" content={String(ogImageHeight)} />
+		{#if ogImageAlt}
+			<meta property="og:image:alt" content={ogImageAlt} />
+		{/if}
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={ogImage} />
+		{#if ogImageAlt}
+			<meta name="twitter:image:alt" content={ogImageAlt} />
+		{/if}
 	{/if}
 </svelte:head>

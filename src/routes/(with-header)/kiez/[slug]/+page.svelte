@@ -39,10 +39,15 @@
 		if (data.profile.flaecheHa > 0) {
 			parts.push(`${numberDe.format(data.profile.flaecheHa)} ha`);
 		}
-		const suffix = parts.length > 0 ? `: ${parts.join(', ')}` : '';
+		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
 		const bezirkSuffix = bezirkName.length > 0 ? `Bezirk ${bezirkName}. ` : '';
-		return `Kiez ${name}${suffix}. ${bezirkSuffix}Daten zu Wohnen, Umwelt, Klima und Mobilität.`.trim();
+		return `Kiez ${name}${suffix}. ${bezirkSuffix}Kiez-Score und offene Daten zu Lärm, Klima, Grün, Mobilität, Versorgung und sozialer Lage.`.trim();
 	});
+	const ogImageAlt = $derived(
+		bezirkName.length > 0
+			? `Kiez ${name} (${bezirkName}): navigator.berlin-Vorschau mit Kiez-Score`
+			: `Kiez ${name}: navigator.berlin-Vorschau mit Kiez-Score`
+	);
 
 	const placeJsonLd = $derived(
 		buildPlace({
@@ -86,6 +91,7 @@
 	{origin}
 	{pathname}
 	ogImage={ogImageAbsolute}
+	{ogImageAlt}
 	locales={['de']}
 />
 <JsonLd data={placeJsonLd} testid="kiez-place-jsonld" />

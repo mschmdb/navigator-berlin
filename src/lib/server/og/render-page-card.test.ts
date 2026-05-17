@@ -11,7 +11,7 @@ import { renderPageCardPng } from './render-page-card.js';
 import { buildBezirkCardVdom } from './page-card-template.js';
 
 describe('renderPageCardPng', () => {
-	it('renders a 1200x630 PNG starting with PNG magic bytes', async () => {
+	it('renders a 2400x1260 PNG starting with PNG magic bytes', async () => {
 		const vdom = buildBezirkCardVdom({
 			bezirkName: 'Mitte',
 			slug: 'mitte',

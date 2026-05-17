@@ -23,9 +23,10 @@
 	const pathname = $derived(page.url.pathname);
 	const pageTitle = 'navigator.berlin · Berlin in Daten';
 	const pageDescription =
-		'Eine Berliner Adresse, ein Kiez, ein Bezirk. Daten zu Lärm, Klima, Grün, Mobilität, Wohnen, Versorgung und sozialer Lage. Mit Quelle und Stand.';
-	const ogImagePath = '/og-default.png';
+		'Eine Berliner Adresse, ein Kiez, ein Bezirk. Daten zu Lärm, Klima, Grün, Mobilität, Wohnen, Versorgung und sozialer Lage. Aus offenen Senats-Quellen. Mit Quelle und Stand.';
+	const ogImagePath = '/og/page/home.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
+	const ogImageAlt = 'navigator.berlin: Berlin in Daten · Karte für Adresse, Kiez und Bezirk';
 
 	const websiteJsonLd = $derived(
 		buildWebSite({
@@ -44,6 +45,7 @@
 	{origin}
 	{pathname}
 	ogImage={ogImageAbsolute}
+	{ogImageAlt}
 	locales={['de']}
 />
 <JsonLd data={websiteJsonLd} testid="home-website-jsonld" />

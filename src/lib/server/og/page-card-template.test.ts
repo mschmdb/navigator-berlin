@@ -140,12 +140,12 @@ describe('buildBezirkCardVdom', () => {
 		}
 	});
 
-	it('returns a 1200×630 root container', () => {
+	it('returns a 2400×1260 root container (2× hi-res for LinkedIn-downscale-sharpness)', () => {
 		const vdom = buildBezirkCardVdom(params);
 		const style = (vdom as unknown as { props: { style: { width: number; height: number } } })
 			.props.style;
-		expect(style.width).toBe(1200);
-		expect(style.height).toBe(630);
+		expect(style.width).toBe(2400);
+		expect(style.height).toBe(1260);
 	});
 
 	it('renders logo <img> when logoDataUri is provided', () => {

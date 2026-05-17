@@ -20,8 +20,12 @@
 import type { ScoreCardData } from './score-card-data.js';
 import { formatScoreValue } from './score-card-data.js';
 
-export const OG_WIDTH = 1200;
-export const OG_HEIGHT = 630;
+// Render-Resolution. OG-Spec ist 1200×630, aber LinkedIn/Twitter scalen
+// mehrfach (Feed-Card 480×252, Detail 1200×630). 2× rendern + Server
+// liefert hi-res = sharper auf hi-DPI-Displays + bei LinkedIn-Re-Compression.
+// og:image:width/height-Meta-Tag bleibt 1200×630 (Spec-Konformität).
+export const OG_WIDTH = 2400;
+export const OG_HEIGHT = 1260;
 
 const COLOR_BG = '#ECEAE0';
 const COLOR_PANEL = 'rgba(236, 234, 224, 0.92)';
@@ -367,6 +371,49 @@ function layerInfoRow(params: LayerCardParams): SatoriNode {
 			cell('Stand', standValue)
 		]
 	);
+}
+
+export interface PageCardParams {
+	readonly headline: string;
+	readonly subline: string;
+	readonly body: string;
+	readonly footerUrl: string;
+	readonly footerDate?: string | null;
+	readonly logoDataUri?: string;
+}
+
+function pageBodyText(body: string): SatoriNode {
+	return node(
+		'div',
+		{
+			display: 'flex',
+			flexDirection: 'column',
+			width: '100%',
+			paddingTop: 24,
+			borderTop: `2px solid ${COLOR_RULE}`
+		},
+		[
+			text(body, {
+				fontFamily: 'Plex Serif',
+				fontSize: 26,
+				color: COLOR_INK,
+				lineHeight: 1.4,
+				maxWidth: '100%'
+			})
+		]
+	);
+}
+
+export function buildPageCardVdom(params: PageCardParams): SatoriNode {
+	const panelNode = panel({
+		headline: params.headline,
+		subline: params.subline,
+		mid: pageBodyText(params.body),
+		footerUrl: params.footerUrl,
+		footerDate: params.footerDate ?? null,
+		logoDataUri: params.logoDataUri
+	});
+	return root(panelNode);
 }
 
 export function buildLayerCardVdom(params: LayerCardParams): SatoriNode {

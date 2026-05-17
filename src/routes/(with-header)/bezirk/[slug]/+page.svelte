@@ -31,9 +31,12 @@
 		if (data.profile.flaecheHa > 0) {
 			parts.push(`${numberDe.format(data.profile.flaecheHa)} ha`);
 		}
-		const suffix = parts.length > 0 ? `: ${parts.join(', ')}` : '';
-		return `Bezirk ${name}${suffix}. Daten zu Wohnen, Umwelt, Klima und Mobilität.`;
+		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
+		return `Bezirk ${name}${suffix}. Kiez-Score und offene Daten zu Lärm, Klima, Grün, Mobilität, Versorgung und sozialer Lage. Mit Quelle und Stand.`;
 	});
+	const ogImageAlt = $derived(
+		`Bezirk ${name}: navigator.berlin-Karten-Vorschau mit Kiez-Score und Bezirks-Daten`
+	);
 
 	const placeJsonLd = $derived(
 		buildPlace({
@@ -78,6 +81,7 @@
 	{origin}
 	{pathname}
 	ogImage={ogImageAbsolute}
+	{ogImageAlt}
 	locales={['de']}
 />
 <JsonLd data={placeJsonLd} testid="bezirk-place-jsonld" />

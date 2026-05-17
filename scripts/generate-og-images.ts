@@ -35,7 +35,8 @@ import { buildOgPath } from '../src/lib/server/og/filename-resolver.js';
 import {
 	buildBezirkCardVdom,
 	buildKiezCardVdom,
-	buildLayerCardVdom
+	buildLayerCardVdom,
+	buildPageCardVdom
 } from '../src/lib/server/og/page-card-template.js';
 import { renderPageCardPng } from '../src/lib/server/og/render-page-card.js';
 import { buildScoreCardData, type ScoreCardData } from '../src/lib/server/og/score-card-data.js';
@@ -46,8 +47,33 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 const STATIC_DIR = path.join(REPO_ROOT, 'static');
 const LAYERS_DIR = path.join(STATIC_DIR, 'layers');
 
+interface PageTarget {
+	readonly slug: string;
+	readonly headline: string;
+	readonly subline: string;
+	readonly body: string;
+	readonly footerUrl: string;
+}
+
+const PAGE_TARGETS: readonly PageTarget[] = [
+	{
+		slug: 'home',
+		headline: 'navigator.berlin',
+		subline: 'Berlin in Daten',
+		body: 'Eine Berliner Adresse, ein Kiez, ein Bezirk. Daten zu Lärm, Klima, Grün, Mobilität, Wohnen, Versorgung und sozialer Lage. Mit Quelle und Stand.',
+		footerUrl: '/'
+	},
+	{
+		slug: 'wo-lebt-es-sich-gut',
+		headline: 'Wo lebt es sich gut?',
+		subline: 'Kiez- und Bezirks-Ranking',
+		body: '143 Berliner Kieze, 12 Bezirke. Fünf Dimensionen: Ruhe, Grün, Mobilität, soziale Lage, Versorgung. Gleich gewichtet, 0 bis 100.',
+		footerUrl: '/wo-lebt-es-sich-gut'
+	}
+];
+
 interface CliArgs {
-	readonly type: 'bezirk' | 'kiez' | 'layer' | 'all';
+	readonly type: 'bezirk' | 'kiez' | 'layer' | 'page' | 'all';
 	readonly slug: string | null;
 	readonly force: boolean;
 }
@@ -213,6 +239,32 @@ async function renderKiez(
 	}
 }
 
+async function renderPage(
+	target: PageTarget,
+	logoDataUri: string | undefined,
+	args: CliArgs
+): Promise<'rendered' | 'cached' | 'failed'> {
+	const outputPath = buildOgPath(REPO_ROOT, 'page', target.slug);
+	if (!args.force && (await fileExists(outputPath))) return 'cached';
+	try {
+		const vdom = buildPageCardVdom({
+			headline: target.headline,
+			subline: target.subline,
+			body: target.body,
+			footerUrl: target.footerUrl,
+			logoDataUri
+		});
+		const png = await renderPageCardPng(vdom);
+		await mkdir(path.dirname(outputPath), { recursive: true });
+		await writeFile(outputPath, png);
+		return 'rendered';
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[og:images] page/${target.slug} failed: ${msg}\n`);
+		return 'failed';
+	}
+}
+
 async function renderLayer(
 	target: LayerTarget,
 	logoDataUri: string | undefined,
@@ -269,14 +321,17 @@ async function main(): Promise<void> {
 	let bezirks: BezirkTarget[] = [];
 	let kieze: KiezTarget[] = [];
 	let layers: LayerTarget[] = [];
+	let pages: PageTarget[] = [];
 	if (args.type === 'all' || args.type === 'bezirk') bezirks = bezirkTargets;
 	if (args.type === 'all' || args.type === 'kiez') kieze = kiezTargets;
 	if (args.type === 'all' || args.type === 'layer') layers = layerTargets;
+	if (args.type === 'all' || args.type === 'page') pages = [...PAGE_TARGETS];
 
 	if (args.slug) {
 		bezirks = bezirks.filter((t) => t.slug === args.slug);
 		kieze = kieze.filter((t) => t.slug === args.slug);
 		layers = layers.filter((t) => t.slug === args.slug);
+		pages = pages.filter((t) => t.slug === args.slug);
 	}
 
 	const [bezirkScores, kiezScores, logoDataUri] = await Promise.all([
@@ -309,6 +364,13 @@ async function main(): Promise<void> {
 		else if (r === 'cached') cached++;
 		else failed++;
 		process.stdout.write(`[og:images] layer/${t.slug}: ${r}\n`);
+	}
+	for (const t of pages) {
+		const r = await renderPage(t, logoDataUri, args);
+		if (r === 'rendered') rendered++;
+		else if (r === 'cached') cached++;
+		else failed++;
+		process.stdout.write(`[og:images] page/${t.slug}: ${r}\n`);
 	}
 
 	process.stdout.write(`[og:images] done: rendered=${rendered} cached=${cached} failed=${failed}\n`);

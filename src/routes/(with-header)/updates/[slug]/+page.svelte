@@ -39,6 +39,7 @@
 	<meta property="og:type" content="article" />
 	<meta property="article:published_time" content={entry.frontmatter.date} />
 	<meta property="article:section" content={entry.frontmatter.category} />
+	<meta property="article:author" content="Matze Schmidbauer" />
 </svelte:head>
 <JsonLd data={jsonLd} testid="updates-detail-jsonld" />
 
