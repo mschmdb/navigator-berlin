@@ -792,6 +792,48 @@
 		ui.bookmarksDialogOpen = true;
 	}
 
+	let locating = $state(false);
+
+	async function onLocate(): Promise<void> {
+		if (typeof navigator === 'undefined' || !navigator.geolocation) {
+			announceGlobal('Standort-Bestimmung wird vom Browser nicht unterstützt');
+			return;
+		}
+		locating = true;
+		try {
+			const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+				navigator.geolocation.getCurrentPosition(resolve, reject, {
+					enableHighAccuracy: true,
+					timeout: 10_000,
+					maximumAge: 30_000
+				});
+			});
+			const { latitude: lat, longitude: lng } = pos.coords;
+			const suggestion = await reverseGeocodeAddress({ lat, lng }).run();
+			if (suggestion) {
+				selection.set(suggestion);
+				return;
+			}
+			// Fallback wenn Reverse-Geocode leer (z.B. außerhalb Berlin)
+			selection.set({
+				id: `geo:${lat.toFixed(6)},${lng.toFixed(6)}`,
+				displayName: `Mein Standort (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+				lat,
+				lng,
+				type: 'geolocation',
+				addresstype: 'street'
+			});
+		} catch (err) {
+			const msg =
+				err instanceof GeolocationPositionError && err.code === err.PERMISSION_DENIED
+					? 'Standort-Berechtigung verweigert'
+					: 'Standort konnte nicht ermittelt werden';
+			announceGlobal(msg);
+		} finally {
+			locating = false;
+		}
+	}
+
 	const showSidePanel = $derived(
 		viewport.breakpoint !== 'mobile' &&
 			((ui.inspectorOpen && ui.selectedAddress !== null) || ui.compareMode)
@@ -863,7 +905,7 @@
 			{onClearSelection}
 			onLoad={onMapLoad}
 		/>
-		<MapControls {onPan} {onZoom} />
+		<MapControls {onPan} {onZoom} {onLocate} {locating} />
 		<MapAttribution />
 		<MapAccessibilityLayer
 			map={a11yMap}

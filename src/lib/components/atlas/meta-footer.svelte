@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+	import { META_LINKS } from './internal/meta-links.js';
 	type Props = { langSwitcher?: Snippet };
 	let { langSwitcher }: Props = $props();
 </script>
@@ -10,17 +11,10 @@
 >
 	<div class="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-4">
 		<nav aria-label="Meta-Navigation" class="flex flex-wrap gap-x-4 gap-y-2">
-			<a href="/methodik" class="hover:text-accent">Methodik</a>
-			<span aria-hidden="true">·</span>
-			<a href="/updates" class="hover:text-accent">Updates</a>
-			<span aria-hidden="true">·</span>
-			<a href="/lizenzen" class="hover:text-accent">Lizenzen</a>
-			<span aria-hidden="true">·</span>
-			<a href="/datenschutz" class="hover:text-accent">Datenschutz</a>
-			<span aria-hidden="true">·</span>
-			<a href="/impressum" class="hover:text-accent">Impressum</a>
-			<span aria-hidden="true">·</span>
-			<a href="/architektur" class="hover:text-accent">Architektur</a>
+			{#each META_LINKS as link, i (link.href)}
+				{#if i > 0}<span aria-hidden="true">·</span>{/if}
+				<a href={link.href} class="hover:text-accent">{link.label}</a>
+			{/each}
 			<span aria-hidden="true">·</span>
 			<a href={`mailto:${FEEDBACK_EMAIL}`} class="hover:text-accent">Kontakt</a>
 		</nav>

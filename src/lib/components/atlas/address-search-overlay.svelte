@@ -45,7 +45,7 @@
 {#if open}
 	<div
 		role="presentation"
-		class="fixed inset-0 z-50 flex items-start justify-center bg-black/30 pt-[8vh]"
+		class="fixed inset-0 z-50 flex items-start justify-center bg-black/30 px-3 pt-[8vh]"
 		onclick={(e) => {
 			if (e.target === e.currentTarget) onClose();
 		}}

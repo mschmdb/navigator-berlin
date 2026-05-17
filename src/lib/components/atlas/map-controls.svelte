@@ -5,6 +5,7 @@
 		ArrowRight,
 		ArrowUp,
 		Compass,
+		LocateFixed,
 		Minus,
 		Plus
 	} from '@lucide/svelte';
@@ -14,9 +15,12 @@
 	type Props = {
 		onPan?: (direction: PanDirection) => void;
 		onZoom?: (delta: 1 | -1) => void;
+		onLocate?: () => void;
+		/** Optional state-flag wenn Geolocation gerade lädt. */
+		locating?: boolean;
 	};
 
-	let { onPan, onZoom }: Props = $props();
+	let { onPan, onZoom, onLocate, locating = false }: Props = $props();
 	let popoutOpen = $state(false);
 
 	function togglePopout(): void {
@@ -123,4 +127,18 @@
 			<Minus aria-hidden="true" size={16} />
 		</button>
 	</div>
+	{#if onLocate}
+		<button
+			type="button"
+			data-testid="map-locate-trigger"
+			aria-label="Mein Standort"
+			aria-busy={locating}
+			disabled={locating}
+			style={compactSize}
+			class="{compactBase} disabled:opacity-50"
+			onclick={onLocate}
+		>
+			<LocateFixed aria-hidden="true" size={16} />
+		</button>
+	{/if}
 </div>

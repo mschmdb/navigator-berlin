@@ -83,13 +83,13 @@
 
 	<BitsCombobox.Portal>
 		<BitsCombobox.Content
-			class="z-50 mt-1 max-h-[60vh] overflow-auto rounded-md border border-rule-strong bg-bg-elevated"
+			class="z-50 mt-1 max-h-[60vh] w-[min(100vw-1rem,42rem)] overflow-auto rounded-md border border-rule-strong bg-bg-elevated"
 		>
 			{#each suggestions as s (s.id)}
 				<BitsCombobox.Item
 					value={s.id}
 					label={s.displayName}
-					class="cursor-pointer px-3 py-2 text-base text-ink data-[highlighted]:bg-rule"
+					class="block cursor-pointer truncate px-3 py-2 text-base text-ink data-[highlighted]:bg-rule"
 				>
 					{s.displayName}
 				</BitsCombobox.Item>

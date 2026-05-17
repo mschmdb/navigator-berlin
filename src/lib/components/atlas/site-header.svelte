@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Layers, Bookmark, BookmarkCheck, Search, Map as MapIcon } from '@lucide/svelte';
+	import { Layers, Bookmark, BookmarkCheck, Search, Map as MapIcon, Menu } from '@lucide/svelte';
 	import AddressSearch from './address-search.svelte';
 	import AddressSearchOverlay from './address-search-overlay.svelte';
+	import MobileMetaDrawer from './mobile-meta-drawer.svelte';
 	import { AnimatedLogo } from '$lib/components/ui';
 	import type { GeocodeSuggestion } from '$lib/data';
 
@@ -50,6 +51,14 @@
 		onSelect?.(s);
 		overlayOpen = false;
 	}
+
+	let drawerOpen = $state(false);
+	function openDrawer(): void {
+		drawerOpen = true;
+	}
+	function closeDrawer(): void {
+		drawerOpen = false;
+	}
 </script>
 
 <header
@@ -60,7 +69,9 @@
 	<div class="mx-auto flex max-w-[1440px] items-center gap-4 px-4">
 		<a href="/" aria-label="navigator.berlin Startseite" class="flex shrink-0 items-center gap-2">
 			<AnimatedLogo variant="one-shot" size={32} title="navigator.berlin" />
-			<span class="font-sans text-base font-light tracking-wide text-ink">navigator.berlin</span>
+			<span class="hidden font-sans text-base font-light tracking-wide text-ink sm:inline">
+				navigator.berlin
+			</span>
 		</a>
 		{#if atlasCtaHref}
 			<div class="min-w-0 flex-1"></div>
@@ -155,8 +166,20 @@
 			</button>
 		{/if}
 		{#if langSwitcher}
-			<div class="shrink-0">{@render langSwitcher()}</div>
+			<div class="hidden shrink-0 sm:block">{@render langSwitcher()}</div>
 		{/if}
+		<!-- Mobile-Hamburger: Drawer mit Meta-Links + LangSwitcher -->
+		<button
+			type="button"
+			data-testid="header-menu-trigger"
+			onclick={openDrawer}
+			aria-label="Menü öffnen"
+			aria-haspopup="dialog"
+			aria-expanded={drawerOpen}
+			class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:bg-bg sm:hidden"
+		>
+			<Menu size={18} aria-hidden="true" />
+		</button>
 	</div>
 </header>
 
@@ -166,3 +189,5 @@
 	onSelect={handleOverlaySelect}
 	onClose={closeOverlay}
 />
+
+<MobileMetaDrawer open={drawerOpen} onClose={closeDrawer} {langSwitcher} />
