@@ -77,6 +77,6 @@ describe('buildOgDescription', () => {
 
 describe('DEFAULT_OG_IMAGE_PATH', () => {
 	it('zeigt auf statisches Default-Image', () => {
-		expect(DEFAULT_OG_IMAGE_PATH).toBe('/og-default.png');
+		expect(DEFAULT_OG_IMAGE_PATH).toBe('/og/page/home.png');
 	});
 });

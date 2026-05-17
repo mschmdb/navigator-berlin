@@ -1,4 +1,4 @@
-export const DEFAULT_OG_IMAGE_PATH = '/og-default.png';
+export const DEFAULT_OG_IMAGE_PATH = '/og/page/home.png';
 const MAX_TOP_LAYERS = 3;
 
 export interface OgImageInput {
