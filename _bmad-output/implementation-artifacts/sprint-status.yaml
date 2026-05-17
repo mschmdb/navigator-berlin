@@ -213,7 +213,7 @@ development_status:
 
   # Epic 4: EU-FOSS Hosting + Compliance-Showcase
   epic-4: in-progress
-  4-1-hetzner-cpx22-coolify-traefik-postgres-production-setup: ready-for-dev
+  4-1-hetzner-cpx22-coolify-traefik-postgres-production-setup: done  # 2026-05-17: live https://navigator.berlin (CPX22 Falkenstein, Coolify v4 + Traefik + Postgres-17), backup-cron weekly→CAX21, runbook docs/runbooks/server-bootstrap.md, 198 OG-PNGs pre-generated
   4-2-security-hardening-tls-csp-headers-crowdsec: ready-for-dev
   4-3-github-actions-ci-8-gates-lefthook: ready-for-dev
   4-4-adr-nachzieher-disaster-recovery-runbooks: ready-for-dev
