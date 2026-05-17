@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Server-Bootstrap: navigator.berlin Production
 
 Reproduzierbare Setup-Anleitung für Production-Host. Wer dieses Dokument in 12 Monaten von Null durchgeht, landet bei einem laufenden `https://navigator.berlin`.

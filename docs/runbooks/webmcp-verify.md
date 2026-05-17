@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # WebMCP-Integration verifizieren
 
 Quick-Check für die WebMCP-Adapter-Schicht (Story 2.7).

@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Runbook · publish-update-Skill
 
 Story 5.8 · Skill-getriebener Workflow für `/updates`-Einträge aus Commit-Ranges.

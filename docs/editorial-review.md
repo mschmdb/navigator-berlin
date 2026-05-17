@@ -1,3 +1,9 @@
+---
+type: editorial
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Editorial-Review-Checkliste (Pre-Phase-1-Launch + halbjährlich)
 
 Solo-Maintainer-Pflicht. Vor jedem Release.

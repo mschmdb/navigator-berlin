@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Runbook: Adress-Bookmark-Storage
 
 Operatives Referenz-Dokument für die Bookmark-Funktion. Zweck: Compliance-Audits, Incident-Response, Migrations-Planung.

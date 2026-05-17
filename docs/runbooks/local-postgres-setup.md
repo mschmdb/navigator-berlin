@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Local Postgres Setup (Story 2.0)
 
 Onboarding-Stub für die Postgres-Aggregat-Schicht. Production-Setup (Hetzner CPX22 + Coolify) kommt mit Story 4.1; Disaster-Recovery-Runbook mit Story 4.4 (ADR-013).

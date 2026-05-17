@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Runbook: Atlas-Screenshot für die Landing aufnehmen (Story 2.12)
 
 Hand-Capture-Pipeline. Story 2.6 deckt die OG-Card-Generation per Satori

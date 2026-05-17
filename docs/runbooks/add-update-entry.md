@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Runbook · Update-Entry hinzufügen
 
 Story 2.13 · Maintainer-Workflow für `/updates`-Einträge.

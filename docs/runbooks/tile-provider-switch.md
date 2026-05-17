@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Runbook: Tile-Provider-Switch (OpenFreeMap zu Protomaps)
 
 Status: Phase 1 Default OpenFreeMap, Hedge Protomaps.

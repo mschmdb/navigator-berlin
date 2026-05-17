@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Runbook: Home-Landing-Content aktualisieren (Story 2.12)
 
 Wer was auf der Landing zeigen will, ändert genau ein Content-File unter

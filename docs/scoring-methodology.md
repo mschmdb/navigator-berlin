@@ -1,3 +1,9 @@
+---
+type: pipeline
+audience: both
+last-verified: 2026-05-17
+---
+
 # Scoring-Methodik: Kiez-Score + Bezirks-Score
 
 Stand: 2026-05-16. Quelle Story 2.9a + ADR-013.

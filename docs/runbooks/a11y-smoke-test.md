@@ -1,3 +1,9 @@
+---
+type: runbook
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Runbook: A11y-Smoke-Test (NVDA + VoiceOver)
 
 Erfüllt: NFR-A1, NFR-A5. Quelle: Story 1.8.

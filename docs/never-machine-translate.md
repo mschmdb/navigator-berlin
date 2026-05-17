@@ -1,3 +1,9 @@
+---
+type: editorial
+audience: owner
+last-verified: 2026-05-17
+---
+
 # Never-Machine-Translate-Flag
 
 Single-Source-of-Truth: `src/lib/components/atlas/internal/editorial-config.ts`

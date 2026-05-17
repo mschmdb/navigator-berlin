@@ -1,3 +1,9 @@
+---
+type: editorial
+audience: owner
+last-verified: 2026-05-17
+---
+
 # FAQ-Template Style-Guide (Story 2.5b)
 
 Geltend für alle `src/lib/data/faq-templates/{cluster}/*.yaml` Dateien. Phase 1 ist

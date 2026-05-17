@@ -1,3 +1,9 @@
+---
+type: pipeline
+audience: both
+last-verified: 2026-05-17
+---
+
 # Daten- und Build-Pipeline
 
 navigator.berlin nutzt mehrere unabhängige Build-Schritte vor `vite build`. Die
