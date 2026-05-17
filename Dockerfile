@@ -26,16 +26,18 @@ RUN pnpm run build
 
 FROM node:22-alpine AS runtime
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@10.32.0 --activate
+RUN apk add --no-cache curl tini && corepack enable && corepack prepare pnpm@10.32.0 --activate
 COPY --from=build /app/build ./build
 COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml /app/.npmrc ./
 COPY --from=build /app/drizzle ./drizzle
+COPY --from=build /app/scripts/db ./scripts/db
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
 EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:3000/api/healthz || exit 1
+HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=5 \
+  CMD curl -fsS http://127.0.0.1:3000/api/healthz || exit 1
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "build/index.js"]
