@@ -20,11 +20,10 @@ describe('HOME_LAYER_TEASERS', () => {
 		expect(HOME_LAYER_TEASERS).toHaveLength(5);
 	});
 
-	it('jeder Slug existiert im MANIFEST.json (oder ist Composite wie oepnv-composite)', () => {
+	it('jeder Slug existiert im MANIFEST.json', () => {
 		const manifestSlugs = loadManifestLayerSlugs();
-		const COMPOSITE_ALLOWED = new Set(['oepnv-composite']);
 		for (const t of HOME_LAYER_TEASERS) {
-			expect(manifestSlugs.has(t.slug) || COMPOSITE_ALLOWED.has(t.slug)).toBe(true);
+			expect(manifestSlugs.has(t.slug)).toBe(true);
 		}
 	});
 

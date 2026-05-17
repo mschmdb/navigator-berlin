@@ -247,7 +247,7 @@
 			Postgres-Tabellen <code class="font-mono text-sm">bezirk_score</code> und
 			<code class="font-mono text-sm">kiez_score</code>. Details unter
 			<a
-				href="https://github.com/MatzeKitt/navigator.berlin/blob/main/docs/scoring-methodology.md"
+				href="https://github.com/mschmdb/navigator-berlin/blob/main/docs/scoring-methodology.md"
 				class="text-accent underline underline-offset-2 hover:text-accent-strong">
 				docs/scoring-methodology.md
 			</a>.

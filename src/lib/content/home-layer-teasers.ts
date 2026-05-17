@@ -51,10 +51,10 @@ export const HOME_LAYER_TEASERS: readonly HomeLayerTeaser[] = [
 		iconKey: 'thermometer'
 	},
 	{
-		slug: 'oepnv-composite',
-		label: 'ÖPNV-Halte',
+		slug: 'kiez-score-mobilitaet',
+		label: 'Mobilität-Score',
 		summary:
-			'Bus, Tram, U-Bahn, S-Bahn aggregiert. Haltedichte pro Quadratkilometer als grober Anbindungs-Indikator.',
+			'Bus, Tram, U-Bahn, S-Bahn, Rad-Infrastruktur zusammengefasst zur Mobilität-Dimension des Kiez-Scores.',
 		iconKey: 'train'
 	},
 	{
