@@ -26,7 +26,4 @@
 		</nav>
 		{#if langSwitcher}{@render langSwitcher()}{/if}
 	</div>
-	<p class="mx-auto mt-3 max-w-[1440px] px-4">
-		BFSG-konform, WCAG 2.2 AA komplett, AAA wo möglich.
-	</p>
 </footer>

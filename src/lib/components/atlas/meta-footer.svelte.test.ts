@@ -47,13 +47,6 @@ describe('meta-footer.svelte', () => {
 			.toBeInTheDocument();
 	});
 
-	it('zeigt BFSG-Disclaimer', async () => {
-		render(MetaFooter, {});
-		await expect
-			.element(page.getByText(/BFSG-konform.*WCAG 2\.2 AA/))
-			.toBeInTheDocument();
-	});
-
 	it('rendert langSwitcher snippet wenn uebergeben', async () => {
 		const langSwitcher = createRawSnippet(() => ({
 			render: () => '<span data-testid="lang">DE | EN</span>'
