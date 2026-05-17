@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { GeocodeSuggestion } from '$lib/data';
-import { extractStreetName, formatAddressSubline } from './address-subline.js';
+import {
+	extractPrimaryName,
+	extractStreetName,
+	formatAddressSubline
+} from './address-subline.js';
 
 function makeAddr(overrides: Partial<GeocodeSuggestion> = {}): GeocodeSuggestion {
 	return {
@@ -42,6 +46,37 @@ describe('extractStreetName', () => {
 	it('Fallback auf gesamten displayName wenn leer', () => {
 		const addr = makeAddr({ displayName: '' });
 		expect(extractStreetName(addr)).toBe('');
+	});
+});
+
+describe('extractPrimaryName', () => {
+	it('liefert erstes Segment vor Komma getrimmt', () => {
+		expect(extractPrimaryName('Carl-Leid-Weg, Wedding, Berlin')).toBe('Carl-Leid-Weg');
+	});
+
+	it('toleriert undefined + empty string', () => {
+		expect(extractPrimaryName(undefined)).toBe('');
+		expect(extractPrimaryName('')).toBe('');
+	});
+
+	it('liefert displayName-Prefix wenn keine Komma-Struktur', () => {
+		expect(extractPrimaryName('Alexanderplatz')).toBe('Alexanderplatz');
+	});
+
+	it('kombiniert Hausnummer-first mit Strassen-Segment zu „Strasse Hausnr"', () => {
+		expect(extractPrimaryName('34, Arndtstraße, Bergmannkiez, Berlin')).toBe('Arndtstraße 34');
+	});
+
+	it('kombiniert Hausnummer mit Buchstaben-Suffix (19a)', () => {
+		expect(extractPrimaryName('19a, Schonensche Straße, Vinetakiez, Berlin')).toBe(
+			'Schonensche Straße 19a'
+		);
+	});
+
+	it('lässt POI-Namen unverändert', () => {
+		expect(
+			extractPrimaryName('Hochschule für Technik und Wirtschaft, Campus, Berlin')
+		).toBe('Hochschule für Technik und Wirtschaft');
 	});
 });
 

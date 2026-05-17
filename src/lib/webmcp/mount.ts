@@ -48,7 +48,11 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 	activeHandle = await registerWebMcpServer({
 		navigatorProvider: () => navigator as unknown as NavigatorWithModelContext,
 		polyfillLoader: loadMcpBGlobalPolyfill,
-		geocode: async (q) => geocodeAddress({ q }),
+		// SvelteKit-Remote-Function: `.run()` triggert die tatsächliche Server-
+		// Ausführung. Ohne `.run()` bekommt der Adapter den RemoteResource-
+		// Builder statt der GeocodeSuggestion[] und `address_lookup` wirft
+		// beim Aufruf von `.slice()`. Root-Cause GH-Issue #7.
+		geocode: async (q) => geocodeAddress({ q }).run(),
 		getLayersAtPoint: (lat, lng) => getLayersAtPoint(lat, lng),
 		getKiezProfile: (locale, slug) => getKiezProfile(locale, slug),
 		getLayerMetadata,

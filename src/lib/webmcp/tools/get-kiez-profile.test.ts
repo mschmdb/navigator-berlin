@@ -76,4 +76,29 @@ describe('get-kiez-profile tool', () => {
 		await tool.handler({ slug: 'regierungsviertel' });
 		expect(spy).toHaveBeenCalledWith('de', 'regierungsviertel');
 	});
+
+	it('graceful auf 404: returnt strukturierten Error statt zu werfen (GH-Issue #7 follow-up)', async () => {
+		const tool = createGetKiezProfileTool({
+			getKiezProfile: async () => {
+				const err = Object.assign(new Error('Kiez not found: wismarplatz'), { status: 404 });
+				throw err;
+			},
+			defaultLocale: () => 'de'
+		});
+		const out = (await tool.handler({ slug: 'wismarplatz' })) as Record<string, unknown>;
+		expect(out.error).toBe('kiez_not_found');
+		expect(out.slug).toBe('wismarplatz');
+		expect(typeof out.hint).toBe('string');
+		expect((out.hint as string).length).toBeGreaterThan(20);
+	});
+
+	it('Nicht-404-Errors werden weiter propagiert', async () => {
+		const tool = createGetKiezProfileTool({
+			getKiezProfile: async () => {
+				throw new Error('connection refused');
+			},
+			defaultLocale: () => 'de'
+		});
+		await expect(tool.handler({ slug: 'irgendwas' })).rejects.toThrow('connection refused');
+	});
 });

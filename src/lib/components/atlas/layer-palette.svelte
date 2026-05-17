@@ -2,14 +2,17 @@
 	import { onMount } from 'svelte';
 	import { X, Search, Clock } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
-	import { getUiState, toggleLayer, clearLayers } from '$lib/state/ui-context.svelte.js';
+	import {
+		getUiState,
+		toggleLayer,
+		clearLayers,
+		openPalette
+	} from '$lib/state/ui-context.svelte.js';
 	import BottomSheet from './inspector-panel/bottom-sheet.svelte';
 	import {
 		filterLayers,
 		groupLayersByBundle,
-		getLayerDisplayName,
-		BUNDLE_ORDER,
-		BUNDLE_LABEL_DE
+		getLayerDisplayName
 	} from './internal/layer-palette-filter.js';
 	import { getLayerExplain } from './inspector-panel/internal/layer-explain.js';
 	import { shouldHandleSlash } from './internal/palette-shortcut.js';
@@ -52,8 +55,12 @@
 			}
 			if (shouldHandleSlash(e)) {
 				e.preventDefault();
-				ui.paletteOpen = !ui.paletteOpen;
-				if (ui.paletteOpen) queueMicrotask(() => searchInput?.focus());
+				if (ui.paletteOpen) {
+					ui.paletteOpen = false;
+				} else {
+					openPalette(ui);
+					queueMicrotask(() => searchInput?.focus());
+				}
 			}
 		}
 		window.addEventListener('keydown', onKeyDown);
@@ -63,18 +70,11 @@
 		};
 	});
 
-	let selectedBundle = $state<string | null>(null);
-
-	const filteredByQuery = $derived(filterLayers(layers, searchQuery));
-	const filtered = $derived(
-		selectedBundle
-			? filteredByQuery.filter((l) => l.bundleGroup === selectedBundle)
-			: filteredByQuery
-	);
+	const filtered = $derived(filterLayers(layers, searchQuery));
 	const groups = $derived(groupLayersByBundle(filtered));
 	const activeCount = $derived(ui.activeLayerSlugs.length);
 	const hasQuery = $derived(searchQuery.trim().length > 0);
-	const showEmptyState = $derived(!hasQuery && !selectedBundle);
+	const showEmptyState = $derived(!hasQuery);
 
 	const FREQUENT_SLUGS = [
 		'kiez-score-ruhe-luft',
@@ -90,10 +90,6 @@
 			(l): l is LayerMetadata => Boolean(l)
 		);
 	});
-
-	function selectBundle(bundle: string): void {
-		selectedBundle = selectedBundle === bundle ? null : bundle;
-	}
 
 	const recentLayers = $derived.by(() => {
 		const bySlug = new Map(layers.map((l) => [l.slug, l] as const));
@@ -123,7 +119,6 @@
 			queueMicrotask(() => searchInput?.focus());
 		} else {
 			searchQuery = '';
-			selectedBundle = null;
 		}
 	});
 </script>
@@ -192,23 +187,6 @@
 					{/each}
 				</ul>
 			</section>
-			<section data-testid="palette-categories" class="mb-4">
-				<h3 class="mb-2 font-sans text-sm font-medium uppercase tracking-wide text-ink-muted">
-					Nach Thema
-				</h3>
-				<div class="flex flex-wrap gap-2">
-					{#each BUNDLE_ORDER as bundle (bundle)}
-						<button
-							type="button"
-							data-testid={`palette-category-${bundle[0]}`}
-							onclick={() => selectBundle(bundle)}
-							class="inline-flex items-center rounded-sm border border-rule px-2 py-1 font-sans text-xs text-ink hover:bg-bg"
-						>
-							{BUNDLE_LABEL_DE[bundle]}
-						</button>
-					{/each}
-				</div>
-			</section>
 		{/if}
 		{#if isMobile && recentLayers.length > 0 && !searchQuery}
 			<section data-testid="palette-recent" class="mb-4">
@@ -252,16 +230,6 @@
 			</section>
 		{/if}
 
-		{#if selectedBundle && !showEmptyState}
-			<button
-				type="button"
-				data-testid="palette-bundle-clear"
-				onclick={() => (selectedBundle = null)}
-				class="mb-3 inline-flex items-center gap-1 font-mono text-xs text-ink-muted hover:text-ink hover:underline"
-			>
-				× {BUNDLE_LABEL_DE[selectedBundle as keyof typeof BUNDLE_LABEL_DE]} entfernen
-			</button>
-		{/if}
 		{#if groups.length === 0 && hasQuery}
 			<p data-testid="palette-empty" class="py-6 text-center font-serif italic text-ink-subtle">
 				Kein Layer matched „{searchQuery}".

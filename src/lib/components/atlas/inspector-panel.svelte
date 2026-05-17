@@ -5,7 +5,8 @@
 		getUiState,
 		toggleLayer,
 		addBookmark,
-		toggleCompareMode
+		toggleCompareMode,
+		openBookmarksDialog
 	} from '$lib/state/ui-context.svelte.js';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import {
@@ -95,7 +96,7 @@
 		const addr = ui.selectedAddress;
 		if (!addr) return;
 		if (addressBookmarked) {
-			ui.bookmarksDialogOpen = true;
+			openBookmarksDialog(ui);
 			return;
 		}
 		const bm = createBookmark({

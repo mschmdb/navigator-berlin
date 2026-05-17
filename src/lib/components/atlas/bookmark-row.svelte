@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Trash2, GitCompare } from '@lucide/svelte';
 	import type { Bookmark } from '$lib/state/bookmark-schema.js';
+	import { extractPrimaryName } from './internal/address-subline.js';
 
 	type Props = {
 		bookmark: Bookmark;
@@ -48,22 +49,19 @@
 		onConfirmDelete(bookmark.id);
 	}
 
+	const primaryName = $derived(extractPrimaryName(bookmark.displayName));
 	const subtext = $derived(
 		[bookmark.bezirk, bookmark.postcode].filter(Boolean).join(' · ')
 	);
 </script>
 
-<li
-	data-testid="bookmark-row"
-	data-bookmark-id={bookmark.id}
-	class="border-b border-rule last:border-b-0"
->
+<li data-testid="bookmark-row" data-bookmark-id={bookmark.id}>
 	{#if confirming}
 		<div
 			data-testid="bookmark-confirm"
 			role="group"
 			aria-label="Bookmark löschen bestätigen"
-			class="flex items-center justify-between gap-2 px-3 py-3"
+			class="flex items-center justify-between gap-2 px-6 py-3"
 		>
 			<span class="font-mono text-xs text-ink">Wirklich löschen?</span>
 			<div class="flex items-center gap-1.5">
@@ -91,20 +89,21 @@
 				type="button"
 				data-testid="bookmark-select"
 				onclick={() => onSelect(bookmark)}
-				class="flex min-h-[44px] flex-1 flex-col items-start justify-center gap-0.5 px-3 py-2 text-left hover:bg-bg"
+				title={bookmark.displayName}
+				class="flex min-h-[44px] flex-1 flex-col items-start justify-center gap-0.5 px-6 py-2.5 text-left hover:bg-bg"
 			>
-				<span class="font-sans text-sm text-ink">{bookmark.displayName}</span>
+				<span class="font-sans text-sm text-ink">{primaryName}</span>
 				{#if subtext}
-					<span class="font-mono text-xs text-ink-subtle">{subtext}</span>
+					<span class="font-sans text-xs text-ink-muted">{subtext}</span>
 				{/if}
 			</button>
-			<div class="flex items-center gap-0.5 px-1">
+			<div class="flex items-center gap-0.5 pr-3">
 				{#if showCompareAction && onAddToCompare}
 					<button
 						type="button"
 						data-testid="bookmark-compare"
 						onclick={() => onAddToCompare(bookmark)}
-						aria-label={`„${bookmark.displayName}" zum Vergleich hinzufügen`}
+						aria-label={`„${primaryName}" zum Vergleich hinzufügen`}
 						class="inline-flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink"
 					>
 						<GitCompare size={16} aria-hidden="true" />
@@ -114,7 +113,7 @@
 					type="button"
 					data-testid="bookmark-delete"
 					onclick={startConfirm}
-					aria-label={`„${bookmark.displayName}" löschen`}
+					aria-label={`„${primaryName}" löschen`}
 					class="inline-flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink"
 				>
 					<Trash2 size={16} aria-hidden="true" />

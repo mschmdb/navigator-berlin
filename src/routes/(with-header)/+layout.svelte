@@ -5,19 +5,26 @@
 	import { geocodeAddress } from '$lib/data/geocode.remote.js';
 	import type { GeocodeSuggestion } from '$lib/data';
 	import { provideAddressSelection } from '$lib/state/address-selection.svelte.js';
-	import { getUiState, setComparisonAddress } from '$lib/state/ui-context.svelte.js';
+	import {
+		getUiState,
+		setComparisonAddress,
+		openPalette,
+		openBookmarksDialog
+	} from '$lib/state/ui-context.svelte.js';
 	import { isBookmarked, bookmarkToSuggestion } from '$lib/state/bookmark-store.js';
 	import type { Bookmark } from '$lib/state/bookmark-schema.js';
 
 	let { children } = $props();
 
 	/**
-	 * Story 2.11: Auf der Hero-Landing („/") zeigt der Header den Atlas-CTA
-	 * statt der Adress-Such-Bar. Atlas + Bookmark + Layer-Palette sind dort
-	 * irrelevant, weil der User noch nicht im Karten-Kontext steckt.
+	 * GH-Issue #8: Atlas-Aktionen (Such-Bar, Layer-Palette, Bookmark) sind
+	 * nur im Karten-Kontext (`/explore`) sinnvoll. Auf allen anderen Routen
+	 * (Hero-Landing, /methodik, /lizenzen, /updates, /bezirk, /kiez,
+	 * /layer/[slug], /wo-lebt-es-sich-gut) zeigt der Header statt Such-Bar
+	 * einen Atlas-CTA, und Layer/Bookmark-Trigger werden ausgeblendet.
 	 */
-	const onLanding = $derived(page.url.pathname === '/');
-	const atlasCtaHref = $derived(onLanding ? '/explore' : undefined);
+	const offAtlas = $derived(!page.url.pathname.startsWith('/explore'));
+	const atlasCtaHref = $derived(offAtlas ? '/explore' : undefined);
 
 	const geocode = async (q: string): Promise<GeocodeSuggestion[]> => geocodeAddress({ q }).run();
 
@@ -29,11 +36,11 @@
 	}
 
 	function openLayerPalette(): void {
-		ui.paletteOpen = true;
+		openPalette(ui);
 	}
 
 	function openBookmarks(): void {
-		ui.bookmarksDialogOpen = true;
+		openBookmarksDialog(ui);
 	}
 
 	const currentAddressBookmarked = $derived(
@@ -57,10 +64,10 @@
 	{geocode}
 	{onSelect}
 	activeLayerCount={ui.activeLayerSlugs.length}
-	onOpenLayerPalette={onLanding ? undefined : openLayerPalette}
+	onOpenLayerPalette={offAtlas ? undefined : openLayerPalette}
 	bookmarkCount={ui.bookmarks.length}
 	{currentAddressBookmarked}
-	onOpenBookmarks={onLanding ? undefined : openBookmarks}
+	onOpenBookmarks={offAtlas ? undefined : openBookmarks}
 	searchCollapsed={ui.inspectorOpen || ui.compareMode}
 	{atlasCtaHref}
 />

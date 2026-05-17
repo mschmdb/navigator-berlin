@@ -176,3 +176,25 @@ export function exitCompareMode(state: UiState): void {
 	clearComparisonData(state);
 	state.comparisonLoading = false;
 }
+
+/**
+ * GH-Issue #10: Overlay-Mutex.
+ * Layer-Palette und Bookmark-Dialog sind beide BottomSheet-Overlays mit
+ * Focus-Trap. Gleichzeitig offen führt zu Focus-Trap-Konflikt, doppeltem
+ * Mount und unklarer ESC/Backdrop-Semantik. Diese Setter erzwingen
+ * gegenseitigen Ausschluss by-design.
+ */
+export function openPalette(state: UiState): void {
+	state.bookmarksDialogOpen = false;
+	state.paletteOpen = true;
+}
+
+export function openBookmarksDialog(state: UiState): void {
+	state.paletteOpen = false;
+	state.bookmarksDialogOpen = true;
+}
+
+export function closeOverlays(state: UiState): void {
+	state.paletteOpen = false;
+	state.bookmarksDialogOpen = false;
+}

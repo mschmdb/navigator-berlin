@@ -205,11 +205,11 @@
 
 {#snippet dialogBody()}
 	<header
-		class="flex items-start justify-between gap-3 border-b border-rule px-4 pb-3 pt-3"
+		class="flex items-start justify-between gap-3 border-b border-rule px-6 pb-4 pt-5"
 	>
 		<h2
 			id="bookmarks-dialog-title"
-			class="font-serif text-xl text-ink"
+			class="font-serif text-xl leading-tight text-ink"
 		>
 			Gespeicherte Adressen
 		</h2>
@@ -225,29 +225,29 @@
 	</header>
 
 	{#if ui.selectedAddress}
-		<div class="border-b border-rule px-4 py-3">
+		<div
+			data-testid="bookmark-toolbar"
+			class="sticky top-[var(--header-height,56px)] z-10 border-b border-rule bg-bg-elevated px-6 py-2"
+		>
 			{#if saveJustHappened}
 				<div
 					data-testid="bookmark-save-confirmation"
-					class="flex items-start gap-3 border border-rule px-3 py-2"
+					class="flex items-center gap-2 font-sans text-sm text-ink"
 				>
-					<Check size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-ink" />
-					<span class="flex flex-col gap-0.5">
-						<span class="font-sans text-sm text-ink">Gespeichert</span>
-						<span class="font-mono text-xs text-ink-subtle">{ui.selectedAddress.displayName}</span>
-					</span>
+					<Check size={16} aria-hidden="true" class="shrink-0" />
+					<span>Gespeichert.</span>
 				</div>
 			{:else if alreadyBookmarked}
 				<p
 					data-testid="bookmark-current-saved"
-					class="font-mono text-xs text-ink-subtle"
+					class="font-sans text-sm text-ink-muted"
 				>
 					Aktuelle Adresse ist bereits gespeichert.
 				</p>
 			{:else if limitReached}
 				<p
 					data-testid="bookmark-limit-reached"
-					class="font-mono text-xs text-ink-subtle"
+					class="font-sans text-sm text-ink-muted"
 				>
 					Limit erreicht ({MAX_BOOKMARKS}). Lösche alte Bookmarks zum Hinzufügen.
 				</p>
@@ -258,13 +258,10 @@
 					data-initial-focus
 					onclick={handleSave}
 					disabled={!canSave}
-					class="flex w-full items-start gap-3 border border-rule px-3 py-2 text-left hover:bg-bg disabled:opacity-40"
+					class="inline-flex items-center gap-2 font-sans text-sm text-ink hover:text-ink disabled:opacity-40"
 				>
-					<BookmarkPlus size={18} aria-hidden="true" class="mt-0.5 shrink-0 text-ink" />
-					<span class="flex flex-col gap-0.5">
-						<span class="font-sans text-sm text-ink">Aktuelle Adresse speichern</span>
-						<span class="font-mono text-xs text-ink-subtle">{ui.selectedAddress.displayName}</span>
-					</span>
+					<BookmarkPlus size={16} aria-hidden="true" class="shrink-0" />
+					<span>Aktuelle Adresse speichern</span>
 				</button>
 			{/if}
 		</div>
@@ -274,7 +271,7 @@
 		{#if sortedBookmarks.length === 0}
 			<p
 				data-testid="bookmark-empty"
-				class="px-4 py-8 text-center font-mono text-xs text-ink-subtle"
+				class="px-6 py-8 text-center font-serif text-sm italic text-ink-subtle"
 			>
 				Noch keine Bookmarks. Wähle eine Adresse und tippe auf das Bookmark-Symbol.
 			</p>
@@ -294,7 +291,7 @@
 	</div>
 
 	<footer
-		class="flex items-center justify-between gap-3 border-t border-rule px-4 py-3"
+		class="flex items-center justify-between gap-3 border-t border-rule px-6 py-3"
 	>
 		<div class="flex items-center gap-3">
 			{#if sortedBookmarks.length > 0 && !clearAllConfirming}
@@ -395,7 +392,7 @@
 				aria-modal="true"
 				aria-labelledby="bookmarks-dialog-title"
 				tabindex="-1"
-				class="flex max-h-[80vh] w-[480px] max-w-full flex-col border border-rule-strong bg-bg-elevated text-ink shadow-lg"
+				class="flex max-h-[80vh] w-[480px] max-w-full flex-col rounded-md border border-rule-strong bg-bg-elevated text-ink shadow-lg"
 			>
 				{@render dialogBody()}
 			</div>

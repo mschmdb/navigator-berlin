@@ -90,4 +90,31 @@ describe('get-layer-metadata tool', () => {
 		const out = (await tool.handler({ slug: 'wohnlagen-2024' })) as Record<string, unknown>;
 		expect(out.updated_at).toBe('2024-12-01');
 	});
+
+	it('graceful auf Unknown-Layer-Throw: returnt strukturierten Error (GH-Issue #7 follow-up 2)', async () => {
+		const tool = createGetLayerMetadataTool({
+			getLayerMetadata: () => {
+				throw new Error('Unknown layer: social-status');
+			},
+			getLayerMethodology: () => null,
+			loadManifest: async () => undefined,
+			defaultLocale: () => 'de'
+		});
+		const out = (await tool.handler({ slug: 'social-status' })) as Record<string, unknown>;
+		expect(out.error).toBe('layer_not_found');
+		expect(out.slug).toBe('social-status');
+		expect(typeof out.hint).toBe('string');
+	});
+
+	it('Nicht-Unknown-Layer-Errors werden weiter propagiert', async () => {
+		const tool = createGetLayerMetadataTool({
+			getLayerMetadata: () => {
+				throw new Error('Network down');
+			},
+			getLayerMethodology: () => null,
+			loadManifest: async () => undefined,
+			defaultLocale: () => 'de'
+		});
+		await expect(tool.handler({ slug: 'whatever' })).rejects.toThrow('Network down');
+	});
 });

@@ -4,6 +4,11 @@
  *
  * Geometrie wird absichtlich NICHT exportiert (zu schwergewichtig für LLM).
  * Stattdessen wird `centroid` + `data_sources` mit Provenance geliefert.
+ *
+ * Nicht-existenter Slug: handler returnt `{ error: 'kiez_not_found', slug, hint }`
+ * statt zu werfen (sonst zeigt die LLM-Extension nur „Tool was executed but the
+ * invocation failed"). LLMs raten den Slug oft aus `plr_name` von
+ * `cross_layer_query`, was eine Ebene tiefer als die Bezirksregion ist.
  */
 
 import * as v from 'valibot';
@@ -38,20 +43,37 @@ function serializeProfile(profile: KiezProfile): JsonObject {
 	};
 }
 
+function isHttpErrorWithStatus(err: unknown, status: number): boolean {
+	if (typeof err !== 'object' || err === null) return false;
+	const candidate = err as { status?: unknown };
+	return candidate.status === status;
+}
+
 export function createGetKiezProfileTool(
 	deps: GetKiezProfileDeps
 ): WebMcpToolDefinition {
 	return {
 		name: 'get_kiez_profile',
 		description:
-			'Return the public profile of a Berlin Kiez (LOR Bezirksregion) by slug. Includes name, Bezirk, population, area, centroid, and a list of data sources with license + updated_at provenance.',
+			'Return the public profile of a Berlin Kiez (LOR Bezirksregion) by slug. Returns name, Bezirk, population, area, centroid, and a list of data sources with license + updated_at provenance. The slug must match a Berlin LOR Bezirksregion (143 total), NOT the plr_name field from cross_layer_query (which is a finer Planungsraum). On unknown slug, returns { error: "kiez_not_found", slug, hint } instead of throwing.',
 		inputSchema: KIEZ_PROFILE_INPUT_JSON_SCHEMA,
 		outputSchema: KIEZ_PROFILE_OUTPUT_JSON_SCHEMA,
 		handler: async (raw) => {
 			const input = v.parse(KiezProfileInputSchema, raw);
 			const locale: Locale = input.locale ?? deps.defaultLocale();
-			const profile = await deps.getKiezProfile(locale, input.slug);
-			return serializeProfile(profile);
+			try {
+				const profile = await deps.getKiezProfile(locale, input.slug);
+				return serializeProfile(profile);
+			} catch (err) {
+				if (isHttpErrorWithStatus(err, 404)) {
+					return {
+						error: 'kiez_not_found',
+						slug: input.slug,
+						hint: 'The slug must be a LOR Bezirksregion (143 total in Berlin), not a Planungsraum (plr_name) from cross_layer_query. Pass lat/lng to list_layers_at_point or cross_layer_query first; then resolve the containing Bezirksregion via geographic context.'
+					};
+				}
+				throw err;
+			}
 		}
 	};
 }

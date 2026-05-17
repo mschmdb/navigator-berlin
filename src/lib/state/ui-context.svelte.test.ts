@@ -14,6 +14,9 @@ import {
 	toggleCompareMode,
 	setComparisonAddress,
 	exitCompareMode,
+	openPalette,
+	openBookmarksDialog,
+	closeOverlays,
 	type UiState
 } from './ui-context.svelte.js';
 import type {
@@ -323,6 +326,43 @@ describe('ui-context', () => {
 			expect(s.comparisonLoading).toBe(true);
 			s.comparisonLoading = false;
 			expect(s.comparisonLoading).toBe(false);
+		});
+	});
+
+	describe('overlay-mutex (GH-Issue #10)', () => {
+		it('openPalette setzt paletteOpen=true und schließt bookmarksDialogOpen', () => {
+			const s = makeState();
+			s.bookmarksDialogOpen = true;
+			openPalette(s);
+			expect(s.paletteOpen).toBe(true);
+			expect(s.bookmarksDialogOpen).toBe(false);
+		});
+
+		it('openBookmarksDialog setzt bookmarksDialogOpen=true und schließt paletteOpen', () => {
+			const s = makeState();
+			s.paletteOpen = true;
+			openBookmarksDialog(s);
+			expect(s.bookmarksDialogOpen).toBe(true);
+			expect(s.paletteOpen).toBe(false);
+		});
+
+		it('closeOverlays schließt beide Flags', () => {
+			const s = makeState();
+			s.paletteOpen = true;
+			s.bookmarksDialogOpen = true;
+			closeOverlays(s);
+			expect(s.paletteOpen).toBe(false);
+			expect(s.bookmarksDialogOpen).toBe(false);
+		});
+
+		it('Sequenz Layer → Bookmark → Layer hält Mutex-Invariante', () => {
+			const s = makeState();
+			openPalette(s);
+			expect(s.paletteOpen && !s.bookmarksDialogOpen).toBe(true);
+			openBookmarksDialog(s);
+			expect(!s.paletteOpen && s.bookmarksDialogOpen).toBe(true);
+			openPalette(s);
+			expect(s.paletteOpen && !s.bookmarksDialogOpen).toBe(true);
 		});
 	});
 });
