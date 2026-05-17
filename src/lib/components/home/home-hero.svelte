@@ -21,12 +21,12 @@
 		navigator.berlin · Beta
 	</p>
 	<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">
-		Berlin, Schicht für Schicht.
+		Berlin in Daten.
 	</h1>
 	<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
-		Eine Karte für Berlin aus offenen Senats-Daten. Lärm, Klima, Grün,
-		Mobilität, Wohnen und Soziale Lage liegen darin übereinander, pro
-		Adresse, pro Kiez, pro Bezirk. Mit Quelle und Stand.
+		Gib eine Adresse ein. Du siehst, wie laut es dort ist, wie heiß es im
+		Sommer wird, wie nah die nächste S-Bahn liegt, wie der Mietspiegel die
+		Lage einordnet. Jeder Wert mit Quelle und Stand-Datum.
 	</p>
 	<div class="flex flex-wrap gap-3 pt-2">
 		<a

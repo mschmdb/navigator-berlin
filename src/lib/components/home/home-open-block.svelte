@@ -12,7 +12,7 @@
 
 <section data-testid="home-open-block" class="space-y-6">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">6 von 38 Quellen</h2>
+		<h2 class="font-serif text-2xl text-ink md:text-3xl">6 von 44 Quellen</h2>
 		<p class="font-serif text-base text-ink-muted">
 			Alle aus öffentlichen Datensätzen mit Open-Data-Lizenz. Kein Scraping,
 			kein Abo, keine Werbung.
@@ -33,6 +33,6 @@
 		class="inline-flex font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
 		href="/lizenzen"
 	>
-		Alle 38 Quellen mit Lizenz
+		Alle 44 Quellen mit Lizenz
 	</a>
 </section>

@@ -24,7 +24,7 @@
 
 <section data-testid="home-layer-teasers" class="space-y-6">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">38 Datensätze</h2>
+		<h2 class="font-serif text-2xl text-ink md:text-3xl">44 Datensätze</h2>
 		<p class="font-serif text-base text-ink-muted">
 			Fünf davon sehr verkürzt. Pro Schicht eigene Detail-Seite mit Methodik,
 			Lizenz und Stand-Datum.

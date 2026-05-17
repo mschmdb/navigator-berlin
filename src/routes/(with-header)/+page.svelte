@@ -21,9 +21,9 @@
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
-	const pageTitle = 'navigator.berlin · Berliner Datenlagen, zusammengelegt';
+	const pageTitle = 'navigator.berlin · Berlin in Daten';
 	const pageDescription =
-		'Berliner Adress-, Kiez- und Bezirks-Daten zu Lärm, Klima, Grün, Mobilität, Wohnen und Sozialer Lage. Offene Senats-Daten, nachvollziehbar aggregiert.';
+		'Eine Berliner Adresse, ein Kiez, ein Bezirk. Daten zu Lärm, Klima, Grün, Mobilität, Wohnen, Versorgung und sozialer Lage. Mit Quelle und Stand.';
 	const ogImagePath = '/og-default.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 

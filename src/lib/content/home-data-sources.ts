@@ -3,7 +3,7 @@
  *
  * 6 zentrale offene Daten-Anbieter mit Lizenz-Marker. Liste ist editorial,
  * NICHT auto-generiert aus dem Manifest — sie soll die wichtigsten Anbieter
- * sichtbar machen, nicht alle 38 Layer einzeln. „Alle 38 Quellen"-Link
+ * sichtbar machen, nicht alle 44 Layer einzeln. „Alle 44 Quellen"-Link
  * verweist auf `/lizenzen` (Story 4.5).
  */
 export interface HomeDataSource {
