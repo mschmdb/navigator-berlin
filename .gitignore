@@ -51,3 +51,4 @@ _user-input/
 # Vitest-Browser visual-regression artifacts (auto-generated per test-run)
 **/__screenshots__/
 .vitest-attachments/
+_bmad-output/secrets/
