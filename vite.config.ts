@@ -18,6 +18,10 @@ export default defineConfig({
 	resolve: {
 		dedupe: ['svelte', 'svelte/internal']
 	},
+	ssr: {
+		// Natives (.node + wasm) niemals bündeln, sonst Rollup PARSE_ERROR auf Binary-Magic-Bytes
+		external: ['@resvg/resvg-js', 'wawoff2', 'fontnik', 'better-sqlite3']
+	},
 	optimizeDeps: {
 		exclude: ['bits-ui'],
 		include: ['layerchart']
