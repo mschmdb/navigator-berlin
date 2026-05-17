@@ -5,13 +5,15 @@
 	geschlossen ist.
 -->
 <script lang="ts">
+	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 </script>
 
 <SeoHead
 	title="Datenschutz · navigator.berlin"
 	description="Datenschutz-Erklärung für navigator.berlin (in Vorbereitung)."
-	noindex
+	pathname={page.url.pathname}
+	origin={page.url.origin}
 />
 
 <main class="mx-auto max-w-2xl px-4 py-12">

@@ -4,13 +4,15 @@
 	nicht 404t.
 -->
 <script lang="ts">
+	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 </script>
 
 <SeoHead
 	title="Architektur · navigator.berlin"
 	description="Technische Architektur und EU-FOSS-Stack hinter navigator.berlin (in Vorbereitung)."
-	noindex
+	pathname={page.url.pathname}
+	origin={page.url.origin}
 />
 
 <main class="mx-auto max-w-2xl px-4 py-12">
