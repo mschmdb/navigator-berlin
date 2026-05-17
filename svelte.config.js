@@ -18,7 +18,7 @@ const config = {
 			// `robots.txt`, `sitemap.xml`, `sitemap-de.xml` haben keine internen Links und
 			// werden vom Crawler nicht entdeckt. Story 2.1 zwingt sie als Entry-Points
 			// in den prerender. Falls weitere standalone-Endpoints dazukommen, hier ergaenzen.
-			entries: ['*', '/robots.txt', '/sitemap.xml', '/sitemap-de.xml', '/webmcp-manifest.json'],
+			entries: ['*', '/robots.txt', '/sitemap.xml', '/sitemap-de.xml', '/webmcp-manifest.json', '/.well-known/webmcp.json'],
 			handleUnseenRoutes: ({ route }) => {
 				console.warn(`[prerender] unseen route ${route} (Phase-1 warn-only)`);
 			},

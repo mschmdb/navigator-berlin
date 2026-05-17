@@ -14,16 +14,15 @@
 	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl" lang="de">Architektur</h1>
 
 	<p class="text-fg-muted mt-6 leading-relaxed">
-		navigator.berlin ist mit einem EU-FOSS-Stack gebaut: alle eingesetzten Komponenten sind
-		Open-Source, gehostet wird in Deutschland. Kein US-Cloud-Anbieter im Produktiv-Pfad, kein
-		proprietäres Tracking, kein Cookie-Banner notwendig.
+		Open-Source-Stack, gehostet in Deutschland. Kein US-Cloud-Anbieter, kein Tracking,
+		kein Cookie-Banner.
 	</p>
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Hosting</h2>
 		<p class="mt-3 leading-relaxed">
-			Server-Hosting in Deutschland bei einem europäischen Anbieter. Domain in Deutschland
-			registriert.
+			Server in Deutschland bei einem europäischen Anbieter. Domain ebenfalls bei
+			einem deutschen Registrar.
 		</p>
 	</section>
 
@@ -64,38 +63,61 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Daten-Quellen</h2>
-		<p class="mt-3 leading-relaxed">
-			Die Inhalte stammen aus offenen Verwaltungs-Quellen:
-		</p>
 		<ul class="mt-3 ml-6 list-disc space-y-2 leading-relaxed">
 			<li>
 				<a class="text-accent underline" href="https://daten.berlin.de/" rel="noopener noreferrer" target="_blank"
 					>ODIS Berlin</a
 				>
-				(Open Data Information Stelle)
 			</li>
-			<li>FIS-Broker (Geoportal des Landes Berlin)</li>
+			<li>FIS-Broker (Geoportal Berlin)</li>
 			<li>Amt für Statistik Berlin-Brandenburg</li>
 			<li>Deutscher Wetterdienst (DWD)</li>
 			<li>OpenStreetMap</li>
 		</ul>
 		<p class="mt-3 leading-relaxed">
-			Pro Layer ist die jeweilige Quelle, Lizenz und der Daten-Stand in der
-			<a class="text-accent underline" href="/methodik">Methodik</a>
-			und auf der
-			<a class="text-accent underline" href="/lizenzen">Lizenzen-Seite</a>
-			dokumentiert.
+			Quelle, Lizenz und Stand-Datum pro Layer in der
+			<a class="text-accent underline" href="/methodik">Methodik</a> und auf der
+			<a class="text-accent underline" href="/lizenzen">Lizenzen-Seite</a>.
 		</p>
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">Was bewusst nicht eingesetzt wird</h2>
+		<h2 class="font-serif text-xl">Schnittstelle für KI-Assistenten (alpha)</h2>
+		<p class="mt-3 leading-relaxed">
+			Fünf Tools für strukturierte Abfragen statt HTML-Scraping: Adress-Suche,
+			Punkt-Abfrage, Layer-Discovery, Kiez-Profil, Layer-Metadaten. Antwort
+			enthält jeweils Quelle, Lizenz und Stand-Datum.
+		</p>
+		<p class="mt-3 leading-relaxed">
+			<a class="text-accent underline" href="https://github.com/webmachinelearning/webmcp" rel="noopener noreferrer" target="_blank">WebMCP</a>
+			ist ein W3C-Community-Group-Draft seit August 2025: eine browser-native
+			JavaScript-API für Websites, die Tools an LLMs ausliefern. Noch keine
+			Recommendation, Spec in Bewegung.
+		</p>
+		<p class="mt-3 leading-relaxed">
+			Diese Site nutzt
+			<a class="text-accent underline" href="https://github.com/MiguelsPizza/WebMCP" rel="noopener noreferrer" target="_blank">mcp-b</a>
+			als Polyfill, bis WebMCP browser-nativ verfügbar ist.
+		</p>
+		<p class="mt-3 leading-relaxed">
+			Manifest-Discovery (Convention, nicht Standard):
+			<a class="text-accent underline" href="/.well-known/webmcp.json">/.well-known/webmcp.json</a>
+			(spiegelt <a class="text-accent underline" href="/webmcp-manifest.json">/webmcp-manifest.json</a>).
+			Klartext-Variante:
+			<a class="text-accent underline" href="/llms.txt">/llms.txt</a> /
+			<a class="text-accent underline" href="/llms-full.txt">/llms-full.txt</a>
+			nach <a class="text-accent underline" href="https://llmstxt.org" rel="noopener noreferrer" target="_blank">llmstxt.org</a>.
+		</p>
+	</section>
+
+	<section class="mt-10">
+		<h2 class="font-serif text-xl">Nicht verwendet</h2>
 		<ul class="mt-3 ml-6 list-disc space-y-2 leading-relaxed">
-			<li>Kein Cloudflare, kein AWS, kein GCP, kein Azure</li>
-			<li>Kein Google Analytics, kein Facebook Pixel, keine Werbe-Netzwerke</li>
-			<li>Keine Drittanbieter-Embeds</li>
-			<li>Keine Tracking-Cookies, kein Cookie-Banner</li>
-			<li>Keine User-Accounts, keine Login-Funktion, keine Newsletter-Sammlung</li>
+			<li>Cloudflare, AWS, GCP, Azure</li>
+			<li>Google Analytics, Facebook Pixel, Werbe-Netzwerke</li>
+			<li>Drittanbieter-Embeds</li>
+			<li>Tracking-Cookies, Cookie-Banner</li>
+			<li>User-Accounts, Login, Newsletter-Sammlung</li>
 		</ul>
 	</section>
 </main>
