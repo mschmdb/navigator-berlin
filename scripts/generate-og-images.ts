@@ -312,7 +312,18 @@ async function main(): Promise<void> {
 	}
 
 	process.stdout.write(`[og:images] done: rendered=${rendered} cached=${cached} failed=${failed}\n`);
-	if (failed > 0) process.exit(1);
+
+	// Postgres-Pool explizit schließen, sonst hängt Node-Event-Loop und Script exit-t nie
+	if (process.env.DATABASE_URL) {
+		try {
+			const { closeDb } = await import('../src/lib/server/db/index.js');
+			await closeDb();
+		} catch {
+			/* ignore close errors */
+		}
+	}
+
+	process.exit(failed > 0 ? 1 : 0);
 }
 
 main().catch((err: unknown) => {
