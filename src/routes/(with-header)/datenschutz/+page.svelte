@@ -12,7 +12,9 @@
 />
 
 <main class="mx-auto max-w-2xl px-4 py-12">
-	<h1 class="font-serif text-3xl">Datenschutzerklärung</h1>
+	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl" lang="de">
+		Datenschutzerklärung
+	</h1>
 
 	<p class="text-fg-muted mt-4 text-sm">Stand: 2026-05-17</p>
 

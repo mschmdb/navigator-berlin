@@ -255,8 +255,9 @@
 		data-variant={variant}
 		class="flex h-full flex-col overflow-x-hidden overflow-y-auto bg-bg-elevated text-ink"
 	>
+		<div class="sticky top-0 z-10 bg-bg-elevated">
 		<header
-			class="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-rule bg-bg-elevated px-6 pb-4 pt-5"
+			class="flex items-start justify-between gap-3 border-b border-rule px-6 pb-4 pt-5"
 		>
 			<div class="min-w-0">
 				<h2
@@ -288,7 +289,7 @@
 
 		<div
 			data-testid="inspector-toolbar"
-			class="sticky top-[var(--header-height,56px)] z-10 flex items-center justify-end gap-3 border-b border-rule bg-bg-elevated px-6 py-2"
+			class="flex items-center justify-end gap-3 border-b border-rule px-6 py-2"
 		>
 			<div class="flex items-center gap-3">
 				<button
@@ -369,6 +370,7 @@
 				{showEmptySections ? 'Leere Sektionen ausblenden' : 'Leere Sektionen einblenden'}
 			</button>
 		</div>
+		</div><!-- /sticky-header-wrapper -->
 
 		<div class="flex-1 space-y-4 px-6 py-4">
 			<KiezScoreSection score={ui.kiezScore} />

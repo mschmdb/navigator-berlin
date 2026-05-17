@@ -841,9 +841,9 @@
 
 <section
 	class={[
-		'flex h-[calc(100vh-120px)] flex-col',
+		'flex h-[calc(100dvh-72px)] flex-col',
 		showSidePanel &&
-			'lg:grid lg:h-[calc(100vh-120px)] lg:grid-cols-[1fr_var(--inspector-width)] lg:grid-rows-1'
+			'lg:grid lg:h-[calc(100dvh-72px)] lg:grid-cols-[1fr_var(--inspector-width)] lg:grid-rows-1'
 	]
 		.filter(Boolean)
 		.join(' ')}

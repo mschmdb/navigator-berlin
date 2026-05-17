@@ -85,7 +85,21 @@
 				<Search size={18} aria-hidden="true" />
 			</button>
 		{:else}
-			<div class="min-w-0 flex-1">
+			<!-- Mobile (<sm): Search collapsed to Lupe-Icon (Bug-Fix 2026-05-17, Mobile-Header
+			     hatte für AddressSearch zu wenig Platz neben Layer-/Bookmark-Triggern). -->
+			<div class="min-w-0 flex-1 sm:hidden"></div>
+			<button
+				type="button"
+				data-testid="header-search-trigger-mobile"
+				onclick={openOverlay}
+				aria-label="Adress-Suche öffnen"
+				aria-haspopup="dialog"
+				class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:bg-bg sm:hidden"
+			>
+				<Search size={18} aria-hidden="true" />
+			</button>
+			<!-- Desktop (sm+): full Search-Input -->
+			<div class="hidden min-w-0 flex-1 sm:block">
 				<AddressSearch variant="header" {geocode} {onSelect} />
 			</div>
 		{/if}

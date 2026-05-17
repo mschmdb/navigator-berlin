@@ -60,6 +60,9 @@
 	let sheetEl: HTMLElement | undefined = $state();
 	let linkTimer: ReturnType<typeof setTimeout> | null = null;
 	let llmTimer: ReturnType<typeof setTimeout> | null = null;
+	// Phase-1: /api/og/share liefert 503 (Stub), bis Native-Pipeline aktiv ist.
+	// Vermeidet broken-image-Icon im UI.
+	let imgFailed = $state(false);
 
 	const tokenCount = $derived(approximateTokens(llmExportText));
 	const tokenLabel = $derived(`≈ ${formatTokensApprox(tokenCount)} Tokens`);
@@ -208,7 +211,7 @@
 			</button>
 		</header>
 
-		{#if ogImageUrl}
+		{#if ogImageUrl && !imgFailed}
 			<div class="px-4 pt-3">
 				<img
 					src={ogImageUrl}
@@ -218,6 +221,7 @@
 					class="block w-full rounded border border-rule shadow-sm"
 					width="320"
 					height="168"
+					onerror={() => (imgFailed = true)}
 				/>
 			</div>
 		{/if}
