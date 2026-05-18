@@ -57,20 +57,20 @@ function detail(
 
 describe('layer-detail +page.svelte', () => {
 	it('rendert layerName als h1', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const h1 = (await page.getByTestId('layer-detail-name').element()) as HTMLElement;
 		expect(h1.tagName).toBe('H1');
 		expect(h1.textContent).toMatch(/Lärmbelastung/);
 	});
 
 	it('rendert long-Explain als Lead', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const lead = (await page.getByTestId('layer-detail-lead').element()) as HTMLElement;
 		expect(lead.textContent).toMatch(/Lärm-Gesamtbelastung/);
 	});
 
 	it('rendert Source-Card mit Source-Link', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const link = (await page
 			.getByTestId('layer-detail-source-link')
 			.element()) as HTMLAnchorElement;
@@ -79,28 +79,28 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert License-Label', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const lic = (await page.getByTestId('layer-detail-license').element()) as HTMLElement;
 		expect(lic.textContent).toMatch(/dl-de\/zero/);
 	});
 
 	it('rendert Inspector-Link mit Layer-URL-State', async () => {
-		render(Page, { data: { detail: detail('wohnlagen-2024') } });
+		render(Page, { data: { detail: detail('wohnlagen-2024'), faq: [] } });
 		const link = (await page
 			.getByTestId('layer-detail-inspector-link')
 			.element()) as HTMLAnchorElement;
-		expect(link.getAttribute('href')).toMatch(/\/\?layers=wohnlagen-2024/);
+		expect(link.getAttribute('href')).toMatch(/\/explore\?layers=wohnlagen-2024/);
 	});
 
 	it('rendert Scale-Section bei vorhandenem valueScaleExplain', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const scale = (await page.getByTestId('layer-detail-scale').element()) as HTMLElement;
 		expect(scale.textContent).toMatch(/niedrig bis sehr hoch/);
 	});
 
 	it('rendert keine Scale-Section ohne valueScaleExplain + ohne unit', async () => {
 		const d = { ...detail(), explain: { short: 'foo', long: 'bar' } };
-		render(Page, { data: { detail: d } });
+		render(Page, { data: { detail: d, faq: [] } });
 		await expect.element(page.getByTestId('layer-detail-scale')).not.toBeInTheDocument();
 	});
 
@@ -114,24 +114,24 @@ describe('layer-detail +page.svelte', () => {
 				feedbackMailto: true
 			}
 		};
-		render(Page, { data: { detail: d } });
+		render(Page, { data: { detail: d, faq: [] } });
 		await expect.element(page.getByTestId('layer-detail-editorial')).toBeInTheDocument();
 		await expect.element(page.getByTestId('editorial-disclaimer')).toBeInTheDocument();
 	});
 
 	it('rendert keinen Disclaimer-Bereich ohne editorial-Config', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		await expect.element(page.getByTestId('layer-detail-editorial')).not.toBeInTheDocument();
 	});
 
 	it('rendert Bundle-Group oberhalb h1', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
 		expect(article.textContent).toMatch(/C: Umwelt/);
 	});
 
 	it('rendert Methodology-Section „Berechnung"', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const sec = (await page.getByTestId('layer-detail-methodology').element()) as HTMLElement;
 		expect(sec.textContent).toMatch(/Berechnung/);
 		expect(sec.textContent).not.toMatch(/Wie berechnet/);
@@ -139,7 +139,7 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert Coverage-Gaps-Section nur wenn coverageGaps gefüllt', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const sec = (await page
 			.getByTestId('layer-detail-coverage-gaps')
 			.element()) as HTMLElement;
@@ -147,13 +147,13 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert Omissions-Section nur wenn omissions gefüllt', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const sec = (await page.getByTestId('layer-detail-omissions').element()) as HTMLElement;
 		expect(sec.textContent).toMatch(/Trennung nach Quelle/);
 	});
 
 	it('rendert Related-Layers-Section mit Auto-Link', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const sec = (await page.getByTestId('layer-detail-related').element()) as HTMLElement;
 		const link = sec.querySelector('a[href="/layer/luft-2023"]');
 		expect(link, 'Auto-Link zu /layer/luft-2023').not.toBeNull();
@@ -161,7 +161,7 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert Methodik-Banner mit Link auf /methodik', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const banner = (await page
 			.getByTestId('layer-detail-methodik-link')
 			.element()) as HTMLElement;
@@ -173,7 +173,7 @@ describe('layer-detail +page.svelte', () => {
 		const d = detail('laerm-2023', {
 			methodology: { ...methodology(), coverageGaps: undefined, omissions: undefined }
 		});
-		render(Page, { data: { detail: d } });
+		render(Page, { data: { detail: d, faq: [] } });
 		await expect
 			.element(page.getByTestId('layer-detail-coverage-gaps'))
 			.not.toBeInTheDocument();
@@ -183,7 +183,7 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert Dataset-JSON-LD mit license-URL + creator + distribution.contentUrl', async () => {
-		render(Page, { data: { detail: detail() } });
+		render(Page, { data: { detail: detail(), faq: [] } });
 		const script = document.querySelector(
 			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
 		);
@@ -202,7 +202,7 @@ describe('layer-detail +page.svelte', () => {
 		const d = detail('laerm-2023', {
 			methodology: { ...methodology(), authority: undefined }
 		});
-		render(Page, { data: { detail: d } });
+		render(Page, { data: { detail: d, faq: [] } });
 		const script = document.querySelector(
 			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
 		);
@@ -212,7 +212,7 @@ describe('layer-detail +page.svelte', () => {
 
 	it('zeigt „Methodik in Vorbereitung"-Banner wenn methodology null', async () => {
 		const d = detail('laerm-2023', { methodology: null });
-		render(Page, { data: { detail: d } });
+		render(Page, { data: { detail: d, faq: [] } });
 		const banner = (await page
 			.getByTestId('layer-detail-methodology-empty')
 			.element()) as HTMLElement;

@@ -11,7 +11,7 @@
 		serializeCategoryFilter,
 		applyCategoryFilter
 	} from '$lib/content/updates/parse-filter.js';
-	import { buildBlogIndex } from '$lib/seo/index.js';
+	import { buildBlogIndex, buildBreadcrumbList } from '$lib/seo/index.js';
 	import type { UpdateCategory } from '$lib/content/updates/types.js';
 
 	type Props = { data: import('./$types').PageData };
@@ -54,6 +54,16 @@
 	const blogJsonLd = $derived(
 		buildBlogIndex({ entries, origin: page.url.origin })
 	);
+
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin: page.url.origin,
+			items: [
+				{ name: 'Berlin', path: '/' },
+				{ name: 'Updates', path: '/updates' }
+			]
+		})
+	);
 </script>
 
 <SeoHead
@@ -66,6 +76,7 @@
 />
 <FeedDiscoveryLinks origin={page.url.origin} />
 <JsonLd data={blogJsonLd} testid="updates-index-jsonld" />
+<JsonLd data={breadcrumbJsonLd} testid="updates-index-breadcrumb-jsonld" />
 
 <article
 	data-testid="updates-index-page"

@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import KiezHero from '$lib/components/atlas/kiez-hero.svelte';
+	import KiezSiblingsList from '$lib/components/atlas/kiez-siblings-list.svelte';
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
@@ -104,3 +105,8 @@
 	score={data.score}
 	faq={data.faq}
 />
+{#if bezirkName.length > 0}
+	<div class="mx-auto max-w-3xl px-4 pb-8">
+		<KiezSiblingsList siblings={data.siblings} parentBezirkName={bezirkName} />
+	</div>
+{/if}

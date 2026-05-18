@@ -26,6 +26,7 @@
 		"webmcp:manifest": "tsx scripts/build-webmcp-manifest.ts",
 		"og:images": "tsx scripts/generate-og-images.ts",
 		"og:all": "pnpm og:images",
+		"indexnow:ping": "tsx scripts/indexnow-ping.ts",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "tsx scripts/db/migrate.ts",
 		"publish-update": "tsx scripts/publish-update/main.ts",

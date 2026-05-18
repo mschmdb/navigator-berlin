@@ -3,6 +3,11 @@ import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
+import {
+	buildKiezeInBezirk,
+	pickTop,
+	type KiezRef
+} from '$lib/data/get-kieze-in-bezirk.js';
 import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
@@ -47,7 +52,74 @@ export type BezirkPageData = {
 	readonly profile: BezirkProfile;
 	readonly stats: BezirkStats | null;
 	readonly faq: readonly FaqEntry[];
+	readonly kieze: readonly KiezRef[];
 };
+
+async function tryLoadKieze(bezirkSlug: string): Promise<KiezRef[]> {
+	try {
+		const { readFile } = await import('node:fs/promises');
+		const { resolve } = await import('node:path');
+		const manifestPath = resolve(process.cwd(), 'static/layers/MANIFEST.json');
+		const manifestRaw = await readFile(manifestPath, 'utf-8');
+		const manifest = JSON.parse(manifestRaw) as {
+			layers: { slug: string; filename: string }[];
+		};
+		const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
+		const lorLayer = manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
+		if (!bezirkeLayer || !lorLayer) return [];
+
+		const [bezirkeRaw, lorRaw] = await Promise.all([
+			readFile(resolve(process.cwd(), 'static/layers', bezirkeLayer.filename), 'utf-8'),
+			readFile(resolve(process.cwd(), 'static/layers', lorLayer.filename), 'utf-8')
+		]);
+		const bezirkeFc = JSON.parse(bezirkeRaw) as {
+			features: { properties?: Record<string, unknown> }[];
+		};
+		const lorFc = JSON.parse(lorRaw) as {
+			features: { properties?: Record<string, unknown> }[];
+		};
+
+		const { normalizeSlug } = await import('$lib/data/internal/slug.js');
+		const bezirkCodeToSlug = new Map<string, string>();
+		for (const f of bezirkeFc.features) {
+			const props = f.properties ?? {};
+			const schluessel = props.Schluessel_gesamt;
+			const name = props.Gemeinde_name;
+			if (typeof schluessel === 'string' && typeof name === 'string') {
+				bezirkCodeToSlug.set(schluessel.slice(-2), normalizeSlug(name));
+			}
+		}
+
+		const scores = new Map<string, number>();
+		if (process.env.DATABASE_URL) {
+			try {
+				const { getDb } = await import('$lib/server/db/index.js');
+				const { kiezScore } = await import('$lib/server/db/schema/index.js');
+				const rows = await getDb()
+					.select({ slug: kiezScore.slug, composite: kiezScore.composite })
+					.from(kiezScore);
+				for (const r of rows) {
+					if (typeof r.composite === 'number') scores.set(r.slug, Math.round(r.composite));
+				}
+			} catch (err) {
+				const msg = err instanceof Error ? err.message : String(err);
+				process.stderr.write(`[bezirk-page] WARN: kiez_score unavailable (${msg})\n`);
+			}
+		}
+
+		const all = buildKiezeInBezirk({
+			lorFeatureCollection: lorFc,
+			bezirkCodeToSlug,
+			scores,
+			bezirkSlug
+		});
+		return pickTop(all, 5);
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[bezirk-page] WARN: kieze-load failed (${msg})\n`);
+		return [];
+	}
+}
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	const slug = params.slug;
@@ -57,7 +129,11 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, `Bezirk ${slug} nicht gefunden`);
 	}
-	const [stats, faq] = await Promise.all([tryLoadBezirkStats(slug), tryLoadFaq(slug)]);
-	const data: BezirkPageData = { profile, stats, faq };
+	const [stats, faq, kieze] = await Promise.all([
+		tryLoadBezirkStats(slug),
+		tryLoadFaq(slug),
+		tryLoadKieze(slug)
+	]);
+	const data: BezirkPageData = { profile, stats, faq, kieze };
 	return data;
 };

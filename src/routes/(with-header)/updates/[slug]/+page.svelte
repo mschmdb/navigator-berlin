@@ -8,7 +8,7 @@
 		CATEGORY_LABEL_DE,
 		formatDateDe
 	} from '$lib/components/updates/category-label.js';
-	import { buildBlogPosting } from '$lib/seo/index.js';
+	import { buildBlogPosting, buildBreadcrumbList } from '$lib/seo/index.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
@@ -26,6 +26,17 @@
 
 	const jsonLd = $derived(
 		buildBlogPosting({ entry, origin: page.url.origin })
+	);
+
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin: page.url.origin,
+			items: [
+				{ name: 'Berlin', path: '/' },
+				{ name: 'Updates', path: '/updates' },
+				{ name: entry.frontmatter.title_de, path: `/updates/${entry.slug}` }
+			]
+		})
 	);
 </script>
 
@@ -46,6 +57,7 @@
 	<meta property="article:author" content="Matze Schmidbauer" />
 </svelte:head>
 <JsonLd data={jsonLd} testid="updates-detail-jsonld" />
+<JsonLd data={breadcrumbJsonLd} testid="updates-detail-breadcrumb-jsonld" />
 
 <article
 	data-testid="updates-detail-page"

@@ -24,6 +24,7 @@ Nach längerer Pause oder bei neuem Maintainer:
 - [server-bootstrap.md](./runbooks/server-bootstrap.md) — Hetzner-CPX22 von Null reproduzieren
 - [add-update-entry.md](./runbooks/add-update-entry.md) — manueller Workflow für /updates-Einträge
 - [publish-update-skill.md](./runbooks/publish-update-skill.md) — Skill-getriebener Workflow für /updates
+- [indexnow-deploy-ping.md](./runbooks/indexnow-deploy-ping.md) — Bing-IndexNow-Push nach Deploy
 - [local-postgres-setup.md](./runbooks/local-postgres-setup.md) — lokale Dev-DB bootstrappen
 - [a11y-smoke-test.md](./runbooks/a11y-smoke-test.md) — Accessibility-Spot-Check
 

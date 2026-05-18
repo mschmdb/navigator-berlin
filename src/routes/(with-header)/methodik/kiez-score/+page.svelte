@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
+	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import { buildBreadcrumbList, buildSpeakableWebPage } from '$lib/seo/index.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 
 	const pageTitle = 'Methodik des Kiez-Scores - Berlin in Daten - navigator.berlin';
@@ -80,6 +82,32 @@
 				'Keine einzelne „Wo lebt es sich gut?"-Zahl auf der Karte. Wer Familie sucht, gewichtet anders als jemand mit Hitze-Empfindlichkeit. Persönliche Prioritäten lassen sich nicht aggregieren.'
 		}
 	];
+
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin: page.url.origin,
+			items: [
+				{ name: 'Berlin', path: '/' },
+				{ name: 'Methodik', path: '/methodik' },
+				{ name: 'Kiez-Score', path: '/methodik/kiez-score' }
+			]
+		})
+	);
+
+	const speakableJsonLd = $derived(
+		buildSpeakableWebPage({
+			origin: page.url.origin,
+			urlPath: '/methodik/kiez-score',
+			name: 'Methodik des Kiez-Scores',
+			cssSelectors: [
+				'#worum',
+				'#dimensionen',
+				'#gewichte',
+				'#normalisierung',
+				'#fehlt'
+			]
+		})
+	);
 </script>
 
 <SeoHead
@@ -90,6 +118,8 @@
 	ogImage={`${page.url.origin}/og/page/methodik-kiez-score.png`}
 	ogImageAlt="navigator.berlin Kiez-Score Methodik"
 />
+<JsonLd data={breadcrumbJsonLd} testid="methodik-kiez-score-breadcrumb-jsonld" />
+<JsonLd data={speakableJsonLd} testid="methodik-kiez-score-speakable-jsonld" />
 
 <article
 	data-testid="methodik-kiez-score-page"

@@ -11,7 +11,8 @@
 	import ErrorFeedbackMailto from '$lib/components/atlas/error-feedback-mailto.svelte';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { buildDataset } from '$lib/seo/index.js';
+	import FaqSection from '$lib/components/atlas/faq-section.svelte';
+	import { buildDataset, buildBreadcrumbList } from '$lib/seo/index.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
 	type Props = { data: import('./$types').PageData };
@@ -48,6 +49,17 @@
 			keywords: [meta.bundleGroup, detail.slug]
 		})
 	);
+
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin: page.url.origin,
+			items: [
+				{ name: 'Berlin', path: '/' },
+				{ name: 'Daten', path: '/explore' },
+				{ name: detail.layerName, path: `/layer/${detail.slug}` }
+			]
+		})
+	);
 </script>
 
 <SeoHead
@@ -59,6 +71,7 @@
 	ogImageAlt={`Layer ${detail.layerName}`}
 />
 <JsonLd data={datasetJsonLd} testid="layer-dataset-jsonld" />
+<JsonLd data={breadcrumbJsonLd} testid="layer-breadcrumb-jsonld" />
 
 <article
 	data-testid="layer-detail-page"
@@ -292,4 +305,6 @@
 	>
 		Layer auf Karte anschauen →
 	</a>
+
+	<FaqSection items={data.faq} pageType="layer" />
 </article>

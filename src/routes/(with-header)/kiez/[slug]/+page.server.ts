@@ -3,6 +3,12 @@ import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
 import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
+import {
+	buildKiezeInBezirk,
+	pickSiblings,
+	type KiezRef
+} from '$lib/data/get-kieze-in-bezirk.js';
+import { normalizeSlug } from '$lib/data/internal/slug.js';
 import type { KiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
 import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 import type { KiezProfile, FaqEntry } from '$lib/data/types.js';
@@ -61,7 +67,58 @@ export type KiezPageData = {
 	readonly stats: KiezStats | null;
 	readonly score: KiezScore | null;
 	readonly faq: readonly FaqEntry[];
+	readonly siblings: readonly KiezRef[];
 };
+
+async function tryLoadSiblings(currentSlug: string, parentBezirkName: string): Promise<KiezRef[]> {
+	if (!parentBezirkName) return [];
+	const parentBezirkSlug = normalizeSlug(parentBezirkName);
+	try {
+		const { readFile } = await import('node:fs/promises');
+		const { resolve } = await import('node:path');
+		const manifestPath = resolve(process.cwd(), 'static/layers/MANIFEST.json');
+		const manifestRaw = await readFile(manifestPath, 'utf-8');
+		const manifest = JSON.parse(manifestRaw) as {
+			layers: { slug: string; filename: string }[];
+		};
+		const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
+		const lorLayer = manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
+		if (!bezirkeLayer || !lorLayer) return [];
+
+		const [bezirkeRaw, lorRaw] = await Promise.all([
+			readFile(resolve(process.cwd(), 'static/layers', bezirkeLayer.filename), 'utf-8'),
+			readFile(resolve(process.cwd(), 'static/layers', lorLayer.filename), 'utf-8')
+		]);
+		const bezirkeFc = JSON.parse(bezirkeRaw) as {
+			features: { properties?: Record<string, unknown> }[];
+		};
+		const lorFc = JSON.parse(lorRaw) as {
+			features: { properties?: Record<string, unknown> }[];
+		};
+
+		const bezirkCodeToSlug = new Map<string, string>();
+		for (const f of bezirkeFc.features) {
+			const props = f.properties ?? {};
+			const schluessel = props.Schluessel_gesamt;
+			const name = props.Gemeinde_name;
+			if (typeof schluessel === 'string' && typeof name === 'string') {
+				bezirkCodeToSlug.set(schluessel.slice(-2), normalizeSlug(name));
+			}
+		}
+
+		const all = buildKiezeInBezirk({
+			lorFeatureCollection: lorFc,
+			bezirkCodeToSlug,
+			scores: new Map(),
+			bezirkSlug: parentBezirkSlug
+		});
+		return pickSiblings({ kieze: all, currentSlug }, 3);
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[kiez-page] WARN: sibling-load failed (${msg})\n`);
+		return [];
+	}
+}
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	const slug = params.slug;
@@ -71,11 +128,12 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, `Kiez ${slug} nicht gefunden`);
 	}
-	const [stats, score, faq] = await Promise.all([
+	const [stats, score, faq, siblings] = await Promise.all([
 		tryLoadKiezStats(slug),
 		tryLoadKiezScore(slug),
-		tryLoadFaq(slug)
+		tryLoadFaq(slug),
+		tryLoadSiblings(slug, profile.bezirk)
 	]);
-	const data: KiezPageData = { profile, stats, score, faq };
+	const data: KiezPageData = { profile, stats, score, faq, siblings };
 	return data;
 };

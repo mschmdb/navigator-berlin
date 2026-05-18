@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import { buildBreadcrumbList } from '$lib/seo/index.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 	import MethodikDatenTabelle from './methodik-daten-tabelle.svelte';
 	import MethodikPipelineDiagram from './methodik-pipeline-diagram.svelte';
@@ -106,6 +107,16 @@
 		},
 		{ label: 'Werbung, Partner-Tracking, A/B-Tests', reason: 'Kein kommerzielles Modell.' }
 	];
+
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin: page.url.origin,
+			items: [
+				{ name: 'Berlin', path: '/' },
+				{ name: 'Methodik', path: '/methodik' }
+			]
+		})
+	);
 </script>
 
 <SeoHead
@@ -118,6 +129,7 @@
 />
 
 <JsonLd data={jsonLd} testid="methodik-jsonld" />
+<JsonLd data={breadcrumbJsonLd} testid="methodik-breadcrumb-jsonld" />
 
 <article
 	data-testid="methodik-page"

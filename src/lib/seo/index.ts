@@ -68,3 +68,19 @@ export {
 	type BlogPostingJsonLd,
 	type BlogJsonLd
 } from './jsonld-blog-posting.js';
+
+// Story 5.9: SEO/AEO Pre-Indexing-Hardening
+export {
+	buildDataCatalog,
+	type DataCatalogInput,
+	type DataCatalogDatasetRef,
+	type DataCatalogJsonLd,
+	type DataCatalogLeafJsonLd
+} from './jsonld-datacatalog.js';
+export {
+	buildSpeakableWebPage,
+	type SpeakableWebPageInput,
+	type SpeakableWebPageJsonLd,
+	type SpeakableWebPageLeafJsonLd,
+	type SpeakableSpecificationLeaf
+} from './jsonld-speakable.js';

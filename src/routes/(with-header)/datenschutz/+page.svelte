@@ -1,7 +1,19 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
+	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import { buildBreadcrumbList } from '$lib/seo/index.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin: page.url.origin,
+			items: [
+				{ name: 'Berlin', path: '/' },
+				{ name: 'Datenschutz', path: '/datenschutz' }
+			]
+		})
+	);
 </script>
 
 <SeoHead
@@ -12,6 +24,7 @@
 	ogImage={`${page.url.origin}/og/page/datenschutz.png`}
 	ogImageAlt="navigator.berlin Datenschutz"
 />
+<JsonLd data={breadcrumbJsonLd} testid="datenschutz-breadcrumb-jsonld" />
 
 <main class="mx-auto max-w-2xl px-4 py-12">
 	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl" lang="de">

@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import BezirkHero from '$lib/components/atlas/bezirk-hero.svelte';
+	import BezirkKiezeList from '$lib/components/atlas/bezirk-kieze-list.svelte';
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
@@ -89,3 +90,6 @@
 <JsonLd data={breadcrumbJsonLd} testid="bezirk-breadcrumb-jsonld" />
 
 <BezirkHero profile={data.profile} stats={data.stats} faq={data.faq} />
+<div class="mx-auto max-w-3xl px-4 pb-8">
+	<BezirkKiezeList kieze={data.kieze} bezirkName={name} />
+</div>

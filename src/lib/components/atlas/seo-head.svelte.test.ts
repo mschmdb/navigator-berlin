@@ -25,6 +25,7 @@ afterEach(() => {
 		'link[rel="canonical"]',
 		'link[rel="alternate"]',
 		'meta[name="description"]',
+		'meta[name="robots"]',
 		'meta[property^="og:"]',
 		'meta[name^="twitter:"]'
 	]) {
@@ -125,5 +126,29 @@ describe('SeoHead', () => {
 		await new Promise((r) => setTimeout(r, 10));
 		const canonical = queryHead('link[rel="canonical"]') as HTMLLinkElement | null;
 		expect(canonical?.href).toBe('https://navigator.berlin/');
+	});
+
+	it('rendert meta-robots NICHT wenn noindex=false (default)', async () => {
+		render(SeoHead, {
+			title: 'Public',
+			description: 'd',
+			pathname: '/methodik',
+			origin: 'https://navigator.berlin'
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		expect(queryHead('meta[name="robots"]')).toBeNull();
+	});
+
+	it('rendert meta-robots noindex,nofollow wenn noindex=true (Story 5.9 AC-9)', async () => {
+		render(SeoHead, {
+			title: 'Dev',
+			description: 'd',
+			pathname: '/_dev/wortmarke',
+			origin: 'https://navigator.berlin',
+			noindex: true
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		const robots = queryHead('meta[name="robots"]') as HTMLMetaElement | null;
+		expect(robots?.content).toBe('noindex,nofollow');
 	});
 });

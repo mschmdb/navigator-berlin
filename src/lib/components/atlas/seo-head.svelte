@@ -33,6 +33,12 @@
 		 * pass `['de', 'en']`.
 		 */
 		locales?: readonly SupportedLocale[];
+		/**
+		 * Story 5.9 AC-9: wenn true, rendert `<meta name="robots" content="noindex,nofollow">`.
+		 * Pflicht fuer /_dev/* Routen (Showcase, Wortmarke). API-Endpoints setzen den
+		 * X-Robots-Tag-Header zusaetzlich serverseitig.
+		 */
+		noindex?: boolean;
 	}
 
 	const {
@@ -45,7 +51,8 @@
 		ogImageWidth = 1200,
 		ogImageHeight = 630,
 		ogImageAlt,
-		locales = ['de']
+		locales = ['de'],
+		noindex = false
 	}: Props = $props();
 
 	const canonicalUrl = $derived(canonical ?? buildCanonical(origin, pathname));
@@ -55,6 +62,9 @@
 <svelte:head>
 	<title>{title}</title>
 	<meta name="description" content={description} />
+	{#if noindex}
+		<meta name="robots" content="noindex,nofollow" />
+	{/if}
 	<link rel="canonical" href={canonicalUrl} />
 	{#each hreflangCluster as link (link.hreflang)}
 		<link rel="alternate" hreflang={link.hreflang} href={link.href} />

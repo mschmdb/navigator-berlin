@@ -2,7 +2,9 @@ import { error } from '@sveltejs/kit';
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildLayerDetail, type LayerDetail } from '$lib/data/get-layer-detail.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
-import type { EntryGenerator, PageLoad } from './$types';
+import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
+import type { FaqEntry } from '$lib/data/types.js';
+import type { EntryGenerator, PageServerLoad } from './$types';
 
 export const prerender = true;
 
@@ -11,6 +13,9 @@ export const prerender = true;
  * every `/layer/{slug}` page is prerendered. The manifest is loaded via Node's
  * `fs` import here (build-time) because SvelteKit calls `entries` without a
  * `fetch` context.
+ *
+ * Story 5.9: konvertiert zu +page.server.ts damit FAQ-Rows aus Postgres
+ * geladen werden koennen (AC-2 FAQPage-JSON-LD via FaqSection-Komponente).
  */
 export const entries: EntryGenerator = async () => {
 	const { readFile } = await import('node:fs/promises');
@@ -21,9 +26,28 @@ export const entries: EntryGenerator = async () => {
 	return manifest.layers.map((l) => ({ slug: l.slug }));
 };
 
-export const load: PageLoad = async ({ params, fetch }) => {
+async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
+	if (!process.env.DATABASE_URL) return [];
+	try {
+		const rows = await getFaqQna({ pageType: 'layer', slug, locale: 'de' });
+		return rows.map((r) => ({ question: r.question, answer: r.answer }));
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[layer-page] WARN: faq_qna unavailable (${msg})\n`);
+		return [];
+	}
+}
+
+export type LayerPageData = {
+	readonly detail: LayerDetail;
+	readonly faq: readonly FaqEntry[];
+};
+
+export const load: PageServerLoad = async ({ params, fetch }) => {
 	const manifest = await loadManifest(fetch);
 	const detail: LayerDetail | null = buildLayerDetail(params.slug, getLocale(), manifest);
 	if (!detail) error(404, `Layer ${params.slug} nicht gefunden`);
-	return { detail };
+	const faq = await tryLoadFaq(params.slug);
+	const data: LayerPageData = { detail, faq };
+	return data;
 };

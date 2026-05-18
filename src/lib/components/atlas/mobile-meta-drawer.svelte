@@ -11,7 +11,7 @@
 	};
 
 	let { open, onClose, langSwitcher }: Props = $props();
-	let drawerEl: HTMLDivElement | null = $state(null);
+	let drawerEl: HTMLElement | null = $state(null);
 	let prevActive: Element | null = null;
 
 	$effect(() => {

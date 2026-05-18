@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
+	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import { buildBreadcrumbList, buildDataCatalog } from '$lib/seo/index.js';
 	import type { LayerMetadata, License } from '$lib/data';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
@@ -125,6 +127,31 @@
 			url: 'https://github.com/vercel/satori'
 		}
 	];
+
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin: page.url.origin,
+			items: [
+				{ name: 'Berlin', path: '/' },
+				{ name: 'Lizenzen', path: '/lizenzen' }
+			]
+		})
+	);
+
+	const dataCatalogJsonLd = $derived(
+		buildDataCatalog({
+			origin: page.url.origin,
+			name: 'navigator.berlin Daten-Katalog',
+			description: `Geo-Daten-Katalog mit ${manifest.layers.length} offenen Berliner Datensätzen aus Senats-Verwaltung, ODIS und OpenStreetMap. Pro Schicht eigene Lizenz, Quelle und Datenstand dokumentiert.`,
+			urlPath: '/lizenzen',
+			publisherName: 'Matze Schmidbauer',
+			datasets: manifest.layers.map((l) => ({
+				name: getLayerDisplayName(l.slug),
+				urlPath: `/layer/${l.slug}`,
+				license: l.license
+			}))
+		})
+	);
 </script>
 
 <SeoHead
@@ -135,6 +162,8 @@
 	ogImage={`${page.url.origin}/og/page/lizenzen.png`}
 	ogImageAlt="navigator.berlin Lizenzen"
 />
+<JsonLd data={breadcrumbJsonLd} testid="lizenzen-breadcrumb-jsonld" />
+<JsonLd data={dataCatalogJsonLd} testid="lizenzen-datacatalog-jsonld" />
 
 <article
 	data-testid="lizenzen-page"
