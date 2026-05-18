@@ -5,7 +5,8 @@
 	import type {
 		WahlResultsAtPoint,
 		WahlResultBundle,
-		Top5Entry
+		Top5Entry,
+		LevelKey
 	} from '$lib/data/get-wahl-results-at-point.js';
 
 	type Props = {
@@ -24,6 +25,13 @@
 		bvv: 'BVV'
 	};
 
+	const LEVEL_LABELS: Record<LevelKey, string> = {
+		stimmbezirk: 'Stimmbezirk',
+		kiez: 'Kiez',
+		bezirk: 'Bezirk',
+		berlin: 'Berlin gesamt'
+	};
+
 	const availableTypen = $derived.by<Wahltyp[]>(() => {
 		const set = new Set<Wahltyp>();
 		for (const r of [resultsA, resultsB]) {
@@ -34,6 +42,7 @@
 	});
 
 	let selectedTyp = $state<Wahltyp>('btw');
+	let selectedLevel = $state<LevelKey>('stimmbezirk');
 
 	$effect(() => {
 		if (availableTypen.length === 0) return;
@@ -59,14 +68,55 @@
 	const bundleA = $derived(pickLatestBundle(resultsA, selectedTyp, defaultStimmtyp));
 	const bundleB = $derived(pickLatestBundle(resultsB, selectedTyp, defaultStimmtyp));
 
-	function pickTopForKiez(b: WahlResultBundle | null): Top5Entry[] {
+	const availableLevels = $derived.by<readonly LevelKey[]>(() => {
+		const all: LevelKey[] = ['stimmbezirk', 'kiez', 'bezirk', 'berlin'];
+		return all.filter(
+			(lvl) => bundleA?.levels[lvl]?.available || bundleB?.levels[lvl]?.available
+		);
+	});
+
+	$effect(() => {
+		if (availableLevels.length === 0) return;
+		if (!availableLevels.includes(selectedLevel)) {
+			selectedLevel = availableLevels.includes('stimmbezirk')
+				? 'stimmbezirk'
+				: availableLevels[0];
+		}
+	});
+
+	function pickTopForLevel(b: WahlResultBundle | null, lvl: LevelKey): Top5Entry[] {
 		if (!b) return [];
-		const lvl = b.levels.kiez;
-		return lvl?.available ? (lvl.top5 ?? []) : [];
+		const data = b.levels[lvl];
+		return data?.available ? (data.top5 ?? []) : [];
 	}
 
-	const topA = $derived(pickTopForKiez(bundleA));
-	const topB = $derived(pickTopForKiez(bundleB));
+	const topA = $derived(pickTopForLevel(bundleA, selectedLevel));
+	const topB = $derived(pickTopForLevel(bundleB, selectedLevel));
+
+	const sameAggregat = $derived.by(() => {
+		if (selectedLevel === 'stimmbezirk') {
+			return (
+				bundleA?.uwbId !== null &&
+				bundleA?.uwbId !== undefined &&
+				bundleA.uwbId === bundleB?.uwbId
+			);
+		}
+		if (selectedLevel === 'kiez') {
+			return (
+				resultsA?.location.kiezSlug !== null &&
+				resultsA?.location.kiezSlug !== undefined &&
+				resultsA.location.kiezSlug === resultsB?.location.kiezSlug
+			);
+		}
+		if (selectedLevel === 'bezirk') {
+			return (
+				resultsA?.location.bezirkSlug !== null &&
+				resultsA?.location.bezirkSlug !== undefined &&
+				resultsA.location.bezirkSlug === resultsB?.location.bezirkSlug
+			);
+		}
+		return selectedLevel === 'berlin';
+	});
 
 	const jahr = $derived(bundleA?.wahl.jahr ?? bundleB?.wahl.jahr ?? null);
 
@@ -120,13 +170,53 @@
 			{/each}
 		</div>
 
+		{#if availableLevels.length > 1}
+			<div
+				role="radiogroup"
+				aria-label="Ebene"
+				class="flex flex-wrap gap-1"
+				data-testid="wahl-compare-level-switch"
+			>
+				{#each availableLevels as lvl (lvl)}
+					<button
+						role="radio"
+						type="button"
+						aria-checked={selectedLevel === lvl}
+						data-testid={`wahl-compare-level-${lvl}`}
+						onclick={() => (selectedLevel = lvl)}
+						class="font-mono text-[11px] px-2 py-0.5 rounded border border-ink transition-colors"
+						class:bg-ink={selectedLevel === lvl}
+						class:text-bg={selectedLevel === lvl}
+						class:bg-bg={selectedLevel !== lvl}
+						class:text-ink={selectedLevel !== lvl}
+						class:hover:bg-bg-muted={selectedLevel !== lvl}
+					>
+						{LEVEL_LABELS[lvl]}
+					</button>
+				{/each}
+			</div>
+		{/if}
+
 		<p class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
-			{TYP_LABELS[selectedTyp]} {jahr} · Ebene Kiez · {defaultStimmtyp === 'einstimme'
+			{TYP_LABELS[selectedTyp]} {jahr} · Ebene {LEVEL_LABELS[selectedLevel]} · {defaultStimmtyp === 'einstimme'
 				? 'Stimme'
 				: defaultStimmtyp === 'zweitstimme'
 					? 'Zweitstimme'
 					: 'Erststimme'}
 		</p>
+
+		{#if sameAggregat && selectedLevel !== 'berlin'}
+			<p
+				class="font-serif italic text-xs text-ink-muted border-l-2 border-ink/30 pl-2"
+				data-testid="wahl-compare-same-aggregat"
+			>
+				{selectedLevel === 'stimmbezirk'
+					? 'Beide Adressen liegen im selben Stimmbezirk · Werte identisch auf dieser Ebene'
+					: selectedLevel === 'kiez'
+						? 'Beide Adressen liegen im selben Kiez · für Adress-Unterschiede die Ebene Stimmbezirk wählen'
+						: 'Beide Adressen liegen im selben Bezirk · für feinere Unterschiede die Ebene Kiez oder Stimmbezirk wählen'}
+			</p>
+		{/if}
 
 		{#if topA.length === 0 && topB.length === 0}
 			<p data-testid="wahl-compare-empty" class="font-mono text-xs text-ink-muted">
