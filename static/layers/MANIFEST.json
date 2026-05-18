@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-18T17:14:17.311Z",
+  "generatedAt": "2026-05-18T19:40:33.038Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -735,7 +735,7 @@
       "slug": "wahlbezirke-btw17",
       "filename": "wahlbezirke-btw17.452b6766.geojson",
       "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_Wahlgebiete_BTW17.zip",
-      "fetchedAt": "2026-05-18T17:14:16.166Z",
+      "fetchedAt": "2026-05-18T19:40:31.371Z",
       "license": "dl-de/by-2-0",
       "sha256": "452b6766a21dde5a8cf236e6eac9f4dc4c19d93f55488ede7769ff6f927b3403",
       "bundleGroup": "H: Wahldaten",
@@ -745,14 +745,14 @@
       },
       "geometryType": "Polygon",
       "featureCount": 1779,
-      "inspectorRelevant": true,
+      "inspectorRelevant": false,
       "mapRelevant": false
     },
     {
       "slug": "wahlbezirke-ah16",
       "filename": "wahlbezirke-ah16.29b3175b.geojson",
       "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_AGH_09_2016.zip",
-      "fetchedAt": "2026-05-18T17:14:16.440Z",
+      "fetchedAt": "2026-05-18T19:40:31.806Z",
       "license": "dl-de/by-2-0",
       "sha256": "29b3175b8a53c847c35d845e2a66d367e1625f630b8a40fff430f81006bf1879",
       "bundleGroup": "H: Wahldaten",
@@ -762,14 +762,14 @@
       },
       "geometryType": "Polygon",
       "featureCount": 1779,
-      "inspectorRelevant": true,
+      "inspectorRelevant": false,
       "mapRelevant": false
     },
     {
       "slug": "wahlbezirke-ah21",
       "filename": "wahlbezirke-ah21.41210759.geojson",
       "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_AH21.zip",
-      "fetchedAt": "2026-05-18T17:14:16.755Z",
+      "fetchedAt": "2026-05-18T19:40:32.531Z",
       "license": "dl-de/by-2-0",
       "sha256": "41210759909a203069f0d359042490c3c32bbe70f34abfc1ef5189c2f4a7989f",
       "bundleGroup": "H: Wahldaten",
@@ -779,14 +779,14 @@
       },
       "geometryType": "Polygon",
       "featureCount": 2257,
-      "inspectorRelevant": true,
+      "inspectorRelevant": false,
       "mapRelevant": false
     },
     {
       "slug": "wahlbezirke-ah23",
       "filename": "wahlbezirke-ah23.3b774478.geojson",
       "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_Wahllokale_AH23.zip",
-      "fetchedAt": "2026-05-18T17:14:16.961Z",
+      "fetchedAt": "2026-05-18T19:40:32.833Z",
       "license": "dl-de/by-2-0",
       "sha256": "3b77447845d1d30ab3bf0717ef2feb95dd6f9db6c79c4f22f2624bbdb5cfca9b",
       "bundleGroup": "H: Wahldaten",
@@ -796,14 +796,14 @@
       },
       "geometryType": "Polygon",
       "featureCount": 3764,
-      "inspectorRelevant": true,
+      "inspectorRelevant": false,
       "mapRelevant": false
     },
     {
       "slug": "wahlbezirke-bt25",
       "filename": "wahlbezirke-bt25.34402fb8.geojson",
       "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_BT25.zip",
-      "fetchedAt": "2026-05-18T17:14:17.310Z",
+      "fetchedAt": "2026-05-18T19:40:33.037Z",
       "license": "dl-de/by-2-0",
       "sha256": "34402fb8b5de1b62ddd0304dab9187d320d3292b7ecf3ac8b6f7e72a87b3310f",
       "bundleGroup": "H: Wahldaten",
@@ -813,7 +813,7 @@
       },
       "geometryType": "Polygon",
       "featureCount": 2323,
-      "inspectorRelevant": true,
+      "inspectorRelevant": false,
       "mapRelevant": false
     }
   ]

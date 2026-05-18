@@ -46,6 +46,7 @@
 	let selectedTyp = $state<Wahltyp>('btw');
 	let selectedLevel = $state<LevelKey>('kiez');
 	let selectedStimmtyp = $state<'erststimme' | 'zweitstimme' | 'einstimme'>('zweitstimme');
+	let selectedJahr = $state<number | null>(null);
 
 	$effect(() => {
 		if (availableTypen.length === 0) return;
@@ -75,8 +76,28 @@
 		}
 	});
 
+	const jahreForTypStimmtyp = $derived.by<number[]>(() => {
+		const set = new Set<number>();
+		for (const b of bundlesForTyp) {
+			if (b.wahl.stimmtyp === selectedStimmtyp) set.add(b.wahl.jahr);
+		}
+		return Array.from(set).sort((a, b) => b - a);
+	});
+
+	$effect(() => {
+		if (jahreForTypStimmtyp.length === 0) {
+			selectedJahr = null;
+			return;
+		}
+		if (selectedJahr === null || !jahreForTypStimmtyp.includes(selectedJahr)) {
+			selectedJahr = jahreForTypStimmtyp[0];
+		}
+	});
+
 	const currentBundle = $derived.by<WahlResultBundle | null>(() => {
-		const match = bundlesForTyp.find((b) => b.wahl.stimmtyp === selectedStimmtyp);
+		const match = bundlesForTyp.find(
+			(b) => b.wahl.stimmtyp === selectedStimmtyp && b.wahl.jahr === selectedJahr
+		);
 		return match ?? bundlesForTyp[0] ?? null;
 	});
 
@@ -111,20 +132,15 @@
 		return match ? match.anteil : null;
 	}
 
-	function deltaInPP(refLevel: LevelKey, kurzname: string, baseAnteil: number): number | null {
-		const ref = anteilForPartei(refLevel, kurzname);
-		if (ref === null) return null;
-		return (baseAnteil - ref) * 100;
-	}
-
 	function formatPct(n: number): string {
 		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
 	}
 
-	function formatDelta(pp: number): string {
-		const sign = pp > 0 ? '+' : pp < 0 ? '−' : '±';
+	function formatDeltaLong(pp: number): string {
+		const direction = pp > 0 ? 'höher' : pp < 0 ? 'niedriger' : 'gleich';
 		const abs = Math.abs(pp).toFixed(1).replace('.', ',');
-		return `${sign}${abs} pp`;
+		if (Math.abs(pp) < 0.05) return 'gleich';
+		return `${abs} Prozent-Punkte ${direction}`;
 	}
 
 	function formatStimmen(n: number): string {
@@ -221,12 +237,11 @@
 					aria-selected={selectedTyp === typ}
 					data-testid={`wahl-typ-tab-${typ}`}
 					onclick={() => (selectedTyp = typ)}
-					class="font-mono text-xs px-2 py-1 rounded border transition-colors"
-					class:bg-accent={selectedTyp === typ}
-					class:text-accent-foreground={selectedTyp === typ}
-					class:border-accent={selectedTyp === typ}
-					class:border-rule={selectedTyp !== typ}
-					class:text-ink-muted={selectedTyp !== typ}
+					class="font-mono text-xs px-2.5 py-1 rounded border border-ink transition-colors"
+					class:bg-ink={selectedTyp === typ}
+					class:text-bg={selectedTyp === typ}
+					class:bg-bg={selectedTyp !== typ}
+					class:text-ink={selectedTyp !== typ}
 					class:hover:bg-bg-muted={selectedTyp !== typ}
 				>
 					{TYP_LABELS[typ]}
@@ -236,23 +251,39 @@
 
 		{#if currentBundle}
 			<div class="flex items-baseline justify-between gap-3 flex-wrap">
-				<div class="flex flex-col">
-					<span class="font-sans text-sm font-semibold text-ink">
-						{TYP_LABELS[currentBundle.wahl.typ]} {currentBundle.wahl.jahr}
+				<div class="flex flex-col gap-1">
+					<div class="flex items-baseline gap-2 flex-wrap">
+						<span class="font-sans text-sm font-semibold text-ink">
+							{TYP_LABELS[currentBundle.wahl.typ]}
+						</span>
+						{#if jahreForTypStimmtyp.length > 0}
+							<label class="flex items-center gap-1">
+								<span class="sr-only">Wahljahr</span>
+								<select
+									data-testid="wahl-jahr-switch"
+									bind:value={selectedJahr}
+									class="font-mono text-xs px-1.5 py-0.5 rounded border border-rule bg-bg text-ink"
+								>
+									{#each jahreForTypStimmtyp as jahr (jahr)}
+										<option value={jahr}>{jahr}</option>
+									{/each}
+								</select>
+							</label>
+						{/if}
 						{#if currentBundle.wahl.isRepeatElection}
 							<span
-								class="ml-1 inline-block font-mono text-[10px] uppercase tracking-wide text-ink-subtle align-middle"
+								class="font-mono text-[10px] uppercase tracking-wide text-ink-muted align-middle"
 								data-testid="wahl-wiederholung-marker"
 							>
 								(Wiederholung)
 							</span>
 						{/if}
-					</span>
+					</div>
 					{#if stimmtypenForTyp.length > 1}
 						<div
 							role="radiogroup"
 							aria-label="Stimmenart"
-							class="mt-1 flex gap-1"
+							class="flex gap-1"
 							data-testid="wahl-stimmtyp-switch"
 						>
 							{#each stimmtypenForTyp as st (st)}
@@ -262,11 +293,15 @@
 									aria-checked={selectedStimmtyp === st}
 									data-testid={`wahl-stimmtyp-${st}`}
 									onclick={() => (selectedStimmtyp = st)}
-									class="font-mono text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded transition-colors"
-									class:bg-bg-muted={selectedStimmtyp === st}
-									class:text-ink={selectedStimmtyp === st}
-									class:text-ink-subtle={selectedStimmtyp !== st}
+									class="font-mono text-[10px] uppercase tracking-wide px-2 py-0.5 rounded border transition-colors"
+									class:bg-ink={selectedStimmtyp === st}
+									class:text-bg={selectedStimmtyp === st}
+									class:border-ink={selectedStimmtyp === st}
+									class:bg-bg={selectedStimmtyp !== st}
+									class:text-ink-muted={selectedStimmtyp !== st}
+									class:border-rule={selectedStimmtyp !== st}
 									class:hover:text-ink={selectedStimmtyp !== st}
+									class:hover:border-ink={selectedStimmtyp !== st}
 								>
 									{st === 'zweitstimme'
 										? 'Zweitstimme'
@@ -281,7 +316,7 @@
 
 				{#if availableLevels.length > 0}
 					<label class="flex items-center gap-2">
-						<span class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle">
+						<span class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
 							Ebene
 						</span>
 						<select
@@ -335,20 +370,21 @@
 								</div>
 								{#if deltaLevels.length > 0}
 									<div
-										class="flex flex-wrap gap-x-3 gap-y-0.5 pl-4 text-[10px] text-ink-subtle"
+										class="flex flex-wrap gap-x-3 gap-y-0.5 pl-4 text-[10px] text-ink-muted"
 										data-testid={`wahl-delta-row-${entry.kurzname}`}
 									>
 										{#each deltaLevels as lvl (lvl)}
-											{@const pp = deltaInPP(lvl, entry.kurzname, entry.anteil)}
+											{@const ref = anteilForPartei(lvl, entry.kurzname)}
+											{@const pp = ref !== null ? (entry.anteil - ref) * 100 : null}
 											<span
 												class="tabular-nums"
 												data-testid={`wahl-delta-${entry.kurzname}-${lvl}`}
 												data-delta={pp !== null ? pp.toFixed(2) : 'na'}
 												title={pp !== null
-													? `Differenz zu ${LEVEL_LABELS[lvl]}: ${formatDelta(pp)}`
+													? `${LEVEL_LABELS[lvl]}: ${formatPct(ref!)} (hier ${formatDeltaLong(pp)})`
 													: `${LEVEL_LABELS[lvl]}: nicht in Top-5`}
 											>
-												{LEVEL_LABELS[lvl]}: {pp !== null ? formatDelta(pp) : '–'}
+												{LEVEL_LABELS[lvl]} {ref !== null ? formatPct(ref) : '–'}
 											</span>
 										{/each}
 									</div>
@@ -400,24 +436,25 @@
 			{/if}
 
 			{#if sparklineLines.length > 0}
-				<div data-testid="wahl-sparkline" class="space-y-1.5">
+				<div data-testid="wahl-sparkline" class="space-y-2 pt-2 border-t border-rule">
 					<p
-						class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+						class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
 						data-testid="wahl-sparkline-label"
 					>
-						Verlauf Kiez {LEVEL_LABELS.kiez} ({sparklineLines[0]?.years[0]}–{sparklineLines[0]
-							?.years[sparklineLines[0].years.length - 1]})
+						Verlauf Kiez-Ebene · {sparklineLines[0]?.years[0]}–{sparklineLines[0]
+							?.years[sparklineLines[0].years.length - 1]}
 					</p>
-					<ul class="grid grid-cols-1 gap-1 sm:grid-cols-2" data-testid="wahl-sparkline-list">
+					<ul class="space-y-1" data-testid="wahl-sparkline-list">
 						{#each sparklineLines as line (line.kurzname)}
 							<li
-								class="flex items-center gap-2 font-mono text-[10px] text-ink"
+								class="flex items-center gap-3 font-mono text-[11px] text-ink"
 								data-testid={`wahl-sparkline-${line.kurzname}`}
 							>
 								<svg
-									width="80"
-									height="24"
+									width="60"
+									height="18"
 									viewBox="0 0 80 24"
+									preserveAspectRatio="none"
 									role="img"
 									aria-label={`${line.kurzname} Verlauf`}
 									class="flex-shrink-0"
@@ -426,13 +463,14 @@
 										d={line.pathD}
 										fill="none"
 										stroke={line.color}
-										stroke-width="1.5"
+										stroke-width="2"
 										stroke-linecap="round"
 										stroke-linejoin="round"
+										vector-effect="non-scaling-stroke"
 									/>
 								</svg>
-								<span class="truncate">{line.kurzname}</span>
-								<span class="ml-auto tabular-nums text-ink-muted">
+								<span class="flex-1 min-w-0">{line.kurzname}</span>
+								<span class="tabular-nums text-ink-muted whitespace-nowrap">
 									{formatPct(line.latestAnteil)}
 								</span>
 							</li>

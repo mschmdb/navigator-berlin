@@ -60,7 +60,10 @@ async function buildOne(source: GeoSource): Promise<LayerEntry> {
 		zoomThresholds: { min: 13, max: 17 },
 		geometryType: 'Polygon',
 		featureCount,
-		inspectorRelevant: true,
+		// Wahl-Geometrien sind kein generischer Inspector-Layer. wahl-section.svelte
+		// konsumiert sie direkt via api/wahl/results-at-point. inspectorRelevant=false
+		// hält sie aus getLayersAtPoint-Output (sonst rendern sie als generic Layer-Hit).
+		inspectorRelevant: false,
 		mapRelevant: false
 	};
 
