@@ -1,6 +1,6 @@
 # Story 6.3: Inspector-Section „Wahlverhalten hier" (Bars + Level-Switch + Slope-Sparkline)
 
-Status: in-progress
+Status: review
 
 <!-- Created 2026-05-18 nach Epic-6-Rewrite + UX-Recon (Datawrapper/NN/g/FT). Blocked by 6-0 (Schema+Queries) + 6-2 (Wahlbezirks-Lookup). Phase-1: lokaler Level-Switch in Wahl-Section; globaler Inspector-Level-Switch = Epic 8. -->
 

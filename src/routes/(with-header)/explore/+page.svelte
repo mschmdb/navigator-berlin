@@ -30,6 +30,7 @@
 	import { getClimateSeries } from '$lib/data/get-climate-series.js';
 	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
 	import { getKiezScore } from '$lib/data/get-kiez-score.js';
+	import { getWahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
 	import { findAllNearestStops } from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
 	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
 	import { queryPmtilesAt, type MapLibreLike } from '$lib/data/internal/pmtiles-query.js';
@@ -429,7 +430,18 @@
 		})();
 		ui.inspectorOpen = true;
 		ui.kiezScore = null;
+		ui.wahlResults = null;
 		announceGlobal(`Inspektor geöffnet für ${suggestion.displayName}`);
+		void (async () => {
+			try {
+				const wahl = await getWahlResultsAtPoint(suggestion.lat, suggestion.lng);
+				if (ui.selectedAddress?.id === suggestion.id) {
+					ui.wahlResults = wahl;
+				}
+			} catch {
+				if (ui.selectedAddress?.id === suggestion.id) ui.wahlResults = null;
+			}
+		})();
 		if (!ui.oepnvStopIndex) {
 			void getOepnvStopIndex()
 				.then((idx) => {
