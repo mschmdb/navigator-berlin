@@ -235,18 +235,18 @@ development_status:
   5-9-seo-aeo-pre-indexing-hardening: review  # 2026-05-18 review. 11 AC + 9 Task-Cluster done. Recon ergeben: buildPlace + AdministrativeArea + Breadcrumb + WebSite + FaqSection schon aus Story 2.2/2.3/2.4/2.5b (Scope -40%). Neu: buildDataCatalog + buildSpeakableWebPage Builders + Tests, robots.txt AI-Bot-Policy (11 Allow + 2 Disallow, Yandex absent), SeoHead noindex-Prop, getKiezeInBezirk-Selector + bezirk-kieze-list/kiez-siblings-list-Komponenten (Internal-Linking AC-7+8), Layer-Page +page.ts→+page.server.ts mit FaqSection, BreadcrumbList-Expansion auf 7 statische Pages + Layer-Detail + Updates-Detail/Index, DataCatalog auf /lizenzen, Speakable auf Methodik/Kiez-Score, _dev/+layout.svelte noindex, hooks.server X-Robots-Tag fuer /api+/_dev, indexnow-ping.ts + [key].txt-Route + Runbook + Memories. 75 neue/touched Tests gruen. pnpm check 0 neue Errors (mobile-meta-drawer pre-existing). Layer-Detail-Test-Fixture-Bulk-Update (faq:[]). User-Pivot: bezirk-kieze-list grid→ordered-list nach „sieht nicht gut aus"-Flag.
   epic-5-retrospective: optional
 
-  # Epic 6: Wahldaten + Cross-Layer-Story
+  # Epic 6: Wahldaten + Cross-Layer-Story (Rewrite 2026-05-18: 8 aktive Stories, 2 cancelled)
   epic-6: backlog
-  6-0-wahl-daten-schema-pipeline-foundation: backlog
-  6-1-bezirksreform-2001-mapping: backlog
-  6-2-wahlbezirks-geometrie-layer-adress-lookup: backlog
-  6-3-inspector-section-wahlverhalten-hier: backlog
-  6-4-per-wahl-detail-page: backlog
-  6-5-briefwahl-asymmetrie-ui-pattern: backlog
-  6-6-volksentscheide-sub-layer: backlog
-  6-7-cross-layer-story-templates-wahl-variablen: backlog
-  6-8-webmcp-tools-wahldaten: backlog
-  6-9-json-ld-dataset-methodik-doku: backlog
+  6-0-wahl-daten-schema-pipeline-foundation-spike: backlog  # Rewrite 2026-05-18: Spike-First (1 CSV pulldown + Schema-Validate) vor Schema-Implementation. Drizzle-Schema mit wahl/stimmbezirk/partei/partei_alias/ergebnis/wahl_aggregat_kiez+bezirk+berlin. AC-1 bis AC-6.
+  6-1-bezirksreform-2001-mapping: cancelled  # 2026-05-18 Scope-Reduce: Daten-Cutoff jetzt 2011+ (post-Reform), Mapping obsolet. Reaktivierungs-Trigger: FragDenStaat-Backfill von pre-2001-Daten.
+  6-2-wahlbezirks-geometrie-layer-adress-lookup: backlog  # Rewrite 2026-05-18: nur 2017+ Geometrien (daten.berlin.de). Pre-2017 via FragDenStaat = Phase-2-Backlog. mapshaper-keep-shapes pflicht (Memory project_simplify_keep_shapes).
+  6-3-inspector-section-wahlverhalten-hier: backlog  # Rewrite 2026-05-18: horizontale Stacked-Bars (NICHT Donut) + lokaler Level-Switch (Stimmbezirk/Kiez/Bezirk/Berlin) + Slope-Sparkline Top-5 + Delta-Chips + Direktmandats-Annotation. Per UX-Recon Datawrapper/NN/g/FT-Visual-Vocabulary. Default-Level = Kiez. WCAG-Pattern + Screenreader-Table. Compare-Mode same-level-lock.
+  6-4-per-wahl-detail-page: backlog  # Rewrite 2026-05-18: 12 Routes (4 BTW + 4 AGH + 4 BVV). Choropleth mit stärkste-Partei-Color + Anteils-Opazität. pre-2017 fällt auf 12 Bezirks-Polygone zurück + Disclaimer. OG-Image via Satori-Pipeline. EN-Variante cancelled (Phase 1 DE-only).
+  6-5-briefwahl-asymmetrie-pattern: backlog  # Rewrite 2026-05-18: dezenter Badge + Confidence-Hairline (NICHT modaler Disclaimer). Nur bei Stimmbezirks-Level + pre-2021-Wahl. Methodik-Page-Section #wahldaten-briefwahl.
+  6-6-volksentscheide-sub-layer: cancelled  # 2026-05-18 User-Decision: out-of-scope Phase 1. Reaktivierungs-Trigger: nach Hard-Launch + Capacity.
+  6-7-cross-layer-story-templates-wahl-variablen: backlog  # Rewrite 2026-05-18: 5-10 Templates wahl × wohnlage × lärm × soziale-lage. Stigma-Lint (Memory feedback_no_lebenswert) + Forbidden-Token-Lint analog Story 5.8. Co-Design-Review vor Roll-out auf 143 Kieze.
+  6-8-webmcp-tools-wahldaten: backlog  # Rewrite 2026-05-18: get_election_result(level)+compare_elections(level)+get_voting_district_geometry+list_elections. Volksentscheide-Tool gestrichen.
+  6-9-json-ld-dataset-methodik-doku: backlog  # Rewrite 2026-05-18: reuse Story 5.9 buildDataset. Methodik-Section #wahldaten mit Daten-Cutoff-Begründung + Briefwahl-Methodik + Stimmbezirks-zu-Kiez-Aggregation-Strategie.
   epic-6-retrospective: optional
 
   # Epic 7: System-Dokumentation (Owner + LLM-Konsum) — Phase 1 parallel zu Epic 4/5
