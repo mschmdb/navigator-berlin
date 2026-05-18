@@ -151,9 +151,7 @@
 		return `wahl-${bundleKey(b)}`;
 	}
 
-	const isBriefwahlLevel = $derived(
-		selectedLevel === 'stimmbezirk' && currentLevelResults?.isBriefwahlAggregat === true
-	);
+	const isBriefwahlLevel = $derived(selectedLevel === 'stimmbezirk');
 
 	const currentSparkline = $derived.by<SparklineSeries | null>(() => {
 		if (!currentBundle || !results) return null;
