@@ -58,7 +58,8 @@ function makeResults(bundles: WahlResultBundle[]): WahlResultsAtPoint {
 		point: { lat: 52.52, lng: 13.41 },
 		location: { bezirkSlug: 'mitte', kiezSlug: 'alexanderplatz' },
 		wahlbezirks: { bt25: { uwbId: '100', bezirkCode: '01' } },
-		wahlen: bundles
+		wahlen: bundles,
+		sparklines: []
 	};
 }
 

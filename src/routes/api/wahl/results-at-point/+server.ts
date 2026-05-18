@@ -13,6 +13,7 @@ import { getResultsForStimmbezirk } from '$lib/server/db/queries/wahl/get-result
 import { getResultsForKiez } from '$lib/server/db/queries/wahl/get-results-for-kiez.js';
 import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for-bezirk.js';
 import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for-berlin.js';
+import { getSparklineForKiez } from '$lib/server/db/queries/wahl/get-sparkline-for-kiez.js';
 
 const QuerySchema = v.object({
 	lat: v.pipe(v.number(), v.minValue(BERLIN_BBOX.south - 0.05), v.maxValue(BERLIN_BBOX.north + 0.05)),
@@ -38,11 +39,20 @@ type WahlResultBundle = {
 	};
 };
 
+type SparklineSeries = {
+	typ: 'btw' | 'agh' | 'bvv';
+	stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
+	level: 'kiez';
+	kiezSlug: string;
+	points: Array<{ jahr: number; parteiKurzname: string; farbeHex: string; anteil: number }>;
+};
+
 type Response = {
 	point: { lat: number; lng: number };
 	location: { bezirkSlug: string | null; kiezSlug: string | null };
 	wahlbezirks: Record<string, { uwbId: string; bezirkCode: string }>;
 	wahlen: WahlResultBundle[];
+	sparklines: SparklineSeries[];
 };
 
 const STATIC_LAYERS_DIR = join(process.cwd(), 'static', 'layers');
@@ -282,11 +292,37 @@ export const GET: RequestHandler = async ({ url }) => {
 		sanitizedWahlbezirks[slug] = { uwbId: data.uwbId, bezirkCode: data.bezirkCode };
 	}
 
+	const sparklines: SparklineSeries[] = [];
+	if (kiezSlug) {
+		const seenCombos = new Set<string>();
+		for (const b of bundles) {
+			const key = `${b.wahl.typ}-${b.wahl.stimmtyp}`;
+			if (seenCombos.has(key)) continue;
+			seenCombos.add(key);
+			const points = await getSparklineForKiez(kiezSlug, b.wahl.typ, b.wahl.stimmtyp, 5);
+			if (points.length > 0) {
+				sparklines.push({
+					typ: b.wahl.typ,
+					stimmtyp: b.wahl.stimmtyp,
+					level: 'kiez',
+					kiezSlug,
+					points: points.map((p) => ({
+						jahr: p.jahr,
+						parteiKurzname: p.parteiKurzname,
+						farbeHex: p.farbeHex,
+						anteil: p.anteil
+					}))
+				});
+			}
+		}
+	}
+
 	const body: Response = {
 		point: { lat, lng },
 		location: { bezirkSlug, kiezSlug },
 		wahlbezirks: sanitizedWahlbezirks,
-		wahlen: bundles
+		wahlen: bundles,
+		sparklines
 	};
 
 	return new Response(JSON.stringify(body), {

@@ -19,8 +19,8 @@ Quelle der Wahrheit für die Wahldaten-Pipeline in navigator.berlin. Erweitert i
 | Bundestagswahl (BTW) | 2013+ | BTW 2013, 2017, 2021, 2025 |
 | Abgeordnetenhaus (AGH) | 2011+ | AGH 2011, 2016, 2021, 2023 (Wiederholung) |
 | Bezirksverordneten-Versammlung (BVV) | 2011+ | BVV 2011, 2016, 2021, 2023 (Wiederholung) |
-| Europawahl (EW) | — | Phase 2 Backlog |
-| Volksentscheide | — | cancelled (Story 6.6) |
+| Europawahl (EW) | · | Phase 2 Backlog |
+| Volksentscheide | · | cancelled (Story 6.6) |
 
 **Summe Phase 1: 12 aktive Wahlen, 20 `wahl`-Rows in DB** (BTW + AGH je 2 Stimmtypen, BVV je 1 Einstimme).
 

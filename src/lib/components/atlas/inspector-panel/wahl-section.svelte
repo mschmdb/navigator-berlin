@@ -6,7 +6,8 @@
 		WahlResultsAtPoint,
 		WahlResultBundle,
 		LevelKey,
-		Top5Entry
+		Top5Entry,
+		SparklineSeries
 	} from '$lib/data/get-wahl-results-at-point.js';
 
 	type Props = {
@@ -99,8 +100,31 @@
 	const top5 = $derived.by<Top5Entry[]>(() => currentLevelResults?.top5 ?? []);
 	const totalStimmen = $derived(top5.reduce((s, e) => s + e.stimmen, 0));
 
+	const deltaLevels = $derived.by<readonly LevelKey[]>(() => {
+		const all: LevelKey[] = ['stimmbezirk', 'kiez', 'bezirk', 'berlin'];
+		return all.filter((lvl) => lvl !== selectedLevel && currentBundle?.levels[lvl]?.available);
+	});
+
+	function anteilForPartei(level: LevelKey, kurzname: string): number | null {
+		const top = currentBundle?.levels[level]?.top5;
+		const match = top?.find((e) => e.kurzname === kurzname);
+		return match ? match.anteil : null;
+	}
+
+	function deltaInPP(refLevel: LevelKey, kurzname: string, baseAnteil: number): number | null {
+		const ref = anteilForPartei(refLevel, kurzname);
+		if (ref === null) return null;
+		return (baseAnteil - ref) * 100;
+	}
+
 	function formatPct(n: number): string {
 		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
+	}
+
+	function formatDelta(pp: number): string {
+		const sign = pp > 0 ? '+' : pp < 0 ? '−' : '±';
+		const abs = Math.abs(pp).toFixed(1).replace('.', ',');
+		return `${sign}${abs} pp`;
 	}
 
 	function formatStimmen(n: number): string {
@@ -114,6 +138,65 @@
 	const isBriefwahlLevel = $derived(
 		selectedLevel === 'stimmbezirk' && currentLevelResults?.isBriefwahlAggregat === true
 	);
+
+	const currentSparkline = $derived.by<SparklineSeries | null>(() => {
+		if (!currentBundle || !results) return null;
+		return (
+			results.sparklines.find(
+				(s) => s.typ === currentBundle.wahl.typ && s.stimmtyp === currentBundle.wahl.stimmtyp
+			) ?? null
+		);
+	});
+
+	type SparklineLine = {
+		kurzname: string;
+		color: string;
+		pathD: string;
+		latestAnteil: number;
+		years: number[];
+	};
+
+	const sparklineLines = $derived.by<SparklineLine[]>(() => {
+		const sp = currentSparkline;
+		if (!sp || sp.points.length === 0) return [];
+
+		const byPartei = new Map<string, { jahr: number; anteil: number }[]>();
+		for (const p of sp.points) {
+			const bucket = byPartei.get(p.parteiKurzname) ?? [];
+			bucket.push({ jahr: p.jahr, anteil: p.anteil });
+			byPartei.set(p.parteiKurzname, bucket);
+		}
+
+		const allYears = Array.from(new Set(sp.points.map((p) => p.jahr))).sort((a, b) => a - b);
+		if (allYears.length < 2) return [];
+
+		const xMin = allYears[0];
+		const xMax = allYears[allYears.length - 1];
+		const yMin = 0;
+		const yMax = Math.max(0.5, ...sp.points.map((p) => p.anteil)) * 1.05;
+
+		const W = 80;
+		const H = 24;
+
+		return Array.from(byPartei.entries()).map(([kurzname, pts]) => {
+			pts.sort((a, b) => a.jahr - b.jahr);
+			const coords = pts.map((p) => {
+				const x = xMax === xMin ? 0 : ((p.jahr - xMin) / (xMax - xMin)) * W;
+				const y = H - ((p.anteil - yMin) / (yMax - yMin)) * H;
+				return [x, y] as const;
+			});
+			const pathD = coords
+				.map(([x, y], i) => `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`)
+				.join(' ');
+			return {
+				kurzname,
+				color: parteiColor(kurzname),
+				pathD,
+				latestAnteil: pts[pts.length - 1].anteil,
+				years: allYears
+			};
+		});
+	});
 </script>
 
 {#if featureFlags.wahlSection && results && results.wahlen.length > 0 && availableTypen.length > 0}
@@ -236,18 +319,40 @@
 							></span>
 						{/each}
 					</div>
-					<ul class="grid grid-cols-1 gap-1 sm:grid-cols-2" data-testid="wahl-legend">
+					<ul class="space-y-1.5" data-testid="wahl-legend">
 						{#each top5 as entry (entry.kurzname)}
-							<li class="flex items-baseline gap-2 font-mono text-xs">
-								<span
-									class="inline-block h-2.5 w-2.5 rounded-sm border border-ink/10 flex-shrink-0"
-									style="background-color:{parteiColor(entry.kurzname)};"
-									aria-hidden="true"
-								></span>
-								<span class="text-ink truncate">{entry.kurzname}</span>
-								<span class="ml-auto text-ink-muted tabular-nums">
-									{formatPct(entry.anteil)}
-								</span>
+							<li class="flex flex-col gap-0.5 font-mono text-xs">
+								<div class="flex items-baseline gap-2">
+									<span
+										class="inline-block h-2.5 w-2.5 rounded-sm border border-ink/10 flex-shrink-0"
+										style="background-color:{parteiColor(entry.kurzname)};"
+										aria-hidden="true"
+									></span>
+									<span class="text-ink truncate">{entry.kurzname}</span>
+									<span class="ml-auto text-ink-muted tabular-nums">
+										{formatPct(entry.anteil)}
+									</span>
+								</div>
+								{#if deltaLevels.length > 0}
+									<div
+										class="flex flex-wrap gap-x-3 gap-y-0.5 pl-4 text-[10px] text-ink-subtle"
+										data-testid={`wahl-delta-row-${entry.kurzname}`}
+									>
+										{#each deltaLevels as lvl (lvl)}
+											{@const pp = deltaInPP(lvl, entry.kurzname, entry.anteil)}
+											<span
+												class="tabular-nums"
+												data-testid={`wahl-delta-${entry.kurzname}-${lvl}`}
+												data-delta={pp !== null ? pp.toFixed(2) : 'na'}
+												title={pp !== null
+													? `Differenz zu ${LEVEL_LABELS[lvl]}: ${formatDelta(pp)}`
+													: `${LEVEL_LABELS[lvl]}: nicht in Top-5`}
+											>
+												{LEVEL_LABELS[lvl]}: {pp !== null ? formatDelta(pp) : '–'}
+											</span>
+										{/each}
+									</div>
+								{/if}
 							</li>
 						{/each}
 					</ul>
@@ -292,6 +397,48 @@
 				<p data-testid="wahl-empty" class="font-mono text-xs text-ink-subtle">
 					Keine Daten für diese Ebene verfügbar.
 				</p>
+			{/if}
+
+			{#if sparklineLines.length > 0}
+				<div data-testid="wahl-sparkline" class="space-y-1.5">
+					<p
+						class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+						data-testid="wahl-sparkline-label"
+					>
+						Verlauf Kiez {LEVEL_LABELS.kiez} ({sparklineLines[0]?.years[0]}–{sparklineLines[0]
+							?.years[sparklineLines[0].years.length - 1]})
+					</p>
+					<ul class="grid grid-cols-1 gap-1 sm:grid-cols-2" data-testid="wahl-sparkline-list">
+						{#each sparklineLines as line (line.kurzname)}
+							<li
+								class="flex items-center gap-2 font-mono text-[10px] text-ink"
+								data-testid={`wahl-sparkline-${line.kurzname}`}
+							>
+								<svg
+									width="80"
+									height="24"
+									viewBox="0 0 80 24"
+									role="img"
+									aria-label={`${line.kurzname} Verlauf`}
+									class="flex-shrink-0"
+								>
+									<path
+										d={line.pathD}
+										fill="none"
+										stroke={line.color}
+										stroke-width="1.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									/>
+								</svg>
+								<span class="truncate">{line.kurzname}</span>
+								<span class="ml-auto tabular-nums text-ink-muted">
+									{formatPct(line.latestAnteil)}
+								</span>
+							</li>
+						{/each}
+					</ul>
+				</div>
 			{/if}
 
 			<p

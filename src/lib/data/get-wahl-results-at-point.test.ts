@@ -11,7 +11,8 @@ const samplePayload: WahlResultsAtPoint = {
 	wahlbezirks: {
 		'bt25': { uwbId: '101', bezirkCode: '01' }
 	},
-	wahlen: []
+	wahlen: [],
+	sparklines: []
 };
 
 beforeEach(() => {

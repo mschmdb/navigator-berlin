@@ -34,11 +34,20 @@ export type WahlResultBundle = {
 	levels: Record<LevelKey, LevelResults>;
 };
 
+export type SparklineSeries = {
+	typ: 'btw' | 'agh' | 'bvv';
+	stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
+	level: 'kiez';
+	kiezSlug: string;
+	points: Array<{ jahr: number; parteiKurzname: string; farbeHex: string; anteil: number }>;
+};
+
 export type WahlResultsAtPoint = {
 	point: { lat: number; lng: number };
 	location: { bezirkSlug: string | null; kiezSlug: string | null };
 	wahlbezirks: Record<string, { uwbId: string; bezirkCode: string }>;
 	wahlen: WahlResultBundle[];
+	sparklines: SparklineSeries[];
 };
 
 const cache = new LRUCache<string, { value: WahlResultsAtPoint | null }>({ max: 50 });
