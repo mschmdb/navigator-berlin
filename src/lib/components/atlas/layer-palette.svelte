@@ -35,6 +35,7 @@
 
 	let searchInput: HTMLInputElement | null = $state(null);
 	let searchQuery = $state('');
+	let previouslyFocused: HTMLElement | null = null;
 	let windowBreakpoint = $state<Breakpoint | null>(null);
 	const breakpoint = $derived(windowBreakpoint ?? initialBreakpoint);
 
@@ -116,9 +117,15 @@
 		if (open === prevOpen) return;
 		prevOpen = open;
 		if (open) {
+			previouslyFocused =
+				typeof document !== 'undefined'
+					? ((document.activeElement as HTMLElement | null) ?? null)
+					: null;
 			queueMicrotask(() => searchInput?.focus());
 		} else {
 			searchQuery = '';
+			previouslyFocused?.focus?.();
+			previouslyFocused = null;
 		}
 	});
 </script>
