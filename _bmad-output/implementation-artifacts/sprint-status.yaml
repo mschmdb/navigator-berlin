@@ -232,6 +232,7 @@ development_status:
   5-6-gdpr-dpia-dokument-beratungs-asset: cancelled  # 2026-05-17 user-decision: nicht relevant für nicht-kommerziellen Single-Maintainer
   5-7-sitemap-submission-search-console-setup: done  # 2026-05-17 user hat GSC + Bing verifiziert + Sitemap submitted
   5-8-public-update-skill: done  # 2026-05-17: /publish-update Skill complete. 7 test-files / 58 tests (TDD), 6 pure-funcs + 1 subagent-wrapper. SKILL.md + 2 Runbooks. pnpm publish-update script. Allowlist+Denylist+14 Forbidden-Tokens.
+  5-9-seo-aeo-pre-indexing-hardening: ready-for-dev  # 2026-05-18 authored nach Lighthouse-Audit. Scope: AI-Bot-Policy (ohne Yandex), FAQPage-JSON-LD auf Bezirk/Kiez/Layer, Place+GeoCoordinates, BreadcrumbList-Expansion, DataCatalog auf /lizenzen, Speakable-Spec auf Methodik, Internal-Linking (Bezirk→Kieze, Kiez→Geschwister), noindex /_dev+/api, IndexNow-Bing-Push. 11 AC, 9 Task-Cluster. Sequencing: pre-erster-Indexing-Push wichtig damit Site-Profil bei Google+Bing+AI-Crawlers strukturiert landet.
   epic-5-retrospective: optional
 
   # Epic 6: Wahldaten + Cross-Layer-Story
