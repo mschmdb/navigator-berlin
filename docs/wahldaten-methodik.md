@@ -127,19 +127,47 @@ Bezirks-Code kommt direkt aus Spalte `Kreis` (Bundeswahlleiterin-Schema). Mappin
 
 SUM über alle Stimmbezirke mit Land=11, gruppiert nach Partei.
 
-### Kiez-Aggregat (Phase 2)
+### Kiez-Aggregat (Story 6.2)
 
 Strategie Centroid-First:
 
-1. Pro Stimmbezirk: Polygon-Centroid berechnen (Geometrie-Layer Story 6.2)
+1. Pro Stimmbezirk: Polygon-Centroid berechnen via `@turf/center`
 2. Centroid → enthaltenes Kiez (Punkt-in-Polygon-Lookup gegen `lor-bezirksregion`)
 3. SUM-Aggregation pro `(wahl_id, kiez_slug, partei_id)` → `wahl_aggregat_kiez`
 
 **Begründung Centroid statt Polygon-Intersection:**
 
-Stimmbezirke (~1.900 in Berlin) sind deutlich kleiner als Kieze (143 BZR). Polygon-Intersection wäre 99 %+ identisches Ergebnis bei 10× Compute-Cost. Edge-Case: Stimmbezirk-Centroid liegt auf Kiez-Grenze → Lookup nutzt ersten-Match (deterministisch via LOR-Index-Reihenfolge).
+Stimmbezirke (~1.800-3.700 in Berlin pro Wahl) sind deutlich kleiner als Kieze (143 BZR). Polygon-Intersection wäre 99 %+ identisches Ergebnis bei 10× Compute-Cost. Edge-Case: Stimmbezirk-Centroid liegt auf Kiez-Grenze → Lookup nutzt ersten-Match (deterministisch via LOR-Index-Reihenfolge).
 
-**Status:** blocked bis Story 6.2 die Stimmbezirks-Geometrien liefert. Bis dahin bleibt `wahl_aggregat_kiez` leer und Queries returnen graceful `[]`.
+**Briefwahl ausgeschlossen:** Aggregation läuft nur über Urne-Stimmen (`ist_briefwahl_aggregat = false`). Brief-Stimmen haben keine räumliche Zuordnung (Bezirks-Aggregat-only) und würden Kiez-Werte verfälschen wenn auf Parent-Urne-Polygon gemappt.
+
+**Geometrie-Coverage Phase 1:**
+
+| Wahl | Geometrie verfügbar | Kiez-Aggregat |
+|------|---------------------|---------------|
+| BTW 2013 | nein | leer |
+| BTW 2017 | ja (`wahlbezirke-btw17`) | 1136 Rows × 2 Stimmtypen |
+| BTW 2021 | ja (`wahlbezirke-ah21` combined) | 1085-1136 Rows × 2 Stimmtypen |
+| BTW 2025 | ja (`wahlbezirke-bt25`) | 1132-1278 Rows × 2 Stimmtypen |
+| AGH 2011 + BVV 2011 | nein | leer |
+| AGH 2016 + BVV 2016 | ja (`wahlbezirke-ah16`) | 978-994 Rows |
+| AGH 2021 + BVV 2021 | ja (`wahlbezirke-ah21` combined) | 1087-1136 Rows |
+| AGH 2023 + BVV 2023 | ja (`wahlbezirke-ah23` Wahllokale) | 1072-1127 Rows |
+
+pre-2016 Geometrien sind Phase-2-Backlog (FragDenStaat-IFG-Anfrage bei Bezirken). `wahl_aggregat_kiez` bleibt für die leer.
+
+**DB-uwbId zu Geo-Properties Mapping:**
+
+Format variiert pro Wahl-Generation:
+
+| Wahl-Slug | DB-Format | Geo-Build-Rule |
+|-----------|-----------|----------------|
+| BTW 21/25 | `${BWK}-${BEZ}-${UWB3}-0` | direkter Build aus BWK+BEZ+UWB3 |
+| BTW 17 | `${BWK}-${BEZ}-${BEZ}W${UWB3}-0` | BEZ+W eingefügt im wahlbezirk-Slot |
+| AGH/BVV 21/23 | `${BEZ}W${UWB3}-W` | Adresse-Format mit -W-Suffix |
+| AGH/BVV 16 | `${BEZ}W${UWB3}` | Adresse-Format ohne Suffix |
+
+Implementation: `scripts/wahlen/lib/kiez-mapper.ts#dbUwbIdFromGeo` und `buildKiezMappings`.
 
 ## Briefwahl-Behandlung
 
@@ -191,7 +219,7 @@ UI (Story 6.3) muss diese Wahlen als „Wiederholungswahl" labeln und in Sparkli
 ## Pipeline-Run
 
 ```bash
-# Alle 12 Wahlen
+# Wahl-Ergebnisse: alle 12 Wahlen ins Postgres
 pnpm data:wahl-fetch
 
 # Einzelne Wahl
@@ -201,9 +229,23 @@ pnpm data:wahl-fetch --only=bvv11
 
 # Drift-Check skippen (für split-Format-Wahlen wie BTW13/17)
 pnpm data:wahl-fetch --only=btw13 --skip-drift-check
+
+# Geometrien: 5 GeoJSON-Layer in static/layers/ + MANIFEST-Augment
+pnpm data:wahl-geo
+
+# Kiez-Aggregat-Build (braucht data:wahl-fetch + data:wahl-geo + LOR-Geometrien)
+pnpm data:wahl-kiez
 ```
 
-Verfügbare Slugs: `btw13` `btw17` `btw21` `btw25` `agh11` `agh16` `agh21` `agh23` `bvv11` `bvv16` `bvv21` `bvv23`.
+**Verfügbare Wahl-Slugs:** `btw13` `btw17` `btw21` `btw25` `agh11` `agh16` `agh21` `agh23` `bvv11` `bvv16` `bvv21` `bvv23`.
+
+**Verfügbare Geometrie-Slugs:** `btw17` `ah16` `ah21` `ah23` `bt25` (`ah21` combined für BTW21+AGH21+BVV21, `ah16` combined für AGH16+BVV16, `ah23` Wahllokale-Variant für AGH23+BVV23).
+
+### URL-Recon-Pattern (volatile Hash-URLs)
+
+Die `statistik-berlin-brandenburg.de/opendata/*.zip`-URLs sind kein direkter Download, sondern Scrivito-SPA-Routes. JS resolved client-side zur echten Hash-URL auf `download.statistik-berlin-brandenburg.de`. `curl`/`fetch` liefern HTML (69 KB SPA), nicht ZIP.
+
+Bei stale Hash-URL: Playwright-Headless gegen die `/opendata/*.zip`-URL navigieren, Network-Response auf `download.statistik-berlin-brandenburg.de` abfangen. Pattern in `scripts/wahlen/spike-fetch.ts` (Spike-Modus für BTW) bzw. manuell via Browser-DevTools für AGH/BVV/Geometrien.
 
 ## Out-of-Scope
 

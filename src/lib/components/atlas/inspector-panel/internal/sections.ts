@@ -46,7 +46,11 @@ const BUNDLE_TO_SECTION: Record<Bundle, SectionKey> = {
 	// Sie liefern keine LayerHits in den Inspector-Sections, fallen daher auf 'boundaries'
 	// als No-Op-Mapping zurück und werden zusätzlich via `inspectorRelevant: false` aus
 	// `getLayersAtPoint` ausgeschlossen.
-	'G: Kiez-Score': 'boundaries'
+	'G: Kiez-Score': 'boundaries',
+	// Wahldaten rendern in eigener Inspector-Sektion (Story 6.3). No-Op-Map auf 'boundaries'
+	// damit getLayersAtPoint sie nicht in andere Sections wirft. Layer haben
+	// inspectorRelevant=true für direkten Wahlbezirks-Lookup ausserhalb von getLayersAtPoint.
+	'H: Wahldaten': 'boundaries'
 };
 
 const BOUNDARY_ORDER = ['bezirke', 'ortsteile', 'plz'];

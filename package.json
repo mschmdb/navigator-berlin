@@ -23,6 +23,8 @@
 		"data:aggregate-scores": "tsx scripts/aggregate-scores.ts",
 		"data:aggregate-wohnlagen": "tsx scripts/aggregate-wohnlagen.ts",
 		"data:wahl-fetch": "tsx scripts/aggregate-wahl-data.ts",
+		"data:wahl-geo": "tsx scripts/build-wahl-geometries.ts",
+		"data:wahl-kiez": "tsx scripts/build-wahl-kiez-aggregat.ts",
 		"data:faq": "tsx scripts/render-faq.ts",
 		"webmcp:manifest": "tsx scripts/build-webmcp-manifest.ts",
 		"og:images": "tsx scripts/generate-og-images.ts",
