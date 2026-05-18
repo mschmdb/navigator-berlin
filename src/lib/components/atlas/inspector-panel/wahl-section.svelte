@@ -393,6 +393,14 @@
 								title={`${entry.kurzname}: ${formatPct(entry.anteil)}`}
 							></span>
 						{/each}
+						{#if isBriefwahlLevel}
+							<span
+								class="absolute top-0 right-0 h-full w-1.5 pointer-events-none"
+								data-testid="wahl-confidence-hairline"
+								style="background-image: repeating-linear-gradient(45deg, rgba(20,20,20,0.45) 0 2px, transparent 2px 4px);"
+								title="Unsicherheits-Zone: Stimmbezirks-Werte ohne Briefstimmen"
+							></span>
+						{/if}
 					</div>
 					<ul class="space-y-1.5" data-testid="wahl-legend">
 						{#each top5 as entry (entry.kurzname)}

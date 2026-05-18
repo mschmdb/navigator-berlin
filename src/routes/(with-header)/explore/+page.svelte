@@ -688,6 +688,14 @@
 			} catch {
 				if (ui.comparisonAddress?.id === addr.id) ui.comparisonKiezScore = null;
 			}
+			try {
+				const wahl = await getWahlResultsAtPoint(addr.lat, addr.lng);
+				if (ui.comparisonAddress?.id === addr.id) {
+					ui.comparisonWahlResults = wahl;
+				}
+			} catch {
+				if (ui.comparisonAddress?.id === addr.id) ui.comparisonWahlResults = null;
+			}
 			if (ui.comparisonAddress?.id === addr.id) {
 				ui.comparisonLoading = false;
 			}

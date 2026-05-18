@@ -51,7 +51,8 @@ function makeState(): UiState {
 		comparisonLoading: false,
 		kiezScore: null,
 		comparisonKiezScore: null,
-		wahlResults: null
+		wahlResults: null,
+		comparisonWahlResults: null
 	};
 }
 

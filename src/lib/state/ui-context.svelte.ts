@@ -54,6 +54,8 @@ export interface UiState {
 	comparisonKiezScore: KiezScore | null;
 	/** Story 6.3: Wahl-Ergebnisse Multi-Level für aktuelle Adresse. */
 	wahlResults: WahlResultsAtPoint | null;
+	/** Story 6.3d: Wahl-Ergebnisse für Vergleichs-Adresse B (Compare-Mode). */
+	comparisonWahlResults: WahlResultsAtPoint | null;
 }
 
 export function createUiState(): UiState {
@@ -80,7 +82,8 @@ export function createUiState(): UiState {
 		comparisonLoading: false,
 		kiezScore: null,
 		comparisonKiezScore: null,
-		wahlResults: null
+		wahlResults: null,
+		comparisonWahlResults: null
 	});
 	setContext(KEY, state);
 	return state;
