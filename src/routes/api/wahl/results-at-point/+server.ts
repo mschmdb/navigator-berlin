@@ -196,9 +196,13 @@ async function buildLevelResults(
 	bezirkSlug: string | null,
 	isBriefwahlByDefault: boolean
 ): Promise<WahlResultBundle['levels']> {
+	// Top-10 statt Top-5: Delta-Vergleich Stimmbezirk-Partei vs Bezirk/Berlin braucht
+	// auch nicht-Top-5-Parteien (BSW oft Rank 6-7 auf Bezirks/Berlin-Ebene während
+	// Top-5 lokal). UI rendert weiter nur Top-5 als Hauptliste.
+	const LIMIT = 10;
 	const [stimmbezirk, kiez, bezirk, berlin] = await Promise.all([
 		dbUwbId
-			? getResultsForStimmbezirk(wahl.id, dbUwbId, 5).then((rows) => ({
+			? getResultsForStimmbezirk(wahl.id, dbUwbId, LIMIT).then((rows) => ({
 					available: rows.length > 0,
 					top5: rows.length > 0 ? rows.map((r) => ({
 						kurzname: r.parteiKurzname,
@@ -211,7 +215,7 @@ async function buildLevelResults(
 				}))
 			: Promise.resolve({ available: false, top5: null }),
 		kiezSlug
-			? getResultsForKiez(wahl.id, kiezSlug, 5).then((rows) => ({
+			? getResultsForKiez(wahl.id, kiezSlug, LIMIT).then((rows) => ({
 					available: rows.length > 0,
 					top5: rows.length > 0 ? rows.map((r) => ({
 						kurzname: r.parteiKurzname,
@@ -223,7 +227,7 @@ async function buildLevelResults(
 				}))
 			: Promise.resolve({ available: false, top5: null }),
 		bezirkSlug
-			? getResultsForBezirk(wahl.id, bezirkSlug, 5).then((rows) => ({
+			? getResultsForBezirk(wahl.id, bezirkSlug, LIMIT).then((rows) => ({
 					available: rows.length > 0,
 					top5: rows.length > 0 ? rows.map((r) => ({
 						kurzname: r.parteiKurzname,
@@ -234,7 +238,7 @@ async function buildLevelResults(
 					})) : null
 				}))
 			: Promise.resolve({ available: false, top5: null }),
-		getResultsForBerlin(wahl.id, 5).then((rows) => ({
+		getResultsForBerlin(wahl.id, LIMIT).then((rows) => ({
 			available: rows.length > 0,
 			top5: rows.length > 0 ? rows.map((r) => ({
 				kurzname: r.parteiKurzname,

@@ -90,8 +90,12 @@
 		return data?.available ? (data.top5 ?? []) : [];
 	}
 
-	const topA = $derived(pickTopForLevel(bundleA, selectedLevel));
-	const topB = $derived(pickTopForLevel(bundleB, selectedLevel));
+	// API liefert Top-10 für Cross-Level-Lookups (BSW etc Rank 6+ auf höheren Levels).
+	// Compare-Render zeigt aber nur die Top-5-Union der beiden Adressen für Lesbarkeit.
+	const topAFull = $derived(pickTopForLevel(bundleA, selectedLevel));
+	const topBFull = $derived(pickTopForLevel(bundleB, selectedLevel));
+	const topA = $derived(topAFull.slice(0, 5));
+	const topB = $derived(topBFull.slice(0, 5));
 
 	const sameAggregat = $derived.by(() => {
 		if (selectedLevel === 'stimmbezirk') {
@@ -127,6 +131,10 @@
 	function anteilForPartei(top: Top5Entry[], kurzname: string): number | null {
 		const m = top.find((e) => e.kurzname === kurzname);
 		return m ? m.anteil : null;
+	}
+
+	function anteilForPartieFull(side: 'a' | 'b', kurzname: string): number | null {
+		return anteilForPartei(side === 'a' ? topAFull : topBFull, kurzname);
 	}
 
 	const visible = $derived(
@@ -240,8 +248,8 @@
 				</thead>
 				<tbody>
 					{#each allParteien as kurzname (kurzname)}
-						{@const a = anteilForPartei(topA, kurzname)}
-						{@const b = anteilForPartei(topB, kurzname)}
+						{@const a = anteilForPartieFull('a', kurzname)}
+						{@const b = anteilForPartieFull('b', kurzname)}
 						{@const diff = a !== null && b !== null ? (a - b) * 100 : null}
 						<tr
 							class="border-t border-rule/50"

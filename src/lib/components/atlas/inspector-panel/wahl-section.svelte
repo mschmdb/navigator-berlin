@@ -118,7 +118,8 @@
 		}
 	});
 
-	const top5 = $derived.by<Top5Entry[]>(() => currentLevelResults?.top5 ?? []);
+	const topN = $derived.by<Top5Entry[]>(() => currentLevelResults?.top5 ?? []);
+	const top5 = $derived(topN.slice(0, 5));
 	const totalStimmen = $derived(top5.reduce((s, e) => s + e.stimmen, 0));
 
 	const deltaLevels = $derived.by<readonly LevelKey[]>(() => {
@@ -127,8 +128,8 @@
 	});
 
 	function anteilForPartei(level: LevelKey, kurzname: string): number | null {
-		const top = currentBundle?.levels[level]?.top5;
-		const match = top?.find((e) => e.kurzname === kurzname);
+		const all = currentBundle?.levels[level]?.top5;
+		const match = all?.find((e) => e.kurzname === kurzname);
 		return match ? match.anteil : null;
 	}
 
