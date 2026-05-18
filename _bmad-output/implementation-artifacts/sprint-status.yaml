@@ -249,6 +249,19 @@ development_status:
   6-9-json-ld-dataset-methodik-doku: backlog  # Rewrite 2026-05-18: reuse Story 5.9 buildDataset. Methodik-Section #wahldaten mit Daten-Cutoff-Begründung + Briefwahl-Methodik + Stimmbezirks-zu-Kiez-Aggregation-Strategie.
   epic-6-retrospective: optional
 
+  # Epic 8: Multi-Level-Inspector + Karten-Polygon-Highlight (Phase 2, post-Hard-Launch + post-Epic-6)
+  # Authored 2026-05-18 nach Epic-6-Story-6.3-UX-Diskussion. User-Vision: globaler Level-Switch
+  # auf alle Sections + Karten-Polygon-Highlight. Risk: bricht Compare/Bookmarks/WebMCP/Disclaimer-Logik.
+  # ADR-014 (Story 8.0) ist Pflicht-Foundation vor jeder Implementation.
+  epic-8: backlog
+  8-0-multi-level-architektur-adr-layer-aggregat-strategy: backlog  # ADR-014 + pro Layer Aggregat-Strategie (numerisch=Median, ordinal=Modus, count=Density) + Backwards-Compat-Plan für Compare/Bookmarks/WebMCP. Pflicht-Block vor 8.1.
+  8-1-inspector-globaler-level-switch-foundation: backlog  # inspector-level-context.svelte.ts + inspector-level-toggle.svelte. Default=Adresse für Backwards-Compat.
+  8-2-layer-sections-multi-level-adapter: backlog  # aggregate-layer-for-level.ts Pure-Function + Section-Konsumenten. Disclaimer wenn nicht-sinnvoll-aggregierbar.
+  8-3-karten-polygon-highlight-level-switch: backlog  # MapLibre-Highlight-Layer beim Level-Wechsel. Existierende bezirke/lor-bezirksregion-Sources reuse.
+  8-4-compare-mode-multi-level-integration: backlog  # Story-1.27-Compare mit Story-8.1-Level-Context. Same-level-lock im Compare.
+  8-5-webmcp-tools-multi-level-parameter: backlog  # alle existing WebMCP-Tools um optional level-Param erweitern. Backwards-Compat: ohne Level = address-Default.
+  epic-8-retrospective: optional
+
   # Epic 7: System-Dokumentation (Owner + LLM-Konsum) — Phase 1 parallel zu Epic 4/5
   epic-7: done  # 2026-05-17 approach-override per memory project_epic_7_approach: Content-First für Narrative, Generators für Derivable, KEIN Lefthook-Auto-Hook. 5 von 6 Stories done (7-1 cancelled).
   7-1-auto-doc-skill-foundation: cancelled  # 2026-05-17 verworfen (Lefthook-post-commit + Subagent-Auto-Narrative-Writes = hohe Friction + Halluzinations-Risiko). Ersetzt durch deterministische Generator-Scripts pnpm doc:pipelines + pnpm doc:story-map (siehe 7-4 + 7-6).
