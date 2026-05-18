@@ -100,11 +100,13 @@ describe('WahlSection', () => {
 		await expect.element(table).toBeInTheDocument();
 	});
 
-	it('level-Switch wechselt zwischen Levels', async () => {
+	it('level-Switch wechselt zwischen Levels via Pill-Click', async () => {
 		render(WahlSection, { results: makeResults([makeBundle()]) });
-		const select = page.getByTestId('wahl-level-switch');
-		await expect.element(select).toBeInTheDocument();
-		await select.selectOptions('berlin');
+		const group = page.getByTestId('wahl-level-switch');
+		await expect.element(group).toBeInTheDocument();
+		const berlinPill = page.getByTestId('wahl-level-berlin');
+		await berlinPill.click();
+		await expect.element(berlinPill).toHaveAttribute('aria-checked', 'true');
 		await expect.element(page.getByTestId('wahl-legend')).toBeInTheDocument();
 	});
 
@@ -135,8 +137,8 @@ describe('WahlSection', () => {
 			isBriefwahlAggregat: true
 		};
 		render(WahlSection, { results: makeResults([b]) });
-		const select = page.getByTestId('wahl-level-switch');
-		await select.selectOptions('stimmbezirk');
+		const stimmbezirkPill = page.getByTestId('wahl-level-stimmbezirk');
+		await stimmbezirkPill.click();
 		await expect.element(page.getByTestId('wahl-briefwahl-note')).toBeInTheDocument();
 	});
 

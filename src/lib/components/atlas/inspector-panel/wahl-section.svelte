@@ -250,85 +250,125 @@
 		</div>
 
 		{#if currentBundle}
-			<div class="flex items-baseline justify-between gap-3 flex-wrap">
-				<div class="flex flex-col gap-1">
-					<div class="flex items-baseline gap-2 flex-wrap">
-						<span class="font-sans text-sm font-semibold text-ink">
-							{TYP_LABELS[currentBundle.wahl.typ]}
-						</span>
-						{#if jahreForTypStimmtyp.length > 0}
-							<label class="flex items-center gap-1">
-								<span class="sr-only">Wahljahr</span>
-								<select
-									data-testid="wahl-jahr-switch"
-									bind:value={selectedJahr}
-									class="font-mono text-xs px-1.5 py-0.5 rounded border border-rule bg-bg text-ink"
-								>
-									{#each jahreForTypStimmtyp as jahr (jahr)}
-										<option value={jahr}>{jahr}</option>
-									{/each}
-								</select>
-							</label>
-						{/if}
-						{#if currentBundle.wahl.isRepeatElection}
-							<span
-								class="font-mono text-[10px] uppercase tracking-wide text-ink-muted align-middle"
-								data-testid="wahl-wiederholung-marker"
-							>
-								(Wiederholung)
-							</span>
-						{/if}
-					</div>
-					{#if stimmtypenForTyp.length > 1}
-						<div
-							role="radiogroup"
-							aria-label="Stimmenart"
-							class="flex gap-1"
-							data-testid="wahl-stimmtyp-switch"
-						>
-							{#each stimmtypenForTyp as st (st)}
-								<button
-									role="radio"
-									type="button"
-									aria-checked={selectedStimmtyp === st}
-									data-testid={`wahl-stimmtyp-${st}`}
-									onclick={() => (selectedStimmtyp = st)}
-									class="font-mono text-[10px] uppercase tracking-wide px-2 py-0.5 rounded border transition-colors"
-									class:bg-ink={selectedStimmtyp === st}
-									class:text-bg={selectedStimmtyp === st}
-									class:border-ink={selectedStimmtyp === st}
-									class:bg-bg={selectedStimmtyp !== st}
-									class:text-ink-muted={selectedStimmtyp !== st}
-									class:border-rule={selectedStimmtyp !== st}
-									class:hover:text-ink={selectedStimmtyp !== st}
-									class:hover:border-ink={selectedStimmtyp !== st}
-								>
-									{st === 'zweitstimme'
-										? 'Zweitstimme'
-										: st === 'erststimme'
-											? 'Erststimme'
-											: 'Stimme'}
-								</button>
-							{/each}
-						</div>
-					{/if}
-				</div>
+			{#if currentBundle.wahl.isRepeatElection}
+				<p
+					class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+					data-testid="wahl-wiederholung-marker"
+				>
+					Wiederholungswahl
+				</p>
+			{/if}
 
-				{#if availableLevels.length > 0}
-					<label class="flex items-center gap-2">
-						<span class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
-							Ebene
-						</span>
-						<select
-							data-testid="wahl-level-switch"
-							bind:value={selectedLevel}
-							class="font-mono text-xs px-2 py-1 rounded border border-rule bg-bg text-ink"
-						>
-							{#each availableLevels as lvl (lvl)}
-								<option value={lvl}>{LEVEL_LABELS[lvl]}</option>
-							{/each}
-						</select>
-					</label>
+			<div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 items-center text-xs">
+				{#if jahreForTypStimmtyp.length > 1}
+					<span
+						id="wahl-jahr-label"
+						class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+					>
+						Jahr
+					</span>
+					<div
+						role="radiogroup"
+						aria-labelledby="wahl-jahr-label"
+						class="flex flex-wrap gap-1"
+						data-testid="wahl-jahr-switch"
+					>
+						{#each jahreForTypStimmtyp as jahr (jahr)}
+							<button
+								role="radio"
+								type="button"
+								aria-checked={selectedJahr === jahr}
+								data-testid={`wahl-jahr-${jahr}`}
+								onclick={() => (selectedJahr = jahr)}
+								class="font-mono text-[11px] tabular-nums px-2 py-0.5 rounded border border-ink transition-colors"
+								class:bg-ink={selectedJahr === jahr}
+								class:text-bg={selectedJahr === jahr}
+								class:bg-bg={selectedJahr !== jahr}
+								class:text-ink={selectedJahr !== jahr}
+								class:hover:bg-bg-muted={selectedJahr !== jahr}
+							>
+								{jahr}
+							</button>
+						{/each}
+					</div>
+				{:else if jahreForTypStimmtyp.length === 1}
+					<span class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">Jahr</span>
+					<span
+						class="font-mono text-[11px] tabular-nums text-ink"
+						data-testid="wahl-jahr-static"
+					>
+						{jahreForTypStimmtyp[0]}
+					</span>
+				{/if}
+
+				{#if stimmtypenForTyp.length > 1}
+					<span
+						id="wahl-stimmtyp-label"
+						class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+					>
+						Stimme
+					</span>
+					<div
+						role="radiogroup"
+						aria-labelledby="wahl-stimmtyp-label"
+						class="flex flex-wrap gap-1"
+						data-testid="wahl-stimmtyp-switch"
+					>
+						{#each stimmtypenForTyp as st (st)}
+							<button
+								role="radio"
+								type="button"
+								aria-checked={selectedStimmtyp === st}
+								data-testid={`wahl-stimmtyp-${st}`}
+								onclick={() => (selectedStimmtyp = st)}
+								class="font-mono text-[11px] px-2 py-0.5 rounded border border-ink transition-colors"
+								class:bg-ink={selectedStimmtyp === st}
+								class:text-bg={selectedStimmtyp === st}
+								class:bg-bg={selectedStimmtyp !== st}
+								class:text-ink={selectedStimmtyp !== st}
+								class:hover:bg-bg-muted={selectedStimmtyp !== st}
+							>
+								{st === 'zweitstimme'
+									? 'Zweitstimme'
+									: st === 'erststimme'
+										? 'Erststimme'
+										: 'Stimme'}
+							</button>
+						{/each}
+					</div>
+				{/if}
+
+				{#if availableLevels.length > 1}
+					<span
+						id="wahl-level-label"
+						class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+					>
+						Ebene
+					</span>
+					<div
+						role="radiogroup"
+						aria-labelledby="wahl-level-label"
+						class="flex flex-wrap gap-1"
+						data-testid="wahl-level-switch"
+					>
+						{#each availableLevels as lvl (lvl)}
+							<button
+								role="radio"
+								type="button"
+								aria-checked={selectedLevel === lvl}
+								data-testid={`wahl-level-${lvl}`}
+								onclick={() => (selectedLevel = lvl)}
+								class="font-mono text-[11px] px-2 py-0.5 rounded border border-ink transition-colors"
+								class:bg-ink={selectedLevel === lvl}
+								class:text-bg={selectedLevel === lvl}
+								class:bg-bg={selectedLevel !== lvl}
+								class:text-ink={selectedLevel !== lvl}
+								class:hover:bg-bg-muted={selectedLevel !== lvl}
+							>
+								{LEVEL_LABELS[lvl]}
+							</button>
+						{/each}
+					</div>
 				{/if}
 			</div>
 
