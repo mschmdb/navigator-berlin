@@ -67,7 +67,7 @@
 	class="sticky top-0 z-30 border-b border-rule bg-bg/95 py-2 print:hidden"
 >
 	<div class="mx-auto flex max-w-[1440px] items-center gap-4 px-4">
-		<a href="/" aria-label="navigator.berlin Startseite" class="flex shrink-0 items-center gap-2">
+		<a href="/" aria-label="navigator.berlin" class="flex shrink-0 items-center gap-2">
 			<AnimatedLogo variant="one-shot" size={44} title="navigator.berlin" />
 			<span class="hidden font-sans text-base font-light tracking-wide text-ink sm:inline">
 				navigator.berlin

@@ -34,6 +34,7 @@
 	</span>
 	<span
 		data-testid="banner-source-info"
+		role="img"
 		class="inline-flex items-center text-ink-subtle hover:text-ink-muted"
 		title={`Quelle: ${hostname}`}
 		aria-label={`Quelle: ${hostname}`}

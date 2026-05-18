@@ -7,7 +7,7 @@ import SiteHeader from './site-header.svelte';
 describe('site-header.svelte', () => {
 	it('rendert Logo-Link mit aria-label', async () => {
 		render(SiteHeader, { geocode: async () => [] });
-		const link = page.getByRole('link', { name: 'navigator.berlin Startseite' });
+		const link = page.getByRole('link', { name: 'navigator.berlin' });
 		await expect.element(link).toBeInTheDocument();
 		const el = (await link.element()) as HTMLAnchorElement;
 		expect(el.getAttribute('href')).toBe('/');

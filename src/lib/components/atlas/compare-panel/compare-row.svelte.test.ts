@@ -63,7 +63,7 @@ describe('compare-row.svelte', () => {
 		expect(row.getAttribute('data-direction')).toBe('equal');
 	});
 
-	it('Layer nur in A → B-Zelle zeigt em-dash mit aria-label "Keine Daten verfügbar"', async () => {
+	it('Layer nur in A → B-Zelle zeigt en-dash mit aria-label "Keine Daten verfügbar"', async () => {
 		render(Harness, {
 			slug: 'laerm-den',
 			layerName: 'Straßenlärm',
@@ -73,7 +73,7 @@ describe('compare-row.svelte', () => {
 		const row = (await page.getByTestId('compare-row').element()) as HTMLElement;
 		const cells = row.querySelectorAll('td');
 		const bCellText = cells[1]?.textContent ?? '';
-		expect(bCellText).toMatch(/—/);
+		expect(bCellText).toMatch(/–/);
 		const bDash = cells[1]?.querySelector('[aria-label="Keine Daten verfügbar"]');
 		expect(bDash).not.toBeNull();
 	});

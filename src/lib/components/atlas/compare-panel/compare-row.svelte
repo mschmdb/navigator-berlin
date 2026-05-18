@@ -75,7 +75,7 @@
 	</th>
 	<td class="py-2 pr-3 align-top">
 		{#if displayA?.chip && severityA}
-			<span class="inline-flex items-center gap-1.5" aria-label={ariaLabelA}>
+			<span role="group" class="inline-flex items-center gap-1.5" aria-label={ariaLabelA}>
 				<ValueChip
 					severity={severityA}
 					value={displayA.chip.value}
@@ -108,12 +108,12 @@
 				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayA.context}</div>
 			{/if}
 		{:else}
-			<span class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar">—</span>
+			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar">–</span>
 		{/if}
 	</td>
 	<td class="py-2 align-top">
 		{#if displayB?.chip && severityB}
-			<span class="inline-flex items-center gap-1.5" aria-label={ariaLabelB}>
+			<span role="group" class="inline-flex items-center gap-1.5" aria-label={ariaLabelB}>
 				<ValueChip
 					severity={severityB}
 					value={displayB.chip.value}
@@ -139,7 +139,7 @@
 				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayB.context}</div>
 			{/if}
 		{:else}
-			<span class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar">—</span>
+			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar">–</span>
 		{/if}
 	</td>
 </tr>
