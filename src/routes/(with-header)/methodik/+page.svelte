@@ -18,6 +18,7 @@
 		{ id: 'datenarchitektur', label: 'Datenarchitektur' },
 		{ id: 'aggregations-ebenen', label: 'Aggregations-Ebenen' },
 		{ id: 'cross-layer', label: 'Aggregat-Indizes' },
+		{ id: 'wahldaten-section', label: 'Wahldaten' },
 		{ id: 'coverage-strategie', label: 'Coverage-Strategie' },
 		{ id: 'omissions', label: 'Was wir weglassen' },
 		{ id: 'editorial', label: 'Editorial-Verantwortung' },
@@ -247,6 +248,41 @@
 			Niedriger Status bedeutet nicht „schlechter Kiez". Die Stufe spiegelt strukturelle
 			Unterschiede, keine Wohnqualität. Choropleth-Farben sind neutral gehalten, kein
 			Rot-Grün. Quelle: SenStadt MSS 2025, Lizenz dl-de/zero-2-0.
+		</p>
+	</section>
+
+	<section
+		id="wahldaten-section"
+		aria-labelledby="wahldaten-section-h"
+		class="flex flex-col gap-3"
+	>
+		<h2 id="wahldaten-section-h" class="font-serif text-2xl text-ink">Wahldaten</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Bundestags-, Abgeordnetenhaus- und BVV-Wahlen seit 2011 mit Aggregaten auf
+			vier Ebenen: Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk und Berlin gesamt.
+			Quellen sind Bundeswahlleiterin (BTW) und Amt für Statistik
+			Berlin-Brandenburg (AGH + BVV). Werte beschreiben Stimmenanteile, keine
+			Bewertung.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Spezialfälle dokumentieren wir transparent: Briefwahl-Asymmetrie pre-2021
+			(Stimmbezirks-Werte ohne Briefstimmen), Wiederholungswahlen 2023 mit
+			Original-Wahl-Verweis, Coverage-Lücken pre-2017 ohne Stimmbezirks-Geometrie.
+		</p>
+		<p class="font-mono text-xs text-ink-muted">
+			Vollständige Methodik:
+			<a
+				href="/methodik/wahldaten"
+				data-testid="methodik-wahldaten-link"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				>/methodik/wahldaten</a
+			>
+			·
+			<a
+				href="/wahl"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				>Übersicht aller Wahlen</a
+			>
 		</p>
 	</section>
 
