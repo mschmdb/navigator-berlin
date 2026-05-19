@@ -22,6 +22,7 @@
 
 	let container: HTMLDivElement | null = $state(null);
 	let mapInstance: unknown = null;
+	let resizeListener: (() => void) | null = null;
 
 	const byBezirkSlug = $derived.by(() => {
 		const map = new Map<string, BezirkSummary>();
@@ -36,7 +37,7 @@
 	onMount(() => {
 		void (async () => {
 			if (!container) return;
-			const { Map, Popup } = await import('maplibre-gl');
+			const { Map, Popup, LngLatBounds } = await import('maplibre-gl');
 			await import('maplibre-gl/dist/maplibre-gl.css');
 			const manifestRes = await fetch('/layers/MANIFEST.json');
 			if (!manifestRes.ok) return;
@@ -113,6 +114,32 @@
 
 			mapInstance = map;
 
+			const bounds = new LngLatBounds();
+			for (const f of fc.features) {
+				const geom = f.geometry as { type: string; coordinates: unknown } | null;
+				if (!geom) continue;
+				const coordsList: number[][] =
+					geom.type === 'Polygon'
+						? (geom.coordinates as number[][][]).flat(1)
+						: geom.type === 'MultiPolygon'
+							? (geom.coordinates as number[][][][]).flat(2)
+							: [];
+				for (const c of coordsList) {
+					if (Array.isArray(c) && c.length >= 2) bounds.extend([c[0], c[1]]);
+				}
+			}
+			if (!bounds.isEmpty()) {
+				map.fitBounds(bounds, { padding: 16, animate: false });
+			}
+			const handleResize = (): void => {
+				map.resize();
+				if (!bounds.isEmpty()) {
+					map.fitBounds(bounds, { padding: 16, animate: false });
+				}
+			};
+			window.addEventListener('resize', handleResize);
+			resizeListener = handleResize;
+
 			map.on('click', 'bezirke-fill', (e) => {
 				const feature = e.features?.[0];
 				if (!feature) return;
@@ -144,6 +171,10 @@
 	});
 
 	onDestroy(() => {
+		if (resizeListener) {
+			window.removeEventListener('resize', resizeListener);
+			resizeListener = null;
+		}
 		if (mapInstance && typeof (mapInstance as { remove?: () => void }).remove === 'function') {
 			(mapInstance as { remove: () => void }).remove();
 		}
@@ -159,7 +190,7 @@
 		bind:this={container}
 		role="img"
 		aria-label="Berliner Bezirke gefärbt nach stärkster Partei"
-		class="h-[400px] w-full overflow-hidden rounded border border-rule"
+		class="h-[320px] sm:h-[400px] w-full overflow-hidden rounded border border-rule"
 	></div>
 	<figcaption class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
 		Farbe = stärkste Partei pro Bezirk · Sättigung skaliert mit Anteil ·

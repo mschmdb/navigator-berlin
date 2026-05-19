@@ -78,7 +78,11 @@
 			·
 			<a href="/wahl" class="hover:text-ink underline-offset-2 hover:underline">Wahlen</a>
 		</p>
-		<h1 class="font-sans text-3xl font-bold text-ink" data-testid="wahl-detail-title">
+		<h1
+			class="font-sans text-2xl sm:text-3xl font-bold text-ink hyphens-auto break-words"
+			lang="de"
+			data-testid="wahl-detail-title"
+		>
 			{data.wahl.title}
 		</h1>
 		{#if data.wahl.isRepeatElection && data.wahl.parentSlug}
@@ -128,34 +132,37 @@
 			</div>
 
 			<table
-				class="w-full font-mono text-sm"
+				class="w-full font-mono text-xs sm:text-sm"
 				aria-label={`Top-5-Parteien Berlin gesamt ${data.wahl.title}`}
 				data-testid="wahl-detail-berlin-table"
 			>
 				<thead>
 					<tr class="text-[10px] uppercase tracking-wide text-ink-muted">
 						<th class="text-left pb-2">Partei</th>
-						<th class="text-right pb-2">Stimmen</th>
-						<th class="text-right pb-2">Anteil</th>
+						<th class="text-right pb-2 whitespace-nowrap pl-2">Stimmen</th>
+						<th class="text-right pb-2 whitespace-nowrap pl-2">Anteil</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each berlinTop5 as entry (entry.kurzname)}
 						<tr class="border-t border-rule/40">
-							<td class="py-1.5">
+							<td class="py-1.5 pr-2">
 								<span class="inline-flex items-center gap-2">
 									<span
-										class="inline-block h-2.5 w-2.5 rounded-sm border border-ink/10"
+										class="inline-block h-2.5 w-2.5 rounded-sm border border-ink/10 flex-shrink-0"
 										style="background-color:{parteiColor(entry.kurzname)};"
 										aria-hidden="true"
 									></span>
-									<span class="text-ink">{entry.vollname}</span>
+									<span class="text-ink">
+										<span class="sm:hidden">{entry.kurzname}</span>
+										<span class="hidden sm:inline">{entry.vollname}</span>
+									</span>
 								</span>
 							</td>
-							<td class="text-right tabular-nums text-ink py-1.5">
+							<td class="text-right tabular-nums text-ink py-1.5 whitespace-nowrap pl-2">
 								{formatStimmen(entry.stimmen)}
 							</td>
-							<td class="text-right tabular-nums text-ink py-1.5">
+							<td class="text-right tabular-nums text-ink py-1.5 whitespace-nowrap pl-2">
 								{formatPct(entry.anteil)}
 							</td>
 						</tr>
