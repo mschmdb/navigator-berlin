@@ -27,6 +27,12 @@ export interface SitemapSourceContext {
 	readonly bezirkSlugs?: readonly string[];
 	/** Reserved for story 2.4 (kiez-pages). */
 	readonly kiezSlugs?: readonly string[];
+	/** Story 6.4: 12-20 wahl-Rows aus wahl-Tabelle für /wahl/[slug]-Routes. */
+	readonly wahlen?: readonly {
+		readonly jahr: number;
+		readonly typ: 'btw' | 'agh' | 'bvv';
+		readonly stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
+	}[];
 }
 
 export type SitemapSource = (ctx: SitemapSourceContext) => SitemapEntry[];
@@ -135,6 +141,7 @@ import { UPDATES_PAGES_SOURCE } from './sources/updates.js';
 import { BEZIRK_PAGES_SOURCE } from './sources/bezirk-pages.js';
 import { KIEZ_PAGES_SOURCE } from './sources/kiez-pages.js';
 import { RANKING_PAGE_SOURCE } from './sources/ranking-page.js';
+import { WAHL_DETAIL_SOURCE } from './sources/wahl-detail-pages.js';
 
 const ALL_SOURCES: readonly SitemapSource[] = [
 	STATIC_PAGES_SOURCE,
@@ -142,7 +149,8 @@ const ALL_SOURCES: readonly SitemapSource[] = [
 	UPDATES_PAGES_SOURCE,
 	BEZIRK_PAGES_SOURCE,
 	KIEZ_PAGES_SOURCE,
-	RANKING_PAGE_SOURCE
+	RANKING_PAGE_SOURCE,
+	WAHL_DETAIL_SOURCE
 ];
 
 export function collectPrerenderedUrls(ctx: SitemapSourceContext): SitemapEntry[] {
