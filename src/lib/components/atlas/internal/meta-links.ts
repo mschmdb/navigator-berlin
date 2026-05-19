@@ -14,6 +14,7 @@ export interface MetaLink {
 
 export const META_LINKS: readonly MetaLink[] = [
 	{ label: 'Wo lebt es sich gut?', href: '/wo-lebt-es-sich-gut' },
+	{ label: 'Wahlen', href: '/wahl' },
 	{ label: 'Methodik', href: '/methodik' },
 	{ label: 'Updates', href: '/updates' },
 	{ label: 'Lizenzen', href: '/lizenzen' },

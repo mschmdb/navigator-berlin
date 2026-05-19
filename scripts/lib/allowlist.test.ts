@@ -21,6 +21,22 @@ describe('allowlist', () => {
 		expect(isAllowed('https://overpass.kumi.systems/api/interpreter')).toBe(true);
 	});
 
+	it('akzeptiert Bundeswahlleiterin host', () => {
+		expect(
+			isAllowed(
+				'https://bundeswahlleiterin.de/dam/jcr/e79a7bd3-0607-4e87-9752-8e601e299e00/btw25_wbz.zip'
+			)
+		).toBe(true);
+	});
+
+	it('akzeptiert Statistik-Berlin-Brandenburg Download-Subdomain', () => {
+		expect(
+			isAllowed(
+				'https://download.statistik-berlin-brandenburg.de/c6fffa8361dd1404/a8cc1bc593d9/DL_BE_AGHBVV2023.xlsx'
+			)
+		).toBe(true);
+	});
+
 	it('akzeptiert Subdomain via dot-suffix-Match', () => {
 		expect(isAllowed('https://sub.fbinter.stadt-berlin.de/x')).toBe(true);
 	});

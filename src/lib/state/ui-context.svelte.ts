@@ -7,6 +7,7 @@ import type {
 	OepnvStopIndex,
 	KiezScore
 } from '$lib/data';
+import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
 import type { Bookmark } from './bookmark-schema.js';
 import {
 	saveBookmark,
@@ -51,6 +52,10 @@ export interface UiState {
 	kiezScore: KiezScore | null;
 	/** Story 1.28 + 1.27: Kiez-Score für Vergleichs-Adresse B. */
 	comparisonKiezScore: KiezScore | null;
+	/** Story 6.3: Wahl-Ergebnisse Multi-Level für aktuelle Adresse. */
+	wahlResults: WahlResultsAtPoint | null;
+	/** Story 6.3d: Wahl-Ergebnisse für Vergleichs-Adresse B (Compare-Mode). */
+	comparisonWahlResults: WahlResultsAtPoint | null;
 }
 
 export function createUiState(): UiState {
@@ -76,7 +81,9 @@ export function createUiState(): UiState {
 		comparisonClimateSeries: null,
 		comparisonLoading: false,
 		kiezScore: null,
-		comparisonKiezScore: null
+		comparisonKiezScore: null,
+		wahlResults: null,
+		comparisonWahlResults: null
 	});
 	setContext(KEY, state);
 	return state;

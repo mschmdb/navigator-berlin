@@ -20,11 +20,18 @@ import {
 	createCrossLayerQueryTool,
 	createListLayersAtPointTool,
 	createGetKiezProfileTool,
-	createGetLayerMetadataTool
+	createGetLayerMetadataTool,
+	createListElectionsTool,
+	createGetElectionResultTool,
+	createCompareElectionsTool,
+	createGetVotingDistrictGeometryTool,
+	type ElectionListEntry
 } from './tools/index.js';
 import type { WebMcpToolDefinition } from './internal/tool-types.js';
 import type { GeocodeSuggestion, LayerHit, LayerMetadata, KiezProfile, Locale } from '$lib/data';
 import type { LayerMethodology } from '$lib/data/layer-methodology.js';
+import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
+import type { JsonObject } from './internal/json-types.js';
 
 /** Minimaler Subset der nativen `ModelContext`-API, den der Adapter nutzt. */
 export interface ModelContextSurface {
@@ -61,6 +68,12 @@ export interface WebMcpServerConfig {
 	readonly getLayerMethodology: (slug: string) => LayerMethodology | null;
 	readonly loadManifest: () => Promise<unknown>;
 	readonly defaultLocale: () => Locale;
+	readonly fetchElections: () => Promise<readonly ElectionListEntry[]>;
+	readonly fetchWahlResultsAtPoint: (lat: number, lng: number) => Promise<WahlResultsAtPoint | null>;
+	readonly fetchVotingDistrictGeometry: (
+		districtId: string,
+		year: number
+	) => Promise<JsonObject | null>;
 }
 
 export interface WebMcpServerHandle {
@@ -124,7 +137,11 @@ export async function registerWebMcpServer(
 			getLayerMethodology: config.getLayerMethodology,
 			loadManifest: config.loadManifest,
 			defaultLocale: config.defaultLocale
-		})
+		}),
+		createListElectionsTool({ fetchElections: config.fetchElections }),
+		createGetElectionResultTool({ fetchResultsAtPoint: config.fetchWahlResultsAtPoint }),
+		createCompareElectionsTool({ fetchResultsAtPoint: config.fetchWahlResultsAtPoint }),
+		createGetVotingDistrictGeometryTool({ fetchGeometry: config.fetchVotingDistrictGeometry })
 	];
 
 	const controller = new AbortController();

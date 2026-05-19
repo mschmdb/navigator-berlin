@@ -3,6 +3,7 @@ import { loadManifest } from '$lib/data/manifest.js';
 import { buildSitemapXml, collectPrerenderedUrls } from '$lib/seo/sitemap-builder.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
+import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 
 export const prerender = true;
 
@@ -24,9 +25,18 @@ export const prerender = true;
 export const GET: RequestHandler = async ({ url, fetch }) => {
 	const manifest = await loadManifest(fetch);
 	const buildTimestamp = new Date().toISOString();
-	const [bezirkSlugs, kiezSlugs] = await Promise.all([
+	const [bezirkSlugs, kiezSlugs, wahlen] = await Promise.all([
 		readBezirkSlugsFromGeoJson(),
-		readKiezSlugsFromGeoJson()
+		readKiezSlugsFromGeoJson(),
+		(async () => {
+			if (!process.env.DATABASE_URL) return [];
+			try {
+				const list = await getWahlList();
+				return list.map((w) => ({ jahr: w.jahr, typ: w.typ, stimmtyp: w.stimmtyp }));
+			} catch {
+				return [];
+			}
+		})()
 	]);
 	const entries = collectPrerenderedUrls({
 		origin: url.origin,
@@ -34,7 +44,8 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
 		manifest,
 		buildTimestamp,
 		bezirkSlugs,
-		kiezSlugs
+		kiezSlugs,
+		wahlen
 	});
 	const body = buildSitemapXml(entries);
 	return new Response(body, {

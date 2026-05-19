@@ -8,3 +8,14 @@ export { createGetKiezProfileTool } from './get-kiez-profile.js';
 export type { GetKiezProfileDeps } from './get-kiez-profile.js';
 export { createGetLayerMetadataTool } from './get-layer-metadata.js';
 export type { GetLayerMetadataDeps } from './get-layer-metadata.js';
+export {
+	createListElectionsTool,
+	createGetElectionResultTool,
+	createCompareElectionsTool,
+	createGetVotingDistrictGeometryTool,
+	type ListElectionsDeps,
+	type GetElectionResultDeps,
+	type CompareElectionsDeps,
+	type VotingDistrictGeometryDeps,
+	type ElectionListEntry
+} from './wahl/index.js';

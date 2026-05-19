@@ -10,6 +10,7 @@
 	import { getLayerDisplayName } from '../internal/layer-palette-filter.js';
 	import CompareRow from './compare-row.svelte';
 	import KiezScoreCompareBlock from './kiez-score-compare-block.svelte';
+	import WahlCompareBlock from './wahl-compare-block.svelte';
 	import AddressSearch from '../address-search.svelte';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
@@ -136,6 +137,14 @@
 					scoreA={ui.kiezScore}
 					scoreB={ui.comparisonKiezScore}
 				/>
+			{/if}
+			{#if ui.wahlResults !== null || ui.comparisonWahlResults !== null}
+				<div class="px-6">
+					<WahlCompareBlock
+						resultsA={ui.wahlResults}
+						resultsB={ui.comparisonWahlResults}
+					/>
+				</div>
 			{/if}
 			<div
 				data-testid="compare-mobile-tabs"

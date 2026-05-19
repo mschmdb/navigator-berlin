@@ -36,7 +36,8 @@ import {
 	buildBezirkCardVdom,
 	buildKiezCardVdom,
 	buildLayerCardVdom,
-	buildPageCardVdom
+	buildPageCardVdom,
+	buildWahlCardVdom
 } from '../src/lib/server/og/page-card-template.js';
 import { renderPageCardPng } from '../src/lib/server/og/render-page-card.js';
 import { buildScoreCardData, type ScoreCardData } from '../src/lib/server/og/score-card-data.js';
@@ -123,7 +124,7 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 ];
 
 interface CliArgs {
-	readonly type: 'bezirk' | 'kiez' | 'layer' | 'page' | 'all';
+	readonly type: 'bezirk' | 'kiez' | 'layer' | 'page' | 'wahl' | 'all';
 	readonly slug: string | null;
 	readonly force: boolean;
 }
@@ -135,7 +136,15 @@ function parseArgs(argv: readonly string[]): CliArgs {
 	for (const arg of argv) {
 		if (arg.startsWith('--type=')) {
 			const v = arg.slice('--type='.length);
-			if (v === 'bezirk' || v === 'kiez' || v === 'layer' || v === 'page' || v === 'all') type = v;
+			if (
+				v === 'bezirk' ||
+				v === 'kiez' ||
+				v === 'layer' ||
+				v === 'page' ||
+				v === 'wahl' ||
+				v === 'all'
+			)
+				type = v;
 		} else if (arg.startsWith('--slug=')) {
 			slug = arg.slice('--slug='.length);
 		} else if (arg === '--force') {
@@ -351,6 +360,103 @@ async function renderLayer(
 	}
 }
 
+interface WahlTarget {
+	readonly slug: string;
+	readonly title: string;
+	readonly subline: string;
+	readonly top5: ReadonlyArray<{ kurzname: string; anteil: number; farbeHex: string }>;
+	readonly sourceName: string;
+	readonly license: string;
+	readonly jahr: number;
+}
+
+async function tryLoadWahlTargets(): Promise<WahlTarget[]> {
+	if (!process.env.DATABASE_URL) return [];
+	try {
+		const { getWahlList } = await import('../src/lib/server/db/queries/wahl/get-wahl-list.js');
+		const { getResultsForBerlin } = await import(
+			'../src/lib/server/db/queries/wahl/get-results-for-berlin.js'
+		);
+		const { parteiColor } = await import('../src/lib/data/partei-farben.js');
+		const wahlen = await getWahlList();
+		const TYP_LABELS = {
+			btw: 'Bundestagswahl',
+			agh: 'Abgeordnetenhauswahl',
+			bvv: 'BVV-Wahl'
+		} as const;
+		const STIMMTYP_LABELS = {
+			erststimme: 'Erststimme',
+			zweitstimme: 'Zweitstimme',
+			einstimme: 'Stimme'
+		} as const;
+		const targets: WahlTarget[] = [];
+		for (const w of wahlen) {
+			const slug =
+				w.typ === 'bvv'
+					? `${w.jahr}-bvv`
+					: `${w.jahr}-${w.typ}-${w.stimmtyp}`;
+			const top = await getResultsForBerlin(w.id, 5);
+			const title =
+				w.typ === 'bvv'
+					? `${TYP_LABELS[w.typ]} ${w.jahr}`
+					: `${TYP_LABELS[w.typ]} ${w.jahr} · ${STIMMTYP_LABELS[w.stimmtyp]}`;
+			const sourceName = w.sourceUrl.includes('bundeswahlleiterin')
+				? 'Bundeswahlleiterin'
+				: 'Amt für Statistik Berlin-Brandenburg';
+			targets.push({
+				slug,
+				title: w.isRepeatElection ? `${title} · Wiederholung` : title,
+				subline: `Berlin gesamt · ${top.length > 0 ? 'Top-5-Parteien' : 'keine Daten'}`,
+				top5: top.map((t) => ({
+					kurzname: t.parteiKurzname,
+					anteil: t.anteil,
+					farbeHex: parteiColor(t.parteiKurzname)
+				})),
+				sourceName,
+				license: w.license,
+				jahr: w.jahr
+			});
+		}
+		process.stdout.write(`[og:images] wahl: ${targets.length} targets loaded\n`);
+		return targets;
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[og:images] WARN: wahl-targets unavailable (${msg})\n`);
+		return [];
+	}
+}
+
+async function renderWahl(
+	target: WahlTarget,
+	logoDataUri: string | undefined,
+	watermarkDataUri: string | undefined,
+	args: CliArgs
+): Promise<'rendered' | 'cached' | 'failed'> {
+	const outputPath = buildOgPath(REPO_ROOT, 'wahl', target.slug);
+	if (!args.force && (await fileExists(outputPath))) return 'cached';
+	try {
+		const vdom = buildWahlCardVdom({
+			title: target.title,
+			subline: target.subline,
+			slug: target.slug,
+			top5: target.top5,
+			sourceName: target.sourceName,
+			license: target.license,
+			footerDate: `${target.jahr}`,
+			logoDataUri,
+			watermarkDataUri
+		});
+		const png = await renderPageCardPng(vdom);
+		await mkdir(path.dirname(outputPath), { recursive: true });
+		await writeFile(outputPath, png);
+		return 'rendered';
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[og:images] wahl/${target.slug} failed: ${msg}\n`);
+		return 'failed';
+	}
+}
+
 async function tryLoadLogo(): Promise<string | undefined> {
 	try {
 		return await loadLogoDataUri(REPO_ROOT);
@@ -390,16 +496,19 @@ async function main(): Promise<void> {
 	let kieze: KiezTarget[] = [];
 	let layers: LayerTarget[] = [];
 	let pages: PageTarget[] = [];
+	let wahlen: WahlTarget[] = [];
 	if (args.type === 'all' || args.type === 'bezirk') bezirks = bezirkTargets;
 	if (args.type === 'all' || args.type === 'kiez') kieze = kiezTargets;
 	if (args.type === 'all' || args.type === 'layer') layers = layerTargets;
 	if (args.type === 'all' || args.type === 'page') pages = [...PAGE_TARGETS];
+	if (args.type === 'all' || args.type === 'wahl') wahlen = await tryLoadWahlTargets();
 
 	if (args.slug) {
 		bezirks = bezirks.filter((t) => t.slug === args.slug);
 		kieze = kieze.filter((t) => t.slug === args.slug);
 		layers = layers.filter((t) => t.slug === args.slug);
 		pages = pages.filter((t) => t.slug === args.slug);
+		wahlen = wahlen.filter((t) => t.slug === args.slug);
 	}
 
 	const [bezirkScores, kiezScores, logoDataUri, watermarkDataUri] = await Promise.all([
@@ -440,6 +549,13 @@ async function main(): Promise<void> {
 		else if (r === 'cached') cached++;
 		else failed++;
 		process.stdout.write(`[og:images] page/${t.slug}: ${r}\n`);
+	}
+	for (const t of wahlen) {
+		const r = await renderWahl(t, logoDataUri, watermarkDataUri, args);
+		if (r === 'rendered') rendered++;
+		else if (r === 'cached') cached++;
+		else failed++;
+		process.stdout.write(`[og:images] wahl/${t.slug}: ${r}\n`);
 	}
 
 	process.stdout.write(`[og:images] done: rendered=${rendered} cached=${cached} failed=${failed}\n`);

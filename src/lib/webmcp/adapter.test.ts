@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 describe('registerWebMcpServer', () => {
-	it('registriert 5 Tools auf navigator.modelContext', async () => {
+	it('registriert 9 Tools auf navigator.modelContext', async () => {
 		const { navigator, mc } = makeFakeNavigator();
 		const config = stubConfig(navigator);
 		const handle = await registerWebMcpServer(config);
@@ -46,9 +46,13 @@ describe('registerWebMcpServer', () => {
 		expect(mc.registered.map((t) => t.name).sort()).toEqual(
 			[
 				'address_lookup',
+				'compare_elections',
 				'cross_layer_query',
+				'get_election_result',
 				'get_kiez_profile',
 				'get_layer_metadata',
+				'get_voting_district_geometry',
+				'list_elections',
 				'list_layers_at_point'
 			].sort()
 		);
@@ -81,7 +85,10 @@ describe('registerWebMcpServer', () => {
 			},
 			getLayerMethodology: () => null,
 			loadManifest: async () => undefined,
-			defaultLocale: () => 'de'
+			defaultLocale: () => 'de',
+			fetchElections: async () => [],
+			fetchWahlResultsAtPoint: async () => null,
+			fetchVotingDistrictGeometry: async () => null
 		};
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
@@ -115,6 +122,9 @@ function stubConfig(navigator: { modelContext: FakeModelContext }): WebMcpServer
 		},
 		getLayerMethodology: () => null,
 		loadManifest: async () => undefined,
-		defaultLocale: () => 'de'
+		defaultLocale: () => 'de',
+		fetchElections: async () => [],
+		fetchWahlResultsAtPoint: async () => null,
+		fetchVotingDistrictGeometry: async () => null
 	};
 }

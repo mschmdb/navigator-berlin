@@ -14,8 +14,8 @@ describe('buildWebMcpManifest', () => {
 		expect(manifest.description).toMatch(/Berlin/);
 	});
 
-	it('exportiert genau 5 Tools', () => {
-		expect(manifest.tools).toHaveLength(5);
+	it('exportiert genau 9 Tools', () => {
+		expect(manifest.tools).toHaveLength(9);
 	});
 
 	it('alle Tool-Names sind snake_case + erwartete Liste', () => {
@@ -23,9 +23,13 @@ describe('buildWebMcpManifest', () => {
 		expect(names).toEqual(
 			[
 				'address_lookup',
+				'compare_elections',
 				'cross_layer_query',
+				'get_election_result',
 				'get_kiez_profile',
 				'get_layer_metadata',
+				'get_voting_district_geometry',
+				'list_elections',
 				'list_layers_at_point'
 			].sort()
 		);

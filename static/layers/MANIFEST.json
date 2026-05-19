@@ -1,12 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-16T17:31:14.417Z",
+  "generatedAt": "2026-05-18T19:40:33.038Z",
   "layers": [
     {
       "slug": "bezirke",
       "filename": "bezirke.c8a6e03b.geojson",
       "sourceUrl": "https://daten.odis-berlin.de/de/dataset/bezirksgrenzen/data.geojson",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "c8a6e03b187dfdd622b1852774b545c45bacbf68fec68184224b585f90e5c6e7",
       "bundleGroup": "A: Boundaries",
@@ -15,14 +16,14 @@
         "max": 12
       },
       "geometryType": "Polygon",
-      "featureCount": 12,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z"
+      "featureCount": 12
     },
     {
       "slug": "ortsteile",
       "filename": "ortsteile.210c8259.geojson",
       "sourceUrl": "https://daten.odis-berlin.de/de/dataset/ortsteile/data.geojson",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "210c8259fc22c0a2f34cd5b499acb33ff2d02613348d312c5a5a1464b6062023",
       "bundleGroup": "A: Boundaries",
@@ -31,14 +32,14 @@
         "max": 14
       },
       "geometryType": "Polygon",
-      "featureCount": 96,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z"
+      "featureCount": 96
     },
     {
       "slug": "plz",
       "filename": "plz.bcc181cc.geojson",
       "sourceUrl": "https://daten.odis-berlin.de/de/dataset/plz/data.geojson",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "bcc181cc4d00dd5d27de367db84184c0ccc5b0a0bd65d779ab294f0948298ccf",
       "bundleGroup": "A: Boundaries",
@@ -47,14 +48,14 @@
         "max": 14
       },
       "geometryType": "Polygon",
-      "featureCount": 193,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z"
+      "featureCount": 193
     },
     {
       "slug": "lor-planungsraum",
       "filename": "lor-planungsraum.e35873e7.geojson",
       "sourceUrl": "https://daten.odis-berlin.de/de/dataset/lor_planungsgraeume_2021/data.geojson",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2021-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "e35873e70c9457dd210f03e3ac9d9231b4a500eec808263fa537f1ff0f62b486",
       "bundleGroup": "A: Boundaries",
@@ -64,7 +65,6 @@
       },
       "geometryType": "Polygon",
       "featureCount": 542,
-      "sourceUpdatedAt": "2021-01-01T00:00:00.000Z",
       "inspectorRelevant": false,
       "mapRelevant": false
     },
@@ -73,6 +73,7 @@
       "filename": "bodenrichtwerte.462c07d8.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/brw2026",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2026-01-01T00:00:00.000Z",
       "license": "dl-de/by-2-0",
       "sha256": "462c07d894a0d357550f58455406e0ddd296527b541b2231d56737f35aeaaaa0",
       "bundleGroup": "B: Wohn-Daten",
@@ -81,14 +82,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 1425,
-      "sourceUpdatedAt": "2026-01-01T00:00:00.000Z"
+      "featureCount": 1425
     },
     {
       "slug": "laerm-2023",
       "filename": "laerm-2023.6d2e5241.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "6d2e5241c4eec6b9c5463bfd77f6704219ec4e5bbaacb3272924fd59ec3b65b8",
       "bundleGroup": "C: Umwelt",
@@ -97,14 +98,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 542,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z"
+      "featureCount": 542
     },
     {
       "slug": "luft-2023",
       "filename": "luft-2023.c13bfbda.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "c13bfbda2ffe06061535d04fbfcdfc77d4289d571cfd476fd291a1a8875b10c4",
       "bundleGroup": "C: Umwelt",
@@ -113,14 +114,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 542,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z"
+      "featureCount": 542
     },
     {
       "slug": "gruenversorgung-2023",
       "filename": "gruenversorgung-2023.cebd7f2d.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "cebd7f2da3790b57b59d5800c3abec05418419202c21ddad285eaa29366c0f3b",
       "bundleGroup": "C: Umwelt",
@@ -129,14 +130,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 542,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z"
+      "featureCount": 542
     },
     {
       "slug": "bioklima-2023",
       "filename": "bioklima-2023.f32ce355.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "f32ce355380470251b44c2f39d1d133c9292321e0205346ebc82aec6852fde30",
       "bundleGroup": "C: Umwelt",
@@ -145,14 +146,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 542,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z"
+      "featureCount": 542
     },
     {
       "slug": "umweltgerechtigkeit-2023",
       "filename": "umweltgerechtigkeit-2023.dff45672.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "dff456727ba582d5d264cdf09ec53f5a217fcd913eb3b3de0dd301511b3f232c",
       "bundleGroup": "C: Umwelt",
@@ -161,8 +162,7 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 542,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z"
+      "featureCount": 542
     },
     {
       "slug": "trinkbrunnen",
@@ -176,12 +176,12 @@
         "min": 14,
         "max": 18
       },
-      "geometryType": "Point",
-      "featureCount": 283,
       "seasonality": {
         "from": "05-01",
         "to": "10-31"
-      }
+      },
+      "geometryType": "Point",
+      "featureCount": 283
     },
     {
       "slug": "stolpersteine",
@@ -203,6 +203,7 @@
       "filename": "klima-pet-2022.cceb2e4d.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "cceb2e4de5e900536780cac864cdda4cf6321f34628e3ac1925fef3463016741",
       "bundleGroup": "C: Umwelt",
@@ -212,7 +213,6 @@
       },
       "geometryType": "Polygon",
       "featureCount": 16204,
-      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
       "nearestPolygonFallbackKm": 0.05
     },
     {
@@ -220,6 +220,7 @@
       "filename": "klima-kaltlufteinwirkbereich-2022.9aca8a76.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "9aca8a7638ef952b6f8c55a46da02ac8f031a3458e8199b22323def4002f7e5a",
       "bundleGroup": "C: Umwelt",
@@ -229,7 +230,6 @@
       },
       "geometryType": "Polygon",
       "featureCount": 11157,
-      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
       "inspectorRelevant": false
     },
     {
@@ -237,6 +237,7 @@
       "filename": "klima-leitbahnkorridor-2022.71bc053e.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "71bc053ec598797ff47c1da66e2e65976d2f1a837050bc4af622fa45936e2937",
       "bundleGroup": "C: Umwelt",
@@ -246,7 +247,6 @@
       },
       "geometryType": "Polygon",
       "featureCount": 489,
-      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
       "inspectorRelevant": false
     },
     {
@@ -254,6 +254,7 @@
       "filename": "wohnlagen-2024.514f79d6.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/wohnlagenadr2024",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-06-10T00:00:00.000Z",
       "license": "dl-de/by-2-0",
       "sha256": "514f79d6ff7dc2997083729b7b0fd120bc392a51a1c2542ec30370730caab7fa",
       "bundleGroup": "B: Wohn-Daten",
@@ -262,14 +263,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 542,
-      "sourceUpdatedAt": "2024-06-10T00:00:00.000Z"
+      "featureCount": 542
     },
     {
       "slug": "milieuschutz-erhaltungsmiete",
       "filename": "milieuschutz-erhaltungsmiete.029b0705.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/erhaltungsverordnungsgebiete",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2025-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "029b070548f3736bf051baf49abf8569db91a4d2bdd85e2d6977dbb648c45030",
       "bundleGroup": "B: Wohn-Daten",
@@ -278,14 +279,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 82,
-      "sourceUpdatedAt": "2025-01-01T00:00:00.000Z"
+      "featureCount": 82
     },
     {
       "slug": "milieuschutz-staedtebau",
       "filename": "milieuschutz-staedtebau.1f49348d.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/erhaltungsverordnungsgebiete",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2025-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "1f49348d1f422c928704385131be5a5ebc7033e80351c291bd29e3bb64101a5d",
       "bundleGroup": "B: Wohn-Daten",
@@ -294,14 +295,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 94,
-      "sourceUpdatedAt": "2025-01-01T00:00:00.000Z"
+      "featureCount": 94
     },
     {
       "slug": "mss-gesamtindex-2025",
       "filename": "mss-gesamtindex-2025.b0b76e50.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/mss_2025",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-12-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "b0b76e504a9d2254edee8ecd1dca76b753415b38570897b9aa02c6440a345493",
       "bundleGroup": "B: Wohn-Daten",
@@ -310,14 +311,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 542,
-      "sourceUpdatedAt": "2024-12-01T00:00:00.000Z"
+      "featureCount": 542
     },
     {
       "slug": "kitas-2024",
       "filename": "kitas-2024.6e0455bd.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/kita",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-12-31T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "6e0455bd0c02ca08f1df4fab2188cc9a83c1384a5e6b7e6342a231ebd3656424",
       "bundleGroup": "E: Soziale Infrastruktur",
@@ -326,14 +327,14 @@
         "max": 18
       },
       "geometryType": "Point",
-      "featureCount": 2934,
-      "sourceUpdatedAt": "2024-12-31T00:00:00.000Z"
+      "featureCount": 2934
     },
     {
       "slug": "schulen-2024",
       "filename": "schulen-2024.2ec5626b.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/schulen",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2025-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "2ec5626b6b83391b0dd8cb2de90c9a4249d3253a605a8b8689fd73a55ecb5893",
       "bundleGroup": "E: Soziale Infrastruktur",
@@ -342,14 +343,14 @@
         "max": 18
       },
       "geometryType": "Point",
-      "featureCount": 930,
-      "sourceUpdatedAt": "2025-01-01T00:00:00.000Z"
+      "featureCount": 930
     },
     {
       "slug": "einschulbereiche-2024",
       "filename": "einschulbereiche-2024.007b8baf.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/schulen",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2025-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "007b8baf4bacc51c53c278d9c5a169154a213cbc0012e92a74bbbcb9de7277a2",
       "bundleGroup": "E: Soziale Infrastruktur",
@@ -358,14 +359,14 @@
         "max": 18
       },
       "geometryType": "Polygon",
-      "featureCount": 394,
-      "sourceUpdatedAt": "2025-01-01T00:00:00.000Z"
+      "featureCount": 394
     },
     {
       "slug": "krankenhaeuser-plan",
       "filename": "krankenhaeuser-plan.08c8697e.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/krankenhaeuser",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2023-03-30T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "08c8697e1fbd34e9658d964419b804d622126fc6b652c92fcb1cc9cc3b9a927a",
       "bundleGroup": "E: Soziale Infrastruktur",
@@ -374,14 +375,14 @@
         "max": 18
       },
       "geometryType": "Point",
-      "featureCount": 64,
-      "sourceUpdatedAt": "2023-03-30T00:00:00.000Z"
+      "featureCount": 64
     },
     {
       "slug": "krankenhaeuser-weitere",
       "filename": "krankenhaeuser-weitere.7baa08d8.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/krankenhaeuser",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2023-03-30T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "7baa08d897361e4247be0bdfab7634aef8237966e25b7cdafece452cdd352250",
       "bundleGroup": "E: Soziale Infrastruktur",
@@ -390,14 +391,14 @@
         "max": 18
       },
       "geometryType": "Point",
-      "featureCount": 47,
-      "sourceUpdatedAt": "2023-03-30T00:00:00.000Z"
+      "featureCount": 47
     },
     {
       "slug": "sportanlagen-2024",
       "filename": "sportanlagen-2024.45aadf24.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/sportstandorte",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2025-07-30T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "45aadf2416c6ca4051bb9c9c9bd1ef0bdd6e30538f29e7c89c23f09839de26d2",
       "bundleGroup": "E: Soziale Infrastruktur",
@@ -406,14 +407,14 @@
         "max": 18
       },
       "geometryType": "Point",
-      "featureCount": 1085,
-      "sourceUpdatedAt": "2025-07-30T00:00:00.000Z"
+      "featureCount": 1085
     },
     {
       "slug": "gruenanlagen",
       "filename": "gruenanlagen.75be87e8.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/gruenanlagen",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2026-04-09T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "75be87e852ed81f330f3cc2f572cfe60be3eb1cbfe99d0506050ae1a249e6541",
       "bundleGroup": "C: Umwelt",
@@ -423,7 +424,6 @@
       },
       "geometryType": "MultiPolygon",
       "featureCount": 2563,
-      "sourceUpdatedAt": "2026-04-09T00:00:00.000Z",
       "inspectorRelevant": false
     },
     {
@@ -431,6 +431,7 @@
       "filename": "spielplaetze.d69b38fc.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/gruenanlagen",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2026-04-09T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "d69b38fce1b1fe55c1ab715d68e821a1da754d0dc06632507cdc8e36005fcef7",
       "bundleGroup": "E: Soziale Infrastruktur",
@@ -440,7 +441,6 @@
       },
       "geometryType": "Polygon",
       "featureCount": 1886,
-      "sourceUpdatedAt": "2026-04-09T00:00:00.000Z",
       "inspectorRelevant": false
     },
     {
@@ -448,6 +448,7 @@
       "filename": "schwimmbaeder.fe5cac40.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/schwimmbaeder_berlin",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2026-04-21T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "fe5cac4038943ac023118919dbe5d2c98fff3edf0f2b97154c15c452fffc7861",
       "bundleGroup": "E: Soziale Infrastruktur",
@@ -456,14 +457,14 @@
         "max": 18
       },
       "geometryType": "Point",
-      "featureCount": 64,
-      "sourceUpdatedAt": "2026-04-21T00:00:00.000Z"
+      "featureCount": 64
     },
     {
       "slug": "radverkehrsnetz-2025",
       "filename": "radverkehrsnetz-2025.62353824.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/radverkehrsnetz",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2025-07-07T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "6235382461a2548d0a28a47381440c595e3ed7e4c7c37748b5f1582424d4c50d",
       "bundleGroup": "F: Mobilität",
@@ -473,7 +474,6 @@
       },
       "geometryType": "LineString",
       "featureCount": 14882,
-      "sourceUpdatedAt": "2025-07-07T00:00:00.000Z",
       "inspectorRelevant": false
     },
     {
@@ -481,6 +481,7 @@
       "filename": "fahrradstrassen-2024.3a17cb69.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/fahrradstrassen",
       "fetchedAt": "2026-05-16T06:56:28.400Z",
+      "sourceUpdatedAt": "2024-06-07T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "3a17cb69c12023ad7b00ea49fc173b2942bd4fa9d37145eca0c54c7a74786f6c",
       "bundleGroup": "F: Mobilität",
@@ -490,7 +491,6 @@
       },
       "geometryType": "LineString",
       "featureCount": 57,
-      "sourceUpdatedAt": "2024-06-07T00:00:00.000Z",
       "inspectorRelevant": false
     },
     {
@@ -610,6 +610,7 @@
       "filename": "lor-bezirksregion.9479b010.geojson",
       "sourceUrl": "https://daten.odis-berlin.de/de/dataset/lor_bezirksregionen_2021/data.geojson",
       "fetchedAt": "2026-05-16T07:01:18.450Z",
+      "sourceUpdatedAt": "2021-01-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "9479b010ba237c15e8b3d7592493853014c0ac26e297db8f65ea3f2d5115c4a4",
       "bundleGroup": "A: Boundaries",
@@ -619,7 +620,6 @@
       },
       "geometryType": "Polygon",
       "featureCount": 143,
-      "sourceUpdatedAt": "2021-01-01T00:00:00.000Z",
       "inspectorRelevant": false,
       "mapRelevant": false
     },
@@ -628,6 +628,7 @@
       "filename": "denkmal-2024.1725b1c3.geojson",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/denkmale",
       "fetchedAt": "2026-05-16T07:03:25.286Z",
+      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "license": "dl-de/by-2-0",
       "sha256": "1725b1c3395269913da31edab8bc0ec6809d8fcb43926d56fd90805705a5c580",
       "bundleGroup": "D: Memorial",
@@ -637,7 +638,6 @@
       },
       "geometryType": "Polygon",
       "featureCount": 7228,
-      "sourceUpdatedAt": "2024-01-01T00:00:00.000Z",
       "inspectorRelevant": false,
       "mapRelevant": false
     },
@@ -730,6 +730,91 @@
       "featureCount": 542,
       "inspectorRelevant": false,
       "mapRelevant": true
+    },
+    {
+      "slug": "wahlbezirke-btw17",
+      "filename": "wahlbezirke-btw17.452b6766.geojson",
+      "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_Wahlgebiete_BTW17.zip",
+      "fetchedAt": "2026-05-18T19:40:31.371Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "452b6766a21dde5a8cf236e6eac9f4dc4c19d93f55488ede7769ff6f927b3403",
+      "bundleGroup": "H: Wahldaten",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 17
+      },
+      "geometryType": "Polygon",
+      "featureCount": 1779,
+      "inspectorRelevant": false,
+      "mapRelevant": false
+    },
+    {
+      "slug": "wahlbezirke-ah16",
+      "filename": "wahlbezirke-ah16.29b3175b.geojson",
+      "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_AGH_09_2016.zip",
+      "fetchedAt": "2026-05-18T19:40:31.806Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "29b3175b8a53c847c35d845e2a66d367e1625f630b8a40fff430f81006bf1879",
+      "bundleGroup": "H: Wahldaten",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 17
+      },
+      "geometryType": "Polygon",
+      "featureCount": 1779,
+      "inspectorRelevant": false,
+      "mapRelevant": false
+    },
+    {
+      "slug": "wahlbezirke-ah21",
+      "filename": "wahlbezirke-ah21.41210759.geojson",
+      "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_AH21.zip",
+      "fetchedAt": "2026-05-18T19:40:32.531Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "41210759909a203069f0d359042490c3c32bbe70f34abfc1ef5189c2f4a7989f",
+      "bundleGroup": "H: Wahldaten",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 17
+      },
+      "geometryType": "Polygon",
+      "featureCount": 2257,
+      "inspectorRelevant": false,
+      "mapRelevant": false
+    },
+    {
+      "slug": "wahlbezirke-ah23",
+      "filename": "wahlbezirke-ah23.3b774478.geojson",
+      "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_Wahllokale_AH23.zip",
+      "fetchedAt": "2026-05-18T19:40:32.833Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "3b77447845d1d30ab3bf0717ef2feb95dd6f9db6c79c4f22f2624bbdb5cfca9b",
+      "bundleGroup": "H: Wahldaten",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 17
+      },
+      "geometryType": "Polygon",
+      "featureCount": 3764,
+      "inspectorRelevant": false,
+      "mapRelevant": false
+    },
+    {
+      "slug": "wahlbezirke-bt25",
+      "filename": "wahlbezirke-bt25.34402fb8.geojson",
+      "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_BT25.zip",
+      "fetchedAt": "2026-05-18T19:40:33.037Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "34402fb8b5de1b62ddd0304dab9187d320d3292b7ecf3ac8b6f7e72a87b3310f",
+      "bundleGroup": "H: Wahldaten",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 17
+      },
+      "geometryType": "Polygon",
+      "featureCount": 2323,
+      "inspectorRelevant": false,
+      "mapRelevant": false
     }
   ]
 }

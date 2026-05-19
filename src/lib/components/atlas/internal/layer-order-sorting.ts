@@ -12,7 +12,8 @@ const BUNDLE_RANK: Record<Bundle, number> = {
 	'D: Memorial': 3,
 	'E: Soziale Infrastruktur': 4,
 	'F: Mobilität': 5,
-	'G: Kiez-Score': 6
+	'G: Kiez-Score': 6,
+	'H: Wahldaten': 7
 };
 
 const UNKNOWN_RANK = 99;

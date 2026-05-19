@@ -19,6 +19,7 @@
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
 	import KiezScoreSection from './inspector-panel/kiez-score-section.svelte';
+	import WahlSection from './inspector-panel/wahl-section.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
@@ -382,6 +383,7 @@
 
 		<div class="flex-1 space-y-4 px-6 py-4">
 			<KiezScoreSection score={ui.kiezScore} />
+			<WahlSection results={ui.wahlResults} />
 			{#each sections as section (section.key)}
 				{#if shouldRenderSection(section.key, section.hits.length)}
 					<section

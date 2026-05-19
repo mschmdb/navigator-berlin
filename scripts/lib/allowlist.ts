@@ -5,7 +5,9 @@ export const BUILD_TIME_ALLOWLIST = [
 	'daten.berlin.de',
 	'opendata.dwd.de',
 	'overpass-api.de',
-	'overpass.kumi.systems'
+	'overpass.kumi.systems',
+	'bundeswahlleiterin.de',
+	'statistik-berlin-brandenburg.de'
 ] as const;
 
 export function isAllowed(url: string): boolean {

@@ -60,7 +60,8 @@ export const BUNDLE_ORDER: readonly Bundle[] = [
 	'D: Memorial',
 	'E: Soziale Infrastruktur',
 	'F: Mobilität',
-	'G: Kiez-Score'
+	'G: Kiez-Score',
+	'H: Wahldaten'
 ];
 
 export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
@@ -70,7 +71,8 @@ export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
 	'D: Memorial': 'D · Memorial',
 	'E: Soziale Infrastruktur': 'E · Soziale Infrastruktur',
 	'F: Mobilität': 'F · Mobilität',
-	'G: Kiez-Score': 'G · Kiez-Score'
+	'G: Kiez-Score': 'G · Kiez-Score',
+	'H: Wahldaten': 'H · Wahldaten'
 };
 
 export interface LayerGroup {

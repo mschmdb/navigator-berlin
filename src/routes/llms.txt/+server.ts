@@ -21,7 +21,7 @@ export const prerender = true;
  */
 export const GET: RequestHandler = async ({ url, fetch }) => {
 	const manifest = await loadManifest(fetch);
-	const collected = await collectLlmsData(manifest);
+	const collected = await collectLlmsData(manifest, url.origin);
 	const body = buildLlmsTxt({
 		origin: url.origin,
 		locale: 'de',
@@ -29,7 +29,8 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
 		buildTimestamp: new Date().toISOString(),
 		bezirke: collected.bezirke,
 		kieze: collected.kieze,
-		layer: collected.layer
+		layer: collected.layer,
+		wahlen: collected.wahlen
 	});
 	return new Response(body, {
 		status: 200,

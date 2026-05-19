@@ -50,7 +50,9 @@ function makeState(): UiState {
 		comparisonClimateSeries: null,
 		comparisonLoading: false,
 		kiezScore: null,
-		comparisonKiezScore: null
+		comparisonKiezScore: null,
+		wahlResults: null,
+		comparisonWahlResults: null
 	};
 }
 

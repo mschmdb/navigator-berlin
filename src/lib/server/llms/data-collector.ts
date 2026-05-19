@@ -22,6 +22,7 @@ import { getKiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 import { renderBezirkMarkdown } from './bezirk-renderer.js';
 import { renderKiezMarkdown } from './kiez-renderer.js';
 import { renderLayerMarkdown } from './layer-renderer.js';
+import { buildWahlEntry } from './wahl-renderer.js';
 import {
 	getLayerExplainEntry,
 	type LayerExplain
@@ -29,13 +30,15 @@ import {
 import type {
 	LlmsBezirkEntry,
 	LlmsKiezEntry,
-	LlmsLayerEntry
+	LlmsLayerEntry,
+	LlmsWahlEntry
 } from '$lib/seo/llms-builder.js';
 
 export interface LlmsCollectedData {
 	readonly bezirke: readonly LlmsBezirkEntry[];
 	readonly kieze: readonly LlmsKiezEntry[];
 	readonly layer: readonly LlmsLayerEntry[];
+	readonly wahlen: readonly LlmsWahlEntry[];
 }
 
 /**
@@ -192,7 +195,72 @@ function collectLayer(manifest: Manifest): LlmsLayerEntry[] {
  * Aufrufer kann auf leere Listen reagieren (z.B. minimaler llms.txt mit nur
  * Static + Layer-Section).
  */
-export async function collectLlmsData(manifest: Manifest): Promise<LlmsCollectedData> {
+async function collectWahlen(origin: string): Promise<LlmsWahlEntry[]> {
+	if (!process.env.DATABASE_URL) return [];
+	try {
+		const [{ getWahlList }, { getResultsForBerlin }] = await Promise.all([
+			import('$lib/server/db/queries/wahl/get-wahl-list.js'),
+			import('$lib/server/db/queries/wahl/get-results-for-berlin.js')
+		]);
+		const wahlen = await getWahlList();
+		const out: LlmsWahlEntry[] = [];
+		const parentIdToSlug = new Map<number, string>();
+		for (const w of wahlen) {
+			const slug = w.typ === 'bvv' ? `${w.jahr}-bvv` : `${w.jahr}-${w.typ}-${w.stimmtyp}`;
+			parentIdToSlug.set(w.id, slug);
+		}
+		for (const w of wahlen) {
+			const slug = parentIdToSlug.get(w.id) ?? `${w.jahr}-${w.typ}-${w.stimmtyp}`;
+			const typLabel =
+				w.typ === 'btw'
+					? 'Bundestagswahl'
+					: w.typ === 'agh'
+						? 'Abgeordnetenhauswahl'
+						: 'BVV-Wahl';
+			const stimmTeil =
+				w.typ === 'bvv'
+					? ''
+					: ` · ${w.stimmtyp === 'erststimme' ? 'Erststimme' : 'Zweitstimme'}`;
+			const title = `${typLabel} ${w.jahr}${stimmTeil}${w.isRepeatElection ? ' · Wiederholung' : ''}`;
+			const sourceName = w.sourceUrl.includes('bundeswahlleiterin')
+				? 'Bundeswahlleiterin'
+				: 'Amt für Statistik Berlin-Brandenburg';
+			const top = await getResultsForBerlin(w.id, 5);
+			out.push(
+				buildWahlEntry({
+					origin,
+					slug,
+					title,
+					jahr: w.jahr,
+					typ: w.typ,
+					stimmtyp: w.stimmtyp,
+					isRepeatElection: w.isRepeatElection,
+					sourceName,
+					license: w.license,
+					berlinTop5: top.map((p) => ({
+						kurzname: p.parteiKurzname,
+						vollname: p.parteiVollname,
+						stimmen: p.stimmen,
+						anteil: p.anteil
+					}))
+				})
+			);
+		}
+		return out;
+	} catch (err) {
+		// eslint-disable-next-line no-console
+		console.warn(
+			'[llms-data-collector] wahlen collection failed:',
+			err instanceof Error ? err.message : err
+		);
+		return [];
+	}
+}
+
+export async function collectLlmsData(
+	manifest: Manifest,
+	origin = 'https://navigator.berlin'
+): Promise<LlmsCollectedData> {
 	let bezirke: LlmsBezirkEntry[] = [];
 	let kieze: LlmsKiezEntry[] = [];
 
@@ -211,6 +279,7 @@ export async function collectLlmsData(manifest: Manifest): Promise<LlmsCollected
 	}
 
 	const layer = collectLayer(manifest);
+	const wahlen = await collectWahlen(origin);
 
-	return { bezirke, kieze, layer };
+	return { bezirke, kieze, layer, wahlen };
 }

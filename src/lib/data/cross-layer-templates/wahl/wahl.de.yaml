@@ -1,0 +1,17 @@
+bundle: wahl
+locale: de
+templates:
+  - id: wahl-trend-zeit-kiez
+    applicableTo: [kiez]
+    requires:
+      - wahl_aggregat_kiez.sparkline
+    body_de: >-
+      Im Kiez {kiez_name} verteilten sich die {stimmtyp_label} bei den
+      letzten {wahl_typ_label} wie folgt: {sparkline_jahre} mit jeweils
+      stärkster Partei {sparkline_jahre_top_parteien}.
+    editorialNote: >-
+      Nüchterne Zeitreihe ohne Trend-Bewertung. Sparkline-Daten kommen aus
+      get_sparkline_for_kiez. Keine Steigungs- oder Schwankungs-Adjektive.
+      Wird pro Wahltyp einmal gerendert (BTW Zweitstimme, AGH Zweitstimme,
+      BVV Einstimme).
+    tags: [wahl, trend, zeitreihe]
