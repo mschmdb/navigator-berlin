@@ -129,17 +129,52 @@ describe('WahlSection', () => {
 		await expect.element(page.getByTestId('wahl-wiederholung-marker')).toBeInTheDocument();
 	});
 
-	it('zeigt Briefwahl-Note auf Stimmbezirks-Level wenn isBriefwahlAggregat=true', async () => {
-		const b = makeBundle();
-		b.levels.stimmbezirk = {
-			available: true,
-			top5: b.levels.stimmbezirk.top5,
-			isBriefwahlAggregat: true
-		};
+	it('zeigt BriefwahlMarker + Hairline auf Stimmbezirks-Level bei pre-2021-Wahl', async () => {
+		const b = makeBundle({
+			wahl: {
+				id: 17,
+				jahr: 2017,
+				typ: 'btw',
+				stimmtyp: 'zweitstimme',
+				isRepeatElection: false,
+				parentElectionId: null,
+				sourceUrl: 'https://bundeswahlleiterin.de/dam/jcr/abc/btw17_wbz.zip',
+				license: 'dl-de/by-2.0'
+			}
+		});
 		render(WahlSection, { results: makeResults([b]) });
 		const stimmbezirkPill = page.getByTestId('wahl-level-stimmbezirk');
 		await stimmbezirkPill.click();
-		await expect.element(page.getByTestId('wahl-briefwahl-note')).toBeInTheDocument();
+		await expect.element(page.getByTestId('briefwahl-marker')).toBeInTheDocument();
+		await expect.element(page.getByTestId('wahl-confidence-hairline')).toBeInTheDocument();
+	});
+
+	it('unterdrückt BriefwahlMarker bei post-2021-Wahl auch auf Stimmbezirks-Level', async () => {
+		const b = makeBundle();
+		render(WahlSection, { results: makeResults([b]) });
+		const stimmbezirkPill = page.getByTestId('wahl-level-stimmbezirk');
+		await stimmbezirkPill.click();
+		await expect.element(page.getByTestId('briefwahl-marker')).not.toBeInTheDocument();
+		await expect.element(page.getByTestId('wahl-confidence-hairline')).not.toBeInTheDocument();
+	});
+
+	it('unterdrückt BriefwahlMarker auf höheren Ebenen auch bei pre-2021', async () => {
+		const b = makeBundle({
+			wahl: {
+				id: 17,
+				jahr: 2017,
+				typ: 'btw',
+				stimmtyp: 'zweitstimme',
+				isRepeatElection: false,
+				parentElectionId: null,
+				sourceUrl: 'https://bundeswahlleiterin.de/dam/jcr/abc/btw17_wbz.zip',
+				license: 'dl-de/by-2.0'
+			}
+		});
+		render(WahlSection, { results: makeResults([b]) });
+		const kiezPill = page.getByTestId('wahl-level-kiez');
+		await kiezPill.click();
+		await expect.element(page.getByTestId('briefwahl-marker')).not.toBeInTheDocument();
 	});
 
 	it('rendert Editorial-Disclaimer wahl-stimmenanteile', async () => {

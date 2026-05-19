@@ -1,5 +1,6 @@
 <script lang="ts">
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
+	import BriefwahlMarker from '../briefwahl-marker.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { parteiColor } from '$lib/data/partei-farben.js';
 	import type {
@@ -124,6 +125,10 @@
 
 	const jahr = $derived(bundleA?.wahl.jahr ?? bundleB?.wahl.jahr ?? null);
 
+	const isBriefwahlContext = $derived(
+		selectedLevel === 'stimmbezirk' && jahr !== null && jahr < 2021
+	);
+
 	function formatPct(n: number): string {
 		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
 	}
@@ -212,6 +217,12 @@
 					? 'Zweitstimme'
 					: 'Erststimme'}
 		</p>
+
+		<BriefwahlMarker
+			showBadge={isBriefwahlContext}
+			methodikHref={`${methodikHref}#wahldaten-briefwahl`}
+			testid="wahl-compare-briefwahl-marker"
+		/>
 
 		{#if sameAggregat && selectedLevel !== 'berlin'}
 			<p

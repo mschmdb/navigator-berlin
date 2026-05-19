@@ -1,5 +1,7 @@
 <script lang="ts">
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
+	import BriefwahlMarker from '../briefwahl-marker.svelte';
+	import WahlConfidenceHairline from '../wahl-confidence-hairline.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
 	import type {
@@ -152,7 +154,11 @@
 		return `wahl-${bundleKey(b)}`;
 	}
 
-	const isBriefwahlLevel = $derived(selectedLevel === 'stimmbezirk');
+	const isBriefwahlLevel = $derived(
+		selectedLevel === 'stimmbezirk' &&
+			currentBundle !== null &&
+			currentBundle.wahl.jahr < 2021
+	);
 
 	const currentSparkline = $derived.by<SparklineSeries | null>(() => {
 		if (!currentBundle || !results) return null;
@@ -392,14 +398,8 @@
 								title={`${entry.kurzname}: ${formatPct(entry.anteil)}`}
 							></span>
 						{/each}
-						{#if isBriefwahlLevel}
-							<span
-								class="absolute top-0 right-0 h-full w-1.5 pointer-events-none"
-								data-testid="wahl-confidence-hairline"
-								style="background-image: repeating-linear-gradient(45deg, rgba(20,20,20,0.45) 0 2px, transparent 2px 4px);"
-								title="Unsicherheits-Zone: Stimmbezirks-Werte ohne Briefstimmen"
-							></span>
-						{/if}
+						<WahlConfidenceHairline visible={isBriefwahlLevel} />
+
 					</div>
 					<ul class="space-y-1.5" data-testid="wahl-legend">
 						{#each top5 as entry (entry.kurzname)}
@@ -468,14 +468,10 @@
 					</tbody>
 				</table>
 
-				{#if isBriefwahlLevel}
-					<p
-						data-testid="wahl-briefwahl-note"
-						class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
-					>
-						Stimmbezirks-Werte ohne Briefstimmen · Briefwähler nur als Bezirks-Aggregat
-					</p>
-				{/if}
+				<BriefwahlMarker
+					showBadge={isBriefwahlLevel}
+					methodikHref={`${methodikHref}#wahldaten-briefwahl`}
+				/>
 			{:else}
 				<p data-testid="wahl-empty" class="font-mono text-xs text-ink-subtle">
 					Keine Daten für diese Ebene verfügbar.
