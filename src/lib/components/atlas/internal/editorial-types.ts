@@ -12,7 +12,8 @@ export type DisclaimerVariant =
 	| 'mss-aggregat'
 	| 'compare-mss-aggregat'
 	| 'kiez-score-explainer'
-	| 'wahl-stimmenanteile';
+	| 'wahl-stimmenanteile'
+	| 'cross-layer-template';
 
 export type EditorialCustomComponent = 'StolpersteinDetail' | 'MauerSektorenDetail';
 

@@ -26,6 +26,7 @@
 		"data:wahl-geo": "tsx scripts/build-wahl-geometries.ts",
 		"data:wahl-kiez": "tsx scripts/build-wahl-kiez-aggregat.ts",
 		"lint:wahl": "tsx scripts/lint-wahl-editorial.ts",
+		"lint:cross-layer-templates": "tsx scripts/lint-cross-layer-templates.ts",
 		"data:faq": "tsx scripts/render-faq.ts",
 		"webmcp:manifest": "tsx scripts/build-webmcp-manifest.ts",
 		"og:images": "tsx scripts/generate-og-images.ts",

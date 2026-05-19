@@ -21,7 +21,9 @@
 		'kiez-score-explainer':
 			'Kiez-Score aggregiert fünf Dimensionen pro Planungsraum (Ruhe & Luft, Grün, Mobilität, Soziale Lage, Versorgung). Die Soziale Lage spiegelt strukturelle MSS-Daten der Senatsverwaltung, keine Wohnqualität. Bezahlbarkeit absichtlich nicht enthalten.',
 		'wahl-stimmenanteile':
-			'Daten beschreiben Stimmenanteile, keine Bewertung. Brief-Stimmen sind im Kiez-Aggregat ausgeschlossen (nur Bezirk und Berlin), weil sie keine räumliche Zuordnung haben.'
+			'Daten beschreiben Stimmenanteile, keine Bewertung. Brief-Stimmen sind im Kiez-Aggregat ausgeschlossen (nur Bezirk und Berlin), weil sie keine räumliche Zuordnung haben.',
+		'cross-layer-template':
+			'Werte aus verschiedenen Layern nebeneinander gestellt, ohne kausale Verknüpfung. Aggregat-Daten pro Planungsraum, nicht pro Adresse.'
 	};
 </script>
 
