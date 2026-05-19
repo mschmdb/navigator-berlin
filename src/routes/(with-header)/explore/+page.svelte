@@ -913,9 +913,9 @@
 
 <section
 	class={[
-		'flex h-[calc(100dvh-72px)] max-h-[calc(100dvh-72px)] min-h-0 flex-col overflow-hidden',
+		'flex h-[calc(100dvh-72px-44px)] max-h-[calc(100dvh-72px-44px)] min-h-0 flex-col overflow-hidden',
 		showSidePanel &&
-			'lg:grid lg:h-[calc(100dvh-72px)] lg:max-h-[calc(100dvh-72px)] lg:grid-cols-[1fr_var(--inspector-width)] lg:grid-rows-[minmax(0,1fr)]'
+			'lg:grid lg:h-[calc(100dvh-72px-44px)] lg:max-h-[calc(100dvh-72px-44px)] lg:grid-cols-[1fr_var(--inspector-width)] lg:grid-rows-[minmax(0,1fr)]'
 	]
 		.filter(Boolean)
 		.join(' ')}

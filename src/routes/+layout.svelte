@@ -77,9 +77,7 @@
 
 {@render children()}
 
-{#if !page.url.pathname.startsWith('/explore')}
-	<MetaFooter />
-{/if}
+<MetaFooter />
 
 <div id="global-aria-live" aria-live="polite" aria-atomic="false" class="sr-only"></div>
 <div
