@@ -296,7 +296,13 @@ body {
 	background: var(--bg);
 	color: var(--ink);
 	font-family: var(--font-sans);
-	overflow-x: hidden;
+}
+
+/* /explore-Route nimmt den ganzen Viewport ein. Inspector scrollt intern,
+   Page-Scroll wird hart unterdrückt. svelte:body class wird beim
+   Component-Destroy automatisch entfernt, andere Routes scrollen normal. */
+body.route-explore {
+	overflow: hidden;
 }
 
 :where(a, button, [role='application'], [tabindex]):focus-visible {

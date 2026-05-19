@@ -138,13 +138,6 @@
 	}
 
 	onMount(() => {
-		// /explore nimmt den ganzen Viewport ein, kein Body-Scroll erlaubt
-		// (Inspector scrollt intern). Beim Verlassen der Route zurücksetzen.
-		const prevBodyOverflow = document.body.style.overflow;
-		const prevHtmlOverflow = document.documentElement.style.overflow;
-		document.body.style.overflow = 'hidden';
-		document.documentElement.style.overflow = 'hidden';
-
 		if (data.activeLayers?.length) {
 			ui.activeLayerSlugs = [...data.activeLayers];
 		}
@@ -170,11 +163,6 @@
 				manifestLayers = [];
 			}
 		})();
-
-		return () => {
-			document.body.style.overflow = prevBodyOverflow;
-			document.documentElement.style.overflow = prevHtmlOverflow;
-		};
 	});
 
 	const syncLayers = debounce((slugs: string[]) => {
@@ -908,6 +896,8 @@
 	);
 	const ogImageUrl = $derived(buildOgImageUrl(ogInput, page.url.origin));
 </script>
+
+<svelte:body class="route-explore" />
 
 <SeoHead
 	title={ogTitle}
