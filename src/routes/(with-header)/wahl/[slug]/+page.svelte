@@ -52,6 +52,11 @@
 			dateModified: `${data.wahl.jahr}-01-01`,
 			creatorName: data.wahl.sourceName,
 			contentUrl: data.wahl.sourceUrl,
+			encodingFormat: data.wahl.sourceUrl.endsWith('.zip')
+				? 'application/zip'
+				: data.wahl.sourceUrl.endsWith('.xlsx')
+					? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+					: 'text/csv',
 			keywords: ['Wahl', 'Berlin', data.wahl.typLabel, String(data.wahl.jahr)],
 			inLanguage: 'de-DE'
 		})

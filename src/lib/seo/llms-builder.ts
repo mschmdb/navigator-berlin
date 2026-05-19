@@ -48,6 +48,13 @@ export interface LlmsLayerEntry {
 	readonly markdown: string;
 }
 
+export interface LlmsWahlEntry {
+	readonly slug: string;
+	readonly name: string;
+	readonly short: string;
+	readonly markdown: string;
+}
+
 export interface LlmsSourceContext {
 	readonly origin: string;
 	readonly locale: SitemapLocale;
@@ -56,13 +63,14 @@ export interface LlmsSourceContext {
 	readonly bezirke: readonly LlmsBezirkEntry[];
 	readonly kieze: readonly LlmsKiezEntry[];
 	readonly layer: readonly LlmsLayerEntry[];
+	readonly wahlen?: readonly LlmsWahlEntry[];
 }
 
 export interface LlmsSourceEntry {
 	readonly loc: string;
 	readonly name: string;
 	readonly description: string;
-	readonly section: 'methodik' | 'bezirk' | 'kiez' | 'layer' | 'static' | 'lizenzen';
+	readonly section: 'methodik' | 'bezirk' | 'kiez' | 'layer' | 'static' | 'lizenzen' | 'wahl';
 }
 
 const SECTION_DEFAULTS: Record<LlmsSourceEntry['section'], string> = {
@@ -71,7 +79,8 @@ const SECTION_DEFAULTS: Record<LlmsSourceEntry['section'], string> = {
 	kiez: 'Kiez-Steckbrief (LOR-Bezirksregion)',
 	layer: 'Daten-Layer',
 	static: 'Statische Seite',
-	lizenzen: 'Lizenz + Quellen pro Layer'
+	lizenzen: 'Lizenz + Quellen pro Layer',
+	wahl: 'Wahl-Ergebnis pro Bezirk und Berlin gesamt'
 };
 
 function buildSiteIntro(): string[] {
@@ -120,6 +129,13 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		section: 'methodik'
 	});
 	out.push({
+		loc: `${ctx.origin}/methodik/wahldaten`,
+		name: 'Methodik · Wahldaten',
+		description:
+			'Datenquellen, Daten-Cutoff, Briefwahl-Asymmetrie, Stimmbezirks-zu-Kiez-Aggregation, Wiederholungswahl 2023',
+		section: 'methodik'
+	});
+	out.push({
 		loc: `${ctx.origin}/lizenzen`,
 		name: 'Lizenzen',
 		description: 'Pro Layer Lizenz und Authority',
@@ -156,6 +172,24 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 			description: entry?.short ?? SECTION_DEFAULTS.layer,
 			section: 'layer'
 		});
+	}
+
+	// Wahl-Index + Detail-Pages (Story 6.4)
+	if (ctx.wahlen && ctx.wahlen.length > 0) {
+		out.push({
+			loc: `${ctx.origin}/wahl`,
+			name: 'Wahl-Übersicht',
+			description: 'Alle abgedeckten Berliner Wahlen seit 2011',
+			section: 'wahl'
+		});
+		for (const w of ctx.wahlen) {
+			out.push({
+				loc: `${ctx.origin}/wahl/${w.slug}`,
+				name: w.name,
+				description: w.short,
+				section: 'wahl'
+			});
+		}
 	}
 
 	return out;
@@ -218,6 +252,14 @@ export function buildLlmsTxt(ctx: LlmsSourceContext): string {
 		lines.push('## Daten-Layer');
 		lines.push('');
 		for (const e of layer) pushBullet(lines, e);
+		lines.push('');
+	}
+
+	const wahl = entries.filter((e) => e.section === 'wahl');
+	if (wahl.length > 0) {
+		lines.push('## Wahldaten');
+		lines.push('');
+		for (const e of wahl) pushBullet(lines, e);
 		lines.push('');
 	}
 
@@ -294,6 +336,16 @@ export function buildLlmsFullTxt(ctx: LlmsSourceContext): string {
 		lines.push('');
 		lines.push(l.markdown.trim());
 		lines.push('');
+	}
+
+	// Wahl-Detail-Markdowns (Story 6.9)
+	if (ctx.wahlen && ctx.wahlen.length > 0) {
+		for (const w of ctx.wahlen) {
+			lines.push(SECTION_MARKER.trim());
+			lines.push('');
+			lines.push(w.markdown.trim());
+			lines.push('');
+		}
 	}
 
 	return lines.join('\n');
