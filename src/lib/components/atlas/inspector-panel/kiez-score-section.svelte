@@ -26,7 +26,7 @@
 		class="space-y-3"
 	>
 		<h3
-			class="font-mono text-xs uppercase tracking-wide text-ink-muted border-t border-rule pt-4"
+			class="font-mono text-xs uppercase tracking-wide text-ink-muted"
 			data-testid="kiez-score-section-header"
 		>
 			Kiez-Score
