@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
+	import WahlBezirkChoropleth from '$lib/components/atlas/wahl-bezirk-choropleth.svelte';
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
@@ -166,6 +167,11 @@
 				Keine Berlin-Aggregat-Daten für diese Wahl.
 			</p>
 		{/if}
+	</section>
+
+	<section data-testid="wahl-detail-choropleth" class="space-y-4">
+		<h2 class="font-sans text-xl font-semibold text-ink">Bezirkskarte</h2>
+		<WahlBezirkChoropleth bezirke={data.bezirke} title={data.wahl.title} />
 	</section>
 
 	<section data-testid="wahl-detail-bezirke" class="space-y-4">

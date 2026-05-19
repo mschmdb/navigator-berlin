@@ -539,12 +539,27 @@
 
 		<EditorialDisclaimer variant="wahl-stimmenanteile" />
 
-		<a
-			href={methodikHref}
-			data-testid="wahl-methodik-link"
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
-		>
-			Methodik · Wahldaten
-		</a>
+		<div class="flex flex-wrap gap-3">
+			{#if currentBundle}
+				{@const slug =
+					currentBundle.wahl.typ === 'bvv'
+						? `${currentBundle.wahl.jahr}-bvv`
+						: `${currentBundle.wahl.jahr}-${currentBundle.wahl.typ}-${currentBundle.wahl.stimmtyp}`}
+				<a
+					href={`/wahl/${slug}`}
+					data-testid="wahl-detail-link"
+					class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				>
+					Detail-Seite öffnen
+				</a>
+			{/if}
+			<a
+				href={methodikHref}
+				data-testid="wahl-methodik-link"
+				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			>
+				Methodik · Wahldaten
+			</a>
+		</div>
 	</section>
 {/if}
