@@ -20,5 +20,6 @@ export const META_LINKS: readonly MetaLink[] = [
 	{ label: 'Lizenzen', href: '/lizenzen' },
 	{ label: 'Datenschutz', href: '/datenschutz' },
 	{ label: 'Impressum', href: '/impressum' },
-	{ label: 'Architektur', href: '/architektur' }
+	{ label: 'Architektur', href: '/architektur' },
+	{ label: 'WebMCP', href: '/webmcp' }
 ] as const;

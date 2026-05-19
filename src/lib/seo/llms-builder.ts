@@ -129,6 +129,13 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		section: 'methodik'
 	});
 	out.push({
+		loc: `${ctx.origin}/webmcp`,
+		name: 'WebMCP',
+		description:
+			'Schnittstelle für KI-Assistenten: Spec-Status, Browser-Support, Tools und Chrome-Canary-Anleitung',
+		section: 'static'
+	});
+	out.push({
 		loc: `${ctx.origin}/methodik/wahldaten`,
 		name: 'Methodik · Wahldaten',
 		description:

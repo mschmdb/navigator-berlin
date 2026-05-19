@@ -34,4 +34,4 @@ Vier neue Tools im Manifest: Wahlen auflisten, Ergebnis an einer Adresse abfrage
 
 ## Methodik
 
-Datenquellen, Aggregations-Logik, Briefwahl-Behandlung und Coverage-Lücken: [`/methodik/wahldaten`](/methodik/wahldaten). Rückmeldung: [hey@navigator.berlin](mailto:hey@navigator.berlin).
+Datenquellen, Aggregations-Logik, Briefwahl-Behandlung und Coverage-Lücken: [`/methodik/wahldaten`](/methodik/wahldaten).

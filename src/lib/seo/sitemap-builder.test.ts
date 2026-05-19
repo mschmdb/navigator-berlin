@@ -128,7 +128,8 @@ describe('STATIC_PAGES_SOURCE', () => {
 			'https://navigator.berlin/',
 			'https://navigator.berlin/explore',
 			'https://navigator.berlin/methodik',
-			'https://navigator.berlin/lizenzen'
+			'https://navigator.berlin/lizenzen',
+			'https://navigator.berlin/webmcp'
 		]);
 		expect(entries.every((e) => e.lastmod === '2026-05-16T08:00:00.000Z')).toBe(true);
 	});

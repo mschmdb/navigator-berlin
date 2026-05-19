@@ -118,9 +118,9 @@
 			Recommendation, Spec in Bewegung.
 		</p>
 		<p class="mt-3 leading-relaxed">
-			Diese Site nutzt
-			<a class="text-accent underline" href="https://github.com/MiguelsPizza/WebMCP" rel="noopener noreferrer" target="_blank">mcp-b</a>
-			als Polyfill, bis WebMCP browser-nativ verfügbar ist.
+			Bis WebMCP browser-nativ in den Stable-Releases ankommt, läuft die
+			API über einen Polyfill, der von LLM-Browser-Extensions oder beim
+			Mount geladen wird.
 		</p>
 		<p class="mt-3 leading-relaxed">
 			Manifest-Discovery (Convention, nicht Standard):
@@ -130,6 +130,10 @@
 			<a class="text-accent underline" href="/llms.txt">/llms.txt</a> /
 			<a class="text-accent underline" href="/llms-full.txt">/llms-full.txt</a>
 			nach <a class="text-accent underline" href="https://llmstxt.org" rel="noopener noreferrer" target="_blank">llmstxt.org</a>.
+		</p>
+		<p class="mt-3 leading-relaxed">
+			Spec-Status, Browser-Support und Anleitung für Chrome Canary:
+			<a class="text-accent underline" href="/webmcp">/webmcp</a>.
 		</p>
 	</section>
 
