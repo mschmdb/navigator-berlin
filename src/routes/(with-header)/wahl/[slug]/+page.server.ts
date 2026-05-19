@@ -2,6 +2,8 @@ import { error } from '@sveltejs/kit';
 import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for-berlin.js';
 import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for-bezirk.js';
+import { getStimmbezirksWinners } from '$lib/server/db/queries/wahl/get-stimmbezirks-winners.js';
+import { WAHL_TO_GEO } from '$lib/data/wahl-geo-mapping.js';
 import { parseWahlSlug, buildWahlSlug, type WahlSlug } from './slug-utils.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
@@ -104,6 +106,15 @@ export type WahlDetailPageData = {
 			readonly anteil: number;
 		}>;
 	}>;
+	/** Story 6.4c: Geo-Layer-Slug für Stimmbezirks-Choropleth oder null. */
+	readonly geoSlug: string | null;
+	/** Story 6.4c: Top-1 pro UWB für Stimmbezirks-Choropleth, leer wenn keine Geometrie. */
+	readonly winnersByUwb: ReadonlyArray<{
+		readonly uwbId: string;
+		readonly parteiKurzname: string;
+		readonly farbeHex: string;
+		readonly anteil: number;
+	}>;
 };
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -124,9 +135,13 @@ export const load: PageServerLoad = async ({ params }) => {
 		throw error(404, `Wahl ${params.slug} existiert nicht in der Datenbank.`);
 	}
 
-	const [berlinRows, ...bezirkRowsList] = await Promise.all([
+	const wahlSlugShort = `${match.typ}${String(match.jahr).slice(-2)}`;
+	const geoSlug = WAHL_TO_GEO.get(wahlSlugShort) ?? null;
+
+	const [berlinRows, bezirkRowsList, winners] = await Promise.all([
 		getResultsForBerlin(match.id, 10),
-		...BEZIRK_SLUGS.map((slug) => getResultsForBezirk(match.id, slug, 3))
+		Promise.all(BEZIRK_SLUGS.map((slug) => getResultsForBezirk(match.id, slug, 3))),
+		geoSlug ? getStimmbezirksWinners(match.id) : Promise.resolve([])
 	]);
 
 	const parentSlug =
@@ -175,6 +190,13 @@ export const load: PageServerLoad = async ({ params }) => {
 				stimmen: r.stimmen,
 				anteil: r.anteil
 			}))
+		})),
+		geoSlug,
+		winnersByUwb: winners.map((w) => ({
+			uwbId: w.uwbId,
+			parteiKurzname: w.parteiKurzname,
+			farbeHex: w.farbeHex,
+			anteil: w.anteil
 		}))
 	};
 

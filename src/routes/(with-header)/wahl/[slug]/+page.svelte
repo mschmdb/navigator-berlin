@@ -4,6 +4,7 @@
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
 	import WahlBezirkChoropleth from '$lib/components/atlas/wahl-bezirk-choropleth.svelte';
+	import WahlStimmbezirkChoropleth from '$lib/components/atlas/wahl-stimmbezirk-choropleth.svelte';
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
@@ -169,9 +170,33 @@
 		{/if}
 	</section>
 
-	<section data-testid="wahl-detail-choropleth" class="space-y-4">
-		<h2 class="font-sans text-xl font-semibold text-ink">Bezirkskarte</h2>
-		<WahlBezirkChoropleth bezirke={data.bezirke} title={data.wahl.title} />
+	<section data-testid="wahl-detail-choropleth" class="space-y-3">
+		<div class="flex items-baseline justify-between gap-2 flex-wrap">
+			<h2 class="font-sans text-xl font-semibold text-ink">
+				{data.geoSlug ? 'Stimmbezirkskarte' : 'Bezirkskarte'}
+			</h2>
+			{#if data.geoSlug}
+				<span class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
+					~{data.winnersByUwb.length.toLocaleString('de-DE')} Stimmbezirke
+				</span>
+			{/if}
+		</div>
+		{#if data.geoSlug && data.winnersByUwb.length > 0}
+			<WahlStimmbezirkChoropleth
+				geoSlug={data.geoSlug}
+				wahlSlug={`${data.wahl.typ}${String(data.wahl.jahr).slice(-2)}`}
+				winnersByUwb={data.winnersByUwb}
+				title={data.wahl.title}
+			/>
+		{:else}
+			<p
+				class="font-serif italic text-sm text-ink-muted border-l-2 border-ink/30 pl-2"
+				data-testid="wahl-detail-choropleth-fallback-note"
+			>
+				Stimmbezirks-Geometrie nicht verfügbar für diese Wahl. Karte zeigt Bezirks-Aggregat.
+			</p>
+			<WahlBezirkChoropleth bezirke={data.bezirke} title={data.wahl.title} />
+		{/if}
 	</section>
 
 	<section data-testid="wahl-detail-bezirke" class="space-y-4">
