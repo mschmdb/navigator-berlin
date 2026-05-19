@@ -10,6 +10,7 @@
 	import HomeFeaturedBezirke from '$lib/components/home/home-featured-bezirke.svelte';
 	import HomeOpenBlock from '$lib/components/home/home-open-block.svelte';
 	import HomeUpdatesTeaser from '$lib/components/home/home-updates-teaser.svelte';
+	import HomeWahlTeaser from '$lib/components/home/home-wahl-teaser.svelte';
 	import { buildWebSite } from '$lib/seo/jsonld-website.js';
 	import type { PageData } from './$types';
 
@@ -54,6 +55,7 @@
 	<HomeHero />
 	<HomeHook />
 	<HomeQuickLinks />
+	<HomeWahlTeaser />
 	<HomeFeaturedBezirke />
 	<HomeTopKieze items={data.topKieze} />
 	<HomeLayerTeasers />
