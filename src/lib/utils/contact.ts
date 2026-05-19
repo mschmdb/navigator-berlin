@@ -1,7 +1,4 @@
-// Phase-1: bestehender Proton-Mail-Account (fliege.dev). Wechsel auf
-// kontakt@navigator.berlin sobald Domain-Mailbox eingerichtet (Migadu /
-// INWX Mailbasic / Proton Unlimited).
-export const FEEDBACK_EMAIL = 'ms@fliege.dev';
+export const FEEDBACK_EMAIL = 'hey@navigator.berlin';
 
 export interface ErrorReportContext {
 	layerSlug: string;

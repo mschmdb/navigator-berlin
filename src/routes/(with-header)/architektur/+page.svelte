@@ -85,7 +85,13 @@
 				>
 			</li>
 			<li>FIS-Broker (Geoportal Berlin)</li>
-			<li>Amt für Statistik Berlin-Brandenburg</li>
+			<li>Amt für Statistik Berlin-Brandenburg (auch Wahl-Daten AGH und BVV)</li>
+			<li>
+				<a class="text-accent underline" href="https://bundeswahlleiterin.de" rel="noopener noreferrer" target="_blank"
+					>Bundeswahlleiterin</a
+				>
+				(Bundestagswahl-Daten)
+			</li>
 			<li>Deutscher Wetterdienst (DWD)</li>
 			<li>OpenStreetMap</li>
 		</ul>
@@ -99,9 +105,11 @@
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Schnittstelle für KI-Assistenten (alpha)</h2>
 		<p class="mt-3 leading-relaxed">
-			Fünf Tools für strukturierte Abfragen statt HTML-Scraping: Adress-Suche,
-			Punkt-Abfrage, Layer-Discovery, Kiez-Profil, Layer-Metadaten. Antwort
-			enthält jeweils Quelle, Lizenz und Stand-Datum.
+			Neun Tools für strukturierte Abfragen statt HTML-Scraping: Adress-Suche,
+			Punkt-Abfrage, Layer-Discovery, Kiez-Profil, Layer-Metadaten plus vier
+			Wahl-Tools (Wahlen auflisten, Ergebnis pro Adresse + Aggregations-Ebene,
+			Wahl-Vergleich, Stimmbezirks-Geometrie). Antwort enthält jeweils Quelle,
+			Lizenz und Stand-Datum.
 		</p>
 		<p class="mt-3 leading-relaxed">
 			<a class="text-accent underline" href="https://github.com/webmachinelearning/webmcp" rel="noopener noreferrer" target="_blank">WebMCP</a>

@@ -26,4 +26,4 @@ Fünf Ereignisse zusätzlich:
 
 Keine Tracking-Cookies, keine Werbe-Cookies, keine Browser-Fingerprints, keine Cross-Site-Verknüpfung, keine Weitergabe an Dritte.
 
-Details: [Datenschutz](/datenschutz). Rückmeldung: [ms@fliege.dev](mailto:ms@fliege.dev).
+Details: [Datenschutz](/datenschutz). Rückmeldung: [hey@navigator.berlin](mailto:hey@navigator.berlin).

@@ -13,6 +13,7 @@
 
 	const sections = [
 		{ id: 'daten-lizenzen', label: 'Daten-Lizenzen' },
+		{ id: 'wahldaten', label: 'Wahldaten' },
 		{ id: 'software', label: 'Software' },
 		{ id: 'schriften', label: 'Schriften' },
 		{ id: 'osm-namensnennung', label: 'OpenStreetMap-Namensnennung' }
@@ -234,6 +235,65 @@
 				</ul>
 			</div>
 		{/each}
+	</section>
+
+	<section id="wahldaten" aria-labelledby="wahldaten-h" class="flex flex-col gap-3">
+		<h2 id="wahldaten-h" class="font-serif text-2xl text-ink">Wahldaten</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Wahl-Ergebnisse aus 12 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV)
+			liegen nicht als Geo-Layer im Manifest, sondern als Datenbank-Aggregate. Quellen und
+			Lizenz beider Datenanbieter:
+		</p>
+		<dl class="flex flex-col gap-3">
+			<div class="border border-rule p-4">
+				<dt class="font-sans text-base font-semibold text-ink">Bundeswahlleiterin</dt>
+				<dd class="font-serif text-sm text-ink-muted mt-1">
+					Bundestagswahlen 2013, 2017, 2021, 2025 als Wahlbezirksstatistik
+					(<code class="font-mono text-xs">_wbz.zip</code>). Lizenz Datenlizenz
+					Deutschland Namensnennung 2.0.
+				</dd>
+				<dd class="mt-2 font-mono text-xs">
+					<a
+						href="https://bundeswahlleiterin.de"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					>
+						bundeswahlleiterin.de
+					</a>
+				</dd>
+			</div>
+			<div class="border border-rule p-4">
+				<dt class="font-sans text-base font-semibold text-ink">
+					Amt für Statistik Berlin-Brandenburg
+				</dt>
+				<dd class="font-serif text-sm text-ink-muted mt-1">
+					Abgeordnetenhaus- und BVV-Wahlen 2011, 2016, 2021, 2023 als
+					XLSX-Sheet-Pipeline plus Stimmbezirks-Polygone (Shapefile-Releases pro
+					Wahlgang, reprojiziert nach WGS84). Lizenz Datenlizenz Deutschland
+					Namensnennung 2.0.
+				</dd>
+				<dd class="mt-2 font-mono text-xs">
+					<a
+						href="https://statistik-berlin-brandenburg.de"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					>
+						statistik-berlin-brandenburg.de
+					</a>
+				</dd>
+			</div>
+		</dl>
+		<p class="font-mono text-xs text-ink-muted">
+			Methodik:
+			<a
+				href="/methodik/wahldaten"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+			>
+				/methodik/wahldaten
+			</a>
+		</p>
 	</section>
 
 	<section id="software" aria-labelledby="software-h" class="flex flex-col gap-3">

@@ -111,7 +111,7 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		slug: 'impressum',
 		headline: 'Impressum',
 		subline: 'Verantwortlich nach §5 TMG',
-		body: 'Matze Schmidbauer, Berlin. Kontakt: ms@fliege.dev. Inhaltlich verantwortlich für alle Daten-Aggregationen, Layer-Beschreibungen und Methodik-Dokumentation.',
+		body: 'Matze Schmidbauer, Berlin. Kontakt: hey@navigator.berlin. Inhaltlich verantwortlich für alle Daten-Aggregationen, Layer-Beschreibungen und Methodik-Dokumentation.',
 		footerUrl: '/impressum'
 	},
 	{
