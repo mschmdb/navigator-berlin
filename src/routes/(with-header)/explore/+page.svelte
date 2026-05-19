@@ -137,6 +137,12 @@
 		}
 	}
 
+	$effect(() => {
+		if (typeof document === 'undefined') return;
+		document.body.classList.add('route-explore');
+		return () => document.body.classList.remove('route-explore');
+	});
+
 	onMount(() => {
 		if (data.activeLayers?.length) {
 			ui.activeLayerSlugs = [...data.activeLayers];
@@ -896,8 +902,6 @@
 	);
 	const ogImageUrl = $derived(buildOgImageUrl(ogInput, page.url.origin));
 </script>
-
-<svelte:body class="route-explore" />
 
 <SeoHead
 	title={ogTitle}
