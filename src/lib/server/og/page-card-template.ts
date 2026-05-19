@@ -109,14 +109,19 @@ function headerBrand(logoDataUri: string | undefined): SatoriNode {
 	);
 }
 
-function titleBlock(headline: string, subline: string, maxWidth: number): SatoriNode {
+function titleBlock(
+	headline: string,
+	subline: string,
+	maxWidth: number,
+	fontSize = 64
+): SatoriNode {
 	return node(
 		'div',
 		{ display: 'flex', flexDirection: 'column', marginTop: 16 },
 		[
 			text(headline, {
 				fontFamily: 'Plex Serif',
-				fontSize: 64,
+				fontSize,
 				color: COLOR_INK,
 				lineHeight: 1.02,
 				maxWidth,
@@ -319,12 +324,18 @@ interface CanvasOptions {
 	readonly watermarkDataUri?: string;
 	readonly watermarkOpacity?: number;
 	readonly headlineMaxWidth?: number;
+	readonly headlineFontSize?: number;
 }
 
 function canvas(opts: CanvasOptions): SatoriNode {
 	const contentChildren: SatoriNode[] = [
 		headerBrand(opts.logoDataUri),
-		titleBlock(opts.headline, opts.subline, opts.headlineMaxWidth ?? 1000),
+		titleBlock(
+			opts.headline,
+			opts.subline,
+			opts.headlineMaxWidth ?? 1000,
+			opts.headlineFontSize ?? 64
+		),
 		node('div', { display: 'flex', flex: 1, width: '100%', marginTop: 24 }, opts.mid)
 	];
 
@@ -635,7 +646,14 @@ export function buildWahlCardVdom(params: WahlCardParams): SatoriNode {
 		subline: params.subline,
 		mid: node(
 			'div',
-			{ display: 'flex', flexDirection: 'column', width: '100%', gap: 12 },
+			{
+				display: 'flex',
+				flexDirection: 'column',
+				width: '100%',
+				height: '100%',
+				justifyContent: 'space-between',
+				gap: 12
+			},
 			[wahlStackedBar(top5), wahlInfoRow(params)]
 		),
 		footerUrl: `/wahl/${params.slug}`,
@@ -643,7 +661,8 @@ export function buildWahlCardVdom(params: WahlCardParams): SatoriNode {
 		logoDataUri: params.logoDataUri,
 		watermarkDataUri: params.watermarkDataUri,
 		watermarkOpacity: 0.08,
-		headlineMaxWidth: 760
+		headlineMaxWidth: 880,
+		headlineFontSize: 46
 	});
 }
 
