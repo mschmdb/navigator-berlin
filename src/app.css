@@ -296,6 +296,7 @@ body {
 	background: var(--bg);
 	color: var(--ink);
 	font-family: var(--font-sans);
+	overflow-x: hidden;
 }
 
 :where(a, button, [role='application'], [tabindex]):focus-visible {
