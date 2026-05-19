@@ -68,6 +68,7 @@
 		void (async () => {
 			if (!container) return;
 			const { Map: MapLibreMap, Popup } = await import('maplibre-gl');
+			await import('maplibre-gl/dist/maplibre-gl.css');
 			const manifestRes = await fetch('/layers/MANIFEST.json');
 			if (!manifestRes.ok) return;
 			type ManifestShape = { layers: Array<{ slug: string; filename: string }> };

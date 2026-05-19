@@ -36,7 +36,8 @@
 	onMount(() => {
 		void (async () => {
 			if (!container) return;
-			const { Map } = await import('maplibre-gl');
+			const { Map, Popup } = await import('maplibre-gl');
+			await import('maplibre-gl/dist/maplibre-gl.css');
 			const manifestRes = await fetch('/layers/MANIFEST.json');
 			if (!manifestRes.ok) return;
 			type ManifestShape = { layers: Array<{ slug: string; filename: string }> };
@@ -122,17 +123,15 @@
 				const lines = summary.top3
 					.map((t) => `<li><strong>${t.kurzname}</strong> ${formatPct(t.anteil)}</li>`)
 					.join('');
-				import('maplibre-gl').then(({ Popup }) => {
-					new Popup({ closeButton: true, closeOnClick: true, maxWidth: '280px' })
-						.setLngLat(e.lngLat)
-						.setHTML(
-							`<div style="font-family:monospace;font-size:12px;line-height:1.4;">` +
-								`<div style="font-weight:600;margin-bottom:4px;">${summary.name}</div>` +
-								`<ol style="list-style:decimal;padding-left:1.2em;margin:0;">${lines}</ol>` +
-								`</div>`
-						)
-						.addTo(map);
-				});
+				new Popup({ closeButton: true, closeOnClick: true, maxWidth: '280px' })
+					.setLngLat(e.lngLat)
+					.setHTML(
+						`<div style="font-family:monospace;font-size:12px;line-height:1.4;">` +
+							`<div style="font-weight:600;margin-bottom:4px;">${summary.name}</div>` +
+							`<ol style="list-style:decimal;padding-left:1.2em;margin:0;">${lines}</ol>` +
+							`</div>`
+					)
+					.addTo(map);
 			});
 
 			map.on('mouseenter', 'bezirke-fill', () => {
