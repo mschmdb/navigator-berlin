@@ -907,7 +907,7 @@
 
 <section
 	class={[
-		'flex h-[calc(100dvh-72px)] flex-col',
+		'flex h-[calc(100dvh-72px)] flex-col overflow-hidden',
 		showSidePanel &&
 			'lg:grid lg:h-[calc(100dvh-72px)] lg:grid-cols-[1fr_var(--inspector-width)] lg:grid-rows-1'
 	]
@@ -977,7 +977,7 @@
 
 	{#if showSidePanel}
 		<aside
-			class="border-t border-rule bg-bg-elevated lg:border-l lg:border-t-0"
+			class="min-h-0 overflow-y-auto border-t border-rule bg-bg-elevated lg:h-full lg:border-l lg:border-t-0"
 			aria-label={ui.compareMode ? 'Adress-Vergleich' : 'Adress-Inspector-Bereich'}
 			data-testid="inspector-slot"
 		>
