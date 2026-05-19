@@ -35,6 +35,12 @@ export const GEO_BT25: GeoSource = {
 	consumesWahlen: ['btw25']
 };
 
+/**
+ * AGH 2023 / BVV 2023 = Wiederholungswahlen Sept 2023 auf den unveränderten
+ * Wahlbezirken vom Sept 2021. Die separate ah23-Quelle enthält nur Wahllokal-
+ * Punkte (RBS_OD_Wahllokale_AH23), die für Choropleth + Kiez-Mapping nicht
+ * verwendbar sind. Konsum von 2023 läuft daher über die ah21-Polygone.
+ */
 export const GEO_AH21: GeoSource = {
 	slug: 'ah21',
 	download:
@@ -43,7 +49,7 @@ export const GEO_AH21: GeoSource = {
 	license: SBB_LICENSE,
 	licenseShort: SBB_LICENSE_SHORT,
 	attribution: SBB_ATTRIBUTION,
-	consumesWahlen: ['btw21', 'agh21', 'bvv21']
+	consumesWahlen: ['btw21', 'agh21', 'bvv21', 'agh23', 'bvv23']
 };
 
 export const GEO_BTW17: GeoSource = {
@@ -68,22 +74,10 @@ export const GEO_AH16: GeoSource = {
 	consumesWahlen: ['agh16', 'bvv16']
 };
 
-export const GEO_AH23: GeoSource = {
-	slug: 'ah23',
-	download:
-		'https://download.statistik-berlin-brandenburg.de/78b122123745c895/685a10a23782/RBS_OD_Wahllokale_AH23.zip',
-	live: 'https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_Wahllokale_AH23.zip',
-	license: SBB_LICENSE,
-	licenseShort: SBB_LICENSE_SHORT,
-	attribution: SBB_ATTRIBUTION,
-	consumesWahlen: ['agh23', 'bvv23']
-};
-
 export const GEO_SOURCES: readonly GeoSource[] = [
 	GEO_BTW17,
 	GEO_AH16,
 	GEO_AH21,
-	GEO_AH23,
 	GEO_BT25
 ];
 
