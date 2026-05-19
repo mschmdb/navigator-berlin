@@ -20,7 +20,15 @@ import {
 	KIEZ_PROFILE_INPUT_JSON_SCHEMA,
 	KIEZ_PROFILE_OUTPUT_JSON_SCHEMA,
 	LAYER_METADATA_INPUT_JSON_SCHEMA,
-	LAYER_METADATA_OUTPUT_JSON_SCHEMA
+	LAYER_METADATA_OUTPUT_JSON_SCHEMA,
+	LIST_ELECTIONS_INPUT_JSON_SCHEMA,
+	LIST_ELECTIONS_OUTPUT_JSON_SCHEMA,
+	GET_ELECTION_RESULT_INPUT_JSON_SCHEMA,
+	GET_ELECTION_RESULT_OUTPUT_JSON_SCHEMA,
+	COMPARE_ELECTIONS_INPUT_JSON_SCHEMA,
+	COMPARE_ELECTIONS_OUTPUT_JSON_SCHEMA,
+	VOTING_DISTRICT_GEOMETRY_INPUT_JSON_SCHEMA,
+	VOTING_DISTRICT_GEOMETRY_OUTPUT_JSON_SCHEMA
 } from './schemas.js';
 import { RESOURCE_DESCRIPTORS } from '../resources/descriptors.js';
 import { ALL_PROMPTS } from '../prompts/index.js';
@@ -96,6 +104,34 @@ const TOOL_DESCRIPTIONS: readonly WebMcpManifestToolEntry[] = [
 			'Return rich metadata for a single data layer by slug: source URL, license, license URL, geometry type, feature count, last update, and methodology summary.',
 		input_schema: LAYER_METADATA_INPUT_JSON_SCHEMA,
 		output_schema: LAYER_METADATA_OUTPUT_JSON_SCHEMA
+	},
+	{
+		name: 'list_elections',
+		description:
+			'List all Berlin elections available in navigator.berlin (Bundestagswahl, Abgeordnetenhauswahl, BVV-Wahl). Per election: slug like 2025-btw-zweitstimme or 2023-bvv, year, type, Stimmtyp, repeat-election flag with parent slug, has_stimmbezirks_geometry flag, source authority + license. Slugs from this tool are the canonical input for get_election_result and compare_elections.',
+		input_schema: LIST_ELECTIONS_INPUT_JSON_SCHEMA,
+		output_schema: LIST_ELECTIONS_OUTPUT_JSON_SCHEMA
+	},
+	{
+		name: 'get_election_result',
+		description:
+			'Return the top parties at a Berlin address for one election on a selectable aggregation level (stimmbezirk/kiez/bezirk/berlin). Default: finest available. Output: top-5 with vote count + share + color, source + license, caveats for pre-2021 stimmbezirks-level (Briefwahl-asymmetry) or repeat elections.',
+		input_schema: GET_ELECTION_RESULT_INPUT_JSON_SCHEMA,
+		output_schema: GET_ELECTION_RESULT_OUTPUT_JSON_SCHEMA
+	},
+	{
+		name: 'compare_elections',
+		description:
+			'Compare multiple elections at a Berlin address on the same aggregation level (sparkline-compatible). Input: 2–8 election_slugs from list_elections. The tool picks the finest level available across ALL elections. Output: series per election with top-5 + caveats.',
+		input_schema: COMPARE_ELECTIONS_INPUT_JSON_SCHEMA,
+		output_schema: COMPARE_ELECTIONS_OUTPUT_JSON_SCHEMA
+	},
+	{
+		name: 'get_voting_district_geometry',
+		description:
+			'Return the GeoJSON Feature for a single Berlin Stimmbezirk in a given year. Input: district_id (uwbId from get_election_result on stimmbezirks-level, format depends on year) + year. Errors with geometry_not_available for pre-2017 BTW / pre-2016 AGH/BVV.',
+		input_schema: VOTING_DISTRICT_GEOMETRY_INPUT_JSON_SCHEMA,
+		output_schema: VOTING_DISTRICT_GEOMETRY_OUTPUT_JSON_SCHEMA
 	}
 ];
 

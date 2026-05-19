@@ -15,6 +15,40 @@
 import { browser } from '$app/environment';
 import { registerWebMcpServer, loadMcpBGlobalPolyfill } from './adapter.js';
 import type { WebMcpServerHandle, NavigatorWithModelContext } from './adapter.js';
+import type { ElectionListEntry } from './tools/index.js';
+import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
+import type { JsonObject } from './internal/json-types.js';
+
+async function fetchElectionsFromApi(): Promise<readonly ElectionListEntry[]> {
+	const res = await fetch('/api/wahl/list');
+	if (!res.ok) return [];
+	const body = (await res.json()) as { elections?: ElectionListEntry[] };
+	return body.elections ?? [];
+}
+
+async function fetchWahlResultsFromApi(
+	lat: number,
+	lng: number
+): Promise<WahlResultsAtPoint | null> {
+	const res = await fetch(
+		`/api/wahl/results-at-point?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`
+	);
+	if (!res.ok) return null;
+	return (await res.json()) as WahlResultsAtPoint;
+}
+
+async function fetchVotingDistrictGeometryFromApi(
+	districtId: string,
+	year: number
+): Promise<JsonObject | null> {
+	const res = await fetch(
+		`/api/wahl/geometry?district_id=${encodeURIComponent(districtId)}&year=${year}`
+	);
+	if (!res.ok) return null;
+	const body = (await res.json()) as JsonObject & { error?: string };
+	if (body.error === 'district_not_found') return null;
+	return body;
+}
 
 let activeHandle: WebMcpServerHandle | null = null;
 
@@ -61,7 +95,10 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		defaultLocale: () => {
 			const loc = getLocale();
 			return loc === 'en' ? 'en' : 'de';
-		}
+		},
+		fetchElections: () => fetchElectionsFromApi(),
+		fetchWahlResultsAtPoint: (lat, lng) => fetchWahlResultsFromApi(lat, lng),
+		fetchVotingDistrictGeometry: (id, year) => fetchVotingDistrictGeometryFromApi(id, year)
 	});
 	return activeHandle;
 }

@@ -337,6 +337,366 @@
           "license_url"
         ]
       }
+    },
+    {
+      "name": "list_elections",
+      "description": "List all Berlin elections available in navigator.berlin (Bundestagswahl, Abgeordnetenhauswahl, BVV-Wahl). Per election: slug like 2025-btw-zweitstimme or 2023-bvv, year, type, Stimmtyp, repeat-election flag with parent slug, has_stimmbezirks_geometry flag, source authority + license. Slugs from this tool are the canonical input for get_election_result and compare_elections.",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "elections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "jahr": {
+                  "type": "number"
+                },
+                "typ": {
+                  "type": "string",
+                  "enum": [
+                    "btw",
+                    "agh",
+                    "bvv"
+                  ]
+                },
+                "stimmtyp": {
+                  "type": "string",
+                  "enum": [
+                    "erststimme",
+                    "zweitstimme",
+                    "einstimme"
+                  ]
+                },
+                "is_repeat_election": {
+                  "type": "boolean"
+                },
+                "parent_slug": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "has_stimmbezirks_geometry": {
+                  "type": "boolean"
+                },
+                "source_name": {
+                  "type": "string"
+                },
+                "source_url": {
+                  "type": "string"
+                },
+                "license": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug",
+                "jahr",
+                "typ",
+                "stimmtyp",
+                "is_repeat_election",
+                "has_stimmbezirks_geometry",
+                "source_name",
+                "license"
+              ]
+            }
+          }
+        },
+        "required": [
+          "elections"
+        ]
+      }
+    },
+    {
+      "name": "get_election_result",
+      "description": "Return the top parties at a Berlin address for one election on a selectable aggregation level (stimmbezirk/kiez/bezirk/berlin). Default: finest available. Output: top-5 with vote count + share + color, source + license, caveats for pre-2021 stimmbezirks-level (Briefwahl-asymmetry) or repeat elections.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "election_slug": {
+            "type": "string",
+            "pattern": "^\\d{4}-(btw-(erststimme|zweitstimme)|agh-(erststimme|zweitstimme)|bvv)$"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "stimmbezirk",
+              "kiez",
+              "bezirk",
+              "berlin"
+            ]
+          }
+        },
+        "required": [
+          "lat",
+          "lng",
+          "election_slug"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "election_slug": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "stimmbezirk",
+              "kiez",
+              "bezirk",
+              "berlin"
+            ]
+          },
+          "top": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kurzname": {
+                  "type": "string"
+                },
+                "vollname": {
+                  "type": "string"
+                },
+                "stimmen": {
+                  "type": "number"
+                },
+                "anteil": {
+                  "type": "number"
+                },
+                "farbe_hex": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kurzname",
+                "vollname",
+                "stimmen",
+                "anteil",
+                "farbe_hex"
+              ]
+            }
+          },
+          "caveats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "election_slug",
+          "level",
+          "top",
+          "source",
+          "license"
+        ]
+      }
+    },
+    {
+      "name": "compare_elections",
+      "description": "Compare multiple elections at a Berlin address on the same aggregation level (sparkline-compatible). Input: 2–8 election_slugs from list_elections. The tool picks the finest level available across ALL elections. Output: series per election with top-5 + caveats.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "election_slugs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^\\d{4}-(btw-(erststimme|zweitstimme)|agh-(erststimme|zweitstimme)|bvv)$"
+            },
+            "minItems": 2,
+            "maxItems": 8
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "stimmbezirk",
+              "kiez",
+              "bezirk",
+              "berlin"
+            ]
+          }
+        },
+        "required": [
+          "lat",
+          "lng",
+          "election_slugs"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": [
+              "stimmbezirk",
+              "kiez",
+              "bezirk",
+              "berlin"
+            ]
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "election_slug": {
+                  "type": "string"
+                },
+                "jahr": {
+                  "type": "number"
+                },
+                "top": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kurzname": {
+                        "type": "string"
+                      },
+                      "anteil": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "kurzname",
+                      "anteil"
+                    ]
+                  }
+                },
+                "caveats": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "election_slug",
+                "jahr",
+                "top"
+              ]
+            }
+          }
+        },
+        "required": [
+          "level",
+          "series"
+        ]
+      }
+    },
+    {
+      "name": "get_voting_district_geometry",
+      "description": "Return the GeoJSON Feature for a single Berlin Stimmbezirk in a given year. Input: district_id (uwbId from get_election_result on stimmbezirks-level, format depends on year) + year. Errors with geometry_not_available for pre-2017 BTW / pre-2016 AGH/BVV.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "district_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "year": {
+            "type": "number",
+            "minimum": 2011,
+            "maximum": 2099
+          }
+        },
+        "required": [
+          "district_id",
+          "year"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "Feature"
+            ]
+          },
+          "geometry": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "coordinates": {}
+            },
+            "required": [
+              "type",
+              "coordinates"
+            ]
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "district_id": {
+                "type": "string"
+              },
+              "year": {
+                "type": "number"
+              },
+              "bezirk_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "district_id",
+              "year"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "geometry",
+          "properties"
+        ]
+      }
     }
   ],
   "resources": [

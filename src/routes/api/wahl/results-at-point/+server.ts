@@ -122,16 +122,18 @@ function wahlSlugFor(w: WahlListItem): string {
 	return `${w.typ}${jj}`;
 }
 
+// agh23/bvv23 = Wiederholungswahl Sept 2023 auf unveränderten Wahlbezirken
+// vom Sept 2021 → ah21-Polygone (ah23-Layer enthält nur Wahllokal-Punkte).
 const WAHL_TO_GEO: Record<string, string> = {
 	btw17: 'btw17',
 	btw21: 'ah21',
 	btw25: 'bt25',
 	agh16: 'ah16',
 	agh21: 'ah21',
-	agh23: 'ah23',
+	agh23: 'ah21',
 	bvv16: 'ah16',
 	bvv21: 'ah21',
-	bvv23: 'ah23'
+	bvv23: 'ah21'
 };
 
 async function findWahlbezirks(
