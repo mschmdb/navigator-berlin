@@ -1,38 +1,41 @@
 ---
-title_de: "Wahldaten: 12 Berliner Wahlen seit 2011"
-summary_de: "Bundestags-, Abgeordnetenhaus- und BVV-Wahlen jetzt im Inspector, auf eigenen Wahl-Detail-Pages, im Kiez-Verlauf und als LLM-Tools."
+title_de: "Wahldaten seit 2011"
+summary_de: "Vier BTW, vier AGH, vier BVV. Wer hat in deinem Kiez gewählt, wer im Bezirk, wer auf deinem Stimmbezirk."
 date: 2026-05-19
 category: feature
-tags: [wahlen, daten, btw, agh, bvv, inspector, webmcp]
+tags: [wahlen, daten, btw, agh, bvv]
 ---
 
-## Welche Wahlen
+## Was drin ist
 
-Vier Bundestagswahlen (2013, 2017, 2021, 2025), vier Abgeordnetenhauswahlen (2011, 2016, 2021, 2023) und vier BVV-Wahlen (2011, 2016, 2021, 2023). Wiederholungswahlen 2023 sind mit Verweis auf die jeweilige Original-Wahl markiert. Werte beschreiben Stimmenanteile, keine Bewertung.
+Zwölf Wahlen: Bundestag (2013, 2017, 2021, 2025), Abgeordnetenhaus (2011, 2016, 2021, 2023) und Bezirksverordneten-Versammlung (2011, 2016, 2021, 2023). Die Wiederholungswahlen 2023 stehen mit Verweis auf die ursprüngliche Wahl drin.
 
-## Wo es zu sehen ist
+Quellen: Bundeswahlleiterin für die BTW, Amt für Statistik Berlin-Brandenburg für AGH und BVV. Beide unter Datenlizenz Deutschland 2.0.
 
-- **Inspector-Section „Wahlverhalten hier"**: pro Adresse Top-Parteien auf vier Ebenen wählbar — Stimmbezirk, Kiez, Bezirk, Berlin gesamt. Delta-Chips zeigen Abweichung zur nächsthöheren Ebene, eine Sparkline den Jahres-Verlauf.
-- **Detail-Pages /wahl/{slug}**: 20 prerendered Seiten mit Stacked-Bar Berlin gesamt, Top-3 je Bezirk und einer Stimmbezirks-Choropleth-Karte (3500 Polygone, Farbe = stärkste Partei).
-- **Kiez-Pages**: neuer Block „Wahl-Verlauf hier" zeigt pro Wahltyp die stärkste Partei pro Jahr.
-- **Compare-Modus**: zwei Adressen seitenweise verglichen auf wählbarem Aggregations-Level.
+## Wo das auftaucht
 
-## Briefwahl-Asymmetrie
+- Im Adress-Inspector unter „Wahlverhalten hier". Wechselbar zwischen Stimmbezirk, Kiez, Bezirk und Berlin gesamt. Ein Delta zeigt, wie sehr der Stimmbezirk vom Bezirk abweicht.
+- Auf eigenen Seiten pro Wahl unter [`/wahl/2025-btw-zweitstimme`](/wahl/2025-btw-zweitstimme) und so weiter. Mit Berlin-gesamt-Balken, Top-3 pro Bezirk und einer Karte aller 3500 Stimmbezirke.
+- Auf den Kiez-Seiten als „Wahl-Verlauf hier" mit den stärksten Parteien pro Jahr.
 
-Bis einschließlich 2017 (Bundestag) und 2016 (Abgeordnetenhaus, BVV) wurden Briefstimmen ohne räumlichen Bezug zu Urne-Stimmbezirken erfasst. Auf Stimmbezirks-Ebene fehlen sie deshalb. Inspector und Choropleth markieren das mit einem dezenten Schraffur-Streifen und einem Hinweis. Ab 2021 verteilen die Wahlleitungen Briefstimmen auf Brief-Wahlbezirks-Distrikte; die Asymmetrie entfällt.
+## Warum Stimmbezirk nicht alles ist
 
-## Quellen
+Bis 2017 (Bundestag) und 2016 (AGH, BVV) gab es Briefstimmen nur als Brief-Bezirks-Aggregat, ohne räumliche Zuordnung zu den Urnenwahl-Stimmbezirken. Auf Stimmbezirks-Ebene fehlen sie in dem Zeitraum.
 
-- Bundestagswahlen: [Bundeswahlleiterin](https://bundeswahlleiterin.de) Wahlbezirksstatistik
-- Abgeordnetenhaus und BVV: [Amt für Statistik Berlin-Brandenburg](https://statistik-berlin-brandenburg.de)
-- Lizenz beider Quellen: Datenlizenz Deutschland Namensnennung 2.0
+Die Karte und der Inspector machen das sichtbar: schraffierter Streifen am Balken und ein „Ohne Briefstimmen"-Badge, der auf die Methodik linkt. Bezirks- und Berlin-Aggregat haben die Briefstimmen mit drin, die sind vollständig.
 
-## LLM-Tools
+Ab 2021 verteilen die Wahlleitungen Briefstimmen auf eigene Brief-Wahlbezirke. Das Problem entfällt dann.
 
-Für LLM-Agenten (Claude-Browser-Extension, ChatGPT-Plugins) gibt es vier WebMCP-Tools: `list_elections`, `get_election_result`, `compare_elections`, `get_voting_district_geometry`. Tool-Manifest unter [/webmcp-manifest.json](/webmcp-manifest.json).
+## Pre-2017 ohne Karte
+
+Für BTW 2013 und AGH/BVV 2011 hat das Amt für Statistik keine Stimmbezirks-Geometrien öffentlich gemacht. Diese drei Wahlen haben deshalb nur Bezirks- und Berlin-Aggregat, keine Choropleth-Karte. Wenn FragDenStaat-Anfragen Material liefern, kommen sie nach.
+
+## Für LLM-Agenten
+
+Vier neue Tools im WebMCP-Manifest: `list_elections`, `get_election_result`, `compare_elections`, `get_voting_district_geometry`. Sinn: eine Frage wie „Wie wählte Friedrichshain bei der BTW 2025?" wird mit Quelle und Lizenz beantwortet, ohne HTML zu scrapen. Manifest unter [`/webmcp-manifest.json`](/webmcp-manifest.json).
 
 ## Methodik
 
-Vollständige Methodik zu Datenquellen, Cutoff, Briefwahl-Behandlung, Stimmbezirks-zu-Kiez-Aggregation, Wiederholungswahlen 2023 und Coverage-Lücken: [/methodik/wahldaten](/methodik/wahldaten).
+Datenquellen, Cutoff-Begründung, Briefwahl-Detail, Aggregations-Strategie, Wiederholungswahl-Behandlung: [`/methodik/wahldaten`](/methodik/wahldaten).
 
 Rückmeldung: [hey@navigator.berlin](mailto:hey@navigator.berlin).
