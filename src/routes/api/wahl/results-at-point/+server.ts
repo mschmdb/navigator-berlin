@@ -97,10 +97,7 @@ function dbUwbIdFromGeoForWahl(
 		const bwk = typeof props.BWK === 'string' ? props.BWK.padStart(3, '0') : null;
 		return bwk ? `${bwk}-${bez}-${bez}W${uwb3}-0` : null;
 	}
-	if (['agh21', 'agh23', 'bvv21', 'bvv23'].includes(wahlSlug)) {
-		return `${bez}W${uwb3}-W`;
-	}
-	if (['agh16', 'bvv16'].includes(wahlSlug)) {
+	if (['agh16', 'agh21', 'agh23', 'bvv16', 'bvv21', 'bvv23'].includes(wahlSlug)) {
 		return `${bez}W${uwb3}`;
 	}
 	return null;

@@ -28,25 +28,23 @@ describe('dbUwbIdFromGeo', () => {
 		});
 	});
 
-	describe('AGH/BVV 21/23 mit -W suffix', () => {
-		it('AGH21 Adresse-Format', () => {
+	describe('AGH/BVV 16/21/23 alle gleiches Format ohne suffix', () => {
+		it('AGH21 ohne suffix', () => {
 			const id = dbUwbIdFromGeo({ BEZ: '01', UWB3: '100' }, 'agh21');
-			expect(id).toBe('01W100-W');
+			expect(id).toBe('01W100');
 		});
 
-		it('BVV23 gleiches Format wie AGH21', () => {
+		it('BVV23 ohne suffix', () => {
 			const id = dbUwbIdFromGeo({ BEZ: '01', UWB3: '100' }, 'bvv23');
-			expect(id).toBe('01W100-W');
+			expect(id).toBe('01W100');
 		});
-	});
 
-	describe('AGH/BVV 16 ohne -W suffix', () => {
 		it('AGH16 ohne suffix', () => {
 			const id = dbUwbIdFromGeo({ BEZ: '01', UWB: '100' }, 'agh16');
 			expect(id).toBe('01W100');
 		});
 
-		it('BVV16 gleich wie AGH16', () => {
+		it('BVV16 ohne suffix', () => {
 			const id = dbUwbIdFromGeo({ BEZ: '01', UWB: '100' }, 'bvv16');
 			expect(id).toBe('01W100');
 		});
@@ -60,7 +58,7 @@ describe('dbUwbIdFromGeo', () => {
 
 		it('liest WB-Spalte (AH23 Wahllokale-Format)', () => {
 			const id = dbUwbIdFromGeo({ BEZ: '01', WB: '100' }, 'agh23');
-			expect(id).toBe('01W100-W');
+			expect(id).toBe('01W100');
 		});
 	});
 

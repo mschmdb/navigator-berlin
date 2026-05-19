@@ -42,11 +42,14 @@ export function dbUwbIdFromGeo(
 		return `${bwk}-${bez}-${bez}W${uwb3}-0`;
 	}
 
-	if (wahlSlug === 'agh21' || wahlSlug === 'agh23' || wahlSlug === 'bvv21' || wahlSlug === 'bvv23') {
-		return `${bez}W${uwb3}-W`;
-	}
-
-	if (wahlSlug === 'agh16' || wahlSlug === 'bvv16') {
+	if (
+		wahlSlug === 'agh16' ||
+		wahlSlug === 'agh21' ||
+		wahlSlug === 'agh23' ||
+		wahlSlug === 'bvv16' ||
+		wahlSlug === 'bvv21' ||
+		wahlSlug === 'bvv23'
+	) {
 		return `${bez}W${uwb3}`;
 	}
 
