@@ -63,6 +63,8 @@
 	description={pageDescription}
 	{origin}
 	{pathname}
+	ogImage={`${origin}/og/wahl/${data.slug}.png`}
+	ogImageAlt={`OG-Karte: ${data.wahl.title}, Top-5 Berlin gesamt`}
 	locales={['de']}
 />
 
