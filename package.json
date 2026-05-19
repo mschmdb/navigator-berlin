@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"prebuild": "pnpm exec svelte-kit sync && pnpm db:migrate && pnpm data:aggregate && pnpm data:aggregate-scores && pnpm data:wahl-fetch && pnpm data:wahl-geo && pnpm data:wahl-kiez && pnpm data:faq && pnpm og:images -- --force",
+		"prebuild": "pnpm exec svelte-kit sync && pnpm db:migrate && pnpm data:aggregate && pnpm data:aggregate-scores && (pnpm data:wahl-check || (pnpm data:wahl-fetch && pnpm data:wahl-geo && pnpm data:wahl-kiez)) && pnpm data:faq && pnpm og:images -- --force",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
@@ -25,6 +25,7 @@
 		"data:wahl-fetch": "tsx scripts/aggregate-wahl-data.ts",
 		"data:wahl-geo": "tsx scripts/build-wahl-geometries.ts",
 		"data:wahl-kiez": "tsx scripts/build-wahl-kiez-aggregat.ts",
+		"data:wahl-check": "tsx scripts/check-wahl-data.ts",
 		"lint:wahl": "tsx scripts/lint-wahl-editorial.ts",
 		"lint:cross-layer-templates": "tsx scripts/lint-cross-layer-templates.ts",
 		"data:faq": "tsx scripts/render-faq.ts",
