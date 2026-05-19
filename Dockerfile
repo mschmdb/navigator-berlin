@@ -49,6 +49,11 @@ COPY --from=build /app/server.js ./server.js
 COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml /app/.npmrc ./
 COPY --from=build /app/drizzle ./drizzle
 COPY --from=build /app/scripts/db ./scripts/db
+# Wahl-APIs (results-at-point, geometry) lesen static/layers + MANIFEST.json
+# zur Laufzeit via fs.readFile(process.cwd()+'/static/...'). vite copyt
+# static/ nach build/client für HTTP-Serving, aber fs-Reads brauchen den
+# Original-Ordner. Daher explicit ins runtime-image mitnehmen.
+COPY --from=build /app/static ./static
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
