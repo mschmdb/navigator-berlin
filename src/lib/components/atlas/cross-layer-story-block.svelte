@@ -12,6 +12,7 @@
 		rendered: RenderedTemplate;
 		sources: ReadonlyArray<SourceRef>;
 		methodikHref?: string;
+		methodikLinkLabel?: string;
 		testid?: string;
 	};
 
@@ -19,6 +20,7 @@
 		rendered,
 		sources,
 		methodikHref = '/methodik',
+		methodikLinkLabel = 'Methodik',
 		testid = 'cross-layer-story-block'
 	}: Props = $props();
 
@@ -63,8 +65,9 @@
 		<a
 			href={methodikHref}
 			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			data-testid={`${testid}-methodik-link`}
 		>
-			Methodik
+			{methodikLinkLabel}
 		</a>
 	</section>
 {/if}

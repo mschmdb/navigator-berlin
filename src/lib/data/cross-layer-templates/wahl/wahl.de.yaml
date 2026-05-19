@@ -1,47 +1,17 @@
 bundle: wahl
 locale: de
 templates:
-  - id: wahl-wohnlage-laerm-kiez
-    applicableTo: [kiez]
-    requires:
-      - wahl_aggregat_kiez.top_partei
-      - wohnlagen-2024.dominantCategory
-      - laerm-2023.dominantCategory
-    body_de: >-
-      Im Kiez {kiez_name} kam {top_partei_label} bei der {wahl_typ_label}
-      {wahl_jahr} auf {top_anteil_pct}. Die Mietspiegel-Wohnlage hier ist
-      {wohnlage_label}. Die Lärm-Kartierung weist überwiegend
-      {laerm_label} aus.
-    editorialNote: >-
-      Drei nebeneinander gestellte Werte ohne Kausal-Bezug. Mietspiegel-Wohnlage
-      ist eine kategoriale Einordnung der Senatsverwaltung, Lärm eine ordinale
-      Klasse aus der EU-Lärmkartierung. Reihenfolge: Wahl, Wohnlage, Lärm,
-      keine wertende Verknüpfung.
-    tags: [wahl, wohnlage, laerm]
-
   - id: wahl-trend-zeit-kiez
     applicableTo: [kiez]
     requires:
-      - wahl_aggregat_kiez.sparkline_btw_zweitstimme
+      - wahl_aggregat_kiez.sparkline
     body_de: >-
-      Im Kiez {kiez_name} verteilten sich die Zweitstimmen bei den letzten
-      Bundestagswahlen wie folgt: {sparkline_jahre} mit jeweils stärkster
-      Partei {sparkline_jahre_top_parteien}.
+      Im Kiez {kiez_name} verteilten sich die {stimmtyp_label} bei den
+      letzten {wahl_typ_label} wie folgt: {sparkline_jahre} mit jeweils
+      stärkster Partei {sparkline_jahre_top_parteien}.
     editorialNote: >-
       Nüchterne Zeitreihe ohne Trend-Bewertung. Sparkline-Daten kommen aus
       get_sparkline_for_kiez. Keine Steigungs- oder Schwankungs-Adjektive.
+      Wird pro Wahltyp einmal gerendert (BTW Zweitstimme, AGH Zweitstimme,
+      BVV Einstimme).
     tags: [wahl, trend, zeitreihe]
-
-  - id: wahl-bezirks-uebersicht
-    applicableTo: [bezirk]
-    requires:
-      - wahl_aggregat_bezirk.top_partei
-      - wahl_aggregat_bezirk.zweite_partei
-    body_de: >-
-      Im Bezirk {bezirk_name} kam bei der {wahl_typ_label} {wahl_jahr}
-      {top_partei_label} auf {top_anteil_pct}, gefolgt von
-      {zweite_partei_label} mit {zweite_anteil_pct}.
-    editorialNote: >-
-      Pure Reihenfolge-Aussage ohne Distanz-Adjektiv. Keine Formulierungen
-      wie „weit vor", „knapp hinter", „dominiert".
-    tags: [wahl, bezirk]

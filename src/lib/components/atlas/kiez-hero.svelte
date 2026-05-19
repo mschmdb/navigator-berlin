@@ -21,6 +21,7 @@
 	import type { kiezStats } from '$lib/server/db/schema/index.js';
 	import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 	import FaqSection from './faq-section.svelte';
+	import KiezWahlVerlauf, { type WahlVerlaufRow } from './kiez-wahl-verlauf.svelte';
 	import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
 	import { describeGruenversorgungDe } from '$lib/data/faq-helpers/gruen.js';
 	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
@@ -34,9 +35,10 @@
 		readonly stats: KiezStatsRow | null;
 		readonly score: KiezScore | null;
 		readonly faq: readonly FaqEntry[];
+		readonly wahlVerlauf?: readonly WahlVerlaufRow[];
 	}
 
-	const { profile, stats, score, faq }: Props = $props();
+	const { profile, stats, score, faq, wahlVerlauf = [] }: Props = $props();
 
 	const numberDe = new Intl.NumberFormat('de-DE');
 	const leadText = $derived.by(() => {
@@ -214,6 +216,9 @@
 			</table>
 		{/if}
 	</section>
+
+	<KiezWahlVerlauf kiezName={profile.name} rows={wahlVerlauf} />
+
 
 	{#if faq.length > 0}
 		<FaqSection items={faq} pageType="kiez" />

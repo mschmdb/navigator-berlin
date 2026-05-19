@@ -13,3 +13,8 @@ export {
 	type LoadedTemplateBundle
 } from './loader.js';
 export { renderTemplate, canRender, type RenderedTemplate, type TemplateContext } from './renderer.js';
+export {
+	buildKiezTrendContext,
+	type KiezTrendInput,
+	type KiezSparklinePoint
+} from './context-builder.js';

@@ -1,8 +1,6 @@
 import type { PageServerLoad } from './$types';
-import { readFile, readdir, stat } from 'node:fs/promises';
-import { join } from 'node:path';
+import { loadCrossLayerTemplates } from '$lib/server/cross-layer-templates-loader.js';
 import {
-	loadTemplatesFromRawMap,
 	findTemplatesForScope,
 	renderTemplate,
 	type RenderedTemplate,
@@ -10,41 +8,10 @@ import {
 	type TemplateScope
 } from '$lib/data/cross-layer-templates/index.js';
 
-const TEMPLATE_ROOT = join(process.cwd(), 'src/lib/data/cross-layer-templates');
-
-async function loadAllYaml(): Promise<Record<string, string>> {
-	const out: Record<string, string> = {};
-	async function walk(dir: string): Promise<void> {
-		let entries: string[];
-		try {
-			entries = await readdir(dir);
-		} catch {
-			return;
-		}
-		for (const name of entries) {
-			const abs = join(dir, name);
-			const s = await stat(abs);
-			if (s.isDirectory()) await walk(abs);
-			else if (name.endsWith('.yaml') || name.endsWith('.yml')) {
-				out[abs] = await readFile(abs, 'utf-8');
-			}
-		}
-	}
-	await walk(TEMPLATE_ROOT);
-	return out;
-}
-
 const FIXTURE_KIEZ: TemplateContext = {
 	kiez_name: 'Friedrichshain Nord',
-	bezirk_name: 'Friedrichshain-Kreuzberg',
-	wahl_typ_label: 'Bundestagswahl',
-	wahl_jahr: 2025,
-	top_partei_label: 'Bündnis 90/Die Grünen',
-	top_anteil_pct: '24,7 %',
-	zweite_partei_label: 'Die Linke',
-	zweite_anteil_pct: '19,8 %',
-	wohnlage_label: 'mittlere Wohnlage',
-	laerm_label: 'hohe Lärm-Klasse',
+	wahl_typ_label: 'Bundestagswahlen',
+	stimmtyp_label: 'Zweitstimmen',
 	sparkline_jahre: '2013, 2017, 2021, 2025',
 	sparkline_jahre_top_parteien:
 		'Die Linke (2013), GRÜNE (2017), GRÜNE (2021), GRÜNE (2025)'
@@ -72,8 +39,7 @@ export interface PreviewEntry {
 }
 
 export const load: PageServerLoad = async () => {
-	const raw = await loadAllYaml();
-	const bundles = loadTemplatesFromRawMap(raw);
+	const bundles = await loadCrossLayerTemplates();
 	const kiezTemplates = findTemplatesForScope(bundles, 'kiez');
 	const bezirkTemplates = findTemplatesForScope(bundles, 'bezirk');
 

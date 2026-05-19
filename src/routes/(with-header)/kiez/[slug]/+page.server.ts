@@ -9,6 +9,8 @@ import {
 	type KiezRef
 } from '$lib/data/get-kieze-in-bezirk.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
+import { featureFlags } from '$lib/data/feature-flags.js';
+import type { WahlVerlaufRow } from '$lib/components/atlas/kiez-wahl-verlauf.svelte';
 import type { KiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
 import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 import type { KiezProfile, FaqEntry } from '$lib/data/types.js';
@@ -68,7 +70,95 @@ export type KiezPageData = {
 	readonly score: KiezScore | null;
 	readonly faq: readonly FaqEntry[];
 	readonly siblings: readonly KiezRef[];
+	readonly wahlVerlauf: readonly WahlVerlaufRow[];
 };
+
+interface WahlTrendVariant {
+	readonly key: string;
+	readonly typ: 'btw' | 'agh' | 'bvv';
+	readonly stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
+	readonly wahlTypLabel: string;
+	readonly stimmtypLabel: string;
+}
+
+const WAHL_TREND_VARIANTS: readonly WahlTrendVariant[] = [
+	{
+		key: 'btw',
+		typ: 'btw',
+		stimmtyp: 'zweitstimme',
+		wahlTypLabel: 'Bundestagswahlen',
+		stimmtypLabel: 'Zweitstimmen'
+	},
+	{
+		key: 'agh',
+		typ: 'agh',
+		stimmtyp: 'zweitstimme',
+		wahlTypLabel: 'Abgeordnetenhauswahlen',
+		stimmtypLabel: 'Zweitstimmen'
+	},
+	{
+		key: 'bvv',
+		typ: 'bvv',
+		stimmtyp: 'einstimme',
+		wahlTypLabel: 'BVV-Wahlen',
+		stimmtypLabel: 'Stimmen'
+	}
+];
+
+function reduceTopPerYear(
+	points: ReadonlyArray<{ jahr: number; parteiKurzname: string; anteil: number }>
+): { jahr: number; parteiKurzname: string }[] {
+	const byYear = new Map<number, { parteiKurzname: string; anteil: number }>();
+	for (const p of points) {
+		const current = byYear.get(p.jahr);
+		if (!current || p.anteil > current.anteil) {
+			byYear.set(p.jahr, { parteiKurzname: p.parteiKurzname, anteil: p.anteil });
+		}
+	}
+	return Array.from(byYear.entries())
+		.map(([jahr, v]) => ({ jahr, parteiKurzname: v.parteiKurzname }))
+		.sort((a, b) => a.jahr - b.jahr);
+}
+
+async function tryBuildWahlVerlauf(kiezSlug: string): Promise<KiezPageData['wahlVerlauf']> {
+	if (!featureFlags.crossLayerStoryBlock) return [];
+	if (!process.env.DATABASE_URL) return [];
+	try {
+		const { getSparklineForKiez } = await import(
+			'$lib/server/db/queries/wahl/get-sparkline-for-kiez.js'
+		);
+
+		const sparklinesByVariant = await Promise.all(
+			WAHL_TREND_VARIANTS.map(async (v) => ({
+				variant: v,
+				sparkline: await getSparklineForKiez(kiezSlug, v.typ, v.stimmtyp, 5)
+			}))
+		);
+
+		const out: WahlVerlaufRow[] = [];
+		for (const { variant, sparkline } of sparklinesByVariant) {
+			const top = reduceTopPerYear(
+				sparkline.map((p) => ({
+					jahr: p.jahr,
+					parteiKurzname: p.parteiKurzname,
+					anteil: p.anteil
+				}))
+			);
+			if (top.length < 2) continue;
+			out.push({
+				key: variant.key,
+				wahlTypLabel: variant.wahlTypLabel,
+				stimmtypLabel: variant.stimmtypLabel,
+				jahre: top
+			});
+		}
+		return out;
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[kiez-page] WARN: wahl-verlauf-build failed (${msg})\n`);
+		return [];
+	}
+}
 
 async function tryLoadSiblings(currentSlug: string, parentBezirkName: string): Promise<KiezRef[]> {
 	if (!parentBezirkName) return [];
@@ -128,12 +218,13 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, `Kiez ${slug} nicht gefunden`);
 	}
-	const [stats, score, faq, siblings] = await Promise.all([
+	const [stats, score, faq, siblings, wahlVerlauf] = await Promise.all([
 		tryLoadKiezStats(slug),
 		tryLoadKiezScore(slug),
 		tryLoadFaq(slug),
-		tryLoadSiblings(slug, profile.bezirk)
+		tryLoadSiblings(slug, profile.bezirk),
+		tryBuildWahlVerlauf(slug)
 	]);
-	const data: KiezPageData = { profile, stats, score, faq, siblings };
+	const data: KiezPageData = { profile, stats, score, faq, siblings, wahlVerlauf };
 	return data;
 };

@@ -104,7 +104,9 @@
 	stats={data.stats}
 	score={data.score}
 	faq={data.faq}
+	wahlVerlauf={data.wahlVerlauf}
 />
+
 {#if bezirkName.length > 0}
 	<div class="mx-auto max-w-3xl px-4 pb-8">
 		<KiezSiblingsList siblings={data.siblings} parentBezirkName={bezirkName} />
