@@ -1,12 +1,26 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.7
 
+# ── deps: full install (incl. dev) für build-Stage ────────────────────────
 FROM node:22-alpine AS deps
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@10.32.0 --activate
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-RUN pnpm install --frozen-lockfile --prod=false
+ENV PNPM_STORE_DIR=/pnpm/store
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile --prod=false
 
+# ── prod-deps: nur Production-deps. Runtime kopiert von hier. ─────────────
+FROM node:22-alpine AS prod-deps
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.32.0 --activate
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+ENV PNPM_STORE_DIR=/pnpm/store
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile --prod --ignore-scripts
+
+# ── build: vite + prerender + prebuild-Pipeline ──────────────────────────
 FROM node:22-alpine AS build
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@10.32.0 --activate
@@ -24,16 +38,17 @@ ENV NODE_ENV=production
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 RUN pnpm run build
 
+# ── runtime: minimaler Container mit prod-deps + build-Artefakten ─────────
 FROM node:22-alpine AS runtime
 WORKDIR /app
 RUN apk add --no-cache curl tini && corepack enable && corepack prepare pnpm@10.32.0 --activate
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/build ./build
 COPY --from=build /app/server.js ./server.js
 COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml /app/.npmrc ./
 COPY --from=build /app/drizzle ./drizzle
 COPY --from=build /app/scripts/db ./scripts/db
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
