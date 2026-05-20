@@ -25,10 +25,11 @@ Architectural-Decision-Records für navigator.berlin. Format folgt [ADR-000-temp
 | [011](./ADR-011-on-demand-layer-loading.md) | On-Demand-Layer-Loading | accepted | 2026-05 | — |
 | [012](./ADR-012-tdd-mandate.md) | Pragmatic-TDD-Mandat ab Story 1.2 | accepted | 2026-05 | — |
 | [013](./ADR-013-score-aggregation-strategy.md) | Score-Aggregation-Strategie (5 Dim, flächen-gewichtet) | accepted | 2026-05 | — |
+| [014](./ADR-014-multi-level-inspector-aggregat-strategie.md) | Multi-Level-Inspector: Aggregat-Strategie + Visual-Typ + Compare pro Layer | proposed | 2026-05 | Epic 8 |
 
 ## Geplant / Pending
 
-- ADR-014 i18n-Scope-Reduce (DE-only Phase 1) — Memory `project_i18n_phase_1_de_only` als Stub
+- ADR-015 i18n-Scope-Reduce (DE-only Phase 1), Memory `project_i18n_phase_1_de_only` als Stub
 - ADR-015 Hetzner-CPX22-statt-CX32 (Performance-Recherche 2026-05-17) — Memory `project_server_purchase_sequencing` als Stub
 - ADR-016 (vorgemerkt) — Plausible-Self-Host statt SaaS
 
