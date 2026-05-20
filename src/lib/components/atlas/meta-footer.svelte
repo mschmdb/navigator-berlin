@@ -14,11 +14,11 @@
 {#if variant === 'compact'}
 	<footer
 		data-testid="meta-footer"
-		class="border-t border-rule/50 bg-bg/55 px-4 py-1.5 font-sans text-xs text-ink-subtle backdrop-blur-sm print:hidden"
+		class="flex h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-xs text-ink-subtle backdrop-blur-sm print:hidden"
 	>
 		<nav
 			aria-label="Meta-Navigation"
-			class="mx-auto flex max-w-[1440px] flex-wrap items-center justify-end gap-y-1"
+			class="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-end gap-y-1"
 		>
 			{#each META_LINKS as link (link.href)}
 				<span class="whitespace-nowrap">
