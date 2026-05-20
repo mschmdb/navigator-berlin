@@ -87,7 +87,7 @@ function buildSiteIntro(): string[] {
 	return [
 		'# navigator.berlin',
 		'',
-		'> Berliner Geo-Daten-Atlas mit rund 39 Layern aus offiziellen Quellen (ODIS Berlin, Umweltatlas, DWD, OpenStreetMap). Adress-Inspektor zeigt Wohn-, Umwelt-, Klima- und Mobilitäts-Daten pro Adresse. Cookieless, EU-FOSS-Stack, vollständig statisch ausgeliefert.',
+		'> Berliner Geo-Daten-Atlas mit rund 39 Layern aus offiziellen Quellen (ODIS Berlin, Umweltatlas, DWD, OpenStreetMap). Adress-Inspektor zeigt Wohn-, Umwelt-, Klima- und Mobilitäts-Daten pro Adresse. Cookieless, Open-Source-Stack, vollständig statisch ausgeliefert.',
 		''
 	];
 }

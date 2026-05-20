@@ -104,7 +104,7 @@
 				rel="noopener noreferrer"
 				target="_blank">OpenFreeMap</a
 			>
-			(EU-FOSS, basiert auf OpenStreetMap-Daten). Beim Laden der Karte werden die für die jeweilige
+			(Open Source, basiert auf OpenStreetMap-Daten). Beim Laden der Karte werden die für die jeweilige
 			Region notwendigen Tiles vom OpenFreeMap-Server abgerufen. Die IP-Adresse wird hierbei kurzzeitig
 			übermittelt, ist aber für die technische Auslieferung erforderlich und wird laut Betreiber
 			nicht für Tracking-Zwecke ausgewertet.

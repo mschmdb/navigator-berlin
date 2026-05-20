@@ -13,7 +13,7 @@ describe('renderSiteIntroMarkdown', () => {
 		expect(md).toMatch(/\n>\s+.+/);
 	});
 
-	it('mentions the cookieless EU-FOSS-stack and ~39 layers', () => {
+	it('mentions the cookieless open-source-stack and ~39 layers', () => {
 		const md = renderSiteIntroMarkdown({ origin: 'https://navigator.berlin' });
 		expect(md.toLowerCase()).toContain('cookieless');
 		expect(md.toLowerCase()).toContain('layer');

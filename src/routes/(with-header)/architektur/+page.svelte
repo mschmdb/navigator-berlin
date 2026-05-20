@@ -17,7 +17,7 @@
 
 <SeoHead
 	title="Architektur - Berlin in Daten - navigator.berlin"
-	description="navigator.berlin läuft auf einem EU-FOSS-Stack: Open-Source-Software, Hosting in Deutschland, keine US-Cloud-Anbieter, kein Tracking."
+	description="navigator.berlin läuft auf einem Open-Source-Stack: Hosting in Deutschland, keine US-Cloud-Anbieter, kein Tracking."
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	ogImage={`${page.url.origin}/og/page/architektur.png`}
@@ -63,7 +63,7 @@
 				<a class="text-accent underline" href="https://openfreemap.org/" rel="noopener noreferrer" target="_blank"
 					>OpenFreeMap</a
 				>
-				(EU-FOSS, basiert auf OpenStreetMap)
+				(Open Source, basiert auf OpenStreetMap)
 			</li>
 			<li>
 				Geocoding:

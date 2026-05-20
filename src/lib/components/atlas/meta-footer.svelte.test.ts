@@ -40,8 +40,15 @@ describe('meta-footer.svelte', () => {
 		expect(el.getAttribute('href')).toBe('/methodik');
 	});
 
-	it('hat aria-label Meta-Navigation', async () => {
+	it('full-Variant hat Footer-Navigation', async () => {
 		render(MetaFooter, {});
+		await expect
+			.element(page.getByRole('navigation', { name: 'Footer-Navigation' }))
+			.toBeInTheDocument();
+	});
+
+	it('compact-Variant hat Meta-Navigation', async () => {
+		render(MetaFooter, { variant: 'compact' });
 		await expect
 			.element(page.getByRole('navigation', { name: 'Meta-Navigation' }))
 			.toBeInTheDocument();

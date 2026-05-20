@@ -69,6 +69,8 @@
 			description: 'Berliner Geo-Datenlayer pro Adresse. Statisch, ohne Cookies, ohne Login.'
 		})
 	);
+
+	const isExplore = $derived(page.url.pathname.startsWith('/explore'));
 </script>
 
 <JsonLd data={websiteJsonLd} testid="website-jsonld" />
@@ -77,7 +79,14 @@
 
 {@render children()}
 
-<MetaFooter />
+{#if isExplore}
+	<!-- Compact-Bottom-Bar auf /explore. Mobile aus, da Header-Drawer dieselben Links hat. -->
+	<div class="hidden md:block">
+		<MetaFooter variant="compact" />
+	</div>
+{:else}
+	<MetaFooter variant="full" />
+{/if}
 
 <div id="global-aria-live" aria-live="polite" aria-atomic="false" class="sr-only"></div>
 <div
