@@ -85,6 +85,16 @@ Jede collapsible Card trägt im collapsed-State ein Mini-Visual plus Kernwert. K
 
 Aggregate folgen ADR-013-Regel: unter 50% Member-Coverage wird das Aggregat `null` und als `coverage:n/m-below-threshold` dokumentiert. Card zeigt dann "auf diesem Level zu wenig Daten" statt Fake-Wert.
 
+### 8. Aggregat-Output-Format: static JSON
+
+Die Pre-Aggregate (Story 8.2a) werden als **static JSON** unter `static/layer-aggregates/` ausgeliefert, analog `static/kiez-scores/kiez-scores.json` (ADR-013). NICHT Postgres.
+
+Begründung:
+- Der Inspector liest client-side. JSON-Fetch vom CDN ist günstiger als API-Call gegen Postgres und passt zum statischen Auslieferungs-Modell (kein Server-Roundtrip).
+- Aggregate ändern sich nur bei Layer-Daten-Refresh (Build-Time), nicht zur Laufzeit. Kein Bedarf für DB-Query-Flexibilität.
+- Schema-Skizze: `{ [layerSlug]: { kiez: { [kiezSlug]: Aggregat }, bezirk: { [bezirkSlug]: Aggregat }, berlin: Aggregat } }`, wobei `Aggregat` typ-abhängig ist (Median-Zahl + Spanne, Klassen-Verteilung, Coverage-Prozent etc.).
+- Postgres bleibt vorbehalten falls Bezirks-/Kiez-Pages dieselben Layer-Aggregate als SSR-Content brauchen. Dann ist die JSON die Source-of-Truth und ein optionaler DB-Cache wird daraus gespeist (analog ADR-013-Pattern). Kein zweiter Berechnungspfad.
+
 ## Consequences
 
 - **Positive:**
@@ -103,7 +113,9 @@ Aggregate folgen ADR-013-Regel: unter 50% Member-Coverage wird das Aggregat `nul
 ## Story-Mapping
 
 - Story 8.1: `inspector-level-context.svelte.ts` + Level-Toggle (liest diese Level-Definition).
-- Story 8.2: `aggregate-layer-for-level.ts` implementiert Spalte 2 + 3.
+- Story 8.1b: Inspector-Card-System + Visual-Primitives. Baut einmal das collapsible-Card mit Visual-Summary-Slot (Constraint Abschnitt 4) plus die Chart-Primitive aus Spalte 3 der Matrix (Score-Bar mit Median-Anker, Verteilungs-Balken, Coverage-Bar, Distanz-Ring, Kiez-Score-Ring, Sparkline-reuse), je a11y-tauglich mit sr-only-Tabelle. Konsumiert von Kiez-Score-Hero, 8.2b-Layer-Cards, Wahl-Card.
+- Story 8.2a: Build-Time-Pre-Aggregation pro Layer × Level, Output static JSON (Abschnitt 8). Implementiert Spalte 2.
+- Story 8.2b: `aggregate-layer-for-level.ts` liest die 8.2a-JSON + Section-Konsum mit den 8.1b-Primitiven (Spalte 3).
 - Story 8.3: Karten-Polygon-Highlight nutzt bezirke / lor-bezirksregion Sources.
 - Story 8.4: Compare same-level-lock + Diff-Gate aus Spalte 4.
-- Story 8.5: WebMCP `level`-Param nach Backwards-Compat-Matrix.
+- Story 8.5: WebMCP `level`-Param nach Backwards-Compat-Matrix, liest 8.2a-Aggregate.
