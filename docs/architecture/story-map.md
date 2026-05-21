@@ -1,7 +1,7 @@
 ---
 type: architecture
 audience: both
-last-verified: 2026-05-20
+last-verified: 2026-05-21
 related:
   - docs/INDEX.md
   - docs/pipelines/data-flow.md
@@ -9,9 +9,9 @@ related:
 
 # Story-Map
 
-Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-05-20.
+Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-05-21.
 
-**96 Stories total**: ✅ 61 done · 🚧 0 in-progress · 📋 6 ready-for-dev · ⏳ 7 backlog · ▫️ 22 other
+**96 Stories total**: ✅ 61 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 1 backlog · ▫️ 30 other
 
 ## Pro Epic
 ### Epic 1
@@ -135,23 +135,23 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | Story | Status | Kommentar |
 |---|---|---|
 | `8-0-multi-level-architektur-adr-layer-aggregat-strategy` | ▫️ review | 2026-05-20 ADR-014 geschrieben (docs/adr/ADR-014, status proposed). Matrix pro Layer-Familie: Aggregat-Strategie (8 T… |
-| `8-1-inspector-globaler-level-switch-foundation` | ▫️ review | 2026-05-20 impl: inspector-level-context.svelte.ts + resolve-spatial-level.ts + inspector-level-toggle.svelte, in ins… |
+| `8-1-inspector-globaler-level-switch-foundation` | ▫️ review | 2026-05-21 PIVOT: User-Level-Switch (Adresse/Kiez/Bezirk/Berlin-Toggle) verworfen (Click-durch-Ebenen-Mental-Model du… |
 | `8-1b-inspector-card-system-visual-primitives` | ▫️ review | 2026-05-20 impl: inspector-card (Visual-Summary-Pflicht+Lazy-Detail) + Chart-Primitive (score-bar/distribution-bar/co… |
 | `8-2a-layer-aggregat-pipeline` | ▫️ review | 2026-05-20 impl: data:layer-aggregate Pipeline, 15 Layer × {kiez,bezirk,berlin} → static/layer-aggregates/layer-aggre… |
 | `8-2b-layer-sections-multi-level-adapter` | ▫️ review | 2026-05-20 impl AC#1-5: aggregate-layer-for-level.ts Adapter + layer-level-card.svelte (8.1b-Primitive) + lazy get-la… |
-| `8-2c-point-layer-density-count` | 📋 ready-for-dev | NEU 2026-05-20 (Split aus 8.2b AC#6): Point-Layer (Kitas/Schulen/ÖPNV/Stolpersteine) Count+Dichte/km² im Kiez/Bezirk/… |
-| `8-3-karten-polygon-highlight-level-switch` | 📋 ready-for-dev | MapLibre-Highlight-Layer beim Level-Wechsel. Existierende bezirke/lor-bezirksregion-Sources reuse. |
-| `8-4-compare-mode-multi-level-integration` | 📋 ready-for-dev | Story-1.27-Compare mit Story-8.1-Level-Context. Same-level-lock im Compare. |
-| `8-5-webmcp-tools-multi-level-parameter` | 📋 ready-for-dev | alle existing WebMCP-Tools um optional level-Param erweitern. Backwards-Compat: ohne Level = address-Default. Braucht… |
+| `8-2c-point-layer-density-count` | 📋 ready-for-dev | 2026-05-21 RESCOPE nach Pivot: kein Level-Switch mehr → Point-Density (Kitas/Schulen/ÖPNV) als Kiez/Bezirk-Anreicheru… |
+| `8-3-karten-polygon-highlight-level-switch` | ❌ cancelled | 2026-05-21 verworfen: braucht den verworfenen User-Level-Switch (Polygon-Highlight beim Level-Wechsel). Ohne Toggle k… |
+| `8-4-compare-mode-multi-level-integration` | ❌ cancelled | 2026-05-21 verworfen: same-level-lock im Compare setzt den verworfenen Level-Switch voraus. Compare-Mode (1.27) bleib… |
+| `8-5-webmcp-tools-multi-level-parameter` | 📋 ready-for-dev | 2026-05-21 RESCOPE nach Pivot: kein UI-Toggle, aber LLM kann Kiez/Bezirk/Berlin-Aggregate via optionalem level-Param … |
 
 ### Epic 9
 
 | Story | Status | Kommentar |
 |---|---|---|
-| `9-1-score-dimensions-foundation` | ⏳ backlog | KiezScoreDimension-Union (soziale-lage→wohnschutz, gruen→gruen-hitze) + dimension-config + Gewichte. Hard-block für a… |
-| `9-2-db-schema-migration` | ⏳ backlog | Drizzle: kiez_score/bezirk_score soziale_lage raus, gruen→gruen_hitze, wohnschutz neu. Braucht 9.1. |
-| `9-3-pipeline-recompute-rerun` | ⏳ backlog | compute/build/aggregate auf neues Set + Re-Run kiez-scores.json + DB. Braucht 9.2. |
-| `9-4-konsumenten-migration` | ⏳ backlog | Display/Inspector/Compare/Hero/Ring/Ranking/Choropleth/OG/LLM auf neue Dimensionen. MSS/Umweltgerechtigkeit = neutral… |
-| `9-5-content-migration` | ⏳ backlog | /methodik/kiez-score + /wo-lebt-es-sich-gut auf neue Komposition + Anti-Stigma-Begründung. Braucht 9.3. |
-| `9-6-erinnerung-layer-removal` | ⏳ backlog | Denkmal + Stolpersteine komplett aus Frontend (Inspector/Map/Palette). Unabhängig, jederzeit. |
+| `9-1-score-dimensions-foundation` | ▫️ review | 2026-05-21 impl: KiezScoreDimension-Union auf ADR-015-Set (soziale-lage raus, gruen→gruen-hitze, wohnschutz neu via M… |
+| `9-2-db-schema-migration` | ▫️ review | 2026-05-21 impl: Schema kiez_score+bezirk_score migriert (soziale_lage raus, gruen→gruen_hitze, wohnschutz neu). Migr… |
+| `9-3-pipeline-recompute-rerun` | ▫️ review | 2026-05-21 impl: build-kiez-scores (MSS+Umweltgerechtigkeit raus, klima-pet+Milieuschutz rein als Punkt-in-Polygon-pr… |
+| `9-4-konsumenten-migration` | ▫️ review | 2026-05-21 impl: alle Score-Konsumenten (Inspector/Compare/Hero/Ring/Ranking/Choropleth/OG/LLM) + Tests auf ADR-015-D… |
+| `9-5-content-migration` | ▫️ review | 2026-05-21 impl: Methodik-Page + wo-lebt-es-sich-gut + Atlas-Methodik + layer-methodology auf ADR-015. Score-Name „Um… |
+| `9-6-erinnerung-layer-removal` | ▫️ review | 2026-05-21 impl (AC-5b build-only): denkmal+stolpersteine aus allen Frontend-Surfaces (Palette/Inspector-Section/Laye… |
 

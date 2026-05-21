@@ -132,7 +132,7 @@ Geplant (Story 5.1, deferred zu Epic 7): GitHub-Actions-Cron für Daten-Refresh 
 graph TB
   Root[/] -->|landing| Home[Home-Hero]
   Root --> Explore[/explore<br/>Atlas + Inspector]
-  Root --> Ranking[/wo-lebt-es-sich-gut]
+  Root --> Ranking[/umwelt-infrastruktur-score<br/>301 von /wo-lebt-es-sich-gut]
   Root --> Bezirk[/bezirk/-slug-<br/>12 prerendered]
   Root --> Kiez[/kiez/-slug-<br/>143 prerendered]
   Root --> Layer[/layer/-slug-<br/>40+ prerendered]

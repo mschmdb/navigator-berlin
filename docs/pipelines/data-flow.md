@@ -1,7 +1,7 @@
 ---
 type: pipeline
 audience: both
-last-verified: 2026-05-20
+last-verified: 2026-05-21
 related:
   - docs/INDEX.md
   - docs/recovery/wiedereinstieg.md
@@ -9,7 +9,7 @@ related:
 
 # Data-Flow-Atlas
 
-Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 2026-05-20.
+Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 2026-05-21.
 
 **39 Layer total**, gruppiert nach Bundle.
 
