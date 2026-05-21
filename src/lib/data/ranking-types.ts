@@ -11,8 +11,8 @@ export interface RankingRow {
 	readonly bezirkName: string | null;
 	readonly composite: number | null;
 	readonly ruheLuft: number | null;
-	readonly gruen: number | null;
+	readonly gruenHitze: number | null;
 	readonly mobilitaet: number | null;
-	readonly sozialeLage: number | null;
 	readonly versorgung: number | null;
+	readonly wohnschutz: number | null;
 }

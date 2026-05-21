@@ -35,10 +35,10 @@ const scoreFixture: KiezScore = {
 	bezirkSlug: 'friedrichshain-kreuzberg',
 	composite: 47,
 	ruheLuft: 30,
-	gruen: 35,
+	gruenHitze: 35,
 	mobilitaet: 65,
-	sozialeLage: 55,
 	versorgung: 70,
+	wohnschutz: 55,
 	computedAt: new Date('2026-05-16T00:00:00Z')
 };
 
@@ -84,14 +84,16 @@ describe('KiezHero.svelte', () => {
 		expect(hero?.textContent).toMatch(/122 ha/);
 	});
 
-	it('zeigt Score-Section wenn score vorhanden (mit composite + 4 Dims, Soziale Lage ausgelassen)', async () => {
+	it('zeigt Score-Section wenn score vorhanden (composite + 5 ADR-015-Dimensionen)', async () => {
 		render(KiezHero, { profile: baseProfile, stats: null, score: scoreFixture, faq: [] });
 		const scoreSec = document.querySelector('[data-testid="kiez-score"]');
 		expect(scoreSec).not.toBeNull();
 		expect(scoreSec?.textContent).toMatch(/47/);
 		expect(scoreSec?.textContent).toMatch(/Ruhe & Luft/);
+		expect(scoreSec?.textContent).toMatch(/Grün & Hitze/);
 		expect(scoreSec?.textContent).toMatch(/Mobilität/);
 		expect(scoreSec?.textContent).toMatch(/Versorgung/);
+		expect(scoreSec?.textContent).toMatch(/Wohnschutz/);
 		expect(scoreSec?.textContent?.toLowerCase()).not.toContain('soziale');
 	});
 

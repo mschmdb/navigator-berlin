@@ -18,14 +18,14 @@ function makeScore(overrides: Partial<KiezScore> = {}): KiezScore {
 				dataStand: '2024-01-01T00:00:00.000Z'
 			},
 			{
-				dimension: 'gruen',
+				dimension: 'gruen-hitze',
 				value: 50,
 				sources: [
 					{
 						layer: 'gruenversorgung-2023',
 						rawValue: { kategorie: 'mittel' },
 						normalizedValue: 33,
-						weight: 0.6
+						weight: 0.3
 					}
 				],
 				missingData: [],
@@ -41,13 +41,13 @@ function makeScore(overrides: Partial<KiezScore> = {}): KiezScore {
 				dataStand: null
 			},
 			{
-				dimension: 'soziale-lage',
-				value: 30,
+				dimension: 'wohnschutz',
+				value: 100,
 				sources: [
 					{
-						layer: 'mss-gesamtindex-2025',
-						rawValue: { si_v: 'niedrig', kom: 'gültig' },
-						normalizedValue: 33,
+						layer: 'wohnschutz-presence',
+						rawValue: true,
+						normalizedValue: 100,
 						weight: 1.0
 					}
 				],
@@ -79,10 +79,10 @@ describe('KiezScoreSection', () => {
 		render(KiezScoreSection, { score: makeScore() });
 		await expect.element(page.getByTestId('kiez-score-section')).toBeInTheDocument();
 		await expect.element(page.getByTestId('kiez-score-dim-ruhe-luft')).toBeInTheDocument();
-		await expect.element(page.getByTestId('kiez-score-dim-gruen')).toBeInTheDocument();
+		await expect.element(page.getByTestId('kiez-score-dim-gruen-hitze')).toBeInTheDocument();
 		await expect.element(page.getByTestId('kiez-score-dim-mobilitaet')).toBeInTheDocument();
-		await expect.element(page.getByTestId('kiez-score-dim-soziale-lage')).toBeInTheDocument();
 		await expect.element(page.getByTestId('kiez-score-dim-versorgung')).toBeInTheDocument();
+		await expect.element(page.getByTestId('kiez-score-dim-wohnschutz')).toBeInTheDocument();
 	});
 
 	it('rendert Editorial-Disclaimer-Variant kiez-score-explainer', async () => {
@@ -99,18 +99,18 @@ describe('KiezScoreSection', () => {
 		expect(link.getAttribute('href')).toBe('/methodik/kiez-score');
 	});
 
-	it('Soziale Lage ValueChip ist hart neutral (Stigma-Schutz)', async () => {
+	it('Wohnschutz ValueChip ist positiv-eindeutig (hoher Schutz = success)', async () => {
 		render(KiezScoreSection, { score: makeScore() });
-		const dim = (await page.getByTestId('kiez-score-dim-soziale-lage').element()) as HTMLElement;
+		const dim = (await page.getByTestId('kiez-score-dim-wohnschutz').element()) as HTMLElement;
 		const chip = dim.querySelector('[data-testid="value-chip"]') as HTMLElement | null;
-		expect(chip?.getAttribute('data-severity')).toBe('neutral');
+		expect(chip?.getAttribute('data-severity')).toBe('success');
 	});
 
 	it('Dimension mit value=null zeigt „Daten unzureichend"', async () => {
 		const score = makeScore();
 		score.dimensions[1].value = null;
 		render(KiezScoreSection, { score });
-		await expect.element(page.getByTestId('kiez-score-missing-gruen')).toBeInTheDocument();
+		await expect.element(page.getByTestId('kiez-score-missing-gruen-hitze')).toBeInTheDocument();
 	});
 
 	it('Quellen-Toggle expandiert Source-Liste', async () => {

@@ -433,7 +433,7 @@ describe('buildLlmExportMarkdown — Kiez-Score (Story 1.28)', () => {
 						dataStand: '2024-01-01T00:00:00.000Z'
 					},
 					{
-						dimension: 'gruen',
+						dimension: 'gruen-hitze',
 						value: 60,
 						sources: [],
 						missingData: [],
@@ -447,32 +447,32 @@ describe('buildLlmExportMarkdown — Kiez-Score (Story 1.28)', () => {
 						dataStand: null
 					},
 					{
-						dimension: 'soziale-lage',
+						dimension: 'wohnschutz',
 						value: null,
 						sources: [],
-						missingData: ['mss-gesamtindex-2025'],
+						missingData: ['wohnschutz-presence'],
 						dataStand: null
 					}
 				],
-				missingDimensions: ['soziale-lage']
+				missingDimensions: ['wohnschutz']
 			}
 		});
 		expect(md).toContain('## Kiez-Score');
 		expect(md).toContain('Ruhe & Luft: sehr hoch (80/100)');
 		expect(md).toContain('laerm-2023');
-		expect(md).toContain('Soziale Lage: Daten unzureichend');
+		expect(md).toContain('Wohnschutz: Daten unzureichend');
 		expect(md).toMatch(/Methodik:.*\/methodik\/kiez-score/);
 	});
 
-	it('nennt MSS-Stigma-Schutz im Footer-Hinweis', () => {
+	it('nennt Sozialstruktur-Ausschluss im Footer-Hinweis', () => {
 		const md = buildLlmExportMarkdown({
 			...fullInput(),
 			kiezScore: {
 				persona: 'allgemein',
 				dimensions: [
 					{
-						dimension: 'soziale-lage',
-						value: 33,
+						dimension: 'wohnschutz',
+						value: 100,
 						sources: [],
 						missingData: [],
 						dataStand: null
@@ -481,6 +481,6 @@ describe('buildLlmExportMarkdown — Kiez-Score (Story 1.28)', () => {
 				missingDimensions: []
 			}
 		});
-		expect(md).toContain('keine Wohnqualität');
+		expect(md).toContain('Sozialstruktur');
 	});
 });

@@ -47,9 +47,9 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'sbahn-netz': 'S-Bahn-Netz',
 	// G: Kiez-Score (virtuelle Aggregat-Layer, Story 1.28)
 	'kiez-score-ruhe-luft': 'Kiez-Score · Ruhe & Luft',
-	'kiez-score-gruen': 'Kiez-Score · Grün',
+	'kiez-score-gruen-hitze': 'Kiez-Score · Grün & Hitze',
 	'kiez-score-mobilitaet': 'Kiez-Score · Mobilität',
-	'kiez-score-soziale-lage': 'Kiez-Score · Soziale Lage',
+	'kiez-score-wohnschutz': 'Kiez-Score · Wohnschutz',
 	'kiez-score-versorgung': 'Kiez-Score · Versorgung'
 };
 

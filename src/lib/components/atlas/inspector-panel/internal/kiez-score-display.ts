@@ -8,20 +8,17 @@ export interface KiezScoreScale {
 
 export const DIMENSION_LABELS_DE: Record<KiezScoreDimension, string> = {
 	'ruhe-luft': 'Ruhe & Luft',
-	gruen: 'Grün',
+	'gruen-hitze': 'Grün & Hitze',
 	mobilitaet: 'Mobilität',
-	'soziale-lage': 'Soziale Lage',
-	versorgung: 'Versorgung'
+	versorgung: 'Versorgung',
+	wohnschutz: 'Wohnschutz'
 };
 
-export function scaleFor(value: number | null, dimension: KiezScoreDimension): KiezScoreScale | null {
+export function scaleFor(value: number | null, _dimension: KiezScoreDimension): KiezScoreScale | null {
 	if (value === null || !Number.isFinite(value)) return null;
 	const clamped = Math.max(0, Math.min(100, value));
 	const label =
 		clamped <= 25 ? 'gering' : clamped <= 50 ? 'mittel' : clamped <= 75 ? 'hoch' : 'sehr hoch';
-	if (dimension === 'soziale-lage') {
-		return { label, severity: 'neutral' };
-	}
 	const severity: SeverityLevel =
 		clamped <= 25 ? 'warning' : clamped <= 50 ? 'neutral' : clamped <= 75 ? 'success-soft' : 'success';
 	return { label, severity };

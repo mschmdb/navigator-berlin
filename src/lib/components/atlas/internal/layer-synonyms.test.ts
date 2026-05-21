@@ -67,10 +67,9 @@ describe('matchSynonyms', () => {
 		expect(matchSynonyms('Hitze')).toContain('klima-pet-2022');
 	});
 
-	it('„Sozial" findet mss-gesamtindex-2025 + kiez-score-soziale-lage', () => {
-		const hits = matchSynonyms('sozial');
-		expect(hits).toContain('mss-gesamtindex-2025');
-		expect(hits).toContain('kiez-score-soziale-lage');
+	it('„Milieuschutz" findet kiez-score-wohnschutz', () => {
+		const hits = matchSynonyms('milieuschutz');
+		expect(hits).toContain('kiez-score-wohnschutz');
 	});
 
 	it('„Mietspiegel" findet wohnlagen-2024', () => {

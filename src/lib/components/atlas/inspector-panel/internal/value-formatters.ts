@@ -407,14 +407,14 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return { text: 'Trinkbrunnen vor Ort', isNumeric: false };
 		case 'kiez-score-ruhe-luft':
 			return formatKiezScoreValue(value, 'Ruhe & Luft');
-		case 'kiez-score-gruen':
-			return formatKiezScoreValue(value, 'Grün');
+		case 'kiez-score-gruen-hitze':
+			return formatKiezScoreValue(value, 'Grün & Hitze');
 		case 'kiez-score-mobilitaet':
 			return formatKiezScoreValue(value, 'Mobilität');
 		case 'kiez-score-versorgung':
 			return formatKiezScoreValue(value, 'Versorgung');
-		case 'kiez-score-soziale-lage':
-			return formatKiezScoreValue(value, 'Soziale Lage', { neutral: true });
+		case 'kiez-score-wohnschutz':
+			return formatKiezScoreValue(value, 'Wohnschutz');
 		// Legacy/fictitious Slugs (Story 1.3 Re-Run TODO):
 		case 'mietspiegel-wohnlage':
 			return { text: safeString(value), isNumeric: false };

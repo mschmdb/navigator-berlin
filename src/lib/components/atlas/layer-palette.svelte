@@ -79,7 +79,7 @@
 
 	const FREQUENT_SLUGS = [
 		'kiez-score-ruhe-luft',
-		'kiez-score-gruen',
+		'kiez-score-gruen-hitze',
 		'laerm-2023',
 		'gruenanlagen',
 		'bodenrichtwerte'

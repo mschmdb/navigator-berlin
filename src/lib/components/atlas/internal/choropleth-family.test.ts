@@ -20,13 +20,13 @@ describe('LAYER_TO_CHOROPLETH_FAMILY', () => {
 	it('Versorgung + Score-Gut → gut (Grün)', () => {
 		expect(getChoroplethFamily('gruenversorgung-2023')).toBe('gut');
 		expect(getChoroplethFamily('kiez-score-ruhe-luft')).toBe('gut');
-		expect(getChoroplethFamily('kiez-score-gruen')).toBe('gut');
+		expect(getChoroplethFamily('kiez-score-gruen-hitze')).toBe('gut');
 		expect(getChoroplethFamily('kiez-score-versorgung')).toBe('gut');
+		expect(getChoroplethFamily('kiez-score-wohnschutz')).toBe('gut');
 	});
 
-	it('Sozial + Wohn + BRW → strukturell (Indigo, kein Vermillion)', () => {
+	it('Sozial + Wohn + BRW → strukturell (Indigo, kein Vermillion); kein Score-Layer mehr', () => {
 		expect(getChoroplethFamily('mss-gesamtindex-2025')).toBe('strukturell');
-		expect(getChoroplethFamily('kiez-score-soziale-lage')).toBe('strukturell');
 		expect(getChoroplethFamily('wohnlagen-2024')).toBe('strukturell');
 		expect(getChoroplethFamily('bodenrichtwerte')).toBe('strukturell');
 	});
@@ -71,7 +71,7 @@ describe('LAYER_CLASSIFICATION_METHOD', () => {
 
 	it('Kiez-Score-Layer: manuelle Quartile 0/26/51/76', () => {
 		expect(getClassificationMethod('kiez-score-ruhe-luft')).toBe('manual-quartile');
-		expect(getClassificationMethod('kiez-score-soziale-lage')).toBe('manual-quartile');
+		expect(getClassificationMethod('kiez-score-wohnschutz')).toBe('manual-quartile');
 	});
 
 	it('non-choropleth-Slug → null', () => {

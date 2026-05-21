@@ -37,9 +37,9 @@ test.describe('Kiez-Score Inspector-Flow', () => {
 		await expect(page.getByTestId('kiez-score-section')).toBeVisible({ timeout: 8000 });
 		await expect(page.getByTestId('kiez-score-section-header')).toContainText('Kiez-Score');
 		await expect(page.getByTestId('kiez-score-dim-ruhe-luft')).toBeVisible();
-		await expect(page.getByTestId('kiez-score-dim-gruen')).toBeVisible();
+		await expect(page.getByTestId('kiez-score-dim-gruen-hitze')).toBeVisible();
 		await expect(page.getByTestId('kiez-score-dim-mobilitaet')).toBeVisible();
-		await expect(page.getByTestId('kiez-score-dim-soziale-lage')).toBeVisible();
+		await expect(page.getByTestId('kiez-score-dim-wohnschutz')).toBeVisible();
 	});
 
 	test('Methodik-Link öffnet /methodik/kiez-score', async ({ page }) => {
@@ -59,15 +59,15 @@ test.describe('Kiez-Score Inspector-Flow', () => {
 		await expect(page.getByTestId('kiez-score-sources-ruhe-luft')).toBeVisible();
 	});
 
-	test('Soziale Lage ValueChip ist neutral (Stigma-Schutz)', async ({ page }) => {
+	test('Wohnschutz ValueChip ist positiv-eindeutig (kein Stigma)', async ({ page }) => {
 		await selectAddress(page);
 		await expect(page.getByTestId('kiez-score-section')).toBeVisible({ timeout: 8000 });
-		const dim = page.getByTestId('kiez-score-dim-soziale-lage');
+		const dim = page.getByTestId('kiez-score-dim-wohnschutz');
 		const chip = dim.locator('[data-testid="value-chip"]').first();
 		const severity = await chip.getAttribute('data-severity');
-		// neutral oder fehlend (Daten unzureichend) — beides ist Stigma-Schutz-konform
+		// Wohnschutz ist positiv-eindeutig: hoher Schutz = success, kein Schutz = warning. Nie 'danger'.
 		if (severity !== null) {
-			expect(severity).toBe('neutral');
+			expect(['success', 'success-soft', 'neutral', 'warning']).toContain(severity);
 		}
 	});
 });

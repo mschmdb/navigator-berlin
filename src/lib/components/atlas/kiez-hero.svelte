@@ -143,9 +143,10 @@
 		score
 			? [
 					{ label: 'Ruhe & Luft', value: score.ruheLuft },
-					{ label: 'Grün', value: score.gruen },
+					{ label: 'Grün & Hitze', value: score.gruenHitze },
 					{ label: 'Mobilität', value: score.mobilitaet },
-					{ label: 'Versorgung', value: score.versorgung }
+					{ label: 'Versorgung', value: score.versorgung },
+					{ label: 'Wohnschutz', value: score.wohnschutz }
 				]
 			: []
 	);

@@ -8,10 +8,10 @@
 
 	const KIEZ_SCORE_DIMENSIONS: readonly KiezScoreDimension[] = [
 		'ruhe-luft',
-		'gruen',
+		'gruen-hitze',
 		'mobilitaet',
-		'soziale-lage',
-		'versorgung'
+		'versorgung',
+		'wohnschutz'
 	];
 
 	type Props = {

@@ -191,17 +191,17 @@ function renderHeritage(stats: BezirkStats, lines: string[]): void {
 }
 
 /**
- * Rendert eine 5-Dimensionen-Score-Section (Composite + Ruhe/Grün/Mobilität/
- * Soziale-Lage/Versorgung). Format identisch für Bezirk + Kiez weil die
- * Score-Tabellen denselben Shape haben.
+ * Rendert den Umwelt- & Infrastruktur-Score (ADR-015): Composite + Ruhe & Luft /
+ * Grün & Hitze / Mobilität / Versorgung / Wohnschutz. Format identisch für Bezirk +
+ * Kiez weil die Score-Tabellen denselben Shape haben. Sozialstruktur ist kein Score-Input.
  */
 export interface ScoreLike {
 	readonly composite: number;
 	readonly ruheLuft: number | null;
-	readonly gruen: number | null;
+	readonly gruenHitze: number | null;
 	readonly mobilitaet: number | null;
-	readonly sozialeLage: number | null;
 	readonly versorgung: number | null;
+	readonly wohnschutz: number | null;
 }
 
 export function renderScoreSection(
@@ -209,21 +209,19 @@ export function renderScoreSection(
 	heading: 'Bezirks-Score' | 'Kiez-Score',
 	lines: string[]
 ): void {
-	lines.push(`### ${heading} (5-Dimensionen-Aggregat)`);
+	lines.push(`### ${heading} (Umwelt- & Infrastruktur-Score)`);
 	lines.push('');
 	lines.push(`- Composite: ${formatNumberDe(score.composite)}/100`);
-	if (score.ruheLuft !== null) lines.push(`- Ruhe + Luft: ${formatNumberDe(score.ruheLuft)}/100`);
-	if (score.gruen !== null) lines.push(`- Grün: ${formatNumberDe(score.gruen)}/100`);
+	if (score.ruheLuft !== null) lines.push(`- Ruhe & Luft: ${formatNumberDe(score.ruheLuft)}/100`);
+	if (score.gruenHitze !== null)
+		lines.push(`- Grün & Hitze: ${formatNumberDe(score.gruenHitze)}/100`);
 	if (score.mobilitaet !== null) lines.push(`- Mobilität: ${formatNumberDe(score.mobilitaet)}/100`);
-	if (score.sozialeLage !== null) {
-		lines.push(
-			`- Soziale Lage: ${formatNumberDe(score.sozialeLage)}/100 (kategorisch-strukturell, kein Bewertungs-Maß)`
-		);
-	}
 	if (score.versorgung !== null) lines.push(`- Versorgung: ${formatNumberDe(score.versorgung)}/100`);
+	if (score.wohnschutz !== null)
+		lines.push(`- Wohnschutz: ${formatNumberDe(score.wohnschutz)}/100`);
 	lines.push('');
 	lines.push(
-		'> Score aggregiert fünf Dimensionen aus den verfügbaren Layern. Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'
+		'> Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'
 	);
 	lines.push('');
 }

@@ -70,10 +70,10 @@ const baseInput: KiezRenderInput = {
 		computedAt: new Date('2026-05-16T00:00:00Z'),
 		composite: 58.2,
 		ruheLuft: 30,
-		gruen: 22,
+		gruenHitze: 22,
 		mobilitaet: 85,
-		sozialeLage: 60,
-		versorgung: 70
+		versorgung: 70,
+		wohnschutz: 60
 	},
 	faq: []
 };

@@ -189,28 +189,28 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	// G: Kiez-Score (Story 1.28 · virtuelle Aggregat-Layer pro LOR-Planungsraum)
 	'kiez-score-ruhe-luft': {
 		short: 'Aggregat „Ruhe & Luft" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Gewichtete Aggregation aus Lärm, Luft und thermischer Belastung pro LOR-Planungsraum. Cloud-Dancer-Skala: niedrig = stärker belastet, hoch = ruhiger und sauberer. Methodik: /methodik/kiez-score.',
+		long: 'Gewichtete Aggregation aus Lärm und Luftbelastung pro LOR-Planungsraum. Cloud-Dancer-Skala: niedrig = stärker belastet, hoch = ruhiger und sauberer. Methodik: /methodik/kiez-score.',
 		valueScaleExplain: 'Höher = ruhiger und sauberer'
 	},
-	'kiez-score-gruen': {
-		short: 'Aggregat „Grün" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Pro-Kopf-Grünversorgung plus Kaltluft-Einwirkbereich und Leitbahnkorridor pro Planungsraum, gewichtet auf 0–100. Methodik: /methodik/kiez-score.',
-		valueScaleExplain: 'Höher = mehr nutzbares Grün'
+	'kiez-score-gruen-hitze': {
+		short: 'Aggregat „Grün & Hitze" pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Grünversorgung und Grünanlagen-Nähe plus thermische Resilienz (Bioklima, PET-Hitzebelastung, Kaltluft-Einwirkbereich, Leitbahnkorridor) pro Planungsraum, gewichtet auf 0–100. Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Höher = mehr nutzbares Grün und besserer Hitzeschutz'
 	},
 	'kiez-score-mobilitaet': {
 		short: 'Aggregat „Mobilität" pro Planungsraum (0–100, Kiez-Score)',
 		long: 'Distance-basiert vom Planungsraum-Centroid zu nächster U-Bahn, S-Bahn, Tram und Bus plus Radverkehrs-Presence. Pro Adresse wird der Wert mit der exakten Adress-Distance überschrieben. Methodik: /methodik/kiez-score.',
 		valueScaleExplain: 'Höher = besser angebunden'
 	},
-	'kiez-score-soziale-lage': {
-		short: 'Aggregat „Soziale Lage" pro Planungsraum (MSS 2025, neutral)',
-		long: 'Status-Achse aus dem Monitoring Soziale Stadtentwicklung 2025 pro Planungsraum, normalisiert auf 0–100. Neutral dargestellt: niedriger Status bedeutet strukturelle Unterschiede, keine Wohnqualität. Stigma-Schutz. Methodik: /methodik/kiez-score.',
-		valueScaleExplain: 'Stufe sehr niedrig bis hoch · keine Bewertung'
-	},
 	'kiez-score-versorgung': {
 		short: 'Aggregat „Versorgung" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Distance vom Planungsraum-Centroid zu nächster Kita, Schule, Plan-Krankenhaus, Spielplatz und Grünanlage. Threshold pro POI individuell (Kita 500 m, Schule 800 m, Krankenhaus 2.000 m, Spielplatz 400 m, Grünanlage 600 m). Methodik: /methodik/kiez-score.',
+		long: 'Distance vom Planungsraum-Centroid zu nächster Kita, Schule, Plan-Krankenhaus und Spielplatz. Threshold pro POI individuell (Kita 500 m, Schule 800 m, Krankenhaus 2.000 m, Spielplatz 400 m). Methodik: /methodik/kiez-score.',
 		valueScaleExplain: 'Höher = bessere Versorgung mit Familien- und Gesundheits-Infrastruktur'
+	},
+	'kiez-score-wohnschutz': {
+		short: 'Aggregat „Wohnschutz" pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner. Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Höher = mehr Schutz vor Verdrängung'
 	},
 
 	// Legacy / non-Manifest-Slugs (Story 1.3 Re-Run TODO):

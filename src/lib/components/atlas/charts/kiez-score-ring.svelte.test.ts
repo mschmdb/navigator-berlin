@@ -12,10 +12,10 @@ function makeScore(overall = 50): KiezScore {
 		missingDimensions: [],
 		dimensions: [
 			{ dimension: 'ruhe-luft', value: 80, sources: [], missingData: [], dataStand: null },
-			{ dimension: 'gruen', value: 50, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'gruen-hitze', value: 50, sources: [], missingData: [], dataStand: null },
 			{ dimension: 'mobilitaet', value: 70, sources: [], missingData: [], dataStand: null },
-			{ dimension: 'soziale-lage', value: 30, sources: [], missingData: [], dataStand: null },
-			{ dimension: 'versorgung', value: 60, sources: [], missingData: [], dataStand: null }
+			{ dimension: 'versorgung', value: 60, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'wohnschutz', value: 30, sources: [], missingData: [], dataStand: null }
 		]
 	};
 }
@@ -24,12 +24,12 @@ describe('KiezScoreRing', () => {
 	it('rendert 5 Dimension-Segmente + Gesamt + sr-only-Tabelle', async () => {
 		render(KiezScoreRing, { score: makeScore(50) });
 		await expect.element(page.getByTestId('ring-segment-ruhe-luft')).toBeInTheDocument();
-		await expect.element(page.getByTestId('ring-segment-soziale-lage')).toBeInTheDocument();
+		await expect.element(page.getByTestId('ring-segment-wohnschutz')).toBeInTheDocument();
 		await expect.element(page.getByTestId('ring-segment-versorgung')).toBeInTheDocument();
 		const table = (await page.getByTestId('kiez-score-ring-table').element()) as HTMLElement;
 		expect(table.textContent).toContain('Gesamt');
 		expect(table.textContent).toContain('50 / 100');
-		expect(table.textContent).toContain('Soziale Lage');
+		expect(table.textContent).toContain('Wohnschutz');
 	});
 
 	it('Dimension mit value null zeigt keine Daten in Tabelle', async () => {

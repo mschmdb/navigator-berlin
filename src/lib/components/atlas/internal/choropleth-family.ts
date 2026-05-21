@@ -22,13 +22,13 @@ export const LAYER_TO_CHOROPLETH_FAMILY: Record<string, LayerFamilyMapping> = {
 	// Gut: Versorgung + positiver Score (Grün)
 	'gruenversorgung-2023': 'gut',
 	'kiez-score-ruhe-luft': 'gut',
-	'kiez-score-gruen': 'gut',
+	'kiez-score-gruen-hitze': 'gut',
 	'kiez-score-versorgung': 'gut',
+	'kiez-score-wohnschutz': 'gut',
 	// Mobilität: aktuell gut, pending Smoke-Test (Story 1.31 AC-9)
 	'kiez-score-mobilitaet': { family: 'gut', pendingValidation: true },
 	// Strukturell: Wertfrei (Sozial, Wohn, Boden)
 	'mss-gesamtindex-2025': 'strukturell',
-	'kiez-score-soziale-lage': 'strukturell',
 	'wohnlagen-2024': 'strukturell',
 	bodenrichtwerte: 'strukturell'
 };
@@ -64,9 +64,9 @@ export const LAYER_CLASSIFICATION_METHOD: Record<string, ClassificationMethod> =
 	'umweltgerechtigkeit-2023': 'manual', // keinfach..vierfach
 	'gruenversorgung-2023': 'manual', // Umweltatlas-Kategorien
 	'kiez-score-ruhe-luft': 'manual-quartile', // 0/26/51/76
-	'kiez-score-gruen': 'manual-quartile',
+	'kiez-score-gruen-hitze': 'manual-quartile',
 	'kiez-score-mobilitaet': 'manual-quartile',
-	'kiez-score-soziale-lage': 'manual-quartile',
+	'kiez-score-wohnschutz': 'manual-quartile',
 	'kiez-score-versorgung': 'manual-quartile',
 	'mss-gesamtindex-2025': 'manual-categorical', // si_v sehr niedrig..hoch
 	'wohnlagen-2024': 'manual-categorical', // Mietspiegel-Stufen

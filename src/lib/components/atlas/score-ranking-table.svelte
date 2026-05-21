@@ -35,10 +35,10 @@
 	type NumericSortKey =
 		| 'composite'
 		| 'ruheLuft'
-		| 'gruen'
+		| 'gruenHitze'
 		| 'mobilitaet'
-		| 'sozialeLage'
-		| 'versorgung';
+		| 'versorgung'
+		| 'wohnschutz';
 	type StringSortKey = 'name' | 'bezirk';
 	type SortKey = NumericSortKey | StringSortKey;
 	type SortDir = 'asc' | 'desc';
@@ -47,10 +47,10 @@
 	const NUMERIC_SORT_KEYS: readonly NumericSortKey[] = [
 		'composite',
 		'ruheLuft',
-		'gruen',
+		'gruenHitze',
 		'mobilitaet',
-		'sozialeLage',
-		'versorgung'
+		'versorgung',
+		'wohnschutz'
 	];
 	const STRING_SORT_KEYS: readonly StringSortKey[] = ['name', 'bezirk'];
 	const ALL_SORT_KEYS: readonly SortKey[] = [...NUMERIC_SORT_KEYS, ...STRING_SORT_KEYS];
@@ -60,10 +60,10 @@
 		bezirk: 'Bezirk',
 		composite: 'Score',
 		ruheLuft: 'Ruhe & Luft',
-		gruen: 'Grün',
+		gruenHitze: 'Grün & Hitze',
 		mobilitaet: 'Mobilität',
-		sozialeLage: 'Soziale Lage',
-		versorgung: 'Versorgung'
+		versorgung: 'Versorgung',
+		wohnschutz: 'Wohnschutz'
 	};
 
 	function isNumericSortKey(key: SortKey): key is NumericSortKey {
@@ -181,8 +181,6 @@
 	}
 	const cellPadding = 'py-3 pr-3';
 
-	const sozialActive = $derived(sortKey === 'sozialeLage');
-
 	const sortDirLabel = $derived.by(() => {
 		if (sortKey === 'name' || sortKey === 'bezirk') {
 			return sortDir === 'asc' ? '· A → Z' : '· Z → A';
@@ -228,17 +226,6 @@
 			{sortDirLabel}
 		</p>
 	</div>
-
-	{#if sozialActive}
-		<aside
-			data-testid="ranking-soziale-disclaimer"
-			class="rounded border border-rule bg-bg-soft px-4 py-3 font-serif text-sm text-ink-muted"
-			role="note"
-		>
-			Soziale Lage ist ein Aggregat des Berliner Monitoring Soziale Stadtentwicklung. Sie
-			beschreibt Verteilung, nicht Wertung einzelner Adressen oder Personen.
-		</aside>
-	{/if}
 
 	<div class="overflow-x-auto" data-testid="ranking-table-wrapper">
 		<table class="w-full font-sans text-sm" data-testid="ranking-table">
@@ -314,14 +301,10 @@
 						{/if}
 						<td class={cellPadding}><span class={pillClass(row.composite)}>{formatScore(row.composite)}</span></td>
 						<td class={cellPadding}><span class={pillClass(row.ruheLuft)}>{formatScore(row.ruheLuft)}</span></td>
-						<td class={cellPadding}><span class={pillClass(row.gruen)}>{formatScore(row.gruen)}</span></td>
+						<td class={cellPadding}><span class={pillClass(row.gruenHitze)}>{formatScore(row.gruenHitze)}</span></td>
 						<td class={cellPadding}><span class={pillClass(row.mobilitaet)}>{formatScore(row.mobilitaet)}</span></td>
-						<td class={cellPadding}>
-							<span class="{pillClass(row.sozialeLage, true)} {sozialActive ? 'font-semibold' : ''}">
-								{formatScore(row.sozialeLage)}
-							</span>
-						</td>
 						<td class={cellPadding}><span class={pillClass(row.versorgung)}>{formatScore(row.versorgung)}</span></td>
+						<td class={cellPadding}><span class={pillClass(row.wohnschutz)}>{formatScore(row.wohnschutz)}</span></td>
 					</tr>
 				{/each}
 			</tbody>

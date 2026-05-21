@@ -24,10 +24,10 @@
 
 	const DIMENSIONS: readonly KiezScoreDimension[] = [
 		'ruhe-luft',
-		'gruen',
+		'gruen-hitze',
 		'mobilitaet',
-		'soziale-lage',
-		'versorgung'
+		'versorgung',
+		'wohnschutz'
 	];
 
 	const overallA = $derived(scaleForOverall(scoreA?.overall));

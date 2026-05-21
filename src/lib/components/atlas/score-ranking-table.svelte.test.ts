@@ -15,10 +15,10 @@ function row(
 		bezirkName: 'Mitte',
 		composite,
 		ruheLuft: 30,
-		gruen: 40,
+		gruenHitze: 40,
 		mobilitaet: 50,
-		sozialeLage: 55,
 		versorgung: 60,
+		wohnschutz: 55,
 		...overrides
 	};
 }
@@ -45,7 +45,7 @@ describe('ScoreRankingTable.svelte', () => {
 		expect(table?.textContent).toMatch(/Kiez/);
 		expect(table?.textContent).toMatch(/Bezirk/);
 		expect(table?.textContent).toMatch(/Score/);
-		expect(table?.textContent).toMatch(/Soziale Lage/);
+		expect(table?.textContent).toMatch(/Wohnschutz/);
 	});
 
 	it('default-sortiert Kieze nach composite desc (Alpha vor Bravo vor Charlie)', async () => {
@@ -75,15 +75,15 @@ describe('ScoreRankingTable.svelte', () => {
 		expect(bezirkeBtn?.getAttribute('aria-checked')).toBe('false');
 	});
 
-	it('Default-Sort ist composite, Soziale-Lage-Disclaimer ist versteckt', async () => {
+	it('kein Soziale-Lage-Disclaimer mehr (ADR-015: keine Sozial-Score-Dimension)', async () => {
 		render(ScoreRankingTable, { kieze, bezirke });
 		expect(document.querySelector('[data-testid="ranking-soziale-disclaimer"]')).toBeNull();
 	});
 
-	it('Sortier-Button für jede Spalte vorhanden inkl. soziale Lage', async () => {
+	it('Sortier-Button für jede Spalte vorhanden inkl. Wohnschutz', async () => {
 		render(ScoreRankingTable, { kieze, bezirke });
 		expect(document.querySelector('[data-testid="ranking-sort-composite"]')).not.toBeNull();
-		expect(document.querySelector('[data-testid="ranking-sort-sozialeLage"]')).not.toBeNull();
+		expect(document.querySelector('[data-testid="ranking-sort-wohnschutz"]')).not.toBeNull();
 		expect(document.querySelector('[data-testid="ranking-sort-versorgung"]')).not.toBeNull();
 	});
 

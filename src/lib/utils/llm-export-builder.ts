@@ -279,7 +279,7 @@ function renderKiezScore(input: LlmExportInput, lines: string[]): void {
 	}
 	lines.push('');
 	lines.push(
-		'> Kiez-Score aggregiert fünf Dimensionen pro Planungsraum (rund 7.500 Einwohner:innen). Soziale Lage spiegelt strukturelle MSS-Daten, keine Wohnqualität. Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'
+		'> Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum (rund 7.500 Einwohner:innen). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'
 	);
 	lines.push('');
 }

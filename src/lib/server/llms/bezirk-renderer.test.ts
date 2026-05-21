@@ -78,10 +78,10 @@ const baseInput: BezirkRenderInput = {
 		computedAt: new Date('2026-05-16T00:00:00Z'),
 		composite: 62.3,
 		ruheLuft: 48,
-		gruen: 70,
+		gruenHitze: 70,
 		mobilitaet: 92,
-		sozialeLage: 58,
-		versorgung: 45
+		versorgung: 45,
+		wohnschutz: 58
 	},
 	faq: [
 		{

@@ -24,7 +24,7 @@ export const LAYER_SYNONYMS_DE: Record<string, readonly string[]> = {
 	'bus-haltestellen': ['bus'],
 	stolpersteine: ['stolperstein', 'gedenken', 'ns'],
 	trinkbrunnen: ['trinkbrunnen', 'wasser'],
-	'kiez-score-soziale-lage': ['sozial', 'kiez-score', 'soziale lage']
+	'kiez-score-wohnschutz': ['wohnschutz', 'milieuschutz', 'erhaltung', 'kiez-score']
 };
 
 export function normalizeQueryNfd(input: string): string {

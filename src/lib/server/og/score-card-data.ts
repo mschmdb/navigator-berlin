@@ -1,12 +1,10 @@
 /**
  * Score-Card-Daten für Bezirks- und Kiez-OG-Bilder (Story 2.6 Score-Layout-
- * Pivot 2026-05-16). Ersetzt für Bezirk/Kiez den Top-3-Stats-Layout durch
- * Hero-Composite + 4 Dimensions-Mini (Ruhe-Luft / Grün / Mobilität /
- * Versorgung).
+ * Pivot 2026-05-16, ADR-015-Dimensionen seit Story 9.4). Hero-Composite + 5
+ * Dimensions-Mini (Ruhe & Luft / Grün & Hitze / Mobilität / Versorgung / Wohnschutz).
  *
- * Soziale-Lage bewusst NICHT auf der OG-Card (Stigma-Schutz, User-Lock
- * 2026-05-16; Memory `feedback_no_lebenswert` + `project_compare_editorial_profiles`).
- * Sie bleibt auf Detail-Page sichtbar, aber nicht auf der teilbaren Card.
+ * Alle Dimensionen sind positiv-eindeutig (ADR-015). Sozialstruktur ist kein
+ * Score-Wert mehr, daher kein Stigma-Ausschluss nötig.
  *
  * Pure Function ohne IO.
  */
@@ -24,13 +22,17 @@ export interface ScoreCardData {
 	readonly dims: readonly ScoreDim[];
 }
 
-type ScoreLike = Pick<BezirkScore | KiezScore, 'composite' | 'ruheLuft' | 'gruen' | 'mobilitaet' | 'versorgung'>;
+type ScoreLike = Pick<
+	BezirkScore | KiezScore,
+	'composite' | 'ruheLuft' | 'gruenHitze' | 'mobilitaet' | 'versorgung' | 'wohnschutz'
+>;
 
 const DIM_LABELS = {
 	ruheLuft: 'Ruhe',
-	gruen: 'Grün',
+	gruenHitze: 'Grün & Hitze',
 	mobilitaet: 'Mobilität',
-	versorgung: 'Versorgung'
+	versorgung: 'Versorgung',
+	wohnschutz: 'Wohnschutz'
 } as const;
 
 export function buildScoreCardData(score: ScoreLike | null | undefined): ScoreCardData {
@@ -39,9 +41,10 @@ export function buildScoreCardData(score: ScoreLike | null | undefined): ScoreCa
 			composite: null,
 			dims: [
 				{ label: DIM_LABELS.ruheLuft, value: null },
-				{ label: DIM_LABELS.gruen, value: null },
+				{ label: DIM_LABELS.gruenHitze, value: null },
 				{ label: DIM_LABELS.mobilitaet, value: null },
-				{ label: DIM_LABELS.versorgung, value: null }
+				{ label: DIM_LABELS.versorgung, value: null },
+				{ label: DIM_LABELS.wohnschutz, value: null }
 			]
 		};
 	}
@@ -49,9 +52,10 @@ export function buildScoreCardData(score: ScoreLike | null | undefined): ScoreCa
 		composite: typeof score.composite === 'number' ? score.composite : null,
 		dims: [
 			{ label: DIM_LABELS.ruheLuft, value: score.ruheLuft },
-			{ label: DIM_LABELS.gruen, value: score.gruen },
+			{ label: DIM_LABELS.gruenHitze, value: score.gruenHitze },
 			{ label: DIM_LABELS.mobilitaet, value: score.mobilitaet },
-			{ label: DIM_LABELS.versorgung, value: score.versorgung }
+			{ label: DIM_LABELS.versorgung, value: score.versorgung },
+			{ label: DIM_LABELS.wohnschutz, value: score.wohnschutz }
 		]
 	};
 }

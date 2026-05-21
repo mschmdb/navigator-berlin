@@ -50,10 +50,10 @@ async function loadKieze(bezirkNameBySlug: Map<string, string>): Promise<Ranking
 			bezirkName: r.bezirkSlug ? bezirkNameBySlug.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug) : null,
 			composite: typeof r.composite === 'number' ? r.composite : null,
 			ruheLuft: r.ruheLuft,
-			gruen: r.gruen,
+			gruenHitze: r.gruenHitze,
 			mobilitaet: r.mobilitaet,
-			sozialeLage: r.sozialeLage,
-			versorgung: r.versorgung
+			versorgung: r.versorgung,
+			wohnschutz: r.wohnschutz
 		}));
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
@@ -77,10 +77,10 @@ async function loadBezirke(): Promise<RankingRow[]> {
 			bezirkName: null,
 			composite: typeof r.composite === 'number' ? r.composite : null,
 			ruheLuft: r.ruheLuft,
-			gruen: r.gruen,
+			gruenHitze: r.gruenHitze,
 			mobilitaet: r.mobilitaet,
-			sozialeLage: r.sozialeLage,
-			versorgung: r.versorgung
+			versorgung: r.versorgung,
+			wohnschutz: r.wohnschutz
 		}));
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);

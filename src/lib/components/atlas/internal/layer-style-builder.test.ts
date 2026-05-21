@@ -225,13 +225,8 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(getTransitionDurationMs({ reducedMotion: true })).toBe(0);
 	});
 
-	it('Strukturell-Familie (Story 1.31): mss/wohnlage/brw/kiez-score-soziale-lage enthalten KEIN Vermillion', () => {
-		const STRUKTURELL_SLUGS = [
-			'mss-gesamtindex-2025',
-			'wohnlagen-2024',
-			'bodenrichtwerte',
-			'kiez-score-soziale-lage'
-		];
+	it('Strukturell-Familie (Story 1.31): mss/wohnlage/brw enthalten KEIN Vermillion', () => {
+		const STRUKTURELL_SLUGS = ['mss-gesamtindex-2025', 'wohnlagen-2024', 'bodenrichtwerte'];
 		for (const slug of STRUKTURELL_SLUGS) {
 			const specs = buildLayerSpec(slug, SOURCE);
 			const flat = JSON.stringify(specs);
@@ -240,12 +235,13 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		}
 	});
 
-	it('Gut-Familie (Story 1.31): kiez-score-ruhe-luft/gruen/versorgung/mobilitaet enthalten KEIN Vermillion', () => {
+	it('Gut-Familie (ADR-015): alle 5 Kiez-Score-Dimensionen enthalten KEIN Vermillion', () => {
 		const GUT_SLUGS = [
 			'kiez-score-ruhe-luft',
-			'kiez-score-gruen',
+			'kiez-score-gruen-hitze',
 			'kiez-score-versorgung',
-			'kiez-score-mobilitaet'
+			'kiez-score-mobilitaet',
+			'kiez-score-wohnschutz'
 		];
 		for (const slug of GUT_SLUGS) {
 			const specs = buildLayerSpec(slug, SOURCE);
@@ -266,7 +262,6 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'choropleth-wohnlage-3',
 			'choropleth-mss-12',
 			'choropleth-kiez-score-ordinal-4',
-			'choropleth-kiez-score-soziale-lage',
 			'polygon-highlight',
 			'polygon-outline-soft',
 			'point',
@@ -284,14 +279,15 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'line-rail-sbahn',
 			'line-fahrradstrasse'
 		];
-		expect(profiles).toHaveLength(27);
+		expect(profiles).toHaveLength(26);
 	});
 
-	it('Kiez-Score-Layer (Story 1.28) nutzen choropleth-kiez-score-ordinal-4 für 3 Dim + soziale-lage-Variante', () => {
+	it('Kiez-Score-Layer (ADR-015) nutzen alle choropleth-kiez-score-ordinal-4', () => {
 		expect(getStyleProfile('kiez-score-ruhe-luft')).toBe('choropleth-kiez-score-ordinal-4');
-		expect(getStyleProfile('kiez-score-gruen')).toBe('choropleth-kiez-score-ordinal-4');
+		expect(getStyleProfile('kiez-score-gruen-hitze')).toBe('choropleth-kiez-score-ordinal-4');
 		expect(getStyleProfile('kiez-score-mobilitaet')).toBe('choropleth-kiez-score-ordinal-4');
-		expect(getStyleProfile('kiez-score-soziale-lage')).toBe('choropleth-kiez-score-soziale-lage');
+		expect(getStyleProfile('kiez-score-versorgung')).toBe('choropleth-kiez-score-ordinal-4');
+		expect(getStyleProfile('kiez-score-wohnschutz')).toBe('choropleth-kiez-score-ordinal-4');
 	});
 
 	it('choropleth-kiez-score-ordinal-4 nutzt value-property step-Stops für 4 Buckets', () => {
@@ -304,11 +300,5 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(color).toContain(26);
 		expect(color).toContain(51);
 		expect(color).toContain(76);
-	});
-
-	it('choropleth-kiez-score-soziale-lage nutzt neutrale Plex-Hues (kein vermillion-danger)', () => {
-		const specs = buildLayerSpec('kiez-score-soziale-lage', SOURCE);
-		const color = (specs[0].paint as Record<string, unknown>)['fill-color'] as unknown[];
-		expect(color).not.toContain(COLORS.vermillion);
 	});
 });

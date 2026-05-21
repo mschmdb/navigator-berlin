@@ -13,7 +13,6 @@ export type StyleProfile =
 	| 'choropleth-wohnlage-3'
 	| 'choropleth-mss-12'
 	| 'choropleth-kiez-score-ordinal-4'
-	| 'choropleth-kiez-score-soziale-lage'
 	| 'polygon-highlight'
 	| 'polygon-outline-soft'
 	| 'point'
@@ -110,9 +109,9 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'sbahn-netz': 'line-rail-sbahn',
 	// G: Kiez-Score (Story 1.28)
 	'kiez-score-ruhe-luft': 'choropleth-kiez-score-ordinal-4',
-	'kiez-score-gruen': 'choropleth-kiez-score-ordinal-4',
+	'kiez-score-gruen-hitze': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-mobilitaet': 'choropleth-kiez-score-ordinal-4',
-	'kiez-score-soziale-lage': 'choropleth-kiez-score-soziale-lage',
+	'kiez-score-wohnschutz': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4'
 };
 
@@ -226,7 +225,7 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		]
 	},
 	'choropleth-kiez-score-ordinal-4': {
-		// Story 1.31: Kiez-Score-Gut-Layer (Ruhe-Luft/Grün/Versorgung/Mobilität) = Gut-Familie (Grün).
+		// Story 1.31: Kiez-Score-Gut-Layer (alle 5 Dimensionen positiv-eindeutig) = Gut-Familie (Grün).
 		// Hell→dunkel = besser. Stage-Subset 4 = {1,2,4,5}.
 		kind: 'categorical',
 		items: [
@@ -234,17 +233,6 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 			{ color: COLORS.scaleGut2, label: 'mittel' },
 			{ color: COLORS.scaleGut4, label: 'hoch' },
 			{ color: COLORS.scaleGut5, label: 'sehr hoch' }
-		]
-	},
-	'choropleth-kiez-score-soziale-lage': {
-		// Story 1.31: Kiez-Score-Soziale-Lage = Strukturell (Indigo). Stage-Subset 4 = {1,2,4,5}.
-		// Kein Rot-Grün, keine Severity-Wertung. „Stufe, keine Wertung".
-		kind: 'categorical',
-		items: [
-			{ color: COLORS.scaleStrukturell1, label: 'Status sehr niedrig' },
-			{ color: COLORS.scaleStrukturell2, label: 'Status niedrig' },
-			{ color: COLORS.scaleStrukturell4, label: 'Status mittel' },
-			{ color: COLORS.scaleStrukturell5, label: 'Status hoch' }
 		]
 	},
 	'polygon-highlight': {
@@ -820,32 +808,6 @@ export function buildLayerSpec(
 							COLORS.scaleGut4,
 							76,
 							COLORS.scaleGut5
-						],
-						'fill-opacity': 0.55,
-						'fill-outline-color': COLORS.accent
-					}
-				}
-			];
-		case 'choropleth-kiez-score-soziale-lage':
-			// Story 1.31: Strukturell-Familie (Indigo). „Stufe, keine Wertung".
-			return [
-				{
-					id,
-					type: 'fill',
-					source: sourceId,
-					paint: {
-						'fill-color': [
-							'step',
-							['to-number', ['get', 'value'], -1],
-							COLORS.bg,
-							0,
-							COLORS.scaleStrukturell1,
-							26,
-							COLORS.scaleStrukturell2,
-							51,
-							COLORS.scaleStrukturell4,
-							76,
-							COLORS.scaleStrukturell5
 						],
 						'fill-opacity': 0.55,
 						'fill-outline-color': COLORS.accent
