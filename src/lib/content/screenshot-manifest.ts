@@ -21,9 +21,9 @@ export const HOME_SCREENSHOTS = {
 	heroHook: {
 		key: 'heroHook',
 		path: '/berlin-navigator-laermbelastung2.webp',
-		alt: 'Karten-Ansicht von navigator.berlin mit aktiver Lärmbelastungs-Schicht',
-		width: 1200,
-		height: 630
+		alt: 'navigator.berlin: Berlin-Karte mit dem Gesamt-Kiez-Score und dem Inspektor für den Pariser Platz',
+		width: 1600,
+		height: 1354
 	}
 } as const satisfies Record<string, HomeScreenshot>;
 
