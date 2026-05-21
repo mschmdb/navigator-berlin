@@ -13,6 +13,7 @@ export type StyleProfile =
 	| 'choropleth-wohnlage-3'
 	| 'choropleth-mss-12'
 	| 'choropleth-kiez-score-ordinal-4'
+	| 'choropleth-dichte'
 	| 'polygon-highlight'
 	| 'polygon-outline-soft'
 	| 'polygon-outline-milieuschutz-erhaltungsmiete'
@@ -115,7 +116,9 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'kiez-score-gruen-hitze': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-mobilitaet': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-wohnschutz': 'choropleth-kiez-score-ordinal-4',
-	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4'
+	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4',
+	// I: Demografie (Story 10.0, neutral, kein Score)
+	'einwohner-dichte-2024': 'choropleth-dichte'
 };
 
 const TRANSITION_MS = 200;
@@ -207,6 +210,18 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 			{ color: COLORS.scaleLast5, label: '42' }
 		],
 		range: ['kühl', 'heiß']
+	},
+	'choropleth-dichte': {
+		// Story 10.0: Einwohnerdichte, neutral (Strukturell-Indigo, keine Wertung). EW/km².
+		kind: 'gradient',
+		items: [
+			{ color: COLORS.scaleStrukturell1, label: '0' },
+			{ color: COLORS.scaleStrukturell2, label: '5.000' },
+			{ color: COLORS.scaleStrukturell3, label: '10.000' },
+			{ color: COLORS.scaleStrukturell4, label: '16.000' },
+			{ color: COLORS.scaleStrukturell5, label: '24.000+' }
+		],
+		range: ['locker', 'dicht']
 	},
 	'choropleth-wohnlage-3': {
 		// Story 1.31: Mietspiegel-Wohnlage = Strukturell (Indigo). „Stufe, keine Wertung".
@@ -578,6 +593,35 @@ export function buildLayerSpec(
 							COLORS.scaleLast5
 						],
 						'fill-opacity': 0.55,
+						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
+		case 'choropleth-dichte':
+			// Story 10.0: Einwohnerdichte, neutral (Strukturell-Indigo). LOR ohne Wert (dichte
+			// null) bleiben transparent statt eingefärbt.
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'interpolate',
+							['linear'],
+							['to-number', ['get', 'dichte'], 0],
+							0,
+							COLORS.scaleStrukturell1,
+							5000,
+							COLORS.scaleStrukturell2,
+							10000,
+							COLORS.scaleStrukturell3,
+							16000,
+							COLORS.scaleStrukturell4,
+							24000,
+							COLORS.scaleStrukturell5
+						],
+						'fill-opacity': ['case', ['==', ['get', 'dichte'], null], 0, 0.55],
 						'fill-outline-color': COLORS.accent
 					}
 				}

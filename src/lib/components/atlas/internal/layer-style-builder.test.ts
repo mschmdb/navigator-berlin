@@ -292,6 +292,7 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'choropleth-wohnlage-3',
 			'choropleth-mss-12',
 			'choropleth-kiez-score-ordinal-4',
+			'choropleth-dichte',
 			'polygon-highlight',
 			'polygon-outline-soft',
 			'polygon-outline-milieuschutz-erhaltungsmiete',
@@ -311,7 +312,7 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'line-rail-sbahn',
 			'line-fahrradstrasse'
 		];
-		expect(profiles).toHaveLength(28);
+		expect(profiles).toHaveLength(29);
 	});
 
 	it('Milieuschutz (Story 10.8) nutzt eigene sichtbare Familien, nicht polygon-outline-soft', () => {
@@ -327,6 +328,14 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(staedt.paint?.['fill-opacity']).toBeGreaterThanOrEqual(0.55);
 		expect(erhalt.paint?.['fill-color']).not.toBe(staedt.paint?.['fill-color']);
 		expect(erhalt.paint?.['fill-color']).not.toBe(COLORS.accentSoft);
+	});
+
+	it('Einwohnerdichte (Story 10.0) nutzt neutralen choropleth-dichte-Gradient auf dichte', () => {
+		expect(getStyleProfile('einwohner-dichte-2024')).toBe('choropleth-dichte');
+		const flat = JSON.stringify(buildLayerSpec('einwohner-dichte-2024', SOURCE)[0].paint);
+		expect(flat).toContain('dichte');
+		expect(flat).toContain('interpolate');
+		expect(flat).toContain(COLORS.scaleStrukturell1);
 	});
 
 	it('Geteilte Family polygon-outline-soft bleibt für gruenanlagen/einschulbereiche/spielplaetze', () => {

@@ -14,6 +14,7 @@
 	const sections = [
 		{ id: 'daten-lizenzen', label: 'Daten-Lizenzen' },
 		{ id: 'wahldaten', label: 'Wahldaten' },
+		{ id: 'demografie', label: 'Demografie' },
 		{ id: 'software', label: 'Software' },
 		{ id: 'schriften', label: 'Schriften' },
 		{ id: 'osm-namensnennung', label: 'OpenStreetMap-Namensnennung' }
@@ -294,6 +295,35 @@
 				/methodik/wahldaten
 			</a>
 		</p>
+	</section>
+
+	<section id="demografie" aria-labelledby="demografie-h" class="flex flex-col gap-3">
+		<h2 id="demografie-h" class="font-serif text-2xl text-ink">Demografie</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Einwohner pro LOR-Planungsraum liegen nicht als Geo-Layer im Manifest, sondern als
+			Build-Aggregat für Pro-Kopf-Metriken und den Demografie-Kontext.
+		</p>
+		<dl class="flex flex-col gap-3">
+			<div class="border border-rule p-4">
+				<dt class="font-sans text-base font-semibold text-ink">
+					Einwohner in LOR-Planungsräumen am 31.12.2024
+				</dt>
+				<dd class="font-serif text-sm text-ink-muted mt-1">
+					Einwohner nach Altersjahren je 542 LOR-Planungsräume, gejoint über die
+					8-stellige RAUMID. Lizenz CC BY 4.0, Amt für Statistik Berlin-Brandenburg.
+				</dd>
+				<dd class="mt-2 font-mono text-xs">
+					<a
+						href="https://daten.berlin.de/datensaetze/einwohnerinnen-und-einwohner-in-berlin-in-lor-planungsraumen-am-31-12-2024"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					>
+						daten.berlin.de
+					</a>
+				</dd>
+			</div>
+		</dl>
 	</section>
 
 	<section id="software" aria-labelledby="software-h" class="flex flex-col gap-3">

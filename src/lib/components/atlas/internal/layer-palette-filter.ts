@@ -51,7 +51,9 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'kiez-score-gruen-hitze': 'Kiez-Score · Grün & Hitze',
 	'kiez-score-mobilitaet': 'Kiez-Score · Mobilität',
 	'kiez-score-wohnschutz': 'Kiez-Score · Wohnschutz',
-	'kiez-score-versorgung': 'Kiez-Score · Versorgung'
+	'kiez-score-versorgung': 'Kiez-Score · Versorgung',
+	// I: Demografie (Story 10.0)
+	'einwohner-dichte-2024': 'Einwohnerdichte 2024'
 };
 
 export const BUNDLE_ORDER: readonly Bundle[] = [
@@ -62,7 +64,8 @@ export const BUNDLE_ORDER: readonly Bundle[] = [
 	'E: Soziale Infrastruktur',
 	'F: Mobilität',
 	'G: Kiez-Score',
-	'H: Wahldaten'
+	'H: Wahldaten',
+	'I: Demografie'
 ];
 
 export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
@@ -73,7 +76,8 @@ export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
 	'E: Soziale Infrastruktur': 'E · Soziale Infrastruktur',
 	'F: Mobilität': 'F · Mobilität',
 	'G: Kiez-Score': 'G · Kiez-Score',
-	'H: Wahldaten': 'H · Wahldaten'
+	'H: Wahldaten': 'H · Wahldaten',
+	'I: Demografie': 'I · Demografie'
 };
 
 export interface LayerGroup {

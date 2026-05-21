@@ -218,6 +218,14 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		valueScaleExplain: 'Höher = mehr Schutz vor Verdrängung'
 	},
 
+	// I: Demografie (Story 10.0 · neutraler Kontext, kein Score-Input)
+	'einwohner-dichte-2024': {
+		short: 'Einwohnerdichte pro LOR-Planungsraum (EW/km², 31.12.2024)',
+		long: 'Einwohner je Quadratkilometer pro LOR-Planungsraum. Neutraler Demografie-Kontext, keine Wertung: dicht ist nicht besser oder schlechter als locker. Quelle: Amt für Statistik Berlin-Brandenburg (CC BY 4.0).',
+		unit: 'EW/km²',
+		valueScaleExplain: 'Höher = dichter besiedelt, ohne Qualitätswertung'
+	},
+
 	// Legacy / non-Manifest-Slugs (Story 1.3 Re-Run TODO):
 	// referenziert in value-formatters.ts und Tests, halten wir bis Refactor.
 	'mietspiegel-wohnlage': {
