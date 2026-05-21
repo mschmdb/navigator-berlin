@@ -197,7 +197,9 @@ export const SOURCES: SourceConfig[] = [
 		seasonality: { from: '05-01', to: '10-31' },
 		simplifyProfile: 'point'
 	},
-	// Bundle D: Memorial (OSM)
+	// Bundle D: Memorial (OSM). ADR-015 (Story 9.6): Erinnerungs-Orte raus aus dem
+	// Frontend. Layer bleibt build-only als Heritage-Dichte-Signal für bezirk_stats/
+	// kiez_stats, NICHT mapRelevant/inspectorRelevant (analog denkmal-2024).
 	{
 		slug: 'stolpersteine',
 		kind: 'overpass',
@@ -206,7 +208,9 @@ export const SOURCES: SourceConfig[] = [
 		license: 'ODbL 1.0',
 		bundleGroup: 'D: Memorial',
 		zoomThresholds: { min: 14, max: 18 },
-		simplifyProfile: 'point'
+		simplifyProfile: 'point',
+		inspectorRelevant: false,
+		mapRelevant: false
 	},
 	// Story 2.0: Baudenkmale Berlin (Heritage-Cluster für bezirk_stats/kiez_stats).
 	// FIS-Broker WFS 2.0, ~9553 MultiPolygon-Features (Stand 2024). Wir nutzen den

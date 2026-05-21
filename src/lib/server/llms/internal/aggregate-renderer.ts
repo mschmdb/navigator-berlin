@@ -38,7 +38,6 @@ export function renderAggregateClusters(stats: BezirkStats, lines: string[]): vo
 	renderWohnen(stats, lines);
 	renderOepnv(stats, lines);
 	renderBildung(stats, lines);
-	renderHeritage(stats, lines);
 }
 
 function renderLaerm(stats: BezirkStats, lines: string[]): void {
@@ -167,25 +166,6 @@ function renderBildung(stats: BezirkStats, lines: string[]): void {
 		lines.push(
 			`- Schulen pro km²: ${formatNumberDe(b.schulenPerKm2.value)}${formatAttribution(b.schulenPerKm2)}`
 		);
-	}
-	lines.push('');
-}
-
-function renderHeritage(stats: BezirkStats, lines: string[]): void {
-	const h = stats.heritage;
-	if (!h.denkmalPerKm2 && !h.stolpersteinePerKm2) return;
-	lines.push('### Denkmal + Erinnerung');
-	lines.push('');
-	if (h.denkmalPerKm2) {
-		lines.push(
-			`- Denkmale pro km²: ${formatNumberDe(h.denkmalPerKm2.value)}${formatAttribution(h.denkmalPerKm2)}`
-		);
-	}
-	if (h.stolpersteinePerKm2) {
-		lines.push(
-			`- Stolpersteine pro km²: ${formatNumberDe(h.stolpersteinePerKm2.value)}${formatAttribution(h.stolpersteinePerKm2)}`
-		);
-		lines.push('  - Stolperstein-Würde: keine algorithmisch generierten Personen-Biografien.');
 	}
 	lines.push('');
 }

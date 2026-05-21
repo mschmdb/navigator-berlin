@@ -176,33 +176,6 @@ describe('layer-hit-row.svelte', () => {
 		expect(d.getAttribute('data-variant')).toBe('seasonal');
 	});
 
-	it('Editorial: stolpersteine-Hit rendert StolpersteinDetail', async () => {
-		render(LayerHitRow, {
-			hit: {
-				...recentHit,
-				layer: 'stolpersteine',
-				value: { person: 'Rosa Beispiel', inscription: 'Hier wohnte Rosa' }
-			},
-			layerName: 'Stolpersteine'
-		});
-		await expect.element(page.getByTestId('stolperstein-detail')).toBeInTheDocument();
-		const h = (await page.getByTestId('stolperstein-person').element()) as HTMLElement;
-		expect(h.textContent).toMatch(/Rosa Beispiel/);
-	});
-
-	it('Editorial: stolpersteine-Hit zeigt source-Disclaimer', async () => {
-		render(LayerHitRow, {
-			hit: {
-				...recentHit,
-				layer: 'stolpersteine',
-				value: { person: 'Rosa', inscription: 'x' }
-			},
-			layerName: 'Stolpersteine'
-		});
-		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-		expect(d.getAttribute('data-variant')).toBe('source');
-	});
-
 	it('Editorial: Layer ohne Config zeigt KEINEN Disclaimer', async () => {
 		render(LayerHitRow, {
 			hit: { ...recentHit, layer: 'gebaeudealter', value: 'vor 1949' },

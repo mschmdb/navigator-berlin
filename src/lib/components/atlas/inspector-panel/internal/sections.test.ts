@@ -51,10 +51,10 @@ describe('groupHitsBySection', () => {
 		expect(result.find((s) => s.key === 'umwelt')?.hits).toHaveLength(1);
 	});
 
-	it('Bundle D → memorial', () => {
+	it('Bundle D (Memorial) erzeugt keine eigene Section mehr (ADR-015 Story 9.6)', () => {
 		const layerMeta = [meta('stolpersteine', 'D: Memorial')];
 		const result = groupHitsBySection([hit('stolpersteine', { person: 'X' })], layerMeta);
-		expect(result.find((s) => s.key === 'memorial')?.hits).toHaveLength(1);
+		expect(result.some((s) => (s.key as string) === 'memorial')).toBe(false);
 	});
 
 	it('Unbekannter slug wird ignoriert', () => {

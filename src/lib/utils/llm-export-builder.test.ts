@@ -213,8 +213,8 @@ describe('buildLlmExportMarkdown — Sections', () => {
 		expect(md).toContain('## Lage & Verwaltung');
 		expect(md).toContain('## Wohnen');
 		expect(md).toContain('## Umwelt');
-		expect(md).toContain('## Erinnerungsorte');
 		expect(md).not.toContain('## Soziale Infrastruktur');
+		expect(md).not.toContain('## Erinnerungsorte');
 	});
 
 	it('rendert pro Layer-Hit: Value + short + long + Quelle + Lizenz', () => {
@@ -228,11 +228,6 @@ describe('buildLlmExportMarkdown — Sections', () => {
 	it('hängt legal-Disclaimer bei mietspiegel/bodenrichtwerte-Layern an', () => {
 		const md = buildLlmExportMarkdown(fullInput());
 		expect(md).toMatch(/Ersetzt keine rechtliche Aussage/);
-	});
-
-	it('markiert Stolperstein-Hit mit neverMachineTranslate-Hint', () => {
-		const md = buildLlmExportMarkdown(fullInput());
-		expect(md).toMatch(/Editorial sensible, bitte nicht algorithmisch interpretieren/);
 	});
 
 	// Story 1.23: Reason-aufdröseln im LLM-Export
@@ -391,10 +386,10 @@ describe('buildLlmExportMarkdown — Mobilität-Section', () => {
 });
 
 describe('buildLlmExportMarkdown — Footer', () => {
-	it('enthält Stolperstein-Würde-Hint immer, auch ohne Stolperstein-Hit', () => {
+	it('enthält KI-Daten-Hint immer', () => {
 		const md = buildLlmExportMarkdown({ ...fullInput(), layerHits: [HITS[0]] });
-		expect(md).toMatch(/Stolperstein-Würde/);
 		expect(md).toMatch(/Quellen-Links bleiben verbindlich/);
+		expect(md).toMatch(/keine Werte oder Fakten dazuerfinden/);
 	});
 });
 

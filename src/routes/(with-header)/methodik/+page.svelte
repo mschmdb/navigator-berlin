@@ -11,7 +11,12 @@
 	let { data }: Props = $props();
 
 	const manifest = $derived(data.manifest);
-	const layerCount = $derived(manifest.layers.length);
+	// Build-only-Layer (weder Karte noch Inspector, z.B. Heritage-Dichte-Signal) tauchen
+	// nicht im Frontend auf, also auch nicht in der Methodik-Tabelle.
+	const visibleLayers = $derived(
+		manifest.layers.filter((l) => !(l.inspectorRelevant === false && l.mapRelevant === false))
+	);
+	const layerCount = $derived(visibleLayers.length);
 
 	const sections = [
 		{ id: 'mission', label: 'Worum es geht' },
@@ -342,7 +347,7 @@
 		<p class="font-serif text-base leading-relaxed text-ink-muted">
 			Alphabetisch sortiert nach Layer-Name, kein Aktualitäts-Ranking.
 		</p>
-		<MethodikDatenTabelle layers={manifest.layers} />
+		<MethodikDatenTabelle layers={visibleLayers} />
 	</section>
 
 	<section id="lizenzen" aria-labelledby="lizenzen-h" class="flex flex-col gap-3">

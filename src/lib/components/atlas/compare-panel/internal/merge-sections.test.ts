@@ -42,15 +42,7 @@ describe('mergeCompareSections', () => {
 		const b = [hit('bezirke', 'Pankow'), hit('mietspiegel-wohnlage', { wol_mode: 'gut' })];
 		const merged = mergeCompareSections(a, b, layerMeta);
 		const keys = merged.map((s) => s.key);
-		expect(keys).toEqual([
-			'umwelt',
-			'wohn',
-			'sozial',
-			'mobilitaet',
-			'klima',
-			'memorial',
-			'boundaries'
-		]);
+		expect(keys).toEqual(['umwelt', 'wohn', 'sozial', 'mobilitaet', 'klima', 'boundaries']);
 	});
 
 	it('Section "boundaries" enthält Union (bezirke in beiden) als 1 Row', () => {
@@ -76,12 +68,12 @@ describe('mergeCompareSections', () => {
 
 	it('Layer nur in B → Row mit hitA=null', () => {
 		const a: LayerHit[] = [];
-		const b = [hit('stolpersteine', { count: 3 })];
+		const b = [hit('kitas-2024', { count: 3 })];
 		const merged = mergeCompareSections(a, b, layerMeta);
-		const memorial = merged.find((s) => s.key === 'memorial')!;
-		expect(memorial.rows).toHaveLength(1);
-		expect(memorial.rows[0]!.hitA).toBeNull();
-		expect(memorial.rows[0]!.hitB?.value).toEqual({ count: 3 });
+		const sozial = merged.find((s) => s.key === 'sozial')!;
+		expect(sozial.rows).toHaveLength(1);
+		expect(sozial.rows[0]!.hitA).toBeNull();
+		expect(sozial.rows[0]!.hitB?.value).toEqual({ count: 3 });
 	});
 
 	it('leere Sections haben rows=[]', () => {

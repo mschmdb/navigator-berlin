@@ -4,7 +4,6 @@ export type SectionKey =
 	| 'boundaries'
 	| 'wohn'
 	| 'umwelt'
-	| 'memorial'
 	| 'sozial'
 	| 'mobilitaet'
 	| 'klima';
@@ -23,7 +22,6 @@ export const SECTION_ORDER: readonly SectionKey[] = [
 	'sozial',
 	'mobilitaet',
 	'klima',
-	'memorial',
 	'boundaries'
 ];
 
@@ -31,7 +29,6 @@ export const SECTION_LABELS: Record<SectionKey, string> = {
 	boundaries: 'Lage & Verwaltung',
 	wohn: 'Wohnen',
 	umwelt: 'Umwelt',
-	memorial: 'Erinnerungsorte',
 	sozial: 'Soziale Infrastruktur',
 	mobilitaet: 'Mobilität',
 	klima: 'Klima'
@@ -41,7 +38,10 @@ const BUNDLE_TO_SECTION: Record<Bundle, SectionKey> = {
 	'A: Boundaries': 'boundaries',
 	'B: Wohn-Daten': 'wohn',
 	'C: Umwelt': 'umwelt',
-	'D: Memorial': 'memorial',
+	// ADR-015 (Story 9.6): Erinnerungs-Orte raus aus dem Frontend. denkmal-2024 +
+	// stolpersteine sind inspectorRelevant:false, erreichen groupHitsBySection nie.
+	// No-Op-Map auf 'boundaries' damit Record<Bundle> exhaustive bleibt.
+	'D: Memorial': 'boundaries',
 	'E: Soziale Infrastruktur': 'sozial',
 	'F: Mobilität': 'mobilitaet',
 	// Kiez-Score-Layer rendern als eigene Top-Sektion über `kiez-score-section.svelte`.
@@ -86,7 +86,6 @@ export function groupHitsBySection(
 		boundaries: [],
 		wohn: [],
 		umwelt: [],
-		memorial: [],
 		sozial: [],
 		mobilitaet: [],
 		klima: []

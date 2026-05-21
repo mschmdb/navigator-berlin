@@ -22,8 +22,13 @@ export const entries: EntryGenerator = async () => {
 	const { resolve: pathResolve } = await import('node:path');
 	const manifestPath = pathResolve(process.cwd(), 'static/layers/MANIFEST.json');
 	const raw = await readFile(manifestPath, 'utf-8');
-	const manifest = JSON.parse(raw) as { layers: { slug: string }[] };
-	return manifest.layers.map((l) => ({ slug: l.slug }));
+	const manifest = JSON.parse(raw) as {
+		layers: { slug: string; inspectorRelevant?: boolean; mapRelevant?: boolean }[];
+	};
+	// Build-only-Layer (weder Karte noch Inspector) bekommen keine Detail-Seite.
+	return manifest.layers
+		.filter((l) => !(l.inspectorRelevant === false && l.mapRelevant === false))
+		.map((l) => ({ slug: l.slug }));
 };
 
 async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {

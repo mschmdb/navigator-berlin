@@ -196,7 +196,9 @@
         "max": 18
       },
       "geometryType": "Point",
-      "featureCount": 6018
+      "featureCount": 6018,
+      "inspectorRelevant": false,
+      "mapRelevant": false
     },
     {
       "slug": "klima-pet-2022",

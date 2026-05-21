@@ -59,7 +59,7 @@ export interface LlmExportInput {
 
 const COORD_PRECISION = 5;
 const FOOTER_HINT =
-	'Du teilst diese Daten mit einer KI. Quellen-Links bleiben verbindlich, keine zusätzlichen Personen-Biografien generieren (Stolperstein-Würde).';
+	'Du teilst diese Daten mit einer KI. Quellen-Links bleiben verbindlich, keine Werte oder Fakten dazuerfinden.';
 const MODI: readonly { key: Modus; label: string }[] = [
 	{ key: 'ubahn', label: 'U-Bahn' },
 	{ key: 'sbahn', label: 'S-Bahn' },

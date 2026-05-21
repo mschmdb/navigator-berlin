@@ -171,8 +171,9 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		});
 	}
 
-	// Layer (alle aus Manifest)
+	// Layer aus Manifest (Build-only-Layer ohne Detail-Seite ausgenommen)
 	for (const l of ctx.manifest.layers) {
+		if (l.inspectorRelevant === false && l.mapRelevant === false) continue;
 		const entry = ctx.layer.find((e) => e.slug === l.slug);
 		out.push({
 			loc: `${ctx.origin}/layer/${l.slug}`,

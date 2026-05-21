@@ -120,11 +120,14 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
  */
 export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
 	if (ctx.locale !== 'de') return [];
-	return ctx.manifest.layers.map((layer) => ({
-		loc: `${ctx.origin}/layer/${layer.slug}`,
-		lastmod: layer.fetchedAt,
-		changefreq: 'monthly' as const
-	}));
+	// Build-only-Layer (weder Karte noch Inspector) haben keine Detail-Seite → nicht in Sitemap.
+	return ctx.manifest.layers
+		.filter((layer) => !(layer.inspectorRelevant === false && layer.mapRelevant === false))
+		.map((layer) => ({
+			loc: `${ctx.origin}/layer/${layer.slug}`,
+			lastmod: layer.fetchedAt,
+			changefreq: 'monthly' as const
+		}));
 };
 
 /**

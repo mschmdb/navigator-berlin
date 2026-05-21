@@ -30,13 +30,6 @@ describe('EDITORIAL_CONFIG', () => {
 		expect(EDITORIAL_CONFIG.trinkbrunnen.disclaimerVariants).toContain('seasonal');
 	});
 
-	it('stolpersteine hat source-Variant + neverMachineTranslate + StolpersteinDetail', () => {
-		const c = EDITORIAL_CONFIG.stolpersteine;
-		expect(c.disclaimerVariants).toContain('source');
-		expect(c.neverMachineTranslate).toBe(true);
-		expect(c.customComponent).toBe('StolpersteinDetail');
-	});
-
 	it('mauer-sektoren hat historic-Variant + MauerSektorenDetail + neverMachineTranslate', () => {
 		const c = EDITORIAL_CONFIG['mauer-sektoren'];
 		expect(c.disclaimerVariants).toContain('historic');
@@ -66,8 +59,8 @@ describe('EDITORIAL_CONFIG', () => {
 
 describe('getEditorialConfig', () => {
 	it('liefert Config für bekannten Slug', () => {
-		const c = getEditorialConfig('stolpersteine');
-		expect(c?.slug).toBe('stolpersteine');
+		const c = getEditorialConfig('mauer-sektoren');
+		expect(c?.slug).toBe('mauer-sektoren');
 	});
 
 	it('liefert undefined für unbekannten Slug', () => {

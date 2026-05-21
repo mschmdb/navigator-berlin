@@ -12,12 +12,7 @@
 	} from './internal/layer-explain.js';
 	import { isOutdated } from './internal/source-shortener.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
-	import type {
-		StolpersteinFeature,
-		StolpersteinProperties
-	} from '../internal/editorial-types.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
-	import StolpersteinDetail from '../stolperstein-detail.svelte';
 	import MauerSektorenDetail from '../mauer-sektoren-detail.svelte';
 	import ValueChip from '../value-chip.svelte';
 
@@ -110,22 +105,6 @@
 			if (v === 'seasonal') return rowState === 'seasonal';
 			return true;
 		});
-	});
-
-	function asStolpersteinProperties(v: unknown): StolpersteinProperties | null {
-		if (!v || typeof v !== 'object') return null;
-		return v as StolpersteinProperties;
-	}
-
-	const stolpersteinFeature = $derived.by((): StolpersteinFeature | null => {
-		if (editorial?.customComponent !== 'StolpersteinDetail') return null;
-		const props = asStolpersteinProperties(hit.value);
-		if (!props) return null;
-		return {
-			type: 'Feature',
-			geometry: { type: 'Point', coordinates: [lng ?? 0, lat ?? 0] },
-			properties: props
-		};
 	});
 
 	const showMauerDetail = $derived(
@@ -291,9 +270,6 @@
 	{#each disclaimerVariants as variant (variant)}
 		<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
 	{/each}
-	{#if stolpersteinFeature}
-		<StolpersteinDetail feature={stolpersteinFeature} fetchedAt={hit.updatedAt} />
-	{/if}
 	{#if showMauerDetail}
 		<MauerSektorenDetail fetchedAt={hit.updatedAt} />
 	{/if}
