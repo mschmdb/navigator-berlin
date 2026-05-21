@@ -21,15 +21,15 @@ function makeScore(overall = 50): KiezScore {
 }
 
 describe('KiezScoreRing', () => {
-	it('rendert 5 Dimension-Segmente + Gesamt + sr-only-Tabelle', async () => {
+	it('rendert ArcChart-Ring + Gesamt + sr-only-Tabelle (alle 5 Dimensionen)', async () => {
 		render(KiezScoreRing, { score: makeScore(50) });
-		await expect.element(page.getByTestId('ring-segment-ruhe-luft')).toBeInTheDocument();
-		await expect.element(page.getByTestId('ring-segment-wohnschutz')).toBeInTheDocument();
-		await expect.element(page.getByTestId('ring-segment-versorgung')).toBeInTheDocument();
+		await expect.element(page.getByTestId('kiez-score-ring')).toBeInTheDocument();
 		const table = (await page.getByTestId('kiez-score-ring-table').element()) as HTMLElement;
 		expect(table.textContent).toContain('Gesamt');
 		expect(table.textContent).toContain('50 / 100');
+		expect(table.textContent).toContain('Ruhe & Luft');
 		expect(table.textContent).toContain('Wohnschutz');
+		expect(table.textContent).toContain('Versorgung');
 	});
 
 	it('Dimension mit value null zeigt keine Daten in Tabelle', async () => {

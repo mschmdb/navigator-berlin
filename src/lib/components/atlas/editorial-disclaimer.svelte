@@ -19,7 +19,7 @@
 		'compare-mss-aggregat':
 			'Wir zeigen die Stufe, ohne Bewertung. Niedriger Status heißt nicht „schlechter Kiez". Daten je Planungsraum, nicht je Adresse.',
 		'kiez-score-explainer':
-			'Kiez-Score aggregiert fünf Dimensionen pro Planungsraum (Ruhe & Luft, Grün, Mobilität, Soziale Lage, Versorgung). Die Soziale Lage spiegelt strukturelle MSS-Daten der Senatsverwaltung, keine Wohnqualität. Bezahlbarkeit absichtlich nicht enthalten.',
+			'Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten.',
 		'wahl-stimmenanteile':
 			'Daten beschreiben Stimmenanteile, keine Bewertung. Brief-Stimmen sind im Kiez-Aggregat ausgeschlossen (nur Bezirk und Berlin), weil sie keine räumliche Zuordnung haben.',
 		'cross-layer-template':

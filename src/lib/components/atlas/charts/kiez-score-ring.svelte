@@ -1,18 +1,17 @@
 <script lang="ts">
-	import {
-		DIMENSION_LABELS_DE,
-		scaleFor,
-		scaleForOverall
-	} from '../inspector-panel/internal/kiez-score-display.js';
+	import { ArcChart, Tooltip } from 'layerchart';
+	import { DIMENSION_LABELS_DE, scaleFor } from '../inspector-panel/internal/kiez-score-display.js';
 	import { severityColor } from './internal/chart-palette.js';
 	import type { KiezScore, KiezScoreDimension } from '$lib/data';
 
 	type Props = {
 		score: KiezScore;
 		layerName?: string;
+		/** Klick auf ein Ring-Segment. Konsument klappt die zugehörige Detail-Row auf. */
+		onSegmentClick?: (dimension: KiezScoreDimension) => void;
 	};
 
-	let { score, layerName = 'Kiez-Score' }: Props = $props();
+	let { score, layerName = 'Kiez-Score', onSegmentClick }: Props = $props();
 
 	const KIEZ_SCORE_DIMENSIONS: readonly KiezScoreDimension[] = [
 		'ruhe-luft',
@@ -22,76 +21,98 @@
 		'wohnschutz'
 	];
 
-	const RADIUS = 20;
-	const CIRC = 2 * Math.PI * RADIUS;
-	const SEG = CIRC / KIEZ_SCORE_DIMENSIONS.length;
-	const GAP = 4;
-	const ARC = SEG - GAP;
+	interface ArcDatum {
+		key: KiezScoreDimension;
+		label: string;
+		value: number;
+		scoreText: string;
+	}
 
 	function dimValue(dim: KiezScoreDimension): number | null {
 		return score.dimensions.find((d) => d.dimension === dim)?.value ?? null;
 	}
 
-	const segments = $derived(
-		KIEZ_SCORE_DIMENSIONS.map((dim, i) => {
+	// Konzentrische Activity-Ringe: ein Ring pro Dimension, Füllung = Score/100,
+	// Farbe = Severity-Stufe. Aussen → innen in Dimensions-Reihenfolge.
+	const arcSeries = $derived(
+		KIEZ_SCORE_DIMENSIONS.map((dim) => {
 			const value = dimValue(dim);
 			const scale = scaleFor(value, dim);
-			return {
-				dim,
+			const datum: ArcDatum = {
+				key: dim,
 				label: DIMENSION_LABELS_DE[dim],
-				value,
-				color: value !== null && scale ? severityColor(scale.severity) : 'var(--bg-muted, #eee)',
-				dashoffset: -(i * SEG)
+				value: value ?? 0,
+				scoreText: value !== null ? `${Math.round(value)} / 100` : 'keine Daten'
+			};
+			return {
+				key: dim,
+				label: DIMENSION_LABELS_DE[dim],
+				maxValue: 100,
+				color: value !== null && scale ? severityColor(scale.severity) : 'var(--rule, #ddd)',
+				data: [datum]
 			};
 		})
 	);
 
-	const overallScale = $derived(scaleForOverall(score.overall));
-	const overallText = $derived(score.overall !== undefined ? String(Math.round(score.overall)) : '—');
+	const scoreByDim = $derived(new Map(arcSeries.map((s) => [s.key as string, s.data[0]])));
+
+	const overallText = $derived(
+		score.overall !== undefined ? String(Math.round(score.overall)) : '—'
+	);
+
+	function handleArcClick(_e: MouseEvent, detail: { data: unknown }): void {
+		const d = detail.data as ArcDatum | undefined;
+		if (d?.key) onSegmentClick?.(d.key);
+	}
+
+	// grid/axis/rule sind aus ArcChartProps geomittet, erreichen die kartesische Chart-Basis
+	// aber via restProps. Cast, um die radialen Gitter-/Achsen-Linien abzuschalten.
+	const noCartesianChrome = { grid: false, axis: false, rule: false } as Record<string, unknown>;
 </script>
 
 <div data-testid="kiez-score-ring" class="flex flex-col items-center">
-	<svg
-		width="112"
-		height="112"
-		viewBox="0 0 56 56"
-		role="img"
-		aria-label={`${layerName} gesamt ${overallText} von 100`}
-	>
-		{#each segments as seg (seg.dim)}
-			<circle
-				data-testid={`ring-segment-${seg.dim}`}
-				cx="28"
-				cy="28"
-				r={RADIUS}
-				fill="none"
-				stroke={seg.color}
-				stroke-width="6"
-				stroke-dasharray={`${ARC} ${CIRC - ARC}`}
-				stroke-dashoffset={seg.dashoffset}
-				transform="rotate(-90 28 28)"
-			/>
-		{/each}
-		<text
-			x="28"
-			y="27"
-			text-anchor="middle"
-			class="fill-ink font-mono text-[11px] font-semibold"
-			aria-hidden="true">{overallText}</text
+	<div class="relative aspect-square w-[210px] overflow-hidden">
+		<ArcChart
+			key="key"
+			label="label"
+			value="value"
+			series={arcSeries}
+			innerRadius={-9}
+			outerRadius={-11}
+			cornerRadius={4}
+			labels={{
+				placement: 'middle',
+				startOffset: '0%',
+				value: 'label',
+				class: 'fill-white font-sans text-[8px] font-medium pointer-events-none'
+			}}
+			onArcClick={handleArcClick}
+			{...noCartesianChrome}
 		>
-		<text
-			x="28"
-			y="35"
-			text-anchor="middle"
-			class="fill-ink-subtle font-mono text-[5px]"
-			aria-hidden="true">/ 100</text
+			{#snippet tooltip({ context })}
+				{@const hovered = context.tooltip.series.filter((s) => s.value !== undefined)}
+				{#if hovered.length > 0}
+					<Tooltip.Root>
+						{#each hovered as s (s.key)}
+							{@const datum = scoreByDim.get(String(s.key))}
+							<Tooltip.Header value={datum?.label ?? String(s.label ?? '')} />
+							<Tooltip.List>
+								<Tooltip.Item label="Score" value={datum?.scoreText ?? '—'} />
+							</Tooltip.List>
+						{/each}
+					</Tooltip.Root>
+				{/if}
+			{/snippet}
+		</ArcChart>
+		<div
+			class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
+			aria-hidden="true"
 		>
-	</svg>
-	{#if overallScale}
-		<span data-testid="ring-overall-label" class="mt-1 font-sans text-sm font-semibold text-ink">
-			{overallScale.label}
-		</span>
-	{/if}
+			<span class="font-mono text-[11px] uppercase tracking-wide text-ink-subtle">Gesamt</span>
+			<span class="font-mono text-4xl font-semibold leading-none text-ink">{overallText}</span>
+			<span class="font-mono text-[10px] text-ink-subtle">/ 100</span>
+		</div>
+	</div>
 
 	<table class="sr-only" data-testid="kiez-score-ring-table">
 		<caption>{layerName}</caption>
@@ -100,10 +121,10 @@
 				<th scope="row">Gesamt</th>
 				<td>{overallText} / 100</td>
 			</tr>
-			{#each segments as seg (seg.dim)}
+			{#each arcSeries as s (s.key)}
 				<tr>
-					<th scope="row">{seg.label}</th>
-					<td>{seg.value !== null ? `${Math.round(seg.value)} / 100` : 'keine Daten'}</td>
+					<th scope="row">{s.label}</th>
+					<td>{s.data[0].scoreText}</td>
 				</tr>
 			{/each}
 		</tbody>

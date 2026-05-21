@@ -122,8 +122,12 @@ describe('KiezScoreSection', () => {
 		await expect.element(page.getByTestId('kiez-score-sources-ruhe-luft')).toBeInTheDocument();
 	});
 
-	it('Stand-Footer zeigt Datum wenn dataStand gesetzt', async () => {
+	it('Stand-Footer zeigt Datum wenn dataStand gesetzt (nach Aufklappen der Quellen)', async () => {
 		render(KiezScoreSection, { score: makeScore() });
+		const toggle = (await page
+			.getByTestId('kiez-score-toggle-sources-ruhe-luft')
+			.element()) as HTMLButtonElement;
+		toggle.click();
 		await expect.element(page.getByTestId('kiez-score-stand-ruhe-luft')).toBeInTheDocument();
 	});
 });
