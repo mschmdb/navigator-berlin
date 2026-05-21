@@ -31,6 +31,7 @@ export interface PipelineOutput {
 }
 
 export type KiezScoreLayerSlug =
+	| 'kiez-score-gesamt'
 	| 'kiez-score-ruhe-luft'
 	| 'kiez-score-gruen-hitze'
 	| 'kiez-score-mobilitaet'
@@ -44,6 +45,9 @@ export const KIEZ_SCORE_LAYER_SLUG_BY_DIMENSION: Record<KiezScoreDimension, Kiez
 	versorgung: 'kiez-score-versorgung',
 	wohnschutz: 'kiez-score-wohnschutz'
 };
+
+/** Composite-/Gesamt-Layer: ungewichtetes Mittel der Dimensionen pro LOR (score.overall). */
+export const KIEZ_SCORE_COMPOSITE_LAYER_SLUG: KiezScoreLayerSlug = 'kiez-score-gesamt';
 
 export interface DerivedLayerGeoJsons {
 	[slug: string]: FeatureCollection;
@@ -83,6 +87,28 @@ export function buildDerivedLayerGeojsons(
 		}
 		out[slug] = { type: 'FeatureCollection', features };
 	}
+
+	// Composite-/Gesamt-Layer: score.overall pro LOR (ADR-015: alle Dimensionen
+	// positiv-eindeutig, daher ist ein Gesamt-Choropleth jetzt vertretbar).
+	const compositeFeatures: Feature[] = [];
+	for (const lor of lorFeatures) {
+		if (lor.geometry.type !== 'Polygon' && lor.geometry.type !== 'MultiPolygon') continue;
+		const lorId = idFn(lor);
+		if (!lorId) continue;
+		const score = pipelineOutput.scores[lorId];
+		if (!score) continue;
+		compositeFeatures.push({
+			type: 'Feature',
+			geometry: lor.geometry,
+			properties: {
+				plr_id: lorId,
+				value: score.overall ?? null,
+				dataStand: null
+			}
+		});
+	}
+	out[KIEZ_SCORE_COMPOSITE_LAYER_SLUG] = { type: 'FeatureCollection', features: compositeFeatures };
+
 	return out;
 }
 

@@ -108,7 +108,8 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'tram-netz': 'line-rail-tram',
 	'sbahn-netz': 'line-rail-sbahn',
 	// G: Kiez-Score (Story 1.28)
-	'kiez-score-ruhe-luft': 'choropleth-kiez-score-ordinal-4',
+	'kiez-score-gesamt': 'choropleth-kiez-score-ordinal-4',
+		'kiez-score-ruhe-luft': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-gruen-hitze': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-mobilitaet': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-wohnschutz': 'choropleth-kiez-score-ordinal-4',

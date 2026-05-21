@@ -21,6 +21,7 @@ export const LAYER_TO_CHOROPLETH_FAMILY: Record<string, LayerFamilyMapping> = {
 	'umweltgerechtigkeit-2023': 'last',
 	// Gut: Versorgung + positiver Score (Grün)
 	'gruenversorgung-2023': 'gut',
+	'kiez-score-gesamt': 'gut',
 	'kiez-score-ruhe-luft': 'gut',
 	'kiez-score-gruen-hitze': 'gut',
 	'kiez-score-versorgung': 'gut',
@@ -63,6 +64,7 @@ export const LAYER_CLASSIFICATION_METHOD: Record<string, ClassificationMethod> =
 	'klima-pet-2022': 'equal-interval', // 28-42°C Spreizung
 	'umweltgerechtigkeit-2023': 'manual', // keinfach..vierfach
 	'gruenversorgung-2023': 'manual', // Umweltatlas-Kategorien
+	'kiez-score-gesamt': 'manual-quartile', // 0/26/51/76
 	'kiez-score-ruhe-luft': 'manual-quartile', // 0/26/51/76
 	'kiez-score-gruen-hitze': 'manual-quartile',
 	'kiez-score-mobilitaet': 'manual-quartile',

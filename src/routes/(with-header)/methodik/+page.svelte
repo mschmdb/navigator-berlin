@@ -107,9 +107,9 @@
 				'Layer-Beschreibungen schreiben wir manuell. Kein LLM-Output für Personen-Biografien.'
 		},
 		{
-			label: 'Composite-Single-Score',
+			label: 'Stadtweiter Einzel-Score',
 			reason:
-				'Kein „Berlin-Lebensqualitäts-Score" als eine Zahl. Persönliche Prioritäten lassen sich nicht aggregieren.'
+				'Pro Kiez gibt es einen Gesamt-Wert, aber keine eine Zahl für ganz Berlin. Persönliche Prioritäten gewichten ohnehin anders.'
 		},
 		{ label: 'Werbung, Partner-Tracking, A/B-Tests', reason: 'Kein kommerzielles Modell.' }
 	];
@@ -221,7 +221,7 @@
 			Der Umwelt- & Infrastruktur-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und
 			Luft, Grün und Hitze, Mobilität, Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze) und
 			Wohnschutz (Milieuschutzgebiete). Jede Dimension bleibt separat abrufbar im Inspector und als
-			eigener Karten-Layer. Fünf mal 20 Prozent Gewicht, kein Composite-Score auf der Karte.
+			eigener Karten-Layer. Fünf mal 20 Prozent Gewicht. Ein Gesamt-Layer aggregiert sie als Mittel.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Der Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur wertet

@@ -191,6 +191,7 @@ describe('buildKiezScoresFromInput', () => {
 		);
 		const derived = buildDerivedLayerGeojsons(lors, out);
 		expect(Object.keys(derived).sort()).toEqual([
+			'kiez-score-gesamt',
 			'kiez-score-gruen-hitze',
 			'kiez-score-mobilitaet',
 			'kiez-score-ruhe-luft',

@@ -77,11 +77,6 @@
 			label: 'Familienfreundlichkeit',
 			reason:
 				'Hängt stark von der Persona ab: Eltern mit Kita-Kind, Schulkind oder Pflegebedarf gewichten anders. Kita-, Schul- und Krankenhaus-Layer bleiben separat im Inspector statt in einer Composite-Dimension zu verschwinden.'
-		},
-		{
-			label: 'Composite-Single-Score auf der Karte',
-			reason:
-				'Keine einzelne Gesamt-Zahl pro Kiez auf der Karte. Wer Familie sucht, gewichtet anders als jemand mit Hitze-Empfindlichkeit. Persönliche Prioritäten lassen sich nicht zu einer Zahl aggregieren.'
 		}
 	];
 
@@ -268,10 +263,10 @@
 			seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Stigma-Schutz: kein Composite-Choropleth auf der Karte. Die einzelne Bezirks-Zahl zeigt sich
-			nur in Steckbrief-Tabellen und im Ranking. Pro Dimension darf eine Choropleth gezeigt werden.
-			Alle fünf Score-Dimensionen sind positiv eindeutig und nutzen die Gut-Skala. Das MSS-Aggregat
-			bleibt als neutraler Kontext-Layer in Strukturell-Indigo, ohne Rot-Grün-Sprünge.
+			Seit der Score-Neuordnung (ADR-015) sind alle fünf Dimensionen positiv eindeutig. Deshalb
+			zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt", Gut-Skala),
+			zusätzlich zu den fünf Einzel-Dimensionen. Das MSS-Aggregat bleibt als neutraler Kontext-Layer
+			in Strukturell-Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score" gibt es nicht.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Build-Pipeline: <code class="font-mono text-sm">pnpm data:aggregate-scores</code> liest die

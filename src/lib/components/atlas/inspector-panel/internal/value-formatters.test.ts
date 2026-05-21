@@ -136,6 +136,13 @@ describe('formatLayerValue', () => {
 		});
 	});
 
+	it('kiez-score-gesamt → Gesamt-Label + Stufe + Wert', () => {
+		expect(formatLayerValue('kiez-score-gesamt', { plr_id: '04501148', value: 52.4 })).toEqual({
+			text: 'Gesamt: hoch (52/100)',
+			isNumeric: false
+		});
+	});
+
 	it('Unbekannter slug + number → isNumeric=true', () => {
 		expect(formatLayerValue('unknown-slug', 42)).toEqual({
 			text: '42',

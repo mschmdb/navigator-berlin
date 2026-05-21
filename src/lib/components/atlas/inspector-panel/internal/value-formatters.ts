@@ -405,6 +405,8 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return formatStolperstein(value);
 		case 'trinkbrunnen':
 			return { text: 'Trinkbrunnen vor Ort', isNumeric: false };
+		case 'kiez-score-gesamt':
+			return formatKiezScoreValue(value, 'Gesamt');
 		case 'kiez-score-ruhe-luft':
 			return formatKiezScoreValue(value, 'Ruhe & Luft');
 		case 'kiez-score-gruen-hitze':
