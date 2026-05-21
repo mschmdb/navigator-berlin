@@ -57,71 +57,47 @@
 </script>
 
 {#if !station || !series}
-	<p
-		class="py-3 font-serif italic text-ink-subtle"
-		data-testid="section-klima-empty"
-	>
+	<p class="py-3 font-serif italic text-ink-subtle" data-testid="section-klima-empty">
 		Klima-Daten werden geladen oder konnten nicht ermittelt werden.
 	</p>
 {:else}
-	<div class="space-y-4" data-testid="klima-section">
-		<p
-			class="font-serif text-sm text-ink-subtle"
-			data-testid="klima-station-hint"
-		>
-			Nächstgelegene DWD-Station: {station.name}, {station.firstYear}+
+	<section
+		class="-mx-2 space-y-3 rounded border border-rule bg-bg-elevated px-2.5 py-2"
+		data-testid="klima-section"
+	>
+		<div class="flex items-start justify-between gap-2">
+			<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">Klima · DWD-Station</h4>
+			<span class="shrink-0 font-serif text-sm italic text-ink-subtle">{station.name}</span>
+		</div>
+		<p class="font-mono text-[11px] text-ink-subtle" data-testid="klima-station-hint">
+			Messreihe seit {station.firstYear}
 		</p>
 
 		{#if loadError}
-			<p
-				class="py-2 font-mono text-xs text-state-error"
-				data-testid="klima-load-error"
-			>
+			<p class="py-2 font-mono text-xs text-state-error" data-testid="klima-load-error">
 				Klima-Charts konnten nicht geladen werden.
 			</p>
 		{:else if Sparkline === null}
-			<div
-				class="space-y-5"
-				data-testid="klima-skeleton"
-				aria-live="polite"
-				aria-busy="true"
-			>
+			<div class="space-y-3" data-testid="klima-skeleton" aria-live="polite" aria-busy="true">
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
 				<span class="font-mono text-xs text-ink-subtle">lädt…</span>
 			</div>
 		{:else}
-			<div class="space-y-5" data-testid="klima-sparkline-grid">
-				<Sparkline
-					series={series.summerDays}
-					metric="summer"
-					stationName={station.name}
-				/>
-				<Sparkline
-					series={series.frostDays}
-					metric="frost"
-					stationName={station.name}
-				/>
-				<Sparkline
-					series={series.hotDays}
-					metric="hot"
-					stationName={station.name}
-				/>
+			<div class="space-y-3" data-testid="klima-sparkline-grid">
+				<Sparkline series={series.summerDays} metric="summer" stationName={station.name} compact />
+				<Sparkline series={series.frostDays} metric="frost" stationName={station.name} compact />
+				<Sparkline series={series.hotDays} metric="hot" stationName={station.name} compact />
 			</div>
 
 			{#if showLongView && LongView}
-				<div class="mt-6" data-testid="klima-long-view-slot">
-					<LongView
-						series={series.annualMeanTemp ?? []}
-						stationName={station.name}
-					/>
+				<div class="mt-4" data-testid="klima-long-view-slot">
+					<LongView series={series.annualMeanTemp ?? []} stationName={station.name} />
 				</div>
 			{/if}
 		{/if}
 
-		<div class="mt-2">
-			<DataStandBanner hit={bannerHit()} />
-		</div>
-	</div>
+		<DataStandBanner hit={bannerHit()} />
+	</section>
 {/if}

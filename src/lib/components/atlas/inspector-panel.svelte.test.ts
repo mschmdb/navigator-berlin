@@ -84,23 +84,22 @@ describe('inspector-panel.svelte', () => {
 		expect(sub.textContent?.trim()).toBe('Boxhagener Kiez · Friedrichshain-Kreuzberg · 10245');
 	});
 
-	it('rendert alle 5 Sektionen in fester Reihenfolge', async () => {
+	it('rendert die Sektionen in fester Reihenfolge (kein Memorial mehr, ADR-015)', async () => {
 		render(Harness, {
 			open: true,
 			address,
 			hits: [
 				hit('bezirke', 'Friedrichshain-Kreuzberg'),
 				hit('mietspiegel-wohnlage', 'gut'),
-				hit('laerm-den', 65),
-				hit('stolpersteine', { person: 'Anna Müller' })
+				hit('laerm-den', 65)
 			],
 			layerMeta: fullLayerMeta
 		});
 		await expect.element(page.getByTestId('section-boundaries')).toBeInTheDocument();
 		await expect.element(page.getByTestId('section-wohn')).toBeInTheDocument();
 		await expect.element(page.getByTestId('section-umwelt')).toBeInTheDocument();
-		await expect.element(page.getByTestId('section-memorial')).toBeInTheDocument();
 		await expect.element(page.getByTestId('section-klima')).toBeInTheDocument();
+		expect(page.getByTestId('section-memorial').query()).toBeNull();
 	});
 
 	it('Klima-Sektion zeigt Lade-Hinweis wenn keine Station/Series', async () => {
@@ -143,8 +142,9 @@ describe('inspector-panel.svelte', () => {
 			nearestStation: station,
 			climateSeries: series
 		});
+		const klimaCard = (await page.getByTestId('klima-section').element()) as HTMLElement;
+		expect(klimaCard.textContent).toContain('Berlin-Tempelhof');
 		const hint = (await page.getByTestId('klima-station-hint').element()) as HTMLElement;
-		expect(hint.textContent).toContain('Berlin-Tempelhof');
 		expect(hint.textContent).toContain('1919');
 		await vi.waitUntil(
 			() => page.getByTestId('klima-sparkline-grid').query() !== null,

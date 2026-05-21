@@ -19,9 +19,12 @@
 		metric: ClimateMetric;
 		stationName: string;
 		unit?: string;
+		/** Kompakt: nur Chart sichtbar, Werte (Min/Max/Mittel) + Tabelle hinter Toggle. */
+		compact?: boolean;
 	};
 
-	let { series, metric, stationName, unit = 'Tage/Jahr' }: Props = $props();
+	let { series, metric, stationName, unit = 'Tage/Jahr', compact = false }: Props = $props();
+	let detailsOpen = $state(false);
 
 	const TITLES: Record<ClimateMetric, string> = {
 		summer: 'Sommertage (T_max ≥ 25°C)',
@@ -241,10 +244,20 @@
 				{stats.latest}
 			</span>
 		{/if}
-		<figcaption
-			class="mt-1 font-mono text-xs text-ink-subtle"
-			data-testid="chart-figcaption"
+	</figure>
+	{#if compact}
+		<button
+			type="button"
+			onclick={() => (detailsOpen = !detailsOpen)}
+			aria-expanded={detailsOpen}
+			data-testid="climate-sparkline-details-toggle"
+			class="mt-1 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wide text-ink-muted hover:text-ink"
 		>
+			{detailsOpen ? 'Werte & Tabelle verbergen' : 'Werte & Tabelle'}
+		</button>
+	{/if}
+	{#if !compact || detailsOpen}
+		<div class="mt-1 font-mono text-xs text-ink-subtle" data-testid="chart-figcaption">
 			<span class="block">{figcaption}</span>
 			{#if normalOldMean !== null}
 				<span
@@ -262,13 +275,13 @@
 					Mittel 1991–2020: {formatMean(normalNewMean)}
 				</span>
 			{/if}
-		</figcaption>
-	</figure>
-	<div class="mt-2">
-		<DataTableAlternative
-			columns={tableColumns}
-			rows={tableRows}
-			caption={`${SHORT_LABELS[metric]} bei ${stationName}`}
-		/>
-	</div>
+		</div>
+		<div class="mt-2">
+			<DataTableAlternative
+				columns={tableColumns}
+				rows={tableRows}
+				caption={`${SHORT_LABELS[metric]} bei ${stationName}`}
+			/>
+		</div>
+	{/if}
 </div>
