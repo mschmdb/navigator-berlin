@@ -20,18 +20,25 @@ interface EinwohnerRecord {
 	kinder0bis6: number;
 }
 
+interface LaermDbRecord {
+	plrId: string;
+	dbDenMean: number;
+}
+
 const STATIC = 'static';
 const LAYERS_DIR = `${STATIC}/layers`;
 const MANIFEST = `${LAYERS_DIR}/MANIFEST.json`;
 const OEPNV_INDEX = `${STATIC}/oepnv-stops-index.json`;
 const PET_POINTS = `${STATIC}/data/klima-pet-points.geojson`;
 const EINWOHNER = `${STATIC}/data/einwohner-lor.json`;
+const LAERM_DB = `${STATIC}/data/laerm-db-lor.json`;
 const OUT = `${STATIC}/kiez-scores/kiez-scores.json`;
 
 // ADR-015: MSS + Umweltgerechtigkeit sind keine Score-Inputs mehr. klima-pet (Grün & Hitze)
 // + Milieuschutz (Wohnschutz, presence via Punkt-in-Polygon am LOR-Centroid) neu.
 const POLYGON_SCORE_LAYERS = [
-	'laerm-2023',
+	// laerm-2023 (3-Stufen) ist seit Story 10.6b kein Score-Input mehr (jetzt dB-Mittel via
+	// laerm-db perLorHits), bleibt aber Map-Layer. luft-2023 weiter ordinal.
 	'luft-2023',
 	'bioklima-2023',
 	'gruenversorgung-2023',
@@ -68,26 +75,35 @@ async function loadLayerFeatures(
 }
 
 /**
- * Story 10.1: pro LOR ein synthetischer `kitas-pro-kind`-Hit (Plätze pro Kind 0-6).
- * Σ e_platz der Kitas im LOR ÷ Kinder 0-6 aus dem Einwohner-Join (Story 10.0).
+ * Vorberechnete Per-LOR-Hits (Stories 10.1 + 10.6b):
+ * - `kitas-pro-kind`: Σ e_platz der Kitas im LOR ÷ Kinder 0-6 (Einwohner-Join 10.0)
+ * - `laerm-db`: dB-Mittel (L_DEN) pro LOR aus den Fassadenpunkten (10.6b)
  */
-async function buildKitaProKindHits(
+async function buildPerLorHits(
 	lorFeatures: readonly Feature[],
 	poiLayers: readonly BuildLayerSpec[]
-): Promise<Record<string, readonly LayerHitLike[]>> {
+): Promise<Record<string, LayerHitLike[]>> {
 	const kitaFeatures = poiLayers.find((l) => l.slug === 'kitas-2024')?.features ?? [];
 	const einwohner = await readJson<{ records: EinwohnerRecord[] }>(EINWOHNER).catch(() => null);
 	if (!einwohner) throw new Error(`${EINWOHNER} fehlt. Lauf zuerst pnpm fetch:einwohner.`);
 	const kinderByPlr = new Map(einwohner.records.map((r) => [r.plrId, r.kinder0bis6]));
 	const plaetzeByLor = aggregateKitaPlaetzeByLor(lorFeatures, kitaFeatures, (f) => defaultLorIdFor(f) ?? '');
 
-	const out: Record<string, readonly LayerHitLike[]> = {};
+	const laerm = await readJson<{ records: LaermDbRecord[] }>(LAERM_DB).catch(() => null);
+	if (!laerm) throw new Error(`${LAERM_DB} fehlt. Lauf zuerst pnpm data:laerm-db.`);
+	const dbByPlr = new Map(laerm.records.map((r) => [r.plrId, r.dbDenMean]));
+
+	const out: Record<string, LayerHitLike[]> = {};
+	const push = (lorId: string, hit: LayerHitLike) => {
+		(out[lorId] = out[lorId] ?? []).push(hit);
+	};
 	for (const lor of lorFeatures) {
 		const lorId = defaultLorIdFor(lor);
 		if (!lorId) continue;
 		const proKind = plaetzeProKind(plaetzeByLor[lorId] ?? 0, kinderByPlr.get(lorId) ?? null);
-		if (proKind === null) continue;
-		out[lorId] = [{ layer: 'kitas-pro-kind', value: { plaetzeProKind: proKind } }];
+		if (proKind !== null) push(lorId, { layer: 'kitas-pro-kind', value: { plaetzeProKind: proKind } });
+		const db = dbByPlr.get(lorId);
+		if (db !== undefined) push(lorId, { layer: 'laerm-db', value: { ges_den: db } });
 	}
 	return out;
 }
@@ -123,8 +139,8 @@ export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: 
 
 	const oepnvIndex = await readJson<OepnvStopIndexShape>(OEPNV_INDEX);
 
-	// Story 10.1: Kita-Plätze pro Kind 0-6 pro LOR (Σ e_platz im LOR ÷ Kinder 0-6 aus 10.0).
-	const perLorHits = await buildKitaProKindHits(lorFeatures, poiLayers);
+	// Stories 10.1 + 10.6b: vorberechnete Per-LOR-Hits (Kita-pro-Kind + Lärm-dB-Mittel).
+	const perLorHits = await buildPerLorHits(lorFeatures, poiLayers);
 
 	const pointValueLayers: BuildLayerSpec[] = [];
 	for (const slug of POINT_VALUE_LAYERS) {

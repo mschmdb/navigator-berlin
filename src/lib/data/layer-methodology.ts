@@ -419,11 +419,12 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 
 	'kiez-score-ruhe-luft': {
 		calculation:
-			'Gewichtete Aggregation aus Lärm- und Luftbelastung pro Planungsraum (Lärm 0.5, Luft 0.5). 3-Stufen-Mapping gering bis hoch, normalisiert auf 0–100, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.',
+			'Gewichtete Aggregation aus Lärm und Luft pro Planungsraum (Lärm 0.5, Luft 0.5). Lärm seit Story 10.6b als dB-Mittel (L_DEN) aus den Fassadenpunkten der Strategischen Lärmkarte 2022: ≤45 dB → 100, ≥75 dB → 0, linear. Luft als 3-Stufen-Index (gering bis hoch). Beides auf 0–100 normalisiert, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 3 bis 5 Jahre (sync mit Umweltatlas-Update)',
 		authorityKey: 'navigator-eigenberechnung-senats-daten',
 		coverageGaps: [
+			'Lärm-dB ist das Mittel über die Fassadenpunkte im LOR; ruhige Hinterhöfe ohne Fassadenpunkt fließen nicht ein.',
 			'Modell-Werte, keine Mess-Stationen. Mikrolagen einzelner Adressen bleiben unsichtbar.'
 		],
 		omissions: [

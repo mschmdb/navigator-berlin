@@ -8,10 +8,24 @@ export const KITA_BEST_AT = 0.35;
 // (Vivantes Neukölln ~1377 Betten); 1500 als konservative Obergrenze gegen Clamp-Effekte.
 export const KRANKENHAUS_MAX_BETTEN = 1500;
 
+// Story 10.6b: Lärm als dB-Mittel (L_DEN) pro LOR statt 3-Stufen-Index. WHO-orientiert:
+// <= 45 dB sehr ruhig → 100, >= 75 dB stark belastet → 0 (Matzarakis/WHO-Richtwerte).
+export const LAERM_DB_BEST_AT = 45;
+export const LAERM_DB_WORST_AT = 75;
+
 export const RUHE_LUFT_CONFIG: DimensionConfig = {
 	dimension: 'ruhe-luft',
 	layers: [
-		{ layer: 'laerm-2023', weight: 0.5, normalize: { kind: 'ordinal-3', field: 'kategorie' } },
+		{
+			layer: 'laerm-db',
+			weight: 0.5,
+			normalize: {
+				kind: 'numeric-inverted',
+				field: 'ges_den',
+				bestAt: LAERM_DB_BEST_AT,
+				worstAt: LAERM_DB_WORST_AT
+			}
+		},
 		{ layer: 'luft-2023', weight: 0.5, normalize: { kind: 'ordinal-3', field: 'kategorie' } }
 	]
 };

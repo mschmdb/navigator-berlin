@@ -1,0 +1,2718 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-05-21T17:19:54.801Z",
+  "source": "Umweltatlas Strategische Lärmkarten 2022 (ua_stratlaerm_2022:aa_fp_gesamt2022)",
+  "metric": "ges_den (L_DEN) Mittel pro LOR-Planungsraum",
+  "records": [
+    {
+      "plrId": "01100101",
+      "dbDenMean": 53.7,
+      "count": 1637
+    },
+    {
+      "plrId": "01100102",
+      "dbDenMean": 56,
+      "count": 2513
+    },
+    {
+      "plrId": "01100103",
+      "dbDenMean": 49.4,
+      "count": 3818
+    },
+    {
+      "plrId": "01100104",
+      "dbDenMean": 51,
+      "count": 2299
+    },
+    {
+      "plrId": "01100205",
+      "dbDenMean": 56.9,
+      "count": 1690
+    },
+    {
+      "plrId": "01100206",
+      "dbDenMean": 57.4,
+      "count": 3378
+    },
+    {
+      "plrId": "01100207",
+      "dbDenMean": 52,
+      "count": 3847
+    },
+    {
+      "plrId": "01100308",
+      "dbDenMean": 54.1,
+      "count": 9310
+    },
+    {
+      "plrId": "01100309",
+      "dbDenMean": 53.5,
+      "count": 11783
+    },
+    {
+      "plrId": "01100310",
+      "dbDenMean": 57.2,
+      "count": 4439
+    },
+    {
+      "plrId": "01100311",
+      "dbDenMean": 56.4,
+      "count": 2990
+    },
+    {
+      "plrId": "01100312",
+      "dbDenMean": 52.1,
+      "count": 3914
+    },
+    {
+      "plrId": "01100313",
+      "dbDenMean": 53,
+      "count": 4211
+    },
+    {
+      "plrId": "01100414",
+      "dbDenMean": 47.6,
+      "count": 2279
+    },
+    {
+      "plrId": "01100415",
+      "dbDenMean": 49.8,
+      "count": 7975
+    },
+    {
+      "plrId": "01100416",
+      "dbDenMean": 47.8,
+      "count": 7460
+    },
+    {
+      "plrId": "01200517",
+      "dbDenMean": 53.9,
+      "count": 2036
+    },
+    {
+      "plrId": "01200518",
+      "dbDenMean": 50.6,
+      "count": 2825
+    },
+    {
+      "plrId": "01200519",
+      "dbDenMean": 47.3,
+      "count": 4413
+    },
+    {
+      "plrId": "01200520",
+      "dbDenMean": 49.5,
+      "count": 4608
+    },
+    {
+      "plrId": "01200521",
+      "dbDenMean": 49.8,
+      "count": 2211
+    },
+    {
+      "plrId": "01200522",
+      "dbDenMean": 50.7,
+      "count": 6177
+    },
+    {
+      "plrId": "01200623",
+      "dbDenMean": 50.8,
+      "count": 5616
+    },
+    {
+      "plrId": "01200624",
+      "dbDenMean": 57,
+      "count": 2937
+    },
+    {
+      "plrId": "01200625",
+      "dbDenMean": 49.6,
+      "count": 3199
+    },
+    {
+      "plrId": "01200626",
+      "dbDenMean": 57.9,
+      "count": 3358
+    },
+    {
+      "plrId": "01200627",
+      "dbDenMean": 55.2,
+      "count": 1556
+    },
+    {
+      "plrId": "01200628",
+      "dbDenMean": 64.1,
+      "count": 2267
+    },
+    {
+      "plrId": "01200629",
+      "dbDenMean": 64.5,
+      "count": 3643
+    },
+    {
+      "plrId": "01300730",
+      "dbDenMean": 49.3,
+      "count": 3807
+    },
+    {
+      "plrId": "01300731",
+      "dbDenMean": 46.9,
+      "count": 4233
+    },
+    {
+      "plrId": "01300732",
+      "dbDenMean": 50.1,
+      "count": 4333
+    },
+    {
+      "plrId": "01300733",
+      "dbDenMean": 49.3,
+      "count": 4994
+    },
+    {
+      "plrId": "01300834",
+      "dbDenMean": 47.7,
+      "count": 5696
+    },
+    {
+      "plrId": "01300835",
+      "dbDenMean": 47.7,
+      "count": 5026
+    },
+    {
+      "plrId": "01300836",
+      "dbDenMean": 53.4,
+      "count": 6719
+    },
+    {
+      "plrId": "01400937",
+      "dbDenMean": 51,
+      "count": 6824
+    },
+    {
+      "plrId": "01400938",
+      "dbDenMean": 50,
+      "count": 6950
+    },
+    {
+      "plrId": "01400939",
+      "dbDenMean": 47.3,
+      "count": 2699
+    },
+    {
+      "plrId": "01400940",
+      "dbDenMean": 48.3,
+      "count": 4341
+    },
+    {
+      "plrId": "01400941",
+      "dbDenMean": 49.6,
+      "count": 2564
+    },
+    {
+      "plrId": "01400942",
+      "dbDenMean": 49.1,
+      "count": 4980
+    },
+    {
+      "plrId": "01401043",
+      "dbDenMean": 47.9,
+      "count": 3133
+    },
+    {
+      "plrId": "01401044",
+      "dbDenMean": 48.6,
+      "count": 4580
+    },
+    {
+      "plrId": "01401045",
+      "dbDenMean": 52.5,
+      "count": 2148
+    },
+    {
+      "plrId": "01401046",
+      "dbDenMean": 47.9,
+      "count": 3702
+    },
+    {
+      "plrId": "01401047",
+      "dbDenMean": 48.6,
+      "count": 3233
+    },
+    {
+      "plrId": "01401048",
+      "dbDenMean": 45.9,
+      "count": 3831
+    },
+    {
+      "plrId": "01401049",
+      "dbDenMean": 48.4,
+      "count": 3798
+    },
+    {
+      "plrId": "02100101",
+      "dbDenMean": 52,
+      "count": 3033
+    },
+    {
+      "plrId": "02100102",
+      "dbDenMean": 51.4,
+      "count": 3777
+    },
+    {
+      "plrId": "02100103",
+      "dbDenMean": 47.5,
+      "count": 2363
+    },
+    {
+      "plrId": "02100104",
+      "dbDenMean": 50.2,
+      "count": 2096
+    },
+    {
+      "plrId": "02100105",
+      "dbDenMean": 50.9,
+      "count": 3242
+    },
+    {
+      "plrId": "02100106",
+      "dbDenMean": 51.3,
+      "count": 2271
+    },
+    {
+      "plrId": "02200207",
+      "dbDenMean": 55.3,
+      "count": 1017
+    },
+    {
+      "plrId": "02200208",
+      "dbDenMean": 51.9,
+      "count": 3675
+    },
+    {
+      "plrId": "02200209",
+      "dbDenMean": 51,
+      "count": 6417
+    },
+    {
+      "plrId": "02200210",
+      "dbDenMean": 50.9,
+      "count": 7287
+    },
+    {
+      "plrId": "02200211",
+      "dbDenMean": 45.9,
+      "count": 7562
+    },
+    {
+      "plrId": "02200212",
+      "dbDenMean": 47.5,
+      "count": 3955
+    },
+    {
+      "plrId": "02200213",
+      "dbDenMean": 47.4,
+      "count": 6135
+    },
+    {
+      "plrId": "02300314",
+      "dbDenMean": 49.7,
+      "count": 3990
+    },
+    {
+      "plrId": "02300315",
+      "dbDenMean": 47.7,
+      "count": 3851
+    },
+    {
+      "plrId": "02300316",
+      "dbDenMean": 51.7,
+      "count": 2689
+    },
+    {
+      "plrId": "02300417",
+      "dbDenMean": 47.1,
+      "count": 4006
+    },
+    {
+      "plrId": "02300418",
+      "dbDenMean": 42.7,
+      "count": 3767
+    },
+    {
+      "plrId": "02300419",
+      "dbDenMean": 46.6,
+      "count": 5386
+    },
+    {
+      "plrId": "02400520",
+      "dbDenMean": 51.5,
+      "count": 2462
+    },
+    {
+      "plrId": "02400521",
+      "dbDenMean": 52.2,
+      "count": 3683
+    },
+    {
+      "plrId": "02400522",
+      "dbDenMean": 46.7,
+      "count": 5234
+    },
+    {
+      "plrId": "02400623",
+      "dbDenMean": 54.5,
+      "count": 4026
+    },
+    {
+      "plrId": "02400624",
+      "dbDenMean": 48.8,
+      "count": 5239
+    },
+    {
+      "plrId": "02400625",
+      "dbDenMean": 56.5,
+      "count": 542
+    },
+    {
+      "plrId": "02500726",
+      "dbDenMean": 50.3,
+      "count": 4102
+    },
+    {
+      "plrId": "02500727",
+      "dbDenMean": 48.4,
+      "count": 3228
+    },
+    {
+      "plrId": "02500728",
+      "dbDenMean": 45.7,
+      "count": 4430
+    },
+    {
+      "plrId": "02500729",
+      "dbDenMean": 48.1,
+      "count": 2478
+    },
+    {
+      "plrId": "02500830",
+      "dbDenMean": 50.7,
+      "count": 1841
+    },
+    {
+      "plrId": "02500831",
+      "dbDenMean": 47.5,
+      "count": 3568
+    },
+    {
+      "plrId": "02500832",
+      "dbDenMean": 51,
+      "count": 3999
+    },
+    {
+      "plrId": "02500833",
+      "dbDenMean": 49.8,
+      "count": 4941
+    },
+    {
+      "plrId": "02500834",
+      "dbDenMean": 49.1,
+      "count": 4964
+    },
+    {
+      "plrId": "02500835",
+      "dbDenMean": 53.1,
+      "count": 3861
+    },
+    {
+      "plrId": "02500836",
+      "dbDenMean": 50.6,
+      "count": 3342
+    },
+    {
+      "plrId": "03100101",
+      "dbDenMean": 50.2,
+      "count": 9046
+    },
+    {
+      "plrId": "03100102",
+      "dbDenMean": 50.8,
+      "count": 6499
+    },
+    {
+      "plrId": "03100103",
+      "dbDenMean": 53.2,
+      "count": 4075
+    },
+    {
+      "plrId": "03200204",
+      "dbDenMean": 48.4,
+      "count": 7765
+    },
+    {
+      "plrId": "03200205",
+      "dbDenMean": 46.1,
+      "count": 15334
+    },
+    {
+      "plrId": "03200206",
+      "dbDenMean": 47.9,
+      "count": 9562
+    },
+    {
+      "plrId": "03200207",
+      "dbDenMean": 49.2,
+      "count": 18204
+    },
+    {
+      "plrId": "03200308",
+      "dbDenMean": 49,
+      "count": 12290
+    },
+    {
+      "plrId": "03200309",
+      "dbDenMean": 55,
+      "count": 15810
+    },
+    {
+      "plrId": "03200310",
+      "dbDenMean": 49.2,
+      "count": 13001
+    },
+    {
+      "plrId": "03300411",
+      "dbDenMean": 51.2,
+      "count": 13646
+    },
+    {
+      "plrId": "03300412",
+      "dbDenMean": 54,
+      "count": 19193
+    },
+    {
+      "plrId": "03300413",
+      "dbDenMean": 48.7,
+      "count": 10807
+    },
+    {
+      "plrId": "03300514",
+      "dbDenMean": 54.3,
+      "count": 26752
+    },
+    {
+      "plrId": "03300515",
+      "dbDenMean": 55.3,
+      "count": 245
+    },
+    {
+      "plrId": "03300516",
+      "dbDenMean": 50.8,
+      "count": 19082
+    },
+    {
+      "plrId": "03300517",
+      "dbDenMean": 48.1,
+      "count": 4241
+    },
+    {
+      "plrId": "03400618",
+      "dbDenMean": 50.9,
+      "count": 10475
+    },
+    {
+      "plrId": "03400619",
+      "dbDenMean": 46.7,
+      "count": 16053
+    },
+    {
+      "plrId": "03400620",
+      "dbDenMean": 51.2,
+      "count": 7725
+    },
+    {
+      "plrId": "03400721",
+      "dbDenMean": 49.7,
+      "count": 7179
+    },
+    {
+      "plrId": "03400722",
+      "dbDenMean": 43.9,
+      "count": 4106
+    },
+    {
+      "plrId": "03400723",
+      "dbDenMean": 52.9,
+      "count": 4808
+    },
+    {
+      "plrId": "03400724",
+      "dbDenMean": 46.4,
+      "count": 5413
+    },
+    {
+      "plrId": "03400725",
+      "dbDenMean": 51.1,
+      "count": 6530
+    },
+    {
+      "plrId": "03400826",
+      "dbDenMean": 51.5,
+      "count": 3997
+    },
+    {
+      "plrId": "03400827",
+      "dbDenMean": 47.6,
+      "count": 4734
+    },
+    {
+      "plrId": "03400828",
+      "dbDenMean": 51.6,
+      "count": 2660
+    },
+    {
+      "plrId": "03400829",
+      "dbDenMean": 46.7,
+      "count": 2748
+    },
+    {
+      "plrId": "03400830",
+      "dbDenMean": 50.8,
+      "count": 5860
+    },
+    {
+      "plrId": "03400831",
+      "dbDenMean": 68.5,
+      "count": 17
+    },
+    {
+      "plrId": "03500932",
+      "dbDenMean": 47.1,
+      "count": 5425
+    },
+    {
+      "plrId": "03500933",
+      "dbDenMean": 49.5,
+      "count": 6765
+    },
+    {
+      "plrId": "03500934",
+      "dbDenMean": 50,
+      "count": 6359
+    },
+    {
+      "plrId": "03500935",
+      "dbDenMean": 47.7,
+      "count": 4596
+    },
+    {
+      "plrId": "03500936",
+      "dbDenMean": 45.7,
+      "count": 6498
+    },
+    {
+      "plrId": "03501037",
+      "dbDenMean": 50,
+      "count": 6016
+    },
+    {
+      "plrId": "03501038",
+      "dbDenMean": 48.2,
+      "count": 7985
+    },
+    {
+      "plrId": "03601139",
+      "dbDenMean": 50.8,
+      "count": 2034
+    },
+    {
+      "plrId": "03601140",
+      "dbDenMean": 49.5,
+      "count": 2636
+    },
+    {
+      "plrId": "03601141",
+      "dbDenMean": 50.6,
+      "count": 3091
+    },
+    {
+      "plrId": "03601142",
+      "dbDenMean": 49,
+      "count": 5410
+    },
+    {
+      "plrId": "03601243",
+      "dbDenMean": 50.5,
+      "count": 3544
+    },
+    {
+      "plrId": "03601244",
+      "dbDenMean": 49.6,
+      "count": 3934
+    },
+    {
+      "plrId": "03601245",
+      "dbDenMean": 49.4,
+      "count": 7336
+    },
+    {
+      "plrId": "03601346",
+      "dbDenMean": 50,
+      "count": 2952
+    },
+    {
+      "plrId": "03601347",
+      "dbDenMean": 45.5,
+      "count": 4469
+    },
+    {
+      "plrId": "03601348",
+      "dbDenMean": 47.3,
+      "count": 3630
+    },
+    {
+      "plrId": "03601449",
+      "dbDenMean": 51.8,
+      "count": 3793
+    },
+    {
+      "plrId": "03601450",
+      "dbDenMean": 48.1,
+      "count": 3292
+    },
+    {
+      "plrId": "03601451",
+      "dbDenMean": 49,
+      "count": 3278
+    },
+    {
+      "plrId": "03601452",
+      "dbDenMean": 52.1,
+      "count": 2061
+    },
+    {
+      "plrId": "03601453",
+      "dbDenMean": 47.6,
+      "count": 2748
+    },
+    {
+      "plrId": "03701554",
+      "dbDenMean": 47.5,
+      "count": 6356
+    },
+    {
+      "plrId": "03701555",
+      "dbDenMean": 46.3,
+      "count": 3886
+    },
+    {
+      "plrId": "03701556",
+      "dbDenMean": 47,
+      "count": 4491
+    },
+    {
+      "plrId": "03701657",
+      "dbDenMean": 53.8,
+      "count": 1582
+    },
+    {
+      "plrId": "03701658",
+      "dbDenMean": 46,
+      "count": 3895
+    },
+    {
+      "plrId": "03701659",
+      "dbDenMean": 47.6,
+      "count": 3742
+    },
+    {
+      "plrId": "03701660",
+      "dbDenMean": 47.8,
+      "count": 6676
+    },
+    {
+      "plrId": "04100101",
+      "dbDenMean": 53.2,
+      "count": 8886
+    },
+    {
+      "plrId": "04100102",
+      "dbDenMean": 55.5,
+      "count": 3425
+    },
+    {
+      "plrId": "04200203",
+      "dbDenMean": 54.2,
+      "count": 3660
+    },
+    {
+      "plrId": "04200204",
+      "dbDenMean": 49.2,
+      "count": 1603
+    },
+    {
+      "plrId": "04200205",
+      "dbDenMean": 54.3,
+      "count": 4502
+    },
+    {
+      "plrId": "04200206",
+      "dbDenMean": 48.6,
+      "count": 7246
+    },
+    {
+      "plrId": "04200207",
+      "dbDenMean": 52,
+      "count": 8215
+    },
+    {
+      "plrId": "04200308",
+      "dbDenMean": 49.7,
+      "count": 9550
+    },
+    {
+      "plrId": "04200309",
+      "dbDenMean": 53.6,
+      "count": 5969
+    },
+    {
+      "plrId": "04200310",
+      "dbDenMean": 50.3,
+      "count": 8305
+    },
+    {
+      "plrId": "04200311",
+      "dbDenMean": 54.9,
+      "count": 3677
+    },
+    {
+      "plrId": "04300412",
+      "dbDenMean": 54.9,
+      "count": 2577
+    },
+    {
+      "plrId": "04300413",
+      "dbDenMean": 49,
+      "count": 5226
+    },
+    {
+      "plrId": "04300414",
+      "dbDenMean": 51,
+      "count": 6326
+    },
+    {
+      "plrId": "04300415",
+      "dbDenMean": 53.8,
+      "count": 3833
+    },
+    {
+      "plrId": "04300416",
+      "dbDenMean": 50.9,
+      "count": 6962
+    },
+    {
+      "plrId": "04300517",
+      "dbDenMean": 52,
+      "count": 4908
+    },
+    {
+      "plrId": "04300518",
+      "dbDenMean": 49.9,
+      "count": 2857
+    },
+    {
+      "plrId": "04300619",
+      "dbDenMean": 48.8,
+      "count": 4848
+    },
+    {
+      "plrId": "04300620",
+      "dbDenMean": 50.2,
+      "count": 1863
+    },
+    {
+      "plrId": "04300621",
+      "dbDenMean": 48.9,
+      "count": 5968
+    },
+    {
+      "plrId": "04300622",
+      "dbDenMean": 53.1,
+      "count": 5557
+    },
+    {
+      "plrId": "04300623",
+      "dbDenMean": 49.2,
+      "count": 6285
+    },
+    {
+      "plrId": "04300624",
+      "dbDenMean": 51,
+      "count": 6455
+    },
+    {
+      "plrId": "04400725",
+      "dbDenMean": 63.4,
+      "count": 170
+    },
+    {
+      "plrId": "04400726",
+      "dbDenMean": 53.2,
+      "count": 11909
+    },
+    {
+      "plrId": "04400727",
+      "dbDenMean": 53.9,
+      "count": 7874
+    },
+    {
+      "plrId": "04400728",
+      "dbDenMean": 50.6,
+      "count": 8562
+    },
+    {
+      "plrId": "04400729",
+      "dbDenMean": 51.7,
+      "count": 8920
+    },
+    {
+      "plrId": "04400830",
+      "dbDenMean": 49.3,
+      "count": 5947
+    },
+    {
+      "plrId": "04400831",
+      "dbDenMean": 49.9,
+      "count": 4936
+    },
+    {
+      "plrId": "04400832",
+      "dbDenMean": 45.4,
+      "count": 6462
+    },
+    {
+      "plrId": "04400833",
+      "dbDenMean": 51.2,
+      "count": 1802
+    },
+    {
+      "plrId": "04400834",
+      "dbDenMean": 51.3,
+      "count": 3506
+    },
+    {
+      "plrId": "04400835",
+      "dbDenMean": 50.7,
+      "count": 6809
+    },
+    {
+      "plrId": "04500936",
+      "dbDenMean": 49.5,
+      "count": 3453
+    },
+    {
+      "plrId": "04500937",
+      "dbDenMean": 53.1,
+      "count": 4857
+    },
+    {
+      "plrId": "04500938",
+      "dbDenMean": 53.3,
+      "count": 4504
+    },
+    {
+      "plrId": "04500939",
+      "dbDenMean": 52.4,
+      "count": 4280
+    },
+    {
+      "plrId": "04501040",
+      "dbDenMean": 50.3,
+      "count": 4216
+    },
+    {
+      "plrId": "04501041",
+      "dbDenMean": 52.4,
+      "count": 5137
+    },
+    {
+      "plrId": "04501042",
+      "dbDenMean": 52.5,
+      "count": 3210
+    },
+    {
+      "plrId": "04501043",
+      "dbDenMean": 49.4,
+      "count": 6803
+    },
+    {
+      "plrId": "04501044",
+      "dbDenMean": 47.1,
+      "count": 3274
+    },
+    {
+      "plrId": "04501045",
+      "dbDenMean": 49.7,
+      "count": 5742
+    },
+    {
+      "plrId": "04501146",
+      "dbDenMean": 53.2,
+      "count": 3051
+    },
+    {
+      "plrId": "04501147",
+      "dbDenMean": 49.2,
+      "count": 3104
+    },
+    {
+      "plrId": "04501148",
+      "dbDenMean": 55.5,
+      "count": 2523
+    },
+    {
+      "plrId": "04501149",
+      "dbDenMean": 47.3,
+      "count": 5497
+    },
+    {
+      "plrId": "04501150",
+      "dbDenMean": 52,
+      "count": 1695
+    },
+    {
+      "plrId": "04501151",
+      "dbDenMean": 52.8,
+      "count": 3993
+    },
+    {
+      "plrId": "04501152",
+      "dbDenMean": 47.7,
+      "count": 4113
+    },
+    {
+      "plrId": "04501153",
+      "dbDenMean": 53.5,
+      "count": 4145
+    },
+    {
+      "plrId": "05100101",
+      "dbDenMean": 43.5,
+      "count": 11084
+    },
+    {
+      "plrId": "05100102",
+      "dbDenMean": 41.8,
+      "count": 3110
+    },
+    {
+      "plrId": "05100103",
+      "dbDenMean": 44,
+      "count": 3161
+    },
+    {
+      "plrId": "05100104",
+      "dbDenMean": 49.1,
+      "count": 2301
+    },
+    {
+      "plrId": "05100105",
+      "dbDenMean": 44.5,
+      "count": 15781
+    },
+    {
+      "plrId": "05100206",
+      "dbDenMean": 46.6,
+      "count": 6271
+    },
+    {
+      "plrId": "05100207",
+      "dbDenMean": 52.6,
+      "count": 5674
+    },
+    {
+      "plrId": "05100208",
+      "dbDenMean": 46.7,
+      "count": 11044
+    },
+    {
+      "plrId": "05100209",
+      "dbDenMean": 44.2,
+      "count": 5823
+    },
+    {
+      "plrId": "05100210",
+      "dbDenMean": 47.9,
+      "count": 5328
+    },
+    {
+      "plrId": "05100211",
+      "dbDenMean": 50.9,
+      "count": 15550
+    },
+    {
+      "plrId": "05100312",
+      "dbDenMean": 45.5,
+      "count": 2730
+    },
+    {
+      "plrId": "05100313",
+      "dbDenMean": 48.5,
+      "count": 3162
+    },
+    {
+      "plrId": "05100314",
+      "dbDenMean": 46.4,
+      "count": 5000
+    },
+    {
+      "plrId": "05100315",
+      "dbDenMean": 48.4,
+      "count": 5383
+    },
+    {
+      "plrId": "05100316",
+      "dbDenMean": 50.6,
+      "count": 9007
+    },
+    {
+      "plrId": "05100317",
+      "dbDenMean": 55,
+      "count": 2559
+    },
+    {
+      "plrId": "05200418",
+      "dbDenMean": 49.5,
+      "count": 14865
+    },
+    {
+      "plrId": "05200419",
+      "dbDenMean": 47.1,
+      "count": 4313
+    },
+    {
+      "plrId": "05200420",
+      "dbDenMean": 49.4,
+      "count": 17960
+    },
+    {
+      "plrId": "05200421",
+      "dbDenMean": 49.1,
+      "count": 4856
+    },
+    {
+      "plrId": "05200422",
+      "dbDenMean": 52,
+      "count": 2355
+    },
+    {
+      "plrId": "05200423",
+      "dbDenMean": 47.1,
+      "count": 3582
+    },
+    {
+      "plrId": "05200524",
+      "dbDenMean": 49.4,
+      "count": 7783
+    },
+    {
+      "plrId": "05200525",
+      "dbDenMean": 45.7,
+      "count": 4085
+    },
+    {
+      "plrId": "05200526",
+      "dbDenMean": 50.2,
+      "count": 2297
+    },
+    {
+      "plrId": "05200527",
+      "dbDenMean": 49.1,
+      "count": 6711
+    },
+    {
+      "plrId": "05200528",
+      "dbDenMean": 47.5,
+      "count": 15996
+    },
+    {
+      "plrId": "05200629",
+      "dbDenMean": 51.2,
+      "count": 5632
+    },
+    {
+      "plrId": "05200630",
+      "dbDenMean": 48.2,
+      "count": 7410
+    },
+    {
+      "plrId": "05200631",
+      "dbDenMean": 48.9,
+      "count": 5504
+    },
+    {
+      "plrId": "05200632",
+      "dbDenMean": 52.9,
+      "count": 3003
+    },
+    {
+      "plrId": "05200633",
+      "dbDenMean": 54.1,
+      "count": 1533
+    },
+    {
+      "plrId": "05200634",
+      "dbDenMean": 46.2,
+      "count": 11515
+    },
+    {
+      "plrId": "05300735",
+      "dbDenMean": 46.5,
+      "count": 2629
+    },
+    {
+      "plrId": "05300736",
+      "dbDenMean": 45.8,
+      "count": 2923
+    },
+    {
+      "plrId": "05300737",
+      "dbDenMean": 49,
+      "count": 7438
+    },
+    {
+      "plrId": "05300838",
+      "dbDenMean": 52.7,
+      "count": 48
+    },
+    {
+      "plrId": "05300839",
+      "dbDenMean": 46.1,
+      "count": 5830
+    },
+    {
+      "plrId": "05300840",
+      "dbDenMean": 54.3,
+      "count": 548
+    },
+    {
+      "plrId": "05300841",
+      "dbDenMean": 51.3,
+      "count": 2434
+    },
+    {
+      "plrId": "05400942",
+      "dbDenMean": 45.2,
+      "count": 16762
+    },
+    {
+      "plrId": "05400943",
+      "dbDenMean": 41.1,
+      "count": 36078
+    },
+    {
+      "plrId": "05400944",
+      "dbDenMean": 39.6,
+      "count": 7468
+    },
+    {
+      "plrId": "05400945",
+      "dbDenMean": 36.2,
+      "count": 13525
+    },
+    {
+      "plrId": "06100101",
+      "dbDenMean": 48.4,
+      "count": 9714
+    },
+    {
+      "plrId": "06100102",
+      "dbDenMean": 49.8,
+      "count": 5770
+    },
+    {
+      "plrId": "06100103",
+      "dbDenMean": 50.2,
+      "count": 4449
+    },
+    {
+      "plrId": "06100204",
+      "dbDenMean": 50.4,
+      "count": 6189
+    },
+    {
+      "plrId": "06100205",
+      "dbDenMean": 51.3,
+      "count": 8747
+    },
+    {
+      "plrId": "06100206",
+      "dbDenMean": 50.1,
+      "count": 5567
+    },
+    {
+      "plrId": "06100207",
+      "dbDenMean": 50.2,
+      "count": 5969
+    },
+    {
+      "plrId": "06100208",
+      "dbDenMean": 51.3,
+      "count": 5407
+    },
+    {
+      "plrId": "06100209",
+      "dbDenMean": 51.8,
+      "count": 5914
+    },
+    {
+      "plrId": "06100210",
+      "dbDenMean": 49.6,
+      "count": 3132
+    },
+    {
+      "plrId": "06200311",
+      "dbDenMean": 48.9,
+      "count": 7345
+    },
+    {
+      "plrId": "06200312",
+      "dbDenMean": 48.7,
+      "count": 9266
+    },
+    {
+      "plrId": "06200313",
+      "dbDenMean": 50.9,
+      "count": 5536
+    },
+    {
+      "plrId": "06200314",
+      "dbDenMean": 45.9,
+      "count": 6973
+    },
+    {
+      "plrId": "06200315",
+      "dbDenMean": 44.1,
+      "count": 7338
+    },
+    {
+      "plrId": "06200316",
+      "dbDenMean": 47.2,
+      "count": 3808
+    },
+    {
+      "plrId": "06200317",
+      "dbDenMean": 45.6,
+      "count": 14856
+    },
+    {
+      "plrId": "06200418",
+      "dbDenMean": 49.2,
+      "count": 89
+    },
+    {
+      "plrId": "06200419",
+      "dbDenMean": 47.6,
+      "count": 2081
+    },
+    {
+      "plrId": "06200420",
+      "dbDenMean": 50.2,
+      "count": 9045
+    },
+    {
+      "plrId": "06200421",
+      "dbDenMean": 50.8,
+      "count": 13276
+    },
+    {
+      "plrId": "06200422",
+      "dbDenMean": 50.2,
+      "count": 13543
+    },
+    {
+      "plrId": "06200423",
+      "dbDenMean": 45,
+      "count": 17660
+    },
+    {
+      "plrId": "06300524",
+      "dbDenMean": 47.9,
+      "count": 12705
+    },
+    {
+      "plrId": "06300525",
+      "dbDenMean": 44.6,
+      "count": 5500
+    },
+    {
+      "plrId": "06300526",
+      "dbDenMean": 50.7,
+      "count": 6675
+    },
+    {
+      "plrId": "06300527",
+      "dbDenMean": 50.4,
+      "count": 7374
+    },
+    {
+      "plrId": "06300528",
+      "dbDenMean": 45.6,
+      "count": 28460
+    },
+    {
+      "plrId": "06300629",
+      "dbDenMean": 51.8,
+      "count": 8454
+    },
+    {
+      "plrId": "06300630",
+      "dbDenMean": 48.2,
+      "count": 5851
+    },
+    {
+      "plrId": "06300631",
+      "dbDenMean": 51.9,
+      "count": 3657
+    },
+    {
+      "plrId": "06300632",
+      "dbDenMean": 46.4,
+      "count": 26771
+    },
+    {
+      "plrId": "06300633",
+      "dbDenMean": 47.5,
+      "count": 17511
+    },
+    {
+      "plrId": "06300634",
+      "dbDenMean": 47.8,
+      "count": 16259
+    },
+    {
+      "plrId": "06400735",
+      "dbDenMean": 47.4,
+      "count": 32233
+    },
+    {
+      "plrId": "06400736",
+      "dbDenMean": 48.5,
+      "count": 9101
+    },
+    {
+      "plrId": "06400737",
+      "dbDenMean": 51.9,
+      "count": 27186
+    },
+    {
+      "plrId": "06400838",
+      "dbDenMean": 48.5,
+      "count": 20474
+    },
+    {
+      "plrId": "06400839",
+      "dbDenMean": 48.7,
+      "count": 13729
+    },
+    {
+      "plrId": "06400840",
+      "dbDenMean": 45.8,
+      "count": 12055
+    },
+    {
+      "plrId": "06400841",
+      "dbDenMean": 48.5,
+      "count": 10976
+    },
+    {
+      "plrId": "06400842",
+      "dbDenMean": 48.1,
+      "count": 5379
+    },
+    {
+      "plrId": "06400843",
+      "dbDenMean": 47,
+      "count": 16910
+    },
+    {
+      "plrId": "06400844",
+      "dbDenMean": 48,
+      "count": 22552
+    },
+    {
+      "plrId": "07100101",
+      "dbDenMean": 48.7,
+      "count": 5604
+    },
+    {
+      "plrId": "07100102",
+      "dbDenMean": 48.6,
+      "count": 4897
+    },
+    {
+      "plrId": "07100103",
+      "dbDenMean": 51.2,
+      "count": 3329
+    },
+    {
+      "plrId": "07100204",
+      "dbDenMean": 45.5,
+      "count": 5838
+    },
+    {
+      "plrId": "07100205",
+      "dbDenMean": 55,
+      "count": 2571
+    },
+    {
+      "plrId": "07100206",
+      "dbDenMean": 50.4,
+      "count": 3996
+    },
+    {
+      "plrId": "07200307",
+      "dbDenMean": 48,
+      "count": 6666
+    },
+    {
+      "plrId": "07200308",
+      "dbDenMean": 52.4,
+      "count": 5281
+    },
+    {
+      "plrId": "07200409",
+      "dbDenMean": 48.2,
+      "count": 5366
+    },
+    {
+      "plrId": "07200410",
+      "dbDenMean": 51.4,
+      "count": 2805
+    },
+    {
+      "plrId": "07200411",
+      "dbDenMean": 51.4,
+      "count": 1697
+    },
+    {
+      "plrId": "07200412",
+      "dbDenMean": 58.2,
+      "count": 905
+    },
+    {
+      "plrId": "07200413",
+      "dbDenMean": 48.1,
+      "count": 4026
+    },
+    {
+      "plrId": "07200414",
+      "dbDenMean": 49.3,
+      "count": 1879
+    },
+    {
+      "plrId": "07300515",
+      "dbDenMean": 52.5,
+      "count": 5005
+    },
+    {
+      "plrId": "07300516",
+      "dbDenMean": 47.6,
+      "count": 6452
+    },
+    {
+      "plrId": "07300517",
+      "dbDenMean": 51.5,
+      "count": 6725
+    },
+    {
+      "plrId": "07300618",
+      "dbDenMean": 51.9,
+      "count": 6809
+    },
+    {
+      "plrId": "07300619",
+      "dbDenMean": 53.3,
+      "count": 7985
+    },
+    {
+      "plrId": "07400720",
+      "dbDenMean": 50.8,
+      "count": 7317
+    },
+    {
+      "plrId": "07400721",
+      "dbDenMean": 54.2,
+      "count": 6936
+    },
+    {
+      "plrId": "07400822",
+      "dbDenMean": 50.8,
+      "count": 1910
+    },
+    {
+      "plrId": "07400823",
+      "dbDenMean": 51.1,
+      "count": 6388
+    },
+    {
+      "plrId": "07400824",
+      "dbDenMean": 51.5,
+      "count": 4832
+    },
+    {
+      "plrId": "07400825",
+      "dbDenMean": 49,
+      "count": 3954
+    },
+    {
+      "plrId": "07400826",
+      "dbDenMean": 52.7,
+      "count": 5216
+    },
+    {
+      "plrId": "07400927",
+      "dbDenMean": 52.3,
+      "count": 7046
+    },
+    {
+      "plrId": "07400928",
+      "dbDenMean": 53,
+      "count": 2781
+    },
+    {
+      "plrId": "07501029",
+      "dbDenMean": 50.8,
+      "count": 4870
+    },
+    {
+      "plrId": "07501030",
+      "dbDenMean": 50.2,
+      "count": 6006
+    },
+    {
+      "plrId": "07501031",
+      "dbDenMean": 49.2,
+      "count": 7504
+    },
+    {
+      "plrId": "07501032",
+      "dbDenMean": 46.7,
+      "count": 7586
+    },
+    {
+      "plrId": "07501133",
+      "dbDenMean": 49.4,
+      "count": 6645
+    },
+    {
+      "plrId": "07501134",
+      "dbDenMean": 45.9,
+      "count": 17968
+    },
+    {
+      "plrId": "07501135",
+      "dbDenMean": 49.6,
+      "count": 6182
+    },
+    {
+      "plrId": "07601236",
+      "dbDenMean": 49.8,
+      "count": 8804
+    },
+    {
+      "plrId": "07601237",
+      "dbDenMean": 49.3,
+      "count": 10461
+    },
+    {
+      "plrId": "07601238",
+      "dbDenMean": 49,
+      "count": 3857
+    },
+    {
+      "plrId": "07601339",
+      "dbDenMean": 43.5,
+      "count": 3112
+    },
+    {
+      "plrId": "07601340",
+      "dbDenMean": 47.8,
+      "count": 2669
+    },
+    {
+      "plrId": "07601341",
+      "dbDenMean": 47.1,
+      "count": 5491
+    },
+    {
+      "plrId": "07601442",
+      "dbDenMean": 48.6,
+      "count": 25003
+    },
+    {
+      "plrId": "07601443",
+      "dbDenMean": 46.2,
+      "count": 23529
+    },
+    {
+      "plrId": "07601544",
+      "dbDenMean": 46.4,
+      "count": 8882
+    },
+    {
+      "plrId": "07601545",
+      "dbDenMean": 43.3,
+      "count": 7754
+    },
+    {
+      "plrId": "07601546",
+      "dbDenMean": 44.1,
+      "count": 18506
+    },
+    {
+      "plrId": "07601547",
+      "dbDenMean": 45.1,
+      "count": 8292
+    },
+    {
+      "plrId": "07601548",
+      "dbDenMean": 44.3,
+      "count": 9621
+    },
+    {
+      "plrId": "08100101",
+      "dbDenMean": 48.4,
+      "count": 2263
+    },
+    {
+      "plrId": "08100102",
+      "dbDenMean": 44.4,
+      "count": 3751
+    },
+    {
+      "plrId": "08100103",
+      "dbDenMean": 43.4,
+      "count": 2996
+    },
+    {
+      "plrId": "08100104",
+      "dbDenMean": 48.3,
+      "count": 2682
+    },
+    {
+      "plrId": "08100105",
+      "dbDenMean": 55.8,
+      "count": 2637
+    },
+    {
+      "plrId": "08100206",
+      "dbDenMean": 48.5,
+      "count": 4497
+    },
+    {
+      "plrId": "08100207",
+      "dbDenMean": 47.4,
+      "count": 3656
+    },
+    {
+      "plrId": "08100208",
+      "dbDenMean": 45.8,
+      "count": 5260
+    },
+    {
+      "plrId": "08100209",
+      "dbDenMean": 51.7,
+      "count": 4213
+    },
+    {
+      "plrId": "08100310",
+      "dbDenMean": 43.6,
+      "count": 3511
+    },
+    {
+      "plrId": "08100311",
+      "dbDenMean": 47.2,
+      "count": 3498
+    },
+    {
+      "plrId": "08100312",
+      "dbDenMean": 45.2,
+      "count": 5567
+    },
+    {
+      "plrId": "08100313",
+      "dbDenMean": 43.4,
+      "count": 1710
+    },
+    {
+      "plrId": "08100314",
+      "dbDenMean": 50.2,
+      "count": 3788
+    },
+    {
+      "plrId": "08100415",
+      "dbDenMean": 47.5,
+      "count": 2915
+    },
+    {
+      "plrId": "08100416",
+      "dbDenMean": 43.1,
+      "count": 3954
+    },
+    {
+      "plrId": "08100417",
+      "dbDenMean": 48.7,
+      "count": 4525
+    },
+    {
+      "plrId": "08100418",
+      "dbDenMean": 47,
+      "count": 4116
+    },
+    {
+      "plrId": "08100419",
+      "dbDenMean": 49.4,
+      "count": 3103
+    },
+    {
+      "plrId": "08100520",
+      "dbDenMean": 53.2,
+      "count": 2154
+    },
+    {
+      "plrId": "08100521",
+      "dbDenMean": 52.8,
+      "count": 4908
+    },
+    {
+      "plrId": "08200622",
+      "dbDenMean": 52.9,
+      "count": 2925
+    },
+    {
+      "plrId": "08200623",
+      "dbDenMean": 49.6,
+      "count": 4730
+    },
+    {
+      "plrId": "08200624",
+      "dbDenMean": 48.4,
+      "count": 4476
+    },
+    {
+      "plrId": "08200725",
+      "dbDenMean": 46.3,
+      "count": 6157
+    },
+    {
+      "plrId": "08200726",
+      "dbDenMean": 49.8,
+      "count": 7524
+    },
+    {
+      "plrId": "08200727",
+      "dbDenMean": 47.2,
+      "count": 8286
+    },
+    {
+      "plrId": "08200728",
+      "dbDenMean": 54.5,
+      "count": 979
+    },
+    {
+      "plrId": "08200729",
+      "dbDenMean": 45.9,
+      "count": 4125
+    },
+    {
+      "plrId": "08200730",
+      "dbDenMean": 50.1,
+      "count": 6696
+    },
+    {
+      "plrId": "08200831",
+      "dbDenMean": 46.7,
+      "count": 14875
+    },
+    {
+      "plrId": "08200832",
+      "dbDenMean": 47.1,
+      "count": 14939
+    },
+    {
+      "plrId": "08200833",
+      "dbDenMean": 41.7,
+      "count": 11657
+    },
+    {
+      "plrId": "08300934",
+      "dbDenMean": 47.3,
+      "count": 5981
+    },
+    {
+      "plrId": "08300935",
+      "dbDenMean": 45.8,
+      "count": 3863
+    },
+    {
+      "plrId": "08301036",
+      "dbDenMean": 44.1,
+      "count": 3355
+    },
+    {
+      "plrId": "08301037",
+      "dbDenMean": 43.6,
+      "count": 3510
+    },
+    {
+      "plrId": "08401138",
+      "dbDenMean": 45.5,
+      "count": 1293
+    },
+    {
+      "plrId": "08401139",
+      "dbDenMean": 48.7,
+      "count": 8512
+    },
+    {
+      "plrId": "08401140",
+      "dbDenMean": 49,
+      "count": 5625
+    },
+    {
+      "plrId": "08401241",
+      "dbDenMean": 50.1,
+      "count": 25529
+    },
+    {
+      "plrId": "08401242",
+      "dbDenMean": 43.3,
+      "count": 20671
+    },
+    {
+      "plrId": "08401243",
+      "dbDenMean": 48.4,
+      "count": 20100
+    },
+    {
+      "plrId": "08401244",
+      "dbDenMean": 43.8,
+      "count": 19905
+    },
+    {
+      "plrId": "08401245",
+      "dbDenMean": 44.3,
+      "count": 3112
+    },
+    {
+      "plrId": "08401246",
+      "dbDenMean": 48.8,
+      "count": 14614
+    },
+    {
+      "plrId": "09100101",
+      "dbDenMean": 46.6,
+      "count": 6704
+    },
+    {
+      "plrId": "09100202",
+      "dbDenMean": 56,
+      "count": 2543
+    },
+    {
+      "plrId": "09100203",
+      "dbDenMean": 53.4,
+      "count": 4348
+    },
+    {
+      "plrId": "09100304",
+      "dbDenMean": 51.3,
+      "count": 7375
+    },
+    {
+      "plrId": "09100305",
+      "dbDenMean": 55.2,
+      "count": 2330
+    },
+    {
+      "plrId": "09100306",
+      "dbDenMean": 52.5,
+      "count": 10188
+    },
+    {
+      "plrId": "09100407",
+      "dbDenMean": 51.6,
+      "count": 9851
+    },
+    {
+      "plrId": "09100408",
+      "dbDenMean": 51.3,
+      "count": 6242
+    },
+    {
+      "plrId": "09100409",
+      "dbDenMean": 52.6,
+      "count": 8933
+    },
+    {
+      "plrId": "09200510",
+      "dbDenMean": 49.6,
+      "count": 5975
+    },
+    {
+      "plrId": "09200511",
+      "dbDenMean": 46.9,
+      "count": 7748
+    },
+    {
+      "plrId": "09200512",
+      "dbDenMean": 52,
+      "count": 2545
+    },
+    {
+      "plrId": "09200613",
+      "dbDenMean": 52.3,
+      "count": 5605
+    },
+    {
+      "plrId": "09200614",
+      "dbDenMean": 50.3,
+      "count": 4972
+    },
+    {
+      "plrId": "09200715",
+      "dbDenMean": 50.6,
+      "count": 4039
+    },
+    {
+      "plrId": "09200716",
+      "dbDenMean": 51.5,
+      "count": 7840
+    },
+    {
+      "plrId": "09200717",
+      "dbDenMean": 51.1,
+      "count": 10290
+    },
+    {
+      "plrId": "09200818",
+      "dbDenMean": 50.9,
+      "count": 3430
+    },
+    {
+      "plrId": "09200819",
+      "dbDenMean": 52.6,
+      "count": 5476
+    },
+    {
+      "plrId": "09300920",
+      "dbDenMean": 51.1,
+      "count": 30911
+    },
+    {
+      "plrId": "09300921",
+      "dbDenMean": 51.9,
+      "count": 7864
+    },
+    {
+      "plrId": "09300922",
+      "dbDenMean": 49.8,
+      "count": 1934
+    },
+    {
+      "plrId": "09300923",
+      "dbDenMean": 48.5,
+      "count": 13202
+    },
+    {
+      "plrId": "09301024",
+      "dbDenMean": 50.4,
+      "count": 6269
+    },
+    {
+      "plrId": "09301025",
+      "dbDenMean": 54.8,
+      "count": 35103
+    },
+    {
+      "plrId": "09301126",
+      "dbDenMean": 51.3,
+      "count": 12468
+    },
+    {
+      "plrId": "09301227",
+      "dbDenMean": 54.3,
+      "count": 8669
+    },
+    {
+      "plrId": "09301228",
+      "dbDenMean": 49.3,
+      "count": 13207
+    },
+    {
+      "plrId": "09401329",
+      "dbDenMean": 44.2,
+      "count": 20173
+    },
+    {
+      "plrId": "09401330",
+      "dbDenMean": 45.2,
+      "count": 5075
+    },
+    {
+      "plrId": "09401431",
+      "dbDenMean": 48.8,
+      "count": 3038
+    },
+    {
+      "plrId": "09401432",
+      "dbDenMean": 46.5,
+      "count": 3964
+    },
+    {
+      "plrId": "09401433",
+      "dbDenMean": 45.2,
+      "count": 1727
+    },
+    {
+      "plrId": "09401534",
+      "dbDenMean": 48.7,
+      "count": 5336
+    },
+    {
+      "plrId": "09401635",
+      "dbDenMean": 51.9,
+      "count": 31153
+    },
+    {
+      "plrId": "09501736",
+      "dbDenMean": 52.8,
+      "count": 7210
+    },
+    {
+      "plrId": "09501737",
+      "dbDenMean": 47,
+      "count": 19358
+    },
+    {
+      "plrId": "09501838",
+      "dbDenMean": 44.8,
+      "count": 42267
+    },
+    {
+      "plrId": "09501939",
+      "dbDenMean": 51.8,
+      "count": 4804
+    },
+    {
+      "plrId": "09501940",
+      "dbDenMean": 51,
+      "count": 2088
+    },
+    {
+      "plrId": "09501941",
+      "dbDenMean": 51.6,
+      "count": 2312
+    },
+    {
+      "plrId": "09502042",
+      "dbDenMean": 47.5,
+      "count": 8579
+    },
+    {
+      "plrId": "09502043",
+      "dbDenMean": 49.9,
+      "count": 16465
+    },
+    {
+      "plrId": "10100101",
+      "dbDenMean": 47.8,
+      "count": 3104
+    },
+    {
+      "plrId": "10100102",
+      "dbDenMean": 46.6,
+      "count": 1211
+    },
+    {
+      "plrId": "10100103",
+      "dbDenMean": 44.7,
+      "count": 2487
+    },
+    {
+      "plrId": "10100104",
+      "dbDenMean": 44.5,
+      "count": 2268
+    },
+    {
+      "plrId": "10100205",
+      "dbDenMean": 55.9,
+      "count": 183
+    },
+    {
+      "plrId": "10100206",
+      "dbDenMean": 47.7,
+      "count": 3540
+    },
+    {
+      "plrId": "10100207",
+      "dbDenMean": 46.6,
+      "count": 3053
+    },
+    {
+      "plrId": "10100208",
+      "dbDenMean": 47.5,
+      "count": 2666
+    },
+    {
+      "plrId": "10100209",
+      "dbDenMean": 48.9,
+      "count": 4583
+    },
+    {
+      "plrId": "10100210",
+      "dbDenMean": 50.8,
+      "count": 3030
+    },
+    {
+      "plrId": "10100311",
+      "dbDenMean": 54.7,
+      "count": 6118
+    },
+    {
+      "plrId": "10100312",
+      "dbDenMean": 49,
+      "count": 3908
+    },
+    {
+      "plrId": "10100313",
+      "dbDenMean": 49.3,
+      "count": 8077
+    },
+    {
+      "plrId": "10100314",
+      "dbDenMean": 49,
+      "count": 2765
+    },
+    {
+      "plrId": "10100315",
+      "dbDenMean": 51.8,
+      "count": 3097
+    },
+    {
+      "plrId": "10100316",
+      "dbDenMean": 46.1,
+      "count": 2507
+    },
+    {
+      "plrId": "10200417",
+      "dbDenMean": 49.9,
+      "count": 2096
+    },
+    {
+      "plrId": "10200418",
+      "dbDenMean": 46.5,
+      "count": 2484
+    },
+    {
+      "plrId": "10200419",
+      "dbDenMean": 44.7,
+      "count": 1370
+    },
+    {
+      "plrId": "10200420",
+      "dbDenMean": 45.9,
+      "count": 3762
+    },
+    {
+      "plrId": "10200421",
+      "dbDenMean": 51,
+      "count": 1047
+    },
+    {
+      "plrId": "10200422",
+      "dbDenMean": 44.3,
+      "count": 2295
+    },
+    {
+      "plrId": "10200423",
+      "dbDenMean": 48.2,
+      "count": 2488
+    },
+    {
+      "plrId": "10200524",
+      "dbDenMean": 45.5,
+      "count": 4469
+    },
+    {
+      "plrId": "10200525",
+      "dbDenMean": 44.2,
+      "count": 1977
+    },
+    {
+      "plrId": "10200526",
+      "dbDenMean": 44.1,
+      "count": 2490
+    },
+    {
+      "plrId": "10200627",
+      "dbDenMean": 45,
+      "count": 1757
+    },
+    {
+      "plrId": "10200628",
+      "dbDenMean": 43.3,
+      "count": 2192
+    },
+    {
+      "plrId": "10200629",
+      "dbDenMean": 44.9,
+      "count": 3686
+    },
+    {
+      "plrId": "10200630",
+      "dbDenMean": 45.1,
+      "count": 2005
+    },
+    {
+      "plrId": "10300731",
+      "dbDenMean": 50,
+      "count": 24300
+    },
+    {
+      "plrId": "10300732",
+      "dbDenMean": 47.2,
+      "count": 8502
+    },
+    {
+      "plrId": "10300733",
+      "dbDenMean": 54.9,
+      "count": 9302
+    },
+    {
+      "plrId": "10300734",
+      "dbDenMean": 51.1,
+      "count": 35349
+    },
+    {
+      "plrId": "10400835",
+      "dbDenMean": 47.6,
+      "count": 24592
+    },
+    {
+      "plrId": "10400836",
+      "dbDenMean": 51.2,
+      "count": 10229
+    },
+    {
+      "plrId": "10400837",
+      "dbDenMean": 47.5,
+      "count": 30700
+    },
+    {
+      "plrId": "10400938",
+      "dbDenMean": 47.8,
+      "count": 36298
+    },
+    {
+      "plrId": "10400939",
+      "dbDenMean": 51.1,
+      "count": 14186
+    },
+    {
+      "plrId": "10400940",
+      "dbDenMean": 44,
+      "count": 23258
+    },
+    {
+      "plrId": "10400941",
+      "dbDenMean": 44.2,
+      "count": 35675
+    },
+    {
+      "plrId": "11100101",
+      "dbDenMean": 44.7,
+      "count": 10693
+    },
+    {
+      "plrId": "11100102",
+      "dbDenMean": 46.1,
+      "count": 4758
+    },
+    {
+      "plrId": "11100203",
+      "dbDenMean": 43,
+      "count": 2565
+    },
+    {
+      "plrId": "11100204",
+      "dbDenMean": 48.7,
+      "count": 1942
+    },
+    {
+      "plrId": "11100205",
+      "dbDenMean": 46.4,
+      "count": 2242
+    },
+    {
+      "plrId": "11100206",
+      "dbDenMean": 46.1,
+      "count": 3073
+    },
+    {
+      "plrId": "11100307",
+      "dbDenMean": 43.8,
+      "count": 2743
+    },
+    {
+      "plrId": "11100308",
+      "dbDenMean": 46.8,
+      "count": 3175
+    },
+    {
+      "plrId": "11100309",
+      "dbDenMean": 48.4,
+      "count": 2116
+    },
+    {
+      "plrId": "11200410",
+      "dbDenMean": 48.7,
+      "count": 18353
+    },
+    {
+      "plrId": "11200411",
+      "dbDenMean": 52.9,
+      "count": 3881
+    },
+    {
+      "plrId": "11200512",
+      "dbDenMean": 44.6,
+      "count": 5940
+    },
+    {
+      "plrId": "11200513",
+      "dbDenMean": 45.8,
+      "count": 5255
+    },
+    {
+      "plrId": "11200514",
+      "dbDenMean": 46.8,
+      "count": 5271
+    },
+    {
+      "plrId": "11200515",
+      "dbDenMean": 48.6,
+      "count": 6054
+    },
+    {
+      "plrId": "11300616",
+      "dbDenMean": 53.6,
+      "count": 1941
+    },
+    {
+      "plrId": "11300617",
+      "dbDenMean": 55,
+      "count": 1123
+    },
+    {
+      "plrId": "11300618",
+      "dbDenMean": 49.4,
+      "count": 1665
+    },
+    {
+      "plrId": "11300619",
+      "dbDenMean": 48.1,
+      "count": 2105
+    },
+    {
+      "plrId": "11300620",
+      "dbDenMean": 50.1,
+      "count": 2713
+    },
+    {
+      "plrId": "11300721",
+      "dbDenMean": 49,
+      "count": 3875
+    },
+    {
+      "plrId": "11300722",
+      "dbDenMean": 51,
+      "count": 5520
+    },
+    {
+      "plrId": "11300723",
+      "dbDenMean": 44.4,
+      "count": 2063
+    },
+    {
+      "plrId": "11300724",
+      "dbDenMean": 50,
+      "count": 2386
+    },
+    {
+      "plrId": "11300725",
+      "dbDenMean": 48.5,
+      "count": 6467
+    },
+    {
+      "plrId": "11300826",
+      "dbDenMean": 52.7,
+      "count": 2165
+    },
+    {
+      "plrId": "11400927",
+      "dbDenMean": 51.8,
+      "count": 2554
+    },
+    {
+      "plrId": "11400928",
+      "dbDenMean": 56,
+      "count": 1909
+    },
+    {
+      "plrId": "11400929",
+      "dbDenMean": 46.9,
+      "count": 9018
+    },
+    {
+      "plrId": "11400930",
+      "dbDenMean": 45.7,
+      "count": 3205
+    },
+    {
+      "plrId": "11400931",
+      "dbDenMean": 51.8,
+      "count": 2709
+    },
+    {
+      "plrId": "11401032",
+      "dbDenMean": 55,
+      "count": 2573
+    },
+    {
+      "plrId": "11401033",
+      "dbDenMean": 52.9,
+      "count": 2549
+    },
+    {
+      "plrId": "11401034",
+      "dbDenMean": 50.8,
+      "count": 1803
+    },
+    {
+      "plrId": "11401135",
+      "dbDenMean": 46.6,
+      "count": 3147
+    },
+    {
+      "plrId": "11401136",
+      "dbDenMean": 47.7,
+      "count": 3964
+    },
+    {
+      "plrId": "11401137",
+      "dbDenMean": 48.4,
+      "count": 2555
+    },
+    {
+      "plrId": "11501238",
+      "dbDenMean": 52.5,
+      "count": 3689
+    },
+    {
+      "plrId": "11501339",
+      "dbDenMean": 45.3,
+      "count": 8240
+    },
+    {
+      "plrId": "11501340",
+      "dbDenMean": 48.1,
+      "count": 16953
+    },
+    {
+      "plrId": "11501341",
+      "dbDenMean": 48.4,
+      "count": 12435
+    },
+    {
+      "plrId": "12100101",
+      "dbDenMean": 49.3,
+      "count": 6838
+    },
+    {
+      "plrId": "12100102",
+      "dbDenMean": 45.2,
+      "count": 6105
+    },
+    {
+      "plrId": "12100103",
+      "dbDenMean": 50,
+      "count": 5824
+    },
+    {
+      "plrId": "12100204",
+      "dbDenMean": 49.7,
+      "count": 5682
+    },
+    {
+      "plrId": "12100205",
+      "dbDenMean": 50.6,
+      "count": 9830
+    },
+    {
+      "plrId": "12100206",
+      "dbDenMean": 50.4,
+      "count": 3661
+    },
+    {
+      "plrId": "12200307",
+      "dbDenMean": 52,
+      "count": 2257
+    },
+    {
+      "plrId": "12200308",
+      "dbDenMean": 46.8,
+      "count": 4108
+    },
+    {
+      "plrId": "12200309",
+      "dbDenMean": 48.4,
+      "count": 6638
+    },
+    {
+      "plrId": "12200310",
+      "dbDenMean": 54.2,
+      "count": 3902
+    },
+    {
+      "plrId": "12200411",
+      "dbDenMean": 55.8,
+      "count": 963
+    },
+    {
+      "plrId": "12200412",
+      "dbDenMean": 47.5,
+      "count": 12469
+    },
+    {
+      "plrId": "12200413",
+      "dbDenMean": 48.4,
+      "count": 4811
+    },
+    {
+      "plrId": "12200414",
+      "dbDenMean": 48.4,
+      "count": 4943
+    },
+    {
+      "plrId": "12200515",
+      "dbDenMean": 45.9,
+      "count": 9451
+    },
+    {
+      "plrId": "12400616",
+      "dbDenMean": 41.7,
+      "count": 19800
+    },
+    {
+      "plrId": "12400617",
+      "dbDenMean": 47.1,
+      "count": 22741
+    },
+    {
+      "plrId": "12400618",
+      "dbDenMean": 52.4,
+      "count": 10083
+    },
+    {
+      "plrId": "12400619",
+      "dbDenMean": 45.6,
+      "count": 26159
+    },
+    {
+      "plrId": "12400720",
+      "dbDenMean": 43.5,
+      "count": 28841
+    },
+    {
+      "plrId": "12400721",
+      "dbDenMean": 45.4,
+      "count": 26759
+    },
+    {
+      "plrId": "12400722",
+      "dbDenMean": 46.4,
+      "count": 27121
+    },
+    {
+      "plrId": "12400723",
+      "dbDenMean": 46.6,
+      "count": 24308
+    },
+    {
+      "plrId": "12500824",
+      "dbDenMean": 49,
+      "count": 14597
+    },
+    {
+      "plrId": "12500825",
+      "dbDenMean": 48.7,
+      "count": 7900
+    },
+    {
+      "plrId": "12500926",
+      "dbDenMean": 52.9,
+      "count": 7443
+    },
+    {
+      "plrId": "12500927",
+      "dbDenMean": 48.4,
+      "count": 12865
+    },
+    {
+      "plrId": "12500928",
+      "dbDenMean": 48.4,
+      "count": 12358
+    },
+    {
+      "plrId": "12500929",
+      "dbDenMean": 43.1,
+      "count": 15509
+    },
+    {
+      "plrId": "12500930",
+      "dbDenMean": 48.8,
+      "count": 13084
+    },
+    {
+      "plrId": "12601031",
+      "dbDenMean": 51.6,
+      "count": 7050
+    },
+    {
+      "plrId": "12601032",
+      "dbDenMean": 44.9,
+      "count": 3359
+    },
+    {
+      "plrId": "12601133",
+      "dbDenMean": 50.8,
+      "count": 2732
+    },
+    {
+      "plrId": "12601134",
+      "dbDenMean": 46.5,
+      "count": 6697
+    },
+    {
+      "plrId": "12601235",
+      "dbDenMean": 51.1,
+      "count": 3595
+    },
+    {
+      "plrId": "12601236",
+      "dbDenMean": 51.1,
+      "count": 7515
+    }
+  ]
+}

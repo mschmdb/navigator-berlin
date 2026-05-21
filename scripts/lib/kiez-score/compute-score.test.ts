@@ -26,15 +26,15 @@ function emptyInput(overrides: Partial<ScoreInput> = {}): ScoreInput {
 }
 
 describe('computeDimensionScore — Ruhe & Luft', () => {
-	it('berechnet gewichteten Score nur aus laerm + luft (kein Bioklima mehr)', () => {
+	it('berechnet gewichteten Score aus laerm-dB + luft (Story 10.6b)', () => {
 		const input = emptyInput({
 			layerHits: [
-				makeHit('laerm-2023', { kategorie: 'gering' }, '2024-01-01T00:00:00.000Z'),
+				makeHit('laerm-db', { ges_den: 45 }, '2024-01-01T00:00:00.000Z'),
 				makeHit('luft-2023', { kategorie: 'mittel' }, '2024-01-01T00:00:00.000Z')
 			]
 		});
 		const score = computeDimensionScore(RUHE_LUFT_CONFIG, input);
-		// laerm 100 * 0.5 + luft 50 * 0.5 = 75
+		// laerm-dB 45 dB → 100 * 0.5 + luft 50 * 0.5 = 75
 		expect(score.value).toBe(75);
 		expect(score.missingData).toEqual([]);
 		expect(score.dataStand).toBe('2024-01-01T00:00:00.000Z');
@@ -46,18 +46,18 @@ describe('computeDimensionScore — Ruhe & Luft', () => {
 		});
 		const score = computeDimensionScore(RUHE_LUFT_CONFIG, input);
 		expect(score.value).toBeNull();
-		expect(score.missingData).toEqual(['laerm-2023', 'luft-2023']);
+		expect(score.missingData).toEqual(['laerm-db', 'luft-2023']);
 	});
 
 	it('überspringt LayerHit mit reason und meldet missingData', () => {
 		const input = emptyInput({
 			layerHits: [
-				{ layer: 'laerm-2023', value: null, reason: 'no-coverage' },
+				{ layer: 'laerm-db', value: null, reason: 'no-coverage' },
 				makeHit('luft-2023', { kategorie: 'mittel' })
 			]
 		});
 		const score = computeDimensionScore(RUHE_LUFT_CONFIG, input);
-		expect(score.missingData).toEqual(['laerm-2023']);
+		expect(score.missingData).toEqual(['laerm-db']);
 		// nur luft 50 * 0.5 → 50 / 0.5 = 50
 		expect(score.value).toBe(50);
 	});
@@ -279,7 +279,7 @@ describe('computeKiezScore', () => {
 	it('Voll-Coverage liefert alle Dimensionen ohne missing', () => {
 		const input: ScoreInput = {
 			layerHits: [
-				makeHit('laerm-2023', { kategorie: 'gering' }),
+				makeHit('laerm-db', { ges_den: 45 }),
 				makeHit('luft-2023', { kategorie: 'gering' }),
 				makeHit('gruenversorgung-2023', { kategorie: 'hoch' }),
 				makeHit('gruenanlagen', { distanceM: 300 }),

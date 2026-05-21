@@ -144,7 +144,7 @@ describe('buildKiezScoresFromInput', () => {
 		const out = buildKiezScoresFromInput(
 			{
 				lorFeatures: [lor],
-				polygonLayers: [makeLayer('laerm-2023', [LAERM_POLYGON])],
+				polygonLayers: [makeLayer('luft-2023', [LAERM_POLYGON])],
 				presenceLayers: [],
 				oepnvIndex: EMPTY_OEPNV
 			},
@@ -152,7 +152,7 @@ describe('buildKiezScoresFromInput', () => {
 		);
 		const score = out.scores['001'];
 		const ruheLuft = score.dimensions.find((d) => d.dimension === 'ruhe-luft');
-		expect(ruheLuft?.sources.find((s) => s.layer === 'laerm-2023')?.normalizedValue).toBe(100);
+		expect(ruheLuft?.sources.find((s) => s.layer === 'luft-2023')?.normalizedValue).toBe(100);
 	});
 
 	it('injiziert Presence-Layer-Hits in alle Scores', () => {
