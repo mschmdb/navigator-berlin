@@ -53,7 +53,17 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'kiez-score-wohnschutz': 'Kiez-Score · Wohnschutz',
 	'kiez-score-versorgung': 'Kiez-Score · Versorgung',
 	// I: Demografie (Story 10.0)
-	'einwohner-dichte-2024': 'Einwohnerdichte 2024'
+	'einwohner-dichte-2024': 'Einwohnerdichte 2024',
+	// Synthetische Score-Sub-Terme (Kiez-Score-Detailzeilen, Stories 10.1-10.4 + Mobilität/Wohnschutz)
+	'kitas-pro-kind': 'Kita-Plätze pro Kind',
+	'schulen-grundschule': 'Grundschulen',
+	'schulen-weiterfuehrend': 'Weiterführende Schulen',
+	'oepnv-ubahn': 'U-Bahn-Nähe',
+	'oepnv-sbahn': 'S-Bahn-Nähe',
+	'oepnv-tram': 'Tram-Nähe',
+	'oepnv-bus': 'Bus-Nähe',
+	'radverkehr-presence': 'Radverkehrsnetz',
+	'wohnschutz-presence': 'Milieuschutz-Gebiet'
 };
 
 export const BUNDLE_ORDER: readonly Bundle[] = [
