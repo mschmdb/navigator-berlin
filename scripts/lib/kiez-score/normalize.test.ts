@@ -5,7 +5,8 @@ import {
 	normalizeMssStatus4,
 	normalizeDistance,
 	normalizeNumericInverted,
-	normalizePresence
+	normalizePresence,
+	normalizeKitaProKind
 } from './normalize.js';
 
 describe('normalizeOrdinal3', () => {
@@ -111,5 +112,24 @@ describe('normalizePresence', () => {
 	it('true → 100, false → 0', () => {
 		expect(normalizePresence(true)).toBe(100);
 		expect(normalizePresence(false)).toBe(0);
+	});
+});
+
+describe('normalizeKitaProKind', () => {
+	it('>= bestAt → 100 (geclampt)', () => {
+		expect(normalizeKitaProKind(0.35, 0.35)).toBe(100);
+		expect(normalizeKitaProKind(0.5, 0.35)).toBe(100);
+	});
+	it('<= 0 → 0 (kein Platzangebot)', () => {
+		expect(normalizeKitaProKind(0, 0.35)).toBe(0);
+	});
+	it('linear dazwischen', () => {
+		expect(normalizeKitaProKind(0.175, 0.35)).toBe(50);
+	});
+	it('null (kein Nenner) → null', () => {
+		expect(normalizeKitaProKind(null, 0.35)).toBeNull();
+	});
+	it('bestAt <= 0 → null', () => {
+		expect(normalizeKitaProKind(0.2, 0)).toBeNull();
 	});
 });

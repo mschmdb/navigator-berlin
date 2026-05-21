@@ -61,3 +61,18 @@ export function normalizeNumericInverted(
 export function normalizePresence(present: boolean): number {
 	return present ? 100 : 0;
 }
+
+/**
+ * Kita-Plätze pro Kind 0-6 (Story 10.1). Höher = besser. `null` (kein Nenner) bleibt null.
+ * >= bestAt → 100, <= 0 → 0, linear dazwischen.
+ */
+export function normalizeKitaProKind(
+	plaetzeProKind: number | null,
+	bestAt: number
+): number | null {
+	if (plaetzeProKind === null || !Number.isFinite(plaetzeProKind)) return null;
+	if (bestAt <= 0) return null;
+	if (plaetzeProKind <= 0) return 0;
+	if (plaetzeProKind >= bestAt) return 100;
+	return Math.round(100 * (plaetzeProKind / bestAt) * 10) / 10;
+}

@@ -46,7 +46,9 @@ export type NormalizationStrategy =
 	| { kind: 'presence-any-of'; layers: string[] }
 	| { kind: 'poi-distance'; threshold: number }
 	/** Numerischer Wert, invertiert: <= bestAt → 100, >= worstAt → 0 (z.B. PET-Hitzebelastung). */
-	| { kind: 'numeric-inverted'; field: string; bestAt: number; worstAt: number };
+	| { kind: 'numeric-inverted'; field: string; bestAt: number; worstAt: number }
+	/** Kita-Plätze pro Kind 0-6 (Story 10.1): >= bestAt → 100, höher = besser. Wert aus perLorHits. */
+	| { kind: 'kita-pro-kind'; field: string; bestAt: number };
 
 export interface LayerWeight {
 	layer: string;

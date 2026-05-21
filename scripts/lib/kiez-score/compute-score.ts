@@ -18,7 +18,8 @@ import {
 	normalizeMssStatus4,
 	normalizeDistance,
 	normalizeNumericInverted,
-	normalizePresence
+	normalizePresence,
+	normalizeKitaProKind
 } from './normalize.js';
 
 function readDistanceMeters(value: unknown): number | null {
@@ -81,6 +82,13 @@ function normalizeFromHit(
 			rawValue = getProp(hit.value, normalize.field);
 			normalized = normalizeNumericInverted(rawValue, normalize.bestAt, normalize.worstAt);
 			break;
+		case 'kita-pro-kind': {
+			const v = getProp(hit.value, normalize.field);
+			const proKind = typeof v === 'number' ? v : null;
+			rawValue = proKind;
+			normalized = normalizeKitaProKind(proKind, normalize.bestAt);
+			break;
+		}
 		default:
 			normalized = null;
 	}

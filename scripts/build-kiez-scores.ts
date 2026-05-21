@@ -8,14 +8,23 @@ import {
 	buildDerivedLayerGeojsons
 } from './lib/kiez-score/pipeline.js';
 import type { BuildLayerSpec } from './lib/kiez-score/build-helpers.js';
+import type { LayerHitLike } from './lib/kiez-score/types.js';
 import type { OepnvStopIndexShape } from './lib/kiez-score/nearest-stops.js';
+import { defaultLorIdFor } from './lib/kiez-score/pipeline.js';
+import { aggregateKitaPlaetzeByLor, plaetzeProKind } from './lib/kiez-score/kita-supply.js';
 import { validateKiezScoreOutput } from './lib/kiez-score/output-schema.js';
+
+interface EinwohnerRecord {
+	plrId: string;
+	kinder0bis6: number;
+}
 
 const STATIC = 'static';
 const LAYERS_DIR = `${STATIC}/layers`;
 const MANIFEST = `${LAYERS_DIR}/MANIFEST.json`;
 const OEPNV_INDEX = `${STATIC}/oepnv-stops-index.json`;
 const PET_POINTS = `${STATIC}/data/klima-pet-points.geojson`;
+const EINWOHNER = `${STATIC}/data/einwohner-lor.json`;
 const OUT = `${STATIC}/kiez-scores/kiez-scores.json`;
 
 // ADR-015: MSS + Umweltgerechtigkeit sind keine Score-Inputs mehr. klima-pet (Grün & Hitze)
@@ -59,6 +68,31 @@ async function loadLayerFeatures(
 	return fc.features ?? null;
 }
 
+/**
+ * Story 10.1: pro LOR ein synthetischer `kitas-pro-kind`-Hit (Plätze pro Kind 0-6).
+ * Σ e_platz der Kitas im LOR ÷ Kinder 0-6 aus dem Einwohner-Join (Story 10.0).
+ */
+async function buildKitaProKindHits(
+	lorFeatures: readonly Feature[],
+	poiLayers: readonly BuildLayerSpec[]
+): Promise<Record<string, readonly LayerHitLike[]>> {
+	const kitaFeatures = poiLayers.find((l) => l.slug === 'kitas-2024')?.features ?? [];
+	const einwohner = await readJson<{ records: EinwohnerRecord[] }>(EINWOHNER).catch(() => null);
+	if (!einwohner) throw new Error(`${EINWOHNER} fehlt. Lauf zuerst pnpm fetch:einwohner.`);
+	const kinderByPlr = new Map(einwohner.records.map((r) => [r.plrId, r.kinder0bis6]));
+	const plaetzeByLor = aggregateKitaPlaetzeByLor(lorFeatures, kitaFeatures, (f) => defaultLorIdFor(f) ?? '');
+
+	const out: Record<string, readonly LayerHitLike[]> = {};
+	for (const lor of lorFeatures) {
+		const lorId = defaultLorIdFor(lor);
+		if (!lorId) continue;
+		const proKind = plaetzeProKind(plaetzeByLor[lorId] ?? 0, kinderByPlr.get(lorId) ?? null);
+		if (proKind === null) continue;
+		out[lorId] = [{ layer: 'kitas-pro-kind', value: { plaetzeProKind: proKind } }];
+	}
+	return out;
+}
+
 export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: number }> {
 	const manifest = await readJson<Manifest>(MANIFEST);
 	const lorFeatures = await loadLayerFeatures('lor-planungsraum', manifest);
@@ -81,6 +115,9 @@ export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: 
 
 	const oepnvIndex = await readJson<OepnvStopIndexShape>(OEPNV_INDEX);
 
+	// Story 10.1: Kita-Plätze pro Kind 0-6 pro LOR (Σ e_platz im LOR ÷ Kinder 0-6 aus 10.0).
+	const perLorHits = await buildKitaProKindHits(lorFeatures, poiLayers);
+
 	const pointValueLayers: BuildLayerSpec[] = [];
 	for (const slug of POINT_VALUE_LAYERS) {
 		const fc = await readJson<FeatureCollection>(PET_POINTS).catch(() => null);
@@ -95,6 +132,7 @@ export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: 
 			presenceLayers: presenceLayersAvailable,
 			poiLayers,
 			pointValueLayers,
+			perLorHits,
 			oepnvIndex
 		},
 		new Date().toISOString()

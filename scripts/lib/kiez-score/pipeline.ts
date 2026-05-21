@@ -23,6 +23,8 @@ export interface PipelineInput {
 	poiLayers?: readonly BuildLayerSpec[];
 	/** Point-Value-Layer (z.B. PET-Centroids, Story 10.10): nächster Punkt-Wert am LOR-Centroid. */
 	pointValueLayers?: readonly BuildLayerSpec[];
+	/** Vorberechnete Hits pro LOR-ID (z.B. Kita-Plätze-pro-Kind, Story 10.1). */
+	perLorHits?: Record<string, readonly import('./types.js').LayerHitLike[]>;
 	oepnvIndex: OepnvStopIndexShape;
 	lorIdFor?: (feat: Feature) => string | null;
 }
@@ -151,9 +153,10 @@ export function buildKiezScoresFromInput(
 		const polygonHits = buildPolygonLayerHitsAtPoint(lat, lng, input.polygonLayers);
 		const poiHits = buildPoiDistanceHits(lat, lng, poiIndex);
 		const pointValueHits = buildNearestPointValueHits(lat, lng, input.pointValueLayers ?? []);
+		const perLor = input.perLorHits?.[lorId] ?? [];
 		const stops = findAllNearestStopsForBuild({ lat, lng }, input.oepnvIndex);
 		scores[lorId] = computeKiezScore({
-			layerHits: [...polygonHits, ...presenceHits, ...poiHits, ...pointValueHits],
+			layerHits: [...polygonHits, ...presenceHits, ...poiHits, ...pointValueHits, ...perLor],
 			nearestStops: stops
 		});
 	}

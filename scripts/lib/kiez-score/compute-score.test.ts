@@ -131,6 +131,7 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 		const input = emptyInput({
 			layerHits: [
 				makeHit('kitas-2024', { distanceM: 250 }),
+				makeHit('kitas-pro-kind', { plaetzeProKind: 0.35 }),
 				makeHit('schulen-2024', { distanceM: 400 }),
 				makeHit('krankenhaeuser-plan', { distanceM: 1000 }),
 				makeHit('spielplaetze', { distanceM: 200 })
@@ -140,6 +141,18 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 		expect(score.value).not.toBeNull();
 		expect((score.value as number) > 0).toBe(true);
 		expect(score.missingData).toEqual([]);
+	});
+
+	it('Story 10.1: Kita-Pro-Kopf-Term scort hoch bei vielen Plätzen pro Kind', () => {
+		const high = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ layerHits: [makeHit('kitas-pro-kind', { plaetzeProKind: 0.4 })] })
+		);
+		const low = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ layerHits: [makeHit('kitas-pro-kind', { plaetzeProKind: 0.05 })] })
+		);
+		expect((high.value as number) > (low.value as number)).toBe(true);
 	});
 
 	it('Grünanlagen ist KEIN Versorgungs-Layer mehr (nach Grün & Hitze gewandert)', () => {

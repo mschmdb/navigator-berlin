@@ -1,5 +1,9 @@
 import type { DimensionConfig } from './types.js';
 
+// Story 10.1: Berliner Versorgungsrichtwert ca. 0.33-0.35 Kita-Plätze pro Kind 0-6
+// (Senatsverwaltung). Ab diesem Quotienten scort die Pro-Kopf-Versorgung voll.
+export const KITA_BEST_AT = 0.35;
+
 export const RUHE_LUFT_CONFIG: DimensionConfig = {
 	dimension: 'ruhe-luft',
 	layers: [
@@ -72,7 +76,14 @@ export const MOBILITAET_CONFIG: DimensionConfig = {
 export const VERSORGUNG_CONFIG: DimensionConfig = {
 	dimension: 'versorgung',
 	layers: [
-		{ layer: 'kitas-2024', weight: 0.3, normalize: { kind: 'poi-distance', threshold: 500 } },
+		// Story 10.1: Kita-Versorgung doppelt gemessen — Distanz zur nächsten Kita (Erreichbarkeit)
+		// + Plätze pro Kind (realistische Platzchance, Pro-Kopf). Gewichte zusammen wie zuvor 0.30.
+		{ layer: 'kitas-2024', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 500 } },
+		{
+			layer: 'kitas-pro-kind',
+			weight: 0.15,
+			normalize: { kind: 'kita-pro-kind', field: 'plaetzeProKind', bestAt: KITA_BEST_AT }
+		},
 		{ layer: 'schulen-2024', weight: 0.3, normalize: { kind: 'poi-distance', threshold: 800 } },
 		{
 			layer: 'krankenhaeuser-plan',

@@ -477,11 +477,12 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 	},
 	'kiez-score-versorgung': {
 		calculation:
-			'Distance-basiert vom LOR-Centroid bzw. Adress-Punkt zu nächster Kita (Gewicht 0.30, Threshold 500 m), Schule (0.30, 800 m), Plan-Krankenhaus (0.25, 2.000 m) und Spielplatz (0.15, 400 m). 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze.',
+			'Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.15, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.15). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze (e_platz) im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Dazu Distanz zu Schule (0.30, 800 m), Plan-Krankenhaus (0.25, 2.000 m) und Spielplatz (0.15, 400 m). 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'jährlich (sync mit Bildungs- und Bezirks-Daten)',
 		authorityKey: 'navigator-eigenberechnung-bezirke',
 		coverageGaps: [
+			'Der Platz-Kind-Quotient basiert auf gemeldeten Kapazitäten (e_platz), nicht auf realen Belegungsquoten oder Wartelisten.',
 			'Belegungsquoten, Wartelisten und Trägerschaft sind im Score nicht berücksichtigt.',
 			'Polygon-Layer kollabieren zum Mittelpunkt. Ein langgezogener Park am Rand erscheint im Score zentriert.'
 		],
