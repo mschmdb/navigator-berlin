@@ -11,7 +11,7 @@ related:
 
 Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-05-21.
 
-**96 Stories total**: ✅ 61 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 1 backlog · ▫️ 30 other
+**106 Stories total**: ✅ 61 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 11 backlog · ▫️ 30 other
 
 ## Pro Epic
 ### Epic 1
@@ -51,6 +51,21 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | `1-29-atlas-methodik-pattern` | ✅ done | — |
 | `1-30-mss-soziale-stadtentwicklung` | ✅ done | — |
 | `1-31-atlas-ui-ux-polish` | ✅ done | — |
+
+### Epic 10
+
+| Story | Status | Kommentar |
+|---|---|---|
+| `10-0-einwohner-lor-join-foundation` | ⏳ backlog | Einwohner-CSV (542 LOR-PLR, Altersjahre, CC-BY, 31.12.2024) join via plr_id auf LOR-Geometrie. Abgeleitete Aggregate:… |
+| `10-1-versorgung-kita-platz-pro-kind` | ⏳ backlog | V1: kita.e_platz (live 99% gefüllt, Range 1-310, Median 30) + Kinder 0-6 aus 10-0 → Versorgung-Score Pro-Kopf statt n… |
+| `10-2-versorgung-krankenhaus-betten-fachabteilung` | ⏳ backlog | V2: betten/betten_insgesamt + fachabteilungen (vorhanden, ungenutzt) gewichten Distanz-Score. string/int-Parsing vere… |
+| `10-3-versorgung-schulart-differenzierung` | ⏳ backlog | V3: schulen.schulart (vorhanden, nur Inspector-Text) → eigene Distanz-Schwellen pro Schulart. Hängt an Epic 9. |
+| `10-4-poi-score-distanz-zu-dichte` | ⏳ backlog | V5: POI-Score von Nächste-Distanz auf Anzahl-im-Radius (optional pro Kopf). Behebt zweiter-Punkt-zählt-0 + Distanz-Cl… |
+| `10-5-einwohnerdichte-altersstruktur-kontext-block` | ⏳ backlog | V4: Demografie als neutraler Inspector-Block (categorical, kein Score-Input, ADR-015). Hängt an 10-0. |
+| `10-6-laerm-db-upgrade-spike` | ⏳ backlog | V6: Spike Strategische Lärmkarten 2022 (fassadengenaue dB) statt 3-Stufen-Umweltgerechtigkeit. Tile-Strategie-Frage. … |
+| `10-7-umweltgerechtigkeit-kategorie-mapping-fix` | ⏳ backlog | Render-Bug: choropleth-mehrfach (layer-style-builder.ts:444) matcht keinfach/.../vierfach, Quelle liefert „keine star… |
+| `10-8-milieuschutz-sichtbarkeit-styling-fix` | ⏳ backlog | Styling-Bug: polygon-outline-soft #E0E4F0 × Opacity 0.35 = unsichtbar. Kräftigere Farbe/Opacity/Umriss, beide Milieus… |
+| `10-9-gefuehlte-temperatur-flaechendeckend` | ⏳ backlog | PET-Lücken füllen: pb_ua_pet_str + pc_ua_pet_grfrei (gleiches pet14h-Feld, live geprüft) mit pa_siedlg mergen → fläch… |
 
 ### Epic 2
 

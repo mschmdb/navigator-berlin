@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
 	buildLayerSpec,
+	getLegendSpec,
 	getStyleProfile,
 	getTransitionDurationMs,
 	LAYER_STYLE_PROFILE,
@@ -133,12 +134,39 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(flat).toContain('gut');
 	});
 
-	it('choropleth-mehrfach für umweltgerechtigkeit-2023 nutzt vierfach-Skala', () => {
+	it('choropleth-mehrfach für umweltgerechtigkeit-2023 deckt alle 6 Quell-Kategorien', () => {
 		const specs = buildLayerSpec('umweltgerechtigkeit-2023', SOURCE);
 		const flat = JSON.stringify(specs[0].paint);
-		expect(flat).toContain('vierfach');
-		expect(flat).toContain('dreifach');
+		expect(flat).toContain('keine starke Belastung');
 		expect(flat).toContain('einfach');
+		expect(flat).toContain('zweifach');
+		expect(flat).toContain('dreifach');
+		expect(flat).toContain('vierfach');
+		expect(flat).toContain('fünffach');
+		expect(flat).not.toContain('keinfach');
+	});
+
+	it('choropleth-mehrfach mappt keine starke Belastung auf eine Skalenfarbe, nicht auf COLORS.bg', () => {
+		const specs = buildLayerSpec('umweltgerechtigkeit-2023', SOURCE);
+		const fillColor = specs[0].paint?.['fill-color'] as unknown[];
+		const idx = fillColor.indexOf('keine starke Belastung');
+		expect(idx).toBeGreaterThan(0);
+		expect(fillColor[idx + 1]).toBe(COLORS.scaleLast1);
+		expect(fillColor[idx + 1]).not.toBe(COLORS.bg);
+	});
+
+	it('choropleth-mehrfach behält COLORS.bg nur als Default für unbekannte Kategorien', () => {
+		const specs = buildLayerSpec('umweltgerechtigkeit-2023', SOURCE);
+		const fillColor = specs[0].paint?.['fill-color'] as unknown[];
+		expect(fillColor[fillColor.length - 1]).toBe(COLORS.bg);
+	});
+
+	it('choropleth-mehrfach Legende hat 6 Einträge mit korrekten Labels', () => {
+		const legend = getLegendSpec('umweltgerechtigkeit-2023');
+		expect(legend.items).toHaveLength(6);
+		expect(legend.items[0].label).toBe('keine starke Belastung');
+		expect(legend.items[5].label).toBe('fünffach');
+		expect(legend.items.map((i) => i.label)).not.toContain('keinfach');
 	});
 
 	it('Pin-Icon-Slugs (Story 1.15) erzeugen symbol-Layer mit pinImageId', () => {

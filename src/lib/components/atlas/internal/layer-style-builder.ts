@@ -187,11 +187,12 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		// Story 1.31: Last-Familie 5-stufig. Vermillion für Umweltgerechtigkeit-Mehrfach-Belastung.
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.scaleLast1, label: 'keinfach' },
+			{ color: COLORS.scaleLast1, label: 'keine starke Belastung' },
 			{ color: COLORS.scaleLast2, label: 'einfach' },
 			{ color: COLORS.scaleLast3, label: 'zweifach' },
 			{ color: COLORS.scaleLast4, label: 'dreifach' },
-			{ color: COLORS.scaleLast5, label: 'vierfach' }
+			{ color: COLORS.scaleLast5, label: 'vierfach' },
+			{ color: COLORS.scaleLast5, label: 'fünffach' }
 		]
 	},
 	'choropleth-pet': {
@@ -442,7 +443,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-mehrfach':
-			// Story 1.31: Last-Familie 5-stufig (Vermillion). Umweltgerechtigkeit-Mehrfachbelastung.
+			// Story 1.31/10.7: Last-Familie 5-stufig (Vermillion), 6 Quell-Kategorien. fünffach teilt scaleLast5.
 			return [
 				{
 					id,
@@ -452,7 +453,7 @@ export function buildLayerSpec(
 						'fill-color': [
 							'match',
 							['get', 'kategorie'],
-							'keinfach',
+							'keine starke Belastung',
 							COLORS.scaleLast1,
 							'einfach',
 							COLORS.scaleLast2,
@@ -461,6 +462,8 @@ export function buildLayerSpec(
 							'dreifach',
 							COLORS.scaleLast4,
 							'vierfach',
+							COLORS.scaleLast5,
+							'fünffach',
 							COLORS.scaleLast5,
 							COLORS.bg
 						],
