@@ -65,7 +65,7 @@
 		buildWebSite({
 			origin: page.url.origin,
 			name: 'navigator.berlin',
-			locale: getLocale() === 'en' ? 'en-US' : 'de-DE',
+			locale: ({ de: 'de-DE', en: 'en-US' } as Record<string, string>)[getLocale()] ?? 'de-DE',
 			description: 'Berliner Geo-Datenlayer pro Adresse. Statisch, ohne Cookies, ohne Login.'
 		})
 	);

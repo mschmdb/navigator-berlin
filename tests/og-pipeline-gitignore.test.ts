@@ -26,10 +26,6 @@ describe('Story 2.6: .gitignore + static/og/ convention', () => {
 		expect(existsSync(path.join(REPO_ROOT, 'static', 'og', 'README.md'))).toBe(true);
 	});
 
-	it('does not break Story 1.20 og-default.png (separate path)', () => {
-		expect(existsSync(path.join(REPO_ROOT, 'static', 'og-default.png'))).toBe(true);
-	});
-
 	it('package.json has og:images + og:all scripts (post Pure-Satori-Pivot, no og:snapshots)', async () => {
 		const raw = await readFile(path.join(REPO_ROOT, 'package.json'), 'utf8');
 		const pkg = JSON.parse(raw) as { scripts: Record<string, string> };

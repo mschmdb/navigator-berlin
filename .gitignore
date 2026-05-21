@@ -36,7 +36,7 @@ _user-input/
 
 # Story 2.6: OG-Image-Pipeline build outputs (pure-Satori, Pivot 2026-05-16)
 # Build-Time-erzeugt via `pnpm og:all`, NICHT committed.
-# `static/og-default.png` (Story 1.20 Adress-Fallback) bleibt versioniert.
+# (static/og-default.png wurde im 2x-Resolution-Refactor 2ef4977 entfernt.)
 /static/og/bezirk/
 /static/og/kiez/
 /static/og/layer/

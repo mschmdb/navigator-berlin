@@ -92,10 +92,7 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		getLayerMetadata,
 		getLayerMethodology,
 		loadManifest: () => loadManifest(),
-		defaultLocale: () => {
-			const loc = getLocale();
-			return loc === 'en' ? 'en' : 'de';
-		},
+		defaultLocale: () => getLocale(),
 		fetchElections: () => fetchElectionsFromApi(),
 		fetchWahlResultsAtPoint: (lat, lng) => fetchWahlResultsFromApi(lat, lng),
 		fetchVotingDistrictGeometry: (id, year) => fetchVotingDistrictGeometryFromApi(id, year)

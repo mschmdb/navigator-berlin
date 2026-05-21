@@ -66,20 +66,22 @@ describe('getKiezStats (snapshot)', () => {
 });
 
 describe('getBezirkScore / getKiezScore (null-fallback)', () => {
-	it('getBezirkScore returns null for any slug (table empty in Story 2.0)', async () => {
-		const row = await getBezirkScore('mitte');
+	// Unbekannte Slugs → null, unabhängig vom DB-Seed-Stand (Score-Tabellen sind
+	// seit Story 9.3 befüllt; ein nicht existierender Slug bleibt trotzdem null).
+	it('getBezirkScore returns null for an unknown slug', async () => {
+		const row = await getBezirkScore('kein-bezirk-xyz');
 		expect(row).toBeNull();
 	});
 
-	it('getKiezScore returns null for any slug (table empty in Story 2.0)', async () => {
-		const row = await getKiezScore('any-kiez');
+	it('getKiezScore returns null for an unknown slug', async () => {
+		const row = await getKiezScore('kein-kiez-xyz');
 		expect(row).toBeNull();
 	});
 });
 
 describe('getFaqQna (empty-array fallback)', () => {
-	it('returns empty array for bezirk (table empty in Story 2.0)', async () => {
-		const rows = await getFaqQna({ pageType: 'bezirk', slug: 'mitte', locale: 'de' });
+	it('returns empty array for an unknown bezirk slug', async () => {
+		const rows = await getFaqQna({ pageType: 'bezirk', slug: 'kein-bezirk-xyz', locale: 'de' });
 		expect(rows).toEqual([]);
 	});
 

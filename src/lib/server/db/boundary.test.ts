@@ -12,10 +12,14 @@ describe('Architecture boundary: $lib/server/** not imported from client code', 
 	function findImports(searchPattern: string, paths: string[]): string[] {
 		const args = paths.join(' ');
 		try {
-			const out = execSync(`grep -rln "${searchPattern}" ${args} 2>/dev/null || true`, {
+			// -n liefert Zeilen-Inhalt. `import type ...` ist compile-time-only (von Svelte/TS
+			// entfernt, kein Runtime-Bundle-Leak) und verletzt die Boundary nicht, daher rausfiltern.
+			const out = execSync(`grep -rn "${searchPattern}" ${args} 2>/dev/null || true`, {
 				encoding: 'utf-8'
 			}).trim();
-			return out ? out.split('\n').filter(Boolean) : [];
+			if (!out) return [];
+			const offendingLines = out.split('\n').filter((l) => l && !/import\s+type\b/.test(l));
+			return [...new Set(offendingLines.map((l) => l.split(':')[0]))];
 		} catch {
 			return [];
 		}

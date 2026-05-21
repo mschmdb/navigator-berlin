@@ -8,8 +8,8 @@ import {
 } from './filename-resolver.js';
 
 describe('ogTargetTypes', () => {
-	it('enumerates exactly the four supported page types', () => {
-		expect(ogTargetTypes).toEqual(['bezirk', 'kiez', 'layer', 'page']);
+	it('enumerates exactly the five supported page types', () => {
+		expect(ogTargetTypes).toEqual(['bezirk', 'kiez', 'layer', 'page', 'wahl']);
 	});
 });
 
