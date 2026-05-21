@@ -35,10 +35,15 @@ async function readJson<T>(path: string): Promise<T> {
 	return JSON.parse(await readFile(path, 'utf-8')) as T;
 }
 
+// klima-pet-2022 ist PMTiles (Story 10.9/10.10) → nicht als GeoJSON lesbar. Aggregat liest
+// das abgeleitete Punkt-Set (Centroids mit pet14h), analog aggregate-data.
+const PET_POINTS = 'static/data/klima-pet-points.geojson';
+
 async function loadFeatures(manifest: Manifest, slug: string): Promise<Feature[]> {
 	const entry = manifest.layers.find((l: LayerEntry) => l.slug === slug);
 	if (!entry) throw new Error(`Manifest missing layer ${slug}`);
-	const fc = await readJson<FeatureCollection>(join(LAYERS_DIR, entry.filename));
+	const path = slug === 'klima-pet-2022' ? PET_POINTS : join(LAYERS_DIR, entry.filename);
+	const fc = await readJson<FeatureCollection>(path);
 	return (fc.features ?? []) as Feature[];
 }
 
