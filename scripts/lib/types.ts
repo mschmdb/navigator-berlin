@@ -33,6 +33,9 @@ export interface SourceConfig {
 	kind: SourceKind;
 	sourceUrl: string;
 	typeName?: string;
+	/** Optional. Weitere typeNames am selben Endpoint, die zu einem Output gemergt werden.
+	 * Für überschneidungsfreie Partitions-Quellen (z.B. PET Straßenraum + Grünfläche). Story 10.9. */
+	additionalTypeNames?: string[];
 	overpassQL?: string;
 	license: License;
 	bundleGroup: Bundle;
