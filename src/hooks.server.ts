@@ -2,6 +2,24 @@ import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
 import { getTextDirection } from '$lib/paraglide/runtime';
 import { paraglideMiddleware } from '$lib/paraglide/server';
+import { staleLocaleRedirectTarget } from '$lib/seo/stale-locale-redirect';
+
+/**
+ * 301 stale locale-prefixed URLs (`/de/…`, `/es/…`, …) onto the prefix-less DE
+ * canonical. These were indexed under the pre-Phase-1 multi-locale scheme and
+ * now 404 (memory `project_i18n_phase_1_de_only` + `project_paraglide_reroute`).
+ * Runs before Paraglide so the redirect happens prior to locale resolution.
+ */
+const handleStaleLocaleRedirect: Handle = ({ event, resolve }) => {
+	const target = staleLocaleRedirectTarget(event.url.pathname);
+	if (target !== null) {
+		return new Response(null, {
+			status: 301,
+			headers: { location: target + event.url.search }
+		});
+	}
+	return resolve(event);
+};
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -28,4 +46,8 @@ const handleNoIndexHeaders: Handle = async ({ event, resolve }) => {
 	return response;
 };
 
-export const handle: Handle = sequence(handleParaglide, handleNoIndexHeaders);
+export const handle: Handle = sequence(
+	handleStaleLocaleRedirect,
+	handleParaglide,
+	handleNoIndexHeaders
+);
