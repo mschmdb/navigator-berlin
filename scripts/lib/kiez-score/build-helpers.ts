@@ -107,6 +107,32 @@ export function nearestPoiDistanceM(
 	return best === Infinity ? null : Math.round(best);
 }
 
+/**
+ * POI-Dichte (Story 10.4): pro Layer Anzahl Centroids im Radius + Distanz zum nächsten.
+ * BBox-Vorfilter (Grad-Annäherung) als cheap early exit vor Haversine.
+ */
+export function buildPoiDensityCounts(
+	lat: number,
+	lng: number,
+	poiIndex: PoiIndex,
+	specs: ReadonlyArray<{ slug: string; radiusM: number }>
+): Record<string, { count: number; nearestM: number | null }> {
+	const out: Record<string, { count: number; nearestM: number | null }> = {};
+	for (const { slug, radiusM } of specs) {
+		const centroids = poiIndex[slug];
+		if (!centroids) continue;
+		let count = 0;
+		let nearest = Infinity;
+		for (const [poiLng, poiLat] of centroids) {
+			const m = haversineM(lat, lng, poiLat, poiLng);
+			if (m < nearest) nearest = m;
+			if (m <= radiusM) count++;
+		}
+		out[slug] = { count, nearestM: nearest === Infinity ? null : Math.round(nearest) };
+	}
+	return out;
+}
+
 export function buildPoiDistanceHits(
 	lat: number,
 	lng: number,

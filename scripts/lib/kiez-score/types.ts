@@ -57,7 +57,9 @@ export type NormalizationStrategy =
 			maxBetten: number;
 			fachabteilungenField?: string;
 			maxFachabteilungen?: number;
-	  };
+	  }
+	/** POI-Dichte (Story 10.4): Anzahl POIs im Radius statt Distanz. >= cap → 100, weicher Tail. */
+	| { kind: 'poi-density'; radiusM: number; cap: number; softTailFactor?: number };
 
 export interface LayerWeight {
 	layer: string;
@@ -87,6 +89,8 @@ export interface NearestStopLike {
 export interface ScoreInput {
 	layerHits: readonly LayerHitLike[];
 	nearestStops: Record<Modus, NearestStopLike | null> | null;
+	/** Radius-Join-Ergebnis pro Layer-Slug (Story 10.4 poi-density). */
+	poiCounts?: Record<string, { count: number; nearestM: number | null }>;
 }
 
 export const DIMENSION_WEIGHTS: Record<KiezScoreDimension, number> = {

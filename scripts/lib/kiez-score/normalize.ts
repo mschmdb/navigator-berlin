@@ -99,6 +99,25 @@ export function normalizeCapacityWeightedDistance(
 }
 
 /**
+ * POI-Dichte im Radius (Story 10.4). Anzahl POIs im Radius statt Distanz zum nächsten.
+ * count >= cap → 100, linear darunter. count 0: weicher Tail über nächste Distanz
+ * (softTailFactor × Distanz-Score gegen 2× Radius), sonst harter Cliff. Behebt
+ * "zweiter Punkt zählt 0" + Distanz-Cliff.
+ */
+export function normalizeDensity(
+	count: number,
+	nearestM: number | null,
+	config: { cap: number; radiusM: number; softTailFactor?: number }
+): number {
+	if (config.cap <= 0) return 0;
+	if (count >= 1) return Math.max(0, Math.min(100, Math.round((count / config.cap) * 100 * 10) / 10));
+	if (nearestM === null) return 0;
+	const tail = config.softTailFactor ?? 0;
+	const distScore = normalizeDistance(nearestM, config.radiusM * 2) ?? 0;
+	return Math.round(tail * distScore * 10) / 10;
+}
+
+/**
  * Kita-Plätze pro Kind 0-6 (Story 10.1). Höher = besser. `null` (kein Nenner) bleibt null.
  * >= bestAt → 100, <= 0 → 0, linear dazwischen.
  */

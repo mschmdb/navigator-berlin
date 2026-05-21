@@ -127,21 +127,35 @@ describe('computeDimensionScore — Mobilität', () => {
 });
 
 describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
-	it('berechnet Distance-basiert pro POI-Layer mit individuellen Thresholds', () => {
+	it('kombiniert Dichte-, Pro-Kopf- und Kapazitäts-Terme ohne missingData', () => {
 		const input = emptyInput({
 			layerHits: [
-				makeHit('kitas-2024', { distanceM: 250 }),
 				makeHit('kitas-pro-kind', { plaetzeProKind: 0.35 }),
-				makeHit('schulen-grundschule', { distanceM: 400 }),
-				makeHit('schulen-weiterfuehrend', { distanceM: 400 }),
-				makeHit('krankenhaeuser-plan', { distanceM: 1000 }),
-				makeHit('spielplaetze', { distanceM: 200 })
-			]
+				makeHit('krankenhaeuser-plan', { distanceM: 1000, betten_insgesamt: '500' })
+			],
+			poiCounts: {
+				'kitas-2024': { count: 3, nearestM: 200 },
+				'schulen-grundschule': { count: 2, nearestM: 300 },
+				'schulen-weiterfuehrend': { count: 1, nearestM: 600 },
+				spielplaetze: { count: 4, nearestM: 150 }
+			}
 		});
 		const score = computeDimensionScore(VERSORGUNG_CONFIG, input);
 		expect(score.value).not.toBeNull();
 		expect((score.value as number) > 0).toBe(true);
 		expect(score.missingData).toEqual([]);
+	});
+
+	it('Story 10.4: mehr POIs im Radius scoren höher (zweiter Punkt zählt nicht 0)', () => {
+		const many = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ poiCounts: { 'kitas-2024': { count: 5, nearestM: 200 } } })
+		);
+		const one = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ poiCounts: { 'kitas-2024': { count: 1, nearestM: 200 } } })
+		);
+		expect((many.value as number) > (one.value as number)).toBe(true);
 	});
 
 	it('Story 10.1: Kita-Pro-Kopf-Term scort hoch bei vielen Plätzen pro Kind', () => {
@@ -181,15 +195,14 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 		expect(score.missingData).not.toContain('krankenhaeuser-plan');
 	});
 
-	it('Story 10.3: Grundschule (600m) und Weiterführend (1200m) eigene Schwellen', () => {
-		// Grundschule in 500m (< 600 → positiv), Weiterführend in 1100m (< 1200 → positiv)
+	it('Story 10.3+10.4: Grundschule (600m) und Weiterführend (1200m) eigene Radien als Dichte', () => {
 		const score = computeDimensionScore(
 			VERSORGUNG_CONFIG,
 			emptyInput({
-				layerHits: [
-					makeHit('schulen-grundschule', { distanceM: 500 }),
-					makeHit('schulen-weiterfuehrend', { distanceM: 1100 })
-				]
+				poiCounts: {
+					'schulen-grundschule': { count: 2, nearestM: 400 },
+					'schulen-weiterfuehrend': { count: 1, nearestM: 900 }
+				}
 			})
 		);
 		expect(score.value).not.toBeNull();
@@ -274,12 +287,8 @@ describe('computeKiezScore', () => {
 				makeHit('klima-pet-2022', { pet14h: 30 }),
 				makeHit('klima-kaltlufteinwirkbereich-2022', { foo: 1 }),
 				makeHit('klima-leitbahnkorridor-2022', { foo: 1 }),
-				makeHit('kitas-2024', { distanceM: 200 }),
 				makeHit('kitas-pro-kind', { plaetzeProKind: 0.3 }),
-				makeHit('schulen-grundschule', { distanceM: 300 }),
-				makeHit('schulen-weiterfuehrend', { distanceM: 300 }),
 				makeHit('krankenhaeuser-plan', { distanceM: 1000, betten_insgesamt: '500' }),
-				makeHit('spielplaetze', { distanceM: 150 }),
 				makeHit('milieuschutz-erhaltungsmiete', { foo: 1 })
 			],
 			nearestStops: {
@@ -287,6 +296,12 @@ describe('computeKiezScore', () => {
 				sbahn: { distanceM: 400 },
 				tram: { distanceM: 200 },
 				bus: { distanceM: 100 }
+			},
+			poiCounts: {
+				'kitas-2024': { count: 3, nearestM: 200 },
+				'schulen-grundschule': { count: 2, nearestM: 300 },
+				'schulen-weiterfuehrend': { count: 1, nearestM: 600 },
+				spielplaetze: { count: 4, nearestM: 150 }
 			}
 		};
 		const score = computeKiezScore(input);

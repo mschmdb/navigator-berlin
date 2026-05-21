@@ -80,26 +80,34 @@ export const MOBILITAET_CONFIG: DimensionConfig = {
 export const VERSORGUNG_CONFIG: DimensionConfig = {
 	dimension: 'versorgung',
 	layers: [
-		// Story 10.1: Kita-Versorgung doppelt gemessen — Distanz zur nächsten Kita (Erreichbarkeit)
-		// + Plätze pro Kind (realistische Platzchance, Pro-Kopf). Gewichte zusammen wie zuvor 0.30.
-		{ layer: 'kitas-2024', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 500 } },
+		// Story 10.1: Kita-Versorgung doppelt — Erreichbarkeit + Plätze pro Kind. Story 10.4: der
+		// Erreichbarkeits-Term zählt jetzt Kitas im Radius (Dichte) statt nur die nächste.
+		{
+			layer: 'kitas-2024',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 500, cap: 5, softTailFactor: 0.3 }
+		},
 		{
 			layer: 'kitas-pro-kind',
 			weight: 0.15,
 			normalize: { kind: 'kita-pro-kind', field: 'plaetzeProKind', bestAt: KITA_BEST_AT }
 		},
-		// Story 10.3: Schul-Term nach Schulart getrennt. Grundschule kurze Schwelle (Gehweg ~8 min),
-		// weiterführend großzügiger (größeres Einzugsgebiet, ÖPNV ab ~10 J.). Je 0.15, zusammen wie zuvor 0.30.
-		{ layer: 'schulen-grundschule', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 600 } },
+		// Story 10.3+10.4: Schul-Term nach Schulart getrennt, jeweils als Dichte im Radius.
+		{
+			layer: 'schulen-grundschule',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 600, cap: 3, softTailFactor: 0.3 }
+		},
 		{
 			layer: 'schulen-weiterfuehrend',
 			weight: 0.15,
-			normalize: { kind: 'poi-distance', threshold: 1200 }
+			normalize: { kind: 'poi-density', radiusM: 1200, cap: 3, softTailFactor: 0.3 }
 		},
 		{
 			layer: 'krankenhaeuser-plan',
 			weight: 0.25,
-			// Story 10.2: Distanz × Bettenkapazität. Großes Klinikum zählt mehr als kleine Fachklinik.
+			// Story 10.2: Distanz × Bettenkapazität. Bleibt Distanz-basiert (nächstes großes Haus zählt,
+			// nicht die Anzahl) — Dichte wäre für Kliniken kein sinnvolles Maß.
 			normalize: {
 				kind: 'capacity-weighted-distance',
 				threshold: 2000,
@@ -107,7 +115,12 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 				maxBetten: KRANKENHAUS_MAX_BETTEN
 			}
 		},
-		{ layer: 'spielplaetze', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 400 } }
+		// Story 10.4: Spielplatz-Dichte im Radius statt Distanz zum nächsten.
+		{
+			layer: 'spielplaetze',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 400, cap: 8, softTailFactor: 0.4 }
+		}
 	]
 };
 

@@ -21,7 +21,8 @@ import {
 	normalizePresence,
 	normalizeKitaProKind,
 	parseBettenCapacity,
-	normalizeCapacityWeightedDistance
+	normalizeCapacityWeightedDistance,
+	normalizeDensity
 } from './normalize.js';
 
 function readDistanceMeters(value: unknown): number | null {
@@ -128,9 +129,27 @@ function normalizeFromHit(
 function normalizeSyntheticLayer(
 	weight: LayerWeight,
 	stops: Record<Modus, NearestStopLike | null> | null,
-	layerHits: readonly LayerHitLike[]
+	layerHits: readonly LayerHitLike[],
+	poiCounts?: Record<string, { count: number; nearestM: number | null }>
 ): NormalizedSource {
 	const { normalize } = weight;
+	if (normalize.kind === 'poi-density') {
+		const entry = poiCounts?.[weight.layer];
+		const normalized = entry
+			? normalizeDensity(entry.count, entry.nearestM, {
+					cap: normalize.cap,
+					radiusM: normalize.radiusM,
+					softTailFactor: normalize.softTailFactor
+				})
+			: null;
+		const source: DimensionSource = {
+			layer: weight.layer,
+			rawValue: entry ?? null,
+			normalizedValue: normalized,
+			weight: weight.weight
+		};
+		return { source };
+	}
 	if (normalize.kind === 'mode-distance') {
 		const stop = stops?.[normalize.mode] ?? null;
 		const normalized = stop ? normalizeDistance(stop.distanceM, normalize.threshold) : 0;
@@ -194,9 +213,17 @@ export function computeDimensionScore(
 
 	for (const weight of config.layers) {
 		const kind = weight.normalize.kind;
-		if (kind === 'mode-distance' || kind === 'presence-any-of') {
-			const result = normalizeSyntheticLayer(weight, input.nearestStops, input.layerHits);
+		if (kind === 'mode-distance' || kind === 'presence-any-of' || kind === 'poi-density') {
+			const result = normalizeSyntheticLayer(
+				weight,
+				input.nearestStops,
+				input.layerHits,
+				input.poiCounts
+			);
 			collected.push(result.source);
+			if (kind === 'poi-density' && result.source.normalizedValue === null) {
+				missingData.push(weight.layer);
+			}
 			continue;
 		}
 		const hit = hitFor(input.layerHits, weight.layer);

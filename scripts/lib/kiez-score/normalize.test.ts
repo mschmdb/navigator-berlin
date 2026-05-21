@@ -8,7 +8,8 @@ import {
 	normalizePresence,
 	normalizeKitaProKind,
 	parseBettenCapacity,
-	normalizeCapacityWeightedDistance
+	normalizeCapacityWeightedDistance,
+	normalizeDensity
 } from './normalize.js';
 
 describe('normalizeOrdinal3', () => {
@@ -152,6 +153,38 @@ describe('normalizeCapacityWeightedDistance', () => {
 		const ohne = normalizeCapacityWeightedDistance(500, 2000, 750, 1500, null, 20);
 		const mit = normalizeCapacityWeightedDistance(500, 2000, 750, 1500, 20, 20);
 		expect((mit as number) > (ohne as number)).toBe(true);
+	});
+});
+
+describe('normalizeDensity', () => {
+	const cfg = { cap: 5, radiusM: 500, softTailFactor: 0.3 };
+	it('mehr POIs im Radius → höherer Score, kein "zweiter Punkt zählt 0"', () => {
+		expect(normalizeDensity(1, 100, cfg)).toBeLessThan(normalizeDensity(3, 100, cfg));
+	});
+	it('count >= cap → 100 (kein Overflow)', () => {
+		expect(normalizeDensity(5, 100, cfg)).toBe(100);
+		expect(normalizeDensity(9, 100, cfg)).toBe(100);
+	});
+	it('0 POIs aber nächster knapp drüber → weicher Tail > 0', () => {
+		const s = normalizeDensity(0, 550, cfg);
+		expect(s).toBeGreaterThan(0);
+		expect(s).toBeLessThan(50);
+	});
+	it('0 POIs + kein nächster → 0', () => {
+		expect(normalizeDensity(0, null, cfg)).toBe(0);
+	});
+	it('Radius/Cap pro Layer konfigurierbar', () => {
+		const big = { cap: 2, radiusM: 2000 };
+		expect(normalizeDensity(1, 100, big)).toBe(50);
+	});
+});
+
+describe('normalizeDensity Performance', () => {
+	it('3000 Aufrufe < 50ms', () => {
+		const cfg = { cap: 5, radiusM: 500, softTailFactor: 0.3 };
+		const start = performance.now();
+		for (let i = 0; i < 3000; i++) normalizeDensity(i % 7, (i % 600) + 1, cfg);
+		expect(performance.now() - start).toBeLessThan(50);
 	});
 });
 
