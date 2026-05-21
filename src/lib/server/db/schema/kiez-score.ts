@@ -14,9 +14,9 @@ export const kiezScore = pgTable('kiez_score', {
 		.references(() => bezirkStats.slug, { onDelete: 'restrict' }),
 	composite: doublePrecision('composite').notNull(),
 	ruheLuft: doublePrecision('ruhe_luft'),
-	gruen: doublePrecision('gruen'),
+	gruenHitze: doublePrecision('gruen_hitze'),
 	mobilitaet: doublePrecision('mobilitaet'),
-	sozialeLage: doublePrecision('soziale_lage'),
 	versorgung: doublePrecision('versorgung'),
+	wohnschutz: doublePrecision('wohnschutz'),
 	computedAt: timestamp('computed_at', { withTimezone: true }).notNull().defaultNow()
 });
