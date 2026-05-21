@@ -33,6 +33,7 @@
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
 	import KiezScoreSection from './inspector-panel/kiez-score-section.svelte';
 	import WahlSection from './inspector-panel/wahl-section.svelte';
+	import DemografieBlock from './inspector-panel/demografie-block.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
@@ -539,6 +540,12 @@
 				onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 			/>
 			<WahlSection results={ui.wahlResults} />
+			<DemografieBlock
+				data={ui.kiezDemografie}
+				{lang}
+				isActive={ui.activeLayerSlugs.includes('einwohner-dichte-2024')}
+				onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+			/>
 			{#each sections as section (section.key)}
 				{#if shouldRenderSection(section.key, section.hits.length)}
 					<section

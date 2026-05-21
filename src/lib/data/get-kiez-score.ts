@@ -63,7 +63,7 @@ export async function loadKiezScores(fetchFn: typeof fetch = fetch): Promise<Kie
 	return scoresInflight;
 }
 
-async function loadLorFeatures(fetchFn: typeof fetch): Promise<LorFeature[]> {
+export async function loadLorFeatures(fetchFn: typeof fetch = fetch): Promise<LorFeature[]> {
 	if (lorCache) return lorCache;
 	if (lorInflight) return lorInflight;
 	lorInflight = (async () => {
