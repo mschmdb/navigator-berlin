@@ -15,6 +15,8 @@ export type StyleProfile =
 	| 'choropleth-kiez-score-ordinal-4'
 	| 'polygon-highlight'
 	| 'polygon-outline-soft'
+	| 'polygon-outline-milieuschutz-erhaltungsmiete'
+	| 'polygon-outline-milieuschutz-staedtebau'
 	| 'point'
 	| 'point-wohnlage'
 	| 'point-ubahn'
@@ -70,8 +72,8 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	// B: Wohn-Daten
 	bodenrichtwerte: 'choropleth-brw',
 	'wohnlagen-2024': 'choropleth-wohnlage-3',
-	'milieuschutz-erhaltungsmiete': 'polygon-outline-soft',
-	'milieuschutz-staedtebau': 'polygon-outline-soft',
+	'milieuschutz-erhaltungsmiete': 'polygon-outline-milieuschutz-erhaltungsmiete',
+	'milieuschutz-staedtebau': 'polygon-outline-milieuschutz-staedtebau',
 	'mss-gesamtindex-2025': 'choropleth-mss-12',
 	// C: Umwelt — Umweltatlas-Indikatoren
 	'laerm-2023': 'choropleth-belastung-3',
@@ -244,6 +246,14 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 	'polygon-outline-soft': {
 		kind: 'categorical',
 		items: [{ color: COLORS.accentSoft, label: 'Fläche' }]
+	},
+	'polygon-outline-milieuschutz-erhaltungsmiete': {
+		kind: 'categorical',
+		items: [{ color: COLORS.chartCat4, label: 'Erhaltungsmiete (§172 BauGB)' }]
+	},
+	'polygon-outline-milieuschutz-staedtebau': {
+		kind: 'categorical',
+		items: [{ color: COLORS.chartCat5, label: 'Städtebaulicher Schutz (§172 BauGB)' }]
 	},
 	point: {
 		kind: 'point',
@@ -595,6 +605,34 @@ export function buildLayerSpec(
 						'fill-color': COLORS.accentSoft,
 						'fill-opacity': 0.35,
 						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
+		case 'polygon-outline-milieuschutz-erhaltungsmiete':
+			// Story 10.8: kräftiges Violett, auf hellem Basemap lesbar (accentSoft war fast unsichtbar).
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': COLORS.chartCat4,
+						'fill-opacity': 0.6,
+						'fill-outline-color': COLORS.chartCat4
+					}
+				}
+			];
+		case 'polygon-outline-milieuschutz-staedtebau':
+			// Story 10.8: Ocker, von Erhaltungsmiete-Violett per Hue unterscheidbar (auch bei Deuteranopie).
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': COLORS.chartCat5,
+						'fill-opacity': 0.6,
+						'fill-outline-color': COLORS.chartCat5
 					}
 				}
 			];

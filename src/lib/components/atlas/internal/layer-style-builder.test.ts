@@ -16,7 +16,9 @@ describe('layer-style-builder.getStyleProfile', () => {
 		expect(getStyleProfile('plz')).toBe('boundary');
 		expect(getStyleProfile('bodenrichtwerte')).toBe('choropleth-brw');
 		expect(getStyleProfile('wohnlagen-2024')).toBe('choropleth-wohnlage-3');
-		expect(getStyleProfile('milieuschutz-erhaltungsmiete')).toBe('polygon-outline-soft');
+		expect(getStyleProfile('milieuschutz-erhaltungsmiete')).toBe(
+			'polygon-outline-milieuschutz-erhaltungsmiete'
+		);
 		expect(getStyleProfile('laerm-2023')).toBe('choropleth-belastung-3');
 		expect(getStyleProfile('umweltgerechtigkeit-2023')).toBe('choropleth-mehrfach');
 		expect(getStyleProfile('klima-pet-2022')).toBe('choropleth-pet');
@@ -292,6 +294,8 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'choropleth-kiez-score-ordinal-4',
 			'polygon-highlight',
 			'polygon-outline-soft',
+			'polygon-outline-milieuschutz-erhaltungsmiete',
+			'polygon-outline-milieuschutz-staedtebau',
 			'point',
 			'point-wohnlage',
 			'point-ubahn',
@@ -307,7 +311,28 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'line-rail-sbahn',
 			'line-fahrradstrasse'
 		];
-		expect(profiles).toHaveLength(26);
+		expect(profiles).toHaveLength(28);
+	});
+
+	it('Milieuschutz (Story 10.8) nutzt eigene sichtbare Familien, nicht polygon-outline-soft', () => {
+		expect(getStyleProfile('milieuschutz-erhaltungsmiete')).toBe(
+			'polygon-outline-milieuschutz-erhaltungsmiete'
+		);
+		expect(getStyleProfile('milieuschutz-staedtebau')).toBe(
+			'polygon-outline-milieuschutz-staedtebau'
+		);
+		const erhalt = buildLayerSpec('milieuschutz-erhaltungsmiete', SOURCE)[0];
+		const staedt = buildLayerSpec('milieuschutz-staedtebau', SOURCE)[0];
+		expect(erhalt.paint?.['fill-opacity']).toBeGreaterThanOrEqual(0.55);
+		expect(staedt.paint?.['fill-opacity']).toBeGreaterThanOrEqual(0.55);
+		expect(erhalt.paint?.['fill-color']).not.toBe(staedt.paint?.['fill-color']);
+		expect(erhalt.paint?.['fill-color']).not.toBe(COLORS.accentSoft);
+	});
+
+	it('Geteilte Family polygon-outline-soft bleibt für gruenanlagen/einschulbereiche/spielplaetze', () => {
+		expect(getStyleProfile('gruenanlagen')).toBe('polygon-outline-soft');
+		expect(getStyleProfile('einschulbereiche-2024')).toBe('polygon-outline-soft');
+		expect(getStyleProfile('spielplaetze')).toBe('polygon-outline-soft');
 	});
 
 	it('Kiez-Score-Layer (ADR-015) nutzen alle choropleth-kiez-score-ordinal-4', () => {
