@@ -245,7 +245,13 @@ export const SOURCES: SourceConfig[] = [
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'C: Umwelt',
 		zoomThresholds: { min: 11, max: 18 },
-		simplifyProfile: 'polygon',
+		// Story 10.9: gemergt sind es 57.8k Polygone (>20 MB als GeoJSON). Vector-Tiles
+		// statt rohes GeoJSON, sonst Transfer + Fill-Rendering zu schwer.
+		simplifyProfile: 'tiles',
+		format: 'pmtiles',
+		tileMinZoom: 9,
+		tileMaxZoom: 13,
+		tileIncludeProperties: ['pet14h'],
 		sourceUpdatedAt: '2024-06-01T00:00:00.000Z',
 		// Story 1.25: Berliner Senat publiziert PET nur auf Siedlungs-Polygonen
 		// (Wohnblock-Geometrie). Adress-Geocoding landet oft im Hof/Straßenraum

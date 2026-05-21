@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-18T19:40:33.038Z",
+  "generatedAt": "2026-05-21T15:06:42.892Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -199,23 +199,6 @@
       "featureCount": 6018,
       "inspectorRelevant": false,
       "mapRelevant": false
-    },
-    {
-      "slug": "klima-pet-2022",
-      "filename": "klima-pet-2022.cceb2e4d.geojson",
-      "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022",
-      "fetchedAt": "2026-05-16T06:56:28.400Z",
-      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
-      "license": "dl-de/zero-2-0",
-      "sha256": "cceb2e4de5e900536780cac864cdda4cf6321f34628e3ac1925fef3463016741",
-      "bundleGroup": "C: Umwelt",
-      "zoomThresholds": {
-        "min": 11,
-        "max": 18
-      },
-      "geometryType": "Polygon",
-      "featureCount": 16204,
-      "nearestPolygonFallbackKm": 0.05
     },
     {
       "slug": "klima-kaltlufteinwirkbereich-2022",
@@ -835,6 +818,24 @@
       "featureCount": 542,
       "inspectorRelevant": false,
       "mapRelevant": true
+    },
+    {
+      "slug": "klima-pet-2022",
+      "filename": "klima-pet-2022.a0435468.pmtiles",
+      "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022",
+      "fetchedAt": "2026-05-21T15:06:42.892Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "a0435468424cb83c35ea0b0d1bd0de7745a3b836f87dbb283cf984f1d63e1740",
+      "bundleGroup": "C: Umwelt",
+      "zoomThresholds": {
+        "min": 11,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 57801,
+      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
+      "format": "pmtiles",
+      "nearestPolygonFallbackKm": 0.05
     }
   ]
 }

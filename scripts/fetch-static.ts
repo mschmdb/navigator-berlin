@@ -108,8 +108,9 @@ async function processLayer(slug: string, fetchedAt: string): Promise<LayerEntry
 		await writeFile(tmpGeoJson, simplified);
 		await runTippecanoe(tmpGeoJson, tmpPmtiles, {
 			layerName: source.slug,
-			minZoom: source.zoomThresholds.min,
-			maxZoom: source.zoomThresholds.max
+			minZoom: source.tileMinZoom ?? source.zoomThresholds.min,
+			maxZoom: source.tileMaxZoom ?? source.zoomThresholds.max,
+			includeProperties: source.tileIncludeProperties
 		});
 		const buf = await readFile(tmpPmtiles);
 		const entry = buildLayerEntry(source, buf, fetchedAt, {
