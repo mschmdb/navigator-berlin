@@ -115,7 +115,13 @@
 			<dt class="font-mono text-xs text-ink-subtle">Anbieter</dt>
 			<dd class="text-ink">
 				{#if meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
-					<span data-testid="layer-detail-source-link">navigator.berlin (eigene Berechnung)</span>
+					<span data-testid="layer-detail-source-link">
+						Eigene Berechnung aus offenen Quellen (<a
+							href={(resolve as (p: string) => string)('/lizenzen')}
+							class="text-accent underline underline-offset-2 hover:text-accent-strong"
+							>Quellen & Lizenzen</a
+						>)
+					</span>
 				{:else}
 					<a
 						data-testid="layer-detail-source-link"
