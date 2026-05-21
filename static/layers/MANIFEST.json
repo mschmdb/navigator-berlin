@@ -841,11 +841,11 @@
       "slug": "einwohner-dichte-2024",
       "filename": "einwohner-dichte-2024.fe33f06f.geojson",
       "sourceUrl": "https://navigator.berlin/derived/einwohner-dichte-2024",
-      "fetchedAt": "2026-05-21T15:28:06.004Z",
-      "sourceUpdatedAt": "2024-12-31",
+      "fetchedAt": "2026-05-21T16:08:05.725Z",
+      "sourceUpdatedAt": "2024-12-31T00:00:00.000Z",
       "license": "CC BY 4.0",
       "sha256": "fe33f06f98b003aa794e92510e81712915354d094d9cdb83b78d48e4763d7694",
-      "bundleGroup": "A: Demografie",
+      "bundleGroup": "I: Demografie",
       "zoomThresholds": {
         "min": 9,
         "max": 18
