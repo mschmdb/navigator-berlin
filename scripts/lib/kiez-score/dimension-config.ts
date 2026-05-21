@@ -4,6 +4,10 @@ import type { DimensionConfig } from './types.js';
 // (Senatsverwaltung). Ab diesem Quotienten scort die Pro-Kopf-Versorgung voll.
 export const KITA_BEST_AT = 0.35;
 
+// Story 10.2: Obergrenze Bettenkapazität für die Normalisierung. Größtes Berliner Haus
+// (Vivantes Neukölln ~1377 Betten); 1500 als konservative Obergrenze gegen Clamp-Effekte.
+export const KRANKENHAUS_MAX_BETTEN = 1500;
+
 export const RUHE_LUFT_CONFIG: DimensionConfig = {
 	dimension: 'ruhe-luft',
 	layers: [
@@ -88,7 +92,13 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 		{
 			layer: 'krankenhaeuser-plan',
 			weight: 0.25,
-			normalize: { kind: 'poi-distance', threshold: 2000 }
+			// Story 10.2: Distanz × Bettenkapazität. Großes Klinikum zählt mehr als kleine Fachklinik.
+			normalize: {
+				kind: 'capacity-weighted-distance',
+				threshold: 2000,
+				bettenField: 'betten_insgesamt',
+				maxBetten: KRANKENHAUS_MAX_BETTEN
+			}
 		},
 		{ layer: 'spielplaetze', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 400 } }
 	]

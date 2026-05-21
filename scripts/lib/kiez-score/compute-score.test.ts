@@ -155,6 +155,31 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 		expect((high.value as number) > (low.value as number)).toBe(true);
 	});
 
+	it('Story 10.2: großes Klinikum (viele Betten) scort bei gleicher Distanz höher', () => {
+		const big = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({
+				layerHits: [makeHit('krankenhaeuser-plan', { distanceM: 500, betten_insgesamt: '1377' })]
+			})
+		);
+		const small = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({
+				layerHits: [makeHit('krankenhaeuser-plan', { distanceM: 500, betten_insgesamt: '50' })]
+			})
+		);
+		expect((big.value as number) > (small.value as number)).toBe(true);
+	});
+
+	it('Story 10.2: Krankenhaus ohne betten_insgesamt → Distanz-Fallback, kein missingData', () => {
+		const score = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ layerHits: [makeHit('krankenhaeuser-plan', { distanceM: 500 })] })
+		);
+		expect(score.value).not.toBeNull();
+		expect(score.missingData).not.toContain('krankenhaeuser-plan');
+	});
+
 	it('Grünanlagen ist KEIN Versorgungs-Layer mehr (nach Grün & Hitze gewandert)', () => {
 		const slugs = VERSORGUNG_CONFIG.layers.map((l) => l.layer);
 		expect(slugs).not.toContain('gruenanlagen');

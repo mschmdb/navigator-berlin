@@ -63,6 +63,42 @@ export function normalizePresence(present: boolean): number {
 }
 
 /**
+ * Betten-Kapazität (Story 10.2). `betten_insgesamt` ist string, `betten` int.
+ * Einheitlich: number oder string → number, `<= 0` / leer / nicht-numerisch → null.
+ */
+export function parseBettenCapacity(value: unknown): number | null {
+	let n: number;
+	if (typeof value === 'number') n = value;
+	else if (typeof value === 'string') n = Number.parseInt(value.trim(), 10);
+	else return null;
+	return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/**
+ * Kapazitätsgewichtete POI-Distanz (Story 10.2). Distanz-Score × Kapazitäts-Faktor.
+ * Faktor = 0.5 (Basis, auch ohne Kapazitätsdaten) + 0.3 × Betten-Anteil + 0.2 × Fachabteilungs-Anteil.
+ * Fehlende Kapazität → Faktor 0.5 (neutral, kein Boost, kein Totalausfall).
+ */
+export function normalizeCapacityWeightedDistance(
+	distanceM: number | null,
+	threshold: number,
+	betten: number | null,
+	maxBetten: number,
+	fachabteilungen: number | null = null,
+	maxFachabteilungen = 0
+): number | null {
+	const distScore = normalizeDistance(distanceM, threshold);
+	if (distScore === null) return null;
+	const bettenFrac = betten !== null && maxBetten > 0 ? Math.min(betten / maxBetten, 1) : 0;
+	const fachFrac =
+		fachabteilungen !== null && maxFachabteilungen > 0
+			? Math.min(fachabteilungen / maxFachabteilungen, 1)
+			: 0;
+	const factor = 0.5 + 0.3 * bettenFrac + 0.2 * fachFrac;
+	return Math.max(0, Math.min(100, Math.round(distScore * factor * 10) / 10));
+}
+
+/**
  * Kita-Plätze pro Kind 0-6 (Story 10.1). Höher = besser. `null` (kein Nenner) bleibt null.
  * >= bestAt → 100, <= 0 → 0, linear dazwischen.
  */

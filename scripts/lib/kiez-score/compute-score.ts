@@ -19,7 +19,9 @@ import {
 	normalizeDistance,
 	normalizeNumericInverted,
 	normalizePresence,
-	normalizeKitaProKind
+	normalizeKitaProKind,
+	parseBettenCapacity,
+	normalizeCapacityWeightedDistance
 } from './normalize.js';
 
 function readDistanceMeters(value: unknown): number | null {
@@ -87,6 +89,23 @@ function normalizeFromHit(
 			const proKind = typeof v === 'number' ? v : null;
 			rawValue = proKind;
 			normalized = normalizeKitaProKind(proKind, normalize.bestAt);
+			break;
+		}
+		case 'capacity-weighted-distance': {
+			const meters = readDistanceMeters(hit.value);
+			const betten = parseBettenCapacity(getProp(hit.value, normalize.bettenField));
+			const fach = normalize.fachabteilungenField
+				? parseBettenCapacity(getProp(hit.value, normalize.fachabteilungenField))
+				: null;
+			rawValue = meters !== null ? { distanceM: meters, betten, fachabteilungen: fach } : null;
+			normalized = normalizeCapacityWeightedDistance(
+				meters,
+				normalize.threshold,
+				betten,
+				normalize.maxBetten,
+				fach,
+				normalize.maxFachabteilungen ?? 0
+			);
 			break;
 		}
 		default:

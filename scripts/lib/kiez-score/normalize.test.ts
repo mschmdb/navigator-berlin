@@ -6,7 +6,9 @@ import {
 	normalizeDistance,
 	normalizeNumericInverted,
 	normalizePresence,
-	normalizeKitaProKind
+	normalizeKitaProKind,
+	parseBettenCapacity,
+	normalizeCapacityWeightedDistance
 } from './normalize.js';
 
 describe('normalizeOrdinal3', () => {
@@ -112,6 +114,44 @@ describe('normalizePresence', () => {
 	it('true → 100, false → 0', () => {
 		expect(normalizePresence(true)).toBe(100);
 		expect(normalizePresence(false)).toBe(0);
+	});
+});
+
+describe('parseBettenCapacity', () => {
+	it('parst string + number', () => {
+		expect(parseBettenCapacity('350')).toBe(350);
+		expect(parseBettenCapacity(415)).toBe(415);
+	});
+	it('leer / null / nicht-numerisch / <=0 → null', () => {
+		expect(parseBettenCapacity('')).toBeNull();
+		expect(parseBettenCapacity(null)).toBeNull();
+		expect(parseBettenCapacity('abc')).toBeNull();
+		expect(parseBettenCapacity('0')).toBeNull();
+		expect(parseBettenCapacity(0)).toBeNull();
+		expect(parseBettenCapacity(-5)).toBeNull();
+	});
+});
+
+describe('normalizeCapacityWeightedDistance', () => {
+	it('großes Krankenhaus scort bei gleicher Distanz höher als kleines', () => {
+		const big = normalizeCapacityWeightedDistance(500, 2000, 1400, 1500);
+		const small = normalizeCapacityWeightedDistance(500, 2000, 80, 1500);
+		expect((big as number) > (small as number)).toBe(true);
+	});
+	it('fehlende Bettenzahl → Faktor 0.5 (halber Distanz-Score)', () => {
+		// distScore = 100*(1-500/2000) = 75; ohne Betten: 75*0.5 = 37.5
+		expect(normalizeCapacityWeightedDistance(500, 2000, null, 1500)).toBe(37.5);
+	});
+	it('Distanz >= threshold → 0 unabhängig von Kapazität', () => {
+		expect(normalizeCapacityWeightedDistance(2000, 2000, 1500, 1500)).toBe(0);
+	});
+	it('null-Distanz → null', () => {
+		expect(normalizeCapacityWeightedDistance(null, 2000, 1500, 1500)).toBeNull();
+	});
+	it('Fachabteilungen erhöhen den Beitrag', () => {
+		const ohne = normalizeCapacityWeightedDistance(500, 2000, 750, 1500, null, 20);
+		const mit = normalizeCapacityWeightedDistance(500, 2000, 750, 1500, 20, 20);
+		expect((mit as number) > (ohne as number)).toBe(true);
 	});
 });
 

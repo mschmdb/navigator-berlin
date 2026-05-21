@@ -142,10 +142,13 @@ export function buildNearestPointValueHits(
 			const m = haversineM(lat, lng, pLat, pLng);
 			if (m < best) {
 				best = m;
-				bestValue = feat.properties ?? null;
+				bestValue = feat.properties ?? {};
 			}
 		}
-		if (bestValue !== null) hits.push({ layer: layer.slug, value: bestValue });
+		// distanceM mitführen, damit kapazitätsgewichtete Distanz (Story 10.2) Distanz + Properties liest.
+		if (bestValue !== null) {
+			hits.push({ layer: layer.slug, value: { ...bestValue, distanceM: Math.round(best) } });
+		}
 	}
 	return hits;
 }

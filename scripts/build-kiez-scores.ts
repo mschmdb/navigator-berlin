@@ -46,13 +46,11 @@ const POINT_VALUE_LAYERS = ['klima-pet-2022'];
 
 const PRESENCE_LAYERS = ['radverkehrsnetz-2025', 'fahrradstrassen-2024'];
 
-const POI_LAYERS = [
-	'kitas-2024',
-	'schulen-2024',
-	'krankenhaeuser-plan',
-	'spielplaetze',
-	'gruenanlagen'
-];
+const POI_LAYERS = ['kitas-2024', 'schulen-2024', 'spielplaetze', 'gruenanlagen'];
+
+// Story 10.2: krankenhaeuser-plan als Point-Value-Layer (nächstes Haus + betten_insgesamt
+// + distanceM) statt reiner POI-Distanz, damit die Kapazitätsgewichtung greift.
+const POINT_VALUE_MANIFEST_LAYERS = ['krankenhaeuser-plan'];
 
 async function readJson<T>(path: string): Promise<T> {
 	return JSON.parse(await readFile(path, 'utf-8')) as T;
@@ -123,6 +121,10 @@ export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: 
 		const fc = await readJson<FeatureCollection>(PET_POINTS).catch(() => null);
 		if (!fc) throw new Error(`${slug}: ${PET_POINTS} fehlt. Lauf zuerst pnpm data:pet-points.`);
 		pointValueLayers.push({ slug, features: fc.features ?? [] });
+	}
+	for (const slug of POINT_VALUE_MANIFEST_LAYERS) {
+		const features = await loadLayerFeatures(slug, manifest);
+		if (features) pointValueLayers.push({ slug, features });
 	}
 
 	const output = buildKiezScoresFromInput(
