@@ -213,19 +213,20 @@
 	<section id="cross-layer" aria-labelledby="cross-layer-h" class="flex flex-col gap-3">
 		<h2 id="cross-layer-h" class="font-serif text-2xl text-ink">Aggregat-Indizes</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Kiez-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und Luft, Grün,
-			Mobilität, Soziale Lage und Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze,
-			Grünanlagen). Jede Dimension bleibt separat abrufbar im Inspector und als eigener
-			Karten-Layer. Fünf mal 20 Prozent Gewicht, kein Composite-Score auf der Karte.
+			Der Umwelt- & Infrastruktur-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und
+			Luft, Grün und Hitze, Mobilität, Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze) und
+			Wohnschutz (Milieuschutzgebiete). Jede Dimension bleibt separat abrufbar im Inspector und als
+			eigener Karten-Layer. Fünf mal 20 Prozent Gewicht, kein Composite-Score auf der Karte.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Es gibt keinen einzelnen „Berlin-Score". Aggregation auf eine Zahl würde Stigmatisierung
-			erzeugen und individuelle Prioritäten verschleiern. Wer Familie sucht, gewichtet anders
-			als jemand mit Hitze-Empfindlichkeit.
+			Der Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur wertet
+			er nicht: ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter". Bezahlbarkeit bleibt
+			ebenfalls draußen, kontestiert und ohne belastbare Adress-Daten.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Anti-Doppelzählung: umweltgerechtigkeit-2023 fasst bereits Lärm, Luft, Bioklima und Grün
-			zusammen. Indizes zählen es nicht zusätzlich, sondern greifen nur als Coverage-Fallback.
+			Es gibt keinen einzelnen „Berlin-Score". Aggregation auf eine Zahl würde stigmatisieren und
+			individuelle Prioritäten verschleiern. Wer Familie sucht, gewichtet anders als jemand mit
+			Hitze-Empfindlichkeit.
 		</p>
 		<p class="font-mono text-xs text-ink-muted">
 			Vollständige Methodik:
@@ -236,13 +237,14 @@
 				>/methodik/kiez-score</a
 			>
 		</p>
-		<h3 class="font-serif text-xl text-ink mt-2">Soziale Lage (MSS 2025)</h3>
+		<h3 class="font-serif text-xl text-ink mt-2">MSS 2025 als neutraler Kontext</h3>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Das Monitoring Soziale Stadtentwicklung der Senatsverwaltung Berlin liefert pro
 			Planungsraum einen Gesamtindex aus Status (Einkommen, Beschäftigung, Bildung) und
-			Dynamik (Veränderung). Wir zeigen nur diesen Aggregat-Wert, nicht die Einzel-Indikatoren
-			wie Arbeitslosen-Quote oder Transferbezugs-Anteil. Einzelwerte wären auf Adress-Ebene
-			schärfer und stigmatisierender.
+			Dynamik (Veränderung). Seit der Score-Neuordnung fließt es nicht mehr in den Score ein.
+			Wir zeigen es als neutralen Kontext-Layer, nur den Aggregat-Wert, nicht die
+			Einzel-Indikatoren wie Arbeitslosen-Quote oder Transferbezugs-Anteil. Einzelwerte wären auf
+			Adress-Ebene schärfer und stigmatisierender.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Niedriger Status bedeutet nicht „schlechter Kiez". Die Stufe spiegelt strukturelle

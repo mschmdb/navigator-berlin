@@ -17,16 +17,16 @@
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
-	const pageTitle = 'Wo lebt es sich gut? - Berlin in Daten - navigator.berlin';
+	const pageTitle = 'Umwelt- & Infrastruktur-Score - Berlin in Daten - navigator.berlin';
 	const pageDescription =
-		'Kiez-Score-Ranking aus 5 Dimensionen: alle 143 Kieze und 12 Bezirke nach aggregiertem Score. Methodik offen, Quellen verlinkt, keine evaluative Sprache.';
+		'Umwelt- & Infrastruktur-Score für Berlin: alle 143 Kieze und 12 Bezirke nach fünf Dimensionen (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz). Misst Umwelt und Infrastruktur, nicht den sozialen Status.';
 	const ogImagePath = '/og/page/wo-lebt-es-sich-gut.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 
 	const datasetJsonLd = $derived(
 		buildDataset({
 			origin,
-			name: 'Kiez-Score-Ranking Berlin',
+			name: 'Umwelt- & Infrastruktur-Score Berlin',
 			description: pageDescription,
 			license: 'CC BY 4.0',
 			dateModified: data.computedAt ?? new Date().toISOString(),
@@ -75,11 +75,11 @@
 	data-testid="ranking-page"
 >
 	<header class="space-y-4">
-		<h1 class="font-serif text-3xl text-ink md:text-4xl">Wo lebt es sich gut?</h1>
+		<h1 class="font-serif text-3xl text-ink md:text-4xl">Umwelt- & Infrastruktur-Score</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
-			Berliner Kieze und Bezirke nach Kiez-Score sortiert. 5 Dimensionen,
-			gleichgewichtet. Der Score beschreibt statistische Verteilung, nicht
-			Wertung einzelner Adressen oder Personen.
+			Berliner Kieze und Bezirke nach fünf gleichgewichteten Dimensionen sortiert. Der Score misst
+			Umwelt und Infrastruktur, nicht den sozialen Status. Er beschreibt statistische Verteilung,
+			nicht Wertung einzelner Adressen oder Personen.
 		</p>
 	</header>
 
@@ -105,12 +105,12 @@
 			<Accordion.Content
 				class="pb-4 font-serif text-base leading-relaxed text-ink-muted"
 			>
-				Wir aggregieren fünf Dimensionen: Ruhe & Luft, Grün, Mobilität, Soziale Lage,
-				Versorgung. Quelle pro Dimension sind offene Senats-Daten (Lärmkartierung,
-				Grünversorgung, Klima-Atlas, ÖPNV-Halte, MSS, POI-Distanzen). Die
+				Wir aggregieren fünf Dimensionen: Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung,
+				Wohnschutz. Quelle pro Dimension sind offene Senats-Daten (Lärmkartierung,
+				Grünversorgung, Klima-Atlas, ÖPNV-Halte, Milieuschutzgebiete, POI-Distanzen). Die
 				Aggregation läuft 542 LOR-Planungsräume → 143 LOR-Bezirksregionen →
 				12 Bezirke, jeweils flächengewichtet. Jede Dimension wird gleich
-				gewichtet (5 × 20%).
+				gewichtet (5 × 20%). Sozialstruktur wird bewusst nicht gewertet.
 				<a class="text-accent underline" href="/methodik/kiez-score">
 					Vollständige Methodik · Kiez-Score
 				</a>.

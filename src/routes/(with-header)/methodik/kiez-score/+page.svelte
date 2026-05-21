@@ -5,9 +5,10 @@
 	import { buildBreadcrumbList, buildSpeakableWebPage } from '$lib/seo/index.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 
-	const pageTitle = 'Methodik des Kiez-Scores - Berlin in Daten - navigator.berlin';
+	const pageTitle =
+		'Methodik des Umwelt- & Infrastruktur-Scores - Berlin in Daten - navigator.berlin';
 	const pageDescription =
-		'Wie der Kiez-Score aus fünf Dimensionen pro Planungsraum entsteht. Ruhe & Luft, Grün, Mobilität, Soziale Lage, Versorgung. Gewichte, Normalisierung, was bewusst fehlt.';
+		'Wie der Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum entsteht. Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz. Gewichte, Normalisierung, warum Sozialstruktur nicht gewertet wird.';
 
 	const sections = [
 		{ id: 'worum', label: 'Worum es geht' },
@@ -26,60 +27,61 @@
 		{
 			id: 'ruhe-luft',
 			label: 'Ruhe & Luft',
-			layers: 'laerm-2023, luft-2023, bioklima-2023 · Fallback umweltgerechtigkeit-2023',
+			layers: 'laerm-2023, luft-2023',
 			detail:
-				'Lärm- und Luftbelastung (Gewicht je 0.4) plus thermische Belastung (0.2). Kategorisches 3-Stufen-Mapping (gering bis hoch). Fehlen alle drei Roh-Layer, greift der Umweltgerechtigkeits-Aggregat als Fallback.'
+				'Lärm- und Luftbelastung, je zur Hälfte gewichtet. Kategorisches 3-Stufen-Mapping von gering bis hoch. Bioklima zählt nicht mehr hier mit, es ist nach Grün & Hitze gewandert.'
 		},
 		{
-			id: 'gruen',
-			label: 'Grün',
-			layers: 'gruenversorgung-2023, klima-kaltlufteinwirkbereich-2022, klima-leitbahnkorridor-2022',
+			id: 'gruen-hitze',
+			label: 'Grün & Hitze',
+			layers:
+				'gruenversorgung-2023, gruenanlagen, bioklima-2023, klima-pet-2022, klima-kaltlufteinwirkbereich-2022, klima-leitbahnkorridor-2022',
 			detail:
-				'Pro-Kopf-Grünversorgung pro Planungsraum (Gewicht 0.6) plus Kaltluft-Einwirkbereich und Leitbahnkorridor (je 0.2). Vier-Stufen-Skala für Grünversorgung harmonisiert mit Story 1.22.'
+				'Nutzbares Grün und Schutz vor Hitze. Grünversorgung 0.30, Grünanlagen-Nähe 0.15, Bioklima 0.20, PET-Hitzebelastung 0.15, Kaltluft-Einwirkbereich 0.10, Leitbahnkorridor 0.10. PET zählt invertiert: kühlere Werte geben mehr Punkte.'
 		},
 		{
 			id: 'mobilitaet',
 			label: 'Mobilität',
 			layers: 'U-Bahn-, S-Bahn-, Tram-, Bus-Stops · radverkehrsnetz-2025, fahrradstrassen-2024',
 			detail:
-				'Luftlinien-Distanz vom Adress-Punkt zur nächsten Haltestelle, mit 1,3-fachem Umwegfaktor. U-Bahn 0.35, S-Bahn 0.25, Tram 0.20, Bus 0.10, Radverkehrs-Presence 0.10. Bei 0 m hundert Punkte, bei 1.000 m null. Mobilität nutzt die exakte Adress-Distance, andere Dimensionen Planungsraum-Centroid.'
-		},
-		{
-			id: 'soziale-lage',
-			label: 'Soziale Lage',
-			layers: 'mss-gesamtindex-2025 (Senatsverwaltung Stadtentwicklung Berlin)',
-			detail:
-				'Status-Achse des Monitoring Soziale Stadtentwicklung 2025 pro Planungsraum (sehr niedrig bis hoch). Planungsräume mit „kom != gültig" (unter 300 Einwohner:innen oder Ausreißer) bleiben ohne Wert. Einzel-Indikatoren wie Arbeitslosen-Quote oder Transferbezug bewusst nicht ausgespielt. Niedriger Status bedeutet nicht „schlechter Kiez", sondern strukturelle Unterschiede.'
+				'Luftlinien-Distanz vom Adress-Punkt zur nächsten Haltestelle, mit 1,3-fachem Umwegfaktor. U-Bahn 0.35, S-Bahn 0.25, Tram 0.20, Bus 0.10, Radverkehrs-Presence 0.10. Bei 0 m hundert Punkte, bei 1.000 m null. Mobilität nutzt die exakte Adress-Distance, andere Dimensionen den Planungsraum-Centroid.'
 		},
 		{
 			id: 'versorgung',
 			label: 'Versorgung',
-			layers: 'kitas-2024, schulen-2024, krankenhaeuser-plan, spielplaetze, gruenanlagen',
+			layers: 'kitas-2024, schulen-2024, krankenhaeuser-plan, spielplaetze',
 			detail:
-				'Distance vom Planungsraum-Centroid zu nächster Kita (Gewicht 0.25, Threshold 500 m), Schule (0.25, 800 m), Plan-Krankenhaus (0.20, 2.000 m), Spielplatz (0.15, 400 m) und Grünanlage (0.15, 600 m). Polygon-Layer (Spielplätze, Grünanlagen) kollabieren zum Geometrie-Mittelpunkt. Belegungsquote, Trägerschaft und Pflege-Qualität bleiben außen vor.'
+				'Distance vom Planungsraum-Centroid zur nächsten Kita (Gewicht 0.30, Threshold 500 m), Schule (0.30, 800 m), Plan-Krankenhaus (0.25, 2.000 m) und Spielplatz (0.15, 400 m). Grünanlagen zählen jetzt unter Grün & Hitze. Belegungsquote, Trägerschaft und Pflege-Qualität bleiben außen vor.'
+		},
+		{
+			id: 'wohnschutz',
+			label: 'Wohnschutz',
+			layers: 'milieuschutz-erhaltungsmiete, milieuschutz-staedtebau',
+			detail:
+				'Verdrängungsschutz: Liegt ein Planungsraum in einem Milieuschutzgebiet, gilt Schutz als vorhanden. Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft. Diese Größe ist positiv eindeutig, mehr Schutz ist besser für Bewohner. Schutz-Status sagt nichts über die tatsächliche Mietentwicklung.'
 		}
 	];
 
 	const omissions = [
 		{
+			label: 'Sozialstruktur',
+			reason:
+				'Der soziale Status eines Kiezes ist kein Qualitäts-Kriterium. Würden wir ihn werten, schnitten Kieze mit niedrigem Status schlechter ab und würden stigmatisiert. Das MSS-Aggregat bleibt als neutraler Kontext sichtbar, fließt aber nicht in den Score.'
+		},
+		{
 			label: 'Bezahlbarkeit',
 			reason:
-				'Politisch sensibel und ambivalent. Hohe Bodenrichtwerte oder gut bewertete Wohnlagen bedeuten teure Miete, nicht schlechte Wohnqualität. Mietspiegel-Werte liefert mietspiegel.berlin.de.'
+				'Kontestiert und ambivalent. Hohe Bodenrichtwerte oder gut bewertete Wohnlagen bedeuten teure Miete, nicht schlechte Wohnqualität. Belastbare Adress-Daten fehlen. Mietspiegel-Werte liefert mietspiegel.berlin.de.'
 		},
 		{
 			label: 'Familienfreundlichkeit',
 			reason:
-				'Hängt stark von Persona ab (Eltern mit Kita-Kind, Schulkind, Pflegebedarf). Kita-, Schul- und Krankenhaus-Layer bleiben separat im Inspector statt in einer Composite-Dimension zu verschwinden.'
+				'Hängt stark von der Persona ab: Eltern mit Kita-Kind, Schulkind oder Pflegebedarf gewichten anders. Kita-, Schul- und Krankenhaus-Layer bleiben separat im Inspector statt in einer Composite-Dimension zu verschwinden.'
 		},
 		{
-			label: 'Hitze-Resilienz als eigene Dimension',
+			label: 'Composite-Single-Score auf der Karte',
 			reason:
-				'PET-Werte (Story 1.25) variieren stark auf Block-Ebene und wären in einer LOR-Aggregation unscharf. Kaltluft und Leitbahn fließen in Grün ein.'
-		},
-		{
-			label: 'Composite-Single-Score',
-			reason:
-				'Keine einzelne „Wo lebt es sich gut?"-Zahl auf der Karte. Wer Familie sucht, gewichtet anders als jemand mit Hitze-Empfindlichkeit. Persönliche Prioritäten lassen sich nicht aggregieren.'
+				'Keine einzelne Gesamt-Zahl pro Kiez auf der Karte. Wer Familie sucht, gewichtet anders als jemand mit Hitze-Empfindlichkeit. Persönliche Prioritäten lassen sich nicht zu einer Zahl aggregieren.'
 		}
 	];
 
@@ -98,7 +100,7 @@
 		buildSpeakableWebPage({
 			origin: page.url.origin,
 			urlPath: '/methodik/kiez-score',
-			name: 'Methodik des Kiez-Scores',
+			name: 'Methodik des Umwelt- & Infrastruktur-Scores',
 			cssSelectors: [
 				'#worum',
 				'#dimensionen',
@@ -140,11 +142,11 @@
 			<span>Kiez-Score</span>
 		</nav>
 		<h1 data-testid="methodik-kiez-score-h1" class="font-serif text-3xl text-ink">
-			Wo lebt es sich gut?
+			Umwelt- & Infrastruktur-Score
 		</h1>
 		<p class="font-serif text-lg leading-relaxed text-ink-muted">
-			Methodik des Kiez-Scores. Fünf Dimensionen pro Planungsraum, gleich gewichtet, transparent
-			zurückverfolgbar.
+			Fünf Dimensionen pro Planungsraum, gleich gewichtet, transparent zurückverfolgbar. Der Score
+			misst Umwelt und Infrastruktur, nicht den sozialen Status.
 		</p>
 	</header>
 
@@ -167,9 +169,9 @@
 	<section id="worum" aria-labelledby="worum-h" class="flex flex-col gap-3">
 		<h2 id="worum-h" class="font-serif text-2xl text-ink">Worum es geht</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Kiez-Score ist kein „Berlin-Ranking". Die Karte zeigt vier Dimensionen separat pro
-			Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Was zutrifft, steht
-			dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.
+			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking". Die Karte zeigt fünf Dimensionen
+			separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Was zutrifft,
+			steht dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Aggregations-Ebene Planungsraum entspricht rund 7.500 Einwohner:innen. Wohnungs-Mikrolagen
@@ -206,9 +208,9 @@
 			</thead>
 			<tbody>
 				<tr><td class="px-3 py-2">Ruhe & Luft</td><td class="px-3 py-2 font-mono">0.20</td></tr>
-				<tr><td class="px-3 py-2">Grün</td><td class="px-3 py-2 font-mono">0.20</td></tr>
+				<tr><td class="px-3 py-2">Grün & Hitze</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 				<tr><td class="px-3 py-2">Mobilität</td><td class="px-3 py-2 font-mono">0.20</td></tr>
-				<tr><td class="px-3 py-2">Soziale Lage</td><td class="px-3 py-2 font-mono">0.20</td></tr>
+				<tr><td class="px-3 py-2">Wohnschutz</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 				<tr><td class="px-3 py-2">Versorgung</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 			</tbody>
 		</table>
@@ -224,8 +226,8 @@
 			<dd class="text-ink">gering 100, mittel 50, hoch 0 (Belastung)</dd>
 			<dt class="font-mono text-xs text-ink-muted">Ordinal-4</dt>
 			<dd class="text-ink">gering 0, mittel 33, hoch 66, sehr hoch 100 (Versorgung)</dd>
-			<dt class="font-mono text-xs text-ink-muted">MSS Status</dt>
-			<dd class="text-ink">sehr niedrig 0, niedrig 33, mittel 66, hoch 100</dd>
+			<dt class="font-mono text-xs text-ink-muted">PET invertiert</dt>
+			<dd class="text-ink">29 °C oder kühler 100, 41 °C oder heißer 0, linear dazwischen</dd>
 			<dt class="font-mono text-xs text-ink-muted">Distance</dt>
 			<dd class="text-ink">linear: 0 m → 100, 1.000 m → 0</dd>
 			<dt class="font-mono text-xs text-ink-muted">Presence</dt>
@@ -267,9 +269,9 @@
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Stigma-Schutz: kein Composite-Choropleth auf der Karte. Die einzelne Bezirks-Zahl zeigt sich
-			nur in Steckbrief-Tabellen und im Ranking, immer mit Disclaimer. Pro Dimension darf eine
-			Choropleth gezeigt werden (Story 1.31 Familie-Mapping). Soziale Lage bleibt Strukturell-Indigo
-			ohne Rot-Grün-Sprünge.
+			nur in Steckbrief-Tabellen und im Ranking. Pro Dimension darf eine Choropleth gezeigt werden.
+			Alle fünf Score-Dimensionen sind positiv eindeutig und nutzen die Gut-Skala. Das MSS-Aggregat
+			bleibt als neutraler Kontext-Layer in Strukturell-Indigo, ohne Rot-Grün-Sprünge.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Build-Pipeline: <code class="font-mono text-sm">pnpm data:aggregate-scores</code> liest die
@@ -308,14 +310,14 @@
 	<section id="editorial" aria-labelledby="editorial-h" class="flex flex-col gap-3">
 		<h2 id="editorial-h" class="font-serif text-2xl text-ink">Editorial-Verantwortung</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Kiez-Score ist statistische Lage-Beschreibung, keine Wohnungsbewertung. Wir nennen keinen
+			Der Score ist statistische Lage-Beschreibung, keine Wohnungsbewertung. Wir nennen keinen
 			Mietpreis und geben keine rechtliche Auskunft.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Die Dimension Soziale Lage spiegelt strukturelle MSS-Daten, keine Wohnqualität. Choropleth-
-			Farben sind neutral, keine Rot-Grün-Sprünge, keine Severity-Wertung. Einzel-Indikatoren des
-			MSS-Datensatzes bleiben bewusst hinter dem Aggregat. Einzelne Adressen können stark vom
-			Planungsraum-Mittel abweichen.
+			Der Score wertet keine Sozialstruktur. Ein Kiez mit niedrigem Sozialstatus lebt nicht
+			„schlechter". Das MSS-Aggregat zeigen wir als neutralen Kontext, nicht als Bewertung.
+			Choropleth-Farben dafür bleiben neutral, ohne Rot-Grün-Sprünge. Einzelne Adressen können stark
+			vom Planungsraum-Mittel abweichen.
 		</p>
 	</section>
 

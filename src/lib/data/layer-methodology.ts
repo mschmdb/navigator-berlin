@@ -4,7 +4,7 @@
 // `$lib/data/authorities.ts` aufgelöst. EN-Coverage komplett auf Phase 3
 // verschoben (Memory `project_i18n_phase_1_de_only`). Spec-Struktur ist
 // i18n-ready: `authorityKey` löst per `resolveAuthority(key, locale)` auf,
-// Phase 3 muss nur EN-Strings in `authorities.ts` ergänzen — kein Refactor
+// Phase 3 muss nur EN-Strings in `authorities.ts` ergänzen, kein Refactor
 // hier.
 //
 // Composites (z.B. BVG-Stops aus OSM) werden via `authoritySuffix`
@@ -419,7 +419,7 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 
 	'kiez-score-ruhe-luft': {
 		calculation:
-			'Gewichtete Aggregation aus Lärm, Luft und thermischer Belastung pro Planungsraum (Lärm 0.4, Luft 0.4, Bioklima 0.2). Coverage-Fallback: Umweltgerechtigkeits-Aggregat. Normalisiert auf 0–100, Centroid-genau pro LOR-Polygon.',
+			'Gewichtete Aggregation aus Lärm- und Luftbelastung pro Planungsraum (Lärm 0.5, Luft 0.5). 3-Stufen-Mapping gering bis hoch, normalisiert auf 0–100, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 3 bis 5 Jahre (sync mit Umweltatlas-Update)',
 		authorityKey: 'navigator-eigenberechnung-senats-daten',
@@ -430,18 +430,24 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 			'Innenraum-Belastung in Wohnungen nicht enthalten.',
 			'Keine getrennte Wertung nach Quelle (Straße, Schiene, Flug).'
 		],
-		relatedLayers: ['laerm-2023', 'luft-2023', 'bioklima-2023', 'umweltgerechtigkeit-2023']
+		relatedLayers: ['laerm-2023', 'luft-2023']
 	},
-	'kiez-score-gruen': {
+	'kiez-score-gruen-hitze': {
 		calculation:
-			'Pro-Kopf-Grünversorgung (Gewicht 0.6) plus Kaltluft-Einwirkbereich und Leitbahnkorridor (je Gewicht 0.2). 4-Stufen-Mapping gering bis sehr hoch, harmonisiert mit Story 1.22.',
+			'Nutzbares Grün und Hitzeschutz pro Planungsraum: Grünversorgung 0.30, Grünanlagen-Nähe 0.15, Bioklima 0.20, PET-Hitzebelastung 0.15, Kaltluft-Einwirkbereich 0.10, Leitbahnkorridor 0.10. PET zählt invertiert (kühler = mehr Punkte). Normalisiert auf 0–100.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 5 Jahre',
 		authorityKey: 'navigator-eigenberechnung-senats-daten',
-		coverageGaps: ['Private Gärten und Höfe zählen nicht zur öffentlichen Pro-Kopf-Versorgung.'],
+		coverageGaps: [
+			'Private Gärten und Höfe zählen nicht zur öffentlichen Grünversorgung.',
+			'PET variiert auf Block-Ebene stark, im LOR-Aggregat geglättet.'
+		],
 		omissions: ['Qualität und Pflege-Zustand der Parks nicht enthalten.'],
 		relatedLayers: [
 			'gruenversorgung-2023',
+			'gruenanlagen',
+			'bioklima-2023',
+			'klima-pet-2022',
 			'klima-kaltlufteinwirkbereich-2022',
 			'klima-leitbahnkorridor-2022'
 		]
@@ -469,25 +475,9 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 			'fahrradstrassen-2024'
 		]
 	},
-	'kiez-score-soziale-lage': {
-		calculation:
-			'Status-Achse aus dem Monitoring Soziale Stadtentwicklung 2025 pro Planungsraum (sehr niedrig bis hoch), normalisiert auf 0–100. Stigma-Schutz: neutrale Farbskala, Kiez-Score-Disclaimer in jeder Surface, kein Composite-Score auf Karte. Planungsräume mit „kom != gültig" (Ausreißer, EW unter 300) bleiben ohne Wert.',
-		aggregationLevel: 'lor-planungsraum',
-		updateFrequency: 'rund alle zwei Jahre (MSS-Zyklus)',
-		authorityKey: 'navigator-eigenberechnung-mss-2025',
-		coverageGaps: [
-			'Planungsräume mit unter 300 Einwohner:innen oder Ausreißer-Profil ohne Zuordnung.',
-			'Aggregat-Daten je rund 7.500 Einwohner:innen. Mikro-Lagen verschwinden.'
-		],
-		omissions: [
-			'Einzel-Indikatoren wie Arbeitslosenquote oder Transferbezug-Quote bewusst nicht ausgespielt (Stigma-Schutz).',
-			'Niedriger Status spiegelt strukturelle Unterschiede, keine Wohnqualität und keine Bewertung.'
-		],
-		relatedLayers: ['mss-gesamtindex-2025']
-	},
 	'kiez-score-versorgung': {
 		calculation:
-			'Distance-basiert vom LOR-Centroid bzw. Adress-Punkt zu nächster Kita (Gewicht 0.25, Threshold 500 m), Schule (0.25, 800 m), Plan-Krankenhaus (0.20, 2.000 m), Spielplatz (0.15, 400 m) und Grünanlage (0.15, 600 m). 0 m → 100, Threshold → 0, linear. Polygon-Layer (Spielplätze, Grünanlagen) nutzen den Geometrie-Mittelpunkt als POI-Punkt.',
+			'Distance-basiert vom LOR-Centroid bzw. Adress-Punkt zu nächster Kita (Gewicht 0.30, Threshold 500 m), Schule (0.30, 800 m), Plan-Krankenhaus (0.25, 2.000 m) und Spielplatz (0.15, 400 m). 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'jährlich (sync mit Bildungs- und Bezirks-Daten)',
 		authorityKey: 'navigator-eigenberechnung-bezirke',
@@ -499,13 +489,23 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 			'Keine Qualitäts-Bewertung der Einrichtung (Layer zeigt nur Standort).',
 			'Privat-Krankenhäuser und Reha-Kliniken bleiben außen vor (nur Plan-Krankenhäuser).'
 		],
-		relatedLayers: [
-			'kitas-2024',
-			'schulen-2024',
-			'krankenhaeuser-plan',
-			'spielplaetze',
-			'gruenanlagen'
-		]
+		relatedLayers: ['kitas-2024', 'schulen-2024', 'krankenhaeuser-plan', 'spielplaetze']
+	},
+	'kiez-score-wohnschutz': {
+		calculation:
+			'Verdrängungsschutz pro Planungsraum: Liegt der Raum in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft), gilt Schutz als vorhanden (100), sonst 0. Auf Bezirksregion/Bezirk flächen-gewichteter Anteil geschützter Planungsräume. Positiv eindeutig: mehr Schutz ist besser.',
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'fortlaufend (Bezirks-Verordnungen)',
+		authorityKey: 'navigator-eigenberechnung-senats-daten',
+		coverageGaps: [
+			'Schutz-Status sagt nichts über die tatsächliche Mietentwicklung im Gebiet.',
+			'Gebiets-Grenzen ändern sich durch neue Verordnungen, der Datenstand kann nachlaufen.'
+		],
+		omissions: [
+			'Umwandlungsverbot, Vorkaufsrecht und Genehmigungspraxis einzelner Bezirke nicht abgebildet.',
+			'Keine Aussage über konkrete Miethöhe oder Verdrängungsdruck.'
+		],
+		relatedLayers: ['milieuschutz-erhaltungsmiete', 'milieuschutz-staedtebau']
 	}
 };
 
