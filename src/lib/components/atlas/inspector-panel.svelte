@@ -138,7 +138,17 @@
 		'bezirke',
 		'ortsteile',
 		'plz',
-		'einschulbereiche-2024'
+		'einschulbereiche-2024',
+		// Einrichtungs-POIs: Name + Adresse als kompakte Card statt alter Hit-Row.
+		'kitas-2024',
+		'schulen-2024',
+		'krankenhaeuser-plan',
+		'krankenhaeuser-weitere',
+		'sportanlagen-2024',
+		'schwimmbaeder',
+		'spielplaetze',
+		'gruenanlagen',
+		'fahrradstrassen-2024'
 	]);
 
 	function aggFor(

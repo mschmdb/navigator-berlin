@@ -43,6 +43,34 @@
 	const editorial = $derived(getEditorialConfig(hit.layer));
 	const learnMoreHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/${hit.layer}`));
 
+	type RowState = 'with-value' | 'no-coverage' | 'coverage-out-of-scope' | 'out-of-concept' | 'seasonal';
+	const rowState: RowState = $derived.by(() => {
+		if (hit.reason === 'coverage-out-of-scope') return 'coverage-out-of-scope';
+		if (hit.reason === 'out-of-concept') return 'out-of-concept';
+		if (hit.reason === 'no-coverage') return 'no-coverage';
+		if (hit.reason === 'seasonal') return 'seasonal';
+		return 'with-value';
+	});
+	const stateText = $derived.by(() => {
+		switch (rowState) {
+			case 'no-coverage':
+				return 'Daten nicht vorhanden';
+			case 'coverage-out-of-scope':
+				return 'Datensatz deckt diese Lage nicht ab';
+			case 'out-of-concept':
+				return 'Nicht ausgewiesen für diese Lage';
+			case 'seasonal':
+				return 'Layer Mai–Oktober aktiv';
+			default:
+				return null;
+		}
+	});
+	// POI-Layer liefern den Namen als fallbackText (kein Severity-Chip). Den zeigen wir
+	// prominent unter dem Layer-Titel statt klein-kursiv im Header.
+	const poiName = $derived(
+		rowState === 'with-value' && !display.chip ? display.fallbackText : null
+	);
+
 	let detailsOpen = $state(false);
 </script>
 
@@ -55,7 +83,7 @@
 	<div class="flex items-start justify-between gap-2">
 		<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">{layerName}</h4>
 		<div class="shrink-0">
-			{#if display.chip}
+			{#if rowState === 'with-value' && display.chip}
 				<ValueChip
 					{severity}
 					value={display.chip.value}
@@ -64,13 +92,19 @@
 					{layerName}
 					compact
 				/>
-			{:else}
-				<span class="font-serif text-sm italic text-ink-subtle"
-					>{display.fallbackText ?? 'k. A.'}</span
-				>
+			{:else if stateText}
+				<span class="font-serif text-sm italic text-ink-subtle">{stateText}</span>
+			{:else if !poiName}
+				<span class="font-serif text-sm italic text-ink-subtle">k. A.</span>
 			{/if}
 		</div>
 	</div>
+
+	{#if poiName}
+		<p data-testid="poi-value" class="mt-0.5 font-sans text-sm font-medium text-ink">
+			{poiName}
+		</p>
+	{/if}
 
 	{#if display.context}
 		<p class="mt-1 font-sans text-xs text-ink-muted">{display.context}</p>

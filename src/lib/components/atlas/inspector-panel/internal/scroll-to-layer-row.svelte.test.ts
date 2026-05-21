@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { scrollToLayerHitRow } from './scroll-to-layer-row.js';
 
-function createRow(layer: string): HTMLElement {
+function createRow(layer: string, testid = 'layer-hit-row'): HTMLElement {
 	const el = document.createElement('div');
-	el.setAttribute('data-testid', 'layer-hit-row');
+	el.setAttribute('data-testid', testid);
 	el.setAttribute('data-layer', layer);
 	el.scrollIntoView = vi.fn();
 	return el;
@@ -43,6 +43,14 @@ describe('scrollToLayerHitRow', () => {
 		expect(target.scrollIntoView).toHaveBeenCalledWith(
 			expect.objectContaining({ behavior: 'auto' })
 		);
+	});
+
+	it('findet auch LayerCard-Variante (data-testid=layer-card)', () => {
+		const c = document.createElement('div');
+		const target = createRow('kitas-2024', 'layer-card');
+		c.appendChild(target);
+		expect(scrollToLayerHitRow(c, 'kitas-2024')).toBe(true);
+		expect(target.scrollIntoView).toHaveBeenCalled();
 	});
 
 	it('default behavior ist smooth', () => {

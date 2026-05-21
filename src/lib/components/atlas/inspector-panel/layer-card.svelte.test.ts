@@ -40,6 +40,36 @@ describe('LayerCard', () => {
 		expect(card.querySelector('dl')).toBeNull();
 	});
 
+	it('POI ohne Chip: Name prominent + Adresse als Kontext', async () => {
+		const kita: LayerHit = {
+			layer: 'kitas-2024',
+			value: { e_name: 'Kita Sonnenschein', e_strasse: 'Musterstraße', e_hnr: '1' },
+			source: '',
+			updatedAt: '',
+			license: 'dl-de/by-2-0'
+		};
+		render(LayerCard, { hit: kita, layerName: 'Kindertagesstätten', contextRows: [] });
+		await expect.element(page.getByTestId('poi-value')).toHaveTextContent('Kita Sonnenschein');
+		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+		expect(card.textContent).toContain('Musterstraße 1');
+		expect(card.querySelector('[data-testid="value-chip"]')).toBeNull();
+	});
+
+	it('no-coverage: zeigt "Daten nicht vorhanden" statt Wert', async () => {
+		const miss: LayerHit = {
+			layer: 'kitas-2024',
+			value: null,
+			reason: 'no-coverage',
+			source: '',
+			updatedAt: '',
+			license: 'dl-de/by-2-0'
+		};
+		render(LayerCard, { hit: miss, layerName: 'Kindertagesstätten', contextRows: [] });
+		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+		expect(card.textContent).toContain('Daten nicht vorhanden');
+		expect(card.querySelector('[data-testid="poi-value"]')).toBeNull();
+	});
+
 	it('Details-Collapsible togglet Quelle/Beschreibung', async () => {
 		render(LayerCard, {
 			hit,
