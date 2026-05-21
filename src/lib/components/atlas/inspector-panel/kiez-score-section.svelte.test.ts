@@ -130,4 +130,43 @@ describe('KiezScoreSection', () => {
 		toggle.click();
 		await expect.element(page.getByTestId('kiez-score-stand-ruhe-luft')).toBeInTheDocument();
 	});
+
+	it('Dimension-Map-Toggle ruft onToggleLayer mit kiez-score-{dim}', async () => {
+		let toggled: string | null = null;
+		render(KiezScoreSection, {
+			score: makeScore(),
+			onToggleLayer: (slug: string) => (toggled = slug)
+		});
+		const eye = (await page
+			.getByTestId('kiez-score-map-toggle-ruhe-luft')
+			.element()) as HTMLButtonElement;
+		eye.click();
+		expect(toggled).toBe('kiez-score-ruhe-luft');
+	});
+
+	it('Dimension-Learn-More verlinkt auf /{lang}/layer/kiez-score-{dim}', async () => {
+		render(KiezScoreSection, { score: makeScore(), lang: 'de', onToggleLayer: () => {} });
+		const link = (await page
+			.getByTestId('kiez-score-learn-more-mobilitaet')
+			.element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/de/layer/kiez-score-mobilitaet');
+	});
+
+	it('Gesamt-Block zeigt Eye + Link für kiez-score-gesamt', async () => {
+		let toggled: string | null = null;
+		render(KiezScoreSection, {
+			score: makeScore({ overall: 64 }),
+			lang: 'de',
+			onToggleLayer: (slug: string) => (toggled = slug)
+		});
+		const link = (await page
+			.getByTestId('kiez-score-learn-more-gesamt')
+			.element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/de/layer/kiez-score-gesamt');
+		const eye = (await page
+			.getByTestId('kiez-score-map-toggle-gesamt')
+			.element()) as HTMLButtonElement;
+		eye.click();
+		expect(toggled).toBe('kiez-score-gesamt');
+	});
 });

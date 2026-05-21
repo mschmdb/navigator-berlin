@@ -58,7 +58,7 @@
 			case 'coverage-out-of-scope':
 				return 'Datensatz deckt diese Lage nicht ab';
 			case 'out-of-concept':
-				return 'Nicht ausgewiesen für diese Lage';
+				return 'N. a. für diese Lage';
 			case 'seasonal':
 				return 'Layer Mai–Oktober aktiv';
 			default:

@@ -532,7 +532,12 @@
 		</div><!-- /sticky-header-wrapper -->
 
 		<div class="flex-1 space-y-4 px-6 py-4">
-			<KiezScoreSection score={ui.kiezScore} />
+			<KiezScoreSection
+				score={ui.kiezScore}
+				{lang}
+				activeLayerSlugs={ui.activeLayerSlugs}
+				onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+			/>
 			<WahlSection results={ui.wahlResults} />
 			{#each sections as section (section.key)}
 				{#if shouldRenderSection(section.key, section.hits.length)}

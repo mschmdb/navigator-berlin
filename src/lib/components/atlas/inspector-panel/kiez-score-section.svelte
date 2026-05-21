@@ -1,15 +1,31 @@
 <script lang="ts">
+	import { Eye, EyeOff, ExternalLink } from '@lucide/svelte';
+	import { resolve } from '$app/paths';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import KiezScoreDimensionRow from './kiez-score-dimension-row.svelte';
 	import KiezScoreRing from '../charts/kiez-score-ring.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import type { KiezScore, KiezScoreDimension } from '$lib/data';
 
+	const GESAMT_SLUG = 'kiez-score-gesamt';
+
 	type Props = {
 		score: KiezScore | null;
 		methodikHref?: string;
+		lang?: string;
+		activeLayerSlugs?: readonly string[];
+		onToggleLayer?: (slug: string) => void;
 	};
-	let { score, methodikHref = '/methodik/kiez-score' }: Props = $props();
+	let {
+		score,
+		methodikHref = '/methodik/kiez-score',
+		lang = 'de',
+		activeLayerSlugs = [],
+		onToggleLayer
+	}: Props = $props();
+
+	const gesamtActive = $derived(activeLayerSlugs.includes(GESAMT_SLUG));
+	const gesamtHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/${GESAMT_SLUG}`));
 
 	const enabled = $derived(featureFlags.kiezScore && score !== null);
 	const usedDimsCount = $derived.by(() => {
@@ -42,6 +58,33 @@
 				>
 					Gesamt · Mittel über {usedDimsCount}/{score.dimensions.length} Dimensionen
 				</span>
+				<div class="flex items-center gap-1" data-testid="kiez-score-overall-actions">
+					{#if onToggleLayer}
+						<button
+							type="button"
+							data-testid="kiez-score-map-toggle-gesamt"
+							aria-pressed={gesamtActive}
+							aria-label={gesamtActive ? 'Gesamt-Score von Karte entfernen' : 'Gesamt-Score auf Karte zeigen'}
+							title={gesamtActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
+							onclick={() => onToggleLayer?.(GESAMT_SLUG)}
+							class={`inline-flex h-6 w-6 items-center justify-center rounded-sm hover:bg-bg ${gesamtActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
+						>
+							{#if gesamtActive}<EyeOff size={14} aria-hidden="true" />{:else}<Eye
+									size={14}
+									aria-hidden="true"
+								/>{/if}
+						</button>
+					{/if}
+					<a
+						href={gesamtHref}
+						data-testid="kiez-score-learn-more-gesamt"
+						aria-label="Mehr über den Gesamt-Score"
+						title="Layer-Details"
+						class="inline-flex h-6 w-6 items-center justify-center rounded-sm text-ink-subtle hover:bg-bg hover:text-ink"
+					>
+						<ExternalLink size={13} aria-hidden="true" />
+					</a>
+				</div>
 			</div>
 		{/if}
 
@@ -51,6 +94,9 @@
 					score={dim}
 					open={expandedDim === dim.dimension}
 					onToggle={toggleDim}
+					{lang}
+					isActive={activeLayerSlugs.includes(`kiez-score-${dim.dimension}`)}
+					{onToggleLayer}
 				/>
 			{/each}
 		</div>
