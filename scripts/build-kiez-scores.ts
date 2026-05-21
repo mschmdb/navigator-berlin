@@ -8,38 +8,57 @@ import {
 	buildDerivedLayerGeojsons
 } from './lib/kiez-score/pipeline.js';
 import type { BuildLayerSpec } from './lib/kiez-score/build-helpers.js';
+import type { LayerHitLike } from './lib/kiez-score/types.js';
 import type { OepnvStopIndexShape } from './lib/kiez-score/nearest-stops.js';
+import { defaultLorIdFor } from './lib/kiez-score/pipeline.js';
+import { aggregateKitaPlaetzeByLor, plaetzeProKind } from './lib/kiez-score/kita-supply.js';
+import { splitSchulenByArt } from './lib/kiez-score/schul-supply.js';
 import { validateKiezScoreOutput } from './lib/kiez-score/output-schema.js';
+
+interface EinwohnerRecord {
+	plrId: string;
+	kinder0bis6: number;
+}
+
+interface LaermDbRecord {
+	plrId: string;
+	dbDenMean: number;
+}
 
 const STATIC = 'static';
 const LAYERS_DIR = `${STATIC}/layers`;
 const MANIFEST = `${LAYERS_DIR}/MANIFEST.json`;
 const OEPNV_INDEX = `${STATIC}/oepnv-stops-index.json`;
+const PET_POINTS = `${STATIC}/data/klima-pet-points.geojson`;
+const EINWOHNER = `${STATIC}/data/einwohner-lor.json`;
+const LAERM_DB = `${STATIC}/data/laerm-db-lor.json`;
 const OUT = `${STATIC}/kiez-scores/kiez-scores.json`;
 
 // ADR-015: MSS + Umweltgerechtigkeit sind keine Score-Inputs mehr. klima-pet (Grün & Hitze)
 // + Milieuschutz (Wohnschutz, presence via Punkt-in-Polygon am LOR-Centroid) neu.
 const POLYGON_SCORE_LAYERS = [
-	'laerm-2023',
+	// laerm-2023 (3-Stufen) ist seit Story 10.6b kein Score-Input mehr (jetzt dB-Mittel via
+	// laerm-db perLorHits), bleibt aber Map-Layer. luft-2023 weiter ordinal.
 	'luft-2023',
 	'bioklima-2023',
 	'gruenversorgung-2023',
-	'klima-pet-2022',
 	'klima-kaltlufteinwirkbereich-2022',
 	'klima-leitbahnkorridor-2022',
 	'milieuschutz-erhaltungsmiete',
 	'milieuschutz-staedtebau'
 ];
 
+// klima-pet-2022 ist als PMTiles publiziert (Story 10.10). Der Score liest den PET-Wert
+// aus dem abgeleiteten Punkt-Set (nächster Centroid am LOR-Centroid) statt Point-in-Polygon.
+const POINT_VALUE_LAYERS = ['klima-pet-2022'];
+
 const PRESENCE_LAYERS = ['radverkehrsnetz-2025', 'fahrradstrassen-2024'];
 
-const POI_LAYERS = [
-	'kitas-2024',
-	'schulen-2024',
-	'krankenhaeuser-plan',
-	'spielplaetze',
-	'gruenanlagen'
-];
+const POI_LAYERS = ['kitas-2024', 'spielplaetze', 'gruenanlagen'];
+
+// Story 10.2: krankenhaeuser-plan als Point-Value-Layer (nächstes Haus + betten_insgesamt
+// + distanceM) statt reiner POI-Distanz, damit die Kapazitätsgewichtung greift.
+const POINT_VALUE_MANIFEST_LAYERS = ['krankenhaeuser-plan'];
 
 async function readJson<T>(path: string): Promise<T> {
 	return JSON.parse(await readFile(path, 'utf-8')) as T;
@@ -53,6 +72,40 @@ async function loadLayerFeatures(
 	if (!entry) return null;
 	const fc = await readJson<FeatureCollection>(join(LAYERS_DIR, entry.filename));
 	return fc.features ?? null;
+}
+
+/**
+ * Vorberechnete Per-LOR-Hits (Stories 10.1 + 10.6b):
+ * - `kitas-pro-kind`: Σ e_platz der Kitas im LOR ÷ Kinder 0-6 (Einwohner-Join 10.0)
+ * - `laerm-db`: dB-Mittel (L_DEN) pro LOR aus den Fassadenpunkten (10.6b)
+ */
+async function buildPerLorHits(
+	lorFeatures: readonly Feature[],
+	poiLayers: readonly BuildLayerSpec[]
+): Promise<Record<string, LayerHitLike[]>> {
+	const kitaFeatures = poiLayers.find((l) => l.slug === 'kitas-2024')?.features ?? [];
+	const einwohner = await readJson<{ records: EinwohnerRecord[] }>(EINWOHNER).catch(() => null);
+	if (!einwohner) throw new Error(`${EINWOHNER} fehlt. Lauf zuerst pnpm fetch:einwohner.`);
+	const kinderByPlr = new Map(einwohner.records.map((r) => [r.plrId, r.kinder0bis6]));
+	const plaetzeByLor = aggregateKitaPlaetzeByLor(lorFeatures, kitaFeatures, (f) => defaultLorIdFor(f) ?? '');
+
+	const laerm = await readJson<{ records: LaermDbRecord[] }>(LAERM_DB).catch(() => null);
+	if (!laerm) throw new Error(`${LAERM_DB} fehlt. Lauf zuerst pnpm data:laerm-db.`);
+	const dbByPlr = new Map(laerm.records.map((r) => [r.plrId, r.dbDenMean]));
+
+	const out: Record<string, LayerHitLike[]> = {};
+	const push = (lorId: string, hit: LayerHitLike) => {
+		(out[lorId] = out[lorId] ?? []).push(hit);
+	};
+	for (const lor of lorFeatures) {
+		const lorId = defaultLorIdFor(lor);
+		if (!lorId) continue;
+		const proKind = plaetzeProKind(plaetzeByLor[lorId] ?? 0, kinderByPlr.get(lorId) ?? null);
+		if (proKind !== null) push(lorId, { layer: 'kitas-pro-kind', value: { plaetzeProKind: proKind } });
+		const db = dbByPlr.get(lorId);
+		if (db !== undefined) push(lorId, { layer: 'laerm-db', value: { ges_den: db } });
+	}
+	return out;
 }
 
 export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: number }> {
@@ -75,7 +128,30 @@ export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: 
 		if (features) poiLayers.push({ slug, features });
 	}
 
+	// Story 10.3: schulen-2024 nach Schulart in zwei virtuelle POI-Layer splitten
+	// (eigene Distanz-Schwellen pro Schulart, siehe VERSORGUNG_CONFIG).
+	const schulenFeatures = await loadLayerFeatures('schulen-2024', manifest);
+	if (schulenFeatures) {
+		const { grundschule, weiterfuehrend } = splitSchulenByArt(schulenFeatures);
+		poiLayers.push({ slug: 'schulen-grundschule', features: grundschule });
+		poiLayers.push({ slug: 'schulen-weiterfuehrend', features: weiterfuehrend });
+	}
+
 	const oepnvIndex = await readJson<OepnvStopIndexShape>(OEPNV_INDEX);
+
+	// Stories 10.1 + 10.6b: vorberechnete Per-LOR-Hits (Kita-pro-Kind + Lärm-dB-Mittel).
+	const perLorHits = await buildPerLorHits(lorFeatures, poiLayers);
+
+	const pointValueLayers: BuildLayerSpec[] = [];
+	for (const slug of POINT_VALUE_LAYERS) {
+		const fc = await readJson<FeatureCollection>(PET_POINTS).catch(() => null);
+		if (!fc) throw new Error(`${slug}: ${PET_POINTS} fehlt. Lauf zuerst pnpm data:pet-points.`);
+		pointValueLayers.push({ slug, features: fc.features ?? [] });
+	}
+	for (const slug of POINT_VALUE_MANIFEST_LAYERS) {
+		const features = await loadLayerFeatures(slug, manifest);
+		if (features) pointValueLayers.push({ slug, features });
+	}
 
 	const output = buildKiezScoresFromInput(
 		{
@@ -83,6 +159,8 @@ export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: 
 			polygonLayers,
 			presenceLayers: presenceLayersAvailable,
 			poiLayers,
+			pointValueLayers,
+			perLorHits,
 			oepnvIndex
 		},
 		new Date().toISOString()

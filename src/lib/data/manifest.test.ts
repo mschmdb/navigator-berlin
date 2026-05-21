@@ -1,6 +1,8 @@
+import { readFileSync } from 'node:fs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import miniManifest from './__fixtures__/mini-manifest.json' with { type: 'json' };
 import { loadManifest, getLayerEntry, getLayersByBundle, _resetManifestCache } from './manifest.js';
+import { validateManifest } from './manifest-schema.js';
 
 const fetchMock = (response: unknown, status = 200) =>
 	vi.fn(async () =>
@@ -18,6 +20,13 @@ beforeEach(() => {
 
 afterEach(() => {
 	vi.restoreAllMocks();
+});
+
+describe('committed MANIFEST.json', () => {
+	it('validiert gegen das Schema (fängt invalide Layer-Entries vor dem Deploy)', () => {
+		const raw = JSON.parse(readFileSync('static/layers/MANIFEST.json', 'utf-8'));
+		expect(() => validateManifest(raw)).not.toThrow();
+	});
 });
 
 describe('loadManifest', () => {

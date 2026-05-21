@@ -11,6 +11,7 @@ import { fetchDwdZip, extractProduktTageswerteCsv } from './lib/fetchers/dwd-cdc
 import { parseDwdKlCsv, aggregateYearly } from './lib/dwd.js';
 import { reprojectGeoJSON, detectGeoJsonCrs } from './lib/reproject.js';
 import { simplifyGeoJSON } from './lib/simplify.js';
+import { mergeFeatureCollections } from './lib/merge-geojson.js';
 import { buildLayerEntry, buildManifest, validateManifest } from './lib/manifest.js';
 import type { ClimateBundle, GeometryType, LayerEntry } from './lib/types.js';
 
@@ -36,12 +37,24 @@ async function fetchSource(slug: string): Promise<{ raw: string; sourceUrl: stri
 	switch (source.kind) {
 		case 'odis':
 			return { raw: await fetchOdisGeoJson(source.sourceUrl), sourceUrl: source.sourceUrl };
-		case 'fis-broker':
+		case 'fis-broker': {
 			if (!source.typeName) throw new Error(`${slug}: typeName required for fis-broker`);
-			return {
-				raw: await fetchFisBrokerWfs(source.sourceUrl, source.typeName),
-				sourceUrl: source.sourceUrl
-			};
+			const primary = await fetchFisBrokerWfs(source.sourceUrl, source.typeName);
+			if (!source.additionalTypeNames?.length) {
+				return { raw: primary, sourceUrl: source.sourceUrl };
+			}
+			// Story 10.9: mehrere typeNames am selben Endpoint zu einem Output mergen.
+			const extras = await Promise.all(
+				source.additionalTypeNames.map((tn) => fetchFisBrokerWfs(source.sourceUrl, tn))
+			);
+			const merged = mergeFeatureCollections(
+				[primary, ...extras].map((r) => JSON.parse(r) as FeatureCollection)
+			);
+			console.log(
+				`[fetch] ${slug}: merged ${1 + extras.length} typeNames → ${merged.features.length} features`
+			);
+			return { raw: JSON.stringify(merged), sourceUrl: source.sourceUrl };
+		}
 		case 'overpass':
 			if (!source.overpassQL) throw new Error(`${slug}: overpassQL required for overpass`);
 			return { raw: await fetchOverpass(source.sourceUrl, source.overpassQL), sourceUrl: source.sourceUrl };
@@ -95,8 +108,9 @@ async function processLayer(slug: string, fetchedAt: string): Promise<LayerEntry
 		await writeFile(tmpGeoJson, simplified);
 		await runTippecanoe(tmpGeoJson, tmpPmtiles, {
 			layerName: source.slug,
-			minZoom: source.zoomThresholds.min,
-			maxZoom: source.zoomThresholds.max
+			minZoom: source.tileMinZoom ?? source.zoomThresholds.min,
+			maxZoom: source.tileMaxZoom ?? source.zoomThresholds.max,
+			includeProperties: source.tileIncludeProperties
 		});
 		const buf = await readFile(tmpPmtiles);
 		const entry = buildLayerEntry(source, buf, fetchedAt, {

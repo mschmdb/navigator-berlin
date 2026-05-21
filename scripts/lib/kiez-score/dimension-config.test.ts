@@ -51,7 +51,7 @@ describe('DIMENSION_CONFIGS', () => {
 
 	it('Ruhe & Luft enthält nur laerm + luft (kein Bioklima, kein Fallback)', () => {
 		const ruheLuft = DIMENSION_CONFIGS.find((c) => c.dimension === 'ruhe-luft')!;
-		expect(ruheLuft.layers.map((l) => l.layer)).toEqual(['laerm-2023', 'luft-2023']);
+		expect(ruheLuft.layers.map((l) => l.layer)).toEqual(['laerm-db', 'luft-2023']);
 		expect(ruheLuft.fallback).toBeUndefined();
 	});
 

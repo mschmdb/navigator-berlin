@@ -25,7 +25,7 @@ describe('methodik/kiez-score · Bezirks-Score-Erweiterung (Story 2.9a)', () => 
 		const sec = document.getElementById('bezirks-score');
 		expect(sec, 'section#bezirks-score fehlt').not.toBeNull();
 		expect(sec?.tagName).toBe('SECTION');
-		expect(sec?.textContent ?? '').toMatch(/Composite-Choropleth/);
+		expect(sec?.textContent ?? '').toMatch(/Gesamt-Choropleth/);
 		expect(sec?.textContent ?? '').toMatch(/data:aggregate-scores/);
 	});
 

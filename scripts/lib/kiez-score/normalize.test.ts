@@ -5,7 +5,11 @@ import {
 	normalizeMssStatus4,
 	normalizeDistance,
 	normalizeNumericInverted,
-	normalizePresence
+	normalizePresence,
+	normalizeKitaProKind,
+	parseBettenCapacity,
+	normalizeCapacityWeightedDistance,
+	normalizeDensity
 } from './normalize.js';
 
 describe('normalizeOrdinal3', () => {
@@ -111,5 +115,94 @@ describe('normalizePresence', () => {
 	it('true → 100, false → 0', () => {
 		expect(normalizePresence(true)).toBe(100);
 		expect(normalizePresence(false)).toBe(0);
+	});
+});
+
+describe('parseBettenCapacity', () => {
+	it('parst string + number', () => {
+		expect(parseBettenCapacity('350')).toBe(350);
+		expect(parseBettenCapacity(415)).toBe(415);
+	});
+	it('leer / null / nicht-numerisch / <=0 → null', () => {
+		expect(parseBettenCapacity('')).toBeNull();
+		expect(parseBettenCapacity(null)).toBeNull();
+		expect(parseBettenCapacity('abc')).toBeNull();
+		expect(parseBettenCapacity('0')).toBeNull();
+		expect(parseBettenCapacity(0)).toBeNull();
+		expect(parseBettenCapacity(-5)).toBeNull();
+	});
+});
+
+describe('normalizeCapacityWeightedDistance', () => {
+	it('großes Krankenhaus scort bei gleicher Distanz höher als kleines', () => {
+		const big = normalizeCapacityWeightedDistance(500, 2000, 1400, 1500);
+		const small = normalizeCapacityWeightedDistance(500, 2000, 80, 1500);
+		expect((big as number) > (small as number)).toBe(true);
+	});
+	it('fehlende Bettenzahl → Faktor 0.5 (halber Distanz-Score)', () => {
+		// distScore = 100*(1-500/2000) = 75; ohne Betten: 75*0.5 = 37.5
+		expect(normalizeCapacityWeightedDistance(500, 2000, null, 1500)).toBe(37.5);
+	});
+	it('Distanz >= threshold → 0 unabhängig von Kapazität', () => {
+		expect(normalizeCapacityWeightedDistance(2000, 2000, 1500, 1500)).toBe(0);
+	});
+	it('null-Distanz → null', () => {
+		expect(normalizeCapacityWeightedDistance(null, 2000, 1500, 1500)).toBeNull();
+	});
+	it('Fachabteilungen erhöhen den Beitrag', () => {
+		const ohne = normalizeCapacityWeightedDistance(500, 2000, 750, 1500, null, 20);
+		const mit = normalizeCapacityWeightedDistance(500, 2000, 750, 1500, 20, 20);
+		expect((mit as number) > (ohne as number)).toBe(true);
+	});
+});
+
+describe('normalizeDensity', () => {
+	const cfg = { cap: 5, radiusM: 500, softTailFactor: 0.3 };
+	it('mehr POIs im Radius → höherer Score, kein "zweiter Punkt zählt 0"', () => {
+		expect(normalizeDensity(1, 100, cfg)).toBeLessThan(normalizeDensity(3, 100, cfg));
+	});
+	it('count >= cap → 100 (kein Overflow)', () => {
+		expect(normalizeDensity(5, 100, cfg)).toBe(100);
+		expect(normalizeDensity(9, 100, cfg)).toBe(100);
+	});
+	it('0 POIs aber nächster knapp drüber → weicher Tail > 0', () => {
+		const s = normalizeDensity(0, 550, cfg);
+		expect(s).toBeGreaterThan(0);
+		expect(s).toBeLessThan(50);
+	});
+	it('0 POIs + kein nächster → 0', () => {
+		expect(normalizeDensity(0, null, cfg)).toBe(0);
+	});
+	it('Radius/Cap pro Layer konfigurierbar', () => {
+		const big = { cap: 2, radiusM: 2000 };
+		expect(normalizeDensity(1, 100, big)).toBe(50);
+	});
+});
+
+describe('normalizeDensity Performance', () => {
+	it('3000 Aufrufe < 50ms', () => {
+		const cfg = { cap: 5, radiusM: 500, softTailFactor: 0.3 };
+		const start = performance.now();
+		for (let i = 0; i < 3000; i++) normalizeDensity(i % 7, (i % 600) + 1, cfg);
+		expect(performance.now() - start).toBeLessThan(50);
+	});
+});
+
+describe('normalizeKitaProKind', () => {
+	it('>= bestAt → 100 (geclampt)', () => {
+		expect(normalizeKitaProKind(0.35, 0.35)).toBe(100);
+		expect(normalizeKitaProKind(0.5, 0.35)).toBe(100);
+	});
+	it('<= 0 → 0 (kein Platzangebot)', () => {
+		expect(normalizeKitaProKind(0, 0.35)).toBe(0);
+	});
+	it('linear dazwischen', () => {
+		expect(normalizeKitaProKind(0.175, 0.35)).toBe(50);
+	});
+	it('null (kein Nenner) → null', () => {
+		expect(normalizeKitaProKind(null, 0.35)).toBeNull();
+	});
+	it('bestAt <= 0 → null', () => {
+		expect(normalizeKitaProKind(0.2, 0)).toBeNull();
 	});
 });

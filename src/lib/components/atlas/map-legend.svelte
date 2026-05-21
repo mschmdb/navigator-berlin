@@ -202,15 +202,24 @@
 						{/if}
 						{#if entry.meta}
 							<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px]">
-								<a
-									data-testid={`legend-source-link-${entry.slug}`}
-									href={entry.meta.sourceUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="text-accent underline underline-offset-2 hover:text-accent-strong"
-								>
-									Quelle
-								</a>
+								{#if entry.meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
+									<span
+										data-testid={`legend-source-link-${entry.slug}`}
+										class="text-ink-subtle"
+									>
+										Eigene Berechnung
+									</span>
+								{:else}
+									<a
+										data-testid={`legend-source-link-${entry.slug}`}
+										href={entry.meta.sourceUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="text-accent underline underline-offset-2 hover:text-accent-strong"
+									>
+										Quelle
+									</a>
+								{/if}
 								<span
 									data-testid={`legend-license-${entry.slug}`}
 									class="font-mono text-ink-subtle"

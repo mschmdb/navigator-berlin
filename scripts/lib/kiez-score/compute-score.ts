@@ -18,7 +18,11 @@ import {
 	normalizeMssStatus4,
 	normalizeDistance,
 	normalizeNumericInverted,
-	normalizePresence
+	normalizePresence,
+	normalizeKitaProKind,
+	parseBettenCapacity,
+	normalizeCapacityWeightedDistance,
+	normalizeDensity
 } from './normalize.js';
 
 function readDistanceMeters(value: unknown): number | null {
@@ -81,6 +85,30 @@ function normalizeFromHit(
 			rawValue = getProp(hit.value, normalize.field);
 			normalized = normalizeNumericInverted(rawValue, normalize.bestAt, normalize.worstAt);
 			break;
+		case 'kita-pro-kind': {
+			const v = getProp(hit.value, normalize.field);
+			const proKind = typeof v === 'number' ? v : null;
+			rawValue = proKind;
+			normalized = normalizeKitaProKind(proKind, normalize.bestAt);
+			break;
+		}
+		case 'capacity-weighted-distance': {
+			const meters = readDistanceMeters(hit.value);
+			const betten = parseBettenCapacity(getProp(hit.value, normalize.bettenField));
+			const fach = normalize.fachabteilungenField
+				? parseBettenCapacity(getProp(hit.value, normalize.fachabteilungenField))
+				: null;
+			rawValue = meters !== null ? { distanceM: meters, betten, fachabteilungen: fach } : null;
+			normalized = normalizeCapacityWeightedDistance(
+				meters,
+				normalize.threshold,
+				betten,
+				normalize.maxBetten,
+				fach,
+				normalize.maxFachabteilungen ?? 0
+			);
+			break;
+		}
 		default:
 			normalized = null;
 	}
@@ -101,9 +129,27 @@ function normalizeFromHit(
 function normalizeSyntheticLayer(
 	weight: LayerWeight,
 	stops: Record<Modus, NearestStopLike | null> | null,
-	layerHits: readonly LayerHitLike[]
+	layerHits: readonly LayerHitLike[],
+	poiCounts?: Record<string, { count: number; nearestM: number | null }>
 ): NormalizedSource {
 	const { normalize } = weight;
+	if (normalize.kind === 'poi-density') {
+		const entry = poiCounts?.[weight.layer];
+		const normalized = entry
+			? normalizeDensity(entry.count, entry.nearestM, {
+					cap: normalize.cap,
+					radiusM: normalize.radiusM,
+					softTailFactor: normalize.softTailFactor
+				})
+			: null;
+		const source: DimensionSource = {
+			layer: weight.layer,
+			rawValue: entry ?? null,
+			normalizedValue: normalized,
+			weight: weight.weight
+		};
+		return { source };
+	}
 	if (normalize.kind === 'mode-distance') {
 		const stop = stops?.[normalize.mode] ?? null;
 		const normalized = stop ? normalizeDistance(stop.distanceM, normalize.threshold) : 0;
@@ -167,9 +213,17 @@ export function computeDimensionScore(
 
 	for (const weight of config.layers) {
 		const kind = weight.normalize.kind;
-		if (kind === 'mode-distance' || kind === 'presence-any-of') {
-			const result = normalizeSyntheticLayer(weight, input.nearestStops, input.layerHits);
+		if (kind === 'mode-distance' || kind === 'presence-any-of' || kind === 'poi-density') {
+			const result = normalizeSyntheticLayer(
+				weight,
+				input.nearestStops,
+				input.layerHits,
+				input.poiCounts
+			);
 			collected.push(result.source);
+			if (kind === 'poi-density' && result.source.normalizedValue === null) {
+				missingData.push(weight.layer);
+			}
 			continue;
 		}
 		const hit = hitFor(input.layerHits, weight.layer);

@@ -52,7 +52,11 @@ const BUNDLE_TO_SECTION: Record<Bundle, SectionKey> = {
 	// Wahldaten rendern in eigener Inspector-Sektion (Story 6.3). No-Op-Map auf 'boundaries'
 	// damit getLayersAtPoint sie nicht in andere Sections wirft. Layer haben
 	// inspectorRelevant=true für direkten Wahlbezirks-Lookup ausserhalb von getLayersAtPoint.
-	'H: Wahldaten': 'boundaries'
+	'H: Wahldaten': 'boundaries',
+	// Einwohnerdichte-Layer ist inspectorRelevant:false (Map-only). Demografie rendert
+	// als eigener Inspector-Block (Story 10.5) aus static/data, nicht via LayerHits.
+	// No-Op-Map auf 'boundaries' damit Record<Bundle> exhaustive bleibt.
+	'I: Demografie': 'boundaries'
 };
 
 const BOUNDARY_ORDER = ['bezirke', 'ortsteile', 'plz', 'einschulbereiche-2024'];

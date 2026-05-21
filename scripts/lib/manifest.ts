@@ -19,7 +19,8 @@ const BundleSchema = v.picklist([
 	'E: Soziale Infrastruktur',
 	'F: Mobilität',
 	'G: Kiez-Score',
-	'H: Wahldaten'
+	'H: Wahldaten',
+	'I: Demografie'
 ]);
 
 const GeometryTypeSchema = v.picklist(['Point', 'Polygon', 'MultiPolygon', 'LineString']);

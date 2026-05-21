@@ -1,9 +1,31 @@
 import type { DimensionConfig } from './types.js';
 
+// Story 10.1: Berliner Versorgungsrichtwert ca. 0.33-0.35 Kita-Plätze pro Kind 0-6
+// (Senatsverwaltung). Ab diesem Quotienten scort die Pro-Kopf-Versorgung voll.
+export const KITA_BEST_AT = 0.35;
+
+// Story 10.2: Obergrenze Bettenkapazität für die Normalisierung. Größtes Berliner Haus
+// (Vivantes Neukölln ~1377 Betten); 1500 als konservative Obergrenze gegen Clamp-Effekte.
+export const KRANKENHAUS_MAX_BETTEN = 1500;
+
+// Story 10.6b: Lärm als dB-Mittel (L_DEN) pro LOR statt 3-Stufen-Index. WHO-orientiert:
+// <= 45 dB sehr ruhig → 100, >= 75 dB stark belastet → 0 (Matzarakis/WHO-Richtwerte).
+export const LAERM_DB_BEST_AT = 45;
+export const LAERM_DB_WORST_AT = 75;
+
 export const RUHE_LUFT_CONFIG: DimensionConfig = {
 	dimension: 'ruhe-luft',
 	layers: [
-		{ layer: 'laerm-2023', weight: 0.5, normalize: { kind: 'ordinal-3', field: 'kategorie' } },
+		{
+			layer: 'laerm-db',
+			weight: 0.5,
+			normalize: {
+				kind: 'numeric-inverted',
+				field: 'ges_den',
+				bestAt: LAERM_DB_BEST_AT,
+				worstAt: LAERM_DB_WORST_AT
+			}
+		},
 		{ layer: 'luft-2023', weight: 0.5, normalize: { kind: 'ordinal-3', field: 'kategorie' } }
 	]
 };
@@ -72,14 +94,47 @@ export const MOBILITAET_CONFIG: DimensionConfig = {
 export const VERSORGUNG_CONFIG: DimensionConfig = {
 	dimension: 'versorgung',
 	layers: [
-		{ layer: 'kitas-2024', weight: 0.3, normalize: { kind: 'poi-distance', threshold: 500 } },
-		{ layer: 'schulen-2024', weight: 0.3, normalize: { kind: 'poi-distance', threshold: 800 } },
+		// Story 10.1: Kita-Versorgung doppelt — Erreichbarkeit + Plätze pro Kind. Story 10.4: der
+		// Erreichbarkeits-Term zählt jetzt Kitas im Radius (Dichte) statt nur die nächste.
+		{
+			layer: 'kitas-2024',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 500, cap: 5, softTailFactor: 0.3 }
+		},
+		{
+			layer: 'kitas-pro-kind',
+			weight: 0.15,
+			normalize: { kind: 'kita-pro-kind', field: 'plaetzeProKind', bestAt: KITA_BEST_AT }
+		},
+		// Story 10.3+10.4: Schul-Term nach Schulart getrennt, jeweils als Dichte im Radius.
+		{
+			layer: 'schulen-grundschule',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 600, cap: 3, softTailFactor: 0.3 }
+		},
+		{
+			layer: 'schulen-weiterfuehrend',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 1200, cap: 3, softTailFactor: 0.3 }
+		},
 		{
 			layer: 'krankenhaeuser-plan',
 			weight: 0.25,
-			normalize: { kind: 'poi-distance', threshold: 2000 }
+			// Story 10.2: Distanz × Bettenkapazität. Bleibt Distanz-basiert (nächstes großes Haus zählt,
+			// nicht die Anzahl) — Dichte wäre für Kliniken kein sinnvolles Maß.
+			normalize: {
+				kind: 'capacity-weighted-distance',
+				threshold: 2000,
+				bettenField: 'betten_insgesamt',
+				maxBetten: KRANKENHAUS_MAX_BETTEN
+			}
 		},
-		{ layer: 'spielplaetze', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 400 } }
+		// Story 10.4: Spielplatz-Dichte im Radius statt Distanz zum nächsten.
+		{
+			layer: 'spielplaetze',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 400, cap: 8, softTailFactor: 0.4 }
+		}
 	]
 };
 

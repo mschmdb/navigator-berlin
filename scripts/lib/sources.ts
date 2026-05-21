@@ -236,10 +236,22 @@ export const SOURCES: SourceConfig[] = [
 		kind: 'fis-broker',
 		sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022',
 		typeName: 'ua_klimaanalyse_2022:pa_ua_pet_siedlg_2022',
+		// Story 10.9: drei überschneidungsfreie PET-Partitionen (Siedlung + Straßenraum +
+		// Grünfläche) zu einem lückenlosen Layer mergen. Gleiches pet14h-Feld in allen dreien.
+		additionalTypeNames: [
+			'ua_klimaanalyse_2022:pb_ua_pet_str_2022',
+			'ua_klimaanalyse_2022:pc_ua_pet_grfrei_2022'
+		],
 		license: 'dl-de/zero-2-0',
 		bundleGroup: 'C: Umwelt',
 		zoomThresholds: { min: 11, max: 18 },
-		simplifyProfile: 'polygon',
+		// Story 10.9: gemergt sind es 57.8k Polygone (>20 MB als GeoJSON). Vector-Tiles
+		// statt rohes GeoJSON, sonst Transfer + Fill-Rendering zu schwer.
+		simplifyProfile: 'tiles',
+		format: 'pmtiles',
+		tileMinZoom: 9,
+		tileMaxZoom: 13,
+		tileIncludeProperties: ['pet14h'],
 		sourceUpdatedAt: '2024-06-01T00:00:00.000Z',
 		// Story 1.25: Berliner Senat publiziert PET nur auf Siedlungs-Polygonen
 		// (Wohnblock-Geometrie). Adress-Geocoding landet oft im Hof/Straßenraum

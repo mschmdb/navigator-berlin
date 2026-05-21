@@ -61,3 +61,73 @@ export function normalizeNumericInverted(
 export function normalizePresence(present: boolean): number {
 	return present ? 100 : 0;
 }
+
+/**
+ * Betten-Kapazität (Story 10.2). `betten_insgesamt` ist string, `betten` int.
+ * Einheitlich: number oder string → number, `<= 0` / leer / nicht-numerisch → null.
+ */
+export function parseBettenCapacity(value: unknown): number | null {
+	let n: number;
+	if (typeof value === 'number') n = value;
+	else if (typeof value === 'string') n = Number.parseInt(value.trim(), 10);
+	else return null;
+	return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/**
+ * Kapazitätsgewichtete POI-Distanz (Story 10.2). Distanz-Score × Kapazitäts-Faktor.
+ * Faktor = 0.5 (Basis, auch ohne Kapazitätsdaten) + 0.3 × Betten-Anteil + 0.2 × Fachabteilungs-Anteil.
+ * Fehlende Kapazität → Faktor 0.5 (neutral, kein Boost, kein Totalausfall).
+ */
+export function normalizeCapacityWeightedDistance(
+	distanceM: number | null,
+	threshold: number,
+	betten: number | null,
+	maxBetten: number,
+	fachabteilungen: number | null = null,
+	maxFachabteilungen = 0
+): number | null {
+	const distScore = normalizeDistance(distanceM, threshold);
+	if (distScore === null) return null;
+	const bettenFrac = betten !== null && maxBetten > 0 ? Math.min(betten / maxBetten, 1) : 0;
+	const fachFrac =
+		fachabteilungen !== null && maxFachabteilungen > 0
+			? Math.min(fachabteilungen / maxFachabteilungen, 1)
+			: 0;
+	const factor = 0.5 + 0.3 * bettenFrac + 0.2 * fachFrac;
+	return Math.max(0, Math.min(100, Math.round(distScore * factor * 10) / 10));
+}
+
+/**
+ * POI-Dichte im Radius (Story 10.4). Anzahl POIs im Radius statt Distanz zum nächsten.
+ * count >= cap → 100, linear darunter. count 0: weicher Tail über nächste Distanz
+ * (softTailFactor × Distanz-Score gegen 2× Radius), sonst harter Cliff. Behebt
+ * "zweiter Punkt zählt 0" + Distanz-Cliff.
+ */
+export function normalizeDensity(
+	count: number,
+	nearestM: number | null,
+	config: { cap: number; radiusM: number; softTailFactor?: number }
+): number {
+	if (config.cap <= 0) return 0;
+	if (count >= 1) return Math.max(0, Math.min(100, Math.round((count / config.cap) * 100 * 10) / 10));
+	if (nearestM === null) return 0;
+	const tail = config.softTailFactor ?? 0;
+	const distScore = normalizeDistance(nearestM, config.radiusM * 2) ?? 0;
+	return Math.round(tail * distScore * 10) / 10;
+}
+
+/**
+ * Kita-Plätze pro Kind 0-6 (Story 10.1). Höher = besser. `null` (kein Nenner) bleibt null.
+ * >= bestAt → 100, <= 0 → 0, linear dazwischen.
+ */
+export function normalizeKitaProKind(
+	plaetzeProKind: number | null,
+	bestAt: number
+): number | null {
+	if (plaetzeProKind === null || !Number.isFinite(plaetzeProKind)) return null;
+	if (bestAt <= 0) return null;
+	if (plaetzeProKind <= 0) return 0;
+	if (plaetzeProKind >= bestAt) return 100;
+	return Math.round(100 * (plaetzeProKind / bestAt) * 10) / 10;
+}

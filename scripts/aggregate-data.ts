@@ -38,6 +38,9 @@ const MANIFEST_PATH = `${LAYERS_DIR}/MANIFEST.json`;
 
 const SLUG_BEZIRKE = 'bezirke';
 const SLUG_BZR = 'lor-bezirksregion';
+// klima-pet-2022 ist PMTiles (Story 10.10). PET-Werte kommen aus dem abgeleiteten
+// Punkt-Set (Centroids mit pet14h), nicht aus dem binären Tile-Layer.
+const PET_POINTS = 'static/data/klima-pet-points.geojson';
 
 interface LoadedLayer {
 	readonly slug: string;
@@ -69,6 +72,17 @@ async function loadLayerOrThrow(manifest: Manifest, slug: string): Promise<Loade
 async function loadLayerOptional(manifest: Manifest, slug: string): Promise<LoadedLayer> {
 	const l = await loadLayer(manifest, slug);
 	return l ?? { slug, features: [], sourceUpdatedAt: new Date(0).toISOString() };
+}
+
+async function loadPetPoints(manifest: Manifest): Promise<LoadedLayer> {
+	const entry = manifest.layers.find((l: LayerEntry) => l.slug === 'klima-pet-2022');
+	const fc = await readJson<FeatureCollection>(PET_POINTS).catch(() => null);
+	if (!fc) throw new Error(`${PET_POINTS} fehlt. Lauf zuerst pnpm data:pet-points.`);
+	return {
+		slug: 'klima-pet-2022',
+		features: (fc.features ?? []) as Feature[],
+		sourceUpdatedAt: entry?.sourceUpdatedAt ?? entry?.fetchedAt ?? new Date(0).toISOString()
+	};
 }
 
 function getBezirkSlug(feature: Feature): string {
@@ -140,7 +154,7 @@ async function loadAllSources(manifest: Manifest): Promise<AllSources> {
 		loadLayerOrThrow(manifest, 'gruenversorgung-2023'),
 		loadLayerOrThrow(manifest, 'gruenanlagen'),
 		loadLayerOrThrow(manifest, 'spielplaetze'),
-		loadLayerOrThrow(manifest, 'klima-pet-2022'),
+		loadPetPoints(manifest),
 		loadLayerOptional(manifest, 'wohnlagen-2024'),
 		loadLayerOrThrow(manifest, 'mss-gesamtindex-2025'),
 		loadLayerOrThrow(manifest, 'ubahn-stationen'),

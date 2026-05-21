@@ -11,7 +11,7 @@ related:
 
 Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-05-21.
 
-**96 Stories total**: ✅ 61 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 1 backlog · ▫️ 30 other
+**107 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 1 backlog · ▫️ 24 other
 
 ## Pro Epic
 ### Epic 1
@@ -51,6 +51,22 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | `1-29-atlas-methodik-pattern` | ✅ done | — |
 | `1-30-mss-soziale-stadtentwicklung` | ✅ done | — |
 | `1-31-atlas-ui-ux-polish` | ✅ done | — |
+
+### Epic 10
+
+| Story | Status | Kommentar |
+|---|---|---|
+| `10-0-einwohner-lor-join-foundation` | ✅ done | Einwohner-CSV (542 LOR-PLR, Altersjahre, CC-BY, 31.12.2024) join via plr_id auf LOR-Geometrie. Abgeleitete Aggregate:… |
+| `10-1-versorgung-kita-platz-pro-kind` | ✅ done | V1: kita.e_platz (live 99% gefüllt, Range 1-310, Median 30) + Kinder 0-6 aus 10-0 → Versorgung-Score Pro-Kopf statt n… |
+| `10-2-versorgung-krankenhaus-betten-fachabteilung` | ✅ done | V2: betten/betten_insgesamt + fachabteilungen (vorhanden, ungenutzt) gewichten Distanz-Score. string/int-Parsing vere… |
+| `10-3-versorgung-schulart-differenzierung` | ✅ done | V3: schulen.schulart (vorhanden, nur Inspector-Text) → eigene Distanz-Schwellen pro Schulart. Hängt an Epic 9. |
+| `10-4-poi-score-distanz-zu-dichte` | ✅ done | V5: POI-Score von Nächste-Distanz auf Anzahl-im-Radius (optional pro Kopf). Behebt zweiter-Punkt-zählt-0 + Distanz-Cl… |
+| `10-5-einwohnerdichte-altersstruktur-kontext-block` | ✅ done | V4: Demografie als neutraler Inspector-Block (categorical, kein Score-Input, ADR-015). Hängt an 10-0. |
+| `10-6-laerm-db-upgrade-spike` | ✅ done | V6: Spike Strategische Lärmkarten 2022 (fassadengenaue dB) statt 3-Stufen-Umweltgerechtigkeit. Tile-Strategie-Frage. … |
+| `10-7-umweltgerechtigkeit-kategorie-mapping-fix` | ✅ done | Render-Bug: choropleth-mehrfach (layer-style-builder.ts:444) matcht keinfach/.../vierfach, Quelle liefert „keine star… |
+| `10-8-milieuschutz-sichtbarkeit-styling-fix` | ✅ done | Styling-Bug: polygon-outline-soft #E0E4F0 × Opacity 0.35 = unsichtbar. Kräftigere Farbe/Opacity/Umriss, beide Milieus… |
+| `10-9-gefuehlte-temperatur-flaechendeckend` | ✅ done | PET-Lücken füllen: pb_ua_pet_str + pc_ua_pet_grfrei (gleiches pet14h-Feld, live geprüft) mit pa_siedlg mergen → fläch… |
+| `10-6b-laerm-db-per-lor-aggregat` | ✅ done | Folge aus 10-6-Spike: Per-LOR-dB-Mittel aus aa_fp_gesamt2022 (3,8 Mio Fassadenpunkte ges_den) statt 3-Stufen-Index. W… |
 
 ### Epic 2
 
@@ -148,10 +164,10 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 
 | Story | Status | Kommentar |
 |---|---|---|
-| `9-1-score-dimensions-foundation` | ▫️ review | 2026-05-21 impl: KiezScoreDimension-Union auf ADR-015-Set (soziale-lage raus, gruen→gruen-hitze, wohnschutz neu via M… |
-| `9-2-db-schema-migration` | ▫️ review | 2026-05-21 impl: Schema kiez_score+bezirk_score migriert (soziale_lage raus, gruen→gruen_hitze, wohnschutz neu). Migr… |
-| `9-3-pipeline-recompute-rerun` | ▫️ review | 2026-05-21 impl: build-kiez-scores (MSS+Umweltgerechtigkeit raus, klima-pet+Milieuschutz rein als Punkt-in-Polygon-pr… |
-| `9-4-konsumenten-migration` | ▫️ review | 2026-05-21 impl: alle Score-Konsumenten (Inspector/Compare/Hero/Ring/Ranking/Choropleth/OG/LLM) + Tests auf ADR-015-D… |
-| `9-5-content-migration` | ▫️ review | 2026-05-21 impl: Methodik-Page + wo-lebt-es-sich-gut + Atlas-Methodik + layer-methodology auf ADR-015. Score-Name „Um… |
-| `9-6-erinnerung-layer-removal` | ▫️ review | 2026-05-21 impl (AC-5b build-only): denkmal+stolpersteine aus allen Frontend-Surfaces (Palette/Inspector-Section/Laye… |
+| `9-1-score-dimensions-foundation` | ✅ done | 2026-05-21 impl: KiezScoreDimension-Union auf ADR-015-Set (soziale-lage raus, gruen→gruen-hitze, wohnschutz neu via M… |
+| `9-2-db-schema-migration` | ✅ done | 2026-05-21 impl: Schema kiez_score+bezirk_score migriert (soziale_lage raus, gruen→gruen_hitze, wohnschutz neu). Migr… |
+| `9-3-pipeline-recompute-rerun` | ✅ done | 2026-05-21 impl: build-kiez-scores (MSS+Umweltgerechtigkeit raus, klima-pet+Milieuschutz rein als Punkt-in-Polygon-pr… |
+| `9-4-konsumenten-migration` | ✅ done | 2026-05-21 impl: alle Score-Konsumenten (Inspector/Compare/Hero/Ring/Ranking/Choropleth/OG/LLM) + Tests auf ADR-015-D… |
+| `9-5-content-migration` | ✅ done | 2026-05-21 impl: Methodik-Page + wo-lebt-es-sich-gut + Atlas-Methodik + layer-methodology auf ADR-015. Score-Name „Um… |
+| `9-6-erinnerung-layer-removal` | ✅ done | 2026-05-21 impl (AC-5b build-only): denkmal+stolpersteine aus allen Frontend-Surfaces (Palette/Inspector-Section/Laye… |
 

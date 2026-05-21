@@ -52,7 +52,9 @@ function makeState(): UiState {
 		kiezScore: null,
 		comparisonKiezScore: null,
 		wahlResults: null,
-		comparisonWahlResults: null
+		comparisonWahlResults: null,
+		kiezDemografie: null,
+		kiezLaermDb: null
 	};
 }
 

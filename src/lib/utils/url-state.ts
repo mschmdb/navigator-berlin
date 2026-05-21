@@ -93,7 +93,8 @@ const BUNDLE_ORDER: Record<string, number> = {
 	'D: Memorial': 3,
 	'E: Soziale Infrastruktur': 4,
 	'F: Mobilität': 5,
-	'G: Kiez-Score': 6
+	'G: Kiez-Score': 6,
+	'I: Demografie': 8
 };
 
 const UNKNOWN_BUNDLE_RANK = 99;

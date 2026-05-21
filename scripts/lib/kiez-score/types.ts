@@ -46,7 +46,20 @@ export type NormalizationStrategy =
 	| { kind: 'presence-any-of'; layers: string[] }
 	| { kind: 'poi-distance'; threshold: number }
 	/** Numerischer Wert, invertiert: <= bestAt → 100, >= worstAt → 0 (z.B. PET-Hitzebelastung). */
-	| { kind: 'numeric-inverted'; field: string; bestAt: number; worstAt: number };
+	| { kind: 'numeric-inverted'; field: string; bestAt: number; worstAt: number }
+	/** Kita-Plätze pro Kind 0-6 (Story 10.1): >= bestAt → 100, höher = besser. Wert aus perLorHits. */
+	| { kind: 'kita-pro-kind'; field: string; bestAt: number }
+	/** Kapazitätsgewichtete POI-Distanz (Story 10.2): Distanz-Score × Betten/Fachabteilungs-Faktor. */
+	| {
+			kind: 'capacity-weighted-distance';
+			threshold: number;
+			bettenField: string;
+			maxBetten: number;
+			fachabteilungenField?: string;
+			maxFachabteilungen?: number;
+	  }
+	/** POI-Dichte (Story 10.4): Anzahl POIs im Radius statt Distanz. >= cap → 100, weicher Tail. */
+	| { kind: 'poi-density'; radiusM: number; cap: number; softTailFactor?: number };
 
 export interface LayerWeight {
 	layer: string;
@@ -76,6 +89,8 @@ export interface NearestStopLike {
 export interface ScoreInput {
 	layerHits: readonly LayerHitLike[];
 	nearestStops: Record<Modus, NearestStopLike | null> | null;
+	/** Radius-Join-Ergebnis pro Layer-Slug (Story 10.4 poi-density). */
+	poiCounts?: Record<string, { count: number; nearestM: number | null }>;
 }
 
 export const DIMENSION_WEIGHTS: Record<KiezScoreDimension, number> = {

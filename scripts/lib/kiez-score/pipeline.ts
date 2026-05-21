@@ -6,13 +6,29 @@ import {
 	buildPresenceLayerHits,
 	buildPoiIndex,
 	buildPoiDistanceHits,
+	buildNearestPointValueHits,
+	buildPoiDensityCounts,
 	type BuildLayerSpec
 } from './build-helpers.js';
 import {
 	findAllNearestStopsForBuild,
 	type OepnvStopIndexShape
 } from './nearest-stops.js';
+import { DIMENSION_CONFIGS } from './dimension-config.js';
 import { KIEZ_SCORE_DIMENSIONS, type KiezScore, type KiezScoreDimension } from './types.js';
+
+// Story 10.4: alle poi-density-Layer + ihr Radius aus den Dimension-Configs ableiten,
+// damit der Radius-Join im LOR-Loop einmalig konfiguriert ist.
+const POI_DENSITY_SPECS: ReadonlyArray<{ slug: string; radiusM: number }> = Object.values(
+	DIMENSION_CONFIGS
+).flatMap((cfg) =>
+	cfg.layers
+		.filter((l) => l.normalize.kind === 'poi-density')
+		.map((l) => ({
+			slug: l.layer,
+			radiusM: (l.normalize as { radiusM: number }).radiusM
+		}))
+);
 
 export interface PipelineInput {
 	lorFeatures: readonly Feature[];
@@ -20,6 +36,10 @@ export interface PipelineInput {
 	presenceLayers: readonly string[];
 	/** POI-Layer für Versorgungs-Dim (Distance-from-Centroid). Points + Polygone (centroid-fallback). */
 	poiLayers?: readonly BuildLayerSpec[];
+	/** Point-Value-Layer (z.B. PET-Centroids, Story 10.10): nächster Punkt-Wert am LOR-Centroid. */
+	pointValueLayers?: readonly BuildLayerSpec[];
+	/** Vorberechnete Hits pro LOR-ID (z.B. Kita-Plätze-pro-Kind, Story 10.1). */
+	perLorHits?: Record<string, readonly import('./types.js').LayerHitLike[]>;
 	oepnvIndex: OepnvStopIndexShape;
 	lorIdFor?: (feat: Feature) => string | null;
 }
@@ -147,10 +167,14 @@ export function buildKiezScoresFromInput(
 		const [lng, lat] = centroid.geometry.coordinates as [number, number];
 		const polygonHits = buildPolygonLayerHitsAtPoint(lat, lng, input.polygonLayers);
 		const poiHits = buildPoiDistanceHits(lat, lng, poiIndex);
+		const pointValueHits = buildNearestPointValueHits(lat, lng, input.pointValueLayers ?? []);
+		const perLor = input.perLorHits?.[lorId] ?? [];
+		const poiCounts = buildPoiDensityCounts(lat, lng, poiIndex, POI_DENSITY_SPECS);
 		const stops = findAllNearestStopsForBuild({ lat, lng }, input.oepnvIndex);
 		scores[lorId] = computeKiezScore({
-			layerHits: [...polygonHits, ...presenceHits, ...poiHits],
-			nearestStops: stops
+			layerHits: [...polygonHits, ...presenceHits, ...poiHits, ...pointValueHits, ...perLor],
+			nearestStops: stops,
+			poiCounts
 		});
 	}
 	return { schemaVersion: 1, generatedAt, scores };

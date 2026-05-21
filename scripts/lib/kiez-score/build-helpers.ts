@@ -107,6 +107,32 @@ export function nearestPoiDistanceM(
 	return best === Infinity ? null : Math.round(best);
 }
 
+/**
+ * POI-Dichte (Story 10.4): pro Layer Anzahl Centroids im Radius + Distanz zum nächsten.
+ * BBox-Vorfilter (Grad-Annäherung) als cheap early exit vor Haversine.
+ */
+export function buildPoiDensityCounts(
+	lat: number,
+	lng: number,
+	poiIndex: PoiIndex,
+	specs: ReadonlyArray<{ slug: string; radiusM: number }>
+): Record<string, { count: number; nearestM: number | null }> {
+	const out: Record<string, { count: number; nearestM: number | null }> = {};
+	for (const { slug, radiusM } of specs) {
+		const centroids = poiIndex[slug];
+		if (!centroids) continue;
+		let count = 0;
+		let nearest = Infinity;
+		for (const [poiLng, poiLat] of centroids) {
+			const m = haversineM(lat, lng, poiLat, poiLng);
+			if (m < nearest) nearest = m;
+			if (m <= radiusM) count++;
+		}
+		out[slug] = { count, nearestM: nearest === Infinity ? null : Math.round(nearest) };
+	}
+	return out;
+}
+
 export function buildPoiDistanceHits(
 	lat: number,
 	lng: number,
@@ -117,6 +143,38 @@ export function buildPoiDistanceHits(
 		const d = nearestPoiDistanceM(lat, lng, centroids);
 		if (d === null) continue;
 		hits.push({ layer: slug, value: { distanceM: d } });
+	}
+	return hits;
+}
+
+/**
+ * Point-Value-Layer: Punkt-Features tragen einen numerischen Wert (z.B. PET-Centroids
+ * mit pet14h, Story 10.9/10.10). Pro Layer wird am Query-Punkt der nächste Punkt gesucht
+ * und dessen Properties als Hit ausgegeben. Ersatz für Point-in-Polygon, wenn die Quelle
+ * als Tiles vorliegt und nur ein abgeleitetes Punkt-Set für den Build verfügbar ist.
+ */
+export function buildNearestPointValueHits(
+	lat: number,
+	lng: number,
+	layers: readonly BuildLayerSpec[]
+): LayerHitLike[] {
+	const hits: LayerHitLike[] = [];
+	for (const layer of layers) {
+		let best = Infinity;
+		let bestValue: Record<string, unknown> | null = null;
+		for (const feat of layer.features) {
+			if (feat.geometry?.type !== 'Point') continue;
+			const [pLng, pLat] = feat.geometry.coordinates as [number, number];
+			const m = haversineM(lat, lng, pLat, pLng);
+			if (m < best) {
+				best = m;
+				bestValue = feat.properties ?? {};
+			}
+		}
+		// distanceM mitführen, damit kapazitätsgewichtete Distanz (Story 10.2) Distanz + Properties liest.
+		if (bestValue !== null) {
+			hits.push({ layer: layer.slug, value: { ...bestValue, distanceM: Math.round(best) } });
+		}
 	}
 	return hits;
 }

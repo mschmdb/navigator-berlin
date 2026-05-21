@@ -13,8 +13,11 @@ export type StyleProfile =
 	| 'choropleth-wohnlage-3'
 	| 'choropleth-mss-12'
 	| 'choropleth-kiez-score-ordinal-4'
+	| 'choropleth-dichte'
 	| 'polygon-highlight'
 	| 'polygon-outline-soft'
+	| 'polygon-outline-milieuschutz-erhaltungsmiete'
+	| 'polygon-outline-milieuschutz-staedtebau'
 	| 'point'
 	| 'point-wohnlage'
 	| 'point-ubahn'
@@ -70,8 +73,8 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	// B: Wohn-Daten
 	bodenrichtwerte: 'choropleth-brw',
 	'wohnlagen-2024': 'choropleth-wohnlage-3',
-	'milieuschutz-erhaltungsmiete': 'polygon-outline-soft',
-	'milieuschutz-staedtebau': 'polygon-outline-soft',
+	'milieuschutz-erhaltungsmiete': 'polygon-outline-milieuschutz-erhaltungsmiete',
+	'milieuschutz-staedtebau': 'polygon-outline-milieuschutz-staedtebau',
 	'mss-gesamtindex-2025': 'choropleth-mss-12',
 	// C: Umwelt — Umweltatlas-Indikatoren
 	'laerm-2023': 'choropleth-belastung-3',
@@ -113,7 +116,9 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'kiez-score-gruen-hitze': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-mobilitaet': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-wohnschutz': 'choropleth-kiez-score-ordinal-4',
-	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4'
+	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4',
+	// I: Demografie (Story 10.0, neutral, kein Score)
+	'einwohner-dichte-2024': 'choropleth-dichte'
 };
 
 const TRANSITION_MS = 200;
@@ -187,11 +192,12 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		// Story 1.31: Last-Familie 5-stufig. Vermillion für Umweltgerechtigkeit-Mehrfach-Belastung.
 		kind: 'categorical',
 		items: [
-			{ color: COLORS.scaleLast1, label: 'keinfach' },
+			{ color: COLORS.scaleLast1, label: 'keine starke Belastung' },
 			{ color: COLORS.scaleLast2, label: 'einfach' },
 			{ color: COLORS.scaleLast3, label: 'zweifach' },
 			{ color: COLORS.scaleLast4, label: 'dreifach' },
-			{ color: COLORS.scaleLast5, label: 'vierfach' }
+			{ color: COLORS.scaleLast5, label: 'vierfach' },
+			{ color: COLORS.scaleLast5, label: 'fünffach' }
 		]
 	},
 	'choropleth-pet': {
@@ -204,6 +210,18 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 			{ color: COLORS.scaleLast5, label: '42' }
 		],
 		range: ['kühl', 'heiß']
+	},
+	'choropleth-dichte': {
+		// Story 10.0: Einwohnerdichte, neutral (Strukturell-Indigo, keine Wertung). EW/km².
+		kind: 'gradient',
+		items: [
+			{ color: COLORS.scaleStrukturell1, label: '0' },
+			{ color: COLORS.scaleStrukturell2, label: '5.000' },
+			{ color: COLORS.scaleStrukturell3, label: '10.000' },
+			{ color: COLORS.scaleStrukturell4, label: '16.000' },
+			{ color: COLORS.scaleStrukturell5, label: '24.000+' }
+		],
+		range: ['locker', 'dicht']
 	},
 	'choropleth-wohnlage-3': {
 		// Story 1.31: Mietspiegel-Wohnlage = Strukturell (Indigo). „Stufe, keine Wertung".
@@ -243,6 +261,14 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 	'polygon-outline-soft': {
 		kind: 'categorical',
 		items: [{ color: COLORS.accentSoft, label: 'Fläche' }]
+	},
+	'polygon-outline-milieuschutz-erhaltungsmiete': {
+		kind: 'categorical',
+		items: [{ color: COLORS.chartCat4, label: 'Erhaltungsmiete (§172 BauGB)' }]
+	},
+	'polygon-outline-milieuschutz-staedtebau': {
+		kind: 'categorical',
+		items: [{ color: COLORS.chartCat5, label: 'Städtebaulicher Schutz (§172 BauGB)' }]
 	},
 	point: {
 		kind: 'point',
@@ -442,7 +468,7 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-mehrfach':
-			// Story 1.31: Last-Familie 5-stufig (Vermillion). Umweltgerechtigkeit-Mehrfachbelastung.
+			// Story 1.31/10.7: Last-Familie 5-stufig (Vermillion), 6 Quell-Kategorien. fünffach teilt scaleLast5.
 			return [
 				{
 					id,
@@ -452,7 +478,7 @@ export function buildLayerSpec(
 						'fill-color': [
 							'match',
 							['get', 'kategorie'],
-							'keinfach',
+							'keine starke Belastung',
 							COLORS.scaleLast1,
 							'einfach',
 							COLORS.scaleLast2,
@@ -461,6 +487,8 @@ export function buildLayerSpec(
 							'dreifach',
 							COLORS.scaleLast4,
 							'vierfach',
+							COLORS.scaleLast5,
+							'fünffach',
 							COLORS.scaleLast5,
 							COLORS.bg
 						],
@@ -569,6 +597,35 @@ export function buildLayerSpec(
 					}
 				}
 			];
+		case 'choropleth-dichte':
+			// Story 10.0: Einwohnerdichte, neutral (Strukturell-Indigo). LOR ohne Wert (dichte
+			// null) bleiben transparent statt eingefärbt.
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'interpolate',
+							['linear'],
+							['to-number', ['get', 'dichte'], 0],
+							0,
+							COLORS.scaleStrukturell1,
+							5000,
+							COLORS.scaleStrukturell2,
+							10000,
+							COLORS.scaleStrukturell3,
+							16000,
+							COLORS.scaleStrukturell4,
+							24000,
+							COLORS.scaleStrukturell5
+						],
+						'fill-opacity': ['case', ['==', ['get', 'dichte'], null], 0, 0.55],
+						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
 		case 'polygon-highlight':
 			return [
 				{
@@ -592,6 +649,34 @@ export function buildLayerSpec(
 						'fill-color': COLORS.accentSoft,
 						'fill-opacity': 0.35,
 						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
+		case 'polygon-outline-milieuschutz-erhaltungsmiete':
+			// Story 10.8: kräftiges Violett, auf hellem Basemap lesbar (accentSoft war fast unsichtbar).
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': COLORS.chartCat4,
+						'fill-opacity': 0.6,
+						'fill-outline-color': COLORS.chartCat4
+					}
+				}
+			];
+		case 'polygon-outline-milieuschutz-staedtebau':
+			// Story 10.8: Ocker, von Erhaltungsmiete-Violett per Hue unterscheidbar (auch bei Deuteranopie).
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': COLORS.chartCat5,
+						'fill-opacity': 0.6,
+						'fill-outline-color': COLORS.chartCat5
 					}
 				}
 			];

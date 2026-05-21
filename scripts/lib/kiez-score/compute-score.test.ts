@@ -26,15 +26,15 @@ function emptyInput(overrides: Partial<ScoreInput> = {}): ScoreInput {
 }
 
 describe('computeDimensionScore — Ruhe & Luft', () => {
-	it('berechnet gewichteten Score nur aus laerm + luft (kein Bioklima mehr)', () => {
+	it('berechnet gewichteten Score aus laerm-dB + luft (Story 10.6b)', () => {
 		const input = emptyInput({
 			layerHits: [
-				makeHit('laerm-2023', { kategorie: 'gering' }, '2024-01-01T00:00:00.000Z'),
+				makeHit('laerm-db', { ges_den: 45 }, '2024-01-01T00:00:00.000Z'),
 				makeHit('luft-2023', { kategorie: 'mittel' }, '2024-01-01T00:00:00.000Z')
 			]
 		});
 		const score = computeDimensionScore(RUHE_LUFT_CONFIG, input);
-		// laerm 100 * 0.5 + luft 50 * 0.5 = 75
+		// laerm-dB 45 dB → 100 * 0.5 + luft 50 * 0.5 = 75
 		expect(score.value).toBe(75);
 		expect(score.missingData).toEqual([]);
 		expect(score.dataStand).toBe('2024-01-01T00:00:00.000Z');
@@ -46,18 +46,18 @@ describe('computeDimensionScore — Ruhe & Luft', () => {
 		});
 		const score = computeDimensionScore(RUHE_LUFT_CONFIG, input);
 		expect(score.value).toBeNull();
-		expect(score.missingData).toEqual(['laerm-2023', 'luft-2023']);
+		expect(score.missingData).toEqual(['laerm-db', 'luft-2023']);
 	});
 
 	it('überspringt LayerHit mit reason und meldet missingData', () => {
 		const input = emptyInput({
 			layerHits: [
-				{ layer: 'laerm-2023', value: null, reason: 'no-coverage' },
+				{ layer: 'laerm-db', value: null, reason: 'no-coverage' },
 				makeHit('luft-2023', { kategorie: 'mittel' })
 			]
 		});
 		const score = computeDimensionScore(RUHE_LUFT_CONFIG, input);
-		expect(score.missingData).toEqual(['laerm-2023']);
+		expect(score.missingData).toEqual(['laerm-db']);
 		// nur luft 50 * 0.5 → 50 / 0.5 = 50
 		expect(score.value).toBe(50);
 	});
@@ -127,19 +127,87 @@ describe('computeDimensionScore — Mobilität', () => {
 });
 
 describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
-	it('berechnet Distance-basiert pro POI-Layer mit individuellen Thresholds', () => {
+	it('kombiniert Dichte-, Pro-Kopf- und Kapazitäts-Terme ohne missingData', () => {
 		const input = emptyInput({
 			layerHits: [
-				makeHit('kitas-2024', { distanceM: 250 }),
-				makeHit('schulen-2024', { distanceM: 400 }),
-				makeHit('krankenhaeuser-plan', { distanceM: 1000 }),
-				makeHit('spielplaetze', { distanceM: 200 })
-			]
+				makeHit('kitas-pro-kind', { plaetzeProKind: 0.35 }),
+				makeHit('krankenhaeuser-plan', { distanceM: 1000, betten_insgesamt: '500' })
+			],
+			poiCounts: {
+				'kitas-2024': { count: 3, nearestM: 200 },
+				'schulen-grundschule': { count: 2, nearestM: 300 },
+				'schulen-weiterfuehrend': { count: 1, nearestM: 600 },
+				spielplaetze: { count: 4, nearestM: 150 }
+			}
 		});
 		const score = computeDimensionScore(VERSORGUNG_CONFIG, input);
 		expect(score.value).not.toBeNull();
 		expect((score.value as number) > 0).toBe(true);
 		expect(score.missingData).toEqual([]);
+	});
+
+	it('Story 10.4: mehr POIs im Radius scoren höher (zweiter Punkt zählt nicht 0)', () => {
+		const many = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ poiCounts: { 'kitas-2024': { count: 5, nearestM: 200 } } })
+		);
+		const one = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ poiCounts: { 'kitas-2024': { count: 1, nearestM: 200 } } })
+		);
+		expect((many.value as number) > (one.value as number)).toBe(true);
+	});
+
+	it('Story 10.1: Kita-Pro-Kopf-Term scort hoch bei vielen Plätzen pro Kind', () => {
+		const high = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ layerHits: [makeHit('kitas-pro-kind', { plaetzeProKind: 0.4 })] })
+		);
+		const low = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ layerHits: [makeHit('kitas-pro-kind', { plaetzeProKind: 0.05 })] })
+		);
+		expect((high.value as number) > (low.value as number)).toBe(true);
+	});
+
+	it('Story 10.2: großes Klinikum (viele Betten) scort bei gleicher Distanz höher', () => {
+		const big = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({
+				layerHits: [makeHit('krankenhaeuser-plan', { distanceM: 500, betten_insgesamt: '1377' })]
+			})
+		);
+		const small = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({
+				layerHits: [makeHit('krankenhaeuser-plan', { distanceM: 500, betten_insgesamt: '50' })]
+			})
+		);
+		expect((big.value as number) > (small.value as number)).toBe(true);
+	});
+
+	it('Story 10.2: Krankenhaus ohne betten_insgesamt → Distanz-Fallback, kein missingData', () => {
+		const score = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({ layerHits: [makeHit('krankenhaeuser-plan', { distanceM: 500 })] })
+		);
+		expect(score.value).not.toBeNull();
+		expect(score.missingData).not.toContain('krankenhaeuser-plan');
+	});
+
+	it('Story 10.3+10.4: Grundschule (600m) und Weiterführend (1200m) eigene Radien als Dichte', () => {
+		const score = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({
+				poiCounts: {
+					'schulen-grundschule': { count: 2, nearestM: 400 },
+					'schulen-weiterfuehrend': { count: 1, nearestM: 900 }
+				}
+			})
+		);
+		expect(score.value).not.toBeNull();
+		expect(score.missingData).not.toContain('schulen-grundschule');
+		expect(score.missingData).not.toContain('schulen-weiterfuehrend');
 	});
 
 	it('Grünanlagen ist KEIN Versorgungs-Layer mehr (nach Grün & Hitze gewandert)', () => {
@@ -152,7 +220,8 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 			layerHits: [makeHit('kitas-2024', { distanceM: 100 })]
 		});
 		const score = computeDimensionScore(VERSORGUNG_CONFIG, input);
-		expect(score.missingData).toContain('schulen-2024');
+		expect(score.missingData).toContain('schulen-grundschule');
+		expect(score.missingData).toContain('schulen-weiterfuehrend');
 		expect(score.missingData).toContain('krankenhaeuser-plan');
 		expect(score.missingData).toContain('spielplaetze');
 	});
@@ -210,7 +279,7 @@ describe('computeKiezScore', () => {
 	it('Voll-Coverage liefert alle Dimensionen ohne missing', () => {
 		const input: ScoreInput = {
 			layerHits: [
-				makeHit('laerm-2023', { kategorie: 'gering' }),
+				makeHit('laerm-db', { ges_den: 45 }),
 				makeHit('luft-2023', { kategorie: 'gering' }),
 				makeHit('gruenversorgung-2023', { kategorie: 'hoch' }),
 				makeHit('gruenanlagen', { distanceM: 300 }),
@@ -218,10 +287,8 @@ describe('computeKiezScore', () => {
 				makeHit('klima-pet-2022', { pet14h: 30 }),
 				makeHit('klima-kaltlufteinwirkbereich-2022', { foo: 1 }),
 				makeHit('klima-leitbahnkorridor-2022', { foo: 1 }),
-				makeHit('kitas-2024', { distanceM: 200 }),
-				makeHit('schulen-2024', { distanceM: 300 }),
-				makeHit('krankenhaeuser-plan', { distanceM: 1000 }),
-				makeHit('spielplaetze', { distanceM: 150 }),
+				makeHit('kitas-pro-kind', { plaetzeProKind: 0.3 }),
+				makeHit('krankenhaeuser-plan', { distanceM: 1000, betten_insgesamt: '500' }),
 				makeHit('milieuschutz-erhaltungsmiete', { foo: 1 })
 			],
 			nearestStops: {
@@ -229,6 +296,12 @@ describe('computeKiezScore', () => {
 				sbahn: { distanceM: 400 },
 				tram: { distanceM: 200 },
 				bus: { distanceM: 100 }
+			},
+			poiCounts: {
+				'kitas-2024': { count: 3, nearestM: 200 },
+				'schulen-grundschule': { count: 2, nearestM: 300 },
+				'schulen-weiterfuehrend': { count: 1, nearestM: 600 },
+				spielplaetze: { count: 4, nearestM: 150 }
 			}
 		};
 		const score = computeKiezScore(input);

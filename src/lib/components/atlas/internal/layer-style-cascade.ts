@@ -18,8 +18,11 @@ const POLYGON_PROFILES: ReadonlySet<StyleProfile> = new Set<StyleProfile>([
 	'choropleth-mehrfach',
 	'choropleth-pet',
 	'choropleth-wohnlage-3',
+	'choropleth-dichte',
 	'polygon-highlight',
-	'polygon-outline-soft'
+	'polygon-outline-soft',
+	'polygon-outline-milieuschutz-erhaltungsmiete',
+	'polygon-outline-milieuschutz-staedtebau'
 ]);
 
 export function isPolygonProfile(profile: StyleProfile): boolean {

@@ -6,7 +6,8 @@ export type Bundle =
 	| 'E: Soziale Infrastruktur'
 	| 'F: Mobilität'
 	| 'G: Kiez-Score'
-	| 'H: Wahldaten';
+	| 'H: Wahldaten'
+	| 'I: Demografie';
 export type License =
 	| 'dl-de/zero-2-0'
 	| 'dl-de/by-2-0'
@@ -33,6 +34,9 @@ export interface SourceConfig {
 	kind: SourceKind;
 	sourceUrl: string;
 	typeName?: string;
+	/** Optional. Weitere typeNames am selben Endpoint, die zu einem Output gemergt werden.
+	 * Für überschneidungsfreie Partitions-Quellen (z.B. PET Straßenraum + Grünfläche). Story 10.9. */
+	additionalTypeNames?: string[];
 	overpassQL?: string;
 	license: License;
 	bundleGroup: Bundle;
@@ -46,6 +50,15 @@ export interface SourceConfig {
 	inspectorRelevant?: boolean;
 	/** Default 'geojson'. 'pmtiles' für Heavy-Layer via tippecanoe-Pipeline. */
 	format?: LayerFormat;
+	/** Nur für simplifyProfile 'tiles'. tippecanoe-Minzoom (-Z). Default zoomThresholds.min.
+	 * Muss <= Map-minZoom (9), sonst fehlen Tiles bei der Berlin-Übersicht. Story 10.9. */
+	tileMinZoom?: number;
+	/** Nur für simplifyProfile 'tiles'. tippecanoe-Maxzoom (-z). Default zoomThresholds.max.
+	 * Für Choropleth-Flächen genügt ein niedriger Wert, MapLibre over-zoomt. Story 10.9. */
+	tileMaxZoom?: number;
+	/** Nur für simplifyProfile 'tiles'. Properties, die in die Tiles übernommen werden (-y).
+	 * Leer = alle. Bei breiten WFS-Attributen drastisch kleinere Tiles. Story 10.9. */
+	tileIncludeProperties?: readonly string[];
 	/** Optional. Wenn gesetzt: bei Polygon-NO-HIT wird nächstes Polygon innerhalb dieser
 	 * Distanz (km) als Hit gewertet. Fachlich sinnvoll für räumlich glatte Indikatoren
 	 * (z.B. Klima-Block-Geometrien, wo Adress-Geocoding im Hof/Straßenraum landet,

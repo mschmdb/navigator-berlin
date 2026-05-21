@@ -419,11 +419,12 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 
 	'kiez-score-ruhe-luft': {
 		calculation:
-			'Gewichtete Aggregation aus Lärm- und Luftbelastung pro Planungsraum (Lärm 0.5, Luft 0.5). 3-Stufen-Mapping gering bis hoch, normalisiert auf 0–100, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.',
+			'Gewichtete Aggregation aus Lärm und Luft pro Planungsraum (Lärm 0.5, Luft 0.5). Lärm seit Story 10.6b als dB-Mittel (L_DEN) aus den Fassadenpunkten der Strategischen Lärmkarte 2022: ≤45 dB → 100, ≥75 dB → 0, linear. Luft als 3-Stufen-Index (gering bis hoch). Beides auf 0–100 normalisiert, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 3 bis 5 Jahre (sync mit Umweltatlas-Update)',
 		authorityKey: 'navigator-eigenberechnung-senats-daten',
 		coverageGaps: [
+			'Lärm-dB ist das Mittel über die Fassadenpunkte im LOR; ruhige Hinterhöfe ohne Fassadenpunkt fließen nicht ein.',
 			'Modell-Werte, keine Mess-Stationen. Mikrolagen einzelner Adressen bleiben unsichtbar.'
 		],
 		omissions: [
@@ -477,11 +478,12 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 	},
 	'kiez-score-versorgung': {
 		calculation:
-			'Distance-basiert vom LOR-Centroid bzw. Adress-Punkt zu nächster Kita (Gewicht 0.30, Threshold 500 m), Schule (0.30, 800 m), Plan-Krankenhaus (0.25, 2.000 m) und Spielplatz (0.15, 400 m). 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze.',
+			'Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.15, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.15). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze (e_platz) im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Die Erreichbarkeit zählt dabei die Anzahl Einrichtungen im Radius (Dichte), nicht nur die nächste: mehr Kitas/Schulen/Spielplätze im Umkreis scoren höher, ein einzelner Standort weniger. Schule nach Schulart getrennt: Grundschule (0.15, Radius 600 m) und weiterführende Schule (0.15, 1.200 m). Plus Spielplatz-Dichte (0.15, 400 m). Liegt keine Einrichtung im Radius, greift ein weicher Übergang über die Distanz zur nächsten statt eines harten Abbruchs. Plan-Krankenhaus (0.25, 2.000 m) zusätzlich nach Bettenkapazität gewichtet: ein großes Versorgungs-Klinikum zählt mehr als eine kleine Fachklinik. 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'jährlich (sync mit Bildungs- und Bezirks-Daten)',
 		authorityKey: 'navigator-eigenberechnung-bezirke',
 		coverageGaps: [
+			'Der Platz-Kind-Quotient basiert auf gemeldeten Kapazitäten (e_platz), nicht auf realen Belegungsquoten oder Wartelisten.',
 			'Belegungsquoten, Wartelisten und Trägerschaft sind im Score nicht berücksichtigt.',
 			'Polygon-Layer kollabieren zum Mittelpunkt. Ein langgezogener Park am Rand erscheint im Score zentriert.'
 		],

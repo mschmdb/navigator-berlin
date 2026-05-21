@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-18T19:40:33.038Z",
+  "generatedAt": "2026-05-21T15:06:42.892Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -199,23 +199,6 @@
       "featureCount": 6018,
       "inspectorRelevant": false,
       "mapRelevant": false
-    },
-    {
-      "slug": "klima-pet-2022",
-      "filename": "klima-pet-2022.cceb2e4d.geojson",
-      "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022",
-      "fetchedAt": "2026-05-16T06:56:28.400Z",
-      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
-      "license": "dl-de/zero-2-0",
-      "sha256": "cceb2e4de5e900536780cac864cdda4cf6321f34628e3ac1925fef3463016741",
-      "bundleGroup": "C: Umwelt",
-      "zoomThresholds": {
-        "min": 11,
-        "max": 18
-      },
-      "geometryType": "Polygon",
-      "featureCount": 16204,
-      "nearestPolygonFallbackKm": 0.05
     },
     {
       "slug": "klima-kaltlufteinwirkbereich-2022",
@@ -729,13 +712,49 @@
       "mapRelevant": false
     },
     {
-      "slug": "kiez-score-ruhe-luft",
-      "filename": "kiez-score-ruhe-luft.e071f6f6.geojson",
-      "sourceUrl": "https://navigator.berlin/derived/kiez-score-ruhe-luft",
-      "fetchedAt": "2026-05-21T09:29:18.211Z",
-      "sourceUpdatedAt": "2026-05-21T09:29:18.211Z",
+      "slug": "klima-pet-2022",
+      "filename": "klima-pet-2022.a0435468.pmtiles",
+      "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022",
+      "fetchedAt": "2026-05-21T15:06:42.892Z",
       "license": "dl-de/zero-2-0",
-      "sha256": "e071f6f6516d62ec0e37c2867c5fdb864455b6b07a58c5ed4280d2e5a288c38f",
+      "sha256": "a0435468424cb83c35ea0b0d1bd0de7745a3b836f87dbb283cf984f1d63e1740",
+      "bundleGroup": "C: Umwelt",
+      "zoomThresholds": {
+        "min": 11,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 57801,
+      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
+      "format": "pmtiles",
+      "nearestPolygonFallbackKm": 0.05
+    },
+    {
+      "slug": "einwohner-dichte-2024",
+      "filename": "einwohner-dichte-2024.fe33f06f.geojson",
+      "sourceUrl": "https://daten.berlin.de/datensaetze/einwohnerinnen-und-einwohner-in-berlin-in-lor-planungsraumen-am-31-12-2024",
+      "fetchedAt": "2026-05-21T16:57:52.937Z",
+      "sourceUpdatedAt": "2024-12-31T00:00:00.000Z",
+      "license": "CC BY 4.0",
+      "sha256": "fe33f06f98b003aa794e92510e81712915354d094d9cdb83b78d48e4763d7694",
+      "bundleGroup": "I: Demografie",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-ruhe-luft",
+      "filename": "kiez-score-ruhe-luft.926d0b1e.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-ruhe-luft",
+      "fetchedAt": "2026-05-21T17:20:11.900Z",
+      "sourceUpdatedAt": "2026-05-21T17:20:11.900Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "926d0b1e47e3e885e917984b8db56ba7debbe787591bb4f2163bafb228fdec1b",
       "bundleGroup": "G: Kiez-Score",
       "zoomThresholds": {
         "min": 9,
@@ -748,12 +767,12 @@
     },
     {
       "slug": "kiez-score-gruen-hitze",
-      "filename": "kiez-score-gruen-hitze.2c5605e5.geojson",
+      "filename": "kiez-score-gruen-hitze.4fd01ecb.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-gruen-hitze",
-      "fetchedAt": "2026-05-21T09:29:18.211Z",
-      "sourceUpdatedAt": "2026-05-21T09:29:18.211Z",
+      "fetchedAt": "2026-05-21T17:20:11.900Z",
+      "sourceUpdatedAt": "2026-05-21T17:20:11.900Z",
       "license": "dl-de/zero-2-0",
-      "sha256": "2c5605e5e66a75186d075120459d629b443895e77fa8364fa35fa690d0aeecb2",
+      "sha256": "4fd01ecbbbcd5433f0f8ea436f9ed61c1966aca26f1c2684bcdc2103b002ce40",
       "bundleGroup": "G: Kiez-Score",
       "zoomThresholds": {
         "min": 9,
@@ -768,8 +787,8 @@
       "slug": "kiez-score-mobilitaet",
       "filename": "kiez-score-mobilitaet.29bf664d.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-mobilitaet",
-      "fetchedAt": "2026-05-21T09:29:18.211Z",
-      "sourceUpdatedAt": "2026-05-21T09:29:18.211Z",
+      "fetchedAt": "2026-05-21T17:20:11.900Z",
+      "sourceUpdatedAt": "2026-05-21T17:20:11.900Z",
       "license": "dl-de/zero-2-0",
       "sha256": "29bf664dfb737a6261cde9dac8e62571a6fce07ca395b0390cb8ba0e3f06e4a0",
       "bundleGroup": "G: Kiez-Score",
@@ -784,12 +803,12 @@
     },
     {
       "slug": "kiez-score-versorgung",
-      "filename": "kiez-score-versorgung.f640caf3.geojson",
+      "filename": "kiez-score-versorgung.28aaf6aa.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-versorgung",
-      "fetchedAt": "2026-05-21T09:29:18.211Z",
-      "sourceUpdatedAt": "2026-05-21T09:29:18.211Z",
+      "fetchedAt": "2026-05-21T17:20:11.900Z",
+      "sourceUpdatedAt": "2026-05-21T17:20:11.900Z",
       "license": "dl-de/zero-2-0",
-      "sha256": "f640caf30827be1b5c07556bc24b1daf794cbf3c0e19149c7800a04274ede6e3",
+      "sha256": "28aaf6aa2716a961d03289ac6e4d64394a37ca634c8787a358726fae565d5608",
       "bundleGroup": "G: Kiez-Score",
       "zoomThresholds": {
         "min": 9,
@@ -804,8 +823,8 @@
       "slug": "kiez-score-wohnschutz",
       "filename": "kiez-score-wohnschutz.c20b10c4.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-wohnschutz",
-      "fetchedAt": "2026-05-21T09:29:18.211Z",
-      "sourceUpdatedAt": "2026-05-21T09:29:18.211Z",
+      "fetchedAt": "2026-05-21T17:20:11.900Z",
+      "sourceUpdatedAt": "2026-05-21T17:20:11.900Z",
       "license": "dl-de/zero-2-0",
       "sha256": "c20b10c4af630b1379829f6765c0c20b3706d1d6fdc376e236972635a4513868",
       "bundleGroup": "G: Kiez-Score",
@@ -820,12 +839,12 @@
     },
     {
       "slug": "kiez-score-gesamt",
-      "filename": "kiez-score-gesamt.20799817.geojson",
+      "filename": "kiez-score-gesamt.dcc5689d.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-gesamt",
-      "fetchedAt": "2026-05-21T09:29:18.211Z",
-      "sourceUpdatedAt": "2026-05-21T09:29:18.211Z",
+      "fetchedAt": "2026-05-21T17:20:11.900Z",
+      "sourceUpdatedAt": "2026-05-21T17:20:11.900Z",
       "license": "dl-de/zero-2-0",
-      "sha256": "20799817ad8e3a78517e1f246719742fa7230fdee3161932ee8c1271d33105ce",
+      "sha256": "dcc5689d3f8eb829acba1f392a4881361995f8de0ca45d6074edd87db7d04274",
       "bundleGroup": "G: Kiez-Score",
       "zoomThresholds": {
         "min": 9,

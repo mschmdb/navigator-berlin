@@ -83,7 +83,7 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	// C: Umwelt — Klimaanalyse 2022
 	'klima-pet-2022': {
 		short: 'Gefühlte Temperatur an Hitzetagen um 14 Uhr (Klimaanalyse 2022)',
-		long: 'Physiologisch Äquivalente Temperatur (PET) als Maß für die gefühlte Hitzebelastung an einem Sommertag um 14 Uhr. Berücksichtigt Lufttemperatur, Strahlung, Wind und Feuchte. Quelle: Berliner Klimaanalyse 2022.',
+		long: 'Physiologisch Äquivalente Temperatur (PET) als Maß für die gefühlte Hitzebelastung an einem Sommertag um 14 Uhr. Berücksichtigt Lufttemperatur, Strahlung, Wind und Feuchte. Die Karte deckt Siedlung, Straßenraum und Grünflächen ab. Gewässer wie Seen und Kanäle tragen keinen PET-Wert und bleiben leer. Quelle: Berliner Klimaanalyse 2022.',
 		unit: '°C',
 		valueScaleExplain: 'unter 32 °C neutral, 32 bis 41 °C warm bis heiß, über 41 °C extrem heiß'
 	},
@@ -216,6 +216,14 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		short: 'Aggregat „Wohnschutz" pro Planungsraum (0–100, Kiez-Score)',
 		long: 'Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner. Methodik: /methodik/kiez-score.',
 		valueScaleExplain: 'Höher = mehr Schutz vor Verdrängung'
+	},
+
+	// I: Demografie (Story 10.0 · neutraler Kontext, kein Score-Input)
+	'einwohner-dichte-2024': {
+		short: 'Einwohnerdichte pro LOR-Planungsraum (EW/km², 31.12.2024)',
+		long: 'Einwohner je Quadratkilometer pro LOR-Planungsraum. Neutraler Demografie-Kontext, keine Wertung: dicht ist nicht besser oder schlechter als locker. Quelle: Amt für Statistik Berlin-Brandenburg (CC BY 4.0).',
+		unit: 'EW/km²',
+		valueScaleExplain: 'Höher = dichter besiedelt, ohne Qualitätswertung'
 	},
 
 	// Legacy / non-Manifest-Slugs (Story 1.3 Re-Run TODO):

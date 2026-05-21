@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
 	buildLayerSpec,
+	getLegendSpec,
 	getStyleProfile,
 	getTransitionDurationMs,
 	LAYER_STYLE_PROFILE,
@@ -15,7 +16,9 @@ describe('layer-style-builder.getStyleProfile', () => {
 		expect(getStyleProfile('plz')).toBe('boundary');
 		expect(getStyleProfile('bodenrichtwerte')).toBe('choropleth-brw');
 		expect(getStyleProfile('wohnlagen-2024')).toBe('choropleth-wohnlage-3');
-		expect(getStyleProfile('milieuschutz-erhaltungsmiete')).toBe('polygon-outline-soft');
+		expect(getStyleProfile('milieuschutz-erhaltungsmiete')).toBe(
+			'polygon-outline-milieuschutz-erhaltungsmiete'
+		);
 		expect(getStyleProfile('laerm-2023')).toBe('choropleth-belastung-3');
 		expect(getStyleProfile('umweltgerechtigkeit-2023')).toBe('choropleth-mehrfach');
 		expect(getStyleProfile('klima-pet-2022')).toBe('choropleth-pet');
@@ -133,12 +136,39 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(flat).toContain('gut');
 	});
 
-	it('choropleth-mehrfach für umweltgerechtigkeit-2023 nutzt vierfach-Skala', () => {
+	it('choropleth-mehrfach für umweltgerechtigkeit-2023 deckt alle 6 Quell-Kategorien', () => {
 		const specs = buildLayerSpec('umweltgerechtigkeit-2023', SOURCE);
 		const flat = JSON.stringify(specs[0].paint);
-		expect(flat).toContain('vierfach');
-		expect(flat).toContain('dreifach');
+		expect(flat).toContain('keine starke Belastung');
 		expect(flat).toContain('einfach');
+		expect(flat).toContain('zweifach');
+		expect(flat).toContain('dreifach');
+		expect(flat).toContain('vierfach');
+		expect(flat).toContain('fünffach');
+		expect(flat).not.toContain('keinfach');
+	});
+
+	it('choropleth-mehrfach mappt keine starke Belastung auf eine Skalenfarbe, nicht auf COLORS.bg', () => {
+		const specs = buildLayerSpec('umweltgerechtigkeit-2023', SOURCE);
+		const fillColor = specs[0].paint?.['fill-color'] as unknown[];
+		const idx = fillColor.indexOf('keine starke Belastung');
+		expect(idx).toBeGreaterThan(0);
+		expect(fillColor[idx + 1]).toBe(COLORS.scaleLast1);
+		expect(fillColor[idx + 1]).not.toBe(COLORS.bg);
+	});
+
+	it('choropleth-mehrfach behält COLORS.bg nur als Default für unbekannte Kategorien', () => {
+		const specs = buildLayerSpec('umweltgerechtigkeit-2023', SOURCE);
+		const fillColor = specs[0].paint?.['fill-color'] as unknown[];
+		expect(fillColor[fillColor.length - 1]).toBe(COLORS.bg);
+	});
+
+	it('choropleth-mehrfach Legende hat 6 Einträge mit korrekten Labels', () => {
+		const legend = getLegendSpec('umweltgerechtigkeit-2023');
+		expect(legend.items).toHaveLength(6);
+		expect(legend.items[0].label).toBe('keine starke Belastung');
+		expect(legend.items[5].label).toBe('fünffach');
+		expect(legend.items.map((i) => i.label)).not.toContain('keinfach');
 	});
 
 	it('Pin-Icon-Slugs (Story 1.15) erzeugen symbol-Layer mit pinImageId', () => {
@@ -262,8 +292,11 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'choropleth-wohnlage-3',
 			'choropleth-mss-12',
 			'choropleth-kiez-score-ordinal-4',
+			'choropleth-dichte',
 			'polygon-highlight',
 			'polygon-outline-soft',
+			'polygon-outline-milieuschutz-erhaltungsmiete',
+			'polygon-outline-milieuschutz-staedtebau',
 			'point',
 			'point-wohnlage',
 			'point-ubahn',
@@ -279,7 +312,36 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'line-rail-sbahn',
 			'line-fahrradstrasse'
 		];
-		expect(profiles).toHaveLength(26);
+		expect(profiles).toHaveLength(29);
+	});
+
+	it('Milieuschutz (Story 10.8) nutzt eigene sichtbare Familien, nicht polygon-outline-soft', () => {
+		expect(getStyleProfile('milieuschutz-erhaltungsmiete')).toBe(
+			'polygon-outline-milieuschutz-erhaltungsmiete'
+		);
+		expect(getStyleProfile('milieuschutz-staedtebau')).toBe(
+			'polygon-outline-milieuschutz-staedtebau'
+		);
+		const erhalt = buildLayerSpec('milieuschutz-erhaltungsmiete', SOURCE)[0];
+		const staedt = buildLayerSpec('milieuschutz-staedtebau', SOURCE)[0];
+		expect(erhalt.paint?.['fill-opacity']).toBeGreaterThanOrEqual(0.55);
+		expect(staedt.paint?.['fill-opacity']).toBeGreaterThanOrEqual(0.55);
+		expect(erhalt.paint?.['fill-color']).not.toBe(staedt.paint?.['fill-color']);
+		expect(erhalt.paint?.['fill-color']).not.toBe(COLORS.accentSoft);
+	});
+
+	it('Einwohnerdichte (Story 10.0) nutzt neutralen choropleth-dichte-Gradient auf dichte', () => {
+		expect(getStyleProfile('einwohner-dichte-2024')).toBe('choropleth-dichte');
+		const flat = JSON.stringify(buildLayerSpec('einwohner-dichte-2024', SOURCE)[0].paint);
+		expect(flat).toContain('dichte');
+		expect(flat).toContain('interpolate');
+		expect(flat).toContain(COLORS.scaleStrukturell1);
+	});
+
+	it('Geteilte Family polygon-outline-soft bleibt für gruenanlagen/einschulbereiche/spielplaetze', () => {
+		expect(getStyleProfile('gruenanlagen')).toBe('polygon-outline-soft');
+		expect(getStyleProfile('einschulbereiche-2024')).toBe('polygon-outline-soft');
+		expect(getStyleProfile('spielplaetze')).toBe('polygon-outline-soft');
 	});
 
 	it('Kiez-Score-Layer (ADR-015) nutzen alle choropleth-kiez-score-ordinal-4', () => {
