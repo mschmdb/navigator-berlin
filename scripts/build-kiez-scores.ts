@@ -17,15 +17,18 @@ const MANIFEST = `${LAYERS_DIR}/MANIFEST.json`;
 const OEPNV_INDEX = `${STATIC}/oepnv-stops-index.json`;
 const OUT = `${STATIC}/kiez-scores/kiez-scores.json`;
 
+// ADR-015: MSS + Umweltgerechtigkeit sind keine Score-Inputs mehr. klima-pet (Grün & Hitze)
+// + Milieuschutz (Wohnschutz, presence via Punkt-in-Polygon am LOR-Centroid) neu.
 const POLYGON_SCORE_LAYERS = [
 	'laerm-2023',
 	'luft-2023',
 	'bioklima-2023',
 	'gruenversorgung-2023',
+	'klima-pet-2022',
 	'klima-kaltlufteinwirkbereich-2022',
 	'klima-leitbahnkorridor-2022',
-	'umweltgerechtigkeit-2023',
-	'mss-gesamtindex-2025'
+	'milieuschutz-erhaltungsmiete',
+	'milieuschutz-staedtebau'
 ];
 
 const PRESENCE_LAYERS = ['radverkehrsnetz-2025', 'fahrradstrassen-2024'];

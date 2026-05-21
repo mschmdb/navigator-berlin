@@ -642,96 +642,6 @@
       "mapRelevant": false
     },
     {
-      "slug": "kiez-score-ruhe-luft",
-      "filename": "kiez-score-ruhe-luft.07c7cc40.geojson",
-      "sourceUrl": "https://navigator.berlin/derived/kiez-score-ruhe-luft",
-      "fetchedAt": "2026-05-16T17:18:08.485Z",
-      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
-      "license": "dl-de/zero-2-0",
-      "sha256": "07c7cc4040f60c5e14feef2eef693b3b8a9a8367e2b2deb0784974d4cae993cd",
-      "bundleGroup": "G: Kiez-Score",
-      "zoomThresholds": {
-        "min": 9,
-        "max": 18
-      },
-      "geometryType": "MultiPolygon",
-      "featureCount": 542,
-      "inspectorRelevant": false,
-      "mapRelevant": true
-    },
-    {
-      "slug": "kiez-score-gruen",
-      "filename": "kiez-score-gruen.f45513e5.geojson",
-      "sourceUrl": "https://navigator.berlin/derived/kiez-score-gruen",
-      "fetchedAt": "2026-05-16T17:18:08.485Z",
-      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
-      "license": "dl-de/zero-2-0",
-      "sha256": "f45513e502749de1352c182d8d415d27fdfb8da5539fb317fbc23a6b568160fe",
-      "bundleGroup": "G: Kiez-Score",
-      "zoomThresholds": {
-        "min": 9,
-        "max": 18
-      },
-      "geometryType": "MultiPolygon",
-      "featureCount": 542,
-      "inspectorRelevant": false,
-      "mapRelevant": true
-    },
-    {
-      "slug": "kiez-score-mobilitaet",
-      "filename": "kiez-score-mobilitaet.29bf664d.geojson",
-      "sourceUrl": "https://navigator.berlin/derived/kiez-score-mobilitaet",
-      "fetchedAt": "2026-05-16T17:18:08.485Z",
-      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
-      "license": "dl-de/zero-2-0",
-      "sha256": "29bf664dfb737a6261cde9dac8e62571a6fce07ca395b0390cb8ba0e3f06e4a0",
-      "bundleGroup": "G: Kiez-Score",
-      "zoomThresholds": {
-        "min": 9,
-        "max": 18
-      },
-      "geometryType": "MultiPolygon",
-      "featureCount": 542,
-      "inspectorRelevant": false,
-      "mapRelevant": true
-    },
-    {
-      "slug": "kiez-score-soziale-lage",
-      "filename": "kiez-score-soziale-lage.65329910.geojson",
-      "sourceUrl": "https://navigator.berlin/derived/kiez-score-soziale-lage",
-      "fetchedAt": "2026-05-16T17:18:08.485Z",
-      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
-      "license": "dl-de/zero-2-0",
-      "sha256": "65329910f91be19e72a344434a40a56e578fdaebe7cc3db17f64760fdc04f4a2",
-      "bundleGroup": "G: Kiez-Score",
-      "zoomThresholds": {
-        "min": 9,
-        "max": 18
-      },
-      "geometryType": "MultiPolygon",
-      "featureCount": 542,
-      "inspectorRelevant": false,
-      "mapRelevant": true
-    },
-    {
-      "slug": "kiez-score-versorgung",
-      "filename": "kiez-score-versorgung.f57d975c.geojson",
-      "sourceUrl": "https://navigator.berlin/derived/kiez-score-versorgung",
-      "fetchedAt": "2026-05-16T17:18:08.485Z",
-      "sourceUpdatedAt": "2026-05-16T17:18:08.485Z",
-      "license": "dl-de/zero-2-0",
-      "sha256": "f57d975cfe2a7fbe41e0773198959b83c82e5764dc4cac5f45f396cb0b59dcf4",
-      "bundleGroup": "G: Kiez-Score",
-      "zoomThresholds": {
-        "min": 9,
-        "max": 18
-      },
-      "geometryType": "MultiPolygon",
-      "featureCount": 542,
-      "inspectorRelevant": false,
-      "mapRelevant": true
-    },
-    {
       "slug": "wahlbezirke-btw17",
       "filename": "wahlbezirke-btw17.452b6766.geojson",
       "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_Wahlgebiete_BTW17.zip",
@@ -815,6 +725,96 @@
       "featureCount": 2323,
       "inspectorRelevant": false,
       "mapRelevant": false
+    },
+    {
+      "slug": "kiez-score-ruhe-luft",
+      "filename": "kiez-score-ruhe-luft.e071f6f6.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-ruhe-luft",
+      "fetchedAt": "2026-05-21T06:20:28.804Z",
+      "sourceUpdatedAt": "2026-05-21T06:20:28.804Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "e071f6f6516d62ec0e37c2867c5fdb864455b6b07a58c5ed4280d2e5a288c38f",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-gruen-hitze",
+      "filename": "kiez-score-gruen-hitze.2c5605e5.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-gruen-hitze",
+      "fetchedAt": "2026-05-21T06:20:28.804Z",
+      "sourceUpdatedAt": "2026-05-21T06:20:28.804Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "2c5605e5e66a75186d075120459d629b443895e77fa8364fa35fa690d0aeecb2",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-mobilitaet",
+      "filename": "kiez-score-mobilitaet.29bf664d.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-mobilitaet",
+      "fetchedAt": "2026-05-21T06:20:28.804Z",
+      "sourceUpdatedAt": "2026-05-21T06:20:28.804Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "29bf664dfb737a6261cde9dac8e62571a6fce07ca395b0390cb8ba0e3f06e4a0",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-versorgung",
+      "filename": "kiez-score-versorgung.f640caf3.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-versorgung",
+      "fetchedAt": "2026-05-21T06:20:28.804Z",
+      "sourceUpdatedAt": "2026-05-21T06:20:28.804Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "f640caf30827be1b5c07556bc24b1daf794cbf3c0e19149c7800a04274ede6e3",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-wohnschutz",
+      "filename": "kiez-score-wohnschutz.c20b10c4.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-wohnschutz",
+      "fetchedAt": "2026-05-21T06:20:28.804Z",
+      "sourceUpdatedAt": "2026-05-21T06:20:28.804Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "c20b10c4af630b1379829f6765c0c20b3706d1d6fdc376e236972635a4513868",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
     }
   ]
 }

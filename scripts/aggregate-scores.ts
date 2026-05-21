@@ -33,7 +33,10 @@ import {
 	type BezirksregionLike,
 	type PlanungsraumLike
 } from './lib/kiez-score/lor-hierarchy.js';
-import type { KiezScore as KiezScoreType } from './lib/kiez-score/types.js';
+import type {
+	KiezScore as KiezScoreType,
+	KiezScoreDimension
+} from './lib/kiez-score/types.js';
 
 const LAYERS_DIR = 'static/layers';
 const MANIFEST_PATH = `${LAYERS_DIR}/MANIFEST.json`;
@@ -48,10 +51,10 @@ export interface ScoreRow {
 	readonly bezirkSlug?: string;
 	readonly composite: number | null;
 	readonly ruheLuft: number | null;
-	readonly gruen: number | null;
+	readonly gruenHitze: number | null;
 	readonly mobilitaet: number | null;
-	readonly sozialeLage: number | null;
 	readonly versorgung: number | null;
+	readonly wohnschutz: number | null;
 }
 
 async function readJson<T>(path: string): Promise<T> {
@@ -102,10 +105,7 @@ function bezirkLikeFromFeature(f: Feature): BezirkLike {
 	return { name, bezCode: total.slice(-2) };
 }
 
-function pickDimensionValue(
-	score: KiezScoreType,
-	dim: 'ruhe-luft' | 'gruen' | 'mobilitaet' | 'soziale-lage' | 'versorgung'
-): number | null {
+function pickDimensionValue(score: KiezScoreType, dim: KiezScoreDimension): number | null {
 	return score.dimensions.find((d) => d.dimension === dim)?.value ?? null;
 }
 
@@ -115,10 +115,10 @@ function toScoreRow(slug: string, bezirkSlug: string | undefined, score: KiezSco
 		slug,
 		composite,
 		ruheLuft: pickDimensionValue(score, 'ruhe-luft'),
-		gruen: pickDimensionValue(score, 'gruen'),
+		gruenHitze: pickDimensionValue(score, 'gruen-hitze'),
 		mobilitaet: pickDimensionValue(score, 'mobilitaet'),
-		sozialeLage: pickDimensionValue(score, 'soziale-lage'),
-		versorgung: pickDimensionValue(score, 'versorgung')
+		versorgung: pickDimensionValue(score, 'versorgung'),
+		wohnschutz: pickDimensionValue(score, 'wohnschutz')
 	};
 	if (bezirkSlug !== undefined) {
 		return { ...row, bezirkSlug };
@@ -206,10 +206,10 @@ async function upsertAll(result: AggregateScoresResult): Promise<void> {
 			// Wahl, in dem Fall die Row zu skippen (Konsumenten lesen `null` als „keine Daten").
 			composite: r.composite ?? 0,
 			ruheLuft: r.ruheLuft,
-			gruen: r.gruen,
+			gruenHitze: r.gruenHitze,
 			mobilitaet: r.mobilitaet,
-			sozialeLage: r.sozialeLage,
-			versorgung: r.versorgung
+			versorgung: r.versorgung,
+			wohnschutz: r.wohnschutz
 		});
 	}
 
@@ -221,10 +221,10 @@ async function upsertAll(result: AggregateScoresResult): Promise<void> {
 			bezirkSlug: r.bezirkSlug,
 			composite: r.composite ?? 0,
 			ruheLuft: r.ruheLuft,
-			gruen: r.gruen,
+			gruenHitze: r.gruenHitze,
 			mobilitaet: r.mobilitaet,
-			sozialeLage: r.sozialeLage,
-			versorgung: r.versorgung
+			versorgung: r.versorgung,
+			wohnschutz: r.wohnschutz
 		});
 	}
 }

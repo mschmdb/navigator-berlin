@@ -40,7 +40,7 @@ describe('aggregate-scores orchestrator (Story 2.9a, AC-3 + AC-4)', () => {
 	it('respects 0..100 range on composite + per-dimension fields', async () => {
 		const { bezirke, kieze } = await aggregateScoresFromSources();
 		for (const row of [...bezirke, ...kieze]) {
-			for (const key of ['composite', 'ruheLuft', 'gruen', 'mobilitaet', 'sozialeLage', 'versorgung'] as const) {
+			for (const key of ['composite', 'ruheLuft', 'gruenHitze', 'mobilitaet', 'versorgung', 'wohnschutz'] as const) {
 				const v = row[key];
 				if (v === null) continue;
 				expect(v).toBeGreaterThanOrEqual(0);
