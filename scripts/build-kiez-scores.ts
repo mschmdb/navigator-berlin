@@ -15,6 +15,7 @@ const STATIC = 'static';
 const LAYERS_DIR = `${STATIC}/layers`;
 const MANIFEST = `${LAYERS_DIR}/MANIFEST.json`;
 const OEPNV_INDEX = `${STATIC}/oepnv-stops-index.json`;
+const PET_POINTS = `${STATIC}/data/klima-pet-points.geojson`;
 const OUT = `${STATIC}/kiez-scores/kiez-scores.json`;
 
 // ADR-015: MSS + Umweltgerechtigkeit sind keine Score-Inputs mehr. klima-pet (Grün & Hitze)
@@ -24,12 +25,15 @@ const POLYGON_SCORE_LAYERS = [
 	'luft-2023',
 	'bioklima-2023',
 	'gruenversorgung-2023',
-	'klima-pet-2022',
 	'klima-kaltlufteinwirkbereich-2022',
 	'klima-leitbahnkorridor-2022',
 	'milieuschutz-erhaltungsmiete',
 	'milieuschutz-staedtebau'
 ];
+
+// klima-pet-2022 ist als PMTiles publiziert (Story 10.10). Der Score liest den PET-Wert
+// aus dem abgeleiteten Punkt-Set (nächster Centroid am LOR-Centroid) statt Point-in-Polygon.
+const POINT_VALUE_LAYERS = ['klima-pet-2022'];
 
 const PRESENCE_LAYERS = ['radverkehrsnetz-2025', 'fahrradstrassen-2024'];
 
@@ -77,12 +81,20 @@ export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: 
 
 	const oepnvIndex = await readJson<OepnvStopIndexShape>(OEPNV_INDEX);
 
+	const pointValueLayers: BuildLayerSpec[] = [];
+	for (const slug of POINT_VALUE_LAYERS) {
+		const fc = await readJson<FeatureCollection>(PET_POINTS).catch(() => null);
+		if (!fc) throw new Error(`${slug}: ${PET_POINTS} fehlt. Lauf zuerst pnpm data:pet-points.`);
+		pointValueLayers.push({ slug, features: fc.features ?? [] });
+	}
+
 	const output = buildKiezScoresFromInput(
 		{
 			lorFeatures,
 			polygonLayers,
 			presenceLayers: presenceLayersAvailable,
 			poiLayers,
+			pointValueLayers,
 			oepnvIndex
 		},
 		new Date().toISOString()

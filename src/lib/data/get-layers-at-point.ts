@@ -231,7 +231,15 @@ export async function getLayersAtPoint(
 
 	const manifest = await loadManifest(fetchFn);
 	const results = await Promise.all(
-		manifest.layers.map((layer) => hitForLayer(layer, lat, lng, fetchFn, pmtilesQuery))
+		// Per-Layer-Catch: ein fehlschlagender Layer-Fetch (z.B. veralteter Filename nach
+		// Pipeline-Re-Run) darf nicht alle Hits nullen und den Berlin-Bezirk-Guard fälschlich
+		// auf „außerhalb Berlins" werfen. Defekter Layer → null statt Reject.
+		manifest.layers.map((layer) =>
+			hitForLayer(layer, lat, lng, fetchFn, pmtilesQuery).catch((err) => {
+				console.warn(`[getLayersAtPoint] Layer ${layer.slug} übersprungen:`, err);
+				return null;
+			})
+		)
 	);
 	const hits = results.filter((h): h is LayerHit => h !== null);
 	resultCache.set(key, hits);

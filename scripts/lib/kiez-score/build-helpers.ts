@@ -120,3 +120,32 @@ export function buildPoiDistanceHits(
 	}
 	return hits;
 }
+
+/**
+ * Point-Value-Layer: Punkt-Features tragen einen numerischen Wert (z.B. PET-Centroids
+ * mit pet14h, Story 10.9/10.10). Pro Layer wird am Query-Punkt der nächste Punkt gesucht
+ * und dessen Properties als Hit ausgegeben. Ersatz für Point-in-Polygon, wenn die Quelle
+ * als Tiles vorliegt und nur ein abgeleitetes Punkt-Set für den Build verfügbar ist.
+ */
+export function buildNearestPointValueHits(
+	lat: number,
+	lng: number,
+	layers: readonly BuildLayerSpec[]
+): LayerHitLike[] {
+	const hits: LayerHitLike[] = [];
+	for (const layer of layers) {
+		let best = Infinity;
+		let bestValue: Record<string, unknown> | null = null;
+		for (const feat of layer.features) {
+			if (feat.geometry?.type !== 'Point') continue;
+			const [pLng, pLat] = feat.geometry.coordinates as [number, number];
+			const m = haversineM(lat, lng, pLat, pLng);
+			if (m < best) {
+				best = m;
+				bestValue = feat.properties ?? null;
+			}
+		}
+		if (bestValue !== null) hits.push({ layer: layer.slug, value: bestValue });
+	}
+	return hits;
+}

@@ -6,6 +6,7 @@ import {
 	buildPresenceLayerHits,
 	buildPoiIndex,
 	buildPoiDistanceHits,
+	buildNearestPointValueHits,
 	type BuildLayerSpec
 } from './build-helpers.js';
 import {
@@ -20,6 +21,8 @@ export interface PipelineInput {
 	presenceLayers: readonly string[];
 	/** POI-Layer für Versorgungs-Dim (Distance-from-Centroid). Points + Polygone (centroid-fallback). */
 	poiLayers?: readonly BuildLayerSpec[];
+	/** Point-Value-Layer (z.B. PET-Centroids, Story 10.10): nächster Punkt-Wert am LOR-Centroid. */
+	pointValueLayers?: readonly BuildLayerSpec[];
 	oepnvIndex: OepnvStopIndexShape;
 	lorIdFor?: (feat: Feature) => string | null;
 }
@@ -147,9 +150,10 @@ export function buildKiezScoresFromInput(
 		const [lng, lat] = centroid.geometry.coordinates as [number, number];
 		const polygonHits = buildPolygonLayerHitsAtPoint(lat, lng, input.polygonLayers);
 		const poiHits = buildPoiDistanceHits(lat, lng, poiIndex);
+		const pointValueHits = buildNearestPointValueHits(lat, lng, input.pointValueLayers ?? []);
 		const stops = findAllNearestStopsForBuild({ lat, lng }, input.oepnvIndex);
 		scores[lorId] = computeKiezScore({
-			layerHits: [...polygonHits, ...presenceHits, ...poiHits],
+			layerHits: [...polygonHits, ...presenceHits, ...poiHits, ...pointValueHits],
 			nearestStops: stops
 		});
 	}
