@@ -54,7 +54,8 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'kiez-score-versorgung': 'Kiez-Score · Versorgung',
 	// I: Demografie (Story 10.0)
 	'einwohner-dichte-2024': 'Einwohnerdichte 2024',
-	// Synthetische Score-Sub-Terme (Kiez-Score-Detailzeilen, Stories 10.1-10.4 + Mobilität/Wohnschutz)
+	// Synthetische Score-Sub-Terme (Kiez-Score-Detailzeilen, Stories 10.1-10.6b + Mobilität/Wohnschutz)
+	'laerm-db': 'Lärm (dB-Mittel)',
 	'kitas-pro-kind': 'Kita-Plätze pro Kind',
 	'schulen-grundschule': 'Grundschulen',
 	'schulen-weiterfuehrend': 'Weiterführende Schulen',
