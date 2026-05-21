@@ -88,7 +88,14 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 			weight: 0.15,
 			normalize: { kind: 'kita-pro-kind', field: 'plaetzeProKind', bestAt: KITA_BEST_AT }
 		},
-		{ layer: 'schulen-2024', weight: 0.3, normalize: { kind: 'poi-distance', threshold: 800 } },
+		// Story 10.3: Schul-Term nach Schulart getrennt. Grundschule kurze Schwelle (Gehweg ~8 min),
+		// weiterführend großzügiger (größeres Einzugsgebiet, ÖPNV ab ~10 J.). Je 0.15, zusammen wie zuvor 0.30.
+		{ layer: 'schulen-grundschule', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 600 } },
+		{
+			layer: 'schulen-weiterfuehrend',
+			weight: 0.15,
+			normalize: { kind: 'poi-distance', threshold: 1200 }
+		},
 		{
 			layer: 'krankenhaeuser-plan',
 			weight: 0.25,

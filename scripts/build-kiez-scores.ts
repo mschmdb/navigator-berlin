@@ -12,6 +12,7 @@ import type { LayerHitLike } from './lib/kiez-score/types.js';
 import type { OepnvStopIndexShape } from './lib/kiez-score/nearest-stops.js';
 import { defaultLorIdFor } from './lib/kiez-score/pipeline.js';
 import { aggregateKitaPlaetzeByLor, plaetzeProKind } from './lib/kiez-score/kita-supply.js';
+import { splitSchulenByArt } from './lib/kiez-score/schul-supply.js';
 import { validateKiezScoreOutput } from './lib/kiez-score/output-schema.js';
 
 interface EinwohnerRecord {
@@ -46,7 +47,7 @@ const POINT_VALUE_LAYERS = ['klima-pet-2022'];
 
 const PRESENCE_LAYERS = ['radverkehrsnetz-2025', 'fahrradstrassen-2024'];
 
-const POI_LAYERS = ['kitas-2024', 'schulen-2024', 'spielplaetze', 'gruenanlagen'];
+const POI_LAYERS = ['kitas-2024', 'spielplaetze', 'gruenanlagen'];
 
 // Story 10.2: krankenhaeuser-plan als Point-Value-Layer (nächstes Haus + betten_insgesamt
 // + distanceM) statt reiner POI-Distanz, damit die Kapazitätsgewichtung greift.
@@ -109,6 +110,15 @@ export async function buildKiezScores(): Promise<{ outPath: string; scoreCount: 
 	for (const slug of POI_LAYERS) {
 		const features = await loadLayerFeatures(slug, manifest);
 		if (features) poiLayers.push({ slug, features });
+	}
+
+	// Story 10.3: schulen-2024 nach Schulart in zwei virtuelle POI-Layer splitten
+	// (eigene Distanz-Schwellen pro Schulart, siehe VERSORGUNG_CONFIG).
+	const schulenFeatures = await loadLayerFeatures('schulen-2024', manifest);
+	if (schulenFeatures) {
+		const { grundschule, weiterfuehrend } = splitSchulenByArt(schulenFeatures);
+		poiLayers.push({ slug: 'schulen-grundschule', features: grundschule });
+		poiLayers.push({ slug: 'schulen-weiterfuehrend', features: weiterfuehrend });
 	}
 
 	const oepnvIndex = await readJson<OepnvStopIndexShape>(OEPNV_INDEX);

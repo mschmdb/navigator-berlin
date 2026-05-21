@@ -132,7 +132,8 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 			layerHits: [
 				makeHit('kitas-2024', { distanceM: 250 }),
 				makeHit('kitas-pro-kind', { plaetzeProKind: 0.35 }),
-				makeHit('schulen-2024', { distanceM: 400 }),
+				makeHit('schulen-grundschule', { distanceM: 400 }),
+				makeHit('schulen-weiterfuehrend', { distanceM: 400 }),
 				makeHit('krankenhaeuser-plan', { distanceM: 1000 }),
 				makeHit('spielplaetze', { distanceM: 200 })
 			]
@@ -180,6 +181,22 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 		expect(score.missingData).not.toContain('krankenhaeuser-plan');
 	});
 
+	it('Story 10.3: Grundschule (600m) und Weiterführend (1200m) eigene Schwellen', () => {
+		// Grundschule in 500m (< 600 → positiv), Weiterführend in 1100m (< 1200 → positiv)
+		const score = computeDimensionScore(
+			VERSORGUNG_CONFIG,
+			emptyInput({
+				layerHits: [
+					makeHit('schulen-grundschule', { distanceM: 500 }),
+					makeHit('schulen-weiterfuehrend', { distanceM: 1100 })
+				]
+			})
+		);
+		expect(score.value).not.toBeNull();
+		expect(score.missingData).not.toContain('schulen-grundschule');
+		expect(score.missingData).not.toContain('schulen-weiterfuehrend');
+	});
+
 	it('Grünanlagen ist KEIN Versorgungs-Layer mehr (nach Grün & Hitze gewandert)', () => {
 		const slugs = VERSORGUNG_CONFIG.layers.map((l) => l.layer);
 		expect(slugs).not.toContain('gruenanlagen');
@@ -190,7 +207,8 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 			layerHits: [makeHit('kitas-2024', { distanceM: 100 })]
 		});
 		const score = computeDimensionScore(VERSORGUNG_CONFIG, input);
-		expect(score.missingData).toContain('schulen-2024');
+		expect(score.missingData).toContain('schulen-grundschule');
+		expect(score.missingData).toContain('schulen-weiterfuehrend');
 		expect(score.missingData).toContain('krankenhaeuser-plan');
 		expect(score.missingData).toContain('spielplaetze');
 	});
@@ -257,8 +275,10 @@ describe('computeKiezScore', () => {
 				makeHit('klima-kaltlufteinwirkbereich-2022', { foo: 1 }),
 				makeHit('klima-leitbahnkorridor-2022', { foo: 1 }),
 				makeHit('kitas-2024', { distanceM: 200 }),
-				makeHit('schulen-2024', { distanceM: 300 }),
-				makeHit('krankenhaeuser-plan', { distanceM: 1000 }),
+				makeHit('kitas-pro-kind', { plaetzeProKind: 0.3 }),
+				makeHit('schulen-grundschule', { distanceM: 300 }),
+				makeHit('schulen-weiterfuehrend', { distanceM: 300 }),
+				makeHit('krankenhaeuser-plan', { distanceM: 1000, betten_insgesamt: '500' }),
 				makeHit('spielplaetze', { distanceM: 150 }),
 				makeHit('milieuschutz-erhaltungsmiete', { foo: 1 })
 			],
