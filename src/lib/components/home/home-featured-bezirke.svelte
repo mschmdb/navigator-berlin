@@ -38,7 +38,7 @@
 		{/each}
 	</ul>
 	<a
-		href="/wo-lebt-es-sich-gut?view=bezirke"
+		href="/umwelt-infrastruktur-score?view=bezirke"
 		class="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
 	>
 		Alle 12 im Vergleich

@@ -33,7 +33,7 @@
 		<header class="flex items-baseline justify-between gap-4">
 			<h2 class="font-serif text-2xl text-ink md:text-3xl">143 Kieze, fünf Dimensionen</h2>
 			<a
-				href="/wo-lebt-es-sich-gut"
+				href="/umwelt-infrastruktur-score"
 				class="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
 			>
 				Ranking ansehen

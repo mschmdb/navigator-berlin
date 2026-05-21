@@ -20,7 +20,7 @@
 	const pageTitle = 'Umwelt- & Infrastruktur-Score - Berlin in Daten - navigator.berlin';
 	const pageDescription =
 		'Umwelt- & Infrastruktur-Score für Berlin: alle 143 Kieze und 12 Bezirke nach fünf Dimensionen (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz). Misst Umwelt und Infrastruktur, nicht den sozialen Status.';
-	const ogImagePath = '/og/page/wo-lebt-es-sich-gut.png';
+	const ogImagePath = '/og/page/umwelt-infrastruktur-score.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 
 	const datasetJsonLd = $derived(
@@ -78,8 +78,8 @@
 		<h1 class="font-serif text-3xl text-ink md:text-4xl">Umwelt- & Infrastruktur-Score</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
 			Berliner Kieze und Bezirke nach fünf gleichgewichteten Dimensionen sortiert. Der Score misst
-			Umwelt und Infrastruktur, nicht den sozialen Status. Er beschreibt statistische Verteilung,
-			nicht Wertung einzelner Adressen oder Personen.
+			Umwelt und Infrastruktur eines Kiezes, nicht den sozialen Status. Er bündelt öffentliche
+			Daten pro Planungsraum. Eine einzelne Adresse kann davon abweichen.
 		</p>
 	</header>
 

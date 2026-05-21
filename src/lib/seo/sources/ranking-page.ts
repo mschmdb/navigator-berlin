@@ -11,7 +11,7 @@ import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
  * Datenquelle die Page-Aktualität feiner trackt.
  */
 
-const PATH = '/wo-lebt-es-sich-gut';
+const PATH = '/umwelt-infrastruktur-score';
 const PRIORITY = 0.7;
 
 export interface BuildRankingSitemapEntryInput {

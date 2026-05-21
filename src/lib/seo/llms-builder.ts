@@ -117,9 +117,10 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		section: 'static'
 	});
 	out.push({
-		loc: `${ctx.origin}/wo-lebt-es-sich-gut`,
-		name: 'Kiez-Score-Ranking',
-		description: 'Alle 143 Kieze und 12 Bezirke nach 5 Dimensionen sortierbar',
+		loc: `${ctx.origin}/umwelt-infrastruktur-score`,
+		name: 'Umwelt- & Infrastruktur-Score',
+		description:
+			'Alle 143 Kieze und 12 Bezirke nach fünf Umwelt- und Infrastruktur-Dimensionen sortierbar',
 		section: 'static'
 	});
 	out.push({

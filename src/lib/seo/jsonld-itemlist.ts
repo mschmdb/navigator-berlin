@@ -3,7 +3,7 @@ import type { WithContext } from 'schema-dts';
 /**
  * Story 2.9b T4: ItemList-JSON-LD für Ranking-Pages.
  *
- * Konsument: Ranking-Page „Wo lebt es sich gut?" listet Top-N-Kieze als
+ * Konsument: Ranking-Page „Umwelt- & Infrastruktur-Score" listet Top-N-Kieze als
  * ItemList damit Suchmaschinen/LLMs die Reihenfolge + Items strukturell
  * verstehen. Items sind Place-Refs (Name + URL); kein eigener Place-Block
  * pro Item nötig weil jede Kiez-Page bereits eigene Place-JSON-LD trägt

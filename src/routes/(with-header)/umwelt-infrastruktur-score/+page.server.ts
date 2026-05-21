@@ -6,20 +6,20 @@ import type { RankingRow } from '$lib/data/ranking-types.js';
 export const prerender = true;
 
 /**
- * Story 2.9b T1: Ranking-Page „Wo lebt es sich gut?"
+ * Ranking-Page „Umwelt- & Infrastruktur-Score" (ADR-015). Route-Slug
+ * /umwelt-infrastruktur-score, alter Slug /wo-lebt-es-sich-gut 301-redirected.
  *
  * Phase-1 DE-only (Memory `project_i18n_phase_1_de_only`): 1 prerendered
  * Route, EN-Variante in Phase-3-Future-Epic. Loader liefert alle 143
  * Kieze + 12 Bezirke einmalig; Client macht Sort + View-Toggle via URL-
- * State (replaceState) gegen die geladenen Arrays — kein Re-Fetch nötig
+ * State (replaceState) gegen die geladenen Arrays, kein Re-Fetch nötig
  * weil Page-HTML statisch prerendered ist.
  *
  * Cutoff-Update 2026-05-16 (User-Request): kein Top-30-Limit mehr, alle
  * Kieze werden gerendert. NULL-composite via COALESCE ans Listen-Ende.
  *
- * Soziale-Lage bleibt im Datenmodell (Spalten-Wert sichtbar), wird aber
- * NIE als Default-Sort verwendet (Memory `feedback_no_lebenswert` +
- * Stigma-Disziplin Memory `project_compare_editorial_profiles`).
+ * Default-Sort ist composite. Sozialstruktur ist seit ADR-015 keine
+ * Score-Dimension mehr (Anti-Stigma, Memory `feedback_no_lebenswert`).
  */
 
 export interface RankingPageData {

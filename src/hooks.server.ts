@@ -3,6 +3,7 @@ import type { Handle } from '@sveltejs/kit';
 import { getTextDirection } from '$lib/paraglide/runtime';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { staleLocaleRedirectTarget } from '$lib/seo/stale-locale-redirect';
+import { renamedRouteRedirectTarget } from '$lib/seo/renamed-route-redirect';
 
 /**
  * 301 stale locale-prefixed URLs (`/de/…`, `/es/…`, …) onto the prefix-less DE
@@ -12,6 +13,21 @@ import { staleLocaleRedirectTarget } from '$lib/seo/stale-locale-redirect';
  */
 const handleStaleLocaleRedirect: Handle = ({ event, resolve }) => {
 	const target = staleLocaleRedirectTarget(event.url.pathname);
+	if (target !== null) {
+		return new Response(null, {
+			status: 301,
+			headers: { location: target + event.url.search }
+		});
+	}
+	return resolve(event);
+};
+
+/**
+ * 301 umbenannte Routes auf ihren neuen Slug (ADR-015: /wo-lebt-es-sich-gut →
+ * /umwelt-infrastruktur-score). Läuft vor Paraglide, erhält Query-String.
+ */
+const handleRenamedRouteRedirect: Handle = ({ event, resolve }) => {
+	const target = renamedRouteRedirectTarget(event.url.pathname);
 	if (target !== null) {
 		return new Response(null, {
 			status: 301,
@@ -48,6 +64,7 @@ const handleNoIndexHeaders: Handle = async ({ event, resolve }) => {
 
 export const handle: Handle = sequence(
 	handleStaleLocaleRedirect,
+	handleRenamedRouteRedirect,
 	handleParaglide,
 	handleNoIndexHeaders
 );

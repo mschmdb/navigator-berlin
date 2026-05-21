@@ -66,11 +66,11 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		footerUrl: '/'
 	},
 	{
-		slug: 'wo-lebt-es-sich-gut',
-		headline: 'Wo lebt es sich gut?',
+		slug: 'umwelt-infrastruktur-score',
+		headline: 'Umwelt- & Infrastruktur-Score',
 		subline: 'Kiez- und Bezirks-Ranking',
-		body: '143 Berliner Kieze, 12 Bezirke. Fünf Dimensionen: Ruhe, Grün, Mobilität, soziale Lage, Versorgung. Gleich gewichtet, 0 bis 100.',
-		footerUrl: '/wo-lebt-es-sich-gut'
+		body: '143 Berliner Kieze, 12 Bezirke. Fünf Dimensionen: Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz. Gleich gewichtet, 0 bis 100.',
+		footerUrl: '/umwelt-infrastruktur-score'
 	},
 	{
 		slug: 'methodik',

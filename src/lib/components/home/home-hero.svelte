@@ -13,7 +13,7 @@
 		readonly rankingHref?: string;
 	}
 
-	const { mapHref = '/explore', rankingHref = '/wo-lebt-es-sich-gut' }: Props = $props();
+	const { mapHref = '/explore', rankingHref = '/umwelt-infrastruktur-score' }: Props = $props();
 </script>
 
 <section data-testid="home-hero" class="space-y-6">

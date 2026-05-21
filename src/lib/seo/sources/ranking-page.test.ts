@@ -26,7 +26,7 @@ describe('buildRankingSitemapEntry', () => {
 			origin: ORIGIN,
 			lastmod: '2026-05-16T08:00:00.000Z'
 		});
-		expect(entry.loc).toBe('https://navigator.berlin/wo-lebt-es-sich-gut');
+		expect(entry.loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
 		expect(entry.changefreq).toBe('monthly');
 		expect(entry.priority).toBe(0.7);
 		expect(entry.lastmod).toBe('2026-05-16T08:00:00.000Z');
@@ -37,7 +37,7 @@ describe('buildRankingSitemapEntry', () => {
 			origin: 'https://navigator.berlin/',
 			lastmod: '2026-05-16T08:00:00.000Z'
 		});
-		expect(entry.loc).toBe('https://navigator.berlin/wo-lebt-es-sich-gut');
+		expect(entry.loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
 	});
 });
 
@@ -45,7 +45,7 @@ describe('RANKING_PAGE_SOURCE', () => {
 	it('liefert für locale=de eine Entry mit buildTimestamp als lastmod', () => {
 		const entries = RANKING_PAGE_SOURCE(fixtureContext());
 		expect(entries).toHaveLength(1);
-		expect(entries[0].loc).toBe('https://navigator.berlin/wo-lebt-es-sich-gut');
+		expect(entries[0].loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
 		expect(entries[0].lastmod).toBe('2026-05-16T08:00:00.000Z');
 	});
 
