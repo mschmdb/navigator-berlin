@@ -32,17 +32,17 @@ export interface PipelineOutput {
 
 export type KiezScoreLayerSlug =
 	| 'kiez-score-ruhe-luft'
-	| 'kiez-score-gruen'
+	| 'kiez-score-gruen-hitze'
 	| 'kiez-score-mobilitaet'
-	| 'kiez-score-soziale-lage'
-	| 'kiez-score-versorgung';
+	| 'kiez-score-versorgung'
+	| 'kiez-score-wohnschutz';
 
 export const KIEZ_SCORE_LAYER_SLUG_BY_DIMENSION: Record<KiezScoreDimension, KiezScoreLayerSlug> = {
 	'ruhe-luft': 'kiez-score-ruhe-luft',
-	gruen: 'kiez-score-gruen',
+	'gruen-hitze': 'kiez-score-gruen-hitze',
 	mobilitaet: 'kiez-score-mobilitaet',
-	'soziale-lage': 'kiez-score-soziale-lage',
-	versorgung: 'kiez-score-versorgung'
+	versorgung: 'kiez-score-versorgung',
+	wohnschutz: 'kiez-score-wohnschutz'
 };
 
 export interface DerivedLayerGeoJsons {

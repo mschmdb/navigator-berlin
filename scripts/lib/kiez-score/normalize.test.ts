@@ -4,6 +4,7 @@ import {
 	normalizeOrdinal4,
 	normalizeMssStatus4,
 	normalizeDistance,
+	normalizeNumericInverted,
 	normalizePresence
 } from './normalize.js';
 
@@ -79,6 +80,30 @@ describe('normalizeDistance', () => {
 	it('threshold 0 oder negativ → null (Guard)', () => {
 		expect(normalizeDistance(100, 0)).toBeNull();
 		expect(normalizeDistance(100, -1)).toBeNull();
+	});
+});
+
+describe('normalizeNumericInverted', () => {
+	// PET-Hitzebelastung: geringe Temperatur = besser. bestAt=29 (komfortabel) → 100, worstAt=41 (extrem) → 0.
+	it('Wert <= bestAt → 100', () => {
+		expect(normalizeNumericInverted(29, 29, 41)).toBe(100);
+		expect(normalizeNumericInverted(20, 29, 41)).toBe(100);
+	});
+	it('Wert >= worstAt → 0', () => {
+		expect(normalizeNumericInverted(41, 29, 41)).toBe(0);
+		expect(normalizeNumericInverted(45, 29, 41)).toBe(0);
+	});
+	it('linear invertiert dazwischen (Mittelpunkt → 50)', () => {
+		expect(normalizeNumericInverted(35, 29, 41)).toBe(50);
+	});
+	it('liefert null für nicht-numerische / ungültige Eingaben', () => {
+		expect(normalizeNumericInverted('36', 29, 41)).toBeNull();
+		expect(normalizeNumericInverted(null, 29, 41)).toBeNull();
+		expect(normalizeNumericInverted(Number.NaN, 29, 41)).toBeNull();
+	});
+	it('liefert null bei degeneriertem Band (worstAt <= bestAt)', () => {
+		expect(normalizeNumericInverted(30, 41, 29)).toBeNull();
+		expect(normalizeNumericInverted(30, 30, 30)).toBeNull();
 	});
 });
 

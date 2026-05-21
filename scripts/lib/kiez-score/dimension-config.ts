@@ -3,35 +3,33 @@ import type { DimensionConfig } from './types.js';
 export const RUHE_LUFT_CONFIG: DimensionConfig = {
 	dimension: 'ruhe-luft',
 	layers: [
-		{ layer: 'laerm-2023', weight: 0.4, normalize: { kind: 'ordinal-3', field: 'kategorie' } },
-		{ layer: 'luft-2023', weight: 0.4, normalize: { kind: 'ordinal-3', field: 'kategorie' } },
-		{ layer: 'bioklima-2023', weight: 0.2, normalize: { kind: 'ordinal-3', field: 'kategorie' } }
-	],
-	fallback: {
-		layer: 'umweltgerechtigkeit-2023',
-		weight: 1.0,
-		normalize: { kind: 'ordinal-3', field: 'kategorie' }
-	}
+		{ layer: 'laerm-2023', weight: 0.5, normalize: { kind: 'ordinal-3', field: 'kategorie' } },
+		{ layer: 'luft-2023', weight: 0.5, normalize: { kind: 'ordinal-3', field: 'kategorie' } }
+	]
 };
 
-export const GRUEN_CONFIG: DimensionConfig = {
-	dimension: 'gruen',
+// PET-Hitzebelastung (pet14h, °C): physiologische Äquivalenttemperatur. <= 29 komfortabel → 100,
+// >= 41 extreme Hitze → 0 (Matzarakis-Belastungsklassen).
+const PET_BEST_AT = 29;
+const PET_WORST_AT = 41;
+
+export const GRUEN_HITZE_CONFIG: DimensionConfig = {
+	dimension: 'gruen-hitze',
 	layers: [
 		{
 			layer: 'gruenversorgung-2023',
-			weight: 0.6,
+			weight: 0.3,
 			normalize: { kind: 'ordinal-4', field: 'kategorie' }
 		},
+		{ layer: 'gruenanlagen', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 600 } },
+		{ layer: 'bioklima-2023', weight: 0.2, normalize: { kind: 'ordinal-3', field: 'kategorie' } },
 		{
-			layer: 'klima-kaltlufteinwirkbereich-2022',
-			weight: 0.2,
-			normalize: { kind: 'presence' }
+			layer: 'klima-pet-2022',
+			weight: 0.15,
+			normalize: { kind: 'numeric-inverted', field: 'pet14h', bestAt: PET_BEST_AT, worstAt: PET_WORST_AT }
 		},
-		{
-			layer: 'klima-leitbahnkorridor-2022',
-			weight: 0.2,
-			normalize: { kind: 'presence' }
-		}
+		{ layer: 'klima-kaltlufteinwirkbereich-2022', weight: 0.1, normalize: { kind: 'presence' } },
+		{ layer: 'klima-leitbahnkorridor-2022', weight: 0.1, normalize: { kind: 'presence' } }
 	]
 };
 
@@ -71,57 +69,39 @@ export const MOBILITAET_CONFIG: DimensionConfig = {
 	]
 };
 
-export const SOZIALE_LAGE_CONFIG: DimensionConfig = {
-	dimension: 'soziale-lage',
-	layers: [
-		{
-			layer: 'mss-gesamtindex-2025',
-			weight: 1.0,
-			normalize: { kind: 'mss-status-4', field: 'si_v' }
-		}
-	],
-	intrinsicGuard: (raw: unknown): boolean => {
-		if (!raw || typeof raw !== 'object') return false;
-		const obj = raw as Record<string, unknown>;
-		return obj.kom === 'gültig';
-	}
-};
-
 export const VERSORGUNG_CONFIG: DimensionConfig = {
 	dimension: 'versorgung',
 	layers: [
-		{
-			layer: 'kitas-2024',
-			weight: 0.25,
-			normalize: { kind: 'poi-distance', threshold: 500 }
-		},
-		{
-			layer: 'schulen-2024',
-			weight: 0.25,
-			normalize: { kind: 'poi-distance', threshold: 800 }
-		},
+		{ layer: 'kitas-2024', weight: 0.3, normalize: { kind: 'poi-distance', threshold: 500 } },
+		{ layer: 'schulen-2024', weight: 0.3, normalize: { kind: 'poi-distance', threshold: 800 } },
 		{
 			layer: 'krankenhaeuser-plan',
-			weight: 0.2,
+			weight: 0.25,
 			normalize: { kind: 'poi-distance', threshold: 2000 }
 		},
+		{ layer: 'spielplaetze', weight: 0.15, normalize: { kind: 'poi-distance', threshold: 400 } }
+	]
+};
+
+// Verdrängungsschutz, positiv-eindeutig: innerhalb eines Milieuschutz-Gebiets = Schutz vorhanden = gut.
+export const WOHNSCHUTZ_CONFIG: DimensionConfig = {
+	dimension: 'wohnschutz',
+	layers: [
 		{
-			layer: 'spielplaetze',
-			weight: 0.15,
-			normalize: { kind: 'poi-distance', threshold: 400 }
-		},
-		{
-			layer: 'gruenanlagen',
-			weight: 0.15,
-			normalize: { kind: 'poi-distance', threshold: 600 }
+			layer: 'wohnschutz-presence',
+			weight: 1.0,
+			normalize: {
+				kind: 'presence-any-of',
+				layers: ['milieuschutz-erhaltungsmiete', 'milieuschutz-staedtebau']
+			}
 		}
 	]
 };
 
 export const DIMENSION_CONFIGS = [
 	RUHE_LUFT_CONFIG,
-	GRUEN_CONFIG,
+	GRUEN_HITZE_CONFIG,
 	MOBILITAET_CONFIG,
-	SOZIALE_LAGE_CONFIG,
-	VERSORGUNG_CONFIG
+	VERSORGUNG_CONFIG,
+	WOHNSCHUTZ_CONFIG
 ] as const;

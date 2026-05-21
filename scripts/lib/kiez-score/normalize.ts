@@ -46,6 +46,18 @@ export function normalizeDistance(meters: number | null, threshold: number): num
 	return Math.max(0, Math.min(100, 100 * (1 - meters / threshold)));
 }
 
+export function normalizeNumericInverted(
+	value: unknown,
+	bestAt: number,
+	worstAt: number
+): number | null {
+	if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+	if (worstAt <= bestAt) return null;
+	if (value <= bestAt) return 100;
+	if (value >= worstAt) return 0;
+	return Math.max(0, Math.min(100, 100 * (1 - (value - bestAt) / (worstAt - bestAt))));
+}
+
 export function normalizePresence(present: boolean): number {
 	return present ? 100 : 0;
 }

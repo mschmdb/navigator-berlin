@@ -17,6 +17,7 @@ import {
 	normalizeOrdinal4,
 	normalizeMssStatus4,
 	normalizeDistance,
+	normalizeNumericInverted,
 	normalizePresence
 } from './normalize.js';
 
@@ -76,6 +77,10 @@ function normalizeFromHit(
 			normalized = normalizeDistance(meters, normalize.threshold);
 			break;
 		}
+		case 'numeric-inverted':
+			rawValue = getProp(hit.value, normalize.field);
+			normalized = normalizeNumericInverted(rawValue, normalize.bestAt, normalize.worstAt);
+			break;
 		default:
 			normalized = null;
 	}
@@ -90,7 +95,10 @@ function normalizeFromHit(
 	return result;
 }
 
-function normalizeMobility(
+// Synthetische Layer ohne direkten Polygon-Hit: mode-distance liest aus nearestStops,
+// presence-any-of prüft mehrere reale Layer-Slugs ODER-verknüpft. Dimension-agnostisch
+// (Mobilität via mode-distance/radverkehr, Wohnschutz via Milieuschutz-presence-any-of).
+function normalizeSyntheticLayer(
 	weight: LayerWeight,
 	stops: Record<Modus, NearestStopLike | null> | null,
 	layerHits: readonly LayerHitLike[]
@@ -155,12 +163,12 @@ export function computeDimensionScore(
 	const dataStands: string[] = [];
 	const missingData: string[] = [];
 
-	const isMobility = config.dimension === 'mobilitaet';
 	const collected: DimensionSource[] = [];
 
 	for (const weight of config.layers) {
-		if (isMobility) {
-			const result = normalizeMobility(weight, input.nearestStops, input.layerHits);
+		const kind = weight.normalize.kind;
+		if (kind === 'mode-distance' || kind === 'presence-any-of') {
+			const result = normalizeSyntheticLayer(weight, input.nearestStops, input.layerHits);
 			collected.push(result.source);
 			continue;
 		}
@@ -236,8 +244,7 @@ export function computeKiezScore(input: ScoreInput): KiezScore {
 
 /**
  * Composite-Score als ungewichtetes Mittel über alle Dimensionen mit `value !== null`.
- * Stigma-Schutz: Soziale Lage zählt mit, weil sie eine Dimension von vielen ist;
- * der Composite wird ausschließlich im Inspector gezeigt, NIE auf der Karte.
+ * Misst nur Größen mit eindeutiger Besser-Richtung (ADR-015): Sozialstruktur ist kein Input.
  */
 export function computeOverallScore(dimensions: readonly DimensionScore[]): number | null {
 	const usable = dimensions.filter((d) => d.value !== null);

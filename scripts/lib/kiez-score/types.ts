@@ -1,16 +1,16 @@
 export type KiezScoreDimension =
 	| 'ruhe-luft'
-	| 'gruen'
+	| 'gruen-hitze'
 	| 'mobilitaet'
-	| 'soziale-lage'
-	| 'versorgung';
+	| 'versorgung'
+	| 'wohnschutz';
 
 export const KIEZ_SCORE_DIMENSIONS: readonly KiezScoreDimension[] = [
 	'ruhe-luft',
-	'gruen',
+	'gruen-hitze',
 	'mobilitaet',
-	'soziale-lage',
-	'versorgung'
+	'versorgung',
+	'wohnschutz'
 ];
 
 export type Modus = 'ubahn' | 'sbahn' | 'tram' | 'bus';
@@ -44,7 +44,9 @@ export type NormalizationStrategy =
 	| { kind: 'presence' }
 	| { kind: 'mode-distance'; mode: Modus; threshold: number }
 	| { kind: 'presence-any-of'; layers: string[] }
-	| { kind: 'poi-distance'; threshold: number };
+	| { kind: 'poi-distance'; threshold: number }
+	/** Numerischer Wert, invertiert: <= bestAt → 100, >= worstAt → 0 (z.B. PET-Hitzebelastung). */
+	| { kind: 'numeric-inverted'; field: string; bestAt: number; worstAt: number };
 
 export interface LayerWeight {
 	layer: string;
@@ -78,8 +80,8 @@ export interface ScoreInput {
 
 export const DIMENSION_WEIGHTS: Record<KiezScoreDimension, number> = {
 	'ruhe-luft': 0.2,
-	gruen: 0.2,
+	'gruen-hitze': 0.2,
 	mobilitaet: 0.2,
-	'soziale-lage': 0.2,
-	versorgung: 0.2
+	versorgung: 0.2,
+	wohnschutz: 0.2
 };

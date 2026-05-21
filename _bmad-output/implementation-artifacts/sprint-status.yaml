@@ -267,7 +267,7 @@ development_status:
 
   # Epic 9: Score-Recomposition zum Umwelt- & Infrastruktur-Score (ADR-015). Multi-Level-Toggle aus Epic 8 verworfen.
   epic-9: in-progress
-  9-1-score-dimensions-foundation: ready-for-dev  # KiezScoreDimension-Union (soziale-lage→wohnschutz, gruen→gruen-hitze) + dimension-config + Gewichte. Hard-block für alle 9.x.
+  9-1-score-dimensions-foundation: review  # 2026-05-21 impl: KiezScoreDimension-Union auf ADR-015-Set (soziale-lage raus, gruen→gruen-hitze, wohnschutz neu via Milieuschutz-presence-any-of), dimension-config neu (Bioklima+Grünanlagen→Grün&Hitze, MSS+Umweltgerechtigkeit raus), numeric-inverted-Normalisierung für klima-pet, presence-any-of dimension-agnostisch generalisiert. 81 Modul-Tests grün. Repo-weiter pnpm check ROT wie erwartet (25 Errors → 9.2 DB / 9.3 Pipeline / 9.4 Konsumenten; 2 de/en-Errors pre-existing). Hard-block für 9.2–9.5 gelöst.
   9-2-db-schema-migration: ready-for-dev  # Drizzle: kiez_score/bezirk_score soziale_lage raus, gruen→gruen_hitze, wohnschutz neu. Braucht 9.1.
   9-3-pipeline-recompute-rerun: ready-for-dev  # compute/build/aggregate auf neues Set + Re-Run kiez-scores.json + DB. Braucht 9.2.
   9-4-konsumenten-migration: ready-for-dev  # Display/Inspector/Compare/Hero/Ring/Ranking/Choropleth/OG/LLM auf neue Dimensionen. MSS/Umweltgerechtigkeit = neutraler Kontext. Braucht 9.3.

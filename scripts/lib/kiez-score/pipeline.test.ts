@@ -191,11 +191,11 @@ describe('buildKiezScoresFromInput', () => {
 		);
 		const derived = buildDerivedLayerGeojsons(lors, out);
 		expect(Object.keys(derived).sort()).toEqual([
-			'kiez-score-gruen',
+			'kiez-score-gruen-hitze',
 			'kiez-score-mobilitaet',
 			'kiez-score-ruhe-luft',
-			'kiez-score-soziale-lage',
-			'kiez-score-versorgung'
+			'kiez-score-versorgung',
+			'kiez-score-wohnschutz'
 		]);
 		for (const fc of Object.values(derived)) {
 			expect(fc.type).toBe('FeatureCollection');
@@ -205,44 +205,25 @@ describe('buildKiezScoresFromInput', () => {
 		}
 	});
 
-	it('Mini-Fixture mit 3 LORs + 2 Polygon-Layern erzeugt 3 valide Scores', () => {
+	it('Mini-Fixture mit 3 LORs + Polygon-Layer + Milieuschutz-Presence erzeugt 3 valide Scores', () => {
 		const lors: Feature[] = [
 			makeSquareLor('A', 13.0, 52.0),
 			makeSquareLor('B', 13.1, 52.0),
 			makeSquareLor('C', 13.2, 52.0)
 		];
-		const mssPolygon: Feature<Polygon> = {
-			type: 'Feature',
-			properties: { si_v: 'hoch', kom: 'gültig' },
-			geometry: {
-				type: 'Polygon',
-				coordinates: [
-					[
-						[13.0, 52.0],
-						[13.3, 52.0],
-						[13.3, 52.3],
-						[13.0, 52.3],
-						[13.0, 52.0]
-					]
-				]
-			}
-		};
 		const out = buildKiezScoresFromInput(
 			{
 				lorFeatures: lors,
-				polygonLayers: [
-					makeLayer('laerm-2023', [LAERM_POLYGON]),
-					makeLayer('mss-gesamtindex-2025', [mssPolygon])
-				],
-				presenceLayers: ['radverkehrsnetz-2025'],
+				polygonLayers: [makeLayer('laerm-2023', [LAERM_POLYGON])],
+				presenceLayers: ['radverkehrsnetz-2025', 'milieuschutz-erhaltungsmiete'],
 				oepnvIndex: EMPTY_OEPNV
 			},
 			'2026-05-15T12:00:00.000Z'
 		);
 		expect(Object.keys(out.scores)).toHaveLength(3);
 		for (const score of Object.values(out.scores)) {
-			const sozial = score.dimensions.find((d) => d.dimension === 'soziale-lage');
-			expect(sozial?.value).toBe(100);
+			const wohnschutz = score.dimensions.find((d) => d.dimension === 'wohnschutz');
+			expect(wohnschutz?.value).toBe(100);
 		}
 		expect(() => validateKiezScoreOutput(out)).not.toThrow();
 	});
