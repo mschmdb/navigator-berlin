@@ -106,7 +106,10 @@ async function augmentManifest(
 	const entry: LayerEntry = {
 		slug: DICHTE_SLUG,
 		filename,
-		sourceUrl: 'https://navigator.berlin/derived/einwohner-dichte-2024',
+		// Echte Quelle (CC BY verlangt Namensnennung): Amt für Statistik via daten.berlin.de.
+		// Kein "derived"-Dummy, damit die Layer-Page korrekt den Datenanbieter verlinkt.
+		sourceUrl:
+			'https://daten.berlin.de/datensaetze/einwohnerinnen-und-einwohner-in-berlin-in-lor-planungsraumen-am-31-12-2024',
 		fetchedAt: generatedAt,
 		sourceUpdatedAt: `${STICHTAG}T00:00:00.000Z`,
 		license: 'CC BY 4.0',

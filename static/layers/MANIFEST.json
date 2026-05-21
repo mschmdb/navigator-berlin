@@ -730,24 +730,6 @@
       "nearestPolygonFallbackKm": 0.05
     },
     {
-      "slug": "einwohner-dichte-2024",
-      "filename": "einwohner-dichte-2024.fe33f06f.geojson",
-      "sourceUrl": "https://navigator.berlin/derived/einwohner-dichte-2024",
-      "fetchedAt": "2026-05-21T16:08:05.725Z",
-      "sourceUpdatedAt": "2024-12-31T00:00:00.000Z",
-      "license": "CC BY 4.0",
-      "sha256": "fe33f06f98b003aa794e92510e81712915354d094d9cdb83b78d48e4763d7694",
-      "bundleGroup": "I: Demografie",
-      "zoomThresholds": {
-        "min": 9,
-        "max": 18
-      },
-      "geometryType": "MultiPolygon",
-      "featureCount": 542,
-      "inspectorRelevant": false,
-      "mapRelevant": true
-    },
-    {
       "slug": "kiez-score-ruhe-luft",
       "filename": "kiez-score-ruhe-luft.e071f6f6.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-ruhe-luft",
@@ -846,6 +828,24 @@
       "license": "dl-de/zero-2-0",
       "sha256": "1aa493b4593950106c224b4243121d174f3b4baf350677e3eb90cb240be4d358",
       "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "einwohner-dichte-2024",
+      "filename": "einwohner-dichte-2024.fe33f06f.geojson",
+      "sourceUrl": "https://daten.berlin.de/datensaetze/einwohnerinnen-und-einwohner-in-berlin-in-lor-planungsraumen-am-31-12-2024",
+      "fetchedAt": "2026-05-21T16:57:52.937Z",
+      "sourceUpdatedAt": "2024-12-31T00:00:00.000Z",
+      "license": "CC BY 4.0",
+      "sha256": "fe33f06f98b003aa794e92510e81712915354d094d9cdb83b78d48e4763d7694",
+      "bundleGroup": "I: Demografie",
       "zoomThresholds": {
         "min": 9,
         "max": 18

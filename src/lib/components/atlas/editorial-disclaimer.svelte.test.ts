@@ -120,8 +120,8 @@ describe('editorial-disclaimer.svelte', () => {
 		it('kiez-score-explainer nennt MSS-Anteil + scope-Schnitte', async () => {
 			render(EditorialDisclaimer, { variant: 'kiez-score-explainer' });
 			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.textContent).toMatch(/Kiez-Score/);
-			expect(el.textContent).toMatch(/Soziale Lage/);
+			expect(el.textContent).toMatch(/Umwelt- & Infrastruktur-Score/);
+			expect(el.textContent).toMatch(/Sozialstruktur/);
 			expect(el.textContent).toMatch(/Bezahlbarkeit/);
 			expect(el.getAttribute('data-variant')).toBe('kiez-score-explainer');
 		});

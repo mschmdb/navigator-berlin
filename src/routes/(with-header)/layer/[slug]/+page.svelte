@@ -114,15 +114,19 @@
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 			<dt class="font-mono text-xs text-ink-subtle">Anbieter</dt>
 			<dd class="text-ink">
-				<a
-					data-testid="layer-detail-source-link"
-					href={meta.sourceUrl}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="text-accent underline underline-offset-2 hover:text-accent-strong"
-				>
-					{shortenSource(meta.sourceUrl)}
-				</a>
+				{#if meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
+					<span data-testid="layer-detail-source-link">navigator.berlin (eigene Berechnung)</span>
+				{:else}
+					<a
+						data-testid="layer-detail-source-link"
+						href={meta.sourceUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					>
+						{shortenSource(meta.sourceUrl)}
+					</a>
+				{/if}
 			</dd>
 			<dt class="font-mono text-xs text-ink-subtle">Lizenz</dt>
 			<dd data-testid="layer-detail-license" class="font-mono text-xs text-ink">
