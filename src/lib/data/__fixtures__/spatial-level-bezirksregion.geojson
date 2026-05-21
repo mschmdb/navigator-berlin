@@ -1,0 +1,25 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"properties": {
+				"BZR_ID": "126011",
+				"BZR_NAME": "Tiergarten Süd",
+				"BEZ": "01"
+			},
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[13.35, 52.52],
+						[13.40, 52.52],
+						[13.40, 52.54],
+						[13.35, 52.54],
+						[13.35, 52.52]
+					]
+				]
+			}
+		}
+	]
+}

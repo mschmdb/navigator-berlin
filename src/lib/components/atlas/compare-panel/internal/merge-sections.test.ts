@@ -43,13 +43,13 @@ describe('mergeCompareSections', () => {
 		const merged = mergeCompareSections(a, b, layerMeta);
 		const keys = merged.map((s) => s.key);
 		expect(keys).toEqual([
-			'boundaries',
-			'wohn',
 			'umwelt',
-			'memorial',
+			'wohn',
 			'sozial',
 			'mobilitaet',
-			'klima'
+			'klima',
+			'memorial',
+			'boundaries'
 		]);
 	});
 
@@ -102,7 +102,7 @@ describe('mergeCompareSections', () => {
 	it('Section-Label-Map wird gesetzt', () => {
 		const merged = mergeCompareSections([], [], layerMeta);
 		const labels = Object.fromEntries(merged.map((s) => [s.key, s.label]));
-		expect(labels.boundaries).toBe('Boundaries');
+		expect(labels.boundaries).toBe('Lage & Verwaltung');
 		expect(labels.klima).toBe('Klima');
 	});
 

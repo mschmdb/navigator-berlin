@@ -1,7 +1,7 @@
 ---
 type: architecture
 audience: both
-last-verified: 2026-05-17
+last-verified: 2026-05-20
 related:
   - docs/INDEX.md
   - docs/pipelines/data-flow.md
@@ -9,9 +9,9 @@ related:
 
 # Story-Map
 
-Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-05-17.
+Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-05-20.
 
-**80 Stories total**: ✅ 56 done · 🚧 0 in-progress · 📋 7 ready-for-dev · ⏳ 11 backlog · ▫️ 6 other
+**96 Stories total**: ✅ 61 done · 🚧 0 in-progress · 📋 6 ready-for-dev · ⏳ 7 backlog · ▫️ 22 other
 
 ## Pro Epic
 ### Epic 1
@@ -102,30 +102,56 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | `5-6-gdpr-dpia-dokument-beratungs-asset` | ❌ cancelled | 2026-05-17 user-decision: nicht relevant für nicht-kommerziellen Single-Maintainer |
 | `5-7-sitemap-submission-search-console-setup` | ✅ done | 2026-05-17 user hat GSC + Bing verifiziert + Sitemap submitted |
 | `5-8-public-update-skill` | ✅ done | 2026-05-17: /publish-update Skill complete. 7 test-files / 58 tests (TDD), 6 pure-funcs + 1 subagent-wrapper. SKILL.m… |
+| `5-9-seo-aeo-pre-indexing-hardening` | ▫️ review | 2026-05-18 review. 11 AC + 9 Task-Cluster done. Recon ergeben: buildPlace + AdministrativeArea + Breadcrumb + WebSite… |
 
 ### Epic 6
 
 | Story | Status | Kommentar |
 |---|---|---|
-| `6-0-wahl-daten-schema-pipeline-foundation` | ⏳ backlog | — |
-| `6-1-bezirksreform-2001-mapping` | ⏳ backlog | — |
-| `6-2-wahlbezirks-geometrie-layer-adress-lookup` | ⏳ backlog | — |
-| `6-3-inspector-section-wahlverhalten-hier` | ⏳ backlog | — |
-| `6-4-per-wahl-detail-page` | ⏳ backlog | — |
-| `6-5-briefwahl-asymmetrie-ui-pattern` | ⏳ backlog | — |
-| `6-6-volksentscheide-sub-layer` | ⏳ backlog | — |
-| `6-7-cross-layer-story-templates-wahl-variablen` | ⏳ backlog | — |
-| `6-8-webmcp-tools-wahldaten` | ⏳ backlog | — |
-| `6-9-json-ld-dataset-methodik-doku` | ⏳ backlog | — |
+| `6-0-wahl-daten-schema-pipeline-foundation-spike` | ▫️ review | 2026-05-18 review on feat/epic-6-wahldaten. Spike done: Source-Pivot statistik-bb → Bundeswahlleiterin _wbz.zip + SBB… |
+| `6-1-bezirksreform-2001-mapping` | ❌ cancelled | 2026-05-18 Scope-Reduce: Daten-Cutoff jetzt 2011+ (post-Reform), Mapping obsolet. Reaktivierungs-Trigger: FragDenStaa… |
+| `6-2-wahlbezirks-geometrie-layer-adress-lookup` | ▫️ review | 2026-05-18 review on feat/epic-6-wahldaten. 5 Geo-Layer in static/layers (btw17/ah16/ah21/ah23/bt25) + MANIFEST-Augme… |
+| `6-3-inspector-section-wahlverhalten-hier` | ▫️ review | 2026-05-18 review on feat/epic-6-wahldaten. Phase 6.3a/b/c/d done. wahl-section.svelte + wahl-compare-block.svelte + … |
+| `6-4-per-wahl-detail-page` | ▫️ review | 2026-05-19 review on feat/epic-6-wahldaten. Phase 6.4a/b/c1/c2 done: 20 prerendered Routes + Methodik-Stub + Bezirks-… |
+| `6-5-briefwahl-asymmetrie-pattern` | ▫️ review | 2026-05-19 review on feat/epic-6-wahldaten. briefwahl-marker.svelte (Plex-Mono-Pill + Info-Icon + Tooltip + Methodik-… |
+| `6-6-volksentscheide-sub-layer` | ❌ cancelled | 2026-05-18 User-Decision: out-of-scope Phase 1. Reaktivierungs-Trigger: nach Hard-Launch + Capacity. |
+| `6-7-cross-layer-story-templates-wahl-variablen` | ▫️ review | 2026-05-19 review on feat/epic-6-wahldaten. Foundation komplett: Schema (Valibot) + Loader (js-yaml) + Renderer (Pure… |
+| `6-8-webmcp-tools-wahldaten` | ▫️ review | 2026-05-19 review on feat/epic-6-wahldaten. 4 Tools live: list_elections + get_election_result(level) + compare_elect… |
+| `6-9-json-ld-dataset-methodik-doku` | ▫️ review | 2026-05-19 review on feat/epic-6-wahldaten. Methodik-Page /methodik/wahldaten ausgebaut mit 9 Sub-Sections (Datenquel… |
 
 ### Epic 7
 
 | Story | Status | Kommentar |
 |---|---|---|
-| `7-1-auto-doc-skill-foundation` | ❌ cancelled | 2026-05-17 verworfen wie spec'd (Lefthook-post-commit + Subagent-Auto-Narrative-Writes haben hohe Friction + Halluzin… |
-| `7-5-owner-recovery-playbook-secrets-map` | 📋 ready-for-dev | NEUE Priorität #1 post-launch |
-| `7-2-docs-tree-struktur-index` | 📋 ready-for-dev | Priorität #2: Tree + INDEX + Frontmatter-Convention für Owner+LLM-Discovery |
-| `7-4-data-pipeline-atlas` | 📋 ready-for-dev | Priorität #3: Generator-Script `pnpm doc:pipelines`, deterministisch |
-| `7-3-system-map-service-topology` | 📋 ready-for-dev | Priorität #4: Mermaid manuell, Content-First |
-| `7-6-llm-konsum-optimierung` | 📋 ready-for-dev | Priorität #5: Story-Map-Generator + Stale-Marker, kein Lefthook |
+| `7-1-auto-doc-skill-foundation` | ❌ cancelled | 2026-05-17 verworfen (Lefthook-post-commit + Subagent-Auto-Narrative-Writes = hohe Friction + Halluzinations-Risiko).… |
+| `7-5-owner-recovery-playbook-secrets-map` | ✅ done | 2026-05-17: docs/recovery/wiedereinstieg.md + secrets-map.md mit Bitwarden-Refs, keine Plaintext-Secrets |
+| `7-2-docs-tree-struktur-index` | ✅ done | 2026-05-17: docs/INDEX.md + docs/adr/INDEX.md + Subordner architecture/pipelines/recovery + Frontmatter-Bulk-Add für … |
+| `7-4-data-pipeline-atlas` | ✅ done | 2026-05-17: scripts/generate-data-flow-doc.ts + pnpm doc:pipelines, deterministisch aus sources.ts, 7 tests, 39 Layer… |
+| `7-3-system-map-service-topology` | ✅ done | 2026-05-17: docs/architecture/system-map.md mit 4 Mermaid-Diagrammen (Topology + Datenfluss + Build + Routes) + Cron-… |
+| `7-6-llm-konsum-optimierung` | ✅ done | 2026-05-17: scripts/generate-story-map.ts + pnpm doc:story-map aus sprint-status.yaml (line-parse weil js-yaml stripp… |
+
+### Epic 8
+
+| Story | Status | Kommentar |
+|---|---|---|
+| `8-0-multi-level-architektur-adr-layer-aggregat-strategy` | ▫️ review | 2026-05-20 ADR-014 geschrieben (docs/adr/ADR-014, status proposed). Matrix pro Layer-Familie: Aggregat-Strategie (8 T… |
+| `8-1-inspector-globaler-level-switch-foundation` | ▫️ review | 2026-05-20 impl: inspector-level-context.svelte.ts + resolve-spatial-level.ts + inspector-level-toggle.svelte, in ins… |
+| `8-1b-inspector-card-system-visual-primitives` | ▫️ review | 2026-05-20 impl: inspector-card (Visual-Summary-Pflicht+Lazy-Detail) + Chart-Primitive (score-bar/distribution-bar/co… |
+| `8-2a-layer-aggregat-pipeline` | ▫️ review | 2026-05-20 impl: data:layer-aggregate Pipeline, 15 Layer × {kiez,bezirk,berlin} → static/layer-aggregates/layer-aggre… |
+| `8-2b-layer-sections-multi-level-adapter` | ▫️ review | 2026-05-20 impl AC#1-5: aggregate-layer-for-level.ts Adapter + layer-level-card.svelte (8.1b-Primitive) + lazy get-la… |
+| `8-2c-point-layer-density-count` | 📋 ready-for-dev | NEU 2026-05-20 (Split aus 8.2b AC#6): Point-Layer (Kitas/Schulen/ÖPNV/Stolpersteine) Count+Dichte/km² im Kiez/Bezirk/… |
+| `8-3-karten-polygon-highlight-level-switch` | 📋 ready-for-dev | MapLibre-Highlight-Layer beim Level-Wechsel. Existierende bezirke/lor-bezirksregion-Sources reuse. |
+| `8-4-compare-mode-multi-level-integration` | 📋 ready-for-dev | Story-1.27-Compare mit Story-8.1-Level-Context. Same-level-lock im Compare. |
+| `8-5-webmcp-tools-multi-level-parameter` | 📋 ready-for-dev | alle existing WebMCP-Tools um optional level-Param erweitern. Backwards-Compat: ohne Level = address-Default. Braucht… |
+
+### Epic 9
+
+| Story | Status | Kommentar |
+|---|---|---|
+| `9-1-score-dimensions-foundation` | ⏳ backlog | KiezScoreDimension-Union (soziale-lage→wohnschutz, gruen→gruen-hitze) + dimension-config + Gewichte. Hard-block für a… |
+| `9-2-db-schema-migration` | ⏳ backlog | Drizzle: kiez_score/bezirk_score soziale_lage raus, gruen→gruen_hitze, wohnschutz neu. Braucht 9.1. |
+| `9-3-pipeline-recompute-rerun` | ⏳ backlog | compute/build/aggregate auf neues Set + Re-Run kiez-scores.json + DB. Braucht 9.2. |
+| `9-4-konsumenten-migration` | ⏳ backlog | Display/Inspector/Compare/Hero/Ring/Ranking/Choropleth/OG/LLM auf neue Dimensionen. MSS/Umweltgerechtigkeit = neutral… |
+| `9-5-content-migration` | ⏳ backlog | /methodik/kiez-score + /wo-lebt-es-sich-gut auf neue Komposition + Anti-Stigma-Begründung. Braucht 9.3. |
+| `9-6-erinnerung-layer-removal` | ⏳ backlog | Denkmal + Stolpersteine komplett aus Frontend (Inspector/Map/Palette). Unabhängig, jederzeit. |
 

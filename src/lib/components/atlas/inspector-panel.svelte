@@ -14,7 +14,20 @@
 		isBookmarked,
 		persistBookmarks
 	} from '$lib/state/bookmark-store.js';
+	import {
+		createInspectorLevelState,
+		resolveSpatialContext,
+		applySpatialContext
+	} from '$lib/state/inspector-level-context.svelte.js';
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
+	import KlimaPetCard from './inspector-panel/klima-pet-card.svelte';
+	import LayerCard, { type ContextRow } from './inspector-panel/layer-card.svelte';
+	import { loadLayerAggregates } from '$lib/data/get-layer-aggregates.js';
+	import type {
+		LayerAggregate,
+		LayerAggregatesFile,
+		NumericMedianAggregate
+	} from '$lib/data/layer-aggregates-types.js';
 	import ShareSheet from './inspector-panel/share-sheet.svelte';
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
@@ -52,6 +65,133 @@
 	}: Props = $props();
 
 	const ui = getUiState();
+
+	// Story 8.1: globaler Spatial-Level-Context (Composition-Root des Inspectors).
+	// Default = 'address' → Backwards-Compat: bei address-Level rendert alles unverändert.
+	const level = createInspectorLevelState();
+
+	// Kiez/Bezirk-Kontext der Adresse still auflösen (Foundation für Layout-Anreicherung,
+	// Story 8.2b-Pivot: kein User-Level-Switch mehr, Kontext dient der Kiez-Anreicherung).
+	$effect(() => {
+		const addr = ui.selectedAddress;
+		if (!addr) {
+			applySpatialContext(level, {
+				kiezSlug: null,
+				kiezName: null,
+				bezirkSlug: null,
+				bezirkName: null
+			});
+			return;
+		}
+		const { lat, lng } = addr;
+		void resolveSpatialContext(level, lat, lng).catch(() => {
+			// Boundary-Fetch fehlgeschlagen: Slugs bleiben null, kein unhandled rejection.
+		});
+	});
+
+	// Pre-Aggregate (8.2a) für die Kiez/Bezirk/Berlin-Anreicherung laden, sobald eine Adresse aktiv ist.
+	let layerAggregates = $state<LayerAggregatesFile | null>(null);
+	$effect(() => {
+		if (!ui.selectedAddress || layerAggregates) return;
+		void loadLayerAggregates()
+			.then((d) => {
+				layerAggregates = d;
+			})
+			.catch(() => {
+				// JSON-Load fehlgeschlagen: Karten zeigen nur den Adresswert, kein Crash.
+			});
+	});
+
+	function numericAgg(
+		slug: string,
+		scope: 'kiez' | 'bezirk' | 'berlin'
+	): NumericMedianAggregate | null {
+		const entry = layerAggregates?.aggregates[slug];
+		if (!entry) return null;
+		let a;
+		if (scope === 'berlin') {
+			a = entry.berlin;
+		} else if (scope === 'kiez') {
+			const s = level.kiezSlug;
+			a = s
+				? (entry.kiez[s] ?? (level.bezirkSlug ? entry.kiez[`${s}-${level.bezirkSlug}`] : undefined))
+				: undefined;
+		} else {
+			a = level.bezirkSlug ? entry.bezirk[level.bezirkSlug] : undefined;
+		}
+		return a?.type === 'numeric-median' ? a : null;
+	}
+
+	// Layer im Card-Muster (Wert-Chip + Umfeld-Kontext). PET hat eigene Karte (Range-Bar).
+	const CARD_SLUGS = new Set([
+		'laerm-2023',
+		'luft-2023',
+		'bioklima-2023',
+		'gruenversorgung-2023',
+		'umweltgerechtigkeit-2023',
+		'wohnlagen-2024',
+		'mss-gesamtindex-2025',
+		'bodenrichtwerte',
+		'milieuschutz-erhaltungsmiete',
+		'milieuschutz-staedtebau',
+		// Lage & Verwaltung + Einschulbereiche: nur kompakter Name/Code, kein Umfeld-Kontext.
+		'bezirke',
+		'ortsteile',
+		'plz',
+		'einschulbereiche-2024'
+	]);
+
+	function aggFor(
+		slug: string,
+		scope: 'kiez' | 'bezirk' | 'berlin'
+	): LayerAggregate | undefined {
+		const entry = layerAggregates?.aggregates[slug];
+		if (!entry) return undefined;
+		if (scope === 'berlin') return entry.berlin;
+		if (scope === 'kiez') {
+			const s = level.kiezSlug;
+			if (!s) return undefined;
+			return entry.kiez[s] ?? (level.bezirkSlug ? entry.kiez[`${s}-${level.bezirkSlug}`] : undefined);
+		}
+		return level.bezirkSlug ? entry.bezirk[level.bezirkSlug] : undefined;
+	}
+
+	function contextText(agg: LayerAggregate): string | null {
+		if (agg.type === 'ordinal-distribution') {
+			if (agg.dominant === null) return null;
+			const share = agg.classes.find((c) => c.label === agg.dominant)?.share;
+			return share != null ? `meist ${agg.dominant} (${share}%)` : `meist ${agg.dominant}`;
+		}
+		if (agg.type === 'coverage-share' || agg.type === 'area-share') {
+			return `${agg.share}% der Fläche`;
+		}
+		return null;
+	}
+
+	// Eine Card zeigt EINEN Wert → Singular-Label, obwohl der Layer-Name (Map-Legende) Plural ist.
+	const CARD_LABEL_SINGULAR: Record<string, string> = {
+		bezirke: 'Bezirk',
+		ortsteile: 'Ortsteil',
+		plz: 'Postleitzahl',
+		'einschulbereiche-2024': 'Einschulbereich'
+	};
+
+	function cardLayerName(slug: string): string {
+		return CARD_LABEL_SINGULAR[slug] ?? getLayerDisplayName(slug);
+	}
+
+	function contextRowsFor(slug: string): ContextRow[] {
+		const scopes: { label: string; scope: 'kiez' | 'bezirk' | 'berlin' }[] = [
+			{ label: level.kiezName ?? 'Kiez', scope: 'kiez' },
+			{ label: level.bezirkName ?? 'Bezirk', scope: 'bezirk' },
+			{ label: 'Berlin', scope: 'berlin' }
+		];
+		return scopes.flatMap((s) => {
+			const agg = aggFor(slug, s.scope);
+			const text = agg ? contextText(agg) : null;
+			return text ? [{ label: s.label, text }] : [];
+		});
+	}
 
 	const enrichedHits = $derived(applyApplicabilityReasons(ui.selectedLayerHits));
 	const sections = $derived(groupHitsBySection(enrichedHits, layerMeta));
@@ -421,17 +561,41 @@
 									{section.label} · keine Daten an dieser Adresse
 								</p>
 							{:else if section.hits.length > 0}
-								<div class="divide-y divide-rule">
+								<div class="space-y-2">
 									{#each section.hits as hit (hit.layer)}
-										<LayerHitRow
-											{hit}
-											layerName={getLayerDisplayName(hit.layer)}
-											{lang}
-											lat={ui.selectedAddress?.lat}
-											lng={ui.selectedAddress?.lng}
-											isActive={ui.activeLayerSlugs.includes(hit.layer)}
-											onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-										/>
+										{#if hit.layer === 'klima-pet-2022'}
+											<KlimaPetCard
+												{hit}
+												layerName={getLayerDisplayName(hit.layer)}
+												{lang}
+												isActive={ui.activeLayerSlugs.includes(hit.layer)}
+												onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+												kiezName={level.kiezName}
+												kiezAggregate={numericAgg('klima-pet-2022', 'kiez')}
+												bezirkName={level.bezirkName}
+												bezirkAggregate={numericAgg('klima-pet-2022', 'bezirk')}
+												berlinAggregate={numericAgg('klima-pet-2022', 'berlin')}
+											/>
+										{:else if CARD_SLUGS.has(hit.layer)}
+											<LayerCard
+												{hit}
+												layerName={cardLayerName(hit.layer)}
+												{lang}
+												isActive={ui.activeLayerSlugs.includes(hit.layer)}
+												onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+												contextRows={contextRowsFor(hit.layer)}
+											/>
+										{:else}
+											<LayerHitRow
+												{hit}
+												layerName={getLayerDisplayName(hit.layer)}
+												{lang}
+												lat={ui.selectedAddress?.lat}
+												lng={ui.selectedAddress?.lng}
+												isActive={ui.activeLayerSlugs.includes(hit.layer)}
+												onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+											/>
+										{/if}
 									{/each}
 								</div>
 							{/if}

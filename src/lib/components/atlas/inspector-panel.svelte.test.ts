@@ -266,7 +266,7 @@ describe('inspector-panel.svelte', () => {
 		render(Harness, {
 			open: true,
 			address,
-			hits: [hit('bezirke', null, { reason: 'no-coverage' })],
+			hits: [hit('laerm-den', null, { reason: 'no-coverage' })],
 			layerMeta: fullLayerMeta
 		});
 		const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;

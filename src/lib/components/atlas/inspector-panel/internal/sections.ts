@@ -15,21 +15,23 @@ export interface InspectorSection {
 	hits: LayerHit[];
 }
 
+// Logische Reihenfolge für „wo lebe ich gut": Umwelt + Wohnen oben (entscheidungsrelevant),
+// administrative Gebiets-Infos (Lage) ganz unten.
 export const SECTION_ORDER: readonly SectionKey[] = [
-	'boundaries',
-	'wohn',
 	'umwelt',
-	'memorial',
+	'wohn',
 	'sozial',
 	'mobilitaet',
-	'klima'
+	'klima',
+	'memorial',
+	'boundaries'
 ];
 
 export const SECTION_LABELS: Record<SectionKey, string> = {
-	boundaries: 'Boundaries',
-	wohn: 'Wohn-Daten',
+	boundaries: 'Lage & Verwaltung',
+	wohn: 'Wohnen',
 	umwelt: 'Umwelt',
-	memorial: 'Memorial',
+	memorial: 'Erinnerungsorte',
 	sozial: 'Soziale Infrastruktur',
 	mobilitaet: 'Mobilität',
 	klima: 'Klima'
@@ -53,7 +55,13 @@ const BUNDLE_TO_SECTION: Record<Bundle, SectionKey> = {
 	'H: Wahldaten': 'boundaries'
 };
 
-const BOUNDARY_ORDER = ['bezirke', 'ortsteile', 'plz'];
+const BOUNDARY_ORDER = ['bezirke', 'ortsteile', 'plz', 'einschulbereiche-2024'];
+
+// Per-Slug-Section-Override: Einschulbereiche sind administrative Grenzen (Schul-Einzugsgebiet),
+// gehören zu „Lage & Verwaltung", nicht zur sozialen Infrastruktur (POIs).
+const SLUG_SECTION_OVERRIDE: Record<string, SectionKey> = {
+	'einschulbereiche-2024': 'boundaries'
+};
 
 function bundleFor(slug: string, metaBySlug: Map<string, LayerMetadata>): Bundle | null {
 	const meta = metaBySlug.get(slug);
@@ -86,7 +94,7 @@ export function groupHitsBySection(
 	for (const hit of hits) {
 		const bundle = bundleFor(hit.layer, metaBySlug);
 		if (!bundle) continue;
-		const section = BUNDLE_TO_SECTION[bundle];
+		const section = SLUG_SECTION_OVERRIDE[hit.layer] ?? BUNDLE_TO_SECTION[bundle];
 		buckets[section].push(hit);
 	}
 	buckets.boundaries.sort(compareBoundaries);

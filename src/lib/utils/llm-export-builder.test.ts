@@ -210,10 +210,10 @@ describe('buildLlmExportMarkdown — Header', () => {
 describe('buildLlmExportMarkdown — Sections', () => {
 	it('rendert Section-Headings nur für nicht-leere Sektionen', () => {
 		const md = buildLlmExportMarkdown(fullInput());
-		expect(md).toContain('## Boundaries');
-		expect(md).toContain('## Wohn-Daten');
+		expect(md).toContain('## Lage & Verwaltung');
+		expect(md).toContain('## Wohnen');
 		expect(md).toContain('## Umwelt');
-		expect(md).toContain('## Memorial');
+		expect(md).toContain('## Erinnerungsorte');
 		expect(md).not.toContain('## Soziale Infrastruktur');
 	});
 

@@ -253,6 +253,26 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	gebaeudealter: {
 		short: 'Baujahr-Klasse der Gebäude im Gebiet',
 		long: 'Aggregierte Baujahr-Klassifikation der Gebäudebestände. Legacy-Slug ohne aktive Manifest-Quelle.'
+	},
+	'wahlbezirke-btw17': {
+		short: 'Wahlbezirks-Grenzen Bundestagswahl 2017',
+		long: 'Geometrie der Berliner Wahlbezirke zur Bundestagswahl 2017. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.'
+	},
+	'wahlbezirke-ah16': {
+		short: 'Wahlbezirks-Grenzen Abgeordnetenhauswahl 2016',
+		long: 'Geometrie der Berliner Wahlbezirke zur Abgeordnetenhauswahl 2016. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.'
+	},
+	'wahlbezirke-ah21': {
+		short: 'Wahlbezirks-Grenzen Abgeordnetenhauswahl 2021',
+		long: 'Geometrie der Berliner Wahlbezirke zur Abgeordnetenhauswahl 2021. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.'
+	},
+	'wahlbezirke-ah23': {
+		short: 'Wahlbezirks-Grenzen Wiederholungswahl 2023',
+		long: 'Geometrie der Berliner Wahlbezirke zur Wiederholungswahl des Abgeordnetenhauses 2023. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.'
+	},
+	'wahlbezirke-bt25': {
+		short: 'Wahlbezirks-Grenzen Bundestagswahl 2025',
+		long: 'Geometrie der Berliner Wahlbezirke zur Bundestagswahl 2025. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.'
 	}
 };
 

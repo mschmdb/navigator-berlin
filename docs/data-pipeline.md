@@ -16,6 +16,8 @@ data:fetch          # Story 1.3: GeoJSON von ODIS/FIS-Broker → static/layers/
 data:oepnv-index    # Story 1.x: ÖPNV-Stop-Index → static/oepnv-stops-index.json
 data:kiez-scores    # Story 1.28: Kiez-Score-Aggregat → static/kiez-scores/
 data:aggregate      # Story 2.0: Postgres bezirk_stats + kiez_stats (DRZ → DB)
+data:aggregate-scores  # Story 2.9a: Kiez-Score 542→143→12 → Postgres kiez_score + bezirk_score
+data:layer-aggregate   # Story 8.2a: Layer-Aggregate pro Layer×{kiez,bezirk,berlin} → static/layer-aggregates/
 webmcp:manifest     # Story 2.7: WebMCP-Server-Manifest → static/webmcp-manifest.json
 og:snapshots        # Story 2.6: MapLibre-Snapshots → static/og/snapshots/
 og:images           # Story 2.6: Satori-OG-Cards → static/og/{type}/
@@ -74,6 +76,39 @@ pnpm og:images --force                          # Cache ignorieren
 - Slug-Konvention via `src/lib/data/internal/slug.ts` `normalizeSlug` (gleicher
   Algorithmus wie `scripts/aggregate-data.ts`, sonst Slug-Mismatch zwischen
   Page-Route und OG-File).
+
+## Layer-Aggregat-Pipeline (Story 8.2a)
+
+Vorberechnung pro aggregierbarem Inspector-Layer × Ebene {Kiez, Bezirk, Berlin},
+damit der Inspector zur Laufzeit fertige Aggregate liest statt Spatial-Queries
+über große GeoJSONs zu fahren. Grundlage: ADR-014.
+
+```bash
+pnpm data:layer-aggregate   # → static/layer-aggregates/layer-aggregates.json
+```
+
+- **Aggregat-Typen:** `numeric-median`, `ordinal-distribution`, `coverage-share`,
+  `area-share` (Strategie pro Layer in `scripts/lib/layer-aggregate/strategy.ts`).
+- **Member-Zuordnung zweigleisig:**
+  - PLR-keyed Layer (laerm/luft/bioklima/gruenversorgung/umweltgerechtigkeit/
+    wohnlagen/mss, je 542 Features mit `plr_id`) → LOR-Hierarchie-Prefix
+    (Reuse `buildLorHierarchy`), kein Spatial-Intersect.
+  - Freie Geometrie (klima-pet/Kaltluft/Leitbahn/Milieuschutz/Denkmal/Grünanlagen/
+    Spielplätze) → Repräsentativ-Punkt bzw. `@turf/intersect`, RBush-bbox-Prefilter.
+- **Ausgenommen:** Point-Layer (`point-density`, Runtime-Count reicht) und
+  `not-aggregatable` (BRW). 15 Layer aggregiert, 34 geskippt.
+- **Missing-Data:** unter 50% Member-Coverage → `null` + below-threshold-Marker
+  (`COVERAGE_THRESHOLD` exakt aus `aggregate-to-larger-region.ts`).
+- **Schema-Typ:** `src/lib/data/layer-aggregates-types.ts` (Single-Source, von
+  8.2b/8.5 importiert). Output deterministisch (sortierte Keys, 1-Dezimal-Rundung;
+  nur `generatedAt` variiert).
+- **Daten-Hinweis:** `luft-2023`/`bioklima-2023` sind real ordinal (`kategorie`),
+  nicht numerisch → ordinal-distribution. Einziger numeric-median = `klima-pet-2022`.
+- **Konsum (Story 8.2b):** Der Inspector liest diese JSON lazy
+  (`src/lib/data/get-layer-aggregates.ts`) und mappt pro Level via
+  `aggregate-layer-for-level.ts` auf die 8.1b-Visual-Primitive. Point-Layer-Count
+  (Story 8.2c) läuft NICHT über diese Pipeline, sondern Runtime via
+  `count-points-in-polygon.ts`.
 
 ## Sonstige Pipelines
 

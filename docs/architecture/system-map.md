@@ -69,6 +69,7 @@ graph TB
     Fetch[data:fetch]
     Aggregate[data:aggregate]
     Scores[data:aggregate-scores]
+    LayerAgg[data:layer-aggregate]
     FAQ[data:faq]
     OG[og:images]
   end
@@ -77,6 +78,7 @@ graph TB
     StaticLayers[static/layers/*.geojson]
     Manifest[static/layers/MANIFEST.json]
     KiezScores[static/kiez-scores/kiez-scores.json]
+    LayerAggJson[static/layer-aggregates/layer-aggregates.json]
     OGPNGs[static/og/*/*.png]
     PGData[(Postgres-Tabellen<br/>kiez_score, bezirk_score, faq_qna)]
   end
@@ -87,6 +89,8 @@ graph TB
   Aggregate --> PGData
   Scores --> PGData
   Scores --> KiezScores
+  StaticLayers -.read.-> LayerAgg
+  LayerAgg --> LayerAggJson
   FAQ --> PGData
   OG --> OGPNGs
   Manifest -.read.-> OG
