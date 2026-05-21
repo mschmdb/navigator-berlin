@@ -59,6 +59,8 @@ export interface UiState {
 	comparisonWahlResults: WahlResultsAtPoint | null;
 	/** Story 10.5: Demografie-Kontext (neutral) für aktuelle Adresse. */
 	kiezDemografie: KiezDemografieData | null;
+	/** Story 10.6b: Lärm-dB-Kiez-Mittel (L_DEN) für aktuelle Adresse. */
+	kiezLaermDb: number | null;
 }
 
 export function createUiState(): UiState {
@@ -87,7 +89,8 @@ export function createUiState(): UiState {
 		comparisonKiezScore: null,
 		wahlResults: null,
 		comparisonWahlResults: null,
-		kiezDemografie: null
+		kiezDemografie: null,
+		kiezLaermDb: null
 	});
 	setContext(KEY, state);
 	return state;

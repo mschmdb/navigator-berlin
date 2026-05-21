@@ -197,11 +197,16 @@
 			{ label: level.bezirkName ?? 'Bezirk', scope: 'bezirk' },
 			{ label: 'Berlin', scope: 'berlin' }
 		];
-		return scopes.flatMap((s) => {
+		const rows = scopes.flatMap((s) => {
 			const agg = aggFor(slug, s.scope);
 			const text = agg ? contextText(agg) : null;
 			return text ? [{ label: s.label, text }] : [];
 		});
+		// Story 10.6b: Lärm-dB-Kiez-Mittel (L_DEN) als Kontext zur adress-genauen 3-Stufen-Karte.
+		if (slug === 'laerm-2023' && ui.kiezLaermDb !== null) {
+			rows.unshift({ label: 'Lärm-Mittel (Kiez)', text: `${ui.kiezLaermDb} dB (L_DEN)` });
+		}
+		return rows;
 	}
 
 	const enrichedHits = $derived(applyApplicabilityReasons(ui.selectedLayerHits));

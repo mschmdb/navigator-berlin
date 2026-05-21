@@ -31,6 +31,7 @@
 	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
 	import { getKiezScore } from '$lib/data/get-kiez-score.js';
 	import { getKiezDemografieAt } from '$lib/data/get-kiez-demografie.js';
+	import { getLaermDbAt } from '$lib/data/get-kiez-laerm-db.js';
 	import { getWahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
 	import { findAllNearestStops } from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
 	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
@@ -439,6 +440,7 @@
 		ui.kiezScore = null;
 		ui.wahlResults = null;
 		ui.kiezDemografie = null;
+		ui.kiezLaermDb = null;
 		announceGlobal(`Inspektor geöffnet für ${suggestion.displayName}`);
 		void (async () => {
 			try {
@@ -446,6 +448,14 @@
 				if (ui.selectedAddress?.id === suggestion.id) ui.kiezDemografie = demografie;
 			} catch {
 				if (ui.selectedAddress?.id === suggestion.id) ui.kiezDemografie = null;
+			}
+		})();
+		void (async () => {
+			try {
+				const db = await getLaermDbAt(suggestion.lat, suggestion.lng);
+				if (ui.selectedAddress?.id === suggestion.id) ui.kiezLaermDb = db;
+			} catch {
+				if (ui.selectedAddress?.id === suggestion.id) ui.kiezLaermDb = null;
 			}
 		})();
 		void (async () => {
