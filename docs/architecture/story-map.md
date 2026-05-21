@@ -11,7 +11,7 @@ related:
 
 Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-05-21.
 
-**107 Stories total**: ✅ 77 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 2 backlog · ▫️ 24 other
+**107 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 1 backlog · ▫️ 24 other
 
 ## Pro Epic
 ### Epic 1
@@ -66,7 +66,7 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | `10-7-umweltgerechtigkeit-kategorie-mapping-fix` | ✅ done | Render-Bug: choropleth-mehrfach (layer-style-builder.ts:444) matcht keinfach/.../vierfach, Quelle liefert „keine star… |
 | `10-8-milieuschutz-sichtbarkeit-styling-fix` | ✅ done | Styling-Bug: polygon-outline-soft #E0E4F0 × Opacity 0.35 = unsichtbar. Kräftigere Farbe/Opacity/Umriss, beide Milieus… |
 | `10-9-gefuehlte-temperatur-flaechendeckend` | ✅ done | PET-Lücken füllen: pb_ua_pet_str + pc_ua_pet_grfrei (gleiches pet14h-Feld, live geprüft) mit pa_siedlg mergen → fläch… |
-| `10-6b-laerm-db-per-lor-aggregat` | ⏳ backlog | Folge aus 10-6-Spike: Per-LOR-dB-Mittel aus aa_fp_gesamt2022 (3,8 Mio Fassadenpunkte ges_den) statt 3-Stufen-Index. W… |
+| `10-6b-laerm-db-per-lor-aggregat` | ✅ done | Folge aus 10-6-Spike: Per-LOR-dB-Mittel aus aa_fp_gesamt2022 (3,8 Mio Fassadenpunkte ges_den) statt 3-Stufen-Index. W… |
 
 ### Epic 2
 
