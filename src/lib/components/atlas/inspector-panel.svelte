@@ -356,7 +356,10 @@
 			oepnv: nearest
 				? { nearest, rating: getMobilityRating(nearest, { isResidential }) }
 				: null,
-			kiezScore: ui.kiezScore
+			kiezScore: ui.kiezScore,
+			wahl: ui.wahlResults,
+			demografie: ui.kiezDemografie,
+			laermDb: ui.kiezLaermDb
 		});
 	});
 

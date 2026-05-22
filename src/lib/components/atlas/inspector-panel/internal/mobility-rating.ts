@@ -16,6 +16,10 @@ export interface MobilityRating {
 	score: number;
 }
 
+// Theoretisches Maximum: rapid 4 + tram 2 + bus 1.5. "Sehr gut" ab Score 4.
+export const MOBILITY_SCORE_MAX = 7.5;
+export const MOBILITY_SCORE_TOP_THRESHOLD = 4;
+
 export interface MobilityRatingOptions {
 	/** When true, allow upgrading "keine" to "schwach" if soft stops exist (Story 1.21). */
 	isResidential?: boolean;

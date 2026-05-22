@@ -16,6 +16,9 @@ export const COLORS = {
 	chartCat4: '#74488E',
 	chartCat5: '#856310',
 	chartCat6: '#366AA0',
+	// Adress-Marker (Auswahl + Vergleich A/B). Kühle, gedämpfte Paarung, neutral (keine Wertung).
+	markerPin: '#2C5F63',
+	markerPinCompare: '#5B6B82',
 	// Story 1.15 POI-Pin-Tokens. Semantische Farbcodes pro Bundle (Memorial, Umwelt, Sozial, Mobility).
 	memorialStolperstein: '#B08C57',
 	umweltTrinkbrunnen: '#1565C0',

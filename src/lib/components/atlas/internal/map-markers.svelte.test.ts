@@ -1,23 +1,51 @@
 import { describe, expect, it } from 'vitest';
-import { createPlexMarker } from './map-markers.js';
+import { buildPinSvg, createPinMarkerElement } from './map-markers.js';
 
-describe('createPlexMarker', () => {
-	it('erzeugt DIV mit plex-marker class', () => {
-		const el = createPlexMarker();
+describe('buildPinSvg', () => {
+	it('enthält die Farbe als fill', () => {
+		const svg = buildPinSvg({ color: '#2A3F7C' });
+		expect(svg).toContain('#2A3F7C');
+		expect(svg).toMatch(/^<svg/);
+		expect(svg).toContain('viewBox');
+	});
+
+	it('rendert weißes Label-Text-Element wenn label gesetzt', () => {
+		const svg = buildPinSvg({ color: '#9E5520', label: 'B' });
+		expect(svg).toContain('<text');
+		expect(svg).toContain('>B<');
+	});
+
+	it('rendert weißen Innen-Kreis wenn kein label', () => {
+		const svg = buildPinSvg({ color: '#2A3F7C' });
+		expect(svg).toContain('<circle');
+		expect(svg).not.toContain('<text');
+	});
+
+	it('escaped Label-Inhalt', () => {
+		const svg = buildPinSvg({ color: '#000', label: '<b>' });
+		expect(svg).not.toContain('<b>');
+		expect(svg).toContain('&lt;b&gt;');
+	});
+});
+
+describe('createPinMarkerElement', () => {
+	it('erzeugt DIV mit pin-marker class', () => {
+		const el = createPinMarkerElement({ color: '#2A3F7C' });
 		expect(el.tagName).toBe('DIV');
-		expect(el.className).toContain('plex-marker');
+		expect(el.className).toContain('pin-marker');
 	});
 
-	it('hat aria-hidden=true', () => {
-		const el = createPlexMarker();
+	it('ist aria-hidden und klickt durch (pointer-events none)', () => {
+		const el = createPinMarkerElement({ color: '#2A3F7C' });
 		expect(el.getAttribute('aria-hidden')).toBe('true');
+		expect(el.style.pointerEvents).toBe('none');
 	});
 
-	it('Visual: 12x12, border-radius round, Token-Hex', () => {
-		const el = createPlexMarker();
-		expect(el.style.width).toBe('12px');
-		expect(el.style.height).toBe('12px');
-		expect(el.style.borderRadius).toBe('50%');
-		expect(el.style.background.toLowerCase()).toMatch(/(#2a3f7c|rgb\(42,\s*63,\s*124\))/);
+	it('enthält ein SVG mit der Farbe', () => {
+		const el = createPinMarkerElement({ color: '#9E5520', label: 'B' });
+		const svg = el.querySelector('svg');
+		expect(svg).not.toBeNull();
+		expect(el.innerHTML).toContain('#9E5520');
+		expect(el.innerHTML).toContain('>B<');
 	});
 });

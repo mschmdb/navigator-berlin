@@ -13,7 +13,8 @@
 	import ComparePanel from '$lib/components/atlas/compare-panel/compare-panel.svelte';
 	import BottomSheet from '$lib/components/atlas/inspector-panel/bottom-sheet.svelte';
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
-	import { createPlexMarker } from '$lib/components/atlas/internal/map-markers.js';
+	import { createPinMarkerElement } from '$lib/components/atlas/internal/map-markers.js';
+	import { COLORS } from '$lib/components/atlas/internal/colors.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
 	import { trackEvent } from '$lib/utils/plausible.js';
 	import { serializeViewport, serializeLayers } from '$lib/utils/url-state.js';
@@ -90,6 +91,7 @@
 	let selectedFeatureId = $state<string | null>(null);
 	let currentMarker: { remove: () => void; getLngLat: () => { lng: number; lat: number } } | null =
 		null;
+	let currentMarkerEl: HTMLElement | null = null;
 	let MarkerCtor = $state.raw<
 		| (new (options: { element: HTMLElement; anchor?: string }) => {
 				setLngLat: (ll: [number, number]) => {
@@ -104,6 +106,19 @@
 
 	const VIEWPORT_KEYS = ['bbox', 'zoom', 'center'] as const;
 	const ADDRESS_KEYS = ['address', 'q'] as const;
+
+	// Default-Einstieg ohne URL-Adresse: Pariser Platz (Mitte) als Beispiel-Punkt.
+	const PARISER_PLATZ = { lat: 52.51631, lng: 13.3777 } as const;
+	const PARISER_PLATZ_FALLBACK: GeocodeSuggestion = {
+		id: 'default-pariser-platz',
+		displayName: 'Pariser Platz',
+		lat: PARISER_PLATZ.lat,
+		lng: PARISER_PLATZ.lng,
+		type: 'point',
+		addresstype: 'point',
+		bezirk: 'Mitte',
+		postcode: '10117'
+	};
 	const LAYERS_KEY = 'layers';
 
 	const syncViewport = debounce((v: Viewport) => {
@@ -162,6 +177,22 @@
 				type: 'point',
 				addresstype: 'point'
 			});
+		} else {
+			// Kein Punkt in URL: Pariser Platz als Default setzen (Reverse-Geocode für
+			// echte Subline, Fallback auf statische Suggestion).
+			void (async () => {
+				try {
+					const s = await reverseGeocodeAddress({
+						lat: PARISER_PLATZ.lat,
+						lng: PARISER_PLATZ.lng
+					}).run();
+					// addresstype steuert nur den Fly-Zoom: für den Default-Einstieg
+					// bewusst Übersicht statt Gebäude-Zoom.
+					selection.set({ ...(s ?? PARISER_PLATZ_FALLBACK), addresstype: 'city_district' });
+				} catch {
+					selection.set({ ...PARISER_PLATZ_FALLBACK, addresstype: 'city_district' });
+				}
+			})();
 		}
 		void (async () => {
 			try {
@@ -350,6 +381,7 @@
 	function clearMarker() {
 		currentMarker?.remove();
 		currentMarker = null;
+		currentMarkerEl = null;
 		selectedFeatureId = null;
 		announceGlobal('Auswahl entfernt');
 		ui.inspectorOpen = false;
@@ -370,10 +402,12 @@
 	async function placeMarker(lngLat: [number, number], displayName?: string) {
 		if (!rawMap || !MarkerCtor) return;
 		currentMarker?.remove();
-		const el = createPlexMarker();
-		currentMarker = new MarkerCtor({ element: el, anchor: 'center' })
+		const el = createPinMarkerElement({ color: COLORS.markerPin });
+		currentMarkerEl = el;
+		currentMarker = new MarkerCtor({ element: el, anchor: 'bottom' })
 			.setLngLat(lngLat)
 			.addTo(rawMap);
+		if (ui.compareMode) el.style.display = 'none';
 
 		const url = new URL(window.location.href);
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
@@ -728,79 +762,43 @@
 		})();
 	});
 
-	const COMPARE_SOURCE_ID = 'compare-markers';
-	const COMPARE_LAYER_ID = 'compare-markers-symbol';
-
-	function buildCompareMarkerFc(
-		a: GeocodeSuggestion,
-		b: GeocodeSuggestion
-	): GeoJSON.FeatureCollection {
-		return {
-			type: 'FeatureCollection',
-			features: [
-				{
-					type: 'Feature',
-					geometry: { type: 'Point', coordinates: [a.lng, a.lat] },
-					properties: { label: 'A', name: a.displayName }
-				},
-				{
-					type: 'Feature',
-					geometry: { type: 'Point', coordinates: [b.lng, b.lat] },
-					properties: { label: 'B', name: b.displayName }
-				}
-			]
-		};
-	}
+	let compareMarkerA: { remove: () => void } | null = null;
+	let compareMarkerB: { remove: () => void } | null = null;
 
 	function removeCompareMarkers(): void {
-		if (!rawMap) return;
-		const map = rawMap as MapWithLayers;
-		if (map.getLayer(COMPARE_LAYER_ID)) map.removeLayer(COMPARE_LAYER_ID);
-		if (map.getSource(COMPARE_SOURCE_ID)) map.removeSource(COMPARE_SOURCE_ID);
+		compareMarkerA?.remove();
+		compareMarkerA = null;
+		compareMarkerB?.remove();
+		compareMarkerB = null;
 	}
 
 	$effect(() => {
 		const a = ui.selectedAddress;
 		const b = ui.comparisonAddress;
 		const active = ui.compareMode;
-		if (!rawMap) return;
+		if (!rawMap || !MarkerCtor) return;
+		removeCompareMarkers();
 		if (!active || !a || !b) {
-			removeCompareMarkers();
+			// Selektions-Pin (A) wieder einblenden, sobald Vergleich endet.
+			if (currentMarkerEl) currentMarkerEl.style.display = '';
 			return;
 		}
-		const map = rawMap as MapWithLayers & {
+		// Selektions-Pin verstecken: A wird durch labeled Compare-Pin ersetzt (kein Doppel-Pin).
+		if (currentMarkerEl) currentMarkerEl.style.display = 'none';
+		const elA = createPinMarkerElement({ color: COLORS.markerPin, label: 'A' });
+		const elB = createPinMarkerElement({ color: COLORS.markerPinCompare, label: 'B' });
+		compareMarkerA = new MarkerCtor({ element: elA, anchor: 'bottom' })
+			.setLngLat([a.lng, a.lat])
+			.addTo(rawMap);
+		compareMarkerB = new MarkerCtor({ element: elB, anchor: 'bottom' })
+			.setLngLat([b.lng, b.lat])
+			.addTo(rawMap);
+		const map = rawMap as {
 			fitBounds?: (
 				bounds: [[number, number], [number, number]],
 				opts: { padding: number; essential?: boolean }
 			) => void;
 		};
-		const fc = buildCompareMarkerFc(a, b);
-		const existing = map.getSource(COMPARE_SOURCE_ID) as
-			| { setData?: (data: unknown) => void }
-			| undefined;
-		if (existing?.setData) {
-			existing.setData(fc);
-		} else {
-			if (map.getLayer(COMPARE_LAYER_ID)) map.removeLayer(COMPARE_LAYER_ID);
-			if (map.getSource(COMPARE_SOURCE_ID)) map.removeSource(COMPARE_SOURCE_ID);
-			map.addSource(COMPARE_SOURCE_ID, { type: 'geojson', data: fc });
-			map.addLayer({
-				id: COMPARE_LAYER_ID,
-				type: 'symbol',
-				source: COMPARE_SOURCE_ID,
-				layout: {
-					'text-field': ['get', 'label'],
-					'text-font': ['Noto Sans Bold'],
-					'text-size': 16,
-					'text-allow-overlap': true
-				},
-				paint: {
-					'text-color': '#ffffff',
-					'text-halo-color': '#0044ff',
-					'text-halo-width': 4
-				}
-			} as MapLibreLayerSpec);
-		}
 		if (map.fitBounds) {
 			const minLng = Math.min(a.lng, b.lng);
 			const maxLng = Math.max(a.lng, b.lng);

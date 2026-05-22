@@ -10,6 +10,8 @@ import type {
 	Modus
 } from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
 import type { MobilityRating } from '$lib/components/atlas/inspector-panel/internal/mobility-rating.js';
+import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
+import type { KiezDemografieData } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
 
 const ADDRESS = {
 	displayName: 'Boxhagener Straße 12, 10245 Berlin',
@@ -186,6 +188,148 @@ function fullInput(): LlmExportInput {
 	};
 }
 
+const WAHL: WahlResultsAtPoint = {
+	point: { lat: 52.5135, lng: 13.4622 },
+	location: { bezirkSlug: 'friedrichshain-kreuzberg', kiezSlug: 'boxhagener-platz' },
+	wahlbezirks: {},
+	wahlen: [
+		{
+			wahl: {
+				id: 1,
+				jahr: 2025,
+				typ: 'btw',
+				stimmtyp: 'zweitstimme',
+				isRepeatElection: false,
+				parentElectionId: null,
+				sourceUrl: 'https://www.bundeswahlleiterin.de/bundestagswahlen/2025.html',
+				license: 'dl-de/by-2-0'
+			},
+			uwbId: null,
+			levels: {
+				stimmbezirk: { available: false, top5: null },
+				kiez: {
+					available: true,
+					top5: [
+						{
+							kurzname: 'GRÜNE',
+							vollname: 'Bündnis 90/Die Grünen',
+							farbeHex: '#46962b',
+							stimmen: 1200,
+							anteil: 0.34
+						},
+						{
+							kurzname: 'LINKE',
+							vollname: 'Die Linke',
+							farbeHex: '#be3075',
+							stimmen: 900,
+							anteil: 0.255
+						}
+					]
+				},
+				bezirk: {
+					available: true,
+					top5: [
+						{
+							kurzname: 'GRÜNE',
+							vollname: 'Bündnis 90/Die Grünen',
+							farbeHex: '#46962b',
+							stimmen: 50000,
+							anteil: 0.3
+						}
+					]
+				},
+				berlin: {
+					available: true,
+					top5: [
+						{
+							kurzname: 'GRÜNE',
+							vollname: 'Bündnis 90/Die Grünen',
+							farbeHex: '#46962b',
+							stimmen: 400000,
+							anteil: 0.18
+						}
+					]
+				}
+			}
+		}
+	],
+	sparklines: []
+};
+
+const DEMOGRAFIE: KiezDemografieData = {
+	einwohner: 8200,
+	dichteEwKm2: 14500,
+	anteilKinder0bis6: 0.052,
+	anteilKinder6bis12: 0.041,
+	anteilSenioren65plus: 0.118,
+	jugendquotient: 22.4,
+	altenquotient: 18.1,
+	erwerbsanteil: 71.4,
+	datenstand: '2024',
+	quelle: 'Amt für Statistik Berlin-Brandenburg',
+	lizenz: 'dl-de/by-2-0'
+};
+
+describe('buildLlmExportMarkdown — Wahl-Section (Story 10.x)', () => {
+	it('rendert nichts wenn wahl null/undefined', () => {
+		const md = buildLlmExportMarkdown(fullInput());
+		expect(md).not.toContain('## Wahlverhalten');
+	});
+
+	it('rendert jüngste Wahl pro Typ auf Kiez-Ebene mit Top-Parteien', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), wahl: WAHL });
+		expect(md).toContain('## Wahlverhalten');
+		expect(md).toMatch(/### Bundestag 2025.*Zweitstimme.*Kiez/);
+		expect(md).toContain('Bündnis 90/Die Grünen (GRÜNE): 34,0 %');
+		expect(md).toContain('Die Linke (LINKE): 25,5 %');
+	});
+
+	it('nennt Quelle Bundeswahlleiterin + Lizenz', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), wahl: WAHL });
+		expect(md).toMatch(/Quelle: Bundeswahlleiterin.*dl-de\/by-2-0/);
+	});
+
+	it('hängt Berlin-Gesamt-Vergleichswert pro Partei an (nicht Berlin-Ebene)', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), wahl: WAHL });
+		expect(md).toContain('Bündnis 90/Die Grünen (GRÜNE): 34,0 % (Berlin gesamt: 18,0 %)');
+	});
+});
+
+describe('buildLlmExportMarkdown — Demografie-Section (Story 10.5)', () => {
+	it('rendert nichts wenn demografie null/undefined', () => {
+		const md = buildLlmExportMarkdown(fullInput());
+		expect(md).not.toContain('## Bevölkerungsprofil');
+	});
+
+	it('rendert Dichte, Einwohner, Alters-Anteile, Quotienten, Quelle', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), demografie: DEMOGRAFIE });
+		expect(md).toContain('## Bevölkerungsprofil');
+		expect(md).toContain('14.500 EW/km²');
+		expect(md).toContain('8.200');
+		expect(md).toContain('Senioren 65+: 11,8 %');
+		expect(md).toContain('Jugendquotient: 22,4');
+		expect(md).toMatch(/Amt für Statistik Berlin-Brandenburg/);
+	});
+
+	it('rendert Erwerbsanteil ohne erneutes ×100 (bereits Prozentwert)', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), demografie: DEMOGRAFIE });
+		expect(md).toContain('Erwerbsanteil: 71,4 %');
+		expect(md).not.toContain('7.140');
+	});
+});
+
+describe('buildLlmExportMarkdown — Lärm-dB-Kontext (Story 10.6b)', () => {
+	it('hängt Lärm-Mittel (Kiez) an den laerm-2023-Hit wenn laermDb gesetzt', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), laermDb: 68 });
+		expect(md).toMatch(/Lärm-Mittel \(Kiez\): 68 dB \(L_DEN\)/);
+	});
+
+	it('rendert keinen Lärm-Mittel-Zusatz wenn laermDb null', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), laermDb: null });
+		expect(md).not.toContain('Lärm-Mittel (Kiez)');
+	});
+});
+
 describe('approximateTokens', () => {
 	it('teilt Zeichenanzahl durch 4 mit Aufrundung', () => {
 		expect(approximateTokens('')).toBe(0);
@@ -268,7 +412,7 @@ describe('buildLlmExportMarkdown — Sections', () => {
 		expect(md).toMatch(/Nicht ausgewiesen für diese Lage/);
 	});
 
-	it('Reason no-coverage → "Daten nicht vorhanden" (Default-Wording)', () => {
+	it('unterdrückt no-coverage-Hits komplett (kein "Daten nicht vorhanden" im Export)', () => {
 		const input: LlmExportInput = {
 			...fullInput(),
 			layerHits: [
@@ -283,7 +427,68 @@ describe('buildLlmExportMarkdown — Sections', () => {
 			]
 		};
 		const md = buildLlmExportMarkdown(input);
-		expect(md).toMatch(/Daten nicht vorhanden/);
+		expect(md).not.toContain('Daten nicht vorhanden');
+		expect(md).not.toContain('Mietspiegel-Wohnlage');
+	});
+
+	it('unterdrückt Hits ohne Wert und ohne Begründung (Leer-Felder raus)', () => {
+		const input: LlmExportInput = {
+			...fullInput(),
+			layerHits: [
+				{
+					layer: 'klima-pet-2022',
+					value: null,
+					source: 'Berliner Umweltatlas 2022',
+					updatedAt: '2022-08-01',
+					license: 'dl-de/zero-2-0'
+				},
+				{
+					layer: 'klima-pet-2022',
+					value: null,
+					source: 'Berliner Umweltatlas 2022',
+					updatedAt: '2022-08-01',
+					license: 'dl-de/zero-2-0'
+				}
+			]
+		};
+		const md = buildLlmExportMarkdown(input);
+		expect(md).not.toContain('Gefühlte Temperatur 2022');
+		expect(md).not.toContain('Daten nicht vorhanden');
+	});
+});
+
+describe('buildLlmExportMarkdown — MSS Interpretations-Warnung', () => {
+	it('rendert maschinenlesbare Warnung statt vager Editorial-Klammer', () => {
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			layerMeta: [
+				...META,
+				{
+					slug: 'mss-gesamtindex-2025',
+					filename: 'mss-gesamtindex-2025.geojson',
+					sourceUrl: 'https://daten.berlin.de/mss-2025',
+					fetchedAt: '2026-04-01T00:00:00.000Z',
+					license: 'dl-de/by-2-0',
+					sha256: 'mss',
+					bundleGroup: 'B: Wohn-Daten',
+					zoomThresholds: { min: 8, max: 22 },
+					geometryType: 'Polygon',
+					featureCount: 540
+				}
+			],
+			layerHits: [
+				{
+					layer: 'mss-gesamtindex-2025',
+					value: { si_v: 'mittel', di_v: 'stabil' },
+					source: 'Monitoring Soziale Stadtentwicklung 2025',
+					updatedAt: '2025-01-01',
+					license: 'dl-de/by-2-0'
+				}
+			]
+		});
+		expect(md).toContain('INTERPRETATIONS-WARNUNG');
+		expect(md).toMatch(/nicht als Aussage über einzelne Menschen/);
+		expect(md).not.toContain('Editorial sensible');
 	});
 });
 
@@ -341,6 +546,12 @@ describe('buildLlmExportMarkdown — Mobilität-Section', () => {
 		expect(md).toContain('220');
 		expect(md).toContain('3 min');
 		expect(md).toContain('Boxhagener Platz');
+	});
+
+	it('nennt Skala-Bezug beim Mobilitäts-Score (von 7,5, sehr gut ab 4)', () => {
+		const md = buildLlmExportMarkdown(fullInput());
+		expect(md).toMatch(/Score 6 von 7,5/);
+		expect(md).toContain('sehr gut ab 4');
 	});
 
 	it('skippt Mobilität-Section wenn kein oepnv', () => {
@@ -453,6 +664,7 @@ describe('buildLlmExportMarkdown — Kiez-Score (Story 1.28)', () => {
 			}
 		});
 		expect(md).toContain('## Kiez-Score');
+		expect(md).toContain('Skala: 0–25 gering · 26–50 mittel · 51–75 hoch · 76–100 sehr hoch');
 		expect(md).toContain('Ruhe & Luft: sehr hoch (80/100)');
 		expect(md).toContain('laerm-2023');
 		expect(md).toContain('Wohnschutz: Daten unzureichend');

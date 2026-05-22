@@ -26,7 +26,17 @@ import type {
 	NearestStop,
 	Modus
 } from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
-import type { MobilityRating } from '$lib/components/atlas/inspector-panel/internal/mobility-rating.js';
+import {
+	MOBILITY_SCORE_MAX,
+	MOBILITY_SCORE_TOP_THRESHOLD,
+	type MobilityRating
+} from '$lib/components/atlas/inspector-panel/internal/mobility-rating.js';
+import type {
+	WahlResultsAtPoint,
+	WahlResultBundle,
+	LevelKey
+} from '$lib/data/get-wahl-results-at-point.js';
+import type { KiezDemografieData } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
 
 export interface LlmExportAddress {
 	displayName: string;
@@ -55,6 +65,9 @@ export interface LlmExportInput {
 	readonly climate: LlmExportClimate | null;
 	readonly oepnv: LlmExportOepnv | null;
 	readonly kiezScore?: KiezScore | null;
+	readonly wahl?: WahlResultsAtPoint | null;
+	readonly demografie?: KiezDemografieData | null;
+	readonly laermDb?: number | null;
 }
 
 const COORD_PRECISION = 5;
@@ -71,13 +84,6 @@ function formatDate(iso: string): string {
 	const date = new Date(iso);
 	if (Number.isNaN(date.getTime())) return iso;
 	return date.toISOString().slice(0, 10);
-}
-
-function latest<T extends { count?: number; temp?: number; year: number }>(
-	values: readonly T[] | undefined
-): T | null {
-	if (!values || values.length === 0) return null;
-	return [...values].sort((a, b) => b.year - a.year)[0] ?? null;
 }
 
 function formatNumber(n: number): string {
@@ -105,7 +111,7 @@ function reasonText(hit: LayerHit): string | null {
 	return null;
 }
 
-function renderHit(hit: LayerHit, lines: string[]): void {
+function renderHit(hit: LayerHit, lines: string[], laermDb?: number | null): void {
 	const display = getLayerDisplayName(hit.layer);
 	const reasonLabel = reasonText(hit);
 	const formatted = reasonLabel
@@ -115,6 +121,10 @@ function renderHit(hit: LayerHit, lines: string[]): void {
 	const editorial = getEditorialConfig(hit.layer);
 
 	lines.push(`- **${display}**: ${formatted.text}`);
+	// Story 10.6b: dB-Kiez-Mittel (L_DEN) als Kontext zur 3-Stufen-Lärmkarte.
+	if (hit.layer === 'laerm-2023' && typeof laermDb === 'number') {
+		lines.push(`  - Lärm-Mittel (Kiez): ${laermDb} dB (L_DEN)`);
+	}
 	if (explain.short) lines.push(`  - Was: ${explain.short}`);
 	if (explain.long && explain.long !== explain.short) lines.push(`  - Details: ${explain.long}`);
 	if (explain.valueScaleExplain) lines.push(`  - Skala: ${explain.valueScaleExplain}`);
@@ -131,19 +141,30 @@ function renderHit(hit: LayerHit, lines: string[]): void {
 			lines.push(`  - Primärquelle: ${editorial.primarySourceUrl}`);
 		}
 		if (editorial.neverMachineTranslate) {
-			lines.push('  - (Editorial sensible, bitte nicht algorithmisch interpretieren)');
+			lines.push(
+				'  - INTERPRETATIONS-WARNUNG: Diesen Wert nicht als Aussage über einzelne Menschen, Adressen oder Lebensqualität deuten. Strukturindikator auf Aggregat-Ebene (Planungsraum). Keine Rangfolge, keine Wertung daraus ableiten.'
+			);
 		}
 	}
+}
+
+// Leer-Hits (kein Wert, keine aussagekräftige Begründung) sind für LLM Rauschen und
+// verwirren Menschen. Informative Reasons (out-of-scope/out-of-concept/seasonal) bleiben.
+function isRenderableHit(hit: LayerHit): boolean {
+	if (hit.reason === 'no-coverage') return false;
+	if (reasonText(hit)) return true;
+	return formatLayerValue(hit.layer, hit.value).text !== 'Daten nicht vorhanden';
 }
 
 function renderSections(input: LlmExportInput, lines: string[]): void {
 	const sections = groupHitsBySection(input.layerHits, input.layerMeta);
 	for (const section of sections) {
-		if (section.hits.length === 0) continue;
+		const hits = section.hits.filter(isRenderableHit);
+		if (hits.length === 0) continue;
 		lines.push(`## ${section.label}`);
 		lines.push('');
-		for (const hit of section.hits) {
-			renderHit(hit, lines);
+		for (const hit of hits) {
+			renderHit(hit, lines, input.laermDb);
 		}
 		lines.push('');
 	}
@@ -241,7 +262,9 @@ function renderOepnv(input: LlmExportInput, lines: string[]): void {
 	const { nearest, rating } = input.oepnv;
 	lines.push('## Mobilität');
 	lines.push('');
-	lines.push(`- Anbindungs-Rating: ${rating.label} (Score ${formatNumber(rating.score)})`);
+	lines.push(
+		`- Anbindungs-Rating: ${rating.label} (Score ${formatNumber(rating.score)} von ${formatNumber(MOBILITY_SCORE_MAX)}, sehr gut ab ${MOBILITY_SCORE_TOP_THRESHOLD}; Heuristik aus Distanz zu U/S-Bahn, Tram, Bus)`
+	);
 	for (const { key, label } of MODI) {
 		const stop = nearest[key];
 		if (!stop) continue;
@@ -256,6 +279,7 @@ function renderKiezScore(input: LlmExportInput, lines: string[]): void {
 	if (!score) return;
 	lines.push('## Kiez-Score');
 	lines.push('');
+	lines.push('- Skala: 0–25 gering · 26–50 mittel · 51–75 hoch · 76–100 sehr hoch');
 	if (typeof score.overall === 'number') {
 		const overallScale = scaleFor(score.overall, 'ruhe-luft');
 		const stufe = overallScale ? overallScale.label : '—';
@@ -284,6 +308,110 @@ function renderKiezScore(input: LlmExportInput, lines: string[]): void {
 	lines.push('');
 }
 
+const WAHL_TYP_LABELS: Record<'btw' | 'agh' | 'bvv', string> = {
+	btw: 'Bundestag',
+	agh: 'Abgeordnetenhaus',
+	bvv: 'BVV'
+};
+const WAHL_STIMMTYP_LABELS: Record<'erststimme' | 'zweitstimme' | 'einstimme', string> = {
+	erststimme: 'Erststimme',
+	zweitstimme: 'Zweitstimme',
+	einstimme: 'Stimme'
+};
+const WAHL_LEVEL_LABELS: Record<LevelKey, string> = {
+	stimmbezirk: 'Stimmbezirk',
+	kiez: 'Kiez',
+	bezirk: 'Bezirk',
+	berlin: 'Berlin gesamt'
+};
+const WAHL_STIMMTYP_PREF: readonly ('zweitstimme' | 'erststimme' | 'einstimme')[] = [
+	'zweitstimme',
+	'erststimme',
+	'einstimme'
+];
+const WAHL_LEVEL_PREF: readonly LevelKey[] = ['kiez', 'bezirk', 'stimmbezirk', 'berlin'];
+
+function formatPct(anteil: number): string {
+	return `${(anteil * 100).toFixed(1).replace('.', ',')} %`;
+}
+
+function renderWahl(input: LlmExportInput, lines: string[]): void {
+	const wahl = input.wahl;
+	if (!wahl || wahl.wahlen.length === 0) return;
+	const typen = (['btw', 'agh', 'bvv'] as const).filter((t) =>
+		wahl.wahlen.some((b) => b.wahl.typ === t)
+	);
+	if (typen.length === 0) return;
+
+	lines.push('## Wahlverhalten');
+	lines.push('');
+	for (const typ of typen) {
+		const bundles = wahl.wahlen.filter((b) => b.wahl.typ === typ);
+		const latestYear = Math.max(...bundles.map((b) => b.wahl.jahr));
+		const yearBundles = bundles.filter((b) => b.wahl.jahr === latestYear);
+		const stimmtyp =
+			WAHL_STIMMTYP_PREF.find((s) => yearBundles.some((b) => b.wahl.stimmtyp === s)) ??
+			yearBundles[0]!.wahl.stimmtyp;
+		const bundle: WahlResultBundle =
+			yearBundles.find((b) => b.wahl.stimmtyp === stimmtyp) ?? yearBundles[0]!;
+		const level = WAHL_LEVEL_PREF.find((l) => bundle.levels[l]?.available) ?? null;
+		const top5 = (level ? bundle.levels[level]?.top5 : null) ?? [];
+
+		// Berlin-Gesamt als Vergleichsanker (links/rechts vs. Stadt), wenn nicht selbst Berlin-Ebene.
+		const berlinTop5 =
+			level !== 'berlin' && bundle.levels.berlin?.available
+				? (bundle.levels.berlin.top5 ?? [])
+				: [];
+		const berlinAnteil = (kurzname: string): number | null =>
+			berlinTop5.find((e) => e.kurzname === kurzname)?.anteil ?? null;
+
+		const levelLabel = level ? WAHL_LEVEL_LABELS[level] : '—';
+		lines.push(
+			`### ${WAHL_TYP_LABELS[typ]} ${latestYear} · ${WAHL_STIMMTYP_LABELS[stimmtyp]} · Ebene ${levelLabel}`
+		);
+		if (bundle.wahl.isRepeatElection) lines.push('- (Wiederholungswahl)');
+		if (top5.length === 0) {
+			lines.push('- Keine Daten für diese Ebene');
+		} else {
+			for (const entry of top5.slice(0, 5)) {
+				const cmp = berlinAnteil(entry.kurzname);
+				const cmpStr = cmp !== null ? ` (Berlin gesamt: ${formatPct(cmp)})` : '';
+				lines.push(`- ${entry.vollname} (${entry.kurzname}): ${formatPct(entry.anteil)}${cmpStr}`);
+			}
+		}
+		const source = bundle.wahl.sourceUrl.includes('bundeswahlleiterin')
+			? 'Bundeswahlleiterin'
+			: 'Amt für Statistik Berlin-Brandenburg';
+		lines.push(`- Quelle: ${source} · Lizenz ${bundle.wahl.license}`);
+		lines.push('');
+	}
+}
+
+function renderDemografie(input: LlmExportInput, lines: string[]): void {
+	const d = input.demografie;
+	if (!d) return;
+	const intFmt = (n: number): string => new Intl.NumberFormat('de-DE').format(n);
+	const pct = (anteil: number): string =>
+		`${new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(anteil * 100)} %`;
+
+	lines.push('## Bevölkerungsprofil');
+	lines.push('');
+	lines.push('- Neutraler Kontext, keine Wertung: dicht ist nicht besser als locker.');
+	if (d.dichteEwKm2 !== null) {
+		lines.push(`- Einwohnerdichte: ${intFmt(Math.round(d.dichteEwKm2))} EW/km²`);
+	}
+	lines.push(`- Einwohner gesamt: ${intFmt(d.einwohner)}`);
+	lines.push(`- Kinder 0–6: ${pct(d.anteilKinder0bis6)}`);
+	lines.push(`- Kinder 6–12: ${pct(d.anteilKinder6bis12)}`);
+	lines.push(`- Senioren 65+: ${pct(d.anteilSenioren65plus)}`);
+	if (d.jugendquotient !== null) lines.push(`- Jugendquotient: ${formatNumber(d.jugendquotient)}`);
+	if (d.altenquotient !== null) lines.push(`- Altenquotient: ${formatNumber(d.altenquotient)}`);
+	// erwerbsanteil ist bereits ein Prozentwert (erw/gesamt*100), nicht 0–1: kein erneutes ×100.
+	if (d.erwerbsanteil !== null) lines.push(`- Erwerbsanteil: ${formatNumber(d.erwerbsanteil)} %`);
+	lines.push(`- Stand: ${d.datenstand} · ${d.quelle} · ${d.lizenz}`);
+	lines.push('');
+}
+
 function renderFooter(lines: string[]): void {
 	lines.push('---');
 	lines.push('');
@@ -298,6 +426,8 @@ export function buildLlmExportMarkdown(input: LlmExportInput): string {
 	renderSections(input, lines);
 	renderClimate(input, lines);
 	renderOepnv(input, lines);
+	renderDemografie(input, lines);
+	renderWahl(input, lines);
 	renderFooter(lines);
 	return lines.join('\n');
 }
