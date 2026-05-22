@@ -15,7 +15,11 @@ export async function loadManifest(fetchFn: typeof fetch = fetch): Promise<Manif
 	if (cached) return cached;
 	if (inflight) return inflight;
 	inflight = (async () => {
-		const res = await fetchFn(MANIFEST_URL);
+		// MANIFEST.json ist der Layer-Index und ändert sich bei jedem Deploy mit neuen
+		// Content-Hashes. Der statische Cache-Header (max-age + stale-while-revalidate) würde
+		// sonst ein veraltetes Manifest liefern, das auf gelöschte Hash-Files zeigt (404).
+		// `no-cache` erzwingt Revalidierung gegen den ETag (billig: 304 wenn unverändert).
+		const res = await fetchFn(MANIFEST_URL, { cache: 'no-cache' });
 		if (!res.ok) {
 			inflight = null;
 			throw new Error(`Failed to load MANIFEST: HTTP ${res.status}`);

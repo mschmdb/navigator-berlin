@@ -44,7 +44,9 @@ export async function loadKiezScores(fetchFn: typeof fetch = fetch): Promise<Kie
 	if (scoresCache) return scoresCache;
 	if (scoresInflight) return scoresInflight;
 	scoresInflight = (async () => {
-		const res = await fetchFn(SCORES_URL);
+		// Statisch benannt, pro Deploy überschrieben → Revalidierung erzwingen (ETag/304),
+		// sonst zeigt der Cache nach einem Score-Update veraltete Werte.
+		const res = await fetchFn(SCORES_URL, { cache: 'no-cache' });
 		if (res.status === 404) {
 			// Build-Pipeline noch nicht gelaufen (pnpm data:kiez-scores). Kein Hard-Fail im Frontend.
 			scoresCache = EMPTY_SCORES;

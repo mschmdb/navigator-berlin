@@ -224,7 +224,7 @@ describe('map-legend.svelte', () => {
 			expect(btn.getAttribute('aria-label')?.toLowerCase()).toMatch(/ausblenden|hide/);
 		});
 
-		it('cascadeVariants rendert Variant-Badge fill/outline/outline-dash', async () => {
+		it('Variant-Badge nur für Outline-Varianten, fill bleibt unbeschriftet', async () => {
 			const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>([
 				['laerm-2023', 'fill'],
 				['wohnlagen-2024', 'outline'],
@@ -234,16 +234,16 @@ describe('map-legend.svelte', () => {
 				activeLayerSlugs: ['laerm-2023', 'wohnlagen-2024', 'klima-pet-2022'],
 				cascadeVariants: variants
 			});
-			const a = (await page
-				.getByTestId('legend-variant-laerm-2023')
-				.element()) as HTMLElement;
+			// fill = Normalzustand → kein Badge (kein verwirrendes "gefüllt")
+			await expect
+				.element(page.getByTestId('legend-variant-laerm-2023'))
+				.not.toBeInTheDocument();
 			const b = (await page
 				.getByTestId('legend-variant-wohnlagen-2024')
 				.element()) as HTMLElement;
 			const c = (await page
 				.getByTestId('legend-variant-klima-pet-2022')
 				.element()) as HTMLElement;
-			expect(a.getAttribute('data-variant')).toBe('fill');
 			expect(b.getAttribute('data-variant')).toBe('outline');
 			expect(c.getAttribute('data-variant')).toBe('outline-dash');
 		});

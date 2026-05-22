@@ -34,7 +34,7 @@ async function loadPayload(fetchFn: typeof fetch): Promise<EinwohnerPayload | nu
 	if (payloadCache) return payloadCache;
 	if (payloadInflight) return payloadInflight;
 	payloadInflight = (async () => {
-		const res = await fetchFn(DEMOGRAFIE_URL);
+		const res = await fetchFn(DEMOGRAFIE_URL, { cache: 'no-cache' });
 		if (!res.ok) {
 			payloadInflight = null;
 			return null;

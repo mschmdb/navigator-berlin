@@ -73,7 +73,7 @@
 				<div class="flex items-start justify-between gap-2">
 					<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 						<p class="font-sans text-sm font-medium text-ink">{entry.name}</p>
-						{#if entry.variant}
+						{#if entry.variant && entry.variant !== 'fill'}
 							<span
 								data-testid={`legend-variant-${entry.slug}`}
 								data-variant={entry.variant}

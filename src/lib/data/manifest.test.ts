@@ -35,7 +35,7 @@ describe('loadManifest', () => {
 		const manifest = await loadManifest(fn as unknown as typeof fetch);
 		expect(manifest.schemaVersion).toBe(1);
 		expect(manifest.layers).toHaveLength(4);
-		expect(fn).toHaveBeenCalledWith('/layers/MANIFEST.json');
+		expect(fn).toHaveBeenCalledWith('/layers/MANIFEST.json', { cache: 'no-cache' });
 	});
 
 	it('cached Result, kein Re-Fetch beim zweiten Aufruf', async () => {

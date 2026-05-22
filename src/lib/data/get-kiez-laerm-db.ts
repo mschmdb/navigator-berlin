@@ -22,7 +22,7 @@ async function loadPayload(fetchFn: typeof fetch): Promise<LaermDbPayload | null
 	if (cache) return cache;
 	if (inflight) return inflight;
 	inflight = (async () => {
-		const res = await fetchFn(LAERM_DB_URL);
+		const res = await fetchFn(LAERM_DB_URL, { cache: 'no-cache' });
 		if (!res.ok) {
 			inflight = null;
 			return null;
