@@ -212,28 +212,6 @@
 	const enrichedHits = $derived(applyApplicabilityReasons(ui.selectedLayerHits));
 	const sections = $derived(groupHitsBySection(enrichedHits, layerMeta));
 
-	const EMPTY_SECTIONS_KEY = 'nav.inspector.showEmptySections';
-	let showEmptySections = $state(false);
-
-	$effect(() => {
-		if (typeof window === 'undefined') return;
-		try {
-			showEmptySections = window.localStorage.getItem(EMPTY_SECTIONS_KEY) === '1';
-		} catch {
-			showEmptySections = false;
-		}
-	});
-
-	function toggleEmptySections(): void {
-		showEmptySections = !showEmptySections;
-		if (typeof window === 'undefined') return;
-		try {
-			window.localStorage.setItem(EMPTY_SECTIONS_KEY, showEmptySections ? '1' : '0');
-		} catch {
-			// localStorage may be unavailable (private mode); state stays in-memory.
-		}
-	}
-
 	function close(): void {
 		ui.inspectorOpen = false;
 	}
@@ -404,8 +382,7 @@
 	function shouldRenderSection(sectionKey: string, hitCount: number): boolean {
 		if (sectionKey === 'klima') return true;
 		if (sectionKey === 'mobilitaet' && hasNearestStops) return true;
-		if (hitCount > 0) return true;
-		return showEmptySections;
+		return hitCount > 0;
 	}
 </script>
 
@@ -524,23 +501,10 @@
 			</div>
 		</div>
 
-		<div
-			data-testid="inspector-toggle-row"
-			class="flex items-center justify-end border-b border-rule px-6 py-1"
-		>
-			<button
-				type="button"
-				data-testid="toggle-empty-sections"
-				aria-pressed={showEmptySections}
-				onclick={toggleEmptySections}
-				class="font-mono text-xs text-ink-subtle underline-offset-2 hover:text-ink hover:underline"
-			>
-				{showEmptySections ? 'Leere Sektionen ausblenden' : 'Leere Sektionen einblenden'}
-			</button>
-		</div>
 		</div><!-- /sticky-header-wrapper -->
 
-		<div class="flex-1 space-y-4 px-6 py-4">
+		{#key ui.selectedAddress?.id}
+		<div class="lc-inspector-body flex-1 space-y-4 px-6 py-4">
 			<KiezScoreSection
 				score={ui.kiezScore}
 				{lang}
@@ -583,13 +547,6 @@
 							{/if}
 							{#if section.key === 'klima'}
 								<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
-							{:else if section.hits.length === 0 && section.key !== 'mobilitaet'}
-								<p
-									class="py-2 font-mono text-xs text-ink-subtle"
-									data-testid={`section-${section.key}-empty`}
-								>
-									{section.label} · keine Daten an dieser Adresse
-								</p>
 							{:else if section.hits.length > 0}
 								<div class="space-y-2">
 									{#each section.hits as hit (hit.layer)}
@@ -634,6 +591,7 @@
 				{/if}
 			{/each}
 		</div>
+		{/key}
 
 		<div data-testid="inspector-print-meta">
 			<p>{addressName}</p>

@@ -429,3 +429,29 @@ body.route-explore {
 [data-testid='inspector-print-meta'] {
 	display: none;
 }
+
+/* Inspector-Section-Entry-Animation.
+   Fade + leichter Slide-Up beim Erst-Mount eines Section-Wrappers UND wenn
+   async geladene Daten-Sections (Wahl, Demografie, Lärm-dB, Layer-Hit-Gruppen)
+   nachträglich erscheinen. {#key selectedAddress.id} im Template triggert die
+   Animation auch beim Adresswechsel. @keyframes statt @starting-style, weil
+   letzteres in Tailwind-v4-Pipeline still hängen blieb (Computed-Styles korrekt,
+   visuelle Transition feuerte nicht). */
+@keyframes lc-inspector-section-entry {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.lc-inspector-body > * {
+	animation: lc-inspector-section-entry 280ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.lc-inspector-body > * {
+		animation: none;
+	}
+}

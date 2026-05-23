@@ -80,6 +80,7 @@
 			innerRadius={-9}
 			outerRadius={-11}
 			cornerRadius={4}
+			props={{ arc: { motion: 'spring' } }}
 			labels={{
 				placement: 'middle',
 				startOffset: '0%',

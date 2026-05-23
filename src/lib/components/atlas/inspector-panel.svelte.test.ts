@@ -302,8 +302,7 @@ describe('inspector-panel.svelte', () => {
 			expect(count.textContent?.trim()).toBe('1');
 		});
 
-		it('Empty-Section default ausgeblendet außer Klima (AC-6)', async () => {
-			window.localStorage.removeItem('nav.inspector.showEmptySections');
+		it('Empty-Section default ausgeblendet außer Klima', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -316,51 +315,7 @@ describe('inspector-panel.svelte', () => {
 			await expect.element(page.getByTestId('section-boundaries')).toBeInTheDocument();
 		});
 
-		it('Footer-Toggle blendet leere Sektionen ein (AC-6)', async () => {
-			window.localStorage.removeItem('nav.inspector.showEmptySections');
-			render(Harness, {
-				open: true,
-				address,
-				hits: [hit('bezirke', 'X')],
-				layerMeta: fullLayerMeta
-			});
-			await page.getByTestId('toggle-empty-sections').click();
-			await expect.element(page.getByTestId('section-sozial')).toBeInTheDocument();
-			await expect.element(page.getByTestId('section-mobilitaet')).toBeInTheDocument();
-		});
-
-		it('Toggle-State in localStorage persistiert (AC-6)', async () => {
-			window.localStorage.removeItem('nav.inspector.showEmptySections');
-			render(Harness, {
-				open: true,
-				address,
-				hits: [hit('bezirke', 'X')],
-				layerMeta: fullLayerMeta
-			});
-			await page.getByTestId('toggle-empty-sections').click();
-			expect(window.localStorage.getItem('nav.inspector.showEmptySections')).toBe('1');
-			await page.getByTestId('toggle-empty-sections').click();
-			expect(window.localStorage.getItem('nav.inspector.showEmptySections')).toBe('0');
-		});
-
-		it('Empty-Section-Compact rendert Plex-Mono 1-Zeile mit Trenner (AC-6)', async () => {
-			window.localStorage.setItem('nav.inspector.showEmptySections', '1');
-			render(Harness, {
-				open: true,
-				address,
-				hits: [hit('bezirke', 'X')],
-				layerMeta: fullLayerMeta
-			});
-			const empty = (await page.getByTestId('section-sozial-empty').element()) as HTMLElement;
-			expect(empty.className).toMatch(/font-mono/);
-			expect(empty.className).toMatch(/text-xs/);
-			expect(empty.textContent).toMatch(/Soziale Infrastruktur ·/);
-			expect(empty.textContent).toMatch(/keine Daten/);
-			window.localStorage.removeItem('nav.inspector.showEmptySections');
-		});
-
 		it('Klima-Section IMMER sichtbar auch bei 0 Hits (AC-6)', async () => {
-			window.localStorage.removeItem('nav.inspector.showEmptySections');
 			render(Harness, {
 				open: true,
 				address,
@@ -404,7 +359,6 @@ describe('inspector-panel.svelte', () => {
 		};
 
 		it('rendert NearestStopsCard in Mobilität-Section bei vorhandenem Stop-Index', async () => {
-			window.localStorage.removeItem('nav.inspector.showEmptySections');
 			render(Harness, {
 				open: true,
 				address,
@@ -417,7 +371,6 @@ describe('inspector-panel.svelte', () => {
 		});
 
 		it('Mobilität-Section bleibt ausgeblendet wenn kein Stop-Index UND keine Hits', async () => {
-			window.localStorage.removeItem('nav.inspector.showEmptySections');
 			render(Harness, {
 				open: true,
 				address,
