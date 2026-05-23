@@ -597,7 +597,11 @@
 				const bezirkPart = suggestion.bezirk ? `, Bezirk ${suggestion.bezirk}` : '';
 				announceGlobal(`Adresse ausgewählt: ${suggestion.displayName}${bezirkPart}`);
 				const opened = await openInspectorFor(suggestion);
-				if (!opened) clearMarker();
+				if (opened) {
+					trackEvent('MapClick', suggestion.bezirk ? { bezirk: suggestion.bezirk } : undefined);
+				} else {
+					clearMarker();
+				}
 				return;
 			}
 		} catch {
@@ -614,7 +618,11 @@
 		};
 		announceGlobal(`Punkt ausgewählt: ${lngLat[1].toFixed(4)}, ${lngLat[0].toFixed(4)}`);
 		const opened = await openInspectorFor(synthetic);
-		if (!opened) clearMarker();
+		if (opened) {
+			trackEvent('MapClick', { type: 'point' });
+		} else {
+			clearMarker();
+		}
 	}
 
 	async function onSelectAccessibleFeature(feature: {
