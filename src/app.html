@@ -20,9 +20,11 @@
 		<!--
 			Plausible Analytics (Self-Host, Open Source, cookieless). Setzt keine Cookies,
 			respektiert Do-Not-Track, kein Cookie-Banner nötig. Variants enabled:
-			file-downloads + hash + outbound-links + pageview-props + tagged-events.
+			file-downloads + manual + outbound-links + pageview-props + tagged-events.
+			Manual-Mode: auto-pushState-Tracking aus, Pageviews werden via afterNavigate
+			im Root-Layout explizit getriggert (zuverlässig für SvelteKit-Client-Nav).
 		-->
-		<script defer data-domain="navigator.berlin" src="https://plausible.navigator.berlin/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+		<script defer data-domain="navigator.berlin" src="https://plausible.navigator.berlin/js/script.file-downloads.manual.outbound-links.pageview-props.tagged-events.js"></script>
 		<script>
 			window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
 		</script>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '../app.css';
-	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { locales, localizeHref, getLocale } from '$lib/paraglide/runtime';
@@ -16,6 +15,8 @@
 		persistBookmarks
 	} from '$lib/state/bookmark-store.js';
 	import { mountWebMcpServer, unmountWebMcpServer } from '$lib/webmcp';
+	import { afterNavigate } from '$app/navigation';
+	import { trackPageview } from '$lib/utils/plausible.js';
 
 	const ui = createUiState();
 
@@ -42,6 +43,12 @@
 		queueMicrotask(() => {
 			persistBookmarks(localStorage, { schemaVersion: 1, bookmarks: snapshot });
 		});
+	});
+
+	// Plausible-Pageview pro SvelteKit-Navigation (manual-Mode, kein Auto-Tracking).
+	// afterNavigate feuert auch beim initialen Mount, daher genau ein Pageview pro Seite.
+	afterNavigate(() => {
+		trackPageview();
 	});
 
 	$effect(() => {

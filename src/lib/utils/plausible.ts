@@ -38,3 +38,18 @@ export function trackEvent(
 		/* analytics never breaks the app */
 	}
 }
+
+/**
+ * Manueller Pageview-Trigger. Wird aus dem Root-Layout via `afterNavigate`
+ * gefeuert, da der Plausible-Script im `manual`-Mode kein Auto-Tracking
+ * macht. SvelteKit-Client-Navigationen würden sonst nicht erfasst.
+ */
+export function trackPageview(): void {
+	if (typeof window === 'undefined') return;
+	if (typeof window.plausible !== 'function') return;
+	try {
+		window.plausible('pageview');
+	} catch {
+		/* analytics never breaks the app */
+	}
+}
