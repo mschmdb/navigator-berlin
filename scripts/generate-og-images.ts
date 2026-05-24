@@ -62,7 +62,7 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		slug: 'home',
 		headline: 'navigator.berlin',
 		subline: 'Berlin in Daten',
-		body: 'Eine Berliner Adresse, ein Kiez, ein Bezirk. Daten zu Lärm, Klima, Grün, Mobilität, Wohnen, Versorgung und sozialer Lage. Mit Quelle und Stand.',
+		body: 'Berliner Daten-Atlas: Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen pro Adresse.',
 		footerUrl: '/'
 	},
 	{
@@ -76,7 +76,7 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		slug: 'methodik',
 		headline: 'Methodik',
 		subline: 'Wie wir Daten verarbeiten',
-		body: 'Quellen, Lizenzen, Stand-Daten, Aggregations-Regeln. Was wir explizit nicht tun: keine LLM-Biografien, kein Lebensqualitäts-Single-Score, keine Werbung.',
+		body: 'Quellen, Lizenzen, Aktualität, Aggregations-Regeln. Auflösung pro Adresse, Kiez und Bezirk.',
 		footerUrl: '/methodik'
 	},
 	{

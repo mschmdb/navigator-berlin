@@ -24,7 +24,7 @@
 	const pathname = $derived(page.url.pathname);
 	const pageTitle = 'Home - Berlin in Daten - navigator.berlin';
 	const pageDescription =
-		'Berliner Daten-Atlas: Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen pro Adresse. Aus offenen Datensätzen, ohne Tracking.';
+		'Berliner Daten-Atlas: Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen pro Adresse.';
 	const ogImagePath = '/og/page/home.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 	const ogImageAlt = 'navigator.berlin: Berlin in Daten · Karte für Adresse, Kiez und Bezirk';
