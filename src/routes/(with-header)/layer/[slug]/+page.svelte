@@ -27,7 +27,7 @@
 	);
 	const pageTitle = $derived(`${detail.layerName} - Berlin in Daten - navigator.berlin`);
 	const pageDescription = $derived(
-		explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin.`
+		explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin. Datengrundlage und Anwendung im Daten-Atlas.`
 	);
 
 	/**
@@ -39,7 +39,7 @@
 		buildDataset({
 			origin: page.url.origin,
 			name: detail.layerName,
-			description: explain.long || explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin.`,
+			description: explain.long || explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin. Datengrundlage und Anwendung im Daten-Atlas.`,
 			license: meta.license,
 			dateModified: meta.sourceUpdatedAt ?? meta.fetchedAt,
 			creatorName: methodology?.authority,

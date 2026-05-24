@@ -23,14 +23,16 @@
 	}: Props = $props();
 </script>
 
-<section data-testid="home-hook" class="grid gap-8 md:grid-cols-[1fr_1.2fr] md:items-center md:gap-10">
+<section data-testid="home-hook" class="grid gap-8 md:grid-cols-[1fr_1.2fr] md:items-start md:gap-10">
 	<div class="space-y-5">
 		<p class="font-serif text-xl leading-relaxed text-ink md:text-2xl">
-			Adresse eingeben. Daten kombinieren. Quelle direkt daneben.
+			Adresse eingeben. Daten kombinieren.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink-muted">
 			Lärmpegel pro Straßenzug. Hitze-Klasse pro Kiez. ÖPNV-Dichte pro Bezirk.
-			Werte mit Stand-Datum, alles aus den offenen Daten der Senatsverwaltung.
+			Werte aus den offenen Daten der Senatsverwaltung. Adressen und Kieze
+			direkt vergleichen. Für die Wohnungssuche, den Umzug, die Recherche oder
+			den nächsten Streit am Küchentisch.
 		</p>
 		<a
 			href={mapHref}
@@ -40,17 +42,23 @@
 			<ArrowRight size={14} aria-hidden="true" />
 		</a>
 	</div>
-	<figure class="overflow-hidden rounded border border-rule bg-bg-soft">
-		<img
-			src={screenshotSrc}
-			alt={screenshotAlt}
-			class="block h-full w-full object-cover"
-			loading="lazy"
-			width={HERO.width}
-			height={HERO.height}
-		/>
-		<figcaption class="sr-only">
-			Vorschau der Karte mit Adress-Inspektor und ausgewählten Daten-Schichten.
-		</figcaption>
-	</figure>
+	<a
+		href={mapHref}
+		aria-label="Karte öffnen"
+		class="group block overflow-hidden rounded border border-rule bg-bg-soft transition-colors hover:border-ink-muted"
+	>
+		<figure>
+			<img
+				src={screenshotSrc}
+				alt={screenshotAlt}
+				class="block h-full w-full object-cover transition-opacity group-hover:opacity-90"
+				loading="lazy"
+				width={HERO.width}
+				height={HERO.height}
+			/>
+			<figcaption class="sr-only">
+				Vorschau der Karte mit Adress-Inspektor und ausgewählten Daten-Schichten.
+			</figcaption>
+		</figure>
+	</a>
 </section>

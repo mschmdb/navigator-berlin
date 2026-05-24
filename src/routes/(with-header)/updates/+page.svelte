@@ -49,7 +49,7 @@
 
 	const pageTitle = 'Updates - Berlin in Daten - navigator.berlin';
 	const pageDescription =
-		'Daten-Refreshes, Feature-Releases und Methodik-Änderungen. Mit RSS, Atom und JSON-Feed.';
+		'Was sich an navigator.berlin verändert: neue Daten, Features und Methodik-Änderungen. Mit RSS und Atom.';
 
 	const blogJsonLd = $derived(
 		buildBlogIndex({ entries, origin: page.url.origin })

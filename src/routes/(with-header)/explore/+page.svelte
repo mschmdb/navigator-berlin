@@ -924,7 +924,7 @@
 	const ogDescription = $derived(
 		ogInput
 			? buildOgDescription(ogInput)
-			: 'Adress-Daten zu Wohn-, Umwelt-, Klima- und Mobilitäts-Layern für Berlin.'
+			: 'Berliner Open-Data-Atlas: pro Adresse Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen. Karte plus Kiez-Score.'
 	);
 	const ogImageUrl = $derived(buildOgImageUrl(ogInput, page.url.origin));
 </script>

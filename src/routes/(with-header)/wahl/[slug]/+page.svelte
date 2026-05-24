@@ -17,8 +17,7 @@
 
 	const pageTitle = $derived(`${data.wahl.title} · Berlin · navigator.berlin`);
 	const pageDescription = $derived(
-		`Ergebnisse der ${data.wahl.typLabel} ${data.wahl.jahr} in Berlin nach Bezirken. ` +
-			`Stimmenanteile pro Partei, Top-3 je Bezirk, Quelle ${data.wahl.sourceName}.`
+		`Ergebnisse der ${data.wahl.typLabel} ${data.wahl.jahr} in Berlin: Stimmenanteile, Top-Parteien je Bezirk und Kiez. navigator.berlin.`
 	);
 
 	const totalStimmen = $derived(data.berlin.reduce((s, e) => s + e.stimmen, 0));

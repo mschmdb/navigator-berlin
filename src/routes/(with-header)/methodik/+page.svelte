@@ -34,7 +34,7 @@
 
 	const pageTitle = 'Methodik - Berlin in Daten - navigator.berlin';
 	const pageDescription =
-		'Wie navigator.berlin Daten verarbeitet, was wir zeigen, was wir bewusst weglassen.';
+		'Methodik des Berliner Daten-Atlas: Auflösung, Aktualität, Editorial-Regeln und was bewusst nicht enthalten ist.';
 
 	/**
 	 * Story 2.2 AC-4: Methodik-Page bleibt bei `TechArticle`. Inline-Object,

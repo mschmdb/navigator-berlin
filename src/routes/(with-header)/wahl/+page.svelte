@@ -13,7 +13,7 @@
 
 	const pageTitle = 'Wahlen in Berlin · navigator.berlin';
 	const pageDescription =
-		'Übersicht aller verfügbaren Wahlen in Berlin: Bundestagswahlen, Abgeordnetenhaus, Bezirksverordnetenversammlungen. Stimmenanteile pro Partei und Bezirk.';
+		'Wahlen in Berlin im Daten-Atlas: Bundestag, Abgeordnetenhaus und BVV. Stimmenanteile pro Partei, Bezirk und Kiez.';
 
 	type Entry = (typeof data.entries)[number];
 

@@ -17,7 +17,7 @@
 
 <SeoHead
 	title="WebMCP - Schnittstelle für KI-Assistenten - navigator.berlin"
-	description="navigator.berlin liefert seine Daten als WebMCP-Tools an LLM-Agenten aus. Status der Spec, Browser-Support, Tools und wie man sie aufruft."
+	description="WebMCP-Tools von navigator.berlin: Berliner Daten an LLM-Agenten ausliefern. Spec-Status, Browser-Support, Tool-Aufrufe."
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	ogImage={`${page.url.origin}/og/page/architektur.png`}

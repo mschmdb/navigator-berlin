@@ -41,8 +41,8 @@
 			parts.push(`${numberDe.format(data.profile.flaecheHa)} ha`);
 		}
 		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-		const bezirkSuffix = bezirkName.length > 0 ? `Bezirk ${bezirkName}. ` : '';
-		return `Kiez ${name}${suffix}. ${bezirkSuffix}Kiez-Score und offene Daten zu Lärm, Klima, Grün, Mobilität, Versorgung und sozialer Lage.`.trim();
+		const bezirkPart = bezirkName.length > 0 ? ` in Bezirk ${bezirkName}` : '';
+		return `Kiez ${name}${bezirkPart}${suffix}: Kiez-Score, Lärm, Klima, Grün, Mobilität, Versorgung, Sozialstruktur. Berliner Daten-Atlas.`;
 	});
 	const ogImageAlt = $derived(
 		bezirkName.length > 0

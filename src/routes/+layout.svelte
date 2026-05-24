@@ -73,7 +73,7 @@
 			origin: page.url.origin,
 			name: 'navigator.berlin',
 			locale: ({ de: 'de-DE', en: 'en-US' } as Record<string, string>)[getLocale()] ?? 'de-DE',
-			description: 'Berliner Geo-Datenlayer pro Adresse. Statisch, ohne Cookies, ohne Login.'
+			description: 'Open-Data-Atlas für Berlin. Pro Adresse Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen.'
 		})
 	);
 

@@ -9,7 +9,7 @@
 
 	const pageTitle = 'Methodik · Wahldaten · navigator.berlin';
 	const pageDescription =
-		'Datenquellen, Daten-Cutoff, Briefwahl-Methodik, Stimmbezirks-zu-Kiez-Aggregation, Wiederholungswahl-Behandlung und Coverage-Lücken der Wahldaten in navigator.berlin.';
+		'Wahldaten-Methodik: Quellen, Daten-Cutoff, Briefwahl, Stimmbezirks-zu-Kiez-Aggregation und Wiederholungswahlen im Berliner Daten-Atlas.';
 
 	const breadcrumbs = $derived(
 		buildBreadcrumbList({

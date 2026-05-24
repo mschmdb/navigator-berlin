@@ -144,7 +144,7 @@
 		buildDataCatalog({
 			origin: page.url.origin,
 			name: 'navigator.berlin Daten-Katalog',
-			description: `Geo-Daten-Katalog mit ${manifest.layers.length} offenen Berliner Datensätzen aus Senats-Verwaltung, ODIS und OpenStreetMap. Pro Schicht eigene Lizenz, Quelle und Datenstand dokumentiert.`,
+			description: `Lizenzen aller Berliner Geo-Daten und Software-Pakete hinter navigator.berlin. Senats-Verwaltung, ODIS, OpenStreetMap.`,
 			urlPath: '/lizenzen',
 			publisherName: 'Matze Schmidbauer',
 			datasets: manifest.layers.map((l) => ({

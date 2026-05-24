@@ -43,7 +43,7 @@
 					</a>
 					<p class="font-serif text-base leading-relaxed text-ink-muted">
 						Berlin, Adresse für Adresse: Lärm, Klima, Grün, Mobilität, Wohnen und Wahlen.
-						Jeder Wert mit Quelle und Stand, aus offenen Senats-Daten.
+						Aus offenen Senats-Daten, ODIS Berlin und OpenStreetMap.
 					</p>
 				</div>
 

@@ -8,7 +8,7 @@
 	const pageTitle =
 		'Methodik des Umwelt- & Infrastruktur-Scores - Berlin in Daten - navigator.berlin';
 	const pageDescription =
-		'Wie der Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum entsteht. Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz. Gewichte, Normalisierung, warum Sozialstruktur nicht gewertet wird.';
+		'Kiez-Score-Methodik: fünf Dimensionen, Normalisierung, Gewichte. Warum Sozialstruktur nicht eingerechnet wird. Berliner Daten-Atlas.';
 
 	const sections = [
 		{ id: 'worum', label: 'Worum es geht' },

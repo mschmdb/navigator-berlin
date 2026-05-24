@@ -33,7 +33,7 @@
 			parts.push(`${numberDe.format(data.profile.flaecheHa)} ha`);
 		}
 		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-		return `Bezirk ${name}${suffix}. Kiez-Score und offene Daten zu Lärm, Klima, Grün, Mobilität, Versorgung und sozialer Lage. Mit Quelle und Stand.`;
+		return `Bezirk ${name}${suffix}: Kiez-Score, Lärm, Klima, Grün, Mobilität, Versorgung, Sozialstruktur. Berliner Daten-Atlas.`;
 	});
 	const ogImageAlt = $derived(
 		`Bezirk ${name}: navigator.berlin-Karten-Vorschau mit Kiez-Score und Bezirks-Daten`
