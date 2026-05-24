@@ -46,8 +46,11 @@
 	});
 
 	// Plausible-Pageview pro SvelteKit-Navigation (manual-Mode, kein Auto-Tracking).
-	// afterNavigate feuert auch beim initialen Mount, daher genau ein Pageview pro Seite.
-	afterNavigate(() => {
+	// Pathname-Diff filtert replaceState-URL-Sync auf /explore (Viewport/Layers/
+	// Adress-Pin schreiben Query-Params via goto+replaceState, das soll kein Pageview).
+	// Initial-Mount: from === null, Bedingung false → Pageview feuert.
+	afterNavigate((nav) => {
+		if (nav.from && nav.from.url.pathname === nav.to?.url.pathname) return;
 		trackPageview();
 	});
 
