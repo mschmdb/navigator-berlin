@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 	import { META_LINKS, META_LINK_GROUPS } from './internal/meta-links.js';
+	import SocialLinks from './internal/social-links.svelte';
 	import { AnimatedLogo } from '$lib/components/ui';
 
 	type Props = {
@@ -14,7 +15,7 @@
 {#if variant === 'compact'}
 	<footer
 		data-testid="meta-footer"
-		class="flex h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-xs text-ink-subtle backdrop-blur-sm print:hidden"
+		class="flex h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-[11px] text-ink-subtle backdrop-blur-sm print:hidden"
 	>
 		<nav
 			aria-label="Meta-Navigation"
@@ -27,6 +28,8 @@
 				</span>
 			{/each}
 			<a href={`mailto:${FEEDBACK_EMAIL}`} class="whitespace-nowrap hover:text-accent">Kontakt</a>
+			<span aria-hidden="true" class="px-2 text-ink-subtle/50">·</span>
+			<SocialLinks size={14} class="gap-2" />
 		</nav>
 	</footer>
 {:else}
@@ -73,13 +76,12 @@
 				</nav>
 			</div>
 
-			{#if langSwitcher}
-				<div
-					class="mt-10 flex flex-wrap items-center justify-end gap-4 border-t border-rule pt-6 font-mono text-xs text-ink-subtle"
-				>
-					{@render langSwitcher()}
-				</div>
-			{/if}
+			<div
+				class="mt-10 flex flex-wrap items-center justify-end gap-4 border-t border-rule pt-6 font-mono text-xs text-ink-subtle"
+			>
+				{#if langSwitcher}{@render langSwitcher()}{/if}
+				<SocialLinks size={16} />
+			</div>
 		</div>
 	</footer>
 {/if}

@@ -2,7 +2,8 @@
 	import { onMount, type Snippet } from 'svelte';
 	import { X } from '@lucide/svelte';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
-	import { META_LINKS } from './internal/meta-links.js';
+	import { META_LINK_GROUPS } from './internal/meta-links.js';
+	import SocialLinks from './internal/social-links.svelte';
 
 	type Props = {
 		open: boolean;
@@ -46,15 +47,17 @@
 		}}
 		onkeydown={() => {}}
 	>
-		<aside
+		<div
 			bind:this={drawerEl}
 			role="dialog"
 			aria-modal="true"
 			aria-label="Menü"
 			data-testid="mobile-meta-drawer"
-			class="fixed inset-y-0 right-0 flex w-[min(88vw,360px)] flex-col bg-bg-elevated shadow-2xl"
+			class="fixed inset-y-0 right-0 flex w-[min(88vw,360px)] flex-col border-l border-rule-strong bg-bg-elevated"
 		>
-			<header class="flex items-center justify-between border-b border-rule px-5 py-4">
+			<header
+				class="flex shrink-0 items-center justify-between border-b border-rule px-5 py-4"
+			>
 				<h2 class="font-serif text-lg text-ink">Menü</h2>
 				<button
 					type="button"
@@ -67,34 +70,57 @@
 				</button>
 			</header>
 
-			<nav aria-label="Meta-Navigation" class="flex-1 overflow-y-auto px-2 py-3">
-				<ul class="flex flex-col">
-					{#each META_LINKS as link (link.href)}
-						<li>
-							<a
-								href={link.href}
-								onclick={onClose}
-								class="block rounded-sm px-3 py-3 text-base text-ink hover:bg-rule/40"
+			<nav
+				aria-label="Meta-Navigation"
+				class="flex-1 overflow-y-auto px-5 py-5"
+			>
+				<div class="flex flex-col gap-6">
+					{#each META_LINK_GROUPS as group (group.title)}
+						<div class="flex flex-col gap-2">
+							<h3
+								class="font-mono text-[10px] uppercase tracking-wider text-ink-subtle"
 							>
-								{link.label}
-							</a>
-						</li>
+								{group.title}
+							</h3>
+							<ul class="flex flex-col">
+								{#each group.links as link (link.href)}
+									<li>
+										<a
+											href={link.href}
+											onclick={onClose}
+											class="block py-2 font-serif text-sm text-ink hover:text-accent"
+										>
+											{link.label}
+										</a>
+									</li>
+								{/each}
+								{#if group.title === 'Sonstiges'}
+									<li>
+										<a
+											href={`mailto:${FEEDBACK_EMAIL}`}
+											onclick={onClose}
+											class="block py-2 font-serif text-sm text-ink hover:text-accent"
+										>
+											Kontakt
+										</a>
+									</li>
+								{/if}
+							</ul>
+						</div>
 					{/each}
-					<li>
-						<a
-							href={`mailto:${FEEDBACK_EMAIL}`}
-							onclick={onClose}
-							class="block rounded-sm px-3 py-3 text-base text-ink hover:bg-rule/40"
-						>
-							Kontakt
-						</a>
-					</li>
-				</ul>
+				</div>
 			</nav>
 
-			{#if langSwitcher}
-				<div class="border-t border-rule px-5 py-4">{@render langSwitcher()}</div>
-			{/if}
-		</aside>
+			<footer
+				class="flex shrink-0 items-center justify-end border-t border-rule px-5 py-4"
+			>
+				{#if langSwitcher}
+					<div class="mr-auto font-mono text-xs text-ink-subtle">
+						{@render langSwitcher()}
+					</div>
+				{/if}
+				<SocialLinks size={16} />
+			</footer>
+		</div>
 	</div>
 {/if}
