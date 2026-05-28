@@ -92,18 +92,19 @@ describe('KIEZ_PAGES_SOURCE', () => {
 		expect(KIEZ_PAGES_SOURCE(fixtureContext({ kiezSlugs: [] }))).toEqual([]);
 	});
 
-	it('rendert Entries mit lastmod aus dem lor-bezirksregion-Layer', () => {
+	it('nutzt fetchedAt (Daten-Refresh) als lastmod statt sourceUpdatedAt-Vintage', () => {
 		const entries = KIEZ_PAGES_SOURCE(fixtureContext());
 		expect(entries).toHaveLength(3);
-		expect(entries[0].lastmod).toBe('2021-01-01T00:00:00.000Z');
+		expect(entries[0].lastmod).toBe('2026-05-16T06:56:28.400Z');
 	});
 
-	it('fällt auf fetchedAt zurück wenn sourceUpdatedAt fehlt', () => {
+	it('fällt auf sourceUpdatedAt zurück wenn fetchedAt fehlt', () => {
 		const manifest = fixtureManifest();
-		manifest.layers[0] = { ...manifest.layers[0], sourceUpdatedAt: undefined };
+		// Simuliert ein Manifest ohne fetchedAt (test-only Cast: Feld ist eigentlich required).
+		manifest.layers[0] = { ...manifest.layers[0], fetchedAt: undefined as unknown as string };
 		const entries = KIEZ_PAGES_SOURCE(
 			fixtureContext({ manifest, kiezSlugs: ['boxhagener-kiez'] })
 		);
-		expect(entries[0].lastmod).toBe('2026-05-16T06:56:28.400Z');
+		expect(entries[0].lastmod).toBe('2021-01-01T00:00:00.000Z');
 	});
 });

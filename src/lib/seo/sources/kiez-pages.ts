@@ -4,8 +4,9 @@ import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
  * Story 2.4 AC-6: Sitemap-Source für Kiez-Routes (143 LOR-Bezirksregionen).
  *
  * - `/kiez/{slug}`: priority 0.6, changefreq monthly.
- * - `lastmod` = `lor-bezirksregion`-Layer `sourceUpdatedAt` (fallback
- *   `fetchedAt`), da alle 143 Kiez-Pages aus derselben Quelle generiert werden.
+ * - `lastmod` = `lor-bezirksregion`-Layer `fetchedAt` (fallback
+ *   `sourceUpdatedAt`), da alle 143 Kiez-Pages aus derselben Quelle generiert
+ *   werden. fetchedAt-first signalisiert Crawlern Freshness (SEO-Recrawl).
  *
  * Phase 1 DE-only (memory `project_i18n_phase_1_de_only`): EN-Routes existieren
  * nicht. Source liefert für `locale === 'en'` einen leeren Array.
@@ -39,6 +40,8 @@ export const KIEZ_PAGES_SOURCE: SitemapSource = (ctx) => {
 	const slugs = ctx.kiezSlugs;
 	if (!slugs || slugs.length === 0) return [];
 	const lorLayer = ctx.manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
-	const lastmod = lorLayer?.sourceUpdatedAt ?? lorLayer?.fetchedAt ?? ctx.buildTimestamp;
+	// fetchedAt (Daten-Refresh ins Build) vor sourceUpdatedAt (Daten-Vintage 2021):
+	// truthful + signalisiert Crawlern Freshness statt "uralt, skip".
+	const lastmod = lorLayer?.fetchedAt ?? lorLayer?.sourceUpdatedAt ?? ctx.buildTimestamp;
 	return buildKiezSitemapEntries({ origin: ctx.origin, slugs, lastmod });
 };

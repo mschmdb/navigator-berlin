@@ -44,6 +44,9 @@ export const GET: RequestHandler = ({ url }) => {
 	lines.push('Allow: /');
 	lines.push('Disallow: /_dev/');
 	lines.push('Disallow: /api/');
+	// GeoJSON-Datenfiles (Map lädt clientseitig, prerenderte Pages tragen Text
+	// bereits im HTML) → Crawl-Budget auf echte Seiten lenken.
+	lines.push('Disallow: /layers/');
 	lines.push('');
 
 	lines.push('# AI-Crawler explizit Allow (Story 5.9, Memory project_seo_bot_policy)');

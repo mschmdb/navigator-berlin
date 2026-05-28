@@ -95,19 +95,20 @@ describe('BEZIRK_PAGES_SOURCE', () => {
 		expect(entries.map((e) => e.loc)).toContain('https://navigator.berlin/bezirk/mitte');
 	});
 
-	it('nutzt sourceUpdatedAt von bezirke-Layer als lastmod-Fallback', () => {
+	it('nutzt fetchedAt (Daten-Refresh) von bezirke-Layer als lastmod', () => {
 		const entries = BEZIRK_PAGES_SOURCE(fixtureContext());
-		expect(entries[0]?.lastmod).toBe('2024-01-01T00:00:00.000Z');
+		expect(entries[0]?.lastmod).toBe('2026-05-16T06:56:28.400Z');
 	});
 
-	it('faellt auf fetchedAt zurueck wenn sourceUpdatedAt fehlt', () => {
+	it('faellt auf sourceUpdatedAt zurueck wenn fetchedAt fehlt', () => {
 		const ctx = fixtureContext();
 		const manifest: Manifest = {
 			...ctx.manifest,
-			layers: ctx.manifest.layers.map((l) => ({ ...l, sourceUpdatedAt: undefined }))
+			// Simuliert ein Manifest ohne fetchedAt (test-only Cast: Feld ist eigentlich required).
+			layers: ctx.manifest.layers.map((l) => ({ ...l, fetchedAt: undefined as unknown as string }))
 		};
 		const entries = BEZIRK_PAGES_SOURCE({ ...ctx, manifest });
-		expect(entries[0]?.lastmod).toBe('2026-05-16T06:56:28.400Z');
+		expect(entries[0]?.lastmod).toBe('2024-01-01T00:00:00.000Z');
 	});
 
 	it('liefert leere Liste wenn bezirkSlugs nicht im Context ist', () => {
