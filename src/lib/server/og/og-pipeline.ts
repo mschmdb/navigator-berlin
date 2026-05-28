@@ -14,6 +14,7 @@
  */
 
 import { normalizeSlug } from '$lib/data/internal/slug.js';
+import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.js';
 import { LAYER_EXPLAIN_DE } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
 export type Bbox4 = readonly [minLon: number, minLat: number, maxLon: number, maxLat: number];
@@ -137,8 +138,11 @@ export function buildKiezTargetsFromGeoJson(
 	fc: GeoJsonFeatureCollection,
 	bezirkCodeToSlug: ReadonlyMap<string, string>
 ): KiezTarget[] {
-	const out: KiezTarget[] = [];
-	for (const feature of fc.features) {
+	// Erst alle Features validieren + Refs sammeln, dann gemeinsam disambiguieren.
+	// Duplikat-Namen (z.B. "Heerstraße") brauchen Bezirk-Suffix damit OG-Slug exakt
+	// zum Page-Slug passt (/kiez/heerstrasse-spandau), sonst OG-404. Siehe
+	// buildKiezSlugs (gleiche Util wie entries/Resolver/Sitemap).
+	const validated = fc.features.map((feature) => {
 		const name = readStringProp(feature, 'BZR_NAME');
 		if (!name) throw new Error('lor-bezirksregion feature missing BZR_NAME');
 		const bez = readStringProp(feature, 'BEZ');
@@ -147,15 +151,19 @@ export function buildKiezTargetsFromGeoJson(
 		if (!parentBezirkSlug) {
 			throw new Error(`unknown bezirk code "${bez}" for kiez "${name}"`);
 		}
-		out.push({
-			type: 'kiez',
-			slug: normalizeSlug(name),
-			label: name,
-			parentBezirkSlug,
-			bbox: computeFeatureBbox(feature)
-		});
-	}
-	return out;
+		return { feature, name, parentBezirkSlug };
+	});
+
+	const refs: KiezNameRef[] = validated.map((v) => ({ name: v.name, bezirk: v.parentBezirkSlug }));
+	const slugs = buildKiezSlugs(refs);
+
+	return validated.map((v, i) => ({
+		type: 'kiez' as const,
+		slug: slugs[i],
+		label: v.name,
+		parentBezirkSlug: v.parentBezirkSlug,
+		bbox: computeFeatureBbox(v.feature)
+	}));
 }
 
 function authorityFromSourceUrl(url: string): string {

@@ -151,6 +151,33 @@ describe('buildKiezTargetsFromGeoJson', () => {
 		const bezirkCodeToSlug = new Map<string, string>();
 		expect(() => buildKiezTargetsFromGeoJson(SAMPLE_KIEZ, bezirkCodeToSlug)).toThrow(/unknown bezirk/i);
 	});
+
+	it('disambiguiert Duplikat-Namen mit Bezirk-Suffix (OG-Slug = Page-Slug)', () => {
+		const fc: GeoJsonFeatureCollection = {
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: { type: 'Polygon', coordinates: [[[13.15, 52.51], [13.16, 52.51], [13.16, 52.52], [13.15, 52.51]]] },
+					properties: { BZR_NAME: 'Heerstraße', BEZ: '05' }
+				},
+				{
+					type: 'Feature',
+					geometry: { type: 'Polygon', coordinates: [[[13.23, 52.49], [13.24, 52.49], [13.24, 52.5], [13.23, 52.49]]] },
+					properties: { BZR_NAME: 'Heerstraße', BEZ: '04' }
+				}
+			]
+		};
+		const bezirkCodeToSlug = new Map([
+			['05', 'spandau'],
+			['04', 'charlottenburg-wilmersdorf']
+		]);
+		const targets = buildKiezTargetsFromGeoJson(fc, bezirkCodeToSlug);
+		expect(targets.map((t) => t.slug)).toEqual([
+			'heerstrasse-spandau',
+			'heerstrasse-charlottenburg-wilmersdorf'
+		]);
+	});
 });
 
 describe('buildLayerTargetsFromManifest', () => {
