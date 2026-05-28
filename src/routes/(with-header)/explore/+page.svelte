@@ -950,6 +950,15 @@
 		: '--inspector-width: clamp(360px, 28vw, 420px);'}
 	data-testid="atlas-shell"
 >
+	<!-- sr-only H1 + Intro: crawlbarer Seiten-Content (fixt Google-Soft-404 +
+	     Bing-H1-missing) und a11y-Landmark, ohne das visuelle Karten-Layout zu
+	     verändern. Statischer Page-Titel, unabhängig von der Adress-Auswahl. -->
+	<h1 class="sr-only">Berlin-Atlas: Daten zu jeder Adresse</h1>
+	<p class="sr-only">
+		Suche eine Adresse oder setze einen Pin auf der Karte. Sieh Lärm, Klima, Grün,
+		Mobilität, Wohnen, Sozialstruktur und Wahlergebnisse für deinen Kiez, über
+		Bezirksgrenzen hinweg.
+	</p>
 	<div class="relative min-h-0 w-full flex-1 lg:h-full lg:flex-none">
 		<MapLibreCanvas
 			initialBbox={data.initialBbox}
