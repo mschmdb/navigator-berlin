@@ -6,6 +6,7 @@ import type { KiezProfile, Locale } from './types.js';
 import { loadManifest } from './manifest.js';
 import { fetchLayer } from './internal/layer-fetch.js';
 import { normalizeSlug } from './internal/slug.js';
+import { resolveKiezSlugIndex, type KiezNameRef } from './internal/kiez-slug.js';
 import { getLayersAtPoint } from './get-layers-at-point.js';
 
 const LOR_BR_SLUG = 'lor-bezirksregion';
@@ -57,19 +58,35 @@ export async function getKiezProfile(
 	if (!layer) throw error(500, 'lor-bezirksregion-Layer fehlt im Manifest');
 
 	const fc = await fetchLayer(layer.filename, fetchFn);
-	const feature = fc.features.find((f) => {
-		const name = readKiezName((f.properties ?? {}) as Record<string, unknown>);
-		if (!name) return false;
-		return normalizeSlug(name) === normalized;
-	}) as Feature<Polygon | MultiPolygon> | undefined;
+	const codeToName = await buildBezirkCodeToNameMap(manifest, fetchFn);
 
-	if (!feature) throw error(404, `Kiez not found: ${slug}`);
+	// Refs index-aligned zu den benannten Features. Gleiche Disambiguierung wie
+	// entries()/Sitemap: Duplikat "Heerstraße" → Bezirk-Suffix, sonst 404 auf
+	// /kiez/heerstrasse-spandau (8.2b-Mismatch-Fix).
+	const named = fc.features
+		.map((f) => {
+			const featureProps = (f.properties ?? {}) as Record<string, unknown>;
+			const featureName = readKiezName(featureProps);
+			if (!featureName) return null;
+			const bezCode = readBezirkCode(featureProps);
+			const bezirkName = bezCode ? codeToName.get(bezCode) ?? '' : '';
+			return {
+				feature: f as Feature<Polygon | MultiPolygon>,
+				ref: { name: featureName, bezirk: bezirkName } satisfies KiezNameRef
+			};
+		})
+		.filter((x): x is NonNullable<typeof x> => x !== null);
 
+	const index = resolveKiezSlugIndex(
+		named.map((n) => n.ref),
+		slug
+	);
+	if (index === -1) throw error(404, `Kiez not found: ${slug}`);
+
+	const { feature } = named[index];
 	const props = (feature.properties ?? {}) as Record<string, unknown>;
 	const name = readKiezName(props) ?? slug;
-	const bezirkCode = readBezirkCode(props);
-	const codeToName = bezirkCode ? await buildBezirkCodeToNameMap(manifest, fetchFn) : null;
-	const bezirk = bezirkCode && codeToName ? codeToName.get(bezirkCode) ?? '' : '';
+	const bezirk = named[index].ref.bezirk;
 
 	const centroid = center(feature).geometry.coordinates as [number, number];
 	const coverage = await getLayersAtPoint(centroid[1], centroid[0], fetchFn);
