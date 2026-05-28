@@ -28,9 +28,9 @@ describe('robots.txt Endpoint (Story 5.9 AC-1)', () => {
 		expect(body).toMatch(/^Disallow: \/api\/$/m);
 	});
 
-	it('default-Block disallowed /layers/ (Crawl-Budget: GeoJSON-Datenfiles)', async () => {
+	it('blockt /layers/ NICHT (render-nötige Ressourcen, sonst Soft-404)', async () => {
 		const body = await fetchRobots();
-		expect(body).toMatch(/^Disallow: \/layers\/$/m);
+		expect(body).not.toMatch(/^Disallow: \/layers\/$/m);
 	});
 
 	for (const bot of [

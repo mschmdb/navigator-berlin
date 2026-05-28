@@ -44,9 +44,11 @@ export const GET: RequestHandler = ({ url }) => {
 	lines.push('Allow: /');
 	lines.push('Disallow: /_dev/');
 	lines.push('Disallow: /api/');
-	// GeoJSON-Datenfiles (Map lädt clientseitig, prerenderte Pages tragen Text
-	// bereits im HTML) → Crawl-Budget auf echte Seiten lenken.
-	lines.push('Disallow: /layers/');
+	// WICHTIG: /layers/ NICHT disallowen. MANIFEST.json + GeoJSON sind
+	// render-nötige Ressourcen (client-seitiger loadManifest); ein robots-Block
+	// lässt Googlebots Render-Fetch fehlschlagen → Load wirft → 500-Page →
+	// Soft-404. Crawl-Budget-Schonung für Datenfiles ginge nur via
+	// X-Robots-Tag: noindex (erlaubt Fetch, schließt aus Index), nicht via Disallow.
 	lines.push('');
 
 	lines.push('# AI-Crawler explizit Allow (Story 5.9, Memory project_seo_bot_policy)');
