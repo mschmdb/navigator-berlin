@@ -30,6 +30,19 @@ const sampleManifest: Manifest = {
 	]
 };
 
+const sampleData = {
+	manifest: sampleManifest,
+	catalogDatasets: [
+		{
+			name: 'Lärm 2023',
+			description: 'Umgebungslärm 2022 in Berlin.',
+			urlPath: '/layer/laerm-2023',
+			license: 'dl-de/zero-2-0' as const,
+			creatorName: 'SenMVKU'
+		}
+	]
+};
+
 const SECTION_IDS = [
 	'daten-lizenzen',
 	'software',
@@ -39,19 +52,19 @@ const SECTION_IDS = [
 
 describe('lizenzen +page.svelte', () => {
 	it('rendert h1 „Lizenzen"', async () => {
-		render(Page, { data: { manifest: sampleManifest } });
+		render(Page, { data: sampleData });
 		const h1 = (await page.getByTestId('lizenzen-page-title').element()) as HTMLElement;
 		expect(h1.tagName).toBe('H1');
 		expect(h1.textContent).toMatch(/Lizenzen/);
 	});
 
 	it('rendert Inhaltsverzeichnis-Nav', async () => {
-		render(Page, { data: { manifest: sampleManifest } });
+		render(Page, { data: sampleData });
 		await expect.element(page.getByRole('navigation', { name: /Inhalt/i })).toBeInTheDocument();
 	});
 
 	it('rendert alle Sections per id', async () => {
-		render(Page, { data: { manifest: sampleManifest } });
+		render(Page, { data: sampleData });
 		for (const id of SECTION_IDS) {
 			const sec = document.getElementById(id);
 			expect(sec, `Section #${id} fehlt`).not.toBeNull();
@@ -60,7 +73,7 @@ describe('lizenzen +page.svelte', () => {
 	});
 
 	it('Daten-Lizenzen-Section gruppiert Layer pro Lizenz', async () => {
-		render(Page, { data: { manifest: sampleManifest } });
+		render(Page, { data: sampleData });
 		const sec = document.getElementById('daten-lizenzen');
 		expect(sec?.textContent).toMatch(/dl-de\/zero/);
 		expect(sec?.textContent).toMatch(/dl-de\/by/);
@@ -71,14 +84,14 @@ describe('lizenzen +page.svelte', () => {
 	});
 
 	it('Daten-Lizenzen verlinkt Lizenz-Volltexte', async () => {
-		render(Page, { data: { manifest: sampleManifest } });
+		render(Page, { data: sampleData });
 		const sec = document.getElementById('daten-lizenzen');
 		const links = sec?.querySelectorAll('a[href^="https"]');
 		expect(links?.length).toBeGreaterThanOrEqual(3);
 	});
 
 	it('Software-Section nennt SvelteKit, Svelte, MapLibre, IBM Plex', async () => {
-		render(Page, { data: { manifest: sampleManifest } });
+		render(Page, { data: sampleData });
 		const sw = document.getElementById('software');
 		const text = sw?.textContent ?? '';
 		expect(text).toMatch(/SvelteKit/);
@@ -88,14 +101,14 @@ describe('lizenzen +page.svelte', () => {
 	});
 
 	it('OSM-Namensnennung-Section weist auf OpenStreetMap-Contributors hin', async () => {
-		render(Page, { data: { manifest: sampleManifest } });
+		render(Page, { data: sampleData });
 		const osm = document.getElementById('osm-namensnennung');
 		expect(osm?.textContent).toMatch(/OpenStreetMap/);
 		expect(osm?.textContent).toMatch(/ODbL/);
 	});
 
 	it('Layer-Slugs verlinken auf /layer/{slug}', async () => {
-		render(Page, { data: { manifest: sampleManifest } });
+		render(Page, { data: sampleData });
 		const link = document.querySelector('section#daten-lizenzen a[href="/layer/laerm-2023"]');
 		expect(link).not.toBeNull();
 	});

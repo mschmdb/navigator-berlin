@@ -147,11 +147,7 @@
 			description: `Lizenzen aller Berliner Geo-Daten und Software-Pakete hinter navigator.berlin. Senats-Verwaltung, ODIS, OpenStreetMap.`,
 			urlPath: '/lizenzen',
 			publisherName: 'Matze Schmidbauer',
-			datasets: manifest.layers.map((l) => ({
-				name: getLayerDisplayName(l.slug),
-				urlPath: `/layer/${l.slug}`,
-				license: l.license
-			}))
+			datasets: data.catalogDatasets
 		})
 	);
 </script>
