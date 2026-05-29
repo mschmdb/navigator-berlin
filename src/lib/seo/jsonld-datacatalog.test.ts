@@ -22,7 +22,7 @@ describe('buildDataCatalog', () => {
 		expect(jsonLd.publisher.name).toBe('Matze Schmidbauer');
 	});
 
-	it('emittiert dataset-Array mit Refs (name + url + license)', () => {
+	it('emittiert dataset als reine @id-Referenzen auf die kanonische Layer-Page', () => {
 		const jsonLd = buildDataCatalog({
 			origin,
 			name: 'Test',
@@ -35,13 +35,12 @@ describe('buildDataCatalog', () => {
 			]
 		});
 		expect(jsonLd.dataset).toHaveLength(2);
-		expect(jsonLd.dataset[0]).toMatchObject({
-			'@type': 'Dataset',
-			name: 'Lärm 2023',
-			url: `${origin}/layer/laerm-2023`
-		});
-		expect(jsonLd.dataset[0].license).toContain('govdata.de');
-		expect(jsonLd.dataset[1].name).toBe('Wohnlagen 2024');
+		// Reine Referenz: nur @id, kein @type Dataset (sonst verlangt Google
+		// description/creator und ordnet das Dataset faelschlich /lizenzen zu).
+		expect(jsonLd.dataset[0]).toEqual({ '@id': `${origin}/layer/laerm-2023` });
+		expect(jsonLd.dataset[1]).toEqual({ '@id': `${origin}/layer/wohnlagen-2024` });
+		expect(jsonLd.dataset[0]).not.toHaveProperty('@type');
+		expect(jsonLd.dataset[0]).not.toHaveProperty('description');
 	});
 
 	it('strippt trailing-slash vom origin', () => {

@@ -1,6 +1,5 @@
 import type { WithContext } from 'schema-dts';
 import type { License } from '$lib/data/types.js';
-import { licenseToSchemaOrgUrl } from './license-url.js';
 
 /**
  * Story 5.9 AC-5: DataCatalog-JSON-LD fuer /lizenzen.
@@ -26,11 +25,14 @@ export interface DataCatalogPublisherJsonLd {
 	name: string;
 }
 
-export interface DataCatalogDatasetJsonLd {
-	'@type': 'Dataset';
-	name: string;
-	url: string;
-	license: string;
+/**
+ * Reine Linked-Data-Referenz auf das kanonische Dataset-JSON-LD der Layer-Detail-
+ * Page (`/layer/<slug>`). KEIN `@type: 'Dataset'`: ein vollstaendiges Dataset-Node
+ * hier wuerde Google `description` (kritisch) und `creator` (Empfehlung) abverlangen
+ * und den Datensatz faelschlich `/lizenzen` zuordnen statt der Layer-Page.
+ */
+export interface DataCatalogDatasetRefJsonLd {
+	'@id': string;
 }
 
 export interface DataCatalogLeafJsonLd {
@@ -40,7 +42,7 @@ export interface DataCatalogLeafJsonLd {
 	url: string;
 	inLanguage: string;
 	publisher: DataCatalogPublisherJsonLd;
-	dataset: DataCatalogDatasetJsonLd[];
+	dataset: DataCatalogDatasetRefJsonLd[];
 }
 
 export type DataCatalogJsonLd = WithContext<DataCatalogLeafJsonLd>;
@@ -78,10 +80,7 @@ export function buildDataCatalog(input: DataCatalogInput): DataCatalogJsonLd {
 			name: input.publisherName
 		},
 		dataset: input.datasets.map((ds) => ({
-			'@type': 'Dataset' as const,
-			name: ds.name,
-			url: `${origin}${ensureLeadingSlash(ds.urlPath)}`,
-			license: licenseToSchemaOrgUrl(ds.license)
+			'@id': `${origin}${ensureLeadingSlash(ds.urlPath)}`
 		}))
 	};
 }
