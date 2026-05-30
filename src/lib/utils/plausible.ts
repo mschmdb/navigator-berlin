@@ -1,7 +1,7 @@
 /**
  * Typed wrapper for Plausible Analytics custom events.
  *
- * Plausible-Self-Host läuft auf plausible.navigator.berlin (siehe Memory
+ * Plausible-Self-Host läuft auf p.fliege.dev (siehe Memory
  * `project_plausible_future`). Script-Tag in `src/app.html`. Diese Datei
  * stellt einen narrow-typed `trackEvent`-Helper, der die globale
  * `window.plausible`-Funktion (im Script-Tag-Stub initialisiert) aufruft.
