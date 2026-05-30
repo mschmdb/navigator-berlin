@@ -18,7 +18,7 @@
 
 <SeoHead
 	title="Datenschutz - Berlin in Daten - navigator.berlin"
-	description="Datenschutzerklärung für navigator.berlin. Kein Tracking, keine Cookies, keine personenbezogenen Daten."
+	description="Datenschutzerklärung für navigator.berlin. Cookieless Reichweitenmessung mit selbst gehostetem Plausible, keine Werbe-Cookies, keine personenbezogenen Daten."
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	ogImage={`${page.url.origin}/og/page/datenschutz.png`}
@@ -31,7 +31,7 @@
 		Datenschutzerklärung
 	</h1>
 
-	<p class="text-fg-muted mt-4 text-sm">Stand: 2026-05-17</p>
+	<p class="text-fg-muted mt-4 text-sm">Stand: 2026-05-30</p>
 
 	<section class="mt-8">
 		<h2 class="font-serif text-xl">1. Verantwortlich</h2>
@@ -63,7 +63,7 @@
 			Optional kann die Website im Browser-LocalStorage einzelne nicht-personenbezogene
 			Präferenzen speichern (z.&nbsp;B. zuletzt geöffnete Adresse, gemerkte Adressen, Stand der
 			Layer-Sichtbarkeit). Details siehe <a class="text-accent underline" href="#bookmarks"
-				>Abschnitt 5</a
+				>Abschnitt 6</a
 			>.
 		</p>
 	</section>
@@ -85,7 +85,33 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 id="bookmarks" class="font-serif text-xl">5. Browser-LocalStorage (Bookmarks, Präferenzen)</h2>
+		<h2 class="font-serif text-xl">5. Reichweitenmessung (Plausible)</h2>
+		<p class="mt-3 leading-relaxed">
+			Diese Website misst Reichweite mit <a
+				class="text-accent underline"
+				href="https://plausible.io/"
+				rel="noopener noreferrer"
+				target="_blank">Plausible Analytics</a
+			>, selbst gehostet auf einem eigenen Server (Hetzner Online GmbH, Falkenstein,
+			Deutschland). Plausible arbeitet ohne Cookies und ohne geräteübergreifende Kennungen.
+		</p>
+		<p class="mt-3 leading-relaxed">
+			Zur Zählung wiederkehrender Aufrufe innerhalb eines Tages bildet Plausible einen Hash
+			aus IP-Adresse, User-Agent und Domain mit einem täglich wechselnden Zufallswert. Die
+			IP-Adresse wird nicht gespeichert. Der Tages-Hash lässt keinen Rückschluss auf Ihre
+			Person zu und wird nach 24 Stunden unbrauchbar. Es entsteht kein Nutzerprofil.
+		</p>
+		<p class="mt-3 leading-relaxed">
+			Die Kennzahlen (Seitenaufrufe, Verweis-Quelle, Land bzw. Region aus der IP, Gerätetyp)
+			bleiben auf dem EU-Server. Eine Weitergabe an Dritte findet nicht statt. Rechtsgrundlage:
+			berechtigtes Interesse an datensparsamer Reichweitenanalyse (Art. 6 Abs. 1 lit. f
+			DSGVO). Plausible setzt keine Cookies und greift nicht auf Ihr Endgerät zu, deshalb ist
+			keine Einwilligung nach § 25 TDDDG erforderlich.
+		</p>
+	</section>
+
+	<section class="mt-8">
+		<h2 id="bookmarks" class="font-serif text-xl">6. Browser-LocalStorage (Bookmarks, Präferenzen)</h2>
 		<p class="mt-3 leading-relaxed">
 			Wenn Sie die Bookmark-Funktion oder Sicht-Einstellungen nutzen, werden diese ausschließlich
 			lokal in Ihrem Browser-LocalStorage gespeichert. Es findet <strong>keine
@@ -96,7 +122,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">6. Karten-Tiles und externe Datenquellen</h2>
+		<h2 class="font-serif text-xl">7. Karten-Tiles und externe Datenquellen</h2>
 		<p class="mt-3 leading-relaxed">
 			Die Karten-Darstellung verwendet Vector-Tiles von <a
 				class="text-accent underline"
@@ -120,7 +146,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">7. Kontaktaufnahme per E-Mail</h2>
+		<h2 class="font-serif text-xl">8. Kontaktaufnahme per E-Mail</h2>
 		<p class="mt-3 leading-relaxed">
 			Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben (Absender-Adresse, Inhalt) zur
 			Bearbeitung Ihrer Anfrage gespeichert. Diese Daten werden nicht ohne Ihre Einwilligung
@@ -130,7 +156,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">8. Ihre Rechte</h2>
+		<h2 class="font-serif text-xl">9. Ihre Rechte</h2>
 		<p class="mt-3 leading-relaxed">
 			Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der
 			Verarbeitung der Sie betreffenden personenbezogenen Daten sowie ein
@@ -140,7 +166,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">9. Änderungen dieser Erklärung</h2>
+		<h2 class="font-serif text-xl">10. Änderungen dieser Erklärung</h2>
 		<p class="mt-3 leading-relaxed">
 			Diese Erklärung kann angepasst werden, falls sich technische oder rechtliche
 			Rahmenbedingungen ändern. Der jeweils aktuelle Stand ist oben rechts ausgewiesen.
