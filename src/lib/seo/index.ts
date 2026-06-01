@@ -46,6 +46,7 @@ export {
 	type DatasetJsonLd,
 	type DatasetLeafJsonLd
 } from './jsonld-dataset.js';
+export { pickDatasetDescription } from './dataset-description.js';
 export {
 	buildFaqPage,
 	type FaqItem,

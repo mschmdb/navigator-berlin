@@ -12,7 +12,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import FaqSection from '$lib/components/atlas/faq-section.svelte';
-	import { buildDataset, buildBreadcrumbList } from '$lib/seo/index.js';
+	import { buildDataset, buildBreadcrumbList, pickDatasetDescription } from '$lib/seo/index.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 
 	type Props = { data: import('./$types').PageData };
@@ -39,7 +39,10 @@
 		buildDataset({
 			origin: page.url.origin,
 			name: detail.layerName,
-			description: explain.long || explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin. Datengrundlage und Anwendung im Daten-Atlas.`,
+			description: pickDatasetDescription(
+				[explain.long, explain.short],
+				`Geo-Datenlayer ${detail.layerName} in Berlin. Datengrundlage und Anwendung im Daten-Atlas.`
+			),
 			license: meta.license,
 			dateModified: meta.sourceUpdatedAt ?? meta.fetchedAt,
 			creatorName: methodology?.authority,

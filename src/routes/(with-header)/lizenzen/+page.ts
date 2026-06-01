@@ -1,6 +1,7 @@
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildLayerDetail } from '$lib/data/get-layer-detail.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
+import { pickDatasetDescription } from '$lib/seo/dataset-description.js';
 import type { DataCatalogDatasetRef } from '$lib/seo/jsonld-datacatalog.js';
 import type { PageLoad } from './$types';
 
@@ -23,10 +24,10 @@ export const load: PageLoad = async ({ fetch }) => {
 			if (!detail) return null;
 			return {
 				name: detail.layerName,
-				description:
-					detail.explain.short ||
-					detail.explain.long ||
-					`Geo-Datensatz ${detail.layerName} in Berlin im Daten-Atlas navigator.berlin.`,
+				description: pickDatasetDescription(
+					[detail.explain.short, detail.explain.long],
+					`Geo-Datensatz ${detail.layerName} in Berlin im Daten-Atlas navigator.berlin.`
+				),
 				urlPath: `/layer/${layer.slug}`,
 				license: layer.license,
 				creatorName: detail.methodology?.authority

@@ -12,6 +12,15 @@ describe('renamedRouteRedirectTarget', () => {
 		);
 	});
 
+	it('mappt umbenannten Layer-Slug /layer/kiez-score-gruen auf -gruen-hitze', () => {
+		expect(renamedRouteRedirectTarget('/layer/kiez-score-gruen')).toBe(
+			'/layer/kiez-score-gruen-hitze'
+		);
+		expect(renamedRouteRedirectTarget('/layer/kiez-score-gruen/')).toBe(
+			'/layer/kiez-score-gruen-hitze'
+		);
+	});
+
 	it('liefert null für unbekannte Pfade', () => {
 		expect(renamedRouteRedirectTarget('/umwelt-infrastruktur-score')).toBeNull();
 		expect(renamedRouteRedirectTarget('/explore')).toBeNull();
