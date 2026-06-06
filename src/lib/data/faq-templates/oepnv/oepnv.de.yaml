@@ -20,7 +20,7 @@ templates:
       Quelle: {oepnvSource}, Stand {oepnvStand}.
 
   - id: oepnv-was-bedeutet-dichte
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Was sagt die Haltedichte pro Quadratkilometer aus?"
     answer: >-
@@ -30,7 +30,7 @@ templates:
       Knoten, eine niedrige Dichte mit Stadtrand-Bereichen.
 
   - id: oepnv-walk-score-logik
-    applicableTo: [bezirk, kiez]
+    applicableTo: [layer]
     requires: []
     question: "Berücksichtigt der Wert Fußwege oder Barrierefreiheit?"
     answer: >-
@@ -40,7 +40,7 @@ templates:
       jede Erweiterung.
 
   - id: oepnv-welche-modi
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Welche Verkehrsmittel fließen in die Haltedichte ein?"
     answer: >-
@@ -49,7 +49,7 @@ templates:
       ausgewiesen, weil sie für Pendelverkehr relevant sind.
 
   - id: oepnv-warum-nicht-fahrplandaten
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Warum zeigt navigator.berlin keine Live-Fahrplan-Daten?"
     answer: >-

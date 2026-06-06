@@ -64,5 +64,11 @@
 				</Accordion.Item>
 			{/each}
 		</Accordion.Root>
+		{#if pageType === 'kiez' || pageType === 'bezirk'}
+			<p class="font-sans text-sm text-ink-muted" data-testid="faq-methodik-link">
+				Allgemeine Erklärungen zu den Kennzahlen stehen auf der
+				<a class="text-accent underline hover:no-underline" href="/methodik">Methodik-Seite</a>.
+			</p>
+		{/if}
 	</section>
 {/if}

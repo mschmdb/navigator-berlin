@@ -25,7 +25,7 @@ templates:
       Quelle: {laermSource}, Stand {laermStand}.
 
   - id: laerm-warum-nacht-schaedlicher
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Warum gilt Nacht-Lärm als gesundheitlich relevanter?"
     answer: >-
@@ -35,7 +35,7 @@ templates:
       LDEN und LNIGHT getrennt aus.
 
   - id: laerm-was-bedeutet-lden
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Was bedeutet der Wert LDEN?"
     answer: >-
@@ -54,7 +54,7 @@ templates:
       der Kartierung {laermStand}.
 
   - id: laerm-welche-quellen
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Welche Lärm-Quellen fließen in die Karte ein?"
     answer: >-
@@ -63,7 +63,7 @@ templates:
       LDEN, weil er flächendeckend die größte Bevölkerung erreicht.
 
   - id: laerm-was-tun-bei-belastung
-    applicableTo: [bezirk, kiez]
+    applicableTo: [layer]
     requires: []
     question: "Was kann ich tun, wenn ich Lärm an meiner Adresse als belastend empfinde?"
     answer: >-

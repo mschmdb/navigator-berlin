@@ -29,7 +29,7 @@ templates:
       bewirtschaftete Kleingärten zählen nicht zu dieser Kategorie.
 
   - id: gruen-was-bedeutet-versorgung
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Was bedeutet wohnungsnahe Grünversorgung?"
     answer: >-
@@ -40,7 +40,7 @@ templates:
       „gering".
 
   - id: gruen-rolle-hitze
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Welche Rolle spielen Grünflächen für Hitze-Mitigation?"
     answer: >-
