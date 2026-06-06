@@ -16,6 +16,8 @@
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { bezirkStats } from '$lib/server/db/schema/index.js';
 	import FaqSection from './faq-section.svelte';
+	import ScoreComparisonTable from './score-comparison-table.svelte';
+	import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
 	import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
 	import { describeGruenversorgungDe } from '$lib/data/faq-helpers/gruen.js';
 	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
@@ -28,9 +30,10 @@
 		readonly profile: BezirkProfile;
 		readonly stats: BezirkStatsRow | null;
 		readonly faq: readonly FaqEntry[];
+		readonly comparison?: readonly ComparisonDimRow[];
 	}
 
-	const { profile, stats, faq }: Props = $props();
+	const { profile, stats, faq, comparison = [] }: Props = $props();
 
 	const numberDe = new Intl.NumberFormat('de-DE');
 	const leadText = $derived.by(() => {
@@ -130,6 +133,8 @@
 		<h1 class="font-serif text-3xl text-ink md:text-4xl">{profile.name}</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">{leadText}</p>
 	</header>
+
+	<ScoreComparisonTable rows={comparison} showBezirkColumn={false} valueLabel="Bezirk" />
 
 	<section aria-labelledby="steckbrief-heading" class="space-y-4">
 		<h2 id="steckbrief-heading" class="font-serif text-2xl text-ink">Steckbrief</h2>

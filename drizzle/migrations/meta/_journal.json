@@ -36,6 +36,13 @@
       "when": 1780763026284,
       "tag": "0004_uneven_guardsmen",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1780767708062,
+      "tag": "0005_daily_silhouette",
+      "breakpoints": true
     }
   ]
 }

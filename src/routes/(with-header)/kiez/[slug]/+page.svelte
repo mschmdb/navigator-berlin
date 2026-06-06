@@ -105,6 +105,7 @@
 	score={data.score}
 	faq={data.faq}
 	wahlVerlauf={data.wahlVerlauf}
+	comparison={data.comparison}
 />
 
 {#if bezirkName.length > 0}

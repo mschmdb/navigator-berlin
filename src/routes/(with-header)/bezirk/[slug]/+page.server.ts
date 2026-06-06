@@ -10,7 +10,16 @@ import {
 } from '$lib/data/get-kieze-in-bezirk.js';
 import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
+import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
+
+const SCORE_DIMS: readonly { key: string; label: string }[] = [
+	{ key: 'ruheLuft', label: 'Ruhe & Luft' },
+	{ key: 'gruenHitze', label: 'Grün & Hitze' },
+	{ key: 'mobilitaet', label: 'Mobilität' },
+	{ key: 'versorgung', label: 'Versorgung' },
+	{ key: 'wohnschutz', label: 'Wohnschutz' }
+];
 
 export const prerender = true;
 
@@ -48,11 +57,36 @@ async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
 	}
 }
 
+async function tryLoadBezirkRank(slug: string) {
+	if (!process.env.DATABASE_URL) return null;
+	try {
+		const { getBezirkRank } = await import('$lib/server/db/queries/get-bezirk-rank.js');
+		return await getBezirkRank(slug);
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[bezirk-page] WARN: bezirk_rank unavailable (${msg})\n`);
+		return null;
+	}
+}
+
+async function tryLoadBezirkComparison(slug: string) {
+	if (!process.env.DATABASE_URL) return null;
+	try {
+		const { getBezirkComparison } = await import('$lib/server/db/queries/get-bezirk-comparison.js');
+		return await getBezirkComparison(slug);
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[bezirk-page] WARN: bezirk_comparison unavailable (${msg})\n`);
+		return null;
+	}
+}
+
 export type BezirkPageData = {
 	readonly profile: BezirkProfile;
 	readonly stats: BezirkStats | null;
 	readonly faq: readonly FaqEntry[];
 	readonly kieze: readonly KiezRef[];
+	readonly comparison: readonly ComparisonDimRow[];
 };
 
 async function tryLoadKieze(bezirkSlug: string): Promise<KiezRef[]> {
@@ -129,11 +163,25 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, `Bezirk ${slug} nicht gefunden`);
 	}
-	const [stats, faq, kieze] = await Promise.all([
+	const [stats, faq, kieze, rank, comparisonMap] = await Promise.all([
 		tryLoadBezirkStats(slug),
 		tryLoadFaq(slug),
-		tryLoadKieze(slug)
+		tryLoadKieze(slug),
+		tryLoadBezirkRank(slug),
+		tryLoadBezirkComparison(slug)
 	]);
-	const data: BezirkPageData = { profile, stats, faq, kieze };
+	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ key, label }) => {
+		const cmp = comparisonMap?.get(key);
+		const rk = rank?.get(key);
+		return {
+			label,
+			value: cmp?.bezirkValue ?? null,
+			berlinMedian: cmp?.berlinMedian ?? null,
+			rang: rk?.rang ?? null,
+			quartil: rk?.quartil ?? null,
+			total: rk?.total ?? 0
+		};
+	});
+	const data: BezirkPageData = { profile, stats, faq, kieze, comparison };
 	return data;
 };

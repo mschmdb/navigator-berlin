@@ -5,6 +5,8 @@ export * from './bezirk-score.js';
 export * from './kiez-score.js';
 export * from './bezirk-rank.js';
 export * from './kiez-rank.js';
+export * from './bezirk-comparison.js';
+export * from './kiez-comparison.js';
 export * from './faq-qna.js';
 export * from './llms-content.js';
 export * from './wahl/index.js';

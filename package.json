@@ -26,6 +26,7 @@
 		"data:aggregate": "tsx scripts/aggregate-data.ts",
 		"data:aggregate-scores": "tsx scripts/aggregate-scores.ts",
 		"data:rank": "tsx scripts/aggregate-ranks.ts",
+		"data:comparison": "tsx scripts/aggregate-comparison.ts",
 		"data:layer-aggregate": "tsx scripts/build-layer-aggregates.ts",
 		"data:aggregate-wohnlagen": "tsx scripts/aggregate-wohnlagen.ts",
 		"data:wahl-fetch": "tsx scripts/aggregate-wahl-data.ts",

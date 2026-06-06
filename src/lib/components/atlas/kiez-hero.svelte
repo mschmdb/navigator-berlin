@@ -22,6 +22,8 @@
 	import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 	import FaqSection from './faq-section.svelte';
 	import KiezWahlVerlauf, { type WahlVerlaufRow } from './kiez-wahl-verlauf.svelte';
+	import ScoreComparisonTable from './score-comparison-table.svelte';
+	import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
 	import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
 	import { describeGruenversorgungDe } from '$lib/data/faq-helpers/gruen.js';
 	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
@@ -36,9 +38,10 @@
 		readonly score: KiezScore | null;
 		readonly faq: readonly FaqEntry[];
 		readonly wahlVerlauf?: readonly WahlVerlaufRow[];
+		readonly comparison?: readonly ComparisonDimRow[];
 	}
 
-	const { profile, stats, score, faq, wahlVerlauf = [] }: Props = $props();
+	const { profile, stats, score, faq, wahlVerlauf = [], comparison = [] }: Props = $props();
 
 	const numberDe = new Intl.NumberFormat('de-DE');
 	const leadText = $derived.by(() => {
@@ -184,6 +187,8 @@
 			</p>
 		</section>
 	{/if}
+
+	<ScoreComparisonTable rows={comparison} showBezirkColumn={true} valueLabel="Kiez" />
 
 	<section aria-labelledby="steckbrief-heading" class="space-y-4">
 		<h2 id="steckbrief-heading" class="font-serif text-2xl text-ink">Steckbrief</h2>
