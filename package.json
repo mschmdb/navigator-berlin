@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
+	"packageManager": "pnpm@10.32.0",
 	"scripts": {
 		"dev": "vite dev",
 		"prebuild": "pnpm exec svelte-kit sync && pnpm db:migrate && pnpm data:aggregate && pnpm data:aggregate-scores && (pnpm data:wahl-check || (pnpm data:wahl-fetch-chunked && pnpm data:wahl-geo && pnpm data:wahl-kiez)) && pnpm data:faq && pnpm og:images -- --force",
