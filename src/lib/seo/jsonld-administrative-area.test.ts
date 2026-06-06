@@ -29,4 +29,27 @@ describe('buildAdministrativeArea', () => {
 		expect(out.url).toBe('https://navigator.berlin/bezirk/kreuzberg');
 		expect(Array.isArray(out.additionalProperty)).toBe(true);
 	});
+
+	it('setzt sameAs wenn übergeben (Story 11.1)', () => {
+		const out = buildAdministrativeArea({
+			origin: 'https://navigator.berlin',
+			name: 'Mitte',
+			centroid: [13.4, 52.5],
+			sameAs: ['https://www.wikidata.org/wiki/Q163966', 'https://de.wikipedia.org/wiki/Bezirk_Mitte']
+		});
+		expect(out.sameAs).toEqual([
+			'https://www.wikidata.org/wiki/Q163966',
+			'https://de.wikipedia.org/wiki/Bezirk_Mitte'
+		]);
+	});
+
+	it('lässt sameAs weg bei leerem/fehlendem Array (kein erfundener Link)', () => {
+		const out = buildAdministrativeArea({
+			origin: 'https://navigator.berlin',
+			name: 'Mitte',
+			centroid: [13.4, 52.5],
+			sameAs: []
+		});
+		expect(out.sameAs).toBeUndefined();
+	});
 });
