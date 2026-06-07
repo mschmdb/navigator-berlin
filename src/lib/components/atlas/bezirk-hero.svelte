@@ -19,6 +19,8 @@
 	import ScoreComparisonTable from './score-comparison-table.svelte';
 	import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
 	import { sourceLabel } from '$lib/data/source-label.js';
+	import DistributionBar from './distribution-bar.svelte';
+	import { toSegments, countsText, type DistSegment } from '$lib/data/steckbrief-extras.js';
 	import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
 	import { describeGruenversorgungDe } from '$lib/data/faq-helpers/gruen.js';
 	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
@@ -53,6 +55,8 @@
 		readonly value: string;
 		readonly source: string;
 		readonly sourceUpdatedAt: string;
+		readonly distribution?: readonly DistSegment[];
+		readonly extra?: string;
 	}
 
 	function formatStand(iso: string): string {
@@ -72,7 +76,8 @@
 				cluster: 'Lärm',
 				value: describeLaermCategoryDe(raw),
 				source: sourceLabel(row.laerm.dominantCategory.layer),
-				sourceUpdatedAt: formatStand(row.laerm.dominantCategory.sourceUpdatedAt)
+				sourceUpdatedAt: formatStand(row.laerm.dominantCategory.sourceUpdatedAt),
+				distribution: toSegments(row.laerm.categoryDistribution?.value)
 			});
 		}
 		const gruen = row.gruen.dominantVersorgung;
@@ -82,7 +87,12 @@
 				cluster: 'Grünversorgung',
 				value: describeGruenversorgungDe(raw),
 				source: sourceLabel(gruen.layer),
-				sourceUpdatedAt: formatStand(gruen.sourceUpdatedAt)
+				sourceUpdatedAt: formatStand(gruen.sourceUpdatedAt),
+				distribution: toSegments(row.gruen.versorgungDistribution?.value),
+				extra: countsText([
+					['Grünanlagen', row.gruen.gruenanlagenCount?.value ?? null],
+					['Spielplätze', row.gruen.spielplaetzeCount?.value ?? null]
+				])
 			});
 		}
 		const pet = row.klima.meanPet;
@@ -100,7 +110,13 @@
 				cluster: 'ÖPNV-Dichte',
 				value: `${formatStopsPerKm2(stops.value)} (${describeOepnvDichte(stops.value)})`,
 				source: sourceLabel(stops.layer),
-				sourceUpdatedAt: formatStand(stops.sourceUpdatedAt)
+				sourceUpdatedAt: formatStand(stops.sourceUpdatedAt),
+				extra: countsText([
+					['U', row.oepnv.uBahnCount?.value ?? null],
+					['S', row.oepnv.sBahnCount?.value ?? null],
+					['Tram', row.oepnv.tramCount?.value ?? null],
+					['Bus', row.oepnv.busCount?.value ?? null]
+				])
 			});
 		}
 		const wohnlage = row.wohnen.dominantWohnlage;
@@ -110,7 +126,8 @@
 				cluster: 'Wohnlage',
 				value: describeWohnlageDe(raw),
 				source: sourceLabel(wohnlage.layer),
-				sourceUpdatedAt: formatStand(wohnlage.sourceUpdatedAt)
+				sourceUpdatedAt: formatStand(wohnlage.sourceUpdatedAt),
+				distribution: toSegments(row.wohnen.wohnlageDistribution?.value)
 			});
 		}
 		const mss = row.wohnen.dominantMss;
@@ -160,6 +177,8 @@
 							<th scope="row" class="py-3 pr-4 text-left font-semibold text-ink">{row.cluster}</th>
 							<td class="py-3 pr-4 text-ink">
 								<span>{row.value}</span>
+								{#if row.extra}<span class="block font-mono text-xs text-ink-muted">{row.extra}</span>{/if}
+								{#if row.distribution && row.distribution.length > 0}<DistributionBar segments={row.distribution} />{/if}
 								<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
 							</td>
 							<td class="py-3 text-left font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
