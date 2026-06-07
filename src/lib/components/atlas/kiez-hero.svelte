@@ -231,8 +231,20 @@
 							<th scope="row" class="py-3 pr-4 text-left font-semibold text-ink">{row.cluster}</th>
 							<td class="py-3 pr-4 text-ink">
 								<span>{row.value}</span>
-								{#if row.extra}<span class="block font-mono text-xs text-ink-muted">{row.extra}</span>{/if}
-									{#if row.distribution && row.distribution.length > 0}<DistributionBar segments={row.distribution} />{/if}
+								{#if row.extra || (row.distribution && row.distribution.length > 0)}
+										<details class="mt-1">
+											<summary
+												class="cursor-pointer font-mono text-xs text-accent hover:text-accent-strong"
+												>Verteilung & Zahlen</summary
+											>
+											{#if row.extra}<span class="mt-1 block font-mono text-xs text-ink-muted"
+													>{row.extra}</span
+												>{/if}
+											{#if row.distribution && row.distribution.length > 0}<DistributionBar
+													segments={row.distribution}
+												/>{/if}
+										</details>
+									{/if}
 									<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
 							</td>
 							<td class="py-3 text-left font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
