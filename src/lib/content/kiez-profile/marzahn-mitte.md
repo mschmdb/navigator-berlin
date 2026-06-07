@@ -3,10 +3,10 @@ slug: marzahn-mitte
 name: Marzahn Mitte
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: aca79763d9ce4054
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: b60ff824fe2560d2
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Marzahn Mitte überzeugt beim Grün. Grün und Hitze erreichen Rang 31 von 143 und liegen über dem Berliner Median. Die Grünversorgung gilt als gut. Bei Ruhe und Luft reicht es für Rang 88. Die Lärmklasse ist mittel. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad.
+Marzahn Mitte zeigt seine Stärke bei Grün und Hitze mit 64,4 über dem Berliner Median und nahe am Bezirksschnitt. Beim Gesamtscore erreicht der Kiez 37,5 und Rang 86 von 143. Die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad.
 
-Die Anbindung bleibt dünn. Die Haltestellendichte liegt bei rund 8 pro Quadratkilometer. Bei Mobilität fällt der Kiez auf Rang 72 zurück. Die Versorgung bleibt nahe am Berliner Median, auf Rang 72. Insgesamt steht Marzahn Mitte auf Rang 88.
+Bei Ruhe und Luft bleibt der Kiez mit 53,6 unter dem Bezirksschnitt und unter dem Berliner Median. Die Mobilität liegt mit 21,8 nahe am Berliner Median, die Haltestellendichte erreicht rund 8 pro Quadratkilometer. Die Versorgung liegt mit 47,8 nahe am Berliner Median. Die Kultur erreicht 34,5 und zählt getrennt vom Gesamtscore.

@@ -3,10 +3,10 @@ slug: koepenick-nord
 name: Koepenick Nord
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: d6b57cb781a250a6
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: a5aeb4738c1c61c8
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Koepenick Nord ist ausgesprochen ruhig und grün. Bei Ruhe und Luft erreicht der Kiez Rang 9 von 143 und liegt weit über dem Berliner Median. Grün und Hitze fallen ebenfalls stark aus, mit Rang 16. Die Grünversorgung gilt als gut. An heißen Tagen liegt die gefühlte Temperatur bei rund 35 Grad.
+Koepenick Nord erreicht bei Ruhe und Luft mit 93,4 den neunten Platz von 143 Kiezen. Dieser Wert liegt über dem Bezirksschnitt und weit über dem Berliner Median. Grün und Hitze liegen mit 69,1 über beiden Vergleichswerten. Beim Gesamtscore erreicht der Kiez 40,5 und Rang 63. Die Lärmklasse gilt als mittel.
 
-Die Anbindung bleibt sehr dünn. Die Haltestellendichte liegt bei rund 5 pro Quadratkilometer. Bei Mobilität fällt der Kiez auf Rang 106 zurück. Die Versorgung bleibt schwach, auf Rang 122 und unter dem Berliner Median. Insgesamt steht Koepenick Nord auf Rang 64.
+Die Mobilität fällt mit 14,5 unter den Berliner Median, die Haltestellendichte erreicht rund 5 pro Quadratkilometer. Die Versorgung fällt mit 25,5 weit unter den Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 35 Grad. Die Kultur erreicht nur 11,6 und zählt getrennt vom Gesamtscore.

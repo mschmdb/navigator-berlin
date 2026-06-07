@@ -3,10 +3,10 @@ slug: prenzlauer-berg-nord
 name: Prenzlauer Berg Nord
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 76598099f7f3d286
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: ce015bbf91132e7e
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Prenzlauer Berg Nord führt beim Wohnschutz. Der Score erreicht 100 Punkte, Rang 1 von 143. Auch die Mobilität ist stark, mit 39 Punkten auf Rang 21 und über dem Berliner Median. Die Haltestellendichte beträgt 16,9 pro Quadratkilometer. Die Versorgung liegt mit 55,6 Punkten über dem Median.
+Prenzlauer Berg Nord führt beim Wohnschutz. Der Score erreicht 100 und steht auf Rang 1 von 143. Die Mobilität liegt mit 39 über Bezirksschnitt und Berliner Median. Die Versorgung übertrifft mit 67,8 den Median deutlich. Die Haltestellendichte beträgt rund 17 Stopps je Quadratkilometer.
 
-Beim Grün und bei der Ruhe hat der Kiez Schwächen. Grün und Hitze erreicht 30,2 Punkte, unter dem Median. An heißen Tagen steigt die gefühlte Temperatur auf 36,7 Grad. Ruhe und Luft kommt auf 42,2 Punkte, unter dem Bezirksschnitt. Insgesamt steht der Kiez auf Rang 11 von 143.
+Grün und Ruhe bleiben schwach. Grün und Hitze erreichen 30,2 und liegen unter dem Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad. Ruhe und Luft kommen mit 42,2 unter den Bezirksschnitt. Insgesamt landet das Gebiet mit einem Gesamtwert von 55,8 auf Rang 12 von 143.

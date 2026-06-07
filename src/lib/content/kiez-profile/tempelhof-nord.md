@@ -3,10 +3,10 @@ slug: tempelhof-nord
 name: Tempelhof Nord
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: f770d80d662ef9ea
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 0c0fa6c9610b3a04
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Tempelhof Nord bewegt sich in mehreren Feldern im Mittel. Ruhe und Luft kommen auf 60,9 Punkte, nahe am Bezirksschnitt. Das Grün liegt bei 50,2 Punkten, etwas unter dem Berliner Median. Die Grünversorgung fällt mittel aus, der Lärm ebenfalls. Die gefühlte Temperatur an heißen Tagen liegt bei rund 37 Grad.
+Tempelhof Nord bewegt sich in mehreren Feldern im Mittel. Ruhe und Luft kommen auf rund 61 Punkte, nahe am Bezirksschnitt. Das Grün liegt bei 50 Punkten, nahe am Berliner Median. Die Grünversorgung fällt mittel aus, die Lärmklasse ebenfalls. An heißen Tagen erreicht die gefühlte Temperatur rund 37 Grad.
 
-Anbindung und Versorgung sind die Schwachpunkte. Der Mobilitäts-Score liegt bei 15,1 Punkten, Rang 105 und unter dem Berliner Median. Die Versorgung kommt auf 35,7 Punkte, Rang 102. Die Haltestellendichte erreicht rund 8 Halte pro Quadratkilometer. Insgesamt ergibt das einen Composite-Score von 36,7 Punkten, Rang 91.
+Anbindung und Versorgung sind die Schwachpunkte. Der Mobilitäts-Score von rund 15 bedeutet Rang 105, unter dem Berliner Median. Die Versorgung kommt auf rund 31 Punkte, Rang 109. Die Haltestellendichte erreicht rund 8 Halte pro Quadratkilometer. Insgesamt steht Tempelhof Nord auf Rang 95.

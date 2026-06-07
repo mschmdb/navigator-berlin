@@ -3,10 +3,10 @@ slug: marzahn-nord
 name: Marzahn Nord
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: da0e8f940eb60146
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 79a0318331617a19
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Marzahn Nord im Bezirk Marzahn Hellersdorf zeigt seine Stärke beim Grün. Bei Grün und Hitze erreicht das Gebiet 68,8 Punkte und liegt klar über dem Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei 36,3 Grad. Auch die Versorgung fällt mit 61,3 Punkten gut aus und übertrifft den Median deutlich.
+Marzahn Nord zeigt seine Stärke bei Grün und Hitze mit 68,8 über dem Bezirksschnitt und über dem Berliner Median. Beim Gesamtscore erreicht der Kiez 44,6 und Rang 49 von 143. Die Versorgung liegt mit 68,9 über dem Bezirksschnitt und über dem Berliner Median. Die Lärmklasse gilt als gering.
 
-Bei Ruhe und Luft kommt Marzahn Nord auf 56,9 Punkte und bleibt unter dem Bezirksschnitt. Die Lärmbelastung gilt als gering. Die Mobilität erreicht 28,5 Punkte, leicht über dem Berliner Median. Die Haltestellendichte beträgt 12 pro Quadratkilometer. Im Gesamtbild steht das Gebiet auf Rang 51 von 143.
+Bei Ruhe und Luft bleibt der Kiez mit 56,9 unter dem Bezirksschnitt und unter dem Berliner Median. Die Mobilität liegt mit 28,5 über dem Berliner Median, die Haltestellendichte erreicht rund 12 pro Quadratkilometer. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad. Die Kultur erreicht 28,7 und zählt getrennt vom Gesamtscore.

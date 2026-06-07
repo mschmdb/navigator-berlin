@@ -3,10 +3,10 @@ slug: ost-2-alt-reinickendorf
 name: Ost 2 Alt Reinickendorf
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 09d8110921f80dad
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: bb6a3f3266c06e86
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Ost 2 Alt Reinickendorf punktet vor allem bei der Mobilität. Mit Rang 7 von 143 liegt das Gebiet hier weit über dem Bezirksschnitt. Die Haltestellendichte erreicht rund 14 Stopps pro Quadratkilometer. Ruhe und Luft bewegen sich nahe am Berliner Median, der Lärm bleibt mittel.
+Ost 2 Alt Reinickendorf punktet bei der Mobilität. Der Score von 46,1 reicht für Rang 7 von 143. Der Wert liegt klar über dem Schnitt von Reinickendorf und über dem Berliner Median. Die Haltestellendichte erreicht rund 14 pro Quadratkilometer. Die Versorgung steht mit 55,8 Punkten über dem Bezirksschnitt.
 
-Beim Gesamtscore landet Ost 2 Alt Reinickendorf mit 41,5 Punkten im Mittelfeld. Versorgung und Grün liegen leicht unter dem Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 35 Grad. Die soziale Lage gilt als mittel.
+Ruhe und Luft bewegen sich mit 66,1 Punkten nahe am Median. Grün und Hitze liegen mit 51,5 Punkten nahe am Median. An heißen Tagen erreicht die gefühlte Temperatur rund 35 Grad. Der Lärm gilt als mittel. Insgesamt kommt das Gebiet auf 43,9 Punkte und Rang 52.

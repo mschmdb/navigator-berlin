@@ -24,7 +24,10 @@ export const DIMS: readonly { key: string; label: string }[] = [
 	{ key: 'gruenHitze', label: 'Grün & Hitze' },
 	{ key: 'mobilitaet', label: 'Mobilität' },
 	{ key: 'versorgung', label: 'Versorgung' },
-	{ key: 'wohnschutz', label: 'Wohnschutz' }
+	{ key: 'wohnschutz', label: 'Wohnschutz' },
+	// Story 13.8: Kultur als eigenständige Dimension (Option C, nicht im Composite). Fließt als
+	// Grounding-Input ins Profil ein, damit der Fakten-Lint Kultur-Zahlen kennt.
+	{ key: 'kultur', label: 'Kultur' }
 ];
 
 export function slugToName(slug: string): string {

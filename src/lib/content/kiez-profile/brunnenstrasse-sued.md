@@ -3,10 +3,10 @@ slug: brunnenstrasse-sued
 name: Brunnenstrasse Sued
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: a3eb628eeab25d1e
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 1b7a852c1af4a639
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Brunnenstrasse Sued im Bezirk Mitte ist sehr zentral und gut versorgt. Im Gesamtbild steht das Gebiet auf Rang 7 von 143. Die Mobilität erreicht 50,6 Punkte und damit Rang 3, weit über dem Berliner Median. Auch Versorgung und Wohnschutz fallen stark aus, mit 69,8 und 78,7 Punkten. Die Haltestellendichte beträgt 16 pro Quadratkilometer.
+Brunnenstrasse Sued erreicht beim Gesamtscore 56,6 und Rang 10 von 143. Die Mobilität liegt mit 50,6 auf Rang 3, weit über dem Berliner Median und über dem Bezirksschnitt. Die Haltestellendichte erreicht rund 16 pro Quadratkilometer. Die Versorgung liegt mit 74,6 über dem Berliner Median.
 
-Beim Grün liegt das Gebiet zurück. Grün und Hitze erreicht nur 29,9 Punkte und bleibt deutlich unter dem Median. Die Grünversorgung gilt als schlecht. Bei Ruhe und Luft kommt es auf 49,2 Punkte, unter dem Median. Die Lärmbelastung gilt als mittel. Die gefühlte Temperatur an heißen Tagen liegt bei 36,3 Grad.
+Bei Grün und Hitze fällt der Kiez mit 29,9 unter den Bezirksschnitt und unter den Berliner Median. Ruhe und Luft liegen mit 49,2 unter dem Berliner Median, die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad. Die Kultur erreicht 100 und Rang 1. Diese Dimension zählt getrennt vom Gesamtscore.

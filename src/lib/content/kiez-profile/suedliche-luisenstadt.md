@@ -3,10 +3,10 @@ slug: suedliche-luisenstadt
 name: Suedliche Luisenstadt
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 7fa4de34a32c4f7d
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 41ee52d3032c0f62
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Suedliche Luisenstadt im Bezirk Friedrichshain Kreuzberg führt das gesamte Feld an. Im Gesamtbild steht das Gebiet auf Rang 1 von 143, mit 62,8 Punkten. Beim Wohnschutz erreicht es die vollen 100 Punkte und damit ebenfalls Platz 1. Die Versorgung fällt mit 69,9 Punkten stark aus und liegt weit über dem Berliner Median.
+Suedliche Luisenstadt erreicht beim Gesamtscore 64,2 und damit den ersten Platz von 143 Kiezen. Die Versorgung liegt mit 77 über dem Bezirksschnitt und weit über dem Berliner Median. Die Lärmklasse gilt als gering. An heißen Tagen steigt die gefühlte Temperatur auf rund 34 Grad.
 
-Die Lärmbelastung gilt als gering. Bei Ruhe und Luft kommt das Gebiet auf 64,4 Punkte, nahe am Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei 34,1 Grad. Die Mobilität erreicht 28,5 Punkte, leicht über dem Median. Die Haltestellendichte beträgt 9,4 pro Quadratkilometer.
+Bei Ruhe und Luft liegt der Kiez mit 64,4 über dem Bezirksschnitt und nahe am Berliner Median. Die Mobilität liegt mit 28,5 über dem Berliner Median, die Haltestellendichte erreicht rund 9 pro Quadratkilometer. Die Kultur erreicht 100 und damit Rang 1. Diese Dimension zählt getrennt vom Gesamtscore.

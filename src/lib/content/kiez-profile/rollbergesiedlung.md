@@ -3,10 +3,10 @@ slug: rollbergesiedlung
 name: Rollbergesiedlung
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 2091eea32e89e8f2
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: dcccf7f4c0e23144
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Rollbergesiedlung liegt bei Ruhe und Luft über dem Berliner Median, auf Rang 55 von 143. Die Grünversorgung gilt als gut. Grün und Hitze fallen jedoch nur mittelmäßig aus, mit Rang 77. An heißen Tagen liegt die gefühlte Temperatur bei rund 38 Grad. Die Lärmklasse ist hoch.
+Rollbergesiedlung erreicht bei Ruhe und Luft 67,4 und liegt damit über dem Berliner Median, doch nahe am Bezirksschnitt. Beim Gesamtscore erreicht der Kiez 37,4 und Rang 87 von 143. Die Lärmklasse gilt als hoch. An heißen Tagen steigt die gefühlte Temperatur auf rund 38 Grad.
 
-Die Anbindung bleibt schwach. Die Haltestellendichte liegt bei rund 14 pro Quadratkilometer. Bei Mobilität fällt der Kiez auf Rang 80 zurück. Die Versorgung bleibt unter dem Berliner Median, auf Rang 85. Insgesamt steht Rollbergesiedlung auf Rang 97.
+Die Versorgung liegt mit 52,7 nahe am Berliner Median und über dem Bezirksschnitt. Die Mobilität fällt mit 19,9 unter den Berliner Median, die Haltestellendichte erreicht rund 14 pro Quadratkilometer. Grün und Hitze liegen mit 47 unter dem Berliner Median. Die Kultur erreicht nur 12,7 und zählt getrennt vom Gesamtscore.

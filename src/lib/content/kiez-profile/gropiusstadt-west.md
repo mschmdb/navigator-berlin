@@ -3,10 +3,10 @@ slug: gropiusstadt-west
 name: Gropiusstadt West
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: a9763f01f4ac939e
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 9a9ff1d65ee5157b
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Gropiusstadt West gehört zu den stärksten Kiezen Berlins, auf Rang 12 von 143. Bei Ruhe und Luft erreicht der Kiez Rang 35 und liegt über dem Berliner Median. Die Lärmklasse ist gering. Grün und Hitze fallen ebenfalls gut aus, mit Rang 46. Die Grünversorgung gilt als gut.
+Gropiusstadt West erreicht beim Gesamtscore 53,9 und Rang 14 von 143. Ruhe und Luft liegen mit 72,3 über dem Bezirksschnitt und über dem Berliner Median. Die Lärmklasse gilt als gering. An heißen Tagen steigt die gefühlte Temperatur auf rund 35 Grad.
 
-Auch die übrigen Werte überzeugen. Beim Wohnschutz reicht es für Rang 24. Bei Mobilität steht der Kiez auf Rang 38. Die Haltestellendichte liegt bei rund 14 pro Quadratkilometer. An heißen Tagen liegt die gefühlte Temperatur bei rund 35 Grad. Die Versorgung bleibt über dem Berliner Median.
+Die Mobilität liegt mit 32 über dem Berliner Median, die Haltestellendichte erreicht rund 14 pro Quadratkilometer. Die Versorgung liegt mit 62 über dem Berliner Median. Grün und Hitze liegen mit 58,9 über dem Bezirksschnitt und über dem Berliner Median. Die Kultur erreicht 42,3 und zählt getrennt vom Gesamtscore.

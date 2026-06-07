@@ -3,10 +3,10 @@ slug: britz-nord
 name: Britz Nord
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 55cb2b825555023e
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 7c0f89da0113d540
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Britz Nord im Bezirk Neukoelln trägt eine hohe Lärmlast. Bei Ruhe und Luft erreicht das Gebiet nur 41,9 Punkte und bleibt deutlich unter dem Berliner Median und dem Bezirksschnitt. Die Lärmbelastung gilt als mittel. Die gefühlte Temperatur an heißen Tagen liegt bei 35,7 Grad.
+Britz Nord fällt bei Ruhe und Luft mit 41,9 unter den Bezirksschnitt und unter den Berliner Median. Beim Gesamtscore erreicht der Kiez 39 und Rang 75 von 143. Die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad.
 
-Die Mobilität kommt auf 31,5 Punkte und liegt leicht über dem Bezirksschnitt. Die Versorgung erreicht 43,2 Punkte, unter dem Berliner Median. Bei Grün und Hitze steht das Gebiet mit 50 Punkten nahe am Bezirksschnitt. Die Haltestellendichte beträgt 14,9 pro Quadratkilometer. Im Gesamtbild steht Britz Nord auf Rang 83 von 143.
+Die Mobilität liegt mit 31,5 über dem Berliner Median, die Haltestellendichte erreicht rund 15 pro Quadratkilometer. Die Versorgung liegt mit 49,6 nahe am Berliner Median. Grün und Hitze liegen mit 50 nahe am Berliner Median. Die Kultur erreicht 34 und zählt getrennt vom Gesamtscore.

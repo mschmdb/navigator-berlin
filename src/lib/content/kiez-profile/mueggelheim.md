@@ -3,10 +3,10 @@ slug: mueggelheim
 name: Mueggelheim
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 253157e033e3f134
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: dfab703db5fb06c4
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Mueggelheim bietet viel Ruhe. Ruhe und Luft erreichen 88,5 Punkte, Rang 19 von 143. Das Grün kommt auf 66,2 Punkte, über dem Bezirksschnitt. Die gefühlte Temperatur an heißen Tagen bleibt mit rund 31 Grad niedrig. Die Grünversorgung fällt gut aus.
+Mueggelheim bietet viel Ruhe. Ruhe und Luft erreichen rund 89 Punkte, Rang 19 von 143. Das Grün kommt auf rund 66 Punkte, über dem Bezirksschnitt. An heißen Tagen bleibt die gefühlte Temperatur mit rund 31 Grad niedrig. Die Grünversorgung fällt gut aus.
 
-Die Anbindung ist die größte Schwäche. Die Haltestellendichte erreicht nur rund 1 Halt pro Quadratkilometer. Der Mobilitäts-Score liegt bei 11,1 Punkten, Rang 115. Die Versorgung kommt auf 15 Punkte, Rang 135 und damit fast am Ende. Insgesamt ergibt das einen Composite-Score von 36,2 Punkten, Rang 93.
+Die Anbindung ist die größte Schwäche. Die Haltestellendichte erreicht nur rund 1 Halt pro Quadratkilometer. Der Mobilitäts-Score von rund 11 bedeutet Rang 115. Die Versorgung kommt auf 12 Punkte, Rang 131 von 143. Insgesamt steht Mueggelheim auf Rang 97.
