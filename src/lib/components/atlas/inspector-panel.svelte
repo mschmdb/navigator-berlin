@@ -511,6 +511,28 @@
 				activeLayerSlugs={ui.activeLayerSlugs}
 				onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 			/>
+			{#if level.kiezSlug || level.bezirkSlug}
+				<nav data-testid="inspector-profile-links" aria-label="Profilseiten" class="flex flex-col gap-1">
+					{#if level.kiezSlug}
+						<a
+							data-testid="inspector-kiez-link"
+							class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+							href="/kiez/{level.kiezSlug}"
+						>
+							Kiez-Profil{level.kiezName ? `: ${level.kiezName}` : ''}
+						</a>
+					{/if}
+					{#if level.bezirkSlug}
+						<a
+							data-testid="inspector-bezirk-link"
+							class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+							href="/bezirk/{level.bezirkSlug}"
+						>
+							Bezirks-Profil{level.bezirkName ? `: ${level.bezirkName}` : ''}
+						</a>
+					{/if}
+				</nav>
+			{/if}
 			<WahlSection results={ui.wahlResults} />
 			<DemografieBlock
 				data={ui.kiezDemografie}
