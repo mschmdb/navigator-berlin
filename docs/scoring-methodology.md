@@ -20,15 +20,17 @@ Drei räumliche Ebenen, eine Methodik:
 | Bezirksregion (BR) | 143 | Postgres `kiez_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
 | Bezirk | 12 | Postgres `bezirk_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
 
-## Fünf Dimensionen
+## Dimensionen
 
-Konsistent über alle drei Ebenen. Gewichte gleich (je 0.20). Werte zwischen 0 und 100, höher ist günstiger.
+Fünf Composite-Dimensionen (je 0.20, fließen in den Gesamt-Score) plus Kultur als eigenständige sechste Dimension. Werte zwischen 0 und 100, höher ist günstiger. Stand seit ADR-015 (Score-Recomposition): Soziale Lage / MSS ist KEIN Score-Input mehr, bleibt neutraler Kontext-Layer.
 
-1. **Ruhe-Luft.** Lärmbelastung (gewichtet 0.4), Luftgüte (0.4), Bioklima (0.2). Ordinal-3 Mapping (gering / mittel / hoch). Fallback Umweltgerechtigkeits-Aggregat.
-2. **Grün.** Pro-Kopf-Grünversorgung (0.6), Kaltluft-Einwirkbereich (0.2), Leitbahnkorridor (0.2).
+1. **Ruhe & Luft.** Lärm-dB-Mittel (0.5, WHO-orientiert, ≤45 dB → 100, ≥75 dB → 0), Luftgüte (0.5, Ordinal-3).
+2. **Grün & Hitze.** Grünversorgung (0.3), Grünanlagen-Nähe (0.15), Bioklima (0.2), PET-Hitzebelastung invertiert (0.15), Kaltluft-Einwirkbereich (0.1), Leitbahnkorridor (0.1).
 3. **Mobilität.** Distanz zur nächsten Haltestelle. U-Bahn (0.35), S-Bahn (0.25), Tram (0.20), Bus (0.10), Radverkehrs-Presence (0.10). Linear: 0 m gibt 100, 1.000 m gibt 0.
-4. **Soziale Lage.** MSS-Gesamtindex 2025 (Story 1.30), Status-Achse 4-stufig. „kom != gültig" Planungsräume bleiben ohne Wert (unter 300 Einwohner:innen oder Ausreißer). Niedriger Status heißt nicht „schlechter Kiez", sondern strukturelle Unterschiede.
-5. **Versorgung.** Öffentliche Daseinsvorsorge UND private Alltags-Nahversorgung, jeweils als Dichte im Umkreis (Anzahl Einrichtungen, weicher Tail statt hartem Distanz-Cliff). Kita-Erreichbarkeit (0.12) + Plätze pro Kind (0.12), Grundschule (0.12) + weiterführende Schule (0.12), Plan-Krankenhaus kapazitätsgewichtet (0.18), Spielplatz (0.10), Nahversorgung aus OSM/ODbL: Lebensmittel (0.12), Apotheke (0.07), Post (0.05). Grünanlage zählt seit der Score-Neuordnung unter Grün. Polygon-Layer kollabieren zum Geometrie-Mittelpunkt. Siehe ADR-017 (Nahversorgung-Erweiterung).
+4. **Versorgung.** Öffentliche Daseinsvorsorge UND private Alltags-Nahversorgung, jeweils als Dichte im Umkreis (Anzahl Einrichtungen, weicher Tail statt hartem Distanz-Cliff). Kita-Erreichbarkeit (0.12) + Plätze pro Kind (0.12), Grundschule (0.12) + weiterführende Schule (0.12), Plan-Krankenhaus kapazitätsgewichtet (0.18), Spielplatz (0.10), Nahversorgung aus OSM/ODbL: Lebensmittel (0.12), Apotheke (0.07), Post (0.05). Polygon-Layer kollabieren zum Geometrie-Mittelpunkt. Siehe ADR-017 (Nahversorgung-Erweiterung).
+5. **Wohnschutz.** Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich, ODER-verknüpft). Positiv eindeutig: Schutz vorhanden = besser.
+
+**6. Kultur (eigenständig, NICHT im Composite — Option C, ADR-018).** Log-gedämpfte Dichte kulturkollektiver POIs aus OSM/ODbL: Bibliothek (0.20), Theater (0.15), Museum (0.15), Kino (0.12), Soziokultur (0.13), Galerie (0.10), Kunst im Stadtraum (0.08), Club (0.07). Gewicht in `DIMENSION_WEIGHTS` ist 0; `computeOverallScore` filtert Kultur über `COMPOSITE_DIMENSIONS` heraus. Begründung: Kultur ballt sich in der Innenstadt (Center-Bias), die Log-Skala dämpft das Innen-Außen-Gefälle. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.
 
 ## Aggregations-Regel: Flächen-gewichtetes Mittel
 
