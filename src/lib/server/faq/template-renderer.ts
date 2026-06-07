@@ -20,6 +20,12 @@ import {
 import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
 import { describePetKategorie, formatPet, petErklaerungDe } from '$lib/data/faq-helpers/klima.js';
 import { formatRank } from '$lib/data/rank-format.js';
+import { LAYER_EXPLAIN_DE } from '$lib/components/atlas/internal/layer-palette-filter.js';
+
+/** Technischen Layer-Slug auf lesbaren deutschen Quellen-Namen mappen (Story 11.3-Fix). */
+function sourceLabel(layerSlug: string): string {
+	return LAYER_EXPLAIN_DE[layerSlug] ?? layerSlug;
+}
 
 /**
  * Story 2.5b T3: Pure-Function-Slot-Renderer.
@@ -148,7 +154,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		const raw = typeof laerm.value === 'string' ? laerm.value : null;
 		slots.laermKategorie = describeLaermCategoryDe(raw);
 		slots.laermErklaerung = laermErklaerungDe(raw);
-		slots.laermSource = laerm.layer;
+		slots.laermSource = sourceLabel(laerm.layer);
 		slots.laermStand = formatSourceStand(laerm.sourceUpdatedAt);
 	}
 
@@ -160,7 +166,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 				: null;
 		slots.gruenKategorie = describeGruenversorgungDe(raw);
 		slots.gruenErklaerung = gruenErklaerungDe(raw);
-		slots.gruenSource = gruen.dominantVersorgung.layer;
+		slots.gruenSource = sourceLabel(gruen.dominantVersorgung.layer);
 		slots.gruenStand = formatSourceStand(gruen.dominantVersorgung.sourceUpdatedAt);
 	}
 	if (gruen.gruenanlagenCount && typeof gruen.gruenanlagenCount.value === 'number') {
@@ -175,7 +181,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		slots.oepnvStopsPerKm2 = formatStopsPerKm2(oepnv.value);
 		slots.oepnvDichte = describeOepnvDichte(oepnv.value);
 		slots.oepnvErklaerung = oepnvErklaerungDe(oepnv.value);
-		slots.oepnvSource = oepnv.layer;
+		slots.oepnvSource = sourceLabel(oepnv.layer);
 		slots.oepnvStand = formatSourceStand(oepnv.sourceUpdatedAt);
 	}
 
@@ -186,7 +192,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 				? wohnen.dominantWohnlage.value
 				: null;
 		slots.wohnenWohnlage = describeWohnlageDe(raw);
-		slots.wohnenSource = wohnen.dominantWohnlage.layer;
+		slots.wohnenSource = sourceLabel(wohnen.dominantWohnlage.layer);
 		slots.wohnenStand = formatSourceStand(wohnen.dominantWohnlage.sourceUpdatedAt);
 	}
 	if (wohnen.dominantMss) {
@@ -200,7 +206,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		slots.klimaPet = formatPet(klima.value);
 		slots.klimaKategorie = describePetKategorie(klima.value);
 		slots.klimaErklaerung = petErklaerungDe(klima.value);
-		slots.klimaSource = klima.layer;
+		slots.klimaSource = sourceLabel(klima.layer);
 		slots.klimaStand = formatSourceStand(klima.sourceUpdatedAt);
 	}
 

@@ -66,7 +66,8 @@ describe('renderTemplate', () => {
 		const result = renderTemplate(laermDominantTemplate, ctx());
 		expect(result?.answer).toContain('laut'); // hoch → laut
 		expect(result?.answer).toContain('Hauptverkehrsstraßen');
-		expect(result?.answer).toContain('laerm-2023');
+		expect(result?.answer).toContain('Lärmbelastung 2023'); // lesbarer Quellen-Name statt slug (11.3-Fix)
+		expect(result?.answer).not.toContain('laerm-2023');
 		expect(result?.answer).toContain('Juni 2023');
 	});
 

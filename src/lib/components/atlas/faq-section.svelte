@@ -36,7 +36,7 @@
 	<section
 		data-testid="faq-section"
 		data-page-type={pageType}
-		class="mx-auto max-w-prose space-y-6"
+		class="space-y-6"
 		aria-labelledby="faq-heading"
 	>
 		{#if headingLevel === 2}
