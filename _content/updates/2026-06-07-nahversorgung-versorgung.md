@@ -6,26 +6,26 @@ category: feature
 tags: [kiez-score, versorgung, nahversorgung, score, osm]
 ---
 
-Die Versorgungs-Dimension des Umwelt- & Infrastruktur-Scores deckte bisher nur öffentliche Daseinsvorsorge ab: Kita, Schule, Krankenhaus, Spielplatz. Der häufigste Weg im Alltag fehlte: der Einkauf. Ab jetzt zählt auch die private Nahversorgung mit.
+Bisher zählte die Versorgung nur öffentliche Einrichtungen: Kita, Schule, Krankenhaus, Spielplatz. Der häufigste Weg im Alltag fehlte, der Einkauf. Ab sofort zählt die Nahversorgung mit.
 
-## Was neu zählt
+## Lebensmittel, Apotheke, Post
 
-Drei neue Terme fließen in die Versorgung ein, jeder als Dichte im Umkreis (Anzahl Geschäfte in Gehweite, nicht nur das nächste):
+Der Score misst, wie viele Geschäfte in Gehweite liegen, nicht nur das nächste:
 
-- **Lebensmittel** (Gewicht 0.12, 500 m): Supermarkt, Discounter, Spätkauf und Bäcker.
-- **Apotheke** (0.07, 800 m).
-- **Post- oder Paketstelle** (0.05, 1.000 m).
+- **Lebensmittel** im Umkreis von 500 Metern: Supermarkt, Discounter, Spätkauf, Bäcker.
+- **Apotheke** im Umkreis von 800 Metern.
+- **Post und Paketshops** im Umkreis von 1.000 Metern.
 
-Die Standorte kommen aus OpenStreetMap (ODbL). Liegt nichts im Umkreis, greift ein weicher Übergang über die Distanz zur nächsten Einrichtung statt eines harten Abbruchs.
+Fehlt ein Geschäft in Reichweite, zählt die Entfernung zum nächsten weiter, nur abgeschwächt. Alle Standorte stammen aus OpenStreetMap.
 
-## Warum
+## Nähe gehört zur Wohnqualität
 
-Versorgung beschreibt jetzt den ganzen Alltag, öffentlich und privat. Ein Kiez mit Supermarkt, Apotheke und Post um die Ecke deckt den täglichen Bedarf kürzer ab. Das ist ein eigenständiger Faktor der Wohnqualität, unabhängig von der Nähe zur nächsten Kita oder Klinik.
+Ein Kiez mit Supermarkt, Apotheke und Post um die Ecke macht den Alltag kürzer. Diese Nähe zählt für sich, unabhängig davon, wie weit die nächste Kita oder Klinik entfernt ist.
 
-## Was sich nicht ändert
+## Keine Bewertung der Wirtschaftskraft
 
-Der Score bleibt bei fünf Dimensionen, jede zu 20 Prozent. Nur die interne Aufteilung der Versorgung wurde neu gewichtet, damit die Nahversorgung Platz bekommt. Wirtschaftliche Größen wie Bodenwerte oder Firmendichte fließen bewusst nicht ein: ein Kiez ist nicht „besser", weil dort mehr Kapital steckt.
+Der Score bleibt bei fünf Dimensionen mit je 20 Prozent. Nur innerhalb der Versorgung haben wir neu gewichtet, damit die Nahversorgung Platz findet. Bodenwerte, Firmendichte oder Mieten fließen bewusst nicht ein. Ein Kiez ist nicht besser, weil dort mehr Geld steckt.
 
 ## Methodik
 
-Alle Terme, Gewichte und die Datenquellen: [`/methodik/kiez-score`](/methodik/kiez-score).
+Alle Terme, Gewichte und Datenquellen stehen unter [`/methodik/kiez-score`](/methodik/kiez-score).
