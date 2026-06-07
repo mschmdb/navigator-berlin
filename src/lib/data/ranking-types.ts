@@ -15,4 +15,5 @@ export interface RankingRow {
 	readonly mobilitaet: number | null;
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
+	readonly kultur: number | null;
 }

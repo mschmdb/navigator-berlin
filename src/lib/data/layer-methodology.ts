@@ -509,6 +509,28 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 			'Keine Aussage über konkrete Miethöhe oder Verdrängungsdruck.'
 		],
 		relatedLayers: ['milieuschutz-erhaltungsmiete', 'milieuschutz-staedtebau']
+	},
+	'kiez-score-kultur': {
+		calculation:
+			'Kultureller Zugang pro Planungsraum: log-gedämpfte Dichte kulturkollektiver POIs im Umkreis (Anzahl Einrichtungen, der erste Ort zählt stark, weitere flachen ab). Bibliothek (Gewicht 0.20, 1.000 m), Theater (0.15, 1.500 m), Museum (0.15, 1.500 m), Kino (0.12, 1.500 m), Soziokultur (0.13, 1.200 m), Galerie (0.10, 1.200 m), Kunst im Stadtraum (0.08, 800 m), Club (0.07, 1.200 m). Quelle OpenStreetMap (ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Die Log-Dämpfung verhindert, dass Außenbezirke flächendeckend auf null fallen.',
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'fortlaufend (OSM-Sync)',
+		authorityKey: 'navigator-eigenberechnung-bezirke',
+		coverageGaps: [
+			'Kulturorte aus OpenStreetMap (Crowdsourcing): einzelne Standorte können fehlen oder veraltet sein.',
+			'Innen-Außen-Gefälle ist real: Kulturinfrastruktur konzentriert sich in der Innenstadt.'
+		],
+		omissions: [
+			'Keine Bewertung von Programm, Qualität oder Eintrittspreis der Einrichtung.',
+			'Stolpersteine und Denkmale zählen NICHT (Memorial/Heritage, keine Kultur-Amenity).'
+		],
+		relatedLayers: [
+			'kultur-museum',
+			'kultur-galerie',
+			'kultur-theater',
+			'kultur-bibliothek',
+			'kultur-kino'
+		]
 	}
 };
 

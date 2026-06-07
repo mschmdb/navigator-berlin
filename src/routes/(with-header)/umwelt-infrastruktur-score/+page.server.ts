@@ -53,7 +53,8 @@ async function loadKieze(bezirkNameBySlug: Map<string, string>): Promise<Ranking
 			gruenHitze: r.gruenHitze,
 			mobilitaet: r.mobilitaet,
 			versorgung: r.versorgung,
-			wohnschutz: r.wohnschutz
+			wohnschutz: r.wohnschutz,
+			kultur: r.kultur
 		}));
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
@@ -80,7 +81,8 @@ async function loadBezirke(): Promise<RankingRow[]> {
 			gruenHitze: r.gruenHitze,
 			mobilitaet: r.mobilitaet,
 			versorgung: r.versorgung,
-			wohnschutz: r.wohnschutz
+			wohnschutz: r.wohnschutz,
+			kultur: r.kultur
 		}));
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);

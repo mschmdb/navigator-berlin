@@ -38,7 +38,8 @@
 		| 'gruenHitze'
 		| 'mobilitaet'
 		| 'versorgung'
-		| 'wohnschutz';
+		| 'wohnschutz'
+		| 'kultur';
 	type StringSortKey = 'name' | 'bezirk';
 	type SortKey = NumericSortKey | StringSortKey;
 	type SortDir = 'asc' | 'desc';
@@ -50,7 +51,8 @@
 		'gruenHitze',
 		'mobilitaet',
 		'versorgung',
-		'wohnschutz'
+		'wohnschutz',
+		'kultur'
 	];
 	const STRING_SORT_KEYS: readonly StringSortKey[] = ['name', 'bezirk'];
 	const ALL_SORT_KEYS: readonly SortKey[] = [...NUMERIC_SORT_KEYS, ...STRING_SORT_KEYS];
@@ -63,7 +65,8 @@
 		gruenHitze: 'Grün & Hitze',
 		mobilitaet: 'Mobilität',
 		versorgung: 'Versorgung',
-		wohnschutz: 'Wohnschutz'
+		wohnschutz: 'Wohnschutz',
+		kultur: 'Kultur'
 	};
 
 	function isNumericSortKey(key: SortKey): key is NumericSortKey {
@@ -305,6 +308,7 @@
 						<td class={cellPadding}><span class={pillClass(row.mobilitaet)}>{formatScore(row.mobilitaet)}</span></td>
 						<td class={cellPadding}><span class={pillClass(row.versorgung)}>{formatScore(row.versorgung)}</span></td>
 						<td class={cellPadding}><span class={pillClass(row.wohnschutz)}>{formatScore(row.wohnschutz)}</span></td>
+						<td class={cellPadding}><span class={pillClass(row.kultur)}>{formatScore(row.kultur)}</span></td>
 					</tr>
 				{/each}
 			</tbody>

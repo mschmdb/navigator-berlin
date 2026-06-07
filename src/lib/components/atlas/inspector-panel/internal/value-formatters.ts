@@ -417,6 +417,8 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return formatKiezScoreValue(value, 'Versorgung');
 		case 'kiez-score-wohnschutz':
 			return formatKiezScoreValue(value, 'Wohnschutz');
+		case 'kiez-score-kultur':
+			return formatKiezScoreValue(value, 'Kultur');
 		// Legacy/fictitious Slugs (Story 1.3 Re-Run TODO):
 		case 'mietspiegel-wohnlage':
 			return { text: safeString(value), isNumeric: false };

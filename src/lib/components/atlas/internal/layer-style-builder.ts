@@ -117,6 +117,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'kiez-score-mobilitaet': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-wohnschutz': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4',
+	'kiez-score-kultur': 'choropleth-kiez-score-ordinal-4',
 	// I: Demografie (Story 10.0, neutral, kein Score)
 	'einwohner-dichte-2024': 'choropleth-dichte'
 };

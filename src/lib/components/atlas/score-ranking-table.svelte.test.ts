@@ -19,6 +19,7 @@ function row(
 		mobilitaet: 50,
 		versorgung: 60,
 		wohnschutz: 55,
+		kultur: 45,
 		...overrides
 	};
 }

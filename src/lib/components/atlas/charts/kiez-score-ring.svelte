@@ -18,7 +18,8 @@
 		'gruen-hitze',
 		'mobilitaet',
 		'versorgung',
-		'wohnschutz'
+		'wohnschutz',
+		'kultur'
 	];
 
 	interface ArcDatum {
