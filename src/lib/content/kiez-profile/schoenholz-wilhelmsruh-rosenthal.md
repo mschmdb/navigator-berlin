@@ -3,10 +3,10 @@ slug: schoenholz-wilhelmsruh-rosenthal
 name: Schoenholz Wilhelmsruh Rosenthal
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 3d58610d378d7c5c
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 00c3d1a50648569c
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Schoenholz Wilhelmsruh Rosenthal punktet beim Grün. Grün und Hitze erreichen Rang 20 von 143 und liegen über dem Berliner Median. Die Grünversorgung gilt als gut. Bei Ruhe und Luft reicht es für Rang 80. Die Lärmklasse ist mittel. An heißen Tagen liegt die gefühlte Temperatur bei rund 37 Grad.
+Schoenholz Wilhelmsruh Rosenthal zeigt seine Stärke bei Grün und Hitze mit 68,5 über dem Bezirksschnitt und über dem Berliner Median. Beim Gesamtscore erreicht der Kiez 38,4 und Rang 80 von 143. Die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad.
 
-Die Versorgung bleibt schwach, auf Rang 111 von 143 und unter dem Berliner Median. Die Anbindung fällt dünn aus. Die Haltestellendichte liegt bei rund 12 pro Quadratkilometer. Bei Mobilität reicht es für Rang 60. Insgesamt steht der Kiez auf Rang 89.
+Bei Ruhe und Luft bleibt der Kiez mit 58,4 unter dem Berliner Median. Die Mobilität liegt mit 25,5 nahe am Berliner Median, die Haltestellendichte erreicht rund 12 pro Quadratkilometer. Die Versorgung liegt mit 39,8 unter dem Berliner Median. Die Kultur erreicht 28,1 und zählt getrennt vom Gesamtscore.

@@ -103,7 +103,9 @@ const SCORE_DIMS: readonly { key: keyof KiezScore; label: string }[] = [
 	{ key: 'gruenHitze', label: 'Grün & Hitze' },
 	{ key: 'mobilitaet', label: 'Mobilität' },
 	{ key: 'versorgung', label: 'Versorgung' },
-	{ key: 'wohnschutz', label: 'Wohnschutz' }
+	{ key: 'wohnschutz', label: 'Wohnschutz' },
+	// Option C: Kultur ist eigenständig (nicht im Gesamt-Score), wird aber als Vergleichszeile gezeigt.
+	{ key: 'kultur', label: 'Kultur' }
 ];
 
 export type KiezPageData = {

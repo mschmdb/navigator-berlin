@@ -39,7 +39,7 @@ Nach längerer Pause oder bei neuem Maintainer:
 
 - [pipelines/data-flow.md](./pipelines/data-flow.md) — Pro Layer: externe Quelle → Build-Step → Output-File (auto-generiert via `pnpm doc:pipelines`)
 - [data-pipeline.md](./data-pipeline.md) — Legacy-Doku zur Aggregat-Schicht (in pipelines/ umziehen wenn überholt)
-- [scoring-methodology.md](./scoring-methodology.md) — Kiez-Score-Berechnung (5 Dimensionen)
+- [scoring-methodology.md](./scoring-methodology.md) — Kiez-Score-Berechnung (6 Dimensionen, 5 im Gesamt-Score + Kultur eigenständig)
 - [wahldaten-methodik.md](./wahldaten-methodik.md) — Wahldaten-Pipeline (Bundeswahlleiterin, Briefwahl, Aggregations-Strategie)
 
 ## Operations

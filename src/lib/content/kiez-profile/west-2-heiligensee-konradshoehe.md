@@ -3,10 +3,10 @@ slug: west-2-heiligensee-konradshoehe
 name: West 2 Heiligensee Konradshoehe
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 71cc065b8a09557e
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: bcae8707607aaf71
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-West 2 Heiligensee Konradshoehe ist sehr ruhig und grün. Ruhe und Luft erreicht 92,5 Punkte, Rang 11 von 143. Grün und Hitze kommt auf 69,4 Punkte, Rang 14. Der Lärm wird als gering eingestuft. An heißen Tagen liegt die gefühlte Temperatur bei 32,2 Grad.
+Ruhe und Grün prägen West 2 Heiligensee Konradshoehe. Ruhe und Luft erreichen rund 93 Punkte und Rang elf von 143, weit über dem Berliner Median. Grün und Hitze liegen mit rund 69 Punkten auf Rang 14. Der Lärm bleibt gering. Die gefühlte Temperatur bleibt niedrig, rund 32 Grad.
 
-Mobilität und Versorgung fallen stark ab. Die Mobilität erreicht 14,2 Punkte, Rang 107 von 143. Die Versorgung kommt auf 21,6 Punkte, Rang 127. Die Haltestellendichte beträgt 3,1 pro Quadratkilometer. Insgesamt steht der Kiez auf Rang 69 von 143.
+Kulturell ist das Gebiet sehr dünn, nur rund neun Punkte und Rang 109, klar unter Bezirksschnitt und Berliner Median. Schwach fallen auch Mobilität und Versorgung aus, Rang 107 und Rang 117. Der ÖPNV bleibt sehr dünn, rund drei Halte je Quadratkilometer. Die soziale Lage liegt hoch. Insgesamt landet das Gebiet mit rund 40 Punkten im hinteren Mittelfeld, Rang 68.

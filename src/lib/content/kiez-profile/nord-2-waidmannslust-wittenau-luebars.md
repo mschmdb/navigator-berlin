@@ -3,10 +3,10 @@ slug: nord-2-waidmannslust-wittenau-luebars
 name: Nord 2 Waidmannslust Wittenau Luebars
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: d7a9610ea6942621
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 32dfeabf8580da33
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Nord 2 Waidmannslust Wittenau Luebars ist ruhig und grün. Der Grün-und-Hitze-Score von 71 Punkten bringt Rang 7 von 143. Der Ruhe-und-Luft-Score von 83,3 Punkten liegt klar über dem Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei rund 36 Grad Celsius. Die Grünversorgung gilt als gut, die Lärmbelastung als mittel.
+Grün und Hitze prägen Nord 2 Waidmannslust Wittenau Luebars, rund 71 Punkte, Rang 7 von 143, weit über dem Berliner Median. Ruhe und Luft erreichen rund 83 Punkte, Rang 24, über dem Bezirksschnitt. Mobilität bleibt mit rund 23 Punkten nahe dem Median. Versorgung fällt mit rund 35 Punkten schwach aus, Rang 101.
 
-Mobilität und Versorgung bleiben zurück. Die Haltestellendichte liegt bei knapp neun Haltestellen pro Quadratkilometer, der Mobilitätsscore bei 22,8 Punkten unter dem Berliner Median. Der Versorgungsscore von 37,5 Punkten reicht für Rang 94 von 143. Der Gesamtscore von 42,9 Punkten platziert den Kiez auf Rang 52 von 143 Berliner Kiezen.
+Kulturell ist das Gebiet dünn, rund 16 Punkte, Rang 101 von 143, unter dem Bezirksschnitt. Die soziale Lage gilt als mittel. Der ÖPNV-Wert liegt bei rund 9 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 36 Grad. Der Gesamtwert von rund 43 Punkten ergibt Rang 56.

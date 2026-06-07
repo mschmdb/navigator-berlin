@@ -177,6 +177,19 @@ describe('normalizeDensity', () => {
 		const big = { cap: 2, radiusM: 2000 };
 		expect(normalizeDensity(1, 100, big)).toBe(50);
 	});
+
+	it('Story 13.1: scale=log dämpft Center-Bias (erster POI zählt stark, flacht ab)', () => {
+		const cfg = { cap: 2, radiusM: 1000, scale: 'log' as const };
+		// 1 POI: log ln(2)/ln(3) ≈ 0.63 → 63, deutlich über linearem 50 (erster Ort zählt stark)
+		const one = normalizeDensity(1, 100, cfg);
+		expect(one).toBeGreaterThan(50);
+		// >= cap erreicht 100
+		expect(normalizeDensity(2, 100, cfg)).toBe(100);
+		// hohe Dichte sättigt (kein Overflow)
+		expect(normalizeDensity(20, 100, cfg)).toBe(100);
+		// log liegt für 1 POI über linear (Dämpfung des Innen-Außen-Gefälles)
+		expect(one).toBeGreaterThan(normalizeDensity(1, 100, { cap: 2, radiusM: 1000 }));
+	});
 });
 
 describe('normalizeDensity Performance', () => {

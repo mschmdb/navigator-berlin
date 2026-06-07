@@ -3,10 +3,10 @@ slug: weissensee
 name: Weissensee
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: bcb12f5ce1b2470a
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 09176e3dec3b8cf5
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Weissensee ist gut versorgt. Die Versorgung erreicht 67,8 Punkte, Rang 15 von 143. Ruhe und Luft kommt auf 64 Punkte, nahe am Berliner Median. An heißen Tagen liegt die gefühlte Temperatur bei 36,1 Grad. Der Lärm bleibt mittel.
+Weissensee ist gut versorgt. Die Versorgung erreicht einen Score von 68,7 und steht auf Rang 33 von 143. Ruhe und Luft kommen auf 64 und liegen nahe am Berliner Median. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad. Der Lärm bleibt mittel.
 
-Beim Grün und der Mobilität bleibt der Kiez unter dem Median. Grün und Hitze erreicht 42,3 Punkte. Die Mobilität kommt auf 23,9 Punkte. Die Haltestellendichte beträgt 15,7 pro Quadratkilometer. Insgesamt steht Weissensee auf Rang 42 von 143.
+Grün und Mobilität bleiben unter dem Median. Grün und Hitze erreichen 42,3 und liegen darunter. Die Mobilität kommt auf 23,9 und bleibt ebenfalls darunter. Die Haltestellendichte beträgt rund 16 Stopps je Quadratkilometer. Insgesamt landet das Gebiet mit einem Gesamtwert von 44,8 auf Rang 48 von 143.

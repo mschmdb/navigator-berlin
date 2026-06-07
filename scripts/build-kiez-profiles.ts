@@ -49,7 +49,9 @@ Zahlen sparsam:
 - Als konkrete Zahlen erlaubt sind höchstens: die ÖPNV-Haltestellendichte (oepnvStopsProKm2), die gefühlte Temperatur (petGrad), einzelne Score-Werte und Ränge. Wähle 2 bis 4 davon, webe sie natürlich ein.
 
 Kennzahlen-Bedeutung (so und nicht anders benennen):
-- Score-Werte (composite, ruheLuft, gruenHitze, mobilitaet, versorgung, wohnschutz) sind Punkte von 0 bis 100, höher ist besser.
+- Score-Werte (composite, ruheLuft, gruenHitze, mobilitaet, versorgung, wohnschutz, kultur) sind Punkte von 0 bis 100, höher ist besser.
+- Kultur misst Kulturorte in Reichweite. Verknüpfe Kultur im Text NIE mit dem Gesamt-Score (nicht "hebt/senkt den Gesamt-Score"). Schreibe AUCH KEINE Meta-Hinweise wie "zählt eigenständig", "eigene Dimension" oder "nicht im Gesamt-Score" in den Profiltext, das ist Methodik, kein Profil.
+- Wenn Kultur unter den zwei höchsten ODER zwei niedrigsten Dimensionen liegt, erwähne sie natürlich mit Wert und qualitativer Einordnung (z.B. "kulturell stark, Rang X von 143" oder "wenig Kultur in Reichweite"). Sonst nur, wenn sie etwas aussagt.
 - petGrad ist die mittlere gefühlte Temperatur (PET) an heißen Tagen in Grad Celsius. Nenne sie "gefühlte Temperatur", NICHT "Oberflächentemperatur" oder "Lufttemperatur".
 - oepnvStopsProKm2 ist die Haltestellendichte pro Quadratkilometer.
 - laermKlasse und wohnlage sind Kategorien (niedrig/mittel/hoch bzw. einfach/mittel/gut).

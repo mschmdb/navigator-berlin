@@ -3,10 +3,10 @@ slug: koellnische-heide
 name: Koellnische Heide
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: d5c269a42e0efa25
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 3f5176d82834fc4d
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Koellnische Heide fällt über fast alle Bereiche zurück. Die Mobilität erreicht 15,7 Punkte und liegt unter dem Berliner Median. Die Haltestellendichte kommt auf rund 12 Halte pro Quadratkilometer. Bei Ruhe und Luft erreicht der Kiez 45,2 Punkte, ebenfalls unter dem Median. Die gefühlte Temperatur an heißen Tagen liegt bei rund 36 Grad.
+Der Gesamtwert von rund 28 drückt dieses Gebiet auf Rang 108 von 143. Kulturell liegt es im Mittelfeld, rund 57 Punkte und Rang 42, über dem Median. Die Versorgung bleibt unter dem Schnitt von Neukoelln. Die gefühlte Temperatur erreicht etwa 36 Grad.
 
-Bei Grün und Hitze bleibt der Kiez mit 39,1 Punkten unter dem Berliner Median. Die Versorgung erreicht 36,4 Punkte, ebenfalls unter dem Median. Der Wohnschutz liegt mit 0 Punkten unter dem Bezirksschnitt. Die soziale Lage ist sehr niedrig eingestuft. Insgesamt kommt der Kiez auf 27,3 Punkte und Rang 107 von 143.
+Die Mobilität fällt ab, rund 16 Punkte und rund 12 ÖPNV-Halte pro Quadratkilometer. Grün und Hitze bleiben mit rund 39 Punkten unter dem Median. Auch die Ruhe liegt schwach, rund 45 Punkte. Der Lärm ist mittel.

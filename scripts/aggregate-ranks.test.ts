@@ -60,7 +60,7 @@ describe('computeRanks', () => {
 	it('produces an entry per metric per row', () => {
 		const rows = [row('a', { composite: 1 })];
 		const out = computeRanks(rows);
-		// 14 Metriken pro Slug
-		expect(out.filter((r) => r.slug === 'a').length).toBe(14);
+		// 15 Metriken pro Slug (Story 13.3: + kultur)
+		expect(out.filter((r) => r.slug === 'a').length).toBe(15);
 	});
 });

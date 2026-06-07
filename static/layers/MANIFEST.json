@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-07T13:36:34.200Z",
+  "generatedAt": "2026-06-07T14:58:18.501Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -796,11 +796,139 @@
       "inspectorRelevant": false
     },
     {
+      "slug": "kultur-museum",
+      "filename": "kultur-museum.85ed23a0.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "85ed23a06cd5e9ae8bbd0a234023af6c6e155cae71e8ec71fa08c5fff9ff6801",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 269,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-galerie",
+      "filename": "kultur-galerie.efab6bd8.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "efab6bd8c5c0a5035d56c6b3485fb760cfd2d86d72192902dee4757f857300c5",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 358,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-kunst-im-raum",
+      "filename": "kultur-kunst-im-raum.0bebf7b5.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "0bebf7b540789a797f1c4b25cb17bb61c70d6a6f149b494702838bfc3d47c8a3",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 14,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 2883,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-theater",
+      "filename": "kultur-theater.c687d9a9.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "c687d9a9c98c10659ecd6acf3772f48f2716cf99afa2343563d57f3515e03181",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 204,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-club",
+      "filename": "kultur-club.5b45cdbe.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "5b45cdbebb0aa067fdd09207601b627950e416ef67c25b795156d7414a15dbad",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 142,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-bibliothek",
+      "filename": "kultur-bibliothek.57749caf.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:58:18.501Z",
+      "license": "ODbL 1.0",
+      "sha256": "57749caff00c3b06f92f1f16fa24086c0cd6ca01426bb1607f167ebda0281462",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 190,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-kino",
+      "filename": "kultur-kino.486e6ea7.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:58:18.501Z",
+      "license": "ODbL 1.0",
+      "sha256": "486e6ea718f32b58c89f1d9c86ecd5ce8dfdccaa2a52fac2538b8a9b9c9a1158",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 97,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-soziokultur",
+      "filename": "kultur-soziokultur.94e41da0.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:58:18.501Z",
+      "license": "ODbL 1.0",
+      "sha256": "94e41da0436328ebe4070abc64eae9d5c0e43de4319538113503e24c21320674",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 141,
+      "inspectorRelevant": false
+    },
+    {
       "slug": "kiez-score-ruhe-luft",
       "filename": "kiez-score-ruhe-luft.926d0b1e.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-ruhe-luft",
-      "fetchedAt": "2026-06-07T14:14:49.482Z",
-      "sourceUpdatedAt": "2026-06-07T14:14:49.482Z",
+      "fetchedAt": "2026-06-07T15:17:33.747Z",
+      "sourceUpdatedAt": "2026-06-07T15:17:33.747Z",
       "license": "dl-de/zero-2-0",
       "sha256": "926d0b1e47e3e885e917984b8db56ba7debbe787591bb4f2163bafb228fdec1b",
       "bundleGroup": "G: Kiez-Score",
@@ -817,8 +945,8 @@
       "slug": "kiez-score-gruen-hitze",
       "filename": "kiez-score-gruen-hitze.4fd01ecb.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-gruen-hitze",
-      "fetchedAt": "2026-06-07T14:14:49.482Z",
-      "sourceUpdatedAt": "2026-06-07T14:14:49.482Z",
+      "fetchedAt": "2026-06-07T15:17:33.747Z",
+      "sourceUpdatedAt": "2026-06-07T15:17:33.747Z",
       "license": "dl-de/zero-2-0",
       "sha256": "4fd01ecbbbcd5433f0f8ea436f9ed61c1966aca26f1c2684bcdc2103b002ce40",
       "bundleGroup": "G: Kiez-Score",
@@ -835,8 +963,8 @@
       "slug": "kiez-score-mobilitaet",
       "filename": "kiez-score-mobilitaet.29bf664d.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-mobilitaet",
-      "fetchedAt": "2026-06-07T14:14:49.482Z",
-      "sourceUpdatedAt": "2026-06-07T14:14:49.482Z",
+      "fetchedAt": "2026-06-07T15:17:33.747Z",
+      "sourceUpdatedAt": "2026-06-07T15:17:33.747Z",
       "license": "dl-de/zero-2-0",
       "sha256": "29bf664dfb737a6261cde9dac8e62571a6fce07ca395b0390cb8ba0e3f06e4a0",
       "bundleGroup": "G: Kiez-Score",
@@ -853,8 +981,8 @@
       "slug": "kiez-score-versorgung",
       "filename": "kiez-score-versorgung.16974625.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-versorgung",
-      "fetchedAt": "2026-06-07T14:14:49.482Z",
-      "sourceUpdatedAt": "2026-06-07T14:14:49.482Z",
+      "fetchedAt": "2026-06-07T15:17:33.747Z",
+      "sourceUpdatedAt": "2026-06-07T15:17:33.747Z",
       "license": "dl-de/zero-2-0",
       "sha256": "16974625fbbc6552f64a196a32d051f7f7647058960a3974a2e5f276cac2c036",
       "bundleGroup": "G: Kiez-Score",
@@ -871,10 +999,28 @@
       "slug": "kiez-score-wohnschutz",
       "filename": "kiez-score-wohnschutz.c20b10c4.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-wohnschutz",
-      "fetchedAt": "2026-06-07T14:14:49.482Z",
-      "sourceUpdatedAt": "2026-06-07T14:14:49.482Z",
+      "fetchedAt": "2026-06-07T15:17:33.747Z",
+      "sourceUpdatedAt": "2026-06-07T15:17:33.747Z",
       "license": "dl-de/zero-2-0",
       "sha256": "c20b10c4af630b1379829f6765c0c20b3706d1d6fdc376e236972635a4513868",
+      "bundleGroup": "G: Kiez-Score",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "MultiPolygon",
+      "featureCount": 542,
+      "inspectorRelevant": false,
+      "mapRelevant": true
+    },
+    {
+      "slug": "kiez-score-kultur",
+      "filename": "kiez-score-kultur.8443d2b3.geojson",
+      "sourceUrl": "https://navigator.berlin/derived/kiez-score-kultur",
+      "fetchedAt": "2026-06-07T15:17:33.747Z",
+      "sourceUpdatedAt": "2026-06-07T15:17:33.747Z",
+      "license": "dl-de/zero-2-0",
+      "sha256": "8443d2b33a44ca471c6bb70d96f75d0c91723f6cc6fdad547eb62f12318a429e",
       "bundleGroup": "G: Kiez-Score",
       "zoomThresholds": {
         "min": 9,
@@ -889,8 +1035,8 @@
       "slug": "kiez-score-gesamt",
       "filename": "kiez-score-gesamt.5a6ff508.geojson",
       "sourceUrl": "https://navigator.berlin/derived/kiez-score-gesamt",
-      "fetchedAt": "2026-06-07T14:14:49.482Z",
-      "sourceUpdatedAt": "2026-06-07T14:14:49.482Z",
+      "fetchedAt": "2026-06-07T15:17:33.747Z",
+      "sourceUpdatedAt": "2026-06-07T15:17:33.747Z",
       "license": "dl-de/zero-2-0",
       "sha256": "5a6ff5085dc3b7c74f417a86d4157a92fa6e1520a7af663e3ec54796b48bc359",
       "bundleGroup": "G: Kiez-Score",

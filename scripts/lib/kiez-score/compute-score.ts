@@ -12,6 +12,7 @@ import type {
 	ScoreInput
 } from './types.js';
 import { DIMENSION_CONFIGS } from './dimension-config.js';
+import { COMPOSITE_DIMENSIONS } from './types.js';
 import {
 	normalizeOrdinal3,
 	normalizeOrdinal4,
@@ -139,7 +140,8 @@ function normalizeSyntheticLayer(
 			? normalizeDensity(entry.count, entry.nearestM, {
 					cap: normalize.cap,
 					radiusM: normalize.radiusM,
-					softTailFactor: normalize.softTailFactor
+					softTailFactor: normalize.softTailFactor,
+					scale: normalize.scale
 				})
 			: null;
 		const source: DimensionSource = {
@@ -297,11 +299,15 @@ export function computeKiezScore(input: ScoreInput): KiezScore {
 }
 
 /**
- * Composite-Score als ungewichtetes Mittel über alle Dimensionen mit `value !== null`.
+ * Composite-Score als ungewichtetes Mittel über die COMPOSITE_DIMENSIONS mit `value !== null`.
  * Misst nur Größen mit eindeutiger Besser-Richtung (ADR-015): Sozialstruktur ist kein Input.
+ * Story 13.1 (Option C): Kultur ist eigenständige Dimension, aber NICHT im Composite — sie wird
+ * hier herausgefiltert, damit der „Umwelt- & Infrastruktur-Score" das Mittel der fünf bleibt.
  */
 export function computeOverallScore(dimensions: readonly DimensionScore[]): number | null {
-	const usable = dimensions.filter((d) => d.value !== null);
+	const usable = dimensions.filter(
+		(d) => d.value !== null && COMPOSITE_DIMENSIONS.includes(d.dimension)
+	);
 	if (usable.length === 0) return null;
 	const sum = usable.reduce((acc, d) => acc + (d.value as number), 0);
 	return Math.round((sum / usable.length) * 10) / 10;

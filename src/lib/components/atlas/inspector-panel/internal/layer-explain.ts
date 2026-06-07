@@ -160,6 +160,40 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		long: 'Berliner Bäder-Betriebe (BBB) und vergleichbare Einrichtungen: Hallenbad, Sommerbad, Kombibad oder Strandbad. Saisonale Öffnungszeiten beachten.'
 	},
 
+	// J: Kultur (Epic 13, Story 13.0) — Standorte aus OpenStreetMap (ODbL 1.0).
+	'kultur-museum': {
+		short: 'Museum',
+		long: 'Museum oder Ausstellungshaus. Teil des Kultur-Scores (Zugang zu Kulturorten im Umkreis). Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-galerie': {
+		short: 'Galerie',
+		long: 'Kunstgalerie oder Ausstellungsraum. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-kunst-im-raum': {
+		short: 'Kunst im Stadtraum',
+		long: 'Kunstwerk im öffentlichen Raum: Skulptur, Wandbild, Installation, Denkmal-Kunst. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-theater': {
+		short: 'Theater oder Bühne',
+		long: 'Theater, Bühne oder Opernhaus. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-bibliothek': {
+		short: 'Bibliothek',
+		long: 'Öffentliche, wissenschaftliche oder Spezial-Bibliothek. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-kino': {
+		short: 'Kino',
+		long: 'Kino oder Lichtspielhaus. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-soziokultur': {
+		short: 'Soziokulturelles Zentrum',
+		long: 'Kulturhaus, soziokulturelles Zentrum oder Kunsthaus (arts_centre). Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-club': {
+		short: 'Club oder Musikspielstätte',
+		long: 'Club, Diskothek oder Live-Musikspielstätte. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+
 	// F: Mobilität
 	'radverkehrsnetz-2025': {
 		short: 'Radverkehrsnetz 2025 mit Vorrangrouten',
@@ -228,6 +262,11 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		short: 'Aggregat „Wohnschutz" pro Planungsraum (0–100, Kiez-Score)',
 		long: 'Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner. Methodik: /methodik/kiez-score.',
 		valueScaleExplain: 'Höher = mehr Schutz vor Verdrängung'
+	},
+	'kiez-score-kultur': {
+		short: 'Aggregat „Kultur" pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Höher = mehr Kulturorte in Reichweite'
 	},
 
 	// I: Demografie (Story 10.0 · neutraler Kontext, kein Score-Input)

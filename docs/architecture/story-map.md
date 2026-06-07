@@ -11,7 +11,7 @@ related:
 
 Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-06-07.
 
-**134 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 15 ready-for-dev · ⏳ 2 backlog · ▫️ 39 other
+**134 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 6 ready-for-dev · ⏳ 4 backlog · ▫️ 46 other
 
 ## Pro Epic
 ### Epic 1
@@ -93,20 +93,20 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | `12-2-apotheke-post-dichte-term` | ▫️ review | Apotheke (~800m) + Post (~1000m) als poi-density-Terme. Baecker-Entscheidung dokumentieren (Lebensmittel-Bucket oder … |
 | `12-3-versorgung-umgewichtung` | ▫️ review | Interne Umgewichtung VERSORGUNG_CONFIG (Owner-Review): Kita 0.30->0.24, Schule 0.30->0.24, Krankenhaus 0.25->0.18, Sp… |
 | `12-4-methodik-doku-nahversorgung` | ▫️ review | scoring-methodology.md + Methodik-Page: Versorgung = oeffentlich + privat. ADR-Notiz Neudefinition + Anti-Stigma-Abgr… |
-| `12-5-step-zentren-zentralitaet-spike` | 📋 ready-for-dev | OPTIONAL Spike: StEP Zentren (FIS-Broker WFS, dl-de/by) als "Naehe zum Versorgungszentrum"-Term. Mehrwert vs OSM-Nahv… |
-| `12-6-epic-12-dokumentation-updates` | 📋 ready-for-dev | Abschluss (Epic-7-Muster): doc:pipelines + doc:story-map neu, INDEX, Konsistenz-Sweep, PLUS User-facing /updates-Eint… |
+| `12-5-step-zentren-zentralitaet-spike` | ⏳ backlog | DEFERRED 2026-06-07 (Owner-Decision, optional, nicht gezogen). OPTIONAL Spike: StEP Zentren (Geoportal/ex-FIS-Broker … |
+| `12-6-epic-12-dokumentation-updates` | ▫️ review | Abschluss (Epic-7-Muster): doc:pipelines + doc:story-map neu, INDEX, Konsistenz-Sweep, PLUS User-facing /updates-Eint… |
 
 ### Epic 13
 
 | Story | Status | Kommentar |
 |---|---|---|
-| `13-0-kultur-layer-foundation` | 📋 ready-for-dev | Overpass-Fetch (tourism=artwork|gallery|museum, amenity=theatre|library|cinema|arts_centre|nightclub, Tags live verif… |
-| `13-1-kultur-dimensions-foundation` | 📋 ready-for-dev | Typ-Union 5->6 (+kultur), DIMENSION_WEIGHTS rebalance (Vorschlag 6x0.1667, Owner-Review; Alt: Kultur leichter). KULTU… |
-| `13-2-db-schema-migration-kultur` | 📋 ready-for-dev | Drizzle-Migration: Spalte kultur (doublePrecision nullable) in kiez_score + bezirk_score. composite bleibt. Nach 13-1… |
-| `13-3-pipeline-recompute-rerun` | 📋 ready-for-dev | compute-score/build-kiez-scores/aggregate-scores auf 6er-Set. data:kiez-scores + aggregate-scores + rank + comparison… |
-| `13-4-konsumenten-migration-ui-map-og-llm` | 📋 ready-for-dev | kiez-score-display (Labels), Score-Ring 5->6 Segmente, Inspector-Section, compare-block, score-ranking-table (ranking… |
-| `13-5-content-migration-methodik-adr` | 📋 ready-for-dev | /methodik/kiez-score + scoring-methodology.md (Kultur-Dimension, Terme, Quelle, Daempfung). Neue ADR (analog ADR-015)… |
-| `13-6-kulturdaten-berlin-anreicherung-spike` | 📋 ready-for-dev | OPTIONAL Spike: kulturdaten.berlin API (CC BY, 3261 Locations, KEINE Koordinaten -> selbst geocodieren). Ueberlappung… |
+| `13-0-kultur-layer-foundation` | ▫️ review | Overpass-Fetch (tourism=artwork|gallery|museum, amenity=theatre|library|cinema|arts_centre|nightclub, Tags live verif… |
+| `13-1-kultur-dimensions-foundation` | ▫️ review | Typ-Union 5->6 (+kultur), DIMENSION_WEIGHTS rebalance (Vorschlag 6x0.1667, Owner-Review; Alt: Kultur leichter). KULTU… |
+| `13-2-db-schema-migration-kultur` | ▫️ review | Drizzle-Migration: Spalte kultur (doublePrecision nullable) in kiez_score + bezirk_score. composite bleibt. Nach 13-1… |
+| `13-3-pipeline-recompute-rerun` | ▫️ review | compute-score/build-kiez-scores/aggregate-scores auf 6er-Set. data:kiez-scores + aggregate-scores + rank + comparison… |
+| `13-4-konsumenten-migration-ui-map-og-llm` | ▫️ review | kiez-score-display (Labels), Score-Ring 5->6 Segmente, Inspector-Section, compare-block, score-ranking-table (ranking… |
+| `13-5-content-migration-methodik-adr` | ▫️ review | /methodik/kiez-score + scoring-methodology.md (Kultur-Dimension, Terme, Quelle, Daempfung). Neue ADR (analog ADR-015)… |
+| `13-6-kulturdaten-berlin-anreicherung-spike` | ⏳ backlog | DEFERRED 2026-06-07 (Owner, optional, analog 12-5).  # OPTIONAL Spike: kulturdaten.berlin API (CC BY, 3261 Locations,… |
 | `13-7-epic-13-dokumentation-updates` | 📋 ready-for-dev | Abschluss (Epic-7-Muster): doc:pipelines + doc:story-map + system-map neu, INDEX, Konsistenz-Sweep (keine "fuenf Dime… |
 | `13-8-prosa-profile-regeneration` | 📋 ready-for-dev | CROSS-EPIC-CAPSTONE (allerletzte Story beider Epics): Profil-Input (build.ts/input.ts) + Fakten-Lint (fact-lint.ts) +… |
 

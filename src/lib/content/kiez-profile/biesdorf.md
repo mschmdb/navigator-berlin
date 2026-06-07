@@ -3,10 +3,10 @@ slug: biesdorf
 name: Biesdorf
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 72dd99139fbc96ce
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: b0b2a3175bf7a352
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Biesdorf überzeugt beim Grün. Der Grün-und-Hitze-Score von 69,2 Punkten liegt klar über dem Berliner Median und bringt Rang 15 von 143. Die Grünversorgung gilt als gut. Die gefühlte Temperatur an heißen Tagen liegt bei rund 38 Grad Celsius. Die Lärmbelastung ist mittel.
+Biesdorf überzeugt beim Grün. Bei Grün und Hitze erreicht der Kiez Platz 15 von 143, klar über Berliner Median und Bezirksschnitt. Die Grünversorgung gilt als gut. Die gefühlte Temperatur liegt bei rund 38 Grad. Die Lärmbelastung ist mittel.
 
-Bei Mobilität und Versorgung bleibt Biesdorf zurück. Die Haltestellendichte liegt bei knapp sieben Haltestellen pro Quadratkilometer, der Mobilitätsscore bei 21,4 Punkten unter dem Berliner Median. Der Versorgungsscore von 39,1 Punkten reicht für Rang 90 von 143. Der Gesamtscore von 39 Punkten platziert Biesdorf auf Rang 74 von 143 Berliner Kiezen.
+Kulturell bleibt der Kiez schwach, rund 15 Punkte und Rang 103 von 143, unter Bezirk und Berliner Median. Die Mobilität fällt unter Median und Bezirksschnitt, die Haltestellendichte liegt bei rund 7 pro Quadratkilometer. Die Versorgung liegt unter dem Bezirksschnitt. Insgesamt kommt der Kiez auf Platz 72 von 143.

@@ -7,7 +7,8 @@ export type Bundle =
 	| 'F: Mobilität'
 	| 'G: Kiez-Score'
 	| 'H: Wahldaten'
-	| 'I: Demografie';
+	| 'I: Demografie'
+	| 'J: Kultur';
 export type License =
 	| 'dl-de/zero-2-0'
 	| 'dl-de/by-2-0'

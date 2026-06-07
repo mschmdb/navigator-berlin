@@ -62,7 +62,17 @@ const POI_LAYERS = [
 	'gruenanlagen',
 	'nahversorgung-lebensmittel',
 	'nahversorgung-apotheke',
-	'nahversorgung-post'
+	'nahversorgung-post',
+	// Epic 13 (Story 13.0): Kultur-POIs in den PoiIndex. Vorverdrahtung — Score-Effekt erst mit
+	// KULTUR_CONFIG (Story 13.1). Kein Effekt auf den Versorgungs-/Composite-Score bis dahin.
+	'kultur-museum',
+	'kultur-galerie',
+	'kultur-kunst-im-raum',
+	'kultur-theater',
+	'kultur-bibliothek',
+	'kultur-kino',
+	'kultur-soziokultur',
+	'kultur-club'
 ];
 
 // Story 10.2: krankenhaeuser-plan als Point-Value-Layer (nächstes Haus + betten_insgesamt

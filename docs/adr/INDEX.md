@@ -29,6 +29,7 @@ Architectural-Decision-Records für navigator.berlin. Format folgt [ADR-000-temp
 | [015](./ADR-015-score-composition-umwelt-infra.md) | Score-Komposition als Umwelt- & Infrastruktur-Score (Anti-Stigma) | accepted | 2026-05 | Epic 9 |
 | [016](./ADR-016-llm-authoring-eu-foss-exception.md) | LLM-Profile zur Authoring-Zeit (EU-FOSS-Ausnahme) | accepted | 2026-06 | Epic 11 |
 | [017](./ADR-017-versorgung-nahversorgung.md) | Versorgung um private Nahversorgung erweitern (öffentlich + privat) | accepted | 2026-06 | Epic 12 |
+| [018](./ADR-018-kultur-score-dimension.md) | Kultur als eigenständige Score-Dimension (Option C, nicht im Composite) | accepted | 2026-06 | Epic 13 |
 
 ## Geplant / Pending
 

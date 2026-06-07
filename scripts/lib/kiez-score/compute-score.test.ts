@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeDimensionScore, computeKiezScore } from './compute-score.js';
+import { computeDimensionScore, computeKiezScore, computeOverallScore } from './compute-score.js';
 import {
 	RUHE_LUFT_CONFIG,
 	GRUEN_HITZE_CONFIG,
@@ -257,7 +257,7 @@ describe('computeDimensionScore — Wohnschutz (Milieuschutz presence-any-of)', 
 });
 
 describe('computeKiezScore', () => {
-	it('liefert die fünf neuen Dimensionen in fester Reihenfolge', () => {
+	it('liefert die sechs Dimensionen in fester Reihenfolge (Story 13.1: + Kultur)', () => {
 		const score = computeKiezScore(emptyInput());
 		expect(score.persona).toBe('allgemein');
 		expect(score.dimensions.map((d) => d.dimension)).toEqual([
@@ -265,13 +265,27 @@ describe('computeKiezScore', () => {
 			'gruen-hitze',
 			'mobilitaet',
 			'versorgung',
-			'wohnschutz'
+			'wohnschutz',
+			'kultur'
 		]);
 	});
 
-	it('missingDimensions enthält nur Dimensionen ohne Wert (Mobilität + Wohnschutz liefern 0)', () => {
+	it('missingDimensions enthält Dimensionen ohne Wert (inkl. Kultur ohne poiCounts)', () => {
 		const score = computeKiezScore(emptyInput());
-		expect(score.missingDimensions).toEqual(['ruhe-luft', 'gruen-hitze', 'versorgung']);
+		expect(score.missingDimensions).toEqual(['ruhe-luft', 'gruen-hitze', 'versorgung', 'kultur']);
+	});
+
+	it('Option C: Kultur zählt NICHT in den Composite (computeOverallScore ignoriert sie)', () => {
+		const dims = [
+			{ dimension: 'ruhe-luft', value: 50, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'gruen-hitze', value: 50, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'mobilitaet', value: 50, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'versorgung', value: 50, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'wohnschutz', value: 50, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'kultur', value: 100, sources: [], missingData: [], dataStand: null }
+		] as const;
+		// Composite = Mittel der fünf (50). Kultur (100) wird ausgefiltert, zieht den Wert nicht hoch.
+		expect(computeOverallScore([...dims])).toBe(50);
 	});
 
 	it('referenziert weder soziale-lage noch gruen als Dimension', () => {
@@ -306,7 +320,19 @@ describe('computeKiezScore', () => {
 				'kitas-2024': { count: 3, nearestM: 200 },
 				'schulen-grundschule': { count: 2, nearestM: 300 },
 				'schulen-weiterfuehrend': { count: 1, nearestM: 600 },
-				spielplaetze: { count: 4, nearestM: 150 }
+				spielplaetze: { count: 4, nearestM: 150 },
+				'nahversorgung-lebensmittel': { count: 3, nearestM: 250 },
+				'nahversorgung-apotheke': { count: 1, nearestM: 400 },
+				'nahversorgung-post': { count: 1, nearestM: 700 },
+				// Story 13.1: Kultur-Terme
+				'kultur-bibliothek': { count: 1, nearestM: 400 },
+				'kultur-theater': { count: 1, nearestM: 800 },
+				'kultur-museum': { count: 1, nearestM: 900 },
+				'kultur-kino': { count: 1, nearestM: 700 },
+				'kultur-galerie': { count: 2, nearestM: 300 },
+				'kultur-soziokultur': { count: 1, nearestM: 600 },
+				'kultur-kunst-im-raum': { count: 4, nearestM: 150 },
+				'kultur-club': { count: 2, nearestM: 500 }
 			}
 		};
 		const score = computeKiezScore(input);

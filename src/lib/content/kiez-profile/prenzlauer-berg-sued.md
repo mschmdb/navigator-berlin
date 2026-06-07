@@ -3,10 +3,10 @@ slug: prenzlauer-berg-sued
 name: Prenzlauer Berg Sued
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 8ce0975a777286aa
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: a2c40fbd6db7aaae
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Prenzlauer Berg Sued versorgt seine Bewohner gut, der Score von 72,4 bedeutet Rang 5 von 143. Auch der Wohnschutz steht mit 73,4 weit oben auf Rang 7 von 143. Die Mobilität liegt mit 30,0 über dem Bezirksschnitt. Insgesamt reicht das für Rang 17 von 143.
+Prenzlauer Berg Sued führt fast bei der Kultur. Kulturell steht das Gebiet an der Spitze, rund 99 Punkte und Rang 2 von 143, weit über Bezirk und Berliner Median. Die Versorgung steht mit rund 80 auf Rang 5 von 143. Der Wohnschutz erreicht rund 73 und Rang 7.
 
-Beim Grün fällt das Gebiet ab, der Score von 38,0 liegt unter dem Berliner Median. Auch Ruhe und Luft bleiben mit 43,2 unter dem Bezirksschnitt. Die gefühlte Temperatur an heißen Tagen erreicht 35,7 Grad. Die Lärmbelastung bleibt im mittleren Bereich.
+Beim Grün fällt das Gebiet ab. Der Score von 38 liegt unter dem Berliner Median. Auch Ruhe und Luft bleiben mit rund 43 unter dem Bezirksschnitt. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad. Die Lärmbelastung bleibt im mittleren Bereich. Der Gesamtscore von rund 53 platziert das Gebiet auf Rang 18 von 143.

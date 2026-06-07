@@ -8,7 +8,7 @@
 	const pageTitle =
 		'Methodik des Umwelt- & Infrastruktur-Scores - Berlin in Daten - navigator.berlin';
 	const pageDescription =
-		'Kiez-Score-Methodik: fünf Dimensionen, Normalisierung, Gewichte. Warum Sozialstruktur nicht eingerechnet wird. Berliner Daten-Atlas.';
+		'Kiez-Score-Methodik: sechs Dimensionen (fünf im Gesamt-Score, Kultur separat), Normalisierung, Gewichte. Warum Sozialstruktur nicht eingerechnet wird. Berliner Daten-Atlas.';
 
 	const sections = [
 		{ id: 'worum', label: 'Worum es geht' },
@@ -60,6 +60,14 @@
 			layers: 'milieuschutz-erhaltungsmiete, milieuschutz-staedtebau',
 			detail:
 				'Verdrängungsschutz: Liegt ein Planungsraum in einem Milieuschutzgebiet, gilt Schutz als vorhanden. Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft. Diese Größe ist positiv eindeutig, mehr Schutz ist besser für Bewohner. Schutz-Status sagt nichts über die tatsächliche Mietentwicklung.'
+		},
+		{
+			id: 'kultur',
+			label: 'Kultur (eigenständig, nicht im Gesamt-Score)',
+			layers:
+				'kultur-museum, kultur-galerie, kultur-theater, kultur-bibliothek, kultur-kino, kultur-soziokultur, kultur-kunst-im-raum, kultur-club',
+			detail:
+				'Kultureller Zugang als log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OpenStreetMap, ODbL). Der erste Kulturort zählt stark, weitere flachen ab, das dämpft das Innen-Außen-Gefälle. Kultur ist eine eigene, sichtbare Dimension, fließt aber NICHT in den Gesamt-Score: Kulturinfrastruktur ballt sich in der Innenstadt und würde sonst jeden Außenbezirk-Gesamt-Score drücken. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.'
 		}
 	];
 
@@ -165,9 +173,10 @@
 	<section id="worum" aria-labelledby="worum-h" class="flex flex-col gap-3">
 		<h2 id="worum-h" class="font-serif text-2xl text-ink">Worum es geht</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking". Die Karte zeigt fünf Dimensionen
-			separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Was zutrifft,
-			steht dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.
+			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking". Die Karte zeigt sechs Dimensionen
+			separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Fünf
+			Dimensionen bilden den Gesamt-Score, Kultur steht als sechste eigenständig daneben. Was
+			zutrifft, steht dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Aggregations-Ebene Planungsraum entspricht rund 7.500 Einwohner:innen. Wohnungs-Mikrolagen
@@ -191,7 +200,8 @@
 	<section id="gewichte" aria-labelledby="gewichte-h" class="flex flex-col gap-3">
 		<h2 id="gewichte-h" class="font-serif text-2xl text-ink">Gewichte</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Persona „allgemein" gewichtet die fünf Dimensionen gleich (je 20 Prozent). Persona-Switcher
+			Persona „allgemein" gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur ist
+			eine sichtbare sechste Dimension, zählt aber nicht in den Gesamt-Score (Gewicht 0). Persona-Switcher
 			für Familie, Single oder Senior:innen liegt in Phase 2. Eigene Slider-Gewichtung kommt
 			ebenfalls später.
 		</p>
@@ -208,6 +218,7 @@
 				<tr><td class="px-3 py-2">Mobilität</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 				<tr><td class="px-3 py-2">Wohnschutz</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 				<tr><td class="px-3 py-2">Versorgung</td><td class="px-3 py-2 font-mono">0.20</td></tr>
+				<tr><td class="px-3 py-2">Kultur <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td><td class="px-3 py-2 font-mono">0</td></tr>
 			</tbody>
 		</table>
 	</section>
@@ -264,9 +275,10 @@
 			seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Seit der Score-Neuordnung (ADR-015) sind alle fünf Dimensionen positiv eindeutig. Deshalb
+			Seit der Score-Neuordnung (ADR-015) sind alle Composite-Dimensionen positiv eindeutig. Deshalb
 			zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt", Gut-Skala),
-			zusätzlich zu den fünf Einzel-Dimensionen. Das MSS-Aggregat bleibt als neutraler Kontext-Layer
+			zusätzlich zu den Einzel-Dimensionen. Die sechste Dimension Kultur (ADR-018) ist eigenständig
+			und fließt nicht in den Gesamt-Score. Das MSS-Aggregat bleibt als neutraler Kontext-Layer
 			in Strukturell-Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score" gibt es nicht.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">

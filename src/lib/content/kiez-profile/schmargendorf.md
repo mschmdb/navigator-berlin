@@ -3,10 +3,10 @@ slug: schmargendorf
 name: Schmargendorf
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 28f929637797376f
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 96d16ce0ac82ceb6
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Schmargendorf liegt in vielen Bereichen im Mittelfeld. Die Versorgung erreicht 52,8 Punkte, über dem Berliner Median. Ruhe und Luft kommt auf 61,9 Punkte. An heißen Tagen liegt die gefühlte Temperatur bei 34,4 Grad. Der Lärm bleibt mittel.
+Schmargendorf liegt in vielen Bereichen im Mittelfeld. Kulturell steht das Gebiet solide, rund 66 Punkte und Rang 34 von 143, über dem Berliner Median, nahe am Bezirksschnitt. Die Versorgung kommt auf rund 56 und übertrifft den Median. Ruhe und Luft liegen mit rund 62 über dem Bezirksschnitt.
 
-Bei Grün und Mobilität bleibt der Kiez unter dem Median. Grün und Hitze erreicht 48,7 Punkte. Die Mobilität kommt auf 25,9 Punkte, nahe am Median. Die Haltestellendichte beträgt 12 pro Quadratkilometer. Insgesamt steht Schmargendorf auf Rang 81 von 143.
+Grün und Mobilität bleiben unter dem Median. Grün und Hitze erreichen rund 49 und liegen darunter. Die Mobilität kommt mit rund 26 nahe an den Median. Die Haltestellendichte beträgt rund 12 pro Quadratkilometer. An heißen Tagen liegt die gefühlte Temperatur bei rund 34 Grad. Der Lärm bleibt mittel. Insgesamt landet das Gebiet mit rund 39 auf Rang 79 von 143.

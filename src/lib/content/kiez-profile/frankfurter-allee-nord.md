@@ -3,10 +3,10 @@ slug: frankfurter-allee-nord
 name: Frankfurter Allee Nord
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 19d230e86600d422
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: a1bdd04c949e3cc8
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Frankfurter Allee Nord steht beim Wohnschutz an der Spitze. Hier erreicht das Gebiet 100 Punkte, Rang 1 von 143. Auch die Versorgung ist stark, mit 77,7 Punkten und Rang 2. Die Mobilität liegt mit 42,2 Punkten klar über dem Berliner Median. Insgesamt kommt das Gebiet auf 59,1 Punkte und Rang 2.
+Frankfurter Allee Nord führt beim Wohnschutz. Der Score von 100 reicht für Rang 1 von 143. Auch die Versorgung ist stark, mit 83,7 und Rang 2. Kulturell steht das Gebiet stark, rund 84 Punkte und Rang 23 von 143, weit über dem Berliner Median und nahe am Bezirksschnitt. Die Mobilität liegt mit 42,2 klar über dem Berliner Median.
 
-Grün und Hitze fallen dagegen schwach aus. Sie liegen bei 24,3 Punkten, weit unter dem Berliner Median, die Grünversorgung gilt als schlecht. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad. Der Lärm bleibt mittel.
+Grün und Hitze fallen schwach aus. Sie liegen mit 24,3 weit unter dem Berliner Median, die Grünversorgung gilt als schlecht. Die gefühlte Temperatur erreicht rund 37 Grad. Der Lärm bleibt mittel. Insgesamt kommt das Gebiet auf 60,3 und Rang 2 von 143.

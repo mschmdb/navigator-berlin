@@ -3,10 +3,10 @@ slug: frankfurter-allee-sued
 name: Frankfurter Allee Sued
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 34c75a662ee85d49
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: ad55ee611ae6e532
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Frankfurter Allee Sued ist gut versorgt. Die Versorgung erreicht 65,3 Punkte, Rang 20 von 143. Damit liegt das Gebiet klar über dem Bezirksschnitt von Lichtenberg. Ruhe und Luft kommen auf 62,2 Punkte, nahe am Bezirksschnitt. Der Lärm fällt hoch aus.
+Die Versorgung trägt dieses Gebiet, Rang 14 von 143 mit rund 75 Punkten, klar über dem Schnitt von Lichtenberg. Kulturell liegt es stark, rund 81 Punkte und Rang 28, über dem Berliner Median. Der Gesamtwert von rund 40 reicht für Rang 68.
 
-Grün und Anbindung schwächeln. Das Grün liegt bei 34,7 Punkten, Rang 98 und unter dem Berliner Median. Die Haltestellendichte erreicht nur rund 2 Halte pro Quadratkilometer. Der Mobilitäts-Score kommt auf 26,9 Punkte, nahe am Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei rund 37 Grad. Insgesamt ergibt das einen Composite-Score von 37,8 Punkten, Rang 82.
+Grün und Hitze schwächeln, rund 35 Punkte und unter dem Median. Die gefühlte Temperatur liegt bei etwa 37 Grad. Die Mobilität bleibt dünn, nur rund 2 ÖPNV-Halte pro Quadratkilometer. Der Lärm ist hoch.

@@ -2,11 +2,11 @@
 slug: marzahn-hellersdorf
 name: Marzahn Hellersdorf
 pageType: bezirk
-model: "claude-opus-4-8 (subagent)"
-inputHash: 47c2ad8ab7816fdd
-generatedAt: "2026-06-07T08:00:00.000Z"
+model: claude-opus-4-8 (subagent)
+inputHash: 0e83802606da762a
+generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 
-Marzahn Hellersdorf ist grün und solide angebunden. Bei Grün und Hitze erreicht der Bezirk Rang zwei von zwölf und liegt über dem Berliner Median. Auch Mobilität fällt überdurchschnittlich aus. Die Haltestellendichte beträgt rund 9,6 pro Quadratkilometer.
+Marzahn Hellersdorf ist grün und gut angebunden. Grün & Hitze gehört mit rund 65 Punkten zu den Stärksten und liegt über dem Median. Mobilität schneidet mit etwa 25 Punkten überdurchschnittlich ab, die Haltestellendichte erreicht rund 10 pro Quadratkilometer. Die Lärmbelastung gilt als gering, die Versorgung liegt leicht über dem Mittel.
 
-Versorgung liegt leicht über dem Berliner Median. Der Wohnschutz steht auf dem letzten Rang. Die gefühlte Temperatur an heißen Tagen beträgt etwa 37,4 Grad. Die Lärmklasse ist gering, die Grünversorgung gut. Im Gesamtbild steht der Bezirk auf Rang acht.
+Beim Wohnschutz steht der Bezirk mit 0 Punkten ganz hinten. Die gefühlte Temperatur an heißen Tagen liegt bei rund 37 Grad. Kultur bleibt mit etwa 23 Punkten unter dem Median. Im Gesamtbild steht der Bezirk auf Rang 7 von 12.

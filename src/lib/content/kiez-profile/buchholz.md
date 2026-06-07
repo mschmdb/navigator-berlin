@@ -3,10 +3,10 @@ slug: buchholz
 name: Buchholz
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 48ccd9d460bbda58
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: caa3d8c379bb09ab
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Buchholz steht für Ruhe und Grün. Bei Ruhe und Luft erreicht der Kiez Rang 36 von 143 und liegt über dem Berliner Median. Grün und Hitze fallen ebenfalls stark aus, mit Rang 30. Die Grünversorgung gilt als gut. Die Lärmklasse ist mittel.
+Buchholz punktet bei Ruhe und Luft mit 72,2 über dem Bezirksschnitt und über dem Berliner Median. Auch Grün und Hitze liegen mit 64,8 über beiden Vergleichswerten. Die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 39 Grad. Beim Gesamtscore erreicht der Kiez 37,7 und Rang 84 von 143.
 
-Die Anbindung bleibt dünn. Die Haltestellendichte liegt bei rund 7 pro Quadratkilometer. Bei Mobilität fällt der Kiez auf Rang 86 zurück. Auch die Versorgung bleibt schwach, auf Rang 110 und unter dem Berliner Median. An heißen Tagen liegt die gefühlte Temperatur bei rund 39 Grad. Insgesamt steht Buchholz auf Rang 83.
+Die Mobilität fällt mit 18,9 unter den Berliner Median, die Haltestellendichte erreicht rund 7 pro Quadratkilometer. Die Versorgung liegt mit 32,7 unter dem Berliner Median. Die Kultur erreicht nur 3,3 und damit Rang 122. Diese Dimension zählt getrennt vom Gesamtscore.

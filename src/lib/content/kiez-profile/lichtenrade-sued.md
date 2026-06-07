@@ -3,10 +3,10 @@ slug: lichtenrade-sued
 name: Lichtenrade Sued
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 31528aacde879268
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 0da4102846f0ebe3
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Lichtenrade Sued punktet bei Ruhe und Grün. Ruhe und Luft erreichen 78,8 Punkte, über dem Bezirksschnitt. Beim Grün reicht es für 68 Punkte und Rang 22 von 143. Der Lärm fällt gering aus, die Grünversorgung gut. Die gefühlte Temperatur an heißen Tagen liegt bei rund 37 Grad.
+Ruhe und Luft tragen dieses Gebiet, Rang 27 von 143 mit rund 79 Punkten, über dem Median. Auch Grün und Hitze stehen stark, Rang 22. Die gefühlte Temperatur erreicht etwa 37 Grad. Der Lärm ist gering.
 
-Anbindung und Versorgung bleiben schwächer. Der Mobilitäts-Score liegt mit 23,3 Punkten nahe am Berliner Median. Die Versorgung kommt auf 39,5 Punkte und damit unter den Median. Die Haltestellendichte erreicht rund 12 Halte pro Quadratkilometer. Insgesamt ergibt das einen Composite-Score von 41,9 Punkten, Rang 54.
+Die Mobilität fällt ab, rund 23 Punkte und rund 12 ÖPNV-Halte pro Quadratkilometer. Die Versorgung bleibt mit rund 44 Punkten unter dem Median. Kulturell ist das Gebiet schwach, rund 22 Punkte und Rang 94, unter dem Schnitt von Tempelhof Schoeneberg. Der Gesamtwert von rund 43 reicht für Rang 55.

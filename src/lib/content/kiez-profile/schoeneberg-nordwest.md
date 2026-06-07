@@ -3,10 +3,10 @@ slug: schoeneberg-nordwest
 name: Schoeneberg Nordwest
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: c1f5488e1841448c
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 4db4ab8e96339c7a
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Schoeneberg Nordwest führt beim Wohnschutz, der Score von 100 bedeutet Rang 1 von 143. Auch die Versorgung steht mit 72,4 weit über dem Bezirksschnitt. Die Anbindung überzeugt, die Haltestellendichte beträgt 24,4 pro Quadratkilometer. Insgesamt reicht das für Rang 6 von 143.
+Versorgung prägt Schoeneberg Nordwest am stärksten. Mit rund 80 Punkten liegt der Kiez auf Rang vier von 143, weit über dem Bezirksschnitt. Beim Wohnschutz steht das Gebiet ganz oben, soziale Lage mittel. Die Mobilität bleibt mit Rang 16 solide, getragen von dichtem ÖPNV, rund 24 Halte je Quadratkilometer.
 
-Beim Grün fällt das Gebiet deutlich ab, der Score von 23,8 liegt unter dem Berliner Median. Die Grünversorgung gilt als schlecht. Die gefühlte Temperatur an heißen Tagen erreicht 36,5 Grad. Auch Ruhe und Luft bleiben mit 42,9 unter dem Bezirksschnitt.
+Kulturell ist der Kiez stark, rund 90 Punkte und Rang 13, klar über Bezirksschnitt und Berliner Median. Schwach fallen Grün und Hitze aus, nur rund 24 Punkte und Rang 118, weit unter dem Median. Die gefühlte Temperatur erreicht rund 37 Grad. Auch Ruhe und Luft bleiben unter dem Bezirksschnitt, Rang 114. Insgesamt landet Schoeneberg Nordwest auf Rang acht.

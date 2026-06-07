@@ -234,6 +234,97 @@ export const SOURCES: SourceConfig[] = [
 		simplifyProfile: 'point',
 		inspectorRelevant: false
 	},
+	// Bundle J: Kultur (Epic 13, Story 13.0). OSM/Overpass, ODbL. Kultur-Zugang als 6. Score-Dimension.
+	// `out center;` für Flächen-POIs. Editorial-Ausschluss: KEINE Stolpersteine/Denkmale (Memorial),
+	// KEINE Sammlungsdaten, KEIN community_centre (verrauscht), KEIN Clubkataster (keine offene Lizenz).
+	{
+		slug: 'kultur-museum',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["tourism"="museum"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'J: Kultur',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'kultur-galerie',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["tourism"="gallery"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'J: Kultur',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'kultur-kunst-im-raum',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["tourism"="artwork"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'J: Kultur',
+		zoomThresholds: { min: 14, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'kultur-theater',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["amenity"="theatre"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'J: Kultur',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'kultur-bibliothek',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["amenity"="library"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'J: Kultur',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'kultur-kino',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["amenity"="cinema"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'J: Kultur',
+		zoomThresholds: { min: 12, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'kultur-soziokultur',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["amenity"="arts_centre"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'J: Kultur',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'kultur-club',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["amenity"="nightclub"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'J: Kultur',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
 	// Bundle D: Memorial (OSM). ADR-015 (Story 9.6): Erinnerungs-Orte raus aus dem
 	// Frontend. Layer bleibt build-only als Heritage-Dichte-Signal für bezirk_stats/
 	// kiez_stats, NICHT mapRelevant/inspectorRelevant (analog denkmal-2024).

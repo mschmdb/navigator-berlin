@@ -11,7 +11,8 @@ export const DIMENSION_LABELS_DE: Record<KiezScoreDimension, string> = {
 	'gruen-hitze': 'Grün & Hitze',
 	mobilitaet: 'Mobilität',
 	versorgung: 'Versorgung',
-	wohnschutz: 'Wohnschutz'
+	wohnschutz: 'Wohnschutz',
+	kultur: 'Kultur'
 };
 
 export function scaleFor(value: number | null, _dimension: KiezScoreDimension): KiezScoreScale | null {

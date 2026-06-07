@@ -3,10 +3,10 @@ slug: lankwitz
 name: Lankwitz
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 6ea099358ed0b461
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: f74444cb5b3124e8
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Lankwitz ist grün und ruhig. Ruhe und Luft erreicht 71,3 Punkte, über dem Berliner Median. Grün und Hitze kommt auf 62 Punkte, ebenfalls über dem Median. An heißen Tagen liegt die gefühlte Temperatur bei 35,5 Grad. Der Lärm bleibt mittel.
+Lankwitz ist ruhig und grün. Ruhe und Luft erreichen einen Score von 71,3 und liegen über dem Berliner Median. Grün und Hitze kommen auf 62 und übertreffen den Median ebenfalls. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad. Die Grünversorgung gilt als gut.
 
-Die Mobilität ist die klare Schwäche. Der Score liegt mit 17,9 Punkten unter dem Berliner Median. Die Haltestellendichte beträgt 11,3 pro Quadratkilometer. Die Versorgung kommt mit 50,1 Punkten nahe an den Median. Insgesamt steht Lankwitz auf Rang 63 von 143.
+Die Mobilität ist die klare Schwäche. Der Score von 17,9 liegt unter dem Berliner Median. Die Haltestellendichte erreicht nur rund 11 Stopps je Quadratkilometer. Die Versorgung liegt mit 54 leicht über dem Bezirksschnitt. Insgesamt landet das Gebiet mit einem Gesamtwert von 41 im Mittelfeld der 143 Kieze.

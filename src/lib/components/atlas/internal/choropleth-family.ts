@@ -26,6 +26,7 @@ export const LAYER_TO_CHOROPLETH_FAMILY: Record<string, LayerFamilyMapping> = {
 	'kiez-score-gruen-hitze': 'gut',
 	'kiez-score-versorgung': 'gut',
 	'kiez-score-wohnschutz': 'gut',
+	'kiez-score-kultur': 'gut',
 	// Mobilität: aktuell gut, pending Smoke-Test (Story 1.31 AC-9)
 	'kiez-score-mobilitaet': { family: 'gut', pendingValidation: true },
 	// Strukturell: Wertfrei (Sozial, Wohn, Boden)
@@ -70,6 +71,7 @@ export const LAYER_CLASSIFICATION_METHOD: Record<string, ClassificationMethod> =
 	'kiez-score-mobilitaet': 'manual-quartile',
 	'kiez-score-wohnschutz': 'manual-quartile',
 	'kiez-score-versorgung': 'manual-quartile',
+	'kiez-score-kultur': 'manual-quartile',
 	'mss-gesamtindex-2025': 'manual-categorical', // si_v sehr niedrig..hoch
 	'wohnlagen-2024': 'manual-categorical', // Mietspiegel-Stufen
 	bodenrichtwerte: 'quantile' // Long-Tail 0.6-60000 EUR/m²

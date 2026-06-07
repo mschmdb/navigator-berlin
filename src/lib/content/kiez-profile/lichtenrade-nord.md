@@ -3,10 +3,10 @@ slug: lichtenrade-nord
 name: Lichtenrade Nord
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 3352fb2cff0d98f2
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 0e06aa70c325e8a3
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Lichtenrade Nord punktet bei Ruhe und Luft, hier liegt der Score mit 70,8 klar über dem Bezirksschnitt. Auch beim Grün steht das Gebiet mit 60,6 über dem Berliner Median. Die gefühlte Temperatur an heißen Tagen erreicht 38,5 Grad. Die Lärmbelastung bleibt im mittleren Bereich.
+Ruhe und Grün tragen dieses Gebiet, Rang 42 und Rang 43 von 143. Beide Werte liegen über dem Schnitt von Tempelhof Schoeneberg. Die gefühlte Temperatur erreicht etwa 38 Grad. Der Lärm bleibt mittel.
 
-Bei der Anbindung schwächelt das Gebiet deutlich. Der Mobilitäts-Score von 14,5 liegt unter dem Bezirksschnitt, die Haltestellendichte beträgt 6,3 pro Quadratkilometer. Auch die Versorgung fällt mit 35,9 schwächer aus als im übrigen Bezirk. Insgesamt landet Lichtenrade Nord auf Rang 92 von 143.
+Die Mobilität fällt ab, rund 15 Punkte und nur rund 6 ÖPNV-Halte pro Quadratkilometer. Die Versorgung bleibt mit rund 37 Punkten unter dem Median. Kulturell ist das Gebiet sehr schwach, rund 4 Punkte und Rang 121, weit unter dem Median. Der Gesamtwert von rund 37 reicht für Rang 91.

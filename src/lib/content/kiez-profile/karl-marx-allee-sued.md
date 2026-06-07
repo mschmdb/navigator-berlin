@@ -3,10 +3,10 @@ slug: karl-marx-allee-sued
 name: Karl Marx Allee Sued
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 12edbb9ca54ee715
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 76d9f15f62e25663
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Karl Marx Allee Sued ist gut angebunden, die Haltestellendichte beträgt 17,5 pro Quadratkilometer. Der Mobilitäts-Score von 39,0 liegt über dem Bezirksschnitt. Auch die Versorgung steht mit 59,8 über dem Berliner Median. Die gefühlte Temperatur an heißen Tagen erreicht 36,1 Grad.
+Kulturell ragt das Gebiet heraus, Rang 12 von 143 mit rund 90 Punkten, weit über dem Median. Die Versorgung liegt stark, Rang 25, nahe dem Schnitt von Friedrichshain Kreuzberg. Die Mobilität profitiert von rund 18 ÖPNV-Halten pro Quadratkilometer. Der Gesamtwert von rund 42 reicht für Rang 57.
 
-Bei Ruhe und Luft fällt das Gebiet ab, der Score von 35,2 liegt unter dem Bezirksschnitt. Die Lärmbelastung gilt als hoch. Beim Grün bewegt sich das Gebiet mit 42,2 nahe am Bezirksschnitt. Insgesamt landet Karl Marx Allee Sued auf Rang 66 von 143.
+Ruhe und Luft brechen ein, rund 35 Punkte und Rang 125, weit unter dem Median. Grün und Hitze bleiben mit rund 42 Punkten ebenfalls schwach. Die gefühlte Temperatur erreicht etwa 36 Grad. Der Lärm ist hoch.

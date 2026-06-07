@@ -3,10 +3,10 @@ slug: marzahn-sued
 name: Marzahn Sued
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 7c53c934ed7a40bf
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 42c045a9a6a27df6
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Marzahn Sued im Bezirk Marzahn Hellersdorf punktet bei Grün und Anbindung. Bei Grün und Hitze erreicht das Gebiet 64,4 Punkte und liegt klar über dem Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei 37,3 Grad. Auch die Mobilität fällt gut aus. Der Score von 36 Punkten übertrifft den Bezirksschnitt deutlich.
+Marzahn Sued zeigt seine Stärke bei Grün und Hitze mit 64,4 über dem Berliner Median und nahe am Bezirksschnitt. Beim Gesamtscore erreicht der Kiez 42,9 und Rang 54 von 143. Die Mobilität liegt mit 36 über dem Berliner Median und über dem Bezirksschnitt. Die Haltestellendichte erreicht rund 12 pro Quadratkilometer.
 
-Bei Ruhe und Luft kommt Marzahn Sued auf 62,9 Punkte, nahe am Berliner Median. Die Lärmbelastung gilt als mittel. Die Versorgung liegt mit 45,3 Punkten knapp unter dem Median. Die Haltestellendichte beträgt 12,1 pro Quadratkilometer. Im Gesamtbild steht das Gebiet auf Rang 56 von 143.
+Bei Ruhe und Luft liegt der Kiez mit 62,9 nahe am Berliner Median, die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad. Die Versorgung liegt mit 51,1 nahe am Berliner Median. Die Kultur erreicht 41,3 und zählt getrennt vom Gesamtscore.

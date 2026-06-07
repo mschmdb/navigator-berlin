@@ -47,6 +47,7 @@ interface ScoreStatsRow {
 	readonly mobilitaet: number | null;
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
+	readonly kultur: number | null;
 	readonly gruen: GruenAggregat | null;
 	readonly oepnv: OepnvAggregat | null;
 	readonly bildung: BildungAggregat | null;
@@ -65,6 +66,7 @@ const METRICS: readonly MetricSpec[] = [
 	{ key: 'mobilitaet', direction: 'higher-better', pick: (r) => r.mobilitaet },
 	{ key: 'versorgung', direction: 'higher-better', pick: (r) => r.versorgung },
 	{ key: 'wohnschutz', direction: 'higher-better', pick: (r) => r.wohnschutz },
+	{ key: 'kultur', direction: 'higher-better', pick: (r) => r.kultur },
 	{ key: 'gruenanlagenCount', direction: 'higher-better', pick: (r) => av(r.gruen?.gruenanlagenCount) },
 	{ key: 'spielplaetzeCount', direction: 'higher-better', pick: (r) => av(r.gruen?.spielplaetzeCount) },
 	{ key: 'stopsPerKm2', direction: 'higher-better', pick: (r) => av(r.oepnv?.stopsPerKm2) },
@@ -115,7 +117,8 @@ async function loadKiezRows(): Promise<ScoreStatsRow[]> {
 			gruenHitze: kiezScore.gruenHitze,
 			mobilitaet: kiezScore.mobilitaet,
 			versorgung: kiezScore.versorgung,
-			wohnschutz: kiezScore.wohnschutz
+			wohnschutz: kiezScore.wohnschutz,
+			kultur: kiezScore.kultur
 		})
 		.from(kiezScore);
 	const stats = await db
@@ -141,7 +144,8 @@ async function loadBezirkRows(): Promise<ScoreStatsRow[]> {
 			gruenHitze: bezirkScore.gruenHitze,
 			mobilitaet: bezirkScore.mobilitaet,
 			versorgung: bezirkScore.versorgung,
-			wohnschutz: bezirkScore.wohnschutz
+			wohnschutz: bezirkScore.wohnschutz,
+			kultur: bezirkScore.kultur
 		})
 		.from(bezirkScore);
 	const stats = await db

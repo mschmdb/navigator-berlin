@@ -27,7 +27,8 @@
 		'gruen-hitze',
 		'mobilitaet',
 		'versorgung',
-		'wohnschutz'
+		'wohnschutz',
+		'kultur'
 	];
 
 	const overallA = $derived(scaleForOverall(scoreA?.overall));

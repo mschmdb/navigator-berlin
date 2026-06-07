@@ -29,7 +29,8 @@ const METRIC_KEYS = [
 	'gruenHitze',
 	'mobilitaet',
 	'versorgung',
-	'wohnschutz'
+	'wohnschutz',
+	'kultur'
 ] as const;
 type MetricKey = (typeof METRIC_KEYS)[number];
 
@@ -42,6 +43,7 @@ interface ScoreRow {
 	readonly mobilitaet: number | null;
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
+	readonly kultur: number | null;
 }
 
 function valueOf(row: { [k in MetricKey]: number | null }, key: MetricKey): number | null {
@@ -64,7 +66,8 @@ async function main(): Promise<void> {
 			gruenHitze: kiezScore.gruenHitze,
 			mobilitaet: kiezScore.mobilitaet,
 			versorgung: kiezScore.versorgung,
-			wohnschutz: kiezScore.wohnschutz
+			wohnschutz: kiezScore.wohnschutz,
+			kultur: kiezScore.kultur
 		})
 		.from(kiezScore)) as ScoreRow[];
 
@@ -77,7 +80,8 @@ async function main(): Promise<void> {
 			gruenHitze: bezirkScore.gruenHitze,
 			mobilitaet: bezirkScore.mobilitaet,
 			versorgung: bezirkScore.versorgung,
-			wohnschutz: bezirkScore.wohnschutz
+			wohnschutz: bezirkScore.wohnschutz,
+			kultur: bezirkScore.kultur
 		})
 		.from(bezirkScore)) as ScoreRow[];
 

@@ -11,7 +11,8 @@
 		'gruen-hitze',
 		'mobilitaet',
 		'versorgung',
-		'wohnschutz'
+		'wohnschutz',
+		'kultur'
 	];
 
 	type Props = {

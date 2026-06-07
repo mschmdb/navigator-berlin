@@ -52,8 +52,18 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'kiez-score-mobilitaet': 'Kiez-Score · Mobilität',
 	'kiez-score-wohnschutz': 'Kiez-Score · Wohnschutz',
 	'kiez-score-versorgung': 'Kiez-Score · Versorgung',
+	'kiez-score-kultur': 'Kiez-Score · Kultur',
 	// I: Demografie (Story 10.0)
 	'einwohner-dichte-2024': 'Einwohnerdichte 2024',
+	// J: Kultur (Epic 13)
+	'kultur-museum': 'Museen',
+	'kultur-galerie': 'Galerien',
+	'kultur-kunst-im-raum': 'Kunst im Stadtraum',
+	'kultur-theater': 'Theater & Bühnen',
+	'kultur-bibliothek': 'Bibliotheken',
+	'kultur-kino': 'Kinos',
+	'kultur-soziokultur': 'Soziokultur',
+	'kultur-club': 'Clubs',
 	// Synthetische Score-Sub-Terme (Kiez-Score-Detailzeilen, Stories 10.1-10.6b + Mobilität/Wohnschutz)
 	'laerm-db': 'Lärm (dB-Mittel)',
 	'kitas-pro-kind': 'Kita-Plätze pro Kind',
@@ -79,7 +89,8 @@ export const BUNDLE_ORDER: readonly Bundle[] = [
 	'F: Mobilität',
 	'G: Kiez-Score',
 	'H: Wahldaten',
-	'I: Demografie'
+	'I: Demografie',
+	'J: Kultur'
 ];
 
 export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
@@ -91,7 +102,8 @@ export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
 	'F: Mobilität': 'F · Mobilität',
 	'G: Kiez-Score': 'G · Kiez-Score',
 	'H: Wahldaten': 'H · Wahldaten',
-	'I: Demografie': 'I · Demografie'
+	'I: Demografie': 'I · Demografie',
+	'J: Kultur': 'J · Kultur'
 };
 
 export interface LayerGroup {

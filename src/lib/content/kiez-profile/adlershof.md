@@ -3,10 +3,10 @@ slug: adlershof
 name: Adlershof
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: f23d0cef2dbd287f
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 84f4f1b4f4f3d2c0
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Adlershof im Bezirk Treptow Koepenick ist ordentlich angebunden, aber schwach versorgt. Die Mobilität erreicht 34,4 Punkte und liegt über dem Bezirksschnitt und dem Berliner Median. Bei Ruhe und Luft kommt das Gebiet auf 65,1 Punkte, leicht über dem Median, aber unter dem Bezirksschnitt. Die Lärmbelastung gilt als mittel.
+Adlershof erreicht bei der Mobilität 34,4 und liegt damit über dem Berliner Median und über dem Bezirksschnitt. Die Haltestellendichte erreicht rund 10 pro Quadratkilometer. Beim Gesamtscore erreicht der Kiez 40,4 und Rang 64 von 143. Die Lärmklasse gilt als mittel.
 
-Die Versorgung fällt mit 38,5 Punkten ab und bleibt unter dem Berliner Median. Bei Grün und Hitze erreicht Adlershof 48,2 Punkte, knapp unter dem Median. Die gefühlte Temperatur an heißen Tagen liegt bei 37,5 Grad. Die Haltestellendichte beträgt 10,3 pro Quadratkilometer. Im Gesamtbild steht das Gebiet auf Rang 88 von 143.
+Bei Ruhe und Luft liegt der Kiez mit 65,1 über dem Berliner Median, doch unter dem Bezirksschnitt. Die Versorgung liegt mit 54,2 über dem Berliner Median. Grün und Hitze liegen mit 48,2 unter dem Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 38 Grad. Die Kultur erreicht 56,6 und zählt getrennt vom Gesamtscore.

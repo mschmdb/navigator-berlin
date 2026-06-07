@@ -182,6 +182,7 @@ export interface ScoreLike {
 	readonly mobilitaet: number | null;
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
+	readonly kultur: number | null;
 }
 
 export function renderScoreSection(
@@ -199,6 +200,8 @@ export function renderScoreSection(
 	if (score.versorgung !== null) lines.push(`- Versorgung: ${formatNumberDe(score.versorgung)}/100`);
 	if (score.wohnschutz !== null)
 		lines.push(`- Wohnschutz: ${formatNumberDe(score.wohnschutz)}/100`);
+	if (score.kultur !== null)
+		lines.push(`- Kultur: ${formatNumberDe(score.kultur)}/100 (eigene Dimension, nicht im Composite)`);
 	lines.push('');
 	lines.push(
 		'> Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'

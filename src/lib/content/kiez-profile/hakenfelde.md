@@ -3,10 +3,10 @@ slug: hakenfelde
 name: Hakenfelde
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 585936906f9bbc24
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: d2f753b2ab6b75e3
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Hakenfelde ist sehr ruhig und grün. Ruhe und Luft erreichen 97,8 Punkte, Rang 4 von 143. Grün und Hitze liegen mit 68,3 Punkten über dem Berliner Median. Die gefühlte Temperatur bleibt an heißen Tagen bei rund 32 Grad, der Lärm gering.
+Ruhe und Luft tragen dieses Gebiet, Rang 4 von 143 mit rund 98 Punkten, weit über dem Median. Auch Grün und Hitze liegen stark, Rang 21. Die gefühlte Temperatur bleibt mit etwa 32 Grad niedrig. Der Lärm ist gering.
 
-Die Anbindung ist sehr dünn. Die Haltestellendichte erreicht nur rund 3 Stopps pro Quadratkilometer. Die Mobilität liegt bei 12,9 Punkten, unter dem Berliner Median. Auch die Versorgung fällt mit 21,8 Punkten schwach aus. Insgesamt kommt Hakenfelde auf 40,2 Punkte und Rang 64.
+Die Versorgung fällt ab, rund 19 Punkte und Rang 123. Die Mobilität bleibt dünn, nur rund 3 ÖPNV-Halte pro Quadratkilometer. Kulturell ist das Gebiet sehr schwach, rund 2 Punkte und Rang 124, weit unter dem Median. Der Gesamtwert von rund 40 reicht für Rang 70.

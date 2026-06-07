@@ -3,10 +3,10 @@ slug: tempelhofer-vorstadt
 name: Tempelhofer Vorstadt
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: e331c9a161fad204
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: af6e995fd4652570
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Tempelhofer Vorstadt ist gut versorgt und geschützt. Die Versorgung erreicht 66,4 Punkte und Rang 16 von 143, klar über dem Berliner Median. Der Wohnschutzscore liegt bei 69,7 Punkten und Rang 11. Der Mobilitätsscore von 34,4 Punkten liegt über dem Berliner Median. Die Haltestellendichte liegt bei rund 18 Haltestellen pro Quadratkilometer.
+Versorgung und Wohnschutz prägen die Tempelhofer Vorstadt. Die Versorgung erreicht rund 74 Punkte und Rang 19 von 143, weit über dem Berliner Median. Beim Wohnschutz steht der Kiez auf Rang elf, soziale Lage mittel. Die Mobilität bleibt mit Rang 32 solide, getragen von dichtem ÖPNV, rund 18 Halte je Quadratkilometer.
 
-Grün und Hitze fallen schwächer aus. Der Score von 34,8 Punkten reicht für Rang 97 von 143, unter dem Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei rund 35 Grad Celsius. Die Lärmbelastung ist mittel, die Grünversorgung gilt als gut. Der Gesamtscore von 51,8 Punkten platziert Tempelhofer Vorstadt auf Rang 15 von 143 Berliner Kiezen.
+Kulturell ist das Gebiet sehr stark, rund 97 Punkte und Rang sechs, klar über Bezirksschnitt und Berliner Median. Schwächer fallen Grün und Hitze aus, rund 35 Punkte und Rang 97, unter dem Median. Ruhe und Luft liegen mit rund 54 Punkten unter dem Median. Die gefühlte Temperatur erreicht rund 35 Grad. Insgesamt landet die Tempelhofer Vorstadt auf Rang 16.

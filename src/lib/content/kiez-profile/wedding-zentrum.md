@@ -3,10 +3,10 @@ slug: wedding-zentrum
 name: Wedding Zentrum
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: dbd2475f29bdf482
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 8a3a44c93b8109e1
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Wedding Zentrum ist stark versorgt und gut angebunden. Die Versorgung erreicht 74,3 Punkte, Rang 3 von 143. Die Mobilität kommt auf 44,3 Punkte, Rang 9. Die Haltestellendichte beträgt 21,3 pro Quadratkilometer. Auch der Wohnschutz schneidet mit 64,2 Punkten stark ab.
+Versorgung prägt Wedding Zentrum am stärksten. Mit rund 81 Punkten erreicht der Kiez Rang drei von 143, weit über dem Bezirksschnitt. Die Mobilität bleibt mit Rang neun stark, getragen von dichtem ÖPNV, rund 21 Halte je Quadratkilometer. Beim Wohnschutz steht das Gebiet auf Rang 13, soziale Lage mittel.
 
-Beim Grün und der Ruhe hat der Kiez Schwächen. Grün und Hitze erreicht 31,1 Punkte, unter dem Berliner Median. An heißen Tagen liegt die gefühlte Temperatur bei 35,6 Grad. Ruhe und Luft kommt auf 44,4 Punkte, unter dem Median. Insgesamt steht Wedding Zentrum auf Rang 16 von 143.
+Kulturell ist der Kiez sehr stark, rund 97 Punkte und Rang sieben, klar über Bezirksschnitt und Berliner Median. Schwach fallen Grün und Hitze aus, nur rund 31 Punkte und Rang 104, weit unter dem Median. Auch Ruhe und Luft drücken, rund 44 Punkte und Rang 110. Die gefühlte Temperatur liegt bei rund 36 Grad. Insgesamt landet Wedding Zentrum auf Rang 17.

@@ -3,10 +3,10 @@ slug: prenzlauer-berg-suedwest
 name: Prenzlauer Berg Suedwest
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 83f88969a15caae2
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 02f59cf7cbce9275
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Prenzlauer Berg Suedwest versorgt und schützt stark. Beim Wohnschutz steht das Gebiet mit einem Score von 100 auf Rang 1 von 143. Die Versorgung erreicht Rang 4, die Mobilität ebenfalls Rang 4. Die Haltestellendichte liegt bei rund 13 pro Quadratkilometer. Der Lärm bleibt gering. Insgesamt steht das Gebiet mit einem Gesamtwert von 57,1 auf Rang 4 von 143.
+Prenzlauer Berg Suedwest gehört zur Spitze Berlins, viertbester von 143 im Gesamtscore. Beim Wohnschutz steht der Kiez auf Platz eins, bei der Mobilität auf Platz vier. Die Haltestellendichte erreicht rund 13 pro Quadratkilometer, klar über dem Bezirksschnitt. Auch die Versorgung liegt weit über Bezirksschnitt und Median.
 
-Grün und Hitze fallen sehr schwach aus. Mit einem Score von 18 steht das Gebiet auf Rang 122 von 143. An heißen Tagen erreicht die gefühlte Temperatur etwa 36 Grad. Die Grünversorgung gilt als schlecht.
+Bei Kulturorten in Reichweite belegt der Kiez ebenfalls Platz eins. Die Schwäche zeigt sich beim Grün. Hier rangiert Prenzlauer Berg Suedwest auf Platz 122 von 143, deutlich unter dem Bezirksschnitt. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad.

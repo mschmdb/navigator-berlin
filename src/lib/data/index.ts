@@ -22,6 +22,10 @@ export type {
 	DimensionSource
 } from '../../../scripts/lib/kiez-score/types.js';
 
+// Option C: die fünf Dimensionen, die in den Gesamt-/Composite-Score einfließen (Kultur ist
+// eigenständig, nicht im Composite). Value-Export für UI-Zähler (z.B. „Mittel über 5 Dimensionen").
+export { COMPOSITE_DIMENSIONS } from '../../../scripts/lib/kiez-score/types.js';
+
 export type {
 	License,
 	Bundle,

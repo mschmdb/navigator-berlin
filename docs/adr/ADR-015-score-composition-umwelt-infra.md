@@ -3,9 +3,12 @@ status: Accepted
 date: 2026-05-20
 deciders: solo-maintainer
 supersedes: ADR-013 (nur Dimensions-Festlegung; Aggregations-Strategie A bleibt gültig)
+extended-by: ADR-017 (Versorgung um Nahversorgung), ADR-018 (Kultur als 6. Dimension, Option C nicht im Composite)
 ---
 
 # ADR-015: Score-Komposition als Umwelt- & Infrastruktur-Score (anti-stigma)
+
+> **Erweiterungen:** ADR-017 erweitert die Versorgungs-Dimension um private Nahversorgung. ADR-018 fügt Kultur als eigenständige sechste Dimension hinzu, die NICHT in den Composite einfließt (Option C). Die fünf Composite-Dimensionen dieses ADR bleiben unverändert.
 
 ## Context
 

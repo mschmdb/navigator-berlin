@@ -178,10 +178,61 @@ export const WOHNSCHUTZ_CONFIG: DimensionConfig = {
 	]
 };
 
+// Story 13.1: Kultur als eigenständige Dimension (Option C: NICHT im Composite, siehe
+// COMPOSITE_DIMENSIONS). Acht OSM-Kultur-Layer als log-gedämpfte poi-density-Terme — die
+// Log-Skala bremst den Innenstadt-Center-Bias (erster Kulturort zählt stark, weitere flachen ab).
+// Bibliothek/Theater/Museum höher gewichtet als Club/Kunst-im-Raum. Gewichte Owner-Review.
+export const KULTUR_CONFIG: DimensionConfig = {
+	dimension: 'kultur',
+	layers: [
+		{
+			layer: 'kultur-bibliothek',
+			weight: 0.2,
+			normalize: { kind: 'poi-density', radiusM: 1000, cap: 2, scale: 'log', softTailFactor: 0.3 }
+		},
+		{
+			layer: 'kultur-theater',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 1500, cap: 2, scale: 'log', softTailFactor: 0.3 }
+		},
+		{
+			layer: 'kultur-museum',
+			weight: 0.15,
+			normalize: { kind: 'poi-density', radiusM: 1500, cap: 2, scale: 'log', softTailFactor: 0.3 }
+		},
+		{
+			layer: 'kultur-kino',
+			weight: 0.12,
+			normalize: { kind: 'poi-density', radiusM: 1500, cap: 2, scale: 'log', softTailFactor: 0.3 }
+		},
+		{
+			layer: 'kultur-galerie',
+			weight: 0.1,
+			normalize: { kind: 'poi-density', radiusM: 1200, cap: 3, scale: 'log', softTailFactor: 0.3 }
+		},
+		{
+			layer: 'kultur-soziokultur',
+			weight: 0.13,
+			normalize: { kind: 'poi-density', radiusM: 1200, cap: 2, scale: 'log', softTailFactor: 0.3 }
+		},
+		{
+			layer: 'kultur-kunst-im-raum',
+			weight: 0.08,
+			normalize: { kind: 'poi-density', radiusM: 800, cap: 5, scale: 'log', softTailFactor: 0.3 }
+		},
+		{
+			layer: 'kultur-club',
+			weight: 0.07,
+			normalize: { kind: 'poi-density', radiusM: 1200, cap: 3, scale: 'log', softTailFactor: 0.3 }
+		}
+	]
+};
+
 export const DIMENSION_CONFIGS = [
 	RUHE_LUFT_CONFIG,
 	GRUEN_HITZE_CONFIG,
 	MOBILITAET_CONFIG,
 	VERSORGUNG_CONFIG,
-	WOHNSCHUTZ_CONFIG
+	WOHNSCHUTZ_CONFIG,
+	KULTUR_CONFIG
 ] as const;

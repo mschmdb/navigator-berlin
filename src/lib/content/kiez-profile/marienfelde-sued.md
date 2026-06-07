@@ -3,10 +3,10 @@ slug: marienfelde-sued
 name: Marienfelde Sued
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 6e098e96a5c58a61
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 605d20dc0a282104
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Marienfelde Sued ist sehr ruhig und grün. Ruhe und Luft erreichen 90 Punkte, Rang 16 von 143, klar über dem Bezirksschnitt. Grün und Hitze liegen mit 62,6 Punkten über dem Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad, der Lärm bleibt mittel.
+Ruhe und Luft tragen Marienfelde Sued, rund 90 Punkte, Rang 16 von 143, weit über dem Bezirksschnitt. Grün und Hitze erreichen rund 63 Punkte, über dem Berliner Median. Mobilität fällt mit rund 11 Punkten schwach aus, Rang 114. Ohne Schiene tragen Busse allein. Versorgung bleibt mit rund 22 Punkten dünn, Rang 118.
 
-Anbindung und Versorgung fallen schwach aus. Die Mobilität kommt auf 11,2 Punkte, weit unter dem Berliner Median. Die Haltestellendichte liegt bei knapp 8 Stopps pro Quadratkilometer. Die Versorgung bleibt mit 24,8 Punkten ebenfalls unter dem Median. Insgesamt erreicht Marienfelde Sued 37,7 Punkte und Rang 83.
+Kultur in Reichweite bleibt mit rund 7 Punkten sehr dünn, Rang 116 von 143, weit unter dem Bezirksschnitt. Die soziale Lage gilt als niedrig. Der ÖPNV-Wert liegt bei rund 8 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 37 Grad. Der Gesamtwert von rund 37 Punkten ergibt Rang 88.

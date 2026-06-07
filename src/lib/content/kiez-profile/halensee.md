@@ -3,10 +3,10 @@ slug: halensee
 name: Halensee
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 360e29d5ecedb915
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: f24de2f6dddcfc20
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Halensee ist gut versorgt und angebunden. Die Versorgung erreicht 62,1 Punkte, Rang 29 von 143. Die Mobilität kommt auf 34,2 Punkte, über dem Berliner Median. Die Haltestellendichte beträgt 18,7 pro Quadratkilometer. Der Lärm wird als hoch eingestuft.
+Kulturell ragt das Gebiet heraus, Rang 26 von 143 mit rund 82 Punkten, weit über dem Median. Die Versorgung liegt stark, Rang 27, über dem Schnitt von Charlottenburg Wilmersdorf. Die Mobilität profitiert von rund 19 ÖPNV-Halten pro Quadratkilometer. Der Gesamtwert von rund 42 reicht für Rang 58.
 
-Beim Grün hat der Kiez deutliche Schwächen. Grün und Hitze erreicht 25,5 Punkte, Rang 114 von 143. An heißen Tagen liegt die gefühlte Temperatur bei 35,7 Grad. Ruhe und Luft kommt auf 45,4 Punkte, unter dem Bezirksschnitt. Insgesamt steht Halensee auf Rang 65 von 143.
+Grün und Hitze fallen ab, rund 26 Punkte und Rang 114, weit unter dem Median. Die gefühlte Temperatur liegt bei etwa 36 Grad. Auch die Ruhe bleibt schwach, rund 45 Punkte. Der Lärm ist hoch.

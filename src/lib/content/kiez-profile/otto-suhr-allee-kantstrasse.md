@@ -3,10 +3,10 @@ slug: otto-suhr-allee-kantstrasse
 name: Otto Suhr Allee Kantstrasse
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: bd3a84b9c8814d79
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 8b7b4f4e78dd444c
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Otto Suhr Allee Kantstrasse ist gut angebunden. Bei Mobilität steht der Kiez auf Rang 19 von 143. Die Haltestellendichte liegt bei rund 18 pro Quadratkilometer. Beim Wohnschutz reicht es für Rang 26. Die Versorgung liegt leicht über dem Berliner Median, auf Rang 55.
+Otto Suhr Allee Kantstrasse erreicht bei der Kultur mit 98 den vierten Platz von 143 Kiezen. Dieser Wert liegt weit über dem Bezirksschnitt und über dem Berliner Median. Die Mobilität liegt mit 39,2 über dem Berliner Median, die Haltestellendichte erreicht rund 18 pro Quadratkilometer. Beim Gesamtscore erreicht der Kiez 44,2 und Rang 51. Kultur zählt getrennt vom Gesamtscore.
 
-Grün und Hitze bilden die Schwäche, mit Rang 108 von 143. Der Wert bleibt unter dem Berliner Median. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad. Bei Ruhe und Luft fällt der Kiez auf Rang 109 zurück. Die Lärmklasse ist mittel. Insgesamt steht der Kiez auf Rang 55.
+Bei Grün und Hitze fällt der Kiez mit 28,1 unter den Bezirksschnitt und unter den Berliner Median. Ruhe und Luft liegen mit 44,6 unter dem Berliner Median, die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad. Die Versorgung liegt mit 66,1 über dem Berliner Median.

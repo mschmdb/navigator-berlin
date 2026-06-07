@@ -3,10 +3,10 @@ slug: lietzenburger-strasse
 name: Lietzenburger Strasse
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 96ce9eb564fd68cb
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: a1b02147e463645f
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Lietzenburger Strasse ist hervorragend angebunden. Bei der Mobilität liegt das Gebiet auf Rang 6 von 143. Die Haltestellendichte erreicht rund 22 Halte pro Quadratkilometer. Das liegt klar über dem Bezirksschnitt von Charlottenburg Wilmersdorf. Auch die Versorgung fällt mit 57,5 Punkten überdurchschnittlich aus.
+Kulturell ragt das Gebiet heraus, Rang 8 von 143 mit rund 96 Punkten, weit über dem Median. Auch die Mobilität steht vorn, Rang 6 mit rund 22 ÖPNV-Halten pro Quadratkilometer. Die Versorgung liegt stark, Rang 34. Der Gesamtwert von rund 46 reicht für Rang 41.
 
-Beim Grün zeigt sich das Gegenteil. Mit 20,3 Punkten landet das Gebiet auf Rang 120 und damit weit unten. Die gefühlte Temperatur an heißen Tagen liegt bei rund 36 Grad. Die Grünversorgung ist schlecht, der Lärm fällt mittel aus. Insgesamt ergibt sich ein Composite-Score von 43,5 Punkten, Rang 49.
+Grün und Hitze brechen ein, rund 20 Punkte und Rang 120, weit unter dem Median. Die gefühlte Temperatur erreicht etwa 36 Grad. Auch die Ruhe bleibt schwach, rund 46 Punkte. Der Lärm ist mittel.

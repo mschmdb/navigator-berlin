@@ -3,10 +3,10 @@ slug: nord-1-frohnau-hermsdorf
 name: Nord 1 Frohnau Hermsdorf
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 3741d8e1f84f5381
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: b550ce98d6c19fad
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Nord 1 Frohnau Hermsdorf ist besonders ruhig und grün. Ruhe und Luft erreichen 93,7 Punkte, Rang 8 von 143. Grün und Hitze liegen mit 69,5 Punkten klar über dem Berliner Median. Die gefühlte Temperatur bleibt an heißen Tagen bei rund 33 Grad, der Lärm gering.
+Ruhe und Luft prägen Nord 1 Frohnau Hermsdorf, rund 94 Punkte, Rang 8 von 143, weit über dem Bezirksschnitt. Grün und Hitze erreichen rund 70 Punkte, Rang 13, über dem Berliner Median. Wohnschutz liegt bei rund 56 Punkten, Rang 18. Mobilität fällt mit rund 17 Punkten schwach aus, Rang 97. Die Schiene reicht nur dünn.
 
-Die Anbindung ist dünn. In der Mobilität kommt das Gebiet auf 17,4 Punkte, unter dem Berliner Median. Die Haltestellendichte liegt bei knapp 7 Stopps pro Quadratkilometer. Auch die Versorgung fällt unterdurchschnittlich aus. Insgesamt erreicht Nord 1 Frohnau Hermsdorf 54,4 Punkte und Rang 10.
+Kulturell ist das Gebiet dünn, rund 19 Punkte, Rang 97 von 143, unter dem Bezirksschnitt. Versorgung bleibt mit rund 35 Punkten schwach, Rang 102. Die soziale Lage gilt als hoch. Der ÖPNV-Wert liegt bei rund 7 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 33 Grad. Der Gesamtwert von rund 54 Punkten ergibt Rang 13.

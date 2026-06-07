@@ -3,10 +3,10 @@ slug: regierungsviertel
 name: Regierungsviertel
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 08d5d2d77e227cab
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 434c1b70b534a80e
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Das Regierungsviertel ist beim ÖPNV Spitze. In der Mobilität belegt es Rang 1 von 143, mit einem Score von 62,3 Punkten. Die Haltestellendichte erreicht rund 26 Stopps pro Quadratkilometer. Auch der Wohnschutz steht stark da, mit Rang 9 und 71,7 Punkten.
+Das Regierungsviertel führt bei Mobilität und Kultur. Die Mobilität erreicht rund 62 und Rang 1 von 143, klar über dem Berliner Median. Kulturell steht das Gebiet ebenfalls an der Spitze, 100 Punkte und Rang 1 von 143, weit über dem Schnitt von Mitte und dem Median. Die Haltestellendichte erreicht rund 26 pro Quadratkilometer.
 
-Grün und Ruhe fallen dagegen schwach aus. Ruhe und Luft liegen bei 32,1 Punkten, weit unter dem Berliner Median. Der Lärm gilt als hoch. An heißen Tagen steigt die gefühlte Temperatur auf rund 38 Grad. Insgesamt kommt das Regierungsviertel auf 48,5 Punkte.
+Grün und Ruhe fallen schwach aus. Ruhe und Luft liegen mit rund 32 Punkten weit unter dem Berliner Median. Grün und Hitze bleiben mit rund 24 Punkten ebenfalls darunter. Der Lärm fällt hoch aus. An heißen Tagen erreicht die gefühlte Temperatur rund 38 Grad. Der Wohnschutz steht mit rund 72 auf Rang 9. Insgesamt kommt das Gebiet auf rund 51 Punkte und Rang 24.

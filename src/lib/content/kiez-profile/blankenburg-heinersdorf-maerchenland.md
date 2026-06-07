@@ -3,10 +3,10 @@ slug: blankenburg-heinersdorf-maerchenland
 name: Blankenburg Heinersdorf Maerchenland
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: dc7413a502da7032
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 61203d6ae23d1409
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Blankenburg Heinersdorf Maerchenland steht beim Grün gut da, der Score von 66,8 liegt über dem Berliner Median. Auch bei Ruhe und Luft bewegt sich das Gebiet mit 75,9 weit über dem Bezirksschnitt. Die gefühlte Temperatur an heißen Tagen erreicht 37,4 Grad. Die Lärmbelastung gilt als hoch.
+Grün und Ruhe prägen Blankenburg Heinersdorf Maerchenland. Beim Grün liegt der Score von rund 67 über dem Berliner Median. Ruhe und Luft erreichen rund 76, weit über dem Bezirksschnitt. Die Grünversorgung gilt als gut, die Lärmklasse ist hoch.
 
-Bei der Versorgung schwächelt das Gebiet stark, der Score von 14,5 bedeutet Rang 136 von 143. Auch die Mobilität bleibt mit 19,3 unter dem Berliner Median, die Haltestellendichte beträgt 5,0 pro Quadratkilometer. Insgesamt landet das Gebiet auf Rang 95 von 143.
+Kulturell rangiert das Gebiet ganz hinten, rund 3 Punkte und Rang 123 von 143, weit unter Bezirk und Berliner Median. Die Versorgung schwächelt ebenfalls, Score 17 und Rang 124. Die Mobilität bleibt unter dem Median, die Haltestellendichte erreicht rund 5 Halte pro Quadratkilometer. Die gefühlte Temperatur steigt auf rund 37 Grad. Insgesamt landet das Gebiet auf Rang 95.

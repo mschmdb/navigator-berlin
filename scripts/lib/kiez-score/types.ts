@@ -3,9 +3,26 @@ export type KiezScoreDimension =
 	| 'gruen-hitze'
 	| 'mobilitaet'
 	| 'versorgung'
-	| 'wohnschutz';
+	| 'wohnschutz'
+	| 'kultur';
 
 export const KIEZ_SCORE_DIMENSIONS: readonly KiezScoreDimension[] = [
+	'ruhe-luft',
+	'gruen-hitze',
+	'mobilitaet',
+	'versorgung',
+	'wohnschutz',
+	'kultur'
+];
+
+/**
+ * Dimensionen, die in den Gesamt-/Composite-Score (computeOverallScore) einfließen.
+ * Epic 13 / Option C: Kultur ist eine sichtbare, eigenständige Dimension (eigener Layer,
+ * Rang, Inspector), zählt aber NICHT in den „Umwelt- & Infrastruktur-Score". Begründung:
+ * Kultur ist innenstadt-lastig (Center-Bias) und würde als Headline-Treiber jeden
+ * Außenbezirk-Gesamt-Score drücken. Präzedenz: ADR-015 (Soziale Lage genauso behandelt).
+ */
+export const COMPOSITE_DIMENSIONS: readonly KiezScoreDimension[] = [
 	'ruhe-luft',
 	'gruen-hitze',
 	'mobilitaet',
@@ -58,8 +75,16 @@ export type NormalizationStrategy =
 			fachabteilungenField?: string;
 			maxFachabteilungen?: number;
 	  }
-	/** POI-Dichte (Story 10.4): Anzahl POIs im Radius statt Distanz. >= cap → 100, weicher Tail. */
-	| { kind: 'poi-density'; radiusM: number; cap: number; softTailFactor?: number };
+	/** POI-Dichte (Story 10.4): Anzahl POIs im Radius statt Distanz. >= cap → 100, weicher Tail.
+	 * Story 13.1: optionale `scale` — 'log' dämpft den Center-Bias (erster POI zählt stark, flacht ab),
+	 * Default 'linear' (rückwärtskompatibel zu allen bestehenden poi-density-Termen). */
+	| {
+			kind: 'poi-density';
+			radiusM: number;
+			cap: number;
+			softTailFactor?: number;
+			scale?: 'linear' | 'log';
+	  };
 
 export interface LayerWeight {
 	layer: string;
@@ -98,5 +123,8 @@ export const DIMENSION_WEIGHTS: Record<KiezScoreDimension, number> = {
 	'gruen-hitze': 0.2,
 	mobilitaet: 0.2,
 	versorgung: 0.2,
-	wohnschutz: 0.2
+	wohnschutz: 0.2,
+	// Story 13.1 (Option C): Kultur ist eigenständige Dimension, NICHT im Composite → Gewicht 0.
+	// Die fünf Composite-Dimensionen bleiben bei 0.20 (Summe 1.0). Siehe COMPOSITE_DIMENSIONS.
+	kultur: 0
 };

@@ -56,7 +56,10 @@ const BUNDLE_TO_SECTION: Record<Bundle, SectionKey> = {
 	// Einwohnerdichte-Layer ist inspectorRelevant:false (Map-only). Demografie rendert
 	// als eigener Inspector-Block (Story 10.5) aus static/data, nicht via LayerHits.
 	// No-Op-Map auf 'boundaries' damit Record<Bundle> exhaustive bleibt.
-	'I: Demografie': 'boundaries'
+	'I: Demografie': 'boundaries',
+	// Kultur-Layer (Epic 13) sind in Story 13.0 inspectorRelevant:false (Map + Score-Input,
+	// kein Inspector-Hit). No-Op-Map auf 'boundaries' damit Record<Bundle> exhaustive bleibt.
+	'J: Kultur': 'boundaries'
 };
 
 const BOUNDARY_ORDER = ['bezirke', 'ortsteile', 'plz', 'einschulbereiche-2024'];

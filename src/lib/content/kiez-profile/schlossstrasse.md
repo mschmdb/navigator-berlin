@@ -3,10 +3,10 @@ slug: schlossstrasse
 name: Schlossstrasse
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: dc82214b637a6ce2
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 6f366b310077f120
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Schlossstrasse ist sehr gut angebunden. Die Haltestellendichte beträgt 19,7 pro Quadratkilometer. Der Mobilitätsscore liegt mit 30,6 Punkten über dem Berliner Median. Auch der Wohnschutz schneidet mit 51 Punkten stark ab, Rang 20 von 143. Die Versorgung kommt auf 56,5 Punkte, über dem Median.
+Schlossstrasse punktet bei Kultur und Versorgung. Kulturell steht das Gebiet stark, rund 84 Punkte und Rang 23 von 143, weit über Bezirk und Berliner Median. Die Versorgung kommt auf rund 64 und übertrifft den Median. Die Mobilität liegt mit rund 31 über dem Bezirksschnitt.
 
-Beim Grün fällt der Kiez ab. Grün und Hitze erreicht 45,2 Punkte, unter dem Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf 35,1 Grad. Ruhe und Luft liegt mit 55,8 Punkten unter dem Bezirksschnitt. Insgesamt steht Schlossstrasse auf Rang 28 von 143.
+Grün und Hitze bleiben schwach. Der Score von rund 45 liegt unter dem Berliner Median. An heißen Tagen erreicht die gefühlte Temperatur rund 35 Grad. Ruhe und Luft fallen mit rund 56 unter den Bezirksschnitt. Die Haltestellendichte beträgt rund 20 pro Quadratkilometer. Der Wohnschutz steht solide auf Rang 20. Insgesamt landet das Gebiet mit rund 49 auf Rang 28 von 143.

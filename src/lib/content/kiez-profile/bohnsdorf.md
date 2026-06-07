@@ -3,10 +3,10 @@ slug: bohnsdorf
 name: Bohnsdorf
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 25b478c313e12154
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 6892d05501b2adbf
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Bohnsdorf liegt ruhig und grün. Der Ruhe-und-Luft-Score erreicht 60 Punkte, der Grün-und-Hitze-Score 52,6 Punkte, beide nahe am Berliner Median. Die Grünversorgung gilt als gut. Die gefühlte Temperatur an heißen Tagen liegt bei rund 38 Grad Celsius. Die Lärmbelastung ist mittel.
+Bohnsdorf liegt ruhig und grün. Bei Ruhe und Luft liegt der Kiez nahe am Berliner Median, aber unter dem Bezirksschnitt. Bei Grün und Hitze liegt er nahe an Median und Bezirksschnitt. Die Grünversorgung gilt als gut. Die gefühlte Temperatur liegt bei rund 38 Grad. Die Lärmbelastung ist mittel.
 
-Mobilität und Versorgung fallen schwächer aus. Die Haltestellendichte liegt bei knapp sieben Haltestellen pro Quadratkilometer, der Mobilitätsscore bei 19,2 Punkten unter dem Berliner Median. Der Versorgungsscore von 39,2 Punkten reicht für Rang 89 von 143. Der Gesamtscore von 34,2 Punkten platziert Bohnsdorf auf Rang 98 von 143 Berliner Kiezen.
+Kulturell bleibt der Kiez dünn, rund 11 Punkte und Rang 108 von 143, unter Bezirk und Berliner Median. Die Mobilität bleibt unter dem Berliner Median, nahe am Bezirksschnitt. Die Haltestellendichte liegt bei rund 7 pro Quadratkilometer. Die Versorgung liegt nahe am Bezirksschnitt, aber unter dem Median. Insgesamt kommt der Kiez auf Platz 102 von 143.

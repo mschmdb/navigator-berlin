@@ -3,10 +3,10 @@ slug: oberschoeneweide
 name: Oberschoeneweide
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 3d92c42b670dbd32
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 14868c256fc20f5d
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Oberschoeneweide steht bei Ruhe und Luft gut da, der Score von 79,3 liegt über dem Berliner Median. Beim Grün bewegt sich das Gebiet mit 47,5 nahe am Berliner Median. Die gefühlte Temperatur an heißen Tagen erreicht 34,7 Grad. Die Lärmbelastung bleibt im mittleren Bereich.
+Ruhe und Luft prägen Oberschoeneweide, rund 79 Punkte, Rang 26 von 143, über dem Berliner Median. Kulturell ist das Gebiet kräftig, rund 58 Punkte, Rang 41 von 143, weit über dem Bezirksschnitt. Grün und Hitze fallen mit rund 48 Punkten unter den Median, Rang 76. Mobilität bleibt mit rund 19 Punkten schwach, Rang 89.
 
-Bei der Anbindung schwächelt das Gebiet, der Mobilitäts-Score von 18,5 liegt unter dem Bezirksschnitt. Die Haltestellendichte beträgt 5,7 pro Quadratkilometer. Auch die Versorgung fällt mit 34,9 unter den Berliner Median. Insgesamt landet Oberschoeneweide auf Rang 69 von 143.
+Versorgung liegt mit rund 36 Punkten nahe dem Bezirksschnitt, Rang 99. Wohnschutz erreicht rund 17 Punkte. Die soziale Lage gilt als mittel. Der ÖPNV-Wert liegt bei rund 6 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 35 Grad. Der Gesamtwert von rund 40 Punkten ergibt Rang 70.

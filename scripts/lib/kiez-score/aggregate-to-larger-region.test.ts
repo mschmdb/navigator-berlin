@@ -173,7 +173,7 @@ describe('aggregateScoresToRegion (Story 2.9a)', () => {
 		const result = aggregateScoresToRegion({}, memberships);
 		const agg = result[0]!;
 		expect(agg.score.overall).toBeUndefined();
-		expect(agg.score.missingDimensions).toHaveLength(5);
+		expect(agg.score.missingDimensions).toHaveLength(6);
 	});
 
 	it('throws if region has no members', () => {

@@ -130,6 +130,17 @@ function formatKita(value: unknown): FormattedValue {
 	return { text: `${name}${addr}`, isNumeric: false };
 }
 
+// OSM-POI (Kultur, Nahversorgung): Name + Adresse statt rohem Tag-Dump.
+function formatOsmPoi(value: unknown): FormattedValue {
+	const name = firstString(value, 'name');
+	const strasse = firstString(value, 'addr:street');
+	const hnr = firstString(value, 'addr:housenumber');
+	const addr = strasse ? ` · ${strasse}${hnr ? ' ' + hnr : ''}` : '';
+	if (name) return { text: `${name}${addr}`, isNumeric: false };
+	const typ = firstString(value, 'amenity', 'shop', 'tourism');
+	return { text: typ ?? 'Ohne Namen', isNumeric: false };
+}
+
 function formatSchule(value: unknown): FormattedValue {
 	const name = firstString(value, 'schulname');
 	const art = firstString(value, 'schulart');
@@ -417,6 +428,8 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return formatKiezScoreValue(value, 'Versorgung');
 		case 'kiez-score-wohnschutz':
 			return formatKiezScoreValue(value, 'Wohnschutz');
+		case 'kiez-score-kultur':
+			return formatKiezScoreValue(value, 'Kultur');
 		// Legacy/fictitious Slugs (Story 1.3 Re-Run TODO):
 		case 'mietspiegel-wohnlage':
 			return { text: safeString(value), isNumeric: false };
@@ -429,6 +442,18 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return { text: safeString(value), isNumeric: false };
 		case 'klimaanalyse':
 			return { text: safeString(value), isNumeric: false };
+		case 'nahversorgung-lebensmittel':
+		case 'nahversorgung-apotheke':
+		case 'nahversorgung-post':
+		case 'kultur-museum':
+		case 'kultur-galerie':
+		case 'kultur-kunst-im-raum':
+		case 'kultur-theater':
+		case 'kultur-bibliothek':
+		case 'kultur-kino':
+		case 'kultur-soziokultur':
+		case 'kultur-club':
+			return formatOsmPoi(value);
 		default:
 			return { text: safeString(value), isNumeric: typeof value === 'number' };
 	}

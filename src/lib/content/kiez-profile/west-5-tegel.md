@@ -3,10 +3,10 @@ slug: west-5-tegel
 name: West 5 Tegel
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: b2127877d4467c93
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: f867830cf47bd151
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-West 5 Tegel im Bezirk Reinickendorf überzeugt auf breiter Front. Bei Ruhe und Luft erreicht das Gebiet 73,5 Punkte und liegt über dem Berliner Median. Die Lärmbelastung gilt als gering. Auch bei Grün und Hitze steht es mit 65,1 Punkten klar über dem Median. Die gefühlte Temperatur an heißen Tagen liegt bei 34,6 Grad.
+West 5 Tegel zeigt seine Stärke bei Ruhe und Luft mit 73,5 über dem Bezirksschnitt und über dem Berliner Median. Beim Gesamtscore erreicht der Kiez 48,6 und Rang 31 von 143. Die Versorgung liegt mit 69,6 über dem Bezirksschnitt und über dem Berliner Median. Die Lärmklasse gilt als gering.
 
-Die Versorgung kommt auf 61,9 Punkte und übertrifft den Bezirksschnitt deutlich. Die Mobilität erreicht 34,8 Punkte und liegt über dem Berliner Median. Die Haltestellendichte beträgt 9,7 pro Quadratkilometer. Im Gesamtbild steht das Gebiet auf Rang 29 von 143.
+Grün und Hitze liegen mit 65,1 über dem Bezirksschnitt und über dem Berliner Median. Die Mobilität liegt mit 34,8 über dem Berliner Median, die Haltestellendichte erreicht rund 10 pro Quadratkilometer. An heißen Tagen steigt die gefühlte Temperatur auf rund 35 Grad. Die Kultur erreicht 49,8 und zählt getrennt vom Gesamtscore.

@@ -5,6 +5,7 @@
 	import KiezScoreDimensionRow from './kiez-score-dimension-row.svelte';
 	import KiezScoreRing from '../charts/kiez-score-ring.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
+	import { COMPOSITE_DIMENSIONS } from '$lib/data';
 	import type { KiezScore, KiezScoreDimension } from '$lib/data';
 
 	const GESAMT_SLUG = 'kiez-score-gesamt';
@@ -28,9 +29,13 @@
 	const gesamtHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/${GESAMT_SLUG}`));
 
 	const enabled = $derived(featureFlags.kiezScore && score !== null);
+	// Option C: der Gesamt-Score ist das Mittel der fünf Composite-Dimensionen (Kultur zählt
+	// nicht hinein). Der Zähler bezieht sich daher nur auf die Composite-Dimensionen.
 	const usedDimsCount = $derived.by(() => {
 		if (!score) return 0;
-		return score.dimensions.filter((d) => d.value !== null).length;
+		return score.dimensions.filter(
+			(d) => d.value !== null && COMPOSITE_DIMENSIONS.includes(d.dimension)
+		).length;
 	});
 
 	let expandedDim = $state<KiezScoreDimension | null>(null);
@@ -56,7 +61,7 @@
 					class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
 					data-testid="kiez-score-overall-meta"
 				>
-					Gesamt · Mittel über {usedDimsCount}/{score.dimensions.length} Dimensionen
+					Gesamt · Mittel über {usedDimsCount}/{COMPOSITE_DIMENSIONS.length} Dimensionen
 				</span>
 				<div class="flex items-center gap-1" data-testid="kiez-score-overall-actions">
 					{#if onToggleLayer}

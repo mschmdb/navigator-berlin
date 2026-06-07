@@ -3,10 +3,10 @@ slug: prenzlauer-berg-ost
 name: Prenzlauer Berg Ost
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: ba286638367c9ea5
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 0e0ed6b7209f72df
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Prenzlauer Berg Ost ist solide versorgt. In der Versorgung erreicht das Gebiet 57,4 Punkte, über dem Berliner Median. Die Mobilität liegt mit 28,4 Punkten ebenfalls über dem Median. Die Haltestellendichte erreicht rund 12 Stopps pro Quadratkilometer.
+Prenzlauer Berg Ost punktet bei Kultur und Versorgung. Kulturell steht das Gebiet solide, rund 68 Punkte und Rang 33 von 143, über Bezirk und Berliner Median. Die Versorgung kommt auf rund 67 Punkte, über dem Schnitt von Pankow und dem Median. Die Haltestellendichte erreicht rund 12 pro Quadratkilometer.
 
-Ruhe und Grün bewegen sich im Mittelfeld. Ruhe und Luft liegen mit 54,3 Punkten unter dem Berliner Median, der Lärm bleibt mittel. Grün und Hitze kommen auf 53,3 Punkte, nahe am Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad. Insgesamt erreicht das Gebiet 38,7 Punkte und Rang 76 von 143.
+Ruhe und Grün bewegen sich im Mittelfeld. Ruhe und Luft liegen mit rund 54 Punkten unter dem Berliner Median, der Lärm bleibt mittel. Grün und Hitze kommen auf rund 53 Punkte, nahe am Median. An heißen Tagen erreicht die gefühlte Temperatur rund 37 Grad. Insgesamt kommt das Gebiet auf rund 41 Punkte und Rang 63 von 143.

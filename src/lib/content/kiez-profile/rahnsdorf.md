@@ -3,10 +3,10 @@ slug: rahnsdorf
 name: Rahnsdorf
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: d048fe145860cf9d
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 2559f5b65a04c083
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Rahnsdorf ist das ruhigste Gebiet der Stadt, bei Ruhe und Luft steht der Score von 100 auf Rang 1 von 143. Die Lärmbelastung gilt als gering. Auch beim Grün liegt das Gebiet mit 68,5 über dem Berliner Median. Die gefühlte Temperatur an heißen Tagen bleibt mit 31,9 Grad niedrig.
+Rahnsdorf ist das ruhigste Gebiet der Stadt. Bei Ruhe und Luft steht der Score von 100 auf Rang 1 von 143. Die Lärmbelastung fällt gering aus. Beim Grün liegt das Gebiet mit rund 69 über dem Berliner Median. An heißen Tagen bleibt die gefühlte Temperatur mit rund 32 Grad niedrig.
 
-Bei der Anbindung schwächelt das Gebiet stark, der Mobilitäts-Score von 10,3 liegt unter dem Bezirksschnitt. Die Haltestellendichte beträgt nur 2,3 pro Quadratkilometer. Die Versorgung fällt mit 16,8 deutlich ab und erreicht Rang 133 von 143. Insgesamt landet Rahnsdorf auf Rang 73 von 143.
+Kultur und Anbindung fallen weit ab. Kulturell erreicht das Gebiet nur rund 1 Punkt und Rang 127 von 143, deutlich unter dem Bezirksschnitt. Der Mobilitätsscore von rund 10 liegt unter dem Bezirksschnitt, die Haltestellendichte bei rund zwei pro Quadratkilometer. Die Versorgung fällt mit rund 15 auf Rang 128. Der Gesamtscore von rund 39 platziert Rahnsdorf auf Rang 78 von 143.

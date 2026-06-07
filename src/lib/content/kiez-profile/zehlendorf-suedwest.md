@@ -3,10 +3,10 @@ slug: zehlendorf-suedwest
 name: Zehlendorf Suedwest
 pageType: kiez
 model: "claude-opus-4-8 (subagent)"
-inputHash: 4973cd2aad56780e
-generatedAt: "2026-06-07T08:00:00.000Z"
+inputHash: 1cf45b62b14d669c
+generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Zehlendorf Suedwest ist ausgesprochen ruhig. Bei Ruhe und Luft steht das Gebiet mit einem Score von 93 auf Rang 10 von 143. Auch Grün und Hitze fallen stark aus und übertreffen den Berliner Median. An heißen Tagen bleibt die gefühlte Temperatur bei rund 30 Grad. Das ist ein kühler Wert.
+Ruhe und Grün prägen Zehlendorf Suedwest. Ruhe und Luft erreichen rund 93 Punkte und Rang zehn von 143, weit über dem Berliner Median. Grün und Hitze liegen mit rund 69 Punkten auf Rang 17, über dem Median. Die gefühlte Temperatur bleibt kühl, rund 30 Grad.
 
-Die Versorgung ist schwach. Mit einem Score von 20,5 steht das Gebiet auf Rang 130 von 143. Auch die Mobilität liegt unter dem Median, die Haltestellendichte erreicht nur etwa 3 pro Quadratkilometer. Das Gebiet ist grün und still, aber dünn erschlossen.
+Kulturell ist das Gebiet sehr dünn, nur rund sieben Punkte und Rang 115, klar unter Bezirksschnitt und Berliner Median. Schwach fallen auch Versorgung und Mobilität aus, Rang 121 und Rang 102. Der ÖPNV bleibt sehr dünn, rund drei Halte je Quadratkilometer. Die soziale Lage liegt hoch. Insgesamt landet das Gebiet mit rund 40 Punkten im hinteren Mittelfeld, Rang 71.

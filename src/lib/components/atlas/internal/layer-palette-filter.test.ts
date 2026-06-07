@@ -117,7 +117,7 @@ describe('getLayerDisplayName', () => {
 });
 
 describe('BUNDLE_ORDER', () => {
-	it('ist A → I (G = Kiez-Score, H = Wahldaten, I = Demografie)', () => {
+	it('ist A → J (G = Kiez-Score, H = Wahldaten, I = Demografie, J = Kultur)', () => {
 		expect(BUNDLE_ORDER).toEqual([
 			'A: Boundaries',
 			'B: Wohn-Daten',
@@ -127,7 +127,8 @@ describe('BUNDLE_ORDER', () => {
 			'F: Mobilität',
 			'G: Kiez-Score',
 			'H: Wahldaten',
-			'I: Demografie'
+			'I: Demografie',
+			'J: Kultur'
 		]);
 	});
 });

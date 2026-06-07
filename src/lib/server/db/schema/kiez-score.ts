@@ -18,5 +18,7 @@ export const kiezScore = pgTable('kiez_score', {
 	mobilitaet: doublePrecision('mobilitaet'),
 	versorgung: doublePrecision('versorgung'),
 	wohnschutz: doublePrecision('wohnschutz'),
+	// Story 13.2: Kultur (Epic 13). Eigenständige Dimension, NICHT im composite (Option C).
+	kultur: doublePrecision('kultur'),
 	computedAt: timestamp('computed_at', { withTimezone: true }).notNull().defaultNow()
 });
