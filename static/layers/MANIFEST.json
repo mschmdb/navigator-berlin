@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-07T13:36:34.200Z",
+  "generatedAt": "2026-06-07T14:58:18.501Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -902,6 +902,134 @@
       "featureCount": 542,
       "inspectorRelevant": false,
       "mapRelevant": true
+    },
+    {
+      "slug": "kultur-museum",
+      "filename": "kultur-museum.85ed23a0.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "85ed23a06cd5e9ae8bbd0a234023af6c6e155cae71e8ec71fa08c5fff9ff6801",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 269,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-galerie",
+      "filename": "kultur-galerie.efab6bd8.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "efab6bd8c5c0a5035d56c6b3485fb760cfd2d86d72192902dee4757f857300c5",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 358,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-kunst-im-raum",
+      "filename": "kultur-kunst-im-raum.0bebf7b5.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "0bebf7b540789a797f1c4b25cb17bb61c70d6a6f149b494702838bfc3d47c8a3",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 14,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 2883,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-theater",
+      "filename": "kultur-theater.c687d9a9.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "c687d9a9c98c10659ecd6acf3772f48f2716cf99afa2343563d57f3515e03181",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 204,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-club",
+      "filename": "kultur-club.5b45cdbe.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:55:18.554Z",
+      "license": "ODbL 1.0",
+      "sha256": "5b45cdbebb0aa067fdd09207601b627950e416ef67c25b795156d7414a15dbad",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 142,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-bibliothek",
+      "filename": "kultur-bibliothek.57749caf.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:58:18.501Z",
+      "license": "ODbL 1.0",
+      "sha256": "57749caff00c3b06f92f1f16fa24086c0cd6ca01426bb1607f167ebda0281462",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 190,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-kino",
+      "filename": "kultur-kino.486e6ea7.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:58:18.501Z",
+      "license": "ODbL 1.0",
+      "sha256": "486e6ea718f32b58c89f1d9c86ecd5ce8dfdccaa2a52fac2538b8a9b9c9a1158",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 12,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 97,
+      "inspectorRelevant": false
+    },
+    {
+      "slug": "kultur-soziokultur",
+      "filename": "kultur-soziokultur.94e41da0.geojson",
+      "sourceUrl": "https://overpass-api.de/api/interpreter",
+      "fetchedAt": "2026-06-07T14:58:18.501Z",
+      "license": "ODbL 1.0",
+      "sha256": "94e41da0436328ebe4070abc64eae9d5c0e43de4319538113503e24c21320674",
+      "bundleGroup": "J: Kultur",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 141,
+      "inspectorRelevant": false
     }
   ]
 }

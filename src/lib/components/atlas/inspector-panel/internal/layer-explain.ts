@@ -160,6 +160,40 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		long: 'Berliner Bäder-Betriebe (BBB) und vergleichbare Einrichtungen: Hallenbad, Sommerbad, Kombibad oder Strandbad. Saisonale Öffnungszeiten beachten.'
 	},
 
+	// J: Kultur (Epic 13, Story 13.0) — Standorte aus OpenStreetMap (ODbL 1.0).
+	'kultur-museum': {
+		short: 'Museum',
+		long: 'Museum oder Ausstellungshaus. Teil des Kultur-Scores (Zugang zu Kulturorten im Umkreis). Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-galerie': {
+		short: 'Galerie',
+		long: 'Kunstgalerie oder Ausstellungsraum. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-kunst-im-raum': {
+		short: 'Kunst im Stadtraum',
+		long: 'Kunstwerk im öffentlichen Raum: Skulptur, Wandbild, Installation, Denkmal-Kunst. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-theater': {
+		short: 'Theater oder Bühne',
+		long: 'Theater, Bühne oder Opernhaus. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-bibliothek': {
+		short: 'Bibliothek',
+		long: 'Öffentliche, wissenschaftliche oder Spezial-Bibliothek. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-kino': {
+		short: 'Kino',
+		long: 'Kino oder Lichtspielhaus. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-soziokultur': {
+		short: 'Soziokulturelles Zentrum',
+		long: 'Kulturhaus, soziokulturelles Zentrum oder Kunsthaus (arts_centre). Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'kultur-club': {
+		short: 'Club oder Musikspielstätte',
+		long: 'Club, Diskothek oder Live-Musikspielstätte. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+
 	// F: Mobilität
 	'radverkehrsnetz-2025': {
 		short: 'Radverkehrsnetz 2025 mit Vorrangrouten',
