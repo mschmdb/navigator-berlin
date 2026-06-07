@@ -87,6 +87,7 @@ export type BezirkPageData = {
 	readonly faq: readonly FaqEntry[];
 	readonly kieze: readonly KiezRef[];
 	readonly comparison: readonly ComparisonDimRow[];
+	readonly profileProse: readonly string[];
 };
 
 async function tryLoadKieze(bezirkSlug: string): Promise<KiezRef[]> {
@@ -163,12 +164,14 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, `Bezirk ${slug} nicht gefunden`);
 	}
-	const [stats, faq, kieze, rank, comparisonMap] = await Promise.all([
+	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
+	const [stats, faq, kieze, rank, comparisonMap, profileProse] = await Promise.all([
 		tryLoadBezirkStats(slug),
 		tryLoadFaq(slug),
 		tryLoadKieze(slug),
 		tryLoadBezirkRank(slug),
-		tryLoadBezirkComparison(slug)
+		tryLoadBezirkComparison(slug),
+		getProfileParagraphs('bezirk', slug)
 	]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ key, label }) => {
 		const cmp = comparisonMap?.get(key);
@@ -182,6 +185,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			total: rk?.total ?? 0
 		};
 	});
-	const data: BezirkPageData = { profile, stats, faq, kieze, comparison };
+	const data: BezirkPageData = { profile, stats, faq, kieze, comparison, profileProse };
 	return data;
 };

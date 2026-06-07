@@ -106,6 +106,7 @@
 	faq={data.faq}
 	wahlVerlauf={data.wahlVerlauf}
 	comparison={data.comparison}
+	profileProse={data.profileProse}
 />
 
 {#if bezirkName.length > 0}

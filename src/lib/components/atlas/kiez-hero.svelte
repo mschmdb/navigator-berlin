@@ -42,9 +42,18 @@
 		readonly faq: readonly FaqEntry[];
 		readonly wahlVerlauf?: readonly WahlVerlaufRow[];
 		readonly comparison?: readonly ComparisonDimRow[];
+		readonly profileProse?: readonly string[];
 	}
 
-	const { profile, stats, score, faq, wahlVerlauf = [], comparison = [] }: Props = $props();
+	const {
+		profile,
+		stats,
+		score,
+		faq,
+		wahlVerlauf = [],
+		comparison = [],
+		profileProse = []
+	}: Props = $props();
 
 	const numberDe = new Intl.NumberFormat('de-DE');
 	const leadText = $derived.by(() => {
@@ -181,6 +190,14 @@
 		<h1 class="font-serif text-3xl text-ink md:text-4xl">{profile.name}</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">{leadText}</p>
 	</header>
+
+	{#if profileProse.length > 0}
+		<section aria-label="Profil" class="space-y-3" data-testid="kiez-profile">
+			{#each profileProse as para (para)}
+				<p class="font-serif text-base leading-relaxed text-ink">{para}</p>
+			{/each}
+		</section>
+	{/if}
 
 	{#if score}
 		<section aria-labelledby="kiez-score-heading" class="space-y-4" data-testid="kiez-score">

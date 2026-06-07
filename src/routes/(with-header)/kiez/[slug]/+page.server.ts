@@ -114,6 +114,7 @@ export type KiezPageData = {
 	readonly siblings: readonly KiezRef[];
 	readonly wahlVerlauf: readonly WahlVerlaufRow[];
 	readonly comparison: readonly ComparisonDimRow[];
+	readonly profileProse: readonly string[];
 };
 
 interface WahlTrendVariant {
@@ -261,15 +262,18 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, `Kiez ${slug} nicht gefunden`);
 	}
-	const [stats, score, faq, siblings, wahlVerlauf, rank, comparisonMap] = await Promise.all([
-		tryLoadKiezStats(slug),
-		tryLoadKiezScore(slug),
-		tryLoadFaq(slug),
-		tryLoadSiblings(slug, profile.bezirk),
-		tryBuildWahlVerlauf(slug),
-		tryLoadKiezRank(slug),
-		tryLoadKiezComparison(slug)
-	]);
+	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
+	const [stats, score, faq, siblings, wahlVerlauf, rank, comparisonMap, profileProse] =
+		await Promise.all([
+			tryLoadKiezStats(slug),
+			tryLoadKiezScore(slug),
+			tryLoadFaq(slug),
+			tryLoadSiblings(slug, profile.bezirk),
+			tryBuildWahlVerlauf(slug),
+			tryLoadKiezRank(slug),
+			tryLoadKiezComparison(slug),
+			getProfileParagraphs('kiez', slug)
+		]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ key, label }) => {
 		const cmp = comparisonMap?.get(key as string);
 		const rk = rank?.get(key as string);
@@ -283,6 +287,15 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			total: rk?.total ?? 0
 		};
 	});
-	const data: KiezPageData = { profile, stats, score, faq, siblings, wahlVerlauf, comparison };
+	const data: KiezPageData = {
+		profile,
+		stats,
+		score,
+		faq,
+		siblings,
+		wahlVerlauf,
+		comparison,
+		profileProse
+	};
 	return data;
 };

@@ -94,7 +94,13 @@
 <JsonLd data={adminAreaJsonLd} testid="bezirk-administrative-area-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="bezirk-breadcrumb-jsonld" />
 
-<BezirkHero profile={data.profile} stats={data.stats} faq={data.faq} comparison={data.comparison} />
+<BezirkHero
+	profile={data.profile}
+	stats={data.stats}
+	faq={data.faq}
+	comparison={data.comparison}
+	profileProse={data.profileProse}
+/>
 <div class="mx-auto max-w-3xl px-4 pb-8">
 	<BezirkKiezeList kieze={data.kieze} bezirkName={name} />
 </div>

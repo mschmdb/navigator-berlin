@@ -27,6 +27,8 @@
 		"data:aggregate-scores": "tsx scripts/aggregate-scores.ts",
 		"data:rank": "tsx scripts/aggregate-ranks.ts",
 		"data:comparison": "tsx scripts/aggregate-comparison.ts",
+		"data:profiles": "tsx scripts/build-kiez-profiles.ts",
+		"lint:profiles": "tsx scripts/lint-profiles.ts",
 		"data:layer-aggregate": "tsx scripts/build-layer-aggregates.ts",
 		"data:aggregate-wohnlagen": "tsx scripts/aggregate-wohnlagen.ts",
 		"data:wahl-fetch": "tsx scripts/aggregate-wahl-data.ts",
