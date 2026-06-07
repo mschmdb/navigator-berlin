@@ -62,3 +62,12 @@ templates:
       (Mietspiegel-Wohnlage, MSS, BRW). Diese Kategorien sind beschreibend, nicht
       wertend. Bezeichnungen wie „beliebter Kiez" oder „guter Bezirk" verwenden
       wir aus methodischen Gründen nicht.
+
+  - id: wohnen-wohnschutz-einordnung
+    applicableTo: [bezirk, kiez]
+    requires: [wohnen.dominantWohnlage]
+    question: "Wie viel Wohnschutz gibt es in {name}?"
+    answer: >-
+      {name} erreicht im Wohnschutz-Score {wohnschutzScore} von 100
+      ({wohnschutzRang}), {wohnschutzVergleich}. Der Score erfasst die
+      Milieuschutz-Abdeckung; ein höherer Wert heißt mehr Schutz vor Verdrängung.

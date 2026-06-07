@@ -49,3 +49,12 @@ templates:
       mit wenig Vegetation an Sommertagen messbar wärmer bleiben als Gebiete mit
       vergleichbarer Bebauung und mehr Grün. Die Klima-Kategorie auf dieser Karte
       bildet das ab.
+
+  - id: gruen-gruenhitze-einordnung
+    applicableTo: [bezirk, kiez]
+    requires: [gruen.dominantVersorgung]
+    question: "Wie grün und kühl ist {name} im Vergleich?"
+    answer: >-
+      {name} erreicht im Grün-und-Hitze-Score {gruenHitzeScore} von 100
+      ({gruenHitzeRang}), {gruenHitzeVergleich}. Der Score verbindet
+      Grünversorgung und Hitzebelastung; ein höherer Wert heißt grüner und kühler.

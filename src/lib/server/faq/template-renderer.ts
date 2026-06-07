@@ -19,6 +19,7 @@ import {
 } from '$lib/data/faq-helpers/oepnv.js';
 import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
 import { describePetKategorie, formatPet, petErklaerungDe } from '$lib/data/faq-helpers/klima.js';
+import { formatRank } from '$lib/data/rank-format.js';
 
 /**
  * Story 2.5b T3: Pure-Function-Slot-Renderer.
@@ -43,12 +44,36 @@ export interface TemplateAggregate {
 	readonly heritage: HeritageAggregat;
 }
 
+/**
+ * Rang + Vergleich pro Score-Dimension (Story 11.3). `value` = Wert dieser Fläche,
+ * `compareValue` = Bezirksschnitt (Kiez) bzw. Berliner Median (Bezirk),
+ * `compareLabel` die passende Beschriftung. Optional, da Layer-Seiten kein Rang.
+ */
+export interface MetricContext {
+	readonly value: number | null;
+	readonly rang: number | null;
+	readonly quartil: number | null;
+	readonly total: number;
+	readonly compareValue: number | null;
+	readonly compareLabel: string;
+}
+
 export interface TemplateContext {
 	readonly pageType: PageType;
 	readonly slug: string;
 	readonly name: string;
 	readonly locale: TemplateLocale;
 	readonly aggregate: TemplateAggregate;
+	/** Story 11.3: Rang/Vergleich je Score-Dimension (ruheLuft, gruenHitze, …). */
+	readonly metrics?: ReadonlyMap<string, MetricContext>;
+}
+
+/** Neutrale, nicht-wertende Richtungsphrase für den Vergleich (Story 11.3). */
+function compareDirection(value: number | null, compareValue: number | null): string | null {
+	if (value === null || compareValue === null) return null;
+	const delta = value - compareValue;
+	if (Math.abs(delta) < 1) return 'etwa im';
+	return delta > 0 ? 'über dem' : 'unter dem';
 }
 
 export interface RenderedFaq {
@@ -177,6 +202,17 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		slots.klimaErklaerung = petErklaerungDe(klima.value);
 		slots.klimaSource = klima.layer;
 		slots.klimaStand = formatSourceStand(klima.sourceUpdatedAt);
+	}
+
+	// Story 11.3: Rang + Vergleich je Score-Dimension. Slots `<dim>Score`,
+	// `<dim>Rang`, `<dim>Vergleich` (z. B. `gruenHitzeRang`).
+	if (ctx.metrics) {
+		for (const [key, m] of ctx.metrics) {
+			if (m.value !== null) slots[`${key}Score`] = Math.round(m.value).toString();
+			slots[`${key}Rang`] = formatRank(m.rang, m.quartil, m.total);
+			const dir = compareDirection(m.value, m.compareValue);
+			if (dir) slots[`${key}Vergleich`] = `${dir} ${m.compareLabel}`;
+		}
 	}
 
 	return slots;

@@ -56,3 +56,12 @@ templates:
       Live-Daten erfordern Server-Caching, Lizenz-Kosten und stehen oft nur
       kurzfristig zur Verfügung. Wir setzen bewusst auf statische Aggregate aus
       offenen Datensätzen, die wir prüfen und versionieren können.
+
+  - id: oepnv-mobilitaet-einordnung
+    applicableTo: [bezirk, kiez]
+    requires: [oepnv.stopsPerKm2]
+    question: "Wie gut ist {name} an den Nahverkehr angebunden?"
+    answer: >-
+      {name} erreicht im Mobilitäts-Score {mobilitaetScore} von 100
+      ({mobilitaetRang}), {mobilitaetVergleich}. Der Score bildet die
+      ÖPNV-Anbindung ab; ein höherer Wert heißt besser angebunden.

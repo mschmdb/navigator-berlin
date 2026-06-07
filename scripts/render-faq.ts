@@ -24,7 +24,16 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { sql } from 'drizzle-orm';
 import { getDb, closeDb } from '../src/lib/server/db/index.js';
-import { faqQna, bezirkStats, kiezStats } from '../src/lib/server/db/schema/index.js';
+import {
+	faqQna,
+	bezirkStats,
+	kiezStats,
+	kiezRank,
+	bezirkRank,
+	kiezComparison,
+	bezirkComparison
+} from '../src/lib/server/db/schema/index.js';
+import type { MetricContext } from '../src/lib/server/faq/template-renderer.js';
 import type {
 	AggregateValue,
 	BildungAggregat,
@@ -65,6 +74,61 @@ interface RenderTarget {
 	readonly slug: string;
 	readonly name: string;
 	readonly aggregate: TemplateAggregate;
+	readonly metrics?: ReadonlyMap<string, MetricContext>;
+}
+
+const SCORE_DIM_KEYS = ['ruheLuft', 'gruenHitze', 'mobilitaet', 'versorgung', 'wohnschutz'];
+
+/** Rang + Vergleich je Score-Dimension pro Kiez (Story 11.3). */
+async function loadKiezMetrics(): Promise<Map<string, Map<string, MetricContext>>> {
+	const db = getDb();
+	const [ranks, cmps] = await Promise.all([
+		db.select().from(kiezRank),
+		db.select().from(kiezComparison)
+	]);
+	const cmpBy = new Map(cmps.map((c) => [`${c.slug}|${c.metricKey}`, c]));
+	const out = new Map<string, Map<string, MetricContext>>();
+	for (const r of ranks) {
+		if (!SCORE_DIM_KEYS.includes(r.metricKey)) continue;
+		const c = cmpBy.get(`${r.slug}|${r.metricKey}`);
+		const m: MetricContext = {
+			value: c?.kiezValue ?? null,
+			rang: r.rang,
+			quartil: r.quartil,
+			total: r.total,
+			compareValue: c?.bezirkMean ?? null,
+			compareLabel: 'Bezirksschnitt'
+		};
+		if (!out.has(r.slug)) out.set(r.slug, new Map());
+		out.get(r.slug)!.set(r.metricKey, m);
+	}
+	return out;
+}
+
+/** Rang + Vergleich je Score-Dimension pro Bezirk (Story 11.3). */
+async function loadBezirkMetrics(): Promise<Map<string, Map<string, MetricContext>>> {
+	const db = getDb();
+	const [ranks, cmps] = await Promise.all([
+		db.select().from(bezirkRank),
+		db.select().from(bezirkComparison)
+	]);
+	const cmpBy = new Map(cmps.map((c) => [`${c.slug}|${c.metricKey}`, c]));
+	const out = new Map<string, Map<string, MetricContext>>();
+	for (const r of ranks) {
+		if (!SCORE_DIM_KEYS.includes(r.metricKey)) continue;
+		const c = cmpBy.get(`${r.slug}|${r.metricKey}`);
+		const m: MetricContext = {
+			value: c?.bezirkValue ?? null,
+			rang: r.rang,
+			quartil: r.quartil,
+			total: r.total,
+			compareValue: c?.berlinMedian ?? null,
+			compareLabel: 'Berlin-Median'
+		};
+		if (!out.has(r.slug)) out.set(r.slug, new Map());
+		out.get(r.slug)!.set(r.metricKey, m);
+	}
+	return out;
 }
 
 const EMPTY_AGGREGATE: TemplateAggregate = {
@@ -116,7 +180,9 @@ async function readManifest(): Promise<Manifest> {
 	return JSON.parse(raw) as Manifest;
 }
 
-async function loadBezirkTargets(): Promise<RenderTarget[]> {
+async function loadBezirkTargets(
+	metricsBySlug: Map<string, Map<string, MetricContext>>
+): Promise<RenderTarget[]> {
 	const rows = await getDb()
 		.select({
 			slug: bezirkStats.slug,
@@ -134,11 +200,14 @@ async function loadBezirkTargets(): Promise<RenderTarget[]> {
 		pageType: 'bezirk' as const,
 		slug: row.slug,
 		name: slugToDisplayName(row.slug),
-		aggregate: rowToAggregate(row)
+		aggregate: rowToAggregate(row),
+		metrics: metricsBySlug.get(row.slug)
 	}));
 }
 
-async function loadKiezTargets(): Promise<RenderTarget[]> {
+async function loadKiezTargets(
+	metricsBySlug: Map<string, Map<string, MetricContext>>
+): Promise<RenderTarget[]> {
 	const rows = await getDb()
 		.select({
 			slug: kiezStats.slug,
@@ -156,7 +225,8 @@ async function loadKiezTargets(): Promise<RenderTarget[]> {
 		pageType: 'kiez' as const,
 		slug: row.slug,
 		name: slugToDisplayName(row.slug),
-		aggregate: rowToAggregate(row)
+		aggregate: rowToAggregate(row),
+		metrics: metricsBySlug.get(row.slug)
 	}));
 }
 
@@ -192,7 +262,8 @@ async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[
 					slug: target.slug,
 					name: target.name,
 					locale,
-					aggregate: target.aggregate
+					aggregate: target.aggregate,
+					metrics: target.metrics
 				};
 				const rendered = renderTemplate(template, context);
 				if (!rendered) continue;
@@ -236,9 +307,13 @@ async function main(): Promise<void> {
 		process.exit(1);
 	}
 	process.stdout.write('[render-faq] Loading targets ...\n');
+	const [kiezMetrics, bezirkMetrics] = await Promise.all([
+		loadKiezMetrics(),
+		loadBezirkMetrics()
+	]);
 	const [bezirks, kieze, layers] = await Promise.all([
-		loadBezirkTargets(),
-		loadKiezTargets(),
+		loadBezirkTargets(bezirkMetrics),
+		loadKiezTargets(kiezMetrics),
 		loadLayerTargets()
 	]);
 	process.stdout.write(

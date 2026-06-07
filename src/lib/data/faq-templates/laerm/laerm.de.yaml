@@ -82,3 +82,12 @@ templates:
       (zum Beispiel „mittel" oder „hoch"), keine Punktwerte. Wir geben den Wert
       genauso wieder, wie er publiziert wird, um keine Genauigkeit zu suggerieren,
       die im Datensatz nicht enthalten ist.
+
+  - id: laerm-ruheluft-einordnung
+    applicableTo: [bezirk, kiez]
+    requires: [laerm.dominantCategory]
+    question: "Wie ruhig und sauber ist {name} im Vergleich?"
+    answer: >-
+      {name} erreicht im Ruhe-und-Luft-Score {ruheLuftScore} von 100
+      ({ruheLuftRang}), {ruheLuftVergleich}. Der Score bündelt Lärm- und
+      Luft-Belastung; ein höherer Wert heißt ruhiger und sauberer.
