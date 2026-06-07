@@ -11,7 +11,7 @@ related:
 
 Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 2026-06-07.
 
-**39 Layer total**, gruppiert nach Bundle.
+**42 Layer total**, gruppiert nach Bundle.
 
 ## Pro-Bundle-Übersicht
 ### A: Boundaries
@@ -60,6 +60,9 @@ Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 202
 
 | Slug | Kind | Source | Lizenz | Stand |
 |---|---|---|---|---|
+| `nahversorgung-lebensmittel` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `nahversorgung-apotheke` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `nahversorgung-post` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
 | `kitas-2024` | fis-broker | gdi.berlin.de/services/wfs/kita | dl-de/zero-2-0 | 2024-12-31 |
 | `schulen-2024` | fis-broker | gdi.berlin.de/services/wfs/schulen | dl-de/zero-2-0 | 2025-01-01 |
 | `einschulbereiche-2024` | fis-broker | gdi.berlin.de/services/wfs/schulen | dl-de/zero-2-0 | 2025-01-01 |
