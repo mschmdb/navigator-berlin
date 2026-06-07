@@ -14,6 +14,14 @@ describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
 		expect(document.querySelector('[data-testid="score-comparison"]')).toBeNull();
 	});
 
+	it('rendert nichts wenn alle Werte null sind (kein leerer Block ohne DB)', async () => {
+		const empty: ComparisonDimRow[] = [
+			{ label: 'Grün & Hitze', value: null, bezirkMean: null, berlinMedian: null, rang: null, quartil: null, total: 0 }
+		];
+		render(ScoreComparisonTable, { rows: empty, showBezirkColumn: true });
+		expect(document.querySelector('[data-testid="score-comparison"]')).toBeNull();
+	});
+
 	it('zeigt Bezirk-Spalte wenn showBezirkColumn', async () => {
 		render(ScoreComparisonTable, { rows, showBezirkColumn: true, valueLabel: 'Kiez' });
 		const section = document.querySelector('[data-testid="score-comparison"]');

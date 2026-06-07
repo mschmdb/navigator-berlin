@@ -18,13 +18,17 @@
 
 	const { rows, showBezirkColumn = false, valueLabel = 'Wert' }: Props = $props();
 
+	// Section nur zeigen, wenn mindestens ein Wert vorliegt (kein leerer „–"-Block
+	// bei fehlender DB im Build).
+	const hasData = $derived(rows.some((r) => r.value !== null && r.value !== undefined));
+
 	function fmt(v: number | null | undefined): string {
 		if (v === null || v === undefined || !Number.isFinite(v)) return '–';
 		return Math.round(v).toString();
 	}
 </script>
 
-{#if rows.length > 0}
+{#if rows.length > 0 && hasData}
 	<section aria-labelledby="vergleich-heading" class="space-y-4" data-testid="score-comparison">
 		<h2 id="vergleich-heading" class="font-serif text-2xl text-ink">Im Vergleich</h2>
 		<div class="overflow-x-auto">
