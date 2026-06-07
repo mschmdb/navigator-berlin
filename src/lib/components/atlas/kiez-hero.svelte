@@ -24,6 +24,7 @@
 	import KiezWahlVerlauf, { type WahlVerlaufRow } from './kiez-wahl-verlauf.svelte';
 	import ScoreComparisonTable from './score-comparison-table.svelte';
 	import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
+	import { sourceLabel } from '$lib/data/source-label.js';
 	import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
 	import { describeGruenversorgungDe } from '$lib/data/faq-helpers/gruen.js';
 	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
@@ -75,7 +76,7 @@
 			out.push({
 				cluster: 'Lärm',
 				value: describeLaermCategoryDe(raw),
-				source: row.laerm.dominantCategory.layer,
+				source: sourceLabel(row.laerm.dominantCategory.layer),
 				sourceUpdatedAt: formatStand(row.laerm.dominantCategory.sourceUpdatedAt)
 			});
 		}
@@ -85,7 +86,7 @@
 			out.push({
 				cluster: 'Grünversorgung',
 				value: describeGruenversorgungDe(raw),
-				source: gruen.layer,
+				source: sourceLabel(gruen.layer),
 				sourceUpdatedAt: formatStand(gruen.sourceUpdatedAt)
 			});
 		}
@@ -94,7 +95,7 @@
 			out.push({
 				cluster: 'Klima · PET',
 				value: `${formatPet(pet.value)} (${describePetKategorie(pet.value)})`,
-				source: pet.layer,
+				source: sourceLabel(pet.layer),
 				sourceUpdatedAt: formatStand(pet.sourceUpdatedAt)
 			});
 		}
@@ -103,7 +104,7 @@
 			out.push({
 				cluster: 'ÖPNV-Dichte',
 				value: `${formatStopsPerKm2(stops.value)} (${describeOepnvDichte(stops.value)})`,
-				source: stops.layer,
+				source: sourceLabel(stops.layer),
 				sourceUpdatedAt: formatStand(stops.sourceUpdatedAt)
 			});
 		}
@@ -113,7 +114,7 @@
 			out.push({
 				cluster: 'Wohnlage',
 				value: describeWohnlageDe(raw),
-				source: wohnlage.layer,
+				source: sourceLabel(wohnlage.layer),
 				sourceUpdatedAt: formatStand(wohnlage.sourceUpdatedAt)
 			});
 		}
@@ -123,7 +124,7 @@
 			out.push({
 				cluster: 'Soziale Lage (MSS)',
 				value: mssBeschreibungDe(raw),
-				source: mss.layer,
+				source: sourceLabel(mss.layer),
 				sourceUpdatedAt: formatStand(mss.sourceUpdatedAt)
 			});
 		}

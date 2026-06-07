@@ -20,12 +20,7 @@ import {
 import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
 import { describePetKategorie, formatPet, petErklaerungDe } from '$lib/data/faq-helpers/klima.js';
 import { formatRank } from '$lib/data/rank-format.js';
-import { LAYER_EXPLAIN_DE } from '$lib/components/atlas/internal/layer-palette-filter.js';
-
-/** Technischen Layer-Slug auf lesbaren deutschen Quellen-Namen mappen (Story 11.3-Fix). */
-function sourceLabel(layerSlug: string): string {
-	return LAYER_EXPLAIN_DE[layerSlug] ?? layerSlug;
-}
+import { sourceLabel } from '$lib/data/source-label.js';
 
 /**
  * Story 2.5b T3: Pure-Function-Slot-Renderer.
