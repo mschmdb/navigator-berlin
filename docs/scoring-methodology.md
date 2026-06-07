@@ -28,7 +28,7 @@ Konsistent über alle drei Ebenen. Gewichte gleich (je 0.20). Werte zwischen 0 u
 2. **Grün.** Pro-Kopf-Grünversorgung (0.6), Kaltluft-Einwirkbereich (0.2), Leitbahnkorridor (0.2).
 3. **Mobilität.** Distanz zur nächsten Haltestelle. U-Bahn (0.35), S-Bahn (0.25), Tram (0.20), Bus (0.10), Radverkehrs-Presence (0.10). Linear: 0 m gibt 100, 1.000 m gibt 0.
 4. **Soziale Lage.** MSS-Gesamtindex 2025 (Story 1.30), Status-Achse 4-stufig. „kom != gültig" Planungsräume bleiben ohne Wert (unter 300 Einwohner:innen oder Ausreißer). Niedriger Status heißt nicht „schlechter Kiez", sondern strukturelle Unterschiede.
-5. **Versorgung.** Distanz vom Planungsraum-Centroid zu Kita (0.25, 500 m), Schule (0.25, 800 m), Krankenhaus (0.20, 2.000 m), Spielplatz (0.15, 400 m), Grünanlage (0.15, 600 m). Polygon-Layer kollabieren zum Geometrie-Mittelpunkt.
+5. **Versorgung.** Öffentliche Daseinsvorsorge UND private Alltags-Nahversorgung, jeweils als Dichte im Umkreis (Anzahl Einrichtungen, weicher Tail statt hartem Distanz-Cliff). Kita-Erreichbarkeit (0.12) + Plätze pro Kind (0.12), Grundschule (0.12) + weiterführende Schule (0.12), Plan-Krankenhaus kapazitätsgewichtet (0.18), Spielplatz (0.10), Nahversorgung aus OSM/ODbL: Lebensmittel (0.12), Apotheke (0.07), Post (0.05). Grünanlage zählt seit der Score-Neuordnung unter Grün. Polygon-Layer kollabieren zum Geometrie-Mittelpunkt. Siehe ADR-017 (Nahversorgung-Erweiterung).
 
 ## Aggregations-Regel: Flächen-gewichtetes Mittel
 

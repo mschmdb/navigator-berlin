@@ -101,8 +101,8 @@
 		>
 			{#each score.sources as src (src.layer)}
 				<li class="flex items-baseline justify-between gap-2">
-					<span>{getLayerDisplayName(src.layer)}</span>
-					<span class="text-ink-subtle">
+					<span class="min-w-0 flex-1">{getLayerDisplayName(src.layer)}</span>
+					<span class="shrink-0 whitespace-nowrap text-ink-subtle">
 						{src.normalizedValue === null ? '—' : `${Math.round(src.normalizedValue)}/100`}
 						<span class="ml-1 text-[10px]">·</span>
 						<span class="ml-1 text-[10px]">w {Math.round(src.weight * 100)}%</span>

@@ -49,9 +49,10 @@
 		{
 			id: 'versorgung',
 			label: 'Versorgung',
-			layers: 'kitas-2024, schulen-2024, krankenhaeuser-plan, spielplaetze',
+			layers:
+				'kitas-2024, schulen-2024, krankenhaeuser-plan, spielplaetze, nahversorgung-lebensmittel, nahversorgung-apotheke, nahversorgung-post',
 			detail:
-				'Distance vom Planungsraum-Centroid zur nächsten Kita (Gewicht 0.30, Threshold 500 m), Schule (0.30, 800 m), Plan-Krankenhaus (0.25, 2.000 m) und Spielplatz (0.15, 400 m). Grünanlagen zählen jetzt unter Grün & Hitze. Belegungsquote, Trägerschaft und Pflege-Qualität bleiben außen vor.'
+				'Versorgung umfasst öffentliche Daseinsvorsorge und private Alltags-Nahversorgung, jeweils als Dichte im Umkreis (Anzahl Einrichtungen, weicher Übergang statt hartem Distanz-Cliff). Kita-Erreichbarkeit (0.12) plus Plätze pro Kind (0.12), Schule nach Schulart (Grundschule 0.12, weiterführend 0.12), Plan-Krankenhaus kapazitätsgewichtet (0.18), Spielplatz (0.10). Dazu Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12), Apotheke (0.07), Post (0.05). Grünanlagen zählen unter Grün & Hitze. Belegungsquote, Trägerschaft und Pflege-Qualität bleiben außen vor.'
 		},
 		{
 			id: 'wohnschutz',

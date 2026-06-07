@@ -197,6 +197,43 @@ export const SOURCES: SourceConfig[] = [
 		seasonality: { from: '05-01', to: '10-31' },
 		simplifyProfile: 'point'
 	},
+	// Epic 12 (Story 12.0): Nahversorgung als Alltagsökonomie-Input für die Versorgungs-Dimension.
+	// OSM/Overpass, ODbL. `out center;` liefert auch Flächen-POIs (Buildings) als Punkt
+	// (overpass-to-geojson centerToFeature). nwr deckt node+way+relation ab.
+	// Bäcker bewusst in den Lebensmittel-Bucket gefaltet (Alltags-Grundversorgung), kein eigener Term.
+	{
+		slug: 'nahversorgung-lebensmittel',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["shop"~"^(supermarket|convenience|grocery|bakery)$"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'nahversorgung-apotheke',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["amenity"="pharmacy"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
+	{
+		slug: 'nahversorgung-post',
+		kind: 'overpass',
+		sourceUrl: 'https://overpass-api.de/api/interpreter',
+		overpassQL: `[out:json][timeout:90];(nwr["amenity"="post_office"](${BERLIN_BBOX_OVERPASS}););out center;`,
+		license: 'ODbL 1.0',
+		bundleGroup: 'E: Soziale Infrastruktur',
+		zoomThresholds: { min: 13, max: 18 },
+		simplifyProfile: 'point',
+		inspectorRelevant: false
+	},
 	// Bundle D: Memorial (OSM). ADR-015 (Story 9.6): Erinnerungs-Orte raus aus dem
 	// Frontend. Layer bleibt build-only als Heritage-Dichte-Signal für bezirk_stats/
 	// kiez_stats, NICHT mapRelevant/inspectorRelevant (analog denkmal-2024).

@@ -11,7 +11,7 @@ related:
 
 Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-06-07.
 
-**118 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 6 ready-for-dev · ⏳ 1 backlog · ▫️ 33 other
+**134 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 15 ready-for-dev · ⏳ 2 backlog · ▫️ 39 other
 
 ## Pro Epic
 ### Epic 1
@@ -80,9 +80,35 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | `11-5-verteilungen-zaehldaten-steckbrief` | ▫️ review | Stufe 1.5: categoryDistribution + Counts (U/S/Tram/Bus, Kitas/Schulen/km2, Spielplaetze) statt nur Dominant-Wert. FR4… |
 | `11-6-grounded-ki-profile-build-step` | ▫️ review | Stufe 2 (Owner-Decision 2026-06-06): eigener Script pnpm data:profiles (NICHT prebuild, Owner-getriggert), grounded 2… |
 | `11-7-fakten-lint-editorial-gate` | ▫️ review | Stufe 2.3/2.4: Lint prueft jede Zahl im Profil-Content-File gegen Datenbasis (analog lint:wahl + forbidden-tokens.ts)… |
-| `11-8-bezirksregionenprofile-prosa-quelle` | 📋 ready-for-dev | Stufe 3.2 (optional): amtliche Bezirksregionenprofile Teil I (143-BZR-Grain, PDF, heterogen) als zusaetzlicher ground… |
+| `11-8-bezirksregionenprofile-prosa-quelle` | ⏳ backlog | FUTURE-TASK (deferred 2026-06-07, siehe epics.md Future-Epics). Stufe 3.2 optional: amtliche Bezirksregionenprofile T… |
 | `11-9-disclaimer-bezirk-audit-llms-content` | ▫️ review | Offene Punkte: Methodik-Disclaimer Kiez=LOR-BZR, Bezirks-Komponenten-Audit vs Kiez, llms_content-Rolle klaeren. Begle… |
-| `11-10-epic-11-dokumentation` | 📋 ready-for-dev | Doku-Abschluss (Epic-7-Muster): scoring-methodology (Ranking/Quartil), faq-template-style-guide (neue Muster), neue d… |
+| `11-10-epic-11-dokumentation` | ▫️ review | Doku-Abschluss (Epic-7-Muster): scoring-methodology (Ranking/Quartil), faq-template-style-guide (neue Muster), neue d… |
+
+### Epic 12
+
+| Story | Status | Kommentar |
+|---|---|---|
+| `12-0-nahversorgung-layer-foundation` | ▫️ review | Overpass-Fetch (shop=supermarket|convenience|grocery, amenity=pharmacy, amenity=post_office, Tags live verifizieren) … |
+| `12-1-lebensmittel-dichte-term` | ▫️ review | Lebensmittel als poi-density-Term (~500m) in VERSORGUNG_CONFIG, weicher Tail analog 10-4. Inspector-Quelle + ODbL-Att… |
+| `12-2-apotheke-post-dichte-term` | ▫️ review | Apotheke (~800m) + Post (~1000m) als poi-density-Terme. Baecker-Entscheidung dokumentieren (Lebensmittel-Bucket oder … |
+| `12-3-versorgung-umgewichtung` | ▫️ review | Interne Umgewichtung VERSORGUNG_CONFIG (Owner-Review): Kita 0.30->0.24, Schule 0.30->0.24, Krankenhaus 0.25->0.18, Sp… |
+| `12-4-methodik-doku-nahversorgung` | ▫️ review | scoring-methodology.md + Methodik-Page: Versorgung = oeffentlich + privat. ADR-Notiz Neudefinition + Anti-Stigma-Abgr… |
+| `12-5-step-zentren-zentralitaet-spike` | 📋 ready-for-dev | OPTIONAL Spike: StEP Zentren (FIS-Broker WFS, dl-de/by) als "Naehe zum Versorgungszentrum"-Term. Mehrwert vs OSM-Nahv… |
+| `12-6-epic-12-dokumentation-updates` | 📋 ready-for-dev | Abschluss (Epic-7-Muster): doc:pipelines + doc:story-map neu, INDEX, Konsistenz-Sweep, PLUS User-facing /updates-Eint… |
+
+### Epic 13
+
+| Story | Status | Kommentar |
+|---|---|---|
+| `13-0-kultur-layer-foundation` | 📋 ready-for-dev | Overpass-Fetch (tourism=artwork|gallery|museum, amenity=theatre|library|cinema|arts_centre|nightclub, Tags live verif… |
+| `13-1-kultur-dimensions-foundation` | 📋 ready-for-dev | Typ-Union 5->6 (+kultur), DIMENSION_WEIGHTS rebalance (Vorschlag 6x0.1667, Owner-Review; Alt: Kultur leichter). KULTU… |
+| `13-2-db-schema-migration-kultur` | 📋 ready-for-dev | Drizzle-Migration: Spalte kultur (doublePrecision nullable) in kiez_score + bezirk_score. composite bleibt. Nach 13-1… |
+| `13-3-pipeline-recompute-rerun` | 📋 ready-for-dev | compute-score/build-kiez-scores/aggregate-scores auf 6er-Set. data:kiez-scores + aggregate-scores + rank + comparison… |
+| `13-4-konsumenten-migration-ui-map-og-llm` | 📋 ready-for-dev | kiez-score-display (Labels), Score-Ring 5->6 Segmente, Inspector-Section, compare-block, score-ranking-table (ranking… |
+| `13-5-content-migration-methodik-adr` | 📋 ready-for-dev | /methodik/kiez-score + scoring-methodology.md (Kultur-Dimension, Terme, Quelle, Daempfung). Neue ADR (analog ADR-015)… |
+| `13-6-kulturdaten-berlin-anreicherung-spike` | 📋 ready-for-dev | OPTIONAL Spike: kulturdaten.berlin API (CC BY, 3261 Locations, KEINE Koordinaten -> selbst geocodieren). Ueberlappung… |
+| `13-7-epic-13-dokumentation-updates` | 📋 ready-for-dev | Abschluss (Epic-7-Muster): doc:pipelines + doc:story-map + system-map neu, INDEX, Konsistenz-Sweep (keine "fuenf Dime… |
+| `13-8-prosa-profile-regeneration` | 📋 ready-for-dev | CROSS-EPIC-CAPSTONE (allerletzte Story beider Epics): Profil-Input (build.ts/input.ts) + Fakten-Lint (fact-lint.ts) +… |
 
 ### Epic 2
 

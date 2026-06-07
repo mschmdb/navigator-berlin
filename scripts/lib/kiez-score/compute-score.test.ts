@@ -137,7 +137,12 @@ describe('computeDimensionScore — Versorgung (ohne Grünanlagen)', () => {
 				'kitas-2024': { count: 3, nearestM: 200 },
 				'schulen-grundschule': { count: 2, nearestM: 300 },
 				'schulen-weiterfuehrend': { count: 1, nearestM: 600 },
-				spielplaetze: { count: 4, nearestM: 150 }
+				spielplaetze: { count: 4, nearestM: 150 },
+				// Story 12.1: Nahversorgung-Lebensmittel-Term
+				'nahversorgung-lebensmittel': { count: 3, nearestM: 250 },
+				// Story 12.2: Apotheke + Post
+				'nahversorgung-apotheke': { count: 1, nearestM: 400 },
+				'nahversorgung-post': { count: 1, nearestM: 700 }
 			}
 		});
 		const score = computeDimensionScore(VERSORGUNG_CONFIG, input);

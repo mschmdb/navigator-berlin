@@ -74,6 +74,45 @@ describe('DIMENSION_CONFIGS', () => {
 		}
 	});
 
+	it('Versorgung enthält Nahversorgung-Lebensmittel als poi-density-Term (Story 12.1)', () => {
+		const versorgung = DIMENSION_CONFIGS.find((c) => c.dimension === 'versorgung')!;
+		const food = versorgung.layers.find((l) => l.layer === 'nahversorgung-lebensmittel');
+		expect(food, 'nahversorgung-lebensmittel fehlt in VERSORGUNG_CONFIG').toBeDefined();
+		expect(food!.normalize.kind).toBe('poi-density');
+		if (food!.normalize.kind === 'poi-density') {
+			expect(food!.normalize.radiusM).toBeLessThanOrEqual(600);
+		}
+	});
+
+	it('Versorgung enthält Apotheke + Post als poi-density-Terme (Story 12.2)', () => {
+		const versorgung = DIMENSION_CONFIGS.find((c) => c.dimension === 'versorgung')!;
+		for (const slug of ['nahversorgung-apotheke', 'nahversorgung-post']) {
+			const term = versorgung.layers.find((l) => l.layer === slug);
+			expect(term, `${slug} fehlt in VERSORGUNG_CONFIG`).toBeDefined();
+			expect(term!.normalize.kind).toBe('poi-density');
+		}
+	});
+
+	it('Versorgung: finale interne Gewichts-Verteilung (Story 12.3, öffentlich + privat)', () => {
+		const versorgung = DIMENSION_CONFIGS.find((c) => c.dimension === 'versorgung')!;
+		const w: Record<string, number> = {};
+		for (const l of versorgung.layers) w[l.layer] = l.weight;
+		// Daseinsvorsorge
+		expect(w['kitas-2024']).toBeCloseTo(0.12, 10);
+		expect(w['kitas-pro-kind']).toBeCloseTo(0.12, 10);
+		expect(w['schulen-grundschule']).toBeCloseTo(0.12, 10);
+		expect(w['schulen-weiterfuehrend']).toBeCloseTo(0.12, 10);
+		expect(w['krankenhaeuser-plan']).toBeCloseTo(0.18, 10);
+		expect(w['spielplaetze']).toBeCloseTo(0.1, 10);
+		// Nahversorgung (privat) = 0.24 gesamt
+		const nahversorgung =
+			w['nahversorgung-lebensmittel'] + w['nahversorgung-apotheke'] + w['nahversorgung-post'];
+		expect(nahversorgung).toBeCloseTo(0.24, 10);
+		expect(w['nahversorgung-lebensmittel']).toBeCloseTo(0.12, 10);
+		expect(w['nahversorgung-apotheke']).toBeCloseTo(0.07, 10);
+		expect(w['nahversorgung-post']).toBeCloseTo(0.05, 10);
+	});
+
 	it('Wohnschutz nutzt presence-any-of über beide Milieuschutz-Layer', () => {
 		const wohnschutz = DIMENSION_CONFIGS.find((c) => c.dimension === 'wohnschutz')!;
 		const layer = wohnschutz.layers[0]!;

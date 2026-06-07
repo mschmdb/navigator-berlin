@@ -54,7 +54,16 @@ const POINT_VALUE_LAYERS = ['klima-pet-2022'];
 
 const PRESENCE_LAYERS = ['radverkehrsnetz-2025', 'fahrradstrassen-2024'];
 
-const POI_LAYERS = ['kitas-2024', 'spielplaetze', 'gruenanlagen'];
+// Epic 12 (Story 12.0): Nahversorgungs-POIs in den PoiIndex aufnehmen. Reine Vorverdrahtung —
+// ein Score-Effekt entsteht erst mit einem poi-density-LayerWeight in VERSORGUNG_CONFIG (Story 12.1/12.2).
+const POI_LAYERS = [
+	'kitas-2024',
+	'spielplaetze',
+	'gruenanlagen',
+	'nahversorgung-lebensmittel',
+	'nahversorgung-apotheke',
+	'nahversorgung-post'
+];
 
 // Story 10.2: krankenhaeuser-plan als Point-Value-Layer (nächstes Haus + betten_insgesamt
 // + distanceM) statt reiner POI-Distanz, damit die Kapazitätsgewichtung greift.

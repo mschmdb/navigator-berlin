@@ -13,6 +13,8 @@ interface OverpassWay {
 	id: number;
 	nodes?: number[];
 	geometry?: Array<{ lat: number; lon: number }>;
+	/** Von `out center;` geliefert: Schwerpunkt einer Flächen-Geometrie ohne volle Geometrie. */
+	center?: { lat: number; lon: number };
 	tags?: Record<string, string>;
 }
 
@@ -20,6 +22,7 @@ interface OverpassRelation {
 	type: 'relation';
 	id: number;
 	members?: Array<{ type: string; ref: number; role: string; geometry?: Array<{ lat: number; lon: number }> }>;
+	center?: { lat: number; lon: number };
 	tags?: Record<string, string>;
 }
 
@@ -83,6 +86,26 @@ function polygonImplyingTag(tags: Record<string, string>): boolean {
 	return false;
 }
 
+/**
+ * `out center;` liefert für Ways/Relations einen Schwerpunkt statt voller Geometrie.
+ * Für Dichte-/POI-Layer (z.B. Nahversorgung) sind die als Buildings gemappten Ways
+ * sonst verloren. Wir geben sie als Point am Center aus.
+ */
+function centerToFeature(el: {
+	id: number;
+	type: 'way' | 'relation';
+	center?: { lat: number; lon: number };
+	tags?: Record<string, string>;
+}): Feature<Point> | null {
+	if (!el.center) return null;
+	return {
+		type: 'Feature',
+		id: el.id,
+		properties: { osmId: el.id, osmType: el.type, ...(el.tags ?? {}) },
+		geometry: { type: 'Point', coordinates: [el.center.lon, el.center.lat] }
+	};
+}
+
 export function overpassToGeoJSON(input: unknown): FeatureCollection {
 	const data = input as OverpassResponse;
 	if (!data || !Array.isArray(data.elements)) {
@@ -93,10 +116,13 @@ export function overpassToGeoJSON(input: unknown): FeatureCollection {
 		if (el.type === 'node') {
 			features.push(nodeToFeature(el));
 		} else if (el.type === 'way') {
-			const f = wayToFeature(el);
+			const f = wayToFeature(el) ?? centerToFeature(el);
+			if (f) features.push(f);
+		} else if (el.type === 'relation') {
+			// Relations nur mit `center` (out center) als Punkt; sonst ignoriert.
+			const f = centerToFeature(el);
 			if (f) features.push(f);
 		}
-		// Relations werden in Phase 1 ignoriert (Stolpersteine/Trinkbrunnen sind Nodes).
 	}
 	return { type: 'FeatureCollection', features };
 }

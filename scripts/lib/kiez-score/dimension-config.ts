@@ -98,28 +98,33 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 		// Erreichbarkeits-Term zählt jetzt Kitas im Radius (Dichte) statt nur die nächste.
 		{
 			layer: 'kitas-2024',
-			weight: 0.15,
+			// Story 12.2: 0.15 → 0.12 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.12,
 			normalize: { kind: 'poi-density', radiusM: 500, cap: 5, softTailFactor: 0.3 }
 		},
 		{
 			layer: 'kitas-pro-kind',
-			weight: 0.15,
+			// Story 12.2: 0.15 → 0.12 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.12,
 			normalize: { kind: 'kita-pro-kind', field: 'plaetzeProKind', bestAt: KITA_BEST_AT }
 		},
 		// Story 10.3+10.4: Schul-Term nach Schulart getrennt, jeweils als Dichte im Radius.
 		{
 			layer: 'schulen-grundschule',
-			weight: 0.15,
+			// Story 12.2: 0.15 → 0.12 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.12,
 			normalize: { kind: 'poi-density', radiusM: 600, cap: 3, softTailFactor: 0.3 }
 		},
 		{
 			layer: 'schulen-weiterfuehrend',
-			weight: 0.15,
+			// Story 12.2: 0.15 → 0.12 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.12,
 			normalize: { kind: 'poi-density', radiusM: 1200, cap: 3, softTailFactor: 0.3 }
 		},
 		{
 			layer: 'krankenhaeuser-plan',
-			weight: 0.25,
+			// Story 12.1: 0.25 → 0.18 (vorläufig, finale Kalibrierung in 12.3), schafft Platz für Nahversorgung.
+			weight: 0.18,
 			// Story 10.2: Distanz × Bettenkapazität. Bleibt Distanz-basiert (nächstes großes Haus zählt,
 			// nicht die Anzahl) — Dichte wäre für Kliniken kein sinnvolles Maß.
 			normalize: {
@@ -132,8 +137,28 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 		// Story 10.4: Spielplatz-Dichte im Radius statt Distanz zum nächsten.
 		{
 			layer: 'spielplaetze',
-			weight: 0.15,
+			// Story 12.1: 0.15 → 0.10 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.1,
 			normalize: { kind: 'poi-density', radiusM: 400, cap: 8, softTailFactor: 0.4 }
+		},
+		// Story 12.1: Nahversorgung-Lebensmittel als Alltagsökonomie-Term. Gewicht vorläufig (0.12),
+		// finale interne Umverteilung der Versorgungs-Dimension in Story 12.3. Quelle OSM (ODbL).
+		{
+			layer: 'nahversorgung-lebensmittel',
+			weight: 0.12,
+			normalize: { kind: 'poi-density', radiusM: 500, cap: 4, softTailFactor: 0.3 }
+		},
+		// Story 12.2: Apotheke + Post als Nahversorgungs-Terme (seltener als Lebensmittel →
+		// größerer Radius, kleinerer Cap). Gewichte vorläufig, finale Kalibrierung in 12.3.
+		{
+			layer: 'nahversorgung-apotheke',
+			weight: 0.07,
+			normalize: { kind: 'poi-density', radiusM: 800, cap: 2, softTailFactor: 0.3 }
+		},
+		{
+			layer: 'nahversorgung-post',
+			weight: 0.05,
+			normalize: { kind: 'poi-density', radiusM: 1000, cap: 2, softTailFactor: 0.3 }
 		}
 	]
 };
