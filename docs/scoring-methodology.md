@@ -16,7 +16,7 @@ Drei räumliche Ebenen, eine Methodik:
 
 | Ebene | Anzahl | Quelle | Berechnung |
 |-------|--------|--------|------------|
-| Planungsraum (PLR) | 542 | `static/kiez-scores/kiez-scores.json` (Story 1.28) | Source-of-Truth, 5 Dimensionen pro Adress-Centroid |
+| Planungsraum (PLR) | 542 | `static/kiez-scores/kiez-scores.json` (Story 1.28) | Source-of-Truth, 6 Dimensionen pro Adress-Centroid (5 im Composite + Kultur) |
 | Bezirksregion (BR) | 143 | Postgres `kiez_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
 | Bezirk | 12 | Postgres `bezirk_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
 
@@ -51,7 +51,7 @@ Beispiel: Bezirksregion enthält PLR mit Lärm-Werten 60 / 30 / 90 und Flächen 
 
 Pro Dimension müssen mindestens 50 Prozent der Member-Planungsräume einen non-null Wert beitragen. Andernfalls wird die Dimension auf `null` gesetzt und im `missingData`-Array dokumentiert (z.B. `coverage:1/4-below-50%-threshold`).
 
-Falls alle fünf Dimensionen einer Region `null` sind, fehlt auch `overall`. Konsumenten interpretieren `null` als „nicht genug Daten für eine belastbare Aggregation".
+Falls alle fünf Composite-Dimensionen einer Region `null` sind, fehlt auch `overall` (Kultur zählt nicht ins `overall`, Option C). Konsumenten interpretieren `null` als „nicht genug Daten für eine belastbare Aggregation".
 
 ## Quartil-Klassifikation
 
@@ -108,7 +108,7 @@ pnpm build                   # SvelteKit prerender
 
 Aufbauend auf den Scores berechnen zwei Build-Steps die vergleichende Einordnung:
 
-- **Ranking** (`pnpm data:rank`, `scripts/aggregate-ranks.ts` → `kiez_rank`/`bezirk_rank`): pro Metrik ein dichter Rang 1..N (1 = bester) plus Quartil. Gerankt werden Composite + 5 Dimensionen sowie numerische stats-Metriken (Grünanlagen, Haltestellendichte, Kitas/km², PET u.a.). Richtung pro Metrik konfiguriert: meist höher = besser, invertiert bei PET-Hitze.
+- **Ranking** (`pnpm data:rank`, `scripts/aggregate-ranks.ts` → `kiez_rank`/`bezirk_rank`): pro Metrik ein dichter Rang 1..N (1 = bester) plus Quartil. Gerankt werden Composite + 6 Dimensionen (inkl. Kultur) sowie numerische stats-Metriken (Grünanlagen, Haltestellendichte, Kitas/km², PET u.a.). Richtung pro Metrik konfiguriert: meist höher = besser, invertiert bei PET-Hitze.
 - **Quartil:** rang-basiert (`floor((rang-1)/total*4)+1`, bester → Q1). Bewusst getrennt von der wert-basierten 0-100-Quartil-Klassifikation (die gilt für Choropleth-Skalen).
 - **Vergleich** (`pnpm data:comparison`, `scripts/aggregate-comparison.ts` → `kiez_comparison`/`bezirk_comparison`): pro Score-Metrik der Bezirks-Schnitt (Mittel der Kieze im Bezirk) und der Berlin-Median. Bezirk = Mittel, Berlin = Median (robuster gegen Ausreißer).
 

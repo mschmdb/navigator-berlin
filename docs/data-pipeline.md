@@ -95,8 +95,9 @@ pnpm data:layer-aggregate   # → static/layer-aggregates/layer-aggregates.json
     (Reuse `buildLorHierarchy`), kein Spatial-Intersect.
   - Freie Geometrie (klima-pet/Kaltluft/Leitbahn/Milieuschutz/Denkmal/Grünanlagen/
     Spielplätze) → Repräsentativ-Punkt bzw. `@turf/intersect`, RBush-bbox-Prefilter.
-- **Ausgenommen:** Point-Layer (`point-density`, Runtime-Count reicht) und
-  `not-aggregatable` (BRW). 15 Layer aggregiert, 34 geskippt.
+- **Ausgenommen:** Point-Layer (`point-density`, Runtime-Count reicht — inkl.
+  Nahversorgung Epic 12 + Kultur Epic 13) und `not-aggregatable` (BRW). Aggregiert
+  werden nur die aggregierbaren Polygon-/Wert-Layer, die übrigen werden geskippt.
 - **Missing-Data:** unter 50% Member-Coverage → `null` + below-threshold-Marker
   (`COVERAGE_THRESHOLD` exakt aus `aggregate-to-larger-region.ts`).
 - **Schema-Typ:** `src/lib/data/layer-aggregates-types.ts` (Single-Source, von
