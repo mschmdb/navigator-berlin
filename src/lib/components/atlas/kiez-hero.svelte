@@ -206,7 +206,7 @@
 				<span class="text-5xl text-ink">{formatScore(score.composite)}</span>
 				<span class="font-mono text-base text-ink-subtle">/ 100</span>
 			</div>
-			<dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+			<dl class="grid grid-cols-3 gap-4 sm:grid-cols-5">
 				{#each scoreDims as dim (dim.label)}
 					<div>
 						<dt class="font-mono text-xs uppercase tracking-wide text-ink-subtle">
