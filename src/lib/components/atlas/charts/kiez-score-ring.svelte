@@ -72,14 +72,14 @@
 </script>
 
 <div data-testid="kiez-score-ring" class="flex flex-col items-center">
-	<div class="relative aspect-square w-[210px] overflow-hidden">
+	<div class="relative aspect-square w-[236px] overflow-hidden">
 		<ArcChart
 			key="key"
 			label="label"
 			value="value"
 			series={arcSeries}
-			innerRadius={-9}
-			outerRadius={-11}
+			innerRadius={-8}
+			outerRadius={-10}
 			cornerRadius={4}
 			props={{ arc: { motion: 'spring' } }}
 			labels={{
