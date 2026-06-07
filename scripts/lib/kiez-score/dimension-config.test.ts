@@ -74,6 +74,16 @@ describe('DIMENSION_CONFIGS', () => {
 		}
 	});
 
+	it('Versorgung enthält Nahversorgung-Lebensmittel als poi-density-Term (Story 12.1)', () => {
+		const versorgung = DIMENSION_CONFIGS.find((c) => c.dimension === 'versorgung')!;
+		const food = versorgung.layers.find((l) => l.layer === 'nahversorgung-lebensmittel');
+		expect(food, 'nahversorgung-lebensmittel fehlt in VERSORGUNG_CONFIG').toBeDefined();
+		expect(food!.normalize.kind).toBe('poi-density');
+		if (food!.normalize.kind === 'poi-density') {
+			expect(food!.normalize.radiusM).toBeLessThanOrEqual(600);
+		}
+	});
+
 	it('Wohnschutz nutzt presence-any-of über beide Milieuschutz-Layer', () => {
 		const wohnschutz = DIMENSION_CONFIGS.find((c) => c.dimension === 'wohnschutz')!;
 		const layer = wohnschutz.layers[0]!;

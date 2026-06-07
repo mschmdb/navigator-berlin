@@ -119,7 +119,8 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 		},
 		{
 			layer: 'krankenhaeuser-plan',
-			weight: 0.25,
+			// Story 12.1: 0.25 → 0.18 (vorläufig, finale Kalibrierung in 12.3), schafft Platz für Nahversorgung.
+			weight: 0.18,
 			// Story 10.2: Distanz × Bettenkapazität. Bleibt Distanz-basiert (nächstes großes Haus zählt,
 			// nicht die Anzahl) — Dichte wäre für Kliniken kein sinnvolles Maß.
 			normalize: {
@@ -132,8 +133,16 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 		// Story 10.4: Spielplatz-Dichte im Radius statt Distanz zum nächsten.
 		{
 			layer: 'spielplaetze',
-			weight: 0.15,
+			// Story 12.1: 0.15 → 0.10 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.1,
 			normalize: { kind: 'poi-density', radiusM: 400, cap: 8, softTailFactor: 0.4 }
+		},
+		// Story 12.1: Nahversorgung-Lebensmittel als Alltagsökonomie-Term. Gewicht vorläufig (0.12),
+		// finale interne Umverteilung der Versorgungs-Dimension in Story 12.3. Quelle OSM (ODbL).
+		{
+			layer: 'nahversorgung-lebensmittel',
+			weight: 0.12,
+			normalize: { kind: 'poi-density', radiusM: 500, cap: 4, softTailFactor: 0.3 }
 		}
 	]
 };

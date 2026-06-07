@@ -478,20 +478,21 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 	},
 	'kiez-score-versorgung': {
 		calculation:
-			'Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.15, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.15). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze (e_platz) im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Die Erreichbarkeit zählt dabei die Anzahl Einrichtungen im Radius (Dichte), nicht nur die nächste: mehr Kitas/Schulen/Spielplätze im Umkreis scoren höher, ein einzelner Standort weniger. Schule nach Schulart getrennt: Grundschule (0.15, Radius 600 m) und weiterführende Schule (0.15, 1.200 m). Plus Spielplatz-Dichte (0.15, 400 m). Liegt keine Einrichtung im Radius, greift ein weicher Übergang über die Distanz zur nächsten statt eines harten Abbruchs. Plan-Krankenhaus (0.25, 2.000 m) zusätzlich nach Bettenkapazität gewichtet: ein großes Versorgungs-Klinikum zählt mehr als eine kleine Fachklinik. 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze.',
+			'Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.15, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.15). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze (e_platz) im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Die Erreichbarkeit zählt dabei die Anzahl Einrichtungen im Radius (Dichte), nicht nur die nächste: mehr Kitas/Schulen/Spielplätze im Umkreis scoren höher, ein einzelner Standort weniger. Schule nach Schulart getrennt: Grundschule (0.15, Radius 600 m) und weiterführende Schule (0.15, 1.200 m). Plus Spielplatz-Dichte (0.10, 400 m) und Lebensmittel-Nahversorgung (0.12, 500 m): Supermarkt, Discounter, Spätkauf und Bäcker im Umkreis, Standorte aus OpenStreetMap (ODbL). Liegt keine Einrichtung im Radius, greift ein weicher Übergang über die Distanz zur nächsten statt eines harten Abbruchs. Plan-Krankenhaus (0.18, 2.000 m) zusätzlich nach Bettenkapazität gewichtet: ein großes Versorgungs-Klinikum zählt mehr als eine kleine Fachklinik. 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze. Versorgung umfasst damit öffentliche Daseinsvorsorge und private Alltags-Nahversorgung; die internen Gewichte sind vorläufig (finale Kalibrierung in Epic 12 Story 12.3).',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'jährlich (sync mit Bildungs- und Bezirks-Daten)',
 		authorityKey: 'navigator-eigenberechnung-bezirke',
 		coverageGaps: [
 			'Der Platz-Kind-Quotient basiert auf gemeldeten Kapazitäten (e_platz), nicht auf realen Belegungsquoten oder Wartelisten.',
 			'Belegungsquoten, Wartelisten und Trägerschaft sind im Score nicht berücksichtigt.',
-			'Polygon-Layer kollabieren zum Mittelpunkt. Ein langgezogener Park am Rand erscheint im Score zentriert.'
+			'Polygon-Layer kollabieren zum Mittelpunkt. Ein langgezogener Park am Rand erscheint im Score zentriert.',
+			'Nahversorgung (Lebensmittel) basiert auf OpenStreetMap (Crowdsourcing): einzelne Geschäfte können fehlen oder veraltet sein.'
 		],
 		omissions: [
 			'Keine Qualitäts-Bewertung der Einrichtung (Layer zeigt nur Standort).',
 			'Privat-Krankenhäuser und Reha-Kliniken bleiben außen vor (nur Plan-Krankenhäuser).'
 		],
-		relatedLayers: ['kitas-2024', 'schulen-2024', 'krankenhaeuser-plan', 'spielplaetze']
+		relatedLayers: ['kitas-2024', 'schulen-2024', 'krankenhaeuser-plan', 'spielplaetze', 'nahversorgung-lebensmittel']
 	},
 	'kiez-score-wohnschutz': {
 		calculation:
