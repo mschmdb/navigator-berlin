@@ -98,23 +98,27 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 		// Erreichbarkeits-Term zählt jetzt Kitas im Radius (Dichte) statt nur die nächste.
 		{
 			layer: 'kitas-2024',
-			weight: 0.15,
+			// Story 12.2: 0.15 → 0.12 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.12,
 			normalize: { kind: 'poi-density', radiusM: 500, cap: 5, softTailFactor: 0.3 }
 		},
 		{
 			layer: 'kitas-pro-kind',
-			weight: 0.15,
+			// Story 12.2: 0.15 → 0.12 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.12,
 			normalize: { kind: 'kita-pro-kind', field: 'plaetzeProKind', bestAt: KITA_BEST_AT }
 		},
 		// Story 10.3+10.4: Schul-Term nach Schulart getrennt, jeweils als Dichte im Radius.
 		{
 			layer: 'schulen-grundschule',
-			weight: 0.15,
+			// Story 12.2: 0.15 → 0.12 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.12,
 			normalize: { kind: 'poi-density', radiusM: 600, cap: 3, softTailFactor: 0.3 }
 		},
 		{
 			layer: 'schulen-weiterfuehrend',
-			weight: 0.15,
+			// Story 12.2: 0.15 → 0.12 (vorläufig, finale Kalibrierung in 12.3).
+			weight: 0.12,
 			normalize: { kind: 'poi-density', radiusM: 1200, cap: 3, softTailFactor: 0.3 }
 		},
 		{
@@ -143,6 +147,18 @@ export const VERSORGUNG_CONFIG: DimensionConfig = {
 			layer: 'nahversorgung-lebensmittel',
 			weight: 0.12,
 			normalize: { kind: 'poi-density', radiusM: 500, cap: 4, softTailFactor: 0.3 }
+		},
+		// Story 12.2: Apotheke + Post als Nahversorgungs-Terme (seltener als Lebensmittel →
+		// größerer Radius, kleinerer Cap). Gewichte vorläufig, finale Kalibrierung in 12.3.
+		{
+			layer: 'nahversorgung-apotheke',
+			weight: 0.07,
+			normalize: { kind: 'poi-density', radiusM: 800, cap: 2, softTailFactor: 0.3 }
+		},
+		{
+			layer: 'nahversorgung-post',
+			weight: 0.05,
+			normalize: { kind: 'poi-density', radiusM: 1000, cap: 2, softTailFactor: 0.3 }
 		}
 	]
 };

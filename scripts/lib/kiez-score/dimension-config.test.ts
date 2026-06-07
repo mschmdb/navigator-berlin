@@ -84,6 +84,15 @@ describe('DIMENSION_CONFIGS', () => {
 		}
 	});
 
+	it('Versorgung enthält Apotheke + Post als poi-density-Terme (Story 12.2)', () => {
+		const versorgung = DIMENSION_CONFIGS.find((c) => c.dimension === 'versorgung')!;
+		for (const slug of ['nahversorgung-apotheke', 'nahversorgung-post']) {
+			const term = versorgung.layers.find((l) => l.layer === slug);
+			expect(term, `${slug} fehlt in VERSORGUNG_CONFIG`).toBeDefined();
+			expect(term!.normalize.kind).toBe('poi-density');
+		}
+	});
+
 	it('Wohnschutz nutzt presence-any-of über beide Milieuschutz-Layer', () => {
 		const wohnschutz = DIMENSION_CONFIGS.find((c) => c.dimension === 'wohnschutz')!;
 		const layer = wohnschutz.layers[0]!;
