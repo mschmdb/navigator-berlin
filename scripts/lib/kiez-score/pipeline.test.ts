@@ -193,6 +193,7 @@ describe('buildKiezScoresFromInput', () => {
 		expect(Object.keys(derived).sort()).toEqual([
 			'kiez-score-gesamt',
 			'kiez-score-gruen-hitze',
+			'kiez-score-kultur',
 			'kiez-score-mobilitaet',
 			'kiez-score-ruhe-luft',
 			'kiez-score-versorgung',

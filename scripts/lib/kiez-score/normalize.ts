@@ -107,10 +107,18 @@ export function normalizeCapacityWeightedDistance(
 export function normalizeDensity(
 	count: number,
 	nearestM: number | null,
-	config: { cap: number; radiusM: number; softTailFactor?: number }
+	config: { cap: number; radiusM: number; softTailFactor?: number; scale?: 'linear' | 'log' }
 ): number {
 	if (config.cap <= 0) return 0;
-	if (count >= 1) return Math.max(0, Math.min(100, Math.round((count / config.cap) * 100 * 10) / 10));
+	if (count >= 1) {
+		// Story 13.1: 'log' dämpft den Center-Bias — der erste POI zählt stark, weitere flachen ab
+		// (100 * ln(1+count)/ln(1+cap)). Default 'linear' (count/cap) bleibt für bestehende Terme.
+		const ratio =
+			config.scale === 'log'
+				? Math.log(1 + count) / Math.log(1 + config.cap)
+				: count / config.cap;
+		return Math.max(0, Math.min(100, Math.round(ratio * 100 * 10) / 10));
+	}
 	if (nearestM === null) return 0;
 	const tail = config.softTailFactor ?? 0;
 	const distScore = normalizeDistance(nearestM, config.radiusM * 2) ?? 0;

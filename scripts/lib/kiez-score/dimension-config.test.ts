@@ -1,15 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import { DIMENSION_CONFIGS } from './dimension-config.js';
-import { KIEZ_SCORE_DIMENSIONS, DIMENSION_WEIGHTS, type KiezScoreDimension } from './types.js';
+import {
+	KIEZ_SCORE_DIMENSIONS,
+	DIMENSION_WEIGHTS,
+	COMPOSITE_DIMENSIONS,
+	type KiezScoreDimension
+} from './types.js';
 
 describe('KIEZ_SCORE_DIMENSIONS', () => {
-	it('listet exakt die fünf neuen Dimensionen in fester Reihenfolge', () => {
+	it('listet exakt die sechs Dimensionen in fester Reihenfolge (Story 13.1: + Kultur)', () => {
 		expect([...KIEZ_SCORE_DIMENSIONS]).toEqual([
 			'ruhe-luft',
 			'gruen-hitze',
 			'mobilitaet',
 			'versorgung',
-			'wohnschutz'
+			'wohnschutz',
+			'kultur'
 		]);
 	});
 
@@ -20,12 +26,26 @@ describe('KIEZ_SCORE_DIMENSIONS', () => {
 	});
 });
 
+describe('COMPOSITE_DIMENSIONS (Option C)', () => {
+	it('umfasst die fünf Composite-Dimensionen ohne Kultur', () => {
+		expect([...COMPOSITE_DIMENSIONS]).toEqual([
+			'ruhe-luft',
+			'gruen-hitze',
+			'mobilitaet',
+			'versorgung',
+			'wohnschutz'
+		]);
+		expect(COMPOSITE_DIMENSIONS).not.toContain('kultur' as KiezScoreDimension);
+	});
+});
+
 describe('DIMENSION_WEIGHTS', () => {
-	it('hat genau fünf Keys', () => {
-		expect(Object.keys(DIMENSION_WEIGHTS)).toHaveLength(5);
+	it('hat genau sechs Keys (Kultur mit Gewicht 0, Option C)', () => {
+		expect(Object.keys(DIMENSION_WEIGHTS)).toHaveLength(6);
+		expect(DIMENSION_WEIGHTS.kultur).toBe(0);
 	});
 
-	it('summiert sich auf 1 (5 × 0.20)', () => {
+	it('summiert sich auf 1 (5 Composite-Dimensionen × 0.20, Kultur 0)', () => {
 		const sum = Object.values(DIMENSION_WEIGHTS).reduce((a, b) => a + b, 0);
 		expect(sum).toBeCloseTo(1, 10);
 	});
@@ -123,6 +143,18 @@ describe('DIMENSION_CONFIGS', () => {
 				'milieuschutz-staedtebau'
 			]);
 		}
+	});
+
+	it('Kultur (Story 13.1) hat acht log-gedämpfte poi-density-Terme, Summe 1.0', () => {
+		const kultur = DIMENSION_CONFIGS.find((c) => c.dimension === 'kultur')!;
+		expect(kultur, 'KULTUR_CONFIG fehlt in DIMENSION_CONFIGS').toBeDefined();
+		expect(kultur.layers).toHaveLength(8);
+		for (const l of kultur.layers) {
+			expect(l.normalize.kind).toBe('poi-density');
+			if (l.normalize.kind === 'poi-density') expect(l.normalize.scale).toBe('log');
+		}
+		const sum = kultur.layers.reduce((a, l) => a + l.weight, 0);
+		expect(sum).toBeCloseTo(1, 10);
 	});
 
 	it('intrinsicGuard (soziale-lage-Pfad) ist auf keiner Config mehr gesetzt', () => {
