@@ -102,6 +102,18 @@ pnpm build                   # SvelteKit prerender
 
 `aggregate-scores.ts` ist idempotent. Zweimal ausführen liefert identische Werte, nur `computed_at` ändert sich.
 
+## Rang, Quartil & Vergleich (Epic 11)
+
+Aufbauend auf den Scores berechnen zwei Build-Steps die vergleichende Einordnung:
+
+- **Ranking** (`pnpm data:rank`, `scripts/aggregate-ranks.ts` → `kiez_rank`/`bezirk_rank`): pro Metrik ein dichter Rang 1..N (1 = bester) plus Quartil. Gerankt werden Composite + 5 Dimensionen sowie numerische stats-Metriken (Grünanlagen, Haltestellendichte, Kitas/km², PET u.a.). Richtung pro Metrik konfiguriert: meist höher = besser, invertiert bei PET-Hitze.
+- **Quartil:** rang-basiert (`floor((rang-1)/total*4)+1`, bester → Q1). Bewusst getrennt von der wert-basierten 0-100-Quartil-Klassifikation (die gilt für Choropleth-Skalen).
+- **Vergleich** (`pnpm data:comparison`, `scripts/aggregate-comparison.ts` → `kiez_comparison`/`bezirk_comparison`): pro Score-Metrik der Bezirks-Schnitt (Mittel der Kieze im Bezirk) und der Berlin-Median. Bezirk = Mittel, Berlin = Median (robuster gegen Ausreißer).
+
+**Anti-Stigma (ADR-015):** Die UI-Beschriftung (`src/lib/data/rank-format.ts`) zeigt den exakten Rang für Q1–Q3, aber „unteres Viertel" statt „Platz N von N" für das schwächste Quartil. Vergleiche sind neutral formuliert (über/unter Schnitt), keine Wertung.
+
+Reihenfolge in `prebuild`: `data:aggregate-scores` → `data:rank` → `data:comparison`. Beide Steps idempotent (TRUNCATE+Insert).
+
 ## Referenzen
 
 - ADR-013 Score-Aggregations-Strategie

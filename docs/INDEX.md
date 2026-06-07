@@ -32,6 +32,7 @@ Nach längerer Pause oder bei neuem Maintainer:
 
 - [system-map.md](./architecture/system-map.md) — Service-Topology + Datenfluss + Build-Pipeline (Mermaid-Diagramme)
 - [story-map.md](./architecture/story-map.md) — Tabelle aller Stories mit Status (auto-generiert via `pnpm doc:story-map`)
+- [aeo-content-strategie.md](./architecture/aeo-content-strategie.md) — Kiez/Bezirk-Content + AEO (Epic 11): Ranking, Vergleich, KI-Profile, Pipeline, Quellen
 - [ADR-Index](./adr/INDEX.md) — alle Architectural-Decision-Records mit Status
 
 ## Daten-Pipelines
