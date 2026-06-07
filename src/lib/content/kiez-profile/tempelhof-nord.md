@@ -7,6 +7,6 @@ inputHash: 0c0fa6c9610b3a04
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Tempelhof Nord bewegt sich in mehreren Feldern im Mittel. Ruhe und Luft kommen auf rund 61 Punkte, nahe am Bezirksschnitt. Das Grün liegt bei 50 Punkten, nahe am Berliner Median. Die Grünversorgung fällt mittel aus, die Lärmklasse ebenfalls. An heißen Tagen erreicht die gefühlte Temperatur rund 37 Grad.
+Tempelhof Nord bewegt sich in mehreren Feldern im Mittel. Ruhe und Luft kommen auf rund 61 Punkte, nahe am Bezirksschnitt. Das Grün liegt bei rund 50 Punkten, nahe am Berliner Median. Die Lärmklasse fällt mittel aus. An heißen Tagen erreicht die gefühlte Temperatur rund 37 Grad. Insgesamt steht Tempelhof Nord auf Rang 95 von 143.
 
-Anbindung und Versorgung sind die Schwachpunkte. Der Mobilitäts-Score von rund 15 bedeutet Rang 105, unter dem Berliner Median. Die Versorgung kommt auf rund 31 Punkte, Rang 109. Die Haltestellendichte erreicht rund 8 Halte pro Quadratkilometer. Insgesamt steht Tempelhof Nord auf Rang 95.
+Anbindung und Versorgung sind die Schwachpunkte. Der Mobilitäts-Score von rund 15 bedeutet Rang 105, unter dem Berliner Median. Die Versorgung kommt auf rund 31 Punkte, Rang 109. Die Haltestellendichte erreicht rund 8 Halte pro Quadratkilometer. Die Kultur liegt im Mittelfeld. Der Score von rund 52 reicht für Rang 47 von 143, über dem Berliner Median und nahe am Bezirksschnitt. Kultur zählt eigenständig und fließt nicht in den Gesamtscore ein.

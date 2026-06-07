@@ -7,6 +7,6 @@ inputHash: ce015bbf91132e7e
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Prenzlauer Berg Nord führt beim Wohnschutz. Der Score erreicht 100 und steht auf Rang 1 von 143. Die Mobilität liegt mit 39 über Bezirksschnitt und Berliner Median. Die Versorgung übertrifft mit 67,8 den Median deutlich. Die Haltestellendichte beträgt rund 17 Stopps je Quadratkilometer.
+Prenzlauer Berg Nord führt beim Wohnschutz. Der Score erreicht 100 und steht auf Rang 1 von 143. Die Kultur folgt stark mit 91,1 Punkten und Rang 11 von 143, weit über dem Bezirksschnitt und dem Berliner Median. Kultur zählt eigenständig, nicht in den Gesamt-Score. Die Mobilität liegt mit 39 über dem Berliner Median.
 
-Grün und Ruhe bleiben schwach. Grün und Hitze erreichen 30,2 und liegen unter dem Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad. Ruhe und Luft kommen mit 42,2 unter den Bezirksschnitt. Insgesamt landet das Gebiet mit einem Gesamtwert von 55,8 auf Rang 12 von 143.
+Grün und Ruhe bleiben schwach. Grün und Hitze erreichen 30,2 und liegen unter dem Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad. Ruhe und Luft kommen mit 42,2 unter den Bezirksschnitt. Die Haltestellendichte beträgt rund 17 pro Quadratkilometer. Insgesamt landet das Gebiet mit 55,8 auf Rang 12 von 143.
