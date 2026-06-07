@@ -81,7 +81,8 @@ const baseInput: BezirkRenderInput = {
 		gruenHitze: 70,
 		mobilitaet: 92,
 		versorgung: 45,
-		wohnschutz: 58
+		wohnschutz: 58,
+		kultur: 40
 	},
 	faq: [
 		{

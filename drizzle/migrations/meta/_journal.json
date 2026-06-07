@@ -43,6 +43,13 @@
       "when": 1780767708062,
       "tag": "0005_daily_silhouette",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1780845247510,
+      "tag": "0006_lazy_lilandra",
+      "breakpoints": true
     }
   ]
 }

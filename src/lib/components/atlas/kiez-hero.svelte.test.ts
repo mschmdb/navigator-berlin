@@ -39,6 +39,7 @@ const scoreFixture: KiezScore = {
 	mobilitaet: 65,
 	versorgung: 70,
 	wohnschutz: 55,
+	kultur: 48,
 	computedAt: new Date('2026-05-16T00:00:00Z')
 };
 
