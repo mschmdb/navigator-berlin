@@ -21,6 +21,7 @@ import { getBezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
 import { getKiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 import { renderBezirkMarkdown } from './bezirk-renderer.js';
 import { renderKiezMarkdown } from './kiez-renderer.js';
+import { getProfileParagraphs } from '../profile/get-profile.js';
 import { renderLayerMarkdown } from './layer-renderer.js';
 import { buildWahlEntry } from './wahl-renderer.js';
 import {
@@ -100,7 +101,8 @@ async function collectBezirke(): Promise<LlmsBezirkEntry[]> {
 			flaecheHa: 0,
 			stats,
 			score,
-			faq: []
+			faq: [],
+			profile: await getProfileParagraphs('bezirk', slug)
 		});
 		out.push({ slug, name, markdown });
 	}
@@ -142,7 +144,8 @@ async function collectKieze(): Promise<LlmsKiezEntry[]> {
 			flaecheHa: 0,
 			stats,
 			score,
-			faq: []
+			faq: [],
+			profile: await getProfileParagraphs('kiez', row.slug)
 		});
 		// Ranking: bis Story 2.9a Scores liefert, sortieren wir alphabetisch nach Bezirks-Alphabet
 		const topRank = score?.composite !== undefined ? -score.composite : i;

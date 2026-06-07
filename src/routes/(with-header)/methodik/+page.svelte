@@ -22,6 +22,7 @@
 		{ id: 'mission', label: 'Worum es geht' },
 		{ id: 'datenarchitektur', label: 'Datenarchitektur' },
 		{ id: 'aggregations-ebenen', label: 'Aggregations-Ebenen' },
+		{ id: 'was-ist-kiez', label: 'Was „Kiez" hier bedeutet' },
 		{ id: 'cross-layer', label: 'Aggregat-Indizes' },
 		{ id: 'wahldaten-section', label: 'Wahldaten' },
 		{ id: 'coverage-strategie', label: 'Coverage-Strategie' },
@@ -213,6 +214,21 @@
 				<dd class="text-ink">{agg.detail}</dd>
 			{/each}
 		</dl>
+	</section>
+
+	<section id="was-ist-kiez" aria-labelledby="was-ist-kiez-h" class="flex flex-col gap-3">
+		<h2 id="was-ist-kiez-h" class="font-serif text-2xl text-ink">Was „Kiez" hier bedeutet</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Umgangssprachlich ist ein Kiez ein gefühltes Viertel, von den Bewohnern definiert, ohne
+			feste Grenze. Auf navigator.berlin meint „Kiez" dagegen eine amtliche Einheit: die
+			Lebensweltlich orientierte Raum-Bezirksregion (LOR-BZR, Stand 2021), 143 Stück.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Wir nutzen die LOR-Bezirksregion, weil nur sie eine klare, statistisch belegte Grenze hat,
+			an der alle Daten hängen. Dein gefühlter Kiez kann kleiner sein oder über mehrere
+			Bezirksregionen reichen. Die Werte auf einer Kiez-Seite gelten für die LOR-BZR, nicht für
+			eine einzelne Straße.
+		</p>
 	</section>
 
 	<section id="cross-layer" aria-labelledby="cross-layer-h" class="flex flex-col gap-3">

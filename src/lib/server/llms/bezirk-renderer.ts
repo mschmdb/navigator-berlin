@@ -41,6 +41,8 @@ export interface BezirkRenderInput {
 	readonly stats: BezirkStats | null;
 	readonly score: BezirkScore | null;
 	readonly faq: readonly BezirkFaqEntry[];
+	/** KI-Profil-Absätze (Story 11.6/11.9). Optional; leer → keine Sektion. */
+	readonly profile?: readonly string[];
 }
 
 function renderHeader(input: BezirkRenderInput, lines: string[]): void {
@@ -52,9 +54,20 @@ function renderHeader(input: BezirkRenderInput, lines: string[]): void {
 	lines.push('');
 }
 
+function renderProfileSection(profile: readonly string[] | undefined, lines: string[]): void {
+	if (!profile || profile.length === 0) return;
+	lines.push('### Profil');
+	lines.push('');
+	for (const para of profile) {
+		lines.push(para);
+		lines.push('');
+	}
+}
+
 export function renderBezirkMarkdown(input: BezirkRenderInput): string {
 	const lines: string[] = [];
 	renderHeader(input, lines);
+	renderProfileSection(input.profile, lines);
 
 	if (input.stats === null) {
 		lines.push('_Hinweis: aktuell keine Cross-Layer-Aggregat-Daten verfügbar._');
