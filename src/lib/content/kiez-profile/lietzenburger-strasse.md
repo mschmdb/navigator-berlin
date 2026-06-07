@@ -7,6 +7,6 @@ inputHash: a1b02147e463645f
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Lietzenburger Strasse ist kulturstark und hervorragend angebunden. Kultur erreicht rund 96 Punkte, Rang 8 von 143, weit über dem Berliner Median. Kultur zählt eigenständig und nicht in den Gesamt-Score. Bei der Mobilität reicht es ebenfalls für Rang 6. Die Haltestellendichte erreicht rund 22 Halte pro Quadratkilometer. Auch die Versorgung fällt mit rund 69 Punkten überdurchschnittlich aus.
+Kulturell ragt das Gebiet heraus, Rang 8 von 143 mit rund 96 Punkten, weit über dem Median. Auch die Mobilität steht vorn, Rang 6 mit rund 22 ÖPNV-Halten pro Quadratkilometer. Die Versorgung liegt stark, Rang 34. Der Gesamtwert von rund 46 reicht für Rang 41.
 
-Beim Grün zeigt sich das Gegenteil. Mit rund 20 Punkten landet das Gebiet auf Rang 120 von 143. Die Grünversorgung gilt als schlecht. An heißen Tagen erreicht die gefühlte Temperatur rund 36 Grad. Die Lärmklasse fällt mittel aus. Insgesamt steht Lietzenburger Strasse auf Rang 41.
+Grün und Hitze brechen ein, rund 20 Punkte und Rang 120, weit unter dem Median. Die gefühlte Temperatur erreicht etwa 36 Grad. Auch die Ruhe bleibt schwach, rund 46 Punkte. Der Lärm ist mittel.

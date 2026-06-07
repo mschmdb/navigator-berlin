@@ -7,6 +7,6 @@ inputHash: 3eed74b957c6516e
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Koepenick Sued ist berlinweit am ruhigsten. Ruhe und Luft erreichen 100 Punkte und Rang 1 von 143. Grün und Hitze liegen mit 70,3 Punkten klar über dem Berliner Median. An heißen Tagen erreicht die gefühlte Temperatur rund 32 Grad. Der Lärm gilt als gering.
+Ruhe und Luft tragen dieses Gebiet, Rang 1 von 143 mit 100 Punkten. Auch Grün und Hitze stehen vorn, Rang 10. Die gefühlte Temperatur bleibt mit etwa 32 Grad niedrig. Der Lärm ist gering.
 
-Kultur fällt weit zurück. Der Wert von 3,3 bedeutet Rang 122 von 143 und liegt klar unter dem Berliner Median. Kultur zählt eigenständig und nicht in den Gesamt-Score. Anbindung und Versorgung fallen sehr schwach aus. Die Haltestellendichte erreicht nur rund 2 pro Quadratkilometer. Die Mobilität kommt auf 16,8 Punkte, unter dem Median. Die Versorgung erreicht 13,8 Punkte und Rang 129. Insgesamt kommt Koepenick Sued auf 40,2 Punkte und Rang 66.
+Die Versorgung bricht ein, rund 14 Punkte und Rang 129, weit unter dem Median. Die Mobilität bleibt dünn, nur rund 2 ÖPNV-Halte pro Quadratkilometer. Kulturell ist das Gebiet sehr schwach, rund 3 Punkte und Rang 122. Der Gesamtwert von rund 40 reicht für Rang 66.

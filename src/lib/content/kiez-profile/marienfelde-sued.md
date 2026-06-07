@@ -7,6 +7,6 @@ inputHash: 605d20dc0a282104
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Marienfelde Sued ist sehr ruhig und grün. Ruhe und Luft erreichen 90 Punkte und Rang 16 von 143. Der Wert liegt klar über dem Schnitt von Tempelhof Schoeneberg. Grün und Hitze stehen mit 62,6 Punkten über dem Berliner Median. An heißen Tagen erreicht die gefühlte Temperatur rund 37 Grad, der Lärm bleibt mittel.
+Ruhe und Luft tragen Marienfelde Sued, rund 90 Punkte, Rang 16 von 143, weit über dem Bezirksschnitt. Grün und Hitze erreichen rund 63 Punkte, über dem Berliner Median. Mobilität fällt mit rund 11 Punkten schwach aus, Rang 114. Ohne Schiene tragen Busse allein. Versorgung bleibt mit rund 22 Punkten dünn, Rang 118.
 
-Die Kultur fällt mit 6,5 Punkten ganz weit zurück. Das ist Rang 116 von 143 und liegt klar unter dem Bezirksschnitt. Kultur zählt eigenständig und nicht in den Gesamtscore. Auch Anbindung und Versorgung sind schwach. Die Mobilität kommt auf 11,2 Punkte, weit unter dem Median. Die Haltestellendichte erreicht rund 8 pro Quadratkilometer. Die Versorgung bleibt mit 22,4 Punkten unter dem Median. Insgesamt kommt das Gebiet auf 37,2 Punkte und Rang 88.
+Kultur in Reichweite bleibt mit rund 7 Punkten sehr dünn, Rang 116 von 143, weit unter dem Bezirksschnitt. Die soziale Lage gilt als niedrig. Der ÖPNV-Wert liegt bei rund 8 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 37 Grad. Der Gesamtwert von rund 37 Punkten ergibt Rang 88.

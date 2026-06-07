@@ -7,6 +7,6 @@ inputHash: ba4a120f3183097a
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Die Versorgung prägt Osloer Strasse am stärksten, mit 78,2 Punkten und Rang 9 von 143, über dem Bezirksschnitt. Die Mobilität liegt mit Platz 17 ebenfalls weit vorn und über dem Berliner Median. Die Haltestellendichte erreicht rund 15 pro Quadratkilometer. Der Lärm bleibt in der mittleren Klasse.
+Versorgung trägt Osloer Strasse, rund 78 Punkte, Rang 9 von 143, weit über dem Berliner Median. Kulturell ist das Gebiet stark, rund 75 Punkte, Rang 30 von 143, weit über dem Median. Mobilität liegt mit rund 40 Punkten kräftig über dem Median, Rang 17. Ruhe und Luft fallen mit rund 51 Punkten schwach aus, Rang 97.
 
-Die Kultur ist stark und kommt auf 74,7 Punkte, Rang 30 von 143. Sie liegt unter dem hohen Bezirksschnitt von Mitte, aber klar über dem Berliner Median. Kultur zählt eigenständig und nicht in den Gesamtscore. Bei Grün und Hitze fällt Osloer Strasse zurück, deutlich unter den Berliner Median. Die gefühlte Temperatur an heißen Tagen steigt auf rund 36 Grad. Der Wohnschutz bleibt unter dem Bezirksschnitt. Die soziale Lage ist sehr niedrig eingestuft. Insgesamt landet der Kiez auf Platz 35 von 143.
+Grün und Hitze bleiben mit rund 39 Punkten unter dem Median, Rang 92. Wohnschutz erreicht rund 28 Punkte. Die soziale Lage gilt als sehr niedrig. Der ÖPNV-Wert liegt bei rund 15 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 36 Grad. Der Gesamtwert von rund 47 Punkten ergibt Rang 35.

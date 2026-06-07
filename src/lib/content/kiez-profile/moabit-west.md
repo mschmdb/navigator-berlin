@@ -7,6 +7,6 @@ inputHash: 9c2eaa2568bb881a
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Moabit West ist stark bei Wohnschutz und Versorgung. Der Wohnschutzscore von 85,1 bringt den drittbesten Rang von 143. Die Versorgung erreicht 79,3 und Rang 6, klar über dem Berliner Median. Auch die Kultur ist stark und kommt auf 83,6 Punkte, Rang 25 von 143. Kultur zählt eigenständig und nicht in den Gesamtscore.
+Versorgung und Wohnschutz tragen Moabit West. Versorgung erreicht rund 79 Punkte, Rang 6 von 143, weit über dem Berliner Median. Wohnschutz liegt bei rund 85 Punkten, Rang 3. Mobilität fällt mit rund 39 Punkten kräftig aus, Rang 20. Ruhe und Luft bleiben mit rund 42 Punkten schwach, Rang 117.
 
-Grün und Hitze bilden die Schwachstelle. Der Score von 23,9 reicht nur für Rang 117 von 143, weit unter dem Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei rund 35 Grad. Die Grünversorgung gilt als schlecht. Der Mobilitätsscore liegt mit 39,1 hoch, die Lärmbelastung ist mittel. Der Gesamtscore von 53,9 platziert Moabit West auf Rang 14 von 143.
+Kulturell ist das Gebiet stark, rund 84 Punkte, Rang 25 von 143, weit über dem Berliner Median. Grün und Hitze fallen mit rund 24 Punkten dünn aus, Rang 117. Die soziale Lage gilt als mittel. Der ÖPNV-Wert liegt bei rund 12 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 35 Grad. Der Gesamtwert von rund 54 Punkten ergibt Rang 14.

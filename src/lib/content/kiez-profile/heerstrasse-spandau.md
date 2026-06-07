@@ -7,6 +7,6 @@ inputHash: 54311a125795372a
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Heerstrasse Spandau gehört beim Grün zur Spitze. Der Score von 71,9 bedeutet Rang 4 von 143. Bei Ruhe und Luft steht das Gebiet mit 93,8 ebenfalls weit oben. Die gefühlte Temperatur an heißen Tagen liegt bei rund 36 Grad. Die Lärmbelastung bleibt im mittleren Bereich.
+Grün und Hitze tragen dieses Gebiet, Rang 4 von 143 mit rund 72 Punkten, weit über dem Median. Auch Ruhe und Luft stehen vorn, Rang 7. Die gefühlte Temperatur erreicht etwa 36 Grad. Der Lärm bleibt mittel.
 
-Kultur fällt weit zurück. Der Wert von 8,4 bedeutet Rang 110 von 143 und liegt klar unter dem Berliner Median. Kultur zählt eigenständig und nicht in den Gesamt-Score. Der Mobilitätsscore von 18 liegt nahe am Bezirksschnitt, aber unter dem Median. Die Haltestellendichte liegt bei rund acht pro Quadratkilometer. Die Versorgung bewegt sich mit 37,7 nahe am Bezirksschnitt. Der Gesamtscore von 44,3 platziert Heerstrasse Spandau auf Rang 50 von 143.
+Die Mobilität fällt ab, rund 18 Punkte und nur rund 8 ÖPNV-Halte pro Quadratkilometer. Die Versorgung liegt nahe dem Schnitt von Spandau, bleibt aber unter dem Median. Kulturell ist das Gebiet schwach, rund 8 Punkte und Rang 110. Der Gesamtwert von rund 44 reicht für Rang 50.

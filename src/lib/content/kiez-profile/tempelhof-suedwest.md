@@ -7,6 +7,6 @@ inputHash: fc39b2d67ac7d188
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Tempelhof Suedwest zeigt ein ausgewogenes Profil. Bei Grün und Hitze liegt der Kiez nahe am Berliner Median und über dem Bezirksschnitt. Die Versorgung liegt dicht am Median. Die gefühlte Temperatur an heißen Tagen bleibt bei rund 35 Grad. Die Haltestellendichte erreicht rund 16 pro Quadratkilometer.
+Tempelhof Suedwest bleibt ausgewogen ohne klare Spitze. Versorgung erreicht rund 54 Punkte und Rang 58, nahe dem Berliner Median. Grün und Hitze liegen mit rund 51 Punkten nahe dem Median und über dem Bezirksschnitt. Ruhe und Luft erreichen rund 54 Punkte, unter dem Median und nahe dem Bezirksschnitt. Die gefühlte Temperatur bleibt bei rund 35 Grad.
 
-Die Kultur zählt zu den niedrigeren Dimensionen. Der Score von rund 41 reicht für Rang 63 von 143, nahe am Berliner Median und unter dem Bezirksschnitt. Kultur zählt eigenständig und fließt nicht in den Gesamtscore ein. Die Mobilität liegt nahe am Berliner Median. Bei Ruhe und Luft fällt der Kiez unter den Median, nahe am Bezirksschnitt. Der Wohnschutz liegt über dem Bezirksschnitt. Insgesamt kommt der Kiez auf Platz 46 von 143.
+Kulturell ist das Gebiet dünner, rund 41 Punkte und Rang 63, unter dem Bezirksschnitt und nahe dem Berliner Median. Die Mobilität bleibt mit Rang 65 mittelmäßig, nahe dem Median. Beim Wohnschutz steht der Kiez mit rund 42 Punkten über dem Bezirksschnitt, soziale Lage mittel. Insgesamt landet Tempelhof Suedwest auf Rang 46.

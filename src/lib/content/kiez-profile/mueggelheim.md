@@ -7,6 +7,6 @@ inputHash: dfab703db5fb06c4
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Mueggelheim bietet viel Ruhe. Ruhe und Luft erreichen rund 89 Punkte, Rang 19 von 143. Das Grün kommt auf rund 66 Punkte, über dem Bezirksschnitt. An heißen Tagen bleibt die gefühlte Temperatur mit rund 31 Grad niedrig. Die Grünversorgung fällt gut aus.
+Ruhe und Luft prägen Mueggelheim am stärksten, rund 89 Punkte, Rang 19 von 143, weit über dem Bezirksschnitt. Grün und Hitze erreichen rund 66 Punkte, Rang 26, über dem Berliner Median. Mobilität fällt mit rund 11 Punkten sehr schwach aus, Rang 115. Versorgung bleibt mit rund 12 Punkten extrem dünn, Rang 131.
 
-Die Kultur fällt mit 1,9 Punkten ganz weit zurück. Das ist Rang 125 von 143 und liegt klar unter dem Bezirksschnitt. Kultur zählt eigenständig und nicht in den Gesamtscore. Auch die Anbindung ist schwach. Die Haltestellendichte erreicht nur rund 1 Halt pro Quadratkilometer. Der Mobilitäts-Score von rund 11 bedeutet Rang 115. Die Versorgung kommt auf 12 Punkte, Rang 131 von 143. Insgesamt steht Mueggelheim auf Rang 97.
+Kultur in Reichweite bleibt mit rund 2 Punkten sehr dünn, Rang 125 von 143, weit unter dem Bezirksschnitt. Die soziale Lage gilt als hoch. Der ÖPNV-Wert liegt bei rund 1 Halt je Quadratkilometer. Die gefühlte Temperatur erreicht rund 31 Grad. Der Gesamtwert von rund 36 Punkten ergibt Rang 97.

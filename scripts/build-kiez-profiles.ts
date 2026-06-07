@@ -50,8 +50,8 @@ Zahlen sparsam:
 
 Kennzahlen-Bedeutung (so und nicht anders benennen):
 - Score-Werte (composite, ruheLuft, gruenHitze, mobilitaet, versorgung, wohnschutz, kultur) sind Punkte von 0 bis 100, höher ist besser.
-- Kultur ist eine eigenständige Dimension (Kulturorte in Reichweite) und zählt NICHT in den composite/Gesamt-Score. Behaupte nie, Kultur hebe oder senke den Gesamt-Score.
-- Wenn Kultur unter den zwei höchsten ODER den zwei niedrigsten der sechs Dimensionen liegt, MUSST du sie erwähnen (mit Wert und qualitativer Einordnung). Sonst nur, wenn sie etwas aussagt.
+- Kultur misst Kulturorte in Reichweite. Verknüpfe Kultur im Text NIE mit dem Gesamt-Score (nicht "hebt/senkt den Gesamt-Score"). Schreibe AUCH KEINE Meta-Hinweise wie "zählt eigenständig", "eigene Dimension" oder "nicht im Gesamt-Score" in den Profiltext, das ist Methodik, kein Profil.
+- Wenn Kultur unter den zwei höchsten ODER zwei niedrigsten Dimensionen liegt, erwähne sie natürlich mit Wert und qualitativer Einordnung (z.B. "kulturell stark, Rang X von 143" oder "wenig Kultur in Reichweite"). Sonst nur, wenn sie etwas aussagt.
 - petGrad ist die mittlere gefühlte Temperatur (PET) an heißen Tagen in Grad Celsius. Nenne sie "gefühlte Temperatur", NICHT "Oberflächentemperatur" oder "Lufttemperatur".
 - oepnvStopsProKm2 ist die Haltestellendichte pro Quadratkilometer.
 - laermKlasse und wohnlage sind Kategorien (niedrig/mittel/hoch bzw. einfach/mittel/gut).

@@ -7,6 +7,6 @@ inputHash: bb6a3f3266c06e86
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Ost 2 Alt Reinickendorf punktet bei der Mobilität. Der Score von 46,1 reicht für Rang 7 von 143. Der Wert liegt klar über dem Schnitt von Reinickendorf und über dem Berliner Median. Die Haltestellendichte erreicht rund 14 pro Quadratkilometer. Die Versorgung steht mit 55,8 Punkten über dem Bezirksschnitt.
+Mobilität prägt Ost 2 Alt Reinickendorf, rund 46 Punkte, Rang 7 von 143, weit über dem Median. Ruhe und Luft erreichen rund 66 Punkte, Rang 57, nahe dem Bezirksschnitt. Versorgung liegt bei rund 56 Punkten, Rang 56, über dem Bezirksschnitt. Grün und Hitze bleiben mit rund 52 Punkten nahe dem Median.
 
-Die Kultur erreicht 41,4 Punkte, Rang 63 von 143. Sie liegt über dem Bezirksschnitt von Reinickendorf und nahe dem Berliner Median. Kultur zählt eigenständig und nicht in den Gesamtscore. Ruhe und Luft bewegen sich mit 66,1 Punkten nahe am Median. Grün und Hitze liegen mit 51,5 Punkten nahe am Median. An heißen Tagen erreicht die gefühlte Temperatur rund 35 Grad. Der Lärm gilt als mittel. Insgesamt kommt das Gebiet auf 43,9 Punkte und Rang 52.
+Kulturell ist das Gebiet kräftig, rund 41 Punkte, Rang 63 von 143, über dem Bezirksschnitt. Die soziale Lage gilt als mittel. Der ÖPNV-Wert liegt bei rund 14 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 35 Grad. Der Gesamtwert von rund 44 Punkten ergibt Rang 52.

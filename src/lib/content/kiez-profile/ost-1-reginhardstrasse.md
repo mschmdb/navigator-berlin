@@ -7,6 +7,6 @@ inputHash: aa1c6640587d206f
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Ost 1 Reginhardstrasse ist dicht angebunden. Die Haltestellendichte erreicht rund 20 pro Quadratkilometer. Die Mobilität liegt mit 31,6 Punkten über dem Schnitt von Reinickendorf und über dem Berliner Median. Auch die Kultur ist stark und kommt auf 64,4 Punkte, Rang 35 von 143, klar über dem Bezirksschnitt. Kultur zählt eigenständig und nicht in den Gesamtscore.
+Kulturell ist Ost 1 Reginhardstrasse stark, rund 64 Punkte, Rang 35 von 143, weit über dem Bezirksschnitt. Versorgung erreicht rund 64 Punkte, Rang 44, über dem Bezirksschnitt. Mobilität liegt mit rund 32 Punkten über dem Median, Rang 39. Ruhe und Luft fallen mit rund 54 Punkten schwach aus, Rang 88.
 
-Ruhe und Luft bleiben mit 53,6 Punkten unter dem Median. Grün und Hitze liegen mit 44,8 Punkten darunter. An heißen Tagen erreicht die gefühlte Temperatur rund 35 Grad. Der Lärm gilt als mittel. Die Versorgung steht mit 64 Punkten über dem Bezirksschnitt, der Wohnschutz mit 33,8 Punkten über dem Median. Insgesamt kommt das Gebiet auf 45,6 Punkte und Rang 42.
+Grün und Hitze bleiben mit rund 45 Punkten unter dem Median, Rang 80. Wohnschutz erreicht rund 34 Punkte, Rang 31. Die soziale Lage gilt als niedrig. Der ÖPNV-Wert liegt bei rund 20 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 35 Grad. Der Gesamtwert von rund 46 Punkten ergibt Rang 42.

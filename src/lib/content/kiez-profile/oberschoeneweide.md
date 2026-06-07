@@ -7,6 +7,6 @@ inputHash: 14868c256fc20f5d
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Oberschoeneweide steht bei Ruhe und Luft gut da. Der Score von 79,3 liegt über dem Berliner Median. Auch die Kultur ist stark und erreicht 58,2 Punkte, Rang 41 von 143, klar über dem Bezirksschnitt von Treptow Koepenick. Kultur zählt eigenständig und nicht in den Gesamtscore.
+Ruhe und Luft prägen Oberschoeneweide, rund 79 Punkte, Rang 26 von 143, über dem Berliner Median. Kulturell ist das Gebiet kräftig, rund 58 Punkte, Rang 41 von 143, weit über dem Bezirksschnitt. Grün und Hitze fallen mit rund 48 Punkten unter den Median, Rang 76. Mobilität bleibt mit rund 19 Punkten schwach, Rang 89.
 
-Bei der Anbindung schwächelt das Gebiet. Der Mobilitätsscore von 18,5 liegt unter dem Bezirksschnitt. Die Haltestellendichte liegt bei rund sechs pro Quadratkilometer. Die Versorgung fällt mit 35,5 unter den Berliner Median. Beim Grün bewegt sich das Gebiet mit 47,5 nahe am Median, die gefühlte Temperatur an heißen Tagen bei rund 35 Grad. Der Gesamtscore von 39,6 platziert Oberschoeneweide auf Rang 70 von 143.
+Versorgung liegt mit rund 36 Punkten nahe dem Bezirksschnitt, Rang 99. Wohnschutz erreicht rund 17 Punkte. Die soziale Lage gilt als mittel. Der ÖPNV-Wert liegt bei rund 6 Halten je Quadratkilometer. Die gefühlte Temperatur erreicht rund 35 Grad. Der Gesamtwert von rund 40 Punkten ergibt Rang 70.

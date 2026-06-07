@@ -7,6 +7,6 @@ inputHash: 44d75c08a0e7a2e7
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Schoeneberg Suedost ist gut versorgt. Die Versorgung erreicht rund 77 Punkte, Rang 13 von 143. Der Wohnschutz kommt auf rund 53 Punkte und liegt klar über dem Bezirksschnitt. Die Haltestellendichte erreicht rund 16 Halte pro Quadratkilometer. Der Mobilitäts-Score liegt über dem Berliner Median.
+Versorgung trägt Schoeneberg Suedost. Mit rund 77 Punkten erreicht der Kiez Rang 13 von 143, deutlich über dem Bezirksschnitt. Ruhe und Luft liegen mit rund 63 Punkten nahe dem Berliner Median. Beim Wohnschutz steht das Gebiet mit rund 53 Punkten über dem Bezirksschnitt, soziale Lage mittel.
 
-Die Kultur zählt zu den stärksten Dimensionen. Der Score von rund 84 reicht für Rang 22 von 143 und liegt klar über Bezirksschnitt und Berliner Median. Kultur zählt eigenständig und fließt nicht in den Gesamtscore ein. Beim Grün zeigt sich die Kehrseite. Mit rund 28 Punkten landet das Gebiet weit hinten auf Rang 111 von 143. An heißen Tagen erreicht die gefühlte Temperatur rund 37 Grad. Ruhe und Luft bleiben nahe am Bezirksschnitt. Insgesamt steht Schoeneberg Suedost auf Rang 25.
+Kulturell ist das Gebiet stark, rund 84 Punkte und Rang 22, klar über Bezirksschnitt und Berliner Median. Schwach fällt Grün und Hitze aus, nur rund 28 Punkte und Rang 111, weit unter dem Median. Die gefühlte Temperatur liegt bei rund 37 Grad. Die Mobilität bleibt mit Rang 36 ordentlich. Insgesamt landet Schoeneberg Suedost auf Rang 25.

@@ -7,6 +7,6 @@ inputHash: 9d54302e742e5425
 generatedAt: "2026-06-07T12:00:00.000Z"
 ---
 
-Mahlsdorf ist grün und ruhig. Ruhe und Luft erreichen einen Score von 72 und liegen über dem Berliner Median. Grün und Hitze kommen auf 64,8 und übertreffen den Median ebenfalls. An heißen Tagen liegt die gefühlte Temperatur bei rund 38 Grad. Die Grünversorgung gilt als gut.
+Ruhe und Grün tragen dieses Gebiet, Rang 38 und Rang 30 von 143. Beide Werte liegen über dem Berliner Median. Die gefühlte Temperatur erreicht etwa 38 Grad. Der Lärm bleibt mittel.
 
-Kultur fällt weit zurück. Der Wert von 6 bedeutet Rang 117 von 143 und liegt klar unter dem Berliner Median. Kultur zählt eigenständig und nicht in den Gesamt-Score. Auch Mobilität und Versorgung ziehen das Gebiet nach unten. Die Versorgung erreicht 29,3 und Rang 112. Die Mobilität kommt auf 20,9, unter dem Median. Die Haltestellendichte beträgt rund 10 Stopps je Quadratkilometer. Insgesamt landet das Gebiet mit einem Gesamtwert von 37,4 auf Rang 87 von 143.
+Die Versorgung fällt ab, rund 29 Punkte und Rang 112, unter dem Schnitt von Marzahn Hellersdorf. Die Mobilität bleibt mit rund 10 ÖPNV-Halten pro Quadratkilometer dünn. Kulturell ist das Gebiet sehr schwach, rund 6 Punkte und Rang 117, weit unter dem Median. Der Gesamtwert von rund 37 reicht für Rang 87.
