@@ -34,7 +34,7 @@ templates:
       Der Index bezieht sich auf den gesamten Raum, nicht auf einzelne Haushalte.
 
   - id: wohnen-warum-keine-mietpreise
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Warum gibt navigator.berlin keine konkreten Mietpreise pro Adresse aus?"
     answer: >-
@@ -44,7 +44,7 @@ templates:
       offiziellen Mietspiegel-Rechner.
 
   - id: wohnen-was-ist-brw
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Worin unterscheiden sich Bodenrichtwert und Mietspiegel?"
     answer: >-
@@ -62,3 +62,12 @@ templates:
       (Mietspiegel-Wohnlage, MSS, BRW). Diese Kategorien sind beschreibend, nicht
       wertend. Bezeichnungen wie „beliebter Kiez" oder „guter Bezirk" verwenden
       wir aus methodischen Gründen nicht.
+
+  - id: wohnen-wohnschutz-einordnung
+    applicableTo: [bezirk, kiez]
+    requires: [wohnen.dominantWohnlage]
+    question: "Wie viel Wohnschutz gibt es in {name}?"
+    answer: >-
+      {name} erreicht im Wohnschutz-Score {wohnschutzScore} von 100
+      ({wohnschutzRang}), {wohnschutzVergleich}. Der Score erfasst die
+      Milieuschutz-Abdeckung; ein höherer Wert heißt mehr Schutz vor Verdrängung.

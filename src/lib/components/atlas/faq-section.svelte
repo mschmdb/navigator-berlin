@@ -36,7 +36,7 @@
 	<section
 		data-testid="faq-section"
 		data-page-type={pageType}
-		class="mx-auto max-w-prose space-y-6"
+		class="space-y-6"
 		aria-labelledby="faq-heading"
 	>
 		{#if headingLevel === 2}
@@ -64,5 +64,11 @@
 				</Accordion.Item>
 			{/each}
 		</Accordion.Root>
+		{#if pageType === 'kiez' || pageType === 'bezirk'}
+			<p class="font-sans text-sm text-ink-muted" data-testid="faq-methodik-link">
+				Allgemeine Erklärungen zu den Kennzahlen stehen auf der
+				<a class="text-accent underline hover:no-underline" href="/methodik">Methodik-Seite</a>.
+			</p>
+		{/if}
 	</section>
 {/if}

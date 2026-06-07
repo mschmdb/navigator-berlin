@@ -51,4 +51,16 @@ describe('FaqSection.svelte', () => {
 		const section = document.querySelector('[data-testid="faq-section"]');
 		expect(section?.getAttribute('data-page-type')).toBe('bezirk');
 	});
+
+	it('verlinkt die Methodik-Seite auf Detailseiten (Story 11.2 AC-2)', async () => {
+		render(FaqSection, { items, pageType: 'kiez' });
+		const link = document.querySelector('[data-testid="faq-methodik-link"] a');
+		expect(link).not.toBeNull();
+		expect(link?.getAttribute('href')).toBe('/methodik');
+	});
+
+	it('zeigt keinen Methodik-Link auf Layer-Seiten (Erklärungen stehen dort selbst)', async () => {
+		render(FaqSection, { items, pageType: 'layer' });
+		expect(document.querySelector('[data-testid="faq-methodik-link"]')).toBeNull();
+	});
 });

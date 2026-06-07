@@ -26,6 +26,8 @@ Architectural-Decision-Records für navigator.berlin. Format folgt [ADR-000-temp
 | [012](./ADR-012-tdd-mandate.md) | Pragmatic-TDD-Mandat ab Story 1.2 | accepted | 2026-05 | — |
 | [013](./ADR-013-score-aggregation-strategy.md) | Score-Aggregation-Strategie (5 Dim, flächen-gewichtet) | accepted | 2026-05 | — |
 | [014](./ADR-014-multi-level-inspector-aggregat-strategie.md) | Multi-Level-Inspector: Aggregat-Strategie + Visual-Typ + Compare pro Layer | proposed | 2026-05 | Epic 8 |
+| [015](./ADR-015-score-composition-umwelt-infra.md) | Score-Komposition als Umwelt- & Infrastruktur-Score (Anti-Stigma) | accepted | 2026-05 | Epic 9 |
+| [016](./ADR-016-llm-authoring-eu-foss-exception.md) | LLM-Profile zur Authoring-Zeit (EU-FOSS-Ausnahme) | accepted | 2026-06 | Epic 11 |
 
 ## Geplant / Pending
 

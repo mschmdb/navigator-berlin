@@ -21,7 +21,7 @@ templates:
       Quelle: {klimaSource}, Stand {klimaStand}.
 
   - id: klima-was-ist-pet
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Was ist die Physiologische Äquivalent-Temperatur (PET)?"
     answer: >-
@@ -31,7 +31,7 @@ templates:
       um Hitzestress in Stadtgebieten zu vergleichen.
 
   - id: klima-was-ist-hitzetag
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Was zählt als Hitzetag?"
     answer: >-
@@ -41,7 +41,7 @@ templates:
       Normalperiode 1991-2020 dokumentiert ist.
 
   - id: klima-normalperiode
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Was bedeutet Klima-Normalperiode?"
     answer: >-
@@ -50,7 +50,7 @@ templates:
       In Berlin nutzen wir die aktuelle Periode 1991-2020 als Vergleichsbasis.
 
   - id: klima-rolle-versiegelung
-    applicableTo: [bezirk, kiez, layer]
+    applicableTo: [layer]
     requires: []
     question: "Welche Rolle spielt die Versiegelung für das Stadtklima?"
     answer: >-

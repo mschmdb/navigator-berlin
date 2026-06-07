@@ -7,6 +7,7 @@
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
+	import { bezirkSameAs } from '$lib/seo/sources/bezirk-sameas.js';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -39,6 +40,8 @@
 		`Bezirk ${name}: navigator.berlin-Karten-Vorschau mit Kiez-Score und Bezirks-Daten`
 	);
 
+	const sameAs = $derived(bezirkSameAs(slug));
+
 	const placeJsonLd = $derived(
 		buildPlace({
 			origin,
@@ -48,7 +51,8 @@
 			slug,
 			urlBasePath: '/bezirk',
 			einwohner: data.profile.einwohner,
-			flaecheHa: data.profile.flaecheHa
+			flaecheHa: data.profile.flaecheHa,
+			sameAs
 		})
 	);
 
@@ -61,7 +65,8 @@
 			slug,
 			urlBasePath: '/bezirk',
 			einwohner: data.profile.einwohner,
-			flaecheHa: data.profile.flaecheHa
+			flaecheHa: data.profile.flaecheHa,
+			sameAs
 		})
 	);
 
@@ -89,7 +94,13 @@
 <JsonLd data={adminAreaJsonLd} testid="bezirk-administrative-area-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="bezirk-breadcrumb-jsonld" />
 
-<BezirkHero profile={data.profile} stats={data.stats} faq={data.faq} />
+<BezirkHero
+	profile={data.profile}
+	stats={data.stats}
+	faq={data.faq}
+	comparison={data.comparison}
+	profileProse={data.profileProse}
+/>
 <div class="mx-auto max-w-3xl px-4 pb-8">
 	<BezirkKiezeList kieze={data.kieze} bezirkName={name} />
 </div>

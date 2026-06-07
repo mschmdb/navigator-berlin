@@ -107,7 +107,7 @@ describe('KiezHero.svelte', () => {
 		const table = document.querySelector('[data-testid="kiez-steckbrief"]');
 		expect(table).not.toBeNull();
 		expect(table?.textContent).toMatch(/Lärm/);
-		expect(table?.textContent).toMatch(/Quelle: laerm-2023/);
+		expect(table?.textContent).toMatch(/Quelle: Lärmbelastung 2023/);
 		expect(table?.textContent).toMatch(/Grünversorgung/);
 	});
 

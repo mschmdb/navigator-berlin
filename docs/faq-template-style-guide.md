@@ -56,3 +56,22 @@ Unbekannte Slots bleiben als Literal stehen (Fail-Loud im Browser-View).
 
 `laerm`, `gruen`, `oepnv`, `wohnen`, `klima`. Phase-2-Backlog: `luft`, `bildung`,
 `heritage`, `score`.
+
+## Detailseiten vs. Layer/Methodik (Epic 11)
+
+- **Detailseiten (kiez/bezirk):** nur Templates mit echtem Aggregat-Bezug (`requires`-Pfad gesetzt). Reine Erklär-Templates (`requires: []`, z. B. „Was bedeutet LDEN?") gehören NICHT hierher (Duplicate-Content über 155 Seiten). Ausnahme: `wohnen-stigma-disclaimer` (ADR-015-Kontext). Invariante in `detail-faq-invariant.test.ts`.
+- **Layer-Seiten:** tragen die Erklär-Templates (`applicableTo: [layer]`). Detailseiten verlinken die Methodik-Seite (`faq-section.svelte`).
+
+## Ranking-FAQ-Muster (Story 11.3, answer-first)
+
+Detailseiten-Templates kombinieren Score + Rang + Vergleich in den ersten Wörtern. Renderer-Slots (aus `kiez_rank`/`kiez_comparison`):
+
+- `{<dim>Score}` — Score-Wert (gerundet), z. B. `{gruenHitzeScore}`.
+- `{<dim>Rang}` — `formatRank` (exakter Rang, oder „unteres Viertel" bei Q4, Anti-Stigma).
+- `{<dim>Vergleich}` — neutrale Richtung „über/unter/etwa im Bezirksschnitt" (Kiez) bzw. Berlin-Median (Bezirk).
+
+`requires` ankert auf einem vorhandenen Aggregat-Feld, damit nur bei Daten gerendert wird.
+
+## Quellen-Namen
+
+`{...Source}`-Slots geben lesbare Layer-Namen aus (`src/lib/data/source-label.ts`), keine technischen Slugs.

@@ -19,6 +19,8 @@ import {
 } from '$lib/data/faq-helpers/oepnv.js';
 import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
 import { describePetKategorie, formatPet, petErklaerungDe } from '$lib/data/faq-helpers/klima.js';
+import { formatRank } from '$lib/data/rank-format.js';
+import { sourceLabel } from '$lib/data/source-label.js';
 
 /**
  * Story 2.5b T3: Pure-Function-Slot-Renderer.
@@ -43,12 +45,36 @@ export interface TemplateAggregate {
 	readonly heritage: HeritageAggregat;
 }
 
+/**
+ * Rang + Vergleich pro Score-Dimension (Story 11.3). `value` = Wert dieser Fläche,
+ * `compareValue` = Bezirksschnitt (Kiez) bzw. Berliner Median (Bezirk),
+ * `compareLabel` die passende Beschriftung. Optional, da Layer-Seiten kein Rang.
+ */
+export interface MetricContext {
+	readonly value: number | null;
+	readonly rang: number | null;
+	readonly quartil: number | null;
+	readonly total: number;
+	readonly compareValue: number | null;
+	readonly compareLabel: string;
+}
+
 export interface TemplateContext {
 	readonly pageType: PageType;
 	readonly slug: string;
 	readonly name: string;
 	readonly locale: TemplateLocale;
 	readonly aggregate: TemplateAggregate;
+	/** Story 11.3: Rang/Vergleich je Score-Dimension (ruheLuft, gruenHitze, …). */
+	readonly metrics?: ReadonlyMap<string, MetricContext>;
+}
+
+/** Neutrale, nicht-wertende Richtungsphrase für den Vergleich (Story 11.3). */
+function compareDirection(value: number | null, compareValue: number | null): string | null {
+	if (value === null || compareValue === null) return null;
+	const delta = value - compareValue;
+	if (Math.abs(delta) < 1) return 'etwa im';
+	return delta > 0 ? 'über dem' : 'unter dem';
 }
 
 export interface RenderedFaq {
@@ -123,7 +149,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		const raw = typeof laerm.value === 'string' ? laerm.value : null;
 		slots.laermKategorie = describeLaermCategoryDe(raw);
 		slots.laermErklaerung = laermErklaerungDe(raw);
-		slots.laermSource = laerm.layer;
+		slots.laermSource = sourceLabel(laerm.layer);
 		slots.laermStand = formatSourceStand(laerm.sourceUpdatedAt);
 	}
 
@@ -135,7 +161,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 				: null;
 		slots.gruenKategorie = describeGruenversorgungDe(raw);
 		slots.gruenErklaerung = gruenErklaerungDe(raw);
-		slots.gruenSource = gruen.dominantVersorgung.layer;
+		slots.gruenSource = sourceLabel(gruen.dominantVersorgung.layer);
 		slots.gruenStand = formatSourceStand(gruen.dominantVersorgung.sourceUpdatedAt);
 	}
 	if (gruen.gruenanlagenCount && typeof gruen.gruenanlagenCount.value === 'number') {
@@ -150,7 +176,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		slots.oepnvStopsPerKm2 = formatStopsPerKm2(oepnv.value);
 		slots.oepnvDichte = describeOepnvDichte(oepnv.value);
 		slots.oepnvErklaerung = oepnvErklaerungDe(oepnv.value);
-		slots.oepnvSource = oepnv.layer;
+		slots.oepnvSource = sourceLabel(oepnv.layer);
 		slots.oepnvStand = formatSourceStand(oepnv.sourceUpdatedAt);
 	}
 
@@ -161,7 +187,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 				? wohnen.dominantWohnlage.value
 				: null;
 		slots.wohnenWohnlage = describeWohnlageDe(raw);
-		slots.wohnenSource = wohnen.dominantWohnlage.layer;
+		slots.wohnenSource = sourceLabel(wohnen.dominantWohnlage.layer);
 		slots.wohnenStand = formatSourceStand(wohnen.dominantWohnlage.sourceUpdatedAt);
 	}
 	if (wohnen.dominantMss) {
@@ -175,8 +201,19 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		slots.klimaPet = formatPet(klima.value);
 		slots.klimaKategorie = describePetKategorie(klima.value);
 		slots.klimaErklaerung = petErklaerungDe(klima.value);
-		slots.klimaSource = klima.layer;
+		slots.klimaSource = sourceLabel(klima.layer);
 		slots.klimaStand = formatSourceStand(klima.sourceUpdatedAt);
+	}
+
+	// Story 11.3: Rang + Vergleich je Score-Dimension. Slots `<dim>Score`,
+	// `<dim>Rang`, `<dim>Vergleich` (z. B. `gruenHitzeRang`).
+	if (ctx.metrics) {
+		for (const [key, m] of ctx.metrics) {
+			if (m.value !== null) slots[`${key}Score`] = Math.round(m.value).toString();
+			slots[`${key}Rang`] = formatRank(m.rang, m.quartil, m.total);
+			const dir = compareDirection(m.value, m.compareValue);
+			if (dir) slots[`${key}Vergleich`] = `${dir} ${m.compareLabel}`;
+		}
 	}
 
 	return slots;

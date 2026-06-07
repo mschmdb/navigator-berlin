@@ -15,6 +15,7 @@
 		{ id: 'daten-lizenzen', label: 'Daten-Lizenzen' },
 		{ id: 'wahldaten', label: 'Wahldaten' },
 		{ id: 'demografie', label: 'Demografie' },
+		{ id: 'entitaets-verweise', label: 'Entitäts-Verweise' },
 		{ id: 'software', label: 'Software' },
 		{ id: 'schriften', label: 'Schriften' },
 		{ id: 'osm-namensnennung', label: 'OpenStreetMap-Namensnennung' }
@@ -316,6 +317,51 @@
 						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						daten.berlin.de
+					</a>
+				</dd>
+			</div>
+		</dl>
+	</section>
+
+	<section id="entitaets-verweise" aria-labelledby="entitaets-verweise-h" class="flex flex-col gap-3">
+		<h2 id="entitaets-verweise-h" class="font-serif text-2xl text-ink">Entitäts-Verweise</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Bezirks-Seiten verweisen per <code class="font-mono text-sm">sameAs</code> auf die
+			passende Entität in offenen Wissensdatenbanken, damit Suchmaschinen die Seite eindeutig
+			zuordnen.
+		</p>
+		<dl class="flex flex-col gap-3">
+			<div class="border border-rule p-4">
+				<dt class="font-sans text-base font-semibold text-ink">Wikidata</dt>
+				<dd class="font-serif text-sm text-ink-muted mt-1">
+					Q-IDs der 12 aktuellen Berliner Bezirke als <code class="font-mono text-xs">sameAs</code
+					>-Verweis im JSON-LD. Lizenz CC0.
+				</dd>
+				<dd class="mt-2 font-mono text-xs">
+					<a
+						href="https://www.wikidata.org"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					>
+						wikidata.org
+					</a>
+				</dd>
+			</div>
+			<div class="border border-rule p-4">
+				<dt class="font-sans text-base font-semibold text-ink">Wikipedia (deutsch)</dt>
+				<dd class="font-serif text-sm text-ink-muted mt-1">
+					Artikel-Verweis pro Bezirk als zusätzlicher <code class="font-mono text-xs">sameAs</code
+					>-Eintrag. Lizenz CC BY-SA 4.0.
+				</dd>
+				<dd class="mt-2 font-mono text-xs">
+					<a
+						href="https://de.wikipedia.org"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					>
+						de.wikipedia.org
 					</a>
 				</dd>
 			</div>

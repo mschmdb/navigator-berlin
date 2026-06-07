@@ -1,7 +1,7 @@
 ---
 type: architecture
 audience: both
-last-verified: 2026-05-21
+last-verified: 2026-06-07
 related:
   - docs/INDEX.md
   - docs/pipelines/data-flow.md
@@ -9,9 +9,9 @@ related:
 
 # Story-Map
 
-Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-05-21.
+Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-06-07.
 
-**107 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 1 backlog · ▫️ 24 other
+**118 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 6 ready-for-dev · ⏳ 1 backlog · ▫️ 33 other
 
 ## Pro Epic
 ### Epic 1
@@ -67,6 +67,22 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | `10-8-milieuschutz-sichtbarkeit-styling-fix` | ✅ done | Styling-Bug: polygon-outline-soft #E0E4F0 × Opacity 0.35 = unsichtbar. Kräftigere Farbe/Opacity/Umriss, beide Milieus… |
 | `10-9-gefuehlte-temperatur-flaechendeckend` | ✅ done | PET-Lücken füllen: pb_ua_pet_str + pc_ua_pet_grfrei (gleiches pet14h-Feld, live geprüft) mit pa_siedlg mergen → fläch… |
 | `10-6b-laerm-db-per-lor-aggregat` | ✅ done | Folge aus 10-6-Spike: Per-LOR-dB-Mittel aus aa_fp_gesamt2022 (3,8 Mio Fassadenpunkte ges_den) statt 3-Stufen-Index. W… |
+
+### Epic 11
+
+| Story | Status | Kommentar |
+|---|---|---|
+| `11-0-ranking-quartil-foundation` | ▫️ review | Build-Step: Rang 1..143 + Quartil pro Score-Dimension/Metrik (analog 12 Bezirke). TDD. Hard-Block fuer 11-3, 11-4, 11-6. |
+| `11-1-wikidata-entitaeten-sameas-jsonld` | ▫️ review | Stufe 3.1: Wikidata (CC0) + Wikipedia je Bezirk/Ortsteil als sameAs in Place/AdministrativeArea-JsonLd. Match per Cen… |
+| `11-2-faq-entruempelung-erklaer-templates` | ▫️ review | Stufe 1.1: FAQ-Templates mit requires:[] aus kiez/bezirk raus, auf Methodik/Layer buendeln. Behebt AEO-Duplicate-Cont… |
+| `11-3-daten-faq-ranking-vergleich-zahl` | ▫️ review | Stufe 1.2: neue FAQ-Templates kombinieren Rang + Vergleich + konkrete Zahl, Antwort in ersten 40-60 Woertern (AEO). A… |
+| `11-4-vergleichswerte-kiez-bezirk-berlin` | ▫️ review | Stufe 1.4: Steckbrief zeigt Kiez-Wert vs Bezirks-Schnitt vs Berlin-Median je Dimension. A11y (kein Farb-only). Haengt… |
+| `11-5-verteilungen-zaehldaten-steckbrief` | ▫️ review | Stufe 1.5: categoryDistribution + Counts (U/S/Tram/Bus, Kitas/Schulen/km2, Spielplaetze) statt nur Dominant-Wert. FR4… |
+| `11-6-grounded-ki-profile-build-step` | ▫️ review | Stufe 2 (Owner-Decision 2026-06-06): eigener Script pnpm data:profiles (NICHT prebuild, Owner-getriggert), grounded 2… |
+| `11-7-fakten-lint-editorial-gate` | ▫️ review | Stufe 2.3/2.4: Lint prueft jede Zahl im Profil-Content-File gegen Datenbasis (analog lint:wahl + forbidden-tokens.ts)… |
+| `11-8-bezirksregionenprofile-prosa-quelle` | 📋 ready-for-dev | Stufe 3.2 (optional): amtliche Bezirksregionenprofile Teil I (143-BZR-Grain, PDF, heterogen) als zusaetzlicher ground… |
+| `11-9-disclaimer-bezirk-audit-llms-content` | ▫️ review | Offene Punkte: Methodik-Disclaimer Kiez=LOR-BZR, Bezirks-Komponenten-Audit vs Kiez, llms_content-Rolle klaeren. Begle… |
+| `11-10-epic-11-dokumentation` | 📋 ready-for-dev | Doku-Abschluss (Epic-7-Muster): scoring-methodology (Ranking/Quartil), faq-template-style-guide (neue Muster), neue d… |
 
 ### Epic 2
 

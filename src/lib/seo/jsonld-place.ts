@@ -12,6 +12,7 @@ export interface PlaceLeafJsonLd {
 	url?: string;
 	containedInPlace?: PlaceLeafJsonLd | { '@type': 'Place'; name: string };
 	additionalProperty?: PropertyValue[];
+	sameAs?: string[];
 }
 
 /**
@@ -36,6 +37,10 @@ export interface PlaceInput {
 	readonly einwohner?: number;
 	/** Optional Flaeche in Hektar als PropertyValue. */
 	readonly flaecheHa?: number;
+	/** Optional sameAs-Entitäts-Links (Wikidata/Wikipedia). Story 11.1. Nur
+	 * gesetzt wenn die Entität verifiziert dieselbe ist (z. B. Bezirk → Wikidata-
+	 * Bezirk). Leeres/fehlendes Array → kein sameAs (kein erfundener Link). */
+	readonly sameAs?: readonly string[];
 }
 
 export type PlaceJsonLd = WithContext<PlaceLeafJsonLd>;
@@ -74,6 +79,9 @@ export function buildPlace(input: PlaceInput): PlaceJsonLd {
 	}
 	if (props.length > 0) {
 		out.additionalProperty = props;
+	}
+	if (input.sameAs && input.sameAs.length > 0) {
+		out.sameAs = [...input.sameAs];
 	}
 	return out;
 }

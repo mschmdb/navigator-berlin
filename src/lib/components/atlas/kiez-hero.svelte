@@ -22,6 +22,11 @@
 	import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 	import FaqSection from './faq-section.svelte';
 	import KiezWahlVerlauf, { type WahlVerlaufRow } from './kiez-wahl-verlauf.svelte';
+	import ScoreComparisonTable from './score-comparison-table.svelte';
+	import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
+	import { sourceLabel } from '$lib/data/source-label.js';
+	import DistributionBar from './distribution-bar.svelte';
+	import { toSegments, countsText, type DistSegment } from '$lib/data/steckbrief-extras.js';
 	import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
 	import { describeGruenversorgungDe } from '$lib/data/faq-helpers/gruen.js';
 	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
@@ -36,9 +41,19 @@
 		readonly score: KiezScore | null;
 		readonly faq: readonly FaqEntry[];
 		readonly wahlVerlauf?: readonly WahlVerlaufRow[];
+		readonly comparison?: readonly ComparisonDimRow[];
+		readonly profileProse?: readonly string[];
 	}
 
-	const { profile, stats, score, faq, wahlVerlauf = [] }: Props = $props();
+	const {
+		profile,
+		stats,
+		score,
+		faq,
+		wahlVerlauf = [],
+		comparison = [],
+		profileProse = []
+	}: Props = $props();
 
 	const numberDe = new Intl.NumberFormat('de-DE');
 	const leadText = $derived.by(() => {
@@ -54,6 +69,8 @@
 		readonly value: string;
 		readonly source: string;
 		readonly sourceUpdatedAt: string;
+		readonly distribution?: readonly DistSegment[];
+		readonly extra?: string;
 	}
 
 	function formatStand(iso: string): string {
@@ -72,8 +89,9 @@
 			out.push({
 				cluster: 'Lärm',
 				value: describeLaermCategoryDe(raw),
-				source: row.laerm.dominantCategory.layer,
-				sourceUpdatedAt: formatStand(row.laerm.dominantCategory.sourceUpdatedAt)
+				source: sourceLabel(row.laerm.dominantCategory.layer),
+				sourceUpdatedAt: formatStand(row.laerm.dominantCategory.sourceUpdatedAt),
+				distribution: toSegments(row.laerm.categoryDistribution?.value)
 			});
 		}
 		const gruen = row.gruen.dominantVersorgung;
@@ -82,8 +100,13 @@
 			out.push({
 				cluster: 'Grünversorgung',
 				value: describeGruenversorgungDe(raw),
-				source: gruen.layer,
-				sourceUpdatedAt: formatStand(gruen.sourceUpdatedAt)
+				source: sourceLabel(gruen.layer),
+				sourceUpdatedAt: formatStand(gruen.sourceUpdatedAt),
+				distribution: toSegments(row.gruen.versorgungDistribution?.value),
+				extra: countsText([
+					['Grünanlagen', row.gruen.gruenanlagenCount?.value ?? null],
+					['Spielplätze', row.gruen.spielplaetzeCount?.value ?? null]
+				])
 			});
 		}
 		const pet = row.klima.meanPet;
@@ -91,7 +114,7 @@
 			out.push({
 				cluster: 'Klima · PET',
 				value: `${formatPet(pet.value)} (${describePetKategorie(pet.value)})`,
-				source: pet.layer,
+				source: sourceLabel(pet.layer),
 				sourceUpdatedAt: formatStand(pet.sourceUpdatedAt)
 			});
 		}
@@ -100,8 +123,14 @@
 			out.push({
 				cluster: 'ÖPNV-Dichte',
 				value: `${formatStopsPerKm2(stops.value)} (${describeOepnvDichte(stops.value)})`,
-				source: stops.layer,
-				sourceUpdatedAt: formatStand(stops.sourceUpdatedAt)
+				source: sourceLabel(stops.layer),
+				sourceUpdatedAt: formatStand(stops.sourceUpdatedAt),
+				extra: countsText([
+					['U', row.oepnv.uBahnCount?.value ?? null],
+					['S', row.oepnv.sBahnCount?.value ?? null],
+					['Tram', row.oepnv.tramCount?.value ?? null],
+					['Bus', row.oepnv.busCount?.value ?? null]
+				])
 			});
 		}
 		const wohnlage = row.wohnen.dominantWohnlage;
@@ -110,8 +139,9 @@
 			out.push({
 				cluster: 'Wohnlage',
 				value: describeWohnlageDe(raw),
-				source: wohnlage.layer,
-				sourceUpdatedAt: formatStand(wohnlage.sourceUpdatedAt)
+				source: sourceLabel(wohnlage.layer),
+				sourceUpdatedAt: formatStand(wohnlage.sourceUpdatedAt),
+				distribution: toSegments(row.wohnen.wohnlageDistribution?.value)
 			});
 		}
 		const mss = row.wohnen.dominantMss;
@@ -120,7 +150,7 @@
 			out.push({
 				cluster: 'Soziale Lage (MSS)',
 				value: mssBeschreibungDe(raw),
-				source: mss.layer,
+				source: sourceLabel(mss.layer),
 				sourceUpdatedAt: formatStand(mss.sourceUpdatedAt)
 			});
 		}
@@ -161,6 +191,14 @@
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">{leadText}</p>
 	</header>
 
+	{#if profileProse.length > 0}
+		<section aria-label="Profil" class="space-y-3" data-testid="kiez-profile">
+			{#each profileProse as para (para)}
+				<p class="font-serif text-base leading-relaxed text-ink">{para}</p>
+			{/each}
+		</section>
+	{/if}
+
 	{#if score}
 		<section aria-labelledby="kiez-score-heading" class="space-y-4" data-testid="kiez-score">
 			<h2 id="kiez-score-heading" class="font-serif text-2xl text-ink">Kiez-Score</h2>
@@ -168,7 +206,7 @@
 				<span class="text-5xl text-ink">{formatScore(score.composite)}</span>
 				<span class="font-mono text-base text-ink-subtle">/ 100</span>
 			</div>
-			<dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+			<dl class="grid grid-cols-3 gap-4 sm:grid-cols-5">
 				{#each scoreDims as dim (dim.label)}
 					<div>
 						<dt class="font-mono text-xs uppercase tracking-wide text-ink-subtle">
@@ -184,6 +222,8 @@
 			</p>
 		</section>
 	{/if}
+
+	<ScoreComparisonTable rows={comparison} showBezirkColumn={true} valueLabel="Kiez" />
 
 	<section aria-labelledby="steckbrief-heading" class="space-y-4">
 		<h2 id="steckbrief-heading" class="font-serif text-2xl text-ink">Steckbrief</h2>
@@ -208,7 +248,21 @@
 							<th scope="row" class="py-3 pr-4 text-left font-semibold text-ink">{row.cluster}</th>
 							<td class="py-3 pr-4 text-ink">
 								<span>{row.value}</span>
-								<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
+								{#if row.extra || (row.distribution && row.distribution.length > 0)}
+										<details class="mt-1">
+											<summary
+												class="cursor-pointer font-mono text-xs text-accent hover:text-accent-strong"
+												>Verteilung & Zahlen</summary
+											>
+											{#if row.extra}<span class="mt-1 block font-mono text-xs text-ink-muted"
+													>{row.extra}</span
+												>{/if}
+											{#if row.distribution && row.distribution.length > 0}<DistributionBar
+													segments={row.distribution}
+												/>{/if}
+										</details>
+									{/if}
+									<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
 							</td>
 							<td class="py-3 text-left font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
 						</tr>

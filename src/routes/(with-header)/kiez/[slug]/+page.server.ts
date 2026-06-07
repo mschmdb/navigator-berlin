@@ -52,6 +52,30 @@ async function tryLoadKiezScore(slug: string): Promise<KiezScore | null> {
 	}
 }
 
+async function tryLoadKiezRank(slug: string) {
+	if (!process.env.DATABASE_URL) return null;
+	try {
+		const { getKiezRank } = await import('$lib/server/db/queries/get-kiez-rank.js');
+		return await getKiezRank(slug);
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[kiez-page] WARN: kiez_rank unavailable (${msg})\n`);
+		return null;
+	}
+}
+
+async function tryLoadKiezComparison(slug: string) {
+	if (!process.env.DATABASE_URL) return null;
+	try {
+		const { getKiezComparison } = await import('$lib/server/db/queries/get-kiez-comparison.js');
+		return await getKiezComparison(slug);
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[kiez-page] WARN: kiez_comparison unavailable (${msg})\n`);
+		return null;
+	}
+}
+
 async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
@@ -64,6 +88,24 @@ async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
 	}
 }
 
+export interface ComparisonDimRow {
+	readonly label: string;
+	readonly value: number | null;
+	readonly bezirkMean: number | null;
+	readonly berlinMedian: number | null;
+	readonly rang: number | null;
+	readonly quartil: number | null;
+	readonly total: number;
+}
+
+const SCORE_DIMS: readonly { key: keyof KiezScore; label: string }[] = [
+	{ key: 'ruheLuft', label: 'Ruhe & Luft' },
+	{ key: 'gruenHitze', label: 'Grün & Hitze' },
+	{ key: 'mobilitaet', label: 'Mobilität' },
+	{ key: 'versorgung', label: 'Versorgung' },
+	{ key: 'wohnschutz', label: 'Wohnschutz' }
+];
+
 export type KiezPageData = {
 	readonly profile: KiezProfile;
 	readonly stats: KiezStats | null;
@@ -71,6 +113,8 @@ export type KiezPageData = {
 	readonly faq: readonly FaqEntry[];
 	readonly siblings: readonly KiezRef[];
 	readonly wahlVerlauf: readonly WahlVerlaufRow[];
+	readonly comparison: readonly ComparisonDimRow[];
+	readonly profileProse: readonly string[];
 };
 
 interface WahlTrendVariant {
@@ -218,13 +262,40 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, `Kiez ${slug} nicht gefunden`);
 	}
-	const [stats, score, faq, siblings, wahlVerlauf] = await Promise.all([
-		tryLoadKiezStats(slug),
-		tryLoadKiezScore(slug),
-		tryLoadFaq(slug),
-		tryLoadSiblings(slug, profile.bezirk),
-		tryBuildWahlVerlauf(slug)
-	]);
-	const data: KiezPageData = { profile, stats, score, faq, siblings, wahlVerlauf };
+	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
+	const [stats, score, faq, siblings, wahlVerlauf, rank, comparisonMap, profileProse] =
+		await Promise.all([
+			tryLoadKiezStats(slug),
+			tryLoadKiezScore(slug),
+			tryLoadFaq(slug),
+			tryLoadSiblings(slug, profile.bezirk),
+			tryBuildWahlVerlauf(slug),
+			tryLoadKiezRank(slug),
+			tryLoadKiezComparison(slug),
+			getProfileParagraphs('kiez', slug)
+		]);
+	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ key, label }) => {
+		const cmp = comparisonMap?.get(key as string);
+		const rk = rank?.get(key as string);
+		return {
+			label,
+			value: (score?.[key] as number | null | undefined) ?? null,
+			bezirkMean: cmp?.bezirkMean ?? null,
+			berlinMedian: cmp?.berlinMedian ?? null,
+			rang: rk?.rang ?? null,
+			quartil: rk?.quartil ?? null,
+			total: rk?.total ?? 0
+		};
+	});
+	const data: KiezPageData = {
+		profile,
+		stats,
+		score,
+		faq,
+		siblings,
+		wahlVerlauf,
+		comparison,
+		profileProse
+	};
 	return data;
 };
