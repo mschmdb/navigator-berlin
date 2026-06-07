@@ -11,7 +11,7 @@ related:
 
 Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 2026-06-07.
 
-**42 Layer total**, gruppiert nach Bundle.
+**50 Layer total**, gruppiert nach Bundle.
 
 ## Pro-Bundle-Übersicht
 ### A: Boundaries
@@ -85,4 +85,17 @@ Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 202
 | `ubahn-netz` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
 | `tram-netz` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
 | `sbahn-netz` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+
+### J: Kultur
+
+| Slug | Kind | Source | Lizenz | Stand |
+|---|---|---|---|---|
+| `kultur-museum` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `kultur-galerie` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `kultur-kunst-im-raum` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `kultur-theater` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `kultur-bibliothek` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `kultur-kino` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `kultur-soziokultur` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
+| `kultur-club` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — |
 
