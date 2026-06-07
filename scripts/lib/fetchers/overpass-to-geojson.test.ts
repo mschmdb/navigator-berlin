@@ -127,7 +127,30 @@ describe('overpassToGeoJSON', () => {
 		expect(out.features).toHaveLength(0);
 	});
 
-	it('Relations werden ignoriert (Phase 1)', () => {
+	it('way ohne geometry aber mit center → Point (out center für Flächen-POIs)', () => {
+		const out = overpassToGeoJSON({
+			elements: [
+				{ type: 'way', id: 12, center: { lat: 52.5, lon: 13.4 }, tags: { shop: 'supermarket' } }
+			]
+		});
+		expect(out.features).toHaveLength(1);
+		const feat = out.features[0];
+		expect(feat.geometry).toEqual({ type: 'Point', coordinates: [13.4, 52.5] });
+		expect(feat.properties).toEqual({ osmId: 12, osmType: 'way', shop: 'supermarket' });
+	});
+
+	it('Relation mit center → Point', () => {
+		const out = overpassToGeoJSON({
+			elements: [
+				{ type: 'relation', id: 13, center: { lat: 52.6, lon: 13.5 }, tags: { amenity: 'pharmacy' } }
+			]
+		});
+		expect(out.features).toHaveLength(1);
+		expect(out.features[0].geometry).toEqual({ type: 'Point', coordinates: [13.5, 52.6] });
+		expect(out.features[0].properties).toEqual({ osmId: 13, osmType: 'relation', amenity: 'pharmacy' });
+	});
+
+	it('Relation ohne center wird ignoriert', () => {
 		const out = overpassToGeoJSON({
 			elements: [{ type: 'relation', id: 11, members: [] }]
 		});

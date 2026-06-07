@@ -143,6 +143,18 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		short: 'Öffentlicher Spielplatz',
 		long: 'Öffentlich zugänglicher Kinderspielplatz mit Spielgeräten, gepflegt durch das Grünflächenamt des Bezirks. Quelle: Berliner Grünanlagen-Register.'
 	},
+	'nahversorgung-lebensmittel': {
+		short: 'Lebensmittel-Nahversorgung (Supermarkt, Discounter, Spätkauf, Bäcker)',
+		long: 'Geschäfte der täglichen Lebensmittelversorgung: Supermarkt, Discounter, Convenience/Spätkauf und Bäckerei. Fließt als Dichte-Term in die Versorgungs-Dimension des Kiez-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'nahversorgung-apotheke': {
+		short: 'Apotheke',
+		long: 'Öffentliche Apotheke für Arzneimittel und gesundheitsnahe Grundversorgung. Teil des Nahversorgungs-Terms der Versorgungs-Dimension. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
+	'nahversorgung-post': {
+		short: 'Post- oder Paketstelle',
+		long: 'Postfiliale, Paketshop oder Postdienststelle für Brief- und Paketversand. Teil des Nahversorgungs-Terms der Versorgungs-Dimension. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+	},
 	schwimmbaeder: {
 		short: 'Öffentliches Schwimmbad oder Schwimmhalle',
 		long: 'Berliner Bäder-Betriebe (BBB) und vergleichbare Einrichtungen: Hallenbad, Sommerbad, Kombibad oder Strandbad. Saisonale Öffnungszeiten beachten.'
