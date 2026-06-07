@@ -100,6 +100,10 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'sportanlagen-2024': 'point-freizeit',
 	spielplaetze: 'polygon-outline-soft',
 	schwimmbaeder: 'point-freizeit',
+	// E: Nahversorgung (Epic 12, Point-Layer)
+	'nahversorgung-lebensmittel': 'point',
+	'nahversorgung-apotheke': 'point-gesundheit',
+	'nahversorgung-post': 'point',
 	// F: Mobilität
 	'radverkehrsnetz-2025': 'line-radverkehr',
 	'fahrradstrassen-2024': 'line-fahrradstrasse',
@@ -119,7 +123,16 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-kultur': 'choropleth-kiez-score-ordinal-4',
 	// I: Demografie (Story 10.0, neutral, kein Score)
-	'einwohner-dichte-2024': 'choropleth-dichte'
+	'einwohner-dichte-2024': 'choropleth-dichte',
+	// J: Kultur (Epic 13, Point-Layer)
+	'kultur-museum': 'point',
+	'kultur-galerie': 'point',
+	'kultur-kunst-im-raum': 'point',
+	'kultur-theater': 'point',
+	'kultur-bibliothek': 'point',
+	'kultur-kino': 'point',
+	'kultur-soziokultur': 'point',
+	'kultur-club': 'point'
 };
 
 const TRANSITION_MS = 200;
