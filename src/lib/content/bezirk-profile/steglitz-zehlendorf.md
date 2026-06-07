@@ -3,10 +3,10 @@ slug: steglitz-zehlendorf
 name: Steglitz Zehlendorf
 pageType: bezirk
 model: "claude-opus-4-8 (subagent)"
-inputHash: eff3ee7db7d155f7
+inputHash: 1fe68cba9117a880
 generatedAt: "2026-06-07T08:00:00.000Z"
 ---
 
-Steglitz Zehlendorf überzeugt bei Ruhe und Luft. Der Score von 85,1 liegt weit über dem Berliner Median. Auch das Grün übertrifft die Stadtmitte. An heißen Tagen liegt die gefühlte Temperatur bei rund 33,7 Grad. Die Lärmklasse ist mittel.
+Steglitz Zehlendorf ist grün und ruhig. Bei Grün und Hitze steht der Bezirk mit 67,3 Punkten auf Rang eins von zwölf. Bei Ruhe und Luft folgt Rang zwei mit 85,1 Punkten. Die gefühlte Temperatur an heißen Tagen liegt bei etwa 33,7 Grad.
 
-Die Mobilität bleibt mit 19,4 Punkten unter dem Median. Die Haltestellendichte erreicht etwa 7,3 pro Quadratkilometer. Die Versorgung liegt mit 34,4 unter dem Median. Der Wohnschutz bewegt sich mit 8,7 nahe am Berliner Mittel.
+Mobilität und Versorgung fallen unterdurchschnittlich aus und bleiben unter dem Berliner Median. Die Haltestellendichte beträgt rund 7,3 pro Quadratkilometer. Die Grünversorgung ist gut, die Lärmklasse mittel. Im Gesamtbild steht der Bezirk auf Rang drei.

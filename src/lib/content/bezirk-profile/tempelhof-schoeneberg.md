@@ -3,10 +3,10 @@ slug: tempelhof-schoeneberg
 name: Tempelhof Schoeneberg
 pageType: bezirk
 model: "claude-opus-4-8 (subagent)"
-inputHash: 0273d0d02505eee2
+inputHash: 50bbe74e65e25b45
 generatedAt: "2026-06-07T08:00:00.000Z"
 ---
 
-Tempelhof Schoeneberg zeigt ein gemischtes Profil. Ruhe und Luft liegen mit 63,9 Punkten knapp unter dem Berliner Median. Das Grün bleibt mit 50,5 darunter. An heißen Tagen liegt die gefühlte Temperatur bei rund 36,6 Grad. Die Lärmklasse ist mittel.
+Tempelhof Schoeneberg ist gut versorgt und dicht angebunden. Versorgung erreicht Rang vier von zwölf und liegt über dem Berliner Median. Die Haltestellendichte beträgt rund 11,4 pro Quadratkilometer. Auch der Wohnschutz fällt überdurchschnittlich aus und steht auf Rang drei.
 
-Die Versorgung übertrifft mit 42,9 Punkten den Median. Die Haltestellendichte erreicht etwa 11,4 pro Quadratkilometer. Die Mobilität bewegt sich mit 21,7 nahe am Median. Der Wohnschutz liegt mit 17,9 über dem Berliner Mittel.
+Ruhe und Luft sowie Grün und Hitze bleiben unter dem Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei etwa 36,6 Grad. Die Grünversorgung ist mittel, die Lärmklasse mittel. Im Gesamtbild steht der Bezirk auf Rang neun.

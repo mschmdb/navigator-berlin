@@ -3,10 +3,10 @@ slug: charlottenburg-wilmersdorf
 name: Charlottenburg Wilmersdorf
 pageType: bezirk
 model: "claude-opus-4-8 (subagent)"
-inputHash: 611474a3f4d29336
+inputHash: fd091879f92819af
 generatedAt: "2026-06-07T08:00:00.000Z"
 ---
 
-Charlottenburg Wilmersdorf zeigt ein ausgewogenes Profil ohne klaren Ausreißer. Ruhe und Luft liegen mit 64,8 Punkten nahe am Berliner Median. Das Grün bleibt knapp darunter. An heißen Tagen liegt die gefühlte Temperatur bei rund 33,9 Grad. Die Lärmklasse ist mittel.
+Charlottenburg Wilmersdorf liegt im Gesamtbild auf dem letzten Rang. Die meisten Dimensionen bewegen sich nahe am Berliner Median. Bei Mobilität schneidet der Bezirk leicht überdurchschnittlich ab. Die Haltestellendichte liegt bei rund 9,5 pro Quadratkilometer.
 
-Die Mobilität liegt mit 23,5 Punkten leicht über dem Median. Die Haltestellendichte erreicht etwa 9,5 pro Quadratkilometer. Die Versorgung bleibt mit 38,6 knapp unter dem Median. Der Wohnschutz liegt mit 8,9 nahe am Berliner Mittel.
+Ruhe und Luft sowie Grün und Hitze fallen knapp unter den Berliner Median. Die gefühlte Temperatur an heißen Tagen beträgt etwa 33,9 Grad. Die Grünversorgung ist schlecht, die Lärmklasse mittel. Versorgung und Wohnschutz bleiben nahe am Median.

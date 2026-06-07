@@ -3,10 +3,10 @@ slug: mitte
 name: Mitte
 pageType: bezirk
 model: "claude-opus-4-8 (subagent)"
-inputHash: 1da165c0278c55da
+inputHash: 80419ddd2aa169d0
 generatedAt: "2026-06-07T08:00:00.000Z"
 ---
 
-Mitte ist dicht angebunden und gut versorgt. Die Haltestellendichte erreicht etwa 16,9 pro Quadratkilometer. Die Versorgung liegt mit 58,3 Punkten weit über dem Berliner Median. Die Mobilität übertrifft mit 38,2 den Median klar. Der Wohnschutz steht mit 42,9 weit über dem Berliner Mittel.
+Mitte ist am besten angebunden und stark versorgt. Bei Mobilität steht der Bezirk mit 38,2 Punkten auf Rang eins von zwölf. Die Haltestellendichte beträgt rund 16,9 pro Quadratkilometer. Versorgung folgt auf Rang zwei und liegt klar über dem Berliner Median.
 
-Bei Ruhe und Luft bleibt Mitte mit 46,6 unter dem Median. Auch das Grün liegt mit 39,3 deutlich darunter. An heißen Tagen liegt die gefühlte Temperatur bei rund 35,9 Grad. Die Lärmklasse ist mittel.
+Ruhe und Luft sowie Grün und Hitze bleiben deutlich unter dem Berliner Median. Beide stehen auf Rang elf. Die gefühlte Temperatur an heißen Tagen liegt bei etwa 35,9 Grad. Die Grünversorgung ist schlecht, die Lärmklasse mittel. Im Gesamtbild steht der Bezirk auf Rang zwei.

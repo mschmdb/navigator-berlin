@@ -3,10 +3,10 @@ slug: treptow-koepenick
 name: Treptow Koepenick
 pageType: bezirk
 model: "claude-opus-4-8 (subagent)"
-inputHash: 1c6f15c2b6479263
+inputHash: 1f592b4737b68518
 generatedAt: "2026-06-07T08:00:00.000Z"
 ---
 
-Treptow Koepenick steht für Ruhe und Luft. Der Score von 84,2 liegt weit über dem Berliner Median. Auch das Grün übertrifft die Stadtmitte. An heißen Tagen liegt die gefühlte Temperatur bei rund 34,7 Grad. Die Lärmklasse ist mittel.
+Treptow Koepenick ist ruhig und grün, aber schlecht versorgt. Bei Ruhe und Luft erreicht der Bezirk mit 84,2 Punkten Rang drei von zwölf. Damit liegt er deutlich über dem Berliner Median. Auch Grün und Hitze fällt überdurchschnittlich aus.
 
-Mobilität und Versorgung fallen ab. Der Mobilitäts-Score von 17,9 liegt unter dem Median. Die Haltestellendichte erreicht nur etwa 5,0 pro Quadratkilometer. Die Versorgung bleibt mit 24,8 deutlich unter dem Median. Der Wohnschutz liegt mit 3,2 darunter.
+Versorgung steht auf dem letzten Rang und bleibt klar unter dem Berliner Median. Auch Mobilität ist unterdurchschnittlich. Die Haltestellendichte liegt bei nur rund 5,0 pro Quadratkilometer. Die gefühlte Temperatur an heißen Tagen beträgt etwa 34,7 Grad. Im Gesamtbild steht der Bezirk auf Rang elf.

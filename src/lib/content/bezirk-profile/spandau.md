@@ -3,10 +3,10 @@ slug: spandau
 name: Spandau
 pageType: bezirk
 model: "claude-opus-4-8 (subagent)"
-inputHash: 645c62ea261f7ca7
+inputHash: 227f220b553340e5
 generatedAt: "2026-06-07T08:00:00.000Z"
 ---
 
-Spandau steht für Ruhe und Luft. Der Score von 89,2 liegt weit über dem Berliner Median. Auch das Grün übertrifft die Stadtmitte. An heißen Tagen liegt die gefühlte Temperatur bei rund 35,1 Grad. Die Lärmklasse ist mittel.
+Spandau ist der ruhigste Bezirk im Vergleich. Bei Ruhe und Luft steht er mit 89,2 Punkten auf Rang eins von zwölf. Auch Grün und Hitze fällt mit Rang drei deutlich überdurchschnittlich aus. Die gefühlte Temperatur an heißen Tagen liegt bei etwa 35,1 Grad.
 
-Die Mobilität fällt ab. Der Score von 16,2 liegt unter dem Median. Die Haltestellendichte erreicht etwa 6,6 pro Quadratkilometer. Die Versorgung bleibt mit 29,8 unter dem Median. Der Wohnschutz liegt mit 3,4 darunter.
+Mobilität und Versorgung bleiben schwach. Beide stehen auf Rang elf und unter dem Berliner Median. Die Haltestellendichte liegt bei nur rund 6,6 pro Quadratkilometer. Die Grünversorgung ist gut, die Lärmklasse mittel. Im Gesamtbild steht der Bezirk auf Rang fünf.
