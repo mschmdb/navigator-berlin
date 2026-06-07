@@ -263,6 +263,11 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		long: 'Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner. Methodik: /methodik/kiez-score.',
 		valueScaleExplain: 'Höher = mehr Schutz vor Verdrängung'
 	},
+	'kiez-score-kultur': {
+		short: 'Aggregat „Kultur" pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Methodik: /methodik/kiez-score.',
+		valueScaleExplain: 'Höher = mehr Kulturorte in Reichweite'
+	},
 
 	// I: Demografie (Story 10.0 · neutraler Kontext, kein Score-Input)
 	'einwohner-dichte-2024': {
