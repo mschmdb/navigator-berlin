@@ -20,6 +20,8 @@
 			'Wir zeigen die Stufe, ohne Bewertung. Niedriger Status heißt nicht „schlechter Kiez". Daten je Planungsraum, nicht je Adresse.',
 		'kiez-score-explainer':
 			'Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten.',
+		'kriminalitaet-aggregat':
+			'Häufigkeitszahl je Bezirksregion, nicht adressgenau. Sie misst erfasste Fälle pro gemeldete Einwohner, kein persönliches Risiko. Touristen- und Pendler-Orte erscheinen überzeichnet, das Dunkelfeld bleibt unerfasst. Kein Sicherheits-Ranking, fließt nicht in den Gesamt-Score.',
 		'wahl-stimmenanteile':
 			'Daten beschreiben Stimmenanteile, keine Bewertung. Brief-Stimmen sind im Kiez-Aggregat ausgeschlossen (nur Bezirk und Berlin), weil sie keine räumliche Zuordnung haben.',
 		'cross-layer-template':

@@ -10,6 +10,7 @@ export type DisclaimerVariant =
 	| 'mss-aggregat'
 	| 'compare-mss-aggregat'
 	| 'kiez-score-explainer'
+	| 'kriminalitaet-aggregat'
 	| 'wahl-stimmenanteile'
 	| 'cross-layer-template'
 	| 'brw-not-aggregatable'

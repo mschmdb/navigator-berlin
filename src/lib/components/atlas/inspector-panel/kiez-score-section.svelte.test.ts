@@ -106,6 +106,38 @@ describe('KiezScoreSection', () => {
 		expect(chip?.getAttribute('data-severity')).toBe('success');
 	});
 
+	it('Kriminalität (Story 14.4): neutrale Chip-Severity + Stigma-Disclaimer, kein Gut-Signal', async () => {
+		const score = makeScore();
+		score.dimensions.push({
+			dimension: 'kriminalitaet',
+			value: 84,
+			sources: [
+				{ layer: 'kriminalitaet', rawValue: { index: 1500 }, normalizedValue: 84, weight: 1 }
+			],
+			missingData: [],
+			dataStand: '2025-01-01T00:00:00.000Z'
+		});
+		render(KiezScoreSection, { score });
+		// neutrale Severity (kein success/warning) trotz hohem Wert
+		const dim = (await page.getByTestId('kiez-score-dim-kriminalitaet').element()) as HTMLElement;
+		const chip = dim.querySelector('[data-testid="value-chip"]') as HTMLElement | null;
+		expect(chip?.getAttribute('data-severity')).toBe('neutral');
+		// eigener Stigma-Disclaimer vorhanden
+		const krimiDisclaimer = dim.ownerDocument.querySelector(
+			'[data-testid="editorial-disclaimer"][data-variant="kriminalitaet-aggregat"]'
+		);
+		expect(krimiDisclaimer).not.toBeNull();
+	});
+
+	it('ohne Kriminalitäts-Wert kein kriminalitaet-aggregat-Disclaimer', async () => {
+		render(KiezScoreSection, { score: makeScore() });
+		await expect.element(page.getByTestId('kiez-score-section')).toBeInTheDocument();
+		const krimiDisclaimer = document.querySelector(
+			'[data-testid="editorial-disclaimer"][data-variant="kriminalitaet-aggregat"]'
+		);
+		expect(krimiDisclaimer).toBeNull();
+	});
+
 	it('Dimension mit value=null zeigt „Daten unzureichend"', async () => {
 		const score = makeScore();
 		score.dimensions[1].value = null;

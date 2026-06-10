@@ -23,6 +23,13 @@ describe('scaleFor', () => {
 		expect(scaleFor(20, 'wohnschutz')).toEqual({ label: 'gering', severity: 'warning' });
 		expect(scaleFor(80, 'wohnschutz')).toEqual({ label: 'sehr hoch', severity: 'success' });
 	});
+
+	it('Kriminalität (Story 14.4): immer neutrale Severity, kein grün/orange Gut-Signal', () => {
+		// Magnitude, kein Gut-Maß (ADR-019): weder niedrige noch hohe Werte werden gut/schlecht gefärbt.
+		expect(scaleFor(5, 'kriminalitaet')).toEqual({ label: 'gering', severity: 'neutral' });
+		expect(scaleFor(50, 'kriminalitaet')).toEqual({ label: 'mittel', severity: 'neutral' });
+		expect(scaleFor(95, 'kriminalitaet')).toEqual({ label: 'sehr hoch', severity: 'neutral' });
+	});
 });
 
 describe('DIMENSION_LABELS_DE', () => {
