@@ -7,7 +7,8 @@ export const BUILD_TIME_ALLOWLIST = [
 	'overpass-api.de',
 	'overpass.kumi.systems',
 	'bundeswahlleiterin.de',
-	'statistik-berlin-brandenburg.de'
+	'statistik-berlin-brandenburg.de',
+	'kriminalitaetsatlas.berlin.de'
 ] as const;
 
 export function isAllowed(url: string): boolean {

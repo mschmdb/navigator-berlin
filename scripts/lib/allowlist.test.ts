@@ -37,6 +37,14 @@ describe('allowlist', () => {
 		).toBe(true);
 	});
 
+	it('akzeptiert Kriminalitätsatlas-Berlin host', () => {
+		expect(
+			isAllowed(
+				'https://www.kriminalitaetsatlas.berlin.de/K-Atlas/bezirke/Fallzahlen%26HZ%202016-2025.xlsx'
+			)
+		).toBe(true);
+	});
+
 	it('akzeptiert Subdomain via dot-suffix-Match', () => {
 		expect(isAllowed('https://sub.fbinter.stadt-berlin.de/x')).toBe(true);
 	});
