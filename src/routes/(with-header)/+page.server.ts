@@ -37,6 +37,8 @@ export interface HomeFeaturedScore {
 	readonly mobilitaet: number | null;
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
+	/** Deep-Link auf die Karte am Kiez-Centroid (address=lng,lat&q=name); Fallback /explore. */
+	readonly exploreHref: string;
 }
 
 export interface HomeUpdateTeaser {
@@ -56,7 +58,13 @@ export interface HomePageData {
 	readonly featured: HomeFeaturedScore | null;
 }
 
-async function loadFeatured(): Promise<HomeFeaturedScore | null> {
+/**
+ * Featured-Kiez: höchster Composite wählt WELCHER Kiez gezeigt wird; der angezeigte Score wird
+ * dann EXAKT so berechnet wie der explore-Inspector beim Deep-Link (getKiezScore am Centroid +
+ * Mobility-Override), damit Home-Ring und Karten-Inspector denselben Wert zeigen (kein
+ * Aggregat-vs-Punkt-Mismatch). Coords auf 5 Dezimalen gerundet = identische Inputs wie die URL.
+ */
+async function loadFeatured(fetchFn: typeof fetch): Promise<HomeFeaturedScore | null> {
 	if (!process.env.DATABASE_URL) return null;
 	try {
 		const { getDb } = await import('$lib/server/db/index.js');
@@ -67,15 +75,45 @@ async function loadFeatured(): Promise<HomeFeaturedScore | null> {
 			.limit(1);
 		const r = rows[0];
 		if (!r || typeof r.composite !== 'number') return null;
+		const displayName = slugToDisplayName(r.slug);
+
+		const { getKiezProfile } = await import('$lib/data/get-kiez-profile.js');
+		const { getLocale } = await import('$lib/paraglide/runtime.js');
+		const profile = await getKiezProfile(getLocale(), r.slug, fetchFn);
+		// Auf 5 Dezimalen runden = exakt die Coords, die im /explore?address=lng,lat landen.
+		const lng = Number(profile.centroid[0].toFixed(5));
+		const lat = Number(profile.centroid[1].toFixed(5));
+
+		const { getOepnvStopIndex } = await import('$lib/data/get-oepnv-stop-index.js');
+		const { findAllNearestStops } = await import(
+			'$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js'
+		);
+		const { getKiezScore } = await import('$lib/data/get-kiez-score.js');
+		const stopIndex = await getOepnvStopIndex(fetchFn);
+		const stops = findAllNearestStops({ lat, lng }, stopIndex, 1000);
+		const override = {
+			nearestStops: {
+				ubahn: stops.ubahn ? { distanceM: stops.ubahn.distanceM } : null,
+				sbahn: stops.sbahn ? { distanceM: stops.sbahn.distanceM } : null,
+				tram: stops.tram ? { distanceM: stops.tram.distanceM } : null,
+				bus: stops.bus ? { distanceM: stops.bus.distanceM } : null
+			}
+		};
+		const score = await getKiezScore(lat, lng, fetchFn, override);
+		if (!score) return null;
+		const dim = (d: string): number | null =>
+			score.dimensions.find((x) => x.dimension === d)?.value ?? null;
+
 		return {
 			slug: r.slug,
-			displayName: slugToDisplayName(r.slug),
-			composite: r.composite,
-			ruheLuft: r.ruheLuft,
-			gruenHitze: r.gruenHitze,
-			mobilitaet: r.mobilitaet,
-			versorgung: r.versorgung,
-			wohnschutz: r.wohnschutz
+			displayName,
+			composite: score.overall ?? null,
+			ruheLuft: dim('ruhe-luft'),
+			gruenHitze: dim('gruen-hitze'),
+			mobilitaet: dim('mobilitaet'),
+			versorgung: dim('versorgung'),
+			wohnschutz: dim('wohnschutz'),
+			exploreHref: `/explore?address=${lng.toFixed(5)},${lat.toFixed(5)}&q=${encodeURIComponent(displayName)}`
 		};
 	} catch {
 		return null;
@@ -147,12 +185,12 @@ async function loadUpdates(): Promise<HomeUpdateTeaser[]> {
 	}
 }
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ fetch }) => {
 	const [topKieze, updates, layerCount, featured] = await Promise.all([
 		loadTopKieze(),
 		loadUpdates(),
 		loadLayerCount(),
-		loadFeatured()
+		loadFeatured(fetch)
 	]);
 	const data: HomePageData = { topKieze, updates, layerCount, featured };
 	return data;

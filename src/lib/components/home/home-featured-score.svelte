@@ -78,7 +78,7 @@
 			</div>
 		{/if}
 		<a
-			href="/explore"
+			href={featured.exploreHref}
 			class="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
 		>
 			{featured.displayName} auf der Karte

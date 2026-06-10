@@ -10,7 +10,8 @@ const FEATURED = {
 	gruenHitze: 46,
 	mobilitaet: 41,
 	versorgung: 77,
-	wohnschutz: 100
+	wohnschutz: 100,
+	exploreHref: '/explore?address=13.41320,52.49500&q=Suedliche%20Luisenstadt'
 };
 
 describe('HomeFeaturedScore', () => {
@@ -19,7 +20,9 @@ describe('HomeFeaturedScore', () => {
 		const ph = document.querySelector('[data-testid="home-featured-score-placeholder"]');
 		expect(ph?.textContent).toContain('64');
 		const section = document.querySelector('[data-testid="home-featured-score"]');
-		expect(section?.querySelector('a')?.getAttribute('href')).toBe('/explore');
+		expect(section?.querySelector('a')?.getAttribute('href')).toBe(
+			'/explore?address=13.41320,52.49500&q=Suedliche%20Luisenstadt'
+		);
 	});
 
 	it('rendert nichts ohne Featured-Daten', async () => {
