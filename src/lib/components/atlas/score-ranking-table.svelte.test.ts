@@ -63,6 +63,19 @@ describe('ScoreRankingTable.svelte', () => {
 		expect(note?.textContent).toMatch(/Sicherheits-Ranking/i);
 	});
 
+	it('Story 14.9 (Option A): färbt relativ pro Spalte (oberstes Viertel grün, unterstes rot)', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		// composite-Verteilung [80,50,30] → 80 oberstes Viertel (pill-4), 30 unterstes (pill-1)
+		const spans = Array.from(document.querySelectorAll('[data-testid="ranking-table"] tbody span'));
+		const top = spans.find((s) => s.textContent?.trim() === '80');
+		expect(top?.className).toMatch(/score-pill-4/);
+		// es existiert mindestens eine unterste-Viertel-Pille (composite 30)
+		expect(document.querySelector('.score-pill-1')).not.toBeNull();
+		// Kriminalität bleibt neutral (keine score-pill-Färbung)
+		const krimiCell = document.querySelector('[data-testid="ranking-cell-kriminalitaet"] span');
+		expect(krimiCell?.className).not.toMatch(/score-pill-/);
+	});
+
 	it('default-sortiert Kieze nach composite desc (Alpha vor Bravo vor Charlie)', async () => {
 		render(ScoreRankingTable, { kieze, bezirke });
 		const rows = document.querySelectorAll('[data-testid="ranking-table"] tbody tr');
