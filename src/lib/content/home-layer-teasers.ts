@@ -17,7 +17,9 @@ export const LAYER_TEASER_ICON_KEYS = [
 	'tree-pine',
 	'thermometer',
 	'train',
-	'home'
+	'home',
+	'landmark',
+	'file-text'
 ] as const;
 export type LayerTeaserIconKey = (typeof LAYER_TEASER_ICON_KEYS)[number];
 
@@ -63,5 +65,19 @@ export const HOME_LAYER_TEASERS: readonly HomeLayerTeaser[] = [
 		summary:
 			'Wohnlage-Klasse aus dem Berliner Mietspiegel-Verfahren (einfach / mittel / gut), block-genau.',
 		iconKey: 'home'
+	},
+	{
+		slug: 'kiez-score-kultur',
+		label: 'Kultur',
+		summary:
+			'Zugang zu Bibliothek, Theater, Museum, Kino und mehr. Eigenständige Dimension, nicht im Gesamt-Score.',
+		iconKey: 'landmark'
+	},
+	{
+		slug: 'kiez-score-kriminalitaet',
+		label: 'Erfasste Kriminalität',
+		summary:
+			'Häufigkeitszahl der Polizei je Bezirksregion. Kontext, kein Sicherheits-Urteil, nicht im Gesamt-Score.',
+		iconKey: 'file-text'
 	}
 ];

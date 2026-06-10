@@ -8,11 +8,18 @@
 -->
 <script lang="ts">
 	import { HOME_DATA_SOURCES } from '$lib/content/home-data-sources.js';
+
+	interface Props {
+		/** Aktive Geo-Layer gesamt (aus MANIFEST via Server-Load → bleibt nie stale). */
+		readonly layerCount?: number;
+	}
+	const { layerCount }: Props = $props();
+	const total = $derived(layerCount ?? HOME_DATA_SOURCES.length);
 </script>
 
 <section data-testid="home-open-block" class="space-y-6">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">6 von 44 Quellen</h2>
+		<h2 class="font-serif text-2xl text-ink md:text-3xl">{HOME_DATA_SOURCES.length} von {total} Quellen</h2>
 		<p class="font-serif text-base text-ink-muted">
 			Alle aus öffentlichen Datensätzen mit Open-Data-Lizenz. Kein Scraping,
 			kein Abo, keine Werbung.
@@ -33,6 +40,6 @@
 		class="inline-flex font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
 		href="/lizenzen"
 	>
-		Alle 44 Quellen mit Lizenz
+		Alle {total} Quellen mit Lizenz
 	</a>
 </section>

@@ -23,8 +23,8 @@
 	}: Props = $props();
 </script>
 
-<section data-testid="home-hook" class="grid gap-8 md:grid-cols-[1fr_1.2fr] md:items-start md:gap-10">
-	<div class="space-y-5">
+<section data-testid="home-hook" class="grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-start md:gap-10">
+	<div class="space-y-5 md:order-2">
 		<p class="font-serif text-xl leading-relaxed text-ink md:text-2xl">
 			Adresse eingeben. Daten kombinieren.
 		</p>
@@ -45,7 +45,7 @@
 	<a
 		href={mapHref}
 		aria-label="Karte öffnen"
-		class="group block overflow-hidden rounded border border-rule bg-bg-soft transition-colors hover:border-ink-muted"
+		class="group block overflow-hidden rounded border border-rule bg-bg-soft transition-colors hover:border-ink-muted md:order-1"
 	>
 		<figure>
 			<img

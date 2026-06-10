@@ -31,7 +31,7 @@
 {#if items.length > 0}
 	<section data-testid="home-top-kieze" class="space-y-6">
 		<header class="flex items-baseline justify-between gap-4">
-			<h2 class="font-serif text-2xl text-ink md:text-3xl">143 Kieze, fünf Dimensionen</h2>
+			<h2 class="font-serif text-2xl text-ink md:text-3xl">Jeder Kiez, ein Score aus sieben Dimensionen</h2>
 			<a
 				href="/umwelt-infrastruktur-score"
 				class="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
@@ -57,8 +57,9 @@
 			{/each}
 		</ol>
 		<p class="font-serif text-sm text-ink-muted">
-			Fünf Dimensionen, gleich gewichtet, 0–100. Beschreibt Verteilung, nicht Wertung
-			einzelner Adressen oder Personen.
+			Fünf gleich gewichtete Dimensionen ergeben den Gesamt-Score (0–100). Kultur und erfasste
+			Kriminalität kommen als eigenständiger Kontext dazu, fließen aber nicht in den Score ein.
+			Beschreibt Verteilung, nicht Wertung einzelner Adressen oder Personen.
 		</p>
 	</section>
 {/if}

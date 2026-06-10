@@ -27,6 +27,20 @@ export interface HomeTopKiez {
 	readonly composite: number | null;
 }
 
+/** Voll-Score eines Featured-Kiez für den Live-Ring auf der Landing (Story Home-Modernize). */
+export interface HomeFeaturedScore {
+	readonly slug: string;
+	readonly displayName: string;
+	readonly composite: number | null;
+	readonly ruheLuft: number | null;
+	readonly gruenHitze: number | null;
+	readonly mobilitaet: number | null;
+	readonly versorgung: number | null;
+	readonly wohnschutz: number | null;
+	/** Deep-Link auf die Karte am Kiez-Centroid (address=lng,lat&q=name); Fallback /explore. */
+	readonly exploreHref: string;
+}
+
 export interface HomeUpdateTeaser {
 	readonly slug: string;
 	readonly title: string;
@@ -38,6 +52,84 @@ export interface HomeUpdateTeaser {
 export interface HomePageData {
 	readonly topKieze: readonly HomeTopKiez[];
 	readonly updates: readonly HomeUpdateTeaser[];
+	/** Aktive Geo-Layer gesamt (MANIFEST). Derived statt hardcoded → bleibt nie stale. */
+	readonly layerCount: number;
+	/** Featured-Kiez (höchster Composite) mit Voll-Score für den Live-Ring; null ohne DB. */
+	readonly featured: HomeFeaturedScore | null;
+}
+
+/**
+ * Featured-Kiez: höchster Composite wählt WELCHER Kiez gezeigt wird; der angezeigte Score wird
+ * dann EXAKT so berechnet wie der explore-Inspector beim Deep-Link (getKiezScore am Centroid +
+ * Mobility-Override), damit Home-Ring und Karten-Inspector denselben Wert zeigen (kein
+ * Aggregat-vs-Punkt-Mismatch). Coords auf 5 Dezimalen gerundet = identische Inputs wie die URL.
+ */
+async function loadFeatured(fetchFn: typeof fetch): Promise<HomeFeaturedScore | null> {
+	if (!process.env.DATABASE_URL) return null;
+	try {
+		const { getDb } = await import('$lib/server/db/index.js');
+		const rows = await getDb()
+			.select()
+			.from(kiezScore)
+			.orderBy(desc(sql`COALESCE(${kiezScore.composite}, -1)`))
+			.limit(1);
+		const r = rows[0];
+		if (!r || typeof r.composite !== 'number') return null;
+		const displayName = slugToDisplayName(r.slug);
+
+		const { getKiezProfile } = await import('$lib/data/get-kiez-profile.js');
+		const { getLocale } = await import('$lib/paraglide/runtime.js');
+		const profile = await getKiezProfile(getLocale(), r.slug, fetchFn);
+		// Auf 5 Dezimalen runden = exakt die Coords, die im /explore?address=lng,lat landen.
+		const lng = Number(profile.centroid[0].toFixed(5));
+		const lat = Number(profile.centroid[1].toFixed(5));
+
+		const { getOepnvStopIndex } = await import('$lib/data/get-oepnv-stop-index.js');
+		const { findAllNearestStops } = await import(
+			'$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js'
+		);
+		const { getKiezScore } = await import('$lib/data/get-kiez-score.js');
+		const stopIndex = await getOepnvStopIndex(fetchFn);
+		const stops = findAllNearestStops({ lat, lng }, stopIndex, 1000);
+		const override = {
+			nearestStops: {
+				ubahn: stops.ubahn ? { distanceM: stops.ubahn.distanceM } : null,
+				sbahn: stops.sbahn ? { distanceM: stops.sbahn.distanceM } : null,
+				tram: stops.tram ? { distanceM: stops.tram.distanceM } : null,
+				bus: stops.bus ? { distanceM: stops.bus.distanceM } : null
+			}
+		};
+		const score = await getKiezScore(lat, lng, fetchFn, override);
+		if (!score) return null;
+		const dim = (d: string): number | null =>
+			score.dimensions.find((x) => x.dimension === d)?.value ?? null;
+
+		return {
+			slug: r.slug,
+			displayName,
+			composite: score.overall ?? null,
+			ruheLuft: dim('ruhe-luft'),
+			gruenHitze: dim('gruen-hitze'),
+			mobilitaet: dim('mobilitaet'),
+			versorgung: dim('versorgung'),
+			wohnschutz: dim('wohnschutz'),
+			exploreHref: `/explore?address=${lng.toFixed(5)},${lat.toFixed(5)}&q=${encodeURIComponent(displayName)}`
+		};
+	} catch {
+		return null;
+	}
+}
+
+async function loadLayerCount(): Promise<number> {
+	try {
+		const { readFile } = await import('node:fs/promises');
+		const { resolve } = await import('node:path');
+		const raw = await readFile(resolve(process.cwd(), 'static/layers/MANIFEST.json'), 'utf-8');
+		const manifest = JSON.parse(raw) as { layers: unknown[] };
+		return manifest.layers.length;
+	} catch {
+		return 0;
+	}
 }
 
 function slugToDisplayName(slug: string): string {
@@ -93,8 +185,13 @@ async function loadUpdates(): Promise<HomeUpdateTeaser[]> {
 	}
 }
 
-export const load: PageServerLoad = async () => {
-	const [topKieze, updates] = await Promise.all([loadTopKieze(), loadUpdates()]);
-	const data: HomePageData = { topKieze, updates };
+export const load: PageServerLoad = async ({ fetch }) => {
+	const [topKieze, updates, layerCount, featured] = await Promise.all([
+		loadTopKieze(),
+		loadUpdates(),
+		loadLayerCount(),
+		loadFeatured(fetch)
+	]);
+	const data: HomePageData = { topKieze, updates, layerCount, featured };
 	return data;
 };

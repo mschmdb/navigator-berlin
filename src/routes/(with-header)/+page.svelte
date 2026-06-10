@@ -4,6 +4,7 @@
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import HomeHero from '$lib/components/home/home-hero.svelte';
 	import HomeHook from '$lib/components/home/home-hook.svelte';
+	import HomeSteps from '$lib/components/home/home-steps.svelte';
 	import HomeQuickLinks from '$lib/components/home/home-quick-links.svelte';
 	import HomeLayerTeasers from '$lib/components/home/home-layer-teasers.svelte';
 	import HomeTopKieze from '$lib/components/home/home-top-kieze.svelte';
@@ -52,13 +53,14 @@
 <JsonLd data={websiteJsonLd} testid="home-website-jsonld" />
 
 <article class="mx-auto max-w-5xl space-y-16 px-4 py-12" data-testid="home-landing">
-	<HomeHero />
+	<HomeHero featured={data.featured} />
 	<HomeHook />
+	<HomeSteps />
 	<HomeQuickLinks />
 	<HomeWahlTeaser />
 	<HomeFeaturedBezirke />
 	<HomeTopKieze items={data.topKieze} />
-	<HomeLayerTeasers />
+	<HomeLayerTeasers layerCount={data.layerCount} />
 	<HomeUpdatesTeaser items={data.updates} />
-	<HomeOpenBlock />
+	<HomeOpenBlock layerCount={data.layerCount} />
 </article>
