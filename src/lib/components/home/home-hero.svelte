@@ -25,8 +25,8 @@
 	</h1>
 	<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
 		Gib eine Adresse ein. Du siehst, wie laut es dort ist, wie heiß es im
-		Sommer wird, wie nah die nächste S-Bahn liegt, wie der Mietspiegel die
-		Lage einordnet.
+		Sommer wird, wie nah die nächste S-Bahn liegt - zusammengefasst zu einem
+		Kiez-Score über sieben Dimensionen, seit heute auch mit Kultur und Kriminalität.
 	</p>
 	<div class="flex flex-wrap gap-3 pt-2">
 		<a

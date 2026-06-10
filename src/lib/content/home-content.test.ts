@@ -16,8 +16,8 @@ function loadManifestLayerSlugs(): Set<string> {
 }
 
 describe('HOME_LAYER_TEASERS', () => {
-	it('liefert exakt 5 Einträge', () => {
-		expect(HOME_LAYER_TEASERS).toHaveLength(5);
+	it('liefert exakt 7 Einträge (inkl. Kultur + Kriminalität)', () => {
+		expect(HOME_LAYER_TEASERS).toHaveLength(7);
 	});
 
 	it('jeder Slug existiert im MANIFEST.json', () => {

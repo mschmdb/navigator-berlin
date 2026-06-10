@@ -38,6 +38,20 @@ export interface HomeUpdateTeaser {
 export interface HomePageData {
 	readonly topKieze: readonly HomeTopKiez[];
 	readonly updates: readonly HomeUpdateTeaser[];
+	/** Aktive Geo-Layer gesamt (MANIFEST). Derived statt hardcoded → bleibt nie stale. */
+	readonly layerCount: number;
+}
+
+async function loadLayerCount(): Promise<number> {
+	try {
+		const { readFile } = await import('node:fs/promises');
+		const { resolve } = await import('node:path');
+		const raw = await readFile(resolve(process.cwd(), 'static/layers/MANIFEST.json'), 'utf-8');
+		const manifest = JSON.parse(raw) as { layers: unknown[] };
+		return manifest.layers.length;
+	} catch {
+		return 0;
+	}
 }
 
 function slugToDisplayName(slug: string): string {
@@ -94,7 +108,11 @@ async function loadUpdates(): Promise<HomeUpdateTeaser[]> {
 }
 
 export const load: PageServerLoad = async () => {
-	const [topKieze, updates] = await Promise.all([loadTopKieze(), loadUpdates()]);
-	const data: HomePageData = { topKieze, updates };
+	const [topKieze, updates, layerCount] = await Promise.all([
+		loadTopKieze(),
+		loadUpdates(),
+		loadLayerCount()
+	]);
+	const data: HomePageData = { topKieze, updates, layerCount };
 	return data;
 };
