@@ -53,7 +53,7 @@
 <JsonLd data={websiteJsonLd} testid="home-website-jsonld" />
 
 <article class="mx-auto max-w-5xl space-y-16 px-4 py-12" data-testid="home-landing">
-	<HomeHero />
+	<HomeHero featured={data.featured} />
 	<HomeHook />
 	<HomeSteps />
 	<HomeQuickLinks />

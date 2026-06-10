@@ -27,6 +27,18 @@ export interface HomeTopKiez {
 	readonly composite: number | null;
 }
 
+/** Voll-Score eines Featured-Kiez für den Live-Ring auf der Landing (Story Home-Modernize). */
+export interface HomeFeaturedScore {
+	readonly slug: string;
+	readonly displayName: string;
+	readonly composite: number | null;
+	readonly ruheLuft: number | null;
+	readonly gruenHitze: number | null;
+	readonly mobilitaet: number | null;
+	readonly versorgung: number | null;
+	readonly wohnschutz: number | null;
+}
+
 export interface HomeUpdateTeaser {
 	readonly slug: string;
 	readonly title: string;
@@ -40,6 +52,34 @@ export interface HomePageData {
 	readonly updates: readonly HomeUpdateTeaser[];
 	/** Aktive Geo-Layer gesamt (MANIFEST). Derived statt hardcoded → bleibt nie stale. */
 	readonly layerCount: number;
+	/** Featured-Kiez (höchster Composite) mit Voll-Score für den Live-Ring; null ohne DB. */
+	readonly featured: HomeFeaturedScore | null;
+}
+
+async function loadFeatured(): Promise<HomeFeaturedScore | null> {
+	if (!process.env.DATABASE_URL) return null;
+	try {
+		const { getDb } = await import('$lib/server/db/index.js');
+		const rows = await getDb()
+			.select()
+			.from(kiezScore)
+			.orderBy(desc(sql`COALESCE(${kiezScore.composite}, -1)`))
+			.limit(1);
+		const r = rows[0];
+		if (!r || typeof r.composite !== 'number') return null;
+		return {
+			slug: r.slug,
+			displayName: slugToDisplayName(r.slug),
+			composite: r.composite,
+			ruheLuft: r.ruheLuft,
+			gruenHitze: r.gruenHitze,
+			mobilitaet: r.mobilitaet,
+			versorgung: r.versorgung,
+			wohnschutz: r.wohnschutz
+		};
+	} catch {
+		return null;
+	}
 }
 
 async function loadLayerCount(): Promise<number> {
@@ -108,11 +148,12 @@ async function loadUpdates(): Promise<HomeUpdateTeaser[]> {
 }
 
 export const load: PageServerLoad = async () => {
-	const [topKieze, updates, layerCount] = await Promise.all([
+	const [topKieze, updates, layerCount, featured] = await Promise.all([
 		loadTopKieze(),
 		loadUpdates(),
-		loadLayerCount()
+		loadLayerCount(),
+		loadFeatured()
 	]);
-	const data: HomePageData = { topKieze, updates, layerCount };
+	const data: HomePageData = { topKieze, updates, layerCount, featured };
 	return data;
 };
