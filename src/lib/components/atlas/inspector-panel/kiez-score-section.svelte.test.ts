@@ -122,11 +122,12 @@ describe('KiezScoreSection', () => {
 		const dim = (await page.getByTestId('kiez-score-dim-kriminalitaet').element()) as HTMLElement;
 		const chip = dim.querySelector('[data-testid="value-chip"]') as HTMLElement | null;
 		expect(chip?.getAttribute('data-severity')).toBe('neutral');
-		// eigener Stigma-Disclaimer vorhanden
-		const krimiDisclaimer = dim.ownerDocument.querySelector(
-			'[data-testid="editorial-disclaimer"][data-variant="kriminalitaet-aggregat"]'
-		);
-		expect(krimiDisclaimer).not.toBeNull();
+		// Stigma-Disclaimer steht im Accordion, nicht auf Section-Ebene → eingeklappt nicht sichtbar
+		expect(
+			document.querySelector(
+				'[data-testid="editorial-disclaimer"][data-variant="kriminalitaet-aggregat"]'
+			)
+		).toBeNull();
 	});
 
 	it('Kriminalität (Story 14.4): Quellen-Toggle schlüsselt nach Delikt-Art auf (HZ pro 100k)', async () => {
@@ -166,6 +167,13 @@ describe('KiezScoreSection', () => {
 		expect(kieztaten.textContent).toContain('3.467');
 		const wohnraum = (await page.getByTestId('kriminalitaet-delikt-wohnraumeinbruch').element()) as HTMLElement;
 		expect(wohnraum.textContent).toContain('Wohnraumeinbruch');
+		// Stigma-Disclaimer erscheint aufgeklappt im Accordion
+		await expect.element(page.getByTestId('kiez-score-delikte-kriminalitaet')).toBeInTheDocument();
+		expect(
+			document.querySelector(
+				'[data-testid="editorial-disclaimer"][data-variant="kriminalitaet-aggregat"]'
+			)
+		).not.toBeNull();
 	});
 
 	it('ohne Kriminalitäts-Wert kein kriminalitaet-aggregat-Disclaimer', async () => {

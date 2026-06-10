@@ -38,12 +38,6 @@
 		).length;
 	});
 
-	// Story 14.4: Kriminalität ist ein Stigma-sensibler Kontext-Layer → eigener Disclaimer,
-	// sobald ein Wert vorliegt (analog MSS-Soziale-Lage).
-	const hasKriminalitaet = $derived(
-		score?.dimensions.some((d) => d.dimension === 'kriminalitaet' && d.value !== null) ?? false
-	);
-
 	let expandedDim = $state<KiezScoreDimension | null>(null);
 
 	function toggleDim(dim: KiezScoreDimension): void {
@@ -113,9 +107,6 @@
 		</div>
 
 		<EditorialDisclaimer variant="kiez-score-explainer" />
-		{#if hasKriminalitaet}
-			<EditorialDisclaimer variant="kriminalitaet-aggregat" />
-		{/if}
 		<a
 			href={methodikHref}
 			data-testid="kiez-score-methodik-link"

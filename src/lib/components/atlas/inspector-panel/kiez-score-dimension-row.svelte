@@ -2,6 +2,7 @@
 	import { ChevronDown, ChevronRight, Eye, EyeOff, ExternalLink } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import ValueChip from '../value-chip.svelte';
+	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import { getLayerDisplayName } from '../internal/layer-palette-filter.js';
 	import { DIMENSION_LABELS_DE, scaleFor } from './internal/kiez-score-display.js';
 	import type { DimensionScore } from '$lib/data';
@@ -27,8 +28,12 @@
 
 	// Story 14.4: Kriminalität nach Delikt-Art aufschlüsseln. Die Roh-HZ (3-Jahres-Mittel pro
 	// 100.000 Einwohner) liegen im rawValue der Single-Index-Quelle (build-kiez-scores).
-	const KRIMINALITAET_DELIKT_ORDER: readonly (readonly [string, string])[] = [
-		['kieztaten', 'Kieztaten'],
+	const KRIMINALITAET_DELIKT_ORDER: readonly (readonly [string, string, string?])[] = [
+		[
+			'kieztaten',
+			'Kieztaten',
+			'Sammelkategorie der Polizei Berlin: Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch).'
+		],
 		['wohnraumeinbruch', 'Wohnraumeinbruch'],
 		['sachbeschaedigung', 'Sachbeschädigung'],
 		['strassenraub', 'Straßenraub/Handtaschenraub'],
@@ -39,9 +44,10 @@
 		if (score.dimension !== 'kriminalitaet') return null;
 		const raw = score.sources[0]?.rawValue as { delikte?: Record<string, number | null> } | undefined;
 		if (!raw || typeof raw !== 'object' || !raw.delikte) return null;
-		return KRIMINALITAET_DELIKT_ORDER.map(([key, deliktLabel]) => ({
+		return KRIMINALITAET_DELIKT_ORDER.map(([key, deliktLabel, hint]) => ({
 			key,
 			label: deliktLabel,
+			hint: hint ?? null,
 			hz: typeof raw.delikte?.[key] === 'number' ? (raw.delikte[key] as number) : null
 		}));
 	});
@@ -125,7 +131,9 @@
 			</li>
 			{#each krimiDelikte as d (d.key)}
 				<li class="flex items-baseline justify-between gap-2" data-testid="kriminalitaet-delikt-{d.key}">
-					<span class="min-w-0 flex-1">{d.label}</span>
+					<span class="min-w-0 flex-1" title={d.hint ?? undefined}>
+						{d.label}{#if d.hint}<span aria-hidden="true" class="ml-0.5 cursor-help text-ink-subtle">*</span>{/if}
+					</span>
 					<span class="shrink-0 whitespace-nowrap tabular-nums text-ink-subtle">
 						{d.hz === null ? '—' : hzFormatter.format(d.hz)}
 					</span>
@@ -137,6 +145,9 @@
 				</li>
 			{/if}
 		</ul>
+		<div class="mt-1.5 border-l border-rule pl-[22px]">
+			<EditorialDisclaimer variant="kriminalitaet-aggregat" />
+		</div>
 	{:else if hasSources && sourcesOpen}
 		<ul
 			class="mt-1 space-y-1 border-l border-rule pl-[22px] font-mono text-xs text-ink-muted"
