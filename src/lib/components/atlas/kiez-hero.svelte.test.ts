@@ -40,6 +40,7 @@ const scoreFixture: KiezScore = {
 	versorgung: 70,
 	wohnschutz: 55,
 	kultur: 48,
+	kriminalitaet: 55,
 	computedAt: new Date('2026-05-16T00:00:00Z')
 };
 
