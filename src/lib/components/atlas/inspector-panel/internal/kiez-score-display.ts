@@ -12,7 +12,9 @@ export const DIMENSION_LABELS_DE: Record<KiezScoreDimension, string> = {
 	mobilitaet: 'Mobilität',
 	versorgung: 'Versorgung',
 	wohnschutz: 'Wohnschutz',
-	kultur: 'Kultur'
+	kultur: 'Kultur',
+	// Story 14.1: neutrale Bezeichnung, kein "sicher/gefährlich" (Stigma-Schutz, ADR-019).
+	kriminalitaet: 'Erfasste Kriminalität (Häufigkeitszahl)'
 };
 
 export function scaleFor(value: number | null, _dimension: KiezScoreDimension): KiezScoreScale | null {

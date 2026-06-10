@@ -4,7 +4,8 @@ export type KiezScoreDimension =
 	| 'mobilitaet'
 	| 'versorgung'
 	| 'wohnschutz'
-	| 'kultur';
+	| 'kultur'
+	| 'kriminalitaet';
 
 export const KIEZ_SCORE_DIMENSIONS: readonly KiezScoreDimension[] = [
 	'ruhe-luft',
@@ -12,7 +13,8 @@ export const KIEZ_SCORE_DIMENSIONS: readonly KiezScoreDimension[] = [
 	'mobilitaet',
 	'versorgung',
 	'wohnschutz',
-	'kultur'
+	'kultur',
+	'kriminalitaet'
 ];
 
 /**
@@ -84,7 +86,10 @@ export type NormalizationStrategy =
 			cap: number;
 			softTailFactor?: number;
 			scale?: 'linear' | 'log';
-	  };
+	  }
+	/** Numerischer Wert, NICHT invertiert (Story 14.1): <= minAt → 0, >= maxAt → 100, höher = höher
+	 * (Magnitude, kein Gut-Maß). maxAt-Clamp kappt City-Core-Ausreißer (ADR-019). */
+	| { kind: 'numeric'; field: string; minAt: number; maxAt: number };
 
 export interface LayerWeight {
 	layer: string;
@@ -126,5 +131,8 @@ export const DIMENSION_WEIGHTS: Record<KiezScoreDimension, number> = {
 	wohnschutz: 0.2,
 	// Story 13.1 (Option C): Kultur ist eigenständige Dimension, NICHT im Composite → Gewicht 0.
 	// Die fünf Composite-Dimensionen bleiben bei 0.20 (Summe 1.0). Siehe COMPOSITE_DIMENSIONS.
-	kultur: 0
+	kultur: 0,
+	// Story 14.1 (Option C): Kriminalität ist eigenständige Kontext-Dimension, NICHT im Composite
+	// → Gewicht 0. Stigma-Schutz (ADR-019): Magnitude-Wert, kein Sicherheits-Ranking.
+	kriminalitaet: 0
 };

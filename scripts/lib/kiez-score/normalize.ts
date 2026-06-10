@@ -58,6 +58,20 @@ export function normalizeNumericInverted(
 	return Math.max(0, Math.min(100, 100 * (1 - (value - bestAt) / (worstAt - bestAt))));
 }
 
+/**
+ * Numerischer Wert, NICHT invertiert (Story 14.1, Magnitude): <= minAt → 0,
+ * >= maxAt → 100, linear dazwischen. Höher = höher (z.B. mehr erfasste
+ * Kriminalität). Das obere Clamp kappt City-Core-Ausreißer (Touristen/Pendler-
+ * Verzerrung, ADR-019). Gegenstück zu normalizeNumericInverted.
+ */
+export function normalizeNumeric(value: unknown, minAt: number, maxAt: number): number | null {
+	if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+	if (maxAt <= minAt) return null;
+	if (value <= minAt) return 0;
+	if (value >= maxAt) return 100;
+	return Math.round(100 * ((value - minAt) / (maxAt - minAt)) * 10) / 10;
+}
+
 export function normalizePresence(present: boolean): number {
 	return present ? 100 : 0;
 }

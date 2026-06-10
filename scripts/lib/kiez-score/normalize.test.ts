@@ -9,7 +9,8 @@ import {
 	normalizeKitaProKind,
 	parseBettenCapacity,
 	normalizeCapacityWeightedDistance,
-	normalizeDensity
+	normalizeDensity,
+	normalizeNumeric
 } from './normalize.js';
 
 describe('normalizeOrdinal3', () => {
@@ -217,5 +218,33 @@ describe('normalizeKitaProKind', () => {
 	});
 	it('bestAt <= 0 → null', () => {
 		expect(normalizeKitaProKind(0.2, 0)).toBeNull();
+	});
+});
+
+describe('normalizeNumeric (Magnitude, nicht invertiert)', () => {
+	// Story 14.1: höher = höherer Index (mehr erfasste Kriminalität), KEINE Invertierung
+	// zu "Sicherheit" (Stigma-Schutz, ADR-019).
+	it('<= minAt → 0', () => {
+		expect(normalizeNumeric(300, 300, 1750)).toBe(0);
+		expect(normalizeNumeric(100, 300, 1750)).toBe(0);
+	});
+	it('>= maxAt → 100 (City-Core-Kappung)', () => {
+		expect(normalizeNumeric(1750, 300, 1750)).toBe(100);
+		expect(normalizeNumeric(3120, 300, 1750)).toBe(100); // Regierungsviertel klemmt
+	});
+	it('linear dazwischen, höher = höher', () => {
+		expect(normalizeNumeric(1025, 300, 1750)).toBe(50);
+		const low = normalizeNumeric(600, 300, 1750)!;
+		const high = normalizeNumeric(1400, 300, 1750)!;
+		expect(high).toBeGreaterThan(low);
+	});
+	it('null / NaN / nicht-numerisch → null', () => {
+		expect(normalizeNumeric(null, 300, 1750)).toBeNull();
+		expect(normalizeNumeric('x', 300, 1750)).toBeNull();
+		expect(normalizeNumeric(Number.NaN, 300, 1750)).toBeNull();
+	});
+	it('maxAt <= minAt → null (Fehlkonfiguration)', () => {
+		expect(normalizeNumeric(500, 1750, 300)).toBeNull();
+		expect(normalizeNumeric(500, 300, 300)).toBeNull();
 	});
 });

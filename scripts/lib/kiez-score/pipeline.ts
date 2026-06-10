@@ -57,7 +57,8 @@ export type KiezScoreLayerSlug =
 	| 'kiez-score-mobilitaet'
 	| 'kiez-score-versorgung'
 	| 'kiez-score-wohnschutz'
-	| 'kiez-score-kultur';
+	| 'kiez-score-kultur'
+	| 'kiez-score-kriminalitaet';
 
 export const KIEZ_SCORE_LAYER_SLUG_BY_DIMENSION: Record<KiezScoreDimension, KiezScoreLayerSlug> = {
 	'ruhe-luft': 'kiez-score-ruhe-luft',
@@ -65,7 +66,8 @@ export const KIEZ_SCORE_LAYER_SLUG_BY_DIMENSION: Record<KiezScoreDimension, Kiez
 	mobilitaet: 'kiez-score-mobilitaet',
 	versorgung: 'kiez-score-versorgung',
 	wohnschutz: 'kiez-score-wohnschutz',
-	kultur: 'kiez-score-kultur'
+	kultur: 'kiez-score-kultur',
+	kriminalitaet: 'kiez-score-kriminalitaet'
 };
 
 /** Composite-/Gesamt-Layer: ungewichtetes Mittel der Dimensionen pro LOR (score.overall). */

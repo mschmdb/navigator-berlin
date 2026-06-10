@@ -228,11 +228,43 @@ export const KULTUR_CONFIG: DimensionConfig = {
 	]
 };
 
+// Story 14.1: Kriminalität als eigenständige Kontext-Dimension (Option C: NICHT im Composite,
+// siehe COMPOSITE_DIMENSIONS). Single-Precomputed-Term: liest den BR-Index pro PLR aus Story 14.0
+// (static/data/kriminalitaet-lor.json, in build-kiez-scores als perLorHit `kriminalitaet`).
+//
+// Stigma-Framing wie Soziale Lage (ADR-015/019), NICHT wie Kultur: Strukturell-Indigo statt
+// Gut-Grün, der Wert ist Magnitude (höher = mehr erfasste Kriminalität), KEINE Invertierung zu
+// "Sicherheit" → `numeric`, nicht `numeric-inverted`.
+//
+// Normalisierung 0–100 (vorläufig, Owner-Review + Story-14.6-Spike-pflichtig): minAt/maxAt aus der
+// BR-Verteilung 2023–2025 (n=143): min≈315, Median≈951, p95≈1748, max≈3120. maxAt=1750 kappt die
+// City-Core-Ausreißer (Touristen/Pendler-Verzerrung: Regierungsviertel≈3120, Tiergarten Süd≈2572,
+// Alexanderplatz≈2123) auf 100, damit die Skala nicht vom Einwohner-Nenner-Artefakt dominiert wird.
+export const KRIMINALITAET_NORM_MIN_AT = 300;
+export const KRIMINALITAET_NORM_MAX_AT = 1750;
+
+export const KRIMINALITAET_CONFIG: DimensionConfig = {
+	dimension: 'kriminalitaet',
+	layers: [
+		{
+			layer: 'kriminalitaet',
+			weight: 1,
+			normalize: {
+				kind: 'numeric',
+				field: 'index',
+				minAt: KRIMINALITAET_NORM_MIN_AT,
+				maxAt: KRIMINALITAET_NORM_MAX_AT
+			}
+		}
+	]
+};
+
 export const DIMENSION_CONFIGS = [
 	RUHE_LUFT_CONFIG,
 	GRUEN_HITZE_CONFIG,
 	MOBILITAET_CONFIG,
 	VERSORGUNG_CONFIG,
 	WOHNSCHUTZ_CONFIG,
-	KULTUR_CONFIG
+	KULTUR_CONFIG,
+	KRIMINALITAET_CONFIG
 ] as const;

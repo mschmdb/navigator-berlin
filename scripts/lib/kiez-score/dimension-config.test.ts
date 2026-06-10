@@ -8,14 +8,15 @@ import {
 } from './types.js';
 
 describe('KIEZ_SCORE_DIMENSIONS', () => {
-	it('listet exakt die sechs Dimensionen in fester Reihenfolge (Story 13.1: + Kultur)', () => {
+	it('listet exakt die sieben Dimensionen in fester Reihenfolge (Story 14.1: + Kriminalität)', () => {
 		expect([...KIEZ_SCORE_DIMENSIONS]).toEqual([
 			'ruhe-luft',
 			'gruen-hitze',
 			'mobilitaet',
 			'versorgung',
 			'wohnschutz',
-			'kultur'
+			'kultur',
+			'kriminalitaet'
 		]);
 	});
 
@@ -36,16 +37,18 @@ describe('COMPOSITE_DIMENSIONS (Option C)', () => {
 			'wohnschutz'
 		]);
 		expect(COMPOSITE_DIMENSIONS).not.toContain('kultur' as KiezScoreDimension);
+		expect(COMPOSITE_DIMENSIONS).not.toContain('kriminalitaet' as KiezScoreDimension);
 	});
 });
 
 describe('DIMENSION_WEIGHTS', () => {
-	it('hat genau sechs Keys (Kultur mit Gewicht 0, Option C)', () => {
-		expect(Object.keys(DIMENSION_WEIGHTS)).toHaveLength(6);
+	it('hat genau sieben Keys (Kultur + Kriminalität mit Gewicht 0, Option C)', () => {
+		expect(Object.keys(DIMENSION_WEIGHTS)).toHaveLength(7);
 		expect(DIMENSION_WEIGHTS.kultur).toBe(0);
+		expect(DIMENSION_WEIGHTS.kriminalitaet).toBe(0);
 	});
 
-	it('summiert sich auf 1 (5 Composite-Dimensionen × 0.20, Kultur 0)', () => {
+	it('summiert sich auf 1 (5 Composite-Dimensionen × 0.20, Kultur + Kriminalität 0)', () => {
 		const sum = Object.values(DIMENSION_WEIGHTS).reduce((a, b) => a + b, 0);
 		expect(sum).toBeCloseTo(1, 10);
 	});
@@ -155,6 +158,20 @@ describe('DIMENSION_CONFIGS', () => {
 		}
 		const sum = kultur.layers.reduce((a, l) => a + l.weight, 0);
 		expect(sum).toBeCloseTo(1, 10);
+	});
+
+	it('Kriminalität (Story 14.1) ist ein Single-Precomputed-Term, liest index, nicht invertiert', () => {
+		const krimi = DIMENSION_CONFIGS.find((c) => c.dimension === 'kriminalitaet')!;
+		expect(krimi, 'KRIMINALITAET_CONFIG fehlt in DIMENSION_CONFIGS').toBeDefined();
+		expect(krimi.layers).toHaveLength(1);
+		const term = krimi.layers[0];
+		expect(term.layer).toBe('kriminalitaet');
+		expect(term.weight).toBe(1);
+		expect(term.normalize.kind).toBe('numeric'); // nicht numeric-inverted (kein Sicherheitsmaß)
+		if (term.normalize.kind === 'numeric') {
+			expect(term.normalize.field).toBe('index');
+			expect(term.normalize.maxAt).toBeGreaterThan(term.normalize.minAt);
+		}
 	});
 
 	it('intrinsicGuard (soziale-lage-Pfad) ist auf keiner Config mehr gesetzt', () => {

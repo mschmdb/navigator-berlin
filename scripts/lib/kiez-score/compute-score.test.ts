@@ -257,7 +257,7 @@ describe('computeDimensionScore — Wohnschutz (Milieuschutz presence-any-of)', 
 });
 
 describe('computeKiezScore', () => {
-	it('liefert die sechs Dimensionen in fester Reihenfolge (Story 13.1: + Kultur)', () => {
+	it('liefert die sieben Dimensionen in fester Reihenfolge (Story 14.1: + Kriminalität)', () => {
 		const score = computeKiezScore(emptyInput());
 		expect(score.persona).toBe('allgemein');
 		expect(score.dimensions.map((d) => d.dimension)).toEqual([
@@ -266,13 +266,20 @@ describe('computeKiezScore', () => {
 			'mobilitaet',
 			'versorgung',
 			'wohnschutz',
-			'kultur'
+			'kultur',
+			'kriminalitaet'
 		]);
 	});
 
-	it('missingDimensions enthält Dimensionen ohne Wert (inkl. Kultur ohne poiCounts)', () => {
+	it('missingDimensions enthält Dimensionen ohne Wert (inkl. Kultur + Kriminalität ohne Hit)', () => {
 		const score = computeKiezScore(emptyInput());
-		expect(score.missingDimensions).toEqual(['ruhe-luft', 'gruen-hitze', 'versorgung', 'kultur']);
+		expect(score.missingDimensions).toEqual([
+			'ruhe-luft',
+			'gruen-hitze',
+			'versorgung',
+			'kultur',
+			'kriminalitaet'
+		]);
 	});
 
 	it('Option C: Kultur zählt NICHT in den Composite (computeOverallScore ignoriert sie)', () => {
@@ -286,6 +293,28 @@ describe('computeKiezScore', () => {
 		] as const;
 		// Composite = Mittel der fünf (50). Kultur (100) wird ausgefiltert, zieht den Wert nicht hoch.
 		expect(computeOverallScore([...dims])).toBe(50);
+	});
+
+	it('Option C: Kriminalität zählt NICHT in den Composite (Wert irrelevant für overall)', () => {
+		const base = [
+			{ dimension: 'ruhe-luft', value: 60, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'gruen-hitze', value: 60, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'mobilitaet', value: 60, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'versorgung', value: 60, sources: [], missingData: [], dataStand: null },
+			{ dimension: 'wohnschutz', value: 60, sources: [], missingData: [], dataStand: null }
+		] as const;
+		const withLowCrime = [
+			...base,
+			{ dimension: 'kriminalitaet', value: 5, sources: [], missingData: [], dataStand: null }
+		] as const;
+		const withHighCrime = [
+			...base,
+			{ dimension: 'kriminalitaet', value: 95, sources: [], missingData: [], dataStand: null }
+		] as const;
+		// Beide bit-identisch zum Mittel der fünf (60), unabhängig vom Kriminalitäts-Wert.
+		expect(computeOverallScore([...withLowCrime])).toBe(60);
+		expect(computeOverallScore([...withHighCrime])).toBe(60);
+		expect(computeOverallScore([...base])).toBe(60);
 	});
 
 	it('referenziert weder soziale-lage noch gruen als Dimension', () => {
@@ -308,7 +337,9 @@ describe('computeKiezScore', () => {
 				makeHit('klima-leitbahnkorridor-2022', { foo: 1 }),
 				makeHit('kitas-pro-kind', { plaetzeProKind: 0.3 }),
 				makeHit('krankenhaeuser-plan', { distanceM: 1000, betten_insgesamt: '500' }),
-				makeHit('milieuschutz-erhaltungsmiete', { foo: 1 })
+				makeHit('milieuschutz-erhaltungsmiete', { foo: 1 }),
+				// Story 14.1: Kriminalitäts-Index (Single-Precomputed-Term)
+				makeHit('kriminalitaet', { index: 1000 })
 			],
 			nearestStops: {
 				ubahn: { distanceM: 200 },

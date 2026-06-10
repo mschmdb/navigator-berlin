@@ -19,6 +19,7 @@ import {
 	normalizeMssStatus4,
 	normalizeDistance,
 	normalizeNumericInverted,
+	normalizeNumeric,
 	normalizePresence,
 	normalizeKitaProKind,
 	parseBettenCapacity,
@@ -85,6 +86,10 @@ function normalizeFromHit(
 		case 'numeric-inverted':
 			rawValue = getProp(hit.value, normalize.field);
 			normalized = normalizeNumericInverted(rawValue, normalize.bestAt, normalize.worstAt);
+			break;
+		case 'numeric':
+			rawValue = getProp(hit.value, normalize.field);
+			normalized = normalizeNumeric(rawValue, normalize.minAt, normalize.maxAt);
 			break;
 		case 'kita-pro-kind': {
 			const v = getProp(hit.value, normalize.field);
