@@ -28,6 +28,9 @@ export const DIMS: readonly { key: string; label: string }[] = [
 	// Story 13.8: Kultur als eigenständige Dimension (Option C, nicht im Composite). Fließt als
 	// Grounding-Input ins Profil ein, damit der Fakten-Lint Kultur-Zahlen kennt.
 	{ key: 'kultur', label: 'Kultur' }
+	// Story 14.8: Kriminalität (Option C) ist BEWUSST NICHT hier — sie darf nicht in die Prosa
+	// lecken (Stigma/Redlining, ADR-019). Der Karten-Layer + Inspector reichen. Dadurch ändert
+	// sich der inputHash durch Kriminalität nicht → keine teure Regeneration (anders als 13.8).
 ];
 
 export function slugToName(slug: string): string {

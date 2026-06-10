@@ -58,6 +58,8 @@ async function main(): Promise<void> {
 				if (res.unbackedNumbers.length > 0)
 					parts.push(`ungedeckte Zahlen: ${res.unbackedNumbers.join(', ')}`);
 				if (res.hasDash) parts.push('Gedankenstrich gefunden');
+				if (res.stigmaHits.length > 0)
+					parts.push(`Stigma-Begriffe (Kriminalität/Sicherheit): ${res.stigmaHits.join(', ')}`);
 				process.stderr.write(`[lint:profiles] FAIL ${pageType}/${slug}: ${parts.join('; ')}\n`);
 			}
 		}
