@@ -23,6 +23,11 @@
 	import KlimaPetCard from './inspector-panel/klima-pet-card.svelte';
 	import LayerCard, { type ContextRow } from './inspector-panel/layer-card.svelte';
 	import { loadLayerAggregates } from '$lib/data/get-layer-aggregates.js';
+	import {
+		loadRegionComposites,
+		regionComposite,
+		type RegionComposites
+	} from '$lib/data/get-region-composites.js';
 	import type {
 		LayerAggregate,
 		LayerAggregatesFile,
@@ -102,6 +107,21 @@
 				// JSON-Load fehlgeschlagen: Karten zeigen nur den Adresswert, kein Crash.
 			});
 	});
+
+	// Story 14.10: Composite-Scores der Bezirksregion + des Bezirks für die Profil-Links.
+	let regionComposites = $state<RegionComposites | null>(null);
+	$effect(() => {
+		if (!ui.selectedAddress || regionComposites) return;
+		void loadRegionComposites().then((d) => {
+			regionComposites = d;
+		});
+	});
+	const kiezComposite = $derived(
+		regionComposite(regionComposites, 'kiez', level.kiezSlug, level.bezirkSlug)
+	);
+	const bezirkComposite = $derived(
+		regionComposite(regionComposites, 'bezirk', level.kiezSlug, level.bezirkSlug)
+	);
 
 	function numericAgg(
 		slug: string,
@@ -514,22 +534,44 @@
 			{#if level.kiezSlug || level.bezirkSlug}
 				<nav data-testid="inspector-profile-links" aria-label="Profilseiten" class="flex flex-col gap-1">
 					{#if level.kiezSlug}
-						<a
-							data-testid="inspector-kiez-link"
-							class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
-							href="/kiez/{level.kiezSlug}"
-						>
-							Kiez-Profil{level.kiezName ? `: ${level.kiezName}` : ''}
-						</a>
+						<div class="flex items-baseline justify-between gap-2">
+							<a
+								data-testid="inspector-kiez-link"
+								class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+								href="/kiez/{level.kiezSlug}"
+							>
+								Kiez-Profil{level.kiezName ? `: ${level.kiezName}` : ''}
+							</a>
+							{#if kiezComposite !== null}
+								<span
+									data-testid="inspector-kiez-composite"
+									class="shrink-0 font-mono text-xs text-ink-muted"
+									title="Gesamt-Score der Bezirksregion (Mittel ihrer Planungsräume)"
+								>
+									Score {Math.round(kiezComposite)}
+								</span>
+							{/if}
+						</div>
 					{/if}
 					{#if level.bezirkSlug}
-						<a
-							data-testid="inspector-bezirk-link"
-							class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
-							href="/bezirk/{level.bezirkSlug}"
-						>
-							Bezirks-Profil{level.bezirkName ? `: ${level.bezirkName}` : ''}
-						</a>
+						<div class="flex items-baseline justify-between gap-2">
+							<a
+								data-testid="inspector-bezirk-link"
+								class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+								href="/bezirk/{level.bezirkSlug}"
+							>
+								Bezirks-Profil{level.bezirkName ? `: ${level.bezirkName}` : ''}
+							</a>
+							{#if bezirkComposite !== null}
+								<span
+									data-testid="inspector-bezirk-composite"
+									class="shrink-0 font-mono text-xs text-ink-muted"
+									title="Gesamt-Score des Bezirks (Mittel seiner Planungsräume)"
+								>
+									Score {Math.round(bezirkComposite)}
+								</span>
+							{/if}
+						</div>
 					{/if}
 				</nav>
 			{/if}

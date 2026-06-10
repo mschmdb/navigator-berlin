@@ -14,8 +14,8 @@
  */
 
 import 'dotenv/config';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import type { Feature, FeatureCollection } from 'geojson';
 import { sql } from 'drizzle-orm';
 
@@ -237,6 +237,30 @@ async function upsertAll(result: AggregateScoresResult): Promise<void> {
 	}
 }
 
+const REGION_COMPOSITES_PATH = 'static/kiez-scores/region-composites.json';
+
+/**
+ * Story 14.10: kompakte Composite-Werte pro Bezirksregion (143) + Bezirk (12) als statisches JSON,
+ * damit der Client-Inspector neben den Profil-Links den BR-/Bezirks-Score zeigen kann (ohne DB).
+ */
+async function writeRegionComposites(result: {
+	kieze: readonly ScoreRow[];
+	bezirke: readonly ScoreRow[];
+}): Promise<void> {
+	const kiez: Record<string, number | null> = {};
+	for (const r of result.kieze) kiez[r.slug] = r.composite;
+	const bezirk: Record<string, number | null> = {};
+	for (const r of result.bezirke) bezirk[r.slug] = r.composite;
+	await mkdir(dirname(REGION_COMPOSITES_PATH), { recursive: true });
+	await writeFile(
+		REGION_COMPOSITES_PATH,
+		JSON.stringify({ schemaVersion: 1, generatedAt: new Date().toISOString(), kiez, bezirk }, null, 2)
+	);
+	console.log(
+		`[aggregate-scores] wrote ${REGION_COMPOSITES_PATH} (${result.kieze.length} BR + ${result.bezirke.length} Bezirke)`
+	);
+}
+
 async function main(): Promise<void> {
 	const t0 = Date.now();
 	const result = await aggregateScoresFromSources();
@@ -244,6 +268,7 @@ async function main(): Promise<void> {
 		`[aggregate-scores] computed ${result.bezirke.length} bezirke + ${result.kieze.length} kieze`
 	);
 	await upsertAll(result);
+	await writeRegionComposites(result);
 	await closeDb();
 	console.log(`[aggregate-scores] done in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
 }
