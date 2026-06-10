@@ -531,6 +531,22 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 			'kultur-bibliothek',
 			'kultur-kino'
 		]
+	},
+	'kiez-score-kriminalitaet': {
+		calculation:
+			'Erfasste Kriminalität pro Bezirksregion: Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. Pro Delikt das 3-Jahres-Mittel (2023–2025), daraus der gewichtete Index, normalisiert auf 0–100 (300 → 0, ab 1750 → 100). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Die Werte liegen nur je Bezirksregion vor und werden auf die enthaltenen Planungsräume gespiegelt (innerhalb der Bezirksregion konstant). Eigenständige Dimension, NICHT im Gesamt-Score (Option C), Strukturell-Kontext wie die Soziale Lage. Höher heißt mehr erfasste Fälle, kein Sicherheits-Ranking.',
+		aggregationLevel: 'lor-bezirksregion',
+		updateFrequency: 'jährlich (Kriminalitätsatlas, Stichtag 31.12.)',
+		authorityKey: 'navigator-eigenberechnung-kriminalitaetsatlas',
+		coverageGaps: [
+			'Granularität Bezirksregion (143), gröber als die fünf Planungsraum-nativen Dimensionen.',
+			'Häufigkeitszahl bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen, Pendler oder Kundschaft: innerstädtische Hotspots erscheinen überzeichnet.',
+			'Dunkelfeld: nur angezeigte Fälle, das Anzeigeverhalten variiert räumlich.'
+		],
+		omissions: [
+			'Tatortprinzip: nur Fälle mit exaktem Tatort, Taschendiebstahl ausgeschlossen.',
+			'Keine Aussage über persönliches Risiko und keine Wertung als „sicherer" oder „gefährlicher" Kiez.'
+		]
 	}
 };
 

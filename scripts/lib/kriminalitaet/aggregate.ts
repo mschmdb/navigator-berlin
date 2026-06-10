@@ -30,7 +30,8 @@ export interface BrIndexRecord {
 	readonly delikteHz: Record<string, number | null>;
 }
 
-/** Gleichgewichteter Default über das Default-Delikt-Set (Summe 1.0). */
+/** Gleichgewichtetes Delikt-Set (Summe 1.0), Owner-bestätigt 2026-06-10: transparent, keine
+ * Annahme über die relative Wohn-Relevanz einzelner Delikte. */
 export const DEFAULT_DELIKT_WEIGHTS: DeliktWeights = {
 	kieztaten: 0.2,
 	wohnraumeinbruch: 0.2,

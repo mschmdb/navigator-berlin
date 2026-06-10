@@ -236,10 +236,10 @@ export const KULTUR_CONFIG: DimensionConfig = {
 // Gut-Grün, der Wert ist Magnitude (höher = mehr erfasste Kriminalität), KEINE Invertierung zu
 // "Sicherheit" → `numeric`, nicht `numeric-inverted`.
 //
-// Normalisierung 0–100 (vorläufig, Owner-Review + Story-14.6-Spike-pflichtig): minAt/maxAt aus der
-// BR-Verteilung 2023–2025 (n=143): min≈315, Median≈951, p95≈1748, max≈3120. maxAt=1750 kappt die
-// City-Core-Ausreißer (Touristen/Pendler-Verzerrung: Regierungsviertel≈3120, Tiergarten Süd≈2572,
-// Alexanderplatz≈2123) auf 100, damit die Skala nicht vom Einwohner-Nenner-Artefakt dominiert wird.
+// Normalisierung 0–100 (Owner-bestätigt 2026-06-10): minAt/maxAt aus der BR-Verteilung 2023–2025
+// (n=143): min≈315, Median≈951, p95≈1748, max≈3120. maxAt=1750 kappt die City-Core-Ausreißer
+// (Touristen/Pendler-Verzerrung: Regierungsviertel≈3120, Tiergarten Süd≈2572, Alexanderplatz≈2123)
+// auf 100, damit die Skala nicht vom Einwohner-Nenner-Artefakt dominiert wird.
 export const KRIMINALITAET_NORM_MIN_AT = 300;
 export const KRIMINALITAET_NORM_MAX_AT = 1750;
 
