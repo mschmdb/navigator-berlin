@@ -271,11 +271,11 @@
 						</th>
 					{/if}
 					{#each NUMERIC_SORT_KEYS as key (key)}
-						<th class="whitespace-nowrap py-2 pr-3 align-bottom" scope="col">
+						<th class="score-col-th" scope="col">
 							<button
 								type="button"
 								data-testid={`ranking-sort-${key}`}
-								class={headerButtonClass(sortKey === key)}
+								class={`${headerButtonClass(sortKey === key)} score-col-rot`}
 								aria-pressed={sortKey === key}
 								onclick={() => toggleSort(key)}
 							>
@@ -286,12 +286,10 @@
 							</button>
 						</th>
 					{/each}
-					<th
-						class="whitespace-nowrap py-2 pr-3 align-bottom font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
-						scope="col"
-						data-testid="ranking-col-kriminalitaet"
-					>
-						Erfasste Kriminalität
+					<th class="score-col-th" scope="col" data-testid="ranking-col-kriminalitaet">
+						<span class="score-col-rot font-mono text-[11px] uppercase tracking-wider text-ink-subtle">
+							Erfasste Kriminalität
+						</span>
 					</th>
 				</tr>
 			</thead>
@@ -370,5 +368,19 @@
 	}
 	.score-pill-4 {
 		background-color: color-mix(in srgb, var(--scale-gut-5, #1f5a2e) 35%, var(--bg, #ecead0));
+	}
+
+	/* Story 14.9: Dimensions-Spalten-Header 45° gedreht — spart horizontalen Platz, weil die
+	 * Spalten dann nur so breit wie die Score-Pills sein müssen statt wie die Label-Texte. */
+	.score-col-th {
+		height: 8.5rem;
+		vertical-align: bottom;
+		padding: 0 0 0.4rem 0;
+		white-space: nowrap;
+	}
+	.score-col-rot {
+		display: inline-block;
+		transform-origin: left bottom;
+		transform: translateX(0.7rem) rotate(-45deg);
 	}
 </style>
