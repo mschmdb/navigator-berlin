@@ -8,13 +8,13 @@ tags: [kiez-score, kriminalitaet, score, dimension, kontext]
 
 Der Kiez-Score hat eine neue Kontext-Dimension: erfasste Kriminalität. Datenquelle ist der [Kriminalitätsatlas Berlin](https://www.kriminalitaetsatlas.berlin.de/) der Polizei Berlin (dl-de-by-2.0).
 
-## Was gezeigt wird
+## Die Kennzahl
 
 Die Häufigkeitszahl, also Fälle pro 100.000 Einwohner, für ausgewählte wohn-relevante Delikte: Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub und Fahrraddiebstahl. „Kieztaten" ist dabei eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet. Pro Delikt bilden wir das Mittel der letzten drei Jahre, das dämpft Ausreißer einzelner Jahre.
 
 Im Inspektor lässt sich die Dimension nach Delikt-Art aufklappen. Auf der Karte gibt es einen eigenen Layer in Indigo.
 
-## Was die Zahl nicht ist
+## Grenzen der Kennzahl
 
 Die Häufigkeitszahl misst erfasste Fälle pro gemeldete Einwohner. Daraus folgen klare Grenzen:
 

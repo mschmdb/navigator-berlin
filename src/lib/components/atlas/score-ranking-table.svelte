@@ -288,7 +288,7 @@
 					{/each}
 					<th class="score-col-th" scope="col" data-testid="ranking-col-kriminalitaet">
 						<span class="score-col-rot font-mono text-[11px] uppercase tracking-wider text-ink-subtle">
-							Erfasste Kriminalität
+							Kriminalität
 						</span>
 					</th>
 				</tr>
