@@ -68,6 +68,7 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	// Synthetische Score-Sub-Terme (Kiez-Score-Detailzeilen, Stories 10.1-10.6b + Mobilität/Wohnschutz)
 	'laerm-db': 'Lärm (dB-Mittel)',
 	'kitas-pro-kind': 'Kita-Plätze pro Kind',
+	kriminalitaet: 'Kriminalitäts-Index (HZ-Mittel)',
 	'schulen-grundschule': 'Grundschulen',
 	'schulen-weiterfuehrend': 'Weiterführende Schulen',
 	'nahversorgung-lebensmittel': 'Lebensmittel',
