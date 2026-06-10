@@ -37,6 +37,7 @@
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
 	import KiezScoreSection from './inspector-panel/kiez-score-section.svelte';
+	import ScoreMembershipBadge from './inspector-panel/score-membership-badge.svelte';
 	import WahlSection from './inspector-panel/wahl-section.svelte';
 	import DemografieBlock from './inspector-panel/demografie-block.svelte';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
@@ -122,6 +123,17 @@
 	const bezirkComposite = $derived(
 		regionComposite(regionComposites, 'bezirk', level.kiezSlug, level.bezirkSlug)
 	);
+
+	// Story 14.11: Sprung von einer Layer-Card zur zugehörigen Score-Dimension (scrollt + klappt auf).
+	function jumpToDimension(dimension: string): void {
+		const row = document.querySelector<HTMLElement>(`[data-testid="kiez-score-dim-${dimension}"]`);
+		if (!row) return;
+		row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		const toggle = row.querySelector<HTMLButtonElement>(
+			`[data-testid="kiez-score-toggle-sources-${dimension}"]`
+		);
+		if (toggle && toggle.getAttribute('aria-expanded') === 'false') toggle.click();
+	}
 
 	function numericAgg(
 		slug: string,
@@ -575,6 +587,14 @@
 					{/if}
 				</nav>
 			{/if}
+			<div class="border-t border-rule pt-4" data-testid="weitere-daten-header">
+				<h3 class="font-sans text-xs font-semibold uppercase tracking-wide text-ink-muted">
+					Weitere Daten an dieser Adresse
+				</h3>
+				<p class="mt-1 font-serif text-[11px] italic leading-snug text-ink-muted">
+					Markierte Werte fließen in den Kiez-Score oben ein, die übrigen sind zusätzlicher Kontext.
+				</p>
+			</div>
 			<WahlSection results={ui.wahlResults} />
 			<DemografieBlock
 				data={ui.kiezDemografie}
@@ -614,6 +634,8 @@
 							{:else if section.hits.length > 0}
 								<div class="space-y-2">
 									{#each section.hits as hit (hit.layer)}
+										<div data-testid="hit-{hit.layer}">
+										<ScoreMembershipBadge slug={hit.layer} onJump={jumpToDimension} />
 										{#if hit.layer === 'klima-pet-2022'}
 											<KlimaPetCard
 												{hit}
@@ -647,6 +669,7 @@
 												onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 											/>
 										{/if}
+										</div>
 									{/each}
 								</div>
 							{/if}
