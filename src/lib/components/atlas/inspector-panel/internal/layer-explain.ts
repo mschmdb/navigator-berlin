@@ -268,6 +268,12 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		long: 'Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Methodik: /methodik/kiez-score.',
 		valueScaleExplain: 'Höher = mehr Kulturorte in Reichweite'
 	},
+	'kiez-score-kriminalitaet': {
+		short: 'Erfasste Kriminalität (Häufigkeitszahl) je Bezirksregion',
+		long: 'Häufigkeitszahl ausgewählter wohn-relevanter Delikte, 3-Jahres-Mittel aus dem Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0). Granularität Bezirksregion, auf Planungsräume gespiegelt. Strukturelle Aggregat-Größe, NICHT im Gesamt-Score (Option C). Bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen/Pendler. Methodik: /methodik/kiez-score.',
+		valueScaleExplain:
+			'Höher = mehr erfasste Fälle pro Einwohner, kein Maß für persönliches Risiko und keine Wertung als „guter" oder „schlechter" Kiez.'
+	},
 
 	// I: Demografie (Story 10.0 · neutraler Kontext, kein Score-Input)
 	'einwohner-dichte-2024': {

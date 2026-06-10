@@ -56,6 +56,7 @@ export interface ScoreRow {
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
 	readonly kultur: number | null;
+	readonly kriminalitaet: number | null;
 }
 
 async function readJson<T>(path: string): Promise<T> {
@@ -120,7 +121,8 @@ function toScoreRow(slug: string, bezirkSlug: string | undefined, score: KiezSco
 		mobilitaet: pickDimensionValue(score, 'mobilitaet'),
 		versorgung: pickDimensionValue(score, 'versorgung'),
 		wohnschutz: pickDimensionValue(score, 'wohnschutz'),
-		kultur: pickDimensionValue(score, 'kultur')
+		kultur: pickDimensionValue(score, 'kultur'),
+		kriminalitaet: pickDimensionValue(score, 'kriminalitaet')
 	};
 	if (bezirkSlug !== undefined) {
 		return { ...row, bezirkSlug };
@@ -212,7 +214,8 @@ async function upsertAll(result: AggregateScoresResult): Promise<void> {
 			mobilitaet: r.mobilitaet,
 			versorgung: r.versorgung,
 			wohnschutz: r.wohnschutz,
-			kultur: r.kultur
+			kultur: r.kultur,
+			kriminalitaet: r.kriminalitaet
 		});
 	}
 
@@ -228,7 +231,8 @@ async function upsertAll(result: AggregateScoresResult): Promise<void> {
 			mobilitaet: r.mobilitaet,
 			versorgung: r.versorgung,
 			wohnschutz: r.wohnschutz,
-			kultur: r.kultur
+			kultur: r.kultur,
+			kriminalitaet: r.kriminalitaet
 		});
 	}
 }

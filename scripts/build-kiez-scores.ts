@@ -25,6 +25,11 @@ interface LaermDbRecord {
 	dbDenMean: number;
 }
 
+interface KriminalitaetRecord {
+	plrId: string;
+	index: number | null;
+}
+
 const STATIC = 'static';
 const LAYERS_DIR = `${STATIC}/layers`;
 const MANIFEST = `${LAYERS_DIR}/MANIFEST.json`;
@@ -32,6 +37,7 @@ const OEPNV_INDEX = `${STATIC}/oepnv-stops-index.json`;
 const PET_POINTS = `${STATIC}/data/klima-pet-points.geojson`;
 const EINWOHNER = `${STATIC}/data/einwohner-lor.json`;
 const LAERM_DB = `${STATIC}/data/laerm-db-lor.json`;
+const KRIMINALITAET = `${STATIC}/data/kriminalitaet-lor.json`;
 const OUT = `${STATIC}/kiez-scores/kiez-scores.json`;
 
 // ADR-015: MSS + Umweltgerechtigkeit sind keine Score-Inputs mehr. klima-pet (Grün & Hitze)
@@ -112,6 +118,11 @@ async function buildPerLorHits(
 	if (!laerm) throw new Error(`${LAERM_DB} fehlt. Lauf zuerst pnpm data:laerm-db.`);
 	const dbByPlr = new Map(laerm.records.map((r) => [r.plrId, r.dbDenMean]));
 
+	// Story 14.3: Kriminalitäts-Index pro PLR (BR-nativ, auf PLR gespiegelt in 14.0).
+	const krimi = await readJson<{ records: KriminalitaetRecord[] }>(KRIMINALITAET).catch(() => null);
+	if (!krimi) throw new Error(`${KRIMINALITAET} fehlt. Lauf zuerst pnpm data:kriminalitaet.`);
+	const krimiByPlr = new Map(krimi.records.map((r) => [r.plrId, r.index]));
+
 	const out: Record<string, LayerHitLike[]> = {};
 	const push = (lorId: string, hit: LayerHitLike) => {
 		(out[lorId] = out[lorId] ?? []).push(hit);
@@ -123,6 +134,8 @@ async function buildPerLorHits(
 		if (proKind !== null) push(lorId, { layer: 'kitas-pro-kind', value: { plaetzeProKind: proKind } });
 		const db = dbByPlr.get(lorId);
 		if (db !== undefined) push(lorId, { layer: 'laerm-db', value: { ges_den: db } });
+		const krimiIndex = krimiByPlr.get(lorId);
+		if (typeof krimiIndex === 'number') push(lorId, { layer: 'kriminalitaet', value: { index: krimiIndex } });
 	}
 	return out;
 }
