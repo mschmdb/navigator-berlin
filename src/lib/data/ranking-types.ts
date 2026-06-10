@@ -16,4 +16,6 @@ export interface RankingRow {
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
 	readonly kultur: number | null;
+	/** Story 14.9: Kontext-Spalte (nicht sortierbar, kein Rang). Strukturell-Indigo. */
+	readonly kriminalitaet: number | null;
 }

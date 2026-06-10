@@ -20,6 +20,7 @@ function row(
 		versorgung: 60,
 		wohnschutz: 55,
 		kultur: 45,
+		kriminalitaet: 70,
 		...overrides
 	};
 }
@@ -47,6 +48,19 @@ describe('ScoreRankingTable.svelte', () => {
 		expect(table?.textContent).toMatch(/Bezirk/);
 		expect(table?.textContent).toMatch(/Score/);
 		expect(table?.textContent).toMatch(/Wohnschutz/);
+	});
+
+	it('Story 14.9: Kriminalitäts-Spalte ist Kontext, NICHT sortierbar, mit Disclaimer', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		// Spalte + Zellen vorhanden
+		expect(document.querySelector('[data-testid="ranking-col-kriminalitaet"]')).not.toBeNull();
+		expect(document.querySelector('[data-testid="ranking-cell-kriminalitaet"]')).not.toBeNull();
+		// KEIN Sortier-Button (kein Sicherheits-Leaderboard, 14.5)
+		expect(document.querySelector('[data-testid="ranking-sort-kriminalitaet"]')).toBeNull();
+		// Disclaimer-Note
+		const note = document.querySelector('[data-testid="ranking-kriminalitaet-note"]');
+		expect(note).not.toBeNull();
+		expect(note?.textContent).toMatch(/Sicherheits-Ranking/i);
 	});
 
 	it('default-sortiert Kieze nach composite desc (Alpha vor Bravo vor Charlie)', async () => {

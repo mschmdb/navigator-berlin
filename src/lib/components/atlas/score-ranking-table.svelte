@@ -286,6 +286,13 @@
 							</button>
 						</th>
 					{/each}
+					<th
+						class="whitespace-nowrap py-2 pr-3 align-bottom font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
+						scope="col"
+						data-testid="ranking-col-kriminalitaet"
+					>
+						Erfasste Kriminalität
+					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -309,6 +316,7 @@
 						<td class={cellPadding}><span class={pillClass(row.versorgung)}>{formatScore(row.versorgung)}</span></td>
 						<td class={cellPadding}><span class={pillClass(row.wohnschutz)}>{formatScore(row.wohnschutz)}</span></td>
 						<td class={cellPadding}><span class={pillClass(row.kultur)}>{formatScore(row.kultur)}</span></td>
+						<td class={cellPadding} data-testid="ranking-cell-kriminalitaet"><span class={pillClass(row.kriminalitaet, true)}>{formatScore(row.kriminalitaet)}</span></td>
 					</tr>
 				{/each}
 			</tbody>
@@ -334,6 +342,13 @@
 		</dd>
 		<dd class="text-ink-muted">Soziale Lage: neutral (kein Farbverlauf)</dd>
 	</dl>
+
+	<p class="pt-2 font-serif text-xs italic leading-snug text-ink-muted" data-testid="ranking-kriminalitaet-note">
+		Erfasste Kriminalität ist ein neutraler Kontext-Wert (Häufigkeitszahl je Bezirksregion, höher =
+		mehr erfasste Fälle), kein Gut-Maß. Bewusst nicht sortierbar und nicht im Gesamt-Score: kein
+		Sicherheits-Ranking. Grenzen unter
+		<a href="/methodik/kiez-score" class="text-accent underline underline-offset-2 hover:text-accent-strong">Methodik</a>.
+	</p>
 </section>
 
 <style>

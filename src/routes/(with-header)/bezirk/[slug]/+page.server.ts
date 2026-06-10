@@ -20,7 +20,9 @@ const SCORE_DIMS: readonly { key: string; label: string }[] = [
 	{ key: 'versorgung', label: 'Versorgung' },
 	{ key: 'wohnschutz', label: 'Wohnschutz' },
 	// Option C: Kultur ist eigenständig (nicht im Gesamt-Score), wird aber als Vergleichszeile gezeigt.
-	{ key: 'kultur', label: 'Kultur' }
+	{ key: 'kultur', label: 'Kultur' },
+	// Story 14.9: Kriminalität als Kontext-Vergleichszeile (Option C). Kein Rang, neutral, BR-Granularität.
+	{ key: 'kriminalitaet', label: 'Erfasste Kriminalität' }
 ];
 
 export const prerender = true;
