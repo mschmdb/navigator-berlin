@@ -25,6 +25,27 @@
 	let internalOpen = $state(false);
 	const sourcesOpen = $derived(open ?? internalOpen);
 
+	// Story 14.4: Kriminalität nach Delikt-Art aufschlüsseln. Die Roh-HZ (3-Jahres-Mittel pro
+	// 100.000 Einwohner) liegen im rawValue der Single-Index-Quelle (build-kiez-scores).
+	const KRIMINALITAET_DELIKT_ORDER: readonly (readonly [string, string])[] = [
+		['kieztaten', 'Kieztaten'],
+		['wohnraumeinbruch', 'Wohnraumeinbruch'],
+		['sachbeschaedigung', 'Sachbeschädigung'],
+		['strassenraub', 'Straßenraub/Handtaschenraub'],
+		['fahrraddiebstahl', 'Fahrraddiebstahl']
+	];
+	const hzFormatter = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
+	const krimiDelikte = $derived.by(() => {
+		if (score.dimension !== 'kriminalitaet') return null;
+		const raw = score.sources[0]?.rawValue as { delikte?: Record<string, number | null> } | undefined;
+		if (!raw || typeof raw !== 'object' || !raw.delikte) return null;
+		return KRIMINALITAET_DELIKT_ORDER.map(([key, deliktLabel]) => ({
+			key,
+			label: deliktLabel,
+			hz: typeof raw.delikte?.[key] === 'number' ? (raw.delikte[key] as number) : null
+		}));
+	});
+
 	function toggleSources(): void {
 		if (onToggle) onToggle(score.dimension);
 		else internalOpen = !internalOpen;
@@ -94,7 +115,29 @@
 		</a>
 	</div>
 
-	{#if hasSources && sourcesOpen}
+	{#if krimiDelikte && sourcesOpen}
+		<ul
+			class="mt-1 space-y-1 border-l border-rule pl-[22px] font-mono text-xs text-ink-muted"
+			data-testid="kiez-score-delikte-kriminalitaet"
+		>
+			<li class="text-[10px] uppercase tracking-wide text-ink-subtle">
+				Häufigkeitszahl je Delikt (Fälle pro 100.000 Ew., 3-Jahres-Mittel)
+			</li>
+			{#each krimiDelikte as d (d.key)}
+				<li class="flex items-baseline justify-between gap-2" data-testid="kriminalitaet-delikt-{d.key}">
+					<span class="min-w-0 flex-1">{d.label}</span>
+					<span class="shrink-0 whitespace-nowrap tabular-nums text-ink-subtle">
+						{d.hz === null ? '—' : hzFormatter.format(d.hz)}
+					</span>
+				</li>
+			{/each}
+			{#if score.dataStand}
+				<li class="pt-0.5 text-[10px] text-ink-subtle" data-testid="kiez-score-stand-kriminalitaet">
+					Stand: {new Date(score.dataStand).toLocaleDateString('de-DE')}
+				</li>
+			{/if}
+		</ul>
+	{:else if hasSources && sourcesOpen}
 		<ul
 			class="mt-1 space-y-1 border-l border-rule pl-[22px] font-mono text-xs text-ink-muted"
 			data-testid="kiez-score-sources-{score.dimension}"

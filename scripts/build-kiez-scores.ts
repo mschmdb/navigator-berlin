@@ -28,6 +28,7 @@ interface LaermDbRecord {
 interface KriminalitaetRecord {
 	plrId: string;
 	index: number | null;
+	delikteHz: Record<string, number | null>;
 }
 
 const STATIC = 'static';
@@ -121,7 +122,7 @@ async function buildPerLorHits(
 	// Story 14.3: Kriminalitäts-Index pro PLR (BR-nativ, auf PLR gespiegelt in 14.0).
 	const krimi = await readJson<{ records: KriminalitaetRecord[] }>(KRIMINALITAET).catch(() => null);
 	if (!krimi) throw new Error(`${KRIMINALITAET} fehlt. Lauf zuerst pnpm data:kriminalitaet.`);
-	const krimiByPlr = new Map(krimi.records.map((r) => [r.plrId, r.index]));
+	const krimiByPlr = new Map(krimi.records.map((r) => [r.plrId, r]));
 
 	const out: Record<string, LayerHitLike[]> = {};
 	const push = (lorId: string, hit: LayerHitLike) => {
@@ -134,8 +135,11 @@ async function buildPerLorHits(
 		if (proKind !== null) push(lorId, { layer: 'kitas-pro-kind', value: { plaetzeProKind: proKind } });
 		const db = dbByPlr.get(lorId);
 		if (db !== undefined) push(lorId, { layer: 'laerm-db', value: { ges_den: db } });
-		const krimiIndex = krimiByPlr.get(lorId);
-		if (typeof krimiIndex === 'number') push(lorId, { layer: 'kriminalitaet', value: { index: krimiIndex } });
+		const krimiRec = krimiByPlr.get(lorId);
+		if (krimiRec && typeof krimiRec.index === 'number') {
+			// index treibt den Score; delikte (Roh-HZ 3-J-Mittel) für den Inspector-Breakdown (Story 14.4).
+			push(lorId, { layer: 'kriminalitaet', value: { index: krimiRec.index, delikte: krimiRec.delikteHz } });
+		}
 	}
 	return out;
 }

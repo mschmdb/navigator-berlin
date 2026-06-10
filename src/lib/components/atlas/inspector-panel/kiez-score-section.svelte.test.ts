@@ -129,6 +129,45 @@ describe('KiezScoreSection', () => {
 		expect(krimiDisclaimer).not.toBeNull();
 	});
 
+	it('Kriminalität (Story 14.4): Quellen-Toggle schlüsselt nach Delikt-Art auf (HZ pro 100k)', async () => {
+		const score = makeScore();
+		score.dimensions.push({
+			dimension: 'kriminalitaet',
+			value: 84,
+			sources: [
+				{
+					layer: 'kriminalitaet',
+					rawValue: {
+						index: 1500,
+						delikte: {
+							kieztaten: 3467,
+							wohnraumeinbruch: 149,
+							sachbeschaedigung: 1280,
+							strassenraub: 76,
+							fahrraddiebstahl: 191
+						}
+					},
+					normalizedValue: 84,
+					weight: 1
+				}
+			],
+			missingData: [],
+			dataStand: '2025-01-01T00:00:00.000Z'
+		});
+		render(KiezScoreSection, { score });
+		const toggle = (await page
+			.getByTestId('kiez-score-toggle-sources-kriminalitaet')
+			.element()) as HTMLButtonElement;
+		toggle.click();
+		await expect.element(page.getByTestId('kiez-score-delikte-kriminalitaet')).toBeInTheDocument();
+		// Roh-HZ je Delikt, deutsch formatiert (3467 → „3.467")
+		const kieztaten = (await page.getByTestId('kriminalitaet-delikt-kieztaten').element()) as HTMLElement;
+		expect(kieztaten.textContent).toContain('Kieztaten');
+		expect(kieztaten.textContent).toContain('3.467');
+		const wohnraum = (await page.getByTestId('kriminalitaet-delikt-wohnraumeinbruch').element()) as HTMLElement;
+		expect(wohnraum.textContent).toContain('Wohnraumeinbruch');
+	});
+
 	it('ohne Kriminalitäts-Wert kein kriminalitaet-aggregat-Disclaimer', async () => {
 		render(KiezScoreSection, { score: makeScore() });
 		await expect.element(page.getByTestId('kiez-score-section')).toBeInTheDocument();
