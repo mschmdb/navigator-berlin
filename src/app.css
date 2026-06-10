@@ -455,3 +455,13 @@ body.route-explore {
 		animation: none;
 	}
 }
+
+/* layerchart-Tooltip (z.B. Kiez-Score-Ring): die mitgelieferte Hintergrund-Regel nutzt
+   color-mix(in oklab, light-dark(var(--color-surface-100, white), …) 90%, transparent). Diese
+   Verschachtelung überlebt die prod-CSS-Minification nicht zuverlässig → Tooltip wird transparent
+   (lokal/dev unminified ok). Eigene opake Surface-Regel: echte Spezifität schlägt layerchart :where(). */
+.lc-tooltip-container[data-variant='default'] {
+	background-color: var(--bg-elevated);
+	color: var(--ink);
+	border: 1px solid var(--rule);
+}
