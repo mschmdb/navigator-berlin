@@ -184,6 +184,43 @@
 	}
 	const cellPadding = 'py-3 pr-3';
 
+	// Story 14.9 (Option A): Relative Quantil-Färbung pro Spalte. Die absoluten Score-Werte stauchen
+	// sich (Composite 27–64, nie >70), eine fixe 0–100-Skala wirkt dadurch durchgängig negativ. Wir
+	// färben stattdessen nach Quartil der tatsächlichen Verteilung der AKTUELLEN Ansicht (kieze/bezirke):
+	// oberstes Viertel grün, unterstes rot. Passt zum „Vergleich, nicht Urteil"-Framing, ändert keine
+	// Scores. Kriminalität bleibt neutral (kein Quartil, kein Leaderboard).
+	const PILL_BASE = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
+	function columnQuartiles(
+		rows: readonly RankingRow[],
+		key: NumericSortKey
+	): [number, number, number] | null {
+		const vals = rows
+			.map((r) => r[key])
+			.filter((v): v is number => typeof v === 'number' && Number.isFinite(v))
+			.sort((a, b) => a - b);
+		if (vals.length === 0) return null;
+		const at = (p: number): number =>
+			vals[Math.min(vals.length - 1, Math.max(0, Math.round(p * (vals.length - 1))))];
+		return [at(0.25), at(0.5), at(0.75)];
+	}
+	const quartilesByKey = $derived.by(() => {
+		const out = {} as Record<NumericSortKey, [number, number, number] | null>;
+		for (const key of NUMERIC_SORT_KEYS) out[key] = columnQuartiles(rowsForView, key);
+		return out;
+	});
+	function relBucket(value: number | null, cuts: [number, number, number] | null): ScoreBucket {
+		if (value === null || !Number.isFinite(value) || cuts === null) return 0;
+		if (value >= cuts[2]) return 4;
+		if (value >= cuts[1]) return 3;
+		if (value >= cuts[0]) return 2;
+		return 1;
+	}
+	function pillClassRel(key: NumericSortKey, value: number | null): string {
+		const bucket = relBucket(value, quartilesByKey[key]);
+		if (bucket === 0) return `${PILL_BASE} text-ink-muted`;
+		return `${PILL_BASE} score-pill-${bucket} text-ink`;
+	}
+
 	const sortDirLabel = $derived.by(() => {
 		if (sortKey === 'name' || sortKey === 'bezirk') {
 			return sortDir === 'asc' ? '· A → Z' : '· Z → A';
@@ -271,11 +308,11 @@
 						</th>
 					{/if}
 					{#each NUMERIC_SORT_KEYS as key (key)}
-						<th class="whitespace-nowrap py-2 pr-3 align-bottom" scope="col">
+						<th class="score-col-th" scope="col">
 							<button
 								type="button"
 								data-testid={`ranking-sort-${key}`}
-								class={headerButtonClass(sortKey === key)}
+								class={`${headerButtonClass(sortKey === key)} score-col-rot`}
 								aria-pressed={sortKey === key}
 								onclick={() => toggleSort(key)}
 							>
@@ -286,6 +323,11 @@
 							</button>
 						</th>
 					{/each}
+					<th class="score-col-th" scope="col" data-testid="ranking-col-kriminalitaet">
+						<span class="score-col-rot font-mono text-[11px] uppercase tracking-wider text-ink-subtle">
+							Kriminalität
+						</span>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -302,13 +344,14 @@
 								{row.bezirkName ?? '–'}
 							</td>
 						{/if}
-						<td class={cellPadding}><span class={pillClass(row.composite)}>{formatScore(row.composite)}</span></td>
-						<td class={cellPadding}><span class={pillClass(row.ruheLuft)}>{formatScore(row.ruheLuft)}</span></td>
-						<td class={cellPadding}><span class={pillClass(row.gruenHitze)}>{formatScore(row.gruenHitze)}</span></td>
-						<td class={cellPadding}><span class={pillClass(row.mobilitaet)}>{formatScore(row.mobilitaet)}</span></td>
-						<td class={cellPadding}><span class={pillClass(row.versorgung)}>{formatScore(row.versorgung)}</span></td>
-						<td class={cellPadding}><span class={pillClass(row.wohnschutz)}>{formatScore(row.wohnschutz)}</span></td>
-						<td class={cellPadding}><span class={pillClass(row.kultur)}>{formatScore(row.kultur)}</span></td>
+						<td class={cellPadding}><span class={pillClassRel('composite', row.composite)}>{formatScore(row.composite)}</span></td>
+						<td class={cellPadding}><span class={pillClassRel('ruheLuft', row.ruheLuft)}>{formatScore(row.ruheLuft)}</span></td>
+						<td class={cellPadding}><span class={pillClassRel('gruenHitze', row.gruenHitze)}>{formatScore(row.gruenHitze)}</span></td>
+						<td class={cellPadding}><span class={pillClassRel('mobilitaet', row.mobilitaet)}>{formatScore(row.mobilitaet)}</span></td>
+						<td class={cellPadding}><span class={pillClassRel('versorgung', row.versorgung)}>{formatScore(row.versorgung)}</span></td>
+						<td class={cellPadding}><span class={pillClassRel('wohnschutz', row.wohnschutz)}>{formatScore(row.wohnschutz)}</span></td>
+						<td class={cellPadding}><span class={pillClassRel('kultur', row.kultur)}>{formatScore(row.kultur)}</span></td>
+						<td class={cellPadding} data-testid="ranking-cell-kriminalitaet"><span class={pillClass(row.kriminalitaet, true)}>{formatScore(row.kriminalitaet)}</span></td>
 					</tr>
 				{/each}
 			</tbody>
@@ -319,21 +362,28 @@
 		class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
 		data-testid="ranking-legend"
 	>
-		<dt class="text-ink-muted">Skala:</dt>
+		<dt class="text-ink-muted">Farbe je Spalte, relativ:</dt>
 		<dd class="flex items-center gap-2">
-			<span class="score-pill-1 inline-block size-4 rounded-sm" aria-hidden="true"></span> &lt; 30
+			<span class="score-pill-1 inline-block size-4 rounded-sm" aria-hidden="true"></span> unterstes Viertel
 		</dd>
 		<dd class="flex items-center gap-2">
-			<span class="score-pill-2 inline-block size-4 rounded-sm" aria-hidden="true"></span> 30 – 49
+			<span class="score-pill-2 inline-block size-4 rounded-sm" aria-hidden="true"></span> unteres Mittel
 		</dd>
 		<dd class="flex items-center gap-2">
-			<span class="score-pill-3 inline-block size-4 rounded-sm" aria-hidden="true"></span> 50 – 69
+			<span class="score-pill-3 inline-block size-4 rounded-sm" aria-hidden="true"></span> oberes Mittel
 		</dd>
 		<dd class="flex items-center gap-2">
-			<span class="score-pill-4 inline-block size-4 rounded-sm" aria-hidden="true"></span> 70 – 100
+			<span class="score-pill-4 inline-block size-4 rounded-sm" aria-hidden="true"></span> oberstes Viertel
 		</dd>
-		<dd class="text-ink-muted">Soziale Lage: neutral (kein Farbverlauf)</dd>
+		<dd class="text-ink-muted">Kriminalität: neutral (kein Farbverlauf)</dd>
 	</dl>
+
+	<p class="pt-2 font-serif text-xs italic leading-snug text-ink-muted" data-testid="ranking-kriminalitaet-note">
+		Erfasste Kriminalität ist ein neutraler Kontext-Wert (Häufigkeitszahl je Bezirksregion, höher =
+		mehr erfasste Fälle), kein Gut-Maß. Bewusst nicht sortierbar und nicht im Gesamt-Score: kein
+		Sicherheits-Ranking. Grenzen unter
+		<a href="/methodik/kiez-score" class="text-accent underline underline-offset-2 hover:text-accent-strong">Methodik</a>.
+	</p>
 </section>
 
 <style>
@@ -355,5 +405,19 @@
 	}
 	.score-pill-4 {
 		background-color: color-mix(in srgb, var(--scale-gut-5, #1f5a2e) 35%, var(--bg, #ecead0));
+	}
+
+	/* Story 14.9: Dimensions-Spalten-Header 45° gedreht — spart horizontalen Platz, weil die
+	 * Spalten dann nur so breit wie die Score-Pills sein müssen statt wie die Label-Texte. */
+	.score-col-th {
+		height: 8.5rem;
+		vertical-align: bottom;
+		padding: 0 0 0.4rem 0;
+		white-space: nowrap;
+	}
+	.score-col-rot {
+		display: inline-block;
+		transform-origin: left bottom;
+		transform: translateX(0.7rem) rotate(-45deg);
 	}
 </style>

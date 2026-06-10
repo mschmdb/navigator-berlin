@@ -183,6 +183,7 @@ export interface ScoreLike {
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
 	readonly kultur: number | null;
+	readonly kriminalitaet: number | null;
 }
 
 export function renderScoreSection(
@@ -202,6 +203,14 @@ export function renderScoreSection(
 		lines.push(`- Wohnschutz: ${formatNumberDe(score.wohnschutz)}/100`);
 	if (score.kultur !== null)
 		lines.push(`- Kultur: ${formatNumberDe(score.kultur)}/100 (eigene Dimension, nicht im Composite)`);
+	if (score.kriminalitaet !== null) {
+		lines.push(
+			`- Erfasste Kriminalität (Häufigkeitszahl): ${formatNumberDe(score.kriminalitaet)}/100 (eigene Dimension, nicht im Composite)`
+		);
+		lines.push(
+			'  - Hinweis: Häufigkeitszahl je Bezirksregion (auf Planungsräume gespiegelt), nicht adressgenau. Misst erfasste Fälle pro Einwohner, kein persönliches Risiko und kein Sicherheits-Ranking. Touristen-/Pendler-Orte erscheinen überzeichnet.'
+		);
+	}
 	lines.push('');
 	lines.push(
 		'> Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'

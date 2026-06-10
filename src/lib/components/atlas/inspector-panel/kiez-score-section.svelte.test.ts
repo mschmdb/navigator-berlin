@@ -106,6 +106,85 @@ describe('KiezScoreSection', () => {
 		expect(chip?.getAttribute('data-severity')).toBe('success');
 	});
 
+	it('Kriminalität (Story 14.4): neutrale Chip-Severity + Stigma-Disclaimer, kein Gut-Signal', async () => {
+		const score = makeScore();
+		score.dimensions.push({
+			dimension: 'kriminalitaet',
+			value: 84,
+			sources: [
+				{ layer: 'kriminalitaet', rawValue: { index: 1500 }, normalizedValue: 84, weight: 1 }
+			],
+			missingData: [],
+			dataStand: '2025-01-01T00:00:00.000Z'
+		});
+		render(KiezScoreSection, { score });
+		// neutrale Severity (kein success/warning) trotz hohem Wert
+		const dim = (await page.getByTestId('kiez-score-dim-kriminalitaet').element()) as HTMLElement;
+		const chip = dim.querySelector('[data-testid="value-chip"]') as HTMLElement | null;
+		expect(chip?.getAttribute('data-severity')).toBe('neutral');
+		// Stigma-Disclaimer steht im Accordion, nicht auf Section-Ebene → eingeklappt nicht sichtbar
+		expect(
+			document.querySelector(
+				'[data-testid="editorial-disclaimer"][data-variant="kriminalitaet-aggregat"]'
+			)
+		).toBeNull();
+	});
+
+	it('Kriminalität (Story 14.4): Quellen-Toggle schlüsselt nach Delikt-Art auf (HZ pro 100k)', async () => {
+		const score = makeScore();
+		score.dimensions.push({
+			dimension: 'kriminalitaet',
+			value: 84,
+			sources: [
+				{
+					layer: 'kriminalitaet',
+					rawValue: {
+						index: 1500,
+						delikte: {
+							kieztaten: 3467,
+							wohnraumeinbruch: 149,
+							sachbeschaedigung: 1280,
+							strassenraub: 76,
+							fahrraddiebstahl: 191
+						}
+					},
+					normalizedValue: 84,
+					weight: 1
+				}
+			],
+			missingData: [],
+			dataStand: '2025-01-01T00:00:00.000Z'
+		});
+		render(KiezScoreSection, { score });
+		const toggle = (await page
+			.getByTestId('kiez-score-toggle-sources-kriminalitaet')
+			.element()) as HTMLButtonElement;
+		toggle.click();
+		await expect.element(page.getByTestId('kiez-score-delikte-kriminalitaet')).toBeInTheDocument();
+		// Roh-HZ je Delikt, deutsch formatiert (3467 → „3.467")
+		const kieztaten = (await page.getByTestId('kriminalitaet-delikt-kieztaten').element()) as HTMLElement;
+		expect(kieztaten.textContent).toContain('Kieztaten');
+		expect(kieztaten.textContent).toContain('3.467');
+		const wohnraum = (await page.getByTestId('kriminalitaet-delikt-wohnraumeinbruch').element()) as HTMLElement;
+		expect(wohnraum.textContent).toContain('Wohnraumeinbruch');
+		// Stigma-Disclaimer erscheint aufgeklappt im Accordion
+		await expect.element(page.getByTestId('kiez-score-delikte-kriminalitaet')).toBeInTheDocument();
+		expect(
+			document.querySelector(
+				'[data-testid="editorial-disclaimer"][data-variant="kriminalitaet-aggregat"]'
+			)
+		).not.toBeNull();
+	});
+
+	it('ohne Kriminalitäts-Wert kein kriminalitaet-aggregat-Disclaimer', async () => {
+		render(KiezScoreSection, { score: makeScore() });
+		await expect.element(page.getByTestId('kiez-score-section')).toBeInTheDocument();
+		const krimiDisclaimer = document.querySelector(
+			'[data-testid="editorial-disclaimer"][data-variant="kriminalitaet-aggregat"]'
+		);
+		expect(krimiDisclaimer).toBeNull();
+	});
+
 	it('Dimension mit value=null zeigt „Daten unzureichend"', async () => {
 		const score = makeScore();
 		score.dimensions[1].value = null;

@@ -53,6 +53,7 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'kiez-score-wohnschutz': 'Kiez-Score · Wohnschutz',
 	'kiez-score-versorgung': 'Kiez-Score · Versorgung',
 	'kiez-score-kultur': 'Kiez-Score · Kultur',
+	'kiez-score-kriminalitaet': 'Kiez-Score · Erfasste Kriminalität',
 	// I: Demografie (Story 10.0)
 	'einwohner-dichte-2024': 'Einwohnerdichte 2024',
 	// J: Kultur (Epic 13)
@@ -67,6 +68,7 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	// Synthetische Score-Sub-Terme (Kiez-Score-Detailzeilen, Stories 10.1-10.6b + Mobilität/Wohnschutz)
 	'laerm-db': 'Lärm (dB-Mittel)',
 	'kitas-pro-kind': 'Kita-Plätze pro Kind',
+	kriminalitaet: 'Kriminalitäts-Index (HZ-Mittel)',
 	'schulen-grundschule': 'Grundschulen',
 	'schulen-weiterfuehrend': 'Weiterführende Schulen',
 	'nahversorgung-lebensmittel': 'Lebensmittel',

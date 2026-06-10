@@ -1,0 +1,6552 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-06-10T07:15:55.076Z",
+  "source": "Kriminalitätsatlas Berlin (Häufigkeitszahlen je Bezirksregion)",
+  "sourceUrl": "https://www.kriminalitaetsatlas.berlin.de/K-Atlas/bezirke/Fallzahlen%26HZ%202016-2025.xlsx",
+  "publisher": "Polizei Berlin",
+  "license": "dl-de-by-2.0",
+  "sourceSha256": "8f02cee9b1b0709eb06e39bebfe8751f69058ca535f1d1bfb86e006261f872bc",
+  "metric": "Gewichteter HZ-Index (3-Jahres-Mittel) wohn-relevanter Delikte, je LOR-Planungsraum",
+  "years": [
+    2023,
+    2024,
+    2025
+  ],
+  "delikte": [
+    {
+      "key": "kieztaten",
+      "label": "Kieztaten",
+      "weight": 0.2
+    },
+    {
+      "key": "wohnraumeinbruch",
+      "label": "Wohnraumeinbruch",
+      "weight": 0.2
+    },
+    {
+      "key": "sachbeschaedigung",
+      "label": "Sachbeschädigung insgesamt",
+      "weight": 0.2
+    },
+    {
+      "key": "strassenraub",
+      "label": "Straßenraub/Handtaschenraub",
+      "weight": 0.2
+    },
+    {
+      "key": "fahrraddiebstahl",
+      "label": "Fahrraddiebstahl",
+      "weight": 0.2
+    }
+  ],
+  "note": "BR-nativ (138/143 Bezirksregionen), auf Planungsräume gespiegelt (BZR_ID = PLR_ID[:6]). Polarität: höher = mehr erfasste Kriminalität, kein Sicherheitsmaß (ADR-019). City-Core-Verzerrung in Story 14.1/14.6.",
+  "brCount": 143,
+  "plrCount": 542,
+  "plrMirrored": 542,
+  "records": [
+    {
+      "plrId": "01100101",
+      "bzrId": "011001",
+      "index": 2571.9557429285046,
+      "delikteHz": {
+        "kieztaten": 8448.008593579387,
+        "wohnraumeinbruch": 210.17390962764486,
+        "sachbeschaedigung": 2052.706093041302,
+        "strassenraub": 279.4387873953747,
+        "fahrraddiebstahl": 1869.4513309988124
+      }
+    },
+    {
+      "plrId": "01100102",
+      "bzrId": "011001",
+      "index": 2571.9557429285046,
+      "delikteHz": {
+        "kieztaten": 8448.008593579387,
+        "wohnraumeinbruch": 210.17390962764486,
+        "sachbeschaedigung": 2052.706093041302,
+        "strassenraub": 279.4387873953747,
+        "fahrraddiebstahl": 1869.4513309988124
+      }
+    },
+    {
+      "plrId": "01100103",
+      "bzrId": "011001",
+      "index": 2571.9557429285046,
+      "delikteHz": {
+        "kieztaten": 8448.008593579387,
+        "wohnraumeinbruch": 210.17390962764486,
+        "sachbeschaedigung": 2052.706093041302,
+        "strassenraub": 279.4387873953747,
+        "fahrraddiebstahl": 1869.4513309988124
+      }
+    },
+    {
+      "plrId": "01100104",
+      "bzrId": "011001",
+      "index": 2571.9557429285046,
+      "delikteHz": {
+        "kieztaten": 8448.008593579387,
+        "wohnraumeinbruch": 210.17390962764486,
+        "sachbeschaedigung": 2052.706093041302,
+        "strassenraub": 279.4387873953747,
+        "fahrraddiebstahl": 1869.4513309988124
+      }
+    },
+    {
+      "plrId": "01100205",
+      "bzrId": "011002",
+      "index": 3119.680188296145,
+      "delikteHz": {
+        "kieztaten": 9328.430152230894,
+        "wohnraumeinbruch": 226.82653300476076,
+        "sachbeschaedigung": 4035.3620330937415,
+        "strassenraub": 187.59313397320125,
+        "fahrraddiebstahl": 1820.1890891781277
+      }
+    },
+    {
+      "plrId": "01100206",
+      "bzrId": "011002",
+      "index": 3119.680188296145,
+      "delikteHz": {
+        "kieztaten": 9328.430152230894,
+        "wohnraumeinbruch": 226.82653300476076,
+        "sachbeschaedigung": 4035.3620330937415,
+        "strassenraub": 187.59313397320125,
+        "fahrraddiebstahl": 1820.1890891781277
+      }
+    },
+    {
+      "plrId": "01100207",
+      "bzrId": "011002",
+      "index": 3119.680188296145,
+      "delikteHz": {
+        "kieztaten": 9328.430152230894,
+        "wohnraumeinbruch": 226.82653300476076,
+        "sachbeschaedigung": 4035.3620330937415,
+        "strassenraub": 187.59313397320125,
+        "fahrraddiebstahl": 1820.1890891781277
+      }
+    },
+    {
+      "plrId": "01100308",
+      "bzrId": "011003",
+      "index": 2123.444720123254,
+      "delikteHz": {
+        "kieztaten": 6622.062432188028,
+        "wohnraumeinbruch": 248.1549677137199,
+        "sachbeschaedigung": 2128.786403621599,
+        "strassenraub": 193.45726076667862,
+        "fahrraddiebstahl": 1424.7625363262441
+      }
+    },
+    {
+      "plrId": "01100309",
+      "bzrId": "011003",
+      "index": 2123.444720123254,
+      "delikteHz": {
+        "kieztaten": 6622.062432188028,
+        "wohnraumeinbruch": 248.1549677137199,
+        "sachbeschaedigung": 2128.786403621599,
+        "strassenraub": 193.45726076667862,
+        "fahrraddiebstahl": 1424.7625363262441
+      }
+    },
+    {
+      "plrId": "01100310",
+      "bzrId": "011003",
+      "index": 2123.444720123254,
+      "delikteHz": {
+        "kieztaten": 6622.062432188028,
+        "wohnraumeinbruch": 248.1549677137199,
+        "sachbeschaedigung": 2128.786403621599,
+        "strassenraub": 193.45726076667862,
+        "fahrraddiebstahl": 1424.7625363262441
+      }
+    },
+    {
+      "plrId": "01100311",
+      "bzrId": "011003",
+      "index": 2123.444720123254,
+      "delikteHz": {
+        "kieztaten": 6622.062432188028,
+        "wohnraumeinbruch": 248.1549677137199,
+        "sachbeschaedigung": 2128.786403621599,
+        "strassenraub": 193.45726076667862,
+        "fahrraddiebstahl": 1424.7625363262441
+      }
+    },
+    {
+      "plrId": "01100312",
+      "bzrId": "011003",
+      "index": 2123.444720123254,
+      "delikteHz": {
+        "kieztaten": 6622.062432188028,
+        "wohnraumeinbruch": 248.1549677137199,
+        "sachbeschaedigung": 2128.786403621599,
+        "strassenraub": 193.45726076667862,
+        "fahrraddiebstahl": 1424.7625363262441
+      }
+    },
+    {
+      "plrId": "01100313",
+      "bzrId": "011003",
+      "index": 2123.444720123254,
+      "delikteHz": {
+        "kieztaten": 6622.062432188028,
+        "wohnraumeinbruch": 248.1549677137199,
+        "sachbeschaedigung": 2128.786403621599,
+        "strassenraub": 193.45726076667862,
+        "fahrraddiebstahl": 1424.7625363262441
+      }
+    },
+    {
+      "plrId": "01100414",
+      "bzrId": "011004",
+      "index": 1117.579454050913,
+      "delikteHz": {
+        "kieztaten": 2644.433968274573,
+        "wohnraumeinbruch": 227.64365682143327,
+        "sachbeschaedigung": 1288.0800143375561,
+        "strassenraub": 72.52604803489906,
+        "fahrraddiebstahl": 1355.2135827861032
+      }
+    },
+    {
+      "plrId": "01100415",
+      "bzrId": "011004",
+      "index": 1117.579454050913,
+      "delikteHz": {
+        "kieztaten": 2644.433968274573,
+        "wohnraumeinbruch": 227.64365682143327,
+        "sachbeschaedigung": 1288.0800143375561,
+        "strassenraub": 72.52604803489906,
+        "fahrraddiebstahl": 1355.2135827861032
+      }
+    },
+    {
+      "plrId": "01100416",
+      "bzrId": "011004",
+      "index": 1117.579454050913,
+      "delikteHz": {
+        "kieztaten": 2644.433968274573,
+        "wohnraumeinbruch": 227.64365682143327,
+        "sachbeschaedigung": 1288.0800143375561,
+        "strassenraub": 72.52604803489906,
+        "fahrraddiebstahl": 1355.2135827861032
+      }
+    },
+    {
+      "plrId": "01200517",
+      "bzrId": "012005",
+      "index": 998.6168965815928,
+      "delikteHz": {
+        "kieztaten": 3008.9856273355886,
+        "wohnraumeinbruch": 178.80266246731517,
+        "sachbeschaedigung": 1139.0812100381715,
+        "strassenraub": 71.13741831655499,
+        "fahrraddiebstahl": 595.0775647503331
+      }
+    },
+    {
+      "plrId": "01200518",
+      "bzrId": "012005",
+      "index": 998.6168965815928,
+      "delikteHz": {
+        "kieztaten": 3008.9856273355886,
+        "wohnraumeinbruch": 178.80266246731517,
+        "sachbeschaedigung": 1139.0812100381715,
+        "strassenraub": 71.13741831655499,
+        "fahrraddiebstahl": 595.0775647503331
+      }
+    },
+    {
+      "plrId": "01200519",
+      "bzrId": "012005",
+      "index": 998.6168965815928,
+      "delikteHz": {
+        "kieztaten": 3008.9856273355886,
+        "wohnraumeinbruch": 178.80266246731517,
+        "sachbeschaedigung": 1139.0812100381715,
+        "strassenraub": 71.13741831655499,
+        "fahrraddiebstahl": 595.0775647503331
+      }
+    },
+    {
+      "plrId": "01200520",
+      "bzrId": "012005",
+      "index": 998.6168965815928,
+      "delikteHz": {
+        "kieztaten": 3008.9856273355886,
+        "wohnraumeinbruch": 178.80266246731517,
+        "sachbeschaedigung": 1139.0812100381715,
+        "strassenraub": 71.13741831655499,
+        "fahrraddiebstahl": 595.0775647503331
+      }
+    },
+    {
+      "plrId": "01200521",
+      "bzrId": "012005",
+      "index": 998.6168965815928,
+      "delikteHz": {
+        "kieztaten": 3008.9856273355886,
+        "wohnraumeinbruch": 178.80266246731517,
+        "sachbeschaedigung": 1139.0812100381715,
+        "strassenraub": 71.13741831655499,
+        "fahrraddiebstahl": 595.0775647503331
+      }
+    },
+    {
+      "plrId": "01200522",
+      "bzrId": "012005",
+      "index": 998.6168965815928,
+      "delikteHz": {
+        "kieztaten": 3008.9856273355886,
+        "wohnraumeinbruch": 178.80266246731517,
+        "sachbeschaedigung": 1139.0812100381715,
+        "strassenraub": 71.13741831655499,
+        "fahrraddiebstahl": 595.0775647503331
+      }
+    },
+    {
+      "plrId": "01200623",
+      "bzrId": "012006",
+      "index": 1517.9452651710635,
+      "delikteHz": {
+        "kieztaten": 4864.908350031902,
+        "wohnraumeinbruch": 210.46648017444338,
+        "sachbeschaedigung": 1484.6377577071605,
+        "strassenraub": 95.3031516105638,
+        "fahrraddiebstahl": 934.4105863312476
+      }
+    },
+    {
+      "plrId": "01200624",
+      "bzrId": "012006",
+      "index": 1517.9452651710635,
+      "delikteHz": {
+        "kieztaten": 4864.908350031902,
+        "wohnraumeinbruch": 210.46648017444338,
+        "sachbeschaedigung": 1484.6377577071605,
+        "strassenraub": 95.3031516105638,
+        "fahrraddiebstahl": 934.4105863312476
+      }
+    },
+    {
+      "plrId": "01200625",
+      "bzrId": "012006",
+      "index": 1517.9452651710635,
+      "delikteHz": {
+        "kieztaten": 4864.908350031902,
+        "wohnraumeinbruch": 210.46648017444338,
+        "sachbeschaedigung": 1484.6377577071605,
+        "strassenraub": 95.3031516105638,
+        "fahrraddiebstahl": 934.4105863312476
+      }
+    },
+    {
+      "plrId": "01200626",
+      "bzrId": "012006",
+      "index": 1517.9452651710635,
+      "delikteHz": {
+        "kieztaten": 4864.908350031902,
+        "wohnraumeinbruch": 210.46648017444338,
+        "sachbeschaedigung": 1484.6377577071605,
+        "strassenraub": 95.3031516105638,
+        "fahrraddiebstahl": 934.4105863312476
+      }
+    },
+    {
+      "plrId": "01200627",
+      "bzrId": "012006",
+      "index": 1517.9452651710635,
+      "delikteHz": {
+        "kieztaten": 4864.908350031902,
+        "wohnraumeinbruch": 210.46648017444338,
+        "sachbeschaedigung": 1484.6377577071605,
+        "strassenraub": 95.3031516105638,
+        "fahrraddiebstahl": 934.4105863312476
+      }
+    },
+    {
+      "plrId": "01200628",
+      "bzrId": "012006",
+      "index": 1517.9452651710635,
+      "delikteHz": {
+        "kieztaten": 4864.908350031902,
+        "wohnraumeinbruch": 210.46648017444338,
+        "sachbeschaedigung": 1484.6377577071605,
+        "strassenraub": 95.3031516105638,
+        "fahrraddiebstahl": 934.4105863312476
+      }
+    },
+    {
+      "plrId": "01200629",
+      "bzrId": "012006",
+      "index": 1517.9452651710635,
+      "delikteHz": {
+        "kieztaten": 4864.908350031902,
+        "wohnraumeinbruch": 210.46648017444338,
+        "sachbeschaedigung": 1484.6377577071605,
+        "strassenraub": 95.3031516105638,
+        "fahrraddiebstahl": 934.4105863312476
+      }
+    },
+    {
+      "plrId": "01300730",
+      "bzrId": "013007",
+      "index": 1392.8473010578195,
+      "delikteHz": {
+        "kieztaten": 4722.869943967103,
+        "wohnraumeinbruch": 162.36026313783736,
+        "sachbeschaedigung": 1247.3292046787194,
+        "strassenraub": 113.22738556198469,
+        "fahrraddiebstahl": 718.4497079434544
+      }
+    },
+    {
+      "plrId": "01300731",
+      "bzrId": "013007",
+      "index": 1392.8473010578195,
+      "delikteHz": {
+        "kieztaten": 4722.869943967103,
+        "wohnraumeinbruch": 162.36026313783736,
+        "sachbeschaedigung": 1247.3292046787194,
+        "strassenraub": 113.22738556198469,
+        "fahrraddiebstahl": 718.4497079434544
+      }
+    },
+    {
+      "plrId": "01300732",
+      "bzrId": "013007",
+      "index": 1392.8473010578195,
+      "delikteHz": {
+        "kieztaten": 4722.869943967103,
+        "wohnraumeinbruch": 162.36026313783736,
+        "sachbeschaedigung": 1247.3292046787194,
+        "strassenraub": 113.22738556198469,
+        "fahrraddiebstahl": 718.4497079434544
+      }
+    },
+    {
+      "plrId": "01300733",
+      "bzrId": "013007",
+      "index": 1392.8473010578195,
+      "delikteHz": {
+        "kieztaten": 4722.869943967103,
+        "wohnraumeinbruch": 162.36026313783736,
+        "sachbeschaedigung": 1247.3292046787194,
+        "strassenraub": 113.22738556198469,
+        "fahrraddiebstahl": 718.4497079434544
+      }
+    },
+    {
+      "plrId": "01300834",
+      "bzrId": "013008",
+      "index": 1491.0334661890793,
+      "delikteHz": {
+        "kieztaten": 4522.059083925212,
+        "wohnraumeinbruch": 263.08176313239136,
+        "sachbeschaedigung": 1657.711295277278,
+        "strassenraub": 101.55687179611942,
+        "fahrraddiebstahl": 910.7583168143941
+      }
+    },
+    {
+      "plrId": "01300835",
+      "bzrId": "013008",
+      "index": 1491.0334661890793,
+      "delikteHz": {
+        "kieztaten": 4522.059083925212,
+        "wohnraumeinbruch": 263.08176313239136,
+        "sachbeschaedigung": 1657.711295277278,
+        "strassenraub": 101.55687179611942,
+        "fahrraddiebstahl": 910.7583168143941
+      }
+    },
+    {
+      "plrId": "01300836",
+      "bzrId": "013008",
+      "index": 1491.0334661890793,
+      "delikteHz": {
+        "kieztaten": 4522.059083925212,
+        "wohnraumeinbruch": 263.08176313239136,
+        "sachbeschaedigung": 1657.711295277278,
+        "strassenraub": 101.55687179611942,
+        "fahrraddiebstahl": 910.7583168143941
+      }
+    },
+    {
+      "plrId": "01400937",
+      "bzrId": "014009",
+      "index": 1307.112009341295,
+      "delikteHz": {
+        "kieztaten": 4290.108610892901,
+        "wohnraumeinbruch": 207.88101145244596,
+        "sachbeschaedigung": 1010.8256809417967,
+        "strassenraub": 56.79304662300411,
+        "fahrraddiebstahl": 969.9516967963281
+      }
+    },
+    {
+      "plrId": "01400938",
+      "bzrId": "014009",
+      "index": 1307.112009341295,
+      "delikteHz": {
+        "kieztaten": 4290.108610892901,
+        "wohnraumeinbruch": 207.88101145244596,
+        "sachbeschaedigung": 1010.8256809417967,
+        "strassenraub": 56.79304662300411,
+        "fahrraddiebstahl": 969.9516967963281
+      }
+    },
+    {
+      "plrId": "01400939",
+      "bzrId": "014009",
+      "index": 1307.112009341295,
+      "delikteHz": {
+        "kieztaten": 4290.108610892901,
+        "wohnraumeinbruch": 207.88101145244596,
+        "sachbeschaedigung": 1010.8256809417967,
+        "strassenraub": 56.79304662300411,
+        "fahrraddiebstahl": 969.9516967963281
+      }
+    },
+    {
+      "plrId": "01400940",
+      "bzrId": "014009",
+      "index": 1307.112009341295,
+      "delikteHz": {
+        "kieztaten": 4290.108610892901,
+        "wohnraumeinbruch": 207.88101145244596,
+        "sachbeschaedigung": 1010.8256809417967,
+        "strassenraub": 56.79304662300411,
+        "fahrraddiebstahl": 969.9516967963281
+      }
+    },
+    {
+      "plrId": "01400941",
+      "bzrId": "014009",
+      "index": 1307.112009341295,
+      "delikteHz": {
+        "kieztaten": 4290.108610892901,
+        "wohnraumeinbruch": 207.88101145244596,
+        "sachbeschaedigung": 1010.8256809417967,
+        "strassenraub": 56.79304662300411,
+        "fahrraddiebstahl": 969.9516967963281
+      }
+    },
+    {
+      "plrId": "01400942",
+      "bzrId": "014009",
+      "index": 1307.112009341295,
+      "delikteHz": {
+        "kieztaten": 4290.108610892901,
+        "wohnraumeinbruch": 207.88101145244596,
+        "sachbeschaedigung": 1010.8256809417967,
+        "strassenraub": 56.79304662300411,
+        "fahrraddiebstahl": 969.9516967963281
+      }
+    },
+    {
+      "plrId": "01401043",
+      "bzrId": "014010",
+      "index": 1470.3610026971855,
+      "delikteHz": {
+        "kieztaten": 4788.907964385938,
+        "wohnraumeinbruch": 171.23912941595395,
+        "sachbeschaedigung": 1192.53725873952,
+        "strassenraub": 165.74241746328275,
+        "fahrraddiebstahl": 1033.3782434812329
+      }
+    },
+    {
+      "plrId": "01401044",
+      "bzrId": "014010",
+      "index": 1470.3610026971855,
+      "delikteHz": {
+        "kieztaten": 4788.907964385938,
+        "wohnraumeinbruch": 171.23912941595395,
+        "sachbeschaedigung": 1192.53725873952,
+        "strassenraub": 165.74241746328275,
+        "fahrraddiebstahl": 1033.3782434812329
+      }
+    },
+    {
+      "plrId": "01401045",
+      "bzrId": "014010",
+      "index": 1470.3610026971855,
+      "delikteHz": {
+        "kieztaten": 4788.907964385938,
+        "wohnraumeinbruch": 171.23912941595395,
+        "sachbeschaedigung": 1192.53725873952,
+        "strassenraub": 165.74241746328275,
+        "fahrraddiebstahl": 1033.3782434812329
+      }
+    },
+    {
+      "plrId": "01401046",
+      "bzrId": "014010",
+      "index": 1470.3610026971855,
+      "delikteHz": {
+        "kieztaten": 4788.907964385938,
+        "wohnraumeinbruch": 171.23912941595395,
+        "sachbeschaedigung": 1192.53725873952,
+        "strassenraub": 165.74241746328275,
+        "fahrraddiebstahl": 1033.3782434812329
+      }
+    },
+    {
+      "plrId": "01401047",
+      "bzrId": "014010",
+      "index": 1470.3610026971855,
+      "delikteHz": {
+        "kieztaten": 4788.907964385938,
+        "wohnraumeinbruch": 171.23912941595395,
+        "sachbeschaedigung": 1192.53725873952,
+        "strassenraub": 165.74241746328275,
+        "fahrraddiebstahl": 1033.3782434812329
+      }
+    },
+    {
+      "plrId": "01401048",
+      "bzrId": "014010",
+      "index": 1470.3610026971855,
+      "delikteHz": {
+        "kieztaten": 4788.907964385938,
+        "wohnraumeinbruch": 171.23912941595395,
+        "sachbeschaedigung": 1192.53725873952,
+        "strassenraub": 165.74241746328275,
+        "fahrraddiebstahl": 1033.3782434812329
+      }
+    },
+    {
+      "plrId": "01401049",
+      "bzrId": "014010",
+      "index": 1470.3610026971855,
+      "delikteHz": {
+        "kieztaten": 4788.907964385938,
+        "wohnraumeinbruch": 171.23912941595395,
+        "sachbeschaedigung": 1192.53725873952,
+        "strassenraub": 165.74241746328275,
+        "fahrraddiebstahl": 1033.3782434812329
+      }
+    },
+    {
+      "plrId": "02100101",
+      "bzrId": "021001",
+      "index": 1695.4739646576281,
+      "delikteHz": {
+        "kieztaten": 5223.4677960613135,
+        "wohnraumeinbruch": 165.8555006766053,
+        "sachbeschaedigung": 1866.10485243585,
+        "strassenraub": 182.92160511140068,
+        "fahrraddiebstahl": 1039.0200690029712
+      }
+    },
+    {
+      "plrId": "02100102",
+      "bzrId": "021001",
+      "index": 1695.4739646576281,
+      "delikteHz": {
+        "kieztaten": 5223.4677960613135,
+        "wohnraumeinbruch": 165.8555006766053,
+        "sachbeschaedigung": 1866.10485243585,
+        "strassenraub": 182.92160511140068,
+        "fahrraddiebstahl": 1039.0200690029712
+      }
+    },
+    {
+      "plrId": "02100103",
+      "bzrId": "021001",
+      "index": 1695.4739646576281,
+      "delikteHz": {
+        "kieztaten": 5223.4677960613135,
+        "wohnraumeinbruch": 165.8555006766053,
+        "sachbeschaedigung": 1866.10485243585,
+        "strassenraub": 182.92160511140068,
+        "fahrraddiebstahl": 1039.0200690029712
+      }
+    },
+    {
+      "plrId": "02100104",
+      "bzrId": "021001",
+      "index": 1695.4739646576281,
+      "delikteHz": {
+        "kieztaten": 5223.4677960613135,
+        "wohnraumeinbruch": 165.8555006766053,
+        "sachbeschaedigung": 1866.10485243585,
+        "strassenraub": 182.92160511140068,
+        "fahrraddiebstahl": 1039.0200690029712
+      }
+    },
+    {
+      "plrId": "02100105",
+      "bzrId": "021001",
+      "index": 1695.4739646576281,
+      "delikteHz": {
+        "kieztaten": 5223.4677960613135,
+        "wohnraumeinbruch": 165.8555006766053,
+        "sachbeschaedigung": 1866.10485243585,
+        "strassenraub": 182.92160511140068,
+        "fahrraddiebstahl": 1039.0200690029712
+      }
+    },
+    {
+      "plrId": "02100106",
+      "bzrId": "021001",
+      "index": 1695.4739646576281,
+      "delikteHz": {
+        "kieztaten": 5223.4677960613135,
+        "wohnraumeinbruch": 165.8555006766053,
+        "sachbeschaedigung": 1866.10485243585,
+        "strassenraub": 182.92160511140068,
+        "fahrraddiebstahl": 1039.0200690029712
+      }
+    },
+    {
+      "plrId": "02200207",
+      "bzrId": "022002",
+      "index": 1338.784397486992,
+      "delikteHz": {
+        "kieztaten": 3459.3516081947796,
+        "wohnraumeinbruch": 190.73305647583643,
+        "sachbeschaedigung": 1521.9295093756266,
+        "strassenraub": 113.33200473056831,
+        "fahrraddiebstahl": 1408.575808658148
+      }
+    },
+    {
+      "plrId": "02200208",
+      "bzrId": "022002",
+      "index": 1338.784397486992,
+      "delikteHz": {
+        "kieztaten": 3459.3516081947796,
+        "wohnraumeinbruch": 190.73305647583643,
+        "sachbeschaedigung": 1521.9295093756266,
+        "strassenraub": 113.33200473056831,
+        "fahrraddiebstahl": 1408.575808658148
+      }
+    },
+    {
+      "plrId": "02200209",
+      "bzrId": "022002",
+      "index": 1338.784397486992,
+      "delikteHz": {
+        "kieztaten": 3459.3516081947796,
+        "wohnraumeinbruch": 190.73305647583643,
+        "sachbeschaedigung": 1521.9295093756266,
+        "strassenraub": 113.33200473056831,
+        "fahrraddiebstahl": 1408.575808658148
+      }
+    },
+    {
+      "plrId": "02200210",
+      "bzrId": "022002",
+      "index": 1338.784397486992,
+      "delikteHz": {
+        "kieztaten": 3459.3516081947796,
+        "wohnraumeinbruch": 190.73305647583643,
+        "sachbeschaedigung": 1521.9295093756266,
+        "strassenraub": 113.33200473056831,
+        "fahrraddiebstahl": 1408.575808658148
+      }
+    },
+    {
+      "plrId": "02200211",
+      "bzrId": "022002",
+      "index": 1338.784397486992,
+      "delikteHz": {
+        "kieztaten": 3459.3516081947796,
+        "wohnraumeinbruch": 190.73305647583643,
+        "sachbeschaedigung": 1521.9295093756266,
+        "strassenraub": 113.33200473056831,
+        "fahrraddiebstahl": 1408.575808658148
+      }
+    },
+    {
+      "plrId": "02200212",
+      "bzrId": "022002",
+      "index": 1338.784397486992,
+      "delikteHz": {
+        "kieztaten": 3459.3516081947796,
+        "wohnraumeinbruch": 190.73305647583643,
+        "sachbeschaedigung": 1521.9295093756266,
+        "strassenraub": 113.33200473056831,
+        "fahrraddiebstahl": 1408.575808658148
+      }
+    },
+    {
+      "plrId": "02200213",
+      "bzrId": "022002",
+      "index": 1338.784397486992,
+      "delikteHz": {
+        "kieztaten": 3459.3516081947796,
+        "wohnraumeinbruch": 190.73305647583643,
+        "sachbeschaedigung": 1521.9295093756266,
+        "strassenraub": 113.33200473056831,
+        "fahrraddiebstahl": 1408.575808658148
+      }
+    },
+    {
+      "plrId": "02300314",
+      "bzrId": "023003",
+      "index": 2079.023752921553,
+      "delikteHz": {
+        "kieztaten": 6724.6125761888425,
+        "wohnraumeinbruch": 196.81476310051198,
+        "sachbeschaedigung": 1791.0134117748412,
+        "strassenraub": 378.54830599699625,
+        "fahrraddiebstahl": 1304.1297075465711
+      }
+    },
+    {
+      "plrId": "02300315",
+      "bzrId": "023003",
+      "index": 2079.023752921553,
+      "delikteHz": {
+        "kieztaten": 6724.6125761888425,
+        "wohnraumeinbruch": 196.81476310051198,
+        "sachbeschaedigung": 1791.0134117748412,
+        "strassenraub": 378.54830599699625,
+        "fahrraddiebstahl": 1304.1297075465711
+      }
+    },
+    {
+      "plrId": "02300316",
+      "bzrId": "023003",
+      "index": 2079.023752921553,
+      "delikteHz": {
+        "kieztaten": 6724.6125761888425,
+        "wohnraumeinbruch": 196.81476310051198,
+        "sachbeschaedigung": 1791.0134117748412,
+        "strassenraub": 378.54830599699625,
+        "fahrraddiebstahl": 1304.1297075465711
+      }
+    },
+    {
+      "plrId": "02300417",
+      "bzrId": "023004",
+      "index": 2255.203337907365,
+      "delikteHz": {
+        "kieztaten": 6288.493250409592,
+        "wohnraumeinbruch": 269.1888550990927,
+        "sachbeschaedigung": 2174.7760137183536,
+        "strassenraub": 615.7315434981601,
+        "fahrraddiebstahl": 1927.8270268116257
+      }
+    },
+    {
+      "plrId": "02300418",
+      "bzrId": "023004",
+      "index": 2255.203337907365,
+      "delikteHz": {
+        "kieztaten": 6288.493250409592,
+        "wohnraumeinbruch": 269.1888550990927,
+        "sachbeschaedigung": 2174.7760137183536,
+        "strassenraub": 615.7315434981601,
+        "fahrraddiebstahl": 1927.8270268116257
+      }
+    },
+    {
+      "plrId": "02300419",
+      "bzrId": "023004",
+      "index": 2255.203337907365,
+      "delikteHz": {
+        "kieztaten": 6288.493250409592,
+        "wohnraumeinbruch": 269.1888550990927,
+        "sachbeschaedigung": 2174.7760137183536,
+        "strassenraub": 615.7315434981601,
+        "fahrraddiebstahl": 1927.8270268116257
+      }
+    },
+    {
+      "plrId": "02400520",
+      "bzrId": "024005",
+      "index": 1092.6313478753011,
+      "delikteHz": {
+        "kieztaten": 3235.6406048129465,
+        "wohnraumeinbruch": 272.52829949366327,
+        "sachbeschaedigung": 988.7181037993769,
+        "strassenraub": 86.50041600793695,
+        "fahrraddiebstahl": 879.769315262581
+      }
+    },
+    {
+      "plrId": "02400521",
+      "bzrId": "024005",
+      "index": 1092.6313478753011,
+      "delikteHz": {
+        "kieztaten": 3235.6406048129465,
+        "wohnraumeinbruch": 272.52829949366327,
+        "sachbeschaedigung": 988.7181037993769,
+        "strassenraub": 86.50041600793695,
+        "fahrraddiebstahl": 879.769315262581
+      }
+    },
+    {
+      "plrId": "02400522",
+      "bzrId": "024005",
+      "index": 1092.6313478753011,
+      "delikteHz": {
+        "kieztaten": 3235.6406048129465,
+        "wohnraumeinbruch": 272.52829949366327,
+        "sachbeschaedigung": 988.7181037993769,
+        "strassenraub": 86.50041600793695,
+        "fahrraddiebstahl": 879.769315262581
+      }
+    },
+    {
+      "plrId": "02400623",
+      "bzrId": "024006",
+      "index": 1965.201683738375,
+      "delikteHz": {
+        "kieztaten": 6216.060483634855,
+        "wohnraumeinbruch": 228.04986045202077,
+        "sachbeschaedigung": 2029.6238836844307,
+        "strassenraub": 235.8947659470366,
+        "fahrraddiebstahl": 1116.379424973531
+      }
+    },
+    {
+      "plrId": "02400624",
+      "bzrId": "024006",
+      "index": 1965.201683738375,
+      "delikteHz": {
+        "kieztaten": 6216.060483634855,
+        "wohnraumeinbruch": 228.04986045202077,
+        "sachbeschaedigung": 2029.6238836844307,
+        "strassenraub": 235.8947659470366,
+        "fahrraddiebstahl": 1116.379424973531
+      }
+    },
+    {
+      "plrId": "02400625",
+      "bzrId": "024006",
+      "index": 1965.201683738375,
+      "delikteHz": {
+        "kieztaten": 6216.060483634855,
+        "wohnraumeinbruch": 228.04986045202077,
+        "sachbeschaedigung": 2029.6238836844307,
+        "strassenraub": 235.8947659470366,
+        "fahrraddiebstahl": 1116.379424973531
+      }
+    },
+    {
+      "plrId": "02500726",
+      "bzrId": "025007",
+      "index": 1114.8054155697887,
+      "delikteHz": {
+        "kieztaten": 3008.1780096517955,
+        "wohnraumeinbruch": 160.35875587226582,
+        "sachbeschaedigung": 1430.8549424204311,
+        "strassenraub": 75.41305881122986,
+        "fahrraddiebstahl": 899.2223110932206
+      }
+    },
+    {
+      "plrId": "02500727",
+      "bzrId": "025007",
+      "index": 1114.8054155697887,
+      "delikteHz": {
+        "kieztaten": 3008.1780096517955,
+        "wohnraumeinbruch": 160.35875587226582,
+        "sachbeschaedigung": 1430.8549424204311,
+        "strassenraub": 75.41305881122986,
+        "fahrraddiebstahl": 899.2223110932206
+      }
+    },
+    {
+      "plrId": "02500728",
+      "bzrId": "025007",
+      "index": 1114.8054155697887,
+      "delikteHz": {
+        "kieztaten": 3008.1780096517955,
+        "wohnraumeinbruch": 160.35875587226582,
+        "sachbeschaedigung": 1430.8549424204311,
+        "strassenraub": 75.41305881122986,
+        "fahrraddiebstahl": 899.2223110932206
+      }
+    },
+    {
+      "plrId": "02500729",
+      "bzrId": "025007",
+      "index": 1114.8054155697887,
+      "delikteHz": {
+        "kieztaten": 3008.1780096517955,
+        "wohnraumeinbruch": 160.35875587226582,
+        "sachbeschaedigung": 1430.8549424204311,
+        "strassenraub": 75.41305881122986,
+        "fahrraddiebstahl": 899.2223110932206
+      }
+    },
+    {
+      "plrId": "02500830",
+      "bzrId": "025008",
+      "index": 1511.1545143729054,
+      "delikteHz": {
+        "kieztaten": 4323.673863173225,
+        "wohnraumeinbruch": 168.24556315961266,
+        "sachbeschaedigung": 1845.7782579854218,
+        "strassenraub": 123.06782503685461,
+        "fahrraddiebstahl": 1095.007062509412
+      }
+    },
+    {
+      "plrId": "02500831",
+      "bzrId": "025008",
+      "index": 1511.1545143729054,
+      "delikteHz": {
+        "kieztaten": 4323.673863173225,
+        "wohnraumeinbruch": 168.24556315961266,
+        "sachbeschaedigung": 1845.7782579854218,
+        "strassenraub": 123.06782503685461,
+        "fahrraddiebstahl": 1095.007062509412
+      }
+    },
+    {
+      "plrId": "02500832",
+      "bzrId": "025008",
+      "index": 1511.1545143729054,
+      "delikteHz": {
+        "kieztaten": 4323.673863173225,
+        "wohnraumeinbruch": 168.24556315961266,
+        "sachbeschaedigung": 1845.7782579854218,
+        "strassenraub": 123.06782503685461,
+        "fahrraddiebstahl": 1095.007062509412
+      }
+    },
+    {
+      "plrId": "02500833",
+      "bzrId": "025008",
+      "index": 1511.1545143729054,
+      "delikteHz": {
+        "kieztaten": 4323.673863173225,
+        "wohnraumeinbruch": 168.24556315961266,
+        "sachbeschaedigung": 1845.7782579854218,
+        "strassenraub": 123.06782503685461,
+        "fahrraddiebstahl": 1095.007062509412
+      }
+    },
+    {
+      "plrId": "02500834",
+      "bzrId": "025008",
+      "index": 1511.1545143729054,
+      "delikteHz": {
+        "kieztaten": 4323.673863173225,
+        "wohnraumeinbruch": 168.24556315961266,
+        "sachbeschaedigung": 1845.7782579854218,
+        "strassenraub": 123.06782503685461,
+        "fahrraddiebstahl": 1095.007062509412
+      }
+    },
+    {
+      "plrId": "02500835",
+      "bzrId": "025008",
+      "index": 1511.1545143729054,
+      "delikteHz": {
+        "kieztaten": 4323.673863173225,
+        "wohnraumeinbruch": 168.24556315961266,
+        "sachbeschaedigung": 1845.7782579854218,
+        "strassenraub": 123.06782503685461,
+        "fahrraddiebstahl": 1095.007062509412
+      }
+    },
+    {
+      "plrId": "02500836",
+      "bzrId": "025008",
+      "index": 1511.1545143729054,
+      "delikteHz": {
+        "kieztaten": 4323.673863173225,
+        "wohnraumeinbruch": 168.24556315961266,
+        "sachbeschaedigung": 1845.7782579854218,
+        "strassenraub": 123.06782503685461,
+        "fahrraddiebstahl": 1095.007062509412
+      }
+    },
+    {
+      "plrId": "03100101",
+      "bzrId": "031001",
+      "index": 1037.8747884887641,
+      "delikteHz": {
+        "kieztaten": 3199.1320194897194,
+        "wohnraumeinbruch": 93.86694490638114,
+        "sachbeschaedigung": 1520.7044762688138,
+        "strassenraub": 52.61788957532116,
+        "fahrraddiebstahl": 323.05261220358517
+      }
+    },
+    {
+      "plrId": "03100102",
+      "bzrId": "031001",
+      "index": 1037.8747884887641,
+      "delikteHz": {
+        "kieztaten": 3199.1320194897194,
+        "wohnraumeinbruch": 93.86694490638114,
+        "sachbeschaedigung": 1520.7044762688138,
+        "strassenraub": 52.61788957532116,
+        "fahrraddiebstahl": 323.05261220358517
+      }
+    },
+    {
+      "plrId": "03100103",
+      "bzrId": "031001",
+      "index": 1037.8747884887641,
+      "delikteHz": {
+        "kieztaten": 3199.1320194897194,
+        "wohnraumeinbruch": 93.86694490638114,
+        "sachbeschaedigung": 1520.7044762688138,
+        "strassenraub": 52.61788957532116,
+        "fahrraddiebstahl": 323.05261220358517
+      }
+    },
+    {
+      "plrId": "03200204",
+      "bzrId": "032002",
+      "index": 517.6983552072882,
+      "delikteHz": {
+        "kieztaten": 1324.1589622738454,
+        "wohnraumeinbruch": 166.51639938348922,
+        "sachbeschaedigung": 706.4384454823761,
+        "strassenraub": 27.928324504549327,
+        "fahrraddiebstahl": 363.449644392181
+      }
+    },
+    {
+      "plrId": "03200205",
+      "bzrId": "032002",
+      "index": 517.6983552072882,
+      "delikteHz": {
+        "kieztaten": 1324.1589622738454,
+        "wohnraumeinbruch": 166.51639938348922,
+        "sachbeschaedigung": 706.4384454823761,
+        "strassenraub": 27.928324504549327,
+        "fahrraddiebstahl": 363.449644392181
+      }
+    },
+    {
+      "plrId": "03200206",
+      "bzrId": "032002",
+      "index": 517.6983552072882,
+      "delikteHz": {
+        "kieztaten": 1324.1589622738454,
+        "wohnraumeinbruch": 166.51639938348922,
+        "sachbeschaedigung": 706.4384454823761,
+        "strassenraub": 27.928324504549327,
+        "fahrraddiebstahl": 363.449644392181
+      }
+    },
+    {
+      "plrId": "03200207",
+      "bzrId": "032002",
+      "index": 517.6983552072882,
+      "delikteHz": {
+        "kieztaten": 1324.1589622738454,
+        "wohnraumeinbruch": 166.51639938348922,
+        "sachbeschaedigung": 706.4384454823761,
+        "strassenraub": 27.928324504549327,
+        "fahrraddiebstahl": 363.449644392181
+      }
+    },
+    {
+      "plrId": "03200308",
+      "bzrId": "032003",
+      "index": 475.8974095832836,
+      "delikteHz": {
+        "kieztaten": 1263.98270058916,
+        "wohnraumeinbruch": 143.38212839880293,
+        "sachbeschaedigung": 655.1620240174824,
+        "strassenraub": 30.10443229041911,
+        "fahrraddiebstahl": 286.8557626205531
+      }
+    },
+    {
+      "plrId": "03200309",
+      "bzrId": "032003",
+      "index": 475.8974095832836,
+      "delikteHz": {
+        "kieztaten": 1263.98270058916,
+        "wohnraumeinbruch": 143.38212839880293,
+        "sachbeschaedigung": 655.1620240174824,
+        "strassenraub": 30.10443229041911,
+        "fahrraddiebstahl": 286.8557626205531
+      }
+    },
+    {
+      "plrId": "03200310",
+      "bzrId": "032003",
+      "index": 475.8974095832836,
+      "delikteHz": {
+        "kieztaten": 1263.98270058916,
+        "wohnraumeinbruch": 143.38212839880293,
+        "sachbeschaedigung": 655.1620240174824,
+        "strassenraub": 30.10443229041911,
+        "fahrraddiebstahl": 286.8557626205531
+      }
+    },
+    {
+      "plrId": "03300411",
+      "bzrId": "033004",
+      "index": 443.4733351926096,
+      "delikteHz": {
+        "kieztaten": 1113.4447277559082,
+        "wohnraumeinbruch": 191.44891114396796,
+        "sachbeschaedigung": 618.7089021422104,
+        "strassenraub": 23.163213381695655,
+        "fahrraddiebstahl": 270.60092153926615
+      }
+    },
+    {
+      "plrId": "03300412",
+      "bzrId": "033004",
+      "index": 443.4733351926096,
+      "delikteHz": {
+        "kieztaten": 1113.4447277559082,
+        "wohnraumeinbruch": 191.44891114396796,
+        "sachbeschaedigung": 618.7089021422104,
+        "strassenraub": 23.163213381695655,
+        "fahrraddiebstahl": 270.60092153926615
+      }
+    },
+    {
+      "plrId": "03300413",
+      "bzrId": "033004",
+      "index": 443.4733351926096,
+      "delikteHz": {
+        "kieztaten": 1113.4447277559082,
+        "wohnraumeinbruch": 191.44891114396796,
+        "sachbeschaedigung": 618.7089021422104,
+        "strassenraub": 23.163213381695655,
+        "fahrraddiebstahl": 270.60092153926615
+      }
+    },
+    {
+      "plrId": "03300514",
+      "bzrId": "033005",
+      "index": 737.9557435239885,
+      "delikteHz": {
+        "kieztaten": 1935.0229916550209,
+        "wohnraumeinbruch": 249.20010620203254,
+        "sachbeschaedigung": 1009.850044677797,
+        "strassenraub": 38.92730401009765,
+        "fahrraddiebstahl": 456.7782710749938
+      }
+    },
+    {
+      "plrId": "03300515",
+      "bzrId": "033005",
+      "index": 737.9557435239885,
+      "delikteHz": {
+        "kieztaten": 1935.0229916550209,
+        "wohnraumeinbruch": 249.20010620203254,
+        "sachbeschaedigung": 1009.850044677797,
+        "strassenraub": 38.92730401009765,
+        "fahrraddiebstahl": 456.7782710749938
+      }
+    },
+    {
+      "plrId": "03300516",
+      "bzrId": "033005",
+      "index": 737.9557435239885,
+      "delikteHz": {
+        "kieztaten": 1935.0229916550209,
+        "wohnraumeinbruch": 249.20010620203254,
+        "sachbeschaedigung": 1009.850044677797,
+        "strassenraub": 38.92730401009765,
+        "fahrraddiebstahl": 456.7782710749938
+      }
+    },
+    {
+      "plrId": "03300517",
+      "bzrId": "033005",
+      "index": 737.9557435239885,
+      "delikteHz": {
+        "kieztaten": 1935.0229916550209,
+        "wohnraumeinbruch": 249.20010620203254,
+        "sachbeschaedigung": 1009.850044677797,
+        "strassenraub": 38.92730401009765,
+        "fahrraddiebstahl": 456.7782710749938
+      }
+    },
+    {
+      "plrId": "03400618",
+      "bzrId": "034006",
+      "index": 545.2483364539291,
+      "delikteHz": {
+        "kieztaten": 1403.6436012288411,
+        "wohnraumeinbruch": 295.83867097296746,
+        "sachbeschaedigung": 667.5933439919373,
+        "strassenraub": 42.25459169676022,
+        "fahrraddiebstahl": 316.9114743791394
+      }
+    },
+    {
+      "plrId": "03400619",
+      "bzrId": "034006",
+      "index": 545.2483364539291,
+      "delikteHz": {
+        "kieztaten": 1403.6436012288411,
+        "wohnraumeinbruch": 295.83867097296746,
+        "sachbeschaedigung": 667.5933439919373,
+        "strassenraub": 42.25459169676022,
+        "fahrraddiebstahl": 316.9114743791394
+      }
+    },
+    {
+      "plrId": "03400620",
+      "bzrId": "034006",
+      "index": 545.2483364539291,
+      "delikteHz": {
+        "kieztaten": 1403.6436012288411,
+        "wohnraumeinbruch": 295.83867097296746,
+        "sachbeschaedigung": 667.5933439919373,
+        "strassenraub": 42.25459169676022,
+        "fahrraddiebstahl": 316.9114743791394
+      }
+    },
+    {
+      "plrId": "03400721",
+      "bzrId": "034007",
+      "index": 799.2818986860613,
+      "delikteHz": {
+        "kieztaten": 2020.5490385920748,
+        "wohnraumeinbruch": 185.06793365485962,
+        "sachbeschaedigung": 846.3777286517872,
+        "strassenraub": 77.14172687635313,
+        "fahrraddiebstahl": 867.2730656552316
+      }
+    },
+    {
+      "plrId": "03400722",
+      "bzrId": "034007",
+      "index": 799.2818986860613,
+      "delikteHz": {
+        "kieztaten": 2020.5490385920748,
+        "wohnraumeinbruch": 185.06793365485962,
+        "sachbeschaedigung": 846.3777286517872,
+        "strassenraub": 77.14172687635313,
+        "fahrraddiebstahl": 867.2730656552316
+      }
+    },
+    {
+      "plrId": "03400723",
+      "bzrId": "034007",
+      "index": 799.2818986860613,
+      "delikteHz": {
+        "kieztaten": 2020.5490385920748,
+        "wohnraumeinbruch": 185.06793365485962,
+        "sachbeschaedigung": 846.3777286517872,
+        "strassenraub": 77.14172687635313,
+        "fahrraddiebstahl": 867.2730656552316
+      }
+    },
+    {
+      "plrId": "03400724",
+      "bzrId": "034007",
+      "index": 799.2818986860613,
+      "delikteHz": {
+        "kieztaten": 2020.5490385920748,
+        "wohnraumeinbruch": 185.06793365485962,
+        "sachbeschaedigung": 846.3777286517872,
+        "strassenraub": 77.14172687635313,
+        "fahrraddiebstahl": 867.2730656552316
+      }
+    },
+    {
+      "plrId": "03400725",
+      "bzrId": "034007",
+      "index": 799.2818986860613,
+      "delikteHz": {
+        "kieztaten": 2020.5490385920748,
+        "wohnraumeinbruch": 185.06793365485962,
+        "sachbeschaedigung": 846.3777286517872,
+        "strassenraub": 77.14172687635313,
+        "fahrraddiebstahl": 867.2730656552316
+      }
+    },
+    {
+      "plrId": "03400826",
+      "bzrId": "034008",
+      "index": 736.3557302968456,
+      "delikteHz": {
+        "kieztaten": 1975.0541253210558,
+        "wohnraumeinbruch": 198.28304160695566,
+        "sachbeschaedigung": 833.6094729767747,
+        "strassenraub": 39.51385907441363,
+        "fahrraddiebstahl": 635.3181525050283
+      }
+    },
+    {
+      "plrId": "03400827",
+      "bzrId": "034008",
+      "index": 736.3557302968456,
+      "delikteHz": {
+        "kieztaten": 1975.0541253210558,
+        "wohnraumeinbruch": 198.28304160695566,
+        "sachbeschaedigung": 833.6094729767747,
+        "strassenraub": 39.51385907441363,
+        "fahrraddiebstahl": 635.3181525050283
+      }
+    },
+    {
+      "plrId": "03400828",
+      "bzrId": "034008",
+      "index": 736.3557302968456,
+      "delikteHz": {
+        "kieztaten": 1975.0541253210558,
+        "wohnraumeinbruch": 198.28304160695566,
+        "sachbeschaedigung": 833.6094729767747,
+        "strassenraub": 39.51385907441363,
+        "fahrraddiebstahl": 635.3181525050283
+      }
+    },
+    {
+      "plrId": "03400829",
+      "bzrId": "034008",
+      "index": 736.3557302968456,
+      "delikteHz": {
+        "kieztaten": 1975.0541253210558,
+        "wohnraumeinbruch": 198.28304160695566,
+        "sachbeschaedigung": 833.6094729767747,
+        "strassenraub": 39.51385907441363,
+        "fahrraddiebstahl": 635.3181525050283
+      }
+    },
+    {
+      "plrId": "03400830",
+      "bzrId": "034008",
+      "index": 736.3557302968456,
+      "delikteHz": {
+        "kieztaten": 1975.0541253210558,
+        "wohnraumeinbruch": 198.28304160695566,
+        "sachbeschaedigung": 833.6094729767747,
+        "strassenraub": 39.51385907441363,
+        "fahrraddiebstahl": 635.3181525050283
+      }
+    },
+    {
+      "plrId": "03400831",
+      "bzrId": "034008",
+      "index": 736.3557302968456,
+      "delikteHz": {
+        "kieztaten": 1975.0541253210558,
+        "wohnraumeinbruch": 198.28304160695566,
+        "sachbeschaedigung": 833.6094729767747,
+        "strassenraub": 39.51385907441363,
+        "fahrraddiebstahl": 635.3181525050283
+      }
+    },
+    {
+      "plrId": "03500932",
+      "bzrId": "035009",
+      "index": 858.3851145220207,
+      "delikteHz": {
+        "kieztaten": 2391.425783563704,
+        "wohnraumeinbruch": 195.56587026018883,
+        "sachbeschaedigung": 982.0421484274156,
+        "strassenraub": 50.75315948326598,
+        "fahrraddiebstahl": 672.1386108755286
+      }
+    },
+    {
+      "plrId": "03500933",
+      "bzrId": "035009",
+      "index": 858.3851145220207,
+      "delikteHz": {
+        "kieztaten": 2391.425783563704,
+        "wohnraumeinbruch": 195.56587026018883,
+        "sachbeschaedigung": 982.0421484274156,
+        "strassenraub": 50.75315948326598,
+        "fahrraddiebstahl": 672.1386108755286
+      }
+    },
+    {
+      "plrId": "03500934",
+      "bzrId": "035009",
+      "index": 858.3851145220207,
+      "delikteHz": {
+        "kieztaten": 2391.425783563704,
+        "wohnraumeinbruch": 195.56587026018883,
+        "sachbeschaedigung": 982.0421484274156,
+        "strassenraub": 50.75315948326598,
+        "fahrraddiebstahl": 672.1386108755286
+      }
+    },
+    {
+      "plrId": "03500935",
+      "bzrId": "035009",
+      "index": 858.3851145220207,
+      "delikteHz": {
+        "kieztaten": 2391.425783563704,
+        "wohnraumeinbruch": 195.56587026018883,
+        "sachbeschaedigung": 982.0421484274156,
+        "strassenraub": 50.75315948326598,
+        "fahrraddiebstahl": 672.1386108755286
+      }
+    },
+    {
+      "plrId": "03500936",
+      "bzrId": "035009",
+      "index": 858.3851145220207,
+      "delikteHz": {
+        "kieztaten": 2391.425783563704,
+        "wohnraumeinbruch": 195.56587026018883,
+        "sachbeschaedigung": 982.0421484274156,
+        "strassenraub": 50.75315948326598,
+        "fahrraddiebstahl": 672.1386108755286
+      }
+    },
+    {
+      "plrId": "03501037",
+      "bzrId": "035010",
+      "index": 1048.7909545982832,
+      "delikteHz": {
+        "kieztaten": 3185.7301623288063,
+        "wohnraumeinbruch": 222.22797532707077,
+        "sachbeschaedigung": 1273.8528026509273,
+        "strassenraub": 65.26120520560563,
+        "fahrraddiebstahl": 496.8826274790056
+      }
+    },
+    {
+      "plrId": "03501038",
+      "bzrId": "035010",
+      "index": 1048.7909545982832,
+      "delikteHz": {
+        "kieztaten": 3185.7301623288063,
+        "wohnraumeinbruch": 222.22797532707077,
+        "sachbeschaedigung": 1273.8528026509273,
+        "strassenraub": 65.26120520560563,
+        "fahrraddiebstahl": 496.8826274790056
+      }
+    },
+    {
+      "plrId": "03601139",
+      "bzrId": "036011",
+      "index": 1199.608198367026,
+      "delikteHz": {
+        "kieztaten": 3252.6338117624323,
+        "wohnraumeinbruch": 128.96902551385992,
+        "sachbeschaedigung": 1323.7542664401615,
+        "strassenraub": 147.90849214890252,
+        "fahrraddiebstahl": 1144.7753959697734
+      }
+    },
+    {
+      "plrId": "03601140",
+      "bzrId": "036011",
+      "index": 1199.608198367026,
+      "delikteHz": {
+        "kieztaten": 3252.6338117624323,
+        "wohnraumeinbruch": 128.96902551385992,
+        "sachbeschaedigung": 1323.7542664401615,
+        "strassenraub": 147.90849214890252,
+        "fahrraddiebstahl": 1144.7753959697734
+      }
+    },
+    {
+      "plrId": "03601141",
+      "bzrId": "036011",
+      "index": 1199.608198367026,
+      "delikteHz": {
+        "kieztaten": 3252.6338117624323,
+        "wohnraumeinbruch": 128.96902551385992,
+        "sachbeschaedigung": 1323.7542664401615,
+        "strassenraub": 147.90849214890252,
+        "fahrraddiebstahl": 1144.7753959697734
+      }
+    },
+    {
+      "plrId": "03601142",
+      "bzrId": "036011",
+      "index": 1199.608198367026,
+      "delikteHz": {
+        "kieztaten": 3252.6338117624323,
+        "wohnraumeinbruch": 128.96902551385992,
+        "sachbeschaedigung": 1323.7542664401615,
+        "strassenraub": 147.90849214890252,
+        "fahrraddiebstahl": 1144.7753959697734
+      }
+    },
+    {
+      "plrId": "03601243",
+      "bzrId": "036012",
+      "index": 952.7358896765093,
+      "delikteHz": {
+        "kieztaten": 2421.783971018307,
+        "wohnraumeinbruch": 225.81306559677788,
+        "sachbeschaedigung": 956.3371875267608,
+        "strassenraub": 36.90151940204019,
+        "fahrraddiebstahl": 1122.8437048386597
+      }
+    },
+    {
+      "plrId": "03601244",
+      "bzrId": "036012",
+      "index": 952.7358896765093,
+      "delikteHz": {
+        "kieztaten": 2421.783971018307,
+        "wohnraumeinbruch": 225.81306559677788,
+        "sachbeschaedigung": 956.3371875267608,
+        "strassenraub": 36.90151940204019,
+        "fahrraddiebstahl": 1122.8437048386597
+      }
+    },
+    {
+      "plrId": "03601245",
+      "bzrId": "036012",
+      "index": 952.7358896765093,
+      "delikteHz": {
+        "kieztaten": 2421.783971018307,
+        "wohnraumeinbruch": 225.81306559677788,
+        "sachbeschaedigung": 956.3371875267608,
+        "strassenraub": 36.90151940204019,
+        "fahrraddiebstahl": 1122.8437048386597
+      }
+    },
+    {
+      "plrId": "03601346",
+      "bzrId": "036013",
+      "index": 980.1177158708743,
+      "delikteHz": {
+        "kieztaten": 2360.7795371131924,
+        "wohnraumeinbruch": 103.51701900577946,
+        "sachbeschaedigung": 1254.5923832684864,
+        "strassenraub": 65.35837354394057,
+        "fahrraddiebstahl": 1116.3412664229725
+      }
+    },
+    {
+      "plrId": "03601347",
+      "bzrId": "036013",
+      "index": 980.1177158708743,
+      "delikteHz": {
+        "kieztaten": 2360.7795371131924,
+        "wohnraumeinbruch": 103.51701900577946,
+        "sachbeschaedigung": 1254.5923832684864,
+        "strassenraub": 65.35837354394057,
+        "fahrraddiebstahl": 1116.3412664229725
+      }
+    },
+    {
+      "plrId": "03601348",
+      "bzrId": "036013",
+      "index": 980.1177158708743,
+      "delikteHz": {
+        "kieztaten": 2360.7795371131924,
+        "wohnraumeinbruch": 103.51701900577946,
+        "sachbeschaedigung": 1254.5923832684864,
+        "strassenraub": 65.35837354394057,
+        "fahrraddiebstahl": 1116.3412664229725
+      }
+    },
+    {
+      "plrId": "03601449",
+      "bzrId": "036014",
+      "index": 1277.1500381938765,
+      "delikteHz": {
+        "kieztaten": 3637.1602329741327,
+        "wohnraumeinbruch": 311.48726361670276,
+        "sachbeschaedigung": 1526.6710917307526,
+        "strassenraub": 132.9755022097127,
+        "fahrraddiebstahl": 777.4561004380813
+      }
+    },
+    {
+      "plrId": "03601450",
+      "bzrId": "036014",
+      "index": 1277.1500381938765,
+      "delikteHz": {
+        "kieztaten": 3637.1602329741327,
+        "wohnraumeinbruch": 311.48726361670276,
+        "sachbeschaedigung": 1526.6710917307526,
+        "strassenraub": 132.9755022097127,
+        "fahrraddiebstahl": 777.4561004380813
+      }
+    },
+    {
+      "plrId": "03601451",
+      "bzrId": "036014",
+      "index": 1277.1500381938765,
+      "delikteHz": {
+        "kieztaten": 3637.1602329741327,
+        "wohnraumeinbruch": 311.48726361670276,
+        "sachbeschaedigung": 1526.6710917307526,
+        "strassenraub": 132.9755022097127,
+        "fahrraddiebstahl": 777.4561004380813
+      }
+    },
+    {
+      "plrId": "03601452",
+      "bzrId": "036014",
+      "index": 1277.1500381938765,
+      "delikteHz": {
+        "kieztaten": 3637.1602329741327,
+        "wohnraumeinbruch": 311.48726361670276,
+        "sachbeschaedigung": 1526.6710917307526,
+        "strassenraub": 132.9755022097127,
+        "fahrraddiebstahl": 777.4561004380813
+      }
+    },
+    {
+      "plrId": "03601453",
+      "bzrId": "036014",
+      "index": 1277.1500381938765,
+      "delikteHz": {
+        "kieztaten": 3637.1602329741327,
+        "wohnraumeinbruch": 311.48726361670276,
+        "sachbeschaedigung": 1526.6710917307526,
+        "strassenraub": 132.9755022097127,
+        "fahrraddiebstahl": 777.4561004380813
+      }
+    },
+    {
+      "plrId": "03701554",
+      "bzrId": "037015",
+      "index": 1242.4719058886217,
+      "delikteHz": {
+        "kieztaten": 3325.36258677079,
+        "wohnraumeinbruch": 185.16008562232696,
+        "sachbeschaedigung": 1456.3123105250113,
+        "strassenraub": 109.65143977407506,
+        "fahrraddiebstahl": 1135.8731067509054
+      }
+    },
+    {
+      "plrId": "03701555",
+      "bzrId": "037015",
+      "index": 1242.4719058886217,
+      "delikteHz": {
+        "kieztaten": 3325.36258677079,
+        "wohnraumeinbruch": 185.16008562232696,
+        "sachbeschaedigung": 1456.3123105250113,
+        "strassenraub": 109.65143977407506,
+        "fahrraddiebstahl": 1135.8731067509054
+      }
+    },
+    {
+      "plrId": "03701556",
+      "bzrId": "037015",
+      "index": 1242.4719058886217,
+      "delikteHz": {
+        "kieztaten": 3325.36258677079,
+        "wohnraumeinbruch": 185.16008562232696,
+        "sachbeschaedigung": 1456.3123105250113,
+        "strassenraub": 109.65143977407506,
+        "fahrraddiebstahl": 1135.8731067509054
+      }
+    },
+    {
+      "plrId": "03701657",
+      "bzrId": "037016",
+      "index": 895.0687648153522,
+      "delikteHz": {
+        "kieztaten": 2348.6582289523544,
+        "wohnraumeinbruch": 208.89971824131285,
+        "sachbeschaedigung": 940.0345648784551,
+        "strassenraub": 49.4543135971007,
+        "fahrraddiebstahl": 928.2969984075372
+      }
+    },
+    {
+      "plrId": "03701658",
+      "bzrId": "037016",
+      "index": 895.0687648153522,
+      "delikteHz": {
+        "kieztaten": 2348.6582289523544,
+        "wohnraumeinbruch": 208.89971824131285,
+        "sachbeschaedigung": 940.0345648784551,
+        "strassenraub": 49.4543135971007,
+        "fahrraddiebstahl": 928.2969984075372
+      }
+    },
+    {
+      "plrId": "03701659",
+      "bzrId": "037016",
+      "index": 895.0687648153522,
+      "delikteHz": {
+        "kieztaten": 2348.6582289523544,
+        "wohnraumeinbruch": 208.89971824131285,
+        "sachbeschaedigung": 940.0345648784551,
+        "strassenraub": 49.4543135971007,
+        "fahrraddiebstahl": 928.2969984075372
+      }
+    },
+    {
+      "plrId": "03701660",
+      "bzrId": "037016",
+      "index": 895.0687648153522,
+      "delikteHz": {
+        "kieztaten": 2348.6582289523544,
+        "wohnraumeinbruch": 208.89971824131285,
+        "sachbeschaedigung": 940.0345648784551,
+        "strassenraub": 49.4543135971007,
+        "fahrraddiebstahl": 928.2969984075372
+      }
+    },
+    {
+      "plrId": "04100101",
+      "bzrId": "041001",
+      "index": 1158.9792969010862,
+      "delikteHz": {
+        "kieztaten": 4172.309188022995,
+        "wohnraumeinbruch": 282.01899676787406,
+        "sachbeschaedigung": 1010.7491648746072,
+        "strassenraub": 85.55941562843331,
+        "fahrraddiebstahl": 244.25971921152077
+      }
+    },
+    {
+      "plrId": "04100102",
+      "bzrId": "041001",
+      "index": 1158.9792969010862,
+      "delikteHz": {
+        "kieztaten": 4172.309188022995,
+        "wohnraumeinbruch": 282.01899676787406,
+        "sachbeschaedigung": 1010.7491648746072,
+        "strassenraub": 85.55941562843331,
+        "fahrraddiebstahl": 244.25971921152077
+      }
+    },
+    {
+      "plrId": "04200203",
+      "bzrId": "042002",
+      "index": 1198.9344280216044,
+      "delikteHz": {
+        "kieztaten": 3576.4781455757197,
+        "wohnraumeinbruch": 406.6898794788462,
+        "sachbeschaedigung": 1578.3286481932885,
+        "strassenraub": 77.2018321383098,
+        "fahrraddiebstahl": 355.97363472185725
+      }
+    },
+    {
+      "plrId": "04200204",
+      "bzrId": "042002",
+      "index": 1198.9344280216044,
+      "delikteHz": {
+        "kieztaten": 3576.4781455757197,
+        "wohnraumeinbruch": 406.6898794788462,
+        "sachbeschaedigung": 1578.3286481932885,
+        "strassenraub": 77.2018321383098,
+        "fahrraddiebstahl": 355.97363472185725
+      }
+    },
+    {
+      "plrId": "04200205",
+      "bzrId": "042002",
+      "index": 1198.9344280216044,
+      "delikteHz": {
+        "kieztaten": 3576.4781455757197,
+        "wohnraumeinbruch": 406.6898794788462,
+        "sachbeschaedigung": 1578.3286481932885,
+        "strassenraub": 77.2018321383098,
+        "fahrraddiebstahl": 355.97363472185725
+      }
+    },
+    {
+      "plrId": "04200206",
+      "bzrId": "042002",
+      "index": 1198.9344280216044,
+      "delikteHz": {
+        "kieztaten": 3576.4781455757197,
+        "wohnraumeinbruch": 406.6898794788462,
+        "sachbeschaedigung": 1578.3286481932885,
+        "strassenraub": 77.2018321383098,
+        "fahrraddiebstahl": 355.97363472185725
+      }
+    },
+    {
+      "plrId": "04200207",
+      "bzrId": "042002",
+      "index": 1198.9344280216044,
+      "delikteHz": {
+        "kieztaten": 3576.4781455757197,
+        "wohnraumeinbruch": 406.6898794788462,
+        "sachbeschaedigung": 1578.3286481932885,
+        "strassenraub": 77.2018321383098,
+        "fahrraddiebstahl": 355.97363472185725
+      }
+    },
+    {
+      "plrId": "04200308",
+      "bzrId": "042003",
+      "index": 1064.5030653228182,
+      "delikteHz": {
+        "kieztaten": 3210.6887656069316,
+        "wohnraumeinbruch": 374.536000437827,
+        "sachbeschaedigung": 1182.3327602021097,
+        "strassenraub": 54.71016311831577,
+        "fahrraddiebstahl": 500.24763724890687
+      }
+    },
+    {
+      "plrId": "04200309",
+      "bzrId": "042003",
+      "index": 1064.5030653228182,
+      "delikteHz": {
+        "kieztaten": 3210.6887656069316,
+        "wohnraumeinbruch": 374.536000437827,
+        "sachbeschaedigung": 1182.3327602021097,
+        "strassenraub": 54.71016311831577,
+        "fahrraddiebstahl": 500.24763724890687
+      }
+    },
+    {
+      "plrId": "04200310",
+      "bzrId": "042003",
+      "index": 1064.5030653228182,
+      "delikteHz": {
+        "kieztaten": 3210.6887656069316,
+        "wohnraumeinbruch": 374.536000437827,
+        "sachbeschaedigung": 1182.3327602021097,
+        "strassenraub": 54.71016311831577,
+        "fahrraddiebstahl": 500.24763724890687
+      }
+    },
+    {
+      "plrId": "04200311",
+      "bzrId": "042003",
+      "index": 1064.5030653228182,
+      "delikteHz": {
+        "kieztaten": 3210.6887656069316,
+        "wohnraumeinbruch": 374.536000437827,
+        "sachbeschaedigung": 1182.3327602021097,
+        "strassenraub": 54.71016311831577,
+        "fahrraddiebstahl": 500.24763724890687
+      }
+    },
+    {
+      "plrId": "04300412",
+      "bzrId": "043004",
+      "index": 1108.3814989073674,
+      "delikteHz": {
+        "kieztaten": 3015.1949065846725,
+        "wohnraumeinbruch": 259.3604943032313,
+        "sachbeschaedigung": 1322.4381513124008,
+        "strassenraub": 63.32668399946774,
+        "fahrraddiebstahl": 881.5872583370641
+      }
+    },
+    {
+      "plrId": "04300413",
+      "bzrId": "043004",
+      "index": 1108.3814989073674,
+      "delikteHz": {
+        "kieztaten": 3015.1949065846725,
+        "wohnraumeinbruch": 259.3604943032313,
+        "sachbeschaedigung": 1322.4381513124008,
+        "strassenraub": 63.32668399946774,
+        "fahrraddiebstahl": 881.5872583370641
+      }
+    },
+    {
+      "plrId": "04300414",
+      "bzrId": "043004",
+      "index": 1108.3814989073674,
+      "delikteHz": {
+        "kieztaten": 3015.1949065846725,
+        "wohnraumeinbruch": 259.3604943032313,
+        "sachbeschaedigung": 1322.4381513124008,
+        "strassenraub": 63.32668399946774,
+        "fahrraddiebstahl": 881.5872583370641
+      }
+    },
+    {
+      "plrId": "04300415",
+      "bzrId": "043004",
+      "index": 1108.3814989073674,
+      "delikteHz": {
+        "kieztaten": 3015.1949065846725,
+        "wohnraumeinbruch": 259.3604943032313,
+        "sachbeschaedigung": 1322.4381513124008,
+        "strassenraub": 63.32668399946774,
+        "fahrraddiebstahl": 881.5872583370641
+      }
+    },
+    {
+      "plrId": "04300416",
+      "bzrId": "043004",
+      "index": 1108.3814989073674,
+      "delikteHz": {
+        "kieztaten": 3015.1949065846725,
+        "wohnraumeinbruch": 259.3604943032313,
+        "sachbeschaedigung": 1322.4381513124008,
+        "strassenraub": 63.32668399946774,
+        "fahrraddiebstahl": 881.5872583370641
+      }
+    },
+    {
+      "plrId": "04300517",
+      "bzrId": "043005",
+      "index": 1190.4456330577136,
+      "delikteHz": {
+        "kieztaten": 3711.7092677194414,
+        "wohnraumeinbruch": 155.76254200432888,
+        "sachbeschaedigung": 1380.4129453349071,
+        "strassenraub": 106.67398630373941,
+        "fahrraddiebstahl": 597.6694239261514
+      }
+    },
+    {
+      "plrId": "04300518",
+      "bzrId": "043005",
+      "index": 1190.4456330577136,
+      "delikteHz": {
+        "kieztaten": 3711.7092677194414,
+        "wohnraumeinbruch": 155.76254200432888,
+        "sachbeschaedigung": 1380.4129453349071,
+        "strassenraub": 106.67398630373941,
+        "fahrraddiebstahl": 597.6694239261514
+      }
+    },
+    {
+      "plrId": "04300619",
+      "bzrId": "043006",
+      "index": 1255.1455998776762,
+      "delikteHz": {
+        "kieztaten": 3735.887227642717,
+        "wohnraumeinbruch": 292.7294042124984,
+        "sachbeschaedigung": 1163.754173245628,
+        "strassenraub": 72.56351915113389,
+        "fahrraddiebstahl": 1010.7936751364024
+      }
+    },
+    {
+      "plrId": "04300620",
+      "bzrId": "043006",
+      "index": 1255.1455998776762,
+      "delikteHz": {
+        "kieztaten": 3735.887227642717,
+        "wohnraumeinbruch": 292.7294042124984,
+        "sachbeschaedigung": 1163.754173245628,
+        "strassenraub": 72.56351915113389,
+        "fahrraddiebstahl": 1010.7936751364024
+      }
+    },
+    {
+      "plrId": "04300621",
+      "bzrId": "043006",
+      "index": 1255.1455998776762,
+      "delikteHz": {
+        "kieztaten": 3735.887227642717,
+        "wohnraumeinbruch": 292.7294042124984,
+        "sachbeschaedigung": 1163.754173245628,
+        "strassenraub": 72.56351915113389,
+        "fahrraddiebstahl": 1010.7936751364024
+      }
+    },
+    {
+      "plrId": "04300622",
+      "bzrId": "043006",
+      "index": 1255.1455998776762,
+      "delikteHz": {
+        "kieztaten": 3735.887227642717,
+        "wohnraumeinbruch": 292.7294042124984,
+        "sachbeschaedigung": 1163.754173245628,
+        "strassenraub": 72.56351915113389,
+        "fahrraddiebstahl": 1010.7936751364024
+      }
+    },
+    {
+      "plrId": "04300623",
+      "bzrId": "043006",
+      "index": 1255.1455998776762,
+      "delikteHz": {
+        "kieztaten": 3735.887227642717,
+        "wohnraumeinbruch": 292.7294042124984,
+        "sachbeschaedigung": 1163.754173245628,
+        "strassenraub": 72.56351915113389,
+        "fahrraddiebstahl": 1010.7936751364024
+      }
+    },
+    {
+      "plrId": "04300624",
+      "bzrId": "043006",
+      "index": 1255.1455998776762,
+      "delikteHz": {
+        "kieztaten": 3735.887227642717,
+        "wohnraumeinbruch": 292.7294042124984,
+        "sachbeschaedigung": 1163.754173245628,
+        "strassenraub": 72.56351915113389,
+        "fahrraddiebstahl": 1010.7936751364024
+      }
+    },
+    {
+      "plrId": "04400725",
+      "bzrId": "044007",
+      "index": 1079.007184757389,
+      "delikteHz": {
+        "kieztaten": 2980.87257606286,
+        "wohnraumeinbruch": 687.9692285961413,
+        "sachbeschaedigung": 1328.7663683426674,
+        "strassenraub": 38.45474976533188,
+        "fahrraddiebstahl": 358.97300101994483
+      }
+    },
+    {
+      "plrId": "04400726",
+      "bzrId": "044007",
+      "index": 1079.007184757389,
+      "delikteHz": {
+        "kieztaten": 2980.87257606286,
+        "wohnraumeinbruch": 687.9692285961413,
+        "sachbeschaedigung": 1328.7663683426674,
+        "strassenraub": 38.45474976533188,
+        "fahrraddiebstahl": 358.97300101994483
+      }
+    },
+    {
+      "plrId": "04400727",
+      "bzrId": "044007",
+      "index": 1079.007184757389,
+      "delikteHz": {
+        "kieztaten": 2980.87257606286,
+        "wohnraumeinbruch": 687.9692285961413,
+        "sachbeschaedigung": 1328.7663683426674,
+        "strassenraub": 38.45474976533188,
+        "fahrraddiebstahl": 358.97300101994483
+      }
+    },
+    {
+      "plrId": "04400728",
+      "bzrId": "044007",
+      "index": 1079.007184757389,
+      "delikteHz": {
+        "kieztaten": 2980.87257606286,
+        "wohnraumeinbruch": 687.9692285961413,
+        "sachbeschaedigung": 1328.7663683426674,
+        "strassenraub": 38.45474976533188,
+        "fahrraddiebstahl": 358.97300101994483
+      }
+    },
+    {
+      "plrId": "04400729",
+      "bzrId": "044007",
+      "index": 1079.007184757389,
+      "delikteHz": {
+        "kieztaten": 2980.87257606286,
+        "wohnraumeinbruch": 687.9692285961413,
+        "sachbeschaedigung": 1328.7663683426674,
+        "strassenraub": 38.45474976533188,
+        "fahrraddiebstahl": 358.97300101994483
+      }
+    },
+    {
+      "plrId": "04400830",
+      "bzrId": "044008",
+      "index": 759.2245611896611,
+      "delikteHz": {
+        "kieztaten": 2143.7755121661107,
+        "wohnraumeinbruch": 317.1678493091976,
+        "sachbeschaedigung": 721.8852839509215,
+        "strassenraub": 32.98928539307558,
+        "fahrraddiebstahl": 580.3048751289999
+      }
+    },
+    {
+      "plrId": "04400831",
+      "bzrId": "044008",
+      "index": 759.2245611896611,
+      "delikteHz": {
+        "kieztaten": 2143.7755121661107,
+        "wohnraumeinbruch": 317.1678493091976,
+        "sachbeschaedigung": 721.8852839509215,
+        "strassenraub": 32.98928539307558,
+        "fahrraddiebstahl": 580.3048751289999
+      }
+    },
+    {
+      "plrId": "04400832",
+      "bzrId": "044008",
+      "index": 759.2245611896611,
+      "delikteHz": {
+        "kieztaten": 2143.7755121661107,
+        "wohnraumeinbruch": 317.1678493091976,
+        "sachbeschaedigung": 721.8852839509215,
+        "strassenraub": 32.98928539307558,
+        "fahrraddiebstahl": 580.3048751289999
+      }
+    },
+    {
+      "plrId": "04400833",
+      "bzrId": "044008",
+      "index": 759.2245611896611,
+      "delikteHz": {
+        "kieztaten": 2143.7755121661107,
+        "wohnraumeinbruch": 317.1678493091976,
+        "sachbeschaedigung": 721.8852839509215,
+        "strassenraub": 32.98928539307558,
+        "fahrraddiebstahl": 580.3048751289999
+      }
+    },
+    {
+      "plrId": "04400834",
+      "bzrId": "044008",
+      "index": 759.2245611896611,
+      "delikteHz": {
+        "kieztaten": 2143.7755121661107,
+        "wohnraumeinbruch": 317.1678493091976,
+        "sachbeschaedigung": 721.8852839509215,
+        "strassenraub": 32.98928539307558,
+        "fahrraddiebstahl": 580.3048751289999
+      }
+    },
+    {
+      "plrId": "04400835",
+      "bzrId": "044008",
+      "index": 759.2245611896611,
+      "delikteHz": {
+        "kieztaten": 2143.7755121661107,
+        "wohnraumeinbruch": 317.1678493091976,
+        "sachbeschaedigung": 721.8852839509215,
+        "strassenraub": 32.98928539307558,
+        "fahrraddiebstahl": 580.3048751289999
+      }
+    },
+    {
+      "plrId": "04500936",
+      "bzrId": "045009",
+      "index": 1275.6398847004534,
+      "delikteHz": {
+        "kieztaten": 4009.9243175464267,
+        "wohnraumeinbruch": 372.0646617044437,
+        "sachbeschaedigung": 1098.0261385642527,
+        "strassenraub": 69.53655231915728,
+        "fahrraddiebstahl": 828.6477533679869
+      }
+    },
+    {
+      "plrId": "04500937",
+      "bzrId": "045009",
+      "index": 1275.6398847004534,
+      "delikteHz": {
+        "kieztaten": 4009.9243175464267,
+        "wohnraumeinbruch": 372.0646617044437,
+        "sachbeschaedigung": 1098.0261385642527,
+        "strassenraub": 69.53655231915728,
+        "fahrraddiebstahl": 828.6477533679869
+      }
+    },
+    {
+      "plrId": "04500938",
+      "bzrId": "045009",
+      "index": 1275.6398847004534,
+      "delikteHz": {
+        "kieztaten": 4009.9243175464267,
+        "wohnraumeinbruch": 372.0646617044437,
+        "sachbeschaedigung": 1098.0261385642527,
+        "strassenraub": 69.53655231915728,
+        "fahrraddiebstahl": 828.6477533679869
+      }
+    },
+    {
+      "plrId": "04500939",
+      "bzrId": "045009",
+      "index": 1275.6398847004534,
+      "delikteHz": {
+        "kieztaten": 4009.9243175464267,
+        "wohnraumeinbruch": 372.0646617044437,
+        "sachbeschaedigung": 1098.0261385642527,
+        "strassenraub": 69.53655231915728,
+        "fahrraddiebstahl": 828.6477533679869
+      }
+    },
+    {
+      "plrId": "04501040",
+      "bzrId": "045010",
+      "index": 2071.5539725160666,
+      "delikteHz": {
+        "kieztaten": 6876.381771362257,
+        "wohnraumeinbruch": 454.31249711498657,
+        "sachbeschaedigung": 1818.225349450423,
+        "strassenraub": 135.56689229374715,
+        "fahrraddiebstahl": 1073.283352358919
+      }
+    },
+    {
+      "plrId": "04501041",
+      "bzrId": "045010",
+      "index": 2071.5539725160666,
+      "delikteHz": {
+        "kieztaten": 6876.381771362257,
+        "wohnraumeinbruch": 454.31249711498657,
+        "sachbeschaedigung": 1818.225349450423,
+        "strassenraub": 135.56689229374715,
+        "fahrraddiebstahl": 1073.283352358919
+      }
+    },
+    {
+      "plrId": "04501042",
+      "bzrId": "045010",
+      "index": 2071.5539725160666,
+      "delikteHz": {
+        "kieztaten": 6876.381771362257,
+        "wohnraumeinbruch": 454.31249711498657,
+        "sachbeschaedigung": 1818.225349450423,
+        "strassenraub": 135.56689229374715,
+        "fahrraddiebstahl": 1073.283352358919
+      }
+    },
+    {
+      "plrId": "04501043",
+      "bzrId": "045010",
+      "index": 2071.5539725160666,
+      "delikteHz": {
+        "kieztaten": 6876.381771362257,
+        "wohnraumeinbruch": 454.31249711498657,
+        "sachbeschaedigung": 1818.225349450423,
+        "strassenraub": 135.56689229374715,
+        "fahrraddiebstahl": 1073.283352358919
+      }
+    },
+    {
+      "plrId": "04501044",
+      "bzrId": "045010",
+      "index": 2071.5539725160666,
+      "delikteHz": {
+        "kieztaten": 6876.381771362257,
+        "wohnraumeinbruch": 454.31249711498657,
+        "sachbeschaedigung": 1818.225349450423,
+        "strassenraub": 135.56689229374715,
+        "fahrraddiebstahl": 1073.283352358919
+      }
+    },
+    {
+      "plrId": "04501045",
+      "bzrId": "045010",
+      "index": 2071.5539725160666,
+      "delikteHz": {
+        "kieztaten": 6876.381771362257,
+        "wohnraumeinbruch": 454.31249711498657,
+        "sachbeschaedigung": 1818.225349450423,
+        "strassenraub": 135.56689229374715,
+        "fahrraddiebstahl": 1073.283352358919
+      }
+    },
+    {
+      "plrId": "04501146",
+      "bzrId": "045011",
+      "index": 952.6147671448416,
+      "delikteHz": {
+        "kieztaten": 2647.088292022457,
+        "wohnraumeinbruch": 296.67962880013664,
+        "sachbeschaedigung": 908.889385435135,
+        "strassenraub": 64.65792705658838,
+        "fahrraddiebstahl": 845.7586024098908
+      }
+    },
+    {
+      "plrId": "04501147",
+      "bzrId": "045011",
+      "index": 952.6147671448416,
+      "delikteHz": {
+        "kieztaten": 2647.088292022457,
+        "wohnraumeinbruch": 296.67962880013664,
+        "sachbeschaedigung": 908.889385435135,
+        "strassenraub": 64.65792705658838,
+        "fahrraddiebstahl": 845.7586024098908
+      }
+    },
+    {
+      "plrId": "04501148",
+      "bzrId": "045011",
+      "index": 952.6147671448416,
+      "delikteHz": {
+        "kieztaten": 2647.088292022457,
+        "wohnraumeinbruch": 296.67962880013664,
+        "sachbeschaedigung": 908.889385435135,
+        "strassenraub": 64.65792705658838,
+        "fahrraddiebstahl": 845.7586024098908
+      }
+    },
+    {
+      "plrId": "04501149",
+      "bzrId": "045011",
+      "index": 952.6147671448416,
+      "delikteHz": {
+        "kieztaten": 2647.088292022457,
+        "wohnraumeinbruch": 296.67962880013664,
+        "sachbeschaedigung": 908.889385435135,
+        "strassenraub": 64.65792705658838,
+        "fahrraddiebstahl": 845.7586024098908
+      }
+    },
+    {
+      "plrId": "04501150",
+      "bzrId": "045011",
+      "index": 952.6147671448416,
+      "delikteHz": {
+        "kieztaten": 2647.088292022457,
+        "wohnraumeinbruch": 296.67962880013664,
+        "sachbeschaedigung": 908.889385435135,
+        "strassenraub": 64.65792705658838,
+        "fahrraddiebstahl": 845.7586024098908
+      }
+    },
+    {
+      "plrId": "04501151",
+      "bzrId": "045011",
+      "index": 952.6147671448416,
+      "delikteHz": {
+        "kieztaten": 2647.088292022457,
+        "wohnraumeinbruch": 296.67962880013664,
+        "sachbeschaedigung": 908.889385435135,
+        "strassenraub": 64.65792705658838,
+        "fahrraddiebstahl": 845.7586024098908
+      }
+    },
+    {
+      "plrId": "04501152",
+      "bzrId": "045011",
+      "index": 952.6147671448416,
+      "delikteHz": {
+        "kieztaten": 2647.088292022457,
+        "wohnraumeinbruch": 296.67962880013664,
+        "sachbeschaedigung": 908.889385435135,
+        "strassenraub": 64.65792705658838,
+        "fahrraddiebstahl": 845.7586024098908
+      }
+    },
+    {
+      "plrId": "04501153",
+      "bzrId": "045011",
+      "index": 952.6147671448416,
+      "delikteHz": {
+        "kieztaten": 2647.088292022457,
+        "wohnraumeinbruch": 296.67962880013664,
+        "sachbeschaedigung": 908.889385435135,
+        "strassenraub": 64.65792705658838,
+        "fahrraddiebstahl": 845.7586024098908
+      }
+    },
+    {
+      "plrId": "05100101",
+      "bzrId": "051001",
+      "index": 691.7541369247731,
+      "delikteHz": {
+        "kieztaten": 2277.544074230551,
+        "wohnraumeinbruch": 161.17256738098857,
+        "sachbeschaedigung": 768.6193792930129,
+        "strassenraub": 19.449072958065816,
+        "fahrraddiebstahl": 231.98559076124687
+      }
+    },
+    {
+      "plrId": "05100102",
+      "bzrId": "051001",
+      "index": 691.7541369247731,
+      "delikteHz": {
+        "kieztaten": 2277.544074230551,
+        "wohnraumeinbruch": 161.17256738098857,
+        "sachbeschaedigung": 768.6193792930129,
+        "strassenraub": 19.449072958065816,
+        "fahrraddiebstahl": 231.98559076124687
+      }
+    },
+    {
+      "plrId": "05100103",
+      "bzrId": "051001",
+      "index": 691.7541369247731,
+      "delikteHz": {
+        "kieztaten": 2277.544074230551,
+        "wohnraumeinbruch": 161.17256738098857,
+        "sachbeschaedigung": 768.6193792930129,
+        "strassenraub": 19.449072958065816,
+        "fahrraddiebstahl": 231.98559076124687
+      }
+    },
+    {
+      "plrId": "05100104",
+      "bzrId": "051001",
+      "index": 691.7541369247731,
+      "delikteHz": {
+        "kieztaten": 2277.544074230551,
+        "wohnraumeinbruch": 161.17256738098857,
+        "sachbeschaedigung": 768.6193792930129,
+        "strassenraub": 19.449072958065816,
+        "fahrraddiebstahl": 231.98559076124687
+      }
+    },
+    {
+      "plrId": "05100105",
+      "bzrId": "051001",
+      "index": 691.7541369247731,
+      "delikteHz": {
+        "kieztaten": 2277.544074230551,
+        "wohnraumeinbruch": 161.17256738098857,
+        "sachbeschaedigung": 768.6193792930129,
+        "strassenraub": 19.449072958065816,
+        "fahrraddiebstahl": 231.98559076124687
+      }
+    },
+    {
+      "plrId": "05100206",
+      "bzrId": "051002",
+      "index": 676.2356907747725,
+      "delikteHz": {
+        "kieztaten": 2337.2857324661495,
+        "wohnraumeinbruch": 223.10379109781437,
+        "sachbeschaedigung": 635.7555251259257,
+        "strassenraub": 37.18194912412976,
+        "fahrraddiebstahl": 147.8514560598427
+      }
+    },
+    {
+      "plrId": "05100207",
+      "bzrId": "051002",
+      "index": 676.2356907747725,
+      "delikteHz": {
+        "kieztaten": 2337.2857324661495,
+        "wohnraumeinbruch": 223.10379109781437,
+        "sachbeschaedigung": 635.7555251259257,
+        "strassenraub": 37.18194912412976,
+        "fahrraddiebstahl": 147.8514560598427
+      }
+    },
+    {
+      "plrId": "05100208",
+      "bzrId": "051002",
+      "index": 676.2356907747725,
+      "delikteHz": {
+        "kieztaten": 2337.2857324661495,
+        "wohnraumeinbruch": 223.10379109781437,
+        "sachbeschaedigung": 635.7555251259257,
+        "strassenraub": 37.18194912412976,
+        "fahrraddiebstahl": 147.8514560598427
+      }
+    },
+    {
+      "plrId": "05100209",
+      "bzrId": "051002",
+      "index": 676.2356907747725,
+      "delikteHz": {
+        "kieztaten": 2337.2857324661495,
+        "wohnraumeinbruch": 223.10379109781437,
+        "sachbeschaedigung": 635.7555251259257,
+        "strassenraub": 37.18194912412976,
+        "fahrraddiebstahl": 147.8514560598427
+      }
+    },
+    {
+      "plrId": "05100210",
+      "bzrId": "051002",
+      "index": 676.2356907747725,
+      "delikteHz": {
+        "kieztaten": 2337.2857324661495,
+        "wohnraumeinbruch": 223.10379109781437,
+        "sachbeschaedigung": 635.7555251259257,
+        "strassenraub": 37.18194912412976,
+        "fahrraddiebstahl": 147.8514560598427
+      }
+    },
+    {
+      "plrId": "05100211",
+      "bzrId": "051002",
+      "index": 676.2356907747725,
+      "delikteHz": {
+        "kieztaten": 2337.2857324661495,
+        "wohnraumeinbruch": 223.10379109781437,
+        "sachbeschaedigung": 635.7555251259257,
+        "strassenraub": 37.18194912412976,
+        "fahrraddiebstahl": 147.8514560598427
+      }
+    },
+    {
+      "plrId": "05100312",
+      "bzrId": "051003",
+      "index": 1204.174586284236,
+      "delikteHz": {
+        "kieztaten": 4155.39440478732,
+        "wohnraumeinbruch": 128.7143866669136,
+        "sachbeschaedigung": 1205.7792042688106,
+        "strassenraub": 116.542544482964,
+        "fahrraddiebstahl": 414.44239121517006
+      }
+    },
+    {
+      "plrId": "05100313",
+      "bzrId": "051003",
+      "index": 1204.174586284236,
+      "delikteHz": {
+        "kieztaten": 4155.39440478732,
+        "wohnraumeinbruch": 128.7143866669136,
+        "sachbeschaedigung": 1205.7792042688106,
+        "strassenraub": 116.542544482964,
+        "fahrraddiebstahl": 414.44239121517006
+      }
+    },
+    {
+      "plrId": "05100314",
+      "bzrId": "051003",
+      "index": 1204.174586284236,
+      "delikteHz": {
+        "kieztaten": 4155.39440478732,
+        "wohnraumeinbruch": 128.7143866669136,
+        "sachbeschaedigung": 1205.7792042688106,
+        "strassenraub": 116.542544482964,
+        "fahrraddiebstahl": 414.44239121517006
+      }
+    },
+    {
+      "plrId": "05100315",
+      "bzrId": "051003",
+      "index": 1204.174586284236,
+      "delikteHz": {
+        "kieztaten": 4155.39440478732,
+        "wohnraumeinbruch": 128.7143866669136,
+        "sachbeschaedigung": 1205.7792042688106,
+        "strassenraub": 116.542544482964,
+        "fahrraddiebstahl": 414.44239121517006
+      }
+    },
+    {
+      "plrId": "05100316",
+      "bzrId": "051003",
+      "index": 1204.174586284236,
+      "delikteHz": {
+        "kieztaten": 4155.39440478732,
+        "wohnraumeinbruch": 128.7143866669136,
+        "sachbeschaedigung": 1205.7792042688106,
+        "strassenraub": 116.542544482964,
+        "fahrraddiebstahl": 414.44239121517006
+      }
+    },
+    {
+      "plrId": "05100317",
+      "bzrId": "051003",
+      "index": 1204.174586284236,
+      "delikteHz": {
+        "kieztaten": 4155.39440478732,
+        "wohnraumeinbruch": 128.7143866669136,
+        "sachbeschaedigung": 1205.7792042688106,
+        "strassenraub": 116.542544482964,
+        "fahrraddiebstahl": 414.44239121517006
+      }
+    },
+    {
+      "plrId": "05200418",
+      "bzrId": "052004",
+      "index": 611.6457766926317,
+      "delikteHz": {
+        "kieztaten": 1899.3230872491943,
+        "wohnraumeinbruch": 259.04365109995575,
+        "sachbeschaedigung": 709.5267467425984,
+        "strassenraub": 40.51051293200964,
+        "fahrraddiebstahl": 149.82488543939994
+      }
+    },
+    {
+      "plrId": "05200419",
+      "bzrId": "052004",
+      "index": 611.6457766926317,
+      "delikteHz": {
+        "kieztaten": 1899.3230872491943,
+        "wohnraumeinbruch": 259.04365109995575,
+        "sachbeschaedigung": 709.5267467425984,
+        "strassenraub": 40.51051293200964,
+        "fahrraddiebstahl": 149.82488543939994
+      }
+    },
+    {
+      "plrId": "05200420",
+      "bzrId": "052004",
+      "index": 611.6457766926317,
+      "delikteHz": {
+        "kieztaten": 1899.3230872491943,
+        "wohnraumeinbruch": 259.04365109995575,
+        "sachbeschaedigung": 709.5267467425984,
+        "strassenraub": 40.51051293200964,
+        "fahrraddiebstahl": 149.82488543939994
+      }
+    },
+    {
+      "plrId": "05200421",
+      "bzrId": "052004",
+      "index": 611.6457766926317,
+      "delikteHz": {
+        "kieztaten": 1899.3230872491943,
+        "wohnraumeinbruch": 259.04365109995575,
+        "sachbeschaedigung": 709.5267467425984,
+        "strassenraub": 40.51051293200964,
+        "fahrraddiebstahl": 149.82488543939994
+      }
+    },
+    {
+      "plrId": "05200422",
+      "bzrId": "052004",
+      "index": 611.6457766926317,
+      "delikteHz": {
+        "kieztaten": 1899.3230872491943,
+        "wohnraumeinbruch": 259.04365109995575,
+        "sachbeschaedigung": 709.5267467425984,
+        "strassenraub": 40.51051293200964,
+        "fahrraddiebstahl": 149.82488543939994
+      }
+    },
+    {
+      "plrId": "05200423",
+      "bzrId": "052004",
+      "index": 611.6457766926317,
+      "delikteHz": {
+        "kieztaten": 1899.3230872491943,
+        "wohnraumeinbruch": 259.04365109995575,
+        "sachbeschaedigung": 709.5267467425984,
+        "strassenraub": 40.51051293200964,
+        "fahrraddiebstahl": 149.82488543939994
+      }
+    },
+    {
+      "plrId": "05200524",
+      "bzrId": "052005",
+      "index": 784.590584429454,
+      "delikteHz": {
+        "kieztaten": 2672.2383473044138,
+        "wohnraumeinbruch": 240.5209248578135,
+        "sachbeschaedigung": 837.7294704150446,
+        "strassenraub": 58.150799967057196,
+        "fahrraddiebstahl": 114.31337960294083
+      }
+    },
+    {
+      "plrId": "05200525",
+      "bzrId": "052005",
+      "index": 784.590584429454,
+      "delikteHz": {
+        "kieztaten": 2672.2383473044138,
+        "wohnraumeinbruch": 240.5209248578135,
+        "sachbeschaedigung": 837.7294704150446,
+        "strassenraub": 58.150799967057196,
+        "fahrraddiebstahl": 114.31337960294083
+      }
+    },
+    {
+      "plrId": "05200526",
+      "bzrId": "052005",
+      "index": 784.590584429454,
+      "delikteHz": {
+        "kieztaten": 2672.2383473044138,
+        "wohnraumeinbruch": 240.5209248578135,
+        "sachbeschaedigung": 837.7294704150446,
+        "strassenraub": 58.150799967057196,
+        "fahrraddiebstahl": 114.31337960294083
+      }
+    },
+    {
+      "plrId": "05200527",
+      "bzrId": "052005",
+      "index": 784.590584429454,
+      "delikteHz": {
+        "kieztaten": 2672.2383473044138,
+        "wohnraumeinbruch": 240.5209248578135,
+        "sachbeschaedigung": 837.7294704150446,
+        "strassenraub": 58.150799967057196,
+        "fahrraddiebstahl": 114.31337960294083
+      }
+    },
+    {
+      "plrId": "05200528",
+      "bzrId": "052005",
+      "index": 784.590584429454,
+      "delikteHz": {
+        "kieztaten": 2672.2383473044138,
+        "wohnraumeinbruch": 240.5209248578135,
+        "sachbeschaedigung": 837.7294704150446,
+        "strassenraub": 58.150799967057196,
+        "fahrraddiebstahl": 114.31337960294083
+      }
+    },
+    {
+      "plrId": "05200629",
+      "bzrId": "052006",
+      "index": 1115.177823363403,
+      "delikteHz": {
+        "kieztaten": 3709.1583186346143,
+        "wohnraumeinbruch": 213.88283642276974,
+        "sachbeschaedigung": 1201.8364346805495,
+        "strassenraub": 71.65799624939325,
+        "fahrraddiebstahl": 379.35353082968874
+      }
+    },
+    {
+      "plrId": "05200630",
+      "bzrId": "052006",
+      "index": 1115.177823363403,
+      "delikteHz": {
+        "kieztaten": 3709.1583186346143,
+        "wohnraumeinbruch": 213.88283642276974,
+        "sachbeschaedigung": 1201.8364346805495,
+        "strassenraub": 71.65799624939325,
+        "fahrraddiebstahl": 379.35353082968874
+      }
+    },
+    {
+      "plrId": "05200631",
+      "bzrId": "052006",
+      "index": 1115.177823363403,
+      "delikteHz": {
+        "kieztaten": 3709.1583186346143,
+        "wohnraumeinbruch": 213.88283642276974,
+        "sachbeschaedigung": 1201.8364346805495,
+        "strassenraub": 71.65799624939325,
+        "fahrraddiebstahl": 379.35353082968874
+      }
+    },
+    {
+      "plrId": "05200632",
+      "bzrId": "052006",
+      "index": 1115.177823363403,
+      "delikteHz": {
+        "kieztaten": 3709.1583186346143,
+        "wohnraumeinbruch": 213.88283642276974,
+        "sachbeschaedigung": 1201.8364346805495,
+        "strassenraub": 71.65799624939325,
+        "fahrraddiebstahl": 379.35353082968874
+      }
+    },
+    {
+      "plrId": "05200633",
+      "bzrId": "052006",
+      "index": 1115.177823363403,
+      "delikteHz": {
+        "kieztaten": 3709.1583186346143,
+        "wohnraumeinbruch": 213.88283642276974,
+        "sachbeschaedigung": 1201.8364346805495,
+        "strassenraub": 71.65799624939325,
+        "fahrraddiebstahl": 379.35353082968874
+      }
+    },
+    {
+      "plrId": "05200634",
+      "bzrId": "052006",
+      "index": 1115.177823363403,
+      "delikteHz": {
+        "kieztaten": 3709.1583186346143,
+        "wohnraumeinbruch": 213.88283642276974,
+        "sachbeschaedigung": 1201.8364346805495,
+        "strassenraub": 71.65799624939325,
+        "fahrraddiebstahl": 379.35353082968874
+      }
+    },
+    {
+      "plrId": "05300735",
+      "bzrId": "053007",
+      "index": 839.8104851571094,
+      "delikteHz": {
+        "kieztaten": 2776.8817935470183,
+        "wohnraumeinbruch": 229.4466860423886,
+        "sachbeschaedigung": 832.7404517770183,
+        "strassenraub": 45.082079713506936,
+        "fahrraddiebstahl": 314.9014147056141
+      }
+    },
+    {
+      "plrId": "05300736",
+      "bzrId": "053007",
+      "index": 839.8104851571094,
+      "delikteHz": {
+        "kieztaten": 2776.8817935470183,
+        "wohnraumeinbruch": 229.4466860423886,
+        "sachbeschaedigung": 832.7404517770183,
+        "strassenraub": 45.082079713506936,
+        "fahrraddiebstahl": 314.9014147056141
+      }
+    },
+    {
+      "plrId": "05300737",
+      "bzrId": "053007",
+      "index": 839.8104851571094,
+      "delikteHz": {
+        "kieztaten": 2776.8817935470183,
+        "wohnraumeinbruch": 229.4466860423886,
+        "sachbeschaedigung": 832.7404517770183,
+        "strassenraub": 45.082079713506936,
+        "fahrraddiebstahl": 314.9014147056141
+      }
+    },
+    {
+      "plrId": "05300838",
+      "bzrId": "053008",
+      "index": 964.9665782324284,
+      "delikteHz": {
+        "kieztaten": 2933.709648846145,
+        "wohnraumeinbruch": 250.14210416402054,
+        "sachbeschaedigung": 1100.507525473009,
+        "strassenraub": 60.955306220794455,
+        "fahrraddiebstahl": 479.5183064581731
+      }
+    },
+    {
+      "plrId": "05300839",
+      "bzrId": "053008",
+      "index": 964.9665782324284,
+      "delikteHz": {
+        "kieztaten": 2933.709648846145,
+        "wohnraumeinbruch": 250.14210416402054,
+        "sachbeschaedigung": 1100.507525473009,
+        "strassenraub": 60.955306220794455,
+        "fahrraddiebstahl": 479.5183064581731
+      }
+    },
+    {
+      "plrId": "05300840",
+      "bzrId": "053008",
+      "index": 964.9665782324284,
+      "delikteHz": {
+        "kieztaten": 2933.709648846145,
+        "wohnraumeinbruch": 250.14210416402054,
+        "sachbeschaedigung": 1100.507525473009,
+        "strassenraub": 60.955306220794455,
+        "fahrraddiebstahl": 479.5183064581731
+      }
+    },
+    {
+      "plrId": "05300841",
+      "bzrId": "053008",
+      "index": 964.9665782324284,
+      "delikteHz": {
+        "kieztaten": 2933.709648846145,
+        "wohnraumeinbruch": 250.14210416402054,
+        "sachbeschaedigung": 1100.507525473009,
+        "strassenraub": 60.955306220794455,
+        "fahrraddiebstahl": 479.5183064581731
+      }
+    },
+    {
+      "plrId": "05400942",
+      "bzrId": "054009",
+      "index": 397.946350509953,
+      "delikteHz": {
+        "kieztaten": 1060.5932427612865,
+        "wohnraumeinbruch": 190.71798120867825,
+        "sachbeschaedigung": 577.4610391038303,
+        "strassenraub": 18.267397772110016,
+        "fahrraddiebstahl": 142.6920917038597
+      }
+    },
+    {
+      "plrId": "05400943",
+      "bzrId": "054009",
+      "index": 397.946350509953,
+      "delikteHz": {
+        "kieztaten": 1060.5932427612865,
+        "wohnraumeinbruch": 190.71798120867825,
+        "sachbeschaedigung": 577.4610391038303,
+        "strassenraub": 18.267397772110016,
+        "fahrraddiebstahl": 142.6920917038597
+      }
+    },
+    {
+      "plrId": "05400944",
+      "bzrId": "054009",
+      "index": 397.946350509953,
+      "delikteHz": {
+        "kieztaten": 1060.5932427612865,
+        "wohnraumeinbruch": 190.71798120867825,
+        "sachbeschaedigung": 577.4610391038303,
+        "strassenraub": 18.267397772110016,
+        "fahrraddiebstahl": 142.6920917038597
+      }
+    },
+    {
+      "plrId": "05400945",
+      "bzrId": "054009",
+      "index": 397.946350509953,
+      "delikteHz": {
+        "kieztaten": 1060.5932427612865,
+        "wohnraumeinbruch": 190.71798120867825,
+        "sachbeschaedigung": 577.4610391038303,
+        "strassenraub": 18.267397772110016,
+        "fahrraddiebstahl": 142.6920917038597
+      }
+    },
+    {
+      "plrId": "06100101",
+      "bzrId": "061001",
+      "index": 995.6610102638218,
+      "delikteHz": {
+        "kieztaten": 2531.512395251242,
+        "wohnraumeinbruch": 207.5777523320363,
+        "sachbeschaedigung": 959.6263483719209,
+        "strassenraub": 78.1534819957798,
+        "fahrraddiebstahl": 1201.4350733681292
+      }
+    },
+    {
+      "plrId": "06100102",
+      "bzrId": "061001",
+      "index": 995.6610102638218,
+      "delikteHz": {
+        "kieztaten": 2531.512395251242,
+        "wohnraumeinbruch": 207.5777523320363,
+        "sachbeschaedigung": 959.6263483719209,
+        "strassenraub": 78.1534819957798,
+        "fahrraddiebstahl": 1201.4350733681292
+      }
+    },
+    {
+      "plrId": "06100103",
+      "bzrId": "061001",
+      "index": 995.6610102638218,
+      "delikteHz": {
+        "kieztaten": 2531.512395251242,
+        "wohnraumeinbruch": 207.5777523320363,
+        "sachbeschaedigung": 959.6263483719209,
+        "strassenraub": 78.1534819957798,
+        "fahrraddiebstahl": 1201.4350733681292
+      }
+    },
+    {
+      "plrId": "06100204",
+      "bzrId": "061002",
+      "index": 534.5870922491911,
+      "delikteHz": {
+        "kieztaten": 1463.631885626589,
+        "wohnraumeinbruch": 192.25910762407617,
+        "sachbeschaedigung": 578.302315136112,
+        "strassenraub": 24.57372537161351,
+        "fahrraddiebstahl": 414.1684274875649
+      }
+    },
+    {
+      "plrId": "06100205",
+      "bzrId": "061002",
+      "index": 534.5870922491911,
+      "delikteHz": {
+        "kieztaten": 1463.631885626589,
+        "wohnraumeinbruch": 192.25910762407617,
+        "sachbeschaedigung": 578.302315136112,
+        "strassenraub": 24.57372537161351,
+        "fahrraddiebstahl": 414.1684274875649
+      }
+    },
+    {
+      "plrId": "06100206",
+      "bzrId": "061002",
+      "index": 534.5870922491911,
+      "delikteHz": {
+        "kieztaten": 1463.631885626589,
+        "wohnraumeinbruch": 192.25910762407617,
+        "sachbeschaedigung": 578.302315136112,
+        "strassenraub": 24.57372537161351,
+        "fahrraddiebstahl": 414.1684274875649
+      }
+    },
+    {
+      "plrId": "06100207",
+      "bzrId": "061002",
+      "index": 534.5870922491911,
+      "delikteHz": {
+        "kieztaten": 1463.631885626589,
+        "wohnraumeinbruch": 192.25910762407617,
+        "sachbeschaedigung": 578.302315136112,
+        "strassenraub": 24.57372537161351,
+        "fahrraddiebstahl": 414.1684274875649
+      }
+    },
+    {
+      "plrId": "06100208",
+      "bzrId": "061002",
+      "index": 534.5870922491911,
+      "delikteHz": {
+        "kieztaten": 1463.631885626589,
+        "wohnraumeinbruch": 192.25910762407617,
+        "sachbeschaedigung": 578.302315136112,
+        "strassenraub": 24.57372537161351,
+        "fahrraddiebstahl": 414.1684274875649
+      }
+    },
+    {
+      "plrId": "06100209",
+      "bzrId": "061002",
+      "index": 534.5870922491911,
+      "delikteHz": {
+        "kieztaten": 1463.631885626589,
+        "wohnraumeinbruch": 192.25910762407617,
+        "sachbeschaedigung": 578.302315136112,
+        "strassenraub": 24.57372537161351,
+        "fahrraddiebstahl": 414.1684274875649
+      }
+    },
+    {
+      "plrId": "06100210",
+      "bzrId": "061002",
+      "index": 534.5870922491911,
+      "delikteHz": {
+        "kieztaten": 1463.631885626589,
+        "wohnraumeinbruch": 192.25910762407617,
+        "sachbeschaedigung": 578.302315136112,
+        "strassenraub": 24.57372537161351,
+        "fahrraddiebstahl": 414.1684274875649
+      }
+    },
+    {
+      "plrId": "06200311",
+      "bzrId": "062003",
+      "index": 574.4749361947788,
+      "delikteHz": {
+        "kieztaten": 1763.9411588913797,
+        "wohnraumeinbruch": 241.61139058984455,
+        "sachbeschaedigung": 593.2433181362962,
+        "strassenraub": 22.640013297767922,
+        "fahrraddiebstahl": 250.93880005860504
+      }
+    },
+    {
+      "plrId": "06200312",
+      "bzrId": "062003",
+      "index": 574.4749361947788,
+      "delikteHz": {
+        "kieztaten": 1763.9411588913797,
+        "wohnraumeinbruch": 241.61139058984455,
+        "sachbeschaedigung": 593.2433181362962,
+        "strassenraub": 22.640013297767922,
+        "fahrraddiebstahl": 250.93880005860504
+      }
+    },
+    {
+      "plrId": "06200313",
+      "bzrId": "062003",
+      "index": 574.4749361947788,
+      "delikteHz": {
+        "kieztaten": 1763.9411588913797,
+        "wohnraumeinbruch": 241.61139058984455,
+        "sachbeschaedigung": 593.2433181362962,
+        "strassenraub": 22.640013297767922,
+        "fahrraddiebstahl": 250.93880005860504
+      }
+    },
+    {
+      "plrId": "06200314",
+      "bzrId": "062003",
+      "index": 574.4749361947788,
+      "delikteHz": {
+        "kieztaten": 1763.9411588913797,
+        "wohnraumeinbruch": 241.61139058984455,
+        "sachbeschaedigung": 593.2433181362962,
+        "strassenraub": 22.640013297767922,
+        "fahrraddiebstahl": 250.93880005860504
+      }
+    },
+    {
+      "plrId": "06200315",
+      "bzrId": "062003",
+      "index": 574.4749361947788,
+      "delikteHz": {
+        "kieztaten": 1763.9411588913797,
+        "wohnraumeinbruch": 241.61139058984455,
+        "sachbeschaedigung": 593.2433181362962,
+        "strassenraub": 22.640013297767922,
+        "fahrraddiebstahl": 250.93880005860504
+      }
+    },
+    {
+      "plrId": "06200316",
+      "bzrId": "062003",
+      "index": 574.4749361947788,
+      "delikteHz": {
+        "kieztaten": 1763.9411588913797,
+        "wohnraumeinbruch": 241.61139058984455,
+        "sachbeschaedigung": 593.2433181362962,
+        "strassenraub": 22.640013297767922,
+        "fahrraddiebstahl": 250.93880005860504
+      }
+    },
+    {
+      "plrId": "06200317",
+      "bzrId": "062003",
+      "index": 574.4749361947788,
+      "delikteHz": {
+        "kieztaten": 1763.9411588913797,
+        "wohnraumeinbruch": 241.61139058984455,
+        "sachbeschaedigung": 593.2433181362962,
+        "strassenraub": 22.640013297767922,
+        "fahrraddiebstahl": 250.93880005860504
+      }
+    },
+    {
+      "plrId": "06200418",
+      "bzrId": "062004",
+      "index": 595.3890567495275,
+      "delikteHz": {
+        "kieztaten": 1474.3784922251707,
+        "wohnraumeinbruch": 354.7228871625027,
+        "sachbeschaedigung": 760.4757150540609,
+        "strassenraub": 16.848903914700813,
+        "fahrraddiebstahl": 370.5192853912022
+      }
+    },
+    {
+      "plrId": "06200419",
+      "bzrId": "062004",
+      "index": 595.3890567495275,
+      "delikteHz": {
+        "kieztaten": 1474.3784922251707,
+        "wohnraumeinbruch": 354.7228871625027,
+        "sachbeschaedigung": 760.4757150540609,
+        "strassenraub": 16.848903914700813,
+        "fahrraddiebstahl": 370.5192853912022
+      }
+    },
+    {
+      "plrId": "06200420",
+      "bzrId": "062004",
+      "index": 595.3890567495275,
+      "delikteHz": {
+        "kieztaten": 1474.3784922251707,
+        "wohnraumeinbruch": 354.7228871625027,
+        "sachbeschaedigung": 760.4757150540609,
+        "strassenraub": 16.848903914700813,
+        "fahrraddiebstahl": 370.5192853912022
+      }
+    },
+    {
+      "plrId": "06200421",
+      "bzrId": "062004",
+      "index": 595.3890567495275,
+      "delikteHz": {
+        "kieztaten": 1474.3784922251707,
+        "wohnraumeinbruch": 354.7228871625027,
+        "sachbeschaedigung": 760.4757150540609,
+        "strassenraub": 16.848903914700813,
+        "fahrraddiebstahl": 370.5192853912022
+      }
+    },
+    {
+      "plrId": "06200422",
+      "bzrId": "062004",
+      "index": 595.3890567495275,
+      "delikteHz": {
+        "kieztaten": 1474.3784922251707,
+        "wohnraumeinbruch": 354.7228871625027,
+        "sachbeschaedigung": 760.4757150540609,
+        "strassenraub": 16.848903914700813,
+        "fahrraddiebstahl": 370.5192853912022
+      }
+    },
+    {
+      "plrId": "06200423",
+      "bzrId": "062004",
+      "index": 595.3890567495275,
+      "delikteHz": {
+        "kieztaten": 1474.3784922251707,
+        "wohnraumeinbruch": 354.7228871625027,
+        "sachbeschaedigung": 760.4757150540609,
+        "strassenraub": 16.848903914700813,
+        "fahrraddiebstahl": 370.5192853912022
+      }
+    },
+    {
+      "plrId": "06300524",
+      "bzrId": "063005",
+      "index": 691.851869985051,
+      "delikteHz": {
+        "kieztaten": 1728.5101184420937,
+        "wohnraumeinbruch": 382.6362079723651,
+        "sachbeschaedigung": 777.0153476022075,
+        "strassenraub": 34.11183143376967,
+        "fahrraddiebstahl": 536.9858444748193
+      }
+    },
+    {
+      "plrId": "06300525",
+      "bzrId": "063005",
+      "index": 691.851869985051,
+      "delikteHz": {
+        "kieztaten": 1728.5101184420937,
+        "wohnraumeinbruch": 382.6362079723651,
+        "sachbeschaedigung": 777.0153476022075,
+        "strassenraub": 34.11183143376967,
+        "fahrraddiebstahl": 536.9858444748193
+      }
+    },
+    {
+      "plrId": "06300526",
+      "bzrId": "063005",
+      "index": 691.851869985051,
+      "delikteHz": {
+        "kieztaten": 1728.5101184420937,
+        "wohnraumeinbruch": 382.6362079723651,
+        "sachbeschaedigung": 777.0153476022075,
+        "strassenraub": 34.11183143376967,
+        "fahrraddiebstahl": 536.9858444748193
+      }
+    },
+    {
+      "plrId": "06300527",
+      "bzrId": "063005",
+      "index": 691.851869985051,
+      "delikteHz": {
+        "kieztaten": 1728.5101184420937,
+        "wohnraumeinbruch": 382.6362079723651,
+        "sachbeschaedigung": 777.0153476022075,
+        "strassenraub": 34.11183143376967,
+        "fahrraddiebstahl": 536.9858444748193
+      }
+    },
+    {
+      "plrId": "06300528",
+      "bzrId": "063005",
+      "index": 691.851869985051,
+      "delikteHz": {
+        "kieztaten": 1728.5101184420937,
+        "wohnraumeinbruch": 382.6362079723651,
+        "sachbeschaedigung": 777.0153476022075,
+        "strassenraub": 34.11183143376967,
+        "fahrraddiebstahl": 536.9858444748193
+      }
+    },
+    {
+      "plrId": "06300629",
+      "bzrId": "063006",
+      "index": 587.1099246587651,
+      "delikteHz": {
+        "kieztaten": 1498.4286616658037,
+        "wohnraumeinbruch": 279.24847875829846,
+        "sachbeschaedigung": 764.2728095349376,
+        "strassenraub": 20.067432305779857,
+        "fahrraddiebstahl": 373.5322410290059
+      }
+    },
+    {
+      "plrId": "06300630",
+      "bzrId": "063006",
+      "index": 587.1099246587651,
+      "delikteHz": {
+        "kieztaten": 1498.4286616658037,
+        "wohnraumeinbruch": 279.24847875829846,
+        "sachbeschaedigung": 764.2728095349376,
+        "strassenraub": 20.067432305779857,
+        "fahrraddiebstahl": 373.5322410290059
+      }
+    },
+    {
+      "plrId": "06300631",
+      "bzrId": "063006",
+      "index": 587.1099246587651,
+      "delikteHz": {
+        "kieztaten": 1498.4286616658037,
+        "wohnraumeinbruch": 279.24847875829846,
+        "sachbeschaedigung": 764.2728095349376,
+        "strassenraub": 20.067432305779857,
+        "fahrraddiebstahl": 373.5322410290059
+      }
+    },
+    {
+      "plrId": "06300632",
+      "bzrId": "063006",
+      "index": 587.1099246587651,
+      "delikteHz": {
+        "kieztaten": 1498.4286616658037,
+        "wohnraumeinbruch": 279.24847875829846,
+        "sachbeschaedigung": 764.2728095349376,
+        "strassenraub": 20.067432305779857,
+        "fahrraddiebstahl": 373.5322410290059
+      }
+    },
+    {
+      "plrId": "06300633",
+      "bzrId": "063006",
+      "index": 587.1099246587651,
+      "delikteHz": {
+        "kieztaten": 1498.4286616658037,
+        "wohnraumeinbruch": 279.24847875829846,
+        "sachbeschaedigung": 764.2728095349376,
+        "strassenraub": 20.067432305779857,
+        "fahrraddiebstahl": 373.5322410290059
+      }
+    },
+    {
+      "plrId": "06300634",
+      "bzrId": "063006",
+      "index": 587.1099246587651,
+      "delikteHz": {
+        "kieztaten": 1498.4286616658037,
+        "wohnraumeinbruch": 279.24847875829846,
+        "sachbeschaedigung": 764.2728095349376,
+        "strassenraub": 20.067432305779857,
+        "fahrraddiebstahl": 373.5322410290059
+      }
+    },
+    {
+      "plrId": "06400735",
+      "bzrId": "064007",
+      "index": 932.518539964828,
+      "delikteHz": {
+        "kieztaten": 1961.2305787073071,
+        "wohnraumeinbruch": 419.3031030411064,
+        "sachbeschaedigung": 1733.1333964824234,
+        "strassenraub": 35.15860516379554,
+        "fahrraddiebstahl": 513.7670164295068
+      }
+    },
+    {
+      "plrId": "06400736",
+      "bzrId": "064007",
+      "index": 932.518539964828,
+      "delikteHz": {
+        "kieztaten": 1961.2305787073071,
+        "wohnraumeinbruch": 419.3031030411064,
+        "sachbeschaedigung": 1733.1333964824234,
+        "strassenraub": 35.15860516379554,
+        "fahrraddiebstahl": 513.7670164295068
+      }
+    },
+    {
+      "plrId": "06400737",
+      "bzrId": "064007",
+      "index": 932.518539964828,
+      "delikteHz": {
+        "kieztaten": 1961.2305787073071,
+        "wohnraumeinbruch": 419.3031030411064,
+        "sachbeschaedigung": 1733.1333964824234,
+        "strassenraub": 35.15860516379554,
+        "fahrraddiebstahl": 513.7670164295068
+      }
+    },
+    {
+      "plrId": "06400838",
+      "bzrId": "064008",
+      "index": 782.2878795563382,
+      "delikteHz": {
+        "kieztaten": 1675.0722443653976,
+        "wohnraumeinbruch": 620.7990607003277,
+        "sachbeschaedigung": 1047.2986466783768,
+        "strassenraub": 34.12509181200591,
+        "fahrraddiebstahl": 534.1443542255824
+      }
+    },
+    {
+      "plrId": "06400839",
+      "bzrId": "064008",
+      "index": 782.2878795563382,
+      "delikteHz": {
+        "kieztaten": 1675.0722443653976,
+        "wohnraumeinbruch": 620.7990607003277,
+        "sachbeschaedigung": 1047.2986466783768,
+        "strassenraub": 34.12509181200591,
+        "fahrraddiebstahl": 534.1443542255824
+      }
+    },
+    {
+      "plrId": "06400840",
+      "bzrId": "064008",
+      "index": 782.2878795563382,
+      "delikteHz": {
+        "kieztaten": 1675.0722443653976,
+        "wohnraumeinbruch": 620.7990607003277,
+        "sachbeschaedigung": 1047.2986466783768,
+        "strassenraub": 34.12509181200591,
+        "fahrraddiebstahl": 534.1443542255824
+      }
+    },
+    {
+      "plrId": "06400841",
+      "bzrId": "064008",
+      "index": 782.2878795563382,
+      "delikteHz": {
+        "kieztaten": 1675.0722443653976,
+        "wohnraumeinbruch": 620.7990607003277,
+        "sachbeschaedigung": 1047.2986466783768,
+        "strassenraub": 34.12509181200591,
+        "fahrraddiebstahl": 534.1443542255824
+      }
+    },
+    {
+      "plrId": "06400842",
+      "bzrId": "064008",
+      "index": 782.2878795563382,
+      "delikteHz": {
+        "kieztaten": 1675.0722443653976,
+        "wohnraumeinbruch": 620.7990607003277,
+        "sachbeschaedigung": 1047.2986466783768,
+        "strassenraub": 34.12509181200591,
+        "fahrraddiebstahl": 534.1443542255824
+      }
+    },
+    {
+      "plrId": "06400843",
+      "bzrId": "064008",
+      "index": 782.2878795563382,
+      "delikteHz": {
+        "kieztaten": 1675.0722443653976,
+        "wohnraumeinbruch": 620.7990607003277,
+        "sachbeschaedigung": 1047.2986466783768,
+        "strassenraub": 34.12509181200591,
+        "fahrraddiebstahl": 534.1443542255824
+      }
+    },
+    {
+      "plrId": "06400844",
+      "bzrId": "064008",
+      "index": 782.2878795563382,
+      "delikteHz": {
+        "kieztaten": 1675.0722443653976,
+        "wohnraumeinbruch": 620.7990607003277,
+        "sachbeschaedigung": 1047.2986466783768,
+        "strassenraub": 34.12509181200591,
+        "fahrraddiebstahl": 534.1443542255824
+      }
+    },
+    {
+      "plrId": "07100101",
+      "bzrId": "071001",
+      "index": 2270.9101468966724,
+      "delikteHz": {
+        "kieztaten": 7515.19937843443,
+        "wohnraumeinbruch": 315.2305702162628,
+        "sachbeschaedigung": 1850.588152435453,
+        "strassenraub": 183.75215210228956,
+        "fahrraddiebstahl": 1489.7804812949246
+      }
+    },
+    {
+      "plrId": "07100102",
+      "bzrId": "071001",
+      "index": 2270.9101468966724,
+      "delikteHz": {
+        "kieztaten": 7515.19937843443,
+        "wohnraumeinbruch": 315.2305702162628,
+        "sachbeschaedigung": 1850.588152435453,
+        "strassenraub": 183.75215210228956,
+        "fahrraddiebstahl": 1489.7804812949246
+      }
+    },
+    {
+      "plrId": "07100103",
+      "bzrId": "071001",
+      "index": 2270.9101468966724,
+      "delikteHz": {
+        "kieztaten": 7515.19937843443,
+        "wohnraumeinbruch": 315.2305702162628,
+        "sachbeschaedigung": 1850.588152435453,
+        "strassenraub": 183.75215210228956,
+        "fahrraddiebstahl": 1489.7804812949246
+      }
+    },
+    {
+      "plrId": "07100204",
+      "bzrId": "071002",
+      "index": 1321.2852403809525,
+      "delikteHz": {
+        "kieztaten": 3640.442873477394,
+        "wohnraumeinbruch": 244.0293297157566,
+        "sachbeschaedigung": 1379.863869201313,
+        "strassenraub": 67.83872731416132,
+        "fahrraddiebstahl": 1274.2514021961363
+      }
+    },
+    {
+      "plrId": "07100205",
+      "bzrId": "071002",
+      "index": 1321.2852403809525,
+      "delikteHz": {
+        "kieztaten": 3640.442873477394,
+        "wohnraumeinbruch": 244.0293297157566,
+        "sachbeschaedigung": 1379.863869201313,
+        "strassenraub": 67.83872731416132,
+        "fahrraddiebstahl": 1274.2514021961363
+      }
+    },
+    {
+      "plrId": "07100206",
+      "bzrId": "071002",
+      "index": 1321.2852403809525,
+      "delikteHz": {
+        "kieztaten": 3640.442873477394,
+        "wohnraumeinbruch": 244.0293297157566,
+        "sachbeschaedigung": 1379.863869201313,
+        "strassenraub": 67.83872731416132,
+        "fahrraddiebstahl": 1274.2514021961363
+      }
+    },
+    {
+      "plrId": "07200307",
+      "bzrId": "072003",
+      "index": 1018.0495318866174,
+      "delikteHz": {
+        "kieztaten": 3034.7818773002055,
+        "wohnraumeinbruch": 288.8283447517877,
+        "sachbeschaedigung": 890.5103092278126,
+        "strassenraub": 65.94249144228971,
+        "fahrraddiebstahl": 810.1846367109914
+      }
+    },
+    {
+      "plrId": "07200308",
+      "bzrId": "072003",
+      "index": 1018.0495318866174,
+      "delikteHz": {
+        "kieztaten": 3034.7818773002055,
+        "wohnraumeinbruch": 288.8283447517877,
+        "sachbeschaedigung": 890.5103092278126,
+        "strassenraub": 65.94249144228971,
+        "fahrraddiebstahl": 810.1846367109914
+      }
+    },
+    {
+      "plrId": "07200409",
+      "bzrId": "072004",
+      "index": 1237.8177832194974,
+      "delikteHz": {
+        "kieztaten": 3342.4404191724584,
+        "wohnraumeinbruch": 150.86376228221448,
+        "sachbeschaedigung": 1414.7782272531451,
+        "strassenraub": 61.39532492267557,
+        "fahrraddiebstahl": 1219.611182466993
+      }
+    },
+    {
+      "plrId": "07200410",
+      "bzrId": "072004",
+      "index": 1237.8177832194974,
+      "delikteHz": {
+        "kieztaten": 3342.4404191724584,
+        "wohnraumeinbruch": 150.86376228221448,
+        "sachbeschaedigung": 1414.7782272531451,
+        "strassenraub": 61.39532492267557,
+        "fahrraddiebstahl": 1219.611182466993
+      }
+    },
+    {
+      "plrId": "07200411",
+      "bzrId": "072004",
+      "index": 1237.8177832194974,
+      "delikteHz": {
+        "kieztaten": 3342.4404191724584,
+        "wohnraumeinbruch": 150.86376228221448,
+        "sachbeschaedigung": 1414.7782272531451,
+        "strassenraub": 61.39532492267557,
+        "fahrraddiebstahl": 1219.611182466993
+      }
+    },
+    {
+      "plrId": "07200412",
+      "bzrId": "072004",
+      "index": 1237.8177832194974,
+      "delikteHz": {
+        "kieztaten": 3342.4404191724584,
+        "wohnraumeinbruch": 150.86376228221448,
+        "sachbeschaedigung": 1414.7782272531451,
+        "strassenraub": 61.39532492267557,
+        "fahrraddiebstahl": 1219.611182466993
+      }
+    },
+    {
+      "plrId": "07200413",
+      "bzrId": "072004",
+      "index": 1237.8177832194974,
+      "delikteHz": {
+        "kieztaten": 3342.4404191724584,
+        "wohnraumeinbruch": 150.86376228221448,
+        "sachbeschaedigung": 1414.7782272531451,
+        "strassenraub": 61.39532492267557,
+        "fahrraddiebstahl": 1219.611182466993
+      }
+    },
+    {
+      "plrId": "07200414",
+      "bzrId": "072004",
+      "index": 1237.8177832194974,
+      "delikteHz": {
+        "kieztaten": 3342.4404191724584,
+        "wohnraumeinbruch": 150.86376228221448,
+        "sachbeschaedigung": 1414.7782272531451,
+        "strassenraub": 61.39532492267557,
+        "fahrraddiebstahl": 1219.611182466993
+      }
+    },
+    {
+      "plrId": "07300515",
+      "bzrId": "073005",
+      "index": 721.2524331400714,
+      "delikteHz": {
+        "kieztaten": 1649.6343470348045,
+        "wohnraumeinbruch": 268.11255032486724,
+        "sachbeschaedigung": 665.9994645872462,
+        "strassenraub": 29.65768763510701,
+        "fahrraddiebstahl": 992.858116118332
+      }
+    },
+    {
+      "plrId": "07300516",
+      "bzrId": "073005",
+      "index": 721.2524331400714,
+      "delikteHz": {
+        "kieztaten": 1649.6343470348045,
+        "wohnraumeinbruch": 268.11255032486724,
+        "sachbeschaedigung": 665.9994645872462,
+        "strassenraub": 29.65768763510701,
+        "fahrraddiebstahl": 992.858116118332
+      }
+    },
+    {
+      "plrId": "07300517",
+      "bzrId": "073005",
+      "index": 721.2524331400714,
+      "delikteHz": {
+        "kieztaten": 1649.6343470348045,
+        "wohnraumeinbruch": 268.11255032486724,
+        "sachbeschaedigung": 665.9994645872462,
+        "strassenraub": 29.65768763510701,
+        "fahrraddiebstahl": 992.858116118332
+      }
+    },
+    {
+      "plrId": "07300618",
+      "bzrId": "073006",
+      "index": 846.6789884410022,
+      "delikteHz": {
+        "kieztaten": 2332.4298408600466,
+        "wohnraumeinbruch": 160.05480907769234,
+        "sachbeschaedigung": 958.563052931474,
+        "strassenraub": 34.05486123335094,
+        "fahrraddiebstahl": 748.2923781024468
+      }
+    },
+    {
+      "plrId": "07300619",
+      "bzrId": "073006",
+      "index": 846.6789884410022,
+      "delikteHz": {
+        "kieztaten": 2332.4298408600466,
+        "wohnraumeinbruch": 160.05480907769234,
+        "sachbeschaedigung": 958.563052931474,
+        "strassenraub": 34.05486123335094,
+        "fahrraddiebstahl": 748.2923781024468
+      }
+    },
+    {
+      "plrId": "07400720",
+      "bzrId": "074007",
+      "index": 1225.374495482227,
+      "delikteHz": {
+        "kieztaten": 3834.4642917250953,
+        "wohnraumeinbruch": 170.66438744141718,
+        "sachbeschaedigung": 1361.6932489091816,
+        "strassenraub": 55.58877598512172,
+        "fahrraddiebstahl": 704.4617733503201
+      }
+    },
+    {
+      "plrId": "07400721",
+      "bzrId": "074007",
+      "index": 1225.374495482227,
+      "delikteHz": {
+        "kieztaten": 3834.4642917250953,
+        "wohnraumeinbruch": 170.66438744141718,
+        "sachbeschaedigung": 1361.6932489091816,
+        "strassenraub": 55.58877598512172,
+        "fahrraddiebstahl": 704.4617733503201
+      }
+    },
+    {
+      "plrId": "07400822",
+      "bzrId": "074008",
+      "index": 866.975328400897,
+      "delikteHz": {
+        "kieztaten": 2633.172987463759,
+        "wohnraumeinbruch": 164.12124625907808,
+        "sachbeschaedigung": 1015.9658419585508,
+        "strassenraub": 39.47551752613356,
+        "fahrraddiebstahl": 482.1410487969634
+      }
+    },
+    {
+      "plrId": "07400823",
+      "bzrId": "074008",
+      "index": 866.975328400897,
+      "delikteHz": {
+        "kieztaten": 2633.172987463759,
+        "wohnraumeinbruch": 164.12124625907808,
+        "sachbeschaedigung": 1015.9658419585508,
+        "strassenraub": 39.47551752613356,
+        "fahrraddiebstahl": 482.1410487969634
+      }
+    },
+    {
+      "plrId": "07400824",
+      "bzrId": "074008",
+      "index": 866.975328400897,
+      "delikteHz": {
+        "kieztaten": 2633.172987463759,
+        "wohnraumeinbruch": 164.12124625907808,
+        "sachbeschaedigung": 1015.9658419585508,
+        "strassenraub": 39.47551752613356,
+        "fahrraddiebstahl": 482.1410487969634
+      }
+    },
+    {
+      "plrId": "07400825",
+      "bzrId": "074008",
+      "index": 866.975328400897,
+      "delikteHz": {
+        "kieztaten": 2633.172987463759,
+        "wohnraumeinbruch": 164.12124625907808,
+        "sachbeschaedigung": 1015.9658419585508,
+        "strassenraub": 39.47551752613356,
+        "fahrraddiebstahl": 482.1410487969634
+      }
+    },
+    {
+      "plrId": "07400826",
+      "bzrId": "074008",
+      "index": 866.975328400897,
+      "delikteHz": {
+        "kieztaten": 2633.172987463759,
+        "wohnraumeinbruch": 164.12124625907808,
+        "sachbeschaedigung": 1015.9658419585508,
+        "strassenraub": 39.47551752613356,
+        "fahrraddiebstahl": 482.1410487969634
+      }
+    },
+    {
+      "plrId": "07400927",
+      "bzrId": "074009",
+      "index": 1069.3967134760885,
+      "delikteHz": {
+        "kieztaten": 3461.0502347361758,
+        "wohnraumeinbruch": 204.0288488516254,
+        "sachbeschaedigung": 1151.8006940320747,
+        "strassenraub": 43.373187325599226,
+        "fahrraddiebstahl": 486.73060243496656
+      }
+    },
+    {
+      "plrId": "07400928",
+      "bzrId": "074009",
+      "index": 1069.3967134760885,
+      "delikteHz": {
+        "kieztaten": 3461.0502347361758,
+        "wohnraumeinbruch": 204.0288488516254,
+        "sachbeschaedigung": 1151.8006940320747,
+        "strassenraub": 43.373187325599226,
+        "fahrraddiebstahl": 486.73060243496656
+      }
+    },
+    {
+      "plrId": "07501029",
+      "bzrId": "075010",
+      "index": 654.3737828598505,
+      "delikteHz": {
+        "kieztaten": 2039.5376198370504,
+        "wohnraumeinbruch": 197.42826868332278,
+        "sachbeschaedigung": 761.6668982290712,
+        "strassenraub": 21.259483033659482,
+        "fahrraddiebstahl": 251.9766445161488
+      }
+    },
+    {
+      "plrId": "07501030",
+      "bzrId": "075010",
+      "index": 654.3737828598505,
+      "delikteHz": {
+        "kieztaten": 2039.5376198370504,
+        "wohnraumeinbruch": 197.42826868332278,
+        "sachbeschaedigung": 761.6668982290712,
+        "strassenraub": 21.259483033659482,
+        "fahrraddiebstahl": 251.9766445161488
+      }
+    },
+    {
+      "plrId": "07501031",
+      "bzrId": "075010",
+      "index": 654.3737828598505,
+      "delikteHz": {
+        "kieztaten": 2039.5376198370504,
+        "wohnraumeinbruch": 197.42826868332278,
+        "sachbeschaedigung": 761.6668982290712,
+        "strassenraub": 21.259483033659482,
+        "fahrraddiebstahl": 251.9766445161488
+      }
+    },
+    {
+      "plrId": "07501032",
+      "bzrId": "075010",
+      "index": 654.3737828598505,
+      "delikteHz": {
+        "kieztaten": 2039.5376198370504,
+        "wohnraumeinbruch": 197.42826868332278,
+        "sachbeschaedigung": 761.6668982290712,
+        "strassenraub": 21.259483033659482,
+        "fahrraddiebstahl": 251.9766445161488
+      }
+    },
+    {
+      "plrId": "07501133",
+      "bzrId": "075011",
+      "index": 703.1862531270781,
+      "delikteHz": {
+        "kieztaten": 2250.385806032598,
+        "wohnraumeinbruch": 276.9475210198486,
+        "sachbeschaedigung": 667.4184050330244,
+        "strassenraub": 40.97224371307502,
+        "fahrraddiebstahl": 280.2072898368442
+      }
+    },
+    {
+      "plrId": "07501134",
+      "bzrId": "075011",
+      "index": 703.1862531270781,
+      "delikteHz": {
+        "kieztaten": 2250.385806032598,
+        "wohnraumeinbruch": 276.9475210198486,
+        "sachbeschaedigung": 667.4184050330244,
+        "strassenraub": 40.97224371307502,
+        "fahrraddiebstahl": 280.2072898368442
+      }
+    },
+    {
+      "plrId": "07501135",
+      "bzrId": "075011",
+      "index": 703.1862531270781,
+      "delikteHz": {
+        "kieztaten": 2250.385806032598,
+        "wohnraumeinbruch": 276.9475210198486,
+        "sachbeschaedigung": 667.4184050330244,
+        "strassenraub": 40.97224371307502,
+        "fahrraddiebstahl": 280.2072898368442
+      }
+    },
+    {
+      "plrId": "07601236",
+      "bzrId": "076012",
+      "index": 620.7435132488591,
+      "delikteHz": {
+        "kieztaten": 1798.3652992611278,
+        "wohnraumeinbruch": 342.8113949892829,
+        "sachbeschaedigung": 699.093432772197,
+        "strassenraub": 9.238318104152738,
+        "fahrraddiebstahl": 254.20912111753523
+      }
+    },
+    {
+      "plrId": "07601237",
+      "bzrId": "076012",
+      "index": 620.7435132488591,
+      "delikteHz": {
+        "kieztaten": 1798.3652992611278,
+        "wohnraumeinbruch": 342.8113949892829,
+        "sachbeschaedigung": 699.093432772197,
+        "strassenraub": 9.238318104152738,
+        "fahrraddiebstahl": 254.20912111753523
+      }
+    },
+    {
+      "plrId": "07601238",
+      "bzrId": "076012",
+      "index": 620.7435132488591,
+      "delikteHz": {
+        "kieztaten": 1798.3652992611278,
+        "wohnraumeinbruch": 342.8113949892829,
+        "sachbeschaedigung": 699.093432772197,
+        "strassenraub": 9.238318104152738,
+        "fahrraddiebstahl": 254.20912111753523
+      }
+    },
+    {
+      "plrId": "07601339",
+      "bzrId": "076013",
+      "index": 695.321623374042,
+      "delikteHz": {
+        "kieztaten": 2189.446960703068,
+        "wohnraumeinbruch": 164.63083230163232,
+        "sachbeschaedigung": 893.1232774057517,
+        "strassenraub": 39.46933636225591,
+        "fahrraddiebstahl": 189.93771009750222
+      }
+    },
+    {
+      "plrId": "07601340",
+      "bzrId": "076013",
+      "index": 695.321623374042,
+      "delikteHz": {
+        "kieztaten": 2189.446960703068,
+        "wohnraumeinbruch": 164.63083230163232,
+        "sachbeschaedigung": 893.1232774057517,
+        "strassenraub": 39.46933636225591,
+        "fahrraddiebstahl": 189.93771009750222
+      }
+    },
+    {
+      "plrId": "07601341",
+      "bzrId": "076013",
+      "index": 695.321623374042,
+      "delikteHz": {
+        "kieztaten": 2189.446960703068,
+        "wohnraumeinbruch": 164.63083230163232,
+        "sachbeschaedigung": 893.1232774057517,
+        "strassenraub": 39.46933636225591,
+        "fahrraddiebstahl": 189.93771009750222
+      }
+    },
+    {
+      "plrId": "07601442",
+      "bzrId": "076014",
+      "index": 485.77214361156825,
+      "delikteHz": {
+        "kieztaten": 1391.987942078488,
+        "wohnraumeinbruch": 429.1521564007994,
+        "sachbeschaedigung": 479.334150348999,
+        "strassenraub": 10.839523866247745,
+        "fahrraddiebstahl": 117.54694536330697
+      }
+    },
+    {
+      "plrId": "07601443",
+      "bzrId": "076014",
+      "index": 485.77214361156825,
+      "delikteHz": {
+        "kieztaten": 1391.987942078488,
+        "wohnraumeinbruch": 429.1521564007994,
+        "sachbeschaedigung": 479.334150348999,
+        "strassenraub": 10.839523866247745,
+        "fahrraddiebstahl": 117.54694536330697
+      }
+    },
+    {
+      "plrId": "07601544",
+      "bzrId": "076015",
+      "index": 545.8201431294276,
+      "delikteHz": {
+        "kieztaten": 1624.4726920601163,
+        "wohnraumeinbruch": 183.57246758237318,
+        "sachbeschaedigung": 683.704273645824,
+        "strassenraub": 31.076610306961104,
+        "fahrraddiebstahl": 206.27467205186338
+      }
+    },
+    {
+      "plrId": "07601545",
+      "bzrId": "076015",
+      "index": 545.8201431294276,
+      "delikteHz": {
+        "kieztaten": 1624.4726920601163,
+        "wohnraumeinbruch": 183.57246758237318,
+        "sachbeschaedigung": 683.704273645824,
+        "strassenraub": 31.076610306961104,
+        "fahrraddiebstahl": 206.27467205186338
+      }
+    },
+    {
+      "plrId": "07601546",
+      "bzrId": "076015",
+      "index": 545.8201431294276,
+      "delikteHz": {
+        "kieztaten": 1624.4726920601163,
+        "wohnraumeinbruch": 183.57246758237318,
+        "sachbeschaedigung": 683.704273645824,
+        "strassenraub": 31.076610306961104,
+        "fahrraddiebstahl": 206.27467205186338
+      }
+    },
+    {
+      "plrId": "07601547",
+      "bzrId": "076015",
+      "index": 545.8201431294276,
+      "delikteHz": {
+        "kieztaten": 1624.4726920601163,
+        "wohnraumeinbruch": 183.57246758237318,
+        "sachbeschaedigung": 683.704273645824,
+        "strassenraub": 31.076610306961104,
+        "fahrraddiebstahl": 206.27467205186338
+      }
+    },
+    {
+      "plrId": "07601548",
+      "bzrId": "076015",
+      "index": 545.8201431294276,
+      "delikteHz": {
+        "kieztaten": 1624.4726920601163,
+        "wohnraumeinbruch": 183.57246758237318,
+        "sachbeschaedigung": 683.704273645824,
+        "strassenraub": 31.076610306961104,
+        "fahrraddiebstahl": 206.27467205186338
+      }
+    },
+    {
+      "plrId": "08100101",
+      "bzrId": "081001",
+      "index": 1185.3706165931596,
+      "delikteHz": {
+        "kieztaten": 3292.875374271398,
+        "wohnraumeinbruch": 156.00980385965337,
+        "sachbeschaedigung": 1262.3105972091907,
+        "strassenraub": 120.56831051631029,
+        "fahrraddiebstahl": 1095.0889971092458
+      }
+    },
+    {
+      "plrId": "08100102",
+      "bzrId": "081001",
+      "index": 1185.3706165931596,
+      "delikteHz": {
+        "kieztaten": 3292.875374271398,
+        "wohnraumeinbruch": 156.00980385965337,
+        "sachbeschaedigung": 1262.3105972091907,
+        "strassenraub": 120.56831051631029,
+        "fahrraddiebstahl": 1095.0889971092458
+      }
+    },
+    {
+      "plrId": "08100103",
+      "bzrId": "081001",
+      "index": 1185.3706165931596,
+      "delikteHz": {
+        "kieztaten": 3292.875374271398,
+        "wohnraumeinbruch": 156.00980385965337,
+        "sachbeschaedigung": 1262.3105972091907,
+        "strassenraub": 120.56831051631029,
+        "fahrraddiebstahl": 1095.0889971092458
+      }
+    },
+    {
+      "plrId": "08100104",
+      "bzrId": "081001",
+      "index": 1185.3706165931596,
+      "delikteHz": {
+        "kieztaten": 3292.875374271398,
+        "wohnraumeinbruch": 156.00980385965337,
+        "sachbeschaedigung": 1262.3105972091907,
+        "strassenraub": 120.56831051631029,
+        "fahrraddiebstahl": 1095.0889971092458
+      }
+    },
+    {
+      "plrId": "08100105",
+      "bzrId": "081001",
+      "index": 1185.3706165931596,
+      "delikteHz": {
+        "kieztaten": 3292.875374271398,
+        "wohnraumeinbruch": 156.00980385965337,
+        "sachbeschaedigung": 1262.3105972091907,
+        "strassenraub": 120.56831051631029,
+        "fahrraddiebstahl": 1095.0889971092458
+      }
+    },
+    {
+      "plrId": "08100206",
+      "bzrId": "081002",
+      "index": 1483.1770115989566,
+      "delikteHz": {
+        "kieztaten": 4459.5933726586645,
+        "wohnraumeinbruch": 190.78017723433103,
+        "sachbeschaedigung": 1661.5281827549663,
+        "strassenraub": 113.81409018065244,
+        "fahrraddiebstahl": 990.1692351661694
+      }
+    },
+    {
+      "plrId": "08100207",
+      "bzrId": "081002",
+      "index": 1483.1770115989566,
+      "delikteHz": {
+        "kieztaten": 4459.5933726586645,
+        "wohnraumeinbruch": 190.78017723433103,
+        "sachbeschaedigung": 1661.5281827549663,
+        "strassenraub": 113.81409018065244,
+        "fahrraddiebstahl": 990.1692351661694
+      }
+    },
+    {
+      "plrId": "08100208",
+      "bzrId": "081002",
+      "index": 1483.1770115989566,
+      "delikteHz": {
+        "kieztaten": 4459.5933726586645,
+        "wohnraumeinbruch": 190.78017723433103,
+        "sachbeschaedigung": 1661.5281827549663,
+        "strassenraub": 113.81409018065244,
+        "fahrraddiebstahl": 990.1692351661694
+      }
+    },
+    {
+      "plrId": "08100209",
+      "bzrId": "081002",
+      "index": 1483.1770115989566,
+      "delikteHz": {
+        "kieztaten": 4459.5933726586645,
+        "wohnraumeinbruch": 190.78017723433103,
+        "sachbeschaedigung": 1661.5281827549663,
+        "strassenraub": 113.81409018065244,
+        "fahrraddiebstahl": 990.1692351661694
+      }
+    },
+    {
+      "plrId": "08100310",
+      "bzrId": "081003",
+      "index": 1511.8150827788131,
+      "delikteHz": {
+        "kieztaten": 4553.531825569879,
+        "wohnraumeinbruch": 164.74221336613928,
+        "sachbeschaedigung": 1702.8740093088884,
+        "strassenraub": 140.54297611374338,
+        "fahrraddiebstahl": 997.3843895354154
+      }
+    },
+    {
+      "plrId": "08100311",
+      "bzrId": "081003",
+      "index": 1511.8150827788131,
+      "delikteHz": {
+        "kieztaten": 4553.531825569879,
+        "wohnraumeinbruch": 164.74221336613928,
+        "sachbeschaedigung": 1702.8740093088884,
+        "strassenraub": 140.54297611374338,
+        "fahrraddiebstahl": 997.3843895354154
+      }
+    },
+    {
+      "plrId": "08100312",
+      "bzrId": "081003",
+      "index": 1511.8150827788131,
+      "delikteHz": {
+        "kieztaten": 4553.531825569879,
+        "wohnraumeinbruch": 164.74221336613928,
+        "sachbeschaedigung": 1702.8740093088884,
+        "strassenraub": 140.54297611374338,
+        "fahrraddiebstahl": 997.3843895354154
+      }
+    },
+    {
+      "plrId": "08100313",
+      "bzrId": "081003",
+      "index": 1511.8150827788131,
+      "delikteHz": {
+        "kieztaten": 4553.531825569879,
+        "wohnraumeinbruch": 164.74221336613928,
+        "sachbeschaedigung": 1702.8740093088884,
+        "strassenraub": 140.54297611374338,
+        "fahrraddiebstahl": 997.3843895354154
+      }
+    },
+    {
+      "plrId": "08100314",
+      "bzrId": "081003",
+      "index": 1511.8150827788131,
+      "delikteHz": {
+        "kieztaten": 4553.531825569879,
+        "wohnraumeinbruch": 164.74221336613928,
+        "sachbeschaedigung": 1702.8740093088884,
+        "strassenraub": 140.54297611374338,
+        "fahrraddiebstahl": 997.3843895354154
+      }
+    },
+    {
+      "plrId": "08100415",
+      "bzrId": "081004",
+      "index": 1156.975762093602,
+      "delikteHz": {
+        "kieztaten": 3259.1095044504964,
+        "wohnraumeinbruch": 157.29711662121574,
+        "sachbeschaedigung": 1256.3067865766297,
+        "strassenraub": 81.6679578508355,
+        "fahrraddiebstahl": 1030.4974449688318
+      }
+    },
+    {
+      "plrId": "08100416",
+      "bzrId": "081004",
+      "index": 1156.975762093602,
+      "delikteHz": {
+        "kieztaten": 3259.1095044504964,
+        "wohnraumeinbruch": 157.29711662121574,
+        "sachbeschaedigung": 1256.3067865766297,
+        "strassenraub": 81.6679578508355,
+        "fahrraddiebstahl": 1030.4974449688318
+      }
+    },
+    {
+      "plrId": "08100417",
+      "bzrId": "081004",
+      "index": 1156.975762093602,
+      "delikteHz": {
+        "kieztaten": 3259.1095044504964,
+        "wohnraumeinbruch": 157.29711662121574,
+        "sachbeschaedigung": 1256.3067865766297,
+        "strassenraub": 81.6679578508355,
+        "fahrraddiebstahl": 1030.4974449688318
+      }
+    },
+    {
+      "plrId": "08100418",
+      "bzrId": "081004",
+      "index": 1156.975762093602,
+      "delikteHz": {
+        "kieztaten": 3259.1095044504964,
+        "wohnraumeinbruch": 157.29711662121574,
+        "sachbeschaedigung": 1256.3067865766297,
+        "strassenraub": 81.6679578508355,
+        "fahrraddiebstahl": 1030.4974449688318
+      }
+    },
+    {
+      "plrId": "08100419",
+      "bzrId": "081004",
+      "index": 1156.975762093602,
+      "delikteHz": {
+        "kieztaten": 3259.1095044504964,
+        "wohnraumeinbruch": 157.29711662121574,
+        "sachbeschaedigung": 1256.3067865766297,
+        "strassenraub": 81.6679578508355,
+        "fahrraddiebstahl": 1030.4974449688318
+      }
+    },
+    {
+      "plrId": "08100520",
+      "bzrId": "081005",
+      "index": 1462.4290178794417,
+      "delikteHz": {
+        "kieztaten": 4378.21514807898,
+        "wohnraumeinbruch": 214.00704448980377,
+        "sachbeschaedigung": 2371.309758405175,
+        "strassenraub": 60.9717772113896,
+        "fahrraddiebstahl": 287.6413612118603
+      }
+    },
+    {
+      "plrId": "08100521",
+      "bzrId": "081005",
+      "index": 1462.4290178794417,
+      "delikteHz": {
+        "kieztaten": 4378.21514807898,
+        "wohnraumeinbruch": 214.00704448980377,
+        "sachbeschaedigung": 2371.309758405175,
+        "strassenraub": 60.9717772113896,
+        "fahrraddiebstahl": 287.6413612118603
+      }
+    },
+    {
+      "plrId": "08200622",
+      "bzrId": "082006",
+      "index": 971.8878510873611,
+      "delikteHz": {
+        "kieztaten": 3095.2891626579753,
+        "wohnraumeinbruch": 256.71496241680137,
+        "sachbeschaedigung": 1068.743985723006,
+        "strassenraub": 46.5969562642278,
+        "fahrraddiebstahl": 392.09418837479507
+      }
+    },
+    {
+      "plrId": "08200623",
+      "bzrId": "082006",
+      "index": 971.8878510873611,
+      "delikteHz": {
+        "kieztaten": 3095.2891626579753,
+        "wohnraumeinbruch": 256.71496241680137,
+        "sachbeschaedigung": 1068.743985723006,
+        "strassenraub": 46.5969562642278,
+        "fahrraddiebstahl": 392.09418837479507
+      }
+    },
+    {
+      "plrId": "08200624",
+      "bzrId": "082006",
+      "index": 971.8878510873611,
+      "delikteHz": {
+        "kieztaten": 3095.2891626579753,
+        "wohnraumeinbruch": 256.71496241680137,
+        "sachbeschaedigung": 1068.743985723006,
+        "strassenraub": 46.5969562642278,
+        "fahrraddiebstahl": 392.09418837479507
+      }
+    },
+    {
+      "plrId": "08200725",
+      "bzrId": "082007",
+      "index": 1002.5958301002229,
+      "delikteHz": {
+        "kieztaten": 3050.934866553261,
+        "wohnraumeinbruch": 283.84281984097845,
+        "sachbeschaedigung": 1226.5104407245517,
+        "strassenraub": 70.19668692813364,
+        "fahrraddiebstahl": 381.4943364541891
+      }
+    },
+    {
+      "plrId": "08200726",
+      "bzrId": "082007",
+      "index": 1002.5958301002229,
+      "delikteHz": {
+        "kieztaten": 3050.934866553261,
+        "wohnraumeinbruch": 283.84281984097845,
+        "sachbeschaedigung": 1226.5104407245517,
+        "strassenraub": 70.19668692813364,
+        "fahrraddiebstahl": 381.4943364541891
+      }
+    },
+    {
+      "plrId": "08200727",
+      "bzrId": "082007",
+      "index": 1002.5958301002229,
+      "delikteHz": {
+        "kieztaten": 3050.934866553261,
+        "wohnraumeinbruch": 283.84281984097845,
+        "sachbeschaedigung": 1226.5104407245517,
+        "strassenraub": 70.19668692813364,
+        "fahrraddiebstahl": 381.4943364541891
+      }
+    },
+    {
+      "plrId": "08200728",
+      "bzrId": "082007",
+      "index": 1002.5958301002229,
+      "delikteHz": {
+        "kieztaten": 3050.934866553261,
+        "wohnraumeinbruch": 283.84281984097845,
+        "sachbeschaedigung": 1226.5104407245517,
+        "strassenraub": 70.19668692813364,
+        "fahrraddiebstahl": 381.4943364541891
+      }
+    },
+    {
+      "plrId": "08200729",
+      "bzrId": "082007",
+      "index": 1002.5958301002229,
+      "delikteHz": {
+        "kieztaten": 3050.934866553261,
+        "wohnraumeinbruch": 283.84281984097845,
+        "sachbeschaedigung": 1226.5104407245517,
+        "strassenraub": 70.19668692813364,
+        "fahrraddiebstahl": 381.4943364541891
+      }
+    },
+    {
+      "plrId": "08200730",
+      "bzrId": "082007",
+      "index": 1002.5958301002229,
+      "delikteHz": {
+        "kieztaten": 3050.934866553261,
+        "wohnraumeinbruch": 283.84281984097845,
+        "sachbeschaedigung": 1226.5104407245517,
+        "strassenraub": 70.19668692813364,
+        "fahrraddiebstahl": 381.4943364541891
+      }
+    },
+    {
+      "plrId": "08200831",
+      "bzrId": "082008",
+      "index": 559.8787320356952,
+      "delikteHz": {
+        "kieztaten": 1825.0639432771886,
+        "wohnraumeinbruch": 239.70446021601614,
+        "sachbeschaedigung": 569.0697112539817,
+        "strassenraub": 19.35864383891195,
+        "fahrraddiebstahl": 146.1969015923772
+      }
+    },
+    {
+      "plrId": "08200832",
+      "bzrId": "082008",
+      "index": 559.8787320356952,
+      "delikteHz": {
+        "kieztaten": 1825.0639432771886,
+        "wohnraumeinbruch": 239.70446021601614,
+        "sachbeschaedigung": 569.0697112539817,
+        "strassenraub": 19.35864383891195,
+        "fahrraddiebstahl": 146.1969015923772
+      }
+    },
+    {
+      "plrId": "08200833",
+      "bzrId": "082008",
+      "index": 559.8787320356952,
+      "delikteHz": {
+        "kieztaten": 1825.0639432771886,
+        "wohnraumeinbruch": 239.70446021601614,
+        "sachbeschaedigung": 569.0697112539817,
+        "strassenraub": 19.35864383891195,
+        "fahrraddiebstahl": 146.1969015923772
+      }
+    },
+    {
+      "plrId": "08300934",
+      "bzrId": "083009",
+      "index": 906.103615057024,
+      "delikteHz": {
+        "kieztaten": 2864.018753379611,
+        "wohnraumeinbruch": 261.7455615690105,
+        "sachbeschaedigung": 1106.2277283118544,
+        "strassenraub": 87.8333972512681,
+        "fahrraddiebstahl": 210.69263477337506
+      }
+    },
+    {
+      "plrId": "08300935",
+      "bzrId": "083009",
+      "index": 906.103615057024,
+      "delikteHz": {
+        "kieztaten": 2864.018753379611,
+        "wohnraumeinbruch": 261.7455615690105,
+        "sachbeschaedigung": 1106.2277283118544,
+        "strassenraub": 87.8333972512681,
+        "fahrraddiebstahl": 210.69263477337506
+      }
+    },
+    {
+      "plrId": "08301036",
+      "bzrId": "083010",
+      "index": 1018.8793840452988,
+      "delikteHz": {
+        "kieztaten": 3242.591951283492,
+        "wohnraumeinbruch": 213.53606723827713,
+        "sachbeschaedigung": 1396.2434412670827,
+        "strassenraub": 57.57522203105191,
+        "fahrraddiebstahl": 184.45023840659033
+      }
+    },
+    {
+      "plrId": "08301037",
+      "bzrId": "083010",
+      "index": 1018.8793840452988,
+      "delikteHz": {
+        "kieztaten": 3242.591951283492,
+        "wohnraumeinbruch": 213.53606723827713,
+        "sachbeschaedigung": 1396.2434412670827,
+        "strassenraub": 57.57522203105191,
+        "fahrraddiebstahl": 184.45023840659033
+      }
+    },
+    {
+      "plrId": "08401138",
+      "bzrId": "084011",
+      "index": 912.0925771854107,
+      "delikteHz": {
+        "kieztaten": 3016.265843970968,
+        "wohnraumeinbruch": 253.39390287895685,
+        "sachbeschaedigung": 982.4608878119706,
+        "strassenraub": 51.40598752802928,
+        "fahrraddiebstahl": 256.9362637371291
+      }
+    },
+    {
+      "plrId": "08401139",
+      "bzrId": "084011",
+      "index": 912.0925771854107,
+      "delikteHz": {
+        "kieztaten": 3016.265843970968,
+        "wohnraumeinbruch": 253.39390287895685,
+        "sachbeschaedigung": 982.4608878119706,
+        "strassenraub": 51.40598752802928,
+        "fahrraddiebstahl": 256.9362637371291
+      }
+    },
+    {
+      "plrId": "08401140",
+      "bzrId": "084011",
+      "index": 912.0925771854107,
+      "delikteHz": {
+        "kieztaten": 3016.265843970968,
+        "wohnraumeinbruch": 253.39390287895685,
+        "sachbeschaedigung": 982.4608878119706,
+        "strassenraub": 51.40598752802928,
+        "fahrraddiebstahl": 256.9362637371291
+      }
+    },
+    {
+      "plrId": "08401241",
+      "bzrId": "084012",
+      "index": 604.411354821368,
+      "delikteHz": {
+        "kieztaten": 1790.0679162990054,
+        "wohnraumeinbruch": 311.5831856221193,
+        "sachbeschaedigung": 708.2305401441023,
+        "strassenraub": 37.04041104490216,
+        "fahrraddiebstahl": 175.1347209967113
+      }
+    },
+    {
+      "plrId": "08401242",
+      "bzrId": "084012",
+      "index": 604.411354821368,
+      "delikteHz": {
+        "kieztaten": 1790.0679162990054,
+        "wohnraumeinbruch": 311.5831856221193,
+        "sachbeschaedigung": 708.2305401441023,
+        "strassenraub": 37.04041104490216,
+        "fahrraddiebstahl": 175.1347209967113
+      }
+    },
+    {
+      "plrId": "08401243",
+      "bzrId": "084012",
+      "index": 604.411354821368,
+      "delikteHz": {
+        "kieztaten": 1790.0679162990054,
+        "wohnraumeinbruch": 311.5831856221193,
+        "sachbeschaedigung": 708.2305401441023,
+        "strassenraub": 37.04041104490216,
+        "fahrraddiebstahl": 175.1347209967113
+      }
+    },
+    {
+      "plrId": "08401244",
+      "bzrId": "084012",
+      "index": 604.411354821368,
+      "delikteHz": {
+        "kieztaten": 1790.0679162990054,
+        "wohnraumeinbruch": 311.5831856221193,
+        "sachbeschaedigung": 708.2305401441023,
+        "strassenraub": 37.04041104490216,
+        "fahrraddiebstahl": 175.1347209967113
+      }
+    },
+    {
+      "plrId": "08401245",
+      "bzrId": "084012",
+      "index": 604.411354821368,
+      "delikteHz": {
+        "kieztaten": 1790.0679162990054,
+        "wohnraumeinbruch": 311.5831856221193,
+        "sachbeschaedigung": 708.2305401441023,
+        "strassenraub": 37.04041104490216,
+        "fahrraddiebstahl": 175.1347209967113
+      }
+    },
+    {
+      "plrId": "08401246",
+      "bzrId": "084012",
+      "index": 604.411354821368,
+      "delikteHz": {
+        "kieztaten": 1790.0679162990054,
+        "wohnraumeinbruch": 311.5831856221193,
+        "sachbeschaedigung": 708.2305401441023,
+        "strassenraub": 37.04041104490216,
+        "fahrraddiebstahl": 175.1347209967113
+      }
+    },
+    {
+      "plrId": "09100101",
+      "bzrId": "091001",
+      "index": 1748.087264750651,
+      "delikteHz": {
+        "kieztaten": 4615.043144146518,
+        "wohnraumeinbruch": 251.22534001662288,
+        "sachbeschaedigung": 1509.323420952387,
+        "strassenraub": 179.01682705889036,
+        "fahrraddiebstahl": 2185.8275915788363
+      }
+    },
+    {
+      "plrId": "09100202",
+      "bzrId": "091002",
+      "index": 904.8704774759391,
+      "delikteHz": {
+        "kieztaten": 2675.2082802310615,
+        "wohnraumeinbruch": 407.40661798468,
+        "sachbeschaedigung": 873.9766232306923,
+        "strassenraub": 46.3493574936611,
+        "fahrraddiebstahl": 521.4115084396002
+      }
+    },
+    {
+      "plrId": "09100203",
+      "bzrId": "091002",
+      "index": 904.8704774759391,
+      "delikteHz": {
+        "kieztaten": 2675.2082802310615,
+        "wohnraumeinbruch": 407.40661798468,
+        "sachbeschaedigung": 873.9766232306923,
+        "strassenraub": 46.3493574936611,
+        "fahrraddiebstahl": 521.4115084396002
+      }
+    },
+    {
+      "plrId": "09100304",
+      "bzrId": "091003",
+      "index": 922.3562069642628,
+      "delikteHz": {
+        "kieztaten": 2715.0726036932133,
+        "wohnraumeinbruch": 323.44549406949153,
+        "sachbeschaedigung": 1071.9789916887532,
+        "strassenraub": 36.079060776238116,
+        "fahrraddiebstahl": 465.2048845936176
+      }
+    },
+    {
+      "plrId": "09100305",
+      "bzrId": "091003",
+      "index": 922.3562069642628,
+      "delikteHz": {
+        "kieztaten": 2715.0726036932133,
+        "wohnraumeinbruch": 323.44549406949153,
+        "sachbeschaedigung": 1071.9789916887532,
+        "strassenraub": 36.079060776238116,
+        "fahrraddiebstahl": 465.2048845936176
+      }
+    },
+    {
+      "plrId": "09100306",
+      "bzrId": "091003",
+      "index": 922.3562069642628,
+      "delikteHz": {
+        "kieztaten": 2715.0726036932133,
+        "wohnraumeinbruch": 323.44549406949153,
+        "sachbeschaedigung": 1071.9789916887532,
+        "strassenraub": 36.079060776238116,
+        "fahrraddiebstahl": 465.2048845936176
+      }
+    },
+    {
+      "plrId": "09100407",
+      "bzrId": "091004",
+      "index": 779.7955247684743,
+      "delikteHz": {
+        "kieztaten": 2389.7421948250453,
+        "wohnraumeinbruch": 212.31888500314406,
+        "sachbeschaedigung": 876.909368128373,
+        "strassenraub": 32.48559084054897,
+        "fahrraddiebstahl": 387.5215850452596
+      }
+    },
+    {
+      "plrId": "09100408",
+      "bzrId": "091004",
+      "index": 779.7955247684743,
+      "delikteHz": {
+        "kieztaten": 2389.7421948250453,
+        "wohnraumeinbruch": 212.31888500314406,
+        "sachbeschaedigung": 876.909368128373,
+        "strassenraub": 32.48559084054897,
+        "fahrraddiebstahl": 387.5215850452596
+      }
+    },
+    {
+      "plrId": "09100409",
+      "bzrId": "091004",
+      "index": 779.7955247684743,
+      "delikteHz": {
+        "kieztaten": 2389.7421948250453,
+        "wohnraumeinbruch": 212.31888500314406,
+        "sachbeschaedigung": 876.909368128373,
+        "strassenraub": 32.48559084054897,
+        "fahrraddiebstahl": 387.5215850452596
+      }
+    },
+    {
+      "plrId": "09200510",
+      "bzrId": "092005",
+      "index": 1012.4179552382489,
+      "delikteHz": {
+        "kieztaten": 2962.8885140186576,
+        "wohnraumeinbruch": 161.63069973050742,
+        "sachbeschaedigung": 1240.6170379656726,
+        "strassenraub": 23.65104126555812,
+        "fahrraddiebstahl": 673.302483210848
+      }
+    },
+    {
+      "plrId": "09200511",
+      "bzrId": "092005",
+      "index": 1012.4179552382489,
+      "delikteHz": {
+        "kieztaten": 2962.8885140186576,
+        "wohnraumeinbruch": 161.63069973050742,
+        "sachbeschaedigung": 1240.6170379656726,
+        "strassenraub": 23.65104126555812,
+        "fahrraddiebstahl": 673.302483210848
+      }
+    },
+    {
+      "plrId": "09200512",
+      "bzrId": "092005",
+      "index": 1012.4179552382489,
+      "delikteHz": {
+        "kieztaten": 2962.8885140186576,
+        "wohnraumeinbruch": 161.63069973050742,
+        "sachbeschaedigung": 1240.6170379656726,
+        "strassenraub": 23.65104126555812,
+        "fahrraddiebstahl": 673.302483210848
+      }
+    },
+    {
+      "plrId": "09200613",
+      "bzrId": "092006",
+      "index": 1592.096001540991,
+      "delikteHz": {
+        "kieztaten": 4253.571778508906,
+        "wohnraumeinbruch": 258.45131673464357,
+        "sachbeschaedigung": 2292.7544985612135,
+        "strassenraub": 72.98340739503293,
+        "fahrraddiebstahl": 1082.7190065051586
+      }
+    },
+    {
+      "plrId": "09200614",
+      "bzrId": "092006",
+      "index": 1592.096001540991,
+      "delikteHz": {
+        "kieztaten": 4253.571778508906,
+        "wohnraumeinbruch": 258.45131673464357,
+        "sachbeschaedigung": 2292.7544985612135,
+        "strassenraub": 72.98340739503293,
+        "fahrraddiebstahl": 1082.7190065051586
+      }
+    },
+    {
+      "plrId": "09200715",
+      "bzrId": "092007",
+      "index": 905.1834967085667,
+      "delikteHz": {
+        "kieztaten": 2363.5824482698113,
+        "wohnraumeinbruch": 201.33733028789092,
+        "sachbeschaedigung": 1185.7556889978139,
+        "strassenraub": 33.205256147768864,
+        "fahrraddiebstahl": 742.0367598395482
+      }
+    },
+    {
+      "plrId": "09200716",
+      "bzrId": "092007",
+      "index": 905.1834967085667,
+      "delikteHz": {
+        "kieztaten": 2363.5824482698113,
+        "wohnraumeinbruch": 201.33733028789092,
+        "sachbeschaedigung": 1185.7556889978139,
+        "strassenraub": 33.205256147768864,
+        "fahrraddiebstahl": 742.0367598395482
+      }
+    },
+    {
+      "plrId": "09200717",
+      "bzrId": "092007",
+      "index": 905.1834967085667,
+      "delikteHz": {
+        "kieztaten": 2363.5824482698113,
+        "wohnraumeinbruch": 201.33733028789092,
+        "sachbeschaedigung": 1185.7556889978139,
+        "strassenraub": 33.205256147768864,
+        "fahrraddiebstahl": 742.0367598395482
+      }
+    },
+    {
+      "plrId": "09200818",
+      "bzrId": "092008",
+      "index": 939.9453500575712,
+      "delikteHz": {
+        "kieztaten": 2871.837350638427,
+        "wohnraumeinbruch": 262.654560565315,
+        "sachbeschaedigung": 1069.4202647773072,
+        "strassenraub": 25.957706156470717,
+        "fahrraddiebstahl": 469.8568681503363
+      }
+    },
+    {
+      "plrId": "09200819",
+      "bzrId": "092008",
+      "index": 939.9453500575712,
+      "delikteHz": {
+        "kieztaten": 2871.837350638427,
+        "wohnraumeinbruch": 262.654560565315,
+        "sachbeschaedigung": 1069.4202647773072,
+        "strassenraub": 25.957706156470717,
+        "fahrraddiebstahl": 469.8568681503363
+      }
+    },
+    {
+      "plrId": "09300920",
+      "bzrId": "093009",
+      "index": 666.3366893170707,
+      "delikteHz": {
+        "kieztaten": 1977.4381621994708,
+        "wohnraumeinbruch": 248.04983898253977,
+        "sachbeschaedigung": 794.6200358474871,
+        "strassenraub": 20.54447553223464,
+        "fahrraddiebstahl": 291.0309340236211
+      }
+    },
+    {
+      "plrId": "09300921",
+      "bzrId": "093009",
+      "index": 666.3366893170707,
+      "delikteHz": {
+        "kieztaten": 1977.4381621994708,
+        "wohnraumeinbruch": 248.04983898253977,
+        "sachbeschaedigung": 794.6200358474871,
+        "strassenraub": 20.54447553223464,
+        "fahrraddiebstahl": 291.0309340236211
+      }
+    },
+    {
+      "plrId": "09300922",
+      "bzrId": "093009",
+      "index": 666.3366893170707,
+      "delikteHz": {
+        "kieztaten": 1977.4381621994708,
+        "wohnraumeinbruch": 248.04983898253977,
+        "sachbeschaedigung": 794.6200358474871,
+        "strassenraub": 20.54447553223464,
+        "fahrraddiebstahl": 291.0309340236211
+      }
+    },
+    {
+      "plrId": "09300923",
+      "bzrId": "093009",
+      "index": 666.3366893170707,
+      "delikteHz": {
+        "kieztaten": 1977.4381621994708,
+        "wohnraumeinbruch": 248.04983898253977,
+        "sachbeschaedigung": 794.6200358474871,
+        "strassenraub": 20.54447553223464,
+        "fahrraddiebstahl": 291.0309340236211
+      }
+    },
+    {
+      "plrId": "09301024",
+      "bzrId": "093010",
+      "index": 681.9075836948386,
+      "delikteHz": {
+        "kieztaten": 2024.313612079557,
+        "wohnraumeinbruch": 275.5862166328149,
+        "sachbeschaedigung": 829.3962581846782,
+        "strassenraub": 27.778388993718796,
+        "fahrraddiebstahl": 252.4634425834241
+      }
+    },
+    {
+      "plrId": "09301025",
+      "bzrId": "093010",
+      "index": 681.9075836948386,
+      "delikteHz": {
+        "kieztaten": 2024.313612079557,
+        "wohnraumeinbruch": 275.5862166328149,
+        "sachbeschaedigung": 829.3962581846782,
+        "strassenraub": 27.778388993718796,
+        "fahrraddiebstahl": 252.4634425834241
+      }
+    },
+    {
+      "plrId": "09301126",
+      "bzrId": "093011",
+      "index": 961.2904626169945,
+      "delikteHz": {
+        "kieztaten": 2424.7180126708877,
+        "wohnraumeinbruch": 248.2468738347287,
+        "sachbeschaedigung": 1111.8008765526672,
+        "strassenraub": 28.131364130322606,
+        "fahrraddiebstahl": 993.5551858963663
+      }
+    },
+    {
+      "plrId": "09301227",
+      "bzrId": "093012",
+      "index": 352.1930228915762,
+      "delikteHz": {
+        "kieztaten": 873.079712474549,
+        "wohnraumeinbruch": 185.20102051751283,
+        "sachbeschaedigung": 562.182234092539,
+        "strassenraub": 7.333333333333333,
+        "fahrraddiebstahl": 133.1688140399469
+      }
+    },
+    {
+      "plrId": "09301228",
+      "bzrId": "093012",
+      "index": 352.1930228915762,
+      "delikteHz": {
+        "kieztaten": 873.079712474549,
+        "wohnraumeinbruch": 185.20102051751283,
+        "sachbeschaedigung": 562.182234092539,
+        "strassenraub": 7.333333333333333,
+        "fahrraddiebstahl": 133.1688140399469
+      }
+    },
+    {
+      "plrId": "09401329",
+      "bzrId": "094013",
+      "index": 531.6868180717971,
+      "delikteHz": {
+        "kieztaten": 1317.7401964350909,
+        "wohnraumeinbruch": 303.2043444049921,
+        "sachbeschaedigung": 639.8379756626846,
+        "strassenraub": 10.375373128215408,
+        "fahrraddiebstahl": 387.27620072800255
+      }
+    },
+    {
+      "plrId": "09401330",
+      "bzrId": "094013",
+      "index": 531.6868180717971,
+      "delikteHz": {
+        "kieztaten": 1317.7401964350909,
+        "wohnraumeinbruch": 303.2043444049921,
+        "sachbeschaedigung": 639.8379756626846,
+        "strassenraub": 10.375373128215408,
+        "fahrraddiebstahl": 387.27620072800255
+      }
+    },
+    {
+      "plrId": "09401431",
+      "bzrId": "094014",
+      "index": 659.1154765914528,
+      "delikteHz": {
+        "kieztaten": 1886.8867476278338,
+        "wohnraumeinbruch": 174.06745010677275,
+        "sachbeschaedigung": 724.9972672995951,
+        "strassenraub": 30.421936250396794,
+        "fahrraddiebstahl": 479.20398167266507
+      }
+    },
+    {
+      "plrId": "09401432",
+      "bzrId": "094014",
+      "index": 659.1154765914528,
+      "delikteHz": {
+        "kieztaten": 1886.8867476278338,
+        "wohnraumeinbruch": 174.06745010677275,
+        "sachbeschaedigung": 724.9972672995951,
+        "strassenraub": 30.421936250396794,
+        "fahrraddiebstahl": 479.20398167266507
+      }
+    },
+    {
+      "plrId": "09401433",
+      "bzrId": "094014",
+      "index": 659.1154765914528,
+      "delikteHz": {
+        "kieztaten": 1886.8867476278338,
+        "wohnraumeinbruch": 174.06745010677275,
+        "sachbeschaedigung": 724.9972672995951,
+        "strassenraub": 30.421936250396794,
+        "fahrraddiebstahl": 479.20398167266507
+      }
+    },
+    {
+      "plrId": "09401534",
+      "bzrId": "094015",
+      "index": 991.3155667596693,
+      "delikteHz": {
+        "kieztaten": 3113.410620296307,
+        "wohnraumeinbruch": 75.59035396036309,
+        "sachbeschaedigung": 1097.0255474159644,
+        "strassenraub": 62.142572449922405,
+        "fahrraddiebstahl": 608.4087396757891
+      }
+    },
+    {
+      "plrId": "09401635",
+      "bzrId": "094016",
+      "index": 315.4312462463303,
+      "delikteHz": {
+        "kieztaten": 864.0617551699846,
+        "wohnraumeinbruch": 146.32183820439664,
+        "sachbeschaedigung": 434.5238262200249,
+        "strassenraub": 4.707433036765052,
+        "fahrraddiebstahl": 127.54137860048009
+      }
+    },
+    {
+      "plrId": "09501736",
+      "bzrId": "095017",
+      "index": 669.3598340557082,
+      "delikteHz": {
+        "kieztaten": 1467.5575483037128,
+        "wohnraumeinbruch": 229.86296456527802,
+        "sachbeschaedigung": 857.3807770071597,
+        "strassenraub": 33.366402124510266,
+        "fahrraddiebstahl": 758.6314782778805
+      }
+    },
+    {
+      "plrId": "09501737",
+      "bzrId": "095017",
+      "index": 669.3598340557082,
+      "delikteHz": {
+        "kieztaten": 1467.5575483037128,
+        "wohnraumeinbruch": 229.86296456527802,
+        "sachbeschaedigung": 857.3807770071597,
+        "strassenraub": 33.366402124510266,
+        "fahrraddiebstahl": 758.6314782778805
+      }
+    },
+    {
+      "plrId": "09501838",
+      "bzrId": "095018",
+      "index": 581.7320372013103,
+      "delikteHz": {
+        "kieztaten": 1192.7114064129623,
+        "wohnraumeinbruch": 198.4182945445442,
+        "sachbeschaedigung": 786.5940201375103,
+        "strassenraub": 18.240633198926776,
+        "fahrraddiebstahl": 712.6958317126077
+      }
+    },
+    {
+      "plrId": "09501939",
+      "bzrId": "095019",
+      "index": 1106.2761311825282,
+      "delikteHz": {
+        "kieztaten": 3019.4125411255022,
+        "wohnraumeinbruch": 91.43469885448133,
+        "sachbeschaedigung": 1210.2146793139989,
+        "strassenraub": 94.43213844481579,
+        "fahrraddiebstahl": 1115.8865981738418
+      }
+    },
+    {
+      "plrId": "09501940",
+      "bzrId": "095019",
+      "index": 1106.2761311825282,
+      "delikteHz": {
+        "kieztaten": 3019.4125411255022,
+        "wohnraumeinbruch": 91.43469885448133,
+        "sachbeschaedigung": 1210.2146793139989,
+        "strassenraub": 94.43213844481579,
+        "fahrraddiebstahl": 1115.8865981738418
+      }
+    },
+    {
+      "plrId": "09501941",
+      "bzrId": "095019",
+      "index": 1106.2761311825282,
+      "delikteHz": {
+        "kieztaten": 3019.4125411255022,
+        "wohnraumeinbruch": 91.43469885448133,
+        "sachbeschaedigung": 1210.2146793139989,
+        "strassenraub": 94.43213844481579,
+        "fahrraddiebstahl": 1115.8865981738418
+      }
+    },
+    {
+      "plrId": "09502042",
+      "bzrId": "095020",
+      "index": 561.9117400772534,
+      "delikteHz": {
+        "kieztaten": 1242.810869122668,
+        "wohnraumeinbruch": 375.63433107649666,
+        "sachbeschaedigung": 528.2099050081015,
+        "strassenraub": 22.349002505674083,
+        "fahrraddiebstahl": 640.5545926733265
+      }
+    },
+    {
+      "plrId": "09502043",
+      "bzrId": "095020",
+      "index": 561.9117400772534,
+      "delikteHz": {
+        "kieztaten": 1242.810869122668,
+        "wohnraumeinbruch": 375.63433107649666,
+        "sachbeschaedigung": 528.2099050081015,
+        "strassenraub": 22.349002505674083,
+        "fahrraddiebstahl": 640.5545926733265
+      }
+    },
+    {
+      "plrId": "10100101",
+      "bzrId": "101001",
+      "index": 1032.6715587758683,
+      "delikteHz": {
+        "kieztaten": 3467.3069864906306,
+        "wohnraumeinbruch": 148.89245543082816,
+        "sachbeschaedigung": 1280.367577895596,
+        "strassenraub": 75.95508117935772,
+        "fahrraddiebstahl": 190.83569288292892
+      }
+    },
+    {
+      "plrId": "10100102",
+      "bzrId": "101001",
+      "index": 1032.6715587758683,
+      "delikteHz": {
+        "kieztaten": 3467.3069864906306,
+        "wohnraumeinbruch": 148.89245543082816,
+        "sachbeschaedigung": 1280.367577895596,
+        "strassenraub": 75.95508117935772,
+        "fahrraddiebstahl": 190.83569288292892
+      }
+    },
+    {
+      "plrId": "10100103",
+      "bzrId": "101001",
+      "index": 1032.6715587758683,
+      "delikteHz": {
+        "kieztaten": 3467.3069864906306,
+        "wohnraumeinbruch": 148.89245543082816,
+        "sachbeschaedigung": 1280.367577895596,
+        "strassenraub": 75.95508117935772,
+        "fahrraddiebstahl": 190.83569288292892
+      }
+    },
+    {
+      "plrId": "10100104",
+      "bzrId": "101001",
+      "index": 1032.6715587758683,
+      "delikteHz": {
+        "kieztaten": 3467.3069864906306,
+        "wohnraumeinbruch": 148.89245543082816,
+        "sachbeschaedigung": 1280.367577895596,
+        "strassenraub": 75.95508117935772,
+        "fahrraddiebstahl": 190.83569288292892
+      }
+    },
+    {
+      "plrId": "10100205",
+      "bzrId": "101002",
+      "index": 991.1418958198283,
+      "delikteHz": {
+        "kieztaten": 3347.278383920961,
+        "wohnraumeinbruch": 240.0111909730456,
+        "sachbeschaedigung": 1078.6064894255162,
+        "strassenraub": 74.95364829456389,
+        "fahrraddiebstahl": 214.85976648505388
+      }
+    },
+    {
+      "plrId": "10100206",
+      "bzrId": "101002",
+      "index": 991.1418958198283,
+      "delikteHz": {
+        "kieztaten": 3347.278383920961,
+        "wohnraumeinbruch": 240.0111909730456,
+        "sachbeschaedigung": 1078.6064894255162,
+        "strassenraub": 74.95364829456389,
+        "fahrraddiebstahl": 214.85976648505388
+      }
+    },
+    {
+      "plrId": "10100207",
+      "bzrId": "101002",
+      "index": 991.1418958198283,
+      "delikteHz": {
+        "kieztaten": 3347.278383920961,
+        "wohnraumeinbruch": 240.0111909730456,
+        "sachbeschaedigung": 1078.6064894255162,
+        "strassenraub": 74.95364829456389,
+        "fahrraddiebstahl": 214.85976648505388
+      }
+    },
+    {
+      "plrId": "10100208",
+      "bzrId": "101002",
+      "index": 991.1418958198283,
+      "delikteHz": {
+        "kieztaten": 3347.278383920961,
+        "wohnraumeinbruch": 240.0111909730456,
+        "sachbeschaedigung": 1078.6064894255162,
+        "strassenraub": 74.95364829456389,
+        "fahrraddiebstahl": 214.85976648505388
+      }
+    },
+    {
+      "plrId": "10100209",
+      "bzrId": "101002",
+      "index": 991.1418958198283,
+      "delikteHz": {
+        "kieztaten": 3347.278383920961,
+        "wohnraumeinbruch": 240.0111909730456,
+        "sachbeschaedigung": 1078.6064894255162,
+        "strassenraub": 74.95364829456389,
+        "fahrraddiebstahl": 214.85976648505388
+      }
+    },
+    {
+      "plrId": "10100210",
+      "bzrId": "101002",
+      "index": 991.1418958198283,
+      "delikteHz": {
+        "kieztaten": 3347.278383920961,
+        "wohnraumeinbruch": 240.0111909730456,
+        "sachbeschaedigung": 1078.6064894255162,
+        "strassenraub": 74.95364829456389,
+        "fahrraddiebstahl": 214.85976648505388
+      }
+    },
+    {
+      "plrId": "10100311",
+      "bzrId": "101003",
+      "index": 807.6407553878181,
+      "delikteHz": {
+        "kieztaten": 2488.2169464794556,
+        "wohnraumeinbruch": 245.13432961123746,
+        "sachbeschaedigung": 1042.8414068785023,
+        "strassenraub": 51.68258269996966,
+        "fahrraddiebstahl": 210.32851126992492
+      }
+    },
+    {
+      "plrId": "10100312",
+      "bzrId": "101003",
+      "index": 807.6407553878181,
+      "delikteHz": {
+        "kieztaten": 2488.2169464794556,
+        "wohnraumeinbruch": 245.13432961123746,
+        "sachbeschaedigung": 1042.8414068785023,
+        "strassenraub": 51.68258269996966,
+        "fahrraddiebstahl": 210.32851126992492
+      }
+    },
+    {
+      "plrId": "10100313",
+      "bzrId": "101003",
+      "index": 807.6407553878181,
+      "delikteHz": {
+        "kieztaten": 2488.2169464794556,
+        "wohnraumeinbruch": 245.13432961123746,
+        "sachbeschaedigung": 1042.8414068785023,
+        "strassenraub": 51.68258269996966,
+        "fahrraddiebstahl": 210.32851126992492
+      }
+    },
+    {
+      "plrId": "10100314",
+      "bzrId": "101003",
+      "index": 807.6407553878181,
+      "delikteHz": {
+        "kieztaten": 2488.2169464794556,
+        "wohnraumeinbruch": 245.13432961123746,
+        "sachbeschaedigung": 1042.8414068785023,
+        "strassenraub": 51.68258269996966,
+        "fahrraddiebstahl": 210.32851126992492
+      }
+    },
+    {
+      "plrId": "10100315",
+      "bzrId": "101003",
+      "index": 807.6407553878181,
+      "delikteHz": {
+        "kieztaten": 2488.2169464794556,
+        "wohnraumeinbruch": 245.13432961123746,
+        "sachbeschaedigung": 1042.8414068785023,
+        "strassenraub": 51.68258269996966,
+        "fahrraddiebstahl": 210.32851126992492
+      }
+    },
+    {
+      "plrId": "10100316",
+      "bzrId": "101003",
+      "index": 807.6407553878181,
+      "delikteHz": {
+        "kieztaten": 2488.2169464794556,
+        "wohnraumeinbruch": 245.13432961123746,
+        "sachbeschaedigung": 1042.8414068785023,
+        "strassenraub": 51.68258269996966,
+        "fahrraddiebstahl": 210.32851126992492
+      }
+    },
+    {
+      "plrId": "10200417",
+      "bzrId": "102004",
+      "index": 1094.9603586761918,
+      "delikteHz": {
+        "kieztaten": 3816.518851952229,
+        "wohnraumeinbruch": 164.8674813747239,
+        "sachbeschaedigung": 1139.4514054425736,
+        "strassenraub": 76.61402107652441,
+        "fahrraddiebstahl": 277.3500335349096
+      }
+    },
+    {
+      "plrId": "10200418",
+      "bzrId": "102004",
+      "index": 1094.9603586761918,
+      "delikteHz": {
+        "kieztaten": 3816.518851952229,
+        "wohnraumeinbruch": 164.8674813747239,
+        "sachbeschaedigung": 1139.4514054425736,
+        "strassenraub": 76.61402107652441,
+        "fahrraddiebstahl": 277.3500335349096
+      }
+    },
+    {
+      "plrId": "10200419",
+      "bzrId": "102004",
+      "index": 1094.9603586761918,
+      "delikteHz": {
+        "kieztaten": 3816.518851952229,
+        "wohnraumeinbruch": 164.8674813747239,
+        "sachbeschaedigung": 1139.4514054425736,
+        "strassenraub": 76.61402107652441,
+        "fahrraddiebstahl": 277.3500335349096
+      }
+    },
+    {
+      "plrId": "10200420",
+      "bzrId": "102004",
+      "index": 1094.9603586761918,
+      "delikteHz": {
+        "kieztaten": 3816.518851952229,
+        "wohnraumeinbruch": 164.8674813747239,
+        "sachbeschaedigung": 1139.4514054425736,
+        "strassenraub": 76.61402107652441,
+        "fahrraddiebstahl": 277.3500335349096
+      }
+    },
+    {
+      "plrId": "10200421",
+      "bzrId": "102004",
+      "index": 1094.9603586761918,
+      "delikteHz": {
+        "kieztaten": 3816.518851952229,
+        "wohnraumeinbruch": 164.8674813747239,
+        "sachbeschaedigung": 1139.4514054425736,
+        "strassenraub": 76.61402107652441,
+        "fahrraddiebstahl": 277.3500335349096
+      }
+    },
+    {
+      "plrId": "10200422",
+      "bzrId": "102004",
+      "index": 1094.9603586761918,
+      "delikteHz": {
+        "kieztaten": 3816.518851952229,
+        "wohnraumeinbruch": 164.8674813747239,
+        "sachbeschaedigung": 1139.4514054425736,
+        "strassenraub": 76.61402107652441,
+        "fahrraddiebstahl": 277.3500335349096
+      }
+    },
+    {
+      "plrId": "10200423",
+      "bzrId": "102004",
+      "index": 1094.9603586761918,
+      "delikteHz": {
+        "kieztaten": 3816.518851952229,
+        "wohnraumeinbruch": 164.8674813747239,
+        "sachbeschaedigung": 1139.4514054425736,
+        "strassenraub": 76.61402107652441,
+        "fahrraddiebstahl": 277.3500335349096
+      }
+    },
+    {
+      "plrId": "10200524",
+      "bzrId": "102005",
+      "index": 869.5327275368518,
+      "delikteHz": {
+        "kieztaten": 3007.1891844121506,
+        "wohnraumeinbruch": 103.9661499968477,
+        "sachbeschaedigung": 892.3932839968343,
+        "strassenraub": 74.17672795015926,
+        "fahrraddiebstahl": 269.93829132826704
+      }
+    },
+    {
+      "plrId": "10200525",
+      "bzrId": "102005",
+      "index": 869.5327275368518,
+      "delikteHz": {
+        "kieztaten": 3007.1891844121506,
+        "wohnraumeinbruch": 103.9661499968477,
+        "sachbeschaedigung": 892.3932839968343,
+        "strassenraub": 74.17672795015926,
+        "fahrraddiebstahl": 269.93829132826704
+      }
+    },
+    {
+      "plrId": "10200526",
+      "bzrId": "102005",
+      "index": 869.5327275368518,
+      "delikteHz": {
+        "kieztaten": 3007.1891844121506,
+        "wohnraumeinbruch": 103.9661499968477,
+        "sachbeschaedigung": 892.3932839968343,
+        "strassenraub": 74.17672795015926,
+        "fahrraddiebstahl": 269.93829132826704
+      }
+    },
+    {
+      "plrId": "10200627",
+      "bzrId": "102006",
+      "index": 760.9187624580284,
+      "delikteHz": {
+        "kieztaten": 2418.713983045511,
+        "wohnraumeinbruch": 125.09480831186379,
+        "sachbeschaedigung": 965.4347803769457,
+        "strassenraub": 58.89522472763144,
+        "fahrraddiebstahl": 236.45501582818972
+      }
+    },
+    {
+      "plrId": "10200628",
+      "bzrId": "102006",
+      "index": 760.9187624580284,
+      "delikteHz": {
+        "kieztaten": 2418.713983045511,
+        "wohnraumeinbruch": 125.09480831186379,
+        "sachbeschaedigung": 965.4347803769457,
+        "strassenraub": 58.89522472763144,
+        "fahrraddiebstahl": 236.45501582818972
+      }
+    },
+    {
+      "plrId": "10200629",
+      "bzrId": "102006",
+      "index": 760.9187624580284,
+      "delikteHz": {
+        "kieztaten": 2418.713983045511,
+        "wohnraumeinbruch": 125.09480831186379,
+        "sachbeschaedigung": 965.4347803769457,
+        "strassenraub": 58.89522472763144,
+        "fahrraddiebstahl": 236.45501582818972
+      }
+    },
+    {
+      "plrId": "10200630",
+      "bzrId": "102006",
+      "index": 760.9187624580284,
+      "delikteHz": {
+        "kieztaten": 2418.713983045511,
+        "wohnraumeinbruch": 125.09480831186379,
+        "sachbeschaedigung": 965.4347803769457,
+        "strassenraub": 58.89522472763144,
+        "fahrraddiebstahl": 236.45501582818972
+      }
+    },
+    {
+      "plrId": "10300731",
+      "bzrId": "103007",
+      "index": 634.0907950099487,
+      "delikteHz": {
+        "kieztaten": 1610.488076272637,
+        "wohnraumeinbruch": 377.0097583297709,
+        "sachbeschaedigung": 665.766336781477,
+        "strassenraub": 35.5232197922984,
+        "fahrraddiebstahl": 481.66658387356006
+      }
+    },
+    {
+      "plrId": "10300732",
+      "bzrId": "103007",
+      "index": 634.0907950099487,
+      "delikteHz": {
+        "kieztaten": 1610.488076272637,
+        "wohnraumeinbruch": 377.0097583297709,
+        "sachbeschaedigung": 665.766336781477,
+        "strassenraub": 35.5232197922984,
+        "fahrraddiebstahl": 481.66658387356006
+      }
+    },
+    {
+      "plrId": "10300733",
+      "bzrId": "103007",
+      "index": 634.0907950099487,
+      "delikteHz": {
+        "kieztaten": 1610.488076272637,
+        "wohnraumeinbruch": 377.0097583297709,
+        "sachbeschaedigung": 665.766336781477,
+        "strassenraub": 35.5232197922984,
+        "fahrraddiebstahl": 481.66658387356006
+      }
+    },
+    {
+      "plrId": "10300734",
+      "bzrId": "103007",
+      "index": 634.0907950099487,
+      "delikteHz": {
+        "kieztaten": 1610.488076272637,
+        "wohnraumeinbruch": 377.0097583297709,
+        "sachbeschaedigung": 665.766336781477,
+        "strassenraub": 35.5232197922984,
+        "fahrraddiebstahl": 481.66658387356006
+      }
+    },
+    {
+      "plrId": "10400835",
+      "bzrId": "104008",
+      "index": 539.1125596693734,
+      "delikteHz": {
+        "kieztaten": 1296.3051440695938,
+        "wohnraumeinbruch": 401.16401787109317,
+        "sachbeschaedigung": 687.8404305460663,
+        "strassenraub": 40.63437416006375,
+        "fahrraddiebstahl": 269.6188317000498
+      }
+    },
+    {
+      "plrId": "10400836",
+      "bzrId": "104008",
+      "index": 539.1125596693734,
+      "delikteHz": {
+        "kieztaten": 1296.3051440695938,
+        "wohnraumeinbruch": 401.16401787109317,
+        "sachbeschaedigung": 687.8404305460663,
+        "strassenraub": 40.63437416006375,
+        "fahrraddiebstahl": 269.6188317000498
+      }
+    },
+    {
+      "plrId": "10400837",
+      "bzrId": "104008",
+      "index": 539.1125596693734,
+      "delikteHz": {
+        "kieztaten": 1296.3051440695938,
+        "wohnraumeinbruch": 401.16401787109317,
+        "sachbeschaedigung": 687.8404305460663,
+        "strassenraub": 40.63437416006375,
+        "fahrraddiebstahl": 269.6188317000498
+      }
+    },
+    {
+      "plrId": "10400938",
+      "bzrId": "104009",
+      "index": 429.2128486070379,
+      "delikteHz": {
+        "kieztaten": 826.8673270839136,
+        "wohnraumeinbruch": 438.98534556134456,
+        "sachbeschaedigung": 603.1634208395817,
+        "strassenraub": 13.006175887797928,
+        "fahrraddiebstahl": 264.0419736625516
+      }
+    },
+    {
+      "plrId": "10400939",
+      "bzrId": "104009",
+      "index": 429.2128486070379,
+      "delikteHz": {
+        "kieztaten": 826.8673270839136,
+        "wohnraumeinbruch": 438.98534556134456,
+        "sachbeschaedigung": 603.1634208395817,
+        "strassenraub": 13.006175887797928,
+        "fahrraddiebstahl": 264.0419736625516
+      }
+    },
+    {
+      "plrId": "10400940",
+      "bzrId": "104009",
+      "index": 429.2128486070379,
+      "delikteHz": {
+        "kieztaten": 826.8673270839136,
+        "wohnraumeinbruch": 438.98534556134456,
+        "sachbeschaedigung": 603.1634208395817,
+        "strassenraub": 13.006175887797928,
+        "fahrraddiebstahl": 264.0419736625516
+      }
+    },
+    {
+      "plrId": "10400941",
+      "bzrId": "104009",
+      "index": 429.2128486070379,
+      "delikteHz": {
+        "kieztaten": 826.8673270839136,
+        "wohnraumeinbruch": 438.98534556134456,
+        "sachbeschaedigung": 603.1634208395817,
+        "strassenraub": 13.006175887797928,
+        "fahrraddiebstahl": 264.0419736625516
+      }
+    },
+    {
+      "plrId": "11100101",
+      "bzrId": "111001",
+      "index": 611.4588231529651,
+      "delikteHz": {
+        "kieztaten": 1787.816991207245,
+        "wohnraumeinbruch": 330.28158497872136,
+        "sachbeschaedigung": 732.396438260081,
+        "strassenraub": 20.85877466251298,
+        "fahrraddiebstahl": 185.94032665626494
+      }
+    },
+    {
+      "plrId": "11100102",
+      "bzrId": "111001",
+      "index": 611.4588231529651,
+      "delikteHz": {
+        "kieztaten": 1787.816991207245,
+        "wohnraumeinbruch": 330.28158497872136,
+        "sachbeschaedigung": 732.396438260081,
+        "strassenraub": 20.85877466251298,
+        "fahrraddiebstahl": 185.94032665626494
+      }
+    },
+    {
+      "plrId": "11100203",
+      "bzrId": "111002",
+      "index": 862.7141971533548,
+      "delikteHz": {
+        "kieztaten": 2845.8071392853976,
+        "wohnraumeinbruch": 123.26316560321764,
+        "sachbeschaedigung": 1077.036872047538,
+        "strassenraub": 72.44625816302796,
+        "fahrraddiebstahl": 195.01755066759281
+      }
+    },
+    {
+      "plrId": "11100204",
+      "bzrId": "111002",
+      "index": 862.7141971533548,
+      "delikteHz": {
+        "kieztaten": 2845.8071392853976,
+        "wohnraumeinbruch": 123.26316560321764,
+        "sachbeschaedigung": 1077.036872047538,
+        "strassenraub": 72.44625816302796,
+        "fahrraddiebstahl": 195.01755066759281
+      }
+    },
+    {
+      "plrId": "11100205",
+      "bzrId": "111002",
+      "index": 862.7141971533548,
+      "delikteHz": {
+        "kieztaten": 2845.8071392853976,
+        "wohnraumeinbruch": 123.26316560321764,
+        "sachbeschaedigung": 1077.036872047538,
+        "strassenraub": 72.44625816302796,
+        "fahrraddiebstahl": 195.01755066759281
+      }
+    },
+    {
+      "plrId": "11100206",
+      "bzrId": "111002",
+      "index": 862.7141971533548,
+      "delikteHz": {
+        "kieztaten": 2845.8071392853976,
+        "wohnraumeinbruch": 123.26316560321764,
+        "sachbeschaedigung": 1077.036872047538,
+        "strassenraub": 72.44625816302796,
+        "fahrraddiebstahl": 195.01755066759281
+      }
+    },
+    {
+      "plrId": "11100307",
+      "bzrId": "111003",
+      "index": 1032.073869707731,
+      "delikteHz": {
+        "kieztaten": 3335.882731437499,
+        "wohnraumeinbruch": 163.23862479403542,
+        "sachbeschaedigung": 1284.9453454048398,
+        "strassenraub": 95.723835750275,
+        "fahrraddiebstahl": 280.57881115200604
+      }
+    },
+    {
+      "plrId": "11100308",
+      "bzrId": "111003",
+      "index": 1032.073869707731,
+      "delikteHz": {
+        "kieztaten": 3335.882731437499,
+        "wohnraumeinbruch": 163.23862479403542,
+        "sachbeschaedigung": 1284.9453454048398,
+        "strassenraub": 95.723835750275,
+        "fahrraddiebstahl": 280.57881115200604
+      }
+    },
+    {
+      "plrId": "11100309",
+      "bzrId": "111003",
+      "index": 1032.073869707731,
+      "delikteHz": {
+        "kieztaten": 3335.882731437499,
+        "wohnraumeinbruch": 163.23862479403542,
+        "sachbeschaedigung": 1284.9453454048398,
+        "strassenraub": 95.723835750275,
+        "fahrraddiebstahl": 280.57881115200604
+      }
+    },
+    {
+      "plrId": "11200410",
+      "bzrId": "112004",
+      "index": 951.26617961953,
+      "delikteHz": {
+        "kieztaten": 2934.5890562341506,
+        "wohnraumeinbruch": 355.88509670542317,
+        "sachbeschaedigung": 1118.136666121078,
+        "strassenraub": 48.4498480759733,
+        "fahrraddiebstahl": 299.2702309610249
+      }
+    },
+    {
+      "plrId": "11200411",
+      "bzrId": "112004",
+      "index": 951.26617961953,
+      "delikteHz": {
+        "kieztaten": 2934.5890562341506,
+        "wohnraumeinbruch": 355.88509670542317,
+        "sachbeschaedigung": 1118.136666121078,
+        "strassenraub": 48.4498480759733,
+        "fahrraddiebstahl": 299.2702309610249
+      }
+    },
+    {
+      "plrId": "11200512",
+      "bzrId": "112005",
+      "index": 866.1508945406293,
+      "delikteHz": {
+        "kieztaten": 2613.945692291875,
+        "wohnraumeinbruch": 276.3445213167197,
+        "sachbeschaedigung": 924.2226212255973,
+        "strassenraub": 58.23900359167163,
+        "fahrraddiebstahl": 458.00263427728265
+      }
+    },
+    {
+      "plrId": "11200513",
+      "bzrId": "112005",
+      "index": 866.1508945406293,
+      "delikteHz": {
+        "kieztaten": 2613.945692291875,
+        "wohnraumeinbruch": 276.3445213167197,
+        "sachbeschaedigung": 924.2226212255973,
+        "strassenraub": 58.23900359167163,
+        "fahrraddiebstahl": 458.00263427728265
+      }
+    },
+    {
+      "plrId": "11200514",
+      "bzrId": "112005",
+      "index": 866.1508945406293,
+      "delikteHz": {
+        "kieztaten": 2613.945692291875,
+        "wohnraumeinbruch": 276.3445213167197,
+        "sachbeschaedigung": 924.2226212255973,
+        "strassenraub": 58.23900359167163,
+        "fahrraddiebstahl": 458.00263427728265
+      }
+    },
+    {
+      "plrId": "11200515",
+      "bzrId": "112005",
+      "index": 866.1508945406293,
+      "delikteHz": {
+        "kieztaten": 2613.945692291875,
+        "wohnraumeinbruch": 276.3445213167197,
+        "sachbeschaedigung": 924.2226212255973,
+        "strassenraub": 58.23900359167163,
+        "fahrraddiebstahl": 458.00263427728265
+      }
+    },
+    {
+      "plrId": "11300616",
+      "bzrId": "113006",
+      "index": 843.861869451915,
+      "delikteHz": {
+        "kieztaten": 2362.923757183245,
+        "wohnraumeinbruch": 210.69382980080397,
+        "sachbeschaedigung": 1231.5038865915456,
+        "strassenraub": 56.21438295640943,
+        "fahrraddiebstahl": 357.97349072757146
+      }
+    },
+    {
+      "plrId": "11300617",
+      "bzrId": "113006",
+      "index": 843.861869451915,
+      "delikteHz": {
+        "kieztaten": 2362.923757183245,
+        "wohnraumeinbruch": 210.69382980080397,
+        "sachbeschaedigung": 1231.5038865915456,
+        "strassenraub": 56.21438295640943,
+        "fahrraddiebstahl": 357.97349072757146
+      }
+    },
+    {
+      "plrId": "11300618",
+      "bzrId": "113006",
+      "index": 843.861869451915,
+      "delikteHz": {
+        "kieztaten": 2362.923757183245,
+        "wohnraumeinbruch": 210.69382980080397,
+        "sachbeschaedigung": 1231.5038865915456,
+        "strassenraub": 56.21438295640943,
+        "fahrraddiebstahl": 357.97349072757146
+      }
+    },
+    {
+      "plrId": "11300619",
+      "bzrId": "113006",
+      "index": 843.861869451915,
+      "delikteHz": {
+        "kieztaten": 2362.923757183245,
+        "wohnraumeinbruch": 210.69382980080397,
+        "sachbeschaedigung": 1231.5038865915456,
+        "strassenraub": 56.21438295640943,
+        "fahrraddiebstahl": 357.97349072757146
+      }
+    },
+    {
+      "plrId": "11300620",
+      "bzrId": "113006",
+      "index": 843.861869451915,
+      "delikteHz": {
+        "kieztaten": 2362.923757183245,
+        "wohnraumeinbruch": 210.69382980080397,
+        "sachbeschaedigung": 1231.5038865915456,
+        "strassenraub": 56.21438295640943,
+        "fahrraddiebstahl": 357.97349072757146
+      }
+    },
+    {
+      "plrId": "11300721",
+      "bzrId": "113007",
+      "index": 1224.1169079566864,
+      "delikteHz": {
+        "kieztaten": 3814.9888096778413,
+        "wohnraumeinbruch": 150.17644741811787,
+        "sachbeschaedigung": 1302.1186334356596,
+        "strassenraub": 92.62596518345873,
+        "fahrraddiebstahl": 760.674684068355
+      }
+    },
+    {
+      "plrId": "11300722",
+      "bzrId": "113007",
+      "index": 1224.1169079566864,
+      "delikteHz": {
+        "kieztaten": 3814.9888096778413,
+        "wohnraumeinbruch": 150.17644741811787,
+        "sachbeschaedigung": 1302.1186334356596,
+        "strassenraub": 92.62596518345873,
+        "fahrraddiebstahl": 760.674684068355
+      }
+    },
+    {
+      "plrId": "11300723",
+      "bzrId": "113007",
+      "index": 1224.1169079566864,
+      "delikteHz": {
+        "kieztaten": 3814.9888096778413,
+        "wohnraumeinbruch": 150.17644741811787,
+        "sachbeschaedigung": 1302.1186334356596,
+        "strassenraub": 92.62596518345873,
+        "fahrraddiebstahl": 760.674684068355
+      }
+    },
+    {
+      "plrId": "11300724",
+      "bzrId": "113007",
+      "index": 1224.1169079566864,
+      "delikteHz": {
+        "kieztaten": 3814.9888096778413,
+        "wohnraumeinbruch": 150.17644741811787,
+        "sachbeschaedigung": 1302.1186334356596,
+        "strassenraub": 92.62596518345873,
+        "fahrraddiebstahl": 760.674684068355
+      }
+    },
+    {
+      "plrId": "11300725",
+      "bzrId": "113007",
+      "index": 1224.1169079566864,
+      "delikteHz": {
+        "kieztaten": 3814.9888096778413,
+        "wohnraumeinbruch": 150.17644741811787,
+        "sachbeschaedigung": 1302.1186334356596,
+        "strassenraub": 92.62596518345873,
+        "fahrraddiebstahl": 760.674684068355
+      }
+    },
+    {
+      "plrId": "11300826",
+      "bzrId": "113008",
+      "index": 1399.9398876747157,
+      "delikteHz": {
+        "kieztaten": 3690.022314293164,
+        "wohnraumeinbruch": 159.5786774853611,
+        "sachbeschaedigung": 2465.863907564384,
+        "strassenraub": 134.70235773587896,
+        "fahrraddiebstahl": 549.53218129479
+      }
+    },
+    {
+      "plrId": "11400927",
+      "bzrId": "114009",
+      "index": 928.9240398805125,
+      "delikteHz": {
+        "kieztaten": 2575.5769584940494,
+        "wohnraumeinbruch": 135.01828068918536,
+        "sachbeschaedigung": 1047.2511102511344,
+        "strassenraub": 58.18571598285836,
+        "fahrraddiebstahl": 828.5881339853346
+      }
+    },
+    {
+      "plrId": "11400928",
+      "bzrId": "114009",
+      "index": 928.9240398805125,
+      "delikteHz": {
+        "kieztaten": 2575.5769584940494,
+        "wohnraumeinbruch": 135.01828068918536,
+        "sachbeschaedigung": 1047.2511102511344,
+        "strassenraub": 58.18571598285836,
+        "fahrraddiebstahl": 828.5881339853346
+      }
+    },
+    {
+      "plrId": "11400929",
+      "bzrId": "114009",
+      "index": 928.9240398805125,
+      "delikteHz": {
+        "kieztaten": 2575.5769584940494,
+        "wohnraumeinbruch": 135.01828068918536,
+        "sachbeschaedigung": 1047.2511102511344,
+        "strassenraub": 58.18571598285836,
+        "fahrraddiebstahl": 828.5881339853346
+      }
+    },
+    {
+      "plrId": "11400930",
+      "bzrId": "114009",
+      "index": 928.9240398805125,
+      "delikteHz": {
+        "kieztaten": 2575.5769584940494,
+        "wohnraumeinbruch": 135.01828068918536,
+        "sachbeschaedigung": 1047.2511102511344,
+        "strassenraub": 58.18571598285836,
+        "fahrraddiebstahl": 828.5881339853346
+      }
+    },
+    {
+      "plrId": "11400931",
+      "bzrId": "114009",
+      "index": 928.9240398805125,
+      "delikteHz": {
+        "kieztaten": 2575.5769584940494,
+        "wohnraumeinbruch": 135.01828068918536,
+        "sachbeschaedigung": 1047.2511102511344,
+        "strassenraub": 58.18571598285836,
+        "fahrraddiebstahl": 828.5881339853346
+      }
+    },
+    {
+      "plrId": "11401032",
+      "bzrId": "114010",
+      "index": 902.368861146749,
+      "delikteHz": {
+        "kieztaten": 2613.0101991304878,
+        "wohnraumeinbruch": 164.01444651759684,
+        "sachbeschaedigung": 1136.473835411618,
+        "strassenraub": 64.73697987961563,
+        "fahrraddiebstahl": 533.6088447944272
+      }
+    },
+    {
+      "plrId": "11401033",
+      "bzrId": "114010",
+      "index": 902.368861146749,
+      "delikteHz": {
+        "kieztaten": 2613.0101991304878,
+        "wohnraumeinbruch": 164.01444651759684,
+        "sachbeschaedigung": 1136.473835411618,
+        "strassenraub": 64.73697987961563,
+        "fahrraddiebstahl": 533.6088447944272
+      }
+    },
+    {
+      "plrId": "11401034",
+      "bzrId": "114010",
+      "index": 902.368861146749,
+      "delikteHz": {
+        "kieztaten": 2613.0101991304878,
+        "wohnraumeinbruch": 164.01444651759684,
+        "sachbeschaedigung": 1136.473835411618,
+        "strassenraub": 64.73697987961563,
+        "fahrraddiebstahl": 533.6088447944272
+      }
+    },
+    {
+      "plrId": "11401135",
+      "bzrId": "114011",
+      "index": 723.6494769866531,
+      "delikteHz": {
+        "kieztaten": 2087.6912926215628,
+        "wohnraumeinbruch": 246.43098221302998,
+        "sachbeschaedigung": 867.2042909624191,
+        "strassenraub": 38.00795086064393,
+        "fahrraddiebstahl": 378.9128682756089
+      }
+    },
+    {
+      "plrId": "11401136",
+      "bzrId": "114011",
+      "index": 723.6494769866531,
+      "delikteHz": {
+        "kieztaten": 2087.6912926215628,
+        "wohnraumeinbruch": 246.43098221302998,
+        "sachbeschaedigung": 867.2042909624191,
+        "strassenraub": 38.00795086064393,
+        "fahrraddiebstahl": 378.9128682756089
+      }
+    },
+    {
+      "plrId": "11401137",
+      "bzrId": "114011",
+      "index": 723.6494769866531,
+      "delikteHz": {
+        "kieztaten": 2087.6912926215628,
+        "wohnraumeinbruch": 246.43098221302998,
+        "sachbeschaedigung": 867.2042909624191,
+        "strassenraub": 38.00795086064393,
+        "fahrraddiebstahl": 378.9128682756089
+      }
+    },
+    {
+      "plrId": "11501238",
+      "bzrId": "115012",
+      "index": 1165.3183098241745,
+      "delikteHz": {
+        "kieztaten": 2573.570347125778,
+        "wohnraumeinbruch": 365.5229011061622,
+        "sachbeschaedigung": 1243.316605023893,
+        "strassenraub": 56.84260111999533,
+        "fahrraddiebstahl": 1587.3390947450437
+      }
+    },
+    {
+      "plrId": "11501339",
+      "bzrId": "115013",
+      "index": 640.4870187755031,
+      "delikteHz": {
+        "kieztaten": 1541.1494445926335,
+        "wohnraumeinbruch": 255.20460575916889,
+        "sachbeschaedigung": 730.1023560788736,
+        "strassenraub": 29.78639664439827,
+        "fahrraddiebstahl": 646.1922908024408
+      }
+    },
+    {
+      "plrId": "11501340",
+      "bzrId": "115013",
+      "index": 640.4870187755031,
+      "delikteHz": {
+        "kieztaten": 1541.1494445926335,
+        "wohnraumeinbruch": 255.20460575916889,
+        "sachbeschaedigung": 730.1023560788736,
+        "strassenraub": 29.78639664439827,
+        "fahrraddiebstahl": 646.1922908024408
+      }
+    },
+    {
+      "plrId": "11501341",
+      "bzrId": "115013",
+      "index": 640.4870187755031,
+      "delikteHz": {
+        "kieztaten": 1541.1494445926335,
+        "wohnraumeinbruch": 255.20460575916889,
+        "sachbeschaedigung": 730.1023560788736,
+        "strassenraub": 29.78639664439827,
+        "fahrraddiebstahl": 646.1922908024408
+      }
+    },
+    {
+      "plrId": "12100101",
+      "bzrId": "121001",
+      "index": 1115.0830035719066,
+      "delikteHz": {
+        "kieztaten": 3805.9591268477,
+        "wohnraumeinbruch": 176.43355145219334,
+        "sachbeschaedigung": 1011.2313623798469,
+        "strassenraub": 71.96787218141414,
+        "fahrraddiebstahl": 509.8231049983783
+      }
+    },
+    {
+      "plrId": "12100102",
+      "bzrId": "121001",
+      "index": 1115.0830035719066,
+      "delikteHz": {
+        "kieztaten": 3805.9591268477,
+        "wohnraumeinbruch": 176.43355145219334,
+        "sachbeschaedigung": 1011.2313623798469,
+        "strassenraub": 71.96787218141414,
+        "fahrraddiebstahl": 509.8231049983783
+      }
+    },
+    {
+      "plrId": "12100103",
+      "bzrId": "121001",
+      "index": 1115.0830035719066,
+      "delikteHz": {
+        "kieztaten": 3805.9591268477,
+        "wohnraumeinbruch": 176.43355145219334,
+        "sachbeschaedigung": 1011.2313623798469,
+        "strassenraub": 71.96787218141414,
+        "fahrraddiebstahl": 509.8231049983783
+      }
+    },
+    {
+      "plrId": "12100204",
+      "bzrId": "121002",
+      "index": 1076.6845523489592,
+      "delikteHz": {
+        "kieztaten": 3350.3333842316897,
+        "wohnraumeinbruch": 214.64859775029268,
+        "sachbeschaedigung": 1180.9966916068613,
+        "strassenraub": 106.34076449330688,
+        "fahrraddiebstahl": 531.1033236626457
+      }
+    },
+    {
+      "plrId": "12100205",
+      "bzrId": "121002",
+      "index": 1076.6845523489592,
+      "delikteHz": {
+        "kieztaten": 3350.3333842316897,
+        "wohnraumeinbruch": 214.64859775029268,
+        "sachbeschaedigung": 1180.9966916068613,
+        "strassenraub": 106.34076449330688,
+        "fahrraddiebstahl": 531.1033236626457
+      }
+    },
+    {
+      "plrId": "12100206",
+      "bzrId": "121002",
+      "index": 1076.6845523489592,
+      "delikteHz": {
+        "kieztaten": 3350.3333842316897,
+        "wohnraumeinbruch": 214.64859775029268,
+        "sachbeschaedigung": 1180.9966916068613,
+        "strassenraub": 106.34076449330688,
+        "fahrraddiebstahl": 531.1033236626457
+      }
+    },
+    {
+      "plrId": "12200307",
+      "bzrId": "122003",
+      "index": 983.4155661176201,
+      "delikteHz": {
+        "kieztaten": 3427.5395781313514,
+        "wohnraumeinbruch": 157.29246650585813,
+        "sachbeschaedigung": 897.328864563006,
+        "strassenraub": 65.72304986600139,
+        "fahrraddiebstahl": 369.19387152188295
+      }
+    },
+    {
+      "plrId": "12200308",
+      "bzrId": "122003",
+      "index": 983.4155661176201,
+      "delikteHz": {
+        "kieztaten": 3427.5395781313514,
+        "wohnraumeinbruch": 157.29246650585813,
+        "sachbeschaedigung": 897.328864563006,
+        "strassenraub": 65.72304986600139,
+        "fahrraddiebstahl": 369.19387152188295
+      }
+    },
+    {
+      "plrId": "12200309",
+      "bzrId": "122003",
+      "index": 983.4155661176201,
+      "delikteHz": {
+        "kieztaten": 3427.5395781313514,
+        "wohnraumeinbruch": 157.29246650585813,
+        "sachbeschaedigung": 897.328864563006,
+        "strassenraub": 65.72304986600139,
+        "fahrraddiebstahl": 369.19387152188295
+      }
+    },
+    {
+      "plrId": "12200310",
+      "bzrId": "122003",
+      "index": 983.4155661176201,
+      "delikteHz": {
+        "kieztaten": 3427.5395781313514,
+        "wohnraumeinbruch": 157.29246650585813,
+        "sachbeschaedigung": 897.328864563006,
+        "strassenraub": 65.72304986600139,
+        "fahrraddiebstahl": 369.19387152188295
+      }
+    },
+    {
+      "plrId": "12200411",
+      "bzrId": "122004",
+      "index": 1101.197072763121,
+      "delikteHz": {
+        "kieztaten": 3962.824842497545,
+        "wohnraumeinbruch": 243.48305707246402,
+        "sachbeschaedigung": 1062.9548280738866,
+        "strassenraub": 33.42915754142553,
+        "fahrraddiebstahl": 203.2934786302826
+      }
+    },
+    {
+      "plrId": "12200412",
+      "bzrId": "122004",
+      "index": 1101.197072763121,
+      "delikteHz": {
+        "kieztaten": 3962.824842497545,
+        "wohnraumeinbruch": 243.48305707246402,
+        "sachbeschaedigung": 1062.9548280738866,
+        "strassenraub": 33.42915754142553,
+        "fahrraddiebstahl": 203.2934786302826
+      }
+    },
+    {
+      "plrId": "12200413",
+      "bzrId": "122004",
+      "index": 1101.197072763121,
+      "delikteHz": {
+        "kieztaten": 3962.824842497545,
+        "wohnraumeinbruch": 243.48305707246402,
+        "sachbeschaedigung": 1062.9548280738866,
+        "strassenraub": 33.42915754142553,
+        "fahrraddiebstahl": 203.2934786302826
+      }
+    },
+    {
+      "plrId": "12200414",
+      "bzrId": "122004",
+      "index": 1101.197072763121,
+      "delikteHz": {
+        "kieztaten": 3962.824842497545,
+        "wohnraumeinbruch": 243.48305707246402,
+        "sachbeschaedigung": 1062.9548280738866,
+        "strassenraub": 33.42915754142553,
+        "fahrraddiebstahl": 203.2934786302826
+      }
+    },
+    {
+      "plrId": "12200515",
+      "bzrId": "122005",
+      "index": 1044.1958519457935,
+      "delikteHz": {
+        "kieztaten": 3269.83374738557,
+        "wohnraumeinbruch": 136.5362402783916,
+        "sachbeschaedigung": 1089.3629878274608,
+        "strassenraub": 105.61163663810005,
+        "fahrraddiebstahl": 619.6346475994451
+      }
+    },
+    {
+      "plrId": "12400616",
+      "bzrId": "124006",
+      "index": 400.9699166136176,
+      "delikteHz": {
+        "kieztaten": 1021.1602380931118,
+        "wohnraumeinbruch": 178.8203612957074,
+        "sachbeschaedigung": 581.3633413335473,
+        "strassenraub": 8.093530828137004,
+        "fahrraddiebstahl": 215.41211151758463
+      }
+    },
+    {
+      "plrId": "12400617",
+      "bzrId": "124006",
+      "index": 400.9699166136176,
+      "delikteHz": {
+        "kieztaten": 1021.1602380931118,
+        "wohnraumeinbruch": 178.8203612957074,
+        "sachbeschaedigung": 581.3633413335473,
+        "strassenraub": 8.093530828137004,
+        "fahrraddiebstahl": 215.41211151758463
+      }
+    },
+    {
+      "plrId": "12400618",
+      "bzrId": "124006",
+      "index": 400.9699166136176,
+      "delikteHz": {
+        "kieztaten": 1021.1602380931118,
+        "wohnraumeinbruch": 178.8203612957074,
+        "sachbeschaedigung": 581.3633413335473,
+        "strassenraub": 8.093530828137004,
+        "fahrraddiebstahl": 215.41211151758463
+      }
+    },
+    {
+      "plrId": "12400619",
+      "bzrId": "124006",
+      "index": 400.9699166136176,
+      "delikteHz": {
+        "kieztaten": 1021.1602380931118,
+        "wohnraumeinbruch": 178.8203612957074,
+        "sachbeschaedigung": 581.3633413335473,
+        "strassenraub": 8.093530828137004,
+        "fahrraddiebstahl": 215.41211151758463
+      }
+    },
+    {
+      "plrId": "12400720",
+      "bzrId": "124007",
+      "index": 580.986559211471,
+      "delikteHz": {
+        "kieztaten": 1089.57534171603,
+        "wohnraumeinbruch": 387.57834785921335,
+        "sachbeschaedigung": 818.6672960257032,
+        "strassenraub": 22.14100055899301,
+        "fahrraddiebstahl": 586.970809897415
+      }
+    },
+    {
+      "plrId": "12400721",
+      "bzrId": "124007",
+      "index": 580.986559211471,
+      "delikteHz": {
+        "kieztaten": 1089.57534171603,
+        "wohnraumeinbruch": 387.57834785921335,
+        "sachbeschaedigung": 818.6672960257032,
+        "strassenraub": 22.14100055899301,
+        "fahrraddiebstahl": 586.970809897415
+      }
+    },
+    {
+      "plrId": "12400722",
+      "bzrId": "124007",
+      "index": 580.986559211471,
+      "delikteHz": {
+        "kieztaten": 1089.57534171603,
+        "wohnraumeinbruch": 387.57834785921335,
+        "sachbeschaedigung": 818.6672960257032,
+        "strassenraub": 22.14100055899301,
+        "fahrraddiebstahl": 586.970809897415
+      }
+    },
+    {
+      "plrId": "12400723",
+      "bzrId": "124007",
+      "index": 580.986559211471,
+      "delikteHz": {
+        "kieztaten": 1089.57534171603,
+        "wohnraumeinbruch": 387.57834785921335,
+        "sachbeschaedigung": 818.6672960257032,
+        "strassenraub": 22.14100055899301,
+        "fahrraddiebstahl": 586.970809897415
+      }
+    },
+    {
+      "plrId": "12500824",
+      "bzrId": "125008",
+      "index": 635.9541982494538,
+      "delikteHz": {
+        "kieztaten": 1998.0099481324662,
+        "wohnraumeinbruch": 112.50071637419296,
+        "sachbeschaedigung": 780.3486635676763,
+        "strassenraub": 36.01844367345358,
+        "fahrraddiebstahl": 252.89321949948013
+      }
+    },
+    {
+      "plrId": "12500825",
+      "bzrId": "125008",
+      "index": 635.9541982494538,
+      "delikteHz": {
+        "kieztaten": 1998.0099481324662,
+        "wohnraumeinbruch": 112.50071637419296,
+        "sachbeschaedigung": 780.3486635676763,
+        "strassenraub": 36.01844367345358,
+        "fahrraddiebstahl": 252.89321949948013
+      }
+    },
+    {
+      "plrId": "12500926",
+      "bzrId": "125009",
+      "index": 807.5790670763181,
+      "delikteHz": {
+        "kieztaten": 2506.7632771081003,
+        "wohnraumeinbruch": 226.9694318504842,
+        "sachbeschaedigung": 912.6249877353479,
+        "strassenraub": 51.040224585385424,
+        "fahrraddiebstahl": 340.4974141022722
+      }
+    },
+    {
+      "plrId": "12500927",
+      "bzrId": "125009",
+      "index": 807.5790670763181,
+      "delikteHz": {
+        "kieztaten": 2506.7632771081003,
+        "wohnraumeinbruch": 226.9694318504842,
+        "sachbeschaedigung": 912.6249877353479,
+        "strassenraub": 51.040224585385424,
+        "fahrraddiebstahl": 340.4974141022722
+      }
+    },
+    {
+      "plrId": "12500928",
+      "bzrId": "125009",
+      "index": 807.5790670763181,
+      "delikteHz": {
+        "kieztaten": 2506.7632771081003,
+        "wohnraumeinbruch": 226.9694318504842,
+        "sachbeschaedigung": 912.6249877353479,
+        "strassenraub": 51.040224585385424,
+        "fahrraddiebstahl": 340.4974141022722
+      }
+    },
+    {
+      "plrId": "12500929",
+      "bzrId": "125009",
+      "index": 807.5790670763181,
+      "delikteHz": {
+        "kieztaten": 2506.7632771081003,
+        "wohnraumeinbruch": 226.9694318504842,
+        "sachbeschaedigung": 912.6249877353479,
+        "strassenraub": 51.040224585385424,
+        "fahrraddiebstahl": 340.4974141022722
+      }
+    },
+    {
+      "plrId": "12500930",
+      "bzrId": "125009",
+      "index": 807.5790670763181,
+      "delikteHz": {
+        "kieztaten": 2506.7632771081003,
+        "wohnraumeinbruch": 226.9694318504842,
+        "sachbeschaedigung": 912.6249877353479,
+        "strassenraub": 51.040224585385424,
+        "fahrraddiebstahl": 340.4974141022722
+      }
+    },
+    {
+      "plrId": "12601031",
+      "bzrId": "126010",
+      "index": 898.2572160762269,
+      "delikteHz": {
+        "kieztaten": 3187.3768692009617,
+        "wohnraumeinbruch": 208.91963865969956,
+        "sachbeschaedigung": 824.7879416515761,
+        "strassenraub": 63.023332647811394,
+        "fahrraddiebstahl": 207.17829822108504
+      }
+    },
+    {
+      "plrId": "12601032",
+      "bzrId": "126010",
+      "index": 898.2572160762269,
+      "delikteHz": {
+        "kieztaten": 3187.3768692009617,
+        "wohnraumeinbruch": 208.91963865969956,
+        "sachbeschaedigung": 824.7879416515761,
+        "strassenraub": 63.023332647811394,
+        "fahrraddiebstahl": 207.17829822108504
+      }
+    },
+    {
+      "plrId": "12601133",
+      "bzrId": "126011",
+      "index": 768.1708779891391,
+      "delikteHz": {
+        "kieztaten": 2750.0204048189457,
+        "wohnraumeinbruch": 85.2124836152912,
+        "sachbeschaedigung": 753.7692470374162,
+        "strassenraub": 53.58917442336099,
+        "fahrraddiebstahl": 198.2630800506807
+      }
+    },
+    {
+      "plrId": "12601134",
+      "bzrId": "126011",
+      "index": 768.1708779891391,
+      "delikteHz": {
+        "kieztaten": 2750.0204048189457,
+        "wohnraumeinbruch": 85.2124836152912,
+        "sachbeschaedigung": 753.7692470374162,
+        "strassenraub": 53.58917442336099,
+        "fahrraddiebstahl": 198.2630800506807
+      }
+    },
+    {
+      "plrId": "12601235",
+      "bzrId": "126012",
+      "index": 587.9027182957457,
+      "delikteHz": {
+        "kieztaten": 2009.0160659606279,
+        "wohnraumeinbruch": 179.26202787741724,
+        "sachbeschaedigung": 593.8012205176877,
+        "strassenraub": 24.108728140030383,
+        "fahrraddiebstahl": 133.32554898296524
+      }
+    },
+    {
+      "plrId": "12601236",
+      "bzrId": "126012",
+      "index": 587.9027182957457,
+      "delikteHz": {
+        "kieztaten": 2009.0160659606279,
+        "wohnraumeinbruch": 179.26202787741724,
+        "sachbeschaedigung": 593.8012205176877,
+        "strassenraub": 24.108728140030383,
+        "fahrraddiebstahl": 133.32554898296524
+      }
+    }
+  ]
+}

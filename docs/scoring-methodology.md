@@ -16,13 +16,13 @@ Drei räumliche Ebenen, eine Methodik:
 
 | Ebene | Anzahl | Quelle | Berechnung |
 |-------|--------|--------|------------|
-| Planungsraum (PLR) | 542 | `static/kiez-scores/kiez-scores.json` (Story 1.28) | Source-of-Truth, 6 Dimensionen pro Adress-Centroid (5 im Composite + Kultur) |
+| Planungsraum (PLR) | 542 | `static/kiez-scores/kiez-scores.json` (Story 1.28) | Source-of-Truth, 7 Dimensionen pro Adress-Centroid (5 im Composite + Kultur + Kriminalität) |
 | Bezirksregion (BR) | 143 | Postgres `kiez_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
 | Bezirk | 12 | Postgres `bezirk_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
 
 ## Dimensionen
 
-Fünf Composite-Dimensionen (je 0.20, fließen in den Gesamt-Score) plus Kultur als eigenständige sechste Dimension. Werte zwischen 0 und 100, höher ist günstiger. Stand seit ADR-015 (Score-Recomposition): Soziale Lage / MSS ist KEIN Score-Input mehr, bleibt neutraler Kontext-Layer.
+Fünf Composite-Dimensionen (je 0.20, fließen in den Gesamt-Score) plus zwei eigenständige Kontext-Dimensionen (Kultur, Kriminalität), die NICHT in den Gesamt-Score zählen. Werte zwischen 0 und 100. Für die fünf Composite-Dimensionen und Kultur gilt: höher ist günstiger. Kriminalität ist eine Magnitude (höher = mehr erfasste Fälle), kein Gut-Maß. Stand seit ADR-015 (Score-Recomposition): Soziale Lage / MSS ist KEIN Score-Input mehr, bleibt neutraler Kontext-Layer.
 
 1. **Ruhe & Luft.** Lärm-dB-Mittel (0.5, WHO-orientiert, ≤45 dB → 100, ≥75 dB → 0), Luftgüte (0.5, Ordinal-3).
 2. **Grün & Hitze.** Grünversorgung (0.3), Grünanlagen-Nähe (0.15), Bioklima (0.2), PET-Hitzebelastung invertiert (0.15), Kaltluft-Einwirkbereich (0.1), Leitbahnkorridor (0.1).
@@ -31,6 +31,16 @@ Fünf Composite-Dimensionen (je 0.20, fließen in den Gesamt-Score) plus Kultur 
 5. **Wohnschutz.** Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich, ODER-verknüpft). Positiv eindeutig: Schutz vorhanden = besser.
 
 **6. Kultur (eigenständig, NICHT im Composite — Option C, ADR-018).** Log-gedämpfte Dichte kulturkollektiver POIs aus OSM/ODbL: Bibliothek (0.20), Theater (0.15), Museum (0.15), Kino (0.12), Soziokultur (0.13), Galerie (0.10), Kunst im Stadtraum (0.08), Club (0.07). Gewicht in `DIMENSION_WEIGHTS` ist 0; `computeOverallScore` filtert Kultur über `COMPOSITE_DIMENSIONS` heraus. Begründung: Kultur ballt sich in der Innenstadt (Center-Bias), die Log-Skala dämpft das Innen-Außen-Gefälle. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.
+
+**7. Erfasste Kriminalität (eigenständig, NICHT im Composite — Option C, ADR-019).** Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte aus dem [Kriminalitätsatlas Berlin](https://www.kriminalitaetsatlas.berlin.de/) (Polizei Berlin, dl-de-by-2.0). Delikt-Set, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. „Kieztaten" ist eine eigene Sammelkategorie der Polizei Berlin für Delikte mit engem räumlichen Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Nötigung, Raub, Sachbeschädigung an Kfz, Keller-/Wohnungseinbruch, Widerstand gegen Vollstreckungsbeamte). Pro Delikt das 3-Jahres-Mittel (2023–2025), dann der gewichtete Index, dann Normalisierung auf 0–100 (`minAt` 300, `maxAt` 1750). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Gewicht in `DIMENSION_WEIGHTS` ist 0; `computeOverallScore` filtert die Dimension über `COMPOSITE_DIMENSIONS` heraus.
+
+Die Dimension ist ein **Strukturell-Kontext** (Choropleth-Familie Indigo, wie Soziale Lage), kein „Sicherheits-Score". Wichtige Grenzen:
+
+- **Granularität Bezirksregion (143), nicht Planungsraum.** Der Atlas liefert nur BR-Werte. Jeder enthaltene Planungsraum erbt den Wert seiner Bezirksregion (innerhalb der BR konstant). Die Dimension ist damit gröber aufgelöst als die fünf PLR-nativen Dimensionen.
+- **Häufigkeitszahl ist kein persönliches Risiko.** Sie bezieht Fälle auf gemeldete Einwohner, nicht auf Touristen, Pendler oder Kundschaft.
+- **Tatortprinzip:** nur Fälle mit exaktem Tatort, Taschendiebstahl ausgeschlossen.
+- **Dunkelfeld:** nur angezeigte Fälle, das Anzeigeverhalten variiert räumlich.
+- **Keine Wertung.** Höher heißt mehr erfasste Fälle, nicht „gefährlicher" oder „schlechterer" Kiez. Kein Sicherheits-Ranking. Siehe ADR-019 und [Kriminalitätsdaten-Methodik](./kriminalitaetsdaten-methodik.md).
 
 ## Aggregations-Regel: Flächen-gewichtetes Mittel
 
@@ -68,7 +78,7 @@ Karten-Choropleth-Familie nach Story 1.31:
 
 - Last (Vermillion) für umwelt-belastende Dimensionen
 - Gut (Grün) für wohltuende Dimensionen wie Versorgung oder Grün
-- Strukturell (Indigo) für Soziale Lage, Wohnen, Bodenrichtwerte (Stigma-Schutz)
+- Strukturell (Indigo) für Soziale Lage, Wohnen, Bodenrichtwerte und erfasste Kriminalität (Stigma-Schutz)
 
 ## LOR-Hierarchie
 
@@ -108,7 +118,7 @@ pnpm build                   # SvelteKit prerender
 
 Aufbauend auf den Scores berechnen zwei Build-Steps die vergleichende Einordnung:
 
-- **Ranking** (`pnpm data:rank`, `scripts/aggregate-ranks.ts` → `kiez_rank`/`bezirk_rank`): pro Metrik ein dichter Rang 1..N (1 = bester) plus Quartil. Gerankt werden Composite + 6 Dimensionen (inkl. Kultur) sowie numerische stats-Metriken (Grünanlagen, Haltestellendichte, Kitas/km², PET u.a.). Richtung pro Metrik konfiguriert: meist höher = besser, invertiert bei PET-Hitze.
+- **Ranking** (`pnpm data:rank`, `scripts/aggregate-ranks.ts` → `kiez_rank`/`bezirk_rank`): pro Metrik ein dichter Rang 1..N (1 = bester) plus Quartil. Gerankt werden Composite + 6 Dimensionen (inkl. Kultur) sowie numerische stats-Metriken (Grünanlagen, Haltestellendichte, Kitas/km², PET u.a.). Richtung pro Metrik konfiguriert: meist höher = besser, invertiert bei PET-Hitze. **Erfasste Kriminalität wird bewusst NICHT gerankt** (kein Sicherheits-Leaderboard, ADR-019).
 - **Quartil:** rang-basiert (`floor((rang-1)/total*4)+1`, bester → Q1). Bewusst getrennt von der wert-basierten 0-100-Quartil-Klassifikation (die gilt für Choropleth-Skalen).
 - **Vergleich** (`pnpm data:comparison`, `scripts/aggregate-comparison.ts` → `kiez_comparison`/`bezirk_comparison`): pro Score-Metrik der Bezirks-Schnitt (Mittel der Kieze im Bezirk) und der Berlin-Median. Bezirk = Mittel, Berlin = Median (robuster gegen Ausreißer).
 

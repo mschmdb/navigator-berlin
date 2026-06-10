@@ -43,4 +43,24 @@ describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
 		const section = document.querySelector('[data-testid="score-comparison"]');
 		expect(section?.textContent).not.toMatch(/Bezirk-Ø/);
 	});
+
+	it('Story 14.9: Kriminalitäts-Zeile mit Wert ohne Rang + Magnitude/BR-Fußnote', async () => {
+		const withKrimi: ComparisonDimRow[] = [
+			...rows,
+			{ label: 'Erfasste Kriminalität', value: 84, bezirkMean: 70, berlinMedian: 65, rang: null, quartil: null, total: 0 }
+		];
+		render(ScoreComparisonTable, { rows: withKrimi, showBezirkColumn: true, valueLabel: 'Kiez' });
+		const krimiRow = document.querySelector('tr[data-row="kriminalitaet"]');
+		expect(krimiRow).not.toBeNull();
+		expect(krimiRow?.textContent).toContain('84');
+		expect(krimiRow?.textContent).not.toMatch(/Platz \d+ von/); // kein Rang
+		const note = document.querySelector('[data-testid="kriminalitaet-footnote"]');
+		expect(note?.textContent).toMatch(/Bezirksregion/);
+		expect(note?.textContent).toMatch(/kein Rang/i);
+	});
+
+	it('Story 14.9: ohne Kriminalitäts-Zeile keine Fußnote', async () => {
+		render(ScoreComparisonTable, { rows, showBezirkColumn: true });
+		expect(document.querySelector('[data-testid="kriminalitaet-footnote"]')).toBeNull();
+	});
 });

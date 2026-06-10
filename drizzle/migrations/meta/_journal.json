@@ -50,6 +50,13 @@
       "when": 1780845247510,
       "tag": "0006_lazy_lilandra",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1781076759272,
+      "tag": "0007_cold_robbie_robertson",
+      "breakpoints": true
     }
   ]
 }

@@ -21,5 +21,7 @@ export const bezirkScore = pgTable('bezirk_score', {
 	wohnschutz: doublePrecision('wohnschutz'),
 	// Story 13.2: Kultur (Epic 13). Eigenständige Dimension, NICHT im composite (Option C).
 	kultur: doublePrecision('kultur'),
+	// Story 14.2: Kriminalität (Epic 14). Eigenständige Kontext-Dimension, NICHT im composite (Option C).
+	kriminalitaet: doublePrecision('kriminalitaet'),
 	computedAt: timestamp('computed_at', { withTimezone: true }).notNull().defaultNow()
 });

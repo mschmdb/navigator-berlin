@@ -32,7 +32,10 @@ export const LAYER_TO_CHOROPLETH_FAMILY: Record<string, LayerFamilyMapping> = {
 	// Strukturell: Wertfrei (Sozial, Wohn, Boden)
 	'mss-gesamtindex-2025': 'strukturell',
 	'wohnlagen-2024': 'strukturell',
-	bodenrichtwerte: 'strukturell'
+	bodenrichtwerte: 'strukturell',
+	// Story 14.1: Kriminalität als Strukturell-Indigo (NICHT Gut-Grün wie Kultur). Magnitude,
+	// kein Sicherheits-Ranking, kein "besser"-Pfeil (ADR-019). Surfacing in 14.4.
+	'kiez-score-kriminalitaet': 'strukturell'
 };
 
 function unwrapFamily(mapping: LayerFamilyMapping): ScaleFamily {
@@ -74,7 +77,8 @@ export const LAYER_CLASSIFICATION_METHOD: Record<string, ClassificationMethod> =
 	'kiez-score-kultur': 'manual-quartile',
 	'mss-gesamtindex-2025': 'manual-categorical', // si_v sehr niedrig..hoch
 	'wohnlagen-2024': 'manual-categorical', // Mietspiegel-Stufen
-	bodenrichtwerte: 'quantile' // Long-Tail 0.6-60000 EUR/m²
+	bodenrichtwerte: 'quantile', // Long-Tail 0.6-60000 EUR/m²
+	'kiez-score-kriminalitaet': 'manual-quartile' // 0/26/51/76, Magnitude-Index (Story 14.1)
 };
 
 export function getClassificationMethod(slug: string): ClassificationMethod | null {

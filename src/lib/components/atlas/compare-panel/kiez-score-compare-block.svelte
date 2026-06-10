@@ -28,7 +28,9 @@
 		'mobilitaet',
 		'versorgung',
 		'wohnschutz',
-		'kultur'
+		'kultur',
+		// Story 14.4: Kriminalität als Kontext-Zeile (neutrale Chips via scaleFor, kein Gut-Pfeil).
+		'kriminalitaet'
 	];
 
 	const overallA = $derived(scaleForOverall(scoreA?.overall));

@@ -173,7 +173,39 @@ describe('aggregateScoresToRegion (Story 2.9a)', () => {
 		const result = aggregateScoresToRegion({}, memberships);
 		const agg = result[0]!;
 		expect(agg.score.overall).toBeUndefined();
-		expect(agg.score.missingDimensions).toHaveLength(6);
+		expect(agg.score.missingDimensions).toHaveLength(7);
+	});
+
+	it('Story 14.3: gespiegelter Kriminalitäts-Wert ist verlustfrei (konstant → Aggregat == Konstante)', () => {
+		// BR-nativer Wert wird auf alle PLR gespiegelt → innerhalb der BR konstant.
+		// Flächen-gewichtetes Mittel einer Konstante == die Konstante (ADR-013), egal welche Flächen.
+		const V = 42.7;
+		const krimiScore = (): KiezScore => ({
+			persona: 'allgemein',
+			dimensions: [
+				{ dimension: 'kriminalitaet', value: V, sources: [], missingData: [], dataStand: null }
+			],
+			missingDimensions: []
+		});
+		const scores: Record<string, KiezScore> = {
+			P1: krimiScore(),
+			P2: krimiScore(),
+			P3: krimiScore()
+		};
+		const memberships: RegionMembership[] = [
+			{
+				regionSlug: 'kiez-a',
+				members: [
+					{ planungsraumId: 'P1', areaM2: 13 },
+					{ planungsraumId: 'P2', areaM2: 211 },
+					{ planungsraumId: 'P3', areaM2: 4567 }
+				]
+			}
+		];
+		const agg = aggregateScoresToRegion(scores, memberships)[0]!;
+		expect(findDim(agg.score, 'kriminalitaet').value).toBe(V);
+		// Option C: Kriminalität nicht im Composite → overall bleibt undefined (keine Composite-Dim vorhanden).
+		expect(agg.score.overall).toBeUndefined();
 	});
 
 	it('throws if region has no members', () => {

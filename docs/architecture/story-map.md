@@ -1,7 +1,7 @@
 ---
 type: architecture
 audience: both
-last-verified: 2026-06-07
+last-verified: 2026-06-10
 related:
   - docs/INDEX.md
   - docs/pipelines/data-flow.md
@@ -9,9 +9,9 @@ related:
 
 # Story-Map
 
-Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-06-07.
+Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-06-10.
 
-**134 Stories total**: ✅ 78 done · 🚧 0 in-progress · 📋 6 ready-for-dev · ⏳ 4 backlog · ▫️ 46 other
+**143 Stories total**: ✅ 78 done · 🚧 1 in-progress · 📋 4 ready-for-dev · ⏳ 4 backlog · ▫️ 56 other
 
 ## Pro Epic
 ### Epic 1
@@ -107,8 +107,22 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 | `13-4-konsumenten-migration-ui-map-og-llm` | ▫️ review | kiez-score-display (Labels), Score-Ring 5->6 Segmente, Inspector-Section, compare-block, score-ranking-table (ranking… |
 | `13-5-content-migration-methodik-adr` | ▫️ review | /methodik/kiez-score + scoring-methodology.md (Kultur-Dimension, Terme, Quelle, Daempfung). Neue ADR (analog ADR-015)… |
 | `13-6-kulturdaten-berlin-anreicherung-spike` | ⏳ backlog | DEFERRED 2026-06-07 (Owner, optional, analog 12-5).  # OPTIONAL Spike: kulturdaten.berlin API (CC BY, 3261 Locations,… |
-| `13-7-epic-13-dokumentation-updates` | 📋 ready-for-dev | Abschluss (Epic-7-Muster): doc:pipelines + doc:story-map + system-map neu, INDEX, Konsistenz-Sweep (keine "fuenf Dime… |
-| `13-8-prosa-profile-regeneration` | 📋 ready-for-dev | CROSS-EPIC-CAPSTONE (allerletzte Story beider Epics): Profil-Input (build.ts/input.ts) + Fakten-Lint (fact-lint.ts) +… |
+| `13-7-epic-13-dokumentation-updates` | ▫️ review | Abschluss (Epic-7-Muster): doc:pipelines + doc:story-map + system-map neu, INDEX, Konsistenz-Sweep (keine "fuenf Dime… |
+| `13-8-prosa-profile-regeneration` | ▫️ review | CROSS-EPIC-CAPSTONE (allerletzte Story beider Epics): Profil-Input (build.ts/input.ts) + Fakten-Lint (fact-lint.ts) +… |
+
+### Epic 14
+
+| Story | Status | Kommentar |
+|---|---|---|
+| `14-0-kriminalitaetsatlas-layer-foundation` | ▫️ review | XLSX-Fetch (Fallzahlen&HZ 2016-2025.xlsx, HZ-Sheets letzte 3 Jahre) + Parse wohn-relevanter Delikt-Spalten je LOR-Sch… |
+| `14-1-kriminalitaet-dimensions-foundation` | ▫️ review | Typ-Union +kriminalitaet, DIMENSION_WEIGHTS.kriminalitaet=0, raus aus COMPOSITE_DIMENSIONS (Option C, kein Rebalance)… |
+| `14-2-db-schema-migration-kriminalitaet` | ▫️ review | Drizzle-Migration: Spalte kriminalitaet (doublePrecision nullable) in kiez_score + bezirk_score. composite bleibt. Na… |
+| `14-3-pipeline-recompute-rerun` | ▫️ review | compute-score/build-kiez-scores/aggregate-scores auf erweitertes Set. data:kiez-scores + aggregate-scores + rank + co… |
+| `14-4-konsumenten-migration-inspector-map-compare` | ▫️ review | Inspector-Section, Choropleth-Score-Layer (Strukturell-Indigo), compare-block, LLM-Renderer. Neutrale Bezeichnung "er… |
+| `14-5-content-migration-methodik-adr` | ▫️ review | /methodik/kiez-score + scoring-methodology.md (Delikt-Auswahl, Quelle Polizei/dl-de-by-2.0, HZ-Definition, 3-Jahres-M… |
+| `14-6-city-core-verzerrung-delikt-set-spike` | ❌ cancelled | 2026-06-10 Owner-Decision: Zweck (Normalisierung + Delikt-Gewichte validieren) durch Owner-Sign-off in 14.1/14.5 erfü… |
+| `14-7-epic-14-dokumentation-updates` | 🚧 in-progress | Abschluss (Epic-7-Muster): doc:pipelines + doc:story-map + system-map neu, INDEX, Konsistenz-Sweep (kein "Sicherheits… |
+| `14-8-profile-konsistenz-crime-exkludiert` | ▫️ review | CAPSTONE (anders als 13-8 KEINE teure Profil-Regeneration): Kriminalitaet bewusst NICHT in Profil-Input (build.ts/inp… |
 
 ### Epic 2
 

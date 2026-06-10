@@ -13,6 +13,7 @@ export type StyleProfile =
 	| 'choropleth-wohnlage-3'
 	| 'choropleth-mss-12'
 	| 'choropleth-kiez-score-ordinal-4'
+	| 'choropleth-kiez-score-strukturell-4'
 	| 'choropleth-dichte'
 	| 'polygon-highlight'
 	| 'polygon-outline-soft'
@@ -122,6 +123,8 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'kiez-score-wohnschutz': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-versorgung': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-kultur': 'choropleth-kiez-score-ordinal-4',
+	// Story 14.4: Kriminalität = Strukturell-Indigo (NICHT Gut-Grün). Magnitude, kein „besser"-Pfeil.
+	'kiez-score-kriminalitaet': 'choropleth-kiez-score-strukturell-4',
 	// I: Demografie (Story 10.0, neutral, kein Score)
 	'einwohner-dichte-2024': 'choropleth-dichte',
 	// J: Kultur (Epic 13, Point-Layer)
@@ -266,6 +269,17 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 			{ color: COLORS.scaleGut2, label: 'mittel' },
 			{ color: COLORS.scaleGut4, label: 'hoch' },
 			{ color: COLORS.scaleGut5, label: 'sehr hoch' }
+		]
+	},
+	'choropleth-kiez-score-strukturell-4': {
+		// Story 14.4: Kriminalität = Strukturell-Indigo (Magnitude, kein Gut-Maß). Hell→dunkel =
+		// mehr erfasste Kriminalität, kein „besser"-Pfeil (ADR-019). Stage-Subset 4 = {1,2,4,5}.
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.scaleStrukturell1, label: 'gering' },
+			{ color: COLORS.scaleStrukturell2, label: 'mittel' },
+			{ color: COLORS.scaleStrukturell4, label: 'hoch' },
+			{ color: COLORS.scaleStrukturell5, label: 'sehr hoch' }
 		]
 	},
 	'polygon-highlight': {
@@ -914,5 +928,32 @@ export function buildLayerSpec(
 					}
 				}
 			];
+			case 'choropleth-kiez-score-strukturell-4':
+				// Story 14.4: Strukturell-Indigo (Magnitude). Gleiche Quartil-Schwellen wie der
+				// Gut-Score, aber Indigo-Familie + kein „besser“-Pfeil (ADR-019).
+				return [
+					{
+						id,
+						type: 'fill',
+						source: sourceId,
+						paint: {
+							'fill-color': [
+								'step',
+								['to-number', ['get', 'value'], -1],
+								COLORS.bg,
+								0,
+								COLORS.scaleStrukturell1,
+								26,
+								COLORS.scaleStrukturell2,
+								51,
+								COLORS.scaleStrukturell4,
+								76,
+								COLORS.scaleStrukturell5
+							],
+							'fill-opacity': 0.55,
+							'fill-outline-color': COLORS.accent
+						}
+					}
+				];
 	}
 }

@@ -30,7 +30,10 @@ const METRIC_KEYS = [
 	'mobilitaet',
 	'versorgung',
 	'wohnschutz',
-	'kultur'
+	'kultur',
+	// Story 14.9: Kriminalität als Vergleichswert (Bezirk-Ø/Berlin-Median) für die Detail-Pages.
+	// Neutrale Aggregate, KEIN Rang (kriminalitaet ist nicht in aggregate-ranks METRICS).
+	'kriminalitaet'
 ] as const;
 type MetricKey = (typeof METRIC_KEYS)[number];
 
@@ -44,6 +47,7 @@ interface ScoreRow {
 	readonly versorgung: number | null;
 	readonly wohnschutz: number | null;
 	readonly kultur: number | null;
+	readonly kriminalitaet: number | null;
 }
 
 function valueOf(row: { [k in MetricKey]: number | null }, key: MetricKey): number | null {
@@ -67,7 +71,8 @@ async function main(): Promise<void> {
 			mobilitaet: kiezScore.mobilitaet,
 			versorgung: kiezScore.versorgung,
 			wohnschutz: kiezScore.wohnschutz,
-			kultur: kiezScore.kultur
+			kultur: kiezScore.kultur,
+			kriminalitaet: kiezScore.kriminalitaet
 		})
 		.from(kiezScore)) as ScoreRow[];
 
@@ -81,7 +86,8 @@ async function main(): Promise<void> {
 			mobilitaet: bezirkScore.mobilitaet,
 			versorgung: bezirkScore.versorgung,
 			wohnschutz: bezirkScore.wohnschutz,
-			kultur: bezirkScore.kultur
+			kultur: bezirkScore.kultur,
+			kriminalitaet: bezirkScore.kriminalitaet
 		})
 		.from(bezirkScore)) as ScoreRow[];
 

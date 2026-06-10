@@ -20,6 +20,7 @@ function row(
 		versorgung: 60,
 		wohnschutz: 55,
 		kultur: 45,
+		kriminalitaet: 70,
 		...overrides
 	};
 }
@@ -47,6 +48,32 @@ describe('ScoreRankingTable.svelte', () => {
 		expect(table?.textContent).toMatch(/Bezirk/);
 		expect(table?.textContent).toMatch(/Score/);
 		expect(table?.textContent).toMatch(/Wohnschutz/);
+	});
+
+	it('Story 14.9: Kriminalitäts-Spalte ist Kontext, NICHT sortierbar, mit Disclaimer', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		// Spalte + Zellen vorhanden
+		expect(document.querySelector('[data-testid="ranking-col-kriminalitaet"]')).not.toBeNull();
+		expect(document.querySelector('[data-testid="ranking-cell-kriminalitaet"]')).not.toBeNull();
+		// KEIN Sortier-Button (kein Sicherheits-Leaderboard, 14.5)
+		expect(document.querySelector('[data-testid="ranking-sort-kriminalitaet"]')).toBeNull();
+		// Disclaimer-Note
+		const note = document.querySelector('[data-testid="ranking-kriminalitaet-note"]');
+		expect(note).not.toBeNull();
+		expect(note?.textContent).toMatch(/Sicherheits-Ranking/i);
+	});
+
+	it('Story 14.9 (Option A): färbt relativ pro Spalte (oberstes Viertel grün, unterstes rot)', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		// composite-Verteilung [80,50,30] → 80 oberstes Viertel (pill-4), 30 unterstes (pill-1)
+		const spans = Array.from(document.querySelectorAll('[data-testid="ranking-table"] tbody span'));
+		const top = spans.find((s) => s.textContent?.trim() === '80');
+		expect(top?.className).toMatch(/score-pill-4/);
+		// es existiert mindestens eine unterste-Viertel-Pille (composite 30)
+		expect(document.querySelector('.score-pill-1')).not.toBeNull();
+		// Kriminalität bleibt neutral (keine score-pill-Färbung)
+		const krimiCell = document.querySelector('[data-testid="ranking-cell-kriminalitaet"] span');
+		expect(krimiCell?.className).not.toMatch(/score-pill-/);
 	});
 
 	it('default-sortiert Kieze nach composite desc (Alpha vor Bravo vor Charlie)', async () => {

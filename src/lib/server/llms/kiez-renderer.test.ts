@@ -74,7 +74,8 @@ const baseInput: KiezRenderInput = {
 		mobilitaet: 85,
 		versorgung: 70,
 		wohnschutz: 60,
-		kultur: 52
+		kultur: 52,
+		kriminalitaet: 48
 	},
 	faq: []
 };

@@ -105,7 +105,10 @@ const SCORE_DIMS: readonly { key: keyof KiezScore; label: string }[] = [
 	{ key: 'versorgung', label: 'Versorgung' },
 	{ key: 'wohnschutz', label: 'Wohnschutz' },
 	// Option C: Kultur ist eigenständig (nicht im Gesamt-Score), wird aber als Vergleichszeile gezeigt.
-	{ key: 'kultur', label: 'Kultur' }
+	{ key: 'kultur', label: 'Kultur' },
+	// Story 14.9: Kriminalität als Kontext-Vergleichszeile (Option C). Kein Rang (nicht in METRICS),
+	// Strukturell-Indigo/neutral, BR-Granularität (ADR-019). NICHT in der Prosa (14.8).
+	{ key: 'kriminalitaet', label: 'Erfasste Kriminalität' }
 ];
 
 export type KiezPageData = {

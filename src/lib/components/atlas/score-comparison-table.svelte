@@ -22,6 +22,11 @@
 	// bei fehlender DB im Build).
 	const hasData = $derived(rows.some((r) => r.value !== null && r.value !== undefined));
 
+	// Story 14.9: Kriminalität ist eine Magnitude (höher = mehr erfasste Fälle), kein Gut-Wert
+	// wie die übrigen Zeilen, und ohne Rang. Fußnote klärt das auf (ADR-019).
+	const isKriminalitaet = (label: string): boolean => /kriminalit/i.test(label);
+	const hasKriminalitaet = $derived(rows.some((r) => isKriminalitaet(r.label)));
+
 	function fmt(v: number | null | undefined): string {
 		if (v === null || v === undefined || !Number.isFinite(v)) return '–';
 		return Math.round(v).toString();
@@ -46,8 +51,10 @@
 				</thead>
 				<tbody>
 					{#each rows as row (row.label)}
-						<tr class="border-b border-rule">
-							<th scope="row" class="py-3 pr-4 text-left font-semibold text-ink">{row.label}</th>
+						<tr class="border-b border-rule" data-row={isKriminalitaet(row.label) ? 'kriminalitaet' : undefined}>
+							<th scope="row" class="py-3 pr-4 text-left font-semibold text-ink">
+								{row.label}{#if isKriminalitaet(row.label)}<span aria-hidden="true" class="text-ink-subtle">&nbsp;*</span>{/if}
+							</th>
 							<td class="py-3 pr-4 text-right text-ink">{fmt(row.value)}</td>
 							{#if showBezirkColumn}
 								<td class="py-3 pr-4 text-right text-ink-muted">{fmt(row.bezirkMean)}</td>
@@ -68,5 +75,12 @@
 				Werte 0–100. Berlin = Median aller Bezirke.
 			{/if}
 		</p>
+		{#if hasKriminalitaet}
+			<p class="font-serif text-xs italic leading-snug text-ink-muted" data-testid="kriminalitaet-footnote">
+				* Erfasste Kriminalität ist eine Häufigkeitszahl je Bezirksregion (gröber als die Adresse),
+				höher = mehr erfasste Fälle. Kein Gut-Wert, kein Rang und kein Sicherheits-Urteil. Siehe
+				<a href="/methodik/kiez-score" class="text-accent underline underline-offset-2 hover:text-accent-strong">Methodik</a>.
+			</p>
+		{/if}
 	</section>
 {/if}

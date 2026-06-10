@@ -8,7 +8,7 @@
 	const pageTitle =
 		'Methodik des Umwelt- & Infrastruktur-Scores - Berlin in Daten - navigator.berlin';
 	const pageDescription =
-		'Kiez-Score-Methodik: sechs Dimensionen (fünf im Gesamt-Score, Kultur separat), Normalisierung, Gewichte. Warum Sozialstruktur nicht eingerechnet wird. Berliner Daten-Atlas.';
+		'Kiez-Score-Methodik: sieben Dimensionen (fünf im Gesamt-Score, Kultur und Kriminalität separat), Normalisierung, Gewichte. Warum Sozialstruktur nicht eingerechnet wird. Berliner Daten-Atlas.';
 
 	const sections = [
 		{ id: 'worum', label: 'Worum es geht' },
@@ -68,6 +68,13 @@
 				'kultur-museum, kultur-galerie, kultur-theater, kultur-bibliothek, kultur-kino, kultur-soziokultur, kultur-kunst-im-raum, kultur-club',
 			detail:
 				'Kultureller Zugang als log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OpenStreetMap, ODbL). Der erste Kulturort zählt stark, weitere flachen ab, das dämpft das Innen-Außen-Gefälle. Kultur ist eine eigene, sichtbare Dimension, fließt aber NICHT in den Gesamt-Score: Kulturinfrastruktur ballt sich in der Innenstadt und würde sonst jeden Außenbezirk-Gesamt-Score drücken. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.'
+		},
+		{
+			id: 'kriminalitaet',
+			label: 'Erfasste Kriminalität (eigenständig, nicht im Gesamt-Score)',
+			layers: 'kiez-score-kriminalitaet (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)',
+			detail:
+				'Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten" ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in Strukturell-Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher" oder „gefährlich".'
 		}
 	];
 
@@ -173,10 +180,11 @@
 	<section id="worum" aria-labelledby="worum-h" class="flex flex-col gap-3">
 		<h2 id="worum-h" class="font-serif text-2xl text-ink">Worum es geht</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking". Die Karte zeigt sechs Dimensionen
+			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking". Die Karte zeigt sieben Dimensionen
 			separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Fünf
-			Dimensionen bilden den Gesamt-Score, Kultur steht als sechste eigenständig daneben. Was
-			zutrifft, steht dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.
+			Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als eigenständige
+			Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst weggelassen ist,
+			sagen wir auch.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Aggregations-Ebene Planungsraum entspricht rund 7.500 Einwohner:innen. Wohnungs-Mikrolagen
@@ -200,10 +208,10 @@
 	<section id="gewichte" aria-labelledby="gewichte-h" class="flex flex-col gap-3">
 		<h2 id="gewichte-h" class="font-serif text-2xl text-ink">Gewichte</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Persona „allgemein" gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur ist
-			eine sichtbare sechste Dimension, zählt aber nicht in den Gesamt-Score (Gewicht 0). Persona-Switcher
-			für Familie, Single oder Senior:innen liegt in Phase 2. Eigene Slider-Gewichtung kommt
-			ebenfalls später.
+			Persona „allgemein" gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur und
+			erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den Gesamt-Score
+			(Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in Phase 2. Eigene
+			Slider-Gewichtung kommt ebenfalls später.
 		</p>
 		<table class="border border-rule text-sm">
 			<thead class="bg-bg">
@@ -219,6 +227,7 @@
 				<tr><td class="px-3 py-2">Wohnschutz</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 				<tr><td class="px-3 py-2">Versorgung</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 				<tr><td class="px-3 py-2">Kultur <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td><td class="px-3 py-2 font-mono">0</td></tr>
+				<tr><td class="px-3 py-2">Erfasste Kriminalität <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td><td class="px-3 py-2 font-mono">0</td></tr>
 			</tbody>
 		</table>
 	</section>
@@ -277,9 +286,10 @@
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Seit der Score-Neuordnung (ADR-015) sind alle Composite-Dimensionen positiv eindeutig. Deshalb
 			zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt", Gut-Skala),
-			zusätzlich zu den Einzel-Dimensionen. Die sechste Dimension Kultur (ADR-018) ist eigenständig
-			und fließt nicht in den Gesamt-Score. Das MSS-Aggregat bleibt als neutraler Kontext-Layer
-			in Strukturell-Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score" gibt es nicht.
+			zusätzlich zu den Einzel-Dimensionen. Kultur (ADR-018) und erfasste Kriminalität (ADR-019) sind
+			eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das
+			MSS-Aggregat bleiben neutrale Kontext-Layer in Strukturell-Indigo, ohne Rot-Grün-Sprünge. Einen
+			stadtweiten „Berlin-Score" gibt es nicht.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Build-Pipeline: <code class="font-mono text-sm">pnpm data:aggregate-scores</code> liest die
@@ -305,9 +315,9 @@
 		<h2 id="quellen-h" class="font-serif text-2xl text-ink">Datenquellen</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt),
-			Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin) und
-			ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand
-			pro Layer:
+			Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin),
+			Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap
+			(ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer:
 			<a
 				href="/lizenzen"
 				class="text-accent underline underline-offset-2 hover:text-accent-strong">/lizenzen</a

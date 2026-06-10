@@ -12,6 +12,36 @@ export interface LintResult {
 	readonly unbackedNumbers: number[];
 	/** true, wenn em-dash/en-dash gefunden. */
 	readonly hasDash: boolean;
+	/** Gefundene Stigma-Begriffe (Kriminalität/Sicherheit), die nicht in Profile gehören. */
+	readonly stigmaHits: string[];
+}
+
+/**
+ * Stigma-Begriffe (Story 14.8, ADR-019): Kriminalität ist Karten-Kontext, darf NICHT in die
+ * Prosa lecken („gefährlicher Kiez" = Redlining im Fließtext). Auch Sozial-Stigma-Wortfeld.
+ * Bewusst eng gefasst, um Lebensqualitäts-Prosa nicht zu blockieren.
+ */
+const STIGMA_PATTERNS: readonly RegExp[] = [
+	/kriminalit/i, // Kriminalität / Kriminalitäts-
+	/kriminell/i,
+	/verbrech/i, // Verbrechen
+	/straftat/i,
+	/\bdelikt/i,
+	/einbruch|einbrüch/i,
+	/\braub(?:überfall|delikt|es|s)?\b/i,
+	/gefährlich/i,
+	/(?:un)?sicher(?:e[rsn]?)?\s+(?:kiez|gegend|wohngegend|viertel|lage|ecke)/i,
+	/sicherheitslage/i,
+	/\bverwahrlos/i
+];
+
+function findStigma(text: string): string[] {
+	const hits: string[] = [];
+	for (const re of STIGMA_PATTERNS) {
+		const m = re.exec(text);
+		if (m) hits.push(m[0]);
+	}
+	return [...new Set(hits.map((h) => h.toLowerCase()))];
 }
 
 /** Extrahiert alle Zahlen aus deutschem Prosatext (Dezimal-Komma oder -Punkt). */
@@ -39,9 +69,11 @@ export function factLint(text: string, input: ProfileInput): LintResult {
 	const allowed = collectNumbers(input);
 	const unbacked = extractNumbers(text).filter((n) => !isBacked(n, allowed));
 	const hasDash = /[—–]/.test(text);
+	const stigmaHits = findStigma(text);
 	return {
-		ok: unbacked.length === 0 && !hasDash,
+		ok: unbacked.length === 0 && !hasDash && stigmaHits.length === 0,
 		unbackedNumbers: [...new Set(unbacked)],
-		hasDash
+		hasDash,
+		stigmaHits
 	};
 }

@@ -44,3 +44,23 @@ describe('factLint', () => {
 		expect(r.hasDash).toBe(true);
 	});
 });
+
+describe('factLint Stigma-Schutz (Story 14.8, ADR-019)', () => {
+	it('flaggt Kriminalitäts-/Sicherheits-Aussagen', () => {
+		expect(factLint('In diesem Kiez ist die Kriminalität hoch.', INPUT).ok).toBe(false);
+		expect(factLint('Eine eher gefährliche Gegend.', INPUT).ok).toBe(false);
+		expect(factLint('Ein sicherer Kiez zum Wohnen.', INPUT).ok).toBe(false);
+		expect(factLint('Viele Einbrüche und Verbrechen.', INPUT).ok).toBe(false);
+	});
+
+	it('listet die gefundenen Stigma-Begriffe', () => {
+		const r = factLint('Die Kriminalität ist gefährlich hoch.', INPUT);
+		expect(r.stigmaHits.length).toBeGreaterThan(0);
+	});
+
+	it('lässt neutrale Lebensqualitäts-Prosa durch', () => {
+		const r = factLint('Ruhige Lage mit guter Grünversorgung auf Rang 2.', INPUT);
+		expect(r.ok).toBe(true);
+		expect(r.stigmaHits).toEqual([]);
+	});
+});

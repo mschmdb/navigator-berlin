@@ -89,6 +89,9 @@ export const AUTHORITIES = {
 	},
 	'navigator-eigenberechnung-bezirke': {
 		de: 'navigator.berlin (Eigenberechnung aus Senats-Daten und Bezirks-Registern)'
+	},
+	'navigator-eigenberechnung-kriminalitaetsatlas': {
+		de: 'navigator.berlin (Eigenberechnung aus dem Kriminalitätsatlas Berlin, Polizei Berlin)'
 	}
 } as const satisfies Record<string, AuthorityMeta>;
 

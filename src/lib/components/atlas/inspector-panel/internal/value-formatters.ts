@@ -430,6 +430,9 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return formatKiezScoreValue(value, 'Wohnschutz');
 		case 'kiez-score-kultur':
 			return formatKiezScoreValue(value, 'Kultur');
+		case 'kiez-score-kriminalitaet':
+			// Magnitude, neutrale Stufen (kein „gut/schlecht", ADR-019).
+			return formatKiezScoreValue(value, 'Erfasste Kriminalität', { neutral: true });
 		// Legacy/fictitious Slugs (Story 1.3 Re-Run TODO):
 		case 'mietspiegel-wohnlage':
 			return { text: safeString(value), isNumeric: false };

@@ -19,6 +19,7 @@ import {
 	normalizeMssStatus4,
 	normalizeDistance,
 	normalizeNumericInverted,
+	normalizeNumeric,
 	normalizePresence,
 	normalizeKitaProKind,
 	parseBettenCapacity,
@@ -85,6 +86,12 @@ function normalizeFromHit(
 		case 'numeric-inverted':
 			rawValue = getProp(hit.value, normalize.field);
 			normalized = normalizeNumericInverted(rawValue, normalize.bestAt, normalize.worstAt);
+			break;
+		case 'numeric':
+			normalized = normalizeNumeric(getProp(hit.value, normalize.field), normalize.minAt, normalize.maxAt);
+			// rawValue bleibt das ganze hit.value-Objekt (index + ggf. delikte), damit der Inspector
+			// die Delikt-Aufschlüsselung rendern kann (Story 14.4). normalizedValue kommt aus `field`.
+			rawValue = hit.value;
 			break;
 		case 'kita-pro-kind': {
 			const v = getProp(hit.value, normalize.field);

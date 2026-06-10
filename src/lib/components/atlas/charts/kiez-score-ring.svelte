@@ -2,6 +2,7 @@
 	import { ArcChart, Tooltip } from 'layerchart';
 	import { DIMENSION_LABELS_DE, scaleFor } from '../inspector-panel/internal/kiez-score-display.js';
 	import { severityColor } from './internal/chart-palette.js';
+	import { COMPOSITE_DIMENSIONS } from '$lib/data';
 	import type { KiezScore, KiezScoreDimension } from '$lib/data';
 
 	type Props = {
@@ -13,14 +14,11 @@
 
 	let { score, layerName = 'Kiez-Score', onSegmentClick }: Props = $props();
 
-	const KIEZ_SCORE_DIMENSIONS: readonly KiezScoreDimension[] = [
-		'ruhe-luft',
-		'gruen-hitze',
-		'mobilitaet',
-		'versorgung',
-		'wohnschutz',
-		'kultur'
-	];
+	// Story 14.4: Der Ring visualisiert exakt den Composite (GESAMT = Mittel der fünf). Kultur und
+	// Kriminalität sind Kontext-Dimensionen (nicht im Composite) und erscheinen NICHT als Ring-Segment:
+	// Der Ring ist Gut-Grün ("höher = besser"), Kriminalität (Magnitude/Indigo) würde dort als positiver
+	// Bogen fehlgelesen (Stigma, ADR-019). Beide stehen als Zeilen unter dem Ring.
+	const RING_DIMENSIONS: readonly KiezScoreDimension[] = COMPOSITE_DIMENSIONS;
 
 	interface ArcDatum {
 		key: KiezScoreDimension;
@@ -36,7 +34,7 @@
 	// Konzentrische Activity-Ringe: ein Ring pro Dimension, Füllung = Score/100,
 	// Farbe = Severity-Stufe. Aussen → innen in Dimensions-Reihenfolge.
 	const arcSeries = $derived(
-		KIEZ_SCORE_DIMENSIONS.map((dim) => {
+		RING_DIMENSIONS.map((dim) => {
 			const value = dimValue(dim);
 			const scale = scaleFor(value, dim);
 			const datum: ArcDatum = {
@@ -78,8 +76,8 @@
 			label="label"
 			value="value"
 			series={arcSeries}
-			innerRadius={-8}
-			outerRadius={-10}
+			innerRadius={-10}
+			outerRadius={-12}
 			cornerRadius={4}
 			props={{ arc: { motion: 'spring' } }}
 			labels={{
