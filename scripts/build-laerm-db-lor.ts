@@ -25,7 +25,9 @@ async function loadLorUtm33(): Promise<Feature[]> {
 	};
 	const entry = manifest.layers.find((l) => l.slug === 'lor-planungsraum');
 	if (!entry) throw new Error('MANIFEST ohne lor-planungsraum');
-	const fc = JSON.parse(await readFile(join(LAYERS_DIR, entry.filename), 'utf-8')) as FeatureCollection;
+	const fc = JSON.parse(
+		await readFile(join(LAYERS_DIR, entry.filename), 'utf-8')
+	) as FeatureCollection;
 	const utm33 = reprojectGeoJSON(fc, 'EPSG:4326', 'EPSG:25833');
 	return utm33.features ?? [];
 }
@@ -35,7 +37,9 @@ async function fetchPage(startIndex: number): Promise<Feature[]> {
 		`${WFS}?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=${TYPENAME}` +
 		`&OUTPUTFORMAT=application/json&COUNT=${PAGE}&STARTINDEX=${startIndex}`;
 	assertAllowed(url);
-	const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT, Accept: 'application/json' } });
+	const res = await fetch(url, {
+		headers: { 'User-Agent': USER_AGENT, Accept: 'application/json' }
+	});
 	if (!res.ok) throw new Error(`Lärm-WFS HTTP ${res.status} @ startIndex ${startIndex}`);
 	const fc = (await res.json()) as FeatureCollection;
 	return fc.features ?? [];

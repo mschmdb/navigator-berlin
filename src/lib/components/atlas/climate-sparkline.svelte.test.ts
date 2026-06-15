@@ -51,9 +51,7 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 				metric,
 				stationName: 'Berlin-Dahlem'
 			});
-			const def = screen.container.querySelector(
-				'[data-testid="climate-sparkline-definition"]'
-			);
+			const def = screen.container.querySelector('[data-testid="climate-sparkline-definition"]');
 			expect(def?.textContent).toContain(expected);
 		}
 	});
@@ -138,9 +136,7 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 			metric: 'summer',
 			stationName: 'Berlin-Dahlem'
 		});
-		const dashed = screen.container.querySelector(
-			'.lc-root-container svg path[stroke-dasharray]'
-		);
+		const dashed = screen.container.querySelector('.lc-root-container svg path[stroke-dasharray]');
 		expect(dashed).not.toBeNull();
 	});
 
@@ -186,9 +182,7 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 			metric: 'summer',
 			stationName: 'Berlin-Dahlem'
 		});
-		const figure = screen.container.querySelector(
-			'[data-testid="climate-sparkline-figure"]'
-		);
+		const figure = screen.container.querySelector('[data-testid="climate-sparkline-figure"]');
 		expect(figure?.getAttribute('tabindex')).toBe('0');
 	});
 
@@ -204,14 +198,10 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 		expect(figure).not.toBeNull();
 		figure!.focus();
 		expect(figure?.getAttribute('data-focused-index')).toBe('-1');
-		figure!.dispatchEvent(
-			new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })
-		);
+		figure!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
 		await new Promise((r) => setTimeout(r, 16));
 		expect(figure?.getAttribute('data-focused-index')).toBe('0');
-		figure!.dispatchEvent(
-			new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })
-		);
+		figure!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
 		await new Promise((r) => setTimeout(r, 16));
 		expect(figure?.getAttribute('data-focused-index')).toBe('1');
 	});
@@ -226,16 +216,10 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 			'[data-testid="climate-sparkline-figure"]'
 		) as HTMLElement | null;
 		figure!.focus();
-		figure!.dispatchEvent(
-			new KeyboardEvent('keydown', { key: 'End', bubbles: true })
-		);
+		figure!.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
 		await new Promise((r) => setTimeout(r, 16));
-		expect(figure?.getAttribute('data-focused-index')).toBe(
-			String(SUMMER.length - 1)
-		);
-		figure!.dispatchEvent(
-			new KeyboardEvent('keydown', { key: 'Home', bubbles: true })
-		);
+		expect(figure?.getAttribute('data-focused-index')).toBe(String(SUMMER.length - 1));
+		figure!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
 		await new Promise((r) => setTimeout(r, 16));
 		expect(figure?.getAttribute('data-focused-index')).toBe('0');
 	});
@@ -258,12 +242,8 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 			metric: 'hot',
 			stationName: 'Berlin-Dahlem'
 		});
-		const oldRow = screen.container.querySelector(
-			'[data-testid="climate-sparkline-normal-old"]'
-		);
-		const newRow = screen.container.querySelector(
-			'[data-testid="climate-sparkline-normal-new"]'
-		);
+		const oldRow = screen.container.querySelector('[data-testid="climate-sparkline-normal-old"]');
+		const newRow = screen.container.querySelector('[data-testid="climate-sparkline-normal-new"]');
 		expect(oldRow?.textContent).toContain('Mittel 1961–1990');
 		expect(oldRow?.textContent).toContain('5');
 		expect(newRow?.textContent).toContain('Mittel 1991–2020');
@@ -300,9 +280,7 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 			metric: 'frost',
 			stationName: 'Berlin-Tempelhof'
 		});
-		const oldRow = screen.container.querySelector(
-			'[data-testid="climate-sparkline-normal-old"]'
-		);
+		const oldRow = screen.container.querySelector('[data-testid="climate-sparkline-normal-old"]');
 		// Mittel = (20 + 18 + 16) / 3 = 18 — 1919 + 1950 NOT included
 		expect(oldRow?.textContent).toContain('18');
 		expect(oldRow?.textContent).not.toContain('50');
@@ -318,12 +296,8 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 			metric: 'hot',
 			stationName: 'Berlin-Dahlem'
 		});
-		const oldRow = screen.container.querySelector(
-			'[data-testid="climate-sparkline-normal-old"]'
-		);
-		const newRow = screen.container.querySelector(
-			'[data-testid="climate-sparkline-normal-new"]'
-		);
+		const oldRow = screen.container.querySelector('[data-testid="climate-sparkline-normal-old"]');
+		const newRow = screen.container.querySelector('[data-testid="climate-sparkline-normal-new"]');
 		expect(oldRow).toBeNull();
 		expect(newRow).toBeNull();
 	});
@@ -334,9 +308,7 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 			metric: 'summer',
 			stationName: 'Berlin-Dahlem'
 		});
-		const figure = screen.container.querySelector(
-			'[data-testid="climate-sparkline-figure"]'
-		);
+		const figure = screen.container.querySelector('[data-testid="climate-sparkline-figure"]');
 		expect(figure).not.toBeNull();
 		const layerChart = screen.container.querySelector('.lc-root-container');
 		expect(layerChart).toBeNull();

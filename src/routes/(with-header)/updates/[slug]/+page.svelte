@@ -19,14 +19,10 @@
 	const categoryLabel = $derived(CATEGORY_LABEL_DE[entry.frontmatter.category]);
 	const categoryClass = $derived(CATEGORY_BADGE_CLASSES[entry.frontmatter.category]);
 
-	const pageTitle = $derived(
-		`${entry.frontmatter.title_de} - Berlin in Daten - navigator.berlin`
-	);
+	const pageTitle = $derived(`${entry.frontmatter.title_de} - Berlin in Daten - navigator.berlin`);
 	const pageDescription = $derived(entry.frontmatter.summary_de);
 
-	const jsonLd = $derived(
-		buildBlogPosting({ entry, origin: page.url.origin })
-	);
+	const jsonLd = $derived(buildBlogPosting({ entry, origin: page.url.origin }));
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
@@ -59,10 +55,7 @@
 <JsonLd data={jsonLd} testid="updates-detail-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="updates-detail-breadcrumb-jsonld" />
 
-<article
-	data-testid="updates-detail-page"
-	class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8"
->
+<article data-testid="updates-detail-page" class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8">
 	<nav aria-label="Brotkrumen" class="font-sans text-sm text-ink-muted">
 		<a href="/" class="hover:text-accent">Start</a>
 		<span aria-hidden="true">›</span>
@@ -86,19 +79,13 @@
 		</div>
 	</header>
 
-	<section
-		class="prose prose-lg max-w-none font-serif text-ink"
-		data-testid="updates-detail-body"
-	>
+	<section class="prose prose-lg max-w-none font-serif text-ink" data-testid="updates-detail-body">
 		{@html bodyHtml}
 	</section>
 
 	{#if entry.frontmatter.tags && entry.frontmatter.tags.length > 0}
-		<footer
-			class="flex flex-col gap-2 border-t border-rule pt-4"
-			data-testid="updates-detail-tags"
-		>
-			<p class="font-mono text-xs uppercase tracking-wide text-ink-subtle">Tags</p>
+		<footer class="flex flex-col gap-2 border-t border-rule pt-4" data-testid="updates-detail-tags">
+			<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">Tags</p>
 			<ul class="flex flex-wrap gap-2">
 				{#each entry.frontmatter.tags as tag (tag)}
 					<li
@@ -114,7 +101,7 @@
 	<p class="font-mono text-xs">
 		<a
 			href="/updates"
-			class="text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="hover:text-accent-strong text-accent underline underline-offset-2"
 			data-testid="updates-back-link"
 		>
 			← Zurück zur Update-Liste

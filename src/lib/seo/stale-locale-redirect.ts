@@ -31,7 +31,9 @@ const STALE_LOCALE_PREFIXES: ReadonlySet<string> = new Set([
 
 export function staleLocaleRedirectTarget(pathname: string): string | null {
 	const firstSlash = pathname.indexOf('/', 1);
-	const segment = (firstSlash === -1 ? pathname.slice(1) : pathname.slice(1, firstSlash)).toLowerCase();
+	const segment = (
+		firstSlash === -1 ? pathname.slice(1) : pathname.slice(1, firstSlash)
+	).toLowerCase();
 
 	if (!STALE_LOCALE_PREFIXES.has(segment)) return null;
 

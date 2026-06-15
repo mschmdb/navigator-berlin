@@ -2,9 +2,9 @@
 slug: mv-sued
 name: Mv Sued
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: c15ed477bc18e6fe
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Mv Sued ist dicht ans Netz angebunden. Die Haltestellendichte liegt bei rund 27 pro Quadratkilometer. Der Mobilitätsscore von 17,7 bleibt aber unter dem Berliner Median. Die Versorgung fällt mit 62,1 über den Bezirksschnitt aus. Die gefühlte Temperatur an heißen Tagen liegt bei rund 39 Grad.

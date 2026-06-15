@@ -176,7 +176,8 @@
 		return 1;
 	}
 	function pillClass(value: number | null, neutral = false): string {
-		const base = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
+		const base =
+			'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
 		if (neutral) return `${base} text-ink`;
 		const bucket = scoreBucket(value);
 		if (bucket === 0) return `${base} text-ink-muted`;
@@ -189,7 +190,8 @@
 	// färben stattdessen nach Quartil der tatsächlichen Verteilung der AKTUELLEN Ansicht (kieze/bezirke):
 	// oberstes Viertel grün, unterstes rot. Passt zum „Vergleich, nicht Urteil"-Framing, ändert keine
 	// Scores. Kriminalität bleibt neutral (kein Quartil, kein Leaderboard).
-	const PILL_BASE = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
+	const PILL_BASE =
+		'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
 	function columnQuartiles(
 		rows: readonly RankingRow[],
 		key: NumericSortKey
@@ -238,14 +240,20 @@
 </script>
 
 <section data-testid="score-ranking" class="space-y-6">
-	<div class="flex flex-wrap items-center justify-between gap-3" role="radiogroup" aria-label="Ranking-Ansicht wechseln">
+	<div
+		class="flex flex-wrap items-center justify-between gap-3"
+		role="radiogroup"
+		aria-label="Ranking-Ansicht wechseln"
+	>
 		<div class="inline-flex rounded border border-rule" role="presentation">
 			<button
 				type="button"
 				role="radio"
 				aria-checked={view === 'kieze'}
 				data-testid="ranking-view-kieze"
-				class="px-4 py-2 font-mono text-xs uppercase tracking-wider {view === 'kieze' ? 'bg-ink text-bg' : 'text-ink hover:bg-bg-soft'}"
+				class="px-4 py-2 font-mono text-xs tracking-wider uppercase {view === 'kieze'
+					? 'bg-ink text-bg'
+					: 'hover:bg-bg-soft text-ink'}"
 				onclick={() => switchView('kieze')}
 			>
 				{kieze.length} Kieze
@@ -255,7 +263,10 @@
 				role="radio"
 				aria-checked={view === 'bezirke'}
 				data-testid="ranking-view-bezirke"
-				class="px-4 py-2 font-mono text-xs uppercase tracking-wider border-l border-rule {view === 'bezirke' ? 'bg-ink text-bg' : 'text-ink hover:bg-bg-soft'}"
+				class="border-l border-rule px-4 py-2 font-mono text-xs tracking-wider uppercase {view ===
+				'bezirke'
+					? 'bg-ink text-bg'
+					: 'hover:bg-bg-soft text-ink'}"
 				onclick={() => switchView('bezirke')}
 			>
 				{bezirke.length} Bezirke
@@ -272,12 +283,12 @@
 			<thead>
 				<tr class="border-b border-rule text-left align-bottom">
 					<th
-						class="whitespace-nowrap py-2 pr-3 font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
+						class="py-2 pr-3 font-mono text-[11px] tracking-wider whitespace-nowrap text-ink-subtle uppercase"
 						scope="col"
 					>
 						Rang
 					</th>
-					<th class="whitespace-nowrap py-2 pr-3 align-bottom" scope="col">
+					<th class="py-2 pr-3 align-bottom whitespace-nowrap" scope="col">
 						<button
 							type="button"
 							data-testid="ranking-sort-name"
@@ -292,7 +303,7 @@
 						</button>
 					</th>
 					{#if view === 'kieze'}
-						<th class="whitespace-nowrap py-2 pr-3 align-bottom" scope="col">
+						<th class="py-2 pr-3 align-bottom whitespace-nowrap" scope="col">
 							<button
 								type="button"
 								data-testid="ranking-sort-bezirk"
@@ -324,7 +335,9 @@
 						</th>
 					{/each}
 					<th class="score-col-th" scope="col" data-testid="ranking-col-kriminalitaet">
-						<span class="score-col-rot font-mono text-[11px] uppercase tracking-wider text-ink-subtle">
+						<span
+							class="score-col-rot font-mono text-[11px] tracking-wider text-ink-subtle uppercase"
+						>
 							Kriminalität
 						</span>
 					</th>
@@ -344,14 +357,44 @@
 								{row.bezirkName ?? '–'}
 							</td>
 						{/if}
-						<td class={cellPadding}><span class={pillClassRel('composite', row.composite)}>{formatScore(row.composite)}</span></td>
-						<td class={cellPadding}><span class={pillClassRel('ruheLuft', row.ruheLuft)}>{formatScore(row.ruheLuft)}</span></td>
-						<td class={cellPadding}><span class={pillClassRel('gruenHitze', row.gruenHitze)}>{formatScore(row.gruenHitze)}</span></td>
-						<td class={cellPadding}><span class={pillClassRel('mobilitaet', row.mobilitaet)}>{formatScore(row.mobilitaet)}</span></td>
-						<td class={cellPadding}><span class={pillClassRel('versorgung', row.versorgung)}>{formatScore(row.versorgung)}</span></td>
-						<td class={cellPadding}><span class={pillClassRel('wohnschutz', row.wohnschutz)}>{formatScore(row.wohnschutz)}</span></td>
-						<td class={cellPadding}><span class={pillClassRel('kultur', row.kultur)}>{formatScore(row.kultur)}</span></td>
-						<td class={cellPadding} data-testid="ranking-cell-kriminalitaet"><span class={pillClass(row.kriminalitaet, true)}>{formatScore(row.kriminalitaet)}</span></td>
+						<td class={cellPadding}
+							><span class={pillClassRel('composite', row.composite)}
+								>{formatScore(row.composite)}</span
+							></td
+						>
+						<td class={cellPadding}
+							><span class={pillClassRel('ruheLuft', row.ruheLuft)}
+								>{formatScore(row.ruheLuft)}</span
+							></td
+						>
+						<td class={cellPadding}
+							><span class={pillClassRel('gruenHitze', row.gruenHitze)}
+								>{formatScore(row.gruenHitze)}</span
+							></td
+						>
+						<td class={cellPadding}
+							><span class={pillClassRel('mobilitaet', row.mobilitaet)}
+								>{formatScore(row.mobilitaet)}</span
+							></td
+						>
+						<td class={cellPadding}
+							><span class={pillClassRel('versorgung', row.versorgung)}
+								>{formatScore(row.versorgung)}</span
+							></td
+						>
+						<td class={cellPadding}
+							><span class={pillClassRel('wohnschutz', row.wohnschutz)}
+								>{formatScore(row.wohnschutz)}</span
+							></td
+						>
+						<td class={cellPadding}
+							><span class={pillClassRel('kultur', row.kultur)}>{formatScore(row.kultur)}</span></td
+						>
+						<td class={cellPadding} data-testid="ranking-cell-kriminalitaet"
+							><span class={pillClass(row.kriminalitaet, true)}
+								>{formatScore(row.kriminalitaet)}</span
+							></td
+						>
 					</tr>
 				{/each}
 			</tbody>
@@ -359,7 +402,7 @@
 	</div>
 
 	<dl
-		class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 font-mono text-[11px] uppercase tracking-wider text-ink-subtle"
+		class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 font-mono text-[11px] tracking-wider text-ink-subtle uppercase"
 		data-testid="ranking-legend"
 	>
 		<dt class="text-ink-muted">Farbe je Spalte, relativ:</dt>
@@ -378,11 +421,17 @@
 		<dd class="text-ink-muted">Kriminalität: neutral (kein Farbverlauf)</dd>
 	</dl>
 
-	<p class="pt-2 font-serif text-xs italic leading-snug text-ink-muted" data-testid="ranking-kriminalitaet-note">
+	<p
+		class="pt-2 font-serif text-xs leading-snug text-ink-muted italic"
+		data-testid="ranking-kriminalitaet-note"
+	>
 		Erfasste Kriminalität ist ein neutraler Kontext-Wert (Häufigkeitszahl je Bezirksregion, höher =
 		mehr erfasste Fälle), kein Gut-Maß. Bewusst nicht sortierbar und nicht im Gesamt-Score: kein
 		Sicherheits-Ranking. Grenzen unter
-		<a href="/methodik/kiez-score" class="text-accent underline underline-offset-2 hover:text-accent-strong">Methodik</a>.
+		<a
+			href="/methodik/kiez-score"
+			class="hover:text-accent-strong text-accent underline underline-offset-2">Methodik</a
+		>.
 	</p>
 </section>
 

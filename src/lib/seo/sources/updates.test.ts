@@ -23,10 +23,7 @@ describe('buildUpdatesSitemapEntries', () => {
 	});
 
 	it('liefert Index + per-Entry Detail-URLs', () => {
-		const entries = [
-			fixtureEntry('launch', '2026-05-15'),
-			fixtureEntry('mss-2025', '2026-04-20')
-		];
+		const entries = [fixtureEntry('launch', '2026-05-15'), fixtureEntry('mss-2025', '2026-04-20')];
 		const out = buildUpdatesSitemapEntries({ entries, origin: ORIGIN });
 		const locs = out.map((e) => e.loc);
 		expect(locs).toContain('https://navigator.berlin/updates');
@@ -35,10 +32,7 @@ describe('buildUpdatesSitemapEntries', () => {
 	});
 
 	it('Index hat priority 0.6 und lastmod = neuestes Entry-Datum', () => {
-		const entries = [
-			fixtureEntry('launch', '2026-05-15'),
-			fixtureEntry('mss-2025', '2026-04-20')
-		];
+		const entries = [fixtureEntry('launch', '2026-05-15'), fixtureEntry('mss-2025', '2026-04-20')];
 		const out = buildUpdatesSitemapEntries({ entries, origin: ORIGIN });
 		const index = out.find((e) => e.loc === 'https://navigator.berlin/updates');
 		expect(index?.priority).toBeCloseTo(0.6, 5);

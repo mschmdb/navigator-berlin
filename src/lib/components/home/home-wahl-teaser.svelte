@@ -40,9 +40,8 @@
 	<header class="space-y-2">
 		<h2 class="font-serif text-2xl text-ink md:text-3xl">Wahlen seit 2011</h2>
 		<p class="font-serif text-base text-ink-muted">
-			Bundestag, Abgeordnetenhaus, BVV. Pro Adresse die stärkste Partei, pro
-			Stimmbezirk eine Karte mit 3500 Polygonen, pro Kiez der Verlauf über
-			die letzten Jahre.
+			Bundestag, Abgeordnetenhaus, BVV. Pro Adresse die stärkste Partei, pro Stimmbezirk eine Karte
+			mit 3500 Polygonen, pro Kiez der Verlauf über die letzten Jahre.
 		</p>
 	</header>
 
@@ -56,7 +55,7 @@
 				>
 					<span class="flex items-center gap-2">
 						<Vote size={16} aria-hidden="true" />
-						<span class="font-mono text-xs uppercase tracking-wider">
+						<span class="font-mono text-xs tracking-wider uppercase">
 							{card.typLabel}
 						</span>
 					</span>
@@ -71,7 +70,7 @@
 		<a
 			href="/wahl"
 			data-testid="home-wahl-teaser-all"
-			class="inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-accent hover:text-ink"
+			class="inline-flex items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
 		>
 			Alle 20 Wahlen
 			<ArrowRight size={14} aria-hidden="true" />
@@ -79,7 +78,7 @@
 		<a
 			href="/methodik/wahldaten"
 			data-testid="home-wahl-teaser-methodik"
-			class="font-mono text-sm uppercase tracking-wider text-ink-muted hover:text-ink"
+			class="font-mono text-sm tracking-wider text-ink-muted uppercase hover:text-ink"
 		>
 			Methodik · Wahldaten
 		</a>

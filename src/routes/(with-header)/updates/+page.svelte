@@ -43,17 +43,13 @@
 		void goto(url, { replaceState: true, keepFocus: true, noScroll: true });
 	});
 
-	const filteredEntries = $derived(
-		applyCategoryFilter(entries, new Set(filterValue))
-	);
+	const filteredEntries = $derived(applyCategoryFilter(entries, new Set(filterValue)));
 
 	const pageTitle = 'Updates - Berlin in Daten - navigator.berlin';
 	const pageDescription =
 		'Was sich an navigator.berlin verändert: neue Daten, Features und Methodik-Änderungen. Mit RSS und Atom.';
 
-	const blogJsonLd = $derived(
-		buildBlogIndex({ entries, origin: page.url.origin })
-	);
+	const blogJsonLd = $derived(buildBlogIndex({ entries, origin: page.url.origin }));
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
@@ -78,29 +74,23 @@
 <JsonLd data={blogJsonLd} testid="updates-index-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="updates-index-breadcrumb-jsonld" />
 
-<article
-	data-testid="updates-index-page"
-	class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
->
+<article data-testid="updates-index-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-2">
 		<h1 data-testid="updates-page-title" class="font-serif text-3xl text-ink">Updates</h1>
 		<p class="font-serif text-lg leading-relaxed text-ink-muted">
 			Daten-Refreshes, Feature-Releases und Methodik-Änderungen. Abonnieren via
 			<a
 				href="/updates/rss.xml"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
-				>RSS</a
+				class="hover:text-accent-strong text-accent underline underline-offset-2">RSS</a
 			>,
 			<a
 				href="/updates/atom.xml"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
-				>Atom</a
+				class="hover:text-accent-strong text-accent underline underline-offset-2">Atom</a
 			>
 			oder
 			<a
 				href="/updates/feed.json"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
-				>JSON Feed</a
+				class="hover:text-accent-strong text-accent underline underline-offset-2">JSON Feed</a
 			>.
 		</p>
 	</header>
@@ -120,11 +110,7 @@
 		{/if}
 	</p>
 
-	<section
-		aria-label="Update-Einträge"
-		class="flex flex-col gap-4"
-		data-testid="updates-list"
-	>
+	<section aria-label="Update-Einträge" class="flex flex-col gap-4" data-testid="updates-list">
 		{#each filteredEntries as entry (entry.slug)}
 			<UpdatesEntryCard {entry} />
 		{:else}

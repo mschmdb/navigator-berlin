@@ -1,6 +1,6 @@
 ---
-title_de: "Versorgung zählt jetzt Supermarkt, Apotheke und Post"
-summary_de: "Der Versorgungs-Score misst neben Kita, Schule und Klinik jetzt die Nahversorgung im Kiez: Lebensmittel, Apotheke und Post aus OpenStreetMap."
+title_de: 'Versorgung zählt jetzt Supermarkt, Apotheke und Post'
+summary_de: 'Der Versorgungs-Score misst neben Kita, Schule und Klinik jetzt die Nahversorgung im Kiez: Lebensmittel, Apotheke und Post aus OpenStreetMap.'
 date: 2026-06-07
 category: feature
 tags: [kiez-score, versorgung, nahversorgung, score, osm]

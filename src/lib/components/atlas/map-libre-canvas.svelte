@@ -7,7 +7,11 @@
 	import { registerPinIcons, type PinAddImageMap } from './internal/pin-sprite-renderer.js';
 	import { COLORS } from './internal/colors.js';
 
-	type Viewport = { center: [number, number]; zoom: number; bbox: [number, number, number, number] };
+	type Viewport = {
+		center: [number, number];
+		zoom: number;
+		bbox: [number, number, number, number];
+	};
 
 	type Props = {
 		initialBbox?: [number, number, number, number];
@@ -110,7 +114,8 @@
 				onMapHandle?.(mapHandle);
 				map.on('load', () => {
 					const pinMap: PinAddImageMap = {
-						hasImage: (id) => (map as unknown as { hasImage: (id: string) => boolean }).hasImage(id),
+						hasImage: (id) =>
+							(map as unknown as { hasImage: (id: string) => boolean }).hasImage(id),
 						addImage: (id, image) =>
 							(map as unknown as { addImage: (id: string, image: unknown) => void }).addImage(
 								id,
@@ -134,9 +139,13 @@
 						addImage: (id: string, image: unknown) => void;
 					};
 					if (m.hasImage(e.id)) return;
-					void registerPinIcons({ hasImage: m.hasImage.bind(m), addImage: m.addImage.bind(m) }, {
-						[slug]: spec
-					}, (token) => COLORS[token]);
+					void registerPinIcons(
+						{ hasImage: m.hasImage.bind(m), addImage: m.addImage.bind(m) },
+						{
+							[slug]: spec
+						},
+						(token) => COLORS[token]
+					);
 				});
 				map.on('moveend', () => {
 					const c = map.getCenter();
@@ -203,9 +212,9 @@
 	{/if}
 
 	<p id="map-help" class="sr-only">
-		Berlin-Karte. Pfeiltasten zum Verschieben, Plus und Minus zum Zoomen, Home für
-		Berlin-Übersicht, Tab um durch sichtbare Orte und Grenzen zu navigieren, Enter zum Auswählen,
-		Escape zum Abwählen. Die Karte zeigt Layer wie Bezirke, LOR-Regionen, Stolpersteine und
-		Lärmkarten, sichtbar abhängig vom Zoom-Level.
+		Berlin-Karte. Pfeiltasten zum Verschieben, Plus und Minus zum Zoomen, Home für Berlin-Übersicht,
+		Tab um durch sichtbare Orte und Grenzen zu navigieren, Enter zum Auswählen, Escape zum Abwählen.
+		Die Karte zeigt Layer wie Bezirke, LOR-Regionen, Stolpersteine und Lärmkarten, sichtbar abhängig
+		vom Zoom-Level.
 	</p>
 </div>

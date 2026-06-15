@@ -109,20 +109,12 @@ describe('compareLayerValues — numeric-no-judgment (Bodenrichtwerte)', () => {
 	});
 
 	it('gleiche Werte → equal', () => {
-		const r = compareLayerValues(
-			'bodenrichtwerte',
-			{ richtwert: 5500 },
-			{ richtwert: 5500 }
-		);
+		const r = compareLayerValues('bodenrichtwerte', { richtwert: 5500 }, { richtwert: 5500 });
 		expect(r.direction).toBe('equal');
 	});
 
 	it('Bodenrichtwert mit anderem Key-Name `eur_qm` funktioniert auch', () => {
-		const r = compareLayerValues(
-			'bodenrichtwerte',
-			{ eur_qm: 8000 },
-			{ eur_qm: 5500 }
-		);
+		const r = compareLayerValues('bodenrichtwerte', { eur_qm: 8000 }, { eur_qm: 5500 });
 		expect(r.direction).toBe('not-comparable');
 		expect(r.deltaLabel).toMatch(/2.500/);
 	});
@@ -220,11 +212,7 @@ describe('compareLayerValues — categorical-neutral (Bezirke, Milieuschutz)', (
 	});
 
 	it('Milieuschutz A vorhanden, B null → not-comparable mit Advisory (Schutz ambivalent)', () => {
-		const r = compareLayerValues(
-			'milieuschutz-erhaltungsmiete',
-			{ name: 'Karl-Marx-Allee' },
-			null
-		);
+		const r = compareLayerValues('milieuschutz-erhaltungsmiete', { name: 'Karl-Marx-Allee' }, null);
 		expect(r.direction).toBe('not-comparable');
 		expect(r.advisory).toMatch(/Schutz|ambivalent/i);
 	});

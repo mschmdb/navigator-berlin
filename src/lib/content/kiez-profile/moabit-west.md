@@ -2,9 +2,9 @@
 slug: moabit-west
 name: Moabit West
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 9c2eaa2568bb881a
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Versorgung und Wohnschutz tragen Moabit West. Versorgung erreicht rund 79 Punkte, Rang 6 von 143, weit über dem Berliner Median. Wohnschutz liegt bei rund 85 Punkten, Rang 3. Mobilität fällt mit rund 39 Punkten kräftig aus, Rang 20. Ruhe und Luft bleiben mit rund 42 Punkten schwach, Rang 117.

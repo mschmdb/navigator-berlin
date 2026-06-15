@@ -2,9 +2,9 @@
 slug: nord-1-frohnau-hermsdorf
 name: Nord 1 Frohnau Hermsdorf
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: b550ce98d6c19fad
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe und Luft prägen Nord 1 Frohnau Hermsdorf, rund 94 Punkte, Rang 8 von 143, weit über dem Bezirksschnitt. Grün und Hitze erreichen rund 70 Punkte, Rang 13, über dem Berliner Median. Wohnschutz liegt bei rund 56 Punkten, Rang 18. Mobilität fällt mit rund 17 Punkten schwach aus, Rang 97. Die Schiene reicht nur dünn.

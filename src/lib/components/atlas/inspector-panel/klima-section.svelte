@@ -28,10 +28,7 @@
 		if (loadStarted) return;
 		if (!station || !series) return;
 		loadStarted = true;
-		Promise.all([
-			import('../climate-sparkline.svelte'),
-			import('../climate-long-view.svelte')
-		])
+		Promise.all([import('../climate-sparkline.svelte'), import('../climate-long-view.svelte')])
 			.then(([sparkMod, longMod]) => {
 				Sparkline = sparkMod.default as Component<Record<string, unknown>>;
 				LongView = longMod.default as Component<Record<string, unknown>>;
@@ -57,7 +54,7 @@
 </script>
 
 {#if !station || !series}
-	<p class="py-3 font-serif italic text-ink-subtle" data-testid="section-klima-empty">
+	<p class="py-3 font-serif text-ink-subtle italic" data-testid="section-klima-empty">
 		Klima-Daten werden geladen oder konnten nicht ermittelt werden.
 	</p>
 {:else}
@@ -67,7 +64,7 @@
 	>
 		<div class="flex items-start justify-between gap-2">
 			<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">Klima · DWD-Station</h4>
-			<span class="shrink-0 font-serif text-sm italic text-ink-subtle">{station.name}</span>
+			<span class="shrink-0 font-serif text-sm text-ink-subtle italic">{station.name}</span>
 		</div>
 		<p class="font-mono text-[11px] text-ink-subtle" data-testid="klima-station-hint">
 			Messreihe seit {station.firstYear}

@@ -6,14 +6,29 @@
 
 		<link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/favicon.svg" />
 
-		<link rel="preload" as="font" type="font/woff2" crossorigin href="%sveltekit.assets%/fonts/plex-sans-latin-var.woff2" />
-		<link rel="preload" as="font" type="font/woff2" crossorigin href="%sveltekit.assets%/fonts/plex-serif-latin-400.woff2" />
-		<link rel="preload" as="font" type="font/woff2" crossorigin href="%sveltekit.assets%/fonts/plex-mono-latin-400.woff2" />
-
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1"
+		<link
+			rel="preload"
+			as="font"
+			type="font/woff2"
+			crossorigin
+			href="%sveltekit.assets%/fonts/plex-sans-latin-var.woff2"
 		/>
+		<link
+			rel="preload"
+			as="font"
+			type="font/woff2"
+			crossorigin
+			href="%sveltekit.assets%/fonts/plex-serif-latin-400.woff2"
+		/>
+		<link
+			rel="preload"
+			as="font"
+			type="font/woff2"
+			crossorigin
+			href="%sveltekit.assets%/fonts/plex-mono-latin-400.woff2"
+		/>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 		<meta name="text-scale" content="scale" />
 		<!--
@@ -23,12 +38,22 @@
 			Manual-Mode: auto-pushState-Tracking aus, Pageviews werden via afterNavigate
 			im Root-Layout explizit getriggert (zuverlässig für SvelteKit-Client-Nav).
 		-->
-		<script defer data-domain="navigator.berlin" src="https://p.fliege.dev/js/script.file-downloads.manual.outbound-links.pageview-props.tagged-events.js"></script>
+		<script
+			defer
+			data-domain="navigator.berlin"
+			src="https://p.fliege.dev/js/script.file-downloads.manual.outbound-links.pageview-props.tagged-events.js"
+		></script>
 		<script>
-			window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
+			window.plausible =
+				window.plausible ||
+				function () {
+					(window.plausible.q = window.plausible.q || []).push(arguments);
+				};
 		</script>
 		%sveltekit.head%
 	</head>
 
-	<body data-sveltekit-preload-data="hover"><div style="display: contents">%sveltekit.body%</div></body>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
 </html>

@@ -13,8 +13,7 @@ const FIXTURE_KIEZ: TemplateContext = {
 	wahl_typ_label: 'Bundestagswahlen',
 	stimmtyp_label: 'Zweitstimmen',
 	sparkline_jahre: '2013, 2017, 2021, 2025',
-	sparkline_jahre_top_parteien:
-		'Die Linke (2013), GRÜNE (2017), GRÜNE (2021), GRÜNE (2025)'
+	sparkline_jahre_top_parteien: 'Die Linke (2013), GRÜNE (2017), GRÜNE (2021), GRÜNE (2025)'
 };
 
 const FIXTURE_BEZIRK: TemplateContext = {

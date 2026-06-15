@@ -45,8 +45,8 @@
 						<span class="font-serif text-lg text-ink">navigator.berlin</span>
 					</a>
 					<p class="font-serif text-base leading-relaxed text-ink-muted">
-						Berlin, Adresse für Adresse: Lärm, Klima, Grün, Mobilität, Wohnen und Wahlen.
-						Aus offenen Senats-Daten, ODIS Berlin und OpenStreetMap.
+						Berlin, Adresse für Adresse: Lärm, Klima, Grün, Mobilität, Wohnen und Wahlen. Aus
+						offenen Senats-Daten, ODIS Berlin und OpenStreetMap.
 					</p>
 				</div>
 
@@ -56,7 +56,7 @@
 				>
 					{#each META_LINK_GROUPS as group (group.title)}
 						<div class="flex flex-col gap-2.5">
-							<h2 class="font-mono text-[10px] uppercase tracking-wider text-ink-subtle">
+							<h2 class="font-mono text-[10px] tracking-wider text-ink-subtle uppercase">
 								{group.title}
 							</h2>
 							<ul class="flex flex-col gap-2">

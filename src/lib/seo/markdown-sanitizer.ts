@@ -34,10 +34,7 @@ export function sanitizeHtml(html: string): string {
 
 	// 1. Strippe verbotene Tags inkl. Inhalt (greedy regex with [\s\S] für Multi-Line).
 	for (const tag of FORBIDDEN_TAGS) {
-		const blockPattern = new RegExp(
-			`<${tag}\\b[^>]*>[\\s\\S]*?<\\/${tag}>`,
-			'gi'
-		);
+		const blockPattern = new RegExp(`<${tag}\\b[^>]*>[\\s\\S]*?<\\/${tag}>`, 'gi');
 		out = out.replace(blockPattern, '');
 		// Selbst-schließende oder unvollständige Variante
 		const voidPattern = new RegExp(`<${tag}\\b[^>]*\\/?>`, 'gi');
@@ -52,27 +49,18 @@ export function sanitizeHtml(html: string): string {
 
 	// 3. Strippe href/src mit gefährlichen Schemes. Komplette Attribut-Wegnahme statt nur Scheme,
 	//    weil Browser-Parser ambiguous gegenüber `java\nscript:`.
-	out = out.replace(
-		/\s+(href|src)\s*=\s*"([^"]*)"/gi,
-		(match, attr: string, value: string) => {
-			if (FORBIDDEN_URL_SCHEMES.test(value.trim())) return '';
-			return ` ${attr}="${value}"`;
-		}
-	);
-	out = out.replace(
-		/\s+(href|src)\s*=\s*'([^']*)'/gi,
-		(match, attr: string, value: string) => {
-			if (FORBIDDEN_URL_SCHEMES.test(value.trim())) return '';
-			return ` ${attr}="${value}"`;
-		}
-	);
-	out = out.replace(
-		/\s+(href|src)\s*=\s*([^\s>]+)/gi,
-		(match, attr: string, value: string) => {
-			if (FORBIDDEN_URL_SCHEMES.test(value.trim())) return '';
-			return ` ${attr}=${value}`;
-		}
-	);
+	out = out.replace(/\s+(href|src)\s*=\s*"([^"]*)"/gi, (match, attr: string, value: string) => {
+		if (FORBIDDEN_URL_SCHEMES.test(value.trim())) return '';
+		return ` ${attr}="${value}"`;
+	});
+	out = out.replace(/\s+(href|src)\s*=\s*'([^']*)'/gi, (match, attr: string, value: string) => {
+		if (FORBIDDEN_URL_SCHEMES.test(value.trim())) return '';
+		return ` ${attr}="${value}"`;
+	});
+	out = out.replace(/\s+(href|src)\s*=\s*([^\s>]+)/gi, (match, attr: string, value: string) => {
+		if (FORBIDDEN_URL_SCHEMES.test(value.trim())) return '';
+		return ` ${attr}=${value}`;
+	});
 
 	return out;
 }

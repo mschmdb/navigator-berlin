@@ -63,9 +63,7 @@ function isUnknownLayerError(err: unknown): boolean {
 	return false;
 }
 
-export function createGetLayerMetadataTool(
-	deps: GetLayerMetadataDeps
-): WebMcpToolDefinition {
+export function createGetLayerMetadataTool(deps: GetLayerMetadataDeps): WebMcpToolDefinition {
 	return {
 		name: 'get_layer_metadata',
 		description:

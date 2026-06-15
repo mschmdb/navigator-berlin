@@ -49,15 +49,7 @@
 
 		<g class="nv-logo__edges" stroke="var(--accent, #2A3F7C)" fill="none" stroke-linecap="round">
 			{#each DELAUNAY_EDGES as [x1, y1, x2, y2], i (i)}
-				<line
-					class="nv-logo__edge"
-					{x1}
-					{y1}
-					{x2}
-					{y2}
-					pathLength="100"
-					style:--i={i}
-				/>
+				<line class="nv-logo__edge" {x1} {y1} {x2} {y2} pathLength="100" style:--i={i} />
 			{/each}
 		</g>
 
@@ -77,11 +69,7 @@
 			{/each}
 		</g>
 
-		<g
-			class="nv-logo__anchors"
-			fill="var(--bg, #ECEAE0)"
-			stroke="var(--accent, #2A3F7C)"
-		>
+		<g class="nv-logo__anchors" fill="var(--bg, #ECEAE0)" stroke="var(--accent, #2A3F7C)">
 			{#each ANCHOR_POINTS as [cx, cy], i (i)}
 				<circle class="nv-logo__anchor" {cx} {cy} style:--i={i} />
 			{/each}

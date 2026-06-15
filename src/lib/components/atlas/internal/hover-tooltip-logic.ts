@@ -21,16 +21,10 @@ export interface HoverTooltipContent {
 const CLICK_HINT_DE = 'Klick für volle Adresse-Inspektion';
 const POI_HINT_DE = 'Mehr im Inspektor →';
 
-export function buildHoverTooltipContent(
-	slug: string,
-	value: unknown
-): HoverTooltipContent {
+export function buildHoverTooltipContent(slug: string, value: unknown): HoverTooltipContent {
 	const layerName = getLayerDisplayName(slug);
 	if (hasPinIcon(slug)) {
-		const summary = getPopoverSummary(
-			slug,
-			(value as Record<string, unknown> | null) ?? null
-		);
+		const summary = getPopoverSummary(slug, (value as Record<string, unknown> | null) ?? null);
 		return {
 			kind: 'poi',
 			slug,

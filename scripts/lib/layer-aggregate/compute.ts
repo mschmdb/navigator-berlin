@@ -43,12 +43,19 @@ function ordinalEntry(
 ): LayerAggregateEntry {
 	const lv = collectPlrValues(source, valueKey, ctx.hierarchy);
 	const kiez = new Map<string, LayerAggregate>();
-	for (const [slug, vals] of lv.kiez) kiez.set(slug, aggregateOrdinalDistribution(vals.map(toLabel)));
+	for (const [slug, vals] of lv.kiez)
+		kiez.set(slug, aggregateOrdinalDistribution(vals.map(toLabel)));
 	const bezirk = new Map<string, LayerAggregate>();
 	for (const [slug, vals] of lv.bezirk)
 		bezirk.set(slug, aggregateOrdinalDistribution(vals.map(toLabel)));
 	const berlin = aggregateOrdinalDistribution(lv.berlin.map(toLabel));
-	return { type: 'ordinal-distribution', neutral, kiez: sortedRecord(kiez), bezirk: sortedRecord(bezirk), berlin };
+	return {
+		type: 'ordinal-distribution',
+		neutral,
+		kiez: sortedRecord(kiez),
+		bezirk: sortedRecord(bezirk),
+		berlin
+	};
 }
 
 function numericMedianEntry(
@@ -63,7 +70,9 @@ function numericMedianEntry(
 	const bezirk = new Map<string, LayerAggregate>();
 	for (const [slug, vals] of bezirkVals)
 		bezirk.set(slug, aggregateNumericMedian(vals.map(toNumber)));
-	const berlinValues = source.map((f) => toNumber(((f.properties ?? {})[valueKey] ?? null) as CellValue));
+	const berlinValues = source.map((f) =>
+		toNumber(((f.properties ?? {})[valueKey] ?? null) as CellValue)
+	);
 	const berlin = aggregateNumericMedian(berlinValues);
 	return { type: 'numeric-median', kiez: sortedRecord(kiez), bezirk: sortedRecord(bezirk), berlin };
 }
@@ -75,7 +84,9 @@ function shareEntry(
 	neutral?: boolean
 ): LayerAggregateEntry {
 	const make = (hit: number, polyArea: number): LayerAggregate =>
-		type === 'coverage-share' ? aggregateCoverageShare(hit, polyArea) : aggregateAreaShare(hit, polyArea);
+		type === 'coverage-share'
+			? aggregateCoverageShare(hit, polyArea)
+			: aggregateAreaShare(hit, polyArea);
 
 	const kiezHit = collectIntersectArea(source, ctx.targets.kiez);
 	const kiez = new Map<string, LayerAggregate>();
@@ -87,7 +98,8 @@ function shareEntry(
 	}
 	const bezirkHit = collectIntersectArea(source, ctx.targets.bezirk);
 	const bezirk = new Map<string, LayerAggregate>();
-	for (const t of ctx.targets.bezirk) bezirk.set(t.slug, make(bezirkHit.get(t.slug) ?? 0, t.areaM2));
+	for (const t of ctx.targets.bezirk)
+		bezirk.set(t.slug, make(bezirkHit.get(t.slug) ?? 0, t.areaM2));
 
 	// Kiez-Tiles partitionieren Berlin → berlinHit = Summe der Kiez-Hits.
 	const berlin = make(berlinHit, ctx.targets.berlinAreaM2);

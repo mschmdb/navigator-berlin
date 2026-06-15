@@ -12,9 +12,7 @@ export interface ActiveAddressReadInput {
 	readonly selectedAddress: GeocodeSuggestion | null;
 }
 
-export function readActiveAddressResource(
-	input: ActiveAddressReadInput
-): WebMcpResourceRead {
+export function readActiveAddressResource(input: ActiveAddressReadInput): WebMcpResourceRead {
 	const sa = input.selectedAddress;
 	if (!sa) {
 		return { uri: input.uri, mimeType: 'application/json', content: null };

@@ -3,11 +3,7 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { closeDb, getDb } from '../src/lib/server/db/index.js';
-import {
-	BERLIN_LAND_CODE,
-	filterByLand,
-	parseBwlWbzCsv
-} from './wahlen/lib/bwl-csv-parser.js';
+import { BERLIN_LAND_CODE, filterByLand, parseBwlWbzCsv } from './wahlen/lib/bwl-csv-parser.js';
 import { extractBwlCsvs, fetchBwlZip } from './wahlen/lib/bwl-fetcher.js';
 import {
 	extractSheet,
@@ -61,7 +57,7 @@ async function processCombined(
 	source: WahlSource,
 	csv: string,
 	args: Args
-): Promise<{ transformed: ReturnType<typeof transformBwlRow>[]; }> {
+): Promise<{ transformed: ReturnType<typeof transformBwlRow>[] }> {
 	const parsed = parseBwlWbzCsv(csv);
 	console.log(
 		`[aggregate-wahl] ${source.slug} parsed: headers=${parsed.headers.length} rows=${parsed.rows.length}`
@@ -138,13 +134,7 @@ async function processOneWahl(source: WahlSource, args: Args): Promise<void> {
 			});
 			await clearWahlData(db, wahlId);
 			const sbCount = await insertStimmbezirke(db, wahlId, transformed);
-			const erCount = await insertErgebnisse(
-				db,
-				wahlId,
-				transformed,
-				stimmtyp,
-				parteiIdByKurzname
-			);
+			const erCount = await insertErgebnisse(db, wahlId, transformed, stimmtyp, parteiIdByKurzname);
 			const counts = await buildAggregates(db, wahlId);
 			console.log(
 				`[aggregate-wahl] ${source.slug}/${stimmtyp} wahlId=${wahlId} stimmbezirke=${sbCount} ergebnis=${erCount} agg=berlin:${counts.berlin}/bezirk:${counts.bezirk}`
@@ -170,13 +160,7 @@ async function processOneWahl(source: WahlSource, args: Args): Promise<void> {
 			});
 			await clearWahlData(db, wahlId);
 			const sbCount = await insertStimmbezirke(db, wahlId, transformed);
-			const erCount = await insertErgebnisse(
-				db,
-				wahlId,
-				transformed,
-				stimmtyp,
-				parteiIdByKurzname
-			);
+			const erCount = await insertErgebnisse(db, wahlId, transformed, stimmtyp, parteiIdByKurzname);
 			const counts = await buildAggregates(db, wahlId);
 			console.log(
 				`[aggregate-wahl] ${source.slug}/${stimmtyp} wahlId=${wahlId} stimmbezirke=${sbCount} ergebnis=${erCount} agg=berlin:${counts.berlin}/bezirk:${counts.bezirk}`
@@ -190,9 +174,7 @@ async function processOneWahl(source: WahlSource, args: Args): Promise<void> {
 
 async function main(): Promise<void> {
 	const args = parseArgs(process.argv.slice(2));
-	const targets = args.only
-		? WAHL_SOURCES.filter((s) => s.slug === args.only)
-		: WAHL_SOURCES;
+	const targets = args.only ? WAHL_SOURCES.filter((s) => s.slug === args.only) : WAHL_SOURCES;
 
 	if (targets.length === 0) {
 		console.error(
@@ -256,13 +238,7 @@ async function processSbbXlsx(
 		});
 		await clearWahlData(db, wahlId);
 		const sbCount = await insertStimmbezirke(db, wahlId, transformed);
-		const erCount = await insertErgebnisse(
-			db,
-			wahlId,
-			transformed,
-			stimmtyp,
-			parteiIdByKurzname
-		);
+		const erCount = await insertErgebnisse(db, wahlId, transformed, stimmtyp, parteiIdByKurzname);
 		const counts = await buildAggregates(db, wahlId);
 		console.log(
 			`[aggregate-wahl] ${source.slug}/${stimmtyp} wahlId=${wahlId} stimmbezirke=${sbCount} ergebnis=${erCount} agg=berlin:${counts.berlin}/bezirk:${counts.bezirk}`

@@ -78,7 +78,11 @@ const COLOR_INK_SUBTLE = '#5F5F5A';
 const COLOR_RULE = '#C8C6BB';
 const COLOR_ACCENT = '#2A3F7C';
 
-function node(type: string, style: Record<string, unknown>, children?: SatoriNode['props']['children']): SatoriNode {
+function node(
+	type: string,
+	style: Record<string, unknown>,
+	children?: SatoriNode['props']['children']
+): SatoriNode {
 	return { type, props: { style, children } };
 }
 
@@ -106,11 +110,7 @@ function buildHeader(params: OgParams): SatoriNode {
 			})
 		);
 	}
-	return node(
-		'div',
-		{ display: 'flex', flexDirection: 'column', gap: 4 },
-		lines
-	);
+	return node('div', { display: 'flex', flexDirection: 'column', gap: 4 }, lines);
 }
 
 function buildLayerList(params: OgParams): SatoriNode {
@@ -129,11 +129,7 @@ function buildLayerList(params: OgParams): SatoriNode {
 			lineHeight: 1.3
 		})
 	);
-	return node(
-		'div',
-		{ display: 'flex', flexDirection: 'column', gap: 12 },
-		items
-	);
+	return node('div', { display: 'flex', flexDirection: 'column', gap: 12 }, items);
 }
 
 function buildFooter(params: OgParams): SatoriNode {
@@ -196,10 +192,7 @@ export interface RenderOgCardOpts {
 	fonts: readonly OgFont[];
 }
 
-export async function renderOgCardPng(
-	params: OgParams,
-	opts: RenderOgCardOpts
-): Promise<Buffer> {
+export async function renderOgCardPng(params: OgParams, opts: RenderOgCardOpts): Promise<Buffer> {
 	const { default: satori } = await import('satori');
 	const { Resvg } = await import('@resvg/resvg-js');
 

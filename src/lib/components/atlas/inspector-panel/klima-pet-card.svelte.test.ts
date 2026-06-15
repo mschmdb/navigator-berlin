@@ -14,7 +14,15 @@ const hit: LayerHit = {
 };
 
 function agg(median: number, min: number, max: number): NumericMedianAggregate {
-	return { type: 'numeric-median', median, min, max, contributingMembers: 10, totalMembers: 10, coverage: '10/10' };
+	return {
+		type: 'numeric-median',
+		median,
+		min,
+		max,
+		contributingMembers: 10,
+		totalMembers: 10,
+		coverage: '10/10'
+	};
 }
 
 describe('KlimaPetCard', () => {

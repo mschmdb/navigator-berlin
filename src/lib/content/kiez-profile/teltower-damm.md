@@ -2,9 +2,9 @@
 slug: teltower-damm
 name: Teltower Damm
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 930655666c921827
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Teltower Damm ist ruhig und grün. Ruhe und Luft erreichen 90,6 Punkte und Rang 14 von 143. Der Wert liegt über dem Schnitt von Steglitz Zehlendorf und über dem Berliner Median. Grün und Hitze stehen mit 66,9 Punkten ebenfalls über dem Median. An heißen Tagen erreicht die gefühlte Temperatur rund 36 Grad.

@@ -63,9 +63,13 @@ test('Escape löscht Selection (kein Marker mehr)', async ({ page }) => {
 	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	await page.locator('[role="application"]').focus();
 	await page.keyboard.press('Escape');
-	await page.waitForFunction(() => !new URL(window.location.href).searchParams.has('address'), null, {
-		timeout: 5000
-	});
+	await page.waitForFunction(
+		() => !new URL(window.location.href).searchParams.has('address'),
+		null,
+		{
+			timeout: 5000
+		}
+	);
 	const url = new URL(page.url());
 	expect(url.searchParams.has('address')).toBe(false);
 });

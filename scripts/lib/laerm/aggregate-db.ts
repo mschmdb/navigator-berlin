@@ -19,9 +19,7 @@ function polygonBbox(feat: Feature<Polygon | MultiPolygon>): [number, number, nu
 	let maxX = -Infinity;
 	let maxY = -Infinity;
 	const rings =
-		feat.geometry.type === 'Polygon'
-			? feat.geometry.coordinates
-			: feat.geometry.coordinates.flat();
+		feat.geometry.type === 'Polygon' ? feat.geometry.coordinates : feat.geometry.coordinates.flat();
 	for (const ring of rings) {
 		for (const [x, y] of ring as [number, number][]) {
 			if (x < minX) minX = x;
@@ -46,7 +44,11 @@ export function buildLorBboxIndex(
 	return out;
 }
 
-export function findLorForPoint(x: number, y: number, index: readonly LorBboxEntry[]): string | null {
+export function findLorForPoint(
+	x: number,
+	y: number,
+	index: readonly LorBboxEntry[]
+): string | null {
 	const pt = point([x, y]);
 	for (const entry of index) {
 		const [minX, minY, maxX, maxY] = entry.bbox;

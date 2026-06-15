@@ -28,9 +28,7 @@ function summarize(hit: LayerHit): JsonObject {
 	};
 }
 
-export function createListLayersAtPointTool(
-	deps: ListLayersAtPointDeps
-): WebMcpToolDefinition {
+export function createListLayersAtPointTool(deps: ListLayersAtPointDeps): WebMcpToolDefinition {
 	return {
 		name: 'list_layers_at_point',
 		description:

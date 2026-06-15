@@ -4,10 +4,7 @@ export type SchemaDrift = {
 	matched: number;
 };
 
-export function diffHeaders(
-	expected: readonly string[],
-	actual: readonly string[]
-): SchemaDrift {
+export function diffHeaders(expected: readonly string[], actual: readonly string[]): SchemaDrift {
 	const expectedSet = new Set(expected);
 	const actualSet = new Set(actual);
 	const missing = expected.filter((h) => !actualSet.has(h));

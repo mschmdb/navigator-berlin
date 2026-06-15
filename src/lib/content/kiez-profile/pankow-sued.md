@@ -2,9 +2,9 @@
 slug: pankow-sued
 name: Pankow Sued
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 36b62df37c934cf8
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Pankow Sued punktet bei Kultur und Anbindung. Kulturell steht das Gebiet stark, rund 74 Punkte und Rang 31 von 143, klar über Bezirk und Berliner Median. Die Mobilität liegt mit rund 35 über dem Median. Die Haltestellendichte erreicht rund 15 pro Quadratkilometer.

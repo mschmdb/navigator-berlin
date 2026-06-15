@@ -55,7 +55,10 @@ export interface LorHierarchy {
 	readonly bezirke: readonly BezirkNode[];
 }
 
-export function bezirkSlugFromBezCode(bezirke: readonly BezirkLike[], bezCode: string): string | null {
+export function bezirkSlugFromBezCode(
+	bezirke: readonly BezirkLike[],
+	bezCode: string
+): string | null {
 	const match = bezirke.find((b) => b.bezCode === bezCode);
 	return match ? normalizeSlug(match.name) : null;
 }

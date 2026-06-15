@@ -164,31 +164,22 @@
 <JsonLd data={breadcrumbJsonLd} testid="lizenzen-breadcrumb-jsonld" />
 <JsonLd data={dataCatalogJsonLd} testid="lizenzen-datacatalog-jsonld" />
 
-<article
-	data-testid="lizenzen-page"
-	class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
->
+<article data-testid="lizenzen-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-2">
-		<h1 data-testid="lizenzen-page-title" class="font-serif text-3xl text-ink">
-			Lizenzen
-		</h1>
+		<h1 data-testid="lizenzen-page-title" class="font-serif text-3xl text-ink">Lizenzen</h1>
 		<p class="font-serif text-lg leading-relaxed text-ink-muted">
 			Welche Lizenz pro Geo-Datensatz gilt und welche Software wir nutzen.
 		</p>
 	</header>
 
-	<nav
-		data-testid="lizenzen-toc"
-		aria-label="Inhalt"
-		class="border border-rule bg-bg p-4"
-	>
-		<p class="mb-2 font-mono text-xs uppercase tracking-wide text-ink-subtle">Inhalt</p>
+	<nav data-testid="lizenzen-toc" aria-label="Inhalt" class="border border-rule bg-bg p-4">
+		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">Inhalt</p>
 		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
 					<a
 						href={`#${sec.id}`}
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						{sec.label}
 					</a>
@@ -200,8 +191,8 @@
 	<section id="daten-lizenzen" aria-labelledby="daten-lizenzen-h" class="flex flex-col gap-4">
 		<h2 id="daten-lizenzen-h" class="font-serif text-2xl text-ink">Daten-Lizenzen</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Die {manifest.layers.length} aktiven Geo-Layer stehen unter drei verschiedenen Lizenzen.
-			Jede gruppiert nach Lizenz, mit Link auf den jeweiligen Volltext.
+			Die {manifest.layers.length} aktiven Geo-Layer stehen unter drei verschiedenen Lizenzen. Jede gruppiert
+			nach Lizenz, mit Link auf den jeweiligen Volltext.
 		</p>
 
 		{#each [...licenseGroups.entries()] as [license, layers] (license)}
@@ -213,7 +204,7 @@
 						href={info.url}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong font-mono text-xs text-accent underline underline-offset-2"
 					>
 						{info.key}
 					</a>
@@ -224,7 +215,7 @@
 						<li>
 							<a
 								href={`/layer/${layer.slug}`}
-								class="text-accent underline underline-offset-2 hover:text-accent-strong"
+								class="hover:text-accent-strong text-accent underline underline-offset-2"
 							>
 								{getLayerDisplayName(layer.slug)}
 							</a>
@@ -238,24 +229,24 @@
 	<section id="wahldaten" aria-labelledby="wahldaten-h" class="flex flex-col gap-3">
 		<h2 id="wahldaten-h" class="font-serif text-2xl text-ink">Wahldaten</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Wahl-Ergebnisse aus 12 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV)
-			liegen nicht als Geo-Layer im Manifest, sondern als Datenbank-Aggregate. Quellen und
-			Lizenz beider Datenanbieter:
+			Wahl-Ergebnisse aus 12 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV) liegen
+			nicht als Geo-Layer im Manifest, sondern als Datenbank-Aggregate. Quellen und Lizenz beider
+			Datenanbieter:
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">Bundeswahlleiterin</dt>
-				<dd class="font-serif text-sm text-ink-muted mt-1">
-					Bundestagswahlen 2013, 2017, 2021, 2025 als Wahlbezirksstatistik
-					(<code class="font-mono text-xs">_wbz.zip</code>). Lizenz Datenlizenz
-					Deutschland Namensnennung 2.0.
+				<dd class="mt-1 font-serif text-sm text-ink-muted">
+					Bundestagswahlen 2013, 2017, 2021, 2025 als Wahlbezirksstatistik (<code
+						class="font-mono text-xs">_wbz.zip</code
+					>). Lizenz Datenlizenz Deutschland Namensnennung 2.0.
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
 						href="https://bundeswahlleiterin.de"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						bundeswahlleiterin.de
 					</a>
@@ -265,18 +256,17 @@
 				<dt class="font-sans text-base font-semibold text-ink">
 					Amt für Statistik Berlin-Brandenburg
 				</dt>
-				<dd class="font-serif text-sm text-ink-muted mt-1">
-					Abgeordnetenhaus- und BVV-Wahlen 2011, 2016, 2021, 2023 als
-					XLSX-Sheet-Pipeline plus Stimmbezirks-Polygone (Shapefile-Releases pro
-					Wahlgang, reprojiziert nach WGS84). Lizenz Datenlizenz Deutschland
-					Namensnennung 2.0.
+				<dd class="mt-1 font-serif text-sm text-ink-muted">
+					Abgeordnetenhaus- und BVV-Wahlen 2011, 2016, 2021, 2023 als XLSX-Sheet-Pipeline plus
+					Stimmbezirks-Polygone (Shapefile-Releases pro Wahlgang, reprojiziert nach WGS84). Lizenz
+					Datenlizenz Deutschland Namensnennung 2.0.
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
 						href="https://statistik-berlin-brandenburg.de"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						statistik-berlin-brandenburg.de
 					</a>
@@ -287,7 +277,7 @@
 			Methodik:
 			<a
 				href="/methodik/wahldaten"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
 				/methodik/wahldaten
 			</a>
@@ -305,16 +295,16 @@
 				<dt class="font-sans text-base font-semibold text-ink">
 					Einwohner in LOR-Planungsräumen am 31.12.2024
 				</dt>
-				<dd class="font-serif text-sm text-ink-muted mt-1">
-					Einwohner nach Altersjahren je 542 LOR-Planungsräume, gejoint über die
-					8-stellige RAUMID. Lizenz CC BY 4.0, Amt für Statistik Berlin-Brandenburg.
+				<dd class="mt-1 font-serif text-sm text-ink-muted">
+					Einwohner nach Altersjahren je 542 LOR-Planungsräume, gejoint über die 8-stellige RAUMID.
+					Lizenz CC BY 4.0, Amt für Statistik Berlin-Brandenburg.
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
 						href="https://daten.berlin.de/datensaetze/einwohnerinnen-und-einwohner-in-berlin-in-lor-planungsraumen-am-31-12-2024"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						daten.berlin.de
 					</a>
@@ -323,17 +313,20 @@
 		</dl>
 	</section>
 
-	<section id="entitaets-verweise" aria-labelledby="entitaets-verweise-h" class="flex flex-col gap-3">
+	<section
+		id="entitaets-verweise"
+		aria-labelledby="entitaets-verweise-h"
+		class="flex flex-col gap-3"
+	>
 		<h2 id="entitaets-verweise-h" class="font-serif text-2xl text-ink">Entitäts-Verweise</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Bezirks-Seiten verweisen per <code class="font-mono text-sm">sameAs</code> auf die
-			passende Entität in offenen Wissensdatenbanken, damit Suchmaschinen die Seite eindeutig
-			zuordnen.
+			Bezirks-Seiten verweisen per <code class="font-mono text-sm">sameAs</code> auf die passende Entität
+			in offenen Wissensdatenbanken, damit Suchmaschinen die Seite eindeutig zuordnen.
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">Wikidata</dt>
-				<dd class="font-serif text-sm text-ink-muted mt-1">
+				<dd class="mt-1 font-serif text-sm text-ink-muted">
 					Q-IDs der 12 aktuellen Berliner Bezirke als <code class="font-mono text-xs">sameAs</code
 					>-Verweis im JSON-LD. Lizenz CC0.
 				</dd>
@@ -342,7 +335,7 @@
 						href="https://www.wikidata.org"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						wikidata.org
 					</a>
@@ -350,7 +343,7 @@
 			</div>
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">Wikipedia (deutsch)</dt>
-				<dd class="font-serif text-sm text-ink-muted mt-1">
+				<dd class="mt-1 font-serif text-sm text-ink-muted">
 					Artikel-Verweis pro Bezirk als zusätzlicher <code class="font-mono text-xs">sameAs</code
 					>-Eintrag. Lizenz CC BY-SA 4.0.
 				</dd>
@@ -359,7 +352,7 @@
 						href="https://de.wikipedia.org"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						de.wikipedia.org
 					</a>
@@ -378,16 +371,10 @@
 			<table class="w-full border-collapse text-sm">
 				<thead class="bg-bg">
 					<tr>
-						<th
-							scope="col"
-							class="border-b border-rule px-3 py-2 text-left font-sans font-medium"
-						>
+						<th scope="col" class="border-b border-rule px-3 py-2 text-left font-sans font-medium">
 							Library
 						</th>
-						<th
-							scope="col"
-							class="border-b border-rule px-3 py-2 text-left font-sans font-medium"
-						>
+						<th scope="col" class="border-b border-rule px-3 py-2 text-left font-sans font-medium">
 							Lizenz
 						</th>
 					</tr>
@@ -400,7 +387,7 @@
 									href={sw.url}
 									target="_blank"
 									rel="noopener noreferrer"
-									class="text-accent underline underline-offset-2 hover:text-accent-strong"
+									class="hover:text-accent-strong text-accent underline underline-offset-2"
 								>
 									{sw.name}
 								</a>
@@ -416,15 +403,14 @@
 	<section id="schriften" aria-labelledby="schriften-h" class="flex flex-col gap-3">
 		<h2 id="schriften-h" class="font-serif text-2xl text-ink">Schriften</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			IBM Plex Serif, Sans und Mono unter SIL Open Font License 1.1, geliefert via
-			Fontsource.
+			IBM Plex Serif, Sans und Mono unter SIL Open Font License 1.1, geliefert via Fontsource.
 		</p>
 		<p class="font-mono text-xs text-ink-muted">
 			<a
 				href="https://github.com/IBM/plex"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
 				github.com/IBM/plex
 			</a>
@@ -433,25 +419,21 @@
 				href="https://openfontlicense.org/"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
 				OFL 1.1
 			</a>
 		</p>
 	</section>
 
-	<section
-		id="osm-namensnennung"
-		aria-labelledby="osm-namensnennung-h"
-		class="flex flex-col gap-3"
-	>
+	<section id="osm-namensnennung" aria-labelledby="osm-namensnennung-h" class="flex flex-col gap-3">
 		<h2 id="osm-namensnennung-h" class="font-serif text-2xl text-ink">
 			OpenStreetMap-Namensnennung
 		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Die ODbL-Layer (Stolpersteine, ÖPNV-Stationen, Trinkbrunnen, S-Bahn-Netz, U-Bahn-Netz,
-			Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten. Lizenz:
-			Open Database License 1.0.
+			Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten. Lizenz: Open
+			Database License 1.0.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			© OpenStreetMap-Contributors. Daten verfügbar unter
@@ -459,7 +441,7 @@
 				href="https://www.openstreetmap.org/copyright"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
 				openstreetmap.org/copyright
 			</a>.

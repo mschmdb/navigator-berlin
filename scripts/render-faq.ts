@@ -51,7 +51,11 @@ import {
 	type TemplateAggregate,
 	type TemplateContext
 } from '../src/lib/server/faq/template-renderer.js';
-import type { ClusterKey, PageType, TemplateLocale } from '../src/lib/server/faq/template-schema.js';
+import type {
+	ClusterKey,
+	PageType,
+	TemplateLocale
+} from '../src/lib/server/faq/template-schema.js';
 import { buildLayerTargetsFromManifest } from '../src/lib/server/og/og-pipeline.js';
 
 const REPO_ROOT = process.cwd();
@@ -307,10 +311,7 @@ async function main(): Promise<void> {
 		process.exit(1);
 	}
 	process.stdout.write('[render-faq] Loading targets ...\n');
-	const [kiezMetrics, bezirkMetrics] = await Promise.all([
-		loadKiezMetrics(),
-		loadBezirkMetrics()
-	]);
+	const [kiezMetrics, bezirkMetrics] = await Promise.all([loadKiezMetrics(), loadBezirkMetrics()]);
 	const [bezirks, kieze, layers] = await Promise.all([
 		loadBezirkTargets(bezirkMetrics),
 		loadKiezTargets(kiezMetrics),

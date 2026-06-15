@@ -39,7 +39,9 @@
 			? agg.classes.map((c) => ({ label: c.label, share: c.share }))
 			: []
 	);
-	const dominant = $derived(agg?.type === 'ordinal-distribution' ? (agg.dominant ?? undefined) : undefined);
+	const dominant = $derived(
+		agg?.type === 'ordinal-distribution' ? (agg.dominant ?? undefined) : undefined
+	);
 
 	// address ODER point-density ohne berechneten Count (Story 8.2c liefert ihn später)
 	// → heutige Layer-Hit-Row (Passthrough, kein „wird berechnet"-Deadstate).
@@ -51,7 +53,12 @@
 {#if usePassthrough}
 	<LayerHitRow {hit} {layerName} {lang} {lat} {lng} {isActive} {onToggleLayer} />
 {:else}
-	<div data-testid="layer-level-card" data-kind={view.kind} data-layer={hit.layer} class="space-y-1">
+	<div
+		data-testid="layer-level-card"
+		data-kind={view.kind}
+		data-layer={hit.layer}
+		class="space-y-1"
+	>
 		<p class="flex items-baseline justify-between gap-2 font-sans text-sm font-medium text-ink">
 			{layerName}
 		</p>

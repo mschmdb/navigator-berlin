@@ -2,9 +2,9 @@
 slug: biesdorf
 name: Biesdorf
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: b0b2a3175bf7a352
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Biesdorf überzeugt beim Grün. Bei Grün und Hitze erreicht der Kiez Platz 15 von 143, klar über Berliner Median und Bezirksschnitt. Die Grünversorgung gilt als gut. Die gefühlte Temperatur liegt bei rund 38 Grad. Die Lärmbelastung ist mittel.

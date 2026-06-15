@@ -44,7 +44,11 @@
 		{:else}
 			<h3 id="faq-heading" class="font-serif text-xl text-ink">Häufige Fragen</h3>
 		{/if}
-		<Accordion.Root type="single" value={initialValue} class="divide-y divide-rule border-y border-rule">
+		<Accordion.Root
+			type="single"
+			value={initialValue}
+			class="divide-y divide-rule border-y border-rule"
+		>
 			{#each items as item, index (item.question)}
 				<Accordion.Item value="faq-{index}">
 					<Accordion.Header>

@@ -190,10 +190,9 @@
 		bind:this={container}
 		role="img"
 		aria-label="Berliner Bezirke gefärbt nach stärkster Partei"
-		class="h-[320px] sm:h-[400px] w-full overflow-hidden rounded border border-rule"
+		class="h-[320px] w-full overflow-hidden rounded border border-rule sm:h-[400px]"
 	></div>
-	<figcaption class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
-		Farbe = stärkste Partei pro Bezirk · Sättigung skaliert mit Anteil ·
-		Klick öffnet Top-3
+	<figcaption class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+		Farbe = stärkste Partei pro Bezirk · Sättigung skaliert mit Anteil · Klick öffnet Top-3
 	</figcaption>
 </figure>

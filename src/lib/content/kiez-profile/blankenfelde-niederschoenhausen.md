@@ -2,9 +2,9 @@
 slug: blankenfelde-niederschoenhausen
 name: Blankenfelde Niederschoenhausen
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 8d068c38f994d226
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe und Luft prägen Blankenfelde Niederschoenhausen am stärksten. Der Score von rund 85 liegt klar über Bezirksschnitt und Berliner Median. Beim Grün bewegt sich das Gebiet nahe am Berliner Median. Die Lärmklasse fällt mittel aus.

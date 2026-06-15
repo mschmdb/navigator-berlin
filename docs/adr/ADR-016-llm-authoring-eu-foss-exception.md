@@ -13,6 +13,7 @@ Epic 11 (Story 11.6) führt grounded Prosa-Profile pro Kiez und Bezirk ein: ein 
 Epic 4 setzt eine harte Regel: **kein US-Drittanbieter im Production-Pfad** (EU-FOSS-Hosting auf Hetzner, keine US-Dependencies zur Laufzeit). Ein LLM-Generierungs-Schritt scheint dem zu widersprechen.
 
 Zwei Optionen für das Modell:
+
 - Claude API (Anthropic, US-Anbieter) bzw. Claude-Code-Subscription/Subagenten.
 - Lokales/EU-Modell (strikt EU-FOSS, aber schwächerer Output, lokales Setup).
 
@@ -23,6 +24,7 @@ Zwei Optionen für das Modell:
 Damit ist die LLM-Nutzung analog zu CI/Authoring-Tools (Editor, Linter, Generatoren), die ebenfalls US-Software sein dürfen, weil sie nicht im Production-Pfad laufen. **Die EU-FOSS-Regel gilt für den Production-Pfad; Authoring-Zeit ist davon ausgenommen.**
 
 **Modellwahl (Hybrid, Owner-Decision 2026-06-07):**
+
 - Bulk-Erstgenerierung der 155 Profile lief gratis über Claude-Code-Subagenten (Modell Opus 4.8), getrieben aus den via `pnpm data:profiles --dump-inputs` exportierten Inputs.
 - `pnpm data:profiles` (Claude API, Default `claude-sonnet-4-6`) bleibt als session-unabhängiges Re-Generierungs-Tool (CI/Cron/andere Dev). Ein `tsx`-Script kann keine Subagenten aufrufen, daher der API-Pfad für Automatisierung.
 

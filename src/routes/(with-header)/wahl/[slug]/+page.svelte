@@ -75,15 +75,15 @@
 <JsonLd data={breadcrumbs} />
 <JsonLd data={dataset} />
 
-<article class="mx-auto max-w-4xl px-4 py-8 space-y-8" data-testid="wahl-detail-page">
+<article class="mx-auto max-w-4xl space-y-8 px-4 py-8" data-testid="wahl-detail-page">
 	<header class="space-y-3">
-		<p class="font-mono text-xs uppercase tracking-wide text-ink-muted">
-			<a href="/" class="hover:text-ink underline-offset-2 hover:underline">Berlin</a>
+		<p class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+			<a href="/" class="underline-offset-2 hover:text-ink hover:underline">Berlin</a>
 			·
-			<a href="/wahl" class="hover:text-ink underline-offset-2 hover:underline">Wahlen</a>
+			<a href="/wahl" class="underline-offset-2 hover:text-ink hover:underline">Wahlen</a>
 		</p>
 		<h1
-			class="font-sans text-2xl sm:text-3xl font-bold text-ink hyphens-auto break-words"
+			class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl"
 			lang="de"
 			data-testid="wahl-detail-title"
 		>
@@ -91,13 +91,13 @@
 		</h1>
 		{#if data.wahl.isRepeatElection && data.wahl.parentSlug}
 			<p
-				class="font-mono text-xs uppercase tracking-wide text-ink-muted"
+				class="font-mono text-xs tracking-wide text-ink-muted uppercase"
 				data-testid="wahl-detail-wiederholung"
 			>
 				Wiederholungswahl ·
 				<a
 					href={`/wahl/${data.wahl.parentSlug}`}
-					class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>
 					Original-Wahl ansehen
 				</a>
@@ -113,7 +113,7 @@
 
 		{#if berlinTop5.length > 0 && totalStimmen > 0}
 			<div
-				class="relative h-8 w-full overflow-hidden rounded border border-rule bg-bg-muted"
+				class="bg-bg-muted relative h-8 w-full overflow-hidden rounded border border-rule"
 				aria-hidden="true"
 				data-testid="wahl-detail-stacked-bar"
 			>
@@ -141,10 +141,10 @@
 				data-testid="wahl-detail-berlin-table"
 			>
 				<thead>
-					<tr class="text-[10px] uppercase tracking-wide text-ink-muted">
-						<th class="text-left pb-2">Partei</th>
-						<th class="text-right pb-2 whitespace-nowrap pl-2">Stimmen</th>
-						<th class="text-right pb-2 whitespace-nowrap pl-2">Anteil</th>
+					<tr class="text-[10px] tracking-wide text-ink-muted uppercase">
+						<th class="pb-2 text-left">Partei</th>
+						<th class="pb-2 pl-2 text-right whitespace-nowrap">Stimmen</th>
+						<th class="pb-2 pl-2 text-right whitespace-nowrap">Anteil</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -153,7 +153,7 @@
 							<td class="py-1.5 pr-2">
 								<span class="inline-flex items-center gap-2">
 									<span
-										class="inline-block h-2.5 w-2.5 rounded-sm border border-ink/10 flex-shrink-0"
+										class="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-sm border border-ink/10"
 										style="background-color:{parteiColor(entry.kurzname)};"
 										aria-hidden="true"
 									></span>
@@ -163,10 +163,10 @@
 									</span>
 								</span>
 							</td>
-							<td class="text-right tabular-nums text-ink py-1.5 whitespace-nowrap pl-2">
+							<td class="py-1.5 pl-2 text-right whitespace-nowrap text-ink tabular-nums">
 								{formatStimmen(entry.stimmen)}
 							</td>
-							<td class="text-right tabular-nums text-ink py-1.5 whitespace-nowrap pl-2">
+							<td class="py-1.5 pl-2 text-right whitespace-nowrap text-ink tabular-nums">
 								{formatPct(entry.anteil)}
 							</td>
 						</tr>
@@ -174,22 +174,19 @@
 				</tbody>
 			</table>
 		{:else}
-			<p
-				class="font-mono text-sm text-ink-muted"
-				data-testid="wahl-detail-berlin-empty"
-			>
+			<p class="font-mono text-sm text-ink-muted" data-testid="wahl-detail-berlin-empty">
 				Keine Berlin-Aggregat-Daten für diese Wahl.
 			</p>
 		{/if}
 	</section>
 
 	<section data-testid="wahl-detail-choropleth" class="space-y-3">
-		<div class="flex items-baseline justify-between gap-2 flex-wrap">
+		<div class="flex flex-wrap items-baseline justify-between gap-2">
 			<h2 class="font-sans text-xl font-semibold text-ink">
 				{data.geoSlug ? 'Stimmbezirkskarte' : 'Bezirkskarte'}
 			</h2>
 			{#if data.geoSlug}
-				<span class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
+				<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
 					~{data.winnersByUwb.length.toLocaleString('de-DE')} Stimmbezirke
 				</span>
 			{/if}
@@ -203,7 +200,7 @@
 			/>
 		{:else}
 			<p
-				class="font-serif italic text-sm text-ink-muted border-l-2 border-ink/30 pl-2"
+				class="border-l-2 border-ink/30 pl-2 font-serif text-sm text-ink-muted italic"
 				data-testid="wahl-detail-choropleth-fallback-note"
 			>
 				Stimmbezirks-Geometrie nicht verfügbar für diese Wahl. Karte zeigt Bezirks-Aggregat.
@@ -217,7 +214,7 @@
 		<ul class="grid gap-3 sm:grid-cols-2">
 			{#each data.bezirke as bezirk (bezirk.slug)}
 				<li
-					class="border border-rule rounded p-3 space-y-2"
+					class="space-y-2 rounded border border-rule p-3"
 					data-testid={`wahl-detail-bezirk-${bezirk.slug}`}
 				>
 					<a
@@ -231,12 +228,12 @@
 							{#each bezirk.top3 as entry (entry.kurzname)}
 								<li class="flex items-baseline gap-2">
 									<span
-										class="inline-block h-2 w-2 rounded-sm border border-ink/10 flex-shrink-0"
+										class="inline-block h-2 w-2 flex-shrink-0 rounded-sm border border-ink/10"
 										style="background-color:{parteiColor(entry.kurzname)};"
 										aria-hidden="true"
 									></span>
-									<span class="text-ink truncate">{entry.kurzname}</span>
-									<span class="ml-auto tabular-nums text-ink-muted">
+									<span class="truncate text-ink">{entry.kurzname}</span>
+									<span class="ml-auto text-ink-muted tabular-nums">
 										{formatPct(entry.anteil)}
 									</span>
 								</li>
@@ -254,7 +251,7 @@
 
 	<a
 		href="/methodik/wahldaten"
-		class="inline-block font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
+		class="hover:text-accent-strong inline-block font-mono text-sm text-accent underline underline-offset-2"
 		data-testid="wahl-detail-methodik-link"
 	>
 		Methodik · Wahldaten

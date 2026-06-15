@@ -22,7 +22,10 @@ export type Bbox4 = readonly [minLon: number, minLat: number, maxLon: number, ma
 export interface GeoJsonFeature {
 	readonly type: 'Feature';
 	readonly geometry:
-		| { readonly type: 'Polygon'; readonly coordinates: readonly (readonly (readonly number[])[])[] }
+		| {
+				readonly type: 'Polygon';
+				readonly coordinates: readonly (readonly (readonly number[])[])[];
+		  }
 		| {
 				readonly type: 'MultiPolygon';
 				readonly coordinates: readonly (readonly (readonly (readonly number[])[])[])[];
@@ -191,7 +194,9 @@ function stripIsoTime(isoDate: string | undefined): string {
 	return isoDate.slice(0, 10);
 }
 
-export function buildLayerTargetsFromManifest(entries: readonly LayerManifestEntry[]): LayerTarget[] {
+export function buildLayerTargetsFromManifest(
+	entries: readonly LayerManifestEntry[]
+): LayerTarget[] {
 	return entries.map((e) => ({
 		type: 'layer' as const,
 		slug: e.slug,

@@ -19,9 +19,7 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
 		});
-		const figure = screen.container.querySelector(
-			'[data-testid="climate-long-view-figure"]'
-		);
+		const figure = screen.container.querySelector('[data-testid="climate-long-view-figure"]');
 		expect(figure).not.toBeNull();
 		expect(figure?.getAttribute('role')).toBe('img');
 		const titleId = figure?.getAttribute('aria-labelledby');
@@ -61,12 +59,8 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
 		});
-		const paths = screen.container.querySelectorAll(
-			'.lc-root-container svg path'
-		);
-		const dataPaths = Array.from(paths).filter(
-			(p) => (p.getAttribute('d') ?? '').length > 50
-		);
+		const paths = screen.container.querySelectorAll('.lc-root-container svg path');
+		const dataPaths = Array.from(paths).filter((p) => (p.getAttribute('d') ?? '').length > 50);
 		expect(dataPaths.length).toBeGreaterThanOrEqual(1);
 	});
 
@@ -75,12 +69,8 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
 		});
-		const paths = screen.container.querySelectorAll(
-			'.lc-root-container svg path'
-		);
-		const longPaths = Array.from(paths).filter(
-			(p) => (p.getAttribute('d') ?? '').length > 50
-		);
+		const paths = screen.container.querySelectorAll('.lc-root-container svg path');
+		const longPaths = Array.from(paths).filter((p) => (p.getAttribute('d') ?? '').length > 50);
 		expect(longPaths.length).toBeGreaterThanOrEqual(2);
 	});
 
@@ -89,9 +79,7 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
 		});
-		const markers = screen.container.querySelectorAll(
-			'[data-testid="long-view-marker"]'
-		);
+		const markers = screen.container.querySelectorAll('[data-testid="long-view-marker"]');
 		expect(markers.length).toBeGreaterThanOrEqual(4);
 	});
 
@@ -101,9 +89,7 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			stationName: 'Berlin-Dahlem',
 			narrativeMarkers: [{ year: 1900, label: 'Custom-Marker' }]
 		});
-		const markers = screen.container.querySelectorAll(
-			'[data-testid="long-view-marker"]'
-		);
+		const markers = screen.container.querySelectorAll('[data-testid="long-view-marker"]');
 		expect(markers.length).toBe(1);
 		expect(markers[0].textContent).toContain('Custom-Marker');
 	});
@@ -124,12 +110,8 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
 		});
-		const oldRow = screen.container.querySelector(
-			'[data-testid="climate-long-view-normal-old"]'
-		);
-		const newRow = screen.container.querySelector(
-			'[data-testid="climate-long-view-normal-new"]'
-		);
+		const oldRow = screen.container.querySelector('[data-testid="climate-long-view-normal-old"]');
+		const newRow = screen.container.querySelector('[data-testid="climate-long-view-normal-new"]');
 		expect(oldRow?.textContent).toContain('Mittel 1961–1990');
 		expect(oldRow?.textContent).toMatch(/°C/);
 		expect(newRow?.textContent).toContain('Mittel 1991–2020');
@@ -158,12 +140,8 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			series: recent,
 			stationName: 'Berlin-Dahlem'
 		});
-		const oldRow = screen.container.querySelector(
-			'[data-testid="climate-long-view-normal-old"]'
-		);
-		const newRow = screen.container.querySelector(
-			'[data-testid="climate-long-view-normal-new"]'
-		);
+		const oldRow = screen.container.querySelector('[data-testid="climate-long-view-normal-old"]');
+		const newRow = screen.container.querySelector('[data-testid="climate-long-view-normal-new"]');
 		expect(oldRow).toBeNull();
 		expect(newRow).toBeNull();
 	});
@@ -182,9 +160,7 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			series: [],
 			stationName: 'Berlin-Dahlem'
 		});
-		const figure = screen.container.querySelector(
-			'[data-testid="climate-long-view-figure"]'
-		);
+		const figure = screen.container.querySelector('[data-testid="climate-long-view-figure"]');
 		expect(figure).not.toBeNull();
 	});
 });

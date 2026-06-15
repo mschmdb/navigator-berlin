@@ -20,7 +20,8 @@ export type GeoSource = {
 	readonly consumesWahlen: readonly string[];
 };
 
-const SBB_LICENSE = 'Datenlizenz Deutschland Namensnennung 2.0 (Amt für Statistik Berlin-Brandenburg)';
+const SBB_LICENSE =
+	'Datenlizenz Deutschland Namensnennung 2.0 (Amt für Statistik Berlin-Brandenburg)';
 const SBB_LICENSE_SHORT = 'dl-de/by-2.0';
 const SBB_ATTRIBUTION = 'Amt für Statistik Berlin-Brandenburg';
 
@@ -74,12 +75,7 @@ export const GEO_AH16: GeoSource = {
 	consumesWahlen: ['agh16', 'bvv16']
 };
 
-export const GEO_SOURCES: readonly GeoSource[] = [
-	GEO_BTW17,
-	GEO_AH16,
-	GEO_AH21,
-	GEO_BT25
-];
+export const GEO_SOURCES: readonly GeoSource[] = [GEO_BTW17, GEO_AH16, GEO_AH21, GEO_BT25];
 
 /**
  * Wahl-Slug → Geometry-Slug. Wahlen ohne Eintrag (z.B. btw13, agh11, bvv11)

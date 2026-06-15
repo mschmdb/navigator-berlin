@@ -1,6 +1,7 @@
 export function isFocusInTextInput(target: EventTarget | null): boolean {
 	if (!(target instanceof HTMLElement)) return false;
-	if (target.matches('input, textarea, [contenteditable="true"], [contenteditable=""]')) return true;
+	if (target.matches('input, textarea, [contenteditable="true"], [contenteditable=""]'))
+		return true;
 	return false;
 }
 

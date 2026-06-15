@@ -21,9 +21,7 @@ export interface BuildUpdatesSitemapEntriesInput {
 const INDEX_PRIORITY = 0.6;
 const DETAIL_PRIORITY = 0.7;
 
-export function buildUpdatesSitemapEntries(
-	input: BuildUpdatesSitemapEntriesInput
-): SitemapEntry[] {
+export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInput): SitemapEntry[] {
 	if (input.entries.length === 0) return [];
 	const origin = input.origin.replace(/\/+$/, '');
 	const sorted = sortByDateDesc(input.entries);

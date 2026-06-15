@@ -2,9 +2,9 @@
 slug: hakenfelde
 name: Hakenfelde
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: d2f753b2ab6b75e3
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe und Luft tragen dieses Gebiet, Rang 4 von 143 mit rund 98 Punkten, weit über dem Median. Auch Grün und Hitze liegen stark, Rang 21. Die gefühlte Temperatur bleibt mit etwa 32 Grad niedrig. Der Lärm ist gering.

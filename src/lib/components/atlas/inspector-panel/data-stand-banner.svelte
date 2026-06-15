@@ -26,7 +26,7 @@
 </script>
 
 <p
-	class="font-mono text-[10px] text-ink-subtle flex flex-wrap items-baseline gap-x-2"
+	class="flex flex-wrap items-baseline gap-x-2 font-mono text-[10px] text-ink-subtle"
 	data-testid="data-stand-banner"
 >
 	<span data-testid="banner-text">
@@ -44,7 +44,7 @@
 	{#if outdated}
 		<span
 			data-testid="banner-outdated"
-			class="ml-auto inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-state-warning"
+			class="ml-auto inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-state-warning uppercase"
 			title={`Datenstand: ${hit.updatedAt}`}
 		>
 			Veraltet

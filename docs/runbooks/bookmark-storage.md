@@ -19,18 +19,18 @@ Operatives Referenz-Dokument für die Bookmark-Funktion. Zweck: Compliance-Audit
 
 ```ts
 interface BookmarkStoreV1 {
-  schemaVersion: 1;
-  bookmarks: Bookmark[];
+	schemaVersion: 1;
+	bookmarks: Bookmark[];
 }
 
 interface Bookmark {
-  id: string;          // uuid v4 via crypto.randomUUID
-  displayName: string; // <= 200 chars
-  lat: number;         // 52.3..52.7 (Berlin Bbox)
-  lng: number;         // 13.0..13.8
-  bezirk?: string;
-  postcode?: string;
-  createdAt: string;   // ISO 8601 UTC
+	id: string; // uuid v4 via crypto.randomUUID
+	displayName: string; // <= 200 chars
+	lat: number; // 52.3..52.7 (Berlin Bbox)
+	lng: number; // 13.0..13.8
+	bezirk?: string;
+	postcode?: string;
+	createdAt: string; // ISO 8601 UTC
 }
 ```
 
@@ -56,13 +56,13 @@ Validation via `valibot`-Schema in `src/lib/state/bookmark-schema.ts`. Reject-Pa
 
 ## Failure-Modi
 
-| Szenario | Verhalten |
-|----------|-----------|
-| `QuotaExceededError` beim Schreiben | In-Memory-State bleibt aktiv, Inline-Banner "Speicher nicht verfügbar" im Dialog. |
-| Private-Mode `SecurityError` | gleicher Pfad wie Quota-Fehler. |
-| Korrupter JSON-Inhalt | Empty fallback, console.warn, Storage NICHT überschrieben (Recovery via Reload nach Browser-Restart möglich). |
-| Schema-Version-Mismatch | Empty fallback + Warn (siehe Migrationspfad). |
-| SSR-Aufruf | `loadBookmarks(null)` liefert leeres Store. |
+| Szenario                            | Verhalten                                                                                                     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `QuotaExceededError` beim Schreiben | In-Memory-State bleibt aktiv, Inline-Banner "Speicher nicht verfügbar" im Dialog.                             |
+| Private-Mode `SecurityError`        | gleicher Pfad wie Quota-Fehler.                                                                               |
+| Korrupter JSON-Inhalt               | Empty fallback, console.warn, Storage NICHT überschrieben (Recovery via Reload nach Browser-Restart möglich). |
+| Schema-Version-Mismatch             | Empty fallback + Warn (siehe Migrationspfad).                                                                 |
+| SSR-Aufruf                          | `loadBookmarks(null)` liefert leeres Store.                                                                   |
 
 ## Cross-Tab-Sync
 

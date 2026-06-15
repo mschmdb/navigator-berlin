@@ -47,7 +47,7 @@
 			onmouseenter={onMouseEnter}
 			onmouseleave={onMouseLeave}
 			onkeydown={onKeydown}
-			class="inline-flex items-baseline gap-1 font-mono text-[10px] uppercase tracking-wide text-ink border border-rule rounded-sm px-1.5 py-0.5 hover:bg-bg-muted focus:outline-none focus:ring-2 focus:ring-accent"
+			class="hover:bg-bg-muted inline-flex items-baseline gap-1 rounded-sm border border-rule px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink uppercase focus:ring-2 focus:ring-accent focus:outline-none"
 			data-testid={`${testid}-trigger`}
 		>
 			<Info aria-hidden="true" class="h-3 w-3 self-center" />
@@ -57,7 +57,7 @@
 			role="tooltip"
 			id={tooltipId}
 			data-testid={`${testid}-tooltip`}
-			class="font-serif italic text-[10px] text-ink-muted"
+			class="font-serif text-[10px] text-ink-muted italic"
 			class:sr-only={!tooltipVisible}
 		>
 			{tooltip}

@@ -54,10 +54,7 @@ interface NormalizedSource {
 	updatedAt?: string;
 }
 
-function normalizeFromHit(
-	weight: LayerWeight,
-	hit: LayerHitLike
-): NormalizedSource {
+function normalizeFromHit(weight: LayerWeight, hit: LayerHitLike): NormalizedSource {
 	const { normalize } = weight;
 	let normalized: number | null = null;
 	let rawValue: unknown = hit.value;
@@ -88,7 +85,11 @@ function normalizeFromHit(
 			normalized = normalizeNumericInverted(rawValue, normalize.bestAt, normalize.worstAt);
 			break;
 		case 'numeric':
-			normalized = normalizeNumeric(getProp(hit.value, normalize.field), normalize.minAt, normalize.maxAt);
+			normalized = normalizeNumeric(
+				getProp(hit.value, normalize.field),
+				normalize.minAt,
+				normalize.maxAt
+			);
 			// rawValue bleibt das ganze hit.value-Objekt (index + ggf. delikte), damit der Inspector
 			// die Delikt-Aufschlüsselung rendern kann (Story 14.4). normalizedValue kommt aus `field`.
 			rawValue = hit.value;
@@ -211,10 +212,7 @@ function weightedAverage(sources: readonly DimensionSource[]): number | null {
 	return Math.round((sum / total) * 10) / 10;
 }
 
-export function computeDimensionScore(
-	config: DimensionConfig,
-	input: ScoreInput
-): DimensionScore {
+export function computeDimensionScore(config: DimensionConfig, input: ScoreInput): DimensionScore {
 	const dataStands: string[] = [];
 	const missingData: string[] = [];
 

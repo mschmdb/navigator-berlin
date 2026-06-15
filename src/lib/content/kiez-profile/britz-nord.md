@@ -2,9 +2,9 @@
 slug: britz-nord
 name: Britz Nord
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 7c0f89da0113d540
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Britz Nord fällt bei Ruhe und Luft mit 41,9 unter den Bezirksschnitt und unter den Berliner Median. Beim Gesamtscore erreicht der Kiez 39 und Rang 75 von 143. Die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad.

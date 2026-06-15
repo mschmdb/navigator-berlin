@@ -70,26 +70,23 @@
 <JsonLd data={itemListJsonLd} testid="ranking-itemlist-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="ranking-breadcrumb-jsonld" />
 
-<article
-	class="mx-auto max-w-4xl space-y-10 px-4 py-10"
-	data-testid="ranking-page"
->
+<article class="mx-auto max-w-4xl space-y-10 px-4 py-10" data-testid="ranking-page">
 	<header class="space-y-4">
 		<h1 class="font-serif text-3xl text-ink md:text-4xl">Umwelt- & Infrastruktur-Score</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
 			Berliner Kieze und Bezirke nach fünf gleichgewichteten Dimensionen sortiert. Der Score misst
-			Umwelt und Infrastruktur eines Kiezes, nicht den sozialen Status. Er bündelt öffentliche
-			Daten pro Planungsraum. Eine einzelne Adresse kann davon abweichen.
+			Umwelt und Infrastruktur eines Kiezes, nicht den sozialen Status. Er bündelt öffentliche Daten
+			pro Planungsraum. Eine einzelne Adresse kann davon abweichen.
 		</p>
 	</header>
 
 	<aside
 		data-testid="ranking-editorial-disclaimer"
-		class="rounded border border-rule bg-bg-soft px-4 py-3 font-serif text-base text-ink-muted"
+		class="bg-bg-soft rounded border border-rule px-4 py-3 font-serif text-base text-ink-muted"
 		role="note"
 	>
-		Der Score fasst öffentliche Senats-Daten pro LOR-Bezirksregion zusammen. Was sich
-		gut anfühlt, bemisst sich an persönlichen Prioritäten. Vergleich, nicht Urteil.
+		Der Score fasst öffentliche Senats-Daten pro LOR-Bezirksregion zusammen. Was sich gut anfühlt,
+		bemisst sich an persönlichen Prioritäten. Vergleich, nicht Urteil.
 	</aside>
 
 	<Accordion.Root type="single" class="border-y border-rule">
@@ -102,15 +99,12 @@
 					Wie wird der Score berechnet?
 				</Accordion.Trigger>
 			</Accordion.Header>
-			<Accordion.Content
-				class="pb-4 font-serif text-base leading-relaxed text-ink-muted"
-			>
+			<Accordion.Content class="pb-4 font-serif text-base leading-relaxed text-ink-muted">
 				Wir aggregieren fünf Dimensionen: Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung,
-				Wohnschutz. Quelle pro Dimension sind offene Senats-Daten (Lärmkartierung,
-				Grünversorgung, Klima-Atlas, ÖPNV-Halte, Milieuschutzgebiete, POI-Distanzen). Die
-				Aggregation läuft 542 LOR-Planungsräume → 143 LOR-Bezirksregionen →
-				12 Bezirke, jeweils flächengewichtet. Jede Dimension wird gleich
-				gewichtet (5 × 20%). Sozialstruktur wird bewusst nicht gewertet.
+				Wohnschutz. Quelle pro Dimension sind offene Senats-Daten (Lärmkartierung, Grünversorgung,
+				Klima-Atlas, ÖPNV-Halte, Milieuschutzgebiete, POI-Distanzen). Die Aggregation läuft 542
+				LOR-Planungsräume → 143 LOR-Bezirksregionen → 12 Bezirke, jeweils flächengewichtet. Jede
+				Dimension wird gleich gewichtet (5 × 20%). Sozialstruktur wird bewusst nicht gewertet.
 				<a class="text-accent underline" href="/methodik/kiez-score">
 					Vollständige Methodik · Kiez-Score
 				</a>.

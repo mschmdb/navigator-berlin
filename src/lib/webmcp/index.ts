@@ -7,10 +7,7 @@
  * - `src/routes/webmcp-manifest.json/+server.ts` ruft `buildWebMcpManifest()` für Doppel-Serving
  */
 
-export {
-	registerWebMcpServer,
-	loadMcpBGlobalPolyfill
-} from './adapter.js';
+export { registerWebMcpServer, loadMcpBGlobalPolyfill } from './adapter.js';
 export type {
 	WebMcpServerConfig,
 	WebMcpServerHandle,

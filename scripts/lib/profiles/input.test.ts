@@ -9,7 +9,9 @@ const BASE: ProfileInput = {
 	einwohner: 12000,
 	flaecheHa: 80,
 	composite: { score: 55, rang: 70, total: 143 },
-	dims: [{ label: 'Grün & Hitze', score: 72, rang: 12, total: 143, bezirkMean: 65, berlinMedian: 58 }],
+	dims: [
+		{ label: 'Grün & Hitze', score: 72, rang: 12, total: 143, bezirkMean: 65, berlinMedian: 58 }
+	],
 	facts: { gruenanlagen: 75, dominantWohnlage: 'mittel' }
 };
 

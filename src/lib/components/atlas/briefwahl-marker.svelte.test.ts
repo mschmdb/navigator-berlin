@@ -30,7 +30,9 @@ describe('briefwahl-marker', () => {
 			showBadge: true,
 			methodikHref: '/x#y'
 		});
-		await expect.element(page.getByTestId('briefwahl-marker-trigger')).toHaveAttribute('href', '/x#y');
+		await expect
+			.element(page.getByTestId('briefwahl-marker-trigger'))
+			.toHaveAttribute('href', '/x#y');
 	});
 
 	it('Tooltip ist aria-describedby-verknüpft', async () => {

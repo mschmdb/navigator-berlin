@@ -93,7 +93,5 @@ export function getLayerStrategy(slug: string, geometryType: string): LayerStrat
 
 /** Layer die tatsächlich vorberechnet werden (alles außer point-density/not-aggregatable). */
 export function isPrecomputed(strategy: LayerStrategy): boolean {
-	return (
-		strategy.type !== 'point-density' && strategy.type !== 'not-aggregatable'
-	);
+	return strategy.type !== 'point-density' && strategy.type !== 'not-aggregatable';
 }

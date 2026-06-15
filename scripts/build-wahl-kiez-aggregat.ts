@@ -4,10 +4,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { sql, eq, and } from 'drizzle-orm';
 import { closeDb, getDb } from '../src/lib/server/db/index.js';
-import {
-	wahl as wahlTable,
-	wahlAggregatKiez
-} from '../src/lib/server/db/schema/index.js';
+import { wahl as wahlTable, wahlAggregatKiez } from '../src/lib/server/db/schema/index.js';
 import { ManifestSchema } from './lib/manifest.js';
 import { GEO_SOURCES, WAHL_TO_GEO } from './wahlen/lib/sbb-geo-sources.js';
 import { WAHL_SOURCES } from './wahlen/lib/sources.js';

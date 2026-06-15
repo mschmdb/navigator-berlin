@@ -12,7 +12,12 @@ export {
 	findTemplatesForScope,
 	type LoadedTemplateBundle
 } from './loader.js';
-export { renderTemplate, canRender, type RenderedTemplate, type TemplateContext } from './renderer.js';
+export {
+	renderTemplate,
+	canRender,
+	type RenderedTemplate,
+	type TemplateContext
+} from './renderer.js';
 export {
 	buildKiezTrendContext,
 	type KiezTrendInput,

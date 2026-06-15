@@ -402,9 +402,7 @@ describe('layer-hit-row.svelte', () => {
 			});
 			const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
 			expect(row.getAttribute('data-state')).toBe('coverage-out-of-scope');
-			const val = (await page
-				.getByTestId('value-coverage-out-of-scope')
-				.element()) as HTMLElement;
+			const val = (await page.getByTestId('value-coverage-out-of-scope').element()) as HTMLElement;
 			expect(val.textContent).toMatch(/Datensatz deckt diese Lage nicht ab/);
 		});
 

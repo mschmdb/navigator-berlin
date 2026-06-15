@@ -47,9 +47,7 @@ async function selectAddress(
 	matcher: RegExp
 ): Promise<void> {
 	await page.goto('/explore');
-	await page
-		.locator('[data-testid="map-skeleton"]')
-		.waitFor({ state: 'detached', timeout: 15000 });
+	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const input = page.getByRole('combobox');
 	await input.click();
 	await input.fill(query);

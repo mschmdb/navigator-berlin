@@ -23,28 +23,16 @@
 		</caption>
 		<thead class="bg-bg">
 			<tr>
-				<th
-					scope="col"
-					class="border-b border-rule px-3 py-2 text-left font-sans font-medium"
-				>
+				<th scope="col" class="border-b border-rule px-3 py-2 text-left font-sans font-medium">
 					Layer
 				</th>
-				<th
-					scope="col"
-					class="border-b border-rule px-3 py-2 text-left font-sans font-medium"
-				>
+				<th scope="col" class="border-b border-rule px-3 py-2 text-left font-sans font-medium">
 					Bundle
 				</th>
-				<th
-					scope="col"
-					class="border-b border-rule px-3 py-2 text-left font-sans font-medium"
-				>
+				<th scope="col" class="border-b border-rule px-3 py-2 text-left font-sans font-medium">
 					Stand
 				</th>
-				<th
-					scope="col"
-					class="border-b border-rule px-3 py-2 text-left font-sans font-medium"
-				>
+				<th scope="col" class="border-b border-rule px-3 py-2 text-left font-sans font-medium">
 					Lizenz
 				</th>
 			</tr>
@@ -55,7 +43,7 @@
 					<td class="px-3 py-2">
 						<a
 							href={`/layer/${layer.slug}`}
-							class="text-accent underline underline-offset-2 hover:text-accent-strong"
+							class="hover:text-accent-strong text-accent underline underline-offset-2"
 						>
 							{getLayerDisplayName(layer.slug)}
 						</a>

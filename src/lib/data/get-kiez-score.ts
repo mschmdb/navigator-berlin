@@ -3,11 +3,7 @@ import { point } from '@turf/helpers';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
 import { LRUCache } from 'lru-cache';
 import type { KiezScoreOutput } from '../../../scripts/lib/kiez-score/output-schema.js';
-import type {
-	KiezScore,
-	Modus,
-	NearestStopLike
-} from '../../../scripts/lib/kiez-score/types.js';
+import type { KiezScore, Modus, NearestStopLike } from '../../../scripts/lib/kiez-score/types.js';
 import { loadManifest } from './manifest.js';
 import { defaultLorIdFor } from '../../../scripts/lib/kiez-score/pipeline.js';
 
@@ -89,8 +85,7 @@ export async function loadLorFeatures(fetchFn: typeof fetch = fetch): Promise<Lo
 		}
 		const fc = (await res.json()) as FeatureCollection;
 		const polygons = (fc.features ?? []).filter(
-			(f): f is LorFeature =>
-				f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon'
+			(f): f is LorFeature => f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon'
 		);
 		lorCache = polygons;
 		lorInflight = null;
@@ -121,10 +116,7 @@ export interface MobilityOverride {
  * Wendet einen Mobilität-Override mit der exakten Adress-Distance auf das Baseline-LOR-Ergebnis an.
  * Die anderen drei Dimensionen bleiben unverändert (LOR-Centroid-Genauigkeit).
  */
-export function applyMobilityOverride(
-	baseline: KiezScore,
-	override: MobilityOverride
-): KiezScore {
+export function applyMobilityOverride(baseline: KiezScore, override: MobilityOverride): KiezScore {
 	const dimensions = baseline.dimensions.map((dim) => {
 		if (dim.dimension !== 'mobilitaet') return dim;
 		const sources = dim.sources.map((s) => {
@@ -150,9 +142,7 @@ export function applyMobilityOverride(
 		const value = total === 0 ? null : Math.round((sum / total) * 10) / 10;
 		return { ...dim, sources, value };
 	});
-	const missingDimensions = dimensions
-		.filter((d) => d.value === null)
-		.map((d) => d.dimension);
+	const missingDimensions = dimensions.filter((d) => d.value === null).map((d) => d.dimension);
 	return { ...baseline, dimensions, missingDimensions };
 }
 
@@ -177,10 +167,7 @@ export async function getKiezScore(
 	const cached = resultCache.get(key);
 	if (cached !== undefined) return cached.score;
 
-	const [scores, lors] = await Promise.all([
-		loadKiezScores(fetchFn),
-		loadLorFeatures(fetchFn)
-	]);
+	const [scores, lors] = await Promise.all([loadKiezScores(fetchFn), loadLorFeatures(fetchFn)]);
 	const lorId = findLorIdContaining(lat, lng, lors);
 	if (!lorId) {
 		resultCache.set(key, { score: null });

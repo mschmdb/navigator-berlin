@@ -13,8 +13,8 @@
 	<header class="space-y-2">
 		<h2 class="font-serif text-2xl text-ink md:text-3xl">12 Bezirke</h2>
 		<p class="font-serif text-base text-ink-muted">
-			Pro Bezirk: Steckbrief, Kiez-Score und Antworten auf die häufigsten Fragen.
-			Vier Einstiege hier, alle zwölf über die Suche erreichbar.
+			Pro Bezirk: Steckbrief, Kiez-Score und Antworten auf die häufigsten Fragen. Vier Einstiege
+			hier, alle zwölf über die Suche erreichbar.
 		</p>
 	</header>
 	<ul class="grid gap-4 md:grid-cols-2">
@@ -39,7 +39,7 @@
 	</ul>
 	<a
 		href="/umwelt-infrastruktur-score?view=bezirke"
-		class="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
+		class="inline-flex items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
 	>
 		Alle 12 im Vergleich
 		<ArrowUpRight size={14} aria-hidden="true" />

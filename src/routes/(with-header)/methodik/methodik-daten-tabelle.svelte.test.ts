@@ -50,7 +50,9 @@ describe('methodik-daten-tabelle.svelte', () => {
 	it('zeigt sourceUpdatedAt formatiert (Year-Month)', async () => {
 		render(MethodikDatenTabelle, { layers: [meta('laerm-2023')] });
 		const cells = document.querySelectorAll('[data-testid="methodik-daten-table"] td');
-		const text = Array.from(cells).map((c) => c.textContent ?? '').join(' ');
+		const text = Array.from(cells)
+			.map((c) => c.textContent ?? '')
+			.join(' ');
 		expect(text).toMatch(/2024/);
 	});
 

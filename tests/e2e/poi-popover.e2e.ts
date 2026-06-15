@@ -4,25 +4,19 @@ import { expect, test } from '@playwright/test';
 // Click-Action + Inspector-Scroll. axe-Snapshot ist im a11y.e2e.ts gebuendelt.
 
 test.beforeEach(async ({ page }) => {
-	await page.route('**/api/geocode**', (route) =>
-		route.fulfill({ json: { suggestions: [] } })
-	);
+	await page.route('**/api/geocode**', (route) => route.fulfill({ json: { suggestions: [] } }));
 	await page.route('**/_app/remote/**', (route) =>
 		route.fulfill({ json: { type: 'result', result: [] } })
 	);
 });
 
-test('Stolperstein-Layer aktiv: Pin-Sprite registriert (kein Console-Error)', async ({
-	page
-}) => {
+test('Stolperstein-Layer aktiv: Pin-Sprite registriert (kein Console-Error)', async ({ page }) => {
 	const errors: string[] = [];
 	page.on('console', (msg) => {
 		if (msg.type() === 'error') errors.push(msg.text());
 	});
 	await page.goto('/?layers=stolpersteine');
-	await page
-		.locator('[data-testid="map-skeleton"]')
-		.waitFor({ state: 'detached', timeout: 15000 });
+	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	await page.waitForTimeout(1200);
 	const missing = errors.find((e) => e.includes('navigator-pin-stolpersteine'));
 	expect(missing, `Pin-Sprite missing: ${missing}`).toBeFalsy();
@@ -30,9 +24,7 @@ test('Stolperstein-Layer aktiv: Pin-Sprite registriert (kein Console-Error)', as
 
 test('Hover ueber POI-Pin zeigt POI-Variant des Tooltips', async ({ page }) => {
 	await page.goto('/?layers=trinkbrunnen');
-	await page
-		.locator('[data-testid="map-skeleton"]')
-		.waitFor({ state: 'detached', timeout: 15000 });
+	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	await page.waitForTimeout(1500);
 	const tooltip = page.getByTestId('map-hover-tooltip');
 	const map = page.locator('[role="application"]').first();

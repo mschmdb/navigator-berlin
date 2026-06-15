@@ -18,7 +18,11 @@ import {
 } from '../../internal/schemas.js';
 import type { WebMcpToolDefinition } from '../../internal/tool-types.js';
 import type { JsonObject } from '../../internal/json-types.js';
-import type { WahlResultsAtPoint, WahlResultBundle, Top5Entry } from '$lib/data/get-wahl-results-at-point.js';
+import type {
+	WahlResultsAtPoint,
+	WahlResultBundle,
+	Top5Entry
+} from '$lib/data/get-wahl-results-at-point.js';
 
 export interface GetElectionResultDeps {
 	readonly fetchResultsAtPoint: (lat: number, lng: number) => Promise<WahlResultsAtPoint | null>;
@@ -50,7 +54,9 @@ function caveatsFor(bundle: WahlResultBundle, level: WahlLevel): string[] {
 		);
 	}
 	if (bundle.wahl.isRepeatElection) {
-		out.push('Wiederholungswahl. Ergebnisse weichen von der gerichtlich aufgehobenen Original-Wahl ab.');
+		out.push(
+			'Wiederholungswahl. Ergebnisse weichen von der gerichtlich aufgehobenen Original-Wahl ab.'
+		);
 	}
 	return out;
 }

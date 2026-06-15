@@ -2,9 +2,9 @@
 slug: alt-treptow
 name: Alt Treptow
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 7db0c44dd769a89d
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Kulturell ragt Alt Treptow heraus, rund 86 Punkte und Rang 17 von 143, weit über Bezirk und Berliner Median. Auch Ruhe und Luft punkten: Score 72,3, über dem Berliner Median. Die Lärmbelastung gilt als gering. Die Versorgung steht mit 64 klar über dem Bezirksschnitt.

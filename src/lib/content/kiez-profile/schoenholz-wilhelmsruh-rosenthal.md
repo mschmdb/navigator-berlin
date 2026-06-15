@@ -2,9 +2,9 @@
 slug: schoenholz-wilhelmsruh-rosenthal
 name: Schoenholz Wilhelmsruh Rosenthal
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 00c3d1a50648569c
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Schoenholz Wilhelmsruh Rosenthal zeigt seine Stärke bei Grün und Hitze mit 68,5 über dem Bezirksschnitt und über dem Berliner Median. Beim Gesamtscore erreicht der Kiez 38,4 und Rang 80 von 143. Die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 37 Grad.

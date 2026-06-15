@@ -28,14 +28,14 @@ Die Versorgungs-Dimension wird von „Daseinsvorsorge" zu **„Alltagsversorgung
 
 **Keine eigene Dimension.** Die interne Verteilung der Versorgungs-Dimension wird umgewichtet (Top-Level-Gewicht `versorgung` = 0.20 bleibt, `DIMENSION_WEIGHTS` unverändert, Score-Schema unverändert):
 
-| Term | vorher | neu |
-|------|--------|-----|
-| Kita (Erreichbarkeit + pro Kind) | 0.30 | 0.24 |
-| Schule (Grund + weiterführend) | 0.30 | 0.24 |
-| Krankenhaus (kapazitätsgewichtet) | 0.25 | 0.18 |
-| Spielplatz | 0.15 | 0.10 |
-| Nahversorgung (Lebensmittel 0.12 / Apotheke 0.07 / Post 0.05) | – | 0.24 |
-| Summe | 1.00 | 1.00 |
+| Term                                                          | vorher | neu  |
+| ------------------------------------------------------------- | ------ | ---- |
+| Kita (Erreichbarkeit + pro Kind)                              | 0.30   | 0.24 |
+| Schule (Grund + weiterführend)                                | 0.30   | 0.24 |
+| Krankenhaus (kapazitätsgewichtet)                             | 0.25   | 0.18 |
+| Spielplatz                                                    | 0.15   | 0.10 |
+| Nahversorgung (Lebensmittel 0.12 / Apotheke 0.07 / Post 0.05) | –      | 0.24 |
+| Summe                                                         | 1.00   | 1.00 |
 
 ### Anti-Stigma-Abgrenzung
 

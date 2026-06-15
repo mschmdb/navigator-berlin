@@ -10,8 +10,7 @@ import Tabs from './tabs.svelte';
 import AlertDialog from './alert-dialog.svelte';
 import Disclosure from './disclosure.svelte';
 
-const snip = (html = '<span>x</span>') =>
-	createRawSnippet(() => ({ render: () => html }));
+const snip = (html = '<span>x</span>') => createRawSnippet(() => ({ render: () => html }));
 
 const assertMounted = (result: { unmount: () => void }) => {
 	expect(result.unmount).toBeTypeOf('function');

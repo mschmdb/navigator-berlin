@@ -12,7 +12,12 @@ function makeScore(overrides: Partial<KiezScore> = {}): KiezScore {
 				dimension: 'ruhe-luft',
 				value: 80,
 				sources: [
-					{ layer: 'laerm-2023', rawValue: { kategorie: 'gering' }, normalizedValue: 100, weight: 0.4 }
+					{
+						layer: 'laerm-2023',
+						rawValue: { kategorie: 'gering' },
+						normalizedValue: 100,
+						weight: 0.4
+					}
 				],
 				missingData: [],
 				dataStand: '2024-01-01T00:00:00.000Z'
@@ -162,10 +167,14 @@ describe('KiezScoreSection', () => {
 		toggle.click();
 		await expect.element(page.getByTestId('kiez-score-delikte-kriminalitaet')).toBeInTheDocument();
 		// Roh-HZ je Delikt, deutsch formatiert (3467 → „3.467")
-		const kieztaten = (await page.getByTestId('kriminalitaet-delikt-kieztaten').element()) as HTMLElement;
+		const kieztaten = (await page
+			.getByTestId('kriminalitaet-delikt-kieztaten')
+			.element()) as HTMLElement;
 		expect(kieztaten.textContent).toContain('Kieztaten');
 		expect(kieztaten.textContent).toContain('3.467');
-		const wohnraum = (await page.getByTestId('kriminalitaet-delikt-wohnraumeinbruch').element()) as HTMLElement;
+		const wohnraum = (await page
+			.getByTestId('kriminalitaet-delikt-wohnraumeinbruch')
+			.element()) as HTMLElement;
 		expect(wohnraum.textContent).toContain('Wohnraumeinbruch');
 		// Stigma-Disclaimer erscheint aufgeklappt im Accordion
 		await expect.element(page.getByTestId('kiez-score-delikte-kriminalitaet')).toBeInTheDocument();

@@ -86,7 +86,12 @@ describe('buildWahlSlug', () => {
 	});
 
 	it('Round-trip parse↔build konsistent', () => {
-		const slugs = ['2025-btw-zweitstimme', '2017-btw-erststimme', '2023-agh-zweitstimme', '2023-bvv'];
+		const slugs = [
+			'2025-btw-zweitstimme',
+			'2017-btw-erststimme',
+			'2023-agh-zweitstimme',
+			'2023-bvv'
+		];
 		for (const slug of slugs) {
 			const parsed = parseWahlSlug(slug);
 			expect(parsed).not.toBeNull();

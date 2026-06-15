@@ -13,7 +13,9 @@ describe('db:migrate (Story 2.0 AC-2)', () => {
 
 	it('initial migration creates all 6 expected tables', () => {
 		const sqlFiles = readdirSync(MIGRATIONS_DIR).filter((f) => f.endsWith('.sql'));
-		const allSql = sqlFiles.map((f) => readFileSync(resolve(MIGRATIONS_DIR, f), 'utf-8')).join('\n');
+		const allSql = sqlFiles
+			.map((f) => readFileSync(resolve(MIGRATIONS_DIR, f), 'utf-8'))
+			.join('\n');
 		const expected = [
 			'bezirk_stats',
 			'kiez_stats',
@@ -31,7 +33,9 @@ describe('db:migrate (Story 2.0 AC-2)', () => {
 
 	it('migrations declare FK constraints (kiez_stats + kiez_score → bezirk_stats)', () => {
 		const sqlFiles = readdirSync(MIGRATIONS_DIR).filter((f) => f.endsWith('.sql'));
-		const allSql = sqlFiles.map((f) => readFileSync(resolve(MIGRATIONS_DIR, f), 'utf-8')).join('\n');
+		const allSql = sqlFiles
+			.map((f) => readFileSync(resolve(MIGRATIONS_DIR, f), 'utf-8'))
+			.join('\n');
 		expect(allSql).toMatch(/kiez_stats_bezirk_slug_bezirk_stats_slug_fk/);
 		expect(allSql).toMatch(/kiez_score_bezirk_slug_bezirk_stats_slug_fk/);
 	});

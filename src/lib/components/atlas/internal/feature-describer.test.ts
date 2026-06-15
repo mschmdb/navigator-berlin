@@ -43,19 +43,20 @@ describe('describeFeature', () => {
 	});
 
 	it('Bezirk ohne einwohner → Fallback ohne Zahl', () => {
-		const out = describeFeature(
-			feature('bezirke', 'MultiPolygon', { name: 'Mitte' }),
-			{ ...baseLayer, slug: 'bezirke' }
-		);
+		const out = describeFeature(feature('bezirke', 'MultiPolygon', { name: 'Mitte' }), {
+			...baseLayer,
+			slug: 'bezirke'
+		});
 		expect(out.description).toBe('Bezirk: Mitte');
 	});
 
 	it('Lärm L_DEN → dB-Wert + Stand', () => {
-		const layer: LayerMetadata = { ...baseLayer, slug: 'laerm-den', fetchedAt: '2022-06-01T00:00:00Z' };
-		const out = describeFeature(
-			feature('laerm-den', 'Polygon', { value: 65 }),
-			layer
-		);
+		const layer: LayerMetadata = {
+			...baseLayer,
+			slug: 'laerm-den',
+			fetchedAt: '2022-06-01T00:00:00Z'
+		};
+		const out = describeFeature(feature('laerm-den', 'Polygon', { value: 65 }), layer);
 		expect(out.description).toMatch(/Lärmkarte/);
 		expect(out.description).toMatch(/65/);
 		expect(out.description).toMatch(/dB/);
@@ -103,10 +104,7 @@ describe('describeFeature', () => {
 
 	it('Unbekannter Slug → properties.name Fallback', () => {
 		const layer: LayerMetadata = { ...baseLayer, slug: 'unknown-layer' };
-		const out = describeFeature(
-			feature('unknown-layer', 'Polygon', { name: 'Etwas' }),
-			layer
-		);
+		const out = describeFeature(feature('unknown-layer', 'Polygon', { name: 'Etwas' }), layer);
 		expect(out.description).toBe('Etwas');
 	});
 

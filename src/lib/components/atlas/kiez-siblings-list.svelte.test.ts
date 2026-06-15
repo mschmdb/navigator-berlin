@@ -18,7 +18,10 @@ describe('kiez-siblings-list.svelte', () => {
 
 	it('rendert Links auf /kiez/{slug}', async () => {
 		render(KiezSiblingsList, { siblings: SIBLINGS, parentBezirkName: 'Pankow' });
-		const link = (await page.getByTestId('kiez-sibling-link').first().element()) as HTMLAnchorElement;
+		const link = (await page
+			.getByTestId('kiez-sibling-link')
+			.first()
+			.element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/kiez/buchholz');
 	});
 

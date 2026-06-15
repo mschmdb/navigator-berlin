@@ -74,10 +74,9 @@ describe('fetchSitemapUrls', () => {
 
 	it('liefert flache Liste wenn kein sitemapindex', async () => {
 		const mockFetch = async (): Promise<Response> => {
-			return new Response(
-				`<urlset><url><loc>https://x.test/single</loc></url></urlset>`,
-				{ status: 200 }
-			);
+			return new Response(`<urlset><url><loc>https://x.test/single</loc></url></urlset>`, {
+				status: 200
+			});
 		};
 		const urls = await fetchSitemapUrls('https://x.test', mockFetch as typeof fetch);
 		expect(urls).toEqual(['https://x.test/single']);

@@ -23,9 +23,7 @@ test.beforeEach(async ({ page }) => {
 
 async function selectAddress(page: import('@playwright/test').Page) {
 	await page.goto('/explore');
-	await page
-		.locator('[data-testid="map-skeleton"]')
-		.waitFor({ state: 'detached', timeout: 15000 });
+	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const input = page.getByRole('combobox');
 	await input.click();
 	await input.fill('Wörther');
@@ -41,9 +39,7 @@ test('Bookmark via Inspector-Toolbar speichern → Reload → Bookmark in Dialog
 	await page.getByTestId('inspector-bookmark-trigger').click();
 	await expect(page.getByTestId('inspector-bookmark-confirmation')).toBeVisible();
 	await page.reload();
-	await page
-		.locator('[data-testid="map-skeleton"]')
-		.waitFor({ state: 'detached', timeout: 15000 });
+	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	await page.getByTestId('header-bookmark-trigger').click();
 	await expect(page.getByTestId('bookmark-list')).toBeVisible();
 	await expect(page.getByTestId('bookmark-row')).toHaveCount(1);
@@ -73,9 +69,7 @@ test('Bookmark löschen → Liste leer + LocalStorage geleert', async ({ page })
 	await page.getByTestId('bookmark-delete').click();
 	await page.getByTestId('bookmark-confirm-delete').click();
 	await expect(page.getByTestId('bookmark-empty')).toBeVisible();
-	const stored = await page.evaluate(() =>
-		localStorage.getItem('navigator-berlin.bookmarks.v1')
-	);
+	const stored = await page.evaluate(() => localStorage.getItem('navigator-berlin.bookmarks.v1'));
 	expect(stored).not.toBeNull();
 	const parsed = JSON.parse(stored!);
 	expect(parsed.bookmarks).toEqual([]);

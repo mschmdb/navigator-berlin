@@ -18,7 +18,7 @@
 	class="flex flex-col gap-2 border-t border-b border-rule py-3"
 	data-testid="updates-filter"
 >
-	<p class="font-mono text-xs uppercase tracking-wide text-ink-subtle">Kategorien</p>
+	<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">Kategorien</p>
 	<ToggleGroup.Root
 		bind:value
 		type="multiple"
@@ -28,7 +28,7 @@
 		{#each UPDATE_CATEGORIES as cat (cat)}
 			<ToggleGroup.Item
 				value={cat}
-				class="inline-flex items-center border border-rule bg-bg-elevated px-3 py-1 font-sans text-sm text-ink hover:border-accent data-[state=on]:border-accent data-[state=on]:bg-accent-soft data-[state=on]:text-accent-strong"
+				class="data-[state=on]:text-accent-strong inline-flex items-center border border-rule bg-bg-elevated px-3 py-1 font-sans text-sm text-ink hover:border-accent data-[state=on]:border-accent data-[state=on]:bg-accent-soft"
 				data-testid="filter-toggle"
 				data-category={cat}
 			>

@@ -9,17 +9,13 @@
 	let { fetchedAt, sectorName }: Props = $props();
 </script>
 
-<section
-	data-testid="mauer-sektoren-detail"
-	data-osm-sourced="true"
-	class="flex flex-col gap-2"
->
+<section data-testid="mauer-sektoren-detail" data-osm-sourced="true" class="flex flex-col gap-2">
 	{#if sectorName}
 		<h4 class="font-serif text-base font-semibold text-ink">
 			{sectorName}
 		</h4>
 	{/if}
-	<p class="font-serif italic text-sm text-ink-muted">
+	<p class="font-serif text-sm text-ink-muted italic">
 		Historischer Stand: Berliner Mauer 1961 bis 1989. Geometrie aus OpenStreetMap-Community-Daten.
 	</p>
 	<a
@@ -27,7 +23,7 @@
 		href="https://www.berlin-mauer.de/"
 		target="_blank"
 		rel="noopener noreferrer"
-		class="inline-flex w-fit items-center gap-1 text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
+		class="hover:text-accent-strong inline-flex w-fit items-center gap-1 text-sm text-accent underline underline-offset-2"
 	>
 		<ExternalLink size={12} aria-hidden="true" />
 		<span>Berliner Mauer Gedenkstätte</span>

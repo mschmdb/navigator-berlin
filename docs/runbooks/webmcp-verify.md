@@ -31,15 +31,21 @@ Erwartung:
 
 ```json
 {
-  "spec_version": "0.3.0",
-  "tools": ["address_lookup", "cross_layer_query", "list_layers_at_point", "get_kiez_profile", "get_layer_metadata"],
-  "prompts": ["address_overview", "compare_kieze", "explain_layer"],
-  "resources": [
-    "navigator://address/current",
-    "navigator://layers/active",
-    "navigator://bezirk/{slug}",
-    "navigator://kiez/{slug}"
-  ]
+	"spec_version": "0.3.0",
+	"tools": [
+		"address_lookup",
+		"cross_layer_query",
+		"list_layers_at_point",
+		"get_kiez_profile",
+		"get_layer_metadata"
+	],
+	"prompts": ["address_overview", "compare_kieze", "explain_layer"],
+	"resources": [
+		"navigator://address/current",
+		"navigator://layers/active",
+		"navigator://bezirk/{slug}",
+		"navigator://kiez/{slug}"
+	]
 }
 ```
 
@@ -54,8 +60,8 @@ Wenn alle drei Listen die erwarteten Slugs liefern: Manifest-Pfad ist intakt.
 
    ```js
    await navigator.modelContext.callTool({
-     name: 'list_layers_at_point',
-     arguments: { lat: 52.5163, lng: 13.3777 }
+   	name: 'list_layers_at_point',
+   	arguments: { lat: 52.5163, lng: 13.3777 }
    });
    ```
 

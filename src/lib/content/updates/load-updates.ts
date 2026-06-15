@@ -26,9 +26,7 @@ export function extractSlugFromPath(path: string): string {
 	const filename = path.split('/').pop() ?? path;
 	const match = FILENAME_REGEX.exec(filename);
 	if (!match) {
-		throw new Error(
-			`Update-Datei verletzt Naming-Pattern YYYY-MM-DD-{slug}.md: ${path}`
-		);
+		throw new Error(`Update-Datei verletzt Naming-Pattern YYYY-MM-DD-{slug}.md: ${path}`);
 	}
 	return match[2] ?? '';
 }
@@ -43,9 +41,7 @@ export function parseUpdateModule(path: string, raw: string): UpdateEntry {
 	try {
 		parsed = matter(raw);
 	} catch (err) {
-		throw new Error(
-			`Update-MD-Parse-Fehler in ${path}: ${(err as Error).message}`
-		);
+		throw new Error(`Update-MD-Parse-Fehler in ${path}: ${(err as Error).message}`);
 	}
 	// gray-matter parsed YAML `2026-05-15` als JS-Date-Object. Coerce zurück zu ISO-String.
 	const normalised = normaliseDateFields(parsed.data);
@@ -67,9 +63,7 @@ export function parseUpdateModule(path: string, raw: string): UpdateEntry {
  * Konvertiert die `import.meta.glob`-Resultat-Map zu typed UpdateEntries.
  * Reihenfolge: chronologisch absteigend nach Frontmatter `date`.
  */
-export function loadUpdatesFromModules(
-	modules: Record<string, unknown>
-): UpdateEntry[] {
+export function loadUpdatesFromModules(modules: Record<string, unknown>): UpdateEntry[] {
 	const entries: UpdateEntry[] = [];
 	for (const [path, raw] of Object.entries(modules)) {
 		// README + nicht-Date-prefixed Files überspringen (Maintainer-Convention).
@@ -115,9 +109,6 @@ function normaliseDateFields(data: Record<string, unknown>): Record<string, unkn
 /**
  * Top-N neueste Entries. Wenn n > length, liefert alle.
  */
-export function latestUpdates(
-	entries: readonly UpdateEntry[],
-	n: number
-): UpdateEntry[] {
+export function latestUpdates(entries: readonly UpdateEntry[], n: number): UpdateEntry[] {
 	return sortByDateDesc(entries).slice(0, Math.max(0, n));
 }

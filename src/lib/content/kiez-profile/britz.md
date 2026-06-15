@@ -2,9 +2,9 @@
 slug: britz
 name: Britz
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 3cf188b074f53243
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Britz ist grün und ruhig. Bei Grün und Hitze erreicht das Gebiet einen Score von 68,7 und steht auf Rang 18 von 143. Ruhe und Luft kommen auf 72,2 und übertreffen den Berliner Median. Der Lärm bleibt gering. An heißen Tagen erreicht die gefühlte Temperatur rund 36 Grad.

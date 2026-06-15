@@ -8,10 +8,7 @@
 <script lang="ts">
 	import { Volume2, TreePine, Thermometer, Train, Home, Landmark, FileText } from '@lucide/svelte';
 	import type { Component } from 'svelte';
-	import {
-		HOME_LAYER_TEASERS,
-		type LayerTeaserIconKey
-	} from '$lib/content/home-layer-teasers.js';
+	import { HOME_LAYER_TEASERS, type LayerTeaserIconKey } from '$lib/content/home-layer-teasers.js';
 
 	interface Props {
 		/** Aktive Geo-Layer gesamt (aus MANIFEST via Server-Load → bleibt nie stale). */
@@ -35,21 +32,18 @@
 	<header class="space-y-2">
 		<h2 class="font-serif text-2xl text-ink md:text-3xl">{total} Datensätze</h2>
 		<p class="font-serif text-base text-ink-muted">
-			Sieben davon hier verkürzt, darunter die neuen Kontext-Schichten Kultur und Kriminalität.
-			Pro Schicht eine eigene Detail-Seite mit Methodik, Lizenz und Stand-Datum.
+			Sieben davon hier verkürzt, darunter die neuen Kontext-Schichten Kultur und Kriminalität. Pro
+			Schicht eine eigene Detail-Seite mit Methodik, Lizenz und Stand-Datum.
 		</p>
 	</header>
 	<ul class="grid gap-4 sm:grid-cols-2">
 		{#each HOME_LAYER_TEASERS as t (t.slug)}
 			{@const Icon = ICON_MAP[t.iconKey]}
 			<li class="rounded border border-rule p-4">
-				<a
-					href={`/layer/${t.slug}`}
-					class="flex flex-col gap-2 text-ink hover:text-accent"
-				>
+				<a href={`/layer/${t.slug}`} class="flex flex-col gap-2 text-ink hover:text-accent">
 					<span class="flex items-center gap-2">
 						<Icon size={16} aria-hidden="true" />
-						<span class="font-mono text-xs uppercase tracking-wider">{t.label}</span>
+						<span class="font-mono text-xs tracking-wider uppercase">{t.label}</span>
 					</span>
 					<span class="font-serif text-base leading-snug">{t.summary}</span>
 				</a>

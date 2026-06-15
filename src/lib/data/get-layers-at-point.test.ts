@@ -148,7 +148,7 @@ describe('getLayersAtPoint', () => {
 		const NEAR_POINT_LAT = 52.5147;
 		const NEAR_POINT_LNG = 13.38;
 		// ~600m südlich der Polygon-Südkante: außerhalb 50m-Fallback, innerhalb Bbox-Suche
-		const FAR_POINT_LAT = 52.510;
+		const FAR_POINT_LAT = 52.51;
 		const FAR_POINT_LNG = 13.38;
 
 		const patchManifestWithFallback = (km: number) => {
@@ -248,9 +248,7 @@ describe('getLayersAtPoint', () => {
 		};
 
 		it('Punkt INNERHALB coverageBbox: normaler Hit (kein coverage-out-of-scope)', async () => {
-			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [
-				13.3, 52.5, 13.41, 52.53
-			]);
+			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [13.3, 52.5, 13.41, 52.53]);
 			const fn = buildFetchMockWithManifest(patched);
 			const hits = await getLayersAtPoint(52.52, 13.38, fn as unknown as typeof fetch);
 			const wohnlage = hits.find((h) => h.layer === 'mietspiegel-wohnlage');
@@ -260,9 +258,7 @@ describe('getLayersAtPoint', () => {
 
 		it('Punkt AUSSERHALB coverageBbox: reason=coverage-out-of-scope', async () => {
 			// Coverage-Bbox: Mitte-Inner; Punkt: Außerhalb (Karow analog)
-			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [
-				13.3, 52.5, 13.41, 52.53
-			]);
+			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [13.3, 52.5, 13.41, 52.53]);
 			const fn = buildFetchMockWithManifest(patched);
 			const hits = await getLayersAtPoint(52.6, 13.48, fn as unknown as typeof fetch);
 			const wohnlage = hits.find((h) => h.layer === 'mietspiegel-wohnlage');
@@ -271,9 +267,7 @@ describe('getLayersAtPoint', () => {
 		});
 
 		it('Coverage-Check umgeht Feature-Fetch (keine GeoJSON-Datei-Anfrage)', async () => {
-			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [
-				13.3, 52.5, 13.41, 52.53
-			]);
+			const patched = patchManifestWithCoverage('mietspiegel-wohnlage', [13.3, 52.5, 13.41, 52.53]);
 			const fn = buildFetchMockWithManifest(patched);
 			await getLayersAtPoint(52.6, 13.48, fn as unknown as typeof fetch);
 			const wohnlageFetched = fn.mock.calls.some(

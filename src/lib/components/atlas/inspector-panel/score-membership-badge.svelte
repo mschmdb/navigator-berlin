@@ -28,7 +28,7 @@
 		<button
 			type="button"
 			data-testid="score-membership-link-{slug}"
-			class="inline-flex items-center gap-1 rounded-sm bg-severity-success-soft-bg px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-severity-success-soft hover:underline"
+			class="inline-flex items-center gap-1 rounded-sm bg-severity-success-soft-bg px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-severity-success-soft uppercase hover:underline"
 			onclick={() => onJump?.(dimension)}
 			title="Im Kiez-Score · {label} (zur Dimension springen)"
 		>
@@ -38,14 +38,17 @@
 	{:else}
 		<span
 			data-testid="score-membership-context-{slug}"
-			class="rounded-sm bg-bg px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+			class="rounded-sm bg-bg px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 		>
 			Kontext · nicht im Score
 		</span>
 	{/if}
 </div>
 {#if note}
-	<p class="mb-1 font-serif text-[11px] italic leading-snug text-ink-muted" data-testid="context-note-{slug}">
+	<p
+		class="mb-1 font-serif text-[11px] leading-snug text-ink-muted italic"
+		data-testid="context-note-{slug}"
+	>
 		{note}
 	</p>
 {/if}

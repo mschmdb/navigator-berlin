@@ -2,9 +2,9 @@
 slug: friedrichshagen
 name: Friedrichshagen
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 38df6426b0bedfe4
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Friedrichshagen zählt bei Ruhe und Luft zur Spitze. Der Score von 94,7 bringt den fünftbesten Rang von 143. Das liegt klar über dem Bezirksschnitt und weit über dem Berliner Median. Grün und Hitze fällt mit 61,7 über den Bezirksschnitt aus. Die gefühlte Temperatur an heißen Tagen liegt bei rund 33 Grad.

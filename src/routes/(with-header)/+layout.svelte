@@ -76,7 +76,4 @@
 	{@render children()}
 </main>
 
-<BookmarkDialog
-	showCompareAction={inComparePickMode}
-	onCompareSelect={handleCompareSelect}
-/>
+<BookmarkDialog showCompareAction={inComparePickMode} onCompareSelect={handleCompareSelect} />

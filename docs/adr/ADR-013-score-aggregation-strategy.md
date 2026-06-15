@@ -14,11 +14,11 @@ Epic 2.9a verlangt zusätzliche Score-Aggregate auf 143 LOR-Bezirksregionen + 12
 
 Drei Varianten wurden diskutiert:
 
-| Variante | Vorteile | Nachteile |
-|----------|----------|-----------|
-| A: Aggregation 542 → 143 → 12 | Single-Source 1.28; deterministisch; kein Drift | Aggregations-Helper neu, Flächen-Gewichte nötig |
-| B: Re-implement gegen Postgres-Aggregat | folgt Epic-Wortlaut wörtlich | doppelter Datenpfad, 1.28 wird obsolet |
-| C: Hybrid (1.28 für PLR/BR, neu für Bezirk) | minimal neuer Code | drei parallele Score-Logiken |
+| Variante                                    | Vorteile                                        | Nachteile                                       |
+| ------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
+| A: Aggregation 542 → 143 → 12               | Single-Source 1.28; deterministisch; kein Drift | Aggregations-Helper neu, Flächen-Gewichte nötig |
+| B: Re-implement gegen Postgres-Aggregat     | folgt Epic-Wortlaut wörtlich                    | doppelter Datenpfad, 1.28 wird obsolet          |
+| C: Hybrid (1.28 für PLR/BR, neu für Bezirk) | minimal neuer Code                              | drei parallele Score-Logiken                    |
 
 ## Decision
 

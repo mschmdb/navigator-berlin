@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-	parseTemplateFile,
-	loadTemplatesFromRawMap,
-	findTemplatesForScope
-} from './loader.js';
+import { parseTemplateFile, loadTemplatesFromRawMap, findTemplatesForScope } from './loader.js';
 
 const VALID_YAML = `
 bundle: wahl

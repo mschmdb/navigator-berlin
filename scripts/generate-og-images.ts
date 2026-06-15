@@ -154,7 +154,9 @@ function parseArgs(argv: readonly string[]): CliArgs {
 	return { type, slug, force };
 }
 
-async function readManifest(): Promise<{ layers: Array<LayerManifestEntry & { filename: string }> }> {
+async function readManifest(): Promise<{
+	layers: Array<LayerManifestEntry & { filename: string }>;
+}> {
 	const raw = await readFile(path.join(LAYERS_DIR, 'MANIFEST.json'), 'utf8');
 	return JSON.parse(raw) as { layers: Array<LayerManifestEntry & { filename: string }> };
 }
@@ -374,9 +376,8 @@ async function tryLoadWahlTargets(): Promise<WahlTarget[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
 		const { getWahlList } = await import('../src/lib/server/db/queries/wahl/get-wahl-list.js');
-		const { getResultsForBerlin } = await import(
-			'../src/lib/server/db/queries/wahl/get-results-for-berlin.js'
-		);
+		const { getResultsForBerlin } =
+			await import('../src/lib/server/db/queries/wahl/get-results-for-berlin.js');
 		const { parteiColor } = await import('../src/lib/data/partei-farben.js');
 		const wahlen = await getWahlList();
 		const TYP_LABELS = {
@@ -391,10 +392,7 @@ async function tryLoadWahlTargets(): Promise<WahlTarget[]> {
 		} as const;
 		const targets: WahlTarget[] = [];
 		for (const w of wahlen) {
-			const slug =
-				w.typ === 'bvv'
-					? `${w.jahr}-bvv`
-					: `${w.jahr}-${w.typ}-${w.stimmtyp}`;
+			const slug = w.typ === 'bvv' ? `${w.jahr}-bvv` : `${w.jahr}-${w.typ}-${w.stimmtyp}`;
 			const top = await getResultsForBerlin(w.id, 5);
 			const title =
 				w.typ === 'bvv'
@@ -558,7 +556,9 @@ async function main(): Promise<void> {
 		process.stdout.write(`[og:images] wahl/${t.slug}: ${r}\n`);
 	}
 
-	process.stdout.write(`[og:images] done: rendered=${rendered} cached=${cached} failed=${failed}\n`);
+	process.stdout.write(
+		`[og:images] done: rendered=${rendered} cached=${cached} failed=${failed}\n`
+	);
 
 	// Postgres-Pool explizit schließen, sonst hängt Node-Event-Loop und Script exit-t nie
 	if (process.env.DATABASE_URL) {

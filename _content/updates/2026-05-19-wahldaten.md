@@ -1,6 +1,6 @@
 ---
-title_de: "Wahldaten seit 2011"
-summary_de: "Vier Bundestags-, vier Abgeordnetenhaus- und vier BVV-Wahlen. Pro Adresse die stärkste Partei, pro Stimmbezirk eine Karte, pro Kiez der Verlauf über die Jahre."
+title_de: 'Wahldaten seit 2011'
+summary_de: 'Vier Bundestags-, vier Abgeordnetenhaus- und vier BVV-Wahlen. Pro Adresse die stärkste Partei, pro Stimmbezirk eine Karte, pro Kiez der Verlauf über die Jahre.'
 date: 2026-05-19
 category: feature
 tags: [wahlen, daten, btw, agh, bvv]

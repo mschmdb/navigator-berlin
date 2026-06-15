@@ -141,7 +141,7 @@ async function resolveContainingKiez(
 		const name = readKiezName(props);
 		if (!name) return;
 		const bezCode = readBezirkCode(props);
-		const bezirk = bezCode ? bezCodeToName.get(bezCode) ?? '' : '';
+		const bezirk = bezCode ? (bezCodeToName.get(bezCode) ?? '') : '';
 		named.push({ origIndex: i, ref: { name, bezirk } });
 	});
 

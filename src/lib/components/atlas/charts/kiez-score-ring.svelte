@@ -108,8 +108,8 @@
 			class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
 			aria-hidden="true"
 		>
-			<span class="font-mono text-[11px] uppercase tracking-wide text-ink-subtle">Gesamt</span>
-			<span class="font-mono text-4xl font-semibold leading-none text-ink">{overallText}</span>
+			<span class="font-mono text-[11px] tracking-wide text-ink-subtle uppercase">Gesamt</span>
+			<span class="font-mono text-4xl leading-none font-semibold text-ink">{overallText}</span>
 			<span class="font-mono text-[10px] text-ink-subtle">/ 100</span>
 		</div>
 	</div>

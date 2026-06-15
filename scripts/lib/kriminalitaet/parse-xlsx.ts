@@ -141,7 +141,9 @@ export function parseHzSheet(aoa: readonly SheetRow[], delikte: readonly DeliktS
 	for (const spec of delikte) {
 		const idx = header.findIndex((h) => h === spec.canonical);
 		if (idx === -1) {
-			throw new Error(`Kriminalitätsatlas: Delikt-Spalte "${spec.label}" nicht im Header gefunden.`);
+			throw new Error(
+				`Kriminalitätsatlas: Delikt-Spalte "${spec.label}" nicht im Header gefunden.`
+			);
 		}
 		colByKey.set(spec.key, idx);
 	}

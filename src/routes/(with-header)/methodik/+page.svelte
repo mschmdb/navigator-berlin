@@ -104,8 +104,7 @@
 		},
 		{
 			label: 'Algorithmisch generierte Layer-Texte',
-			reason:
-				'Layer-Beschreibungen schreiben wir manuell. Kein LLM-Output für Personen-Biografien.'
+			reason: 'Layer-Beschreibungen schreiben wir manuell. Kein LLM-Output für Personen-Biografien.'
 		},
 		{
 			label: 'Stadtweiter Einzel-Score',
@@ -138,31 +137,22 @@
 <JsonLd data={jsonLd} testid="methodik-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="methodik-breadcrumb-jsonld" />
 
-<article
-	data-testid="methodik-page"
-	class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
->
+<article data-testid="methodik-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-2">
-		<h1 data-testid="methodik-page-title" class="font-serif text-3xl text-ink">
-			Methodik
-		</h1>
+		<h1 data-testid="methodik-page-title" class="font-serif text-3xl text-ink">Methodik</h1>
 		<p class="font-serif text-lg leading-relaxed text-ink-muted">
 			{pageDescription}
 		</p>
 	</header>
 
-	<nav
-		data-testid="methodik-toc"
-		aria-label="Inhalt"
-		class="border border-rule bg-bg p-4"
-	>
-		<p class="mb-2 font-mono text-xs uppercase tracking-wide text-ink-subtle">Inhalt</p>
+	<nav data-testid="methodik-toc" aria-label="Inhalt" class="border border-rule bg-bg p-4">
+		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">Inhalt</p>
 		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
 					<a
 						href={`#${sec.id}`}
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						{sec.label}
 					</a>
@@ -174,9 +164,8 @@
 	<section id="mission" aria-labelledby="mission-h" class="flex flex-col gap-3">
 		<h2 id="mission-h" class="font-serif text-2xl text-ink">Worum es geht</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			navigator.berlin sammelt {layerCount} öffentliche Berliner Geo-Datensätze und zeigt pro
-			Adresse die zutreffenden Werte. Statisch ausgeliefert, ohne Cookies, ohne Login, ohne
-			Tracker.
+			navigator.berlin sammelt {layerCount} öffentliche Berliner Geo-Datensätze und zeigt pro Adresse
+			die zutreffenden Werte. Statisch ausgeliefert, ohne Cookies, ohne Login, ohne Tracker.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Die Idee: Daten lesbar machen, ohne sie zu einem „Wohn-Score" zu verdichten.
@@ -189,9 +178,9 @@
 		<h2 id="datenarchitektur-h" class="font-serif text-2xl text-ink">Datenarchitektur</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Beim Build-Schritt fetchen wir jeden Layer von der Quelle, reprojizieren auf EPSG:4326,
-			vereinfachen die Geometrie mit mapshaper und schreiben Hash plus Datenstand ins Manifest.
-			Zur Laufzeit liefert ein Punkt-im-Polygon-Lookup pro Adresse die zutreffenden Werte.
-			Keine Datenbank, kein API-Call zum Server.
+			vereinfachen die Geometrie mit mapshaper und schreiben Hash plus Datenstand ins Manifest. Zur
+			Laufzeit liefert ein Punkt-im-Polygon-Lookup pro Adresse die zutreffenden Werte. Keine
+			Datenbank, kein API-Call zum Server.
 		</p>
 		<MethodikPipelineDiagram />
 	</section>
@@ -204,9 +193,9 @@
 		<h2 id="aggregations-ebenen-h" class="font-serif text-2xl text-ink">Aggregations-Ebenen</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Nicht jeder Wert ist adressgenau. Lärm und Luft stammen aus Stadtteil-Statistiken
-			(LOR-Planungsraum, 538 Polygone). Bodenrichtwerte hängen am Häuserblock. Wer im
-			Inspector einen Lärm-Wert liest, sieht den Mittelwert für den ganzen Planungsraum, nicht
-			das eigene Schlafzimmer.
+			(LOR-Planungsraum, 538 Polygone). Bodenrichtwerte hängen am Häuserblock. Wer im Inspector
+			einen Lärm-Wert liest, sieht den Mittelwert für den ganzen Planungsraum, nicht das eigene
+			Schlafzimmer.
 		</p>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 			{#each aggregationLevels as agg (agg.level)}
@@ -219,15 +208,15 @@
 	<section id="was-ist-kiez" aria-labelledby="was-ist-kiez-h" class="flex flex-col gap-3">
 		<h2 id="was-ist-kiez-h" class="font-serif text-2xl text-ink">Was „Kiez" hier bedeutet</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Umgangssprachlich ist ein Kiez ein gefühltes Viertel, von den Bewohnern definiert, ohne
-			feste Grenze. Auf navigator.berlin meint „Kiez" dagegen eine amtliche Einheit: die
-			Lebensweltlich orientierte Raum-Bezirksregion (LOR-BZR, Stand 2021), 143 Stück.
+			Umgangssprachlich ist ein Kiez ein gefühltes Viertel, von den Bewohnern definiert, ohne feste
+			Grenze. Auf navigator.berlin meint „Kiez" dagegen eine amtliche Einheit: die Lebensweltlich
+			orientierte Raum-Bezirksregion (LOR-BZR, Stand 2021), 143 Stück.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Wir nutzen die LOR-Bezirksregion, weil nur sie eine klare, statistisch belegte Grenze hat,
-			an der alle Daten hängen. Dein gefühlter Kiez kann kleiner sein oder über mehrere
-			Bezirksregionen reichen. Die Werte auf einer Kiez-Seite gelten für die LOR-BZR, nicht für
-			eine einzelne Straße.
+			Wir nutzen die LOR-Bezirksregion, weil nur sie eine klare, statistisch belegte Grenze hat, an
+			der alle Daten hängen. Dein gefühlter Kiez kann kleiner sein oder über mehrere Bezirksregionen
+			reichen. Die Werte auf einer Kiez-Seite gelten für die LOR-BZR, nicht für eine einzelne
+			Straße.
 		</p>
 	</section>
 
@@ -254,56 +243,48 @@
 			<a
 				href="/methodik/kiez-score"
 				data-testid="methodik-kiez-score-link"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>/methodik/kiez-score</a
 			>
 		</p>
-		<h3 class="font-serif text-xl text-ink mt-2">MSS 2025 als neutraler Kontext</h3>
+		<h3 class="mt-2 font-serif text-xl text-ink">MSS 2025 als neutraler Kontext</h3>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Das Monitoring Soziale Stadtentwicklung der Senatsverwaltung Berlin liefert pro
-			Planungsraum einen Gesamtindex aus Status (Einkommen, Beschäftigung, Bildung) und
-			Dynamik (Veränderung). Seit der Score-Neuordnung fließt es nicht mehr in den Score ein.
-			Wir zeigen es als neutralen Kontext-Layer, nur den Aggregat-Wert, nicht die
-			Einzel-Indikatoren wie Arbeitslosen-Quote oder Transferbezugs-Anteil. Einzelwerte wären auf
-			Adress-Ebene schärfer und stigmatisierender.
+			Das Monitoring Soziale Stadtentwicklung der Senatsverwaltung Berlin liefert pro Planungsraum
+			einen Gesamtindex aus Status (Einkommen, Beschäftigung, Bildung) und Dynamik (Veränderung).
+			Seit der Score-Neuordnung fließt es nicht mehr in den Score ein. Wir zeigen es als neutralen
+			Kontext-Layer, nur den Aggregat-Wert, nicht die Einzel-Indikatoren wie Arbeitslosen-Quote oder
+			Transferbezugs-Anteil. Einzelwerte wären auf Adress-Ebene schärfer und stigmatisierender.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Niedriger Status bedeutet nicht „schlechter Kiez". Die Stufe spiegelt strukturelle
-			Unterschiede, keine Wohnqualität. Choropleth-Farben sind neutral gehalten, kein
-			Rot-Grün. Quelle: SenStadt MSS 2025, Lizenz dl-de/zero-2-0.
+			Unterschiede, keine Wohnqualität. Choropleth-Farben sind neutral gehalten, kein Rot-Grün.
+			Quelle: SenStadt MSS 2025, Lizenz dl-de/zero-2-0.
 		</p>
 	</section>
 
-	<section
-		id="wahldaten-section"
-		aria-labelledby="wahldaten-section-h"
-		class="flex flex-col gap-3"
-	>
+	<section id="wahldaten-section" aria-labelledby="wahldaten-section-h" class="flex flex-col gap-3">
 		<h2 id="wahldaten-section-h" class="font-serif text-2xl text-ink">Wahldaten</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Bundestags-, Abgeordnetenhaus- und BVV-Wahlen seit 2011 mit Aggregaten auf
-			vier Ebenen: Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk und Berlin gesamt.
-			Quellen sind Bundeswahlleiterin (BTW) und Amt für Statistik
-			Berlin-Brandenburg (AGH + BVV). Werte beschreiben Stimmenanteile, keine
-			Bewertung.
+			Bundestags-, Abgeordnetenhaus- und BVV-Wahlen seit 2011 mit Aggregaten auf vier Ebenen:
+			Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk und Berlin gesamt. Quellen sind
+			Bundeswahlleiterin (BTW) und Amt für Statistik Berlin-Brandenburg (AGH + BVV). Werte
+			beschreiben Stimmenanteile, keine Bewertung.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Spezialfälle dokumentieren wir transparent: Briefwahl-Asymmetrie pre-2021
-			(Stimmbezirks-Werte ohne Briefstimmen), Wiederholungswahlen 2023 mit
-			Original-Wahl-Verweis, Coverage-Lücken pre-2017 ohne Stimmbezirks-Geometrie.
+			Spezialfälle dokumentieren wir transparent: Briefwahl-Asymmetrie pre-2021 (Stimmbezirks-Werte
+			ohne Briefstimmen), Wiederholungswahlen 2023 mit Original-Wahl-Verweis, Coverage-Lücken
+			pre-2017 ohne Stimmbezirks-Geometrie.
 		</p>
 		<p class="font-mono text-xs text-ink-muted">
 			Vollständige Methodik:
 			<a
 				href="/methodik/wahldaten"
 				data-testid="methodik-wahldaten-link"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>/methodik/wahldaten</a
 			>
 			·
-			<a
-				href="/wahl"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+			<a href="/wahl" class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>Übersicht aller Wahlen</a
 			>
 		</p>
@@ -345,12 +326,12 @@
 			Personen-Biografien gehören zur Primärquelle stolpersteine-berlin.de.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			navigator.berlin nennt keinen Mietpreis und gibt keine rechtliche Auskunft. Den
-			gesetzlichen Wohnlagen-Mietspiegel liefert mietspiegel.berlin.de.
+			navigator.berlin nennt keinen Mietpreis und gibt keine rechtliche Auskunft. Den gesetzlichen
+			Wohnlagen-Mietspiegel liefert mietspiegel.berlin.de.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Aggregierte Werte sind Stadtteil-Mittel, keine Wohnungs-Eigenschaften. Wir verzichten
-			bewusst auf einen „Berlin-Score" und zeigen keine Bezirks-Rankings.
+			Aggregierte Werte sind Stadtteil-Mittel, keine Wohnungs-Eigenschaften. Wir verzichten bewusst
+			auf einen „Berlin-Score" und zeigen keine Bezirks-Rankings.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Layer-Texte schreiben wir manuell. Kein Layer-Inhalt wird per LLM zusammengefasst, keine
@@ -376,8 +357,7 @@
 		<p class="font-mono text-xs text-ink-muted">
 			Vollständige Auflistung: <a
 				href="/lizenzen"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
-				>/lizenzen</a
+				class="hover:text-accent-strong text-accent underline underline-offset-2">/lizenzen</a
 			>
 		</p>
 	</section>
@@ -390,7 +370,7 @@
 		<p class="font-mono text-sm">
 			<a
 				href={`mailto:${FEEDBACK_EMAIL}?subject=Methodik-Feedback`}
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
 				{FEEDBACK_EMAIL}
 			</a>

@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-	buildKiezeInBezirk,
-	pickTop,
-	pickSiblings,
-	type KiezRef
-} from './get-kieze-in-bezirk.js';
+import { buildKiezeInBezirk, pickTop, pickSiblings, type KiezRef } from './get-kieze-in-bezirk.js';
 
 const fc = {
 	features: [

@@ -94,9 +94,7 @@ describe('methodik +page.svelte', () => {
 
 	it('rendert Pipeline-Diagram', async () => {
 		render(Page, { data: { manifest: sampleManifest } });
-		await expect
-			.element(page.getByTestId('methodik-pipeline-diagram'))
-			.toBeInTheDocument();
+		await expect.element(page.getByTestId('methodik-pipeline-diagram')).toBeInTheDocument();
 	});
 
 	it('rendert JSON-LD-Schema TechArticle', async () => {

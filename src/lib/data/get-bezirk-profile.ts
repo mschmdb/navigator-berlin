@@ -47,9 +47,7 @@ export async function getBezirkProfile(
 	const flaecheRaw = props.FLAECHE_HA ?? props.flaeche_ha;
 	const einwohner = typeof einwohnerRaw === 'number' ? einwohnerRaw : 0;
 	const flaecheHa =
-		typeof flaecheRaw === 'number'
-			? flaecheRaw
-			: Math.round(turfArea(feature) / 10000);
+		typeof flaecheRaw === 'number' ? flaecheRaw : Math.round(turfArea(feature) / 10000);
 
 	return {
 		slug: normalized,

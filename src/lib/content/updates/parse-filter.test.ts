@@ -51,8 +51,6 @@ describe('serializeCategoryFilter', () => {
 	});
 
 	it('Multi alphabetisch sortiert', () => {
-		expect(serializeCategoryFilter(new Set(['methodik', 'feature']))).toBe(
-			'feature,methodik'
-		);
+		expect(serializeCategoryFilter(new Set(['methodik', 'feature']))).toBe('feature,methodik');
 	});
 });

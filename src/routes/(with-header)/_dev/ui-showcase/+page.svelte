@@ -11,8 +11,8 @@
 	</header>
 
 	<p class="mb-8 max-w-[64ch] text-base text-ink">
-		Adressgenaue Multi-Layer-Inspektion für Berlin: Klima, Lärm, Mobilität, Heritage,
-		demografische Daten auf einer Karte.
+		Adressgenaue Multi-Layer-Inspektion für Berlin: Klima, Lärm, Mobilität, Heritage, demografische
+		Daten auf einer Karte.
 	</p>
 
 	<div class="mb-12 flex flex-wrap items-center gap-3">
@@ -24,17 +24,22 @@
 			{#snippet trigger()}
 				<span
 					class="inline-flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center border border-rule-strong px-4 py-2 text-base text-ink hover:bg-bg-elevated"
-				>Dialog öffnen</span>
+					>Dialog öffnen</span
+				>
 			{/snippet}
 			{#snippet children()}
 				<h2 class="mb-2 font-serif text-2xl text-ink">Dialog-Beispiel</h2>
-				<p class="text-ink-muted">Kein Overlay-Dimmer (UX-DR33). Heading + Schrift trennen Figur/Grund.</p>
+				<p class="text-ink-muted">
+					Kein Overlay-Dimmer (UX-DR33). Heading + Schrift trennen Figur/Grund.
+				</p>
 			{/snippet}
 		</Dialog>
 
 		<Tooltip>
 			{#snippet trigger()}
-				<span class="cursor-help text-accent underline-offset-2 hover:underline">Hover für Tooltip</span>
+				<span class="cursor-help text-accent underline-offset-2 hover:underline"
+					>Hover für Tooltip</span
+				>
 			{/snippet}
 			{#snippet children()}
 				Inline-Hinweis im Plex-Mini-Style
@@ -51,7 +56,9 @@
 
 	<div class="mb-12">
 		<h2 class="mb-3 font-serif text-2xl text-ink">Code (Plex Mono)</h2>
-		<pre class="border border-rule p-3 font-mono text-sm text-ink"><code>const navigator = 'berlin';</code></pre>
+		<pre class="border border-rule p-3 font-mono text-sm text-ink"><code
+				>const navigator = 'berlin';</code
+			></pre>
 		<p class="tabular mt-3 text-base">Tabular: 1234567890 · 12.345,67 €</p>
 	</div>
 

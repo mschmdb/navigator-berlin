@@ -38,7 +38,11 @@ export const explainLayerPrompt: PromptTemplate = {
 	description:
 		'Explain a single navigator.berlin data layer (by slug) to a non-expert: source, license, methodology, gaps, citations.',
 	arguments: [
-		{ name: 'slug', description: 'Layer slug, e.g. `laerm-2023` or `wohnlagen-2024`.', required: true }
+		{
+			name: 'slug',
+			description: 'Layer slug, e.g. `laerm-2023` or `wohnlagen-2024`.',
+			required: true
+		}
 	],
 	render
 };

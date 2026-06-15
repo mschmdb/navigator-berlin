@@ -26,11 +26,41 @@
 			? {
 					persona: 'allgemein',
 					dimensions: [
-						{ dimension: 'ruhe-luft', value: featured.ruheLuft, sources: [], missingData: [], dataStand: null },
-						{ dimension: 'gruen-hitze', value: featured.gruenHitze, sources: [], missingData: [], dataStand: null },
-						{ dimension: 'mobilitaet', value: featured.mobilitaet, sources: [], missingData: [], dataStand: null },
-						{ dimension: 'versorgung', value: featured.versorgung, sources: [], missingData: [], dataStand: null },
-						{ dimension: 'wohnschutz', value: featured.wohnschutz, sources: [], missingData: [], dataStand: null }
+						{
+							dimension: 'ruhe-luft',
+							value: featured.ruheLuft,
+							sources: [],
+							missingData: [],
+							dataStand: null
+						},
+						{
+							dimension: 'gruen-hitze',
+							value: featured.gruenHitze,
+							sources: [],
+							missingData: [],
+							dataStand: null
+						},
+						{
+							dimension: 'mobilitaet',
+							value: featured.mobilitaet,
+							sources: [],
+							missingData: [],
+							dataStand: null
+						},
+						{
+							dimension: 'versorgung',
+							value: featured.versorgung,
+							sources: [],
+							missingData: [],
+							dataStand: null
+						},
+						{
+							dimension: 'wohnschutz',
+							value: featured.wohnschutz,
+							sources: [],
+							missingData: [],
+							dataStand: null
+						}
 					],
 					...(featured.composite !== null ? { overall: featured.composite } : {}),
 					missingDimensions: []
@@ -70,8 +100,8 @@
 				data-testid="home-featured-score-placeholder"
 				aria-hidden="true"
 			>
-				<span class="font-mono text-xs uppercase tracking-wide text-ink-subtle">Gesamt</span>
-				<span class="font-mono text-5xl font-semibold leading-none text-ink"
+				<span class="font-mono text-xs tracking-wide text-ink-subtle uppercase">Gesamt</span>
+				<span class="font-mono text-5xl leading-none font-semibold text-ink"
 					>{Math.round(featured.composite ?? 0)}</span
 				>
 				<span class="font-mono text-xs text-ink-subtle">/ 100</span>
@@ -79,7 +109,7 @@
 		{/if}
 		<a
 			href={featured.exploreHref}
-			class="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-accent hover:text-ink"
+			class="inline-flex items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
 		>
 			{featured.displayName} auf der Karte
 			<ArrowUpRight size={14} aria-hidden="true" />

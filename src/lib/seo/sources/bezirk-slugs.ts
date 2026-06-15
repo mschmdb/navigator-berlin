@@ -29,11 +29,12 @@ export async function readBezirkSlugsFromGeoJson(): Promise<string[]> {
 	const slugs = new Set<string>();
 	for (const feature of fc.features) {
 		const props = feature.properties ?? {};
-		const name = typeof props.Gemeinde_name === 'string'
-			? props.Gemeinde_name
-			: typeof props.NAME === 'string'
-				? props.NAME
-				: null;
+		const name =
+			typeof props.Gemeinde_name === 'string'
+				? props.Gemeinde_name
+				: typeof props.NAME === 'string'
+					? props.NAME
+					: null;
 		if (!name) continue;
 		slugs.add(normalizeSlug(name));
 	}

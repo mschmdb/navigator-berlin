@@ -21,7 +21,12 @@ interface OverpassWay {
 interface OverpassRelation {
 	type: 'relation';
 	id: number;
-	members?: Array<{ type: string; ref: number; role: string; geometry?: Array<{ lat: number; lon: number }> }>;
+	members?: Array<{
+		type: string;
+		ref: number;
+		role: string;
+		geometry?: Array<{ lat: number; lon: number }>;
+	}>;
 	center?: { lat: number; lon: number };
 	tags?: Record<string, string>;
 }

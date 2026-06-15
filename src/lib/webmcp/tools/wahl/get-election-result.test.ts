@@ -30,8 +30,20 @@ function makeBundle(jahr: number, isRepeat = false): WahlResultBundle {
 		},
 		uwbId: '075-01-100-0',
 		levels: {
-			stimmbezirk: { available: true, top5: makeTop([['CDU', 0.3], ['SPD', 0.25]]) },
-			kiez: { available: true, top5: makeTop([['SPD', 0.3], ['GRÜNE', 0.25]]) },
+			stimmbezirk: {
+				available: true,
+				top5: makeTop([
+					['CDU', 0.3],
+					['SPD', 0.25]
+				])
+			},
+			kiez: {
+				available: true,
+				top5: makeTop([
+					['SPD', 0.3],
+					['GRÜNE', 0.25]
+				])
+			},
 			bezirk: { available: true, top5: makeTop([['SPD', 0.28]]) },
 			berlin: { available: true, top5: makeTop([['CDU', 0.22]]) }
 		}

@@ -48,9 +48,9 @@ describe('isResidentialLocation', () => {
 	});
 
 	it('returns false for Kleingarten SF-KGA', () => {
-		expect(
-			isResidentialLocation([brwHit('SF-KGA - Sonstige Flächen - Kleingartenfläche')])
-		).toBe(false);
+		expect(isResidentialLocation([brwHit('SF-KGA - Sonstige Flächen - Kleingartenfläche')])).toBe(
+			false
+		);
 	});
 
 	it('returns false for Gewerbe G', () => {
@@ -89,8 +89,6 @@ describe('isResidentialLocation', () => {
 	});
 
 	it('finds residential hit alongside non-residential hits', () => {
-		expect(
-			isResidentialLocation([otherHit('milieuschutz'), brwHit('W - Wohngebiet')])
-		).toBe(true);
+		expect(isResidentialLocation([otherHit('milieuschutz'), brwHit('W - Wohngebiet')])).toBe(true);
 	});
 });

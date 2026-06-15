@@ -69,7 +69,10 @@ export async function getWahlbezirkAtPoint(
 	const pt = point([lng, lat]);
 
 	for (const { featureIndex } of candidates) {
-		const feature = fc.features[featureIndex] as Feature<Polygon | MultiPolygon, Record<string, unknown>>;
+		const feature = fc.features[featureIndex] as Feature<
+			Polygon | MultiPolygon,
+			Record<string, unknown>
+		>;
 		if (!feature?.geometry) continue;
 		if (!booleanPointInPolygon(pt, feature)) continue;
 		const props = normalizeProps(feature.properties ?? {});

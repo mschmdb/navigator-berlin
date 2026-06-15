@@ -83,7 +83,10 @@ const BEZIRK_DISPLAY_NAMES: Record<string, string> = {
 function tryGet<T>(loader: () => Promise<T>): Promise<T | null> {
 	return loader().catch((err) => {
 		// eslint-disable-next-line no-console
-		console.warn('[llms-data-collector] DB-fetch failed, falling back to null:', err instanceof Error ? err.message : err);
+		console.warn(
+			'[llms-data-collector] DB-fetch failed, falling back to null:',
+			err instanceof Error ? err.message : err
+		);
 		return null;
 	});
 }
@@ -118,11 +121,16 @@ async function collectKieze(): Promise<LlmsKiezEntry[]> {
 	const { kiezStats } = await import('$lib/server/db/schema/index.js');
 	let rows: { slug: string; bezirkSlug: string }[] = [];
 	try {
-		const all = await getDb().select({ slug: kiezStats.slug, bezirkSlug: kiezStats.bezirkSlug }).from(kiezStats);
+		const all = await getDb()
+			.select({ slug: kiezStats.slug, bezirkSlug: kiezStats.bezirkSlug })
+			.from(kiezStats);
 		rows = all;
 	} catch (err) {
 		// eslint-disable-next-line no-console
-		console.warn('[llms-data-collector] kiez-stats list failed, empty list:', err instanceof Error ? err.message : err);
+		console.warn(
+			'[llms-data-collector] kiez-stats list failed, empty list:',
+			err instanceof Error ? err.message : err
+		);
 		return [];
 	}
 
@@ -215,15 +223,9 @@ async function collectWahlen(origin: string): Promise<LlmsWahlEntry[]> {
 		for (const w of wahlen) {
 			const slug = parentIdToSlug.get(w.id) ?? `${w.jahr}-${w.typ}-${w.stimmtyp}`;
 			const typLabel =
-				w.typ === 'btw'
-					? 'Bundestagswahl'
-					: w.typ === 'agh'
-						? 'Abgeordnetenhauswahl'
-						: 'BVV-Wahl';
+				w.typ === 'btw' ? 'Bundestagswahl' : w.typ === 'agh' ? 'Abgeordnetenhauswahl' : 'BVV-Wahl';
 			const stimmTeil =
-				w.typ === 'bvv'
-					? ''
-					: ` · ${w.stimmtyp === 'erststimme' ? 'Erststimme' : 'Zweitstimme'}`;
+				w.typ === 'bvv' ? '' : ` · ${w.stimmtyp === 'erststimme' ? 'Erststimme' : 'Zweitstimme'}`;
 			const title = `${typLabel} ${w.jahr}${stimmTeil}${w.isRepeatElection ? ' · Wiederholung' : ''}`;
 			const sourceName = w.sourceUrl.includes('bundeswahlleiterin')
 				? 'Bundeswahlleiterin'
@@ -271,14 +273,20 @@ export async function collectLlmsData(
 		bezirke = await collectBezirke();
 	} catch (err) {
 		// eslint-disable-next-line no-console
-		console.warn('[llms-data-collector] bezirke collection failed:', err instanceof Error ? err.message : err);
+		console.warn(
+			'[llms-data-collector] bezirke collection failed:',
+			err instanceof Error ? err.message : err
+		);
 	}
 
 	try {
 		kieze = await collectKieze();
 	} catch (err) {
 		// eslint-disable-next-line no-console
-		console.warn('[llms-data-collector] kieze collection failed:', err instanceof Error ? err.message : err);
+		console.warn(
+			'[llms-data-collector] kieze collection failed:',
+			err instanceof Error ? err.message : err
+		);
 	}
 
 	const layer = collectLayer(manifest);

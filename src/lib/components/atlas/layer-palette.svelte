@@ -25,11 +25,7 @@
 		forceBreakpoint?: boolean;
 	};
 
-	let {
-		layers = [],
-		initialBreakpoint = 'desktop',
-		forceBreakpoint = false
-	}: Props = $props();
+	let { layers = [], initialBreakpoint = 'desktop', forceBreakpoint = false }: Props = $props();
 
 	const ui = getUiState();
 
@@ -87,8 +83,8 @@
 
 	const frequentLayers = $derived.by(() => {
 		const bySlug = new Map(layers.map((l) => [l.slug, l] as const));
-		return FREQUENT_SLUGS.map((slug) => bySlug.get(slug)).filter(
-			(l): l is LayerMetadata => Boolean(l)
+		return FREQUENT_SLUGS.map((slug) => bySlug.get(slug)).filter((l): l is LayerMetadata =>
+			Boolean(l)
 		);
 	});
 
@@ -131,7 +127,7 @@
 </script>
 
 {#snippet paletteBody()}
-	<header class="flex items-start justify-between gap-3 border-b border-rule px-4 pb-3 pt-2">
+	<header class="flex items-start justify-between gap-3 border-b border-rule px-4 pt-2 pb-3">
 		<div>
 			<h2 class="font-serif text-xl text-ink">Layer auswählen</h2>
 			<p class="text-xs text-ink-subtle">
@@ -167,7 +163,9 @@
 	<div class="flex-1 overflow-y-auto px-4 py-3">
 		{#if showEmptyState && frequentLayers.length > 0}
 			<section data-testid="palette-frequent" class="mb-4">
-				<h3 class="mb-2 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ink-muted">
+				<h3
+					class="mb-2 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ink-muted"
+				>
 					<Clock size={14} aria-hidden="true" /> Meistgenutzt
 				</h3>
 				<ul class="space-y-1.5">
@@ -181,7 +179,7 @@
 								aria-pressed={isOn}
 								onclick={() => onToggle(layer.slug)}
 								class={[
-									'flex w-full min-h-[44px] items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
+									'flex min-h-[44px] w-full items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
 									isOn && 'bg-accent-soft'
 								]
 									.filter(Boolean)
@@ -197,7 +195,9 @@
 		{/if}
 		{#if isMobile && recentLayers.length > 0 && !searchQuery}
 			<section data-testid="palette-recent" class="mb-4">
-				<h3 class="mb-2 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ink-muted">
+				<h3
+					class="mb-2 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ink-muted"
+				>
 					<Clock size={14} aria-hidden="true" /> Zuletzt verwendet
 				</h3>
 				<ul class="space-y-1.5">
@@ -212,7 +212,7 @@
 								aria-pressed={isOn}
 								onclick={() => onToggle(layer.slug)}
 								class={[
-									'flex w-full min-h-[44px] items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
+									'flex min-h-[44px] w-full items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
 									isOn && 'bg-accent-soft'
 								]
 									.filter(Boolean)
@@ -223,7 +223,7 @@
 									{#if subline}
 										<span
 											data-testid={`palette-subline-${layer.slug}`}
-											class="font-serif text-xs italic leading-snug text-ink-subtle"
+											class="font-serif text-xs leading-snug text-ink-subtle italic"
 										>
 											{subline}
 										</span>
@@ -238,7 +238,7 @@
 		{/if}
 
 		{#if groups.length === 0 && hasQuery}
-			<p data-testid="palette-empty" class="py-6 text-center font-serif italic text-ink-subtle">
+			<p data-testid="palette-empty" class="py-6 text-center font-serif text-ink-subtle italic">
 				Kein Layer matched „{searchQuery}".
 			</p>
 		{:else if groups.length > 0}
@@ -248,7 +248,7 @@
 					data-bundle={group.bundle}
 					class="mb-4"
 				>
-					<h3 class="mb-2 font-sans text-sm font-medium uppercase tracking-wide text-ink-muted">
+					<h3 class="mb-2 font-sans text-sm font-medium tracking-wide text-ink-muted uppercase">
 						{group.label}
 					</h3>
 					<ul class="space-y-1.5">
@@ -263,7 +263,7 @@
 									aria-pressed={isOn}
 									onclick={() => onToggle(layer.slug)}
 									class={[
-										'flex w-full min-h-[44px] items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
+										'flex min-h-[44px] w-full items-start justify-between gap-2 rounded-sm border border-rule px-3 py-2 text-left text-sm hover:bg-bg',
 										isOn && 'bg-accent-soft'
 									]
 										.filter(Boolean)
@@ -274,7 +274,7 @@
 										{#if subline}
 											<span
 												data-testid={`palette-subline-${layer.slug}`}
-												class="font-serif text-xs italic leading-snug text-ink-subtle"
+												class="font-serif text-xs leading-snug text-ink-subtle italic"
 											>
 												{subline}
 											</span>
@@ -326,7 +326,7 @@
 		data-testid="layer-palette"
 		data-variant="dialog"
 		tabindex="-1"
-		class="fixed left-1/2 top-1/2 z-50 flex max-h-[80vh] w-[600px] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md border border-rule-strong bg-bg-elevated text-ink"
+		class="fixed top-1/2 left-1/2 z-50 flex max-h-[80vh] w-[600px] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md border border-rule-strong bg-bg-elevated text-ink"
 	>
 		{@render paletteBody()}
 	</div>

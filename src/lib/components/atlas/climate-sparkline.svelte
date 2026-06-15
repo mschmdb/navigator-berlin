@@ -8,11 +8,7 @@
 	import DataTableAlternative, { type TableColumn } from './data-table-alternative.svelte';
 	import { linearRegression } from '$lib/utils/regression.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import {
-		NORMAL_OLD,
-		NORMAL_NEW,
-		getNormalperiodMean
-	} from '$lib/utils/normalperiod.js';
+	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '$lib/utils/normalperiod.js';
 
 	type Props = {
 		series: readonly YearValue[];
@@ -92,20 +88,14 @@
 			: `Min: ${stats.min} · Max: ${stats.max} · Latest: ${stats.latest} ${unit}`
 	);
 
-	const normalOldMean = $derived(
-		getNormalperiodMean(points, NORMAL_OLD.from, NORMAL_OLD.to)
-	);
-	const normalNewMean = $derived(
-		getNormalperiodMean(points, NORMAL_NEW.from, NORMAL_NEW.to)
-	);
+	const normalOldMean = $derived(getNormalperiodMean(points, NORMAL_OLD.from, NORMAL_OLD.to));
+	const normalNewMean = $derived(getNormalperiodMean(points, NORMAL_NEW.from, NORMAL_NEW.to));
 
 	function formatMean(n: number): string {
 		return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(n);
 	}
 
-	const chartId = $derived(
-		`sparkline-${metric}-${stationName.replace(/\W+/g, '-').toLowerCase()}`
-	);
+	const chartId = $derived(`sparkline-${metric}-${stationName.replace(/\W+/g, '-').toLowerCase()}`);
 	const titleId = $derived(`chart-title-${chartId}`);
 	const descId = $derived(`chart-desc-${chartId}`);
 
@@ -161,7 +151,7 @@
 		{SHORT_LABELS[metric]}
 	</h4>
 	<p
-		class="mb-1 font-serif text-xs italic text-ink-subtle"
+		class="mb-1 font-serif text-xs text-ink-subtle italic"
 		data-testid="climate-sparkline-definition"
 	>
 		{DEFINITIONS[metric]}
@@ -177,7 +167,7 @@
 		data-chart-id={chartId}
 		data-focused-index={focusedIndex}
 		onkeydown={onKeydown}
-		class="climate-sparkline-figure relative block w-full focus:outline focus:outline-2 focus:outline-rule-strong focus:outline-offset-2"
+		class="climate-sparkline-figure relative block w-full focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-rule-strong"
 	>
 		<span id={descId} class="sr-only">{description}</span>
 		<span class="sr-only">{TITLES[metric]}</span>
@@ -223,24 +213,14 @@
 						<Tooltip.Root>
 							<Tooltip.Header value={String(data.year)} />
 							<Tooltip.List>
-								<Tooltip.Item
-									label={SHORT_LABELS[metric]}
-									value={`${data.value} ${unit}`}
-								/>
-								<Tooltip.Item
-									label="Trend"
-									value={`${Math.round(data.trend)} ${unit}`}
-								/>
+								<Tooltip.Item label={SHORT_LABELS[metric]} value={`${data.value} ${unit}`} />
+								<Tooltip.Item label="Trend" value={`${Math.round(data.trend)} ${unit}`} />
 							</Tooltip.List>
 						</Tooltip.Root>
 					{/if}
 				{/snippet}
 			</LineChart>
-			<span
-				data-testid="sparkline-annotation-latest"
-				class="sr-only"
-				aria-hidden="true"
-			>
+			<span data-testid="sparkline-annotation-latest" class="sr-only" aria-hidden="true">
 				{stats.latest}
 			</span>
 		{/if}
@@ -251,7 +231,7 @@
 			onclick={() => (detailsOpen = !detailsOpen)}
 			aria-expanded={detailsOpen}
 			data-testid="climate-sparkline-details-toggle"
-			class="mt-1 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wide text-ink-muted hover:text-ink"
+			class="mt-1 inline-flex items-center gap-1 font-mono text-[11px] tracking-wide text-ink-muted uppercase hover:text-ink"
 		>
 			{detailsOpen ? 'Werte & Tabelle verbergen' : 'Werte & Tabelle'}
 		</button>

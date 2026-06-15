@@ -140,7 +140,9 @@ describe('buildLlmsTxt', () => {
 		const txt = buildLlmsTxt(ctx);
 		// llmstxt.org Format: `- [name](url): description`
 		expect(txt).toMatch(/-\s+\[Mitte\]\(https:\/\/navigator\.berlin\/bezirk\/mitte\)/);
-		expect(txt).toMatch(/-\s+\[Boxhagener Kiez\]\(https:\/\/navigator\.berlin\/kiez\/boxhagener-kiez\)/);
+		expect(txt).toMatch(
+			/-\s+\[Boxhagener Kiez\]\(https:\/\/navigator\.berlin\/kiez\/boxhagener-kiez\)/
+		);
 		expect(txt).toMatch(/-\s+\[Lärm 2023\]\(https:\/\/navigator\.berlin\/layer\/laerm-2023\)/);
 	});
 

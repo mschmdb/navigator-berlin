@@ -20,7 +20,15 @@ describe('isOverpassResponse', () => {
 describe('overpassToGeoJSON', () => {
 	it('node → Point-Feature mit Tags als Properties', () => {
 		const out = overpassToGeoJSON({
-			elements: [{ type: 'node', id: 1, lat: 52.5, lon: 13.4, tags: { name: 'X', amenity: 'drinking_water' } }]
+			elements: [
+				{
+					type: 'node',
+					id: 1,
+					lat: 52.5,
+					lon: 13.4,
+					tags: { name: 'X', amenity: 'drinking_water' }
+				}
+			]
 		});
 		expect(out.type).toBe('FeatureCollection');
 		expect(out.features).toHaveLength(1);
@@ -142,12 +150,21 @@ describe('overpassToGeoJSON', () => {
 	it('Relation mit center → Point', () => {
 		const out = overpassToGeoJSON({
 			elements: [
-				{ type: 'relation', id: 13, center: { lat: 52.6, lon: 13.5 }, tags: { amenity: 'pharmacy' } }
+				{
+					type: 'relation',
+					id: 13,
+					center: { lat: 52.6, lon: 13.5 },
+					tags: { amenity: 'pharmacy' }
+				}
 			]
 		});
 		expect(out.features).toHaveLength(1);
 		expect(out.features[0].geometry).toEqual({ type: 'Point', coordinates: [13.5, 52.6] });
-		expect(out.features[0].properties).toEqual({ osmId: 13, osmType: 'relation', amenity: 'pharmacy' });
+		expect(out.features[0].properties).toEqual({
+			osmId: 13,
+			osmType: 'relation',
+			amenity: 'pharmacy'
+		});
 	});
 
 	it('Relation ohne center wird ignoriert', () => {

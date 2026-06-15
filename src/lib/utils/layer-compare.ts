@@ -181,12 +181,7 @@ function formatDelta(n: number): string {
 	return n.toLocaleString('de-DE', { maximumFractionDigits: 1 });
 }
 
-function compareNumeric(
-	slug: string,
-	a: number,
-	b: number,
-	lowerIsBetter: boolean
-): CompareResult {
+function compareNumeric(slug: string, a: number, b: number, lowerIsBetter: boolean): CompareResult {
 	if (Math.abs(a - b) < EQUALITY_TOLERANCE) return { direction: 'equal' };
 	const aBetter = lowerIsBetter ? a < b : a > b;
 	const diff = Math.abs(a - b);
@@ -236,7 +231,12 @@ function rankFor(slug: string, value: string): { rank: number; ranking: readonly
 	return rank >= 0 ? { rank, ranking } : null;
 }
 
-function compareOrdinal(slug: string, a: string, b: string, higherIsBetter: boolean): CompareResult {
+function compareOrdinal(
+	slug: string,
+	a: string,
+	b: string,
+	higherIsBetter: boolean
+): CompareResult {
 	const ra = rankFor(slug, a);
 	const rb = rankFor(slug, b);
 	if (!ra || !rb) return { direction: 'not-comparable' };
@@ -272,8 +272,10 @@ function compareCategorical(slug: string, a: unknown, b: unknown): CompareResult
 				'Milieuschutz wirkt ambivalent: Schutz für Bewohner, kann aber Umzugschancen mindern.'
 		};
 	}
-	const aKey = extractCategoricalKey(slug, a) ?? (a !== null && a !== undefined ? JSON.stringify(a) : null);
-	const bKey = extractCategoricalKey(slug, b) ?? (b !== null && b !== undefined ? JSON.stringify(b) : null);
+	const aKey =
+		extractCategoricalKey(slug, a) ?? (a !== null && a !== undefined ? JSON.stringify(a) : null);
+	const bKey =
+		extractCategoricalKey(slug, b) ?? (b !== null && b !== undefined ? JSON.stringify(b) : null);
 	if (!aPresent && !bPresent) return { direction: 'equal' };
 	if (aKey !== null && bKey !== null && aKey === bKey) return { direction: 'equal' };
 	return { direction: 'not-comparable' };
@@ -300,7 +302,8 @@ function compareDistance(a: number | null, b: number | null): CompareResult {
 function compareCount(a: unknown, b: unknown): CompareResult {
 	const ca = extractCount(a);
 	const cb = extractCount(b);
-	const advisory = 'Erinnerungs-Layer, kein Wohn-Score. Würde der Opfer steht über Vergleichbarkeit.';
+	const advisory =
+		'Erinnerungs-Layer, kein Wohn-Score. Würde der Opfer steht über Vergleichbarkeit.';
 	if (ca === null && cb === null) return { direction: 'not-comparable', advisory };
 	return {
 		direction: 'not-comparable',
@@ -309,11 +312,7 @@ function compareCount(a: unknown, b: unknown): CompareResult {
 	};
 }
 
-export function compareLayerValues(
-	slug: string,
-	valueA: unknown,
-	valueB: unknown
-): CompareResult {
+export function compareLayerValues(slug: string, valueA: unknown, valueB: unknown): CompareResult {
 	const profile = getCompareProfile(slug);
 
 	switch (profile) {

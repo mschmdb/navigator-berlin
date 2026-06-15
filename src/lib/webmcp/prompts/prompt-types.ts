@@ -19,8 +19,5 @@ export interface PromptTemplate {
 	readonly name: string;
 	readonly description: string;
 	readonly arguments: readonly PromptArgumentDescriptor[];
-	readonly render: (
-		args: Record<string, string | undefined>,
-		locale: PromptLocale
-	) => string;
+	readonly render: (args: Record<string, string | undefined>, locale: PromptLocale) => string;
 }

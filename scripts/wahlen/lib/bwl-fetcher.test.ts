@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import AdmZip from 'adm-zip';
-import {
-	extractBwlWbzCsv,
-	findBwlWbzCsvEntry,
-	BWL_BTW25_WBZ_CSV_NAME
-} from './bwl-fetcher.js';
+import { extractBwlWbzCsv, findBwlWbzCsvEntry, BWL_BTW25_WBZ_CSV_NAME } from './bwl-fetcher.js';
 
 function buildFixtureZip(entries: Array<{ name: string; content: string }>): Buffer {
 	const zip = new AdmZip();

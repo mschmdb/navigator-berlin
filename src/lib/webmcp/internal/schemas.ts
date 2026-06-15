@@ -341,8 +341,7 @@ export const GET_ELECTION_RESULT_INPUT_JSON_SCHEMA = {
 		lng: { type: 'number', minimum: -180, maximum: 180 },
 		election_slug: {
 			type: 'string',
-			pattern:
-				'^\\d{4}-(btw-(erststimme|zweitstimme)|agh-(erststimme|zweitstimme)|bvv)$'
+			pattern: '^\\d{4}-(btw-(erststimme|zweitstimme)|agh-(erststimme|zweitstimme)|bvv)$'
 		},
 		level: { type: 'string', enum: ['stimmbezirk', 'kiez', 'bezirk', 'berlin'] }
 	},
@@ -386,8 +385,7 @@ export const COMPARE_ELECTIONS_INPUT_JSON_SCHEMA = {
 			type: 'array',
 			items: {
 				type: 'string',
-				pattern:
-					'^\\d{4}-(btw-(erststimme|zweitstimme)|agh-(erststimme|zweitstimme)|bvv)$'
+				pattern: '^\\d{4}-(btw-(erststimme|zweitstimme)|agh-(erststimme|zweitstimme)|bvv)$'
 			},
 			minItems: 2,
 			maxItems: 8

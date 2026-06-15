@@ -20,17 +20,18 @@ Story 1.2 Acceptance Criterion AC-7 setzt verbindliche Schwellenwerte und ordnet
 
 **Token-Hex-Werte verifiziert** (relative Luminance per WCAG 2.x Formel, gerechnet gegen `--bg #ECEAE0` (L ca. 0.822) als Standard-Hintergrund):
 
-| Token | Hex (final) | Ratio vs `--bg` | WCAG-Soll | Status | Anpassung |
-|-------|-------------|-----------------|-----------|--------|-----------|
-| `--ink` | `#141414` | ca. 16.0:1 | ≥7 AAA Body, ≥4.5 AA | ✓ AAA | keine |
-| `--ink-muted` | `#4A4A46` | ca. 7.5:1 | ≥7 AAA Grenze | ✓ AAA | keine |
-| `--ink-subtle` | `#5F5F5A` | ca. 5.3:1 | ≥4.5 AA Body-Text | ✓ AA | Story-Spec `#6F6F6A` (4.1:1) auf `#5F5F5A` (5.3:1) angehoben (AC-7 Mandat) |
-| `--rule` | `#C8C6BB` | ca. 1.5:1 | dekorativ, keine UI-Komponente | ✓ | keine |
-| `--rule-strong` | `#74726A` | ca. 4.0:1 | ≥3 SC 1.4.11 | ✓ | Story-Spec `#989488` (2.5:1) auf `#74726A` (4.0:1) abgedunkelt (AC-7 Mandat) |
-| `--accent` | `#2A3F7C` | ca. 8.4:1 | ≥7 AAA Link | ✓ AAA | keine |
-| `--focus` | `#0030C8` | ca. 9.1:1 | ≥9 Focus-Ring | ✓ | keine |
+| Token           | Hex (final) | Ratio vs `--bg` | WCAG-Soll                      | Status | Anpassung                                                                    |
+| --------------- | ----------- | --------------- | ------------------------------ | ------ | ---------------------------------------------------------------------------- |
+| `--ink`         | `#141414`   | ca. 16.0:1      | ≥7 AAA Body, ≥4.5 AA           | ✓ AAA  | keine                                                                        |
+| `--ink-muted`   | `#4A4A46`   | ca. 7.5:1       | ≥7 AAA Grenze                  | ✓ AAA  | keine                                                                        |
+| `--ink-subtle`  | `#5F5F5A`   | ca. 5.3:1       | ≥4.5 AA Body-Text              | ✓ AA   | Story-Spec `#6F6F6A` (4.1:1) auf `#5F5F5A` (5.3:1) angehoben (AC-7 Mandat)   |
+| `--rule`        | `#C8C6BB`   | ca. 1.5:1       | dekorativ, keine UI-Komponente | ✓      | keine                                                                        |
+| `--rule-strong` | `#74726A`   | ca. 4.0:1       | ≥3 SC 1.4.11                   | ✓      | Story-Spec `#989488` (2.5:1) auf `#74726A` (4.0:1) abgedunkelt (AC-7 Mandat) |
+| `--accent`      | `#2A3F7C`   | ca. 8.4:1       | ≥7 AAA Link                    | ✓ AAA  | keine                                                                        |
+| `--focus`       | `#0030C8`   | ca. 9.1:1       | ≥9 Focus-Ring                  | ✓      | keine                                                                        |
 
 **Adjustment-Rationale:**
+
 - `--ink-subtle` ist Body-Text in MetaFooter + Tertiary-Hints. AA-Pflicht 4.5:1. Story-Wert `#6F6F6A` lag bei 4.1:1, failte.
 - `--rule-strong` ist UI-Component-Border (Buttons-Secondary, Dialog/Sheet/Popover, ToggleGroup, Tooltip-Border). SC 1.4.11 Pflicht 3:1. Story-Wert `#989488` lag bei 2.5:1, failte.
 - Logo-SVGs (`static/favicon.svg` + `static/logo-mark.svg`) nutzen `#2A3F7C` (accent) + `#ECEAE0` (bg), beide unverändert, kein SVG-Update nötig.

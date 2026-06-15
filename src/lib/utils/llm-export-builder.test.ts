@@ -166,7 +166,7 @@ const NEAREST_STOPS: Record<Modus, NearestStop | null> = {
 	ubahn: { name: 'U Frankfurter Tor', lat: 52.515, lng: 13.464, distanceM: 220, walkingMin: 3 },
 	sbahn: null,
 	tram: { name: 'Boxhagener Straße', lat: 52.514, lng: 13.461, distanceM: 130, walkingMin: 2 },
-	bus: { name: 'Boxhagener Platz', lat: 52.512, lng: 13.460, distanceM: 95, walkingMin: 2 }
+	bus: { name: 'Boxhagener Platz', lat: 52.512, lng: 13.46, distanceM: 95, walkingMin: 2 }
 };
 
 const RATING: MobilityRating = {

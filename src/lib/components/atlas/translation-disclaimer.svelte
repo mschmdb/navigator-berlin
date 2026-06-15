@@ -20,8 +20,7 @@
 	export type TranslationDisclaimerVariant = 'en-translated' | 'en-fallback-to-de';
 
 	export const DISCLAIMER_TEXTS: Record<TranslationDisclaimerVariant, string> = {
-		'en-translated':
-			'Translated from German source. Original DE version remains authoritative.',
+		'en-translated': 'Translated from German source. Original DE version remains authoritative.',
 		'en-fallback-to-de':
 			'This page is shown in German because the English translation is not yet available.'
 	};
@@ -56,14 +55,14 @@
 	<p
 		data-testid="translation-disclaimer"
 		data-variant={variant}
-		class="font-mono text-xs uppercase tracking-wide text-ink-subtle"
+		class="font-mono text-xs tracking-wide text-ink-subtle uppercase"
 	>
 		<span>{text}</span>
 		{#if alternateLocaleHref}
 			<a
 				href={alternateLocaleHref}
 				data-testid="translation-disclaimer-alt-link"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
 				{altLabel}
 			</a>

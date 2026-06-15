@@ -117,12 +117,12 @@ Build-Dauer: ~5-10 min für full-build inkl. 198 OG-PNGs + Prerender aller Kiez/
 
 ## Cron-Schedules
 
-| Was | Wo | Wann | Auswirkung bei Fehler |
-|---|---|---|---|
-| **Backup-Cron** (pg_dump + .env → CAX21) | CPX22 Cron (`/etc/cron.d/navigator-backup`) | Sun 04:00 UTC | Backup-Lücke, kein User-Impact |
-| **Coolify Docker-Cleanup** | Coolify intern | täglich 00:00 (default) | unused-images bleiben länger |
-| **Let's-Encrypt-Renewal** (Traefik) | Traefik intern | automatisch 30d vor Expiry | bei Failure: TLS-Fehler nach Cert-Expiry |
-| **Plausible Event-Aggregation** | Plausible-Container intern | hourly + daily | Dashboard-Lücken |
+| Was                                      | Wo                                          | Wann                       | Auswirkung bei Fehler                    |
+| ---------------------------------------- | ------------------------------------------- | -------------------------- | ---------------------------------------- |
+| **Backup-Cron** (pg_dump + .env → CAX21) | CPX22 Cron (`/etc/cron.d/navigator-backup`) | Sun 04:00 UTC              | Backup-Lücke, kein User-Impact           |
+| **Coolify Docker-Cleanup**               | Coolify intern                              | täglich 00:00 (default)    | unused-images bleiben länger             |
+| **Let's-Encrypt-Renewal** (Traefik)      | Traefik intern                              | automatisch 30d vor Expiry | bei Failure: TLS-Fehler nach Cert-Expiry |
+| **Plausible Event-Aggregation**          | Plausible-Container intern                  | hourly + daily             | Dashboard-Lücken                         |
 
 Geplant (Story 5.1, deferred zu Epic 7): GitHub-Actions-Cron für Daten-Refresh pro Layer (Klima jährlich, BRW alle 2 Jahre, etc.) — aktuell nicht implementiert.
 
@@ -145,13 +145,13 @@ graph TB
 
 ## State-Slots (Production)
 
-| State | Wo | Persistence |
-|---|---|---|
-| Postgres-App-Daten | CPX22 Container `u83rd482pdebahel7a1bi80n` | Docker-Volume, weekly-backup |
-| Coolify-State | CPX22 `/data/coolify/*` | manual-backup via `.env`-Snapshot |
-| Plausible-Events | CAX21 ClickHouse-Volume | kein Off-Server-Backup (re-aggregation aus Web-Vitals erlaubt) |
-| User-LocalStorage | Browser | nicht auf Server, kein Server-Backup nötig |
-| Static-Files (committed) | GitHub-Repo + Build-Output | Repo = Source-of-Truth |
+| State                    | Wo                                         | Persistence                                                    |
+| ------------------------ | ------------------------------------------ | -------------------------------------------------------------- |
+| Postgres-App-Daten       | CPX22 Container `u83rd482pdebahel7a1bi80n` | Docker-Volume, weekly-backup                                   |
+| Coolify-State            | CPX22 `/data/coolify/*`                    | manual-backup via `.env`-Snapshot                              |
+| Plausible-Events         | CAX21 ClickHouse-Volume                    | kein Off-Server-Backup (re-aggregation aus Web-Vitals erlaubt) |
+| User-LocalStorage        | Browser                                    | nicht auf Server, kein Server-Backup nötig                     |
+| Static-Files (committed) | GitHub-Repo + Build-Output                 | Repo = Source-of-Truth                                         |
 
 ## Was bewusst NICHT existiert
 
@@ -163,11 +163,11 @@ graph TB
 
 ## Externe Abhängigkeiten
 
-| Service | Was passiert wenn down |
-|---|---|
-| OpenFreeMap (Tiles) | Karte rendert ohne Tiles (Browser-Konsole-Errors), Site-Funktionalität bleibt |
-| Nominatim (Geocoding) | Adress-Suche blockt, Permalink-Direct-Load funktioniert |
-| MapTiler (falls jemals als Fallback) | nicht im Production-Pfad, nur als Backup |
-| Hetzner-Cloud-API | nur für Provisioning relevant, nicht für Runtime |
-| INWX-DNS | bei DNS-Down: Site nicht erreichbar (TTL 300, Recovery innerhalb 5 min nach Fix) |
-| GitHub-App (Coolify-Source) | Deploy-Trigger funktioniert nicht, Live-Site läuft weiter |
+| Service                              | Was passiert wenn down                                                           |
+| ------------------------------------ | -------------------------------------------------------------------------------- |
+| OpenFreeMap (Tiles)                  | Karte rendert ohne Tiles (Browser-Konsole-Errors), Site-Funktionalität bleibt    |
+| Nominatim (Geocoding)                | Adress-Suche blockt, Permalink-Direct-Load funktioniert                          |
+| MapTiler (falls jemals als Fallback) | nicht im Production-Pfad, nur als Backup                                         |
+| Hetzner-Cloud-API                    | nur für Provisioning relevant, nicht für Runtime                                 |
+| INWX-DNS                             | bei DNS-Down: Site nicht erreichbar (TTL 300, Recovery innerhalb 5 min nach Fix) |
+| GitHub-App (Coolify-Source)          | Deploy-Trigger funktioniert nicht, Live-Site läuft weiter                        |

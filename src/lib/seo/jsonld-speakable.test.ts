@@ -16,11 +16,7 @@ describe('buildSpeakableWebPage', () => {
 		expect(jsonLd.url).toBe(`${origin}/methodik/kiez-score`);
 		expect(jsonLd.name).toBe('Kiez-Score Methodik');
 		expect(jsonLd.speakable['@type']).toBe('SpeakableSpecification');
-		expect(jsonLd.speakable.cssSelector).toEqual([
-			'#worum',
-			'#dimensionen',
-			'#gewichte'
-		]);
+		expect(jsonLd.speakable.cssSelector).toEqual(['#worum', '#dimensionen', '#gewichte']);
 	});
 
 	it('strippt trailing-slash vom origin', () => {

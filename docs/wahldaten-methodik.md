@@ -14,13 +14,13 @@ Quelle der Wahrheit für die Wahldaten-Pipeline in navigator.berlin. Erweitert i
 
 ## Daten-Cutoff (Phase 1)
 
-| Wahl-Typ | Cutoff | Aktive Wahlen Phase 1 |
-|----------|--------|----------------------|
-| Bundestagswahl (BTW) | 2013+ | BTW 2013, 2017, 2021, 2025 |
-| Abgeordnetenhaus (AGH) | 2011+ | AGH 2011, 2016, 2021, 2023 (Wiederholung) |
-| Bezirksverordneten-Versammlung (BVV) | 2011+ | BVV 2011, 2016, 2021, 2023 (Wiederholung) |
-| Europawahl (EW) | · | Phase 2 Backlog |
-| Volksentscheide | · | cancelled (Story 6.6) |
+| Wahl-Typ                             | Cutoff | Aktive Wahlen Phase 1                     |
+| ------------------------------------ | ------ | ----------------------------------------- |
+| Bundestagswahl (BTW)                 | 2013+  | BTW 2013, 2017, 2021, 2025                |
+| Abgeordnetenhaus (AGH)               | 2011+  | AGH 2011, 2016, 2021, 2023 (Wiederholung) |
+| Bezirksverordneten-Versammlung (BVV) | 2011+  | BVV 2011, 2016, 2021, 2023 (Wiederholung) |
+| Europawahl (EW)                      | ·      | Phase 2 Backlog                           |
+| Volksentscheide                      | ·      | cancelled (Story 6.6)                     |
 
 **Summe Phase 1: 12 aktive Wahlen, 20 `wahl`-Rows in DB** (BTW + AGH je 2 Stimmtypen, BVV je 1 Einstimme).
 
@@ -51,8 +51,8 @@ https://bundeswahlleiterin.de/dam/jcr/<jcr-uuid>/btw<jj>_wbz.zip
 
 Live-URLs (Stand 2026-05-18):
 
-| Wahl | jcr-UUID |
-|------|----------|
+| Wahl     | jcr-UUID                               |
+| -------- | -------------------------------------- |
 | BTW 2013 | `0ad35576-0c4b-4fa5-85f5-284618b8fa25` |
 | BTW 2017 | `a2eef6bd-0225-447c-9943-7af0f46c94d1` |
 | BTW 2021 | `c2cd99e6-064e-4ebc-b634-f86b5c0e14b3` |
@@ -64,12 +64,12 @@ URLs sind hash-basiert und nicht stabil. Pflege im Code (`scripts/wahlen/lib/sou
 
 **3 Format-Generationen über die Jahre:**
 
-| Wahl | Container | CSV-Layout | Encoding | Spalten-Marker |
-|------|-----------|------------|----------|----------------|
-| BTW 2013 | ZIP, 2 CSVs `BTW13_Erststimmen_Wahlbezirke.csv` + `BTW13_Zweitstimmen_Wahlbezirke.csv` | split-by-file | UTF-8 mit BOM | direct (Spaltennamen = Parteien) |
-| BTW 2017 | ZIP, 2 CSVs `btw17_wbz_erststimmen.csv` + `btw17_wbz_zweitstimmen.csv` | split-by-file | **Windows-1252** | direct + quoted |
-| BTW 2021 | ZIP, 1 CSV `btw21_wbz_ergebnisse.csv` | combined | UTF-8 mit BOM | Prefix `E_` / `Z_` |
-| BTW 2025 | ZIP, 1 CSV `btw25_wbz_ergebnisse.csv` | combined | UTF-8 mit BOM | Suffix ` - Erststimmen` / ` - Zweitstimmen` |
+| Wahl     | Container                                                                              | CSV-Layout    | Encoding         | Spalten-Marker                              |
+| -------- | -------------------------------------------------------------------------------------- | ------------- | ---------------- | ------------------------------------------- |
+| BTW 2013 | ZIP, 2 CSVs `BTW13_Erststimmen_Wahlbezirke.csv` + `BTW13_Zweitstimmen_Wahlbezirke.csv` | split-by-file | UTF-8 mit BOM    | direct (Spaltennamen = Parteien)            |
+| BTW 2017 | ZIP, 2 CSVs `btw17_wbz_erststimmen.csv` + `btw17_wbz_zweitstimmen.csv`                 | split-by-file | **Windows-1252** | direct + quoted                             |
+| BTW 2021 | ZIP, 1 CSV `btw21_wbz_ergebnisse.csv`                                                  | combined      | UTF-8 mit BOM    | Prefix `E_` / `Z_`                          |
+| BTW 2025 | ZIP, 1 CSV `btw25_wbz_ergebnisse.csv`                                                  | combined      | UTF-8 mit BOM    | Suffix ` - Erststimmen` / ` - Zweitstimmen` |
 
 Format-Profile-Detection in `scripts/wahlen/lib/row-transformer.ts` (`SUFFIX_GEN_PROFILE`, `PREFIX_GEN_PROFILE`, plus `transformBwlSplitRow` für direct/split). Encoding-Detection (BOM vs. Latin-1) in `scripts/wahlen/lib/bwl-fetcher.ts#detectEncoding`. Combined-vs-split-Mode via `extractBwlCsvs`.
 
@@ -81,12 +81,12 @@ Berliner Landeswahlen kommen nicht von der Bundeswahlleiterin. Quelle: `download
 
 Live-URLs (Stand 2026-05-18):
 
-| Datei | Enthält Wahlen | Sheet-Namen |
-|-------|----------------|-------------|
-| `DL_BE_AB2011.xlsx` | AGH 2011 + BVV 2011 | `Erststimme`, `Zweitstimme`, `BVV` |
+| Datei                     | Enthält Wahlen      | Sheet-Namen                        |
+| ------------------------- | ------------------- | ---------------------------------- |
+| `DL_BE_AB2011.xlsx`       | AGH 2011 + BVV 2011 | `Erststimme`, `Zweitstimme`, `BVV` |
 | `DL_BE_EE_WB_AH2016.xlsx` | AGH 2016 + BVV 2016 | `Erststimme`, `Zweitstimme`, `BVV` |
-| `DL_BE_AGHBVV2021.xlsx` | AGH 2021 + BVV 2021 | `AGH_W1`, `AGH_W2`, `BVV` |
-| `DL_BE_AGHBVV2023.xlsx` | AGH 2023 + BVV 2023 | `AGH_W1`, `AGH_W2`, `BVV` |
+| `DL_BE_AGHBVV2021.xlsx`   | AGH 2021 + BVV 2021 | `AGH_W1`, `AGH_W2`, `BVV`          |
+| `DL_BE_AGHBVV2023.xlsx`   | AGH 2023 + BVV 2023 | `AGH_W1`, `AGH_W2`, `BVV`          |
 
 Implementation: `scripts/wahlen/lib/sbb-xlsx-fetcher.ts` (XLSX-Parser via `xlsx`-Library) plus `scripts/wahlen/lib/sbb-row-transformer.ts`. SBB-Schema hat eigene Spalten-Konventionen:
 
@@ -143,16 +143,16 @@ Stimmbezirke (~1.800-3.700 in Berlin pro Wahl) sind deutlich kleiner als Kieze (
 
 **Geometrie-Coverage Phase 1:**
 
-| Wahl | Geometrie verfügbar | Kiez-Aggregat |
-|------|---------------------|---------------|
-| BTW 2013 | nein | leer |
-| BTW 2017 | ja (`wahlbezirke-btw17`) | 1136 Rows × 2 Stimmtypen |
-| BTW 2021 | ja (`wahlbezirke-ah21` combined) | 1085-1136 Rows × 2 Stimmtypen |
-| BTW 2025 | ja (`wahlbezirke-bt25`) | 1132-1278 Rows × 2 Stimmtypen |
-| AGH 2011 + BVV 2011 | nein | leer |
-| AGH 2016 + BVV 2016 | ja (`wahlbezirke-ah16`) | 978-994 Rows |
-| AGH 2021 + BVV 2021 | ja (`wahlbezirke-ah21` combined) | 1087-1136 Rows |
-| AGH 2023 + BVV 2023 | ja (`wahlbezirke-ah23` Wahllokale) | 1072-1127 Rows |
+| Wahl                | Geometrie verfügbar                | Kiez-Aggregat                 |
+| ------------------- | ---------------------------------- | ----------------------------- |
+| BTW 2013            | nein                               | leer                          |
+| BTW 2017            | ja (`wahlbezirke-btw17`)           | 1136 Rows × 2 Stimmtypen      |
+| BTW 2021            | ja (`wahlbezirke-ah21` combined)   | 1085-1136 Rows × 2 Stimmtypen |
+| BTW 2025            | ja (`wahlbezirke-bt25`)            | 1132-1278 Rows × 2 Stimmtypen |
+| AGH 2011 + BVV 2011 | nein                               | leer                          |
+| AGH 2016 + BVV 2016 | ja (`wahlbezirke-ah16`)            | 978-994 Rows                  |
+| AGH 2021 + BVV 2021 | ja (`wahlbezirke-ah21` combined)   | 1087-1136 Rows                |
+| AGH 2023 + BVV 2023 | ja (`wahlbezirke-ah23` Wahllokale) | 1072-1127 Rows                |
 
 pre-2016 Geometrien sind Phase-2-Backlog (FragDenStaat-IFG-Anfrage bei Bezirken). `wahl_aggregat_kiez` bleibt für die leer.
 
@@ -160,12 +160,12 @@ pre-2016 Geometrien sind Phase-2-Backlog (FragDenStaat-IFG-Anfrage bei Bezirken)
 
 Format variiert pro Wahl-Generation:
 
-| Wahl-Slug | DB-Format | Geo-Build-Rule |
-|-----------|-----------|----------------|
-| BTW 21/25 | `${BWK}-${BEZ}-${UWB3}-0` | direkter Build aus BWK+BEZ+UWB3 |
-| BTW 17 | `${BWK}-${BEZ}-${BEZ}W${UWB3}-0` | BEZ+W eingefügt im wahlbezirk-Slot |
-| AGH/BVV 21/23 | `${BEZ}W${UWB3}-W` | Adresse-Format mit -W-Suffix |
-| AGH/BVV 16 | `${BEZ}W${UWB3}` | Adresse-Format ohne Suffix |
+| Wahl-Slug     | DB-Format                        | Geo-Build-Rule                     |
+| ------------- | -------------------------------- | ---------------------------------- |
+| BTW 21/25     | `${BWK}-${BEZ}-${UWB3}-0`        | direkter Build aus BWK+BEZ+UWB3    |
+| BTW 17        | `${BWK}-${BEZ}-${BEZ}W${UWB3}-0` | BEZ+W eingefügt im wahlbezirk-Slot |
+| AGH/BVV 21/23 | `${BEZ}W${UWB3}-W`               | Adresse-Format mit -W-Suffix       |
+| AGH/BVV 16    | `${BEZ}W${UWB3}`                 | Adresse-Format ohne Suffix         |
 
 Implementation: `scripts/wahlen/lib/kiez-mapper.ts#dbUwbIdFromGeo` und `buildKiezMappings`.
 
@@ -191,18 +191,18 @@ Beispiel: `077-04-119-0` vs. `077-05-119-0` für die zwei oben genannten Stimmbe
 
 Parteien werden über `partei` + `partei_alias` modelliert, weil sich Schreibweisen über die Jahre ändern. Seed in `scripts/wahlen/lib/partei-seed.ts`.
 
-| Kurzname (DB) | Aliase | First Seen |
-|---------------|--------|-----------|
-| SPD | SPD | - |
-| CDU | CDU | - |
-| CSU | CSU | - |
-| GRÜNE | GRÜNE, B'90/GRÜNE, Bündnis 90/Die Grünen, Die Grünen | - |
-| FDP | FDP | - |
-| AfD | AfD | 2013 |
-| Die Linke | Die Linke, DIE LINKE, Linkspartei.PDS, PDS, Linke | - |
-| BSW | BSW | 2024 |
-| FREIE WÄHLER | FREIE WÄHLER | - |
-| Sonstige | Sonstige, Übrige, übrige | - |
+| Kurzname (DB) | Aliase                                               | First Seen |
+| ------------- | ---------------------------------------------------- | ---------- |
+| SPD           | SPD                                                  | -          |
+| CDU           | CDU                                                  | -          |
+| CSU           | CSU                                                  | -          |
+| GRÜNE         | GRÜNE, B'90/GRÜNE, Bündnis 90/Die Grünen, Die Grünen | -          |
+| FDP           | FDP                                                  | -          |
+| AfD           | AfD                                                  | 2013       |
+| Die Linke     | Die Linke, DIE LINKE, Linkspartei.PDS, PDS, Linke    | -          |
+| BSW           | BSW                                                  | 2024       |
+| FREIE WÄHLER  | FREIE WÄHLER                                         | -          |
+| Sonstige      | Sonstige, Übrige, übrige                             | -          |
 
 **Pflege-Regel:** Bei neuer Wahl muss die Liste gegen die echten CSV-Spalten geprüft werden. Unbekannte Parteien fallen automatisch in `Sonstige`. Wenn eine `Sonstige`-Partei jemals > 3 % erreicht oder als Top-5 erscheint, eigene Tabellenzeile aufnehmen.
 
@@ -252,7 +252,7 @@ Bei stale Hash-URL: Playwright-Headless gegen die `/opendata/*.zip`-URL navigier
 Folgende Daten sind explizit ausgeschlossen für Phase 1:
 
 - Volksentscheide (Story 6.6 cancelled)
-- Europawahlen (Phase 2 Backlog, eigene Source-Pipeline ggf. analog BTW-_wbz)
+- Europawahlen (Phase 2 Backlog, eigene Source-Pipeline ggf. analog BTW-\_wbz)
 - BTW 2024 Wiederholung (eigene Berliner-Pipeline später)
 - pre-2011-AGH/BVV + pre-2013-BTW (FragDenStaat-IFG-Anfrage, Phase 2)
 - Live-Wahl-Auszählung am Wahltag (Memory `feedback_no_live_data` lock)

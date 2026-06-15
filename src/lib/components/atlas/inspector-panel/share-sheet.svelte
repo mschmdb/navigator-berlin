@@ -197,7 +197,7 @@
 		onkeydown={onKeydown}
 	>
 		<header class="flex items-center justify-between gap-2 border-b border-rule px-4 py-3">
-			<h2 id="share-sheet-title" class="font-mono text-xs uppercase tracking-wide text-ink-muted">
+			<h2 id="share-sheet-title" class="font-mono text-xs tracking-wide text-ink-muted uppercase">
 				{SHARE_STRINGS.title}
 			</h2>
 			<button
@@ -232,7 +232,7 @@
 					type="button"
 					onclick={copyPermalink}
 					data-testid="share-option-permalink"
-					class="flex w-full min-h-10 items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
+					class="flex min-h-10 w-full items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
 				>
 					{#if linkState === 'done'}
 						<Check size={18} aria-hidden="true" class="text-state-success" />
@@ -248,7 +248,7 @@
 					type="button"
 					onclick={copyLlm}
 					data-testid="share-option-llm"
-					class="flex w-full min-h-10 items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
+					class="flex min-h-10 w-full items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
 				>
 					{#if llmState === 'done'}
 						<Check size={18} aria-hidden="true" class="text-state-success" />
@@ -270,7 +270,7 @@
 					type="button"
 					onclick={doPrint}
 					data-testid="share-option-print"
-					class="flex w-full min-h-10 items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
+					class="flex min-h-10 w-full items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
 				>
 					<Printer size={18} aria-hidden="true" />
 					<span class="font-mono">{SHARE_STRINGS.print}</span>
@@ -282,7 +282,7 @@
 						type="button"
 						onclick={doNativeShare}
 						data-testid="share-option-native"
-						class="flex w-full min-h-10 items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
+						class="flex min-h-10 w-full items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
 					>
 						<Share2 size={18} aria-hidden="true" />
 						<span class="font-mono">{SHARE_STRINGS.nativeShare}</span>

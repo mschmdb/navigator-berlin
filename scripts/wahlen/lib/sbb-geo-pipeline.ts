@@ -24,7 +24,9 @@ function normalizeCpg(cpg: Buffer): Buffer {
  * Pattern aus scripts/lib/simplify.ts, erweitert um Shapefile-Multi-Input.
  */
 export async function shapefileToGeoJSON(pack: ShapefilePack): Promise<string> {
-	const mapshaper = (await import('mapshaper')) as unknown as { default?: MapshaperApi } & MapshaperApi;
+	const mapshaper = (await import('mapshaper')) as unknown as {
+		default?: MapshaperApi;
+	} & MapshaperApi;
 	const api: MapshaperApi = mapshaper.default ?? (mapshaper as MapshaperApi);
 
 	const inputs: Record<string, Buffer> = {

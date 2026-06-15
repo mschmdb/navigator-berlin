@@ -1,1405 +1,1296 @@
 {
-  "id": "c3b997ac-3fea-4f1f-b1d2-93de86906ff2",
-  "prevId": "a7b99d95-0b69-4ea3-8d87-b144d5c9f6cb",
-  "version": "7",
-  "dialect": "postgresql",
-  "tables": {
-    "public.bezirk_stats": {
-      "name": "bezirk_stats",
-      "schema": "",
-      "columns": {
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "laerm": {
-          "name": "laerm",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "luft": {
-          "name": "luft",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "gruen": {
-          "name": "gruen",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "klima": {
-          "name": "klima",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "wohnen": {
-          "name": "wohnen",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "oepnv": {
-          "name": "oepnv",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bildung": {
-          "name": "bildung",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "heritage": {
-          "name": "heritage",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.kiez_stats": {
-      "name": "kiez_stats",
-      "schema": "",
-      "columns": {
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "bezirk_slug": {
-          "name": "bezirk_slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "laerm": {
-          "name": "laerm",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "luft": {
-          "name": "luft",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "gruen": {
-          "name": "gruen",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "klima": {
-          "name": "klima",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "wohnen": {
-          "name": "wohnen",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "oepnv": {
-          "name": "oepnv",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bildung": {
-          "name": "bildung",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "heritage": {
-          "name": "heritage",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "kiez_stats_bezirk_slug_bezirk_stats_slug_fk": {
-          "name": "kiez_stats_bezirk_slug_bezirk_stats_slug_fk",
-          "tableFrom": "kiez_stats",
-          "tableTo": "bezirk_stats",
-          "columnsFrom": [
-            "bezirk_slug"
-          ],
-          "columnsTo": [
-            "slug"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.bezirk_score": {
-      "name": "bezirk_score",
-      "schema": "",
-      "columns": {
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "composite": {
-          "name": "composite",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ruhe_luft": {
-          "name": "ruhe_luft",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "gruen_hitze": {
-          "name": "gruen_hitze",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "mobilitaet": {
-          "name": "mobilitaet",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "versorgung": {
-          "name": "versorgung",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "wohnschutz": {
-          "name": "wohnschutz",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "kultur": {
-          "name": "kultur",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "kriminalitaet": {
-          "name": "kriminalitaet",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.kiez_score": {
-      "name": "kiez_score",
-      "schema": "",
-      "columns": {
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "bezirk_slug": {
-          "name": "bezirk_slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "composite": {
-          "name": "composite",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ruhe_luft": {
-          "name": "ruhe_luft",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "gruen_hitze": {
-          "name": "gruen_hitze",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "mobilitaet": {
-          "name": "mobilitaet",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "versorgung": {
-          "name": "versorgung",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "wohnschutz": {
-          "name": "wohnschutz",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "kultur": {
-          "name": "kultur",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "kriminalitaet": {
-          "name": "kriminalitaet",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "kiez_score_bezirk_slug_bezirk_stats_slug_fk": {
-          "name": "kiez_score_bezirk_slug_bezirk_stats_slug_fk",
-          "tableFrom": "kiez_score",
-          "tableTo": "bezirk_stats",
-          "columnsFrom": [
-            "bezirk_slug"
-          ],
-          "columnsTo": [
-            "slug"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.bezirk_rank": {
-      "name": "bezirk_rank",
-      "schema": "",
-      "columns": {
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "metric_key": {
-          "name": "metric_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "rang": {
-          "name": "rang",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "quartil": {
-          "name": "quartil",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "total": {
-          "name": "total",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "bezirk_rank_slug_metric_key_pk": {
-          "name": "bezirk_rank_slug_metric_key_pk",
-          "columns": [
-            "slug",
-            "metric_key"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.kiez_rank": {
-      "name": "kiez_rank",
-      "schema": "",
-      "columns": {
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "metric_key": {
-          "name": "metric_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "rang": {
-          "name": "rang",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "quartil": {
-          "name": "quartil",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "total": {
-          "name": "total",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "kiez_rank_slug_metric_key_pk": {
-          "name": "kiez_rank_slug_metric_key_pk",
-          "columns": [
-            "slug",
-            "metric_key"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.bezirk_comparison": {
-      "name": "bezirk_comparison",
-      "schema": "",
-      "columns": {
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "metric_key": {
-          "name": "metric_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bezirk_value": {
-          "name": "bezirk_value",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "berlin_median": {
-          "name": "berlin_median",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "bezirk_comparison_slug_metric_key_pk": {
-          "name": "bezirk_comparison_slug_metric_key_pk",
-          "columns": [
-            "slug",
-            "metric_key"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.kiez_comparison": {
-      "name": "kiez_comparison",
-      "schema": "",
-      "columns": {
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "metric_key": {
-          "name": "metric_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "kiez_value": {
-          "name": "kiez_value",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "bezirk_mean": {
-          "name": "bezirk_mean",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "berlin_median": {
-          "name": "berlin_median",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "kiez_comparison_slug_metric_key_pk": {
-          "name": "kiez_comparison_slug_metric_key_pk",
-          "columns": [
-            "slug",
-            "metric_key"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.faq_qna": {
-      "name": "faq_qna",
-      "schema": "",
-      "columns": {
-        "page_type": {
-          "name": "page_type",
-          "type": "page_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cluster": {
-          "name": "cluster",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "locale": {
-          "name": "locale",
-          "type": "locale",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "template_id": {
-          "name": "template_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "question": {
-          "name": "question",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "answer": {
-          "name": "answer",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "faq_qna_page_type_slug_cluster_locale_template_id_pk": {
-          "name": "faq_qna_page_type_slug_cluster_locale_template_id_pk",
-          "columns": [
-            "page_type",
-            "slug",
-            "cluster",
-            "locale",
-            "template_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.llms_content": {
-      "name": "llms_content",
-      "schema": "",
-      "columns": {
-        "page_type": {
-          "name": "page_type",
-          "type": "page_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "locale": {
-          "name": "locale",
-          "type": "locale",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "markdown": {
-          "name": "markdown",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "llms_content_page_type_slug_locale_pk": {
-          "name": "llms_content_page_type_slug_locale_pk",
-          "columns": [
-            "page_type",
-            "slug",
-            "locale"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.wahl": {
-      "name": "wahl",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "jahr": {
-          "name": "jahr",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "typ": {
-          "name": "typ",
-          "type": "wahl_typ",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "stimmtyp": {
-          "name": "stimmtyp",
-          "type": "wahl_stimmtyp",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "is_repeat_election": {
-          "name": "is_repeat_election",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "parent_election_id": {
-          "name": "parent_election_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "source_url": {
-          "name": "source_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "license": {
-          "name": "license",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'dl-de/by-2.0'"
-        },
-        "source_updated_at": {
-          "name": "source_updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "wahl_jahr_typ_stimmtyp_uniq": {
-          "name": "wahl_jahr_typ_stimmtyp_uniq",
-          "columns": [
-            {
-              "expression": "jahr",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "typ",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "stimmtyp",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "wahl_parent_election_id_wahl_id_fk": {
-          "name": "wahl_parent_election_id_wahl_id_fk",
-          "tableFrom": "wahl",
-          "tableTo": "wahl",
-          "columnsFrom": [
-            "parent_election_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.stimmbezirk": {
-      "name": "stimmbezirk",
-      "schema": "",
-      "columns": {
-        "wahl_id": {
-          "name": "wahl_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "uwb_id": {
-          "name": "uwb_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "wahlkreis": {
-          "name": "wahlkreis",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "wahlbezirk": {
-          "name": "wahlbezirk",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bezirk_code": {
-          "name": "bezirk_code",
-          "type": "char(2)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bezirksart": {
-          "name": "bezirksart",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "stimmbezirk_wahl_id_wahl_id_fk": {
-          "name": "stimmbezirk_wahl_id_wahl_id_fk",
-          "tableFrom": "stimmbezirk",
-          "tableTo": "wahl",
-          "columnsFrom": [
-            "wahl_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "stimmbezirk_wahl_id_uwb_id_pk": {
-          "name": "stimmbezirk_wahl_id_uwb_id_pk",
-          "columns": [
-            "wahl_id",
-            "uwb_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.partei": {
-      "name": "partei",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "kurzname": {
-          "name": "kurzname",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "vollname": {
-          "name": "vollname",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "farbe_hex": {
-          "name": "farbe_hex",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "first_seen_year": {
-          "name": "first_seen_year",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "last_seen_year": {
-          "name": "last_seen_year",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "partei_kurzname_unique": {
-          "name": "partei_kurzname_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "kurzname"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.partei_alias": {
-      "name": "partei_alias",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "partei_id": {
-          "name": "partei_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "alias_label": {
-          "name": "alias_label",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "jahr": {
-          "name": "jahr",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "partei_alias_label_jahr_uniq": {
-          "name": "partei_alias_label_jahr_uniq",
-          "columns": [
-            {
-              "expression": "alias_label",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "jahr",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "partei_alias_partei_id_partei_id_fk": {
-          "name": "partei_alias_partei_id_partei_id_fk",
-          "tableFrom": "partei_alias",
-          "tableTo": "partei",
-          "columnsFrom": [
-            "partei_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.ergebnis": {
-      "name": "ergebnis",
-      "schema": "",
-      "columns": {
-        "wahl_id": {
-          "name": "wahl_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "uwb_id": {
-          "name": "uwb_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "partei_id": {
-          "name": "partei_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "stimmen": {
-          "name": "stimmen",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "anteil": {
-          "name": "anteil",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ist_briefwahl_aggregat": {
-          "name": "ist_briefwahl_aggregat",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "ergebnis_wahl_id_wahl_id_fk": {
-          "name": "ergebnis_wahl_id_wahl_id_fk",
-          "tableFrom": "ergebnis",
-          "tableTo": "wahl",
-          "columnsFrom": [
-            "wahl_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "ergebnis_partei_id_partei_id_fk": {
-          "name": "ergebnis_partei_id_partei_id_fk",
-          "tableFrom": "ergebnis",
-          "tableTo": "partei",
-          "columnsFrom": [
-            "partei_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "ergebnis_wahl_id_uwb_id_partei_id_pk": {
-          "name": "ergebnis_wahl_id_uwb_id_partei_id_pk",
-          "columns": [
-            "wahl_id",
-            "uwb_id",
-            "partei_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.wahl_aggregat_kiez": {
-      "name": "wahl_aggregat_kiez",
-      "schema": "",
-      "columns": {
-        "wahl_id": {
-          "name": "wahl_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "kiez_slug": {
-          "name": "kiez_slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "partei_id": {
-          "name": "partei_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "stimmen": {
-          "name": "stimmen",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "anteil": {
-          "name": "anteil",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "wahl_aggregat_kiez_wahl_id_wahl_id_fk": {
-          "name": "wahl_aggregat_kiez_wahl_id_wahl_id_fk",
-          "tableFrom": "wahl_aggregat_kiez",
-          "tableTo": "wahl",
-          "columnsFrom": [
-            "wahl_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "wahl_aggregat_kiez_partei_id_partei_id_fk": {
-          "name": "wahl_aggregat_kiez_partei_id_partei_id_fk",
-          "tableFrom": "wahl_aggregat_kiez",
-          "tableTo": "partei",
-          "columnsFrom": [
-            "partei_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "wahl_aggregat_kiez_wahl_id_kiez_slug_partei_id_pk": {
-          "name": "wahl_aggregat_kiez_wahl_id_kiez_slug_partei_id_pk",
-          "columns": [
-            "wahl_id",
-            "kiez_slug",
-            "partei_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.wahl_aggregat_bezirk": {
-      "name": "wahl_aggregat_bezirk",
-      "schema": "",
-      "columns": {
-        "wahl_id": {
-          "name": "wahl_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bezirk_slug": {
-          "name": "bezirk_slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "partei_id": {
-          "name": "partei_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "stimmen": {
-          "name": "stimmen",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "anteil": {
-          "name": "anteil",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "wahl_aggregat_bezirk_wahl_id_wahl_id_fk": {
-          "name": "wahl_aggregat_bezirk_wahl_id_wahl_id_fk",
-          "tableFrom": "wahl_aggregat_bezirk",
-          "tableTo": "wahl",
-          "columnsFrom": [
-            "wahl_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "wahl_aggregat_bezirk_partei_id_partei_id_fk": {
-          "name": "wahl_aggregat_bezirk_partei_id_partei_id_fk",
-          "tableFrom": "wahl_aggregat_bezirk",
-          "tableTo": "partei",
-          "columnsFrom": [
-            "partei_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "wahl_aggregat_bezirk_wahl_id_bezirk_slug_partei_id_pk": {
-          "name": "wahl_aggregat_bezirk_wahl_id_bezirk_slug_partei_id_pk",
-          "columns": [
-            "wahl_id",
-            "bezirk_slug",
-            "partei_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.wahl_aggregat_berlin": {
-      "name": "wahl_aggregat_berlin",
-      "schema": "",
-      "columns": {
-        "wahl_id": {
-          "name": "wahl_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "partei_id": {
-          "name": "partei_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "stimmen": {
-          "name": "stimmen",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "anteil": {
-          "name": "anteil",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "computed_at": {
-          "name": "computed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "wahl_aggregat_berlin_wahl_id_wahl_id_fk": {
-          "name": "wahl_aggregat_berlin_wahl_id_wahl_id_fk",
-          "tableFrom": "wahl_aggregat_berlin",
-          "tableTo": "wahl",
-          "columnsFrom": [
-            "wahl_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "wahl_aggregat_berlin_partei_id_partei_id_fk": {
-          "name": "wahl_aggregat_berlin_partei_id_partei_id_fk",
-          "tableFrom": "wahl_aggregat_berlin",
-          "tableTo": "partei",
-          "columnsFrom": [
-            "partei_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "wahl_aggregat_berlin_wahl_id_partei_id_pk": {
-          "name": "wahl_aggregat_berlin_wahl_id_partei_id_pk",
-          "columns": [
-            "wahl_id",
-            "partei_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    }
-  },
-  "enums": {
-    "public.locale": {
-      "name": "locale",
-      "schema": "public",
-      "values": [
-        "de",
-        "en"
-      ]
-    },
-    "public.page_type": {
-      "name": "page_type",
-      "schema": "public",
-      "values": [
-        "bezirk",
-        "kiez",
-        "layer"
-      ]
-    },
-    "public.wahl_stimmtyp": {
-      "name": "wahl_stimmtyp",
-      "schema": "public",
-      "values": [
-        "erststimme",
-        "zweitstimme",
-        "einstimme"
-      ]
-    },
-    "public.wahl_typ": {
-      "name": "wahl_typ",
-      "schema": "public",
-      "values": [
-        "btw",
-        "agh",
-        "bvv"
-      ]
-    }
-  },
-  "schemas": {},
-  "sequences": {},
-  "roles": {},
-  "policies": {},
-  "views": {},
-  "_meta": {
-    "columns": {},
-    "schemas": {},
-    "tables": {}
-  }
+	"id": "c3b997ac-3fea-4f1f-b1d2-93de86906ff2",
+	"prevId": "a7b99d95-0b69-4ea3-8d87-b144d5c9f6cb",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.bezirk_stats": {
+			"name": "bezirk_stats",
+			"schema": "",
+			"columns": {
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"laerm": {
+					"name": "laerm",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"luft": {
+					"name": "luft",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"gruen": {
+					"name": "gruen",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"klima": {
+					"name": "klima",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"wohnen": {
+					"name": "wohnen",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"oepnv": {
+					"name": "oepnv",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"bildung": {
+					"name": "bildung",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"heritage": {
+					"name": "heritage",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.kiez_stats": {
+			"name": "kiez_stats",
+			"schema": "",
+			"columns": {
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"bezirk_slug": {
+					"name": "bezirk_slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"laerm": {
+					"name": "laerm",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"luft": {
+					"name": "luft",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"gruen": {
+					"name": "gruen",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"klima": {
+					"name": "klima",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"wohnen": {
+					"name": "wohnen",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"oepnv": {
+					"name": "oepnv",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"bildung": {
+					"name": "bildung",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"heritage": {
+					"name": "heritage",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"kiez_stats_bezirk_slug_bezirk_stats_slug_fk": {
+					"name": "kiez_stats_bezirk_slug_bezirk_stats_slug_fk",
+					"tableFrom": "kiez_stats",
+					"tableTo": "bezirk_stats",
+					"columnsFrom": ["bezirk_slug"],
+					"columnsTo": ["slug"],
+					"onDelete": "restrict",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.bezirk_score": {
+			"name": "bezirk_score",
+			"schema": "",
+			"columns": {
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"composite": {
+					"name": "composite",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"ruhe_luft": {
+					"name": "ruhe_luft",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"gruen_hitze": {
+					"name": "gruen_hitze",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"mobilitaet": {
+					"name": "mobilitaet",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"versorgung": {
+					"name": "versorgung",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"wohnschutz": {
+					"name": "wohnschutz",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"kultur": {
+					"name": "kultur",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"kriminalitaet": {
+					"name": "kriminalitaet",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.kiez_score": {
+			"name": "kiez_score",
+			"schema": "",
+			"columns": {
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"bezirk_slug": {
+					"name": "bezirk_slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"composite": {
+					"name": "composite",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"ruhe_luft": {
+					"name": "ruhe_luft",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"gruen_hitze": {
+					"name": "gruen_hitze",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"mobilitaet": {
+					"name": "mobilitaet",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"versorgung": {
+					"name": "versorgung",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"wohnschutz": {
+					"name": "wohnschutz",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"kultur": {
+					"name": "kultur",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"kriminalitaet": {
+					"name": "kriminalitaet",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"kiez_score_bezirk_slug_bezirk_stats_slug_fk": {
+					"name": "kiez_score_bezirk_slug_bezirk_stats_slug_fk",
+					"tableFrom": "kiez_score",
+					"tableTo": "bezirk_stats",
+					"columnsFrom": ["bezirk_slug"],
+					"columnsTo": ["slug"],
+					"onDelete": "restrict",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.bezirk_rank": {
+			"name": "bezirk_rank",
+			"schema": "",
+			"columns": {
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"metric_key": {
+					"name": "metric_key",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"rang": {
+					"name": "rang",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"quartil": {
+					"name": "quartil",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"total": {
+					"name": "total",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"bezirk_rank_slug_metric_key_pk": {
+					"name": "bezirk_rank_slug_metric_key_pk",
+					"columns": ["slug", "metric_key"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.kiez_rank": {
+			"name": "kiez_rank",
+			"schema": "",
+			"columns": {
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"metric_key": {
+					"name": "metric_key",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"rang": {
+					"name": "rang",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"quartil": {
+					"name": "quartil",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"total": {
+					"name": "total",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"kiez_rank_slug_metric_key_pk": {
+					"name": "kiez_rank_slug_metric_key_pk",
+					"columns": ["slug", "metric_key"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.bezirk_comparison": {
+			"name": "bezirk_comparison",
+			"schema": "",
+			"columns": {
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"metric_key": {
+					"name": "metric_key",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"bezirk_value": {
+					"name": "bezirk_value",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"berlin_median": {
+					"name": "berlin_median",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"bezirk_comparison_slug_metric_key_pk": {
+					"name": "bezirk_comparison_slug_metric_key_pk",
+					"columns": ["slug", "metric_key"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.kiez_comparison": {
+			"name": "kiez_comparison",
+			"schema": "",
+			"columns": {
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"metric_key": {
+					"name": "metric_key",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"kiez_value": {
+					"name": "kiez_value",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"bezirk_mean": {
+					"name": "bezirk_mean",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"berlin_median": {
+					"name": "berlin_median",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"kiez_comparison_slug_metric_key_pk": {
+					"name": "kiez_comparison_slug_metric_key_pk",
+					"columns": ["slug", "metric_key"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.faq_qna": {
+			"name": "faq_qna",
+			"schema": "",
+			"columns": {
+				"page_type": {
+					"name": "page_type",
+					"type": "page_type",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"cluster": {
+					"name": "cluster",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"locale": {
+					"name": "locale",
+					"type": "locale",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"template_id": {
+					"name": "template_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"question": {
+					"name": "question",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"answer": {
+					"name": "answer",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"faq_qna_page_type_slug_cluster_locale_template_id_pk": {
+					"name": "faq_qna_page_type_slug_cluster_locale_template_id_pk",
+					"columns": ["page_type", "slug", "cluster", "locale", "template_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.llms_content": {
+			"name": "llms_content",
+			"schema": "",
+			"columns": {
+				"page_type": {
+					"name": "page_type",
+					"type": "page_type",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"slug": {
+					"name": "slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"locale": {
+					"name": "locale",
+					"type": "locale",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"markdown": {
+					"name": "markdown",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"llms_content_page_type_slug_locale_pk": {
+					"name": "llms_content_page_type_slug_locale_pk",
+					"columns": ["page_type", "slug", "locale"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.wahl": {
+			"name": "wahl",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"jahr": {
+					"name": "jahr",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"typ": {
+					"name": "typ",
+					"type": "wahl_typ",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stimmtyp": {
+					"name": "stimmtyp",
+					"type": "wahl_stimmtyp",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"is_repeat_election": {
+					"name": "is_repeat_election",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"parent_election_id": {
+					"name": "parent_election_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"source_url": {
+					"name": "source_url",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"license": {
+					"name": "license",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'dl-de/by-2.0'"
+				},
+				"source_updated_at": {
+					"name": "source_updated_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"wahl_jahr_typ_stimmtyp_uniq": {
+					"name": "wahl_jahr_typ_stimmtyp_uniq",
+					"columns": [
+						{
+							"expression": "jahr",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "typ",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "stimmtyp",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"wahl_parent_election_id_wahl_id_fk": {
+					"name": "wahl_parent_election_id_wahl_id_fk",
+					"tableFrom": "wahl",
+					"tableTo": "wahl",
+					"columnsFrom": ["parent_election_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.stimmbezirk": {
+			"name": "stimmbezirk",
+			"schema": "",
+			"columns": {
+				"wahl_id": {
+					"name": "wahl_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"uwb_id": {
+					"name": "uwb_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"wahlkreis": {
+					"name": "wahlkreis",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"wahlbezirk": {
+					"name": "wahlbezirk",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"bezirk_code": {
+					"name": "bezirk_code",
+					"type": "char(2)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"bezirksart": {
+					"name": "bezirksart",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"stimmbezirk_wahl_id_wahl_id_fk": {
+					"name": "stimmbezirk_wahl_id_wahl_id_fk",
+					"tableFrom": "stimmbezirk",
+					"tableTo": "wahl",
+					"columnsFrom": ["wahl_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"stimmbezirk_wahl_id_uwb_id_pk": {
+					"name": "stimmbezirk_wahl_id_uwb_id_pk",
+					"columns": ["wahl_id", "uwb_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.partei": {
+			"name": "partei",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"kurzname": {
+					"name": "kurzname",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"vollname": {
+					"name": "vollname",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"farbe_hex": {
+					"name": "farbe_hex",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"first_seen_year": {
+					"name": "first_seen_year",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"last_seen_year": {
+					"name": "last_seen_year",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"partei_kurzname_unique": {
+					"name": "partei_kurzname_unique",
+					"nullsNotDistinct": false,
+					"columns": ["kurzname"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.partei_alias": {
+			"name": "partei_alias",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"partei_id": {
+					"name": "partei_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"alias_label": {
+					"name": "alias_label",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"jahr": {
+					"name": "jahr",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {
+				"partei_alias_label_jahr_uniq": {
+					"name": "partei_alias_label_jahr_uniq",
+					"columns": [
+						{
+							"expression": "alias_label",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "jahr",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"partei_alias_partei_id_partei_id_fk": {
+					"name": "partei_alias_partei_id_partei_id_fk",
+					"tableFrom": "partei_alias",
+					"tableTo": "partei",
+					"columnsFrom": ["partei_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.ergebnis": {
+			"name": "ergebnis",
+			"schema": "",
+			"columns": {
+				"wahl_id": {
+					"name": "wahl_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"uwb_id": {
+					"name": "uwb_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"partei_id": {
+					"name": "partei_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stimmen": {
+					"name": "stimmen",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"anteil": {
+					"name": "anteil",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"ist_briefwahl_aggregat": {
+					"name": "ist_briefwahl_aggregat",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"ergebnis_wahl_id_wahl_id_fk": {
+					"name": "ergebnis_wahl_id_wahl_id_fk",
+					"tableFrom": "ergebnis",
+					"tableTo": "wahl",
+					"columnsFrom": ["wahl_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"ergebnis_partei_id_partei_id_fk": {
+					"name": "ergebnis_partei_id_partei_id_fk",
+					"tableFrom": "ergebnis",
+					"tableTo": "partei",
+					"columnsFrom": ["partei_id"],
+					"columnsTo": ["id"],
+					"onDelete": "restrict",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"ergebnis_wahl_id_uwb_id_partei_id_pk": {
+					"name": "ergebnis_wahl_id_uwb_id_partei_id_pk",
+					"columns": ["wahl_id", "uwb_id", "partei_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.wahl_aggregat_kiez": {
+			"name": "wahl_aggregat_kiez",
+			"schema": "",
+			"columns": {
+				"wahl_id": {
+					"name": "wahl_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"kiez_slug": {
+					"name": "kiez_slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"partei_id": {
+					"name": "partei_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stimmen": {
+					"name": "stimmen",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"anteil": {
+					"name": "anteil",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"wahl_aggregat_kiez_wahl_id_wahl_id_fk": {
+					"name": "wahl_aggregat_kiez_wahl_id_wahl_id_fk",
+					"tableFrom": "wahl_aggregat_kiez",
+					"tableTo": "wahl",
+					"columnsFrom": ["wahl_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"wahl_aggregat_kiez_partei_id_partei_id_fk": {
+					"name": "wahl_aggregat_kiez_partei_id_partei_id_fk",
+					"tableFrom": "wahl_aggregat_kiez",
+					"tableTo": "partei",
+					"columnsFrom": ["partei_id"],
+					"columnsTo": ["id"],
+					"onDelete": "restrict",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"wahl_aggregat_kiez_wahl_id_kiez_slug_partei_id_pk": {
+					"name": "wahl_aggregat_kiez_wahl_id_kiez_slug_partei_id_pk",
+					"columns": ["wahl_id", "kiez_slug", "partei_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.wahl_aggregat_bezirk": {
+			"name": "wahl_aggregat_bezirk",
+			"schema": "",
+			"columns": {
+				"wahl_id": {
+					"name": "wahl_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"bezirk_slug": {
+					"name": "bezirk_slug",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"partei_id": {
+					"name": "partei_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stimmen": {
+					"name": "stimmen",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"anteil": {
+					"name": "anteil",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"wahl_aggregat_bezirk_wahl_id_wahl_id_fk": {
+					"name": "wahl_aggregat_bezirk_wahl_id_wahl_id_fk",
+					"tableFrom": "wahl_aggregat_bezirk",
+					"tableTo": "wahl",
+					"columnsFrom": ["wahl_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"wahl_aggregat_bezirk_partei_id_partei_id_fk": {
+					"name": "wahl_aggregat_bezirk_partei_id_partei_id_fk",
+					"tableFrom": "wahl_aggregat_bezirk",
+					"tableTo": "partei",
+					"columnsFrom": ["partei_id"],
+					"columnsTo": ["id"],
+					"onDelete": "restrict",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"wahl_aggregat_bezirk_wahl_id_bezirk_slug_partei_id_pk": {
+					"name": "wahl_aggregat_bezirk_wahl_id_bezirk_slug_partei_id_pk",
+					"columns": ["wahl_id", "bezirk_slug", "partei_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.wahl_aggregat_berlin": {
+			"name": "wahl_aggregat_berlin",
+			"schema": "",
+			"columns": {
+				"wahl_id": {
+					"name": "wahl_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"partei_id": {
+					"name": "partei_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stimmen": {
+					"name": "stimmen",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"anteil": {
+					"name": "anteil",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"computed_at": {
+					"name": "computed_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"wahl_aggregat_berlin_wahl_id_wahl_id_fk": {
+					"name": "wahl_aggregat_berlin_wahl_id_wahl_id_fk",
+					"tableFrom": "wahl_aggregat_berlin",
+					"tableTo": "wahl",
+					"columnsFrom": ["wahl_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"wahl_aggregat_berlin_partei_id_partei_id_fk": {
+					"name": "wahl_aggregat_berlin_partei_id_partei_id_fk",
+					"tableFrom": "wahl_aggregat_berlin",
+					"tableTo": "partei",
+					"columnsFrom": ["partei_id"],
+					"columnsTo": ["id"],
+					"onDelete": "restrict",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"wahl_aggregat_berlin_wahl_id_partei_id_pk": {
+					"name": "wahl_aggregat_berlin_wahl_id_partei_id_pk",
+					"columns": ["wahl_id", "partei_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {
+		"public.locale": {
+			"name": "locale",
+			"schema": "public",
+			"values": ["de", "en"]
+		},
+		"public.page_type": {
+			"name": "page_type",
+			"schema": "public",
+			"values": ["bezirk", "kiez", "layer"]
+		},
+		"public.wahl_stimmtyp": {
+			"name": "wahl_stimmtyp",
+			"schema": "public",
+			"values": ["erststimme", "zweitstimme", "einstimme"]
+		},
+		"public.wahl_typ": {
+			"name": "wahl_typ",
+			"schema": "public",
+			"values": ["btw", "agh", "bvv"]
+		}
+	},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
 }

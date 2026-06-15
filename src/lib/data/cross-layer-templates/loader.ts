@@ -9,7 +9,12 @@
 
 import { load as parseYaml } from 'js-yaml';
 import * as v from 'valibot';
-import { TemplateFileSchema, type Template, type TemplateFile, type TemplateScope } from './schema.js';
+import {
+	TemplateFileSchema,
+	type Template,
+	type TemplateFile,
+	type TemplateScope
+} from './schema.js';
 
 export interface LoadedTemplateBundle {
 	readonly bundle: string;
@@ -22,9 +27,7 @@ export function parseTemplateFile(rawYaml: string): TemplateFile {
 	return v.parse(TemplateFileSchema, parsed);
 }
 
-export function loadTemplatesFromRawMap(
-	rawFiles: Record<string, string>
-): LoadedTemplateBundle[] {
+export function loadTemplatesFromRawMap(rawFiles: Record<string, string>): LoadedTemplateBundle[] {
 	const bundles: LoadedTemplateBundle[] = [];
 	for (const [path, raw] of Object.entries(rawFiles)) {
 		try {

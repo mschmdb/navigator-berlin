@@ -4,7 +4,7 @@ templates:
   - id: gruen-versorgung-bezirk
     applicableTo: [bezirk]
     requires: [gruen.dominantVersorgung]
-    question: "Wie ist die Grünversorgung im Bezirk {name}?"
+    question: 'Wie ist die Grünversorgung im Bezirk {name}?'
     answer: >-
       Im Bezirk {name} dominiert die Kategorie {gruenKategorie} für die
       wohnungsnahe Grünversorgung. {gruenErklaerung}
@@ -13,7 +13,7 @@ templates:
   - id: gruen-versorgung-kiez
     applicableTo: [kiez]
     requires: [gruen.dominantVersorgung]
-    question: "Wie ist die Grünversorgung im Kiez {name}?"
+    question: 'Wie ist die Grünversorgung im Kiez {name}?'
     answer: >-
       Die wohnungsnahe Grünversorgung im Kiez {name} liegt in der Kategorie
       {gruenKategorie}. {gruenErklaerung}
@@ -22,7 +22,7 @@ templates:
   - id: gruen-anzahl-anlagen
     applicableTo: [bezirk]
     requires: [gruen.gruenanlagenCount]
-    question: "Wie viele öffentliche Grünanlagen liegen in {name}?"
+    question: 'Wie viele öffentliche Grünanlagen liegen in {name}?'
     answer: >-
       Im Bezirk {name} liegen {gruenanlagenCount} öffentlich gewidmete Grünanlagen
       gemäß dem aktuellen Kataster der Senatsverwaltung. Privat-Gärten und
@@ -31,7 +31,7 @@ templates:
   - id: gruen-was-bedeutet-versorgung
     applicableTo: [layer]
     requires: []
-    question: "Was bedeutet wohnungsnahe Grünversorgung?"
+    question: 'Was bedeutet wohnungsnahe Grünversorgung?'
     answer: >-
       Die Senatsverwaltung berechnet pro Planungsraum, wie viele Quadratmeter
       wohnungsnahe Grünfläche pro Einwohnerin im Einzugsbereich liegen.
@@ -42,7 +42,7 @@ templates:
   - id: gruen-rolle-hitze
     applicableTo: [layer]
     requires: []
-    question: "Welche Rolle spielen Grünflächen für Hitze-Mitigation?"
+    question: 'Welche Rolle spielen Grünflächen für Hitze-Mitigation?'
     answer: >-
       Bäume und größere Grünflächen senken die Lufttemperatur durch Verschattung
       und Verdunstung. Stadtklima-Analysen zeigen, dass dicht bebaute Quartiere
@@ -53,7 +53,7 @@ templates:
   - id: gruen-gruenhitze-einordnung
     applicableTo: [bezirk, kiez]
     requires: [gruen.dominantVersorgung]
-    question: "Wie grün und kühl ist {name} im Vergleich?"
+    question: 'Wie grün und kühl ist {name} im Vergleich?'
     answer: >-
       {name} erreicht im Grün-und-Hitze-Score {gruenHitzeScore} von 100
       ({gruenHitzeRang}), {gruenHitzeVergleich}. Der Score verbindet

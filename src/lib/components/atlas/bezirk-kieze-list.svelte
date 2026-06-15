@@ -22,32 +22,27 @@
 				Kieze im Bezirk {bezirkName}
 			</h2>
 			{#if hasScores}
-				<p class="font-mono text-xs uppercase tracking-wide text-ink-subtle">
+				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
 					Top 5 nach Kiez-Score
 				</p>
 			{/if}
 		</header>
 		<ol class="flex flex-col font-sans text-base">
 			{#each kieze as kiez, idx (kiez.slug)}
-				<li
-					class="flex items-baseline gap-3 border-b border-rule/40 py-2 last:border-b-0"
-				>
-					<span
-						class="w-6 shrink-0 font-mono text-xs text-ink-subtle"
-						aria-hidden="true"
-					>
+				<li class="flex items-baseline gap-3 border-b border-rule/40 py-2 last:border-b-0">
+					<span class="w-6 shrink-0 font-mono text-xs text-ink-subtle" aria-hidden="true">
 						{idx + 1}.
 					</span>
 					<a
 						href={`/kiez/${kiez.slug}`}
-						class="grow text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong grow text-accent underline underline-offset-2"
 						data-testid="bezirk-kieze-link"
 					>
 						{kiez.name}
 					</a>
 					{#if typeof kiez.composite === 'number'}
 						<span
-							class="shrink-0 font-mono text-sm tabular-nums text-ink-muted"
+							class="shrink-0 font-mono text-sm text-ink-muted tabular-nums"
 							aria-label={`Kiez-Score ${kiez.composite} von 100`}
 						>
 							{kiez.composite}

@@ -1,10 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import {
-	BERLIN_LAND_CODE,
-	filterByLand,
-	parseBwlWbzCsv
-} from './lib/bwl-csv-parser.js';
+import { BERLIN_LAND_CODE, filterByLand, parseBwlWbzCsv } from './lib/bwl-csv-parser.js';
 import { extractBwlWbzCsv, fetchBwlZip } from './lib/bwl-fetcher.js';
 import { WAHL_SOURCES, type WahlSource } from './lib/sources.js';
 
@@ -134,7 +130,9 @@ export async function runSpike(source: WahlSource): Promise<Snapshot> {
 	console.log(`${tag} snapshot: ${outFile}`);
 	console.log(`${tag} asserts: ${allPass ? 'PASS' : 'FAIL'}`);
 	console.log(`  berlinRowsAroundExpected: ${snapshot.asserts.berlinRowsAroundExpected}`);
-	console.log(`  wahlkreiseCountIs12: ${snapshot.asserts.wahlkreiseCountIs12} (found ${wahlkreiseCount})`);
+	console.log(
+		`  wahlkreiseCountIs12: ${snapshot.asserts.wahlkreiseCountIs12} (found ${wahlkreiseCount})`
+	);
 	console.log(`  noNullWahlbezirk: ${snapshot.asserts.noNullWahlbezirk}`);
 
 	return snapshot;
@@ -142,12 +140,12 @@ export async function runSpike(source: WahlSource): Promise<Snapshot> {
 
 async function main(): Promise<void> {
 	const onlySlug = process.argv.find((a) => a.startsWith('--only='))?.slice('--only='.length);
-	const targets = onlySlug
-		? WAHL_SOURCES.filter((s) => s.slug === onlySlug)
-		: WAHL_SOURCES;
+	const targets = onlySlug ? WAHL_SOURCES.filter((s) => s.slug === onlySlug) : WAHL_SOURCES;
 
 	if (targets.length === 0) {
-		console.error(`No wahl matches --only=${onlySlug}. Known: ${WAHL_SOURCES.map((s) => s.slug).join(', ')}`);
+		console.error(
+			`No wahl matches --only=${onlySlug}. Known: ${WAHL_SOURCES.map((s) => s.slug).join(', ')}`
+		);
 		process.exit(2);
 	}
 

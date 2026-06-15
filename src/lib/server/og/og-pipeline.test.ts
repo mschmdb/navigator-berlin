@@ -149,7 +149,9 @@ describe('buildKiezTargetsFromGeoJson', () => {
 
 	it('throws when parent-bezirk code not in lookup', () => {
 		const bezirkCodeToSlug = new Map<string, string>();
-		expect(() => buildKiezTargetsFromGeoJson(SAMPLE_KIEZ, bezirkCodeToSlug)).toThrow(/unknown bezirk/i);
+		expect(() => buildKiezTargetsFromGeoJson(SAMPLE_KIEZ, bezirkCodeToSlug)).toThrow(
+			/unknown bezirk/i
+		);
 	});
 
 	it('disambiguiert Duplikat-Namen mit Bezirk-Suffix (OG-Slug = Page-Slug)', () => {
@@ -158,12 +160,32 @@ describe('buildKiezTargetsFromGeoJson', () => {
 			features: [
 				{
 					type: 'Feature',
-					geometry: { type: 'Polygon', coordinates: [[[13.15, 52.51], [13.16, 52.51], [13.16, 52.52], [13.15, 52.51]]] },
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[13.15, 52.51],
+								[13.16, 52.51],
+								[13.16, 52.52],
+								[13.15, 52.51]
+							]
+						]
+					},
 					properties: { BZR_NAME: 'Heerstraße', BEZ: '05' }
 				},
 				{
 					type: 'Feature',
-					geometry: { type: 'Polygon', coordinates: [[[13.23, 52.49], [13.24, 52.49], [13.24, 52.5], [13.23, 52.49]]] },
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[13.23, 52.49],
+								[13.24, 52.49],
+								[13.24, 52.5],
+								[13.23, 52.49]
+							]
+						]
+					},
 					properties: { BZR_NAME: 'Heerstraße', BEZ: '04' }
 				}
 			]

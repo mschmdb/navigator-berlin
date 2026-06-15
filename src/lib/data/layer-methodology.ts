@@ -316,8 +316,7 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 		relatedLayers: ['gruenversorgung-2023', 'spielplaetze']
 	},
 	spielplaetze: {
-		calculation:
-			'Öffentlich zugängliche Kinderspielplätze aus dem Berliner Grünanlagen-Register.',
+		calculation: 'Öffentlich zugängliche Kinderspielplätze aus dem Berliner Grünanlagen-Register.',
 		aggregationLevel: 'address',
 		updateFrequency: 'fortlaufend',
 		authorityKey: 'bezirksamt-gruenflaeche',
@@ -492,7 +491,15 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 			'Keine Qualitäts-Bewertung der Einrichtung (Layer zeigt nur Standort).',
 			'Privat-Krankenhäuser und Reha-Kliniken bleiben außen vor (nur Plan-Krankenhäuser).'
 		],
-		relatedLayers: ['kitas-2024', 'schulen-2024', 'krankenhaeuser-plan', 'spielplaetze', 'nahversorgung-lebensmittel', 'nahversorgung-apotheke', 'nahversorgung-post']
+		relatedLayers: [
+			'kitas-2024',
+			'schulen-2024',
+			'krankenhaeuser-plan',
+			'spielplaetze',
+			'nahversorgung-lebensmittel',
+			'nahversorgung-apotheke',
+			'nahversorgung-post'
+		]
 	},
 	'kiez-score-wohnschutz': {
 		calculation:
@@ -552,7 +559,9 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 
 function specToMethodology(spec: LayerMethodologySpec, locale: Locale): LayerMethodology {
 	const authorityBase = resolveAuthority(spec.authorityKey, locale);
-	const authority = spec.authoritySuffix ? `${authorityBase} ${spec.authoritySuffix}` : authorityBase;
+	const authority = spec.authoritySuffix
+		? `${authorityBase} ${spec.authoritySuffix}`
+		: authorityBase;
 	return {
 		calculation: spec.calculation,
 		coverageGaps: spec.coverageGaps,

@@ -22,7 +22,9 @@ async function loadManifest(): Promise<Manifest> {
 async function loadFc(filename: string): Promise<FeatureCollection> {
 	const hit = fcCache.get(filename);
 	if (hit) return hit;
-	const fc = JSON.parse(await readFile(join(STATIC_LAYERS_DIR, filename), 'utf-8')) as FeatureCollection;
+	const fc = JSON.parse(
+		await readFile(join(STATIC_LAYERS_DIR, filename), 'utf-8')
+	) as FeatureCollection;
 	fcCache.set(filename, fc);
 	return fc;
 }

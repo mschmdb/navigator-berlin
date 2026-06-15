@@ -25,7 +25,7 @@
 					{#if idx < items.length - 1}
 						<a
 							href={item.path}
-							class="text-accent underline underline-offset-2 hover:text-accent-strong"
+							class="hover:text-accent-strong text-accent underline underline-offset-2"
 						>
 							{item.name}
 						</a>

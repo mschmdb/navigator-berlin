@@ -127,7 +127,11 @@ async function callClaude(input: ProfileInput): Promise<string> {
 	return text;
 }
 
-export function profileFrontmatter(b: BuiltInput, model: string, generatedAt: string): {
+export function profileFrontmatter(
+	b: BuiltInput,
+	model: string,
+	generatedAt: string
+): {
 	slug: string;
 	name: string;
 	pageType: string;

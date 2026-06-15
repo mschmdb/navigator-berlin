@@ -34,8 +34,7 @@ describe('classifyAndDraftCommit', () => {
 	});
 
 	it('extrahiert JSON aus markdown-fences', async () => {
-		const subagent = async () =>
-			'```json\n{"kind":"skip","reason":"so weit, so gut"}\n```';
+		const subagent = async () => '```json\n{"kind":"skip","reason":"so weit, so gut"}\n```';
 		const r = await classifyAndDraftCommit(baseInput, { systemPrompt, subagent });
 		expect(r.kind).toBe('skip');
 	});
@@ -50,7 +49,14 @@ describe('classifyAndDraftCommit', () => {
 
 	it('skip bei Schema-Verstoß mit Begründung', async () => {
 		const subagent = async () =>
-			JSON.stringify({ kind: 'draft', category: 'unknown-cat', title_de: '', summary_de: '', tags: [], body: '' });
+			JSON.stringify({
+				kind: 'draft',
+				category: 'unknown-cat',
+				title_de: '',
+				summary_de: '',
+				tags: [],
+				body: ''
+			});
 		const r = await classifyAndDraftCommit(baseInput, { systemPrompt, subagent });
 		expect(r.kind).toBe('skip');
 		if (r.kind !== 'skip') throw new Error('unreachable');

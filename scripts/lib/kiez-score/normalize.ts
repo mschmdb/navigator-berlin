@@ -128,9 +128,7 @@ export function normalizeDensity(
 		// Story 13.1: 'log' dämpft den Center-Bias — der erste POI zählt stark, weitere flachen ab
 		// (100 * ln(1+count)/ln(1+cap)). Default 'linear' (count/cap) bleibt für bestehende Terme.
 		const ratio =
-			config.scale === 'log'
-				? Math.log(1 + count) / Math.log(1 + config.cap)
-				: count / config.cap;
+			config.scale === 'log' ? Math.log(1 + count) / Math.log(1 + config.cap) : count / config.cap;
 		return Math.max(0, Math.min(100, Math.round(ratio * 100 * 10) / 10));
 	}
 	if (nearestM === null) return 0;
@@ -143,10 +141,7 @@ export function normalizeDensity(
  * Kita-Plätze pro Kind 0-6 (Story 10.1). Höher = besser. `null` (kein Nenner) bleibt null.
  * >= bestAt → 100, <= 0 → 0, linear dazwischen.
  */
-export function normalizeKitaProKind(
-	plaetzeProKind: number | null,
-	bestAt: number
-): number | null {
+export function normalizeKitaProKind(plaetzeProKind: number | null, bestAt: number): number | null {
 	if (plaetzeProKind === null || !Number.isFinite(plaetzeProKind)) return null;
 	if (bestAt <= 0) return null;
 	if (plaetzeProKind <= 0) return 0;

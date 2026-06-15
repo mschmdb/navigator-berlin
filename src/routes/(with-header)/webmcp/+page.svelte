@@ -29,10 +29,10 @@
 	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl" lang="de">WebMCP</h1>
 
 	<p class="text-fg-muted mt-6 leading-relaxed">
-		WebMCP ist eine Browser-API, mit der Websites strukturierte Tools an
-		KI-Agenten ausliefern können. Statt HTML zu scrapen, fragt der Agent eine
-		Adresse oder einen Datensatz direkt ab und bekommt Zahl, Quelle und Lizenz
-		zurück. navigator.berlin liefert seit Mai 2026 neun solche Tools.
+		WebMCP ist eine Browser-API, mit der Websites strukturierte Tools an KI-Agenten ausliefern
+		können. Statt HTML zu scrapen, fragt der Agent eine Adresse oder einen Datensatz direkt ab und
+		bekommt Zahl, Quelle und Lizenz zurück. navigator.berlin liefert seit Mai 2026 neun solche
+		Tools.
 	</p>
 
 	<section class="mt-10">
@@ -46,12 +46,10 @@
 				target="_blank"
 			>
 				W3C-Community-Group-Draft
-			</a>, gemeinsam von Microsoft und Google entwickelt, gehostet in der
-			Web Machine Learning Community Group. Letzte Veröffentlichung:
-			April 2026. Ausdrücklich nicht auf dem W3C-Standards-Track. Das heißt:
-			interessierte Parteien haben sich auf einen Entwurf geeinigt, aber noch
-			ist kein Commitment, daraus eine offizielle Web-Plattform-API zu
-			machen.
+			</a>, gemeinsam von Microsoft und Google entwickelt, gehostet in der Web Machine Learning
+			Community Group. Letzte Veröffentlichung: April 2026. Ausdrücklich nicht auf dem
+			W3C-Standards-Track. Das heißt: interessierte Parteien haben sich auf einen Entwurf geeinigt,
+			aber noch ist kein Commitment, daraus eine offizielle Web-Plattform-API zu machen.
 		</p>
 		<p class="mt-3 leading-relaxed">
 			Spec-URL:
@@ -72,33 +70,32 @@
 			<div>
 				<dt class="font-medium">Chrome Canary 146+</dt>
 				<dd class="text-fg-muted">
-					Erste native Implementation seit Anfang 2026. Aktivierung über
-					Flag <code class="font-mono text-sm">chrome://flags/#enable-webmcp-testing</code>
+					Erste native Implementation seit Anfang 2026. Aktivierung über Flag <code
+						class="font-mono text-sm">chrome://flags/#enable-webmcp-testing</code
+					>
 					plus Neustart.
 				</dd>
 			</div>
 			<div>
 				<dt class="font-medium">Microsoft Edge 147</dt>
 				<dd class="text-fg-muted">
-					Support angekündigt für März 2026. Vermutlich gleiche Flag-
-					Mechanik wie Chrome.
+					Support angekündigt für März 2026. Vermutlich gleiche Flag- Mechanik wie Chrome.
 				</dd>
 			</div>
 			<div>
 				<dt class="font-medium">Firefox und Safari</dt>
 				<dd class="text-fg-muted">
-					In Spec-Diskussion, kein Release-Datum. Realistische Schätzung:
-					Q3 2026 frühestens.
+					In Spec-Diskussion, kein Release-Datum. Realistische Schätzung: Q3 2026 frühestens.
 				</dd>
 			</div>
 			<div>
 				<dt class="font-medium">Polyfill</dt>
 				<dd class="text-fg-muted">
-					Für Browser ohne native Implementation laden LLM-Browser-Extensions
-					oft einen Polyfill, der
+					Für Browser ohne native Implementation laden LLM-Browser-Extensions oft einen Polyfill,
+					der
 					<code class="font-mono text-sm">navigator.modelContext</code>
-					nachreicht. So funktionieren die Tools auch in Chrome Stable,
-					Firefox oder Safari, sofern der Agent diesen Weg fährt.
+					nachreicht. So funktionieren die Tools auch in Chrome Stable, Firefox oder Safari, sofern der
+					Agent diesen Weg fährt.
 				</dd>
 			</div>
 		</dl>
@@ -107,29 +104,27 @@
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Begründung für frühen Einsatz</h2>
 		<p class="mt-3 leading-relaxed">
-			Die Spec ist Draft und der Browser-Support frisch. Wir liefern WebMCP-
-			Tools trotzdem aus, weil:
+			Die Spec ist Draft und der Browser-Support frisch. Wir liefern WebMCP- Tools trotzdem aus,
+			weil:
 		</p>
 		<ul class="mt-3 ml-6 list-disc space-y-2 leading-relaxed">
 			<li>
-				Strukturierte Tool-Discovery ist die richtige Richtung. HTML-Scraping
-				durch LLMs erzeugt schlechte Antworten und unnötigen Traffic. Eine
-				deklarative Schnittstelle mit Quelle und Lizenz pro Antwort ist eine
-				ehrliche Datenausgabe.
+				Strukturierte Tool-Discovery ist die richtige Richtung. HTML-Scraping durch LLMs erzeugt
+				schlechte Antworten und unnötigen Traffic. Eine deklarative Schnittstelle mit Quelle und
+				Lizenz pro Antwort ist eine ehrliche Datenausgabe.
 			</li>
 			<li>
-				Standards entstehen, wenn früh Sites mitmachen. Eine Bürger-Daten-
-				Plattform sollte solche Open-Web-Initiativen unterstützen, nicht
-				nur kommerzielle.
+				Standards entstehen, wenn früh Sites mitmachen. Eine Bürger-Daten- Plattform sollte solche
+				Open-Web-Initiativen unterstützen, nicht nur kommerzielle.
 			</li>
 			<li>
-				Der Aufwand ist gering. Die neun Tools sind Wrapper um Funktionen,
-				die ohnehin existieren (Adress-Lookup, Layer-Abfrage, Wahl-Daten).
-				Spec-Änderungen wirken sich nur auf eine Adapter-Datei aus.
+				Der Aufwand ist gering. Die neun Tools sind Wrapper um Funktionen, die ohnehin existieren
+				(Adress-Lookup, Layer-Abfrage, Wahl-Daten). Spec-Änderungen wirken sich nur auf eine
+				Adapter-Datei aus.
 			</li>
 			<li>
-				Bricht die Spec, fällt eine Subseite aus. Die Hauptseite bleibt
-				bedienbar. Damit ist das Risiko eingegrenzt.
+				Bricht die Spec, fällt eine Subseite aus. Die Hauptseite bleibt bedienbar. Damit ist das
+				Risiko eingegrenzt.
 			</li>
 		</ul>
 	</section>
@@ -137,8 +132,7 @@
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Verfügbare Tools</h2>
 		<p class="mt-3 leading-relaxed">
-			Aktuell sind neun Tools registriert. Volltext-Manifest mit JSON-Schemas
-			pro Tool unter
+			Aktuell sind neun Tools registriert. Volltext-Manifest mit JSON-Schemas pro Tool unter
 			<a class="text-accent underline" href="/webmcp-manifest.json">/webmcp-manifest.json</a>.
 		</p>
 		<dl class="mt-3 space-y-2 leading-relaxed">
@@ -172,15 +166,13 @@
 			</div>
 			<div>
 				<dt class="font-mono text-sm">list_elections</dt>
-				<dd class="text-fg-muted text-sm">
-					Alle 12 Berliner Wahlen seit 2011 auflisten.
-				</dd>
+				<dd class="text-fg-muted text-sm">Alle 12 Berliner Wahlen seit 2011 auflisten.</dd>
 			</div>
 			<div>
 				<dt class="font-mono text-sm">get_election_result</dt>
 				<dd class="text-fg-muted text-sm">
-					Ergebnis an einer Adresse für eine bestimmte Wahl, auf wählbarer
-					Ebene (Stimmbezirk, Kiez, Bezirk, Berlin).
+					Ergebnis an einer Adresse für eine bestimmte Wahl, auf wählbarer Ebene (Stimmbezirk, Kiez,
+					Bezirk, Berlin).
 				</dd>
 			</div>
 			<div>
@@ -191,9 +183,7 @@
 			</div>
 			<div>
 				<dt class="font-mono text-sm">get_voting_district_geometry</dt>
-				<dd class="text-fg-muted text-sm">
-					GeoJSON-Polygon zu einer Stimmbezirks-ID liefern.
-				</dd>
+				<dd class="text-fg-muted text-sm">GeoJSON-Polygon zu einer Stimmbezirks-ID liefern.</dd>
 			</div>
 		</dl>
 	</section>
@@ -217,8 +207,7 @@
 				öffnen, „WebMCP for testing" auf „Enabled" setzen, Canary neu starten.
 			</li>
 			<li>
-				navigator.berlin im Canary öffnen. Die neun Tools sind automatisch
-				bei
+				navigator.berlin im Canary öffnen. Die neun Tools sind automatisch bei
 				<code class="font-mono text-sm">navigator.modelContext</code>
 				registriert (siehe DevTools-Konsole).
 			</li>
@@ -240,9 +229,9 @@
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Einsatz ohne Canary</h2>
 		<p class="mt-3 leading-relaxed">
-			Wer im Stable-Chrome, Firefox oder Safari bleibt, kann WebMCP über eine
-			LLM-Browser-Extension nutzen, die einen Polyfill mitlädt. Aktuelle
-			Anthropic-Browser-Tools und einige ChatGPT-Plugins fahren diesen Weg.
+			Wer im Stable-Chrome, Firefox oder Safari bleibt, kann WebMCP über eine LLM-Browser-Extension
+			nutzen, die einen Polyfill mitlädt. Aktuelle Anthropic-Browser-Tools und einige
+			ChatGPT-Plugins fahren diesen Weg.
 		</p>
 		<p class="mt-3 leading-relaxed">
 			Discovery-Pfad (Konvention, nicht Standard):
@@ -298,5 +287,4 @@
 			</li>
 		</ul>
 	</section>
-
 </main>

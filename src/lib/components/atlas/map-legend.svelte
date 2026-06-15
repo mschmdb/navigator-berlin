@@ -77,7 +77,7 @@
 							<span
 								data-testid={`legend-variant-${entry.slug}`}
 								data-variant={entry.variant}
-								class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+								class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 							>
 								{VARIANT_LABEL[entry.variant]}
 							</span>
@@ -89,9 +89,7 @@
 								type="button"
 								data-testid={`legend-eye-${entry.slug}`}
 								aria-pressed={entry.hidden}
-								aria-label={entry.hidden
-									? `${entry.name} einblenden`
-									: `${entry.name} ausblenden`}
+								aria-label={entry.hidden ? `${entry.name} einblenden` : `${entry.name} ausblenden`}
 								onclick={() => onToggleHidden!(entry.slug)}
 								class="p-0.5 text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
 							>
@@ -108,7 +106,7 @@
 								data-testid={`legend-remove-${entry.slug}`}
 								aria-label={`${entry.name} aus aktiven Layern entfernen`}
 								onclick={() => onRemove!(entry.slug)}
-								class="p-0.5 text-ink-muted hover:text-vermillion focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+								class="hover:text-vermillion p-0.5 text-ink-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
 							>
 								<X size={14} aria-hidden="true" />
 							</button>
@@ -183,10 +181,7 @@
 						<span class="hidden group-open:inline">Weniger</span>
 					</summary>
 
-					<div
-						data-testid={`legend-expand-${entry.slug}`}
-						class="mt-1.5 flex flex-col gap-1.5"
-					>
+					<div data-testid={`legend-expand-${entry.slug}`} class="mt-1.5 flex flex-col gap-1.5">
 						{#if entry.explain.long}
 							<p class="font-serif text-xs leading-snug text-ink-muted">
 								{entry.explain.long}
@@ -203,10 +198,7 @@
 						{#if entry.meta}
 							<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px]">
 								{#if entry.meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
-									<span
-										data-testid={`legend-source-link-${entry.slug}`}
-										class="text-ink-subtle"
-									>
+									<span data-testid={`legend-source-link-${entry.slug}`} class="text-ink-subtle">
 										Eigene Berechnung
 									</span>
 								{:else}
@@ -215,7 +207,7 @@
 										href={entry.meta.sourceUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="text-accent underline underline-offset-2 hover:text-accent-strong"
+										class="hover:text-accent-strong text-accent underline underline-offset-2"
 									>
 										Quelle
 									</a>
@@ -246,7 +238,7 @@
 				data-testid="legend-limit-warning"
 				role="status"
 				aria-live="polite"
-				class="border-t border-rule pt-2 font-mono text-[10px] leading-snug text-vermillion"
+				class="text-vermillion border-t border-rule pt-2 font-mono text-[10px] leading-snug"
 			>
 				Mehr als 3 Polygon-Layer aktiv. Lesbarkeit eingeschränkt, ein Layer per Auge ausblenden.
 			</p>

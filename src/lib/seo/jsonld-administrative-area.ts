@@ -11,8 +11,7 @@ import { buildPlace, type PlaceInput, type PlaceLeafJsonLd } from './jsonld-plac
  */
 export type AdministrativeAreaInput = PlaceInput;
 
-export interface AdministrativeAreaLeafJsonLd
-	extends Omit<PlaceLeafJsonLd, '@type'> {
+export interface AdministrativeAreaLeafJsonLd extends Omit<PlaceLeafJsonLd, '@type'> {
 	'@type': 'AdministrativeArea';
 	geo: GeoCoordinates;
 	additionalProperty?: PropertyValue[];
@@ -20,9 +19,7 @@ export interface AdministrativeAreaLeafJsonLd
 
 export type AdministrativeAreaJsonLd = WithContext<AdministrativeAreaLeafJsonLd>;
 
-export function buildAdministrativeArea(
-	input: AdministrativeAreaInput
-): AdministrativeAreaJsonLd {
+export function buildAdministrativeArea(input: AdministrativeAreaInput): AdministrativeAreaJsonLd {
 	const base = buildPlace(input);
 	return {
 		...base,

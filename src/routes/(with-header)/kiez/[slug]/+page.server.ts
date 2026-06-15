@@ -3,11 +3,7 @@ import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
 import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
-import {
-	buildKiezeInBezirk,
-	pickSiblings,
-	type KiezRef
-} from '$lib/data/get-kieze-in-bezirk.js';
+import { buildKiezeInBezirk, pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { featureFlags } from '$lib/data/feature-flags.js';
 import type { WahlVerlaufRow } from '$lib/components/atlas/kiez-wahl-verlauf.svelte';
@@ -174,9 +170,8 @@ async function tryBuildWahlVerlauf(kiezSlug: string): Promise<KiezPageData['wahl
 	if (!featureFlags.crossLayerStoryBlock) return [];
 	if (!process.env.DATABASE_URL) return [];
 	try {
-		const { getSparklineForKiez } = await import(
-			'$lib/server/db/queries/wahl/get-sparkline-for-kiez.js'
-		);
+		const { getSparklineForKiez } =
+			await import('$lib/server/db/queries/wahl/get-sparkline-for-kiez.js');
 
 		const sparklinesByVariant = await Promise.all(
 			WAHL_TREND_VARIANTS.map(async (v) => ({

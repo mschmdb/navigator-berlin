@@ -6,10 +6,7 @@
 	import DataStandBanner from './data-stand-banner.svelte';
 	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
 	import { getValueSeverity } from './internal/value-severity-mapping.js';
-	import {
-		getLayerExplainEntry,
-		getLayerExternalLink
-	} from './internal/layer-explain.js';
+	import { getLayerExplainEntry, getLayerExternalLink } from './internal/layer-explain.js';
 	import { isOutdated } from './internal/source-shortener.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
@@ -26,15 +23,7 @@
 		onToggleLayer?: (slug: string) => void;
 	};
 
-	let {
-		hit,
-		layerName,
-		lang = 'de',
-		lat,
-		lng,
-		isActive = false,
-		onToggleLayer
-	}: Props = $props();
+	let { hit, layerName, lang = 'de', lat, lng, isActive = false, onToggleLayer }: Props = $props();
 
 	let showMore = $state(false);
 	function toggleMore(): void {
@@ -56,7 +45,7 @@
 	const hasMore = $derived(
 		Boolean(
 			explainEntry.long &&
-				(explainEntry.long !== explainEntry.short || explainEntry.valueScaleExplain)
+			(explainEntry.long !== explainEntry.short || explainEntry.valueScaleExplain)
 		)
 	);
 	const externalLink = $derived(getLayerExternalLink(hit.layer));
@@ -78,9 +67,7 @@
 		if (rowState === 'out-of-concept') return 'Nicht ausgewiesen für diese Lage';
 		if (rowState === 'seasonal') return 'Layer Mai–Oktober aktiv';
 		if (display.chip) {
-			return display.chip.unit
-				? `${display.chip.value} ${display.chip.unit}`
-				: display.chip.value;
+			return display.chip.unit ? `${display.chip.value} ${display.chip.unit}` : display.chip.value;
 		}
 		if (display.fallbackText) return display.fallbackText;
 		return 'Daten nicht vorhanden';
@@ -121,7 +108,7 @@
 	class="-mx-2 flex flex-col gap-1.5 rounded-sm border-b border-rule px-2 py-3 transition-colors last:border-b-0 hover:bg-bg/50"
 >
 	<div class="flex flex-col gap-1.5">
-		<span class="text-base font-medium text-ink leading-tight" data-testid="layer-name">
+		<span class="text-base leading-tight font-medium text-ink" data-testid="layer-name">
 			{layerName}
 		</span>
 		<div
@@ -141,24 +128,18 @@
 					{display.fallbackText}
 				</span>
 			{:else if rowState === 'no-coverage'}
-				<span
-					class="font-serif italic text-ink-subtle text-sm"
-					data-testid="value-no-coverage"
-				>
+				<span class="font-serif text-sm text-ink-subtle italic" data-testid="value-no-coverage">
 					Daten nicht vorhanden
 				</span>
 			{:else if rowState === 'coverage-out-of-scope'}
 				<span
-					class="font-serif italic text-ink-subtle text-sm"
+					class="font-serif text-sm text-ink-subtle italic"
 					data-testid="value-coverage-out-of-scope"
 				>
 					Datensatz deckt diese Lage nicht ab
 				</span>
 			{:else if rowState === 'out-of-concept'}
-				<span
-					class="font-serif italic text-ink-subtle text-sm"
-					data-testid="value-out-of-concept"
-				>
+				<span class="font-serif text-sm text-ink-subtle italic" data-testid="value-out-of-concept">
 					Nicht ausgewiesen für diese Lage
 				</span>
 			{:else if rowState === 'seasonal'}
@@ -170,14 +151,14 @@
 			{#if showSeasonalActivePill}
 				<span
 					data-testid="seasonal-pill-active"
-					class="inline-flex items-center rounded-sm bg-state-success/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-state-success"
+					class="inline-flex items-center rounded-sm bg-state-success/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide text-state-success uppercase"
 				>
 					aktiv (Mai–Oktober)
 				</span>
 			{:else if showSeasonalOutOfSeasonPill}
 				<span
 					data-testid="seasonal-pill-outofseason"
-					class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-state-warning"
+					class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide text-state-warning uppercase"
 				>
 					außerhalb der Saison
 				</span>
@@ -192,13 +173,11 @@
 					aria-label={isActive
 						? `${layerName} von Karte entfernen`
 						: `${layerName} auf Karte zeigen`}
-					title={isActive
-						? `${layerName} von Karte entfernen`
-						: `${layerName} auf Karte zeigen`}
+					title={isActive ? `${layerName} von Karte entfernen` : `${layerName} auf Karte zeigen`}
 					onclick={() => onToggleLayer?.(hit.layer)}
 					class={[
 						'inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:bg-bg hover:text-ink',
-						isActive && 'text-accent hover:text-accent-strong'
+						isActive && 'hover:text-accent-strong text-accent'
 					]
 						.filter(Boolean)
 						.join(' ')}
@@ -260,7 +239,7 @@
 			target="_blank"
 			rel="noopener noreferrer"
 			data-testid="external-link"
-			class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="hover:text-accent-strong inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
 		>
 			<ExternalLink size={12} aria-hidden="true" />
 			{externalLink.label}

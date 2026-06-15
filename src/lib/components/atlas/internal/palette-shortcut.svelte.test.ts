@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { shouldHandleSlash, isFocusInTextInput } from './palette-shortcut.js';
 
-function ev(key: string, target: HTMLElement | null = null, opts: KeyboardEventInit = {}): KeyboardEvent {
+function ev(
+	key: string,
+	target: HTMLElement | null = null,
+	opts: KeyboardEventInit = {}
+): KeyboardEvent {
 	const e = new KeyboardEvent('keydown', { key, ...opts });
 	if (target) Object.defineProperty(e, 'target', { value: target });
 	return e;

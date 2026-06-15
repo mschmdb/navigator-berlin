@@ -2,9 +2,9 @@
 slug: bohnsdorf
 name: Bohnsdorf
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 6892d05501b2adbf
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Bohnsdorf liegt ruhig und grün. Bei Ruhe und Luft liegt der Kiez nahe am Berliner Median, aber unter dem Bezirksschnitt. Bei Grün und Hitze liegt er nahe an Median und Bezirksschnitt. Die Grünversorgung gilt als gut. Die gefühlte Temperatur liegt bei rund 38 Grad. Die Lärmbelastung ist mittel.

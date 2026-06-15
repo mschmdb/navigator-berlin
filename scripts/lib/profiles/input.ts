@@ -21,7 +21,11 @@ export interface ProfileInput {
 	readonly bezirk: string | null;
 	readonly einwohner: number | null;
 	readonly flaecheHa: number | null;
-	readonly composite: { readonly score: number | null; readonly rang: number | null; readonly total: number };
+	readonly composite: {
+		readonly score: number | null;
+		readonly rang: number | null;
+		readonly total: number;
+	};
 	readonly dims: readonly ProfileDim[];
 	/** Flache, lesbare Fakten (Cluster-Werte + Counts) als zusätzlicher Anker. */
 	readonly facts: Readonly<Record<string, string | number>>;

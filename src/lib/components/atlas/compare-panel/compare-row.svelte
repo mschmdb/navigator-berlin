@@ -108,7 +108,9 @@
 				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayA.context}</div>
 			{/if}
 		{:else}
-			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar">–</span>
+			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar"
+				>–</span
+			>
 		{/if}
 	</td>
 	<td class="py-2 align-top">
@@ -139,23 +141,22 @@
 				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayB.context}</div>
 			{/if}
 		{:else}
-			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar">–</span>
+			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar"
+				>–</span
+			>
 		{/if}
 	</td>
 </tr>
 {#if compareResult.deltaLabel || compareResult.advisory}
 	<tr data-testid="compare-row-delta" data-slug={slug}>
-		<td colspan="3" class="pb-2 pl-3 pt-0">
+		<td colspan="3" class="pt-0 pb-2 pl-3">
 			{#if compareResult.deltaLabel}
 				<span class="font-mono text-xs text-ink-muted" data-testid="compare-delta-label">
 					{compareResult.deltaLabel}
 				</span>
 			{/if}
 			{#if compareResult.advisory}
-				<span
-					class="ml-2 font-serif italic text-xs text-ink-subtle"
-					data-testid="compare-advisory"
-				>
+				<span class="ml-2 font-serif text-xs text-ink-subtle italic" data-testid="compare-advisory">
 					{compareResult.advisory}
 				</span>
 			{/if}

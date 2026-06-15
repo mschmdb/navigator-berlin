@@ -43,7 +43,10 @@ export async function getLaermDbAt(
 	lng: number,
 	fetchFn: typeof fetch = fetch
 ): Promise<number | null> {
-	const [payload, lorFeatures] = await Promise.all([loadPayload(fetchFn), loadLorFeatures(fetchFn)]);
+	const [payload, lorFeatures] = await Promise.all([
+		loadPayload(fetchFn),
+		loadLorFeatures(fetchFn)
+	]);
 	if (!payload || lorFeatures.length === 0) return null;
 	const plrId = findLorIdContaining(lat, lng, lorFeatures);
 	if (!plrId) return null;

@@ -22,10 +22,7 @@ export type KiezMapping = {
  * | AGH/BVV 16 | `${BEZ}W${UWB3}` (no suffix)    | `${BEZ}W${UWB3}`                     |
  * | AGH/BVV 11 | (different, Adresse-Spalte fehlt) | not mappable                       |
  */
-export function dbUwbIdFromGeo(
-	props: GeoUwbProps,
-	wahlSlug: string
-): string | null {
+export function dbUwbIdFromGeo(props: GeoUwbProps, wahlSlug: string): string | null {
 	const bez = typeof props.BEZ === 'string' ? props.BEZ.padStart(2, '0') : null;
 	const uwb3 = pickUwb3(props);
 	if (!bez || !uwb3) return null;

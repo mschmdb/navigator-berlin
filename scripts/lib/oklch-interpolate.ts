@@ -19,7 +19,13 @@ function clamp01(x: number): number {
 
 function hexToRgb(hex: string): Rgb {
 	const m = hex.replace('#', '');
-	const full = m.length === 3 ? m.split('').map((c) => c + c).join('') : m;
+	const full =
+		m.length === 3
+			? m
+					.split('')
+					.map((c) => c + c)
+					.join('')
+			: m;
 	const r = parseInt(full.substring(0, 2), 16) / 255;
 	const g = parseInt(full.substring(2, 4), 16) / 255;
 	const b = parseInt(full.substring(4, 6), 16) / 255;

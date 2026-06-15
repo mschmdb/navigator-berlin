@@ -1,9 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-	await page.route('**/api/geocode**', (route) =>
-		route.fulfill({ json: { suggestions: [] } })
-	);
+	await page.route('**/api/geocode**', (route) => route.fulfill({ json: { suggestions: [] } }));
 	await page.route('**/_app/remote/**', (route) =>
 		route.fulfill({ json: { type: 'result', result: [] } })
 	);

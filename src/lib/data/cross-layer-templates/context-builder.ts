@@ -51,8 +51,6 @@ export function buildKiezTrendContext(input: KiezTrendInput): TemplateContext | 
 		wahl_typ_label: input.wahlTypLabel,
 		stimmtyp_label: input.stimmtypLabel,
 		sparkline_jahre: years.join(', '),
-		sparkline_jahre_top_parteien: topPerYear
-			.map((t) => `${t.partei} (${t.jahr})`)
-			.join(', ')
+		sparkline_jahre_top_parteien: topPerYear.map((t) => `${t.partei} (${t.jahr})`).join(', ')
 	};
 }

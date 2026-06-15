@@ -119,9 +119,9 @@ describe('buildBezirkCardVdom', () => {
 	});
 
 	it('falls back to en-dash when composite is null', () => {
-		const joined = collectText(
-			buildBezirkCardVdom({ ...params, scoreCard: emptyScoreCard })
-		).join('|');
+		const joined = collectText(buildBezirkCardVdom({ ...params, scoreCard: emptyScoreCard })).join(
+			'|'
+		);
 		expect(joined).toContain('–');
 		expect(joined).not.toMatch(/—/);
 	});
@@ -142,17 +142,15 @@ describe('buildBezirkCardVdom', () => {
 
 	it('returns a 1200×630 root container (OG-Spec, supersample im Render-Layer)', () => {
 		const vdom = buildBezirkCardVdom(params);
-		const style = (vdom as unknown as { props: { style: { width: number; height: number } } })
-			.props.style;
+		const style = (vdom as unknown as { props: { style: { width: number; height: number } } }).props
+			.style;
 		expect(style.width).toBe(1200);
 		expect(style.height).toBe(630);
 	});
 
 	it('renders logo <img> when logoDataUri is provided', () => {
 		const dataUri = 'data:image/svg+xml;base64,FAKE_BASE64_LOGO';
-		const sources = collectImgSources(
-			buildBezirkCardVdom({ ...params, logoDataUri: dataUri })
-		);
+		const sources = collectImgSources(buildBezirkCardVdom({ ...params, logoDataUri: dataUri }));
 		expect(sources).toContain(dataUri);
 	});
 
@@ -186,9 +184,9 @@ describe('buildKiezCardVdom', () => {
 	});
 
 	it('handles empty score-card gracefully', () => {
-		const joined = collectText(
-			buildKiezCardVdom({ ...params, scoreCard: emptyScoreCard })
-		).join('|');
+		const joined = collectText(buildKiezCardVdom({ ...params, scoreCard: emptyScoreCard })).join(
+			'|'
+		);
 		expect((joined.match(/–/g) ?? []).length).toBeGreaterThanOrEqual(5);
 	});
 });
@@ -229,9 +227,7 @@ describe('buildLayerCardVdom', () => {
 
 	it('renders logo when provided', () => {
 		const dataUri = 'data:image/svg+xml;base64,LAYER_LOGO';
-		const sources = collectImgSources(
-			buildLayerCardVdom({ ...params, logoDataUri: dataUri })
-		);
+		const sources = collectImgSources(buildLayerCardVdom({ ...params, logoDataUri: dataUri }));
 		expect(sources).toContain(dataUri);
 	});
 });

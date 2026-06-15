@@ -10,7 +10,9 @@ const INPUT: ProfileInput = {
 	einwohner: null,
 	flaecheHa: null,
 	composite: { score: 51.1, rang: 19, total: 143 },
-	dims: [{ label: 'Mobilität', score: 54.7, rang: 2, total: 143, bezirkMean: 38.2, berlinMedian: 21.8 }],
+	dims: [
+		{ label: 'Mobilität', score: 54.7, rang: 2, total: 143, bezirkMean: 38.2, berlinMedian: 21.8 }
+	],
 	facts: { petGrad: 36.8, oepnvStopsProKm2: 27.9 }
 };
 

@@ -3,11 +3,7 @@ import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
-import {
-	buildKiezeInBezirk,
-	pickTop,
-	type KiezRef
-} from '$lib/data/get-kieze-in-bezirk.js';
+import { buildKiezeInBezirk, pickTop, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
 import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
 import type { ComparisonDimRow } from '$lib/data/comparison-types.js';

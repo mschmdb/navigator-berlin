@@ -3,10 +3,7 @@ import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import type { Feature, FeatureCollection } from 'geojson';
 import type { LayerEntry, Manifest } from './lib/types.js';
-import {
-	buildKiezScoresFromInput,
-	buildDerivedLayerGeojsons
-} from './lib/kiez-score/pipeline.js';
+import { buildKiezScoresFromInput, buildDerivedLayerGeojsons } from './lib/kiez-score/pipeline.js';
 import type { BuildLayerSpec } from './lib/kiez-score/build-helpers.js';
 import type { LayerHitLike } from './lib/kiez-score/types.js';
 import type { OepnvStopIndexShape } from './lib/kiez-score/nearest-stops.js';
@@ -113,7 +110,11 @@ async function buildPerLorHits(
 	const einwohner = await readJson<{ records: EinwohnerRecord[] }>(EINWOHNER).catch(() => null);
 	if (!einwohner) throw new Error(`${EINWOHNER} fehlt. Lauf zuerst pnpm fetch:einwohner.`);
 	const kinderByPlr = new Map(einwohner.records.map((r) => [r.plrId, r.kinder0bis6]));
-	const plaetzeByLor = aggregateKitaPlaetzeByLor(lorFeatures, kitaFeatures, (f) => defaultLorIdFor(f) ?? '');
+	const plaetzeByLor = aggregateKitaPlaetzeByLor(
+		lorFeatures,
+		kitaFeatures,
+		(f) => defaultLorIdFor(f) ?? ''
+	);
 
 	const laerm = await readJson<{ records: LaermDbRecord[] }>(LAERM_DB).catch(() => null);
 	if (!laerm) throw new Error(`${LAERM_DB} fehlt. Lauf zuerst pnpm data:laerm-db.`);
@@ -132,13 +133,17 @@ async function buildPerLorHits(
 		const lorId = defaultLorIdFor(lor);
 		if (!lorId) continue;
 		const proKind = plaetzeProKind(plaetzeByLor[lorId] ?? 0, kinderByPlr.get(lorId) ?? null);
-		if (proKind !== null) push(lorId, { layer: 'kitas-pro-kind', value: { plaetzeProKind: proKind } });
+		if (proKind !== null)
+			push(lorId, { layer: 'kitas-pro-kind', value: { plaetzeProKind: proKind } });
 		const db = dbByPlr.get(lorId);
 		if (db !== undefined) push(lorId, { layer: 'laerm-db', value: { ges_den: db } });
 		const krimiRec = krimiByPlr.get(lorId);
 		if (krimiRec && typeof krimiRec.index === 'number') {
 			// index treibt den Score; delikte (Roh-HZ 3-J-Mittel) für den Inspector-Breakdown (Story 14.4).
-			push(lorId, { layer: 'kriminalitaet', value: { index: krimiRec.index, delikte: krimiRec.delikteHz } });
+			push(lorId, {
+				layer: 'kriminalitaet',
+				value: { index: krimiRec.index, delikte: krimiRec.delikteHz }
+			});
 		}
 	}
 	return out;
@@ -263,9 +268,7 @@ async function augmentManifestWithKiezScoreLayers(
 		layers: merged
 	};
 	await writeFile(`${LAYERS_DIR}/MANIFEST.json`, JSON.stringify(nextManifest, null, 2));
-	console.log(
-		`[kiez-scores] augmented MANIFEST.json with ${newEntries.length} kiez-score layers`
-	);
+	console.log(`[kiez-scores] augmented MANIFEST.json with ${newEntries.length} kiez-score layers`);
 }
 
 async function purgeOldHashes(slug: string): Promise<void> {

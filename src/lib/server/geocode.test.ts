@@ -10,8 +10,9 @@ const brandenburger = JSON.parse(
 );
 
 const fetchMock = (response: unknown) =>
-	vi.fn(async (_url: string | URL | Request, _init?: RequestInit) =>
-		new Response(JSON.stringify(response), { status: 200 })
+	vi.fn(
+		async (_url: string | URL | Request, _init?: RequestInit) =>
+			new Response(JSON.stringify(response), { status: 200 })
 	);
 
 beforeEach(() => {
@@ -98,8 +99,8 @@ describe('proxyNominatim', () => {
 
 	it('wirft bei HTTP-Error', async () => {
 		const fn = vi.fn(async () => new Response('Server error', { status: 503 }));
-		await expect(
-			proxyNominatim('test', 'de', fn as unknown as typeof fetch)
-		).rejects.toThrow(/503/);
+		await expect(proxyNominatim('test', 'de', fn as unknown as typeof fetch)).rejects.toThrow(
+			/503/
+		);
 	});
 });

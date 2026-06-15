@@ -16,12 +16,12 @@ Lizenz: dl-de/zero-2.0. CRS: EPSG:25833 (UTM33). Format: **Vektor, kein Raster**
 Kein GeoTIFF/WCS-Raster im Dienst. Die Annahme aus dem Audit (Raster/GeoTIFF,
 Tile-Pipeline-Frage) trifft nicht zu. Stattdessen Vektor-Feature-Typen:
 
-| typeName | Inhalt | dB-Feld | Features |
-|---|---|---|---|
-| `aa_fp_gesamt2022` | Fassadenpegel-Punkte | `ges_den`, `ges_n` (+ str/sch/flg) | **3.799.746** |
-| `ab_wohngebaeude2022` | Wohngebäude-Polygone | keins (nur `typ`) | 305.574 |
-| `ac_krankenhaeuser`/`ad_bildung`/`ae_kita` | sensible Gebäude | — | klein |
-| `da_autobahn` … `de_strassen_ubahn` | Quell-Linien + Verkehrsmengen (kfz/lkw…) | **keins** | 285 – 9.179 |
+| typeName                                   | Inhalt                                   | dB-Feld                            | Features      |
+| ------------------------------------------ | ---------------------------------------- | ---------------------------------- | ------------- |
+| `aa_fp_gesamt2022`                         | Fassadenpegel-Punkte                     | `ges_den`, `ges_n` (+ str/sch/flg) | **3.799.746** |
+| `ab_wohngebaeude2022`                      | Wohngebäude-Polygone                     | keins (nur `typ`)                  | 305.574       |
+| `ac_krankenhaeuser`/`ad_bildung`/`ae_kita` | sensible Gebäude                         | —                                  | klein         |
+| `da_autobahn` … `de_strassen_ubahn`        | Quell-Linien + Verkehrsmengen (kfz/lkw…) | **keins**                          | 285 – 9.179   |
 
 Schlüssel: die dB-Werte liegen ausschließlich als **3,8 Mio Fassadenpunkte**
 (`aa_fp_gesamt2022.ges_den`) vor. Es gibt keine kontinuierlichen dB-Iso-Flächen
@@ -34,6 +34,7 @@ Verkehrszählung, ohne dB.
 3,8 Mio Fassadenpunkte via WFS-Paging holen, pro LOR-Planungsraum Mittel/Median
 `ges_den` aggregieren, als kleines JSON (542 Werte) committen. Score liest den
 Wert, `normalizeNumericInverted` (bestAt ~45 dB, worstAt ~75 dB). Kein Tile-Serve.
+
 - Aufwand: M-L (WFS-Paging über 3,8 Mio Features, Aggregations-Script, Pipeline).
 - Ergebnis: dB-basiert, aber wieder **auf LOR-Ebene gemittelt** → Auflösungsgewinn
   gegenüber dem 3-Stufen-Index real, aber begrenzt (Hauptstraße + Hinterhof eines
@@ -42,6 +43,7 @@ Wert, `normalizeNumericInverted` (bestAt ~45 dB, worstAt ~75 dB). Kein Tile-Serv
 **B · Adress-genaue Fassaden-Abfrage (fassadengenau, das eigentliche Ziel).**
 3,8 Mio Punkte als PMTiles + Runtime-Nächster-Fassadenpunkt (Muster wie
 `klima-pet-2022`, Story 10.9/10.10: PMTiles für Map + Precompute-Punkte für Build).
+
 - Aufwand: L-XL (Tile-Pipeline für 3,8 Mio Punkte, Runtime-Lookup, No-Data-Semantik
   in ruhigen Lagen ohne Fassadenpunkt).
 - Ergebnis: echter fassadengenauer Gewinn. No-Data-Ambiguität (kein Punkt = ruhig
@@ -54,6 +56,7 @@ als die wegen Raster/Tile-Last deferred `solarpotenzial`/`klimaanalyse`). Aber
 schwerer als im Audit angenommen (3,8 Mio Punkte, kein fertiges Iso-Flächen-Layer).
 
 Empfohlene Reihenfolge:
+
 1. **10-6b (Variante A, M-L):** Per-LOR-dB-Mittel als erster Schritt. Ersetzt den
    3-Stufen-Index durch dB-Mittel, moderater Auflösungsgewinn, kein Tile-Zwang.
 2. **Später (Variante B, L-XL):** Adress-genaue Fassaden-Abfrage via PMTiles +

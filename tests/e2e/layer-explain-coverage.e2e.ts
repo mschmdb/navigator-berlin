@@ -2,9 +2,7 @@ import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 async function waitForMap(page: import('@playwright/test').Page) {
-	await page
-		.locator('[data-testid="map-skeleton"]')
-		.waitFor({ state: 'detached', timeout: 15000 });
+	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 }
 
 test.describe('Story 1.16 Layer-Explain-Coverage + Multi-Surface', () => {

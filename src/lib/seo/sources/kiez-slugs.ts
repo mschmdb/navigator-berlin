@@ -54,7 +54,7 @@ export async function readKiezSlugsFromGeoJson(): Promise<string[]> {
 					: null;
 		if (!name) continue;
 		const bez = typeof props.BEZ === 'string' ? props.BEZ : null;
-		const bezirk = bez ? bezCodeToName.get(bez) ?? '' : '';
+		const bezirk = bez ? (bezCodeToName.get(bez) ?? '') : '';
 		refs.push({ name, bezirk });
 	}
 

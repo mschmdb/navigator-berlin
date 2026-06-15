@@ -51,11 +51,7 @@ describe('buildKiezSlugs', () => {
 			{ name: 'Zentrum', bezirk: 'Pankow' },
 			{ name: 'Zentrum', bezirk: 'Spandau' }
 		];
-		expect(buildKiezSlugs(refs)).toEqual([
-			'zentrum-mitte',
-			'zentrum-pankow',
-			'zentrum-spandau'
-		]);
+		expect(buildKiezSlugs(refs)).toEqual(['zentrum-mitte', 'zentrum-pankow', 'zentrum-spandau']);
 	});
 
 	it('erhält Eingabe-Reihenfolge (Index-Alignment)', () => {

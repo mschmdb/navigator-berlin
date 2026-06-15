@@ -4,7 +4,7 @@ import adapter from '@sveltejs/adapter-node';
 const config = {
 	compilerOptions: {
 		// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
-		runes: ({ filename }) => filename.split(/[/\\]/).includes('node_modules') ? undefined : true,
+		runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true),
 		experimental: { async: true }
 	},
 	kit: {
@@ -18,7 +18,14 @@ const config = {
 			// `robots.txt`, `sitemap.xml`, `sitemap-de.xml` haben keine internen Links und
 			// werden vom Crawler nicht entdeckt. Story 2.1 zwingt sie als Entry-Points
 			// in den prerender. Falls weitere standalone-Endpoints dazukommen, hier ergaenzen.
-			entries: ['*', '/robots.txt', '/sitemap.xml', '/sitemap-de.xml', '/webmcp-manifest.json', '/.well-known/webmcp.json'],
+			entries: [
+				'*',
+				'/robots.txt',
+				'/sitemap.xml',
+				'/sitemap-de.xml',
+				'/webmcp-manifest.json',
+				'/.well-known/webmcp.json'
+			],
 			handleUnseenRoutes: ({ route }) => {
 				console.warn(`[prerender] unseen route ${route} (Phase-1 warn-only)`);
 			},

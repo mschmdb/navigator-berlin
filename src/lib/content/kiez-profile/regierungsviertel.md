@@ -2,9 +2,9 @@
 slug: regierungsviertel
 name: Regierungsviertel
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 434c1b70b534a80e
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Das Regierungsviertel führt bei Mobilität und Kultur. Die Mobilität erreicht rund 62 und Rang 1 von 143, klar über dem Berliner Median. Kulturell steht das Gebiet ebenfalls an der Spitze, 100 Punkte und Rang 1 von 143, weit über dem Schnitt von Mitte und dem Median. Die Haltestellendichte erreicht rund 26 pro Quadratkilometer.

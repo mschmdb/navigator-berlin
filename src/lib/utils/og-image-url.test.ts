@@ -36,10 +36,7 @@ describe('buildOgImageUrl', () => {
 	});
 
 	it('limitiert topLayers im URL auf 3', () => {
-		const url = buildOgImageUrl(
-			{ ...FULL, topLayers: ['a', 'b', 'c', 'd', 'e'] },
-			BASE
-		);
+		const url = buildOgImageUrl({ ...FULL, topLayers: ['a', 'b', 'c', 'd', 'e'] }, BASE);
 		const parsed = new URL(url);
 		expect(parsed.searchParams.get('topLayers')?.split('|').length).toBe(3);
 	});

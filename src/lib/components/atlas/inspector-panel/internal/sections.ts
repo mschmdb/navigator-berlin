@@ -1,12 +1,6 @@
 import type { Bundle, LayerHit, LayerMetadata } from '$lib/data';
 
-export type SectionKey =
-	| 'boundaries'
-	| 'wohn'
-	| 'umwelt'
-	| 'sozial'
-	| 'mobilitaet'
-	| 'klima';
+export type SectionKey = 'boundaries' | 'wohn' | 'umwelt' | 'sozial' | 'mobilitaet' | 'klima';
 
 export interface InspectorSection {
 	key: SectionKey;

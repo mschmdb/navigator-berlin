@@ -169,13 +169,7 @@ describe('aggregateLayerForLevel', () => {
 	});
 
 	it('bezirk-Slug nicht im Aggregat (z.B. Brandenburg) → no-data', () => {
-		const v = aggregateLayerForLevel(
-			'mss-gesamtindex-2025',
-			'bezirk',
-			ctx,
-			aggregates,
-			'Polygon'
-		);
+		const v = aggregateLayerForLevel('mss-gesamtindex-2025', 'bezirk', ctx, aggregates, 'Polygon');
 		expect(v.kind).toBe('no-data');
 	});
 

@@ -154,9 +154,7 @@ describe('bookmark-dialog', () => {
 
 	it('Datenschutz-Link verweist auf /datenschutz#bookmarks', async () => {
 		render(Harness, { open: true });
-		const link = (await page
-			.getByTestId('bookmark-privacy-link')
-			.element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('bookmark-privacy-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/datenschutz#bookmarks');
 	});
 

@@ -77,7 +77,16 @@ describe('MapAccessibilityLayer', () => {
 				layer: { id: 'bezirke' },
 				geometry: {
 					type: 'MultiPolygon',
-					coordinates: [[[[13.4, 52.5], [13.5, 52.5], [13.5, 52.6], [13.4, 52.5]]]]
+					coordinates: [
+						[
+							[
+								[13.4, 52.5],
+								[13.5, 52.5],
+								[13.5, 52.6],
+								[13.4, 52.5]
+							]
+						]
+					]
 				},
 				properties: { name: 'Mitte', einwohner: 380000 }
 			},
@@ -86,7 +95,14 @@ describe('MapAccessibilityLayer', () => {
 				layer: { id: 'laerm-den' },
 				geometry: {
 					type: 'Polygon',
-					coordinates: [[[13.41, 52.51], [13.42, 52.51], [13.42, 52.52], [13.41, 52.51]]]
+					coordinates: [
+						[
+							[13.41, 52.51],
+							[13.42, 52.51],
+							[13.42, 52.52],
+							[13.41, 52.51]
+						]
+					]
 				},
 				properties: { value: 65 }
 			}
@@ -101,10 +117,10 @@ describe('MapAccessibilityLayer', () => {
 		expect(ul.getAttribute('aria-labelledby')).toBe('map-a11y-layer-heading');
 		const buttons = page.getByTestId('map-a11y-feature-button');
 		await expect.element(buttons.first()).toBeInTheDocument();
-		const all = (await Promise.all([
+		const all = await Promise.all([
 			(await buttons.nth(0).element()) as HTMLButtonElement,
 			(await buttons.nth(1).element()) as HTMLButtonElement
-		]));
+		]);
 		expect(all[0].textContent).toMatch(/Mitte/);
 		expect(all[1].textContent).toMatch(/Lärmkarte/);
 	});
@@ -116,7 +132,16 @@ describe('MapAccessibilityLayer', () => {
 				layer: { id: 'bezirke' },
 				geometry: {
 					type: 'MultiPolygon',
-					coordinates: [[[[13.4, 52.5], [13.5, 52.5], [13.5, 52.6], [13.4, 52.5]]]]
+					coordinates: [
+						[
+							[
+								[13.4, 52.5],
+								[13.5, 52.5],
+								[13.5, 52.6],
+								[13.4, 52.5]
+							]
+						]
+					]
 				},
 				properties: { name: 'Mitte', einwohner: 380000 }
 			}
@@ -152,9 +177,7 @@ describe('MapAccessibilityLayer', () => {
 				selectedFeatureId: 'bezirke:bezirk-mitte'
 			}
 		});
-		const btn = (await page
-			.getByTestId('map-a11y-feature-button')
-			.element()) as HTMLButtonElement;
+		const btn = (await page.getByTestId('map-a11y-feature-button').element()) as HTMLButtonElement;
 		expect(btn.getAttribute('aria-current')).toBe('true');
 	});
 
@@ -293,9 +316,7 @@ describe('MapAccessibilityLayer', () => {
 					compareB: null
 				}
 			});
-			await expect
-				.element(page.getByTestId('map-a11y-compare-buttons'))
-				.not.toBeInTheDocument();
+			await expect.element(page.getByTestId('map-a11y-compare-buttons')).not.toBeInTheDocument();
 		});
 	});
 });

@@ -2,9 +2,9 @@
 slug: marzahn-nord
 name: Marzahn Nord
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 79a0318331617a19
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Marzahn Nord zeigt seine Stärke bei Grün und Hitze mit 68,8 über dem Bezirksschnitt und über dem Berliner Median. Beim Gesamtscore erreicht der Kiez 44,6 und Rang 49 von 143. Die Versorgung liegt mit 68,9 über dem Bezirksschnitt und über dem Berliner Median. Die Lärmklasse gilt als gering.

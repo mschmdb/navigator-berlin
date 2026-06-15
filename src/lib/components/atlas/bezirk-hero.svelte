@@ -189,7 +189,7 @@
 								{#if row.extra || (row.distribution && row.distribution.length > 0)}
 									<details class="mt-1">
 										<summary
-											class="cursor-pointer font-mono text-xs text-accent hover:text-accent-strong"
+											class="hover:text-accent-strong cursor-pointer font-mono text-xs text-accent"
 											>Verteilung & Zahlen</summary
 										>
 										{#if row.extra}<span class="mt-1 block font-mono text-xs text-ink-muted"

@@ -117,7 +117,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	'sbahn-netz': 'line-rail-sbahn',
 	// G: Kiez-Score (Story 1.28)
 	'kiez-score-gesamt': 'choropleth-kiez-score-ordinal-4',
-		'kiez-score-ruhe-luft': 'choropleth-kiez-score-ordinal-4',
+	'kiez-score-ruhe-luft': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-gruen-hitze': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-mobilitaet': 'choropleth-kiez-score-ordinal-4',
 	'kiez-score-wohnschutz': 'choropleth-kiez-score-ordinal-4',
@@ -928,32 +928,32 @@ export function buildLayerSpec(
 					}
 				}
 			];
-			case 'choropleth-kiez-score-strukturell-4':
-				// Story 14.4: Strukturell-Indigo (Magnitude). Gleiche Quartil-Schwellen wie der
-				// Gut-Score, aber Indigo-Familie + kein „besser“-Pfeil (ADR-019).
-				return [
-					{
-						id,
-						type: 'fill',
-						source: sourceId,
-						paint: {
-							'fill-color': [
-								'step',
-								['to-number', ['get', 'value'], -1],
-								COLORS.bg,
-								0,
-								COLORS.scaleStrukturell1,
-								26,
-								COLORS.scaleStrukturell2,
-								51,
-								COLORS.scaleStrukturell4,
-								76,
-								COLORS.scaleStrukturell5
-							],
-							'fill-opacity': 0.55,
-							'fill-outline-color': COLORS.accent
-						}
+		case 'choropleth-kiez-score-strukturell-4':
+			// Story 14.4: Strukturell-Indigo (Magnitude). Gleiche Quartil-Schwellen wie der
+			// Gut-Score, aber Indigo-Familie + kein „besser“-Pfeil (ADR-019).
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'step',
+							['to-number', ['get', 'value'], -1],
+							COLORS.bg,
+							0,
+							COLORS.scaleStrukturell1,
+							26,
+							COLORS.scaleStrukturell2,
+							51,
+							COLORS.scaleStrukturell4,
+							76,
+							COLORS.scaleStrukturell5
+						],
+						'fill-opacity': 0.55,
+						'fill-outline-color': COLORS.accent
 					}
-				];
+				}
+			];
 	}
 }

@@ -4,8 +4,7 @@ import { render } from 'vitest-browser-svelte';
 import { createRawSnippet } from 'svelte';
 import Sheet from './sheet.svelte';
 
-const snippet = (html: string) =>
-	createRawSnippet(() => ({ render: () => html }));
+const snippet = (html: string) => createRawSnippet(() => ({ render: () => html }));
 
 describe('sheet.svelte (bottom-sheet variant)', () => {
 	it('rendert Trigger', async () => {

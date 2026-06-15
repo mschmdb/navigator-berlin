@@ -11,9 +11,7 @@ export interface LoadedLayersReadInput {
 	readonly hiddenLayerSlugs: readonly string[];
 }
 
-export function readLoadedLayersResource(
-	input: LoadedLayersReadInput
-): WebMcpResourceRead {
+export function readLoadedLayersResource(input: LoadedLayersReadInput): WebMcpResourceRead {
 	return {
 		uri: input.uri,
 		mimeType: 'application/json',

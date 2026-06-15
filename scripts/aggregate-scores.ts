@@ -33,10 +33,7 @@ import {
 	type BezirksregionLike,
 	type PlanungsraumLike
 } from './lib/kiez-score/lor-hierarchy.js';
-import type {
-	KiezScore as KiezScoreType,
-	KiezScoreDimension
-} from './lib/kiez-score/types.js';
+import type { KiezScore as KiezScoreType, KiezScoreDimension } from './lib/kiez-score/types.js';
 
 const LAYERS_DIR = 'static/layers';
 const MANIFEST_PATH = `${LAYERS_DIR}/MANIFEST.json`;
@@ -254,7 +251,11 @@ async function writeRegionComposites(result: {
 	await mkdir(dirname(REGION_COMPOSITES_PATH), { recursive: true });
 	await writeFile(
 		REGION_COMPOSITES_PATH,
-		JSON.stringify({ schemaVersion: 1, generatedAt: new Date().toISOString(), kiez, bezirk }, null, 2)
+		JSON.stringify(
+			{ schemaVersion: 1, generatedAt: new Date().toISOString(), kiez, bezirk },
+			null,
+			2
+		)
 	);
 	console.log(
 		`[aggregate-scores] wrote ${REGION_COMPOSITES_PATH} (${result.kieze.length} BR + ${result.bezirke.length} Bezirke)`

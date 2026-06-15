@@ -83,8 +83,7 @@ export function renderStoryMapMarkdown(rows: readonly StoryRow[], generatedAt: s
 		sections.push('|---|---|---|');
 		for (const r of epicRows) {
 			const statusBadge = badge(r.status);
-			const commentShort =
-				r.comment.length > 120 ? r.comment.slice(0, 117) + '…' : r.comment;
+			const commentShort = r.comment.length > 120 ? r.comment.slice(0, 117) + '…' : r.comment;
 			sections.push(`| \`${r.key}\` | ${statusBadge} | ${commentShort || '—'} |`);
 		}
 		sections.push('');

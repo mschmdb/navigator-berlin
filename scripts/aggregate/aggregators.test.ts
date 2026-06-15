@@ -68,7 +68,10 @@ describe('gruen aggregate (T4.5)', () => {
 	it('combines versorgung kategorie + counts for anlagen + spielplätze', () => {
 		const r = computeGruenAggregate(
 			{
-				versorgungFeatures: [polyAt(1, 1, { kategorie: 'gut' }), polyAt(2, 2, { kategorie: 'gut' })],
+				versorgungFeatures: [
+					polyAt(1, 1, { kategorie: 'gut' }),
+					polyAt(2, 2, { kategorie: 'gut' })
+				],
 				versorgungSourceUpdatedAt: T0,
 				gruenanlagenFeatures: [pt(3, 3), pt(4, 4), pt(50, 50)],
 				gruenanlagenSourceUpdatedAt: T0,

@@ -115,28 +115,24 @@ function titleBlock(
 	maxWidth: number,
 	fontSize = 64
 ): SatoriNode {
-	return node(
-		'div',
-		{ display: 'flex', flexDirection: 'column', marginTop: 16 },
-		[
-			text(headline, {
-				fontFamily: 'Plex Serif',
-				fontSize,
-				color: COLOR_INK,
-				lineHeight: 1.02,
-				maxWidth,
-				fontWeight: 600
-			}),
-			text(subline, {
-				fontFamily: 'Plex Sans',
-				fontSize: 18,
-				color: COLOR_INK_MUTED,
-				marginTop: 8,
-				textTransform: 'uppercase' as const,
-				letterSpacing: 1
-			})
-		]
-	);
+	return node('div', { display: 'flex', flexDirection: 'column', marginTop: 16 }, [
+		text(headline, {
+			fontFamily: 'Plex Serif',
+			fontSize,
+			color: COLOR_INK,
+			lineHeight: 1.02,
+			maxWidth,
+			fontWeight: 600
+		}),
+		text(subline, {
+			fontFamily: 'Plex Sans',
+			fontSize: 18,
+			color: COLOR_INK_MUTED,
+			marginTop: 8,
+			textTransform: 'uppercase' as const,
+			letterSpacing: 1
+		})
+	]);
 }
 
 function footerStrip(urlPath: string, standDate: string | null): SatoriNode {
@@ -217,9 +213,8 @@ function compositeHero(composite: number | null): SatoriNode {
 }
 
 function dimBar(label: string, value: number | null): SatoriNode {
-	const pct = typeof value === 'number' && Number.isFinite(value)
-		? Math.max(0, Math.min(100, value))
-		: 0;
+	const pct =
+		typeof value === 'number' && Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : 0;
 	const valueLabel = formatScoreValue(value);
 	return node(
 		'div',
@@ -305,11 +300,7 @@ function scoreSplitRow(scoreCard: ScoreCardData): SatoriNode {
 				{ display: 'flex', width: 340, flexShrink: 0 },
 				compositeHero(scoreCard.composite)
 			),
-			node(
-				'div',
-				{ display: 'flex', flex: 1, flexDirection: 'column' },
-				dimBarStack(scoreCard)
-			)
+			node('div', { display: 'flex', flex: 1, flexDirection: 'column' }, dimBarStack(scoreCard))
 		]
 	);
 }
@@ -437,33 +428,28 @@ export interface LayerCardParams {
 }
 
 function layerInfoCell(label: string, value: string): SatoriNode {
-	return node(
-		'div',
-		{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0, flex: 1 },
-		[
-			text(label, {
-				fontFamily: 'Plex Sans',
-				fontSize: 12,
-				color: COLOR_INK_SUBTLE,
-				textTransform: 'uppercase' as const,
-				letterSpacing: 1.2,
-				fontWeight: 600
-			}),
-			text(value, {
-				fontFamily: 'Plex Mono',
-				fontSize: 18,
-				color: COLOR_INK,
-				lineHeight: 1.3,
-				maxWidth: 280
-			})
-		]
-	);
+	return node('div', { display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0, flex: 1 }, [
+		text(label, {
+			fontFamily: 'Plex Sans',
+			fontSize: 12,
+			color: COLOR_INK_SUBTLE,
+			textTransform: 'uppercase' as const,
+			letterSpacing: 1.2,
+			fontWeight: 600
+		}),
+		text(value, {
+			fontFamily: 'Plex Mono',
+			fontSize: 18,
+			color: COLOR_INK,
+			lineHeight: 1.3,
+			maxWidth: 280
+		})
+	]);
 }
 
 function layerInfoRow(params: LayerCardParams): SatoriNode {
-	const standValue = params.sourceUpdatedAt && params.sourceUpdatedAt.length > 0
-		? params.sourceUpdatedAt
-		: '–';
+	const standValue =
+		params.sourceUpdatedAt && params.sourceUpdatedAt.length > 0 ? params.sourceUpdatedAt : '–';
 	return node(
 		'div',
 		{
@@ -484,9 +470,8 @@ function layerInfoRow(params: LayerCardParams): SatoriNode {
 }
 
 export function buildLayerCardVdom(params: LayerCardParams): SatoriNode {
-	const footerDate = params.sourceUpdatedAt && params.sourceUpdatedAt.length > 0
-		? params.sourceUpdatedAt
-		: null;
+	const footerDate =
+		params.sourceUpdatedAt && params.sourceUpdatedAt.length > 0 ? params.sourceUpdatedAt : null;
 	return canvas({
 		headline: params.layerLabel,
 		subline: params.bundleGroup,

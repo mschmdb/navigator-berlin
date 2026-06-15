@@ -32,11 +32,7 @@ const KEBAB_TAG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const FrontmatterSchema = v.object({
 	title_de: v.pipe(v.string('title_de muss ein String sein'), v.minLength(1), v.maxLength(80)),
 	title_en: v.optional(v.pipe(v.string(), v.maxLength(80))),
-	summary_de: v.pipe(
-		v.string('summary_de muss ein String sein'),
-		v.minLength(1),
-		v.maxLength(160)
-	),
+	summary_de: v.pipe(v.string('summary_de muss ein String sein'), v.minLength(1), v.maxLength(160)),
 	summary_en: v.optional(v.pipe(v.string(), v.maxLength(160))),
 	date: v.pipe(
 		v.string('date muss ein ISO-8601-String sein'),
@@ -45,9 +41,7 @@ export const FrontmatterSchema = v.object({
 	category: v.picklist(UPDATE_CATEGORIES, 'category muss eine der 5 Enum-Werte sein'),
 	tags: v.optional(
 		v.pipe(
-			v.array(
-				v.pipe(v.string(), v.regex(KEBAB_TAG_REGEX, 'Tag muss lowercase-kebab-case sein'))
-			),
+			v.array(v.pipe(v.string(), v.regex(KEBAB_TAG_REGEX, 'Tag muss lowercase-kebab-case sein'))),
 			v.maxLength(8, 'Max 8 Tags erlaubt')
 		)
 	),

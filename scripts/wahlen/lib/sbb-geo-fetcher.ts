@@ -44,7 +44,9 @@ export async function fetchSbbGeoZip(downloadUrl: string): Promise<Buffer> {
 export function extractShapefilePack(zip: Buffer): ShapefilePack {
 	const archive = new AdmZip(zip);
 	const entries = archive.getEntries();
-	const shpEntry = entries.find((e) => /\.shp$/i.test(e.entryName) && !/\.shp\.xml$/i.test(e.entryName));
+	const shpEntry = entries.find(
+		(e) => /\.shp$/i.test(e.entryName) && !/\.shp\.xml$/i.test(e.entryName)
+	);
 	if (!shpEntry) throw new Error('SBB geo ZIP: no .shp file found');
 	const baseName = shpEntry.entryName.replace(/\.shp$/i, '');
 

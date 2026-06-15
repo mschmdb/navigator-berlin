@@ -67,15 +67,15 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 
 	describe('krankenhaeuser', () => {
 		it('zeigt name für krankenhaeuser-plan', () => {
-			expect(
-				getPopoverSummary('krankenhaeuser-plan', { name: 'Charité Mitte' }).title
-			).toBe('Charité Mitte');
+			expect(getPopoverSummary('krankenhaeuser-plan', { name: 'Charité Mitte' }).title).toBe(
+				'Charité Mitte'
+			);
 		});
 
 		it('zeigt name für krankenhaeuser-weitere', () => {
-			expect(
-				getPopoverSummary('krankenhaeuser-weitere', { name: 'Spezialklinik' }).title
-			).toBe('Spezialklinik');
+			expect(getPopoverSummary('krankenhaeuser-weitere', { name: 'Spezialklinik' }).title).toBe(
+				'Spezialklinik'
+			);
 		});
 	});
 
@@ -102,15 +102,15 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 
 	describe('Stationen (U/S/Tram/Bus)', () => {
 		it('zeigt name für ubahn-stationen', () => {
-			expect(
-				getPopoverSummary('ubahn-stationen', { name: 'Alexanderplatz' }).title
-			).toBe('Alexanderplatz');
+			expect(getPopoverSummary('ubahn-stationen', { name: 'Alexanderplatz' }).title).toBe(
+				'Alexanderplatz'
+			);
 		});
 
 		it('zeigt name für sbahn-stationen', () => {
-			expect(
-				getPopoverSummary('sbahn-stationen', { name: 'Friedrichstraße' }).title
-			).toBe('Friedrichstraße');
+			expect(getPopoverSummary('sbahn-stationen', { name: 'Friedrichstraße' }).title).toBe(
+				'Friedrichstraße'
+			);
 		});
 
 		it('zeigt name für tram-haltestellen', () => {

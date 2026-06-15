@@ -2,9 +2,9 @@
 slug: marzahn-sued
 name: Marzahn Sued
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 42c045a9a6a27df6
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Marzahn Sued zeigt seine Stärke bei Grün und Hitze mit 64,4 über dem Berliner Median und nahe am Bezirksschnitt. Beim Gesamtscore erreicht der Kiez 42,9 und Rang 54 von 143. Die Mobilität liegt mit 36 über dem Berliner Median und über dem Bezirksschnitt. Die Haltestellendichte erreicht rund 12 pro Quadratkilometer.

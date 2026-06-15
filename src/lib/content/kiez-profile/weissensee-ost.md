@@ -2,9 +2,9 @@
 slug: weissensee-ost
 name: Weissensee Ost
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 06fa2c816ca21670
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Grün und Ruhe prägen Weissensee Ost. Grün und Hitze erreichen rund 67 Punkte und Rang 25 von 143, über Bezirksschnitt und Berliner Median. Ruhe und Luft liegen mit rund 68 Punkten über dem Bezirksschnitt. Die Grünversorgung gilt als gut. Die Mobilität bleibt mit Rang 35 ordentlich, getragen von Tram und Bus, soziale Lage mittel.

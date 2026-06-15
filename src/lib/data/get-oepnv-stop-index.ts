@@ -20,9 +20,7 @@ export function _resetOepnvStopIndexCache(): void {
 	inflight = null;
 }
 
-export async function getOepnvStopIndex(
-	fetchFn: typeof fetch = fetch
-): Promise<OepnvStopIndex> {
+export async function getOepnvStopIndex(fetchFn: typeof fetch = fetch): Promise<OepnvStopIndex> {
 	if (cache) return cache;
 	if (inflight) return inflight;
 	inflight = (async () => {

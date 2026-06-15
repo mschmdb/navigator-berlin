@@ -2,9 +2,9 @@
 slug: schoeneberg-suedost
 name: Schoeneberg Suedost
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 44d75c08a0e7a2e7
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Versorgung trägt Schoeneberg Suedost. Mit rund 77 Punkten erreicht der Kiez Rang 13 von 143, deutlich über dem Bezirksschnitt. Ruhe und Luft liegen mit rund 63 Punkten nahe dem Berliner Median. Beim Wohnschutz steht das Gebiet mit rund 53 Punkten über dem Bezirksschnitt, soziale Lage mittel.

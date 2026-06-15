@@ -40,9 +40,7 @@ describe('buildRssXml', () => {
 		expect(xml).toContain('<title>Navigator Berlin · Updates</title>');
 		expect(xml).toContain('<link>https://navigator.berlin/updates</link>');
 		expect(xml).toContain('<language>de-DE</language>');
-		expect(xml).toContain(
-			'<atom:link href="https://navigator.berlin/updates/rss.xml" rel="self"'
-		);
+		expect(xml).toContain('<atom:link href="https://navigator.berlin/updates/rss.xml" rel="self"');
 	});
 
 	it('enthält Item mit title, link, guid, pubDate, category', () => {

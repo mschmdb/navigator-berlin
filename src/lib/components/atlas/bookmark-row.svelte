@@ -50,9 +50,7 @@
 	}
 
 	const primaryName = $derived(extractPrimaryName(bookmark.displayName));
-	const subtext = $derived(
-		[bookmark.bezirk, bookmark.postcode].filter(Boolean).join(' · ')
-	);
+	const subtext = $derived([bookmark.bezirk, bookmark.postcode].filter(Boolean).join(' · '));
 </script>
 
 <li data-testid="bookmark-row" data-bookmark-id={bookmark.id}>

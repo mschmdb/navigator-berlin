@@ -2,9 +2,9 @@
 slug: tempelhof-suedwest
 name: Tempelhof Suedwest
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: fc39b2d67ac7d188
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Tempelhof Suedwest bleibt ausgewogen ohne klare Spitze. Versorgung erreicht rund 54 Punkte und Rang 58, nahe dem Berliner Median. Grün und Hitze liegen mit rund 51 Punkten nahe dem Median und über dem Bezirksschnitt. Ruhe und Luft erreichen rund 54 Punkte, unter dem Median und nahe dem Bezirksschnitt. Die gefühlte Temperatur bleibt bei rund 35 Grad.

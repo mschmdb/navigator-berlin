@@ -269,7 +269,9 @@ export async function aggregateAll(): Promise<{
 	const manifest = await readJson<Manifest>(MANIFEST_PATH);
 	const bezirkLayer = await loadLayerOrThrow(manifest, SLUG_BEZIRKE);
 	const bzrLayer = await loadLayerOrThrow(manifest, SLUG_BZR);
-	console.log(`[aggregate] ${bezirkLayer.features.length} bezirke, ${bzrLayer.features.length} bezirksregionen`);
+	console.log(
+		`[aggregate] ${bezirkLayer.features.length} bezirke, ${bzrLayer.features.length} bezirksregionen`
+	);
 
 	const sources = await loadAllSources(manifest);
 
@@ -308,8 +310,7 @@ export async function aggregateAll(): Promise<{
 		if (!bezirkSlug) {
 			throw new Error(`Kein Bezirk gefunden für BZR ${baseSlug} mit BEZ-Code ${bezCode}`);
 		}
-		const slug =
-			(slugCounts.get(baseSlug) ?? 0) > 1 ? `${baseSlug}-${bezirkSlug}` : baseSlug;
+		const slug = (slugCounts.get(baseSlug) ?? 0) > 1 ? `${baseSlug}-${bezirkSlug}` : baseSlug;
 		const agg = computeAggregate(target, areaM2, sources);
 		kiezRows.push({ slug, bezirkSlug, ...agg });
 	}

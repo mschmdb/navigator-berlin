@@ -2,9 +2,9 @@
 slug: pankow-zentrum
 name: Pankow Zentrum
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 3d861e4ed93cfde9
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Pankow Zentrum versorgt seine Bewohner gut. Der Score von rund 69 liegt klar über dem Bezirksschnitt. Kulturell steht das Gebiet solide, rund 59 Punkte und Rang 40 von 143, über Bezirk und Berliner Median. Bei der Mobilität liegt es mit rund 31 über dem Median.

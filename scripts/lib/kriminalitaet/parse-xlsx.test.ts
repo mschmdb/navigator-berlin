@@ -48,7 +48,9 @@ describe('canonicalizeDelikt', () => {
 	it('entfernt Whitespace, Silbentrennung, Komma und Slash', () => {
 		expect(canonicalizeDelikt('Fahrrad- diebstahl')).toBe('fahrraddiebstahl');
 		expect(canonicalizeDelikt('Wohnraum- einbruch')).toBe('wohnraumeinbruch');
-		expect(canonicalizeDelikt('Straßenraub,\r\nHandtaschen-raub')).toBe('straßenraubhandtaschenraub');
+		expect(canonicalizeDelikt('Straßenraub,\r\nHandtaschen-raub')).toBe(
+			'straßenraubhandtaschenraub'
+		);
 		expect(canonicalizeDelikt('Sach-beschädigung -insgesamt-')).toBe('sachbeschädigunginsgesamt');
 	});
 

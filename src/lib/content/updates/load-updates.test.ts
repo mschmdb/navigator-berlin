@@ -40,9 +40,7 @@ describe('extractSlugFromPath', () => {
 	});
 
 	it('wirft bei Filename ohne Date-Prefix', () => {
-		expect(() => extractSlugFromPath('/_content/updates/launch.md')).toThrow(
-			/YYYY-MM-DD/
-		);
+		expect(() => extractSlugFromPath('/_content/updates/launch.md')).toThrow(/YYYY-MM-DD/);
 	});
 
 	it('wirft bei .en.md-Suffix (Phase 1 DE-only)', () => {

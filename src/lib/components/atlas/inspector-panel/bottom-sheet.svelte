@@ -12,14 +12,7 @@
 		children: Snippet;
 	};
 
-	let {
-		open,
-		snapVh,
-		onSnap,
-		onClose,
-		ariaLabel = 'Inspektor-Panel',
-		children
-	}: Props = $props();
+	let { open, snapVh, onSnap, onClose, ariaLabel = 'Inspektor-Panel', children }: Props = $props();
 
 	const SNAP_CYCLE: SheetSnapVh[] = [40, 70, 100];
 

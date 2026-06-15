@@ -2,9 +2,9 @@
 slug: west-1-tegel-sued-flughafensee
 name: West 1 Tegel Sued Flughafensee
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 332f207930ea2ffb
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe und saubere Luft prägen West 1 Tegel Sued Flughafensee. Der Kiez gehört hier zu den 15 bestplatzierten Gebieten Berlins. Der Wert liegt klar über Bezirksschnitt und Berliner Median. Die gefühlte Temperatur an heißen Tagen bleibt bei rund 35 Grad.

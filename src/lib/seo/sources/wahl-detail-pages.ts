@@ -31,9 +31,7 @@ export interface BuildWahlSitemapEntriesInput {
 	readonly wahlen: readonly WahlSitemapEntry[];
 }
 
-export function buildWahlSitemapEntries(
-	input: BuildWahlSitemapEntriesInput
-): SitemapEntry[] {
+export function buildWahlSitemapEntries(input: BuildWahlSitemapEntriesInput): SitemapEntry[] {
 	const origin = input.origin.replace(/\/+$/, '');
 	return input.wahlen.map((w) => ({
 		loc: `${origin}/wahl/${slugFor(w)}`,

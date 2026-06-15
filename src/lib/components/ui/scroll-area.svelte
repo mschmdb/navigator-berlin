@@ -16,7 +16,7 @@
 	</BitsScrollArea.Viewport>
 	<BitsScrollArea.Scrollbar
 		orientation="vertical"
-		class="flex w-2 touch-none select-none bg-bg-elevated"
+		class="flex w-2 touch-none bg-bg-elevated select-none"
 	>
 		<BitsScrollArea.Thumb class="flex-1 rounded-full bg-rule-strong" />
 	</BitsScrollArea.Scrollbar>

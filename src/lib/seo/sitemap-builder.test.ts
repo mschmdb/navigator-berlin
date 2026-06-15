@@ -92,9 +92,7 @@ describe('buildSitemapXml', () => {
 	});
 
 	it('escapes XML special chars in loc', () => {
-		const entries: SitemapEntry[] = [
-			{ loc: 'https://navigator.berlin/x?a=1&b=2' }
-		];
+		const entries: SitemapEntry[] = [{ loc: 'https://navigator.berlin/x?a=1&b=2' }];
 		const xml = buildSitemapXml(entries);
 		expect(xml).toContain('https://navigator.berlin/x?a=1&amp;b=2');
 	});

@@ -42,7 +42,9 @@
 	const hzFormatter = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
 	const krimiDelikte = $derived.by(() => {
 		if (score.dimension !== 'kriminalitaet') return null;
-		const raw = score.sources[0]?.rawValue as { delikte?: Record<string, number | null> } | undefined;
+		const raw = score.sources[0]?.rawValue as
+			| { delikte?: Record<string, number | null> }
+			| undefined;
 		if (!raw || typeof raw !== 'object' || !raw.delikte) return null;
 		return KRIMINALITAET_DELIKT_ORDER.map(([key, deliktLabel, hint]) => ({
 			key,
@@ -58,11 +60,7 @@
 	}
 </script>
 
-<div
-	data-testid="kiez-score-dim-{score.dimension}"
-	data-dimension={score.dimension}
-	class="py-1"
->
+<div data-testid="kiez-score-dim-{score.dimension}" data-dimension={score.dimension} class="py-1">
 	<div class="flex items-center gap-2 py-1">
 		{#if hasSources}
 			<button
@@ -126,15 +124,20 @@
 			class="mt-1 space-y-1 border-l border-rule pl-[22px] font-mono text-xs text-ink-muted"
 			data-testid="kiez-score-delikte-kriminalitaet"
 		>
-			<li class="text-[10px] uppercase tracking-wide text-ink-subtle">
+			<li class="text-[10px] tracking-wide text-ink-subtle uppercase">
 				Häufigkeitszahl je Delikt (Fälle pro 100.000 Ew., 3-Jahres-Mittel)
 			</li>
 			{#each krimiDelikte as d (d.key)}
-				<li class="flex items-baseline justify-between gap-2" data-testid="kriminalitaet-delikt-{d.key}">
+				<li
+					class="flex items-baseline justify-between gap-2"
+					data-testid="kriminalitaet-delikt-{d.key}"
+				>
 					<span class="min-w-0 flex-1" title={d.hint ?? undefined}>
-						{d.label}{#if d.hint}<span aria-hidden="true" class="ml-0.5 cursor-help text-ink-subtle">*</span>{/if}
+						{d.label}{#if d.hint}<span aria-hidden="true" class="ml-0.5 cursor-help text-ink-subtle"
+								>*</span
+							>{/if}
 					</span>
-					<span class="shrink-0 whitespace-nowrap tabular-nums text-ink-subtle">
+					<span class="shrink-0 whitespace-nowrap text-ink-subtle tabular-nums">
 						{d.hz === null ? '—' : hzFormatter.format(d.hz)}
 					</span>
 				</li>

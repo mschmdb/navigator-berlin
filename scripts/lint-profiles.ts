@@ -41,7 +41,9 @@ async function main(): Promise<void> {
 			const built = byKey.get(`${pageType}/${slug}`);
 			checked += 1;
 			if (!built) {
-				process.stderr.write(`[lint:profiles] FAIL ${pageType}/${slug}: kein passender Datensatz (orphan)\n`);
+				process.stderr.write(
+					`[lint:profiles] FAIL ${pageType}/${slug}: kein passender Datensatz (orphan)\n`
+				);
 				failed += 1;
 				continue;
 			}

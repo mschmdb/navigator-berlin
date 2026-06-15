@@ -22,12 +22,12 @@
 <div data-testid="coverage-bar" data-severity={severity} class="w-full">
 	<div class="mb-1 flex items-baseline justify-between gap-2">
 		<span class="font-sans text-sm text-ink">{label}</span>
-		<span data-testid="coverage-bar-value" class="font-mono text-sm tabular-nums text-ink"
+		<span data-testid="coverage-bar-value" class="font-mono text-sm text-ink tabular-nums"
 			>{rounded}%</span
 		>
 	</div>
 	<div
-		class="h-2.5 w-full overflow-hidden rounded-full bg-bg-muted"
+		class="bg-bg-muted h-2.5 w-full overflow-hidden rounded-full"
 		role="img"
 		aria-label={`${name}: ${rounded} Prozent Flächenanteil`}
 	>

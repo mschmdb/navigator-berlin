@@ -2,9 +2,9 @@
 slug: rummelsburger-bucht
 name: Rummelsburger Bucht
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 8465bc1373d94502
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Die Rummelsburger Bucht ist mobil ordentlich aufgestellt. Der Mobilitätsscore von 35,4 liegt über dem Berliner Median und reicht für Rang 29 von 143. Grün und Hitze fällt mit 53,1 nahe am Berliner Median aus. Die gefühlte Temperatur an heißen Tagen liegt bei rund 37 Grad. Die Grünversorgung gilt als gut.

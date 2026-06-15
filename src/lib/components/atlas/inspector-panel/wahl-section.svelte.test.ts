@@ -32,11 +32,23 @@ function makeBundle(overrides: Partial<WahlResultBundle> = {}): WahlResultBundle
 				{ kurzname: 'CDU', vollname: 'CDU', farbeHex: '#000000', stimmen: 250, anteil: 0.25 },
 				{ kurzname: 'GRÜNE', vollname: 'GRÜNE', farbeHex: '#1AA037', stimmen: 200, anteil: 0.2 },
 				{ kurzname: 'AfD', vollname: 'AfD', farbeHex: '#009EE0', stimmen: 150, anteil: 0.15 },
-				{ kurzname: 'Die Linke', vollname: 'Die Linke', farbeHex: '#BE3075', stimmen: 100, anteil: 0.1 }
+				{
+					kurzname: 'Die Linke',
+					vollname: 'Die Linke',
+					farbeHex: '#BE3075',
+					stimmen: 100,
+					anteil: 0.1
+				}
 			]),
 			kiez: makeLevel([
 				{ kurzname: 'GRÜNE', vollname: 'GRÜNE', farbeHex: '#1AA037', stimmen: 3000, anteil: 0.3 },
-				{ kurzname: 'Die Linke', vollname: 'Die Linke', farbeHex: '#BE3075', stimmen: 2500, anteil: 0.25 },
+				{
+					kurzname: 'Die Linke',
+					vollname: 'Die Linke',
+					farbeHex: '#BE3075',
+					stimmen: 2500,
+					anteil: 0.25
+				},
 				{ kurzname: 'SPD', vollname: 'SPD', farbeHex: '#E3000F', stimmen: 2000, anteil: 0.2 },
 				{ kurzname: 'CDU', vollname: 'CDU', farbeHex: '#000000', stimmen: 1500, anteil: 0.15 },
 				{ kurzname: 'AfD', vollname: 'AfD', farbeHex: '#009EE0', stimmen: 1000, anteil: 0.1 }

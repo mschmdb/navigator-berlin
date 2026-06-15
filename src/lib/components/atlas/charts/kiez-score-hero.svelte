@@ -55,7 +55,7 @@
 						<p class="mb-1 font-sans text-sm font-medium text-ink">{row.label}</p>
 						<div class="space-y-1">
 							<div class="flex items-center gap-2">
-								<span class="w-4 font-mono text-[10px] uppercase text-ink-subtle">A</span>
+								<span class="w-4 font-mono text-[10px] text-ink-subtle uppercase">A</span>
 								{#if row.valueA !== null && row.scaleA}
 									<ScoreBar
 										value={row.valueA}
@@ -67,7 +67,7 @@
 								{/if}
 							</div>
 							<div class="flex items-center gap-2">
-								<span class="w-4 font-mono text-[10px] uppercase text-ink-subtle">B</span>
+								<span class="w-4 font-mono text-[10px] text-ink-subtle uppercase">B</span>
 								{#if row.valueB !== null && row.scaleB}
 									<ScoreBar
 										value={row.valueB}
@@ -87,10 +87,7 @@
 				<KiezScoreRing {score} />
 				<ul data-testid="kiez-score-hero-dims" class="flex-1 space-y-2">
 					{#each rows as row (row.dim)}
-						<li
-							data-testid={`hero-dim-${row.dim}`}
-							class="flex items-center justify-between gap-2"
-						>
+						<li data-testid={`hero-dim-${row.dim}`} class="flex items-center justify-between gap-2">
 							<span class="font-sans text-sm text-ink">{row.label}</span>
 							{#if row.valueA !== null && row.scaleA}
 								<ValueChip
@@ -112,7 +109,7 @@
 			<a
 				href={methodikHref}
 				data-testid="kiez-score-hero-methodik-link"
-				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 			>
 				Methodik · Wie der Kiez-Score berechnet wird
 			</a>

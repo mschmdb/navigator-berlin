@@ -2,9 +2,9 @@
 slug: prenzlauer-berg-sued
 name: Prenzlauer Berg Sued
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: a2c40fbd6db7aaae
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Prenzlauer Berg Sued führt fast bei der Kultur. Kulturell steht das Gebiet an der Spitze, rund 99 Punkte und Rang 2 von 143, weit über Bezirk und Berliner Median. Die Versorgung steht mit rund 80 auf Rang 5 von 143. Der Wohnschutz erreicht rund 73 und Rang 7.

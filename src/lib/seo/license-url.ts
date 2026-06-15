@@ -14,8 +14,7 @@ const LICENSE_URL_MAP: Readonly<Record<License, string>> = {
 	'ODbL 1.0': 'https://opendatacommons.org/licenses/odbl/1-0/',
 	// Geodatenzugangsgesetz Berlin (GeoZG-Bln): kein offizieller Lizenz-URL-Endpoint,
 	// wir verweisen auf das Gesetz als zitierbare Quelle.
-	Geodatenzugangsgesetz:
-		'https://gesetze.berlin.de/perma?j=GeoZG_BE'
+	Geodatenzugangsgesetz: 'https://gesetze.berlin.de/perma?j=GeoZG_BE'
 };
 
 export function licenseToSchemaOrgUrl(license: License): string {

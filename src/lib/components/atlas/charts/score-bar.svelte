@@ -35,7 +35,7 @@
 
 <div data-testid="score-bar" data-severity={severity} class="w-full">
 	<div
-		class="relative h-2.5 w-full overflow-hidden rounded-full bg-bg-muted"
+		class="bg-bg-muted relative h-2.5 w-full overflow-hidden rounded-full"
 		role="img"
 		aria-label={`${layerName}: ${value}${unitSuffix}${anchorPct !== null ? `, ${anchorLabel} ${anchorValue}${unitSuffix}` : ''}`}
 	>

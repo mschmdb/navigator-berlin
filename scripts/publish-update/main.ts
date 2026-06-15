@@ -123,7 +123,10 @@ async function runPreflight(): Promise<{ ok: true } | { ok: false; reason: strin
 	try {
 		const { stdout } = await exec('git', ['status', '--porcelain'], { cwd: REPO_ROOT });
 		if (stdout.trim() !== '') {
-			return { ok: false, reason: 'Working-Tree nicht clean (git status --porcelain liefert Output)' };
+			return {
+				ok: false,
+				reason: 'Working-Tree nicht clean (git status --porcelain liefert Output)'
+			};
 		}
 	} catch (err) {
 		return { ok: false, reason: `git status fehlgeschlagen: ${(err as Error).message}` };
@@ -146,12 +149,17 @@ async function resolveCommits(range: Exclude<RangeArg, { kind: 'error' }>): Prom
 }
 
 async function gitShowChangedFiles(sha: string): Promise<string[]> {
-	const { stdout } = await exec('git', ['show', '--name-only', '--format=', sha], { cwd: REPO_ROOT });
+	const { stdout } = await exec('git', ['show', '--name-only', '--format=', sha], {
+		cwd: REPO_ROOT
+	});
 	return stdout.trim().split('\n').filter(Boolean);
 }
 
 async function gitShowDiff(sha: string): Promise<string> {
-	const { stdout } = await exec('git', ['show', '--format=', sha], { cwd: REPO_ROOT, maxBuffer: 50 * 1024 * 1024 });
+	const { stdout } = await exec('git', ['show', '--format=', sha], {
+		cwd: REPO_ROOT,
+		maxBuffer: 50 * 1024 * 1024
+	});
 	return stdout;
 }
 
@@ -167,10 +175,14 @@ async function gitCommitDateIso(sha: string): Promise<string> {
 
 function createClaudeSubagent(): SubagentExecutor {
 	return async (prompt) => {
-		const { stdout } = await exec('claude', ['--print', '--append-system-prompt', prompt, '/dev/stdin'], {
-			cwd: REPO_ROOT,
-			maxBuffer: 10 * 1024 * 1024
-		});
+		const { stdout } = await exec(
+			'claude',
+			['--print', '--append-system-prompt', prompt, '/dev/stdin'],
+			{
+				cwd: REPO_ROOT,
+				maxBuffer: 10 * 1024 * 1024
+			}
+		);
 		return stdout;
 	};
 }

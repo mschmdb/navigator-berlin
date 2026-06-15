@@ -52,7 +52,7 @@
 	{id}
 	data-testid="editorial-disclaimer"
 	data-variant={variant}
-	class="font-serif italic text-sm text-ink-muted leading-snug"
+	class="font-serif text-sm leading-snug text-ink-muted italic"
 >
 	<span>{text}</span>
 	{#if sourceUrl}
@@ -61,7 +61,7 @@
 			target="_blank"
 			rel="noopener noreferrer"
 			data-testid="disclaimer-source-link"
-			class="inline-flex items-center gap-1 not-italic text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="hover:text-accent-strong inline-flex items-center gap-1 text-accent not-italic underline underline-offset-2"
 		>
 			<ExternalLink size={12} aria-hidden="true" />
 			<span>Quelle ansehen</span>

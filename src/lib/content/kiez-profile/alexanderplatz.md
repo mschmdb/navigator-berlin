@@ -2,9 +2,9 @@
 slug: alexanderplatz
 name: Alexanderplatz
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: d9c047ce3f29e99a
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Kulturell ragt Alexanderplatz heraus. Der Wert erreicht rund 98 und Rang fünf von 143, weit über Bezirk und Berliner Median. Die Mobilität folgt direkt: Score 54,7 und Rang 2 von 143. Die Haltestellendichte beträgt rund 28 Stopps je Quadratkilometer.

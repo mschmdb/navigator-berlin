@@ -48,9 +48,7 @@
 
 	const addressPet = $derived(petOf(hit.value));
 	const severity = $derived(getValueSeverity('klima-pet-2022', hit.value));
-	const scale = $derived(
-		kiezAggregate?.median != null ? kiezAggregate : (berlinAggregate ?? null)
-	);
+	const scale = $derived(kiezAggregate?.median != null ? kiezAggregate : (berlinAggregate ?? null));
 
 	const contextRows = $derived(
 		[
@@ -63,7 +61,9 @@
 	const explainEntry = $derived(getLayerExplainEntry('klima-pet-2022'));
 	const externalLink = $derived(getLayerExternalLink('klima-pet-2022'));
 	const editorial = $derived(getEditorialConfig('klima-pet-2022'));
-	const learnMoreHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/klima-pet-2022`));
+	const learnMoreHref = $derived(
+		(resolve as (p: string) => string)(`/${lang}/layer/klima-pet-2022`)
+	);
 
 	const SEVERITY_TEXT: Record<string, string> = {
 		success: 'text-severity-success',
@@ -109,7 +109,7 @@
 	{/if}
 
 	{#if addressPet === null && contextRows.length > 0}
-		<p data-testid="pet-no-point-value" class="mt-2 font-serif text-xs italic text-ink-subtle">
+		<p data-testid="pet-no-point-value" class="mt-2 font-serif text-xs text-ink-subtle italic">
 			An dieser Stelle kein direkter Messwert · Werte im Umfeld:
 		</p>
 	{/if}
@@ -118,7 +118,7 @@
 		<dl class="mt-2 grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 text-xs">
 			{#each contextRows as row (row.label)}
 				<dt class="truncate text-ink-muted">{row.label}</dt>
-				<dd class="text-right font-mono tabular-nums text-ink">
+				<dd class="text-right font-mono text-ink tabular-nums">
 					{fmt.format(row.agg.median as number)}°C
 					<span class="text-ink-subtle"
 						>· {fmt.format(row.agg.min as number)}–{fmt.format(row.agg.max as number)}</span
@@ -149,7 +149,9 @@
 					type="button"
 					data-testid="map-toggle"
 					aria-pressed={isActive}
-					aria-label={isActive ? `${layerName} von Karte entfernen` : `${layerName} auf Karte zeigen`}
+					aria-label={isActive
+						? `${layerName} von Karte entfernen`
+						: `${layerName} auf Karte zeigen`}
 					title={isActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
 					onclick={() => onToggleLayer?.('klima-pet-2022')}
 					class={`inline-flex h-6 w-6 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
@@ -179,7 +181,7 @@
 					href={externalLink.href}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="hover:text-accent-strong inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
 				>
 					<ExternalLink size={12} aria-hidden="true" />
 					{externalLink.label}

@@ -2,9 +2,9 @@
 slug: nord-2-waidmannslust-wittenau-luebars
 name: Nord 2 Waidmannslust Wittenau Luebars
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 32dfeabf8580da33
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Grün und Hitze prägen Nord 2 Waidmannslust Wittenau Luebars, rund 71 Punkte, Rang 7 von 143, weit über dem Berliner Median. Ruhe und Luft erreichen rund 83 Punkte, Rang 24, über dem Bezirksschnitt. Mobilität bleibt mit rund 23 Punkten nahe dem Median. Versorgung fällt mit rund 35 Punkten schwach aus, Rang 101.

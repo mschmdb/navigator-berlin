@@ -23,9 +23,7 @@ describe('getMobilityRating', () => {
 	});
 
 	it('rates Top when U-Bahn 220m + Bus nearby (combined score)', () => {
-		const r = getMobilityRating(
-			nearest({ ubahn: stop(220), bus: stop(116) })
-		);
+		const r = getMobilityRating(nearest({ ubahn: stop(220), bus: stop(116) }));
 		expect(r.key).toBe('top');
 	});
 
@@ -71,9 +69,7 @@ describe('getMobilityRating', () => {
 	});
 
 	it('rates Gut combining Schnellbahn 580m + Bus 100m (score 3.5)', () => {
-		const r = getMobilityRating(
-			nearest({ ubahn: stop(580), bus: stop(100) })
-		);
+		const r = getMobilityRating(nearest({ ubahn: stop(580), bus: stop(100) }));
 		expect(r.key).toBe('gut');
 	});
 
@@ -104,20 +100,14 @@ describe('getMobilityRating residential soft-cutoff', () => {
 	}
 
 	it('rates "schwach" when residential + only soft stops present', () => {
-		const r = getMobilityRating(
-			nearest({ sbahn: soft(900) }),
-			{ isResidential: true }
-		);
+		const r = getMobilityRating(nearest({ sbahn: soft(900) }), { isResidential: true });
 		expect(r.key).toBe('schwach');
 		expect(r.severity).toBe('warning');
 		expect(r.label).toBe('Schwach angebunden');
 	});
 
 	it('rates "keine" when NOT residential, even with soft stops', () => {
-		const r = getMobilityRating(
-			nearest({ sbahn: soft(900) }),
-			{ isResidential: false }
-		);
+		const r = getMobilityRating(nearest({ sbahn: soft(900) }), { isResidential: false });
 		expect(r.key).toBe('keine');
 		expect(r.severity).toBe('danger');
 	});
@@ -128,10 +118,9 @@ describe('getMobilityRating residential soft-cutoff', () => {
 	});
 
 	it('ignores soft stops in scoring when hard stop exists', () => {
-		const r = getMobilityRating(
-			nearest({ ubahn: stop(200), sbahn: soft(1200) }),
-			{ isResidential: true }
-		);
+		const r = getMobilityRating(nearest({ ubahn: stop(200), sbahn: soft(1200) }), {
+			isResidential: true
+		});
 		expect(r.key).toBe('top');
 	});
 
@@ -141,10 +130,9 @@ describe('getMobilityRating residential soft-cutoff', () => {
 	});
 
 	it('schwach score is 0 (soft stops contribute no score)', () => {
-		const r = getMobilityRating(
-			nearest({ sbahn: soft(900), bus: soft(800) }),
-			{ isResidential: true }
-		);
+		const r = getMobilityRating(nearest({ sbahn: soft(900), bus: soft(800) }), {
+			isResidential: true
+		});
 		expect(r.key).toBe('schwach');
 		expect(r.score).toBe(0);
 	});

@@ -46,9 +46,7 @@
 		if (!map) return;
 		// Defensive Filter: queryRenderedFeatures wirft wenn LayerID fehlt (Race waehrend
 		// Symbol-Sprite-Loading oder Layer-Add-Cycle). map.getLayer ist falsy bei missing.
-		const existing = map.getLayer
-			? layerIds.filter((id) => Boolean(map.getLayer!(id)))
-			: layerIds;
+		const existing = map.getLayer ? layerIds.filter((id) => Boolean(map.getLayer!(id))) : layerIds;
 		if (existing.length === 0) {
 			visible = false;
 			return;
@@ -102,22 +100,16 @@
 		style="left: {pos.x + 12}px; top: {pos.y + 12}px;"
 	>
 		{#if content.kind === 'poi'}
-			<p
-				class="font-serif text-sm font-semibold text-ink"
-				data-testid="poi-popover-title"
-			>
+			<p class="font-serif text-sm font-semibold text-ink" data-testid="poi-popover-title">
 				{content.poiTitle ?? content.layerName}
 			</p>
 			{#if content.poiSubtitle}
-				<p
-					class="font-sans text-xs leading-snug text-ink-muted"
-					data-testid="poi-popover-subtitle"
-				>
+				<p class="font-sans text-xs leading-snug text-ink-muted" data-testid="poi-popover-subtitle">
 					{content.poiSubtitle}
 				</p>
 			{/if}
 			<p
-				class="mt-1 font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+				class="mt-1 font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 				data-testid="poi-popover-hint"
 			>
 				{content.hint}
@@ -129,13 +121,13 @@
 			</p>
 			{#if content.shortExplain}
 				<p
-					class="font-serif text-[11px] italic leading-snug text-ink-muted"
+					class="font-serif text-[11px] leading-snug text-ink-muted italic"
 					data-testid="hover-tooltip-explain"
 				>
 					{content.shortExplain}
 				</p>
 			{/if}
-			<p class="mt-1 font-sans text-[10px] uppercase tracking-wide text-ink-subtle">
+			<p class="mt-1 font-sans text-[10px] tracking-wide text-ink-subtle uppercase">
 				{content.hint}
 			</p>
 		{/if}

@@ -20,7 +20,9 @@
 	<span class="mt-1 block">
 		<span class="flex h-1.5 w-full max-w-xs overflow-hidden rounded-full" aria-hidden="true">
 			{#each segments as seg, i (seg.label)}
-				<span class="{SHADES[Math.min(i, SHADES.length - 1)]} block h-full" style="width: {pct(seg.share)}%"
+				<span
+					class="{SHADES[Math.min(i, SHADES.length - 1)]} block h-full"
+					style="width: {pct(seg.share)}%"
 				></span>
 			{/each}
 		</span>

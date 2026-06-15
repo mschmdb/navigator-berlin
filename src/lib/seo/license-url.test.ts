@@ -3,21 +3,15 @@ import { licenseToSchemaOrgUrl } from './license-url.js';
 
 describe('licenseToSchemaOrgUrl', () => {
 	it('mappt dl-de/zero-2-0 auf govdata-zero-URL', () => {
-		expect(licenseToSchemaOrgUrl('dl-de/zero-2-0')).toBe(
-			'https://www.govdata.de/dl-de/zero-2-0'
-		);
+		expect(licenseToSchemaOrgUrl('dl-de/zero-2-0')).toBe('https://www.govdata.de/dl-de/zero-2-0');
 	});
 
 	it('mappt dl-de/by-2-0 auf govdata-by-URL', () => {
-		expect(licenseToSchemaOrgUrl('dl-de/by-2-0')).toBe(
-			'https://www.govdata.de/dl-de/by-2-0'
-		);
+		expect(licenseToSchemaOrgUrl('dl-de/by-2-0')).toBe('https://www.govdata.de/dl-de/by-2-0');
 	});
 
 	it('mappt CC BY 4.0 auf creativecommons.org', () => {
-		expect(licenseToSchemaOrgUrl('CC BY 4.0')).toBe(
-			'https://creativecommons.org/licenses/by/4.0/'
-		);
+		expect(licenseToSchemaOrgUrl('CC BY 4.0')).toBe('https://creativecommons.org/licenses/by/4.0/');
 	});
 
 	it('mappt ODbL 1.0 auf opendatacommons.org', () => {

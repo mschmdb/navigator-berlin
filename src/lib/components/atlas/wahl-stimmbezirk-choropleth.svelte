@@ -122,15 +122,7 @@
 								'fill-opacity': [
 									'case',
 									['==', ['get', 'has_winner'], 1],
-									[
-										'interpolate',
-										['linear'],
-										['get', 'anteil'],
-										0.15,
-										0.4,
-										0.45,
-										0.9
-									],
+									['interpolate', ['linear'], ['get', 'anteil'], 0.15, 0.4, 0.45, 0.9],
 									0.1
 								],
 								'fill-outline-color': 'rgba(20,20,20,0.18)'
@@ -231,9 +223,9 @@
 		bind:this={container}
 		role="img"
 		aria-label="Berliner Stimmbezirke gefärbt nach stärkster Partei"
-		class="h-[360px] sm:h-[480px] md:h-[520px] w-full overflow-hidden rounded border border-rule"
+		class="h-[360px] w-full overflow-hidden rounded border border-rule sm:h-[480px] md:h-[520px]"
 	></div>
-	<figcaption class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
+	<figcaption class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
 		Farbe = stärkste Partei pro Stimmbezirk · Sättigung skaliert mit Anteil · Klick öffnet Detail
 	</figcaption>
 </figure>

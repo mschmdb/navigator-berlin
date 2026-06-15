@@ -42,7 +42,10 @@ interface RequestEventLike {
 	setHeaders: (headers: Record<string, string>) => void;
 }
 
-function makeEvent(urlString: string, params: Record<string, string> = {}): RequestEventLike & {
+function makeEvent(
+	urlString: string,
+	params: Record<string, string> = {}
+): RequestEventLike & {
 	params: Record<string, string>;
 } {
 	return {

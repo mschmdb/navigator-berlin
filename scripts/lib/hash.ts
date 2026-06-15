@@ -8,6 +8,10 @@ export function shortHash(hex: string): string {
 	return hex.slice(0, 8);
 }
 
-export function hashedFilename(slug: string, content: Buffer | Uint8Array, ext = 'geojson'): string {
+export function hashedFilename(
+	slug: string,
+	content: Buffer | Uint8Array,
+	ext = 'geojson'
+): string {
 	return `${slug}.${shortHash(sha256Hex(content))}.${ext}`;
 }
