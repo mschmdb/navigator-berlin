@@ -48,7 +48,6 @@ function makeState(): UiState {
 		comparisonKiezScore: null,
 		wahlResults: null,
 		comparisonWahlResults: null,
-		kiezDemografie: null,
 		demografieScope: 'standort',
 		kiezLaermDb: null
 	};

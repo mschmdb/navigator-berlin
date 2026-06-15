@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { Users, Eye, EyeOff, ExternalLink, ChevronDown } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
-	import type { DemografieScope, KiezDemografieData } from './internal/demografie-types.js';
+	import {
+		demografieBezugLabel,
+		type DemografieScope,
+		type KiezDemografieData
+	} from './internal/demografie-types.js';
 
 	interface Props {
 		data: KiezDemografieData | null;
@@ -53,11 +57,8 @@
 	}
 
 	// Bezug-Zeile: erklärt, worauf sich die Zahlen beziehen (löst die Scope-Ambiguität).
-	const bezugText = $derived.by(() => {
-		if (scope === 'standort') return 'Bezug: Umgebung · statistischer Planungsraum';
-		const label = SCOPE_LABELS[scope];
-		return scopeName ? `Bezug: ${label} ${scopeName}` : `Bezug: ${label}`;
-	});
+	// Gleiche Quelle wie der LLM-Export (demografieBezugLabel), damit beide übereinstimmen.
+	const bezugText = $derived(`Bezug: ${demografieBezugLabel(scope, scopeName)}`);
 
 	let scopeButtons: HTMLButtonElement[] = $state([]);
 

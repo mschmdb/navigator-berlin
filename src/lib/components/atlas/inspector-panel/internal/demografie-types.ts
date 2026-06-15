@@ -28,3 +28,13 @@ export interface DemografieByScope {
 	kiez: KiezDemografieData | null;
 	bezirk: KiezDemografieData | null;
 }
+
+/**
+ * Räumlicher Bezug als Label (Inspector-Block + LLM-Export teilen sich diese Quelle,
+ * damit beide denselben Bezug nennen). `scopeName` = aufgelöster Kiez/Bezirk-Name.
+ */
+export function demografieBezugLabel(scope: DemografieScope, scopeName: string | null): string {
+	if (scope === 'standort') return 'Umgebung · statistischer Planungsraum';
+	const label = scope === 'kiez' ? 'Kiez' : 'Bezirk';
+	return scopeName ? `${label} ${scopeName}` : label;
+}

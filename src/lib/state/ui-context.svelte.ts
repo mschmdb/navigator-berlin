@@ -8,10 +8,7 @@ import type {
 	KiezScore
 } from '$lib/data';
 import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
-import type {
-	DemografieScope,
-	KiezDemografieData
-} from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
+import type { DemografieScope } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
 import type { Bookmark } from './bookmark-schema.js';
 import {
 	saveBookmark,
@@ -60,8 +57,6 @@ export interface UiState {
 	wahlResults: WahlResultsAtPoint | null;
 	/** Story 6.3d: Wahl-Ergebnisse für Vergleichs-Adresse B (Compare-Mode). */
 	comparisonWahlResults: WahlResultsAtPoint | null;
-	/** Story 10.5: Demografie-Kontext (neutral) für aktuelle Adresse. */
-	kiezDemografie: KiezDemografieData | null;
 	/** Story 10.5: aktiver räumlicher Bezug des Bevölkerungsprofils (steuert Karten-Outline). */
 	demografieScope: DemografieScope;
 	/** Story 10.6b: Lärm-dB-Kiez-Mittel (L_DEN) für aktuelle Adresse. */
@@ -94,7 +89,6 @@ export function createUiState(): UiState {
 		comparisonKiezScore: null,
 		wahlResults: null,
 		comparisonWahlResults: null,
-		kiezDemografie: null,
 		demografieScope: 'standort',
 		kiezLaermDb: null
 	});
