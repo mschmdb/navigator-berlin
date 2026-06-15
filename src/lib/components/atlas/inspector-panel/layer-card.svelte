@@ -43,7 +43,12 @@
 	const editorial = $derived(getEditorialConfig(hit.layer));
 	const learnMoreHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/${hit.layer}`));
 
-	type RowState = 'with-value' | 'no-coverage' | 'coverage-out-of-scope' | 'out-of-concept' | 'seasonal';
+	type RowState =
+		| 'with-value'
+		| 'no-coverage'
+		| 'coverage-out-of-scope'
+		| 'out-of-concept'
+		| 'seasonal';
 	const rowState: RowState = $derived.by(() => {
 		if (hit.reason === 'coverage-out-of-scope') return 'coverage-out-of-scope';
 		if (hit.reason === 'out-of-concept') return 'out-of-concept';
@@ -93,9 +98,9 @@
 					compact
 				/>
 			{:else if stateText}
-				<span class="font-serif text-sm italic text-ink-subtle">{stateText}</span>
+				<span class="font-serif text-sm text-ink-subtle italic">{stateText}</span>
 			{:else if !poiName}
-				<span class="font-serif text-sm italic text-ink-subtle">k. A.</span>
+				<span class="font-serif text-sm text-ink-subtle italic">k. A.</span>
 			{/if}
 		</div>
 	</div>
@@ -140,7 +145,9 @@
 					type="button"
 					data-testid="map-toggle"
 					aria-pressed={isActive}
-					aria-label={isActive ? `${layerName} von Karte entfernen` : `${layerName} auf Karte zeigen`}
+					aria-label={isActive
+						? `${layerName} von Karte entfernen`
+						: `${layerName} auf Karte zeigen`}
 					title={isActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
 					onclick={() => onToggleLayer?.(hit.layer)}
 					class={`inline-flex h-6 w-6 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
@@ -170,7 +177,7 @@
 					href={externalLink.href}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="hover:text-accent-strong inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
 				>
 					<ExternalLink size={12} aria-hidden="true" />
 					{externalLink.label}

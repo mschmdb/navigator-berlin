@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-	getOepnvStopIndex,
-	_resetOepnvStopIndexCache
-} from './get-oepnv-stop-index.js';
+import { getOepnvStopIndex, _resetOepnvStopIndexCache } from './get-oepnv-stop-index.js';
 import type { OepnvStopIndex } from './get-oepnv-stop-index.js';
 
 const SAMPLE: OepnvStopIndex = {
@@ -46,10 +43,7 @@ describe('getOepnvStopIndex', () => {
 
 	it('shares in-flight promise to avoid duplicate fetches', async () => {
 		const fetchFn = fakeFetch(SAMPLE);
-		const [a, b] = await Promise.all([
-			getOepnvStopIndex(fetchFn),
-			getOepnvStopIndex(fetchFn)
-		]);
+		const [a, b] = await Promise.all([getOepnvStopIndex(fetchFn), getOepnvStopIndex(fetchFn)]);
 		expect(fetchFn).toHaveBeenCalledTimes(1);
 		expect(a).toBe(b);
 	});

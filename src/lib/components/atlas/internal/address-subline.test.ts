@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { GeocodeSuggestion } from '$lib/data';
-import {
-	extractPrimaryName,
-	extractStreetName,
-	formatAddressSubline
-} from './address-subline.js';
+import { extractPrimaryName, extractStreetName, formatAddressSubline } from './address-subline.js';
 
 function makeAddr(overrides: Partial<GeocodeSuggestion> = {}): GeocodeSuggestion {
 	return {
@@ -74,9 +70,9 @@ describe('extractPrimaryName', () => {
 	});
 
 	it('lässt POI-Namen unverändert', () => {
-		expect(
-			extractPrimaryName('Hochschule für Technik und Wirtschaft, Campus, Berlin')
-		).toBe('Hochschule für Technik und Wirtschaft');
+		expect(extractPrimaryName('Hochschule für Technik und Wirtschaft, Campus, Berlin')).toBe(
+			'Hochschule für Technik und Wirtschaft'
+		);
 	});
 });
 

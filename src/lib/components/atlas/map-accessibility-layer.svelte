@@ -7,10 +7,7 @@
 	};
 
 	export type AccessibilityMapLike = {
-		queryRenderedFeatures: (
-			geom?: unknown,
-			opts?: { layers?: string[] }
-		) => unknown[];
+		queryRenderedFeatures: (geom?: unknown, opts?: { layers?: string[] }) => unknown[];
 		getLayer?: (id: string) => unknown;
 		on: (event: string, handler: () => void) => unknown;
 		off: (event: string, handler: () => void) => unknown;
@@ -56,9 +53,7 @@
 	const layerBySlug = $derived(new Map(layers.map((l) => [l.slug, l])));
 	const layerIdsToQuery = $derived(layers.map((l) => l.slug));
 
-	function geometryTypeOf(
-		g: { type: string }
-	): 'Point' | 'Polygon' | 'MultiPolygon' | null {
+	function geometryTypeOf(g: { type: string }): 'Point' | 'Polygon' | 'MultiPolygon' | null {
 		if (g.type === 'Point') return 'Point';
 		if (g.type === 'Polygon') return 'Polygon';
 		if (g.type === 'MultiPolygon') return 'MultiPolygon';
@@ -71,7 +66,12 @@
 			return [c[0] as number, c[1] as number];
 		}
 		// Polygon: coords[0][0]
-		if (geom.type === 'Polygon' && Array.isArray(c) && Array.isArray(c[0]) && Array.isArray(c[0][0])) {
+		if (
+			geom.type === 'Polygon' &&
+			Array.isArray(c) &&
+			Array.isArray(c[0]) &&
+			Array.isArray(c[0][0])
+		) {
 			return [(c[0][0] as number[])[0]!, (c[0][0] as number[])[1]!];
 		}
 		// MultiPolygon: coords[0][0][0]
@@ -155,7 +155,9 @@
 	}
 </script>
 
-<div class="sr-only focus-within:not-sr-only focus-within:fixed focus-within:left-4 focus-within:top-16 focus-within:z-40 focus-within:max-h-[60vh] focus-within:w-[min(28rem,calc(100vw-2rem))] focus-within:overflow-y-auto focus-within:rounded-sm focus-within:border focus-within:border-rule focus-within:bg-bg-elevated focus-within:p-4 focus-within:shadow-lg">
+<div
+	class="sr-only focus-within:not-sr-only focus-within:fixed focus-within:top-16 focus-within:left-4 focus-within:z-40 focus-within:max-h-[60vh] focus-within:w-[min(28rem,calc(100vw-2rem))] focus-within:overflow-y-auto focus-within:rounded-sm focus-within:border focus-within:border-rule focus-within:bg-bg-elevated focus-within:p-4 focus-within:shadow-lg"
+>
 	{#if compareA && compareB}
 		<div
 			data-testid="map-a11y-compare-buttons"

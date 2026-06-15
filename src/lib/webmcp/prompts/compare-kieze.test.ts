@@ -7,7 +7,10 @@ describe('compare-kieze prompt', () => {
 	});
 
 	it('rendert DE mit beiden Slugs', () => {
-		const out = compareKiezePrompt.render({ slug_a: 'kreuzberg-nord', slug_b: 'wedding-zentrum' }, 'de');
+		const out = compareKiezePrompt.render(
+			{ slug_a: 'kreuzberg-nord', slug_b: 'wedding-zentrum' },
+			'de'
+		);
 		expect(out).toContain('kreuzberg-nord');
 		expect(out).toContain('wedding-zentrum');
 		expect(out).toMatch(/get_kiez_profile/);
@@ -15,7 +18,10 @@ describe('compare-kieze prompt', () => {
 	});
 
 	it('rendert EN mit beiden Slugs', () => {
-		const out = compareKiezePrompt.render({ slug_a: 'kreuzberg-nord', slug_b: 'wedding-zentrum' }, 'en');
+		const out = compareKiezePrompt.render(
+			{ slug_a: 'kreuzberg-nord', slug_b: 'wedding-zentrum' },
+			'en'
+		);
 		expect(out).toContain('kreuzberg-nord');
 		expect(out).toContain('wedding-zentrum');
 		expect(out).toMatch(/get_kiez_profile/);

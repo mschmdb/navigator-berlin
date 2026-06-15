@@ -4,10 +4,7 @@ import type { FeatureCollection, Geometry, Position } from 'geojson';
 const EPSG_4326 = 'EPSG:4326';
 const EPSG_25833 = 'EPSG:25833';
 
-proj4.defs(
-	EPSG_25833,
-	'+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
-);
+proj4.defs(EPSG_25833, '+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
 
 export function utm33ToWgs84(x: number, y: number): [number, number] {
 	const [lon, lat] = proj4(EPSG_25833, EPSG_4326, [x, y]);
@@ -21,10 +18,12 @@ export function wgs84ToUtm33(lon: number, lat: number): [number, number] {
 
 type CRS = 'EPSG:4326' | 'EPSG:25833';
 
-const convert = (from: CRS, to: CRS) => (pos: Position): Position => {
-	const [x, y] = proj4(from, to, [pos[0], pos[1]]);
-	return pos.length === 3 ? [x, y, pos[2]] : [x, y];
-};
+const convert =
+	(from: CRS, to: CRS) =>
+	(pos: Position): Position => {
+		const [x, y] = proj4(from, to, [pos[0], pos[1]]);
+		return pos.length === 3 ? [x, y, pos[2]] : [x, y];
+	};
 
 function mapGeometry(geom: Geometry, fn: (p: Position) => Position): Geometry {
 	switch (geom.type) {

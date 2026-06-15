@@ -15,15 +15,15 @@ Solo-Maintainer-Playbook für den Fall, dass du nach mehreren Monaten Lücke wie
 
 ## TL;DR
 
-| Was | Wo | Kommando |
-|---|---|---|
-| Repo | `mschmdb/navigator-berlin` (GitHub, privat) | `gh repo clone mschmdb/navigator-berlin` |
-| Production | https://navigator.berlin | — |
-| Coolify-Dashboard (App) | https://coolify.navigator.berlin | Basic-Auth `navigator` / `arndtstrasse34` |
-| Coolify-Dashboard (Plausible) | https://coolify.fliege.dev | dein Login |
-| Plausible-Dashboard | https://plausible.navigator.berlin | dein Login |
-| SSH Production | `ssh admin@88.198.115.174` | (Key-Auth, kein Passwort) |
-| SSH CAX21 (Aux) | `ssh root@168.119.98.228` | (Key-Auth) |
+| Was                           | Wo                                          | Kommando                                  |
+| ----------------------------- | ------------------------------------------- | ----------------------------------------- |
+| Repo                          | `mschmdb/navigator-berlin` (GitHub, privat) | `gh repo clone mschmdb/navigator-berlin`  |
+| Production                    | https://navigator.berlin                    | —                                         |
+| Coolify-Dashboard (App)       | https://coolify.navigator.berlin            | Basic-Auth `navigator` / `arndtstrasse34` |
+| Coolify-Dashboard (Plausible) | https://coolify.fliege.dev                  | dein Login                                |
+| Plausible-Dashboard           | https://plausible.navigator.berlin          | dein Login                                |
+| SSH Production                | `ssh admin@88.198.115.174`                  | (Key-Auth, kein Passwort)                 |
+| SSH CAX21 (Aux)               | `ssh root@168.119.98.228`                   | (Key-Auth)                                |
 
 ## Local-Dev-Setup
 

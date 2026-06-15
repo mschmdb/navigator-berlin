@@ -14,13 +14,7 @@ import * as v from 'valibot';
  * Phase-2-Backlog (vgl. Story-File Open-Question 1).
  */
 
-export const CLUSTER_KEYS = [
-	'laerm',
-	'gruen',
-	'oepnv',
-	'wohnen',
-	'klima'
-] as const;
+export const CLUSTER_KEYS = ['laerm', 'gruen', 'oepnv', 'wohnen', 'klima'] as const;
 export type ClusterKey = (typeof CLUSTER_KEYS)[number];
 
 export const PAGE_TYPES = ['bezirk', 'kiez', 'layer'] as const;

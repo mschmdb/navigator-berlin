@@ -54,7 +54,9 @@ test.describe('Editorial-Pattern (Story 1.12)', () => {
 
 	test('Inspector-Row enthält KEINEN Mailto-Link (Footer-Page deferred)', async ({ page }) => {
 		await selectAddress(page);
-		const mailtos = page.locator('[data-testid="layer-hit-row"] [data-testid="error-feedback-mailto"]');
+		const mailtos = page.locator(
+			'[data-testid="layer-hit-row"] [data-testid="error-feedback-mailto"]'
+		);
 		await expect(mailtos).toHaveCount(0);
 	});
 
@@ -66,9 +68,7 @@ test.describe('Editorial-Pattern (Story 1.12)', () => {
 		await expect(detail).toHaveAttribute('data-osm-sourced', 'true');
 		const aiAttr = await detail.getAttribute('data-ai-generated');
 		expect(aiAttr).toBeNull();
-		await expect(
-			detail.locator('[data-testid="stolperstein-source-koordinierung"]')
-		).toBeVisible();
+		await expect(detail.locator('[data-testid="stolperstein-source-koordinierung"]')).toBeVisible();
 	});
 
 	test('Trinkbrunnen-Layer zeigt seasonal-Pille (aktiv oder außerhalb)', async ({ page }) => {

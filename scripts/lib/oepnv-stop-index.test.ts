@@ -61,11 +61,7 @@ describe('extractStopFromFeature', () => {
 	});
 
 	it('extracts S-Bahn stop (light_rail)', () => {
-		const f = makeFeature(
-			{ name: 'Tiergarten', station: 'light_rail' },
-			13.336,
-			52.514
-		);
+		const f = makeFeature({ name: 'Tiergarten', station: 'light_rail' }, 13.336, 52.514);
 		expect(extractStopFromFeature(f, 'sbahn')).toEqual({
 			name: 'Tiergarten',
 			lat: 52.514,
@@ -87,11 +83,7 @@ describe('extractStopFromFeature', () => {
 	});
 
 	it('extracts Bus stop (highway=bus_stop)', () => {
-		const f = makeFeature(
-			{ name: 'Londoner Straße', highway: 'bus_stop' },
-			13.342,
-			52.5635
-		);
+		const f = makeFeature({ name: 'Londoner Straße', highway: 'bus_stop' }, 13.342, 52.5635);
 		expect(extractStopFromFeature(f, 'bus')).toEqual({
 			name: 'Londoner Straße',
 			lat: 52.5635,
@@ -105,11 +97,7 @@ describe('extractStopFromFeature', () => {
 	});
 
 	it('trims name whitespace', () => {
-		const f = makeFeature(
-			{ name: '  Frankfurter Tor  ', station: 'subway' },
-			13.45,
-			52.51
-		);
+		const f = makeFeature({ name: '  Frankfurter Tor  ', station: 'subway' }, 13.45, 52.51);
 		expect(extractStopFromFeature(f, 'ubahn')?.name).toBe('Frankfurter Tor');
 	});
 });
@@ -160,31 +148,21 @@ describe('buildOepnvStopIndex', () => {
 	it('aggregates features per modus into an index', () => {
 		const ubahnFC = {
 			type: 'FeatureCollection',
-			features: [
-				makeFeature({ name: 'Alex', station: 'subway' }, 13.41, 52.52)
-			]
+			features: [makeFeature({ name: 'Alex', station: 'subway' }, 13.41, 52.52)]
 		};
 		const sbahnFC = {
 			type: 'FeatureCollection',
-			features: [
-				makeFeature({ name: 'Hbf', station: 'light_rail' }, 13.37, 52.52)
-			]
+			features: [makeFeature({ name: 'Hbf', station: 'light_rail' }, 13.37, 52.52)]
 		};
 		const tramFC = {
 			type: 'FeatureCollection',
 			features: [
-				makeFeature(
-					{ name: 'Boxhagener', railway: 'tram_stop', tram: 'yes' },
-					13.46,
-					52.51
-				)
+				makeFeature({ name: 'Boxhagener', railway: 'tram_stop', tram: 'yes' }, 13.46, 52.51)
 			]
 		};
 		const busFC = {
 			type: 'FeatureCollection',
-			features: [
-				makeFeature({ name: 'Londoner', highway: 'bus_stop' }, 13.342, 52.5635)
-			]
+			features: [makeFeature({ name: 'Londoner', highway: 'bus_stop' }, 13.342, 52.5635)]
 		};
 		const index = buildOepnvStopIndex({
 			ubahn: ubahnFC,

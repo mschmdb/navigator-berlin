@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-	buildWahlSitemapEntries,
-	WAHL_DETAIL_SOURCE
-} from './wahl-detail-pages.js';
+import { buildWahlSitemapEntries, WAHL_DETAIL_SOURCE } from './wahl-detail-pages.js';
 import type { Manifest } from '../../data/types.js';
 
 const emptyManifest: Manifest = {

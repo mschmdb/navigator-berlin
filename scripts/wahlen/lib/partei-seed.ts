@@ -85,9 +85,7 @@ export const PARTEI_SEED: readonly ParteiSeed[] = [
 	}
 ] as const;
 
-export function buildAliasIndex(
-	seed: readonly ParteiSeed[] = PARTEI_SEED
-): Map<string, string> {
+export function buildAliasIndex(seed: readonly ParteiSeed[] = PARTEI_SEED): Map<string, string> {
 	const index = new Map<string, string>();
 	for (const p of seed) {
 		for (const a of p.aliases) {

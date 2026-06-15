@@ -9,11 +9,7 @@
 	} from './internal/narrative-markers.js';
 	import { rollingMean } from '$lib/utils/rolling-mean.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import {
-		NORMAL_OLD,
-		NORMAL_NEW,
-		getNormalperiodMean
-	} from '$lib/utils/normalperiod.js';
+	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '$lib/utils/normalperiod.js';
 
 	type Props = {
 		series: readonly YearValue[];
@@ -76,27 +72,19 @@
 			: `Min: ${stats.min.toFixed(1)} ${unit} · Max: ${stats.max.toFixed(1)} ${unit} · Latest: ${stats.latest.toFixed(2)} ${unit}`
 	);
 
-	const normalOldMean = $derived(
-		getNormalperiodMean(points, NORMAL_OLD.from, NORMAL_OLD.to)
-	);
-	const normalNewMean = $derived(
-		getNormalperiodMean(points, NORMAL_NEW.from, NORMAL_NEW.to)
-	);
+	const normalOldMean = $derived(getNormalperiodMean(points, NORMAL_OLD.from, NORMAL_OLD.to));
+	const normalNewMean = $derived(getNormalperiodMean(points, NORMAL_NEW.from, NORMAL_NEW.to));
 
 	function formatMean(n: number): string {
 		return `${n.toFixed(2)} ${unit}`;
 	}
 
-	const chartId = $derived(
-		`long-view-${stationName.replace(/\W+/g, '-').toLowerCase()}`
-	);
+	const chartId = $derived(`long-view-${stationName.replace(/\W+/g, '-').toLowerCase()}`);
 	const titleId = $derived(`chart-title-${chartId}`);
 	const descId = $derived(`chart-desc-${chartId}`);
 
 	const visibleMarkers = $derived(
-		stats === null
-			? []
-			: markersInRange(narrativeMarkers, stats.firstYear, stats.latestYear)
+		stats === null ? [] : markersInRange(narrativeMarkers, stats.firstYear, stats.latestYear)
 	);
 
 	const decadeTicks = $derived.by<number[]>(() => {
@@ -111,11 +99,7 @@
 	const yTicks = $derived.by<number[]>(() => {
 		if (stats === null) return [];
 		const mid = (stats.min + stats.max) / 2;
-		return [
-			Math.floor(stats.min),
-			Math.round(mid * 10) / 10,
-			Math.ceil(stats.max)
-		];
+		return [Math.floor(stats.min), Math.round(mid * 10) / 10, Math.ceil(stats.max)];
 	});
 
 	let focusedIndex = $state(-1);
@@ -173,7 +157,7 @@
 		data-chart-id={chartId}
 		data-focused-index={focusedIndex}
 		onkeydown={onKeydown}
-		class="climate-long-view-figure relative block w-full focus:outline focus:outline-2 focus:outline-rule-strong focus:outline-offset-2"
+		class="climate-long-view-figure relative block w-full focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-rule-strong"
 	>
 		<span id={titleId} class="sr-only">Jahresmitteltemperatur {stationName}</span>
 		<span id={descId} class="sr-only">{description}</span>
@@ -252,10 +236,7 @@
 						<Tooltip.Root>
 							<Tooltip.Header value={String(data.year)} />
 							<Tooltip.List>
-								<Tooltip.Item
-									label="Jahresmittel"
-									value={`${data.value.toFixed(2)} ${unit}`}
-								/>
+								<Tooltip.Item label="Jahresmittel" value={`${data.value.toFixed(2)} ${unit}`} />
 								{#if data.rolling != null}
 									<Tooltip.Item
 										label="30-Jahr-Mittel"
@@ -268,10 +249,7 @@
 				{/snippet}
 			</AreaChart>
 		{/if}
-		<figcaption
-			class="mt-1 font-mono text-xs text-ink-subtle"
-			data-testid="chart-figcaption"
-		>
+		<figcaption class="mt-1 font-mono text-xs text-ink-subtle" data-testid="chart-figcaption">
 			<span class="block">{figcaption}</span>
 			{#if normalOldMean !== null}
 				<span

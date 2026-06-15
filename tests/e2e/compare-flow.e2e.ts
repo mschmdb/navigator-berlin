@@ -42,9 +42,7 @@ test.beforeEach(async ({ page }) => {
 
 async function pickAddressA(page: import('@playwright/test').Page) {
 	await page.goto('/explore');
-	await page
-		.locator('[data-testid="map-skeleton"]')
-		.waitFor({ state: 'detached', timeout: 15000 });
+	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 	const input = page.getByRole('combobox');
 	await input.click();
 	await input.fill('Wörther');

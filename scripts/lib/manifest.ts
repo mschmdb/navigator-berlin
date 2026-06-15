@@ -84,7 +84,13 @@ function detectGeometryType(buf: Buffer): GeometryType {
 	try {
 		const fc = JSON.parse(buf.toString('utf-8')) as FeatureCollection;
 		const first = fc.features?.[0]?.geometry;
-		if (first && (first.type === 'Point' || first.type === 'Polygon' || first.type === 'MultiPolygon' || first.type === 'LineString')) {
+		if (
+			first &&
+			(first.type === 'Point' ||
+				first.type === 'Polygon' ||
+				first.type === 'MultiPolygon' ||
+				first.type === 'LineString')
+		) {
 			return first.type;
 		}
 	} catch {

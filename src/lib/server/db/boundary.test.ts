@@ -26,24 +26,20 @@ describe('Architecture boundary: $lib/server/** not imported from client code', 
 	}
 
 	it('src/lib/components/ does not import $lib/server/**', () => {
-		const offenders = findImports(
-			"from ['\\\"]\\$lib/server",
-			['src/lib/components']
-		);
+		const offenders = findImports('from [\'\\"]\\$lib/server', ['src/lib/components']);
 		expect(offenders, `Offending files: ${offenders.join(', ')}`).toEqual([]);
 	});
 
 	it('src/lib/data/ does not import $lib/server/** (excluding .remote.ts / .server.ts)', () => {
-		const offenders = findImports(
-			"from ['\\\"]\\$lib/server",
-			['src/lib/data']
-		).filter((f) => !/\.(remote|server)\.ts$/.test(f));
+		const offenders = findImports('from [\'\\"]\\$lib/server', ['src/lib/data']).filter(
+			(f) => !/\.(remote|server)\.ts$/.test(f)
+		);
 		expect(offenders, `Offending files: ${offenders.join(', ')}`).toEqual([]);
 	});
 
 	it('+page.svelte / +layout.svelte do not import $lib/server/**', () => {
-		const offenders = findImports("from ['\\\"]\\$lib/server", ['src/routes']).filter(
-			(f) => /\+page\.svelte$|\+layout\.svelte$/.test(f)
+		const offenders = findImports('from [\'\\"]\\$lib/server', ['src/routes']).filter((f) =>
+			/\+page\.svelte$|\+layout\.svelte$/.test(f)
 		);
 		expect(offenders, `Offending files: ${offenders.join(', ')}`).toEqual([]);
 	});

@@ -3,7 +3,14 @@ import { buildKiezTrendContext } from './context-builder.js';
 
 describe('buildKiezTrendContext', () => {
 	it('liefert null bei leeren Punkten', () => {
-		expect(buildKiezTrendContext({ kiezName: 'X', wahlTypLabel: 'Bundestagswahlen', stimmtypLabel: 'Zweitstimmen', sparkline: [] })).toBeNull();
+		expect(
+			buildKiezTrendContext({
+				kiezName: 'X',
+				wahlTypLabel: 'Bundestagswahlen',
+				stimmtypLabel: 'Zweitstimmen',
+				sparkline: []
+			})
+		).toBeNull();
 	});
 
 	it('liefert null bei nur 1 Jahr', () => {

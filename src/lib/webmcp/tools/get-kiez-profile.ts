@@ -49,9 +49,7 @@ function isHttpErrorWithStatus(err: unknown, status: number): boolean {
 	return candidate.status === status;
 }
 
-export function createGetKiezProfileTool(
-	deps: GetKiezProfileDeps
-): WebMcpToolDefinition {
+export function createGetKiezProfileTool(deps: GetKiezProfileDeps): WebMcpToolDefinition {
 	return {
 		name: 'get_kiez_profile',
 		description:

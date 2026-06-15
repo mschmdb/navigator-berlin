@@ -31,6 +31,7 @@ Diese Datei ergänzt `~/.claude/CLAUDE.md` mit projekt-spezifischen Hard-Rules. 
 ### Hand-off-Gates
 
 Vor Story-Status `review`:
+
 - Pro AC mind. 1 Test-File mit failing-then-passing History (im Commit nachvollziehbar)
 - `pnpm test` 100% green (unit + e2e wo definiert)
 - Coverage-Ziele (Story-Phase-2+): Daten-Transform ≥80%, kritische Pfade ≥90%, UI-Smoke E2E für Top-3-Journeys
@@ -47,6 +48,7 @@ Setup-Stories (1.1, evtl. 4.1, 4.3) sind smoke-level. Tests existieren + lauffä
 ## Sonstige Projekt-Regeln
 
 Siehe auch:
+
 - `~/.claude/CLAUDE.md` (User-globale Regeln: @lucide/svelte, Files <500, kein `any`, kein Hardcoded Data ohne Rückfrage)
 - `docs/adr/` (Architectural Decision Records)
 - `_bmad-output/planning-artifacts/architecture.md` (21 MUST-Rules: Enforcement Guidelines)

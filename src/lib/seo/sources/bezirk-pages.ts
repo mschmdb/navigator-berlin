@@ -25,9 +25,7 @@ export interface BuildBezirkSitemapEntriesInput {
 	readonly lastmod: string;
 }
 
-export function buildBezirkSitemapEntries(
-	input: BuildBezirkSitemapEntriesInput
-): SitemapEntry[] {
+export function buildBezirkSitemapEntries(input: BuildBezirkSitemapEntriesInput): SitemapEntry[] {
 	if (input.slugs.length === 0) return [];
 	const origin = input.origin.replace(/\/+$/, '');
 	return input.slugs.map((slug) => ({

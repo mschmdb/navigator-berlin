@@ -157,9 +157,7 @@ function poiSportanlage(value: unknown): LayerHitDisplay {
 	if (!name) return EMPTY;
 	const flaeche = pickProp(value, 'gesamtflaeche_standort_qm');
 	const ctx =
-		typeof flaeche === 'number'
-			? `${new Intl.NumberFormat('de-DE').format(flaeche)} m²`
-			: null;
+		typeof flaeche === 'number' ? `${new Intl.NumberFormat('de-DE').format(flaeche)} m²` : null;
 	return fallback(name, ctx);
 }
 

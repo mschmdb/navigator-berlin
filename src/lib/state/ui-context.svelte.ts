@@ -8,7 +8,10 @@ import type {
 	KiezScore
 } from '$lib/data';
 import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
-import type { KiezDemografieData } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
+import type {
+	DemografieScope,
+	KiezDemografieData
+} from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
 import type { Bookmark } from './bookmark-schema.js';
 import {
 	saveBookmark,
@@ -59,6 +62,8 @@ export interface UiState {
 	comparisonWahlResults: WahlResultsAtPoint | null;
 	/** Story 10.5: Demografie-Kontext (neutral) für aktuelle Adresse. */
 	kiezDemografie: KiezDemografieData | null;
+	/** Story 10.5: aktiver räumlicher Bezug des Bevölkerungsprofils (steuert Karten-Outline). */
+	demografieScope: DemografieScope;
 	/** Story 10.6b: Lärm-dB-Kiez-Mittel (L_DEN) für aktuelle Adresse. */
 	kiezLaermDb: number | null;
 }
@@ -90,6 +95,7 @@ export function createUiState(): UiState {
 		wahlResults: null,
 		comparisonWahlResults: null,
 		kiezDemografie: null,
+		demografieScope: 'standort',
 		kiezLaermDb: null
 	});
 	setContext(KEY, state);
@@ -149,10 +155,7 @@ export function addBookmark(state: UiState, bookmark: Bookmark): boolean {
 }
 
 export function removeBookmark(state: UiState, id: string): void {
-	const next = removeBookmarkFromStore(
-		{ schemaVersion: 1, bookmarks: state.bookmarks },
-		id
-	);
+	const next = removeBookmarkFromStore({ schemaVersion: 1, bookmarks: state.bookmarks }, id);
 	state.bookmarks = next.bookmarks;
 }
 
@@ -176,10 +179,7 @@ export function toggleCompareMode(state: UiState): void {
 	}
 }
 
-export function setComparisonAddress(
-	state: UiState,
-	address: GeocodeSuggestion | null
-): void {
+export function setComparisonAddress(state: UiState, address: GeocodeSuggestion | null): void {
 	state.comparisonAddress = address;
 	clearComparisonData(state);
 }

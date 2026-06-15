@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-	barPercent,
-	cumulativeSegments,
-	proximityFraction,
-	ringDashArray
-} from './chart-scale.js';
+import { barPercent, cumulativeSegments, proximityFraction, ringDashArray } from './chart-scale.js';
 
 describe('barPercent', () => {
 	it('mappt value linear auf 0-100', () => {

@@ -14,11 +14,11 @@ Diese Doku beschreibt die transparente Berechnung der drei Aggregat-Ebenen Kiez-
 
 Drei räumliche Ebenen, eine Methodik:
 
-| Ebene | Anzahl | Quelle | Berechnung |
-|-------|--------|--------|------------|
-| Planungsraum (PLR) | 542 | `static/kiez-scores/kiez-scores.json` (Story 1.28) | Source-of-Truth, 7 Dimensionen pro Adress-Centroid (5 im Composite + Kultur + Kriminalität) |
-| Bezirksregion (BR) | 143 | Postgres `kiez_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
-| Bezirk | 12 | Postgres `bezirk_score` | Flächen-gewichtetes Mittel über enthaltene PLR |
+| Ebene              | Anzahl | Quelle                                             | Berechnung                                                                                  |
+| ------------------ | ------ | -------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Planungsraum (PLR) | 542    | `static/kiez-scores/kiez-scores.json` (Story 1.28) | Source-of-Truth, 7 Dimensionen pro Adress-Centroid (5 im Composite + Kultur + Kriminalität) |
+| Bezirksregion (BR) | 143    | Postgres `kiez_score`                              | Flächen-gewichtetes Mittel über enthaltene PLR                                              |
+| Bezirk             | 12     | Postgres `bezirk_score`                            | Flächen-gewichtetes Mittel über enthaltene PLR                                              |
 
 ## Dimensionen
 
@@ -67,11 +67,11 @@ Falls alle fünf Composite-Dimensionen einer Region `null` sind, fehlt auch `ove
 
 Werte 0 bis 100. Vier UI-Stufen für Choropleth-Skalen und Inspector-Anzeige:
 
-| Stufe | Bereich |
-|-------|---------|
-| gering | 0 bis 25 |
-| mittel | 26 bis 50 |
-| hoch | 51 bis 75 |
+| Stufe     | Bereich    |
+| --------- | ---------- |
+| gering    | 0 bis 25   |
+| mittel    | 26 bis 50  |
+| hoch      | 51 bis 75  |
 | sehr hoch | 76 bis 100 |
 
 Karten-Choropleth-Familie nach Story 1.31:

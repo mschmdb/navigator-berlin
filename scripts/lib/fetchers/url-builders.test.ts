@@ -37,9 +37,9 @@ describe('Overpass POST-Body-Builder', () => {
 	});
 
 	it('wirft bei nicht-allowlisted endpoint', () => {
-		expect(() =>
-			buildOverpassRequest('https://evil.example.com/api', '[out:json];')
-		).toThrow(/allowlist/);
+		expect(() => buildOverpassRequest('https://evil.example.com/api', '[out:json];')).toThrow(
+			/allowlist/
+		);
 	});
 });
 

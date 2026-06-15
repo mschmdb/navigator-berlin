@@ -24,41 +24,41 @@ Dieser ADR ist Pflicht-Foundation vor Story 8.1 und vor jedem visuellen Card-Bau
 
 ### 2. Aggregat-Typen
 
-| Typ | Regel auf Polygon-Level | Beispiel-Layer |
-|-----|-------------------------|----------------|
-| `numeric-median` | Median der Member-Werte + Min/Max-Spanne | Lärm LDEN, Luft NO2 |
-| `ordinal-distribution` | Verteilung über Klassen, dominante Klasse als Headline | Wohnlage, Lärm-Klasse, MSS-Stufe |
-| `coverage-share` | Anteil der Polygon-Fläche mit Treffer (0-100%) | Kaltluft-Einwirkbereich, Leitbahnkorridor, Milieuschutz |
-| `point-density` | Treffer pro km² + nächste Distanz vom Adress-Punkt (nur address) | Kitas, Schulen, ÖPNV-Stops, Stolpersteine |
-| `area-share` | Anteil Grün-/Parkfläche an Polygon-Fläche | Grünanlagen, Spielplätze |
-| `score-weighted` | flächengewichtetes Mittel (ADR-013) | Kiez-Score 5 Dimensionen |
-| `vote-share` | Stimmenanteil pro Partei (Epic 6 Pipeline) | Wahldaten |
-| `not-aggregatable` | kein Aggregat, Disclaimer-Card statt Fake-Wert | Bodenrichtwert, einzelner Stolperstein-Datensatz |
+| Typ                    | Regel auf Polygon-Level                                          | Beispiel-Layer                                          |
+| ---------------------- | ---------------------------------------------------------------- | ------------------------------------------------------- |
+| `numeric-median`       | Median der Member-Werte + Min/Max-Spanne                         | Lärm LDEN, Luft NO2                                     |
+| `ordinal-distribution` | Verteilung über Klassen, dominante Klasse als Headline           | Wohnlage, Lärm-Klasse, MSS-Stufe                        |
+| `coverage-share`       | Anteil der Polygon-Fläche mit Treffer (0-100%)                   | Kaltluft-Einwirkbereich, Leitbahnkorridor, Milieuschutz |
+| `point-density`        | Treffer pro km² + nächste Distanz vom Adress-Punkt (nur address) | Kitas, Schulen, ÖPNV-Stops, Stolpersteine               |
+| `area-share`           | Anteil Grün-/Parkfläche an Polygon-Fläche                        | Grünanlagen, Spielplätze                                |
+| `score-weighted`       | flächengewichtetes Mittel (ADR-013)                              | Kiez-Score 5 Dimensionen                                |
+| `vote-share`           | Stimmenanteil pro Partei (Epic 6 Pipeline)                       | Wahldaten                                               |
+| `not-aggregatable`     | kein Aggregat, Disclaimer-Card statt Fake-Wert                   | Bodenrichtwert, einzelner Stolperstein-Datensatz        |
 
 ### 3. Matrix pro Layer-Familie
 
-| Layer-Familie | address | kiez/bezirk/berlin | Visual-Typ | Compare evaluierbar? |
-|---------------|---------|--------------------|-----------|----------------------|
-| Lärm (laerm-2023) | Punkt-dB + Klasse | `ordinal-distribution` | Verteilungs-Balken + Median-Tick | ja (ordinal, leiser=Richtung) |
-| Luft (luft-2023) | Punkt-NO2 | `numeric-median` | Score-Bar + Berlin-Median-Anker | ja |
-| Bioklima / PET (klima-pet) | Punkt-PET | `numeric-median` | Score-Bar + Anker | ja |
-| Kaltluft / Leitbahn | Treffer ja/nein | `coverage-share` | Coverage-Bar (% Fläche) | neutral (Faktum) |
-| Grünversorgung | Punkt-Klasse | `ordinal-distribution` | Verteilungs-Balken | ja |
-| Grünanlagen / Spielplätze | nächste Distanz | `area-share` | Anteils-Bar | neutral |
-| Umweltgerechtigkeit | Punkt-Composite | `ordinal-distribution` | Verteilungs-Balken | ja, aber Stigma-Gate |
-| Wohnlage (Mietspiegel) | Punkt-Stufe | `ordinal-distribution` | Verteilungs-Balken | NEIN (categorical-neutral, Memory `project_compare_editorial_profiles`) |
-| MSS-Soziale-Lage | Punkt-Stufe | `ordinal-distribution` | Verteilungs-Balken | NEIN (Stigma-Lock) |
-| Milieuschutz | innerhalb ja/nein | `coverage-share` | Coverage-Bar | neutral |
-| Bodenrichtwert | Block-Wert | `not-aggregatable` | nur address: Wert; sonst Disclaimer | NEIN |
-| Kitas/Schulen/Kranken./Sport/Schwimm | nächste Distanz | `point-density` | Distanz-Ring (address) / Dichte-Dot (Polygon) | neutral (Anzahl=faktisch) |
-| Einschulbereiche | enthaltender Bereich | address-only | Text | n/a |
-| ÖPNV-Stops (u/s/tram/bus) | nächste Distanz + Linien | `point-density` | Distanz-Ring / Dichte | neutral |
-| ÖPNV-Netze, Rad (LineString) | innerhalb-Buffer | address-only Kontext | Mini-Map-Annotation | n/a |
-| Stolpersteine | Treffer im Umkreis | `point-density` count | Dot-Density + Disclaimer | NEIN (Erinnerung, kein Wohn-Kriterium, bestehender Disclaimer) |
-| Denkmal | enthaltend ja/nein | `coverage-share` | Coverage-Bar | neutral |
-| Kiez-Score | 5-Dim aus ADR-013 | `score-weighted` | Ring (Hero) + 5 Dim-Bars | NEIN auf Composite (Stigma) |
-| Wahldaten | Stimmbezirk-Lookup | `vote-share` | Stacked-Bar + Sparkline | ja (Stimmenanteil, kein Werturteil) |
-| Boundaries | enthaltend | sind die Level-Definition selbst | n/a | n/a |
+| Layer-Familie                        | address                  | kiez/bezirk/berlin               | Visual-Typ                                    | Compare evaluierbar?                                                    |
+| ------------------------------------ | ------------------------ | -------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------- |
+| Lärm (laerm-2023)                    | Punkt-dB + Klasse        | `ordinal-distribution`           | Verteilungs-Balken + Median-Tick              | ja (ordinal, leiser=Richtung)                                           |
+| Luft (luft-2023)                     | Punkt-NO2                | `numeric-median`                 | Score-Bar + Berlin-Median-Anker               | ja                                                                      |
+| Bioklima / PET (klima-pet)           | Punkt-PET                | `numeric-median`                 | Score-Bar + Anker                             | ja                                                                      |
+| Kaltluft / Leitbahn                  | Treffer ja/nein          | `coverage-share`                 | Coverage-Bar (% Fläche)                       | neutral (Faktum)                                                        |
+| Grünversorgung                       | Punkt-Klasse             | `ordinal-distribution`           | Verteilungs-Balken                            | ja                                                                      |
+| Grünanlagen / Spielplätze            | nächste Distanz          | `area-share`                     | Anteils-Bar                                   | neutral                                                                 |
+| Umweltgerechtigkeit                  | Punkt-Composite          | `ordinal-distribution`           | Verteilungs-Balken                            | ja, aber Stigma-Gate                                                    |
+| Wohnlage (Mietspiegel)               | Punkt-Stufe              | `ordinal-distribution`           | Verteilungs-Balken                            | NEIN (categorical-neutral, Memory `project_compare_editorial_profiles`) |
+| MSS-Soziale-Lage                     | Punkt-Stufe              | `ordinal-distribution`           | Verteilungs-Balken                            | NEIN (Stigma-Lock)                                                      |
+| Milieuschutz                         | innerhalb ja/nein        | `coverage-share`                 | Coverage-Bar                                  | neutral                                                                 |
+| Bodenrichtwert                       | Block-Wert               | `not-aggregatable`               | nur address: Wert; sonst Disclaimer           | NEIN                                                                    |
+| Kitas/Schulen/Kranken./Sport/Schwimm | nächste Distanz          | `point-density`                  | Distanz-Ring (address) / Dichte-Dot (Polygon) | neutral (Anzahl=faktisch)                                               |
+| Einschulbereiche                     | enthaltender Bereich     | address-only                     | Text                                          | n/a                                                                     |
+| ÖPNV-Stops (u/s/tram/bus)            | nächste Distanz + Linien | `point-density`                  | Distanz-Ring / Dichte                         | neutral                                                                 |
+| ÖPNV-Netze, Rad (LineString)         | innerhalb-Buffer         | address-only Kontext             | Mini-Map-Annotation                           | n/a                                                                     |
+| Stolpersteine                        | Treffer im Umkreis       | `point-density` count            | Dot-Density + Disclaimer                      | NEIN (Erinnerung, kein Wohn-Kriterium, bestehender Disclaimer)          |
+| Denkmal                              | enthaltend ja/nein       | `coverage-share`                 | Coverage-Bar                                  | neutral                                                                 |
+| Kiez-Score                           | 5-Dim aus ADR-013        | `score-weighted`                 | Ring (Hero) + 5 Dim-Bars                      | NEIN auf Composite (Stigma)                                             |
+| Wahldaten                            | Stimmbezirk-Lookup       | `vote-share`                     | Stacked-Bar + Sparkline                       | ja (Stimmenanteil, kein Werturteil)                                     |
+| Boundaries                           | enthaltend               | sind die Level-Definition selbst | n/a                                           | n/a                                                                     |
 
 ### 4. Visual-Summary-Pflicht (User-Constraint 2026-05-20)
 
@@ -73,13 +73,13 @@ Jede collapsible Card trägt im collapsed-State ein Mini-Visual plus Kernwert. K
 
 ### 6. Backwards-Compatibility
 
-| Bestehender Mechanismus | Verhalten bei Multi-Level |
-|-------------------------|---------------------------|
-| Bookmarks (Story 1.26) | speichern weiter lat/lng. Level wird NICHT persistiert, beim Öffnen Default address. |
-| Compare (Story 1.27) | same-level-lock, Level-Context geteilt. |
-| WebMCP-Tools (2.7 + 6.8) | optionaler `level`-Param, default `address` (Story 8.5). Ohne Param = heutiges Verhalten. |
-| Editorial-Disclaimer (1.27) | pro Layer + Level. `not-aggregatable` rendert Disclaimer-Card statt Wert. |
-| Adress-Layer-Hits-Section | bei Level=address exakt heutiges Verhalten, kein Re-Layout. |
+| Bestehender Mechanismus     | Verhalten bei Multi-Level                                                                 |
+| --------------------------- | ----------------------------------------------------------------------------------------- |
+| Bookmarks (Story 1.26)      | speichern weiter lat/lng. Level wird NICHT persistiert, beim Öffnen Default address.      |
+| Compare (Story 1.27)        | same-level-lock, Level-Context geteilt.                                                   |
+| WebMCP-Tools (2.7 + 6.8)    | optionaler `level`-Param, default `address` (Story 8.5). Ohne Param = heutiges Verhalten. |
+| Editorial-Disclaimer (1.27) | pro Layer + Level. `not-aggregatable` rendert Disclaimer-Card statt Wert.                 |
+| Adress-Layer-Hits-Section   | bei Level=address exakt heutiges Verhalten, kein Re-Layout.                               |
 
 ### 7. Missing-Data + Threshold
 
@@ -90,6 +90,7 @@ Aggregate folgen ADR-013-Regel: unter 50% Member-Coverage wird das Aggregat `nul
 Die Pre-Aggregate (Story 8.2a) werden als **static JSON** unter `static/layer-aggregates/` ausgeliefert, analog `static/kiez-scores/kiez-scores.json` (ADR-013). NICHT Postgres.
 
 Begründung:
+
 - Der Inspector liest client-side. JSON-Fetch vom CDN ist günstiger als API-Call gegen Postgres und passt zum statischen Auslieferungs-Modell (kein Server-Roundtrip).
 - Aggregate ändern sich nur bei Layer-Daten-Refresh (Build-Time), nicht zur Laufzeit. Kein Bedarf für DB-Query-Flexibilität.
 - Schema-Skizze: `{ [layerSlug]: { kiez: { [kiezSlug]: Aggregat }, bezirk: { [bezirkSlug]: Aggregat }, berlin: Aggregat } }`, wobei `Aggregat` typ-abhängig ist (Median-Zahl + Spanne, Klassen-Verteilung, Coverage-Prozent etc.).

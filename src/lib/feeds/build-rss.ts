@@ -56,9 +56,7 @@ export function buildRssXml(input: BuildRssInput): string {
 	const sorted = sortByDateDesc(input.entries).slice(0, max);
 	const origin = input.origin.replace(/\/+$/, '');
 
-	const items = sorted
-		.map((entry) => renderItem(entry, origin))
-		.join('\n');
+	const items = sorted.map((entry) => renderItem(entry, origin)).join('\n');
 
 	return [
 		'<?xml version="1.0" encoding="UTF-8"?>',

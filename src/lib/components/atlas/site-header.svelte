@@ -78,7 +78,7 @@
 			<a
 				href={atlasCtaHref}
 				data-testid="header-atlas-cta"
-				class="inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-accent bg-accent px-3 font-mono text-xs uppercase tracking-wider text-bg hover:bg-ink hover:border-ink"
+				class="inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-accent bg-accent px-3 font-mono text-xs tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 			>
 				<MapIcon size={16} aria-hidden="true" />
 				Atlas öffnen
@@ -130,7 +130,7 @@
 					<span
 						data-testid="header-layer-badge"
 						aria-hidden="true"
-						class="font-mono text-xs tabular-nums text-ink-muted"
+						class="font-mono text-xs text-ink-muted tabular-nums"
 					>
 						{activeLayerCount}
 					</span>
@@ -158,7 +158,7 @@
 					<span
 						data-testid="header-bookmark-badge"
 						aria-hidden="true"
-						class="font-mono text-xs tabular-nums text-ink-muted"
+						class="font-mono text-xs text-ink-muted tabular-nums"
 					>
 						{bookmarkCount}
 					</span>

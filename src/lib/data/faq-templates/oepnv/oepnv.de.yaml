@@ -4,7 +4,7 @@ templates:
   - id: oepnv-dichte-bezirk
     applicableTo: [bezirk]
     requires: [oepnv.stopsPerKm2]
-    question: "Wie dicht ist das ÖPNV-Netz im Bezirk {name}?"
+    question: 'Wie dicht ist das ÖPNV-Netz im Bezirk {name}?'
     answer: >-
       Im Bezirk {name} liegen {oepnvStopsPerKm2} Haltestellen pro Quadratkilometer.
       Das Netz gilt damit als {oepnvDichte}. {oepnvErklaerung}
@@ -13,7 +13,7 @@ templates:
   - id: oepnv-dichte-kiez
     applicableTo: [kiez]
     requires: [oepnv.stopsPerKm2]
-    question: "Wie ist der Kiez {name} an den ÖPNV angebunden?"
+    question: 'Wie ist der Kiez {name} an den ÖPNV angebunden?'
     answer: >-
       Im Kiez {name} liegen {oepnvStopsPerKm2} Halte pro Quadratkilometer.
       {oepnvErklaerung}
@@ -22,7 +22,7 @@ templates:
   - id: oepnv-was-bedeutet-dichte
     applicableTo: [layer]
     requires: []
-    question: "Was sagt die Haltedichte pro Quadratkilometer aus?"
+    question: 'Was sagt die Haltedichte pro Quadratkilometer aus?'
     answer: >-
       Die Haltedichte ist ein erster grober Indikator für Anbindung. Sie sagt
       nichts über Taktung, Linienführung oder Barrierefreiheit aus. Eine hohe
@@ -32,7 +32,7 @@ templates:
   - id: oepnv-walk-score-logik
     applicableTo: [layer]
     requires: []
-    question: "Berücksichtigt der Wert Fußwege oder Barrierefreiheit?"
+    question: 'Berücksichtigt der Wert Fußwege oder Barrierefreiheit?'
     answer: >-
       Aktuell nicht. Der Wert zählt Haltepunkte innerhalb der Flächengrenzen und
       teilt sie durch die Fläche. Wir verbessern den Indikator schrittweise um
@@ -42,7 +42,7 @@ templates:
   - id: oepnv-welche-modi
     applicableTo: [layer]
     requires: []
-    question: "Welche Verkehrsmittel fließen in die Haltedichte ein?"
+    question: 'Welche Verkehrsmittel fließen in die Haltedichte ein?'
     answer: >-
       Wir zählen U-Bahn-, S-Bahn-, Tram- und Bus-Haltestellen der BVG und der
       S-Bahn Berlin GmbH zusammen. Regional-Bahn-Stationen werden zusätzlich
@@ -51,7 +51,7 @@ templates:
   - id: oepnv-warum-nicht-fahrplandaten
     applicableTo: [layer]
     requires: []
-    question: "Warum zeigt navigator.berlin keine Live-Fahrplan-Daten?"
+    question: 'Warum zeigt navigator.berlin keine Live-Fahrplan-Daten?'
     answer: >-
       Live-Daten erfordern Server-Caching, Lizenz-Kosten und stehen oft nur
       kurzfristig zur Verfügung. Wir setzen bewusst auf statische Aggregate aus
@@ -60,7 +60,7 @@ templates:
   - id: oepnv-mobilitaet-einordnung
     applicableTo: [bezirk, kiez]
     requires: [oepnv.stopsPerKm2]
-    question: "Wie gut ist {name} an den Nahverkehr angebunden?"
+    question: 'Wie gut ist {name} an den Nahverkehr angebunden?'
     answer: >-
       {name} erreicht im Mobilitäts-Score {mobilitaetScore} von 100
       ({mobilitaetRang}), {mobilitaetVergleich}. Der Score bildet die

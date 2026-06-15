@@ -2,9 +2,9 @@
 slug: zehlendorf-suedwest
 name: Zehlendorf Suedwest
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 1cf45b62b14d669c
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe und Grün prägen Zehlendorf Suedwest. Ruhe und Luft erreichen rund 93 Punkte und Rang zehn von 143, weit über dem Berliner Median. Grün und Hitze liegen mit rund 69 Punkten auf Rang 17, über dem Median. Die gefühlte Temperatur bleibt kühl, rund 30 Grad.

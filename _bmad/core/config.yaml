@@ -7,4 +7,4 @@ user_name: Matze
 project_name: navigator.berlin
 communication_language: German
 document_output_language: German
-output_folder: "{project-root}/_bmad-output"
+output_folder: '{project-root}/_bmad-output'

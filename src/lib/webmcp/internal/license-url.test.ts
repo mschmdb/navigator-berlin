@@ -19,8 +19,6 @@ describe('licenseToUrl', () => {
 	});
 
 	it('mappt Geodatenzugangsgesetz', () => {
-		expect(licenseToUrl('Geodatenzugangsgesetz')).toBe(
-			'https://www.gesetze-im-internet.de/geozg/'
-		);
+		expect(licenseToUrl('Geodatenzugangsgesetz')).toBe('https://www.gesetze-im-internet.de/geozg/');
 	});
 });

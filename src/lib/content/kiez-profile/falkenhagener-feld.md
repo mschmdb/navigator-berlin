@@ -2,9 +2,9 @@
 slug: falkenhagener-feld
 name: Falkenhagener Feld
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 5d65b584b4121daf
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe, Luft und Grün prägen Falkenhagener Feld. Bei Ruhe und Luft erreicht der Kiez Platz 20 von 143, über dem Berliner Median. Bei Grün und Hitze landet er auf Platz 18, klar über dem Median. Die gefühlte Temperatur an heißen Tagen liegt bei rund 37 Grad. Die Grünversorgung gilt als gut.

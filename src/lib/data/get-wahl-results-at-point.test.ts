@@ -9,7 +9,7 @@ const samplePayload: WahlResultsAtPoint = {
 	point: { lat: 52.5219, lng: 13.4132 },
 	location: { bezirkSlug: 'mitte', kiezSlug: 'alexanderplatz' },
 	wahlbezirks: {
-		'bt25': { uwbId: '101', bezirkCode: '01' }
+		bt25: { uwbId: '101', bezirkCode: '01' }
 	},
 	wahlen: [],
 	sparklines: []

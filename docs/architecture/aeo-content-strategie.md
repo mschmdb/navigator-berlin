@@ -15,16 +15,19 @@ Vorher: Detailseiten zeigten nur den Dominant-Wert je Cluster, die FAQ bestand z
 ## Drei Stufen
 
 **Stufe 1 (eigene Daten):**
+
 - Ranking + Quartil je Score-Dimension/Metrik (`kiez_rank`/`bezirk_rank`, Story 11.0, `pnpm data:rank`).
 - Vergleich Kiez ↔ Bezirks-Schnitt ↔ Berlin-Median (`kiez_comparison`/`bezirk_comparison`, Story 11.4, `pnpm data:comparison`), gerendert als „Im Vergleich"-Tabelle.
 - FAQ entrümpelt: Erklär-Templates (`requires: []`) nur noch auf Layer/Methodik-Seiten, nicht auf Detailseiten (Story 11.2). Neue Daten-FAQ kombiniert Rang + Vergleich + Zahl, answer-first (Story 11.3).
 - Verteilungen + Zähldaten im Steckbrief (Story 11.5), in `<details>` kompakt.
 
 **Stufe 2 (KI-Profile):**
+
 - Pro Kiez/Bezirk ein grounded 2-Absatz-Profil (Story 11.6). Pipeline siehe unten.
 - Faktentreue-Gate `pnpm lint:profiles` (Story 11.7).
 
 **Stufe 3 (externe Anreicherung):**
+
 - Wikidata/Wikipedia `sameAs` in Place/AdministrativeArea-JSON-LD je Bezirk (Story 11.1).
 - Bezirksregionenprofile als zusätzliche Prosa-Quelle (Story 11.8, optional/Spike).
 
@@ -53,12 +56,12 @@ Inkrementell: `inputHash` (Hash über den ProfileInput) überspringt unveränder
 
 ## Externe Quellen + Lizenz
 
-| Quelle | Nutzung | Lizenz |
-|--------|---------|--------|
-| Wikidata | `sameAs` je Bezirk (Q-IDs) | CC0 |
-| Wikipedia (de) | `sameAs` je Bezirk | CC BY-SA 4.0 |
-| Bezirksregionenprofile (berlin.de) | optionale Prosa-Quelle (11.8) | offen, je Bezirk |
-| eigene Aggregate (`*_score`/`*_stats`/`*_rank`/`*_comparison`) | Profile + FAQ + Vergleich | siehe `/lizenzen` (FR40-Attribution je Layer) |
+| Quelle                                                         | Nutzung                       | Lizenz                                        |
+| -------------------------------------------------------------- | ----------------------------- | --------------------------------------------- |
+| Wikidata                                                       | `sameAs` je Bezirk (Q-IDs)    | CC0                                           |
+| Wikipedia (de)                                                 | `sameAs` je Bezirk            | CC BY-SA 4.0                                  |
+| Bezirksregionenprofile (berlin.de)                             | optionale Prosa-Quelle (11.8) | offen, je Bezirk                              |
+| eigene Aggregate (`*_score`/`*_stats`/`*_rank`/`*_comparison`) | Profile + FAQ + Vergleich     | siehe `/lizenzen` (FR40-Attribution je Layer) |
 
 ## Anti-Stigma (ADR-015)
 

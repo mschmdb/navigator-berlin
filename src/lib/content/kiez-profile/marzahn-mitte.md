@@ -2,9 +2,9 @@
 slug: marzahn-mitte
 name: Marzahn Mitte
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: b60ff824fe2560d2
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Marzahn Mitte zeigt seine Stärke bei Grün und Hitze mit 64,4 über dem Berliner Median und nahe am Bezirksschnitt. Beim Gesamtscore erreicht der Kiez 37,5 und Rang 86 von 143. Die Lärmklasse gilt als mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad.

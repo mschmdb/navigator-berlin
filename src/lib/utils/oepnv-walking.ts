@@ -18,12 +18,7 @@ function haversineM(lat1: number, lng1: number, lat2: number, lng2: number): num
 	return 2 * EARTH_RADIUS_M * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-export function walkingDistanceM(
-	lat1: number,
-	lng1: number,
-	lat2: number,
-	lng2: number
-): number {
+export function walkingDistanceM(lat1: number, lng1: number, lat2: number, lng2: number): number {
 	return Math.round(haversineM(lat1, lng1, lat2, lng2) * DETOUR_FACTOR);
 }
 

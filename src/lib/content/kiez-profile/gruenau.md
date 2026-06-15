@@ -2,9 +2,9 @@
 slug: gruenau
 name: Gruenau
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: e77fa0a0033e7721
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Gruenau überzeugt bei Ruhe und Luft. Der Score von rund 90 bedeutet Rang 17 von 143. Das Grün kommt auf rund 62 Punkte, über dem Berliner Median. An heißen Tagen bleibt die gefühlte Temperatur mit rund 32 Grad moderat. Die Grünversorgung fällt gut aus.

@@ -85,8 +85,10 @@ describe('aggregateKitaPlaetzeByLor', () => {
 	});
 
 	it('nicht-parsebares e_platz zählt 0', () => {
-		const out = aggregateKitaPlaetzeByLor([lor('A', square)], [kita(5, 5, ''), kita(6, 6, '10')], (f) =>
-			String(f.properties?.PLR_ID)
+		const out = aggregateKitaPlaetzeByLor(
+			[lor('A', square)],
+			[kita(5, 5, ''), kita(6, 6, '10')],
+			(f) => String(f.properties?.PLR_ID)
 		);
 		expect(out.A).toBe(10);
 	});

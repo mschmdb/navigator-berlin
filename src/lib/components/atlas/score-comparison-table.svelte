@@ -51,9 +51,15 @@
 				</thead>
 				<tbody>
 					{#each rows as row (row.label)}
-						<tr class="border-b border-rule" data-row={isKriminalitaet(row.label) ? 'kriminalitaet' : undefined}>
+						<tr
+							class="border-b border-rule"
+							data-row={isKriminalitaet(row.label) ? 'kriminalitaet' : undefined}
+						>
 							<th scope="row" class="py-3 pr-4 text-left font-semibold text-ink">
-								{row.label}{#if isKriminalitaet(row.label)}<span aria-hidden="true" class="text-ink-subtle">&nbsp;*</span>{/if}
+								{row.label}{#if isKriminalitaet(row.label)}<span
+										aria-hidden="true"
+										class="text-ink-subtle">&nbsp;*</span
+									>{/if}
 							</th>
 							<td class="py-3 pr-4 text-right text-ink">{fmt(row.value)}</td>
 							{#if showBezirkColumn}
@@ -76,10 +82,16 @@
 			{/if}
 		</p>
 		{#if hasKriminalitaet}
-			<p class="font-serif text-xs italic leading-snug text-ink-muted" data-testid="kriminalitaet-footnote">
+			<p
+				class="font-serif text-xs leading-snug text-ink-muted italic"
+				data-testid="kriminalitaet-footnote"
+			>
 				* Erfasste Kriminalität ist eine Häufigkeitszahl je Bezirksregion (gröber als die Adresse),
 				höher = mehr erfasste Fälle. Kein Gut-Wert, kein Rang und kein Sicherheits-Urteil. Siehe
-				<a href="/methodik/kiez-score" class="text-accent underline underline-offset-2 hover:text-accent-strong">Methodik</a>.
+				<a
+					href="/methodik/kiez-score"
+					class="hover:text-accent-strong text-accent underline underline-offset-2">Methodik</a
+				>.
 			</p>
 		{/if}
 	</section>

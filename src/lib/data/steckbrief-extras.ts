@@ -28,7 +28,9 @@ export function distributionText(segments: readonly DistSegment[]): string {
 }
 
 /** Zähl-Text aus Label/Wert-Paaren; null/0-Werte fallen raus. „U 3 · Bus 12". */
-export function countsText(pairs: ReadonlyArray<readonly [string, number | null | undefined]>): string {
+export function countsText(
+	pairs: ReadonlyArray<readonly [string, number | null | undefined]>
+): string {
 	return pairs
 		.filter((p): p is [string, number] => typeof p[1] === 'number' && p[1] > 0)
 		.map(([label, n]) => `${label} ${n.toLocaleString('de-DE')}`)

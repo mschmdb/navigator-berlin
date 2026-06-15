@@ -2,9 +2,9 @@
 slug: lichtenrade-nord
 name: Lichtenrade Nord
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 0e06aa70c325e8a3
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe und Grün tragen dieses Gebiet, Rang 42 und Rang 43 von 143. Beide Werte liegen über dem Schnitt von Tempelhof Schoeneberg. Die gefühlte Temperatur erreicht etwa 38 Grad. Der Lärm bleibt mittel.

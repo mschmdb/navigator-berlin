@@ -4,9 +4,7 @@ import {
 	type LayerExplain
 } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
 import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
-import {
-	getEditorialConfig
-} from '$lib/components/atlas/internal/editorial-config.js';
+import { getEditorialConfig } from '$lib/components/atlas/internal/editorial-config.js';
 import type { EditorialConfig } from '$lib/components/atlas/internal/editorial-types.js';
 import { getLayerMethodology, type LayerMethodology } from './layer-methodology.js';
 

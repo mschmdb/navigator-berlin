@@ -4,8 +4,14 @@ import FaqSection from './faq-section.svelte';
 import type { FaqEntry } from '$lib/data/types.js';
 
 const items: FaqEntry[] = [
-	{ question: 'Wie laut ist es in Mitte?', answer: 'Der Tages-Lärmpegel liegt im Berliner Mittel.' },
-	{ question: 'Wie viele Grünanlagen gibt es?', answer: 'In Mitte gibt es rund 200 öffentliche Grünanlagen.' }
+	{
+		question: 'Wie laut ist es in Mitte?',
+		answer: 'Der Tages-Lärmpegel liegt im Berliner Mittel.'
+	},
+	{
+		question: 'Wie viele Grünanlagen gibt es?',
+		answer: 'In Mitte gibt es rund 200 öffentliche Grünanlagen.'
+	}
 ];
 
 describe('FaqSection.svelte', () => {

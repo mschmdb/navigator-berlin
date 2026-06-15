@@ -36,13 +36,21 @@
 	import { getWahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
 	import { findAllNearestStops } from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
 	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
+	import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+	import { point } from '@turf/helpers';
+	import type { Feature, Polygon, MultiPolygon } from 'geojson';
+	import type { DemografieScope } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
 	import { queryPmtilesAt, type MapLibreLike } from '$lib/data/internal/pmtiles-query.js';
 	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data/types.js';
 	import { useViewport } from '$lib/utils/use-viewport.svelte.js';
 	import { SvelteSet } from 'svelte/reactivity';
 	import LayerPalette from '$lib/components/atlas/layer-palette.svelte';
 	import { page } from '$app/state';
-	import { buildOgDescription, buildOgImageUrl, type OgImageInput } from '$lib/utils/og-image-url.js';
+	import {
+		buildOgDescription,
+		buildOgImageUrl,
+		type OgImageInput
+	} from '$lib/utils/og-image-url.js';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
@@ -56,7 +64,10 @@
 		isPolygonSlug
 	} from '$lib/components/atlas/internal/layer-style-cascade.js';
 	import { sortSlugsByBundleStable } from '$lib/components/atlas/internal/layer-order-sorting.js';
-	import { applyHiddenSlugs, exceedsPolygonLimit } from '$lib/components/atlas/internal/layer-visibility.js';
+	import {
+		applyHiddenSlugs,
+		exceedsPolygonLimit
+	} from '$lib/components/atlas/internal/layer-visibility.js';
 	import {
 		toggleLayerHidden,
 		removeLayer as removeUiLayer,
@@ -71,7 +82,11 @@
 	} from '$lib/components/atlas/internal/layer-diff.js';
 	import { PIN_LAYER_SLUGS } from '$lib/components/atlas/internal/pin-icon-mapping.js';
 
-	type Viewport = { center: [number, number]; zoom: number; bbox: [number, number, number, number] };
+	type Viewport = {
+		center: [number, number];
+		zoom: number;
+		bbox: [number, number, number, number];
+	};
 	type Props = { data: import('./$types').PageData };
 
 	let { data }: Props = $props();
@@ -168,7 +183,8 @@
 		// wir eine synthetische GeocodeSuggestion und triggern die Adress-
 		// Selection. Inspector öffnet sich dann automatisch.
 		if (typeof data.address?.lng === 'number' && typeof data.address?.lat === 'number') {
-			const displayName = data.address.q ?? `${data.address.lat.toFixed(5)}, ${data.address.lng.toFixed(5)}`;
+			const displayName =
+				data.address.q ?? `${data.address.lat.toFixed(5)}, ${data.address.lng.toFixed(5)}`;
 			selection.set({
 				id: `url-${data.address.lng.toFixed(5)}-${data.address.lat.toFixed(5)}`,
 				displayName,
@@ -264,7 +280,10 @@
 		variant: string,
 		reduced: boolean
 	): MapLibreLayerSpec[] {
-		if (isPolygonSlug(slug) && (variant === 'fill' || variant === 'outline' || variant === 'outline-dash')) {
+		if (
+			isPolygonSlug(slug) &&
+			(variant === 'fill' || variant === 'outline' || variant === 'outline-dash')
+		) {
 			return buildLayerSpecCascade(slug, sourceId, variant, { reducedMotion: reduced });
 		}
 		return buildLayerSpec(slug, sourceId, { reducedMotion: reduced });
@@ -281,7 +300,7 @@
 
 		const variantBySlug: Record<string, string> = {};
 		for (const slug of ordered) {
-			variantBySlug[slug] = isPolygonSlug(slug) ? cascade.get(slug) ?? 'fill' : 'non-polygon';
+			variantBySlug[slug] = isPolygonSlug(slug) ? (cascade.get(slug) ?? 'fill') : 'non-polygon';
 		}
 
 		const visibleSet = new Set(ordered);
@@ -359,6 +378,77 @@
 		void _hidden;
 		if (!rawMap || manifestLayers.length === 0) return;
 		void renderLayers(slugs);
+	});
+
+	// Story 10.5: Karten-Outline folgt dem Demografie-Scope. Eigene Source/Layer-IDs,
+	// getrennt von renderLayers, damit Choropleth-Layer unberührt bleiben.
+	const OUTLINE_SOURCE_ID = 'region-outline-src';
+	const OUTLINE_LINE_ID = 'region-outline-line';
+	const OUTLINE_LAYER_SLUG: Record<DemografieScope, string> = {
+		standort: 'lor-planungsraum',
+		kiez: 'lor-bezirksregion',
+		bezirk: 'bezirke'
+	};
+
+	function removeRegionOutline(): void {
+		if (!rawMap) return;
+		const map = rawMap as MapWithLayers;
+		if (map.getLayer(OUTLINE_LINE_ID)) map.removeLayer(OUTLINE_LINE_ID);
+		if (map.getSource(OUTLINE_SOURCE_ID)) map.removeSource(OUTLINE_SOURCE_ID);
+	}
+
+	async function containingFeature(
+		slug: string,
+		lat: number,
+		lng: number
+	): Promise<Feature<Polygon | MultiPolygon> | null> {
+		const meta = getLayerEntry(slug);
+		if (!meta) return null;
+		const fc = await fetchLayer(meta.filename);
+		if (!Array.isArray(fc?.features)) return null;
+		const queryPoint = point([lng, lat]);
+		for (const f of fc.features) {
+			const geom = f.geometry;
+			if (geom?.type !== 'Polygon' && geom?.type !== 'MultiPolygon') continue;
+			const feat = f as Feature<Polygon | MultiPolygon>;
+			if (booleanPointInPolygon(queryPoint, feat)) return feat;
+		}
+		return null;
+	}
+
+	async function renderRegionOutline(
+		lat: number,
+		lng: number,
+		scope: DemografieScope,
+		addrId: string
+	): Promise<void> {
+		const feature = await containingFeature(OUTLINE_LAYER_SLUG[scope], lat, lng);
+		// Stale-Guard: Adresse/Scope können während des Fetch gewechselt haben.
+		if (!rawMap || ui.selectedAddress?.id !== addrId || ui.demografieScope !== scope) return;
+		removeRegionOutline();
+		if (!feature) return;
+		const map = rawMap as MapWithLayers;
+		map.addSource(OUTLINE_SOURCE_ID, {
+			type: 'geojson',
+			data: { type: 'FeatureCollection', features: [feature] }
+		});
+		map.addLayer({
+			id: OUTLINE_LINE_ID,
+			type: 'line',
+			source: OUTLINE_SOURCE_ID,
+			paint: { 'line-color': COLORS.markerPin, 'line-width': 2.5, 'line-opacity': 0.9 }
+		} as MapLibreLayerSpec);
+	}
+
+	$effect(() => {
+		const addr = ui.selectedAddress;
+		const scope = ui.demografieScope;
+		if (!rawMap) return;
+		if (!addr) {
+			removeRegionOutline();
+			return;
+		}
+		void renderRegionOutline(addr.lat, addr.lng, scope, addr.id);
 	});
 
 	const cascadeForLegend = $derived(
@@ -441,12 +531,7 @@
 	async function openInspectorFor(suggestion: GeocodeSuggestion): Promise<boolean> {
 		let hits: Awaited<ReturnType<typeof getLayersAtPoint>>;
 		try {
-			hits = await getLayersAtPoint(
-				suggestion.lat,
-				suggestion.lng,
-				undefined,
-				pmtilesQuery
-			);
+			hits = await getLayersAtPoint(suggestion.lat, suggestion.lng, undefined, pmtilesQuery);
 		} catch {
 			hits = [];
 		}
@@ -634,7 +719,11 @@
 	}) {
 		selectedFeatureId = feature.id;
 		if (rawMap)
-			flyToSuggestion({ lng: feature.centroid[0], lat: feature.centroid[1], addresstype: 'street' });
+			flyToSuggestion({
+				lng: feature.centroid[0],
+				lat: feature.centroid[1],
+				addresstype: 'street'
+			});
 		announceGlobal(`${feature.layerName}: ${feature.description}`);
 		if (feature.geometryType === 'Point') {
 			await placeMarker(feature.centroid);
@@ -955,9 +1044,8 @@
 	     verändern. Statischer Page-Titel, unabhängig von der Adress-Auswahl. -->
 	<h1 class="sr-only">Berlin-Atlas: Daten zu jeder Adresse</h1>
 	<p class="sr-only">
-		Suche eine Adresse oder setze einen Pin auf der Karte. Sieh Lärm, Klima, Grün,
-		Mobilität, Wohnen, Sozialstruktur und Wahlergebnisse für deinen Kiez, über
-		Bezirksgrenzen hinweg.
+		Suche eine Adresse oder setze einen Pin auf der Karte. Sieh Lärm, Klima, Grün, Mobilität,
+		Wohnen, Sozialstruktur und Wahlergebnisse für deinen Kiez, über Bezirksgrenzen hinweg.
 	</p>
 	<div class="relative min-h-0 w-full flex-1 lg:h-full lg:flex-none">
 		<MapLibreCanvas
@@ -992,7 +1080,7 @@
 		/>
 		<MapLegend
 			activeLayerSlugs={ui.activeLayerSlugs}
-			manifestLayers={manifestLayers}
+			{manifestLayers}
 			hiddenSlugs={ui.hiddenLayerSlugs}
 			cascadeVariants={cascadeForLegend}
 			showLimitWarning={legendLimitWarning}
@@ -1006,7 +1094,7 @@
 		/>
 		{#if outsideBerlinHintVisible}
 			<div
-				class="pointer-events-none absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-sm border border-severity-warning/40 bg-severity-warning-bg px-3 py-2 font-sans text-sm text-severity-warning shadow-sm"
+				class="pointer-events-none absolute top-4 left-1/2 z-20 -translate-x-1/2 rounded-sm border border-severity-warning/40 bg-severity-warning-bg px-3 py-2 font-sans text-sm text-severity-warning shadow-sm"
 				role="status"
 				aria-live="polite"
 				data-testid="outside-berlin-hint"
@@ -1018,7 +1106,7 @@
 
 	{#if showSidePanel}
 		<aside
-			class="min-h-0 overflow-y-auto border-t border-rule bg-bg-elevated lg:h-full lg:border-l lg:border-t-0"
+			class="min-h-0 overflow-y-auto border-t border-rule bg-bg-elevated lg:h-full lg:border-t-0 lg:border-l"
 			aria-label={ui.compareMode ? 'Adress-Vergleich' : 'Adress-Inspector-Bereich'}
 			data-testid="inspector-slot"
 		>

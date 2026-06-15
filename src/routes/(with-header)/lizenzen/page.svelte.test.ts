@@ -43,12 +43,7 @@ const sampleData = {
 	]
 };
 
-const SECTION_IDS = [
-	'daten-lizenzen',
-	'software',
-	'schriften',
-	'osm-namensnennung'
-];
+const SECTION_IDS = ['daten-lizenzen', 'software', 'schriften', 'osm-namensnennung'];
 
 describe('lizenzen +page.svelte', () => {
 	it('rendert h1 „Lizenzen"', async () => {

@@ -3,10 +3,7 @@ export interface LayerDiff {
 	readonly toRemove: readonly string[];
 }
 
-export function diffLayerSlugs(
-	current: readonly string[],
-	next: readonly string[]
-): LayerDiff {
+export function diffLayerSlugs(current: readonly string[], next: readonly string[]): LayerDiff {
 	const currentSet = new Set(current);
 	const nextSet = new Set(next);
 	const toAdd: string[] = [];

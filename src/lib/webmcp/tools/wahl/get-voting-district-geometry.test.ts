@@ -3,7 +3,17 @@ import { createGetVotingDistrictGeometryTool } from './get-voting-district-geome
 
 const FEATURE = {
 	type: 'Feature',
-	geometry: { type: 'Polygon', coordinates: [[[13.4, 52.5], [13.5, 52.5], [13.5, 52.6], [13.4, 52.5]]] },
+	geometry: {
+		type: 'Polygon',
+		coordinates: [
+			[
+				[13.4, 52.5],
+				[13.5, 52.5],
+				[13.5, 52.6],
+				[13.4, 52.5]
+			]
+		]
+	},
 	properties: { district_id: '075-01-100-0', year: 2025, bezirk_code: '01' }
 };
 
@@ -36,9 +46,7 @@ describe('get_voting_district_geometry tool', () => {
 
 	it('Schema-Validation: year out-of-range wirft', async () => {
 		const tool = createGetVotingDistrictGeometryTool({ fetchGeometry: async () => null });
-		await expect(
-			tool.handler({ district_id: '075-01-100-0', year: 1990 })
-		).rejects.toThrow();
+		await expect(tool.handler({ district_id: '075-01-100-0', year: 1990 })).rejects.toThrow();
 	});
 
 	it('Schema-Validation: leerer district_id wirft', async () => {

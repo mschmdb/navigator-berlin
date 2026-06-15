@@ -33,9 +33,7 @@ export interface BreadcrumbListLeafJsonLd {
 
 export type BreadcrumbListJsonLd = WithContext<BreadcrumbListLeafJsonLd>;
 
-export function buildBreadcrumbList(
-	input: BreadcrumbListInput
-): BreadcrumbListJsonLd {
+export function buildBreadcrumbList(input: BreadcrumbListInput): BreadcrumbListJsonLd {
 	const origin = input.origin.replace(/\/+$/, '');
 	const itemListElement: BreadcrumbListItemJsonLd[] = input.items.map((item, idx) => {
 		const path = item.path.startsWith('/') ? item.path : `/${item.path}`;

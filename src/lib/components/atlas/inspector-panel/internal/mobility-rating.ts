@@ -1,13 +1,7 @@
 import type { NearestStop, Modus } from './nearest-oepnv-stop.js';
 import type { SeverityLevel } from './value-severity-mapping.js';
 
-export type MobilityRatingKey =
-	| 'top'
-	| 'gut'
-	| 'solide'
-	| 'ausreichend'
-	| 'schwach'
-	| 'keine';
+export type MobilityRatingKey = 'top' | 'gut' | 'solide' | 'ausreichend' | 'schwach' | 'keine';
 
 export interface MobilityRating {
 	key: MobilityRatingKey;
@@ -75,10 +69,7 @@ function hardStop(stop: NearestStop | null): NearestStop | null {
 
 function anySoftStop(nearest: Record<Modus, NearestStop | null>): boolean {
 	return (
-		!!nearest.ubahn?.soft ||
-		!!nearest.sbahn?.soft ||
-		!!nearest.tram?.soft ||
-		!!nearest.bus?.soft
+		!!nearest.ubahn?.soft || !!nearest.sbahn?.soft || !!nearest.tram?.soft || !!nearest.bus?.soft
 	);
 }
 

@@ -9,11 +9,7 @@
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import { buildWebSite } from '$lib/seo/index.js';
 	import { createUiState } from '$lib/state/ui-context.svelte.js';
-	import {
-		STORAGE_KEY,
-		loadBookmarks,
-		persistBookmarks
-	} from '$lib/state/bookmark-store.js';
+	import { STORAGE_KEY, loadBookmarks, persistBookmarks } from '$lib/state/bookmark-store.js';
 	import { mountWebMcpServer, unmountWebMcpServer } from '$lib/webmcp';
 	import { afterNavigate } from '$app/navigation';
 	import { trackPageview } from '$lib/utils/plausible.js';
@@ -76,7 +72,8 @@
 			origin: page.url.origin,
 			name: 'navigator.berlin',
 			locale: ({ de: 'de-DE', en: 'en-US' } as Record<string, string>)[getLocale()] ?? 'de-DE',
-			description: 'Open-Data-Atlas für Berlin. Pro Adresse Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen.'
+			description:
+				'Open-Data-Atlas für Berlin. Pro Adresse Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen.'
 		})
 	);
 
@@ -108,6 +105,8 @@
 
 <div style="display:none">
 	{#each locales as locale (locale)}
-		<a href={(resolve as (path: string) => string)(localizeHref(page.url.pathname, { locale }))}>{locale}</a>
+		<a href={(resolve as (path: string) => string)(localizeHref(page.url.pathname, { locale }))}
+			>{locale}</a
+		>
 	{/each}
 </div>

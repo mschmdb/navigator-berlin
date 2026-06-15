@@ -72,7 +72,7 @@
 		{#if variant === 'header'}
 			<span
 				data-testid="search-icon"
-				class="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-ink-subtle"
+				class="pointer-events-none absolute top-1/2 left-2 -translate-y-1/2 text-ink-subtle"
 			>
 				<Search size={16} aria-hidden="true" />
 			</span>

@@ -7,11 +7,15 @@ import { withRetry } from './lib/retry.js';
 import { USER_AGENT } from './lib/user-agent.js';
 import type { LayerEntry } from './lib/types.js';
 import {
+	aggregateEinwohner,
 	joinEinwohnerToLor,
+	type AggregatedEinwohnerRecord,
 	type LorAreaFeature,
 	type LorEinwohnerRecord
 } from './lib/einwohner/einwohner.js';
 import { parseEinwohnerCsv } from './lib/einwohner/parse-csv.js';
+import { buildKiezSlugs } from '../src/lib/data/internal/kiez-slug.js';
+import { normalizeSlug } from '../src/lib/data/internal/slug.js';
 
 const LAYERS_DIR = 'static/layers';
 const MANIFEST_PATH = join(LAYERS_DIR, 'MANIFEST.json');
@@ -37,7 +41,9 @@ interface Manifest {
 async function fetchCsv(): Promise<string> {
 	assertAllowed(DOWNLOAD);
 	return withRetry(async () => {
-		const res = await fetch(DOWNLOAD, { headers: { 'User-Agent': USER_AGENT, Accept: 'text/csv' } });
+		const res = await fetch(DOWNLOAD, {
+			headers: { 'User-Agent': USER_AGENT, Accept: 'text/csv' }
+		});
 		if (!res.ok) throw new Error(`Einwohner-CSV ${DOWNLOAD} HTTP ${res.status}`);
 		const text = await res.text();
 		if (!/RAUMID/i.test(text.slice(0, 500))) {
@@ -56,8 +62,60 @@ async function loadManifest(): Promise<Manifest> {
 async function loadLorFeatures(manifest: Manifest): Promise<Feature[]> {
 	const entry = manifest.layers.find((l) => l.slug === 'lor-planungsraum');
 	if (!entry) throw new Error('MANIFEST ohne lor-planungsraum');
-	const fc = JSON.parse(await readFile(join(LAYERS_DIR, entry.filename), 'utf-8')) as FeatureCollection;
+	const fc = JSON.parse(
+		await readFile(join(LAYERS_DIR, entry.filename), 'utf-8')
+	) as FeatureCollection;
 	return fc.features ?? [];
+}
+
+async function loadFcBySlug(manifest: Manifest, slug: string): Promise<FeatureCollection> {
+	const entry = manifest.layers.find((l) => l.slug === slug);
+	if (!entry) throw new Error(`MANIFEST ohne ${slug}`);
+	return JSON.parse(await readFile(join(LAYERS_DIR, entry.filename), 'utf-8')) as FeatureCollection;
+}
+
+/** Bezirk-Code (2-stellig, = plrId.slice(0,2)) → Gemeinde_name aus dem Bezirke-Layer. */
+function bezCodeToName(bezFc: FeatureCollection): Map<string, string> {
+	const m = new Map<string, string>();
+	for (const f of bezFc.features) {
+		const p = (f.properties ?? {}) as Record<string, unknown>;
+		const schluessel = p.Schluessel_gesamt;
+		const name = p.Gemeinde_name;
+		if (typeof schluessel === 'string' && typeof name === 'string')
+			m.set(schluessel.slice(-2), name);
+	}
+	return m;
+}
+
+/**
+ * BZR_ID (6-stellig, = plrId.slice(0,6)) → disambiguierter Kiez-Slug. Reuse
+ * buildKiezSlugs über ALLE Bezirksregionen, damit die Slugs exakt den von
+ * resolveSpatialLevel erzeugten entsprechen (Heerstraße-Disambiguierung).
+ */
+function bzrIdToSlug(bzrFc: FeatureCollection, bezNames: Map<string, string>): Map<string, string> {
+	const props = bzrFc.features.map((f) => (f.properties ?? {}) as Record<string, unknown>);
+	const refs = props.map((p) => ({
+		name: typeof p.BZR_NAME === 'string' ? p.BZR_NAME : '',
+		bezirk: bezNames.get(typeof p.BEZ === 'string' ? p.BEZ : '') ?? ''
+	}));
+	const slugs = buildKiezSlugs(refs);
+	const m = new Map<string, string>();
+	props.forEach((p, i) => {
+		if (typeof p.BZR_ID === 'string') m.set(p.BZR_ID, slugs[i]);
+	});
+	return m;
+}
+
+function remapToSlug(
+	agg: Map<string, AggregatedEinwohnerRecord>,
+	idToSlug: Map<string, string>
+): Record<string, AggregatedEinwohnerRecord> {
+	const out: Record<string, AggregatedEinwohnerRecord> = {};
+	for (const [id, rec] of agg) {
+		const slug = idToSlug.get(id);
+		if (slug) out[slug] = rec;
+	}
+	return out;
 }
 
 function lorAreaOf(f: Feature): LorAreaFeature {
@@ -129,17 +187,45 @@ async function augmentManifest(
 
 async function main(): Promise<void> {
 	const manifest = await loadManifest();
-	const [csv, lorFeatures] = await Promise.all([fetchCsv(), loadLorFeatures(manifest)]);
+	const [csv, lorFeatures, bzrFc, bezFc] = await Promise.all([
+		fetchCsv(),
+		loadLorFeatures(manifest),
+		loadFcBySlug(manifest, 'lor-bezirksregion'),
+		loadFcBySlug(manifest, 'bezirke')
+	]);
 	const rows = parseEinwohnerCsv(csv);
-	const records = joinEinwohnerToLor(rows, lorFeatures.map(lorAreaOf));
+	const areaFeatures = lorFeatures.map(lorAreaOf);
+	const records = joinEinwohnerToLor(rows, areaFeatures);
+
+	// Flächengewichtete Aggregate auf Kiez (BZR_ID = plrId[0:6]) + Bezirk (= plrId[0:2]),
+	// gekeyed mit denselben Slugs wie resolveSpatialLevel (Story 10.5 Scope-Umschaltung).
+	const areaByPlr = new Map<string, number | null>(areaFeatures.map((a) => [a.plrId, a.areaM2]));
+	const bezNames = bezCodeToName(bezFc);
+	const kiezAgg = aggregateEinwohner(rows, areaByPlr, (id) =>
+		id.length >= 6 ? id.slice(0, 6) : null
+	);
+	const bezirkAgg = aggregateEinwohner(rows, areaByPlr, (id) =>
+		id.length >= 2 ? id.slice(0, 2) : null
+	);
+	const kiez = remapToSlug(kiezAgg, bzrIdToSlug(bzrFc, bezNames));
+	const bezCodeToSlug = new Map<string, string>(
+		[...bezNames].map(([code, name]) => [code, normalizeSlug(name)])
+	);
+	const bezirk = remapToSlug(bezirkAgg, bezCodeToSlug);
 
 	const generatedAt = new Date().toISOString();
 	await mkdir(OUT_DIR, { recursive: true });
 	await writeFile(
 		OUT_FILE,
-		JSON.stringify({ schemaVersion: 1, generatedAt, stichtag: STICHTAG, records }, null, 2)
+		JSON.stringify(
+			{ schemaVersion: 2, generatedAt, stichtag: STICHTAG, records, kiez, bezirk },
+			null,
+			2
+		)
 	);
-	console.log(`[einwohner] wrote ${records.length} records`);
+	console.log(
+		`[einwohner] wrote ${records.length} PLR · ${Object.keys(kiez).length} Kiez · ${Object.keys(bezirk).length} Bezirk`
+	);
 
 	await augmentManifest(manifest, buildDichteLayer(lorFeatures, records), generatedAt);
 }

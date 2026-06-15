@@ -112,13 +112,7 @@
 			origin: page.url.origin,
 			urlPath: '/methodik/kiez-score',
 			name: 'Methodik des Umwelt- & Infrastruktur-Scores',
-			cssSelectors: [
-				'#worum',
-				'#dimensionen',
-				'#gewichte',
-				'#normalisierung',
-				'#fehlt'
-			]
+			cssSelectors: ['#worum', '#dimensionen', '#gewichte', '#normalisierung', '#fehlt']
 		})
 	);
 </script>
@@ -144,9 +138,7 @@
 			data-testid="methodik-kiez-score-breadcrumb"
 			class="font-mono text-xs text-ink-muted"
 		>
-			<a
-				href="/methodik"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+			<a href="/methodik" class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>Methodik</a
 			>
 			<span aria-hidden="true">·</span>
@@ -162,13 +154,13 @@
 	</header>
 
 	<nav aria-label="Inhalt" class="border border-rule bg-bg p-4">
-		<p class="mb-2 font-mono text-xs uppercase tracking-wide text-ink-subtle">Inhalt</p>
+		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">Inhalt</p>
 		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
 					<a
 						href={`#${sec.id}`}
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						{sec.label}
 					</a>
@@ -180,11 +172,11 @@
 	<section id="worum" aria-labelledby="worum-h" class="flex flex-col gap-3">
 		<h2 id="worum-h" class="font-serif text-2xl text-ink">Worum es geht</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking". Die Karte zeigt sieben Dimensionen
-			separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Fünf
-			Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als eigenständige
-			Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst weggelassen ist,
-			sagen wir auch.
+			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking". Die Karte zeigt sieben
+			Dimensionen separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse.
+			Fünf Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als
+			eigenständige Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst
+			weggelassen ist, sagen wir auch.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Aggregations-Ebene Planungsraum entspricht rund 7.500 Einwohner:innen. Wohnungs-Mikrolagen
@@ -208,16 +200,16 @@
 	<section id="gewichte" aria-labelledby="gewichte-h" class="flex flex-col gap-3">
 		<h2 id="gewichte-h" class="font-serif text-2xl text-ink">Gewichte</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Persona „allgemein" gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur und
-			erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den Gesamt-Score
-			(Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in Phase 2. Eigene
-			Slider-Gewichtung kommt ebenfalls später.
+			Persona „allgemein" gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur
+			und erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den
+			Gesamt-Score (Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in
+			Phase 2. Eigene Slider-Gewichtung kommt ebenfalls später.
 		</p>
 		<table class="border border-rule text-sm">
 			<thead class="bg-bg">
 				<tr>
-					<th class="px-3 py-2 text-left font-mono text-xs uppercase text-ink-muted">Dimension</th>
-					<th class="px-3 py-2 text-left font-mono text-xs uppercase text-ink-muted">Gewicht</th>
+					<th class="px-3 py-2 text-left font-mono text-xs text-ink-muted uppercase">Dimension</th>
+					<th class="px-3 py-2 text-left font-mono text-xs text-ink-muted uppercase">Gewicht</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -226,8 +218,16 @@
 				<tr><td class="px-3 py-2">Mobilität</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 				<tr><td class="px-3 py-2">Wohnschutz</td><td class="px-3 py-2 font-mono">0.20</td></tr>
 				<tr><td class="px-3 py-2">Versorgung</td><td class="px-3 py-2 font-mono">0.20</td></tr>
-				<tr><td class="px-3 py-2">Kultur <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td><td class="px-3 py-2 font-mono">0</td></tr>
-				<tr><td class="px-3 py-2">Erfasste Kriminalität <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td><td class="px-3 py-2 font-mono">0</td></tr>
+				<tr
+					><td class="px-3 py-2"
+						>Kultur <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td
+					><td class="px-3 py-2 font-mono">0</td></tr
+				>
+				<tr
+					><td class="px-3 py-2"
+						>Erfasste Kriminalität <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td
+					><td class="px-3 py-2 font-mono">0</td></tr
+				>
 			</tbody>
 		</table>
 	</section>
@@ -285,11 +285,11 @@
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Seit der Score-Neuordnung (ADR-015) sind alle Composite-Dimensionen positiv eindeutig. Deshalb
-			zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt", Gut-Skala),
-			zusätzlich zu den Einzel-Dimensionen. Kultur (ADR-018) und erfasste Kriminalität (ADR-019) sind
-			eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das
-			MSS-Aggregat bleiben neutrale Kontext-Layer in Strukturell-Indigo, ohne Rot-Grün-Sprünge. Einen
-			stadtweiten „Berlin-Score" gibt es nicht.
+			zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt",
+			Gut-Skala), zusätzlich zu den Einzel-Dimensionen. Kultur (ADR-018) und erfasste Kriminalität
+			(ADR-019) sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score.
+			Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in Strukturell-Indigo, ohne
+			Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score" gibt es nicht.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Build-Pipeline: <code class="font-mono text-sm">pnpm data:aggregate-scores</code> liest die
@@ -318,9 +318,8 @@
 			Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin),
 			Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap
 			(ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer:
-			<a
-				href="/lizenzen"
-				class="text-accent underline underline-offset-2 hover:text-accent-strong">/lizenzen</a
+			<a href="/lizenzen" class="hover:text-accent-strong text-accent underline underline-offset-2"
+				>/lizenzen</a
 			>.
 		</p>
 	</section>
@@ -347,7 +346,7 @@
 		<p class="font-mono text-sm">
 			<a
 				href={`mailto:${FEEDBACK_EMAIL}?subject=Kiez-Score-Methodik`}
-				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>{FEEDBACK_EMAIL}</a
 			>
 		</p>
@@ -357,7 +356,7 @@
 		<a
 			href="/methodik"
 			data-testid="methodik-kiez-score-back-link"
-			class="font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="hover:text-accent-strong font-mono text-sm text-accent underline underline-offset-2"
 		>
 			Zur Atlas-Methodik
 		</a>

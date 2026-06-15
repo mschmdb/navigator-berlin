@@ -13,8 +13,7 @@ function fixtureManifest(): Manifest {
 			{
 				slug: 'lor-bezirksregion',
 				filename: 'lor-bezirksregion.9479b010.geojson',
-				sourceUrl:
-					'https://daten.odis-berlin.de/de/dataset/lor_bezirksregionen_2021/data.geojson',
+				sourceUrl: 'https://daten.odis-berlin.de/de/dataset/lor_bezirksregionen_2021/data.geojson',
 				fetchedAt: '2026-05-16T06:56:28.400Z',
 				sourceUpdatedAt: '2021-01-01T00:00:00.000Z',
 				license: 'dl-de/zero-2-0',
@@ -102,9 +101,7 @@ describe('KIEZ_PAGES_SOURCE', () => {
 		const manifest = fixtureManifest();
 		// Simuliert ein Manifest ohne fetchedAt (test-only Cast: Feld ist eigentlich required).
 		manifest.layers[0] = { ...manifest.layers[0], fetchedAt: undefined as unknown as string };
-		const entries = KIEZ_PAGES_SOURCE(
-			fixtureContext({ manifest, kiezSlugs: ['boxhagener-kiez'] })
-		);
+		const entries = KIEZ_PAGES_SOURCE(fixtureContext({ manifest, kiezSlugs: ['boxhagener-kiez'] }));
 		expect(entries[0].lastmod).toBe('2021-01-01T00:00:00.000Z');
 	});
 });

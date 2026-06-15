@@ -39,14 +39,18 @@
 
 		{#if sources.length > 0}
 			<ul
-				class="font-mono text-[10px] uppercase tracking-wide text-ink-muted space-y-0.5"
+				class="space-y-0.5 font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 				data-testid={`${testid}-sources`}
 				aria-label="Quellen für diese Beobachtung"
 			>
 				{#each sources as src, i (i)}
 					<li>
 						{#if src.url}
-							<a href={src.url} class="hover:text-ink underline-offset-2 hover:underline" rel="noopener">
+							<a
+								href={src.url}
+								class="underline-offset-2 hover:text-ink hover:underline"
+								rel="noopener"
+							>
 								{src.label}
 							</a>
 						{:else}
@@ -64,7 +68,7 @@
 
 		<a
 			href={methodikHref}
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 			data-testid={`${testid}-methodik-link`}
 		>
 			{methodikLinkLabel}

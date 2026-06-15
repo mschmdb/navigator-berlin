@@ -16,7 +16,11 @@ import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for
 import { getSparklineForKiez } from '$lib/server/db/queries/wahl/get-sparkline-for-kiez.js';
 
 const QuerySchema = v.object({
-	lat: v.pipe(v.number(), v.minValue(BERLIN_BBOX.south - 0.05), v.maxValue(BERLIN_BBOX.north + 0.05)),
+	lat: v.pipe(
+		v.number(),
+		v.minValue(BERLIN_BBOX.south - 0.05),
+		v.maxValue(BERLIN_BBOX.north + 0.05)
+	),
 	lng: v.pipe(v.number(), v.minValue(BERLIN_BBOX.west - 0.05), v.maxValue(BERLIN_BBOX.east + 0.05))
 });
 
@@ -24,7 +28,13 @@ type WahlListItem = Awaited<ReturnType<typeof getWahlList>>[number];
 
 type LevelResults = {
 	available: boolean;
-	top5: Array<{ kurzname: string; vollname: string; farbeHex: string; stimmen: number; anteil: number }> | null;
+	top5: Array<{
+		kurzname: string;
+		vollname: string;
+		farbeHex: string;
+		stimmen: number;
+		anteil: number;
+	}> | null;
 	isBriefwahlAggregat?: boolean;
 };
 
@@ -81,10 +91,7 @@ async function loadFc(filename: string): Promise<FeatureCollection> {
 	return fc;
 }
 
-function dbUwbIdFromGeoForWahl(
-	props: Record<string, unknown>,
-	wahlSlug: string
-): string | null {
+function dbUwbIdFromGeoForWahl(props: Record<string, unknown>, wahlSlug: string): string | null {
 	const bez = typeof props.BEZ === 'string' ? props.BEZ.padStart(2, '0') : null;
 	const uwb3 = pickUwb3(props);
 	if (!bez || !uwb3) return null;
@@ -136,10 +143,15 @@ const WAHL_TO_GEO: Record<string, string> = {
 async function findWahlbezirks(
 	lat: number,
 	lng: number
-): Promise<Record<string, { uwbId: string; bezirkCode: string; geoProps: Record<string, unknown> }>> {
+): Promise<
+	Record<string, { uwbId: string; bezirkCode: string; geoProps: Record<string, unknown> }>
+> {
 	const manifest = await loadManifest();
 	const wahlbezirksLayers = manifest.layers.filter((l) => l.slug.startsWith(SLUG_PREFIX));
-	const results: Record<string, { uwbId: string; bezirkCode: string; geoProps: Record<string, unknown> }> = {};
+	const results: Record<
+		string,
+		{ uwbId: string; bezirkCode: string; geoProps: Record<string, unknown> }
+	> = {};
 	const pt = point([lng, lat]);
 
 	await Promise.all(
@@ -203,49 +215,61 @@ async function buildLevelResults(
 		dbUwbId
 			? getResultsForStimmbezirk(wahl.id, dbUwbId, LIMIT).then((rows) => ({
 					available: rows.length > 0,
-					top5: rows.length > 0 ? rows.map((r) => ({
-						kurzname: r.parteiKurzname,
-						vollname: r.parteiVollname,
-						farbeHex: r.farbeHex,
-						stimmen: r.stimmen,
-						anteil: r.anteil
-					})) : null,
+					top5:
+						rows.length > 0
+							? rows.map((r) => ({
+									kurzname: r.parteiKurzname,
+									vollname: r.parteiVollname,
+									farbeHex: r.farbeHex,
+									stimmen: r.stimmen,
+									anteil: r.anteil
+								}))
+							: null,
 					isBriefwahlAggregat: rows[0]?.istBriefwahlAggregat ?? isBriefwahlByDefault
 				}))
 			: Promise.resolve({ available: false, top5: null }),
 		kiezSlug
 			? getResultsForKiez(wahl.id, kiezSlug, LIMIT).then((rows) => ({
 					available: rows.length > 0,
-					top5: rows.length > 0 ? rows.map((r) => ({
-						kurzname: r.parteiKurzname,
-						vollname: r.parteiVollname,
-						farbeHex: r.farbeHex,
-						stimmen: r.stimmen,
-						anteil: r.anteil
-					})) : null
+					top5:
+						rows.length > 0
+							? rows.map((r) => ({
+									kurzname: r.parteiKurzname,
+									vollname: r.parteiVollname,
+									farbeHex: r.farbeHex,
+									stimmen: r.stimmen,
+									anteil: r.anteil
+								}))
+							: null
 				}))
 			: Promise.resolve({ available: false, top5: null }),
 		bezirkSlug
 			? getResultsForBezirk(wahl.id, bezirkSlug, LIMIT).then((rows) => ({
 					available: rows.length > 0,
-					top5: rows.length > 0 ? rows.map((r) => ({
-						kurzname: r.parteiKurzname,
-						vollname: r.parteiVollname,
-						farbeHex: r.farbeHex,
-						stimmen: r.stimmen,
-						anteil: r.anteil
-					})) : null
+					top5:
+						rows.length > 0
+							? rows.map((r) => ({
+									kurzname: r.parteiKurzname,
+									vollname: r.parteiVollname,
+									farbeHex: r.farbeHex,
+									stimmen: r.stimmen,
+									anteil: r.anteil
+								}))
+							: null
 				}))
 			: Promise.resolve({ available: false, top5: null }),
 		getResultsForBerlin(wahl.id, LIMIT).then((rows) => ({
 			available: rows.length > 0,
-			top5: rows.length > 0 ? rows.map((r) => ({
-				kurzname: r.parteiKurzname,
-				vollname: r.parteiVollname,
-				farbeHex: r.farbeHex,
-				stimmen: r.stimmen,
-				anteil: r.anteil
-			})) : null
+			top5:
+				rows.length > 0
+					? rows.map((r) => ({
+							kurzname: r.parteiKurzname,
+							vollname: r.parteiVollname,
+							farbeHex: r.farbeHex,
+							stimmen: r.stimmen,
+							anteil: r.anteil
+						}))
+					: null
 		}))
 	]);
 	return { stimmbezirk, kiez, bezirk, berlin };
@@ -264,7 +288,11 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const [wahlbezirks, kiezSlug] = await Promise.all([
 		findWahlbezirks(lat, lng).catch(
-			() => ({}) as Record<string, { uwbId: string; bezirkCode: string; geoProps: Record<string, unknown> }>
+			() =>
+				({}) as Record<
+					string,
+					{ uwbId: string; bezirkCode: string; geoProps: Record<string, unknown> }
+				>
 		),
 		findKiezSlug(lat, lng).catch(() => null)
 	]);

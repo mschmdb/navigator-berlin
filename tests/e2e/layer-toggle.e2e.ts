@@ -1,9 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 async function waitForMap(page: import('@playwright/test').Page) {
-	await page
-		.locator('[data-testid="map-skeleton"]')
-		.waitFor({ state: 'detached', timeout: 15000 });
+	await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
 }
 
 test.describe('Layer-Toggle-Palette', () => {
@@ -37,7 +35,9 @@ test.describe('Layer-Toggle-Palette', () => {
 		await waitForMap(page);
 		await page.keyboard.press('/');
 		await page.getByTestId('palette-toggle-bezirke').click();
-		await page.waitForFunction(() => new URL(window.location.href).searchParams.get('layers') !== null);
+		await page.waitForFunction(
+			() => new URL(window.location.href).searchParams.get('layers') !== null
+		);
 		const url = new URL(page.url());
 		expect(url.searchParams.get('layers')).toContain('bezirke');
 		await expect(page.getByTestId('header-layer-badge')).toHaveText('1');

@@ -53,10 +53,7 @@ async function main(): Promise<void> {
 			`[wahl-check] state: wahlen=${w} wahlen-mit-kiez-aggregat=${kw} min-ergebnis-per-wahl=${m}`
 		);
 
-		const ok =
-			w >= MIN_WAHLEN &&
-			m >= MIN_ERGEBNIS_PER_WAHL &&
-			kw >= MIN_WAHLEN_WITH_KIEZ_AGGREGAT;
+		const ok = w >= MIN_WAHLEN && m >= MIN_ERGEBNIS_PER_WAHL && kw >= MIN_WAHLEN_WITH_KIEZ_AGGREGAT;
 
 		if (ok) {
 			console.log('[wahl-check] DB complete · skipping wahl-fetch/wahl-geo/wahl-kiez');

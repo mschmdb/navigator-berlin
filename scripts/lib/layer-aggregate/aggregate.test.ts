@@ -56,7 +56,12 @@ describe('aggregateOrdinalDistribution', () => {
 	it('ohne classOrder: Share desc, dann Label alphabetisch', () => {
 		const r = aggregateOrdinalDistribution(['b', 'a', 'a', 'b', 'c']);
 		expect(r.classes[0].share).toBe(40);
-		expect(r.classes.map((c) => c.label).slice(0, 2).sort()).toEqual(['a', 'b']);
+		expect(
+			r.classes
+				.map((c) => c.label)
+				.slice(0, 2)
+				.sort()
+		).toEqual(['a', 'b']);
 	});
 
 	it('unter 50% → leere Verteilung + Marker', () => {

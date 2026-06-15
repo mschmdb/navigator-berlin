@@ -94,7 +94,8 @@ async function main(): Promise<void> {
 				publisher: PUBLISHER,
 				license: LICENSE,
 				sourceSha256,
-				metric: 'Gewichteter HZ-Index (3-Jahres-Mittel) wohn-relevanter Delikte, je LOR-Planungsraum',
+				metric:
+					'Gewichteter HZ-Index (3-Jahres-Mittel) wohn-relevanter Delikte, je LOR-Planungsraum',
 				years,
 				delikte: DEFAULT_DELIKTE.map((d) => ({
 					key: d.key,

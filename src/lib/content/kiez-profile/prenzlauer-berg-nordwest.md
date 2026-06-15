@@ -2,9 +2,9 @@
 slug: prenzlauer-berg-nordwest
 name: Prenzlauer Berg Nordwest
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 0bbce1c8dff1d291
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Prenzlauer Berg Nordwest punktet bei Kultur und Versorgung. Kulturell steht das Gebiet stark, rund 89 Punkte und Rang 15 von 143, weit über Bezirk und Berliner Median. Die Versorgung kommt auf rund 75 Punkte, Rang 17. Die Mobilität liegt mit rund 39 über dem Median.

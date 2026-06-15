@@ -4,7 +4,7 @@ templates:
   - id: klima-pet-bezirk
     applicableTo: [bezirk]
     requires: [klima.meanPet]
-    question: "Wie heiß wird der Bezirk {name} im Sommer?"
+    question: 'Wie heiß wird der Bezirk {name} im Sommer?'
     answer: >-
       Die mittlere Physiologische Äquivalent-Temperatur (PET) im Bezirk {name}
       liegt bei {klimaPet} Grad Celsius (Klassifikation: {klimaKategorie}).
@@ -14,7 +14,7 @@ templates:
   - id: klima-pet-kiez
     applicableTo: [kiez]
     requires: [klima.meanPet]
-    question: "Wie warm wird der Kiez {name} an Hitzetagen?"
+    question: 'Wie warm wird der Kiez {name} an Hitzetagen?'
     answer: >-
       Die mittlere PET im Kiez {name} liegt bei {klimaPet} Grad Celsius.
       {klimaErklaerung}
@@ -23,7 +23,7 @@ templates:
   - id: klima-was-ist-pet
     applicableTo: [layer]
     requires: []
-    question: "Was ist die Physiologische Äquivalent-Temperatur (PET)?"
+    question: 'Was ist die Physiologische Äquivalent-Temperatur (PET)?'
     answer: >-
       PET ist ein bioklimatischer Kennwert. Er gibt an, welche Lufttemperatur in
       einem geschlossenen Raum einer gefühlten Temperatur draußen entsprechen
@@ -33,7 +33,7 @@ templates:
   - id: klima-was-ist-hitzetag
     applicableTo: [layer]
     requires: []
-    question: "Was zählt als Hitzetag?"
+    question: 'Was zählt als Hitzetag?'
     answer: >-
       Der Deutsche Wetterdienst zählt einen Tag mit Tageshöchsttemperatur ab
       30 Grad Celsius als Hitzetag. Die Anzahl der Hitzetage pro Jahr ist in
@@ -43,7 +43,7 @@ templates:
   - id: klima-normalperiode
     applicableTo: [layer]
     requires: []
-    question: "Was bedeutet Klima-Normalperiode?"
+    question: 'Was bedeutet Klima-Normalperiode?'
     answer: >-
       Eine Klima-Normalperiode ist ein 30-Jahres-Referenzzeitraum, mit dem die
       Weltorganisation für Meteorologie Wetter-Mittelwerte vergleichbar macht.
@@ -52,7 +52,7 @@ templates:
   - id: klima-rolle-versiegelung
     applicableTo: [layer]
     requires: []
-    question: "Welche Rolle spielt die Versiegelung für das Stadtklima?"
+    question: 'Welche Rolle spielt die Versiegelung für das Stadtklima?'
     answer: >-
       Asphalt und Stein speichern Wärme und geben sie nachts wieder ab. Stark
       versiegelte Quartiere kühlen schlechter aus als Quartiere mit Vegetation

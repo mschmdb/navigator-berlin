@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-	parseFaqTemplateFile,
-	type FaqTemplateFile,
-	CLUSTER_KEYS
-} from './template-schema.js';
+import { parseFaqTemplateFile, type FaqTemplateFile, CLUSTER_KEYS } from './template-schema.js';
 
 /**
  * Story 2.5b AC-1 + AC-8: Schema-Validation pro YAML-Template-Datei.
@@ -41,9 +37,7 @@ describe('parseFaqTemplateFile (Valibot)', () => {
 	});
 
 	it('verwirft unbekannte Locale', () => {
-		expect(() =>
-			parseFaqTemplateFile({ ...validInput, locale: 'fr' as unknown })
-		).toThrow();
+		expect(() => parseFaqTemplateFile({ ...validInput, locale: 'fr' as unknown })).toThrow();
 	});
 
 	it('verwirft Template ohne id', () => {

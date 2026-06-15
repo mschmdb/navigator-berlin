@@ -43,10 +43,7 @@ function withinBbox(
 	stop: OepnvStop,
 	deltas: { lat: number; lng: number }
 ): boolean {
-	return (
-		Math.abs(stop.lat - addr.lat) < deltas.lat &&
-		Math.abs(stop.lng - addr.lng) < deltas.lng
-	);
+	return Math.abs(stop.lat - addr.lat) < deltas.lat && Math.abs(stop.lng - addr.lng) < deltas.lng;
 }
 
 export function findNearestStop(

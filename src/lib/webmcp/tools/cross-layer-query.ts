@@ -31,9 +31,7 @@ function serializeHit(hit: LayerHit): JsonObject {
 	};
 }
 
-export function createCrossLayerQueryTool(
-	deps: CrossLayerQueryDeps
-): WebMcpToolDefinition {
+export function createCrossLayerQueryTool(deps: CrossLayerQueryDeps): WebMcpToolDefinition {
 	return {
 		name: 'cross_layer_query',
 		description:

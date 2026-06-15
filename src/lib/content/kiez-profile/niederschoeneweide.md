@@ -2,9 +2,9 @@
 slug: niederschoeneweide
 name: Niederschoeneweide
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 44c0fadab7a00073
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Kulturell ist Niederschoeneweide stark, rund 69 Punkte, Rang 32 von 143, weit über dem Bezirksschnitt. Wohnschutz erreicht rund 64 Punkte, Rang 14. Ruhe und Luft liegen bei rund 64 Punkten, nahe dem Berliner Median. Versorgung erreicht rund 60 Punkte, Rang 51, über dem Bezirksschnitt.

@@ -18,7 +18,7 @@ describe('buildIndex (rbush)', () => {
 
 	it('search liefert Kandidaten fuer Bbox in Mitte', () => {
 		const idx = buildIndex(bezirke);
-		const results = idx.search({ minX: 13.39, minY: 52.52, maxX: 13.40, maxY: 52.53 });
+		const results = idx.search({ minX: 13.39, minY: 52.52, maxX: 13.4, maxY: 52.53 });
 		expect(results).toHaveLength(1);
 		expect(results[0].featureIndex).toBe(0);
 	});

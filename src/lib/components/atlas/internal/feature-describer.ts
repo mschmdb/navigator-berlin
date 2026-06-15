@@ -47,7 +47,11 @@ function describeLor(props: Record<string, unknown>): string {
 	return `Kiez: ${name}`;
 }
 
-function describeLaerm(props: Record<string, unknown>, layer: LayerMetadata, label: string): string {
+function describeLaerm(
+	props: Record<string, unknown>,
+	layer: LayerMetadata,
+	label: string
+): string {
 	const value = asString(props.value) ?? asString(props.lden) ?? asString(props.lnight);
 	const year = formatYear(layer.fetchedAt);
 	const valuePart = value ? `${value} dB` : 'Wert unbekannt';

@@ -69,7 +69,10 @@ export interface WebMcpServerConfig {
 	readonly loadManifest: () => Promise<unknown>;
 	readonly defaultLocale: () => Locale;
 	readonly fetchElections: () => Promise<readonly ElectionListEntry[]>;
-	readonly fetchWahlResultsAtPoint: (lat: number, lng: number) => Promise<WahlResultsAtPoint | null>;
+	readonly fetchWahlResultsAtPoint: (
+		lat: number,
+		lng: number
+	) => Promise<WahlResultsAtPoint | null>;
 	readonly fetchVotingDistrictGeometry: (
 		districtId: string,
 		year: number
@@ -86,9 +89,7 @@ export interface WebMcpServerHandle {
  * Default-Polyfill-Loader: dynamic-import `@mcp-b/global` und initialisiert
  * den Polyfill. Wird nur aufgerufen, wenn die native API fehlt.
  */
-export async function loadMcpBGlobalPolyfill(
-	target: NavigatorWithModelContext
-): Promise<void> {
+export async function loadMcpBGlobalPolyfill(target: NavigatorWithModelContext): Promise<void> {
 	if (target.modelContext) return;
 	const mod = await import('@mcp-b/global');
 	mod.initializeWebModelContext({ autoInitialize: true });

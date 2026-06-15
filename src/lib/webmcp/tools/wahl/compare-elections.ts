@@ -49,7 +49,9 @@ function caveatsFor(bundle: WahlResultBundle, level: WahlLevel): string[] {
 		);
 	}
 	if (bundle.wahl.isRepeatElection) {
-		out.push('Wiederholungswahl. Ergebnisse weichen von der gerichtlich aufgehobenen Original-Wahl ab.');
+		out.push(
+			'Wiederholungswahl. Ergebnisse weichen von der gerichtlich aufgehobenen Original-Wahl ab.'
+		);
 	}
 	return out;
 }
@@ -72,9 +74,7 @@ export function createCompareElectionsTool(deps: CompareElectionsDeps): WebMcpTo
 			}
 			const slugSet = new Set(input.election_slugs);
 			const bundles = results.wahlen.filter((b) => slugSet.has(bundleSlug(b)));
-			const missing = input.election_slugs.filter(
-				(s) => !bundles.some((b) => bundleSlug(b) === s)
-			);
+			const missing = input.election_slugs.filter((s) => !bundles.some((b) => bundleSlug(b) === s));
 			if (missing.length > 0) {
 				return {
 					error: 'election_not_found',

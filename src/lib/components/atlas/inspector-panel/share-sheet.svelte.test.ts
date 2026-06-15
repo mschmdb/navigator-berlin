@@ -50,9 +50,7 @@ describe('share-sheet.svelte', () => {
 
 	it('versteckt Native-Share wenn navigator.share fehlt', async () => {
 		render(ShareSheet, defaultProps());
-		await expect
-			.element(page.getByTestId('share-option-native'))
-			.not.toBeInTheDocument();
+		await expect.element(page.getByTestId('share-option-native')).not.toBeInTheDocument();
 	});
 
 	it('rendert nicht wenn open=false', async () => {

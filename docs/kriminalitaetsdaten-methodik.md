@@ -19,18 +19,18 @@ Anders als bei Müll (siehe [[muelldaten-methodik]], verworfen) gibt es hier ein
 
 ## Quelle & Zugang
 
-| | |
-|---|---|
-| Portal | https://daten.berlin.de/datensaetze/kriminalitatsatlas-berlin |
-| Interaktiv | https://www.kriminalitaetsatlas.berlin.de/ |
-| Methodik | https://www.kriminalitaetsatlas.berlin.de/K-Atlas/hinweise.htm |
+|                   |                                                                                          |
+| ----------------- | ---------------------------------------------------------------------------------------- |
+| Portal            | https://daten.berlin.de/datensaetze/kriminalitatsatlas-berlin                            |
+| Interaktiv        | https://www.kriminalitaetsatlas.berlin.de/                                               |
+| Methodik          | https://www.kriminalitaetsatlas.berlin.de/K-Atlas/hinweise.htm                           |
 | Download (direkt) | `https://www.kriminalitaetsatlas.berlin.de/K-Atlas/bezirke/Fallzahlen&HZ 2016-2025.xlsx` |
-| Format | **XLSX** (eine Datei, ~610 KB) |
-| Herausgeber | Polizei Berlin |
-| Lizenz | dl-de-by-2.0 bzw. cc-by-sa (Namensnennung) — frei nutzbar |
-| Aktualität | **jährlich zum 31.12. fortgeschrieben**, synchron mit PKS |
-| Zeitreihe | **2016–2025** (10 Jahre), gleitend |
-| Geprüft | 9.6.2026: Datei geladen, 22 Sheets, Struktur verifiziert |
+| Format            | **XLSX** (eine Datei, ~610 KB)                                                           |
+| Herausgeber       | Polizei Berlin                                                                           |
+| Lizenz            | dl-de-by-2.0 bzw. cc-by-sa (Namensnennung) — frei nutzbar                                |
+| Aktualität        | **jährlich zum 31.12. fortgeschrieben**, synchron mit PKS                                |
+| Zeitreihe         | **2016–2025** (10 Jahre), gleitend                                                       |
+| Geprüft           | 9.6.2026: Datei geladen, 22 Sheets, Struktur verifiziert                                 |
 
 ## Granularität — der entscheidende Vorteil
 

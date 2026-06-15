@@ -4,8 +4,24 @@ import ScoreComparisonTable from './score-comparison-table.svelte';
 import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
 
 const rows: ComparisonDimRow[] = [
-	{ label: 'Grün & Hitze', value: 72, bezirkMean: 65, berlinMedian: 58, rang: 12, quartil: 1, total: 143 },
-	{ label: 'Versorgung', value: 30, bezirkMean: 55, berlinMedian: 60, rang: 140, quartil: 4, total: 143 }
+	{
+		label: 'Grün & Hitze',
+		value: 72,
+		bezirkMean: 65,
+		berlinMedian: 58,
+		rang: 12,
+		quartil: 1,
+		total: 143
+	},
+	{
+		label: 'Versorgung',
+		value: 30,
+		bezirkMean: 55,
+		berlinMedian: 60,
+		rang: 140,
+		quartil: 4,
+		total: 143
+	}
 ];
 
 describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
@@ -16,7 +32,15 @@ describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
 
 	it('rendert nichts wenn alle Werte null sind (kein leerer Block ohne DB)', async () => {
 		const empty: ComparisonDimRow[] = [
-			{ label: 'Grün & Hitze', value: null, bezirkMean: null, berlinMedian: null, rang: null, quartil: null, total: 0 }
+			{
+				label: 'Grün & Hitze',
+				value: null,
+				bezirkMean: null,
+				berlinMedian: null,
+				rang: null,
+				quartil: null,
+				total: 0
+			}
 		];
 		render(ScoreComparisonTable, { rows: empty, showBezirkColumn: true });
 		expect(document.querySelector('[data-testid="score-comparison"]')).toBeNull();
@@ -47,7 +71,15 @@ describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
 	it('Story 14.9: Kriminalitäts-Zeile mit Wert ohne Rang + Magnitude/BR-Fußnote', async () => {
 		const withKrimi: ComparisonDimRow[] = [
 			...rows,
-			{ label: 'Erfasste Kriminalität', value: 84, bezirkMean: 70, berlinMedian: 65, rang: null, quartil: null, total: 0 }
+			{
+				label: 'Erfasste Kriminalität',
+				value: 84,
+				bezirkMean: 70,
+				berlinMedian: 65,
+				rang: null,
+				quartil: null,
+				total: 0
+			}
 		];
 		render(ScoreComparisonTable, { rows: withKrimi, showBezirkColumn: true, valueLabel: 'Kiez' });
 		const krimiRow = document.querySelector('tr[data-row="kriminalitaet"]');

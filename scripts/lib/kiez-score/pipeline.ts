@@ -10,10 +10,7 @@ import {
 	buildPoiDensityCounts,
 	type BuildLayerSpec
 } from './build-helpers.js';
-import {
-	findAllNearestStopsForBuild,
-	type OepnvStopIndexShape
-} from './nearest-stops.js';
+import { findAllNearestStopsForBuild, type OepnvStopIndexShape } from './nearest-stops.js';
 import { DIMENSION_CONFIGS } from './dimension-config.js';
 import { KIEZ_SCORE_DIMENSIONS, type KiezScore, type KiezScoreDimension } from './types.js';
 

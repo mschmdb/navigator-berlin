@@ -36,13 +36,15 @@ describe('bwl-csv-parser', () => {
 
 	describe('isMetadataLine', () => {
 		it('erkennt Copyright-Zeile', () => {
-			expect(isMetadataLine('(c) Die Bundeswahlleiterin (im Auftrag der Herausgebergemeinschaft)')).toBe(
-				true
-			);
+			expect(
+				isMetadataLine('(c) Die Bundeswahlleiterin (im Auftrag der Herausgebergemeinschaft)')
+			).toBe(true);
 		});
 
 		it('erkennt Title-Zeile (Ergebnisse der Wahlbezirksstatistik)', () => {
-			expect(isMetadataLine('Ergebnisse der Wahlbezirksstatistik zur Bundestagswahl 2025')).toBe(true);
+			expect(isMetadataLine('Ergebnisse der Wahlbezirksstatistik zur Bundestagswahl 2025')).toBe(
+				true
+			);
 		});
 
 		it('erkennt komplett leere Zeile', () => {

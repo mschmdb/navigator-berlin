@@ -198,11 +198,14 @@ export function renderScoreSection(
 	if (score.gruenHitze !== null)
 		lines.push(`- Grün & Hitze: ${formatNumberDe(score.gruenHitze)}/100`);
 	if (score.mobilitaet !== null) lines.push(`- Mobilität: ${formatNumberDe(score.mobilitaet)}/100`);
-	if (score.versorgung !== null) lines.push(`- Versorgung: ${formatNumberDe(score.versorgung)}/100`);
+	if (score.versorgung !== null)
+		lines.push(`- Versorgung: ${formatNumberDe(score.versorgung)}/100`);
 	if (score.wohnschutz !== null)
 		lines.push(`- Wohnschutz: ${formatNumberDe(score.wohnschutz)}/100`);
 	if (score.kultur !== null)
-		lines.push(`- Kultur: ${formatNumberDe(score.kultur)}/100 (eigene Dimension, nicht im Composite)`);
+		lines.push(
+			`- Kultur: ${formatNumberDe(score.kultur)}/100 (eigene Dimension, nicht im Composite)`
+		);
 	if (score.kriminalitaet !== null) {
 		lines.push(
 			`- Erfasste Kriminalität (Häufigkeitszahl): ${formatNumberDe(score.kriminalitaet)}/100 (eigene Dimension, nicht im Composite)`

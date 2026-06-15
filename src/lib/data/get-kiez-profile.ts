@@ -69,7 +69,7 @@ export async function getKiezProfile(
 			const featureName = readKiezName(featureProps);
 			if (!featureName) return null;
 			const bezCode = readBezirkCode(featureProps);
-			const bezirkName = bezCode ? codeToName.get(bezCode) ?? '' : '';
+			const bezirkName = bezCode ? (codeToName.get(bezCode) ?? '') : '';
 			return {
 				feature: f as Feature<Polygon | MultiPolygon>,
 				ref: { name: featureName, bezirk: bezirkName } satisfies KiezNameRef

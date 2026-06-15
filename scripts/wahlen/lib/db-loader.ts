@@ -77,11 +77,7 @@ export async function upsertWahl(db: Db, params: UpsertWahlParams): Promise<numb
 		.select({ id: wahl.id })
 		.from(wahl)
 		.where(
-			and(
-				eq(wahl.jahr, params.jahr),
-				eq(wahl.typ, params.typ),
-				eq(wahl.stimmtyp, params.stimmtyp)
-			)
+			and(eq(wahl.jahr, params.jahr), eq(wahl.typ, params.typ), eq(wahl.stimmtyp, params.stimmtyp))
 		)
 		.limit(1);
 
@@ -162,7 +158,8 @@ export async function insertErgebnisse(
 	stimmtyp: StimmtypKey | 'einstimme',
 	parteiIdByKurzname: ParteiIdMap
 ): Promise<number> {
-	const slot: 'erststimme' | 'zweitstimme' = stimmtyp === 'zweitstimme' ? 'zweitstimme' : 'erststimme';
+	const slot: 'erststimme' | 'zweitstimme' =
+		stimmtyp === 'zweitstimme' ? 'zweitstimme' : 'erststimme';
 
 	const values: {
 		wahlId: number;

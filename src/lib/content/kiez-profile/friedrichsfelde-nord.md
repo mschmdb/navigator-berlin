@@ -2,9 +2,9 @@
 slug: friedrichsfelde-nord
 name: Friedrichsfelde Nord
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 097fd4cc1c70ea28
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Friedrichsfelde Nord zeigt seine Stärke bei Grün und Hitze mit 68 über dem Bezirksschnitt und über dem Berliner Median. Ruhe und Luft liegen mit 69,7 über dem Bezirksschnitt und nahe am Berliner Median. Beim Gesamtscore erreicht der Kiez 39,7 und Rang 69 von 143. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad.

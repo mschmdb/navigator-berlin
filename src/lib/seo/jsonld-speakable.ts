@@ -39,9 +39,7 @@ function ensureLeadingSlash(s: string): string {
 	return s.startsWith('/') ? s : `/${s}`;
 }
 
-export function buildSpeakableWebPage(
-	input: SpeakableWebPageInput
-): SpeakableWebPageJsonLd {
+export function buildSpeakableWebPage(input: SpeakableWebPageInput): SpeakableWebPageJsonLd {
 	if (input.cssSelectors.length === 0) {
 		throw new Error('buildSpeakableWebPage: cssSelectors darf nicht leer sein');
 	}

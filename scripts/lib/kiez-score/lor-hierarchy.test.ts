@@ -12,7 +12,18 @@ function plr(plrId: string, areaM2: number): PlanungsraumLike {
 	return { plrId, bez: plrId.slice(0, 2), areaM2 };
 }
 
-const polygon: Polygon = { type: 'Polygon', coordinates: [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]] };
+const polygon: Polygon = {
+	type: 'Polygon',
+	coordinates: [
+		[
+			[0, 0],
+			[1, 0],
+			[1, 1],
+			[0, 1],
+			[0, 0]
+		]
+	]
+};
 
 function brFeature(bzrId: string, areaM2: number): BezirksregionLike {
 	const bez = bzrId.slice(0, 2);
@@ -20,7 +31,11 @@ function brFeature(bzrId: string, areaM2: number): BezirksregionLike {
 		bzrId,
 		bez,
 		areaM2,
-		feature: { type: 'Feature', properties: { BZR_ID: bzrId, BEZ: bez }, geometry: polygon } as Feature
+		feature: {
+			type: 'Feature',
+			properties: { BZR_ID: bzrId, BEZ: bez },
+			geometry: polygon
+		} as Feature
 	};
 }
 
@@ -48,7 +63,10 @@ describe('lor-hierarchy / buildLorHierarchy (Story 2.9a)', () => {
 	it('attaches bezirk-slug to bezirksregionen via BEZ code', () => {
 		const plrs: PlanungsraumLike[] = [plr('01100101', 100)];
 		const brs: BezirksregionLike[] = [brFeature('011001', 100)];
-		const bzs: BezirkLike[] = [bezFeature('Mitte', '01'), bezFeature('Friedrichshain-Kreuzberg', '02')];
+		const bzs: BezirkLike[] = [
+			bezFeature('Mitte', '01'),
+			bezFeature('Friedrichshain-Kreuzberg', '02')
+		];
 		const h = buildLorHierarchy(plrs, brs, bzs);
 		expect(h.bezirksregionen[0]!.bezirkSlug).toBe('mitte');
 	});
@@ -60,11 +78,11 @@ describe('lor-hierarchy / buildLorHierarchy (Story 2.9a)', () => {
 			plr('02100101', 300),
 			plr('02100102', 400)
 		];
-		const brs: BezirksregionLike[] = [
-			brFeature('011001', 300),
-			brFeature('021001', 700)
+		const brs: BezirksregionLike[] = [brFeature('011001', 300), brFeature('021001', 700)];
+		const bzs: BezirkLike[] = [
+			bezFeature('Mitte', '01'),
+			bezFeature('Friedrichshain-Kreuzberg', '02')
 		];
-		const bzs: BezirkLike[] = [bezFeature('Mitte', '01'), bezFeature('Friedrichshain-Kreuzberg', '02')];
 		const h = buildLorHierarchy(plrs, brs, bzs);
 		const mitte = h.bezirke.find((b) => b.slug === 'mitte');
 		expect(mitte?.planungsraeume.map((p) => p.plrId).sort()).toEqual(['01100101', '01100102']);

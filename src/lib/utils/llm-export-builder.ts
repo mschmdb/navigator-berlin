@@ -1,10 +1,4 @@
-import type {
-	ClimateData,
-	ClimateStation,
-	KiezScore,
-	LayerHit,
-	LayerMetadata
-} from '$lib/data';
+import type { ClimateData, ClimateStation, KiezScore, LayerHit, LayerMetadata } from '$lib/data';
 import {
 	DIMENSION_LABELS_DE,
 	scaleFor
@@ -170,7 +164,9 @@ function renderSections(input: LlmExportInput, lines: string[]): void {
 	}
 }
 
-function minMaxLatest(points: readonly NumericYearPoint[]): { min: NumericYearPoint; max: NumericYearPoint; latest: NumericYearPoint } | null {
+function minMaxLatest(
+	points: readonly NumericYearPoint[]
+): { min: NumericYearPoint; max: NumericYearPoint; latest: NumericYearPoint } | null {
 	if (points.length === 0) return null;
 	let min = points[0]!;
 	let max = points[0]!;
@@ -217,9 +213,24 @@ function renderClimate(input: LlmExportInput, lines: string[]): void {
 	if (series) {
 		const fmtInt = (n: number): string => `${Math.round(n)}`;
 		const fmtTemp = (n: number): string => `${formatNumber(n)} °C`;
-		renderClimateIndicator('Sommertage (≥25 °C)', yearValuesToNumeric(series.summerDays, 'count'), fmtInt, lines);
-		renderClimateIndicator('Heiße Tage (>30 °C)', yearValuesToNumeric(series.hotDays, 'count'), fmtInt, lines);
-		renderClimateIndicator('Frost-Tage', yearValuesToNumeric(series.frostDays, 'count'), fmtInt, lines);
+		renderClimateIndicator(
+			'Sommertage (≥25 °C)',
+			yearValuesToNumeric(series.summerDays, 'count'),
+			fmtInt,
+			lines
+		);
+		renderClimateIndicator(
+			'Heiße Tage (>30 °C)',
+			yearValuesToNumeric(series.hotDays, 'count'),
+			fmtInt,
+			lines
+		);
+		renderClimateIndicator(
+			'Frost-Tage',
+			yearValuesToNumeric(series.frostDays, 'count'),
+			fmtInt,
+			lines
+		);
 		renderClimateIndicator(
 			'Jahres-Mittelwert',
 			yearValuesToNumeric(series.annualMeanTemp, 'temp'),
@@ -269,7 +280,9 @@ function renderOepnv(input: LlmExportInput, lines: string[]): void {
 		const stop = nearest[key];
 		if (!stop) continue;
 		const softSuffix = stop.soft ? ' · schwach (außerhalb 600 m)' : '';
-		lines.push(`- ${label}: ${stop.name} · ${stop.distanceM} m · ${stop.walkingMin} min${softSuffix}`);
+		lines.push(
+			`- ${label}: ${stop.name} · ${stop.distanceM} m · ${stop.walkingMin} min${softSuffix}`
+		);
 	}
 	lines.push('');
 }
@@ -283,7 +296,9 @@ function renderKiezScore(input: LlmExportInput, lines: string[]): void {
 	if (typeof score.overall === 'number') {
 		const overallScale = scaleFor(score.overall, 'ruhe-luft');
 		const stufe = overallScale ? overallScale.label : '—';
-		lines.push(`- Gesamt: ${stufe} (${Math.round(score.overall)}/100, Mittel über ${score.dimensions.filter((d) => d.value !== null).length} Dimensionen)`);
+		lines.push(
+			`- Gesamt: ${stufe} (${Math.round(score.overall)}/100, Mittel über ${score.dimensions.filter((d) => d.value !== null).length} Dimensionen)`
+		);
 	}
 	for (const dim of score.dimensions) {
 		const label = DIMENSION_LABELS_DE[dim.dimension];
@@ -295,7 +310,10 @@ function renderKiezScore(input: LlmExportInput, lines: string[]): void {
 		const stufe = scale ? scale.label : '—';
 		const sources = dim.sources
 			.filter((s) => s.normalizedValue !== null)
-			.map((s) => `${s.layer} (${Math.round(s.normalizedValue as number)}/100, Gewicht ${Math.round(s.weight * 100)}%)`)
+			.map(
+				(s) =>
+					`${s.layer} (${Math.round(s.normalizedValue as number)}/100, Gewicht ${Math.round(s.weight * 100)}%)`
+			)
 			.join(', ');
 		lines.push(`- ${label}: ${stufe} (${Math.round(dim.value)}/100)`);
 		if (sources) lines.push(`  Quellen: ${sources}`);

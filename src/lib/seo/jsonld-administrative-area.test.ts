@@ -35,7 +35,10 @@ describe('buildAdministrativeArea', () => {
 			origin: 'https://navigator.berlin',
 			name: 'Mitte',
 			centroid: [13.4, 52.5],
-			sameAs: ['https://www.wikidata.org/wiki/Q163966', 'https://de.wikipedia.org/wiki/Bezirk_Mitte']
+			sameAs: [
+				'https://www.wikidata.org/wiki/Q163966',
+				'https://de.wikipedia.org/wiki/Bezirk_Mitte'
+			]
 		});
 		expect(out.sameAs).toEqual([
 			'https://www.wikidata.org/wiki/Q163966',

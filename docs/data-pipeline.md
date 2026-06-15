@@ -59,7 +59,7 @@ pnpm data:fetch && pnpm data:aggregate && pnpm og:all && pnpm build
 - Meta-Tag-URL: `${origin}/og/{type}/{slug}.png`, gesetzt via SeoHead-Prop
   `ogImage` aus Story 2.1.
 - Cache: SvelteKit-Static-Adapter liefert default `cache-control: public,
-  max-age=86400`. Filename ohne Hash; Coolify-Deploy invalidet via neuen Build.
+max-age=86400`. Filename ohne Hash; Coolify-Deploy invalidet via neuen Build.
 
 ### Flags
 

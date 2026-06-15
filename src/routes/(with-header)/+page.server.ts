@@ -86,9 +86,8 @@ async function loadFeatured(fetchFn: typeof fetch): Promise<HomeFeaturedScore | 
 		const lat = Number(profile.centroid[1].toFixed(5));
 
 		const { getOepnvStopIndex } = await import('$lib/data/get-oepnv-stop-index.js');
-		const { findAllNearestStops } = await import(
-			'$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js'
-		);
+		const { findAllNearestStops } =
+			await import('$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js');
 		const { getKiezScore } = await import('$lib/data/get-kiez-score.js');
 		const stopIndex = await getOepnvStopIndex(fetchFn);
 		const stops = findAllNearestStops({ lat, lng }, stopIndex, 1000);
@@ -152,7 +151,9 @@ async function loadTopKieze(names: RegionDisplayNames): Promise<HomeTopKiez[]> {
 		return rows.map((r) => ({
 			slug: r.slug,
 			displayName: names.kiez.get(r.slug) ?? slugToDisplayName(r.slug),
-			bezirkName: r.bezirkSlug ? names.bezirk.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug) : null,
+			bezirkName: r.bezirkSlug
+				? (names.bezirk.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug))
+				: null,
 			composite: typeof r.composite === 'number' ? r.composite : null
 		}));
 	} catch (err) {

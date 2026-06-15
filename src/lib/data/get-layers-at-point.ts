@@ -27,11 +27,7 @@ function inSeason(seasonality: { from: string; to: string }, now: Date = new Dat
 	return today >= from || today <= to;
 }
 
-function makeHit(
-	layer: LayerMetadata,
-	value: unknown,
-	reason?: LayerHit['reason']
-): LayerHit {
+function makeHit(layer: LayerMetadata, value: unknown, reason?: LayerHit['reason']): LayerHit {
 	const hit: LayerHit = {
 		layer: layer.slug,
 		value,
@@ -43,7 +39,11 @@ function makeHit(
 	return hit;
 }
 
-export type PmtilesQueryFn = (slug: string, lng: number, lat: number) => Record<string, unknown> | null;
+export type PmtilesQueryFn = (
+	slug: string,
+	lng: number,
+	lat: number
+) => Record<string, unknown> | null;
 
 function isInCoverageBbox(
 	lat: number,

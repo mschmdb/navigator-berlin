@@ -2,9 +2,9 @@
 slug: west-3-borsigwalde-freie-scholle
 name: West 3 Borsigwalde Freie Scholle
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 78c87c1d857b21a9
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 West 3 Borsigwalde Freie Scholle steht bei Ruhe und Luft solide da. Der Score von 68,5 liegt über dem Berliner Median. Grün und Hitze fällt mit 51,8 nahe am Berliner Median aus. Die gefühlte Temperatur an heißen Tagen liegt bei rund 37 Grad. Die Grünversorgung gilt als gut, die Lärmbelastung als mittel.

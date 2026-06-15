@@ -8,12 +8,12 @@
 <section class="mx-auto max-w-[1280px] px-4 py-12">
 	<h1 class="mb-2 font-serif text-3xl text-ink">Logo-Showcase</h1>
 	<p class="mb-8 text-base text-ink-muted">
-		Visuelle Verifikation der drei statischen Varianten + animierter Loader-Komponente.
-		Geometrie: {BOUNDARY_POINTS.length} Boundary-Punkte, {ANCHOR_POINTS.length} innere Vermessungs-Stützpunkte,
+		Visuelle Verifikation der drei statischen Varianten + animierter Loader-Komponente. Geometrie: {BOUNDARY_POINTS.length}
+		Boundary-Punkte, {ANCHOR_POINTS.length} innere Vermessungs-Stützpunkte,
 		{DELAUNAY_EDGES.length} Delaunay-Kanten. Quelle: bezirke.geojson → Douglas-Peucker → Delaunay.
 	</p>
 
-	<h2 class="mb-4 mt-10 font-mono text-xs uppercase tracking-wider text-ink-muted">
+	<h2 class="mt-10 mb-4 font-mono text-xs tracking-wider text-ink-muted uppercase">
 		Statische SVG-Files
 	</h2>
 	<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -38,7 +38,7 @@
 		</figure>
 	</div>
 
-	<h2 class="mb-4 mt-12 font-mono text-xs uppercase tracking-wider text-ink-muted">
+	<h2 class="mt-12 mb-4 font-mono text-xs tracking-wider text-ink-muted uppercase">
 		Animierte Komponente: one-shot
 	</h2>
 	<p class="mb-4 max-w-prose text-sm text-ink-muted">
@@ -52,19 +52,19 @@
 		<button
 			type="button"
 			onclick={() => (replayKey += 1)}
-			class="border border-rule px-4 py-2 font-mono text-xs uppercase tracking-wider text-ink hover:bg-bg-elevated"
+			class="border border-rule px-4 py-2 font-mono text-xs tracking-wider text-ink uppercase hover:bg-bg-elevated"
 		>
 			Replay
 		</button>
 	</div>
 
-	<h2 class="mb-4 mt-12 font-mono text-xs uppercase tracking-wider text-ink-muted">
+	<h2 class="mt-12 mb-4 font-mono text-xs tracking-wider text-ink-muted uppercase">
 		Animierte Komponente: loop (Loader)
 	</h2>
 	<p class="mb-4 max-w-prose text-sm text-ink-muted">
-		Endlos-Cycle für Loading-States. Boundary baut auf, Punkte erscheinen, Linien zeichnen,
-		alles fadet wieder, Cycle wiederholt. role="status" + aria-live="polite" mit
-		visually-hidden Label für Screenreader.
+		Endlos-Cycle für Loading-States. Boundary baut auf, Punkte erscheinen, Linien zeichnen, alles
+		fadet wieder, Cycle wiederholt. role="status" + aria-live="polite" mit visually-hidden Label für
+		Screenreader.
 	</p>
 	<div class="flex items-center gap-12 border border-rule p-6">
 		<AnimatedLogo variant="loop" size={192} loadingLabel="Karte wird geladen" />
@@ -72,7 +72,7 @@
 		<AnimatedLogo variant="loop" size={32} loadingLabel="Lädt" />
 	</div>
 
-	<h2 class="mb-4 mt-12 font-mono text-xs uppercase tracking-wider text-ink-muted">
+	<h2 class="mt-12 mb-4 font-mono text-xs tracking-wider text-ink-muted uppercase">
 		Header-Kontext (32 px wie im Site-Header)
 	</h2>
 	<div class="flex items-center gap-3 border border-rule p-4">
@@ -80,12 +80,12 @@
 		<span class="font-sans text-base font-light tracking-wide text-ink">navigator.berlin</span>
 	</div>
 
-	<h2 class="mb-4 mt-12 font-mono text-xs uppercase tracking-wider text-ink-muted">
+	<h2 class="mt-12 mb-4 font-mono text-xs tracking-wider text-ink-muted uppercase">
 		Reduced-Motion Verhalten
 	</h2>
 	<p class="max-w-prose text-sm text-ink-muted">
-		System-Setting <code class="font-mono">prefers-reduced-motion: reduce</code> aktivieren
-		(macOS: Systemeinstellungen → Bedienungshilfen → Anzeige → Bewegung reduzieren). Die
-		Komponente zeigt dann sofort den Final-State ohne Animation, Loop-Variante steht still.
+		System-Setting <code class="font-mono">prefers-reduced-motion: reduce</code> aktivieren (macOS: Systemeinstellungen
+		→ Bedienungshilfen → Anzeige → Bewegung reduzieren). Die Komponente zeigt dann sofort den Final-State
+		ohne Animation, Loop-Variante steht still.
 	</p>
 </section>

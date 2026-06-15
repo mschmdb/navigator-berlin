@@ -114,8 +114,7 @@ describe('map-hover-tooltip.svelte', () => {
 				querySpy = opts;
 				return [];
 			},
-			getLayer: (id: string) =>
-				id === 'navigator-layer-bezirke' ? { id } : undefined
+			getLayer: (id: string) => (id === 'navigator-layer-bezirke' ? { id } : undefined)
 		};
 		render(MapHoverTooltip, {
 			map: api,
@@ -173,9 +172,7 @@ describe('map-hover-tooltip.svelte', () => {
 		await new Promise((r) => setTimeout(r, 10));
 		fire('mousemove', { point: { x: 100, y: 100 } });
 		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
-		const subtitle = (await page
-			.getByTestId('poi-popover-subtitle')
-			.element()) as HTMLElement;
+		const subtitle = (await page.getByTestId('poi-popover-subtitle').element()) as HTMLElement;
 		expect(subtitle.textContent).toMatch(/Grundschule/);
 	});
 

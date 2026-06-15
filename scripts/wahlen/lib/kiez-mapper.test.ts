@@ -5,10 +5,7 @@ import type { FeatureCollection, Polygon } from 'geojson';
 describe('dbUwbIdFromGeo', () => {
 	describe('BTW 21/25 modern format', () => {
 		it('matched BTW25 DB-Format aus BT25-Geo', () => {
-			const id = dbUwbIdFromGeo(
-				{ BWK: '83', BEZ: '09', UWB3: '101', UWB: '09101' },
-				'btw25'
-			);
+			const id = dbUwbIdFromGeo({ BWK: '83', BEZ: '09', UWB3: '101', UWB: '09101' }, 'btw25');
 			expect(id).toBe('083-09-101-0');
 		});
 
@@ -20,10 +17,7 @@ describe('dbUwbIdFromGeo', () => {
 
 	describe('BTW 17 alt-Format', () => {
 		it('fügt BEZ+W ein im wahlbezirk-Slot', () => {
-			const id = dbUwbIdFromGeo(
-				{ BWK: '078', BEZ: '05', UWB3: '221', UWB: '05221' },
-				'btw17'
-			);
+			const id = dbUwbIdFromGeo({ BWK: '078', BEZ: '05', UWB3: '221', UWB: '05221' }, 'btw17');
 			expect(id).toBe('078-05-05W221-0');
 		});
 	});

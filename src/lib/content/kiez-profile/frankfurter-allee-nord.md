@@ -2,9 +2,9 @@
 slug: frankfurter-allee-nord
 name: Frankfurter Allee Nord
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: a1bdd04c949e3cc8
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Frankfurter Allee Nord führt beim Wohnschutz. Der Score von 100 reicht für Rang 1 von 143. Auch die Versorgung ist stark, mit 83,7 und Rang 2. Kulturell steht das Gebiet stark, rund 84 Punkte und Rang 23 von 143, weit über dem Berliner Median und nahe am Bezirksschnitt. Die Mobilität liegt mit 42,2 klar über dem Berliner Median.

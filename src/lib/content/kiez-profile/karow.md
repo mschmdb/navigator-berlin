@@ -2,9 +2,9 @@
 slug: karow
 name: Karow
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: d96825c5185817f1
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Grün und Ruhe prägen Karow. Bei Grün und Hitze erreicht der Kiez Platz 27 von 143, über dem Berliner Median und dem Bezirksschnitt. Bei Ruhe und Luft liegt er ebenfalls über dem Median. Die Grünversorgung gilt als gut. Die gefühlte Temperatur an heißen Tagen steigt auf rund 38 Grad.

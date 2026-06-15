@@ -4,8 +4,7 @@ import { render } from 'vitest-browser-svelte';
 import { createRawSnippet } from 'svelte';
 import Button from './button.svelte';
 
-const label = (text: string) =>
-	createRawSnippet(() => ({ render: () => `<span>${text}</span>` }));
+const label = (text: string) => createRawSnippet(() => ({ render: () => `<span>${text}</span>` }));
 
 describe('button.svelte', () => {
 	it('rendert default als secondary (border + text-ink + 44px touch)', async () => {

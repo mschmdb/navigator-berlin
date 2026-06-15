@@ -58,7 +58,7 @@ export function buildRegionDisplayNames({ lorFc, bezirkeFc }: BuildInput): Regio
 					: null;
 		if (!name) continue;
 		const bez = typeof props.BEZ === 'string' ? props.BEZ : null;
-		const bezirkName = bez ? bezCodeToName.get(bez) ?? '' : '';
+		const bezirkName = bez ? (bezCodeToName.get(bez) ?? '') : '';
 		refs.push({ name: cleanName(name), bezirk: bezirkName });
 	}
 

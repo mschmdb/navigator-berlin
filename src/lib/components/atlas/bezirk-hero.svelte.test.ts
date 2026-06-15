@@ -37,7 +37,11 @@ const statsFixture: BezirkStatsRow = {
 	},
 	luft: { dominantCategory: null, categoryDistribution: null },
 	gruen: {
-		dominantVersorgung: { value: 'hoch', layer: 'gruenversorgung-2023', sourceUpdatedAt: '2023-09-01' },
+		dominantVersorgung: {
+			value: 'hoch',
+			layer: 'gruenversorgung-2023',
+			sourceUpdatedAt: '2023-09-01'
+		},
 		gruenanlagenCount: null,
 		spielplaetzeCount: null
 	} as unknown as BezirkStatsRow['gruen'],

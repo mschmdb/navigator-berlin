@@ -19,10 +19,7 @@ const UBAHN_FAR: OepnvStop = { name: 'Zoologischer Garten', lat: 52.5058, lng: 1
 
 describe('findNearestStop', () => {
 	it('returns nearest stop within max distance', () => {
-		const stops: OepnvStop[] = [
-			{ name: 'Far', lat: 52.51, lng: 13.46 },
-			UBAHN_FRANKFURTER_TOR
-		];
+		const stops: OepnvStop[] = [{ name: 'Far', lat: 52.51, lng: 13.46 }, UBAHN_FRANKFURTER_TOR];
 		const nearest = findNearestStop(FRANKFURTER_TOR, stops, 600);
 		expect(nearest?.name).toBe('Frankfurter Tor');
 		expect(nearest?.distanceM).toBe(0);
@@ -48,9 +45,7 @@ describe('findNearestStop', () => {
 	});
 
 	it('attaches lines if stop has them', () => {
-		const stops: OepnvStop[] = [
-			{ ...UBAHN_FRANKFURTER_TOR, lines: ['U5'] }
-		];
+		const stops: OepnvStop[] = [{ ...UBAHN_FRANKFURTER_TOR, lines: ['U5'] }];
 		const nearest = findNearestStop(FRANKFURTER_TOR, stops, 600);
 		expect(nearest?.lines).toEqual(['U5']);
 	});
@@ -96,12 +91,16 @@ describe('findAllNearestStops', () => {
 	});
 
 	it('handles empty modus arrays', () => {
-		const result = findAllNearestStops(FRANKFURTER_TOR, {
-			ubahn: [],
-			sbahn: [],
-			tram: [],
-			bus: []
-		}, 600);
+		const result = findAllNearestStops(
+			FRANKFURTER_TOR,
+			{
+				ubahn: [],
+				sbahn: [],
+				tram: [],
+				bus: []
+			},
+			600
+		);
 		expect(result.ubahn).toBeNull();
 		expect(result.sbahn).toBeNull();
 		expect(result.tram).toBeNull();

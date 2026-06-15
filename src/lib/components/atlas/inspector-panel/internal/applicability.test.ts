@@ -63,14 +63,20 @@ describe('isLayerApplicable', () => {
 
 describe('applyApplicabilityReasons', () => {
 	it('no-coverage + nicht-anwendbar → out-of-concept', () => {
-		const hits: LayerHit[] = [brwHit('G - Gewerbegebiet'), noCoverageHit('milieuschutz-erhaltungsmiete')];
+		const hits: LayerHit[] = [
+			brwHit('G - Gewerbegebiet'),
+			noCoverageHit('milieuschutz-erhaltungsmiete')
+		];
 		const result = applyApplicabilityReasons(hits);
 		const milieu = result.find((h) => h.layer === 'milieuschutz-erhaltungsmiete');
 		expect(milieu?.reason).toBe('out-of-concept');
 	});
 
 	it('no-coverage + anwendbar → bleibt no-coverage (echte Lücke)', () => {
-		const hits: LayerHit[] = [brwHit('W - Wohngebiet'), noCoverageHit('milieuschutz-erhaltungsmiete')];
+		const hits: LayerHit[] = [
+			brwHit('W - Wohngebiet'),
+			noCoverageHit('milieuschutz-erhaltungsmiete')
+		];
 		const result = applyApplicabilityReasons(hits);
 		const milieu = result.find((h) => h.layer === 'milieuschutz-erhaltungsmiete');
 		expect(milieu?.reason).toBe('no-coverage');

@@ -2,9 +2,9 @@
 slug: suedliche-luisenstadt
 name: Suedliche Luisenstadt
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 41ee52d3032c0f62
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Suedliche Luisenstadt erreicht beim Gesamtscore 64,2 und damit den ersten Platz von 143 Kiezen. Die Versorgung liegt mit 77 über dem Bezirksschnitt und weit über dem Berliner Median. Die Lärmklasse gilt als gering. An heißen Tagen steigt die gefühlte Temperatur auf rund 34 Grad.

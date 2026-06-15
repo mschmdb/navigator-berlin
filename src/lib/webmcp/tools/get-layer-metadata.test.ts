@@ -58,10 +58,7 @@ describe('get-layer-metadata tool', () => {
 				source_layers: ['wohnlagen-2024']
 			}
 		});
-		const methodology = (out as Record<string, unknown>).methodology as Record<
-			string,
-			unknown
-		>;
+		const methodology = (out as Record<string, unknown>).methodology as Record<string, unknown>;
 		expect(methodology.authority).toBe('ODIS Berlin');
 	});
 

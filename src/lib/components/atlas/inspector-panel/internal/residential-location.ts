@@ -2,17 +2,7 @@ import type { LayerHit } from '$lib/data';
 
 const BRW_SLUG = 'bodenrichtwerte';
 
-const RESIDENTIAL_CODES = new Set<string>([
-	'W',
-	'WA',
-	'WR',
-	'WS',
-	'MD',
-	'MI',
-	'MK',
-	'M1',
-	'M2'
-]);
+const RESIDENTIAL_CODES = new Set<string>(['W', 'WA', 'WR', 'WS', 'MD', 'MI', 'MK', 'M1', 'M2']);
 
 function pickNutzung(value: unknown): string | null {
 	if (!value || typeof value !== 'object') return null;

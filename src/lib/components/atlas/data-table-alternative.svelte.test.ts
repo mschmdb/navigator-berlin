@@ -23,22 +23,28 @@ const ROWS: Row[] = [
 
 describe('DataTableAlternative', () => {
 	it('rendert Toggle-Button per Default geschlossen', async () => {
-		const screen = render(DataTableAlternative as unknown as typeof DataTableAlternative<Row>, {
-			columns: COLUMNS,
-			rows: ROWS,
-			caption: 'Layer-Daten'
-		} as unknown as Parameters<typeof render>[1]);
+		const screen = render(
+			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,
+			{
+				columns: COLUMNS,
+				rows: ROWS,
+				caption: 'Layer-Daten'
+			} as unknown as Parameters<typeof render>[1]
+		);
 		const toggle = screen.getByTestId('table-toggle');
 		await toggle.element();
 		expect(screen.container.querySelector('table')).toBeNull();
 	});
 
 	it('öffnet Tabelle bei Toggle-Klick', async () => {
-		const screen = render(DataTableAlternative as unknown as typeof DataTableAlternative<Row>, {
-			columns: COLUMNS,
-			rows: ROWS,
-			caption: 'Layer-Daten'
-		} as unknown as Parameters<typeof render>[1]);
+		const screen = render(
+			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,
+			{
+				columns: COLUMNS,
+				rows: ROWS,
+				caption: 'Layer-Daten'
+			} as unknown as Parameters<typeof render>[1]
+		);
 		await screen.getByTestId('table-toggle').click();
 		const table = screen.container.querySelector('table');
 		expect(table).not.toBeNull();
@@ -49,22 +55,28 @@ describe('DataTableAlternative', () => {
 	});
 
 	it('sortable Header haben aria-sort="none" initial', async () => {
-		const screen = render(DataTableAlternative as unknown as typeof DataTableAlternative<Row>, {
-			columns: COLUMNS,
-			rows: ROWS,
-			caption: 'Layer-Daten'
-		} as unknown as Parameters<typeof render>[1]);
+		const screen = render(
+			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,
+			{
+				columns: COLUMNS,
+				rows: ROWS,
+				caption: 'Layer-Daten'
+			} as unknown as Parameters<typeof render>[1]
+		);
 		await screen.getByTestId('table-toggle').click();
 		const layerHeader = screen.container.querySelector('th[data-key="layer"]');
 		expect(layerHeader?.getAttribute('aria-sort')).toBe('none');
 	});
 
 	it('Klick auf sortierbaren Header setzt aria-sort="ascending"', async () => {
-		const screen = render(DataTableAlternative as unknown as typeof DataTableAlternative<Row>, {
-			columns: COLUMNS,
-			rows: ROWS,
-			caption: 'Layer-Daten'
-		} as unknown as Parameters<typeof render>[1]);
+		const screen = render(
+			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,
+			{
+				columns: COLUMNS,
+				rows: ROWS,
+				caption: 'Layer-Daten'
+			} as unknown as Parameters<typeof render>[1]
+		);
 		await screen.getByTestId('table-toggle').click();
 		await screen.getByTestId('sort-layer').click();
 		const layerHeader = screen.container.querySelector('th[data-key="layer"]');
@@ -74,11 +86,14 @@ describe('DataTableAlternative', () => {
 	});
 
 	it('zweiter Klick auf Header toggle auf "descending"', async () => {
-		const screen = render(DataTableAlternative as unknown as typeof DataTableAlternative<Row>, {
-			columns: COLUMNS,
-			rows: ROWS,
-			caption: 'Layer-Daten'
-		} as unknown as Parameters<typeof render>[1]);
+		const screen = render(
+			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,
+			{
+				columns: COLUMNS,
+				rows: ROWS,
+				caption: 'Layer-Daten'
+			} as unknown as Parameters<typeof render>[1]
+		);
 		await screen.getByTestId('table-toggle').click();
 		await screen.getByTestId('sort-layer').click();
 		await screen.getByTestId('sort-layer').click();
@@ -89,11 +104,14 @@ describe('DataTableAlternative', () => {
 	});
 
 	it('numerische Werte sortieren als Zahlen, nicht als Strings', async () => {
-		const screen = render(DataTableAlternative as unknown as typeof DataTableAlternative<Row>, {
-			columns: COLUMNS,
-			rows: ROWS,
-			caption: 'Layer-Daten'
-		} as unknown as Parameters<typeof render>[1]);
+		const screen = render(
+			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,
+			{
+				columns: COLUMNS,
+				rows: ROWS,
+				caption: 'Layer-Daten'
+			} as unknown as Parameters<typeof render>[1]
+		);
 		await screen.getByTestId('table-toggle').click();
 		await screen.getByTestId('sort-value').click();
 		const firstRow = screen.container.querySelectorAll('tbody tr')[0];
@@ -103,11 +121,14 @@ describe('DataTableAlternative', () => {
 	});
 
 	it('nicht-sortierbare Spalte hat keinen Sort-Button', async () => {
-		const screen = render(DataTableAlternative as unknown as typeof DataTableAlternative<Row>, {
-			columns: COLUMNS,
-			rows: ROWS,
-			caption: 'Layer-Daten'
-		} as unknown as Parameters<typeof render>[1]);
+		const screen = render(
+			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,
+			{
+				columns: COLUMNS,
+				rows: ROWS,
+				caption: 'Layer-Daten'
+			} as unknown as Parameters<typeof render>[1]
+		);
 		await screen.getByTestId('table-toggle').click();
 		expect(screen.container.querySelector('[data-testid="sort-updated"]')).toBeNull();
 	});

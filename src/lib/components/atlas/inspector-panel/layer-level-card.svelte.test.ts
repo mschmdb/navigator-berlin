@@ -5,7 +5,13 @@ import LayerLevelCard from './layer-level-card.svelte';
 import type { LayerHit } from '$lib/data';
 import type { LayerLevelView } from './internal/aggregate-layer-for-level.js';
 
-const hit: LayerHit = { layer: 'laerm-2023', value: 'mittel', source: '', updatedAt: '', license: 'dl-de/by-2-0' };
+const hit: LayerHit = {
+	layer: 'laerm-2023',
+	value: 'mittel',
+	source: '',
+	updatedAt: '',
+	license: 'dl-de/by-2-0'
+};
 
 describe('LayerLevelCard', () => {
 	it('address-View → Passthrough auf LayerHitRow (kein Aggregat-Card)', async () => {
@@ -83,13 +89,21 @@ describe('LayerLevelCard', () => {
 	});
 
 	it('point-density ohne pointResult → Passthrough auf LayerHitRow (8.2c-Fallback)', async () => {
-		const view: LayerLevelView = { kind: 'point-density', level: 'bezirk', visualType: 'point-density' };
+		const view: LayerLevelView = {
+			kind: 'point-density',
+			level: 'bezirk',
+			visualType: 'point-density'
+		};
 		render(LayerLevelCard, { view, hit, layerName: 'Kitas' });
 		await expect.element(page.getByTestId('layer-level-card')).not.toBeInTheDocument();
 	});
 
 	it('point-density mit pointResult → Count + Dichte', async () => {
-		const view: LayerLevelView = { kind: 'point-density', level: 'bezirk', visualType: 'point-density' };
+		const view: LayerLevelView = {
+			kind: 'point-density',
+			level: 'bezirk',
+			visualType: 'point-density'
+		};
 		render(LayerLevelCard, {
 			view,
 			hit,

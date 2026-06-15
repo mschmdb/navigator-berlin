@@ -1,6 +1,6 @@
 ---
-title_de: "Kiez-Score: Versorgungs-Dimension ergänzt"
-summary_de: "Fünfte Dimension prüft Kita, Schule, Krankenhaus, Spielplatz und Grünanlage in Lauf-Distanz."
+title_de: 'Kiez-Score: Versorgungs-Dimension ergänzt'
+summary_de: 'Fünfte Dimension prüft Kita, Schule, Krankenhaus, Spielplatz und Grünanlage in Lauf-Distanz.'
 date: 2026-05-15
 category: methodik
 tags: [kiez-score, versorgung, methodik]
@@ -10,13 +10,13 @@ tags: [kiez-score, versorgung, methodik]
 
 Der Kiez-Score hat ab Story 1.28 fünf Dimensionen statt vier. Neu dazu: **Versorgung**.
 
-| Dimension | Anteil |
-|---|---|
-| Ruhe und Luft | 20 % |
-| Grün | 20 % |
-| Mobilität | 20 % |
-| Soziale Lage | 20 % |
-| Versorgung | 20 % |
+| Dimension     | Anteil |
+| ------------- | ------ |
+| Ruhe und Luft | 20 %   |
+| Grün          | 20 %   |
+| Mobilität     | 20 %   |
+| Soziale Lage  | 20 %   |
+| Versorgung    | 20 %   |
 
 ## Was die Versorgungs-Dimension misst
 

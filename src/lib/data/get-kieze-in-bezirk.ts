@@ -98,7 +98,5 @@ export interface SiblingKiezeInput {
 
 export function pickSiblings(input: SiblingKiezeInput, n: number): KiezRef[] {
 	const siblings = input.kieze.filter((k) => k.slug !== input.currentSlug);
-	return [...siblings]
-		.sort((a, b) => a.name.localeCompare(b.name, 'de'))
-		.slice(0, n);
+	return [...siblings].sort((a, b) => a.name.localeCompare(b.name, 'de')).slice(0, n);
 }

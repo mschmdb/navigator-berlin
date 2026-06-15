@@ -184,7 +184,7 @@
 
 <article class="mx-auto max-w-3xl space-y-10 px-4 py-10" data-testid="kiez-hero">
 	<header class="space-y-4">
-		<p class="font-mono text-xs uppercase tracking-wider text-ink-subtle">
+		<p class="font-mono text-xs tracking-wider text-ink-subtle uppercase">
 			{profile.bezirk ? `Bezirk ${profile.bezirk}` : 'Kiez'}
 		</p>
 		<h1 class="font-serif text-3xl text-ink md:text-4xl">{profile.name}</h1>
@@ -209,7 +209,7 @@
 			<dl class="grid grid-cols-3 gap-4 sm:grid-cols-5">
 				{#each scoreDims as dim (dim.label)}
 					<div>
-						<dt class="font-mono text-xs uppercase tracking-wide text-ink-subtle">
+						<dt class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
 							{dim.label}
 						</dt>
 						<dd class="font-serif text-2xl text-ink">{formatScore(dim.value)}</dd>
@@ -249,20 +249,20 @@
 							<td class="py-3 pr-4 text-ink">
 								<span>{row.value}</span>
 								{#if row.extra || (row.distribution && row.distribution.length > 0)}
-										<details class="mt-1">
-											<summary
-												class="cursor-pointer font-mono text-xs text-accent hover:text-accent-strong"
-												>Verteilung & Zahlen</summary
-											>
-											{#if row.extra}<span class="mt-1 block font-mono text-xs text-ink-muted"
-													>{row.extra}</span
-												>{/if}
-											{#if row.distribution && row.distribution.length > 0}<DistributionBar
-													segments={row.distribution}
-												/>{/if}
-										</details>
-									{/if}
-									<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
+									<details class="mt-1">
+										<summary
+											class="hover:text-accent-strong cursor-pointer font-mono text-xs text-accent"
+											>Verteilung & Zahlen</summary
+										>
+										{#if row.extra}<span class="mt-1 block font-mono text-xs text-ink-muted"
+												>{row.extra}</span
+											>{/if}
+										{#if row.distribution && row.distribution.length > 0}<DistributionBar
+												segments={row.distribution}
+											/>{/if}
+									</details>
+								{/if}
+								<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
 							</td>
 							<td class="py-3 text-left font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
 						</tr>
@@ -273,7 +273,6 @@
 	</section>
 
 	<KiezWahlVerlauf kiezName={profile.name} rows={wahlVerlauf} />
-
 
 	{#if faq.length > 0}
 		<FaqSection items={faq} pageType="kiez" />

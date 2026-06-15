@@ -31,7 +31,7 @@
 
 	<section class="mt-8">
 		<h2 class="font-serif text-xl">Angaben gemäß § 5 TMG</h2>
-		<address class="not-italic mt-3 leading-relaxed">
+		<address class="mt-3 leading-relaxed not-italic">
 			Matze Schmidbauer<br />
 			Arndtstraße 34<br />
 			10965 Berlin<br />
@@ -42,13 +42,14 @@
 	<section class="mt-8">
 		<h2 class="font-serif text-xl">Kontakt</h2>
 		<p class="mt-3 leading-relaxed">
-			E-Mail: <a class="text-accent underline" href={`mailto:${FEEDBACK_EMAIL}`}>{FEEDBACK_EMAIL}</a>
+			E-Mail: <a class="text-accent underline" href={`mailto:${FEEDBACK_EMAIL}`}>{FEEDBACK_EMAIL}</a
+			>
 		</p>
 	</section>
 
 	<section class="mt-8">
 		<h2 class="font-serif text-xl">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
-		<address class="not-italic mt-3 leading-relaxed">
+		<address class="mt-3 leading-relaxed not-italic">
 			Matze Schmidbauer<br />
 			Arndtstraße 34<br />
 			10965 Berlin
@@ -82,8 +83,8 @@
 	<section class="mt-8">
 		<h2 class="font-serif text-xl">Urheberrecht</h2>
 		<p class="mt-3 leading-relaxed">
-			Code und redaktionelle Inhalte unterliegen dem deutschen Urheberrecht. Daten-Layer
-			unterliegen den auf der <a class="text-accent underline" href="/lizenzen">Lizenzen-Seite</a>
+			Code und redaktionelle Inhalte unterliegen dem deutschen Urheberrecht. Daten-Layer unterliegen
+			den auf der <a class="text-accent underline" href="/lizenzen">Lizenzen-Seite</a>
 			ausgewiesenen Open-Data-Lizenzen (überwiegend dl-de/zero-2-0, dl-de/by-2-0, ODbL).
 		</p>
 	</section>

@@ -23,20 +23,22 @@
 	}: Props = $props();
 </script>
 
-<section data-testid="home-hook" class="grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-start md:gap-10">
+<section
+	data-testid="home-hook"
+	class="grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-start md:gap-10"
+>
 	<div class="space-y-5 md:order-2">
 		<p class="font-serif text-xl leading-relaxed text-ink md:text-2xl">
 			Adresse eingeben. Daten kombinieren.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink-muted">
-			Lärmpegel pro Straßenzug. Hitze-Klasse pro Kiez. ÖPNV-Dichte pro Bezirk.
-			Werte aus den offenen Daten der Senatsverwaltung. Adressen und Kieze
-			direkt vergleichen. Für die Wohnungssuche, den Umzug, die Recherche oder
-			den nächsten Streit am Küchentisch.
+			Lärmpegel pro Straßenzug. Hitze-Klasse pro Kiez. ÖPNV-Dichte pro Bezirk. Werte aus den offenen
+			Daten der Senatsverwaltung. Adressen und Kieze direkt vergleichen. Für die Wohnungssuche, den
+			Umzug, die Recherche oder den nächsten Streit am Küchentisch.
 		</p>
 		<a
 			href={mapHref}
-			class="inline-flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-accent hover:text-ink"
+			class="inline-flex items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
 		>
 			Karte öffnen
 			<ArrowRight size={14} aria-hidden="true" />
@@ -45,7 +47,7 @@
 	<a
 		href={mapHref}
 		aria-label="Karte öffnen"
-		class="group block overflow-hidden rounded border border-rule bg-bg-soft transition-colors hover:border-ink-muted md:order-1"
+		class="group bg-bg-soft block overflow-hidden rounded border border-rule transition-colors hover:border-ink-muted md:order-1"
 	>
 		<figure>
 			<img

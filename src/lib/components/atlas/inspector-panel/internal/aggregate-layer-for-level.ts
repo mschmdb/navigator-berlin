@@ -79,7 +79,8 @@ export function aggregateLayerForLevel(
 		if (!slug) return { kind: 'no-data', level };
 		// Aggregate keyen mit disambiguiertem Slug (Duplikat-BZR-Namen → `-${bezirkSlug}`),
 		// resolve-spatial-level (8.1) liefert die plain Form → Fallback-Lookup.
-		agg = entry.kiez[slug] ?? (ctx.bezirkSlug ? entry.kiez[`${slug}-${ctx.bezirkSlug}`] : undefined);
+		agg =
+			entry.kiez[slug] ?? (ctx.bezirkSlug ? entry.kiez[`${slug}-${ctx.bezirkSlug}`] : undefined);
 	} else {
 		const slug = ctx.bezirkSlug;
 		if (!slug) return { kind: 'no-data', level };

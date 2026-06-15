@@ -2,9 +2,9 @@
 slug: marienfelde-nord
 name: Marienfelde Nord
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 1d86050f118c284a
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe prägt Marienfelde Nord am stärksten. Ruhe und Luft erreichen rund 68 Punkte, Rang 53 von 143, über dem Bezirksschnitt. Grün und Hitze liegen mit rund 49 Punkten unter dem Berliner Median. Versorgung bleibt mit rund 43 Punkten dünn, Rang 81. Mobilität fällt mit rund 23 Punkten schwach aus. Ohne U- und S-Bahn vor Ort tragen Busse den Nahverkehr.

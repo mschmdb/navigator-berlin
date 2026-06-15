@@ -156,9 +156,7 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 	const gruen = ctx.aggregate.gruen;
 	if (gruen.dominantVersorgung) {
 		const raw =
-			typeof gruen.dominantVersorgung.value === 'string'
-				? gruen.dominantVersorgung.value
-				: null;
+			typeof gruen.dominantVersorgung.value === 'string' ? gruen.dominantVersorgung.value : null;
 		slots.gruenKategorie = describeGruenversorgungDe(raw);
 		slots.gruenErklaerung = gruenErklaerungDe(raw);
 		slots.gruenSource = sourceLabel(gruen.dominantVersorgung.layer);
@@ -183,16 +181,13 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 	const wohnen = ctx.aggregate.wohnen;
 	if (wohnen.dominantWohnlage) {
 		const raw =
-			typeof wohnen.dominantWohnlage.value === 'string'
-				? wohnen.dominantWohnlage.value
-				: null;
+			typeof wohnen.dominantWohnlage.value === 'string' ? wohnen.dominantWohnlage.value : null;
 		slots.wohnenWohnlage = describeWohnlageDe(raw);
 		slots.wohnenSource = sourceLabel(wohnen.dominantWohnlage.layer);
 		slots.wohnenStand = formatSourceStand(wohnen.dominantWohnlage.sourceUpdatedAt);
 	}
 	if (wohnen.dominantMss) {
-		const raw =
-			typeof wohnen.dominantMss.value === 'string' ? wohnen.dominantMss.value : null;
+		const raw = typeof wohnen.dominantMss.value === 'string' ? wohnen.dominantMss.value : null;
 		slots.wohnenMssBeschreibung = mssBeschreibungDe(raw);
 	}
 

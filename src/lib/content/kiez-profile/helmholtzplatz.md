@@ -2,9 +2,9 @@
 slug: helmholtzplatz
 name: Helmholtzplatz
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: a4369fb31911d246
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Helmholtzplatz erreicht beim Gesamtscore 58,8 und damit den dritten Platz von 143 Kiezen. Die Versorgung erreicht 78,8 und Rang 7, weit über dem Berliner Median. Die Mobilität liegt mit 45,6 auf Rang 8, die Haltestellendichte erreicht rund 14 pro Quadratkilometer. Die Lärmklasse gilt als gering.

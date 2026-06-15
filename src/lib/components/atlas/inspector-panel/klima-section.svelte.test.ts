@@ -39,9 +39,7 @@ describe('KlimaSection lazy-load', () => {
 			station: STATION,
 			series: SERIES
 		});
-		const skeleton = screen.container.querySelector(
-			'[data-testid="klima-skeleton"]'
-		);
+		const skeleton = screen.container.querySelector('[data-testid="klima-skeleton"]');
 		expect(skeleton).not.toBeNull();
 		expect(skeleton?.getAttribute('aria-busy')).toBe('true');
 		expect(skeleton?.textContent).toMatch(/lädt/i);
@@ -52,13 +50,9 @@ describe('KlimaSection lazy-load', () => {
 			station: null,
 			series: null
 		});
-		const empty = screen.container.querySelector(
-			'[data-testid="section-klima-empty"]'
-		);
+		const empty = screen.container.querySelector('[data-testid="section-klima-empty"]');
 		expect(empty).not.toBeNull();
-		const skeleton = screen.container.querySelector(
-			'[data-testid="klima-skeleton"]'
-		);
+		const skeleton = screen.container.querySelector('[data-testid="klima-skeleton"]');
 		expect(skeleton).toBeNull();
 	});
 
@@ -68,9 +62,7 @@ describe('KlimaSection lazy-load', () => {
 			series: SERIES
 		});
 		for (let i = 0; i < 80; i += 1) {
-			const grid = screen.container.querySelector(
-				'[data-testid="klima-sparkline-grid"]'
-			);
+			const grid = screen.container.querySelector('[data-testid="klima-sparkline-grid"]');
 			if (grid !== null) {
 				expect(grid).not.toBeNull();
 				return;
@@ -85,9 +77,7 @@ describe('KlimaSection lazy-load', () => {
 			station: STATION,
 			series: SERIES
 		});
-		const banner = screen.container.querySelector(
-			'[data-testid="data-stand-banner"]'
-		);
+		const banner = screen.container.querySelector('[data-testid="data-stand-banner"]');
 		expect(banner).not.toBeNull();
 	});
 });

@@ -68,7 +68,7 @@
 		aria-label="Kiez-Score-Vergleich"
 	>
 		<h3
-			class="mb-3 font-mono text-xs uppercase tracking-wide text-ink-muted"
+			class="mb-3 font-mono text-xs tracking-wide text-ink-muted uppercase"
 			data-testid="compare-kiez-score-header"
 		>
 			Kiez-Score
@@ -78,35 +78,29 @@
 				<tr class="border-b border-rule-strong">
 					<th
 						scope="col"
-						class="py-1 pr-3 text-left font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+						class="py-1 pr-3 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 					>
 						Dimension
 					</th>
 					<th
 						scope="col"
 						data-cell="a"
-						class="py-1 pr-3 text-left font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+						class="py-1 pr-3 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 					>
 						A
 					</th>
 					<th
 						scope="col"
 						data-cell="b"
-						class="py-1 text-left font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+						class="py-1 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 					>
 						B
 					</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					data-testid="compare-kiez-score-overall"
-					class="border-b border-rule"
-				>
-					<th
-						scope="row"
-						class="py-2 pr-3 text-left font-sans text-sm font-semibold text-ink"
-					>
+				<tr data-testid="compare-kiez-score-overall" class="border-b border-rule">
+					<th scope="row" class="py-2 pr-3 text-left font-sans text-sm font-semibold text-ink">
 						Gesamt
 					</th>
 					<td data-cell="a" class="py-2 pr-3">
@@ -134,10 +128,7 @@
 				</tr>
 				{#each rows as row (row.dim)}
 					<tr data-testid={`compare-kiez-score-dim-${row.dim}`}>
-						<th
-							scope="row"
-							class="py-2 pr-3 text-left font-sans text-sm font-medium text-ink"
-						>
+						<th scope="row" class="py-2 pr-3 text-left font-sans text-sm font-medium text-ink">
 							{row.label}
 						</th>
 						<td data-cell="a" class="py-2 pr-3">
@@ -171,7 +162,7 @@
 			<a
 				href={methodikHref}
 				data-testid="compare-kiez-score-methodik-link"
-				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 			>
 				Methodik · Wie der Kiez-Score berechnet wird
 			</a>

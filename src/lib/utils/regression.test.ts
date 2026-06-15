@@ -9,7 +9,11 @@ describe('linearRegression', () => {
 			{ year: 3, value: 7 },
 			{ year: 4, value: 9 }
 		];
-		const fit = linearRegression(data, (d) => d.year, (d) => d.value);
+		const fit = linearRegression(
+			data,
+			(d) => d.year,
+			(d) => d.value
+		);
 		expect(fit.slope).toBeCloseTo(2, 6);
 		expect(fit.intercept).toBeCloseTo(1, 6);
 		expect(fit.predict(5)).toBeCloseTo(11, 6);
@@ -21,13 +25,21 @@ describe('linearRegression', () => {
 			{ year: 2001, value: 5 },
 			{ year: 2002, value: 5 }
 		];
-		const fit = linearRegression(data, (d) => d.year, (d) => d.value);
+		const fit = linearRegression(
+			data,
+			(d) => d.year,
+			(d) => d.value
+		);
 		expect(fit.slope).toBeCloseTo(0, 6);
 		expect(fit.intercept).toBeCloseTo(5, 6);
 	});
 
 	it('returns zero slope on empty input without throwing', () => {
-		const fit = linearRegression([] as { year: number; value: number }[], (d) => d.year, (d) => d.value);
+		const fit = linearRegression(
+			[] as { year: number; value: number }[],
+			(d) => d.year,
+			(d) => d.value
+		);
 		expect(fit.slope).toBe(0);
 		expect(fit.intercept).toBe(0);
 		expect(fit.predict(2000)).toBe(0);
@@ -50,7 +62,11 @@ describe('linearRegression', () => {
 			{ year: 1970, value: 60 },
 			{ year: 1980, value: 40 }
 		];
-		const fit = linearRegression(data, (d) => d.year, (d) => d.value);
+		const fit = linearRegression(
+			data,
+			(d) => d.year,
+			(d) => d.value
+		);
 		expect(fit.slope).toBeLessThan(0);
 	});
 });

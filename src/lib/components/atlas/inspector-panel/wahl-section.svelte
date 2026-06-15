@@ -64,12 +64,18 @@
 			.sort((a, b) => b.wahl.jahr - a.wahl.jahr);
 	});
 
-	const stimmtypenForTyp = $derived.by<readonly ('erststimme' | 'zweitstimme' | 'einstimme')[]>(() => {
-		const set = new Set<'erststimme' | 'zweitstimme' | 'einstimme'>();
-		for (const b of bundlesForTyp) set.add(b.wahl.stimmtyp);
-		const order: ('erststimme' | 'zweitstimme' | 'einstimme')[] = ['zweitstimme', 'erststimme', 'einstimme'];
-		return order.filter((s) => set.has(s));
-	});
+	const stimmtypenForTyp = $derived.by<readonly ('erststimme' | 'zweitstimme' | 'einstimme')[]>(
+		() => {
+			const set = new Set<'erststimme' | 'zweitstimme' | 'einstimme'>();
+			for (const b of bundlesForTyp) set.add(b.wahl.stimmtyp);
+			const order: ('erststimme' | 'zweitstimme' | 'einstimme')[] = [
+				'zweitstimme',
+				'erststimme',
+				'einstimme'
+			];
+			return order.filter((s) => set.has(s));
+		}
+	);
 
 	$effect(() => {
 		if (stimmtypenForTyp.length === 0) return;
@@ -114,9 +120,7 @@
 	$effect(() => {
 		if (availableLevels.length === 0) return;
 		if (!availableLevels.includes(selectedLevel)) {
-			selectedLevel = availableLevels.includes('kiez')
-				? 'kiez'
-				: availableLevels[0];
+			selectedLevel = availableLevels.includes('kiez') ? 'kiez' : availableLevels[0];
 		}
 	});
 
@@ -155,9 +159,7 @@
 	}
 
 	const isBriefwahlLevel = $derived(
-		selectedLevel === 'stimmbezirk' &&
-			currentBundle !== null &&
-			currentBundle.wahl.jahr < 2021
+		selectedLevel === 'stimmbezirk' && currentBundle !== null && currentBundle.wahl.jahr < 2021
 	);
 
 	const currentSparkline = $derived.by<SparklineSeries | null>(() => {
@@ -223,18 +225,13 @@
 {#if featureFlags.wahlSection && results && results.wahlen.length > 0 && availableTypen.length > 0}
 	<section data-testid="wahl-section" class="space-y-3">
 		<h3
-			class="font-mono text-xs uppercase tracking-wide text-ink-muted border-t border-rule pt-4"
+			class="border-t border-rule pt-4 font-mono text-xs tracking-wide text-ink-muted uppercase"
 			data-testid="wahl-section-header"
 		>
 			Wahlverhalten hier
 		</h3>
 
-		<div
-			role="tablist"
-			aria-label="Wahltyp wählen"
-			class="flex gap-1"
-			data-testid="wahl-typ-tabs"
-		>
+		<div role="tablist" aria-label="Wahltyp wählen" class="flex gap-1" data-testid="wahl-typ-tabs">
 			{#each availableTypen as typ (typ)}
 				<button
 					role="tab"
@@ -242,7 +239,7 @@
 					aria-selected={selectedTyp === typ}
 					data-testid={`wahl-typ-tab-${typ}`}
 					onclick={() => (selectedTyp = typ)}
-					class="font-mono text-xs px-2.5 py-1 rounded border border-ink transition-colors"
+					class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
 					class:bg-ink={selectedTyp === typ}
 					class:text-bg={selectedTyp === typ}
 					class:bg-bg={selectedTyp !== typ}
@@ -257,18 +254,18 @@
 		{#if currentBundle}
 			{#if currentBundle.wahl.isRepeatElection}
 				<p
-					class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					data-testid="wahl-wiederholung-marker"
 				>
 					Wiederholungswahl
 				</p>
 			{/if}
 
-			<div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 items-center text-xs">
+			<div class="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2 text-xs">
 				{#if jahreForTypStimmtyp.length > 1}
 					<span
 						id="wahl-jahr-label"
-						class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					>
 						Jahr
 					</span>
@@ -285,7 +282,7 @@
 								aria-checked={selectedJahr === jahr}
 								data-testid={`wahl-jahr-${jahr}`}
 								onclick={() => (selectedJahr = jahr)}
-								class="font-mono text-[11px] tabular-nums px-2 py-0.5 rounded border border-ink transition-colors"
+								class="rounded border border-ink px-2 py-0.5 font-mono text-[11px] tabular-nums transition-colors"
 								class:bg-ink={selectedJahr === jahr}
 								class:text-bg={selectedJahr === jahr}
 								class:bg-bg={selectedJahr !== jahr}
@@ -297,11 +294,8 @@
 						{/each}
 					</div>
 				{:else if jahreForTypStimmtyp.length === 1}
-					<span class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">Jahr</span>
-					<span
-						class="font-mono text-[11px] tabular-nums text-ink"
-						data-testid="wahl-jahr-static"
-					>
+					<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">Jahr</span>
+					<span class="font-mono text-[11px] text-ink tabular-nums" data-testid="wahl-jahr-static">
 						{jahreForTypStimmtyp[0]}
 					</span>
 				{/if}
@@ -309,7 +303,7 @@
 				{#if stimmtypenForTyp.length > 1}
 					<span
 						id="wahl-stimmtyp-label"
-						class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					>
 						Stimme
 					</span>
@@ -326,7 +320,7 @@
 								aria-checked={selectedStimmtyp === st}
 								data-testid={`wahl-stimmtyp-${st}`}
 								onclick={() => (selectedStimmtyp = st)}
-								class="font-mono text-[11px] px-2 py-0.5 rounded border border-ink transition-colors"
+								class="rounded border border-ink px-2 py-0.5 font-mono text-[11px] transition-colors"
 								class:bg-ink={selectedStimmtyp === st}
 								class:text-bg={selectedStimmtyp === st}
 								class:bg-bg={selectedStimmtyp !== st}
@@ -346,7 +340,7 @@
 				{#if availableLevels.length > 1}
 					<span
 						id="wahl-level-label"
-						class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					>
 						Ebene
 					</span>
@@ -363,7 +357,7 @@
 								aria-checked={selectedLevel === lvl}
 								data-testid={`wahl-level-${lvl}`}
 								onclick={() => (selectedLevel = lvl)}
-								class="font-mono text-[11px] px-2 py-0.5 rounded border border-ink transition-colors"
+								class="rounded border border-ink px-2 py-0.5 font-mono text-[11px] transition-colors"
 								class:bg-ink={selectedLevel === lvl}
 								class:text-bg={selectedLevel === lvl}
 								class:bg-bg={selectedLevel !== lvl}
@@ -379,9 +373,7 @@
 
 			{#if top5.length > 0 && totalStimmen > 0}
 				<div data-testid="wahl-stacked-bar" class="space-y-2" aria-hidden="true">
-					<div
-						class="relative h-6 w-full overflow-hidden rounded border border-rule bg-bg-muted"
-					>
+					<div class="bg-bg-muted relative h-6 w-full overflow-hidden rounded border border-rule">
 						{#each top5 as entry, i (entry.kurzname)}
 							{@const widthPct = (entry.anteil * 100).toFixed(2)}
 							{@const offsetPct = top5
@@ -399,18 +391,17 @@
 							></span>
 						{/each}
 						<WahlConfidenceHairline visible={isBriefwahlLevel} />
-
 					</div>
 					<ul class="space-y-1.5" data-testid="wahl-legend">
 						{#each top5 as entry (entry.kurzname)}
 							<li class="flex flex-col gap-0.5 font-mono text-xs">
 								<div class="flex items-baseline gap-2">
 									<span
-										class="inline-block h-2.5 w-2.5 rounded-sm border border-ink/10 flex-shrink-0"
+										class="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-sm border border-ink/10"
 										style="background-color:{parteiColor(entry.kurzname)};"
 										aria-hidden="true"
 									></span>
-									<span class="text-ink truncate">{entry.kurzname}</span>
+									<span class="truncate text-ink">{entry.kurzname}</span>
 									<span class="ml-auto text-ink-muted tabular-nums">
 										{formatPct(entry.anteil)}
 									</span>
@@ -431,7 +422,8 @@
 													? `${LEVEL_LABELS[lvl]}: ${formatPct(ref!)} (hier ${formatDeltaLong(pp)})`
 													: `${LEVEL_LABELS[lvl]}: nicht in Top-5`}
 											>
-												{LEVEL_LABELS[lvl]} {ref !== null ? formatPct(ref) : '–'}
+												{LEVEL_LABELS[lvl]}
+												{ref !== null ? formatPct(ref) : '–'}
 											</span>
 										{/each}
 									</div>
@@ -447,8 +439,8 @@
 					aria-label={`Top-5 Parteien · ${TYP_LABELS[currentBundle.wahl.typ]} ${currentBundle.wahl.jahr} · Ebene ${LEVEL_LABELS[selectedLevel]}`}
 				>
 					<caption>
-						Top-5-Parteien für {TYP_LABELS[currentBundle.wahl.typ]} {currentBundle.wahl.jahr},
-						Ebene {LEVEL_LABELS[selectedLevel]}
+						Top-5-Parteien für {TYP_LABELS[currentBundle.wahl.typ]}
+						{currentBundle.wahl.jahr}, Ebene {LEVEL_LABELS[selectedLevel]}
 					</caption>
 					<thead>
 						<tr>
@@ -479,13 +471,14 @@
 			{/if}
 
 			{#if sparklineLines.length > 0}
-				<div data-testid="wahl-sparkline" class="space-y-2 pt-2 border-t border-rule">
+				<div data-testid="wahl-sparkline" class="space-y-2 border-t border-rule pt-2">
 					<p
-						class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
+						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 						data-testid="wahl-sparkline-label"
 					>
-						Verlauf Kiez-Ebene · {sparklineLines[0]?.years[0]}–{sparklineLines[0]
-							?.years[sparklineLines[0].years.length - 1]}
+						Verlauf Kiez-Ebene · {sparklineLines[0]?.years[0]}–{sparklineLines[0]?.years[
+							sparklineLines[0].years.length - 1
+						]}
 					</p>
 					<ul class="space-y-1" data-testid="wahl-sparkline-list">
 						{#each sparklineLines as line (line.kurzname)}
@@ -512,8 +505,8 @@
 										vector-effect="non-scaling-stroke"
 									/>
 								</svg>
-								<span class="flex-1 min-w-0">{line.kurzname}</span>
-								<span class="tabular-nums text-ink-muted whitespace-nowrap">
+								<span class="min-w-0 flex-1">{line.kurzname}</span>
+								<span class="whitespace-nowrap text-ink-muted tabular-nums">
 									{formatPct(line.latestAnteil)}
 								</span>
 							</li>
@@ -524,7 +517,7 @@
 
 			<p
 				id={uniqueId(currentBundle) + '-meta'}
-				class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+				class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 				data-testid="wahl-meta"
 			>
 				Quelle: {currentBundle.wahl.sourceUrl.includes('bundeswahlleiterin')
@@ -544,7 +537,7 @@
 				<a
 					href={`/wahl/${slug}`}
 					data-testid="wahl-detail-link"
-					class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 				>
 					Detail-Seite öffnen
 				</a>
@@ -552,7 +545,7 @@
 			<a
 				href={methodikHref}
 				data-testid="wahl-methodik-link"
-				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 			>
 				Methodik · Wahldaten
 			</a>

@@ -71,17 +71,13 @@
 
 	const availableLevels = $derived.by<readonly LevelKey[]>(() => {
 		const all: LevelKey[] = ['stimmbezirk', 'kiez', 'bezirk', 'berlin'];
-		return all.filter(
-			(lvl) => bundleA?.levels[lvl]?.available || bundleB?.levels[lvl]?.available
-		);
+		return all.filter((lvl) => bundleA?.levels[lvl]?.available || bundleB?.levels[lvl]?.available);
 	});
 
 	$effect(() => {
 		if (availableLevels.length === 0) return;
 		if (!availableLevels.includes(selectedLevel)) {
-			selectedLevel = availableLevels.includes('stimmbezirk')
-				? 'stimmbezirk'
-				: availableLevels[0];
+			selectedLevel = availableLevels.includes('stimmbezirk') ? 'stimmbezirk' : availableLevels[0];
 		}
 	});
 
@@ -101,9 +97,7 @@
 	const sameAggregat = $derived.by(() => {
 		if (selectedLevel === 'stimmbezirk') {
 			return (
-				bundleA?.uwbId !== null &&
-				bundleA?.uwbId !== undefined &&
-				bundleA.uwbId === bundleB?.uwbId
+				bundleA?.uwbId !== null && bundleA?.uwbId !== undefined && bundleA.uwbId === bundleB?.uwbId
 			);
 		}
 		if (selectedLevel === 'kiez') {
@@ -143,27 +137,20 @@
 	}
 
 	const visible = $derived(
-		featureFlags.wahlSection &&
-			(topA.length > 0 || topB.length > 0) &&
-			availableTypen.length > 0
+		featureFlags.wahlSection && (topA.length > 0 || topB.length > 0) && availableTypen.length > 0
 	);
 </script>
 
 {#if visible && jahr !== null}
 	<section data-testid="wahl-compare-block" class="space-y-3">
 		<h3
-			class="font-mono text-xs uppercase tracking-wide text-ink-muted border-t border-rule pt-4"
+			class="border-t border-rule pt-4 font-mono text-xs tracking-wide text-ink-muted uppercase"
 			data-testid="wahl-compare-header"
 		>
 			Wahlverhalten · Vergleich
 		</h3>
 
-		<div
-			role="tablist"
-			aria-label="Wahltyp"
-			class="flex gap-1"
-			data-testid="wahl-compare-typ-tabs"
-		>
+		<div role="tablist" aria-label="Wahltyp" class="flex gap-1" data-testid="wahl-compare-typ-tabs">
 			{#each availableTypen as typ (typ)}
 				<button
 					role="tab"
@@ -171,7 +158,7 @@
 					aria-selected={selectedTyp === typ}
 					data-testid={`wahl-compare-typ-tab-${typ}`}
 					onclick={() => (selectedTyp = typ)}
-					class="font-mono text-xs px-2.5 py-1 rounded border border-ink transition-colors"
+					class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
 					class:bg-ink={selectedTyp === typ}
 					class:text-bg={selectedTyp === typ}
 					class:bg-bg={selectedTyp !== typ}
@@ -197,7 +184,7 @@
 						aria-checked={selectedLevel === lvl}
 						data-testid={`wahl-compare-level-${lvl}`}
 						onclick={() => (selectedLevel = lvl)}
-						class="font-mono text-[11px] px-2 py-0.5 rounded border border-ink transition-colors"
+						class="rounded border border-ink px-2 py-0.5 font-mono text-[11px] transition-colors"
 						class:bg-ink={selectedLevel === lvl}
 						class:text-bg={selectedLevel === lvl}
 						class:bg-bg={selectedLevel !== lvl}
@@ -210,8 +197,9 @@
 			</div>
 		{/if}
 
-		<p class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
-			{TYP_LABELS[selectedTyp]} {jahr} · Ebene {LEVEL_LABELS[selectedLevel]} · {defaultStimmtyp === 'einstimme'
+		<p class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+			{TYP_LABELS[selectedTyp]}
+			{jahr} · Ebene {LEVEL_LABELS[selectedLevel]} · {defaultStimmtyp === 'einstimme'
 				? 'Stimme'
 				: defaultStimmtyp === 'zweitstimme'
 					? 'Zweitstimme'
@@ -226,7 +214,7 @@
 
 		{#if sameAggregat && selectedLevel !== 'berlin'}
 			<p
-				class="font-serif italic text-xs text-ink-muted border-l-2 border-ink/30 pl-2"
+				class="border-l-2 border-ink/30 pl-2 font-serif text-xs text-ink-muted italic"
 				data-testid="wahl-compare-same-aggregat"
 			>
 				{selectedLevel === 'stimmbezirk'
@@ -245,16 +233,13 @@
 			{@const allParteien = Array.from(
 				new Set([...topA.map((e) => e.kurzname), ...topB.map((e) => e.kurzname)])
 			)}
-			<table
-				class="w-full font-mono text-xs"
-				data-testid="wahl-compare-table"
-			>
+			<table class="w-full font-mono text-xs" data-testid="wahl-compare-table">
 				<thead>
-					<tr class="text-[10px] uppercase tracking-wide text-ink-muted">
-						<th class="text-left pb-1">Partei</th>
-						<th class="text-right pb-1 px-2">A</th>
-						<th class="text-right pb-1 px-2">B</th>
-						<th class="text-right pb-1">Diff</th>
+					<tr class="text-[10px] tracking-wide text-ink-muted uppercase">
+						<th class="pb-1 text-left">Partei</th>
+						<th class="px-2 pb-1 text-right">A</th>
+						<th class="px-2 pb-1 text-right">B</th>
+						<th class="pb-1 text-right">Diff</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -262,10 +247,7 @@
 						{@const a = anteilForPartieFull('a', kurzname)}
 						{@const b = anteilForPartieFull('b', kurzname)}
 						{@const diff = a !== null && b !== null ? (a - b) * 100 : null}
-						<tr
-							class="border-t border-rule/50"
-							data-testid={`wahl-compare-row-${kurzname}`}
-						>
+						<tr class="border-t border-rule/50" data-testid={`wahl-compare-row-${kurzname}`}>
 							<td class="py-1">
 								<span class="inline-flex items-center gap-1.5">
 									<span
@@ -277,19 +259,19 @@
 								</span>
 							</td>
 							<td
-								class="text-right tabular-nums px-2 text-ink"
+								class="px-2 text-right text-ink tabular-nums"
 								data-testid={`wahl-compare-${kurzname}-a`}
 							>
 								{a !== null ? formatPct(a) : '–'}
 							</td>
 							<td
-								class="text-right tabular-nums px-2 text-ink"
+								class="px-2 text-right text-ink tabular-nums"
 								data-testid={`wahl-compare-${kurzname}-b`}
 							>
 								{b !== null ? formatPct(b) : '–'}
 							</td>
 							<td
-								class="text-right tabular-nums text-ink-muted"
+								class="text-right text-ink-muted tabular-nums"
 								data-testid={`wahl-compare-${kurzname}-diff`}
 								title={diff !== null
 									? `Differenz A−B: ${Math.abs(diff).toFixed(1).replace('.', ',')} Prozent-Punkte ${diff > 0 ? 'höher in A' : diff < 0 ? 'höher in B' : 'gleich'}`
@@ -304,7 +286,7 @@
 				</tbody>
 			</table>
 
-			<p class="font-mono text-[10px] uppercase tracking-wide text-ink-muted">
+			<p class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
 				Diff in Prozent-Punkten (A minus B). Top-5 je Adresse zusammengeführt.
 			</p>
 		{/if}
@@ -314,7 +296,7 @@
 		<a
 			href={methodikHref}
 			data-testid="wahl-compare-methodik-link"
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 		>
 			Methodik · Wahldaten
 		</a>

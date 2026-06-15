@@ -117,10 +117,7 @@ const SPLIT_IDENTIFIER_COLS = new Set([
 	'Bezeichnung des Wahlbezirkes gemäß Anlage 30 zur BWO'
 ]);
 
-function aggregateSplitVotes(
-	row: BwlRawRow,
-	headers: readonly string[]
-): PartyVote[] {
+function aggregateSplitVotes(row: BwlRawRow, headers: readonly string[]): PartyVote[] {
 	const totals = new Map<string, number>();
 	for (const col of headers) {
 		if (SPLIT_IDENTIFIER_COLS.has(col)) continue;
@@ -154,9 +151,7 @@ export function transformBwlSplitRow(
 
 	const ungueltig = parseIntSafe(pickFirstExisting(row, ['Ungültig', 'Ungültige']));
 	const gueltig = parseIntSafe(pickFirstExisting(row, ['Gültig', 'Gültige']));
-	const waehlende = parseIntSafe(
-		pickFirstExisting(row, ['Wählende (B)', 'Wähler (B)'])
-	);
+	const waehlende = parseIntSafe(pickFirstExisting(row, ['Wählende (B)', 'Wähler (B)']));
 
 	const votes = aggregateSplitVotes(row, headers);
 

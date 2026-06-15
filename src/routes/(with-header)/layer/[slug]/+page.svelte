@@ -27,7 +27,8 @@
 	);
 	const pageTitle = $derived(`${detail.layerName} - Berlin in Daten - navigator.berlin`);
 	const pageDescription = $derived(
-		explain.short || `Geo-Datenlayer ${detail.layerName} in Berlin. Datengrundlage und Anwendung im Daten-Atlas.`
+		explain.short ||
+			`Geo-Datenlayer ${detail.layerName} in Berlin. Datengrundlage und Anwendung im Daten-Atlas.`
 	);
 
 	/**
@@ -82,17 +83,14 @@
 	class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8"
 >
 	<header class="flex flex-col gap-2">
-		<p class="font-mono text-xs uppercase tracking-wide text-ink-subtle">
+		<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
 			{meta.bundleGroup}
 		</p>
 		<h1 data-testid="layer-detail-name" class="font-serif text-3xl text-ink">
 			{detail.layerName}
 		</h1>
 		{#if explain.long}
-			<p
-				data-testid="layer-detail-lead"
-				class="font-serif text-lg leading-relaxed text-ink-muted"
-			>
+			<p data-testid="layer-detail-lead" class="font-serif text-lg leading-relaxed text-ink-muted">
 				{explain.long}
 			</p>
 		{/if}
@@ -101,10 +99,7 @@
 	{#if detail.editorial}
 		<section data-testid="layer-detail-editorial">
 			{#each detail.editorial.disclaimerVariants as variant (variant)}
-				<EditorialDisclaimer
-					{variant}
-					sourceUrl={detail.editorial.primarySourceUrl}
-				/>
+				<EditorialDisclaimer {variant} sourceUrl={detail.editorial.primarySourceUrl} />
 			{/each}
 		</section>
 	{/if}
@@ -113,7 +108,7 @@
 		data-testid="layer-detail-source-card"
 		class="flex flex-col gap-2 border border-rule bg-bg-elevated p-4"
 	>
-		<h2 class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted">Quelle</h2>
+		<h2 class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase">Quelle</h2>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 			<dt class="font-mono text-xs text-ink-subtle">Anbieter</dt>
 			<dd class="text-ink">
@@ -121,7 +116,7 @@
 					<span data-testid="layer-detail-source-link">
 						Eigene Berechnung aus offenen Quellen (<a
 							href={(resolve as (p: string) => string)('/lizenzen')}
-							class="text-accent underline underline-offset-2 hover:text-accent-strong"
+							class="hover:text-accent-strong text-accent underline underline-offset-2"
 							>Quellen & Lizenzen</a
 						>)
 					</span>
@@ -131,7 +126,7 @@
 						href={meta.sourceUrl}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						{shortenSource(meta.sourceUrl)}
 					</a>
@@ -151,13 +146,8 @@
 	</section>
 
 	{#if explain.valueScaleExplain || explain.unit}
-		<section
-			data-testid="layer-detail-scale"
-			class="flex flex-col gap-2 border border-rule p-4"
-		>
-			<h2 class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted">
-				Werte
-			</h2>
+		<section data-testid="layer-detail-scale" class="flex flex-col gap-2 border border-rule p-4">
+			<h2 class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase">Werte</h2>
 			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 				{#if explain.unit}
 					<dt class="font-mono text-xs text-ink-subtle">Einheit</dt>
@@ -179,7 +169,7 @@
 		>
 			<h2
 				id="layer-detail-methodology-h"
-				class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted"
+				class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
 			>
 				Berechnung
 			</h2>
@@ -212,7 +202,7 @@
 			>
 				<h2
 					id="layer-detail-coverage-h"
-					class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted"
+					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
 				>
 					Coverage-Lücken
 				</h2>
@@ -232,7 +222,7 @@
 			>
 				<h2
 					id="layer-detail-omissions-h"
-					class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted"
+					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
 				>
 					Was wir NICHT zeigen
 				</h2>
@@ -252,7 +242,7 @@
 			>
 				<h2
 					id="layer-detail-related-h"
-					class="font-sans text-sm font-semibold uppercase tracking-wide text-ink-muted"
+					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
 				>
 					Verwandte Layer
 				</h2>
@@ -261,7 +251,7 @@
 						<li>
 							<a
 								href={`/layer/${relSlug}`}
-								class="text-accent underline underline-offset-2 hover:text-accent-strong"
+								class="hover:text-accent-strong text-accent underline underline-offset-2"
 							>
 								{getLayerDisplayName(relSlug)}
 							</a>
@@ -271,14 +261,11 @@
 			</section>
 		{/if}
 
-		<aside
-			data-testid="layer-detail-methodik-link"
-			class="border border-rule bg-bg p-3"
-		>
+		<aside data-testid="layer-detail-methodik-link" class="border border-rule bg-bg p-3">
 			<p class="font-mono text-xs text-ink-muted">
 				<a
 					href="/methodik"
-					class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>
 					Methodik
 				</a>
@@ -291,13 +278,12 @@
 			class="flex flex-col gap-2 border border-rule bg-bg p-4"
 		>
 			<p class="font-serif text-base text-ink">
-				Methodik in Vorbereitung. Wir dokumentieren diesen Layer derzeit noch nicht
-				vollständig.
+				Methodik in Vorbereitung. Wir dokumentieren diesen Layer derzeit noch nicht vollständig.
 			</p>
 			<p class="font-mono text-xs text-ink-muted">
 				<a
 					href="/methodik"
-					class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>
 					Methodik öffnen
 				</a>
@@ -314,7 +300,7 @@
 	<a
 		data-testid="layer-detail-inspector-link"
 		href={inspectorHref}
-		class="inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2 hover:text-accent-strong"
+		class="hover:text-accent-strong inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2"
 	>
 		Layer auf Karte anschauen →
 	</a>

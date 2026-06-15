@@ -15,9 +15,12 @@ describe('toSegments', () => {
 
 describe('distributionText', () => {
 	it('rendert Prozent-Text', () => {
-		expect(distributionText([{ label: 'Mittel', share: 0.67 }, { label: 'Gut', share: 0.33 }])).toBe(
-			'Mittel 67% · Gut 33%'
-		);
+		expect(
+			distributionText([
+				{ label: 'Mittel', share: 0.67 },
+				{ label: 'Gut', share: 0.33 }
+			])
+		).toBe('Mittel 67% · Gut 33%');
 	});
 });
 

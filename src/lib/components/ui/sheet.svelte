@@ -15,7 +15,7 @@
 	<BitsDialog.Trigger>{@render trigger()}</BitsDialog.Trigger>
 	<BitsDialog.Portal>
 		<BitsDialog.Content
-			class="fixed bottom-0 inset-x-0 z-50 max-h-[40vh] overflow-auto border-t border-rule-strong bg-bg-elevated p-6 text-ink"
+			class="fixed inset-x-0 bottom-0 z-50 max-h-[40vh] overflow-auto border-t border-rule-strong bg-bg-elevated p-6 text-ink"
 		>
 			{@render children()}
 		</BitsDialog.Content>

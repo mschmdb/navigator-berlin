@@ -2,9 +2,9 @@
 slug: altglienicke
 name: Altglienicke
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 92c76db0813fb2db
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Altglienicke ist grün und ruhig. Grün und Hitze erreichen 65,2 Punkte, über dem Schnitt von Treptow Koepenick und über dem Berliner Median. Ruhe und Luft kommen auf 64,3 Punkte, nahe am Median. An heißen Tagen erreicht die gefühlte Temperatur rund 38 Grad. Der Lärm bleibt mittel.

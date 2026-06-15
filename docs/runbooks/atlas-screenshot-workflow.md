@@ -32,6 +32,7 @@ Satori nicht liefert.
 
    Qualität 82 ist guter Trade-off: Karten-Vektor-Linien bleiben scharf,
    Datei ~80% kleiner als PNG-Original.
+
 8. `out.webp` nach `static/` legen (Filename z.B.
    `berlin-navigator-{thema}.webp`).
 9. `src/lib/content/screenshot-manifest.ts` aktualisieren:

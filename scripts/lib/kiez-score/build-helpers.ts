@@ -133,11 +133,7 @@ export function buildPoiDensityCounts(
 	return out;
 }
 
-export function buildPoiDistanceHits(
-	lat: number,
-	lng: number,
-	poiIndex: PoiIndex
-): LayerHitLike[] {
+export function buildPoiDistanceHits(lat: number, lng: number, poiIndex: PoiIndex): LayerHitLike[] {
 	const hits: LayerHitLike[] = [];
 	for (const [slug, centroids] of Object.entries(poiIndex)) {
 		const d = nearestPoiDistanceM(lat, lng, centroids);

@@ -17,7 +17,10 @@ export const DIMENSION_LABELS_DE: Record<KiezScoreDimension, string> = {
 	kriminalitaet: 'Erfasste Kriminalität'
 };
 
-export function scaleFor(value: number | null, dimension: KiezScoreDimension): KiezScoreScale | null {
+export function scaleFor(
+	value: number | null,
+	dimension: KiezScoreDimension
+): KiezScoreScale | null {
 	if (value === null || !Number.isFinite(value)) return null;
 	const clamped = Math.max(0, Math.min(100, value));
 	const label =
@@ -28,7 +31,13 @@ export function scaleFor(value: number | null, dimension: KiezScoreDimension): K
 		return { label, severity: 'neutral' };
 	}
 	const severity: SeverityLevel =
-		clamped <= 25 ? 'warning' : clamped <= 50 ? 'neutral' : clamped <= 75 ? 'success-soft' : 'success';
+		clamped <= 25
+			? 'warning'
+			: clamped <= 50
+				? 'neutral'
+				: clamped <= 75
+					? 'success-soft'
+					: 'success';
 	return { label, severity };
 }
 
@@ -38,6 +47,12 @@ export function scaleForOverall(value: number | null | undefined): KiezScoreScal
 	const label =
 		clamped <= 25 ? 'gering' : clamped <= 50 ? 'mittel' : clamped <= 75 ? 'hoch' : 'sehr hoch';
 	const severity: SeverityLevel =
-		clamped <= 25 ? 'warning' : clamped <= 50 ? 'neutral' : clamped <= 75 ? 'success-soft' : 'success';
+		clamped <= 25
+			? 'warning'
+			: clamped <= 50
+				? 'neutral'
+				: clamped <= 75
+					? 'success-soft'
+					: 'success';
 	return { label, severity };
 }

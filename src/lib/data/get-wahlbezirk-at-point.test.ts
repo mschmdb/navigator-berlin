@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-	getWahlbezirkAtPoint,
-	getWahlbezirksByYear
-} from './get-wahlbezirk-at-point.js';
+import { getWahlbezirkAtPoint, getWahlbezirksByYear } from './get-wahlbezirk-at-point.js';
 import { _resetManifestCache } from './manifest.js';
 import { _resetLayerCache } from './internal/layer-fetch.js';
 import { _resetIndexCache } from './internal/spatial-index.js';
@@ -59,7 +56,15 @@ const bt25Geo = {
 					]
 				]
 			},
-			properties: { UWB: '01100', UWB3: '100', BWB: '011A', BWB3: '1A', AWK: '0101', BEZ: '01', BWK: '075' }
+			properties: {
+				UWB: '01100',
+				UWB3: '100',
+				BWB: '011A',
+				BWB3: '1A',
+				AWK: '0101',
+				BEZ: '01',
+				BWK: '075'
+			}
 		},
 		{
 			type: 'Feature',
@@ -75,7 +80,15 @@ const bt25Geo = {
 					]
 				]
 			},
-			properties: { UWB: '01101', UWB3: '101', BWB: '011B', BWB3: '1B', AWK: '0101', BEZ: '01', BWK: '075' }
+			properties: {
+				UWB: '01101',
+				UWB3: '101',
+				BWB: '011B',
+				BWB3: '1B',
+				AWK: '0101',
+				BEZ: '01',
+				BWK: '075'
+			}
 		}
 	]
 };

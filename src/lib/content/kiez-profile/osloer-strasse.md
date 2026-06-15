@@ -2,9 +2,9 @@
 slug: osloer-strasse
 name: Osloer Strasse
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: ba4a120f3183097a
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Versorgung trägt Osloer Strasse, rund 78 Punkte, Rang 9 von 143, weit über dem Berliner Median. Kulturell ist das Gebiet stark, rund 75 Punkte, Rang 30 von 143, weit über dem Median. Mobilität liegt mit rund 40 Punkten kräftig über dem Median, Rang 17. Ruhe und Luft fallen mit rund 51 Punkten schwach aus, Rang 97.

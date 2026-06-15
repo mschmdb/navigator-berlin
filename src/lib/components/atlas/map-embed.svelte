@@ -146,10 +146,12 @@
 				class="absolute inset-0 h-full w-full object-cover"
 			/>
 		{:else}
-			<div class="flex h-full items-center justify-center bg-bg-soft text-ink-muted">
+			<div class="bg-bg-soft flex h-full items-center justify-center text-ink-muted">
 				Karte für {label}
 			</div>
 		{/if}
 	</noscript>
-	<figcaption class="sr-only">Karten-Ansicht des Bezirks {label} mit hervorgehobener Grenze.</figcaption>
+	<figcaption class="sr-only">
+		Karten-Ansicht des Bezirks {label} mit hervorgehobener Grenze.
+	</figcaption>
 </figure>

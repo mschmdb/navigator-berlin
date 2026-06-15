@@ -30,17 +30,13 @@ test.describe('Story 1.29 Atlas-Methodik-Pattern', () => {
 
 	test('Daten-Tabelle: Layer-Row-Link öffnet Layer-Detail-Page', async ({ page }) => {
 		await page.goto('/methodik');
-		const link = page.locator(
-			'[data-testid="methodik-daten-table"] a[href="/layer/laerm-2023"]'
-		);
+		const link = page.locator('[data-testid="methodik-daten-table"] a[href="/layer/laerm-2023"]');
 		await expect(link).toBeVisible();
 		await link.click();
 		await expect(page.getByTestId('layer-detail-name')).toHaveText(/Lärm/);
 	});
 
-	test('Layer-Detail-Page enthält 4 Pflicht-Sections + Methodik-Atlas-Link', async ({
-		page
-	}) => {
+	test('Layer-Detail-Page enthält 4 Pflicht-Sections + Methodik-Atlas-Link', async ({ page }) => {
 		await page.goto('/layer/laerm-2023');
 		await expect(page.getByTestId('layer-detail-methodology')).toBeVisible();
 		await expect(page.getByTestId('layer-detail-coverage-gaps')).toBeVisible();

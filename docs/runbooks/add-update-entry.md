@@ -24,8 +24,8 @@ Lokales Git-Checkout, `pnpm install` einmalig gelaufen. Keine Datenbank, kein Ad
 
    ```yaml
    ---
-   title_de: "Mietspiegel 2025 ist live"
-   summary_de: "Mietspiegel-Layer von 2024 auf 2025 aktualisiert. 542 Planungsräume mit frischen Werten."
+   title_de: 'Mietspiegel 2025 ist live'
+   summary_de: 'Mietspiegel-Layer von 2024 auf 2025 aktualisiert. 542 Planungsräume mit frischen Werten.'
    date: 2026-06-12
    category: daten-update
    tags: [mietspiegel, wohnen, refresh]
@@ -39,7 +39,6 @@ Lokales Git-Checkout, `pnpm install` einmalig gelaufen. Keine Datenbank, kein Ad
    Schema-Verstoß: Build wirft mit klarer Fehlermeldung. Validation in `src/lib/content/updates/frontmatter-schema.ts`.
 
 3. **Body schreiben** als GitHub-flavored Markdown.
-
    - Empfohlen: 300 bis 1000 Wörter (Long-Tail-SEO-Sweet-Spot).
    - Erlaubt: Headlines, Links, Code-Blocks, Listen, Tabellen, eingebettete `<a href="/layer/...">`-Verweise.
    - Stil-Disziplin: keine em-dashes, kein „lebenswert", aktive Verben.

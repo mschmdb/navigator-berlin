@@ -52,9 +52,7 @@ describe('address-lookup tool', () => {
 		const tool = createAddressLookupTool({
 			geocode: async () => FIXTURE_SUGGESTIONS
 		});
-		const out = (await tool.handler({ query: 'Brandenburger' })) as Array<
-			Record<string, unknown>
-		>;
+		const out = (await tool.handler({ query: 'Brandenburger' })) as Array<Record<string, unknown>>;
 		expect(Array.isArray(out)).toBe(true);
 		expect(out[0]).toMatchObject({
 			display_name: 'Brandenburger Tor, Mitte, Berlin',

@@ -40,7 +40,9 @@ describe('NearestStopsCard', () => {
 		});
 		const card = screen.container.querySelector('[data-testid="nearest-stops-card"]');
 		expect(card).not.toBeNull();
-		expect(card?.querySelectorAll('[data-testid="nearest-stop-row"]').length).toBeGreaterThanOrEqual(1);
+		expect(
+			card?.querySelectorAll('[data-testid="nearest-stop-row"]').length
+		).toBeGreaterThanOrEqual(1);
 		expect(card?.textContent).toContain('Frankfurter Tor');
 		expect(card?.textContent).toContain('Petersburger Straße');
 	});
@@ -94,7 +96,9 @@ describe('NearestStopsCard', () => {
 			address: FRANKFURTER_TOR,
 			index: INDEX_FULL
 		});
-		const row = screen.container.querySelector('[data-testid="nearest-stop-row"][data-modus="ubahn"]');
+		const row = screen.container.querySelector(
+			'[data-testid="nearest-stop-row"][data-modus="ubahn"]'
+		);
 		expect(row?.getAttribute('aria-label')).toMatch(/U-Bahn/);
 		expect(row?.getAttribute('aria-label')).toMatch(/Frankfurter Tor/);
 		expect(row?.getAttribute('aria-label')).toMatch(/Meter Fußweg/);

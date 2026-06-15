@@ -43,7 +43,17 @@ describe('buildNearestPointValueHits', () => {
 			features: [
 				{
 					type: 'Feature',
-					geometry: { type: 'Polygon', coordinates: [[[0, 0], [0, 1], [1, 1], [0, 0]]] },
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[0, 0],
+								[0, 1],
+								[1, 1],
+								[0, 0]
+							]
+						]
+					},
 					properties: { pet14h: 99 }
 				}
 			]
@@ -79,7 +89,10 @@ describe('buildPoiDensityCounts', () => {
 
 	it('Performance: 3000 Punkte × 542 LOR-Abfragen < 1500ms', () => {
 		const big: PoiIndex = {
-			x: Array.from({ length: 3000 }, (_, i) => [13.3 + (i % 200) * 0.001, 52.4 + (i % 150) * 0.001])
+			x: Array.from({ length: 3000 }, (_, i) => [
+				13.3 + (i % 200) * 0.001,
+				52.4 + (i % 150) * 0.001
+			])
 		};
 		const start = performance.now();
 		for (let i = 0; i < 542; i++) {

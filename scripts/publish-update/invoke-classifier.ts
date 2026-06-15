@@ -50,7 +50,10 @@ export async function classifyAndDraftCommit(
 	try {
 		parsed = JSON.parse(cleaned);
 	} catch {
-		return { kind: 'skip', reason: `Subagent-Response kein gültiges JSON: ${cleaned.slice(0, 80)}` };
+		return {
+			kind: 'skip',
+			reason: `Subagent-Response kein gültiges JSON: ${cleaned.slice(0, 80)}`
+		};
 	}
 
 	const result = parseDraftResult(parsed);

@@ -26,9 +26,7 @@ function matchesModus(props: Record<string, unknown>, modus: Modus): boolean {
 			return props.station === 'subway' || props.subway === 'yes';
 		case 'sbahn':
 			return (
-				props.station === 'light_rail' ||
-				props.light_rail === 'yes' ||
-				props.station === 'train'
+				props.station === 'light_rail' || props.light_rail === 'yes' || props.station === 'train'
 			);
 		case 'tram':
 			return props.railway === 'tram_stop' || props.tram === 'yes';
@@ -46,10 +44,7 @@ function parseLines(raw: unknown): string[] | undefined {
 	return parts.length > 0 ? parts : undefined;
 }
 
-export function extractStopFromFeature(
-	feature: Feature,
-	modus: Modus
-): RawStop | null {
+export function extractStopFromFeature(feature: Feature, modus: Modus): RawStop | null {
 	if (!isPoint(feature.geometry)) return null;
 	const props = (feature.properties ?? {}) as Record<string, unknown>;
 	if (!matchesModus(props, modus)) return null;
@@ -85,10 +80,7 @@ export function dedupeStops(stops: readonly RawStop[]): RawStop[] {
 	return [...acc.values()];
 }
 
-export function extractStops(
-	fc: FeatureCollection,
-	modus: Modus
-): RawStop[] {
+export function extractStops(fc: FeatureCollection, modus: Modus): RawStop[] {
 	const out: RawStop[] = [];
 	for (const f of fc.features) {
 		const stop = extractStopFromFeature(f, modus);

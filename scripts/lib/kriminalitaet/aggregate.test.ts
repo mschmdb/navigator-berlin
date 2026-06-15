@@ -91,7 +91,11 @@ describe('buildBrIndex', () => {
 				fahrraddiebstahl: f
 			})
 		];
-		const records = buildBrIndex([y(6000, 400), y(6000, 400), y(6000, 400)], DEFAULT_DELIKTE, DEFAULT_DELIKT_WEIGHTS);
+		const records = buildBrIndex(
+			[y(6000, 400), y(6000, 400), y(6000, 400)],
+			DEFAULT_DELIKTE,
+			DEFAULT_DELIKT_WEIGHTS
+		);
 		expect(records).toHaveLength(1);
 		expect(records[0].bzrId).toBe('011001');
 		expect(records[0].name).toBe('Tiergarten Süd');
@@ -101,7 +105,13 @@ describe('buildBrIndex', () => {
 	});
 
 	it('setzt index = null, wenn alle Delikte einer BR fehlen', () => {
-		const allNull = { kieztaten: null, wohnraumeinbruch: null, sachbeschaedigung: null, strassenraub: null, fahrraddiebstahl: null };
+		const allNull = {
+			kieztaten: null,
+			wohnraumeinbruch: null,
+			sachbeschaedigung: null,
+			strassenraub: null,
+			fahrraddiebstahl: null
+		};
 		const r = [row('011009', 'Leer', allNull)];
 		const records = buildBrIndex([r, r, r], DEFAULT_DELIKTE, DEFAULT_DELIKT_WEIGHTS);
 		expect(records[0].index).toBeNull();

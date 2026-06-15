@@ -51,7 +51,14 @@
 		aria-label={`${name}: nächste Distanz ${distanceText}`}
 		class="shrink-0"
 	>
-		<circle cx="24" cy="24" r={RADIUS} fill="none" stroke="var(--bg-muted, #eee)" stroke-width="4" />
+		<circle
+			cx="24"
+			cy="24"
+			r={RADIUS}
+			fill="none"
+			stroke="var(--bg-muted, #eee)"
+			stroke-width="4"
+		/>
 		<circle
 			data-testid="distance-ring-arc"
 			cx="24"

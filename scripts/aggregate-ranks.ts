@@ -67,8 +67,16 @@ const METRICS: readonly MetricSpec[] = [
 	{ key: 'versorgung', direction: 'higher-better', pick: (r) => r.versorgung },
 	{ key: 'wohnschutz', direction: 'higher-better', pick: (r) => r.wohnschutz },
 	{ key: 'kultur', direction: 'higher-better', pick: (r) => r.kultur },
-	{ key: 'gruenanlagenCount', direction: 'higher-better', pick: (r) => av(r.gruen?.gruenanlagenCount) },
-	{ key: 'spielplaetzeCount', direction: 'higher-better', pick: (r) => av(r.gruen?.spielplaetzeCount) },
+	{
+		key: 'gruenanlagenCount',
+		direction: 'higher-better',
+		pick: (r) => av(r.gruen?.gruenanlagenCount)
+	},
+	{
+		key: 'spielplaetzeCount',
+		direction: 'higher-better',
+		pick: (r) => av(r.gruen?.spielplaetzeCount)
+	},
 	{ key: 'stopsPerKm2', direction: 'higher-better', pick: (r) => av(r.oepnv?.stopsPerKm2) },
 	{ key: 'kitasPerKm2', direction: 'higher-better', pick: (r) => av(r.bildung?.kitasPerKm2) },
 	{ key: 'schulenPerKm2', direction: 'higher-better', pick: (r) => av(r.bildung?.schulenPerKm2) },

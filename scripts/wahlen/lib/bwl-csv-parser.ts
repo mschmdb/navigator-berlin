@@ -80,7 +80,9 @@ export function parseBwlWbzCsv(csv: string): BwlParseResult {
 	}
 
 	if (headerIndex < 0) {
-		throw new Error('Bundeswahlleiterin-CSV: header line not found (expected "Wahlkreis;Land;...")');
+		throw new Error(
+			'Bundeswahlleiterin-CSV: header line not found (expected "Wahlkreis;Land;...")'
+		);
 	}
 
 	const headers = splitCsvLine(lines[headerIndex]).map((h) => h.trim());

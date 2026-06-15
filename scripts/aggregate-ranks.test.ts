@@ -25,7 +25,11 @@ function av(value: number) {
 
 describe('computeRanks', () => {
 	it('ranks composite higher-better (best = rang 1)', () => {
-		const rows = [row('a', { composite: 50 }), row('b', { composite: 90 }), row('c', { composite: 70 })];
+		const rows = [
+			row('a', { composite: 50 }),
+			row('b', { composite: 90 }),
+			row('c', { composite: 70 })
+		];
 		const out = computeRanks(rows).filter((r) => r.metricKey === 'composite');
 		const bySlug = Object.fromEntries(out.map((r) => [r.slug, r]));
 		expect(bySlug.b.rang).toBe(1);

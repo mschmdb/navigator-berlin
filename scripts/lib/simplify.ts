@@ -24,12 +24,11 @@ interface MapshaperApi {
 	) => Promise<Record<string, Uint8Array>>;
 }
 
-export async function simplifyGeoJSON(
-	geojson: string,
-	profile: SimplifyProfile
-): Promise<string> {
+export async function simplifyGeoJSON(geojson: string, profile: SimplifyProfile): Promise<string> {
 	if (profile === 'point' || profile === 'tiles') return geojson;
-	const mapshaper = (await import('mapshaper')) as unknown as { default?: MapshaperApi } & MapshaperApi;
+	const mapshaper = (await import('mapshaper')) as unknown as {
+		default?: MapshaperApi;
+	} & MapshaperApi;
 	const api: MapshaperApi = mapshaper.default ?? (mapshaper as MapshaperApi);
 	const cmd = `-i input.json ${simplifyCommand(profile)} -o output.json format=geojson`;
 	const output = await api.applyCommands(cmd, { 'input.json': geojson });

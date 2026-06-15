@@ -62,9 +62,7 @@ describe('sanitizeHtml — XSS-Vectors', () => {
 	});
 
 	it('lässt sichere href stehen (https / mailto / relative)', () => {
-		expect(sanitizeHtml('<a href="https://example.com">x</a>')).toContain(
-			'https://example.com'
-		);
+		expect(sanitizeHtml('<a href="https://example.com">x</a>')).toContain('https://example.com');
 		expect(sanitizeHtml('<a href="mailto:a@b.de">x</a>')).toContain('mailto:a@b.de');
 		expect(sanitizeHtml('<a href="/layer/kitas-2024">x</a>')).toContain('/layer/kitas-2024');
 	});

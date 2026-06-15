@@ -2,9 +2,9 @@
 slug: buckow-nord
 name: Buckow Nord
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: ae98b1d8fc49ec7d
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Buckow Nord steht beim Grün gut da. Der Score von 60,8 liegt über dem Berliner Median. Die Versorgung bewegt sich mit 57,8 nahe am Bezirksschnitt. Ruhe und Luft fallen mit 58,9 etwas schwächer aus. Die gefühlte Temperatur an heißen Tagen liegt bei rund 39 Grad.

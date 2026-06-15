@@ -53,7 +53,11 @@ describe('getBezirkProfile', () => {
 
 	it('case-insensitive Slug-Lookup', async () => {
 		const fn = fetchMock();
-		const p = await getBezirkProfile('de', 'FRIEDRICHSHAIN-KREUZBERG', fn as unknown as typeof fetch);
+		const p = await getBezirkProfile(
+			'de',
+			'FRIEDRICHSHAIN-KREUZBERG',
+			fn as unknown as typeof fetch
+		);
 		expect(p.slug).toBe('friedrichshain-kreuzberg');
 	});
 

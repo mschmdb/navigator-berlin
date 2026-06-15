@@ -48,7 +48,12 @@ export const GRUEN_HITZE_CONFIG: DimensionConfig = {
 		{
 			layer: 'klima-pet-2022',
 			weight: 0.15,
-			normalize: { kind: 'numeric-inverted', field: 'pet14h', bestAt: PET_BEST_AT, worstAt: PET_WORST_AT }
+			normalize: {
+				kind: 'numeric-inverted',
+				field: 'pet14h',
+				bestAt: PET_BEST_AT,
+				worstAt: PET_WORST_AT
+			}
 		},
 		{ layer: 'klima-kaltlufteinwirkbereich-2022', weight: 0.1, normalize: { kind: 'presence' } },
 		{ layer: 'klima-leitbahnkorridor-2022', weight: 0.1, normalize: { kind: 'presence' } }
@@ -63,12 +68,20 @@ export const MOBILITAET_CONFIG: DimensionConfig = {
 		{
 			layer: 'oepnv-ubahn',
 			weight: 0.35,
-			normalize: { kind: 'mode-distance', mode: 'ubahn', threshold: MOBILITAET_DISTANCE_THRESHOLD_M }
+			normalize: {
+				kind: 'mode-distance',
+				mode: 'ubahn',
+				threshold: MOBILITAET_DISTANCE_THRESHOLD_M
+			}
 		},
 		{
 			layer: 'oepnv-sbahn',
 			weight: 0.25,
-			normalize: { kind: 'mode-distance', mode: 'sbahn', threshold: MOBILITAET_DISTANCE_THRESHOLD_M }
+			normalize: {
+				kind: 'mode-distance',
+				mode: 'sbahn',
+				threshold: MOBILITAET_DISTANCE_THRESHOLD_M
+			}
 		},
 		{
 			layer: 'oepnv-tram',

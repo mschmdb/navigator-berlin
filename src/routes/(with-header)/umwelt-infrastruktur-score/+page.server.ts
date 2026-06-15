@@ -49,7 +49,7 @@ async function loadKieze(names: RegionDisplayNames): Promise<RankingRow[]> {
 			displayName: names.kiez.get(r.slug) ?? slugToDisplayName(r.slug),
 			bezirkSlug: r.bezirkSlug,
 			bezirkName: r.bezirkSlug
-				? names.bezirk.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug)
+				? (names.bezirk.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug))
 				: null,
 			composite: typeof r.composite === 'number' ? r.composite : null,
 			ruheLuft: r.ruheLuft,

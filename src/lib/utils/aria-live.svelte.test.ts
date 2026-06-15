@@ -22,9 +22,7 @@ describe('aria-live', () => {
 
 	it('setzt textContent in polite-Channel default', () => {
 		announceGlobal('Adresse ausgewählt');
-		expect(document.getElementById(GLOBAL_LIVE_ID_POLITE)?.textContent).toBe(
-			'Adresse ausgewählt'
-		);
+		expect(document.getElementById(GLOBAL_LIVE_ID_POLITE)?.textContent).toBe('Adresse ausgewählt');
 		expect(document.getElementById(GLOBAL_LIVE_ID_ASSERTIVE)?.textContent).toBe('');
 	});
 

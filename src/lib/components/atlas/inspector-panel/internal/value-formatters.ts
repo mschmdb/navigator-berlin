@@ -98,7 +98,8 @@ function formatWohnlage(value: unknown): FormattedValue {
 		const strasse = pickProp(value, 'strasse');
 		const hnr = pickProp(value, 'hnr');
 		const plr = pickProp(value, 'plr_name');
-		const addr = typeof strasse === 'string' && typeof hnr === 'string' ? `${strasse} ${hnr}` : null;
+		const addr =
+			typeof strasse === 'string' && typeof hnr === 'string' ? `${strasse} ${hnr}` : null;
 		const tail =
 			addr && typeof plr === 'string'
 				? ` · ${addr}, ${plr}`
@@ -172,9 +173,7 @@ function formatSportanlage(value: unknown): FormattedValue {
 	const flaeche = pickProp(value, 'gesamtflaeche_standort_qm');
 	if (!name) return FALLBACK;
 	const flPart =
-		typeof flaeche === 'number'
-			? ` · ${new Intl.NumberFormat('de-DE').format(flaeche)} m²`
-			: '';
+		typeof flaeche === 'number' ? ` · ${new Intl.NumberFormat('de-DE').format(flaeche)} m²` : '';
 	return { text: `${name}${flPart}`, isNumeric: false };
 }
 

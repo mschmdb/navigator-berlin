@@ -205,12 +205,14 @@ Browser: `http://localhost:8000`
 - Falls "Server is not reachable" → siehe Schritt 4 (Coolify-pubkey + PermitRootLogin)
 
 **Instance-FQDN setzen:**
+
 - Settings → Configuration → Instance's Domain (FQDN) = `https://coolify.navigator.berlin`
 - Save → Coolify generiert Traefik-Labels + ACME-Cert (10-30 s)
 
 Vor Schritt 6 DNS für `coolify.navigator.berlin` setzen (via Wildcard automatisch).
 
 **API-Token erstellen:**
+
 - Keys & Tokens → API Tokens → Create → `claude-code-prod`, Permissions root → kopieren → lokal:
   ```bash
   mkdir -p ~/.config/navigator && chmod 700 ~/.config/navigator
@@ -225,12 +227,12 @@ Vor Schritt 6 DNS für `coolify.navigator.berlin` setzen (via Wildcard automatis
 
 INWX-Console → navigator.berlin DNS-Records → "Nameserver" → Master-Mode:
 
-| Name | Typ | Wert | TTL |
-|------|-----|------|-----|
-| `@` | A | `<IPv4>` | 300 |
-| `@` | AAAA | `<IPv6>` | 300 |
-| `*` | A | `<IPv4>` | 300 |
-| `*` | AAAA | `<IPv6>` | 300 |
+| Name | Typ  | Wert     | TTL |
+| ---- | ---- | -------- | --- |
+| `@`  | A    | `<IPv4>` | 300 |
+| `@`  | AAAA | `<IPv6>` | 300 |
+| `*`  | A    | `<IPv4>` | 300 |
+| `*`  | AAAA | `<IPv6>` | 300 |
 
 TTL 300 für Phase-1-Iteration, nach Hard-Launch auf 3600.
 

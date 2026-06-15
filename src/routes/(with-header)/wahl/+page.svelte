@@ -38,28 +38,22 @@
 	);
 </script>
 
-<SeoHead
-	title={pageTitle}
-	description={pageDescription}
-	{origin}
-	{pathname}
-	locales={['de']}
-/>
+<SeoHead title={pageTitle} description={pageDescription} {origin} {pathname} locales={['de']} />
 
 <JsonLd data={breadcrumbs} />
 
-<article class="mx-auto max-w-4xl px-4 py-8 space-y-8" data-testid="wahl-index-page">
+<article class="mx-auto max-w-4xl space-y-8 px-4 py-8" data-testid="wahl-index-page">
 	<header class="space-y-3">
-		<p class="font-mono text-xs uppercase tracking-wide text-ink-muted">
-			<a href="/" class="hover:text-ink underline-offset-2 hover:underline">Berlin</a>
+		<p class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+			<a href="/" class="underline-offset-2 hover:text-ink hover:underline">Berlin</a>
 		</p>
 		<h1 class="font-sans text-3xl font-bold text-ink" data-testid="wahl-index-title">
 			Wahlen in Berlin
 		</h1>
-		<p class="font-serif text-base text-ink-muted leading-relaxed">
+		<p class="font-serif text-base leading-relaxed text-ink-muted">
 			Stimmenanteile pro Partei in Berlin, aggregiert auf Stimmbezirk, Kiez, Bezirk und Berlin
-			gesamt. Bundestagswahlen ab 2013, Abgeordnetenhaus und Bezirksverordneten-Versammlungen
-			ab 2011.
+			gesamt. Bundestagswahlen ab 2013, Abgeordnetenhaus und Bezirksverordneten-Versammlungen ab
+			2011.
 		</p>
 	</header>
 
@@ -71,10 +65,7 @@
 		{#each ['btw', 'agh', 'bvv'] as typ (typ)}
 			{@const list = groupedByTyp[typ as 'btw' | 'agh' | 'bvv']}
 			{#if list.length > 0}
-				<section
-					class="space-y-3"
-					data-testid={`wahl-index-section-${typ}`}
-				>
+				<section class="space-y-3" data-testid={`wahl-index-section-${typ}`}>
 					<h2 class="font-sans text-xl font-semibold text-ink">
 						{list[0].typLabel}
 					</h2>
@@ -84,16 +75,14 @@
 								<a
 									href={`/wahl/${entry.slug}`}
 									data-testid={`wahl-index-card-${entry.slug}`}
-									class="block border border-rule rounded p-3 hover:border-ink hover:bg-bg-muted transition-colors"
+									class="hover:bg-bg-muted block rounded border border-rule p-3 transition-colors hover:border-ink"
 								>
 									<div class="flex items-baseline justify-between gap-2">
-										<span class="font-mono text-base tabular-nums text-ink">
+										<span class="font-mono text-base text-ink tabular-nums">
 											{entry.jahr}
 										</span>
 										{#if entry.isRepeatElection}
-											<span
-												class="font-mono text-[10px] uppercase tracking-wide text-ink-muted"
-											>
+											<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
 												Wiederholung
 											</span>
 										{/if}
@@ -117,7 +106,7 @@
 	<a
 		href="/methodik/wahldaten"
 		data-testid="wahl-index-methodik-link"
-		class="inline-block font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
+		class="hover:text-accent-strong inline-block font-mono text-sm text-accent underline underline-offset-2"
 	>
 		Methodik · Wahldaten
 	</a>

@@ -4,8 +4,7 @@ import { render } from 'vitest-browser-svelte';
 import { createRawSnippet } from 'svelte';
 import Dialog from './dialog.svelte';
 
-const snippet = (html: string) =>
-	createRawSnippet(() => ({ render: () => html }));
+const snippet = (html: string) => createRawSnippet(() => ({ render: () => html }));
 
 describe('dialog.svelte', () => {
 	it('rendert Trigger als button', async () => {

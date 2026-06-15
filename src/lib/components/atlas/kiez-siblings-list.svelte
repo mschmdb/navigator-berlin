@@ -23,7 +23,7 @@
 				<li>
 					<a
 						href={`/kiez/${kiez.slug}`}
-						class="text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
 						data-testid="kiez-sibling-link"
 					>
 						{kiez.name}

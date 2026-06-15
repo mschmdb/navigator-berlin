@@ -28,7 +28,7 @@
 	<ol class="grid gap-6 sm:grid-cols-3">
 		{#each STEPS as step (step.n)}
 			<li class="space-y-2 border-t-2 border-rule pt-3">
-				<span class="font-mono text-xs uppercase tracking-wider text-accent">Schritt {step.n}</span>
+				<span class="font-mono text-xs tracking-wider text-accent uppercase">Schritt {step.n}</span>
 				<p class="font-serif text-lg text-ink">{step.title}</p>
 				<p class="font-serif text-sm leading-relaxed text-ink-muted">{step.text}</p>
 			</li>

@@ -2,9 +2,9 @@
 slug: schoeneberg-nordwest
 name: Schoeneberg Nordwest
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 4db4ab8e96339c7a
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Versorgung prägt Schoeneberg Nordwest am stärksten. Mit rund 80 Punkten liegt der Kiez auf Rang vier von 143, weit über dem Bezirksschnitt. Beim Wohnschutz steht das Gebiet ganz oben, soziale Lage mittel. Die Mobilität bleibt mit Rang 16 solide, getragen von dichtem ÖPNV, rund 24 Halte je Quadratkilometer.

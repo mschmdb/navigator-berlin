@@ -33,10 +33,9 @@ export const SCALE_FAMILY_CONFIGS: readonly ScaleFamilyConfig[] = [
 	{ key: 'strukturell', startHex: '#DDE1ED', endHex: '#2A3F7C' }
 ];
 
-export function generateAllScales(backgroundHex = BACKGROUND_TOKEN): Record<
-	'last' | 'gut' | 'strukturell',
-	readonly string[]
-> {
+export function generateAllScales(
+	backgroundHex = BACKGROUND_TOKEN
+): Record<'last' | 'gut' | 'strukturell', readonly string[]> {
 	return Object.fromEntries(
 		SCALE_FAMILY_CONFIGS.map((cfg) => [
 			cfg.key,

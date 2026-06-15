@@ -2,9 +2,9 @@
 slug: volkspark-wilmersdorf
 name: Volkspark Wilmersdorf
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 520e99b9cbb7bfe7
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Versorgung trägt Volkspark Wilmersdorf. Mit rund 70 Punkten liegt der Kiez über Bezirksschnitt und Berliner Median, Rang 25. Die Mobilität steht mit rund 38 Punkten über beiden Vergleichswerten, Rang 23. Der ÖPNV bleibt dicht, rund 18 Halte je Quadratkilometer. Die soziale Lage liegt mittel.

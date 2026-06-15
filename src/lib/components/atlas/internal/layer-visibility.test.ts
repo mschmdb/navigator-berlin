@@ -81,8 +81,10 @@ describe('layer-visibility.applyHiddenSlugs', () => {
 	});
 
 	it('haelt Reihenfolge der active-Slugs', () => {
-		expect(
-			applyHiddenSlugs(['c-slug', 'b-slug', 'a-slug', 'd-slug'], ['b-slug'])
-		).toEqual(['c-slug', 'a-slug', 'd-slug']);
+		expect(applyHiddenSlugs(['c-slug', 'b-slug', 'a-slug', 'd-slug'], ['b-slug'])).toEqual([
+			'c-slug',
+			'a-slug',
+			'd-slug'
+		]);
 	});
 });

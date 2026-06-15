@@ -2,9 +2,9 @@
 slug: rixdorf
 name: Rixdorf
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 76559202b403236f
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Rixdorf steht beim Wohnschutz weit vorn. Der Score von rund 79 bringt Rang 4 von 143. Kulturell ist das Gebiet stark, rund 85 Punkte und Rang 21 von 143, klar über Bezirk und Berliner Median. Die Versorgung fällt mit rund 70 ebenfalls stark aus.

@@ -4,15 +4,12 @@ import { BERLIN_SPOTCHECK, SPOTCHECK_TOLERANCE_DEG } from './spotcheck.js';
 import type { FeatureCollection } from 'geojson';
 
 describe('reproject EPSG:25833 <-> EPSG:4326', () => {
-	it.each(BERLIN_SPOTCHECK)(
-		'$name: UTM33 -> WGS84 within tolerance',
-		({ name, wgs84, utm33 }) => {
-			const [lon, lat] = utm33ToWgs84(utm33[0], utm33[1]);
-			expect(Math.abs(lon - wgs84[0])).toBeLessThan(0.005);
-			expect(Math.abs(lat - wgs84[1])).toBeLessThan(0.005);
-			void name;
-		}
-	);
+	it.each(BERLIN_SPOTCHECK)('$name: UTM33 -> WGS84 within tolerance', ({ name, wgs84, utm33 }) => {
+		const [lon, lat] = utm33ToWgs84(utm33[0], utm33[1]);
+		expect(Math.abs(lon - wgs84[0])).toBeLessThan(0.005);
+		expect(Math.abs(lat - wgs84[1])).toBeLessThan(0.005);
+		void name;
+	});
 
 	it('round-trip WGS84 -> UTM33 -> WGS84 (Brandenburger Tor)', () => {
 		const [x, y] = wgs84ToUtm33(13.37771, 52.51629);

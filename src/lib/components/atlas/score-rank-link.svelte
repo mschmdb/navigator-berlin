@@ -14,9 +14,7 @@
 	const { rang, total, view }: Props = $props();
 
 	const href = $derived(
-		view === 'bezirke'
-			? '/umwelt-infrastruktur-score?view=bezirke'
-			: '/umwelt-infrastruktur-score'
+		view === 'bezirke' ? '/umwelt-infrastruktur-score?view=bezirke' : '/umwelt-infrastruktur-score'
 	);
 
 	const label = $derived(
@@ -29,7 +27,7 @@
 <a
 	{href}
 	data-testid="score-rank-link"
-	class="text-accent underline underline-offset-2 hover:text-accent-strong"
+	class="hover:text-accent-strong text-accent underline underline-offset-2"
 >
 	{label}
 </a>

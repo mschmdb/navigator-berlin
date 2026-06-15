@@ -168,9 +168,7 @@ export interface BuiltInput {
 }
 
 /** Baut alle ProfileInputs (+ Hash) für die gewünschten Page-Types. */
-export async function buildAllInputs(
-	types: readonly ('kiez' | 'bezirk')[]
-): Promise<BuiltInput[]> {
+export async function buildAllInputs(types: readonly ('kiez' | 'bezirk')[]): Promise<BuiltInput[]> {
 	const out: BuiltInput[] = [];
 	for (const pageType of types) {
 		const areas = await loadAreas(pageType);

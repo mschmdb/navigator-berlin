@@ -15,8 +15,12 @@ describe('ScoreMembershipBadge', () => {
 
 	it('Kontext-Layer: zeigt „Kontext · nicht im Score", kein Link', async () => {
 		render(ScoreMembershipBadge, { slug: 'umweltgerechtigkeit-2023' });
-		expect(document.querySelector('[data-testid="score-membership-context-umweltgerechtigkeit-2023"]')).not.toBeNull();
-		expect(document.querySelector('[data-testid="score-membership-link-umweltgerechtigkeit-2023"]')).toBeNull();
+		expect(
+			document.querySelector('[data-testid="score-membership-context-umweltgerechtigkeit-2023"]')
+		).not.toBeNull();
+		expect(
+			document.querySelector('[data-testid="score-membership-link-umweltgerechtigkeit-2023"]')
+		).toBeNull();
 	});
 
 	it('V5: laerm-2023 bekommt den klärenden dB-Mittel-Hinweis', async () => {

@@ -7,9 +7,7 @@ describe('renamedRouteRedirectTarget', () => {
 	});
 
 	it('toleriert Trailing-Slash', () => {
-		expect(renamedRouteRedirectTarget('/wo-lebt-es-sich-gut/')).toBe(
-			'/umwelt-infrastruktur-score'
-		);
+		expect(renamedRouteRedirectTarget('/wo-lebt-es-sich-gut/')).toBe('/umwelt-infrastruktur-score');
 	});
 
 	it('mappt umbenannten Layer-Slug /layer/kiez-score-gruen auf -gruen-hitze', () => {

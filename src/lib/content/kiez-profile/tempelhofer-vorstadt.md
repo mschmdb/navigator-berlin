@@ -2,9 +2,9 @@
 slug: tempelhofer-vorstadt
 name: Tempelhofer Vorstadt
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: af6e995fd4652570
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Versorgung und Wohnschutz prägen die Tempelhofer Vorstadt. Die Versorgung erreicht rund 74 Punkte und Rang 19 von 143, weit über dem Berliner Median. Beim Wohnschutz steht der Kiez auf Rang elf, soziale Lage mittel. Die Mobilität bleibt mit Rang 32 solide, getragen von dichtem ÖPNV, rund 18 Halte je Quadratkilometer.

@@ -49,10 +49,7 @@ describe('robots.txt Endpoint (Story 5.9 AC-1)', () => {
 		it(`AI-Bot ${bot} explizit Allow: /`, async () => {
 			const body = await fetchRobots();
 			const escaped = bot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-			const pattern = new RegExp(
-				`^User-agent: ${escaped}\\nAllow: \\/$`,
-				'm'
-			);
+			const pattern = new RegExp(`^User-agent: ${escaped}\\nAllow: \\/$`, 'm');
 			expect(body, `Erwartet User-agent: ${bot}\\nAllow: /`).toMatch(pattern);
 		});
 	}
@@ -61,10 +58,7 @@ describe('robots.txt Endpoint (Story 5.9 AC-1)', () => {
 		it(`Spam-Bot ${bot} explizit Disallow: /`, async () => {
 			const body = await fetchRobots();
 			const escaped = bot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-			const pattern = new RegExp(
-				`^User-agent: ${escaped}\\nDisallow: \\/$`,
-				'm'
-			);
+			const pattern = new RegExp(`^User-agent: ${escaped}\\nDisallow: \\/$`, 'm');
 			expect(body).toMatch(pattern);
 		});
 	}

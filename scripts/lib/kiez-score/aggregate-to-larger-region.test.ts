@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-	aggregateScoresToRegion,
-	type RegionMembership
-} from './aggregate-to-larger-region.js';
+import { aggregateScoresToRegion, type RegionMembership } from './aggregate-to-larger-region.js';
 import type { KiezScore } from './types.js';
 
 /**
@@ -16,17 +13,49 @@ import type { KiezScore } from './types.js';
 
 function planungsraum(
 	id: string,
-	values: Partial<Record<'ruhe-luft' | 'gruen-hitze' | 'mobilitaet' | 'wohnschutz' | 'versorgung', number | null>>,
+	values: Partial<
+		Record<'ruhe-luft' | 'gruen-hitze' | 'mobilitaet' | 'wohnschutz' | 'versorgung', number | null>
+	>,
 	overall?: number
 ): KiezScore {
 	const score: KiezScore = {
 		persona: 'allgemein',
 		dimensions: [
-			{ dimension: 'ruhe-luft', value: values['ruhe-luft'] ?? null, sources: [], missingData: [], dataStand: null },
-			{ dimension: 'gruen-hitze', value: values['gruen-hitze'] ?? null, sources: [], missingData: [], dataStand: null },
-			{ dimension: 'mobilitaet', value: values.mobilitaet ?? null, sources: [], missingData: [], dataStand: null },
-			{ dimension: 'wohnschutz', value: values['wohnschutz'] ?? null, sources: [], missingData: [], dataStand: null },
-			{ dimension: 'versorgung', value: values.versorgung ?? null, sources: [], missingData: [], dataStand: null }
+			{
+				dimension: 'ruhe-luft',
+				value: values['ruhe-luft'] ?? null,
+				sources: [],
+				missingData: [],
+				dataStand: null
+			},
+			{
+				dimension: 'gruen-hitze',
+				value: values['gruen-hitze'] ?? null,
+				sources: [],
+				missingData: [],
+				dataStand: null
+			},
+			{
+				dimension: 'mobilitaet',
+				value: values.mobilitaet ?? null,
+				sources: [],
+				missingData: [],
+				dataStand: null
+			},
+			{
+				dimension: 'wohnschutz',
+				value: values['wohnschutz'] ?? null,
+				sources: [],
+				missingData: [],
+				dataStand: null
+			},
+			{
+				dimension: 'versorgung',
+				value: values.versorgung ?? null,
+				sources: [],
+				missingData: [],
+				dataStand: null
+			}
 		],
 		missingDimensions: []
 	};
@@ -45,9 +74,21 @@ describe('aggregateScoresToRegion (Story 2.9a)', () => {
 		// 3 PRs gehören zu BR "kiez-A".
 		// Flächen: 1, 2, 3 (Summe 6). Gewichte normiert: 1/6, 2/6, 3/6.
 		const scores: Record<string, KiezScore> = {
-			P1: planungsraum('P1', { 'ruhe-luft': 60, 'gruen-hitze':40, mobilitaet: 100, 'wohnschutz': 50, versorgung: 80 }, 66),
-			P2: planungsraum('P2', { 'ruhe-luft': 30, 'gruen-hitze':60, mobilitaet: 50, 'wohnschutz': 70, versorgung: 40 }, 50),
-			P3: planungsraum('P3', { 'ruhe-luft': 90, 'gruen-hitze':80, mobilitaet: 25, 'wohnschutz': 30, versorgung: 60 }, 57)
+			P1: planungsraum(
+				'P1',
+				{ 'ruhe-luft': 60, 'gruen-hitze': 40, mobilitaet: 100, wohnschutz: 50, versorgung: 80 },
+				66
+			),
+			P2: planungsraum(
+				'P2',
+				{ 'ruhe-luft': 30, 'gruen-hitze': 60, mobilitaet: 50, wohnschutz: 70, versorgung: 40 },
+				50
+			),
+			P3: planungsraum(
+				'P3',
+				{ 'ruhe-luft': 90, 'gruen-hitze': 80, mobilitaet: 25, wohnschutz: 30, versorgung: 60 },
+				57
+			)
 		};
 		const memberships: RegionMembership[] = [
 			{
@@ -73,8 +114,16 @@ describe('aggregateScoresToRegion (Story 2.9a)', () => {
 
 	it('re-computes overall from aggregated dimensions, not from input overall values', () => {
 		const scores: Record<string, KiezScore> = {
-			P1: planungsraum('P1', { 'ruhe-luft': 100, 'gruen-hitze':100, mobilitaet: 100, 'wohnschutz': 100, versorgung: 100 }, 100),
-			P2: planungsraum('P2', { 'ruhe-luft': 0, 'gruen-hitze':0, mobilitaet: 0, 'wohnschutz': 0, versorgung: 0 }, 0)
+			P1: planungsraum(
+				'P1',
+				{ 'ruhe-luft': 100, 'gruen-hitze': 100, mobilitaet: 100, wohnschutz: 100, versorgung: 100 },
+				100
+			),
+			P2: planungsraum(
+				'P2',
+				{ 'ruhe-luft': 0, 'gruen-hitze': 0, mobilitaet: 0, wohnschutz: 0, versorgung: 0 },
+				0
+			)
 		};
 		const memberships: RegionMembership[] = [
 			{
@@ -94,8 +143,20 @@ describe('aggregateScoresToRegion (Story 2.9a)', () => {
 
 	it('ignores null dimension values in weighted mean and records missing data', () => {
 		const scores: Record<string, KiezScore> = {
-			P1: planungsraum('P1', { 'ruhe-luft': 80, 'gruen-hitze':null, mobilitaet: 60, 'wohnschutz': 40, versorgung: 50 }),
-			P2: planungsraum('P2', { 'ruhe-luft': 40, 'gruen-hitze':60, mobilitaet: 40, 'wohnschutz': 60, versorgung: 70 })
+			P1: planungsraum('P1', {
+				'ruhe-luft': 80,
+				'gruen-hitze': null,
+				mobilitaet: 60,
+				wohnschutz: 40,
+				versorgung: 50
+			}),
+			P2: planungsraum('P2', {
+				'ruhe-luft': 40,
+				'gruen-hitze': 60,
+				mobilitaet: 40,
+				wohnschutz: 60,
+				versorgung: 70
+			})
 		};
 		const memberships: RegionMembership[] = [
 			{
@@ -117,10 +178,16 @@ describe('aggregateScoresToRegion (Story 2.9a)', () => {
 	it('sets dimension value to null if coverage falls below 50% threshold', () => {
 		// 4 PRs, nur 1 hat ruhe-luft → 25% Coverage → null
 		const scores: Record<string, KiezScore> = {
-			P1: planungsraum('P1', { 'ruhe-luft': 60, 'gruen-hitze':50, mobilitaet: 50, 'wohnschutz': 50, versorgung: 50 }),
-			P2: planungsraum('P2', { 'gruen-hitze':50, mobilitaet: 50, 'wohnschutz': 50, versorgung: 50 }),
-			P3: planungsraum('P3', { 'gruen-hitze':50, mobilitaet: 50, 'wohnschutz': 50, versorgung: 50 }),
-			P4: planungsraum('P4', { 'gruen-hitze':50, mobilitaet: 50, 'wohnschutz': 50, versorgung: 50 })
+			P1: planungsraum('P1', {
+				'ruhe-luft': 60,
+				'gruen-hitze': 50,
+				mobilitaet: 50,
+				wohnschutz: 50,
+				versorgung: 50
+			}),
+			P2: planungsraum('P2', { 'gruen-hitze': 50, mobilitaet: 50, wohnschutz: 50, versorgung: 50 }),
+			P3: planungsraum('P3', { 'gruen-hitze': 50, mobilitaet: 50, wohnschutz: 50, versorgung: 50 }),
+			P4: planungsraum('P4', { 'gruen-hitze': 50, mobilitaet: 50, wohnschutz: 50, versorgung: 50 })
 		};
 		const memberships: RegionMembership[] = [
 			{
@@ -145,10 +212,22 @@ describe('aggregateScoresToRegion (Story 2.9a)', () => {
 	it('respects 50% threshold exactly (>=50% inclusive)', () => {
 		// 2 von 4 = 50% → IST genug
 		const scores: Record<string, KiezScore> = {
-			P1: planungsraum('P1', { 'ruhe-luft': 40, 'gruen-hitze':50, mobilitaet: 50, 'wohnschutz': 50, versorgung: 50 }),
-			P2: planungsraum('P2', { 'ruhe-luft': 60, 'gruen-hitze':50, mobilitaet: 50, 'wohnschutz': 50, versorgung: 50 }),
-			P3: planungsraum('P3', { 'gruen-hitze':50, mobilitaet: 50, 'wohnschutz': 50, versorgung: 50 }),
-			P4: planungsraum('P4', { 'gruen-hitze':50, mobilitaet: 50, 'wohnschutz': 50, versorgung: 50 })
+			P1: planungsraum('P1', {
+				'ruhe-luft': 40,
+				'gruen-hitze': 50,
+				mobilitaet: 50,
+				wohnschutz: 50,
+				versorgung: 50
+			}),
+			P2: planungsraum('P2', {
+				'ruhe-luft': 60,
+				'gruen-hitze': 50,
+				mobilitaet: 50,
+				wohnschutz: 50,
+				versorgung: 50
+			}),
+			P3: planungsraum('P3', { 'gruen-hitze': 50, mobilitaet: 50, wohnschutz: 50, versorgung: 50 }),
+			P4: planungsraum('P4', { 'gruen-hitze': 50, mobilitaet: 50, wohnschutz: 50, versorgung: 50 })
 		};
 		const memberships: RegionMembership[] = [
 			{
@@ -209,18 +288,36 @@ describe('aggregateScoresToRegion (Story 2.9a)', () => {
 	});
 
 	it('throws if region has no members', () => {
-		expect(() =>
-			aggregateScoresToRegion({}, [{ regionSlug: 'kiez-a', members: [] }])
-		).toThrow(/no members/);
+		expect(() => aggregateScoresToRegion({}, [{ regionSlug: 'kiez-a', members: [] }])).toThrow(
+			/no members/
+		);
 	});
 
 	it('produces stable output for two runs (idempotent)', () => {
 		const scores: Record<string, KiezScore> = {
-			P1: planungsraum('P1', { 'ruhe-luft': 60, 'gruen-hitze':40, mobilitaet: 100, 'wohnschutz': 50, versorgung: 80 }),
-			P2: planungsraum('P2', { 'ruhe-luft': 30, 'gruen-hitze':60, mobilitaet: 50, 'wohnschutz': 70, versorgung: 40 })
+			P1: planungsraum('P1', {
+				'ruhe-luft': 60,
+				'gruen-hitze': 40,
+				mobilitaet: 100,
+				wohnschutz: 50,
+				versorgung: 80
+			}),
+			P2: planungsraum('P2', {
+				'ruhe-luft': 30,
+				'gruen-hitze': 60,
+				mobilitaet: 50,
+				wohnschutz: 70,
+				versorgung: 40
+			})
 		};
 		const memberships: RegionMembership[] = [
-			{ regionSlug: 'kiez-a', members: [{ planungsraumId: 'P1', areaM2: 1 }, { planungsraumId: 'P2', areaM2: 2 }] }
+			{
+				regionSlug: 'kiez-a',
+				members: [
+					{ planungsraumId: 'P1', areaM2: 1 },
+					{ planungsraumId: 'P2', areaM2: 2 }
+				]
+			}
 		];
 		const a = aggregateScoresToRegion(scores, memberships);
 		const b = aggregateScoresToRegion(scores, memberships);

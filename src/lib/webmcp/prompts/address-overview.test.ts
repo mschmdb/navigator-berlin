@@ -36,9 +36,8 @@ describe('address-overview prompt', () => {
 	});
 
 	it('snapshot DE', () => {
-		expect(
-			addressOverviewPrompt.render({ address: 'Pariser Platz 1, 10117 Berlin' }, 'de')
-		).toMatchInlineSnapshot(`
+		expect(addressOverviewPrompt.render({ address: 'Pariser Platz 1, 10117 Berlin' }, 'de'))
+			.toMatchInlineSnapshot(`
 			"Du analysierst eine Berliner Adresse für eine Nutzerin oder einen Nutzer.
 
 			Adresse: Pariser Platz 1, 10117 Berlin
@@ -54,9 +53,8 @@ describe('address-overview prompt', () => {
 	});
 
 	it('snapshot EN', () => {
-		expect(
-			addressOverviewPrompt.render({ address: 'Brandenburg Gate, 10117 Berlin' }, 'en')
-		).toMatchInlineSnapshot(`
+		expect(addressOverviewPrompt.render({ address: 'Brandenburg Gate, 10117 Berlin' }, 'en'))
+			.toMatchInlineSnapshot(`
 			"You are analyzing a Berlin address for a user.
 
 			Address: Brandenburg Gate, 10117 Berlin

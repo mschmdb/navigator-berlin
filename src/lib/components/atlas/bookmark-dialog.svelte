@@ -55,16 +55,10 @@
 	const currentLng = $derived(ui.selectedAddress?.lng);
 	const alreadyBookmarked = $derived.by(() => {
 		if (currentLat === undefined || currentLng === undefined) return false;
-		return isBookmarked(
-			{ schemaVersion: 1, bookmarks: ui.bookmarks },
-			currentLat,
-			currentLng
-		);
+		return isBookmarked({ schemaVersion: 1, bookmarks: ui.bookmarks }, currentLat, currentLng);
 	});
 	const limitReached = $derived(ui.bookmarks.length >= MAX_BOOKMARKS);
-	const canSave = $derived(
-		ui.selectedAddress !== null && !alreadyBookmarked && !limitReached
-	);
+	const canSave = $derived(ui.selectedAddress !== null && !alreadyBookmarked && !limitReached);
 
 	function syncBreakpoint(): void {
 		if (typeof window === 'undefined') return;
@@ -204,13 +198,8 @@
 </script>
 
 {#snippet dialogBody()}
-	<header
-		class="flex items-start justify-between gap-3 border-b border-rule px-6 pb-4 pt-5"
-	>
-		<h2
-			id="bookmarks-dialog-title"
-			class="font-serif text-xl leading-tight text-ink"
-		>
+	<header class="flex items-start justify-between gap-3 border-b border-rule px-6 pt-5 pb-4">
+		<h2 id="bookmarks-dialog-title" class="font-serif text-xl leading-tight text-ink">
 			Gespeicherte Adressen
 		</h2>
 		<button
@@ -238,17 +227,11 @@
 					<span>Gespeichert.</span>
 				</div>
 			{:else if alreadyBookmarked}
-				<p
-					data-testid="bookmark-current-saved"
-					class="font-sans text-sm text-ink-muted"
-				>
+				<p data-testid="bookmark-current-saved" class="font-sans text-sm text-ink-muted">
 					Aktuelle Adresse ist bereits gespeichert.
 				</p>
 			{:else if limitReached}
-				<p
-					data-testid="bookmark-limit-reached"
-					class="font-sans text-sm text-ink-muted"
-				>
+				<p data-testid="bookmark-limit-reached" class="font-sans text-sm text-ink-muted">
 					Limit erreicht ({MAX_BOOKMARKS}). Lösche alte Bookmarks zum Hinzufügen.
 				</p>
 			{:else}
@@ -271,7 +254,7 @@
 		{#if sortedBookmarks.length === 0}
 			<p
 				data-testid="bookmark-empty"
-				class="px-6 py-8 text-center font-serif text-sm italic text-ink-subtle"
+				class="px-6 py-8 text-center font-serif text-sm text-ink-subtle italic"
 			>
 				Noch keine Bookmarks. Wähle eine Adresse und tippe auf das Bookmark-Symbol.
 			</p>
@@ -290,9 +273,7 @@
 		{/if}
 	</div>
 
-	<footer
-		class="flex items-center justify-between gap-3 border-t border-rule px-6 py-3"
-	>
+	<footer class="flex items-center justify-between gap-3 border-t border-rule px-6 py-3">
 		<div class="flex items-center gap-3">
 			{#if sortedBookmarks.length > 0 && !clearAllConfirming}
 				<button
@@ -333,10 +314,7 @@
 			>
 				Datenschutz
 			</a>
-			<span
-				data-testid="bookmark-counter"
-				class="font-mono text-xs text-ink-subtle"
-			>
+			<span data-testid="bookmark-counter" class="font-mono text-xs text-ink-subtle">
 				{sortedBookmarks.length}/{MAX_BOOKMARKS}
 			</span>
 		</div>
@@ -400,11 +378,6 @@
 	{/if}
 {/if}
 
-<div
-	aria-live="polite"
-	aria-atomic="false"
-	data-testid="bookmark-aria-live"
-	class="sr-only"
->
+<div aria-live="polite" aria-atomic="false" data-testid="bookmark-aria-live" class="sr-only">
 	{liveMessage}
 </div>

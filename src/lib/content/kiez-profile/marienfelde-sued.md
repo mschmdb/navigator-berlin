@@ -2,9 +2,9 @@
 slug: marienfelde-sued
 name: Marienfelde Sued
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 605d20dc0a282104
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ruhe und Luft tragen Marienfelde Sued, rund 90 Punkte, Rang 16 von 143, weit über dem Bezirksschnitt. Grün und Hitze erreichen rund 63 Punkte, über dem Berliner Median. Mobilität fällt mit rund 11 Punkten schwach aus, Rang 114. Ohne Schiene tragen Busse allein. Versorgung bleibt mit rund 22 Punkten dünn, Rang 118.

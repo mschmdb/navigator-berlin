@@ -2,9 +2,9 @@
 slug: siemensstadt
 name: Siemensstadt
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 50334ba1673acc69
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Siemensstadt erreicht bei Ruhe und Luft 66 und liegt damit über dem Berliner Median, doch unter dem Bezirksschnitt. Beim Gesamtscore erreicht der Kiez 34 und Rang 101 von 143. Die Lärmklasse gilt als hoch. An heißen Tagen steigt die gefühlte Temperatur auf rund 34 Grad.

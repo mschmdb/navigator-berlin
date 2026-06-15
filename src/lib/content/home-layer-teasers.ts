@@ -48,8 +48,7 @@ export const HOME_LAYER_TEASERS: readonly HomeLayerTeaser[] = [
 	{
 		slug: 'klima-pet-2022',
 		label: 'Klima PET 2022',
-		summary:
-			'Gefühlte Mittagstemperatur an Sommer-Hitzetagen aus dem Berliner Klima-Atlas.',
+		summary: 'Gefühlte Mittagstemperatur an Sommer-Hitzetagen aus dem Berliner Klima-Atlas.',
 		iconKey: 'thermometer'
 	},
 	{

@@ -47,9 +47,7 @@ describe('formatLayerValue', () => {
 	});
 
 	it('Bezirke Props-Objekt → Gemeinde_name', () => {
-		expect(
-			formatLayerValue('bezirke', { Gemeinde_name: 'Pankow', Land_name: 'Berlin' })
-		).toEqual({
+		expect(formatLayerValue('bezirke', { Gemeinde_name: 'Pankow', Land_name: 'Berlin' })).toEqual({
 			text: 'Pankow',
 			isNumeric: false
 		});

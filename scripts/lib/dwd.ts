@@ -68,9 +68,7 @@ function countPerYear(
 		if (!map.has(year)) map.set(year, 0);
 		if (predicate(r)) map.set(year, map.get(year)! + 1);
 	}
-	return [...map.entries()]
-		.sort((a, b) => a[0] - b[0])
-		.map(([year, count]) => ({ year, count }));
+	return [...map.entries()].sort((a, b) => a[0] - b[0]).map(([year, count]) => ({ year, count }));
 }
 
 export function aggregateYearly(records: DailyRecord[]): YearlyAggregation {

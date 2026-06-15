@@ -15,3 +15,16 @@ export interface KiezDemografieData {
 	quelle: string;
 	lizenz: string;
 }
+
+/**
+ * Räumlicher Bezug des Bevölkerungsprofils. 'standort' = LOR-Planungsraum am Marker
+ * (feinste Einheit, 542), 'kiez' = LOR-Bezirksregion (143), 'bezirk' = Bezirk (12).
+ */
+export type DemografieScope = 'standort' | 'kiez' | 'bezirk';
+
+/** Demografie pro Scope, von der Inspector-Ebene aufgelöst (Story 10.5). */
+export interface DemografieByScope {
+	standort: KiezDemografieData | null;
+	kiez: KiezDemografieData | null;
+	bezirk: KiezDemografieData | null;
+}

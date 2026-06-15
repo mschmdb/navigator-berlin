@@ -2,9 +2,9 @@
 slug: alt-lichtenberg
 name: Alt Lichtenberg
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 191f26334159ac9d
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Alt Lichtenberg ist solide angebunden und versorgt. Die Mobilität erreicht 35,6 und Rang 27 von 143, über dem Bezirksschnitt. Die Versorgung kommt auf 53,6 und übertrifft den Berliner Median. Die Haltestellendichte beträgt rund 13 Stopps je Quadratkilometer.

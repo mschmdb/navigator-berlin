@@ -2,9 +2,9 @@
 slug: haselhorst
 name: Haselhorst
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 2da25b4ac30ef32f
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Haselhorst punktet bei Ruhe und Luft. Der Score von rund 78 liegt über dem Berliner Median, aber unter dem Bezirksschnitt. Das Grün kommt auf 53 Punkte, nahe am Berliner Median. Die Grünversorgung fällt gut aus, die Lärmklasse mittel. An heißen Tagen erreicht die gefühlte Temperatur rund 36 Grad.

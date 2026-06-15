@@ -63,10 +63,10 @@
 		class="flex h-full flex-col overflow-auto bg-bg-elevated text-ink"
 	>
 		<header
-			class="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-rule bg-bg-elevated px-6 pb-4 pt-5"
+			class="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-rule bg-bg-elevated px-6 pt-5 pb-4"
 		>
 			<div>
-				<p class="font-mono text-xs uppercase tracking-wide text-ink-subtle">Vergleich</p>
+				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">Vergleich</p>
 				<div class="mt-1 flex items-baseline gap-2 font-serif text-lg leading-tight text-ink">
 					<span data-testid="compare-address-a">{ui.selectedAddress.displayName}</span>
 					<ArrowLeftRight size={14} aria-hidden="true" class="text-ink-muted" />
@@ -91,9 +91,7 @@
 				data-testid="compare-b-picker"
 				class="flex flex-col gap-3 border-b border-rule px-6 py-4"
 			>
-				<p class="font-mono text-xs uppercase tracking-wide text-ink-subtle">
-					Adresse B wählen
-				</p>
+				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">Adresse B wählen</p>
 				{#if geocode}
 					<div class="flex items-center gap-2">
 						<Search size={14} aria-hidden="true" class="text-ink-muted" />
@@ -133,17 +131,11 @@
 
 		{#if ui.comparisonAddress && !ui.comparisonLoading}
 			{#if featureFlags.kiezScore && (ui.kiezScore !== null || ui.comparisonKiezScore !== null)}
-				<KiezScoreCompareBlock
-					scoreA={ui.kiezScore}
-					scoreB={ui.comparisonKiezScore}
-				/>
+				<KiezScoreCompareBlock scoreA={ui.kiezScore} scoreB={ui.comparisonKiezScore} />
 			{/if}
 			{#if ui.wahlResults !== null || ui.comparisonWahlResults !== null}
 				<div class="px-6">
-					<WahlCompareBlock
-						resultsA={ui.wahlResults}
-						resultsB={ui.comparisonWahlResults}
-					/>
+					<WahlCompareBlock resultsA={ui.wahlResults} resultsB={ui.comparisonWahlResults} />
 				</div>
 			{/if}
 			<div
@@ -178,10 +170,7 @@
 
 			<div class="flex-1 px-6 py-4">
 				{#if !hasAnyRows}
-					<p
-						data-testid="compare-empty"
-						class="py-6 font-mono text-sm text-ink-subtle"
-					>
+					<p data-testid="compare-empty" class="py-6 font-mono text-sm text-ink-subtle">
 						Keine vergleichbaren Layer-Daten für beide Adressen.
 					</p>
 				{:else}
@@ -192,28 +181,27 @@
 						class="w-full border-collapse"
 					>
 						<caption class="sr-only">
-							Vergleich: {ui.selectedAddress.displayName} vs {ui.comparisonAddress
-								.displayName}
+							Vergleich: {ui.selectedAddress.displayName} vs {ui.comparisonAddress.displayName}
 						</caption>
 						<thead>
 							<tr class="border-b border-rule-strong">
 								<th
 									scope="col"
-									class="py-2 pr-3 text-left font-mono text-xs uppercase tracking-wide text-ink-muted"
+									class="py-2 pr-3 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
 								>
 									Indikator
 								</th>
 								<th
 									scope="col"
 									data-cell="a"
-									class="py-2 pr-3 text-left font-mono text-xs uppercase tracking-wide text-ink-muted"
+									class="py-2 pr-3 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
 								>
 									Adresse A
 								</th>
 								<th
 									scope="col"
 									data-cell="b"
-									class="py-2 text-left font-mono text-xs uppercase tracking-wide text-ink-muted"
+									class="py-2 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
 								>
 									Adresse B
 								</th>
@@ -223,14 +211,11 @@
 							{#each sections as section (section.key)}
 								{#if section.rows.length > 0}
 									{@const disclaimers = getSectionDisclaimers(section)}
-									<tr
-										data-testid={`compare-section-${section.key}`}
-										data-section={section.key}
-									>
+									<tr data-testid={`compare-section-${section.key}`} data-section={section.key}>
 										<th
 											colspan="3"
 											scope="rowgroup"
-											class="border-t border-rule pt-4 pb-1 text-left font-mono text-xs uppercase tracking-wide text-ink-muted"
+											class="border-t border-rule pt-4 pb-1 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
 										>
 											{section.label}
 										</th>

@@ -107,11 +107,7 @@ describe('yearValuesToNumeric', () => {
 	});
 
 	it('überspringt Einträge ohne das gewählte Feld', () => {
-		const yv: YearValue[] = [
-			{ year: 2000, count: 5 },
-			{ year: 2001 },
-			{ year: 2002, count: 7 }
-		];
+		const yv: YearValue[] = [{ year: 2000, count: 5 }, { year: 2001 }, { year: 2002, count: 7 }];
 		expect(yearValuesToNumeric(yv, 'count')).toEqual([
 			{ year: 2000, value: 5 },
 			{ year: 2002, value: 7 }

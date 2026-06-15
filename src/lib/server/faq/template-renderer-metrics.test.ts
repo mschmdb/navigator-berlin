@@ -49,40 +49,49 @@ const TEMPLATE: FaqTemplate = {
 
 describe('template-renderer metrics slots (Story 11.3)', () => {
 	it('füllt Score, Rang und Vergleich für starke Werte', () => {
-		const out = renderTemplate(TEMPLATE, ctxWith({
-			value: 72,
-			rang: 12,
-			quartil: 1,
-			total: 143,
-			compareValue: 65,
-			compareLabel: 'Bezirksschnitt'
-		}));
+		const out = renderTemplate(
+			TEMPLATE,
+			ctxWith({
+				value: 72,
+				rang: 12,
+				quartil: 1,
+				total: 143,
+				compareValue: 65,
+				compareLabel: 'Bezirksschnitt'
+			})
+		);
 		expect(out?.answer).toBe('Test-Kiez: 72 von 100 (Platz 12 von 143), über dem Bezirksschnitt.');
 	});
 
 	it('Anti-Stigma: Quartil 4 → „unteres Viertel" statt letztem Rang', () => {
-		const out = renderTemplate(TEMPLATE, ctxWith({
-			value: 30,
-			rang: 142,
-			quartil: 4,
-			total: 143,
-			compareValue: 60,
-			compareLabel: 'Bezirksschnitt'
-		}));
+		const out = renderTemplate(
+			TEMPLATE,
+			ctxWith({
+				value: 30,
+				rang: 142,
+				quartil: 4,
+				total: 143,
+				compareValue: 60,
+				compareLabel: 'Bezirksschnitt'
+			})
+		);
 		expect(out?.answer).toContain('unteres Viertel');
 		expect(out?.answer).toContain('unter dem Bezirksschnitt');
 		expect(out?.answer).not.toContain('Platz 142');
 	});
 
 	it('„etwa im" bei nahezu gleichem Wert', () => {
-		const out = renderTemplate(TEMPLATE, ctxWith({
-			value: 65,
-			rang: 70,
-			quartil: 2,
-			total: 143,
-			compareValue: 65,
-			compareLabel: 'Bezirksschnitt'
-		}));
+		const out = renderTemplate(
+			TEMPLATE,
+			ctxWith({
+				value: 65,
+				rang: 70,
+				quartil: 2,
+				total: 143,
+				compareValue: 65,
+				compareLabel: 'Bezirksschnitt'
+			})
+		);
 		expect(out?.answer).toContain('etwa im Bezirksschnitt');
 	});
 });

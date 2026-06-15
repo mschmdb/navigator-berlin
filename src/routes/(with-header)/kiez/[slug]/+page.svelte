@@ -123,14 +123,10 @@
 {/if}
 
 <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
-	<ScoreRankLink
-		rang={data.compositeRank.rang}
-		total={data.compositeRank.total}
-		view="kieze"
-	/>
+	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="kieze" />
 	<a
 		href="/methodik/kiez-score"
-		class="text-accent underline underline-offset-2 hover:text-accent-strong"
+		class="hover:text-accent-strong text-accent underline underline-offset-2"
 	>
 		Wie der Kiez-Score entsteht →
 	</a>

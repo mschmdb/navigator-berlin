@@ -146,10 +146,10 @@ describe('inspector-panel.svelte', () => {
 		expect(klimaCard.textContent).toContain('Berlin-Tempelhof');
 		const hint = (await page.getByTestId('klima-station-hint').element()) as HTMLElement;
 		expect(hint.textContent).toContain('1919');
-		await vi.waitUntil(
-			() => page.getByTestId('klima-sparkline-grid').query() !== null,
-			{ timeout: 5000, interval: 50 }
-		);
+		await vi.waitUntil(() => page.getByTestId('klima-sparkline-grid').query() !== null, {
+			timeout: 5000,
+			interval: 50
+		});
 		const grid = (await page.getByTestId('klima-sparkline-grid').element()) as HTMLElement;
 		const sparklines = grid.querySelectorAll('[data-testid="climate-sparkline"]');
 		expect(sparklines.length).toBe(3);
@@ -185,10 +185,10 @@ describe('inspector-panel.svelte', () => {
 			nearestStation: station,
 			climateSeries: series
 		});
-		await vi.waitUntil(
-			() => page.getByTestId('klima-long-view-slot').query() !== null,
-			{ timeout: 5000, interval: 50 }
-		);
+		await vi.waitUntil(() => page.getByTestId('klima-long-view-slot').query() !== null, {
+			timeout: 5000,
+			interval: 50
+		});
 		await expect.element(page.getByTestId('klima-long-view-slot')).toBeInTheDocument();
 	});
 
@@ -233,17 +233,13 @@ describe('inspector-panel.svelte', () => {
 
 		it('Inspector-Bookmark-Trigger sichtbar in Toolbar', async () => {
 			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
-			await expect
-				.element(page.getByTestId('inspector-bookmark-trigger'))
-				.toBeInTheDocument();
+			await expect.element(page.getByTestId('inspector-bookmark-trigger')).toBeInTheDocument();
 		});
 
 		it('Bookmark-Click bei nicht-gespeicherter Adresse zeigt Konfirmation', async () => {
 			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
 			await page.getByTestId('inspector-bookmark-trigger').click();
-			await expect
-				.element(page.getByTestId('inspector-bookmark-confirmation'))
-				.toBeInTheDocument();
+			await expect.element(page.getByTestId('inspector-bookmark-confirmation')).toBeInTheDocument();
 		});
 
 		it('Compare-Trigger sichtbar in Toolbar (Story 1.27)', async () => {
@@ -296,9 +292,7 @@ describe('inspector-panel.svelte', () => {
 				hits: [hit('bezirke', 'X')],
 				layerMeta: fullLayerMeta
 			});
-			const count = (await page
-				.getByTestId('section-count-boundaries')
-				.element()) as HTMLElement;
+			const count = (await page.getByTestId('section-count-boundaries').element()) as HTMLElement;
 			expect(count.textContent?.trim()).toBe('1');
 		});
 
@@ -333,18 +327,18 @@ describe('inspector-panel.svelte', () => {
 			hits: [hit('bezirke', 'Mitte')],
 			layerMeta: fullLayerMeta
 		});
-		const before = ((await page.getByTestId('inspector-panel').element()) as HTMLElement).getAttribute(
-			'data-mount-id'
-		);
+		const before = (
+			(await page.getByTestId('inspector-panel').element()) as HTMLElement
+		).getAttribute('data-mount-id');
 		harness.rerender({
 			open: true,
 			address: { ...address, displayName: 'Andere Straße 5, 10243 Berlin' },
 			hits: [hit('bezirke', 'Friedrichshain'), hit('mietspiegel-wohnlage', 'mittel')],
 			layerMeta: fullLayerMeta
 		});
-		const after = ((await page.getByTestId('inspector-panel').element()) as HTMLElement).getAttribute(
-			'data-mount-id'
-		);
+		const after = (
+			(await page.getByTestId('inspector-panel').element()) as HTMLElement
+		).getAttribute('data-mount-id');
 		expect(after).toBe(before);
 		const newHeader = (await page.getByTestId('inspector-address').element()) as HTMLElement;
 		expect(newHeader.textContent).toMatch(/Andere Straße 5/);
@@ -396,7 +390,9 @@ describe('inspector-panel.svelte', () => {
 			expect(cardEl).not.toBeNull();
 			expect(hitEl).not.toBeNull();
 			if (cardEl && hitEl) {
-				expect(cardEl.compareDocumentPosition(hitEl) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+				expect(
+					cardEl.compareDocumentPosition(hitEl) & Node.DOCUMENT_POSITION_FOLLOWING
+				).toBeTruthy();
 			}
 		});
 	});

@@ -12,8 +12,8 @@ Beispiel: `2026-05-16-kiez-score-versorgungs-dimension.md`
 
 ```yaml
 ---
-title_de: "Kiez-Score: Versorgungs-Dimension ergänzt"
-summary_de: "Fünfte Dimension Kita, Schule, Krankenhaus, Spielplatz, Grünanlage live."
+title_de: 'Kiez-Score: Versorgungs-Dimension ergänzt'
+summary_de: 'Fünfte Dimension Kita, Schule, Krankenhaus, Spielplatz, Grünanlage live.'
 date: 2026-05-16
 category: feature
 tags: [kiez-score, dimensionen]

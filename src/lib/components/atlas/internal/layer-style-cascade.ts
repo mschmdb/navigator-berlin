@@ -79,7 +79,5 @@ export function buildLayerSpecCascade(
 	if (variant === 'fill') return baseSpecs;
 	if (!isPolygonSlug(slug)) return baseSpecs;
 	const dash = variant === 'outline-dash';
-	return baseSpecs.map((spec) =>
-		spec.type === 'fill' ? fillSpecToLineSpec(spec, dash) : spec
-	);
+	return baseSpecs.map((spec) => (spec.type === 'fill' ? fillSpecToLineSpec(spec, dash) : spec));
 }

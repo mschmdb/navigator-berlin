@@ -3,11 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { parseBwlWbzCsv, filterByLand, BERLIN_LAND_CODE } from './bwl-csv-parser.js';
-import {
-	buildUwbId,
-	isBriefwahlRow,
-	transformBwlRow
-} from './row-transformer.js';
+import { buildUwbId, isBriefwahlRow, transformBwlRow } from './row-transformer.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fixturePath = join(here, '..', '..', '..', 'tests', 'fixtures', 'wahlen', 'btw25-sample.csv');
@@ -96,9 +92,7 @@ describe('row-transformer', () => {
 		it('aggregiert Sonstige-Aliase (Tierschutzpartei, PIRATEN etc.) zu "Sonstige"', async () => {
 			const { rows, headers } = await loadBerlin();
 			const transformed = transformBwlRow(rows[0], headers);
-			const erst = new Map(
-				transformed.votes.erststimme.map((v) => [v.parteiKurzname, v.stimmen])
-			);
+			const erst = new Map(transformed.votes.erststimme.map((v) => [v.parteiKurzname, v.stimmen]));
 			expect(erst.has('SPD')).toBe(true);
 			expect(erst.has('CDU')).toBe(true);
 			expect(erst.has('GRÜNE')).toBe(true);

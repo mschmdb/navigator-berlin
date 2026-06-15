@@ -34,7 +34,11 @@ const ctx = (overrides: Partial<TemplateContext> = {}): TemplateContext => ({
 			busCount: null
 		},
 		wohnen: {
-			dominantWohnlage: { value: 'mittel', layer: 'mietspiegel-2024', sourceUpdatedAt: '2024-05-01' },
+			dominantWohnlage: {
+				value: 'mittel',
+				layer: 'mietspiegel-2024',
+				sourceUpdatedAt: '2024-05-01'
+			},
 			wohnlageDistribution: null,
 			dominantMss: { value: 'mittel', layer: 'mss-2021', sourceUpdatedAt: '2021-12-01' },
 			mssDistribution: null

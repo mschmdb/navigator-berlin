@@ -45,7 +45,7 @@
 		</p>
 	{/if}
 	<div
-		class="flex h-2.5 w-full overflow-hidden rounded-full bg-bg-muted"
+		class="bg-bg-muted flex h-2.5 w-full overflow-hidden rounded-full"
 		role="img"
 		aria-label={`${layerName}: Verteilung, dominant ${dominantLabel}`}
 	>

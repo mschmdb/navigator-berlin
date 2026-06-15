@@ -18,10 +18,7 @@ export interface ResourceContext {
 	readonly hiddenLayerSlugs: readonly string[];
 }
 
-export function resolveResource(
-	uri: string,
-	ctx: ResourceContext
-): WebMcpResourceRead | null {
+export function resolveResource(uri: string, ctx: ResourceContext): WebMcpResourceRead | null {
 	const ref = parseResourceUri(uri);
 	if (!ref) return null;
 	switch (ref.type) {

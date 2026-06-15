@@ -205,7 +205,12 @@ export const load: PageServerLoad = async ({ params }) => {
 
 function buildWahlSlugFromParentId(
 	parentId: number,
-	list: ReadonlyArray<{ id: number; jahr: number; typ: 'btw' | 'agh' | 'bvv'; stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme' }>
+	list: ReadonlyArray<{
+		id: number;
+		jahr: number;
+		typ: 'btw' | 'agh' | 'bvv';
+		stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
+	}>
 ): string | null {
 	const parent = list.find((w) => w.id === parentId);
 	if (!parent) return null;

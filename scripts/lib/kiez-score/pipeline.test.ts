@@ -9,12 +9,7 @@ import { validateKiezScoreOutput } from './output-schema.js';
 import type { BuildLayerSpec } from './build-helpers.js';
 import type { OepnvStopIndexShape } from './nearest-stops.js';
 
-function makeSquareLor(
-	id: string,
-	minLng: number,
-	minLat: number,
-	span = 0.01
-): Feature<Polygon> {
+function makeSquareLor(id: string, minLng: number, minLat: number, span = 0.01): Feature<Polygon> {
 	return {
 		type: 'Feature',
 		properties: { plr_id: id, plr_name: `LOR-${id}` },

@@ -41,9 +41,7 @@ describe('frontmatter-schema', () => {
 	});
 
 	it('wirft bei invalidem date-Format', () => {
-		expect(() => parseFrontmatter({ ...validFrontmatter, date: '2026/05/15' })).toThrow(
-			/date/
-		);
+		expect(() => parseFrontmatter({ ...validFrontmatter, date: '2026/05/15' })).toThrow(/date/);
 	});
 
 	it('wirft bei title_de länger als 80 Zeichen', () => {
@@ -57,9 +55,9 @@ describe('frontmatter-schema', () => {
 	});
 
 	it('wirft bei unbekannter Category', () => {
-		expect(() =>
-			parseFrontmatter({ ...validFrontmatter, category: 'unbekannt' })
-		).toThrow(/category/);
+		expect(() => parseFrontmatter({ ...validFrontmatter, category: 'unbekannt' })).toThrow(
+			/category/
+		);
 	});
 
 	it('akzeptiert alle 5 Categories', () => {

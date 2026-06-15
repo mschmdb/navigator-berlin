@@ -27,9 +27,7 @@ describe('DemografieBlock', () => {
 
 	it('null-safe: Leer-Hinweis statt Crash', async () => {
 		const screen = render(DemografieBlock, { data: null });
-		await expect
-			.element(screen.getByTestId('demografie-empty'))
-			.toBeInTheDocument();
+		await expect.element(screen.getByTestId('demografie-empty')).toBeInTheDocument();
 	});
 
 	it('keine Severity-/Chip-Elemente (categorical-neutral)', async () => {
@@ -47,5 +45,59 @@ describe('DemografieBlock', () => {
 		await expect.element(details).toBeInTheDocument();
 		await expect.element(details).toHaveTextContent('2024-12-31');
 		await expect.element(details).toHaveTextContent('CC BY 4.0');
+	});
+
+	it('ohne onScopeChange: kein Scope-Toggle (Backwards-Compat)', async () => {
+		const screen = render(DemografieBlock, { data: DATA });
+		const block = screen.getByTestId('demografie-block');
+		expect(block.element().querySelector('[data-testid="demografie-scope-toggle"]')).toBeNull();
+	});
+
+	it('Default-Scope standort: Bezug-Zeile nennt Umgebung + Planungsraum', async () => {
+		const screen = render(DemografieBlock, { data: DATA, onScopeChange: () => {} });
+		await expect
+			.element(screen.getByTestId('demografie-bezug'))
+			.toHaveTextContent(/Umgebung.*Planungsraum/);
+	});
+
+	it('Scope kiez: Bezug-Zeile nennt Kiez-Namen', async () => {
+		const screen = render(DemografieBlock, {
+			data: DATA,
+			scope: 'kiez',
+			scopeName: 'Beispielkiez',
+			kiezAvailable: true,
+			bezirkAvailable: true,
+			onScopeChange: () => {}
+		});
+		await expect
+			.element(screen.getByTestId('demografie-bezug'))
+			.toHaveTextContent('Kiez Beispielkiez');
+	});
+
+	it('Klick auf Bezirk ruft onScopeChange', async () => {
+		let picked: string | null = null;
+		const screen = render(DemografieBlock, {
+			data: DATA,
+			kiezAvailable: true,
+			bezirkAvailable: true,
+			onScopeChange: (s: string) => (picked = s)
+		});
+		await screen.getByTestId('demografie-scope-bezirk').click();
+		expect(picked).toBe('bezirk');
+	});
+
+	it('nicht verfügbarer Scope ist aria-disabled', async () => {
+		const screen = render(DemografieBlock, {
+			data: DATA,
+			kiezAvailable: false,
+			bezirkAvailable: false,
+			onScopeChange: () => {}
+		});
+		await expect
+			.element(screen.getByTestId('demografie-scope-kiez'))
+			.toHaveAttribute('aria-disabled', 'true');
+		await expect
+			.element(screen.getByTestId('demografie-scope-bezirk'))
+			.toHaveAttribute('aria-disabled', 'true');
 	});
 });

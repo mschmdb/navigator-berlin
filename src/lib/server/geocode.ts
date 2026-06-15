@@ -76,8 +76,7 @@ function mapToSuggestion(r: NominatimResult): GeocodeSuggestion {
 }
 
 function getEndpoint(): string {
-	const envEndpoint =
-		typeof process !== 'undefined' ? process.env?.NOMINATIM_ENDPOINT : undefined;
+	const envEndpoint = typeof process !== 'undefined' ? process.env?.NOMINATIM_ENDPOINT : undefined;
 	return envEndpoint ?? DEFAULT_ENDPOINT;
 }
 

@@ -7,13 +7,7 @@
 import bboxFn from '@turf/bbox';
 import centerFn from '@turf/center';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import type {
-	Feature,
-	FeatureCollection,
-	Polygon,
-	MultiPolygon,
-	Position
-} from 'geojson';
+import type { Feature, FeatureCollection, Polygon, MultiPolygon, Position } from 'geojson';
 
 type PolygonFeature = Feature<Polygon | MultiPolygon>;
 type AnyFeature = Feature;
@@ -59,10 +53,7 @@ export function pointsInPolygon(
  * Berechnet das (ungewichtete) arithmetische Mittel einer numerischen Property
  * über eine Liste von Features. Ignoriert Features ohne gültige Zahl.
  */
-export function featureMean(
-	features: ReadonlyArray<AnyFeature>,
-	prop: string
-): number | null {
+export function featureMean(features: ReadonlyArray<AnyFeature>, prop: string): number | null {
 	let sum = 0;
 	let count = 0;
 	for (const f of features) {
@@ -104,10 +95,7 @@ export function shareAbove(
  * Häufigste String-Property-Ausprägung über Features (dominante Kategorie).
  * Liefert null wenn alle Werte leer.
  */
-export function dominantCategory(
-	features: ReadonlyArray<AnyFeature>,
-	prop: string
-): string | null {
+export function dominantCategory(features: ReadonlyArray<AnyFeature>, prop: string): string | null {
 	const counts = new Map<string, number>();
 	for (const f of features) {
 		const v = f.properties?.[prop];

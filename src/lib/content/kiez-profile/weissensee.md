@@ -2,9 +2,9 @@
 slug: weissensee
 name: Weissensee
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 09176e3dec3b8cf5
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Weissensee ist gut versorgt. Die Versorgung erreicht einen Score von 68,7 und steht auf Rang 33 von 143. Ruhe und Luft kommen auf 64 und liegen nahe am Berliner Median. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad. Der Lärm bleibt mittel.

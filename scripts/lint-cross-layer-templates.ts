@@ -146,9 +146,7 @@ async function main(): Promise<void> {
 	}
 	if (violations.length > 0) {
 		for (const v of violations) {
-			process.stderr.write(
-				`${v.file}:${v.line} [${v.token}] ${v.snippet}\n  hint: ${v.hint}\n\n`
-			);
+			process.stderr.write(`${v.file}:${v.line} [${v.token}] ${v.snippet}\n  hint: ${v.hint}\n\n`);
 		}
 		process.stderr.write(
 			`[lint-cross-layer-templates] ${files.length} files scanned, ${violations.length} violations.\n`

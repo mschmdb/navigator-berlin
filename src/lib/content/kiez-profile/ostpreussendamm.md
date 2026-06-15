@@ -2,9 +2,9 @@
 slug: ostpreussendamm
 name: Ostpreussendamm
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 9d0fea7533e2eae5
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Ostpreussendamm ist grün und ruhig. Grün und Hitze erreichen rund 70 Punkte und Rang 12 von 143, über dem Berliner Median. Ruhe und Luft stehen mit rund 72 Punkten ebenfalls darüber, der Lärm bleibt mittel. An heißen Tagen steigt die gefühlte Temperatur auf rund 36 Grad.

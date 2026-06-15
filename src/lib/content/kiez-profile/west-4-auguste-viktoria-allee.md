@@ -2,9 +2,9 @@
 slug: west-4-auguste-viktoria-allee
 name: West 4 Auguste Viktoria Allee
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: 70e5747149a0c84b
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 West 4 Auguste Viktoria Allee ist dicht angebunden. Die Haltestellendichte erreicht rund 16 pro Quadratkilometer. Die Mobilität liegt mit 27,7 Punkten über dem Schnitt von Reinickendorf und über dem Berliner Median. Der Wohnschutz steht mit 27,3 Punkten über dem Bezirksschnitt. Der Lärm gilt als hoch.

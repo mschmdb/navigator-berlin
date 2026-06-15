@@ -48,7 +48,7 @@
 {#if enabled && score}
 	<section data-testid="kiez-score-section" class="space-y-3">
 		<h3
-			class="font-mono text-xs uppercase tracking-wide text-ink-muted"
+			class="font-mono text-xs tracking-wide text-ink-muted uppercase"
 			data-testid="kiez-score-section-header"
 		>
 			Kiez-Score
@@ -58,7 +58,7 @@
 			<div class="flex flex-col items-center gap-1 pb-1" data-testid="kiez-score-overall">
 				<KiezScoreRing {score} onSegmentClick={toggleDim} />
 				<span
-					class="font-mono text-[10px] uppercase tracking-wide text-ink-subtle"
+					class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 					data-testid="kiez-score-overall-meta"
 				>
 					Gesamt · Mittel über {usedDimsCount}/{COMPOSITE_DIMENSIONS.length} Dimensionen
@@ -69,7 +69,9 @@
 							type="button"
 							data-testid="kiez-score-map-toggle-gesamt"
 							aria-pressed={gesamtActive}
-							aria-label={gesamtActive ? 'Gesamt-Score von Karte entfernen' : 'Gesamt-Score auf Karte zeigen'}
+							aria-label={gesamtActive
+								? 'Gesamt-Score von Karte entfernen'
+								: 'Gesamt-Score auf Karte zeigen'}
 							title={gesamtActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
 							onclick={() => onToggleLayer?.(GESAMT_SLUG)}
 							class={`inline-flex h-6 w-6 items-center justify-center rounded-sm hover:bg-bg ${gesamtActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
@@ -110,7 +112,7 @@
 		<a
 			href={methodikHref}
 			data-testid="kiez-score-methodik-link"
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 		>
 			Methodik · Wie der Kiez-Score berechnet wird
 		</a>

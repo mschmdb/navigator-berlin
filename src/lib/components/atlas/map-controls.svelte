@@ -42,7 +42,7 @@
 <div
 	role="group"
 	aria-label="Karten-Steuerung"
-	class="absolute right-3 top-3 flex flex-col items-end gap-2"
+	class="absolute top-3 right-3 flex flex-col items-end gap-2"
 >
 	<div class="relative">
 		<button
@@ -62,7 +62,7 @@
 				role="menu"
 				data-testid="compass-popout"
 				style="width:148px;height:148px"
-				class="absolute right-9 top-0 z-20 rounded-md border border-rule bg-bg-elevated/95 backdrop-blur-sm"
+				class="absolute top-0 right-9 z-20 rounded-md border border-rule bg-bg-elevated/95 backdrop-blur-sm"
 			>
 				<button
 					type="button"

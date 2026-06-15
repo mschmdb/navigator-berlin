@@ -70,7 +70,9 @@ describe('Authority-Phase-3-Bereitschaft', () => {
 	});
 
 	it('Phase-1-Lock: aktuell sind keine EN-Strings gesetzt (Phase 3 deferred)', () => {
-		const withEn = AUTHORITY_KEYS.filter((key) => (AUTHORITIES[key] as AuthorityMeta).en !== undefined);
+		const withEn = AUTHORITY_KEYS.filter(
+			(key) => (AUTHORITIES[key] as AuthorityMeta).en !== undefined
+		);
 		expect(withEn).toEqual([]);
 	});
 });

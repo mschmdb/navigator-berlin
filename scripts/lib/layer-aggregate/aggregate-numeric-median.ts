@@ -14,9 +14,7 @@ export function aggregateNumericMedian(
 	memberValues: readonly (number | null)[]
 ): NumericMedianAggregate {
 	const totalMembers = memberValues.length;
-	const values = memberValues.filter(
-		(v): v is number => v !== null && Number.isFinite(v)
-	);
+	const values = memberValues.filter((v): v is number => v !== null && Number.isFinite(v));
 	const contributingMembers = values.length;
 	const coverage = totalMembers === 0 ? 0 : contributingMembers / totalMembers;
 
@@ -34,8 +32,7 @@ export function aggregateNumericMedian(
 
 	const sorted = [...values].sort((a, b) => a - b);
 	const mid = Math.floor(sorted.length / 2);
-	const median =
-		sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+	const median = sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
 
 	return {
 		type: 'numeric-median',

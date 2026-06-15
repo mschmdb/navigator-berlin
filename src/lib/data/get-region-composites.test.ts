@@ -15,7 +15,9 @@ const DATA: RegionComposites = {
 
 describe('regionComposite', () => {
 	it('liefert den BR-Composite über den direkten Slug', () => {
-		expect(regionComposite(DATA, 'kiez', 'tempelhofer-vorstadt', 'friedrichshain-kreuzberg')).toBe(53.3);
+		expect(regionComposite(DATA, 'kiez', 'tempelhofer-vorstadt', 'friedrichshain-kreuzberg')).toBe(
+			53.3
+		);
 	});
 
 	it('löst disambiguierte BR-Slugs via name-bezirk-Fallback', () => {
@@ -25,7 +27,9 @@ describe('regionComposite', () => {
 	});
 
 	it('liefert den Bezirks-Composite', () => {
-		expect(regionComposite(DATA, 'bezirk', 'tempelhofer-vorstadt', 'friedrichshain-kreuzberg')).toBe(52.6);
+		expect(
+			regionComposite(DATA, 'bezirk', 'tempelhofer-vorstadt', 'friedrichshain-kreuzberg')
+		).toBe(52.6);
 	});
 
 	it('liefert null bei fehlendem Slug / null-Daten / null-Wert', () => {

@@ -1,62 +1,62 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1778915725842,
-      "tag": "0000_ambitious_brother_voodoo",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1778943260258,
-      "tag": "0001_nostalgic_mesmero",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1779117187912,
-      "tag": "0002_warm_randall",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1779344171890,
-      "tag": "0003_icy_talon",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1780763026284,
-      "tag": "0004_uneven_guardsmen",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1780767708062,
-      "tag": "0005_daily_silhouette",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1780845247510,
-      "tag": "0006_lazy_lilandra",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1781076759272,
-      "tag": "0007_cold_robbie_robertson",
-      "breakpoints": true
-    }
-  ]
+	"version": "7",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "7",
+			"when": 1778915725842,
+			"tag": "0000_ambitious_brother_voodoo",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1778943260258,
+			"tag": "0001_nostalgic_mesmero",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1779117187912,
+			"tag": "0002_warm_randall",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "7",
+			"when": 1779344171890,
+			"tag": "0003_icy_talon",
+			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "7",
+			"when": 1780763026284,
+			"tag": "0004_uneven_guardsmen",
+			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "7",
+			"when": 1780767708062,
+			"tag": "0005_daily_silhouette",
+			"breakpoints": true
+		},
+		{
+			"idx": 6,
+			"version": "7",
+			"when": 1780845247510,
+			"tag": "0006_lazy_lilandra",
+			"breakpoints": true
+		},
+		{
+			"idx": 7,
+			"version": "7",
+			"when": 1781076759272,
+			"tag": "0007_cold_robbie_robertson",
+			"breakpoints": true
+		}
+	]
 }

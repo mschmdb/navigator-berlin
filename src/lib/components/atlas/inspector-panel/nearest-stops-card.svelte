@@ -83,7 +83,7 @@
 			aria-label="Nächste ÖPNV-Haltestellen"
 		>
 			<div class="flex items-center justify-between gap-2 border-b border-rule pb-1">
-				<h3 class="font-mono text-xs uppercase tracking-wide text-ink-muted">
+				<h3 class="font-mono text-xs tracking-wide text-ink-muted uppercase">
 					Nächste Haltestellen
 				</h3>
 				{#if rating}
@@ -111,13 +111,11 @@
 				class="mt-1 pb-2 font-mono text-[10px] leading-snug text-ink-subtle"
 				data-testid="nearest-stops-method"
 			>
-				Berechnete Schätzung: Luftlinie × 1,3 Umweg-Faktor, 4,8 km/h Gehgeschwindigkeit. Reale Fußwege können abweichen.
+				Berechnete Schätzung: Luftlinie × 1,3 Umweg-Faktor, 4,8 km/h Gehgeschwindigkeit. Reale
+				Fußwege können abweichen.
 			</p>
 			{#if entries.length === 0}
-				<p
-					class="py-1 font-mono text-xs text-ink-subtle"
-					data-testid="nearest-stops-empty"
-				>
+				<p class="py-1 font-mono text-xs text-ink-subtle" data-testid="nearest-stops-empty">
 					{isResidential
 						? 'Keine ÖPNV-Haltestelle im Umkreis von 1500m'
 						: 'Keine ÖPNV-Haltestelle im Umkreis von 600m'}
@@ -142,12 +140,14 @@
 							>
 								<Icon size={16} aria-hidden="true" />
 							</span>
-							<span class="w-12 shrink-0 font-mono text-[10px] uppercase tracking-wide text-ink-subtle">
+							<span
+								class="w-12 shrink-0 font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+							>
 								{MODUS_LABEL[modus]}
 							</span>
 							<span class="flex-1 truncate text-sm text-ink">{stop.name}</span>
 							<span
-								class="shrink-0 font-mono text-[11px] tabular-nums text-ink-subtle"
+								class="shrink-0 font-mono text-[11px] text-ink-subtle tabular-nums"
 								data-testid="nearest-stop-distance"
 								aria-hidden="true"
 							>

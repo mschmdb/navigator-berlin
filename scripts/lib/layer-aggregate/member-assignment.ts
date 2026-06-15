@@ -98,7 +98,11 @@ export function buildSpatialTargets(
 		if (typeof name !== 'string') continue;
 		const a = area(f);
 		berlinAreaM2 += a;
-		bezirk.push({ slug: normalizeSlug(name), feature: f as Feature<Polygon | MultiPolygon>, areaM2: a });
+		bezirk.push({
+			slug: normalizeSlug(name),
+			feature: f as Feature<Polygon | MultiPolygon>,
+			areaM2: a
+		});
 	}
 
 	return { kiez, bezirk, berlinAreaM2 };
@@ -170,9 +174,7 @@ export function collectIntersectArea(
 			const sf = sourceFeatures[cand.idx];
 			const geom = sf.geometry;
 			if (geom.type !== 'Polygon' && geom.type !== 'MultiPolygon') continue;
-			const clip = intersect(
-				featureCollection([t.feature, sf as Feature<Polygon | MultiPolygon>])
-			);
+			const clip = intersect(featureCollection([t.feature, sf as Feature<Polygon | MultiPolygon>]));
 			if (clip) hitArea += area(clip);
 		}
 		result.set(t.slug, hitArea);

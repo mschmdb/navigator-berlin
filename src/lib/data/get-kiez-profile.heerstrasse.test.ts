@@ -36,11 +36,7 @@ describe('getKiezProfile · Heerstraße-Disambiguierung', () => {
 	});
 
 	it('löst heerstrasse-charlottenburg-wilmersdorf auf den richtigen Bezirk auf', async () => {
-		const profile = await getKiezProfile(
-			'de',
-			'heerstrasse-charlottenburg-wilmersdorf',
-			fsFetch
-		);
+		const profile = await getKiezProfile('de', 'heerstrasse-charlottenburg-wilmersdorf', fsFetch);
 		expect(profile.name).toBe('Heerstraße');
 		expect(profile.bezirk).toBe('Charlottenburg-Wilmersdorf');
 		expect(profile.slug).toBe('heerstrasse-charlottenburg-wilmersdorf');

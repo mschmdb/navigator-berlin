@@ -88,12 +88,8 @@ describe('getValueSeverity()', () => {
 		it('hoch / gut (raw) → success', () => {
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'hoch' })).toBe('success');
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'gut' })).toBe('success');
-			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr hoch' })).toBe(
-				'success'
-			);
-			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr gut' })).toBe(
-				'success'
-			);
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr hoch' })).toBe('success');
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr gut' })).toBe('success');
 		});
 		it('mittel → success-soft (User-Pattern Story 1.18: gegen Grau-Monotonie)', () => {
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'mittel' })).toBe(
@@ -102,9 +98,7 @@ describe('getValueSeverity()', () => {
 		});
 		it('gering / schlecht (raw) / niedrig → warning', () => {
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'gering' })).toBe('warning');
-			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'schlecht' })).toBe(
-				'warning'
-			);
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'schlecht' })).toBe('warning');
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'niedrig' })).toBe('warning');
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr gering' })).toBe(
 				'warning'
@@ -114,9 +108,7 @@ describe('getValueSeverity()', () => {
 
 	describe('Umweltgerechtigkeit (kumulativ)', () => {
 		it('keine Belastung → success', () => {
-			expect(getValueSeverity('umweltgerechtigkeit-2023', { kategorie: 'keine' })).toBe(
-				'success'
-			);
+			expect(getValueSeverity('umweltgerechtigkeit-2023', { kategorie: 'keine' })).toBe('success');
 		});
 		it('einfach → warning', () => {
 			expect(getValueSeverity('umweltgerechtigkeit-2023', { kategorie: 'einfach' })).toBe(

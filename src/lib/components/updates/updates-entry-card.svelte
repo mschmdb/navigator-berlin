@@ -1,10 +1,6 @@
 <script lang="ts">
 	import type { UpdateEntry } from '$lib/content/updates/types.js';
-	import {
-		CATEGORY_BADGE_CLASSES,
-		CATEGORY_LABEL_DE,
-		formatDateDe
-	} from './category-label.js';
+	import { CATEGORY_BADGE_CLASSES, CATEGORY_LABEL_DE, formatDateDe } from './category-label.js';
 
 	type Props = { entry: UpdateEntry };
 	let { entry }: Props = $props();
@@ -43,10 +39,7 @@
 		{entry.frontmatter.summary_de}
 	</p>
 	<p class="font-mono text-xs text-ink-subtle">
-		<a
-			href={detailHref}
-			class="text-accent underline underline-offset-2 hover:text-accent-strong"
-		>
+		<a href={detailHref} class="hover:text-accent-strong text-accent underline underline-offset-2">
 			Mehr lesen
 		</a>
 	</p>

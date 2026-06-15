@@ -57,7 +57,10 @@ async function fetchSource(slug: string): Promise<{ raw: string; sourceUrl: stri
 		}
 		case 'overpass':
 			if (!source.overpassQL) throw new Error(`${slug}: overpassQL required for overpass`);
-			return { raw: await fetchOverpass(source.sourceUrl, source.overpassQL), sourceUrl: source.sourceUrl };
+			return {
+				raw: await fetchOverpass(source.sourceUrl, source.overpassQL),
+				sourceUrl: source.sourceUrl
+			};
 		default:
 			throw new Error(`Unsupported kind for layer source: ${slug}`);
 	}
@@ -81,7 +84,9 @@ function detectGeoJsonStats(geojson: string): { geometryType: GeometryType; feat
 			'MultiPolygon',
 			'LineString'
 		]);
-		const geometryType = (first && supported.has(first as GeometryType) ? first : 'Point') as GeometryType;
+		const geometryType = (
+			first && supported.has(first as GeometryType) ? first : 'Point'
+		) as GeometryType;
 		return { geometryType, featureCount: fc.features?.length ?? 0 };
 	} catch {
 		return { geometryType: 'Point', featureCount: 0 };
@@ -169,9 +174,7 @@ async function main(): Promise<void> {
 	const entries: LayerEntry[] = [];
 	const failed: Array<{ slug: string; error: string }> = [];
 
-	const targetSources = slugFilter
-		? SOURCES.filter((s) => slugFilter.includes(s.slug))
-		: SOURCES;
+	const targetSources = slugFilter ? SOURCES.filter((s) => slugFilter.includes(s.slug)) : SOURCES;
 	if (slugFilter) {
 		const unknown = slugFilter.filter((s) => !SOURCES.some((src) => src.slug === s));
 		if (unknown.length > 0) throw new Error(`Unknown slug(s): ${unknown.join(', ')}`);

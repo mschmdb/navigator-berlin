@@ -19,9 +19,7 @@ describe('map-controls.svelte', () => {
 		render(MapControls, {});
 		await openCompass();
 		await expect.element(page.getByRole('menuitem', { name: /Norden/i })).toBeInTheDocument();
-		await expect
-			.element(page.getByRole('menuitem', { name: /Sueden|Süden/i }))
-			.toBeInTheDocument();
+		await expect.element(page.getByRole('menuitem', { name: /Sueden|Süden/i })).toBeInTheDocument();
 		await expect.element(page.getByRole('menuitem', { name: /Westen/i })).toBeInTheDocument();
 		await expect.element(page.getByRole('menuitem', { name: /Osten/i })).toBeInTheDocument();
 	});
@@ -75,9 +73,7 @@ describe('map-controls.svelte', () => {
 		expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
 		expect(trigger.getAttribute('aria-expanded')).toBe('false');
 		await trigger.click();
-		const triggerAfter = (await page
-			.getByTestId('compass-trigger')
-			.element()) as HTMLButtonElement;
+		const triggerAfter = (await page.getByTestId('compass-trigger').element()) as HTMLButtonElement;
 		expect(triggerAfter.getAttribute('aria-expanded')).toBe('true');
 	});
 });

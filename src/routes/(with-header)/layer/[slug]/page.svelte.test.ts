@@ -25,8 +25,7 @@ function makeMeta(slug: string, overrides: Partial<LayerMetadata> = {}): LayerMe
 
 function methodology(): LayerMethodology {
 	return {
-		calculation:
-			'Modellierte Lärm-Gesamtbelastung pro LOR-Planungsraum aus dem Umweltatlas 2023.',
+		calculation: 'Modellierte Lärm-Gesamtbelastung pro LOR-Planungsraum aus dem Umweltatlas 2023.',
 		coverageGaps: ['Modellwerte, keine flächendeckenden Mess-Stationen.'],
 		omissions: ['Keine Trennung nach Quelle (Straße, Schiene, Flug).'],
 		relatedLayers: ['luft-2023'],
@@ -36,10 +35,7 @@ function methodology(): LayerMethodology {
 	};
 }
 
-function detail(
-	slug = 'laerm-2023',
-	overrides: Partial<LayerDetail> = {}
-): LayerDetail {
+function detail(slug = 'laerm-2023', overrides: Partial<LayerDetail> = {}): LayerDetail {
 	return {
 		slug,
 		lang: 'de',
@@ -140,9 +136,7 @@ describe('layer-detail +page.svelte', () => {
 
 	it('rendert Coverage-Gaps-Section nur wenn coverageGaps gefüllt', async () => {
 		render(Page, { data: { detail: detail(), faq: [] } });
-		const sec = (await page
-			.getByTestId('layer-detail-coverage-gaps')
-			.element()) as HTMLElement;
+		const sec = (await page.getByTestId('layer-detail-coverage-gaps').element()) as HTMLElement;
 		expect(sec.textContent).toMatch(/Modellwerte/);
 	});
 
@@ -162,9 +156,7 @@ describe('layer-detail +page.svelte', () => {
 
 	it('rendert Methodik-Banner mit Link auf /methodik', async () => {
 		render(Page, { data: { detail: detail(), faq: [] } });
-		const banner = (await page
-			.getByTestId('layer-detail-methodik-link')
-			.element()) as HTMLElement;
+		const banner = (await page.getByTestId('layer-detail-methodik-link').element()) as HTMLElement;
 		const link = banner.querySelector('a');
 		expect(link?.getAttribute('href')).toMatch(/^\/methodik/);
 	});
@@ -174,12 +166,8 @@ describe('layer-detail +page.svelte', () => {
 			methodology: { ...methodology(), coverageGaps: undefined, omissions: undefined }
 		});
 		render(Page, { data: { detail: d, faq: [] } });
-		await expect
-			.element(page.getByTestId('layer-detail-coverage-gaps'))
-			.not.toBeInTheDocument();
-		await expect
-			.element(page.getByTestId('layer-detail-omissions'))
-			.not.toBeInTheDocument();
+		await expect.element(page.getByTestId('layer-detail-coverage-gaps')).not.toBeInTheDocument();
+		await expect.element(page.getByTestId('layer-detail-omissions')).not.toBeInTheDocument();
 	});
 
 	it('rendert Dataset-JSON-LD mit license-URL + creator + distribution.contentUrl', async () => {

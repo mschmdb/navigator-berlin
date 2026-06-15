@@ -2,9 +2,9 @@
 slug: dammvorstadt
 name: Dammvorstadt
 pageType: kiez
-model: "claude-opus-4-8 (subagent)"
+model: 'claude-opus-4-8 (subagent)'
 inputHash: cfd7e826507363cb
-generatedAt: "2026-06-07T12:00:00.000Z"
+generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
 Dammvorstadt ist grün und ordentlich versorgt. Grün und Hitze erreichen 62,9 Punkte, über dem Berliner Median. Die Versorgung liegt mit 56 Punkten klar über dem Schnitt von Treptow Koepenick. Die Mobilität übertrifft mit 31,2 Punkten den Berliner Median. Die Haltestellendichte erreicht rund 14 pro Quadratkilometer.

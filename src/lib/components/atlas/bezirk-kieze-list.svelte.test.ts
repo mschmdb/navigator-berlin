@@ -21,7 +21,10 @@ describe('bezirk-kieze-list.svelte', () => {
 
 	it('Links verweisen auf /kiez/{slug}', async () => {
 		render(BezirkKiezeList, { kieze: KIEZE, bezirkName: 'Pankow' });
-		const link = (await page.getByTestId('bezirk-kieze-link').first().element()) as HTMLAnchorElement;
+		const link = (await page
+			.getByTestId('bezirk-kieze-link')
+			.first()
+			.element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/kiez/prenzlauer-berg');
 	});
 

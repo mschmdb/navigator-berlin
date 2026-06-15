@@ -28,11 +28,7 @@ export const LAYER_SYNONYMS_DE: Record<string, readonly string[]> = {
 };
 
 export function normalizeQueryNfd(input: string): string {
-	return input
-		.normalize('NFD')
-		.replace(/[̀-ͯ]/g, '')
-		.toLowerCase()
-		.trim();
+	return input.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 }
 
 export function matchSynonyms(query: string): readonly string[] {

@@ -13,7 +13,15 @@
 		icon?: Component<{ size?: number | string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
 	};
 
-	let { severity, value, unit, layerName, numeric, compact = false, icon: IconCmp }: Props = $props();
+	let {
+		severity,
+		value,
+		unit,
+		layerName,
+		numeric,
+		compact = false,
+		icon: IconCmp
+	}: Props = $props();
 
 	const SEVERITY_DESCRIPTIONS: Record<SeverityLevel, string> = {
 		success: 'günstige Belastung',
@@ -43,14 +51,16 @@
 	aria-label={ariaLabel}
 	class={[
 		'inline-flex max-w-full items-center gap-1.5 rounded-xs font-sans whitespace-normal',
-		compact
-			? 'px-1.5 py-0.5 text-xs font-medium'
-			: 'min-h-8 px-2 py-1 text-sm font-semibold',
+		compact ? 'px-1.5 py-0.5 text-xs font-medium' : 'min-h-8 px-2 py-1 text-sm font-semibold',
 		SEVERITY_CLASSES[severity]
 	].join(' ')}
 >
 	{#if IconCmp}
-		<span data-testid="value-chip-icon" class="inline-flex shrink-0 items-center" aria-hidden="true">
+		<span
+			data-testid="value-chip-icon"
+			class="inline-flex shrink-0 items-center"
+			aria-hidden="true"
+		>
 			<IconCmp size={14} aria-hidden="true" />
 		</span>
 	{/if}

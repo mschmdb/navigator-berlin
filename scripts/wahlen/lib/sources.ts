@@ -23,7 +23,8 @@ export type WahlSource = {
 
 const BWL_LICENSE = 'Datenlizenz Deutschland Namensnennung 2.0 (Bundeswahlleiterin)';
 const BWL_LICENSE_SHORT = 'dl-de/by-2.0';
-const SBB_LICENSE = 'Datenlizenz Deutschland Namensnennung 2.0 (Amt für Statistik Berlin-Brandenburg)';
+const SBB_LICENSE =
+	'Datenlizenz Deutschland Namensnennung 2.0 (Amt für Statistik Berlin-Brandenburg)';
 
 export const BWL_BTW13_WBZ: WahlSource = {
 	slug: 'btw13',

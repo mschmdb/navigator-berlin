@@ -32,6 +32,9 @@ export interface LorAreaFeature {
 	areaM2: number | null;
 }
 
+/** Aggregat-Record für Kiez/Bezirk: gleiche Felder wie PLR, ohne plrId-Join-Key. */
+export type AggregatedEinwohnerRecord = Omit<LorEinwohnerRecord, 'plrId'>;
+
 // 0 bis unter 6: E_EU1 (unter 1) + E_E1U6 (1 bis unter 6).
 const KINDER_0_6_KEYS = ['E_EU1', 'E_E1U6'] as const;
 // 6 bis unter 12: Einzeljahr-Spalten, da die Quelle nur E_E6U15 vorgruppiert.
@@ -82,6 +85,54 @@ export function computeDichte(gesamt: number, areaM2: number | null): number | n
 	if (areaM2 === null || !Number.isFinite(areaM2) || areaM2 <= 0) return null;
 	if (!Number.isFinite(gesamt) || gesamt < 0) return null;
 	return gesamt / (areaM2 / 1_000_000);
+}
+
+/**
+ * Aggregiert PLR-Zeilen flächengewichtet auf eine gröbere Ebene (Kiez/Bezirk).
+ *
+ * `groupKeyOf(plrId)` bestimmt die Gruppe (z.B. plrId.slice(0,6) = BZR_ID,
+ * plrId.slice(0,2) = Bezirk-Code); `null` schließt die Zeile aus.
+ *
+ * Dichte ist Σgesamt / Σfläche (NICHT der Mittelwert der PLR-Dichten), Quotienten +
+ * Anteile werden aus den summierten Altersbändern neu berechnet. Nur Flächen mit
+ * bekanntem Wert gehen in die Summe ein; ohne Fläche bleibt dichtePro_km2 null.
+ */
+export function aggregateEinwohner(
+	rows: readonly EinwohnerRow[],
+	areaByPlr: ReadonlyMap<string, number | null>,
+	groupKeyOf: (plrId: string) => string | null
+): Map<string, AggregatedEinwohnerRecord> {
+	interface Acc {
+		gesamt: number;
+		areaM2: number;
+		ages: Record<string, number>;
+	}
+	const groups = new Map<string, Acc>();
+	for (const r of rows) {
+		const key = groupKeyOf(r.lorId);
+		if (key === null) continue;
+		let acc = groups.get(key);
+		if (!acc) {
+			acc = { gesamt: 0, areaM2: 0, ages: {} };
+			groups.set(key, acc);
+		}
+		acc.gesamt += Number.isFinite(r.gesamt) ? r.gesamt : 0;
+		const area = areaByPlr.get(r.lorId);
+		if (typeof area === 'number' && Number.isFinite(area) && area > 0) acc.areaM2 += area;
+		for (const [k, v] of Object.entries(r.ages)) {
+			if (Number.isFinite(v)) acc.ages[k] = (acc.ages[k] ?? 0) + v;
+		}
+	}
+	const out = new Map<string, AggregatedEinwohnerRecord>();
+	for (const [key, acc] of groups) {
+		out.set(key, {
+			gesamt: acc.gesamt,
+			...bucketAltersjahre(acc.ages),
+			dichtePro_km2: computeDichte(acc.gesamt, acc.areaM2 > 0 ? acc.areaM2 : null),
+			...computeQuotienten(acc.ages, acc.gesamt)
+		});
+	}
+	return out;
 }
 
 export function joinEinwohnerToLor(

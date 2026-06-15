@@ -11,10 +11,7 @@
  * `scripts/render-faq.ts` (Story 2.5b, future).
  */
 
-export const BANNED_WORDS: readonly string[] = Object.freeze([
-	'lebenswert',
-	'lebensqualität'
-]);
+export const BANNED_WORDS: readonly string[] = Object.freeze(['lebenswert', 'lebensqualität']);
 
 export interface LintResult {
 	readonly hits: readonly string[];
