@@ -2,6 +2,7 @@ import { desc, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { bezirkScore, kiezScore } from '$lib/server/db/schema/index.js';
 import type { RankingRow } from '$lib/data/ranking-types.js';
+import { readRegionDisplayNames, type RegionDisplayNames } from '$lib/data/region-display-names.js';
 
 export const prerender = true;
 
@@ -35,7 +36,7 @@ function slugToDisplayName(slug: string): string {
 		.join(' ');
 }
 
-async function loadKieze(bezirkNameBySlug: Map<string, string>): Promise<RankingRow[]> {
+async function loadKieze(names: RegionDisplayNames): Promise<RankingRow[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
 		const { getDb } = await import('$lib/server/db/index.js');
@@ -45,9 +46,11 @@ async function loadKieze(bezirkNameBySlug: Map<string, string>): Promise<Ranking
 			.orderBy(desc(sql`COALESCE(${kiezScore.composite}, -1)`));
 		return rows.map((r) => ({
 			slug: r.slug,
-			displayName: slugToDisplayName(r.slug),
+			displayName: names.kiez.get(r.slug) ?? slugToDisplayName(r.slug),
 			bezirkSlug: r.bezirkSlug,
-			bezirkName: r.bezirkSlug ? bezirkNameBySlug.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug) : null,
+			bezirkName: r.bezirkSlug
+				? names.bezirk.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug)
+				: null,
 			composite: typeof r.composite === 'number' ? r.composite : null,
 			ruheLuft: r.ruheLuft,
 			gruenHitze: r.gruenHitze,
@@ -64,7 +67,7 @@ async function loadKieze(bezirkNameBySlug: Map<string, string>): Promise<Ranking
 	}
 }
 
-async function loadBezirke(): Promise<RankingRow[]> {
+async function loadBezirke(names: RegionDisplayNames): Promise<RankingRow[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
 		const { getDb } = await import('$lib/server/db/index.js');
@@ -74,7 +77,7 @@ async function loadBezirke(): Promise<RankingRow[]> {
 			.orderBy(desc(sql`COALESCE(${bezirkScore.composite}, -1)`));
 		return rows.map((r) => ({
 			slug: r.slug,
-			displayName: slugToDisplayName(r.slug),
+			displayName: names.bezirk.get(r.slug) ?? slugToDisplayName(r.slug),
 			bezirkSlug: null,
 			bezirkName: null,
 			composite: typeof r.composite === 'number' ? r.composite : null,
@@ -94,11 +97,9 @@ async function loadBezirke(): Promise<RankingRow[]> {
 }
 
 export const load: PageServerLoad = async () => {
-	const bezirke = await loadBezirke();
-	const bezirkNameBySlug = new Map<string, string>(
-		bezirke.map((b) => [b.slug, b.displayName])
-	);
-	const kieze = await loadKieze(bezirkNameBySlug);
+	const names = await readRegionDisplayNames();
+	const bezirke = await loadBezirke(names);
+	const kieze = await loadKieze(names);
 	const computedAt = bezirke.length > 0 || kieze.length > 0 ? new Date().toISOString() : null;
 	const data: RankingPageData = { kieze, bezirke, computedAt };
 	return data;
