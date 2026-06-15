@@ -4,6 +4,8 @@
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import BezirkHero from '$lib/components/atlas/bezirk-hero.svelte';
 	import BezirkKiezeList from '$lib/components/atlas/bezirk-kieze-list.svelte';
+	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
+	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
@@ -70,15 +72,11 @@
 		})
 	);
 
-	const breadcrumbJsonLd = $derived(
-		buildBreadcrumbList({
-			origin,
-			items: [
-				{ name: 'Berlin', path: '/' },
-				{ name, path: `/bezirk/${slug}` }
-			]
-		})
-	);
+	const breadcrumbItems = $derived([
+		{ name: 'Berlin', path: '/' },
+		{ name, path: `/bezirk/${slug}` }
+	]);
+	const breadcrumbJsonLd = $derived(buildBreadcrumbList({ origin, items: breadcrumbItems }));
 </script>
 
 <SeoHead
@@ -94,6 +92,10 @@
 <JsonLd data={adminAreaJsonLd} testid="bezirk-administrative-area-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="bezirk-breadcrumb-jsonld" />
 
+<div class="mx-auto max-w-3xl px-4 pt-6">
+	<Breadcrumb items={breadcrumbItems} />
+</div>
+
 <BezirkHero
 	profile={data.profile}
 	stats={data.stats}
@@ -103,4 +105,18 @@
 />
 <div class="mx-auto max-w-3xl px-4 pb-8">
 	<BezirkKiezeList kieze={data.kieze} bezirkName={name} />
+</div>
+
+<div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
+	<ScoreRankLink
+		rang={data.compositeRank.rang}
+		total={data.compositeRank.total}
+		view="bezirke"
+	/>
+	<a
+		href="/methodik/kiez-score"
+		class="text-accent underline underline-offset-2 hover:text-accent-strong"
+	>
+		Wie der Bezirks-Score entsteht →
+	</a>
 </div>

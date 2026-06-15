@@ -91,6 +91,7 @@ export type BezirkPageData = {
 	readonly faq: readonly FaqEntry[];
 	readonly kieze: readonly KiezRef[];
 	readonly comparison: readonly ComparisonDimRow[];
+	readonly compositeRank: { readonly rang: number | null; readonly total: number };
 	readonly profileProse: readonly string[];
 };
 
@@ -189,6 +190,19 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			total: rk?.total ?? 0
 		};
 	});
-	const data: BezirkPageData = { profile, stats, faq, kieze, comparison, profileProse };
+	const compositeRk = rank?.get('composite');
+	const compositeRank = {
+		rang: compositeRk?.rang ?? null,
+		total: compositeRk?.total ?? 0
+	};
+	const data: BezirkPageData = {
+		profile,
+		stats,
+		faq,
+		kieze,
+		comparison,
+		compositeRank,
+		profileProse
+	};
 	return data;
 };

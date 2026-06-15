@@ -62,5 +62,5 @@
 	<HomeTopKieze items={data.topKieze} />
 	<HomeLayerTeasers layerCount={data.layerCount} />
 	<HomeUpdatesTeaser items={data.updates} />
-	<HomeOpenBlock layerCount={data.layerCount} />
+	<HomeOpenBlock />
 </article>

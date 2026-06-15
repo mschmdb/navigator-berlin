@@ -119,6 +119,7 @@ export type KiezPageData = {
 	readonly siblings: readonly KiezRef[];
 	readonly wahlVerlauf: readonly WahlVerlaufRow[];
 	readonly comparison: readonly ComparisonDimRow[];
+	readonly compositeRank: { readonly rang: number | null; readonly total: number };
 	readonly profileProse: readonly string[];
 };
 
@@ -292,6 +293,11 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			total: rk?.total ?? 0
 		};
 	});
+	const compositeRk = rank?.get('composite');
+	const compositeRank = {
+		rang: compositeRk?.rang ?? null,
+		total: compositeRk?.total ?? 0
+	};
 	const data: KiezPageData = {
 		profile,
 		stats,
@@ -300,6 +306,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		siblings,
 		wahlVerlauf,
 		comparison,
+		compositeRank,
 		profileProse
 	};
 	return data;

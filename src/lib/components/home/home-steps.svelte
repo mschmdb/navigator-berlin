@@ -8,12 +8,12 @@
 		{
 			n: '1',
 			title: 'Adresse oder Kiez wählen',
-			text: 'Tipp eine Berliner Adresse ein oder klick einen Kiez auf der Karte an.'
+			text: 'Gib eine Berliner Adresse ein oder klick einen Kiez auf der Karte an.'
 		},
 		{
 			n: '2',
-			title: 'Score & sieben Dimensionen',
-			text: 'Ein Gesamt-Score von 0 bis 100, dazu sieben Dimensionen - von Lärm und Versorgung bis Kultur und Kriminalität.'
+			title: 'Kiez-Score & Dimensionen',
+			text: 'Ein Kiez-Score von 0 bis 100 aus fünf Dimensionen. Kultur und Kriminalität kommen als Kontext dazu.'
 		},
 		{
 			n: '3',

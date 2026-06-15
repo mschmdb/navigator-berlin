@@ -1,6 +1,7 @@
 import { desc, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { kiezScore } from '$lib/server/db/schema/index.js';
+import { readRegionDisplayNames, type RegionDisplayNames } from '$lib/data/region-display-names.js';
 
 export const prerender = true;
 
@@ -75,11 +76,11 @@ async function loadFeatured(fetchFn: typeof fetch): Promise<HomeFeaturedScore | 
 			.limit(1);
 		const r = rows[0];
 		if (!r || typeof r.composite !== 'number') return null;
-		const displayName = slugToDisplayName(r.slug);
 
 		const { getKiezProfile } = await import('$lib/data/get-kiez-profile.js');
 		const { getLocale } = await import('$lib/paraglide/runtime.js');
 		const profile = await getKiezProfile(getLocale(), r.slug, fetchFn);
+		const displayName = profile.name || slugToDisplayName(r.slug);
 		// Auf 5 Dezimalen runden = exakt die Coords, die im /explore?address=lng,lat landen.
 		const lng = Number(profile.centroid[0].toFixed(5));
 		const lat = Number(profile.centroid[1].toFixed(5));
@@ -139,7 +140,7 @@ function slugToDisplayName(slug: string): string {
 		.join(' ');
 }
 
-async function loadTopKieze(): Promise<HomeTopKiez[]> {
+async function loadTopKieze(names: RegionDisplayNames): Promise<HomeTopKiez[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
 		const { getDb } = await import('$lib/server/db/index.js');
@@ -150,8 +151,8 @@ async function loadTopKieze(): Promise<HomeTopKiez[]> {
 			.limit(TOP_KIEZ_TEASER);
 		return rows.map((r) => ({
 			slug: r.slug,
-			displayName: slugToDisplayName(r.slug),
-			bezirkName: r.bezirkSlug ? slugToDisplayName(r.bezirkSlug) : null,
+			displayName: names.kiez.get(r.slug) ?? slugToDisplayName(r.slug),
+			bezirkName: r.bezirkSlug ? names.bezirk.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug) : null,
 			composite: typeof r.composite === 'number' ? r.composite : null
 		}));
 	} catch (err) {
@@ -186,8 +187,9 @@ async function loadUpdates(): Promise<HomeUpdateTeaser[]> {
 }
 
 export const load: PageServerLoad = async ({ fetch }) => {
+	const names = await readRegionDisplayNames();
 	const [topKieze, updates, layerCount, featured] = await Promise.all([
-		loadTopKieze(),
+		loadTopKieze(names),
 		loadUpdates(),
 		loadLayerCount(),
 		loadFeatured(fetch)
