@@ -704,4 +704,105 @@ describe('buildLlmExportMarkdown — Kiez-Score (Story 1.28)', () => {
 		});
 		expect(md).toContain('Sozialstruktur');
 	});
+
+	it('Gesamt zählt nur Composite-Dimensionen, Kontext-Dims markiert (Story 13/14)', () => {
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			kiezScore: {
+				persona: 'allgemein',
+				overall: 70,
+				dimensions: [
+					{ dimension: 'ruhe-luft', value: 80, sources: [], missingData: [], dataStand: null },
+					{ dimension: 'gruen-hitze', value: 60, sources: [], missingData: [], dataStand: null },
+					// Kultur ist KEINE Composite-Dimension (Gewicht 0) → darf den Zähler nicht erhöhen.
+					{ dimension: 'kultur', value: 90, sources: [], missingData: [], dataStand: null }
+				],
+				missingDimensions: []
+			}
+		});
+		// 2 Composite-Dims mit Wert, 5 Composite-Dims gesamt → 2/5, NICHT 3/3.
+		expect(md).toContain('Mittel über 2/5 Dimensionen');
+		expect(md).toMatch(/Kultur.*\(Kontext, nicht im Gesamt-Score\)/);
+		expect(md).toContain('aus 5 Dimensionen');
+	});
+});
+
+describe('buildLlmExportMarkdown — Regionaler Vergleich (Story 14.10)', () => {
+	const regional = {
+		kiezName: 'Boxhagener Platz',
+		kiezSlug: 'boxhagener-platz',
+		kiezComposite: 62,
+		bezirkName: 'Friedrichshain-Kreuzberg',
+		bezirkSlug: 'friedrichshain-kreuzberg',
+		bezirkComposite: 55
+	};
+
+	it('rendert Kiez- + Bezirk-Composite mit Profil-Links', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), regional });
+		expect(md).toContain('## Regionaler Vergleich');
+		expect(md).toContain(
+			'Bezirksregion Boxhagener Platz: Gesamt-Score 62/100 · Profil /kiez/boxhagener-platz'
+		);
+		expect(md).toContain(
+			'Bezirk Friedrichshain-Kreuzberg: Gesamt-Score 55/100 · Profil /bezirk/friedrichshain-kreuzberg'
+		);
+	});
+
+	it('lässt fehlende Composites (null) weg', () => {
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			regional: { ...regional, bezirkComposite: null }
+		});
+		expect(md).toContain('Bezirksregion Boxhagener Platz');
+		expect(md).not.toContain('Bezirk Friedrichshain-Kreuzberg: Gesamt-Score');
+	});
+
+	it('ohne regional / beide null keine Section', () => {
+		expect(buildLlmExportMarkdown(fullInput())).not.toContain('## Regionaler Vergleich');
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			regional: { ...regional, kiezComposite: null, bezirkComposite: null }
+		});
+		expect(md).not.toContain('## Regionaler Vergleich');
+	});
+});
+
+describe('buildLlmExportMarkdown — Score-Membership pro Layer (Story 14.11)', () => {
+	it('markiert Score-Input-Layer mit Dimension', () => {
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			layerHits: [
+				{
+					layer: 'gruenversorgung-2023',
+					value: { kategorie: 'gut' },
+					source: 'Berlin Umweltatlas',
+					updatedAt: '2023-01-01',
+					license: 'dl-de/by-2-0'
+				}
+			],
+			layerMeta: [
+				...META,
+				{
+					slug: 'gruenversorgung-2023',
+					filename: 'gruenversorgung-2023.geojson',
+					sourceUrl: 'https://daten.berlin.de/umweltatlas',
+					fetchedAt: '2026-04-01T00:00:00.000Z',
+					license: 'dl-de/by-2-0',
+					sha256: 'gv',
+					bundleGroup: 'C: Umwelt',
+					zoomThresholds: { min: 6, max: 22 },
+					geometryType: 'Polygon',
+					featureCount: 540
+				}
+			]
+		});
+		expect(md).toContain('Im Kiez-Score: Grün & Hitze');
+	});
+
+	it('markiert Kontext-Layer + Lärm-Hinweis', () => {
+		const md = buildLlmExportMarkdown(fullInput());
+		// laerm-2023 ist Kontext (Score nutzt das dB-Mittel) → Kontext-Tag + klärender Hinweis.
+		expect(md).toContain('Kontext · nicht im Kiez-Score');
+		expect(md).toMatch(/Kontext-Hinweis:.*dB-Mittelwert/);
+	});
 });

@@ -1,8 +1,19 @@
-import type { ClimateData, ClimateStation, KiezScore, LayerHit, LayerMetadata } from '$lib/data';
+import {
+	COMPOSITE_DIMENSIONS,
+	type ClimateData,
+	type ClimateStation,
+	type KiezScore,
+	type LayerHit,
+	type LayerMetadata
+} from '$lib/data';
 import {
 	DIMENSION_LABELS_DE,
 	scaleFor
 } from '$lib/components/atlas/inspector-panel/internal/kiez-score-display.js';
+import {
+	scoreDimensionLabelFor,
+	contextNoteFor
+} from '$lib/components/atlas/inspector-panel/internal/score-membership.js';
 import { groupHitsBySection } from '$lib/components/atlas/inspector-panel/internal/sections.js';
 import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
 import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
@@ -64,6 +75,18 @@ export interface LlmExportInput {
 	/** Räumlicher Bezug des Bevölkerungsprofils (spiegelt den Inspector-Scope). */
 	readonly demografieBezug?: string | null;
 	readonly laermDb?: number | null;
+	/** Story 14.10: aggregierte Gesamt-Scores der Bezirksregion + des Bezirks (0–100). */
+	readonly regional?: LlmExportRegional | null;
+}
+
+/** Regionaler Vergleich: Composite-Scores + Profil-Links für Kiez (BR) und Bezirk. */
+export interface LlmExportRegional {
+	readonly kiezName: string | null;
+	readonly kiezSlug: string | null;
+	readonly kiezComposite: number | null;
+	readonly bezirkName: string | null;
+	readonly bezirkSlug: string | null;
+	readonly bezirkComposite: number | null;
 }
 
 const COORD_PRECISION = 5;
@@ -117,6 +140,13 @@ function renderHit(hit: LayerHit, lines: string[], laermDb?: number | null): voi
 	const editorial = getEditorialConfig(hit.layer);
 
 	lines.push(`- **${display}**: ${formatted.text}`);
+	// Story 14.11: Score-Zugehörigkeit explizit machen (wie der Inspector-Badge).
+	const scoreDimLabel = scoreDimensionLabelFor(hit.layer);
+	lines.push(
+		scoreDimLabel ? `  - Im Kiez-Score: ${scoreDimLabel}` : '  - Kontext · nicht im Kiez-Score'
+	);
+	const membershipNote = contextNoteFor(hit.layer);
+	if (membershipNote) lines.push(`  - Kontext-Hinweis: ${membershipNote}`);
 	// Story 10.6b: dB-Kiez-Mittel (L_DEN) als Kontext zur 3-Stufen-Lärmkarte.
 	if (hit.layer === 'laerm-2023' && typeof laermDb === 'number') {
 		lines.push(`  - Lärm-Mittel (Kiez): ${laermDb} dB (L_DEN)`);
@@ -298,14 +328,22 @@ function renderKiezScore(input: LlmExportInput, lines: string[]): void {
 	if (typeof score.overall === 'number') {
 		const overallScale = scaleFor(score.overall, 'ruhe-luft');
 		const stufe = overallScale ? overallScale.label : '—';
+		// Gesamt = Mittel NUR über die Composite-Dimensionen (Kultur/Kriminalität zählen
+		// als Kontext nicht mit). Spiegelt usedDimsCount/COMPOSITE_DIMENSIONS.length im Inspector.
+		const usedComposite = score.dimensions.filter(
+			(d) => d.value !== null && COMPOSITE_DIMENSIONS.includes(d.dimension)
+		).length;
 		lines.push(
-			`- Gesamt: ${stufe} (${Math.round(score.overall)}/100, Mittel über ${score.dimensions.filter((d) => d.value !== null).length} Dimensionen)`
+			`- Gesamt: ${stufe} (${Math.round(score.overall)}/100, Mittel über ${usedComposite}/${COMPOSITE_DIMENSIONS.length} Dimensionen)`
 		);
 	}
 	for (const dim of score.dimensions) {
 		const label = DIMENSION_LABELS_DE[dim.dimension];
+		const kontext = COMPOSITE_DIMENSIONS.includes(dim.dimension)
+			? ''
+			: ' (Kontext, nicht im Gesamt-Score)';
 		if (dim.value === null) {
-			lines.push(`- ${label}: Daten unzureichend`);
+			lines.push(`- ${label}${kontext}: Daten unzureichend`);
 			continue;
 		}
 		const scale = scaleFor(dim.value, dim.dimension);
@@ -317,13 +355,39 @@ function renderKiezScore(input: LlmExportInput, lines: string[]): void {
 					`${s.layer} (${Math.round(s.normalizedValue as number)}/100, Gewicht ${Math.round(s.weight * 100)}%)`
 			)
 			.join(', ');
-		lines.push(`- ${label}: ${stufe} (${Math.round(dim.value)}/100)`);
+		lines.push(`- ${label}${kontext}: ${stufe} (${Math.round(dim.value)}/100)`);
 		if (sources) lines.push(`  Quellen: ${sources}`);
 		if (dim.dataStand) lines.push(`  Stand: ${formatDate(dim.dataStand)}`);
 	}
 	lines.push('');
 	lines.push(
-		'> Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum (rund 7.500 Einwohner:innen). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'
+		`> Umwelt- & Infrastruktur-Score aus ${COMPOSITE_DIMENSIONS.length} Dimensionen pro Planungsraum (rund 7.500 Einwohner:innen). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.`
+	);
+	lines.push('');
+}
+
+/** Story 14.10: Gesamt-Scores der Region (Bezirksregion + Bezirk) + Profil-Links. */
+function renderRegional(input: LlmExportInput, lines: string[]): void {
+	const r = input.regional;
+	if (!r) return;
+	const rows: string[] = [];
+	if (r.kiezComposite !== null) {
+		const name = r.kiezName ?? 'Bezirksregion';
+		const link = r.kiezSlug ? ` · Profil /kiez/${r.kiezSlug}` : '';
+		rows.push(`- Bezirksregion ${name}: Gesamt-Score ${Math.round(r.kiezComposite)}/100${link}`);
+	}
+	if (r.bezirkComposite !== null) {
+		const name = r.bezirkName ?? 'Bezirk';
+		const link = r.bezirkSlug ? ` · Profil /bezirk/${r.bezirkSlug}` : '';
+		rows.push(`- Bezirk ${name}: Gesamt-Score ${Math.round(r.bezirkComposite)}/100${link}`);
+	}
+	if (rows.length === 0) return;
+	lines.push('## Regionaler Vergleich');
+	lines.push('');
+	lines.push(...rows);
+	lines.push('');
+	lines.push(
+		'> Gesamt-Score aggregiert über die Planungsräume der Region (Mittel). Einordnender Kontext, nicht die Adresse selbst.'
 	);
 	lines.push('');
 }
@@ -444,6 +508,7 @@ export function buildLlmExportMarkdown(input: LlmExportInput): string {
 	const lines: string[] = [];
 	renderHeader(input, lines);
 	renderKiezScore(input, lines);
+	renderRegional(input, lines);
 	renderSections(input, lines);
 	renderClimate(input, lines);
 	renderOepnv(input, lines);

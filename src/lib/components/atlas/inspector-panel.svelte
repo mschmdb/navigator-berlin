@@ -416,7 +416,15 @@
 			wahl: ui.wahlResults,
 			demografie: activeDemografie,
 			demografieBezug: demografieBezugLabel(ui.demografieScope, demografieScopeName),
-			laermDb: ui.kiezLaermDb
+			laermDb: ui.kiezLaermDb,
+			regional: {
+				kiezName: level.kiezName,
+				kiezSlug: level.kiezSlug,
+				kiezComposite,
+				bezirkName: level.bezirkName,
+				bezirkSlug: level.bezirkSlug,
+				bezirkComposite
+			}
 		});
 	});
 
