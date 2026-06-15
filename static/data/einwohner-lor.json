@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-05-21T16:57:52.937Z",
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-15T11:52:32.246Z",
   "stichtag": "2024-12-31",
   "records": [
     {
@@ -5965,5 +5965,1559 @@
       "altenquotient": 47.7,
       "erwerbsanteil": 57.5
     }
-  ]
+  ],
+  "kiez": {
+    "tiergarten-sued": {
+      "gesamt": 16293,
+      "kinder0bis6": 798,
+      "kinder6bis12": 708,
+      "senioren65plus": 2526,
+      "dichtePro_km2": 3150.821453672191,
+      "jugendquotient": 18.6,
+      "altenquotient": 21.8,
+      "erwerbsanteil": 71.2
+    },
+    "regierungsviertel": {
+      "gesamt": 13637,
+      "kinder0bis6": 649,
+      "kinder6bis12": 629,
+      "senioren65plus": 2382,
+      "dichtePro_km2": 5059.381138732554,
+      "jugendquotient": 18.1,
+      "altenquotient": 25,
+      "erwerbsanteil": 69.9
+    },
+    "alexanderplatz": {
+      "gesamt": 62233,
+      "kinder0bis6": 3043,
+      "kinder6bis12": 2830,
+      "senioren65plus": 9330,
+      "dichtePro_km2": 9991.122433459183,
+      "jugendquotient": 18.7,
+      "altenquotient": 20.9,
+      "erwerbsanteil": 71.6
+    },
+    "brunnenstrasse-sued": {
+      "gesamt": 32384,
+      "kinder0bis6": 1851,
+      "kinder6bis12": 1718,
+      "senioren65plus": 2207,
+      "dichtePro_km2": 18450.610632997803,
+      "jugendquotient": 21,
+      "altenquotient": 8.8,
+      "erwerbsanteil": 77
+    },
+    "moabit-west": {
+      "gesamt": 46905,
+      "kinder0bis6": 2201,
+      "kinder6bis12": 1975,
+      "senioren65plus": 6378,
+      "dichtePro_km2": 10895.528912892369,
+      "jugendquotient": 17.9,
+      "altenquotient": 18.6,
+      "erwerbsanteil": 73.3
+    },
+    "moabit-ost": {
+      "gesamt": 43624,
+      "kinder0bis6": 2303,
+      "kinder6bis12": 2102,
+      "senioren65plus": 5739,
+      "dichtePro_km2": 11136.849101902855,
+      "jugendquotient": 19.8,
+      "altenquotient": 18.2,
+      "erwerbsanteil": 72.5
+    },
+    "osloer-strasse": {
+      "gesamt": 38744,
+      "kinder0bis6": 2199,
+      "kinder6bis12": 2360,
+      "senioren65plus": 4192,
+      "dichtePro_km2": 16373.66105716875,
+      "jugendquotient": 25.2,
+      "altenquotient": 15.2,
+      "erwerbsanteil": 71.2
+    },
+    "brunnenstrasse-nord": {
+      "gesamt": 40026,
+      "kinder0bis6": 2224,
+      "kinder6bis12": 2588,
+      "senioren65plus": 5112,
+      "dichtePro_km2": 12054.947698486318,
+      "jugendquotient": 26.8,
+      "altenquotient": 18.6,
+      "erwerbsanteil": 68.8
+    },
+    "parkviertel": {
+      "gesamt": 46542,
+      "kinder0bis6": 2421,
+      "kinder6bis12": 2193,
+      "senioren65plus": 7596,
+      "dichtePro_km2": 6523.275386815882,
+      "jugendquotient": 20.2,
+      "altenquotient": 23.4,
+      "erwerbsanteil": 69.6
+    },
+    "wedding-zentrum": {
+      "gesamt": 56616,
+      "kinder0bis6": 2827,
+      "kinder6bis12": 2698,
+      "senioren65plus": 6259,
+      "dichtePro_km2": 22601.29878282018,
+      "jugendquotient": 19.9,
+      "altenquotient": 14.9,
+      "erwerbsanteil": 74.2
+    },
+    "suedliche-friedrichstadt": {
+      "gesamt": 40981,
+      "kinder0bis6": 2155,
+      "kinder6bis12": 2331,
+      "senioren65plus": 5236,
+      "dichtePro_km2": 13932.905702795932,
+      "jugendquotient": 25.1,
+      "altenquotient": 18.3,
+      "erwerbsanteil": 69.7
+    },
+    "tempelhofer-vorstadt": {
+      "gesamt": 64657,
+      "kinder0bis6": 3138,
+      "kinder6bis12": 3201,
+      "senioren65plus": 8371,
+      "dichtePro_km2": 13622.788967802853,
+      "jugendquotient": 20.3,
+      "altenquotient": 17.9,
+      "erwerbsanteil": 72.3
+    },
+    "noerdliche-luisenstadt": {
+      "gesamt": 19454,
+      "kinder0bis6": 764,
+      "kinder6bis12": 927,
+      "senioren65plus": 2607,
+      "dichtePro_km2": 15363.245940663635,
+      "jugendquotient": 18.9,
+      "altenquotient": 18.4,
+      "erwerbsanteil": 72.8
+    },
+    "suedliche-luisenstadt": {
+      "gesamt": 26326,
+      "kinder0bis6": 1138,
+      "kinder6bis12": 1195,
+      "senioren65plus": 2880,
+      "dichtePro_km2": 17595.71909775895,
+      "jugendquotient": 17.4,
+      "altenquotient": 14.4,
+      "erwerbsanteil": 75.9
+    },
+    "karl-marx-allee-nord": {
+      "gesamt": 26010,
+      "kinder0bis6": 1452,
+      "kinder6bis12": 1426,
+      "senioren65plus": 4117,
+      "dichtePro_km2": 11676.467925716994,
+      "jugendquotient": 21.9,
+      "altenquotient": 22.9,
+      "erwerbsanteil": 69
+    },
+    "karl-marx-allee-sued": {
+      "gesamt": 27252,
+      "kinder0bis6": 1389,
+      "kinder6bis12": 1237,
+      "senioren65plus": 3733,
+      "dichtePro_km2": 11592.73671501852,
+      "jugendquotient": 18.3,
+      "altenquotient": 18.8,
+      "erwerbsanteil": 72.9
+    },
+    "frankfurter-allee-nord": {
+      "gesamt": 31174,
+      "kinder0bis6": 1694,
+      "kinder6bis12": 1603,
+      "senioren65plus": 1973,
+      "dichtePro_km2": 24344.356268713324,
+      "jugendquotient": 18.3,
+      "altenquotient": 8,
+      "erwerbsanteil": 79.2
+    },
+    "frankfurter-allee-sued-fk": {
+      "gesamt": 56770,
+      "kinder0bis6": 3188,
+      "kinder6bis12": 2896,
+      "senioren65plus": 3232,
+      "dichtePro_km2": 13877.128818019106,
+      "jugendquotient": 18.5,
+      "altenquotient": 7.2,
+      "erwerbsanteil": 79.6
+    },
+    "buch": {
+      "gesamt": 17674,
+      "kinder0bis6": 1149,
+      "kinder6bis12": 1132,
+      "senioren65plus": 3903,
+      "dichtePro_km2": 768.9418938367394,
+      "jugendquotient": 31.3,
+      "altenquotient": 37.2,
+      "erwerbsanteil": 59.3
+    },
+    "blankenfelde-niederschoenhausen": {
+      "gesamt": 30231,
+      "kinder0bis6": 1537,
+      "kinder6bis12": 2047,
+      "senioren65plus": 5491,
+      "dichtePro_km2": 1537.2925070788535,
+      "jugendquotient": 29.2,
+      "altenquotient": 28.7,
+      "erwerbsanteil": 63.3
+    },
+    "buchholz": {
+      "gesamt": 18833,
+      "kinder0bis6": 1025,
+      "kinder6bis12": 1352,
+      "senioren65plus": 3706,
+      "dichtePro_km2": 2911.110389802476,
+      "jugendquotient": 32,
+      "altenquotient": 32.3,
+      "erwerbsanteil": 60.9
+    },
+    "karow": {
+      "gesamt": 20185,
+      "kinder0bis6": 1219,
+      "kinder6bis12": 1615,
+      "senioren65plus": 4058,
+      "dichtePro_km2": 3053.6479547138,
+      "jugendquotient": 35.3,
+      "altenquotient": 34,
+      "erwerbsanteil": 59.1
+    },
+    "blankenburg-heinersdorf-maerchenland": {
+      "gesamt": 17566,
+      "kinder0bis6": 963,
+      "kinder6bis12": 1177,
+      "senioren65plus": 3844,
+      "dichtePro_km2": 1125.0145861621943,
+      "jugendquotient": 30.6,
+      "altenquotient": 36.6,
+      "erwerbsanteil": 59.8
+    },
+    "schoenholz-wilhelmsruh-rosenthal": {
+      "gesamt": 18885,
+      "kinder0bis6": 945,
+      "kinder6bis12": 1068,
+      "senioren65plus": 4086,
+      "dichtePro_km2": 3212.928556930667,
+      "jugendquotient": 28,
+      "altenquotient": 35.3,
+      "erwerbsanteil": 61.2
+    },
+    "pankow-zentrum": {
+      "gesamt": 39348,
+      "kinder0bis6": 2337,
+      "kinder6bis12": 2715,
+      "senioren65plus": 6308,
+      "dichtePro_km2": 9983.865859128895,
+      "jugendquotient": 30.2,
+      "altenquotient": 24.9,
+      "erwerbsanteil": 64.5
+    },
+    "pankow-sued": {
+      "gesamt": 37120,
+      "kinder0bis6": 1873,
+      "kinder6bis12": 2065,
+      "senioren65plus": 5988,
+      "dichtePro_km2": 12244.868305662874,
+      "jugendquotient": 23.2,
+      "altenquotient": 23.7,
+      "erwerbsanteil": 68.1
+    },
+    "weissensee": {
+      "gesamt": 41559,
+      "kinder0bis6": 2378,
+      "kinder6bis12": 2618,
+      "senioren65plus": 5398,
+      "dichtePro_km2": 9815.69330433269,
+      "jugendquotient": 25.8,
+      "altenquotient": 18.8,
+      "erwerbsanteil": 69.1
+    },
+    "weissensee-ost": {
+      "gesamt": 15993,
+      "kinder0bis6": 814,
+      "kinder6bis12": 867,
+      "senioren65plus": 3559,
+      "dichtePro_km2": 4311.48259271914,
+      "jugendquotient": 25.2,
+      "altenquotient": 35.8,
+      "erwerbsanteil": 62.1
+    },
+    "prenzlauer-berg-nordwest": {
+      "gesamt": 27973,
+      "kinder0bis6": 1427,
+      "kinder6bis12": 1417,
+      "senioren65plus": 1915,
+      "dichtePro_km2": 14500.44326346073,
+      "jugendquotient": 19.4,
+      "altenquotient": 8.8,
+      "erwerbsanteil": 78
+    },
+    "prenzlauer-berg-nord": {
+      "gesamt": 28115,
+      "kinder0bis6": 1351,
+      "kinder6bis12": 1191,
+      "senioren65plus": 3281,
+      "dichtePro_km2": 16937.759314971492,
+      "jugendquotient": 17.1,
+      "altenquotient": 15.5,
+      "erwerbsanteil": 75.4
+    },
+    "helmholtzplatz": {
+      "gesamt": 22853,
+      "kinder0bis6": 1083,
+      "kinder6bis12": 1270,
+      "senioren65plus": 1176,
+      "dichtePro_km2": 32128.49386580689,
+      "jugendquotient": 20.3,
+      "altenquotient": 6.5,
+      "erwerbsanteil": 78.9
+    },
+    "prenzlauer-berg-ost": {
+      "gesamt": 30041,
+      "kinder0bis6": 1588,
+      "kinder6bis12": 1711,
+      "senioren65plus": 5570,
+      "dichtePro_km2": 8018.011216698851,
+      "jugendquotient": 25.9,
+      "altenquotient": 28.6,
+      "erwerbsanteil": 64.7
+    },
+    "prenzlauer-berg-suedwest": {
+      "gesamt": 27309,
+      "kinder0bis6": 1483,
+      "kinder6bis12": 1543,
+      "senioren65plus": 1912,
+      "dichtePro_km2": 19931.44521432035,
+      "jugendquotient": 21.7,
+      "altenquotient": 9.2,
+      "erwerbsanteil": 76.4
+    },
+    "prenzlauer-berg-sued": {
+      "gesamt": 33591,
+      "kinder0bis6": 1596,
+      "kinder6bis12": 1911,
+      "senioren65plus": 3119,
+      "dichtePro_km2": 20224.234287587016,
+      "jugendquotient": 22.2,
+      "altenquotient": 12.5,
+      "erwerbsanteil": 74.3
+    },
+    "charlottenburg-nord": {
+      "gesamt": 19646,
+      "kinder0bis6": 1065,
+      "kinder6bis12": 1132,
+      "senioren65plus": 4090,
+      "dichtePro_km2": 3394.0673731225856,
+      "jugendquotient": 27.4,
+      "altenquotient": 33.5,
+      "erwerbsanteil": 62.1
+    },
+    "heerstrasse-charlottenburg-wilmersdorf": {
+      "gesamt": 13147,
+      "kinder0bis6": 506,
+      "kinder6bis12": 644,
+      "senioren65plus": 3685,
+      "dichtePro_km2": 558.7340404587457,
+      "jugendquotient": 25.9,
+      "altenquotient": 49,
+      "erwerbsanteil": 57.2
+    },
+    "westend": {
+      "gesamt": 27965,
+      "kinder0bis6": 1215,
+      "kinder6bis12": 1238,
+      "senioren65plus": 7515,
+      "dichtePro_km2": 4723.795081664627,
+      "jugendquotient": 21.9,
+      "altenquotient": 44.8,
+      "erwerbsanteil": 60
+    },
+    "schloss-charlottenburg": {
+      "gesamt": 42997,
+      "kinder0bis6": 2106,
+      "kinder6bis12": 1976,
+      "senioren65plus": 9178,
+      "dichtePro_km2": 12228.607737930393,
+      "jugendquotient": 21.2,
+      "altenquotient": 32.9,
+      "erwerbsanteil": 64.9
+    },
+    "mierendorffplatz": {
+      "gesamt": 16150,
+      "kinder0bis6": 793,
+      "kinder6bis12": 702,
+      "senioren65plus": 2626,
+      "dichtePro_km2": 8518.933810143528,
+      "jugendquotient": 19.2,
+      "altenquotient": 23.1,
+      "erwerbsanteil": 70.2
+    },
+    "otto-suhr-allee-kantstrasse": {
+      "gesamt": 50836,
+      "kinder0bis6": 2450,
+      "kinder6bis12": 2049,
+      "senioren65plus": 9849,
+      "dichtePro_km2": 13101.148800143106,
+      "jugendquotient": 18.6,
+      "altenquotient": 28.5,
+      "erwerbsanteil": 68
+    },
+    "grunewald": {
+      "gesamt": 19829,
+      "kinder0bis6": 983,
+      "kinder6bis12": 1021,
+      "senioren65plus": 5485,
+      "dichtePro_km2": 2614.1697712618857,
+      "jugendquotient": 26.6,
+      "altenquotient": 48.4,
+      "erwerbsanteil": 57.1
+    },
+    "schmargendorf": {
+      "gesamt": 34447,
+      "kinder0bis6": 1512,
+      "kinder6bis12": 1757,
+      "senioren65plus": 9696,
+      "dichtePro_km2": 8436.694311015988,
+      "jugendquotient": 25,
+      "altenquotient": 49,
+      "erwerbsanteil": 57.5
+    },
+    "halensee": {
+      "gesamt": 28316,
+      "kinder0bis6": 1249,
+      "kinder6bis12": 1301,
+      "senioren65plus": 6543,
+      "dichtePro_km2": 12540.96666135084,
+      "jugendquotient": 20.4,
+      "altenquotient": 36.2,
+      "erwerbsanteil": 63.9
+    },
+    "lietzenburger-strasse": {
+      "gesamt": 40669,
+      "kinder0bis6": 1801,
+      "kinder6bis12": 1694,
+      "senioren65plus": 9860,
+      "dichtePro_km2": 14008.386781106457,
+      "jugendquotient": 20.2,
+      "altenquotient": 38.5,
+      "erwerbsanteil": 63
+    },
+    "volkspark-wilmersdorf": {
+      "gesamt": 49498,
+      "kinder0bis6": 2241,
+      "kinder6bis12": 2294,
+      "senioren65plus": 10699,
+      "dichtePro_km2": 14850.580199369371,
+      "jugendquotient": 21.8,
+      "altenquotient": 33.6,
+      "erwerbsanteil": 64.4
+    },
+    "hakenfelde": {
+      "gesamt": 29637,
+      "kinder0bis6": 1911,
+      "kinder6bis12": 1781,
+      "senioren65plus": 6569,
+      "dichtePro_km2": 1484.0226404585092,
+      "jugendquotient": 29.4,
+      "altenquotient": 36.9,
+      "erwerbsanteil": 60.1
+    },
+    "falkenhagener-feld": {
+      "gesamt": 43147,
+      "kinder0bis6": 2536,
+      "kinder6bis12": 2775,
+      "senioren65plus": 9303,
+      "dichtePro_km2": 6172.015164373048,
+      "jugendquotient": 31.3,
+      "altenquotient": 36.1,
+      "erwerbsanteil": 59.7
+    },
+    "spandau-mitte": {
+      "gesamt": 41028,
+      "kinder0bis6": 2557,
+      "kinder6bis12": 2688,
+      "senioren65plus": 6605,
+      "dichtePro_km2": 6198.883038845538,
+      "jugendquotient": 28.7,
+      "altenquotient": 24.7,
+      "erwerbsanteil": 65.2
+    },
+    "brunsbuetteler-damm": {
+      "gesamt": 23759,
+      "kinder0bis6": 1237,
+      "kinder6bis12": 1436,
+      "senioren65plus": 5534,
+      "dichtePro_km2": 3451.9634204861345,
+      "jugendquotient": 29.1,
+      "altenquotient": 39.2,
+      "erwerbsanteil": 59.4
+    },
+    "heerstrasse-spandau": {
+      "gesamt": 30971,
+      "kinder0bis6": 1943,
+      "kinder6bis12": 2482,
+      "senioren65plus": 6251,
+      "dichtePro_km2": 4093.8558673030725,
+      "jugendquotient": 38.6,
+      "altenquotient": 35,
+      "erwerbsanteil": 57.6
+    },
+    "wilhelmstadt": {
+      "gesamt": 37211,
+      "kinder0bis6": 1939,
+      "kinder6bis12": 1954,
+      "senioren65plus": 8221,
+      "dichtePro_km2": 4343.553922671567,
+      "jugendquotient": 24.7,
+      "altenquotient": 35.4,
+      "erwerbsanteil": 62.5
+    },
+    "haselhorst": {
+      "gesamt": 20008,
+      "kinder0bis6": 1511,
+      "kinder6bis12": 1371,
+      "senioren65plus": 3305,
+      "dichtePro_km2": 4262.841069574683,
+      "jugendquotient": 32.1,
+      "altenquotient": 26.1,
+      "erwerbsanteil": 63.2
+    },
+    "siemensstadt": {
+      "gesamt": 13438,
+      "kinder0bis6": 790,
+      "kinder6bis12": 760,
+      "senioren65plus": 2246,
+      "dichtePro_km2": 2359.4289838005525,
+      "jugendquotient": 25.9,
+      "altenquotient": 25.3,
+      "erwerbsanteil": 66.1
+    },
+    "gatow-kladow": {
+      "gesamt": 20078,
+      "kinder0bis6": 930,
+      "kinder6bis12": 1478,
+      "senioren65plus": 5620,
+      "dichtePro_km2": 806.6355308533624,
+      "jugendquotient": 35.9,
+      "altenquotient": 52.8,
+      "erwerbsanteil": 53
+    },
+    "schlossstrasse": {
+      "gesamt": 22146,
+      "kinder0bis6": 1026,
+      "kinder6bis12": 1119,
+      "senioren65plus": 4974,
+      "dichtePro_km2": 11414.956363847452,
+      "jugendquotient": 22.9,
+      "altenquotient": 35.6,
+      "erwerbsanteil": 63.1
+    },
+    "albrechtstrasse": {
+      "gesamt": 54101,
+      "kinder0bis6": 2667,
+      "kinder6bis12": 2589,
+      "senioren65plus": 11820,
+      "dichtePro_km2": 11160.877870542854,
+      "jugendquotient": 22.1,
+      "altenquotient": 34.1,
+      "erwerbsanteil": 64
+    },
+    "lankwitz": {
+      "gesamt": 44698,
+      "kinder0bis6": 2284,
+      "kinder6bis12": 2413,
+      "senioren65plus": 11157,
+      "dichtePro_km2": 6391.712631183213,
+      "jugendquotient": 25.7,
+      "altenquotient": 41.8,
+      "erwerbsanteil": 59.7
+    },
+    "ostpreussendamm": {
+      "gesamt": 35974,
+      "kinder0bis6": 1639,
+      "kinder6bis12": 1981,
+      "senioren65plus": 9989,
+      "dichtePro_km2": 5261.645445528448,
+      "jugendquotient": 27.9,
+      "altenquotient": 49.2,
+      "erwerbsanteil": 56.5
+    },
+    "teltower-damm": {
+      "gesamt": 34282,
+      "kinder0bis6": 1500,
+      "kinder6bis12": 1826,
+      "senioren65plus": 9721,
+      "dichtePro_km2": 4251.318483083106,
+      "jugendquotient": 27.2,
+      "altenquotient": 50.4,
+      "erwerbsanteil": 56.3
+    },
+    "drakestrasse": {
+      "gesamt": 49471,
+      "kinder0bis6": 2150,
+      "kinder6bis12": 2842,
+      "senioren65plus": 12144,
+      "dichtePro_km2": 4810.89006483447,
+      "jugendquotient": 27.4,
+      "altenquotient": 41.4,
+      "erwerbsanteil": 59.2
+    },
+    "zehlendorf-suedwest": {
+      "gesamt": 26664,
+      "kinder0bis6": 1075,
+      "kinder6bis12": 1668,
+      "senioren65plus": 7557,
+      "dichtePro_km2": 615.0060768520034,
+      "jugendquotient": 30.9,
+      "altenquotient": 51.8,
+      "erwerbsanteil": 54.7
+    },
+    "zehlendorf-nord": {
+      "gesamt": 42708,
+      "kinder0bis6": 1812,
+      "kinder6bis12": 2529,
+      "senioren65plus": 12303,
+      "dichtePro_km2": 2232.001650478361,
+      "jugendquotient": 30.5,
+      "altenquotient": 52.8,
+      "erwerbsanteil": 54.6
+    },
+    "schoeneberg-nordwest": {
+      "gesamt": 26387,
+      "kinder0bis6": 1138,
+      "kinder6bis12": 1180,
+      "senioren65plus": 5409,
+      "dichtePro_km2": 17833.31920563012,
+      "jugendquotient": 19.7,
+      "altenquotient": 30.9,
+      "erwerbsanteil": 66.4
+    },
+    "schoeneberg-nordost": {
+      "gesamt": 23957,
+      "kinder0bis6": 1155,
+      "kinder6bis12": 1104,
+      "senioren65plus": 3999,
+      "dichtePro_km2": 17518.937452553047,
+      "jugendquotient": 20.1,
+      "altenquotient": 24.1,
+      "erwerbsanteil": 69.4
+    },
+    "schoeneberg-suedwest": {
+      "gesamt": 21247,
+      "kinder0bis6": 1038,
+      "kinder6bis12": 1036,
+      "senioren65plus": 4087,
+      "dichtePro_km2": 18464.86328274816,
+      "jugendquotient": 20.7,
+      "altenquotient": 28.8,
+      "erwerbsanteil": 66.9
+    },
+    "schoeneberg-suedost": {
+      "gesamt": 31676,
+      "kinder0bis6": 1742,
+      "kinder6bis12": 1601,
+      "senioren65plus": 4539,
+      "dichtePro_km2": 14345.514251417666,
+      "jugendquotient": 21,
+      "altenquotient": 20.2,
+      "erwerbsanteil": 70.8
+    },
+    "friedenau-west": {
+      "gesamt": 25939,
+      "kinder0bis6": 1363,
+      "kinder6bis12": 1299,
+      "senioren65plus": 5432,
+      "dichtePro_km2": 17736.58395582476,
+      "jugendquotient": 23.8,
+      "altenquotient": 32.8,
+      "erwerbsanteil": 63.9
+    },
+    "friedenau-ost": {
+      "gesamt": 21462,
+      "kinder0bis6": 1153,
+      "kinder6bis12": 1112,
+      "senioren65plus": 4072,
+      "dichtePro_km2": 6831.918715836575,
+      "jugendquotient": 23.6,
+      "altenquotient": 28.9,
+      "erwerbsanteil": 65.6
+    },
+    "tempelhof-nord": {
+      "gesamt": 19307,
+      "kinder0bis6": 880,
+      "kinder6bis12": 1103,
+      "senioren65plus": 3557,
+      "dichtePro_km2": 3532.477166291819,
+      "jugendquotient": 25.2,
+      "altenquotient": 28.3,
+      "erwerbsanteil": 65.2
+    },
+    "tempelhof-suedwest": {
+      "gesamt": 32691,
+      "kinder0bis6": 1810,
+      "kinder6bis12": 1765,
+      "senioren65plus": 6435,
+      "dichtePro_km2": 7290.87918222441,
+      "jugendquotient": 23.9,
+      "altenquotient": 30.4,
+      "erwerbsanteil": 64.8
+    },
+    "tempelhof-suedost": {
+      "gesamt": 15380,
+      "kinder0bis6": 961,
+      "kinder6bis12": 775,
+      "senioren65plus": 2482,
+      "dichtePro_km2": 4134.852297366992,
+      "jugendquotient": 23.3,
+      "altenquotient": 23.7,
+      "erwerbsanteil": 68
+    },
+    "mariendorf-nord": {
+      "gesamt": 32705,
+      "kinder0bis6": 1854,
+      "kinder6bis12": 1695,
+      "senioren65plus": 7360,
+      "dichtePro_km2": 6794.418296515331,
+      "jugendquotient": 24.2,
+      "altenquotient": 36.1,
+      "erwerbsanteil": 62.4
+    },
+    "mariendorf-sued": {
+      "gesamt": 21059,
+      "kinder0bis6": 1107,
+      "kinder6bis12": 1104,
+      "senioren65plus": 6028,
+      "dichtePro_km2": 4612.826924870162,
+      "jugendquotient": 27.5,
+      "altenquotient": 51.1,
+      "erwerbsanteil": 56
+    },
+    "marienfelde-nord": {
+      "gesamt": 17997,
+      "kinder0bis6": 990,
+      "kinder6bis12": 1183,
+      "senioren65plus": 4396,
+      "dichtePro_km2": 4120.317251030487,
+      "jugendquotient": 32.6,
+      "altenquotient": 42.9,
+      "erwerbsanteil": 57
+    },
+    "marienfelde-sued": {
+      "gesamt": 14362,
+      "kinder0bis6": 838,
+      "kinder6bis12": 867,
+      "senioren65plus": 3797,
+      "dichtePro_km2": 3003.8696328828364,
+      "jugendquotient": 31.7,
+      "altenquotient": 47.4,
+      "erwerbsanteil": 55.8
+    },
+    "lichtenrade-nord": {
+      "gesamt": 21257,
+      "kinder0bis6": 1058,
+      "kinder6bis12": 1313,
+      "senioren65plus": 5770,
+      "dichtePro_km2": 4903.690951453487,
+      "jugendquotient": 30.2,
+      "altenquotient": 48.5,
+      "erwerbsanteil": 56
+    },
+    "lichtenrade-sued": {
+      "gesamt": 31533,
+      "kinder0bis6": 1817,
+      "kinder6bis12": 2146,
+      "senioren65plus": 7919,
+      "dichtePro_km2": 5523.998841376059,
+      "jugendquotient": 33.4,
+      "altenquotient": 44.7,
+      "erwerbsanteil": 56.1
+    },
+    "schillerpromenade": {
+      "gesamt": 33049,
+      "kinder0bis6": 1690,
+      "kinder6bis12": 1474,
+      "senioren65plus": 3387,
+      "dichtePro_km2": 11202.42542174248,
+      "jugendquotient": 18.1,
+      "altenquotient": 13.5,
+      "erwerbsanteil": 76
+    },
+    "neukoellner-mitte-zentrum": {
+      "gesamt": 37581,
+      "kinder0bis6": 1850,
+      "kinder6bis12": 1866,
+      "senioren65plus": 4211,
+      "dichtePro_km2": 19406.796864242315,
+      "jugendquotient": 20.2,
+      "altenquotient": 15.2,
+      "erwerbsanteil": 73.9
+    },
+    "reuterstrasse": {
+      "gesamt": 37805,
+      "kinder0bis6": 1709,
+      "kinder6bis12": 1677,
+      "senioren65plus": 3933,
+      "dichtePro_km2": 26506.935366980844,
+      "jugendquotient": 17.3,
+      "altenquotient": 13.6,
+      "erwerbsanteil": 76.4
+    },
+    "rixdorf": {
+      "gesamt": 38919,
+      "kinder0bis6": 2145,
+      "kinder6bis12": 1989,
+      "senioren65plus": 4066,
+      "dichtePro_km2": 18772.304737201783,
+      "jugendquotient": 20.7,
+      "altenquotient": 14.1,
+      "erwerbsanteil": 74.2
+    },
+    "koellnische-heide": {
+      "gesamt": 15194,
+      "kinder0bis6": 996,
+      "kinder6bis12": 1268,
+      "senioren65plus": 2140,
+      "dichtePro_km2": 4579.037814101422,
+      "jugendquotient": 37.8,
+      "altenquotient": 22.6,
+      "erwerbsanteil": 62.3
+    },
+    "britz-nord": {
+      "gesamt": 21540,
+      "kinder0bis6": 1328,
+      "kinder6bis12": 1312,
+      "senioren65plus": 3413,
+      "dichtePro_km2": 7094.966614639535,
+      "jugendquotient": 27,
+      "altenquotient": 23.9,
+      "erwerbsanteil": 66.3
+    },
+    "britz": {
+      "gesamt": 23196,
+      "kinder0bis6": 1100,
+      "kinder6bis12": 1235,
+      "senioren65plus": 5569,
+      "dichtePro_km2": 2444.140524414209,
+      "jugendquotient": 24.9,
+      "altenquotient": 39.5,
+      "erwerbsanteil": 60.8
+    },
+    "buckow": {
+      "gesamt": 29646,
+      "kinder0bis6": 1654,
+      "kinder6bis12": 1826,
+      "senioren65plus": 7224,
+      "dichtePro_km2": 6448.553067861415,
+      "jugendquotient": 29.6,
+      "altenquotient": 41.7,
+      "erwerbsanteil": 58.4
+    },
+    "gropiusstadt-west": {
+      "gesamt": 20234,
+      "kinder0bis6": 1288,
+      "kinder6bis12": 1111,
+      "senioren65plus": 5416,
+      "dichtePro_km2": 13268.671330809018,
+      "jugendquotient": 30.2,
+      "altenquotient": 47.6,
+      "erwerbsanteil": 56.3
+    },
+    "gropiusstadt-ost": {
+      "gesamt": 18497,
+      "kinder0bis6": 1260,
+      "kinder6bis12": 1242,
+      "senioren65plus": 4014,
+      "dichtePro_km2": 16326.289365480987,
+      "jugendquotient": 32.3,
+      "altenquotient": 36.7,
+      "erwerbsanteil": 59.2
+    },
+    "buckow-nord": {
+      "gesamt": 9662,
+      "kinder0bis6": 499,
+      "kinder6bis12": 569,
+      "senioren65plus": 2768,
+      "dichtePro_km2": 6895.061927347158,
+      "jugendquotient": 29.2,
+      "altenquotient": 51.9,
+      "erwerbsanteil": 55.2
+    },
+    "rudow": {
+      "gesamt": 44165,
+      "kinder0bis6": 2502,
+      "kinder6bis12": 2828,
+      "senioren65plus": 11275,
+      "dichtePro_km2": 3666.822248305978,
+      "jugendquotient": 31.6,
+      "altenquotient": 45.1,
+      "erwerbsanteil": 56.6
+    },
+    "alt-treptow": {
+      "gesamt": 13453,
+      "kinder0bis6": 778,
+      "kinder6bis12": 871,
+      "senioren65plus": 1347,
+      "dichtePro_km2": 5813.338272154474,
+      "jugendquotient": 24.1,
+      "altenquotient": 13.8,
+      "erwerbsanteil": 72.5
+    },
+    "plaenterwald": {
+      "gesamt": 11753,
+      "kinder0bis6": 545,
+      "kinder6bis12": 532,
+      "senioren65plus": 2211,
+      "dichtePro_km2": 3918.8803007881374,
+      "jugendquotient": 18.6,
+      "altenquotient": 27.5,
+      "erwerbsanteil": 68.5
+    },
+    "baumschulenweg": {
+      "gesamt": 19404,
+      "kinder0bis6": 1049,
+      "kinder6bis12": 935,
+      "senioren65plus": 4049,
+      "dichtePro_km2": 4014.5636709457867,
+      "jugendquotient": 21.7,
+      "altenquotient": 32.1,
+      "erwerbsanteil": 65
+    },
+    "johannisthal": {
+      "gesamt": 21636,
+      "kinder0bis6": 1257,
+      "kinder6bis12": 1179,
+      "senioren65plus": 4547,
+      "dichtePro_km2": 3090.0229324560905,
+      "jugendquotient": 25.9,
+      "altenquotient": 33.5,
+      "erwerbsanteil": 62.8
+    },
+    "oberschoeneweide": {
+      "gesamt": 25664,
+      "kinder0bis6": 1446,
+      "kinder6bis12": 1507,
+      "senioren65plus": 2839,
+      "dichtePro_km2": 3233.7320896245656,
+      "jugendquotient": 22.3,
+      "altenquotient": 15.2,
+      "erwerbsanteil": 72.7
+    },
+    "niederschoeneweide": {
+      "gesamt": 14508,
+      "kinder0bis6": 908,
+      "kinder6bis12": 746,
+      "senioren65plus": 2223,
+      "dichtePro_km2": 4872.118210838022,
+      "jugendquotient": 22.8,
+      "altenquotient": 22.2,
+      "erwerbsanteil": 69
+    },
+    "adlershof": {
+      "gesamt": 22417,
+      "kinder0bis6": 1371,
+      "kinder6bis12": 1183,
+      "senioren65plus": 3423,
+      "dichtePro_km2": 3636.2485797470317,
+      "jugendquotient": 22.7,
+      "altenquotient": 22.1,
+      "erwerbsanteil": 69
+    },
+    "koellnische-vorstadt-spindlersfeld": {
+      "gesamt": 12918,
+      "kinder0bis6": 747,
+      "kinder6bis12": 704,
+      "senioren65plus": 1937,
+      "dichtePro_km2": 6083.850636069692,
+      "jugendquotient": 23.9,
+      "altenquotient": 21.8,
+      "erwerbsanteil": 68.6
+    },
+    "altglienicke": {
+      "gesamt": 31244,
+      "kinder0bis6": 2217,
+      "kinder6bis12": 2457,
+      "senioren65plus": 5419,
+      "dichtePro_km2": 4050.1842862174553,
+      "jugendquotient": 36.2,
+      "altenquotient": 28.6,
+      "erwerbsanteil": 60.7
+    },
+    "bohnsdorf": {
+      "gesamt": 15695,
+      "kinder0bis6": 976,
+      "kinder6bis12": 1000,
+      "senioren65plus": 3242,
+      "dichtePro_km2": 2348.5374371481685,
+      "jugendquotient": 29.5,
+      "altenquotient": 33.7,
+      "erwerbsanteil": 61.2
+    },
+    "gruenau": {
+      "gesamt": 8376,
+      "kinder0bis6": 526,
+      "kinder6bis12": 491,
+      "senioren65plus": 2032,
+      "dichtePro_km2": 913.1371103498997,
+      "jugendquotient": 26.6,
+      "altenquotient": 40.6,
+      "erwerbsanteil": 59.8
+    },
+    "schmoeckwitz": {
+      "gesamt": 4487,
+      "kinder0bis6": 235,
+      "kinder6bis12": 262,
+      "senioren65plus": 1263,
+      "dichtePro_km2": 262.09493165446816,
+      "jugendquotient": 29.8,
+      "altenquotient": 50.8,
+      "erwerbsanteil": 55.4
+    },
+    "koepenick-sued": {
+      "gesamt": 12925,
+      "kinder0bis6": 592,
+      "kinder6bis12": 653,
+      "senioren65plus": 4003,
+      "dichtePro_km2": 718.4877506855044,
+      "jugendquotient": 25.4,
+      "altenquotient": 56.3,
+      "erwerbsanteil": 55
+    },
+    "allende-viertel": {
+      "gesamt": 12042,
+      "kinder0bis6": 585,
+      "kinder6bis12": 638,
+      "senioren65plus": 4144,
+      "dichtePro_km2": 3496.8205536616806,
+      "jugendquotient": 30.7,
+      "altenquotient": 68.6,
+      "erwerbsanteil": 50.2
+    },
+    "altstadt-koepenick": {
+      "gesamt": 7494,
+      "kinder0bis6": 485,
+      "kinder6bis12": 513,
+      "senioren65plus": 1104,
+      "dichtePro_km2": 9404.958834197749,
+      "jugendquotient": 30.4,
+      "altenquotient": 22.5,
+      "erwerbsanteil": 65.4
+    },
+    "mueggelheim": {
+      "gesamt": 7059,
+      "kinder0bis6": 311,
+      "kinder6bis12": 413,
+      "senioren65plus": 1858,
+      "dichtePro_km2": 317.76456550817534,
+      "jugendquotient": 28.5,
+      "altenquotient": 45.9,
+      "erwerbsanteil": 57.4
+    },
+    "friedrichshagen": {
+      "gesamt": 19036,
+      "kinder0bis6": 890,
+      "kinder6bis12": 1107,
+      "senioren65plus": 5320,
+      "dichtePro_km2": 1355.5057162140326,
+      "jugendquotient": 27.7,
+      "altenquotient": 49.5,
+      "erwerbsanteil": 56.4
+    },
+    "rahnsdorf": {
+      "gesamt": 11138,
+      "kinder0bis6": 631,
+      "kinder6bis12": 671,
+      "senioren65plus": 2882,
+      "dichtePro_km2": 519.2403088558464,
+      "jugendquotient": 30.1,
+      "altenquotient": 45.4,
+      "erwerbsanteil": 57
+    },
+    "dammvorstadt": {
+      "gesamt": 12525,
+      "kinder0bis6": 791,
+      "kinder6bis12": 660,
+      "senioren65plus": 2423,
+      "dichtePro_km2": 4498.00295994667,
+      "jugendquotient": 24.1,
+      "altenquotient": 29.8,
+      "erwerbsanteil": 65
+    },
+    "koepenick-nord": {
+      "gesamt": 13462,
+      "kinder0bis6": 595,
+      "kinder6bis12": 701,
+      "senioren65plus": 3829,
+      "dichtePro_km2": 1688.865860808811,
+      "jugendquotient": 24.7,
+      "altenquotient": 49.6,
+      "erwerbsanteil": 57.4
+    },
+    "marzahn-nord": {
+      "gesamt": 25148,
+      "kinder0bis6": 1538,
+      "kinder6bis12": 1740,
+      "senioren65plus": 4486,
+      "dichtePro_km2": 9689.038044971086,
+      "jugendquotient": 31.7,
+      "altenquotient": 28.6,
+      "erwerbsanteil": 62.4
+    },
+    "marzahn-mitte": {
+      "gesamt": 52190,
+      "kinder0bis6": 3063,
+      "kinder6bis12": 3147,
+      "senioren65plus": 12639,
+      "dichtePro_km2": 6590.903395694186,
+      "jugendquotient": 30.6,
+      "altenquotient": 41.7,
+      "erwerbsanteil": 58
+    },
+    "marzahn-sued": {
+      "gesamt": 42246,
+      "kinder0bis6": 2347,
+      "kinder6bis12": 2381,
+      "senioren65plus": 11358,
+      "dichtePro_km2": 4678.894399979912,
+      "jugendquotient": 29,
+      "altenquotient": 47.4,
+      "erwerbsanteil": 56.7
+    },
+    "hellersdorf-nord": {
+      "gesamt": 44060,
+      "kinder0bis6": 3313,
+      "kinder6bis12": 3424,
+      "senioren65plus": 5529,
+      "dichtePro_km2": 12234.751316898746,
+      "jugendquotient": 34.5,
+      "altenquotient": 19.3,
+      "erwerbsanteil": 65
+    },
+    "hellersdorf-ost": {
+      "gesamt": 23435,
+      "kinder0bis6": 1774,
+      "kinder6bis12": 1788,
+      "senioren65plus": 3319,
+      "dichtePro_km2": 11086.300547101531,
+      "jugendquotient": 34.7,
+      "altenquotient": 22.2,
+      "erwerbsanteil": 63.7
+    },
+    "hellersdorf-sued": {
+      "gesamt": 26017,
+      "kinder0bis6": 1503,
+      "kinder6bis12": 1654,
+      "senioren65plus": 6112,
+      "dichtePro_km2": 10802.806605446416,
+      "jugendquotient": 29.5,
+      "altenquotient": 39.8,
+      "erwerbsanteil": 59.1
+    },
+    "biesdorf": {
+      "gesamt": 30959,
+      "kinder0bis6": 1663,
+      "kinder6bis12": 1802,
+      "senioren65plus": 7837,
+      "dichtePro_km2": 2495.7903943018296,
+      "jugendquotient": 28.7,
+      "altenquotient": 43.6,
+      "erwerbsanteil": 58
+    },
+    "kaulsdorf": {
+      "gesamt": 19683,
+      "kinder0bis6": 877,
+      "kinder6bis12": 1207,
+      "senioren65plus": 5155,
+      "dichtePro_km2": 2244.0279098831925,
+      "jugendquotient": 28.5,
+      "altenquotient": 45.6,
+      "erwerbsanteil": 57.4
+    },
+    "mahlsdorf": {
+      "gesamt": 30353,
+      "kinder0bis6": 1409,
+      "kinder6bis12": 2079,
+      "senioren65plus": 7761,
+      "dichtePro_km2": 2339.2511000639074,
+      "jugendquotient": 30.5,
+      "altenquotient": 44.8,
+      "erwerbsanteil": 57
+    },
+    "malchow-wartenberg-und-falkenberg": {
+      "gesamt": 6451,
+      "kinder0bis6": 471,
+      "kinder6bis12": 482,
+      "senioren65plus": 1082,
+      "dichtePro_km2": 560.5921254507563,
+      "jugendquotient": 34.1,
+      "altenquotient": 27,
+      "erwerbsanteil": 62.1
+    },
+    "neu-hohenschoenhausen-nord": {
+      "gesamt": 30968,
+      "kinder0bis6": 2061,
+      "kinder6bis12": 2239,
+      "senioren65plus": 5509,
+      "dichtePro_km2": 11055.53249880128,
+      "jugendquotient": 33.8,
+      "altenquotient": 29,
+      "erwerbsanteil": 61.4
+    },
+    "neu-hohenschoenhausen-sued": {
+      "gesamt": 28157,
+      "kinder0bis6": 1660,
+      "kinder6bis12": 1759,
+      "senioren65plus": 6713,
+      "dichtePro_km2": 12033.542485307902,
+      "jugendquotient": 31.3,
+      "altenquotient": 41.1,
+      "erwerbsanteil": 58
+    },
+    "alt-hohenschoenhausen-nord": {
+      "gesamt": 17330,
+      "kinder0bis6": 1117,
+      "kinder6bis12": 1288,
+      "senioren65plus": 3797,
+      "dichtePro_km2": 3645.127731141978,
+      "jugendquotient": 34.7,
+      "altenquotient": 37.8,
+      "erwerbsanteil": 58
+    },
+    "alt-hohenschoenhausen-sued": {
+      "gesamt": 35756,
+      "kinder0bis6": 2245,
+      "kinder6bis12": 2242,
+      "senioren65plus": 6944,
+      "dichtePro_km2": 7774.523450065734,
+      "jugendquotient": 29.8,
+      "altenquotient": 31.3,
+      "erwerbsanteil": 62.1
+    },
+    "fennpfuhl": {
+      "gesamt": 34484,
+      "kinder0bis6": 1739,
+      "kinder6bis12": 1660,
+      "senioren65plus": 8233,
+      "dichtePro_km2": 16096.721530723493,
+      "jugendquotient": 22.9,
+      "altenquotient": 38.5,
+      "erwerbsanteil": 61.9
+    },
+    "alt-lichtenberg": {
+      "gesamt": 34329,
+      "kinder0bis6": 2143,
+      "kinder6bis12": 1915,
+      "senioren65plus": 4356,
+      "dichtePro_km2": 5410.074178887268,
+      "jugendquotient": 22.9,
+      "altenquotient": 17.9,
+      "erwerbsanteil": 71
+    },
+    "frankfurter-allee-sued": {
+      "gesamt": 10508,
+      "kinder0bis6": 568,
+      "kinder6bis12": 575,
+      "senioren65plus": 2131,
+      "dichtePro_km2": 9976.344395598893,
+      "jugendquotient": 24.5,
+      "altenquotient": 31.7,
+      "erwerbsanteil": 64
+    },
+    "neu-lichtenberg": {
+      "gesamt": 35831,
+      "kinder0bis6": 2069,
+      "kinder6bis12": 1971,
+      "senioren65plus": 4425,
+      "dichtePro_km2": 13675.652211885987,
+      "jugendquotient": 21.5,
+      "altenquotient": 17.1,
+      "erwerbsanteil": 72.1
+    },
+    "friedrichsfelde-nord": {
+      "gesamt": 16561,
+      "kinder0bis6": 949,
+      "kinder6bis12": 869,
+      "senioren65plus": 3353,
+      "dichtePro_km2": 6013.164116482893,
+      "jugendquotient": 24.8,
+      "altenquotient": 31.7,
+      "erwerbsanteil": 63.9
+    },
+    "friedrichsfelde-sued": {
+      "gesamt": 28351,
+      "kinder0bis6": 1655,
+      "kinder6bis12": 1465,
+      "senioren65plus": 7210,
+      "dichtePro_km2": 12797.71651794527,
+      "jugendquotient": 25.4,
+      "altenquotient": 42.8,
+      "erwerbsanteil": 59.4
+    },
+    "rummelsburger-bucht": {
+      "gesamt": 4899,
+      "kinder0bis6": 386,
+      "kinder6bis12": 381,
+      "senioren65plus": 487,
+      "dichtePro_km2": 2039.9619450783057,
+      "jugendquotient": 34.6,
+      "altenquotient": 14.9,
+      "erwerbsanteil": 66.9
+    },
+    "karlshorst": {
+      "gesamt": 31923,
+      "kinder0bis6": 2133,
+      "kinder6bis12": 2395,
+      "senioren65plus": 4839,
+      "dichtePro_km2": 4847.032861465571,
+      "jugendquotient": 31.8,
+      "altenquotient": 23.6,
+      "erwerbsanteil": 64.4
+    },
+    "ost-1-reginhardstrasse": {
+      "gesamt": 28760,
+      "kinder0bis6": 1673,
+      "kinder6bis12": 1560,
+      "senioren65plus": 4543,
+      "dichtePro_km2": 12444.675121911841,
+      "jugendquotient": 24.1,
+      "altenquotient": 23.3,
+      "erwerbsanteil": 67.8
+    },
+    "ost-2-alt-reinickendorf": {
+      "gesamt": 28322,
+      "kinder0bis6": 1620,
+      "kinder6bis12": 1460,
+      "senioren65plus": 5425,
+      "dichtePro_km2": 5394.801318852423,
+      "jugendquotient": 23.6,
+      "altenquotient": 29.3,
+      "erwerbsanteil": 65.4
+    },
+    "west-4-auguste-viktoria-allee": {
+      "gesamt": 28242,
+      "kinder0bis6": 1622,
+      "kinder6bis12": 1625,
+      "senioren65plus": 5098,
+      "dichtePro_km2": 10913.682117278351,
+      "jugendquotient": 25.8,
+      "altenquotient": 27.7,
+      "erwerbsanteil": 65.2
+    },
+    "west-1-tegel-sued-flughafensee": {
+      "gesamt": 20355,
+      "kinder0bis6": 1087,
+      "kinder6bis12": 1104,
+      "senioren65plus": 3884,
+      "dichtePro_km2": 1523.4554821003276,
+      "jugendquotient": 25.6,
+      "altenquotient": 29.6,
+      "erwerbsanteil": 64.4
+    },
+    "west-5-tegel": {
+      "gesamt": 11322,
+      "kinder0bis6": 567,
+      "kinder6bis12": 486,
+      "senioren65plus": 3278,
+      "dichtePro_km2": 4732.331962443807,
+      "jugendquotient": 22.1,
+      "altenquotient": 49.8,
+      "erwerbsanteil": 58.2
+    },
+    "west-2-heiligensee-konradshoehe": {
+      "gesamt": 24332,
+      "kinder0bis6": 1120,
+      "kinder6bis12": 1524,
+      "senioren65plus": 7316,
+      "dichtePro_km2": 843.0249737685315,
+      "jugendquotient": 31.8,
+      "altenquotient": 56.7,
+      "erwerbsanteil": 53.1
+    },
+    "nord-1-frohnau-hermsdorf": {
+      "gesamt": 32978,
+      "kinder0bis6": 1390,
+      "kinder6bis12": 1997,
+      "senioren65plus": 10248,
+      "dichtePro_km2": 2372.8409169693355,
+      "jugendquotient": 31.4,
+      "altenquotient": 59.2,
+      "erwerbsanteil": 52.5
+    },
+    "west-3-borsigwalde-freie-scholle": {
+      "gesamt": 16760,
+      "kinder0bis6": 775,
+      "kinder6bis12": 766,
+      "senioren65plus": 4133,
+      "dichtePro_km2": 4110.722116752917,
+      "jugendquotient": 21.3,
+      "altenquotient": 39.7,
+      "erwerbsanteil": 62.1
+    },
+    "nord-2-waidmannslust-wittenau-luebars": {
+      "gesamt": 32190,
+      "kinder0bis6": 1553,
+      "kinder6bis12": 1773,
+      "senioren65plus": 8439,
+      "dichtePro_km2": 2728.145526739836,
+      "jugendquotient": 26,
+      "altenquotient": 44.8,
+      "erwerbsanteil": 58.6
+    },
+    "rollbergesiedlung": {
+      "gesamt": 9583,
+      "kinder0bis6": 619,
+      "kinder6bis12": 719,
+      "senioren65plus": 2044,
+      "dichtePro_km2": 5859.594216955331,
+      "jugendquotient": 36.9,
+      "altenquotient": 37.1,
+      "erwerbsanteil": 57.5
+    },
+    "mv-nord": {
+      "gesamt": 27454,
+      "kinder0bis6": 1901,
+      "kinder6bis12": 2186,
+      "senioren65plus": 5475,
+      "dichtePro_km2": 13417.152308054861,
+      "jugendquotient": 39.4,
+      "altenquotient": 34.7,
+      "erwerbsanteil": 57.4
+    },
+    "mv-sued": {
+      "gesamt": 13800,
+      "kinder0bis6": 838,
+      "kinder6bis12": 1038,
+      "senioren65plus": 2558,
+      "dichtePro_km2": 12525.966908045588,
+      "jugendquotient": 37.2,
+      "altenquotient": 31.2,
+      "erwerbsanteil": 59.4
+    }
+  },
+  "bezirk": {
+    "mitte": {
+      "gesamt": 397004,
+      "kinder0bis6": 20516,
+      "kinder6bis12": 19801,
+      "senioren65plus": 51721,
+      "dichtePro_km2": 10076.558108395875,
+      "jugendquotient": 20.6,
+      "altenquotient": 18.1,
+      "erwerbsanteil": 72.1
+    },
+    "friedrichshain-kreuzberg": {
+      "gesamt": 292624,
+      "kinder0bis6": 14918,
+      "kinder6bis12": 14816,
+      "senioren65plus": 32149,
+      "dichtePro_km2": 14344.480208652558,
+      "jugendquotient": 19.9,
+      "altenquotient": 14.8,
+      "erwerbsanteil": 74.2
+    },
+    "pankow": {
+      "gesamt": 427276,
+      "kinder0bis6": 22768,
+      "kinder6bis12": 25699,
+      "senioren65plus": 63314,
+      "dichtePro_km2": 4139.658333429083,
+      "jugendquotient": 25.2,
+      "altenquotient": 21.8,
+      "erwerbsanteil": 68
+    },
+    "charlottenburg-wilmersdorf": {
+      "gesamt": 343500,
+      "kinder0bis6": 15921,
+      "kinder6bis12": 15808,
+      "senioren65plus": 79226,
+      "dichtePro_km2": 5309.70791553014,
+      "jugendquotient": 21.8,
+      "altenquotient": 36.5,
+      "erwerbsanteil": 63.2
+    },
+    "spandau": {
+      "gesamt": 259277,
+      "kinder0bis6": 15354,
+      "kinder6bis12": 16725,
+      "senioren65plus": 53654,
+      "dichtePro_km2": 2822.059867470992,
+      "jugendquotient": 30.4,
+      "altenquotient": 34,
+      "erwerbsanteil": 60.8
+    },
+    "steglitz-zehlendorf": {
+      "gesamt": 310044,
+      "kinder0bis6": 14153,
+      "kinder6bis12": 16967,
+      "senioren65plus": 79665,
+      "dichtePro_km2": 3055.9860778599445,
+      "jugendquotient": 26.5,
+      "altenquotient": 43.7,
+      "erwerbsanteil": 58.7
+    },
+    "tempelhof-schoeneberg": {
+      "gesamt": 356959,
+      "kinder0bis6": 18904,
+      "kinder6bis12": 19283,
+      "senioren65plus": 75282,
+      "dichtePro_km2": 6728.742024604717,
+      "jugendquotient": 24.8,
+      "altenquotient": 33.3,
+      "erwerbsanteil": 63.2
+    },
+    "neukoelln": {
+      "gesamt": 329488,
+      "kinder0bis6": 18021,
+      "kinder6bis12": 18397,
+      "senioren65plus": 57416,
+      "dichtePro_km2": 7333.091584198424,
+      "jugendquotient": 24.5,
+      "altenquotient": 26.3,
+      "erwerbsanteil": 66.3
+    },
+    "treptow-koepenick": {
+      "gesamt": 297236,
+      "kinder0bis6": 16935,
+      "kinder6bis12": 17223,
+      "senioren65plus": 60095,
+      "dichtePro_km2": 1772.0642358158707,
+      "jugendquotient": 26,
+      "altenquotient": 31.9,
+      "erwerbsanteil": 63.3
+    },
+    "marzahn-hellersdorf": {
+      "gesamt": 294091,
+      "kinder0bis6": 17487,
+      "kinder6bis12": 19222,
+      "senioren65plus": 64196,
+      "dichtePro_km2": 4757.384706482685,
+      "jugendquotient": 31,
+      "altenquotient": 36.6,
+      "erwerbsanteil": 59.7
+    },
+    "lichtenberg": {
+      "gesamt": 315548,
+      "kinder0bis6": 19196,
+      "kinder6bis12": 19241,
+      "senioren65plus": 59079,
+      "dichtePro_km2": 6054.261738521608,
+      "jugendquotient": 27.5,
+      "altenquotient": 29.4,
+      "erwerbsanteil": 63.8
+    },
+    "reinickendorf": {
+      "gesamt": 274098,
+      "kinder0bis6": 14765,
+      "kinder6bis12": 16238,
+      "senioren65plus": 62441,
+      "dichtePro_km2": 3068.624827663492,
+      "jugendquotient": 28.2,
+      "altenquotient": 37.8,
+      "erwerbsanteil": 60.2
+    }
+  }
 }

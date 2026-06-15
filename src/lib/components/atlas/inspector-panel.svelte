@@ -9,11 +9,7 @@
 		openBookmarksDialog
 	} from '$lib/state/ui-context.svelte.js';
 	import { featureFlags } from '$lib/data/feature-flags.js';
-	import {
-		createBookmark,
-		isBookmarked,
-		persistBookmarks
-	} from '$lib/state/bookmark-store.js';
+	import { createBookmark, isBookmarked, persistBookmarks } from '$lib/state/bookmark-store.js';
 	import {
 		createInspectorLevelState,
 		resolveSpatialContext,
@@ -40,6 +36,11 @@
 	import ScoreMembershipBadge from './inspector-panel/score-membership-badge.svelte';
 	import WahlSection from './inspector-panel/wahl-section.svelte';
 	import DemografieBlock from './inspector-panel/demografie-block.svelte';
+	import { getDemografieByScopeAt } from '$lib/data/get-kiez-demografie.js';
+	import type {
+		DemografieByScope,
+		DemografieScope
+	} from './inspector-panel/internal/demografie-types.js';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
@@ -56,6 +57,7 @@
 	import { buildOgImageUrl } from '$lib/utils/og-image-url.js';
 	import { formatLayerValue } from './inspector-panel/internal/value-formatters.js';
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 
 	type Props = {
 		layerMeta?: readonly LayerMetadata[];
@@ -124,6 +126,54 @@
 		regionComposite(regionComposites, 'bezirk', level.kiezSlug, level.bezirkSlug)
 	);
 
+	// Story 10.5: Bevölkerungsprofil pro Scope (Standort/Kiez/Bezirk) + Umschaltung.
+	// Lädt alle drei sobald Adresse + aufgelöste Slugs vorliegen; Scope steuert auch die Karten-Outline.
+	let demografieByScope = $state<DemografieByScope | null>(null);
+	$effect(() => {
+		const addr = ui.selectedAddress;
+		if (!addr) {
+			demografieByScope = null;
+			ui.demografieScope = 'standort';
+			return;
+		}
+		const { lat, lng } = addr;
+		const kiezSlug = level.kiezSlug;
+		const bezirkSlug = level.bezirkSlug;
+		const addrId = addr.id;
+		void getDemografieByScopeAt(lat, lng, kiezSlug, bezirkSlug)
+			.then((d) => {
+				if (ui.selectedAddress?.id !== addrId) return;
+				demografieByScope = d;
+				// Scope auf Standort zurücksetzen, wenn der gewählte Bezug hier keine Daten hat.
+				if (
+					(ui.demografieScope === 'kiez' && !d.kiez) ||
+					(ui.demografieScope === 'bezirk' && !d.bezirk)
+				) {
+					ui.demografieScope = 'standort';
+				}
+			})
+			.catch(() => {
+				if (ui.selectedAddress?.id === addrId) demografieByScope = null;
+			});
+	});
+
+	const kiezDemografieAvailable = $derived(!!demografieByScope?.kiez);
+	const bezirkDemografieAvailable = $derived(!!demografieByScope?.bezirk);
+	const activeDemografie = $derived(
+		demografieByScope ? (demografieByScope[ui.demografieScope] ?? demografieByScope.standort) : null
+	);
+	const demografieScopeName = $derived(
+		ui.demografieScope === 'kiez'
+			? level.kiezName
+			: ui.demografieScope === 'bezirk'
+				? level.bezirkName
+				: null
+	);
+
+	function changeDemografieScope(scope: DemografieScope): void {
+		ui.demografieScope = scope;
+	}
+
 	// Story 14.11: Sprung von einer Layer-Card zur zugehörigen Score-Dimension (scrollt + klappt auf).
 	function jumpToDimension(dimension: string): void {
 		const row = document.querySelector<HTMLElement>(`[data-testid="kiez-score-dim-${dimension}"]`);
@@ -184,17 +234,16 @@
 		'fahrradstrassen-2024'
 	]);
 
-	function aggFor(
-		slug: string,
-		scope: 'kiez' | 'bezirk' | 'berlin'
-	): LayerAggregate | undefined {
+	function aggFor(slug: string, scope: 'kiez' | 'bezirk' | 'berlin'): LayerAggregate | undefined {
 		const entry = layerAggregates?.aggregates[slug];
 		if (!entry) return undefined;
 		if (scope === 'berlin') return entry.berlin;
 		if (scope === 'kiez') {
 			const s = level.kiezSlug;
 			if (!s) return undefined;
-			return entry.kiez[s] ?? (level.bezirkSlug ? entry.kiez[`${s}-${level.bezirkSlug}`] : undefined);
+			return (
+				entry.kiez[s] ?? (level.bezirkSlug ? entry.kiez[`${s}-${level.bezirkSlug}`] : undefined)
+			);
 		}
 		return level.bezirkSlug ? entry.bezirk[level.bezirkSlug] : undefined;
 	}
@@ -290,9 +339,7 @@
 	}
 
 	const addressName = $derived(ui.selectedAddress?.displayName ?? '');
-	const addressPrimary = $derived(
-		ui.selectedAddress ? extractStreetName(ui.selectedAddress) : ''
-	);
+	const addressPrimary = $derived(ui.selectedAddress ? extractStreetName(ui.selectedAddress) : '');
 	const addressSubline = $derived(
 		ui.selectedAddress ? formatAddressSubline(ui.selectedAddress) : ''
 	);
@@ -363,9 +410,7 @@
 			layerHits: enrichedHits,
 			layerMeta,
 			climate: ui.nearestStation ? { station: ui.nearestStation, series: ui.climateSeries } : null,
-			oepnv: nearest
-				? { nearest, rating: getMobilityRating(nearest, { isResidential }) }
-				: null,
+			oepnv: nearest ? { nearest, rating: getMobilityRating(nearest, { isResidential }) } : null,
 			kiezScore: ui.kiezScore,
 			wahl: ui.wahlResults,
 			demografie: ui.kiezDemografie,
@@ -376,9 +421,7 @@
 	const ogImageUrl = $derived(shareOpen ? buildOgImageUrl(ogImageInput, currentOrigin()) : null);
 	const permalinkUrl = $derived(shareOpen ? currentHref() : '');
 	const nativeShareData = $derived<ShareData>({
-		title: addressName
-			? `${addressName} - Berlin in Daten - navigator.berlin`
-			: 'navigator.berlin',
+		title: addressName ? `${addressName} - Berlin in Daten - navigator.berlin` : 'navigator.berlin',
 		text: ogImageInput?.topLayers.join(' · ') ?? '',
 		url: permalinkUrl || currentHref()
 	});
@@ -398,9 +441,7 @@
 	});
 
 	const nearestAddressPoint = $derived(
-		ui.selectedAddress
-			? { lat: ui.selectedAddress.lat, lng: ui.selectedAddress.lng }
-			: null
+		ui.selectedAddress ? { lat: ui.selectedAddress.lat, lng: ui.selectedAddress.lng } : null
 	);
 
 	const hasNearestStops = $derived.by(() => {
@@ -430,254 +471,262 @@
 		class="flex h-full flex-col overflow-x-hidden overflow-y-auto bg-bg-elevated text-ink"
 	>
 		<div class="sticky top-0 z-10 bg-bg-elevated">
-		<header
-			class="flex items-start justify-between gap-3 border-b border-rule px-6 pb-4 pt-5"
-		>
-			<div class="min-w-0">
-				<h2
-					class="font-serif text-xl leading-tight text-ink"
-					data-testid="inspector-address"
-					title={addressName}
-				>
-					{addressPrimary || addressName}
-				</h2>
-				{#if addressSubline}
-					<p
-						data-testid="inspector-address-subline"
-						class="font-sans text-sm text-ink-muted"
+			<header class="flex items-start justify-between gap-3 border-b border-rule px-6 pt-5 pb-4">
+				<div class="min-w-0">
+					<h2
+						class="font-serif text-xl leading-tight text-ink"
+						data-testid="inspector-address"
+						title={addressName}
 					>
-						{addressSubline}
-					</p>
-				{/if}
-			</div>
-			<button
-				type="button"
-				onclick={close}
-				data-testid="inspector-close"
-				aria-label="Inspektor schließen"
-				class="rounded-sm p-1 text-ink-muted hover:text-ink"
-			>
-				<X size={18} aria-hidden="true" />
-			</button>
-		</header>
-
-		<div
-			data-testid="inspector-toolbar"
-			class="flex items-center justify-end gap-3 border-b border-rule px-6 py-2"
-		>
-			<div class="flex items-center gap-3">
+						{addressPrimary || addressName}
+					</h2>
+					{#if addressSubline}
+						<p data-testid="inspector-address-subline" class="font-sans text-sm text-ink-muted">
+							{addressSubline}
+						</p>
+					{/if}
+				</div>
 				<button
 					type="button"
-					data-testid="inspector-bookmark-trigger"
-					data-bookmarked={addressBookmarked ? 'true' : 'false'}
-					onclick={handleInspectorBookmark}
-					aria-label={addressBookmarked
-						? 'Adresse ist gespeichert · Bookmark-Liste öffnen'
-						: 'Adresse als Bookmark speichern'}
-					class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+					onclick={close}
+					data-testid="inspector-close"
+					aria-label="Inspektor schließen"
+					class="rounded-sm p-1 text-ink-muted hover:text-ink"
 				>
-					{#if inspectorSaveJustHappened}
-						<Check size={14} aria-hidden="true" />
-						<span data-testid="inspector-bookmark-confirmation">Gespeichert</span>
-					{:else if addressBookmarked}
-						<BookmarkCheck size={14} aria-hidden="true" />
-						<span>Gespeichert</span>
-					{:else}
-						<Bookmark size={14} aria-hidden="true" />
-						<span>Bookmark</span>
-					{/if}
+					<X size={18} aria-hidden="true" />
 				</button>
-				{#if featureFlags.compareMode}
+			</header>
+
+			<div
+				data-testid="inspector-toolbar"
+				class="flex items-center justify-end gap-3 border-b border-rule px-6 py-2"
+			>
+				<div class="flex items-center gap-3">
 					<button
 						type="button"
-						onclick={() => {
-							if (!ui.compareMode) trackEvent('Compare');
-							toggleCompareMode(ui);
-						}}
-						data-testid="compare-trigger"
-						aria-label="Mit Adresse vergleichen"
-						aria-pressed={ui.compareMode}
+						data-testid="inspector-bookmark-trigger"
+						data-bookmarked={addressBookmarked ? 'true' : 'false'}
+						onclick={handleInspectorBookmark}
+						aria-label={addressBookmarked
+							? 'Adresse ist gespeichert · Bookmark-Liste öffnen'
+							: 'Adresse als Bookmark speichern'}
 						class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
 					>
-						<GitCompare size={14} aria-hidden="true" />
-						<span>Vergleichen</span>
+						{#if inspectorSaveJustHappened}
+							<Check size={14} aria-hidden="true" />
+							<span data-testid="inspector-bookmark-confirmation">Gespeichert</span>
+						{:else if addressBookmarked}
+							<BookmarkCheck size={14} aria-hidden="true" />
+							<span>Gespeichert</span>
+						{:else}
+							<Bookmark size={14} aria-hidden="true" />
+							<span>Bookmark</span>
+						{/if}
 					</button>
-				{/if}
-				<div class="relative">
-					<button
-						type="button"
-						bind:this={shareTriggerEl}
-						onclick={openShare}
-						aria-haspopup="dialog"
-						aria-expanded={shareOpen}
-						aria-controls="inspector-share-sheet"
-						data-testid="share-sheet-trigger"
-						class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
-					>
-						<Share2 size={14} aria-hidden="true" />
-						<span>Teilen</span>
-					</button>
-					<div id="inspector-share-sheet">
-						<ShareSheet
-							open={shareOpen}
-							onClose={closeShare}
-							{permalinkUrl}
-							llmExportText={llmMarkdown}
-							{ogImageUrl}
-							{addressName}
-							variant={variant === 'sheet' ? 'sheet' : 'popover'}
-							{nativeShareData}
-						/>
+					{#if featureFlags.compareMode}
+						<button
+							type="button"
+							onclick={() => {
+								if (!ui.compareMode) trackEvent('Compare');
+								toggleCompareMode(ui);
+							}}
+							data-testid="compare-trigger"
+							aria-label="Mit Adresse vergleichen"
+							aria-pressed={ui.compareMode}
+							class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+						>
+							<GitCompare size={14} aria-hidden="true" />
+							<span>Vergleichen</span>
+						</button>
+					{/if}
+					<div class="relative">
+						<button
+							type="button"
+							bind:this={shareTriggerEl}
+							onclick={openShare}
+							aria-haspopup="dialog"
+							aria-expanded={shareOpen}
+							aria-controls="inspector-share-sheet"
+							data-testid="share-sheet-trigger"
+							class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+						>
+							<Share2 size={14} aria-hidden="true" />
+							<span>Teilen</span>
+						</button>
+						<div id="inspector-share-sheet">
+							<ShareSheet
+								open={shareOpen}
+								onClose={closeShare}
+								{permalinkUrl}
+								llmExportText={llmMarkdown}
+								{ogImageUrl}
+								{addressName}
+								variant={variant === 'sheet' ? 'sheet' : 'popover'}
+								{nativeShareData}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
-		</div><!-- /sticky-header-wrapper -->
+		<!-- /sticky-header-wrapper -->
 
 		{#key ui.selectedAddress?.id}
-		<div class="lc-inspector-body flex-1 space-y-4 px-6 py-4">
-			<KiezScoreSection
-				score={ui.kiezScore}
-				{lang}
-				activeLayerSlugs={ui.activeLayerSlugs}
-				onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-			/>
-			{#if level.kiezSlug || level.bezirkSlug}
-				<nav data-testid="inspector-profile-links" aria-label="Profilseiten" class="flex flex-col gap-1">
-					{#if level.kiezSlug}
-						<div class="flex items-baseline justify-between gap-2">
-							<a
-								data-testid="inspector-kiez-link"
-								class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
-								href="/kiez/{level.kiezSlug}"
-							>
-								Kiez-Profil{level.kiezName ? `: ${level.kiezName}` : ''}
-							</a>
-							{#if kiezComposite !== null}
-								<span
-									data-testid="inspector-kiez-composite"
-									class="shrink-0 font-mono text-xs text-ink-muted"
-									title="Gesamt-Score der Bezirksregion (Mittel ihrer Planungsräume)"
-								>
-									Score {Math.round(kiezComposite)}
-								</span>
-							{/if}
-						</div>
-					{/if}
-					{#if level.bezirkSlug}
-						<div class="flex items-baseline justify-between gap-2">
-							<a
-								data-testid="inspector-bezirk-link"
-								class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
-								href="/bezirk/{level.bezirkSlug}"
-							>
-								Bezirks-Profil{level.bezirkName ? `: ${level.bezirkName}` : ''}
-							</a>
-							{#if bezirkComposite !== null}
-								<span
-									data-testid="inspector-bezirk-composite"
-									class="shrink-0 font-mono text-xs text-ink-muted"
-									title="Gesamt-Score des Bezirks (Mittel seiner Planungsräume)"
-								>
-									Score {Math.round(bezirkComposite)}
-								</span>
-							{/if}
-						</div>
-					{/if}
-				</nav>
-			{/if}
-			<div class="border-t border-rule pt-4" data-testid="weitere-daten-header">
-				<h3 class="font-sans text-xs font-semibold uppercase tracking-wide text-ink-muted">
-					Weitere Daten an dieser Adresse
-				</h3>
-				<p class="mt-1 font-serif text-[11px] italic leading-snug text-ink-muted">
-					Markierte Werte fließen in den Kiez-Score oben ein, die übrigen sind zusätzlicher Kontext.
-				</p>
-			</div>
-			<WahlSection results={ui.wahlResults} />
-			<DemografieBlock
-				data={ui.kiezDemografie}
-				{lang}
-				isActive={ui.activeLayerSlugs.includes('einwohner-dichte-2024')}
-				onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-			/>
-			{#each sections as section (section.key)}
-				{#if shouldRenderSection(section.key, section.hits.length)}
-					<section
-						data-testid={`section-${section.key}`}
-						data-section={section.key}
-						class="border-t border-rule pt-4"
+			<div class="lc-inspector-body flex-1 space-y-4 px-6 py-4">
+				<KiezScoreSection
+					score={ui.kiezScore}
+					{lang}
+					activeLayerSlugs={ui.activeLayerSlugs}
+					onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+				/>
+				{#if level.kiezSlug || level.bezirkSlug}
+					<nav
+						data-testid="inspector-profile-links"
+						aria-label="Profilseiten"
+						class="flex flex-col gap-1"
 					>
-						<h3
-							class="mb-3 flex items-baseline gap-2 font-sans text-xs font-semibold uppercase tracking-wide text-ink-muted"
-							data-testid={`section-header-${section.key}`}
-						>
-							<span>{section.label}</span>
-							{#if section.hits.length > 0}
-								<span
-									class="font-mono tabular-nums text-ink-subtle"
-									data-testid={`section-count-${section.key}`}>{section.hits.length}</span
+						{#if level.kiezSlug}
+							{@const kiezHref = resolve('/(with-header)/kiez/[slug]', { slug: level.kiezSlug })}
+							<div class="flex items-baseline justify-between gap-2">
+								<a
+									data-testid="inspector-kiez-link"
+									class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+									href={kiezHref}
 								>
-							{/if}
-						</h3>
-						<div class="mt-2 space-y-3">
-							{#if section.key === 'mobilitaet'}
-								<NearestStopsCard
-									address={nearestAddressPoint}
-									index={ui.oepnvStopIndex}
-									{isResidential}
-								/>
-							{/if}
-							{#if section.key === 'klima'}
-								<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
-							{:else if section.hits.length > 0}
-								<div class="space-y-2">
-									{#each section.hits as hit (hit.layer)}
-										<div data-testid="hit-{hit.layer}">
-										<ScoreMembershipBadge slug={hit.layer} onJump={jumpToDimension} />
-										{#if hit.layer === 'klima-pet-2022'}
-											<KlimaPetCard
-												{hit}
-												layerName={getLayerDisplayName(hit.layer)}
-												{lang}
-												isActive={ui.activeLayerSlugs.includes(hit.layer)}
-												onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-												kiezName={level.kiezName}
-												kiezAggregate={numericAgg('klima-pet-2022', 'kiez')}
-												bezirkName={level.bezirkName}
-												bezirkAggregate={numericAgg('klima-pet-2022', 'bezirk')}
-												berlinAggregate={numericAgg('klima-pet-2022', 'berlin')}
-											/>
-										{:else if CARD_SLUGS.has(hit.layer)}
-											<LayerCard
-												{hit}
-												layerName={cardLayerName(hit.layer)}
-												{lang}
-												isActive={ui.activeLayerSlugs.includes(hit.layer)}
-												onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-												contextRows={contextRowsFor(hit.layer)}
-											/>
-										{:else}
-											<LayerHitRow
-												{hit}
-												layerName={getLayerDisplayName(hit.layer)}
-												{lang}
-												lat={ui.selectedAddress?.lat}
-												lng={ui.selectedAddress?.lng}
-												isActive={ui.activeLayerSlugs.includes(hit.layer)}
-												onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-											/>
-										{/if}
-										</div>
-									{/each}
-								</div>
-							{/if}
-						</div>
-					</section>
+									Kiez-Profil{level.kiezName ? `: ${level.kiezName}` : ''}
+								</a>
+								{#if kiezComposite !== null}
+									<span
+										data-testid="inspector-kiez-composite"
+										class="shrink-0 font-mono text-xs text-ink-muted"
+										title="Gesamt-Score der Bezirksregion (Mittel ihrer Planungsräume)"
+									>
+										Score {Math.round(kiezComposite)}
+									</span>
+								{/if}
+							</div>
+						{/if}
+						{#if level.bezirkSlug}
+							{@const bezirkHref = resolve('/(with-header)/bezirk/[slug]', {
+								slug: level.bezirkSlug
+							})}
+							<div class="flex items-baseline justify-between gap-2">
+								<a
+									data-testid="inspector-bezirk-link"
+									class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+									href={bezirkHref}
+								>
+									Bezirks-Profil{level.bezirkName ? `: ${level.bezirkName}` : ''}
+								</a>
+								{#if bezirkComposite !== null}
+									<span
+										data-testid="inspector-bezirk-composite"
+										class="shrink-0 font-mono text-xs text-ink-muted"
+										title="Gesamt-Score des Bezirks (Mittel seiner Planungsräume)"
+									>
+										Score {Math.round(bezirkComposite)}
+									</span>
+								{/if}
+							</div>
+						{/if}
+					</nav>
 				{/if}
-			{/each}
-		</div>
+				<div class="border-t border-rule pt-4" data-testid="weitere-daten-header">
+					<h3 class="font-sans text-xs font-semibold tracking-wide text-ink-muted uppercase">
+						Weitere Daten an dieser Adresse
+					</h3>
+					<p class="mt-1 font-serif text-[11px] leading-snug text-ink-muted italic">
+						Markierte Werte fließen in den Kiez-Score oben ein, die übrigen sind zusätzlicher
+						Kontext.
+					</p>
+				</div>
+				<WahlSection results={ui.wahlResults} />
+				<DemografieBlock
+					data={activeDemografie}
+					isActive={ui.activeLayerSlugs.includes('einwohner-dichte-2024')}
+					onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+					scope={ui.demografieScope}
+					scopeName={demografieScopeName}
+					kiezAvailable={kiezDemografieAvailable}
+					bezirkAvailable={bezirkDemografieAvailable}
+					onScopeChange={changeDemografieScope}
+				/>
+				{#each sections as section (section.key)}
+					{#if shouldRenderSection(section.key, section.hits.length)}
+						<section
+							data-testid={`section-${section.key}`}
+							data-section={section.key}
+							class="border-t border-rule pt-4"
+						>
+							<h3
+								class="mb-3 flex items-baseline gap-2 font-sans text-xs font-semibold tracking-wide text-ink-muted uppercase"
+								data-testid={`section-header-${section.key}`}
+							>
+								<span>{section.label}</span>
+								{#if section.hits.length > 0}
+									<span
+										class="font-mono text-ink-subtle tabular-nums"
+										data-testid={`section-count-${section.key}`}>{section.hits.length}</span
+									>
+								{/if}
+							</h3>
+							<div class="mt-2 space-y-3">
+								{#if section.key === 'mobilitaet'}
+									<NearestStopsCard
+										address={nearestAddressPoint}
+										index={ui.oepnvStopIndex}
+										{isResidential}
+									/>
+								{/if}
+								{#if section.key === 'klima'}
+									<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
+								{:else if section.hits.length > 0}
+									<div class="space-y-2">
+										{#each section.hits as hit (hit.layer)}
+											<div data-testid="hit-{hit.layer}">
+												<ScoreMembershipBadge slug={hit.layer} onJump={jumpToDimension} />
+												{#if hit.layer === 'klima-pet-2022'}
+													<KlimaPetCard
+														{hit}
+														layerName={getLayerDisplayName(hit.layer)}
+														{lang}
+														isActive={ui.activeLayerSlugs.includes(hit.layer)}
+														onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+														kiezName={level.kiezName}
+														kiezAggregate={numericAgg('klima-pet-2022', 'kiez')}
+														bezirkName={level.bezirkName}
+														bezirkAggregate={numericAgg('klima-pet-2022', 'bezirk')}
+														berlinAggregate={numericAgg('klima-pet-2022', 'berlin')}
+													/>
+												{:else if CARD_SLUGS.has(hit.layer)}
+													<LayerCard
+														{hit}
+														layerName={cardLayerName(hit.layer)}
+														{lang}
+														isActive={ui.activeLayerSlugs.includes(hit.layer)}
+														onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+														contextRows={contextRowsFor(hit.layer)}
+													/>
+												{:else}
+													<LayerHitRow
+														{hit}
+														layerName={getLayerDisplayName(hit.layer)}
+														{lang}
+														lat={ui.selectedAddress?.lat}
+														lng={ui.selectedAddress?.lng}
+														isActive={ui.activeLayerSlugs.includes(hit.layer)}
+														onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+													/>
+												{/if}
+											</div>
+										{/each}
+									</div>
+								{/if}
+							</div>
+						</section>
+					{/if}
+				{/each}
+			</div>
 		{/key}
 
 		<div data-testid="inspector-print-meta">
@@ -685,6 +734,5 @@
 			<p>navigator.berlin · {new Date().toLocaleDateString('de-DE')}</p>
 			<p>{page.url.toString()}</p>
 		</div>
-
 	</section>
 {/if}

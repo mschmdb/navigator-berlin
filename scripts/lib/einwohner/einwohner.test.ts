@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+	aggregateEinwohner,
 	bucketAltersjahre,
 	computeDichte,
 	computeQuotienten,
@@ -117,10 +118,58 @@ describe('joinEinwohnerToLor', () => {
 	});
 
 	it('ist deterministisch nach plrId sortiert', () => {
-		const out = joinEinwohnerToLor([rows[1], rows[0]], [
-			{ plrId: '01100101', areaM2: 500_000 },
-			{ plrId: '01100102', areaM2: 1_000_000 }
-		]);
+		const out = joinEinwohnerToLor(
+			[rows[1], rows[0]],
+			[
+				{ plrId: '01100101', areaM2: 500_000 },
+				{ plrId: '01100102', areaM2: 1_000_000 }
+			]
+		);
 		expect(out.map((r) => r.plrId)).toEqual(['01100101', '01100102']);
+	});
+});
+
+describe('aggregateEinwohner', () => {
+	// Zwei PLR in derselben Gruppe (Prefix 0110):
+	// A 3580 EW auf 0.5 km² (Dichte 7160), B 2000 EW auf 1.0 km² (Dichte 2000).
+	const rows = [
+		row('01100101', 3580, { E_EU1: 37, E_E1U6: 128, E_E65U80: 455, E_E80U110: 262 }),
+		row('01100201', 2000, { E_EU1: 10, E_E1U6: 40 })
+	];
+	const areaByPlr = new Map<string, number | null>([
+		['01100101', 500_000],
+		['01100201', 1_000_000]
+	]);
+
+	it('dichte ist flächengewichtet (Σgesamt/Σfläche), nicht der Mittelwert der PLR-Dichten', () => {
+		const out = aggregateEinwohner(rows, areaByPlr, (id) => id.slice(0, 4));
+		const g = out.get('0110')!;
+		// 5580 EW / 1.5 km² = 3720, NICHT (7160+2000)/2 = 4580
+		expect(g.dichtePro_km2).toBeCloseTo(3720, 5);
+		expect(g.gesamt).toBe(5580);
+	});
+
+	it('summiert Altersbänder über die Gruppe + leitet Quotienten daraus ab', () => {
+		const out = aggregateEinwohner(rows, areaByPlr, (id) => id.slice(0, 4));
+		const g = out.get('0110')!;
+		expect(g.kinder0bis6).toBe(215); // 37+128+10+40
+		expect(g.senioren65plus).toBe(717); // 455+262
+	});
+
+	it('teilt nach groupKey in mehrere Gruppen', () => {
+		const out = aggregateEinwohner(rows, areaByPlr, (id) => id.slice(0, 6));
+		expect([...out.keys()].sort()).toEqual(['011001', '011002']);
+	});
+
+	it('groupKey null schließt die Zeile aus', () => {
+		const out = aggregateEinwohner(rows, areaByPlr, (id) => (id === '01100101' ? null : '011002'));
+		expect(out.has('011002')).toBe(true);
+		expect(out.get('011002')!.gesamt).toBe(2000);
+	});
+
+	it('Gruppe ohne bekannte Fläche liefert dichtePro_km2 null, kein Crash', () => {
+		const out = aggregateEinwohner(rows, new Map(), (id) => id.slice(0, 4));
+		expect(out.get('0110')!.dichtePro_km2).toBeNull();
+		expect(out.get('0110')!.gesamt).toBe(5580);
 	});
 });

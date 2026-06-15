@@ -1,18 +1,34 @@
 <script lang="ts">
 	import { Users, Eye, EyeOff, ExternalLink, ChevronDown } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
-	import type { KiezDemografieData } from './internal/demografie-types.js';
+	import type { DemografieScope, KiezDemografieData } from './internal/demografie-types.js';
 
 	interface Props {
 		data: KiezDemografieData | null;
-		lang?: string;
 		isActive?: boolean;
 		onToggleLayer?: (slug: string) => void;
+		/** Aktiver räumlicher Bezug. Default 'standort' (= bisheriges PLR-Verhalten). */
+		scope?: DemografieScope;
+		/** Anzeigename des aktiven Kiez/Bezirk (für die Bezug-Zeile). */
+		scopeName?: string | null;
+		kiezAvailable?: boolean;
+		bezirkAvailable?: boolean;
+		/** Gesetzt = Scope-Umschaltung aktiv (rendert den Toggle). */
+		onScopeChange?: (scope: DemografieScope) => void;
 	}
-	let { data, lang = 'de', isActive = false, onToggleLayer }: Props = $props();
+	let {
+		data,
+		isActive = false,
+		onToggleLayer,
+		scope = 'standort',
+		scopeName = null,
+		kiezAvailable = false,
+		bezirkAvailable = false,
+		onScopeChange
+	}: Props = $props();
 
 	const SLUG = 'einwohner-dichte-2024';
-	const learnMoreHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/${SLUG}`));
+	const learnMoreHref = resolve('/(with-header)/layer/[slug]', { slug: SLUG });
 
 	let detailsOpen = $state(false);
 
@@ -21,6 +37,50 @@
 
 	function pct(anteil: number): string {
 		return `${oneFmt.format(anteil * 100)} %`;
+	}
+
+	const SCOPES: readonly DemografieScope[] = ['standort', 'kiez', 'bezirk'];
+	const SCOPE_LABELS: Record<DemografieScope, string> = {
+		standort: 'Umgebung',
+		kiez: 'Kiez',
+		bezirk: 'Bezirk'
+	};
+
+	function scopeAvailable(s: DemografieScope): boolean {
+		if (s === 'standort') return true;
+		if (s === 'kiez') return kiezAvailable;
+		return bezirkAvailable;
+	}
+
+	// Bezug-Zeile: erklärt, worauf sich die Zahlen beziehen (löst die Scope-Ambiguität).
+	const bezugText = $derived.by(() => {
+		if (scope === 'standort') return 'Bezug: Umgebung · statistischer Planungsraum';
+		const label = SCOPE_LABELS[scope];
+		return scopeName ? `Bezug: ${label} ${scopeName}` : `Bezug: ${label}`;
+	});
+
+	let scopeButtons: HTMLButtonElement[] = $state([]);
+
+	function selectScope(s: DemografieScope): void {
+		if (!scopeAvailable(s)) return;
+		onScopeChange?.(s);
+	}
+
+	function onScopeKeydown(event: KeyboardEvent, s: DemografieScope): void {
+		const order = SCOPES.filter(scopeAvailable);
+		const idx = order.indexOf(s);
+		if (idx < 0) return;
+		let nextIdx: number | null = null;
+		if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIdx = (idx + 1) % order.length;
+		else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp')
+			nextIdx = (idx - 1 + order.length) % order.length;
+		else if (event.key === 'Home') nextIdx = 0;
+		else if (event.key === 'End') nextIdx = order.length - 1;
+		if (nextIdx === null) return;
+		event.preventDefault();
+		const next = order[nextIdx];
+		scopeButtons[SCOPES.indexOf(next)]?.focus();
+		selectScope(next);
 	}
 </script>
 
@@ -31,15 +91,60 @@
 >
 	<h4 class="flex min-w-0 items-center gap-2 font-sans text-sm font-semibold text-ink">
 		<Users class="size-4 shrink-0 text-ink-muted" aria-hidden="true" />
-		<span class="hyphens-auto break-words">Bevölkerungsprofil</span>
+		<span class="break-words hyphens-auto">Bevölkerungsprofil</span>
 	</h4>
+
+	{#if onScopeChange}
+		<div
+			role="radiogroup"
+			aria-label="Räumlicher Bezug des Bevölkerungsprofils"
+			data-testid="demografie-scope-toggle"
+			class="mt-1.5 grid grid-cols-3 gap-1"
+		>
+			{#each SCOPES as s, i (s)}
+				{@const available = scopeAvailable(s)}
+				{@const checked = scope === s}
+				<button
+					bind:this={scopeButtons[i]}
+					role="radio"
+					type="button"
+					data-testid={`demografie-scope-${s}`}
+					aria-checked={checked}
+					aria-disabled={!available}
+					tabindex={checked ? 0 : -1}
+					title={available
+						? SCOPE_LABELS[s]
+						: `${SCOPE_LABELS[s]} · an dieser Stelle nicht verfügbar`}
+					onclick={() => selectScope(s)}
+					onkeydown={(e) => onScopeKeydown(e, s)}
+					class="rounded border border-ink px-1 py-1 text-center font-mono text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+					class:bg-ink={checked}
+					class:text-bg={checked}
+					class:bg-bg={!checked}
+					class:text-ink={!checked && available}
+					class:hover:bg-bg-muted={!checked && available}
+					class:opacity-40={!available}
+					class:cursor-not-allowed={!available}
+					class:text-ink-subtle={!available}
+				>
+					{SCOPE_LABELS[s]}
+				</button>
+			{/each}
+		</div>
+	{/if}
 
 	{#if data === null}
 		<p class="mt-1 font-serif text-sm text-ink-muted" data-testid="demografie-empty">
 			Keine Bevölkerungsdaten vorhanden.
 		</p>
 	{:else}
-		<p class="mt-0.5 font-serif text-xs text-ink-subtle hyphens-auto break-words">
+		<p
+			class="mt-1 font-mono text-[11px] break-words hyphens-auto text-ink-muted"
+			data-testid="demografie-bezug"
+		>
+			{bezugText}
+		</p>
+		<p class="mt-0.5 font-serif text-xs break-words hyphens-auto text-ink-subtle">
 			Neutraler Kontext, keine Wertung: dicht ist nicht besser als locker.
 		</p>
 		<dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-sm">
@@ -49,18 +154,18 @@
 			</dd>
 			<dt class="text-ink-muted">Einwohner gesamt</dt>
 			<dd class="text-right font-mono text-ink">{intFmt.format(data.einwohner)}</dd>
-			<dt class="text-ink-muted hyphens-auto break-words">Kinder 0–6</dt>
+			<dt class="break-words hyphens-auto text-ink-muted">Kinder 0–6</dt>
 			<dd class="text-right font-mono text-ink">{pct(data.anteilKinder0bis6)}</dd>
-			<dt class="text-ink-muted hyphens-auto break-words">Kinder 6–12</dt>
+			<dt class="break-words hyphens-auto text-ink-muted">Kinder 6–12</dt>
 			<dd class="text-right font-mono text-ink">{pct(data.anteilKinder6bis12)}</dd>
-			<dt class="text-ink-muted hyphens-auto break-words">Senioren 65+</dt>
+			<dt class="break-words hyphens-auto text-ink-muted">Senioren 65+</dt>
 			<dd class="text-right font-mono text-ink">{pct(data.anteilSenioren65plus)}</dd>
 			{#if data.jugendquotient !== null}
-				<dt class="text-ink-muted hyphens-auto break-words">Jugendquotient</dt>
+				<dt class="break-words hyphens-auto text-ink-muted">Jugendquotient</dt>
 				<dd class="text-right font-mono text-ink">{oneFmt.format(data.jugendquotient)}</dd>
 			{/if}
 			{#if data.altenquotient !== null}
-				<dt class="text-ink-muted hyphens-auto break-words">Altenquotient</dt>
+				<dt class="break-words hyphens-auto text-ink-muted">Altenquotient</dt>
 				<dd class="text-right font-mono text-ink">{oneFmt.format(data.altenquotient)}</dd>
 			{/if}
 		</dl>
@@ -114,7 +219,7 @@
 
 	{#if detailsOpen && data !== null}
 		<p
-			class="mt-1.5 font-mono text-xs text-ink-subtle hyphens-auto break-words"
+			class="mt-1.5 font-mono text-xs break-words hyphens-auto text-ink-subtle"
 			data-testid="demografie-details"
 		>
 			Stand {data.datenstand} · {data.quelle} · {data.lizenz}

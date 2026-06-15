@@ -19,12 +19,7 @@ import {
 	closeOverlays,
 	type UiState
 } from './ui-context.svelte.js';
-import type {
-	GeocodeSuggestion,
-	LayerHit,
-	ClimateStation,
-	ClimateData
-} from '$lib/data';
+import type { GeocodeSuggestion, LayerHit, ClimateStation, ClimateData } from '$lib/data';
 import type { Bookmark } from './bookmark-schema.js';
 
 function makeState(): UiState {
@@ -54,6 +49,7 @@ function makeState(): UiState {
 		wahlResults: null,
 		comparisonWahlResults: null,
 		kiezDemografie: null,
+		demografieScope: 'standort',
 		kiezLaermDb: null
 	};
 }
@@ -260,9 +256,20 @@ describe('ui-context', () => {
 			s.compareMode = true;
 			s.comparisonAddress = makeAddress();
 			s.comparisonLayerHits = [
-				{ layer: 'bezirke', value: 'Mitte', source: 'x', updatedAt: '2024-01-01', license: 'CC BY 4.0' } as LayerHit
+				{
+					layer: 'bezirke',
+					value: 'Mitte',
+					source: 'x',
+					updatedAt: '2024-01-01',
+					license: 'CC BY 4.0'
+				} as LayerHit
 			];
-			s.comparisonClimateStation = { id: 's1', name: 'Dahlem', coordinates: [13.3, 52.5], firstYear: 1950 } as ClimateStation;
+			s.comparisonClimateStation = {
+				id: 's1',
+				name: 'Dahlem',
+				coordinates: [13.3, 52.5],
+				firstYear: 1950
+			} as ClimateStation;
 			s.comparisonClimateSeries = { stationId: 's1' } as unknown as ClimateData;
 			s.comparisonLoading = true;
 			toggleCompareMode(s);
@@ -285,9 +292,20 @@ describe('ui-context', () => {
 			const s = makeState();
 			s.comparisonAddress = makeAddress();
 			s.comparisonLayerHits = [
-				{ layer: 'bezirke', value: 'Mitte', source: 'x', updatedAt: '2024-01-01', license: 'CC BY 4.0' } as LayerHit
+				{
+					layer: 'bezirke',
+					value: 'Mitte',
+					source: 'x',
+					updatedAt: '2024-01-01',
+					license: 'CC BY 4.0'
+				} as LayerHit
 			];
-			s.comparisonClimateStation = { id: 's1', name: 'Dahlem', coordinates: [13.3, 52.5], firstYear: 1950 } as ClimateStation;
+			s.comparisonClimateStation = {
+				id: 's1',
+				name: 'Dahlem',
+				coordinates: [13.3, 52.5],
+				firstYear: 1950
+			} as ClimateStation;
 			s.comparisonClimateSeries = { stationId: 's1' } as unknown as ClimateData;
 			setComparisonAddress(s, null);
 			expect(s.comparisonAddress).toBeNull();
@@ -302,7 +320,13 @@ describe('ui-context', () => {
 			const addrB = makeAddress({ id: 'b', displayName: 'B' });
 			setComparisonAddress(s, addrA);
 			s.comparisonLayerHits = [
-				{ layer: 'bezirke', value: 'Mitte', source: 'x', updatedAt: '2024-01-01', license: 'CC BY 4.0' } as LayerHit
+				{
+					layer: 'bezirke',
+					value: 'Mitte',
+					source: 'x',
+					updatedAt: '2024-01-01',
+					license: 'CC BY 4.0'
+				} as LayerHit
 			];
 			setComparisonAddress(s, addrB);
 			expect(s.comparisonAddress).toBe(addrB);
@@ -314,7 +338,13 @@ describe('ui-context', () => {
 			s.compareMode = true;
 			s.comparisonAddress = makeAddress();
 			s.comparisonLayerHits = [
-				{ layer: 'bezirke', value: 'Mitte', source: 'x', updatedAt: '2024-01-01', license: 'CC BY 4.0' } as LayerHit
+				{
+					layer: 'bezirke',
+					value: 'Mitte',
+					source: 'x',
+					updatedAt: '2024-01-01',
+					license: 'CC BY 4.0'
+				} as LayerHit
 			];
 			s.comparisonLoading = true;
 			exitCompareMode(s);
