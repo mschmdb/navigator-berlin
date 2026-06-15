@@ -37,9 +37,10 @@
 	import WahlSection from './inspector-panel/wahl-section.svelte';
 	import DemografieBlock from './inspector-panel/demografie-block.svelte';
 	import { getDemografieByScopeAt } from '$lib/data/get-kiez-demografie.js';
-	import type {
-		DemografieByScope,
-		DemografieScope
+	import {
+		demografieBezugLabel,
+		type DemografieByScope,
+		type DemografieScope
 	} from './inspector-panel/internal/demografie-types.js';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
@@ -413,7 +414,8 @@
 			oepnv: nearest ? { nearest, rating: getMobilityRating(nearest, { isResidential }) } : null,
 			kiezScore: ui.kiezScore,
 			wahl: ui.wahlResults,
-			demografie: ui.kiezDemografie,
+			demografie: activeDemografie,
+			demografieBezug: demografieBezugLabel(ui.demografieScope, demografieScopeName),
 			laermDb: ui.kiezLaermDb
 		});
 	});

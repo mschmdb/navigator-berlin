@@ -61,6 +61,8 @@ export interface LlmExportInput {
 	readonly kiezScore?: KiezScore | null;
 	readonly wahl?: WahlResultsAtPoint | null;
 	readonly demografie?: KiezDemografieData | null;
+	/** Räumlicher Bezug des Bevölkerungsprofils (spiegelt den Inspector-Scope). */
+	readonly demografieBezug?: string | null;
 	readonly laermDb?: number | null;
 }
 
@@ -414,6 +416,7 @@ function renderDemografie(input: LlmExportInput, lines: string[]): void {
 
 	lines.push('## Bevölkerungsprofil');
 	lines.push('');
+	if (input.demografieBezug) lines.push(`- Bezug: ${input.demografieBezug}`);
 	lines.push('- Neutraler Kontext, keine Wertung: dicht ist nicht besser als locker.');
 	if (d.dichteEwKm2 !== null) {
 		lines.push(`- Einwohnerdichte: ${intFmt(Math.round(d.dichteEwKm2))} EW/km²`);

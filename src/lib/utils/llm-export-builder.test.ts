@@ -316,6 +316,20 @@ describe('buildLlmExportMarkdown — Demografie-Section (Story 10.5)', () => {
 		expect(md).toContain('Erwerbsanteil: 71,4 %');
 		expect(md).not.toContain('7.140');
 	});
+
+	it('nennt den räumlichen Bezug (deckungsgleich mit dem Inspector-Scope)', () => {
+		const md = buildLlmExportMarkdown({
+			...fullInput(),
+			demografie: DEMOGRAFIE,
+			demografieBezug: 'Kiez Beispielkiez'
+		});
+		expect(md).toContain('- Bezug: Kiez Beispielkiez');
+	});
+
+	it('ohne demografieBezug keine Bezug-Zeile', () => {
+		const md = buildLlmExportMarkdown({ ...fullInput(), demografie: DEMOGRAFIE });
+		expect(md).not.toContain('- Bezug:');
+	});
 });
 
 describe('buildLlmExportMarkdown — Lärm-dB-Kontext (Story 10.6b)', () => {
