@@ -109,6 +109,10 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		short: 'Öffentlicher Trinkwasser-Brunnen (Mai bis Oktober aktiv)',
 		long: 'Von den Berliner Wasserbetrieben betriebener öffentlicher Trinkbrunnen. Saisonal aktiv: Mai bis Oktober wegen Frostschutz. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
 	},
+	'kuehle-orte': {
+		short: 'Ort zum Abkühlen bei Hitze (Angebot, kein Behörden-Ersatz)',
+		long: 'Orte in Berlin, die bei Hitze Abkühlung bieten: Kinos, Bibliotheken, Malls, Schwimmhallen, Museen und mehr. Geometrie und Basis-Tags aus OpenStreetMap (ODbL 1.0), ergänzt um eine redaktionelle navigator.berlin-Anreicherung (Kühle-Score, Klimatisierung, Sommer-Verfügbarkeit). Siehe docs/kuehle-orte-methodik.md. Kein Rechtsanspruch auf Zugang.'
+	},
 
 	// E: Soziale Infrastruktur
 	'kitas-2024': {

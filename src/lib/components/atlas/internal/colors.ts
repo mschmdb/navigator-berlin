@@ -22,6 +22,7 @@ export const COLORS = {
 	// Story 1.15 POI-Pin-Tokens. Semantische Farbcodes pro Bundle (Memorial, Umwelt, Sozial, Mobility).
 	memorialStolperstein: '#B08C57',
 	umweltTrinkbrunnen: '#1565C0',
+	umweltKuehleOrte: '#0277BD',
 	sozialKita: '#74488E',
 	sozialSchule: '#0E6549',
 	sozialKrankenhaus: '#B71C1C',

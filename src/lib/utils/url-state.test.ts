@@ -93,6 +93,12 @@ describe('serializeLayers / parseLayers', () => {
 	it('dedupliziert', () => {
 		expect(parseLayers('a,a,b')).toEqual(['a', 'b']);
 	});
+
+	it('aktiviert kuehle-orte per Deep-Link (FR20, Story 15.2)', () => {
+		expect(parseLayers('kuehle-orte')).toContain('kuehle-orte');
+		expect(parseLayers('kuehle-orte')).toEqual(['kuehle-orte']);
+		expect(parseLayers(serializeLayers(['kuehle-orte']))).toEqual(['kuehle-orte']);
+	});
 });
 
 describe('sortLayerSlugsByBundle', () => {

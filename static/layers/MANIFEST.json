@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-07T14:58:18.501Z",
+  "generatedAt": "2026-06-30T16:24:35.018Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -1066,6 +1066,21 @@
       "featureCount": 542,
       "inspectorRelevant": false,
       "mapRelevant": true
+    },
+    {
+      "slug": "kuehle-orte",
+      "filename": "kuehle-orte.128684d3.geojson",
+      "sourceUrl": "https://www.openstreetmap.org/copyright",
+      "fetchedAt": "2026-06-30T16:24:35.018Z",
+      "license": "ODbL 1.0",
+      "sha256": "128684d3996eb1b074d9cebb49e7af7419d638ed5b5180ef1c184b79ac3f524a",
+      "bundleGroup": "C: Umwelt",
+      "zoomThresholds": {
+        "min": 11,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 519
     }
   ]
 }

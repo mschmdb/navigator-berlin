@@ -5,6 +5,7 @@ import { SOURCES, DWD_STATIONS } from './lib/sources.js';
 import { fetchOdisGeoJson } from './lib/fetchers/odis.js';
 import { fetchFisBrokerWfs } from './lib/fetchers/fis-broker.js';
 import { fetchOverpass } from './lib/fetchers/overpass.js';
+import { fetchLocalGeoJson } from './lib/fetchers/local.js';
 import { overpassToGeoJSON, isOverpassResponse } from './lib/fetchers/overpass-to-geojson.js';
 import { runTippecanoe } from './lib/fetchers/tippecanoe.js';
 import { fetchDwdZip, extractProduktTageswerteCsv } from './lib/fetchers/dwd-cdc.js';
@@ -31,7 +32,7 @@ async function ensureDirs(): Promise<void> {
 	}
 }
 
-async function fetchSource(slug: string): Promise<{ raw: string; sourceUrl: string }> {
+export async function fetchSource(slug: string): Promise<{ raw: string; sourceUrl: string }> {
 	const source = SOURCES.find((s) => s.slug === slug);
 	if (!source) throw new Error(`Unknown source slug: ${slug}`);
 	switch (source.kind) {
@@ -61,6 +62,9 @@ async function fetchSource(slug: string): Promise<{ raw: string; sourceUrl: stri
 				raw: await fetchOverpass(source.sourceUrl, source.overpassQL),
 				sourceUrl: source.sourceUrl
 			};
+		case 'local':
+			if (!source.localPath) throw new Error(`${slug}: localPath required for local`);
+			return { raw: await fetchLocalGeoJson(source.localPath), sourceUrl: source.sourceUrl };
 		default:
 			throw new Error(`Unsupported kind for layer source: ${slug}`);
 	}

@@ -20,11 +20,12 @@ const EXPECTED_SLUGS = [
 	'ubahn-stationen',
 	'sbahn-stationen',
 	'tram-haltestellen',
-	'bus-haltestellen'
+	'bus-haltestellen',
+	'kuehle-orte'
 ] as const;
 
 describe('pin-icon-mapping.PIN_ICON_MAP', () => {
-	it('deckt alle 12 Point-Layer der Story 1.15', () => {
+	it('deckt alle Point-Layer (Story 1.15 + kuehle-orte aus 15.2)', () => {
 		for (const slug of EXPECTED_SLUGS) {
 			expect(PIN_ICON_MAP[slug]).toBeDefined();
 		}
@@ -108,7 +109,13 @@ describe('pin-icon-mapping.PIN_ICON_MAP', () => {
 		}
 	});
 
-	it('exportiert PIN_LAYER_SLUGS als ReadonlySet aller 12 Slugs', () => {
+	it('mapped Kühle Orte auf Snowflake mit Kühle-Orte-Token', () => {
+		expect(PIN_ICON_MAP['kuehle-orte'].iconName).toBe('snowflake');
+		expect(PIN_ICON_MAP['kuehle-orte'].colorToken).toBe('umweltKuehleOrte');
+		expect(PIN_ICON_MAP['kuehle-orte'].svgNodes.length).toBeGreaterThan(0);
+	});
+
+	it('exportiert PIN_LAYER_SLUGS als ReadonlySet aller Slugs', () => {
 		expect(PIN_LAYER_SLUGS.size).toBe(EXPECTED_SLUGS.length);
 		for (const slug of EXPECTED_SLUGS) {
 			expect(PIN_LAYER_SLUGS.has(slug)).toBe(true);

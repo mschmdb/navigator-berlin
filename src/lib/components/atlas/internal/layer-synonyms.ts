@@ -24,6 +24,7 @@ export const LAYER_SYNONYMS_DE: Record<string, readonly string[]> = {
 	'bus-haltestellen': ['bus'],
 	stolpersteine: ['stolperstein', 'gedenken', 'ns'],
 	trinkbrunnen: ['trinkbrunnen', 'wasser'],
+	'kuehle-orte': ['kühl', 'kuehl', 'kühle orte', 'kuehle orte', 'abkühlen', 'hitze', 'schatten', 'klimatisiert'],
 	'kiez-score-wohnschutz': ['wohnschutz', 'milieuschutz', 'erhaltung', 'kiez-score']
 };
 

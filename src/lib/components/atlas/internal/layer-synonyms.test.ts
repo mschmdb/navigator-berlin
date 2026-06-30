@@ -72,6 +72,12 @@ describe('matchSynonyms', () => {
 		expect(hits).toContain('kiez-score-wohnschutz');
 	});
 
+	it('„kühle orte" und „abkühlen" finden kuehle-orte', () => {
+		expect(matchSynonyms('kühle orte')).toContain('kuehle-orte');
+		expect(matchSynonyms('abkühlen')).toContain('kuehle-orte');
+		expect(matchSynonyms('kuehl')).toContain('kuehle-orte');
+	});
+
 	it('„Mietspiegel" findet wohnlagen-2024', () => {
 		expect(matchSynonyms('mietspiegel')).toContain('wohnlagen-2024');
 	});

@@ -197,6 +197,21 @@ export const SOURCES: SourceConfig[] = [
 		seasonality: { from: '05-01', to: '10-31' },
 		simplifyProfile: 'point'
 	},
+	// Story 15.2 (Epic 15): Kühle Orte als lokal vorgebauter Layer (kein Netz-Fetch).
+	// Datenherkunft: OSM-Geometrie (ODbL 1.0) plus redaktionelle Anreicherung (Kühle-Score,
+	// AC-Status, Verifikation) als eigener navigator.berlin-Datensatz, getrennt gekennzeichnet
+	// in docs/kuehle-orte-methodik.md. Build-Input via build-kuehle-orte.ts (Story 15.1).
+	// FR18: kein Brunnen-Feature, Trinkbrunnen bleibt eigener Layer.
+	{
+		slug: 'kuehle-orte',
+		kind: 'local',
+		localPath: 'static/data/kuehle-orte.geojson',
+		sourceUrl: 'https://www.openstreetmap.org/copyright',
+		license: 'ODbL 1.0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'point'
+	},
 	// Epic 12 (Story 12.0): Nahversorgung als Alltagsökonomie-Input für die Versorgungs-Dimension.
 	// OSM/Overpass, ODbL. `out center;` liefert auch Flächen-POIs (Buildings) als Punkt
 	// (overpass-to-geojson centerToFeature). nwr deckt node+way+relation ab.

@@ -25,6 +25,12 @@ export const EDITORIAL_CONFIG: Record<string, EditorialConfig> = {
 		primarySourceUrl: 'https://www.bwb.de/de/trinkbrunnen.php',
 		feedbackMailto: true
 	},
+	'kuehle-orte': {
+		slug: 'kuehle-orte',
+		disclaimerVariants: ['source'],
+		primarySourceUrl: 'https://www.openstreetmap.org/copyright',
+		feedbackMailto: true
+	},
 	'mss-gesamtindex-2025': {
 		slug: 'mss-gesamtindex-2025',
 		disclaimerVariants: ['mss-aggregat'],

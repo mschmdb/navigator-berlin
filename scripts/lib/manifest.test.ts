@@ -163,3 +163,38 @@ describe('validateManifest', () => {
 		expect(parsed.layers[0].mapRelevant).toBe(false);
 	});
 });
+
+describe('buildLayerEntry: local kind (Story 15.2)', () => {
+	const localSource: SourceConfig = {
+		slug: 'kuehle-orte',
+		kind: 'local',
+		localPath: 'static/data/kuehle-orte.geojson',
+		sourceUrl: 'https://www.openstreetmap.org/copyright',
+		license: 'ODbL 1.0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'point'
+	};
+	const pointGeo = Buffer.from(
+		JSON.stringify({
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: { type: 'Point', coordinates: [13.4, 52.5] },
+					properties: { name: 'Test' }
+				}
+			]
+		})
+	);
+
+	it('erzeugt ODbL-Lizenz, Point-Geometrie, gehashten Filename, C: Umwelt', () => {
+		const entry = buildLayerEntry(localSource, pointGeo, '2026-06-30T00:00:00Z');
+		expect(entry.license).toBe('ODbL 1.0');
+		expect(entry.geometryType).toBe('Point');
+		expect(entry.bundleGroup).toBe('C: Umwelt');
+		expect(entry.filename).toMatch(/^kuehle-orte\.[0-9a-f]{8}\.geojson$/);
+		expect(entry.featureCount).toBe(1);
+		expect(entry.sourceUrl).toBe('https://www.openstreetmap.org/copyright');
+	});
+});

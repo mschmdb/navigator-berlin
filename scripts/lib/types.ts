@@ -18,7 +18,7 @@ export type License =
 export type GeometryType = 'Point' | 'Polygon' | 'MultiPolygon' | 'LineString';
 export type SimplifyProfile = 'boundary' | 'polygon' | 'point' | 'tiles';
 export type LayerFormat = 'geojson' | 'pmtiles';
-export type SourceKind = 'fis-broker' | 'odis' | 'overpass' | 'dwd';
+export type SourceKind = 'fis-broker' | 'odis' | 'overpass' | 'dwd' | 'local';
 
 export interface ZoomRange {
 	min: number;
@@ -39,6 +39,9 @@ export interface SourceConfig {
 	 * Für überschneidungsfreie Partitions-Quellen (z.B. PET Straßenraum + Grünfläche). Story 10.9. */
 	additionalTypeNames?: string[];
 	overpassQL?: string;
+	/** Nur für kind 'local'. Pfad relativ zum Repo-Root zu einem vorgebauten GeoJSON
+	 * (z.B. Build-Output von build-kuehle-orte.ts). Wird statt eines Netz-Fetch gelesen. */
+	localPath?: string;
 	license: License;
 	bundleGroup: Bundle;
 	zoomThresholds: ZoomRange;
