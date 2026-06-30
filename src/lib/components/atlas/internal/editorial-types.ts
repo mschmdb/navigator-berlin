@@ -3,6 +3,7 @@ export type DisclaimerVariant =
 	| 'historic'
 	| 'seasonal'
 	| 'source'
+	| 'kuehle-orte'
 	| 'compare-stolperstein'
 	| 'compare-mietspiegel'
 	| 'compare-bodenrichtwerte'

@@ -6,6 +6,8 @@
 		historic: 'Historischer Stand. Geometrie aus OpenStreetMap-Community-Daten.',
 		seasonal: 'Layer aktiv Mai–Oktober. November–April außerhalb der Saison.',
 		source: 'Personen-Hintergrund aus zitierter Quelle. Nicht algorithmisch generiert.',
+		'kuehle-orte':
+			'Geometrie aus OpenStreetMap (ODbL), ergänzt um eine redaktionelle Anreicherung. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.',
 		'compare-stolperstein':
 			'Stolpersteine sind Erinnerung an NS-Opfer, kein Wohn-Bewertungs-Kriterium. Wir zählen nur, ohne zu vergleichen oder zu werten.',
 		'compare-mietspiegel':

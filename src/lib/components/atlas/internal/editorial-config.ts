@@ -27,7 +27,7 @@ export const EDITORIAL_CONFIG: Record<string, EditorialConfig> = {
 	},
 	'kuehle-orte': {
 		slug: 'kuehle-orte',
-		disclaimerVariants: ['source'],
+		disclaimerVariants: ['kuehle-orte'],
 		primarySourceUrl: 'https://www.openstreetmap.org/copyright',
 		feedbackMailto: true
 	},

@@ -7,6 +7,8 @@ export { getNearestClimateStation, CLIMATE_STATIONS } from './get-climate-statio
 export { getClimateSeries } from './get-climate-series.js';
 export { getOepnvStopIndex } from './get-oepnv-stop-index.js';
 export type { OepnvStopIndex, OepnvStop } from './get-oepnv-stop-index.js';
+export { getKuehleOrteIndex } from './get-kuehle-orte-index.js';
+export type { KuehleOrt } from './get-kuehle-orte-index.js';
 export {
 	getKiezScore,
 	loadKiezScores,

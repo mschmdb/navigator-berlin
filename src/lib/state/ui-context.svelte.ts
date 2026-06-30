@@ -5,6 +5,7 @@ import type {
 	ClimateStation,
 	ClimateData,
 	OepnvStopIndex,
+	KuehleOrt,
 	KiezScore
 } from '$lib/data';
 import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
@@ -39,6 +40,8 @@ export interface UiState {
 	hiddenLayerSlugs: string[];
 	/** Story 1.19: ÖPNV-Stop-Index für Nearest-Stop-Berechnung im Inspector. */
 	oepnvStopIndex: OepnvStopIndex | null;
+	/** Story 15.3-15.5: Kühle-Orte-Index für Nächste-Orte + Filter im Inspector. */
+	kuehleOrteIndex: KuehleOrt[] | null;
 	/** Story 1.26: lokale Adress-Bookmarks (LocalStorage-Mirror, siehe ADR-004). */
 	bookmarks: Bookmark[];
 	bookmarksDialogOpen: boolean;
@@ -77,6 +80,7 @@ export function createUiState(): UiState {
 		scrollToLayerSlug: null,
 		hiddenLayerSlugs: [],
 		oepnvStopIndex: null,
+		kuehleOrteIndex: null,
 		bookmarks: [],
 		bookmarksDialogOpen: false,
 		compareMode: false,

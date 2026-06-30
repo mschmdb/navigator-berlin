@@ -36,6 +36,7 @@ function makeState(): UiState {
 		scrollToLayerSlug: null,
 		hiddenLayerSlugs: [],
 		oepnvStopIndex: null,
+		kuehleOrteIndex: null,
 		bookmarks: [],
 		bookmarksDialogOpen: false,
 		compareMode: false,

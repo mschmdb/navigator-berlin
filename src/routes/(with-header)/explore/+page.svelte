@@ -30,6 +30,7 @@
 	import { getNearestClimateStation } from '$lib/data/get-climate-station.js';
 	import { getClimateSeries } from '$lib/data/get-climate-series.js';
 	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
+	import { getKuehleOrteIndex } from '$lib/data/get-kuehle-orte-index.js';
 	import { getKiezScore } from '$lib/data/get-kiez-score.js';
 	import { getLaermDbAt } from '$lib/data/get-kiez-laerm-db.js';
 	import { getWahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
@@ -585,6 +586,15 @@
 				})
 				.catch(() => {
 					ui.oepnvStopIndex = null;
+				});
+		}
+		if (!ui.kuehleOrteIndex) {
+			void getKuehleOrteIndex()
+				.then((idx) => {
+					ui.kuehleOrteIndex = idx;
+				})
+				.catch(() => {
+					ui.kuehleOrteIndex = null;
 				});
 		}
 		void (async () => {

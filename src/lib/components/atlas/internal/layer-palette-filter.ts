@@ -26,6 +26,7 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	// D: Memorial
 	stolpersteine: 'Stolpersteine',
 	trinkbrunnen: 'Trinkbrunnen',
+	'kuehle-orte': 'Kühle Orte',
 	// E: Soziale Infrastruktur
 	'kitas-2024': 'Kindertagesstätten',
 	'schulen-2024': 'Schulen',

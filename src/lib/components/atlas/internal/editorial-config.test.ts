@@ -11,6 +11,7 @@ const ALLOWED_VARIANTS: DisclaimerVariant[] = [
 	'historic',
 	'seasonal',
 	'source',
+	'kuehle-orte',
 	'mss-aggregat'
 ];
 
@@ -30,10 +31,10 @@ describe('EDITORIAL_CONFIG', () => {
 		expect(EDITORIAL_CONFIG.trinkbrunnen.disclaimerVariants).toContain('seasonal');
 	});
 
-	it('kuehle-orte hat source-Variant + OSM-Quelle + feedbackMailto (FR13)', () => {
+	it('kuehle-orte hat eigenen Disclaimer + OSM-Quelle + feedbackMailto (FR13)', () => {
 		const c = EDITORIAL_CONFIG['kuehle-orte'];
 		expect(c.slug).toBe('kuehle-orte');
-		expect(c.disclaimerVariants).toContain('source');
+		expect(c.disclaimerVariants).toContain('kuehle-orte');
 		expect(c.primarySourceUrl).toMatch(/^https:\/\//);
 		expect(c.feedbackMailto).toBe(true);
 	});

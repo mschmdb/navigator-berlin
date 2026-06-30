@@ -32,6 +32,7 @@
 	import ShareSheet from './inspector-panel/share-sheet.svelte';
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
+	import KuehleOrteCard from './inspector-panel/kuehle-orte-card.svelte';
 	import KiezScoreSection from './inspector-panel/kiez-score-section.svelte';
 	import ScoreMembershipBadge from './inspector-panel/score-membership-badge.svelte';
 	import WahlSection from './inspector-panel/wahl-section.svelte';
@@ -707,6 +708,15 @@
 														bezirkName={level.bezirkName}
 														bezirkAggregate={numericAgg('klima-pet-2022', 'bezirk')}
 														berlinAggregate={numericAgg('klima-pet-2022', 'berlin')}
+													/>
+												{:else if hit.layer === 'kuehle-orte'}
+													<KuehleOrteCard
+														{hit}
+														layerName={getLayerDisplayName(hit.layer)}
+														address={nearestAddressPoint}
+														index={ui.kuehleOrteIndex}
+														isActive={ui.activeLayerSlugs.includes(hit.layer)}
+														onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 													/>
 												{:else if CARD_SLUGS.has(hit.layer)}
 													<LayerCard
