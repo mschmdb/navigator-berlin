@@ -33,6 +33,7 @@ export interface PlaceItem {
 	plz: string;
 	oh: string;
 	wheelchair: string;
+	website: string;
 }
 
 export interface KuehleOrtProperties {
@@ -109,7 +110,9 @@ export function mergeKuehleOrte(
 				summer_available: e.summer_available,
 				opening_hours_note: e.opening_hours_note,
 				address_verified: e.address_verified,
-				website: e.website,
+				// Enrichment-Website bevorzugt (redaktionell), OSM-Website als Fallback,
+				// damit keine Quelle verloren geht, wenn das Enrichment-Feld leer ist.
+				website: e.website || place.website,
 				suitable_reason: e.suitable_reason,
 				notes: e.notes,
 				oh: place.oh,

@@ -21,7 +21,16 @@ function enrich(over: Partial<EnrichmentItem> & Pick<EnrichmentItem, 'id'>): Enr
 }
 
 function place(over: Partial<PlaceItem> & Pick<PlaceItem, 'id'>): PlaceItem {
-	return { lat: 52.5, lon: 13.4, addr: 'Teststr 1', plz: '10117', oh: '', wheelchair: '', ...over };
+	return {
+		lat: 52.5,
+		lon: 13.4,
+		addr: 'Teststr 1',
+		plz: '10117',
+		oh: '',
+		wheelchair: '',
+		website: '',
+		...over
+	};
 }
 
 describe('mergeKuehleOrte', () => {
@@ -41,6 +50,20 @@ describe('mergeKuehleOrte', () => {
 		expect(f.properties.googleMapsUrl).toContain('destination=52.1,13.2');
 		expect(f.properties.appleMapsUrl).toContain('daddr=52.1,13.2');
 		expect(res.dropped).toEqual({ suitableFalse: 0, stillExistsNo: 0, missingGeometry: 0 });
+	});
+
+	it('website: Enrichment bevorzugt, OSM-Website als Fallback (Codex-Review 15.2)', () => {
+		const withEnrich = mergeKuehleOrte(
+			[enrich({ id: 'node/1', website: 'https://enrich.example' })],
+			[place({ id: 'node/1', website: 'https://osm.example' })]
+		);
+		expect(withEnrich.collection.features[0].properties.website).toBe('https://enrich.example');
+
+		const fallback = mergeKuehleOrte(
+			[enrich({ id: 'node/2', website: '' })],
+			[place({ id: 'node/2', website: 'https://osm.example' })]
+		);
+		expect(fallback.collection.features[0].properties.website).toBe('https://osm.example');
 	});
 
 	it('filtert suitable=false und zählt es', () => {
