@@ -356,19 +356,19 @@ development_status:
   14-10-inspector-region-composites: review  # Owner-Decision 2026-06-10: Inspector zeigt BR- + Bezirks-Composite-Score neben den Profil-Links. Neue static region-composites.json (aus aggregate-scores, 143 BR + 12 Bezirke), Client-Loader get-region-composites + Disambiguation-Lookup. check 0, 2849 grün.
   epic-14-retrospective: optional
   # epic-15/16 authored 2026-06-30 (Mary, Business-Analyst-Agent): Feature „Kühle Orte Berlin" (Branch feat/kuehle-orte-layer), epics-kuehle-orte.md. Quelle: Analyst-Session „Hitzewelle Berlin vs NYC" 2026-06-30 (Brainstorm + Product Brief). Daten: OSM ODbL + redaktionelle Schwarm-Anreicherung (33 Subagenten, 659 Orte → 519 suitable → 473 sommer-nutzbar) in static/data/kuehle-orte/. Numeriert als 15/16 (Fortsetzung Projekt-Sequenz, Kollision mit epic-1/2 vermieden). Alle backlog (keine Story-Files erstellt). Termin: vor nächster Hitzewelle ~07.07.2026.
-  epic-15: backlog  # Kühle Orte im Atlas: neuer Layer kuehle-orte (kind:'local' + build-kuehle-orte.ts), Inspector (Adresse+Navi+Melde), Live-Status/Filter/Saison, Kühle-Score/Sommer-Flags, Methodik+ADR, Epic-Doku. FR1-13,18,19,20.
-  15-1-kuehle-orte-daten-build: backlog  # Merge enrichment.json + places-osm.json per id, Filter suitable=false/still_exists=no (geloggt), Navi-Deep-Links (Google/Apple) als Properties. TDD.
-  15-2-layer-integration-local-manifest-lizenz: backlog  # kind:'local' in sources.ts + fetchSource, MANIFEST (Quelle/Stand/SHA/Lizenz: OSM ODbL + Anreicherung getrennt), editorial-config (feedbackMailto)/pin-icon/synonyms, URL-State-Aktivierung, Trinkbrunnen-Reuse. TDD.
-  15-3-orts-inspector-adresse-navi-melde: backlog  # Inspector-Reuse: Name/Typ, kopierbare Adresse, Google/Apple-Navi-Buttons, Melde-Link (stimmt nicht/gibts nicht mehr). WCAG.
-  15-4-live-oeffnungsstatus-filter-saison: backlog  # opening_hours.js Ampel (offen/schließt bald/zu, Farbe+Text), Fallback "Zeiten unbekannt", jetzt-offen-Filter, Saison (Trinkbrunnen Mai-Okt). TDD.
-  15-5-kuehle-score-sommer-flags: backlog  # cool_score-Badge + Begründung, "im Sommer geschlossen"-Badge + Abwertung (summer_available=no), is_free/ac_status(nur belegt)/Barrierefrei-Flags. TDD.
-  15-6-methodik-doku-adr: backlog  # docs/kuehle-orte-methodik.md + Methodik-Route (Score-Rubrik, summer_available, AC-Ehrlichkeit, Herkunft OSM+Anreicherung, Caveats kein Behörden-Ersatz). ADR (kind:'local'). Keine em-dashes.
-  15-7-epic-15-dokumentation: backlog  # doc:pipelines + doc:story-map + INDEX/System-Map, Konsistenz-Sweep, Lizenz verlinkt.
+  epic-15: in-progress  # Kühle Orte im Atlas: neuer Layer kuehle-orte (kind:'local' + build-kuehle-orte.ts), Inspector (Adresse+Navi+Melde), Live-Status/Filter/Saison, Kühle-Score/Sommer-Flags, Methodik+ADR, Epic-Doku. FR1-13,18,19,20.
+  15-1-kuehle-orte-daten-build: ready-for-dev  # Merge enrichment.json + places-osm.json per id, Filter suitable=false/still_exists=no (geloggt), Navi-Deep-Links (Google/Apple) als Properties. TDD.
+  15-2-layer-integration-local-manifest-lizenz: ready-for-dev  # kind:'local' in sources.ts + fetchSource, MANIFEST (Quelle/Stand/SHA/Lizenz: OSM ODbL + Anreicherung getrennt), editorial-config (feedbackMailto)/pin-icon/synonyms, URL-State-Aktivierung, Trinkbrunnen-Reuse. TDD.
+  15-3-orts-inspector-adresse-navi-melde: ready-for-dev  # Inspector-Reuse: Name/Typ, kopierbare Adresse, Google/Apple-Navi-Buttons, Melde-Link (stimmt nicht/gibts nicht mehr). WCAG.
+  15-4-live-oeffnungsstatus-filter-saison: ready-for-dev  # opening_hours.js Ampel (offen/schließt bald/zu, Farbe+Text), Fallback "Zeiten unbekannt", jetzt-offen-Filter, Saison (Trinkbrunnen Mai-Okt). TDD.
+  15-5-kuehle-score-sommer-flags: ready-for-dev  # cool_score-Badge + Begründung, "im Sommer geschlossen"-Badge + Abwertung (summer_available=no), is_free/ac_status(nur belegt)/Barrierefrei-Flags. TDD.
+  15-6-methodik-doku-adr: ready-for-dev  # docs/kuehle-orte-methodik.md + Methodik-Route (Score-Rubrik, summer_available, AC-Ehrlichkeit, Herkunft OSM+Anreicherung, Caveats kein Behörden-Ersatz). ADR (kind:'local'). Keine em-dashes.
+  15-7-epic-15-dokumentation: ready-for-dev  # doc:pipelines + doc:story-map + INDEX/System-Map, Konsistenz-Sweep, Lizenz verlinkt.
   epic-15-retrospective: optional
-  epic-16: backlog  # Kühle-Orte-Landing-Page (NYC-Geist): mobile-first Seite, DWD-Hitzewarn-Banner, in-deiner-Nähe-Geolocation, Opt-out-Mail + Quellen-Transparenz, CTA-Deep-Link in Explorer. FR14-17,20. Baut auf Epic 15.
-  16-1-landing-geruest-eingebettete-karte: backlog  # Neue Route /kuehle-orte, Angebot-Intro (kein Behörden-Ersatz), eingebettete Karte, Zum-Explorer-CTA (URL-State-Deep-Link), DE-only, WCAG.
-  16-2-dwd-hitzewarn-banner: backlog  # Live-DWD-Warnlage Berlin, Banner mit Stufe + Quelle, ausgeblendet ohne Warnung (kein Layout-Sprung), still degradierend bei Fehler. TDD.
-  16-3-in-deiner-naehe-geolocation: backlog  # Geolocation-Consent → nächste jetzt-offene Orte nach Distanz + Navi-Link, Fallback ohne Standort. TDD.
-  16-4-opt-out-mail-quellen-transparenz: backlog  # Opt-out-Mail-Link für Institutionen, Transparenz-Abschnitt (Quellen OSM/ODbL + Anreicherung + DWD, Angebot-Haltung, keine Absolutismen).
-  16-5-landing-doku-updates-eintrag: backlog  # System-Map/INDEX, /updates _content/updates/2026-MM-DD-kuehle-orte.md (category feature, Nutzersprache, keine em-dashes), Feed-Tests grün.
+  epic-16: in-progress  # Kühle-Orte-Landing-Page (NYC-Geist): mobile-first Seite, DWD-Hitzewarn-Banner, in-deiner-Nähe-Geolocation, Opt-out-Mail + Quellen-Transparenz, CTA-Deep-Link in Explorer. FR14-17,20. Baut auf Epic 15.
+  16-1-landing-geruest-eingebettete-karte: ready-for-dev  # Neue Route /kuehle-orte, Angebot-Intro (kein Behörden-Ersatz), eingebettete Karte, Zum-Explorer-CTA (URL-State-Deep-Link), DE-only, WCAG.
+  16-2-dwd-hitzewarn-banner: ready-for-dev  # Live-DWD-Warnlage Berlin, Banner mit Stufe + Quelle, ausgeblendet ohne Warnung (kein Layout-Sprung), still degradierend bei Fehler. TDD.
+  16-3-in-deiner-naehe-geolocation: ready-for-dev  # Geolocation-Consent → nächste jetzt-offene Orte nach Distanz + Navi-Link, Fallback ohne Standort. TDD.
+  16-4-opt-out-mail-quellen-transparenz: ready-for-dev  # Opt-out-Mail-Link für Institutionen, Transparenz-Abschnitt (Quellen OSM/ODbL + Anreicherung + DWD, Angebot-Haltung, keine Absolutismen).
+  16-5-landing-doku-updates-eintrag: ready-for-dev  # System-Map/INDEX, /updates _content/updates/2026-MM-DD-kuehle-orte.md (category feature, Nutzersprache, keine em-dashes), Feed-Tests grün.
   epic-16-retrospective: optional
