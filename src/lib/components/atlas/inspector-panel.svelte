@@ -463,9 +463,19 @@
 		return !!(result.ubahn || result.sbahn || result.tram || result.bus);
 	});
 
+	// Story 15.3-15.5: Kühle-Orte-Card rendert auf Section-Ebene (wie NearestStopsCard),
+	// nicht per-Hit. Als Punkt-Layer liefert kuehle-orte bei präziser Adresse oft keinen
+	// Hit am exakten Punkt; die Card zeigt stattdessen die nächsten kühlen Orte.
+	const hasKuehleOrte = $derived(
+		ui.activeLayerSlugs.includes('kuehle-orte') &&
+			nearestAddressPoint !== null &&
+			ui.kuehleOrteIndex !== null
+	);
+
 	function shouldRenderSection(sectionKey: string, hitCount: number): boolean {
 		if (sectionKey === 'klima') return true;
 		if (sectionKey === 'mobilitaet' && hasNearestStops) return true;
+		if (sectionKey === 'umwelt' && hasKuehleOrte) return true;
 		return hitCount > 0;
 	}
 </script>
@@ -689,6 +699,15 @@
 										{isResidential}
 									/>
 								{/if}
+								{#if section.key === 'umwelt' && hasKuehleOrte}
+									<KuehleOrteCard
+										layerName={getLayerDisplayName('kuehle-orte')}
+										address={nearestAddressPoint}
+										index={ui.kuehleOrteIndex}
+										isActive={ui.activeLayerSlugs.includes('kuehle-orte')}
+										onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+									/>
+								{/if}
 								{#if section.key === 'klima'}
 									<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
 								{:else if section.hits.length > 0}
@@ -710,14 +729,7 @@
 														berlinAggregate={numericAgg('klima-pet-2022', 'berlin')}
 													/>
 												{:else if hit.layer === 'kuehle-orte'}
-													<KuehleOrteCard
-														{hit}
-														layerName={getLayerDisplayName(hit.layer)}
-														address={nearestAddressPoint}
-														index={ui.kuehleOrteIndex}
-														isActive={ui.activeLayerSlugs.includes(hit.layer)}
-														onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-													/>
+													<!-- Auf Section-Ebene gerendert (hasKuehleOrte), kein per-Hit-Row. -->
 												{:else if CARD_SLUGS.has(hit.layer)}
 													<LayerCard
 														{hit}

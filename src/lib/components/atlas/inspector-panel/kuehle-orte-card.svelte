@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { LayerHit } from '$lib/data';
 	import type { KuehleOrt } from '$lib/data/get-kuehle-orte-index.js';
 	import { Eye, EyeOff, ExternalLink, ChevronDown, Navigation, Snowflake } from '@lucide/svelte';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
@@ -8,11 +7,11 @@
 		nearestFilteredKuehleOrte,
 		type KuehleOrteFilters
 	} from './internal/nearest-kuehle-orte.js';
-	import DataStandBanner from './data-stand-banner.svelte';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 
+	const SLUG = 'kuehle-orte';
+
 	type Props = {
-		hit: LayerHit;
 		layerName: string;
 		address: { lat: number; lng: number } | null;
 		index: readonly KuehleOrt[] | null;
@@ -20,7 +19,7 @@
 		onToggleLayer?: (slug: string) => void;
 	};
 
-	let { hit, layerName, address, index, isActive = false, onToggleLayer }: Props = $props();
+	let { layerName, address, index, isActive = false, onToggleLayer }: Props = $props();
 
 	const LIMIT = 5;
 	let filters = $state<KuehleOrteFilters>({
@@ -30,8 +29,8 @@
 	});
 	let detailsOpen = $state(false);
 
-	const editorial = $derived(getEditorialConfig(hit.layer));
-	const explainEntry = $derived(getLayerExplainEntry(hit.layer));
+	const editorial = $derived(getEditorialConfig(SLUG));
+	const explainEntry = $derived(getLayerExplainEntry(SLUG));
 
 	const nearest = $derived.by(() => {
 		if (!address || !index) return [];
@@ -69,7 +68,7 @@
 
 <section
 	data-testid="kuehle-orte-card"
-	data-layer={hit.layer}
+	data-layer={SLUG}
 	class="-mx-2 rounded border border-rule bg-bg-elevated px-2.5 py-2"
 	aria-label={`${layerName} in der Nähe`}
 >
@@ -88,7 +87,7 @@
 						? `${layerName} von Karte entfernen`
 						: `${layerName} auf Karte zeigen`}
 					title={isActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
-					onclick={() => onToggleLayer?.(hit.layer)}
+					onclick={() => onToggleLayer?.(SLUG)}
 					class={`inline-flex h-6 w-6 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
 				>
 					{#if isActive}<EyeOff size={14} aria-hidden="true" />{:else}<Eye
@@ -224,7 +223,6 @@
 					<ExternalLink size={12} aria-hidden="true" /> Quelle ansehen
 				</a>
 			{/if}
-			<DataStandBanner {hit} />
 			{#each editorial?.disclaimerVariants ?? [] as variant (variant)}
 				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
 			{/each}
