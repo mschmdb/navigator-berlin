@@ -17,8 +17,12 @@
 	} from '@lucide/svelte';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import DwdHitzewarnBanner from '$lib/components/kuehle-orte/dwd-hitzewarn-banner.svelte';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
@@ -98,6 +102,7 @@
 <JsonLd data={datasetJsonLd} testid="hitze-dataset-jsonld" />
 
 <main id="main" class="mx-auto flex max-w-3xl flex-col gap-10 px-4 py-10">
+	<DwdHitzewarnBanner warning={data.warning} />
 	<header class="flex flex-col gap-4">
 		<h1 class="flex items-center gap-2 font-sans text-4xl font-semibold text-ink">
 			<Snowflake size={32} aria-hidden="true" class="shrink-0 text-[#0277BD]" />

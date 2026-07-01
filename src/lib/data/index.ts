@@ -9,6 +9,7 @@ export { getOepnvStopIndex } from './get-oepnv-stop-index.js';
 export type { OepnvStopIndex, OepnvStop } from './get-oepnv-stop-index.js';
 export { getKuehleOrteIndex } from './get-kuehle-orte-index.js';
 export type { KuehleOrt } from './get-kuehle-orte-index.js';
+export type { HeatWarning, HeatLevel } from './dwd-warnung.types.js';
 export {
 	getKiezScore,
 	loadKiezScores,
