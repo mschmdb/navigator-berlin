@@ -19,10 +19,13 @@ describe('trackPageview', () => {
 		expect(fn).toHaveBeenCalledWith('pageview');
 	});
 
-	it('mit Pfad: url-Override auf origin+path (Hitze-Subdomain → /hitze)', () => {
+	it('mit Pfad: u + url Override auf origin+path (Hitze-Subdomain → /hitze)', () => {
 		const fn = stubPlausible();
 		trackPageview('/hitze');
-		expect(fn).toHaveBeenCalledWith('pageview', { url: 'https://hitze.navigator.berlin/hitze' });
+		expect(fn).toHaveBeenCalledWith('pageview', {
+			u: 'https://hitze.navigator.berlin/hitze',
+			url: 'https://hitze.navigator.berlin/hitze'
+		});
 	});
 
 	it('bricht nicht, wenn window.plausible fehlt', () => {

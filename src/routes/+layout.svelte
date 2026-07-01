@@ -13,6 +13,7 @@
 	import { mountWebMcpServer, unmountWebMcpServer } from '$lib/webmcp';
 	import { afterNavigate } from '$app/navigation';
 	import { trackPageview } from '$lib/utils/plausible.js';
+	import { resolveAppMode } from '$lib/app-mode';
 
 	const ui = createUiState();
 
@@ -47,10 +48,11 @@
 	// Initial-Mount: from === null, Bedingung false → Pageview feuert.
 	afterNavigate((nav) => {
 		if (nav.from && nav.from.url.pathname === nav.to?.url.pathname) return;
-		// Hitze-Subdomain: `/` reroutet auf die /hitze-Route (route.id endet auf `/hitze`),
-		// die URL bleibt aber `/`. Für Plausible den effektiven Pfad `/hitze` melden.
-		const routeId = nav.to?.route?.id ?? '';
-		const isHitzeRoot = routeId.endsWith('/hitze') && nav.to?.url.pathname === '/';
+		// Hitze-Subdomain: `/` reroutet auf `/hitze`, die URL bleibt aber `/`. Host-basiert
+		// erkennen (zuverlässiger als route.id nach Reroute) und `/hitze` an Plausible melden,
+		// sonst vermischt sich der Subdomain-Traffic mit der Homepage.
+		const toUrl = nav.to?.url;
+		const isHitzeRoot = !!toUrl && resolveAppMode(toUrl.host) === 'hitze' && toUrl.pathname === '/';
 		trackPageview(isHitzeRoot ? '/hitze' : undefined);
 	});
 
