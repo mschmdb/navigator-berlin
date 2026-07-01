@@ -176,9 +176,10 @@
 	});
 
 	onMount(() => {
-		if (data.activeLayers?.length) {
-			ui.activeLayerSlugs = [...data.activeLayers];
-		}
+		// URL ist Source-of-Truth für aktive Layer: immer setzen, auch leer. Sonst schleppt ein
+		// Explorer-Einstieg ohne ?layers die aus einer früheren Session persistierten Layer mit
+		// (z.B. kuehle-orte via Hitze-Landing → Home → Explorer).
+		ui.activeLayerSlugs = [...(data.activeLayers ?? [])];
 		// Story 2.12 Quick-Links: wenn `?address=lng,lat&q=…` gesetzt, bauen
 		// wir eine synthetische GeocodeSuggestion und triggern die Adress-
 		// Selection. Inspector öffnet sich dann automatisch.
