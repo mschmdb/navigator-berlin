@@ -12,6 +12,7 @@
 	import HomeOpenBlock from '$lib/components/home/home-open-block.svelte';
 	import HomeUpdatesTeaser from '$lib/components/home/home-updates-teaser.svelte';
 	import HomeWahlTeaser from '$lib/components/home/home-wahl-teaser.svelte';
+	import HomeHitzeTeaser from '$lib/components/home/home-hitze-teaser.svelte';
 	import { buildWebSite } from '$lib/seo/jsonld-website.js';
 	import type { PageData } from './$types';
 
@@ -58,6 +59,7 @@
 	<HomeSteps />
 	<HomeQuickLinks />
 	<HomeWahlTeaser />
+	<HomeHitzeTeaser />
 	<HomeFeaturedBezirke />
 	<HomeTopKieze items={data.topKieze} />
 	<HomeLayerTeasers layerCount={data.layerCount} />

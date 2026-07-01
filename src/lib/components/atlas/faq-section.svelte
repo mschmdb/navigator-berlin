@@ -16,7 +16,7 @@
 	import { buildFaqPage } from '$lib/seo/jsonld-faqpage.js';
 	import type { FaqEntry } from '$lib/data/types.js';
 
-	type PageType = 'bezirk' | 'kiez' | 'layer';
+	type PageType = 'bezirk' | 'kiez' | 'layer' | 'landing';
 
 	interface Props {
 		readonly items: readonly FaqEntry[];

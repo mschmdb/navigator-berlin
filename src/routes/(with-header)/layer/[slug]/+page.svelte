@@ -96,6 +96,16 @@
 		{/if}
 	</header>
 
+	{#if detail.slug === 'kuehle-orte'}
+		<a
+			href="/hitze"
+			data-testid="layer-detail-hitze-link"
+			class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+		>
+			Zum Hitze-Navigator: kühle Orte in deiner Nähe
+		</a>
+	{/if}
+
 	{#if detail.editorial}
 		<section data-testid="layer-detail-editorial">
 			{#each detail.editorial.disclaimerVariants as variant (variant)}

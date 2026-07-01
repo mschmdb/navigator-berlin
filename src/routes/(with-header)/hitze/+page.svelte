@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import {
-		Snowflake,
 		ArrowRight,
-		Home,
 		Search,
 		MapPin,
 		Navigation,
@@ -17,10 +15,13 @@
 	} from '@lucide/svelte';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import FaqSection from '$lib/components/atlas/faq-section.svelte';
 	import DwdHitzewarnBanner from '$lib/components/kuehle-orte/dwd-hitzewarn-banner.svelte';
 	import InDeinerNaehe from '$lib/components/kuehle-orte/in-deiner-naehe.svelte';
 	import KuehleOrteTransparenz from '$lib/components/kuehle-orte/kuehle-orte-transparenz.svelte';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
+	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
+	import { HITZE_FAQ } from '$lib/content/hitze-faq.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
 	import type { PageData } from './$types';
 
@@ -48,6 +49,16 @@
 			contentUrl: `${origin}${pathname}`,
 			encodingFormat: 'text/html',
 			keywords: ['Kühle Orte', 'Hitze', 'Berlin', 'Abkühlung', 'Klimaanlage', 'Trinkbrunnen']
+		})
+	);
+
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin,
+			items: [
+				{ name: 'Start', path: '/' },
+				{ name: 'Kühle Orte bei Hitze', path: '/hitze' }
+			]
 		})
 	);
 
@@ -102,31 +113,37 @@
 	locales={['de']}
 />
 <JsonLd data={datasetJsonLd} testid="hitze-dataset-jsonld" />
+<JsonLd data={breadcrumbJsonLd} testid="hitze-breadcrumb-jsonld" />
 
-<main id="main" class="mx-auto flex max-w-3xl flex-col gap-10 px-4 py-10">
+<div data-testid="hitze-landing" class="mx-auto flex max-w-3xl flex-col gap-12 px-4 py-12">
 	<DwdHitzewarnBanner warning={data.warning} />
-	<header class="flex flex-col gap-4">
-		<h1 class="flex items-center gap-2 font-sans text-4xl font-semibold text-ink">
-			<Snowflake size={32} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
-			Hitze-Navigator Berlin
-		</h1>
-		<p class="font-serif text-xl leading-relaxed text-ink-muted">
+	<header class="flex flex-col gap-6">
+		<p class="font-mono text-xs tracking-wider text-accent uppercase">Kühle Orte bei Hitze</p>
+		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">Hitze-Navigator Berlin</h1>
+		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
 			Bei Hitze zählt eine schnelle Antwort: Wohin zum Abkühlen? Der Hitze-Navigator zeigt über 500
 			kühle Orte in Berlin, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten, kein
 			Ersatz für die Hinweise der Stadt.
 		</p>
-		<div class="flex flex-col gap-2">
+		<div class="flex flex-col gap-2 pt-1">
 			<a
 				href={explorerLink}
 				data-testid="hitze-cta"
-				class="bg-accent hover:bg-accent-strong focus-visible:ring-accent inline-flex min-h-11 w-fit items-center gap-2 rounded px-6 py-3 font-sans text-base font-semibold text-bg-elevated focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+				class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 			>
+				<ArrowRight size={16} aria-hidden="true" />
 				Kühle Orte auf der Karte
-				<ArrowRight size={18} aria-hidden="true" />
 			</a>
 			<p class="font-sans text-sm text-ink-subtle">
 				Interaktive Karte mit allen kühlen Orten, Live-Status und Filtern.
 			</p>
+			<a
+				href="/layer/kuehle-orte"
+				data-testid="hitze-methodik-link"
+				class="w-fit font-mono text-sm tracking-wider text-ink-muted uppercase hover:text-ink"
+			>
+				Methodik: wie wir kühle Orte bewerten
+			</a>
 		</div>
 	</header>
 
@@ -134,7 +151,7 @@
 
 	<section aria-labelledby="orte-h" class="flex flex-col gap-4">
 		<h2 id="orte-h" class="font-sans text-2xl font-semibold text-ink">
-			Wo du in Berlin Abkühlung findest
+			Kühle Orte in Berlin: wo du Abkühlung findest
 		</h2>
 		<ul class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 			{#each categories as cat (cat.name)}
@@ -206,15 +223,7 @@
 		</ul>
 	</section>
 
-	<KuehleOrteTransparenz />
+	<FaqSection items={HITZE_FAQ} pageType="landing" />
 
-	<footer class="border-t border-rule pt-5">
-		<a
-			href="https://navigator.berlin/"
-			class="hover:text-ink inline-flex items-center gap-1.5 font-sans text-sm text-ink-subtle"
-		>
-			<Home size={14} aria-hidden="true" />
-			navigator.berlin: der volle Open-Data-Atlas für Berlin
-		</a>
-	</footer>
-</main>
+	<KuehleOrteTransparenz />
+</div>
