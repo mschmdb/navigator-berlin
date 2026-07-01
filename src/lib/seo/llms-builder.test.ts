@@ -136,6 +136,13 @@ describe('buildLlmsTxt', () => {
 		expect(txt).toContain('## Daten-Layer');
 	});
 
+	it('rendert statische Seiten inkl. /hitze als Bullets (## Seiten)', () => {
+		const txt = buildLlmsTxt(ctx);
+		expect(txt).toContain('## Seiten');
+		expect(txt).toMatch(/-\s+\[Hitze-Navigator Berlin\]\(https:\/\/navigator\.berlin\/hitze\)/);
+		expect(txt).toMatch(/-\s+\[Kühle Orte in Berlin\]\(https:\/\/navigator\.berlin\/kuehle-orte\)/);
+	});
+
 	it('renders each entry as bullet with markdown hyperlink + description', () => {
 		const txt = buildLlmsTxt(ctx);
 		// llmstxt.org Format: `- [name](url): description`

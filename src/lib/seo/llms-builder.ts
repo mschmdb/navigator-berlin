@@ -244,6 +244,14 @@ export function buildLlmsTxt(ctx: LlmsSourceContext): string {
 	const lines: string[] = [];
 	lines.push(...buildSiteIntro());
 
+	const staticPages = entries.filter((e) => e.section === 'static');
+	if (staticPages.length > 0) {
+		lines.push('## Seiten');
+		lines.push('');
+		for (const e of staticPages) pushBullet(lines, e);
+		lines.push('');
+	}
+
 	const methodik = entries.filter((e) => e.section === 'methodik');
 	const bezirke = entries.filter((e) => e.section === 'bezirk');
 	const kieze = entries.filter((e) => e.section === 'kiez');
