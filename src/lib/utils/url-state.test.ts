@@ -8,7 +8,8 @@ import {
 	serializeViewport,
 	serializeComparison,
 	parseComparison,
-	buildComparePermalink
+	buildComparePermalink,
+	buildExplorerDeepLink
 } from './url-state.js';
 
 describe('serializeViewport', () => {
@@ -98,6 +99,23 @@ describe('serializeLayers / parseLayers', () => {
 		expect(parseLayers('kuehle-orte')).toContain('kuehle-orte');
 		expect(parseLayers('kuehle-orte')).toEqual(['kuehle-orte']);
 		expect(parseLayers(serializeLayers(['kuehle-orte']))).toEqual(['kuehle-orte']);
+	});
+});
+
+describe('buildExplorerDeepLink', () => {
+	it('baut /explore?layers=kuehle-orte (FR20, Story 16.1)', () => {
+		expect(buildExplorerDeepLink(['kuehle-orte'])).toBe('/explore?layers=kuehle-orte');
+	});
+
+	it('serialisiert mehrere Slugs bundle-stabil, round-trip zu parseLayers', () => {
+		const link = buildExplorerDeepLink(['kuehle-orte', 'trinkbrunnen']);
+		expect(link.startsWith('/explore?layers=')).toBe(true);
+		const csv = link.split('layers=')[1];
+		expect(parseLayers(csv)).toEqual(['kuehle-orte', 'trinkbrunnen']);
+	});
+
+	it('leere Liste liefert /explore ohne Query', () => {
+		expect(buildExplorerDeepLink([])).toBe('/explore');
 	});
 });
 
