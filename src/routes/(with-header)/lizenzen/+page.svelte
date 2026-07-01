@@ -431,9 +431,9 @@
 			OpenStreetMap-Namensnennung
 		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Die ODbL-Layer (Stolpersteine, ÖPNV-Stationen, Trinkbrunnen, S-Bahn-Netz, U-Bahn-Netz,
-			Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten. Lizenz: Open
-			Database License 1.0.
+			Die ODbL-Layer (Stolpersteine, ÖPNV-Stationen, Trinkbrunnen, Kühle Orte, S-Bahn-Netz,
+			U-Bahn-Netz, Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten.
+			Lizenz: Open Database License 1.0.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			© OpenStreetMap-Contributors. Daten verfügbar unter

@@ -6,17 +6,17 @@ category: feature
 tags: [kuehle-orte, hitze, karte, navigation, feature]
 ---
 
-Bei Hitze zählt eine schnelle Antwort: Wohin zum Abkühlen? navigator.berlin zeigt jetzt über 500 kühle Orte in Berlin, jeweils mit Adresse und Weg dorthin. Das ist ein Angebot auf offenen Daten. Es ergänzt die Hinweise der Stadt, es ersetzt sie nicht.
+navigator.berlin zeigt jetzt über 500 kühle Orte in Berlin, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten. Es ergänzt die Hinweise der Stadt, es ersetzt sie nicht.
 
-## Was die Karte zeigt
+## Live-Status und Navigation
 
-- **Live-Öffnungsstatus.** Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen mit Angabe, ob gerade offen.
+- **Öffnungsstatus in Echtzeit.** Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen mit Angabe, ob gerade offen.
 - **Ein-Tap-Navigation.** Jeder Ort verlinkt direkt in Google Maps oder Apple Maps.
 - **Ehrliche Flags.** Kühle-Score von 1 bis 5, „im Sommer geschlossen", kostenlos oder Ticket, klimatisiert und barrierefrei. Wo eine Angabe nicht belegbar war, sagen wir das offen.
 
 Der neue [Hitze-Navigator](/hitze) bündelt das mobil: Standort freigeben, nächste offene Orte sehen, hinnavigieren.
 
-## Woher die Daten kommen
+## Daten und Quellen
 
 Geometrie und Basis-Angaben stammen aus OpenStreetMap (ODbL 1.0, © OpenStreetMap-Contributors), ergänzt um eine redaktionelle Anreicherung von navigator.berlin: Kühle-Score, Klimatisierung, Öffnungszeiten und Sommer-Verfügbarkeit. Die aktuelle Hitzewarnung kommt vom Deutschen Wetterdienst.
 
