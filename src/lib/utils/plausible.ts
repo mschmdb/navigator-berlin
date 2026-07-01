@@ -15,7 +15,7 @@ type EventName = 'Search' | 'Bookmark' | 'Compare' | 'Share' | 'Locate' | 'MapCl
 interface PlausibleFn {
 	(
 		eventName: string,
-		options?: { u?: string; props?: Record<string, string | number | boolean> }
+		options?: { url?: string; props?: Record<string, string | number | boolean> }
 	): void;
 }
 
@@ -52,10 +52,12 @@ export function trackPageview(path?: string): void {
 	if (typeof window.plausible !== 'function') return;
 	try {
 		// Hitze-Subdomain reroutet `/` → `/hitze` ohne URL-Wechsel. Plausible würde sonst die
-		// tatsächliche URL `/` tracken (mit der Homepage vermischt). Mit `u`-Override melden wir
-		// den effektiven Pfad, sodass Top-Pages `/hitze` statt `/` zeigt.
+		// tatsächliche URL `/` tracken (mit der Homepage vermischt). Der Custom-Location-Override
+		// heißt im JS-Wrapper `url` (NICHT `u`, das ist nur der rohe Events-API-Parameter).
 		if (path) {
-			window.plausible('pageview', { u: `${window.location.origin}${path}` });
+			window.plausible('pageview', {
+				url: `${window.location.origin}${path}${window.location.search}`
+			});
 		} else {
 			window.plausible('pageview');
 		}

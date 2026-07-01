@@ -5,7 +5,10 @@ afterEach(() => vi.unstubAllGlobals());
 
 function stubPlausible() {
 	const fn = vi.fn();
-	vi.stubGlobal('window', { plausible: fn, location: { origin: 'https://hitze.navigator.berlin' } });
+	vi.stubGlobal('window', {
+		plausible: fn,
+		location: { origin: 'https://hitze.navigator.berlin', search: '' }
+	});
 	return fn;
 }
 
@@ -16,10 +19,10 @@ describe('trackPageview', () => {
 		expect(fn).toHaveBeenCalledWith('pageview');
 	});
 
-	it('mit Pfad: u-Override auf origin+path (Hitze-Subdomain → /hitze)', () => {
+	it('mit Pfad: url-Override auf origin+path (Hitze-Subdomain → /hitze)', () => {
 		const fn = stubPlausible();
 		trackPageview('/hitze');
-		expect(fn).toHaveBeenCalledWith('pageview', { u: 'https://hitze.navigator.berlin/hitze' });
+		expect(fn).toHaveBeenCalledWith('pageview', { url: 'https://hitze.navigator.berlin/hitze' });
 	});
 
 	it('bricht nicht, wenn window.plausible fehlt', () => {
