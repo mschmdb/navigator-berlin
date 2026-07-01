@@ -28,7 +28,7 @@ src/lib/paraglide
 project.inlang/cache/
 
 # BMAD intermediates (DO NOT ignore _bmad/, skill source is versioned)
-_bmad-output/
+
 _user-input/
 
 # Build pipeline cache (Story 1.3)
@@ -52,3 +52,4 @@ _user-input/
 **/__screenshots__/
 .vitest-attachments/
 _bmad-output/secrets/
+_bmad-output/secrets/coolify-prod.env.backup
