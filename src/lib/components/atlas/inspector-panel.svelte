@@ -59,6 +59,8 @@
 	import { buildOgImageUrl } from '$lib/utils/og-image-url.js';
 	import { formatLayerValue } from './inspector-panel/internal/value-formatters.js';
 	import { page } from '$app/state';
+	import { browser } from '$app/environment';
+	import { resolveAppMode } from '$lib/app-mode';
 	import { resolve } from '$app/paths';
 
 	type Props = {
@@ -472,7 +474,14 @@
 			ui.kuehleOrteIndex !== null
 	);
 
+	// Hitze-Subdomain (hitze.navigator.berlin) oder ?mode=hitze: der Inspector zeigt nur die
+	// Kühle-Orte-Section, kein Kiez-Score/Wahl/Demografie-Clutter. Link zum vollen Navigator unten.
+	const hitzeMode = $derived(
+		resolveAppMode(browser ? page.url.host : '', page.url.searchParams.get('mode')) === 'hitze'
+	);
+
 	function shouldRenderSection(sectionKey: string, hitCount: number): boolean {
+		if (hitzeMode) return sectionKey === 'umwelt' && hasKuehleOrte;
 		if (sectionKey === 'klima') return true;
 		if (sectionKey === 'mobilitaet' && hasNearestStops) return true;
 		if (sectionKey === 'umwelt' && hasKuehleOrte) return true;
@@ -594,6 +603,7 @@
 
 		{#key ui.selectedAddress?.id}
 			<div class="lc-inspector-body flex-1 space-y-4 px-6 py-4">
+				{#if !hitzeMode}
 				<KiezScoreSection
 					score={ui.kiezScore}
 					{lang}
@@ -672,6 +682,7 @@
 					bezirkAvailable={bezirkDemografieAvailable}
 					onScopeChange={changeDemografieScope}
 				/>
+				{/if}
 				{#each sections as section (section.key)}
 					{#if shouldRenderSection(section.key, section.hits.length)}
 						<section
@@ -710,7 +721,7 @@
 								{/if}
 								{#if section.key === 'klima'}
 									<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
-								{:else if section.hits.length > 0}
+								{:else if section.hits.length > 0 && !hitzeMode}
 									<div class="space-y-2">
 										{#each section.hits as hit (hit.layer)}
 											<div data-testid="hit-{hit.layer}">
@@ -758,6 +769,16 @@
 						</section>
 					{/if}
 				{/each}
+			{#if hitzeMode}
+				<div class="border-t border-rule pt-4" data-testid="hitze-full-navigator">
+					<a
+						href="https://navigator.berlin/explore"
+						class="inline-flex items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+					>
+						Alle Layer und Daten im vollen navigator.berlin
+					</a>
+				</div>
+			{/if}
 			</div>
 		{/key}
 

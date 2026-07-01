@@ -23,7 +23,8 @@
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
 
-	const explorerLink = buildExplorerDeepLink(['kuehle-orte']);
+	// mode=hitze erzwingt den reduzierten Explorer auch ohne Hitze-Host (lokal + Main-Domain).
+	const explorerLink = `${buildExplorerDeepLink(['kuehle-orte'])}&mode=hitze`;
 	const pageTitle = 'Hitze-Navigator Berlin - kühle Orte bei Hitze finden';
 	const pageDescription =
 		'Über 500 kühle Orte in Berlin bei Hitze: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten.';

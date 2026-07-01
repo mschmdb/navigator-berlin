@@ -15,7 +15,7 @@ describe('Hitze-Home (Spin-off-Route)', () => {
 		render(Page);
 		await expect
 			.element(page.getByTestId('hitze-cta'))
-			.toHaveAttribute('href', '/explore?layers=kuehle-orte');
+			.toHaveAttribute('href', '/explore?layers=kuehle-orte&mode=hitze');
 	});
 
 	it('gerenderter Text enthält keine em-dashes (U+2014)', async () => {
