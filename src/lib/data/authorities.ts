@@ -92,6 +92,9 @@ export const AUTHORITIES = {
 	},
 	'navigator-eigenberechnung-kriminalitaetsatlas': {
 		de: 'navigator.berlin (Eigenberechnung aus dem Kriminalitätsatlas Berlin, Polizei Berlin)'
+	},
+	'navigator-redaktion-osm-kuehle-orte': {
+		de: 'navigator.berlin (redaktionelle Anreicherung aus OpenStreetMap)'
 	}
 } as const satisfies Record<string, AuthorityMeta>;
 

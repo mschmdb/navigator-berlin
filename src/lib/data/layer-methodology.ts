@@ -341,6 +341,21 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 		coverageGaps: ['Layer aktiv Mai bis Oktober. Außerhalb der Saison Frostschutz-Abschaltung.'],
 		relatedLayers: ['gruenanlagen']
 	},
+	'kuehle-orte': {
+		calculation:
+			'Orte zum Abkühlen bei Hitze aus OpenStreetMap, redaktionell angereichert. Der Kühle-Score von 1 bis 5 folgt Typ und Bauart (5 Eishalle, 4 klimatisiert oder am Wasser, 3 kühler Massivbau). Von 659 recherchierten Orten fließen die 519 geeigneten in den Layer.',
+		aggregationLevel: 'point-osm',
+		updateFrequency: 'fortlaufend (OSM + redaktionelle Anreicherung)',
+		authorityKey: 'navigator-redaktion-osm-kuehle-orte',
+		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
+		coverageGaps: [
+			'Klimatisierung ist selten belegbar: 29 von 659 Orten mit belegtem AC-Status, der Rest wahrscheinlich oder unbekannt. Der AC-Hinweis ist ein Indiz, keine Zusage.'
+		],
+		omissions: [
+			'Kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang. Private Orte wie Malls und Kinos üben Hausrecht aus.'
+		],
+		relatedLayers: ['trinkbrunnen', 'klima-pet-2022', 'schwimmbaeder']
+	},
 
 	'radverkehrsnetz-2025': {
 		calculation:

@@ -111,7 +111,7 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	},
 	'kuehle-orte': {
 		short: 'Orte zum Abkühlen bei Hitze in deiner Nähe',
-		long: 'Orte in Berlin, die bei Hitze Abkühlung bieten: Kinos, Bibliotheken, Malls, Schwimmhallen, Museen und mehr. Geometrie und Basis-Tags aus OpenStreetMap (ODbL 1.0), ergänzt um eine redaktionelle navigator.berlin-Anreicherung (Kühle-Score, Klimatisierung, Sommer-Verfügbarkeit). Siehe docs/kuehle-orte-methodik.md. Kein Rechtsanspruch auf Zugang.'
+		long: 'Orte in Berlin, die bei Hitze Abkühlung bieten: Kinos, Bibliotheken, Malls, Schwimmhallen, Museen und mehr. Geometrie und Basis-Tags aus OpenStreetMap (ODbL 1.0), ergänzt um eine redaktionelle navigator.berlin-Anreicherung: Kühle-Score, Klimatisierung, Sommer-Verfügbarkeit. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.'
 	},
 
 	// E: Soziale Infrastruktur
