@@ -362,8 +362,8 @@ development_status:
   15-3-orts-inspector-adresse-navi-melde: review  # Inspector-Reuse: Name/Typ, kopierbare Adresse, Google/Apple-Navi-Buttons, Melde-Link (stimmt nicht/gibts nicht mehr). WCAG.
   15-4-live-oeffnungsstatus-filter-saison: review  # opening_hours.js Ampel (offen/schließt bald/zu, Farbe+Text), Fallback "Zeiten unbekannt", jetzt-offen-Filter, Saison (Trinkbrunnen Mai-Okt). TDD.
   15-5-kuehle-score-sommer-flags: review  # cool_score-Badge + Begründung, "im Sommer geschlossen"-Badge + Abwertung (summer_available=no), is_free/ac_status(nur belegt)/Barrierefrei-Flags. TDD.
-  15-6-methodik-doku-adr: ready-for-dev  # docs/kuehle-orte-methodik.md + Methodik-Route (Score-Rubrik, summer_available, AC-Ehrlichkeit, Herkunft OSM+Anreicherung, Caveats kein Behörden-Ersatz). ADR (kind:'local'). Keine em-dashes.
-  15-7-epic-15-dokumentation: ready-for-dev  # doc:pipelines + doc:story-map + INDEX/System-Map, Konsistenz-Sweep, Lizenz verlinkt.
+  15-6-methodik-doku-adr: review  # docs/kuehle-orte-methodik.md + Methodik-Route (Score-Rubrik, summer_available, AC-Ehrlichkeit, Herkunft OSM+Anreicherung, Caveats kein Behörden-Ersatz). ADR (kind:'local'). Keine em-dashes.
+  15-7-epic-15-dokumentation: review  # doc:pipelines + doc:story-map + INDEX/System-Map, Konsistenz-Sweep, Lizenz verlinkt.
   epic-15-retrospective: optional
   epic-16: in-progress  # Kühle-Orte-Landing-Page (NYC-Geist): mobile-first Seite, DWD-Hitzewarn-Banner, in-deiner-Nähe-Geolocation, Opt-out-Mail + Quellen-Transparenz, CTA-Deep-Link in Explorer. FR14-17,20. Baut auf Epic 15.
   16-1-landing-geruest-eingebettete-karte: review  # Neue Route /kuehle-orte, Angebot-Intro (kein Behörden-Ersatz), eingebettete Karte, Zum-Explorer-CTA (URL-State-Deep-Link), DE-only, WCAG.

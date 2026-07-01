@@ -82,3 +82,35 @@ describe('renderDataFlowMarkdown', () => {
 		expect(md).toContain('**2 Layer total**');
 	});
 });
+
+describe('buildStep (Story 15.7)', () => {
+	const withBuild: SourceConfig[] = [
+		{
+			slug: 'kuehle-orte',
+			kind: 'local',
+			sourceUrl: 'https://www.openstreetmap.org/copyright',
+			license: 'ODbL 1.0',
+			bundleGroup: 'C: Umwelt',
+			buildStep: 'scripts/build-kuehle-orte.ts'
+		} as SourceConfig,
+		{
+			slug: 'bezirke',
+			kind: 'odis',
+			sourceUrl: 'https://x.de',
+			license: 'CC0',
+			bundleGroup: 'A: Boundaries'
+		} as SourceConfig
+	];
+
+	it('mappt buildStep auf die Row, fehlend = "-"', () => {
+		const rows = buildRowsFromSources(withBuild);
+		expect(rows[0].buildStep).toBe('scripts/build-kuehle-orte.ts');
+		expect(rows[1].buildStep).toBe('-');
+	});
+
+	it('rendert die Build-Schritt-Spalte mit dem Script-Pfad', () => {
+		const md = renderDataFlowMarkdown(buildRowsFromSources(withBuild), '2026-06-30');
+		expect(md).toContain('Build-Schritt');
+		expect(md).toContain('`scripts/build-kuehle-orte.ts`');
+	});
+});

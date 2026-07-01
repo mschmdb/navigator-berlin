@@ -31,6 +31,7 @@ Architectural-Decision-Records für navigator.berlin. Format folgt [ADR-000-temp
 | [017](./ADR-017-versorgung-nahversorgung.md)                 | Versorgung um private Nahversorgung erweitern (öffentlich + privat)         | accepted | 2026-06 | Epic 12                                             |
 | [018](./ADR-018-kultur-score-dimension.md)                   | Kultur als eigenständige Score-Dimension (Option C, nicht im Composite)     | accepted | 2026-06 | Epic 13                                             |
 | [019](./ADR-019-kriminalitaet-score-dimension.md)            | Kriminalität als eigenständige Kontext-Dimension (Option C + Stigma-Schutz) | accepted | 2026-06 | Epic 14                                             |
+| [020](./ADR-020-kuehle-orte-local-source.md)                 | Kühle Orte als lokal vorgebaute Layer-Quelle (kind: 'local' + Merge)        | accepted | 2026-06 | Epic 15                                             |
 
 ## Geplant / Pending
 

@@ -206,6 +206,7 @@ export const SOURCES: SourceConfig[] = [
 		slug: 'kuehle-orte',
 		kind: 'local',
 		localPath: 'static/data/kuehle-orte.geojson',
+		buildStep: 'scripts/build-kuehle-orte.ts',
 		sourceUrl: 'https://www.openstreetmap.org/copyright',
 		license: 'ODbL 1.0',
 		bundleGroup: 'C: Umwelt',

@@ -42,6 +42,9 @@ export interface SourceConfig {
 	/** Nur für kind 'local'. Pfad relativ zum Repo-Root zu einem vorgebauten GeoJSON
 	 * (z.B. Build-Output von build-kuehle-orte.ts). Wird statt eines Netz-Fetch gelesen. */
 	localPath?: string;
+	/** Optional. Vorgelagertes Build-Script, das den (lokalen) Input erzeugt. Nur für den
+	 * Pipeline-Atlas (docs/pipelines/data-flow.md), keine Fetch-Logik. Story 15.7. */
+	buildStep?: string;
 	license: License;
 	bundleGroup: Bundle;
 	zoomThresholds: ZoomRange;

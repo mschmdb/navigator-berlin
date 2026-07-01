@@ -131,4 +131,15 @@ describe('methodik +page.svelte', () => {
 		const mailto = feedback?.querySelector('a[href^="mailto:"]');
 		expect(mailto).not.toBeNull();
 	});
+
+	it('Kühle-Orte-Section erklärt Score, Anreicherung, AC-Ehrlichkeit + Lizenz-Link (Story 15.6)', async () => {
+		render(Page, { data: { manifest: sampleManifest } });
+		const sec = document.getElementById('kuehle-orte');
+		expect(sec).not.toBeNull();
+		expect(sec?.textContent).toMatch(/Kühle-Score/);
+		expect(sec?.textContent).toMatch(/29 von 659/);
+		expect(sec?.textContent).toMatch(/OpenStreetMap/);
+		await expect.element(page.getByTestId('methodik-kuehle-orte-link')).toBeInTheDocument();
+	});
+
 });

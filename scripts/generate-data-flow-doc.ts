@@ -26,6 +26,8 @@ export interface DataFlowRow {
 	readonly source: string;
 	readonly license: string;
 	readonly stand: string;
+	/** Story 15.7: vorgelagertes Build-Script, das den (lokalen) Input erzeugt. '-' wenn keins. */
+	readonly buildStep: string;
 }
 
 export function buildRowsFromSources(sources: readonly SourceConfig[]): DataFlowRow[] {
@@ -35,7 +37,8 @@ export function buildRowsFromSources(sources: readonly SourceConfig[]): DataFlow
 		kind: s.kind,
 		source: shortenUrl(s.sourceUrl),
 		license: s.license,
-		stand: formatStand(s.sourceUpdatedAt)
+		stand: formatStand(s.sourceUpdatedAt),
+		buildStep: s.buildStep ?? '-'
 	}));
 }
 
@@ -67,10 +70,12 @@ export function renderDataFlowMarkdown(rows: readonly DataFlowRow[], generatedAt
 	for (const bundle of bundleNames) {
 		const bundleRows = grouped.get(bundle) ?? [];
 		sections.push(`### ${bundle}\n`);
-		sections.push('| Slug | Kind | Source | Lizenz | Stand |');
-		sections.push('|---|---|---|---|---|');
+		sections.push('| Slug | Kind | Source | Lizenz | Stand | Build-Schritt |');
+		sections.push('|---|---|---|---|---|---|');
 		for (const r of bundleRows) {
-			sections.push(`| \`${r.slug}\` | ${r.kind} | ${r.source} | ${r.license} | ${r.stand} |`);
+			sections.push(
+				`| \`${r.slug}\` | ${r.kind} | ${r.source} | ${r.license} | ${r.stand} | ${r.buildStep === '-' ? '-' : `\`${r.buildStep}\``} |`
+			);
 		}
 		sections.push('');
 	}

@@ -25,6 +25,7 @@
 		{ id: 'was-ist-kiez', label: 'Was „Kiez" hier bedeutet' },
 		{ id: 'cross-layer', label: 'Aggregat-Indizes' },
 		{ id: 'wahldaten-section', label: 'Wahldaten' },
+		{ id: 'kuehle-orte', label: 'Kühle Orte' },
 		{ id: 'coverage-strategie', label: 'Coverage-Strategie' },
 		{ id: 'omissions', label: 'Was wir weglassen' },
 		{ id: 'editorial', label: 'Editorial-Verantwortung' },
@@ -286,6 +287,30 @@
 			·
 			<a href="/wahl" class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>Übersicht aller Wahlen</a
+			>
+		</p>
+	</section>
+
+	<section id="kuehle-orte" aria-labelledby="kuehle-orte-h" class="flex flex-col gap-3">
+		<h2 id="kuehle-orte-h" class="font-serif text-2xl text-ink">Kühle Orte</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Der Kühle-Orte-Layer zeigt Orte zum Abkühlen bei Hitze. Der Kühle-Score von 1 bis 5 folgt Typ
+			und Bauart: 5 sehr kalt (Eishalle), 4 klimatisiert oder am Wasser, 3 kühler Massivbau wie
+			Bibliothek oder Museum, darunter weniger kühl. Geometrie und Basis-Tags stammen aus
+			OpenStreetMap (ODbL 1.0, Namensnennung), ergänzt um eine redaktionelle
+			navigator.berlin-Anreicherung: Kühle-Score, Klimatisierung und Sommer-Verfügbarkeit.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Klimatisierung ist selten belegbar: nur 29 von 659 Orten tragen einen belegten AC-Status, der
+			Rest steht auf wahrscheinlich oder unbekannt. Der AC-Hinweis ist ein Indiz, keine Zusage. Ein
+			Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.
+		</p>
+		<p class="font-serif text-sm text-ink-muted">
+			<a
+				href="/lizenzen"
+				data-testid="methodik-kuehle-orte-link"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				>Quellen und Lizenzen</a
 			>
 		</p>
 	</section>

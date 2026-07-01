@@ -1,7 +1,7 @@
 ---
 type: architecture
 audience: both
-last-verified: 2026-05-17
+last-verified: 2026-06-30
 related:
   - docs/INDEX.md
   - docs/recovery/wiedereinstieg.md
@@ -72,6 +72,7 @@ graph TB
     LayerAgg[data:layer-aggregate]
     FAQ[data:faq]
     OG[og:images]
+    BuildKuehle[data:kuehle-orte<br/>build-kuehle-orte.ts]
   end
 
   subgraph Output["Build-Output"]
@@ -79,6 +80,7 @@ graph TB
     Manifest[static/layers/MANIFEST.json]
     KiezScores[static/kiez-scores/kiez-scores.json]
     LayerAggJson[static/layer-aggregates/layer-aggregates.json]
+    KuehleInput[static/data/kuehle-orte.geojson<br/>lokaler Build-Input]
     OGPNGs[static/og/*/*.png]
     PGData[(Postgres-Tabellen<br/>kiez_score, bezirk_score, faq_qna)]
   end
@@ -95,6 +97,9 @@ graph TB
   OG --> OGPNGs
   Manifest -.read.-> OG
   PGData -.read.-> OG
+  OSM --> BuildKuehle
+  BuildKuehle --> KuehleInput
+  KuehleInput -.local.-> Fetch
 ```
 
 **Datenfluss-Atlas pro Layer:** [docs/pipelines/data-flow.md](../pipelines/data-flow.md) (auto-generiert).
