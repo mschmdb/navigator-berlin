@@ -18,6 +18,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import DwdHitzewarnBanner from '$lib/components/kuehle-orte/dwd-hitzewarn-banner.svelte';
+	import InDeinerNaehe from '$lib/components/kuehle-orte/in-deiner-naehe.svelte';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
 	import type { PageData } from './$types';
@@ -127,6 +128,8 @@
 			</p>
 		</div>
 	</header>
+
+	<InDeinerNaehe explorerHref={explorerLink} />
 
 	<section aria-labelledby="orte-h" class="flex flex-col gap-4">
 		<h2 id="orte-h" class="font-sans text-2xl font-semibold text-ink">

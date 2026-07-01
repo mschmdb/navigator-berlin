@@ -368,7 +368,7 @@ development_status:
   epic-16: in-progress  # Kühle-Orte-Landing-Page (NYC-Geist): mobile-first Seite, DWD-Hitzewarn-Banner, in-deiner-Nähe-Geolocation, Opt-out-Mail + Quellen-Transparenz, CTA-Deep-Link in Explorer. FR14-17,20. Baut auf Epic 15.
   16-1-landing-geruest-eingebettete-karte: review  # Neue Route /kuehle-orte, Angebot-Intro (kein Behörden-Ersatz), eingebettete Karte, Zum-Explorer-CTA (URL-State-Deep-Link), DE-only, WCAG.
   16-2-dwd-hitzewarn-banner: review  # Live-DWD-Warnlage Berlin, Banner mit Stufe + Quelle, ausgeblendet ohne Warnung (kein Layout-Sprung), still degradierend bei Fehler. TDD.
-  16-3-in-deiner-naehe-geolocation: ready-for-dev  # Geolocation-Consent → nächste jetzt-offene Orte nach Distanz + Navi-Link, Fallback ohne Standort. TDD.
+  16-3-in-deiner-naehe-geolocation: review  # Geolocation-Consent → nächste jetzt-offene Orte nach Distanz + Navi-Link, Fallback ohne Standort. TDD.
   16-4-opt-out-mail-quellen-transparenz: ready-for-dev  # Opt-out-Mail-Link für Institutionen, Transparenz-Abschnitt (Quellen OSM/ODbL + Anreicherung + DWD, Angebot-Haltung, keine Absolutismen).
   16-5-landing-doku-updates-eintrag: ready-for-dev  # System-Map/INDEX, /updates _content/updates/2026-MM-DD-kuehle-orte.md (category feature, Nutzersprache, keine em-dashes), Feed-Tests grün.
   epic-16-retrospective: optional
