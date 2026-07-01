@@ -3,6 +3,7 @@
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 	import { META_LINKS, META_LINK_GROUPS } from './internal/meta-links.js';
 	import SocialLinks from './internal/social-links.svelte';
+	import MtcLogo from './internal/mtc-logo.svelte';
 	import { AnimatedLogo } from '$lib/components/ui';
 
 	type Props = {
@@ -29,7 +30,10 @@
 			{/each}
 			<a href={`mailto:${FEEDBACK_EMAIL}`} class="whitespace-nowrap hover:text-accent">Kontakt</a>
 			<span aria-hidden="true" class="px-2 text-ink-subtle/50">·</span>
-			<SocialLinks size={14} class="gap-2" />
+			<span class="inline-flex items-center gap-2">
+				<SocialLinks size={14} class="gap-2" />
+				<MtcLogo size={14} />
+			</span>
 		</nav>
 	</footer>
 {:else}
@@ -50,10 +54,7 @@
 					</p>
 				</div>
 
-				<nav
-					aria-label="Footer-Navigation"
-					class="grid grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-3"
-				>
+				<nav aria-label="Footer-Navigation" class="grid grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-3">
 					{#each META_LINK_GROUPS as group (group.title)}
 						<div class="flex flex-col gap-2.5">
 							<h2 class="font-mono text-[10px] tracking-wider text-ink-subtle uppercase">
@@ -80,7 +81,10 @@
 				class="mt-10 flex flex-wrap items-center justify-end gap-4 border-t border-rule pt-6 font-mono text-xs text-ink-subtle"
 			>
 				{#if langSwitcher}{@render langSwitcher()}{/if}
-				<SocialLinks size={16} />
+				<div class="flex items-center gap-3">
+					<SocialLinks size={16} />
+					<MtcLogo />
+				</div>
 			</div>
 		</div>
 	</footer>

@@ -67,6 +67,14 @@ describe('meta-footer.svelte', () => {
 		await expect.element(page.getByTestId('lang')).not.toBeInTheDocument();
 	});
 
+	it('MTC-Logo verlinkt auf mtc.berlin mit aria-label + Inline-SVG', async () => {
+		render(MetaFooter, {});
+		const link = (await page.getByTestId('footer-mtc-link').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('https://mtc.berlin');
+		expect(link.getAttribute('aria-label')).toBe('mtc.berlin');
+		expect(link.querySelector('svg')).not.toBeNull();
+	});
+
 	it('Kontakt-Link ist mailto', async () => {
 		render(MetaFooter, {});
 		const link = page.getByRole('link', { name: 'Kontakt' });

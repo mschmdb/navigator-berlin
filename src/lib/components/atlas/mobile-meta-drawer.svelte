@@ -4,6 +4,7 @@
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
 	import { META_LINK_GROUPS } from './internal/meta-links.js';
 	import SocialLinks from './internal/social-links.svelte';
+	import MtcLogo from './internal/mtc-logo.svelte';
 
 	type Props = {
 		open: boolean;
@@ -110,7 +111,10 @@
 						{@render langSwitcher()}
 					</div>
 				{/if}
-				<SocialLinks size={16} />
+				<div class="flex items-center gap-3">
+					<SocialLinks size={16} />
+					<MtcLogo />
+				</div>
 			</footer>
 		</div>
 	</div>
