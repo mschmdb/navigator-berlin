@@ -19,6 +19,7 @@
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import DwdHitzewarnBanner from '$lib/components/kuehle-orte/dwd-hitzewarn-banner.svelte';
 	import InDeinerNaehe from '$lib/components/kuehle-orte/in-deiner-naehe.svelte';
+	import KuehleOrteTransparenz from '$lib/components/kuehle-orte/kuehle-orte-transparenz.svelte';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
 	import type { PageData } from './$types';
@@ -205,15 +206,7 @@
 		</ul>
 	</section>
 
-	<section aria-labelledby="daten-h" class="flex flex-col gap-2">
-		<h2 id="daten-h" class="font-sans text-lg font-semibold text-ink">Woher die Daten kommen</h2>
-		<p class="font-serif text-sm leading-relaxed text-ink-muted">
-			Geometrie und Basis-Angaben stammen aus OpenStreetMap (ODbL), ergänzt um eine redaktionelle
-			Anreicherung von navigator.berlin: Kühle-Score, Klimatisierung, Öffnungszeiten und
-			Sommer-Verfügbarkeit. Wo eine Angabe nicht belegbar war, sagen wir das offen. Kein
-			Rechtsanspruch auf Zugang, private Orte wie Malls und Kinos üben Hausrecht aus.
-		</p>
-	</section>
+	<KuehleOrteTransparenz />
 
 	<footer class="border-t border-rule pt-5">
 		<a

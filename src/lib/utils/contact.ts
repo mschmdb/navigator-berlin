@@ -25,3 +25,27 @@ export function buildErrorReportMailto(ctx: ErrorReportContext): string {
 	const body = lines.join('\n');
 	return `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
+
+export interface OptOutContext {
+	/** Name der Einrichtung, optional vorbelegt. */
+	name?: string;
+	/** Adresse der Einrichtung, optional vorbelegt. */
+	address?: string;
+}
+
+// Story 16.4: Institutionen tragen sich per vorbereitetem Mail-Entwurf aus. Eigener Betreff/Body
+// (institutions-, nicht ortsbezogen), gemeinsam mit buildErrorReportMailto bleiben Recipient + Encoding.
+export function buildOptOutMailto(ctx: OptOutContext = {}): string {
+	const subject = 'Austragung kühler Ort';
+	const lines = [
+		'Ich möchte einen Ort aus der Kühle-Orte-Karte austragen lassen.',
+		'',
+		`Name der Einrichtung: ${ctx.name ?? ''}`,
+		`Adresse: ${ctx.address ?? ''}`,
+		'',
+		'Begründung:',
+		''
+	];
+	const body = lines.join('\n');
+	return `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
