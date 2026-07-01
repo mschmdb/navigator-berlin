@@ -8,6 +8,7 @@ import type {
 	KuehleOrt,
 	KiezScore
 } from '$lib/data';
+import type { Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
 import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
 import type { DemografieScope } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
 import type { Bookmark } from './bookmark-schema.js';
@@ -42,6 +43,7 @@ export interface UiState {
 	oepnvStopIndex: OepnvStopIndex | null;
 	/** Story 15.3-15.5: Kühle-Orte-Index für Nächste-Orte + Filter im Inspector. */
 	kuehleOrteIndex: KuehleOrt[] | null;
+	trinkbrunnenIndex: Trinkbrunnen[] | null;
 	/** Story 1.26: lokale Adress-Bookmarks (LocalStorage-Mirror, siehe ADR-004). */
 	bookmarks: Bookmark[];
 	bookmarksDialogOpen: boolean;
@@ -81,6 +83,7 @@ export function createUiState(): UiState {
 		hiddenLayerSlugs: [],
 		oepnvStopIndex: null,
 		kuehleOrteIndex: null,
+		trinkbrunnenIndex: null,
 		bookmarks: [],
 		bookmarksDialogOpen: false,
 		compareMode: false,

@@ -1,22 +1,40 @@
 <!--
 	Hitze-Modus: Trinkbrunnen sind eine Abkühl-Kategorie neben den kühlen Orten.
-	Der reduzierte Inspector bietet deshalb einen direkten Weg, den Trinkbrunnen-Layer
-	auf der Karte ein- und auszublenden, ohne den vollen Explorer öffnen zu müssen.
+	Der reduzierte Inspector zeigt den nächsten Trinkbrunnen mit Weg dorthin (Navi-Links
+	aus den Koordinaten, OSM liefert keine Adresse) und blendet den Layer auf der Karte ein.
 -->
 <script lang="ts">
-	import { Eye, EyeOff, Droplet } from '@lucide/svelte';
+	import { Eye, EyeOff, Droplet, Navigation } from '@lucide/svelte';
 	import { getLayerExplainEntry } from './internal/layer-explain.js';
+	import {
+		findNearestTrinkbrunnen,
+		type Trinkbrunnen
+	} from '$lib/data/get-trinkbrunnen-index.js';
+	import { formatDistanceDe } from './internal/format-distance.js';
 
 	const SLUG = 'trinkbrunnen';
 
 	type Props = {
 		isActive?: boolean;
 		onToggleLayer?: (slug: string) => void;
+		address?: { lat: number; lng: number } | null;
+		index?: readonly Trinkbrunnen[] | null;
 	};
 
-	let { isActive = false, onToggleLayer }: Props = $props();
+	let { isActive = false, onToggleLayer, address = null, index = null }: Props = $props();
 
 	const explain = getLayerExplainEntry(SLUG);
+
+	const nearest = $derived(address && index ? findNearestTrinkbrunnen(address, index) : null);
+
+	function badges(b: Trinkbrunnen): string {
+		const parts: string[] = [];
+		if (b.kostenlos) parts.push('kostenlos');
+		if (b.bottle) parts.push('Flaschen auffüllen');
+		if (b.wheelchair === 'yes') parts.push('barrierefrei');
+		else if (b.wheelchair === 'limited') parts.push('teils barrierefrei');
+		return parts.slice(0, 2).join(' · ');
+	}
 </script>
 
 <section
@@ -29,6 +47,41 @@
 		Trinkbrunnen
 	</h4>
 	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">{explain.short}</p>
+
+	{#if nearest}
+		{@const badgeText = badges(nearest)}
+		<div class="mt-2 border-t border-rule pt-2" data-testid="trinkbrunnen-nearest">
+			<div class="flex items-baseline justify-between gap-2">
+				<span class="min-w-0 truncate font-sans text-sm font-medium text-ink">
+					Nächster: {nearest.name}
+				</span>
+				<span class="shrink-0 font-mono text-xs text-ink-subtle tabular-nums">
+					{formatDistanceDe(nearest.distanceM)}
+				</span>
+			</div>
+			{#if badgeText}
+				<p class="mt-0.5 font-mono text-[11px] text-ink-muted">{badgeText}</p>
+			{/if}
+			<div class="mt-1 flex flex-wrap gap-3">
+				<a
+					href={nearest.googleMapsUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+				>
+					<Navigation size={11} aria-hidden="true" /> Google Maps
+				</a>
+				<a
+					href={nearest.appleMapsUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+				>
+					<Navigation size={11} aria-hidden="true" /> Apple Maps
+				</a>
+			</div>
+		</div>
+	{/if}
 
 	{#if onToggleLayer}
 		<button

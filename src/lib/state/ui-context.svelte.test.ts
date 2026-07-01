@@ -37,6 +37,7 @@ function makeState(): UiState {
 		hiddenLayerSlugs: [],
 		oepnvStopIndex: null,
 		kuehleOrteIndex: null,
+		trinkbrunnenIndex: null,
 		bookmarks: [],
 		bookmarksDialogOpen: false,
 		compareMode: false,

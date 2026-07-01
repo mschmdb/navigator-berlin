@@ -723,6 +723,8 @@
 										<HitzeTrinkbrunnenToggle
 											isActive={ui.activeLayerSlugs.includes('trinkbrunnen')}
 											onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+											address={nearestAddressPoint}
+											index={ui.trinkbrunnenIndex}
 										/>
 									{/if}
 								{/if}
