@@ -21,6 +21,7 @@ function ort(over: Partial<KuehleOrt> & Pick<KuehleOrt, 'id' | 'name'>): KuehleO
 		googleMapsUrl: 'https://www.google.com/maps/dir/?api=1&destination=52.5,13.4',
 		appleMapsUrl: 'https://maps.apple.com/?daddr=52.5,13.4',
 		openingHoursNote: '',
+		openingHours: '',
 		...over
 	};
 }
@@ -50,6 +51,17 @@ describe('filterKuehleOrte', () => {
 	it('imSommerNutzbar: nur summer_available=yes', () => {
 		const r = filterKuehleOrte(places, { ...EMPTY_FILTERS, imSommerNutzbar: true });
 		expect(r.map((p) => p.id).sort()).toEqual(['a', 'c']);
+	});
+
+	it('jetztOffen: nur belegt offene Orte, unbekannte Zeiten raus (Story 15.4)', () => {
+		const now = new Date(2026, 6, 1, 12, 0, 0);
+		const orte = [
+			ort({ id: 'offen', name: 'Offen', openingHours: 'Mo-Su 10:00-18:00' }),
+			ort({ id: 'zu', name: 'Zu', openingHours: 'Mo-Su 20:00-23:00' }),
+			ort({ id: 'unbekannt', name: 'Unbekannt', openingHours: '' })
+		];
+		const r = filterKuehleOrte(orte, { ...EMPTY_FILTERS, jetztOffen: true }, now);
+		expect(r.map((p) => p.id)).toEqual(['offen']);
 	});
 
 	it('kombiniert (UND): kostenlos + im Sommer nutzbar', () => {

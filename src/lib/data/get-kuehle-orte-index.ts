@@ -19,6 +19,8 @@ export interface KuehleOrt {
 	googleMapsUrl: string;
 	appleMapsUrl: string;
 	openingHoursNote: string;
+	/** Roher OSM-opening_hours-String für den Live-Status (Story 15.4). */
+	openingHours: string;
 }
 
 type KuehleOrtProps = {
@@ -34,6 +36,7 @@ type KuehleOrtProps = {
 	googleMapsUrl: string;
 	appleMapsUrl: string;
 	opening_hours_note: string;
+	oh: string;
 };
 
 export function featureToKuehleOrt(feature: Feature<Point, KuehleOrtProps>): KuehleOrt {
@@ -53,7 +56,8 @@ export function featureToKuehleOrt(feature: Feature<Point, KuehleOrtProps>): Kue
 		website: p.website,
 		googleMapsUrl: p.googleMapsUrl,
 		appleMapsUrl: p.appleMapsUrl,
-		openingHoursNote: p.opening_hours_note
+		openingHoursNote: p.opening_hours_note,
+		openingHours: p.oh ?? ''
 	};
 }
 

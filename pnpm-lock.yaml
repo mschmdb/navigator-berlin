@@ -68,6 +68,9 @@ importers:
       marked:
         specifier: ^14.1.4
         version: 14.1.4
+      opening_hours:
+        specifier: ^3.13.0
+        version: 3.13.0(typescript@6.0.3)
       pmtiles:
         specifier: ^4.4.1
         version: 4.4.1
@@ -3227,6 +3230,14 @@ packages:
   hysnappy@1.0.0:
     resolution: {integrity: sha512-MNrC4NfwDGPb889O6gIfEtbvEZCSWUsSEhsz4Oq2FRcpGtXHfeVz3KciSPp5Pnnz1NjFMgDQNfxdJozymJEDDA==}
 
+  i18next@26.3.4:
+    resolution: {integrity: sha512-pa7m0d7pBDqGHZxljT+WPFeyFgQ7P7SciPPo1tTqYuO0z4sqADYhwnBESmmGp/wEof1inwdls/k8ZgTg8rxFHA==}
+    peerDependencies:
+      typescript: ^5 || ^6
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -3844,6 +3855,10 @@ packages:
 
   open@8.4.2:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
+    engines: {node: '>=12'}
+
+  opening_hours@3.13.0:
+    resolution: {integrity: sha512-yQxRzM+ggFvmgML53tcnI3Ugy/OCt4HgyYeTryD2tgahfcjDNSgrU2wTs1ccNhA2ytatNUwKDJcLi2u54nT2Bg==}
     engines: {node: '>=12'}
 
   optionator@0.9.4:
@@ -4517,6 +4532,9 @@ packages:
 
   style-to-object@1.0.14:
     resolution: {integrity: sha512-LIN7rULI0jBscWQYaSswptyderlarFkjQ+t79nzty8tcIAceVomEVlLzH5VP4Cmsv6MtKhs7qaAiwlcp+Mgaxw==}
+
+  suncalc@1.9.0:
+    resolution: {integrity: sha512-vMJ8Byp1uIPoj+wb9c1AdK4jpkSKVAywgHX0lqY7zt6+EWRRC3Z+0Ucfjy/0yxTVO1hwwchZe4uoFNqrIC24+A==}
 
   supercluster@8.0.1:
     resolution: {integrity: sha512-IiOea5kJ9iqzD2t7QJq/cREyLHTtSmUT6gQsweojg9WH2sYJqZK9SswTu6jrscO6D1G5v5vYZ9ru/eq85lXeZQ==}
@@ -7850,6 +7868,10 @@ snapshots:
 
   hysnappy@1.0.0: {}
 
+  i18next@26.3.4(typescript@6.0.3):
+    optionalDependencies:
+      typescript: 6.0.3
+
   iconv-lite@0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -8506,6 +8528,13 @@ snapshots:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
+
+  opening_hours@3.13.0(typescript@6.0.3):
+    dependencies:
+      i18next: 26.3.4(typescript@6.0.3)
+      suncalc: 1.9.0
+    transitivePeerDependencies:
+      - typescript
 
   optionator@0.9.4:
     dependencies:
@@ -9249,6 +9278,8 @@ snapshots:
   style-to-object@1.0.14:
     dependencies:
       inline-style-parser: 0.2.7
+
+  suncalc@1.9.0: {}
 
   supercluster@8.0.1:
     dependencies:

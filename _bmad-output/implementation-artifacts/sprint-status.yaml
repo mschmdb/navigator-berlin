@@ -360,7 +360,7 @@ development_status:
   15-1-kuehle-orte-daten-build: review  # Merge enrichment.json + places-osm.json per id, Filter suitable=false/still_exists=no (geloggt), Navi-Deep-Links (Google/Apple) als Properties. TDD.
   15-2-layer-integration-local-manifest-lizenz: review  # kind:'local' in sources.ts + fetchSource, MANIFEST (Quelle/Stand/SHA/Lizenz: OSM ODbL + Anreicherung getrennt), editorial-config (feedbackMailto)/pin-icon/synonyms, URL-State-Aktivierung, Trinkbrunnen-Reuse. TDD.
   15-3-orts-inspector-adresse-navi-melde: review  # Inspector-Reuse: Name/Typ, kopierbare Adresse, Google/Apple-Navi-Buttons, Melde-Link (stimmt nicht/gibts nicht mehr). WCAG.
-  15-4-live-oeffnungsstatus-filter-saison: in-progress  # opening_hours.js Ampel (offen/schließt bald/zu, Farbe+Text), Fallback "Zeiten unbekannt", jetzt-offen-Filter, Saison (Trinkbrunnen Mai-Okt). TDD.
+  15-4-live-oeffnungsstatus-filter-saison: review  # opening_hours.js Ampel (offen/schließt bald/zu, Farbe+Text), Fallback "Zeiten unbekannt", jetzt-offen-Filter, Saison (Trinkbrunnen Mai-Okt). TDD.
   15-5-kuehle-score-sommer-flags: review  # cool_score-Badge + Begründung, "im Sommer geschlossen"-Badge + Abwertung (summer_available=no), is_free/ac_status(nur belegt)/Barrierefrei-Flags. TDD.
   15-6-methodik-doku-adr: ready-for-dev  # docs/kuehle-orte-methodik.md + Methodik-Route (Score-Rubrik, summer_available, AC-Ehrlichkeit, Herkunft OSM+Anreicherung, Caveats kein Behörden-Ersatz). ADR (kind:'local'). Keine em-dashes.
   15-7-epic-15-dokumentation: ready-for-dev  # doc:pipelines + doc:story-map + INDEX/System-Map, Konsistenz-Sweep, Lizenz verlinkt.

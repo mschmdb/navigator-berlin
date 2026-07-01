@@ -7,6 +7,7 @@
 		nearestFilteredKuehleOrte,
 		type KuehleOrteFilters
 	} from './internal/nearest-kuehle-orte.js';
+	import { getOpeningStatus } from './internal/opening-status.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 
 	const SLUG = 'kuehle-orte';
@@ -23,25 +24,49 @@
 
 	const LIMIT = 5;
 	let filters = $state<KuehleOrteFilters>({
+		jetztOffen: false,
 		mitKlimaanlage: false,
 		kostenlos: false,
 		imSommerNutzbar: false
 	});
 	let detailsOpen = $state(false);
 
+	// Live-Uhr für den Öffnungsstatus, aktualisiert minütlich.
+	let now = $state(new Date());
+	$effect(() => {
+		const id = setInterval(() => (now = new Date()), 60_000);
+		return () => clearInterval(id);
+	});
+
 	const editorial = $derived(getEditorialConfig(SLUG));
 	const explainEntry = $derived(getLayerExplainEntry(SLUG));
 
 	const nearest = $derived.by(() => {
 		if (!address || !index) return [];
-		return nearestFilteredKuehleOrte(address, index, filters, LIMIT);
+		return nearestFilteredKuehleOrte(address, index, filters, LIMIT, now);
 	});
 
 	const FILTER_CHIPS: { key: keyof KuehleOrteFilters; label: string }[] = [
+		{ key: 'jetztOffen', label: 'jetzt offen' },
 		{ key: 'mitKlimaanlage', label: 'mit Klimaanlage' },
 		{ key: 'kostenlos', label: 'kostenlos' },
 		{ key: 'imSommerNutzbar', label: 'im Sommer nutzbar' }
 	];
+
+	function statusInfo(oh: string): { text: string; tone: 'open' | 'soon' | 'closed' | 'unknown' } {
+		const s = getOpeningStatus(oh, now);
+		if (s === 'open') return { text: 'jetzt offen', tone: 'open' };
+		if (s === 'closing-soon') return { text: 'schließt bald', tone: 'soon' };
+		if (s === 'closed') return { text: 'geschlossen', tone: 'closed' };
+		return { text: 'Zeiten unbekannt', tone: 'unknown' };
+	}
+
+	const STATUS_CLASS: Record<'open' | 'soon' | 'closed' | 'unknown', string> = {
+		open: 'bg-state-success/15 text-state-success',
+		soon: 'bg-state-warning/15 text-state-warning',
+		closed: 'bg-state-error/15 text-state-error',
+		unknown: 'bg-bg text-ink-subtle'
+	};
 
 	function toggleFilter(key: keyof KuehleOrteFilters): void {
 		filters = { ...filters, [key]: !filters[key] };
@@ -126,6 +151,7 @@
 			{#each nearest as ort (ort.id)}
 				{@const summer = summerLabel(ort.summerAvailable)}
 				{@const free = freeLabel(ort.isFree)}
+				{@const status = statusInfo(ort.openingHours)}
 				<li class="border-t border-rule pt-2 first:border-t-0 first:pt-0" data-testid="kuehle-ort">
 					<div class="flex items-baseline justify-between gap-2">
 						<span class="min-w-0 truncate font-sans text-sm font-medium text-ink">{ort.name}</span>
@@ -134,6 +160,10 @@
 						>
 					</div>
 					<div class="mt-0.5 flex flex-wrap items-center gap-1">
+						<span
+							class={`inline-flex items-center rounded-sm px-1 font-mono text-[10px] font-semibold ${STATUS_CLASS[status.tone]}`}
+							data-testid="ort-status">{status.text}</span
+						>
 						<span class="font-mono text-[11px] text-ink-muted">{ort.cat}</span>
 						<span class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted">
 							Kühle {ort.coolScore}/5
