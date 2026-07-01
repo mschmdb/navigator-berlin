@@ -127,6 +127,13 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		subline: 'Kühle Orte bei Hitze',
 		body: 'Über 500 kühle Orte in Berlin: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen. Mit Adresse, Live-Status und Weg dorthin. Ein Angebot auf offenen Daten.',
 		footerUrl: '/hitze'
+	},
+	{
+		slug: 'kuehle-orte',
+		headline: 'Kühle Orte in Berlin',
+		subline: 'Abkühlung bei Hitze',
+		body: 'Wo du dich in Berlin bei Hitze abkühlen kannst: Kinos, Bibliotheken, Schwimmhallen und mehr, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten.',
+		footerUrl: '/kuehle-orte'
 	}
 ];
 
