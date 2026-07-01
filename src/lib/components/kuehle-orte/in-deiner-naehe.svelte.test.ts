@@ -52,6 +52,17 @@ describe('InDeinerNaehe (Story 16.3)', () => {
 		await expect.element(page.getByTestId('naehe-fallback')).toBeInTheDocument();
 	});
 
+	it('ohne now-Prop nutzt die Live-Uhr (Klick-Zeit) und findet 24/7-Orte', async () => {
+		render(InDeinerNaehe, {
+			explorerHref: '/explore?layers=kuehle-orte&mode=hitze',
+			requestPositionFn: okPosition,
+			loadIndex: async () => [ort({ id: 'node/9', name: 'Immer offen', openingHours: '24/7' })]
+			// kein now: die Komponente fällt auf die Live-Uhr zurück
+		});
+		await page.getByTestId('naehe-locate').click();
+		await expect.element(page.getByText('Immer offen')).toBeInTheDocument();
+	});
+
 	it('kein offener Ort in der Nähe zeigt Leer-Hinweis', async () => {
 		render(InDeinerNaehe, {
 			explorerHref: '/explore?layers=kuehle-orte&mode=hitze',

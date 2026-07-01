@@ -9,6 +9,7 @@
 		type KuehleOrtMitDistanz
 	} from '$lib/components/atlas/inspector-panel/internal/nearest-kuehle-orte.js';
 	import { getOpeningStatus } from '$lib/components/atlas/inspector-panel/internal/opening-status.js';
+	import { formatDistanceDe } from '$lib/components/atlas/inspector-panel/internal/format-distance.js';
 
 	type Phase = 'idle' | 'locating' | 'ready' | 'denied' | 'unsupported' | 'error';
 
@@ -24,12 +25,22 @@
 		explorerHref,
 		requestPositionFn = requestPosition,
 		loadIndex = getKuehleOrteIndex,
-		now = new Date()
+		now: nowProp
 	}: Props = $props();
 
 	const LIMIT = 5;
 	let phase = $state<Phase>('idle');
 	let results = $state<KuehleOrtMitDistanz[]>([]);
+
+	// Live-Uhr, damit der jetzt-offen-Filter die Klick-Zeit nutzt, nicht die Seitenaufruf-Zeit.
+	// Test-Injection (nowProp) fixiert die Zeit und schaltet den Minutentakt ab.
+	let liveNow = $state(new Date());
+	$effect(() => {
+		if (nowProp) return;
+		const id = setInterval(() => (liveNow = new Date()), 60_000);
+		return () => clearInterval(id);
+	});
+	const now = $derived(nowProp ?? liveNow);
 
 	const FALLBACK_MSG: Record<'denied' | 'unsupported' | 'error', string> = {
 		denied: 'Ohne Standort können wir keine Orte in deiner Nähe zeigen.',
@@ -72,11 +83,6 @@
 		);
 	}
 
-	function formatDistance(m: number): string {
-		if (m < 1000) return `${m} m`;
-		return `${(m / 1000).toFixed(1).replace('.', ',')} km`;
-	}
-
 	function statusText(oh: string): string {
 		const s = getOpeningStatus(oh, now);
 		return s === 'closing-soon' ? 'schließt bald' : 'jetzt offen';
@@ -109,8 +115,8 @@
 							<span class="min-w-0 truncate font-sans text-sm font-medium text-ink">{ort.name}</span
 							>
 							<span class="shrink-0 font-mono text-xs text-ink-subtle tabular-nums"
-								aria-label={`Entfernung ${formatDistance(ort.distanceM)}`}
-								>{formatDistance(ort.distanceM)}</span
+								aria-label={`Entfernung ${formatDistanceDe(ort.distanceM)}`}
+								>{formatDistanceDe(ort.distanceM)}</span
 							>
 						</div>
 						<div class="mt-0.5 flex flex-wrap items-center gap-1.5">

@@ -7,8 +7,10 @@
 		ChevronDown,
 		Navigation,
 		Snowflake,
-		Clock
+		Clock,
+		Mail
 	} from '@lucide/svelte';
+	import { buildOptOutMailto } from '$lib/utils/contact.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
 	import { getLayerExplainEntry } from './internal/layer-explain.js';
 	import {
@@ -17,6 +19,7 @@
 	} from './internal/nearest-kuehle-orte.js';
 	import { getOpeningStatus } from './internal/opening-status.js';
 	import { formatOpeningHoursDe } from './internal/format-opening-hours.js';
+	import { formatDistanceDe } from './internal/format-distance.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 
 	const SLUG = 'kuehle-orte';
@@ -79,11 +82,6 @@
 
 	function toggleFilter(key: keyof KuehleOrteFilters): void {
 		filters = { ...filters, [key]: !filters[key] };
-	}
-
-	function formatDistance(m: number): string {
-		if (m < 1000) return `${m} m`;
-		return `${(m / 1000).toFixed(1).replace('.', ',')} km`;
 	}
 
 	function freeLabel(isFree: string): string | null {
@@ -165,7 +163,7 @@
 					<div class="flex items-baseline justify-between gap-2">
 						<span class="min-w-0 truncate font-sans text-sm font-medium text-ink">{ort.name}</span>
 						<span class="shrink-0 font-mono text-xs text-ink-subtle tabular-nums"
-							>{formatDistance(ort.distanceM)}</span
+							>{formatDistanceDe(ort.distanceM)}</span
 						>
 					</div>
 					<div class="mt-0.5 flex flex-wrap items-center gap-1">
@@ -284,6 +282,14 @@
 			{#each editorial?.disclaimerVariants ?? [] as variant (variant)}
 				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
 			{/each}
+			<a
+				href={buildOptOutMailto()}
+				data-testid="card-opt-out"
+				aria-label="Einrichtung aus der Kühle-Orte-Karte austragen lassen"
+				class="hover:text-accent-strong inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+			>
+				<Mail size={12} aria-hidden="true" /> Ihre Einrichtung austragen lassen?
+			</a>
 		</div>
 	{/if}
 </section>
