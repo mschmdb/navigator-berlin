@@ -30,23 +30,29 @@
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
 
+	// Dieselbe Seite ist über zwei Hosts erreichbar: navigator.berlin/hitze und
+	// hitze.navigator.berlin/ (Reroute). Canonical konsolidiert auf die Haupt-Domain,
+	// damit kein Duplicate-Content entsteht. `hitze.`-Subdomain wird gestrippt, lokal bleibt lokal.
+	const primaryOrigin = $derived(origin.replace('://hitze.', '://'));
+	const canonical = $derived(`${primaryOrigin}/hitze`);
+
 	// mode=hitze erzwingt den reduzierten Explorer auch ohne Hitze-Host (lokal + Main-Domain).
 	const explorerLink = `${buildExplorerDeepLink(['kuehle-orte'])}&mode=hitze`;
 	const pageTitle = 'Hitze-Navigator Berlin - kühle Orte bei Hitze finden';
 	const pageDescription =
 		'Über 500 kühle Orte in Berlin bei Hitze: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten.';
 	const ogImagePath = '/og/page/hitze.png';
-	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
+	const ogImageAbsolute = $derived(`${primaryOrigin}${ogImagePath}`);
 
 	const datasetJsonLd = $derived(
 		buildDataset({
-			origin,
+			origin: primaryOrigin,
 			name: 'Kühle Orte in Berlin',
 			description: pageDescription,
 			license: 'ODbL 1.0',
 			dateModified: '2026-06-30',
 			creatorName: 'navigator.berlin',
-			contentUrl: `${origin}${pathname}`,
+			contentUrl: `${primaryOrigin}/hitze`,
 			encodingFormat: 'text/html',
 			keywords: ['Kühle Orte', 'Hitze', 'Berlin', 'Abkühlung', 'Klimaanlage', 'Trinkbrunnen']
 		})
@@ -54,7 +60,7 @@
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
-			origin,
+			origin: primaryOrigin,
 			items: [
 				{ name: 'Start', path: '/' },
 				{ name: 'Kühle Orte bei Hitze', path: '/hitze' }
@@ -109,6 +115,7 @@
 	description={pageDescription}
 	{pathname}
 	{origin}
+	{canonical}
 	ogImage={ogImageAbsolute}
 	locales={['de']}
 />

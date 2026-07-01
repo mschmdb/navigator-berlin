@@ -13,7 +13,10 @@
 type EventName = 'Search' | 'Bookmark' | 'Compare' | 'Share' | 'Locate' | 'MapClick';
 
 interface PlausibleFn {
-	(eventName: string, options?: { props?: Record<string, string | number | boolean> }): void;
+	(
+		eventName: string,
+		options?: { u?: string; props?: Record<string, string | number | boolean> }
+	): void;
 }
 
 declare global {
@@ -44,11 +47,18 @@ export function trackEvent(
  * gefeuert, da der Plausible-Script im `manual`-Mode kein Auto-Tracking
  * macht. SvelteKit-Client-Navigationen würden sonst nicht erfasst.
  */
-export function trackPageview(): void {
+export function trackPageview(path?: string): void {
 	if (typeof window === 'undefined') return;
 	if (typeof window.plausible !== 'function') return;
 	try {
-		window.plausible('pageview');
+		// Hitze-Subdomain reroutet `/` → `/hitze` ohne URL-Wechsel. Plausible würde sonst die
+		// tatsächliche URL `/` tracken (mit der Homepage vermischt). Mit `u`-Override melden wir
+		// den effektiven Pfad, sodass Top-Pages `/hitze` statt `/` zeigt.
+		if (path) {
+			window.plausible('pageview', { u: `${window.location.origin}${path}` });
+		} else {
+			window.plausible('pageview');
+		}
 	} catch {
 		/* analytics never breaks the app */
 	}

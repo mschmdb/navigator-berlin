@@ -47,7 +47,11 @@
 	// Initial-Mount: from === null, Bedingung false → Pageview feuert.
 	afterNavigate((nav) => {
 		if (nav.from && nav.from.url.pathname === nav.to?.url.pathname) return;
-		trackPageview();
+		// Hitze-Subdomain: `/` reroutet auf die /hitze-Route (route.id endet auf `/hitze`),
+		// die URL bleibt aber `/`. Für Plausible den effektiven Pfad `/hitze` melden.
+		const routeId = nav.to?.route?.id ?? '';
+		const isHitzeRoot = routeId.endsWith('/hitze') && nav.to?.url.pathname === '/';
+		trackPageview(isHitzeRoot ? '/hitze' : undefined);
 	});
 
 	$effect(() => {
