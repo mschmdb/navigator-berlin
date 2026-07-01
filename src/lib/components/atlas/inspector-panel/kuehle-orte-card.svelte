@@ -174,10 +174,7 @@
 							data-testid="ort-status">{status.text}</span
 						>
 						<span class="font-mono text-[11px] text-ink-muted">{ort.cat}</span>
-						<span
-							title="Kühle-Score 1 bis 5: 5 sehr kalt (z.B. Eishalle), 4 klimatisiert oder am Wasser, 3 kühler Massivbau wie Bibliothek oder Museum, darunter weniger kühl."
-							class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted"
-						>
+						<span class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted">
 							Kühle {ort.coolScore}/5
 						</span>
 						{#if ort.acStatus === 'yes'}
@@ -245,6 +242,16 @@
 		</p>
 	{/if}
 
+	{#if nearest.length > 0}
+		<p
+			class="mt-2.5 border-t border-rule pt-2.5 font-serif text-[11px] leading-snug text-ink-subtle"
+			data-testid="kuehle-legende"
+		>
+			„Kühle x/5" heißt: 5 sehr kalt (z.B. Eishalle), 4 klimatisiert oder am Wasser, 3 kühler
+			Massivbau wie Bibliothek oder Museum, darunter weniger kühl.
+		</p>
+	{/if}
+
 	<div class="mt-2 flex items-center justify-between gap-2">
 		<button
 			type="button"
@@ -264,10 +271,6 @@
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
 			<p class="font-serif text-xs leading-snug text-ink-muted">{explainEntry.long}</p>
-			<p class="font-serif text-xs leading-snug text-ink-muted">
-				Kühle-Score von 1 bis 5: 5 sehr kalt (z.B. Eishalle), 4 klimatisiert oder am Wasser, 3
-				kühler Massivbau wie Bibliothek oder Museum, darunter weniger kühl.
-			</p>
 			{#if editorial?.primarySourceUrl}
 				<a
 					href={editorial.primarySourceUrl}
