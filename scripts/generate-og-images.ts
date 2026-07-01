@@ -120,6 +120,13 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		subline: 'Daten · Features · Methodik',
 		body: 'Wann welcher Datensatz refreshed wurde, welches Feature neu ist, welche Methodik-Änderung wir dokumentiert haben. Per RSS, Atom oder JSON-Feed abonnierbar.',
 		footerUrl: '/updates'
+	},
+	{
+		slug: 'hitze',
+		headline: 'Hitze-Navigator Berlin',
+		subline: 'Kühle Orte bei Hitze',
+		body: 'Über 500 kühle Orte in Berlin: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen. Mit Adresse, Live-Status und Weg dorthin. Ein Angebot auf offenen Daten.',
+		footerUrl: '/hitze'
 	}
 ];
 
