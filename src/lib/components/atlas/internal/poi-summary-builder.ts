@@ -26,9 +26,19 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 		const person = readString(props, 'person');
 		return { title: person ?? STOLPERSTEIN_FALLBACK_TITLE };
 	},
-	trinkbrunnen: (props, layerName) => ({
-		title: readString(props, 'name') ?? layerName
-	}),
+	trinkbrunnen: (props, layerName) => {
+		const name = readString(props, 'name') ?? layerName;
+		// Kompakte, für Durstige nützliche Angaben aus den OSM-Tags. Max zwei, damit der
+		// Tooltip einzeilig bleibt (Priorität: kostenlos, Flaschen, Barrierefreiheit).
+		const parts: string[] = [];
+		if (readString(props, 'fee') === 'no') parts.push('kostenlos');
+		if (readString(props, 'bottle') === 'yes') parts.push('Flaschen auffüllen');
+		const wc = readString(props, 'wheelchair');
+		if (wc === 'yes') parts.push('barrierefrei');
+		else if (wc === 'limited') parts.push('teils barrierefrei');
+		const subtitle = parts.slice(0, 2).join(' · ');
+		return subtitle ? { title: name, subtitle } : { title: name };
+	},
 	'kuehle-orte': (props, layerName) => {
 		const name = readString(props, 'name') ?? layerName;
 		const cat = readString(props, 'cat');

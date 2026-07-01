@@ -24,31 +24,31 @@
 	data-layer={SLUG}
 	class="-mx-2 rounded border border-rule bg-bg-elevated px-2.5 py-2"
 >
-	<div class="flex items-start justify-between gap-2">
-		<div class="min-w-0">
-			<h4 class="flex min-w-0 items-center gap-1.5 font-sans text-sm font-semibold text-ink">
-				<Droplet size={15} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
-				Trinkbrunnen
-			</h4>
-			<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">{explain.short}</p>
-		</div>
-		{#if onToggleLayer}
-			<button
-				type="button"
-				data-testid="trinkbrunnen-map-toggle"
-				aria-pressed={isActive}
-				aria-label={isActive
-					? 'Trinkbrunnen von Karte entfernen'
-					: 'Trinkbrunnen auf Karte zeigen'}
-				title={isActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
-				onclick={() => onToggleLayer?.(SLUG)}
-				class={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
-			>
-				{#if isActive}<EyeOff size={14} aria-hidden="true" />{:else}<Eye
-						size={14}
-						aria-hidden="true"
-					/>{/if}
-			</button>
-		{/if}
-	</div>
+	<h4 class="flex min-w-0 items-center gap-1.5 font-sans text-sm font-semibold text-ink">
+		<Droplet size={15} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
+		Trinkbrunnen
+	</h4>
+	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">{explain.short}</p>
+
+	{#if onToggleLayer}
+		<button
+			type="button"
+			data-testid="trinkbrunnen-map-toggle"
+			aria-pressed={isActive}
+			onclick={() => onToggleLayer?.(SLUG)}
+			class={`mt-2 inline-flex min-h-9 w-full items-center justify-center gap-1.5 rounded border px-3 py-1.5 font-sans text-sm font-medium transition-colors ${
+				isActive
+					? 'border-accent bg-accent/10 text-accent hover:bg-accent/15'
+					: 'border-rule text-ink hover:border-ink-subtle hover:bg-bg'
+			}`}
+		>
+			{#if isActive}
+				<EyeOff size={14} aria-hidden="true" />
+				Trinkbrunnen ausblenden
+			{:else}
+				<Eye size={14} aria-hidden="true" />
+				Trinkbrunnen einblenden
+			{/if}
+		</button>
+	{/if}
 </section>

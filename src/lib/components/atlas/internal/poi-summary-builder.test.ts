@@ -34,6 +34,34 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 		it('fällt auf "Trinkbrunnen" wenn name fehlt', () => {
 			expect(getPopoverSummary('trinkbrunnen', {}).title).toBe('Trinkbrunnen');
 		});
+
+		it('baut Subtitle aus kostenlos + Flaschen', () => {
+			expect(getPopoverSummary('trinkbrunnen', { fee: 'no', bottle: 'yes' }).subtitle).toBe(
+				'kostenlos · Flaschen auffüllen'
+			);
+		});
+
+		it('mappt wheelchair auf Barrierefreiheit', () => {
+			expect(getPopoverSummary('trinkbrunnen', { wheelchair: 'yes' }).subtitle).toBe(
+				'barrierefrei'
+			);
+			expect(getPopoverSummary('trinkbrunnen', { wheelchair: 'limited' }).subtitle).toBe(
+				'teils barrierefrei'
+			);
+		});
+
+		it('kappt den Subtitle auf zwei Angaben', () => {
+			const sub = getPopoverSummary('trinkbrunnen', {
+				fee: 'no',
+				bottle: 'yes',
+				wheelchair: 'yes'
+			}).subtitle;
+			expect(sub).toBe('kostenlos · Flaschen auffüllen');
+		});
+
+		it('ohne belegte Angaben kein Subtitle', () => {
+			expect(getPopoverSummary('trinkbrunnen', { fountain: 'bubbler' }).subtitle).toBeUndefined();
+		});
 	});
 
 	describe('kitas-2024', () => {

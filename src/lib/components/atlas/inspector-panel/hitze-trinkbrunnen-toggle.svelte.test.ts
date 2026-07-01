@@ -17,6 +17,16 @@ describe('HitzeTrinkbrunnenToggle', () => {
 		expect(btn.getAttribute('aria-pressed')).toBe('true');
 	});
 
+	it('zeigt klaren Text-Button je nach Zustand', async () => {
+		render(HitzeTrinkbrunnenToggle, { isActive: false, onToggleLayer: () => {} });
+		await expect.element(page.getByText('Trinkbrunnen einblenden')).toBeInTheDocument();
+	});
+
+	it('aktiv zeigt Ausblenden-Label', async () => {
+		render(HitzeTrinkbrunnenToggle, { isActive: true, onToggleLayer: () => {} });
+		await expect.element(page.getByText('Trinkbrunnen ausblenden')).toBeInTheDocument();
+	});
+
 	it('ohne onToggleLayer kein Toggle-Button', async () => {
 		render(HitzeTrinkbrunnenToggle, { isActive: false });
 		await expect.element(page.getByTestId('trinkbrunnen-map-toggle')).not.toBeInTheDocument();
