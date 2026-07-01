@@ -33,6 +33,7 @@
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
 	import KuehleOrteCard from './inspector-panel/kuehle-orte-card.svelte';
+	import HitzeTrinkbrunnenToggle from './inspector-panel/hitze-trinkbrunnen-toggle.svelte';
 	import KiezScoreSection from './inspector-panel/kiez-score-section.svelte';
 	import ScoreMembershipBadge from './inspector-panel/score-membership-badge.svelte';
 	import WahlSection from './inspector-panel/wahl-section.svelte';
@@ -718,6 +719,12 @@
 										isActive={ui.activeLayerSlugs.includes('kuehle-orte')}
 										onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 									/>
+									{#if hitzeMode}
+										<HitzeTrinkbrunnenToggle
+											isActive={ui.activeLayerSlugs.includes('trinkbrunnen')}
+											onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+										/>
+									{/if}
 								{/if}
 								{#if section.key === 'klima'}
 									<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
