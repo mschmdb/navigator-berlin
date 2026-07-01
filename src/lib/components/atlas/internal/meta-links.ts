@@ -21,6 +21,7 @@ export interface MetaLinkGroup {
 export const META_LINKS: readonly MetaLink[] = [
 	{ label: 'Umwelt- & Infrastruktur-Score', href: '/umwelt-infrastruktur-score' },
 	{ label: 'Wahlen', href: '/wahl' },
+	{ label: 'Kühle Orte bei Hitze', href: '/hitze' },
 	{ label: 'Methodik', href: '/methodik' },
 	{ label: 'Updates', href: '/updates' },
 	{ label: 'Lizenzen', href: '/lizenzen' },
@@ -36,7 +37,8 @@ export const META_LINK_GROUPS: readonly MetaLinkGroup[] = [
 		links: [
 			{ label: 'Atlas', href: '/explore' },
 			{ label: 'Umwelt- & Infrastruktur-Score', href: '/umwelt-infrastruktur-score' },
-			{ label: 'Wahlen', href: '/wahl' }
+			{ label: 'Wahlen', href: '/wahl' },
+			{ label: 'Kühle Orte bei Hitze', href: '/hitze' }
 		]
 	},
 	{

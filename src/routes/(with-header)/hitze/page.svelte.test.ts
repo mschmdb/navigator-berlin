@@ -20,7 +20,7 @@ describe('Hitze-Home (Spin-off-Route)', () => {
 
 	it('gerenderter Text enthält keine em-dashes (U+2014)', async () => {
 		render(Page, { data: { warning: null } });
-		const text = (await page.getByRole('main').element()).textContent ?? '';
+		const text = (await page.getByTestId('hitze-landing').element()).textContent ?? '';
 		expect(text.includes('—')).toBe(false);
 	});
 });
