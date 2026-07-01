@@ -1,7 +1,7 @@
 ---
 type: architecture
 audience: both
-last-verified: 2026-06-30
+last-verified: 2026-07-01
 related:
   - docs/INDEX.md
   - docs/recovery/wiedereinstieg.md
@@ -142,6 +142,7 @@ graph TB
   Root --> Kiez[/kiez/-slug-<br/>143 prerendered]
   Root --> Layer[/layer/-slug-<br/>40+ prerendered]
   Root --> Methodik[/methodik]
+  Root --> Hitze[/hitze<br/>Kühle-Orte-Landing + Geolocation]
   Root --> Updates[/updates<br/>+ RSS/Atom/JSON]
   Root --> Meta[/impressum<br/>/datenschutz<br/>/architektur<br/>/lizenzen]
   Root --> WebMCP[/.well-known/webmcp.json<br/>/webmcp-manifest.json]
