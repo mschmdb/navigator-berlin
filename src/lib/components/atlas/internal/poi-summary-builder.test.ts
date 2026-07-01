@@ -150,4 +150,22 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 			expect(getPopoverSummary('kitas-2024', { name: '   ' }).title).toBe('Kindertagesstätten');
 		});
 	});
+
+	describe('kuehle-orte (Story 15.3 Tooltip-Fix)', () => {
+		it('zeigt Ortsnamen als Titel + Kategorie als Untertitel', () => {
+			expect(getPopoverSummary('kuehle-orte', { name: 'Max-Liebermann-Haus', cat: 'Museum' })).toEqual({
+				title: 'Max-Liebermann-Haus',
+				subtitle: 'Museum'
+			});
+		});
+		it('nimmt den Kühle-Score in den Untertitel auf', () => {
+			expect(
+				getPopoverSummary('kuehle-orte', { name: 'Madame Tussauds', cat: 'Museum', cool_score: 4 })
+			).toEqual({ title: 'Madame Tussauds', subtitle: 'Museum · Kühle 4/5' });
+		});
+		it('faellt auf Layer-Namen zurueck, wenn name fehlt', () => {
+			expect(getPopoverSummary('kuehle-orte', { cat: 'Museum' }).title).toBe('Kühle Orte');
+		});
+	});
+
 });

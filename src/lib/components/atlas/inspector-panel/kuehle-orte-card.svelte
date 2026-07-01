@@ -1,6 +1,14 @@
 <script lang="ts">
 	import type { KuehleOrt } from '$lib/data/get-kuehle-orte-index.js';
-	import { Eye, EyeOff, ExternalLink, ChevronDown, Navigation, Snowflake } from '@lucide/svelte';
+	import {
+		Eye,
+		EyeOff,
+		ExternalLink,
+		ChevronDown,
+		Navigation,
+		Snowflake,
+		Clock
+	} from '@lucide/svelte';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
 	import { getLayerExplainEntry } from './internal/layer-explain.js';
 	import {
@@ -8,6 +16,7 @@
 		type KuehleOrteFilters
 	} from './internal/nearest-kuehle-orte.js';
 	import { getOpeningStatus } from './internal/opening-status.js';
+	import { formatOpeningHoursDe } from './internal/format-opening-hours.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 
 	const SLUG = 'kuehle-orte';
@@ -165,7 +174,10 @@
 							data-testid="ort-status">{status.text}</span
 						>
 						<span class="font-mono text-[11px] text-ink-muted">{ort.cat}</span>
-						<span class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted">
+						<span
+							title="Kühle-Score 1 bis 5: 5 sehr kalt (z.B. Eishalle), 4 klimatisiert oder am Wasser, 3 kühler Massivbau wie Bibliothek oder Museum, darunter weniger kühl."
+							class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted"
+						>
 							Kühle {ort.coolScore}/5
 						</span>
 						{#if ort.acStatus === 'yes'}
@@ -190,6 +202,15 @@
 					</div>
 					{#if ort.address}
 						<p class="mt-0.5 font-serif text-xs text-ink-subtle">{ort.address}</p>
+					{/if}
+					{#if ort.openingHours}
+						<p
+							class="mt-0.5 flex items-center gap-1 font-mono text-[11px] text-ink-muted"
+							data-testid="ort-hours"
+						>
+							<Clock size={11} aria-hidden="true" class="shrink-0" />
+							{formatOpeningHoursDe(ort.openingHours)}
+						</p>
 					{/if}
 					<div class="mt-1 flex flex-wrap gap-2">
 						<a
@@ -243,6 +264,10 @@
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
 			<p class="font-serif text-xs leading-snug text-ink-muted">{explainEntry.long}</p>
+			<p class="font-serif text-xs leading-snug text-ink-muted">
+				Kühle-Score von 1 bis 5: 5 sehr kalt (z.B. Eishalle), 4 klimatisiert oder am Wasser, 3
+				kühler Massivbau wie Bibliothek oder Museum, darunter weniger kühl.
+			</p>
 			{#if editorial?.primarySourceUrl}
 				<a
 					href={editorial.primarySourceUrl}

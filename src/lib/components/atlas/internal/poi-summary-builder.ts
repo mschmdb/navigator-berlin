@@ -29,6 +29,16 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 	trinkbrunnen: (props, layerName) => ({
 		title: readString(props, 'name') ?? layerName
 	}),
+	'kuehle-orte': (props, layerName) => {
+		const name = readString(props, 'name') ?? layerName;
+		const cat = readString(props, 'cat');
+		const scoreRaw = props?.cool_score;
+		const score = typeof scoreRaw === 'number' ? scoreRaw : null;
+		const parts = [cat, score !== null ? `Kühle ${score}/5` : null].filter(
+			(x): x is string => x !== null
+		);
+		return parts.length > 0 ? { title: name, subtitle: parts.join(' · ') } : { title: name };
+	},
 	'kitas-2024': (props, layerName) => ({
 		title: readString(props, 'name') ?? layerName
 	}),
