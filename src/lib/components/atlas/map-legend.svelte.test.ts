@@ -63,6 +63,14 @@ describe('map-legend.svelte', () => {
 		await expect.element(page.getByText('S-Bahn-Station', { exact: true })).toBeInTheDocument();
 	});
 
+	it('Pin-Layer rendert das Karten-Icon in der Legende (kuehle-orte Schneeflocke)', async () => {
+		render(MapLegend, { activeLayerSlugs: ['kuehle-orte'] });
+		const marker = (await page.getByTestId('legend-icon-kuehle-orte').element()) as HTMLElement;
+		const svg = marker.querySelector('svg');
+		expect(svg).not.toBeNull();
+		expect(svg?.getAttribute('stroke')).toBe('#0277BD');
+	});
+
 	// Story 1.16 AC-3: Legend-Expand-Panel
 	describe('Story 1.16 Expand-Panel', () => {
 		it('Layer-Section ist standardmäßig kollabiert (details closed)', async () => {

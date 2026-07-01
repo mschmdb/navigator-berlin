@@ -4,6 +4,8 @@
 	import { Eye, EyeOff, X } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
 	import { getLegendSpec } from './internal/layer-style-builder.js';
+	import { getPinIcon } from './internal/pin-icon-mapping.js';
+	import { COLORS } from './internal/colors.js';
 	import { getLayerDisplayName } from './internal/layer-palette-filter.js';
 	import { getLayerExplainEntry } from './inspector-panel/internal/layer-explain.js';
 	import { shortenLicense } from './inspector-panel/internal/source-shortener.js';
@@ -41,15 +43,22 @@
 	};
 
 	const entries = $derived(
-		activeLayerSlugs.map((slug) => ({
-			slug,
-			name: getLayerDisplayName(slug),
-			spec: getLegendSpec(slug),
-			explain: getLayerExplainEntry(slug),
-			meta: metaBySlug.get(slug),
-			hidden: hiddenSet.has(slug),
-			variant: cascadeVariants && isPolygonSlug(slug) ? cascadeVariants.get(slug) : undefined
-		}))
+		activeLayerSlugs.map((slug) => {
+			// Pin-Layer rendern auf der Karte ein Lucide-Icon (Story 1.15). Die Legende zeigt
+			// dasselbe Icon statt eines generischen Punkts, damit Marker und Legende übereinstimmen.
+			const pinIcon = getPinIcon(slug);
+			return {
+				slug,
+				name: getLayerDisplayName(slug),
+				spec: getLegendSpec(slug),
+				explain: getLayerExplainEntry(slug),
+				meta: metaBySlug.get(slug),
+				hidden: hiddenSet.has(slug),
+				variant: cascadeVariants && isPolygonSlug(slug) ? cascadeVariants.get(slug) : undefined,
+				pinIcon,
+				pinColor: pinIcon ? COLORS[pinIcon.colorToken] : undefined
+			};
+		})
 	);
 </script>
 
@@ -135,7 +144,28 @@
 					<ul class="flex flex-col gap-1">
 						{#each entry.spec.items as item (item.label)}
 							<li class="flex items-center gap-2">
-								{#if entry.spec.kind === 'line'}
+								{#if entry.pinIcon}
+									<span
+										data-testid={`legend-icon-${entry.slug}`}
+										aria-hidden="true"
+										class="inline-flex shrink-0"
+									>
+										<svg
+											width="15"
+											height="15"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke={entry.pinColor}
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											{#each entry.pinIcon.svgNodes as node (node.attrs.d ?? JSON.stringify(node.attrs))}
+												<svelte:element this={node.tag} {...node.attrs} />
+											{/each}
+										</svg>
+									</span>
+								{:else if entry.spec.kind === 'line'}
 									<span
 										aria-hidden="true"
 										class="inline-block h-0.5 w-5"

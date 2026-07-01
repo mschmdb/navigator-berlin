@@ -28,6 +28,7 @@ export type StyleProfile =
 	| 'point-bildung'
 	| 'point-gesundheit'
 	| 'point-freizeit'
+	| 'point-kuehle-orte'
 	| 'line-radverkehr'
 	| 'line-rail-ubahn'
 	| 'line-rail-tram'
@@ -92,6 +93,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	// D: Memorial
 	stolpersteine: 'point',
 	trinkbrunnen: 'point',
+	'kuehle-orte': 'point-kuehle-orte',
 	// E: Soziale Infrastruktur
 	'kitas-2024': 'point-bildung',
 	'schulen-2024': 'point-bildung',
@@ -301,6 +303,10 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 	point: {
 		kind: 'point',
 		items: [{ color: COLORS.accent, label: 'Standort' }]
+	},
+	'point-kuehle-orte': {
+		kind: 'point',
+		items: [{ color: COLORS.umweltKuehleOrte, label: 'Kühler Ort' }]
 	},
 	'point-wohnlage': {
 		kind: 'point',
@@ -525,6 +531,9 @@ export function buildLayerSpec(
 					}
 				}
 			];
+		case 'point-kuehle-orte':
+		// kuehle-orte rendert als Pin (hasPinIcon greift vorher), der circle-Case ist nur
+		// TS-Vollständigkeit. Fall-through auf das generische Punkt-Rendering.
 		case 'point':
 			return [
 				{

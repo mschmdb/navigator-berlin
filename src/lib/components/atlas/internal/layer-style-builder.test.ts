@@ -364,3 +364,12 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(color).toContain(76);
 	});
 });
+
+describe('getLegendSpec kuehle-orte (Legende-Fix)', () => {
+	it('kuehle-orte ist Punkt-Legende „Kühler Ort", nicht „Grenze"', () => {
+		const legend = getLegendSpec('kuehle-orte');
+		expect(legend.kind).toBe('point');
+		expect(legend.items[0].label).toBe('Kühler Ort');
+		expect(legend.items[0].color).toBe(COLORS.umweltKuehleOrte);
+	});
+});
