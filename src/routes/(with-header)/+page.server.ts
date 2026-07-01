@@ -3,14 +3,18 @@ import type { PageServerLoad } from './$types';
 import { kiezScore } from '$lib/server/db/schema/index.js';
 import { readRegionDisplayNames, type RegionDisplayNames } from '$lib/data/region-display-names.js';
 
-export const prerender = true;
+// SSR statt prerender: Die Hitze-Subdomain reroutet `/` → `/hitze` per reroute-Hook.
+// Prerenderte Seiten werden als statische Assets ausgeliefert und durchlaufen den
+// reroute-Hook NICHT (SvelteKit-Docs). Damit der Host-basierte Reroute auf `/` greift,
+// muss die Homepage serverseitig gerendert werden. Load ist soft (leere Arrays ohne DB).
+export const prerender = false;
 
 /**
  * Story 2.11: Hero-Landing-Move auf „/".
  *
  * Atlas-Page-Tree wurde nach `/explore` verschoben (Memory
- * `project_atlas_explore_route`). „/" wird jetzt statisch prerenderte
- * Hero-Landing mit redaktionellen Slots; Welcome-Overlay verworfen.
+ * `project_atlas_explore_route`). „/" ist SSR-Hero-Landing mit
+ * redaktionellen Slots; Welcome-Overlay verworfen.
  *
  * Loader liefert Top-5-Kieze + Top-3-Updates damit Hero-Teaser-Slots
  * (home-top-kieze.svelte + home-updates-teaser.svelte) gefüllt sind. Beide
