@@ -111,6 +111,20 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 			changefreq: 'weekly',
 			priority: 0.9
 		},
+		// Kühle-Orte-Landings (Epic 16): in-Atlas + Hitze-Spin-off. Saisonale Suchintention,
+		// deshalb hohe Priorität und wöchentliche Change-Frequency.
+		{
+			loc: `${ctx.origin}/kuehle-orte`,
+			lastmod: ctx.buildTimestamp,
+			changefreq: 'weekly',
+			priority: 0.8
+		},
+		{
+			loc: `${ctx.origin}/hitze`,
+			lastmod: ctx.buildTimestamp,
+			changefreq: 'weekly',
+			priority: 0.8
+		},
 		{ loc: `${ctx.origin}/methodik`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
 		{ loc: `${ctx.origin}/lizenzen`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
 		{ loc: `${ctx.origin}/webmcp`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' }

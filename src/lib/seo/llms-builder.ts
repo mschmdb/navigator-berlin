@@ -117,6 +117,20 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		section: 'static'
 	});
 	out.push({
+		loc: `${ctx.origin}/kuehle-orte`,
+		name: 'Kühle Orte in Berlin',
+		description:
+			'Über 500 kühle Orte bei Hitze: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls, Trinkbrunnen, mit Adresse, Live-Status und Weg dorthin',
+		section: 'static'
+	});
+	out.push({
+		loc: `${ctx.origin}/hitze`,
+		name: 'Hitze-Navigator Berlin',
+		description:
+			'Landing für kühle Orte bei Hitze mit Standort-Suche, Live-DWD-Warnlage und Ein-Tap-Navigation',
+		section: 'static'
+	});
+	out.push({
 		loc: `${ctx.origin}/umwelt-infrastruktur-score`,
 		name: 'Umwelt- & Infrastruktur-Score',
 		description:

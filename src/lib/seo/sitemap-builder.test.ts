@@ -119,12 +119,14 @@ describe('buildSitemapIndexXml', () => {
 });
 
 describe('STATIC_PAGES_SOURCE', () => {
-	it('emits root, /explore, methodik, lizenzen for DE locale (Story 2.11 split)', () => {
+	it('emits root, /explore, Kühle-Orte-Landings, methodik, lizenzen for DE locale (Story 2.11 split)', () => {
 		const entries = STATIC_PAGES_SOURCE(ctx());
 		const locs = entries.map((e) => e.loc);
 		expect(locs).toEqual([
 			'https://navigator.berlin/',
 			'https://navigator.berlin/explore',
+			'https://navigator.berlin/kuehle-orte',
+			'https://navigator.berlin/hitze',
 			'https://navigator.berlin/methodik',
 			'https://navigator.berlin/lizenzen',
 			'https://navigator.berlin/webmcp'
