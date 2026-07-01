@@ -16,9 +16,13 @@ const TIMEOUT_MS = 5000;
 
 // LRUCache erlaubt kein null als Value (muss `{}` sein). Sentinel für „geprüft, keine Warnung".
 const NO_WARNING = Symbol('no-warning');
-type CacheValue = HeatWarning | typeof NO_WARNING;
+// Sentinel für „DWD-Fetch fehlgeschlagen". Kurz negativ cachen, damit ein DWD-Ausfall im
+// Traffic-Peak nicht jeden /hitze-Request 5s blockiert und erneut auf DWD einschlägt.
+const FETCH_ERROR = Symbol('fetch-error');
+type CacheValue = HeatWarning | typeof NO_WARNING | typeof FETCH_ERROR;
 const cache = new LRUCache<string, CacheValue>({ max: 1, ttl: 1000 * 60 * 10 });
 const CACHE_KEY = 'berlin-heat';
+const ERROR_TTL_MS = 1000 * 30;
 
 export function _resetDwdCache(): void {
 	cache.clear();
@@ -77,18 +81,24 @@ export async function fetchBerlinHeatWarning(
 	fetchFn: typeof fetch = fetch
 ): Promise<HeatWarning | null> {
 	const cached = cache.get(CACHE_KEY);
-	if (cached !== undefined) return cached === NO_WARNING ? null : cached;
+	if (cached !== undefined) {
+		return cached === NO_WARNING || cached === FETCH_ERROR ? null : cached;
+	}
 
 	const controller = new AbortController();
 	const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 	try {
 		const res = await fetchFn(WFS_URL, { signal: controller.signal });
-		if (!res.ok) return null;
+		if (!res.ok) {
+			cache.set(CACHE_KEY, FETCH_ERROR, { ttl: ERROR_TTL_MS });
+			return null;
+		}
 		const data: unknown = await res.json();
 		const warning = parseBerlinHeatWarning(data);
 		cache.set(CACHE_KEY, warning ?? NO_WARNING);
 		return warning;
 	} catch {
+		cache.set(CACHE_KEY, FETCH_ERROR, { ttl: ERROR_TTL_MS });
 		return null;
 	} finally {
 		clearTimeout(timeout);

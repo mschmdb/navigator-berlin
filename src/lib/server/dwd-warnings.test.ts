@@ -111,3 +111,39 @@ describe('fetchBerlinHeatWarning (Degradation)', () => {
 		expect(await fetchBerlinHeatWarning(okFetch(fc([])))).toBeNull();
 	});
 });
+
+describe('fetchBerlinHeatWarning (Negativ-Cache bei Ausfall)', () => {
+	it('HTTP-Fehler wird gecacht: zweiter Aufruf ohne erneuten Fetch', async () => {
+		let calls = 0;
+		const f = (async () => {
+			calls++;
+			return { ok: false };
+		}) as unknown as typeof fetch;
+		expect(await fetchBerlinHeatWarning(f)).toBeNull();
+		expect(await fetchBerlinHeatWarning(f)).toBeNull();
+		expect(calls).toBe(1);
+	});
+
+	it('Netzwerkfehler wird gecacht: zweiter Aufruf ohne erneuten Fetch', async () => {
+		let calls = 0;
+		const f = (async () => {
+			calls++;
+			throw new Error('abort');
+		}) as unknown as typeof fetch;
+		await fetchBerlinHeatWarning(f);
+		await fetchBerlinHeatWarning(f);
+		expect(calls).toBe(1);
+	});
+
+	it('nach Cache-Reset wird erneut versucht', async () => {
+		let calls = 0;
+		const f = (async () => {
+			calls++;
+			return { ok: false };
+		}) as unknown as typeof fetch;
+		await fetchBerlinHeatWarning(f);
+		_resetDwdCache();
+		await fetchBerlinHeatWarning(f);
+		expect(calls).toBe(2);
+	});
+});
