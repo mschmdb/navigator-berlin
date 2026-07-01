@@ -121,9 +121,9 @@
 		<p class="font-mono text-xs tracking-wider text-accent uppercase">Kühle Orte bei Hitze</p>
 		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">Hitze-Navigator Berlin</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
-			Bei Hitze zählt eine schnelle Antwort: Wohin zum Abkühlen? Der Hitze-Navigator zeigt über 500
-			kühle Orte in Berlin, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten, kein
-			Ersatz für die Hinweise der Stadt.
+			Gib deinen Standort ein. Du siehst die nächsten kühlen Orte in Berlin, sortiert nach
+			Entfernung, mit Öffnungsstatus und dem Weg dorthin. Kinos, Bibliotheken, Schwimmhallen,
+			Museen, Malls und Trinkbrunnen, über 500 Orte aus offenen Daten.
 		</p>
 		<div class="flex flex-col gap-2 pt-1">
 			<a
