@@ -463,9 +463,16 @@ Stand 01.08.2026. Ohne Vermerk: Adresse stand auf Kontaktseite/Impressum oder in
 - Star FM: Impressum nur mit Telefon (030 23100771)
 - Spreeradio: Kontaktseite ohne Mail, nur Formular
 
+### Nachzügler-Funde (08.08.2026, noch nicht angeschrieben)
+
+- visitBerlin-Blog: pflegt Hitze-Evergreens auf Deutsch und Englisch ("11 tips for dealing with the heatwave"). Tourismus-Reichweite, Evergreen-Logik wie t-online. Kontaktweg prüfen (visitberlin.de, Blog-Redaktion)
+- Berlin.de-Tipps-Redaktion: "Berlin bei Hitze: 9 Tipps" stammt von der redaktionellen Tipps-Sektion (BerlinOnline Stadtportal GmbH, berlinonline.net/kontakt), NICHT von der Senatsverwaltung. Pitchbar, aber diplomatisch formulieren (das Land ist Mitgesellschafter, unsere Karte konkurriert mit der Senats-Karte)
+- HIMBEER / berlinmitkind.de: Familien-Stadtmagazin ohne eigenes Kühle-Orte-Stück. Eigener Winkel: "kühle Orte mit Kind, kostenlos". Dafür lohnt vorher die Kategorie Wasserspielplätze in der Datenbank
+- The Berliner hat ZWEI eigene Hitze-Evergreens ("Cool places in Berlin", "Hot in the city: air conditioning"): Die ungesendete Mail Nr. 11 vor Versand um Bezug auf deren eigene Artikel ergänzen
+
 ### Bewusst nicht angeschrieben
 
-- Berlin.de: offizielles Stadtportal des Landes, kein redaktioneller Pitch-Kanal. Falls gewünscht: eigener Weg über die Senatsverwaltung
+- Berlin.de-Verwaltungsseiten (Hitzeschutzportal der Senatsgesundheitsverwaltung): kein redaktioneller Pitch-Kanal; die Tipps-Redaktion von BerlinOnline ist der pitchbare Teil, siehe Nachzügler-Funde
 
 ## Ansprache: Best Practice (Fokus Magazine/Zeitungen)
 
