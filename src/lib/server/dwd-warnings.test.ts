@@ -7,7 +7,16 @@ import {
 	_resetDwdCache
 } from './dwd-warnings.js';
 
-function fc(features: Array<{ NAME: string; EC_II: number; HEADLINE?: string }>) {
+function fc(
+	features: Array<{
+		NAME: string;
+		EC_II: number;
+		HEADLINE?: string;
+		WARNCELLID?: number;
+		ONSET?: string;
+		EXPIRES?: string;
+	}>
+) {
 	return {
 		type: 'FeatureCollection',
 		features: features.map((p) => ({ type: 'Feature', geometry: null, properties: p }))
@@ -63,6 +72,80 @@ describe('parseBerlinHeatWarning', () => {
 
 	it('anderer Bezirk ohne Berlin-Bezug → null', () => {
 		expect(parseBerlinHeatWarning(fc([{ NAME: 'Stadt Hamburg', EC_II: 248 }]))).toBeNull();
+	});
+
+	it('Substring-Falle: Überlingen/Berlingen/Berlingerode → null', () => {
+		const w = parseBerlinHeatWarning(
+			fc([
+				{ NAME: 'Stadt Überlingen', EC_II: 247, WARNCELLID: 808435059 },
+				{ NAME: 'Gemeinde Berlingen', EC_II: 248, WARNCELLID: 807233004 },
+				{ NAME: 'Gemeinde Berlingerode', EC_II: 247, WARNCELLID: 816061003 }
+			])
+		);
+		expect(w).toBeNull();
+	});
+
+	it('Berlin per WARNCELLID 811000000 erkannt', () => {
+		const w = parseBerlinHeatWarning(
+			fc([{ NAME: 'Stadt Berlin', EC_II: 247, WARNCELLID: 811000000 }])
+		);
+		expect(w?.level).toBe('stark');
+	});
+
+	it('Warnung mit ONSET am Folgetag → null (noch nicht heute gültig)', () => {
+		const now = new Date('2026-08-08T11:00:00Z');
+		const w = parseBerlinHeatWarning(
+			fc([
+				{
+					NAME: 'Stadt Berlin',
+					EC_II: 247,
+					WARNCELLID: 811000000,
+					ONSET: '2026-08-09T09:00:00Z',
+					EXPIRES: '2026-08-09T17:00:00Z'
+				}
+			]),
+			now
+		);
+		expect(w).toBeNull();
+	});
+
+	it('Warnung mit ONSET später am selben Tag → wird angezeigt', () => {
+		const now = new Date('2026-08-08T06:00:00Z');
+		const w = parseBerlinHeatWarning(
+			fc([
+				{
+					NAME: 'Stadt Berlin',
+					EC_II: 248,
+					WARNCELLID: 811000000,
+					ONSET: '2026-08-08T09:00:00Z',
+					EXPIRES: '2026-08-08T17:00:00Z'
+				}
+			]),
+			now
+		);
+		expect(w?.level).toBe('extrem');
+	});
+
+	it('abgelaufene Warnung (EXPIRES in der Vergangenheit) → null', () => {
+		const now = new Date('2026-08-08T18:00:00Z');
+		const w = parseBerlinHeatWarning(
+			fc([
+				{
+					NAME: 'Stadt Berlin',
+					EC_II: 247,
+					WARNCELLID: 811000000,
+					ONSET: '2026-08-08T09:00:00Z',
+					EXPIRES: '2026-08-08T17:00:00Z'
+				}
+			]),
+			now
+		);
+		expect(w).toBeNull();
+	});
+
+	it('sourceUrl ist der stabile DWD-Kurzlink', () => {
+		const w = parseBerlinHeatWarning(fc([{ NAME: 'Stadt Berlin', EC_II: 247 }]));
+		expect(w?.sourceUrl).toBe('https://www.dwd.de/warnungen');
 	});
 
 	it('leere FeatureCollection → null', () => {
