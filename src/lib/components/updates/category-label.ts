@@ -9,7 +9,8 @@ export const CATEGORY_LABEL_DE: Record<UpdateCategory, string> = {
 	feature: 'Feature',
 	methodik: 'Methodik',
 	datenquelle: 'Datenquelle',
-	lizenz: 'Lizenz'
+	lizenz: 'Lizenz',
+	presse: 'Presse'
 };
 
 /**
@@ -23,7 +24,8 @@ export const CATEGORY_BADGE_CLASSES: Record<UpdateCategory, string> = {
 	methodik: 'border-rule bg-bg-elevated text-ink-muted',
 	datenquelle: 'border-rule bg-bg text-ink',
 	// Lizenz dezent severity-warning weil Lizenz-Änderungen aufmerksamkeits-relevant
-	lizenz: 'border-warning bg-bg text-warning-strong'
+	lizenz: 'border-warning bg-bg text-warning-strong',
+	presse: 'border-rule bg-bg-elevated text-ink'
 };
 
 /**

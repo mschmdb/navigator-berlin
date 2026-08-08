@@ -21,7 +21,8 @@ export const UPDATE_CATEGORIES = [
 	'feature',
 	'methodik',
 	'datenquelle',
-	'lizenz'
+	'lizenz',
+	'presse'
 ] as const;
 
 export type UpdateCategory = (typeof UPDATE_CATEGORIES)[number];
@@ -38,7 +39,7 @@ export const FrontmatterSchema = v.object({
 		v.string('date muss ein ISO-8601-String sein'),
 		v.regex(ISO_DATE_REGEX, 'date muss dem Format YYYY-MM-DD entsprechen')
 	),
-	category: v.picklist(UPDATE_CATEGORIES, 'category muss eine der 5 Enum-Werte sein'),
+	category: v.picklist(UPDATE_CATEGORIES, 'category muss eine der 6 Enum-Werte sein'),
 	tags: v.optional(
 		v.pipe(
 			v.array(v.pipe(v.string(), v.regex(KEBAB_TAG_REGEX, 'Tag muss lowercase-kebab-case sein'))),

@@ -3,11 +3,15 @@ import { CATEGORY_LABEL_DE, formatDateDe } from './category-label.js';
 import { UPDATE_CATEGORIES } from '$lib/content/updates/frontmatter-schema.js';
 
 describe('CATEGORY_LABEL_DE', () => {
-	it('hat Label für alle 5 Categories', () => {
+	it('hat Label für alle 6 Categories', () => {
 		for (const cat of UPDATE_CATEGORIES) {
 			expect(CATEGORY_LABEL_DE[cat]).toBeDefined();
 			expect(typeof CATEGORY_LABEL_DE[cat]).toBe('string');
 		}
+	});
+
+	it('hat das Label Presse für die Category presse', () => {
+		expect(CATEGORY_LABEL_DE.presse).toBe('Presse');
 	});
 
 	it('verwendet keine em-dashes (U+2014)', () => {

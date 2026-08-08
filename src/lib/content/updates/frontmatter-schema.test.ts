@@ -60,11 +60,16 @@ describe('frontmatter-schema', () => {
 		);
 	});
 
-	it('akzeptiert alle 5 Categories', () => {
+	it('akzeptiert alle 6 Categories', () => {
 		for (const cat of UPDATE_CATEGORIES) {
 			const result = parseFrontmatter({ ...validFrontmatter, category: cat });
 			expect(result.category).toBe(cat);
 		}
+	});
+
+	it('akzeptiert die Category presse', () => {
+		const result = parseFrontmatter({ ...validFrontmatter, category: 'presse' });
+		expect(result.category).toBe('presse');
 	});
 
 	it('akzeptiert tags-Array max 8 lowercase-kebab', () => {
