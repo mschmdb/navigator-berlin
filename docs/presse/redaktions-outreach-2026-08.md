@@ -5,6 +5,8 @@
 - 03.08.2026, 14:47 Uhr: taz veröffentlicht "Kühle Orte in Berlin: Zuflucht vor dem Hitzeschlag" von Claudius Prößer (taz.de/Kuehle-Orte-in-Berlin/!6201300/). Nennt Matze Schmidbauer namentlich, verlinkt navigator.berlin und hitze.navigator.berlin, zitiert 473 Orte / 281 kostenlos und den Hitze-Score. Eigener Vergleichstest der taz: rund 40 Orte im Gendarmenmarkt-Umkreis gegenüber zwei auf den Behördenkarten. Weg der Mail: post@taz.de an Wahmkow weitergeleitet, geschrieben hat Prößer.
 - 03.08.2026: Versand an 9 Ziele am Vormittag. Einzige Direkt-Antwort: Eingangsbestätigung taz kommune.
 - 08.08.2026: t-online-Mail (Nr. 15) versendet an sdp-redaktion@stroeer.de, mit taz-Referenz und Kirchen-Update (491/298). Vorher deployed: Kirchen-Abgleich, DWD-Warnzellen-Fix, korrigierter DWD-Link.
+- 08.08.2026: HIMBEER-Mail (Nr. 16, Familien-Winkel) versendet.
+- 08.08.2026 nachmittags: Radio-Runde versendet (Nr. 17-22: 104.6 RTL, radioeins, Energy, FluxFM, Kiss FM, Berliner Rundfunk). Link-Fokus, kein O-Ton-Angebot, taz-Artikel als Beleg verlinkt. Damit an diesem Tag insgesamt 8 neue Ziele angeschrieben.
 
 Fokus: Zeitungen und Magazine. Versand: Montag, 03.08., 7 bis 9 Uhr. Peak ist Dienstag (33 Grad).
 Kein Anhang, keine Screenshots. Nur Text und Link.
