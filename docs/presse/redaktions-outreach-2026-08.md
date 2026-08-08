@@ -410,6 +410,44 @@ Für Rückfragen erreichen Sie mich unter 0151 15674987.
 Freundliche Grüße
 Matze Schmidbauer
 
+### 16. HIMBEER / berlinmitkind.de (redaktion@himbeer-verlag.com, Chefredakteurin Anja Ihlenfeld)
+
+Betreff: Hitze mit Kindern in Berlin: 298 kostenlose kühle Orte auf einer Karte
+
+Hallo liebes HIMBEER-Team,
+
+die Ferienwochen bleiben heiß, morgen sollen es wieder über 30 Grad werden. Falls ihr dazu Material braucht: Ich betreibe privat hitze.navigator.berlin, ein kostenloses Hitzeportal für Berlin.
+
+Die Karte zeigt 491 kühle Orte, die im Sommer wirklich geöffnet sind, mit Adresse und Öffnungszeiten. Für Familien besonders brauchbar: 298 davon kosten keinen Eintritt, darunter 113 Bibliotheken, dazu Schwimmbäder, Kindermuseen wie das MACHmit! und seit dieser Woche 18 geprüfte offene Kirchen. Die taz hat die Karte Anfang August getestet und fand rund 40 Orte, wo die Behördenkarten zwei zeigten.
+
+Vielleicht noch interessanter für euch ist die Vollversion auf navigator.berlin: Dort gibt es für jeden Berliner Kiez Daten, die Familien direkt betreffen, etwa Spielplatz- und Grünanlagen-Nähe, Kita-Plätze pro Kind, Schulen im Umfeld und die Lärmbelastung. Damit lässt sich für jede Adresse ein kleiner Familien-Kiez-Check machen.
+
+Berichtet und verlinkt gern, alles ist frei zugänglich. Wenn ihr für ein Heft- oder Online-Format etwas Bestimmtes braucht, etwa die schönsten kostenlosen kühlen Orte pro Bezirk, stelle ich euch das zusammen.
+
+Ihr erreicht mich unter 0151 15674987.
+
+Herzliche Grüße
+Matze Schmidbauer
+
+### 17. Angela Misslbeck, unterwegsmitkind.com (blog@unterwegsmitkind.com)
+
+Betreff: Zu deinem Berlin-Hitze-Artikel: eine Karte mit 298 kostenlosen kühlen Orten
+
+Hallo Angela,
+
+dein Artikel "Wohin im Sommer in Berlin mit Kindern bei Hitze?" beantwortet genau die Frage, für die ich ein Werkzeug gebaut habe, vielleicht passt das als Ergänzung.
+
+hitze.navigator.berlin ist ein kostenloses Hitzeportal für Berlin, das ich privat betreibe. Die Karte zeigt 491 kühle Orte, die im Sommer wirklich geöffnet sind, mit Adresse, Öffnungszeiten und Kostenlos-Filter (298 Orte ohne Eintritt, von Bibliotheken über Schwimmbäder bis zu Kindermuseen). Dazu kommen die Trinkbrunnen der Wasserbetriebe und die Live-Hitzewarnung des DWD. Die taz hat die Karte Anfang August gegen die Behördenkarten getestet: rund 40 Orte am Gendarmenmarkt gegen zwei.
+
+Auf der Vollversion navigator.berlin steckt außerdem ein Daten-Atlas, der für deine Berlin-Themen taugen könnte: pro Kiez unter anderem Spielplätze, Kita-Platz-Versorgung, Schulen, Grünanlagen und Lärmbelastung, alles aus offenen Verwaltungsdaten.
+
+Verlink oder verwende gern, was dir nützt. Wenn du für einen Artikel etwas Bestimmtes brauchst, etwa die kinderfreundlichsten kühlen Orte in einem Bezirk, stelle ich es dir zusammen.
+
+Du erreichst mich unter 0151 15674987.
+
+Viele Grüße
+Matze Schmidbauer
+
 ## Verteilerliste
 
 Stand 01.08.2026. Ohne Vermerk: Adresse stand auf Kontaktseite/Impressum oder in bestätigter Quelle.
