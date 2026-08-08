@@ -431,7 +431,9 @@ Matze Schmidbauer
 
 ### Radio-Runde (08.08.2026): Link-Fokus, KEIN O-Ton-Angebot
 
-Prinzip: Web-Desks und Online-Redaktionen der Sender ansprechen, Ziel ist der Link im Web-Artikel oder in den Wetter-/Service-Meldungen. Kein Interview-Angebot; wer O-Töne will, fragt von selbst (Telefonnummer steht ja drin). Wetter-Aufhänger beim Versand aktualisieren (Stand 08.08.: morgen 31, Montag 32 Grad, nächste Spitze Do/Fr 27-32).
+Prinzip: Web-Desks und Online-Redaktionen der Sender ansprechen, Ziel ist der Link im Web-Artikel oder in den Wetter-/Service-Meldungen. Kein Interview-Angebot; wer O-Töne will, fragt von selbst (Telefonnummer steht ja drin). Wetter-Aufhänger beim Versand aktualisieren (Stand 08.08.: morgen 31, Montag 32 Grad, nächste Spitze Do/Fr 27-32). Alle Radio-Mails verlinken den taz-Artikel als Ein-Klick-Beleg.
+
+Deutschlandfunk/Dlf Kultur/Dlf Nova: bewusst NICHT in dieser Runde. Nationales Programm ohne Berlin-Service, verlinkt kaum, will Gesprächspartner (O-Ton-Spiel). C-Ziel für eine bundesweite Hitzewelle mit dem Feature-Winkel 'Städte in der Hitze' + Kiez-Score-Methodik, kein eigener Beitrag zum Thema gefunden (geprüft 08.08.).
 
 ### 17. 104.6 RTL (redaktion@104.6rtl.com)
 
@@ -443,7 +445,7 @@ morgen und Montag kommt die Hitze zurück nach Berlin, bis 32 Grad sind angesagt
 
 hitze.navigator.berlin ist ein kostenloses Hitzeportal für Berlin, das ich privat betreibe. Die Karte zeigt 491 kühle Orte, die im Sommer wirklich geöffnet sind, von Museen über Bibliotheken bis zu Schwimmbädern, jeweils mit Adresse und Öffnungszeiten. 298 davon kosten keinen Eintritt. Dazu kommen die Trinkbrunnen der Wasserbetriebe und die Live-Hitzewarnung des DWD.
 
-Die taz hat die Karte Anfang August gegen die Behördenkarten getestet: rund 40 Orte am Gendarmenmarkt gegenüber zwei auf den offiziellen Karten.
+Die taz hat die Karte Anfang August gegen die Behördenkarten getestet: rund 40 Orte am Gendarmenmarkt gegenüber zwei auf den offiziellen Karten (taz.de/Kuehle-Orte-in-Berlin/!6201300/).
 
 Sie dürfen die Karte gern verlinken und die Zahlen verwenden. Bei Rückfragen erreichen Sie mich unter 0151 15674987.
 
@@ -466,7 +468,7 @@ Auf navigator.berlin, meinem privaten Daten-Atlas aus offenen Verwaltungsdaten, 
 4. Helmholtzplatz
 5. Regierungsviertel
 
-Am anderen Ende: das Allende-Viertel in Köpenick. Die Schwester-Seite hitze.navigator.berlin zeigt dazu 491 geprüfte kühle Orte; die taz hat sie Anfang August getestet.
+Am anderen Ende: das Allende-Viertel in Köpenick. Die Schwester-Seite hitze.navigator.berlin zeigt dazu 491 geprüfte kühle Orte; die taz hat sie Anfang August getestet (taz.de/Kuehle-Orte-in-Berlin/!6201300/).
 
 Verwenden und verlinken Sie gern, was in Ihre Beiträge passt. Methodik ist auf der Seite dokumentiert, Rückfragen unter 0151 15674987.
 
@@ -481,7 +483,7 @@ Hallo liebes Energy-Team,
 
 morgen 31, Montag 32 Grad, und die Frage eurer Hörer:innen ist wieder: wohin, ohne Geld auszugeben?
 
-Dafür gibt es hitze.navigator.berlin, mein kostenloses Hitzeportal für Berlin. Auf der Karte: 491 kühle Orte, die im Sommer offen sind, 298 davon gratis, von Bibliotheken über Museen bis zu Schwimmbädern, alle mit Öffnungszeiten. Dazu Trinkbrunnen und die Live-Hitzewarnung des DWD. Die taz hat die Karte getestet und fand rund 40 Orte, wo die offiziellen Karten zwei zeigten.
+Dafür gibt es hitze.navigator.berlin, mein kostenloses Hitzeportal für Berlin. Auf der Karte: 491 kühle Orte, die im Sommer offen sind, 298 davon gratis, von Bibliotheken über Museen bis zu Schwimmbädern, alle mit Öffnungszeiten. Dazu Trinkbrunnen und die Live-Hitzewarnung des DWD. Die taz hat die Karte getestet und fand rund 40 Orte, wo die offiziellen Karten zwei zeigten (taz.de/Kuehle-Orte-in-Berlin/!6201300/).
 
 Nehmt die Karte gern in eure Online-Tipps oder verlinkt sie in der Wetter-Berichterstattung. Bei Fragen: 0151 15674987.
 
@@ -496,7 +498,7 @@ Hallo liebes FluxFM-Team,
 
 am Wochenende wird Berlin wieder gegrillt, und ich habe was gebaut, das dabei hilft: hitze.navigator.berlin, ein kostenloses Hitzeportal mit 491 kühlen Orten, die im Sommer tatsächlich geöffnet sind. Mit Öffnungszeiten, Kostenlos-Filter (298 Orte gratis) und Live-DWD-Warnung. Seit dieser Woche sind sogar 18 geprüfte offene Kirchen dabei, die Passionskirche in Kreuzberg verteilt bis Ende August montags bis mittwochs Wasser und Sonnencreme.
 
-Die taz hat die Karte Anfang August gegen die Senats-Karten getestet, Ergebnis 40 zu 2 am Gendarmenmarkt.
+Die taz hat die Karte Anfang August gegen die Senats-Karten getestet, Ergebnis 40 zu 2 am Gendarmenmarkt (taz.de/Kuehle-Orte-in-Berlin/!6201300/).
 
 Falls das in eure Stadt-Tipps oder auf eure Website passt: verlinkt gern. Rückfragen unter 0151 15674987.
 
@@ -511,7 +513,7 @@ Guten Tag Frau Manz,
 
 morgen und Montag erwarten Berlin wieder über 30 Grad. Für Ihre Online-Redaktion vielleicht interessant:
 
-hitze.navigator.berlin ist ein kostenloses Hitzeportal, das ich privat betreibe. Es zeigt 491 kühle Orte mit Öffnungszeiten, davon 298 ohne Eintritt, plus Trinkbrunnen und die Live-Hitzewarnung des DWD. Die taz hat die Karte Anfang August getestet: rund 40 Orte am Gendarmenmarkt, die Behördenkarten zeigten zwei.
+hitze.navigator.berlin ist ein kostenloses Hitzeportal, das ich privat betreibe. Es zeigt 491 kühle Orte mit Öffnungszeiten, davon 298 ohne Eintritt, plus Trinkbrunnen und die Live-Hitzewarnung des DWD. Die taz hat die Karte Anfang August getestet: rund 40 Orte am Gendarmenmarkt, die Behördenkarten zeigten zwei (taz.de/Kuehle-Orte-in-Berlin/!6201300/).
 
 Die Karte darf gern verlinkt und zitiert werden. Bei Rückfragen erreichen Sie mich unter 0151 15674987.
 
@@ -528,7 +530,7 @@ die nächsten heißen Tage stehen an, und gerade für ältere Berlinerinnen und 
 
 hitze.navigator.berlin ist ein kostenloses Hitzeportal, das ich privat betreibe. Die Karte zeigt 491 kühle Orte mit Adresse und Öffnungszeiten, 298 davon ohne Eintritt: Bibliotheken, Museen, Schwimmbäder und seit dieser Woche auch 18 geprüfte offene Kirchen, darunter die Passionskirche am Marheinekeplatz, die im Sommer montags bis mittwochs Wasser und kühle Ruheplätze anbietet. Dazu die aktuelle Hitzewarnung des Deutschen Wetterdienstes.
 
-Die taz hat die Karte Anfang August getestet und fand rund 40 Orte, wo die offiziellen Karten zwei zeigten.
+Die taz hat die Karte Anfang August getestet und fand rund 40 Orte, wo die offiziellen Karten zwei zeigten (taz.de/Kuehle-Orte-in-Berlin/!6201300/).
 
 Sie dürfen die Karte gern in Ihrer Berichterstattung verlinken. Für Rückfragen: 0151 15674987.
 
