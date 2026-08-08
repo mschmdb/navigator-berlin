@@ -429,6 +429,112 @@ Ihr erreicht mich unter 0151 15674987.
 Herzliche Grüße
 Matze Schmidbauer
 
+### Radio-Runde (08.08.2026): Link-Fokus, KEIN O-Ton-Angebot
+
+Prinzip: Web-Desks und Online-Redaktionen der Sender ansprechen, Ziel ist der Link im Web-Artikel oder in den Wetter-/Service-Meldungen. Kein Interview-Angebot; wer O-Töne will, fragt von selbst (Telefonnummer steht ja drin). Wetter-Aufhänger beim Versand aktualisieren (Stand 08.08.: morgen 31, Montag 32 Grad, nächste Spitze Do/Fr 27-32).
+
+### 17. 104.6 RTL (redaktion@104.6rtl.com)
+
+Betreff: Wohin bei der Hitze? Karte mit 491 kühlen Orten für Ihre Berichterstattung
+
+Guten Tag,
+
+morgen und Montag kommt die Hitze zurück nach Berlin, bis 32 Grad sind angesagt. Für Ihre Online- und Service-Berichterstattung dazu ein Hinweis:
+
+hitze.navigator.berlin ist ein kostenloses Hitzeportal für Berlin, das ich privat betreibe. Die Karte zeigt 491 kühle Orte, die im Sommer wirklich geöffnet sind, von Museen über Bibliotheken bis zu Schwimmbädern, jeweils mit Adresse und Öffnungszeiten. 298 davon kosten keinen Eintritt. Dazu kommen die Trinkbrunnen der Wasserbetriebe und die Live-Hitzewarnung des DWD.
+
+Die taz hat die Karte Anfang August gegen die Behördenkarten getestet: rund 40 Orte am Gendarmenmarkt gegenüber zwei auf den offiziellen Karten.
+
+Sie dürfen die Karte gern verlinken und die Zahlen verwenden. Bei Rückfragen erreichen Sie mich unter 0151 15674987.
+
+Freundliche Grüße
+Matze Schmidbauer
+
+### 18. radioeins (office@radioeins.de)
+
+Betreff: Daten für Ihren Hitze-Schwerpunkt: welcher Kiez sich am stärksten aufheizt
+
+Guten Tag,
+
+Ihr Umwelt-Schwerpunkt "Heiß, heißer, Hitze" fragt, wie Städte mit der Hitze leben. Dazu habe ich Daten, die es so für Berlin bisher nicht gab.
+
+Auf navigator.berlin, meinem privaten Daten-Atlas aus offenen Verwaltungsdaten, gibt es einen Hitze-Score für alle 143 Berliner Bezirksregionen, berechnet aus Bioklima, gefühlter Temperatur, Kaltluft und Grünversorgung des Umweltatlas. Das Ergebnis widerspricht der Intuition: Am stärksten belastet sind nicht die Großsiedlungen, sondern die Gründerzeit-Innenstadt.
+
+1. Prenzlauer Berg Südwest
+2. Friedenau West
+3. Lietzenburger Straße
+4. Helmholtzplatz
+5. Regierungsviertel
+
+Am anderen Ende: das Allende-Viertel in Köpenick. Die Schwester-Seite hitze.navigator.berlin zeigt dazu 491 geprüfte kühle Orte; die taz hat sie Anfang August getestet.
+
+Verwenden und verlinken Sie gern, was in Ihre Beiträge passt. Methodik ist auf der Seite dokumentiert, Rückfragen unter 0151 15674987.
+
+Freundliche Grüße
+Matze Schmidbauer
+
+### 19. Energy Berlin (studioberlin@energy.de)
+
+Betreff: Berlin schwitzt wieder: 298 kostenlose kühle Orte auf einer Karte
+
+Hallo liebes Energy-Team,
+
+morgen 31, Montag 32 Grad, und die Frage eurer Hörer:innen ist wieder: wohin, ohne Geld auszugeben?
+
+Dafür gibt es hitze.navigator.berlin, mein kostenloses Hitzeportal für Berlin. Auf der Karte: 491 kühle Orte, die im Sommer offen sind, 298 davon gratis, von Bibliotheken über Museen bis zu Schwimmbädern, alle mit Öffnungszeiten. Dazu Trinkbrunnen und die Live-Hitzewarnung des DWD. Die taz hat die Karte getestet und fand rund 40 Orte, wo die offiziellen Karten zwei zeigten.
+
+Nehmt die Karte gern in eure Online-Tipps oder verlinkt sie in der Wetter-Berichterstattung. Bei Fragen: 0151 15674987.
+
+Beste Grüße
+Matze Schmidbauer
+
+### 20. FluxFM (kontakt@fluxfm.de)
+
+Betreff: Für eure Hitze-Tage: eine Karte, die zeigt, wo Berlin wirklich kühl ist
+
+Hallo liebes FluxFM-Team,
+
+am Wochenende wird Berlin wieder gegrillt, und ich habe was gebaut, das dabei hilft: hitze.navigator.berlin, ein kostenloses Hitzeportal mit 491 kühlen Orten, die im Sommer tatsächlich geöffnet sind. Mit Öffnungszeiten, Kostenlos-Filter (298 Orte gratis) und Live-DWD-Warnung. Seit dieser Woche sind sogar 18 geprüfte offene Kirchen dabei, die Passionskirche in Kreuzberg verteilt bis Ende August montags bis mittwochs Wasser und Sonnencreme.
+
+Die taz hat die Karte Anfang August gegen die Senats-Karten getestet, Ergebnis 40 zu 2 am Gendarmenmarkt.
+
+Falls das in eure Stadt-Tipps oder auf eure Website passt: verlinkt gern. Rückfragen unter 0151 15674987.
+
+Viele Grüße
+Matze Schmidbauer
+
+### 21. Kiss FM, Pressekontakt Doro Manz (doro.manz@kissfm.de)
+
+Betreff: Hitze-Wochenende: Karte mit 298 kostenlosen kühlen Orten in Berlin
+
+Guten Tag Frau Manz,
+
+morgen und Montag erwarten Berlin wieder über 30 Grad. Für Ihre Online-Redaktion vielleicht interessant:
+
+hitze.navigator.berlin ist ein kostenloses Hitzeportal, das ich privat betreibe. Es zeigt 491 kühle Orte mit Öffnungszeiten, davon 298 ohne Eintritt, plus Trinkbrunnen und die Live-Hitzewarnung des DWD. Die taz hat die Karte Anfang August getestet: rund 40 Orte am Gendarmenmarkt, die Behördenkarten zeigten zwei.
+
+Die Karte darf gern verlinkt und zitiert werden. Bei Rückfragen erreichen Sie mich unter 0151 15674987.
+
+Freundliche Grüße
+Matze Schmidbauer
+
+### 22. Berliner Rundfunk 91.4 (info@berliner-rundfunk.de, Adresse unbestätigt)
+
+Betreff: Kostenlos abkühlen in Berlin: Karte mit 298 freien kühlen Orten
+
+Guten Tag,
+
+die nächsten heißen Tage stehen an, und gerade für ältere Berlinerinnen und Berliner wird die Frage wichtig, wo man tagsüber kostenlos ins Kühle kommt.
+
+hitze.navigator.berlin ist ein kostenloses Hitzeportal, das ich privat betreibe. Die Karte zeigt 491 kühle Orte mit Adresse und Öffnungszeiten, 298 davon ohne Eintritt: Bibliotheken, Museen, Schwimmbäder und seit dieser Woche auch 18 geprüfte offene Kirchen, darunter die Passionskirche am Marheinekeplatz, die im Sommer montags bis mittwochs Wasser und kühle Ruheplätze anbietet. Dazu die aktuelle Hitzewarnung des Deutschen Wetterdienstes.
+
+Die taz hat die Karte Anfang August getestet und fand rund 40 Orte, wo die offiziellen Karten zwei zeigten.
+
+Sie dürfen die Karte gern in Ihrer Berichterstattung verlinken. Für Rückfragen: 0151 15674987.
+
+Freundliche Grüße
+Matze Schmidbauer
+
 ## Verteilerliste
 
 Stand 01.08.2026. Ohne Vermerk: Adresse stand auf Kontaktseite/Impressum oder in bestätigter Quelle.
