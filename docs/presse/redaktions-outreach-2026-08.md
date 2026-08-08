@@ -470,6 +470,14 @@ Stand 01.08.2026. Ohne Vermerk: Adresse stand auf Kontaktseite/Impressum oder in
 - HIMBEER / berlinmitkind.de: Familien-Stadtmagazin ohne eigenes Kühle-Orte-Stück. Eigener Winkel: "kühle Orte mit Kind, kostenlos". Dafür lohnt vorher die Kategorie Wasserspielplätze in der Datenbank
 - The Berliner hat ZWEI eigene Hitze-Evergreens ("Cool places in Berlin", "Hot in the city: air conditioning"): Die ungesendete Mail Nr. 11 vor Versand um Bezug auf deren eigene Artikel ergänzen
 
+Themen-first-Recherche (08.08.2026, Suche nach dem Thema statt nach Medien; diese Portale ranken selbst für "kühle Orte Berlin", Links von dort sind daher auch SEO-relevant):
+
+- gratis-in-berlin.de: "Was unternehmen bei Hitze in Berlin". Bester inhaltlicher Fit im ganzen Verteiler, deren DNA ist unser Kostenlos-Filter (298 Gratis-Orte). Kontakt prüfen
+- unterwegsmitkind.com: "Wohin im Sommer in Berlin mit Kindern bei Hitze?" Familien-Blog, zusammen mit HIMBEER die Familien-Schiene. Kontakt prüfen
+- berlinmagazine.de: "Berlin bei Hitze: Die besten Orte für Abkühlung". Kontakt prüfen
+- Eurowings-Reiseblog "Horizons": "7 schönste Orte zum Abkühlen" Berlin. Corporate-Travel-Content, niedrige Prio
+- Mit Vergnügen hat neben dem 2026er-Stück noch einen zweiten Evergreen von 2015 ("11 kühle Orte, die ihr fast für euch allein habt"), beide in der Mail referenzierbar
+
 ### Bewusst nicht angeschrieben
 
 - Berlin.de-Verwaltungsseiten (Hitzeschutzportal der Senatsgesundheitsverwaltung): kein redaktioneller Pitch-Kanal; die Tipps-Redaktion von BerlinOnline ist der pitchbare Teil, siehe Nachzügler-Funde
