@@ -429,25 +429,6 @@ Ihr erreicht mich unter 0151 15674987.
 Herzliche Grüße
 Matze Schmidbauer
 
-### 17. Angela Misslbeck, unterwegsmitkind.com (blog@unterwegsmitkind.com)
-
-Betreff: Zu deinem Berlin-Hitze-Artikel: eine Karte mit 298 kostenlosen kühlen Orten
-
-Hallo Angela,
-
-dein Artikel "Wohin im Sommer in Berlin mit Kindern bei Hitze?" beantwortet genau die Frage, für die ich ein Werkzeug gebaut habe, vielleicht passt das als Ergänzung.
-
-hitze.navigator.berlin ist ein kostenloses Hitzeportal für Berlin, das ich privat betreibe. Die Karte zeigt 491 kühle Orte, die im Sommer wirklich geöffnet sind, mit Adresse, Öffnungszeiten und Kostenlos-Filter (298 Orte ohne Eintritt, von Bibliotheken über Schwimmbäder bis zu Kindermuseen). Dazu kommen die Trinkbrunnen der Wasserbetriebe und die Live-Hitzewarnung des DWD. Die taz hat die Karte Anfang August gegen die Behördenkarten getestet: rund 40 Orte am Gendarmenmarkt gegen zwei.
-
-Auf der Vollversion navigator.berlin steckt außerdem ein Daten-Atlas, der für deine Berlin-Themen taugen könnte: pro Kiez unter anderem Spielplätze, Kita-Platz-Versorgung, Schulen, Grünanlagen und Lärmbelastung, alles aus offenen Verwaltungsdaten.
-
-Verlink oder verwende gern, was dir nützt. Wenn du für einen Artikel etwas Bestimmtes brauchst, etwa die kinderfreundlichsten kühlen Orte in einem Bezirk, stelle ich es dir zusammen.
-
-Du erreichst mich unter 0151 15674987.
-
-Viele Grüße
-Matze Schmidbauer
-
 ## Verteilerliste
 
 Stand 01.08.2026. Ohne Vermerk: Adresse stand auf Kontaktseite/Impressum oder in bestätigter Quelle.
@@ -511,7 +492,7 @@ Stand 01.08.2026. Ohne Vermerk: Adresse stand auf Kontaktseite/Impressum oder in
 Themen-first-Recherche (08.08.2026, Suche nach dem Thema statt nach Medien; diese Portale ranken selbst für "kühle Orte Berlin", Links von dort sind daher auch SEO-relevant):
 
 - gratis-in-berlin.de: "Was unternehmen bei Hitze in Berlin". Bester inhaltlicher Fit im ganzen Verteiler, deren DNA ist unser Kostenlos-Filter (298 Gratis-Orte). Kontakt prüfen
-- unterwegsmitkind.com: "Wohin im Sommer in Berlin mit Kindern bei Hitze?" Familien-Blog, zusammen mit HIMBEER die Familien-Schiene. Kontakt prüfen
+- unterwegsmitkind.com: GESTRICHEN (08.08.): typischer Sponsored-Posts-Blog, kein redaktioneller Pitch-Kanal. Familien-Schiene läuft über HIMBEER
 - berlinmagazine.de: "Berlin bei Hitze: Die besten Orte für Abkühlung". Kontakt prüfen
 - Eurowings-Reiseblog "Horizons": "7 schönste Orte zum Abkühlen" Berlin. Corporate-Travel-Content, niedrige Prio
 - Mit Vergnügen hat neben dem 2026er-Stück noch einen zweiten Evergreen von 2015 ("11 kühle Orte, die ihr fast für euch allein habt"), beide in der Mail referenzierbar
