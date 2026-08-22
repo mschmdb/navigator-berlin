@@ -6,6 +6,7 @@ import { getResultsForKiez } from './get-results-for-kiez.js';
 import { getResultsForBezirk } from './get-results-for-bezirk.js';
 import { getResultsForBerlin } from './get-results-for-berlin.js';
 import { getSparklineForKiez } from './get-sparkline-for-kiez.js';
+import { getKiezSharesForWahl } from './get-kiez-shares-for-wahl.js';
 
 afterAll(async () => {
 	await closeDb();
@@ -24,6 +25,10 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 
 		it('getResultsForStimmbezirk returns empty without DB', async () => {
 			expect(await getResultsForStimmbezirk(1, '074-01-104-0')).toEqual([]);
+		});
+
+		it('getKiezSharesForWahl returns empty without DB', async () => {
+			expect(await getKiezSharesForWahl(1)).toEqual([]);
 		});
 
 		it('getResultsForKiez returns empty without DB', async () => {
