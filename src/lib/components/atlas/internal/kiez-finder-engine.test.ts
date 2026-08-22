@@ -7,6 +7,7 @@ import {
 	FINDER_RAMP,
 	fitColorExpression,
 	fitDomain,
+	fitOpacityExpression,
 	hasActiveWeights,
 	NEUTRAL_METRIC,
 	neutralWeights,
@@ -178,12 +179,30 @@ describe('Kiez-Name in Collection und Top-Liste', () => {
 	});
 });
 
+describe('fitOpacityExpression · Passung steuert Deckkraft', () => {
+	it('interpoliert die Opacity von schwach nach kräftig über die Domain', () => {
+		const expr = fitOpacityExpression({ ...neutralWeights(), ruheLuft: 1 }, { lo: 20, hi: 80 });
+		const flat = JSON.stringify(expr);
+		expect(flat).toContain('"interpolate"');
+		expect(flat).toContain(',20,');
+		expect(flat).toContain(',80,');
+		expect(flat).toContain('0.15');
+		expect(flat).toContain('0.8');
+	});
+	it('liefert bei Neutral-Gewichten eine Konstante', () => {
+		expect(fitOpacityExpression(neutralWeights())).toBe(0.15);
+	});
+});
+
 describe('fitDomain · Kontrast-Spreizung', () => {
-	it('liefert P5..P95 der tatsächlichen Passungs-Verteilung', () => {
+	it('liefert P5..Maximum der tatsächlichen Passungs-Verteilung', () => {
+		// Untere Klammer P5 gegen Ausreißer, oben das echte Maximum: eine
+		// P95-Kappe würde die ganze Spitzengruppe in eine Einheits-Farbe
+		// kollabieren und Rang-Verschiebungen unsichtbar machen.
 		const values = Array.from({ length: 100 }, (_, i) => i + 1); // 1..100
 		const domain = fitDomain(values);
 		expect(domain.lo).toBeCloseTo(5.95, 1);
-		expect(domain.hi).toBeCloseTo(95.05, 1);
+		expect(domain.hi).toBe(100);
 	});
 
 	it('fällt bei degenerierter Verteilung auf 0..100 zurück', () => {

@@ -179,7 +179,7 @@ export interface FitDomain {
 
 /**
  * Kontrast-Spreizung: reale Passungen clustern oft in einem schmalen Band,
- * eine feste 0..100-Rampe ergäbe eine uniforme Fläche. P5..P95 der
+ * eine feste 0..100-Rampe ergäbe eine uniforme Fläche. P5..Maximum der
  * tatsächlichen Verteilung spannen die Rampe dorthin, wo die Unterschiede
  * liegen. Degeneriert (leer oder ohne Spannweite) → 0..100.
  */
@@ -193,9 +193,43 @@ export function fitDomain(fits: readonly number[]): FitDomain {
 		return sorted[base] + rest * ((sorted[base + 1] ?? sorted[base]) - sorted[base]);
 	};
 	const lo = at(0.05);
-	const hi = at(0.95);
+	// Oben das echte Maximum: eine P95-Kappe kollabiert die ganze
+	// Spitzengruppe in eine Einheits-Farbe und macht Rang-Verschiebungen
+	// unsichtbar. Die P5-Klammer unten bleibt gegen Ausreißer.
+	const hi = sorted[sorted.length - 1];
 	if (hi - lo < 1) return { lo: 0, hi: 100 };
 	return { lo, hi };
+}
+
+/** Deckkraft-Spanne: schwache Passung tritt zurück, starke leuchtet. */
+export const FINDER_OPACITY_RANGE = { min: 0.15, max: 0.8 } as const;
+
+/**
+ * MapLibre-fill-opacity-Expression: dieselbe gewichtete Passung wie die
+ * Farbe steuert die Deckkraft. Schwache Passung wird fast transparent,
+ * damit ein Rang-Absturz sichtbar verblasst statt nur den Blauton zu
+ * wechseln.
+ */
+export function fitOpacityExpression(
+	weights: FinderWeights,
+	domain: FitDomain = { lo: 0, hi: 100 }
+): unknown[] | number {
+	if (!hasActiveWeights(weights)) return FINDER_OPACITY_RANGE.min;
+	const expr = fitColorExpression(weights, domain);
+	if (typeof expr === 'string') return FINDER_OPACITY_RANGE.min;
+	// Gleiche Fit-Formel wie die Farbe: Expression bis vor die Farb-Stops
+	// übernehmen (['interpolate', ['linear'], fit, ...]), nur mit
+	// Opacity-Stops an den Domain-Grenzen.
+	const fit = expr[2];
+	return [
+		'interpolate',
+		['linear'],
+		fit,
+		+domain.lo.toFixed(2),
+		FINDER_OPACITY_RANGE.min,
+		+domain.hi.toFixed(2),
+		FINDER_OPACITY_RANGE.max
+	];
 }
 
 /**

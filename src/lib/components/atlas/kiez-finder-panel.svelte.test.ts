@@ -120,6 +120,8 @@ describe('kiez-finder-panel', () => {
 		slider.dispatchEvent(new Event('input', { bubbles: true }));
 		await vi.waitFor(() => {
 			expect(Object.keys(map.calls.paints).some((k) => k.includes('fill-color'))).toBe(true);
+			// Passung steuert auch die Deckkraft: schwache Treffer verblassen.
+			expect(Object.keys(map.calls.paints).some((k) => k.includes('fill-opacity'))).toBe(true);
 		});
 	});
 

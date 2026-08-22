@@ -14,6 +14,7 @@
 		FINDER_SOURCE_ID,
 		fitColorExpression,
 		fitDomain,
+		fitOpacityExpression,
 		hasActiveWeights,
 		neutralWeights,
 		topResults,
@@ -146,6 +147,7 @@
 		const allResults = topResults(collection, weights, collection.features.length);
 		const domain = fitDomain(allResults.map((r) => r.fit));
 		const expression = fitColorExpression(weights, domain);
+		const opacity = fitOpacityExpression(weights, domain);
 		if (!map.getLayer(FINDER_LAYER_ID)) {
 			map.addLayer({
 				id: FINDER_LAYER_ID,
@@ -153,13 +155,14 @@
 				source: FINDER_SOURCE_ID,
 				paint: {
 					'fill-color': expression,
-					'fill-opacity': 0.72,
+					'fill-opacity': opacity,
 					'fill-outline-color': '#ECEAE0'
 				}
 			});
 			map.moveLayer(FINDER_LAYER_ID);
 		} else {
 			map.setPaintProperty(FINDER_LAYER_ID, 'fill-color', expression);
+			map.setPaintProperty(FINDER_LAYER_ID, 'fill-opacity', opacity);
 		}
 		top = allResults.slice(0, 5);
 	}
