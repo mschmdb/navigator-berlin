@@ -60,8 +60,11 @@ beforeEach(() => {
 	vi.resetModules();
 });
 
+// Die Erst-Imports der Route-Module ziehen den halben App-Graph durch die
+// Vite-Transform; unter Suite-Volllast dauert das gelegentlich über 5 s.
+// Der lange Timeout deckt die Transform-Zeit, nicht die Logik.
 describe('routes/robots.txt/+server.ts', () => {
-	it('returns User-agent + Sitemap with correct content-type', async () => {
+	it('returns User-agent + Sitemap with correct content-type', { timeout: 20_000 }, async () => {
 		const mod = await import('../../routes/robots.txt/+server.js');
 		const response = await mod.GET(
 			makeEvent('https://navigator.berlin/robots.txt') as Parameters<typeof mod.GET>[0]
@@ -76,22 +79,26 @@ describe('routes/robots.txt/+server.ts', () => {
 });
 
 describe('routes/sitemap.xml/+server.ts (index)', () => {
-	it('returns sitemap-index XML referencing sitemap-de.xml only (phase 1 DE-only)', async () => {
-		const mod = await import('../../routes/sitemap.xml/+server.js');
-		const response = await mod.GET(
-			makeEvent('https://navigator.berlin/sitemap.xml') as Parameters<typeof mod.GET>[0]
-		);
-		expect(response.status).toBe(200);
-		expect(response.headers.get('content-type')).toMatch(/(application\/xml|text\/xml)/i);
-		const body = await response.text();
-		expect(body).toContain('<sitemapindex');
-		expect(body).toContain('https://navigator.berlin/sitemap-de.xml');
-		expect(body).not.toContain('sitemap-en.xml');
-	});
+	it(
+		'returns sitemap-index XML referencing sitemap-de.xml only (phase 1 DE-only)',
+		{ timeout: 20_000 },
+		async () => {
+			const mod = await import('../../routes/sitemap.xml/+server.js');
+			const response = await mod.GET(
+				makeEvent('https://navigator.berlin/sitemap.xml') as Parameters<typeof mod.GET>[0]
+			);
+			expect(response.status).toBe(200);
+			expect(response.headers.get('content-type')).toMatch(/(application\/xml|text\/xml)/i);
+			const body = await response.text();
+			expect(body).toContain('<sitemapindex');
+			expect(body).toContain('https://navigator.berlin/sitemap-de.xml');
+			expect(body).not.toContain('sitemap-en.xml');
+		}
+	);
 });
 
 describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
-	it('returns sitemap-DE with static pages + layer routes', async () => {
+	it('returns sitemap-DE with static pages + layer routes', { timeout: 20_000 }, async () => {
 		const mod = await import('../../routes/sitemap-de.xml/+server.js');
 		const response = await mod.GET(
 			makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
@@ -106,7 +113,7 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 		expect(body).toContain('https://navigator.berlin/layer/klima-pet');
 	});
 
-	it('has prerender = true so it is built statically', async () => {
+	it('has prerender = true so it is built statically', { timeout: 20_000 }, async () => {
 		const mod = await import('../../routes/sitemap-de.xml/+server.js');
 		expect(mod.prerender).toBe(true);
 	});
