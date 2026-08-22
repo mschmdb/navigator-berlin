@@ -30,6 +30,7 @@ function makeState(): UiState {
 		selectedLayerHits: [],
 		activeLayerSlugs: [],
 		choroplethLeadSlug: null,
+		finderOpen: false,
 		recentLayerSlugs: [],
 		sheetSnapVh: 40,
 		paletteOpen: false,

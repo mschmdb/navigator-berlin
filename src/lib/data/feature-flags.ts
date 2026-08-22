@@ -10,7 +10,9 @@ export const featureFlags = Object.freeze({
 	/** Story 6.3: Inspector-Section "Wahlverhalten hier" mit Multi-Level-Switch. */
 	wahlSection: true,
 	/** Story 6.7: Cross-Layer-Story-Block. Co-Design-Sign-off 2026-05-19 für wahl-trend-zeit-kiez. */
-	crossLayerStoryBlock: true
+	crossLayerStoryBlock: true,
+	/** Kiez-Finder: Live-Passungs-Suche über der Karte (Spec 2026-08-22). */
+	kiezFinder: true
 });
 
 export type FeatureFlag = keyof typeof featureFlags;

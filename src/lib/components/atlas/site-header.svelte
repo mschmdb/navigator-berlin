@@ -5,6 +5,8 @@
 	import AddressSearchOverlay from './address-search-overlay.svelte';
 	import MobileMetaDrawer from './mobile-meta-drawer.svelte';
 	import { PixelLogo } from '$lib/components/ui';
+	import { Sparkles } from '@lucide/svelte';
+	import { featureFlags } from '$lib/data/feature-flags.js';
 	import type { GeocodeSuggestion } from '$lib/data';
 
 	type Props = {
@@ -73,6 +75,16 @@
 				navigator.berlin
 			</span>
 		</a>
+		{#if featureFlags.kiezFinder}
+			<a
+				href="/explore?finder=1"
+				data-testid="header-finder-link"
+				class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-sm border border-rule px-2.5 font-mono text-xs tracking-wider text-ink uppercase hover:border-accent hover:text-accent"
+			>
+				<Sparkles size={14} aria-hidden="true" />
+				<span class="hidden md:inline">Kiez-Finder</span>
+			</a>
+		{/if}
 		{#if atlasCtaHref}
 			<div class="min-w-0 flex-1"></div>
 			<a
