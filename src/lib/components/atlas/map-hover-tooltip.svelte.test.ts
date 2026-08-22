@@ -231,3 +231,35 @@ describe('map-hover-tooltip · Multi-Layer', () => {
 		expect(v.textContent).toMatch(/hoch/);
 	});
 });
+
+describe('map-hover-tooltip · Overflow langer Werte', () => {
+	it('lange Werte bleiben innerhalb der Tooltip-Box (kein horizontaler Überlauf)', async () => {
+		const { api, fire } = makeFakeMap([
+			[
+				{
+					layer: { id: 'navigator-layer-wohnlagen-2024' },
+					properties: { wol: 'mittel', strasse: 'Hohenfriedbergstraße', hnr: '12' }
+				},
+				{
+					layer: { id: 'navigator-layer-milieuschutz-erhaltungsmiete' },
+					properties: { gebietsname: 'Schöneberger Insel', bezirk: 'Tempelhof-Schöneberg' }
+				}
+			]
+		]);
+		render(MapHoverTooltip, {
+			map: api,
+			activeLayerSlugs: ['wohnlagen-2024', 'milieuschutz-erhaltungsmiete']
+		});
+		fire('mousemove', { point: { x: 10, y: 10 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const tip = (await page.getByTestId('map-hover-tooltip').element()) as HTMLElement;
+		// Tailwind lädt in Browser-Tests nicht, deshalb Klassen-Assertions:
+		// nowrap drückte lange Ortsnamen aus der Box (Bug 22.08.), Werte müssen
+		// am Wortende umbrechen dürfen.
+		for (const el of tip.querySelectorAll('dd')) {
+			expect((el as HTMLElement).className).not.toMatch(/whitespace-nowrap/);
+			expect((el as HTMLElement).className).toMatch(/break-words/);
+			expect((el as HTMLElement).className).toMatch(/min-w-0/);
+		}
+	});
+});

@@ -130,8 +130,11 @@
 				{#each content.rows as row (row.slug)}
 					<div class="contents" data-testid="hover-tooltip-row">
 						<dt class="font-serif text-ink">{row.layerName}</dt>
+						<!-- Kein nowrap: lange Werte (Ortsnamen) müssen am Wortende umbrechen,
+						     statt aus der Box zu laufen. Kurze Score-Werte bleiben von selbst
+						     einzeilig, weil der Dimensions-Präfix in Mehrzeilen-Ansicht fehlt. -->
 						<dd
-							class="text-right font-mono whitespace-nowrap text-ink"
+							class="min-w-0 text-right font-mono break-words text-ink"
 							data-testid="hover-tooltip-value-{row.slug}"
 						>
 							{row.valueText}

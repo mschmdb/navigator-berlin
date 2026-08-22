@@ -142,7 +142,9 @@
 					</div>
 				</div>
 
-				{#if entry.spec.kind === 'gradient'}
+				<!-- Gradient nur, solange der Layer die Fläche ist. Als Symbol-Layer
+				     zeigt er Quadrat-Größen, der Balken würde die Karte falsch beschreiben. -->
+				{#if entry.spec.kind === 'gradient' && !(entry.variant === 'outline' && dotSpecForSlug(entry.slug))}
 					<div
 						aria-hidden="true"
 						class="h-2 w-full rounded-sm"

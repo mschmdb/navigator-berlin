@@ -353,3 +353,30 @@ describe('map-legend · Legenden-Tausch (Fläche ↔ Symbole)', () => {
 			.not.toBeInTheDocument();
 	});
 });
+
+describe('map-legend · Gradient-Layer als Symbol-Layer', () => {
+	it('zeigt Größen-Quadrate statt Gradient-Balken, wenn BRW sekundär ist', async () => {
+		const variants = new Map<string, 'fill' | 'outline'>([
+			['wohnlagen-2024', 'fill'],
+			['bodenrichtwerte', 'outline']
+		]);
+		render(MapLegend, {
+			activeLayerSlugs: ['wohnlagen-2024', 'bodenrichtwerte'],
+			cascadeVariants: variants
+		});
+		const entry = (await page.getByTestId('legend-bodenrichtwerte').element()) as HTMLElement;
+		expect(entry.querySelector('div[style*="linear-gradient"]')).toBeNull();
+		const squares = entry.querySelectorAll('li span.rounded-sm');
+		expect(squares.length).toBeGreaterThanOrEqual(4);
+	});
+
+	it('behält den Gradient-Balken, wenn BRW die Fläche ist', async () => {
+		const variants = new Map<string, 'fill' | 'outline'>([['bodenrichtwerte', 'fill']]);
+		render(MapLegend, {
+			activeLayerSlugs: ['bodenrichtwerte'],
+			cascadeVariants: variants
+		});
+		const entry = (await page.getByTestId('legend-bodenrichtwerte').element()) as HTMLElement;
+		expect(entry.querySelector('div[style*="linear-gradient"]')).not.toBeNull();
+	});
+});
