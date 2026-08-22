@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import MapLegend from './map-legend.svelte';
 import type { LayerMetadata } from '$lib/data';
+import { SCORE_OUTLINE_WIDTHS } from './internal/dimension-ramps.js';
 
 function meta(slug: string, opts: Partial<LayerMetadata> = {}): LayerMetadata {
 	return {
@@ -268,5 +269,34 @@ describe('map-legend.svelte', () => {
 			});
 			await expect.element(page.getByTestId('legend-limit-warning')).not.toBeInTheDocument();
 		});
+	});
+});
+
+describe('map-legend · Score-Kontur mit Wert-Breite', () => {
+	it('rendert die Outline-Swatches eines Score-Layers mit ansteigender Border-Breite', async () => {
+		const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>([
+			['kiez-score-gesamt', 'fill'],
+			['kiez-score-ruhe-luft', 'outline']
+		]);
+		render(MapLegend, {
+			activeLayerSlugs: ['kiez-score-gesamt', 'kiez-score-ruhe-luft'],
+			cascadeVariants: variants
+		});
+		const entry = (await page.getByTestId('legend-kiez-score-ruhe-luft').element()) as HTMLElement;
+		const swatches = Array.from(entry.querySelectorAll('li > span[aria-hidden="true"]'));
+		expect(swatches).toHaveLength(4);
+		// Balkenhöhe = echte Konturbreite auf der Karte, ungekappt.
+		const heights = swatches.map((el) => parseFloat((el as HTMLElement).style.height));
+		expect(heights).toEqual([...SCORE_OUTLINE_WIDTHS]);
+	});
+
+	it('lässt Fill-Swatches unverändert gefüllt', async () => {
+		const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>([
+			['kiez-score-gesamt', 'fill']
+		]);
+		render(MapLegend, { activeLayerSlugs: ['kiez-score-gesamt'], cascadeVariants: variants });
+		const entry = (await page.getByTestId('legend-kiez-score-gesamt').element()) as HTMLElement;
+		const swatch = entry.querySelector('li > span[aria-hidden="true"]') as HTMLElement;
+		expect(swatch.style.background).not.toBe('transparent');
 	});
 });

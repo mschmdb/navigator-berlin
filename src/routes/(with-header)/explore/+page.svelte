@@ -67,7 +67,8 @@
 	import { sortSlugsByBundleStable } from '$lib/components/atlas/internal/layer-order-sorting.js';
 	import {
 		applyHiddenSlugs,
-		exceedsPolygonLimit
+		exceedsPolygonLimit,
+		capPolygonSlugs
 	} from '$lib/components/atlas/internal/layer-visibility.js';
 	import {
 		toggleLayerHidden,
@@ -79,7 +80,8 @@
 	import {
 		diffLayerSlugs,
 		sourceIdFor,
-		layerIdFor
+		layerIdFor,
+		outlineLayerIdFor
 	} from '$lib/components/atlas/internal/layer-diff.js';
 	import { PIN_LAYER_SLUGS } from '$lib/components/atlas/internal/pin-icon-mapping.js';
 
@@ -180,7 +182,8 @@
 		// URL ist Source-of-Truth für aktive Layer: immer setzen, auch leer. Sonst schleppt ein
 		// Explorer-Einstieg ohne ?layers die aus einer früheren Session persistierten Layer mit
 		// (z.B. kuehle-orte via Hitze-Landing → Home → Explorer).
-		ui.activeLayerSlugs = [...(data.activeLayers ?? [])];
+		// Multi-Layer-Limit auch am URL-Einstieg: höchstens 2 Choroplethen.
+		ui.activeLayerSlugs = capPolygonSlugs(data.activeLayers ?? []);
 		// Story 2.12 Quick-Links: wenn `?address=lng,lat&q=…` gesetzt, bauen
 		// wir eine synthetische GeocodeSuggestion und triggern die Adress-
 		// Selection. Inspector öffnet sich dann automatisch.
@@ -308,10 +311,13 @@
 		const visibleSet = new Set(ordered);
 		const { toRemove } = diffLayerSlugs(renderedSlugs, ordered);
 
-		// 1. remove sources for slugs no longer visible
+		// 1. remove sources for slugs no longer visible. Kontur-Varianten führen
+		// einen zweiten Layer unter der -outline-ID, der mit weg muss.
 		for (const slug of toRemove) {
 			const layerId = layerIdFor(slug);
+			const outlineId = outlineLayerIdFor(slug);
 			const sourceId = sourceIdFor(slug);
+			if (map.getLayer(outlineId)) map.removeLayer(outlineId);
 			if (map.getLayer(layerId)) map.removeLayer(layerId);
 			if (map.getSource(sourceId)) map.removeSource(sourceId);
 		}
@@ -321,6 +327,8 @@
 			if (!visibleSet.has(slug)) continue;
 			if (renderedVariantBySlug[slug] === variantBySlug[slug]) continue;
 			const layerId = layerIdFor(slug);
+			const outlineId = outlineLayerIdFor(slug);
+			if (map.getLayer(outlineId)) map.removeLayer(outlineId);
 			if (map.getLayer(layerId)) map.removeLayer(layerId);
 		}
 

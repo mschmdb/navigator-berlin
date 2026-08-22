@@ -10,6 +10,7 @@
 	import { getLayerExplainEntry } from './inspector-panel/internal/layer-explain.js';
 	import { shortenLicense } from './inspector-panel/internal/source-shortener.js';
 	import { isPolygonSlug, type CascadeVariant } from './internal/layer-style-cascade.js';
+	import { rampForSlug, SCORE_OUTLINE_WIDTHS } from './internal/dimension-ramps.js';
 
 	type Props = {
 		activeLayerSlugs: readonly string[];
@@ -142,7 +143,7 @@
 					</div>
 				{:else}
 					<ul class="flex flex-col gap-1">
-						{#each entry.spec.items as item (item.label)}
+						{#each entry.spec.items as item, itemIndex (item.label)}
 							<li class="flex items-center gap-2">
 								{#if entry.pinIcon}
 									<span
@@ -176,6 +177,14 @@
 										aria-hidden="true"
 										class="inline-block h-2.5 w-2.5 rounded-full"
 										style={`background:${item.color}; border:1px solid var(--color-bg)`}
+									></span>
+								{:else if (entry.variant === 'outline' || entry.variant === 'outline-dash') && rampForSlug(entry.slug)}
+									<!-- Score-Konturen kodieren den Wert über die Linienbreite; der
+									     Balken zeigt die ECHTE Kartenbreite als Höhe, ungekappt. -->
+									<span
+										aria-hidden="true"
+										class="inline-block w-5 self-center"
+										style={`height:${SCORE_OUTLINE_WIDTHS[itemIndex] ?? 1.5}px; background:${item.color}`}
 									></span>
 								{:else if entry.variant === 'outline' || entry.variant === 'outline-dash'}
 									<span

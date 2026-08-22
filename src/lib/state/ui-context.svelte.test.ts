@@ -117,6 +117,29 @@ describe('ui-context', () => {
 		expect(typeof getUiState).toBe('function');
 	});
 
+	describe('toggleLayer · Polygon-Limit 2', () => {
+		it('ersetzt beim dritten Choroplethen den ältesten, der Rest bleibt', () => {
+			const s = makeState();
+			toggleLayer(s, 'kiez-score-gesamt');
+			toggleLayer(s, 'ubahn-stationen');
+			toggleLayer(s, 'kiez-score-ruhe-luft');
+			toggleLayer(s, 'kiez-score-mobilitaet');
+			expect(s.activeLayerSlugs).toEqual([
+				'ubahn-stationen',
+				'kiez-score-ruhe-luft',
+				'kiez-score-mobilitaet'
+			]);
+		});
+
+		it('lässt Deaktivieren und Nicht-Polygon-Layer unberührt', () => {
+			const s = makeState();
+			toggleLayer(s, 'kiez-score-gesamt');
+			toggleLayer(s, 'kiez-score-ruhe-luft');
+			toggleLayer(s, 'kiez-score-gesamt');
+			expect(s.activeLayerSlugs).toEqual(['kiez-score-ruhe-luft']);
+		});
+	});
+
 	describe('toggleLayer', () => {
 		it('fügt unbekannten Slug zu activeLayerSlugs hinzu', () => {
 			const s = makeState();

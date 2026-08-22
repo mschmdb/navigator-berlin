@@ -12,6 +12,7 @@ import type { Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
 import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
 import type { DemografieScope } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
 import type { Bookmark } from './bookmark-schema.js';
+import { capPolygonSlugs } from '$lib/components/atlas/internal/layer-visibility.js';
 import {
 	saveBookmark,
 	removeBookmark as removeBookmarkFromStore,
@@ -119,6 +120,12 @@ export function toggleLayer(state: UiState, slug: string): void {
 		state.activeLayerSlugs.splice(activeIdx, 1);
 	} else {
 		state.activeLayerSlugs.push(slug);
+		// Multi-Layer-Limit: höchstens Fläche + eine Kontur. Der älteste
+		// Choropleth weicht dem neuen, Punkt- und Linien-Layer bleiben.
+		const capped = capPolygonSlugs(state.activeLayerSlugs);
+		if (capped.length !== state.activeLayerSlugs.length) {
+			state.activeLayerSlugs.splice(0, state.activeLayerSlugs.length, ...capped);
+		}
 	}
 	const recentIdx = state.recentLayerSlugs.indexOf(slug);
 	if (recentIdx >= 0) state.recentLayerSlugs.splice(recentIdx, 1);

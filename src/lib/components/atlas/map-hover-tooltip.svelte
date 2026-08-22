@@ -21,10 +21,8 @@
 
 <script lang="ts">
 	import {
-		buildHoverTooltipContent,
-		pickTopmostHover,
-		slugFromLayerId,
-		type HoverTooltipContent
+		buildMultiHoverContent,
+		type MultiHoverContent
 	} from './internal/hover-tooltip-logic.js';
 	import { layerIdFor } from './internal/layer-diff.js';
 
@@ -38,7 +36,7 @@
 
 	let visible = $state(false);
 	let pos = $state<HoverPoint>({ x: 0, y: 0 });
-	let content = $state<HoverTooltipContent | null>(null);
+	let content = $state<MultiHoverContent | null>(null);
 
 	const layerIds = $derived(activeLayerSlugs.map((s) => layerIdFor(s)));
 
@@ -52,17 +50,12 @@
 			return;
 		}
 		const features = map.queryRenderedFeatures(e.point, { layers: existing });
-		const topmost = pickTopmostHover(features);
-		if (!topmost) {
+		const next = buildMultiHoverContent(features);
+		if (!next) {
 			visible = false;
 			return;
 		}
-		const slug = slugFromLayerId(topmost.layer.id);
-		if (!slug) {
-			visible = false;
-			return;
-		}
-		content = buildHoverTooltipContent(slug, topmost.properties);
+		content = next;
 		pos = { x: e.point.x, y: e.point.y };
 		visible = true;
 	}
@@ -90,9 +83,10 @@
 </script>
 
 {#if visible && content && !isMobile}
+	{@const first = content.rows[0]}
 	<div
 		data-testid="map-hover-tooltip"
-		data-slug={content.slug}
+		data-slug={first.slug}
 		data-variant={content.kind}
 		role="tooltip"
 		aria-live="polite"
@@ -101,11 +95,11 @@
 	>
 		{#if content.kind === 'poi'}
 			<p class="font-serif text-sm font-semibold text-ink" data-testid="poi-popover-title">
-				{content.poiTitle ?? content.layerName}
+				{first.poiTitle ?? first.layerName}
 			</p>
-			{#if content.poiSubtitle}
+			{#if first.poiSubtitle}
 				<p class="font-sans text-xs leading-snug text-ink-muted" data-testid="poi-popover-subtitle">
-					{content.poiSubtitle}
+					{first.poiSubtitle}
 				</p>
 			{/if}
 			<p
@@ -114,19 +108,34 @@
 			>
 				{content.hint}
 			</p>
-		{:else}
-			<p class="font-serif text-sm font-semibold text-ink">{content.layerName}</p>
+		{:else if content.rows.length === 1}
+			<p class="font-serif text-sm font-semibold text-ink">{first.layerName}</p>
 			<p class="font-mono text-xs text-ink" data-testid="hover-tooltip-value">
-				{content.valueText}
+				{first.valueText}
 			</p>
-			{#if content.shortExplain}
+			{#if first.shortExplain}
 				<p
 					class="font-serif text-[11px] leading-snug text-ink-muted italic"
 					data-testid="hover-tooltip-explain"
 				>
-					{content.shortExplain}
+					{first.shortExplain}
 				</p>
 			{/if}
+			<p class="mt-1 font-sans text-[10px] tracking-wide text-ink-subtle uppercase">
+				{content.hint}
+			</p>
+		{:else}
+			<!-- Multi-Layer: eine Zeile je Choropleth, oberster zuerst. -->
+			<dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5">
+				{#each content.rows as row (row.slug)}
+					<div class="contents" data-testid="hover-tooltip-row">
+						<dt class="font-serif text-ink">{row.layerName}</dt>
+						<dd class="text-right font-mono text-ink" data-testid="hover-tooltip-value-{row.slug}">
+							{row.valueText}
+						</dd>
+					</div>
+				{/each}
+			</dl>
 			<p class="mt-1 font-sans text-[10px] tracking-wide text-ink-subtle uppercase">
 				{content.hint}
 			</p>

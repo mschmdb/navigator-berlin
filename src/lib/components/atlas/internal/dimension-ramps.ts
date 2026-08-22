@@ -88,3 +88,10 @@ export function rampForSlug(slug: string): Ramp | null {
  * Choroplethen liest, kühl, weil Kaltluft. OKLCH L 0.72 / C 0.09 / H 215.
  */
 export const KALTLUFT_HIGHLIGHT = '#5AB3C8';
+
+/**
+ * Konturbreiten der Score-Layer nach Wert-Quartil (dünn→dick = besser). Auf
+ * 2 px dünnen Linien sind die Rampen-Stufen kaum unterscheidbar; die Breite
+ * kodiert den Wert redundant zur Farbe. Karte und Legende teilen diese Werte.
+ */
+export const SCORE_OUTLINE_WIDTHS: readonly [number, number, number, number] = [1, 1.75, 2.75, 4];

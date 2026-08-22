@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { SCORE_OUTLINE_WIDTHS } from './dimension-ramps.js';
 import {
 	buildLayerSpecCascade,
 	computeCascadeVariants,
@@ -99,28 +100,31 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 		expect(specs[0]?.paint?.['fill-color']).toBeDefined();
 	});
 
-	it('outline-Variant macht aus fill-Spec eine line-Spec ohne dash', () => {
+	it('outline-Variant liefert Hit-Fill + line-Spec ohne dash', () => {
 		const specs = buildLayerSpecCascade('laerm-2023', sourceId, 'outline');
-		expect(specs).toHaveLength(1);
-		const spec = specs[0]!;
-		expect(spec.type).toBe('line');
-		expect(spec.paint?.['line-color']).toBeDefined();
-		expect(spec.paint?.['line-width']).toBe(2);
-		expect(spec.paint).not.toHaveProperty('fill-color');
-		expect(spec.paint).not.toHaveProperty('line-dasharray');
+		expect(specs).toHaveLength(2);
+		const [hit, line] = specs;
+		expect(hit.type).toBe('fill');
+		expect(hit.paint?.['fill-opacity']).toBe(0);
+		expect(line.type).toBe('line');
+		expect(line.paint?.['line-color']).toBeDefined();
+		expect(line.paint?.['line-width']).toBe(2);
+		expect(line.paint).not.toHaveProperty('fill-color');
+		expect(line.paint).not.toHaveProperty('line-dasharray');
 	});
 
-	it('outline-dash-Variant macht line-Spec mit dasharray [4,4]', () => {
+	it('outline-dash-Variant liefert Hit-Fill + line-Spec mit dasharray [4,4]', () => {
 		const specs = buildLayerSpecCascade('wohnlagen-2024', sourceId, 'outline-dash');
-		expect(specs).toHaveLength(1);
-		const spec = specs[0]!;
-		expect(spec.type).toBe('line');
-		expect(spec.paint?.['line-dasharray']).toEqual([4, 4]);
+		expect(specs).toHaveLength(2);
+		const [hit, line] = specs;
+		expect(hit.type).toBe('fill');
+		expect(line.type).toBe('line');
+		expect(line.paint?.['line-dasharray']).toEqual([4, 4]);
 	});
 
 	it('uebernimmt fill-color-Expression als line-color (z.B. match-Expression)', () => {
 		const specs = buildLayerSpecCascade('laerm-2023', sourceId, 'outline');
-		const expr = specs[0]?.paint?.['line-color'];
+		const expr = specs[1]?.paint?.['line-color'];
 		expect(Array.isArray(expr)).toBe(true);
 		expect((expr as unknown[])[0]).toBe('match');
 	});
@@ -149,8 +153,24 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 });
 
 describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
+	it('liefert für outline zwei Specs: unsichtbarer Hit-Fill + eigener Line-Layer', () => {
+		const specs = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
+		expect(specs).toHaveLength(2);
+		const [hit, line] = specs;
+		// Haupt-ID bleibt der Fill: nie ein Typwechsel unter derselben ID, und
+		// queryRenderedFeatures trifft die Fläche fürs Tooltip.
+		expect(hit.id).toBe('navigator-layer-kiez-score-ruhe-luft');
+		expect(hit.type).toBe('fill');
+		expect(hit.paint?.['fill-opacity']).toBe(0);
+		// Reiner Hit-Layer: kein fill-outline-color, das je nach Renderer als
+		// zweite Grenzlinie unter der Kontur durchscheinen könnte.
+		expect(hit.paint).not.toHaveProperty('fill-outline-color');
+		expect(line.id).toBe('navigator-layer-kiez-score-ruhe-luft-outline');
+		expect(line.type).toBe('line');
+	});
+
 	it('behält die daten-getriebene Farb-Expression in der Kontur (eigene Dimension-Hue)', () => {
-		const [line] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
+		const [, line] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
 		expect(line.type).toBe('line');
 		const color = line.paint?.['line-color'] as unknown[];
 		expect(color[0]).toBe('step');
@@ -158,11 +178,39 @@ describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
 	});
 
 	it('zeichnet die gestrichelte Kontur breiter, damit der Dash-Verlust nicht blind macht', () => {
-		const [solid] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
-		const [dashed] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline-dash');
+		const [, solid] = buildLayerSpecCascade('laerm-2023', 'src', 'outline');
+		const [, dashed] = buildLayerSpecCascade('laerm-2023', 'src', 'outline-dash');
 		expect(dashed.paint?.['line-dasharray']).toEqual([4, 4]);
 		expect(dashed.paint?.['line-width'] as number).toBeGreaterThan(
 			solid.paint?.['line-width'] as number
 		);
+	});
+
+	it('kodiert den Score-Wert zusätzlich über die Linienbreite (dünn→dick = besser)', () => {
+		const [, line] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
+		// Quartil-Schwellen wie die Füllung; vier Breiten, monoton, Spreizung ≥ 4x.
+		expect(line.paint?.['line-width']).toEqual([
+			'step',
+			['to-number', ['get', 'value'], -1],
+			SCORE_OUTLINE_WIDTHS[0],
+			0,
+			SCORE_OUTLINE_WIDTHS[0],
+			26,
+			SCORE_OUTLINE_WIDTHS[1],
+			51,
+			SCORE_OUTLINE_WIDTHS[2],
+			76,
+			SCORE_OUTLINE_WIDTHS[3]
+		]);
+		const [w1, w2, w3, w4] = SCORE_OUTLINE_WIDTHS;
+		expect(w2).toBeGreaterThan(w1);
+		expect(w3).toBeGreaterThan(w2);
+		expect(w4).toBeGreaterThan(w3);
+		expect(w4 / w1).toBeGreaterThanOrEqual(3);
+	});
+
+	it('Nicht-Score-Konturen behalten die feste Linienbreite', () => {
+		const [, line] = buildLayerSpecCascade('laerm-2023', 'src', 'outline');
+		expect(typeof line.paint?.['line-width']).toBe('number');
 	});
 });
