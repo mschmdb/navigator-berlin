@@ -22,6 +22,7 @@
 		{ id: 'mission', label: 'Worum es geht' },
 		{ id: 'datenarchitektur', label: 'Datenarchitektur' },
 		{ id: 'aggregations-ebenen', label: 'Aggregations-Ebenen' },
+		{ id: 'karten-darstellung', label: 'Karten-Darstellung' },
 		{ id: 'was-ist-kiez', label: 'Was „Kiez" hier bedeutet' },
 		{ id: 'cross-layer', label: 'Aggregat-Indizes' },
 		{ id: 'wahldaten-section', label: 'Wahldaten' },
@@ -204,6 +205,34 @@
 				<dd class="text-ink">{agg.detail}</dd>
 			{/each}
 		</dl>
+	</section>
+
+	<section
+		id="karten-darstellung"
+		aria-labelledby="karten-darstellung-h"
+		class="flex flex-col gap-3"
+	>
+		<h2 id="karten-darstellung-h" class="font-serif text-2xl text-ink">Karten-Darstellung</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Die Karte zeigt höchstens zwei Wertkarten gleichzeitig, mit festen Rollen: Die erste füllt die
+			Fläche, die zweite erscheint als abgestufte Quadrat-Symbole, ein Quadrat pro Planungsraum,
+			dessen Größe die Stufe zeigt. Ein dritter Wert-Layer ersetzt automatisch den ältesten. In der
+			Legende lassen sich die Rollen per Klick tauschen; die Einstellung wandert mit in geteilte
+			Links.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Jede Score-Dimension hat eine eigene Farbe (Ruhe & Luft blau, Mobilität violett, Versorgung
+			ocker, Wohnschutz petrol, Kultur beere; Grün gehört dem Gesamt-Score und Grün & Hitze).
+			Innerhalb jeder Farbe gilt: hell = niedrige, dunkel = hohe Stufe. Die Formsprache trennt
+			Bedeutungen: Quadrate stehen für zusammengefasste Flächenwerte, runde Marker und Pins für
+			konkrete Orte. Gebiets-Layer wie Milieuschutz oder Kaltluft-Korridore sagen nur „hier gilt
+			etwas", legen sich als Flächen darunter und zählen nicht ins Zwei-Karten-Limit.
+		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Die Größen-Staffelung der Symbole trägt die Information auch bei Rot-Grün-Schwäche, wo sich
+			Farbtöne annähern können. Die Unterscheidbarkeit der Farb-Kombinationen haben wir mit
+			simulierter Farbfehlsichtigkeit gemessen, nicht geschätzt.
+		</p>
 	</section>
 
 	<section id="was-ist-kiez" aria-labelledby="was-ist-kiez-h" class="flex flex-col gap-3">

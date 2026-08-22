@@ -34,6 +34,7 @@ const EXPECTED_SECTION_IDS = [
 	'mission',
 	'datenarchitektur',
 	'aggregations-ebenen',
+	'karten-darstellung',
 	'cross-layer',
 	'coverage-strategie',
 	'omissions',
@@ -141,5 +142,4 @@ describe('methodik +page.svelte', () => {
 		expect(sec?.textContent).toMatch(/OpenStreetMap/);
 		await expect.element(page.getByTestId('methodik-kuehle-orte-link')).toBeInTheDocument();
 	});
-
 });
