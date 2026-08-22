@@ -171,3 +171,38 @@ describe('getEinwohnerGesamtForScope', () => {
 		expect(await getEinwohnerGesamtForScope('kiez', 'regierungsviertel', notFound)).toBeNull();
 	});
 });
+
+describe('loadPayload-Härtung · transienter Fehler blockiert nicht dauerhaft', () => {
+	it('wirft nicht bei rejectendem fetch und kann danach erfolgreich nachladen', async () => {
+		_resetDemografieCache();
+		const failing = (async () => {
+			throw new Error('network down');
+		}) as unknown as typeof fetch;
+		await expect(
+			getEinwohnerGesamtForScope('kiez', 'regierungsviertel', failing)
+		).resolves.toBeNull();
+
+		const payload = {
+			schemaVersion: 2,
+			generatedAt: 'x',
+			stichtag: '2024-12-31',
+			records: [],
+			kiez: { regierungsviertel: { gesamt: 13637 } },
+			bezirk: {}
+		};
+		const working = (async () =>
+			new Response(JSON.stringify(payload), { status: 200 })) as unknown as typeof fetch;
+		await expect(getEinwohnerGesamtForScope('kiez', 'regierungsviertel', working)).resolves.toBe(
+			13637
+		);
+	});
+
+	it('wirft nicht bei kaputtem JSON', async () => {
+		_resetDemografieCache();
+		const broken = (async () =>
+			new Response('das ist kein json', { status: 200 })) as unknown as typeof fetch;
+		await expect(
+			getEinwohnerGesamtForScope('kiez', 'regierungsviertel', broken)
+		).resolves.toBeNull();
+	});
+});

@@ -43,16 +43,21 @@ export function _resetDemografieCache(): void {
 async function loadPayload(fetchFn: typeof fetch): Promise<EinwohnerPayload | null> {
 	if (payloadCache) return payloadCache;
 	if (payloadInflight) return payloadInflight;
+	// Fehler (Netz weg, kaputtes JSON) liefern null und räumen den Inflight-
+	// Marker im finally ab: Ein transienter Ausfall darf nicht als abgelehnte
+	// Promise hängen bleiben und jeden späteren Aufruf für immer mitreißen.
 	payloadInflight = (async () => {
-		const res = await fetchFn(DEMOGRAFIE_URL, { cache: 'no-cache' });
-		if (!res.ok) {
-			payloadInflight = null;
+		try {
+			const res = await fetchFn(DEMOGRAFIE_URL, { cache: 'no-cache' });
+			if (!res.ok) return null;
+			const data = (await res.json()) as EinwohnerPayload;
+			payloadCache = data;
+			return data;
+		} catch {
 			return null;
+		} finally {
+			payloadInflight = null;
 		}
-		const data = (await res.json()) as EinwohnerPayload;
-		payloadCache = data;
-		payloadInflight = null;
-		return data;
 	})();
 	return payloadInflight;
 }

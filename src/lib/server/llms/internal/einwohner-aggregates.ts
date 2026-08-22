@@ -24,7 +24,10 @@ interface PayloadShape {
 function toMap(records: Record<string, { readonly gesamt?: unknown }> | undefined) {
 	const map = new Map<string, number>();
 	for (const [slug, record] of Object.entries(records ?? {})) {
-		if (typeof record?.gesamt === 'number' && record.gesamt > 0) map.set(slug, record.gesamt);
+		// Eine echte 0 ist ein bekannter Wert und bleibt erhalten; nur
+		// fehlende/kaputte Werte fallen raus. Ob 0 angezeigt wird, entscheidet
+		// der Renderer.
+		if (typeof record?.gesamt === 'number' && record.gesamt >= 0) map.set(slug, record.gesamt);
 	}
 	return map;
 }
@@ -41,7 +44,18 @@ export async function loadEinwohnerAggregates(repoRoot: string): Promise<Einwohn
 		);
 		const payload = JSON.parse(raw) as PayloadShape;
 		value = { kiez: toMap(payload.kiez), bezirk: toMap(payload.bezirk) };
-	} catch {
+	} catch (err) {
+		// ENOENT ist der erwartete Leer-Fall (Datei noch nicht gebaut). Alles
+		// andere (kaputtes JSON, Rechte) ist echte Korruption und wird benannt,
+		// statt still leere Exporte auszuliefern.
+		const code = (err as NodeJS.ErrnoException).code;
+		if (code !== 'ENOENT') {
+			// eslint-disable-next-line no-console
+			console.warn(
+				'[einwohner-aggregates] Payload unlesbar, Exporte ohne Einwohner:',
+				err instanceof Error ? err.message : err
+			);
+		}
 		value = { kiez: new Map(), bezirk: new Map() };
 	}
 	cache = { root: repoRoot, value };
