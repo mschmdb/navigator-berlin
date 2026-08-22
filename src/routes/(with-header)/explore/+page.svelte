@@ -260,6 +260,7 @@
 		removeSource: (id: string) => void;
 		addLayer: (spec: MapLibreLayerSpec & { 'source-layer'?: string }) => void;
 		removeLayer: (id: string) => void;
+		moveLayer: (id: string, beforeId?: string) => void;
 		getLayer: (id: string) => unknown;
 		getSource: (id: string) => unknown;
 	};
@@ -392,6 +393,24 @@
 				}
 			}
 		}
+
+		// 4. Z-Reihenfolge deterministisch erzwingen. Der Add-Loop fügt nur
+		// fehlende Layer hinzu, sonst wäre die Stapelung Aktivierungs-Historie:
+		// ein später zugeschalteter Overlay läge über den Aggregat-Symbolen.
+		// moveLayer ohne beforeId hebt an die Spitze; die ordered-Sequenz
+		// bottom-up ergibt exakt die gewünschte Stapelung, Symbole zuoberst.
+		for (const slug of ordered) {
+			const layerId = layerIdFor(slug);
+			if (map.getLayer(layerId)) map.moveLayer(layerId);
+		}
+		// Aggregat-Symbole liegen über ALLEN Daten-Layern, auch über Overlays
+		// und Punkt-Layern: Sie sind die kleinste Tinte und tragen den Wert.
+		for (const slug of ordered) {
+			const outlineId = outlineLayerIdFor(slug);
+			if (map.getLayer(outlineId)) map.moveLayer(outlineId);
+		}
+		// Die Auswahl-Kontur (Region-Outline) bleibt zuoberst.
+		if (map.getLayer(OUTLINE_LINE_ID)) map.moveLayer(OUTLINE_LINE_ID);
 
 		renderedSlugs = [...ordered];
 		renderedVariantBySlug = variantBySlug;
