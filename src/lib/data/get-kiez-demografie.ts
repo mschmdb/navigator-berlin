@@ -127,3 +127,20 @@ export async function getDemografieByScopeAt(
 		bezirk: bezirkRecord ? toData(bezirkRecord, payload.stichtag) : null
 	};
 }
+
+/**
+ * Einwohner gesamt für einen Kiez- oder Bezirks-Slug aus den slug-gekeyten
+ * Aggregaten des Demografie-Payloads (schemaVersion ≥ 2). null, wenn der
+ * Payload fehlt oder den Slug nicht kennt. Für die Profil-Seiten: Die
+ * Boundary-GeoJSONs führen keine EINWOHNER-Properties mehr, dieser Payload
+ * ist die gepflegte Quelle (mit Stichtag).
+ */
+export async function getEinwohnerGesamtForScope(
+	scope: 'kiez' | 'bezirk',
+	slug: string,
+	fetchFn: typeof fetch = fetch
+): Promise<number | null> {
+	const payload = await loadPayload(fetchFn);
+	const record = payload?.[scope]?.[slug];
+	return typeof record?.gesamt === 'number' ? record.gesamt : null;
+}

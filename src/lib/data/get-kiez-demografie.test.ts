@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { Feature, FeatureCollection, Polygon } from 'geojson';
-import { _resetDemografieCache, getDemografieByScopeAt } from './get-kiez-demografie.js';
+import {
+	_resetDemografieCache,
+	getDemografieByScopeAt,
+	getEinwohnerGesamtForScope
+} from './get-kiez-demografie.js';
 import { _resetKiezScoreCache } from './get-kiez-score.js';
 import { _resetManifestCache } from './manifest.js';
 import type { Manifest } from './types.js';
@@ -138,5 +142,32 @@ describe('getDemografieByScopeAt', () => {
 		expect(out.standort?.einwohner).toBe(3580);
 		expect(out.kiez).toBeNull();
 		expect(out.bezirk).toBeNull();
+	});
+});
+
+describe('getEinwohnerGesamtForScope', () => {
+	const payload = {
+		schemaVersion: 2,
+		generatedAt: 'x',
+		stichtag: '2024-12-31',
+		records: [],
+		kiez: { regierungsviertel: { gesamt: 13637 } },
+		bezirk: { mitte: { gesamt: 397004 } }
+	};
+	const okFetch = (async () =>
+		new Response(JSON.stringify(payload), { status: 200 })) as unknown as typeof fetch;
+
+	it('liest kiez- und bezirk-Aggregate aus dem Payload', async () => {
+		_resetDemografieCache();
+		expect(await getEinwohnerGesamtForScope('kiez', 'regierungsviertel', okFetch)).toBe(13637);
+		expect(await getEinwohnerGesamtForScope('bezirk', 'mitte', okFetch)).toBe(397004);
+	});
+
+	it('liefert null für unbekannte Slugs und fehlenden Payload', async () => {
+		_resetDemografieCache();
+		expect(await getEinwohnerGesamtForScope('kiez', 'nirgendwo', okFetch)).toBeNull();
+		_resetDemografieCache();
+		const notFound = (async () => new Response('404', { status: 404 })) as unknown as typeof fetch;
+		expect(await getEinwohnerGesamtForScope('kiez', 'regierungsviertel', notFound)).toBeNull();
 	});
 });

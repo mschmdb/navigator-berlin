@@ -7,6 +7,7 @@ import { loadManifest } from './manifest.js';
 import { fetchLayer } from './internal/layer-fetch.js';
 import { normalizeSlug } from './internal/slug.js';
 import { getLayersAtPoint } from './get-layers-at-point.js';
+import { getEinwohnerGesamtForScope } from './get-kiez-demografie.js';
 
 const BEZIRKE_SLUG = 'bezirke';
 
@@ -43,9 +44,12 @@ export async function getBezirkProfile(
 	const centroid = center(feature).geometry.coordinates as [number, number];
 	const coverage = await getLayersAtPoint(centroid[1], centroid[0], fetchFn);
 
+	// Einwohner aus dem Demografie-Payload (gepflegt, mit Stichtag); das
+	// Prod-Bezirks-GeoJSON führt keine EINWOHNER-Props. Props als Fallback.
+	const einwohnerAggregat = await getEinwohnerGesamtForScope('bezirk', normalized, fetchFn);
 	const einwohnerRaw = props.EINWOHNER ?? props.einwohner;
 	const flaecheRaw = props.FLAECHE_HA ?? props.flaeche_ha;
-	const einwohner = typeof einwohnerRaw === 'number' ? einwohnerRaw : 0;
+	const einwohner = einwohnerAggregat ?? (typeof einwohnerRaw === 'number' ? einwohnerRaw : 0);
 	const flaecheHa =
 		typeof flaecheRaw === 'number' ? flaecheRaw : Math.round(turfArea(feature) / 10000);
 

@@ -8,6 +8,7 @@ import { fetchLayer } from './internal/layer-fetch.js';
 import { normalizeSlug } from './internal/slug.js';
 import { resolveKiezSlugIndex, type KiezNameRef } from './internal/kiez-slug.js';
 import { getLayersAtPoint } from './get-layers-at-point.js';
+import { getEinwohnerGesamtForScope } from './get-kiez-demografie.js';
 
 const LOR_BR_SLUG = 'lor-bezirksregion';
 const BEZIRKE_SLUG = 'bezirke';
@@ -91,10 +92,14 @@ export async function getKiezProfile(
 	const centroid = center(feature).geometry.coordinates as [number, number];
 	const coverage = await getLayersAtPoint(centroid[1], centroid[0], fetchFn);
 
+	// Einwohner aus dem Demografie-Payload (gepflegt, mit Stichtag); die
+	// Boundary-GeoJSONs führen keine EINWOHNER-Props mehr. Props bleiben als
+	// Fallback für Alt-Daten, sonst 0.
 	const einwohnerRaw = props.EINWOHNER ?? props.einwohner;
 	const flaecheRaw = props.FLAECHE_HA ?? props.flaeche_ha;
 	const groesseM2 = typeof props.GROESSE_m2 === 'number' ? props.GROESSE_m2 : null;
-	const einwohner = typeof einwohnerRaw === 'number' ? einwohnerRaw : 0;
+	const einwohnerAggregat = await getEinwohnerGesamtForScope('kiez', normalized, fetchFn);
+	const einwohner = einwohnerAggregat ?? (typeof einwohnerRaw === 'number' ? einwohnerRaw : 0);
 	const flaecheHa =
 		typeof flaecheRaw === 'number'
 			? flaecheRaw

@@ -1,0 +1,16 @@
+{
+	"schemaVersion": 2,
+	"generatedAt": "2026-06-15T00:00:00.000Z",
+	"stichtag": "2024-12-31",
+	"records": [],
+	"kiez": {
+		"heerstrasse": {
+			"gesamt": 21077
+		}
+	},
+	"bezirk": {
+		"mitte": {
+			"gesamt": 397004
+		}
+	}
+}

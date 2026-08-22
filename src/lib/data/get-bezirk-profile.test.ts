@@ -1,3 +1,4 @@
+import { _resetDemografieCache } from './get-kiez-demografie.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -15,9 +16,14 @@ const miniBezirke = load('./__fixtures__/mini-bezirke.geojson');
 const miniMietspiegel = load('./__fixtures__/mini-mietspiegel.geojson');
 const miniTrinkbrunnen = load('./__fixtures__/mini-trinkbrunnen.geojson');
 const miniStrassenlaerm = load('./__fixtures__/mini-strassenlaerm.geojson');
+const miniEinwohner = load('./__fixtures__/mini-einwohner-lor.json');
 
-const fetchMock = () =>
+const fetchMock = (opts: { einwohnerPayload?: boolean } = {}) =>
 	vi.fn(async (url: string) => {
+		if (url === '/data/einwohner-lor.json') {
+			if (opts.einwohnerPayload === false) return new Response('404', { status: 404 });
+			return new Response(JSON.stringify(miniEinwohner), { status: 200 });
+		}
 		if (url === '/layers/MANIFEST.json')
 			return new Response(JSON.stringify(miniManifest), { status: 200 });
 		if (url === '/layers/bezirke.a1b2c3d4.geojson')
@@ -32,6 +38,7 @@ const fetchMock = () =>
 	});
 
 beforeEach(() => {
+	_resetDemografieCache();
 	_resetManifestCache();
 	_resetLayerCache();
 	_resetIndexCache();
@@ -45,7 +52,9 @@ describe('getBezirkProfile', () => {
 		const p = await getBezirkProfile('de', 'mitte', fn as unknown as typeof fetch);
 		expect(p.slug).toBe('mitte');
 		expect(p.name).toBe('Mitte');
-		expect(p.einwohner).toBe(384172);
+		// Einwohner kommen aus dem Demografie-Payload (Stichtag-gepflegt), nicht
+		// aus den GeoJSON-Props: Das Prod-GeoJSON führt gar keine EINWOHNER mehr.
+		expect(p.einwohner).toBe(397004);
 		expect(p.flaecheHa).toBe(3947);
 		expect(p.centroid).toHaveLength(2);
 		expect(p.layerCoverage.length).toBeGreaterThan(0);
@@ -66,5 +75,13 @@ describe('getBezirkProfile', () => {
 		await expect(
 			getBezirkProfile('de', 'foo-bar-baz', fn as unknown as typeof fetch)
 		).rejects.toThrow();
+	});
+});
+
+describe('getBezirkProfile · Einwohner-Fallbacks', () => {
+	it('fällt ohne Demografie-Payload auf die GeoJSON-Props zurück', async () => {
+		const fn = fetchMock({ einwohnerPayload: false });
+		const p = await getBezirkProfile('de', 'mitte', fn as unknown as typeof fetch);
+		expect(p.einwohner).toBe(384172);
 	});
 });

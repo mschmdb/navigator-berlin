@@ -2,6 +2,7 @@ import { describe, expect, it, beforeEach } from 'vitest';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { getKiezProfile } from './get-kiez-profile.js';
+import { _resetDemografieCache } from './get-kiez-demografie.js';
 import { _resetManifestCache } from './manifest.js';
 import { _resetLayerCache } from './internal/layer-fetch.js';
 import { _resetIndexCache } from './internal/spatial-index.js';
@@ -13,7 +14,7 @@ import { _resetIndexCache } from './internal/spatial-index.js';
  */
 const fsFetch = (async (input: string) => {
 	const path = typeof input === 'string' ? input : String(input);
-	if (path.startsWith('/layers/')) {
+	if (path.startsWith('/layers/') || path.startsWith('/data/')) {
 		const file = resolve(process.cwd(), 'static', path.replace(/^\//, ''));
 		const body = await readFile(file, 'utf-8');
 		return new Response(body, { status: 200 });
@@ -22,6 +23,7 @@ const fsFetch = (async (input: string) => {
 }) as unknown as typeof fetch;
 
 beforeEach(() => {
+	_resetDemografieCache();
 	_resetManifestCache();
 	_resetLayerCache();
 	_resetIndexCache();
@@ -51,5 +53,14 @@ describe('getKiezProfile · Heerstraße-Disambiguierung', () => {
 	it('löst einen eindeutigen Kiez weiterhin über den bare Slug auf', async () => {
 		const profile = await getKiezProfile('de', 'buch', fsFetch);
 		expect(profile.slug).toBe('buch');
+	});
+});
+
+describe('getKiezProfile · Einwohner aus Demografie-Payload', () => {
+	it('liefert echte Einwohnerzahlen statt 0 (Prod-GeoJSON führt keine EINWOHNER-Props)', async () => {
+		const spandau = await getKiezProfile('de', 'heerstrasse-spandau', fsFetch);
+		expect(spandau.einwohner).toBe(30971);
+		const regierungsviertel = await getKiezProfile('de', 'regierungsviertel', fsFetch);
+		expect(regierungsviertel.einwohner).toBe(13637);
 	});
 });
