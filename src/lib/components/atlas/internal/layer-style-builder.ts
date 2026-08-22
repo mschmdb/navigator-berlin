@@ -1,4 +1,5 @@
 import { COLORS } from './colors.js';
+import { KALTLUFT_HIGHLIGHT, rampForSlug, type Ramp } from './dimension-ramps.js';
 import { hasPinIcon } from './pin-icon-mapping.js';
 import { pinImageId } from './pin-sprite-renderer.js';
 
@@ -141,6 +142,23 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 };
 
 const TRANSITION_MS = 200;
+
+// Fallback-Rampen, falls ein Score-Profil-Slug keine Dimension-Rampe hat
+// (sollte nicht vorkommen, haelt den Builder aber total).
+const GUT_RAMP: Ramp = [
+	COLORS.scaleGut1,
+	COLORS.scaleGut2,
+	COLORS.scaleGut3,
+	COLORS.scaleGut4,
+	COLORS.scaleGut5
+];
+const STRUKTURELL_RAMP: Ramp = [
+	COLORS.scaleStrukturell1,
+	COLORS.scaleStrukturell2,
+	COLORS.scaleStrukturell3,
+	COLORS.scaleStrukturell4,
+	COLORS.scaleStrukturell5
+];
 
 export function getStyleProfile(slug: string): StyleProfile {
 	return LAYER_STYLE_PROFILE[slug] ?? 'boundary';
@@ -286,7 +304,7 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 	},
 	'polygon-highlight': {
 		kind: 'categorical',
-		items: [{ color: COLORS.chartCat3, label: 'betroffen' }]
+		items: [{ color: KALTLUFT_HIGHLIGHT, label: 'betroffen' }]
 	},
 	'polygon-outline-soft': {
 		kind: 'categorical',
@@ -369,8 +387,28 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 	}
 };
 
+/**
+ * Multi-Layer-Kartenfarben: Score-Choroplethen ziehen ihre Rampe pro Slug
+ * (Hue = Dimension), nicht mehr pro Profil. Alle übrigen Profile bleiben statisch.
+ */
+function scoreLegend(ramp: Ramp): LegendSpec {
+	return {
+		kind: 'categorical',
+		items: [
+			{ color: ramp[0], label: 'gering' },
+			{ color: ramp[1], label: 'mittel' },
+			{ color: ramp[3], label: 'hoch' },
+			{ color: ramp[4], label: 'sehr hoch' }
+		]
+	};
+}
+
 export function getLegendSpec(slug: string): LegendSpec {
 	const profile = getStyleProfile(slug);
+	if (profile === 'choropleth-kiez-score-ordinal-4')
+		return scoreLegend(rampForSlug(slug) ?? GUT_RAMP);
+	if (profile === 'choropleth-kiez-score-strukturell-4')
+		return scoreLegend(rampForSlug(slug) ?? STRUKTURELL_RAMP);
 	return LEGEND_BY_PROFILE[profile];
 }
 
@@ -664,15 +702,17 @@ export function buildLayerSpec(
 				}
 			];
 		case 'polygon-highlight':
+			// Multi-Layer-Kartenfarben: helles Cyan statt Score-Grün, damit Kaltluft-
+			// Flächen nicht mit den Gut-Grün-Choroplethen verschwimmen.
 			return [
 				{
 					id,
 					type: 'fill',
 					source: sourceId,
 					paint: {
-						'fill-color': COLORS.chartCat3,
+						'fill-color': KALTLUFT_HIGHLIGHT,
 						'fill-opacity': 0.45,
-						'fill-outline-color': COLORS.chartCat3
+						'fill-outline-color': KALTLUFT_HIGHLIGHT
 					}
 				}
 			];
@@ -912,7 +952,13 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-kiez-score-ordinal-4':
-			// Story 1.31: Gut-Familie (Grün). Hell→dunkel = besser. Stage-Subset 4 = {1,2,4,5}.
+		case 'choropleth-kiez-score-strukturell-4': {
+			// Multi-Layer-Kartenfarben: Hue = Dimension (dimension-ramps.ts), Helligkeit =
+			// Wert. Hell→dunkel = besser (ADR-015); Kriminalität Indigo ohne Wertung
+			// (ADR-019). Quartil-Schwellen 0/26/51/76, Stage-Subset {1,2,4,5}.
+			const ramp =
+				rampForSlug(slug) ??
+				(profile === 'choropleth-kiez-score-strukturell-4' ? STRUKTURELL_RAMP : GUT_RAMP);
 			return [
 				{
 					id,
@@ -924,45 +970,19 @@ export function buildLayerSpec(
 							['to-number', ['get', 'value'], -1],
 							COLORS.bg,
 							0,
-							COLORS.scaleGut1,
+							ramp[0],
 							26,
-							COLORS.scaleGut2,
+							ramp[1],
 							51,
-							COLORS.scaleGut4,
+							ramp[3],
 							76,
-							COLORS.scaleGut5
+							ramp[4]
 						],
 						'fill-opacity': 0.55,
 						'fill-outline-color': COLORS.accent
 					}
 				}
 			];
-		case 'choropleth-kiez-score-strukturell-4':
-			// Story 14.4: Strukturell-Indigo (Magnitude). Gleiche Quartil-Schwellen wie der
-			// Gut-Score, aber Indigo-Familie + kein „besser“-Pfeil (ADR-019).
-			return [
-				{
-					id,
-					type: 'fill',
-					source: sourceId,
-					paint: {
-						'fill-color': [
-							'step',
-							['to-number', ['get', 'value'], -1],
-							COLORS.bg,
-							0,
-							COLORS.scaleStrukturell1,
-							26,
-							COLORS.scaleStrukturell2,
-							51,
-							COLORS.scaleStrukturell4,
-							76,
-							COLORS.scaleStrukturell5
-						],
-						'fill-opacity': 0.55,
-						'fill-outline-color': COLORS.accent
-					}
-				}
-			];
+		}
 	}
 }

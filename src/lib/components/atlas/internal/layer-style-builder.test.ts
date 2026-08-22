@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { KALTLUFT_HIGHLIGHT, rampForSlug } from './dimension-ramps.js';
 import {
 	buildLayerSpec,
 	getLegendSpec,
@@ -371,5 +372,64 @@ describe('getLegendSpec kuehle-orte (Legende-Fix)', () => {
 		expect(legend.kind).toBe('point');
 		expect(legend.items[0].label).toBe('Kühler Ort');
 		expect(legend.items[0].color).toBe(COLORS.umweltKuehleOrte);
+	});
+});
+
+describe('layer-style-builder · Dimension-Rampen (Multi-Layer-Kartenfarben)', () => {
+	const SOURCE = 'src';
+
+	function fillColorOf(slug: string): unknown[] {
+		const [spec] = buildLayerSpec(slug, SOURCE);
+		return spec.paint?.['fill-color'] as unknown[];
+	}
+
+	it('färbt jede Score-Dimension aus ihrer eigenen Rampe (Stufen 1/2/4/5)', () => {
+		const ramp = rampForSlug('kiez-score-ruhe-luft')!;
+		const expr = fillColorOf('kiez-score-ruhe-luft');
+		expect(expr[0]).toBe('step');
+		expect(expr).toContain(ramp[0]);
+		expect(expr).toContain(ramp[1]);
+		expect(expr).toContain(ramp[3]);
+		expect(expr).toContain(ramp[4]);
+		expect(expr).not.toContain(COLORS.scaleGut1);
+	});
+
+	it('zwei Score-Dimensionen teilen keine Flächenfarbe mehr', () => {
+		const a = fillColorOf('kiez-score-ruhe-luft').filter(
+			(v) => typeof v === 'string' && v.startsWith('#')
+		);
+		const b = fillColorOf('kiez-score-mobilitaet').filter(
+			(v) => typeof v === 'string' && v.startsWith('#')
+		);
+		const shared = a.filter((hex) => b.includes(hex) && hex !== COLORS.bg);
+		expect(shared).toEqual([]);
+	});
+
+	it('gesamt und gruen-hitze bleiben auf der Gut-Grün-Rampe', () => {
+		expect(fillColorOf('kiez-score-gesamt')).toContain(COLORS.scaleGut5);
+		expect(fillColorOf('kiez-score-gruen-hitze')).toContain(COLORS.scaleGut5);
+	});
+
+	it('kriminalitaet bleibt Strukturell-Indigo (ADR-019)', () => {
+		const expr = fillColorOf('kiez-score-kriminalitaet');
+		expect(expr).toContain(COLORS.scaleStrukturell5);
+		expect(expr).not.toContain(COLORS.scaleGut5);
+	});
+
+	it('Kaltluft-Highlights füllen cyan statt Score-Grün', () => {
+		const [spec] = buildLayerSpec('klima-kaltlufteinwirkbereich-2022', SOURCE);
+		expect(spec.paint?.['fill-color']).toBe(KALTLUFT_HIGHLIGHT);
+		expect(spec.paint?.['fill-color']).not.toBe(COLORS.chartCat3);
+	});
+
+	it('Legende zeigt pro Score-Dimension die eigene Rampe', () => {
+		const legend = getLegendSpec('kiez-score-mobilitaet');
+		const ramp = rampForSlug('kiez-score-mobilitaet')!;
+		expect(legend.items.map((i) => i.color)).toEqual([ramp[0], ramp[1], ramp[3], ramp[4]]);
+		expect(legend.items.map((i) => i.label)).toEqual(['gering', 'mittel', 'hoch', 'sehr hoch']);
+	});
+
+	it('Legende der Kaltluft-Layer trägt das Cyan', () => {
+		expect(getLegendSpec('klima-leitbahnkorridor-2022').items[0].color).toBe(KALTLUFT_HIGHLIGHT);
 	});
 });

@@ -18,6 +18,9 @@ const POLYGON_PROFILES: ReadonlySet<StyleProfile> = new Set<StyleProfile>([
 	'choropleth-mehrfach',
 	'choropleth-pet',
 	'choropleth-wohnlage-3',
+	'choropleth-mss-12',
+	'choropleth-kiez-score-ordinal-4',
+	'choropleth-kiez-score-strukturell-4',
 	'choropleth-dichte',
 	'polygon-highlight',
 	'polygon-outline-soft',
@@ -50,6 +53,8 @@ export function computeCascadeVariants(
 }
 
 const OUTLINE_LINE_WIDTH = 2;
+// Gestrichelt verliert die Hälfte der Tinte; etwas mehr Breite gleicht das aus.
+const OUTLINE_DASH_LINE_WIDTH = 2.5;
 const OUTLINE_LINE_OPACITY = 0.85;
 const OUTLINE_DASH_PATTERN: readonly [number, number] = [4, 4];
 
@@ -57,7 +62,7 @@ function fillSpecToLineSpec(spec: MapLibreLayerSpec, dash: boolean): MapLibreLay
 	const fillColor = spec.paint?.['fill-color'] ?? COLORS.accent;
 	const paint: Record<string, unknown> = {
 		'line-color': fillColor,
-		'line-width': OUTLINE_LINE_WIDTH,
+		'line-width': dash ? OUTLINE_DASH_LINE_WIDTH : OUTLINE_LINE_WIDTH,
 		'line-opacity': OUTLINE_LINE_OPACITY
 	};
 	if (dash) paint['line-dasharray'] = [...OUTLINE_DASH_PATTERN];

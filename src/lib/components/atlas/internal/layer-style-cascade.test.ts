@@ -147,3 +147,22 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 		expect(outline[0]?.source).toBe(sourceId);
 	});
 });
+
+describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
+	it('behält die daten-getriebene Farb-Expression in der Kontur (eigene Dimension-Hue)', () => {
+		const [line] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
+		expect(line.type).toBe('line');
+		const color = line.paint?.['line-color'] as unknown[];
+		expect(color[0]).toBe('step');
+		expect(JSON.stringify(color)).toContain('#003D69');
+	});
+
+	it('zeichnet die gestrichelte Kontur breiter, damit der Dash-Verlust nicht blind macht', () => {
+		const [solid] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
+		const [dashed] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline-dash');
+		expect(dashed.paint?.['line-dasharray']).toEqual([4, 4]);
+		expect(dashed.paint?.['line-width'] as number).toBeGreaterThan(
+			solid.paint?.['line-width'] as number
+		);
+	});
+});
