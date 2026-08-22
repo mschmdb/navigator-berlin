@@ -48,8 +48,10 @@ export interface BezirkRenderInput {
 function renderHeader(input: BezirkRenderInput, lines: string[]): void {
 	lines.push(`## Bezirk ${input.name}`);
 	lines.push('');
-	lines.push(`- Einwohner: ${formatNumberDe(input.einwohner)}`);
-	lines.push(`- Fläche: ${formatKm2(input.flaecheHa)}`);
+	// 0 heißt „nicht befüllt", nicht „niemand wohnt hier": Zeile weglassen
+	// statt eine falsche Zahl an KI-Crawler auszuliefern.
+	if (input.einwohner > 0) lines.push(`- Einwohner: ${formatNumberDe(input.einwohner)}`);
+	if (input.flaecheHa > 0) lines.push(`- Fläche: ${formatKm2(input.flaecheHa)}`);
 	lines.push(`- Slug: ${input.slug}`);
 	lines.push('');
 }

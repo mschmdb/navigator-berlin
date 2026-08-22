@@ -19,6 +19,7 @@ import { getBezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import { getKiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
 import { getBezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
 import { getKiezScore } from '$lib/server/db/queries/get-kiez-score.js';
+import { loadEinwohnerAggregates } from './internal/einwohner-aggregates.js';
 import { renderBezirkMarkdown } from './bezirk-renderer.js';
 import { renderKiezMarkdown } from './kiez-renderer.js';
 import { getProfileParagraphs } from '../profile/get-profile.js';
@@ -93,6 +94,7 @@ function tryGet<T>(loader: () => Promise<T>): Promise<T | null> {
 
 async function collectBezirke(): Promise<LlmsBezirkEntry[]> {
 	const out: LlmsBezirkEntry[] = [];
+	const einwohnerAgg = await loadEinwohnerAggregates(process.cwd());
 	for (const slug of BERLIN_BEZIRK_SLUGS) {
 		const stats = await tryGet(() => getBezirkStats(slug));
 		const score = await tryGet(() => getBezirkScore(slug));
@@ -100,7 +102,9 @@ async function collectBezirke(): Promise<LlmsBezirkEntry[]> {
 		const markdown = renderBezirkMarkdown({
 			slug,
 			name,
-			einwohner: 0, // Bezirks-GeoJSON-Load out-of-scope für Phase 1 (extra fetch)
+			// Einwohner aus dem Demografie-Payload; Fläche weiter unbefüllt, der
+			// Renderer lässt 0-Zeilen weg statt 0 zu behaupten.
+			einwohner: einwohnerAgg.bezirk.get(slug) ?? 0,
 			flaecheHa: 0,
 			stats,
 			score,
@@ -135,6 +139,7 @@ async function collectKieze(): Promise<LlmsKiezEntry[]> {
 	}
 
 	const out: LlmsKiezEntry[] = [];
+	const einwohnerAgg = await loadEinwohnerAggregates(process.cwd());
 	for (const [i, row] of rows.entries()) {
 		const stats = await tryGet(() => getKiezStats(row.slug));
 		const score = await tryGet(() => getKiezScore(row.slug));
@@ -148,7 +153,7 @@ async function collectKieze(): Promise<LlmsKiezEntry[]> {
 			name,
 			bezirkName,
 			bezirkSlug: row.bezirkSlug,
-			einwohner: 0,
+			einwohner: einwohnerAgg.kiez.get(row.slug) ?? 0,
 			flaecheHa: 0,
 			stats,
 			score,

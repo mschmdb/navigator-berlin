@@ -165,3 +165,17 @@ describe('renderBezirkMarkdown', () => {
 		expect(md).toContain('[REDAKTIONSFEHLER]');
 	});
 });
+
+describe('renderBezirkMarkdown · unbekannte Einwohner/Fläche', () => {
+	it('lässt Einwohner- und Fläche-Zeilen bei 0 weg statt 0 zu behaupten', () => {
+		const md = renderBezirkMarkdown({ ...baseInput, einwohner: 0, flaecheHa: 0 });
+		expect(md).not.toMatch(/Einwohner: 0/);
+		expect(md).not.toMatch(/Fläche: 0/);
+	});
+
+	it('zeigt echte Werte weiterhin an', () => {
+		const md = renderBezirkMarkdown({ ...baseInput, einwohner: 13637, flaecheHa: 270 });
+		expect(md).toContain('Einwohner: 13.637');
+		expect(md).toMatch(/Fläche: /);
+	});
+});
