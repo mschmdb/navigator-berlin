@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { SCORE_DOT_SIZES } from './dimension-ramps.js';
 import {
 	buildLayerSpecCascade,
+	isChoroplethSlug,
 	computeCascadeVariants,
 	isPolygonSlug,
 	type CascadeVariant
@@ -59,7 +60,7 @@ describe('layer-style-cascade.computeCascadeVariants', () => {
 		expect(map.get('wohnlagen-2024')).toBe<CascadeVariant>('outline');
 	});
 
-	it('dritter und folgende Polygon-Layer = outline-dash', () => {
+	it('dritter und folgende Choroplethen fallen defensiv auf outline (Limit greift vorher)', () => {
 		const map = computeCascadeVariants([
 			'laerm-2023',
 			'wohnlagen-2024',
@@ -68,8 +69,8 @@ describe('layer-style-cascade.computeCascadeVariants', () => {
 		]);
 		expect(map.get('laerm-2023')).toBe<CascadeVariant>('fill');
 		expect(map.get('wohnlagen-2024')).toBe<CascadeVariant>('outline');
-		expect(map.get('klima-pet-2022')).toBe<CascadeVariant>('outline-dash');
-		expect(map.get('bodenrichtwerte')).toBe<CascadeVariant>('outline-dash');
+		expect(map.get('klima-pet-2022')).toBe<CascadeVariant>('outline');
+		expect(map.get('bodenrichtwerte')).toBe<CascadeVariant>('outline');
 	});
 
 	it('non-polygon-Slugs werden uebersprungen, nicht gezaehlt', () => {
@@ -86,7 +87,7 @@ describe('layer-style-cascade.computeCascadeVariants', () => {
 		expect(map.has('ubahn-netz')).toBe(false);
 		expect(map.get('laerm-2023')).toBe<CascadeVariant>('fill');
 		expect(map.get('wohnlagen-2024')).toBe<CascadeVariant>('outline');
-		expect(map.get('klima-pet-2022')).toBe<CascadeVariant>('outline-dash');
+		expect(map.get('klima-pet-2022')).toBe<CascadeVariant>('outline');
 	});
 });
 
@@ -113,15 +114,6 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 		expect(line.paint).not.toHaveProperty('line-dasharray');
 	});
 
-	it('outline-dash-Variant liefert Hit-Fill + line-Spec mit dasharray [4,4]', () => {
-		const specs = buildLayerSpecCascade('klima-pet-2022', sourceId, 'outline-dash');
-		expect(specs).toHaveLength(2);
-		const [hit, line] = specs;
-		expect(hit.type).toBe('fill');
-		expect(line.type).toBe('line');
-		expect(line.paint?.['line-dasharray']).toEqual([4, 4]);
-	});
-
 	it('uebernimmt fill-color-Expression als line-color (PET: interpolate-Expression)', () => {
 		const specs = buildLayerSpecCascade('klima-pet-2022', sourceId, 'outline');
 		const expr = specs[1]?.paint?.['line-color'];
@@ -135,9 +127,9 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 		expect(outlineVariant).toEqual(baseLine);
 	});
 
-	it('Pin-Icon-Slug bleibt unveraendert auch bei outline-dash-Variant', () => {
+	it('Pin-Icon-Slug bleibt unveraendert auch bei outline-Variant', () => {
 		const fill = buildLayerSpecCascade('kitas-2024', sourceId, 'fill');
-		const dashed = buildLayerSpecCascade('kitas-2024', sourceId, 'outline-dash');
+		const dashed = buildLayerSpecCascade('kitas-2024', sourceId, 'outline');
 		expect(dashed).toEqual(fill);
 		expect(dashed[0]?.type).toBe('symbol');
 	});
@@ -145,7 +137,7 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 	it('id und source bleiben gleich ueber alle Variants', () => {
 		const fill = buildLayerSpecCascade('laerm-2023', sourceId, 'fill');
 		const outline = buildLayerSpecCascade('laerm-2023', sourceId, 'outline');
-		const dash = buildLayerSpecCascade('laerm-2023', sourceId, 'outline-dash');
+		const dash = buildLayerSpecCascade('laerm-2023', sourceId, 'outline');
 		expect(outline[0]?.id).toBe(fill[0]?.id);
 		expect(dash[0]?.id).toBe(fill[0]?.id);
 		expect(outline[0]?.source).toBe(sourceId);
@@ -189,15 +181,6 @@ describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
 		]);
 	});
 
-	it('zeichnet die gestrichelte Kontur breiter, damit der Dash-Verlust nicht blind macht', () => {
-		const [, solid] = buildLayerSpecCascade('klima-pet-2022', 'src', 'outline');
-		const [, dashed] = buildLayerSpecCascade('klima-pet-2022', 'src', 'outline-dash');
-		expect(dashed.paint?.['line-dasharray']).toEqual([4, 4]);
-		expect(dashed.paint?.['line-width'] as number).toBeGreaterThan(
-			solid.paint?.['line-width'] as number
-		);
-	});
-
 	it('PET-Kontur behält die feste Linienbreite (kein Dot-Spec)', () => {
 		const [, line] = buildLayerSpecCascade('klima-pet-2022', 'src', 'outline');
 		expect(typeof line.paint?.['line-width']).toBe('number');
@@ -208,5 +191,50 @@ describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
 		expect(dots.type).toBe('symbol');
 		expect(dots.layout?.['icon-image']).toBe('navigator-score-dot-laerm-2023');
 		expect((dots.layout?.['icon-size'] as unknown[])[0]).toBe('match');
+	});
+});
+
+describe('isChoroplethSlug · Overlay-Klasse', () => {
+	it('Choroplethen: Scores, Umweltatlas, MSS, Wohnlagen, BRW, Dichte, PET', () => {
+		for (const slug of [
+			'kiez-score-gesamt',
+			'laerm-2023',
+			'mss-gesamtindex-2025',
+			'wohnlagen-2024',
+			'bodenrichtwerte',
+			'einwohner-dichte-2024',
+			'klima-pet-2022'
+		]) {
+			expect(isChoroplethSlug(slug)).toBe(true);
+		}
+	});
+
+	it('Overlays sind KEINE Choroplethen: Kaltluft, Milieuschutz, Grünanlagen, Spielplätze', () => {
+		for (const slug of [
+			'klima-kaltlufteinwirkbereich-2022',
+			'klima-leitbahnkorridor-2022',
+			'milieuschutz-erhaltungsmiete',
+			'milieuschutz-staedtebau',
+			'gruenanlagen',
+			'spielplaetze',
+			'einschulbereiche-2024'
+		]) {
+			expect(isChoroplethSlug(slug)).toBe(false);
+			// aber weiterhin Polygone (Hover, Hit-Testing)
+			expect(isPolygonSlug(slug)).toBe(true);
+		}
+	});
+
+	it('computeCascadeVariants vergibt Rollen nur an Choroplethen', () => {
+		const variants = computeCascadeVariants([
+			'milieuschutz-erhaltungsmiete',
+			'laerm-2023',
+			'milieuschutz-staedtebau',
+			'kiez-score-wohnschutz'
+		]);
+		expect(variants.get('laerm-2023')).toBe('fill');
+		expect(variants.get('kiez-score-wohnschutz')).toBe('outline');
+		expect(variants.has('milieuschutz-erhaltungsmiete')).toBe(false);
+		expect(variants.has('milieuschutz-staedtebau')).toBe(false);
 	});
 });

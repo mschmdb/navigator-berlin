@@ -287,7 +287,6 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'choropleth-brw',
 			'choropleth-belastung-3',
 			'choropleth-versorgung-3',
-			'choropleth-status-3',
 			'choropleth-mehrfach',
 			'choropleth-pet',
 			'choropleth-wohnlage-3',
@@ -299,7 +298,6 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'polygon-outline-milieuschutz-erhaltungsmiete',
 			'polygon-outline-milieuschutz-staedtebau',
 			'point',
-			'point-wohnlage',
 			'point-ubahn',
 			'point-sbahn',
 			'point-tram',
@@ -313,7 +311,7 @@ describe('layer-style-builder.buildLayerSpec', () => {
 			'line-rail-sbahn',
 			'line-fahrradstrasse'
 		];
-		expect(profiles).toHaveLength(29);
+		expect(profiles).toHaveLength(27);
 	});
 
 	it('Milieuschutz (Story 10.8) nutzt eigene sichtbare Familien, nicht polygon-outline-soft', () => {

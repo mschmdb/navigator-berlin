@@ -10,13 +10,12 @@ import {
 	type StyleProfile
 } from './layer-style-builder.js';
 
-export type CascadeVariant = 'fill' | 'outline' | 'outline-dash';
+export type CascadeVariant = 'fill' | 'outline';
 
 const POLYGON_PROFILES: ReadonlySet<StyleProfile> = new Set<StyleProfile>([
 	'choropleth-brw',
 	'choropleth-belastung-3',
 	'choropleth-versorgung-3',
-	'choropleth-status-3',
 	'choropleth-mehrfach',
 	'choropleth-pet',
 	'choropleth-wohnlage-3',
@@ -39,26 +38,48 @@ export function isPolygonSlug(slug: string): boolean {
 	return isPolygonProfile(getStyleProfile(slug));
 }
 
+/**
+ * Choroplethen tragen eine Wertskala über ganz Berlin und konkurrieren um die
+ * Fläche-/Symbol-Rollen. Binär-Overlays (Kaltluft, Milieuschutz, Grünanlagen,
+ * Spielplätze, Einschulbereiche) sagen nur „hier gilt X": Sie rendern immer
+ * als eigene Wasch-Fläche, bekommen keine Kaskaden-Rolle und zählen nicht ins
+ * Choroplethen-Limit.
+ */
+const CHOROPLETH_PROFILES: ReadonlySet<StyleProfile> = new Set<StyleProfile>([
+	'choropleth-brw',
+	'choropleth-belastung-3',
+	'choropleth-versorgung-3',
+	'choropleth-mehrfach',
+	'choropleth-pet',
+	'choropleth-wohnlage-3',
+	'choropleth-mss-12',
+	'choropleth-kiez-score-ordinal-4',
+	'choropleth-kiez-score-strukturell-4',
+	'choropleth-dichte'
+]);
+
+export function isChoroplethSlug(slug: string): boolean {
+	if (hasPinIcon(slug)) return false;
+	return CHOROPLETH_PROFILES.has(getStyleProfile(slug));
+}
+
 export function computeCascadeVariants(
 	slugs: readonly string[]
 ): ReadonlyMap<string, CascadeVariant> {
+	// Limit 2 (capPolygonSlugs): mehr als Fläche + ein Symbol-Layer gibt es
+	// nicht, jede weitere Position fällt defensiv auf 'outline'.
 	const out = new Map<string, CascadeVariant>();
 	let polyIndex = 0;
 	for (const slug of slugs) {
-		if (!isPolygonSlug(slug)) continue;
-		if (polyIndex === 0) out.set(slug, 'fill');
-		else if (polyIndex === 1) out.set(slug, 'outline');
-		else out.set(slug, 'outline-dash');
+		if (!isChoroplethSlug(slug)) continue;
+		out.set(slug, polyIndex === 0 ? 'fill' : 'outline');
 		polyIndex++;
 	}
 	return out;
 }
 
 const OUTLINE_LINE_WIDTH = 2;
-// Gestrichelt verliert die Hälfte der Tinte; etwas mehr Breite gleicht das aus.
-const OUTLINE_DASH_LINE_WIDTH = 2.5;
 const OUTLINE_LINE_OPACITY = 0.85;
-const OUTLINE_DASH_PATTERN: readonly [number, number] = [4, 4];
 
 /**
  * Sekundär-Variante = zwei Layer: der Haupt-Fill bleibt bestehen, aber
@@ -67,11 +88,7 @@ const OUTLINE_DASH_PATTERN: readonly [number, number] = [4, 4];
  * Darstellung läuft unter der -outline-ID: Punktsymbole für Score-Dimensionen,
  * Konturlinien für die übrigen Polygon-Layer.
  */
-function fillSpecToOutlineSpecs(
-	spec: MapLibreLayerSpec,
-	dash: boolean,
-	slug: string
-): MapLibreLayerSpec[] {
+function fillSpecToOutlineSpecs(spec: MapLibreLayerSpec, slug: string): MapLibreLayerSpec[] {
 	const fillColor = spec.paint?.['fill-color'] ?? COLORS.accent;
 	// Reiner Hit-Layer: nur fill-color (für MapLibre-Validierung) + Opacity 0.
 	// Kein fill-outline-color, das als zweite Grenzlinie durchscheinen könnte.
@@ -109,10 +126,9 @@ function fillSpecToOutlineSpecs(
 
 	const paint: Record<string, unknown> = {
 		'line-color': fillColor,
-		'line-width': dash ? OUTLINE_DASH_LINE_WIDTH : OUTLINE_LINE_WIDTH,
+		'line-width': OUTLINE_LINE_WIDTH,
 		'line-opacity': OUTLINE_LINE_OPACITY
 	};
-	if (dash) paint['line-dasharray'] = [...OUTLINE_DASH_PATTERN];
 	const outline: MapLibreLayerSpec = {
 		id: outlineLayerIdFor(slug),
 		type: 'line',
@@ -131,8 +147,7 @@ export function buildLayerSpecCascade(
 	const baseSpecs = buildLayerSpec(slug, sourceId, options);
 	if (variant === 'fill') return baseSpecs;
 	if (!isPolygonSlug(slug)) return baseSpecs;
-	const dash = variant === 'outline-dash';
 	return baseSpecs.flatMap((spec) =>
-		spec.type === 'fill' ? fillSpecToOutlineSpecs(spec, dash, slug) : [spec]
+		spec.type === 'fill' ? fillSpecToOutlineSpecs(spec, slug) : [spec]
 	);
 }

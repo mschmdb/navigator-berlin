@@ -225,10 +225,10 @@ describe('map-legend.svelte', () => {
 		});
 
 		it('Variant-Badge nur für Outline-Varianten, fill bleibt unbeschriftet', async () => {
-			const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>([
+			const variants = new Map<string, 'fill' | 'outline'>([
 				['laerm-2023', 'fill'],
 				['wohnlagen-2024', 'outline'],
-				['klima-pet-2022', 'outline-dash']
+				['klima-pet-2022', 'outline']
 			]);
 			render(MapLegend, {
 				activeLayerSlugs: ['laerm-2023', 'wohnlagen-2024', 'klima-pet-2022'],
@@ -239,11 +239,11 @@ describe('map-legend.svelte', () => {
 			const b = (await page.getByTestId('legend-variant-wohnlagen-2024').element()) as HTMLElement;
 			const c = (await page.getByTestId('legend-variant-klima-pet-2022').element()) as HTMLElement;
 			expect(b.getAttribute('data-variant')).toBe('outline');
-			expect(c.getAttribute('data-variant')).toBe('outline-dash');
+			expect(c.getAttribute('data-variant')).toBe('outline');
 		});
 
 		it('cascadeVariants rendert KEIN Variant-Badge fuer non-polygon-Slugs', async () => {
-			const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>();
+			const variants = new Map<string, 'fill' | 'outline'>();
 			render(MapLegend, {
 				activeLayerSlugs: ['ubahn-netz', 'kitas-2024'],
 				cascadeVariants: variants
@@ -275,7 +275,7 @@ describe('map-legend.svelte', () => {
 
 describe('map-legend · Score-Kontur mit Wert-Breite', () => {
 	it('rendert die Sekundär-Swatches eines Choroplethen als wachsende Quadrate in Kartengröße', async () => {
-		const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>([
+		const variants = new Map<string, 'fill' | 'outline'>([
 			['kiez-score-gesamt', 'fill'],
 			['kiez-score-ruhe-luft', 'outline']
 		]);
@@ -298,12 +298,58 @@ describe('map-legend · Score-Kontur mit Wert-Breite', () => {
 	});
 
 	it('lässt Fill-Swatches unverändert gefüllt', async () => {
-		const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>([
-			['kiez-score-gesamt', 'fill']
-		]);
+		const variants = new Map<string, 'fill' | 'outline'>([['kiez-score-gesamt', 'fill']]);
 		render(MapLegend, { activeLayerSlugs: ['kiez-score-gesamt'], cascadeVariants: variants });
 		const entry = (await page.getByTestId('legend-kiez-score-gesamt').element()) as HTMLElement;
 		const swatch = entry.querySelector('li > span[aria-hidden="true"]') as HTMLElement;
 		expect(swatch.style.background).not.toBe('transparent');
+	});
+});
+
+describe('map-legend · Legenden-Tausch (Fläche ↔ Symbole)', () => {
+	const variants = new Map<string, 'fill' | 'outline'>([
+		['laerm-2023', 'fill'],
+		['kiez-score-ruhe-luft', 'outline']
+	]);
+
+	it('zeigt auf dem Symbol-Layer einen Tausch-Button und meldet den Slug', async () => {
+		let promoted: string | null = null;
+		render(MapLegend, {
+			activeLayerSlugs: ['laerm-2023', 'kiez-score-ruhe-luft'],
+			cascadeVariants: variants,
+			onPromoteLayer: (slug: string) => (promoted = slug)
+		});
+		await expect.element(page.getByTestId('legend-promote-laerm-2023')).not.toBeInTheDocument();
+		const btn = (await page
+			.getByTestId('legend-promote-kiez-score-ruhe-luft')
+			.element()) as HTMLButtonElement;
+		expect(btn.getAttribute('aria-label')).toContain('als Fläche darstellen');
+		btn.click();
+		expect(promoted).toBe('kiez-score-ruhe-luft');
+	});
+
+	it('versteckt den Tausch-Button, wenn PET die Fläche fest belegt', async () => {
+		const petVariants = new Map<string, 'fill' | 'outline'>([
+			['klima-pet-2022', 'fill'],
+			['kiez-score-ruhe-luft', 'outline']
+		]);
+		render(MapLegend, {
+			activeLayerSlugs: ['klima-pet-2022', 'kiez-score-ruhe-luft'],
+			cascadeVariants: petVariants,
+			onPromoteLayer: () => {}
+		});
+		await expect
+			.element(page.getByTestId('legend-promote-kiez-score-ruhe-luft'))
+			.not.toBeInTheDocument();
+	});
+
+	it('zeigt ohne Callback keinen Tausch-Button', async () => {
+		render(MapLegend, {
+			activeLayerSlugs: ['laerm-2023', 'kiez-score-ruhe-luft'],
+			cascadeVariants: variants
+		});
+		await expect
+			.element(page.getByTestId('legend-promote-kiez-score-ruhe-luft'))
+			.not.toBeInTheDocument();
 	});
 });

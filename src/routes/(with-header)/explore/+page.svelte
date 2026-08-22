@@ -62,13 +62,14 @@
 	import {
 		buildLayerSpecCascade,
 		computeCascadeVariants,
-		isPolygonSlug
+		isChoroplethSlug
 	} from '$lib/components/atlas/internal/layer-style-cascade.js';
 	import { sortSlugsByBundleStable } from '$lib/components/atlas/internal/layer-order-sorting.js';
 	import {
 		applyHiddenSlugs,
 		exceedsPolygonLimit,
-		capPolygonSlugs
+		capPolygonSlugs,
+		orderChoropleths
 	} from '$lib/components/atlas/internal/layer-visibility.js';
 	import {
 		toggleLayerHidden,
@@ -288,10 +289,7 @@
 		variant: string,
 		reduced: boolean
 	): MapLibreLayerSpec[] {
-		if (
-			isPolygonSlug(slug) &&
-			(variant === 'fill' || variant === 'outline' || variant === 'outline-dash')
-		) {
+		if (isChoroplethSlug(slug) && (variant === 'fill' || variant === 'outline')) {
 			return buildLayerSpecCascade(slug, sourceId, variant, { reducedMotion: reduced });
 		}
 		return buildLayerSpec(slug, sourceId, { reducedMotion: reduced });
@@ -303,12 +301,15 @@
 		// Story 1.14: Eye-Toggle blendet aktive Layer aus, ohne sie aus activeLayerSlugs zu entfernen.
 		const visible = applyHiddenSlugs(activeSlugs, ui.hiddenLayerSlugs);
 		// Story 1.14 AC-5: Bundle-Order A→F (innerhalb Bundle = Aktivierungs-Reihenfolge).
-		const ordered = sortSlugsByBundleStable(visible, manifestLayers);
+		const ordered = orderChoropleths(
+			sortSlugsByBundleStable(visible, manifestLayers),
+			ui.choroplethLeadSlug
+		);
 		const cascade = computeCascadeVariants(ordered);
 
 		const variantBySlug: Record<string, string> = {};
 		for (const slug of ordered) {
-			variantBySlug[slug] = isPolygonSlug(slug) ? (cascade.get(slug) ?? 'fill') : 'non-polygon';
+			variantBySlug[slug] = isChoroplethSlug(slug) ? (cascade.get(slug) ?? 'fill') : 'non-polygon';
 		}
 
 		const visibleSet = new Set(ordered);
@@ -397,10 +398,12 @@
 	}
 
 	$effect(() => {
-		// reactive deps: activeLayerSlugs, hiddenLayerSlugs, manifestLayers
+		// reactive deps: activeLayerSlugs, hiddenLayerSlugs, choroplethLeadSlug, manifestLayers
 		const slugs = ui.activeLayerSlugs;
 		const _hidden = ui.hiddenLayerSlugs;
 		void _hidden;
+		const _lead = ui.choroplethLeadSlug;
+		void _lead;
 		if (!rawMap || manifestLayers.length === 0) return;
 		void renderLayers(slugs);
 	});
@@ -478,9 +481,12 @@
 
 	const cascadeForLegend = $derived(
 		computeCascadeVariants(
-			sortSlugsByBundleStable(
-				applyHiddenSlugs(ui.activeLayerSlugs, ui.hiddenLayerSlugs),
-				manifestLayers
+			orderChoropleths(
+				sortSlugsByBundleStable(
+					applyHiddenSlugs(ui.activeLayerSlugs, ui.hiddenLayerSlugs),
+					manifestLayers
+				),
+				ui.choroplethLeadSlug
 			)
 		)
 	);
@@ -1121,6 +1127,7 @@
 			showLimitWarning={legendLimitWarning}
 			onToggleHidden={onLegendToggleHidden}
 			onRemove={onLegendRemove}
+			onPromoteLayer={(slug: string) => (ui.choroplethLeadSlug = slug)}
 		/>
 		<MapHoverTooltip
 			map={rawMap as MapHoverApi | null}

@@ -31,6 +31,8 @@ export interface UiState {
 	selectedAddress: GeocodeSuggestion | null;
 	selectedLayerHits: LayerHit[];
 	activeLayerSlugs: string[];
+	/** Legenden-Tausch: dieser Choropleth bekommt den Fläche-Slot. */
+	choroplethLeadSlug: string | null;
 	recentLayerSlugs: string[];
 	sheetSnapVh: SheetSnapVh;
 	paletteOpen: boolean;
@@ -75,6 +77,7 @@ export function createUiState(): UiState {
 		selectedAddress: null,
 		selectedLayerHits: [],
 		activeLayerSlugs: [],
+		choroplethLeadSlug: null,
 		recentLayerSlugs: [],
 		sheetSnapVh: 40,
 		paletteOpen: false,
@@ -120,12 +123,15 @@ export function toggleLayer(state: UiState, slug: string): void {
 		state.activeLayerSlugs.splice(activeIdx, 1);
 	} else {
 		state.activeLayerSlugs.push(slug);
-		// Multi-Layer-Limit: höchstens Fläche + eine Kontur. Der älteste
-		// Choropleth weicht dem neuen, Punkt- und Linien-Layer bleiben.
+		// Multi-Layer-Limit: höchstens Fläche + ein Symbol-Layer. Der älteste
+		// Choropleth weicht dem neuen, Overlays, Punkte und Linien bleiben.
 		const capped = capPolygonSlugs(state.activeLayerSlugs);
 		if (capped.length !== state.activeLayerSlugs.length) {
 			state.activeLayerSlugs.splice(0, state.activeLayerSlugs.length, ...capped);
 		}
+	}
+	if (state.choroplethLeadSlug && !state.activeLayerSlugs.includes(state.choroplethLeadSlug)) {
+		state.choroplethLeadSlug = null;
 	}
 	const recentIdx = state.recentLayerSlugs.indexOf(slug);
 	if (recentIdx >= 0) state.recentLayerSlugs.splice(recentIdx, 1);
@@ -138,6 +144,7 @@ export function toggleLayer(state: UiState, slug: string): void {
 export function clearLayers(state: UiState): void {
 	state.activeLayerSlugs.length = 0;
 	state.hiddenLayerSlugs.length = 0;
+	state.choroplethLeadSlug = null;
 }
 
 export function toggleLayerHidden(state: UiState, slug: string): void {
@@ -151,6 +158,7 @@ export function removeLayer(state: UiState, slug: string): void {
 	if (activeIdx >= 0) state.activeLayerSlugs.splice(activeIdx, 1);
 	const hiddenIdx = state.hiddenLayerSlugs.indexOf(slug);
 	if (hiddenIdx >= 0) state.hiddenLayerSlugs.splice(hiddenIdx, 1);
+	if (state.choroplethLeadSlug === slug) state.choroplethLeadSlug = null;
 }
 
 export function addBookmark(state: UiState, bookmark: Bookmark): boolean {

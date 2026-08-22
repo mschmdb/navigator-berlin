@@ -8,7 +8,6 @@ export type StyleProfile =
 	| 'choropleth-brw'
 	| 'choropleth-belastung-3'
 	| 'choropleth-versorgung-3'
-	| 'choropleth-status-3'
 	| 'choropleth-mehrfach'
 	| 'choropleth-pet'
 	| 'choropleth-wohnlage-3'
@@ -21,7 +20,6 @@ export type StyleProfile =
 	| 'polygon-outline-milieuschutz-erhaltungsmiete'
 	| 'polygon-outline-milieuschutz-staedtebau'
 	| 'point'
-	| 'point-wohnlage'
 	| 'point-ubahn'
 	| 'point-sbahn'
 	| 'point-tram'
@@ -217,14 +215,6 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 			{ color: COLORS.scaleLast4, label: 'schlecht' }
 		]
 	},
-	'choropleth-status-3': {
-		kind: 'categorical',
-		items: [
-			{ color: COLORS.chartCat3, label: 'hoher Status' },
-			{ color: COLORS.chartCat5, label: 'mittlerer Status' },
-			{ color: COLORS.vermillion, label: 'niedriger Status' }
-		]
-	},
 	'choropleth-mehrfach': {
 		// Story 1.31: Last-Familie 5-stufig. Vermillion für Umweltgerechtigkeit-Mehrfach-Belastung.
 		kind: 'categorical',
@@ -325,14 +315,6 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 	'point-kuehle-orte': {
 		kind: 'point',
 		items: [{ color: COLORS.umweltKuehleOrte, label: 'Kühler Ort' }]
-	},
-	'point-wohnlage': {
-		kind: 'point',
-		items: [
-			{ color: COLORS.chartCat3, label: 'gut' },
-			{ color: COLORS.chartCat5, label: 'mittel' },
-			{ color: COLORS.vermillion, label: 'einfach' }
-		]
 	},
 	'point-ubahn': {
 		kind: 'point',
@@ -508,30 +490,6 @@ export function buildLayerSpec(
 							COLORS.scaleGut3,
 							'schlecht',
 							COLORS.scaleLast4,
-							COLORS.bg
-						],
-						'fill-opacity': 0.55,
-						'fill-outline-color': COLORS.accent
-					}
-				}
-			];
-		case 'choropleth-status-3':
-			// Sozial: `kategorie` ∈ {hoher/mittlerer/niedriger Status-Index}.
-			return [
-				{
-					id,
-					type: 'fill',
-					source: sourceId,
-					paint: {
-						'fill-color': [
-							'match',
-							['get', 'kategorie'],
-							'hoher Status-Index',
-							COLORS.chartCat3,
-							'mittlerer Status-Index',
-							COLORS.chartCat5,
-							'niedriger Status-Index',
-							COLORS.vermillion,
 							COLORS.bg
 						],
 						'fill-opacity': 0.55,
@@ -754,31 +712,6 @@ export function buildLayerSpec(
 						'fill-color': COLORS.chartCat5,
 						'fill-opacity': 0.6,
 						'fill-outline-color': COLORS.chartCat5
-					}
-				}
-			];
-		case 'point-wohnlage':
-			// Mietspiegel-Wohnlage: einfach/mittel/gut. Vermillion → Cloud-Dancer → Green.
-			return [
-				{
-					id,
-					type: 'circle',
-					source: sourceId,
-					paint: {
-						'circle-color': [
-							'match',
-							['get', 'wol'],
-							'einfach',
-							COLORS.vermillion,
-							'mittel',
-							COLORS.chartCat5,
-							'gut',
-							COLORS.chartCat3,
-							COLORS.accentSoft
-						],
-						'circle-radius': 3,
-						'circle-stroke-color': COLORS.bg,
-						'circle-stroke-width': 0.5
 					}
 				}
 			];
