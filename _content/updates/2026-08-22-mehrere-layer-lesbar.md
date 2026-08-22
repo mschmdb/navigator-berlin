@@ -1,6 +1,6 @@
 ---
 title_de: 'Mehrere Karten-Layer gleichzeitig, endlich lesbar'
-summary_de: 'Jede Score-Dimension hat jetzt eine eigene Farbe, ein zweiter Layer erscheint als Größen-Symbole statt als Linien-Wirrwarr, und in der Legende lassen sich die Rollen tauschen. Dazu: neues Logo.'
+summary_de: 'Jede Score-Dimension hat eine eigene Farbe, ein zweiter Layer erscheint als Größen-Symbole, die Rollen lassen sich tauschen. Dazu: neues Logo.'
 date: 2026-08-22
 category: feature
 tags: [karte, kiez-score, barrierefreiheit, design]
