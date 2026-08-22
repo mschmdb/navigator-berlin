@@ -88,6 +88,10 @@
 	let base: FinderBaseData | null = null;
 	let sharesCache: readonly KiezShareRow[] | null = null;
 	let collection: FeatureCollection<Polygon | MultiPolygon> | null = null;
+	// Für welche Partei m_partei tatsächlich gebaut wurde: die Collection
+	// trägt IMMER ein m_partei-Property (Neutral-Fallback), dessen Existenz
+	// sagt also nichts über geladene Daten aus.
+	let loadedPartei: ParteiKurzname | null = null;
 
 	const PARTEIEN = Object.keys(PARTEI_FARBEN).filter(
 		(p) => p !== 'Sonstige' && p !== 'CSU' && p !== 'FREIE WÄHLER'
@@ -99,8 +103,11 @@
 		if (weights.partei !== 0) {
 			if (!sharesCache) sharesCache = await loadShares(ELECTION);
 			metrics.m_partei = buildParteiMetric(sharesCache, base.plrIds, partei);
+			loadedPartei = partei;
+		} else {
+			loadedPartei = null;
 		}
-		collection = buildFinderCollection(base.plrFc, metrics);
+		collection = buildFinderCollection(base.plrFc, metrics, base.kiezNames);
 		if (!map) return;
 		if (!map.getSource(FINDER_SOURCE_ID)) {
 			map.addSource(FINDER_SOURCE_ID, { type: 'geojson', data: collection });
@@ -125,7 +132,7 @@
 			top = [];
 			return;
 		}
-		if (!collection || (weights.partei !== 0 && !collection.features[0]?.properties?.m_partei)) {
+		if (!collection || (weights.partei !== 0 && loadedPartei !== partei)) {
 			await rebuildCollection();
 		}
 		if (!collection || !map) return;
@@ -344,7 +351,11 @@
 					<ol data-testid="finder-top-list" class="flex flex-col gap-0.5">
 						{#each top as result (result.plrId)}
 							<li class="flex items-baseline justify-between gap-2">
-								<span class="truncate font-serif text-xs text-ink">{result.name}</span>
+								<span class="min-w-0 truncate font-serif text-xs text-ink">
+									{result.name}{#if result.kiez && result.kiez !== result.name}
+										<span class="text-ink-subtle">· {result.kiez}</span>
+									{/if}
+								</span>
 								<span class="tabular font-mono text-xs text-ink">{Math.round(result.fit)}</span>
 							</li>
 						{/each}

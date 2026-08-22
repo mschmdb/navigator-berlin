@@ -106,6 +106,19 @@ export interface FinderBaseData {
 	readonly plrFc: FeatureCollection;
 	readonly plrIds: readonly string[];
 	readonly metrics: FinderMetricInput;
+	readonly kiezNames?: ReadonlyMap<string, string>;
+}
+
+/** BZR_ID → BZR_NAME aus dem Bezirksregionen-Layer (Kiez-Label der Top-Liste). */
+export function buildKiezNames(bzrFc: FeatureCollection): ReadonlyMap<string, string> {
+	const names = new Map<string, string>();
+	for (const feature of bzrFc.features) {
+		const props = (feature.properties ?? {}) as Record<string, unknown>;
+		if (typeof props.BZR_ID === 'string' && typeof props.BZR_NAME === 'string') {
+			names.set(props.BZR_ID, props.BZR_NAME);
+		}
+	}
+	return names;
 }
 
 interface EinwohnerRecord {
@@ -134,6 +147,16 @@ export async function loadFinderBaseData(fetchFn: typeof fetch = fetch): Promise
 		metrics[metricKey] = buildScoreMetric(await fetchLayer(filename, fetchFn));
 	}
 
+	let kiezNames: ReadonlyMap<string, string> | undefined;
+	const bzrFilename = filenameFor('lor-bezirksregion');
+	if (bzrFilename) {
+		try {
+			kiezNames = buildKiezNames(await fetchLayer(bzrFilename, fetchFn));
+		} catch {
+			// Kiez-Label ist Komfort: ohne Namen zeigt die Top-Liste nur den Planungsraum.
+		}
+	}
+
 	const sbahnFilename = filenameFor('sbahn-stationen');
 	if (sbahnFilename) {
 		metrics.m_sbahn = buildSbahnMetric(plrFc, await fetchLayer(sbahnFilename, fetchFn));
@@ -159,7 +182,7 @@ export async function loadFinderBaseData(fetchFn: typeof fetch = fetch): Promise
 		.map((f) => (f.properties as Record<string, unknown> | null)?.PLR_ID)
 		.filter((id): id is string => typeof id === 'string');
 
-	return { plrFc, plrIds, metrics: metrics as FinderMetricInput };
+	return { plrFc, plrIds, metrics: metrics as FinderMetricInput, kiezNames };
 }
 
 export { buildFinderCollection };

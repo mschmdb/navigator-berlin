@@ -161,6 +161,19 @@ describe('kiez-finder-panel', () => {
 		expect(aufgerufen).toBe(true);
 	});
 
+	it('lädt die Partei-Anteile schon beim Slider-Move, nicht erst beim Chip-Klick', async () => {
+		const loadShares = vi.fn(async () => [
+			{ bzrId: '011001', partei: 'SPD', anteil: 0.3 } as const
+		]);
+		await renderPanel({ loadShares });
+		const slider = (await page.getByTestId('finder-slider-partei').element()) as HTMLInputElement;
+		slider.value = '2';
+		slider.dispatchEvent(new Event('input', { bubbles: true }));
+		await vi.waitFor(() => {
+			expect(loadShares).toHaveBeenCalledWith('2025-btw-zweitstimme');
+		});
+	});
+
 	it('meldet die genutzten Kriterien beim Unmount an Plausible', async () => {
 		const events: Array<[string, unknown]> = [];
 		(window as { plausible?: unknown }).plausible = (name: string, opts?: unknown) =>

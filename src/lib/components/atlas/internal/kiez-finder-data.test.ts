@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { FeatureCollection } from 'geojson';
-import { buildParteiMetric, buildSbahnMetric, buildScoreMetric } from './kiez-finder-data.js';
+import {
+	buildKiezNames,
+	buildParteiMetric,
+	buildSbahnMetric,
+	buildScoreMetric
+} from './kiez-finder-data.js';
 
 const square = (id: string, x: number): GeoJSON.Feature => ({
 	type: 'Feature',
@@ -63,6 +68,25 @@ describe('buildSbahnMetric', () => {
 			features: [square('a', 13.3)]
 		} as FeatureCollection;
 		expect(buildSbahnMetric(plrFc, { type: 'FeatureCollection', features: [] }).size).toBe(0);
+	});
+});
+
+describe('buildKiezNames', () => {
+	it('mappt BZR_ID auf BZR_NAME', () => {
+		const fc = {
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					properties: { BZR_ID: '011001', BZR_NAME: 'Tiergarten Süd' },
+					geometry: null
+				},
+				{ type: 'Feature', properties: { BZR_ID: '126011', BZR_NAME: 'MV Nord' }, geometry: null }
+			]
+		} as unknown as Parameters<typeof buildKiezNames>[0];
+		const names = buildKiezNames(fc);
+		expect(names.get('011001')).toBe('Tiergarten Süd');
+		expect(names.size).toBe(2);
 	});
 });
 

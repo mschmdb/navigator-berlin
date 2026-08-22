@@ -120,7 +120,8 @@ export type FinderMetricInput = Partial<Record<FinderMetricKey, ReadonlyMap<stri
  */
 export function buildFinderCollection(
 	plrFc: FeatureCollection,
-	metrics: FinderMetricInput
+	metrics: FinderMetricInput,
+	kiezNames?: ReadonlyMap<string, string>
 ): FeatureCollection<Polygon | MultiPolygon> {
 	const features: Feature<Polygon | MultiPolygon>[] = [];
 	for (const feature of plrFc.features) {
@@ -132,7 +133,8 @@ export function buildFinderCollection(
 		if (!plrId) continue;
 		const out: Record<string, unknown> = {
 			PLR_ID: plrId,
-			PLR_NAME: typeof props.PLR_NAME === 'string' ? props.PLR_NAME : plrId
+			PLR_NAME: typeof props.PLR_NAME === 'string' ? props.PLR_NAME : plrId,
+			kiez_name: kiezNames?.get(plrId.slice(0, 6)) ?? ''
 		};
 		for (const key of FINDER_METRIC_KEYS) {
 			out[key] = metrics[key]?.get(plrId) ?? NEUTRAL_METRIC;
@@ -205,7 +207,10 @@ export function fitDomain(fits: readonly number[]): FitDomain {
 export function fitColorExpression(
 	weights: FinderWeights,
 	domain: FitDomain = { lo: 0, hi: 100 }
-): unknown[] {
+): unknown[] | string {
+	// Ohne aktive Gewichte gibt es keine Passung: konstante Grundfarbe
+	// statt Division durch die Gewichts-Summe 0.
+	if (!hasActiveWeights(weights)) return FINDER_RAMP[0];
 	const terms = activeTerms(weights);
 	const weightSum = terms.reduce((acc, t) => acc + Math.abs(t.weight), 0);
 	const summands = terms.map(({ key, weight }) =>
@@ -237,6 +242,7 @@ export function fitColorExpression(
 export interface FinderResult {
 	readonly plrId: string;
 	readonly name: string;
+	readonly kiez: string;
 	readonly fit: number;
 }
 
@@ -252,6 +258,7 @@ export function topResults(
 			return {
 				plrId: String(props.PLR_ID ?? ''),
 				name: String(props.PLR_NAME ?? ''),
+				kiez: String(props.kiez_name ?? ''),
 				fit: computeFitJs(props as Partial<Record<FinderMetricKey, number>>, weights)
 			};
 		})

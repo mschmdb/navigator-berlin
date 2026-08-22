@@ -4,6 +4,7 @@ import {
 	buildFinderCollection,
 	computeFitJs,
 	FINDER_METRIC_KEYS,
+	FINDER_RAMP,
 	fitColorExpression,
 	fitDomain,
 	hasActiveWeights,
@@ -14,6 +15,10 @@ import {
 	topResults,
 	type FinderWeights
 } from './kiez-finder-engine.js';
+
+function plrFixture(): FeatureCollection {
+	return { type: 'FeatureCollection', features: [plr('01100101', 'Stülerstraße')] };
+}
 
 function plr(id: string, name: string): Feature<Polygon> {
 	return {
@@ -143,6 +148,33 @@ describe('topResults', () => {
 		const top = topResults(out, { ...neutralWeights(), versorgung: 1 }, 1);
 		expect(top).toHaveLength(1);
 		expect(top[0]).toMatchObject({ plrId: '01100102', name: 'Großer Tiergarten', fit: 70 });
+	});
+});
+
+describe('fitColorExpression · Neutral-Guard', () => {
+	it('liefert bei Neutral-Gewichten eine konstante Farbe statt kaputter Expression', () => {
+		const expr = fitColorExpression(neutralWeights());
+		expect(expr).toEqual(FINDER_RAMP[0]);
+	});
+});
+
+describe('Kiez-Name in Collection und Top-Liste', () => {
+	it('buildFinderCollection bakt den Kiez-Namen über die BZR-Id ein', () => {
+		const fc = buildFinderCollection(
+			plrFixture(),
+			{ m_ruhe_luft: new Map([['01100101', 0.9]]) },
+			new Map([['011001', 'Tiergarten Süd']])
+		);
+		expect(fc.features[0].properties?.kiez_name).toBe('Tiergarten Süd');
+	});
+	it('topResults trägt den Kiez-Namen mit', () => {
+		const fc = buildFinderCollection(
+			plrFixture(),
+			{ m_ruhe_luft: new Map([['01100101', 0.9]]) },
+			new Map([['011001', 'Tiergarten Süd']])
+		);
+		const results = topResults(fc, { ...neutralWeights(), ruheLuft: 1 }, 1);
+		expect(results[0].kiez).toBe('Tiergarten Süd');
 	});
 });
 
