@@ -188,6 +188,7 @@
 		// (z.B. kuehle-orte via Hitze-Landing → Home → Explorer).
 		// Multi-Layer-Limit auch am URL-Einstieg: höchstens 2 Choroplethen.
 		ui.activeLayerSlugs = capPolygonSlugs(data.activeLayers ?? []);
+		ui.choroplethLeadSlug = data.leadSlug ?? null;
 		// Story 2.12 Quick-Links: wenn `?address=lng,lat&q=…` gesetzt, bauen
 		// wir eine synthetische GeocodeSuggestion und triggern die Adress-
 		// Selection. Inspector öffnet sich dann automatisch.
@@ -229,12 +230,14 @@
 		})();
 	});
 
-	const syncLayers = debounce((slugs: string[]) => {
+	const syncLayers = debounce((slugs: string[], lead: string | null) => {
 		const url = new URL(window.location.href);
 		url.searchParams.delete(LAYERS_KEY);
+		url.searchParams.delete('lead');
 		// Story 1.14 AC-5: Aktivierungs-Reihenfolge persistieren, kein Bundle-Re-Sort.
 		const csv = serializeLayers(slugs);
 		if (csv) url.searchParams.set(LAYERS_KEY, csv);
+		if (csv && lead) url.searchParams.set('lead', lead);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
 			replaceState: true,
@@ -245,12 +248,17 @@
 
 	let layersSyncBootstrapped = false;
 	$effect(() => {
-		const slugs = ui.activeLayerSlugs;
+		// Tief lesen VOR dem Bootstrap-Guard: Der erste Lauf muss Länge und
+		// Elemente tracken. Mit dem Read nach dem Guard sah der Effekt nur die
+		// Array-Referenz, die nie neu zugewiesen wird, und feuerte nach dem
+		// Mount nie wieder. Folge: Permalink ohne die aktivierten Layer.
+		const slugs = [...ui.activeLayerSlugs];
+		const lead = ui.choroplethLeadSlug;
 		if (!layersSyncBootstrapped) {
 			layersSyncBootstrapped = true;
 			return;
 		}
-		syncLayers([...slugs]);
+		syncLayers(slugs, lead);
 	});
 
 	type GeoJsonSource = { type: 'geojson'; data: unknown };

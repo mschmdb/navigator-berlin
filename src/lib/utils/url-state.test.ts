@@ -9,7 +9,8 @@ import {
 	serializeComparison,
 	parseComparison,
 	buildComparePermalink,
-	buildExplorerDeepLink
+	buildExplorerDeepLink,
+	parseLead
 } from './url-state.js';
 
 describe('serializeViewport', () => {
@@ -303,5 +304,19 @@ describe('buildComparePermalink (Story 1.27)', () => {
 			[]
 		);
 		expect(url.startsWith('https://navigator.berlin/de')).toBe(true);
+	});
+});
+
+describe('parseLead (Legenden-Tausch im Permalink)', () => {
+	it('liefert den Lead-Slug nur, wenn er unter den aktiven Layern ist', () => {
+		expect(parseLead('kiez-score-ruhe-luft', ['laerm-2023', 'kiez-score-ruhe-luft'])).toBe(
+			'kiez-score-ruhe-luft'
+		);
+	});
+
+	it('liefert null für fehlende, leere oder nicht aktive Werte', () => {
+		expect(parseLead(null, ['laerm-2023'])).toBeNull();
+		expect(parseLead('', ['laerm-2023'])).toBeNull();
+		expect(parseLead('kiez-score-ruhe-luft', ['laerm-2023'])).toBeNull();
 	});
 });

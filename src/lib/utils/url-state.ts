@@ -120,6 +120,16 @@ export function sortLayerSlugsByBundle(
 	});
 }
 
+/**
+ * Legenden-Tausch im Permalink: Lead-Choropleth nur übernehmen, wenn er
+ * tatsächlich unter den aktiven Layern ist, sonst ist der Param Müll.
+ */
+export function parseLead(value: string | null, activeLayers: readonly string[]): string | null {
+	if (!value) return null;
+	const trimmed = value.trim();
+	return trimmed && activeLayers.includes(trimmed) ? trimmed : null;
+}
+
 export function parseLayers(value: string | null): string[] {
 	if (!value) return [];
 	const seen = new Set<string>();
