@@ -76,6 +76,9 @@ const SLUG_TO_KEY: Record<string, DimensionRampKey> = {
 	'kiez-score-kriminalitaet': 'kriminalitaet'
 };
 
+/** Alle Kiez-Score-Slugs (für Sprite-Registrierung und Klassifikation). */
+export const SCORE_SLUGS: readonly string[] = Object.keys(SLUG_TO_KEY);
+
 /** Rampe eines Score-Layers; null für alles, was beim Familien-System bleibt. */
 export function rampForSlug(slug: string): Ramp | null {
 	const key = SLUG_TO_KEY[slug];
@@ -98,8 +101,3 @@ export const KALTLUFT_HIGHLIGHT = '#5AB3C8';
  */
 export const SCORE_DOT_BASE_PX = 18;
 export const SCORE_DOT_SIZES: readonly [number, number, number, number] = [0.33, 0.5, 0.72, 1];
-
-/** MapLibre-Image-ID des Kreis-Sprites einer Score-Dimension. */
-export function scoreDotImageId(slug: string): string {
-	return `navigator-score-dot-${slug}`;
-}

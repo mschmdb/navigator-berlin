@@ -85,7 +85,7 @@
 		outlineLayerIdFor
 	} from '$lib/components/atlas/internal/layer-diff.js';
 	import { featureLabelPoints } from '$lib/components/atlas/internal/feature-label-points.js';
-	import { rampForSlug } from '$lib/components/atlas/internal/dimension-ramps.js';
+	import { dotSpecForSlug } from '$lib/components/atlas/internal/choropleth-dots.js';
 	import { PIN_LAYER_SLUGS } from '$lib/components/atlas/internal/pin-icon-mapping.js';
 
 	type Viewport = {
@@ -365,7 +365,7 @@
 						// Score-Layer: Label-Punkt-Quelle für die Punktsymbole der
 						// Sekundär-Variante. Ein Punkt pro Fläche, zoom-unabhängig,
 						// statt MapLibres Symbol-pro-Tile-Fragment auf Polygonen.
-						if (rampForSlug(slug) && !map.getSource(dotsSourceIdFor(slug))) {
+						if (dotSpecForSlug(slug) && !map.getSource(dotsSourceIdFor(slug))) {
 							map.addSource(dotsSourceIdFor(slug), {
 								type: 'geojson',
 								data: featureLabelPoints(fc)

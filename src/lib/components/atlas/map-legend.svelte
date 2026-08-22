@@ -10,7 +10,8 @@
 	import { getLayerExplainEntry } from './inspector-panel/internal/layer-explain.js';
 	import { shortenLicense } from './inspector-panel/internal/source-shortener.js';
 	import { isPolygonSlug, type CascadeVariant } from './internal/layer-style-cascade.js';
-	import { rampForSlug, SCORE_DOT_BASE_PX, SCORE_DOT_SIZES } from './internal/dimension-ramps.js';
+	import { dotSpecForSlug } from './internal/choropleth-dots.js';
+	import { SCORE_DOT_BASE_PX } from './internal/dimension-ramps.js';
 
 	type Props = {
 		activeLayerSlugs: readonly string[];
@@ -178,14 +179,17 @@
 										class="inline-block h-2.5 w-2.5 rounded-full"
 										style={`background:${item.color}; border:1px solid var(--color-bg)`}
 									></span>
-								{:else if (entry.variant === 'outline' || entry.variant === 'outline-dash') && rampForSlug(entry.slug)}
-									{@const dotPx = Math.round(SCORE_DOT_BASE_PX * (SCORE_DOT_SIZES[itemIndex] ?? 1))}
-									<!-- Sekundär-Dimension = abgestufte Punktsymbole; die Kreise zeigen
-									     die ECHTEN Kartengrößen. Farbe = dunkler Rampen-Anker wie das Sprite. -->
+								{:else if (entry.variant === 'outline' || entry.variant === 'outline-dash') && dotSpecForSlug(entry.slug)}
+									{@const dotSpec = dotSpecForSlug(entry.slug)}
+									{@const dotPx = Math.round(
+										SCORE_DOT_BASE_PX * (dotSpec?.legendFactors[itemIndex] ?? 1)
+									)}
+									<!-- Sekundär-Choropleth = abgestufte Quadrat-Symbole; die Swatches
+									     zeigen die ECHTEN Kartengrößen und die Sprite-Farbe. -->
 									<span class="inline-flex w-5 items-center justify-center" aria-hidden="true">
 										<span
-											class="inline-block rounded-full"
-											style={`width:${dotPx}px; height:${dotPx}px; background:${rampForSlug(entry.slug)?.[4]}`}
+											class="inline-block rounded-sm"
+											style={`width:${dotPx}px; height:${dotPx}px; background:${dotSpec?.imageColor}`}
 										></span>
 									</span>
 								{:else if entry.variant === 'outline' || entry.variant === 'outline-dash'}

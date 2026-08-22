@@ -88,12 +88,15 @@ describe('pin-sprite-renderer.pinImageId', () => {
 	});
 });
 
-describe('buildScoreDotSvg (Punktsymbole der Sekundär-Dimension)', () => {
-	it('zeichnet einen gefüllten Kreis in Dimensionsfarbe mit hellem Rand', () => {
+describe('buildScoreDotSvg (Aggregat-Symbole der Sekundär-Dimension)', () => {
+	it('zeichnet ein abgerundetes Quadrat in Dimensionsfarbe mit hellem Rand', () => {
 		const svg = buildScoreDotSvg('#005381');
-		expect(svg).toContain('<circle');
+		expect(svg).toContain('<rect');
+		expect(svg).not.toContain('<circle');
 		expect(svg).toContain('fill="#005381"');
 		expect(svg).toContain('stroke="#ECEAE0"');
+		// Abgerundet, aber klar als Quadrat lesbar (kein Kreis via rx=50%).
+		expect(svg).toMatch(/rx="3(\.\d+)?"/);
 	});
 
 	it('nutzt die geteilte Basisgröße, damit icon-size-Faktoren stimmen', () => {

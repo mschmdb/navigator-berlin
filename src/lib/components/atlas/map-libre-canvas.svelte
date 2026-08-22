@@ -4,18 +4,8 @@
 	import { PixelLogo } from '$lib/components/ui';
 	import { handleMapKeydown, type MapHandle } from './internal/map-keyboard.js';
 	import { PIN_ICON_MAP } from './internal/pin-icon-mapping.js';
+	import { DOT_CAPABLE_SLUGS } from './internal/choropleth-dots.js';
 
-	// Score-Dimensionen, deren Punkt-Sprites beim Map-Load registriert werden.
-	const SCORE_DOT_SLUGS = [
-		'kiez-score-gesamt',
-		'kiez-score-ruhe-luft',
-		'kiez-score-gruen-hitze',
-		'kiez-score-mobilitaet',
-		'kiez-score-versorgung',
-		'kiez-score-wohnschutz',
-		'kiez-score-kultur',
-		'kiez-score-kriminalitaet'
-	] as const;
 	import {
 		registerPinIcons,
 		registerScoreDots,
@@ -139,7 +129,7 @@
 							)
 					};
 					void registerPinIcons(pinMap, PIN_ICON_MAP, (token) => COLORS[token]);
-					void registerScoreDots(pinMap, SCORE_DOT_SLUGS);
+					void registerScoreDots(pinMap, DOT_CAPABLE_SLUGS);
 					isReady = true;
 					onLoad?.(map);
 				});

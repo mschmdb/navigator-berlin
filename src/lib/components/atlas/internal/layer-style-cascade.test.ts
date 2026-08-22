@@ -100,8 +100,8 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 		expect(specs[0]?.paint?.['fill-color']).toBeDefined();
 	});
 
-	it('outline-Variant liefert Hit-Fill + line-Spec ohne dash', () => {
-		const specs = buildLayerSpecCascade('laerm-2023', sourceId, 'outline');
+	it('outline-Variant liefert Hit-Fill + line-Spec ohne dash (PET: pmtiles ohne Dots)', () => {
+		const specs = buildLayerSpecCascade('klima-pet-2022', sourceId, 'outline');
 		expect(specs).toHaveLength(2);
 		const [hit, line] = specs;
 		expect(hit.type).toBe('fill');
@@ -114,7 +114,7 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 	});
 
 	it('outline-dash-Variant liefert Hit-Fill + line-Spec mit dasharray [4,4]', () => {
-		const specs = buildLayerSpecCascade('wohnlagen-2024', sourceId, 'outline-dash');
+		const specs = buildLayerSpecCascade('klima-pet-2022', sourceId, 'outline-dash');
 		expect(specs).toHaveLength(2);
 		const [hit, line] = specs;
 		expect(hit.type).toBe('fill');
@@ -122,11 +122,11 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 		expect(line.paint?.['line-dasharray']).toEqual([4, 4]);
 	});
 
-	it('uebernimmt fill-color-Expression als line-color (z.B. match-Expression)', () => {
-		const specs = buildLayerSpecCascade('laerm-2023', sourceId, 'outline');
+	it('uebernimmt fill-color-Expression als line-color (PET: interpolate-Expression)', () => {
+		const specs = buildLayerSpecCascade('klima-pet-2022', sourceId, 'outline');
 		const expr = specs[1]?.paint?.['line-color'];
 		expect(Array.isArray(expr)).toBe(true);
-		expect((expr as unknown[])[0]).toBe('match');
+		expect((expr as unknown[])[0]).toBe('interpolate');
 	});
 
 	it('non-polygon-Slug bleibt unveraendert auch bei outline-Variant', () => {
@@ -190,16 +190,23 @@ describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
 	});
 
 	it('zeichnet die gestrichelte Kontur breiter, damit der Dash-Verlust nicht blind macht', () => {
-		const [, solid] = buildLayerSpecCascade('laerm-2023', 'src', 'outline');
-		const [, dashed] = buildLayerSpecCascade('laerm-2023', 'src', 'outline-dash');
+		const [, solid] = buildLayerSpecCascade('klima-pet-2022', 'src', 'outline');
+		const [, dashed] = buildLayerSpecCascade('klima-pet-2022', 'src', 'outline-dash');
 		expect(dashed.paint?.['line-dasharray']).toEqual([4, 4]);
 		expect(dashed.paint?.['line-width'] as number).toBeGreaterThan(
 			solid.paint?.['line-width'] as number
 		);
 	});
 
-	it('Nicht-Score-Konturen behalten die feste Linienbreite', () => {
-		const [, line] = buildLayerSpecCascade('laerm-2023', 'src', 'outline');
+	it('PET-Kontur behält die feste Linienbreite (kein Dot-Spec)', () => {
+		const [, line] = buildLayerSpecCascade('klima-pet-2022', 'src', 'outline');
 		expect(typeof line.paint?.['line-width']).toBe('number');
+	});
+
+	it('Nicht-Score-Choroplethen bekommen ebenfalls Quadrat-Symbole (laerm)', () => {
+		const [, dots] = buildLayerSpecCascade('laerm-2023', 'src', 'outline');
+		expect(dots.type).toBe('symbol');
+		expect(dots.layout?.['icon-image']).toBe('navigator-score-dot-laerm-2023');
+		expect((dots.layout?.['icon-size'] as unknown[])[0]).toBe('match');
 	});
 });

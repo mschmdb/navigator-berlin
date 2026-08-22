@@ -1,4 +1,5 @@
-import { rampForSlug, SCORE_DOT_BASE_PX, scoreDotImageId } from './dimension-ramps.js';
+import { choroplethDotImageId, dotSpecForSlug } from './choropleth-dots.js';
+import { SCORE_DOT_BASE_PX } from './dimension-ramps.js';
 import type { PinIconSpec, SvgNode } from './pin-icon-mapping.js';
 
 // Hintergrund-Token --bg-elevated aus src/app.css. Duplikat hier weil Canvas-Rendering
@@ -90,16 +91,18 @@ export async function registerPinIcons(
 }
 
 /**
- * Punktsymbol der sekundären Score-Dimension: gefüllter Kreis in der
- * Dimensionsfarbe mit hellem Rand, Basisgröße geteilt mit den
- * icon-size-Faktoren aus dimension-ramps.
+ * Aggregat-Symbol der Choroplethen-Sekundärdarstellung: abgerundetes QUADRAT
+ * in der Familien-/Dimensionsfarbe mit hellem Rand. Quadrat = Flächen-Aggregat,
+ * Kreis/Pin = konkreter Ort; die Form-Grammatik hält die Symbolwelten
+ * unterscheidbar (und zitiert nebenbei das Pixel-Logo-Raster).
  */
 export function buildScoreDotSvg(hexColor: string): string {
-	const half = SCORE_DOT_BASE_PX / 2;
-	const radius = half - 1.5;
+	const inset = 1.5;
+	const side = SCORE_DOT_BASE_PX - 2 * inset;
+	const radius = Math.round(side * 0.22 * 100) / 100;
 	return (
 		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SCORE_DOT_BASE_PX} ${SCORE_DOT_BASE_PX}" width="${SCORE_DOT_BASE_PX}" height="${SCORE_DOT_BASE_PX}">` +
-		`<circle cx="${half}" cy="${half}" r="${radius}" fill="${hexColor}" stroke="#ECEAE0" stroke-width="1.5" />` +
+		`<rect x="${inset}" y="${inset}" width="${side}" height="${side}" rx="${radius}" fill="${hexColor}" stroke="#ECEAE0" stroke-width="1.5" />` +
 		`</svg>`
 	);
 }
@@ -122,19 +125,19 @@ function loadSvgImage(svg: string): Promise<HTMLImageElement> {
 }
 
 /**
- * Registriert die Kreis-Sprites aller Score-Dimensionen bei MapLibre.
- * Idempotent wie registerPinIcons; Farbe = dunkler Anker der Dimension-Rampe.
+ * Registriert die Quadrat-Sprites aller Punkt-fähigen Choroplethen bei
+ * MapLibre. Idempotent wie registerPinIcons; Farbe aus dem Dot-Spec.
  */
 export async function registerScoreDots(
 	map: PinAddImageMap,
 	slugs: readonly string[]
 ): Promise<void> {
 	const tasks = slugs.map(async (slug) => {
-		const ramp = rampForSlug(slug);
-		if (!ramp) return;
-		const id = scoreDotImageId(slug);
+		const spec = dotSpecForSlug(slug);
+		if (!spec) return;
+		const id = choroplethDotImageId(slug);
 		if (map.hasImage(id)) return;
-		const img = await loadSvgImage(buildScoreDotSvg(ramp[4]));
+		const img = await loadSvgImage(buildScoreDotSvg(spec.imageColor));
 		if (map.hasImage(id)) return;
 		map.addImage(id, img);
 	});

@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import MapLegend from './map-legend.svelte';
 import type { LayerMetadata } from '$lib/data';
-import { rampForSlug, SCORE_DOT_BASE_PX, SCORE_DOT_SIZES } from './internal/dimension-ramps.js';
+import { dotSpecForSlug } from './internal/choropleth-dots.js';
+import { SCORE_DOT_BASE_PX } from './internal/dimension-ramps.js';
 
 function meta(slug: string, opts: Partial<LayerMetadata> = {}): LayerMetadata {
 	return {
@@ -273,7 +274,7 @@ describe('map-legend.svelte', () => {
 });
 
 describe('map-legend · Score-Kontur mit Wert-Breite', () => {
-	it('rendert die Sekundär-Swatches eines Score-Layers als wachsende Punkte in Kartengröße', async () => {
+	it('rendert die Sekundär-Swatches eines Choroplethen als wachsende Quadrate in Kartengröße', async () => {
 		const variants = new Map<string, 'fill' | 'outline' | 'outline-dash'>([
 			['kiez-score-gesamt', 'fill'],
 			['kiez-score-ruhe-luft', 'outline']
@@ -283,12 +284,13 @@ describe('map-legend · Score-Kontur mit Wert-Breite', () => {
 			cascadeVariants: variants
 		});
 		const entry = (await page.getByTestId('legend-kiez-score-ruhe-luft').element()) as HTMLElement;
-		const dots = Array.from(entry.querySelectorAll('li span.rounded-full'));
+		const dots = Array.from(entry.querySelectorAll('li span.rounded-sm'));
 		expect(dots).toHaveLength(4);
+		const spec = dotSpecForSlug('kiez-score-ruhe-luft')!;
 		const sizes = dots.map((el) => parseFloat((el as HTMLElement).style.width));
-		expect(sizes).toEqual(SCORE_DOT_SIZES.map((f) => Math.round(SCORE_DOT_BASE_PX * f)));
-		// Farbe = dunkler Rampen-Anker, wie das Karten-Sprite (Browser gibt rgb() zurück).
-		const anchorHex = rampForSlug('kiez-score-ruhe-luft')![4];
+		expect(sizes).toEqual(spec.legendFactors.map((f) => Math.round(SCORE_DOT_BASE_PX * f)));
+		// Farbe = Sprite-Farbe des Dot-Specs (Browser gibt rgb() zurück).
+		const anchorHex = spec.imageColor;
 		const rgb = `rgb(${[1, 3, 5].map((i) => parseInt(anchorHex.slice(i, i + 2), 16)).join(', ')})`;
 		for (const el of dots) {
 			expect((el as HTMLElement).style.background).toContain(rgb);

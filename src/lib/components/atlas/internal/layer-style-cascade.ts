@@ -1,5 +1,5 @@
 import { COLORS } from './colors.js';
-import { rampForSlug, SCORE_DOT_SIZES, scoreDotImageId } from './dimension-ramps.js';
+import { choroplethDotImageId, dotSpecForSlug } from './choropleth-dots.js';
 import { dotsSourceIdFor, outlineLayerIdFor } from './layer-diff.js';
 import { hasPinIcon } from './pin-icon-mapping.js';
 import {
@@ -60,11 +60,6 @@ const OUTLINE_DASH_LINE_WIDTH = 2.5;
 const OUTLINE_LINE_OPACITY = 0.85;
 const OUTLINE_DASH_PATTERN: readonly [number, number] = [4, 4];
 
-function scoreDotSizeExpression(): unknown[] {
-	const [s1, s2, s3, s4] = SCORE_DOT_SIZES;
-	return ['step', ['to-number', ['get', 'value'], -1], s1, 0, s1, 26, s2, 51, s3, 76, s4];
-}
-
 /**
  * Sekundär-Variante = zwei Layer: der Haupt-Fill bleibt bestehen, aber
  * unsichtbar (fill-opacity 0), damit die Haupt-ID nie ihren Typ wechselt und
@@ -90,11 +85,12 @@ function fillSpecToOutlineSpecs(
 		}
 	};
 
-	// Score-Dimension als zweiter Layer: abgestufte Punktsymbole statt
+	// Choropleth als zweiter Layer: abgestufte Quadrat-Symbole statt
 	// Konturnetz. Ein Liniennetz über 542 LOR-Flächen wird zum Gekritzel;
-	// MapLibre platziert ein Symbol pro Fläche, die Größe kodiert das
-	// Wert-Quartil, das Sprite trägt die Dimensions-Farbe.
-	if (rampForSlug(slug)) {
+	// MapLibre platziert ein Symbol pro Fläche, die Größe kodiert die
+	// ordinale Stufe, das Sprite trägt die Familien-/Dimensionsfarbe.
+	const dotSpec = dotSpecForSlug(slug);
+	if (dotSpec) {
 		const dots: MapLibreLayerSpec = {
 			id: outlineLayerIdFor(slug),
 			type: 'symbol',
@@ -102,8 +98,8 @@ function fillSpecToOutlineSpecs(
 			// pro Tile-Fragment des Polygons.
 			source: dotsSourceIdFor(slug),
 			layout: {
-				'icon-image': scoreDotImageId(slug),
-				'icon-size': scoreDotSizeExpression(),
+				'icon-image': choroplethDotImageId(slug),
+				'icon-size': dotSpec.sizeExpression,
 				'icon-allow-overlap': true,
 				'icon-ignore-placement': true
 			}
