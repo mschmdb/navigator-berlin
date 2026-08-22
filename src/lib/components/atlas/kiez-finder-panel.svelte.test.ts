@@ -90,12 +90,13 @@ async function renderPanel(overrides: Record<string, unknown> = {}) {
 }
 
 describe('kiez-finder-panel', () => {
-	it('rendert als nicht-modaler Dialog mit beschrifteten Slidern', async () => {
+	it('rendert als gedockte Section mit Überschrift und beschrifteten Slidern', async () => {
 		await renderPanel();
 		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
-		expect(panel.getAttribute('role')).toBe('dialog');
-		expect(panel.getAttribute('aria-modal')).toBeNull();
-		expect(panel.getAttribute('aria-label')).toContain('Kiez-Finder');
+		// Gedockt im Inspector-Slot: kein Dialog, kein Drag-Handle mehr.
+		expect(panel.getAttribute('role')).toBeNull();
+		expect(panel.querySelector('[data-testid="finder-drag-handle"]')).toBeNull();
+		expect(panel.querySelector('h2')?.textContent).toContain('Kiez-Finder');
 		const sliders = panel.querySelectorAll('input[type="range"]');
 		expect(sliders.length).toBeGreaterThanOrEqual(9);
 		for (const slider of sliders) {
@@ -135,10 +136,10 @@ describe('kiez-finder-panel', () => {
 		expect(slider.value).toBe('0');
 	});
 
-	it('Escape schließt das Panel', async () => {
+	it('Schließen-Button ruft onClose', async () => {
 		const { onClose } = await renderPanel();
-		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
-		panel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		const close = (await page.getByTestId('finder-close').element()) as HTMLButtonElement;
+		close.click();
 		expect(onClose).toHaveBeenCalled();
 	});
 
@@ -147,23 +148,5 @@ describe('kiez-finder-panel', () => {
 		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
 		expect(panel.textContent).toContain('keine Bewertung von Nachbarschaften');
 		expect(panel.textContent).toContain('offenen Daten');
-	});
-
-	it('Drag am Kopf verschiebt das Panel', async () => {
-		await renderPanel();
-		const handle = (await page.getByTestId('finder-drag-handle').element()) as HTMLElement;
-		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
-		const before = panel.style.transform;
-		handle.dispatchEvent(
-			new PointerEvent('pointerdown', { clientX: 10, clientY: 10, bubbles: true, pointerId: 1 })
-		);
-		window.dispatchEvent(
-			new PointerEvent('pointermove', { clientX: 60, clientY: 40, pointerId: 1 })
-		);
-		window.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
-		await vi.waitFor(() => {
-			expect(panel.style.transform).not.toBe(before);
-			expect(panel.style.transform).toContain('50');
-		});
 	});
 });

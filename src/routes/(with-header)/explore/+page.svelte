@@ -192,7 +192,6 @@
 		// (z.B. kuehle-orte via Hitze-Landing → Home → Explorer).
 		// Multi-Layer-Limit auch am URL-Einstieg: höchstens 2 Choroplethen.
 		ui.activeLayerSlugs = capPolygonSlugs(data.activeLayers ?? []);
-		if (featureFlags.kiezFinder && data.finderOpen) ui.finderOpen = true;
 		// Lead gegen die GEKAPPTE Liste prüfen: parseLead sah die rohe URL-Liste,
 		// der Cap kann den Lead-Slug gerade entfernt haben.
 		ui.choroplethLeadSlug =
@@ -200,7 +199,11 @@
 		// Story 2.12 Quick-Links: wenn `?address=lng,lat&q=…` gesetzt, bauen
 		// wir eine synthetische GeocodeSuggestion und triggern die Adress-
 		// Selection. Inspector öffnet sich dann automatisch.
-		if (typeof data.address?.lng === 'number' && typeof data.address?.lat === 'number') {
+		// Finder-Einstieg (?finder=1): keine Default-Adresse setzen, sonst
+		// verdeckt der automatisch geöffnete Inspector den Finder im Slot.
+		if (featureFlags.kiezFinder && data.finderOpen) {
+			// bewusst leer: der Finder besetzt den Slot, kein Auto-Inspector
+		} else if (typeof data.address?.lng === 'number' && typeof data.address?.lat === 'number') {
 			const displayName =
 				data.address.q ?? `${data.address.lat.toFixed(5)}, ${data.address.lng.toFixed(5)}`;
 			selection.set({
@@ -539,6 +542,26 @@
 			return;
 		}
 		void renderRegionOutline(addr.lat, addr.lng, scope, addr.id);
+	});
+
+	// ?finder=1 wird bei JEDER Navigation konsumiert, nicht nur beim Mount:
+	// der Header-Link navigiert client-seitig, onMount liefe dann nie.
+	// Nach dem Konsum fliegt der Param aus der URL, damit ein erneuter
+	// Header-Klick wieder eine echte Navigation auslöst.
+	$effect(() => {
+		if (!featureFlags.kiezFinder || !data.finderOpen) return;
+		ui.finderOpen = true;
+		ui.inspectorOpen = false;
+		const url = new URL(window.location.href);
+		if (url.searchParams.has('finder')) {
+			url.searchParams.delete('finder');
+			// eslint-disable-next-line svelte/no-navigation-without-resolve
+			void goto(`?${url.searchParams.toString()}`, {
+				replaceState: true,
+				keepFocus: true,
+				noScroll: true
+			});
+		}
 	});
 
 	$effect(() => {
@@ -1088,14 +1111,14 @@
 		}
 	}
 
-	const showSidePanel = $derived(
-		viewport.breakpoint !== 'mobile' &&
-			((ui.inspectorOpen && ui.selectedAddress !== null) || ui.compareMode)
-	);
-	const showBottomSheet = $derived(
-		viewport.breakpoint === 'mobile' &&
-			((ui.inspectorOpen && ui.selectedAddress !== null) || ui.compareMode)
-	);
+	const finderActive = $derived(featureFlags.kiezFinder && ui.finderOpen);
+	const inspectorActive = $derived(ui.inspectorOpen && ui.selectedAddress !== null);
+	const slotOccupied = $derived(inspectorActive || ui.compareMode || finderActive);
+	const showSidePanel = $derived(viewport.breakpoint !== 'mobile' && slotOccupied);
+	const showBottomSheet = $derived(viewport.breakpoint === 'mobile' && slotOccupied);
+	// Finder bleibt gemountet, solange er offen ist: Slider-Gewichte und
+	// Karten-Färbung überleben den Wechsel zum Inspector (Karten-Klick).
+	const finderVisible = $derived(finderActive && !inspectorActive && !ui.compareMode);
 
 	const ogInput = $derived.by<OgImageInput | null>(() => {
 		const addr = ui.selectedAddress;
@@ -1199,12 +1222,6 @@
 			onRemove={onLegendRemove}
 			onPromoteLayer={(slug: string) => (ui.choroplethLeadSlug = slug)}
 		/>
-		{#if featureFlags.kiezFinder && ui.finderOpen}
-			<KiezFinderPanel
-				map={rawMap as unknown as FinderMapApi | null}
-				onClose={() => (ui.finderOpen = false)}
-			/>
-		{/if}
 		<MapHoverTooltip
 			map={rawMap as MapHoverApi | null}
 			activeLayerSlugs={ui.activeLayerSlugs}
@@ -1225,7 +1242,11 @@
 	{#if showSidePanel}
 		<aside
 			class="min-h-0 overflow-y-auto border-t border-rule bg-bg-elevated lg:h-full lg:border-t-0 lg:border-l"
-			aria-label={ui.compareMode ? 'Adress-Vergleich' : 'Adress-Inspector-Bereich'}
+			aria-label={ui.compareMode
+				? 'Adress-Vergleich'
+				: inspectorActive
+					? 'Adress-Inspector-Bereich'
+					: 'Kiez-Finder'}
 			data-testid="inspector-slot"
 		>
 			{#if ui.compareMode}
@@ -1234,8 +1255,16 @@
 					geocode={geocodeForCompare}
 					onOpenBookmarkPicker={openBookmarkPickerForCompare}
 				/>
-			{:else}
+			{:else if inspectorActive}
 				<InspectorPanel layerMeta={manifestLayers} />
+			{/if}
+			{#if finderActive && viewport.breakpoint !== 'mobile'}
+				<div class={finderVisible ? 'h-full' : 'hidden'}>
+					<KiezFinderPanel
+						map={rawMap as unknown as FinderMapApi | null}
+						onClose={() => (ui.finderOpen = false)}
+					/>
+				</div>
 			{/if}
 		</aside>
 	{/if}
@@ -1244,8 +1273,16 @@
 			open
 			snapVh={ui.sheetSnapVh}
 			onSnap={setSnap}
-			onClose={ui.compareMode ? () => exitCompareMode(ui) : closeInspector}
-			ariaLabel={ui.compareMode ? 'Adress-Vergleich' : 'Adress-Inspektor'}
+			onClose={ui.compareMode
+				? () => exitCompareMode(ui)
+				: inspectorActive
+					? closeInspector
+					: () => (ui.finderOpen = false)}
+			ariaLabel={ui.compareMode
+				? 'Adress-Vergleich'
+				: inspectorActive
+					? 'Adress-Inspektor'
+					: 'Kiez-Finder'}
 		>
 			{#if ui.compareMode}
 				<ComparePanel
@@ -1253,8 +1290,16 @@
 					geocode={geocodeForCompare}
 					onOpenBookmarkPicker={openBookmarkPickerForCompare}
 				/>
-			{:else}
+			{:else if inspectorActive}
 				<InspectorPanel layerMeta={manifestLayers} variant="sheet" />
+			{/if}
+			{#if finderActive && viewport.breakpoint === 'mobile'}
+				<div class={finderVisible ? '' : 'hidden'}>
+					<KiezFinderPanel
+						map={rawMap as unknown as FinderMapApi | null}
+						onClose={() => (ui.finderOpen = false)}
+					/>
+				</div>
 			{/if}
 		</BottomSheet>
 	{/if}

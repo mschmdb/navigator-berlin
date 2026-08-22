@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { X, RotateCcw, Sparkles, GripVertical } from '@lucide/svelte';
+	import { X, RotateCcw, Sparkles } from '@lucide/svelte';
 	import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 	import { PARTEI_FARBEN, type ParteiKurzname } from '$lib/data/partei-farben.js';
 	import {
@@ -200,51 +200,6 @@
 		};
 	});
 
-	// Drag: Pointer am Kopf verschiebt das Panel (Viewport-geklemmt).
-	let dx = $state(0);
-	let dy = $state(0);
-	let dragging: { startX: number; startY: number; baseX: number; baseY: number } | null = null;
-	let panelEl = $state<HTMLElement | null>(null);
-
-	function onDragStart(event: PointerEvent): void {
-		dragging = { startX: event.clientX, startY: event.clientY, baseX: dx, baseY: dy };
-		window.addEventListener('pointermove', onDragMove);
-		window.addEventListener('pointerup', onDragEnd, { once: true });
-	}
-	function onDragMove(event: PointerEvent): void {
-		if (!dragging) return;
-		const rect = panelEl?.getBoundingClientRect();
-		let nextX = dragging.baseX + event.clientX - dragging.startX;
-		let nextY = dragging.baseY + event.clientY - dragging.startY;
-		if (rect) {
-			const minX = dragging.baseX - rect.left + 8;
-			const minY = dragging.baseY - rect.top + 8;
-			nextX = Math.max(minX, nextX);
-			nextY = Math.max(minY, nextY);
-		}
-		dx = nextX;
-		dy = nextY;
-	}
-	function onDragEnd(): void {
-		dragging = null;
-		window.removeEventListener('pointermove', onDragMove);
-	}
-
-	function onKeydown(event: KeyboardEvent): void {
-		if (event.key === 'Escape') onClose?.();
-	}
-
-	/** Tastatur-Alternative zum Drag: Pfeiltasten verschieben in 16-px-Schritten. */
-	function onHandleKeydown(event: KeyboardEvent): void {
-		const step = 16;
-		if (event.key === 'ArrowLeft') dx -= step;
-		else if (event.key === 'ArrowRight') dx += step;
-		else if (event.key === 'ArrowUp') dy -= step;
-		else if (event.key === 'ArrowDown') dy += step;
-		else return;
-		event.preventDefault();
-	}
-
 	function stufenText(value: number, low: string, high: string): string {
 		if (value === 0) return 'egal';
 		const grad = Math.abs(value) === 2 ? 'möglichst' : 'eher';
@@ -253,29 +208,15 @@
 	void STUFEN_BIPOLAR;
 </script>
 
-<div
-	bind:this={panelEl}
+<section
 	data-testid="finder-panel"
-	role="dialog"
-	aria-label="Kiez-Finder: Sag der Karte, was du suchst"
-	tabindex="-1"
-	onkeydown={onKeydown}
-	class="absolute top-4 right-4 z-40 flex max-h-[calc(100%-2rem)] w-80 flex-col overflow-hidden rounded-sm border border-rule bg-bg-elevated/95 shadow-xl backdrop-blur-sm"
-	style:transform="translate({dx}px, {dy}px)"
+	class="flex h-full flex-col overflow-hidden bg-bg-elevated text-ink"
 >
-	<header class="flex items-center gap-2 border-b border-rule px-3 py-2 select-none">
-		<button
-			type="button"
-			data-testid="finder-drag-handle"
-			aria-label="Panel verschieben (ziehen oder Pfeiltasten)"
-			onpointerdown={onDragStart}
-			onkeydown={onHandleKeydown}
-			class="cursor-grab p-0.5 text-ink-subtle hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent active:cursor-grabbing"
-		>
-			<GripVertical size={14} aria-hidden="true" />
-		</button>
-		<Sparkles size={14} aria-hidden="true" class="text-accent" />
-		<h2 class="flex-1 font-sans text-sm font-medium text-ink">Kiez-Finder</h2>
+	<header
+		class="sticky top-0 z-10 flex items-center gap-2 border-b border-rule bg-bg-elevated px-4 py-3"
+	>
+		<Sparkles size={16} aria-hidden="true" class="text-accent" />
+		<h2 class="flex-1 font-serif text-lg leading-tight text-ink">Kiez-Finder</h2>
 		<button
 			type="button"
 			data-testid="finder-close"
@@ -287,7 +228,7 @@
 		</button>
 	</header>
 
-	<div class="flex-1 overflow-y-auto px-3 py-2">
+	<div class="flex-1 overflow-y-auto px-4 py-3">
 		{#if loading}
 			<p class="py-6 text-center font-mono text-xs text-ink-muted" role="status">
 				Daten werden geladen …
@@ -404,7 +345,7 @@
 			</p>
 		{/if}
 	</div>
-</div>
+</section>
 
 <style>
 	.finder-range {
