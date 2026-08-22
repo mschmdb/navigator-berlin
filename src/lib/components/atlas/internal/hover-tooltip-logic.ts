@@ -121,7 +121,9 @@ export function buildMultiHoverContent(
 	const rows = polygonContents.map((content) => ({
 		slug: content.slug,
 		layerName: content.layerName,
-		valueText: content.valueText,
+		// Mehrzeilig nennt die Label-Spalte die Dimension schon; der Präfix
+		// "Versorgung: " würde den Wert nur unnötig umbrechen lassen.
+		valueText: multiple ? content.valueText.replace(/^[^:()]{1,32}:\s+/, '') : content.valueText,
 		shortExplain: multiple ? '' : content.shortExplain
 	}));
 	return { kind: 'polygon', rows, hint: top.hint };

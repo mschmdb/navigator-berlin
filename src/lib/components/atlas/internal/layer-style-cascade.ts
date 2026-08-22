@@ -1,5 +1,5 @@
 import { COLORS } from './colors.js';
-import { rampForSlug, SCORE_OUTLINE_WIDTHS } from './dimension-ramps.js';
+import { rampForSlug, SCORE_DOT_SIZES, scoreDotImageId } from './dimension-ramps.js';
 import { outlineLayerIdFor } from './layer-diff.js';
 import { hasPinIcon } from './pin-icon-mapping.js';
 import {
@@ -60,16 +60,17 @@ const OUTLINE_DASH_LINE_WIDTH = 2.5;
 const OUTLINE_LINE_OPACITY = 0.85;
 const OUTLINE_DASH_PATTERN: readonly [number, number] = [4, 4];
 
-function scoreOutlineWidthExpression(): unknown[] {
-	const [w1, w2, w3, w4] = SCORE_OUTLINE_WIDTHS;
-	return ['step', ['to-number', ['get', 'value'], -1], w1, 0, w1, 26, w2, 51, w3, 76, w4];
+function scoreDotSizeExpression(): unknown[] {
+	const [s1, s2, s3, s4] = SCORE_DOT_SIZES;
+	return ['step', ['to-number', ['get', 'value'], -1], s1, 0, s1, 26, s2, 51, s3, 76, s4];
 }
 
 /**
- * Kontur-Variante = zwei Layer: der Haupt-Fill bleibt bestehen, aber unsichtbar
- * (fill-opacity 0), damit die Haupt-ID nie ihren Typ wechselt und
+ * Sekundär-Variante = zwei Layer: der Haupt-Fill bleibt bestehen, aber
+ * unsichtbar (fill-opacity 0), damit die Haupt-ID nie ihren Typ wechselt und
  * queryRenderedFeatures die Fläche fürs Tooltip weiter trifft. Die sichtbare
- * Kontur läuft als eigener Line-Layer unter der -outline-ID.
+ * Darstellung läuft unter der -outline-ID: Punktsymbole für Score-Dimensionen,
+ * Konturlinien für die übrigen Polygon-Layer.
  */
 function fillSpecToOutlineSpecs(
 	spec: MapLibreLayerSpec,
@@ -77,17 +78,6 @@ function fillSpecToOutlineSpecs(
 	slug: string
 ): MapLibreLayerSpec[] {
 	const fillColor = spec.paint?.['fill-color'] ?? COLORS.accent;
-	const scoreRamp = rampForSlug(slug);
-	const paint: Record<string, unknown> = {
-		'line-color': fillColor,
-		'line-width': scoreRamp
-			? scoreOutlineWidthExpression()
-			: dash
-				? OUTLINE_DASH_LINE_WIDTH
-				: OUTLINE_LINE_WIDTH,
-		'line-opacity': OUTLINE_LINE_OPACITY
-	};
-	if (dash) paint['line-dasharray'] = [...OUTLINE_DASH_PATTERN];
 	// Reiner Hit-Layer: nur fill-color (für MapLibre-Validierung) + Opacity 0.
 	// Kein fill-outline-color, das als zweite Grenzlinie durchscheinen könnte.
 	const hitFill: MapLibreLayerSpec = {
@@ -95,10 +85,36 @@ function fillSpecToOutlineSpecs(
 		type: 'fill',
 		source: spec.source,
 		paint: {
-			'fill-color': spec.paint?.['fill-color'] ?? COLORS.accent,
+			'fill-color': fillColor,
 			'fill-opacity': 0
 		}
 	};
+
+	// Score-Dimension als zweiter Layer: abgestufte Punktsymbole statt
+	// Konturnetz. Ein Liniennetz über 542 LOR-Flächen wird zum Gekritzel;
+	// MapLibre platziert ein Symbol pro Fläche, die Größe kodiert das
+	// Wert-Quartil, das Sprite trägt die Dimensions-Farbe.
+	if (rampForSlug(slug)) {
+		const dots: MapLibreLayerSpec = {
+			id: outlineLayerIdFor(slug),
+			type: 'symbol',
+			source: spec.source,
+			layout: {
+				'icon-image': scoreDotImageId(slug),
+				'icon-size': scoreDotSizeExpression(),
+				'icon-allow-overlap': true,
+				'icon-ignore-placement': true
+			}
+		};
+		return [hitFill, dots];
+	}
+
+	const paint: Record<string, unknown> = {
+		'line-color': fillColor,
+		'line-width': dash ? OUTLINE_DASH_LINE_WIDTH : OUTLINE_LINE_WIDTH,
+		'line-opacity': OUTLINE_LINE_OPACITY
+	};
+	if (dash) paint['line-dasharray'] = [...OUTLINE_DASH_PATTERN];
 	const outline: MapLibreLayerSpec = {
 		id: outlineLayerIdFor(slug),
 		type: 'line',

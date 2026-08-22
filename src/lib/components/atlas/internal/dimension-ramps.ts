@@ -90,8 +90,16 @@ export function rampForSlug(slug: string): Ramp | null {
 export const KALTLUFT_HIGHLIGHT = '#5AB3C8';
 
 /**
- * Konturbreiten der Score-Layer nach Wert-Quartil (dünn→dick = besser). Auf
- * 2 px dünnen Linien sind die Rampen-Stufen kaum unterscheidbar; die Breite
- * kodiert den Wert redundant zur Farbe. Karte und Legende teilen diese Werte.
+ * Punktsymbole der sekundären Score-Dimension: Basisgröße des Kreis-Sprites in
+ * Pixeln und die vier icon-size-Faktoren nach Wert-Quartil (klein→groß =
+ * besser). Abgestufte Symbole statt Konturnetz: Ein Liniennetz über 542
+ * LOR-Flächen wird zum Gekritzel, ein Kreis pro Fläche bleibt lesbar.
+ * Karte und Legende teilen diese Werte.
  */
-export const SCORE_OUTLINE_WIDTHS: readonly [number, number, number, number] = [1, 1.75, 2.75, 4];
+export const SCORE_DOT_BASE_PX = 18;
+export const SCORE_DOT_SIZES: readonly [number, number, number, number] = [0.33, 0.5, 0.72, 1];
+
+/** MapLibre-Image-ID des Kreis-Sprites einer Score-Dimension. */
+export function scoreDotImageId(slug: string): string {
+	return `navigator-score-dot-${slug}`;
+}

@@ -1,5 +1,6 @@
+import { SCORE_DOT_BASE_PX } from './dimension-ramps.js';
 import { describe, expect, it } from 'vitest';
-import { buildPinSvg, pinImageId } from './pin-sprite-renderer.js';
+import { buildPinSvg, buildScoreDotSvg, pinImageId } from './pin-sprite-renderer.js';
 import { PIN_ICON_MAP } from './pin-icon-mapping.js';
 import { COLORS } from './colors.js';
 
@@ -84,5 +85,20 @@ describe('pin-sprite-renderer.pinImageId', () => {
 	it('baut stable IDs pro Slug', () => {
 		expect(pinImageId('stolpersteine')).toBe('navigator-pin-stolpersteine');
 		expect(pinImageId('ubahn-stationen')).toBe('navigator-pin-ubahn-stationen');
+	});
+});
+
+describe('buildScoreDotSvg (Punktsymbole der Sekundär-Dimension)', () => {
+	it('zeichnet einen gefüllten Kreis in Dimensionsfarbe mit hellem Rand', () => {
+		const svg = buildScoreDotSvg('#005381');
+		expect(svg).toContain('<circle');
+		expect(svg).toContain('fill="#005381"');
+		expect(svg).toContain('stroke="#ECEAE0"');
+	});
+
+	it('nutzt die geteilte Basisgröße, damit icon-size-Faktoren stimmen', () => {
+		const svg = buildScoreDotSvg('#005381');
+		expect(svg).toContain(`width="${SCORE_DOT_BASE_PX}"`);
+		expect(svg).toContain(`height="${SCORE_DOT_BASE_PX}"`);
 	});
 });

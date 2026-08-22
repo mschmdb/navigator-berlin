@@ -1,3 +1,4 @@
+import { rampForSlug, SCORE_DOT_BASE_PX, scoreDotImageId } from './dimension-ramps.js';
 import type { PinIconSpec, SvgNode } from './pin-icon-mapping.js';
 
 // Hintergrund-Token --bg-elevated aus src/app.css. Duplikat hier weil Canvas-Rendering
@@ -82,6 +83,58 @@ export async function registerPinIcons(
 		const id = pinImageId(slug);
 		if (map.hasImage(id)) return;
 		const img = await loadPinImage(spec, colorResolver(spec.colorToken));
+		if (map.hasImage(id)) return;
+		map.addImage(id, img);
+	});
+	await Promise.all(tasks);
+}
+
+/**
+ * Punktsymbol der sekundären Score-Dimension: gefüllter Kreis in der
+ * Dimensionsfarbe mit hellem Rand, Basisgröße geteilt mit den
+ * icon-size-Faktoren aus dimension-ramps.
+ */
+export function buildScoreDotSvg(hexColor: string): string {
+	const half = SCORE_DOT_BASE_PX / 2;
+	const radius = half - 1.5;
+	return (
+		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SCORE_DOT_BASE_PX} ${SCORE_DOT_BASE_PX}" width="${SCORE_DOT_BASE_PX}" height="${SCORE_DOT_BASE_PX}">` +
+		`<circle cx="${half}" cy="${half}" r="${radius}" fill="${hexColor}" stroke="#ECEAE0" stroke-width="1.5" />` +
+		`</svg>`
+	);
+}
+
+function loadSvgImage(svg: string): Promise<HTMLImageElement> {
+	const blob = new Blob([svg], { type: 'image/svg+xml' });
+	const url = URL.createObjectURL(blob);
+	return new Promise((resolve, reject) => {
+		const img = new Image();
+		img.onload = () => {
+			URL.revokeObjectURL(url);
+			resolve(img);
+		};
+		img.onerror = (e) => {
+			URL.revokeObjectURL(url);
+			reject(e instanceof Error ? e : new Error('Score-Dot-Sprite-Load fehlgeschlagen'));
+		};
+		img.src = url;
+	});
+}
+
+/**
+ * Registriert die Kreis-Sprites aller Score-Dimensionen bei MapLibre.
+ * Idempotent wie registerPinIcons; Farbe = dunkler Anker der Dimension-Rampe.
+ */
+export async function registerScoreDots(
+	map: PinAddImageMap,
+	slugs: readonly string[]
+): Promise<void> {
+	const tasks = slugs.map(async (slug) => {
+		const ramp = rampForSlug(slug);
+		if (!ramp) return;
+		const id = scoreDotImageId(slug);
+		if (map.hasImage(id)) return;
+		const img = await loadSvgImage(buildScoreDotSvg(ramp[4]));
 		if (map.hasImage(id)) return;
 		map.addImage(id, img);
 	});

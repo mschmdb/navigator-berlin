@@ -10,7 +10,7 @@
 	import { getLayerExplainEntry } from './inspector-panel/internal/layer-explain.js';
 	import { shortenLicense } from './inspector-panel/internal/source-shortener.js';
 	import { isPolygonSlug, type CascadeVariant } from './internal/layer-style-cascade.js';
-	import { rampForSlug, SCORE_OUTLINE_WIDTHS } from './internal/dimension-ramps.js';
+	import { rampForSlug, SCORE_DOT_BASE_PX, SCORE_DOT_SIZES } from './internal/dimension-ramps.js';
 
 	type Props = {
 		activeLayerSlugs: readonly string[];
@@ -179,13 +179,15 @@
 										style={`background:${item.color}; border:1px solid var(--color-bg)`}
 									></span>
 								{:else if (entry.variant === 'outline' || entry.variant === 'outline-dash') && rampForSlug(entry.slug)}
-									<!-- Score-Konturen kodieren den Wert über die Linienbreite; der
-									     Balken zeigt die ECHTE Kartenbreite als Höhe, ungekappt. -->
-									<span
-										aria-hidden="true"
-										class="inline-block w-5 self-center"
-										style={`height:${SCORE_OUTLINE_WIDTHS[itemIndex] ?? 1.5}px; background:${item.color}`}
-									></span>
+									{@const dotPx = Math.round(SCORE_DOT_BASE_PX * (SCORE_DOT_SIZES[itemIndex] ?? 1))}
+									<!-- Sekundär-Dimension = abgestufte Punktsymbole; die Kreise zeigen
+									     die ECHTEN Kartengrößen. Farbe = dunkler Rampen-Anker wie das Sprite. -->
+									<span class="inline-flex w-5 items-center justify-center" aria-hidden="true">
+										<span
+											class="inline-block rounded-full"
+											style={`width:${dotPx}px; height:${dotPx}px; background:${rampForSlug(entry.slug)?.[4]}`}
+										></span>
+									</span>
 								{:else if entry.variant === 'outline' || entry.variant === 'outline-dash'}
 									<span
 										aria-hidden="true"

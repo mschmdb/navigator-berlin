@@ -59,6 +59,22 @@ describe('buildMultiHoverContent (Multi-Layer-Tooltip)', () => {
 		expect(content?.rows[0].shortExplain).not.toBe('');
 	});
 
+	it('streicht in Mehrzeilen-Ansicht den redundanten Dimensions-Präfix aus dem Wert', () => {
+		const content = buildMultiHoverContent([
+			polygonFeature('kiez-score-versorgung', 86),
+			polygonFeature('kiez-score-mobilitaet', 39)
+		]);
+		// Spaltenlabel nennt die Dimension schon; "Versorgung: sehr hoch (86/100)"
+		// würde als "sehr hoch (86/100)" einzeilig bleiben statt hässlich umzubrechen.
+		expect(content?.rows[0].valueText).toBe('sehr hoch (86/100)');
+		expect(content?.rows[1].valueText).toBe('mittel (39/100)');
+	});
+
+	it('behält den vollen Wert-Text in der Einzel-Ansicht', () => {
+		const content = buildMultiHoverContent([polygonFeature('kiez-score-versorgung', 86)]);
+		expect(content?.rows[0].valueText).toContain('Versorgung:');
+	});
+
 	it('zeigt bei zwei Choroplethen beide Werte, oberster zuerst', () => {
 		const content = buildMultiHoverContent([
 			polygonFeature('kiez-score-ruhe-luft', 62),

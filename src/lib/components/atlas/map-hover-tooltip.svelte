@@ -130,7 +130,10 @@
 				{#each content.rows as row (row.slug)}
 					<div class="contents" data-testid="hover-tooltip-row">
 						<dt class="font-serif text-ink">{row.layerName}</dt>
-						<dd class="text-right font-mono text-ink" data-testid="hover-tooltip-value-{row.slug}">
+						<dd
+							class="text-right font-mono whitespace-nowrap text-ink"
+							data-testid="hover-tooltip-value-{row.slug}"
+						>
 							{row.valueText}
 						</dd>
 					</div>

@@ -4,7 +4,23 @@
 	import { PixelLogo } from '$lib/components/ui';
 	import { handleMapKeydown, type MapHandle } from './internal/map-keyboard.js';
 	import { PIN_ICON_MAP } from './internal/pin-icon-mapping.js';
-	import { registerPinIcons, type PinAddImageMap } from './internal/pin-sprite-renderer.js';
+
+	// Score-Dimensionen, deren Punkt-Sprites beim Map-Load registriert werden.
+	const SCORE_DOT_SLUGS = [
+		'kiez-score-gesamt',
+		'kiez-score-ruhe-luft',
+		'kiez-score-gruen-hitze',
+		'kiez-score-mobilitaet',
+		'kiez-score-versorgung',
+		'kiez-score-wohnschutz',
+		'kiez-score-kultur',
+		'kiez-score-kriminalitaet'
+	] as const;
+	import {
+		registerPinIcons,
+		registerScoreDots,
+		type PinAddImageMap
+	} from './internal/pin-sprite-renderer.js';
 	import { COLORS } from './internal/colors.js';
 
 	type Viewport = {
@@ -123,11 +139,23 @@
 							)
 					};
 					void registerPinIcons(pinMap, PIN_ICON_MAP, (token) => COLORS[token]);
+					void registerScoreDots(pinMap, SCORE_DOT_SLUGS);
 					isReady = true;
 					onLoad?.(map);
 				});
 				// Fallback fuer den Fall, dass Symbol-Layer vor Sprite-Registrierung referenziert wird.
 				map.on('styleimagemissing', (e: { id: string }) => {
+					if (e.id.startsWith('navigator-score-dot-')) {
+						const dotSlug = e.id.slice('navigator-score-dot-'.length);
+						const m = map as unknown as {
+							hasImage: (id: string) => boolean;
+							addImage: (id: string, image: unknown) => void;
+						};
+						void registerScoreDots({ hasImage: m.hasImage.bind(m), addImage: m.addImage.bind(m) }, [
+							dotSlug
+						]);
+						return;
+					}
 					const slug = e.id.startsWith('navigator-pin-')
 						? e.id.slice('navigator-pin-'.length)
 						: null;

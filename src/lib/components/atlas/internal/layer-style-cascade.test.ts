@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SCORE_OUTLINE_WIDTHS } from './dimension-ramps.js';
+import { SCORE_DOT_SIZES } from './dimension-ramps.js';
 import {
 	buildLayerSpecCascade,
 	computeCascadeVariants,
@@ -153,28 +153,39 @@ describe('layer-style-cascade.buildLayerSpecCascade', () => {
 });
 
 describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
-	it('liefert für outline zwei Specs: unsichtbarer Hit-Fill + eigener Line-Layer', () => {
+	it('liefert für Score-outline zwei Specs: unsichtbarer Hit-Fill + Punkt-Symbole', () => {
 		const specs = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
 		expect(specs).toHaveLength(2);
-		const [hit, line] = specs;
+		const [hit, dots] = specs;
 		// Haupt-ID bleibt der Fill: nie ein Typwechsel unter derselben ID, und
 		// queryRenderedFeatures trifft die Fläche fürs Tooltip.
 		expect(hit.id).toBe('navigator-layer-kiez-score-ruhe-luft');
 		expect(hit.type).toBe('fill');
 		expect(hit.paint?.['fill-opacity']).toBe(0);
-		// Reiner Hit-Layer: kein fill-outline-color, das je nach Renderer als
-		// zweite Grenzlinie unter der Kontur durchscheinen könnte.
 		expect(hit.paint).not.toHaveProperty('fill-outline-color');
-		expect(line.id).toBe('navigator-layer-kiez-score-ruhe-luft-outline');
-		expect(line.type).toBe('line');
+		// Sekundäre Dimension als abgestufte Punktsymbole statt Konturnetz:
+		// ein Kreis pro Fläche, Größe = Wert-Quartil, Farbe = Dimension.
+		expect(dots.id).toBe('navigator-layer-kiez-score-ruhe-luft-outline');
+		expect(dots.type).toBe('symbol');
+		expect(dots.layout?.['icon-image']).toBe('navigator-score-dot-kiez-score-ruhe-luft');
+		expect(dots.layout?.['icon-allow-overlap']).toBe(true);
 	});
 
-	it('behält die daten-getriebene Farb-Expression in der Kontur (eigene Dimension-Hue)', () => {
-		const [, line] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
-		expect(line.type).toBe('line');
-		const color = line.paint?.['line-color'] as unknown[];
-		expect(color[0]).toBe('step');
-		expect(JSON.stringify(color)).toContain('#003D69');
+	it('staffelt die Punktgröße über die Quartil-Schwellen (klein→groß = besser)', () => {
+		const [, dots] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
+		expect(dots.layout?.['icon-size']).toEqual([
+			'step',
+			['to-number', ['get', 'value'], -1],
+			SCORE_DOT_SIZES[0],
+			0,
+			SCORE_DOT_SIZES[0],
+			26,
+			SCORE_DOT_SIZES[1],
+			51,
+			SCORE_DOT_SIZES[2],
+			76,
+			SCORE_DOT_SIZES[3]
+		]);
 	});
 
 	it('zeichnet die gestrichelte Kontur breiter, damit der Dash-Verlust nicht blind macht', () => {
@@ -184,29 +195,6 @@ describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
 		expect(dashed.paint?.['line-width'] as number).toBeGreaterThan(
 			solid.paint?.['line-width'] as number
 		);
-	});
-
-	it('kodiert den Score-Wert zusätzlich über die Linienbreite (dünn→dick = besser)', () => {
-		const [, line] = buildLayerSpecCascade('kiez-score-ruhe-luft', 'src', 'outline');
-		// Quartil-Schwellen wie die Füllung; vier Breiten, monoton, Spreizung ≥ 4x.
-		expect(line.paint?.['line-width']).toEqual([
-			'step',
-			['to-number', ['get', 'value'], -1],
-			SCORE_OUTLINE_WIDTHS[0],
-			0,
-			SCORE_OUTLINE_WIDTHS[0],
-			26,
-			SCORE_OUTLINE_WIDTHS[1],
-			51,
-			SCORE_OUTLINE_WIDTHS[2],
-			76,
-			SCORE_OUTLINE_WIDTHS[3]
-		]);
-		const [w1, w2, w3, w4] = SCORE_OUTLINE_WIDTHS;
-		expect(w2).toBeGreaterThan(w1);
-		expect(w3).toBeGreaterThan(w2);
-		expect(w4).toBeGreaterThan(w3);
-		expect(w4 / w1).toBeGreaterThanOrEqual(3);
 	});
 
 	it('Nicht-Score-Konturen behalten die feste Linienbreite', () => {

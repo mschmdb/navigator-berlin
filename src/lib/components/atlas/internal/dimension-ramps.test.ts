@@ -4,6 +4,8 @@ import {
 	DIMENSION_RAMPS,
 	KALTLUFT_HIGHLIGHT,
 	rampForSlug,
+	SCORE_DOT_BASE_PX,
+	SCORE_DOT_SIZES,
 	type DimensionRampKey
 } from './dimension-ramps.js';
 
@@ -99,5 +101,16 @@ describe('KALTLUFT_HIGHLIGHT', () => {
 		// Hell: deutlich über den dunklen Rampen-Ankern, damit die Fläche als
 		// Wash liest statt als weitere Choroplethen-Stufe.
 		expect(oklabL(KALTLUFT_HIGHLIGHT)).toBeGreaterThan(0.62);
+	});
+});
+
+describe('SCORE_DOT_SIZES', () => {
+	it('vier icon-size-Stufen, monoton steigend, volle Stufe = 1', () => {
+		expect(SCORE_DOT_SIZES).toHaveLength(4);
+		for (let i = 1; i < SCORE_DOT_SIZES.length; i++) {
+			expect(SCORE_DOT_SIZES[i]).toBeGreaterThan(SCORE_DOT_SIZES[i - 1]);
+		}
+		expect(SCORE_DOT_SIZES[3]).toBe(1);
+		expect(SCORE_DOT_BASE_PX).toBeGreaterThanOrEqual(16);
 	});
 });
