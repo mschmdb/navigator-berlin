@@ -1,6 +1,6 @@
 import { COLORS } from './colors.js';
 import { rampForSlug, SCORE_DOT_SIZES, scoreDotImageId } from './dimension-ramps.js';
-import { outlineLayerIdFor } from './layer-diff.js';
+import { dotsSourceIdFor, outlineLayerIdFor } from './layer-diff.js';
 import { hasPinIcon } from './pin-icon-mapping.js';
 import {
 	buildLayerSpec,
@@ -98,7 +98,9 @@ function fillSpecToOutlineSpecs(
 		const dots: MapLibreLayerSpec = {
 			id: outlineLayerIdFor(slug),
 			type: 'symbol',
-			source: spec.source,
+			// Eigene Punkt-Quelle: ein Label-Punkt pro Fläche statt ein Symbol
+			// pro Tile-Fragment des Polygons.
+			source: dotsSourceIdFor(slug),
 			layout: {
 				'icon-image': scoreDotImageId(slug),
 				'icon-size': scoreDotSizeExpression(),

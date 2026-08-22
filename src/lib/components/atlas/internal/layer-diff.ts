@@ -33,3 +33,12 @@ export function layerIdFor(slug: string): string {
 export function outlineLayerIdFor(slug: string): string {
 	return `${layerIdFor(slug)}-outline`;
 }
+
+/**
+ * Punkt-Quelle der Score-Punktsymbole: ein berechneter Label-Punkt pro
+ * Fläche (feature-label-points), damit MapLibre bei hohem Zoom nicht ein
+ * Symbol pro Tile-Fragment setzt.
+ */
+export function dotsSourceIdFor(slug: string): string {
+	return `${sourceIdFor(slug)}-dots`;
+}

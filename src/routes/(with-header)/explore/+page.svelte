@@ -79,10 +79,13 @@
 	import { geocodeAddress } from '$lib/data/geocode.remote.js';
 	import {
 		diffLayerSlugs,
+		dotsSourceIdFor,
 		sourceIdFor,
 		layerIdFor,
 		outlineLayerIdFor
 	} from '$lib/components/atlas/internal/layer-diff.js';
+	import { featureLabelPoints } from '$lib/components/atlas/internal/feature-label-points.js';
+	import { rampForSlug } from '$lib/components/atlas/internal/dimension-ramps.js';
 	import { PIN_LAYER_SLUGS } from '$lib/components/atlas/internal/pin-icon-mapping.js';
 
 	type Viewport = {
@@ -317,9 +320,11 @@
 			const layerId = layerIdFor(slug);
 			const outlineId = outlineLayerIdFor(slug);
 			const sourceId = sourceIdFor(slug);
+			const dotsId = dotsSourceIdFor(slug);
 			if (map.getLayer(outlineId)) map.removeLayer(outlineId);
 			if (map.getLayer(layerId)) map.removeLayer(layerId);
 			if (map.getSource(sourceId)) map.removeSource(sourceId);
+			if (map.getSource(dotsId)) map.removeSource(dotsId);
 		}
 
 		// 2. for slugs whose variant changed but still visible: remove layer (keep source)
@@ -357,6 +362,15 @@
 						const fc = await fetchLayer(meta.filename);
 						if (!rawMap) return;
 						map.addSource(sourceId, { type: 'geojson', data: fc });
+						// Score-Layer: Label-Punkt-Quelle für die Punktsymbole der
+						// Sekundär-Variante. Ein Punkt pro Fläche, zoom-unabhängig,
+						// statt MapLibres Symbol-pro-Tile-Fragment auf Polygonen.
+						if (rampForSlug(slug) && !map.getSource(dotsSourceIdFor(slug))) {
+							map.addSource(dotsSourceIdFor(slug), {
+								type: 'geojson',
+								data: featureLabelPoints(fc)
+							});
+						}
 					}
 				} catch {
 					layerRenderInflight.delete(slug);
@@ -369,6 +383,7 @@
 			if (!map.getLayer(layerId)) {
 				const specs = specsForSlug(slug, sourceId, variant, reduced);
 				for (const spec of specs) {
+					if (spec.source !== sourceId && !map.getSource(spec.source)) continue;
 					if (!map.getLayer(spec.id)) {
 						const merged = meta.format === 'pmtiles' ? { ...spec, 'source-layer': slug } : spec;
 						map.addLayer(merged);

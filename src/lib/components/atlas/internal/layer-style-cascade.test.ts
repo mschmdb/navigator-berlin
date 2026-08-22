@@ -167,6 +167,7 @@ describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
 		// ein Kreis pro Fläche, Größe = Wert-Quartil, Farbe = Dimension.
 		expect(dots.id).toBe('navigator-layer-kiez-score-ruhe-luft-outline');
 		expect(dots.type).toBe('symbol');
+		expect(dots.source).toBe('navigator-source-kiez-score-ruhe-luft-dots');
 		expect(dots.layout?.['icon-image']).toBe('navigator-score-dot-kiez-score-ruhe-luft');
 		expect(dots.layout?.['icon-allow-overlap']).toBe(true);
 	});
