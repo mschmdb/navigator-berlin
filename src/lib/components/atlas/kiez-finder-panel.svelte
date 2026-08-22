@@ -2,6 +2,7 @@
 	import { X, RotateCcw, Sparkles } from '@lucide/svelte';
 	import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 	import { PARTEI_FARBEN, type ParteiKurzname } from '$lib/data/partei-farben.js';
+	import { trackEvent } from '$lib/utils/plausible.js';
 	import {
 		buildFinderCollection,
 		buildParteiMetric,
@@ -173,7 +174,24 @@
 		applyWeights();
 	}
 
+	/**
+	 * Nutzungs-Event beim Verlassen: welche Kriterien aktiv waren, nicht
+	 * welche Werte (und bewusst nie die gewählte Partei).
+	 */
+	function trackNutzung(): void {
+		const aktive = (Object.keys(weights) as Array<keyof FinderWeights>).filter(
+			(key) => weights[key] !== 0
+		);
+		if (aktive.length === 0) return;
+		trackEvent('Finder', {
+			action: 'nutzung',
+			kriterien: aktive.join('+'),
+			anzahl: aktive.length
+		});
+	}
+
 	function teardown(): void {
+		trackNutzung();
 		if (!map) return;
 		// Beim Seiten-Wechsel kann MapLibre die Map schon zerstört haben,
 		// dann wirft jeder Style-Zugriff. Der Layer stirbt mit der Map,

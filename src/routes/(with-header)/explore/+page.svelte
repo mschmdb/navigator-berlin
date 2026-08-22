@@ -558,6 +558,7 @@
 		if (!featureFlags.kiezFinder || !data.finderOpen) return;
 		ui.finderOpen = true;
 		ui.inspectorOpen = false;
+		trackEvent('Finder', { action: 'open' });
 		const url = new URL(window.location.href);
 		if (url.searchParams.has('finder')) {
 			url.searchParams.delete('finder');

@@ -161,6 +161,45 @@ describe('kiez-finder-panel', () => {
 		expect(aufgerufen).toBe(true);
 	});
 
+	it('meldet die genutzten Kriterien beim Unmount an Plausible', async () => {
+		const events: Array<[string, unknown]> = [];
+		(window as { plausible?: unknown }).plausible = (name: string, opts?: unknown) =>
+			events.push([name, opts]);
+		try {
+			const { result } = await renderPanel();
+			const ruhe = (await page.getByTestId('finder-slider-ruheLuft').element()) as HTMLInputElement;
+			ruhe.value = '2';
+			ruhe.dispatchEvent(new Event('input', { bubbles: true }));
+			const sbahn = (await page.getByTestId('finder-slider-sbahn').element()) as HTMLInputElement;
+			sbahn.value = '1';
+			sbahn.dispatchEvent(new Event('input', { bubbles: true }));
+			await vi.waitFor(async () => {
+				await expect.element(page.getByTestId('finder-top-list')).toBeInTheDocument();
+			});
+			await result.unmount();
+			const finderEvents = events.filter(([name]) => name === 'Finder');
+			expect(finderEvents).toHaveLength(1);
+			const opts = finderEvents[0][1] as { props: Record<string, string | number> };
+			expect(opts.props.action).toBe('nutzung');
+			expect(opts.props.kriterien).toBe('ruheLuft+sbahn');
+			expect(opts.props.anzahl).toBe(2);
+		} finally {
+			delete (window as { plausible?: unknown }).plausible;
+		}
+	});
+
+	it('Neutral-Gewichte melden kein Nutzungs-Event', async () => {
+		const events: string[] = [];
+		(window as { plausible?: unknown }).plausible = (name: string) => events.push(name);
+		try {
+			const { result } = await renderPanel();
+			await result.unmount();
+			expect(events.filter((n) => n === 'Finder')).toHaveLength(0);
+		} finally {
+			delete (window as { plausible?: unknown }).plausible;
+		}
+	});
+
 	it('trägt die redaktionelle Fußnote und die Quelle', async () => {
 		await renderPanel();
 		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
