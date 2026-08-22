@@ -216,7 +216,7 @@
 	{#if ui.selectedAddress}
 		<div
 			data-testid="bookmark-toolbar"
-			class="sticky top-[var(--header-height,56px)] z-10 border-b border-rule bg-bg-elevated px-6 py-2"
+			class="sticky top-[var(--header-height,72px)] z-10 border-b border-rule bg-bg-elevated px-6 py-2"
 		>
 			{#if saveJustHappened}
 				<div

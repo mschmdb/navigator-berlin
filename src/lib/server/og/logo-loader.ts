@@ -30,16 +30,43 @@ function transparentBackground(svg: string): string {
 }
 
 /**
- * Crop viewBox auf tatsächliche Berlin-Boundary-Bounds (statt 0-100 mit ~15 %
- * Whitespace oben/unten). Bounding-Box manuell aus den SVG-Linien-Koordinaten
- * abgeleitet: x∈[8, 92], y∈[18, 77]; mit 2 px Padding → "6 16 88 63".
+ * Zieht die viewBox auf die tatsächlich belegte Fläche zusammen. Das Raster lässt
+ * oben und unten je rund 16 Einheiten frei; ohne Crop sitzt die Bildmarke in der
+ * OG-Card versetzt unter ihrer Baseline.
  *
- * Ohne diesen Crop sitzt das Logo in der OG-Card vertikal versetzt unter der
- * Brand-Mark-Baseline, weil das viewBox-0-0-100-100 ~16 % leeres Padding oben
- * vorhält.
+ * Die Grenzen kommen aus den Zellen selbst statt aus fest eingetragenen Werten.
+ * Ein Neubau über `pnpm logo:pixel` mit anderem Raster verschiebt sie sonst, ohne
+ * dass es jemand merkt, und die Marke wird angeschnitten.
  */
 function cropViewBox(svg: string): string {
-	return svg.replace(/viewBox="0 0 100 100"/, 'viewBox="6 16 88 63"');
+	const cells = [...svg.matchAll(/<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)"/g)];
+	if (cells.length === 0) return svg;
+
+	const pad = 2;
+	let minX = Infinity;
+	let minY = Infinity;
+	let maxX = -Infinity;
+	let maxY = -Infinity;
+	for (const [, x, y, size] of cells) {
+		minX = Math.min(minX, Number(x));
+		minY = Math.min(minY, Number(y));
+		maxX = Math.max(maxX, Number(x) + Number(size));
+		maxY = Math.max(maxY, Number(y) + Number(size));
+	}
+	const box = [
+		Math.max(0, minX - pad),
+		Math.max(0, minY - pad),
+		Math.min(100, maxX + pad) - Math.max(0, minX - pad),
+		Math.min(100, maxY + pad) - Math.max(0, minY - pad)
+	]
+		.map((n) => +n.toFixed(3))
+		.join(' ');
+	return svg.replace(/viewBox="0 0 100 100"/, `viewBox="${box}"`);
+}
+
+/** Datei-unabhängige Aufbereitung: CSS-Vars auflösen, Fläche entfernen, zuschneiden. */
+export function prepareLogoSvg(raw: string): string {
+	return cropViewBox(transparentBackground(resolveCssVars(raw)));
 }
 
 export async function loadLogoDataUri(
@@ -48,7 +75,6 @@ export async function loadLogoDataUri(
 ): Promise<string> {
 	const filePath = path.join(repoRoot, 'static', filename);
 	const raw = await readFile(filePath, 'utf-8');
-	const cleaned = cropViewBox(transparentBackground(resolveCssVars(raw)));
-	const base64 = Buffer.from(cleaned, 'utf-8').toString('base64');
+	const base64 = Buffer.from(prepareLogoSvg(raw), 'utf-8').toString('base64');
 	return `data:image/svg+xml;base64,${base64}`;
 }

@@ -4,7 +4,7 @@
 	import { META_LINKS, META_LINK_GROUPS } from './internal/meta-links.js';
 	import SocialLinks from './internal/social-links.svelte';
 	import MtcLogo from './internal/mtc-logo.svelte';
-	import { AnimatedLogo } from '$lib/components/ui';
+	import { PixelLogo } from '$lib/components/ui';
 
 	type Props = {
 		variant?: 'full' | 'compact';
@@ -45,7 +45,7 @@
 			<div class="flex flex-col gap-10 md:flex-row md:justify-between">
 				<div class="flex max-w-sm flex-col gap-3">
 					<a href="/" aria-label="navigator.berlin" class="flex items-center gap-2">
-						<AnimatedLogo variant="one-shot" size={36} title="navigator.berlin" />
+						<PixelLogo size={36} title="navigator.berlin" />
 						<span class="font-serif text-lg text-ink">navigator.berlin</span>
 					</a>
 					<p class="font-serif text-base leading-relaxed text-ink-muted">

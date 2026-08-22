@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-"""Generate navigator.berlin Logo-Geometrie aus echtem Berlin-GeoJSON.
+"""STILLGELEGT (22.08.2026). Nicht mehr ausfuehren.
+
+Die Bildmarke ist jetzt das Pixel-Logo, erzeugt von `scripts/generate-pixel-logo.ts`
+(`pnpm logo:pixel`). Dieses Skript wuerde static/logo-mark.svg, logo-mark-header.svg
+und favicon.svg mit der alten Wireframe-Fassung ueberschreiben.
+
+Es bleibt als Herkunftsnachweis der Silhouette liegen: der 32-Punkte-Pfad in
+src/lib/data/pixel-logo-geometry.ts stammt aus dieser Pipeline. Wer die Kontur neu
+ableiten will, nimmt hier die Punkte ab und traegt sie dort ein, statt die SVGs
+schreiben zu lassen.
+
+Generate navigator.berlin Logo-Geometrie aus echtem Berlin-GeoJSON.
 
 Pipeline:
   1. bezirke.*.geojson laden (12 Bezirks-Polygone)

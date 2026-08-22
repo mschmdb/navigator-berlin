@@ -4,7 +4,7 @@
 	import AddressSearch from './address-search.svelte';
 	import AddressSearchOverlay from './address-search-overlay.svelte';
 	import MobileMetaDrawer from './mobile-meta-drawer.svelte';
-	import { AnimatedLogo } from '$lib/components/ui';
+	import { PixelLogo } from '$lib/components/ui';
 	import type { GeocodeSuggestion } from '$lib/data';
 
 	type Props = {
@@ -63,12 +63,12 @@
 
 <header
 	data-testid="site-header"
-	style="min-height: var(--header-height, 56px)"
-	class="sticky top-0 z-30 border-b border-rule bg-bg/95 py-2 print:hidden"
+	style="min-height: var(--header-height, 72px)"
+	class="sticky top-0 z-30 border-b border-rule bg-bg/95 py-1 print:hidden"
 >
 	<div class="mx-auto flex max-w-[1440px] items-center gap-4 px-4">
 		<a href="/" aria-label="navigator.berlin" class="flex shrink-0 items-center gap-2">
-			<AnimatedLogo variant="one-shot" size={44} title="navigator.berlin" />
+			<PixelLogo size={64} title="navigator.berlin" />
 			<span class="hidden font-sans text-base font-light tracking-wide text-ink sm:inline">
 				navigator.berlin
 			</span>

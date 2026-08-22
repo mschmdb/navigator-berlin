@@ -10,4 +10,4 @@ export { default as Tabs } from './tabs.svelte';
 export { default as Sheet } from './sheet.svelte';
 export { default as AlertDialog } from './alert-dialog.svelte';
 export { default as Disclosure } from './disclosure.svelte';
-export { default as AnimatedLogo } from './animated-logo.svelte';
+export { default as PixelLogo } from './pixel-logo.svelte';

@@ -187,7 +187,7 @@
 	--mobility-tram: #dd1f26;
 	--mobility-bus: #6a2a82;
 
-	--header-height: 56px;
+	--header-height: 72px;
 
 	/* Story 1.31 AC-14 Radius-Tokens. */
 	--radius-xs: 2px; /* Chips, ValueChip, Severity-Pills (Zustand, kein Tag) */

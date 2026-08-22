@@ -88,9 +88,11 @@ function headerBrand(logoDataUri: string | undefined): SatoriNode {
 	const children: SatoriNode[] = [brandMark()];
 	if (logoDataUri) {
 		children.push(
+			// 64 x 54 folgt dem Seitenverhältnis des Zuschnitts aus `logo-loader.ts`
+			// (rund 84 zu 71). Mit 64 x 48 zieht Satori die Marke 13 % in die Breite.
 			img(logoDataUri, {
 				width: 64,
-				height: 48,
+				height: 54,
 				display: 'flex',
 				marginLeft: 'auto'
 			})
