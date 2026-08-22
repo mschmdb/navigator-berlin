@@ -101,3 +101,37 @@ describe('featureLabelPoints', () => {
 		expect(featureLabelPoints(fc).features).toHaveLength(1);
 	});
 });
+
+describe('featureLabelPoints · kaputte Geometrien', () => {
+	it('überspringt Features mit leeren Koordinaten, statt zu werfen', () => {
+		const fc: FeatureCollection = {
+			type: 'FeatureCollection',
+			features: [
+				{ type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [] } },
+				{ type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [[]] } },
+				{
+					type: 'Feature',
+					properties: {},
+					geometry: { type: 'MultiPolygon', coordinates: [] }
+				},
+				{
+					type: 'Feature',
+					properties: {},
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[0, 0],
+								[1, 0]
+							]
+						]
+					}
+				},
+				square
+			]
+		};
+		const points = featureLabelPoints(fc);
+		expect(points.features).toHaveLength(1);
+		expect(points.features[0].properties?.name).toBe('Testkiez');
+	});
+});

@@ -188,7 +188,10 @@
 		// (z.B. kuehle-orte via Hitze-Landing → Home → Explorer).
 		// Multi-Layer-Limit auch am URL-Einstieg: höchstens 2 Choroplethen.
 		ui.activeLayerSlugs = capPolygonSlugs(data.activeLayers ?? []);
-		ui.choroplethLeadSlug = data.leadSlug ?? null;
+		// Lead gegen die GEKAPPTE Liste prüfen: parseLead sah die rohe URL-Liste,
+		// der Cap kann den Lead-Slug gerade entfernt haben.
+		ui.choroplethLeadSlug =
+			data.leadSlug && ui.activeLayerSlugs.includes(data.leadSlug) ? data.leadSlug : null;
 		// Story 2.12 Quick-Links: wenn `?address=lng,lat&q=…` gesetzt, bauen
 		// wir eine synthetische GeocodeSuggestion und triggern die Adress-
 		// Selection. Inspector öffnet sich dann automatisch.
@@ -237,7 +240,7 @@
 		// Story 1.14 AC-5: Aktivierungs-Reihenfolge persistieren, kein Bundle-Re-Sort.
 		const csv = serializeLayers(slugs);
 		if (csv) url.searchParams.set(LAYERS_KEY, csv);
-		if (csv && lead) url.searchParams.set('lead', lead);
+		if (csv && lead && slugs.includes(lead)) url.searchParams.set('lead', lead);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
 			replaceState: true,
@@ -385,6 +388,33 @@
 				} catch {
 					layerRenderInflight.delete(slug);
 					continue;
+				}
+				layerRenderInflight.delete(slug);
+			}
+
+			// Dots-Quelle unabhängig sicherstellen: Existiert die Haupt-Quelle,
+			// aber die Punkt-Quelle fehlt (z.B. nach Teil-Aufräumen), würde der
+			// Symbol-Spec sonst still übersprungen und der Zweit-Choropleth
+			// bliebe unsichtbar.
+			if (
+				meta.format !== 'pmtiles' &&
+				dotSpecForSlug(slug) &&
+				map.getSource(sourceId) &&
+				!map.getSource(dotsSourceIdFor(slug)) &&
+				!layerRenderInflight.has(slug)
+			) {
+				layerRenderInflight.add(slug);
+				try {
+					const fc = await fetchLayer(meta.filename);
+					if (!rawMap) return;
+					if (!map.getSource(dotsSourceIdFor(slug))) {
+						map.addSource(dotsSourceIdFor(slug), {
+							type: 'geojson',
+							data: featureLabelPoints(fc)
+						});
+					}
+				} catch {
+					// Punkt-Quelle bleibt aus; der Fill rendert weiter.
 				}
 				layerRenderInflight.delete(slug);
 			}

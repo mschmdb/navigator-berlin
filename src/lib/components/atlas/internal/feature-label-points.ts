@@ -31,18 +31,24 @@ function ringCentroid(ring: readonly Position[]): { x: number; y: number; area: 
 	};
 }
 
-function largestOuterRing(feature: Feature<Polygon | MultiPolygon>): readonly Position[] {
+/**
+ * Größter Außenring, oder null bei leeren/degenerierten Koordinaten. Ein
+ * kaputtes Feature darf nicht die ganze Punkt-Quelle abreißen.
+ */
+function largestOuterRing(feature: Feature<Polygon | MultiPolygon>): readonly Position[] | null {
 	const polygons =
 		feature.geometry.type === 'Polygon'
 			? [feature.geometry.coordinates]
 			: feature.geometry.coordinates;
-	let best: readonly Position[] = polygons[0][0];
+	let best: readonly Position[] | null = null;
 	let bestArea = -1;
 	for (const rings of polygons) {
-		const { area } = ringCentroid(rings[0]);
+		const ring = rings?.[0];
+		if (!ring || ring.length < 3) continue;
+		const { area } = ringCentroid(ring);
 		if (area > bestArea) {
 			bestArea = area;
-			best = rings[0];
+			best = ring;
 		}
 	}
 	return best;
@@ -53,8 +59,9 @@ function largestOuterRing(feature: Feature<Polygon | MultiPolygon>): readonly Po
  * außerhalb (konkave Form), Mittelpunkte der Ring-Sehnen testen, zuletzt der
  * erste Ring-Punkt als garantierter Rückfall.
  */
-function labelPoint(feature: Feature<Polygon | MultiPolygon>): Position {
+function labelPoint(feature: Feature<Polygon | MultiPolygon>): Position | null {
 	const ring = largestOuterRing(feature);
+	if (!ring) return null;
 	const centroid = ringCentroid(ring);
 	const candidate: Position = [centroid.x, centroid.y];
 	if (booleanPointInPolygon(candidate, feature)) return candidate;
@@ -71,13 +78,12 @@ export function featureLabelPoints(fc: FeatureCollection): FeatureCollection<Poi
 		if (feature.geometry?.type !== 'Polygon' && feature.geometry?.type !== 'MultiPolygon') {
 			continue;
 		}
+		const point = labelPoint(feature as Feature<Polygon | MultiPolygon>);
+		if (!point) continue;
 		features.push({
 			type: 'Feature',
 			properties: feature.properties ?? {},
-			geometry: {
-				type: 'Point',
-				coordinates: labelPoint(feature as Feature<Polygon | MultiPolygon>)
-			}
+			geometry: { type: 'Point', coordinates: point }
 		});
 	}
 	return { type: 'FeatureCollection', features };
