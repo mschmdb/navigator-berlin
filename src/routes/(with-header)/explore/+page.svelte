@@ -6,6 +6,10 @@
 	import MapAttribution from '$lib/components/atlas/map-attribution.svelte';
 	import MapAccessibilityLayer from '$lib/components/atlas/map-accessibility-layer.svelte';
 	import MapLegend from '$lib/components/atlas/map-legend.svelte';
+	import KiezFinderPanel, {
+		type FinderMapApi
+	} from '$lib/components/atlas/kiez-finder-panel.svelte';
+	import { featureFlags } from '$lib/data/feature-flags.js';
 	import MapHoverTooltip, {
 		type MapHoverApi
 	} from '$lib/components/atlas/map-hover-tooltip.svelte';
@@ -188,6 +192,7 @@
 		// (z.B. kuehle-orte via Hitze-Landing → Home → Explorer).
 		// Multi-Layer-Limit auch am URL-Einstieg: höchstens 2 Choroplethen.
 		ui.activeLayerSlugs = capPolygonSlugs(data.activeLayers ?? []);
+		if (featureFlags.kiezFinder && data.finderOpen) ui.finderOpen = true;
 		// Lead gegen die GEKAPPTE Liste prüfen: parseLead sah die rohe URL-Liste,
 		// der Cap kann den Lead-Slug gerade entfernt haben.
 		ui.choroplethLeadSlug =
@@ -534,6 +539,14 @@
 			return;
 		}
 		void renderRegionOutline(addr.lat, addr.lng, scope, addr.id);
+	});
+
+	$effect(() => {
+		if (!ui.finderOpen) return;
+		const remaining = ui.activeLayerSlugs.filter((slug) => !isChoroplethSlug(slug));
+		if (remaining.length !== ui.activeLayerSlugs.length) {
+			ui.activeLayerSlugs.splice(0, ui.activeLayerSlugs.length, ...remaining);
+		}
 	});
 
 	const cascadeForLegend = $derived(
@@ -1186,6 +1199,12 @@
 			onRemove={onLegendRemove}
 			onPromoteLayer={(slug: string) => (ui.choroplethLeadSlug = slug)}
 		/>
+		{#if featureFlags.kiezFinder && ui.finderOpen}
+			<KiezFinderPanel
+				map={rawMap as unknown as FinderMapApi | null}
+				onClose={() => (ui.finderOpen = false)}
+			/>
+		{/if}
 		<MapHoverTooltip
 			map={rawMap as MapHoverApi | null}
 			activeLayerSlugs={ui.activeLayerSlugs}

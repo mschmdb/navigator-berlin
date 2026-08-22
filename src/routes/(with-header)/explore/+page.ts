@@ -7,5 +7,6 @@ export const load: PageLoad = ({ url }) => {
 	const address = parseAddress(url.searchParams);
 	const activeLayers = parseLayers(url.searchParams.get('layers'));
 	const leadSlug = parseLead(url.searchParams.get('lead'), activeLayers);
-	return { ...viewport, address, activeLayers, leadSlug };
+	const finderOpen = url.searchParams.get('finder') === '1';
+	return { ...viewport, address, activeLayers, leadSlug, finderOpen };
 };

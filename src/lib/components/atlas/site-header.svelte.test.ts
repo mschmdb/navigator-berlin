@@ -175,3 +175,12 @@ describe('site-header.svelte', () => {
 		});
 	});
 });
+
+describe('site-header · Kiez-Finder-Link', () => {
+	it('rendert flag-gated Link auf /explore?finder=1', async () => {
+		render(SiteHeader, {});
+		const link = (await page.getByTestId('header-finder-link').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/explore?finder=1');
+		expect(link.textContent).toContain('Kiez-Finder');
+	});
+});

@@ -33,6 +33,8 @@ export interface UiState {
 	activeLayerSlugs: string[];
 	/** Legenden-Tausch: dieser Choropleth bekommt den Fläche-Slot. */
 	choroplethLeadSlug: string | null;
+	/** Kiez-Finder-Panel sichtbar. */
+	finderOpen: boolean;
 	recentLayerSlugs: string[];
 	sheetSnapVh: SheetSnapVh;
 	paletteOpen: boolean;
@@ -78,6 +80,7 @@ export function createUiState(): UiState {
 		selectedLayerHits: [],
 		activeLayerSlugs: [],
 		choroplethLeadSlug: null,
+		finderOpen: false,
 		recentLayerSlugs: [],
 		sheetSnapVh: 40,
 		paletteOpen: false,
