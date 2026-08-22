@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { Pathname } from '$app/types';
-	import { Eye, EyeOff, X } from '@lucide/svelte';
+	import { ArrowDownUp, Eye, EyeOff, X } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
 	import { getLegendSpec } from './internal/layer-style-builder.js';
 	import { getPinIcon } from './internal/pin-icon-mapping.js';
@@ -10,6 +10,9 @@
 	import { getLayerExplainEntry } from './inspector-panel/internal/layer-explain.js';
 	import { shortenLicense } from './inspector-panel/internal/source-shortener.js';
 	import { isPolygonSlug, type CascadeVariant } from './internal/layer-style-cascade.js';
+	import { hasPinnedChoropleth } from './internal/layer-visibility.js';
+	import { dotSpecForSlug } from './internal/choropleth-dots.js';
+	import { SCORE_DOT_BASE_PX } from './internal/dimension-ramps.js';
 
 	type Props = {
 		activeLayerSlugs: readonly string[];
@@ -20,6 +23,8 @@
 		lang?: string;
 		onToggleHidden?: (slug: string) => void;
 		onRemove?: (slug: string) => void;
+		/** Legenden-Tausch: dieser Choropleth soll die Fläche werden. */
+		onPromoteLayer?: (slug: string) => void;
 	};
 
 	let {
@@ -30,16 +35,18 @@
 		showLimitWarning = false,
 		lang = 'de',
 		onToggleHidden,
-		onRemove
+		onRemove,
+		onPromoteLayer
 	}: Props = $props();
 
 	const metaBySlug = $derived(new Map(manifestLayers.map((l) => [l.slug, l] as const)));
 	const hiddenSet = $derived(new Set(hiddenSlugs));
+	// PET & Co. belegen die Fläche fest; dann gibt es nichts zu tauschen.
+	const promoteLocked = $derived(hasPinnedChoropleth(activeLayerSlugs));
 
 	const VARIANT_LABEL: Record<CascadeVariant, string> = {
 		fill: 'gefüllt',
-		outline: 'Outline',
-		'outline-dash': 'Outline gestrichelt'
+		outline: 'Symbole'
 	};
 
 	const entries = $derived(
@@ -93,6 +100,18 @@
 						{/if}
 					</div>
 					<div class="flex shrink-0 items-center gap-0.5">
+						{#if onPromoteLayer && entry.variant === 'outline' && !promoteLocked}
+							<button
+								type="button"
+								data-testid={`legend-promote-${entry.slug}`}
+								aria-label={`${entry.name} als Fläche darstellen`}
+								title="Mit der Fläche tauschen"
+								onclick={() => onPromoteLayer!(entry.slug)}
+								class="p-0.5 text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+							>
+								<ArrowDownUp size={14} aria-hidden="true" />
+							</button>
+						{/if}
 						{#if onToggleHidden}
 							<button
 								type="button"
@@ -123,7 +142,9 @@
 					</div>
 				</div>
 
-				{#if entry.spec.kind === 'gradient'}
+				<!-- Gradient nur, solange der Layer die Fläche ist. Als Symbol-Layer
+				     zeigt er Quadrat-Größen, der Balken würde die Karte falsch beschreiben. -->
+				{#if entry.spec.kind === 'gradient' && !(entry.variant === 'outline' && dotSpecForSlug(entry.slug))}
 					<div
 						aria-hidden="true"
 						class="h-2 w-full rounded-sm"
@@ -142,7 +163,7 @@
 					</div>
 				{:else}
 					<ul class="flex flex-col gap-1">
-						{#each entry.spec.items as item (item.label)}
+						{#each entry.spec.items as item, itemIndex (item.label)}
 							<li class="flex items-center gap-2">
 								{#if entry.pinIcon}
 									<span
@@ -177,11 +198,24 @@
 										class="inline-block h-2.5 w-2.5 rounded-full"
 										style={`background:${item.color}; border:1px solid var(--color-bg)`}
 									></span>
-								{:else if entry.variant === 'outline' || entry.variant === 'outline-dash'}
+								{:else if entry.variant === 'outline' && dotSpecForSlug(entry.slug)}
+									{@const dotSpec = dotSpecForSlug(entry.slug)}
+									{@const dotPx = Math.round(
+										SCORE_DOT_BASE_PX * (dotSpec?.legendFactors[itemIndex] ?? 1)
+									)}
+									<!-- Sekundär-Choropleth = abgestufte Quadrat-Symbole; die Swatches
+									     zeigen die ECHTEN Kartengrößen und die Sprite-Farbe. -->
+									<span class="inline-flex w-5 items-center justify-center" aria-hidden="true">
+										<span
+											class="inline-block rounded-sm"
+											style={`width:${dotPx}px; height:${dotPx}px; background:${dotSpec?.imageColor}`}
+										></span>
+									</span>
+								{:else if entry.variant === 'outline'}
 									<span
 										aria-hidden="true"
 										class="inline-block h-2.5 w-3.5 rounded-sm"
-										style={`background:transparent; border:1.5px ${entry.variant === 'outline-dash' ? 'dashed' : 'solid'} ${item.color}`}
+										style={`background:transparent; border:1.5px solid ${item.color}`}
 									></span>
 								{:else}
 									<span

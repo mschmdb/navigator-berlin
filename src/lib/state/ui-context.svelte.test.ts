@@ -8,6 +8,7 @@ import {
 	getUiState,
 	toggleLayer,
 	clearLayers,
+	removeLayer,
 	addBookmark,
 	removeBookmark,
 	clearBookmarks,
@@ -28,6 +29,7 @@ function makeState(): UiState {
 		selectedAddress: null,
 		selectedLayerHits: [],
 		activeLayerSlugs: [],
+		choroplethLeadSlug: null,
 		recentLayerSlugs: [],
 		sheetSnapVh: 40,
 		paletteOpen: false,
@@ -115,6 +117,51 @@ describe('ui-context', () => {
 	it('exporte createUiState + getUiState sind Funktionen', () => {
 		expect(typeof createUiState).toBe('function');
 		expect(typeof getUiState).toBe('function');
+	});
+
+	describe('choroplethLeadSlug (Legenden-Tausch)', () => {
+		it('startet null und wird beim Entfernen des Lead-Layers zurückgesetzt', () => {
+			const s = makeState();
+			expect(s.choroplethLeadSlug).toBeNull();
+			toggleLayer(s, 'kiez-score-gesamt');
+			s.choroplethLeadSlug = 'kiez-score-gesamt';
+			toggleLayer(s, 'kiez-score-gesamt');
+			expect(s.choroplethLeadSlug).toBeNull();
+		});
+
+		it('removeLayer und clearLayers räumen den Lead mit ab', () => {
+			const s = makeState();
+			toggleLayer(s, 'kiez-score-gesamt');
+			s.choroplethLeadSlug = 'kiez-score-gesamt';
+			removeLayer(s, 'kiez-score-gesamt');
+			expect(s.choroplethLeadSlug).toBeNull();
+			s.choroplethLeadSlug = 'laerm-2023';
+			clearLayers(s);
+			expect(s.choroplethLeadSlug).toBeNull();
+		});
+	});
+
+	describe('toggleLayer · Polygon-Limit 2', () => {
+		it('ersetzt beim dritten Choroplethen den ältesten, der Rest bleibt', () => {
+			const s = makeState();
+			toggleLayer(s, 'kiez-score-gesamt');
+			toggleLayer(s, 'ubahn-stationen');
+			toggleLayer(s, 'kiez-score-ruhe-luft');
+			toggleLayer(s, 'kiez-score-mobilitaet');
+			expect(s.activeLayerSlugs).toEqual([
+				'ubahn-stationen',
+				'kiez-score-ruhe-luft',
+				'kiez-score-mobilitaet'
+			]);
+		});
+
+		it('lässt Deaktivieren und Nicht-Polygon-Layer unberührt', () => {
+			const s = makeState();
+			toggleLayer(s, 'kiez-score-gesamt');
+			toggleLayer(s, 'kiez-score-ruhe-luft');
+			toggleLayer(s, 'kiez-score-gesamt');
+			expect(s.activeLayerSlugs).toEqual(['kiez-score-ruhe-luft']);
+		});
 	});
 
 	describe('toggleLayer', () => {

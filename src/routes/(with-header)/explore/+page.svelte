@@ -62,12 +62,14 @@
 	import {
 		buildLayerSpecCascade,
 		computeCascadeVariants,
-		isPolygonSlug
+		isChoroplethSlug
 	} from '$lib/components/atlas/internal/layer-style-cascade.js';
 	import { sortSlugsByBundleStable } from '$lib/components/atlas/internal/layer-order-sorting.js';
 	import {
 		applyHiddenSlugs,
-		exceedsPolygonLimit
+		exceedsPolygonLimit,
+		capPolygonSlugs,
+		orderChoropleths
 	} from '$lib/components/atlas/internal/layer-visibility.js';
 	import {
 		toggleLayerHidden,
@@ -78,9 +80,13 @@
 	import { geocodeAddress } from '$lib/data/geocode.remote.js';
 	import {
 		diffLayerSlugs,
+		dotsSourceIdFor,
 		sourceIdFor,
-		layerIdFor
+		layerIdFor,
+		outlineLayerIdFor
 	} from '$lib/components/atlas/internal/layer-diff.js';
+	import { featureLabelPoints } from '$lib/components/atlas/internal/feature-label-points.js';
+	import { dotSpecForSlug } from '$lib/components/atlas/internal/choropleth-dots.js';
 	import { PIN_LAYER_SLUGS } from '$lib/components/atlas/internal/pin-icon-mapping.js';
 
 	type Viewport = {
@@ -180,7 +186,12 @@
 		// URL ist Source-of-Truth für aktive Layer: immer setzen, auch leer. Sonst schleppt ein
 		// Explorer-Einstieg ohne ?layers die aus einer früheren Session persistierten Layer mit
 		// (z.B. kuehle-orte via Hitze-Landing → Home → Explorer).
-		ui.activeLayerSlugs = [...(data.activeLayers ?? [])];
+		// Multi-Layer-Limit auch am URL-Einstieg: höchstens 2 Choroplethen.
+		ui.activeLayerSlugs = capPolygonSlugs(data.activeLayers ?? []);
+		// Lead gegen die GEKAPPTE Liste prüfen: parseLead sah die rohe URL-Liste,
+		// der Cap kann den Lead-Slug gerade entfernt haben.
+		ui.choroplethLeadSlug =
+			data.leadSlug && ui.activeLayerSlugs.includes(data.leadSlug) ? data.leadSlug : null;
 		// Story 2.12 Quick-Links: wenn `?address=lng,lat&q=…` gesetzt, bauen
 		// wir eine synthetische GeocodeSuggestion und triggern die Adress-
 		// Selection. Inspector öffnet sich dann automatisch.
@@ -222,12 +233,14 @@
 		})();
 	});
 
-	const syncLayers = debounce((slugs: string[]) => {
+	const syncLayers = debounce((slugs: string[], lead: string | null) => {
 		const url = new URL(window.location.href);
 		url.searchParams.delete(LAYERS_KEY);
+		url.searchParams.delete('lead');
 		// Story 1.14 AC-5: Aktivierungs-Reihenfolge persistieren, kein Bundle-Re-Sort.
 		const csv = serializeLayers(slugs);
 		if (csv) url.searchParams.set(LAYERS_KEY, csv);
+		if (csv && lead && slugs.includes(lead)) url.searchParams.set('lead', lead);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
 			replaceState: true,
@@ -238,12 +251,17 @@
 
 	let layersSyncBootstrapped = false;
 	$effect(() => {
-		const slugs = ui.activeLayerSlugs;
+		// Tief lesen VOR dem Bootstrap-Guard: Der erste Lauf muss Länge und
+		// Elemente tracken. Mit dem Read nach dem Guard sah der Effekt nur die
+		// Array-Referenz, die nie neu zugewiesen wird, und feuerte nach dem
+		// Mount nie wieder. Folge: Permalink ohne die aktivierten Layer.
+		const slugs = [...ui.activeLayerSlugs];
+		const lead = ui.choroplethLeadSlug;
 		if (!layersSyncBootstrapped) {
 			layersSyncBootstrapped = true;
 			return;
 		}
-		syncLayers([...slugs]);
+		syncLayers(slugs, lead);
 	});
 
 	type GeoJsonSource = { type: 'geojson'; data: unknown };
@@ -253,6 +271,7 @@
 		removeSource: (id: string) => void;
 		addLayer: (spec: MapLibreLayerSpec & { 'source-layer'?: string }) => void;
 		removeLayer: (id: string) => void;
+		moveLayer: (id: string, beforeId?: string) => void;
 		getLayer: (id: string) => unknown;
 		getSource: (id: string) => unknown;
 	};
@@ -282,10 +301,7 @@
 		variant: string,
 		reduced: boolean
 	): MapLibreLayerSpec[] {
-		if (
-			isPolygonSlug(slug) &&
-			(variant === 'fill' || variant === 'outline' || variant === 'outline-dash')
-		) {
+		if (isChoroplethSlug(slug) && (variant === 'fill' || variant === 'outline')) {
 			return buildLayerSpecCascade(slug, sourceId, variant, { reducedMotion: reduced });
 		}
 		return buildLayerSpec(slug, sourceId, { reducedMotion: reduced });
@@ -297,23 +313,31 @@
 		// Story 1.14: Eye-Toggle blendet aktive Layer aus, ohne sie aus activeLayerSlugs zu entfernen.
 		const visible = applyHiddenSlugs(activeSlugs, ui.hiddenLayerSlugs);
 		// Story 1.14 AC-5: Bundle-Order A→F (innerhalb Bundle = Aktivierungs-Reihenfolge).
-		const ordered = sortSlugsByBundleStable(visible, manifestLayers);
+		const ordered = orderChoropleths(
+			sortSlugsByBundleStable(visible, manifestLayers),
+			ui.choroplethLeadSlug
+		);
 		const cascade = computeCascadeVariants(ordered);
 
 		const variantBySlug: Record<string, string> = {};
 		for (const slug of ordered) {
-			variantBySlug[slug] = isPolygonSlug(slug) ? (cascade.get(slug) ?? 'fill') : 'non-polygon';
+			variantBySlug[slug] = isChoroplethSlug(slug) ? (cascade.get(slug) ?? 'fill') : 'non-polygon';
 		}
 
 		const visibleSet = new Set(ordered);
 		const { toRemove } = diffLayerSlugs(renderedSlugs, ordered);
 
-		// 1. remove sources for slugs no longer visible
+		// 1. remove sources for slugs no longer visible. Kontur-Varianten führen
+		// einen zweiten Layer unter der -outline-ID, der mit weg muss.
 		for (const slug of toRemove) {
 			const layerId = layerIdFor(slug);
+			const outlineId = outlineLayerIdFor(slug);
 			const sourceId = sourceIdFor(slug);
+			const dotsId = dotsSourceIdFor(slug);
+			if (map.getLayer(outlineId)) map.removeLayer(outlineId);
 			if (map.getLayer(layerId)) map.removeLayer(layerId);
 			if (map.getSource(sourceId)) map.removeSource(sourceId);
+			if (map.getSource(dotsId)) map.removeSource(dotsId);
 		}
 
 		// 2. for slugs whose variant changed but still visible: remove layer (keep source)
@@ -321,6 +345,8 @@
 			if (!visibleSet.has(slug)) continue;
 			if (renderedVariantBySlug[slug] === variantBySlug[slug]) continue;
 			const layerId = layerIdFor(slug);
+			const outlineId = outlineLayerIdFor(slug);
+			if (map.getLayer(outlineId)) map.removeLayer(outlineId);
 			if (map.getLayer(layerId)) map.removeLayer(layerId);
 		}
 
@@ -349,6 +375,15 @@
 						const fc = await fetchLayer(meta.filename);
 						if (!rawMap) return;
 						map.addSource(sourceId, { type: 'geojson', data: fc });
+						// Score-Layer: Label-Punkt-Quelle für die Punktsymbole der
+						// Sekundär-Variante. Ein Punkt pro Fläche, zoom-unabhängig,
+						// statt MapLibres Symbol-pro-Tile-Fragment auf Polygonen.
+						if (dotSpecForSlug(slug) && !map.getSource(dotsSourceIdFor(slug))) {
+							map.addSource(dotsSourceIdFor(slug), {
+								type: 'geojson',
+								data: featureLabelPoints(fc)
+							});
+						}
 					}
 				} catch {
 					layerRenderInflight.delete(slug);
@@ -357,10 +392,38 @@
 				layerRenderInflight.delete(slug);
 			}
 
+			// Dots-Quelle unabhängig sicherstellen: Existiert die Haupt-Quelle,
+			// aber die Punkt-Quelle fehlt (z.B. nach Teil-Aufräumen), würde der
+			// Symbol-Spec sonst still übersprungen und der Zweit-Choropleth
+			// bliebe unsichtbar.
+			if (
+				meta.format !== 'pmtiles' &&
+				dotSpecForSlug(slug) &&
+				map.getSource(sourceId) &&
+				!map.getSource(dotsSourceIdFor(slug)) &&
+				!layerRenderInflight.has(slug)
+			) {
+				layerRenderInflight.add(slug);
+				try {
+					const fc = await fetchLayer(meta.filename);
+					if (!rawMap) return;
+					if (!map.getSource(dotsSourceIdFor(slug))) {
+						map.addSource(dotsSourceIdFor(slug), {
+							type: 'geojson',
+							data: featureLabelPoints(fc)
+						});
+					}
+				} catch {
+					// Punkt-Quelle bleibt aus; der Fill rendert weiter.
+				}
+				layerRenderInflight.delete(slug);
+			}
+
 			// Layer ensure: re-add wenn nicht da ODER variant changed (variant change removed layer above).
 			if (!map.getLayer(layerId)) {
 				const specs = specsForSlug(slug, sourceId, variant, reduced);
 				for (const spec of specs) {
+					if (spec.source !== sourceId && !map.getSource(spec.source)) continue;
 					if (!map.getLayer(spec.id)) {
 						const merged = meta.format === 'pmtiles' ? { ...spec, 'source-layer': slug } : spec;
 						map.addLayer(merged);
@@ -369,15 +432,35 @@
 			}
 		}
 
+		// 4. Z-Reihenfolge deterministisch erzwingen. Der Add-Loop fügt nur
+		// fehlende Layer hinzu, sonst wäre die Stapelung Aktivierungs-Historie:
+		// ein später zugeschalteter Overlay läge über den Aggregat-Symbolen.
+		// moveLayer ohne beforeId hebt an die Spitze; die ordered-Sequenz
+		// bottom-up ergibt exakt die gewünschte Stapelung, Symbole zuoberst.
+		for (const slug of ordered) {
+			const layerId = layerIdFor(slug);
+			if (map.getLayer(layerId)) map.moveLayer(layerId);
+		}
+		// Aggregat-Symbole liegen über ALLEN Daten-Layern, auch über Overlays
+		// und Punkt-Layern: Sie sind die kleinste Tinte und tragen den Wert.
+		for (const slug of ordered) {
+			const outlineId = outlineLayerIdFor(slug);
+			if (map.getLayer(outlineId)) map.moveLayer(outlineId);
+		}
+		// Die Auswahl-Kontur (Region-Outline) bleibt zuoberst.
+		if (map.getLayer(OUTLINE_LINE_ID)) map.moveLayer(OUTLINE_LINE_ID);
+
 		renderedSlugs = [...ordered];
 		renderedVariantBySlug = variantBySlug;
 	}
 
 	$effect(() => {
-		// reactive deps: activeLayerSlugs, hiddenLayerSlugs, manifestLayers
+		// reactive deps: activeLayerSlugs, hiddenLayerSlugs, choroplethLeadSlug, manifestLayers
 		const slugs = ui.activeLayerSlugs;
 		const _hidden = ui.hiddenLayerSlugs;
 		void _hidden;
+		const _lead = ui.choroplethLeadSlug;
+		void _lead;
 		if (!rawMap || manifestLayers.length === 0) return;
 		void renderLayers(slugs);
 	});
@@ -455,9 +538,12 @@
 
 	const cascadeForLegend = $derived(
 		computeCascadeVariants(
-			sortSlugsByBundleStable(
-				applyHiddenSlugs(ui.activeLayerSlugs, ui.hiddenLayerSlugs),
-				manifestLayers
+			orderChoropleths(
+				sortSlugsByBundleStable(
+					applyHiddenSlugs(ui.activeLayerSlugs, ui.hiddenLayerSlugs),
+					manifestLayers
+				),
+				ui.choroplethLeadSlug
 			)
 		)
 	);
@@ -1098,6 +1184,7 @@
 			showLimitWarning={legendLimitWarning}
 			onToggleHidden={onLegendToggleHidden}
 			onRemove={onLegendRemove}
+			onPromoteLayer={(slug: string) => (ui.choroplethLeadSlug = slug)}
 		/>
 		<MapHoverTooltip
 			map={rawMap as MapHoverApi | null}

@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { diffLayerSlugs, sourceIdFor, layerIdFor } from './layer-diff.js';
+import {
+	diffLayerSlugs,
+	dotsSourceIdFor,
+	layerIdFor,
+	outlineLayerIdFor,
+	sourceIdFor
+} from './layer-diff.js';
 
 describe('diffLayerSlugs', () => {
 	it('alle hinzufügen wenn current leer', () => {
@@ -35,5 +41,21 @@ describe('sourceIdFor / layerIdFor', () => {
 
 	it('handhabt Slug mit Bindestrichen', () => {
 		expect(sourceIdFor('mietspiegel-wohnlage')).toBe('navigator-source-mietspiegel-wohnlage');
+	});
+});
+
+describe('outlineLayerIdFor', () => {
+	it('hängt -outline an die Haupt-Layer-ID', () => {
+		expect(outlineLayerIdFor('kiez-score-ruhe-luft')).toBe(
+			'navigator-layer-kiez-score-ruhe-luft-outline'
+		);
+	});
+});
+
+describe('dotsSourceIdFor', () => {
+	it('hängt -dots an die Source-ID', () => {
+		expect(dotsSourceIdFor('kiez-score-ruhe-luft')).toBe(
+			sourceIdFor('kiez-score-ruhe-luft') + '-dots'
+		);
 	});
 });
