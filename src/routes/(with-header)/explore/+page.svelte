@@ -207,8 +207,11 @@
 		// Selection. Inspector öffnet sich dann automatisch.
 		// Finder-Einstieg (?finder=1): keine Default-Adresse setzen, sonst
 		// verdeckt der automatisch geöffnete Inspector den Finder im Slot.
+		// Zusätzlich die aus einem früheren Explore-Besuch konservierte
+		// Selection stummschalten: der Selection-Effect feuert nach dem
+		// Map-Load erneut und würde den Inspector über den Finder schieben.
 		if (featureFlags.kiezFinder && data.finderOpen) {
-			// bewusst leer: der Finder besetzt den Slot, kein Auto-Inspector
+			suppressedSelectionId = selection.current?.id ?? null;
 		} else if (typeof data.address?.lng === 'number' && typeof data.address?.lat === 'number') {
 			const displayName =
 				data.address.q ?? `${data.address.lat.toFixed(5)}, ${data.address.lng.toFixed(5)}`;
@@ -913,10 +916,16 @@
 		}
 	}
 
+	// Beim Finder-Einstieg stummgeschaltete Alt-Selection: erst eine NEUE
+	// Auswahl (Karten-Klick, Suche) reaktiviert Fly-to, Pin und Inspector.
+	let suppressedSelectionId: string | null = null;
+
 	$effect(() => {
 		const s = selection.current;
 		if (!s) return;
+		if (s.id === suppressedSelectionId) return;
 		if (!rawMap || !MarkerCtor) return;
+		suppressedSelectionId = null;
 		flyToSuggestion(s);
 		void placeMarker([s.lng, s.lat], s.displayName);
 		const bezirkPart = s.bezirk ? `, Bezirk ${s.bezirk}` : '';
