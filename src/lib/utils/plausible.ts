@@ -10,7 +10,7 @@
  * Goal-Funnel-Analyse in Plausible-UI.
  */
 
-type EventName = 'Search' | 'Bookmark' | 'Compare' | 'Share' | 'Locate' | 'MapClick';
+type EventName = 'Search' | 'Bookmark' | 'Compare' | 'Share' | 'Locate' | 'MapClick' | 'Finder';
 
 interface PlausibleFn {
 	(

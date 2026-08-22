@@ -4,6 +4,8 @@
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import HomeHero from '$lib/components/home/home-hero.svelte';
 	import HomeHook from '$lib/components/home/home-hook.svelte';
+	import HomeFinderTeaser from '$lib/components/home/home-finder-teaser.svelte';
+	import { featureFlags } from '$lib/data/feature-flags.js';
 	import HomeSteps from '$lib/components/home/home-steps.svelte';
 	import HomeQuickLinks from '$lib/components/home/home-quick-links.svelte';
 	import HomeLayerTeasers from '$lib/components/home/home-layer-teasers.svelte';
@@ -55,6 +57,9 @@
 
 <article class="mx-auto max-w-5xl space-y-16 px-4 py-12" data-testid="home-landing">
 	<HomeHero featured={data.featured} />
+	{#if featureFlags.kiezFinder}
+		<HomeFinderTeaser />
+	{/if}
 	<HomeHook />
 	<HomeSteps />
 	<HomeQuickLinks />
