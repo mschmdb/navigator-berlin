@@ -195,3 +195,71 @@ describe('map-hover-tooltip.svelte', () => {
 		expect(tip.dataset.slug).toBe('klima-pet-2022');
 	});
 });
+
+describe('map-hover-tooltip · Multi-Layer', () => {
+	it('zeigt bei zwei aktiven Choroplethen beide Zeilen mit Layername + Wert', async () => {
+		const { api, fire } = makeFakeMap([
+			[
+				{ layer: { id: 'navigator-layer-kiez-score-ruhe-luft' }, properties: { value: 62 } },
+				{ layer: { id: 'navigator-layer-kiez-score-versorgung' }, properties: { value: 34 } }
+			]
+		]);
+		render(MapHoverTooltip, {
+			map: api,
+			activeLayerSlugs: ['kiez-score-ruhe-luft', 'kiez-score-versorgung']
+		});
+		fire('mousemove', { point: { x: 10, y: 10 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const rows = (await page.getByTestId('map-hover-tooltip').element()).querySelectorAll(
+			'[data-testid="hover-tooltip-row"]'
+		);
+		expect(rows).toHaveLength(2);
+		expect(rows[0].textContent).toMatch(/Ruhe & Luft/);
+		expect(rows[0].textContent).toMatch(/62/);
+		expect(rows[1].textContent).toMatch(/Versorgung/);
+		expect(rows[1].textContent).toMatch(/34/);
+	});
+
+	it('zeigt bei einem Layer weiterhin Wert + Erklärung (Bestand)', async () => {
+		const { api, fire } = makeFakeMap([
+			[{ layer: { id: 'navigator-layer-laerm-2023' }, properties: { kategorie: 'hoch' } }]
+		]);
+		render(MapHoverTooltip, { map: api, activeLayerSlugs: ['laerm-2023'] });
+		fire('mousemove', { point: { x: 10, y: 10 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const v = (await page.getByTestId('hover-tooltip-value').element()) as HTMLElement;
+		expect(v.textContent).toMatch(/hoch/);
+	});
+});
+
+describe('map-hover-tooltip · Overflow langer Werte', () => {
+	it('lange Werte bleiben innerhalb der Tooltip-Box (kein horizontaler Überlauf)', async () => {
+		const { api, fire } = makeFakeMap([
+			[
+				{
+					layer: { id: 'navigator-layer-wohnlagen-2024' },
+					properties: { wol: 'mittel', strasse: 'Hohenfriedbergstraße', hnr: '12' }
+				},
+				{
+					layer: { id: 'navigator-layer-milieuschutz-erhaltungsmiete' },
+					properties: { gebietsname: 'Schöneberger Insel', bezirk: 'Tempelhof-Schöneberg' }
+				}
+			]
+		]);
+		render(MapHoverTooltip, {
+			map: api,
+			activeLayerSlugs: ['wohnlagen-2024', 'milieuschutz-erhaltungsmiete']
+		});
+		fire('mousemove', { point: { x: 10, y: 10 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const tip = (await page.getByTestId('map-hover-tooltip').element()) as HTMLElement;
+		// Tailwind lädt in Browser-Tests nicht, deshalb Klassen-Assertions:
+		// nowrap drückte lange Ortsnamen aus der Box (Bug 22.08.), Werte müssen
+		// am Wortende umbrechen dürfen.
+		for (const el of tip.querySelectorAll('dd')) {
+			expect((el as HTMLElement).className).not.toMatch(/whitespace-nowrap/);
+			expect((el as HTMLElement).className).toMatch(/break-words/);
+			expect((el as HTMLElement).className).toMatch(/min-w-0/);
+		}
+	});
+});

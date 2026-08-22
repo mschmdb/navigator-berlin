@@ -24,3 +24,21 @@ export function sourceIdFor(slug: string): string {
 export function layerIdFor(slug: string): string {
 	return `navigator-layer-${slug}`;
 }
+
+/**
+ * ID des begleitenden Kontur-Layers einer Polygon-Kaskade. Der Haupt-Layer
+ * bleibt immer ein Fill (bei Kontur-Variante unsichtbar als Hover-Hit-Fläche),
+ * die sichtbare Kontur läuft unter dieser Zweit-ID.
+ */
+export function outlineLayerIdFor(slug: string): string {
+	return `${layerIdFor(slug)}-outline`;
+}
+
+/**
+ * Punkt-Quelle der Score-Punktsymbole: ein berechneter Label-Punkt pro
+ * Fläche (feature-label-points), damit MapLibre bei hohem Zoom nicht ein
+ * Symbol pro Tile-Fragment setzt.
+ */
+export function dotsSourceIdFor(slug: string): string {
+	return `${sourceIdFor(slug)}-dots`;
+}
