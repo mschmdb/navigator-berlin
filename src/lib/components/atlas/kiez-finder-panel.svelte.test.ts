@@ -77,7 +77,7 @@ function fakeMap() {
 async function renderPanel(overrides: Record<string, unknown> = {}) {
 	const map = fakeMap();
 	const onClose = vi.fn();
-	render(KiezFinderPanel, {
+	const result = render(KiezFinderPanel, {
 		map: map.api,
 		loadData: async () => baseData(),
 		onClose,
@@ -86,7 +86,7 @@ async function renderPanel(overrides: Record<string, unknown> = {}) {
 	await vi.waitFor(async () => {
 		await expect.element(page.getByTestId('finder-panel')).toBeInTheDocument();
 	});
-	return { map, onClose };
+	return { map, onClose, result };
 }
 
 describe('kiez-finder-panel', () => {
@@ -141,6 +141,24 @@ describe('kiez-finder-panel', () => {
 		const close = (await page.getByTestId('finder-close').element()) as HTMLButtonElement;
 		close.click();
 		expect(onClose).toHaveBeenCalled();
+	});
+
+	it('Unmount crasht nicht, wenn die Map schon zerstört ist', async () => {
+		const { map, result } = await renderPanel();
+		const slider = (await page.getByTestId('finder-slider-ruheLuft').element()) as HTMLInputElement;
+		slider.value = '2';
+		slider.dispatchEvent(new Event('input', { bubbles: true }));
+		await vi.waitFor(async () => {
+			await expect.element(page.getByTestId('finder-top-list')).toBeInTheDocument();
+		});
+		// Seiten-Wechsel: MapLibre ist bereits removed, jeder Zugriff wirft.
+		let aufgerufen = false;
+		map.api.getLayer = () => {
+			aufgerufen = true;
+			throw new TypeError("Cannot read properties of undefined (reading 'getLayer')");
+		};
+		await result.unmount();
+		expect(aufgerufen).toBe(true);
 	});
 
 	it('trägt die redaktionelle Fußnote und die Quelle', async () => {

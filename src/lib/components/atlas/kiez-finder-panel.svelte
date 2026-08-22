@@ -175,8 +175,15 @@
 
 	function teardown(): void {
 		if (!map) return;
-		if (map.getLayer(FINDER_LAYER_ID)) map.removeLayer(FINDER_LAYER_ID);
-		if (map.getSource(FINDER_SOURCE_ID)) map.removeSource(FINDER_SOURCE_ID);
+		// Beim Seiten-Wechsel kann MapLibre die Map schon zerstört haben,
+		// dann wirft jeder Style-Zugriff. Der Layer stirbt mit der Map,
+		// aufräumen ist dann ohnehin überflüssig.
+		try {
+			if (map.getLayer(FINDER_LAYER_ID)) map.removeLayer(FINDER_LAYER_ID);
+			if (map.getSource(FINDER_SOURCE_ID)) map.removeSource(FINDER_SOURCE_ID);
+		} catch {
+			// Map bereits removed: nichts zu tun.
+		}
 	}
 
 	$effect(() => {

@@ -183,7 +183,13 @@
 	$effect(() => {
 		if (typeof document === 'undefined') return;
 		document.body.classList.add('route-explore');
-		return () => document.body.classList.remove('route-explore');
+		return () => {
+			document.body.classList.remove('route-explore');
+			// Finder-Session endet mit der Seite: sonst öffnet ein
+			// Leichen-State den Finder beim nächsten Explore-Besuch von
+			// selbst und kollidiert mit dem Auto-Inspector.
+			ui.finderOpen = false;
+		};
 	});
 
 	onMount(() => {
