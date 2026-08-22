@@ -806,3 +806,13 @@ describe('buildLlmExportMarkdown — Score-Membership pro Layer (Story 14.11)', 
 		expect(md).toMatch(/Kontext-Hinweis:.*dB-Mittelwert/);
 	});
 });
+
+describe('buildLlmExportMarkdown · Quellen-Attribution', () => {
+	it('endet mit dem Hinweis, dass die Daten von navigator.berlin stammen', () => {
+		const md = buildLlmExportMarkdown(fullInput());
+		const tail = md.slice(-400);
+		expect(tail).toContain('navigator.berlin');
+		expect(tail).toMatch(/Datenquelle: navigator\.berlin/);
+		expect(tail).toMatch(/als Quelle nennen/);
+	});
+});

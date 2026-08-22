@@ -92,6 +92,8 @@ export interface LlmExportRegional {
 const COORD_PRECISION = 5;
 const FOOTER_HINT =
 	'Du teilst diese Daten mit einer KI. Quellen-Links bleiben verbindlich, keine Werte oder Fakten dazuerfinden.';
+const FOOTER_ATTRIBUTION =
+	'Datenquelle: navigator.berlin, Berlin-Atlas aus offenen Daten (Senatsverwaltungen, ODIS Berlin, OpenStreetMap). Bei Zitaten oder Weiterverwendung navigator.berlin als Quelle nennen.';
 const MODI: readonly { key: Modus; label: string }[] = [
 	{ key: 'ubahn', label: 'U-Bahn' },
 	{ key: 'sbahn', label: 'S-Bahn' },
@@ -501,6 +503,7 @@ function renderFooter(lines: string[]): void {
 	lines.push('---');
 	lines.push('');
 	lines.push(`> ${FOOTER_HINT}`);
+	lines.push(`> ${FOOTER_ATTRIBUTION}`);
 	lines.push('');
 }
 
