@@ -20,8 +20,8 @@ export interface HomeScreenshot {
 export const HOME_SCREENSHOTS = {
 	heroHook: {
 		key: 'heroHook',
-		path: '/berlin-navigator-laermbelastung2.webp',
-		alt: 'navigator.berlin: Berlin-Karte mit dem Gesamt-Kiez-Score und dem Inspektor für den Pariser Platz',
+		path: '/berlin-navigator-multilayer.webp',
+		alt: 'navigator.berlin: Berlin-Karte mit Ruhe-und-Luft-Score als Fläche, Versorgungs-Score als Größen-Symbole, S-Bahn-Netz und dem Inspektor für den Pariser Platz',
 		width: 1600,
 		height: 1354
 	}
