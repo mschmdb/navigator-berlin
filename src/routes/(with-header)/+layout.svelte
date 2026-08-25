@@ -68,7 +68,7 @@
 	bookmarkCount={ui.bookmarks.length}
 	{currentAddressBookmarked}
 	onOpenBookmarks={offAtlas ? undefined : openBookmarks}
-	searchCollapsed={ui.inspectorOpen || ui.compareMode}
+	searchCollapsed={ui.inspectorOpen || ui.compareMode || ui.finderOpen}
 	{atlasCtaHref}
 />
 
