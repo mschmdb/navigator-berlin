@@ -1,4 +1,5 @@
 import { page } from 'vitest/browser';
+import { __setEmbeddedForTests } from '$lib/utils/plausible.js';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import KiezFinderPanel from './kiez-finder-panel.svelte';
@@ -180,6 +181,9 @@ describe('kiez-finder-panel', () => {
 		const events: Array<[string, unknown]> = [];
 		(window as { plausible?: unknown }).plausible = (name: string, opts?: unknown) =>
 			events.push([name, opts]);
+		// Vitest-Browser-Tests laufen im iframe; der Embed-Guard (self !== top)
+		// würde das Event schlucken. Top-Level-Kontext simulieren.
+		__setEmbeddedForTests(false);
 		try {
 			const { result } = await renderPanel();
 			const ruhe = (await page.getByTestId('finder-slider-ruheLuft').element()) as HTMLInputElement;
@@ -199,6 +203,7 @@ describe('kiez-finder-panel', () => {
 			expect(opts.props.kriterien).toBe('ruheLuft+sbahn');
 			expect(opts.props.anzahl).toBe(2);
 		} finally {
+			__setEmbeddedForTests(null);
 			delete (window as { plausible?: unknown }).plausible;
 		}
 	});
@@ -206,11 +211,14 @@ describe('kiez-finder-panel', () => {
 	it('Neutral-Gewichte melden kein Nutzungs-Event', async () => {
 		const events: string[] = [];
 		(window as { plausible?: unknown }).plausible = (name: string) => events.push(name);
+		// Ohne Override wäre der Embed-Guard aktiv und der Test trivial grün.
+		__setEmbeddedForTests(false);
 		try {
 			const { result } = await renderPanel();
 			await result.unmount();
 			expect(events.filter((n) => n === 'Finder')).toHaveLength(0);
 		} finally {
+			__setEmbeddedForTests(null);
 			delete (window as { plausible?: unknown }).plausible;
 		}
 	});

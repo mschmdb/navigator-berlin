@@ -30,7 +30,19 @@ declare global {
  * zählen nicht als Besuche. Cross-Origin-Zugriff auf window.top kann
  * werfen: dann sind wir sicher eingebettet.
  */
+let embeddedOverride: boolean | null = null;
+
+/**
+ * Nur für Tests: Vitest-Browser führt Tests selbst in einem iframe aus,
+ * dort wäre isEmbedded() immer true und Tracking-Tests liefen ins Leere.
+ * Produktion ruft das nie auf.
+ */
+export function __setEmbeddedForTests(value: boolean | null): void {
+	embeddedOverride = value;
+}
+
 function isEmbedded(): boolean {
+	if (embeddedOverride !== null) return embeddedOverride;
 	try {
 		return window.self !== window.top;
 	} catch {
