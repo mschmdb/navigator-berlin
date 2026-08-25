@@ -60,7 +60,7 @@
 			detail: 'Punkt-Geocode + Punkt-Layer (Stolpersteine, Kitas, ÖPNV-Stops)'
 		},
 		{
-			level: 'LOR-Planungsraum (538)',
+			level: 'LOR-Planungsraum (542)',
 			detail: 'Lärm, Luft, Bioklima, Grünversorgung, Umweltgerechtigkeit, Wohnlagen-2024'
 		},
 		{
@@ -195,7 +195,7 @@
 		<h2 id="aggregations-ebenen-h" class="font-serif text-2xl text-ink">Aggregations-Ebenen</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Nicht jeder Wert ist adressgenau. Lärm und Luft stammen aus Stadtteil-Statistiken
-			(LOR-Planungsraum, 538 Polygone). Bodenrichtwerte hängen am Häuserblock. Wer im Inspector
+			(LOR-Planungsraum, 542 Polygone). Bodenrichtwerte hängen am Häuserblock. Wer im Inspector
 			einen Lärm-Wert liest, sieht den Mittelwert für den ganzen Planungsraum, nicht das eigene
 			Schlafzimmer.
 		</p>
