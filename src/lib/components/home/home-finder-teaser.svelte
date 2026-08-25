@@ -23,7 +23,8 @@
 			<p class="font-mono text-xs tracking-wider text-accent uppercase">Neu · Kiez-Finder</p>
 			<h2 class="font-serif text-2xl text-ink md:text-3xl">Sag der Karte, was du suchst</h2>
 			<p class="max-w-prose font-serif text-base text-ink-muted">
-				9 verschiedene Werte, mit denen du dir deinen idealen Bezirk oder Kiez raussuchen kannst.
+				Neun verschiedene und kombinierbare Werte, mit denen du dir deinen idealen Bezirk oder Kiez
+				raussuchen kannst.
 			</p>
 		</header>
 
