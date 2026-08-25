@@ -68,7 +68,10 @@
 	style="min-height: var(--header-height, 72px)"
 	class="sticky top-0 z-30 border-b border-rule bg-bg/95 py-1 print:hidden"
 >
-	<div class="mx-auto flex max-w-[1440px] items-center gap-4 px-4">
+	<!-- Volle Breite (25.08.): der frühere max-w-[1440px]-Container ließ die
+	     Header-Inhalte auf großen Screens mittig schweben, während die Karte
+	     vollflächig läuft. Logo links außen, Controls rechts außen. -->
+	<div class="flex w-full items-center gap-4 px-4">
 		<a href="/" aria-label="navigator.berlin" class="flex shrink-0 items-center gap-2">
 			<PixelLogo size={64} title="navigator.berlin" />
 			<span class="hidden font-sans text-base font-light tracking-wide text-ink sm:inline">
@@ -121,9 +124,13 @@
 			>
 				<Search size={18} aria-hidden="true" />
 			</button>
-			<!-- Desktop (sm+): full Search-Input -->
-			<div class="hidden min-w-0 flex-1 sm:block">
-				<AddressSearch variant="header" {geocode} {onSelect} />
+			<!-- Desktop (sm+): full Search-Input. Breite gedeckelt + zentriert
+			     (25.08.): auf großen Screens streckte flex-1 das Feld über die
+			     ganze Mitte, der Header wirkte linkslastig. -->
+			<div class="hidden min-w-0 flex-1 sm:flex sm:justify-center">
+				<div class="w-full max-w-xl">
+					<AddressSearch variant="header" {geocode} {onSelect} />
+				</div>
 			</div>
 		{/if}
 		{#if onOpenLayerPalette}
