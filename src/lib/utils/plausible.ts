@@ -25,12 +25,26 @@ declare global {
 	}
 }
 
+/**
+ * Eingebettete Kontexte (iframe, z.B. das Talk-Deck bettet /explore ein)
+ * zählen nicht als Besuche. Cross-Origin-Zugriff auf window.top kann
+ * werfen: dann sind wir sicher eingebettet.
+ */
+function isEmbedded(): boolean {
+	try {
+		return window.self !== window.top;
+	} catch {
+		return true;
+	}
+}
+
 export function trackEvent(
 	name: EventName,
 	props?: Record<string, string | number | boolean>
 ): void {
 	if (typeof window === 'undefined') return;
 	if (typeof window.plausible !== 'function') return;
+	if (isEmbedded()) return;
 	try {
 		if (props && Object.keys(props).length > 0) {
 			window.plausible(name, { props });
@@ -50,6 +64,7 @@ export function trackEvent(
 export function trackPageview(path?: string): void {
 	if (typeof window === 'undefined') return;
 	if (typeof window.plausible !== 'function') return;
+	if (isEmbedded()) return;
 	try {
 		// Hitze-Subdomain reroutet `/` → `/hitze` ohne URL-Wechsel. Plausible würde sonst die
 		// tatsächliche URL `/` tracken (mit der Homepage vermischt). Custom-Location-Override:

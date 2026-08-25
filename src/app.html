@@ -38,17 +38,30 @@
 			Manual-Mode: auto-pushState-Tracking aus, Pageviews werden via afterNavigate
 			im Root-Layout explizit getriggert (zuverlässig für SvelteKit-Client-Nav).
 		-->
-		<script
-			defer
-			data-domain="navigator.berlin"
-			src="https://p.fliege.dev/js/script.file-downloads.manual.outbound-links.pageview-props.tagged-events.js"
-		></script>
 		<script>
 			window.plausible =
 				window.plausible ||
 				function () {
 					(window.plausible.q = window.plausible.q || []).push(arguments);
 				};
+			// Embed-Guard (25.08.): eingebettet (iframe, z.B. Talk-Deck) laden wir
+			// das Script gar nicht erst, sonst feuern die Auto-Varianten
+			// (outbound-links, file-downloads) trotz Wrapper-Guard.
+			(function () {
+				var embedded;
+				try {
+					embedded = window.self !== window.top;
+				} catch (e) {
+					embedded = true;
+				}
+				if (embedded) return;
+				var s = document.createElement('script');
+				s.defer = true;
+				s.dataset.domain = 'navigator.berlin';
+				s.src =
+					'https://p.fliege.dev/js/script.file-downloads.manual.outbound-links.pageview-props.tagged-events.js';
+				document.head.appendChild(s);
+			})();
 		</script>
 		%sveltekit.head%
 	</head>
