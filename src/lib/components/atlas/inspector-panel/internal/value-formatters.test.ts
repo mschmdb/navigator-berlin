@@ -16,6 +16,31 @@ describe('formatLayerValue', () => {
 		});
 	});
 
+	// Bug 25.08.: einwohner-dichte-2024 hatte keinen Formatter-Case und fiel
+	// auf den JSON-Default (Tooltip zeigte das rohe Properties-Objekt).
+	it('Einwohnerdichte Props-Objekt → gerundete EW/km²', () => {
+		expect(
+			formatLayerValue('einwohner-dichte-2024', { plr_id: '12200414', dichte: 11293.98552911116 })
+		).toEqual({
+			text: '11.294 Einwohner/km²',
+			isNumeric: true
+		});
+	});
+
+	it('Einwohnerdichte ohne dichte-Property → Fallback', () => {
+		expect(formatLayerValue('einwohner-dichte-2024', { plr_id: '099' })).toEqual({
+			text: 'Daten nicht vorhanden',
+			isNumeric: false
+		});
+	});
+
+	it('S-Bahn-Netz → Trassen-Label statt JSON-Default', () => {
+		expect(formatLayerValue('sbahn-netz', { fid: 7 })).toEqual({
+			text: 'S-Bahn-Trasse',
+			isNumeric: false
+		});
+	});
+
 	it('Mietspiegel-Wohnlage als String', () => {
 		expect(formatLayerValue('mietspiegel-wohnlage', 'gut')).toEqual({
 			text: 'gut',

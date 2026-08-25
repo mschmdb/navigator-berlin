@@ -222,6 +222,13 @@ function formatKlimaPet(value: unknown): FormattedValue {
 	return { text: `${numFmt.format(pet)} °C (gefühlt, 14 Uhr)`, isNumeric: true };
 }
 
+function formatEinwohnerdichte(value: unknown): FormattedValue {
+	const dichte = pickProp(value, 'dichte');
+	if (typeof dichte !== 'number' || !Number.isFinite(dichte)) return FALLBACK;
+	const numFmt = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
+	return { text: `${numFmt.format(dichte)} Einwohner/km²`, isNumeric: true };
+}
+
 function formatKlimaHighlight(value: unknown, label: string): FormattedValue {
 	if (!value || (typeof value === 'object' && Object.keys(value).length === 0)) return FALLBACK;
 	return { text: label, isNumeric: false };
@@ -368,6 +375,8 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return formatUmweltgerechtigkeit(value);
 		case 'klima-pet-2022':
 			return formatKlimaPet(value);
+		case 'einwohner-dichte-2024':
+			return formatEinwohnerdichte(value);
 		case 'klima-kaltlufteinwirkbereich-2022':
 			return formatKlimaHighlight(value, 'Kaltluft-Einwirkbereich');
 		case 'klima-leitbahnkorridor-2022':
@@ -409,6 +418,8 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 			return formatOepnvStation(value, 'Bus');
 		case 'ubahn-netz':
 			return { text: 'U-Bahn-Trasse', isNumeric: false };
+		case 'sbahn-netz':
+			return { text: 'S-Bahn-Trasse', isNumeric: false };
 		case 'tram-netz':
 			return { text: 'Tram-Trasse', isNumeric: false };
 		case 'stolpersteine':
