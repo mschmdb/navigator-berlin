@@ -181,6 +181,7 @@ describe('site-header · Kiez-Finder-Link', () => {
 		render(SiteHeader, {});
 		const link = (await page.getByTestId('header-finder-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/explore?finder=1');
-		expect(link.textContent).toContain('Kiez-Finder');
+		// Seit 25.08. Icon-Control: Label hängt am aria-label, nicht im Textinhalt.
+		expect(link.getAttribute('aria-label')).toBe('Kiez-Finder öffnen');
 	});
 });

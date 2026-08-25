@@ -63,6 +63,23 @@
 	}
 </script>
 
+{#snippet finderTrigger()}
+	<!-- Finder als Icon-Control rechts (25.08.): neben dem Logo wurde der
+	     Button öfter geklickt als der Atlas-Einstieg, die erste Scan-Position
+	     hatte ihn zum Primär-CTA gemacht. -->
+	{#if featureFlags.kiezFinder}
+		<a
+			href="/explore?finder=1"
+			data-testid="header-finder-link"
+			aria-label="Kiez-Finder öffnen"
+			title="Kiez-Finder"
+			class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:border-accent hover:text-accent"
+		>
+			<Sparkles size={18} aria-hidden="true" />
+		</a>
+	{/if}
+{/snippet}
+
 <header
 	data-testid="site-header"
 	style="min-height: var(--header-height, 72px)"
@@ -78,17 +95,9 @@
 				navigator.berlin
 			</span>
 		</a>
-		{#if featureFlags.kiezFinder}
-			<a
-				href="/explore?finder=1"
-				data-testid="header-finder-link"
-				class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-sm border border-rule px-2.5 font-mono text-xs tracking-wider text-ink uppercase hover:border-accent hover:text-accent"
-			>
-				<Sparkles size={14} aria-hidden="true" />
-				<span class="hidden md:inline">Kiez-Finder</span>
-			</a>
-		{/if}
 		{#if atlasCtaHref}
+			<!-- Kein Finder auf der Landing (25.08.): er konkurrierte mit dem
+			     Atlas-CTA, der Home-Teaser übernimmt den Finder-Einstieg. -->
 			<div class="min-w-0 flex-1"></div>
 			<a
 				href={atlasCtaHref}
@@ -132,6 +141,9 @@
 					<AddressSearch variant="header" {geocode} {onSelect} />
 				</div>
 			</div>
+		{/if}
+		{#if !atlasCtaHref}
+			{@render finderTrigger()}
 		{/if}
 		{#if onOpenLayerPalette}
 			<button
