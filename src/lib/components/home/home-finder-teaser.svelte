@@ -4,7 +4,7 @@
 	Text (crawl- und vorlesbar), CTA öffnet den Finder auf der Karte.
 -->
 <script lang="ts">
-	import { Sparkles } from '@lucide/svelte';
+	import { SlidersHorizontal } from '@lucide/svelte';
 	import { HOME_SCREENSHOTS } from '$lib/content/screenshot-manifest.js';
 
 	const SCREENSHOT = HOME_SCREENSHOTS.kiezFinder;
@@ -45,7 +45,7 @@
 				data-testid="home-finder-teaser-cta"
 				class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 			>
-				<Sparkles size={16} aria-hidden="true" />
+				<SlidersHorizontal size={16} aria-hidden="true" />
 				Kiez-Finder öffnen
 			</a>
 		</div>

@@ -5,7 +5,7 @@
 	import AddressSearchOverlay from './address-search-overlay.svelte';
 	import MobileMetaDrawer from './mobile-meta-drawer.svelte';
 	import { PixelLogo } from '$lib/components/ui';
-	import { Sparkles } from '@lucide/svelte';
+	import { SlidersHorizontal } from '@lucide/svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import type { GeocodeSuggestion } from '$lib/data';
 
@@ -75,7 +75,7 @@
 			title="Kiez-Finder"
 			class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:border-accent hover:text-accent"
 		>
-			<Sparkles size={18} aria-hidden="true" />
+			<SlidersHorizontal size={18} aria-hidden="true" />
 		</a>
 	{/if}
 {/snippet}

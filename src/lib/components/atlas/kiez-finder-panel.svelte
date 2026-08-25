@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { X, RotateCcw, Sparkles } from '@lucide/svelte';
+	import { X, RotateCcw, SlidersHorizontal } from '@lucide/svelte';
 	import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 	import { PARTEI_FARBEN, type ParteiKurzname } from '$lib/data/partei-farben.js';
 	import { trackEvent } from '$lib/utils/plausible.js';
@@ -250,7 +250,7 @@
 	<header
 		class="sticky top-0 z-10 flex items-center gap-2 border-b border-rule bg-bg-elevated px-4 py-3"
 	>
-		<Sparkles size={16} aria-hidden="true" class="text-accent" />
+		<SlidersHorizontal size={16} aria-hidden="true" class="text-accent" />
 		<h2 class="flex-1 font-serif text-lg leading-tight text-ink">Kiez-Finder</h2>
 		<button
 			type="button"
