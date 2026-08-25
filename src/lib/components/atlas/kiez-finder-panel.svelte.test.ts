@@ -226,7 +226,7 @@ describe('kiez-finder-panel', () => {
 	it('trägt die redaktionelle Fußnote und die Quelle', async () => {
 		await renderPanel();
 		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
-		expect(panel.textContent).toContain('keine Bewertung von Nachbarschaften');
-		expect(panel.textContent).toContain('offenen Daten');
+		expect(panel.textContent?.replace(/\s+/g, ' ')).toContain('bewertet weder Nachbarschaften');
+		expect(panel.textContent).toContain('Zweitstimmen BTW 2025');
 	});
 });

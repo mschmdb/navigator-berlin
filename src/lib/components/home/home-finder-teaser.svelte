@@ -23,8 +23,7 @@
 			<p class="font-mono text-xs tracking-wider text-accent uppercase">Neu · Kiez-Finder</p>
 			<h2 class="font-serif text-2xl text-ink md:text-3xl">Sag der Karte, was du suchst</h2>
 			<p class="max-w-prose font-serif text-base text-ink-muted">
-				Regler statt Suchfeld: Du gewichtest, was dir wichtig ist, und die Karte färbt sich noch
-				während du schiebst. Alle 542 Planungsräume Berlins, live gerechnet aus offenen Daten.
+				9 verschiedene Werte, mit denen du dir deinen idealen Bezirk oder Kiez raussuchen kannst.
 			</p>
 		</header>
 
@@ -51,8 +50,8 @@
 		</div>
 
 		<p class="max-w-prose font-serif text-xs text-ink-subtle">
-			Die Passung ist deine Gewichtung offener Daten, keine Bewertung von Nachbarschaften oder
-			Menschen.
+			Die Karte bewertet weder Nachbarschaften noch Menschen, sie zeigt nur, wie gut eine Gegend zu
+			deinen Reglern passt.
 		</p>
 	</div>
 

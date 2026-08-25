@@ -379,8 +379,8 @@
 			</div>
 
 			<p class="mt-2 font-serif text-[10px] leading-snug text-ink-subtle">
-				Die Passung ist deine Gewichtung aus offenen Daten, keine Bewertung von Nachbarschaften oder
-				Menschen. Wahlverhalten: Zweitstimmen BTW 2025 (Bundeswahlleiterin).
+				Die Karte bewertet weder Nachbarschaften noch Menschen, sie zeigt nur, wie gut eine Gegend
+				zu deinen Reglern passt. Wahlverhalten: Zweitstimmen BTW 2025 (Bundeswahlleiterin).
 			</p>
 		{/if}
 	</div>

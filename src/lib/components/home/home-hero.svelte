@@ -32,8 +32,7 @@
 		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">Berlin in Daten.</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
 			Gib eine Adresse ein. Du siehst, wie laut es dort ist, wie heiß es im Sommer wird, wie nah die
-			nächste S-Bahn liegt. Zusammengefasst zu einem Kiez-Score aus fünf Dimensionen. Kultur und
-			Kriminalität kommen seit heute als Kontext dazu.
+			nächste S-Bahn liegt. Zusammengefasst zu einem Kiez-Score aus fünf Dimensionen.
 		</p>
 		<div class="flex flex-wrap gap-3 pt-2">
 			<a
