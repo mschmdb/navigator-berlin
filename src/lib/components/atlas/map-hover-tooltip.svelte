@@ -125,16 +125,16 @@
 				{content.hint}
 			</p>
 		{:else}
-			<!-- Multi-Layer: eine Zeile je Choropleth, oberster zuerst. -->
-			<dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5">
+			<!-- Multi-Layer: ein Block je Choropleth, oberster zuerst. Wert steht
+			     linksbündig UNTER dem Label (Umbau 25.08.): die frühere Wert-Spalte
+			     rechts wurde bei langen Labels so schmal, dass Ortsnamen mitten im
+			     Wort brachen („Frankfu/rter"). Volle Breite bricht am Wortende. -->
+			<dl class="grid gap-y-1.5">
 				{#each content.rows as row (row.slug)}
-					<div class="contents" data-testid="hover-tooltip-row">
-						<dt class="font-serif text-ink">{row.layerName}</dt>
-						<!-- Kein nowrap: lange Werte (Ortsnamen) müssen am Wortende umbrechen,
-						     statt aus der Box zu laufen. Kurze Score-Werte bleiben von selbst
-						     einzeilig, weil der Dimensions-Präfix in Mehrzeilen-Ansicht fehlt. -->
+					<div data-testid="hover-tooltip-row">
+						<dt class="font-serif text-[11px] text-ink-muted">{row.layerName}</dt>
 						<dd
-							class="min-w-0 text-right font-mono break-words text-ink"
+							class="min-w-0 font-mono break-words text-ink"
 							data-testid="hover-tooltip-value-{row.slug}"
 						>
 							{row.valueText}
