@@ -128,19 +128,44 @@ describe('registerWebMcpServer', () => {
 		expect(aufgeloest).toBe(11);
 	});
 
-	it('benennt bei Ablehnung Tool-Name und serialisierten Grund', async () => {
+	it('benennt bei Total-Ablehnung Tool-Name und serialisierten Grund', async () => {
 		const mc = {
-			registered: [] as unknown[],
-			registerTool(tool: { name: string }) {
-				if (tool.name === 'get_kiez_profile') {
-					return Promise.reject({ code: 'PermissionDenied', detail: 'site tools disabled' });
-				}
-				this.registered.push(tool);
+			registerTool() {
+				return Promise.reject({ code: 'PermissionDenied', detail: 'site tools disabled' });
 			}
 		};
 		await expect(registerWebMcpServer(stubConfig({ modelContext: mc as never }))).rejects.toThrow(
-			/get_kiez_profile.*PermissionDenied/
+			/address_lookup.*PermissionDenied/
 		);
+	});
+
+	it('serialisiert DOMException-artige Gründe mit name und message', async () => {
+		const grund = Object.create(null, {
+			name: { value: 'NotAllowedError', enumerable: false },
+			message: { value: 'site tools are disabled', enumerable: false }
+		});
+		const mc = {
+			registerTool() {
+				return Promise.reject(grund);
+			}
+		};
+		await expect(registerWebMcpServer(stubConfig({ modelContext: mc as never }))).rejects.toThrow(
+			/NotAllowedError: site tools are disabled/
+		);
+	});
+
+	it('registriert weiter, wenn nur einzelne Tools abgelehnt werden', async () => {
+		const mc = {
+			registered: [] as Array<{ name: string }>,
+			registerTool(tool: { name: string }) {
+				if (tool.name === 'get_kiez_profile') return Promise.reject(new Error('nope'));
+				this.registered.push({ name: tool.name });
+			}
+		};
+		const handle = await registerWebMcpServer(stubConfig({ modelContext: mc as never }));
+		cleanup = () => handle.unregister();
+		expect(mc.registered.length).toBe(10);
+		expect(handle.failedTools).toEqual([{ name: 'get_kiez_profile', reason: 'nope' }]);
 	});
 
 	it('reicht readOnlyHint-Annotations an registerTool durch', async () => {

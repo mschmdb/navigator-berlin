@@ -107,6 +107,8 @@ export interface WebMcpServerHandle {
 	readonly surface: 'document' | 'navigator';
 	/** true, wenn erst der @mcp-b/global-Polyfill die API bereitstellte. */
 	readonly viaPolyfill: boolean;
+	/** Einzelne abgelehnte Registrierungen (leer = alles angenommen). */
+	readonly failedTools: readonly { name: string; reason: string }[];
 	unregister(): void;
 }
 
@@ -123,11 +125,21 @@ export async function loadMcpBGlobalPolyfill(target: NavigatorWithModelContext):
 function serializeReason(grund: unknown): string {
 	if (grund instanceof Error) return grund.message;
 	if (typeof grund === 'string') return grund;
-	try {
-		return JSON.stringify(grund);
-	} catch {
-		return String(grund);
+	// DOMException-artige Objekte tragen name/message NICHT enumerierbar,
+	// JSON.stringify liefert dann '{}'. Explizit ablesen.
+	if (grund && typeof grund === 'object') {
+		const { name, message } = grund as { name?: unknown; message?: unknown };
+		if (typeof name === 'string' || typeof message === 'string') {
+			return [name, message].filter((t) => typeof t === 'string' && t).join(': ');
+		}
 	}
+	try {
+		const json = JSON.stringify(grund);
+		if (json && json !== '{}') return json;
+	} catch {
+		/* fällt auf String() zurück */
+	}
+	return String(grund);
 }
 
 function registerToolOnContext(
@@ -188,26 +200,27 @@ export async function registerWebMcpServer(
 	];
 
 	const controller = new AbortController();
-	// Spec: registerTool liefert Promise<undefined>. Erst wenn der Browser
-	// alle Registrierungen angenommen hat, gilt der Server als gemountet;
-	// eine Ablehnung soll den Aufrufer erreichen statt still zu versanden,
-	// und zwar mit Tool-Name und lesbarem Grund (native Implementierungen
-	// rejecten teils mit Plain-Objects, die als [object Object] enden).
-	await Promise.all(
-		tools.map(async (tool) => {
-			try {
-				await registerToolOnContext(mc, tool, controller.signal);
-			} catch (grund) {
-				throw new Error(`registerTool('${tool.name}') rejected: ${serializeReason(grund)}`);
-			}
-		})
+	// Spec: registerTool liefert Promise<undefined>, also jede Registrierung
+	// abwarten. Resilient statt alles-oder-nichts (26.08.): einzelne
+	// Ablehnungen (z.B. Permission-Modelle nativer Browser) landen lesbar
+	// in failedTools; erst wenn ALLE Tools abgelehnt werden, wirft der Mount.
+	const ergebnisse = await Promise.allSettled(
+		tools.map((tool) => Promise.resolve(registerToolOnContext(mc, tool, controller.signal)))
 	);
+	const failedTools = ergebnisse.flatMap((r, i) =>
+		r.status === 'rejected' ? [{ name: tools[i].name, reason: serializeReason(r.reason) }] : []
+	);
+	if (failedTools.length === tools.length) {
+		const erster = failedTools[0];
+		throw new Error(`registerTool('${erster.name}') rejected: ${erster.reason}`);
+	}
 
 	return {
 		specVersion: WEBMCP_SPEC_VERSION,
 		toolNames: tools.map((t) => t.name),
 		surface,
 		viaPolyfill,
+		failedTools,
 		unregister: () => controller.abort()
 	};
 }

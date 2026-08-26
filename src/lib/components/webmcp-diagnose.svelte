@@ -70,6 +70,12 @@
 			<dd data-testid="webmcp-diagnose-tools" class="break-words">
 				{handle.toolNames.join(' · ')}
 			</dd>
+			{#if handle.failedTools.length > 0}
+				<dt class="text-red-700">rejected ({handle.failedTools.length})</dt>
+				<dd data-testid="webmcp-diagnose-rejected" class="break-words text-red-700">
+					{handle.failedTools.map((f) => `${f.name}: ${f.reason}`).join(' · ')}
+				</dd>
+			{/if}
 		</dl>
 	{/if}
 </section>
