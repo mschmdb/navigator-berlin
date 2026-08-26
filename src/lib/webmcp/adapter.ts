@@ -1,9 +1,12 @@
 /**
  * WebMCP-Adapter-Schicht.
  *
- * - Feature-detect `navigator.modelContext` (Chrome 146+ native API).
- * - Bei fehlender API: dynamic-import des `@mcp-b/global`-Polyfills.
- * - Registriert die 5 navigator.berlin-Tools auf der Spec-konformen
+ * - Feature-detect in Spec-Reihenfolge: `document.modelContext` (aktuelle
+ *   Spec-Location, ChatGPT-In-App-Browser und Chrome 149+) zuerst, dann
+ *   `navigator.modelContext` (ältere native API, Chrome 146).
+ * - Bei fehlender API: dynamic-import des `@mcp-b/global`-Polyfills,
+ *   danach werden beide Surfaces erneut geprüft.
+ * - Registriert die navigator.berlin-Tools auf der Spec-konformen
  *   `registerTool`-Schnittstelle.
  *
  * Spec-Version-Pin via `WEBMCP_SPEC_VERSION`. Bei Breaking-Change ändert
@@ -56,6 +59,12 @@ export interface WebMcpServerConfig {
 	 * in Tests ein Fake.
 	 */
 	readonly navigatorProvider: () => NavigatorWithModelContext;
+	/**
+	 * Liefert das `document`-Objekt (aktuelle Spec-Location der API).
+	 * Optional für Rückwärtskompatibilität der Aufrufer; ohne Provider
+	 * prüft der Adapter nur `navigator`.
+	 */
+	readonly documentProvider?: () => NavigatorWithModelContext;
 	/**
 	 * Polyfill-Loader: Side-Effect-Function, die nach Aufruf
 	 * `navigator.modelContext` bereitstellt. Default `loadMcpBGlobalPolyfill`.
@@ -115,13 +124,15 @@ export async function registerWebMcpServer(
 	config: WebMcpServerConfig
 ): Promise<WebMcpServerHandle> {
 	const navigator = config.navigatorProvider();
-	if (!navigator.modelContext) {
+	const dokument = config.documentProvider?.() ?? {};
+	let mc = dokument.modelContext ?? navigator.modelContext;
+	if (!mc) {
 		await config.polyfillLoader(navigator);
+		mc = dokument.modelContext ?? navigator.modelContext;
 	}
-	const mc = navigator.modelContext;
 	if (!mc) {
 		throw new Error(
-			'navigator.modelContext is still undefined after polyfill load. WebMCP integration aborted.'
+			'Neither document.modelContext nor navigator.modelContext is available after polyfill load. WebMCP integration aborted.'
 		);
 	}
 

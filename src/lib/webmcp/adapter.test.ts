@@ -95,6 +95,51 @@ describe('registerWebMcpServer', () => {
 		expect(polyfillLoader).toHaveBeenCalled();
 	});
 
+	// WebMCP-Challenge 26.08.: die Spec ist von navigator.modelContext zu
+	// document.modelContext gewandert (ChatGPT-Browser, Chrome 149). Der
+	// Adapter bevorzugt document und fällt auf navigator + Polyfill zurück.
+	it('bevorzugt document.modelContext, wenn vorhanden', async () => {
+		const dokument = makeFakeNavigator();
+		const alt = makeFakeNavigator();
+		const config: WebMcpServerConfig = {
+			...stubConfig(alt.navigator),
+			documentProvider: () => dokument.navigator as never
+		};
+		const handle = await registerWebMcpServer(config);
+		cleanup = () => handle.unregister();
+		expect(dokument.mc.registered.length).toBe(9);
+		expect(alt.mc.registered.length).toBe(0);
+	});
+
+	it('fällt auf navigator.modelContext zurück, wenn document keine API hat', async () => {
+		const { navigator, mc } = makeFakeNavigator();
+		const config: WebMcpServerConfig = {
+			...stubConfig(navigator),
+			documentProvider: () => ({}) as never
+		};
+		const handle = await registerWebMcpServer(config);
+		cleanup = () => handle.unregister();
+		expect(mc.registered.length).toBe(9);
+	});
+
+	it('findet document.modelContext auch, wenn erst der Polyfill es bereitstellt', async () => {
+		const dokument: { modelContext?: FakeModelContext } = {};
+		const nav: { modelContext?: FakeModelContext } = {};
+		const polyfillLoader = vi.fn(async () => {
+			dokument.modelContext = makeFakeNavigator().mc;
+		});
+		const config: WebMcpServerConfig = {
+			...stubConfig({ modelContext: undefined as never }),
+			navigatorProvider: () => nav as never,
+			documentProvider: () => dokument as never,
+			polyfillLoader
+		};
+		const handle = await registerWebMcpServer(config);
+		cleanup = () => handle.unregister();
+		expect(polyfillLoader).toHaveBeenCalled();
+		expect(dokument.modelContext?.registered.length).toBe(9);
+	});
+
 	it('lädt KEIN Polyfill wenn navigator.modelContext bereits da ist', async () => {
 		const polyfillLoader = vi.fn(async () => undefined);
 		const { navigator } = makeFakeNavigator();

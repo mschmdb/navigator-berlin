@@ -81,6 +81,8 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 
 	activeHandle = await registerWebMcpServer({
 		navigatorProvider: () => navigator as unknown as NavigatorWithModelContext,
+		// Aktuelle Spec-Location (ChatGPT-Browser, Chrome 149+): document.
+		documentProvider: () => document as unknown as NavigatorWithModelContext,
 		polyfillLoader: loadMcpBGlobalPolyfill,
 		// SvelteKit-Remote-Function: `.run()` triggert die tatsächliche Server-
 		// Ausführung. Ohne `.run()` bekommt der Adapter den RemoteResource-
