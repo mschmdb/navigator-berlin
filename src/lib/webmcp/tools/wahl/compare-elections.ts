@@ -61,6 +61,7 @@ export function createCompareElectionsTool(deps: CompareElectionsDeps): WebMcpTo
 		name: 'compare_elections',
 		description:
 			'Compare multiple elections at a single Berlin address on the same aggregation level (sparkline-compatible). Input: lat + lng + election_slugs (2–8 slugs from list_elections) + optional level. The tool auto-picks the finest level available across ALL requested elections (default order: kiez → bezirk → berlin → stimmbezirk). Output: series array with top-5 parties per election + caveats for pre-2021 stimmbezirks-level. Use this for time-series questions like "How did SPD vote share evolve in Friedrichshain across BTW 2017, 2021, 2025?". Errors with no_common_level if no aggregation level is available across all requested elections.',
+		readOnly: true,
 		inputSchema: COMPARE_ELECTIONS_INPUT_JSON_SCHEMA,
 		outputSchema: COMPARE_ELECTIONS_OUTPUT_JSON_SCHEMA,
 		handler: async (raw) => {

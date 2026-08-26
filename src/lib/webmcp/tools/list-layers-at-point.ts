@@ -33,6 +33,7 @@ export function createListLayersAtPointTool(deps: ListLayersAtPointDeps): WebMcp
 		name: 'list_layers_at_point',
 		description:
 			'Lightweight discovery: list which Berlin data layers cover a given point. Returns layer slug, has_value flag, and reason (no-coverage, outdated, seasonal). Use this to decide which deeper queries to run.',
+		readOnly: true,
 		inputSchema: POINT_INPUT_JSON_SCHEMA,
 		outputSchema: LAYER_SLUG_LIST_JSON_SCHEMA,
 		handler: async (raw) => {

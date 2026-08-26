@@ -54,6 +54,7 @@ export function createGetKiezProfileTool(deps: GetKiezProfileDeps): WebMcpToolDe
 		name: 'get_kiez_profile',
 		description:
 			'Return the public profile of a Berlin Kiez (LOR Bezirksregion) by slug. Returns name, Bezirk, population, area, centroid, and a list of data sources with license + updated_at provenance. The slug must match a Berlin LOR Bezirksregion (143 total), NOT the plr_name field from cross_layer_query (which is a finer Planungsraum). On unknown slug, returns { error: "kiez_not_found", slug, hint } instead of throwing.',
+		readOnly: true,
 		inputSchema: KIEZ_PROFILE_INPUT_JSON_SCHEMA,
 		outputSchema: KIEZ_PROFILE_OUTPUT_JSON_SCHEMA,
 		handler: async (raw) => {

@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 describe('registerWebMcpServer', () => {
-	it('registriert 9 Tools auf navigator.modelContext', async () => {
+	it('registriert 11 Tools auf navigator.modelContext', async () => {
 		const { navigator, mc } = makeFakeNavigator();
 		const config = stubConfig(navigator);
 		const handle = await registerWebMcpServer(config);
@@ -53,7 +53,9 @@ describe('registerWebMcpServer', () => {
 				'get_layer_metadata',
 				'get_voting_district_geometry',
 				'list_elections',
-				'list_layers_at_point'
+				'list_layers_at_point',
+				'set_finder_weights',
+				'get_finder_state'
 			].sort()
 		);
 	});
@@ -88,7 +90,13 @@ describe('registerWebMcpServer', () => {
 			defaultLocale: () => 'de',
 			fetchElections: async () => [],
 			fetchWahlResultsAtPoint: async () => null,
-			fetchVotingDistrictGeometry: async () => null
+			fetchVotingDistrictGeometry: async () => null,
+			applyFinderWeights: async () => {
+				throw new Error('not used in registration smoke');
+			},
+			readFinderState: () => {
+				throw new Error('not used in registration smoke');
+			}
 		};
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
@@ -98,6 +106,116 @@ describe('registerWebMcpServer', () => {
 	// WebMCP-Challenge 26.08.: die Spec ist von navigator.modelContext zu
 	// document.modelContext gewandert (ChatGPT-Browser, Chrome 149). Der
 	// Adapter bevorzugt document und fällt auf navigator + Polyfill zurück.
+	// Spec-Konformität (IDL 26.08.): registerTool liefert Promise<undefined>,
+	// der Adapter muss die Annahme ABWARTEN; ToolAnnotations.readOnlyHint
+	// steuert ChatGPTs Safety-Review.
+	it('wartet asynchrone registerTool-Aufrufe ab und propagiert Fehler', async () => {
+		let aufgeloest = 0;
+		const mc = {
+			registered: [] as Array<{ name: string }>,
+			registerTool(tool: { name: string }) {
+				this.registered.push({ name: tool.name });
+				return new Promise<void>((resolve) => {
+					setTimeout(() => {
+						aufgeloest += 1;
+						resolve();
+					}, 1);
+				});
+			}
+		};
+		const handle = await registerWebMcpServer(stubConfig({ modelContext: mc as never }));
+		cleanup = () => handle.unregister();
+		expect(aufgeloest).toBe(11);
+	});
+
+	it('benennt bei Total-Ablehnung Tool-Name und serialisierten Grund', async () => {
+		const mc = {
+			registerTool() {
+				return Promise.reject({ code: 'PermissionDenied', detail: 'site tools disabled' });
+			}
+		};
+		await expect(registerWebMcpServer(stubConfig({ modelContext: mc as never }))).rejects.toThrow(
+			/address_lookup.*PermissionDenied/
+		);
+	});
+
+	it('serialisiert DOMException-artige Gründe mit name und message', async () => {
+		const grund = Object.create(null, {
+			name: { value: 'NotAllowedError', enumerable: false },
+			message: { value: 'site tools are disabled', enumerable: false }
+		});
+		const mc = {
+			registerTool() {
+				return Promise.reject(grund);
+			}
+		};
+		await expect(registerWebMcpServer(stubConfig({ modelContext: mc as never }))).rejects.toThrow(
+			/NotAllowedError: site tools are disabled/
+		);
+	});
+
+	it('registriert weiter, wenn nur einzelne Tools abgelehnt werden', async () => {
+		const mc = {
+			registered: [] as Array<{ name: string }>,
+			registerTool(tool: { name: string }) {
+				if (tool.name === 'get_kiez_profile') return Promise.reject(new Error('nope'));
+				this.registered.push({ name: tool.name });
+			}
+		};
+		const handle = await registerWebMcpServer(stubConfig({ modelContext: mc as never }));
+		cleanup = () => handle.unregister();
+		expect(mc.registered.length).toBe(10);
+		expect(handle.failedTools).toEqual([{ name: 'get_kiez_profile', reason: 'nope' }]);
+	});
+
+	it('reicht readOnlyHint-Annotations an registerTool durch', async () => {
+		const annotationen: Record<string, unknown> = {};
+		const mc = {
+			registered: [] as unknown[],
+			registerTool(tool: { name: string; annotations?: { readOnlyHint?: boolean } }) {
+				annotationen[tool.name] = tool.annotations?.readOnlyHint;
+				this.registered.push(tool);
+			}
+		};
+		const handle = await registerWebMcpServer(stubConfig({ modelContext: mc as never }));
+		cleanup = () => handle.unregister();
+		expect(annotationen['address_lookup']).toBe(true);
+		expect(annotationen['get_finder_state']).toBe(true);
+		expect(annotationen['set_finder_weights']).toBe(false);
+	});
+
+	it('meldet im Handle Surface und Polyfill-Status', async () => {
+		const { navigator } = makeFakeNavigator();
+		const handle = await registerWebMcpServer(stubConfig(navigator));
+		cleanup = () => handle.unregister();
+		expect(handle.surface).toBe('navigator');
+		expect(handle.viaPolyfill).toBe(false);
+	});
+
+	it('meldet surface document, wenn document.modelContext trägt', async () => {
+		const dokument = makeFakeNavigator();
+		const handle = await registerWebMcpServer({
+			...stubConfig(makeFakeNavigator().navigator),
+			documentProvider: () => dokument.navigator as never
+		});
+		cleanup = () => handle.unregister();
+		expect(handle.surface).toBe('document');
+	});
+
+	it('meldet viaPolyfill true, wenn erst der Polyfill die API stellt', async () => {
+		const nav: { modelContext?: FakeModelContext } = {};
+		const handle = await registerWebMcpServer({
+			...stubConfig({ modelContext: undefined as never }),
+			navigatorProvider: () => nav as never,
+			polyfillLoader: async () => {
+				nav.modelContext = makeFakeNavigator().mc;
+			}
+		});
+		cleanup = () => handle.unregister();
+		expect(handle.viaPolyfill).toBe(true);
+		expect(handle.surface).toBe('navigator');
+	});
+
 	it('bevorzugt document.modelContext, wenn vorhanden', async () => {
 		const dokument = makeFakeNavigator();
 		const alt = makeFakeNavigator();
@@ -107,7 +225,7 @@ describe('registerWebMcpServer', () => {
 		};
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
-		expect(dokument.mc.registered.length).toBe(9);
+		expect(dokument.mc.registered.length).toBe(11);
 		expect(alt.mc.registered.length).toBe(0);
 	});
 
@@ -119,7 +237,7 @@ describe('registerWebMcpServer', () => {
 		};
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
-		expect(mc.registered.length).toBe(9);
+		expect(mc.registered.length).toBe(11);
 	});
 
 	it('findet document.modelContext auch, wenn erst der Polyfill es bereitstellt', async () => {
@@ -137,7 +255,7 @@ describe('registerWebMcpServer', () => {
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
 		expect(polyfillLoader).toHaveBeenCalled();
-		expect(dokument.modelContext?.registered.length).toBe(9);
+		expect(dokument.modelContext?.registered.length).toBe(11);
 	});
 
 	it('lädt KEIN Polyfill wenn navigator.modelContext bereits da ist', async () => {
@@ -170,6 +288,12 @@ function stubConfig(navigator: { modelContext: FakeModelContext }): WebMcpServer
 		defaultLocale: () => 'de',
 		fetchElections: async () => [],
 		fetchWahlResultsAtPoint: async () => null,
-		fetchVotingDistrictGeometry: async () => null
+		fetchVotingDistrictGeometry: async () => null,
+		applyFinderWeights: async () => {
+			throw new Error('not used in registration smoke');
+		},
+		readFinderState: () => {
+			throw new Error('not used in registration smoke');
+		}
 	};
 }

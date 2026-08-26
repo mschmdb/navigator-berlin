@@ -19,3 +19,10 @@ export {
 	type VotingDistrictGeometryDeps,
 	type ElectionListEntry
 } from './wahl/index.js';
+export {
+	createSetFinderWeightsTool,
+	createGetFinderStateTool,
+	type SetFinderWeightsDeps,
+	type GetFinderStateDeps,
+	type ApplyFinderWeightsResult
+} from './finder/index.js';

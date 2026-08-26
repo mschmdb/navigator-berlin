@@ -68,6 +68,7 @@ export function createGetLayerMetadataTool(deps: GetLayerMetadataDeps): WebMcpTo
 		name: 'get_layer_metadata',
 		description:
 			'Return rich metadata for a single data layer by slug: source URL, license, license URL, geometry type, feature count, last update, and methodology summary. The slug must match a manifest layer-slug exactly (e.g. mss-gesamtindex-2025, laerm-2023, klima-pet-2022) — semantic guesses like "social-status" or "noise" will fail. Use list_layers_at_point or cross_layer_query to discover valid slugs from a location first. On unknown slug, returns { error: "layer_not_found", slug, hint } instead of throwing.',
+		readOnly: true,
 		inputSchema: LAYER_METADATA_INPUT_JSON_SCHEMA,
 		outputSchema: LAYER_METADATA_OUTPUT_JSON_SCHEMA,
 		handler: async (raw) => {

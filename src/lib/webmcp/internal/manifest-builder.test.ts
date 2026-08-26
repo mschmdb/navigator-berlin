@@ -15,7 +15,10 @@ describe('buildWebMcpManifest', () => {
 	});
 
 	it('exportiert genau 9 Tools', () => {
-		expect(manifest.tools).toHaveLength(9);
+		expect(manifest.tools).toHaveLength(11);
+		const namen = manifest.tools.map((t) => t.name);
+		expect(namen).toContain('set_finder_weights');
+		expect(namen).toContain('get_finder_state');
 	});
 
 	it('alle Tool-Names sind snake_case + erwartete Liste', () => {
@@ -29,8 +32,10 @@ describe('buildWebMcpManifest', () => {
 				'get_kiez_profile',
 				'get_layer_metadata',
 				'get_voting_district_geometry',
+				'get_finder_state',
 				'list_elections',
-				'list_layers_at_point'
+				'list_layers_at_point',
+				'set_finder_weights'
 			].sort()
 		);
 		for (const name of names) {

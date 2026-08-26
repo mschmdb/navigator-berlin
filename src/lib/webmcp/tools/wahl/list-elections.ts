@@ -40,6 +40,7 @@ export function createListElectionsTool(deps: ListElectionsDeps): WebMcpToolDefi
 		name: 'list_elections',
 		description:
 			'List all Berlin elections available in navigator.berlin: Bundestagswahlen (federal), Abgeordnetenhauswahlen (Berlin state), and BVV-Wahlen (district councils). For each: slug like "2025-btw-zweitstimme" or "2023-bvv", year, election type (btw/agh/bvv), Stimmtyp (erststimme/zweitstimme/einstimme), whether it is a repeat election with parent slug, whether per-Stimmbezirk geometry is available (needed for get_voting_district_geometry), source authority, and license. Slugs from this tool are the canonical input for get_election_result and compare_elections.',
+		readOnly: true,
 		inputSchema: LIST_ELECTIONS_INPUT_JSON_SCHEMA,
 		outputSchema: LIST_ELECTIONS_OUTPUT_JSON_SCHEMA,
 		handler: async (raw) => {

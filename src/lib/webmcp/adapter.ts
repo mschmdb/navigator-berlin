@@ -28,8 +28,13 @@ import {
 	createGetElectionResultTool,
 	createCompareElectionsTool,
 	createGetVotingDistrictGeometryTool,
-	type ElectionListEntry
+	createSetFinderWeightsTool,
+	createGetFinderStateTool,
+	type ElectionListEntry,
+	type ApplyFinderWeightsResult
 } from './tools/index.js';
+import type { FinderWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import type { FinderBridgeSnapshot } from '$lib/state/finder-bridge.svelte.js';
 import type { WebMcpToolDefinition } from './internal/tool-types.js';
 import type { GeocodeSuggestion, LayerHit, LayerMetadata, KiezProfile, Locale } from '$lib/data';
 import type { LayerMethodology } from '$lib/data/layer-methodology.js';
@@ -44,9 +49,10 @@ export interface ModelContextSurface {
 			description?: string;
 			inputSchema?: Readonly<Record<string, unknown>>;
 			execute: (args: unknown) => Promise<unknown>;
+			annotations?: { readOnlyHint?: boolean; untrustedContentHint?: boolean };
 		},
 		options?: { signal?: AbortSignal }
-	): void;
+	): void | Promise<void>;
 }
 
 export interface NavigatorWithModelContext {
@@ -86,11 +92,23 @@ export interface WebMcpServerConfig {
 		districtId: string,
 		year: number
 	) => Promise<JsonObject | null>;
+	/** Finder-Kollaboration (WebMCP Challenge 2026): Agent stellt Regler. */
+	readonly applyFinderWeights: (
+		partial: Partial<FinderWeights>,
+		party?: string
+	) => Promise<ApplyFinderWeightsResult>;
+	readonly readFinderState: () => FinderBridgeSnapshot;
 }
 
 export interface WebMcpServerHandle {
 	readonly specVersion: string;
 	readonly toolNames: readonly string[];
+	/** Auf welcher Surface die Tools registriert wurden. */
+	readonly surface: 'document' | 'navigator';
+	/** true, wenn erst der @mcp-b/global-Polyfill die API bereitstellte. */
+	readonly viaPolyfill: boolean;
+	/** Einzelne abgelehnte Registrierungen (leer = alles angenommen). */
+	readonly failedTools: readonly { name: string; reason: string }[];
 	unregister(): void;
 }
 
@@ -104,17 +122,38 @@ export async function loadMcpBGlobalPolyfill(target: NavigatorWithModelContext):
 	mod.initializeWebModelContext({ autoInitialize: true });
 }
 
+function serializeReason(grund: unknown): string {
+	if (grund instanceof Error) return grund.message;
+	if (typeof grund === 'string') return grund;
+	// DOMException-artige Objekte tragen name/message NICHT enumerierbar,
+	// JSON.stringify liefert dann '{}'. Explizit ablesen.
+	if (grund && typeof grund === 'object') {
+		const { name, message } = grund as { name?: unknown; message?: unknown };
+		if (typeof name === 'string' || typeof message === 'string') {
+			return [name, message].filter((t) => typeof t === 'string' && t).join(': ');
+		}
+	}
+	try {
+		const json = JSON.stringify(grund);
+		if (json && json !== '{}') return json;
+	} catch {
+		/* fällt auf String() zurück */
+	}
+	return String(grund);
+}
+
 function registerToolOnContext(
 	mc: ModelContextSurface,
 	tool: WebMcpToolDefinition,
 	signal: AbortSignal
-): void {
-	mc.registerTool(
+): void | Promise<void> {
+	return mc.registerTool(
 		{
 			name: tool.name,
 			description: tool.description,
 			inputSchema: tool.inputSchema,
-			execute: (args) => tool.handler(args)
+			execute: (args) => tool.handler(args),
+			annotations: { readOnlyHint: tool.readOnly === true }
 		},
 		{ signal }
 	);
@@ -126,10 +165,12 @@ export async function registerWebMcpServer(
 	const navigator = config.navigatorProvider();
 	const dokument = config.documentProvider?.() ?? {};
 	let mc = dokument.modelContext ?? navigator.modelContext;
+	const viaPolyfill = !mc;
 	if (!mc) {
 		await config.polyfillLoader(navigator);
 		mc = dokument.modelContext ?? navigator.modelContext;
 	}
+	const surface: 'document' | 'navigator' = dokument.modelContext ? 'document' : 'navigator';
 	if (!mc) {
 		throw new Error(
 			'Neither document.modelContext nor navigator.modelContext is available after polyfill load. WebMCP integration aborted.'
@@ -153,17 +194,33 @@ export async function registerWebMcpServer(
 		createListElectionsTool({ fetchElections: config.fetchElections }),
 		createGetElectionResultTool({ fetchResultsAtPoint: config.fetchWahlResultsAtPoint }),
 		createCompareElectionsTool({ fetchResultsAtPoint: config.fetchWahlResultsAtPoint }),
-		createGetVotingDistrictGeometryTool({ fetchGeometry: config.fetchVotingDistrictGeometry })
+		createGetVotingDistrictGeometryTool({ fetchGeometry: config.fetchVotingDistrictGeometry }),
+		createSetFinderWeightsTool({ applyFinderWeights: config.applyFinderWeights }),
+		createGetFinderStateTool({ readFinderState: config.readFinderState })
 	];
 
 	const controller = new AbortController();
-	for (const tool of tools) {
-		registerToolOnContext(mc, tool, controller.signal);
+	// Spec: registerTool liefert Promise<undefined>, also jede Registrierung
+	// abwarten. Resilient statt alles-oder-nichts (26.08.): einzelne
+	// Ablehnungen (z.B. Permission-Modelle nativer Browser) landen lesbar
+	// in failedTools; erst wenn ALLE Tools abgelehnt werden, wirft der Mount.
+	const ergebnisse = await Promise.allSettled(
+		tools.map((tool) => Promise.resolve(registerToolOnContext(mc, tool, controller.signal)))
+	);
+	const failedTools = ergebnisse.flatMap((r, i) =>
+		r.status === 'rejected' ? [{ name: tools[i].name, reason: serializeReason(r.reason) }] : []
+	);
+	if (failedTools.length === tools.length) {
+		const erster = failedTools[0];
+		throw new Error(`registerTool('${erster.name}') rejected: ${erster.reason}`);
 	}
 
 	return {
 		specVersion: WEBMCP_SPEC_VERSION,
 		toolNames: tools.map((t) => t.name),
+		surface,
+		viaPolyfill,
+		failedTools,
 		unregister: () => controller.abort()
 	};
 }
