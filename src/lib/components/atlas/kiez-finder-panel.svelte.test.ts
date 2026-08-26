@@ -306,6 +306,21 @@ describe('kiez-finder-panel', () => {
 		resetFinderBridgeForTests();
 	});
 
+	// Prod-Race 26.08.: auf /explore mountet das Panel, bevor die
+	// MapLibre-Instanz steht; Agent-Gewichte waren da, aber niemand malte,
+	// als die Map später kam.
+	it('malt, wenn die Map erst nach den Agent-Gewichten bereit wird', async () => {
+		resetFinderBridgeForTests();
+		requestAgentWeights({ ruheLuft: 2 });
+		const map = fakeMap();
+		const { result } = await renderPanel({ map: null });
+		await result.rerender({ map: map.api });
+		await vi.waitFor(() => {
+			expect(map.api.getLayer('navigator-finder-fill')).toBeTruthy();
+		});
+		resetFinderBridgeForTests();
+	});
+
 	it('meldet Panel-Sichtbarkeit an die Bridge', async () => {
 		resetFinderBridgeForTests();
 		const { result } = await renderPanel();
