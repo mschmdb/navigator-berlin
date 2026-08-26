@@ -9,6 +9,7 @@
  * sich, wer zuletzt gedreht hat: Mensch oder Agent.
  */
 
+import { untrack } from 'svelte';
 import {
 	neutralWeights,
 	type FinderWeights
@@ -48,6 +49,8 @@ let topMatches = $state<readonly FinderTopMatch[]>([]);
 let panelActive = $state(false);
 let party = $state<string | null>(null);
 let pendingAgentUpdate = $state<PendingAgentUpdate | null>(null);
+/** Panel-Sichtbarkeit in ANDEREN Kontexten (Broadcast-empfangen). */
+let remotePanelActive = $state(false);
 
 /**
  * Panel → Bridge: nach jedem Paint den sichtbaren Zustand spiegeln.
@@ -66,6 +69,7 @@ export function publishUserFinderState(
 		lastChangedBy = 'user';
 		changedAt = Date.now();
 	}
+	sendeState();
 }
 
 /** Tool → Bridge: partielle Gewichte (und optional Partei) mergen. */
@@ -79,6 +83,7 @@ export function requestAgentWeights(
 	pendingAgentUpdate = { weights: merged, party: agentParty ?? null };
 	lastChangedBy = 'agent';
 	changedAt = Date.now();
+	sende({ typ: 'agent-update', weights: merged, party: agentParty ?? null });
 	return merged;
 }
 
@@ -96,6 +101,7 @@ export function peekPendingAgentWeights(): PendingAgentUpdate | null {
 
 export function setFinderPanelActive(active: boolean): void {
 	panelActive = active;
+	sendeState();
 }
 
 export function readFinderBridge(): FinderBridgeSnapshot {
@@ -105,8 +111,75 @@ export function readFinderBridge(): FinderBridgeSnapshot {
 		lastChangedBy,
 		changedAt,
 		topMatches: [...topMatches],
-		panelActive
+		panelActive: panelActive || remotePanelActive
 	};
+}
+
+/**
+ * Cross-Kontext-Sync (26.08., "Gate 2"): Der ChatGPT-Agent arbeitet auf
+ * einer eigenen Instanz der Seite. BroadcastChannel trägt Agent-Updates
+ * in alle same-origin-Kontexte (der sichtbare Tab wendet sie an, die
+ * Karte färbt sich vor den Augen des Menschen) und den Panel-Zustand
+ * samt Top-Liste zurück in den Agenten-Kontext. BroadcastChannel stellt
+ * eigene Nachrichten nie an den Sender zu, Loops sind ausgeschlossen.
+ */
+type SyncNachricht =
+	| { typ: 'agent-update'; weights: FinderWeights; party: string | null }
+	| {
+			typ: 'state';
+			weights: FinderWeights;
+			party: string | null;
+			topMatches: readonly FinderTopMatch[];
+			lastChangedBy: FinderChangeSource | null;
+			changedAt: number | null;
+			panelActive: boolean;
+	  };
+
+const KANAL_NAME = 'navigator-finder-bridge';
+let kanal: BroadcastChannel | null = null;
+
+function sende(nachricht: SyncNachricht): void {
+	// $state-Proxies sind nicht structured-cloneable: erst zu Plain-Daten.
+	kanal?.postMessage($state.snapshot(nachricht));
+}
+
+function empfange(nachricht: SyncNachricht): void {
+	if (nachricht.typ === 'agent-update') {
+		weights = { ...nachricht.weights };
+		if (nachricht.party !== null) party = nachricht.party;
+		pendingAgentUpdate = { weights: { ...nachricht.weights }, party: nachricht.party };
+		lastChangedBy = 'agent';
+		changedAt = Date.now();
+		return;
+	}
+	weights = { ...nachricht.weights };
+	party = nachricht.party;
+	topMatches = [...nachricht.topMatches];
+	lastChangedBy = nachricht.lastChangedBy;
+	changedAt = nachricht.changedAt;
+	remotePanelActive = nachricht.panelActive;
+}
+
+if (typeof BroadcastChannel !== 'undefined') {
+	kanal = new BroadcastChannel(KANAL_NAME);
+	kanal.onmessage = (e: MessageEvent<SyncNachricht>) => empfange(e.data);
+}
+
+function sendeState(): void {
+	// untrack: Broadcasts dürfen aufrufende Effects nicht auf den gesamten
+	// Bridge-State abonnieren, sonst loopt das Panel-Sichtbarkeits-Effect
+	// mit jedem Paint (effect_update_depth_exceeded).
+	untrack(() => {
+		sende({
+			typ: 'state',
+			weights: { ...weights },
+			party,
+			topMatches: [...topMatches],
+			lastChangedBy,
+			changedAt,
+			panelActive
+		});
+	});
 }
 
 export function resetFinderBridgeForTests(): void {
@@ -116,5 +189,6 @@ export function resetFinderBridgeForTests(): void {
 	changedAt = null;
 	topMatches = [];
 	panelActive = false;
+	remotePanelActive = false;
 	pendingAgentUpdate = null;
 }
