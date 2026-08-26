@@ -70,7 +70,7 @@ export const AUTHORITIES = {
 		de: 'Berliner Wasserbetriebe'
 	},
 	bvg: {
-		de: 'BVG · Berliner Verkehrsbetriebe (GTFS-Export VBB)'
+		de: 'BVG · Berliner Verkehrsbetriebe · Halte und Netze aus OpenStreetMap'
 	},
 	sbahn: {
 		de: 'S-Bahn Berlin GmbH (DB-Konzern) · Routen aus OpenStreetMap-Relationen'

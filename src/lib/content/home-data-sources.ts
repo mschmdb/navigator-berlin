@@ -25,12 +25,12 @@ export const HOME_DATA_SOURCES: readonly HomeDataSource[] = [
 	},
 	{
 		name: 'OpenStreetMap',
-		description: 'Adress-Geocoding, POI-Daten, Routing-Graph.',
+		description: 'Adress-Geocoding, POI-Daten, ÖPNV-Halte und -Netze.',
 		license: 'ODbL 1.0'
 	},
 	{
-		name: 'BVG · GTFS-VBB',
-		description: 'ÖPNV-Halte aus dem GTFS-Export des VBB.',
+		name: 'DWD · Climate Data Center',
+		description: 'Historische Klima-Zeitreihen der Berliner Wetterstationen.',
 		license: 'CC BY 4.0'
 	},
 	{

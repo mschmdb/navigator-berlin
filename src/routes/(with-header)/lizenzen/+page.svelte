@@ -15,6 +15,8 @@
 		{ id: 'daten-lizenzen', label: 'Daten-Lizenzen' },
 		{ id: 'wahldaten', label: 'Wahldaten' },
 		{ id: 'demografie', label: 'Demografie' },
+		{ id: 'kriminalitaetsatlas', label: 'Kriminalitätsatlas' },
+		{ id: 'klimadaten-dwd', label: 'Klimadaten (DWD)' },
 		{ id: 'entitaets-verweise', label: 'Entitäts-Verweise' },
 		{ id: 'software', label: 'Software' },
 		{ id: 'schriften', label: 'Schriften' },
@@ -224,6 +226,11 @@
 				</ul>
 			</div>
 		{/each}
+
+		<p class="font-serif text-sm text-ink-muted">
+			Zusätzlich fließt die Strategische Lärmkarte 2022 (Umweltatlas, ua_stratlaerm_2022, Lizenz
+			Datenlizenz Deutschland Zero 2.0) als Build-Aggregat je Planungsraum in den Kiez-Score ein.
+		</p>
 	</section>
 
 	<section id="wahldaten" aria-labelledby="wahldaten-h" class="flex flex-col gap-3">
@@ -307,6 +314,75 @@
 						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						daten.berlin.de
+					</a>
+				</dd>
+			</div>
+		</dl>
+	</section>
+
+	<section
+		id="kriminalitaetsatlas"
+		aria-labelledby="kriminalitaetsatlas-h"
+		class="flex flex-col gap-3"
+	>
+		<h2 id="kriminalitaetsatlas-h" class="font-serif text-2xl text-ink">Kriminalitätsatlas</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Fallzahlen und Häufigkeitszahlen je LOR-Bezirksregion fließen als Build-Aggregat in den
+			Kiez-Score ein, nicht als Geo-Layer im Manifest.
+		</p>
+		<dl class="flex flex-col gap-3">
+			<div class="border border-rule p-4">
+				<dt class="font-sans text-base font-semibold text-ink">Kriminalitätsatlas Berlin</dt>
+				<dd class="mt-1 font-serif text-sm text-ink-muted">
+					Straftaten-Fallzahlen und Häufigkeitszahlen 2016 bis 2025 der Polizei Berlin,
+					geocodiert auf LOR-Ebene. Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+				</dd>
+				<dd class="mt-2 font-mono text-xs">
+					<a
+						href="https://www.kriminalitaetsatlas.berlin.de/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
+					>
+						kriminalitaetsatlas.berlin.de
+					</a>
+				</dd>
+			</div>
+		</dl>
+		<p class="font-mono text-xs text-ink-muted">
+			Methodik:
+			<a
+				href="/methodik/kiez-score"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
+			>
+				/methodik/kiez-score
+			</a>
+		</p>
+	</section>
+
+	<section id="klimadaten-dwd" aria-labelledby="klimadaten-dwd-h" class="flex flex-col gap-3">
+		<h2 id="klimadaten-dwd-h" class="font-serif text-2xl text-ink">Klimadaten (DWD)</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">
+			Historische Sommertage- und Hitzetage-Zeitreihen von vier Berliner Wetterstationen
+			(Dahlem, Tempelhof, Buch, Brandenburg) liegen als Build-Aggregat im Hitze-Kontext.
+		</p>
+		<dl class="flex flex-col gap-3">
+			<div class="border border-rule p-4">
+				<dt class="font-sans text-base font-semibold text-ink">
+					Deutscher Wetterdienst · Climate Data Center
+				</dt>
+				<dd class="mt-1 font-serif text-sm text-ink-muted">
+					Tageswerte der Stationsmessungen (daily KL, historical). Lizenz CC BY 4.0,
+					Namensnennung Deutscher Wetterdienst.
+				</dd>
+				<dd class="mt-2 font-mono text-xs">
+					<a
+						href="https://opendata.dwd.de/climate_environment/CDC/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
+					>
+						opendata.dwd.de/climate_environment/CDC
 					</a>
 				</dd>
 			</div>
