@@ -12,10 +12,10 @@ describe('webmcp-manifest.json endpoint', () => {
 		expect(response.headers.get('Content-Type')).toContain('application/json');
 	});
 
-	it('Response-Body enthält 9 Tools + 3 Prompts', async () => {
+	it('Response-Body enthält 11 Tools + 3 Prompts', async () => {
 		const response = await GET({} as Parameters<typeof GET>[0]);
 		const body = JSON.parse(await response.text());
-		expect(body.tools).toHaveLength(9);
+		expect(body.tools).toHaveLength(11);
 		expect(body.prompts).toHaveLength(3);
 		expect(body.spec_version).toBeDefined();
 	});
