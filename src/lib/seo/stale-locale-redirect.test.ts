@@ -43,4 +43,22 @@ describe('staleLocaleRedirectTarget', () => {
 		expect(staleLocaleRedirectTarget('/DE/kiez/heerstrasse')).toBe('/kiez/heerstrasse');
 		expect(staleLocaleRedirectTarget('/Es/kiez/heerstrasse')).toBe('/kiez/heerstrasse');
 	});
+
+	it('never returns an off-site target (scheme-relative remainder)', () => {
+		// /de//evil.com would otherwise yield //evil.com, an absolute redirect off-origin
+		expect(staleLocaleRedirectTarget('/de//evil.com/login')).toBe('/evil.com/login');
+		expect(staleLocaleRedirectTarget('/en//attacker.example')).toBe('/attacker.example');
+		expect(staleLocaleRedirectTarget('/fr///triple.example')).toBe('/triple.example');
+	});
+
+	it('collapses backslash and mixed-slash tricks to a single leading slash', () => {
+		// browsers treat \ as / in URLs; /de/\evil.com must not escape the origin
+		expect(staleLocaleRedirectTarget('/de/\\evil.com')).toBe('/evil.com');
+		expect(staleLocaleRedirectTarget('/de/\\\\evil.com')).toBe('/evil.com');
+		expect(staleLocaleRedirectTarget('/de//\\evil.com')).toBe('/evil.com');
+	});
+
+	it('keeps a normal single-slash deep path intact', () => {
+		expect(staleLocaleRedirectTarget('/de/kiez/alt-treptow')).toBe('/kiez/alt-treptow');
+	});
 });
