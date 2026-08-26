@@ -321,6 +321,37 @@ describe('kiez-finder-panel', () => {
 		resetFinderBridgeForTests();
 	});
 
+	// Prod-Bug 26.08.: Agent-Browser (ChatGPT Atlas, Automations-Chrome)
+	// fahren die Seite in einem versteckten Tab. Dort feuert
+	// requestAnimationFrame nie, und die Top-Liste blieb dauerhaft leer.
+	it('liefert Top-Treffer auch, wenn requestAnimationFrame nie feuert', async () => {
+		resetFinderBridgeForTests();
+		const echtesRaf = globalThis.requestAnimationFrame;
+		globalThis.requestAnimationFrame = (() => 1) as typeof globalThis.requestAnimationFrame;
+		try {
+			requestAgentWeights({ ruheLuft: 2 });
+			await renderPanel();
+			await vi.waitFor(() => {
+				expect(readFinderBridge().topMatches.length).toBeGreaterThan(0);
+			});
+		} finally {
+			globalThis.requestAnimationFrame = echtesRaf;
+			resetFinderBridgeForTests();
+		}
+	});
+
+	// Die Rangliste ist eine reine Funktion über die Finder-Kollektion; sie
+	// darf nicht daran hängen, dass die MapLibre-Instanz bereit ist.
+	it('liefert Top-Treffer auch ohne Map-Instanz', async () => {
+		resetFinderBridgeForTests();
+		requestAgentWeights({ ruheLuft: 2 });
+		await renderPanel({ map: null });
+		await vi.waitFor(() => {
+			expect(readFinderBridge().topMatches.length).toBeGreaterThan(0);
+		});
+		resetFinderBridgeForTests();
+	});
+
 	it('meldet Panel-Sichtbarkeit an die Bridge', async () => {
 		resetFinderBridgeForTests();
 		const { result } = await renderPanel();

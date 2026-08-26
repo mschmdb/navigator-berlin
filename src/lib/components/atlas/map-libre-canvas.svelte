@@ -76,8 +76,11 @@
 		if (!container) return;
 		let cancelled = false;
 		const TIMEOUT_MS = 5000;
+		// In einem versteckten Tab (Agent-Browser) rendert MapLibre keinen
+		// Frame, `load` bleibt aus und die Meldung wäre ein Fehlalarm über
+		// einer intakten Karte. Dort erst prüfen, wenn der Tab sichtbar wird.
 		const timer = setTimeout(() => {
-			if (!isReady && !cancelled) {
+			if (!isReady && !cancelled && !document.hidden) {
 				loadError = 'Karte konnte nicht geladen werden. Bitte Seite neu laden.';
 			}
 		}, TIMEOUT_MS);
@@ -131,6 +134,9 @@
 					void registerPinIcons(pinMap, PIN_ICON_MAP, (token) => COLORS[token]);
 					void registerScoreDots(pinMap, DOT_CAPABLE_SLUGS);
 					isReady = true;
+					// Lud die Karte nach dem Timeout doch noch, verschwindet die
+					// Fehlermeldung wieder statt über der Karte kleben zu bleiben.
+					loadError = null;
 					onLoad?.(map);
 				});
 				// Fallback fuer den Fall, dass Symbol-Layer vor Sprite-Registrierung referenziert wird.
