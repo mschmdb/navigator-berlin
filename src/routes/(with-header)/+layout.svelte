@@ -26,7 +26,7 @@
 	const offAtlas = $derived(!page.url.pathname.startsWith('/explore'));
 	const atlasCtaHref = $derived(offAtlas ? '/explore' : undefined);
 
-	const geocode = async (q: string): Promise<GeocodeSuggestion[]> => geocodeAddress({ q }).run();
+	const geocode = async (q: string): Promise<GeocodeSuggestion[]> => await geocodeAddress({ q });
 
 	const selection = provideAddressSelection();
 	const ui = getUiState();

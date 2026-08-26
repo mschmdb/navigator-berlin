@@ -231,7 +231,7 @@
 					const s = await reverseGeocodeAddress({
 						lat: PARISER_PLATZ.lat,
 						lng: PARISER_PLATZ.lng
-					}).run();
+					});
 					// addresstype steuert nur den Fly-Zoom: für den Default-Einstieg
 					// bewusst Übersicht statt Gebäude-Zoom.
 					selection.set({ ...(s ?? PARISER_PLATZ_FALLBACK), addresstype: 'city_district' });
@@ -820,7 +820,7 @@
 		const pinSlug = detectPinSlugAtPoint(lngLat);
 		if (pinSlug) ui.scrollToLayerSlug = pinSlug;
 		try {
-			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] }).run();
+			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] });
 			if (suggestion) {
 				await placeMarker([suggestion.lng, suggestion.lat], suggestion.displayName);
 				const bezirkPart = suggestion.bezirk ? `, Bezirk ${suggestion.bezirk}` : '';
@@ -945,7 +945,7 @@
 
 	async function geocodeForCompare(q: string): Promise<GeocodeSuggestion[]> {
 		try {
-			return await geocodeAddress({ q }).run();
+			return await geocodeAddress({ q });
 		} catch {
 			return [];
 		}
@@ -1066,7 +1066,7 @@
 		pendingReplaceLngLat = null;
 		if (!lngLat) return;
 		try {
-			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] }).run();
+			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] });
 			if (!suggestion) return;
 			if (target === 'a') {
 				selection.set(suggestion);
@@ -1102,7 +1102,7 @@
 				});
 			});
 			const { latitude: lat, longitude: lng } = pos.coords;
-			const suggestion = await reverseGeocodeAddress({ lat, lng }).run();
+			const suggestion = await reverseGeocodeAddress({ lat, lng });
 			if (suggestion) {
 				selection.set(suggestion);
 				return;
