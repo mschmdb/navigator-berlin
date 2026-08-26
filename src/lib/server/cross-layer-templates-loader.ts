@@ -41,6 +41,3 @@ export async function loadCrossLayerTemplates(): Promise<LoadedTemplateBundle[]>
 	return cache;
 }
 
-export function _resetCrossLayerTemplatesCache(): void {
-	cache = null;
-}

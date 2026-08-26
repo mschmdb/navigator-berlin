@@ -1,8 +1,12 @@
 # navigator.berlin
 
-Cross-Layer Berlin Atlas — adressgenaue Multi-Layer-Inspektion (Klima, Lärm, Mobilität, Heritage, demografische Daten) auf einer offenen Karte.
+Cross-Layer Berlin Atlas: adressgenaue Multi-Layer-Inspektion (Klima, Lärm, Mobilität, Heritage, demografische Daten) auf einer offenen Karte.
 
 GitHub: <https://github.com/mschmdb/navigator-berlin>
+
+![Kiez-Finder: Regler gewichten neun Kriterien, die Karte färbt alle 542 Planungsräume live](static/berlin-navigator-kiez-finder.webp)
+
+![Multi-Layer-Inspektion: mehrere Datenebenen an einer Adresse übereinandergelegt](static/berlin-navigator-multilayer.webp)
 
 ## Setup
 

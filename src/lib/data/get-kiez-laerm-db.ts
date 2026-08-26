@@ -13,11 +13,6 @@ interface LaermDbPayload {
 let cache: LaermDbPayload | null = null;
 let inflight: Promise<LaermDbPayload | null> | null = null;
 
-export function _resetLaermDbCache(): void {
-	cache = null;
-	inflight = null;
-}
-
 async function loadPayload(fetchFn: typeof fetch): Promise<LaermDbPayload | null> {
 	if (cache) return cache;
 	if (inflight) return inflight;
