@@ -19,7 +19,15 @@
 			const { mountWebMcpServer } = await import('$lib/webmcp/mount.js');
 			handle = await mountWebMcpServer();
 		} catch (e) {
-			fehler = e instanceof Error ? e.message : String(e);
+			if (e instanceof Error) {
+				fehler = e.message;
+			} else {
+				try {
+					fehler = JSON.stringify(e);
+				} catch {
+					fehler = String(e);
+				}
+			}
 		}
 		// Zustand NACH dem Mount: bei viaPolyfill=true stammt die Surface
 		// vom Polyfill, nicht vom Browser.

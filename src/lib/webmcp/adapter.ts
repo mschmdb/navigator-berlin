@@ -119,6 +119,16 @@ export async function loadMcpBGlobalPolyfill(target: NavigatorWithModelContext):
 	mod.initializeWebModelContext({ autoInitialize: true });
 }
 
+function serializeReason(grund: unknown): string {
+	if (grund instanceof Error) return grund.message;
+	if (typeof grund === 'string') return grund;
+	try {
+		return JSON.stringify(grund);
+	} catch {
+		return String(grund);
+	}
+}
+
 function registerToolOnContext(
 	mc: ModelContextSurface,
 	tool: WebMcpToolDefinition,
@@ -179,8 +189,18 @@ export async function registerWebMcpServer(
 	const controller = new AbortController();
 	// Spec: registerTool liefert Promise<undefined>. Erst wenn der Browser
 	// alle Registrierungen angenommen hat, gilt der Server als gemountet;
-	// eine Ablehnung soll den Aufrufer erreichen statt still zu versanden.
-	await Promise.all(tools.map((tool) => registerToolOnContext(mc, tool, controller.signal)));
+	// eine Ablehnung soll den Aufrufer erreichen statt still zu versanden,
+	// und zwar mit Tool-Name und lesbarem Grund (native Implementierungen
+	// rejecten teils mit Plain-Objects, die als [object Object] enden).
+	await Promise.all(
+		tools.map(async (tool) => {
+			try {
+				await registerToolOnContext(mc, tool, controller.signal);
+			} catch (grund) {
+				throw new Error(`registerTool('${tool.name}') rejected: ${serializeReason(grund)}`);
+			}
+		})
+	);
 
 	return {
 		specVersion: WEBMCP_SPEC_VERSION,

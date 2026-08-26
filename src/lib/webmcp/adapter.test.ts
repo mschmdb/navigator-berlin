@@ -128,6 +128,21 @@ describe('registerWebMcpServer', () => {
 		expect(aufgeloest).toBe(11);
 	});
 
+	it('benennt bei Ablehnung Tool-Name und serialisierten Grund', async () => {
+		const mc = {
+			registered: [] as unknown[],
+			registerTool(tool: { name: string }) {
+				if (tool.name === 'get_kiez_profile') {
+					return Promise.reject({ code: 'PermissionDenied', detail: 'site tools disabled' });
+				}
+				this.registered.push(tool);
+			}
+		};
+		await expect(registerWebMcpServer(stubConfig({ modelContext: mc as never }))).rejects.toThrow(
+			/get_kiez_profile.*PermissionDenied/
+		);
+	});
+
 	it('reicht readOnlyHint-Annotations an registerTool durch', async () => {
 		const annotationen: Record<string, unknown> = {};
 		const mc = {
