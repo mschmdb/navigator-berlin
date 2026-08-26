@@ -24,7 +24,7 @@ export function createGetFinderStateTool(deps: GetFinderStateDeps): WebMcpToolDe
 	return {
 		name: 'get_finder_state',
 		description:
-			'Read the current state of the interactive Kiez-Finder on navigator.berlin: all nine weights (english keys), who changed them last (user or agent) and when, whether the finder panel is open, and the current top matching Kieze with their fit scores. Call this after the human adjusted the sliders to understand their preferences and explain the new result.',
+			'Read the current state of the interactive Kiez-Finder on navigator.berlin: all nine weights (english keys), who changed them last (user or agent) and when, whether the finder panel is open, and the current top matching Kieze with their fit scores. Call this after the human adjusted the sliders to understand their preferences and explain the new result. The fit score (0-100) already reflects every active weight including voting similarity: answer from top_matches directly, and only verify with other tools if the user explicitly asks for details.',
 		readOnly: true,
 		inputSchema: GET_FINDER_STATE_INPUT_JSON_SCHEMA,
 		outputSchema: GET_FINDER_STATE_OUTPUT_JSON_SCHEMA,
