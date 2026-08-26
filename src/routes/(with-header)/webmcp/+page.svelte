@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import { buildBreadcrumbList } from '$lib/seo/index.js';
+	import WebmcpDiagnose from '$lib/components/webmcp-diagnose.svelte';
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
@@ -34,6 +35,8 @@
 		bekommt Zahl, Quelle und Lizenz zurück. navigator.berlin liefert seit Mai 2026 neun solche
 		Tools.
 	</p>
+
+	<WebmcpDiagnose />
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Status der Spec</h2>

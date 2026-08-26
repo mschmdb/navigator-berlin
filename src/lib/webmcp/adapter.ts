@@ -101,6 +101,10 @@ export interface WebMcpServerConfig {
 export interface WebMcpServerHandle {
 	readonly specVersion: string;
 	readonly toolNames: readonly string[];
+	/** Auf welcher Surface die Tools registriert wurden. */
+	readonly surface: 'document' | 'navigator';
+	/** true, wenn erst der @mcp-b/global-Polyfill die API bereitstellte. */
+	readonly viaPolyfill: boolean;
 	unregister(): void;
 }
 
@@ -136,10 +140,12 @@ export async function registerWebMcpServer(
 	const navigator = config.navigatorProvider();
 	const dokument = config.documentProvider?.() ?? {};
 	let mc = dokument.modelContext ?? navigator.modelContext;
+	const viaPolyfill = !mc;
 	if (!mc) {
 		await config.polyfillLoader(navigator);
 		mc = dokument.modelContext ?? navigator.modelContext;
 	}
+	const surface: 'document' | 'navigator' = dokument.modelContext ? 'document' : 'navigator';
 	if (!mc) {
 		throw new Error(
 			'Neither document.modelContext nor navigator.modelContext is available after polyfill load. WebMCP integration aborted.'
@@ -176,6 +182,8 @@ export async function registerWebMcpServer(
 	return {
 		specVersion: WEBMCP_SPEC_VERSION,
 		toolNames: tools.map((t) => t.name),
+		surface,
+		viaPolyfill,
 		unregister: () => controller.abort()
 	};
 }

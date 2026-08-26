@@ -106,6 +106,38 @@ describe('registerWebMcpServer', () => {
 	// WebMCP-Challenge 26.08.: die Spec ist von navigator.modelContext zu
 	// document.modelContext gewandert (ChatGPT-Browser, Chrome 149). Der
 	// Adapter bevorzugt document und fällt auf navigator + Polyfill zurück.
+	it('meldet im Handle Surface und Polyfill-Status', async () => {
+		const { navigator } = makeFakeNavigator();
+		const handle = await registerWebMcpServer(stubConfig(navigator));
+		cleanup = () => handle.unregister();
+		expect(handle.surface).toBe('navigator');
+		expect(handle.viaPolyfill).toBe(false);
+	});
+
+	it('meldet surface document, wenn document.modelContext trägt', async () => {
+		const dokument = makeFakeNavigator();
+		const handle = await registerWebMcpServer({
+			...stubConfig(makeFakeNavigator().navigator),
+			documentProvider: () => dokument.navigator as never
+		});
+		cleanup = () => handle.unregister();
+		expect(handle.surface).toBe('document');
+	});
+
+	it('meldet viaPolyfill true, wenn erst der Polyfill die API stellt', async () => {
+		const nav: { modelContext?: FakeModelContext } = {};
+		const handle = await registerWebMcpServer({
+			...stubConfig({ modelContext: undefined as never }),
+			navigatorProvider: () => nav as never,
+			polyfillLoader: async () => {
+				nav.modelContext = makeFakeNavigator().mc;
+			}
+		});
+		cleanup = () => handle.unregister();
+		expect(handle.viaPolyfill).toBe(true);
+		expect(handle.surface).toBe('navigator');
+	});
+
 	it('bevorzugt document.modelContext, wenn vorhanden', async () => {
 		const dokument = makeFakeNavigator();
 		const alt = makeFakeNavigator();
