@@ -102,8 +102,6 @@
 				props.db_uwb_id = dbUwbId;
 				props.has_winner = winner ? 1 : 0;
 			}
-			console.debug(`[wahl-stimmbezirk-choropleth] ${matched}/${fc.features.length} matched`);
-
 			const map = new MapLibreMap({
 				container,
 				style: {

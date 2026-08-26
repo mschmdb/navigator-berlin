@@ -64,11 +64,6 @@ export function featureToKuehleOrt(feature: Feature<Point, KuehleOrtProps>): Kue
 let cache: KuehleOrt[] | null = null;
 let inflight: Promise<KuehleOrt[]> | null = null;
 
-export function _resetKuehleOrteIndexCache(): void {
-	cache = null;
-	inflight = null;
-}
-
 export async function getKuehleOrteIndex(fetchFn: typeof fetch = fetch): Promise<KuehleOrt[]> {
 	if (cache) return cache;
 	if (inflight) return inflight;

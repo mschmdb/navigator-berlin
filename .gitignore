@@ -43,6 +43,7 @@ _user-input/
 
 # Claude Code session transcripts (PII)
 .claude/projects/
+.claude/settings.local.json
 
 # Claude Code worktrees + runtime locks
 .claude/worktrees/
