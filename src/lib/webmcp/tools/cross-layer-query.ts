@@ -36,6 +36,7 @@ export function createCrossLayerQueryTool(deps: CrossLayerQueryDeps): WebMcpTool
 		name: 'cross_layer_query',
 		description:
 			'Query all configured Berlin data layers at a geographic point (lat, lng) and return one structured hit per layer with full provenance (source, updated_at, license, reason).',
+		readOnly: true,
 		inputSchema: POINT_INPUT_JSON_SCHEMA,
 		outputSchema: LAYER_HIT_LIST_JSON_SCHEMA,
 		handler: async (raw) => {

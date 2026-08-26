@@ -22,4 +22,10 @@ export interface WebMcpToolDefinition<TInput = unknown, TOutput = JsonValue> {
 	 * (FR40) im Output durchreichen.
 	 */
 	readonly handler: (input: TInput) => Promise<TOutput>;
+	/**
+	 * Spec-`ToolAnnotations` (IDL 2026): `readOnlyHint: true` markiert Tools
+	 * ohne Seiteneffekte; ChatGPTs Safety-Review winkt sie ohne
+	 * Bestätigungs-Dialog durch. Schreibende Tools lassen das Feld weg.
+	 */
+	readonly readOnly?: boolean;
 }

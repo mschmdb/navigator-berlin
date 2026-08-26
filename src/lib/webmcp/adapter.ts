@@ -49,9 +49,10 @@ export interface ModelContextSurface {
 			description?: string;
 			inputSchema?: Readonly<Record<string, unknown>>;
 			execute: (args: unknown) => Promise<unknown>;
+			annotations?: { readOnlyHint?: boolean; untrustedContentHint?: boolean };
 		},
 		options?: { signal?: AbortSignal }
-	): void;
+	): void | Promise<void>;
 }
 
 export interface NavigatorWithModelContext {
@@ -122,13 +123,14 @@ function registerToolOnContext(
 	mc: ModelContextSurface,
 	tool: WebMcpToolDefinition,
 	signal: AbortSignal
-): void {
-	mc.registerTool(
+): void | Promise<void> {
+	return mc.registerTool(
 		{
 			name: tool.name,
 			description: tool.description,
 			inputSchema: tool.inputSchema,
-			execute: (args) => tool.handler(args)
+			execute: (args) => tool.handler(args),
+			annotations: { readOnlyHint: tool.readOnly === true }
 		},
 		{ signal }
 	);
@@ -175,9 +177,10 @@ export async function registerWebMcpServer(
 	];
 
 	const controller = new AbortController();
-	for (const tool of tools) {
-		registerToolOnContext(mc, tool, controller.signal);
-	}
+	// Spec: registerTool liefert Promise<undefined>. Erst wenn der Browser
+	// alle Registrierungen angenommen hat, gilt der Server als gemountet;
+	// eine Ablehnung soll den Aufrufer erreichen statt still zu versanden.
+	await Promise.all(tools.map((tool) => registerToolOnContext(mc, tool, controller.signal)));
 
 	return {
 		specVersion: WEBMCP_SPEC_VERSION,

@@ -76,6 +76,7 @@ export function createGetElectionResultTool(deps: GetElectionResultDeps): WebMcp
 		name: 'get_election_result',
 		description:
 			'Return the top parties at a given Berlin address for one specific election, on a selectable aggregation level (stimmbezirk/kiez/bezirk/berlin). Input: lat + lng + election_slug (from list_elections, format "2025-btw-zweitstimme" or "2023-bvv") + optional level. Default level is the finest available: stimmbezirk if the address has per-district data, then kiez (LOR Bezirksregion), then bezirk, then berlin. Output includes top-5 parties with vote count + share + color, source authority + license + last update, and caveats for pre-2021 Stimmbezirks-level (Briefwahl-asymmetry) or repeat elections. Errors with election_not_found if election_slug does not exist, address_outside_berlin if the point is not in Berlin.',
+		readOnly: true,
 		inputSchema: GET_ELECTION_RESULT_INPUT_JSON_SCHEMA,
 		outputSchema: GET_ELECTION_RESULT_OUTPUT_JSON_SCHEMA,
 		handler: async (raw) => {

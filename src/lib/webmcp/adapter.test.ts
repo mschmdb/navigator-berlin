@@ -106,6 +106,44 @@ describe('registerWebMcpServer', () => {
 	// WebMCP-Challenge 26.08.: die Spec ist von navigator.modelContext zu
 	// document.modelContext gewandert (ChatGPT-Browser, Chrome 149). Der
 	// Adapter bevorzugt document und fällt auf navigator + Polyfill zurück.
+	// Spec-Konformität (IDL 26.08.): registerTool liefert Promise<undefined>,
+	// der Adapter muss die Annahme ABWARTEN; ToolAnnotations.readOnlyHint
+	// steuert ChatGPTs Safety-Review.
+	it('wartet asynchrone registerTool-Aufrufe ab und propagiert Fehler', async () => {
+		let aufgeloest = 0;
+		const mc = {
+			registered: [] as Array<{ name: string }>,
+			registerTool(tool: { name: string }) {
+				this.registered.push({ name: tool.name });
+				return new Promise<void>((resolve) => {
+					setTimeout(() => {
+						aufgeloest += 1;
+						resolve();
+					}, 1);
+				});
+			}
+		};
+		const handle = await registerWebMcpServer(stubConfig({ modelContext: mc as never }));
+		cleanup = () => handle.unregister();
+		expect(aufgeloest).toBe(11);
+	});
+
+	it('reicht readOnlyHint-Annotations an registerTool durch', async () => {
+		const annotationen: Record<string, unknown> = {};
+		const mc = {
+			registered: [] as unknown[],
+			registerTool(tool: { name: string; annotations?: { readOnlyHint?: boolean } }) {
+				annotationen[tool.name] = tool.annotations?.readOnlyHint;
+				this.registered.push(tool);
+			}
+		};
+		const handle = await registerWebMcpServer(stubConfig({ modelContext: mc as never }));
+		cleanup = () => handle.unregister();
+		expect(annotationen['address_lookup']).toBe(true);
+		expect(annotationen['get_finder_state']).toBe(true);
+		expect(annotationen['set_finder_weights']).toBe(false);
+	});
+
 	it('meldet im Handle Surface und Polyfill-Status', async () => {
 		const { navigator } = makeFakeNavigator();
 		const handle = await registerWebMcpServer(stubConfig(navigator));

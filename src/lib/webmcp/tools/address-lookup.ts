@@ -39,6 +39,7 @@ export function createAddressLookupTool(deps: AddressLookupDeps): WebMcpToolDefi
 		name: 'address_lookup',
 		description:
 			'Search Berlin addresses, streets, and POIs. Returns up to N candidates with coordinates and administrative context (Bezirk, Kiez, postcode). Backed by OSM Nominatim, biased to Berlin.',
+		readOnly: true,
 		inputSchema: ADDRESS_LOOKUP_INPUT_JSON_SCHEMA,
 		outputSchema: ADDRESS_LOOKUP_OUTPUT_JSON_SCHEMA,
 		handler: async (raw) => {
