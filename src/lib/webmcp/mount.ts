@@ -103,6 +103,9 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		// zur Explore-Seite; Top-Treffer liefert dann erst der nächste
 		// get_finder_state (steht so in der Tool-Description).
 		applyFinderWeights: async (partial, party) => {
+			// Zählerstand VOR dem Schreibwunsch: nur so lässt sich die neue
+			// Rechnung von der noch stehenden alten Rangliste unterscheiden.
+			const seqVorher = finderBridge.readFinderPublishSeq();
 			const merged = finderBridge.requestAgentWeights(partial, party);
 			let navigation: 'none' | 'opened_finder' = 'none';
 			if (!finderBridge.readFinderBridge().panelActive) {
@@ -111,9 +114,10 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 				// eslint-disable-next-line svelte/no-navigation-without-resolve
 				await goto('/explore?finder=1');
 			}
-			// Auf die Panel-Rechnung warten: eine leere top_matches-Liste
-			// treibt den Agenten in eigene Nach-Recherche (Prod-Lauf 26.08.).
-			const topMatches = await finderBridge.waitForFinderTopMatches();
+			// Auf die neue Panel-Rechnung warten: eine leere Liste treibt den
+			// Agenten in eigene Nach-Recherche, eine veraltete lässt ihn die
+			// alte Rangliste als neue melden (beides Prod-Läufe 26.08.).
+			const topMatches = await finderBridge.waitForFinderTopMatches({ sinceSeq: seqVorher });
 			const snap = finderBridge.readFinderBridge();
 			return {
 				weights: merged,

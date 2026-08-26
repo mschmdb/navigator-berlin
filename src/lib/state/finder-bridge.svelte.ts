@@ -54,6 +54,13 @@ let party = $state<string | null>(null);
 let pendingAgentUpdate = $state<PendingAgentUpdate | null>(null);
 /** Panel-Sichtbarkeit in ANDEREN Kontexten (Broadcast-empfangen). */
 let remotePanelActive = $state(false);
+/**
+ * Zählt jede veröffentlichte Rechnung. `waitForFinderTopMatches` unterscheidet
+ * damit eine frische Rangliste von der noch stehenden alten: nach dem ersten
+ * Tool-Aufruf ist die Liste nie wieder leer, "nicht leer" taugt also nicht als
+ * Kriterium (Prod-Bug 26.08., Agent meldete die alte Rangliste als neue).
+ */
+let publishSeq = $state(0);
 
 /**
  * Panel → Bridge: nach jedem Paint den sichtbaren Zustand spiegeln.
@@ -67,6 +74,7 @@ export function publishUserFinderState(
 ): void {
 	weights = { ...next };
 	topMatches = [...top];
+	publishSeq += 1;
 	if (opts.party !== undefined) party = opts.party;
 	if (opts.vomNutzer !== false) {
 		lastChangedBy = 'user';
@@ -158,6 +166,8 @@ function empfange(nachricht: SyncNachricht): void {
 	weights = { ...nachricht.weights };
 	party = nachricht.party;
 	topMatches = [...nachricht.topMatches];
+	// Auch eine Rangliste aus einem fremden Tab ist eine frische Rechnung.
+	publishSeq += 1;
 	lastChangedBy = nachricht.lastChangedBy;
 	changedAt = nachricht.changedAt;
 	remotePanelActive = nachricht.panelActive;
@@ -185,18 +195,25 @@ function sendeState(): void {
 	});
 }
 
+/** Stand des Publish-Zählers, vor einem Schreibwunsch zu merken. */
+export function readFinderPublishSeq(): number {
+	return publishSeq;
+}
+
 /**
- * Wartet, bis ein Panel Treffer publiziert hat (Agent-Flow: das Tool soll
- * echte top_matches zurückgeben statt einer leeren Liste, die den Agenten
- * in eigene Nach-Recherche treibt). Nach Timeout: aktueller Stand.
+ * Wartet auf eine FRISCHE Rangliste (Agent-Flow: das Tool soll echte
+ * top_matches zurückgeben, nicht die noch stehende alte Liste und keine
+ * leere). `sinceSeq` ist der vor dem Schreibwunsch gemerkte Zählerstand;
+ * gewartet wird, bis das Panel danach neu gerechnet hat. Nach Timeout:
+ * aktueller Stand.
  */
 export async function waitForFinderTopMatches(
-	timeoutMs = 7000,
-	intervallMs = 150
+	opts: { sinceSeq?: number; timeoutMs?: number; intervallMs?: number } = {}
 ): Promise<readonly FinderTopMatch[]> {
+	const { sinceSeq = -1, timeoutMs = 7000, intervallMs = 150 } = opts;
 	const start = Date.now();
 	while (Date.now() - start < timeoutMs) {
-		if (topMatches.length > 0) return [...topMatches];
+		if (publishSeq > sinceSeq && topMatches.length > 0) return [...topMatches];
 		await new Promise((r) => setTimeout(r, intervallMs));
 	}
 	return [...topMatches];
@@ -211,4 +228,5 @@ export function resetFinderBridgeForTests(): void {
 	panelActive = false;
 	remotePanelActive = false;
 	pendingAgentUpdate = null;
+	publishSeq = 0;
 }
