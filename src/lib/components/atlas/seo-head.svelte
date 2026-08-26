@@ -35,8 +35,7 @@
 		locales?: readonly SupportedLocale[];
 		/**
 		 * Story 5.9 AC-9: wenn true, rendert `<meta name="robots" content="noindex,nofollow">`.
-		 * Pflicht fuer /_dev/* Routen (Showcase, Wortmarke). API-Endpoints setzen den
-		 * X-Robots-Tag-Header zusaetzlich serverseitig.
+		 * API-Endpoints setzen den X-Robots-Tag-Header zusaetzlich serverseitig.
 		 */
 		noindex?: boolean;
 	}

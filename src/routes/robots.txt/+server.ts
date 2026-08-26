@@ -10,7 +10,7 @@ export const prerender = true;
  * - Story 2.8: llms.txt-Hinweis.
  * - Story 5.9 (AC-1): explizite AI-Bot-Allowlist (GPTBot, ClaudeBot, etc.),
  *   Spam-Bot-Disallow (Omgilibot, MJ12bot), Crawl-Budget-Disallow fuer
- *   /_dev/ + /api/. Yandex bewusst nicht gelistet (User-Decision).
+ *   /api/. Yandex bewusst nicht gelistet (User-Decision).
  *
  * Sonst lebende Indexierungs-Annahmen siehe Memory `project_seo_bot_policy`.
  */
@@ -42,7 +42,6 @@ export const GET: RequestHandler = ({ url }) => {
 	lines.push('# Default-Block fuer alle nicht explizit aufgefuehrten Crawler');
 	lines.push('User-agent: *');
 	lines.push('Allow: /');
-	lines.push('Disallow: /_dev/');
 	lines.push('Disallow: /api/');
 	// WICHTIG: /layers/ NICHT disallowen. MANIFEST.json + GeoJSON sind
 	// render-nötige Ressourcen (client-seitiger loadManifest); ein robots-Block
