@@ -4,6 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import KiezFinderPanel from './kiez-finder-panel.svelte';
 import type { FinderBaseData } from './internal/kiez-finder-data.js';
+import {
+	requestAgentWeights,
+	readFinderBridge,
+	resetFinderBridgeForTests
+} from '$lib/state/finder-bridge.svelte.js';
 
 function baseData(): FinderBaseData {
 	return {
@@ -228,5 +233,44 @@ describe('kiez-finder-panel', () => {
 		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
 		expect(panel.textContent?.replace(/\s+/g, ' ')).toContain('bewertet weder Nachbarschaften');
 		expect(panel.textContent).toContain('Zweitstimmen BTW 2025');
+	});
+
+	// WebMCP-Kollaboration (Challenge 2026): Panel ↔ Bridge Round-Trip.
+	it('Nutzer-Slider spiegelt Gewichte und Quelle user in die Bridge', async () => {
+		resetFinderBridgeForTests();
+		await renderPanel();
+		const slider = (await page.getByTestId('finder-slider-ruheLuft').element()) as HTMLInputElement;
+		slider.value = '2';
+		slider.dispatchEvent(new Event('input', { bubbles: true }));
+		await vi.waitFor(() => {
+			const s = readFinderBridge();
+			expect(s.weights.ruheLuft).toBe(2);
+			expect(s.lastChangedBy).toBe('user');
+		});
+		resetFinderBridgeForTests();
+	});
+
+	it('wendet pending Agent-Gewichte an und liefert Top-Treffer in die Bridge', async () => {
+		resetFinderBridgeForTests();
+		await renderPanel();
+		requestAgentWeights({ ruheLuft: 2 });
+		await vi.waitFor(() => {
+			const slider = document.querySelector(
+				'[data-testid="finder-slider-ruheLuft"]'
+			) as HTMLInputElement;
+			expect(slider.value).toBe('2');
+			expect(readFinderBridge().topMatches.length).toBeGreaterThan(0);
+			expect(readFinderBridge().lastChangedBy).toBe('agent');
+		});
+		resetFinderBridgeForTests();
+	});
+
+	it('meldet Panel-Sichtbarkeit an die Bridge', async () => {
+		resetFinderBridgeForTests();
+		const { result } = await renderPanel();
+		expect(readFinderBridge().panelActive).toBe(true);
+		await result.unmount();
+		expect(readFinderBridge().panelActive).toBe(false);
+		resetFinderBridgeForTests();
 	});
 });

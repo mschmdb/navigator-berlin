@@ -4,6 +4,13 @@
 	import { PARTEI_FARBEN, type ParteiKurzname } from '$lib/data/partei-farben.js';
 	import { trackEvent } from '$lib/utils/plausible.js';
 	import {
+		publishUserFinderState,
+		peekPendingAgentWeights,
+		consumePendingAgentWeights,
+		setFinderPanelActive,
+		type FinderTopMatch
+	} from '$lib/state/finder-bridge.svelte.js';
+	import {
 		buildFinderCollection,
 		buildParteiMetric,
 		type FinderBaseData,
@@ -131,6 +138,7 @@
 		if (!hasActiveWeights(weights)) {
 			if (map.getLayer(FINDER_LAYER_ID)) map.removeLayer(FINDER_LAYER_ID);
 			top = [];
+			publishUserFinderState(weights, [], { vomNutzer: false });
 			return;
 		}
 		if (!collection || (weights.partei !== 0 && loadedPartei !== partei)) {
@@ -165,12 +173,36 @@
 			map.setPaintProperty(FINDER_LAYER_ID, 'fill-opacity', opacity);
 		}
 		top = allResults.slice(0, 5);
+		publishUserFinderState(weights, alsMatches(top), { vomNutzer: false });
+	}
+
+	// Bridge-Spiegel (WebMCP-Kollaboration): Panel-Zustand für die Tools
+	// sichtbar machen. vomNutzer=false hält die Quelle beim Agenten, wenn
+	// nur der Paint die Top-Liste nachliefert.
+	function alsMatches(results: FinderResult[]): FinderTopMatch[] {
+		return results.map((r) => ({ plrId: r.plrId, name: r.name, fit: r.fit }));
 	}
 
 	function setWeight(key: keyof FinderWeights, value: number): void {
 		weights = { ...weights, [key]: value };
+		publishUserFinderState(weights, alsMatches(top), { vomNutzer: true });
 		applyWeights();
 	}
+
+	// Agent-Schreibwünsche (set_finder_weights) anwenden, sobald sie da sind.
+	$effect(() => {
+		const pending = peekPendingAgentWeights();
+		if (!pending) return;
+		consumePendingAgentWeights();
+		weights = { ...pending };
+		applyWeights();
+	});
+
+	// Panel-Sichtbarkeit für get_finder_state spiegeln.
+	$effect(() => {
+		setFinderPanelActive(true);
+		return () => setFinderPanelActive(false);
+	});
 
 	async function onParteiChange(next: ParteiKurzname): Promise<void> {
 		partei = next;
@@ -181,6 +213,7 @@
 
 	function reset(): void {
 		weights = neutralWeights();
+		publishUserFinderState(weights, [], { vomNutzer: true });
 		applyWeights();
 	}
 

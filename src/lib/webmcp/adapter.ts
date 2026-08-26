@@ -28,8 +28,13 @@ import {
 	createGetElectionResultTool,
 	createCompareElectionsTool,
 	createGetVotingDistrictGeometryTool,
-	type ElectionListEntry
+	createSetFinderWeightsTool,
+	createGetFinderStateTool,
+	type ElectionListEntry,
+	type ApplyFinderWeightsResult
 } from './tools/index.js';
+import type { FinderWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import type { FinderBridgeSnapshot } from '$lib/state/finder-bridge.svelte.js';
 import type { WebMcpToolDefinition } from './internal/tool-types.js';
 import type { GeocodeSuggestion, LayerHit, LayerMetadata, KiezProfile, Locale } from '$lib/data';
 import type { LayerMethodology } from '$lib/data/layer-methodology.js';
@@ -86,6 +91,11 @@ export interface WebMcpServerConfig {
 		districtId: string,
 		year: number
 	) => Promise<JsonObject | null>;
+	/** Finder-Kollaboration (WebMCP Challenge 2026): Agent stellt Regler. */
+	readonly applyFinderWeights: (
+		partial: Partial<FinderWeights>
+	) => Promise<ApplyFinderWeightsResult>;
+	readonly readFinderState: () => FinderBridgeSnapshot;
 }
 
 export interface WebMcpServerHandle {
@@ -153,7 +163,9 @@ export async function registerWebMcpServer(
 		createListElectionsTool({ fetchElections: config.fetchElections }),
 		createGetElectionResultTool({ fetchResultsAtPoint: config.fetchWahlResultsAtPoint }),
 		createCompareElectionsTool({ fetchResultsAtPoint: config.fetchWahlResultsAtPoint }),
-		createGetVotingDistrictGeometryTool({ fetchGeometry: config.fetchVotingDistrictGeometry })
+		createGetVotingDistrictGeometryTool({ fetchGeometry: config.fetchVotingDistrictGeometry }),
+		createSetFinderWeightsTool({ applyFinderWeights: config.applyFinderWeights }),
+		createGetFinderStateTool({ readFinderState: config.readFinderState })
 	];
 
 	const controller = new AbortController();

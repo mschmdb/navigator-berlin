@@ -68,7 +68,8 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		{ getLayerMetadata },
 		{ getLayerMethodology },
 		{ loadManifest },
-		{ getLocale }
+		{ getLocale },
+		finderBridge
 	] = await Promise.all([
 		import('$lib/data/geocode.remote'),
 		import('$lib/data/get-layers-at-point'),
@@ -76,7 +77,8 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		import('$lib/data/get-layer-metadata'),
 		import('$lib/data/layer-methodology'),
 		import('$lib/data/manifest'),
-		import('$lib/paraglide/runtime')
+		import('$lib/paraglide/runtime'),
+		import('$lib/state/finder-bridge.svelte')
 	]);
 
 	activeHandle = await registerWebMcpServer({
@@ -97,7 +99,29 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		defaultLocale: () => getLocale(),
 		fetchElections: () => fetchElectionsFromApi(),
 		fetchWahlResultsAtPoint: (lat, lng) => fetchWahlResultsFromApi(lat, lng),
-		fetchVotingDistrictGeometry: (id, year) => fetchVotingDistrictGeometryFromApi(id, year)
+		fetchVotingDistrictGeometry: (id, year) => fetchVotingDistrictGeometryFromApi(id, year),
+		// Finder-Kollaboration: Agent-Gewichte in die Bridge, das Panel wendet
+		// sie an. Ist der Finder nirgends gemountet, navigiert der Tool-Call
+		// zur Explore-Seite; Top-Treffer liefert dann erst der nächste
+		// get_finder_state (steht so in der Tool-Description).
+		applyFinderWeights: async (partial) => {
+			const merged = finderBridge.requestAgentWeights(partial);
+			let navigation: 'none' | 'opened_finder' = 'none';
+			if (!finderBridge.readFinderBridge().panelActive) {
+				navigation = 'opened_finder';
+				const { goto } = await import('$app/navigation');
+				// eslint-disable-next-line svelte/no-navigation-without-resolve
+				await goto('/explore?finder=1');
+			}
+			const snap = finderBridge.readFinderBridge();
+			return {
+				weights: merged,
+				finderOpen: snap.panelActive,
+				navigation,
+				topMatches: snap.topMatches
+			};
+		},
+		readFinderState: () => finderBridge.readFinderBridge()
 	});
 	return activeHandle;
 }

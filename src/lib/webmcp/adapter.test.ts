@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 describe('registerWebMcpServer', () => {
-	it('registriert 9 Tools auf navigator.modelContext', async () => {
+	it('registriert 11 Tools auf navigator.modelContext', async () => {
 		const { navigator, mc } = makeFakeNavigator();
 		const config = stubConfig(navigator);
 		const handle = await registerWebMcpServer(config);
@@ -53,7 +53,9 @@ describe('registerWebMcpServer', () => {
 				'get_layer_metadata',
 				'get_voting_district_geometry',
 				'list_elections',
-				'list_layers_at_point'
+				'list_layers_at_point',
+				'set_finder_weights',
+				'get_finder_state'
 			].sort()
 		);
 	});
@@ -88,7 +90,13 @@ describe('registerWebMcpServer', () => {
 			defaultLocale: () => 'de',
 			fetchElections: async () => [],
 			fetchWahlResultsAtPoint: async () => null,
-			fetchVotingDistrictGeometry: async () => null
+			fetchVotingDistrictGeometry: async () => null,
+			applyFinderWeights: async () => {
+				throw new Error('not used in registration smoke');
+			},
+			readFinderState: () => {
+				throw new Error('not used in registration smoke');
+			}
 		};
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
@@ -107,7 +115,7 @@ describe('registerWebMcpServer', () => {
 		};
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
-		expect(dokument.mc.registered.length).toBe(9);
+		expect(dokument.mc.registered.length).toBe(11);
 		expect(alt.mc.registered.length).toBe(0);
 	});
 
@@ -119,7 +127,7 @@ describe('registerWebMcpServer', () => {
 		};
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
-		expect(mc.registered.length).toBe(9);
+		expect(mc.registered.length).toBe(11);
 	});
 
 	it('findet document.modelContext auch, wenn erst der Polyfill es bereitstellt', async () => {
@@ -137,7 +145,7 @@ describe('registerWebMcpServer', () => {
 		const handle = await registerWebMcpServer(config);
 		cleanup = () => handle.unregister();
 		expect(polyfillLoader).toHaveBeenCalled();
-		expect(dokument.modelContext?.registered.length).toBe(9);
+		expect(dokument.modelContext?.registered.length).toBe(11);
 	});
 
 	it('lädt KEIN Polyfill wenn navigator.modelContext bereits da ist', async () => {
@@ -170,6 +178,12 @@ function stubConfig(navigator: { modelContext: FakeModelContext }): WebMcpServer
 		defaultLocale: () => 'de',
 		fetchElections: async () => [],
 		fetchWahlResultsAtPoint: async () => null,
-		fetchVotingDistrictGeometry: async () => null
+		fetchVotingDistrictGeometry: async () => null,
+		applyFinderWeights: async () => {
+			throw new Error('not used in registration smoke');
+		},
+		readFinderState: () => {
+			throw new Error('not used in registration smoke');
+		}
 	};
 }
