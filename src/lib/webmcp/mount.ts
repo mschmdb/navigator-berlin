@@ -86,11 +86,9 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		// Aktuelle Spec-Location (ChatGPT-Browser, Chrome 149+): document.
 		documentProvider: () => document as unknown as NavigatorWithModelContext,
 		polyfillLoader: loadMcpBGlobalPolyfill,
-		// SvelteKit-Remote-Function: `.run()` triggert die tatsächliche Server-
-		// Ausführung. Ohne `.run()` bekommt der Adapter den RemoteResource-
-		// Builder statt der GeocodeSuggestion[] und `address_lookup` wirft
-		// beim Aufruf von `.slice()`. Root-Cause GH-Issue #7.
-		geocode: async (q) => geocodeAddress({ q }).run(),
+		// SvelteKit-Remote-Query ist seit kit 2.70 direkt awaitable
+		// (RemoteQuery<T> = Promise<T>), das frühere `.run()` entfiel.
+		geocode: async (q) => await geocodeAddress({ q }),
 		getLayersAtPoint: (lat, lng) => getLayersAtPoint(lat, lng),
 		getKiezProfile: (locale, slug) => getKiezProfile(locale, slug),
 		getLayerMetadata,
