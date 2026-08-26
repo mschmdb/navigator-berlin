@@ -113,12 +113,15 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 				// eslint-disable-next-line svelte/no-navigation-without-resolve
 				await goto('/explore?finder=1');
 			}
+			// Auf die Panel-Rechnung warten: eine leere top_matches-Liste
+			// treibt den Agenten in eigene Nach-Recherche (Prod-Lauf 26.08.).
+			const topMatches = await finderBridge.waitForFinderTopMatches();
 			const snap = finderBridge.readFinderBridge();
 			return {
 				weights: merged,
 				finderOpen: snap.panelActive,
 				navigation,
-				topMatches: snap.topMatches
+				topMatches
 			};
 		},
 		readFinderState: () => finderBridge.readFinderBridge()

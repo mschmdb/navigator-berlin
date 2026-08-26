@@ -697,6 +697,177 @@
           "properties"
         ]
       }
+    },
+    {
+      "name": "set_finder_weights",
+      "description": "Set the sliders of the interactive Kiez-Finder. The map the user is looking at recolors all 542 Berlin planning areas instantly; weights not provided stay unchanged. Part of the human-agent collaboration round-trip with get_finder_state.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "quiet_air": {
+            "type": "integer",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Quiet & clean air. -2 = as little as possible, 0 = neutral, +2 = as much as possible"
+          },
+          "green_heat": {
+            "type": "integer",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Green spaces & heat protection. -2 = as little as possible, 0 = neutral, +2 = as much as possible"
+          },
+          "mobility": {
+            "type": "integer",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Public transit & bike access. -2 = as little as possible, 0 = neutral, +2 = as much as possible"
+          },
+          "supply": {
+            "type": "integer",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Daily supply: groceries, pharmacies, schools. -2 = as little as possible, 0 = neutral, +2 = as much as possible"
+          },
+          "housing_protection": {
+            "type": "integer",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Tenant/housing protection zones. -2 = as little as possible, 0 = neutral, +2 = as much as possible"
+          },
+          "culture": {
+            "type": "integer",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Cultural offering. -2 = as little as possible, 0 = neutral, +2 = as much as possible"
+          },
+          "density": {
+            "type": "integer",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Built-up density: -2 = as loose as possible, +2 = as dense as possible"
+          },
+          "sbahn_proximity": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "S-Bahn proximity. 0 = does not matter, 2 = as close as possible"
+          },
+          "voting_similarity": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "Similarity of local voting behavior (BTW 2025 Zweitstimme) to the chosen party. Combine with \"party\"."
+          },
+          "party": {
+            "type": "string",
+            "enum": [
+              "SPD",
+              "CDU",
+              "GRÜNE",
+              "FDP",
+              "AfD",
+              "Die Linke",
+              "BSW"
+            ],
+            "description": "Party for voting_similarity. Optional; without it the current panel selection applies (initial: SPD)."
+          }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "applied_weights": {
+            "type": "object",
+            "description": "All nine weights after the update."
+          },
+          "finder_open": {
+            "type": "boolean"
+          },
+          "navigation": {
+            "type": "string",
+            "enum": [
+              "none",
+              "opened_finder"
+            ],
+            "description": "opened_finder = the page navigated to the finder; top matches follow shortly, poll get_finder_state."
+          },
+          "top_matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kiez": {
+                  "type": "string"
+                },
+                "plr_id": {
+                  "type": "string"
+                },
+                "fit": {
+                  "type": "number",
+                  "description": "Match 0..100"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "get_finder_state",
+      "description": "Read the current Kiez-Finder state: all nine weights, who changed them last (user or agent) and when, whether the panel is open, and the current top matching Kieze.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "finder_open": {
+            "type": "boolean"
+          },
+          "weights": {
+            "type": "object",
+            "description": "All nine weights, english keys."
+          },
+          "last_changed_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "agent",
+              "user",
+              null
+            ]
+          },
+          "changed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO timestamp of the last change."
+          },
+          "top_matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kiez": {
+                  "type": "string"
+                },
+                "plr_id": {
+                  "type": "string"
+                },
+                "fit": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "resources": [

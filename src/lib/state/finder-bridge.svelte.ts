@@ -182,6 +182,23 @@ function sendeState(): void {
 	});
 }
 
+/**
+ * Wartet, bis ein Panel Treffer publiziert hat (Agent-Flow: das Tool soll
+ * echte top_matches zurückgeben statt einer leeren Liste, die den Agenten
+ * in eigene Nach-Recherche treibt). Nach Timeout: aktueller Stand.
+ */
+export async function waitForFinderTopMatches(
+	timeoutMs = 7000,
+	intervallMs = 150
+): Promise<readonly FinderTopMatch[]> {
+	const start = Date.now();
+	while (Date.now() - start < timeoutMs) {
+		if (topMatches.length > 0) return [...topMatches];
+		await new Promise((r) => setTimeout(r, intervallMs));
+	}
+	return [...topMatches];
+}
+
 export function resetFinderBridgeForTests(): void {
 	weights = neutralWeights();
 	party = null;

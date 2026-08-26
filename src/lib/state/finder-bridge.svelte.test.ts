@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import {
+	waitForFinderTopMatches,
 	publishUserFinderState,
 	requestAgentWeights,
 	consumePendingAgentWeights,
@@ -122,6 +123,21 @@ describe('finder-bridge', () => {
 		expect(s.panelActive).toBe(true);
 		expect(s.lastChangedBy).toBe('user');
 		fremd.close();
+	});
+
+	it('waitForFinderTopMatches wartet, bis das Panel Treffer publiziert', async () => {
+		setTimeout(() => {
+			publishUserFinderState({ ...neutralWeights(), kultur: 2 }, [
+				{ plrId: 'x', name: 'Hasenheide', fit: 78 }
+			]);
+		}, 120);
+		const treffer = await waitForFinderTopMatches(3000, 40);
+		expect(treffer[0]?.name).toBe('Hasenheide');
+	});
+
+	it('waitForFinderTopMatches gibt nach Timeout leer zurück', async () => {
+		const treffer = await waitForFinderTopMatches(150, 40);
+		expect(treffer).toEqual([]);
 	});
 
 	it('setFinderPanelActive spiegelt den Panel-Zustand', () => {
