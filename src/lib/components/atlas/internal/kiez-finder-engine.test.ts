@@ -221,3 +221,34 @@ describe('fitDomain · Kontrast-Spreizung', () => {
 		expect(flat).not.toContain(',0,"#');
 	});
 });
+
+describe('topResults Zentroide', () => {
+	// 26.08.: Agenten geocodierten Kiez-NAMEN per address_lookup, nur um
+	// Koordinaten für Folge-Tools zu bekommen. Die Treffer liefern sie mit.
+	it('liefert lat/lng als BBox-Zentrum der Feature-Geometrie', () => {
+		const fc = {
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					properties: { PLR_ID: '1', PLR_NAME: 'Test', kiez_name: 'Testkiez', m_ruhe_luft: 0.9 },
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[13.3, 52.5],
+								[13.5, 52.5],
+								[13.5, 52.6],
+								[13.3, 52.6],
+								[13.3, 52.5]
+							]
+						]
+					}
+				}
+			]
+		} as never;
+		const [r] = topResults(fc, { ...neutralWeights(), ruheLuft: 2 }, 1);
+		expect(r.lng).toBeCloseTo(13.4, 5);
+		expect(r.lat).toBeCloseTo(52.55, 5);
+	});
+});

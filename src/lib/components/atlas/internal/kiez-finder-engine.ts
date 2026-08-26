@@ -278,6 +278,29 @@ export interface FinderResult {
 	readonly name: string;
 	readonly kiez: string;
 	readonly fit: number;
+	/** BBox-Zentrum der Fläche: erspart Agenten das Geocoding der Namen. */
+	readonly lng: number;
+	readonly lat: number;
+}
+
+function bboxZentrum(geom: Polygon | MultiPolygon): { lng: number; lat: number } {
+	let minLng = Infinity;
+	let minLat = Infinity;
+	let maxLng = -Infinity;
+	let maxLat = -Infinity;
+	const polygone = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+	for (const ringe of polygone) {
+		for (const ring of ringe) {
+			for (const [lng, lat] of ring) {
+				if (lng < minLng) minLng = lng;
+				if (lng > maxLng) maxLng = lng;
+				if (lat < minLat) minLat = lat;
+				if (lat > maxLat) maxLat = lat;
+			}
+		}
+	}
+	const runde = (n: number) => Math.round(n * 1e5) / 1e5;
+	return { lng: runde((minLng + maxLng) / 2), lat: runde((minLat + maxLat) / 2) };
 }
 
 export function topResults(
@@ -293,7 +316,8 @@ export function topResults(
 				plrId: String(props.PLR_ID ?? ''),
 				name: String(props.PLR_NAME ?? ''),
 				kiez: String(props.kiez_name ?? ''),
-				fit: computeFitJs(props as Partial<Record<FinderMetricKey, number>>, weights)
+				fit: computeFitJs(props as Partial<Record<FinderMetricKey, number>>, weights),
+				...bboxZentrum(f.geometry)
 			};
 		})
 		.sort((a, b) => b.fit - a.fit)

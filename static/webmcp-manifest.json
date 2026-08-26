@@ -806,6 +806,20 @@
                 "fit": {
                   "type": "number",
                   "description": "Match 0..100"
+                },
+                "lat": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Centroid latitude, use directly for follow-up point queries"
+                },
+                "lng": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Centroid longitude"
                 }
               }
             }
@@ -862,6 +876,18 @@
                 },
                 "fit": {
                   "type": "number"
+                },
+                "lat": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "lng": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
                 }
               }
             }

@@ -127,7 +127,12 @@ export const SET_FINDER_WEIGHTS_OUTPUT_JSON_SCHEMA = {
 				properties: {
 					kiez: { type: 'string' },
 					plr_id: { type: 'string' },
-					fit: { type: 'number', description: 'Match 0..100' }
+					fit: { type: 'number', description: 'Match 0..100' },
+					lat: {
+						type: ['number', 'null'],
+						description: 'Centroid latitude, use directly for follow-up point queries'
+					},
+					lng: { type: ['number', 'null'], description: 'Centroid longitude' }
 				}
 			}
 		}
@@ -154,7 +159,9 @@ export const GET_FINDER_STATE_OUTPUT_JSON_SCHEMA = {
 				properties: {
 					kiez: { type: 'string' },
 					plr_id: { type: 'string' },
-					fit: { type: 'number' }
+					fit: { type: 'number' },
+					lat: { type: ['number', 'null'] },
+					lng: { type: ['number', 'null'] }
 				}
 			}
 		}

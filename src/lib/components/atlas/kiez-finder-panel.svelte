@@ -180,7 +180,13 @@
 	// sichtbar machen. vomNutzer=false hält die Quelle beim Agenten, wenn
 	// nur der Paint die Top-Liste nachliefert.
 	function alsMatches(results: FinderResult[]): FinderTopMatch[] {
-		return results.map((r) => ({ plrId: r.plrId, name: r.name, fit: r.fit }));
+		return results.map((r) => ({
+			plrId: r.plrId,
+			name: r.name,
+			fit: r.fit,
+			lng: r.lng,
+			lat: r.lat
+		}));
 	}
 
 	function setWeight(key: keyof FinderWeights, value: number): void {
