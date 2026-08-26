@@ -259,6 +259,10 @@
 				if (cancelled) return;
 				await rebuildCollection();
 				loading = false;
+				// Agent-Gewichte können per Broadcast VOR dem Load angekommen
+				// sein; der frühe paint() lief dann ins Leere. Einmal nachmalen
+				// (No-op ohne aktive Gewichte).
+				applyWeights();
 			} catch {
 				if (!cancelled) {
 					loadFailed = true;

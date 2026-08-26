@@ -292,6 +292,20 @@ describe('kiez-finder-panel', () => {
 		resetFinderBridgeForTests();
 	});
 
+	// Bug 26.08. (Prod-Test): Agent-Gewichte kamen per Broadcast an, BEVOR
+	// die Finder-Daten geladen waren; paint() brach ab und niemand malte
+	// nach. Die Karte blieb weiß trotz gesetzter Regler.
+	it('malt nach dem Daten-Load, wenn Agent-Gewichte schon warteten', async () => {
+		resetFinderBridgeForTests();
+		requestAgentWeights({ ruheLuft: 2 });
+		const { map } = await renderPanel();
+		await vi.waitFor(() => {
+			expect(map.api.getLayer('navigator-finder-fill')).toBeTruthy();
+			expect(readFinderBridge().topMatches.length).toBeGreaterThan(0);
+		});
+		resetFinderBridgeForTests();
+	});
+
 	it('meldet Panel-Sichtbarkeit an die Bridge', async () => {
 		resetFinderBridgeForTests();
 		const { result } = await renderPanel();
