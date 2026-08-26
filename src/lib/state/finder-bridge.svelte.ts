@@ -20,6 +20,9 @@ export interface FinderTopMatch {
 	readonly name: string;
 	/** Passung 0..100, gerundet. */
 	readonly fit: number;
+	/** BBox-Zentrum: erspart Agenten address_lookup für Folge-Queries. */
+	readonly lng?: number;
+	readonly lat?: number;
 }
 
 export type FinderChangeSource = 'agent' | 'user';
