@@ -11,6 +11,12 @@
  * consolidate the indexed URL onto the prefix-less canonical instead of 404ing.
  *
  * Operates on the pathname only. Callers must re-append the original query string.
+ *
+ * Security: the returned target is normalized to a single-origin absolute path.
+ * The remainder after the locale segment is untrusted request input, so a
+ * scheme-relative remainder (`/de//evil.com`) or a backslash trick
+ * (`/de/\evil.com`) must never survive into the 301 Location header, otherwise
+ * the hook becomes an open redirect off navigator.berlin.
  */
 
 /**
@@ -38,6 +44,8 @@ export function staleLocaleRedirectTarget(pathname: string): string | null {
 	if (!STALE_LOCALE_PREFIXES.has(segment)) return null;
 
 	const rest = firstSlash === -1 ? '' : pathname.slice(firstSlash);
-	const target = rest.replace(/\/+$/, '');
-	return target === '' ? '/' : target;
+	// Collapse leading slash/backslash runs to a single '/' so an untrusted
+	// remainder can never become a scheme-relative off-origin target.
+	const target = rest.replace(/[/\\]+$/, '').replace(/^[/\\]+/, '/');
+	return target === '' || target === '/' ? '/' : target;
 }
