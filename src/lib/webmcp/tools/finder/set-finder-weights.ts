@@ -27,7 +27,8 @@ export interface ApplyFinderWeightsResult {
 
 export interface SetFinderWeightsDeps {
 	readonly applyFinderWeights: (
-		partial: Partial<FinderWeights>
+		partial: Partial<FinderWeights>,
+		party?: string
 	) => Promise<ApplyFinderWeightsResult>;
 }
 
@@ -35,7 +36,7 @@ export function createSetFinderWeightsTool(deps: SetFinderWeightsDeps): WebMcpTo
 	return {
 		name: 'set_finder_weights',
 		description:
-			'Set the sliders of the interactive Kiez-Finder on navigator.berlin. The map the user is currently looking at recolors all 542 Berlin planning areas instantly: darker means better match. Weights you do not provide stay unchanged. If the finder is not open, the page navigates to it first; top matches then follow with a short delay, poll get_finder_state. Use this to translate a spoken wish ("quiet, green, close to an S-Bahn") into a visible map the human can react to.',
+			'Set the sliders of the interactive Kiez-Finder on navigator.berlin. The map the user is currently looking at recolors all 542 Berlin planning areas instantly: darker means better match. Weights you do not provide stay unchanged. If the finder is not open, the page navigates to it first; top matches then follow with a short delay, poll get_finder_state. voting_similarity colors by how similar local voting (BTW 2025 Zweitstimme) is to the given party. Use this to translate a spoken wish ("quiet, green, close to an S-Bahn") into a visible map the human can react to.',
 		inputSchema: SET_FINDER_WEIGHTS_INPUT_JSON_SCHEMA,
 		outputSchema: SET_FINDER_WEIGHTS_OUTPUT_JSON_SCHEMA,
 		handler: async (raw) => {
@@ -46,7 +47,7 @@ export function createSetFinderWeightsTool(deps: SetFinderWeightsDeps): WebMcpTo
 					'Provide at least one weight, e.g. { "quiet_air": 2, "sbahn_proximity": 1 }.'
 				);
 			}
-			const result = await deps.applyFinderWeights(partial);
+			const result = await deps.applyFinderWeights(partial, input.party);
 			const out: JsonObject = {
 				applied_weights: toEnglishWeights(result.weights),
 				finder_open: result.finderOpen,

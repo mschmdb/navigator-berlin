@@ -138,7 +138,7 @@
 		if (!hasActiveWeights(weights)) {
 			if (map.getLayer(FINDER_LAYER_ID)) map.removeLayer(FINDER_LAYER_ID);
 			top = [];
-			publishUserFinderState(weights, [], { vomNutzer: false });
+			publishUserFinderState(weights, [], { vomNutzer: false, party: partei });
 			return;
 		}
 		if (!collection || (weights.partei !== 0 && loadedPartei !== partei)) {
@@ -173,7 +173,7 @@
 			map.setPaintProperty(FINDER_LAYER_ID, 'fill-opacity', opacity);
 		}
 		top = allResults.slice(0, 5);
-		publishUserFinderState(weights, alsMatches(top), { vomNutzer: false });
+		publishUserFinderState(weights, alsMatches(top), { vomNutzer: false, party: partei });
 	}
 
 	// Bridge-Spiegel (WebMCP-Kollaboration): Panel-Zustand für die Tools
@@ -185,7 +185,7 @@
 
 	function setWeight(key: keyof FinderWeights, value: number): void {
 		weights = { ...weights, [key]: value };
-		publishUserFinderState(weights, alsMatches(top), { vomNutzer: true });
+		publishUserFinderState(weights, alsMatches(top), { vomNutzer: true, party: partei });
 		applyWeights();
 	}
 
@@ -194,7 +194,11 @@
 		const pending = peekPendingAgentWeights();
 		if (!pending) return;
 		consumePendingAgentWeights();
-		weights = { ...pending };
+		if (pending.party && pending.party !== partei) {
+			partei = pending.party as ParteiKurzname;
+			collection = null;
+		}
+		weights = { ...pending.weights };
 		applyWeights();
 	});
 
@@ -213,7 +217,7 @@
 
 	function reset(): void {
 		weights = neutralWeights();
-		publishUserFinderState(weights, [], { vomNutzer: true });
+		publishUserFinderState(weights, [], { vomNutzer: true, party: partei });
 		applyWeights();
 	}
 

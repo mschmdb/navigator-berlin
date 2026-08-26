@@ -94,7 +94,8 @@ export interface WebMcpServerConfig {
 	) => Promise<JsonObject | null>;
 	/** Finder-Kollaboration (WebMCP Challenge 2026): Agent stellt Regler. */
 	readonly applyFinderWeights: (
-		partial: Partial<FinderWeights>
+		partial: Partial<FinderWeights>,
+		party?: string
 	) => Promise<ApplyFinderWeightsResult>;
 	readonly readFinderState: () => FinderBridgeSnapshot;
 }

@@ -104,8 +104,8 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		// sie an. Ist der Finder nirgends gemountet, navigiert der Tool-Call
 		// zur Explore-Seite; Top-Treffer liefert dann erst der nächste
 		// get_finder_state (steht so in der Tool-Description).
-		applyFinderWeights: async (partial) => {
-			const merged = finderBridge.requestAgentWeights(partial);
+		applyFinderWeights: async (partial, party) => {
+			const merged = finderBridge.requestAgentWeights(partial, party);
 			let navigation: 'none' | 'opened_finder' = 'none';
 			if (!finderBridge.readFinderBridge().panelActive) {
 				navigation = 'opened_finder';

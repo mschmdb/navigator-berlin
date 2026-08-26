@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import KiezFinderPanel from './kiez-finder-panel.svelte';
 import type { FinderBaseData } from './internal/kiez-finder-data.js';
+import { FINDER_PARTIES } from '$lib/webmcp/internal/finder-schemas.js';
+import { PARTEI_FARBEN } from '$lib/data/partei-farben.js';
 import {
 	requestAgentWeights,
 	readFinderBridge,
@@ -233,6 +235,15 @@ describe('kiez-finder-panel', () => {
 		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
 		expect(panel.textContent?.replace(/\s+/g, ' ')).toContain('bewertet weder Nachbarschaften');
 		expect(panel.textContent).toContain('Zweitstimmen BTW 2025');
+	});
+
+	// Verklammert die Boundary-Duplikation: das WebMCP-Schema darf nur
+	// Parteien anbieten, die das Panel auch kennt.
+	it('FINDER_PARTIES entspricht der Panel-Parteiliste', () => {
+		const panelParteien = Object.keys(PARTEI_FARBEN).filter(
+			(p) => p !== 'Sonstige' && p !== 'CSU' && p !== 'FREIE WÄHLER'
+		);
+		expect([...FINDER_PARTIES].sort()).toEqual(panelParteien.sort());
 	});
 
 	// WebMCP-Kollaboration (Challenge 2026): Panel ↔ Bridge Round-Trip.

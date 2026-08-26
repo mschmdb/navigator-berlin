@@ -42,14 +42,22 @@ describe('finder-bridge', () => {
 	it('Panel konsumiert pending Agent-Gewichte genau einmal', () => {
 		requestAgentWeights({ sbahn: 2 });
 		const erste = consumePendingAgentWeights();
-		expect(erste?.sbahn).toBe(2);
+		expect(erste?.weights.sbahn).toBe(2);
 		expect(consumePendingAgentWeights()).toBeNull();
+	});
+
+	it('trägt eine Agent-Partei durch bis zum Snapshot', () => {
+		requestAgentWeights({ partei: 2 }, 'GRÜNE');
+		const pending = consumePendingAgentWeights();
+		expect(pending?.party).toBe('GRÜNE');
+		publishUserFinderState(pending!.weights, [], { vomNutzer: false, party: 'GRÜNE' });
+		expect(readFinderBridge().party).toBe('GRÜNE');
 	});
 
 	it('publishUserFinderState nach Agent-Apply überschreibt die Quelle nicht ohne Nutzer-Flag', () => {
 		requestAgentWeights({ kultur: 2 });
 		const pending = consumePendingAgentWeights();
-		publishUserFinderState(pending!, [], { vomNutzer: false });
+		publishUserFinderState(pending!.weights, [], { vomNutzer: false });
 		expect(readFinderBridge().lastChangedBy).toBe('agent');
 	});
 

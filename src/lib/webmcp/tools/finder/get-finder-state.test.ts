@@ -7,6 +7,7 @@ describe('get_finder_state', () => {
 		const tool = createGetFinderStateTool({
 			readFinderState: () => ({
 				weights: { ...neutralWeights(), kultur: 2, partei: 1 },
+				party: 'GRÜNE',
 				lastChangedBy: 'user',
 				changedAt: 1787725681000,
 				topMatches: [{ plrId: '01100102', name: 'Regierungsviertel', fit: 87 }],
@@ -18,6 +19,7 @@ describe('get_finder_state', () => {
 		expect(weights.culture).toBe(2);
 		expect(weights.voting_similarity).toBe(1);
 		expect(out.last_changed_by).toBe('user');
+		expect(out.party).toBe('GRÜNE');
 		expect(out.changed_at).toBe(new Date(1787725681000).toISOString());
 		expect(out.finder_open).toBe(true);
 		expect((out.top_matches as Array<Record<string, unknown>>)[0]?.kiez).toBe('Regierungsviertel');
@@ -27,6 +29,7 @@ describe('get_finder_state', () => {
 		const tool = createGetFinderStateTool({
 			readFinderState: () => ({
 				weights: neutralWeights(),
+				party: null,
 				lastChangedBy: null,
 				changedAt: null,
 				topMatches: [],

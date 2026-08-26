@@ -4,7 +4,7 @@ import { neutralWeights } from '$lib/components/atlas/internal/kiez-finder-engin
 
 function makeDeps(overrides: Record<string, unknown> = {}) {
 	return {
-		applyFinderWeights: vi.fn(async (partial) => ({
+		applyFinderWeights: vi.fn(async (partial: Record<string, number>, _party?: string) => ({
 			weights: { ...neutralWeights(), ...partial },
 			finderOpen: true,
 			navigation: 'none' as const,
@@ -19,7 +19,7 @@ describe('set_finder_weights', () => {
 		const deps = makeDeps();
 		const tool = createSetFinderWeightsTool(deps);
 		await tool.handler({ culture: 2, sbahn_proximity: 1 });
-		expect(deps.applyFinderWeights).toHaveBeenCalledWith({ kultur: 2, sbahn: 1 });
+		expect(deps.applyFinderWeights).toHaveBeenCalledWith({ kultur: 2, sbahn: 1 }, undefined);
 	});
 
 	it('liefert angewandte Gewichte englisch zurück, inkl. Top-Treffern', async () => {
@@ -30,6 +30,18 @@ describe('set_finder_weights', () => {
 		expect(weights.voting_similarity).toBe(0);
 		expect((out.top_matches as unknown[]).length).toBe(1);
 		expect(out.finder_open).toBe(true);
+	});
+
+	it('setzt voting_similarity samt Partei um', async () => {
+		const deps = makeDeps();
+		const tool = createSetFinderWeightsTool(deps);
+		await tool.handler({ voting_similarity: 2, party: 'GRÜNE' });
+		expect(deps.applyFinderWeights).toHaveBeenCalledWith({ partei: 2 }, 'GRÜNE');
+	});
+
+	it('lehnt unbekannte Partei ab', async () => {
+		const tool = createSetFinderWeightsTool(makeDeps());
+		await expect(tool.handler({ voting_similarity: 1, party: 'Piraten' })).rejects.toThrow();
 	});
 
 	it('lehnt leeren Input mit englischer Meldung ab', async () => {

@@ -33,6 +33,7 @@ export function createGetFinderStateTool(deps: GetFinderStateDeps): WebMcpToolDe
 			const out: JsonObject = {
 				finder_open: s.panelActive,
 				weights: toEnglishWeights(s.weights),
+				party: s.party,
 				last_changed_by: s.lastChangedBy,
 				changed_at: s.changedAt === null ? null : new Date(s.changedAt).toISOString(),
 				top_matches: s.topMatches.map((m) => ({

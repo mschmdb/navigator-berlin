@@ -29,10 +29,13 @@ const Bipolar = v.pipe(v.number(), v.integer(), v.minValue(-2), v.maxValue(2));
 const Unipolar = v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2));
 
 /**
- * Schreibbar sind die 8 Nicht-Partei-Gewichte. `voting_similarity` braucht
- * zusätzlich eine Partei-Wahl und bleibt v1 der UI vorbehalten (lesbar
- * über `get_finder_state`).
+ * Wählbare Parteien für voting_similarity. Muss der PARTEIEN-Liste im
+ * Kiez-Finder-Panel entsprechen (Architecture-Boundary: webmcp importiert
+ * nicht aus $lib/data, daher hier dupliziert; Panel-Test verklammert beide).
  */
+export const FINDER_PARTIES = ['SPD', 'CDU', 'GRÜNE', 'FDP', 'AfD', 'Die Linke', 'BSW'] as const;
+export type FinderParty = (typeof FINDER_PARTIES)[number];
+
 export const SetFinderWeightsInputSchema = v.object({
 	quiet_air: v.optional(Bipolar),
 	green_heat: v.optional(Bipolar),
@@ -41,7 +44,9 @@ export const SetFinderWeightsInputSchema = v.object({
 	housing_protection: v.optional(Bipolar),
 	culture: v.optional(Bipolar),
 	density: v.optional(Bipolar),
-	sbahn_proximity: v.optional(Unipolar)
+	sbahn_proximity: v.optional(Unipolar),
+	voting_similarity: v.optional(Unipolar),
+	party: v.optional(v.picklist(FINDER_PARTIES))
 });
 export type SetFinderWeightsInput = v.InferOutput<typeof SetFinderWeightsInputSchema>;
 
@@ -89,6 +94,17 @@ export const SET_FINDER_WEIGHTS_INPUT_JSON_SCHEMA = {
 		sbahn_proximity: {
 			...UNIPOLAR_JSON,
 			description: 'S-Bahn proximity. ' + UNIPOLAR_JSON.description
+		},
+		voting_similarity: {
+			...UNIPOLAR_JSON,
+			description:
+				'Similarity of local voting behavior (BTW 2025 Zweitstimme) to the chosen party. Combine with "party".'
+		},
+		party: {
+			type: 'string',
+			enum: [...FINDER_PARTIES],
+			description:
+				'Party for voting_similarity. Optional; without it the current panel selection applies (initial: SPD).'
 		}
 	}
 } as const;
@@ -158,7 +174,7 @@ export function toEnglishWeights(weights: FinderWeights): Record<EnglishWeightKe
 export function toInternalPartial(input: SetFinderWeightsInput): Partial<FinderWeights> {
 	const out: { -readonly [K in keyof FinderWeights]?: number } = {};
 	for (const [en, wert] of Object.entries(input)) {
-		if (typeof wert !== 'number') continue;
+		if (en === 'party' || typeof wert !== 'number') continue;
 		out[FINDER_WEIGHT_KEY_MAP[en as EnglishWeightKey]] = wert;
 	}
 	return out;

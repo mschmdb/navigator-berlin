@@ -23,8 +23,16 @@ export interface FinderTopMatch {
 
 export type FinderChangeSource = 'agent' | 'user';
 
+export interface PendingAgentUpdate {
+	readonly weights: FinderWeights;
+	/** Partei für weights.partei; null = aktuelle Panel-Auswahl behalten. */
+	readonly party: string | null;
+}
+
 export interface FinderBridgeSnapshot {
 	readonly weights: FinderWeights;
+	/** Aktive Partei-Auswahl des Panels (null bis zum ersten Publish). */
+	readonly party: string | null;
 	readonly lastChangedBy: FinderChangeSource | null;
 	/** Epoch-ms des letzten Wechsels, null solange unberührt. */
 	readonly changedAt: number | null;
@@ -38,7 +46,8 @@ let lastChangedBy = $state<FinderChangeSource | null>(null);
 let changedAt = $state<number | null>(null);
 let topMatches = $state<readonly FinderTopMatch[]>([]);
 let panelActive = $state(false);
-let pendingAgentWeights = $state<FinderWeights | null>(null);
+let party = $state<string | null>(null);
+let pendingAgentUpdate = $state<PendingAgentUpdate | null>(null);
 
 /**
  * Panel → Bridge: nach jedem Paint den sichtbaren Zustand spiegeln.
@@ -48,36 +57,41 @@ let pendingAgentWeights = $state<FinderWeights | null>(null);
 export function publishUserFinderState(
 	next: FinderWeights,
 	top: readonly FinderTopMatch[],
-	opts: { vomNutzer?: boolean } = {}
+	opts: { vomNutzer?: boolean; party?: string } = {}
 ): void {
 	weights = { ...next };
 	topMatches = [...top];
+	if (opts.party !== undefined) party = opts.party;
 	if (opts.vomNutzer !== false) {
 		lastChangedBy = 'user';
 		changedAt = Date.now();
 	}
 }
 
-/** Tool → Bridge: partielle Gewichte auf den letzten Stand mergen. */
-export function requestAgentWeights(partial: Partial<FinderWeights>): FinderWeights {
+/** Tool → Bridge: partielle Gewichte (und optional Partei) mergen. */
+export function requestAgentWeights(
+	partial: Partial<FinderWeights>,
+	agentParty?: string
+): FinderWeights {
 	const merged = { ...weights, ...partial };
 	weights = merged;
-	pendingAgentWeights = merged;
+	if (agentParty !== undefined) party = agentParty;
+	pendingAgentUpdate = { weights: merged, party: agentParty ?? null };
 	lastChangedBy = 'agent';
 	changedAt = Date.now();
 	return merged;
 }
 
-/** Panel-Effect: wartende Agent-Gewichte genau einmal abholen. */
-export function consumePendingAgentWeights(): FinderWeights | null {
-	const pending = pendingAgentWeights;
-	pendingAgentWeights = null;
+/** Panel-Effect: wartendes Agent-Update genau einmal abholen. */
+export function consumePendingAgentWeights(): PendingAgentUpdate | null {
+	const pending = pendingAgentUpdate;
+	pendingAgentUpdate = null;
 	return pending;
 }
 
 /** Reaktiver Lesezugriff fürs Panel-Effect (ohne zu konsumieren). */
-export function peekPendingAgentWeights(): FinderWeights | null {
-	return pendingAgentWeights;
+export function peekPendingAgentWeights(): PendingAgentUpdate | null {
+	return pendingAgentUpdate;
 }
 
 export function setFinderPanelActive(active: boolean): void {
@@ -87,6 +101,7 @@ export function setFinderPanelActive(active: boolean): void {
 export function readFinderBridge(): FinderBridgeSnapshot {
 	return {
 		weights: { ...weights },
+		party,
 		lastChangedBy,
 		changedAt,
 		topMatches: [...topMatches],
@@ -96,9 +111,10 @@ export function readFinderBridge(): FinderBridgeSnapshot {
 
 export function resetFinderBridgeForTests(): void {
 	weights = neutralWeights();
+	party = null;
 	lastChangedBy = null;
 	changedAt = null;
 	topMatches = [];
 	panelActive = false;
-	pendingAgentWeights = null;
+	pendingAgentUpdate = null;
 }
