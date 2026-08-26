@@ -362,7 +362,7 @@ Test:
 ```bash
 ssh admin@<IPv4> 'sudo /usr/local/bin/navigator-backup.sh'
 ls -lh /opt/backups/   # pg-YYYY-MM-DD.sql.gz + coolify-env-YYYY-MM-DD
-ssh root@168.119.98.228 'ls -lh /root/backups/navigator-prod/'   # gleicher Inhalt
+ssh root@<aux-IPv4> 'ls -lh /root/backups/navigator-prod/'   # gleicher Inhalt
 ```
 
 ---
@@ -402,7 +402,7 @@ ssh admin@<NEW_IPv4> 'sudo cp /tmp/coolify-prod.env.backup /data/coolify/source/
 ## Anhang: Eingebaute Hilfen + Memory-Referenzen
 
 - `project_server_purchase_sequencing` — CPX22 statt CX33 Begründung
-- `project_cax21_aux_server` — Aux-ARM-Server für Off-Server-Backup (168.119.98.228)
+- `project_cax21_aux_server` — Aux-ARM-Server für Off-Server-Backup
 - `project_coolify_basic_auth` — Coolify-Dashboard-Schutz
 - `project_backup_pipeline` — Aktuelle Backup-Implementation
 

@@ -3,7 +3,6 @@ type: architecture
 audience: both
 last-verified: 2026-07-01
 related:
-  - docs/recovery/wiedereinstieg.md
   - docs/architecture/system-map.md
   - docs/adr/INDEX.md
 ---
@@ -14,10 +13,7 @@ Single-Entry für Owner + LLM-Agents. Alle System-Doku-Assets von navigator.berl
 
 ## Wiedereinstieg-Quickstart
 
-Nach längerer Pause oder bei neuem Maintainer:
-
-- [Wiedereinstieg-Playbook](./recovery/wiedereinstieg.md) — Local-Dev-Setup, Production-Access, Restart-Sequenz, häufige Bricks
-- [Secrets-Map](./recovery/secrets-map.md) — Inventar aller Tokens/Passwörter mit Storage-Locations (keine Plaintext-Werte)
+Nach längerer Pause oder bei neuem Maintainer: Die operativen Recovery-Dokumente (Wiedereinstieg-Playbook, Secrets-Map) liegen außerhalb dieses Repos beim Owner.
 
 **Top-Runbooks bei akuten Problemen:**
 
