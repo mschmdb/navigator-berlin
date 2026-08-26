@@ -9,7 +9,8 @@ import {
 	GetFinderStateInputSchema,
 	GET_FINDER_STATE_INPUT_JSON_SCHEMA,
 	GET_FINDER_STATE_OUTPUT_JSON_SCHEMA,
-	toEnglishWeights
+	toEnglishWeights,
+	finderMapUrl
 } from '../../internal/finder-schemas.js';
 import type { WebMcpToolDefinition } from '../../internal/tool-types.js';
 import type { JsonObject } from '../../internal/json-types.js';
@@ -35,6 +36,7 @@ export function createGetFinderStateTool(deps: GetFinderStateDeps): WebMcpToolDe
 				weights: toEnglishWeights(s.weights),
 				party: s.party,
 				last_changed_by: s.lastChangedBy,
+				map_url: finderMapUrl(),
 				changed_at: s.changedAt === null ? null : new Date(s.changedAt).toISOString(),
 				top_matches: s.topMatches.map((m) => ({
 					kiez: m.name,

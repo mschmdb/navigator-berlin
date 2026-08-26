@@ -30,6 +30,7 @@ describe('set_finder_weights', () => {
 		expect(weights.voting_similarity).toBe(0);
 		expect((out.top_matches as unknown[]).length).toBe(1);
 		expect(out.finder_open).toBe(true);
+		expect(out.map_url).toMatch(/\/explore\?finder=1$/);
 	});
 
 	it('setzt voting_similarity samt Partei um', async () => {
