@@ -276,6 +276,22 @@ describe('kiez-finder-panel', () => {
 		resetFinderBridgeForTests();
 	});
 
+	it('wendet eine Agent-Partei an: Select wechselt, Shares werden geladen', async () => {
+		resetFinderBridgeForTests();
+		const loadShares = vi.fn(async () => [] as never[]);
+		await renderPanel({ loadShares });
+		requestAgentWeights({ partei: 2 }, 'GRÜNE');
+		await vi.waitFor(() => {
+			expect(loadShares).toHaveBeenCalled();
+			const slider = document.querySelector(
+				'[data-testid="finder-slider-partei"]'
+			) as HTMLInputElement;
+			expect(slider.value).toBe('2');
+			expect(readFinderBridge().party).toBe('GRÜNE');
+		});
+		resetFinderBridgeForTests();
+	});
+
 	it('meldet Panel-Sichtbarkeit an die Bridge', async () => {
 		resetFinderBridgeForTests();
 		const { result } = await renderPanel();
