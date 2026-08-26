@@ -179,3 +179,16 @@ export function toInternalPartial(input: SetFinderWeightsInput): Partial<FinderW
 	}
 	return out;
 }
+
+/**
+ * Absolute URL der Finder-Ansicht für Tool-Antworten. Agent-Clients
+ * (ChatGPT) öffnen das Browser-Panel nicht automatisch; eine explizite
+ * map_url im Ergebnis macht den Karten-Link in der Antwort zuverlässig.
+ */
+export function finderMapUrl(): string {
+	const origin =
+		typeof location !== 'undefined' && location.origin
+			? location.origin
+			: 'https://navigator.berlin';
+	return `${origin}/explore?finder=1`;
+}
