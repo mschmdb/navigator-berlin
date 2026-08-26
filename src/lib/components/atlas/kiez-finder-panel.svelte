@@ -125,18 +125,44 @@
 	}
 
 	let rafId: number | null = null;
-	function applyWeights(): void {
-		if (rafId !== null) return;
-		rafId = requestAnimationFrame(() => {
+	let fallbackId: ReturnType<typeof setTimeout> | null = null;
+
+	function runPaint(): void {
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
 			rafId = null;
-			void paint();
-		});
+		}
+		if (fallbackId !== null) {
+			clearTimeout(fallbackId);
+			fallbackId = null;
+		}
+		void paint();
 	}
 
+	/**
+	 * Agent-Browser (ChatGPT Atlas, Automations-Chrome) fahren die Seite in
+	 * einem versteckten Tab; dort feuert requestAnimationFrame nie. Ohne den
+	 * Timeout-Fallback blieb die Top-Liste für die WebMCP-Tools dauerhaft
+	 * leer (Prod-Bug 26.08.). Wer zuerst feuert, malt; der andere wird
+	 * abgeräumt.
+	 */
+	function applyWeights(): void {
+		if (rafId !== null || fallbackId !== null) return;
+		rafId = requestAnimationFrame(runPaint);
+		fallbackId = setTimeout(runPaint, 100);
+	}
+
+	/**
+	 * Die Rangliste ist eine reine Funktion über die Finder-Kollektion und
+	 * wird veröffentlicht, bevor die Karte ins Spiel kommt: die WebMCP-Tools
+	 * sollen Treffer bekommen, auch wenn die MapLibre-Instanz fehlt oder
+	 * noch nicht bereit ist. Das Einfärben passiert danach, sofern eine
+	 * Karte da ist.
+	 */
 	async function paint(): Promise<void> {
-		if (!map || !base) return;
+		if (!base) return;
 		if (!hasActiveWeights(weights)) {
-			if (map.getLayer(FINDER_LAYER_ID)) map.removeLayer(FINDER_LAYER_ID);
+			if (map?.getLayer(FINDER_LAYER_ID)) map.removeLayer(FINDER_LAYER_ID);
 			top = [];
 			publishUserFinderState(weights, [], { vomNutzer: false, party: partei });
 			return;
@@ -144,15 +170,18 @@
 		if (!collection || (weights.partei !== 0 && loadedPartei !== partei)) {
 			await rebuildCollection();
 		}
-		if (!collection || !map) return;
+		if (!collection) return;
+		// Kontrast-Spreizung über die reale Verteilung: alle 542 Fits sind für
+		// die Top-Liste ohnehin berechnet.
+		const allResults = topResults(collection, weights, collection.features.length);
+		top = allResults.slice(0, 5);
+		publishUserFinderState(weights, alsMatches(top), { vomNutzer: false, party: partei });
+		if (!map) return;
 		// Quelle sicherstellen: das Panel kann mounten, bevor die Map bereit
 		// war; dann lief rebuildCollection ohne Quelle und addLayer fiele um.
 		if (!map.getSource(FINDER_SOURCE_ID)) {
 			map.addSource(FINDER_SOURCE_ID, { type: 'geojson', data: collection });
 		}
-		// Kontrast-Spreizung über die reale Verteilung: alle 542 Fits sind für
-		// die Top-Liste ohnehin berechnet.
-		const allResults = topResults(collection, weights, collection.features.length);
 		const domain = fitDomain(allResults.map((r) => r.fit));
 		const expression = fitColorExpression(weights, domain);
 		const opacity = fitOpacityExpression(weights, domain);
@@ -172,8 +201,6 @@
 			map.setPaintProperty(FINDER_LAYER_ID, 'fill-color', expression);
 			map.setPaintProperty(FINDER_LAYER_ID, 'fill-opacity', opacity);
 		}
-		top = allResults.slice(0, 5);
-		publishUserFinderState(weights, alsMatches(top), { vomNutzer: false, party: partei });
 	}
 
 	// Bridge-Spiegel (WebMCP-Kollaboration): Panel-Zustand für die Tools
