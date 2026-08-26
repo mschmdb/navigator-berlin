@@ -1,6 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import {
 	waitForFinderTopMatches,
+	readFinderPublishSeq,
 	publishUserFinderState,
 	requestAgentWeights,
 	consumePendingAgentWeights,
@@ -131,13 +132,30 @@ describe('finder-bridge', () => {
 				{ plrId: 'x', name: 'Hasenheide', fit: 78 }
 			]);
 		}, 120);
-		const treffer = await waitForFinderTopMatches(3000, 40);
+		const treffer = await waitForFinderTopMatches({ timeoutMs: 3000, intervallMs: 40 });
 		expect(treffer[0]?.name).toBe('Hasenheide');
 	});
 
 	it('waitForFinderTopMatches gibt nach Timeout leer zurück', async () => {
-		const treffer = await waitForFinderTopMatches(150, 40);
+		const treffer = await waitForFinderTopMatches({ timeoutMs: 150, intervallMs: 40 });
 		expect(treffer).toEqual([]);
+	});
+
+	// Prod-Bug 26.08.: beim zweiten Tool-Aufruf (Partei dazugeschaltet) war
+	// die Liste bereits gefüllt, das Warten endete sofort und der Agent
+	// meldete die ALTE Rangliste als neue.
+	it('waitForFinderTopMatches ignoriert den alten Stand und wartet auf die neue Rechnung', async () => {
+		publishUserFinderState({ ...neutralWeights(), kultur: 2 }, [
+			{ plrId: 'alt', name: 'Alte Liste', fit: 70 }
+		]);
+		const seq = readFinderPublishSeq();
+		setTimeout(() => {
+			publishUserFinderState({ ...neutralWeights(), partei: 2 }, [
+				{ plrId: 'neu', name: 'Neue Liste', fit: 83 }
+			]);
+		}, 120);
+		const treffer = await waitForFinderTopMatches({ sinceSeq: seq, timeoutMs: 3000, intervallMs: 40 });
+		expect(treffer[0]?.name).toBe('Neue Liste');
 	});
 
 	it('setFinderPanelActive spiegelt den Panel-Zustand', () => {
