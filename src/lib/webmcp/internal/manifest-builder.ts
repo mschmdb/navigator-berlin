@@ -12,6 +12,12 @@
 
 import { WEBMCP_SPEC_VERSION } from './spec-version.js';
 import {
+	SET_FINDER_WEIGHTS_INPUT_JSON_SCHEMA,
+	SET_FINDER_WEIGHTS_OUTPUT_JSON_SCHEMA,
+	GET_FINDER_STATE_INPUT_JSON_SCHEMA,
+	GET_FINDER_STATE_OUTPUT_JSON_SCHEMA
+} from './finder-schemas.js';
+import {
 	ADDRESS_LOOKUP_INPUT_JSON_SCHEMA,
 	ADDRESS_LOOKUP_OUTPUT_JSON_SCHEMA,
 	POINT_INPUT_JSON_SCHEMA,
@@ -132,6 +138,20 @@ const TOOL_DESCRIPTIONS: readonly WebMcpManifestToolEntry[] = [
 			'Return the GeoJSON Feature for a single Berlin Stimmbezirk in a given year. Input: district_id (uwbId from get_election_result on stimmbezirks-level, format depends on year) + year. Errors with geometry_not_available for pre-2017 BTW / pre-2016 AGH/BVV.',
 		input_schema: VOTING_DISTRICT_GEOMETRY_INPUT_JSON_SCHEMA,
 		output_schema: VOTING_DISTRICT_GEOMETRY_OUTPUT_JSON_SCHEMA
+	},
+	{
+		name: 'set_finder_weights',
+		description:
+			'Set the sliders of the interactive Kiez-Finder. The map the user is looking at recolors all 542 Berlin planning areas instantly; weights not provided stay unchanged. Part of the human-agent collaboration round-trip with get_finder_state.',
+		input_schema: SET_FINDER_WEIGHTS_INPUT_JSON_SCHEMA,
+		output_schema: SET_FINDER_WEIGHTS_OUTPUT_JSON_SCHEMA
+	},
+	{
+		name: 'get_finder_state',
+		description:
+			'Read the current Kiez-Finder state: all nine weights, who changed them last (user or agent) and when, whether the panel is open, and the current top matching Kieze.',
+		input_schema: GET_FINDER_STATE_INPUT_JSON_SCHEMA,
+		output_schema: GET_FINDER_STATE_OUTPUT_JSON_SCHEMA
 	}
 ];
 

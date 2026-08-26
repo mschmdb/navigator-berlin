@@ -32,8 +32,9 @@
 	<p class="text-fg-muted mt-6 leading-relaxed">
 		WebMCP ist eine Browser-API, mit der Websites strukturierte Tools an KI-Agenten ausliefern
 		können. Statt HTML zu scrapen, fragt der Agent eine Adresse oder einen Datensatz direkt ab und
-		bekommt Zahl, Quelle und Lizenz zurück. navigator.berlin liefert seit Mai 2026 neun solche
-		Tools.
+		bekommt Zahl, Quelle und Lizenz zurück. navigator.berlin liefert seit Mai 2026 solche Tools aus,
+		inzwischen elf, seit August 2026 auch schreibende: Ein Agent kann den Kiez-Finder bedienen, den
+		ein Mensch vor sich sieht.
 	</p>
 
 	<WebmcpDiagnose />
@@ -50,9 +51,13 @@
 			>
 				W3C-Community-Group-Draft
 			</a>, gemeinsam von Microsoft und Google entwickelt, gehostet in der Web Machine Learning
-			Community Group. Letzte Veröffentlichung: April 2026. Ausdrücklich nicht auf dem
-			W3C-Standards-Track. Das heißt: interessierte Parteien haben sich auf einen Entwurf geeinigt,
-			aber noch ist kein Commitment, daraus eine offizielle Web-Plattform-API zu machen.
+			Community Group. Laufend aktualisiert, Stand August 2026; die API-Surface ist inzwischen von
+			<code class="font-mono text-sm">navigator.modelContext</code>
+			zu
+			<code class="font-mono text-sm">document.modelContext</code>
+			umgezogen. Ausdrücklich nicht auf dem W3C-Standards-Track. Das heißt: interessierte Parteien haben
+			sich auf einen Entwurf geeinigt, aber noch ist kein Commitment, daraus eine offizielle Web-Plattform-API
+			zu machen.
 		</p>
 		<p class="mt-3 leading-relaxed">
 			Spec-URL:
@@ -71,12 +76,20 @@
 		<h2 class="font-serif text-xl">Browser-Support</h2>
 		<dl class="mt-3 space-y-3 leading-relaxed">
 			<div>
-				<dt class="font-medium">Chrome Canary 146+</dt>
+				<dt class="font-medium">Chrome 149+</dt>
 				<dd class="text-fg-muted">
-					Erste native Implementation seit Anfang 2026. Aktivierung über Flag <code
-						class="font-mono text-sm">chrome://flags/#enable-webmcp-testing</code
-					>
+					Native Implementation auf <code class="font-mono text-sm">document.modelContext</code>
+					(erste Fassung ab Canary 146 noch auf navigator). Aktivierung über Flag
+					<code class="font-mono text-sm">chrome://flags/#enable-webmcp-testing</code>
 					plus Neustart.
+				</dd>
+			</div>
+			<div>
+				<dt class="font-medium">ChatGPT-Desktop-App</dt>
+				<dd class="text-fg-muted">
+					Der eingebaute Browser stellt <code class="font-mono text-sm">document.modelContext</code>
+					nativ bereit; Tool-Aufrufe setzen ein Runtime-Modell mit Site-Tools-Support voraus (GPT-5.6
+					Sol oder Terra) und die Freigabe unter Settings → Browser → Permissions.
 				</dd>
 			</div>
 			<div>
@@ -95,10 +108,12 @@
 				<dt class="font-medium">Polyfill</dt>
 				<dd class="text-fg-muted">
 					Für Browser ohne native Implementation laden LLM-Browser-Extensions oft einen Polyfill,
-					der
+					der die API nachreicht. navigator.berlin prüft
+					<code class="font-mono text-sm">document.modelContext</code>
+					zuerst und fällt auf
 					<code class="font-mono text-sm">navigator.modelContext</code>
-					nachreicht. So funktionieren die Tools auch in Chrome Stable, Firefox oder Safari, sofern der
-					Agent diesen Weg fährt.
+					plus Polyfill zurück. So funktionieren die Tools auch in Chrome Stable, Firefox oder Safari,
+					sofern der Agent diesen Weg fährt.
 				</dd>
 			</div>
 		</dl>
@@ -121,7 +136,7 @@
 				Open-Web-Initiativen unterstützen, nicht nur kommerzielle.
 			</li>
 			<li>
-				Der Aufwand ist gering. Die neun Tools sind Wrapper um Funktionen, die ohnehin existieren
+				Der Aufwand ist gering. Die Tools sind Wrapper um Funktionen, die ohnehin existieren
 				(Adress-Lookup, Layer-Abfrage, Wahl-Daten). Spec-Änderungen wirken sich nur auf eine
 				Adapter-Datei aus.
 			</li>
@@ -135,7 +150,8 @@
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Verfügbare Tools</h2>
 		<p class="mt-3 leading-relaxed">
-			Aktuell sind neun Tools registriert. Volltext-Manifest mit JSON-Schemas pro Tool unter
+			Aktuell sind elf Tools registriert, zehn lesende und ein schreibendes. Volltext-Manifest mit
+			JSON-Schemas pro Tool unter
 			<a class="text-accent underline" href="/webmcp-manifest.json">/webmcp-manifest.json</a>.
 		</p>
 		<dl class="mt-3 space-y-2 leading-relaxed">
@@ -188,6 +204,19 @@
 				<dt class="font-mono text-sm">get_voting_district_geometry</dt>
 				<dd class="text-fg-muted text-sm">GeoJSON-Polygon zu einer Stimmbezirks-ID liefern.</dd>
 			</div>
+			<div>
+				<dt class="font-mono text-sm">set_finder_weights</dt>
+				<dd class="text-fg-muted text-sm">
+					Schreibend: Der Agent stellt die Kiez-Finder-Regler, die Karte vor den Augen des Menschen
+					färbt sich live um.
+				</dd>
+			</div>
+			<div>
+				<dt class="font-mono text-sm">get_finder_state</dt>
+				<dd class="text-fg-muted text-sm">
+					Rückkanal: Gewichte, letzte Änderungsquelle (Mensch oder Agent) und Top-Kieze lesen.
+				</dd>
+			</div>
 		</dl>
 	</section>
 
@@ -203,16 +232,16 @@
 				>
 					Chrome Canary
 				</a>
-				ab Version 146 installieren.
+				ab Version 149 installieren (oder Chrome Stable 149+).
 			</li>
 			<li>
 				<code class="font-mono text-sm">chrome://flags/#enable-webmcp-testing</code>
 				öffnen, „WebMCP for testing" auf „Enabled" setzen, Canary neu starten.
 			</li>
 			<li>
-				navigator.berlin im Canary öffnen. Die neun Tools sind automatisch bei
-				<code class="font-mono text-sm">navigator.modelContext</code>
-				registriert (siehe DevTools-Konsole).
+				navigator.berlin öffnen. Die elf Tools registrieren sich automatisch bei
+				<code class="font-mono text-sm">document.modelContext</code>; die Live-Diagnose oben auf
+				dieser Seite zeigt Surface und Tool-Liste.
 			</li>
 			<li>
 				Optional: Chrome-Team-Extension
@@ -232,9 +261,9 @@
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Einsatz ohne Canary</h2>
 		<p class="mt-3 leading-relaxed">
-			Wer im Stable-Chrome, Firefox oder Safari bleibt, kann WebMCP über eine LLM-Browser-Extension
-			nutzen, die einen Polyfill mitlädt. Aktuelle Anthropic-Browser-Tools und einige
-			ChatGPT-Plugins fahren diesen Weg.
+			Die ChatGPT-Desktop-App bringt WebMCP im eingebauten Browser nativ mit. Wer im Stable-Chrome
+			ohne Flag, Firefox oder Safari bleibt, kann WebMCP über eine LLM-Browser-Extension nutzen, die
+			einen Polyfill mitlädt.
 		</p>
 		<p class="mt-3 leading-relaxed">
 			Discovery-Pfad (Konvention, nicht Standard):
