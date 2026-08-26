@@ -382,7 +382,7 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 		relatedLayers: ['ubahn-netz']
 	},
 	'sbahn-stationen': {
-		calculation: 'S-Bahn-Bahnhöfe aus OpenStreetMap, abgeleitet aus VBB-GTFS-Stations-Set.',
+		calculation: 'S-Bahn-Bahnhöfe aus OpenStreetMap (railway=station, station=light_rail).',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
 		authorityKey: 'sbahn',
