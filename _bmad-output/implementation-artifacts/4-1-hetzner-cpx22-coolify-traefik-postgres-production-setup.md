@@ -22,7 +22,7 @@ so that Site mit 99% Uptime (NFR-R1) ohne SLA und ohne externes Monitoring betre
 
 **ADR-Status (Story 4.4 nachzieher):** ADR-015 (Hetzner-CPX22-statt-CX32) wird in Story 4.4 dokumentiert — Architecture-Doku (`architecture.md` Zeile 482) referenziert noch CX32 (ARM). Story 4.1 verwendet CPX22 (AMD) explizit per User-Lock 2026-05-15-PM, finale Bestätigung 2026-05-17-AM nach CX33-vs-CPX22-Recherche (CX-Gen3-Lotterie + Cross-Arch-Rescale-Block ausgeschlossen). ADR-013 (Postgres-Hybrid) und ADR-014 (i18n-Scope-Reduce) ebenfalls in 4.4.
 
-**Aux-Server (Memory `project_cax21_aux_server`):** Bestehender CAX21 (ARM Ampere, 168.119.98.228) verfügbar als sekundäre Resource für kleine externe Dienste (z. B. off-server-rsync-Target alternativ zu Storage-Box, Status-Endpoint, leichte Monitoring-Aufgaben). Kein Primär-Production-Host für navigator.berlin — Trennung Production-Pfad bleibt CPX22-only. Cross-Arch (AMD ↔ ARM) verhindert Direkt-Cluster, aber Aux-Pfad via SSH-rsync/HTTPS unkritisch.
+**Aux-Server (Memory `project_cax21_aux_server`):** Bestehender CAX21 (ARM Ampere) verfügbar als sekundäre Resource für kleine externe Dienste (z. B. off-server-rsync-Target alternativ zu Storage-Box, Status-Endpoint, leichte Monitoring-Aufgaben). Kein Primär-Production-Host für navigator.berlin — Trennung Production-Pfad bleibt CPX22-only. Cross-Arch (AMD ↔ ARM) verhindert Direkt-Cluster, aber Aux-Pfad via SSH-rsync/HTTPS unkritisch.
 
 **Memory-Marker:** `project_server_purchase_sequencing`, `project_cax21_aux_server`, `project_i18n_phase_1_de_only` (i18n-Phase-1 ist DE-only — Coming-Soon-Skelett ist DE-only, kein `/en/...`-Variant).
 
@@ -331,7 +331,7 @@ export const GET: RequestHandler = async () => {
 **MUST-Rule-Mapping (`architecture.md` Zeilen 1050–1073):**
 
 - **Rule #10 (Cookieless):** Production-MUSS-Gate. Story 4.1 implementiert keine eigene Cookie-Logic. CI-Cookie-Gate (Story 4.3) verifiziert Set-Cookie-Header-Absence. Falls Story 3.1 (Paraglide-Reduce auf DE-only mit `["baseLocale"]`-Strategy) NICHT done ist, kann `PARAGLIDE_LOCALE`-Cookie gesetzt sein — Coordination-Hand-off zu 3.1 dokumentieren.
-- **Rule #11 (Kein US-Drittanbieter):** Production-Pfad. CI-Gate in Story 4.3. Story 4.1 verwendet KEIN Cloudflare, KEIN AWS, KEIN GCP. Hetzner-Falkenstein + Hetzner-Storage-Box (Backup) sind EU-FOSS-konform. CAX21-Aux-Server (168.119.98.228, Hetzner-Falkenstein/Nürnberg, Memory `project_cax21_aux_server`) ebenfalls EU-FOSS-konform.
+- **Rule #11 (Kein US-Drittanbieter):** Production-Pfad. CI-Gate in Story 4.3. Story 4.1 verwendet KEIN Cloudflare, KEIN AWS, KEIN GCP. Hetzner-Falkenstein + Hetzner-Storage-Box (Backup) sind EU-FOSS-konform. CAX21-Aux-Server (Hetzner-Falkenstein/Nürnberg, Memory `project_cax21_aux_server`) ebenfalls EU-FOSS-konform.
 
 **NFR-Mapping:**
 
