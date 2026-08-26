@@ -22,9 +22,8 @@ describe('robots.txt Endpoint (Story 5.9 AC-1)', () => {
 		expect(body).toMatch(/^Sitemap: https:\/\/navigator\.berlin\/sitemap\.xml$/m);
 	});
 
-	it('default-Block disallowed /_dev/ + /api/', async () => {
+	it('default-Block disallowed /api/', async () => {
 		const body = await fetchRobots();
-		expect(body).toMatch(/^Disallow: \/_dev\/$/m);
 		expect(body).toMatch(/^Disallow: \/api\/$/m);
 	});
 

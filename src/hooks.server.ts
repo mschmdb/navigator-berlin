@@ -50,15 +50,15 @@ const handleParaglide: Handle = ({ event, resolve }) =>
 	});
 
 /**
- * Story 5.9 AC-9: X-Robots-Tag: noindex,nofollow auf alle /api/* und /_dev/*
- * Responses. Crawl-Budget + verhindert dass Suchmaschinen JSON-Endpoints oder
- * Dev-Showcase-Pages indexieren falls Default-Block in robots.txt overridden
- * wird. Komplement zum meta-robots-Tag im HTML.
+ * Story 5.9 AC-9: X-Robots-Tag: noindex,nofollow auf alle /api/*-Responses.
+ * Crawl-Budget + verhindert dass Suchmaschinen JSON-Endpoints indexieren
+ * falls Default-Block in robots.txt overridden wird. Komplement zum
+ * meta-robots-Tag im HTML.
  */
 const handleNoIndexHeaders: Handle = async ({ event, resolve }) => {
 	const response = await resolve(event);
 	const path = event.url.pathname;
-	if (path.startsWith('/api/') || path.startsWith('/_dev/')) {
+	if (path.startsWith('/api/')) {
 		response.headers.set('X-Robots-Tag', 'noindex,nofollow');
 	}
 	return response;

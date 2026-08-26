@@ -54,3 +54,7 @@ _user-input/
 .vitest-attachments/
 _bmad-output/secrets/
 _bmad-output/secrets/coolify-prod.env.backup
+# Lokale Agent-Tooling-Artefakte (Codex-Skill-Spiegel, Jean, Prompt-Grading)
+.agents/
+jean.json
+prompt-grader-runs/

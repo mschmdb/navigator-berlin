@@ -143,7 +143,7 @@ describe('SeoHead', () => {
 		render(SeoHead, {
 			title: 'Dev',
 			description: 'd',
-			pathname: '/_dev/wortmarke',
+			pathname: '/interne-vorschau',
 			origin: 'https://navigator.berlin',
 			noindex: true
 		});

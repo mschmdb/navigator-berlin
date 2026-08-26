@@ -71,16 +71,6 @@ export const SOURCES: SourceConfig[] = [
 	// Bundle B: Wohn-Daten (GDI Berlin WFS, dl-de/by-2-0). Endpoints + typeNames live-verifiziert 2026-05-11
 	// TODO: mietspiegel-wohnlage (~600k Adress-Polygone, 116MB simplified). Vertex-Simplify hilft nicht
 	// (Polygone bereits klein). Defer bis Tile-Strategy (PMTiles/MVT) oder Dissolve-by-wohnlage.
-	// {
-	// 	slug: 'mietspiegel-wohnlage',
-	// 	kind: 'fis-broker',
-	// 	sourceUrl: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
-	// 	typeName: 'wohnlagenadr2024:wohnlagenadr2024',
-	// 	license: 'dl-de/by-2-0',
-	// 	bundleGroup: 'B: Wohn-Daten',
-	// 	zoomThresholds: { min: 12, max: 18 },
-	// 	simplifyProfile: 'polygon'
-	// },
 	{
 		slug: 'bodenrichtwerte',
 		kind: 'fis-broker',
@@ -94,16 +84,6 @@ export const SOURCES: SourceConfig[] = [
 	},
 	// TODO: alkis_gebaeude (~600k Polygone, ~100MB+) braucht Tile-basiertes Streaming oder bbox-Subset.
 	// Deferred zu Story 1.6+ (Map-Display) wenn entschieden ist wie wir mit grossen Layern umgehen.
-	// {
-	// 	slug: 'gebaeudealter',
-	// 	kind: 'fis-broker',
-	// 	sourceUrl: 'https://gdi.berlin.de/services/wfs/alkis_gebaeude',
-	// 	typeName: 'alkis_gebaeude:gebaeude',
-	// 	license: 'dl-de/by-2-0',
-	// 	bundleGroup: 'B: Wohn-Daten',
-	// 	zoomThresholds: { min: 14, max: 18 },
-	// 	simplifyProfile: 'polygon'
-	// },
 	// Bundle C: Umwelt (Umweltatlas WFS + OSM saisonal).
 	// Umweltgerechtigkeit 2023/2024: 542 LOR-Planungsraum-Polygone, ordinal-3-Stufen (gering/mittel/hoch).
 	// Ersetzt urspruengliche strassenlaerm-2022-Quelle (Schienenverkehrs-LineStrings) durch flaechige Laermbelastung.
@@ -164,28 +144,8 @@ export const SOURCES: SourceConfig[] = [
 	},
 	// TODO: solarpotenzial (~600k Gebaeude-Photovoltaik-Polygone, >512MB raw, Node string-limit gesprengt).
 	// Defer bis Tile-Strategy ODER bbox-Pagination im WFS-Request.
-	// {
-	// 	slug: 'solarpotenzial',
-	// 	kind: 'fis-broker',
-	// 	sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_solarpotenzial_solarrechner',
-	// 	typeName: 'ua_solarpotenzial_solarrechner:d_photovoltaik_potenzial',
-	// 	license: 'dl-de/by-2-0',
-	// 	bundleGroup: 'C: Umwelt',
-	// 	zoomThresholds: { min: 13, max: 18 },
-	// 	simplifyProfile: 'polygon'
-	// },
 	// TODO: klimaanalyse (29MB simplified). Polygone hochaufgelöst (10x10m raster). Defer bis Tile-Strategy
 	// oder gröberer Klimabewertung-Layer (z.B. Block-basiert statt Raster).
-	// {
-	// 	slug: 'klimaanalyse',
-	// 	kind: 'fis-broker',
-	// 	sourceUrl: 'https://gdi.berlin.de/services/wfs/ua_klimabewertung_2015',
-	// 	typeName: 'ua_klimabewertung_2015:ca_besondere_stadtklimat_missstaende',
-	// 	license: 'dl-de/by-2-0',
-	// 	bundleGroup: 'C: Umwelt',
-	// 	zoomThresholds: { min: 10, max: 18 },
-	// 	simplifyProfile: 'polygon'
-	// },
 	{
 		slug: 'trinkbrunnen',
 		kind: 'overpass',
