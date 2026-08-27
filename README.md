@@ -1,12 +1,14 @@
 # navigator.berlin
 
-Cross-Layer Berlin Atlas: adressgenaue Multi-Layer-Inspektion (Klima, Lärm, Mobilität, Heritage, demografische Daten) auf einer offenen Karte.
+Cross-layer Berlin atlas: address-level inspection across 65 open-data layers (climate, noise, mobility, heritage, demographics) on one map.
 
-GitHub: <https://github.com/mschmdb/navigator-berlin>
+Live: <https://navigator.berlin>
 
-![Kiez-Finder: Regler gewichten neun Kriterien, die Karte färbt alle 542 Planungsräume live](static/berlin-navigator-kiez-finder.webp)
+![Kiez-Finder: nine sliders weight the criteria, the map recolors all 542 planning areas live](static/berlin-navigator-kiez-finder.webp)
 
-![Multi-Layer-Inspektion: mehrere Datenebenen an einer Adresse übereinandergelegt](static/berlin-navigator-multilayer.webp)
+![Multi-layer inspection: several data layers stacked at one address](static/berlin-navigator-multilayer.webp)
+
+The interface is German, since the data and the audience are Berlin's. Code, commits and this file are English.
 
 ## Setup
 
@@ -15,33 +17,36 @@ pnpm install
 pnpm dev
 ```
 
-Anforderungen: Node.js ≥20 (siehe `.nvmrc`), pnpm 10.
+Requirements: Node.js ≥20 (see `.nvmrc`), pnpm 10.
 
-Die Karte, alle Geo-Layer und der Kiez-Finder laufen ohne weitere Konfiguration: `static/` enthält die fertig generierten Daten.
+The map, all geo layers and the Kiez-Finder run with no further configuration: `static/` ships the generated data.
 
-**Optional: Postgres.** Wahldaten und Zusatzdaten (FAQ, Ranks, Vergleiche) kommen aus einer lokalen Postgres-Datenbank. Ohne `DATABASE_URL` antwortet `/wahl` mit 503; Bezirk- und Kiez-Seiten rendern mit reduzierten Daten. Setup: [`docs/runbooks/local-postgres-setup.md`](./docs/runbooks/local-postgres-setup.md), Variablen: [`.env.example`](./.env.example).
+**Postgres is optional.** Election results and supplementary data (FAQ, ranks, comparisons) come from a local Postgres database. Without `DATABASE_URL`, `/wahl` answers 503 and the Bezirk and Kiez pages render with reduced data; everything else works. Setup: [`docs/runbooks/local-postgres-setup.md`](./docs/runbooks/local-postgres-setup.md), variables: [`.env.example`](./.env.example).
 
 ## WebMCP
 
-navigator.berlin registriert 11 Tools über die [WebMCP-API](https://webmachinelearning.github.io/webmcp/) (`window.agent`-`ModelContext`). Browser-Agenten (z.B. ChatGPT in Atlas, Chrome 149 mit WebMCP-Flag) können damit Adressen nachschlagen, Layer an Koordinaten abfragen, Wahlergebnisse vergleichen und den Kiez-Finder steuern: `set_finder_weights` stellt die Regler, die Karte färbt sich live vor den Augen des Menschen um, `get_finder_state` liest zurück, was der Mensch nachjustiert hat.
+navigator.berlin registers 11 tools through the [WebMCP API](https://webmachinelearning.github.io/webmcp/), ten of them read-only. Browser agents (ChatGPT's in-app browser, Chrome 149 with the WebMCP flag) can look up addresses, query layers at a coordinate, compare election results and drive the Kiez-Finder.
 
-- Tool-Manifest: [`/webmcp-manifest.json`](https://navigator.berlin/webmcp-manifest.json)
-- Doku: [`docs/webmcp-challenge.md`](./docs/webmcp-challenge.md)
+The finder is the collaborative part: `set_finder_weights` moves the sliders and the map recolors in front of the human, `get_finder_state` reads back what the human adjusted afterwards. Every answer carries a link that reopens that exact map in any browser.
 
-## Daten-Pipeline
+- Tool manifest: [`/webmcp-manifest.json`](https://navigator.berlin/webmcp-manifest.json)
+- Live diagnostics: [`/webmcp`](https://navigator.berlin/webmcp)
+- Notes: [`docs/webmcp-challenge.md`](./docs/webmcp-challenge.md)
 
-Alle Layer und Aggregate entstehen aus Build-Scripts (`pnpm data:*`), Quelle-für-Quelle deklariert in `scripts/lib/sources.ts`. Ablauf und Abhängigkeiten: [`docs/data-pipeline.md`](./docs/data-pipeline.md).
+## Data pipeline
 
-## Datenquellen
+Layers and aggregates are produced by build scripts (`pnpm data:*`), declared source by source in `scripts/lib/sources.ts`. Sequence and dependencies: [`docs/data-pipeline.md`](./docs/data-pipeline.md).
 
-Offene Daten von ODIS Berlin, Umweltatlas (SenMVKU), Geoportal Berlin/FIS-Broker, OpenStreetMap, Bundeswahlleiterin, Amt für Statistik Berlin-Brandenburg, Polizei Berlin (Kriminalitätsatlas) und DWD Climate Data Center. Alle Lizenzen und Attributionen: [navigator.berlin/lizenzen](https://navigator.berlin/lizenzen).
+## Data sources
+
+Open data from ODIS Berlin, Umweltatlas (SenMVKU), Geoportal Berlin/FIS-Broker, OpenStreetMap, Bundeswahlleiterin, Amt für Statistik Berlin-Brandenburg, Polizei Berlin (Kriminalitätsatlas) and DWD Climate Data Center. Every license and attribution: [navigator.berlin/lizenzen](https://navigator.berlin/lizenzen).
 
 ## Stack
 
-SvelteKit 2 · Svelte 5 (Runes) · TypeScript strict · Tailwind v4 · Paraglide v2 (8 Sprachen) · MapLibre GL · Layerchart · D3 · Turf · Bits UI · WebMCP · Vitest · Playwright.
+SvelteKit 2 · Svelte 5 (runes) · TypeScript strict · Tailwind v4 · Paraglide v2 (8 languages) · MapLibre GL · Layerchart · D3 · Turf · Bits UI · WebMCP · Vitest · Playwright.
 
-Volle Architektur-Übersicht: `docs/adr/` (Architectural Decision Records).
+Architecture decisions live in `docs/adr/`.
 
-## Lizenz
+## License
 
-MIT, siehe [`LICENSE`](./LICENSE).
+MIT, see [`LICENSE`](./LICENSE).
