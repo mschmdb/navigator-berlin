@@ -252,6 +252,19 @@
 		return () => setFinderPanelActive(false);
 	});
 
+	/**
+	 * Neu malen, sobald die MapLibre-Instanz da ist. `map` wurde bisher NUR in
+	 * Funktionsrümpfen gelesen (paint, rebuildCollection), also von keinem
+	 * Effect getrackt: kam die Karte später als die erste Rechnung, blieb sie
+	 * ungefärbt, während die Trefferliste schon stand. Sichtbar beim Reload
+	 * eines Links mit Gewichten (Matze 27.08.); im Live-Betrieb fiel es nicht
+	 * auf, weil beim Regler-Ziehen die Karte längst bereit ist.
+	 */
+	$effect(() => {
+		if (!map) return;
+		applyWeights();
+	});
+
 	async function onParteiChange(next: ParteiKurzname): Promise<void> {
 		partei = next;
 		collection = null;

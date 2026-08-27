@@ -3,6 +3,7 @@ import { __setEmbeddedForTests } from '$lib/utils/plausible.js';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import KiezFinderPanel from './kiez-finder-panel.svelte';
+import { neutralWeights } from './internal/kiez-finder-engine.js';
 import type { FinderBaseData } from './internal/kiez-finder-data.js';
 import { FINDER_PARTIES } from '$lib/webmcp/internal/finder-schemas.js';
 import { PARTEI_FARBEN } from '$lib/data/partei-farben.js';
@@ -348,6 +349,32 @@ describe('kiez-finder-panel', () => {
 		await renderPanel({ map: null });
 		await vi.waitFor(() => {
 			expect(readFinderBridge().topMatches.length).toBeGreaterThan(0);
+		});
+		resetFinderBridgeForTests();
+	});
+
+	// Deep-Link-Fall (Matze 27.08.): Gewichte stehen ab dem ersten Render fest,
+	// die MapLibre-Instanz kommt später. Die Trefferliste stand, die Karte blieb
+	// ungefärbt, weil kein Effect `map` las und damit nichts neu malte.
+	//
+	// ACHTUNG zur Aussagekraft: `rerender` lässt die Effekte ohnehin neu laufen,
+	// dieser Test wurde deshalb auch OHNE den map-Effect grün. Er hält das
+	// gewünschte Verhalten fest, kann eine fehlende reaktive Abhängigkeit aber
+	// nicht nachweisen. Der echte Beleg ist der Reload im Browser.
+	it('färbt die Karte, wenn sie erst nach einem Deep-Link-Start bereit wird', async () => {
+		resetFinderBridgeForTests();
+		const map = fakeMap();
+		const { result } = await renderPanel({
+			map: null,
+			initialWeights: { ...neutralWeights(), ruheLuft: 2 }
+		});
+		// Ohne Map rechnet das Panel bereits: die Liste ist da.
+		await vi.waitFor(() => {
+			expect(readFinderBridge().topMatches.length).toBeGreaterThan(0);
+		});
+		await result.rerender({ map: map.api });
+		await vi.waitFor(() => {
+			expect(map.api.getLayer('navigator-finder-fill')).toBeTruthy();
 		});
 		resetFinderBridgeForTests();
 	});
