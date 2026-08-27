@@ -64,9 +64,24 @@ describe('parseFinderUrlState', () => {
 		expect(parseFinderUrlState(params('fw=0,0,0,0,0,0,0,0,0,0'))).toBeNull();
 	});
 
-	it('ignoriert eine unbekannte Partei, behält aber die Gewichte', () => {
-		const state = parseFinderUrlState(params('fw=0,0,0,0,0,0,0,0,2&fp=Piraten'));
+	// Wahl-Ähnlichkeit ohne gültige Partei ist mehrdeutig: das Panel fiele auf
+	// SPD zurück und unterstellte dem Absender eine Partei, die er nie nannte.
+	// Die Dimension fliegt raus, die übrigen acht Regler bleiben.
+	it('nimmt die Wahl-Ähnlichkeit zurück, wenn die Partei fehlt oder unbekannt ist', () => {
+		const ohne = parseFinderUrlState(params('fw=2,0,0,0,0,0,0,0,2'));
+		expect(ohne?.weights.partei).toBe(0);
+		expect(ohne?.weights.ruheLuft).toBe(2);
+		expect(ohne?.party).toBeNull();
+
+		const unbekannt = parseFinderUrlState(params('fw=2,0,0,0,0,0,0,0,2&fp=Piraten'));
+		expect(unbekannt?.weights.partei).toBe(0);
+		expect(unbekannt?.weights.ruheLuft).toBe(2);
+		expect(unbekannt?.party).toBeNull();
+	});
+
+	it('lässt die Wahl-Ähnlichkeit stehen, wenn die Partei gültig ist', () => {
+		const state = parseFinderUrlState(params('fw=0,0,0,0,0,0,0,0,2&fp=CDU'));
 		expect(state?.weights.partei).toBe(2);
-		expect(state?.party).toBeNull();
+		expect(state?.party).toBe('CDU');
 	});
 });

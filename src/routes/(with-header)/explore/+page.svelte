@@ -14,7 +14,7 @@
 		FINDER_URL_KEYS
 	} from '$lib/components/atlas/internal/finder-url-state.js';
 	import type { FinderWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
-	import { readFinderBridge } from '$lib/state/finder-bridge.svelte.js';
+	import { readFinderBridge, readFinderPublishSeq } from '$lib/state/finder-bridge.svelte.js';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import MapHoverTooltip, {
 		type MapHoverApi
@@ -178,6 +178,12 @@
 		const snap = readFinderBridge();
 		// Tief lesen, damit der Effekt auf jede Regler-Änderung reagiert.
 		const weights = { ...snap.weights };
+		// Vor der ersten Panel-Rechnung ist der Bridge-Zustand nur der
+		// Startwert, kein echter Zustand. Ohne diese Sperre überschrieb der
+		// Sync einen geteilten Link mit neutralen Gewichten, bevor das Panel
+		// seine 542 Flächen geladen hatte (Codex-Review 27.08., nachgestellt:
+		// `fw` war 800 ms nach dem Laden kurzzeitig aus der URL verschwunden).
+		if (readFinderPublishSeq() === 0) return;
 		syncFinder(weights, snap.party);
 	});
 

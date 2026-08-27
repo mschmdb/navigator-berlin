@@ -92,5 +92,10 @@ export function parseFinderUrlState(params: URLSearchParams): FinderUrlState | n
 			? (parteiRoh as FinderParty)
 			: null;
 
+	// Wahl-Ähnlichkeit ohne gültige Partei ist mehrdeutig: das Panel fiele auf
+	// seine Vorauswahl zurück und unterstellte dem Absender eine Partei, die er
+	// nie genannt hat. Die Dimension fällt weg, die übrigen Regler bleiben.
+	if (weights.partei !== 0 && party === null) weights.partei = 0;
+
 	return { weights, party };
 }

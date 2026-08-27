@@ -21,6 +21,12 @@ import type { FinderTopMatch } from '$lib/state/finder-bridge.svelte.js';
 
 export interface ApplyFinderWeightsResult {
 	readonly weights: FinderWeights;
+	/**
+	 * Die nach dem Update tatsächlich gesetzte Partei, nicht der Roh-Input:
+	 * ein Folge-Aufruf ohne `party` lässt die Wahl-Ähnlichkeit aktiv, und
+	 * der Link muss trotzdem die richtige Partei tragen.
+	 */
+	readonly party: string | null;
 	readonly finderOpen: boolean;
 	readonly navigation: 'none' | 'opened_finder';
 	readonly topMatches: readonly FinderTopMatch[];
@@ -53,7 +59,7 @@ export function createSetFinderWeightsTool(deps: SetFinderWeightsDeps): WebMcpTo
 				applied_weights: toEnglishWeights(result.weights),
 				finder_open: result.finderOpen,
 				navigation: result.navigation,
-				map_url: finderMapUrl(result.weights, input.party ?? null),
+				map_url: finderMapUrl(result.weights, result.party),
 				top_matches: result.topMatches.map((m) => ({
 					kiez: m.name,
 					plr_id: m.plrId,
