@@ -22,7 +22,9 @@ describe('get_finder_state', () => {
 		expect(out.party).toBe('GRÜNE');
 		expect(out.changed_at).toBe(new Date(1787725681000).toISOString());
 		expect(out.finder_open).toBe(true);
-		expect(out.map_url).toMatch(/\/explore\?finder=1$/);
+		// Zustand im Link, inkl. Partei: der Empfänger sieht dieselbe Karte.
+		expect(decodeURIComponent(out.map_url as string)).toContain('fw=0,0,0,0,0,2,0,0,1');
+		expect(decodeURIComponent(out.map_url as string)).toContain('fp=GRÜNE');
 		expect((out.top_matches as Array<Record<string, unknown>>)[0]?.kiez).toBe('Regierungsviertel');
 	});
 

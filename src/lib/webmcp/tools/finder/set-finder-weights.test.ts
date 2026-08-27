@@ -30,7 +30,9 @@ describe('set_finder_weights', () => {
 		expect(weights.voting_similarity).toBe(0);
 		expect((out.top_matches as unknown[]).length).toBe(1);
 		expect(out.finder_open).toBe(true);
-		expect(out.map_url).toMatch(/\/explore\?finder=1$/);
+		// Der Link muss den Zustand tragen: ein blanker /explore?finder=1
+		// öffnete beim Empfänger neun Regler auf „egal" (Prod-Befund 26.08.).
+		expect(decodeURIComponent(out.map_url as string)).toContain('fw=-1,0,0,0,0,0,0,0,0');
 	});
 
 	it('setzt voting_similarity samt Partei um', async () => {

@@ -36,7 +36,7 @@ export function createGetFinderStateTool(deps: GetFinderStateDeps): WebMcpToolDe
 				weights: toEnglishWeights(s.weights),
 				party: s.party,
 				last_changed_by: s.lastChangedBy,
-				map_url: finderMapUrl(),
+				map_url: finderMapUrl(s.weights, s.party),
 				changed_at: s.changedAt === null ? null : new Date(s.changedAt).toISOString(),
 				top_matches: s.topMatches.map((m) => ({
 					kiez: m.name,

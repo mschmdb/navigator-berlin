@@ -53,7 +53,7 @@ export function createSetFinderWeightsTool(deps: SetFinderWeightsDeps): WebMcpTo
 				applied_weights: toEnglishWeights(result.weights),
 				finder_open: result.finderOpen,
 				navigation: result.navigation,
-				map_url: finderMapUrl(),
+				map_url: finderMapUrl(result.weights, input.party ?? null),
 				top_matches: result.topMatches.map((m) => ({
 					kiez: m.name,
 					plr_id: m.plrId,
