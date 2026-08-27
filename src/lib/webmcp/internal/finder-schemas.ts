@@ -123,6 +123,11 @@ export const SET_FINDER_WEIGHTS_OUTPUT_JSON_SCHEMA = {
 			description:
 				'opened_finder = the page navigated to the finder; top matches follow shortly, poll get_finder_state.'
 		},
+		map_url: {
+			type: 'string',
+			description:
+				'Shareable link that reproduces exactly this map: it carries the weights and the party, so it opens the same colored finder in any browser. Show it to the user.'
+		},
 		top_matches: {
 			type: 'array',
 			items: {
@@ -153,8 +158,17 @@ export const GET_FINDER_STATE_OUTPUT_JSON_SCHEMA = {
 	properties: {
 		finder_open: { type: 'boolean' },
 		weights: { type: 'object', description: 'All nine weights, english keys.' },
+		party: {
+			type: ['string', 'null'],
+			description: 'Party currently selected for voting_similarity.'
+		},
 		last_changed_by: { type: ['string', 'null'], enum: ['agent', 'user', null] },
 		changed_at: { type: ['string', 'null'], description: 'ISO timestamp of the last change.' },
+		map_url: {
+			type: 'string',
+			description:
+				'Shareable link that reproduces exactly this map: it carries the weights and the party, so it opens the same colored finder in any browser. Show it to the user.'
+		},
 		top_matches: {
 			type: 'array',
 			items: {

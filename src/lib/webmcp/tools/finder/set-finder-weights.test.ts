@@ -35,6 +35,16 @@ describe('set_finder_weights', () => {
 		expect(decodeURIComponent(out.map_url as string)).toContain('fw=-1,0,0,0,0,0,0,0,0');
 	});
 
+	// Ein Feld, das der Handler liefert, das Schema aber verschweigt, ist für
+	// den Agenten unsichtbar: er nahm stattdessen die Browser-URL (Prod 26.08.).
+	it('dokumentiert map_url im Output-Schema', () => {
+		const tool = createSetFinderWeightsTool(makeDeps());
+		const props = (tool.outputSchema as { properties: Record<string, { description?: string }> })
+			.properties;
+		expect(props.map_url).toBeDefined();
+		expect(props.map_url?.description).toMatch(/shareable|reproduc/i);
+	});
+
 	it('setzt voting_similarity samt Partei um', async () => {
 		const deps = makeDeps();
 		const tool = createSetFinderWeightsTool(deps);

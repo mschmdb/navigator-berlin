@@ -28,6 +28,24 @@ describe('get_finder_state', () => {
 		expect((out.top_matches as Array<Record<string, unknown>>)[0]?.kiez).toBe('Regierungsviertel');
 	});
 
+	it('dokumentiert map_url und party im Output-Schema', () => {
+		const tool = createGetFinderStateTool({
+			readFinderState: () => ({
+				weights: neutralWeights(),
+				party: null,
+				lastChangedBy: null,
+				changedAt: null,
+				topMatches: [],
+				panelActive: false
+			})
+		});
+		const props = (tool.outputSchema as { properties: Record<string, { description?: string }> })
+			.properties;
+		expect(props.map_url).toBeDefined();
+		expect(props.map_url?.description).toMatch(/shareable|reproduc/i);
+		expect(props.party).toBeDefined();
+	});
+
 	it('unberührter Finder: Quelle und Zeit null, leere Treffer', async () => {
 		const tool = createGetFinderStateTool({
 			readFinderState: () => ({

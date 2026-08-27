@@ -792,6 +792,10 @@
             ],
             "description": "opened_finder = the page navigated to the finder; top matches follow shortly, poll get_finder_state."
           },
+          "map_url": {
+            "type": "string",
+            "description": "Shareable link that reproduces exactly this map: it carries the weights and the party, so it opens the same colored finder in any browser. Show it to the user."
+          },
           "top_matches": {
             "type": "array",
             "items": {
@@ -845,6 +849,13 @@
             "type": "object",
             "description": "All nine weights, english keys."
           },
+          "party": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Party currently selected for voting_similarity."
+          },
           "last_changed_by": {
             "type": [
               "string",
@@ -862,6 +873,10 @@
               "null"
             ],
             "description": "ISO timestamp of the last change."
+          },
+          "map_url": {
+            "type": "string",
+            "description": "Shareable link that reproduces exactly this map: it carries the weights and the party, so it opens the same colored finder in any browser. Show it to the user."
           },
           "top_matches": {
             "type": "array",
