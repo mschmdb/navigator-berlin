@@ -156,13 +156,15 @@
 	// Finder-Zustand in die URL spiegeln, damit ein geteilter Link (auch der
 	// vom Agenten ausgegebene) die Karte überall reproduziert statt neun
 	// Regler auf „egal" zu zeigen.
-	const syncFinder = debounce((weights: FinderWeights, party: string | null) => {
+	const syncFinder = debounce((weights: FinderWeights | null, party: string | null) => {
 		const url = new URL(window.location.href);
 		const vorher = url.searchParams.toString();
 		url.searchParams.delete(FINDER_URL_KEYS.weights);
 		url.searchParams.delete(FINDER_URL_KEYS.party);
-		for (const [k, v] of Object.entries(encodeFinderUrlState(weights, party))) {
-			url.searchParams.set(k, v);
+		if (weights) {
+			for (const [k, v] of Object.entries(encodeFinderUrlState(weights, party))) {
+				url.searchParams.set(k, v);
+			}
 		}
 		if (url.searchParams.toString() === vorher) return;
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
@@ -184,7 +186,10 @@
 		// seine 542 Flächen geladen hatte (Codex-Review 27.08., nachgestellt:
 		// `fw` war 800 ms nach dem Laden kurzzeitig aus der URL verschwunden).
 		if (readFinderPublishSeq() === 0) return;
-		syncFinder(weights, snap.party);
+		// Die URL muss beschreiben, was zu sehen ist. Blieben die Gewichte bei
+		// geschlossenem Finder stehen, öffnete `data.finderOpen` ihn bei jedem
+		// Laden wieder: der Atlas war nicht mehr erreichbar (Matze 27.08.).
+		syncFinder(ui.finderOpen ? weights : null, snap.party);
 	});
 
 	const syncViewport = debounce((v: Viewport) => {
