@@ -6,6 +6,7 @@ function makeDeps(overrides: Record<string, unknown> = {}) {
 	return {
 		applyFinderWeights: vi.fn(async (partial: Record<string, number>, _party?: string) => ({
 			weights: { ...neutralWeights(), ...partial },
+			party: _party ?? null,
 			finderOpen: true,
 			navigation: 'none' as const,
 			topMatches: [{ plrId: '01100102', name: 'Regierungsviertel', fit: 87 }]
@@ -30,7 +31,39 @@ describe('set_finder_weights', () => {
 		expect(weights.voting_similarity).toBe(0);
 		expect((out.top_matches as unknown[]).length).toBe(1);
 		expect(out.finder_open).toBe(true);
-		expect(out.map_url).toMatch(/\/explore\?finder=1$/);
+		// Der Link muss den Zustand tragen: ein blanker /explore?finder=1
+		// öffnete beim Empfänger neun Regler auf „egal" (Prod-Befund 26.08.).
+		expect(decodeURIComponent(out.map_url as string)).toContain('fw=-1,0,0,0,0,0,0,0,0');
+	});
+
+	// Ein Feld, das der Handler liefert, das Schema aber verschweigt, ist für
+	// den Agenten unsichtbar: er nahm stattdessen die Browser-URL (Prod 26.08.).
+	// Folge-Prompt "jetzt noch viel Kultur" schickt keine Partei mit, die
+	// Wahl-Ähnlichkeit bleibt aber aktiv: der Link muss die im Panel gesetzte
+	// Partei tragen, nicht den leeren Input (Codex-Review 27.08.).
+	it('baut map_url aus der effektiven Partei, nicht aus dem Input', async () => {
+		const deps = makeDeps({
+			applyFinderWeights: async () => ({
+				weights: { ...neutralWeights(), kultur: 2, partei: 2 },
+				party: 'CDU',
+				finderOpen: true,
+				navigation: 'none' as const,
+				topMatches: []
+			})
+		});
+		const tool = createSetFinderWeightsTool(deps);
+		const out = (await tool.handler({ culture: 2 })) as Record<string, unknown>;
+		const url = decodeURIComponent(out.map_url as string);
+		expect(url).toContain('fw=0,0,0,0,0,2,0,0,2');
+		expect(url).toContain('fp=CDU');
+	});
+
+	it('dokumentiert map_url im Output-Schema', () => {
+		const tool = createSetFinderWeightsTool(makeDeps());
+		const props = (tool.outputSchema as { properties: Record<string, { description?: string }> })
+			.properties;
+		expect(props.map_url).toBeDefined();
+		expect(props.map_url?.description).toMatch(/shareable|reproduc/i);
 	});
 
 	it('setzt voting_similarity samt Partei um', async () => {

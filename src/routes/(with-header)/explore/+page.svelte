@@ -9,6 +9,12 @@
 	import KiezFinderPanel, {
 		type FinderMapApi
 	} from '$lib/components/atlas/kiez-finder-panel.svelte';
+	import {
+		encodeFinderUrlState,
+		FINDER_URL_KEYS
+	} from '$lib/components/atlas/internal/finder-url-state.js';
+	import type { FinderWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+	import { readFinderBridge, readFinderPublishSeq } from '$lib/state/finder-bridge.svelte.js';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import MapHoverTooltip, {
 		type MapHoverApi
@@ -146,6 +152,40 @@
 		postcode: '10117'
 	};
 	const LAYERS_KEY = 'layers';
+
+	// Finder-Zustand in die URL spiegeln, damit ein geteilter Link (auch der
+	// vom Agenten ausgegebene) die Karte überall reproduziert statt neun
+	// Regler auf „egal" zu zeigen.
+	const syncFinder = debounce((weights: FinderWeights, party: string | null) => {
+		const url = new URL(window.location.href);
+		const vorher = url.searchParams.toString();
+		url.searchParams.delete(FINDER_URL_KEYS.weights);
+		url.searchParams.delete(FINDER_URL_KEYS.party);
+		for (const [k, v] of Object.entries(encodeFinderUrlState(weights, party))) {
+			url.searchParams.set(k, v);
+		}
+		if (url.searchParams.toString() === vorher) return;
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		void goto(`?${url.searchParams.toString()}`, {
+			replaceState: true,
+			keepFocus: true,
+			noScroll: true
+		});
+	}, 200);
+
+	$effect(() => {
+		if (!featureFlags.kiezFinder) return;
+		const snap = readFinderBridge();
+		// Tief lesen, damit der Effekt auf jede Regler-Änderung reagiert.
+		const weights = { ...snap.weights };
+		// Vor der ersten Panel-Rechnung ist der Bridge-Zustand nur der
+		// Startwert, kein echter Zustand. Ohne diese Sperre überschrieb der
+		// Sync einen geteilten Link mit neutralen Gewichten, bevor das Panel
+		// seine 542 Flächen geladen hatte (Codex-Review 27.08., nachgestellt:
+		// `fw` war 800 ms nach dem Laden kurzzeitig aus der URL verschwunden).
+		if (readFinderPublishSeq() === 0) return;
+		syncFinder(weights, snap.party);
+	});
 
 	const syncViewport = debounce((v: Viewport) => {
 		const url = new URL(window.location.href);
@@ -1278,6 +1318,8 @@
 				<div class={finderVisible ? 'h-full' : 'hidden'}>
 					<KiezFinderPanel
 						map={rawMap as unknown as FinderMapApi | null}
+						initialWeights={data.finderState?.weights ?? null}
+						initialParty={data.finderState?.party ?? null}
 						onClose={() => (ui.finderOpen = false)}
 					/>
 				</div>
@@ -1313,6 +1355,8 @@
 				<div class={finderVisible ? '' : 'hidden'}>
 					<KiezFinderPanel
 						map={rawMap as unknown as FinderMapApi | null}
+						initialWeights={data.finderState?.weights ?? null}
+						initialParty={data.finderState?.party ?? null}
 						onClose={() => (ui.finderOpen = false)}
 					/>
 				</div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { X, RotateCcw, SlidersHorizontal } from '@lucide/svelte';
 	import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 	import { PARTEI_FARBEN, type ParteiKurzname } from '$lib/data/partei-farben.js';
@@ -46,6 +47,9 @@
 		/** Injektierbar für Tests; Default lädt die echten Quellen. */
 		loadData?: () => Promise<FinderBaseData>;
 		loadShares?: (election: string) => Promise<readonly KiezShareRow[]>;
+		/** Startzustand aus der URL (geteilter Finder-Link). */
+		initialWeights?: FinderWeights | null;
+		initialParty?: string | null;
 		onClose?: () => void;
 	};
 
@@ -67,6 +71,8 @@
 		map,
 		loadData = defaultLoadData,
 		loadShares = defaultLoadShares,
+		initialWeights = null,
+		initialParty = null,
 		onClose
 	}: Props = $props();
 
@@ -87,8 +93,13 @@
 
 	const STUFEN_BIPOLAR = ['möglichst wenig', 'eher wenig', 'egal', 'eher viel', 'möglichst viel'];
 
-	let weights = $state<FinderWeights>(neutralWeights());
-	let partei = $state<ParteiKurzname>('SPD');
+	// Bewusst nur der Startwert: danach führt das Panel den Zustand, die URL
+	// wird von der Seite nachgezogen. Ein reaktives Zurückschreiben würde die
+	// eigene URL-Synchronisierung wieder ins Panel spiegeln.
+	let weights = $state<FinderWeights>(untrack(() => initialWeights) ?? neutralWeights());
+	let partei = $state<ParteiKurzname>(
+		(untrack(() => initialParty) as ParteiKurzname | null) ?? 'SPD'
+	);
 	let loading = $state(true);
 	let loadFailed = $state(false);
 	let top = $state<FinderResult[]>([]);

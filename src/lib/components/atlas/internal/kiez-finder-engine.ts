@@ -73,6 +73,14 @@ export const FINDER_RAMP: readonly [string, string, string, string, string] = [
 	COLORS.scaleStrukturell5
 ];
 
+/**
+ * Parteien, für die der Finder Wahl-Ähnlichkeit anbietet. Liegt hier statt in
+ * den WebMCP-Schemas, damit Engine, URL-Zustand und Tool-Schemas dieselbe
+ * Quelle nutzen, ohne sich gegenseitig zu importieren.
+ */
+export const FINDER_PARTIES = ['SPD', 'CDU', 'GRÜNE', 'FDP', 'AfD', 'Die Linke', 'BSW'] as const;
+export type FinderParty = (typeof FINDER_PARTIES)[number];
+
 export function neutralWeights(): FinderWeights {
 	return {
 		ruheLuft: 0,

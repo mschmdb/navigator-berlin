@@ -121,6 +121,9 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 			const snap = finderBridge.readFinderBridge();
 			return {
 				weights: merged,
+				// Effektive Partei aus der Bridge: das Panel führt sie, ein
+				// Folge-Aufruf ohne `party` darf sie nicht aus dem Link kippen.
+				party: snap.party,
 				finderOpen: snap.panelActive,
 				navigation,
 				topMatches

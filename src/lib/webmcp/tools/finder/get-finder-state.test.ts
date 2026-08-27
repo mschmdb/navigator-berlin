@@ -22,8 +22,28 @@ describe('get_finder_state', () => {
 		expect(out.party).toBe('GRÜNE');
 		expect(out.changed_at).toBe(new Date(1787725681000).toISOString());
 		expect(out.finder_open).toBe(true);
-		expect(out.map_url).toMatch(/\/explore\?finder=1$/);
+		// Zustand im Link, inkl. Partei: der Empfänger sieht dieselbe Karte.
+		expect(decodeURIComponent(out.map_url as string)).toContain('fw=0,0,0,0,0,2,0,0,1');
+		expect(decodeURIComponent(out.map_url as string)).toContain('fp=GRÜNE');
 		expect((out.top_matches as Array<Record<string, unknown>>)[0]?.kiez).toBe('Regierungsviertel');
+	});
+
+	it('dokumentiert map_url und party im Output-Schema', () => {
+		const tool = createGetFinderStateTool({
+			readFinderState: () => ({
+				weights: neutralWeights(),
+				party: null,
+				lastChangedBy: null,
+				changedAt: null,
+				topMatches: [],
+				panelActive: false
+			})
+		});
+		const props = (tool.outputSchema as { properties: Record<string, { description?: string }> })
+			.properties;
+		expect(props.map_url).toBeDefined();
+		expect(props.map_url?.description).toMatch(/shareable|reproduc/i);
+		expect(props.party).toBeDefined();
 	});
 
 	it('unberührter Finder: Quelle und Zeit null, leere Treffer', async () => {

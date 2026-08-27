@@ -8,7 +8,11 @@
  */
 
 import * as v from 'valibot';
-import type { FinderWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import {
+	FINDER_PARTIES as PARTIES,
+	type FinderWeights
+} from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { encodeFinderUrlState } from '$lib/components/atlas/internal/finder-url-state.js';
 
 /** Englischer Schema-Key → interner FinderWeights-Key. */
 export const FINDER_WEIGHT_KEY_MAP = {
@@ -29,12 +33,11 @@ const Bipolar = v.pipe(v.number(), v.integer(), v.minValue(-2), v.maxValue(2));
 const Unipolar = v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2));
 
 /**
- * Wählbare Parteien für voting_similarity. Muss der PARTEIEN-Liste im
- * Kiez-Finder-Panel entsprechen (Architecture-Boundary: webmcp importiert
- * nicht aus $lib/data, daher hier dupliziert; Panel-Test verklammert beide).
+ * Wählbare Parteien für voting_similarity. Single Source ist das
+ * Engine-Modul, damit Panel, URL-Zustand und Tool-Schemas nicht
+ * auseinanderlaufen; der Panel-Test verklammert die Liste zusätzlich.
  */
-export const FINDER_PARTIES = ['SPD', 'CDU', 'GRÜNE', 'FDP', 'AfD', 'Die Linke', 'BSW'] as const;
-export type FinderParty = (typeof FINDER_PARTIES)[number];
+export { FINDER_PARTIES, type FinderParty } from '$lib/components/atlas/internal/kiez-finder-engine.js';
 
 export const SetFinderWeightsInputSchema = v.object({
 	quiet_air: v.optional(Bipolar),
@@ -46,7 +49,7 @@ export const SetFinderWeightsInputSchema = v.object({
 	density: v.optional(Bipolar),
 	sbahn_proximity: v.optional(Unipolar),
 	voting_similarity: v.optional(Unipolar),
-	party: v.optional(v.picklist(FINDER_PARTIES))
+	party: v.optional(v.picklist(PARTIES))
 });
 export type SetFinderWeightsInput = v.InferOutput<typeof SetFinderWeightsInputSchema>;
 
@@ -102,7 +105,7 @@ export const SET_FINDER_WEIGHTS_INPUT_JSON_SCHEMA = {
 		},
 		party: {
 			type: 'string',
-			enum: [...FINDER_PARTIES],
+			enum: [...PARTIES],
 			description:
 				'Party for voting_similarity. Optional; without it the current panel selection applies (initial: SPD).'
 		}
@@ -119,6 +122,11 @@ export const SET_FINDER_WEIGHTS_OUTPUT_JSON_SCHEMA = {
 			enum: ['none', 'opened_finder'],
 			description:
 				'opened_finder = the page navigated to the finder; top matches follow shortly, poll get_finder_state.'
+		},
+		map_url: {
+			type: 'string',
+			description:
+				'Shareable link that reproduces exactly this map: it carries the weights and the party, so it opens the same colored finder in any browser. Show it to the user.'
 		},
 		top_matches: {
 			type: 'array',
@@ -150,8 +158,17 @@ export const GET_FINDER_STATE_OUTPUT_JSON_SCHEMA = {
 	properties: {
 		finder_open: { type: 'boolean' },
 		weights: { type: 'object', description: 'All nine weights, english keys.' },
+		party: {
+			type: ['string', 'null'],
+			description: 'Party currently selected for voting_similarity.'
+		},
 		last_changed_by: { type: ['string', 'null'], enum: ['agent', 'user', null] },
 		changed_at: { type: ['string', 'null'], description: 'ISO timestamp of the last change.' },
+		map_url: {
+			type: 'string',
+			description:
+				'Shareable link that reproduces exactly this map: it carries the weights and the party, so it opens the same colored finder in any browser. Show it to the user.'
+		},
 		top_matches: {
 			type: 'array',
 			items: {
@@ -192,10 +209,18 @@ export function toInternalPartial(input: SetFinderWeightsInput): Partial<FinderW
  * (ChatGPT) öffnen das Browser-Panel nicht automatisch; eine explizite
  * map_url im Ergebnis macht den Karten-Link in der Antwort zuverlässig.
  */
-export function finderMapUrl(): string {
+export function finderMapUrl(weights?: FinderWeights, party?: string | null): string {
 	const origin =
 		typeof location !== 'undefined' && location.origin
 			? location.origin
 			: 'https://navigator.berlin';
-	return `${origin}/explore?finder=1`;
+	const params = new URLSearchParams({ finder: '1' });
+	// Gewichte in den Link: ohne sie öffnet der Empfänger neun Regler auf
+	// „egal" statt der Karte, die der Agent gerade beschrieben hat.
+	if (weights) {
+		for (const [k, v] of Object.entries(encodeFinderUrlState(weights, party ?? null))) {
+			params.set(k, v);
+		}
+	}
+	return `${origin}/explore?${params.toString()}`;
 }
