@@ -6,3 +6,5 @@ export * from './ergebnis.js';
 export * from './wahl-aggregat-kiez.js';
 export * from './wahl-aggregat-bezirk.js';
 export * from './wahl-aggregat-berlin.js';
+export * from './wahl-analytik-kiez.js';
+export * from './wahl-trend-kiez.js';

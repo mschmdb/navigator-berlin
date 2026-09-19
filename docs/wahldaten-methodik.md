@@ -216,6 +216,20 @@ Parteien werden über `partei` + `partei_alias` modelliert, weil sich Schreibwei
 
 UI (Story 6.3) muss diese Wahlen als „Wiederholungswahl" labeln und in Sparklines als separaten Datenpunkt zeigen, NICHT als Ersatz für die Erst-Wahl.
 
+## Analytik-Methoden
+
+Build-Zeit-Aggregat (ADR-013: Postgres als Cache, kein Live-Rechenpfad) für Wechsel, Trend und Volatilität pro Kiez und Wahl-Reihe (typ × stimmtyp). Rechenkern: `src/lib/server/wahl/analytik.ts` (pure Functions, Fixture-Tests). Build-Script: `scripts/build-wahl-analytik.ts`, liest `wahl_aggregat_kiez`, schreibt `wahl_analytik_kiez` + `wahl_trend_kiez`. Phase 1 nur Kiez-Ebene (Bezirk-Analytik wäre günstig nachrüstbar, aber noch nicht gebaut). API-Konsequenz: `/api/wahl/series` und `/api/wahl/winners` akzeptieren `ebene=kiez|bezirk`, `/api/wahl/analytik` bewusst nur `ebene=kiez`. Anteils-Gleichstände löst die Analytik deterministisch alphabetisch nach Partei-Kurzname auf.
+
+**Wiederholungswahl-Regel:** Alle drei Metriken nutzen pro Legislatur den letztgültigen Stand. Eine Wiederholungswahl (z.B. AGH 2023) ersetzt ihre Eltern-Wahl (AGH 2021) an deren Position in der Reihe, statt einen eigenen Slot zu belegen. Der Übergang Eltern-Jahr → Wiederholungs-Jahr (2021 → 2023) zählt dadurch nie als eigener Wechsel; ein Wechsel gegenüber der vorherigen Legislatur wird stattdessen am Wiederholungs-Jahr gebucht.
+
+**Wechsel:** Anzahl + Jahre der Führungswechsel (stärkste Partei) über die effektive Legislatur-Reihe eines Kiez.
+
+**Trend:** Steigung (`slope`) der linearen Regression (kleinste Quadrate) des Partei-Anteils über die Jahre der effektiven Reihe. Jahre ohne Anteil für die Partei werden ausgelassen. Mit < 2 Datenpunkten: `slope = 0`.
+
+**Volatilität:** Mittlere L1-Distanz aufeinanderfolgender Anteils-Vektoren (Summe der absoluten Anteils-Differenzen über alle Parteien) zwischen zwei benachbarten Legislaturen der effektiven Reihe, gemittelt über alle Übergänge. Mit < 2 Legislaturen: `0`.
+
+**Zwilling (Kiez-Ähnlichkeit):** Anders als Wechsel/Trend/Volatilität kein Build-Zeit-Aggregat, sondern Laufzeit-Berechnung über den vorhandenen Bulk-Query `get-kiez-shares-for-wahl` (143 Anteils-Vektoren pro Request sind billig genug, Route cached 3600s). Score = `1 − normierte L1-Distanz` der Anteils-Vektoren der jüngsten Wahl der Reihe, skaliert auf 0..100 (L1-Distanz zweier Anteils-Vektoren mit Summe 1 liegt in [0, 2], normiert durch Division durch 2).
+
 ## Pipeline-Run
 
 ```bash
@@ -235,6 +249,12 @@ pnpm data:wahl-geo
 
 # Kiez-Aggregat-Build (braucht data:wahl-fetch + data:wahl-geo + LOR-Geometrien)
 pnpm data:wahl-kiez
+
+# Analytik-Build (Wechsel/Trend/Volatilität, braucht data:wahl-kiez)
+pnpm data:wahl-analytik
+
+# Einzelne Wahl-Art
+pnpm data:wahl-analytik --only=agh
 ```
 
 **Verfügbare Wahl-Slugs:** `btw13` `btw17` `btw21` `btw25` `agh11` `agh16` `agh21` `agh23` `bvv11` `bvv16` `bvv21` `bvv23`.

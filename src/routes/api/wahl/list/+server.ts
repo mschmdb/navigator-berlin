@@ -1,16 +1,11 @@
 import type { RequestHandler } from './$types';
 import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { hasGeometry, wahlSlugFromTypJahr } from '$lib/data/wahl-geo-mapping.js';
+import { sourceName } from '$lib/server/wahl/source-label.js';
 
 function buildSlug(jahr: number, typ: 'btw' | 'agh' | 'bvv', stimmtyp: string): string {
 	if (typ === 'bvv') return `${jahr}-bvv`;
 	return `${jahr}-${typ}-${stimmtyp}`;
-}
-
-function sourceName(sourceUrl: string): string {
-	return sourceUrl.includes('bundeswahlleiterin')
-		? 'Bundeswahlleiterin'
-		: 'Amt für Statistik Berlin-Brandenburg';
 }
 
 export const GET: RequestHandler = async () => {

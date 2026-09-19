@@ -4,6 +4,7 @@ import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for
 import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for-bezirk.js';
 import { getStimmbezirksWinners } from '$lib/server/db/queries/wahl/get-stimmbezirks-winners.js';
 import { WAHL_TO_GEO, wahlSlugFromTypJahr } from '$lib/data/wahl-geo-mapping.js';
+import { sourceName } from '$lib/server/wahl/source-label.js';
 import { parseWahlSlug, buildWahlSlug, type WahlSlug } from './slug-utils.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
@@ -149,10 +150,6 @@ export const load: PageServerLoad = async ({ params }) => {
 			? buildWahlSlugFromParentId(match.parentElectionId, list)
 			: null;
 
-	const sourceName = match.sourceUrl.includes('bundeswahlleiterin')
-		? 'Bundeswahlleiterin'
-		: 'Amt für Statistik Berlin-Brandenburg';
-
 	const title = `${TYP_LABELS[match.typ]} ${match.jahr}${
 		match.typ !== 'bvv' ? ` · ${STIMMTYP_LABELS[match.stimmtyp]}` : ''
 	}${match.isRepeatElection ? ' · Wiederholungswahl' : ''}`;
@@ -170,7 +167,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			isRepeatElection: match.isRepeatElection,
 			parentSlug,
 			sourceUrl: match.sourceUrl,
-			sourceName,
+			sourceName: sourceName(match.sourceUrl),
 			license: match.license
 		},
 		berlin: berlinRows.map((r) => ({
