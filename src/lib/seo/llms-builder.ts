@@ -64,6 +64,8 @@ export interface LlmsSourceContext {
 	readonly kieze: readonly LlmsKiezEntry[];
 	readonly layer: readonly LlmsLayerEntry[];
 	readonly wahlen?: readonly LlmsWahlEntry[];
+	/** Story 3: muss synchron mit `SitemapSourceContext.wahlPortalEnabled` bleiben. */
+	readonly wahlPortalEnabled?: boolean;
 }
 
 export interface LlmsSourceEntry {
@@ -157,6 +159,15 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 			'Datenquellen, Daten-Cutoff, Briefwahl-Asymmetrie, Stimmbezirks-zu-Kiez-Aggregation, Wiederholungswahl 2023',
 		section: 'methodik'
 	});
+	if (ctx.wahlPortalEnabled) {
+		out.push({
+			loc: `${ctx.origin}/berlin-wahlen`,
+			name: 'Berlin-Wahlen',
+			description:
+				'Bundestags-, Abgeordnetenhaus- und BVV-Wahlen in Berlin seit 2011: Karte, Trends, Kontraste und dein Kiez im Wahlverhalten',
+			section: 'static'
+		});
+	}
 	out.push({
 		loc: `${ctx.origin}/lizenzen`,
 		name: 'Lizenzen',

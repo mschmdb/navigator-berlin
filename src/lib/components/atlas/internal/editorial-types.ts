@@ -15,7 +15,8 @@ export type DisclaimerVariant =
 	| 'wahl-stimmenanteile'
 	| 'cross-layer-template'
 	| 'brw-not-aggregatable'
-	| 'level-below-threshold';
+	| 'level-below-threshold'
+	| 'wahl-portal-footnote';
 
 export type EditorialCustomComponent = 'MauerSektorenDetail';
 

@@ -4,6 +4,7 @@ import { buildSitemapXml, collectPrerenderedUrls } from '$lib/seo/sitemap-builde
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
 import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
+import { featureFlags } from '$lib/data/feature-flags.js';
 
 export const prerender = true;
 
@@ -45,7 +46,8 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
 		buildTimestamp,
 		bezirkSlugs,
 		kiezSlugs,
-		wahlen
+		wahlen,
+		wahlPortalEnabled: featureFlags.wahlPortal
 	});
 	const body = buildSitemapXml(entries);
 	return new Response(body, {

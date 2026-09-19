@@ -105,6 +105,8 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 		);
 		expect(response.status).toBe(200);
 		const body = await response.text();
+		// Story 3: Flag-Verdrahtung am echten Handler (featureFlags.wahlPortal=false).
+		expect(body).not.toContain('/berlin-wahlen');
 		expect(body).toContain('<urlset');
 		expect(body).toContain('https://navigator.berlin/');
 		expect(body).toContain('https://navigator.berlin/methodik');

@@ -126,4 +126,14 @@ describe('editorial-disclaimer.svelte', () => {
 			expect(el.getAttribute('data-variant')).toBe('kiez-score-explainer');
 		});
 	});
+
+	describe('Wahl-Portal-Variant (Story 3, Portal-Skeleton /berlin-wahlen)', () => {
+		it('wahl-portal-footnote → deskriptiv-ohne-Ranking-Hinweis', async () => {
+			render(EditorialDisclaimer, { variant: 'wahl-portal-footnote' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/deskriptiv/);
+			expect(el.textContent).toMatch(/kein Ranking/);
+			expect(el.getAttribute('data-variant')).toBe('wahl-portal-footnote');
+		});
+	});
 });

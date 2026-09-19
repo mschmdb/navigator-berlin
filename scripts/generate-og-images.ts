@@ -134,6 +134,13 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		subline: 'Abkühlung bei Hitze',
 		body: 'Wo du dich in Berlin bei Hitze abkühlen kannst: Kinos, Bibliotheken, Schwimmhallen und mehr, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten.',
 		footerUrl: '/kuehle-orte'
+	},
+	{
+		slug: 'berlin-wahlen',
+		headline: 'Berlin-Wahlen',
+		subline: 'Wahlergebnisse auf der Karte',
+		body: 'Bundestags-, Abgeordnetenhaus- und BVV-Wahlen in Berlin seit 2011: Karte, Trends, Kontraste und dein Kiez im Wahlverhalten.',
+		footerUrl: '/berlin-wahlen'
 	}
 ];
 

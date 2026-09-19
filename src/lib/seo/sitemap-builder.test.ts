@@ -128,10 +128,21 @@ describe('STATIC_PAGES_SOURCE', () => {
 			'https://navigator.berlin/kuehle-orte',
 			'https://navigator.berlin/hitze',
 			'https://navigator.berlin/methodik',
+			'https://navigator.berlin/methodik/wahldaten',
 			'https://navigator.berlin/lizenzen',
 			'https://navigator.berlin/webmcp'
 		]);
 		expect(entries.every((e) => e.lastmod === '2026-05-16T08:00:00.000Z')).toBe(true);
+	});
+
+	it('/berlin-wahlen fehlt wenn wahlPortalEnabled nicht gesetzt ist (Flag aus)', () => {
+		const entries = STATIC_PAGES_SOURCE(ctx());
+		expect(entries.some((e) => e.loc === 'https://navigator.berlin/berlin-wahlen')).toBe(false);
+	});
+
+	it('emittiert /berlin-wahlen wenn wahlPortalEnabled=true', () => {
+		const entries = STATIC_PAGES_SOURCE(ctx({ wahlPortalEnabled: true }));
+		expect(entries.some((e) => e.loc === 'https://navigator.berlin/berlin-wahlen')).toBe(true);
 	});
 
 	it('skips EN locale entirely in phase 1 (returns empty)', () => {

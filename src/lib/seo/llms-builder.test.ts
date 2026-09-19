@@ -115,6 +115,16 @@ describe('collectLlmsSourceEntries', () => {
 		expect(urls).toContain('https://navigator.berlin/kiez/boxhagener-kiez');
 		expect(urls).toContain('https://navigator.berlin/kiez/helmholtzkiez');
 	});
+
+	it('/berlin-wahlen fehlt wenn wahlPortalEnabled nicht gesetzt ist (Flag aus)', () => {
+		const urls = collectLlmsSourceEntries(ctx).map((e) => e.loc);
+		expect(urls).not.toContain('https://navigator.berlin/berlin-wahlen');
+	});
+
+	it('enthält /berlin-wahlen wenn wahlPortalEnabled=true', () => {
+		const urls = collectLlmsSourceEntries({ ...ctx, wahlPortalEnabled: true }).map((e) => e.loc);
+		expect(urls).toContain('https://navigator.berlin/berlin-wahlen');
+	});
 });
 
 describe('buildLlmsTxt', () => {
