@@ -55,14 +55,17 @@ Vision plus Gelegenheit: navigator.berlin hält 12 Berliner Wahlen bis auf Stimm
   - **intent:** Methodik und Lizenz-Provenienz sind wie überall im Projekt vollständig dokumentiert.
   - **success:** `docs/wahldaten-methodik.md` um Portal-Analytik ergänzt, `/methodik` verlinkt sie, Portal-Seite endet mit Quellen/Lizenz-Akkordeon, jede neue API-Response führt `license` + `sourceUrl`.
 - **CAP-13**
-  - **intent:** Besucher finden das Portal über Home-Feature-Block, Footer, Inspector-Wahl-Sektion und den Redirect von `/wahl`.
-  - **success:** Alle vier Einstiege verlinken auf `/berlin-wahlen` (Inspector mit Gebiets-Deep-Link); `/wahl`-Index antwortet 301 auf `/berlin-wahlen`, `/wahl/[slug]` bleibt erreichbar.
+  - **intent:** Besucher finden das Portal über Home-Feature-Block, Footer, Inspector-Wahl-Sektion und die Redirects der alten `/wahl`-Routen.
+  - **success:** Alle Einstiege verlinken auf `/berlin-wahlen` (Inspector mit wahl- und gebietsabhängigem Deep-Link); `/wahl` antwortet 301 auf `/berlin-wahlen`, `/wahl/[slug]` 301 auf `/berlin-wahlen/[slug]`.
 - **CAP-14**
   - **intent:** AGH/BVV 2026 erscheint im Portal allein durch Pipeline-Deklaration, ohne Änderung am Portal-Code.
   - **success:** Nach Eintrag von `agh26`/`bvv26` in `sources.ts` + Geo-Quelle + Gate-Schwellen + Partei-Seed rendert das Portal die neuen Wahlen in allen Modulen; Nachweis per lokalem Ingest-Testlauf.
 - **CAP-15**
   - **intent:** Besucher sehen Wahlbeteiligung je Gebiet und deren Zeitreihe.
   - **success:** `wahlberechtigte`/`waehlende`/`ungueltige` sind persistiert und aggregiert, das Modul zeigt Beteiligung mit Vorwahl-Delta. (Droppable: v1 darf ohne CAP-15 live gehen.)
+- **CAP-16**
+  - **intent:** Jede Einzelwahl behält eine eigene indexierbare Detailseite unter `/berlin-wahlen/[slug]`, neu gebaut aus den Portal-Bausteinen.
+  - **success:** Alle Bestands-Slugs rendern unter `/berlin-wahlen/[slug]` (prerendered, Slugs unverändert), sämtliche internen Links (Inspector-Wahl-Sektion wahlabhängig, Home-Teaser, Kiez-Seiten, Methodik, llms, OG, Sitemap) zeigen direkt auf die neuen URLs, und `grep '/wahl'` findet keine internen Alt-Links mehr.
 
 ## Constraints
 
@@ -85,7 +88,7 @@ Vision plus Gelegenheit: navigator.berlin hält 12 Berliner Wahlen bis auf Stimm
 - Europawahl und BTW-2024-Teilwiederholung (Phase-2-Backlog der Wahl-Pipeline).
 - Abgeordneten-Fotos oder Personen-Datenbank.
 - EN-Version (kommt mit dem i18n-Plan, nicht hier).
-- Subdomain `politik.navigator.berlin` (später optional als Redirect-Alias).
+- Subdomain in v1; später optional `wahlen.navigator.berlin` als Redirect-Alias (nicht `politik.`).
 
 ## Success signal
 
@@ -93,11 +96,9 @@ Wenn die endgültigen BVV-2026-Ergebnisse (~30.09.) vorliegen, erscheint die neu
 
 ## Assumptions
 
-- `/wahl`-Index wird 301-Redirect auf `/berlin-wahlen`; die `/wahl/[slug]`-Detailseiten bleiben und werden vom Portal verlinkt.
 - Das Portal startet flag-gated (`wahlPortal` analog `wahlSection`); Default-on entscheidet Matze nach UX-Review.
 - Takeaway-Sätze werden generiert und von Matze redigiert, bevor der Flag auf Default-on geht.
 
 ## Open Questions
 
 - Soll CAP-15 (Wahlbeteiligung, braucht Migration + Re-Ingest aller 20 Wahlen) noch vor dem 2026-Ingest laufen oder danach?
-- Bleibt `/wahl/[slug]` langfristig oder wandern die Detailseiten als Kapitel ins Portal?

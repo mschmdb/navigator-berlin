@@ -3,7 +3,7 @@ import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for-berlin.js';
 import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for-bezirk.js';
 import { getStimmbezirksWinners } from '$lib/server/db/queries/wahl/get-stimmbezirks-winners.js';
-import { WAHL_TO_GEO } from '$lib/data/wahl-geo-mapping.js';
+import { WAHL_TO_GEO, wahlSlugFromTypJahr } from '$lib/data/wahl-geo-mapping.js';
 import { parseWahlSlug, buildWahlSlug, type WahlSlug } from './slug-utils.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
@@ -135,7 +135,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		throw error(404, `Wahl ${params.slug} existiert nicht in der Datenbank.`);
 	}
 
-	const wahlSlugShort = `${match.typ}${String(match.jahr).slice(-2)}`;
+	const wahlSlugShort = wahlSlugFromTypJahr(match.typ, match.jahr);
 	const geoSlug = WAHL_TO_GEO.get(wahlSlugShort) ?? null;
 
 	const [berlinRows, bezirkRowsList, winners] = await Promise.all([

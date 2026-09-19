@@ -1,17 +1,6 @@
 import type { RequestHandler } from './$types';
 import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-
-const GEO_AVAILABLE = new Set([
-	'btw17',
-	'btw21',
-	'btw25',
-	'agh16',
-	'agh21',
-	'agh23',
-	'bvv16',
-	'bvv21',
-	'bvv23'
-]);
+import { hasGeometry, wahlSlugFromTypJahr } from '$lib/data/wahl-geo-mapping.js';
 
 function buildSlug(jahr: number, typ: 'btw' | 'agh' | 'bvv', stimmtyp: string): string {
 	if (typ === 'bvv') return `${jahr}-bvv`;
@@ -22,10 +11,6 @@ function sourceName(sourceUrl: string): string {
 	return sourceUrl.includes('bundeswahlleiterin')
 		? 'Bundeswahlleiterin'
 		: 'Amt für Statistik Berlin-Brandenburg';
-}
-
-function geoSlug(jahr: number, typ: string): string {
-	return `${typ}${String(jahr).slice(-2)}`;
 }
 
 export const GET: RequestHandler = async () => {
@@ -41,7 +26,7 @@ export const GET: RequestHandler = async () => {
 		stimmtyp: w.stimmtyp,
 		is_repeat_election: w.isRepeatElection,
 		parent_slug: w.parentElectionId ? (parentIdToSlug.get(w.parentElectionId) ?? null) : null,
-		has_stimmbezirks_geometry: GEO_AVAILABLE.has(geoSlug(w.jahr, w.typ)),
+		has_stimmbezirks_geometry: hasGeometry(wahlSlugFromTypJahr(w.typ, w.jahr)),
 		source_name: sourceName(w.sourceUrl),
 		source_url: w.sourceUrl,
 		license: w.license
