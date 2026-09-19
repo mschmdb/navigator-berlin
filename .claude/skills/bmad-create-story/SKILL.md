@@ -1,6 +1,8 @@
 ---
 name: bmad-create-story
-description: 'Creates a dedicated story file with all the context the agent will need to implement it later. Use when the user says "create the next story" or "create story [story identifier]"'
+description: "Deprecated: `bmad-build` is now the official implementation method. Only use this when explicitly invoked by name"
+metadata:
+  lifecycle: shim
 ---
 
 # Create Story Workflow
@@ -16,6 +18,9 @@ description: 'Creates a dedicated story file with all the context the agent will
 - SAVE QUESTIONS: If you think of questions or clarifications during analysis, save them for the end after the complete story is written
 - ZERO USER INTERVENTION: Process should be fully automated except for initial epic/story selection or missing documents
 
+Subagents, when the capability is available, are an important part of this workflow. Use them as directed by the workflow steps.
+If you need an explicit user instruction to run them, ask once now for the whole workflow run.
+
 ## Conventions
 
 - Bare paths (e.g. `discover-inputs.md`) resolve from the skill root.
@@ -27,7 +32,7 @@ description: 'Creates a dedicated story file with all the context the agent will
 
 ### Step 1: Resolve the Workflow Block
 
-Run: `python3 {project-root}/_bmad/scripts/resolve_customization.py --skill {skill-root} --key workflow`
+Run: `uv run {project-root}/_bmad/scripts/resolve_customization.py --skill {skill-root} --project-root {project-root} --key workflow`
 
 **If the script fails**, resolve the `workflow` block yourself by reading these three files in base → team → user order and applying the same structural merge rules as the resolver:
 
@@ -59,11 +64,13 @@ Load config from `{project-root}/_bmad/bmm/config.yaml` and resolve:
 
 Greet `{user_name}`, speaking in `{communication_language}`.
 
+<output>Deprecated: `bmad-build` is now the official implementation method. Only use this when explicitly invoked by name.</output>
+
 ### Step 6: Execute Append Steps
 
 Execute each entry in `{workflow.activation_steps_append}` in order.
 
-Activation is complete. Begin the workflow below.
+Activation is complete. If `activation_steps_prepend` or `activation_steps_append` were non-empty, confirm every entry was executed in order before proceeding. Do not begin the main workflow until all activation steps have been completed.
 
 ## Paths
 
@@ -250,7 +257,7 @@ Activation is complete. Begin the workflow below.
 
   <!-- Load all available content through discovery protocol -->
   <action>Read fully and follow `./discover-inputs.md` to load all input files</action>
-  <note>Available content: {epics_content}, {prd_content}, {architecture_content}, {ux_content}, plus the project-context facts loaded during activation via `persistent_facts`.</note>
+  <note>Available content: {epics_content}, {prd_content}, {architecture_content}, {ux_content}, plus any facts loaded during activation via `persistent_facts` (empty unless the user opted in).</note>
 
   <!-- Analyze epics file for story foundation -->
   <action>From {epics_content}, extract Epic {{epic_num}} complete context:</action> **EPIC ANALYSIS:** - Epic
@@ -423,7 +430,7 @@ Activation is complete. Begin the workflow below.
 
     **The developer now has everything needed for flawless implementation!**
   </output>
-  <action>Run: `python3 {project-root}/_bmad/scripts/resolve_customization.py --skill {skill-root} --key workflow.on_complete` — if the resolved value is non-empty, follow it as the final terminal instruction before exiting.</action>
+  <action>Run: `uv run {project-root}/_bmad/scripts/resolve_customization.py --skill {skill-root} --project-root {project-root} --key workflow.on_complete` — if the resolved value is non-empty, follow it as the final terminal instruction before exiting.</action>
 </step>
 
 </workflow>
