@@ -32,6 +32,7 @@
 	import PortalDatenstand from '$lib/components/wahl-portal/portal-datenstand.svelte';
 	import PortalQuellen from '$lib/components/wahl-portal/portal-quellen.svelte';
 	import WinnerMap from '$lib/components/wahl-portal/winner-map.svelte';
+	import WechselKapitel from '$lib/components/wahl-portal/wechsel-kapitel.svelte';
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
@@ -106,14 +107,9 @@
 	const quellen = $derived(deriveQuellen(portal.wahlen));
 
 	const KARTE_CHAPTER = { id: 'karte', label: 'Karte' } as const;
+	const WECHSEL_CHAPTER = { id: 'wechsel', label: 'Wechsel' } as const;
 
 	const PLACEHOLDER_CHAPTERS = [
-		{
-			id: 'wechsel',
-			label: 'Wechsel',
-			title: 'Wechsel der stärksten Kraft',
-			takeaway: 'Hier entsteht die Karte der Gebiete, in denen die stärkste Kraft wechselte.'
-		},
 		{
 			id: 'trends',
 			label: 'Trends',
@@ -149,6 +145,7 @@
 	const NAV_CHAPTERS = [
 		{ id: 'ueberblick', label: 'Überblick' },
 		KARTE_CHAPTER,
+		WECHSEL_CHAPTER,
 		...PLACEHOLDER_CHAPTERS.map((c) => ({ id: c.id, label: c.label })),
 		{ id: 'methodik', label: 'Methodik' }
 	];
@@ -230,6 +227,14 @@
 
 	<KapitelSection id={KARTE_CHAPTER.id} title="Karte" testid="wahl-portal-chapter-karte">
 		<WinnerMap />
+	</KapitelSection>
+
+	<KapitelSection
+		id={WECHSEL_CHAPTER.id}
+		title="Wechsel der stärksten Kraft"
+		testid="wahl-portal-chapter-wechsel"
+	>
+		<WechselKapitel />
 	</KapitelSection>
 
 	{#each PLACEHOLDER_CHAPTERS as chapter (chapter.id)}

@@ -18,14 +18,21 @@
  * Container-Node unter der Instanz wegriss).
  */
 import bbox from '@turf/bbox';
-import type { WinnerFeatureCollection } from './winner-map-data.js';
-import { ANTEIL_OPACITY_RAMP, NEUTRAL_OPACITY, NEUTRAL_FARBE } from './winner-map-data.js';
+import type { GebietFeatureCollection } from './winner-map-data.js';
+import { genericFillOpacityExpression, NEUTRAL_FARBE } from './winner-map-data.js';
 import {
 	registerPartyPatterns,
 	buildPatternImageData,
 	toImageData,
 	type PatternAddImageMap
 } from './partei-pattern-images.js';
+import {
+	fillColorExpression,
+	fillOpacityExpression,
+	fillPatternExpression,
+	wechselOutlineExpression,
+	winnerForJahrJs
+} from './winner-map-expressions.js';
 import type { WinnerTooltipData } from '../winner-map-tooltip.svelte';
 
 interface GeoJsonSourceLike {
@@ -40,9 +47,17 @@ interface MapLibreMapLike extends PatternAddImageMap {
 	addSource: (id: string, source: Record<string, unknown>) => void;
 	addLayer: (layer: Record<string, unknown>) => void;
 	setPaintProperty: (layer: string, prop: string, value: unknown) => void;
+	setFilter: (layer: string, filter: unknown) => void;
 	fitBounds: (bounds: [[number, number], [number, number]], opts?: Record<string, unknown>) => void;
 	on: (event: string, layerOrHandler: unknown, handler?: unknown) => void;
 }
+
+/** Konstruktor-Signatur der MapLibre-`Map`-Klasse -- Test-Naht (`mapFactory`)
+ * kann eine Fake-Implementierung liefern statt der echten Bibliothek. */
+type MapLibreMapCtor = new (options: Record<string, unknown>) => MapLibreMapLike;
+
+/** Filter, der auf keinem Feature jemals matcht (Stimmbezirk: nie Wechsel-Outline). */
+const NEVER_FILTER: unknown[] = ['==', ['literal', 1], 0];
 
 // Navigator-Standard-Pan-Bounds (Muster map-libre-canvas.svelte BERLIN_MAX_BOUNDS).
 const BERLIN_MAX_BOUNDS: [[number, number], [number, number]] = [
@@ -61,7 +76,28 @@ export interface WinnerMapControllerOptions {
 	/** Liest den aktuell abgeleiteten Stand (nicht den Aufruf-Zeitpunkt-Stand)
 	 * -- der `load`-Handler feuert async, `joinedFc` kann sich bis dahin schon
 	 * weiterbewegt haben. */
-	readonly getFc: () => WinnerFeatureCollection | null;
+	readonly getFc: () => GebietFeatureCollection | null;
+	/**
+	 * Aktives Anzeige-Jahr für den Erst-Init-Paint (Story 7: kiez/bezirk
+	 * backen alle Jahre einmal, das Paint muss ab dem ersten Frame den
+	 * richtigen Jahr-Ausschnitt zeigen statt kurz generische/leere Keys zu
+	 * lesen). `null`/undefiniert = Stimmbezirks-Pfad, generische Properties.
+	 */
+	readonly getActiveJahr?: () => number | null;
+	/**
+	 * Injizierbar für Tests: liefert den MapLibre-`Map`-Konstruktor, ohne den
+	 * echten dynamischen Import (inkl. CSS) auszulösen (Muster
+	 * `kiez-finder-panel.svelte.test.ts`, hier als Factory statt fertiger
+	 * Instanz, weil der Controller die Instanz selbst erzeugt/verwaltet).
+	 * Default: echter `import('maplibre-gl')` + CSS.
+	 */
+	readonly mapFactory?: () => Promise<MapLibreMapCtor>;
+}
+
+async function defaultMapFactory(): Promise<MapLibreMapCtor> {
+	const { Map: MapLibreMap } = await import('maplibre-gl');
+	await import('maplibre-gl/dist/maplibre-gl.css');
+	return MapLibreMap as unknown as MapLibreMapCtor;
 }
 
 const NEUTRAL_PATTERN_ID = 'wahl-partei-pattern-neutral';
@@ -77,15 +113,22 @@ export class WinnerMapController {
 
 	#map: MapLibreMapLike | null = null;
 	#initializing = false;
-	#getFc: () => WinnerFeatureCollection | null;
+	#getFc: () => GebietFeatureCollection | null;
+	#getActiveJahr: () => number | null;
+	/** Zuletzt gemaltes Jahr (Story 7); `null` = Stimmbezirks-Pfad, generische Properties. */
+	#activeJahr: number | null = null;
+	#patternsEnabled = false;
+	#mapFactory: () => Promise<MapLibreMapCtor>;
 
 	constructor(opts: WinnerMapControllerOptions) {
 		this.#getFc = opts.getFc;
+		this.#getActiveJahr = opts.getActiveJahr ?? (() => null);
+		this.#mapFactory = opts.mapFactory ?? defaultMapFactory;
 	}
 
 	/** Init beim ersten Mal mit Daten, danach nur noch `setData` auf der
 	 * bestehenden Instanz -- niemals erneut initialisieren. */
-	ensureMap(fc: WinnerFeatureCollection | null): void {
+	ensureMap(fc: GebietFeatureCollection | null): void {
 		if (!fc || fc.features.length === 0 || !this.container) return;
 		if (!this.#map && !this.#initializing) {
 			void this.#initMap();
@@ -94,24 +137,69 @@ export class WinnerMapController {
 		}
 	}
 
+	/**
+	 * Story 7: Jahr-Wechsel auf kiez/bezirk ist NUR NOCH `setPaintProperty`
+	 * (Finder-Muster), kein `setData`. Aktualisiert Farbe/Deckkraft/Muster
+	 * (falls aktiv) UND den Wechsel-Outline-Filter für das übergebene Jahr.
+	 * Kein Aufruf vom Stimmbezirks-Pfad (Boundary: nie Zeit-Animation dort).
+	 */
+	setActiveJahr(jahr: number): void {
+		this.#activeJahr = jahr;
+		if (!this.ready || !this.#map) return;
+		this.#map.setPaintProperty('winners-fill', 'fill-color', fillColorExpression(jahr));
+		this.#map.setPaintProperty('winners-fill', 'fill-opacity', fillOpacityExpression(jahr));
+		if (this.#patternsEnabled) {
+			this.#map.setPaintProperty(
+				'winners-fill',
+				'fill-pattern',
+				fillPatternExpression(jahr, NEUTRAL_PATTERN_ID)
+			);
+		}
+		this.#map.setFilter('winners-wechsel-outline', wechselOutlineExpression(jahr));
+	}
+
+	/**
+	 * Ebenen-Wechsel WEG von kiez/bezirk (z. B. zu Stimmbezirk): setzt Paint/
+	 * Filter zurück auf die generischen Properties (`farbe`/`anteil`/
+	 * `has_winner`), sonst bleibt die Stimmbezirks-Karte auf den zuletzt
+	 * gemalten `w_<jahr>_*`-Keys stehen (leer/neutral) und der Tooltip verliert
+	 * Partei/Anteil, weil `#activeJahr` nie zurückgesetzt wurde.
+	 */
+	clearActiveJahr(): void {
+		if (this.#activeJahr === null) return;
+		this.#activeJahr = null;
+		if (!this.ready || !this.#map) return;
+		this.#map.setPaintProperty('winners-fill', 'fill-color', ['get', 'farbe']);
+		this.#map.setPaintProperty('winners-fill', 'fill-opacity', genericFillOpacityExpression());
+		if (this.#patternsEnabled) {
+			this.#map.setPaintProperty('winners-fill', 'fill-pattern', [
+				'coalesce',
+				['get', 'pattern_image_id'],
+				NEUTRAL_PATTERN_ID
+			]);
+		}
+		this.#map.setFilter('winners-wechsel-outline', NEVER_FILTER);
+	}
+
 	setPatternsEnabled(enabled: boolean, parteien: readonly string[]): void {
+		this.#patternsEnabled = enabled;
 		if (!this.ready || !this.#map) return;
 		if (enabled) {
 			registerPartyPatterns(this.#map, parteien);
 			this.#registerNeutralPattern(this.#map);
 			// coalesce: neutrale Gebiete haben pattern_image_id null; ohne
 			// Fallback-Image meldet MapLibre missing-image und die Flaeche kippt.
-			this.#map.setPaintProperty('winners-fill', 'fill-pattern', [
-				'coalesce',
-				['get', 'pattern_image_id'],
-				NEUTRAL_PATTERN_ID
-			]);
+			const patternExpr =
+				this.#activeJahr !== null
+					? fillPatternExpression(this.#activeJahr, NEUTRAL_PATTERN_ID)
+					: ['coalesce', ['get', 'pattern_image_id'], NEUTRAL_PATTERN_ID];
+			this.#map.setPaintProperty('winners-fill', 'fill-pattern', patternExpr);
 		} else {
 			this.#map.setPaintProperty('winners-fill', 'fill-pattern', undefined);
 		}
 	}
 
-	highlight(fc: WinnerFeatureCollection | null, slug: string | null): void {
+	highlight(fc: GebietFeatureCollection | null, slug: string | null): void {
 		this.highlightedSlug = slug;
 		if (!this.ready || !this.#map) return;
 		const source = this.#map.getSource('highlight');
@@ -141,8 +229,7 @@ export class WinnerMapController {
 	async #initMap(): Promise<void> {
 		if (!this.container || this.#map || this.#initializing) return;
 		this.#initializing = true;
-		const { Map: MapLibreMap } = await import('maplibre-gl');
-		await import('maplibre-gl/dist/maplibre-gl.css');
+		const MapLibreMap = await this.#mapFactory();
 		if (!this.container) {
 			this.#initializing = false;
 			return;
@@ -175,6 +262,10 @@ export class WinnerMapController {
 		if (instance !== this.#map) return;
 		const fc = this.#getFc();
 		if (!fc) return;
+		// Story 7: Erst-Init-Paint liest bereits das aktive Jahr (falls
+		// bekannt), sonst würden kiez/bezirk-Baked-FCs für einen Frame
+		// generische (nicht existente) Property-Keys ansprechen.
+		this.#activeJahr = this.#getActiveJahr();
 		instance.addSource('winners', {
 			type: 'geojson',
 			data: fc as unknown as GeoJSON.FeatureCollection
@@ -188,21 +279,12 @@ export class WinnerMapController {
 			type: 'fill',
 			source: 'winners',
 			paint: {
-				'fill-color': ['get', 'farbe'],
-				'fill-opacity': [
-					'case',
-					['==', ['get', 'has_winner'], 1],
-					[
-						'interpolate',
-						['linear'],
-						['get', 'anteil'],
-						ANTEIL_OPACITY_RAMP.minAnteil,
-						ANTEIL_OPACITY_RAMP.minOpacity,
-						ANTEIL_OPACITY_RAMP.maxAnteil,
-						ANTEIL_OPACITY_RAMP.maxOpacity
-					],
-					NEUTRAL_OPACITY
-				],
+				'fill-color':
+					this.#activeJahr !== null ? fillColorExpression(this.#activeJahr) : ['get', 'farbe'],
+				'fill-opacity':
+					this.#activeJahr !== null
+						? fillOpacityExpression(this.#activeJahr)
+						: genericFillOpacityExpression(),
 				'fill-outline-color': 'rgba(20,20,20,0.18)'
 			}
 		});
@@ -211,6 +293,17 @@ export class WinnerMapController {
 			type: 'line',
 			source: 'highlight',
 			paint: { 'line-color': '#141414', 'line-width': 3 }
+		});
+		// Wechsel-Outline (Story 7): eigener line-Layer über winners-fill,
+		// Filter statt Paint-Bedingung -- nur Gebiete mit Wechsel-Flag=1 im
+		// aktiven Jahr bekommen eine Kontur. Nie sichtbar auf Stimmbezirk
+		// (activeJahr bleibt dort `null`, Boundary: nie Zeit-Animation dort).
+		instance.addLayer({
+			id: 'winners-wechsel-outline',
+			type: 'line',
+			source: 'winners',
+			filter: this.#activeJahr !== null ? wechselOutlineExpression(this.#activeJahr) : NEVER_FILTER,
+			paint: { 'line-color': '#141414', 'line-width': 2.5, 'line-dasharray': [2, 1] }
 		});
 
 		// Navigator-Hover-Tooltip statt MapLibre-Klick-Popup (Muster
@@ -225,12 +318,24 @@ export class WinnerMapController {
 					return;
 				}
 				const props = feature.properties;
-				this.tooltipData = {
-					gebietName: typeof props.gebiet_name === 'string' ? props.gebiet_name : '',
-					partei: typeof props.partei === 'string' ? props.partei : null,
-					anteil: typeof props.anteil === 'number' ? props.anteil : 0,
-					hasWinner: props.has_winner === 1
-				};
+				if (this.#activeJahr !== null) {
+					const w = winnerForJahrJs(props, this.#activeJahr);
+					this.tooltipData = {
+						gebietName: w.gebietName,
+						partei: w.partei,
+						anteil: w.anteil,
+						hasWinner: w.hasWinner,
+						wechsel: w.wechsel
+					};
+				} else {
+					this.tooltipData = {
+						gebietName: typeof props.gebiet_name === 'string' ? props.gebiet_name : '',
+						partei: typeof props.partei === 'string' ? props.partei : null,
+						anteil: typeof props.anteil === 'number' ? props.anteil : 0,
+						hasWinner: props.has_winner === 1,
+						wechsel: false
+					};
+				}
 				this.tooltipPos = { x: e.point.x, y: e.point.y };
 				this.tooltipVisible = true;
 				instance.getCanvas().style.cursor = 'pointer';
