@@ -62,9 +62,17 @@
     ist nur setPaintProperty. prefers-reduced-motion respektieren.'
 - id: '8'
   title: Analyse-Kapitel Trends und Kontraste
-  description: Trend- und Volatilitäts-Karten, Ausgeglichenheit, schärfste Nachbar-Grenzen,
-    AGH-vs-BVV und Splitting, je mit Takeaway-Zeile und Vorwahl-Delta (CAP-5,
-    CAP-6, CAP-8).
+  description: 'Trend- und Volatilitäts-Darstellungen, Ausgeglichenheit, schärfste
+    Nachbar-Grenzen, AGH-vs-BVV und Splitting, je mit Takeaway-Zeile und Vorwahl-Delta
+    (CAP-5, CAP-6, CAP-8). Herzstück der Volatilität: Sankey/Alluvial über die
+    Wahljahre (Matze-Idee 19.09.): Spalten = Jahre, Knoten = Parteien in Partei-Farbe,
+    Bandbreite = Gebiete (Kiez/Bezirk toggelbar), die zwischen stärksten Kräften
+    wechseln.'
+  invoke_dev_with: Sankey nur auf LOR-stabilen Ebenen Kiez/Bezirk, NIE Stimmbezirke
+    (Zuschnitts-Wechsel zwischen Generationen). Flüsse pro Partei-Übergang bündeln,
+    nicht pro Gebiet. Wiederholungswahl-Regel der Analytik gilt (2023 ersetzt
+    2021 als Legislatur-Slot). Partei-Farben aus partei-farben.ts; layerchart
+    nur lazy, eigene SVG-Primitives erlaubt.
 - id: '9'
   title: 'Partei-Ansichten: Tabs und Small Multiples'
   description: 'Einzel-Partei-Intensität als Tab-Auswahl auf der Hero-Karte (wie
