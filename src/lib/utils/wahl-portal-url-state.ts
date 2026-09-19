@@ -86,3 +86,14 @@ export function serializePortalState(state: WahlPortalUrlState): URLSearchParams
 	if (state.ebene !== DEFAULT_EBENE) params.set('ebene', state.ebene);
 	return params;
 }
+
+export type WahlPortalStimmtyp = 'einstimme' | 'zweitstimme';
+
+/**
+ * Leitet den API-Stimmtyp aus der Wahl-Reihe ab (Story 4 AC).
+ * BVV kennt nur eine Stimme; BTW/AGH werten für die Winner-Map die
+ * Zweitstimme (Parteien-Ergebnis, nicht Wahlkreis-Erststimme).
+ */
+export function stimmtypForReihe(reihe: WahlPortalReihe): WahlPortalStimmtyp {
+	return reihe === 'bvv' ? 'einstimme' : 'zweitstimme';
+}

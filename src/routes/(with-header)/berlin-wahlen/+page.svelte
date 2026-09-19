@@ -31,6 +31,7 @@
 	import KapitelSection from '$lib/components/wahl-portal/kapitel-section.svelte';
 	import PortalDatenstand from '$lib/components/wahl-portal/portal-datenstand.svelte';
 	import PortalQuellen from '$lib/components/wahl-portal/portal-quellen.svelte';
+	import WinnerMap from '$lib/components/wahl-portal/winner-map.svelte';
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
@@ -104,13 +105,9 @@
 
 	const quellen = $derived(deriveQuellen(portal.wahlen));
 
+	const KARTE_CHAPTER = { id: 'karte', label: 'Karte' } as const;
+
 	const PLACEHOLDER_CHAPTERS = [
-		{
-			id: 'karte',
-			label: 'Karte',
-			title: 'Karte',
-			takeaway: 'Hier entsteht die Winner-Karte mit Zeit-Animation über alle Wahljahre.'
-		},
 		{
 			id: 'wechsel',
 			label: 'Wechsel',
@@ -151,6 +148,7 @@
 
 	const NAV_CHAPTERS = [
 		{ id: 'ueberblick', label: 'Überblick' },
+		KARTE_CHAPTER,
 		...PLACEHOLDER_CHAPTERS.map((c) => ({ id: c.id, label: c.label })),
 		{ id: 'methodik', label: 'Methodik' }
 	];
@@ -229,6 +227,10 @@
 		<PortalDatenstand {minJahr} {maxJahr} status={portal.status} />
 		<EditorialDisclaimer variant="wahl-portal-footnote" />
 	</header>
+
+	<KapitelSection id={KARTE_CHAPTER.id} title="Karte" testid="wahl-portal-chapter-karte">
+		<WinnerMap />
+	</KapitelSection>
 
 	{#each PLACEHOLDER_CHAPTERS as chapter (chapter.id)}
 		<KapitelSection

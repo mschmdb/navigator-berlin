@@ -2,7 +2,7 @@
 title: 'Winner-Map mit Ebenen und Adress-Suche'
 type: 'feature'
 created: '2026-09-19'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: '943911a07bc7d2be21689cbdfccc1aa8dbee522e'
@@ -139,9 +139,40 @@ Verifiziert: `pnpm vitest run --project server` (2664 Tests grün), `--project c
 Regressionstest für den Ebenen-Wechsel-Destroy-Bug) und der bestehende Axe-Test
 `tests/e2e/a11y.e2e.ts -g "Berlin-Wahlen-Portal"` (0 Violations, DB-loser Leerzustand).
 
+Nach Review 13 Patches (Details Triage-Log), von mir direkt angewendet, da der
+Implementierungs-Agent nicht mehr resumierbar war. Zusatz beim Matrix-Audit:
+geocodeFn injizierbar + zwei Adress-Such-Tests (Tastatur-Selektion). Klarstellung
+zum Intent: Winners-Cache ist pro Reihe×Ebene (nicht pro Reihe); statt MapLibre-
+Popup ein Navigator-Hover-Tooltip (Human-Änderung 19.09.).
+
 ## Spec Change Log
 
 ## Review Triage Log
+
+| # | Layer | Finding | Verdict | Route |
+|---|-------|---------|---------|-------|
+| 1 | blind+edge (4 Findings) | Stale-Response-Races in loadWinners/loadGeometry + Übergangs-Join alter Geometrie mit neuen Winners | medium | **patch**: Zustands-Guards vor jeder Zuweisung, GeometryState.ebene, Join nur bei passender Ebene |
+| 2 | blind+edge (3 Findings) | Fehler/Leer-Ergebnisse nach mapShown-Latch verschluckt | medium | **patch**: nicht-destruktive Status-Zeile über der Karte |
+| 3 | blind+edge | #onStyleLoad läuft nach destroy() auf toter Instanz | medium | **patch**: `instance !== this.#map`-Guard |
+| 4 | blind+edge | handleAddressSelect ohne try/catch | medium | **patch** |
+| 5 | edge | fill-pattern mit null pattern_image_id (neutrale Gebiete kippen) | medium | **patch**: coalesce + registriertes Neutral-Pattern |
+| 6 | edge | Malformed winners-Shape crasht statt error-State | low | **patch**: Array-Guard |
+| 7 | edge | Duplikat-BZR_NAMEs in Tabelle/Tooltip ununterscheidbar | medium | **patch**: Namens-Dedup mit Bezirk in Klammern |
+| 8 | edge | Takeaway-Gleichstand wählt zufällige Partei | medium | **patch**: alphabetischer Tie-Break + Test (E2E-Fixtures nachgezogen: 1:1-Tie ergibt jetzt GRÜNE) |
+| 9 | blind | Prozent-Formatierung 3× dupliziert | low | **patch**: formatAnteilPct geteilt |
+| 10 | blind | Irreführender Pattern-Testname | low | **patch**: umbenannt |
+| 11 | verification-gap | Highlight-Outcome nicht assertierbar | medium | **patch**: highlightedSlug am Controller + data-highlighted-slug + Assertion |
+| 12 | verification-gap+blind | Muster-Toggle nie auf gemounteter Karte getestet | medium | **patch**: neuer Component-Test (ans Datei-Ende: Interferenz mit nachfolgender Combobox-Selektion, isoliert dokumentiert) |
+| 13 | verification-gap | Alt-E2E-Tests treffen ungemockte winners-Requests | low | **patch**: Mocks ergänzt |
+| 14 | blind | winners-URL ohne encodeURIComponent | false | Werte stammen aus geschlossenen Union-Typen (valibot-gesichert), kein User-Input |
+| 15 | blind | „143" hartcodiert im Aggregations-Hinweis | rejected | Methodik-Systemkonstante des LOR (nicht FC-abhängig); bei LOR-Reform ändert sich der Text ohnehin |
+| 16 | blind | Muster-Toggle nicht in URL persistiert | rejected | Frozen-Boundary schreibt flüchtig vor; als UX-Frage an Matze notiert |
+| 17 | blind | Legenden-CSS-Näherung ≠ Bitmap-Algorithmus | rejected | bewusste, kommentierte Näherung |
+| 18 | edge | Tooltip-Clipping am Kartenrand | low, rejected | Polish; Clamping braucht Container-Messung, Nutzen gering |
+| 19 | edge (2 Findings) | BEZ-Code ohne bezirke-Match / doppelte gebiet_slug-Rows | rejected | Datensätze repo-gepflegt bzw. upstream per DISTINCT ON eindeutig |
+| 20 | verification-gap+blind | Hover-Pipeline (mousemove→tooltipData) und Karten-Tastatur-Pfad ungetestet | medium (Coverage) | **defer** |
+| 21 | edge (2 Claims) | Spec-Intent sagt „Response pro Reihe" (real: Reihe×Ebene); Task nennt „Popup" (real: Tooltip nach Human-Änderung) | note | Design Notes präzisiert; kein Code-Change |
+
 
 ## Design Notes
 
