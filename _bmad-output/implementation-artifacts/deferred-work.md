@@ -13,3 +13,9 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/3-portal-skeleton-berlin-wahlen.md`
   summary: Coverage-Nachzügler Portal-Skeleton: Scroll-Spy-Berechnung (computeActive) ohne direkten Unit-Test, noindex-Flag-Wiring ohne Head-Check-Test, lint-wahl-editorial collectScanFiles-Rekursion ungetestet.
   evidence: Review-Layer Story 3; Klick-Pfad ist per Component- und E2E-Test gedeckt, der Rest braucht ein Head-Check-/Script-Test-Muster, das im Repo noch nicht existiert.
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories.yaml`
+  summary: Wahlkreis-Ebene für die Winner-Map (AGH-/BTW-Wahlkreise als Darstellungs-Einheit; Wahlkreis-Codes liegen in stimmbezirk.wahlkreis, Geometrien fehlen komplett).
+  evidence: Matze-Direktive 19.09. (amtliche Einheiten); braucht neue AfS-Geometrie-Quelle + Wahlkreis-Aggregation, sinnvoll gebündelt mit dem 2026-Ingest (Story 15), wenn ohnehin AfS-Geodaten gezogen werden.
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/4-winner-map-mit-ebenen-und-adress-suche.md`
+  summary: Winner-Map-Coverage-Nachzügler: Hover-Pipeline (echtes mousemove→tooltipData-Mapping) und ein Tastatur-/Touch-Pfad auf die Pro-Gebiet-Info der Karte selbst; dazu die UX-Frage, ob der Achromatopsie-Muster-Toggle in die URL gehört.
+  evidence: Review-Layer Story 4; Tabelle ist der A11y-Pfad laut Haus-Muster, echte MapLibre-Hit-Tests brauchen ein neues E2E-Muster.

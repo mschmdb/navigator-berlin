@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
 	parsePortalState,
 	serializePortalState,
+	stimmtypForReihe,
 	DEFAULT_REIHE,
 	DEFAULT_EBENE,
 	type WahlPortalUrlState
@@ -93,5 +94,19 @@ describe('serializePortalState', () => {
 		const state: WahlPortalUrlState = { reihe: 'bvv', jahr: 2023, ebene: 'bezirk' };
 		const roundtripped = parsePortalState(serializePortalState(state));
 		expect(roundtripped).toEqual(state);
+	});
+});
+
+describe('stimmtypForReihe', () => {
+	it('liefert einstimme für bvv', () => {
+		expect(stimmtypForReihe('bvv')).toBe('einstimme');
+	});
+
+	it('liefert zweitstimme für agh', () => {
+		expect(stimmtypForReihe('agh')).toBe('zweitstimme');
+	});
+
+	it('liefert zweitstimme für btw', () => {
+		expect(stimmtypForReihe('btw')).toBe('zweitstimme');
 	});
 });
