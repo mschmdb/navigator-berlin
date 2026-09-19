@@ -43,6 +43,18 @@ const ELECTIONS = {
 			license: 'dl-de/by-2.0'
 		},
 		{
+			slug: '2016-agh-zweitstimme',
+			jahr: 2016,
+			typ: 'agh',
+			stimmtyp: 'zweitstimme',
+			is_repeat_election: false,
+			parent_slug: null,
+			has_stimmbezirks_geometry: true,
+			source_name: 'Amt für Statistik Berlin-Brandenburg',
+			source_url: 'https://example.invalid/agh16',
+			license: 'dl-de/by-2.0'
+		},
+		{
 			slug: '2025-btw-zweitstimme',
 			jahr: 2025,
 			typ: 'btw',
@@ -78,8 +90,9 @@ test('Steuerleisten-Klicks schreiben die URL und revertieren nicht', async ({ pa
 	await expect(page.getByTestId('steuerleiste-reihe-btw')).toHaveAttribute('aria-checked', 'true');
 
 	// Zurück auf Defaults: Query-Params verschwinden wieder (kein Müll).
+	// Story 5: Default-Ebene ist jetzt stimmbezirk (Tagesspiegel-Referenz).
 	await page.getByTestId('steuerleiste-reihe-agh').click();
-	await page.getByTestId('steuerleiste-ebene-kiez').click();
+	await page.getByTestId('steuerleiste-ebene-stimmbezirk').click();
 	await expect(page).not.toHaveURL(/reihe=/);
 	await expect(page).not.toHaveURL(/ebene=/);
 });
@@ -142,7 +155,7 @@ const WINNERS_AGH_KIEZ = {
 	source_name: 'Amt für Statistik Berlin-Brandenburg'
 };
 
-test('Winner-Map: Karte + Tabelle rendern, Jahr-Wechsel ohne neuen Winners-Request', async ({
+test('Winner-Map (Ebene kiez): Karte + Tabelle rendern, Jahr-Wechsel ohne neuen Winners-Request', async ({
 	page
 }) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
@@ -153,7 +166,10 @@ test('Winner-Map: Karte + Tabelle rendern, Jahr-Wechsel ohne neuen Winners-Reque
 		return route.fulfill({ json: WINNERS_AGH_KIEZ });
 	});
 
-	await page.goto('/berlin-wahlen');
+	// Explizit ebene=kiez: Story 5 macht stimmbezirk zum Default, dieser Test
+	// deckt weiter den unveränderten Bulk-Reihe-Pfad ab (AC: kiez/bezirk-
+	// Semantik unverändert).
+	await page.goto('/berlin-wahlen?ebene=kiez');
 
 	// Kapitel rendert den Karten-Container (Default-Reihe agh, Default-Jahr 2023).
 	// Fixture hat 1:1-Gleichstand SPD/GRÜNE; der Takeaway löst alphabetisch auf.
@@ -195,7 +211,7 @@ const WINNERS_AGH_BEZIRK = {
 	source_name: 'Amt für Statistik Berlin-Brandenburg'
 };
 
-test('Winner-Map: Ebenen-Wechsel aktualisiert die bestehende Karte statt sie zu zerstören', async ({
+test('Winner-Map (Ebene kiez/bezirk): Ebenen-Wechsel aktualisiert die bestehende Karte statt sie zu zerstören', async ({
 	page
 }) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
@@ -205,7 +221,7 @@ test('Winner-Map: Ebenen-Wechsel aktualisiert die bestehende Karte statt sie zu 
 		return route.fulfill({ json: ebene === 'bezirk' ? WINNERS_AGH_BEZIRK : WINNERS_AGH_KIEZ });
 	});
 
-	await page.goto('/berlin-wahlen');
+	await page.goto('/berlin-wahlen?ebene=kiez');
 
 	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
 	await expect(page.getByTestId('winner-map-takeaway')).toContainText('GRÜNE');
@@ -218,4 +234,165 @@ test('Winner-Map: Ebenen-Wechsel aktualisiert die bestehende Karte statt sie zu 
 	await expect(page.getByTestId('winner-map-takeaway')).toContainText('CDU');
 	await expect(page.getByTestId('winner-map-loading')).not.toBeVisible();
 	await expect(page.getByTestId('winner-map-empty')).not.toBeVisible();
+});
+
+// Story 5: Stimmbezirks-Winners jahrweise (ebene=stimmbezirk verlangt jahr).
+// `01W100` ist eine echte uwbId aus static/layers/wahlbezirke-ah21*.geojson
+// UND wahlbezirke-ah16*.geojson (BEZ=01, UWB3/UWB=100) -- dieselbe Nummer
+// existiert in beiden Geometrie-Generationen, deckt also sowohl den
+// Default-Render (ah21) als auch den Geo-Swap-Test (ah16 -> ah21) ab.
+const STIMMBEZIRK_WINNERS_BY_JAHR: Record<string, unknown> = {
+	'2023': {
+		typ: 'agh',
+		stimmtyp: 'zweitstimme',
+		ebene: 'stimmbezirk',
+		jahr: 2023,
+		geo_slug: 'ah21',
+		winners: [
+			{
+				jahr: 2023,
+				gebiet_slug: '01W100',
+				partei: 'SPD',
+				farbe_hex: '#A50C1A',
+				anteil: 0.4,
+				is_repeat_election: true,
+				parent_slug: '2021-agh-zweitstimme'
+			}
+		],
+		license: 'dl-de/by-2.0',
+		source_url: 'https://example.invalid/agh23',
+		source_name: 'Amt für Statistik Berlin-Brandenburg'
+	},
+	'2021': {
+		typ: 'agh',
+		stimmtyp: 'zweitstimme',
+		ebene: 'stimmbezirk',
+		jahr: 2021,
+		geo_slug: 'ah21',
+		winners: [
+			{
+				jahr: 2021,
+				gebiet_slug: '01W100',
+				partei: 'CDU',
+				farbe_hex: '#1A1A1A',
+				anteil: 0.5,
+				is_repeat_election: false,
+				parent_slug: null
+			}
+		],
+		license: 'dl-de/by-2.0',
+		source_url: 'https://example.invalid/agh21',
+		source_name: 'Amt für Statistik Berlin-Brandenburg'
+	},
+	'2016': {
+		typ: 'agh',
+		stimmtyp: 'zweitstimme',
+		ebene: 'stimmbezirk',
+		jahr: 2016,
+		geo_slug: 'ah16',
+		winners: [
+			{
+				jahr: 2016,
+				gebiet_slug: '01W100',
+				partei: 'GRÜNE',
+				farbe_hex: '#0F6E2C',
+				anteil: 0.35,
+				is_repeat_election: false,
+				parent_slug: null
+			}
+		],
+		license: 'dl-de/by-2.0',
+		source_url: 'https://example.invalid/agh16',
+		source_name: 'Amt für Statistik Berlin-Brandenburg'
+	}
+};
+
+async function routeStimmbezirkWinners(page: import('@playwright/test').Page): Promise<void> {
+	await page.route('**/api/wahl/winners**', (route) => {
+		const url = new URL(route.request().url());
+		const ebene = url.searchParams.get('ebene');
+		const jahr = url.searchParams.get('jahr');
+		if (ebene === 'stimmbezirk') {
+			const body = (jahr && STIMMBEZIRK_WINNERS_BY_JAHR[jahr]) ?? {
+				typ: 'agh',
+				stimmtyp: 'zweitstimme',
+				ebene: 'stimmbezirk',
+				jahr: jahr ? Number(jahr) : null,
+				geo_slug: null,
+				winners: []
+			};
+			return route.fulfill({ json: body });
+		}
+		return route.fulfill({ json: { winners: [] } });
+	});
+}
+
+test('Winner-Map (Ebene stimmbezirk): Default-Ansicht rendert die Stimmbezirks-Karte', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await routeStimmbezirkWinners(page);
+
+	// Kaltstart ohne Params: Default-Ebene ist stimmbezirk (Story 5), URL bleibt param-frei.
+	await page.goto('/berlin-wahlen');
+	await expect(page).not.toHaveURL(/ebene=/);
+
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+	await expect(page.getByTestId('winner-map-takeaway')).toContainText('SPD');
+	await expect(page.getByTestId('winner-map-fallback-hinweis')).not.toBeVisible();
+
+	await page.getByTestId('table-toggle').click();
+	await expect(page.getByTestId('data-table')).toContainText('Stimmbezirk 01W100');
+});
+
+test('Winner-Map (Ebene stimmbezirk): Ebenen-Wechsel zu kiez aktualisiert die bestehende Karte', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await page.route('**/api/wahl/winners**', (route) => {
+		const url = new URL(route.request().url());
+		const ebene = url.searchParams.get('ebene');
+		const jahr = url.searchParams.get('jahr');
+		if (ebene === 'stimmbezirk') {
+			return route.fulfill({ json: (jahr && STIMMBEZIRK_WINNERS_BY_JAHR[jahr]) ?? { winners: [] } });
+		}
+		return route.fulfill({ json: WINNERS_AGH_KIEZ });
+	});
+
+	await page.goto('/berlin-wahlen');
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+	await expect(page.getByTestId('winner-map-takeaway')).toContainText('SPD');
+
+	// Ebene-Wechsel (Live-Fund 19.09.): Karte bleibt im DOM, aktualisiert nur.
+	await page.getByTestId('steuerleiste-ebene-kiez').click();
+	await expect(page).toHaveURL(/ebene=kiez/);
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+	await expect(page.getByTestId('winner-map-takeaway')).toContainText('GRÜNE');
+
+	// Zurück zu stimmbezirk: wieder sichtbar, wieder SPD (Cache-Hit, kein Datenverlust).
+	await page.getByTestId('steuerleiste-ebene-stimmbezirk').click();
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+	await expect(page.getByTestId('winner-map-takeaway')).toContainText('SPD');
+});
+
+test('Winner-Map (Ebene stimmbezirk): Jahr-Wechsel swappt die Geometrie ohne Karten-Verlust', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await routeStimmbezirkWinners(page);
+
+	await page.goto('/berlin-wahlen');
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+	await expect(page.getByTestId('winner-map-takeaway')).toContainText('SPD');
+
+	// AGH 2021: gleiche Geometrie-Generation (ah21), kein Swap.
+	await page.getByTestId('steuerleiste-jahr-2021').click();
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+	await expect(page.getByTestId('winner-map-takeaway')).toContainText('CDU');
+
+	// AGH 2016: Geometrie-Generation wechselt ah21 -> ah16 (setData auf der
+	// bestehenden Instanz, Bestands-Boundary: nie Re-Init). Karte bleibt sichtbar.
+	await page.getByTestId('steuerleiste-jahr-2016').click();
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+	await expect(page.getByTestId('winner-map-takeaway')).toContainText('GRÜNE');
 });

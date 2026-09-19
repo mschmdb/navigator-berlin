@@ -3,25 +3,26 @@
  * `?reihe=&jahr=&ebene=`. Pure Funktionen, kein Svelte-Import, testbar ohne
  * Component-Mount.
  *
- * Defaults (I/O-Matrix Kaltstart): jüngste AGH-Reihe, Ebene kiez. `jahr` hat
- * keinen fixen Default hier, weil das jüngste Jahr von der geladenen
- * Wahl-Liste abhängt (siehe `wahl-portal-context.svelte.ts`). `jahr: null`
- * heißt „kein expliziter User-Override", die Context-Schicht löst daraus das
- * jüngste Jahr der aktuellen Reihe auf.
+ * Defaults (I/O-Matrix Kaltstart): jüngste AGH-Reihe, Ebene stimmbezirk
+ * (Story 5: amtliche Einheiten als Standard-Ansicht, Tagesspiegel-Referenz).
+ * `jahr` hat keinen fixen Default hier, weil das jüngste Jahr von der
+ * geladenen Wahl-Liste abhängt (siehe `wahl-portal-context.svelte.ts`).
+ * `jahr: null` heißt „kein expliziter User-Override", die Context-Schicht
+ * löst daraus das jüngste Jahr der aktuellen Reihe auf.
  *
  * Ungültige Werte fallen still auf Defaults zurück (kein Fehler, kein 404).
  */
 
 export type WahlPortalReihe = 'btw' | 'agh' | 'bvv';
-export type WahlPortalEbene = 'kiez' | 'bezirk';
+export type WahlPortalEbene = 'stimmbezirk' | 'kiez' | 'bezirk';
 
 export const DEFAULT_REIHE: WahlPortalReihe = 'agh';
-export const DEFAULT_EBENE: WahlPortalEbene = 'kiez';
+export const DEFAULT_EBENE: WahlPortalEbene = 'stimmbezirk';
 
 export const REIHE_VALUES: readonly WahlPortalReihe[] = ['btw', 'agh', 'bvv'];
 // Nur Ebenen mit API-Gegenstück (/api/wahl/series|winners); 'berlin' hat
 // keine Gebietskarte und kommt erst mit einem konkreten Kapitel-Bedarf.
-export const EBENE_VALUES: readonly WahlPortalEbene[] = ['kiez', 'bezirk'];
+export const EBENE_VALUES: readonly WahlPortalEbene[] = ['stimmbezirk', 'kiez', 'bezirk'];
 
 export const REIHE_LABELS: Record<WahlPortalReihe, string> = {
 	btw: 'Bundestag',
@@ -30,6 +31,7 @@ export const REIHE_LABELS: Record<WahlPortalReihe, string> = {
 };
 
 export const EBENE_LABELS: Record<WahlPortalEbene, string> = {
+	stimmbezirk: 'Stimmbezirk',
 	kiez: 'Kiez',
 	bezirk: 'Bezirk'
 };

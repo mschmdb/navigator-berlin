@@ -9,6 +9,8 @@ import {
 	kiezNamesForFeatures,
 	bezirkNamesForFeatures,
 	joinWinnersToFeatures,
+	joinStimmbezirkWinners,
+	resolveAnzeigeEbene,
 	buildTableRows,
 	buildTakeawaySentence,
 	aggregationHinweisText,
@@ -211,6 +213,94 @@ describe('joinWinnersToFeatures', () => {
 	});
 });
 
+// Fixture-Props identisch zu scripts/wahlen/lib/kiez-mapper.test.ts (Kontrakt:
+// dieselben uwbIds wie die Kiez-Mapper-Fixtures für BTW- und AGH-Format).
+const STIMMBEZIRK_FC_BTW: FeatureCollection = {
+	type: 'FeatureCollection',
+	features: [
+		feature({ BWK: '75', BEZ: '01', UWB3: '100' }),
+		feature({ BWK: '83', BEZ: '09', UWB3: '101', UWB: '09101' })
+	]
+};
+
+const STIMMBEZIRK_FC_AGH: FeatureCollection = {
+	type: 'FeatureCollection',
+	features: [feature({ BEZ: '01', UWB3: '100' }), feature({ BEZ: '05', UWB3: '221' })]
+};
+
+describe('joinStimmbezirkWinners', () => {
+	it('joint über dbUwbIdFromGeo im BTW-Format (BWK-BEZ-UWB3-0)', () => {
+		const winners: WinnerApiRow[] = [
+			{
+				jahr: 2021,
+				gebiet_slug: '075-01-100-0',
+				partei: 'SPD',
+				farbe_hex: '#ignored',
+				anteil: 0.4,
+				is_repeat_election: false,
+				parent_slug: null
+			}
+		];
+		const joined = joinStimmbezirkWinners(STIMMBEZIRK_FC_BTW, 'btw21', winners);
+		expect(joined.features[0].properties.gebiet_slug).toBe('075-01-100-0');
+		expect(joined.features[0].properties.gebiet_name).toBe('Stimmbezirk 075-01-100-0');
+		expect(joined.features[0].properties.partei).toBe('SPD');
+		expect(joined.features[0].properties.has_winner).toBe(1);
+		// Zweites Feature (083-09-101-0) bleibt unmatched, neutral.
+		expect(joined.features[1].properties.has_winner).toBe(0);
+	});
+
+	it('joint über dbUwbIdFromGeo im AGH-Format (BEZ-W-UWB3, ohne Suffix)', () => {
+		const winners: WinnerApiRow[] = [
+			{
+				jahr: 2021,
+				gebiet_slug: '01W100',
+				partei: 'GRÜNE',
+				farbe_hex: '#ignored',
+				anteil: 0.3,
+				is_repeat_election: false,
+				parent_slug: null
+			}
+		];
+		const joined = joinStimmbezirkWinners(STIMMBEZIRK_FC_AGH, 'agh21', winners);
+		expect(joined.features[0].properties.gebiet_slug).toBe('01W100');
+		expect(joined.features[0].properties.gebiet_name).toBe('Stimmbezirk 01W100');
+		expect(joined.features[0].properties.partei).toBe('GRÜNE');
+	});
+});
+
+describe('resolveAnzeigeEbene', () => {
+	it('behält die gewünschte Ebene, wenn sie verfügbar ist', () => {
+		expect(
+			resolveAnzeigeEbene('stimmbezirk', { stimmbezirk: true, kiez: true, bezirk: true })
+		).toBe('stimmbezirk');
+	});
+
+	it('fällt von stimmbezirk auf kiez, wenn stimmbezirk fehlt', () => {
+		expect(
+			resolveAnzeigeEbene('stimmbezirk', { stimmbezirk: false, kiez: true, bezirk: true })
+		).toBe('kiez');
+	});
+
+	it('fällt von stimmbezirk auf bezirk, wenn weder stimmbezirk noch kiez verfügbar sind (BVV 2011)', () => {
+		expect(
+			resolveAnzeigeEbene('stimmbezirk', { stimmbezirk: false, kiez: false, bezirk: true })
+		).toBe('bezirk');
+	});
+
+	it('fällt bei manuell gewähltem kiez ohne Daten auf bezirk, rutscht nicht zurück zu stimmbezirk', () => {
+		expect(
+			resolveAnzeigeEbene('kiez', { stimmbezirk: true, kiez: false, bezirk: true })
+		).toBe('bezirk');
+	});
+
+	it('bleibt bei bezirk (immer verfügbar)', () => {
+		expect(
+			resolveAnzeigeEbene('bezirk', { stimmbezirk: false, kiez: false, bezirk: true })
+		).toBe('bezirk');
+	});
+});
+
 describe('buildTableRows', () => {
 	it('enthält nur gematchte Gebiete', () => {
 		const slugs = buildKiezSlugsForFeatures(KIEZ_FC, BEZIRKE_FC);
@@ -266,6 +356,11 @@ describe('aggregationHinweisText', () => {
 
 	it('nennt die amtlichen Bezirks-Summen auf Bezirk-Ebene', () => {
 		expect(aggregationHinweisText('bezirk')).toMatch(/amtliche Bezirks-Summen/);
+	});
+
+	it('nennt amtliche Urnenwahl-Ergebnisse und die Briefwahl-Lücke auf Stimmbezirks-Ebene', () => {
+		expect(aggregationHinweisText('stimmbezirk')).toMatch(/Urnenwahl/);
+		expect(aggregationHinweisText('stimmbezirk')).toMatch(/Briefwahl/);
 	});
 });
 

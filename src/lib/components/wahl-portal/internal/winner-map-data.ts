@@ -13,6 +13,8 @@ import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { parteiColor, parteiPattern, type Pattern } from '$lib/data/partei-farben.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.js';
+import { dbUwbIdFromGeo, type GeoUwbProps } from '$lib/data/wahl-geo-mapping.js';
+import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
 import { patternImageId } from './partei-pattern-images.js';
 
 /** Eine Winners-Row aus `GET /api/wahl/winners` (Response-Shape der Story-2-API). */
@@ -198,6 +200,51 @@ export function joinWinnersToFeatures(
 	return { type: 'FeatureCollection', features };
 }
 
+/**
+ * Story 5: Join für die Stimmbezirks-Ebene. Anders als `joinWinnersToFeatures`
+ * (vorab gebaute `slugs`/`names`-Arrays, Story 4) berechnet dieser Join die
+ * DB-uwbId direkt aus den Geo-Feature-Properties (`dbUwbIdFromGeo`), weil
+ * Stimmbezirks-Features die nötigen Felder (BEZ/UWB/BWK) selbst tragen.
+ * Delegiert an `joinWinnersToFeatures`, um Farb-/Pattern-/Neutral-Logik nicht
+ * zu duplizieren. Anzeige-Name: „Stimmbezirk <uwbId>".
+ */
+export function joinStimmbezirkWinners(
+	fc: FeatureCollection,
+	wahlSlug: string,
+	winners: readonly WinnerApiRow[]
+): WinnerFeatureCollection {
+	const slugs = fc.features.map(
+		(f) => dbUwbIdFromGeo((f.properties ?? {}) as GeoUwbProps, wahlSlug) ?? ''
+	);
+	const names = slugs.map((s) => (s ? `Stimmbezirk ${s}` : ''));
+	return joinWinnersToFeatures(fc, slugs, names, winners);
+}
+
+const EBENEN_LEITER: readonly WahlPortalEbene[] = ['stimmbezirk', 'kiez', 'bezirk'];
+
+/** Ob eine Ebene für das aktive Jahr tatsächlich Daten/Geometrie hat. */
+export type EbenenVerfuegbarkeit = Readonly<Record<WahlPortalEbene, boolean>>;
+
+/**
+ * Fallback-Leiter (Human-Direktive 19.09., Tagesspiegel-Referenz): fehlt der
+ * gewünschten Ebene die Geometrie/die Daten für das aktive Jahr, rutscht die
+ * ANZEIGE zur nächstgröberen verfügbaren Ebene (stimmbezirk -> kiez ->
+ * bezirk). Rein die Darstellung -- der Nutzer-Wunsch im URL-State bleibt
+ * unangetastet (kein stilles Umschalten des Toggles), ein Jahr-Wechsel zurück
+ * zu einem Jahr mit Stimmbezirks-Daten zeigt wieder Stimmbezirke.
+ */
+export function resolveAnzeigeEbene(
+	gewuenscht: WahlPortalEbene,
+	verfuegbarkeit: EbenenVerfuegbarkeit
+): WahlPortalEbene {
+	const start = EBENEN_LEITER.indexOf(gewuenscht);
+	for (let i = start; i < EBENEN_LEITER.length; i++) {
+		const ebene = EBENEN_LEITER[i];
+		if (verfuegbarkeit[ebene]) return ebene;
+	}
+	return 'bezirk';
+}
+
 export interface WinnerTableRow {
 	readonly gebiet: string;
 	readonly partei: string;
@@ -247,7 +294,10 @@ export function buildTakeawaySentence(
  * amtlicher Originalwert wie die Bezirks-Summen -- muss direkt an der Karte
  * stehen, nicht nur in der Methodik-Doku verlinkt).
  */
-export function aggregationHinweisText(ebene: 'kiez' | 'bezirk'): string {
+export function aggregationHinweisText(ebene: WahlPortalEbene): string {
+	if (ebene === 'stimmbezirk') {
+		return 'Stimmbezirks-Werte: amtliche Ergebnisse der Urnenwahl. Briefwahl wird eigenen Briefwahlbezirken zugeordnet und ist nicht kartierbar.';
+	}
 	return ebene === 'kiez'
 		? 'Kiez-Werte: Stimmbezirke der Wahl, per Flächen-Zuordnung auf die 143 Berliner Kieze aggregiert.'
 		: 'Bezirks-Werte: amtliche Bezirks-Summen.';
