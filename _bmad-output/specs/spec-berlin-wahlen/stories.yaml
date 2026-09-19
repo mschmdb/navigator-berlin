@@ -76,19 +76,32 @@
     Tool-Surface englisch. Tools rufen nur HTTP-APIs, kein DB-Zugriff
     (Composition-Root-Muster in mount.ts).
 - id: "10"
-  title: Einstiegspunkte und Redirect
+  title: Wahl-Detailseiten ins Portal überführen
+  description: >-
+    /berlin-wahlen/[slug] als Neubau der 20 Einzelwahl-Seiten aus
+    Portal-Bausteinen (Slugs unverändert, prerendered), 301 von /wahl
+    und /wahl/[slug], alle internen Links direkt umziehen (CAP-16,
+    CAP-13-Redirects).
+  invoke_dev_with: >-
+    Interne Link-Stellen stehen in der Constraint-Notiz im Memlog
+    (Inspector wahl-section wahlabhängig, home-wahl-teaser,
+    kiez-finder-panel, meta-links, kiez/[slug], methodik, llms, OG,
+    Sitemap-Sources). Abschluss-Check: grep '/wahl' ohne interne
+    Alt-Links. Sitemap/llms/OG auf neue Slug-Pfade, lastmod aktualisieren.
+- id: "11"
+  title: Einstiegspunkte
   description: >-
     Home-Feature-Block nach Kiez-Finder-Muster, Footer-Link,
-    Inspector-Deep-Link, 301 von /wahl auf /berlin-wahlen, OG-Image
-    final (CAP-13).
+    Inspector-Deep-Link auf Portal und Detailseite, OG-Image final
+    (CAP-13-Rest).
   done_checkpoint: true
-- id: "11"
+- id: "12"
   title: Wahlbeteiligung persistieren und zeigen
   description: >-
     Migration für wahlberechtigte/waehlende/ungueltige, Loader- und
     Aggregat-Erweiterung, Re-Ingest, Beteiligungs-Modul mit Zeitreihe
     (CAP-15). Droppable: Portal geht ohne diese Story live.
-- id: "12"
+- id: "13"
   title: Ingest AGH/BVV 2026
   description: >-
     Deklarativer Ingest nach technical-notes.md-Checkliste: sources,
