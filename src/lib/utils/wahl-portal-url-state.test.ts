@@ -13,9 +13,9 @@ function params(query: string): URLSearchParams {
 }
 
 describe('parsePortalState', () => {
-	it('liefert Defaults (jüngste AGH-Reihe, Ebene kiez, kein Jahr) ohne Params', () => {
+	it('liefert Defaults (jüngste AGH-Reihe, Ebene stimmbezirk, kein Jahr) ohne Params', () => {
 		const state = parsePortalState(params(''));
-		expect(state).toEqual({ reihe: 'agh', jahr: null, ebene: 'kiez' });
+		expect(state).toEqual({ reihe: 'agh', jahr: null, ebene: 'stimmbezirk' });
 	});
 
 	it('parsed einen gültigen Deep-Link exakt', () => {
@@ -54,7 +54,8 @@ describe('parsePortalState', () => {
 		expect(parsePortalState(params('reihe=bvv')).reihe).toBe('bvv');
 	});
 
-	it('akzeptiert beide gültigen ebene-Werte, berlin fällt auf Default', () => {
+	it('akzeptiert alle drei gültigen ebene-Werte, berlin fällt auf Default', () => {
+		expect(parsePortalState(params('ebene=stimmbezirk')).ebene).toBe('stimmbezirk');
 		expect(parsePortalState(params('ebene=kiez')).ebene).toBe('kiez');
 		expect(parsePortalState(params('ebene=bezirk')).ebene).toBe('bezirk');
 		expect(parsePortalState(params('ebene=berlin')).ebene).toBe(DEFAULT_EBENE);
@@ -63,12 +64,12 @@ describe('parsePortalState', () => {
 
 describe('serializePortalState', () => {
 	it('schreibt keine Params für den reinen Default-Zustand (kein Query-Müll)', () => {
-		const state: WahlPortalUrlState = { reihe: 'agh', jahr: null, ebene: 'kiez' };
+		const state: WahlPortalUrlState = { reihe: 'agh', jahr: null, ebene: 'stimmbezirk' };
 		expect(serializePortalState(state).toString()).toBe('');
 	});
 
 	it('schreibt reihe nur wenn abweichend vom Default', () => {
-		const state: WahlPortalUrlState = { reihe: 'btw', jahr: null, ebene: 'kiez' };
+		const state: WahlPortalUrlState = { reihe: 'btw', jahr: null, ebene: 'stimmbezirk' };
 		expect(serializePortalState(state).toString()).toBe('reihe=btw');
 	});
 
@@ -77,8 +78,13 @@ describe('serializePortalState', () => {
 		expect(serializePortalState(state).toString()).toBe('ebene=bezirk');
 	});
 
+	it('schreibt kiez als Nicht-Default-Ebene ebenfalls', () => {
+		const state: WahlPortalUrlState = { reihe: 'agh', jahr: null, ebene: 'kiez' };
+		expect(serializePortalState(state).toString()).toBe('ebene=kiez');
+	});
+
 	it('schreibt jahr immer wenn explizit gesetzt, auch bei Default-Reihe', () => {
-		const state: WahlPortalUrlState = { reihe: 'agh', jahr: 2021, ebene: 'kiez' };
+		const state: WahlPortalUrlState = { reihe: 'agh', jahr: 2021, ebene: 'stimmbezirk' };
 		expect(serializePortalState(state).toString()).toBe('jahr=2021');
 	});
 

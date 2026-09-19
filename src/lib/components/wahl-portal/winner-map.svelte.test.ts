@@ -111,6 +111,83 @@ const WAHLEN_2023: WahlPortalListEntry[] = [
 	}
 ];
 
+// Story 5: Stimmbezirks-Fixture im AGH-Format (BEZ+UWB3, kein BWK/-Suffix,
+// dbUwbIdFromGeo('agh23') -> `${BEZ}W${UWB3}`). agh23 mappt per
+// geoSlugForWahl auf die ah21-Geometrie (Wiederholungswahl-Bestand).
+const STIMMBEZIRK_FC = {
+	type: 'FeatureCollection',
+	features: [
+		{ type: 'Feature', geometry: polygon(), properties: { BEZ: '01', UWB3: '100' } },
+		{ type: 'Feature', geometry: polygon(), properties: { BEZ: '01', UWB3: '101' } }
+	]
+};
+
+const WINNERS_STIMMBEZIRK_2023 = {
+	typ: 'agh',
+	stimmtyp: 'zweitstimme',
+	ebene: 'stimmbezirk',
+	jahr: 2023,
+	geo_slug: 'ah21',
+	winners: [
+		{
+			jahr: 2023,
+			gebiet_slug: '01W100',
+			partei: 'SPD',
+			farbe_hex: '#000000',
+			anteil: 0.4,
+			is_repeat_election: false,
+			parent_slug: null
+		}
+	],
+	license: 'dl-de/by-2-0',
+	source_url: 'https://example.invalid',
+	source_name: 'Amt für Statistik Berlin-Brandenburg'
+};
+
+const MANIFEST_WITH_STIMMBEZIRK = {
+	...MANIFEST,
+	layers: [
+		...MANIFEST.layers,
+		layerMeta({
+			slug: 'wahlbezirke-ah21',
+			filename: 'wahlbezirke-ah21.cccccccc.geojson',
+			featureCount: 2
+		})
+	]
+};
+
+// bvv11 hat keine Stimmbezirks-Geometrie (WAHL_TO_GEO-Lücke, docs/wahldaten-methodik.md).
+const WAHLEN_BVV_2011: WahlPortalListEntry[] = [
+	{
+		slug: '2011-bvv',
+		jahr: 2011,
+		typ: 'bvv',
+		isRepeatElection: false,
+		sourceName: 'Amt für Statistik Berlin-Brandenburg',
+		license: 'dl-de/by-2-0'
+	}
+];
+
+const WINNERS_BEZIRK_2011 = {
+	typ: 'bvv',
+	stimmtyp: 'einstimme',
+	ebene: 'bezirk',
+	winners: [
+		{
+			jahr: 2011,
+			gebiet_slug: 'mitte',
+			partei: 'CDU',
+			farbe_hex: '#000000',
+			anteil: 0.3,
+			is_repeat_election: false,
+			parent_slug: null
+		}
+	],
+	license: 'dl-de/by-2-0',
+	source_url: 'https://example.invalid',
+	source_name: 'Amt für Statistik Berlin-Brandenburg'
+};
+
 function fakeFetch(routes: ReadonlyArray<[string, unknown]>): typeof fetch {
 	return (async (input: RequestInfo | URL) => {
 		const url = typeof input === 'string' ? input : input.toString();
@@ -330,5 +407,53 @@ describe('winner-map.svelte', () => {
 		el = (await page.getByTestId('winner-map-swatch-CDU').element()) as HTMLElement;
 		// CDU-Pattern ist 'stripes' -> mit aktivem Toggle Pattern-Vorschau.
 		expect(el.getAttribute('style')).toContain('background-image');
+	});
+
+	it('rendert die Stimmbezirks-Karte auf der Default-Ebene mit uwbId-Tabellen-Labels', async () => {
+		const fetchFn = fakeFetch([
+			['ebene=stimmbezirk', WINNERS_STIMMBEZIRK_2023],
+			['MANIFEST.json', MANIFEST_WITH_STIMMBEZIRK],
+			['wahlbezirke-ah21', STIMMBEZIRK_FC]
+		]);
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'stimmbezirk',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
+
+		await expect.element(page.getByTestId('winner-map-canvas')).toBeInTheDocument();
+		await expect.element(page.getByTestId('winner-map-takeaway')).toHaveTextContent(/SPD/);
+		await expect
+			.element(page.getByTestId('winner-map-aggregation-hinweis'))
+			.toHaveTextContent(/Urnenwahl/);
+		await expect
+			.element(page.getByTestId('winner-map-fallback-hinweis'))
+			.not.toBeInTheDocument();
+
+		await page.getByTestId('table-toggle').click();
+		await expect.element(page.getByTestId('data-table')).toHaveTextContent('Stimmbezirk 01W100');
+	});
+
+	it('zeigt den Fallback-Hinweis und rendert Bezirke, wenn dem Jahr die Stimmbezirks-Geometrie fehlt', async () => {
+		const fetchFn = fakeFetch([
+			['ebene=bezirk', WINNERS_BEZIRK_2011],
+			['MANIFEST.json', MANIFEST],
+			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC]
+		]);
+		render(WinnerMapContextProbe, {
+			reihe: 'bvv',
+			ebene: 'stimmbezirk',
+			jahr: 2011,
+			wahlen: WAHLEN_BVV_2011,
+			fetchFn
+		});
+
+		await expect
+			.element(page.getByTestId('winner-map-fallback-hinweis'))
+			.toHaveTextContent('2011: keine Stimmbezirks-Daten, Karte zeigt Bezirke.');
+		await expect.element(page.getByTestId('winner-map-canvas')).toBeInTheDocument();
+		await expect.element(page.getByTestId('winner-map-takeaway')).toHaveTextContent(/CDU/);
 	});
 });

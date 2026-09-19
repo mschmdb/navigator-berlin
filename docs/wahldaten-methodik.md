@@ -169,6 +169,41 @@ Format variiert pro Wahl-Generation:
 
 Implementation: `scripts/wahlen/lib/kiez-mapper.ts#dbUwbIdFromGeo` und `buildKiezMappings`.
 
+## Stimmbezirks-Ansicht (Story 5)
+
+`/berlin-wahlen` zeigt die Winner-Map standardmäßig auf Stimmbezirks-Ebene
+(Matze-Direktive 19.09., Tagesspiegel-Referenz): die amtlichen Wahleinheiten
+statt der abgeleiteten Kiez-/Bezirks-Aggregate.
+
+**Amtliche Einheiten:** Stimmbezirks-Rows kommen direkt aus `ergebnis`
+(Urnenwahl), ohne Aggregationsschritt -- anders als Kiez (Centroid-Aggregat,
+siehe oben) und Bezirk (Summen-Aggregat). `/api/wahl/winners?ebene=stimmbezirk`
+verlangt einen `jahr`-Parameter (Response jahrweise statt Reihe-Bulk, ~2.200
+statt ~7.000 Rows pro Antwort).
+
+**Geometrie pro Wahl-Generation:** Anders als Kiez/Bezirk (stabile LOR-
+Geometrie über alle Jahre) hat jede Stimmbezirks-Geometrie-Generation
+(`ah16`/`ah21`/`bt25`/`btw17`, siehe `WAHL_TO_GEO` in
+`src/lib/data/wahl-geo-mapping.ts`) ihre eigene Wahlbezirks-Einteilung. Ein
+Jahr-Wechsel innerhalb einer Reihe kann deshalb einen Geometrie-Wechsel
+bedeuten (z. B. AGH 2016 → 2021: `ah16` → `ah21`); die Karte tauscht die
+Geometrie per `setData` auf der bestehenden MapLibre-Instanz, ohne
+Re-Initialisierung.
+
+**Fallback-Leiter:** Jahre ohne Stimmbezirks-Geometrie (`btw13`, `agh11`,
+`bvv11`, siehe Geometrie-Coverage-Tabelle oben) zeigen ersatzweise die
+nächstgröbere verfügbare Ebene; die Status-Zeile nennt den Fallback, der
+Ebenen-Toggle bleibt auf dem Nutzer-Wunsch stehen. Mit dem heutigen
+Datenbestand landet der Fallback faktisch immer auf Bezirk: Das Kiez-Aggregat
+setzt dieselbe Stimmbezirks-Geometrie voraus, die Kiez-Stufe der Leiter ist
+also nur für künftige Datenlagen relevant.
+
+**Briefwahl-Lücke:** Stimmbezirks-Rows mit `ist_briefwahl_aggregat = true`
+haben keine Geometrie (eigene Briefwahlbezirke, siehe Composite-UWB-ID oben)
+und werden aus der Karten-/Tabellen-Antwort ausgefiltert. Die Karte zeigt
+damit ausschließlich Urnenwahl-Ergebnisse; ein Hinweistext an der Karte macht
+das transparent (Abschnitt „Transparenz" in der Winner-Map-Spec).
+
 ## Briefwahl-Behandlung
 
 ### Asymmetrie pre-2021

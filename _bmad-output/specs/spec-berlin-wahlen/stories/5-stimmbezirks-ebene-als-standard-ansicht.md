@@ -2,7 +2,7 @@
 title: 'Stimmbezirks-Ebene als Standard-Ansicht'
 type: 'feature'
 created: '2026-09-19'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: '73c6f2fae4d860fff3bae66e4a6f57450045546d'
@@ -65,13 +65,13 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `wahl-portal-url-state` -- Default/Values/Labels + Tests zuerst (rot: Kaltstart-Default kippt)
-- [ ] `winner-map-data`: `resolveAnzeigeEbene` + `joinStimmbezirkWinners` + Hinweis-Text, test-first gegen Fixture-FC mit BTW- und AGH-Formaten (Kontrakt: identische uwbIds wie kiez-mapper-Fixtures)
-- [ ] `/api/wahl/winners` Stimmbezirks-Zweig + Routen-Tests (400 ohne jahr, DB-los leer, Briefwahl-Filter per Fixture nicht testbar ohne DB → defensiver With-DB-Block nach Haus-Muster)
-- [ ] `winner-map.svelte` Stimmbezirks-Pfad (Fetch/Caches/Stale-Guards/Fallback/Adress-PiP) + Component-Tests (Fallback-Hinweis, Stimmbezirks-Render mit Fixture)
-- [ ] Steuerleisten-/Skeleton-Tests nachziehen (neue Default-Ebene in bestehenden Erwartungen)
-- [ ] E2E: Default-Stimmbezirk-Render, Ebenen-Wechsel stimmbezirk↔kiez, Jahr-Wechsel mit Geo-Swap ohne Karten-Verlust
-- [ ] `docs/wahldaten-methodik.md` -- Stimmbezirks-Absatz
+- [x] `wahl-portal-url-state` -- Default/Values/Labels + Tests zuerst (rot: Kaltstart-Default kippt)
+- [x] `winner-map-data`: `resolveAnzeigeEbene` + `joinStimmbezirkWinners` + Hinweis-Text, test-first gegen Fixture-FC mit BTW- und AGH-Formaten (Kontrakt: identische uwbIds wie kiez-mapper-Fixtures)
+- [x] `/api/wahl/winners` Stimmbezirks-Zweig + Routen-Tests (400 ohne jahr, DB-los leer, Briefwahl-Filter per Fixture nicht testbar ohne DB → defensiver With-DB-Block nach Haus-Muster)
+- [x] `winner-map.svelte` Stimmbezirks-Pfad (Fetch/Caches/Stale-Guards/Fallback/Adress-PiP) + Component-Tests (Fallback-Hinweis, Stimmbezirks-Render mit Fixture)
+- [x] Steuerleisten-/Skeleton-Tests nachziehen (neue Default-Ebene in bestehenden Erwartungen)
+- [x] E2E: Default-Stimmbezirk-Render, Ebenen-Wechsel stimmbezirk↔kiez, Jahr-Wechsel mit Geo-Swap ohne Karten-Verlust
+- [x] `docs/wahldaten-methodik.md` -- Stimmbezirks-Absatz
 
 **Acceptance Criteria:**
 - Given Kaltstart ohne Params mit AGH-Daten, when die Seite lädt, then rendert die Karte Stimmbezirke und die URL bleibt param-frei.
@@ -81,9 +81,35 @@ context:
 
 ## Implementation Notes
 
+**Fallback-Ladder-Verfügbarkeit ohne Extra-Fetch:** `resolveAnzeigeEbene` bekommt für stimmbezirk/kiez dieselbe Verfügbarkeit (`hasStimmbezirkGeo`, aus `geoSlugForWahl`), weil Kiez-Aggregat laut Methodik-Doku ohne Stimmbezirks-Geometrie ebenfalls leer ist -- kein separater Kiez-Bulk-Fetch nur zur Verfügbarkeits-Prüfung nötig. Vor dem ersten Auflösen von `jahr` (Wahl-Liste lädt noch) gilt `hasStimmbezirkGeo = true` (unbekannt statt Nein), sonst würde der Kaltstart kurz auf `bezirk` rutschen und einen unnötigen Bezirks-Bulk-Request auslösen, bevor die Wahl-Liste da ist (per E2E-Regression gefunden und gefixt).
+
+**Stimmbezirks-Fetch/Geometrie/Adress-PiP** ausgelagert nach `internal/winner-map-stimmbezirk.svelte.ts` (Datei-Zeilenlimit, Muster `winner-map-maplibre.svelte.ts`).
+
+**Test-Strategie:** pure Funktionen (`winner-map-data.ts`) test-first mit Fixtures im BTW- und AGH-uwbId-Format; API-Route mit DB-losem Block + defensivem With-DB-Block (Haus-Muster `series/server.test.ts`, grün auch ohne lokale Postgres-Daten, prüft die Matrix wenn Daten da sind); Component-Tests für Default-Stimmbezirk-Render und Fallback-Hinweis; 7 E2E-Szenarien gegen den echten Preview-Build (reale `wahlbezirke-ah16`/`wahlbezirke-ah21`-Geometrie, kein Mock).
+
+**Bekannte Flakiness (nicht Teil dieser Story):** `winner-map.svelte.test.ts` Test „Adress-Auswahl außerhalb Berlins" ist zeitbasiert (400ms-Debounce-Wait) und flakt auch auf dem Baseline-Commit vor dieser Story (verifiziert). Nicht angefasst.
+
+Nach Review fünf Patches (Triage-Log), von mir angewendet: der High-Fund
+(stale wahlSlug im Geometrie-Cache bei geteiltem geoSlug) plus Loader-Tests,
+Adress-Lade-Hinweis, Doku-Präzisierung, parent_slug-Assertion (dabei den
+bekannten parent_election_id-Datenbug live bestätigt, Fix bleibt Story 15).
+
 ## Spec Change Log
 
 ## Review Triage Log
+
+| # | Layer | Finding | Verdict | Route |
+|---|-------|---------|---------|-------|
+| 1 | verification-gap + edge | Geometrie-Cache friert den ersten wahlSlug pro geoSlug ein; Reihe-Wechsel AGH→BTW auf geteiltem ah21 joint mit falschem uwbId-Format → komplett neutrale Karte | high | **patch**: wahlSlug pro Aufruf (auch Cache-Hit), Join-Guard auf wahlSlug, Loader-Test belegt beide Formate |
+| 2 | blind (4 Findings) + edge | Kiez-Sprosse der Fallback-Leiter mit heutigem Datenbestand tot (Kiez-Aggregat setzt dieselbe Geometrie voraus); Doku/Hinweis-Text versprachen mehr | medium | **patch**: Doku präzisiert (faktisch Bezirk-Fallback, Leiter zukunftssicher); pure Funktion + 'Kieze'-Text bleiben bewusst zukunftsfähig |
+| 3 | blind | StimmbezirkLoader ohne eigene Tests (ADR-012 Cache-Logic) | medium | **patch**: neue Testdatei (5 Tests: wahlSlug-Refresh, Winners-Cache, malformed, PiP hit/miss inkl. Format-Wechsel) |
+| 4 | blind | Adress-Suche vor geladener Geometrie meldet fälschlich „kein Gebiet in Berlin" | low | **patch**: eigener „Karte lädt noch"-Hinweis |
+| 5 | blind | Repeat-Election-Zweig (parent_slug) im Stimmbezirks-Handler ungetestet | low | **patch**: With-DB-Assertion; dabei live den pre-existing parent_election_id-Bug getroffen → Präfix-Assertion mit Verweis auf Ingest-Story 15 |
+| 6 | edge | resolveAnzeigeEbene erzwingt 'bezirk' auch bei bezirk:false | rejected | Vertrags-Garantie (Bezirk immer verfügbar), dokumentiert; Guard wäre tote Defensive |
+| 7 | edge | Manuell gewähltes kiez ohne Daten bekommt keinen Fallback | rejected | Spec verlangt die Leiter nur für den stimmbezirk-Wunsch; Status-Zeile deckt den Fall |
+| 8 | edge | totalGebiete könnte beim Geo-Swap stale sein | false | Der Takeaway nutzt totalGebiete nur mit nicht-leeren Rows, die den geoSlug/wahlSlug-Guard voraussetzen; stale Kombination unerreichbar |
+| 9 | blind | Story-Datei nicht im Review-Diff | false | _bmad-output ist bewusst aus dem Review-Diff ausgenommen (Prozess-Artefakt, wird committet) |
+
 
 ## Design Notes
 
