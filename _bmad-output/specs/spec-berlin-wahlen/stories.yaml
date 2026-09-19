@@ -111,4 +111,7 @@
   invoke_dev_with: >-
     Erst nach Vorliegen der endgültigen Ergebnisse (BVV ~30.09., AGH
     ~05.-08.10.) und nach Freeze-Ende ausführen; URL per
-    Playwright-Recon beschaffen, niemals raten.
+    Playwright-Recon beschaffen, niemals raten. Dabei den pre-existing
+    parent_election_id-Bug fixen: 2023er-Wiederholungswahlen müssen auf
+    die Parent-Row mit gleichem stimmtyp zeigen (Ingest-Script +
+    Re-Ingest, Entscheidung Matze 19.09.).
