@@ -44,6 +44,29 @@ export const NEUTRAL_OPACITY = 0.1;
 export const NEUTRAL_FARBE = '#CCCCCC';
 
 /**
+ * Generische `fill-opacity`-Expression (Stimmbezirk + Erst-Init-Pfad, generische
+ * `has_winner`/`anteil`-Keys statt jahr-gebundener `w_<jahr>_*`-Keys). Eine
+ * Stelle für Erst-Init-Paint UND `clearActiveJahr` (Ebenen-Wechsel weg von
+ * kiez/bezirk), damit beide garantiert dieselbe Rampe zeigen.
+ */
+export function genericFillOpacityExpression(): unknown[] {
+	return [
+		'case',
+		['==', ['get', 'has_winner'], 1],
+		[
+			'interpolate',
+			['linear'],
+			['get', 'anteil'],
+			ANTEIL_OPACITY_RAMP.minAnteil,
+			ANTEIL_OPACITY_RAMP.minOpacity,
+			ANTEIL_OPACITY_RAMP.maxAnteil,
+			ANTEIL_OPACITY_RAMP.maxOpacity
+		],
+		NEUTRAL_OPACITY
+	];
+}
+
+/**
  * Deckungsgleiche Opacity-Rampe zur MapLibre-`interpolate`-Expression
  * (winner-map.svelte). Reine Berechnung für Legende + Tests.
  */
@@ -156,6 +179,18 @@ export interface WinnerFeatureProperties {
 }
 
 export type WinnerFeatureCollection = FeatureCollection<Geometry, WinnerFeatureProperties>;
+
+/**
+ * Minimale Feature-Form, die alle Winner-Map-FeatureCollections gemeinsam
+ * haben (Story-4-Join UND Story-7-Baked-FC für die Zeit-Animation): genug
+ * für Highlight-/Adress-Lookup per Slug, ohne dass Karten-Controller sich
+ * auf die konkrete Property-Form (generisch vs. `w_<jahr>_*`) festlegen.
+ */
+export interface GebietSlugProperties {
+	readonly gebiet_slug: string;
+}
+
+export type GebietFeatureCollection = FeatureCollection<Geometry, GebietSlugProperties>;
 
 /**
  * Joint Geometrie-Features mit Winners-Rows über die (index-aligned) Slug-

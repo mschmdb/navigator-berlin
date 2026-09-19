@@ -177,11 +177,14 @@ test('Winner-Map (Ebene kiez): Karte + Tabelle rendern, Jahr-Wechsel ohne neuen 
 	await expect(page.getByTestId('winner-map-takeaway')).toContainText('GRÜNE');
 	expect(winnersRequestCount).toBe(1);
 
-	// Tabellen-Alternative liefert die gejointen Rows.
-	await page.getByTestId('table-toggle').click();
-	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page.getByTestId('data-table')).toContainText('SPD');
-	await expect(page.getByTestId('data-table')).toContainText('GRÜNE');
+	// Tabellen-Alternative liefert die gejointen Rows. Scope aufs Karte-
+	// Kapitel: das Wechsel-Kapitel (Story 7) hat auf derselben Seite eine
+	// eigene Tabellen-Alternative mit demselben Testid.
+	const karteChapter = page.getByTestId('wahl-portal-chapter-karte');
+	await karteChapter.getByTestId('table-toggle').click();
+	await expect(karteChapter.getByTestId('data-table')).toBeVisible();
+	await expect(karteChapter.getByTestId('data-table')).toContainText('SPD');
+	await expect(karteChapter.getByTestId('data-table')).toContainText('GRÜNE');
 
 	// Jahr-Wechsel: nur Client-Filter auf die bereits geladene Bulk-Response,
 	// kein zweiter /api/wahl/winners-Request pro Reihe×Ebene.
@@ -479,4 +482,181 @@ test('Ergebnis-Panel: rendert neben der Karte mit Berlin-Werten, Stimmbezirks-Hi
 	await expect(page.getByTestId('ergebnis-panel-anteil-CDU')).toHaveText('18,0 %');
 	await expect(page.getByTestId('ergebnis-panel-delta-CDU')).not.toBeVisible();
 	expect(seriesRequestCount).toBe(1);
+});
+
+// Story 7 (Zeit-Animation): Play-Durchlauf auf Kiez-Ebene. WINNERS_AGH_KIEZ
+// (oben, Story 4) hat genau zwei Jahre (2021/2023) -- reicht, um Play von
+// 2021 nach 2023 laufen zu lassen und die Auto-Pause zu pruefen.
+test('Zeit-Animation (Ebene kiez): Play-Durchlauf faerbt ohne neuen Winners-Request um, pausiert am letzten Jahr, URL traegt Endjahr', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	let winnersRequestCount = 0;
+	await page.route('**/api/wahl/winners**', (route) => {
+		winnersRequestCount++;
+		return route.fulfill({ json: WINNERS_AGH_KIEZ });
+	});
+
+	await page.goto('/berlin-wahlen?ebene=kiez');
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+
+	// Start bei 2021 (aeltestes verfuegbares Jahr der Fixture), damit Play
+	// tatsaechlich einen Schritt vorwaerts macht.
+	await page.getByTestId('steuerleiste-jahr-2021').click();
+	await expect(page.getByTestId('zeit-animation-slider')).toHaveAttribute('aria-valuetext', '2021');
+
+	const playButton = page.getByTestId('zeit-animation-play');
+	await playButton.click();
+	await expect(playButton).toHaveAttribute('aria-pressed', 'true');
+	// Karte bleibt waehrend der gesamten Wiedergabe sichtbar (kein Re-Init).
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+
+	// ~1,5s/Jahr + Puffer: ein Schritt reicht bis zum letzten Jahr (2023),
+	// danach pausiert die Animation automatisch.
+	await expect(playButton).toHaveAttribute('aria-pressed', 'false', { timeout: 4000 });
+	// WINNERS_AGH_KIEZ markiert 2023 als Wiederholungswahl -- aria-valuetext
+	// traegt den Zusatz (Boundary: Jahr(+„Wiederholungswahl")).
+	await expect(page.getByTestId('zeit-animation-slider')).toHaveAttribute(
+		'aria-valuetext',
+		'2023 Wiederholungswahl'
+	);
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+	await expect(page).toHaveURL(/jahr=2023/);
+
+	// Kein weiterer Bulk-Request pro Jahr -- die Animation faerbt nur um.
+	expect(winnersRequestCount).toBe(1);
+});
+
+test('Zeit-Animation (Ebene stimmbezirk): zeigt Hinweis + Zur-Kiez-Ebene-Button statt Play/Slider', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await page.route('**/api/wahl/winners**', (route) => {
+		const url = new URL(route.request().url());
+		const ebene = url.searchParams.get('ebene');
+		const jahr = url.searchParams.get('jahr');
+		if (ebene === 'stimmbezirk') {
+			const body = (jahr && STIMMBEZIRK_WINNERS_BY_JAHR[jahr]) ?? { winners: [] };
+			return route.fulfill({ json: body });
+		}
+		return route.fulfill({ json: WINNERS_AGH_KIEZ });
+	});
+
+	// Default-Ansicht: Ebene stimmbezirk (Story 5).
+	await page.goto('/berlin-wahlen');
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+
+	await expect(page.getByTestId('zeit-animation-hinweis')).toBeVisible();
+	await expect(page.getByTestId('zeit-animation-play')).not.toBeVisible();
+	await expect(page.getByTestId('zeit-animation-slider')).not.toBeVisible();
+
+	await page.getByTestId('zeit-animation-zur-kiez-button').click();
+	await expect(page).toHaveURL(/ebene=kiez/);
+	await expect(page.getByTestId('zeit-animation-play')).toBeVisible();
+	await expect(page.getByTestId('zeit-animation-hinweis')).not.toBeVisible();
+});
+
+// Story 7 (Wechsel-Kapitel): eigene Fixture mit einer echten Reihen-Historie
+// (2016 SPD -> 2021 GRÜNE -> 2023 Wiederholungswahl GRÜNE), damit genau ein
+// Wechsel entsteht (an 2021->2023, siehe wechsel-data.test.ts Klammer-Test).
+const WINNERS_WECHSEL_KAPITEL = {
+	typ: 'agh',
+	stimmtyp: 'zweitstimme',
+	ebene: 'kiez',
+	winners: [
+		{
+			jahr: 2016,
+			gebiet_slug: 'mv-nord',
+			partei: 'SPD',
+			farbe_hex: '#A50C1A',
+			anteil: 0.4,
+			is_repeat_election: false,
+			parent_slug: null
+		},
+		{
+			jahr: 2021,
+			gebiet_slug: 'mv-nord',
+			partei: 'GRÜNE',
+			farbe_hex: '#0F6E2C',
+			anteil: 0.35,
+			is_repeat_election: false,
+			parent_slug: null
+		},
+		{
+			jahr: 2023,
+			gebiet_slug: 'mv-nord',
+			partei: 'GRÜNE',
+			farbe_hex: '#0F6E2C',
+			anteil: 0.38,
+			is_repeat_election: true,
+			parent_slug: '2021-agh-zweitstimme'
+		}
+	],
+	license: 'dl-de/by-2.0',
+	source_url: 'https://example.invalid/agh23',
+	source_name: 'Amt für Statistik Berlin-Brandenburg'
+};
+
+test('Wechsel-Kapitel: rendert die Liste aus der Fixture (Gebiet, Jahr, Von -> Nach)', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await page.route('**/api/wahl/winners**', (route) =>
+		route.fulfill({ json: WINNERS_WECHSEL_KAPITEL })
+	);
+
+	await page.goto('/berlin-wahlen');
+	await expect(page.getByTestId('wahl-portal-chapter-wechsel')).toBeVisible();
+
+	const eintrag = page.getByTestId('wechsel-kapitel-eintrag');
+	await expect(eintrag).toBeVisible();
+	await expect(eintrag).toContainText('2023');
+	await expect(page.getByTestId('wechsel-kapitel-von')).toContainText('SPD');
+	await expect(page.getByTestId('wechsel-kapitel-nach')).toContainText('GRÜNE');
+	await expect(page.getByTestId('wechsel-kapitel-canvas')).toBeVisible();
+});
+
+// Review-Fund VG-3/BH-4: die echte matchMedia-Verdrahtung von reduced motion
+// (Boundary: "Play-Button steppt pro Klick genau ein Jahr weiter, kein
+// Timer-Lauf") war von keinem Test ausgeführt -- Muster
+// `climate-heritage.e2e.ts:108-125` (eigener Browser-Context statt Page-Reload,
+// `reducedMotion: 'reduce'` kann nicht nachträglich pro Page gesetzt werden).
+test.describe('Zeit-Animation Reduced-Motion: Step statt Timer', () => {
+	test('Kiez-Ebene: ein Klick auf den Schritt-Button rückt aria-valuetext genau ein Jahr vor und bleibt danach stehen', async ({
+		browser
+	}) => {
+		const ctx = await browser.newContext({ reducedMotion: 'reduce' });
+		const page = await ctx.newPage();
+		await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+		await page.route('**/api/wahl/winners**', (route) =>
+			route.fulfill({ json: WINNERS_AGH_KIEZ })
+		);
+
+		await page.goto('/berlin-wahlen?ebene=kiez');
+		await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+
+		// Start bei 2021 (aeltestes verfuegbares Jahr der Fixture), damit ein
+		// Schritt tatsaechlich vorwaerts geht.
+		await page.getByTestId('steuerleiste-jahr-2021').click();
+		await expect(page.getByTestId('zeit-animation-slider')).toHaveAttribute('aria-valuetext', '2021');
+
+		const stepButton = page.getByTestId('zeit-animation-play');
+		await expect(stepButton).toHaveAttribute('aria-label', 'Ein Jahr weiter');
+		await stepButton.click();
+		await expect(page.getByTestId('zeit-animation-slider')).toHaveAttribute(
+			'aria-valuetext',
+			'2023 Wiederholungswahl'
+		);
+
+		// Kein Timer-Weiterlauf: binnen ~2,5s (deutlich über der sonst
+		// üblichen 1,5s-Play-Kadenz) bleibt das Jahr stehen, weiter gibt es
+		// ohnehin kein Jahr nach 2023 in der Fixture.
+		await page.waitForTimeout(2500);
+		await expect(page.getByTestId('zeit-animation-slider')).toHaveAttribute(
+			'aria-valuetext',
+			'2023 Wiederholungswahl'
+		);
+
+		await ctx.close();
+	});
 });

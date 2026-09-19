@@ -19,3 +19,6 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/4-winner-map-mit-ebenen-und-adress-suche.md`
   summary: Winner-Map-Coverage-Nachzügler: Hover-Pipeline (echtes mousemove→tooltipData-Mapping) und ein Tastatur-/Touch-Pfad auf die Pro-Gebiet-Info der Karte selbst; dazu die UX-Frage, ob der Achromatopsie-Muster-Toggle in die URL gehört.
   evidence: Review-Layer Story 4; Tabelle ist der A11y-Pfad laut Haus-Muster, echte MapLibre-Hit-Tests brauchen ein neues E2E-Muster.
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/7-zeit-animation-mit-wechsel-markierung.md`
+  summary: Wechsel-Kapitel lazy mounten (IntersectionObserver) und Kiez-Geometrie-Requests deduplizieren (fetchLayer-In-Flight-Map), damit der Seiten-Load nicht eager eine zweite MapLibre-Instanz plus doppelte Layer-Downloads startet.
+  evidence: Review Story 7 (Blind Hunter 11, Verification Gap Other 3, Edge Case Hunter 14): wechsel-kapitel.svelte laedt Winners, Manifest, bezirke- und lor-bezirksregion-Layer beim Seiten-Load, auch in der Stimmbezirks-Default-Ansicht; Winners sind seit Story 7 dedupliziert, die Geometrie nicht (fetchLayer ist Bestandsmodul).

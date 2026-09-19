@@ -1,10 +1,13 @@
 <script lang="ts">
-	import type { FeatureCollection } from 'geojson';
 	import { resolve } from '$app/paths';
-	import { getWahlPortalState, currentJahr } from '$lib/state/wahl-portal-context.svelte.js';
+	import {
+		getWahlPortalState,
+		currentJahr,
+		jahreForReihe,
+		setJahr,
+		setEbene
+	} from '$lib/state/wahl-portal-context.svelte.js';
 	import { stimmtypForReihe, EBENE_LABELS } from '$lib/utils/wahl-portal-url-state.js';
-	import { loadManifest } from '$lib/data/manifest.js';
-	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
 	import { geocodeAddress } from '$lib/data/geocode.remote.js';
 	import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
 	import type { GeocodeSuggestion } from '$lib/data';
@@ -15,16 +18,16 @@
 	import WinnerMapLegende from './winner-map-legende.svelte';
 	import WinnerMapTooltip from './winner-map-tooltip.svelte';
 	import ErgebnisPanel from './ergebnis-panel.svelte';
+	import ZeitAnimation from './zeit-animation.svelte';
 	import { WinnerMapController } from './internal/winner-map-maplibre.svelte.js';
 	import { StimmbezirkLoader } from './internal/winner-map-stimmbezirk.svelte.js';
 	import { AddressHighlight } from './internal/winner-map-address.svelte.js';
+	import { bakeJahrProperties, buildZeitJahrOptions } from './internal/winner-map-expressions.js';
+	import { KiezBezirkWinnersLoader } from './internal/winner-map-winners.svelte.js';
+	import { KiezBezirkGeometryLoader } from './internal/winner-map-geometry.svelte.js';
 	import {
 		filterWinnersByJahr,
 		isRepeatElectionYear,
-		buildKiezSlugsForFeatures,
-		bezirkSlugsForFeatures,
-		kiezNamesForFeatures,
-		bezirkNamesForFeatures,
 		joinWinnersToFeatures,
 		joinStimmbezirkWinners,
 		resolveAnzeigeEbene,
@@ -32,8 +35,8 @@
 		buildTakeawaySentence,
 		aggregationHinweisText,
 		formatAnteilPct,
-		type WinnerApiRow,
 		type WinnerFeatureCollection,
+		type GebietFeatureCollection,
 		type WinnerTableRow
 	} from './internal/winner-map-data.js';
 
@@ -83,56 +86,35 @@
 		}
 	}
 
-	// Winners-Fetch (kiez/bezirk), gecacht pro Reihe×Ebene (AC: genau EIN
-	// Request je Kombination). Story 5: wird nur noch aufgerufen, wenn die
-	// Anzeige-Ebene kiez/bezirk ist -- direkt gewählt ODER Fallback-Ziel. ---
-	interface WinnersApiResponse {
-		readonly winners: WinnerApiRow[];
-	}
-	type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error';
-
-	// Plain Record statt Map: bewusst nicht-reaktiver Request-Cache.
-	const winnersCache: Record<string, WinnersApiResponse> = {};
-	let winnersResponse = $state<WinnersApiResponse | null>(null);
-	let winnersStatus = $state<LoadStatus>('idle');
-
-	async function loadWinners(typ: string, st: string, eb: 'kiez' | 'bezirk'): Promise<void> {
-		const key = `${typ}-${st}-${eb}`;
-		const cached = winnersCache[key];
-		if (cached) {
-			winnersResponse = cached;
-			winnersStatus = 'loaded';
-			return;
-		}
-		winnersStatus = 'loading';
-		try {
-			const url = `/api/wahl/winners?typ=${typ}&stimmtyp=${st}&ebene=${eb}`;
-			const res = await fetchFn(url);
-			if (!res.ok) throw new Error(`status ${res.status}`);
-			const data = (await res.json()) as WinnersApiResponse;
-			if (!Array.isArray(data?.winners)) throw new Error('malformed winners response');
-			winnersCache[key] = data;
-			// Stale-Guard: gegen die tatsächlich angezeigte Ebene (Fallback-Ziel
-			// kann von portal.ebene abweichen, siehe anzeigeEbene).
-			if (typ !== portal.reihe || st !== stimmtypForReihe(portal.reihe) || eb !== anzeigeEbene) {
-				return;
-			}
-			winnersResponse = data;
-			winnersStatus = 'loaded';
-		} catch {
-			if (typ !== portal.reihe || eb !== anzeigeEbene) return;
-			winnersStatus = 'error';
-		}
-	}
+	// Winners-Fetch (kiez/bezirk): eigene Klasse (Datei-Zeilenlimit, Muster
+	// StimmbezirkLoader). Story 5: wird nur aufgerufen, wenn die Anzeige-Ebene
+	// kiez/bezirk ist -- direkt gewählt ODER Fallback-Ziel. Liefert ALLE Jahre
+	// der Reihe (Story 7: Grundlage für `bakeJahrProperties`).
+	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop,
+	// über die Komponenten-Lebenszeit stabil (Muster sbLoader unten).
+	const winnersLoader = new KiezBezirkWinnersLoader(fetchFn);
 
 	$effect(() => {
 		if (anzeigeEbene === 'kiez' || anzeigeEbene === 'bezirk') {
-			void loadWinners(portal.reihe, stimmtyp, anzeigeEbene);
+			const expectedReihe = portal.reihe;
+			const expectedStimmtyp = stimmtyp;
+			const expectedEbene = anzeigeEbene;
+			void winnersLoader.load(
+				expectedReihe,
+				expectedStimmtyp,
+				expectedEbene,
+				() =>
+					portal.reihe !== expectedReihe ||
+					stimmtypForReihe(portal.reihe) !== expectedStimmtyp ||
+					anzeigeEbene !== expectedEbene
+			);
 		}
 	});
 
 	const winnersForJahr = $derived(
-		winnersResponse && jahr !== null ? filterWinnersByJahr(winnersResponse.winners, jahr) : []
+		winnersLoader.response && jahr !== null
+			? filterWinnersByJahr(winnersLoader.response.winners, jahr)
+			: []
 	);
 
 	// Winners-Fetch (stimmbezirk), gecacht pro typ×stimmtyp×jahr (Story 5). ---
@@ -155,12 +137,12 @@
 	// Vereinheitlichte Sicht auf die aktive Datenquelle (stimmbezirk vs.
 	// kiez/bezirk), damit Template/Ableitungen unten nicht doppelt verzweigen. ---
 	const activeWinnersStatus = $derived(
-		anzeigeEbene === 'stimmbezirk' ? sbLoader.winnersStatus : winnersStatus
+		anzeigeEbene === 'stimmbezirk' ? sbLoader.winnersStatus : winnersLoader.status
 	);
 	const activeHasAnyWinners = $derived(
 		anzeigeEbene === 'stimmbezirk'
 			? (sbLoader.winnersResponse?.winners.length ?? 0) > 0
-			: (winnersResponse?.winners.length ?? 0) > 0
+			: (winnersLoader.response?.winners.length ?? 0) > 0
 	);
 	const activeWinnersForJahr = $derived(
 		anzeigeEbene === 'stimmbezirk' ? (sbLoader.winnersResponse?.winners ?? []) : winnersForJahr
@@ -183,60 +165,12 @@
 		if (readyToShow) mapShown = true;
 	});
 
-	// Geometrie, gecacht pro Ebene (kiez/bezirk) bzw. pro geo_slug (stimmbezirk).
-	// Kein Fetch ohne Winners-Daten (Boundary DB-los). ---
-	interface GeometryState {
-		readonly ebene: 'kiez' | 'bezirk';
-		readonly fc: FeatureCollection;
-		readonly slugs: string[];
-		readonly names: string[];
-	}
-	const geometryCache: Record<string, GeometryState> = {};
-	let geometry = $state<GeometryState | null>(null);
-	let geometryStatus = $state<LoadStatus>('idle');
-
-	async function loadGeometry(ebene: 'kiez' | 'bezirk'): Promise<void> {
-		const cached = geometryCache[ebene];
-		if (cached) {
-			geometry = cached;
-			geometryStatus = 'loaded';
-			return;
-		}
-		geometryStatus = 'loading';
-		try {
-			const manifest = await loadManifest(fetchFn);
-			const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
-			if (!bezirkeLayer) throw new Error('bezirke-Layer fehlt im Manifest');
-			const bezirkeFc = await fetchLayer(bezirkeLayer.filename, fetchFn);
-			let next: GeometryState;
-			if (ebene === 'bezirk') {
-				next = {
-					ebene,
-					fc: bezirkeFc,
-					slugs: bezirkSlugsForFeatures(bezirkeFc),
-					names: bezirkNamesForFeatures(bezirkeFc)
-				};
-			} else {
-				const kiezLayer = manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
-				if (!kiezLayer) throw new Error('lor-bezirksregion-Layer fehlt im Manifest');
-				const kiezFc = await fetchLayer(kiezLayer.filename, fetchFn);
-				next = {
-					ebene,
-					fc: kiezFc,
-					slugs: buildKiezSlugsForFeatures(kiezFc, bezirkeFc),
-					names: kiezNamesForFeatures(kiezFc, bezirkeFc)
-				};
-			}
-			geometryCache[ebene] = next;
-			// Stale-Guard analog loadWinners: gegen die tatsächlich angezeigte Ebene.
-			if (ebene !== anzeigeEbene) return;
-			geometry = next;
-			geometryStatus = 'loaded';
-		} catch {
-			if (ebene !== anzeigeEbene) return;
-			geometryStatus = 'error';
-		}
-	}
+	// Geometrie (kiez/bezirk): eigene Klasse (Datei-Zeilenlimit, Muster
+	// KiezBezirkWinnersLoader). Kein Fetch ohne Winners-Daten (Boundary DB-los).
+	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop,
+	// über die Komponenten-Lebenszeit stabil (Muster winnersLoader/sbLoader).
+	const geometryLoader = new KiezBezirkGeometryLoader(fetchFn);
+	const geometry = $derived(geometryLoader.geometry);
 
 	$effect(() => {
 		// DB-los-Guard nur vor dem allerersten Zeigen der Karte (Boundary: kein
@@ -254,15 +188,23 @@
 				);
 			}
 		} else {
-			void loadGeometry(anzeigeEbene);
+			const expectedEbene = anzeigeEbene;
+			void geometryLoader.load(expectedEbene, () => anzeigeEbene !== expectedEbene);
 		}
 	});
 
 	const activeGeometryStatus = $derived(
-		anzeigeEbene === 'stimmbezirk' ? sbLoader.geometryStatus : geometryStatus
+		anzeigeEbene === 'stimmbezirk' ? sbLoader.geometryStatus : geometryLoader.status
 	);
 
-	const joinedFc = $derived.by<WinnerFeatureCollection | null>(() => {
+	/**
+	 * Story 7: Kiez/Bezirk backen ALLE Jahre der Reihe einmal als flache
+	 * Properties (`bakeJahrProperties`); ein Jahr-Wechsel ist danach nur noch
+	 * `mapCtl.setActiveJahr` (`setPaintProperty`), kein erneutes `setData`.
+	 * Stimmbezirk bleibt unveraendert beim jahrweisen Join (Boundary: nie
+	 * Zeit-Animation dort, Zuschnitts-Wechsel zwischen Wahl-Generationen).
+	 */
+	const joinedFc = $derived.by<GebietFeatureCollection | null>(() => {
 		if (anzeigeEbene === 'stimmbezirk') {
 			const geo = sbLoader.geometry;
 			// Guard auch auf wahlSlug: gleicher geoSlug kann zu einer anderen
@@ -270,13 +212,61 @@
 			if (!geo || geo.geoSlug !== stimmbezirkGeoSlug || geo.wahlSlug !== wahlSlug) return null;
 			return joinStimmbezirkWinners(geo.fc, geo.wahlSlug, sbLoader.winnersResponse?.winners ?? []);
 		}
-		// Nur joinen, wenn die geladene Geometrie zur Anzeige-Ebene gehoert;
-		// sonst mischt ein Wechsel uebergangsweise alte Flaechen mit neuen
-		// Winners (alles unmatched -> neutrale Blitz-Karte).
+		if (!geometry || geometry.ebene !== anzeigeEbene) return null;
+		return bakeJahrProperties(
+			geometry.fc,
+			geometry.slugs,
+			geometry.names,
+			winnersLoader.response?.winners ?? []
+		);
+	});
+
+	/** Tabelle/Takeaway/Legende bleiben auf dem bestehenden Pro-Jahr-Join
+	 * (unveraendert): eine einzelne Ebene ist billig genug, dafuer keinen
+	 * zweiten Baked-Lesepfad zu brauchen (Task 5: "Tooltip/Tabelle/Takeaway
+	 * ueber JS-Zwilling bzw. bestehendes winnersForJahr"). */
+	const tableFc = $derived.by<WinnerFeatureCollection | null>(() => {
+		if (anzeigeEbene === 'stimmbezirk') return joinedFc as WinnerFeatureCollection | null;
 		if (!geometry || geometry.ebene !== anzeigeEbene) return null;
 		return joinWinnersToFeatures(geometry.fc, geometry.slugs, geometry.names, winnersForJahr);
 	});
-	const tableRows = $derived<WinnerTableRow[]>(joinedFc ? buildTableRows(joinedFc) : []);
+	const tableRows = $derived<WinnerTableRow[]>(tableFc ? buildTableRows(tableFc) : []);
+
+	// Zeit-Animation (Story 7): reale Jahre mit Kiez/Bezirk-Daten, aufsteigend.
+	// Schnittmenge mit `jahreForReihe` (Bestand `/api/wahl/list`): `setJahr`
+	// akzeptiert nur Jahre daraus -- ein Nur-Winners-Jahr ohne Gegenstück in
+	// der Wahl-Liste würde sonst still verworfen und der paintJahr-Effect die
+	// Karte auf das vorherige Jahr zurückreißen.
+	const zeitJahrOptions = $derived.by(() => {
+		if (anzeigeEbene === 'stimmbezirk') return [];
+		const gueltigeJahre = new Set(jahreForReihe(portal, portal.reihe).map((w) => w.jahr));
+		return buildZeitJahrOptions(winnersLoader.response?.winners ?? []).filter((o) =>
+			gueltigeJahre.has(o.jahr)
+		);
+	});
+	// Anzeige-Jahr fuer die Karten-Paint (Story 7): sofort bei jedem
+	// Slider-/Play-Schritt aktualisiert, unabhaengig vom gedrosselten
+	// Portal-Commit; extern (Steuerleiste-Chip, Reihen-Wechsel) folgt `jahr`
+	// ueber den Effect direkt darunter (der Initialwert hier ist bewusst nur
+	// der Kaltstart-Wert vor dem ersten Effect-Lauf).
+	// svelte-ignore state_referenced_locally
+	// Kein reiner Spiegel von `jahr`: handleZeitDisplayJahr schreibt paintJahr
+	// zwischen zwei `jahr`-Aenderungen unabhaengig (Slider/Play), ein
+	// `$derived` kann das nicht abbilden.
+	// eslint-disable-next-line svelte/prefer-writable-derived
+	let paintJahr = $state<number | null>(jahr);
+	$effect(() => {
+		paintJahr = jahr;
+	});
+	function handleZeitDisplayJahr(j: number): void {
+		paintJahr = j;
+	}
+	function handleZeitCommitJahr(j: number): void {
+		setJahr(portal, j);
+	}
+	function handleZurKiez(): void {
+		setEbene(portal, 'kiez');
+	}
 	const totalGebiete = $derived(
 		anzeigeEbene === 'stimmbezirk'
 			? (sbLoader.geometry?.fc.features.length ?? 0)
@@ -310,7 +300,10 @@
 	}
 
 	// MapLibre-Hülle: Lifecycle in eigener Klasse (Datei-Zeilenlimit). --------
-	const mapCtl = new WinnerMapController({ getFc: () => joinedFc });
+	const mapCtl = new WinnerMapController({
+		getFc: () => joinedFc,
+		getActiveJahr: () => (anzeigeEbene === 'stimmbezirk' ? null : paintJahr)
+	});
 	// Adress-Hervorhebung (Zustand + Handler): eigene Klasse, siehe Modul-Doc.
 	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop,
 	// über die Komponenten-Lebenszeit stabil (Muster sbLoader oben).
@@ -324,6 +317,19 @@
 
 	$effect(() => {
 		mapCtl.ensureMap(joinedFc);
+	});
+
+	// Story 7: Jahr-Wechsel auf kiez/bezirk faerbt nur um (setPaintProperty),
+	// kein setData -- nie auf Stimmbezirk (Boundary). Ein Ebenen-Wechsel WEG
+	// von kiez/bezirk muss die jahr-gebundenen Paint-/Filter-/Tooltip-Zustände
+	// zuruecksetzen, sonst bleibt die Stimmbezirks-Karte auf den zuletzt
+	// gemalten `w_<jahr>_*`-Keys stehen (leer/neutral, Tooltip ohne Partei).
+	$effect(() => {
+		if (anzeigeEbene === 'stimmbezirk') {
+			mapCtl.clearActiveJahr();
+		} else if (paintJahr !== null) {
+			mapCtl.setActiveJahr(paintJahr);
+		}
 	});
 
 	$effect(() => {
@@ -434,6 +440,17 @@
 				{repeatElection}
 			/>
 		</div>
+
+		{#if jahr !== null}
+			<ZeitAnimation
+				ebene={anzeigeEbene}
+				jahrOptions={zeitJahrOptions}
+				{jahr}
+				onDisplayJahr={handleZeitDisplayJahr}
+				onCommitJahr={handleZeitCommitJahr}
+				onZurKiez={handleZurKiez}
+			/>
+		{/if}
 
 		<figcaption data-testid="winner-map-aggregation-hinweis" class="font-mono text-xs text-ink-subtle">
 			{aggregationHinweis} Details:

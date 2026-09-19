@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 import WinnerMapContextProbe from './internal/winner-map-context-probe.svelte';
 import { _resetManifestCache } from '$lib/data/manifest.js';
 import { _resetLayerCache } from '$lib/data/internal/layer-fetch.js';
+import { _resetWinnersCache } from './internal/winner-map-winners.svelte.js';
 import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
 
 const SHA = 'a'.repeat(64);
@@ -206,11 +207,13 @@ function fakeFetch(routes: ReadonlyArray<[string, unknown]>): typeof fetch {
 beforeEach(() => {
 	_resetManifestCache();
 	_resetLayerCache();
+	_resetWinnersCache();
 });
 
 afterEach(() => {
 	_resetManifestCache();
 	_resetLayerCache();
+	_resetWinnersCache();
 });
 
 describe('winner-map.svelte', () => {

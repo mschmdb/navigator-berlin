@@ -8,14 +8,14 @@
  */
 import { resolveSpatialLevel } from '$lib/data/resolve-spatial-level.js';
 import type { GeocodeSuggestion } from '$lib/data';
-import type { WinnerFeatureCollection } from './winner-map-data.js';
+import type { GebietFeatureCollection } from './winner-map-data.js';
 import type { WinnerMapController } from './winner-map-maplibre.svelte.js';
 import type { StimmbezirkLoader } from './winner-map-stimmbezirk.svelte.js';
 import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
 
 export interface AddressHighlightDeps {
 	readonly getAnzeigeEbene: () => WahlPortalEbene;
-	readonly getJoinedFc: () => WinnerFeatureCollection | null;
+	readonly getJoinedFc: () => GebietFeatureCollection | null;
 	readonly sbLoader: StimmbezirkLoader;
 	readonly mapCtl: WinnerMapController;
 	readonly fetchFn: typeof fetch;

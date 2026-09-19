@@ -4,6 +4,9 @@
 		readonly partei: string | null;
 		readonly anteil: number;
 		readonly hasWinner: boolean;
+		/** Story 7: Sieger-Wechsel im aktiven Jahr (Kiez/Bezirk). Generischer/
+		 * Stimmbezirks-Pfad liefert immer `false` (keine Zeit-Animation dort). */
+		readonly wechsel: boolean;
 	}
 </script>
 
@@ -67,6 +70,11 @@
 				data-testid="winner-map-tooltip-jahr"
 			>
 				{jahr}{repeatElection ? ' · Wiederholungswahl' : ''}
+			</p>
+		{/if}
+		{#if data.wechsel}
+			<p class="mt-0.5 font-mono text-[10px] text-ink-subtle" data-testid="winner-map-tooltip-wechsel">
+				Wechsel der stärksten Kraft in diesem Jahr
 			</p>
 		{/if}
 	</div>
