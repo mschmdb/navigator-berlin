@@ -396,3 +396,87 @@ test('Winner-Map (Ebene stimmbezirk): Jahr-Wechsel swappt die Geometrie ohne Kar
 	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
 	await expect(page.getByTestId('winner-map-takeaway')).toContainText('GRÜNE');
 });
+
+// Story 6 (Ergebnis-Panel): Series-berlin-Mock für die AGH-Reihe. CDU 2023
+// 0.282 deckt die AC „AGH 2023 CDU ≈ 0,282" auch auf E2E-Ebene ab.
+const SERIES_BERLIN_AGH = {
+	typ: 'agh',
+	stimmtyp: 'zweitstimme',
+	ebene: 'berlin',
+	gebiet: 'berlin',
+	coverage_ab: 2021,
+	points: [
+		{
+			jahr: 2021,
+			partei: 'CDU',
+			farbe_hex: '#1A1A1A',
+			anteil: 0.18,
+			stimmen: 950000,
+			is_repeat_election: false,
+			parent_slug: null
+		},
+		{
+			jahr: 2021,
+			partei: 'SPD',
+			farbe_hex: '#A50C1A',
+			anteil: 0.213,
+			stimmen: 1100000,
+			is_repeat_election: false,
+			parent_slug: null
+		},
+		{
+			jahr: 2023,
+			partei: 'CDU',
+			farbe_hex: '#1A1A1A',
+			anteil: 0.282,
+			stimmen: 1600000,
+			is_repeat_election: true,
+			parent_slug: '2021-agh-zweitstimme'
+		},
+		{
+			jahr: 2023,
+			partei: 'SPD',
+			farbe_hex: '#A50C1A',
+			anteil: 0.184,
+			stimmen: 1050000,
+			is_repeat_election: true,
+			parent_slug: '2021-agh-zweitstimme'
+		}
+	],
+	license: 'dl-de/by-2.0',
+	source_url: 'https://example.invalid/agh23',
+	source_name: 'Amt für Statistik Berlin-Brandenburg'
+};
+
+test('Ergebnis-Panel: rendert neben der Karte mit Berlin-Werten, Stimmbezirks-Hinweis auf der Default-Ebene', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await routeStimmbezirkWinners(page);
+
+	let seriesRequestCount = 0;
+	await page.route('**/api/wahl/series**', (route) => {
+		seriesRequestCount++;
+		return route.fulfill({ json: SERIES_BERLIN_AGH });
+	});
+
+	// Default-Ansicht: Reihe agh, Jahr 2023, Ebene stimmbezirk.
+	await page.goto('/berlin-wahlen');
+	await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
+
+	await expect(page.getByTestId('ergebnis-panel')).toBeVisible();
+	await expect(page.getByTestId('ergebnis-panel-anteil-CDU')).toHaveText('28,2 %');
+	await expect(page.getByTestId('ergebnis-panel-delta-CDU')).toHaveText('+10,2 Pp.');
+	await expect(page.getByTestId('ergebnis-panel-delta-SPD')).toHaveText('−2,9 Pp.');
+	await expect(page.getByTestId('ergebnis-panel-stimmbezirk-hinweis')).toBeVisible();
+	await expect(page.getByTestId('ergebnis-panel-gebiet-block')).not.toBeVisible();
+	expect(seriesRequestCount).toBe(1);
+
+	// Jahr-Wechsel: Deltas aktualisieren sich aus dem bereits geladenen
+	// Series-Response, kein zweiter Request (Boundary: eine Reihen-Anfrage
+	// deckt alle Jahre ab).
+	await page.getByTestId('steuerleiste-jahr-2021').click();
+	await expect(page.getByTestId('ergebnis-panel-anteil-CDU')).toHaveText('18,0 %');
+	await expect(page.getByTestId('ergebnis-panel-delta-CDU')).not.toBeVisible();
+	expect(seriesRequestCount).toBe(1);
+});
