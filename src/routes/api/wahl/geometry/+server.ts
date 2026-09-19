@@ -3,6 +3,11 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
 import type { RequestHandler } from './$types';
+import {
+	geoSlugForYear,
+	candidateDbUwbIds,
+	UWB_FORMAT_HINT
+} from '$lib/data/wahl-geo-mapping.js';
 
 const STATIC_LAYERS_DIR = join(process.cwd(), 'static', 'layers');
 const MANIFEST_PATH = join(STATIC_LAYERS_DIR, 'MANIFEST.json');
@@ -27,41 +32,6 @@ async function loadFc(filename: string): Promise<FeatureCollection> {
 	) as FeatureCollection;
 	fcCache.set(filename, fc);
 	return fc;
-}
-
-function geoSlugForYear(year: number): string | null {
-	if (year === 2025) return 'bt25';
-	if (year === 2023) return 'ah21';
-	if (year === 2021) return 'ah21';
-	if (year === 2017) return 'btw17';
-	if (year === 2016) return 'ah16';
-	return null;
-}
-
-function pickUwb3(props: Record<string, unknown>): string | null {
-	if (typeof props.UWB3 === 'string') return props.UWB3;
-	if (typeof props.UWB === 'string') {
-		const u = props.UWB;
-		if (u.length === 5) return u.slice(2);
-		return u;
-	}
-	if (typeof props.WB === 'string') return props.WB;
-	return null;
-}
-
-function candidateDbUwbIds(props: Record<string, unknown>): string[] {
-	const bez = typeof props.BEZ === 'string' ? props.BEZ.padStart(2, '0') : null;
-	const uwb3 = pickUwb3(props);
-	if (!bez || !uwb3) return [];
-	const bwk = typeof props.BWK === 'string' ? props.BWK.padStart(3, '0') : null;
-	const out: string[] = [];
-	if (bwk) {
-		out.push(`${bwk}-${bez}-${uwb3}-0`);
-		out.push(`${bwk}-${bez}-${bez}W${uwb3}-0`);
-	}
-	out.push(`${bez}W${uwb3}-W`);
-	out.push(`${bez}W${uwb3}`);
-	return out;
 }
 
 export const GET: RequestHandler = async ({ url }) => {
@@ -132,7 +102,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			error: 'district_not_found',
 			district_id: districtId,
 			year,
-			hint: 'Verify district_id format. BTW21/25: 075-01-100-0. BTW17: 078-05-05W221-0. AGH/BVV21/23: 01W100-W. AGH/BVV16: 01W100.'
+			hint: UWB_FORMAT_HINT
 		}),
 		{
 			status: 404,

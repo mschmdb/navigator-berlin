@@ -7,7 +7,14 @@
  *
  * Recon-Pattern: page.goto(live) in Headless-Browser → ZIP-Response auf
  * download.statistik-berlin-brandenburg.de abfangen.
+ *
+ * Wahl→Geo-Mapping-Wissen (`WAHL_TO_GEO`) lebt in src/lib/data/wahl-geo-mapping.ts
+ * (einzige Quelle) und wird hier nur re-exportiert; `consumesWahlen` unten
+ * leitet sich per `wahlenForGeo` daraus ab, damit keine zweite Kopie entsteht.
  */
+import { WAHL_TO_GEO, wahlenForGeo } from '../../../src/lib/data/wahl-geo-mapping.js';
+
+export { WAHL_TO_GEO };
 
 export type GeoSource = {
 	readonly slug: string;
@@ -33,7 +40,7 @@ export const GEO_BT25: GeoSource = {
 	license: SBB_LICENSE,
 	licenseShort: SBB_LICENSE_SHORT,
 	attribution: SBB_ATTRIBUTION,
-	consumesWahlen: ['btw25']
+	consumesWahlen: wahlenForGeo('bt25')
 };
 
 /**
@@ -50,7 +57,7 @@ export const GEO_AH21: GeoSource = {
 	license: SBB_LICENSE,
 	licenseShort: SBB_LICENSE_SHORT,
 	attribution: SBB_ATTRIBUTION,
-	consumesWahlen: ['btw21', 'agh21', 'bvv21', 'agh23', 'bvv23']
+	consumesWahlen: wahlenForGeo('ah21')
 };
 
 export const GEO_BTW17: GeoSource = {
@@ -61,7 +68,7 @@ export const GEO_BTW17: GeoSource = {
 	license: SBB_LICENSE,
 	licenseShort: SBB_LICENSE_SHORT,
 	attribution: SBB_ATTRIBUTION,
-	consumesWahlen: ['btw17']
+	consumesWahlen: wahlenForGeo('btw17')
 };
 
 export const GEO_AH16: GeoSource = {
@@ -72,15 +79,7 @@ export const GEO_AH16: GeoSource = {
 	license: SBB_LICENSE,
 	licenseShort: SBB_LICENSE_SHORT,
 	attribution: SBB_ATTRIBUTION,
-	consumesWahlen: ['agh16', 'bvv16']
+	consumesWahlen: wahlenForGeo('ah16')
 };
 
 export const GEO_SOURCES: readonly GeoSource[] = [GEO_BTW17, GEO_AH16, GEO_AH21, GEO_BT25];
-
-/**
- * Wahl-Slug → Geometry-Slug. Wahlen ohne Eintrag (z.B. btw13, agh11, bvv11)
- * haben keine verfügbare Geometrie und bleiben im Kiez-Aggregat leer.
- */
-export const WAHL_TO_GEO: ReadonlyMap<string, string> = new Map(
-	GEO_SOURCES.flatMap((g) => g.consumesWahlen.map((w) => [w, g.slug] as const))
-);

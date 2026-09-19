@@ -2,8 +2,9 @@ import center from '@turf/center';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
 import { normalizeSlug } from '../../../src/lib/data/internal/slug.js';
+import { dbUwbIdFromGeo, type GeoUwbProps } from '../../../src/lib/data/wahl-geo-mapping.js';
 
-export type GeoUwbProps = Record<string, unknown>;
+export type { GeoUwbProps };
 
 export type KiezMapping = {
 	dbUwbId: string;
@@ -11,59 +12,20 @@ export type KiezMapping = {
 };
 
 /**
- * Map DB-uwbId zu kiez-slug via Centroid → LOR-Bezirksregion. Format-Variants über die Jahre:
+ * Map DB-uwbId zu kiez-slug via Centroid → LOR-Bezirksregion. `dbUwbIdFromGeo`
+ * delegiert an `src/lib/data/wahl-geo-mapping.ts` (einzige Quelle). Format-
+ * Varianten über die Jahre:
  *
- * | Wahl       | DB-Format                       | Geo-Build-Rule                       |
- * |------------|---------------------------------|--------------------------------------|
- * | BTW 21/25  | `${BWK}-${BEZ}-${UWB3}-0`       | `${BWK}-${BEZ}-${UWB3}-0`            |
- * | BTW 17     | `${BWK}-${BEZ}-${BEZ}W${UWB3}-0`| `${BWK}-${BEZ}-${BEZ}W${UWB3}-0`     |
- * | BTW 13     | (split-direct format, different) | not mappable                        |
- * | AGH/BVV 21/23 | `${BEZ}W${UWB3}-W`           | `${BEZ}W${UWB3}-W`                   |
- * | AGH/BVV 16 | `${BEZ}W${UWB3}` (no suffix)    | `${BEZ}W${UWB3}`                     |
- * | AGH/BVV 11 | (different, Adresse-Spalte fehlt) | not mappable                       |
+ * | Wahl          | DB-Format                                                    |
+ * |---------------|---------------------------------------------------------------|
+ * | BTW 21/25     | `${BWK}-${BEZ}-${UWB3}-0`                                    |
+ * | BTW 17        | `${BWK}-${BEZ}-${BEZ}W${UWB3}-0`                             |
+ * | BTW 13        | (split-direct format, different) — not mappable              |
+ * | AGH/BVV 21/23 | `${BEZ}W${UWB3}` (ohne Suffix; DB kann `-W` enthalten, Reverse-Lookup in der geometry-Route deckt beides ab) |
+ * | AGH/BVV 16    | `${BEZ}W${UWB3}` (no suffix)                                 |
+ * | AGH/BVV 11    | (different, Adresse-Spalte fehlt) — not mappable             |
  */
-export function dbUwbIdFromGeo(props: GeoUwbProps, wahlSlug: string): string | null {
-	const bez = typeof props.BEZ === 'string' ? props.BEZ.padStart(2, '0') : null;
-	const uwb3 = pickUwb3(props);
-	if (!bez || !uwb3) return null;
-
-	if (wahlSlug === 'btw21' || wahlSlug === 'btw25') {
-		const bwk = typeof props.BWK === 'string' ? props.BWK.padStart(3, '0') : null;
-		if (!bwk) return null;
-		return `${bwk}-${bez}-${uwb3}-0`;
-	}
-
-	if (wahlSlug === 'btw17') {
-		const bwk = typeof props.BWK === 'string' ? props.BWK.padStart(3, '0') : null;
-		if (!bwk) return null;
-		return `${bwk}-${bez}-${bez}W${uwb3}-0`;
-	}
-
-	if (
-		wahlSlug === 'agh16' ||
-		wahlSlug === 'agh21' ||
-		wahlSlug === 'agh23' ||
-		wahlSlug === 'bvv16' ||
-		wahlSlug === 'bvv21' ||
-		wahlSlug === 'bvv23'
-	) {
-		return `${bez}W${uwb3}`;
-	}
-
-	return null;
-}
-
-function pickUwb3(props: GeoUwbProps): string | null {
-	if (typeof props.UWB3 === 'string') return props.UWB3;
-	if (typeof props.UWB === 'string') {
-		const u = props.UWB;
-		if (u.length === 5) return u.slice(2);
-		if (u.length === 3) return u;
-		return u;
-	}
-	if (typeof props.WB === 'string') return props.WB;
-	return null;
-}
+export { dbUwbIdFromGeo };
 
 /**
  * Berechne Kiez-Slug pro Geo-Feature via Centroid → LOR-BR-Punkt-in-Polygon.

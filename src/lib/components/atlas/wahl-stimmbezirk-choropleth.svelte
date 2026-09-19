@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { parteiColor } from '$lib/data/partei-farben.js';
+	import { dbUwbIdFromGeo } from '$lib/data/wahl-geo-mapping.js';
 
 	type WinnerEntry = {
 		readonly uwbId: string;
@@ -30,36 +31,6 @@
 
 	function formatPct(n: number): string {
 		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
-	}
-
-	function pickUwb3(props: Record<string, unknown>): string | null {
-		if (typeof props.UWB3 === 'string') return props.UWB3;
-		if (typeof props.UWB === 'string') {
-			const u = props.UWB;
-			if (u.length === 5) return u.slice(2);
-			return u;
-		}
-		if (typeof props.WB === 'string') return props.WB;
-		return null;
-	}
-
-	function dbUwbIdFromGeo(props: Record<string, unknown>): string | null {
-		const bez = typeof props.BEZ === 'string' ? props.BEZ.padStart(2, '0') : null;
-		const uwb3 = pickUwb3(props);
-		if (!bez || !uwb3) return null;
-
-		if (wahlSlug === 'btw21' || wahlSlug === 'btw25') {
-			const bwk = typeof props.BWK === 'string' ? props.BWK.padStart(3, '0') : null;
-			return bwk ? `${bwk}-${bez}-${uwb3}-0` : null;
-		}
-		if (wahlSlug === 'btw17') {
-			const bwk = typeof props.BWK === 'string' ? props.BWK.padStart(3, '0') : null;
-			return bwk ? `${bwk}-${bez}-${bez}W${uwb3}-0` : null;
-		}
-		if (['agh16', 'agh21', 'agh23', 'bvv16', 'bvv21', 'bvv23'].includes(wahlSlug)) {
-			return `${bez}W${uwb3}`;
-		}
-		return null;
 	}
 
 	onMount(() => {
@@ -93,7 +64,7 @@
 			let matched = 0;
 			for (const feature of fc.features) {
 				const props = (feature.properties ?? {}) as Record<string, unknown>;
-				const dbUwbId = dbUwbIdFromGeo(props);
+				const dbUwbId = dbUwbIdFromGeo(props, wahlSlug);
 				const winner = dbUwbId ? winnerMap.get(dbUwbId) : null;
 				if (winner) matched++;
 				props.partei = winner?.parteiKurzname ?? null;

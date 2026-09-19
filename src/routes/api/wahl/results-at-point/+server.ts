@@ -14,6 +14,12 @@ import { getResultsForKiez } from '$lib/server/db/queries/wahl/get-results-for-k
 import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for-bezirk.js';
 import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for-berlin.js';
 import { getSparklineForKiez } from '$lib/server/db/queries/wahl/get-sparkline-for-kiez.js';
+import {
+	WAHL_TO_GEO,
+	wahlSlugFromTypJahr,
+	pickUwb3,
+	dbUwbIdFromGeo
+} from '$lib/data/wahl-geo-mapping.js';
 
 const QuerySchema = v.object({
 	lat: v.pipe(
@@ -90,55 +96,6 @@ async function loadFc(filename: string): Promise<FeatureCollection> {
 	fcCache.set(filename, fc);
 	return fc;
 }
-
-function dbUwbIdFromGeoForWahl(props: Record<string, unknown>, wahlSlug: string): string | null {
-	const bez = typeof props.BEZ === 'string' ? props.BEZ.padStart(2, '0') : null;
-	const uwb3 = pickUwb3(props);
-	if (!bez || !uwb3) return null;
-
-	if (wahlSlug === 'btw21' || wahlSlug === 'btw25') {
-		const bwk = typeof props.BWK === 'string' ? props.BWK.padStart(3, '0') : null;
-		return bwk ? `${bwk}-${bez}-${uwb3}-0` : null;
-	}
-	if (wahlSlug === 'btw17') {
-		const bwk = typeof props.BWK === 'string' ? props.BWK.padStart(3, '0') : null;
-		return bwk ? `${bwk}-${bez}-${bez}W${uwb3}-0` : null;
-	}
-	if (['agh16', 'agh21', 'agh23', 'bvv16', 'bvv21', 'bvv23'].includes(wahlSlug)) {
-		return `${bez}W${uwb3}`;
-	}
-	return null;
-}
-
-function pickUwb3(props: Record<string, unknown>): string | null {
-	if (typeof props.UWB3 === 'string') return props.UWB3;
-	if (typeof props.UWB === 'string') {
-		const u = props.UWB;
-		if (u.length === 5) return u.slice(2);
-		return u;
-	}
-	if (typeof props.WB === 'string') return props.WB;
-	return null;
-}
-
-function wahlSlugFor(w: WahlListItem): string {
-	const jj = String(w.jahr).slice(-2);
-	return `${w.typ}${jj}`;
-}
-
-// agh23/bvv23 = Wiederholungswahl Sept 2023 auf unveränderten Wahlbezirken
-// vom Sept 2021 → ah21-Polygone (ah23-Layer enthält nur Wahllokal-Punkte).
-const WAHL_TO_GEO: Record<string, string> = {
-	btw17: 'btw17',
-	btw21: 'ah21',
-	btw25: 'bt25',
-	agh16: 'ah16',
-	agh21: 'ah21',
-	agh23: 'ah21',
-	bvv16: 'ah16',
-	bvv21: 'ah21',
-	bvv23: 'ah21'
-};
 
 async function findWahlbezirks(
 	lat: number,
@@ -309,10 +266,10 @@ export const GET: RequestHandler = async ({ url }) => {
 	const wahlen = await getWahlList();
 	const bundles: WahlResultBundle[] = await Promise.all(
 		wahlen.map(async (w) => {
-			const slug = wahlSlugFor(w);
-			const geoSlug = WAHL_TO_GEO[slug];
+			const slug = wahlSlugFromTypJahr(w.typ, w.jahr);
+			const geoSlug = WAHL_TO_GEO.get(slug);
 			const wb = geoSlug ? wahlbezirks[geoSlug] : undefined;
-			const dbUwbId = wb ? dbUwbIdFromGeoForWahl(wb.geoProps, slug) : null;
+			const dbUwbId = wb ? dbUwbIdFromGeo(wb.geoProps, slug) : null;
 			const levels = await buildLevelResults(w, dbUwbId, kiezSlug, bezirkSlug, false);
 			return { wahl: w, uwbId: dbUwbId, levels };
 		})
