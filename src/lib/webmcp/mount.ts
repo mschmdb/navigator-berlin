@@ -51,15 +51,34 @@ async function fetchVotingDistrictGeometryFromApi(
 }
 
 let activeHandle: WebMcpServerHandle | null = null;
+let activeMount: Promise<WebMcpServerHandle | null> | null = null;
 
 /**
- * Idempotent: zweiter Aufruf ignoriert den ersten und liefert das
- * vorhandene Handle zurück.
+ * Idempotent, auch bei parallelen Aufrufen: Der Guard cacht das In-Flight-
+ * Promise, nicht das fertige Handle. Sonst passieren Layout-$effect und
+ * /webmcp-Diagnose beide den Guard und der Verlierer bekommt vom Browser
+ * „Duplicate tool name" (Race vom 04.09.2026). Muster wie in
+ * `$lib/data/manifest.ts`; bei Reject wird das Promise zurückgesetzt,
+ * damit ein späterer Aufruf neu mounten kann.
  */
 export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 	if (!browser) return null;
-	if (activeHandle) return activeHandle;
+	if (activeMount) return activeMount;
+	const mount = doMount().then(
+		(handle) => {
+			activeHandle = handle;
+			return handle;
+		},
+		(err: unknown) => {
+			activeMount = null;
+			throw err;
+		}
+	);
+	activeMount = mount;
+	return mount;
+}
 
+async function doMount(): Promise<WebMcpServerHandle | null> {
 	// Lazy-Imports: kein Server-Bundling, kein direkter Adapter-Import auf $lib/data.
 	const [
 		{ geocodeAddress },
@@ -81,7 +100,7 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		import('$lib/state/finder-bridge.svelte')
 	]);
 
-	activeHandle = await registerWebMcpServer({
+	return await registerWebMcpServer({
 		navigatorProvider: () => navigator as unknown as NavigatorWithModelContext,
 		// Aktuelle Spec-Location (ChatGPT-Browser, Chrome 149+): document.
 		documentProvider: () => document as unknown as NavigatorWithModelContext,
@@ -131,11 +150,11 @@ export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
 		},
 		readFinderState: () => finderBridge.readFinderBridge()
 	});
-	return activeHandle;
 }
 
 export function unmountWebMcpServer(): void {
 	if (!activeHandle) return;
 	activeHandle.unregister();
 	activeHandle = null;
+	activeMount = null;
 }
