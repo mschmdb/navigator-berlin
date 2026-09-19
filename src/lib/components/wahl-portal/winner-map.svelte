@@ -5,7 +5,6 @@
 	import { stimmtypForReihe, EBENE_LABELS } from '$lib/utils/wahl-portal-url-state.js';
 	import { loadManifest } from '$lib/data/manifest.js';
 	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
-	import { resolveSpatialLevel } from '$lib/data/resolve-spatial-level.js';
 	import { geocodeAddress } from '$lib/data/geocode.remote.js';
 	import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
 	import type { GeocodeSuggestion } from '$lib/data';
@@ -15,8 +14,10 @@
 	} from '$lib/components/atlas/data-table-alternative.svelte';
 	import WinnerMapLegende from './winner-map-legende.svelte';
 	import WinnerMapTooltip from './winner-map-tooltip.svelte';
+	import ErgebnisPanel from './ergebnis-panel.svelte';
 	import { WinnerMapController } from './internal/winner-map-maplibre.svelte.js';
 	import { StimmbezirkLoader } from './internal/winner-map-stimmbezirk.svelte.js';
+	import { AddressHighlight } from './internal/winner-map-address.svelte.js';
 	import {
 		filterWinnersByJahr,
 		isRepeatElectionYear,
@@ -310,7 +311,16 @@
 
 	// MapLibre-Hülle: Lifecycle in eigener Klasse (Datei-Zeilenlimit). --------
 	const mapCtl = new WinnerMapController({ getFc: () => joinedFc });
-	let addressHint = $state<string | null>(null);
+	// Adress-Hervorhebung (Zustand + Handler): eigene Klasse, siehe Modul-Doc.
+	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop,
+	// über die Komponenten-Lebenszeit stabil (Muster sbLoader oben).
+	const addressHighlight = new AddressHighlight({
+		getAnzeigeEbene: () => anzeigeEbene,
+		getJoinedFc: () => joinedFc,
+		sbLoader,
+		mapCtl,
+		fetchFn
+	});
 
 	$effect(() => {
 		mapCtl.ensureMap(joinedFc);
@@ -320,47 +330,13 @@
 		mapCtl.setPatternsEnabled(patternsEnabled, occurringParteien);
 	});
 
-	// Anzeige-Ebenen-Wechsel invalidiert eine evtl. aktive Adress-Hervorhebung
-	// (das hervorgehobene Feature gehört zur alten Geometrie/Ebene).
 	$effect(() => {
 		void anzeigeEbene;
-		addressHint = null;
-		mapCtl.highlight(joinedFc, null);
+		addressHighlight.reset();
 	});
 
 	async function handleAddressSelect(s: GeocodeSuggestion): Promise<void> {
-		if (anzeigeEbene === 'stimmbezirk') {
-			if (sbLoader.geometryStatus !== 'loaded' || !sbLoader.geometry) {
-				addressHint = 'Karte lädt noch, bitte gleich erneut versuchen.';
-				return;
-			}
-			const uwbId = sbLoader.resolveAddress(s.lat, s.lng);
-			if (!uwbId) {
-				addressHint = 'Für diese Adresse liegt kein Gebiet in Berlin vor.';
-				mapCtl.highlight(joinedFc, null);
-				return;
-			}
-			addressHint = `Stimmbezirk ${uwbId} hervorgehoben.`;
-			mapCtl.highlight(joinedFc, uwbId);
-			return;
-		}
-
-		let ctx;
-		try {
-			ctx = await resolveSpatialLevel(s.lat, s.lng, fetchFn);
-		} catch {
-			addressHint = 'Adresse konnte nicht aufgelöst werden.';
-			return;
-		}
-		const slug = anzeigeEbene === 'bezirk' ? ctx.bezirkSlug : ctx.kiezSlug;
-		const name = anzeigeEbene === 'bezirk' ? ctx.bezirkName : ctx.kiezName;
-		if (!slug) {
-			addressHint = 'Für diese Adresse liegt kein Gebiet in Berlin vor.';
-			mapCtl.highlight(joinedFc, null);
-			return;
-		}
-		addressHint = name ? `${name} hervorgehoben.` : null;
-		mapCtl.highlight(joinedFc, slug);
+		await addressHighlight.select(s);
 	}
 
 	$effect(() => {
@@ -371,9 +347,26 @@
 	const figureLabel = $derived(
 		`Karte der stärksten Partei je Gebiet, Ebene ${ebeneLabel}${jahr !== null ? `, ${jahr}` : ''}${repeatElection ? ' (Wiederholungswahl)' : ''}`
 	);
+
+	// Zustands-Fassade für den {#if}/{:else if}-Fall (Story 6: dieselben Flags
+	// entscheiden jetzt auch, ob Legende/Tabelle unter der Karte gezeigt werden,
+	// die per Grid-Reihenfolge unter dem Ergebnis-Panel liegen -- siehe Markup).
+	const isErrorState = $derived(
+		!mapShown && (activeWinnersStatus === 'error' || activeGeometryStatus === 'error')
+	);
+	const isLoadingState = $derived(!isErrorState && !mapShown && activeWinnersStatus !== 'loaded');
+	const isEmptyState = $derived(
+		!isErrorState && !isLoadingState && !mapShown && (!activeHasAnyWinners || jahr === null)
+	);
+	const showKarteInhalt = $derived(!isErrorState && !isLoadingState && !isEmptyState);
 </script>
 
-<figure class="space-y-3" aria-label={figureLabel} data-testid="winner-map">
+<div class="flex flex-col gap-6 lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-6 lg:gap-y-6">
+<figure
+	class="space-y-3 lg:col-start-1 lg:col-span-2 lg:row-start-1"
+	aria-label={figureLabel}
+	data-testid="winner-map"
+>
 	{#if repeatElection}
 		<p data-testid="winner-map-wiederholung" class="font-mono text-xs text-ink-subtle">
 			Wiederholungswahl
@@ -394,15 +387,15 @@
 		</p>
 	{/if}
 
-	{#if !mapShown && (activeWinnersStatus === 'error' || activeGeometryStatus === 'error')}
+	{#if isErrorState}
 		<p data-testid="winner-map-error" role="alert" class="font-serif text-ink-muted">
 			Wahl-Daten konnten nicht geladen werden.
 		</p>
-	{:else if !mapShown && activeWinnersStatus !== 'loaded'}
+	{:else if isLoadingState}
 		<p data-testid="winner-map-loading" class="font-serif text-ink-muted">
 			Lädt Wahl-Ergebnisse …
 		</p>
-	{:else if !mapShown && (!activeHasAnyWinners || jahr === null)}
+	{:else if isEmptyState}
 		<p data-testid="winner-map-empty" class="font-serif text-ink-muted">
 			Für diese Auswahl liegen noch keine Wahl-Ergebnisse vor.
 		</p>
@@ -413,13 +406,13 @@
 
 		<div class="max-w-md">
 			<AddressSearch variant="header" {geocode} onSelect={handleAddressSelect} />
-			{#if addressHint}
+			{#if addressHighlight.hint}
 				<p
 					aria-live="polite"
 					data-testid="winner-map-address-hint"
 					class="mt-1 font-mono text-xs text-ink-subtle"
 				>
-					{addressHint}
+					{addressHighlight.hint}
 				</p>
 			{/if}
 		</div>
@@ -451,7 +444,23 @@
 				/methodik/wahldaten
 			</a>
 		</figcaption>
+	{/if}
+</figure>
 
+<aside
+	class="lg:col-start-3 lg:col-span-1 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-24"
+	data-testid="ergebnis-panel-slot"
+>
+	<ErgebnisPanel
+		{fetchFn}
+		highlightedSlug={anzeigeEbene === 'stimmbezirk' ? null : addressHighlight.gebietSlug}
+		highlightedName={anzeigeEbene === 'stimmbezirk' ? null : addressHighlight.gebietName}
+		{anzeigeEbene}
+	/>
+</aside>
+
+{#if showKarteInhalt}
+	<div class="space-y-3 lg:col-start-1 lg:col-span-2 lg:row-start-2">
 		<WinnerMapLegende
 			parteien={occurringParteien}
 			{patternsEnabled}
@@ -463,5 +472,6 @@
 			rows={tableRows}
 			caption={`Stärkste Partei je Gebiet${jahr !== null ? `, ${jahr}` : ''}`}
 		/>
-	{/if}
-</figure>
+	</div>
+{/if}
+</div>

@@ -321,6 +321,101 @@ describe('winner-map.svelte', () => {
 			.toHaveAttribute('data-highlighted-slug', 'hansaviertel');
 	});
 
+	it('Adress-Auswahl auf Kiez-Ebene verdrahtet das Ergebnis-Panel: Gebiets-Block mit Series-Daten', async () => {
+		// Review-Fund (Verification Gap): Adresse -> gebietSlug -> Panel-Gebiets-Block
+		// war nur isoliert getestet, nie durch den echten Komponenten-Baum.
+		const seriesBerlin = {
+			typ: 'agh',
+			stimmtyp: 'zweitstimme',
+			ebene: 'berlin',
+			gebiet: 'berlin',
+			coverage_ab: 2021,
+			points: [
+				{
+					jahr: 2023,
+					partei: 'SPD',
+					farbe_hex: '#000000',
+					anteil: 0.184,
+					stimmen: 100,
+					is_repeat_election: false,
+					parent_slug: null
+				}
+			],
+			license: 'dl-de/by-2-0',
+			source_url: 'https://example.invalid',
+			source_name: 'Amt für Statistik Berlin-Brandenburg'
+		};
+		const seriesGebiet = {
+			...seriesBerlin,
+			ebene: 'kiez',
+			gebiet: 'hansaviertel',
+			points: [
+				{
+					jahr: 2023,
+					partei: 'SPD',
+					farbe_hex: '#000000',
+					anteil: 0.42,
+					stimmen: 40,
+					is_repeat_election: false,
+					parent_slug: null
+				}
+			]
+		};
+		const fetchFn = fakeFetch([
+			['/api/wahl/winners', WINNERS_LOADED],
+			['MANIFEST.json', MANIFEST],
+			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
+			['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC],
+			['gebiet=hansaviertel', seriesGebiet],
+			['ebene=berlin', seriesBerlin]
+		]);
+		const geocodeFn = async () => [
+			{
+				id: '1',
+				displayName: 'Hansaviertel 1, Berlin',
+				lat: 52.505,
+				lng: 13.305,
+				type: 'house',
+				addresstype: 'house'
+			}
+		];
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn,
+			geocodeFn
+		});
+		await expect.element(page.getByTestId('winner-map-canvas')).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('ergebnis-panel-gebiet-block'))
+			.not.toBeInTheDocument();
+
+		// Debounce-Race-Stabilisierung wie im Kein-Gebiet-Test: bis zu 3 Versuche.
+		const input = page.getByRole('combobox');
+		for (let versuch = 0; versuch < 3; versuch++) {
+			await input.click();
+			await input.fill('');
+			await input.fill('Hansaviertel');
+			await new Promise((r) => setTimeout(r, 600));
+			await userEvent.keyboard('{ArrowDown}{Enter}');
+			const hint = document.querySelector('[data-testid="winner-map-address-hint"]');
+			if (hint?.textContent?.includes('hervorgehoben')) break;
+		}
+		await expect
+			.element(page.getByTestId('winner-map-address-hint'))
+			.toHaveTextContent('Hansaviertel hervorgehoben.');
+
+		await expect.element(page.getByTestId('ergebnis-panel-gebiet-block')).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('ergebnis-panel-gebiet-block'))
+			.toHaveTextContent('Hansaviertel');
+		await expect
+			.element(page.getByTestId('ergebnis-panel-gebiet-anteil-SPD'))
+			.toHaveTextContent('42,0 %');
+	});
+
 	it('Adress-Auswahl außerhalb Berlins zeigt den Kein-Gebiet-Hinweis ohne Exception', async () => {
 		const fetchFn = fakeFetch([
 			['/api/wahl/winners', WINNERS_LOADED],
@@ -347,11 +442,18 @@ describe('winner-map.svelte', () => {
 			geocodeFn
 		});
 		await expect.element(page.getByTestId('winner-map-canvas')).toBeInTheDocument();
+		// Debounce-Race-Stabilisierung: die Combobox-Liste öffnet zeitabhängig;
+		// bis zu 3 Versuche, bevor der Hint asserted wird (bekannter Flake).
 		const input = page.getByRole('combobox');
-		await input.click();
-		await input.fill('draussen');
-		await new Promise((r) => setTimeout(r, 400));
-		await userEvent.keyboard('{ArrowDown}{Enter}');
+		for (let versuch = 0; versuch < 3; versuch++) {
+			await input.click();
+			await input.fill('');
+			await input.fill('draussen');
+			await new Promise((r) => setTimeout(r, 600));
+			await userEvent.keyboard('{ArrowDown}{Enter}');
+			const hint = document.querySelector('[data-testid="winner-map-address-hint"]');
+			if (hint?.textContent?.includes('kein Gebiet')) break;
+		}
 		await expect
 			.element(page.getByTestId('winner-map-address-hint'))
 			.toHaveTextContent('kein Gebiet');

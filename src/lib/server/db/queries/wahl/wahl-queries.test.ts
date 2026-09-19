@@ -54,6 +54,10 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 			expect(await getSeriesForGebiet('mitte-zentrum', 'kiez', 'agh', 'zweitstimme')).toEqual([]);
 		});
 
+		it('getSeriesForGebiet (ebene berlin) returns empty without DB', async () => {
+			expect(await getSeriesForGebiet(null, 'berlin', 'agh', 'zweitstimme')).toEqual([]);
+		});
+
 		it('getWinnersBulk returns empty without DB', async () => {
 			expect(await getWinnersBulk('kiez', 'agh', 'zweitstimme')).toEqual([]);
 		});
@@ -128,6 +132,19 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 			const jahre = new Set(rows.map((r) => r.jahr));
 			expect(jahre.size).toBeGreaterThan(1);
 			expect(rows[0].anteil).toBeGreaterThan(0);
+		});
+
+		it('getSeriesForGebiet (ebene berlin) liefert die AGH-Zeitreihe für Berlin gesamt, Anteile 0..1', async () => {
+			const rows = await getSeriesForGebiet(null, 'berlin', 'agh', 'zweitstimme');
+			if (rows.length === 0) return;
+			const jahre = new Set(rows.map((r) => r.jahr));
+			expect(jahre.size).toBeGreaterThan(1);
+			for (const r of rows) {
+				expect(r.anteil).toBeGreaterThan(0);
+				expect(r.anteil).toBeLessThan(1);
+			}
+			const cdu2023 = rows.find((r) => r.jahr === 2023 && r.parteiKurzname === 'CDU');
+			if (cdu2023) expect(cdu2023.anteil).toBeCloseTo(0.282, 2);
 		});
 
 		it('getWinnersBulk liefert eine Row pro Jahr × Gebiet', async () => {

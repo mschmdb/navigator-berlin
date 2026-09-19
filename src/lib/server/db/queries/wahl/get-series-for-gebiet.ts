@@ -1,8 +1,14 @@
 import { eq, and, desc, asc, inArray, sql } from 'drizzle-orm';
 import { getDb } from '../../index.js';
-import { wahl, wahlAggregatKiez, wahlAggregatBezirk, partei } from '../../schema/index.js';
+import {
+	wahl,
+	wahlAggregatKiez,
+	wahlAggregatBezirk,
+	wahlAggregatBerlin,
+	partei
+} from '../../schema/index.js';
 
-export type GebietEbene = 'kiez' | 'bezirk';
+export type GebietEbene = 'kiez' | 'bezirk' | 'berlin';
 
 export type GebietSeriesRow = {
 	wahlId: number;
@@ -14,25 +20,75 @@ export type GebietSeriesRow = {
 };
 
 /**
- * Zeitreihe eines Gebiets (Kiez oder Bezirk) über alle Jahre einer
- * Wahl-Reihe (typ × stimmtyp), auf die Top-N Parteien der jüngsten Wahl der
- * Reihe begrenzt. 3-Schritt-Muster wie `get-sparkline-for-kiez.ts` (jüngste
- * Wahl → Top-N → Zeitreihe via `inArray`), auf beide Aggregat-Ebenen
- * angewandt (Code-Map: „Bezirk analog"). Rückgabe roh (inkl. `wahlId`);
- * Wiederholungswahl-Flags + Jahr-Slug-Auflösung passieren in der Route
- * (dort liegt bereits `getWahlList()`, kein zweiter Wahl-Join nötig).
+ * Zeitreihe eines Gebiets (Kiez, Bezirk oder Berlin gesamt) über alle Jahre
+ * einer Wahl-Reihe (typ × stimmtyp), auf die Top-N Parteien der jüngsten
+ * Wahl der Reihe begrenzt. 3-Schritt-Muster wie `get-sparkline-for-kiez.ts`
+ * (jüngste Wahl → Top-N → Zeitreihe via `inArray`), auf alle drei
+ * Aggregat-Ebenen angewandt (Code-Map: „Bezirk analog"). Rückgabe roh (inkl.
+ * `wahlId`); Wiederholungswahl-Flags + Jahr-Slug-Auflösung passieren in der
+ * Route (dort liegt bereits `getWahlList()`, kein zweiter Wahl-Join nötig).
+ *
+ * Story 6: `ebene: 'berlin'` ignoriert `gebietSlug` (kein Slug-Filter,
+ * `wahl_aggregat_berlin` führt genau eine Row pro Wahl × Partei).
  */
 export async function getSeriesForGebiet(
-	gebietSlug: string,
+	gebietSlug: string | null,
 	ebene: GebietEbene,
 	typ: 'btw' | 'agh' | 'bvv',
 	stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme',
 	topN = 8
 ): Promise<GebietSeriesRow[]> {
 	if (!process.env.DATABASE_URL) return [];
+	if (ebene === 'berlin') return seriesFromBerlin(typ, stimmtyp, topN);
 	return ebene === 'bezirk'
-		? seriesFromBezirk(gebietSlug, typ, stimmtyp, topN)
-		: seriesFromKiez(gebietSlug, typ, stimmtyp, topN);
+		? seriesFromBezirk(gebietSlug ?? '', typ, stimmtyp, topN)
+		: seriesFromKiez(gebietSlug ?? '', typ, stimmtyp, topN);
+}
+
+async function seriesFromBerlin(
+	typ: 'btw' | 'agh' | 'bvv',
+	stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme',
+	topN: number
+): Promise<GebietSeriesRow[]> {
+	const db = getDb();
+
+	const wahlenInReihe = await db
+		.select({ id: wahl.id })
+		.from(wahl)
+		.where(and(eq(wahl.typ, typ), eq(wahl.stimmtyp, stimmtyp)))
+		.orderBy(desc(wahl.jahr));
+	if (wahlenInReihe.length === 0) return [];
+	const wahlIds = wahlenInReihe.map((w) => w.id);
+	const latestWahlId = wahlIds[0];
+
+	const topParteien = await db
+		.select({ parteiId: wahlAggregatBerlin.parteiId })
+		.from(wahlAggregatBerlin)
+		.where(eq(wahlAggregatBerlin.wahlId, latestWahlId))
+		.orderBy(desc(wahlAggregatBerlin.stimmen))
+		.limit(topN);
+	if (topParteien.length === 0) return [];
+	const parteiIds = topParteien.map((r) => r.parteiId);
+
+	return db
+		.select({
+			wahlId: wahlAggregatBerlin.wahlId,
+			jahr: wahl.jahr,
+			parteiKurzname: partei.kurzname,
+			farbeHex: partei.farbeHex,
+			anteil: wahlAggregatBerlin.anteil,
+			stimmen: wahlAggregatBerlin.stimmen
+		})
+		.from(wahlAggregatBerlin)
+		.innerJoin(wahl, eq(wahl.id, wahlAggregatBerlin.wahlId))
+		.innerJoin(partei, eq(partei.id, wahlAggregatBerlin.parteiId))
+		.where(
+			and(
+				inArray(wahlAggregatBerlin.wahlId, wahlIds),
+				inArray(wahlAggregatBerlin.parteiId, parteiIds)
+			)
+		)
+		.orderBy(asc(wahl.jahr), sql`${partei.kurzname} ASC`);
 }
 
 async function seriesFromKiez(

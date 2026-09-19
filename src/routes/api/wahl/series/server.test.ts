@@ -39,6 +39,14 @@ describe('GET /api/wahl/series', () => {
 		expect(body.coverage_ab).toBeNull();
 		expect(body.license).toBeNull();
 	});
+
+	it('ebene=berlin: liefert ohne Datenbank 200 mit leeren Punkten, gebiet optional', async () => {
+		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=berlin');
+		expect(res.status).toBe(200);
+		const body = await res.json();
+		expect(body.points).toEqual([]);
+		expect(body.gebiet).toBe('berlin');
+	});
 });
 
 // Defensiv gegen lokales Postgres (Muster wahl-queries.test.ts): grünt auch
@@ -72,5 +80,17 @@ describe('GET /api/wahl/series (mit lokaler DB)', () => {
 		await expect(
 			call('?typ=agh&stimmtyp=zweitstimme&ebene=kiez&gebiet=gibt-es-nicht')
 		).rejects.toMatchObject({ status: 404 });
+	});
+
+	it('ebene=berlin: liefert die Zeitreihe für Berlin gesamt, AGH 2023 CDU ≈ 0.282, kein 404', async () => {
+		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=berlin');
+		expect(res.status).toBe(200);
+		const body = await res.json();
+		expect(body.gebiet).toBe('berlin');
+		if (body.points.length === 0) return;
+		const cdu2023 = body.points.find(
+			(p: { jahr: number; partei: string }) => p.jahr === 2023 && p.partei === 'CDU'
+		);
+		if (cdu2023) expect(cdu2023.anteil).toBeCloseTo(0.282, 2);
 	});
 });
