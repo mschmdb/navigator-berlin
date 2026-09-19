@@ -1,117 +1,102 @@
-- id: "1"
+- id: '1'
   title: Geo-Mapping auf eine Quelle konsolidieren
-  description: >-
-    Die sechs Kopien des Wahl-zu-Geometrie-Mappings (technical-notes.md,
-    Abschnitt Geo-Mapping-Konsolidierung) durch ein gemeinsames Modul
-    ersetzen, das Runtime und Build-Skripte importieren. Vorbedingung für
-    CAP-14.
-  invoke_dev_with: >-
-    Kein Verhaltens-Change: bestehende API-Responses und Choroplethen
-    bleiben byte-identisch, nachgewiesen über die vorhandenen Tests plus
-    neue Unit-Tests fürs konsolidierte Modul.
-- id: "2"
+  description: Die sechs Kopien des Wahl-zu-Geometrie-Mappings (technical-notes.md,
+    Abschnitt Geo-Mapping-Konsolidierung) durch ein gemeinsames Modul ersetzen,
+    das Runtime und Build-Skripte importieren. Vorbedingung für CAP-14.
+  invoke_dev_with: 'Kein Verhaltens-Change: bestehende API-Responses und Choroplethen
+    bleiben byte-identisch, nachgewiesen über die vorhandenen Tests plus neue
+    Unit-Tests fürs konsolidierte Modul.'
+- id: '2'
   title: Daten-Fundament Zeitreihen und Bulk-Winners
-  description: >-
-    Neue Queries/APIs für Reihen-Zeitreihen (Kiez/Bezirk/Berlin),
-    Bulk-Winners über alle Jahre einer Reihe, Wechsel/Trend/Volatilität
-    als Build-Zeit-Aggregat und die Zwilling-Ähnlichkeit (CAP-3 bis
-    CAP-7, CAP-10 Datenseite). license + sourceUrl in jeder Response
-    (CAP-12).
-  invoke_dev_with: >-
-    ADR-013-Muster: teure Analytik zur Build-Zeit aggregieren, Runtime
-    liest nur. DB-loser Fallback (leere Liste) wie im Bestand. TDD gegen
-    Fixture-Reihen.
-- id: "3"
+  description: Neue Queries/APIs für Reihen-Zeitreihen (Kiez/Bezirk/Berlin), Bulk-Winners
+    über alle Jahre einer Reihe, Wechsel/Trend/Volatilität als Build-Zeit-Aggregat
+    und die Zwilling-Ähnlichkeit (CAP-3 bis CAP-7, CAP-10 Datenseite). license
+    + sourceUrl in jeder Response (CAP-12).
+  invoke_dev_with: 'ADR-013-Muster: teure Analytik zur Build-Zeit aggregieren,
+    Runtime liest nur. DB-loser Fallback (leere Liste) wie im Bestand. TDD gegen
+    Fixture-Reihen.'
+- id: '3'
   title: Portal-Skeleton /berlin-wahlen
-  description: >-
-    Route mit Scroll-Layout, Sticky-Kapitel-Nav, Reihen/Jahr/Ebenen-Zustand
-    mit URL-Sync, Datenstand-Banner, Methodik/Quellen-Akkordeon und
-    SEO-Pflichtmuster inkl. Sitemap-Lücken-Fix (CAP-1, CAP-12-Teil).
-    Feature-Flag wahlPortal.
+  description: Route mit Scroll-Layout, Sticky-Kapitel-Nav, Reihen/Jahr/Ebenen-Zustand
+    mit URL-Sync, Datenstand-Banner, Methodik/Quellen-Akkordeon und SEO-Pflichtmuster
+    inkl. Sitemap-Lücken-Fix (CAP-1, CAP-12-Teil). Feature-Flag wahlPortal.
   spec_checkpoint: true
-  invoke_dev_with: >-
-    ux-blueprint.md ist bindend. Portal-Dateien in lint:wahl TARGET_PATHS
-    eintragen. Kapitel rendern zunächst als Platzhalter-Sections mit
-    Takeaway-Slot.
-- id: "4"
+  invoke_dev_with: ux-blueprint.md ist bindend. Portal-Dateien in lint:wahl TARGET_PATHS
+    eintragen. Kapitel rendern zunächst als Platzhalter-Sections mit Takeaway-Slot.
+- id: '4'
   title: Winner-Map mit Ebenen und Adress-Suche
-  description: >-
-    Hero-Karte des Portals: stärkste Partei je Gebiet mit
-    Anteils-Intensität, Level-Toggle, Adress-Suche, Tabellen-Alternative
-    (CAP-2). Wiederverwendet Choropleth- und Geocode-Bestand.
-- id: "5"
+  description: 'Hero-Karte des Portals: stärkste Partei je Gebiet mit Anteils-Intensität,
+    Level-Toggle, Adress-Suche, Tabellen-Alternative (CAP-2). Wiederverwendet
+    Choropleth- und Geocode-Bestand.'
+- id: '5'
+  title: Ergebnis-Panel und Zahlen-Transparenz
+  description: 'Tagesspiegel-inspiriertes Panel am Karte-Kapitel: Ergebnis-Liste
+    (Partei, Anteil, Farb-Balken, Delta zur Vorwahl) für Berlin gesamt bzw. das
+    ausgewählte Gebiet, Datenstand, amtliche Quelle und ein Info-Disclosure zur
+    Berechnung (Kiez-Aggregation, Briefwahl). Series-API additiv um ebene=berlin
+    erweitern (CAP-8, CAP-12; Matze-Direktive 19.09.).'
+  invoke_dev_with: 'Vorbild: Tagesspiegel-BTW25-Ergebnisseite (Zahlen-Anker neben
+    der Karte). Deltas client-seitig aus der Series-Response über alle Jahre.
+    Wahlbeteiligung kommt erst mit der Wahlbeteiligungs-Story, Platz vorsehen.
+    Neutralitäts-Lint gilt.'
+- id: '6'
   title: Zeit-Animation mit Wechsel-Markierung
-  description: >-
-    Play/Slider über eine Wahl-Art-Reihe per GPU-Expression, Jahr als
-    Deep-Link, Wechsel-Gebiete im Wechsel-Jahr markiert; dazu das
-    Wechsel-Kapitel mit Karte und Liste (CAP-3, CAP-4).
+  description: Play/Slider über eine Wahl-Art-Reihe per GPU-Expression, Jahr als
+    Deep-Link, Wechsel-Gebiete im Wechsel-Jahr markiert; dazu das Wechsel-Kapitel
+    mit Karte und Liste (CAP-3, CAP-4).
   done_checkpoint: true
-  invoke_dev_with: >-
-    Finder-Engine-Muster: Daten einmal in Properties backen, Jahr-Wechsel
-    ist nur setPaintProperty. prefers-reduced-motion respektieren.
-- id: "6"
+  invoke_dev_with: 'Finder-Engine-Muster: Daten einmal in Properties backen, Jahr-Wechsel
+    ist nur setPaintProperty. prefers-reduced-motion respektieren.'
+- id: '7'
   title: Analyse-Kapitel Trends und Kontraste
-  description: >-
-    Trend- und Volatilitäts-Karten, Ausgeglichenheit, schärfste
-    Nachbar-Grenzen, AGH-vs-BVV und Splitting, je mit Takeaway-Zeile und
-    Vorwahl-Delta (CAP-5, CAP-6, CAP-8).
-- id: "7"
-  title: Extrem-Gebiete Small Multiples
-  description: >-
-    Eine Mini-Karte pro Partei mit stärkstem und schwächstem Kiez
-    benannt, gemeinsamer Ausschnitt, responsive Raster (CAP-7).
-- id: "8"
+  description: Trend- und Volatilitäts-Karten, Ausgeglichenheit, schärfste Nachbar-Grenzen,
+    AGH-vs-BVV und Splitting, je mit Takeaway-Zeile und Vorwahl-Delta (CAP-5,
+    CAP-6, CAP-8).
+- id: '8'
+  title: 'Partei-Ansichten: Tabs und Small Multiples'
+  description: 'Einzel-Partei-Intensität als Tab-Auswahl auf der Hero-Karte (wie
+    Tagesspiegel: Gewinner | je Partei) plus eine Mini-Karte pro Partei mit stärkstem
+    und schwächstem Kiez benannt, gemeinsamer Ausschnitt, responsive Raster (CAP-7).'
+- id: '9'
   title: Dein Kiez, Zwilling und Wahl-x-Layer
-  description: >-
-    Kiez-Profil mit Sparkline, politischer Zwilling (Top-5), Kreuzung
-    Wahl mit Atlas-Layern samt Fehlschluss-Notiz und
-    Methodik-Fortschreibung (CAP-9, CAP-10, CAP-12-Rest).
-- id: "9"
+  description: Kiez-Profil mit Sparkline, politischer Zwilling (Top-5), Kreuzung
+    Wahl mit Atlas-Layern samt Fehlschluss-Notiz und Methodik-Fortschreibung (CAP-9,
+    CAP-10, CAP-12-Rest).
+- id: '10'
   title: WebMCP-Tools fürs Portal
-  description: >-
-    get_political_profile, get_political_trend, find_similar_kieze über
-    die neuen APIs, Manifest-Einträge, Portal-Deep-Links, updated_at-Fix
+  description: get_political_profile, get_political_trend, find_similar_kieze
+    über die neuen APIs, Manifest-Einträge, Portal-Deep-Links, updated_at-Fix
     in get_election_result (CAP-11).
-  invoke_dev_with: >-
-    Tool-Surface englisch. Tools rufen nur HTTP-APIs, kein DB-Zugriff
+  invoke_dev_with: Tool-Surface englisch. Tools rufen nur HTTP-APIs, kein DB-Zugriff
     (Composition-Root-Muster in mount.ts).
-- id: "10"
+- id: '11'
   title: Wahl-Detailseiten ins Portal überführen
-  description: >-
-    /berlin-wahlen/[slug] als Neubau der 20 Einzelwahl-Seiten aus
-    Portal-Bausteinen (Slugs unverändert, prerendered), 301 von /wahl
-    und /wahl/[slug], alle internen Links direkt umziehen (CAP-16,
-    CAP-13-Redirects).
-  invoke_dev_with: >-
-    Interne Link-Stellen stehen in der Constraint-Notiz im Memlog
-    (Inspector wahl-section wahlabhängig, home-wahl-teaser,
-    kiez-finder-panel, meta-links, kiez/[slug], methodik, llms, OG,
-    Sitemap-Sources). Abschluss-Check: grep '/wahl' ohne interne
-    Alt-Links. Sitemap/llms/OG auf neue Slug-Pfade, lastmod aktualisieren.
-- id: "11"
+  description: /berlin-wahlen/[slug] als Neubau der 20 Einzelwahl-Seiten aus Portal-Bausteinen
+    (Slugs unverändert, prerendered), 301 von /wahl und /wahl/[slug], alle internen
+    Links direkt umziehen (CAP-16, CAP-13-Redirects).
+  invoke_dev_with: 'Interne Link-Stellen stehen in der Constraint-Notiz im Memlog
+    (Inspector wahl-section wahlabhängig, home-wahl-teaser, kiez-finder-panel,
+    meta-links, kiez/[slug], methodik, llms, OG, Sitemap-Sources). Abschluss-Check:
+    grep ''/wahl'' ohne interne Alt-Links. Sitemap/llms/OG auf neue Slug-Pfade,
+    lastmod aktualisieren.'
+- id: '12'
   title: Einstiegspunkte
-  description: >-
-    Home-Feature-Block nach Kiez-Finder-Muster, Footer-Link,
-    Inspector-Deep-Link auf Portal und Detailseite, OG-Image final
-    (CAP-13-Rest).
+  description: Home-Feature-Block nach Kiez-Finder-Muster, Footer-Link, Inspector-Deep-Link
+    auf Portal und Detailseite, OG-Image final (CAP-13-Rest).
   done_checkpoint: true
-- id: "12"
+- id: '13'
   title: Wahlbeteiligung persistieren und zeigen
-  description: >-
-    Migration für wahlberechtigte/waehlende/ungueltige, Loader- und
-    Aggregat-Erweiterung, Re-Ingest, Beteiligungs-Modul mit Zeitreihe
-    (CAP-15). Droppable: Portal geht ohne diese Story live.
-- id: "13"
+  description: 'Migration für wahlberechtigte/waehlende/ungueltige, Loader- und
+    Aggregat-Erweiterung, Re-Ingest, Beteiligungs-Modul mit Zeitreihe (CAP-15).
+    Droppable: Portal geht ohne diese Story live.'
+- id: '14'
   title: Ingest AGH/BVV 2026
-  description: >-
-    Deklarativer Ingest nach technical-notes.md-Checkliste: sources,
-    Gate-Schwellen, Partei-Seed, Geo-Quelle, Drift-Snapshot,
-    Doku-Fortschreibung; Nachweis CAP-14 per lokalem Testlauf.
+  description: 'Deklarativer Ingest nach technical-notes.md-Checkliste: sources,
+    Gate-Schwellen, Partei-Seed, Geo-Quelle, Drift-Snapshot, Doku-Fortschreibung;
+    Nachweis CAP-14 per lokalem Testlauf.'
   spec_checkpoint: true
-  invoke_dev_with: >-
-    Erst nach Vorliegen der endgültigen Ergebnisse (BVV ~30.09., AGH
-    ~05.-08.10.) und nach Freeze-Ende ausführen; URL per
-    Playwright-Recon beschaffen, niemals raten. Dabei den pre-existing
-    parent_election_id-Bug fixen: 2023er-Wiederholungswahlen müssen auf
-    die Parent-Row mit gleichem stimmtyp zeigen (Ingest-Script +
-    Re-Ingest, Entscheidung Matze 19.09.).
+  invoke_dev_with: 'Erst nach Vorliegen der endgültigen Ergebnisse (BVV ~30.09.,
+    AGH ~05.-08.10.) und nach Freeze-Ende ausführen; URL per Playwright-Recon
+    beschaffen, niemals raten. Dabei den pre-existing parent_election_id-Bug fixen:
+    2023er-Wiederholungswahlen müssen auf die Parent-Row mit gleichem stimmtyp
+    zeigen (Ingest-Script + Re-Ingest, Entscheidung Matze 19.09.).'
