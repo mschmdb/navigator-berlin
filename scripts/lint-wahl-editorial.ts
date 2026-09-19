@@ -12,8 +12,20 @@ const TARGET_PATHS: readonly string[] = [
 	'docs/wahldaten-methodik.md'
 ];
 
-const SCAN_DIRS: readonly string[] = ['src/lib/components/atlas/inspector-panel'];
 const SCAN_FILE_PATTERN = /(wahl-|\bwahl\b).*\.(svelte|ts)$/i;
+/** Portal-Verzeichnisse (Story 3): jede .svelte/.ts-Datei ist wahl-relevant, kein Namens-Filter nötig. */
+const ALL_FILES_PATTERN = /\.(svelte|ts)$/i;
+
+interface ScanDirConfig {
+	readonly dir: string;
+	readonly pattern: RegExp;
+}
+
+const SCAN_DIR_CONFIGS: readonly ScanDirConfig[] = [
+	{ dir: 'src/lib/components/atlas/inspector-panel', pattern: SCAN_FILE_PATTERN },
+	{ dir: 'src/lib/components/wahl-portal', pattern: ALL_FILES_PATTERN },
+	{ dir: 'src/routes/(with-header)/berlin-wahlen', pattern: ALL_FILES_PATTERN }
+];
 
 async function pathExists(p: string): Promise<boolean> {
 	try {
@@ -30,14 +42,15 @@ async function collectScanFiles(): Promise<string[]> {
 		const abs = join(ROOT, t);
 		if (await pathExists(abs)) all.add(abs);
 	}
-	for (const dir of SCAN_DIRS) {
+	for (const { dir, pattern } of SCAN_DIR_CONFIGS) {
 		const absDir = join(ROOT, dir);
 		if (!(await pathExists(absDir))) continue;
-		const entries = await readdir(absDir);
-		for (const e of entries) {
-			if (!SCAN_FILE_PATTERN.test(e)) continue;
-			if (e.endsWith('.test.ts')) continue;
-			all.add(join(absDir, e));
+		const entries = await readdir(absDir, { recursive: true, withFileTypes: true });
+		for (const entry of entries) {
+			if (!entry.isFile()) continue;
+			if (!pattern.test(entry.name)) continue;
+			if (entry.name.endsWith('.test.ts')) continue;
+			all.add(join(entry.parentPath ?? absDir, entry.name));
 		}
 	}
 	return Array.from(all).sort();

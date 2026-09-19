@@ -31,7 +31,9 @@
 		'brw-not-aggregatable':
 			'Auf dieser Ebene nicht sinnvoll aggregierbar. Ein Median über das ganze Gebiet würde lokale Unterschiede verwischen, deshalb zeigen wir hier keinen Wert.',
 		'level-below-threshold':
-			'Auf dieser Ebene zu wenig Daten für eine belastbare Aussage. Wir zeigen lieber keinen Wert als einen irreführenden.'
+			'Auf dieser Ebene zu wenig Daten für eine belastbare Aussage. Wir zeigen lieber keinen Wert als einen irreführenden.',
+		'wahl-portal-footnote':
+			'Karten und Vergleiche auf dieser Seite sind deskriptiv, kein Ranking von Kiezen oder Bezirken. Stimmenanteile sind kein Hinweis auf künftige Wahlen.'
 	};
 </script>
 

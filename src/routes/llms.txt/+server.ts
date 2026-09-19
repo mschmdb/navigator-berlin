@@ -2,6 +2,7 @@ import type { RequestHandler } from './$types';
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildLlmsTxt } from '$lib/seo/llms-builder.js';
 import { collectLlmsData } from '$lib/server/llms/data-collector.js';
+import { featureFlags } from '$lib/data/feature-flags.js';
 
 export const prerender = true;
 
@@ -30,7 +31,8 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
 		bezirke: collected.bezirke,
 		kieze: collected.kieze,
 		layer: collected.layer,
-		wahlen: collected.wahlen
+		wahlen: collected.wahlen,
+		wahlPortalEnabled: featureFlags.wahlPortal
 	});
 	return new Response(body, {
 		status: 200,

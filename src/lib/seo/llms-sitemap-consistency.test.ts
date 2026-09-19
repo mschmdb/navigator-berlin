@@ -138,4 +138,31 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 		expect(llms.some((e) => e.section === 'bezirk')).toBe(true);
 		expect(llms.some((e) => e.section === 'kiez')).toBe(true);
 	});
+
+	it('Story 3: /berlin-wahlen fehlt in beiden solange wahlPortalEnabled aus ist', () => {
+		const sitemapUrls = collectPrerenderedUrls({
+			origin: ctx.origin,
+			locale: ctx.locale,
+			manifest: ctx.manifest,
+			buildTimestamp: ctx.buildTimestamp
+		}).map((e) => e.loc);
+		const llmsUrls = collectLlmsSourceEntries(ctx).map((e) => e.loc);
+		expect(sitemapUrls).not.toContain(`${ctx.origin}/berlin-wahlen`);
+		expect(llmsUrls).not.toContain(`${ctx.origin}/berlin-wahlen`);
+	});
+
+	it('Story 3: /berlin-wahlen erscheint in beiden gemeinsam wenn wahlPortalEnabled an ist', () => {
+		const sitemapUrls = collectPrerenderedUrls({
+			origin: ctx.origin,
+			locale: ctx.locale,
+			manifest: ctx.manifest,
+			buildTimestamp: ctx.buildTimestamp,
+			wahlPortalEnabled: true
+		}).map((e) => e.loc);
+		const llmsUrls = collectLlmsSourceEntries({ ...ctx, wahlPortalEnabled: true }).map(
+			(e) => e.loc
+		);
+		expect(sitemapUrls).toContain(`${ctx.origin}/berlin-wahlen`);
+		expect(llmsUrls).toContain(`${ctx.origin}/berlin-wahlen`);
+	});
 });

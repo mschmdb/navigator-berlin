@@ -33,6 +33,13 @@ export interface SitemapSourceContext {
 		readonly typ: 'btw' | 'agh' | 'bvv';
 		readonly stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
 	}[];
+	/**
+	 * Story 3 (Portal-Skeleton /berlin-wahlen): `featureFlags.wahlPortal`.
+	 * Route rendert immer, taucht aber erst bei aktivem Flag in der Sitemap
+	 * auf (muss synchron mit `LlmsSourceContext.wahlPortalEnabled` bleiben,
+	 * sonst bricht `llms-sitemap-consistency.test.ts`).
+	 */
+	readonly wahlPortalEnabled?: boolean;
 }
 
 export type SitemapSource = (ctx: SitemapSourceContext) => SitemapEntry[];
@@ -126,8 +133,24 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 			priority: 0.8
 		},
 		{ loc: `${ctx.origin}/methodik`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
+		// Story 3: Bestandslücke geschlossen, die Seite existiert bereits (Story 2).
+		{
+			loc: `${ctx.origin}/methodik/wahldaten`,
+			lastmod: ctx.buildTimestamp,
+			changefreq: 'monthly'
+		},
 		{ loc: `${ctx.origin}/lizenzen`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
-		{ loc: `${ctx.origin}/webmcp`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' }
+		{ loc: `${ctx.origin}/webmcp`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
+		...(ctx.wahlPortalEnabled
+			? [
+					{
+						loc: `${ctx.origin}/berlin-wahlen`,
+						lastmod: ctx.buildTimestamp,
+						changefreq: 'weekly' as const,
+						priority: 0.8
+					}
+				]
+			: [])
 	];
 };
 

@@ -106,6 +106,8 @@ describe('routes/llms.txt/+server.ts', () => {
 			makeEvent('https://navigator.berlin/llms.txt') as Parameters<typeof mod.GET>[0]
 		);
 		const body = await response.text();
+		// Story 3: Flag-Verdrahtung am echten Handler (featureFlags.wahlPortal=false).
+		expect(body).not.toContain('/berlin-wahlen');
 		expect(body).toContain('## Bezirke');
 		expect(body).toContain('## Kieze');
 		expect(body).toContain('## Daten-Layer');
