@@ -7,7 +7,7 @@
 	"packageManager": "pnpm@10.32.0",
 	"scripts": {
 		"dev": "vite dev",
-		"prebuild": "pnpm exec svelte-kit sync && pnpm db:migrate && pnpm data:aggregate && pnpm data:aggregate-scores && pnpm data:rank && pnpm data:comparison && (pnpm data:wahl-check || (pnpm data:wahl-fetch-chunked && pnpm data:wahl-geo && pnpm data:wahl-kiez)) && pnpm data:faq && pnpm og:images -- --force && pnpm webmcp:manifest",
+		"prebuild": "pnpm exec svelte-kit sync && pnpm db:migrate && pnpm data:aggregate && pnpm data:aggregate-scores && pnpm data:rank && pnpm data:comparison && (pnpm data:wahl-check || (pnpm data:wahl-fetch-chunked && pnpm data:wahl-geo && pnpm data:wahl-kiez && pnpm data:wahl-analytik)) && pnpm data:faq && pnpm og:images -- --force && pnpm webmcp:manifest",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
@@ -39,6 +39,7 @@
 		"data:wahl-fetch-chunked": "tsx scripts/wahl-fetch-chunked.ts",
 		"data:wahl-geo": "tsx scripts/build-wahl-geometries.ts",
 		"data:wahl-kiez": "tsx scripts/build-wahl-kiez-aggregat.ts",
+		"data:wahl-analytik": "tsx scripts/build-wahl-analytik.ts",
 		"data:wahl-check": "tsx scripts/check-wahl-data.ts",
 		"lint:wahl": "tsx scripts/lint-wahl-editorial.ts",
 		"lint:cross-layer-templates": "tsx scripts/lint-cross-layer-templates.ts",

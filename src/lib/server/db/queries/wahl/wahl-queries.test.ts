@@ -7,6 +7,9 @@ import { getResultsForBezirk } from './get-results-for-bezirk.js';
 import { getResultsForBerlin } from './get-results-for-berlin.js';
 import { getSparklineForKiez } from './get-sparkline-for-kiez.js';
 import { getKiezSharesForWahl } from './get-kiez-shares-for-wahl.js';
+import { getSeriesForGebiet } from './get-series-for-gebiet.js';
+import { getWinnersBulk } from './get-winners-bulk.js';
+import { getAnalytikForReihe, getTrendForReihe } from './get-analytik-for-reihe.js';
 
 afterAll(async () => {
 	await closeDb();
@@ -45,6 +48,22 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 
 		it('getSparklineForKiez returns empty without DB', async () => {
 			expect(await getSparklineForKiez('mitte-zentrum', 'btw')).toEqual([]);
+		});
+
+		it('getSeriesForGebiet returns empty without DB', async () => {
+			expect(await getSeriesForGebiet('mitte-zentrum', 'kiez', 'agh', 'zweitstimme')).toEqual([]);
+		});
+
+		it('getWinnersBulk returns empty without DB', async () => {
+			expect(await getWinnersBulk('kiez', 'agh', 'zweitstimme')).toEqual([]);
+		});
+
+		it('getAnalytikForReihe returns empty without DB', async () => {
+			expect(await getAnalytikForReihe('agh', 'zweitstimme')).toEqual([]);
+		});
+
+		it('getTrendForReihe returns empty without DB', async () => {
+			expect(await getTrendForReihe('agh', 'zweitstimme')).toEqual([]);
 		});
 
 		afterAll(() => {
@@ -101,6 +120,34 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 			if (!btw25Zweit) return;
 			const top = await getResultsForKiez(btw25Zweit.id, 'mitte-zentrum', 5);
 			expect(top).toEqual([]);
+		});
+
+		it('getSeriesForGebiet liefert eine Zeitreihe für einen echten Kiez', async () => {
+			const rows = await getSeriesForGebiet('adlershof', 'kiez', 'agh', 'zweitstimme');
+			if (rows.length === 0) return;
+			const jahre = new Set(rows.map((r) => r.jahr));
+			expect(jahre.size).toBeGreaterThan(1);
+			expect(rows[0].anteil).toBeGreaterThan(0);
+		});
+
+		it('getWinnersBulk liefert eine Row pro Jahr × Gebiet', async () => {
+			const rows = await getWinnersBulk('kiez', 'agh', 'zweitstimme');
+			if (rows.length === 0) return;
+			const key = `${rows[0].wahlId}-${rows[0].gebietSlug}`;
+			const dupes = rows.filter((r) => `${r.wahlId}-${r.gebietSlug}` === key);
+			expect(dupes.length).toBe(1);
+		});
+
+		it('getAnalytikForReihe + getTrendForReihe liefern konsistente Kiez-Slugs (nach build-wahl-analytik)', async () => {
+			const [analytik, trend] = await Promise.all([
+				getAnalytikForReihe('agh', 'zweitstimme'),
+				getTrendForReihe('agh', 'zweitstimme')
+			]);
+			if (analytik.length === 0) return;
+			const analytikSlugs = new Set(analytik.map((a) => a.kiezSlug));
+			expect(trend.some((t) => analytikSlugs.has(t.kiezSlug))).toBe(true);
+			expect(analytik[0].wechselCount).toBeGreaterThanOrEqual(0);
+			expect(Array.isArray(analytik[0].wechselJahre)).toBe(true);
 		});
 	});
 });
