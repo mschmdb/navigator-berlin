@@ -1,6 +1,7 @@
 /**
  * GET /api/wahl/winners?typ=agh&stimmtyp=zweitstimme&ebene=kiez
  * GET /api/wahl/winners?typ=agh&stimmtyp=zweitstimme&ebene=stimmbezirk&jahr=2023
+ * GET /api/wahl/winners?typ=agh&stimmtyp=zweitstimme&ebene=kiez&partei=CDU
  *
  * Bulk-Winners (kiez/bezirk): stärkste Partei + Anteil pro Jahr × Gebiet
  * einer Wahl-Reihe in einem Response, für die Zeit-Animation (Design Notes:
@@ -14,8 +15,16 @@
  * dieses Jahr) und pro Row `gebiet_slug` = DB-`uwbId` statt Kiez/Bezirk-Slug.
  * Briefwahl-Aggregat-Rows (keine Geometrie) werden ausgefiltert.
  *
- * Ohne Datenbank: 200 mit leerer Liste. Ungültiger `typ`/`stimmtyp`/`ebene`
- * → 400 (valibot).
+ * Partei-Param (Story 9, additiv): `partei` (Picklist = `FINDER_PARTIES`)
+ * schaltet von Sieger- auf Anteils-Rows EINER Partei um -- Response-Shape,
+ * `license`/`source_*`-Felder und Wiederholungswahl-Mapping bleiben 1:1
+ * identisch, nur die zugrunde liegende Query wechselt
+ * (`getParteiAnteileBulk`/`getParteiAnteileStimmbezirk` statt
+ * `getWinnersBulk`/`getStimmbezirksWinners`). `anteil` ist dann der Anteil
+ * der gewählten Partei, `partei` im Response immer der angefragte Kurzname.
+ *
+ * Ohne Datenbank: 200 mit leerer Liste. Ungültiger `typ`/`stimmtyp`/`ebene`/
+ * `partei` → 400 (valibot).
  */
 
 import { json, error } from '@sveltejs/kit';
@@ -24,13 +33,19 @@ import type { RequestHandler } from './$types';
 import { getWahlList, type WahlListItem } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { getWinnersBulk } from '$lib/server/db/queries/wahl/get-winners-bulk.js';
 import { getStimmbezirksWinners } from '$lib/server/db/queries/wahl/get-stimmbezirks-winners.js';
+import {
+	getParteiAnteileBulk,
+	getParteiAnteileStimmbezirk
+} from '$lib/server/db/queries/wahl/get-partei-anteile-bulk.js';
 import { sourceName } from '$lib/server/wahl/source-label.js';
 import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
+import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
 
 const QuerySchema = v.object({
 	typ: v.picklist(['btw', 'agh', 'bvv']),
 	stimmtyp: v.picklist(['erststimme', 'zweitstimme', 'einstimme']),
-	ebene: v.picklist(['kiez', 'bezirk', 'stimmbezirk'])
+	ebene: v.picklist(['kiez', 'bezirk', 'stimmbezirk']),
+	partei: v.optional(v.picklist([...FINDER_PARTIES]))
 });
 
 const JahrSchema = v.pipe(v.string(), v.regex(/^\d{4}$/), v.transform(Number));
@@ -43,7 +58,8 @@ function slugOf(w: { jahr: number; typ: string; stimmtyp: string }): string {
 async function handleStimmbezirk(
 	typ: 'btw' | 'agh' | 'bvv',
 	stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme',
-	jahrRaw: string | null
+	jahrRaw: string | null,
+	partei: string | undefined
 ): Promise<Response> {
 	const jahrParsed = v.safeParse(JahrSchema, jahrRaw);
 	if (!jahrParsed.success) {
@@ -84,7 +100,9 @@ async function handleStimmbezirk(
 				})()
 			: null;
 
-	const rows = await getStimmbezirksWinners(wahl.id);
+	const rows = partei
+		? await getParteiAnteileStimmbezirk(wahl.id, partei)
+		: await getStimmbezirksWinners(wahl.id);
 	const winners = rows
 		.filter((r) => !r.istBriefwahlAggregat)
 		.map((r) => ({
@@ -117,25 +135,28 @@ export const GET: RequestHandler = async ({ url }) => {
 	const parsed = v.safeParse(QuerySchema, {
 		typ: url.searchParams.get('typ'),
 		stimmtyp: url.searchParams.get('stimmtyp'),
-		ebene: url.searchParams.get('ebene')
+		ebene: url.searchParams.get('ebene'),
+		partei: url.searchParams.get('partei') ?? undefined
 	});
 	if (!parsed.success) {
 		throw error(
 			400,
-			'typ, stimmtyp und ebene erforderlich (typ: btw|agh|bvv, ebene: kiez|bezirk|stimmbezirk)'
+			'typ, stimmtyp und ebene erforderlich (typ: btw|agh|bvv, ebene: kiez|bezirk|stimmbezirk, partei optional aus FINDER_PARTIES)'
 		);
 	}
-	const { typ, stimmtyp, ebene } = parsed.output;
+	const { typ, stimmtyp, ebene, partei } = parsed.output;
 
 	if (ebene === 'stimmbezirk') {
-		return handleStimmbezirk(typ, stimmtyp, url.searchParams.get('jahr'));
+		return handleStimmbezirk(typ, stimmtyp, url.searchParams.get('jahr'), partei);
 	}
 
 	const list = await getWahlList();
 	const wahlById = new Map(list.map((w) => [w.id, w]));
 	const wahlenInReihe = list.filter((w) => w.typ === typ && w.stimmtyp === stimmtyp);
 
-	const rows = await getWinnersBulk(ebene, typ, stimmtyp);
+	const rows = partei
+		? await getParteiAnteileBulk(ebene, typ, stimmtyp, partei)
+		: await getWinnersBulk(ebene, typ, stimmtyp);
 
 	const winners = rows.map((r) => {
 		const w = wahlById.get(r.wahlId);

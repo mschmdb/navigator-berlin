@@ -42,9 +42,13 @@ function setPixel(
 
 /**
  * Baut die Pixel-Rohdaten für ein Pattern-Tile (RGBA, `size`×`size`).
- * `solid` füllt vollständig (entspricht optisch reiner Farbfläche);
- * `stripes` horizontale 2px-Streifen, `dots` Punktraster, `diagonal`
- * 45°-Streifen. Nicht gesetzte Pixel bleiben transparent (Alpha 0).
+ * `solid` füllt fast vollständig (segmentiertes Raster aus vollständig
+ * transparenten Blöcken, siehe `shouldPaint` -- eine WIRKLICH uniforme
+ * Fläche war im Muster-Modus nicht von reiner Flächenfarbe (Muster aus) zu
+ * unterscheiden). `stripes` horizontale 2px-Streifen, `dots` Punktraster,
+ * `diagonal`/`diagonal-reverse` 45°-Streifen in Gegenrichtung (Review-Fund
+ * #16: unterscheidet Die Linke von FDP trotz gleicher Streifen-Form). Nicht
+ * gesetzte Pixel bleiben transparent (Alpha 0).
  */
 export function buildPatternImageData(
 	pattern: Pattern,
@@ -65,12 +69,26 @@ export function buildPatternImageData(
 
 function shouldPaint(pattern: Pattern, x: number, y: number): boolean {
 	switch (pattern) {
-		case 'solid':
-			return true;
+		case 'solid': {
+			// Review-Fund #15: ein einzelnes transparentes Pixel alle 4px (6 %
+			// Fläche) war kaum wahrnehmbar. Ein 3×3-Block alle 8px (Tile-Größe
+			// 16 bleibt nahtlos kachelbar, 16/8=2) ergibt ~14 % transparente
+			// Fläche -- klar wahrnehmbar, bleibt aber optisch "fast solid".
+			const bx = x % 8;
+			const by = y % 8;
+			return !(bx < 3 && by < 3);
+		}
 		case 'stripes':
 			return Math.floor(y / 2) % 2 === 0;
 		case 'diagonal':
 			return (x + y) % 4 < 2;
+		case 'diagonal-reverse': {
+			// Gegenrichtung zu 'diagonal' (135° statt 45°): `x - y` statt `x + y`.
+			// `+ DIAGONAL_OFFSET` haelt das Ergebnis vor dem `%` nicht-negativ
+			// (JS `%` liefert bei negativem Dividend ein negatives Ergebnis).
+			const DIAGONAL_OFFSET = PATTERN_TILE_SIZE * 4;
+			return (x - y + DIAGONAL_OFFSET) % 4 < 2;
+		}
 		case 'dots': {
 			const cx = (x % 8) - 3.5;
 			const cy = (y % 8) - 3.5;
@@ -103,10 +121,7 @@ export interface PatternAddImageMap {
  * Idempotent (wie `registerPinIcons`/`registerScoreDots`): bereits
  * registrierte IDs werden übersprungen.
  */
-export function registerPartyPatterns(
-	map: PatternAddImageMap,
-	parteien: readonly string[]
-): void {
+export function registerPartyPatterns(map: PatternAddImageMap, parteien: readonly string[]): void {
 	for (const partei of parteien) {
 		const id = patternImageId(partei);
 		if (map.hasImage(id)) continue;

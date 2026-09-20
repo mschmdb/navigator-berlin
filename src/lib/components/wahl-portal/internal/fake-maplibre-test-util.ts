@@ -11,8 +11,16 @@ export interface FakePaintCall {
 	readonly value: unknown;
 }
 
+export interface FakeFilterCall {
+	readonly layer: string;
+	readonly filter: unknown;
+}
+
 export interface FakeMapLibre {
 	readonly paintCalls: FakePaintCall[];
+	/** Review-Fund #1(b): `setFilter`-Aufrufe (Wechsel-Outline-Layer) für
+	 * Wiring-Tests auf kiez/bezirk, analog zum lokalen Fake im Controller-Test. */
+	readonly filterCalls: FakeFilterCall[];
 	readonly setDataCalls: unknown[];
 	readonly layers: Record<string, Record<string, unknown>>;
 	readonly handlers: Record<string, (...args: unknown[]) => void>;
@@ -26,6 +34,7 @@ export interface FakeMapLibre {
 
 export function fakeMapFactory(): FakeMapLibre {
 	const paintCalls: FakePaintCall[] = [];
+	const filterCalls: FakeFilterCall[] = [];
 	const layers: Record<string, Record<string, unknown>> = {};
 	const sources: Record<string, unknown> = {};
 	const handlers: Record<string, (...args: unknown[]) => void> = {};
@@ -53,12 +62,22 @@ export function fakeMapFactory(): FakeMapLibre {
 		setPaintProperty(layer: string, prop: string, value: unknown) {
 			paintCalls.push({ layer, prop, value });
 		}
+		setFilter(layer: string, filter: unknown) {
+			filterCalls.push({ layer, filter });
+		}
 		getSource(id: string) {
 			return sources[id]
 				? {
 						setData: (data: unknown) => setDataCalls.push(data)
 					}
 				: undefined;
+		}
+		hasImage() {
+			return false;
+		}
+		addImage() {}
+		getCanvas() {
+			return { style: { cursor: '' } };
 		}
 		fitBounds() {}
 		resize() {}
@@ -69,6 +88,7 @@ export function fakeMapFactory(): FakeMapLibre {
 
 	return {
 		paintCalls,
+		filterCalls,
 		setDataCalls,
 		layers,
 		handlers,

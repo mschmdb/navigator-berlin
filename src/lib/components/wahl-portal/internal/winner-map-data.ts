@@ -338,6 +338,63 @@ export function aggregationHinweisText(ebene: WahlPortalEbene): string {
 		: 'Bezirks-Werte: amtliche Bezirks-Summen.';
 }
 
+export type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error';
+
+export interface ActiveWinnersState {
+	readonly status: LoadStatus;
+	readonly hasAnyWinners: boolean;
+	readonly winnersForJahr: readonly WinnerApiRow[];
+	readonly repeatElection: boolean;
+}
+
+/** Vereinheitlicht die stimmbezirk- vs. kiez/bezirk-Sicht auf die aktive
+ * Datenquelle (Datei-Zeilenlimit `winner-map.svelte`). */
+export function deriveActiveWinnersState(params: {
+	readonly isStimmbezirk: boolean;
+	readonly sbStatus: LoadStatus;
+	readonly sbWinners: readonly WinnerApiRow[];
+	readonly kbStatus: LoadStatus;
+	readonly kbWinnersAll: readonly WinnerApiRow[];
+	readonly kbWinnersForJahr: readonly WinnerApiRow[];
+}): ActiveWinnersState {
+	const { isStimmbezirk, sbStatus, sbWinners, kbStatus, kbWinnersAll, kbWinnersForJahr } = params;
+	const winnersForJahr = isStimmbezirk ? sbWinners : kbWinnersForJahr;
+	return {
+		status: isStimmbezirk ? sbStatus : kbStatus,
+		hasAnyWinners: isStimmbezirk ? sbWinners.length > 0 : kbWinnersAll.length > 0,
+		winnersForJahr,
+		repeatElection: isRepeatElectionYear(winnersForJahr)
+	};
+}
+
+export interface KarteVisibility {
+	readonly isErrorState: boolean;
+	readonly isLoadingState: boolean;
+	readonly isEmptyState: boolean;
+	readonly showKarteInhalt: boolean;
+}
+
+/** Zustands-Fassade für den {#if}/{:else if}-Fall in `winner-map.svelte`. */
+export function deriveKarteVisibility(params: {
+	readonly mapShown: boolean;
+	readonly winnersStatus: LoadStatus;
+	readonly geometryStatus: LoadStatus;
+	readonly hasAnyWinners: boolean;
+	readonly jahrIsNull: boolean;
+}): KarteVisibility {
+	const { mapShown, winnersStatus, geometryStatus, hasAnyWinners, jahrIsNull } = params;
+	const isErrorState = !mapShown && (winnersStatus === 'error' || geometryStatus === 'error');
+	const isLoadingState = !isErrorState && !mapShown && winnersStatus !== 'loaded';
+	const isEmptyState =
+		!isErrorState && !isLoadingState && !mapShown && (!hasAnyWinners || jahrIsNull);
+	return {
+		isErrorState,
+		isLoadingState,
+		isEmptyState,
+		showKarteInhalt: !isErrorState && !isLoadingState && !isEmptyState
+	};
+}
+
 /** Geteilte Prozent-Formatierung (Tooltip, Tabelle, Legende). */
 export function formatAnteilPct(anteil: number, decimals: 0 | 1 = 1): string {
 	const pct = anteil * 100;

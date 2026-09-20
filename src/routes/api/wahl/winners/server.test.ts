@@ -36,6 +36,19 @@ describe('GET /api/wahl/winners', () => {
 		expect(body.license).toBeNull();
 	});
 
+	it('lehnt eine unbekannte Partei ab (400)', async () => {
+		await expect(
+			call('?typ=agh&stimmtyp=zweitstimme&ebene=kiez&partei=Piraten')
+		).rejects.toMatchObject({ status: 400 });
+	});
+
+	it('liefert ohne Datenbank 200 mit leerer Winners-Liste für einen partei-Request', async () => {
+		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=kiez&partei=CDU');
+		expect(res.status).toBe(200);
+		const body = await res.json();
+		expect(body.winners).toEqual([]);
+	});
+
 	it('ebene=stimmbezirk ohne jahr → 400', async () => {
 		await expect(call('?typ=agh&stimmtyp=zweitstimme&ebene=stimmbezirk')).rejects.toMatchObject({
 			status: 400
@@ -96,5 +109,31 @@ describe('GET /api/wahl/winners ebene=stimmbezirk (mit lokaler DB)', () => {
 		const body = await res.json();
 		expect(body.geo_slug).toBeNull();
 		expect(body.winners).toEqual([]);
+	});
+
+	it('partei=CDU liefert nur CDU-Anteile je Gebiet (Response-Shape unverändert)', async () => {
+		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=kiez&partei=CDU');
+		expect(res.status).toBe(200);
+		const body = await res.json();
+		if (body.winners.length === 0) return;
+		expect(body.winners.every((w: { partei: string }) => w.partei === 'CDU')).toBe(true);
+		const row = body.winners[0];
+		expect(row).toMatchObject({
+			jahr: expect.any(Number),
+			gebiet_slug: expect.any(String),
+			partei: 'CDU',
+			anteil: expect.any(Number)
+		});
+		expect(row.anteil).toBeGreaterThanOrEqual(0);
+		expect(row.anteil).toBeLessThan(1);
+	});
+
+	it('ebene=stimmbezirk mit partei=CDU liefert nur CDU-Anteile und filtert Briefwahl-Aggregat-Rows', async () => {
+		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=stimmbezirk&jahr=2023&partei=CDU');
+		expect(res.status).toBe(200);
+		const body = await res.json();
+		if (body.winners.length === 0) return;
+		expect(body.winners.every((w: { partei: string }) => w.partei === 'CDU')).toBe(true);
+		expect(body.winners[0].gebiet_slug).toMatch(/^\d{2}W\d{3}$/);
 	});
 });

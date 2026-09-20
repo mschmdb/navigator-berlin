@@ -10,6 +10,7 @@ import { getKiezSharesForWahl } from './get-kiez-shares-for-wahl.js';
 import { getSeriesForGebiet } from './get-series-for-gebiet.js';
 import { getWinnersBulk } from './get-winners-bulk.js';
 import { getAnalytikForReihe, getTrendForReihe } from './get-analytik-for-reihe.js';
+import { getParteiAnteileBulk, getParteiAnteileStimmbezirk } from './get-partei-anteile-bulk.js';
 
 afterAll(async () => {
 	await closeDb();
@@ -60,6 +61,14 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 
 		it('getWinnersBulk returns empty without DB', async () => {
 			expect(await getWinnersBulk('kiez', 'agh', 'zweitstimme')).toEqual([]);
+		});
+
+		it('getParteiAnteileBulk returns empty without DB', async () => {
+			expect(await getParteiAnteileBulk('kiez', 'agh', 'zweitstimme', 'CDU')).toEqual([]);
+		});
+
+		it('getParteiAnteileStimmbezirk returns empty without DB', async () => {
+			expect(await getParteiAnteileStimmbezirk(1, 'CDU')).toEqual([]);
 		});
 
 		it('getAnalytikForReihe returns empty without DB', async () => {
@@ -153,6 +162,32 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 			const key = `${rows[0].wahlId}-${rows[0].gebietSlug}`;
 			const dupes = rows.filter((r) => `${r.wahlId}-${r.gebietSlug}` === key);
 			expect(dupes.length).toBe(1);
+		});
+
+		it('getParteiAnteileBulk liefert nur die angefragte Partei, anteil 0..1 (AGH CDU-Berlin ≈ 0,282 in 2023)', async () => {
+			const rows = await getParteiAnteileBulk('bezirk', 'agh', 'zweitstimme', 'CDU');
+			if (rows.length === 0) return;
+			expect(rows.every((r) => r.parteiKurzname === 'CDU')).toBe(true);
+			for (const r of rows) {
+				expect(r.anteil).toBeGreaterThanOrEqual(0);
+				expect(r.anteil).toBeLessThan(1);
+			}
+			// Berlin-Bezirks-Aggregat existiert nicht als eigene Row -- Referenz
+			// bleibt qualitativ (Muster oben, getSeriesForGebiet-Anker), hier nur
+			// die Partei-Filterung + Wertebereich als Bauplan-Treue prüfen.
+		});
+
+		it('getParteiAnteileStimmbezirk liefert nur die angefragte Partei ohne Briefwahl-Aggregat-Filterung (Filterung bleibt Route-Aufgabe)', async () => {
+			const list = await getWahlList();
+			const agh23 = list.find(
+				(w) => w.jahr === 2023 && w.typ === 'agh' && w.stimmtyp === 'zweitstimme'
+			);
+			if (!agh23) return;
+			const rows = await getParteiAnteileStimmbezirk(agh23.id, 'CDU');
+			if (rows.length === 0) return;
+			expect(rows.every((r) => r.parteiKurzname === 'CDU')).toBe(true);
+			const urne = rows.find((r) => !r.istBriefwahlAggregat);
+			if (urne) expect(urne.uwbId).toMatch(/^\d{2}W\d{3}$/);
 		});
 
 		it('getAnalytikForReihe + getTrendForReihe liefern konsistente Kiez-Slugs (nach build-wahl-analytik)', async () => {

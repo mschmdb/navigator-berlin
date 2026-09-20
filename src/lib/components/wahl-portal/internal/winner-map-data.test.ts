@@ -14,6 +14,8 @@ import {
 	buildTableRows,
 	buildTakeawaySentence,
 	aggregationHinweisText,
+	deriveActiveWinnersState,
+	deriveKarteVisibility,
 	ANTEIL_OPACITY_RAMP,
 	NEUTRAL_OPACITY,
 	NEUTRAL_FARBE,
@@ -25,7 +27,17 @@ function feature(properties: Record<string, unknown>): GeoJSON.Feature {
 	return {
 		type: 'Feature',
 		properties,
-		geometry: { type: 'Polygon', coordinates: [[[0, 0], [0, 1], [1, 1], [0, 0]]] }
+		geometry: {
+			type: 'Polygon',
+			coordinates: [
+				[
+					[0, 0],
+					[0, 1],
+					[1, 1],
+					[0, 0]
+				]
+			]
+		}
 	};
 }
 
@@ -289,15 +301,15 @@ describe('resolveAnzeigeEbene', () => {
 	});
 
 	it('fällt bei manuell gewähltem kiez ohne Daten auf bezirk, rutscht nicht zurück zu stimmbezirk', () => {
-		expect(
-			resolveAnzeigeEbene('kiez', { stimmbezirk: true, kiez: false, bezirk: true })
-		).toBe('bezirk');
+		expect(resolveAnzeigeEbene('kiez', { stimmbezirk: true, kiez: false, bezirk: true })).toBe(
+			'bezirk'
+		);
 	});
 
 	it('bleibt bei bezirk (immer verfügbar)', () => {
-		expect(
-			resolveAnzeigeEbene('bezirk', { stimmbezirk: false, kiez: false, bezirk: true })
-		).toBe('bezirk');
+		expect(resolveAnzeigeEbene('bezirk', { stimmbezirk: false, kiez: false, bezirk: true })).toBe(
+			'bezirk'
+		);
 	});
 });
 
@@ -341,10 +353,7 @@ describe('buildTakeawaySentence', () => {
 	});
 
 	it('ist lint:wahl-konform (keine verbotenen Wertungs-Begriffe)', () => {
-		const sentence = buildTakeawaySentence(
-			[{ gebiet: 'A', partei: 'SPD', anteil: 0.4 }],
-			1
-		);
+		const sentence = buildTakeawaySentence([{ gebiet: 'A', partei: 'SPD', anteil: 0.4 }], 1);
 		expect(sentence).not.toMatch(/hochburg|wahlsieger|erdrutsch/i);
 	});
 });
@@ -369,5 +378,111 @@ describe('aggregationHinweisText', () => {
 describe('NEUTRAL_OPACITY', () => {
 	it('ist 0.1 (Boundary-Vorgabe)', () => {
 		expect(NEUTRAL_OPACITY).toBe(0.1);
+	});
+});
+
+function row(overrides: Partial<WinnerApiRow>): WinnerApiRow {
+	return {
+		jahr: 2023,
+		gebiet_slug: 'a',
+		partei: 'SPD',
+		farbe_hex: '#ignored',
+		anteil: 0.4,
+		is_repeat_election: false,
+		parent_slug: null,
+		...overrides
+	};
+}
+
+describe('deriveActiveWinnersState', () => {
+	it('liest im Stimmbezirks-Modus aus den sb-Feldern, sonst aus den kb-Feldern', () => {
+		const sbRows = [row({ is_repeat_election: true })];
+		const kbRows = [row({})];
+		const sb = deriveActiveWinnersState({
+			isStimmbezirk: true,
+			sbStatus: 'loaded',
+			sbWinners: sbRows,
+			kbStatus: 'error',
+			kbWinnersAll: [],
+			kbWinnersForJahr: kbRows
+		});
+		expect(sb).toEqual({
+			status: 'loaded',
+			hasAnyWinners: true,
+			winnersForJahr: sbRows,
+			repeatElection: true
+		});
+
+		const kb = deriveActiveWinnersState({
+			isStimmbezirk: false,
+			sbStatus: 'error',
+			sbWinners: [],
+			kbStatus: 'loaded',
+			kbWinnersAll: kbRows,
+			kbWinnersForJahr: kbRows
+		});
+		expect(kb).toEqual({
+			status: 'loaded',
+			hasAnyWinners: true,
+			winnersForJahr: kbRows,
+			repeatElection: false
+		});
+	});
+
+	it('hasAnyWinners bleibt false ohne Rows, kein Crash', () => {
+		const state = deriveActiveWinnersState({
+			isStimmbezirk: false,
+			sbStatus: 'idle',
+			sbWinners: [],
+			kbStatus: 'loaded',
+			kbWinnersAll: [],
+			kbWinnersForJahr: []
+		});
+		expect(state.hasAnyWinners).toBe(false);
+		expect(state.repeatElection).toBe(false);
+	});
+});
+
+describe('deriveKarteVisibility', () => {
+	it('zeigt Error nur vor dem Erst-Zeigen der Karte', () => {
+		const visible = deriveKarteVisibility({
+			mapShown: false,
+			winnersStatus: 'error',
+			geometryStatus: 'loaded',
+			hasAnyWinners: false,
+			jahrIsNull: false
+		});
+		expect(visible.isErrorState).toBe(true);
+		expect(visible.showKarteInhalt).toBe(false);
+
+		const afterShown = deriveKarteVisibility({
+			mapShown: true,
+			winnersStatus: 'error',
+			geometryStatus: 'loaded',
+			hasAnyWinners: false,
+			jahrIsNull: false
+		});
+		expect(afterShown.isErrorState).toBe(false);
+		expect(afterShown.showKarteInhalt).toBe(true);
+	});
+
+	it('Loading vor dem ersten Zeigen, Empty ohne Winners/Jahr', () => {
+		const loading = deriveKarteVisibility({
+			mapShown: false,
+			winnersStatus: 'loading',
+			geometryStatus: 'idle',
+			hasAnyWinners: false,
+			jahrIsNull: false
+		});
+		expect(loading.isLoadingState).toBe(true);
+
+		const empty = deriveKarteVisibility({
+			mapShown: false,
+			winnersStatus: 'loaded',
+			geometryStatus: 'loaded',
+			hasAnyWinners: false,
+			jahrIsNull: false
+		});
+		expect(empty.isEmptyState).toBe(true);
 	});
 });

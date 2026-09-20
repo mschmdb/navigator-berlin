@@ -122,6 +122,43 @@ describe('StimmbezirkLoader.loadWinners', () => {
 		expect(loader.winnersResponse?.winners[0].partei).toBe('SPD');
 	});
 
+	it('Story 9: partei-Param hängt an die URL an und cached unabhängig vom Gewinner-Key', async () => {
+		let calls = 0;
+		let lastUrl = '';
+		const fetchFn = (async (input: RequestInfo | URL) => {
+			calls++;
+			lastUrl = typeof input === 'string' ? input : input.toString();
+			return new Response(JSON.stringify(WINNERS), {
+				status: 200,
+				headers: { 'content-type': 'application/json' }
+			});
+		}) as typeof fetch;
+		const loader = new StimmbezirkLoader(fetchFn);
+		await loader.loadWinners('agh', 'zweitstimme', 2023, () => false, 'CDU');
+		expect(lastUrl).toContain('partei=CDU');
+		await loader.loadWinners('agh', 'zweitstimme', 2023, () => false);
+		expect(calls).toBe(2);
+	});
+
+	it('Review-Fund #9: zwei parallele loadWinners desselben Keys feuern nur EINEN Fetch (In-Flight-Dedupe)', async () => {
+		let calls = 0;
+		const fetchFn = (async () => {
+			calls++;
+			await new Promise((r) => setTimeout(r, 0));
+			return new Response(JSON.stringify(WINNERS), {
+				status: 200,
+				headers: { 'content-type': 'application/json' }
+			});
+		}) as typeof fetch;
+		const loader = new StimmbezirkLoader(fetchFn);
+		await Promise.all([
+			loader.loadWinners('agh', 'zweitstimme', 2023, () => false),
+			loader.loadWinners('agh', 'zweitstimme', 2023, () => false)
+		]);
+		expect(calls).toBe(1);
+		expect(loader.winnersResponse?.winners[0].partei).toBe('SPD');
+	});
+
 	it('malformed Response führt in den error-Status statt zu crashen', async () => {
 		const fetchFn = (async () =>
 			new Response(JSON.stringify({ nope: true }), {
