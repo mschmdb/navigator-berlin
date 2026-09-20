@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Accordion } from 'bits-ui';
+	import { ChevronDown } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import { getWahlPortalState, currentJahr } from '$lib/state/wahl-portal-context.svelte.js';
 	import {
@@ -194,38 +195,44 @@
 			{#each berlinPanel.rows as row (row.partei)}
 				<li
 					data-testid={`ergebnis-panel-row-${row.partei}`}
-					class="flex items-center gap-2 font-mono text-sm text-ink"
+					class="flex flex-col gap-1 font-mono text-sm text-ink"
 				>
-					<span
-						aria-hidden="true"
-						class="h-3 w-3 shrink-0 rounded-full"
-						style:background-color={row.farbeHex}
-					></span>
-					<span class="w-24 shrink-0 truncate">{row.partei}</span>
-					<span
-						aria-hidden="true"
-						class="h-2 flex-1 overflow-hidden rounded-full bg-bg-muted"
-					>
+					<span class="flex items-center gap-2">
+						<span
+							aria-hidden="true"
+							class="h-3 w-3 shrink-0 rounded-full"
+							style:background-color={row.farbeHex}
+						></span>
+						<span class="min-w-0 flex-1 truncate">{row.partei}</span>
+						<span
+							data-testid={`ergebnis-panel-anteil-${row.partei}`}
+							class="w-16 shrink-0 text-right tabular-nums"
+						>
+							{row.anteilLabel}
+						</span>
+						{#if row.deltaLabel}
+							<span
+								data-testid={`ergebnis-panel-delta-${row.partei}`}
+								class="w-20 shrink-0 text-right tabular-nums text-ink-subtle"
+							>
+								{row.deltaLabel}
+							</span>
+						{:else}
+							<!-- Platzhalter ohne Testid: haelt die Anteils-Spalte in Flucht,
+							     wenn eine Partei kein Vorwahl-Delta hat (z. B. neu angetreten). -->
+							<span aria-hidden="true" class="w-20 shrink-0"></span>
+						{/if}
+					</span>
+					<!-- Anteils-Balken in voller Breite unter der Zeile: die alte
+					     Inline-Variante kollabierte im schmalen Panel auf ~0px (Live-Fund
+					     Matze 20.09.: "angeschnittener Extra-Dot" bei Zeilen ohne Delta). -->
+					<span aria-hidden="true" class="ml-5 h-1.5 overflow-hidden rounded-full bg-bg-muted">
 						<span
 							class="block h-full rounded-full"
 							style:width={`${Math.min(Math.max(row.anteil * 100, 0), 100)}%`}
 							style:background-color={row.farbeHex}
 						></span>
 					</span>
-					<span
-						data-testid={`ergebnis-panel-anteil-${row.partei}`}
-						class="w-16 shrink-0 text-right tabular-nums"
-					>
-						{row.anteilLabel}
-					</span>
-					{#if row.deltaLabel}
-						<span
-							data-testid={`ergebnis-panel-delta-${row.partei}`}
-							class="w-20 shrink-0 text-right tabular-nums text-ink-subtle"
-						>
-							{row.deltaLabel}
-						</span>
-					{/if}
 				</li>
 			{/each}
 		</ol>
@@ -265,38 +272,44 @@
 					{#each gebietPanel.rows as row (row.partei)}
 						<li
 							data-testid={`ergebnis-panel-gebiet-row-${row.partei}`}
-							class="flex items-center gap-2 font-mono text-sm text-ink"
+							class="flex flex-col gap-1 font-mono text-sm text-ink"
 						>
-							<span
-								aria-hidden="true"
-								class="h-3 w-3 shrink-0 rounded-full"
-								style:background-color={row.farbeHex}
-							></span>
-							<span class="w-24 shrink-0 truncate">{row.partei}</span>
-							<span
-								aria-hidden="true"
-								class="h-2 flex-1 overflow-hidden rounded-full bg-bg-muted"
-							>
+							<span class="flex items-center gap-2">
+								<span
+									aria-hidden="true"
+									class="h-3 w-3 shrink-0 rounded-full"
+									style:background-color={row.farbeHex}
+								></span>
+								<span class="min-w-0 flex-1 truncate">{row.partei}</span>
+								<span
+									data-testid={`ergebnis-panel-gebiet-anteil-${row.partei}`}
+									class="w-16 shrink-0 text-right tabular-nums"
+								>
+									{row.anteilLabel}
+								</span>
+								{#if row.deltaLabel}
+									<span
+										data-testid={`ergebnis-panel-gebiet-delta-${row.partei}`}
+										class="w-20 shrink-0 text-right tabular-nums text-ink-subtle"
+									>
+										{row.deltaLabel}
+									</span>
+								{:else}
+									<!-- Platzhalter ohne Testid: haelt die Anteils-Spalte in Flucht,
+									     wenn eine Partei kein Vorwahl-Delta hat (z. B. neu angetreten). -->
+									<span aria-hidden="true" class="w-20 shrink-0"></span>
+								{/if}
+							</span>
+							<!-- Anteils-Balken in voller Breite unter der Zeile: die alte
+							     Inline-Variante kollabierte im schmalen Panel auf ~0px (Live-Fund
+							     Matze 20.09.: "angeschnittener Extra-Dot" bei Zeilen ohne Delta). -->
+							<span aria-hidden="true" class="ml-5 h-1.5 overflow-hidden rounded-full bg-bg-muted">
 								<span
 									class="block h-full rounded-full"
 									style:width={`${Math.min(Math.max(row.anteil * 100, 0), 100)}%`}
 									style:background-color={row.farbeHex}
 								></span>
 							</span>
-							<span
-								data-testid={`ergebnis-panel-gebiet-anteil-${row.partei}`}
-								class="w-16 shrink-0 text-right tabular-nums"
-							>
-								{row.anteilLabel}
-							</span>
-							{#if row.deltaLabel}
-								<span
-									data-testid={`ergebnis-panel-gebiet-delta-${row.partei}`}
-									class="w-20 shrink-0 text-right tabular-nums text-ink-subtle"
-								>
-									{row.deltaLabel}
-								</span>
-							{/if}
 						</li>
 					{/each}
 				</ol>
@@ -309,9 +322,14 @@
 			<Accordion.Header>
 				<Accordion.Trigger
 					data-testid="ergebnis-panel-disclosure-trigger"
-					class="flex w-full items-center justify-between gap-4 py-2 text-left font-sans text-sm font-semibold text-ink hover:text-accent"
+					class="group flex w-full items-center justify-between gap-4 py-2 text-left font-sans text-sm font-semibold text-ink hover:text-accent"
 				>
 					Woher kommen diese Zahlen?
+					<ChevronDown
+						size={16}
+						aria-hidden="true"
+						class="shrink-0 transition-transform group-data-[state=open]:rotate-180"
+					/>
 				</Accordion.Trigger>
 			</Accordion.Header>
 			<Accordion.Content
