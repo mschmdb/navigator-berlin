@@ -33,6 +33,7 @@
 	import PortalQuellen from '$lib/components/wahl-portal/portal-quellen.svelte';
 	import WinnerMap from '$lib/components/wahl-portal/winner-map.svelte';
 	import WechselKapitel from '$lib/components/wahl-portal/wechsel-kapitel.svelte';
+	import TrendsKapitel from '$lib/components/wahl-portal/trends-kapitel.svelte';
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
@@ -108,14 +109,9 @@
 
 	const KARTE_CHAPTER = { id: 'karte', label: 'Karte' } as const;
 	const WECHSEL_CHAPTER = { id: 'wechsel', label: 'Wechsel' } as const;
+	const TRENDS_CHAPTER = { id: 'trends', label: 'Trends' } as const;
 
 	const PLACEHOLDER_CHAPTERS = [
-		{
-			id: 'trends',
-			label: 'Trends',
-			title: 'Trends',
-			takeaway: 'Hier entstehen Trend- und Volatilitäts-Karten je Partei und Gebiet.'
-		},
 		{
 			id: 'kontraste',
 			label: 'Kontraste',
@@ -146,6 +142,7 @@
 		{ id: 'ueberblick', label: 'Überblick' },
 		KARTE_CHAPTER,
 		WECHSEL_CHAPTER,
+		TRENDS_CHAPTER,
 		...PLACEHOLDER_CHAPTERS.map((c) => ({ id: c.id, label: c.label })),
 		{ id: 'methodik', label: 'Methodik' }
 	];
@@ -235,6 +232,10 @@
 		testid="wahl-portal-chapter-wechsel"
 	>
 		<WechselKapitel />
+	</KapitelSection>
+
+	<KapitelSection id={TRENDS_CHAPTER.id} title="Trends und Volatilität" testid="wahl-portal-chapter-trends">
+		<TrendsKapitel />
 	</KapitelSection>
 
 	{#each PLACEHOLDER_CHAPTERS as chapter (chapter.id)}

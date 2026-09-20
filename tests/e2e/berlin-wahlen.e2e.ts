@@ -344,8 +344,11 @@ test('Winner-Map (Ebene stimmbezirk): Default-Ansicht rendert die Stimmbezirks-K
 	await expect(page.getByTestId('winner-map-takeaway')).toContainText('SPD');
 	await expect(page.getByTestId('winner-map-fallback-hinweis')).not.toBeVisible();
 
-	await page.getByTestId('table-toggle').click();
-	await expect(page.getByTestId('data-table')).toContainText('Stimmbezirk 01W100');
+	// Kapitel-Scoping (Story 8): das Trends-Kapitel mountet ab hier auf jeder
+	// Seite mit und hat eine eigene Tabellen-Alternative mit demselben Testid.
+	const karteChapter = page.getByTestId('wahl-portal-chapter-karte');
+	await karteChapter.getByTestId('table-toggle').click();
+	await expect(karteChapter.getByTestId('data-table')).toContainText('Stimmbezirk 01W100');
 });
 
 test('Winner-Map (Ebene stimmbezirk): Ebenen-Wechsel zu kiez aktualisiert die bestehende Karte', async ({
@@ -614,6 +617,76 @@ test('Wechsel-Kapitel: rendert die Liste aus der Fixture (Gebiet, Jahr, Von -> N
 	await expect(page.getByTestId('wechsel-kapitel-von')).toContainText('SPD');
 	await expect(page.getByTestId('wechsel-kapitel-nach')).toContainText('GRÜNE');
 	await expect(page.getByTestId('wechsel-kapitel-canvas')).toBeVisible();
+});
+
+// Story 8 (Trends/Sankey): eigene Analytik-Fixture. `mv-nord` deckt sich mit
+// der WINNERS_AGH_KIEZ-Fixture (Story 4) oben, damit Geometrie + Analytik
+// dasselbe Gebiet treffen.
+const ANALYTIK_AGH_KIEZ = {
+	ebene: 'kiez',
+	typ: 'agh',
+	stimmtyp: 'zweitstimme',
+	gebiete: [
+		{
+			kiez_slug: 'mv-nord',
+			wechsel_count: 1,
+			wechsel_jahre: [2023],
+			volatilitaet: 0.08,
+			trends: [{ partei: 'SPD', slope: 0.015 }]
+		}
+	],
+	license: 'dl-de/by-2.0',
+	source_url: 'https://example.invalid/agh23',
+	source_name: 'Amt für Statistik Berlin-Brandenburg'
+};
+
+test('Trends-Kapitel: rendert Karte + Sankey aus Fixtures, Toggle wechselt ohne neuen Analytik-Request', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	// WINNERS_WECHSEL_KAPITEL (3 Kalenderjahre je Gebiet, 2 effektive Spalten
+	// nach der Wiederholungs-Regel) statt WINNERS_AGH_KIEZ (nur 2 Kalenderjahre
+	// -> kollabiert auf 1 effektive Spalte, kein Übergang für den Sankey).
+	await page.route('**/api/wahl/winners**', (route) =>
+		route.fulfill({ json: WINNERS_WECHSEL_KAPITEL })
+	);
+	let analytikRequestCount = 0;
+	await page.route('**/api/wahl/analytik**', (route) => {
+		analytikRequestCount++;
+		return route.fulfill({ json: ANALYTIK_AGH_KIEZ });
+	});
+
+	await page.goto('/berlin-wahlen');
+	await expect(page.getByTestId('wahl-portal-chapter-trends')).toBeVisible();
+
+	const trendsChapter = page.getByTestId('wahl-portal-chapter-trends');
+	await expect(trendsChapter.getByTestId('trends-kapitel-canvas')).toBeVisible();
+	await expect(trendsChapter.getByTestId('trends-kapitel-takeaway')).toContainText('SPD');
+	expect(analytikRequestCount).toBe(1);
+
+	// Sankey ist eingebettet und rendert eigenständig aus derselben (bereits
+	// geladenen) Bulk-Winners-Response, kein zweiter Winners-Request nötig.
+	await expect(trendsChapter.getByTestId('sankey-wahljahre-svg')).toBeVisible();
+	const sankeyTabelle = page.getByTestId('sankey-wahljahre').getByTestId('table-toggle');
+	await sankeyTabelle.click();
+	// WINNERS_WECHSEL_KAPITEL (mv-nord: 2016 SPD -> 2021 GRÜNE -> 2023(W)
+	// GRÜNE) kollabiert auf die effektive Reihe 2016 SPD -> 2023 GRÜNE -- die
+	// Tabelle muss die konkreten Fixture-Werte zeigen, nicht nur die
+	// Überschrift „Gebiete" (Review Triage Log #22).
+	const sankeyDataTable = page.getByTestId('sankey-wahljahre').getByTestId('data-table');
+	await expect(sankeyDataTable).toContainText('Gebiete');
+	await expect(sankeyDataTable).toContainText('SPD');
+	await expect(sankeyDataTable).toContainText('GRÜNE');
+	await expect(sankeyDataTable).toContainText('2023');
+	await expect(sankeyDataTable).toContainText('1');
+
+	// Toggle Trend -> Volatilität: nur Paint-Wechsel, kein neuer Analytik-Request.
+	await trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet').click();
+	await expect(trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet')).toHaveAttribute(
+		'aria-checked',
+		'true'
+	);
+	expect(analytikRequestCount).toBe(1);
 });
 
 // Review-Fund VG-3/BH-4: die echte matchMedia-Verdrahtung von reduced motion
