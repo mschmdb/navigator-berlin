@@ -44,6 +44,92 @@ test('Kapitel-Nav: Klick aktiviert das geklickte Kapitel', async ({ page }) => {
 	);
 });
 
+// Story 10 (Steuerungs-Klarheit): die Wahl-Reihe ist jetzt der einzige
+// seitenweite Zustand, sichtbar über eine eigene sticky Leiste; Jahr/Ebene
+// zogen als Karten-Controls in das Karte-Kapitel um. Deckt die AC "Sticky
+// bleibt nach Scroll sichtbar, Reihen-Wechsel wirkt ohne Zurückscrollen" ab.
+test('Sticky-Reihen-Leiste bleibt nach Scroll sichtbar; Reihen-Wechsel aktualisiert die Kontext-Badges ohne Zurückscrollen', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: { winners: [] } }));
+	await page.goto('/berlin-wahlen');
+
+	await expect(page.getByTestId('wahl-portal-chapter-wechsel')).toContainText(
+		'Abgeordnetenhaus · alle Wahljahre · Kiez-Ebene'
+	);
+	// Review Triage Log #2: Trends hat einen eigenen Sankey-Ebenen-Toggle,
+	// das Badge nennt hier deshalb keine Ebene mehr. Scope aufs Badge selbst:
+	// der Sankey-eigene Toggle nennt "Kiez-Ebene" in seiner Fußnote (siehe
+	// sankey-wahljahre.svelte), das ist ein anderer, gültiger Textbestandteil
+	// desselben Kapitels.
+	const trendsBadge = page
+		.getByTestId('wahl-portal-chapter-trends')
+		.getByTestId('kapitel-kontext-badge');
+	await expect(trendsBadge).toContainText('Abgeordnetenhaus · alle Wahljahre');
+	await expect(trendsBadge).not.toContainText('Kiez-Ebene');
+
+	// Review Triage Log #4: Extreme-Badge folgt dem Karten-Jahr (Default 2023
+	// aus der agh-Fixture). Vor dem Reihen-Wechsel geprüft, weil 2021 nur zu
+	// den Jahr-Optionen der agh-Reihe passt.
+	await expect(page.getByTestId('wahl-portal-chapter-extreme-gebiete')).toContainText(
+		'Wahl 2023'
+	);
+	await page.getByTestId('steuerleiste-jahr-2021').click();
+	await expect(page.getByTestId('wahl-portal-chapter-extreme-gebiete')).toContainText(
+		'Wahl 2021'
+	);
+
+	// Ans Seitenende scrollen (Methodik-Kapitel): die Reihen-Leiste bleibt
+	// sticky sichtbar, Jahr/Ebene (jetzt im Karte-Kapitel) scrollen mit.
+	await page.getByTestId('wahl-portal-chapter-methodik').scrollIntoViewIfNeeded();
+	await expect(page.getByTestId('reihen-leiste')).toBeInViewport();
+	// Review Triage Log #6: `methodik`-in-Viewport statt `not.toBeInViewport`
+	// auf `ueberblick` -- letzteres ist anfällig für scrollY-Clamping (ein
+	// Reihen-Wechsel kann die Dokument-Höhe schrumpfen, wodurch der Browser
+	// scrollY passiv auf die neue Maximalhöhe klemmt und `ueberblick` wieder
+	// in den Viewport rutscht, ohne dass die Seite wirklich gesprungen ist).
+	await expect(page.getByTestId('wahl-portal-chapter-methodik')).toBeInViewport();
+
+	// Review Triage Log #5: Kapitel-Nav liegt unter der Reihen-Leiste, keine
+	// Überdeckung (-1px Toleranz für Subpixel-Rundung).
+	const reihenLeisteBox = await page.getByTestId('reihen-leiste').boundingBox();
+	const kapitelNavBox = await page.getByTestId('kapitel-nav').boundingBox();
+	if (!reihenLeisteBox || !kapitelNavBox) throw new Error('Sticky-Leisten nicht renderbar');
+	expect(kapitelNavBox.y).toBeGreaterThanOrEqual(
+		reihenLeisteBox.y + reihenLeisteBox.height - 1
+	);
+
+	// Reihen-Wechsel wirkt sofort auf alle Kapitel (Karte, Wechsel, Trends,
+	// Extreme), ohne dass die Seite zurück nach oben springt. Nicht per
+	// scrollY-Pixelvergleich geprüft: ein Reihen-Wechsel kann die
+	// Dokument-Höhe verändern (andere Kapitel-Inhalte je Reihe), wodurch der
+	// Browser scrollY passiv auf die neue Maximalhöhe klemmt -- das ist kein
+	// App-Bug. Die eigentliche AC (kein Sprung zum Seitenanfang) prüft die
+	// Sichtbarkeit von Leiste vs. Methodik-Kapitel.
+	await page.getByTestId('steuerleiste-reihe-btw').click();
+	await expect(page).toHaveURL(/reihe=btw/);
+	await expect(page.getByTestId('wahl-portal-chapter-wechsel')).toContainText(
+		'Bundestag · alle Wahljahre · Kiez-Ebene'
+	);
+	await expect(trendsBadge).toContainText('Bundestag · alle Wahljahre');
+	await expect(trendsBadge).not.toContainText('Kiez-Ebene');
+	await expect(page.getByTestId('reihen-leiste')).toBeInViewport();
+	await expect(page.getByTestId('wahl-portal-chapter-methodik')).toBeInViewport();
+
+	// Review Triage Log #5: Anker-Sprung landet nicht unter dem Sticky-Stapel
+	// -- die Trends-Überschrift steht unterhalb der Kapitel-Nav-Unterkante.
+	await page.getByTestId('kapitel-nav-link-trends').click();
+	const trendsHeadingBox = await page.locator('#trends-h').boundingBox();
+	const kapitelNavBoxAfterJump = await page.getByTestId('kapitel-nav').boundingBox();
+	if (!trendsHeadingBox || !kapitelNavBoxAfterJump) {
+		throw new Error('Trends-Überschrift oder Kapitel-Nav nicht renderbar');
+	}
+	expect(trendsHeadingBox.y).toBeGreaterThanOrEqual(
+		kapitelNavBoxAfterJump.y + kapitelNavBoxAfterJump.height - 1
+	);
+});
+
 // Story 4 (Winner-Map): reale Geometrie kommt aus static/layers (kein Mock nötig,
 // echte MANIFEST.json + lor-bezirksregion.geojson liegen im Preview-Build).
 // `mv-nord` und `marienfelde-nord` sind eindeutige BZR-Namen (kein Slug-Suffix).

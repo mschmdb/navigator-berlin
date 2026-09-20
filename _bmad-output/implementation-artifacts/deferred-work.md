@@ -40,3 +40,9 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/9-partei-tabs-und-small-multiples.md`
   summary: Nach Freeze-Ende (22.09. 02:00) auf Prod einmalig die vier BVV-Wahlen neu ingesten (pnpm data:wahl-fetch -- --only=bvv11 / bvv16 / bvv21 / bvv23) plus data:wahl-kiez und data:wahl-analytik, damit die reparierten Stimmbezirks-Anteile (vorher ueberall 0) auch in Prod landen.
   evidence: BVV-Anteil-Bug 20.09. (transformSbbRow gueltig-Slot); der prebuild fetcht nur, wenn data:wahl-check KEINE Daten findet, ein normaler Deploy repariert die Prod-Rows daher nicht.
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/10-steuerungs-klarheit.md`
+  summary: Steuerungs-Haertung als Sammel-Refactor; Kontext-Badge-Testid instanz-suffixen (dreifach identisch auf der Seite, Strict-Mode-Falle), Label-ids der Radiogroups per $props.id() instanzbinden (brechen bei zweitem Mount), Sticky-Offsets (h-10 / +2.5rem / 2x +5.5rem / winner-map-Panel) auf eine gemeinsame CSS-Custom-Property ziehen.
+  evidence: Review Story 10 (Triage #8/#9/#10); heute kollisionsfrei (Grep-verifiziert, E2E scoped ueber Kapitel-Testids), reine Vorsorge ohne Verhaltens-Aenderung.
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/10-steuerungs-klarheit.md`
+  summary: a11y-E2E-Suite reparieren; /_dev/wortmarke fehlt das <title>-Element (axe document-title, serious), /explore Escape-Selection-Test laeuft ins Timeout, Root-axe-Test flakt unter Parallel-Last (solo gruen).
+  evidence: Verifikationslaeufe Story 10 (20.09.); alle drei ausserhalb des Story-Scopes und vorbestehend bzw. lastabhaengig, Portal-Seiten (berlin-wahlen) durchgehend gruen.
