@@ -28,4 +28,23 @@ describe('KapitelSection', () => {
 		await expect.element(page.getByTestId('probe-section-takeaway')).toHaveTextContent('Kurzsatz');
 		await expect.element(page.getByTestId('probe-section-body')).toBeInTheDocument();
 	});
+
+	it('Story 12: rendert ohne subtext-Prop keinen Subtext-Block', async () => {
+		render(KapitelSection, { id: 'y', title: 'Y', testid: 'y-section' });
+		const subtext = page.getByTestId('y-section-subtext');
+		await expect.element(subtext).not.toBeInTheDocument();
+	});
+
+	it('Story 12: rendert den subtext als <p> zwischen Überschrift und Inhalt', async () => {
+		render(KapitelSection, {
+			id: 'karte',
+			title: 'Karte',
+			testid: 'wahl-portal-chapter-karte',
+			subtext: 'Erklär-Satz zum Kapitel.'
+		});
+		const subtext = page.getByTestId('wahl-portal-chapter-karte-subtext');
+		await expect.element(subtext).toHaveTextContent('Erklär-Satz zum Kapitel.');
+		const el = (await subtext.element()) as HTMLElement;
+		expect(el.tagName).toBe('P');
+	});
 });

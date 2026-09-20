@@ -42,10 +42,54 @@ test('Kapitel-Nav: Klick aktiviert das geklickte Kapitel', async ({ page }) => {
 	await page.goto('/berlin-wahlen');
 	await page.getByTestId('kapitel-nav-link-trends').click();
 	await expect(page.getByTestId('kapitel-nav-link-trends')).toHaveAttribute('aria-current', 'true');
-	await expect(page.getByTestId('kapitel-nav-link-kontraste')).not.toHaveAttribute(
+	await expect(page.getByTestId('kapitel-nav-link-wechsel')).not.toHaveAttribute(
 		'aria-current',
 		'true'
 	);
+});
+
+// Story 12: eigener Nav-Eintrag „Übergänge" für das aus dem Trends-Kapitel
+// ausgezogene Sankey-Kapitel -- Klick scrollt hin, Anker landet unter dem
+// Sticky-Stapel (Review Triage Log #5-Muster).
+test('Kapitel-Nav: Klick auf „Übergänge" scrollt zum Sankey-Kapitel, Anker landet unter der Sticky-Nav', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: { winners: [] } }));
+	// Review Triage Log #10: das Trends-Kapitel der selben Seite lädt Analytik
+	// unabhängig vom aktiven Nav-Eintrag -- ohne Stub liefe es real und würde
+	// den Test flaky/langsam machen.
+	await page.route('**/api/wahl/analytik**', (route) => route.fulfill({ json: ANALYTIK_AGH_KIEZ }));
+	await page.goto('/berlin-wahlen');
+
+	await page.getByTestId('kapitel-nav-link-uebergaenge').click();
+	await expect(page.getByTestId('kapitel-nav-link-uebergaenge')).toHaveAttribute(
+		'aria-current',
+		'true'
+	);
+	await expect(page.getByTestId('wahl-portal-chapter-uebergaenge')).toBeInViewport();
+
+	const headingBox = await page.locator('#uebergaenge-h').boundingBox();
+	const kapitelNavBox = await page.getByTestId('kapitel-nav').boundingBox();
+	if (!headingBox || !kapitelNavBox) {
+		throw new Error('Übergänge-Überschrift oder Kapitel-Nav nicht renderbar');
+	}
+	expect(headingBox.y).toBeGreaterThanOrEqual(kapitelNavBox.y + kapitelNavBox.height - 1);
+});
+
+// Review Triage Log #9: kein Test prüfte bisher, dass jedes Kapitel seinen
+// Erklär-Subtext zeigt (AC „jedes Kapitel bekommt 1-2 Sätze Subtext").
+test('Kapitel-Subtexte: alle sechs Kapitel zeigen ihren Erklär-Subtext', async ({ page }) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: { winners: [] } }));
+	await page.route('**/api/wahl/analytik**', (route) => route.fulfill({ json: ANALYTIK_AGH_KIEZ }));
+	await page.goto('/berlin-wahlen');
+
+	const chapterIds = ['karte', 'wechsel', 'trends', 'uebergaenge', 'extreme-gebiete', 'methodik'];
+	for (const id of chapterIds) {
+		await expect(page.getByTestId(`wahl-portal-chapter-${id}-subtext`)).toBeVisible();
+	}
+	await expect(page.getByTestId('wahl-portal-chapter-karte-subtext')).toContainText('Gewinner-Tab');
 });
 
 // Story 10 (Steuerungs-Klarheit): die Wahl-Reihe ist jetzt der einzige
@@ -62,27 +106,20 @@ test('Sticky-Reihen-Leiste bleibt nach Scroll sichtbar; Reihen-Wechsel aktualisi
 	await expect(page.getByTestId('wahl-portal-chapter-wechsel')).toContainText(
 		'Abgeordnetenhaus · alle Wahljahre · Kiez-Ebene'
 	);
-	// Review Triage Log #2: Trends hat einen eigenen Sankey-Ebenen-Toggle,
-	// das Badge nennt hier deshalb keine Ebene mehr. Scope aufs Badge selbst:
-	// der Sankey-eigene Toggle nennt "Kiez-Ebene" in seiner Fußnote (siehe
-	// sankey-wahljahre.svelte), das ist ein anderer, gültiger Textbestandteil
-	// desselben Kapitels.
+	// Story 12/Review Triage Log #11: der Sankey (mit seinem eigenen
+	// Kiez/Bezirk-Toggle) zog in ein eigenes Kapitel um -- das Trends-Kapitel
+	// ist reine Kiez-Ebene, das Badge nennt sie deshalb wieder.
 	const trendsBadge = page
 		.getByTestId('wahl-portal-chapter-trends')
 		.getByTestId('kapitel-kontext-badge');
-	await expect(trendsBadge).toContainText('Abgeordnetenhaus · alle Wahljahre');
-	await expect(trendsBadge).not.toContainText('Kiez-Ebene');
+	await expect(trendsBadge).toContainText('Abgeordnetenhaus · alle Wahljahre · Kiez-Ebene');
 
 	// Review Triage Log #4: Extreme-Badge folgt dem Karten-Jahr (Default 2023
 	// aus der agh-Fixture). Vor dem Reihen-Wechsel geprüft, weil 2021 nur zu
 	// den Jahr-Optionen der agh-Reihe passt.
-	await expect(page.getByTestId('wahl-portal-chapter-extreme-gebiete')).toContainText(
-		'Wahl 2023'
-	);
+	await expect(page.getByTestId('wahl-portal-chapter-extreme-gebiete')).toContainText('Wahl 2023');
 	await page.getByTestId('steuerleiste-jahr-2021').click();
-	await expect(page.getByTestId('wahl-portal-chapter-extreme-gebiete')).toContainText(
-		'Wahl 2021'
-	);
+	await expect(page.getByTestId('wahl-portal-chapter-extreme-gebiete')).toContainText('Wahl 2021');
 
 	// Ans Seitenende scrollen (Methodik-Kapitel): die Reihen-Leiste bleibt
 	// sticky sichtbar, Jahr/Ebene (jetzt im Karte-Kapitel) scrollen mit.
@@ -100,9 +137,7 @@ test('Sticky-Reihen-Leiste bleibt nach Scroll sichtbar; Reihen-Wechsel aktualisi
 	const reihenLeisteBox = await page.getByTestId('reihen-leiste').boundingBox();
 	const kapitelNavBox = await page.getByTestId('kapitel-nav').boundingBox();
 	if (!reihenLeisteBox || !kapitelNavBox) throw new Error('Sticky-Leisten nicht renderbar');
-	expect(kapitelNavBox.y).toBeGreaterThanOrEqual(
-		reihenLeisteBox.y + reihenLeisteBox.height - 1
-	);
+	expect(kapitelNavBox.y).toBeGreaterThanOrEqual(reihenLeisteBox.y + reihenLeisteBox.height - 1);
 
 	// Reihen-Wechsel wirkt sofort auf alle Kapitel (Karte, Wechsel, Trends,
 	// Extreme), ohne dass die Seite zurück nach oben springt. Nicht per
@@ -116,8 +151,7 @@ test('Sticky-Reihen-Leiste bleibt nach Scroll sichtbar; Reihen-Wechsel aktualisi
 	await expect(page.getByTestId('wahl-portal-chapter-wechsel')).toContainText(
 		'Bundestag · alle Wahljahre · Kiez-Ebene'
 	);
-	await expect(trendsBadge).toContainText('Bundestag · alle Wahljahre');
-	await expect(trendsBadge).not.toContainText('Kiez-Ebene');
+	await expect(trendsBadge).toContainText('Bundestag · alle Wahljahre · Kiez-Ebene');
 	await expect(page.getByTestId('reihen-leiste')).toBeInViewport();
 	await expect(page.getByTestId('wahl-portal-chapter-methodik')).toBeInViewport();
 
@@ -605,6 +639,12 @@ test('Wechsel-Kapitel: rendert die Liste aus der Fixture (Gebiet, Jahr, Von -> N
 	await expect(page.getByTestId('wechsel-kapitel-von')).toContainText('SPD');
 	await expect(page.getByTestId('wechsel-kapitel-nach')).toContainText('GRÜNE');
 	await expect(page.getByTestId('wechsel-kapitel-canvas')).toBeVisible();
+	// Review Triage Log #8: deckt den ungetesteten `defaultMapFactory`-Pfad ab
+	// -- die vorherige Assertion prüfte nur den Container-Div, nicht dass
+	// MapLibre darin tatsächlich einen Canvas rendert.
+	await expect(
+		page.getByTestId('wechsel-kapitel-canvas').locator('canvas.maplibregl-canvas')
+	).toBeVisible();
 });
 
 // Story 8 (Trends/Sankey): `ANALYTIK_AGH_KIEZ` liegt jetzt ebenfalls in
@@ -612,13 +652,10 @@ test('Wechsel-Kapitel: rendert die Liste aus der Fixture (Gebiet, Jahr, Von -> N
 // `WINNERS_WECHSEL_KAPITEL`, damit Geometrie + Analytik dasselbe Gebiet
 // treffen.
 
-test('Trends-Kapitel: rendert Karte + Sankey aus Fixtures, Toggle wechselt ohne neuen Analytik-Request', async ({
+test('Trends-Kapitel: rendert Karte aus Fixtures, Toggle wechselt ohne neuen Analytik-Request', async ({
 	page
 }) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
-	// WINNERS_WECHSEL_KAPITEL (3 Kalenderjahre je Gebiet, 2 effektive Spalten
-	// nach der Wiederholungs-Regel) statt WINNERS_AGH_KIEZ (nur 2 Kalenderjahre
-	// -> kollabiert auf 1 effektive Spalte, kein Übergang für den Sankey).
 	await page.route('**/api/wahl/winners**', (route) =>
 		route.fulfill({ json: WINNERS_WECHSEL_KAPITEL })
 	);
@@ -633,12 +670,49 @@ test('Trends-Kapitel: rendert Karte + Sankey aus Fixtures, Toggle wechselt ohne 
 
 	const trendsChapter = page.getByTestId('wahl-portal-chapter-trends');
 	await expect(trendsChapter.getByTestId('trends-kapitel-canvas')).toBeVisible();
+	// Review Triage Log #8: deckt den ungetesteten `defaultMapFactory`-Pfad ab.
+	await expect(
+		trendsChapter.getByTestId('trends-kapitel-canvas').locator('canvas.maplibregl-canvas')
+	).toBeVisible();
 	await expect(trendsChapter.getByTestId('trends-kapitel-takeaway')).toContainText('SPD');
 	expect(analytikRequestCount).toBe(1);
 
-	// Sankey ist eingebettet und rendert eigenständig aus derselben (bereits
-	// geladenen) Bulk-Winners-Response, kein zweiter Winners-Request nötig.
-	await expect(trendsChapter.getByTestId('sankey-wahljahre-svg')).toBeVisible();
+	// Toggle Trend -> Volatilität: nur Paint-Wechsel, kein neuer Analytik-Request.
+	await trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet').click();
+	await expect(trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet')).toHaveAttribute(
+		'aria-checked',
+		'true'
+	);
+	expect(analytikRequestCount).toBe(1);
+});
+
+// Story 12: der Sankey zog aus dem Trends-Kapitel in ein eigenes Kapitel
+// „Übergänge" um -- eigener Nav-Eintrag, eigenes Kapitel-Testid.
+test('Übergänge-Kapitel: rendert den Sankey aus Fixtures, eigener Nav-Eintrag', async ({
+	page
+}) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	// WINNERS_WECHSEL_KAPITEL (3 Kalenderjahre je Gebiet, 2 effektive Spalten
+	// nach der Wiederholungs-Regel) statt WINNERS_AGH_KIEZ (nur 2 Kalenderjahre
+	// -> kollabiert auf 1 effektive Spalte, kein Übergang für den Sankey).
+	await page.route('**/api/wahl/winners**', (route) =>
+		route.fulfill({ json: WINNERS_WECHSEL_KAPITEL })
+	);
+	// Review Triage Log #10: das Trends-Kapitel der selben Seite lädt Analytik
+	// unabhängig vom aktiven Nav-Eintrag -- ohne Stub liefe es real.
+	await page.route('**/api/wahl/analytik**', (route) => route.fulfill({ json: ANALYTIK_AGH_KIEZ }));
+
+	await page.goto('/berlin-wahlen');
+	await page.getByTestId('kapitel-nav-link-uebergaenge').click();
+	await expect(page.getByTestId('kapitel-nav-link-uebergaenge')).toHaveAttribute(
+		'aria-current',
+		'true'
+	);
+
+	const uebergaengeChapter = page.getByTestId('wahl-portal-chapter-uebergaenge');
+	await expect(uebergaengeChapter).toBeVisible();
+	await expect(uebergaengeChapter.getByTestId('sankey-wahljahre-svg')).toBeVisible();
+
 	const sankeyTabelle = page.getByTestId('sankey-wahljahre').getByTestId('table-toggle');
 	await sankeyTabelle.click();
 	// WINNERS_WECHSEL_KAPITEL (mv-nord: 2016 SPD -> 2021 GRÜNE -> 2023(W)
@@ -651,14 +725,6 @@ test('Trends-Kapitel: rendert Karte + Sankey aus Fixtures, Toggle wechselt ohne 
 	await expect(sankeyDataTable).toContainText('GRÜNE');
 	await expect(sankeyDataTable).toContainText('2023');
 	await expect(sankeyDataTable).toContainText('1');
-
-	// Toggle Trend -> Volatilität: nur Paint-Wechsel, kein neuer Analytik-Request.
-	await trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet').click();
-	await expect(trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet')).toHaveAttribute(
-		'aria-checked',
-		'true'
-	);
-	expect(analytikRequestCount).toBe(1);
 });
 
 // Story 11 (Sankey-Rework): Hover-Smoke im echten Browser-Layout -- der
@@ -667,15 +733,18 @@ test('Trends-Kapitel: rendert Karte + Sankey aus Fixtures, Toggle wechselt ohne 
 // eine als sichtbar/stabil erkannte Bounding-Box, die im isolierten
 // Komponenten-Test ohne volles Layout unzuverlässig ist); hier läuft die
 // echte Seite mit echtem CSS, `hover()` ist deshalb zuverlässig.
+// Story 12: Sankey-Kapitel-Scope zog von „trends" auf „uebergaenge" um.
 test('Sankey-Hover: ein Partei-Band zeigt den Tooltip mit Von/Nach/Anzahl', async ({ page }) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
-	await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: WINNERS_WECHSEL_KAPITEL }));
+	await page.route('**/api/wahl/winners**', (route) =>
+		route.fulfill({ json: WINNERS_WECHSEL_KAPITEL })
+	);
 	await page.route('**/api/wahl/analytik**', (route) => route.fulfill({ json: ANALYTIK_AGH_KIEZ }));
 
 	await page.goto('/berlin-wahlen');
-	await page.getByTestId('kapitel-nav-link-trends').click();
-	const trendsChapter = page.getByTestId('wahl-portal-chapter-trends');
-	await expect(trendsChapter.getByTestId('sankey-wahljahre-svg')).toBeVisible();
+	await page.getByTestId('kapitel-nav-link-uebergaenge').click();
+	const uebergaengeChapter = page.getByTestId('wahl-portal-chapter-uebergaenge');
+	await expect(uebergaengeChapter.getByTestId('sankey-wahljahre-svg')).toBeVisible();
 
 	// `dispatchEvent` statt `hover()`: Playwrights Actionability-Check
 	// hittestet die Mitte der Bounding-Box bzw. verlangt einen Viewport-Punkt
@@ -684,7 +753,7 @@ test('Sankey-Hover: ein Partei-Band zeigt den Tooltip mit Von/Nach/Anzahl', asyn
 	// bekanntes Playwright/SVG-Pfad-Verhalten, kein Rendering-Fehler. Ein
 	// direktes `pointermove`-Event prüft denselben Handler ohne diese
 	// Heuristik.
-	const band = trendsChapter.getByTestId('sankey-band').first();
+	const band = uebergaengeChapter.getByTestId('sankey-band').first();
 	await band.dispatchEvent('pointermove', { clientX: 10, clientY: 10 });
 	await expect(page.getByTestId('sankey-tooltip')).toBeVisible();
 	await expect(page.getByTestId('sankey-tooltip-title')).toHaveText('SPD → GRÜNE');

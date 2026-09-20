@@ -94,15 +94,20 @@ test('Berlin-Wahlen-Portal (Story 3 Skeleton) hat 0 axe-Violations', async ({ pa
 // Elections-Liste, der Sankey (und mit ihm die role="img"-Umstellung aus
 // Patch P3) wird also NIE gescannt -- eine Regression bliebe unentdeckt.
 // Eigener Scan mit derselben Trends-Fixture wie `berlin-wahlen.e2e.ts`.
-test('Berlin-Wahlen-Portal (Trends-Kapitel mit Sankey) hat 0 axe-Violations', async ({ page }) => {
+// Story 12: der Sankey sitzt jetzt im eigenen „Übergänge"-Kapitel.
+test('Berlin-Wahlen-Portal (Übergänge-Kapitel mit Sankey) hat 0 axe-Violations', async ({
+	page
+}) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
-	await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: WINNERS_SANKEY_A11Y }));
+	await page.route('**/api/wahl/winners**', (route) =>
+		route.fulfill({ json: WINNERS_SANKEY_A11Y })
+	);
 	await page.route('**/api/wahl/analytik**', (route) => route.fulfill({ json: ANALYTIK_AGH_KIEZ }));
 
 	await page.goto('/berlin-wahlen');
-	await page.getByTestId('kapitel-nav-link-trends').click();
-	const trendsChapter = page.getByTestId('wahl-portal-chapter-trends');
-	await expect(trendsChapter.getByTestId('sankey-band').first()).toBeVisible();
+	await page.getByTestId('kapitel-nav-link-uebergaenge').click();
+	const uebergaengeChapter = page.getByTestId('wahl-portal-chapter-uebergaenge');
+	await expect(uebergaengeChapter.getByTestId('sankey-band').first()).toBeVisible();
 
 	const results = await new AxeBuilder({ page })
 		.withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])

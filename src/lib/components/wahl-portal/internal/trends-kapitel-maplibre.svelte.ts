@@ -13,6 +13,7 @@ import {
 	type BakedTrendsFeatureCollection
 } from './trends-map-expressions.js';
 import { TRENDS_FILL_OPACITY, type TrendsToggle } from './trends-map-data.js';
+import { paddedMaxBounds, type FitBounds } from './map-fit-constraints.js';
 
 /** Deckkraft für Gebiete ohne Analytik-Daten (`*_hat_daten: 0`); exportiert,
  * damit die Legende (`trends-kapitel.svelte`, Review Triage Log #7) den
@@ -31,6 +32,15 @@ interface MapLibreMapLike {
 	addLayer: (layer: Record<string, unknown>) => void;
 	setPaintProperty: (layer: string, prop: string, value: unknown) => void;
 	fitBounds: (bounds: [[number, number], [number, number]], opts?: Record<string, unknown>) => void;
+	/** Story 12: Karten-Anschlag-Grenzen nach dem initialen Fit (siehe
+	 * `map-fit-constraints.ts`). `getBounds()` liefert die nach dem Fit
+	 * SICHTBAREN Bounds (echtes MapLibre: `LngLatBounds.toArray()` ==
+	 * `[[west, south], [east, north]]`), die Quelle für `paddedMaxBounds` --
+	 * nicht die schmale Daten-Bbox (Review Triage Log #1). */
+	setMaxBounds: (bounds: FitBounds) => void;
+	setMinZoom: (zoom: number) => void;
+	getZoom: () => number;
+	getBounds: () => { toArray: () => FitBounds };
 	on: (event: string, handler: unknown) => void;
 }
 
@@ -109,7 +119,11 @@ export class TrendsMapController {
 		if (!this.ready || !this.#map) return;
 		const toggle = this.#getToggle();
 		const partei = this.#getAktivePartei();
-		this.#map.setPaintProperty('trends-fill', 'fill-color', trendsFillColorExpression(toggle, partei));
+		this.#map.setPaintProperty(
+			'trends-fill',
+			'fill-color',
+			trendsFillColorExpression(toggle, partei)
+		);
 		this.#map.setPaintProperty(
 			'trends-fill',
 			'fill-opacity',
@@ -129,31 +143,43 @@ export class TrendsMapController {
 		if (!this.container || this.#map || this.#initializing) return;
 		this.#initializing = true;
 		const container = this.container;
-		const MapLibreMap = await this.#mapFactory();
-		if (this.#destroyed || !this.container) {
+		try {
+			const MapLibreMap = await this.#mapFactory();
+			if (this.#destroyed || !this.container) {
+				this.#initializing = false;
+				return;
+			}
+			const instance = new MapLibreMap({
+				container,
+				style: '/map-style.json',
+				center: [13.4, 52.5],
+				zoom: 9,
+				// Story 12: von 9 auf 8 gesenkt -- der echte Fit-Zoom der Kiez-Bbox
+				// liegt bei ~8,7 und wurde vom Konstruktions-minZoom vorher geklemmt,
+				// was den initialen Fit auf breiten Canvases verzerrte (Review
+				// Triage Log #1).
+				minZoom: 8,
+				maxZoom: 19,
+				maxBounds: BERLIN_MAX_BOUNDS,
+				attributionControl: false,
+				interactive: true
+			});
+			const typedInstance = instance as unknown as MapLibreMapLike;
+			this.#map = typedInstance;
+			this.#mountedContainer = container;
 			this.#initializing = false;
-			return;
-		}
-		const instance = new MapLibreMap({
-			container,
-			style: '/map-style.json',
-			center: [13.4, 52.5],
-			zoom: 9,
-			minZoom: 9,
-			maxZoom: 19,
-			maxBounds: BERLIN_MAX_BOUNDS,
-			attributionControl: false,
-			interactive: true
-		});
-		const typedInstance = instance as unknown as MapLibreMapLike;
-		this.#map = typedInstance;
-		this.#mountedContainer = container;
-		this.#initializing = false;
 
-		instance.on('error', (e: { error?: Error }) => {
-			if (e?.error) console.warn('[trends-kapitel]', e.error.message);
-		});
-		instance.on('load', () => this.#onStyleLoad(typedInstance));
+			instance.on('error', (e: { error?: Error }) => {
+				if (e?.error) console.warn('[trends-kapitel]', e.error.message);
+			});
+			instance.on('load', () => this.#onStyleLoad(typedInstance));
+		} catch (error) {
+			// Review Triage Log #3: dasselbe Problem wie im Wechsel-Controller --
+			// ein Factory-/Import-Reject hielt `#initializing` vorher dauerhaft
+			// `true` (kein Fehlerzustand, unbehandelte Promise-Rejection).
+			this.#initializing = false;
+			console.warn('[trends-kapitel] Karte konnte nicht initialisiert werden', error);
+		}
 	}
 
 	#onStyleLoad(instance: MapLibreMapLike): void {
@@ -172,12 +198,37 @@ export class TrendsMapController {
 			source: 'trends',
 			paint: {
 				'fill-color': trendsFillColorExpression(toggle, partei),
-				'fill-opacity': trendsFillOpacityExpression(toggle, partei, TRENDS_FILL_OPACITY, NEUTRAL_OPACITY),
+				'fill-opacity': trendsFillOpacityExpression(
+					toggle,
+					partei,
+					TRENDS_FILL_OPACITY,
+					NEUTRAL_OPACITY
+				),
 				'fill-outline-color': 'rgba(20,20,20,0.18)'
 			}
 		});
-		const fitTo = toFitBounds(bbox(fc) as [number, number, number, number]);
-		instance.fitBounds(fitTo, { padding: 16, animate: false });
+		// Review Triage Log #2: eine leere FeatureCollection liefert aus
+		// `turf.bbox` Infinity -- kein Fit, keine Anschlag-Grenzen, kein Crash;
+		// Basemap + (leere) Source bleiben trotzdem sichtbar.
+		if (fc.features.length > 0) {
+			// Story 12/Review Triage Log #1: `resize()` SYNCHRON vor dem Fit --
+			// sonst stammen die Transform-Maße noch aus der Konstruktion, MapLibre
+			// fittet dann auf einen falschen Canvas und "korrigiert" das später
+			// per Constrain-Zoom (Beschnitt).
+			instance.resize();
+			const fitTo = toFitBounds(bbox(fc) as [number, number, number, number]);
+			instance.fitBounds(fitTo, { padding: 16, animate: false });
+			// fitZoom NACH dem Fit erfassen (vor jedem setMaxBounds!) -- sonst
+			// friert `setMinZoom` einen durch `setMaxBounds` bereits verbogenen
+			// Zoom ein (Review Triage Log #1).
+			const fitZoom = instance.getZoom();
+			// Die Anschlag-Grenzen kommen aus den nach dem Fit SICHTBAREN Bounds
+			// (`getBounds()`), nicht aus der Daten-Bbox -- der Viewport ist dann
+			// nie breiter als `maxBounds`, MapLibre zwingt sich also nicht mehr
+			// per Constrain-Zoom hinein (Review Triage Log #1).
+			instance.setMaxBounds(paddedMaxBounds(instance.getBounds().toArray()));
+			if (Number.isFinite(fitZoom)) instance.setMinZoom(fitZoom);
+		}
 		if (typeof requestAnimationFrame !== 'undefined') {
 			// Guard gegen destroy() zwischen Schedule und Callback (Review Triage
 			// Log #13): ein rAF-resize nach `destroy()` würde sonst auf einer
