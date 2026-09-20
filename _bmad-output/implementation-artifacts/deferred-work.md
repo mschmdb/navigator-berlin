@@ -37,3 +37,6 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/9-partei-tabs-und-small-multiples.md`
   summary: Achromatopsie-Muster-Vokabular erweitern, Bestands-Doppelbelegungen CDU/AfD ('stripes') und GRÜNE/BSW ('dots') auflösen (4 Muster für 7+ Parteien; Story 9 hat 'diagonal-reverse' eingeführt und Die Linke/FDP getrennt).
   evidence: Review Story 9 (Blind Hunter 11, Edge Case Hunter 10, Verification Gap Other 2, Koordinator): mit nur 4 Pattern-Typen (solid/stripes/dots/diagonal[-reverse]) für 7 FINDER_PARTIES bleiben zwei Doppel bestehen; Fix-Scope dieser Runde war auf die EXAKTE Kollision (Die Linke/FDP, beide 'diagonal') begrenzt.
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/9-partei-tabs-und-small-multiples.md`
+  summary: Nach Freeze-Ende (22.09. 02:00) auf Prod einmalig die vier BVV-Wahlen neu ingesten (pnpm data:wahl-fetch -- --only=bvv11 / bvv16 / bvv21 / bvv23) plus data:wahl-kiez und data:wahl-analytik, damit die reparierten Stimmbezirks-Anteile (vorher ueberall 0) auch in Prod landen.
+  evidence: BVV-Anteil-Bug 20.09. (transformSbbRow gueltig-Slot); der prebuild fetcht nur, wenn data:wahl-check KEINE Daten findet, ein normaler Deploy repariert die Prod-Rows daher nicht.
