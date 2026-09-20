@@ -2,9 +2,10 @@
 title: 'Portal-Feinschliff: Karten-Sitz, Sankey-Kapitel, Erklär-Subtexte'
 type: 'feature'
 created: '2026-09-20'
-status: 'draft'
+status: 'in-progress'
 route: 'dispatch'
 review_loop_iteration: 0
+baseline_commit: '29e5698'
 context:
   - '_bmad-output/specs/spec-berlin-wahlen/ux-blueprint.md'
 ---
