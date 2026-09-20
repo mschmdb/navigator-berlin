@@ -4,6 +4,7 @@ import {
 	buildFinderCollection,
 	computeFitJs,
 	FINDER_METRIC_KEYS,
+	FINDER_PARTIES,
 	FINDER_RAMP,
 	fitColorExpression,
 	fitDomain,
@@ -16,6 +17,7 @@ import {
 	topResults,
 	type FinderWeights
 } from './kiez-finder-engine.js';
+import { PARTEI_SEED } from '../../../../../scripts/wahlen/lib/partei-seed.js';
 
 function plrFixture(): FeatureCollection {
 	return { type: 'FeatureCollection', features: [plr('01100101', 'Stülerstraße')] };
@@ -250,5 +252,14 @@ describe('topResults Zentroide', () => {
 		const [r] = topResults(fc, { ...neutralWeights(), ruheLuft: 2 }, 1);
 		expect(r.lng).toBeCloseTo(13.4, 5);
 		expect(r.lat).toBeCloseTo(52.55, 5);
+	});
+});
+
+describe('FINDER_PARTIES (Review-Fund #19)', () => {
+	it('jede FINDER_PARTIES-Partei existiert als kurzname im PARTEI_SEED (DB-Filter p.kurzname = … ohne Klammer)', () => {
+		const seedKurznamen = new Set(PARTEI_SEED.map((p) => p.kurzname));
+		for (const partei of FINDER_PARTIES) {
+			expect(seedKurznamen.has(partei), `"${partei}" fehlt im PARTEI_SEED`).toBe(true);
+		}
 	});
 });

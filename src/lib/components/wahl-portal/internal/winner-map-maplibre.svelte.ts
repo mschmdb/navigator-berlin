@@ -30,8 +30,11 @@ import {
 	fillColorExpression,
 	fillOpacityExpression,
 	fillPatternExpression,
+	genericParteiFillOpacityExpression,
+	parteiFillOpacityExpression,
 	wechselOutlineExpression,
-	winnerForJahrJs
+	winnerForJahrJs,
+	type AnteilSpanne
 } from './winner-map-expressions.js';
 import type { WinnerTooltipData } from '../winner-map-tooltip.svelte';
 
@@ -56,8 +59,8 @@ interface MapLibreMapLike extends PatternAddImageMap {
  * kann eine Fake-Implementierung liefern statt der echten Bibliothek. */
 type MapLibreMapCtor = new (options: Record<string, unknown>) => MapLibreMapLike;
 
-/** Filter, der auf keinem Feature jemals matcht (Stimmbezirk: nie Wechsel-Outline). */
-const NEVER_FILTER: unknown[] = ['==', ['literal', 1], 0];
+/** Filter, der auf keinem Feature jemals matcht (Stimmbezirk UND Partei-Modus: nie Wechsel-Outline). */
+export const NEVER_FILTER: unknown[] = ['==', ['literal', 1], 0];
 
 // Navigator-Standard-Pan-Bounds (Muster map-libre-canvas.svelte BERLIN_MAX_BOUNDS).
 const BERLIN_MAX_BOUNDS: [[number, number], [number, number]] = [
@@ -84,6 +87,13 @@ export interface WinnerMapControllerOptions {
 	 * lesen). `null`/undefiniert = Stimmbezirks-Pfad, generische Properties.
 	 */
 	readonly getActiveJahr?: () => number | null;
+	/**
+	 * Story 9 (Partei-Tabs): partei-relative Anteils-Spanne für den Erst-Init-
+	 * Paint. `null`/undefiniert = Sieger-Modus (feste Rampe, Wechsel-Outline
+	 * aktiv). Gesetzt => Partei-Modus: Deckkraft interpoliert über die
+	 * Spanne, Wechsel-Outline bleibt aus (`NEVER_FILTER`, Sieger-Semantik).
+	 */
+	readonly getParteiRamp?: () => AnteilSpanne | null;
 	/**
 	 * Injizierbar für Tests: liefert den MapLibre-`Map`-Konstruktor, ohne den
 	 * echten dynamischen Import (inkl. CSS) auszulösen (Muster
@@ -115,6 +125,7 @@ export class WinnerMapController {
 	#initializing = false;
 	#getFc: () => GebietFeatureCollection | null;
 	#getActiveJahr: () => number | null;
+	#getParteiRamp: () => AnteilSpanne | null;
 	/** Zuletzt gemaltes Jahr (Story 7); `null` = Stimmbezirks-Pfad, generische Properties. */
 	#activeJahr: number | null = null;
 	#patternsEnabled = false;
@@ -123,6 +134,7 @@ export class WinnerMapController {
 	constructor(opts: WinnerMapControllerOptions) {
 		this.#getFc = opts.getFc;
 		this.#getActiveJahr = opts.getActiveJahr ?? (() => null);
+		this.#getParteiRamp = opts.getParteiRamp ?? (() => null);
 		this.#mapFactory = opts.mapFactory ?? defaultMapFactory;
 	}
 
@@ -146,8 +158,13 @@ export class WinnerMapController {
 	setActiveJahr(jahr: number): void {
 		this.#activeJahr = jahr;
 		if (!this.ready || !this.#map) return;
+		const ramp = this.#getParteiRamp();
 		this.#map.setPaintProperty('winners-fill', 'fill-color', fillColorExpression(jahr));
-		this.#map.setPaintProperty('winners-fill', 'fill-opacity', fillOpacityExpression(jahr));
+		this.#map.setPaintProperty(
+			'winners-fill',
+			'fill-opacity',
+			ramp ? parteiFillOpacityExpression(jahr, ramp.min, ramp.max) : fillOpacityExpression(jahr)
+		);
 		if (this.#patternsEnabled) {
 			this.#map.setPaintProperty(
 				'winners-fill',
@@ -155,7 +172,11 @@ export class WinnerMapController {
 				fillPatternExpression(jahr, NEUTRAL_PATTERN_ID)
 			);
 		}
-		this.#map.setFilter('winners-wechsel-outline', wechselOutlineExpression(jahr));
+		// Partei-Modus: nie Wechsel-Outline (Sieger-Semantik, Boundary).
+		this.#map.setFilter(
+			'winners-wechsel-outline',
+			ramp ? NEVER_FILTER : wechselOutlineExpression(jahr)
+		);
 	}
 
 	/**
@@ -179,6 +200,23 @@ export class WinnerMapController {
 			]);
 		}
 		this.#map.setFilter('winners-wechsel-outline', NEVER_FILTER);
+	}
+
+	/**
+	 * Story 9 (Partei-Tabs, Stimmbezirks-Pfad): der generische Pfad
+	 * (`activeJahr === null`, keine Zeit-Animation) setzt fill-opacity nur
+	 * einmal beim Erst-Init; ein Tab-Wechsel auf Stimmbezirk braucht deshalb
+	 * ein explizites Repaint mit der partei-relativen Rampe -- anders als
+	 * `setActiveJahr` (kiez/bezirk), das ohnehin bei jedem Jahr-Schritt läuft.
+	 * `ramp: null` setzt die feste Sieger-Rampe zurück (Tab „Gewinner").
+	 */
+	setGenericRamp(ramp: AnteilSpanne | null): void {
+		if (!this.ready || !this.#map) return;
+		this.#map.setPaintProperty(
+			'winners-fill',
+			'fill-opacity',
+			ramp ? genericParteiFillOpacityExpression(ramp.min, ramp.max) : genericFillOpacityExpression()
+		);
 	}
 
 	setPatternsEnabled(enabled: boolean, parteien: readonly string[]): void {
@@ -266,6 +304,10 @@ export class WinnerMapController {
 		// bekannt), sonst würden kiez/bezirk-Baked-FCs für einen Frame
 		// generische (nicht existente) Property-Keys ansprechen.
 		this.#activeJahr = this.#getActiveJahr();
+		// Story 9: Erst-Init im Partei-Modus (z. B. Tab-Wechsel direkt beim
+		// Mount) muss ebenfalls sofort die partei-relative Rampe + ausgeschaltete
+		// Wechsel-Outline zeigen statt kurz die Sieger-Rampe aufzublitzen.
+		const initialRamp = this.#getParteiRamp();
 		instance.addSource('winners', {
 			type: 'geojson',
 			data: fc as unknown as GeoJSON.FeatureCollection
@@ -283,8 +325,12 @@ export class WinnerMapController {
 					this.#activeJahr !== null ? fillColorExpression(this.#activeJahr) : ['get', 'farbe'],
 				'fill-opacity':
 					this.#activeJahr !== null
-						? fillOpacityExpression(this.#activeJahr)
-						: genericFillOpacityExpression(),
+						? initialRamp
+							? parteiFillOpacityExpression(this.#activeJahr, initialRamp.min, initialRamp.max)
+							: fillOpacityExpression(this.#activeJahr)
+						: initialRamp
+							? genericParteiFillOpacityExpression(initialRamp.min, initialRamp.max)
+							: genericFillOpacityExpression(),
 				'fill-outline-color': 'rgba(20,20,20,0.18)'
 			}
 		});
@@ -297,12 +343,16 @@ export class WinnerMapController {
 		// Wechsel-Outline (Story 7): eigener line-Layer über winners-fill,
 		// Filter statt Paint-Bedingung -- nur Gebiete mit Wechsel-Flag=1 im
 		// aktiven Jahr bekommen eine Kontur. Nie sichtbar auf Stimmbezirk
-		// (activeJahr bleibt dort `null`, Boundary: nie Zeit-Animation dort).
+		// (activeJahr bleibt dort `null`, Boundary: nie Zeit-Animation dort)
+		// NOCH im Partei-Modus (Story 9, Boundary: Sieger-Semantik).
 		instance.addLayer({
 			id: 'winners-wechsel-outline',
 			type: 'line',
 			source: 'winners',
-			filter: this.#activeJahr !== null ? wechselOutlineExpression(this.#activeJahr) : NEVER_FILTER,
+			filter:
+				this.#activeJahr !== null && !initialRamp
+					? wechselOutlineExpression(this.#activeJahr)
+					: NEVER_FILTER,
 			paint: { 'line-color': '#141414', 'line-width': 2.5, 'line-dasharray': [2, 1] }
 		});
 
@@ -311,7 +361,10 @@ export class WinnerMapController {
 		instance.on(
 			'mousemove',
 			'winners-fill',
-			(e: { features?: Array<{ properties: Record<string, unknown> }>; point: { x: number; y: number } }) => {
+			(e: {
+				features?: Array<{ properties: Record<string, unknown> }>;
+				point: { x: number; y: number };
+			}) => {
 				const feature = e.features?.[0];
 				if (!feature) {
 					this.tooltipVisible = false;

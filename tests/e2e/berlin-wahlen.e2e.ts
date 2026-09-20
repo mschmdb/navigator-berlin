@@ -1,80 +1,15 @@
 import { test, expect } from '@playwright/test';
+import { ELECTIONS } from './fixtures/berlin-wahlen-fixtures.js';
 
 // Story 3 Portal-Skeleton: URL-Sync und Steuerleisten-Verdrahtung auf der
 // echten Seite. Deckt zwei Review-/Live-Funde ab: den Zwei-Effect-Revert-Loop
 // (Klick wurde vom URL-Pull-Effect zurückgedreht) und das keyed-each-Duplikat
 // bei zwei Stimmtyp-Rows pro Jahr.
-const ELECTIONS = {
-	elections: [
-		{
-			slug: '2023-agh-erststimme',
-			jahr: 2023,
-			typ: 'agh',
-			stimmtyp: 'erststimme',
-			is_repeat_election: true,
-			parent_slug: '2021-agh-erststimme',
-			has_stimmbezirks_geometry: true,
-			source_name: 'Amt für Statistik Berlin-Brandenburg',
-			source_url: 'https://example.invalid/agh23',
-			license: 'dl-de/by-2.0'
-		},
-		{
-			slug: '2023-agh-zweitstimme',
-			jahr: 2023,
-			typ: 'agh',
-			stimmtyp: 'zweitstimme',
-			is_repeat_election: true,
-			parent_slug: '2021-agh-zweitstimme',
-			has_stimmbezirks_geometry: true,
-			source_name: 'Amt für Statistik Berlin-Brandenburg',
-			source_url: 'https://example.invalid/agh23',
-			license: 'dl-de/by-2.0'
-		},
-		{
-			slug: '2021-agh-zweitstimme',
-			jahr: 2021,
-			typ: 'agh',
-			stimmtyp: 'zweitstimme',
-			is_repeat_election: false,
-			parent_slug: null,
-			has_stimmbezirks_geometry: true,
-			source_name: 'Amt für Statistik Berlin-Brandenburg',
-			source_url: 'https://example.invalid/agh21',
-			license: 'dl-de/by-2.0'
-		},
-		{
-			slug: '2016-agh-zweitstimme',
-			jahr: 2016,
-			typ: 'agh',
-			stimmtyp: 'zweitstimme',
-			is_repeat_election: false,
-			parent_slug: null,
-			has_stimmbezirks_geometry: true,
-			source_name: 'Amt für Statistik Berlin-Brandenburg',
-			source_url: 'https://example.invalid/agh16',
-			license: 'dl-de/by-2.0'
-		},
-		{
-			slug: '2025-btw-zweitstimme',
-			jahr: 2025,
-			typ: 'btw',
-			stimmtyp: 'zweitstimme',
-			is_repeat_election: false,
-			parent_slug: null,
-			has_stimmbezirks_geometry: true,
-			source_name: 'Bundeswahlleiterin',
-			source_url: 'https://example.invalid/btw25',
-			license: 'dl-de/by-2.0'
-		}
-	]
-};
 
 test('Steuerleisten-Klicks schreiben die URL und revertieren nicht', async ({ page }) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
 	// Story 4: die Karte mountet jetzt immer mit; winners deterministisch mocken.
-	await page.route('**/api/wahl/winners**', (route) =>
-		route.fulfill({ json: { winners: [] } })
-	);
+	await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: { winners: [] } }));
 	await page.goto('/berlin-wahlen');
 
 	// Duplikat-Fix: 2023 existiert als Erst- UND Zweitstimmen-Row, darf aber
@@ -99,15 +34,10 @@ test('Steuerleisten-Klicks schreiben die URL und revertieren nicht', async ({ pa
 
 test('Kapitel-Nav: Klick aktiviert das geklickte Kapitel', async ({ page }) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
-	await page.route('**/api/wahl/winners**', (route) =>
-		route.fulfill({ json: { winners: [] } })
-	);
+	await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: { winners: [] } }));
 	await page.goto('/berlin-wahlen');
 	await page.getByTestId('kapitel-nav-link-trends').click();
-	await expect(page.getByTestId('kapitel-nav-link-trends')).toHaveAttribute(
-		'aria-current',
-		'true'
-	);
+	await expect(page.getByTestId('kapitel-nav-link-trends')).toHaveAttribute('aria-current', 'true');
 	await expect(page.getByTestId('kapitel-nav-link-kontraste')).not.toHaveAttribute(
 		'aria-current',
 		'true'
@@ -360,7 +290,9 @@ test('Winner-Map (Ebene stimmbezirk): Ebenen-Wechsel zu kiez aktualisiert die be
 		const ebene = url.searchParams.get('ebene');
 		const jahr = url.searchParams.get('jahr');
 		if (ebene === 'stimmbezirk') {
-			return route.fulfill({ json: (jahr && STIMMBEZIRK_WINNERS_BY_JAHR[jahr]) ?? { winners: [] } });
+			return route.fulfill({
+				json: (jahr && STIMMBEZIRK_WINNERS_BY_JAHR[jahr]) ?? { winners: [] }
+			});
 		}
 		return route.fulfill({ json: WINNERS_AGH_KIEZ });
 	});
@@ -701,9 +633,7 @@ test.describe('Zeit-Animation Reduced-Motion: Step statt Timer', () => {
 		const ctx = await browser.newContext({ reducedMotion: 'reduce' });
 		const page = await ctx.newPage();
 		await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
-		await page.route('**/api/wahl/winners**', (route) =>
-			route.fulfill({ json: WINNERS_AGH_KIEZ })
-		);
+		await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: WINNERS_AGH_KIEZ }));
 
 		await page.goto('/berlin-wahlen?ebene=kiez');
 		await expect(page.getByTestId('winner-map-canvas')).toBeVisible();
@@ -711,7 +641,10 @@ test.describe('Zeit-Animation Reduced-Motion: Step statt Timer', () => {
 		// Start bei 2021 (aeltestes verfuegbares Jahr der Fixture), damit ein
 		// Schritt tatsaechlich vorwaerts geht.
 		await page.getByTestId('steuerleiste-jahr-2021').click();
-		await expect(page.getByTestId('zeit-animation-slider')).toHaveAttribute('aria-valuetext', '2021');
+		await expect(page.getByTestId('zeit-animation-slider')).toHaveAttribute(
+			'aria-valuetext',
+			'2021'
+		);
 
 		const stepButton = page.getByTestId('zeit-animation-play');
 		await expect(stepButton).toHaveAttribute('aria-label', 'Ein Jahr weiter');

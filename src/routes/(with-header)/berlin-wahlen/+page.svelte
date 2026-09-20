@@ -34,6 +34,7 @@
 	import WinnerMap from '$lib/components/wahl-portal/winner-map.svelte';
 	import WechselKapitel from '$lib/components/wahl-portal/wechsel-kapitel.svelte';
 	import TrendsKapitel from '$lib/components/wahl-portal/trends-kapitel.svelte';
+	import SmallMultiples from '$lib/components/wahl-portal/small-multiples.svelte';
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
@@ -81,6 +82,29 @@
 		void loadWahlList(portal);
 	});
 
+	// Small Multiples laden 7 Partei-Requests parallel (eine Reihe); erst beim
+	// Scrollen in die Nähe des Kapitels mounten (Muster `home-featured-score
+	// .svelte`, IntersectionObserver) -- sonst würde jeder Seitenaufruf sofort
+	// 7 zusätzliche Requests feuern, unabhängig davon ob das Kapitel je
+	// gesehen wird (Live-Fund 20.09.: brach die "genau EIN Request"-AC
+	// anderer Kapitel, die denselben Netz-Log in E2E-Tests mitzählen).
+	let extremeHost = $state<HTMLElement | null>(null);
+	let showExtreme = $state(false);
+	onMount(() => {
+		if (!extremeHost) return;
+		const io = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((e) => e.isIntersecting)) {
+					io.disconnect();
+					showExtreme = true;
+				}
+			},
+			{ rootMargin: '200px' }
+		);
+		io.observe(extremeHost);
+		return () => io.disconnect();
+	});
+
 	function handleReiheChange(reihe: WahlPortalReihe): void {
 		setReihe(portal, reihe);
 	}
@@ -110,20 +134,17 @@
 	const KARTE_CHAPTER = { id: 'karte', label: 'Karte' } as const;
 	const WECHSEL_CHAPTER = { id: 'wechsel', label: 'Wechsel' } as const;
 	const TRENDS_CHAPTER = { id: 'trends', label: 'Trends' } as const;
+	const EXTREME_CHAPTER = { id: 'extreme-gebiete', label: 'Extreme' } as const;
 
-	const PLACEHOLDER_CHAPTERS = [
+	const PLACEHOLDER_CHAPTERS_VOR_EXTREME = [
 		{
 			id: 'kontraste',
 			label: 'Kontraste',
 			title: 'Kontraste',
 			takeaway: 'Hier entstehen Ausgeglichenheits-Karte und die schärfsten Nachbar-Kontraste.'
-		},
-		{
-			id: 'extreme-gebiete',
-			label: 'Extreme',
-			title: 'Stärkste und schwächste Gebiete',
-			takeaway: 'Hier entsteht je Partei eine Mini-Karte mit ihren stärksten und schwächsten Kiezen.'
-		},
+		}
+	] as const;
+	const PLACEHOLDER_CHAPTERS_NACH_EXTREME = [
 		{
 			id: 'dein-kiez',
 			label: 'Dein Kiez',
@@ -137,13 +158,14 @@
 			takeaway: 'Hier entsteht die Kreuzung von Wahlergebnissen mit den Atlas-Layern.'
 		}
 	] as const;
-
 	const NAV_CHAPTERS = [
 		{ id: 'ueberblick', label: 'Überblick' },
 		KARTE_CHAPTER,
 		WECHSEL_CHAPTER,
 		TRENDS_CHAPTER,
-		...PLACEHOLDER_CHAPTERS.map((c) => ({ id: c.id, label: c.label })),
+		...PLACEHOLDER_CHAPTERS_VOR_EXTREME.map((c) => ({ id: c.id, label: c.label })),
+		EXTREME_CHAPTER,
+		...PLACEHOLDER_CHAPTERS_NACH_EXTREME.map((c) => ({ id: c.id, label: c.label })),
 		{ id: 'methodik', label: 'Methodik' }
 	];
 
@@ -234,11 +256,49 @@
 		<WechselKapitel />
 	</KapitelSection>
 
-	<KapitelSection id={TRENDS_CHAPTER.id} title="Trends und Volatilität" testid="wahl-portal-chapter-trends">
+	<KapitelSection
+		id={TRENDS_CHAPTER.id}
+		title="Trends und Volatilität"
+		testid="wahl-portal-chapter-trends"
+	>
 		<TrendsKapitel />
 	</KapitelSection>
 
-	{#each PLACEHOLDER_CHAPTERS as chapter (chapter.id)}
+	{#each PLACEHOLDER_CHAPTERS_VOR_EXTREME as chapter (chapter.id)}
+		<KapitelSection
+			id={chapter.id}
+			title={chapter.title}
+			testid={`wahl-portal-chapter-${chapter.id}`}
+		>
+			{#snippet takeaway()}
+				{chapter.takeaway}
+			{/snippet}
+			<p
+				data-testid={`wahl-portal-chapter-${chapter.id}-placeholder`}
+				class="font-serif text-base text-ink-muted"
+			>
+				Dieses Kapitel ist in Arbeit und folgt in Kürze.
+			</p>
+		</KapitelSection>
+	{/each}
+
+	<KapitelSection
+		id={EXTREME_CHAPTER.id}
+		title="Stärkste und schwächste Gebiete"
+		testid="wahl-portal-chapter-extreme-gebiete"
+	>
+		<div bind:this={extremeHost}>
+			{#if showExtreme}
+				<SmallMultiples />
+			{:else}
+				<p data-testid="extreme-gebiete-lazy-hinweis" class="font-serif text-ink-muted">
+					Das Kapitel lädt, sobald es sichtbar wird.
+				</p>
+			{/if}
+		</div>
+	</KapitelSection>
+
+	{#each PLACEHOLDER_CHAPTERS_NACH_EXTREME as chapter (chapter.id)}
 		<KapitelSection
 			id={chapter.id}
 			title={chapter.title}

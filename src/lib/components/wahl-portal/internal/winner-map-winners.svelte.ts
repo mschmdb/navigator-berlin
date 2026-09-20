@@ -12,6 +12,12 @@
  * Komponente ihren eigenen Request feuern und die "genau EIN Request"-AC
  * verletzen. `_resetWinnersCache()` für Test-Isolation (Muster
  * `_resetManifestCache`/`_resetLayerCache`).
+ *
+ * Story 9 (Partei-Tabs): optionaler `partei`-Parameter erweitert den
+ * Cache-Key auf `typ-stimmtyp-ebene-partei` (Default-Key ohne Partei bleibt
+ * unverändert für den Gewinner-Tab, kein Cache-Invalidierungs-Bruch für
+ * bestehende Aufrufer wie `wechsel-kapitel.svelte`). Die Small Multiples
+ * teilen sich denselben Cache/In-Flight-Dedupe wie die Partei-Tabs.
  */
 import type { WinnerApiRow } from './winner-map-data.js';
 
@@ -30,6 +36,10 @@ const inFlight: Record<string, Promise<WinnersApiResponse>> = {};
 export function _resetWinnersCache(): void {
 	for (const key of Object.keys(responseCache)) delete responseCache[key];
 	for (const key of Object.keys(inFlight)) delete inFlight[key];
+}
+
+function cacheKey(typ: string, stimmtyp: string, ebene: string, partei?: string): string {
+	return `${typ}-${stimmtyp}-${ebene}-${partei ?? 'gewinner'}`;
 }
 
 export class KiezBezirkWinnersLoader {
@@ -52,9 +62,10 @@ export class KiezBezirkWinnersLoader {
 		typ: string,
 		stimmtyp: string,
 		ebene: 'kiez' | 'bezirk',
-		isStale: () => boolean
+		isStale: () => boolean,
+		partei?: string
 	): Promise<void> {
-		const key = `${typ}-${stimmtyp}-${ebene}`;
+		const key = cacheKey(typ, stimmtyp, ebene, partei);
 		const cached = responseCache[key];
 		if (cached) {
 			this.response = cached;
@@ -63,7 +74,7 @@ export class KiezBezirkWinnersLoader {
 		}
 		this.status = 'loading';
 		try {
-			const data = await (inFlight[key] ?? this.#fetchOnce(key, typ, stimmtyp, ebene));
+			const data = await (inFlight[key] ?? this.#fetchOnce(key, typ, stimmtyp, ebene, partei));
 			if (isStale()) return;
 			this.response = data;
 			this.status = 'loaded';
@@ -80,10 +91,12 @@ export class KiezBezirkWinnersLoader {
 		key: string,
 		typ: string,
 		stimmtyp: string,
-		ebene: 'kiez' | 'bezirk'
+		ebene: 'kiez' | 'bezirk',
+		partei?: string
 	): Promise<WinnersApiResponse> {
 		const promise = (async () => {
-			const url = `/api/wahl/winners?typ=${typ}&stimmtyp=${stimmtyp}&ebene=${ebene}`;
+			const parteiQuery = partei ? `&partei=${encodeURIComponent(partei)}` : '';
+			const url = `/api/wahl/winners?typ=${typ}&stimmtyp=${stimmtyp}&ebene=${ebene}${parteiQuery}`;
 			const res = await this.#fetchFn(url);
 			if (!res.ok) throw new Error(`status ${res.status}`);
 			const data = (await res.json()) as WinnersApiResponse;

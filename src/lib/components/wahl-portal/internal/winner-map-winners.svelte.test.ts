@@ -85,4 +85,42 @@ describe('KiezBezirkWinnersLoader (Modul-Cache + In-Flight-Dedupe)', () => {
 		]);
 		expect(count()).toBe(2);
 	});
+
+	it('Story 9: partei-Param hängt an die URL an und erweitert den Cache-Key (eigener Request pro Partei)', async () => {
+		_resetWinnersCache();
+		const { fetchFn, count } = fetchCounter(WINNERS_BODY);
+		let lastUrl = '';
+		const spyFetch = (async (url: string) => {
+			lastUrl = url;
+			return fetchFn(url);
+		}) as typeof fetch;
+		const loader = new KiezBezirkWinnersLoader(spyFetch);
+		await loader.load('agh', 'zweitstimme', 'kiez', () => false, 'CDU');
+		expect(lastUrl).toContain('partei=CDU');
+		expect(count()).toBe(1);
+	});
+
+	it('Story 9: Gewinner-Tab (kein partei) und Partei-Tab teilen sich NICHT denselben Cache-Eintrag', async () => {
+		_resetWinnersCache();
+		const { fetchFn, count } = fetchCounter(WINNERS_BODY);
+		const loaderA = new KiezBezirkWinnersLoader(fetchFn);
+		const loaderB = new KiezBezirkWinnersLoader(fetchFn);
+		await Promise.all([
+			loaderA.load('agh', 'zweitstimme', 'kiez', () => false),
+			loaderB.load('agh', 'zweitstimme', 'kiez', () => false, 'CDU')
+		]);
+		expect(count()).toBe(2);
+	});
+
+	it('Story 9: zwei Aufrufer mit demselben Partei-Key teilen sich einen In-Flight-Request', async () => {
+		_resetWinnersCache();
+		const { fetchFn, count } = fetchCounter(WINNERS_BODY);
+		const loaderA = new KiezBezirkWinnersLoader(fetchFn);
+		const loaderB = new KiezBezirkWinnersLoader(fetchFn);
+		await Promise.all([
+			loaderA.load('agh', 'zweitstimme', 'kiez', () => false, 'SPD'),
+			loaderB.load('agh', 'zweitstimme', 'kiez', () => false, 'SPD')
+		]);
+		expect(count()).toBe(1);
+	});
 });

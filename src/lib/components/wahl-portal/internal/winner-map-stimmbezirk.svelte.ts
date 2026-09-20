@@ -46,6 +46,10 @@ export class StimmbezirkLoader {
 
 	#fetchFn: typeof fetch;
 	#winnersCache: Record<string, StimmbezirkWinnersResponse> = {};
+	/** Review-Fund #9: In-Flight-Promise je Key, instanz-lokal (der Cache ist
+	 * es auch) -- verhindert einen doppelten Fetch, wenn zwei Aufrufer im
+	 * selben Tick denselben Key anfragen (Muster `KiezBezirkWinnersLoader`). */
+	#winnersInFlight: Record<string, Promise<StimmbezirkWinnersResponse>> = {};
 	#geometryCache: Record<string, StimmbezirkGeometryState> = {};
 
 	constructor(fetchFn: typeof fetch) {
@@ -61,9 +65,10 @@ export class StimmbezirkLoader {
 		typ: string,
 		stimmtyp: string,
 		jahr: number,
-		isStale: () => boolean
+		isStale: () => boolean,
+		partei?: string
 	): Promise<void> {
-		const key = `${typ}-${stimmtyp}-${jahr}`;
+		const key = `${typ}-${stimmtyp}-${jahr}-${partei ?? 'gewinner'}`;
 		const cached = this.#winnersCache[key];
 		if (cached) {
 			this.winnersResponse = cached;
@@ -72,12 +77,8 @@ export class StimmbezirkLoader {
 		}
 		this.winnersStatus = 'loading';
 		try {
-			const url = `/api/wahl/winners?typ=${typ}&stimmtyp=${stimmtyp}&ebene=stimmbezirk&jahr=${jahr}`;
-			const res = await this.#fetchFn(url);
-			if (!res.ok) throw new Error(`status ${res.status}`);
-			const data = (await res.json()) as StimmbezirkWinnersResponse;
-			if (!Array.isArray(data?.winners)) throw new Error('malformed winners response');
-			this.#winnersCache[key] = data;
+			const data = await (this.#winnersInFlight[key] ??
+				this.#fetchWinnersOnce(key, typ, stimmtyp, jahr, partei));
 			if (isStale()) return;
 			this.winnersResponse = data;
 			this.winnersStatus = 'loaded';
@@ -85,6 +86,34 @@ export class StimmbezirkLoader {
 			if (isStale()) return;
 			this.winnersStatus = 'error';
 		}
+	}
+
+	#fetchWinnersOnce(
+		key: string,
+		typ: string,
+		stimmtyp: string,
+		jahr: number,
+		partei?: string
+	): Promise<StimmbezirkWinnersResponse> {
+		const promise = (async () => {
+			const parteiQuery = partei ? `&partei=${encodeURIComponent(partei)}` : '';
+			const url = `/api/wahl/winners?typ=${typ}&stimmtyp=${stimmtyp}&ebene=stimmbezirk&jahr=${jahr}${parteiQuery}`;
+			const res = await this.#fetchFn(url);
+			if (!res.ok) throw new Error(`status ${res.status}`);
+			const data = (await res.json()) as StimmbezirkWinnersResponse;
+			if (!Array.isArray(data?.winners)) throw new Error('malformed winners response');
+			this.#winnersCache[key] = data;
+			return data;
+		})();
+		this.#winnersInFlight[key] = promise;
+		// Muster `KiezBezirkWinnersLoader#fetchOnce`: `.finally()` liefert eine
+		// neue Promise, die eine Rejection übernähme -- ungenutzt ein Leck.
+		promise
+			.finally(() => {
+				if (this.#winnersInFlight[key] === promise) delete this.#winnersInFlight[key];
+			})
+			.catch(() => {});
+		return promise;
 	}
 
 	async loadGeometry(geoSlug: string, wahlSlug: string, isStale: () => boolean): Promise<void> {

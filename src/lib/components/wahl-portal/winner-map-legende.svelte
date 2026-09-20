@@ -8,10 +8,17 @@
 				return `background-image: repeating-linear-gradient(0deg, ${hex} 0 2px, transparent 2px 4px);`;
 			case 'diagonal':
 				return `background-image: repeating-linear-gradient(45deg, ${hex} 0 2px, transparent 2px 4px);`;
+			case 'diagonal-reverse':
+				// Review-Fund #16: Gegenrichtung zu 'diagonal' (135° statt 45°),
+				// derselbe CSS-Zwilling-Ansatz wie die anderen Muster.
+				return `background-image: repeating-linear-gradient(135deg, ${hex} 0 2px, transparent 2px 4px);`;
 			case 'dots':
 				return `background-image: radial-gradient(${hex} 30%, transparent 30%); background-size: 6px 6px;`;
 			case 'solid':
-				return `background-color: ${hex};`;
+				// Review-Fund #15: der Legenden-Swatch blieb eine Vollfläche (kein
+				// Zwilling zur segmentierten Textur aus `partei-pattern-images.ts`)
+				// -- ein feines, inverses Punktraster macht die Textur auch hier sichtbar.
+				return `background-color: ${hex}; background-image: radial-gradient(circle at 30% 30%, transparent 35%, ${hex} 36%); background-size: 6px 6px;`;
 		}
 	}
 </script>
@@ -25,17 +32,27 @@
 		parteien: readonly string[];
 		patternsEnabled: boolean;
 		onTogglePatterns: () => void;
+		/** Story 9 (Partei-Modus): Titel/Rampen-Hinweis ersetzen die
+		 * Sieger-Texte, wenn gesetzt (kein "Stärkste Partei"-Framing). */
+		titel?: string;
+		rampeText?: string;
 	};
 
-	let { parteien, patternsEnabled, onTogglePatterns }: Props = $props();
+	let {
+		parteien,
+		patternsEnabled,
+		onTogglePatterns,
+		titel = 'Stärkste Partei',
+		rampeText
+	}: Props = $props();
 
-
+	const defaultRampeText = `Sättigung nach Anteil: ${formatAnteilPct(ANTEIL_OPACITY_RAMP.minAnteil, 0)} = niedrige Deckkraft, ab ${formatAnteilPct(ANTEIL_OPACITY_RAMP.maxAnteil, 0)} volle Deckkraft.`;
 </script>
 
 <div data-testid="winner-map-legende" class="flex flex-col gap-3 border border-rule bg-bg p-3">
 	<div class="flex items-center justify-between gap-3">
 		<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-			Stärkste Partei
+			{titel}
 		</span>
 		<button
 			type="button"
@@ -65,7 +82,9 @@
 						data-testid={`winner-map-swatch-${partei}`}
 						aria-hidden="true"
 						class="inline-block h-3.5 w-3.5 rounded-sm border border-rule-strong"
-						style={patternsEnabled ? patternPreviewStyle(parteiPattern(partei), hex) : `background-color: ${hex};`}
+						style={patternsEnabled
+							? patternPreviewStyle(parteiPattern(partei), hex)
+							: `background-color: ${hex};`}
 					></span>
 					<span class="font-mono text-xs text-ink">{partei}</span>
 				</li>
@@ -74,6 +93,6 @@
 	{/if}
 
 	<p data-testid="winner-map-legende-rampe" class="font-mono text-[10px] text-ink-subtle">
-		Sättigung nach Anteil: {formatAnteilPct(ANTEIL_OPACITY_RAMP.minAnteil, 0)} = niedrige Deckkraft, ab {formatAnteilPct(ANTEIL_OPACITY_RAMP.maxAnteil, 0)} volle Deckkraft.
+		{rampeText ?? defaultRampeText}
 	</p>
 </div>

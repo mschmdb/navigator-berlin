@@ -1,7 +1,7 @@
 import { page } from 'vitest/browser';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import WinnerMapLegende from './winner-map-legende.svelte';
+import WinnerMapLegende, { patternPreviewStyle } from './winner-map-legende.svelte';
 import { parteiColor } from '$lib/data/partei-farben.js';
 
 function hexToRgb(hex: string): string {
@@ -65,13 +65,43 @@ describe('winner-map-legende.svelte', () => {
 			onTogglePatterns: () => {}
 		});
 		const swatch = (await page.getByTestId('winner-map-swatch-SPD').element()) as HTMLElement;
-		// SPD-Pattern ist 'solid' -> auch mit Toggle bleibt es reine Farbfläche,
-		// darum an CDU (pattern 'stripes') die background-image-Vorschau prüfen.
-		expect(swatch.getAttribute('style')).toBeTruthy();
+		// SPD-Pattern ist 'solid' -- Review-Fund #15: der Swatch bekommt jetzt
+		// ebenfalls einen background-image-Zwilling (kein Vollflächen-Rest mehr).
+		expect(swatch.getAttribute('style')).toContain('gradient');
+	});
+
+	it('Review-Fund #15: patternPreviewStyle("solid", …) enthält einen gradient-Zwilling statt reiner Flächenfarbe', () => {
+		const style = patternPreviewStyle('solid', '#A50C1A');
+		expect(style).toContain('gradient');
+		expect(style).toContain('#A50C1A');
+	});
+
+	it('Review-Fund #16: patternPreviewStyle unterscheidet diagonal von diagonal-reverse (Streifen-Richtung)', () => {
+		const diagonal = patternPreviewStyle('diagonal', '#7A6500');
+		const diagonalReverse = patternPreviewStyle('diagonal-reverse', '#8C2057');
+		expect(diagonal).toContain('45deg');
+		expect(diagonalReverse).toContain('135deg');
+		expect(diagonal).not.toBe(diagonalReverse);
 	});
 
 	it('rendert den Anteils-Rampen-Hinweis', async () => {
-		render(WinnerMapLegende, { parteien: ['SPD'], patternsEnabled: false, onTogglePatterns: () => {} });
+		render(WinnerMapLegende, {
+			parteien: ['SPD'],
+			patternsEnabled: false,
+			onTogglePatterns: () => {}
+		});
 		await expect.element(page.getByTestId('winner-map-legende-rampe')).toBeInTheDocument();
+	});
+
+	it('Story 9: titel/rampeText-Props überschreiben die Sieger-Texte (Partei-Modus)', async () => {
+		render(WinnerMapLegende, {
+			parteien: ['CDU'],
+			patternsEnabled: false,
+			onTogglePatterns: () => {},
+			titel: 'Anteil CDU',
+			rampeText: 'Deckkraft nach Anteil: 10,0 % = niedrige Deckkraft, ab 50,0 % volle Deckkraft.'
+		});
+		await expect.element(page.getByText('Anteil CDU')).toBeInTheDocument();
+		await expect.element(page.getByTestId('winner-map-legende-rampe')).toHaveTextContent('10,0 %');
 	});
 });

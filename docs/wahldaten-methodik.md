@@ -273,6 +273,26 @@ Bänder sind Partei-Übergänge zwischen zwei benachbarten Spalten, **gebündelt
 
 Rechenkern: `src/lib/components/wahl-portal/internal/wechsel-data.ts` (`computeUebergaengeFromRows`/`effectiveJahreFromRows`/`parteiAnzahlProJahrFromRows`), Layout: `sankey-layout.ts` (reines Geometrie-Modul, kein `d3-sankey`). Der Client-Zwilling der Wiederholungswahl-Merge-Regel (`mergeEffectiveSeries` in `wechsel-data.ts`) bleibt gegen die Server-Semantik (`analytik.ts#mergeRepeatElections`) durch `src/lib/server/wahl/wechsel-client-parity.test.ts` geklammert.
 
+## Anteils-Intensität (Partei-Tabs)
+
+Die Winner-Map bekommt neben der Sieger-Ansicht („Gewinner") einen Tab je `FINDER_PARTIES`-Partei (SPD, CDU, GRÜNE, FDP, AfD, Die Linke, BSW). Im Partei-Modus färbt die Karte durchgängig in der Farbe DIESER Partei; die Deckkraft trägt die Information, nicht die Farbe.
+
+**Server:** `partei`-Param an `/api/wahl/winners` (Picklist = `FINDER_PARTIES`) schaltet von `getWinnersBulk`/`getStimmbezirksWinners` auf `getParteiAnteileBulk`/`getParteiAnteileStimmbezirk` um -- gleiches Row-Shape, `anteil` ist jetzt der Anteil der gewählten Partei statt des Siegers. Response-Mapping (jahr, parent_slug, license) bleibt unverändert.
+
+**Partei-relative Deckkraft-Rampe:** Die feste Sieger-Rampe (`ANTEIL_OPACITY_RAMP`, 0,15-0,45 Anteil → 0,4-0,9 Deckkraft) würde eine durchgängig schwache Partei (z. B. FDP) flächig auf Minimal-Deckkraft zeigen, eine durchgängig starke Partei (z. B. CDU in einzelnen Wahl-Reihen) flächig auf Maximal-Deckkraft -- in beiden Fällen verschwindet die interne Verteilung. `parteiAnteilSpanne` normiert deshalb auf die TATSÄCHLICHE Anteils-Verteilung der gewählten Partei in der geladenen Reihe (Min/Max über alle Jahre × Gebiete bzw. alle Gebiete eines Stimmbezirks-Jahres).
+
+**Eine einzige Bezugsgröße gilt überall:** die Rampe ist immer REIHEN-weit normiert (alle Jahre × Gebiete der Partei), nie auf das gerade angezeigte Jahr beschränkt -- Karte, Small Multiples und Editorial-Texte teilen dieselbe Spanne. Das macht Jahre in der Zeit-Animation vergleichbar (dieselbe Farbintensität bedeutet über alle Jahre denselben Anteil) und hält die Mini-Karten deckungsgleich mit der Karte. Takeaway und Legende nennen die Bezugsgröße deshalb explizit: „… über alle Wahlen der Reihe" (`parteiTakeawaySentence`) bzw. ein Normierungs-Satz in der Legende (`parteiLegendeRampeText`).
+
+Die Deckkraft-Grenzen der Partei-Rampe (`PARTEI_OPACITY_RANGE`) liegen bei 0,15 (Spannen-Minimum) bis 0,9 (Spannen-Maximum), linear interpoliert dazwischen -- deutlich niedriger am unteren Ende als die Sieger-Rampe (0,4), aber bewusst über der `NEUTRAL_OPACITY` (0,1) für Gebiete ganz ohne Daten: das Gebiet mit dem niedrigsten Partei-Anteil bleibt so immer sichtbar präsenter als ein Gebiet ohne Match. Ein niedriger Floor macht Unterschiede innerhalb der Partei-Verteilung sichtbar, ohne die Fläche auf reine Partei-Farbe ohne Informationswert zu reduzieren.
+
+**Wechsel-Semantik entfällt:** Der Partei-Modus bakt über `bakeParteiJahrProperties` (Wechsel-Flags konstant 0) statt `bakeJahrProperties`; die Wechsel-Outline bleibt aus (`NEVER_FILTER`), weil „Führungswechsel der stärksten Partei" im Partei-Modus keine Bedeutung hat.
+
+**Datenlücken:** Die Rampe bleibt reihen-weit auch dann, wenn das GEWÄHLTE Jahr keine Daten für die Partei hat (z. B. BSW vor 2024 in einer Reihe mit späteren BSW-Jahren). Ob ein Hinweis statt der Karte/Legende erscheint, entscheidet sich am gewählten Jahr, nicht an der Reihe: hat die Partei für das gewählte Jahr keine Rows, zeigen Karte, Legende und Takeaway einen neutralen Hinweis statt einer erfundenen Rampe oder einer leeren Fläche.
+
+Rechenkern: `src/lib/components/wahl-portal/internal/winner-map-expressions.ts` (`parteiAnteilSpanne`, `parteiFillOpacityExpression`, `genericParteiFillOpacityExpression`, `parteiOpacityForAnteil` als JS-Zwilling für Legende/Small-Multiples), Editorial-Texte: `winner-map-partei-text.ts`.
+
+**Small Multiples (Kapitel „Stärkste und schwächste Gebiete"):** Eine statische SVG-Mini-Karte je Partei (kein MapLibre), gemeinsame Web-Mercator-Projektion über alle sieben Minis (`internal/geo-svg.ts`, Eigenbau ohne `d3-geo`), das im Portal gewählte Jahr der Reihe (`currentJahr`, respektiert einen Nutzer-Override), Kiez-Ebene. Jede Mini-Karte nutzt dieselbe REIHEN-weite Anteils-Spanne wie die Karte (nicht die Spanne des angezeigten Jahres allein) UND denselben `parteiOpacityForAnteil`-JS-Zwilling, damit Karte und Mini-Karten dieselbe visuelle Sprache teilen. Extrem-Kieze (stärkster/schwächster Anteil) lösen einen Gleichstand deterministisch alphabetisch (`localeCompare('de')`) auf. Ein fehlgeschlagener Partei-Request blendet nur die betroffene Mini-Karte aus (eigene Fehler-Kachel), nie das gesamte Kapitel. Rechenkern: `internal/small-multiples-data.ts`.
+
 ## Pipeline-Run
 
 ```bash

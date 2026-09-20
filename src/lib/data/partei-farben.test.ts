@@ -31,7 +31,9 @@ describe('PARTEI_FARBEN', () => {
 
 	it('Pattern-Variants verfügbar pro Partei (Achromatopsie-Fallback)', () => {
 		for (const k of Object.keys(PARTEI_FARBEN) as ParteiKurzname[]) {
-			expect(['solid', 'stripes', 'dots', 'diagonal']).toContain(PARTEI_FARBEN[k].pattern);
+			expect(['solid', 'stripes', 'dots', 'diagonal', 'diagonal-reverse']).toContain(
+				PARTEI_FARBEN[k].pattern
+			);
 		}
 	});
 
@@ -42,6 +44,52 @@ describe('PARTEI_FARBEN', () => {
 			expect(seen.has(PARTEI_FARBEN[k].hex.toLowerCase())).toBe(false);
 			seen.add(PARTEI_FARBEN[k].hex.toLowerCase());
 		}
+	});
+
+	it('höchstens eine Major-Partei nutzt das texturlose "solid"-Pattern (Achromatopsie-Regression)', () => {
+		// 'solid' ist eine reine Flächenfarbe ohne innere Struktur -- zwei
+		// 'solid'-Parteien sind für Achromatopsie schlechter unterscheidbar als
+		// zwei Parteien mit demselben texturierten Pattern (stripes/dots/
+		// diagonal behalten wenigstens eine sichtbare Struktur).
+		const major: ParteiKurzname[] = ['SPD', 'CDU', 'GRÜNE', 'FDP', 'AfD', 'Die Linke', 'BSW'];
+		const solidCount = major.filter((k) => PARTEI_FARBEN[k].pattern === 'solid').length;
+		expect(solidCount).toBeLessThanOrEqual(1);
+	});
+
+	it('Review-Fund #16: unter den FINDER_PARTIES ist jedes Pattern höchstens 2x vergeben, ein Doppel muss sich in Streifen-Richtung/-Form unterscheiden', () => {
+		// FINDER_PARTIES statt Object.keys(PARTEI_FARBEN): Boundary begrenzt die
+		// Eindeutigkeits-Anforderung auf die 7 Tab-/Small-Multiples-Parteien.
+		const finderParties: ParteiKurzname[] = [
+			'SPD',
+			'CDU',
+			'GRÜNE',
+			'FDP',
+			'AfD',
+			'Die Linke',
+			'BSW'
+		];
+		const byPattern = new Map<string, ParteiKurzname[]>();
+		for (const k of finderParties) {
+			const list = byPattern.get(PARTEI_FARBEN[k].pattern) ?? [];
+			list.push(k);
+			byPattern.set(PARTEI_FARBEN[k].pattern, list);
+		}
+		for (const [pattern, parteien] of byPattern) {
+			expect(parteien.length, `Pattern "${pattern}" bei ${parteien.join('/')}`).toBeLessThanOrEqual(
+				2
+			);
+		}
+		// FDP ('diagonal') und Die Linke ('diagonal-reverse') sind dieselbe Form
+		// (45°-Streifen) in Gegenrichtung -- explizit als verschieden geprüft,
+		// die frühere Kollision (beide 'diagonal') ist damit aufgelöst.
+		expect(PARTEI_FARBEN.FDP.pattern).toBe('diagonal');
+		expect(PARTEI_FARBEN['Die Linke'].pattern).toBe('diagonal-reverse');
+		expect(PARTEI_FARBEN.FDP.pattern).not.toBe(PARTEI_FARBEN['Die Linke'].pattern);
+		// Bestands-Doppel bleiben unangetastet (Defer in deferred-work.md).
+		expect(PARTEI_FARBEN.CDU.pattern).toBe('stripes');
+		expect(PARTEI_FARBEN.AfD.pattern).toBe('stripes');
+		expect(PARTEI_FARBEN['GRÜNE'].pattern).toBe('dots');
+		expect(PARTEI_FARBEN.BSW.pattern).toBe('dots');
 	});
 });
 
