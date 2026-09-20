@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { ComponentProps } from 'svelte';
 	import SankeyWahljahre from '../sankey-wahljahre.svelte';
 	import {
 		createWahlPortalState,
@@ -11,9 +12,11 @@
 		reihe?: WahlPortalReihe;
 		wahlen?: WahlPortalListEntry[];
 		fetchFn?: typeof fetch;
+		showCoverageHinweis?: boolean;
+		sankeyFactory?: ComponentProps<typeof SankeyWahljahre>['sankeyFactory'];
 	};
 
-	let { reihe = 'agh', wahlen = [], fetchFn }: Props = $props();
+	let { reihe = 'agh', wahlen = [], fetchFn, showCoverageHinweis, sankeyFactory }: Props = $props();
 
 	// svelte-ignore state_referenced_locally
 	const portal = createWahlPortalState({ reihe, ebene: 'kiez', jahr: null });
@@ -21,4 +24,4 @@
 	applyWahlList(portal, wahlen);
 </script>
 
-<SankeyWahljahre {fetchFn} />
+<SankeyWahljahre {fetchFn} {showCoverageHinweis} {sankeyFactory} />

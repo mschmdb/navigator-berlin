@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { ELECTIONS } from './fixtures/berlin-wahlen-fixtures.js';
+import {
+	ELECTIONS,
+	WINNERS_WECHSEL_KAPITEL,
+	ANALYTIK_AGH_KIEZ
+} from './fixtures/berlin-wahlen-fixtures.js';
 
 // Story 3 Portal-Skeleton: URL-Sync und Steuerleisten-Verdrahtung auf der
 // echten Seite. Deckt zwei Review-/Live-Funde ab: den Zwei-Effect-Revert-Loop
@@ -577,46 +581,12 @@ test('Zeit-Animation (Ebene stimmbezirk): zeigt Hinweis + Zur-Kiez-Ebene-Button 
 	await expect(page.getByTestId('zeit-animation-hinweis')).not.toBeVisible();
 });
 
-// Story 7 (Wechsel-Kapitel): eigene Fixture mit einer echten Reihen-Historie
-// (2016 SPD -> 2021 GRÜNE -> 2023 Wiederholungswahl GRÜNE), damit genau ein
-// Wechsel entsteht (an 2021->2023, siehe wechsel-data.test.ts Klammer-Test).
-const WINNERS_WECHSEL_KAPITEL = {
-	typ: 'agh',
-	stimmtyp: 'zweitstimme',
-	ebene: 'kiez',
-	winners: [
-		{
-			jahr: 2016,
-			gebiet_slug: 'mv-nord',
-			partei: 'SPD',
-			farbe_hex: '#A50C1A',
-			anteil: 0.4,
-			is_repeat_election: false,
-			parent_slug: null
-		},
-		{
-			jahr: 2021,
-			gebiet_slug: 'mv-nord',
-			partei: 'GRÜNE',
-			farbe_hex: '#0F6E2C',
-			anteil: 0.35,
-			is_repeat_election: false,
-			parent_slug: null
-		},
-		{
-			jahr: 2023,
-			gebiet_slug: 'mv-nord',
-			partei: 'GRÜNE',
-			farbe_hex: '#0F6E2C',
-			anteil: 0.38,
-			is_repeat_election: true,
-			parent_slug: '2021-agh-zweitstimme'
-		}
-	],
-	license: 'dl-de/by-2.0',
-	source_url: 'https://example.invalid/agh23',
-	source_name: 'Amt für Statistik Berlin-Brandenburg'
-};
+// Story 7 (Wechsel-Kapitel): `WINNERS_WECHSEL_KAPITEL` (2016 SPD -> 2021
+// GRÜNE -> 2023 Wiederholungswahl GRÜNE, genau ein Wechsel an 2021->2023,
+// siehe wechsel-data.test.ts Klammer-Test) liegt jetzt in
+// `fixtures/berlin-wahlen-fixtures.ts` -- geteilt mit `a11y.e2e.ts` (Review
+// Triage Log #9: der Axe-Scan des Portals braucht ein sichtbares
+// Trends-Kapitel mit einem gerenderten Sankey-Band).
 
 test('Wechsel-Kapitel: rendert die Liste aus der Fixture (Gebiet, Jahr, Von -> Nach)', async ({
 	page
@@ -637,26 +607,10 @@ test('Wechsel-Kapitel: rendert die Liste aus der Fixture (Gebiet, Jahr, Von -> N
 	await expect(page.getByTestId('wechsel-kapitel-canvas')).toBeVisible();
 });
 
-// Story 8 (Trends/Sankey): eigene Analytik-Fixture. `mv-nord` deckt sich mit
-// der WINNERS_AGH_KIEZ-Fixture (Story 4) oben, damit Geometrie + Analytik
-// dasselbe Gebiet treffen.
-const ANALYTIK_AGH_KIEZ = {
-	ebene: 'kiez',
-	typ: 'agh',
-	stimmtyp: 'zweitstimme',
-	gebiete: [
-		{
-			kiez_slug: 'mv-nord',
-			wechsel_count: 1,
-			wechsel_jahre: [2023],
-			volatilitaet: 0.08,
-			trends: [{ partei: 'SPD', slope: 0.015 }]
-		}
-	],
-	license: 'dl-de/by-2.0',
-	source_url: 'https://example.invalid/agh23',
-	source_name: 'Amt für Statistik Berlin-Brandenburg'
-};
+// Story 8 (Trends/Sankey): `ANALYTIK_AGH_KIEZ` liegt jetzt ebenfalls in
+// `fixtures/berlin-wahlen-fixtures.ts` (s. o.). `mv-nord` deckt sich mit
+// `WINNERS_WECHSEL_KAPITEL`, damit Geometrie + Analytik dasselbe Gebiet
+// treffen.
 
 test('Trends-Kapitel: rendert Karte + Sankey aus Fixtures, Toggle wechselt ohne neuen Analytik-Request', async ({
 	page
@@ -705,6 +659,62 @@ test('Trends-Kapitel: rendert Karte + Sankey aus Fixtures, Toggle wechselt ohne 
 		'true'
 	);
 	expect(analytikRequestCount).toBe(1);
+});
+
+// Story 11 (Sankey-Rework): Hover-Smoke im echten Browser-Layout -- der
+// Komponenten-Test (`sankey-wahljahre.svelte.test.ts`) prüft denselben
+// Handler per direktem `pointermove`-Event (Playwright-`hover()` verlangt
+// eine als sichtbar/stabil erkannte Bounding-Box, die im isolierten
+// Komponenten-Test ohne volles Layout unzuverlässig ist); hier läuft die
+// echte Seite mit echtem CSS, `hover()` ist deshalb zuverlässig.
+test('Sankey-Hover: ein Partei-Band zeigt den Tooltip mit Von/Nach/Anzahl', async ({ page }) => {
+	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: ELECTIONS }));
+	await page.route('**/api/wahl/winners**', (route) => route.fulfill({ json: WINNERS_WECHSEL_KAPITEL }));
+	await page.route('**/api/wahl/analytik**', (route) => route.fulfill({ json: ANALYTIK_AGH_KIEZ }));
+
+	await page.goto('/berlin-wahlen');
+	await page.getByTestId('kapitel-nav-link-trends').click();
+	const trendsChapter = page.getByTestId('wahl-portal-chapter-trends');
+	await expect(trendsChapter.getByTestId('sankey-wahljahre-svg')).toBeVisible();
+
+	// `dispatchEvent` statt `hover()`: Playwrights Actionability-Check
+	// hittestet die Mitte der Bounding-Box bzw. verlangt einen Viewport-Punkt
+	// für die echte Maus-Bewegung; bei einer gebogenen Bezier-Ribbon-Form
+	// (unser Band) ist das je nach Kurvenverlauf unzuverlässig -- ein
+	// bekanntes Playwright/SVG-Pfad-Verhalten, kein Rendering-Fehler. Ein
+	// direktes `pointermove`-Event prüft denselben Handler ohne diese
+	// Heuristik.
+	const band = trendsChapter.getByTestId('sankey-band').first();
+	await band.dispatchEvent('pointermove', { clientX: 10, clientY: 10 });
+	await expect(page.getByTestId('sankey-tooltip')).toBeVisible();
+	await expect(page.getByTestId('sankey-tooltip-title')).toHaveText('SPD → GRÜNE');
+
+	// Review Triage Log #10: zusätzlich ein ECHTER `mouse.move` auf einen Punkt
+	// AUF dem Band. `boundingBox()` ist dafür KEINE verlässliche Quelle: bei
+	// dieser Fixture (ein Gebiet, ein Übergang) liegen Quell- und Ziel-Knoten
+	// auf derselben Höhe, das Band verläuft rein horizontal -- Chromiums
+	// `getBoundingClientRect()` rechnet den Stroke nicht in die Geometrie-BBox
+	// ein, eine horizontale Linie hat also `height: 0` und jeder Punkt "aus der
+	// Box-Mitte" verfehlt das Band. Stattdessen: ein Punkt exakt AUF der
+	// Pfad-Mittellinie nahe dem Band-Anfang (`getPointAtLength`), über
+	// `getScreenCTM` in Viewport-Koordinaten übersetzt -- robust unabhängig
+	// vom Kurvenverlauf. `scrollIntoViewIfNeeded` zuerst, sonst liefert
+	// `elementFromPoint` an dieser Stelle `null` (Punkt unterhalb des
+	// sichtbaren Viewports).
+	await band.scrollIntoViewIfNeeded();
+	const point = await band.evaluate((el: SVGPathElement) => {
+		const ctm = el.getScreenCTM();
+		if (!ctm) return null;
+		const len = el.getTotalLength();
+		const p = el.getPointAtLength(Math.min(20, len / 4));
+		return { x: ctm.a * p.x + ctm.c * p.y + ctm.e, y: ctm.b * p.x + ctm.d * p.y + ctm.f };
+	});
+	expect(point).not.toBeNull();
+	if (point) {
+		await page.mouse.move(point.x, point.y);
+		await expect(page.getByTestId('sankey-tooltip')).toBeVisible();
+		await expect(page.getByTestId('sankey-tooltip-title')).toHaveText('SPD → GRÜNE');
+	}
 });
 
 // Review-Fund VG-3/BH-4: die echte matchMedia-Verdrahtung von reduced motion
