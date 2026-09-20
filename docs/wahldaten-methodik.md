@@ -261,9 +261,17 @@ Build-Zeit-Aggregat (ADR-013: Postgres als Cache, kein Live-Rechenpfad) für Wec
 
 **Trend:** Steigung (`slope`) der linearen Regression (kleinste Quadrate) des Partei-Anteils über die Jahre der effektiven Reihe. Jahre ohne Anteil für die Partei werden ausgelassen. Mit < 2 Datenpunkten: `slope = 0`.
 
-**Volatilität:** Mittlere L1-Distanz aufeinanderfolgender Anteils-Vektoren (Summe der absoluten Anteils-Differenzen über alle Parteien) zwischen zwei benachbarten Legislaturen der effektiven Reihe, gemittelt über alle Übergänge. Mit < 2 Legislaturen: `0`.
+**Volatilität:** Mittlere L1-Distanz aufeinanderfolgender Anteils-Vektoren (Summe der absoluten Anteils-Differenzen über alle Parteien) zwischen zwei benachbarten Legislaturen der effektiven Reihe, gemittelt über alle Übergänge. Mit < 2 Legislaturen: `0`. `volatilitaet × 100` ist die Summe der Prozentpunkt-Beträge über ALLE Parteien, keine Verschiebung einer einzelnen Partei -- die Trend-/Volatilitäts-Karte beschriftet den Wert deshalb als „Gesamtverschiebung" (`formatVolatilitaetLabel`, `trends-map-data.ts`).
+
+**Klassifizierungs-Schwellen der Trend-/Volatilitäts-Karte:** Trend (`slope × 100`, Pp./Jahr): „stabil" unter ±0,2, „leicht" ab ±0,2, „stark" ab ±1,0. Volatilität (`volatilitaet`, Rohwert 0..2): „gering" unter 0,05 (5,0 Pp. Gesamtverschiebung), „mittel" 0,05 bis 0,12 (5,0 bis 12,0 Pp.), „hoch" ab 0,12 (12,0 Pp.). Rechenkern + Schwellen-Konstanten: `src/lib/components/wahl-portal/internal/trends-map-data.ts`.
 
 **Zwilling (Kiez-Ähnlichkeit):** Anders als Wechsel/Trend/Volatilität kein Build-Zeit-Aggregat, sondern Laufzeit-Berechnung über den vorhandenen Bulk-Query `get-kiez-shares-for-wahl` (143 Anteils-Vektoren pro Request sind billig genug, Route cached 3600s). Score = `1 − normierte L1-Distanz` der Anteils-Vektoren der jüngsten Wahl der Reihe, skaliert auf 0..100 (L1-Distanz zweier Anteils-Vektoren mit Summe 1 liegt in [0, 2], normiert durch Division durch 2).
+
+**Sankey (Wahljahre-Übergänge):** Client-seitig aus der bereits geladenen Bulk-Winners-Response (`/api/wahl/winners`) berechnet, kein eigenes Server-Aggregat. Spalten sind die Jahre der effektiven Legislatur-Reihe (dieselbe Wiederholungswahl-Regel wie oben: eine Wiederholungswahl ersetzt ihre Eltern-Wahl an deren Position).
+
+Bänder sind Partei-Übergänge zwischen zwei benachbarten Spalten, **gebündelt pro Partei-Paar**: alle Gebiete mit demselben Von-Partei/Nach-Partei-Übergang zwischen denselben zwei Jahren bilden EIN Band, dessen Breite die Anzahl der Gebiete zählt (nie Personen, nie ein Band pro Gebiet). Ein unveränderter Übergang (Partei A → Partei A) zählt ebenfalls als Band. Je Spalte entspricht die Summe der Bandbreiten exakt der Anzahl der Gebiete MIT DATEN IN DIESEM JAHR, nicht der Gesamtzahl aller je erfassten Gebiete -- ein Gebiet mit kürzerer Datenhistorie (Coverage-Grenze, z. B. BVV-Kiez ab 2016) trägt nur in den Spalten bei, die es tatsächlich abdeckt, auch wenn diese Spalte erst in der Mitte der Reihe liegt. Ebenen-Beschränkung: nur Kiez oder Bezirk (LOR-stabile Ebenen über alle Wahljahre), nie Stimmbezirk (Wahlkreis-Zuschnitte ändern sich zwischen Wahlen).
+
+Rechenkern: `src/lib/components/wahl-portal/internal/wechsel-data.ts` (`computeUebergaengeFromRows`/`effectiveJahreFromRows`/`parteiAnzahlProJahrFromRows`), Layout: `sankey-layout.ts` (reines Geometrie-Modul, kein `d3-sankey`). Der Client-Zwilling der Wiederholungswahl-Merge-Regel (`mergeEffectiveSeries` in `wechsel-data.ts`) bleibt gegen die Server-Semantik (`analytik.ts#mergeRepeatElections`) durch `src/lib/server/wahl/wechsel-client-parity.test.ts` geklammert.
 
 ## Pipeline-Run
 

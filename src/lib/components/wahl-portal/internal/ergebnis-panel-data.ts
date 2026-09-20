@@ -44,7 +44,13 @@ export interface ErgebnisPanelData {
 
 const SONSTIGE = 'Sonstige';
 
-function formatDeltaLabel(deltaPp: number): string {
+/**
+ * `±x,x Pp.` mit echtem Plus/Minus (U+2212, kein U+00B1), de-DE-Komma.
+ * Story 8 (Trends): auch für `slope×100` (Pp./Jahr) in der Trend-Karten-
+ * Tabelle und deren Takeaway (`trends-map-data.ts`) wiederverwendet
+ * (Boundary Code-Map: „Bestands-Helfer", keine zweite Formatierung).
+ */
+export function formatDeltaLabel(deltaPp: number): string {
 	const sign = deltaPp < 0 ? '−' : '+';
 	const abs = Math.abs(deltaPp).toFixed(1).replace('.', ',');
 	return `${sign}${abs} Pp.`;

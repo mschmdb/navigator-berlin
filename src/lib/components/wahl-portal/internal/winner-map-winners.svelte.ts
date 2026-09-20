@@ -19,6 +19,9 @@ export type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
 export interface WinnersApiResponse {
 	readonly winners: WinnerApiRow[];
+	readonly license?: string | null;
+	readonly source_name?: string | null;
+	readonly source_url?: string | null;
 }
 
 const responseCache: Record<string, WinnersApiResponse> = {};
