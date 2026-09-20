@@ -180,42 +180,6 @@ describe('trends-kapitel.svelte', () => {
 		await expect.element(page.getByTestId('trends-kapitel-empty')).not.toBeInTheDocument();
 	});
 
-	it('Sankey rendert eigenständig, auch wenn die Analytik leer bleibt (Review Triage Log #10)', async () => {
-		const winners = {
-			winners: [
-				{
-					jahr: 2016,
-					gebiet_slug: 'a',
-					partei: 'SPD',
-					farbe_hex: '#A50C1A',
-					anteil: 0.4,
-					is_repeat_election: false,
-					parent_slug: null
-				},
-				{
-					jahr: 2021,
-					gebiet_slug: 'a',
-					partei: 'GRÜNE',
-					farbe_hex: '#0F6E2C',
-					anteil: 0.35,
-					is_repeat_election: false,
-					parent_slug: null
-				}
-			]
-		};
-		const fetchFn = fakeFetch([
-			['/api/wahl/analytik', { gebiete: [] }],
-			['/api/wahl/winners', winners],
-			['MANIFEST.json', MANIFEST],
-			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
-			['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC]
-		]);
-		render(TrendsKapitelContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn });
-
-		await expect.element(page.getByTestId('trends-kapitel-empty')).toBeInTheDocument();
-		await expect.element(page.getByTestId('sankey-wahljahre-svg')).toBeInTheDocument();
-	});
-
 	it('I/O-Matrix Trend-Karte: rendert Karte, Takeaway, Legende, Chips, Datenstand, Tabelle', async () => {
 		const fetchFn = fakeFetch([
 			['/api/wahl/analytik', ANALYTIK],
@@ -231,30 +195,26 @@ describe('trends-kapitel.svelte', () => {
 		// hat einen Trend-Eintrag in der Fixture -> "steigend" im Takeaway.
 		await expect.element(page.getByTestId('trends-kapitel-takeaway')).toHaveTextContent('SPD');
 		await expect.element(page.getByTestId('trends-kapitel-legende')).toBeInTheDocument();
-		await expect.element(page.getByTestId('trends-kapitel-datenstand')).toHaveTextContent(
-			'Amt für Statistik Berlin-Brandenburg'
-		);
+		await expect
+			.element(page.getByTestId('trends-kapitel-datenstand'))
+			.toHaveTextContent('Amt für Statistik Berlin-Brandenburg');
 		await expect.element(page.getByTestId('trends-kapitel-coverage-hinweis')).toBeInTheDocument();
 
-		await expect.element(page.getByTestId('trends-kapitel-partei-SPD')).toHaveAttribute(
-			'aria-checked',
-			'true'
-		);
+		await expect
+			.element(page.getByTestId('trends-kapitel-partei-SPD'))
+			.toHaveAttribute('aria-checked', 'true');
 
 		await page.getByTestId('table-toggle').first().click();
 		await expect.element(page.getByTestId('data-table').first()).toHaveTextContent('Hansaviertel');
 
 		// Toggle zu Volatilität: Chips werden deaktiviert, Legende wechselt.
 		await page.getByTestId('trends-kapitel-toggle-volatilitaet').click();
-		await expect.element(page.getByTestId('trends-kapitel-partei-SPD')).toHaveAttribute(
-			'aria-disabled',
-			'true'
-		);
-		await expect.element(page.getByTestId('trends-kapitel-takeaway')).toHaveTextContent('Hansaviertel');
-
-		// Der eingebettete Sankey rendert eigenständig (eigener Ladezustand,
-		// hier leer, weil die Fixture keine Winners-Übergänge liefert).
-		await expect.element(page.getByTestId('sankey-wahljahre-empty')).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('trends-kapitel-partei-SPD'))
+			.toHaveAttribute('aria-disabled', 'true');
+		await expect
+			.element(page.getByTestId('trends-kapitel-takeaway'))
+			.toHaveTextContent('Hansaviertel');
 	});
 
 	it('Volatilitäts-Modus: aria-describedby zeigt auf einen sichtbaren Hinweissatz an der Partei-Radiogroup (Review Triage Log #12)', async () => {

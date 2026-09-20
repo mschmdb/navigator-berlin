@@ -16,12 +16,64 @@ export interface FakeFilterCall {
 	readonly filter: unknown;
 }
 
+export interface FakeFitBoundsCall {
+	readonly bounds: unknown;
+	readonly opts: unknown;
+}
+
+/** Fixer Rückgabewert des Fake-`getZoom()` NACH dem ersten `fitBounds`-Aufruf
+ * -- steht für den Zoom, den `fitBounds` (animate: false) synchron erreicht
+ * (Story 12). Davor liefert `getZoom()` den Konstruktions-Zoom (9), damit
+ * Controller-Tests beweisen können, dass `fitZoom` wirklich NACH dem Fit
+ * erfasst wird (Review Triage Log #8). */
+export const FAKE_ZOOM_AFTER_FIT = 11.4;
+const FAKE_CONSTRUCTION_ZOOM = 9;
+
+/** Bounds, die `getBounds()` liefert, BEVOR ein `fitBounds`-Aufruf lief --
+ * steht für die Konstruktions-`maxBounds` der echten Controller. */
+const FAKE_CONSTRUCTION_BOUNDS: readonly [readonly [number, number], readonly [number, number]] = [
+	[12.9, 52.25],
+	[13.9, 52.75]
+];
+
+/** Simuliert, dass die NACH einem `fitBounds`-Aufruf sichtbaren Bounds von
+ * der reinen Daten-Bbox abweichen (das echte MapLibre rechnet Canvas-
+ * Seitenverhältnis und `padding` mit ein) -- Controller-Tests können damit
+ * beweisen, dass `setMaxBounds` wirklich `instance.getBounds()` liest statt
+ * die lokale `fitTo`-Bbox wiederzuverwenden (Review Triage Log #1). */
+const FAKE_VISIBLE_PADDING = 0.05;
+
+export function fakeVisibleBoundsAfterFit(
+	fitTo: readonly [readonly [number, number], readonly [number, number]]
+): readonly [readonly [number, number], readonly [number, number]] {
+	const [[minLng, minLat], [maxLng, maxLat]] = fitTo;
+	return [
+		[minLng - FAKE_VISIBLE_PADDING, minLat - FAKE_VISIBLE_PADDING],
+		[maxLng + FAKE_VISIBLE_PADDING, maxLat + FAKE_VISIBLE_PADDING]
+	];
+}
+
 export interface FakeMapLibre {
 	readonly paintCalls: FakePaintCall[];
 	/** Review-Fund #1(b): `setFilter`-Aufrufe (Wechsel-Outline-Layer) für
 	 * Wiring-Tests auf kiez/bezirk, analog zum lokalen Fake im Controller-Test. */
 	readonly filterCalls: FakeFilterCall[];
 	readonly setDataCalls: unknown[];
+	/** Story 12: `setMaxBounds`/`setMinZoom`-Aufrufe nach `fitBounds`, prüfen
+	 * die Karten-Anschlag-Grenzen (Wechsel-/Trends-Controller). */
+	readonly setMaxBoundsCalls: unknown[];
+	readonly setMinZoomCalls: number[];
+	/** Review Triage Log #8: `fitBounds`-Aufrufe (Bounds + Options) aufzeichnen
+	 * -- vorher war der Fake `fitBounds` ein reines No-op, Wiring-Tests konnten
+	 * die Reihenfolge/Argumente also gar nicht beweisen. */
+	readonly fitBoundsCalls: FakeFitBoundsCall[];
+	/** Zählt `resize()`-Aufrufe -- beweist, dass der Controller synchron vor
+	 * dem Fit resized (Review Triage Log #1). */
+	readonly resizeCalls: number[];
+	/** Aufruf-Reihenfolge von `resize`/`fitBounds`/`setMaxBounds`/`setMinZoom`
+	 * als Tag-Liste -- präziser als der Vergleich einzelner Call-Arrays, wenn
+	 * ein Test explizit die Reihenfolge beweisen muss (Review Triage Log #1). */
+	readonly callOrder: string[];
 	readonly layers: Record<string, Record<string, unknown>>;
 	readonly handlers: Record<string, (...args: unknown[]) => void>;
 	readonly removeCalls: number[];
@@ -39,8 +91,16 @@ export function fakeMapFactory(): FakeMapLibre {
 	const sources: Record<string, unknown> = {};
 	const handlers: Record<string, (...args: unknown[]) => void> = {};
 	const setDataCalls: unknown[] = [];
+	const setMaxBoundsCalls: unknown[] = [];
+	const setMinZoomCalls: number[] = [];
+	const fitBoundsCalls: FakeFitBoundsCall[] = [];
+	const resizeCalls: number[] = [];
+	const callOrder: string[] = [];
 	const removeCalls: number[] = [];
 	let constructCount = 0;
+	let currentZoom = FAKE_CONSTRUCTION_ZOOM;
+	let currentBounds: readonly [readonly [number, number], readonly [number, number]] =
+		FAKE_CONSTRUCTION_BOUNDS;
 
 	class FakeMap {
 		constructor() {
@@ -65,6 +125,21 @@ export function fakeMapFactory(): FakeMapLibre {
 		setFilter(layer: string, filter: unknown) {
 			filterCalls.push({ layer, filter });
 		}
+		setMaxBounds(bounds: unknown) {
+			setMaxBoundsCalls.push(bounds);
+			callOrder.push('setMaxBounds');
+		}
+		setMinZoom(zoom: number) {
+			setMinZoomCalls.push(zoom);
+			callOrder.push('setMinZoom');
+		}
+		getZoom() {
+			return currentZoom;
+		}
+		getBounds() {
+			const bounds = currentBounds;
+			return { toArray: () => bounds };
+		}
 		getSource(id: string) {
 			return sources[id]
 				? {
@@ -79,8 +154,18 @@ export function fakeMapFactory(): FakeMapLibre {
 		getCanvas() {
 			return { style: { cursor: '' } };
 		}
-		fitBounds() {}
-		resize() {}
+		fitBounds(bounds: unknown, opts?: unknown) {
+			fitBoundsCalls.push({ bounds, opts });
+			callOrder.push('fitBounds');
+			currentZoom = FAKE_ZOOM_AFTER_FIT;
+			currentBounds = fakeVisibleBoundsAfterFit(
+				bounds as readonly [readonly [number, number], readonly [number, number]]
+			);
+		}
+		resize() {
+			resizeCalls.push(1);
+			callOrder.push('resize');
+		}
 		remove() {
 			removeCalls.push(1);
 		}
@@ -90,6 +175,11 @@ export function fakeMapFactory(): FakeMapLibre {
 		paintCalls,
 		filterCalls,
 		setDataCalls,
+		setMaxBoundsCalls,
+		setMinZoomCalls,
+		fitBoundsCalls,
+		resizeCalls,
+		callOrder,
 		layers,
 		handlers,
 		removeCalls,

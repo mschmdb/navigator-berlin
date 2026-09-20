@@ -51,9 +51,11 @@
 	type Props = {
 		/** Injizierbar für Tests; Default = globales `fetch` (Muster wechsel-kapitel.svelte). */
 		fetchFn?: typeof fetch;
-		/** Trends-Kapitel bettet den Sankey ein und zeigt die Coverage-Fußnote
-		 * bereits selbst -- doppelte Anzeige auf dem Schirm vermeiden
-		 * (Review Triage Log #3). Default `true` (Sankey rendert eigenständig). */
+		/** Story 12: der Sankey rendert seit dem Umzug ins eigene „Übergänge"-
+		 * Kapitel immer eigenständig, `+page.svelte` übergibt dieses Prop nicht
+		 * mehr explizit -- Default `true` greift dort immer. Bleibt als reine
+		 * DI-Naht bestehen, falls eine künftige Einbettung die Fußnote wieder
+		 * unterdrücken muss. */
 		showCoverageHinweis?: boolean;
 		/** Injizierbar für Tests (Test-Naht, Muster `winner-map-maplibre.svelte.ts`
 		 * `mapFactory`) -- Default = echter `import('d3-sankey')`. */

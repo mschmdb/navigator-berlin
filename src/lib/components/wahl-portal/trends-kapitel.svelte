@@ -1,10 +1,13 @@
 <script lang="ts">
 	/**
 	 * Story 8, Kapitel „Trends" (CAP-5 + CAP-8): Kiez-Choropleth mit Toggle
-	 * Trend|Volatilität (Partei-Chips für Trend) + eingebetteter Sankey über
-	 * die Wahljahre. Trend/Volatilität kommen NUR aus `/api/wahl/analytik`
-	 * (Kiez-only, kein Bezirk-Toggle an dieser Karte -- Boundary: die API
-	 * liefert bewusst nur `ebene=kiez`).
+	 * Trend|Volatilität (Partei-Chips für Trend). Trend/Volatilität kommen NUR
+	 * aus `/api/wahl/analytik` (Kiez-only, kein Bezirk-Toggle an dieser Karte
+	 * -- Boundary: die API liefert bewusst nur `ebene=kiez`).
+	 *
+	 * Story 12: der Sankey „Wahljahre im Übergang" zog in ein eigenes Kapitel
+	 * um (`+page.svelte`, Section `uebergaenge`) -- er versteckte sich hier
+	 * vorher als Unterabschnitt ohne eigenen Nav-Eintrag.
 	 */
 	import { getWahlPortalState } from '$lib/state/wahl-portal-context.svelte.js';
 	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
@@ -45,7 +48,6 @@
 		type TrendsToggle,
 		type TrendsTableRow
 	} from './internal/trends-map-data.js';
-	import SankeyWahljahre from './sankey-wahljahre.svelte';
 
 	interface LegendeEintrag {
 		readonly label: string;
@@ -102,7 +104,10 @@
 	let parteiButtons: HTMLButtonElement[] = $state([]);
 
 	const TOGGLE_WERTE: readonly TrendsToggle[] = ['trend', 'volatilitaet'];
-	const TOGGLE_LABELS: Record<TrendsToggle, string> = { trend: 'Trend', volatilitaet: 'Volatilität' };
+	const TOGGLE_LABELS: Record<TrendsToggle, string> = {
+		trend: 'Trend',
+		volatilitaet: 'Volatilität'
+	};
 
 	function onToggleKeydown(event: KeyboardEvent, index: number): void {
 		const next = nextRadioIndex(event.key, index, TOGGLE_WERTE.length);
@@ -233,7 +238,10 @@
 	<div data-testid="trends-kapitel" class="flex flex-col gap-6">
 		<div class="flex flex-col gap-3">
 			<div class="flex flex-col gap-1.5">
-				<span id="trends-toggle-label" class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+				<span
+					id="trends-toggle-label"
+					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+				>
 					Ansicht
 				</span>
 				<div
@@ -267,7 +275,10 @@
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<span id="trends-partei-label" class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+				<span
+					id="trends-partei-label"
+					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+				>
 					Partei
 				</span>
 				<div
@@ -356,7 +367,10 @@
 		</ul>
 
 		{#if response}
-			<p data-testid="trends-kapitel-datenstand" class="font-mono text-xs text-ink-subtle tabular-nums">
+			<p
+				data-testid="trends-kapitel-datenstand"
+				class="font-mono text-xs text-ink-subtle tabular-nums"
+			>
 				Datenstand: {response.source_name ?? 'unbekannte Quelle'}
 				{#if response.license}
 					· Lizenz {response.license}
@@ -367,11 +381,10 @@
 			{KIEZ_COVERAGE_HINWEIS}
 		</p>
 
-		<DataTableAlternative columns={tableColumns} rows={tableRows} caption="Kieze nach Trend/Volatilität" />
+		<DataTableAlternative
+			columns={tableColumns}
+			rows={tableRows}
+			caption="Kieze nach Trend/Volatilität"
+		/>
 	</div>
 {/if}
-
-<div class="border-t border-rule pt-6">
-	<h3 class="mb-3 font-serif text-xl text-ink">Wahljahre im Übergang</h3>
-	<SankeyWahljahre {fetchFn} showCoverageHinweis={false} />
-</div>

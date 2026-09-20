@@ -5,11 +5,16 @@
 		id: string;
 		title: string;
 		testid: string;
+		/** Story 12: 1-2 kurze Sätze direkt unter der Überschrift -- was zeigt
+		 * das Kapitel, wie liest man es. Statischer String, kein Snippet (im
+		 * Unterschied zu `takeaway`, das eine Kennzahl/einen Kurzbefund
+		 * ausweist). */
+		subtext?: string;
 		takeaway?: Snippet;
 		children?: Snippet;
 	};
 
-	let { id, title, testid, takeaway, children }: Props = $props();
+	let { id, title, testid, subtext, takeaway, children }: Props = $props();
 </script>
 
 <!-- Story 10: Puffer wuchs von 3rem auf 5.5rem -- über der Kapitel-Nav sitzt
@@ -22,6 +27,11 @@
 	class="flex scroll-mt-[calc(var(--header-height,72px)+5.5rem)] flex-col gap-4 border-t border-rule py-10"
 >
 	<h2 id={`${id}-h`} class="font-serif text-2xl text-ink">{title}</h2>
+	{#if subtext}
+		<p data-testid={`${testid}-subtext`} class="max-w-prose font-serif text-base text-ink-muted">
+			{subtext}
+		</p>
+	{/if}
 	{#if takeaway}
 		<p
 			data-testid={`${testid}-takeaway`}

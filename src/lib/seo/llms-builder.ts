@@ -164,7 +164,7 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 			loc: `${ctx.origin}/berlin-wahlen`,
 			name: 'Berlin-Wahlen',
 			description:
-				'Bundestags-, Abgeordnetenhaus- und BVV-Wahlen in Berlin seit 2011: Karte, Trends, Kontraste und dein Kiez im Wahlverhalten',
+				'Bundestags-, Abgeordnetenhaus- und BVV-Wahlen in Berlin seit 2011: Karte, Wechsel, Trends und Wahljahre im Übergang je Kiez und Bezirk',
 			section: 'static'
 		});
 	}

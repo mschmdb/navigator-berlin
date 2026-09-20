@@ -83,6 +83,8 @@
   description: Kiez-Profil mit Sparkline, politischer Zwilling (Top-5), Kreuzung
     Wahl mit Atlas-Layern samt Fehlschluss-Notiz und Methodik-Fortschreibung (CAP-9,
     CAP-10, CAP-12-Rest).
+  # Matze 20.09.: gestrichen (Spec-Story 12 Portal-Feinschliff). Kontraste
+  # bleibt separat in deferred-work.md vermerkt.
 - id: '11'
   title: WebMCP-Tools fürs Portal
   description: get_political_profile, get_political_trend, find_similar_kieze
@@ -95,11 +97,11 @@
   description: /berlin-wahlen/[slug] als Neubau der 20 Einzelwahl-Seiten aus Portal-Bausteinen
     (Slugs unverändert, prerendered), 301 von /wahl und /wahl/[slug], alle internen
     Links direkt umziehen (CAP-16, CAP-13-Redirects).
-  invoke_dev_with: 'Interne Link-Stellen stehen in der Constraint-Notiz im Memlog
+  invoke_dev_with: "Interne Link-Stellen stehen in der Constraint-Notiz im Memlog
     (Inspector wahl-section wahlabhängig, home-wahl-teaser, kiez-finder-panel,
     meta-links, kiez/[slug], methodik, llms, OG, Sitemap-Sources). Abschluss-Check:
-    grep ''/wahl'' ohne interne Alt-Links. Sitemap/llms/OG auf neue Slug-Pfade,
-    lastmod aktualisieren.'
+    grep '/wahl' ohne interne Alt-Links. Sitemap/llms/OG auf neue Slug-Pfade,
+    lastmod aktualisieren."
 - id: '13'
   title: Einstiegspunkte
   description: Home-Feature-Block nach Kiez-Finder-Muster, Footer-Link, Inspector-Deep-Link
