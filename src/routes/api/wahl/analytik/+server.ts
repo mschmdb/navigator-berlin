@@ -18,6 +18,7 @@ import {
 	getTrendForReihe
 } from '$lib/server/db/queries/wahl/get-analytik-for-reihe.js';
 import { sourceName } from '$lib/server/wahl/source-label.js';
+import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	ebene: v.literal('kiez'),
@@ -69,6 +70,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			source_url: latestWahl?.sourceUrl ?? null,
 			source_name: latestWahl ? sourceName(latestWahl.sourceUrl) : null
 		},
-		{ headers: { 'cache-control': 'public, max-age=3600' } }
+		{ headers: wahlCacheHeaders() }
 	);
 };

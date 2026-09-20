@@ -14,6 +14,7 @@ import type { RequestHandler } from './$types';
 import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { getKiezSharesForWahl } from '$lib/server/db/queries/wahl/get-kiez-shares-for-wahl.js';
 import { loadKiezSlugToBzrId } from '$lib/server/wahl/kiez-slug-to-bzr.js';
+import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
 
 const ElectionSlugSchema = v.pipe(v.string(), v.regex(/^\d{4}-(btw|agh|bvv)(-[a-z]+)?$/));
 
@@ -40,6 +41,6 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	return json(
 		{ election: electionSlug, shares },
-		{ headers: { 'cache-control': 'public, max-age=3600' } }
+		{ headers: wahlCacheHeaders() }
 	);
 };

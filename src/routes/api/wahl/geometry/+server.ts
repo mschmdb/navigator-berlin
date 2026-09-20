@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
 import type { RequestHandler } from './$types';
+import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
 import {
 	geoSlugForYear,
 	candidateDbUwbIds,
@@ -93,7 +94,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			status: 200,
 			headers: {
 				'content-type': 'application/geo+json',
-				'cache-control': 'public, max-age=3600'
+				...wahlCacheHeaders()
 			}
 		});
 	}

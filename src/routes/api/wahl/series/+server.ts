@@ -28,6 +28,7 @@ import {
 	type GebietEbene
 } from '$lib/server/db/queries/wahl/get-series-for-gebiet.js';
 import { sourceName } from '$lib/server/wahl/source-label.js';
+import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	typ: v.picklist(['btw', 'agh', 'bvv']),
@@ -114,6 +115,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			source_url: latestWahl?.sourceUrl ?? null,
 			source_name: latestWahl ? sourceName(latestWahl.sourceUrl) : null
 		},
-		{ headers: { 'cache-control': 'public, max-age=3600' } }
+		{ headers: wahlCacheHeaders() }
 	);
 };
