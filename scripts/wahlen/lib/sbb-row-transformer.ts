@@ -129,12 +129,16 @@ export function transformSbbRow(
 		istBriefwahl: isSbbBriefwahl(wahlbezirksart),
 		wahlberechtigte: parseIntSafe(row[COL_WAHLBERECHTIGTE]),
 		waehlende,
+		// einstimme (BVV) teilt den erststimme-Slot mit den votes: der
+		// db-loader liest gueltig/votes aus demselben Slot -- fuellte nur
+		// votes den Slot, blieb gueltig 0 und JEDER BVV-ergebnis.anteil
+		// wurde als stimmen/0 -> 0 gespeichert (Live-Fund 20.09.).
 		ungueltig: {
-			erststimme: erst ? ungueltig : 0,
+			erststimme: erst || ein ? ungueltig : 0,
 			zweitstimme: zweit ? ungueltig : 0
 		},
 		gueltig: {
-			erststimme: erst ? gueltig : 0,
+			erststimme: erst || ein ? gueltig : 0,
 			zweitstimme: zweit ? gueltig : 0
 		},
 		votes: {
