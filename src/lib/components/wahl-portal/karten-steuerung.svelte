@@ -1,10 +1,17 @@
 <script lang="ts">
+	/**
+	 * Story 10 (Steuerungs-Klarheit): Jahr- und Ebenen-Controls gelten nur für
+	 * das Karte-Kapitel (Winner-Map/Panel/Small-Multiples-Zeitschnitt), nicht
+	 * seitenweit -- deshalb rendert dieses Control im Karte-Kapitel, direkt vor
+	 * der Winner-Map, statt in einer globalen Steuerleiste.
+	 *
+	 * Aufgespalten aus `portal-steuerleiste.svelte` (Story 3): Testids
+	 * (`steuerleiste-jahr*`, `steuerleiste-ebene*`) und Tastatursteuerung
+	 * bleiben unverändert, damit die bestehenden E2E-Stellen stabil bleiben.
+	 */
 	import {
-		REIHE_VALUES,
 		EBENE_VALUES,
-		REIHE_LABELS,
 		EBENE_LABELS,
-		type WahlPortalReihe,
 		type WahlPortalEbene
 	} from '$lib/utils/wahl-portal-url-state.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
@@ -15,40 +22,19 @@
 	}
 
 	type Props = {
-		reihe: WahlPortalReihe;
 		jahr: number | null;
 		ebene: WahlPortalEbene;
 		jahrOptions: readonly JahrOption[];
-		/** DB-los / API leer (AC I/O-Matrix): Reihe+Ebene-Toggles gesperrt. */
+		/** DB-los / API leer (AC I/O-Matrix): Ebene-Toggle gesperrt. */
 		disabled?: boolean;
-		onReiheChange: (reihe: WahlPortalReihe) => void;
 		onJahrChange: (jahr: number) => void;
 		onEbeneChange: (ebene: WahlPortalEbene) => void;
 	};
 
-	let {
-		reihe,
-		jahr,
-		ebene,
-		jahrOptions,
-		disabled = false,
-		onReiheChange,
-		onJahrChange,
-		onEbeneChange
-	}: Props = $props();
+	let { jahr, ebene, jahrOptions, disabled = false, onJahrChange, onEbeneChange }: Props = $props();
 
-	let reiheButtons: HTMLButtonElement[] = $state([]);
 	let jahrButtons: HTMLButtonElement[] = $state([]);
 	let ebeneButtons: HTMLButtonElement[] = $state([]);
-
-	function onReiheKeydown(event: KeyboardEvent, index: number): void {
-		if (disabled) return;
-		const next = nextRadioIndex(event.key, index, REIHE_VALUES.length);
-		if (next === null) return;
-		event.preventDefault();
-		reiheButtons[next]?.focus();
-		onReiheChange(REIHE_VALUES[next]);
-	}
 
 	function onJahrKeydown(event: KeyboardEvent, index: number): void {
 		if (disabled) return;
@@ -69,47 +55,7 @@
 	}
 </script>
 
-<div data-testid="portal-steuerleiste" class="flex flex-col gap-3 border border-rule bg-bg p-3">
-	<div class="flex flex-col gap-1.5">
-		<span
-			id="steuerleiste-reihe-label"
-			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
-		>
-			Wahl-Reihe
-		</span>
-		<div
-			role="radiogroup"
-			aria-labelledby="steuerleiste-reihe-label"
-			data-testid="steuerleiste-reihe"
-			class="flex flex-wrap gap-1"
-		>
-			{#each REIHE_VALUES as value, i (value)}
-				{@const checked = reihe === value}
-				<button
-					bind:this={reiheButtons[i]}
-					role="radio"
-					type="button"
-					data-testid={`steuerleiste-reihe-${value}`}
-					aria-checked={checked}
-					aria-disabled={disabled}
-					tabindex={checked ? 0 : -1}
-					onclick={() => !disabled && onReiheChange(value)}
-					onkeydown={(e) => onReiheKeydown(e, i)}
-					class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
-					class:bg-ink={checked}
-					class:text-bg={checked}
-					class:bg-bg={!checked}
-					class:text-ink={!checked}
-					class:hover:bg-bg-muted={!checked && !disabled}
-					class:opacity-40={disabled}
-					class:cursor-not-allowed={disabled}
-				>
-					{REIHE_LABELS[value]}
-				</button>
-			{/each}
-		</div>
-	</div>
-
+<div data-testid="karten-steuerung" class="flex flex-col gap-3 border border-rule bg-bg p-3">
 	<div class="flex flex-col gap-1.5">
 		<span
 			id="steuerleiste-jahr-label"

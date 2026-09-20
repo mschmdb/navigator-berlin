@@ -2,10 +2,10 @@
 title: 'Steuerungs-Klarheit: globale Reihe, Karten-Controls, Kontext-Badges'
 type: 'feature'
 created: '2026-09-20'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
-review_loop_iteration: 0
-baseline_commit: '0e6a3d1'
+review_loop_iteration: 1
+baseline_commit: 'ad047ee'
 context:
   - '_bmad-output/specs/spec-berlin-wahlen/ux-blueprint.md'
 ---
@@ -60,10 +60,10 @@ context:
 ## Tasks & Acceptance
 
 **Execution (TDD: pro Task erst failing Test, dann Implementation):**
-- [ ] `reihen-leiste.svelte` + `karten-steuerung.svelte` + Tests -- Aufteilung der Steuerleiste, Testids/Keyboard identisch; Sticky-Styling an der Reihen-Leiste.
-- [ ] `kapitel-kontext-badge.svelte` + Test -- Badge-Komponente.
-- [ ] `+page.svelte` + Test-Anpassungen -- Einbau: Sticky-Reihe oben, Karten-Steuerung im Karte-Kapitel, Badges in Wechsel/Trends/Extreme (Trends-Badge erwähnt den Sankey-Ebenen-Toggle nicht doppelt); `scroll-mt` nachziehen; alte `portal-steuerleiste`-Nutzung entfernt.
-- [ ] `tests/e2e/berlin-wahlen.e2e.ts` -- bestehende Flows grün halten; ein neuer Test: Sticky-Leiste nach Scroll sichtbar + Reihen-Wechsel wirkt (Badge-Text ändert sich); Deep-Link-Test bleibt.
+- [x] `reihen-leiste.svelte` + `karten-steuerung.svelte` + Tests -- Aufteilung der Steuerleiste, Testids/Keyboard identisch; Sticky-Styling an der Reihen-Leiste.
+- [x] `kapitel-kontext-badge.svelte` + Test -- Badge-Komponente.
+- [x] `+page.svelte` + Test-Anpassungen -- Einbau: Sticky-Reihe oben, Karten-Steuerung im Karte-Kapitel, Badges in Wechsel/Trends/Extreme (Trends-Badge erwähnt den Sankey-Ebenen-Toggle nicht doppelt); `scroll-mt` nachziehen; alte `portal-steuerleiste`-Nutzung entfernt.
+- [x] `tests/e2e/berlin-wahlen.e2e.ts` -- bestehende Flows grün halten; ein neuer Test: Sticky-Leiste nach Scroll sichtbar + Reihen-Wechsel wirkt (Badge-Text ändert sich); Deep-Link-Test bleibt.
 
 **Acceptance Criteria:**
 - Given ein Scroll ans Seitenende, when die Reihe gewechselt wird, then aktualisieren sich Karte, Wechsel, Trends, Sankey und Extreme ohne Zurückscrollen; die Leiste war durchgehend sichtbar.
@@ -72,9 +72,34 @@ context:
 
 ## Implementation Notes
 
+Umgesetzt wie im Code Map beschrieben: `portal-steuerleiste.svelte` in `reihen-leiste.svelte` (Reihe, sticky) und `karten-steuerung.svelte` (Jahr + Ebene) aufgeteilt, Testids/Tastatursteuerung/Callback-Signaturen unverändert übernommen. `portal-steuerleiste.svelte(.test.ts)` entfernt statt als Re-Export sterben gelassen (keine verbleibenden Importe).
+
+- **Sticky-Stapel:** `ReihenLeiste` sitzt `sticky top-[var(--header-height,72px)]` (h-10, z-30) direkt über der bestehenden `KapitelNav`, deren `top` um `2.5rem` (die Reihen-Leisten-Höhe) nachzieht, damit sich beide Sticky-Leisten nicht überlappen. `kapitel-section.svelte`s `scroll-mt` wuchs von `+3rem` auf `+5.5rem` (Reihen-Leiste + Kapitel-Nav-Puffer), sonst würden Anker-Sprünge unter der jetzt höheren Sticky-Zone landen.
+- **Kontext-Badges:** `kapitel-kontext-badge.svelte` ist reiner Text (kein aria-Ballast), die drei Texte (`reiheLabel`, `jahreText`, `ebeneText`) werden in `+page.svelte` berechnet, nicht in der Badge selbst. Wechsel/Trends zeigen „alle Wahljahre" (beide sind laut ihrem eigenen Code reihen-weit über alle Jahre), Extreme (Small Multiples) zeigt „Wahl {jahr}" nach `currentJahr` (folgt dem Karten-Jahr, wie in der I/O-Matrix gefordert). Alle drei zeigen fest „Kiez-Ebene", weil Wechsel/Trends/Small-Multiples laut ihren eigenen Kommentaren unabhängig vom globalen Ebenen-Toggle immer auf Kiez-Geometrie rechnen.
+- **Sankey unangetastet:** der Sankey behält seinen eigenen lokalen Kiez/Bezirk-Toggle (`sankey-wahljahre.svelte`); das Trends-Badge dupliziert diesen nicht.
+- **`winner-map.svelte`** nicht angefasst (bleibt bei 499 Zeilen); `KartenSteuerung` rendert in `+page.svelte` innerhalb der Karte-Section vor `<WinnerMap/>`.
+- Neuer E2E-Test (`berlin-wahlen.e2e.ts`): Sticky-Sichtbarkeit nach Scroll ans Seitenende + Reihen-Wechsel aktualisiert Badges. Statt eines rohen `scrollY`-Pixelvergleichs prüft der Test die Sichtbarkeit von Reihen-Leiste vs. Kopf-Kapitel: ein Reihen-Wechsel kann die Dokument-Höhe ändern (andere Kapitel-Inhalte je Reihe), wodurch der Browser `scrollY` passiv auf eine neue, kleinere Maximalhöhe klemmt -- kein App-Bug, aber ein zu strenger Pixel-Vergleich hätte das fälschlich als Regression gemeldet.
+
 ## Spec Change Log
 
 ## Review Triage Log
+
+Runde 1 (2026-09-20). Layer: Blind Hunter (N=6), Edge Case Hunter (8 Funde), Verification Gap (2 Gaps + 3 Nebenfunde). Verdicts und Routen:
+
+| # | Fund | Quelle(n) | Verdict | Route |
+|---|------|-----------|---------|-------|
+| 1 | Reihen-Leiste: `h-10` fest + `flex-wrap` innen; ab ~383px Viewport (oder großer Root-Font) bricht die Chip-Zeile um und legt sich über die Kapitel-Nav; Offsets 2.5rem/5.5rem stimmen dann nicht mehr | BH#1 (strong), ECH#1, VG-Neben | high | patch: Muster `kapitel-nav` übernehmen (`overflow-x-auto`, `flex-nowrap`, `shrink-0`, `whitespace-nowrap` am Label) + Regressions-Test |
+| 2 | Trends-Badge behauptet fest „Kiez-Ebene", der eingebettete Sankey hat einen eigenen Kiez/Bezirk-Toggle; auf „Bezirk" widerspricht das Badge der sichtbaren Grafik | BH#2 (medium), ECH#4 | high | patch: `ebeneText` in der Badge optional machen, Trends-Badge ohne Ebenen-Angabe rendern; E2E-Assertions nachziehen |
+| 3 | Ergebnis-Panel `lg:sticky lg:top-24` (96px) liegt unter dem jetzt 153px hohen Sticky-Stapel; ~57px Panel-Oberkante dauerhaft verdeckt (vorher 17px, durch die Story verschärft) | ECH#6 | high | patch: `lg:top-[calc(var(--header-height,72px)+5.5rem)]` in `winner-map.svelte` (bewusste 1-Klassen-Ausnahme von der Boundary „winner-map unangetastet", Zeilenzahl bleibt 499) |
+| 4 | Extreme-Badge-Verdrahtung (`kontextExtremeJahreText` folgt Karten-Jahr) von keinem Test beobachtet; Regression bliebe unsichtbar | VG#1 | medium | patch: Story-10-E2E-Test um Extreme-Badge-Assertions erweitern (Default-Jahr + Reaktion auf Jahr-Klick) |
+| 5 | Sticky-Stapel-Geometrie (Nav-Offset +2.5rem, scroll-mt +5.5rem) von keinem Test beobachtet; Rückdrehen auf alte Werte bliebe grün | VG#2 | medium | patch: `boundingBox()`-Assertions im Story-10-E2E-Test (Nav unter Leisten-Unterkante; Anker-Sprung-Ziel unter Nav-Unterkante) |
+| 6 | Neuer E2E-Test: `not.toBeInViewport(ueberblick)` ist gegen das im eigenen Kommentar beschriebene scrollY-Clamping anfällig (Dokument schrumpft beim Reihen-Wechsel → ueberblick rutscht zurück in den Viewport → false-negative) | BH#4 (medium), ECH#7 | medium | patch: Assertion durch `methodik`-in-Viewport ersetzen |
+| 7 | Extreme-Badge-Fallback bei `resolvedJahr === null` sagt „alle Wahljahre", Kapitel zeigt aber Leerzustand | ECH#3, BH#6b, VG-Neben | low | patch: Fallback-Text „kein Wahljahr geladen" |
+| 8 | `data-testid="kapitel-kontext-badge"` dreifach auf der Seite; künftige ungescopte Zugriffe fliegen im Strict-Mode | ECH#5, BH#6a | low | defer: aktuelle Tests scopen über die Kapitel-Testids; Suffix-Prop bei Bedarf in Folge-Story |
+| 9 | Label-ids (`steuerleiste-*-label`) hartcodiert, kollidieren bei zweitem Mount der Komponente | BH#5 (weak) | low | defer: heute genau 1 Mount pro Komponente (Grep-verifiziert); `$props.id()`-Härtung bei Wiederverwendung |
+| 10 | Sticky-Offsets als Magic Numbers an 4 Stellen (h-10, +2.5rem, 2× +5.5rem); 1px-Überlappung durch border-b | VG-Neben, ECH#2 | low | defer: CSS-Custom-Property-Konsolidierung als Refactor, kein Verhalten betroffen |
+| 11 | Jahr-Control fürs Extreme-Kapitel vier Kapitel entfernt; Zeit-Animation ändert das Kapitel im Hintergrund | BH#3 (medium) | maybe-false | reject: direkte Folge der abgenommenen Option-B-Entscheidung (Jahr/Ebene = Karten-Controls); als UX-Beobachtung an Matze berichtet |
+| 12 | Neuer E2E-Test lässt `/api/wahl/analytik` ungemockt (Trends lädt real) | BH#4, ECH#8 | low | defer: identisches Verhalten aller Bestands-E2E-Tests gegen den Preview-Build; Partei-Requests sind über `winners**` gemockt |
 
 ## Design Notes
 
@@ -87,3 +112,7 @@ Die Aufteilung statt Umbau in-place hält die 16 E2E-Verweise stabil (Testids zi
 - `pnpm check` -- expected: 0 Errors
 - `pnpm lint:wahl` + `pnpm exec eslint <geänderte Dateien>` -- expected: 0 Verstöße (bekanntes `no-unused-svelte-ignore`-Detail ausgenommen)
 - E2E: `pnpm exec vite build`, Ports räumen, `pnpm preview --port 4173`, temp Playwright-Config, `playwright test tests/e2e/berlin-wahlen.e2e.ts tests/e2e/berlin-wahlen-partei.e2e.ts tests/e2e/a11y.e2e.ts` -- expected: grün
+
+**Ergebnis (2026-09-20, nach Review-Runde 1):**
+- Unit: 982 Client- + 2828 Server-Tests grün. `pnpm check`: 0 Errors. `pnpm lint:wahl`: 59 Dateien, 0 Verstöße. eslint auf geänderten Dateien: 0 (winner-map: 20 vorbestehende `no-unused-svelte-ignore`, per `git diff ad047ee` als unberührt verifiziert).
+- E2E-Trio: 23/25. berlin-wahlen 14/14, berlin-wahlen-partei 3/3. Die 2 Fails sind vorbestehend und außerhalb des Scopes: `/_dev/wortmarke` fehlt `<title>` (axe document-title), `/explore` Escape-Selection-Timeout. Der Root-axe-Test flakt unter Parallel-Last (solo und im finalen Lauf grün); alle drei in `deferred-work.md` erfasst.

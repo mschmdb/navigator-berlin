@@ -43,11 +43,14 @@
 	});
 </script>
 
+<!-- Story 10: `top` rückt um die Höhe der sticky Reihen-Leiste (h-10, 2.5rem)
+     nach unten, die jetzt über dieser Nav sitzt -- sonst würden sich beide
+     Sticky-Leisten überlappen. -->
 <nav
 	bind:this={navEl}
 	aria-label="Kapitel"
 	data-testid="kapitel-nav"
-	class="sticky top-[var(--header-height,72px)] z-20 flex gap-1 overflow-x-auto border-b border-rule bg-bg/95 px-4 py-2"
+	class="sticky top-[calc(var(--header-height,72px)+2.5rem)] z-20 flex gap-1 overflow-x-auto border-b border-rule bg-bg/95 px-4 py-2"
 >
 	{#each chapters as chapter (chapter.id)}
 		{@const current = activeId === chapter.id}

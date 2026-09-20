@@ -12,6 +12,8 @@
 		serializePortalState,
 		DEFAULT_REIHE,
 		DEFAULT_EBENE,
+		REIHE_LABELS,
+		EBENE_LABELS,
 		type WahlPortalReihe,
 		type WahlPortalEbene
 	} from '$lib/utils/wahl-portal-url-state.js';
@@ -26,7 +28,9 @@
 	} from '$lib/state/wahl-portal-context.svelte.js';
 	import { deriveQuellen } from '$lib/utils/wahl-portal-quellen.js';
 	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
-	import PortalSteuerleiste from '$lib/components/wahl-portal/portal-steuerleiste.svelte';
+	import ReihenLeiste from '$lib/components/wahl-portal/reihen-leiste.svelte';
+	import KartenSteuerung from '$lib/components/wahl-portal/karten-steuerung.svelte';
+	import KapitelKontextBadge from '$lib/components/wahl-portal/kapitel-kontext-badge.svelte';
 	import KapitelNav from '$lib/components/wahl-portal/kapitel-nav.svelte';
 	import KapitelSection from '$lib/components/wahl-portal/kapitel-section.svelte';
 	import PortalDatenstand from '$lib/components/wahl-portal/portal-datenstand.svelte';
@@ -131,6 +135,23 @@
 
 	const quellen = $derived(deriveQuellen(portal.wahlen));
 
+	// Kontext-Badges (Story 10): Wechsel/Trends sind reihen-weit über ALLE
+	// Wahljahre (siehe wechsel-kapitel.svelte/trends-kapitel.svelte). Wechsel
+	// ist fest auf Kiez-Ebene -- unabhängig vom Karten-Ebenen-Toggle. Trends
+	// bekommt KEIN ebeneText (Review Triage Log #2): der eingebettete Sankey
+	// hat einen eigenen Kiez/Bezirk-Toggle, das Badge darf ihm nicht
+	// widersprechen. Extreme (Small Multiples) folgt dagegen dem Karten-Jahr
+	// (`currentJahr`), fest auf Kiez-Ebene.
+	const kontextReiheLabel = $derived(REIHE_LABELS[portal.reihe]);
+	const kontextEbeneKiezText = `${EBENE_LABELS.kiez}-Ebene`;
+	const kontextAlleWahljahreText = 'alle Wahljahre';
+	// Review Triage Log #7: `resolvedJahr === null` heißt keine Daten geladen,
+	// das Kapitel zeigt dann einen Leerzustand -- "alle Wahljahre" würde eine
+	// Auswahl suggerieren, die es nicht gibt.
+	const kontextExtremeJahreText = $derived(
+		resolvedJahr !== null ? `Wahl ${resolvedJahr}` : 'kein Wahljahr geladen'
+	);
+
 	const KARTE_CHAPTER = { id: 'karte', label: 'Karte' } as const;
 	const WECHSEL_CHAPTER = { id: 'wechsel', label: 'Wechsel' } as const;
 	const TRENDS_CHAPTER = { id: 'trends', label: 'Trends' } as const;
@@ -215,13 +236,21 @@
 <JsonLd data={dataCatalogJsonLd} testid="berlin-wahlen-datacatalog-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="berlin-wahlen-breadcrumb-jsonld" />
 
+<!-- Story 10: die Wahl-Reihe ist der einzige seitenweite Zustand und bleibt
+     deshalb als eigene, schlanke Leiste dauerhaft sichtbar -- oberhalb der
+     Kapitel-Nav, die ihren `top`-Offset entsprechend nachzieht. -->
+<ReihenLeiste
+	reihe={portal.reihe}
+	disabled={steuerleisteDisabled}
+	onReiheChange={handleReiheChange}
+/>
 <KapitelNav chapters={NAV_CHAPTERS} />
 
 <div data-testid="berlin-wahlen-page" class="mx-auto flex max-w-4xl flex-col px-4 py-8">
 	<header
 		id="ueberblick"
 		data-testid="wahl-portal-chapter-ueberblick"
-		class="flex scroll-mt-[calc(var(--header-height,72px)+3rem)] flex-col gap-6 pb-10"
+		class="flex scroll-mt-[calc(var(--header-height,72px)+5.5rem)] flex-col gap-6 pb-10"
 	>
 		<p class="font-mono text-xs tracking-wider text-accent uppercase">Wahlen in Berlin</p>
 		<h1 class="font-serif text-4xl text-ink md:text-5xl">Berlin-Wahlen</h1>
@@ -229,22 +258,22 @@
 			{pageDescription}
 		</p>
 
-		<PortalSteuerleiste
-			reihe={portal.reihe}
-			jahr={resolvedJahr}
-			ebene={portal.ebene}
-			{jahrOptions}
-			disabled={steuerleisteDisabled}
-			onReiheChange={handleReiheChange}
-			onJahrChange={handleJahrChange}
-			onEbeneChange={handleEbeneChange}
-		/>
-
 		<PortalDatenstand {minJahr} {maxJahr} status={portal.status} />
 		<EditorialDisclaimer variant="wahl-portal-footnote" />
 	</header>
 
 	<KapitelSection id={KARTE_CHAPTER.id} title="Karte" testid="wahl-portal-chapter-karte">
+		<!-- Story 10: Jahr/Ebene sind Karten-lokale Controls (gelten nur für
+		     Winner-Map/Panel/Zeit-Animation), deshalb hier statt in der
+		     globalen Steuerleiste. -->
+		<KartenSteuerung
+			jahr={resolvedJahr}
+			ebene={portal.ebene}
+			{jahrOptions}
+			disabled={steuerleisteDisabled}
+			onJahrChange={handleJahrChange}
+			onEbeneChange={handleEbeneChange}
+		/>
 		<WinnerMap />
 	</KapitelSection>
 
@@ -253,6 +282,11 @@
 		title="Wechsel der stärksten Kraft"
 		testid="wahl-portal-chapter-wechsel"
 	>
+		<KapitelKontextBadge
+			reiheLabel={kontextReiheLabel}
+			jahreText={kontextAlleWahljahreText}
+			ebeneText={kontextEbeneKiezText}
+		/>
 		<WechselKapitel />
 	</KapitelSection>
 
@@ -261,6 +295,9 @@
 		title="Trends und Volatilität"
 		testid="wahl-portal-chapter-trends"
 	>
+		<!-- Review Triage Log #2: kein ebeneText -- der Sankey hat einen
+		     eigenen Kiez/Bezirk-Toggle, das Badge darf keine Ebene behaupten. -->
+		<KapitelKontextBadge reiheLabel={kontextReiheLabel} jahreText={kontextAlleWahljahreText} />
 		<TrendsKapitel />
 	</KapitelSection>
 
@@ -287,6 +324,11 @@
 		title="Stärkste und schwächste Gebiete"
 		testid="wahl-portal-chapter-extreme-gebiete"
 	>
+		<KapitelKontextBadge
+			reiheLabel={kontextReiheLabel}
+			jahreText={kontextExtremeJahreText}
+			ebeneText={kontextEbeneKiezText}
+		/>
 		<div bind:this={extremeHost}>
 			{#if showExtreme}
 				<SmallMultiples />

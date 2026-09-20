@@ -466,7 +466,7 @@
 	</figure>
 
 	<aside
-		class="lg:sticky lg:top-24 lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1"
+		class="lg:sticky lg:top-[calc(var(--header-height,72px)+5.5rem)] lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1"
 		data-testid="ergebnis-panel-slot"
 	>
 		<ErgebnisPanel

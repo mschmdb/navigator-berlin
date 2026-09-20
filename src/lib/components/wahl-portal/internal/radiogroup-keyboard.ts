@@ -1,6 +1,6 @@
 /**
  * Pure Arrow/Home/End-Navigationslogik für `role="radiogroup"`-Toggles
- * (Muster `inspector-level-toggle.svelte`). Von `portal-steuerleiste.svelte`
+ * (Muster `inspector-level-toggle.svelte`). Von `reihen-leiste.svelte`/`karten-steuerung.svelte`
  * für Reihe-, Jahr- und Ebene-Gruppe wiederverwendet, um Duplikation zu
  * vermeiden.
  */

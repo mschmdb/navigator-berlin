@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
-import PortalSteuerleiste from './portal-steuerleiste.svelte';
+import KartenSteuerung from './karten-steuerung.svelte';
 
 const JAHR_OPTIONS = [
 	{ jahr: 2023, isRepeatElection: true },
@@ -10,40 +10,34 @@ const JAHR_OPTIONS = [
 
 function baseProps() {
 	return {
-		reihe: 'agh' as const,
 		jahr: 2021,
 		ebene: 'kiez' as const,
 		jahrOptions: JAHR_OPTIONS,
-		onReiheChange: vi.fn(),
 		onJahrChange: vi.fn(),
 		onEbeneChange: vi.fn()
 	};
 }
 
-describe('PortalSteuerleiste', () => {
-	it('rendert alle drei Radiogroups (Reihe, Jahr, Ebene)', async () => {
-		render(PortalSteuerleiste, baseProps());
-		await expect.element(page.getByTestId('portal-steuerleiste')).toBeInTheDocument();
-		await expect.element(page.getByTestId('steuerleiste-reihe')).toBeInTheDocument();
+describe('KartenSteuerung', () => {
+	it('rendert Jahr- und Ebenen-Radiogroup (Testid-Kontrakt aus portal-steuerleiste)', async () => {
+		render(KartenSteuerung, baseProps());
+		await expect.element(page.getByTestId('karten-steuerung')).toBeInTheDocument();
 		await expect.element(page.getByTestId('steuerleiste-jahr')).toBeInTheDocument();
 		await expect.element(page.getByTestId('steuerleiste-ebene')).toBeInTheDocument();
-		await expect.element(page.getByTestId('steuerleiste-reihe-btw')).toBeInTheDocument();
-		await expect.element(page.getByTestId('steuerleiste-reihe-agh')).toBeInTheDocument();
-		await expect.element(page.getByTestId('steuerleiste-reihe-bvv')).toBeInTheDocument();
+		await expect.element(page.getByTestId('steuerleiste-jahr-2023')).toBeInTheDocument();
+		await expect.element(page.getByTestId('steuerleiste-ebene-bezirk')).toBeInTheDocument();
 	});
 
-	it('markiert die aktuelle Reihe/Ebene als aria-checked', async () => {
-		render(PortalSteuerleiste, baseProps());
-		const agh = (await page.getByTestId('steuerleiste-reihe-agh').element()) as HTMLElement;
-		const btw = (await page.getByTestId('steuerleiste-reihe-btw').element()) as HTMLElement;
-		expect(agh.getAttribute('aria-checked')).toBe('true');
-		expect(btw.getAttribute('aria-checked')).toBe('false');
+	it('markiert das aktuelle Jahr/die aktuelle Ebene als aria-checked', async () => {
+		render(KartenSteuerung, baseProps());
+		const jahr2021 = (await page.getByTestId('steuerleiste-jahr-2021').element()) as HTMLElement;
+		expect(jahr2021.getAttribute('aria-checked')).toBe('true');
 		const kiez = (await page.getByTestId('steuerleiste-ebene-kiez').element()) as HTMLElement;
 		expect(kiez.getAttribute('aria-checked')).toBe('true');
 	});
 
 	it('zeigt Wiederholungswahl-Flag als eigenen Chip-Marker', async () => {
-		render(PortalSteuerleiste, baseProps());
+		render(KartenSteuerung, baseProps());
 		await expect
 			.element(page.getByTestId('steuerleiste-jahr-2023-wiederholung'))
 			.toBeInTheDocument();
@@ -51,11 +45,9 @@ describe('PortalSteuerleiste', () => {
 		await expect.element(el).not.toBeInTheDocument();
 	});
 
-	it('Klick auf Reihe/Jahr/Ebene ruft die jeweiligen Callbacks', async () => {
+	it('Klick auf Jahr/Ebene ruft die jeweiligen Callbacks', async () => {
 		const props = baseProps();
-		render(PortalSteuerleiste, props);
-		await page.getByTestId('steuerleiste-reihe-btw').click();
-		expect(props.onReiheChange).toHaveBeenCalledWith('btw');
+		render(KartenSteuerung, props);
 		await page.getByTestId('steuerleiste-jahr-2023').click();
 		expect(props.onJahrChange).toHaveBeenCalledWith(2023);
 		await page.getByTestId('steuerleiste-ebene-bezirk').click();
@@ -64,7 +56,7 @@ describe('PortalSteuerleiste', () => {
 
 	it('ArrowRight auf Ebene-Gruppe wechselt Fokus und feuert onEbeneChange', async () => {
 		const props = baseProps();
-		render(PortalSteuerleiste, props);
+		render(KartenSteuerung, props);
 		const kiez = page.getByTestId('steuerleiste-ebene-kiez');
 		await kiez.click();
 		await (
@@ -73,17 +65,17 @@ describe('PortalSteuerleiste', () => {
 		expect(props.onEbeneChange).toHaveBeenCalledWith('bezirk');
 	});
 
-	it('disabled sperrt Reihe/Ebene und zeigt aria-disabled', async () => {
+	it('disabled sperrt Ebene und zeigt aria-disabled', async () => {
 		const props = { ...baseProps(), disabled: true };
-		render(PortalSteuerleiste, props);
-		const btw = (await page.getByTestId('steuerleiste-reihe-btw').element()) as HTMLElement;
-		expect(btw.getAttribute('aria-disabled')).toBe('true');
-		await page.getByTestId('steuerleiste-reihe-btw').click({ force: true });
-		expect(props.onReiheChange).not.toHaveBeenCalled();
+		render(KartenSteuerung, props);
+		const bezirk = (await page.getByTestId('steuerleiste-ebene-bezirk').element()) as HTMLElement;
+		expect(bezirk.getAttribute('aria-disabled')).toBe('true');
+		await page.getByTestId('steuerleiste-ebene-bezirk').click({ force: true });
+		expect(props.onEbeneChange).not.toHaveBeenCalled();
 	});
 
 	it('zeigt Leer-Hinweis wenn keine Jahr-Optionen vorhanden sind (DB-los)', async () => {
-		render(PortalSteuerleiste, { ...baseProps(), jahrOptions: [] });
+		render(KartenSteuerung, { ...baseProps(), jahrOptions: [] });
 		await expect.element(page.getByTestId('steuerleiste-jahr-empty')).toBeInTheDocument();
 		const jahrGroup = page.getByTestId('steuerleiste-jahr');
 		await expect.element(jahrGroup).not.toBeInTheDocument();
