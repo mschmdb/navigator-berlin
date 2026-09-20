@@ -47,6 +47,14 @@ export default defineConfig({
 			output: {
 				manualChunks(id: string): string | undefined {
 					if (id.includes('node_modules/maplibre-gl')) return 'maplibre';
+					// Story 11 (Sankey-Rework): d3-sankey lazy geladen, EIGENER Chunk,
+					// getrennt von `d3-shape` (Review Triage Log #7: ein gemeinsamer Chunk
+					// kettete den layerchart-Chunk an den sankey-Chunk, weil layerchart
+					// selbst `d3-shape` nutzt -- Home/Atlas luden d3-sankey dadurch
+					// ungewollt mit). Beide Regeln bleiben VOR der layerchart-Regel, sonst
+					// zöge diese `d3-shape` zuerst in den `layerchart`-Chunk.
+					if (id.includes('node_modules/d3-sankey')) return 'sankey';
+					if (id.includes('node_modules/d3-shape')) return 'd3-shape';
 					if (
 						id.includes('node_modules/layerchart') ||
 						id.includes('node_modules/d3-scale') ||
