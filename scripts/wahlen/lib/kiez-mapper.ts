@@ -1,7 +1,7 @@
 import center from '@turf/center';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
-import { normalizeSlug } from '../../../src/lib/data/internal/slug.js';
+import { buildKiezSlugs } from '../../../src/lib/data/internal/kiez-slug.js';
 import { dbUwbIdFromGeo, type GeoUwbProps } from '../../../src/lib/data/wahl-geo-mapping.js';
 
 export type { GeoUwbProps };
@@ -32,9 +32,28 @@ export { dbUwbIdFromGeo };
  */
 export function buildKiezMappings(
 	geoFc: FeatureCollection<Polygon | MultiPolygon, GeoUwbProps>,
-	lorFc: FeatureCollection<Polygon | MultiPolygon, { BZR_NAME: string }>,
-	wahlSlug: string
+	lorFc: FeatureCollection<Polygon | MultiPolygon, { BZR_NAME: string; BEZ?: string }>,
+	wahlSlug: string,
+	bezirkeFc: FeatureCollection<Polygon | MultiPolygon, Record<string, unknown>>
 ): KiezMapping[] {
+	// Slug-Bildung ueber die GETEILTE Disambiguierung (kiez-slug.ts, identisch
+	// zu Client-Join, Resolver und Sitemap): Duplikat-Namen wie "Heerstrasse"
+	// (Charlottenburg-Wilmersdorf + Spandau) bekommen den Bezirks-Slug als
+	// Suffix. Der fruehere bare normalizeSlug(BZR_NAME) warf beide Kieze auf
+	// EINEN Slug zusammen (DB-Rows = Summe beider, Client-Join lief ins Leere).
+	const bezNames = new Map<string, string>();
+	for (const f of bezirkeFc.features) {
+		const p = (f.properties ?? {}) as Record<string, unknown>;
+		if (typeof p.Gemeinde_schluessel === 'string' && typeof p.Gemeinde_name === 'string') {
+			bezNames.set(p.Gemeinde_schluessel.slice(-2), p.Gemeinde_name);
+		}
+	}
+	const refs = lorFc.features.map((f) => ({
+		name: typeof f.properties?.BZR_NAME === 'string' ? f.properties.BZR_NAME : '',
+		bezirk: bezNames.get(typeof f.properties?.BEZ === 'string' ? f.properties.BEZ : '') ?? ''
+	}));
+	const lorSlugs = buildKiezSlugs(refs);
+
 	const out: KiezMapping[] = [];
 	const seen = new Set<string>();
 
@@ -43,13 +62,12 @@ export function buildKiezMappings(
 		if (!dbUwbId || seen.has(dbUwbId)) continue;
 
 		const c = center(feature as Feature);
-		const kiez = lorFc.features.find((lor) =>
+		const kiezIndex = lorFc.features.findIndex((lor) =>
 			booleanPointInPolygon(c, lor as Feature<Polygon | MultiPolygon>)
 		);
-		if (!kiez || !kiez.properties?.BZR_NAME) continue;
+		if (kiezIndex === -1 || !lorFc.features[kiezIndex].properties?.BZR_NAME) continue;
 
-		const kiezSlug = normalizeSlug(kiez.properties.BZR_NAME);
-		out.push({ dbUwbId, kiezSlug });
+		out.push({ dbUwbId, kiezSlug: lorSlugs[kiezIndex] });
 		seen.add(dbUwbId);
 	}
 	return out;
