@@ -41,16 +41,22 @@ async function processOneWahl(wahlSlug: string): Promise<void> {
 	const manifest = await loadManifest();
 	const geoLayer = manifest.layers.find((l) => l.slug === `wahlbezirke-${geoSlug}`);
 	const lorLayer = manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
+	const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
 	if (!geoLayer) throw new Error(`manifest missing wahlbezirke-${geoSlug}`);
 	if (!lorLayer) throw new Error('manifest missing lor-bezirksregion');
+	if (!bezirkeLayer) throw new Error('manifest missing bezirke');
 
-	const [geoFc, lorFc] = await Promise.all([loadFc(geoLayer.filename), loadFc(lorLayer.filename)]);
+	const [geoFc, lorFc, bezirkeFc] = await Promise.all([
+		loadFc(geoLayer.filename),
+		loadFc(lorLayer.filename),
+		loadFc(bezirkeLayer.filename)
+	]);
 	console.log(
 		`[kiez-aggregat] ${wahlSlug} geo=${geoFc.features.length} features, lor=${lorFc.features.length} BR`
 	);
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const mappings = buildKiezMappings(geoFc as any, lorFc as any, wahlSlug);
+	const mappings = buildKiezMappings(geoFc as any, lorFc as any, wahlSlug, bezirkeFc as any);
 	console.log(`[kiez-aggregat] ${wahlSlug} mappings=${mappings.length}`);
 
 	const db = getDb();

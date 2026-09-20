@@ -73,7 +73,45 @@ describe('dbUwbIdFromGeo', () => {
 });
 
 describe('buildKiezMappings', () => {
-	const lorFc: FeatureCollection<Polygon, { BZR_NAME: string }> = {
+	const bezirkeFc: FeatureCollection<Polygon, Record<string, unknown>> = {
+		type: 'FeatureCollection',
+		features: [
+			{
+				type: 'Feature',
+				geometry: {
+					type: 'Polygon',
+					coordinates: [
+						[
+							[13.0, 52.4],
+							[13.9, 52.4],
+							[13.9, 52.7],
+							[13.0, 52.7],
+							[13.0, 52.4]
+						]
+					]
+				},
+				properties: { Gemeinde_name: 'Mitte', Gemeinde_schluessel: '11000001' }
+			},
+			{
+				type: 'Feature',
+				geometry: {
+					type: 'Polygon',
+					coordinates: [
+						[
+							[13.0, 52.0],
+							[13.9, 52.0],
+							[13.9, 52.3],
+							[13.0, 52.3],
+							[13.0, 52.0]
+						]
+					]
+				},
+				properties: { Gemeinde_name: 'Spandau', Gemeinde_schluessel: '11000005' }
+			}
+		]
+	};
+
+	const lorFc: FeatureCollection<Polygon, { BZR_NAME: string; BEZ?: string }> = {
 		type: 'FeatureCollection',
 		features: [
 			{
@@ -90,7 +128,7 @@ describe('buildKiezMappings', () => {
 						]
 					]
 				},
-				properties: { BZR_NAME: 'Test Kiez' }
+				properties: { BZR_NAME: 'Test Kiez', BEZ: '01' }
 			}
 		]
 	};
@@ -117,10 +155,95 @@ describe('buildKiezMappings', () => {
 				}
 			]
 		};
-		const mappings = buildKiezMappings(geoFc, lorFc, 'btw25');
+		const mappings = buildKiezMappings(geoFc, lorFc, 'btw25', bezirkeFc);
 		expect(mappings).toHaveLength(1);
 		expect(mappings[0].dbUwbId).toBe('075-01-100-0');
 		expect(mappings[0].kiezSlug).toBe('test-kiez');
+	});
+
+	it('disambiguiert Duplikat-Kiez-Namen mit Bezirks-Suffix (Heerstrasse-Bug: zwei Kieze gleichen Namens wurden auf EINEN Slug zusammengeworfen)', () => {
+		const duplicateLorFc: FeatureCollection<Polygon, { BZR_NAME: string; BEZ?: string }> = {
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[13.4, 52.5],
+								[13.5, 52.5],
+								[13.5, 52.55],
+								[13.4, 52.55],
+								[13.4, 52.5]
+							]
+						]
+					},
+					properties: { BZR_NAME: 'Heerstraße', BEZ: '01' }
+				},
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[13.4, 52.1],
+								[13.5, 52.1],
+								[13.5, 52.15],
+								[13.4, 52.15],
+								[13.4, 52.1]
+							]
+						]
+					},
+					properties: { BZR_NAME: 'Heerstraße', BEZ: '05' }
+				}
+			]
+		};
+		const geoFc: FeatureCollection<Polygon, Record<string, unknown>> = {
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[13.42, 52.52],
+								[13.44, 52.52],
+								[13.44, 52.54],
+								[13.42, 52.54],
+								[13.42, 52.52]
+							]
+						]
+					},
+					properties: { BWK: '75', BEZ: '01', UWB3: '100' }
+				},
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[13.42, 52.12],
+								[13.44, 52.12],
+								[13.44, 52.14],
+								[13.42, 52.14],
+								[13.42, 52.12]
+							]
+						]
+					},
+					properties: { BWK: '75', BEZ: '05', UWB3: '200' }
+				}
+			]
+		};
+		const mappings = buildKiezMappings(geoFc, duplicateLorFc, 'btw25', bezirkeFc);
+		expect(mappings).toHaveLength(2);
+		// Dieselbe Disambiguierung wie buildKiezSlugs (Client/Resolver/Sitemap):
+		// Duplikat-Namen tragen den Bezirks-Slug als Suffix.
+		expect(mappings.map((m) => m.kiezSlug).sort()).toEqual([
+			'heerstrasse-mitte',
+			'heerstrasse-spandau'
+		]);
 	});
 
 	it('skipt Features ausserhalb aller Kiez-Polygone', () => {
@@ -145,7 +268,7 @@ describe('buildKiezMappings', () => {
 				}
 			]
 		};
-		expect(buildKiezMappings(geoFc, lorFc, 'btw25')).toHaveLength(0);
+		expect(buildKiezMappings(geoFc, lorFc, 'btw25', bezirkeFc)).toHaveLength(0);
 	});
 
 	it('dedupliziert gleiche DB-uwbIds', () => {
@@ -186,6 +309,6 @@ describe('buildKiezMappings', () => {
 				}
 			]
 		};
-		expect(buildKiezMappings(geoFc, lorFc, 'btw25')).toHaveLength(1);
+		expect(buildKiezMappings(geoFc, lorFc, 'btw25', bezirkeFc)).toHaveLength(1);
 	});
 });
