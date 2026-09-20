@@ -20,6 +20,7 @@ import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { getKiezSharesForWahl } from '$lib/server/db/queries/wahl/get-kiez-shares-for-wahl.js';
 import { rankSimilarKieze } from '$lib/server/wahl/similar-kieze.js';
 import { sourceName } from '$lib/server/wahl/source-label.js';
+import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	kiez: v.pipe(v.string(), v.minLength(1)),
@@ -56,6 +57,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			source_url: latestWahl?.sourceUrl ?? null,
 			source_name: latestWahl ? sourceName(latestWahl.sourceUrl) : null
 		},
-		{ headers: { 'cache-control': 'public, max-age=3600' } }
+		{ headers: wahlCacheHeaders() }
 	);
 };

@@ -40,6 +40,7 @@ import {
 import { sourceName } from '$lib/server/wahl/source-label.js';
 import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
 import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	typ: v.picklist(['btw', 'agh', 'bvv']),
@@ -83,7 +84,7 @@ async function handleStimmbezirk(
 				source_url: w?.sourceUrl ?? null,
 				source_name: w ? sourceName(w.sourceUrl) : null
 			},
-			{ headers: { 'cache-control': 'public, max-age=3600' } }
+			{ headers: wahlCacheHeaders() }
 		);
 
 	if (!wahl) return empty(undefined);
@@ -127,7 +128,7 @@ async function handleStimmbezirk(
 			source_url: wahl.sourceUrl,
 			source_name: sourceName(wahl.sourceUrl)
 		},
-		{ headers: { 'cache-control': 'public, max-age=3600' } }
+		{ headers: wahlCacheHeaders() }
 	);
 }
 
@@ -190,6 +191,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			source_url: latestWahl?.sourceUrl ?? null,
 			source_name: latestWahl ? sourceName(latestWahl.sourceUrl) : null
 		},
-		{ headers: { 'cache-control': 'public, max-age=3600' } }
+		{ headers: wahlCacheHeaders() }
 	);
 };
