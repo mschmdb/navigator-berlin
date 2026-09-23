@@ -8,9 +8,17 @@ describe('sourceName', () => {
 		);
 	});
 
-	it('fällt für alle anderen URLs auf Amt für Statistik Berlin-Brandenburg zurück', () => {
+	it('fällt für SBB-URLs auf Amt für Statistik Berlin-Brandenburg zurück', () => {
 		expect(sourceName('https://download.statistik-berlin-brandenburg.de/xyz.xlsx')).toBe(
 			'Amt für Statistik Berlin-Brandenburg'
 		);
+	});
+
+	it('erkennt wahlen-berlin.de-URLs (Story: Ingest AGH/BVV 2026, wb-csv)', () => {
+		expect(
+			sourceName(
+				'https://www.wahlen-berlin.de/wahlen/BE2026/Afspraes/AGH/Datenexport_AGH2026_Zweitstimme_W_BE.csv'
+			)
+		).toBe('Landeswahlleiterin Berlin');
 	});
 });

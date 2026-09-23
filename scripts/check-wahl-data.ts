@@ -2,10 +2,10 @@
  * prebuild-Gate für Wahl-Daten (Story 6.9-Followup).
  *
  * Exit 0 (skip data:wahl-fetch + wahl-geo + wahl-kiez + wahl-analytik) wenn:
- *   - mind. 20 Wahlen in DB
+ *   - mind. 23 Wahlen in DB (Story: Ingest AGH/BVV 2026 -- +agh26 Erst/Zweit + bvv26)
  *   - jede Wahl hat mind. 100 ergebnis-rows
- *   - mind. 15 distinct wahl_ids in wahl_aggregat_kiez (alle Wahlen
- *     mit Geometrie: BTW 17/21/25 ×2 + AGH 16/21/23 ×2 + BVV 16/21/23)
+ *   - mind. 18 distinct wahl_ids in wahl_aggregat_kiez (alle Wahlen
+ *     mit Geometrie: BTW 17/21/25 ×2 + AGH 16/21/23/26 ×2 + BVV 16/21/23/26)
  *   - mind. 400 Rows in wahl_analytik_kiez (5 Reihen × ~142 Kieze,
  *     Build-Zeit-Aggregat aus `build-wahl-analytik.ts`)
  *   - env WAHL_REFRESH != true
@@ -21,9 +21,9 @@ import 'dotenv/config';
 import { sql } from 'drizzle-orm';
 import { getDb, closeDb } from '../src/lib/server/db/index.js';
 
-const MIN_WAHLEN = 20;
+const MIN_WAHLEN = 23;
 const MIN_ERGEBNIS_PER_WAHL = 100;
-const MIN_WAHLEN_WITH_KIEZ_AGGREGAT = 15;
+const MIN_WAHLEN_WITH_KIEZ_AGGREGAT = 18;
 const MIN_ANALYTIK_ROWS = 400;
 
 async function main(): Promise<void> {

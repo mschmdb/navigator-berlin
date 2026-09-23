@@ -84,7 +84,9 @@ const WAHLEN_2023: WahlPortalListEntry[] = [
 		typ: 'agh',
 		isRepeatElection: false,
 		sourceName: 'Amt für Statistik Berlin-Brandenburg',
-		license: 'dl-de/by-2-0'
+		license: 'dl-de/by-2-0',
+		vorlaeufig: false,
+		sourceUpdatedAt: null
 	}
 ];
 

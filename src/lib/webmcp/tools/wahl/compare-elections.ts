@@ -101,7 +101,10 @@ export function createCompareElectionsTool(deps: CompareElectionsDeps): WebMcpTo
 				const entry: JsonObject = {
 					election_slug: bundleSlug(b),
 					jahr: b.wahl.jahr,
-					top
+					top,
+					// Tool-Surface bewusst Englisch (Matze-Entscheidung 23.09., 1B).
+					provisional: b.wahl.vorlaeufig,
+					source_updated_at: b.wahl.sourceUpdatedAt
 				};
 				if (caveats.length > 0) entry.caveats = caveats;
 				return entry;

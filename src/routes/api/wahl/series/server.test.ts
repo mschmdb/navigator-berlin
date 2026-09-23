@@ -93,4 +93,22 @@ describe('GET /api/wahl/series (mit lokaler DB)', () => {
 		);
 		if (cdu2023) expect(cdu2023.anteil).toBeCloseTo(0.282, 2);
 	});
+
+	it('ebene=berlin: 2026-Punkte tragen vorlaeufig=true + ISO source_updated_at, ältere Jahre vorlaeufig=false (Review-Fund 23.09.)', async () => {
+		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=berlin');
+		expect(res.status).toBe(200);
+		const body = await res.json();
+		if (body.points.length === 0) return;
+		const punkt2026 = body.points.find((p: { jahr: number }) => p.jahr === 2026);
+		if (punkt2026) {
+			expect(punkt2026.vorlaeufig).toBe(true);
+			expect(typeof punkt2026.source_updated_at).toBe('string');
+			expect(Number.isNaN(Date.parse(punkt2026.source_updated_at))).toBe(false);
+		}
+		const punkt2021 = body.points.find((p: { jahr: number }) => p.jahr === 2021);
+		if (punkt2021) {
+			expect(punkt2021.vorlaeufig).toBe(false);
+			expect(punkt2021.source_updated_at).toBeNull();
+		}
+	});
 });

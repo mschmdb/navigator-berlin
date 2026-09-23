@@ -82,4 +82,27 @@ export const GEO_AH16: GeoSource = {
 	consumesWahlen: wahlenForGeo('ah16')
 };
 
-export const GEO_SOURCES: readonly GeoSource[] = [GEO_BTW17, GEO_AH16, GEO_AH21, GEO_BT25];
+/**
+ * AGH 2026 / BVV 2026: Wahlbezirks-Geometrie der Wahl vom 20.09.2026.
+ * Hash-URL per Playwright-Recon aus der SPA-Route
+ * `/opendata/RBS_OD_UWB_AH26.zip` (Network-Response auf
+ * download.statistik-berlin-brandenburg.de abgefangen, 23.09.2026).
+ */
+export const GEO_AH26: GeoSource = {
+	slug: 'ah26',
+	download:
+		'https://download.statistik-berlin-brandenburg.de/17c6e6ab35dd6980/a43a09d174ed/RBS_OD_UWB_AH26.zip',
+	live: 'https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_AH26.zip',
+	license: SBB_LICENSE,
+	licenseShort: SBB_LICENSE_SHORT,
+	attribution: SBB_ATTRIBUTION,
+	consumesWahlen: wahlenForGeo('ah26')
+};
+
+export const GEO_SOURCES: readonly GeoSource[] = [
+	GEO_BTW17,
+	GEO_AH16,
+	GEO_AH21,
+	GEO_BT25,
+	GEO_AH26
+];

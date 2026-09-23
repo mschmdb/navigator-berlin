@@ -54,6 +54,16 @@ describe('dbUwbIdFromGeo (Kontrakt-Parität zu kiez-mapper.test.ts)', () => {
 			const id = dbUwbIdFromGeo({ BEZ: '01', UWB: '100' }, 'bvv16');
 			expect(id).toBe('01W100');
 		});
+
+		it('AGH26 ohne suffix (generisch, kein Code-Update pro Jahrgang nötig)', () => {
+			const id = dbUwbIdFromGeo({ BEZ: '01', UWB3: '100' }, 'agh26');
+			expect(id).toBe('01W100');
+		});
+
+		it('BVV26 ohne suffix', () => {
+			const id = dbUwbIdFromGeo({ BEZ: '01', UWB3: '100' }, 'bvv26');
+			expect(id).toBe('01W100');
+		});
 	});
 
 	describe('UWB3-Detection-Fallback', () => {
@@ -80,6 +90,7 @@ describe('dbUwbIdFromGeo (Kontrakt-Parität zu kiez-mapper.test.ts)', () => {
 		it('returns null bei unbekanntem wahlSlug', () => {
 			expect(dbUwbIdFromGeo({ BEZ: '01', UWB3: '100', BWK: '75' }, 'btw13')).toBeNull();
 			expect(dbUwbIdFromGeo({ BEZ: '01', UWB3: '100' }, 'agh11')).toBeNull();
+			expect(dbUwbIdFromGeo({ BEZ: '01', UWB3: '100' }, 'bvv11')).toBeNull();
 		});
 	});
 });
@@ -116,7 +127,9 @@ describe('geoSlugForWahl / hasGeometry', () => {
 		'agh23',
 		'bvv16',
 		'bvv21',
-		'bvv23'
+		'bvv23',
+		'agh26',
+		'bvv26'
 	];
 	const wahlenOhneGeometrie = ['btw13', 'agh11', 'bvv11'];
 
@@ -130,13 +143,14 @@ describe('geoSlugForWahl / hasGeometry', () => {
 		expect(geoSlugForWahl(slug)).toBeNull();
 	});
 
-	it('WAHL_TO_GEO hat genau 9 Einträge (Bestand)', () => {
-		expect(WAHL_TO_GEO.size).toBe(9);
+	it('WAHL_TO_GEO hat genau 11 Einträge (Bestand + agh26/bvv26)', () => {
+		expect(WAHL_TO_GEO.size).toBe(11);
 	});
 });
 
 describe('geoSlugForYear (Parität zu WAHL_TO_GEO)', () => {
 	it.each([
+		[2026, 'ah26'],
 		[2025, 'bt25'],
 		[2023, 'ah21'],
 		[2021, 'ah21'],

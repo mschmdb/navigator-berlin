@@ -14,13 +14,13 @@ export const PARTEI_SEED: readonly ParteiSeed[] = [
 		kurzname: 'SPD',
 		vollname: 'Sozialdemokratische Partei Deutschlands',
 		farbeHex: '#E3000F',
-		aliases: [{ label: 'SPD' }]
+		aliases: [{ label: 'SPD' }, { label: 'Sozialdemokratische Partei Deutschlands' }]
 	},
 	{
 		kurzname: 'CDU',
 		vollname: 'Christlich Demokratische Union Deutschlands',
 		farbeHex: '#000000',
-		aliases: [{ label: 'CDU' }]
+		aliases: [{ label: 'CDU' }, { label: 'Christlich Demokratische Union Deutschlands' }]
 	},
 	{
 		kurzname: 'CSU',
@@ -43,14 +43,14 @@ export const PARTEI_SEED: readonly ParteiSeed[] = [
 		kurzname: 'FDP',
 		vollname: 'Freie Demokratische Partei',
 		farbeHex: '#FFEF00',
-		aliases: [{ label: 'FDP' }]
+		aliases: [{ label: 'FDP' }, { label: 'Freie Demokratische Partei' }]
 	},
 	{
 		kurzname: 'AfD',
 		vollname: 'Alternative für Deutschland',
 		farbeHex: '#009EE0',
 		firstSeenYear: 2013,
-		aliases: [{ label: 'AfD' }]
+		aliases: [{ label: 'AfD' }, { label: 'Alternative für Deutschland' }]
 	},
 	{
 		kurzname: 'Die Linke',
@@ -69,7 +69,7 @@ export const PARTEI_SEED: readonly ParteiSeed[] = [
 		vollname: 'Bündnis Sahra Wagenknecht',
 		farbeHex: '#722282',
 		firstSeenYear: 2024,
-		aliases: [{ label: 'BSW' }]
+		aliases: [{ label: 'BSW' }, { label: 'Bündnis Sahra Wagenknecht - Vernunft und Gerechtigkeit' }]
 	},
 	{
 		kurzname: 'FREIE WÄHLER',

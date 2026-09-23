@@ -29,6 +29,9 @@ export interface ElectionListEntry {
 	readonly source_name: string;
 	readonly source_url: string;
 	readonly license: string;
+	/** Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B); Feld-Name aus `/api/wahl/list`. */
+	readonly vorlaeufig: boolean;
+	readonly source_updated_at: string | null;
 }
 
 export interface ListElectionsDeps {
@@ -57,7 +60,11 @@ export function createListElectionsTool(deps: ListElectionsDeps): WebMcpToolDefi
 					has_stimmbezirks_geometry: e.has_stimmbezirks_geometry,
 					source_name: e.source_name,
 					source_url: e.source_url,
-					license: e.license
+					license: e.license,
+					// Tool-Surface bewusst Englisch (Matze-Entscheidung 23.09., 1B):
+					// `vorlaeufig` (API-Feldname) -> `provisional`.
+					provisional: e.vorlaeufig,
+					source_updated_at: e.source_updated_at
 				}))
 			};
 			return out;

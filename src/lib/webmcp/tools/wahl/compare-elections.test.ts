@@ -8,7 +8,9 @@ import type {
 
 function makeBundle(
 	jahr: number,
-	levels: Partial<Record<LevelKey, boolean>> = {}
+	levels: Partial<Record<LevelKey, boolean>> = {},
+	vorlaeufig = false,
+	sourceUpdatedAt: string | null = null
 ): WahlResultBundle {
 	const mk = (lvl: LevelKey) =>
 		levels[lvl] !== false
@@ -34,7 +36,9 @@ function makeBundle(
 			isRepeatElection: false,
 			parentElectionId: null,
 			sourceUrl: 'https://bundeswahlleiterin.de/x.zip',
-			license: 'dl-de/by-2-0'
+			license: 'dl-de/by-2-0',
+			vorlaeufig,
+			sourceUpdatedAt
 		},
 		uwbId: null,
 		levels: {
@@ -75,6 +79,26 @@ describe('compare_elections tool', () => {
 		})) as Record<string, unknown>;
 		expect(out.level).toBe('kiez');
 		expect((out.series as unknown[]).length).toBe(2);
+	});
+
+	it('reicht provisional/source_updated_at je Series-Eintrag durch (Story: Ingest AGH/BVV 2026)', async () => {
+		const tool = createCompareElectionsTool({
+			fetchResultsAtPoint: async () =>
+				makeResults([makeBundle(2025), makeBundle(2026, {}, true, '2026-09-20T23:55:55.000Z')])
+		});
+		const out = (await tool.handler({
+			lat: 52.52,
+			lng: 13.41,
+			election_slugs: ['2025-btw-zweitstimme', '2026-btw-zweitstimme']
+		})) as {
+			series: Array<{ jahr: number; provisional: boolean; source_updated_at: string | null }>;
+		};
+		const alt = out.series.find((s) => s.jahr === 2025);
+		const neu = out.series.find((s) => s.jahr === 2026);
+		expect(alt?.provisional).toBe(false);
+		expect(alt?.source_updated_at).toBeNull();
+		expect(neu?.provisional).toBe(true);
+		expect(neu?.source_updated_at).toBe('2026-09-20T23:55:55.000Z');
 	});
 
 	it('Error election_not_found bei missing slug', async () => {

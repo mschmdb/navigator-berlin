@@ -2,7 +2,7 @@
 title: 'Ingest AGH/BVV 2026'
 type: 'feature'
 created: '2026-09-23'
-status: 'in-progress'
+status: 'done'
 baseline_commit: '6edeaba5a5e4ccc4e82ed8aed257ab3026bbccb6'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -73,23 +73,75 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `scripts/wahlen/lib/wb-csv-parser.ts` (+ `.test.ts`) -- parst DSB-Legende (cp1252) und W-CSV (UTF-8-BOM, `;`, Dezimalkomma) in SBB-kompatible Zeilen-Objekte -- ein Transformer statt zwei
-- [ ] `scripts/wahlen/lib/sources.ts`, `scripts/lib/allowlist.ts` -- `agh26` (Erst/Zweit), `bvv26` als `wb-csv`, Host freigeben
-- [ ] `scripts/wahlen/lib/parent-lookup.ts` (+ Test) -- `lookupParentWahlId` herausziehen, `stimmtyp` filtern, Aufruf pro Stimmtyp in `aggregate-wahl-data.ts`
-- [ ] `scripts/aggregate-wahl-data.ts` -- `wb-csv`-Zweig; Plausi: Parteisumme = `Gueltig` je Zeile
-- [ ] `partei-seed.ts` (+ Test) -- Aliase der 2026er-Legendennamen
-- [ ] `sbb-geo-sources.ts`, `wahl-geo-mapping.ts` (+ Test) -- `ah26` per Recon-URL, `agh26/bvv26 → ah26`, `dbUwbIdFromGeo` generisch
-- [ ] `wahl.ts` + `drizzle/migrations/0009_*`, `db-loader.ts`, `sources.ts` -- `vorlaeufig`-Flag und `sourceUpdatedAt` je Quelle setzen -- Kennzeichnung ohne Heuristik
-- [ ] `api/wahl/list`, `get-election-result.ts`, Portal/`wahl/[slug]` via `data-stand-banner` (+ Tests) -- Badge „vorläufig, Stand …“, zugänglich (Text, nicht nur Farbe)
-- [ ] `home-wahl-teaser.svelte` (+ Test) -- 2026er-Slugs
-- [ ] `check-wahl-data.ts`, `wahl/[slug]/+page.server.ts`, `docs/wahldaten-methodik.md`, `technical-notes.md`, `SPEC.md` -- Gates, Fallbacks, Doku inkl. Vorläufig-Regel und Re-Ingest-Pflicht
-- [ ] Lokaler Lauf: `data:wahl-fetch --only=agh23,agh26,bvv26`, `data:wahl-geo --only=ah26`, `data:wahl-kiez`, `data:wahl-analytik`, `data:wahl-check`
+- [x] `scripts/wahlen/lib/wb-csv-parser.ts` (+ `.test.ts`) -- parst DSB-Legende (cp1252) und W-CSV (UTF-8-BOM, `;`, Dezimalkomma) in SBB-kompatible Zeilen-Objekte -- ein Transformer statt zwei
+- [x] `scripts/wahlen/lib/sources.ts`, `scripts/lib/allowlist.ts` -- `agh26` (Erst/Zweit), `bvv26` als `wb-csv`, Host freigeben
+- [x] `scripts/wahlen/lib/parent-lookup.ts` (+ Test) -- `lookupParentWahlId` herausziehen, `stimmtyp` filtern, Aufruf pro Stimmtyp in `aggregate-wahl-data.ts`
+- [x] `scripts/aggregate-wahl-data.ts` -- `wb-csv`-Zweig; Plausi: Parteisumme = `Gueltig` je Zeile
+- [x] `partei-seed.ts` (+ Test) -- Aliase der 2026er-Legendennamen
+- [x] `sbb-geo-sources.ts`, `wahl-geo-mapping.ts` (+ Test) -- `ah26` per Recon-URL, `agh26/bvv26 → ah26`, `dbUwbIdFromGeo` generisch
+- [x] `wahl.ts` + `drizzle/migrations/0009_*`, `db-loader.ts`, `sources.ts` -- `vorlaeufig`-Flag und `sourceUpdatedAt` je Quelle setzen -- Kennzeichnung ohne Heuristik
+- [x] `api/wahl/list`, `get-election-result.ts`, Portal/`wahl/[slug]` via `data-stand-banner` (+ Tests) -- Badge „vorläufig, Stand …“, zugänglich (Text, nicht nur Farbe)
+- [x] `home-wahl-teaser.svelte` (+ Test) -- 2026er-Slugs
+- [x] `check-wahl-data.ts`, `wahl/[slug]/+page.server.ts`, `docs/wahldaten-methodik.md`, `technical-notes.md`, `SPEC.md` -- Gates, Fallbacks, Doku inkl. Vorläufig-Regel und Re-Ingest-Pflicht
+- [x] Lokaler Lauf: `data:wahl-fetch --only=agh23,agh26,bvv26`, `data:wahl-geo --only=ah26`, `data:wahl-kiez`, `data:wahl-analytik`, `data:wahl-check`
 
 **Acceptance Criteria:**
 - Given lokale DB, when die Pipeline läuft, then enthält `/api/wahl/list` `2026-agh-erststimme`, `2026-agh-zweitstimme` und `2026-bvv`, und das Berlin-Aggregat trifft die amtlichen Werte (Linke 25,7, CDU 18,8, AfD 16,3, Grüne 14,3, SPD 12,1, BSW 4,7 %; BVV Linke 24,1 %) auf 0,1 Punkte.
 - Given `/berlin-wahlen` lokal, when 2026 gewählt ist, then zeigen Winner-Map (Stimmbezirk + Kiez), Zeit-Animation, Trends und Übergänge 2026 ohne Konsolen-Fehler.
 - Given `agh26`/`bvv26` vorläufig, when Portal, `/wahl/2026-bvv` oder `get_election_result` sie zeigen, then steht dort „vorläufig“ mit Stand-Datum; bei 2023 nicht.
 - Given der Parent-Fix, when `/api/wahl/list` gelesen wird, then hat `2023-agh-zweitstimme` `parent_slug = '2021-agh-zweitstimme'`.
+
+## Implementation Notes
+
+- Dispatch 23.09. 17:30, Subagent: `wb-csv-parser.ts`, `parent-lookup.ts` (pure `selectParentWahlId`), Migration `0009_quiet_magma.sql` (`vorlaeufig`), `GEO_AH26` per Playwright-Recon, `dbUwbIdFromGeo` generisch ab Jahrgang 16.
+- Über die Code Map hinaus: `ergebnis-panel.svelte` behauptete „Endgültiges Ergebnis“ auch für 2026, jetzt Badge; `sourceName` erkennt `wahlen-berlin.de` → „Landeswahlleiterin Berlin“; `--only` akzeptiert Kommaliste; `isMain`-Guard in `aggregate-wahl-data.ts`.
+- Nach Matrix-Audit: Tests für W/B, lokale BVV-Liste, Stimmtyp-Filter; `computeSourceUpdatedAt` parst Europe/Berlin statt UTC; `formatBerlinDate` (`src/lib/utils/format-berlin-date.ts`) mit fester Zeitzone.
+- Lokaler Lauf: Gate `wahlen=23 wahlen-mit-kiez-aggregat=18`; Berlin-Aggregate treffen die amtlichen Werte exakt; `source_updated_at` agh26 2026-09-20T23:55:55Z, bvv26 2026-09-20T23:48:01Z.
+
+## Spec Change Log
+
+## Review Triage Log
+
+Runde 1 (23.09.2026), 3 Layer: Blind Hunter (BH) 14, Edge Case (EC) 18, Verification Gap (VG) 5 Gaps + 4 weitere. Route: P1-P5 = Patch-Gruppen, D = defer, R = reject.
+
+| # | Layer | Fund | Verdict | Evidenz | Route |
+|---|---|---|---|---|---|
+| 1 | BH | `list_elections`/`compare_elections` ohne `provisional` | medium | `list-elections.ts:21-31` ElectionListEntry ohne Feld; Tool-Surface gehört zu 1B | P1 |
+| 2 | BH/EC/VG | Inspector, LLM-Export, llms.txt ohne Vorläufig-Hinweis | medium | `wahl-section.svelte`, `llm-export-builder.ts#renderWahl`, `data-collector.ts` rendern nur die Quelle | P1 |
+| 3 | EC | Ergebnis-Panel zeigt beim Laden/Fehler „Endgültiges Ergebnis“ | medium | Kopf `{#if berlinPanel?.vorlaeufig}…{:else}Endgültiges` ignoriert Ladezustand | P1 |
+| 4 | BH | Badge-Kontrast und -Größe | medium | #9e5520 auf 15-%-Tint über #eceae0 = 3,87:1 < 4,5:1; 10 px Uppercase | P2 |
+| 5 | BH/EC | Fehlende Pflichtspalten oder 0 Zeilen → `clearWahlData` leert Bestand | medium | fehlende Spalten werden '', Filter verwirft alles, kein Abbruch | P3 |
+| 6 | BH/EC | Identifier-Liste handkopiert statt aus `IDENTIFIER_COLUMN_MAP` | low | partyNames-Filter in `aggregate-wahl-data.ts` driftet bei Map-Erweiterung | P3 |
+| 7 | EC | `--only` mit Tippfehler still übersprungen | low | `main()` prüft nur `targets.length === 0` | P3 |
+| 8 | EC | wb-csv ohne Drift-Check | low | durch Pflichtspalten-Prüfung (#5) abgedeckt | P3 |
+| 9 | BH | Re-Ingest vs. prebuild-Gate-Skip; Teaser-Label hart „Vorläufig“ | medium | `check-wahl-data.ts` Exit 0 bei 23/18; `home-wahl-teaser.svelte` typLabel statisch | P4 |
+| 10 | BH | Doku: Zeilenref in deferred-work, Coverage-Spalte 2026, JJ.MM.TT-Beispiel | low | direkte Korrekturen | P4 |
+| 11 | VG | Series-API `vorlaeufig` ungetestet | gap | `series/server.test.ts` prüft Feld nicht | P5 |
+| 12 | VG | `/wahl/[slug]`-Badge ungetestet | gap | kein Test nennt `wahl-detail-vorlaeufig` | P5 |
+| 13 | VG | „Landeswahlleiterin Berlin“ in 3 Client-Kopien ungetestet | gap | nur `source-label.test.ts` | P5 |
+| 14 | VG | Beteiligungs-Mapping WberIns/Waehler/Unguelt/AghWkr ungetestet | gap | W/B-Test prüft Beteiligung nicht | P5 |
+| 15 | VG | Testname „Vormittags“ bei 23:30Z | low | kosmetisch | P5 |
+| 16 | VG | `isMain`-Guard ohne Prozess-Smoke | maybe-false | lokal ok; Spawn mit `--only=gibtsnicht` → Exit 2 würde klären | D |
+| 17 | BH | `sourceName` vierfach | low | Bestand dreifach; geteiltes Modul unter `$lib/data/` | D |
+| 18 | BH | BSW-Alias exakt: anderer Strich → still Sonstige | maybe-false | Endergebnis-Legende unbekannt; Gate „Name >3 % ohne Alias“ würde klären | D |
+| 19 | BH | AC-Berlin-Werte nur manuell geprüft | low | kein Regressions-Check beim Re-Ingest | D |
+| 20 | BH | OG-Images und `list_elections`-Description offen | low | technical-notes Punkt 6 | D |
+| 21 | BH | „Alle 23 Wahlen“ zählt Rows | low | Bestand „Alle 20 Wahlen“, gleiche Semantik | R |
+| 22 | BH | Stand ohne Uhrzeit | low | W-Datei-Max 01:55 ≠ Seiten-Stand 03:33, Uhrzeit verwirrt | R |
+| 23 | BH | Diff ohne Snapshot/GeoJSON, Prettier-Hunks | false | generierte Artefakte bewusst ausgeschlossen | R |
+| 24 | BH | `bg-bg-muted` Sortierung | false | Bestands-Utility, nur Sorter-Reihenfolge | R |
+| 25 | EC | Multiline-Quoted-Felder | low | Quelle enthält keine Quotes | R |
+| 26 | EC | Zellenzahl ≠ Header | low | Parteisummen-Plausi fängt Verschiebung | R |
+| 27 | EC | `parseIntSafe('-')` → 0 | low | Parteisummen-Plausi fängt es | R |
+| 28 | EC | Datums-Rollover | low | Quelle liefert gültige Werte | R |
+| 29 | EC | DST-Lücke/Doppelstunde | low | Stand-Zeiten liegen nachts im September | R |
+| 30 | EC | Badge hängt am ersten Series-Punkt | false | alle Punkte eines Jahres stammen aus derselben `wahl`-Row | R |
+| 31 | EC | `dbUwbIdFromGeo` für künftige Jahre ohne Geo | false | ohne WAHL_TO_GEO keine Geometrie, ID bleibt ungenutzt | R |
+| 32 | EC | Cache 300 s nach Re-Ingest | low | höchstens 5 min Verzögerung | R |
+| 33 | EC | Hart codierte 2026-Stellen vs. „ohne Portal-Code“ | false | Fallback/Teaser sind Spec-Tasks, Portal-Komponenten datengetrieben | R |
+| 34 | EC | Dezimalkomma bei parseInt | false | Stimmen sind Ganzzahlen, Prozentspalten verworfen | R |
+| 35 | VG | ROT-Beleg-Test prüft Nachbildung | low | Doku-Test, Fix durch übrige Tests gedeckt | R |
+| 36 | VG | `updated_at` gemischtes Format | low | beide ISO-8601-kompatibel | R |
 
 ## Design Notes
 

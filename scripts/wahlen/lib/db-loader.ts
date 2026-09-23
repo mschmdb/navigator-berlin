@@ -70,6 +70,7 @@ export type UpsertWahlParams = {
 	sourceUpdatedAt?: Date;
 	isRepeatElection?: boolean;
 	parentElectionId?: number;
+	vorlaeufig?: boolean;
 };
 
 export async function upsertWahl(db: Db, params: UpsertWahlParams): Promise<number> {
@@ -91,6 +92,7 @@ export async function upsertWahl(db: Db, params: UpsertWahlParams): Promise<numb
 				sourceUpdatedAt: params.sourceUpdatedAt ?? null,
 				isRepeatElection: params.isRepeatElection ?? false,
 				parentElectionId: params.parentElectionId ?? null,
+				vorlaeufig: params.vorlaeufig ?? false,
 				computedAt: new Date()
 			})
 			.where(eq(wahl.id, id));
@@ -107,7 +109,8 @@ export async function upsertWahl(db: Db, params: UpsertWahlParams): Promise<numb
 			license: params.license,
 			sourceUpdatedAt: params.sourceUpdatedAt ?? null,
 			isRepeatElection: params.isRepeatElection ?? false,
-			parentElectionId: params.parentElectionId ?? null
+			parentElectionId: params.parentElectionId ?? null,
+			vorlaeufig: params.vorlaeufig ?? false
 		})
 		.returning({ id: wahl.id });
 

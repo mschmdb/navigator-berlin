@@ -24,7 +24,9 @@ export const GET: RequestHandler = async () => {
 		has_stimmbezirks_geometry: hasGeometry(wahlSlugFromTypJahr(w.typ, w.jahr)),
 		source_name: sourceName(w.sourceUrl),
 		source_url: w.sourceUrl,
-		license: w.license
+		license: w.license,
+		vorlaeufig: w.vorlaeufig,
+		source_updated_at: w.sourceUpdatedAt ? w.sourceUpdatedAt.toISOString() : null
 	}));
 	return new Response(JSON.stringify({ elections }), {
 		status: 200,

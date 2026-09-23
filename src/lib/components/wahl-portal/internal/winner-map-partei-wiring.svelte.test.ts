@@ -100,7 +100,9 @@ const WAHLEN_2025: WahlPortalListEntry[] = [
 		typ: 'btw',
 		isRepeatElection: false,
 		sourceName: 'Bundeswahlleiterin',
-		license: 'dl-de/by-2-0'
+		license: 'dl-de/by-2-0',
+		vorlaeufig: false,
+		sourceUpdatedAt: null
 	}
 ];
 
@@ -282,7 +284,9 @@ describe('WinnerMap Partei-Tab-Verdrahtung (Kiez, Fake-Map)', () => {
 			typ: 'agh',
 			isRepeatElection: false,
 			sourceName: 'Amt für Statistik Berlin-Brandenburg',
-			license: 'dl-de/by-2-0'
+			license: 'dl-de/by-2-0',
+			vorlaeufig: false,
+			sourceUpdatedAt: null
 		}
 	];
 

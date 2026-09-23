@@ -9,6 +9,7 @@ const TARGET_PATHS: readonly string[] = [
 	'src/lib/data/get-wahl-results-at-point.ts',
 	'src/lib/data/partei-farben.ts',
 	'src/routes/api/wahl/results-at-point/+server.ts',
+	'src/routes/(with-header)/wahl/[slug]/+page.svelte',
 	'docs/wahldaten-methodik.md'
 ];
 

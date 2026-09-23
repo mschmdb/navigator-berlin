@@ -8,6 +8,7 @@ export const BUILD_TIME_ALLOWLIST = [
 	'overpass.kumi.systems',
 	'bundeswahlleiterin.de',
 	'statistik-berlin-brandenburg.de',
+	'wahlen-berlin.de',
 	'kriminalitaetsatlas.berlin.de'
 ] as const;
 

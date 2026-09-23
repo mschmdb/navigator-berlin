@@ -60,7 +60,7 @@ export const entries: EntryGenerator = async () => {
 			fallback.push({ jahr, typ: 'btw', stimmtyp: 'erststimme' });
 			fallback.push({ jahr, typ: 'btw', stimmtyp: 'zweitstimme' });
 		}
-		for (const jahr of [2011, 2016, 2021, 2023]) {
+		for (const jahr of [2011, 2016, 2021, 2023, 2026]) {
 			fallback.push({ jahr, typ: 'agh', stimmtyp: 'erststimme' });
 			fallback.push({ jahr, typ: 'agh', stimmtyp: 'zweitstimme' });
 			fallback.push({ jahr, typ: 'bvv', stimmtyp: 'einstimme' });
@@ -88,6 +88,9 @@ export type WahlDetailPageData = {
 		readonly sourceUrl: string;
 		readonly sourceName: string;
 		readonly license: string;
+		/** Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B). */
+		readonly vorlaeufig: boolean;
+		readonly sourceUpdatedAt: string | null;
 	};
 	readonly berlin: ReadonlyArray<{
 		readonly kurzname: string;
@@ -168,7 +171,9 @@ export const load: PageServerLoad = async ({ params }) => {
 			parentSlug,
 			sourceUrl: match.sourceUrl,
 			sourceName: sourceName(match.sourceUrl),
-			license: match.license
+			license: match.license,
+			vorlaeufig: match.vorlaeufig,
+			sourceUpdatedAt: match.sourceUpdatedAt ? match.sourceUpdatedAt.toISOString() : null
 		},
 		berlin: berlinRows.map((r) => ({
 			kurzname: r.parteiKurzname,

@@ -43,6 +43,15 @@ describe('buildWahlShortDescription', () => {
 		expect(short).not.toContain('Stimme · '); // kein extra-Pipe für BVV
 		expect(short).toContain('Wiederholungswahl');
 	});
+
+	it('Vorläufig-Hinweis mit Stand-Datum (Story: Ingest AGH/BVV 2026)', () => {
+		const short = buildWahlShortDescription({
+			...BASE,
+			vorlaeufig: true,
+			sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+		});
+		expect(short).toContain('vorläufig, Stand 21.09.2026');
+	});
 });
 
 describe('renderWahlMarkdown', () => {
@@ -68,6 +77,20 @@ describe('renderWahlMarkdown', () => {
 	it('Wiederholungswahl-Hinweis bei isRepeatElection=true', () => {
 		const md = renderWahlMarkdown({ ...BASE, isRepeatElection: true });
 		expect(md).toContain('Wiederholungswahl');
+	});
+
+	it('Vorläufig-Hinweis mit Stand-Datum (Story: Ingest AGH/BVV 2026)', () => {
+		const md = renderWahlMarkdown({
+			...BASE,
+			vorlaeufig: true,
+			sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+		});
+		expect(md).toContain('Status: vorläufig, Stand 21.09.2026.');
+	});
+
+	it('kein Vorläufig-Hinweis wenn vorlaeufig=false', () => {
+		const md = renderWahlMarkdown({ ...BASE, vorlaeufig: false });
+		expect(md).not.toContain('vorläufig');
 	});
 
 	it('Briefwahl-Caveat immer enthalten', () => {

@@ -1,0 +1,1 @@
+ALTER TABLE "wahl" ADD COLUMN "vorlaeufig" boolean DEFAULT false NOT NULL;

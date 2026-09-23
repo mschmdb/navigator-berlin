@@ -14,24 +14,28 @@
 		readonly note: string;
 	};
 
+	// „· Vorläufig" in den beiden 2026er-typLabel ist statischer Text, kein
+	// API-Feld -- ein Re-Ingest mit dem Endergebnis aktualisiert ihn NICHT
+	// automatisch. Beim Endergebnis von Hand entfernen, siehe Re-Ingest-
+	// Checkliste in docs/wahldaten-methodik.md ("AGH/BVV 2026 (vorläufig)").
 	const CARDS: ReadonlyArray<WahlCard> = [
+		{
+			slug: '2026-agh-zweitstimme',
+			title: 'Abgeordnetenhaus 2026',
+			typLabel: 'Zweitstimme · Vorläufig',
+			note: 'Quelle Landeswahlleiterin Berlin'
+		},
+		{
+			slug: '2026-bvv',
+			title: 'BVV-Wahl 2026',
+			typLabel: 'Stimme · Vorläufig',
+			note: 'Quelle Landeswahlleiterin Berlin'
+		},
 		{
 			slug: '2025-btw-zweitstimme',
 			title: 'Bundestagswahl 2025',
 			typLabel: 'Zweitstimme',
 			note: 'Quelle Bundeswahlleiterin'
-		},
-		{
-			slug: '2023-agh-zweitstimme',
-			title: 'Abgeordnetenhaus 2023',
-			typLabel: 'Zweitstimme · Wiederholung',
-			note: 'Quelle Amt für Statistik Berlin-Brandenburg'
-		},
-		{
-			slug: '2023-bvv',
-			title: 'BVV-Wahl 2023',
-			typLabel: 'Stimme · Wiederholung',
-			note: 'Quelle Amt für Statistik Berlin-Brandenburg'
 		}
 	];
 </script>
@@ -72,7 +76,7 @@
 			data-testid="home-wahl-teaser-all"
 			class="inline-flex items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
 		>
-			Alle 20 Wahlen
+			Alle 23 Wahlen
 			<ArrowRight size={14} aria-hidden="true" />
 		</a>
 		<a

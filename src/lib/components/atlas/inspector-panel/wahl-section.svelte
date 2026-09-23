@@ -4,6 +4,7 @@
 	import WahlConfidenceHairline from '../wahl-confidence-hairline.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
+	import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
 	import type {
 		WahlResultsAtPoint,
 		WahlResultBundle,
@@ -258,6 +259,16 @@
 					data-testid="wahl-wiederholung-marker"
 				>
 					Wiederholungswahl
+				</p>
+			{/if}
+			{#if currentBundle.wahl.vorlaeufig}
+				<p
+					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+					data-testid="wahl-vorlaeufig-marker"
+				>
+					Vorläufig{#if currentBundle.wahl.sourceUpdatedAt}&nbsp;· Stand {formatBerlinDate(
+							currentBundle.wahl.sourceUpdatedAt
+						)}{/if}
 				</p>
 			{/if}
 
@@ -522,7 +533,9 @@
 			>
 				Quelle: {currentBundle.wahl.sourceUrl.includes('bundeswahlleiterin')
 					? 'Bundeswahlleiterin'
-					: 'Amt für Statistik Berlin-Brandenburg'} · Lizenz {currentBundle.wahl.license}
+					: currentBundle.wahl.sourceUrl.includes('wahlen-berlin.de')
+						? 'Landeswahlleiterin Berlin'
+						: 'Amt für Statistik Berlin-Brandenburg'} · Lizenz {currentBundle.wahl.license}
 			</p>
 		{/if}
 

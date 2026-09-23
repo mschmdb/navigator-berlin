@@ -7,6 +7,7 @@
  */
 
 import type { LlmsWahlEntry } from '$lib/seo/llms-builder.js';
+import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
 
 export interface WahlMarkdownInput {
 	readonly origin: string;
@@ -18,6 +19,9 @@ export interface WahlMarkdownInput {
 	readonly isRepeatElection: boolean;
 	readonly sourceName: string;
 	readonly license: string;
+	/** Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B). */
+	readonly vorlaeufig?: boolean;
+	readonly sourceUpdatedAt?: string | null;
 	readonly berlinTop5: ReadonlyArray<{
 		readonly kurzname: string;
 		readonly vollname: string;
@@ -46,12 +50,18 @@ function formatNum(n: number): string {
 	return n.toLocaleString('de-DE');
 }
 
+/** „vorläufig, Stand DD.MM.YYYY" (Matze-Entscheidung 23.09., 1B). */
+function vorlaeufigHinweis(sourceUpdatedAt: string | null | undefined): string {
+	return sourceUpdatedAt ? `vorläufig, Stand ${formatBerlinDate(sourceUpdatedAt)}` : 'vorläufig';
+}
+
 export function buildWahlShortDescription(input: WahlMarkdownInput): string {
 	const parts: string[] = [];
 	parts.push(
 		`${TYP_LABELS[input.typ]} ${input.jahr}${input.typ === 'bvv' ? '' : ` · ${STIMMTYP_LABELS[input.stimmtyp]}`}`
 	);
 	if (input.isRepeatElection) parts.push('Wiederholungswahl');
+	if (input.vorlaeufig) parts.push(vorlaeufigHinweis(input.sourceUpdatedAt));
 	parts.push(`Quelle ${input.sourceName}`);
 	return parts.join(' · ');
 }
@@ -70,6 +80,9 @@ export function renderWahlMarkdown(input: WahlMarkdownInput): string {
 		lines.push(
 			'Wiederholungswahl: ja. Ergebnisse weichen von der gerichtlich aufgehobenen Original-Wahl ab.'
 		);
+	}
+	if (input.vorlaeufig) {
+		lines.push(`Status: ${vorlaeufigHinweis(input.sourceUpdatedAt)}.`);
 	}
 	lines.push(`Quelle: ${input.sourceName}. Lizenz: ${input.license}.`);
 	lines.push('');

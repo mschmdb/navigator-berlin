@@ -8,6 +8,7 @@
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
+	import VorlaeufigBadge from '$lib/components/wahl-portal/vorlaeufig-badge.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -89,6 +90,14 @@
 		>
 			{data.wahl.title}
 		</h1>
+		{#if data.wahl.vorlaeufig}
+			<p>
+				<VorlaeufigBadge
+					sourceUpdatedAt={data.wahl.sourceUpdatedAt}
+					testid="wahl-detail-vorlaeufig"
+				/>
+			</p>
+		{/if}
 		{#if data.wahl.isRepeatElection && data.wahl.parentSlug}
 			<p
 				class="font-mono text-xs tracking-wide text-ink-muted uppercase"

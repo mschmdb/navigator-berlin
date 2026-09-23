@@ -69,7 +69,7 @@ Vision plus Gelegenheit: navigator.berlin hält 12 Berliner Wahlen bis auf Stimm
 
 ## Constraints
 
-- Nur endgültige Wahlergebnisse, kein Liveticker und keine vorläufigen Zahlen (Matze 06.09.).
+- Kein Liveticker, keine Hochrechnungen. Ausnahme (Matze 23.09., 1B): das amtliche vorläufige Ergebnis einer frisch stattgefundenen Wahl (z. B. AGH/BVV 2026) darf mit dem nächsten Deploy live gehen, wenn Portal, `/wahl/[slug]` und Tool-/API-Responses die Kennzeichnung „vorläufig" plus Stand-Datum tragen. Beim Endergebnis ist ein Re-Ingest Pflicht, der die Kennzeichnung entfernt.
 - Neutralität hart: `lint:wahl`-Forbidden-Tokens (u. a. „Hochburg", Farb-Adjektive, „Wahlsieger") gelten für alle Portal-Texte; neue Dateien in `TARGET_PATHS` eintragen; `banned-words.ts` als zweites Gate.
 - Keine eigene Sitzberechnung: Sitze/Koalitionen erst, wenn offizielle Sitzzahlen vorliegen.
 - Zeit-Animation nur innerhalb einer Wahl-Art-Reihe (AGH, BVV, BTW getrennt).
@@ -83,7 +83,7 @@ Vision plus Gelegenheit: navigator.berlin hält 12 Berliner Wahlen bis auf Stimm
 
 ## Non-goals
 
-- Liveticker, Hochrechnungen, vorläufige Ergebnisse.
+- Liveticker, Hochrechnungen. Vorläufige Ergebnisse sind kein genereller Non-Goal mehr, siehe Constraints-Ausnahme (Matze 23.09., 1B) -- nur klar gekennzeichnet, nie unmarkiert.
 - Sitzverteilungs-Halbkreis und Koalitionsrechner in v1 (erst mit offiziellen 2026er-Sitzzahlen).
 - Europawahl und BTW-2024-Teilwiederholung (Phase-2-Backlog der Wahl-Pipeline).
 - Abgeordneten-Fotos oder Personen-Datenbank.

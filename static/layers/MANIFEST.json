@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-08T10:55:22.829Z",
+  "generatedAt": "2026-09-23T15:53:17.923Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -716,6 +716,7 @@
       "filename": "klima-pet-2022.a0435468.pmtiles",
       "sourceUrl": "https://gdi.berlin.de/services/wfs/ua_klimaanalyse_2022",
       "fetchedAt": "2026-05-21T15:06:42.892Z",
+      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
       "license": "dl-de/zero-2-0",
       "sha256": "a0435468424cb83c35ea0b0d1bd0de7745a3b836f87dbb283cf984f1d63e1740",
       "bundleGroup": "C: Umwelt",
@@ -725,7 +726,6 @@
       },
       "geometryType": "MultiPolygon",
       "featureCount": 57801,
-      "sourceUpdatedAt": "2024-06-01T00:00:00.000Z",
       "format": "pmtiles",
       "nearestPolygonFallbackKm": 0.05
     },
@@ -1081,6 +1081,23 @@
       },
       "geometryType": "Point",
       "featureCount": 538
+    },
+    {
+      "slug": "wahlbezirke-ah26",
+      "filename": "wahlbezirke-ah26.54a9d8ad.geojson",
+      "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_AH26.zip",
+      "fetchedAt": "2026-09-23T15:53:17.923Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "54a9d8ad89cdaa520c2e85bc5fee8d4e888c7179caa8b57502c9d0686d11f00e",
+      "bundleGroup": "H: Wahldaten",
+      "zoomThresholds": {
+        "min": 13,
+        "max": 17
+      },
+      "geometryType": "Polygon",
+      "featureCount": 2542,
+      "inspectorRelevant": false,
+      "mapRelevant": false
     }
   ]
 }

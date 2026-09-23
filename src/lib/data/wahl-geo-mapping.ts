@@ -25,7 +25,9 @@ export const WAHL_TO_GEO: ReadonlyMap<string, string> = new Map([
 	['agh23', 'ah21'],
 	['bvv16', 'ah16'],
 	['bvv21', 'ah21'],
-	['bvv23', 'ah21']
+	['bvv23', 'ah21'],
+	['agh26', 'ah26'],
+	['bvv26', 'ah26']
 ]);
 
 export function wahlSlugFromTypJahr(typ: 'btw' | 'agh' | 'bvv', jahr: number): string {
@@ -119,14 +121,13 @@ export function dbUwbIdFromGeo(props: GeoUwbProps, wahlSlug: string): string | n
 		return `${bwk}-${bez}-${bez}W${uwb3}-0`;
 	}
 
-	if (
-		wahlSlug === 'agh16' ||
-		wahlSlug === 'agh21' ||
-		wahlSlug === 'agh23' ||
-		wahlSlug === 'bvv16' ||
-		wahlSlug === 'bvv21' ||
-		wahlSlug === 'bvv23'
-	) {
+	// AGH/BVV ab 2016 teilen sich ein Format (Adresse ohne `-W`-Suffix).
+	// 2011 hat keine Stimmbezirks-Geometrie (siehe WAHL_TO_GEO) und bleibt
+	// deshalb explizit ausgeschlossen. Generisch über den Jahrgang statt
+	// Jahrgangs-Enumeration, damit neue AGH/BVV-Jahrgänge (z.B. agh26/bvv26)
+	// ohne Code-Änderung funktionieren.
+	const aghBvvMatch = wahlSlug.match(/^(agh|bvv)(\d{2})$/);
+	if (aghBvvMatch && Number(aghBvvMatch[2]) >= 16) {
 		return `${bez}W${uwb3}`;
 	}
 

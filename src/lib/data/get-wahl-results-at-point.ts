@@ -26,6 +26,9 @@ export type WahlListEntry = {
 	parentElectionId: number | null;
 	sourceUrl: string;
 	license: string;
+	/** Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B). */
+	vorlaeufig: boolean;
+	sourceUpdatedAt: string | null;
 };
 
 export type WahlResultBundle = {

@@ -11,7 +11,9 @@ const WAHLEN_2023: WahlPortalListEntry[] = [
 		typ: 'agh',
 		isRepeatElection: true,
 		sourceName: 'Amt für Statistik Berlin-Brandenburg',
-		license: 'dl-de/by-2-0'
+		license: 'dl-de/by-2-0',
+		vorlaeufig: false,
+		sourceUpdatedAt: null
 	},
 	{
 		slug: '2021-agh-zweitstimme',
@@ -19,7 +21,9 @@ const WAHLEN_2023: WahlPortalListEntry[] = [
 		typ: 'agh',
 		isRepeatElection: false,
 		sourceName: 'Amt für Statistik Berlin-Brandenburg',
-		license: 'dl-de/by-2-0'
+		license: 'dl-de/by-2-0',
+		vorlaeufig: false,
+		sourceUpdatedAt: null
 	}
 ];
 
@@ -134,21 +138,177 @@ describe('ergebnis-panel.svelte', () => {
 		});
 
 		await expect.element(page.getByTestId('ergebnis-panel')).toBeInTheDocument();
-		await expect.element(page.getByTestId('ergebnis-panel-kopf')).toHaveTextContent(
-			'Abgeordnetenhaus 2023'
-		);
+		await expect
+			.element(page.getByTestId('ergebnis-panel-kopf'))
+			.toHaveTextContent('Abgeordnetenhaus 2023');
 		await expect
 			.element(page.getByTestId('ergebnis-panel-kopf'))
 			.toHaveTextContent('Endgültiges Ergebnis');
 		await expect
 			.element(page.getByTestId('ergebnis-panel-datenstand'))
 			.toHaveTextContent('Amt für Statistik Berlin-Brandenburg');
+		await expect.element(page.getByTestId('ergebnis-panel-beteiligung-slot')).toBeInTheDocument();
+		await expect.element(page.getByTestId('ergebnis-panel-beteiligung-slot')).toBeEmptyDOMElement();
+	});
+
+	it('zeigt Vorläufig-Badge statt „Endgültiges Ergebnis" für ein vorläufiges Jahr (Story: Ingest AGH/BVV 2026)', async () => {
+		const wahlen2026: WahlPortalListEntry[] = [
+			{
+				slug: '2026-agh-zweitstimme',
+				jahr: 2026,
+				typ: 'agh',
+				isRepeatElection: false,
+				sourceName: 'Landeswahlleiterin Berlin',
+				license: 'dl-de/by-2.0',
+				vorlaeufig: true,
+				sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+			},
+			...WAHLEN_2023
+		];
+		const seriesMitVorlaeufig = {
+			...SERIES_BERLIN,
+			points: [
+				...SERIES_BERLIN.points,
+				{
+					jahr: 2026,
+					partei: 'Die Linke',
+					farbe_hex: '#BE3075',
+					anteil: 0.257,
+					stimmen: 468060,
+					is_repeat_election: false,
+					parent_slug: null,
+					vorlaeufig: true,
+					source_updated_at: '2026-09-21T01:55:55.000Z'
+				}
+			]
+		};
+		const fetchFn = fakeFetch([['/api/wahl/series', seriesMitVorlaeufig]]);
+		render(ErgebnisPanelContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2026,
+			wahlen: wahlen2026,
+			fetchFn
+		});
+
 		await expect
-			.element(page.getByTestId('ergebnis-panel-beteiligung-slot'))
-			.toBeInTheDocument();
+			.element(page.getByTestId('ergebnis-panel-vorlaeufig'))
+			.toHaveTextContent('Vorläufig');
 		await expect
-			.element(page.getByTestId('ergebnis-panel-beteiligung-slot'))
-			.toBeEmptyDOMElement();
+			.element(page.getByTestId('ergebnis-panel-vorlaeufig'))
+			.toHaveTextContent('21.09.2026');
+		await expect
+			.element(page.getByTestId('ergebnis-panel-kopf'))
+			.not.toHaveTextContent('Endgültiges Ergebnis');
+	});
+
+	it('zeigt weiter „Endgültiges Ergebnis" für ein nicht-vorläufiges Jahr derselben Reihe', async () => {
+		const seriesMitVorlaeufig = {
+			...SERIES_BERLIN,
+			points: [
+				...SERIES_BERLIN.points,
+				{
+					jahr: 2026,
+					partei: 'Die Linke',
+					farbe_hex: '#BE3075',
+					anteil: 0.257,
+					stimmen: 468060,
+					is_repeat_election: false,
+					parent_slug: null,
+					vorlaeufig: true,
+					source_updated_at: '2026-09-21T01:55:55.000Z'
+				}
+			]
+		};
+		const fetchFn = fakeFetch([['/api/wahl/series', seriesMitVorlaeufig]]);
+		render(ErgebnisPanelContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
+
+		await expect
+			.element(page.getByTestId('ergebnis-panel-kopf'))
+			.toHaveTextContent('Endgültiges Ergebnis');
+		await expect.element(page.getByTestId('ergebnis-panel-vorlaeufig')).not.toBeInTheDocument();
+	});
+
+	it('zeigt Vorläufig-Badge im Kopf schon während die Series noch lädt (Review-Fund: Lade-/Fehlerzustand)', async () => {
+		const wahlen2026: WahlPortalListEntry[] = [
+			{
+				slug: '2026-agh-zweitstimme',
+				jahr: 2026,
+				typ: 'agh',
+				isRepeatElection: false,
+				sourceName: 'Landeswahlleiterin Berlin',
+				license: 'dl-de/by-2.0',
+				vorlaeufig: true,
+				sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+			}
+		];
+		// Fetch, der nie auflöst -> berlinStatus bleibt dauerhaft 'loading'.
+		const neverResolves: typeof fetch = () => new Promise(() => {});
+		render(ErgebnisPanelContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2026,
+			wahlen: wahlen2026,
+			fetchFn: neverResolves
+		});
+
+		await expect.element(page.getByTestId('ergebnis-panel-loading')).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('ergebnis-panel-vorlaeufig'))
+			.toHaveTextContent('Vorläufig');
+		await expect
+			.element(page.getByTestId('ergebnis-panel-kopf'))
+			.not.toHaveTextContent('Endgültiges Ergebnis');
+	});
+
+	it('zeigt Vorläufig-Badge im Kopf auch bei Series-Fehlerzustand (Review-Fund: Lade-/Fehlerzustand)', async () => {
+		const wahlen2026: WahlPortalListEntry[] = [
+			{
+				slug: '2026-agh-zweitstimme',
+				jahr: 2026,
+				typ: 'agh',
+				isRepeatElection: false,
+				sourceName: 'Landeswahlleiterin Berlin',
+				license: 'dl-de/by-2.0',
+				vorlaeufig: true,
+				sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+			}
+		];
+		const failingFetch: typeof fetch = (async () =>
+			new Response('boom', { status: 500 })) as typeof fetch;
+		render(ErgebnisPanelContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2026,
+			wahlen: wahlen2026,
+			fetchFn: failingFetch
+		});
+
+		await expect.element(page.getByTestId('ergebnis-panel-error')).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('ergebnis-panel-vorlaeufig'))
+			.toHaveTextContent('Vorläufig');
+	});
+
+	it('zeigt weder „Vorläufig" noch „Endgültiges Ergebnis" solange die Portal-Wahl-Liste selbst keinen Treffer hat (Status unbekannt)', async () => {
+		render(ErgebnisPanelContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2026,
+			wahlen: [],
+			fetchFn: fakeFetch([['/api/wahl/series', SERIES_BERLIN]])
+		});
+
+		await expect.element(page.getByTestId('ergebnis-panel-vorlaeufig')).not.toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('ergebnis-panel-kopf'))
+			.not.toHaveTextContent('Endgültiges Ergebnis');
 	});
 
 	it('rendert Rows mit Rang, Anteil und Delta-Badge (2023 vs. 2021)', async () => {
@@ -162,9 +322,7 @@ describe('ergebnis-panel.svelte', () => {
 		});
 
 		await expect.element(page.getByTestId('ergebnis-panel-liste')).toBeInTheDocument();
-		await expect
-			.element(page.getByTestId('ergebnis-panel-anteil-CDU'))
-			.toHaveTextContent('28,2 %');
+		await expect.element(page.getByTestId('ergebnis-panel-anteil-CDU')).toHaveTextContent('28,2 %');
 		await expect
 			.element(page.getByTestId('ergebnis-panel-delta-CDU'))
 			.toHaveTextContent('+10,2 Pp.');
@@ -187,9 +345,7 @@ describe('ergebnis-panel.svelte', () => {
 		});
 
 		await expect.element(page.getByTestId('ergebnis-panel-anteil-CDU')).toBeInTheDocument();
-		await expect
-			.element(page.getByTestId('ergebnis-panel-delta-CDU'))
-			.not.toBeInTheDocument();
+		await expect.element(page.getByTestId('ergebnis-panel-delta-CDU')).not.toBeInTheDocument();
 	});
 
 	it('Jahr-Wechsel liest aus dem geladenen Response, kein neuer Series-Request', async () => {
@@ -214,9 +370,7 @@ describe('ergebnis-panel.svelte', () => {
 			wahlen: WAHLEN_2023,
 			fetchFn
 		});
-		await expect
-			.element(page.getByTestId('ergebnis-panel-anteil-CDU'))
-			.toHaveTextContent('18,0 %');
+		await expect.element(page.getByTestId('ergebnis-panel-anteil-CDU')).toHaveTextContent('18,0 %');
 		expect(requestCount).toBe(1);
 	});
 
@@ -230,15 +384,9 @@ describe('ergebnis-panel.svelte', () => {
 			fetchFn
 		});
 		await page.getByTestId('ergebnis-panel-disclosure-trigger').click();
-		await expect
-			.element(page.getByTestId('ergebnis-panel-disclosure-content'))
-			.toBeInTheDocument();
-		await expect
-			.element(page.getByTestId('ergebnis-panel-methodik-link'))
-			.toBeInTheDocument();
-		await expect
-			.element(page.getByTestId('ergebnis-panel-lizenzen-link'))
-			.toBeInTheDocument();
+		await expect.element(page.getByTestId('ergebnis-panel-disclosure-content')).toBeInTheDocument();
+		await expect.element(page.getByTestId('ergebnis-panel-methodik-link')).toBeInTheDocument();
+		await expect.element(page.getByTestId('ergebnis-panel-lizenzen-link')).toBeInTheDocument();
 	});
 
 	it('Kiez-Ebene mit hervorgehobenem Gebiet: zweiter Block mit Gebiets-Werten, Berlin-Block bleibt', async () => {
@@ -289,9 +437,7 @@ describe('ergebnis-panel.svelte', () => {
 			anzeigeEbene: 'kiez'
 		});
 
-		await expect
-			.element(page.getByTestId('ergebnis-panel-gebiet-empty'))
-			.toBeInTheDocument();
+		await expect.element(page.getByTestId('ergebnis-panel-gebiet-empty')).toBeInTheDocument();
 	});
 
 	it('Stimmbezirks-Ebene: Berlin-Block plus Detailseiten-Satz, kein Gebiets-Block', async () => {
@@ -311,9 +457,7 @@ describe('ergebnis-panel.svelte', () => {
 		await expect
 			.element(page.getByTestId('ergebnis-panel-stimmbezirk-hinweis'))
 			.toBeInTheDocument();
-		await expect
-			.element(page.getByTestId('ergebnis-panel-gebiet-block'))
-			.not.toBeInTheDocument();
+		await expect.element(page.getByTestId('ergebnis-panel-gebiet-block')).not.toBeInTheDocument();
 	});
 
 	it('zeigt einen Lade-Hinweis vor der ersten Antwort und einen Fehler-Hinweis bei 500', async () => {

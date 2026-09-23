@@ -2,7 +2,11 @@
 	import { Accordion } from 'bits-ui';
 	import { ChevronDown } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
-	import { getWahlPortalState, currentJahr } from '$lib/state/wahl-portal-context.svelte.js';
+	import {
+		getWahlPortalState,
+		currentJahr,
+		vorlaeufigStatusFor
+	} from '$lib/state/wahl-portal-context.svelte.js';
 	import {
 		stimmtypForReihe,
 		REIHE_LABELS,
@@ -14,6 +18,7 @@
 		type ErgebnisSeriesPoint,
 		type ErgebnisPanelData
 	} from './internal/ergebnis-panel-data.js';
+	import VorlaeufigBadge from './vorlaeufig-badge.svelte';
 
 	type Props = {
 		/** Injizierbar für Tests; Default = globales `fetch`. */
@@ -157,17 +162,39 @@
 	);
 	const vorjahrText = $derived(berlinPanel ? vorjahrLabel(berlinPanel.vorjahr) : null);
 
+	// Vorläufig-Status aus der Portal-Wahl-Liste (nicht aus berlinPanel/der
+	// Series-Antwort): die Series-API liefert das Flag pro Datenpunkt, aber
+	// während Lade-/Fehlerzustand gibt es noch keine Punkte -- ohne eigene
+	// Quelle würde der Kopf dann fälschlich "Endgültiges Ergebnis" zeigen,
+	// obwohl der Status schlicht unbekannt ist. `null` = unbekannt: weder
+	// "vorläufig" noch "endgültig" behaupten (Review-Fund 23.09.).
+	const vorlaeufigStatus = $derived(vorlaeufigStatusFor(portal, portal.reihe, jahr));
+
 	const DISCLOSURE_TEXT =
 		'Berlin- und Bezirks-Werte sind amtliche Summen der Wahlämter. Kiez-Werte sind ein ' +
 		'Flächen-Aggregat aus den Stimmbezirken, kein amtlicher Originalwert. Briefwahl-Stimmen ' +
 		'fließen in die Bezirks- und Berlin-Summen ein, sind aber nicht auf Kieze verteilbar.';
 </script>
 
-<section aria-labelledby="ergebnis-panel-h" data-testid="ergebnis-panel" class="flex flex-col gap-4">
+<section
+	aria-labelledby="ergebnis-panel-h"
+	data-testid="ergebnis-panel"
+	class="flex flex-col gap-4"
+>
 	<h3 id="ergebnis-panel-h" class="font-serif text-xl text-ink">Ergebnis</h3>
 
 	<div data-testid="ergebnis-panel-kopf" class="flex flex-col gap-1">
-		<p class="font-serif text-base text-ink">{wahlBezeichnung} · Endgültiges Ergebnis</p>
+		<p class="font-serif text-base text-ink">
+			{wahlBezeichnung}
+			{#if vorlaeufigStatus?.vorlaeufig}
+				· <VorlaeufigBadge
+					sourceUpdatedAt={vorlaeufigStatus.sourceUpdatedAt}
+					testid="ergebnis-panel-vorlaeufig"
+				/>
+			{:else if vorlaeufigStatus !== null}
+				· Endgültiges Ergebnis
+			{/if}
+		</p>
 		{#if berlinResponse}
 			<p data-testid="ergebnis-panel-datenstand" class="font-mono text-xs text-ink-subtle">
 				Datenstand: {berlinResponse.source_name ?? 'unbekannte Quelle'}
@@ -185,7 +212,9 @@
 			Ergebnis-Daten konnten nicht geladen werden.
 		</p>
 	{:else if berlinStatus !== 'loaded'}
-		<p data-testid="ergebnis-panel-loading" role="status" class="font-serif text-ink-muted">Lädt Ergebnis …</p>
+		<p data-testid="ergebnis-panel-loading" role="status" class="font-serif text-ink-muted">
+			Lädt Ergebnis …
+		</p>
 	{:else if !berlinPanel || berlinPanel.rows.length === 0}
 		<p data-testid="ergebnis-panel-empty" role="status" class="font-serif text-ink-muted">
 			Für diese Auswahl liegen noch keine Ergebnis-Daten vor.
@@ -213,7 +242,7 @@
 						{#if row.deltaLabel}
 							<span
 								data-testid={`ergebnis-panel-delta-${row.partei}`}
-								class="w-20 shrink-0 text-right tabular-nums text-ink-subtle"
+								class="w-20 shrink-0 text-right text-ink-subtle tabular-nums"
 							>
 								{row.deltaLabel}
 							</span>
@@ -226,7 +255,7 @@
 					<!-- Anteils-Balken in voller Breite unter der Zeile: die alte
 					     Inline-Variante kollabierte im schmalen Panel auf ~0px (Live-Fund
 					     Matze 20.09.: "angeschnittener Extra-Dot" bei Zeilen ohne Delta). -->
-					<span aria-hidden="true" class="ml-5 h-1.5 overflow-hidden rounded-full bg-bg-muted">
+					<span aria-hidden="true" class="bg-bg-muted ml-5 h-1.5 overflow-hidden rounded-full">
 						<span
 							class="block h-full rounded-full"
 							style:width={`${Math.min(Math.max(row.anteil * 100, 0), 100)}%`}
@@ -248,7 +277,10 @@
 			Stimmbezirks-Verteilungen liegen auf den Detailseiten der einzelnen Stimmbezirke.
 		</p>
 	{:else if highlightedSlug}
-		<div data-testid="ergebnis-panel-gebiet-block" class="flex flex-col gap-2 border-t border-rule pt-4">
+		<div
+			data-testid="ergebnis-panel-gebiet-block"
+			class="flex flex-col gap-2 border-t border-rule pt-4"
+		>
 			<h4 class="font-serif text-base text-ink">{highlightedName ?? 'Hervorgehobenes Gebiet'}</h4>
 			{#if gebietStatus === 'error'}
 				<p data-testid="ergebnis-panel-gebiet-error" role="alert" class="font-serif text-ink-muted">
@@ -264,7 +296,10 @@
 				</p>
 			{:else}
 				{#if gebietPanel.vorjahr !== null}
-					<p data-testid="ergebnis-panel-gebiet-vorjahr-label" class="font-mono text-xs text-ink-subtle">
+					<p
+						data-testid="ergebnis-panel-gebiet-vorjahr-label"
+						class="font-mono text-xs text-ink-subtle"
+					>
 						Veränderung {vorjahrLabel(gebietPanel.vorjahr)}
 					</p>
 				{/if}
@@ -290,7 +325,7 @@
 								{#if row.deltaLabel}
 									<span
 										data-testid={`ergebnis-panel-gebiet-delta-${row.partei}`}
-										class="w-20 shrink-0 text-right tabular-nums text-ink-subtle"
+										class="w-20 shrink-0 text-right text-ink-subtle tabular-nums"
 									>
 										{row.deltaLabel}
 									</span>
@@ -303,7 +338,7 @@
 							<!-- Anteils-Balken in voller Breite unter der Zeile: die alte
 							     Inline-Variante kollabierte im schmalen Panel auf ~0px (Live-Fund
 							     Matze 20.09.: "angeschnittener Extra-Dot" bei Zeilen ohne Delta). -->
-							<span aria-hidden="true" class="ml-5 h-1.5 overflow-hidden rounded-full bg-bg-muted">
+							<span aria-hidden="true" class="bg-bg-muted ml-5 h-1.5 overflow-hidden rounded-full">
 								<span
 									class="block h-full rounded-full"
 									style:width={`${Math.min(Math.max(row.anteil * 100, 0), 100)}%`}
@@ -317,7 +352,11 @@
 		</div>
 	{/if}
 
-	<Accordion.Root type="single" class="border-t border-rule" data-testid="ergebnis-panel-disclosure">
+	<Accordion.Root
+		type="single"
+		class="border-t border-rule"
+		data-testid="ergebnis-panel-disclosure"
+	>
 		<Accordion.Item value="disclosure" class="py-1">
 			<Accordion.Header>
 				<Accordion.Trigger

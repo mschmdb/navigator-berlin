@@ -202,7 +202,9 @@ const WAHL: WahlResultsAtPoint = {
 				isRepeatElection: false,
 				parentElectionId: null,
 				sourceUrl: 'https://www.bundeswahlleiterin.de/bundestagswahlen/2025.html',
-				license: 'dl-de/by-2-0'
+				license: 'dl-de/by-2-0',
+				vorlaeufig: false,
+				sourceUpdatedAt: null
 			},
 			uwbId: null,
 			levels: {
@@ -289,9 +291,46 @@ describe('buildLlmExportMarkdown — Wahl-Section (Story 10.x)', () => {
 		expect(md).toMatch(/Quelle: Bundeswahlleiterin.*dl-de\/by-2-0/);
 	});
 
+	it('erkennt wahlen-berlin.de-URLs als Landeswahlleiterin Berlin (Story: Ingest AGH/BVV 2026)', () => {
+		const wahlBerlin: WahlResultsAtPoint = {
+			...WAHL,
+			wahlen: [
+				{
+					...WAHL.wahlen[0],
+					wahl: {
+						...WAHL.wahlen[0].wahl,
+						typ: 'agh',
+						stimmtyp: 'zweitstimme',
+						sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/Afspraes/AGH/x.csv'
+					}
+				}
+			]
+		};
+		const md = buildLlmExportMarkdown({ ...fullInput(), wahl: wahlBerlin });
+		expect(md).toMatch(/Quelle: Landeswahlleiterin Berlin/);
+	});
+
 	it('hängt Berlin-Gesamt-Vergleichswert pro Partei an (nicht Berlin-Ebene)', () => {
 		const md = buildLlmExportMarkdown({ ...fullInput(), wahl: WAHL });
 		expect(md).toContain('Bündnis 90/Die Grünen (GRÜNE): 34,0 % (Berlin gesamt: 18,0 %)');
+	});
+
+	it('markiert eine vorläufige Wahl mit Stand-Datum (Story: Ingest AGH/BVV 2026)', () => {
+		const vorlaeufigeWahl: WahlResultsAtPoint = {
+			...WAHL,
+			wahlen: [
+				{
+					...WAHL.wahlen[0],
+					wahl: {
+						...WAHL.wahlen[0].wahl,
+						vorlaeufig: true,
+						sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+					}
+				}
+			]
+		};
+		const md = buildLlmExportMarkdown({ ...fullInput(), wahl: vorlaeufigeWahl });
+		expect(md).toContain('(vorläufig, Stand 21.09.2026)');
 	});
 });
 

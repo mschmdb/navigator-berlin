@@ -26,7 +26,9 @@ function makeBundle(jahr: number, isRepeat = false): WahlResultBundle {
 			isRepeatElection: isRepeat,
 			parentElectionId: null,
 			sourceUrl: 'https://bundeswahlleiterin.de/x.zip',
-			license: 'dl-de/by-2-0'
+			license: 'dl-de/by-2-0',
+			vorlaeufig: false,
+			sourceUpdatedAt: null
 		},
 		uwbId: '075-01-100-0',
 		levels: {
@@ -84,6 +86,25 @@ describe('get_election_result tool', () => {
 		expect(Array.isArray(out.top)).toBe(true);
 	});
 
+	it('erkennt wahlen-berlin.de-URLs als Landeswahlleiterin Berlin (Story: Ingest AGH/BVV 2026)', async () => {
+		const bundle = makeBundle(2026);
+		bundle.wahl = {
+			...bundle.wahl,
+			typ: 'agh',
+			stimmtyp: 'zweitstimme',
+			sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/Afspraes/AGH/x.csv'
+		};
+		const tool = createGetElectionResultTool({
+			fetchResultsAtPoint: async () => makeResults([bundle])
+		});
+		const out = (await tool.handler({
+			lat: 52.52,
+			lng: 13.41,
+			election_slug: '2026-agh-zweitstimme'
+		})) as Record<string, unknown>;
+		expect(out.source).toBe('Landeswahlleiterin Berlin');
+	});
+
 	it('ergänzt Briefwahl-Caveat bei pre-2021-stimmbezirk', async () => {
 		const tool = createGetElectionResultTool({
 			fetchResultsAtPoint: async () => makeResults([makeBundle(2017)])
@@ -121,6 +142,42 @@ describe('get_election_result tool', () => {
 			election_slug: '2023-btw-zweitstimme'
 		})) as Record<string, unknown>;
 		expect((out.caveats as string[]).some((c) => c.includes('Wiederholungswahl'))).toBe(true);
+	});
+
+	it('provisional=false und Jahres-Fallback für updated_at ohne sourceUpdatedAt (Bestand)', async () => {
+		const tool = createGetElectionResultTool({
+			fetchResultsAtPoint: async () => makeResults([makeBundle(2025)])
+		});
+		const out = (await tool.handler({
+			lat: 52.52,
+			lng: 13.41,
+			election_slug: '2025-btw-zweitstimme'
+		})) as Record<string, unknown>;
+		expect(out.provisional).toBe(false);
+		expect(out.source_updated_at).toBeNull();
+		expect(out.updated_at).toBe('2025-01-01');
+	});
+
+	it('provisional=true + source_updated_at aus wahl.sourceUpdatedAt (Story: Ingest AGH/BVV 2026)', async () => {
+		const bundle = makeBundle(2026);
+		bundle.wahl = {
+			...bundle.wahl,
+			typ: 'agh',
+			stimmtyp: 'zweitstimme',
+			vorlaeufig: true,
+			sourceUpdatedAt: '2026-09-21T01:55:55.000Z'
+		};
+		const tool = createGetElectionResultTool({
+			fetchResultsAtPoint: async () => makeResults([bundle])
+		});
+		const out = (await tool.handler({
+			lat: 52.52,
+			lng: 13.41,
+			election_slug: '2026-agh-zweitstimme'
+		})) as Record<string, unknown>;
+		expect(out.provisional).toBe(true);
+		expect(out.source_updated_at).toBe('2026-09-21T01:55:55.000Z');
+		expect(out.updated_at).toBe('2026-09-21T01:55:55.000Z');
 	});
 
 	it('Error address_outside_berlin', async () => {

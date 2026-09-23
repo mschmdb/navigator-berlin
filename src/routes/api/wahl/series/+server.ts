@@ -96,7 +96,9 @@ export const GET: RequestHandler = async ({ url }) => {
 			anteil: r.anteil,
 			stimmen: r.stimmen,
 			is_repeat_election: w?.isRepeatElection ?? false,
-			parent_slug: parentSlug
+			parent_slug: parentSlug,
+			vorlaeufig: w?.vorlaeufig ?? false,
+			source_updated_at: w?.sourceUpdatedAt ? w.sourceUpdatedAt.toISOString() : null
 		};
 	});
 

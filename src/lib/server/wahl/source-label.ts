@@ -4,7 +4,7 @@
  * `(with-header)/wahl/[slug]/+page.server.ts`).
  */
 export function sourceName(sourceUrl: string): string {
-	return sourceUrl.includes('bundeswahlleiterin')
-		? 'Bundeswahlleiterin'
-		: 'Amt für Statistik Berlin-Brandenburg';
+	if (sourceUrl.includes('bundeswahlleiterin')) return 'Bundeswahlleiterin';
+	if (sourceUrl.includes('wahlen-berlin.de')) return 'Landeswahlleiterin Berlin';
+	return 'Amt für Statistik Berlin-Brandenburg';
 }
