@@ -2,7 +2,7 @@
 title: 'Wahl-Detailseiten ins Portal überführen (yaml-Story 12)'
 type: 'feature'
 created: '2026-09-23'
-status: 'draft'
+status: 'ready-for-dev'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
@@ -56,6 +56,7 @@ context:
 - `src/lib/data/feature-flags.ts:21` -- `wahlPortal`; Sitemap/llms-Einträge des Portals hängen daran (`sitemap-builder.ts:144-152`, `llms-builder.ts:163-170`).
 - `scripts/lint-wahl-editorial.ts:12` -- `TARGET_PATHS` auf neue Route umstellen.
 - Slug-Logik mehrfach (`slug-utils.ts`, `wahl-detail-pages.ts:24`, `wahl-section.svelte:546`, `api/wahl/list/+server.ts:18`) -- nach dem Umzug `parseWahlSlug`/`buildWahlSlug` aus `src/lib/` importieren, keine neue Kopie.
+- Hinweis Story 17: Detailseiten-Choropleth nutzt jetzt `wahlgruppen-*` und `src/lib/data/wahl-gruppe-label.ts`; beim Umzug unverändert übernehmen.
 - Nicht ändern: Portal-Hauptseite, `/api/wahl/*`, OG-PNG-Pfade `static/og/wahl/*`.
 
 ## Tasks & Acceptance
@@ -73,6 +74,12 @@ context:
 - Given der Build, when `grep -rn "['\"\`(]/wahl[/'\"\`)]" src _content` läuft, then gibt es keinen Seiten-Link mehr auf `/wahl`.
 - Given `pnpm build && pnpm preview`, when `/wahl/2023-bvv` aufgerufen wird, then antwortet der Server mit 301 auf `/berlin-wahlen/2023-bvv`, und die Zielseite ist prerendered.
 - Given die Sitemap, when sie erzeugt wird, then enthält sie `/berlin-wahlen/<slug>` für alle Wahlen und keinen `/wahl`-Pfad.
+
+## Implementation Notes
+
+## Spec Change Log
+
+## Review Triage Log
 
 ## Design Notes
 
