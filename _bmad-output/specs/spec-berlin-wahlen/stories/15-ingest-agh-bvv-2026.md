@@ -2,7 +2,8 @@
 title: 'Ingest AGH/BVV 2026'
 type: 'feature'
 created: '2026-09-23'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '6edeaba5a5e4ccc4e82ed8aed257ab3026bbccb6'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
