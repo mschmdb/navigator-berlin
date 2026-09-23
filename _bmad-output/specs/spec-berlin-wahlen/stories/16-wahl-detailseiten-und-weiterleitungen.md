@@ -2,7 +2,8 @@
 title: 'Wahl-Detailseiten ins Portal überführen (yaml-Story 12)'
 type: 'feature'
 created: '2026-09-23'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'c52335d572e6f3a2000e4908f0993eabfcfdbc3d'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
