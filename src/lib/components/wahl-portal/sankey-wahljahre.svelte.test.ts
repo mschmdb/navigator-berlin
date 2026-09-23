@@ -12,7 +12,9 @@ const WAHLEN: WahlPortalListEntry[] = [
 		typ: 'agh',
 		isRepeatElection: true,
 		sourceName: 'Amt für Statistik Berlin-Brandenburg',
-		license: 'dl-de/by-2-0'
+		license: 'dl-de/by-2-0',
+		vorlaeufig: false,
+		sourceUpdatedAt: null
 	}
 ];
 
@@ -142,16 +144,20 @@ describe('sankey-wahljahre.svelte', () => {
 		await expect
 			.element(page.getByTestId('sankey-wahljahre-footnote-wiederholung'))
 			.toHaveTextContent('Wiederholungswahl-Regel');
-		await expect.element(page.getByTestId('sankey-wahljahre-footnote-coverage')).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('sankey-wahljahre-footnote-coverage'))
+			.toBeInTheDocument();
 
 		// Review Triage Log #4: Farbe allein ist kein Label -- mindestens ein
 		// sichtbarer Knoten-Label-Text mit Partei-Namen.
 		const nodeLabels = page.getByTestId('sankey-node-label');
 		await expect.element(nodeLabels.first()).toBeInTheDocument();
-		await expect.element(page.getByTestId('sankey-wahljahre-svg')).toHaveAttribute(
-			'aria-label',
-			'Sankey der Partei-Übergänge, Ebene Kiez, 2016 bis 2023, 1 Gebiete'
-		);
+		await expect
+			.element(page.getByTestId('sankey-wahljahre-svg'))
+			.toHaveAttribute(
+				'aria-label',
+				'Sankey der Partei-Übergänge, Ebene Kiez, 2016 bis 2023, 1 Gebiete'
+			);
 
 		// Story 11 (Sankey-Rework): Erklär-Satz benennt die Sieger-Semantik.
 		await expect
@@ -196,7 +202,9 @@ describe('sankey-wahljahre.svelte', () => {
 		// prüft denselben Handler ohne die Actionability-Heuristik (der echte
 		// Hover-Smoke läuft zusätzlich als E2E-Test im echten Browser-Layout).
 		const band = (await page.getByTestId('sankey-band').element()) as SVGPathElement;
-		band.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 10, clientY: 10 }));
+		band.dispatchEvent(
+			new PointerEvent('pointermove', { bubbles: true, clientX: 10, clientY: 10 })
+		);
 		await expect.element(page.getByTestId('sankey-tooltip')).toBeInTheDocument();
 		await expect.element(page.getByTestId('sankey-tooltip-title')).toHaveTextContent('SPD → GRÜNE');
 	});
@@ -227,9 +235,13 @@ describe('sankey-wahljahre.svelte', () => {
 		const fetchFn = fakeFetch([['/api/wahl/winners', winners]]);
 		render(SankeyWahljahreContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn });
 
-		await expect.element(page.getByTestId('sankey-wahljahre-footnote-coverage')).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('sankey-wahljahre-footnote-coverage'))
+			.toBeInTheDocument();
 		await page.getByTestId('sankey-ebene-bezirk').click();
-		await expect.element(page.getByTestId('sankey-wahljahre-footnote-coverage')).not.toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('sankey-wahljahre-footnote-coverage'))
+			.not.toBeInTheDocument();
 	});
 
 	it('Ebenen-Toggle: Klick auf Bezirk lädt einen eigenen (gecachten) Winners-Request', async () => {
@@ -250,7 +262,9 @@ describe('sankey-wahljahre.svelte', () => {
 		expect(winnersRequestCount).toBe(1);
 
 		await page.getByTestId('sankey-ebene-bezirk').click();
-		await expect.element(page.getByTestId('sankey-ebene-bezirk')).toHaveAttribute('aria-checked', 'true');
+		await expect
+			.element(page.getByTestId('sankey-ebene-bezirk'))
+			.toHaveAttribute('aria-checked', 'true');
 		expect(winnersRequestCount).toBe(2);
 
 		// Rückwechsel zu kiez: gecacht, kein dritter Request.
@@ -280,7 +294,9 @@ describe('sankey-wahljahre.svelte', () => {
 		// Band A trägt den Wert 2 (Gebiete a+b) -- Bandbreite > 1px.
 		expect(Number(bandA.getAttribute('stroke-width'))).toBeGreaterThan(1);
 
-		bandA.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 10, clientY: 10 }));
+		bandA.dispatchEvent(
+			new PointerEvent('pointermove', { bubbles: true, clientX: 10, clientY: 10 })
+		);
 		await expect.element(bands.first()).toHaveAttribute('stroke-opacity', '0.85');
 		await expect.element(bands.nth(1)).toHaveAttribute('stroke-opacity', '0.15');
 		await expect.element(page.getByTestId('sankey-tooltip')).toBeInTheDocument();
@@ -298,7 +314,9 @@ describe('sankey-wahljahre.svelte', () => {
 		await expect.element(page.getByTestId('sankey-wahljahre-svg')).toBeInTheDocument();
 
 		const band = (await page.getByTestId('sankey-band').first().element()) as SVGPathElement;
-		band.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 10, clientY: 10 }));
+		band.dispatchEvent(
+			new PointerEvent('pointermove', { bubbles: true, clientX: 10, clientY: 10 })
+		);
 		await expect.element(page.getByTestId('sankey-tooltip')).toBeInTheDocument();
 
 		band.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
@@ -384,7 +402,9 @@ describe('sankey-wahljahre.svelte', () => {
 		await expect.element(page.getByTestId('sankey-wahljahre-svg')).toBeInTheDocument();
 
 		const band = (await page.getByTestId('sankey-band').first().element()) as SVGPathElement;
-		band.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 10, clientY: 10 }));
+		band.dispatchEvent(
+			new PointerEvent('pointermove', { bubbles: true, clientX: 10, clientY: 10 })
+		);
 		await expect.element(page.getByTestId('sankey-tooltip')).toBeInTheDocument();
 
 		await page.getByTestId('sankey-ebene-bezirk').click();

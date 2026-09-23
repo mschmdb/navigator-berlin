@@ -37,6 +37,14 @@ describe('allowlist', () => {
 		).toBe(true);
 	});
 
+	it('akzeptiert wahlen-berlin.de host (wb-csv, Story: Ingest AGH/BVV 2026)', () => {
+		expect(
+			isAllowed(
+				'https://www.wahlen-berlin.de/wahlen/BE2026/Afspraes/AGH/Datenexport_AGH2026_Zweitstimme_W_BE.csv'
+			)
+		).toBe(true);
+	});
+
 	it('akzeptiert Kriminalitätsatlas-Berlin host', () => {
 		expect(
 			isAllowed(

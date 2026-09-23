@@ -23,7 +23,9 @@ function makeBundle(overrides: Partial<WahlResultBundle> = {}): WahlResultBundle
 			isRepeatElection: false,
 			parentElectionId: null,
 			sourceUrl: 'https://bundeswahlleiterin.de/dam/jcr/abc/btw25_wbz.zip',
-			license: 'dl-de/by-2.0'
+			license: 'dl-de/by-2.0',
+			vorlaeufig: false,
+			sourceUpdatedAt: null
 		},
 		uwbId: '075-01-100-0',
 		levels: {
@@ -132,13 +134,82 @@ describe('WahlSection', () => {
 				isRepeatElection: true,
 				parentElectionId: 13,
 				sourceUrl: 'https://download.statistik-berlin-brandenburg.de/abc/AGHBVV2023.xlsx',
-				license: 'dl-de/by-2.0'
+				license: 'dl-de/by-2.0',
+				vorlaeufig: false,
+				sourceUpdatedAt: null
 			}
 		});
 		render(WahlSection, { results: makeResults([b]) });
 		const tab = page.getByTestId('wahl-typ-tab-agh');
 		await tab.click();
 		await expect.element(page.getByTestId('wahl-wiederholung-marker')).toBeInTheDocument();
+	});
+
+	it('zeigt Vorläufig-Marker mit Stand-Datum wenn vorlaeufig=true (Story: Ingest AGH/BVV 2026)', async () => {
+		const b = makeBundle({
+			wahl: {
+				id: 22,
+				jahr: 2026,
+				typ: 'agh',
+				stimmtyp: 'zweitstimme',
+				isRepeatElection: false,
+				parentElectionId: null,
+				sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/x.csv',
+				license: 'dl-de/by-2.0',
+				vorlaeufig: true,
+				sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+			}
+		});
+		render(WahlSection, { results: makeResults([b]) });
+		const tab = page.getByTestId('wahl-typ-tab-agh');
+		await tab.click();
+		await expect
+			.element(page.getByTestId('wahl-vorlaeufig-marker'))
+			.toHaveTextContent('Vorläufig · Stand 21.09.2026');
+	});
+
+	it('zeigt keinen Vorläufig-Marker wenn vorlaeufig=false', async () => {
+		const b = makeBundle({
+			wahl: {
+				id: 9,
+				jahr: 2023,
+				typ: 'agh',
+				stimmtyp: 'zweitstimme',
+				isRepeatElection: false,
+				parentElectionId: null,
+				sourceUrl: 'https://download.statistik-berlin-brandenburg.de/abc.xlsx',
+				license: 'dl-de/by-2.0',
+				vorlaeufig: false,
+				sourceUpdatedAt: null
+			}
+		});
+		render(WahlSection, { results: makeResults([b]) });
+		const tab = page.getByTestId('wahl-typ-tab-agh');
+		await tab.click();
+		await expect.element(page.getByTestId('wahl-vorlaeufig-marker')).not.toBeInTheDocument();
+	});
+
+	it('zeigt Landeswahlleiterin Berlin als Quelle bei wahlen-berlin.de-URL (Story: Ingest AGH/BVV 2026)', async () => {
+		const b = makeBundle({
+			wahl: {
+				id: 22,
+				jahr: 2026,
+				typ: 'agh',
+				stimmtyp: 'zweitstimme',
+				isRepeatElection: false,
+				parentElectionId: null,
+				sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/x.csv',
+				license: 'dl-de/by-2.0',
+				vorlaeufig: true,
+				sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+			}
+		});
+		render(WahlSection, { results: makeResults([b]) });
+		const tab = page.getByTestId('wahl-typ-tab-agh');
+		await tab.click();
+		await expect
+			.element(page.getByTestId('wahl-meta'))
+			.toHaveTextContent('Landeswahlleiterin Berlin');
 	});
 
 	it('zeigt BriefwahlMarker + Hairline auf Stimmbezirks-Level bei pre-2021-Wahl', async () => {
@@ -151,7 +222,9 @@ describe('WahlSection', () => {
 				isRepeatElection: false,
 				parentElectionId: null,
 				sourceUrl: 'https://bundeswahlleiterin.de/dam/jcr/abc/btw17_wbz.zip',
-				license: 'dl-de/by-2.0'
+				license: 'dl-de/by-2.0',
+				vorlaeufig: false,
+				sourceUpdatedAt: null
 			}
 		});
 		render(WahlSection, { results: makeResults([b]) });
@@ -180,7 +253,9 @@ describe('WahlSection', () => {
 				isRepeatElection: false,
 				parentElectionId: null,
 				sourceUrl: 'https://bundeswahlleiterin.de/dam/jcr/abc/btw17_wbz.zip',
-				license: 'dl-de/by-2.0'
+				license: 'dl-de/by-2.0',
+				vorlaeufig: false,
+				sourceUpdatedAt: null
 			}
 		});
 		render(WahlSection, { results: makeResults([b]) });

@@ -347,6 +347,10 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	'wahlbezirke-bt25': {
 		short: 'Wahlbezirks-Grenzen Bundestagswahl 2025',
 		long: 'Geometrie der Berliner Wahlbezirke zur Bundestagswahl 2025. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.'
+	},
+	'wahlbezirke-ah26': {
+		short: 'Wahlbezirks-Grenzen Abgeordnetenhauswahl 2026',
+		long: 'Geometrie der Berliner Wahlbezirke zur Abgeordnetenhaus- und BVV-Wahl 2026. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.'
 	}
 };
 

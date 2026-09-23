@@ -33,10 +33,15 @@ function bundleSlug(b: WahlResultBundle): string {
 	return `${b.wahl.jahr}-${b.wahl.typ}-${b.wahl.stimmtyp}`;
 }
 
+/**
+ * Duplikat von `$lib/server/wahl/source-label.ts#sourceName` -- dieses Tool
+ * läuft client-seitig (`webmcp/adapter.ts`, `document.modelContext`), kann
+ * `$lib/server/*` also nicht importieren (SvelteKit-Server-Boundary).
+ */
 function sourceName(sourceUrl: string): string {
-	return sourceUrl.includes('bundeswahlleiterin')
-		? 'Bundeswahlleiterin'
-		: 'Amt für Statistik Berlin-Brandenburg';
+	if (sourceUrl.includes('bundeswahlleiterin')) return 'Bundeswahlleiterin';
+	if (sourceUrl.includes('wahlen-berlin.de')) return 'Landeswahlleiterin Berlin';
+	return 'Amt für Statistik Berlin-Brandenburg';
 }
 
 function autoSelectLevel(bundle: WahlResultBundle): WahlLevel {
@@ -113,13 +118,21 @@ export function createGetElectionResultTool(deps: GetElectionResultDeps): WebMcp
 			}
 			const top5 = levelData.top5.slice(0, 5);
 			const caveats = caveatsFor(bundle, requestedLevel);
+			// Stolperstein (Bestand): `updated_at` war hart auf `jahr-01-01`
+			// codiert statt den echten `wahl.sourceUpdatedAt`-Wert zu nutzen.
+			// Für Wahlen ohne (noch) gepflegtes sourceUpdatedAt bleibt der
+			// Jahres-Fallback bestehen. `provisional`/`source_updated_at`
+			// (Matze-Entscheidung 23.09., 1B) sind die dedizierten
+			// Vorläufig-Badge-Felder, Tool-Surface bewusst Englisch.
 			const out: JsonObject = {
 				election_slug: input.election_slug,
 				level: requestedLevel,
 				top: serializeTop(top5),
 				source: sourceName(bundle.wahl.sourceUrl),
-				updated_at: `${bundle.wahl.jahr}-01-01`,
-				license: bundle.wahl.license
+				updated_at: bundle.wahl.sourceUpdatedAt ?? `${bundle.wahl.jahr}-01-01`,
+				license: bundle.wahl.license,
+				provisional: bundle.wahl.vorlaeufig,
+				source_updated_at: bundle.wahl.sourceUpdatedAt
 			};
 			if (caveats.length > 0) out.caveats = caveats;
 			return out;

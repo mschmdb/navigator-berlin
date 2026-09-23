@@ -1,7 +1,7 @@
 ---
 type: methodology
 audience: both
-last-verified: 2026-05-18
+last-verified: 2026-09-23
 related:
   - _bmad-output/implementation-artifacts/6-0-wahl-daten-schema-pipeline-foundation-spike.md
   - _bmad-output/spike-artifacts/SCHEMA-DRIFT-ANALYSIS.md
@@ -14,15 +14,34 @@ Quelle der Wahrheit für die Wahldaten-Pipeline in navigator.berlin. Erweitert i
 
 ## Daten-Cutoff (Phase 1)
 
-| Wahl-Typ                             | Cutoff | Aktive Wahlen Phase 1                     |
-| ------------------------------------ | ------ | ----------------------------------------- |
-| Bundestagswahl (BTW)                 | 2013+  | BTW 2013, 2017, 2021, 2025                |
-| Abgeordnetenhaus (AGH)               | 2011+  | AGH 2011, 2016, 2021, 2023 (Wiederholung) |
-| Bezirksverordneten-Versammlung (BVV) | 2011+  | BVV 2011, 2016, 2021, 2023 (Wiederholung) |
-| Europawahl (EW)                      | ·      | Phase 2 Backlog                           |
-| Volksentscheide                      | ·      | cancelled (Story 6.6)                     |
+| Wahl-Typ                             | Cutoff | Aktive Wahlen Phase 1                           |
+| ------------------------------------ | ------ | ----------------------------------------------- |
+| Bundestagswahl (BTW)                 | 2013+  | BTW 2013, 2017, 2021, 2025                      |
+| Abgeordnetenhaus (AGH)               | 2011+  | AGH 2011, 2016, 2021, 2023 (Wiederholung), 2026 |
+| Bezirksverordneten-Versammlung (BVV) | 2011+  | BVV 2011, 2016, 2021, 2023 (Wiederholung), 2026 |
+| Europawahl (EW)                      | ·      | Phase 2 Backlog                                 |
+| Volksentscheide                      | ·      | cancelled (Story 6.6)                           |
 
-**Summe Phase 1: 12 aktive Wahlen, 20 `wahl`-Rows in DB** (BTW + AGH je 2 Stimmtypen, BVV je 1 Einstimme).
+**Summe Phase 1: 14 aktive Wahlen, 23 `wahl`-Rows in DB** (BTW + AGH je 2 Stimmtypen, BVV je 1 Einstimme).
+
+**AGH/BVV 2026 (vorläufig):** Wahltag 20.09.2026. Ingest lief am 23.09.2026 mit dem
+amtlichen vorläufigen Ergebnis (Stand 21.09.2026, Quelle wahlen-berlin.de).
+`wahl.vorlaeufig = true` für `agh26`/`bvv26`, Portal/`/wahl/[slug]`/Tool-Responses
+zeigen die Kennzeichnung „vorläufig" plus Stand-Datum (`wahl.sourceUpdatedAt`,
+aus `Datum`/`Zeit` der Wahlbezirks-CSV berechnet).
+
+**Re-Ingest-Checkliste beim Endergebnis** (BVV ab ~30.09., AGH ab ~05.–08.10.):
+
+1. `scripts/wahlen/lib/sources.ts`: `vorlaeufig: true` bei `WB_AGH2026`/`WB_BVV2026` entfernen (oder auf `false` setzen).
+2. Re-Ingest erzwingen -- das prebuild-Gate (`scripts/check-wahl-data.ts`) überspringt `data:wahl-fetch`/`data:wahl-kiez`/`data:wahl-analytik` sonst, weil `wahlen=23`/`wahlen-mit-kiez-aggregat=18` bereits erfüllt sind: entweder `WAHL_REFRESH=true` setzen (läuft die volle Kette einmal durch) oder gezielt
+   ```bash
+   pnpm data:wahl-fetch -- --only=agh26,bvv26
+   pnpm data:wahl-kiez -- --only=agh26
+   pnpm data:wahl-kiez -- --only=bvv26
+   pnpm data:wahl-analytik
+   ```
+3. `src/lib/components/home/home-wahl-teaser.svelte`: `typLabel` der beiden 2026er-`CARDS`-Einträge von `„… · Vorläufig"` auf den finalen Text ändern -- das Badge dort ist statischer Text, kein Re-Ingest aktualisiert es automatisch (siehe Kommentar an `CARDS` im Code).
+4. `pnpm data:wahl-check` grün prüfen, `wahl.vorlaeufig`/`source_updated_at` stichprobenhaft per SQL verifizieren.
 
 **Begründung Cutoff 2013/2011:**
 
@@ -97,6 +116,59 @@ Implementation: `scripts/wahlen/lib/sbb-xlsx-fetcher.ts` (XLSX-Parser via `xlsx`
 
 **Lizenz:** Datenlizenz Deutschland Namensnennung 2.0 (`dl-de/by-2.0`), Attribution: „Datenquelle: Amt für Statistik Berlin-Brandenburg".
 
+### Wahlbezirks-Datenexport-Pipeline (wb-csv, ab AGH/BVV 2026)
+
+Ab der AGH/BVV-Wahl 2026 liefert die Landeswahlleiterin Berlin den
+Wahlbezirks-Datenexport direkt über `wahlen-berlin.de` statt über die
+SBB-XLSX-Pipeline. Format-Wechsel, keine Format-Fortsetzung.
+
+Endpoint-Pattern (pro Wahl + Stimmtyp zwei Dateien):
+
+```
+https://www.wahlen-berlin.de/wahlen/BE<jahr>/Afspraes/<AGH|bvv>/Datenexport_<WAHL><jahr>_<Erststimme|Zweitstimme|Stimme>_W_BE.csv
+https://www.wahlen-berlin.de/wahlen/BE<jahr>/Afspraes/<AGH|bvv>/DSB/DSB_Datenexport_<WAHL><jahr>_<Erststimme|Zweitstimme|Stimme>_W_BE.csv
+```
+
+Live-URLs (Stand 23.09.2026, per Recon aus `downloads.html`, siehe
+`scripts/wahlen/lib/sources.ts`): `agh26` (Erst- und Zweitstimme, je eigene
+DSB-Legende) und `bvv26` (eine kombinierte Stimme, DB-Slot `einstimme`).
+
+**Format:** `Datenexport_*_W_BE.csv` (Wahlbezirks-Ebene, `_W_`) ist UTF-8 mit
+BOM, `;`-getrennt, ein Wahlbezirk pro Zeile. Partei-Stimmen stehen in
+`P<nn>`-Spalten (Prozent-Zwilling `P<nn>p`, wird ignoriert). Welcher Code
+welche Partei ist, steht NICHT im Datenexport selbst, sondern in der
+separaten `DSB_Datenexport_*_W_BE.csv` (Windows-1252, Datensatzbeschreibung).
+Ein Code ohne Ergebniseingang trägt dort `nicht besetzt, kein
+Ergebniseingang` -- die Spalte wird beim Parsen ignoriert, nicht als Partei
+mit 0 Stimmen gezählt. AGH-Erststimme und -Zweitstimme haben **getrennte**
+DSB-Legenden (unterschiedliche Codes können unterschiedliche Parteien
+tragen), ebenso hat BVV ihre eigene.
+
+Parser: `scripts/wahlen/lib/wb-csv-parser.ts`. Löst `P<nn>` über die Legende
+auf den amtlichen Parteinamen auf und liefert Zeilen in der Spaltenform, die
+`sbb-row-transformer.ts#transformSbbRow` erwartet -- UWB-ID, Briefwahl-
+Erkennung und Einstimme-Slot laufen dadurch unverändert weiter.
+Metaspalten (`StimmArt`, `Datum`, `Zeit`, `WberA1..3`, alle `p`-Spalten)
+werden nicht durchgereicht.
+
+**Plausi statt Drift-Snapshot:** Die wb-csv-Pipeline hat keinen
+Schema-Drift-Snapshot wie die BWL-Pipeline. Stattdessen prüft
+`assertPartySumMatchesGueltig` je Zeile, dass die Summe der aufgelösten
+Partei-Spalten exakt `Gueltig` ergibt, und `buildWbCsvRows` bricht bei einem
+Partei-Code ohne jeden Legenden-Eintrag (auch nicht als „nicht besetzt")
+sofort ab, sobald dieser Code in mindestens einer Zeile einen Wert > 0 trägt.
+
+**`sourceUpdatedAt`/Vorläufig-Stand:** `computeSourceUpdatedAt` liest das
+späteste `Datum`+`Zeit`-Paar über alle Rohzeilen der CSV (Format `JJ.MM.TT`
+bzw. `hh:mm:ss`, Beispiel `26.09.20` = 20.09.2026) -- kein Scraping der
+HTML-Seite. Die Quelle liefert diese Werte in Berliner Ortszeit (Stand-Banner
+der Seite), nicht UTC; die Konvertierung läuft DST-korrekt über
+`Europe/Berlin` (Bugfix: eine Erstversion interpretierte den Zeitstempel
+fälschlich als UTC, dadurch lag `wahl.source_updated_at` 1-2h daneben).
+
+**Lizenz:** Datenlizenz Deutschland Namensnennung 2.0 (`dl-de/by-2.0`),
+Attribution: „Datenquelle: Landeswahlleiterin Berlin".
+
 ### Pre-Indexing-Verifikation per Spike
 
 Vor Schema-Implementation wurde ein Spike-Snapshot (`_bmad-output/spike-artifacts/wahl-schema-snapshot-btw25.json`) angelegt. Aggregator-Pipeline (`scripts/aggregate-wahl-data.ts`) führt bei jedem Real-Run einen Schema-Drift-Check gegen den Snapshot durch. Bei Drift wird die Pipeline mit explizitem Diff-Output abgebrochen statt stille Daten-Korruption.
@@ -143,16 +215,17 @@ Stimmbezirke (~1.800-3.700 in Berlin pro Wahl) sind deutlich kleiner als Kieze (
 
 **Geometrie-Coverage Phase 1:**
 
-| Wahl                | Geometrie verfügbar                | Kiez-Aggregat                 |
-| ------------------- | ---------------------------------- | ----------------------------- |
-| BTW 2013            | nein                               | leer                          |
-| BTW 2017            | ja (`wahlbezirke-btw17`)           | 1136 Rows × 2 Stimmtypen      |
-| BTW 2021            | ja (`wahlbezirke-ah21` combined)   | 1085-1136 Rows × 2 Stimmtypen |
-| BTW 2025            | ja (`wahlbezirke-bt25`)            | 1132-1278 Rows × 2 Stimmtypen |
-| AGH 2011 + BVV 2011 | nein                               | leer                          |
-| AGH 2016 + BVV 2016 | ja (`wahlbezirke-ah16`)            | 978-994 Rows                  |
-| AGH 2021 + BVV 2021 | ja (`wahlbezirke-ah21` combined)   | 1087-1136 Rows                |
-| AGH 2023 + BVV 2023 | ja (`wahlbezirke-ah23` Wahllokale) | 1072-1127 Rows                |
+| Wahl                | Geometrie verfügbar                                                                                                                                                             | Kiez-Aggregat                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| BTW 2013            | nein                                                                                                                                                                            | leer                          |
+| BTW 2017            | ja (`wahlbezirke-btw17`)                                                                                                                                                        | 1136 Rows × 2 Stimmtypen      |
+| BTW 2021            | ja (`wahlbezirke-ah21` combined)                                                                                                                                                | 1085-1136 Rows × 2 Stimmtypen |
+| BTW 2025            | ja (`wahlbezirke-bt25`)                                                                                                                                                         | 1132-1278 Rows × 2 Stimmtypen |
+| AGH 2011 + BVV 2011 | nein                                                                                                                                                                            | leer                          |
+| AGH 2016 + BVV 2016 | ja (`wahlbezirke-ah16`)                                                                                                                                                         | 978-994 Rows                  |
+| AGH 2021 + BVV 2021 | ja (`wahlbezirke-ah21` combined)                                                                                                                                                | 1087-1136 Rows                |
+| AGH 2023 + BVV 2023 | ja (`wahlbezirke-ah21`, geteilt mit 2021 -- Wiederholungswahl auf unveränderten Wahlbezirken; `RBS_OD_Wahllokale_AH23` enthält nur Wahllokal-Punkte, für Choropleth ungeeignet) | 1072-1127 Rows                |
+| AGH 2026 + BVV 2026 | ja (`wahlbezirke-ah26`)                                                                                                                                                         | 1128-1161 Rows                |
 
 pre-2016 Geometrien sind Phase-2-Backlog (FragDenStaat-IFG-Anfrage bei Bezirken). `wahl_aggregat_kiez` bleibt für die leer.
 
@@ -165,7 +238,7 @@ Format variiert pro Wahl-Generation:
 | BTW 21/25     | `${BWK}-${BEZ}-${UWB3}-0`        | direkter Build aus BWK+BEZ+UWB3    |
 | BTW 17        | `${BWK}-${BEZ}-${BEZ}W${UWB3}-0` | BEZ+W eingefügt im wahlbezirk-Slot |
 | AGH/BVV 21/23 | `${BEZ}W${UWB3}-W`               | Adresse-Format mit -W-Suffix       |
-| AGH/BVV 16    | `${BEZ}W${UWB3}`                 | Adresse-Format ohne Suffix         |
+| AGH/BVV 16/26 | `${BEZ}W${UWB3}`                 | Adresse-Format ohne Suffix         |
 
 Implementation: `scripts/wahlen/lib/kiez-mapper.ts#dbUwbIdFromGeo` und `buildKiezMappings`.
 
@@ -226,18 +299,24 @@ Beispiel: `077-04-119-0` vs. `077-05-119-0` für die zwei oben genannten Stimmbe
 
 Parteien werden über `partei` + `partei_alias` modelliert, weil sich Schreibweisen über die Jahre ändern. Seed in `scripts/wahlen/lib/partei-seed.ts`.
 
-| Kurzname (DB) | Aliase                                               | First Seen |
-| ------------- | ---------------------------------------------------- | ---------- |
-| SPD           | SPD                                                  | -          |
-| CDU           | CDU                                                  | -          |
-| CSU           | CSU                                                  | -          |
-| GRÜNE         | GRÜNE, B'90/GRÜNE, Bündnis 90/Die Grünen, Die Grünen | -          |
-| FDP           | FDP                                                  | -          |
-| AfD           | AfD                                                  | 2013       |
-| Die Linke     | Die Linke, DIE LINKE, Linkspartei.PDS, PDS, Linke    | -          |
-| BSW           | BSW                                                  | 2024       |
-| FREIE WÄHLER  | FREIE WÄHLER                                         | -          |
-| Sonstige      | Sonstige, Übrige, übrige                             | -          |
+| Kurzname (DB) | Aliase                                                                                                     | First Seen |
+| ------------- | ---------------------------------------------------------------------------------------------------------- | ---------- |
+| SPD           | SPD, Sozialdemokratische Partei Deutschlands                                                               | -          |
+| CDU           | CDU, Christlich Demokratische Union Deutschlands                                                           | -          |
+| CSU           | CSU                                                                                                        | -          |
+| GRÜNE         | GRÜNE, B'90/GRÜNE, Bündnis 90/Die Grünen, Die Grünen (case-insensitive, matcht auch BÜNDNIS 90/DIE GRÜNEN) | -          |
+| FDP           | FDP, Freie Demokratische Partei                                                                            | -          |
+| AfD           | AfD, Alternative für Deutschland                                                                           | 2013       |
+| Die Linke     | Die Linke, DIE LINKE, Linkspartei.PDS, PDS, Linke                                                          | -          |
+| BSW           | BSW, Bündnis Sahra Wagenknecht - Vernunft und Gerechtigkeit                                                | 2024       |
+| FREIE WÄHLER  | FREIE WÄHLER                                                                                               | -          |
+| Sonstige      | Sonstige, Übrige, übrige                                                                                   | -          |
+
+**AGH/BVV 2026 Legenden-Aliase:** Die DSB-Legende von wahlen-berlin.de nennt
+Parteien mit ihrem vollen amtlichen Namen statt der SBB-Kurzform. Aliase oben
+um die Langformen ergänzt (`scripts/wahlen/lib/partei-seed.ts`). Alle 2026er
+Parteien unter 3 % (u. a. PARTEI MENSCH KLIMA TIERSCHUTZ 2,1 %, Volt
+Deutschland 2,1 %) fallen automatisch in `Sonstige`, ohne eigenen Alias-Eintrag.
 
 **Pflege-Regel:** Bei neuer Wahl muss die Liste gegen die echten CSV-Spalten geprüft werden. Unbekannte Parteien fallen automatisch in `Sonstige`. Wenn eine `Sonstige`-Partei jemals > 3 % erreicht oder als Top-5 erscheint, eigene Tabellenzeile aufnehmen.
 
@@ -322,15 +401,17 @@ pnpm data:wahl-analytik
 pnpm data:wahl-analytik --only=agh
 ```
 
-**Verfügbare Wahl-Slugs:** `btw13` `btw17` `btw21` `btw25` `agh11` `agh16` `agh21` `agh23` `bvv11` `bvv16` `bvv21` `bvv23`.
+**Verfügbare Wahl-Slugs:** `btw13` `btw17` `btw21` `btw25` `agh11` `agh16` `agh21` `agh23` `agh26` `bvv11` `bvv16` `bvv21` `bvv23` `bvv26`.
 
-**Verfügbare Geometrie-Slugs:** `btw17` `ah16` `ah21` `ah23` `bt25` (`ah21` combined für BTW21+AGH21+BVV21, `ah16` combined für AGH16+BVV16, `ah23` Wahllokale-Variant für AGH23+BVV23).
+**Verfügbare Geometrie-Slugs:** `btw17` `ah16` `ah21` `ah23` `bt25` `ah26` (`ah21` combined für BTW21+AGH21+BVV21 UND geteilt mit AGH23/BVV23-Wiederholung, `ah16` combined für AGH16+BVV16, `ah23` Wahllokale-Variant -- nicht für Choropleth konsumiert, siehe Geometrie-Coverage-Tabelle --, `ah26` für AGH26+BVV26).
 
 ### URL-Recon-Pattern (volatile Hash-URLs)
 
 Die `statistik-berlin-brandenburg.de/opendata/*.zip`-URLs sind kein direkter Download, sondern Scrivito-SPA-Routes. JS resolved client-side zur echten Hash-URL auf `download.statistik-berlin-brandenburg.de`. `curl`/`fetch` liefern HTML (69 KB SPA), nicht ZIP.
 
 Bei stale Hash-URL: Playwright-Headless gegen die `/opendata/*.zip`-URL navigieren, Network-Response auf `download.statistik-berlin-brandenburg.de` abfangen. Pattern in `scripts/wahlen/spike-fetch.ts` (Spike-Modus für BTW) bzw. manuell via Browser-DevTools für AGH/BVV/Geometrien.
+
+**AH26-Geometrie (Recon 23.09.2026):** `https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_UWB_AH26.zip` per Playwright navigiert, Network-Response auf `download.statistik-berlin-brandenburg.de` abgefangen → `https://download.statistik-berlin-brandenburg.de/17c6e6ab35dd6980/a43a09d174ed/RBS_OD_UWB_AH26.zip` (2542 Urnenwahlbezirke, Shapefile-Felder `UWB`/`UWB3`/`BEZ`/`BWK`, identisch zu `ah21`). Die wb-csv-Download-URLs selbst sind stabil (keine Hash-Komponente, direkte `wahlen-berlin.de`-Pfade aus `downloads.html`).
 
 ## Out-of-Scope
 

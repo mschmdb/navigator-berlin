@@ -41,6 +41,23 @@ describe('partei-seed', () => {
 		expect(resolveParteiKurzname('Die Grünen')).toBe('GRÜNE');
 	});
 
+	it('fängt die AGH26/BVV26-DSB-Legendennamen (Story: Ingest AGH/BVV 2026)', () => {
+		expect(resolveParteiKurzname('Christlich Demokratische Union Deutschlands')).toBe('CDU');
+		expect(resolveParteiKurzname('Sozialdemokratische Partei Deutschlands')).toBe('SPD');
+		expect(resolveParteiKurzname('BÜNDNIS 90/DIE GRÜNEN')).toBe('GRÜNE');
+		expect(resolveParteiKurzname('Die Linke')).toBe('Die Linke');
+		expect(resolveParteiKurzname('Alternative für Deutschland')).toBe('AfD');
+		expect(resolveParteiKurzname('Freie Demokratische Partei')).toBe('FDP');
+		expect(resolveParteiKurzname('Bündnis Sahra Wagenknecht - Vernunft und Gerechtigkeit')).toBe(
+			'BSW'
+		);
+	});
+
+	it('PARTEI MENSCH KLIMA TIERSCHUTZ und Volt Deutschland fallen auf Sonstige (unter 3 %)', () => {
+		expect(resolveParteiKurzname('PARTEI MENSCH KLIMA TIERSCHUTZ')).toBe(SONSTIGE_KURZNAME);
+		expect(resolveParteiKurzname('Volt Deutschland')).toBe(SONSTIGE_KURZNAME);
+	});
+
 	it('matched case-insensitive', () => {
 		expect(resolveParteiKurzname('spd')).toBe('SPD');
 		expect(resolveParteiKurzname('cdu')).toBe('CDU');

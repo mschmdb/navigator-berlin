@@ -18,6 +18,7 @@ import type { Manifest } from '$lib/data/types.js';
 import { getBezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import { getKiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
 import { getBezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
+import { sourceName as wahlSourceName } from '$lib/server/wahl/source-label.js';
 import { getKiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 import { loadEinwohnerAggregates } from './internal/einwohner-aggregates.js';
 import { renderBezirkMarkdown } from './bezirk-renderer.js';
@@ -232,9 +233,7 @@ async function collectWahlen(origin: string): Promise<LlmsWahlEntry[]> {
 			const stimmTeil =
 				w.typ === 'bvv' ? '' : ` · ${w.stimmtyp === 'erststimme' ? 'Erststimme' : 'Zweitstimme'}`;
 			const title = `${typLabel} ${w.jahr}${stimmTeil}${w.isRepeatElection ? ' · Wiederholung' : ''}`;
-			const sourceName = w.sourceUrl.includes('bundeswahlleiterin')
-				? 'Bundeswahlleiterin'
-				: 'Amt für Statistik Berlin-Brandenburg';
+			const sourceName = wahlSourceName(w.sourceUrl);
 			const top = await getResultsForBerlin(w.id, 5);
 			out.push(
 				buildWahlEntry({
@@ -247,6 +246,8 @@ async function collectWahlen(origin: string): Promise<LlmsWahlEntry[]> {
 					isRepeatElection: w.isRepeatElection,
 					sourceName,
 					license: w.license,
+					vorlaeufig: w.vorlaeufig,
+					sourceUpdatedAt: w.sourceUpdatedAt ? w.sourceUpdatedAt.toISOString() : null,
 					berlinTop5: top.map((p) => ({
 						kurzname: p.parteiKurzname,
 						vollname: p.parteiVollname,

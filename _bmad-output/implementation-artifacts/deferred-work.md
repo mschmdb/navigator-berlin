@@ -55,3 +55,31 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/12-portal-feinschliff.md`
   summary: Karten-Folgethemen und Prozess-Notizen aus Review-Runde 1; (a) Resize-/Rotations-Handler fuer die Kapitel-Karten (maxBounds/minZoom passen nach Fenster-Aenderung nicht mehr, vorbestehend, kein Controller hat einen); (b) Kamera-E2E (Pan/Zoom haelt Berlin im Canvas) braucht einen Test-Hook auf die Map-Instanz, bis dahin manueller Browser-Check je Story; (c) stories.yaml-IDs laufen seit Story 10 gegen die Story-Datei-Nummern (yaml-10 = Dein Kiez, Datei-10 = Steuerung), betrifft nur bmad-Tooling; (d) lint:wahl liegt ausserhalb des pnpm-test-Pfads, laeuft nur manuell je Story-Verifikation.
   evidence: Review Story 12 Runde 1 (Triage #16-#19); Kern-Fund #1 (Over-Constraining) wurde stattdessen direkt gepatcht.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
+  summary: Volatilitäts-Karte (Trends-Kapitel) auf Pedersen-Index (L1/2) umstellen und Klassen per Terzil je Reihe mit echten Spannen in der Legende bilden.
+  evidence: Matze-Live-Fund 23.09.: Karte immer komplett „hoch“. Feste Schwellen 5/12 Pp. (trends-map-data.ts) liegen unter dem Minimum aller Reihen (19,7 bis 26,8 Pp., Median 35 bis 44 Pp., lokale DB inkl. 2026). Methodik-Doku, Abschnitte „Volatilität“ und „Klassifizierungs-Schwellen der Trend-/Volatilitäts-Karte“, mitziehen.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
+  summary: Prozess-Smoke-Test für den `isMain`-Guard in `scripts/aggregate-wahl-data.ts`.
+  evidence: maybe-false (medium, unverifiziert). Weicht `argv[1]` vom realpath ab (Symlink, anderer Loader), endet `data:wahl-fetch` still mit Exit 0. Klärt: Spawn mit `--only=gibtsnicht` erwartet Exit 2.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
+  summary: `sourceName` für Wahlquellen in ein geteiltes Modul unter `$lib/data/` ziehen statt vier Kopien.
+  evidence: Kopien in `source-label.ts`, `get-election-result.ts`, `llm-export-builder.ts`, `wahl-section.svelte`; beim nächsten Quellwechsel driften die Labels.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
+  summary: Ingest-Gate, das bei einem Legendennamen über 3 % ohne Partei-Alias abbricht oder warnt.
+  evidence: maybe-false (medium, unverifiziert). Aliase matchen exakt; schreibt die Endergebnis-Legende den BSW-Langnamen mit anderem Strich, landen 4,7 % still in Sonstige, die Summen-Plausi merkt es nicht.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
+  summary: Reproduzierbare Abnahme der Berlin-Aggregate gegen die amtlichen Werte beim Endergebnis-Re-Ingest.
+  evidence: AC-Werte (Linke 25,7 usw.) nur per SQL manuell geprüft; `data:wahl-check` zählt nur Rows.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
+  summary: OG-Images für die 2026er-Wahlen erzeugen und die Wahlenzahl in der `list_elections`-Description anpassen.
+  evidence: technical-notes Punkt 6, von Story 15 nicht erledigt.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
+  summary: Flaky Test `winner-map.svelte.test.ts:347` (Adress-Hint „Hansaviertel hervorgehoben.“) stabilisieren; dazu die Unhandled Rejection in `wahl-bezirk-choropleth.svelte` beim Unmount (async fetch nach Container-Abbau).
+  evidence: Voller Vitest-Lauf 23.09. zweimal rot (Matcher-Timeout unter Last), isoliert 3/3 grün; Story 15 ändert an der Datei nur Fixture-Felder. Choropleth-Rejection meldete der Story-15-Agent aus `wahl-detail-page.svelte.test.ts`.

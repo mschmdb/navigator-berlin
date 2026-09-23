@@ -172,4 +172,34 @@ describe('buildErgebnisPanelRows', () => {
 		expect(rows).toEqual([]);
 		expect(vorjahr).toBeNull();
 	});
+
+	it('vorlaeufig=false/sourceUpdatedAt=null ohne Flag in den Punkten (Bestand)', () => {
+		const { vorlaeufig, sourceUpdatedAt } = buildErgebnisPanelRows(POINTS, 2023);
+		expect(vorlaeufig).toBe(false);
+		expect(sourceUpdatedAt).toBeNull();
+	});
+
+	it('vorlaeufig/sourceUpdatedAt gelten für DAS Jahr, nicht die ganze Reihe (Story: Ingest AGH/BVV 2026)', () => {
+		const withVorlaeufig: ErgebnisSeriesPoint[] = [
+			...POINTS,
+			{
+				jahr: 2026,
+				partei: 'Die Linke',
+				farbe_hex: '#BE3075',
+				anteil: 0.257,
+				stimmen: 468060,
+				is_repeat_election: false,
+				parent_slug: null,
+				vorlaeufig: true,
+				source_updated_at: '2026-09-21T01:55:55.000Z'
+			}
+		];
+		const wahl2026 = buildErgebnisPanelRows(withVorlaeufig, 2026);
+		expect(wahl2026.vorlaeufig).toBe(true);
+		expect(wahl2026.sourceUpdatedAt).toBe('2026-09-21T01:55:55.000Z');
+
+		const wahl2023 = buildErgebnisPanelRows(withVorlaeufig, 2023);
+		expect(wahl2023.vorlaeufig).toBe(false);
+		expect(wahl2023.sourceUpdatedAt).toBeNull();
+	});
 });

@@ -1,5 +1,11 @@
 export type WahlTyp = 'btw' | 'agh' | 'bvv';
-export type WahlKind = 'bwl-csv' | 'sbb-xlsx';
+export type WahlKind = 'bwl-csv' | 'sbb-xlsx' | 'wb-csv';
+
+/** wb-csv: Datenexport-CSV + DSB-Legende (Datensatzbeschreibung) für einen Stimmtyp. */
+export type WbCsvFiles = {
+	readonly data: string;
+	readonly legend: string;
+};
 
 export type WahlSource = {
 	readonly slug: string;
@@ -15,10 +21,22 @@ export type WahlSource = {
 	readonly sheetZweit?: string;
 	/** Für sbb-xlsx (BVV nur): kombinierte Sheet ohne Erst/Zweit-Split */
 	readonly sheetEin?: string;
+	/** Für wb-csv: Erststimme-Datenexport + DSB-Legende */
+	readonly wbCsvErst?: WbCsvFiles;
+	/** Für wb-csv: Zweitstimme-Datenexport + DSB-Legende (nicht bei BVV) */
+	readonly wbCsvZweit?: WbCsvFiles;
+	/** Für wb-csv (BVV nur): kombinierter Datenexport + DSB-Legende ohne Erst/Zweit-Split */
+	readonly wbCsvEin?: WbCsvFiles;
 	/** Wiederholungswahl-Marker */
 	readonly isRepeatElection?: boolean;
 	/** Slug der Eltern-Wahl bei Wiederholung */
 	readonly parentSlug?: string;
+	/**
+	 * Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B): explizites
+	 * Config-Flag statt Text-Heuristik. Re-Ingest mit `vorlaeufig: false`
+	 * (oder Feld entfernen) ist beim Endergebnis Pflicht.
+	 */
+	readonly vorlaeufig?: boolean;
 };
 
 const BWL_LICENSE = 'Datenlizenz Deutschland Namensnennung 2.0 (Bundeswahlleiterin)';
@@ -171,6 +189,45 @@ export const SBB_BVV2023: WahlSource = {
 	parentSlug: 'bvv21'
 };
 
+const WB_LICENSE = 'Datenlizenz Deutschland Namensnennung 2.0 (Landeswahlleiterin Berlin)';
+const WB_LICENSE_SHORT = 'dl-de/by-2.0';
+const WB_AGH26_BASE = 'https://www.wahlen-berlin.de/wahlen/BE2026/Afspraes/AGH';
+const WB_BVV26_BASE = 'https://www.wahlen-berlin.de/wahlen/BE2026/Afspraes/bvv';
+
+export const WB_AGH2026: WahlSource = {
+	slug: 'agh26',
+	wahl: 'agh',
+	jahr: 2026,
+	url: `${WB_AGH26_BASE}/ergebnisse_nach_wahlbezirk.html`,
+	license: WB_LICENSE,
+	licenseShort: WB_LICENSE_SHORT,
+	kind: 'wb-csv',
+	wbCsvErst: {
+		data: `${WB_AGH26_BASE}/Datenexport_AGH2026_Erststimme_W_BE.csv`,
+		legend: `${WB_AGH26_BASE}/DSB/DSB_Datenexport_AGH2026_Erststimme_W_BE.csv`
+	},
+	wbCsvZweit: {
+		data: `${WB_AGH26_BASE}/Datenexport_AGH2026_Zweitstimme_W_BE.csv`,
+		legend: `${WB_AGH26_BASE}/DSB/DSB_Datenexport_AGH2026_Zweitstimme_W_BE.csv`
+	},
+	vorlaeufig: true
+};
+
+export const WB_BVV2026: WahlSource = {
+	slug: 'bvv26',
+	wahl: 'bvv',
+	jahr: 2026,
+	url: `${WB_BVV26_BASE}/ergebnisse_nach_wahlbezirk.html`,
+	license: WB_LICENSE,
+	licenseShort: WB_LICENSE_SHORT,
+	kind: 'wb-csv',
+	wbCsvEin: {
+		data: `${WB_BVV26_BASE}/Datenexport_BVV2026_Stimme_W_BE.csv`,
+		legend: `${WB_BVV26_BASE}/DSB/DSB_Datenexport_BVV2026_Stimme_W_BE.csv`
+	},
+	vorlaeufig: true
+};
+
 export const WAHL_SOURCES: readonly WahlSource[] = [
 	BWL_BTW13_WBZ,
 	BWL_BTW17_WBZ,
@@ -183,5 +240,7 @@ export const WAHL_SOURCES: readonly WahlSource[] = [
 	SBB_AGH2021,
 	SBB_BVV2021,
 	SBB_AGH2023,
-	SBB_BVV2023
+	SBB_BVV2023,
+	WB_AGH2026,
+	WB_BVV2026
 ];

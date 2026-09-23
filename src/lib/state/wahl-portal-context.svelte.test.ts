@@ -11,6 +11,7 @@ import {
 	setJahr,
 	applyWahlList,
 	loadWahlList,
+	vorlaeufigStatusFor,
 	type WahlPortalState,
 	type WahlPortalListEntry
 } from './wahl-portal-context.svelte.js';
@@ -32,7 +33,9 @@ const AGH_2021: WahlPortalListEntry = {
 	typ: 'agh',
 	isRepeatElection: false,
 	sourceName: 'Amt für Statistik Berlin-Brandenburg',
-	license: 'dl-de/by-2-0'
+	license: 'dl-de/by-2-0',
+	vorlaeufig: false,
+	sourceUpdatedAt: null
 };
 const AGH_2023: WahlPortalListEntry = {
 	slug: '2023-agh-zweitstimme',
@@ -40,7 +43,9 @@ const AGH_2023: WahlPortalListEntry = {
 	typ: 'agh',
 	isRepeatElection: true,
 	sourceName: 'Amt für Statistik Berlin-Brandenburg',
-	license: 'dl-de/by-2-0'
+	license: 'dl-de/by-2-0',
+	vorlaeufig: false,
+	sourceUpdatedAt: null
 };
 const BTW_2025: WahlPortalListEntry = {
 	slug: '2025-btw-zweitstimme',
@@ -48,7 +53,9 @@ const BTW_2025: WahlPortalListEntry = {
 	typ: 'btw',
 	isRepeatElection: false,
 	sourceName: 'Bundeswahlleiterin',
-	license: 'dl-de/by-2-0'
+	license: 'dl-de/by-2-0',
+	vorlaeufig: false,
+	sourceUpdatedAt: null
 };
 
 describe('wahl-portal-context', () => {
@@ -145,7 +152,9 @@ describe('wahl-portal-context', () => {
 						typ: 'agh',
 						is_repeat_election: false,
 						source_name: 'Amt für Statistik Berlin-Brandenburg',
-						license: 'dl-de/by-2-0'
+						license: 'dl-de/by-2-0',
+						vorlaeufig: false,
+						source_updated_at: null
 					}
 				]
 			})
@@ -159,7 +168,9 @@ describe('wahl-portal-context', () => {
 				typ: 'agh',
 				isRepeatElection: false,
 				sourceName: 'Amt für Statistik Berlin-Brandenburg',
-				license: 'dl-de/by-2-0'
+				license: 'dl-de/by-2-0',
+				vorlaeufig: false,
+				sourceUpdatedAt: null
 			}
 		]);
 	});
@@ -169,6 +180,43 @@ describe('wahl-portal-context', () => {
 		const fetchFn = vi.fn().mockResolvedValue({ ok: false, status: 500 });
 		await loadWahlList(s, fetchFn as unknown as typeof fetch);
 		expect(s.status).toBe('error');
+	});
+
+	it('vorlaeufigStatusFor liefert null solange die Liste nicht geladen ist (Story: Ingest AGH/BVV 2026)', () => {
+		const s = makeState({ status: 'loading', wahlen: [] });
+		expect(vorlaeufigStatusFor(s, 'agh', 2026)).toBeNull();
+	});
+
+	it('vorlaeufigStatusFor liefert null ohne jahr', () => {
+		const s = makeState({ status: 'loaded', wahlen: [AGH_2021] });
+		expect(vorlaeufigStatusFor(s, 'agh', null)).toBeNull();
+	});
+
+	it('vorlaeufigStatusFor liefert null ohne Treffer für typ+jahr', () => {
+		const s = makeState({ status: 'loaded', wahlen: [AGH_2021] });
+		expect(vorlaeufigStatusFor(s, 'agh', 2026)).toBeNull();
+	});
+
+	it('vorlaeufigStatusFor liefert vorlaeufig+sourceUpdatedAt bei Treffer', () => {
+		const agh2026: WahlPortalListEntry = {
+			slug: '2026-agh-zweitstimme',
+			jahr: 2026,
+			typ: 'agh',
+			isRepeatElection: false,
+			sourceName: 'Landeswahlleiterin Berlin',
+			license: 'dl-de/by-2.0',
+			vorlaeufig: true,
+			sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+		};
+		const s = makeState({ status: 'loaded', wahlen: [AGH_2021, agh2026] });
+		expect(vorlaeufigStatusFor(s, 'agh', 2026)).toEqual({
+			vorlaeufig: true,
+			sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+		});
+		expect(vorlaeufigStatusFor(s, 'agh', 2021)).toEqual({
+			vorlaeufig: false,
+			sourceUpdatedAt: null
+		});
 	});
 
 	it('getWahlPortalState wirft, wenn kein Provider in Context', () => {

@@ -108,7 +108,9 @@ const WAHLEN_2023: WahlPortalListEntry[] = [
 		typ: 'agh',
 		isRepeatElection: false,
 		sourceName: 'Amt für Statistik Berlin-Brandenburg',
-		license: 'dl-de/by-2-0'
+		license: 'dl-de/by-2-0',
+		vorlaeufig: false,
+		sourceUpdatedAt: null
 	}
 ];
 
@@ -165,7 +167,9 @@ const WAHLEN_BVV_2011: WahlPortalListEntry[] = [
 		typ: 'bvv',
 		isRepeatElection: false,
 		sourceName: 'Amt für Statistik Berlin-Brandenburg',
-		license: 'dl-de/by-2-0'
+		license: 'dl-de/by-2-0',
+		vorlaeufig: false,
+		sourceUpdatedAt: null
 	}
 ];
 
@@ -219,20 +223,38 @@ afterEach(() => {
 describe('winner-map.svelte', () => {
 	it('zeigt einen Lade-Hinweis bevor die Winners-Antwort da ist', async () => {
 		const fetchFn = fakeFetch([['/api/wahl/winners', WINNERS_LOADED]]);
-		render(WinnerMapContextProbe, { reihe: 'agh', ebene: 'kiez', jahr: 2023, wahlen: WAHLEN_2023, fetchFn });
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
 		await expect.element(page.getByTestId('winner-map-loading')).toBeInTheDocument();
 	});
 
 	it('zeigt den Leerzustand ohne Karten-Init, wenn die API leer ist (DB-los)', async () => {
 		const fetchFn = fakeFetch([['/api/wahl/winners', { ...WINNERS_LOADED, winners: [] }]]);
-		render(WinnerMapContextProbe, { reihe: 'agh', ebene: 'kiez', jahr: 2023, wahlen: WAHLEN_2023, fetchFn });
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
 		await expect.element(page.getByTestId('winner-map-empty')).toBeInTheDocument();
 		await expect.element(page.getByTestId('winner-map-canvas')).not.toBeInTheDocument();
 	});
 
 	it('zeigt eine Fehlermeldung, wenn die Winners-API fehlschlägt', async () => {
 		const fetchFn = (async () => new Response('boom', { status: 500 })) as typeof fetch;
-		render(WinnerMapContextProbe, { reihe: 'agh', ebene: 'kiez', jahr: 2023, wahlen: WAHLEN_2023, fetchFn });
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
 		await expect.element(page.getByTestId('winner-map-error')).toBeInTheDocument();
 	});
 
@@ -243,7 +265,13 @@ describe('winner-map.svelte', () => {
 			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
 			['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC]
 		]);
-		render(WinnerMapContextProbe, { reihe: 'agh', ebene: 'kiez', jahr: 2023, wahlen: WAHLEN_2023, fetchFn });
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
 
 		const canvas = page.getByTestId('winner-map-canvas');
 		await expect.element(canvas).toBeInTheDocument();
@@ -391,9 +419,7 @@ describe('winner-map.svelte', () => {
 			geocodeFn
 		});
 		await expect.element(page.getByTestId('winner-map-canvas')).toBeInTheDocument();
-		await expect
-			.element(page.getByTestId('ergebnis-panel-gebiet-block'))
-			.not.toBeInTheDocument();
+		await expect.element(page.getByTestId('ergebnis-panel-gebiet-block')).not.toBeInTheDocument();
 
 		// Debounce-Race-Stabilisierung wie im Kein-Gebiet-Test: bis zu 3 Versuche.
 		const input = page.getByRole('combobox');
@@ -473,10 +499,16 @@ describe('winner-map.svelte', () => {
 			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
 			['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC]
 		]);
-		render(WinnerMapContextProbe, { reihe: 'agh', ebene: 'kiez', jahr: 2023, wahlen: WAHLEN_2023, fetchFn });
-		await expect.element(page.getByTestId('winner-map-wiederholung')).toHaveTextContent(
-			'Wiederholungswahl'
-		);
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
+		await expect
+			.element(page.getByTestId('winner-map-wiederholung'))
+			.toHaveTextContent('Wiederholungswahl');
 	});
 
 	it('Muster-Toggle auf der gemounteten Karte schaltet die Legenden-Vorschau um', async () => {
@@ -501,7 +533,13 @@ describe('winner-map.svelte', () => {
 			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
 			['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC]
 		]);
-		render(WinnerMapContextProbe, { reihe: 'agh', ebene: 'kiez', jahr: 2023, wahlen: WAHLEN_2023, fetchFn });
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
 		const swatch = page.getByTestId('winner-map-swatch-CDU');
 		await expect.element(swatch).toBeInTheDocument();
 		let el = (await swatch.element()) as HTMLElement;
@@ -533,9 +571,7 @@ describe('winner-map.svelte', () => {
 		await expect
 			.element(page.getByTestId('winner-map-aggregation-hinweis'))
 			.toHaveTextContent(/Urnenwahl/);
-		await expect
-			.element(page.getByTestId('winner-map-fallback-hinweis'))
-			.not.toBeInTheDocument();
+		await expect.element(page.getByTestId('winner-map-fallback-hinweis')).not.toBeInTheDocument();
 
 		await page.getByTestId('table-toggle').click();
 		await expect.element(page.getByTestId('data-table')).toHaveTextContent('Stimmbezirk 01W100');

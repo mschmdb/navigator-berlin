@@ -25,6 +25,12 @@ export const wahl = pgTable(
 		sourceUrl: text('source_url').notNull(),
 		license: text('license').notNull().default('dl-de/by-2.0'),
 		sourceUpdatedAt: timestamp('source_updated_at', { withTimezone: true }),
+		/**
+		 * Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B). Explizites
+		 * Config-Flag aus `WahlSource.vorlaeufig`, keine Text-Heuristik.
+		 * Re-Ingest beim Endergebnis muss das Flag auf `false` zurücksetzen.
+		 */
+		vorlaeufig: boolean('vorlaeufig').notNull().default(false),
 		computedAt: timestamp('computed_at', { withTimezone: true }).notNull().defaultNow()
 	},
 	(t) => ({

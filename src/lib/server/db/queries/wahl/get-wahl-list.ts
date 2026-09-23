@@ -11,6 +11,9 @@ export type WahlListItem = {
 	parentElectionId: number | null;
 	sourceUrl: string;
 	license: string;
+	/** Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B). */
+	vorlaeufig: boolean;
+	sourceUpdatedAt: Date | null;
 };
 
 export async function getWahlList(): Promise<WahlListItem[]> {
@@ -24,7 +27,9 @@ export async function getWahlList(): Promise<WahlListItem[]> {
 			isRepeatElection: wahl.isRepeatElection,
 			parentElectionId: wahl.parentElectionId,
 			sourceUrl: wahl.sourceUrl,
-			license: wahl.license
+			license: wahl.license,
+			vorlaeufig: wahl.vorlaeufig,
+			sourceUpdatedAt: wahl.sourceUpdatedAt
 		})
 		.from(wahl)
 		.orderBy(desc(wahl.jahr), asc(wahl.typ), asc(wahl.stimmtyp));

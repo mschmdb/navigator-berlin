@@ -64,6 +64,13 @@
       "when": 1789835185190,
       "tag": "0008_quiet_violations",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790178140072,
+      "tag": "0009_quiet_magma",
+      "breakpoints": true
     }
   ]
 }

@@ -20,6 +20,9 @@ export interface ErgebnisSeriesPoint {
 	readonly stimmen: number;
 	readonly is_repeat_election: boolean;
 	readonly parent_slug: string | null;
+	/** Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B); optional, Default `false`. */
+	readonly vorlaeufig?: boolean;
+	readonly source_updated_at?: string | null;
 }
 
 export interface ErgebnisPanelRow {
@@ -40,6 +43,9 @@ export interface ErgebnisPanelData {
 	/** Jahr, gegen das die Deltas gerechnet sind; `null` = erste Wahl der Reihe. */
 	readonly vorjahr: number | null;
 	readonly rows: readonly ErgebnisPanelRow[];
+	/** Vorläufiges Ergebnis für DIESES Jahr (Matze-Entscheidung 23.09., 1B). */
+	readonly vorlaeufig: boolean;
+	readonly sourceUpdatedAt: string | null;
 }
 
 const SONSTIGE = 'Sonstige';
@@ -107,7 +113,13 @@ export function buildErgebnisPanelRows(
 		};
 	});
 
-	return { jahr, vorjahr, rows };
+	return {
+		jahr,
+		vorjahr,
+		rows,
+		vorlaeufig: currentPoints[0]?.vorlaeufig ?? false,
+		sourceUpdatedAt: currentPoints[0]?.source_updated_at ?? null
+	};
 }
 
 /** Text für das Vorjahres-Label neben den Delta-Badges (Wiederholungswahl-

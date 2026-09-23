@@ -20,6 +20,9 @@ export interface WahlPortalListEntry {
 	readonly isRepeatElection: boolean;
 	readonly sourceName: string;
 	readonly license: string;
+	/** Vorläufiges Ergebnis (Matze-Entscheidung 23.09., 1B). */
+	readonly vorlaeufig: boolean;
+	readonly sourceUpdatedAt: string | null;
 }
 
 export type WahlPortalListStatus = 'idle' | 'loading' | 'loaded' | 'error';
@@ -123,6 +126,8 @@ interface WahlListApiResponse {
 		readonly is_repeat_election: boolean;
 		readonly source_name: string;
 		readonly license: string;
+		readonly vorlaeufig: boolean;
+		readonly source_updated_at: string | null;
 	}>;
 }
 
@@ -142,10 +147,30 @@ export async function loadWahlList(
 			typ: e.typ,
 			isRepeatElection: e.is_repeat_election,
 			sourceName: e.source_name,
-			license: e.license
+			license: e.license,
+			vorlaeufig: e.vorlaeufig,
+			sourceUpdatedAt: e.source_updated_at
 		}));
 		applyWahlList(state, entries);
 	} catch {
 		state.status = 'error';
 	}
+}
+
+/**
+ * Vorläufig-Status für `typ`+`jahr` aus der Portal-Wahl-Liste, unabhängig
+ * vom Stimmtyp (beide Stimmtypen einer Quelle teilen denselben Ingest-Lauf
+ * und damit dasselbe `vorlaeufig`-Flag). `null` = Liste noch nicht geladen
+ * oder kein Treffer -- Aufrufer zeigen dann weder „vorläufig" noch
+ * „endgültig" an (Status unbekannt statt geraten).
+ */
+export function vorlaeufigStatusFor(
+	state: WahlPortalState,
+	typ: WahlPortalReihe,
+	jahr: number | null
+): { vorlaeufig: boolean; sourceUpdatedAt: string | null } | null {
+	if (state.status !== 'loaded' || jahr === null) return null;
+	const entry = state.wahlen.find((w) => w.typ === typ && w.jahr === jahr);
+	if (!entry) return null;
+	return { vorlaeufig: entry.vorlaeufig, sourceUpdatedAt: entry.sourceUpdatedAt };
 }

@@ -18,6 +18,7 @@ import { groupHitsBySection } from '$lib/components/atlas/inspector-panel/intern
 import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
 import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
+import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
 import { getEditorialConfig } from '$lib/components/atlas/internal/editorial-config.js';
 import { DISCLAIMER_TEXTS_DE } from '$lib/components/atlas/editorial-disclaimer.svelte';
 import {
@@ -456,6 +457,12 @@ function renderWahl(input: LlmExportInput, lines: string[]): void {
 			`### ${WAHL_TYP_LABELS[typ]} ${latestYear} · ${WAHL_STIMMTYP_LABELS[stimmtyp]} · Ebene ${levelLabel}`
 		);
 		if (bundle.wahl.isRepeatElection) lines.push('- (Wiederholungswahl)');
+		if (bundle.wahl.vorlaeufig) {
+			const hinweis = bundle.wahl.sourceUpdatedAt
+				? `vorläufig, Stand ${formatBerlinDate(bundle.wahl.sourceUpdatedAt)}`
+				: 'vorläufig';
+			lines.push(`- (${hinweis})`);
+		}
 		if (top5.length === 0) {
 			lines.push('- Keine Daten für diese Ebene');
 		} else {
@@ -467,7 +474,9 @@ function renderWahl(input: LlmExportInput, lines: string[]): void {
 		}
 		const source = bundle.wahl.sourceUrl.includes('bundeswahlleiterin')
 			? 'Bundeswahlleiterin'
-			: 'Amt für Statistik Berlin-Brandenburg';
+			: bundle.wahl.sourceUrl.includes('wahlen-berlin.de')
+				? 'Landeswahlleiterin Berlin'
+				: 'Amt für Statistik Berlin-Brandenburg';
 		lines.push(`- Quelle: ${source} · Lizenz ${bundle.wahl.license}`);
 		lines.push('');
 	}

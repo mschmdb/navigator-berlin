@@ -316,7 +316,9 @@ export const LIST_ELECTIONS_OUTPUT_JSON_SCHEMA = {
 					has_stimmbezirks_geometry: { type: 'boolean' },
 					source_name: { type: 'string' },
 					source_url: { type: 'string' },
-					license: { type: 'string' }
+					license: { type: 'string' },
+					provisional: { type: 'boolean' },
+					source_updated_at: { type: ['string', 'null'] }
 				},
 				required: [
 					'slug',
@@ -326,7 +328,8 @@ export const LIST_ELECTIONS_OUTPUT_JSON_SCHEMA = {
 					'is_repeat_election',
 					'has_stimmbezirks_geometry',
 					'source_name',
-					'license'
+					'license',
+					'provisional'
 				]
 			}
 		}
@@ -371,9 +374,11 @@ export const GET_ELECTION_RESULT_OUTPUT_JSON_SCHEMA = {
 		caveats: { type: 'array', items: { type: 'string' } },
 		source: { type: 'string' },
 		updated_at: { type: 'string' },
-		license: { type: 'string' }
+		license: { type: 'string' },
+		provisional: { type: 'boolean' },
+		source_updated_at: { type: ['string', 'null'] }
 	},
-	required: ['election_slug', 'level', 'top', 'source', 'license']
+	required: ['election_slug', 'level', 'top', 'source', 'license', 'provisional']
 } as const;
 
 export const COMPARE_ELECTIONS_INPUT_JSON_SCHEMA = {
@@ -418,9 +423,11 @@ export const COMPARE_ELECTIONS_OUTPUT_JSON_SCHEMA = {
 							required: ['kurzname', 'anteil']
 						}
 					},
-					caveats: { type: 'array', items: { type: 'string' } }
+					caveats: { type: 'array', items: { type: 'string' } },
+					provisional: { type: 'boolean' },
+					source_updated_at: { type: ['string', 'null'] }
 				},
-				required: ['election_slug', 'jahr', 'top']
+				required: ['election_slug', 'jahr', 'top', 'provisional']
 			}
 		}
 	},
