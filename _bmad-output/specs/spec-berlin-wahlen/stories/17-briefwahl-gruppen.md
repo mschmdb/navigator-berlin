@@ -2,7 +2,8 @@
 title: 'Briefwahl-Gruppen als kleinste Kartenebene'
 type: 'bugfix'
 created: '2026-09-23'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '062cc0bf08dfd076887290d1b84ef872d0e8c9ed'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
