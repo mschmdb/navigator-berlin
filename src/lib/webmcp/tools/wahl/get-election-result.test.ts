@@ -31,6 +31,7 @@ function makeBundle(jahr: number, isRepeat = false): WahlResultBundle {
 			sourceUpdatedAt: null
 		},
 		uwbId: '075-01-100-0',
+		gruppeId: '075-01-1A-5',
 		levels: {
 			stimmbezirk: {
 				available: true,
@@ -105,7 +106,7 @@ describe('get_election_result tool', () => {
 		expect(out.source).toBe('Landeswahlleiterin Berlin');
 	});
 
-	it('ergänzt Briefwahl-Caveat bei pre-2021-stimmbezirk', async () => {
+	it('keine Briefwahl-Caveat bei pre-2021-stimmbezirk (Story 17: Briefwahl-Gruppen gelten für alle Jahre mit Geometrie)', async () => {
 		const tool = createGetElectionResultTool({
 			fetchResultsAtPoint: async () => makeResults([makeBundle(2017)])
 		});
@@ -115,7 +116,20 @@ describe('get_election_result tool', () => {
 			election_slug: '2017-btw-zweitstimme',
 			level: 'stimmbezirk'
 		})) as Record<string, unknown>;
-		expect((out.caveats as string[])[0]).toContain('Briefstimmen');
+		expect(out.caveats).toBeUndefined();
+	});
+
+	it('ergänzt Kiez-Caveat (Postwahl-Schätzung, Review-Fund: Kiez-Werte enthielten anteilig verteilte Briefwahl ohne jeden Hinweis)', async () => {
+		const tool = createGetElectionResultTool({
+			fetchResultsAtPoint: async () => makeResults([makeBundle(2025)])
+		});
+		const out = (await tool.handler({
+			lat: 52.52,
+			lng: 13.41,
+			election_slug: '2025-btw-zweitstimme',
+			level: 'kiez'
+		})) as Record<string, unknown>;
+		expect((out.caveats as string[])[0]).toContain('postal votes allocated proportionally');
 	});
 
 	it('keine Briefwahl-Caveat bei post-2021-stimmbezirk', async () => {

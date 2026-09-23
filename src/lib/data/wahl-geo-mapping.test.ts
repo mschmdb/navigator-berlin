@@ -9,6 +9,7 @@ import {
 	dbUwbIdFromGeo,
 	candidateDbUwbIds,
 	wahlenForGeo,
+	gruppeIdFromGeo,
 	UWB_FORMAT_HINT
 } from './wahl-geo-mapping.js';
 
@@ -215,11 +216,95 @@ describe('wahlSlugFromTypJahr', () => {
 	});
 });
 
+// gruppeIdFromGeo: Ground-Truth per SQL-Sample gegen echte stimmbezirk-Rows
+// verifiziert (Story: Briefwahl-Gruppen als kleinste Kartenebene).
+describe('gruppeIdFromGeo', () => {
+	describe('BTW 21/25 (Suffix aus BWB3)', () => {
+		it('baut die Gruppen-ID für BTW25', () => {
+			const id = gruppeIdFromGeo({ BWK: '74', BEZ: '01', BWB3: '1C' }, 'btw25');
+			expect(id).toBe('074-01-1C-5');
+		});
+
+		it('baut die Gruppen-ID für BTW21', () => {
+			const id = gruppeIdFromGeo({ BWK: '75', BEZ: '01', BWB3: '1A' }, 'btw21');
+			expect(id).toBe('075-01-1A-5');
+		});
+	});
+
+	describe('BTW 17 (Suffix aus BWB2, BEZ+B-Infix)', () => {
+		it('baut die Gruppen-ID für BTW17', () => {
+			const id = gruppeIdFromGeo({ BWK: '75', BEZ: '01', BWB2: '1A' }, 'btw17');
+			expect(id).toBe('075-01-01B1A-5');
+		});
+	});
+
+	describe('AGH/BVV 21/23/26 (Suffix aus BWB3, kein Anhang)', () => {
+		it('AGH21', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB3: '1A' }, 'agh21')).toBe('01B1A');
+		});
+		it('AGH23 (nutzt den ah21-Layer)', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB3: '1A' }, 'agh23')).toBe('01B1A');
+		});
+		it('BVV21', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB3: '1A' }, 'bvv21')).toBe('01B1A');
+		});
+		it('AGH26 (Beispiel aus Spec: Gruppe 7P)', () => {
+			expect(gruppeIdFromGeo({ BEZ: '09', BWB3: '7P' }, 'agh26')).toBe('09B7P');
+		});
+		it('BVV26', () => {
+			expect(gruppeIdFromGeo({ BEZ: '10', BWB3: '5A' }, 'bvv26')).toBe('10B5A');
+		});
+	});
+
+	describe('AGH/BVV 16 (Suffix aus BWB, BEZ-Präfix entfernen)', () => {
+		it('AGH16', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB: '011A' }, 'agh16')).toBe('01B1A');
+		});
+		it('BVV16', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB: '011A' }, 'bvv16')).toBe('01B1A');
+		});
+
+		it('normalisiert kleingeschriebenen Suffix auf Großbuchstaben (Bezirk 08/Neukölln liefert "081a" statt "011A", Ground-Truth-Fund gegen echte stimmbezirk-Rows)', () => {
+			expect(gruppeIdFromGeo({ BEZ: '08', BWB: '081a' }, 'agh16')).toBe('08B1A');
+		});
+	});
+
+	describe('Edge cases', () => {
+		it('returns null bei fehlendem BEZ', () => {
+			expect(gruppeIdFromGeo({ BWB3: '1A', BWK: '75' }, 'btw25')).toBeNull();
+		});
+
+		it('returns null bei BTW ohne BWK', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB3: '1A' }, 'btw25')).toBeNull();
+		});
+
+		it('returns null bei fehlendem Suffix-Feld', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01' }, 'agh21')).toBeNull();
+			expect(gruppeIdFromGeo({ BEZ: '01' }, 'agh16')).toBeNull();
+		});
+
+		it('returns null wenn BWB (agh16) nicht mit BEZ beginnt', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB: '021A' }, 'agh16')).toBeNull();
+		});
+
+		it('returns null bei unbekanntem wahlSlug', () => {
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB3: '1A', BWK: '75' }, 'btw13')).toBeNull();
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB3: '1A' }, 'agh11')).toBeNull();
+			expect(gruppeIdFromGeo({ BEZ: '01', BWB3: '1A' }, 'bvv11')).toBeNull();
+		});
+	});
+});
+
 describe('UWB_FORMAT_HINT', () => {
 	it('ist ein nicht-leerer Hinweis-String mit allen Format-Beispielen', () => {
 		expect(UWB_FORMAT_HINT).toContain('075-01-100-0');
 		expect(UWB_FORMAT_HINT).toContain('078-05-05W221-0');
 		expect(UWB_FORMAT_HINT).toContain('01W100-W');
 		expect(UWB_FORMAT_HINT).toContain('01W100');
+	});
+
+	it('klärt, dass keine Briefwahl-Gruppen-ID gemeint ist, und nennt is_gruppe (Review-Fund)', () => {
+		expect(UWB_FORMAT_HINT).toContain('gebiet_slug');
+		expect(UWB_FORMAT_HINT).toContain('is_gruppe');
 	});
 });

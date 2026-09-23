@@ -41,12 +41,13 @@ type LevelResults = {
 		stimmen: number;
 		anteil: number;
 	}> | null;
-	isBriefwahlAggregat?: boolean;
 };
 
 type WahlResultBundle = {
 	wahl: WahlListItem;
 	uwbId: string | null;
+	/** Briefwahl-Gruppen-ID der Urne (Story 17), `null` ohne Gruppen-Zuordnung. */
+	gruppeId: string | null;
 	levels: {
 		stimmbezirk: LevelResults;
 		kiez: LevelResults;
@@ -161,30 +162,22 @@ async function buildLevelResults(
 	wahl: WahlListItem,
 	dbUwbId: string | null,
 	kiezSlug: string | null,
-	bezirkSlug: string | null,
-	isBriefwahlByDefault: boolean
-): Promise<WahlResultBundle['levels']> {
+	bezirkSlug: string | null
+): Promise<{ levels: WahlResultBundle['levels']; gruppeId: string | null }> {
 	// Top-10 statt Top-5: Delta-Vergleich Stimmbezirk-Partei vs Bezirk/Berlin braucht
 	// auch nicht-Top-5-Parteien (BSW oft Rank 6-7 auf Bezirks/Berlin-Ebene während
 	// Top-5 lokal). UI rendert weiter nur Top-5 als Hauptliste.
 	const LIMIT = 10;
-	const [stimmbezirk, kiez, bezirk, berlin] = await Promise.all([
-		dbUwbId
-			? getResultsForStimmbezirk(wahl.id, dbUwbId, LIMIT).then((rows) => ({
-					available: rows.length > 0,
-					top5:
-						rows.length > 0
-							? rows.map((r) => ({
-									kurzname: r.parteiKurzname,
-									vollname: r.parteiVollname,
-									farbeHex: r.farbeHex,
-									stimmen: r.stimmen,
-									anteil: r.anteil
-								}))
-							: null,
-					isBriefwahlAggregat: rows[0]?.istBriefwahlAggregat ?? isBriefwahlByDefault
-				}))
-			: Promise.resolve({ available: false, top5: null }),
+	// Story 17: dbUwbId ist die Urne am Punkt, die Ergebnisse kommen für ihre
+	// gesamte Briefwahl-Gruppe (Punkt -> Urne -> Gruppe -> Gruppen-Ergebnis).
+	// Review-Fund: lief vorher als eigenes `await` VOR dem `Promise.all`,
+	// blockierte damit kiez/bezirk/berlin unnötig seriell -- jetzt Teil
+	// desselben `Promise.all`.
+	const stimmbezirkPromise = dbUwbId
+		? getResultsForStimmbezirk(wahl.id, dbUwbId, LIMIT)
+		: Promise.resolve({ gruppeId: null, results: [] });
+	const [stimmbezirkResult, kiez, bezirk, berlin] = await Promise.all([
+		stimmbezirkPromise,
 		kiezSlug
 			? getResultsForKiez(wahl.id, kiezSlug, LIMIT).then((rows) => ({
 					available: rows.length > 0,
@@ -229,7 +222,20 @@ async function buildLevelResults(
 					: null
 		}))
 	]);
-	return { stimmbezirk, kiez, bezirk, berlin };
+	const stimmbezirk = {
+		available: stimmbezirkResult.results.length > 0,
+		top5:
+			stimmbezirkResult.results.length > 0
+				? stimmbezirkResult.results.map((r) => ({
+						kurzname: r.parteiKurzname,
+						vollname: r.parteiVollname,
+						farbeHex: r.farbeHex,
+						stimmen: r.stimmen,
+						anteil: r.anteil
+					}))
+				: null
+	};
+	return { levels: { stimmbezirk, kiez, bezirk, berlin }, gruppeId: stimmbezirkResult.gruppeId };
 }
 
 export const GET: RequestHandler = async ({ url }) => {
@@ -270,8 +276,8 @@ export const GET: RequestHandler = async ({ url }) => {
 			const geoSlug = WAHL_TO_GEO.get(slug);
 			const wb = geoSlug ? wahlbezirks[geoSlug] : undefined;
 			const dbUwbId = wb ? dbUwbIdFromGeo(wb.geoProps, slug) : null;
-			const levels = await buildLevelResults(w, dbUwbId, kiezSlug, bezirkSlug, false);
-			return { wahl: w, uwbId: dbUwbId, levels };
+			const { levels, gruppeId } = await buildLevelResults(w, dbUwbId, kiezSlug, bezirkSlug);
+			return { wahl: w, uwbId: dbUwbId, gruppeId, levels };
 		})
 	);
 

@@ -8,12 +8,17 @@
  * Kiez/Bezirk haben stabile LOR-Geometrie über alle Jahre, Stimmbezirke
  * nicht).
  *
- * Stimmbezirke (Story 5): pro Jahr statt pro Reihe (eine AGH-Reihe wären
- * ~7.000 Rows in einem Response, ein Jahr ~2.200) -- verlangt deshalb einen
- * expliziten `jahr`-Parameter (400 ohne). Response trägt zusätzlich
- * `geo_slug` (Wahl-Generation für die Geometrie, `null` ohne Geometrie für
- * dieses Jahr) und pro Row `gebiet_slug` = DB-`uwbId` statt Kiez/Bezirk-Slug.
- * Briefwahl-Aggregat-Rows (keine Geometrie) werden ausgefiltert.
+ * Stimmbezirke (Story 5, ab Story 17 Briefwahl-Gruppen): pro Jahr statt pro
+ * Reihe (eine AGH-Reihe wären ~7.000 Rows in einem Response, ein Jahr
+ * ~2.200) -- verlangt deshalb einen expliziten `jahr`-Parameter (400 ohne).
+ * Response trägt zusätzlich `geo_slug` (Wahl-Generation für die Geometrie,
+ * `null` ohne Geometrie für dieses Jahr) und pro Row `gebiet_slug` = die
+ * Briefwahl-Gruppen-ID (`wahl_stimmbezirk_gruppe.gruppe_id`, z. B. `09B7P`)
+ * statt der einzelnen Urnen-uwbId. Eine Gruppe = alle Urnen-Stimmbezirke mit
+ * demselben Briefwahlbezirk PLUS dieser Briefwahlbezirk selbst -- Briefwahl
+ * ist damit Teil jeder Gruppen-Summe, keine separate ausgefilterte Row mehr
+ * (löst die frühere Urnen-only-Ansicht ab, Story 17: Briefwahl-Gruppen als
+ * kleinste Kartenebene).
  *
  * Partei-Param (Story 9, additiv): `partei` (Picklist = `FINDER_PARTIES`)
  * schaltet von Sieger- auf Anteils-Rows EINER Partei um -- Response-Shape,
@@ -104,17 +109,18 @@ async function handleStimmbezirk(
 	const rows = partei
 		? await getParteiAnteileStimmbezirk(wahl.id, partei)
 		: await getStimmbezirksWinners(wahl.id);
-	const winners = rows
-		.filter((r) => !r.istBriefwahlAggregat)
-		.map((r) => ({
-			jahr,
-			gebiet_slug: r.uwbId,
-			partei: r.parteiKurzname,
-			farbe_hex: r.farbeHex,
-			anteil: r.anteil,
-			is_repeat_election: wahl.isRepeatElection,
-			parent_slug: parentSlug
-		}));
+	// Story 17: eine Row je Briefwahl-Gruppe (Urnen + ihr Briefwahlbezirk
+	// zusammen) statt je Urnen-Stimmbezirk -- kein Briefwahl-Filter mehr,
+	// die Gruppen-Summe enthält die Briefwahl bereits.
+	const winners = rows.map((r) => ({
+		jahr,
+		gebiet_slug: r.gruppeId,
+		partei: r.parteiKurzname,
+		farbe_hex: r.farbeHex,
+		anteil: r.anteil,
+		is_repeat_election: wahl.isRepeatElection,
+		parent_slug: parentSlug
+	}));
 
 	return json(
 		{

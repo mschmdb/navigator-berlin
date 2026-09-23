@@ -207,6 +207,7 @@ const WAHL: WahlResultsAtPoint = {
 				sourceUpdatedAt: null
 			},
 			uwbId: null,
+			gruppeId: null,
 			levels: {
 				stimmbezirk: { available: false, top5: null },
 				kiez: {

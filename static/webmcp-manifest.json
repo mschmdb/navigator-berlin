@@ -396,6 +396,15 @@
                 },
                 "license": {
                   "type": "string"
+                },
+                "provisional": {
+                  "type": "boolean"
+                },
+                "source_updated_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               },
               "required": [
@@ -406,7 +415,8 @@
                 "is_repeat_election",
                 "has_stimmbezirks_geometry",
                 "source_name",
-                "license"
+                "license",
+                "provisional"
               ]
             }
           }
@@ -512,6 +522,15 @@
           },
           "license": {
             "type": "string"
+          },
+          "provisional": {
+            "type": "boolean"
+          },
+          "source_updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
@@ -519,7 +538,8 @@
           "level",
           "top",
           "source",
-          "license"
+          "license",
+          "provisional"
         ]
       }
     },
@@ -611,12 +631,22 @@
                   "items": {
                     "type": "string"
                   }
+                },
+                "provisional": {
+                  "type": "boolean"
+                },
+                "source_updated_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               },
               "required": [
                 "election_slug",
                 "jahr",
-                "top"
+                "top",
+                "provisional"
               ]
             }
           }
@@ -683,6 +713,10 @@
               },
               "bezirk_code": {
                 "type": "string"
+              },
+              "is_gruppe": {
+                "type": "boolean",
+                "description": "True when the geometry is the dissolved Briefwahl-Gruppe (voting district merged with its postal-voting district), false when it falls back to the single voting district."
               }
             },
             "required": [

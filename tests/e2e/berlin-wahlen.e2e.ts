@@ -293,11 +293,16 @@ test('Winner-Map (Ebene kiez/bezirk): Ebenen-Wechsel aktualisiert die bestehende
 	await expect(page.getByTestId('winner-map-empty')).not.toBeVisible();
 });
 
-// Story 5: Stimmbezirks-Winners jahrweise (ebene=stimmbezirk verlangt jahr).
-// `01W100` ist eine echte uwbId aus static/layers/wahlbezirke-ah21*.geojson
-// UND wahlbezirke-ah16*.geojson (BEZ=01, UWB3/UWB=100) -- dieselbe Nummer
-// existiert in beiden Geometrie-Generationen, deckt also sowohl den
-// Default-Render (ah21) als auch den Geo-Swap-Test (ah16 -> ah21) ab.
+// Story 5, ab Story 17 auf Briefwahl-Gruppen umgestellt: Stimmbezirks-
+// Winners jahrweise (ebene=stimmbezirk verlangt jahr), gebiet_slug ist die
+// Briefwahl-Gruppen-ID, nicht mehr die einzelne Urnen-uwbId (Review-Fund:
+// die e2e-Fixtures nutzten noch die alte Urnen-ID '01W100', die gegen die
+// dissolvierte wahlgruppen-*-Geometrie nicht mehr matcht -- der Join lief
+// still ins Leere). `01B1A` ist eine echte Gruppen-ID aus
+// static/layers/wahlgruppen-ah21*.geojson UND wahlgruppen-ah16*.geojson
+// (BEZ=01, BWB3/BWB-Suffix=1A) -- dieselbe Gruppe existiert in beiden
+// Geometrie-Generationen, deckt also sowohl den Default-Render (ah21) als
+// auch den Geo-Swap-Test (ah16 -> ah21) ab.
 const STIMMBEZIRK_WINNERS_BY_JAHR: Record<string, unknown> = {
 	'2023': {
 		typ: 'agh',
@@ -308,7 +313,7 @@ const STIMMBEZIRK_WINNERS_BY_JAHR: Record<string, unknown> = {
 		winners: [
 			{
 				jahr: 2023,
-				gebiet_slug: '01W100',
+				gebiet_slug: '01B1A',
 				partei: 'SPD',
 				farbe_hex: '#A50C1A',
 				anteil: 0.4,
@@ -329,7 +334,7 @@ const STIMMBEZIRK_WINNERS_BY_JAHR: Record<string, unknown> = {
 		winners: [
 			{
 				jahr: 2021,
-				gebiet_slug: '01W100',
+				gebiet_slug: '01B1A',
 				partei: 'CDU',
 				farbe_hex: '#1A1A1A',
 				anteil: 0.5,
@@ -350,7 +355,7 @@ const STIMMBEZIRK_WINNERS_BY_JAHR: Record<string, unknown> = {
 		winners: [
 			{
 				jahr: 2016,
-				gebiet_slug: '01W100',
+				gebiet_slug: '01B1A',
 				partei: 'GRÜNE',
 				farbe_hex: '#0F6E2C',
 				anteil: 0.35,
@@ -402,7 +407,7 @@ test('Winner-Map (Ebene stimmbezirk): Default-Ansicht rendert die Stimmbezirks-K
 	// Seite mit und hat eine eigene Tabellen-Alternative mit demselben Testid.
 	const karteChapter = page.getByTestId('wahl-portal-chapter-karte');
 	await karteChapter.getByTestId('table-toggle').click();
-	await expect(karteChapter.getByTestId('data-table')).toContainText('Stimmbezirk 01W100');
+	await expect(karteChapter.getByTestId('data-table')).toContainText('Stimmbezirke 100, 124 und Briefwahl 1A');
 });
 
 test('Winner-Map (Ebene stimmbezirk): Ebenen-Wechsel zu kiez aktualisiert die bestehende Karte', async ({

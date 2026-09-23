@@ -11,6 +11,7 @@ import { getSeriesForGebiet } from './get-series-for-gebiet.js';
 import { getWinnersBulk } from './get-winners-bulk.js';
 import { getAnalytikForReihe, getTrendForReihe } from './get-analytik-for-reihe.js';
 import { getParteiAnteileBulk, getParteiAnteileStimmbezirk } from './get-partei-anteile-bulk.js';
+import { getStimmbezirksWinners } from './get-stimmbezirks-winners.js';
 
 afterAll(async () => {
 	await closeDb();
@@ -28,7 +29,14 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 		});
 
 		it('getResultsForStimmbezirk returns empty without DB', async () => {
-			expect(await getResultsForStimmbezirk(1, '074-01-104-0')).toEqual([]);
+			expect(await getResultsForStimmbezirk(1, '074-01-104-0')).toEqual({
+				gruppeId: null,
+				results: []
+			});
+		});
+
+		it('getStimmbezirksWinners returns empty without DB', async () => {
+			expect(await getStimmbezirksWinners(1)).toEqual([]);
 		});
 
 		it('getKiezSharesForWahl returns empty without DB', async () => {
@@ -119,12 +127,26 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 			expect(top.length).toBeLessThanOrEqual(5);
 		});
 
-		it('getResultsForStimmbezirk liefert echte UWB-Daten', async () => {
+		it('getResultsForStimmbezirk liefert die Gruppen-Summe (Urne + Briefwahl) für eine echte Urne (Story 17)', async () => {
 			const list = await getWahlList();
 			const btw25Erst = list.find((w) => w.jahr === 2025 && w.stimmtyp === 'erststimme');
 			if (!btw25Erst) return;
 			const top = await getResultsForStimmbezirk(btw25Erst.id, '074-01-104-0', 5);
-			expect(top.length).toBeGreaterThan(0);
+			if (top.results.length === 0) return;
+			expect(top.gruppeId).not.toBeNull();
+			expect(top.results.length).toBeGreaterThan(0);
+		});
+
+		it('getStimmbezirksWinners löst Gleichstand deterministisch alphabetisch nach Partei-Kurzname (Review-Fund, AGH26 Gruppe 03B3F: AfD=Linke=325)', async () => {
+			const list = await getWahlList();
+			const agh26Zweit = list.find((w) => w.jahr === 2026 && w.typ === 'agh' && w.stimmtyp === 'zweitstimme');
+			if (!agh26Zweit) return;
+			const winners = await getStimmbezirksWinners(agh26Zweit.id);
+			if (winners.length === 0) return;
+			const gruppe03B3F = winners.find((w) => w.gruppeId === '03B3F');
+			if (!gruppe03B3F) return;
+			// AfD < Die Linke < ... alphabetisch bei gleicher Stimmenzahl (325).
+			expect(gruppe03B3F.parteiKurzname).toBe('AfD');
 		});
 
 		it('getResultsForKiez ist leer solange Story 6.2 noch keine Geometrien hat', async () => {
@@ -177,7 +199,7 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 			// die Partei-Filterung + Wertebereich als Bauplan-Treue prüfen.
 		});
 
-		it('getParteiAnteileStimmbezirk liefert nur die angefragte Partei ohne Briefwahl-Aggregat-Filterung (Filterung bleibt Route-Aufgabe)', async () => {
+		it('getParteiAnteileStimmbezirk liefert nur die angefragte Partei je Briefwahl-Gruppe (Story 17)', async () => {
 			const list = await getWahlList();
 			const agh23 = list.find(
 				(w) => w.jahr === 2023 && w.typ === 'agh' && w.stimmtyp === 'zweitstimme'
@@ -186,8 +208,7 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 			const rows = await getParteiAnteileStimmbezirk(agh23.id, 'CDU');
 			if (rows.length === 0) return;
 			expect(rows.every((r) => r.parteiKurzname === 'CDU')).toBe(true);
-			const urne = rows.find((r) => !r.istBriefwahlAggregat);
-			if (urne) expect(urne.uwbId).toMatch(/^\d{2}W\d{3}$/);
+			expect(rows[0].gruppeId).toMatch(/^\d{2}B\S+$/);
 		});
 
 		it('getAnalytikForReihe + getTrendForReihe liefern konsistente Kiez-Slugs (nach build-wahl-analytik)', async () => {

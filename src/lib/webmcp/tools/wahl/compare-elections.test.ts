@@ -41,6 +41,7 @@ function makeBundle(
 			sourceUpdatedAt
 		},
 		uwbId: null,
+		gruppeId: null,
 		levels: {
 			stimmbezirk: mk('stimmbezirk'),
 			kiez: mk('kiez'),
@@ -79,6 +80,21 @@ describe('compare_elections tool', () => {
 		})) as Record<string, unknown>;
 		expect(out.level).toBe('kiez');
 		expect((out.series as unknown[]).length).toBe(2);
+	});
+
+	it('ergänzt Kiez-Caveat (Postwahl-Schätzung) pro Series-Eintrag auf Default-Ebene kiez (Review-Fund)', async () => {
+		const tool = createCompareElectionsTool({
+			fetchResultsAtPoint: async () => makeResults([makeBundle(2017), makeBundle(2025)])
+		});
+		const out = (await tool.handler({
+			lat: 52.52,
+			lng: 13.41,
+			election_slugs: ['2017-btw-zweitstimme', '2025-btw-zweitstimme']
+		})) as Record<string, unknown>;
+		const series = out.series as Array<Record<string, unknown>>;
+		for (const entry of series) {
+			expect((entry.caveats as string[])[0]).toContain('postal votes allocated proportionally');
+		}
 	});
 
 	it('reicht provisional/source_updated_at je Series-Eintrag durch (Story: Ingest AGH/BVV 2026)', async () => {

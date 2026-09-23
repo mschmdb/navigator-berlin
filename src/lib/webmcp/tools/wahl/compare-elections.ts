@@ -41,12 +41,14 @@ function pickCommonLevel(
 	return null;
 }
 
+// Kein Level-Parameter mehr (Story 17: Briefwahl-Gruppen als kleinste
+// Kartenebene): Stimmbezirks-Werte sind für alle Wahlen mit Geometrie echte
+// Gruppen-Summen aus Urne + Briefwahlbezirk, der frühere Pre-2021-Briefwahl-
+// Caveat auf Stimmbezirks-Level entfällt ersatzlos.
 function caveatsFor(bundle: WahlResultBundle, level: WahlLevel): string[] {
 	const out: string[] = [];
-	if (level === 'stimmbezirk' && bundle.wahl.jahr < 2021) {
-		out.push(
-			'Stimmbezirks-Werte ohne Briefstimmen. Briefwähler werden nur als Bezirks-Aggregat erfasst (Briefwahl-Asymmetrie pre-2021).'
-		);
+	if (level === 'kiez') {
+		out.push('Kiez values include postal votes allocated proportionally by eligible voters, not an official breakdown.');
 	}
 	if (bundle.wahl.isRepeatElection) {
 		out.push(
@@ -60,7 +62,7 @@ export function createCompareElectionsTool(deps: CompareElectionsDeps): WebMcpTo
 	return {
 		name: 'compare_elections',
 		description:
-			'Compare multiple elections at a single Berlin address on the same aggregation level (sparkline-compatible). Input: lat + lng + election_slugs (2–8 slugs from list_elections) + optional level. The tool auto-picks the finest level available across ALL requested elections (default order: kiez → bezirk → berlin → stimmbezirk). Output: series array with top-5 parties per election + caveats for pre-2021 stimmbezirks-level. Use this for time-series questions like "How did SPD vote share evolve in Friedrichshain across BTW 2017, 2021, 2025?". Errors with no_common_level if no aggregation level is available across all requested elections.',
+			'Compare multiple elections at a single Berlin address on the same aggregation level (sparkline-compatible). Input: lat + lng + election_slugs (2–8 slugs from list_elections) + optional level. The tool auto-picks the finest level available across ALL requested elections (default order: kiez → bezirk → berlin → stimmbezirk). Stimmbezirks-level results are Briefwahl-Gruppen and already include postal votes for every election year with geometry. Output: series array with top-5 parties per election + caveats for kiez-level (postal votes allocated proportionally, not an official breakdown) or repeat elections. Use this for time-series questions like "How did SPD vote share evolve in Friedrichshain across BTW 2017, 2021, 2025?". Errors with no_common_level if no aggregation level is available across all requested elections.',
 		readOnly: true,
 		inputSchema: COMPARE_ELECTIONS_INPUT_JSON_SCHEMA,
 		outputSchema: COMPARE_ELECTIONS_OUTPUT_JSON_SCHEMA,

@@ -351,6 +351,26 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	'wahlbezirke-ah26': {
 		short: 'Wahlbezirks-Grenzen Abgeordnetenhauswahl 2026',
 		long: 'Geometrie der Berliner Wahlbezirke zur Abgeordnetenhaus- und BVV-Wahl 2026. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.'
+	},
+	'wahlgruppen-btw17': {
+		short: 'Briefwahl-Gruppen Bundestagswahl 2017',
+		long: 'Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Bundestagswahl 2017. Kleinste Kartenebene der Wahl-Ergebniskarte.'
+	},
+	'wahlgruppen-ah16': {
+		short: 'Briefwahl-Gruppen Abgeordnetenhaus- und BVV-Wahl 2016',
+		long: 'Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Abgeordnetenhaus- und BVV-Wahl 2016. Kleinste Kartenebene der Wahl-Ergebniskarte.'
+	},
+	'wahlgruppen-ah21': {
+		short: 'Briefwahl-Gruppen Bundestags-, Abgeordnetenhaus- und BVV-Wahl 2021',
+		long: 'Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Bundestagswahl 2021 sowie zur Abgeordnetenhaus- und BVV-Wahl 2021 und deren Wiederholungswahl 2023. Kleinste Kartenebene der Wahl-Ergebniskarte.'
+	},
+	'wahlgruppen-bt25': {
+		short: 'Briefwahl-Gruppen Bundestagswahl 2025',
+		long: 'Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Bundestagswahl 2025. Kleinste Kartenebene der Wahl-Ergebniskarte.'
+	},
+	'wahlgruppen-ah26': {
+		short: 'Briefwahl-Gruppen Abgeordnetenhaus- und BVV-Wahl 2026',
+		long: 'Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Abgeordnetenhaus- und BVV-Wahl 2026. Kleinste Kartenebene der Wahl-Ergebniskarte.'
 	}
 };
 

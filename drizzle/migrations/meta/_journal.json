@@ -71,6 +71,13 @@
       "when": 1790178140072,
       "tag": "0009_quiet_magma",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790185179449,
+      "tag": "0010_cute_tiger_shark",
+      "breakpoints": true
     }
   ]
 }

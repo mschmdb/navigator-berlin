@@ -211,7 +211,18 @@ Strategie Centroid-First:
 
 Stimmbezirke (~1.800-3.700 in Berlin pro Wahl) sind deutlich kleiner als Kieze (143 BZR). Polygon-Intersection wäre 99 %+ identisches Ergebnis bei 10× Compute-Cost. Edge-Case: Stimmbezirk-Centroid liegt auf Kiez-Grenze → Lookup nutzt ersten-Match (deterministisch via LOR-Index-Reihenfolge).
 
-**Briefwahl ausgeschlossen:** Aggregation läuft nur über Urne-Stimmen (`ist_briefwahl_aggregat = false`). Brief-Stimmen haben keine räumliche Zuordnung (Bezirks-Aggregat-only) und würden Kiez-Werte verfälschen wenn auf Parent-Urne-Polygon gemappt.
+**Briefwahl anteilig verteilt (Story 17, löst die frühere Urnen-only-Regel ab):**
+Bis Story 17 lief die Kiez-Aggregation nur über Urne-Stimmen
+(`ist_briefwahl_aggregat = false`); Briefstimmen fehlten in den Kiez-Werten
+komplett. Für 2026 wären das 40,8 % der gültigen Stimmen gewesen. Die
+Kiez-Aggregation verteilt Briefstimmen jetzt anteilig auf die Kieze ihrer
+Briefwahl-Gruppe (siehe „Briefwahl-Gruppen" unten): für Urne `u` in Gruppe
+`g` gilt `brief_u = brief_g × wb_u / Σ wb(g)` (`wb` = Wahlberechtigte der
+Urne). Das ist eine Schätzung -- Wahlberechtigte korrelieren mit
+Wahlbeteiligung, aber nicht 1:1 mit dem tatsächlichen Briefwahl-Stimmverhalten
+pro Urne. Fehlt `wb_u` für eine oder mehrere Urnen einer Gruppe (ältere
+`stimmbezirk`-Rows vor einem Re-Ingest), fällt die Verteilung für diese
+Gruppe auf Gleichverteilung über ihre Urnen zurück.
 
 **Geometrie-Coverage Phase 1:**
 
@@ -271,17 +282,30 @@ Datenbestand landet der Fallback faktisch immer auf Bezirk: Das Kiez-Aggregat
 setzt dieselbe Stimmbezirks-Geometrie voraus, die Kiez-Stufe der Leiter ist
 also nur für künftige Datenlagen relevant.
 
-**Briefwahl-Lücke:** Stimmbezirks-Rows mit `ist_briefwahl_aggregat = true`
-haben keine Geometrie (eigene Briefwahlbezirke, siehe Composite-UWB-ID oben)
-und werden aus der Karten-/Tabellen-Antwort ausgefiltert. Die Karte zeigt
-damit ausschließlich Urnenwahl-Ergebnisse; ein Hinweistext an der Karte macht
-das transparent (Abschnitt „Transparenz" in der Winner-Map-Spec).
+**Briefwahl-Gruppen statt Briefwahl-Lücke (Story 17):** Bis Story 17 wurden
+Stimmbezirks-Rows mit `ist_briefwahl_aggregat = true` aus der Karten-/
+Tabellen-Antwort ausgefiltert -- die Karte zeigte nur Urnenwahl-Ergebnisse,
+2026 fehlten so 40,8 % der gültigen Stimmen, in 429 von 2542 Urnenbezirken
+mit anderem Sieger als Urne+Briefwahl zusammen. Die kleinste Kartenebene ist
+jetzt die **Briefwahl-Gruppe**: alle Urnen-Stimmbezirke mit demselben
+Briefwahlbezirk PLUS dieser Briefwahlbezirk selbst bilden eine Fläche
+(Dissolve der Urnen-Polygone), analog zur Tagesspiegel-Darstellung
+(„Stimmbezirke 726, 727 und 7P"). Siehe „Briefwahl-Gruppen" unten für die
+Gruppen-ID-Bildung.
 
 ## Briefwahl-Behandlung
 
-### Asymmetrie pre-2021
+### Briefwahlbezirke pro Stimmbezirk
 
-Vor 2021 wurden Briefstimmen NUR auf Bezirks-Ebene zusammengefasst, nicht pro Stimmbezirk. Ab 2021 verteilt die Bundeswahlleiterin Briefstimmen auf Briefwahlbezirke mit eigener UWB-ID.
+Die Bundeswahlleiterin und die SBB-Pipeline verteilen Briefstimmen auf
+eigene Briefwahlbezirke mit eigener UWB-ID -- für BTW17 und AGH/BVV16
+ebenso wie ab 2021: die ingestierten Datensätze zeigen für BTW17 und
+AGH/BVV16 granulare Briefwahlbezirk-Rows mit echten, pro Bezirk
+unterschiedlichen Stimmenzahlen (verifiziert per SQL-Sample gegen
+`ergebnis`). Ein früherer Stand dieser Doku behauptete einen generellen
+„vor 2021 nur Bezirks-Ebene"-Unterschied; die davon abgeleiteten UI-Caveats
+entfielen deshalb mit Story 17 (Briefwahl-Gruppen, siehe unten, gelten für
+alle Wahlen mit Stimmbezirks-Geometrie, nicht nur ab 2021).
 
 Schema-Modellierung: `ergebnis.ist_briefwahl_aggregat BOOL`. Detection-Regel: `Bezirksart !== '0'`.
 
@@ -294,6 +318,74 @@ uwb_id = `${wahlkreis}-${bezirk_code}-${wahlbezirk}-${bezirksart}`
 ```
 
 Beispiel: `077-04-119-0` vs. `077-05-119-0` für die zwei oben genannten Stimmbezirke.
+
+### Briefwahl-Gruppen (Story 17)
+
+**Problem:** Stimmbezirks- und Kiez-Ebene zählten bis Story 17 nur
+Urnenstimmen. 2026 fehlten dort 40,8 % der gültigen Stimmen; in 429 von 2542
+Urnenbezirken zeigte die Karte einen anderen Sieger als Urne+Briefwahl
+zusammen (AfD 823 statt 557 Bezirke). Die Verzerrung betrifft jede Wahl mit
+Stimmbezirks-Geometrie (Briefwahl-Anteil 28 bis 47 %). Berlin- und
+Bezirks-Werte waren davon nicht betroffen (SUM über alle Stimmbezirke
+inklusive Briefwahl, siehe oben).
+
+**Lösung:** Die kleinste Kartenebene ist die **Briefwahl-Gruppe**: alle
+Urnen-Stimmbezirke mit gleichem Briefwahlbezirk plus dieser Briefwahlbezirk
+selbst (Tagesspiegel-Vorbild: „Stimmbezirke 726, 727 und 7P"). Geometrie =
+Dissolve der Urnen-Polygone je Gruppe. Kiez-Aggregat und Analytik enthalten
+seither die Briefwahl.
+
+**Gruppen-ID-Bildung** (`gruppeIdFromGeo` in `src/lib/data/wahl-geo-mapping.ts`,
+Schlüssel = DB-uwbId des zugehörigen Briefwahl-Stimmbezirks): das
+Briefwahlbezirk-Feld im Shapefile variiert pro Geo-Slug, genau wie das
+UWB3-Äquivalent für Urnen (`pickUwb3`):
+
+| Geo-Slug           | Feld  | Beispielwert | Gruppen-ID-Format |
+| ------------------ | ----- | ------------ | ------------------ |
+| ah16               | BWB   | `011A` (BEZ+Suffix verschmolzen) | `${BEZ}B${Suffix}` |
+| btw17              | BWB2  | `2C`          | `${BWK}-${BEZ}-${BEZ}B${Suffix}-5` |
+| ah21 / ah26 / bt25 | BWB3  | `1A`          | AGH/BVV: `${BEZ}B${Suffix}`; BTW: `${BWK}-${BEZ}-${Suffix}-5` |
+
+`ah23` fehlt bewusst: Wahllokale-Punkte statt Polygone, für Choropleth
+ungeeignet (siehe Geometrie-Coverage-Tabelle oben) -- agh23/bvv23 laufen über
+den `ah21`-Layer.
+
+**Neue Tabelle `wahl_stimmbezirk_gruppe` (wahl_id, uwb_id, gruppe_id):**
+ordnet jeden Stimmbezirk (Urne ODER Briefwahlbezirk) einer Wahl seiner
+Gruppe zu; die Briefwahl-Row zeigt dabei auf sich selbst
+(`uwb_id === gruppe_id`). Gefüllt im Kiez-Build aus der Geometrie. Build
+bricht ab (statt still wegzulassen), wenn ein Briefwahl-Stimmbezirk keiner
+Gruppe zugeordnet werden kann oder eine Urne ohne Gruppe bleibt, und wenn die
+Summe aller Gruppen einer Wahl nicht der amtlichen Berlin-Summe entspricht.
+
+**Kiez-Split:** Für Urne `u` in Gruppe `g` gilt
+`brief_u = brief_g × wb_u / Σ wb(g)` (`wb` = Wahlberechtigte der Urne, Spalte
+`stimmbezirk.wahlberechtigte`; `0` zählt wie fehlend). Die Rundung läuft
+Largest-Remainder-basiert und PRO PARTEI innerhalb einer Gruppe (nicht
+einmal über die Gruppen-Gesamtsumme): jede Partei verteilt ihre eigenen
+Briefwahl-Stimmen exakt auf die Mitglieds-Urnen, jede Partei-Verteilung
+summiert sich für sich schon exakt auf den Briefwahl-Rohwert dieser Partei
+zurück. Ein Gruppen-Centroid hätte Gruppen an Kiezgrenzen komplett einem
+Kiez zugeschlagen; die Urnen-Zuordnung zum Kiez bleibt dadurch exakt
+(Centroid-Verfahren, siehe oben), nur die Briefwahl selbst ist anteilig
+geschätzt. Keine Schätzung auf Stimmbezirks-Ebene: die Karte zeigt dort
+echte Gruppen-Summen, keine Verteilung.
+
+**Summen-Check:** die Gruppen-Summe (Urne + Brief über die Gruppen-
+Zuordnung erreichbar) muss der amtlichen Berlin-Summe entsprechen
+(`wahl_aggregat_berlin`, unabhängig von den geladenen `ergebnis`-Rows
+gelesen); der Kiez-Split muss dieselbe Gruppen-Summe exakt reproduzieren
+(`sumKiez + Stimmen der Urnen ohne Kiez == Gruppen-Summe`). Zusätzlich
+gated: fehlende/`0`-Wahlberechtigte über 1 % aller Urnen einer Wahl,
+widersprüchliche Urne→Gruppe-Zuordnungen aus der Geometrie, Geometrie-
+Gruppen ohne passende DB-Briefwahl-Row. Jede Verletzung bricht den Build ab.
+
+Rechenkern: `scripts/wahlen/lib/gruppe-mapper.ts` (pure, DB-frei --
+Urne-uwbId → Gruppen-ID aus der Geometrie), `gruppe-preflight.ts` (alle
+Gates), `briefwahl-split.ts` (Largest-Remainder-Verteilung),
+`kiez-aggregat-plan.ts` (fasst Gates + Verteilung + Anteil-Berechnung zu
+einer reinen, DB-freien Planungsfunktion zusammen). Build-Script:
+`scripts/build-wahl-kiez-aggregat.ts` (I/O + Transaktion pro Wahl/Stimmtyp).
 
 ## Parteien-Alias-Tabelle
 

@@ -196,7 +196,7 @@
 			</h2>
 			{#if data.geoSlug}
 				<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-					~{data.winnersByUwb.length.toLocaleString('de-DE')} Stimmbezirke
+					~{data.winnersByUwb.length.toLocaleString('de-DE')} Briefwahl-Gruppen
 				</span>
 			{/if}
 		</div>

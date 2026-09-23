@@ -13,7 +13,8 @@ import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { parteiColor, parteiPattern, type Pattern } from '$lib/data/partei-farben.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.js';
-import { dbUwbIdFromGeo, type GeoUwbProps } from '$lib/data/wahl-geo-mapping.js';
+import { gruppeIdFromGeo, type GeoUwbProps } from '$lib/data/wahl-geo-mapping.js';
+import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
 import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
 import { patternImageId } from './partei-pattern-images.js';
 
@@ -235,13 +236,21 @@ export function joinWinnersToFeatures(
 	return { type: 'FeatureCollection', features };
 }
 
+// `gruppenAnzeigeName` (+ `briefCodeFromGruppeId`) lebt in
+// `$lib/data/wahl-gruppe-label.ts` -- geteiltes Modul für Winner-Map und
+// Detailseiten-Choropleth (Review-Fund: zwei divergierende Kopien mit
+// unterschiedlichen Bugs, u.a. falscher Briefwahl-Code bei BTW-Gruppen-IDs
+// und ein doppeltes "und" bei genau zwei Mitgliedern).
+export { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
+
 /**
- * Story 5: Join für die Stimmbezirks-Ebene. Anders als `joinWinnersToFeatures`
- * (vorab gebaute `slugs`/`names`-Arrays, Story 4) berechnet dieser Join die
- * DB-uwbId direkt aus den Geo-Feature-Properties (`dbUwbIdFromGeo`), weil
- * Stimmbezirks-Features die nötigen Felder (BEZ/UWB/BWK) selbst tragen.
- * Delegiert an `joinWinnersToFeatures`, um Farb-/Pattern-/Neutral-Logik nicht
- * zu duplizieren. Anzeige-Name: „Stimmbezirk <uwbId>".
+ * Story 5, ab Story 17 auf Briefwahl-Gruppen umgestellt: Join für die
+ * kleinste Kartenebene. Anders als `joinWinnersToFeatures` (vorab gebaute
+ * `slugs`/`names`-Arrays, Story 4) berechnet dieser Join die Gruppen-ID
+ * direkt aus den (bereits dissolvierten) Geo-Feature-Properties
+ * (`gruppeIdFromGeo`), weil die Gruppen-Fläche die nötigen Felder
+ * (BEZ/BWK/BWB*) selbst trägt. Delegiert an `joinWinnersToFeatures`, um
+ * Farb-/Pattern-/Neutral-Logik nicht zu duplizieren.
  */
 export function joinStimmbezirkWinners(
 	fc: FeatureCollection,
@@ -249,9 +258,13 @@ export function joinStimmbezirkWinners(
 	winners: readonly WinnerApiRow[]
 ): WinnerFeatureCollection {
 	const slugs = fc.features.map(
-		(f) => dbUwbIdFromGeo((f.properties ?? {}) as GeoUwbProps, wahlSlug) ?? ''
+		(f) => gruppeIdFromGeo((f.properties ?? {}) as GeoUwbProps, wahlSlug) ?? ''
 	);
-	const names = slugs.map((s) => (s ? `Stimmbezirk ${s}` : ''));
+	const names = fc.features.map((f, i) => {
+		if (!slugs[i]) return '';
+		const members = (f.properties as Record<string, unknown> | null)?.MEMBERS;
+		return gruppenAnzeigeName(slugs[i], typeof members === 'string' ? members : undefined);
+	});
 	return joinWinnersToFeatures(fc, slugs, names, winners);
 }
 
@@ -331,10 +344,10 @@ export function buildTakeawaySentence(
  */
 export function aggregationHinweisText(ebene: WahlPortalEbene): string {
 	if (ebene === 'stimmbezirk') {
-		return 'Stimmbezirks-Werte: amtliche Ergebnisse der Urnenwahl. Briefwahl wird eigenen Briefwahlbezirken zugeordnet und ist nicht kartierbar.';
+		return 'Stimmbezirks-Werte: Briefwahl-Gruppen (Urnen-Stimmbezirke + ihr Briefwahlbezirk zusammen). Amtliche Gruppen-Summe, Urne und Briefwahl vollständig enthalten.';
 	}
 	return ebene === 'kiez'
-		? 'Kiez-Werte: Stimmbezirke der Wahl, per Flächen-Zuordnung auf die 143 Berliner Kieze aggregiert.'
+		? 'Kiez-Werte: Stimmbezirke der Wahl, per Flächen-Zuordnung auf die 143 Berliner Kieze aggregiert; Briefwahl anteilig nach Wahlberechtigten auf die Kieze ihrer Gruppe verteilt (Schätzung).'
 		: 'Bezirks-Werte: amtliche Bezirks-Summen.';
 }
 

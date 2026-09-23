@@ -173,7 +173,9 @@
 	const DISCLOSURE_TEXT =
 		'Berlin- und Bezirks-Werte sind amtliche Summen der Wahlämter. Kiez-Werte sind ein ' +
 		'Flächen-Aggregat aus den Stimmbezirken, kein amtlicher Originalwert. Briefwahl-Stimmen ' +
-		'fließen in die Bezirks- und Berlin-Summen ein, sind aber nicht auf Kieze verteilbar.';
+		'fließen in die Bezirks- und Berlin-Summen amtlich ein; auf Kiez-Ebene verteilt sich die ' +
+		'Briefwahl einer Gruppe anteilig nach Wahlberechtigten auf ihre Urnen: eine Schätzung, ' +
+		'keine amtliche Aufteilung.';
 </script>
 
 <section

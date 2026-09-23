@@ -10,8 +10,8 @@ const MANIFEST = {
 	generatedAt: '2026-05-16T06:56:28.400Z',
 	layers: [
 		{
-			slug: 'wahlbezirke-ah21',
-			filename: 'wahlbezirke-ah21.cccccccc.geojson',
+			slug: 'wahlgruppen-ah21',
+			filename: 'wahlgruppen-ah21.cccccccc.geojson',
 			sourceUrl: 'https://example.invalid/x.zip',
 			fetchedAt: '2026-05-16T06:56:28.400Z',
 			license: 'dl-de/by-2-0',
@@ -40,7 +40,7 @@ const GEO_FC = {
 					]
 				]
 			},
-			properties: { BEZ: '01', UWB3: '100', BWK: '75' }
+			properties: { BEZ: '01', UWB3: '100', BWB3: '1A', BWK: '75', MEMBERS: '100' }
 		}
 	]
 };
@@ -62,7 +62,7 @@ function fakeFetch(routes: ReadonlyArray<[string, unknown]>): typeof fetch {
 
 const geoRoutes: ReadonlyArray<[string, unknown]> = [
 	['MANIFEST.json', MANIFEST],
-	['wahlbezirke-ah21', GEO_FC]
+	['wahlgruppen-ah21', GEO_FC]
 ];
 
 describe('StimmbezirkLoader.loadGeometry', () => {
@@ -96,7 +96,7 @@ describe('StimmbezirkLoader.loadWinners', () => {
 		winners: [
 			{
 				jahr: 2023,
-				gebiet_slug: '01W100',
+				gebiet_slug: '01B1A',
 				partei: 'SPD',
 				farbe_hex: '#000000',
 				anteil: 0.4,
@@ -172,16 +172,31 @@ describe('StimmbezirkLoader.loadWinners', () => {
 });
 
 describe('StimmbezirkLoader.resolveAddress', () => {
-	it('liefert die uwbId im Format des aktuellen wahlSlug, null außerhalb', async () => {
+	it('liefert die Gruppen-ID im Format des aktuellen wahlSlug, null außerhalb (Story 17)', async () => {
 		_resetManifestCache();
 		_resetLayerCache();
 		const loader = new StimmbezirkLoader(fakeFetch(geoRoutes));
 		await loader.loadGeometry('ah21', 'agh23', () => false);
-		expect(loader.resolveAddress(52.505, 13.305)).toBe('01W100');
+		expect(loader.resolveAddress(52.505, 13.305)).toBe('01B1A');
 		expect(loader.resolveAddress(52.39, 13.06)).toBeNull();
 
 		// Nach Reihe-Wechsel auf BTW liefert dieselbe Geometrie das BTW-Format.
 		await loader.loadGeometry('ah21', 'btw21', () => false);
-		expect(loader.resolveAddress(52.505, 13.305)).toBe('075-01-100-0');
+		expect(loader.resolveAddress(52.505, 13.305)).toBe('075-01-1A-5');
+	});
+});
+
+describe('StimmbezirkLoader.resolveAddressLabel', () => {
+	it('liefert den Gruppen-Anzeige-Namen statt der rohen Gruppen-ID (Review-Fund: Adress-Hinweis zeigte bisher die uwbId)', async () => {
+		_resetManifestCache();
+		_resetLayerCache();
+		const loader = new StimmbezirkLoader(fakeFetch(geoRoutes));
+		await loader.loadGeometry('ah21', 'agh23', () => false);
+		expect(loader.resolveAddressLabel(52.505, 13.305)).toBe('Stimmbezirk 100 und Briefwahl 1A');
+		expect(loader.resolveAddressLabel(52.39, 13.06)).toBeNull();
+
+		// BTW-Format: Gruppen-ID '075-01-1A-5' -> Briefwahl-Code '1A', nicht die volle ID.
+		await loader.loadGeometry('ah21', 'btw21', () => false);
+		expect(loader.resolveAddressLabel(52.505, 13.305)).toBe('Stimmbezirk 100 und Briefwahl 1A');
 	});
 });

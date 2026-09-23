@@ -8,6 +8,10 @@
  *     mit Geometrie: BTW 17/21/25 ×2 + AGH 16/21/23/26 ×2 + BVV 16/21/23/26)
  *   - mind. 400 Rows in wahl_analytik_kiez (5 Reihen × ~142 Kieze,
  *     Build-Zeit-Aggregat aus `build-wahl-analytik.ts`)
+ *   - mind. 18 distinct wahl_ids in wahl_stimmbezirk_gruppe (Story 17:
+ *     Briefwahl-Gruppen, gefüllt im selben Kiez-Build -- ohne diesen Check
+ *     würde ein Re-Deploy auf einer VOR Story 17 bereits vollständigen DB
+ *     `data:wahl-kiez` überspringen und die Gruppen-Tabelle leer lassen)
  *   - env WAHL_REFRESH != true
  *
  * Exit 1 (refresh) sonst. prebuild-Kette nutzt `|| (data:wahl-fetch && …)`
@@ -25,6 +29,7 @@ const MIN_WAHLEN = 23;
 const MIN_ERGEBNIS_PER_WAHL = 100;
 const MIN_WAHLEN_WITH_KIEZ_AGGREGAT = 18;
 const MIN_ANALYTIK_ROWS = 400;
+const MIN_WAHLEN_WITH_GRUPPEN = 18;
 
 async function main(): Promise<void> {
 	if (process.env.WAHL_REFRESH === 'true') {
@@ -50,21 +55,26 @@ async function main(): Promise<void> {
 		const analytikRows = await db.execute<{ count: number }>(
 			sql`SELECT count(*)::int AS count FROM wahl_analytik_kiez`
 		);
+		const distinctGruppenWahlen = await db.execute<{ count: number }>(
+			sql`SELECT count(DISTINCT wahl_id)::int AS count FROM wahl_stimmbezirk_gruppe`
+		);
 
 		const w = wahlCount[0]?.count ?? 0;
 		const kw = distinctKiezWahlen[0]?.count ?? 0;
 		const m = minPerWahl[0]?.min ?? 0;
 		const ar = analytikRows[0]?.count ?? 0;
+		const gw = distinctGruppenWahlen[0]?.count ?? 0;
 
 		console.log(
-			`[wahl-check] state: wahlen=${w} wahlen-mit-kiez-aggregat=${kw} min-ergebnis-per-wahl=${m} analytik-rows=${ar}`
+			`[wahl-check] state: wahlen=${w} wahlen-mit-kiez-aggregat=${kw} min-ergebnis-per-wahl=${m} analytik-rows=${ar} wahlen-mit-gruppen=${gw}`
 		);
 
 		const ok =
 			w >= MIN_WAHLEN &&
 			m >= MIN_ERGEBNIS_PER_WAHL &&
 			kw >= MIN_WAHLEN_WITH_KIEZ_AGGREGAT &&
-			ar >= MIN_ANALYTIK_ROWS;
+			ar >= MIN_ANALYTIK_ROWS &&
+			gw >= MIN_WAHLEN_WITH_GRUPPEN;
 
 		if (ok) {
 			console.log(
@@ -73,7 +83,7 @@ async function main(): Promise<void> {
 			process.exit(0);
 		}
 		console.log(
-			`[wahl-check] DB incomplete (need wahlen>=${MIN_WAHLEN}, min-per-wahl>=${MIN_ERGEBNIS_PER_WAHL}, wahlen-mit-kiez>=${MIN_WAHLEN_WITH_KIEZ_AGGREGAT}, analytik-rows>=${MIN_ANALYTIK_ROWS}) · refreshing`
+			`[wahl-check] DB incomplete (need wahlen>=${MIN_WAHLEN}, min-per-wahl>=${MIN_ERGEBNIS_PER_WAHL}, wahlen-mit-kiez>=${MIN_WAHLEN_WITH_KIEZ_AGGREGAT}, analytik-rows>=${MIN_ANALYTIK_ROWS}, wahlen-mit-gruppen>=${MIN_WAHLEN_WITH_GRUPPEN}) · refreshing`
 		);
 		process.exit(1);
 	} catch (err) {

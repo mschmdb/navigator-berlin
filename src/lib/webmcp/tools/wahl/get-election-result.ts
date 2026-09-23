@@ -51,12 +51,14 @@ function autoSelectLevel(bundle: WahlResultBundle): WahlLevel {
 	return 'berlin';
 }
 
+// Kein Level-Parameter mehr (Story 17: Briefwahl-Gruppen als kleinste
+// Kartenebene): Stimmbezirks-Werte sind für alle Wahlen mit Geometrie echte
+// Gruppen-Summen aus Urne + Briefwahlbezirk, der frühere Pre-2021-Briefwahl-
+// Caveat auf Stimmbezirks-Level entfällt ersatzlos.
 function caveatsFor(bundle: WahlResultBundle, level: WahlLevel): string[] {
 	const out: string[] = [];
-	if (level === 'stimmbezirk' && bundle.wahl.jahr < 2021) {
-		out.push(
-			'Stimmbezirks-Werte ohne Briefstimmen. Briefwähler werden nur als Bezirks-Aggregat erfasst (Briefwahl-Asymmetrie pre-2021).'
-		);
+	if (level === 'kiez') {
+		out.push('Kiez values include postal votes allocated proportionally by eligible voters, not an official breakdown.');
 	}
 	if (bundle.wahl.isRepeatElection) {
 		out.push(
@@ -80,7 +82,7 @@ export function createGetElectionResultTool(deps: GetElectionResultDeps): WebMcp
 	return {
 		name: 'get_election_result',
 		description:
-			'Return the top parties at a given Berlin address for one specific election, on a selectable aggregation level (stimmbezirk/kiez/bezirk/berlin). Input: lat + lng + election_slug (from list_elections, format "2025-btw-zweitstimme" or "2023-bvv") + optional level. Default level is the finest available: stimmbezirk if the address has per-district data, then kiez (LOR Bezirksregion), then bezirk, then berlin. Output includes top-5 parties with vote count + share + color, source authority + license + last update, and caveats for pre-2021 Stimmbezirks-level (Briefwahl-asymmetry) or repeat elections. Errors with election_not_found if election_slug does not exist, address_outside_berlin if the point is not in Berlin.',
+			'Return the top parties at a given Berlin address for one specific election, on a selectable aggregation level (stimmbezirk/kiez/bezirk/berlin). Input: lat + lng + election_slug (from list_elections, format "2025-btw-zweitstimme" or "2023-bvv") + optional level. Default level is the finest available: stimmbezirk if the address has per-district data, then kiez (LOR Bezirksregion), then bezirk, then berlin. Stimmbezirks-level results are Briefwahl-Gruppen (a voting district merged with its postal-voting district) and already include postal votes for every election year with geometry. Output includes top-5 parties with vote count + share + color, source authority + license + last update, and caveats for kiez-level (postal votes allocated proportionally, not an official breakdown) or repeat elections. Errors with election_not_found if election_slug does not exist, address_outside_berlin if the point is not in Berlin.',
 		readOnly: true,
 		inputSchema: GET_ELECTION_RESULT_INPUT_JSON_SCHEMA,
 		outputSchema: GET_ELECTION_RESULT_OUTPUT_JSON_SCHEMA,
