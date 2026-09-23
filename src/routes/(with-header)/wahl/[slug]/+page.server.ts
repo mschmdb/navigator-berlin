@@ -112,7 +112,10 @@ export type WahlDetailPageData = {
 	}>;
 	/** Story 6.4c: Geo-Layer-Slug für Stimmbezirks-Choropleth oder null. */
 	readonly geoSlug: string | null;
-	/** Story 6.4c: Top-1 pro UWB für Stimmbezirks-Choropleth, leer wenn keine Geometrie. */
+	/** Story 6.4c, ab Story 17 Briefwahl-Gruppen: Top-1 pro Briefwahl-Gruppe
+	 * für die Stimmbezirks-Choropleth, leer wenn keine Geometrie. `uwbId`
+	 * trägt die Gruppen-ID (Feld-Name bleibt aus Bauplan-Parität mit der
+	 * Winners-API, siehe `getStimmbezirksWinners`). */
 	readonly winnersByUwb: ReadonlyArray<{
 		readonly uwbId: string;
 		readonly parteiKurzname: string;
@@ -195,7 +198,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		})),
 		geoSlug,
 		winnersByUwb: winners.map((w) => ({
-			uwbId: w.uwbId,
+			uwbId: w.gruppeId,
 			parteiKurzname: w.parteiKurzname,
 			farbeHex: w.farbeHex,
 			anteil: w.anteil

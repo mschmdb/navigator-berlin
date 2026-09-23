@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { dbUwbIdFromGeo } from '$lib/data/wahl-geo-mapping.js';
+	import { gruppeIdFromGeo } from '$lib/data/wahl-geo-mapping.js';
+	import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
 
 	type WinnerEntry = {
+		/** Briefwahl-Gruppen-ID, nicht die einzelne Urnen-uwbId. */
 		readonly uwbId: string;
 		readonly parteiKurzname: string;
 		readonly farbeHex: string;
@@ -43,7 +45,11 @@
 			type ManifestShape = { layers: Array<{ slug: string; filename: string }> };
 			const manifest = (await manifestRes.json()) as ManifestShape;
 
-			const geoLayer = manifest.layers.find((l) => l.slug === `wahlbezirke-${geoSlug}`);
+			// Story 17: kleinste Kartenebene ist die dissolvierte Briefwahl-
+			// Gruppen-Fläche (`wahlgruppen-${geoSlug}`), nicht mehr die einzelne
+			// Urnen-Fläche (`wahlbezirke-${geoSlug}`) -- Never-Boundary "kein
+			// Urnen-only-Umschalter".
+			const geoLayer = manifest.layers.find((l) => l.slug === `wahlgruppen-${geoSlug}`);
 			const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
 			if (!geoLayer || !bezirkeLayer) return;
 
@@ -64,13 +70,16 @@
 			let matched = 0;
 			for (const feature of fc.features) {
 				const props = (feature.properties ?? {}) as Record<string, unknown>;
-				const dbUwbId = dbUwbIdFromGeo(props, wahlSlug);
-				const winner = dbUwbId ? winnerMap.get(dbUwbId) : null;
+				const gruppeId = gruppeIdFromGeo(props, wahlSlug);
+				const winner = gruppeId ? winnerMap.get(gruppeId) : null;
 				if (winner) matched++;
 				props.partei = winner?.parteiKurzname ?? null;
 				props.partei_farbe = winner ? parteiColor(winner.parteiKurzname) : '#CCCCCC';
 				props.anteil = winner?.anteil ?? 0;
-				props.db_uwb_id = dbUwbId;
+				props.gruppe_id = gruppeId;
+				props.gruppe_name = gruppeId
+				? gruppenAnzeigeName(gruppeId, typeof props.MEMBERS === 'string' ? props.MEMBERS : undefined)
+				: null;
 				props.has_winner = winner ? 1 : 0;
 			}
 			const map = new MapLibreMap({
@@ -149,14 +158,15 @@
 				if (!feature) return;
 				const props = feature.properties as Record<string, unknown>;
 				const partei = typeof props.partei === 'string' ? props.partei : null;
-				const dbUwbId = typeof props.db_uwb_id === 'string' ? props.db_uwb_id : '–';
+				const gruppenName =
+					typeof props.gruppe_name === 'string' ? props.gruppe_name : 'Briefwahl-Gruppe';
 				const anteilNum = typeof props.anteil === 'number' ? props.anteil : 0;
 				const html = partei
 					? `<div style="font-family:monospace;font-size:12px;line-height:1.4;">` +
-						`<div style="font-weight:600;margin-bottom:4px;">Stimmbezirk ${dbUwbId}</div>` +
+						`<div style="font-weight:600;margin-bottom:4px;">${gruppenName}</div>` +
 						`<div>Stärkste: <strong>${partei}</strong> ${formatPct(anteilNum)}</div>` +
 						`</div>`
-					: `<div style="font-family:monospace;font-size:12px;">Stimmbezirk ${dbUwbId}<br/>Keine Daten</div>`;
+					: `<div style="font-family:monospace;font-size:12px;">${gruppenName}<br/>Keine Daten</div>`;
 				new Popup({ closeButton: true, closeOnClick: true, maxWidth: '260px' })
 					.setLngLat(e.lngLat)
 					.setHTML(html)
@@ -191,10 +201,11 @@
 	<div
 		bind:this={container}
 		role="img"
-		aria-label="Berliner Stimmbezirke gefärbt nach stärkster Partei"
+		aria-label="Berliner Briefwahl-Gruppen gefärbt nach stärkster Partei"
 		class="h-[360px] w-full overflow-hidden rounded border border-rule sm:h-[480px] md:h-[520px]"
 	></div>
 	<figcaption class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-		Farbe = stärkste Partei pro Stimmbezirk · Sättigung skaliert mit Anteil · Klick öffnet Detail
+		Farbe = stärkste Partei pro Briefwahl-Gruppe (Urnen + ihr Briefwahlbezirk) · Sättigung skaliert
+		mit Anteil · Klick öffnet Detail
 	</figcaption>
 </figure>

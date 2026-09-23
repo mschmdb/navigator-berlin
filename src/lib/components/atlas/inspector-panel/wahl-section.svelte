@@ -1,7 +1,6 @@
 <script lang="ts">
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import BriefwahlMarker from '../briefwahl-marker.svelte';
-	import WahlConfidenceHairline from '../wahl-confidence-hairline.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
 	import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
@@ -159,9 +158,12 @@
 		return `wahl-${bundleKey(b)}`;
 	}
 
-	const isBriefwahlLevel = $derived(
-		selectedLevel === 'stimmbezirk' && currentBundle !== null && currentBundle.wahl.jahr < 2021
-	);
+	// Stimmbezirks-Werte sind für jede Wahl mit Geometrie echte Gruppen-
+	// Summen aus Urne + Briefwahlbezirk, kein Caveat nötig. Kiez-Werte
+	// verteilen die Briefwahl einer Gruppe anteilig nach Wahlberechtigten
+	// auf ihre Urnen -- eine Schätzung, keine amtliche Aufteilung
+	// (Design Notes, Methodik-Doku).
+	const isKiezBriefwahlSchaetzung = $derived(selectedLevel === 'kiez');
 
 	const currentSparkline = $derived.by<SparklineSeries | null>(() => {
 		if (!currentBundle || !results) return null;
@@ -401,7 +403,6 @@
 								title={`${entry.kurzname}: ${formatPct(entry.anteil)}`}
 							></span>
 						{/each}
-						<WahlConfidenceHairline visible={isBriefwahlLevel} />
 					</div>
 					<ul class="space-y-1.5" data-testid="wahl-legend">
 						{#each top5 as entry (entry.kurzname)}
@@ -472,7 +473,9 @@
 				</table>
 
 				<BriefwahlMarker
-					showBadge={isBriefwahlLevel}
+					showBadge={isKiezBriefwahlSchaetzung}
+					tooltip="Kiez-Werte verteilen die Briefwahl einer Gruppe anteilig nach Wahlberechtigten auf ihre Urnen: eine Schätzung, keine amtliche Aufteilung."
+					label="Briefwahl geschätzt"
 					methodikHref={`${methodikHref}#wahldaten-briefwahl`}
 				/>
 			{:else}

@@ -10,6 +10,7 @@ import {
 	bezirkNamesForFeatures,
 	joinWinnersToFeatures,
 	joinStimmbezirkWinners,
+	gruppenAnzeigeName,
 	resolveAnzeigeEbene,
 	buildTableRows,
 	buildTakeawaySentence,
@@ -225,27 +226,32 @@ describe('joinWinnersToFeatures', () => {
 	});
 });
 
-// Fixture-Props identisch zu scripts/wahlen/lib/kiez-mapper.test.ts (Kontrakt:
-// dieselben uwbIds wie die Kiez-Mapper-Fixtures für BTW- und AGH-Format).
-const STIMMBEZIRK_FC_BTW: FeatureCollection = {
+// Story 17: joinStimmbezirkWinners läuft auf der DISSOLVIERTEN Gruppen-
+// Geometrie (`wahlgruppen-<geoSlug>`), nicht mehr auf Urnen-Flächen -- Fixture-
+// Props tragen deshalb BWB*-Felder + MEMBERS (Kontrakt `dissolveGruppen`,
+// sbb-geo-pipeline.ts).
+const GRUPPEN_FC_BTW: FeatureCollection = {
 	type: 'FeatureCollection',
 	features: [
-		feature({ BWK: '75', BEZ: '01', UWB3: '100' }),
-		feature({ BWK: '83', BEZ: '09', UWB3: '101', UWB: '09101' })
+		feature({ BWK: '75', BEZ: '01', BWB3: '1A', MEMBERS: '100,101' }),
+		feature({ BWK: '83', BEZ: '09', BWB3: '9Z', MEMBERS: '900' })
 	]
 };
 
-const STIMMBEZIRK_FC_AGH: FeatureCollection = {
+const GRUPPEN_FC_AGH: FeatureCollection = {
 	type: 'FeatureCollection',
-	features: [feature({ BEZ: '01', UWB3: '100' }), feature({ BEZ: '05', UWB3: '221' })]
+	features: [
+		feature({ BEZ: '09', BWB3: '7P', MEMBERS: '726,727' }),
+		feature({ BEZ: '05', BWB3: '3C', MEMBERS: '221' })
+	]
 };
 
 describe('joinStimmbezirkWinners', () => {
-	it('joint über dbUwbIdFromGeo im BTW-Format (BWK-BEZ-UWB3-0)', () => {
+	it('joint über gruppeIdFromGeo im BTW-Format (BWK-BEZ-BWB3-5)', () => {
 		const winners: WinnerApiRow[] = [
 			{
 				jahr: 2021,
-				gebiet_slug: '075-01-100-0',
+				gebiet_slug: '075-01-1A-5',
 				partei: 'SPD',
 				farbe_hex: '#ignored',
 				anteil: 0.4,
@@ -253,31 +259,45 @@ describe('joinStimmbezirkWinners', () => {
 				parent_slug: null
 			}
 		];
-		const joined = joinStimmbezirkWinners(STIMMBEZIRK_FC_BTW, 'btw21', winners);
-		expect(joined.features[0].properties.gebiet_slug).toBe('075-01-100-0');
-		expect(joined.features[0].properties.gebiet_name).toBe('Stimmbezirk 075-01-100-0');
+		const joined = joinStimmbezirkWinners(GRUPPEN_FC_BTW, 'btw21', winners);
+		expect(joined.features[0].properties.gebiet_slug).toBe('075-01-1A-5');
+		expect(joined.features[0].properties.gebiet_name).toBe(
+			'Stimmbezirke 100, 101 und Briefwahl 1A'
+		);
 		expect(joined.features[0].properties.partei).toBe('SPD');
 		expect(joined.features[0].properties.has_winner).toBe(1);
-		// Zweites Feature (083-09-101-0) bleibt unmatched, neutral.
+		// Zweite Gruppe (083-09-9Z-5) bleibt unmatched, neutral.
 		expect(joined.features[1].properties.has_winner).toBe(0);
 	});
 
-	it('joint über dbUwbIdFromGeo im AGH-Format (BEZ-W-UWB3, ohne Suffix)', () => {
+	it('joint über gruppeIdFromGeo im AGH-Format (BEZ+B+BWB3, Spec-Beispiel Gruppe 7P)', () => {
 		const winners: WinnerApiRow[] = [
 			{
-				jahr: 2021,
-				gebiet_slug: '01W100',
-				partei: 'GRÜNE',
+				jahr: 2026,
+				gebiet_slug: '09B7P',
+				partei: 'CDU',
 				farbe_hex: '#ignored',
-				anteil: 0.3,
+				anteil: 0.265,
 				is_repeat_election: false,
 				parent_slug: null
 			}
 		];
-		const joined = joinStimmbezirkWinners(STIMMBEZIRK_FC_AGH, 'agh21', winners);
-		expect(joined.features[0].properties.gebiet_slug).toBe('01W100');
-		expect(joined.features[0].properties.gebiet_name).toBe('Stimmbezirk 01W100');
-		expect(joined.features[0].properties.partei).toBe('GRÜNE');
+		const joined = joinStimmbezirkWinners(GRUPPEN_FC_AGH, 'agh26', winners);
+		expect(joined.features[0].properties.gebiet_slug).toBe('09B7P');
+		expect(joined.features[0].properties.gebiet_name).toBe(
+			'Stimmbezirke 726, 727 und Briefwahl 7P'
+		);
+		expect(joined.features[0].properties.partei).toBe('CDU');
+	});
+});
+
+// Volle Coverage (AGH/BVV + alle BTW-Formate, Edge-Cases) lebt jetzt bei
+// `$lib/data/wahl-gruppe-label.test.ts` (geteiltes Modul, Review-Fund). Hier
+// nur ein Re-Export-Smoke-Test, damit `winner-map-data.js` als Import-Pfad
+// weiter funktioniert.
+describe('gruppenAnzeigeName (Re-Export)', () => {
+	it('re-exportiert dieselbe Funktion wie $lib/data/wahl-gruppe-label.js', () => {
+		expect(gruppenAnzeigeName('09B7P', '726,727')).toBe('Stimmbezirke 726, 727 und Briefwahl 7P');
 	});
 });
 
@@ -367,9 +387,13 @@ describe('aggregationHinweisText', () => {
 		expect(aggregationHinweisText('bezirk')).toMatch(/amtliche Bezirks-Summen/);
 	});
 
-	it('nennt amtliche Urnenwahl-Ergebnisse und die Briefwahl-Lücke auf Stimmbezirks-Ebene', () => {
-		expect(aggregationHinweisText('stimmbezirk')).toMatch(/Urnenwahl/);
-		expect(aggregationHinweisText('stimmbezirk')).toMatch(/Briefwahl/);
+	it('nennt Briefwahl-Gruppen (Urne + Briefwahlbezirk zusammen) auf Stimmbezirks-Ebene (Story 17)', () => {
+		expect(aggregationHinweisText('stimmbezirk')).toMatch(/Briefwahl-Gruppen/);
+		expect(aggregationHinweisText('stimmbezirk')).toMatch(/Briefwahlbezirk/);
+	});
+
+	it('nennt die anteilige Briefwahl-Schätzung auf Kiez-Ebene (Story 17)', () => {
+		expect(aggregationHinweisText('kiez')).toMatch(/Briefwahl anteilig/);
 	});
 });
 

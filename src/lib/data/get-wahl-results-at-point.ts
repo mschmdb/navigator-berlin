@@ -14,7 +14,6 @@ export type Top5Entry = {
 export type LevelResults = {
 	available: boolean;
 	top5: Top5Entry[] | null;
-	isBriefwahlAggregat?: boolean;
 };
 
 export type WahlListEntry = {
@@ -34,6 +33,8 @@ export type WahlListEntry = {
 export type WahlResultBundle = {
 	wahl: WahlListEntry;
 	uwbId: string | null;
+	/** Briefwahl-Gruppen-ID der Urne am Punkt (Story 17), `null` ohne Gruppen-Zuordnung. */
+	gruppeId: string | null;
 	levels: Record<LevelKey, LevelResults>;
 };
 

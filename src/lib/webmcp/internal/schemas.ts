@@ -461,7 +461,12 @@ export const VOTING_DISTRICT_GEOMETRY_OUTPUT_JSON_SCHEMA = {
 			properties: {
 				district_id: { type: 'string' },
 				year: { type: 'number' },
-				bezirk_code: { type: 'string' }
+				bezirk_code: { type: 'string' },
+				is_gruppe: {
+					type: 'boolean',
+					description:
+						'True when the geometry is the dissolved Briefwahl-Gruppe (voting district merged with its postal-voting district), false when it falls back to the single voting district.'
+				}
 			},
 			required: ['district_id', 'year']
 		}

@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir, unlink, readdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fetchSbbGeoZip, extractShapefilePack } from './wahlen/lib/sbb-geo-fetcher.js';
-import { shapefileToGeoJSON } from './wahlen/lib/sbb-geo-pipeline.js';
+import { shapefileToGeoJSON, dissolveGruppen } from './wahlen/lib/sbb-geo-pipeline.js';
 import { GEO_SOURCES, type GeoSource } from './wahlen/lib/sbb-geo-sources.js';
 import { hashedFilename, sha256Hex } from './lib/hash.js';
 import { ManifestSchema, validateManifest } from './lib/manifest.js';
@@ -15,20 +15,16 @@ function manifestSlugFor(source: GeoSource): string {
 	return `wahlbezirke-${source.slug}`;
 }
 
-async function buildOne(source: GeoSource): Promise<LayerEntry> {
-	const t0 = Date.now();
-	const tag = `[build-wahl-geo] ${source.slug}`;
-	console.log(`${tag} fetch ${source.download}`);
-	const zip = await fetchSbbGeoZip(source.download);
-	console.log(`${tag} zip bytes=${zip.byteLength}`);
+/** Story 17: Slug der dissolvierten Briefwahl-Gruppen-Fläche je Geo-Slug. */
+function gruppenSlugFor(source: GeoSource): string {
+	return `wahlgruppen-${source.slug}`;
+}
 
-	const pack = extractShapefilePack(zip);
-	console.log(`${tag} shapefile baseName=${pack.baseName}`);
-
-	const geojsonStr = await shapefileToGeoJSON(pack);
-	const content = Buffer.from(geojsonStr, 'utf-8');
-
-	const slug = manifestSlugFor(source);
+async function writeLayerFile(
+	slug: string,
+	content: Buffer,
+	tag: string
+): Promise<{ filename: string }> {
 	const filename = hashedFilename(slug, content, 'geojson');
 	const outPath = join(LAYERS_DIR, filename);
 	await mkdir(LAYERS_DIR, { recursive: true });
@@ -45,11 +41,41 @@ async function buildOne(source: GeoSource): Promise<LayerEntry> {
 
 	await writeFile(outPath, content);
 	console.log(`${tag} wrote ${filename} bytes=${content.byteLength}`);
+	return { filename };
+}
 
-	const fc = JSON.parse(geojsonStr) as { features?: unknown[] };
-	const featureCount = fc.features?.length ?? 0;
+/**
+ * Geometrie-Typ aus dem tatsächlichen Feature-Inhalt ableiten statt hart
+ * `'Polygon'` anzunehmen (Review-Fund): der Dissolve-Schritt
+ * (`dissolveGruppen`) kann aus mehreren Polygon-Urnen eine zusammen-
+ * hängende MultiPolygon-Gruppenfläche machen. Prüft ALLE Features (nicht
+ * nur das erste), weil Dissolve-Output je Gruppe zwischen Polygon (eine
+ * zusammenhängende Fläche) und MultiPolygon (getrennte Teilflächen)
+ * wechseln kann.
+ */
+function detectGeometryType(content: Buffer): 'Polygon' | 'MultiPolygon' {
+	try {
+		const fc = JSON.parse(content.toString('utf-8')) as {
+			features?: { geometry?: { type?: string } | null }[];
+		};
+		const hasMultiPolygon = (fc.features ?? []).some(
+			(f) => f.geometry?.type === 'MultiPolygon'
+		);
+		return hasMultiPolygon ? 'MultiPolygon' : 'Polygon';
+	} catch {
+		return 'Polygon';
+	}
+}
 
-	const entry: LayerEntry = {
+function buildLayerEntry(params: {
+	slug: string;
+	filename: string;
+	content: Buffer;
+	featureCount: number;
+	source: GeoSource;
+}): LayerEntry {
+	const { slug, filename, content, featureCount, source } = params;
+	return {
 		slug,
 		filename,
 		sourceUrl: source.live,
@@ -58,7 +84,7 @@ async function buildOne(source: GeoSource): Promise<LayerEntry> {
 		sha256: sha256Hex(content),
 		bundleGroup: 'H: Wahldaten',
 		zoomThresholds: { min: 13, max: 17 },
-		geometryType: 'Polygon',
+		geometryType: detectGeometryType(content),
 		featureCount,
 		// Wahl-Geometrien sind kein generischer Inspector-Layer. wahl-section.svelte
 		// konsumiert sie direkt via api/wahl/results-at-point. inspectorRelevant=false
@@ -66,10 +92,47 @@ async function buildOne(source: GeoSource): Promise<LayerEntry> {
 		inspectorRelevant: false,
 		mapRelevant: false
 	};
+}
+
+async function buildOne(source: GeoSource): Promise<LayerEntry[]> {
+	const t0 = Date.now();
+	const tag = `[build-wahl-geo] ${source.slug}`;
+	console.log(`${tag} fetch ${source.download}`);
+	const zip = await fetchSbbGeoZip(source.download);
+	console.log(`${tag} zip bytes=${zip.byteLength}`);
+
+	const pack = extractShapefilePack(zip);
+	console.log(`${tag} shapefile baseName=${pack.baseName}`);
+
+	const geojsonStr = await shapefileToGeoJSON(pack);
+	const content = Buffer.from(geojsonStr, 'utf-8');
+	const slug = manifestSlugFor(source);
+	const { filename } = await writeLayerFile(slug, content, tag);
+	const fc = JSON.parse(geojsonStr) as { features?: unknown[] };
+	const featureCount = fc.features?.length ?? 0;
+	const urnenEntry = buildLayerEntry({ slug, filename, content, featureCount, source });
+
+	// Story 17: dissolvierte Briefwahl-Gruppen-Fläche aus derselben (bereits
+	// simplifizierten) Urnen-GeoJSON -- kein zweiter Shapefile-Fetch nötig.
+	const gruppenSlug = gruppenSlugFor(source);
+	const gruppenGeojsonStr = await dissolveGruppen(geojsonStr, source.slug);
+	const gruppenContent = Buffer.from(gruppenGeojsonStr, 'utf-8');
+	const { filename: gruppenFilename } = await writeLayerFile(gruppenSlug, gruppenContent, tag);
+	const gruppenFc = JSON.parse(gruppenGeojsonStr) as { features?: unknown[] };
+	const gruppenFeatureCount = gruppenFc.features?.length ?? 0;
+	const gruppenEntry = buildLayerEntry({
+		slug: gruppenSlug,
+		filename: gruppenFilename,
+		content: gruppenContent,
+		featureCount: gruppenFeatureCount,
+		source
+	});
 
 	const dt = ((Date.now() - t0) / 1000).toFixed(1);
-	console.log(`${tag} done in ${dt}s features=${featureCount}`);
-	return entry;
+	console.log(
+		`${tag} done in ${dt}s features=${featureCount} gruppen=${gruppenFeatureCount}`
+	);
+	return [urnenEntry, gruppenEntry];
 }
 
 async function loadManifest(): Promise<Manifest> {
@@ -115,8 +178,8 @@ async function main(): Promise<void> {
 
 	let manifest = await loadManifest();
 	for (const source of targets) {
-		const entry = await buildOne(source);
-		manifest = upsertLayer(manifest, entry);
+		const entries = await buildOne(source);
+		for (const entry of entries) manifest = upsertLayer(manifest, entry);
 	}
 	await saveManifest(manifest);
 	console.log(`[build-wahl-geo] manifest updated: ${MANIFEST_PATH}`);

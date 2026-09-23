@@ -1,5 +1,6 @@
 export * from './wahl.js';
 export * from './stimmbezirk.js';
+export * from './wahl-stimmbezirk-gruppe.js';
 export * from './partei.js';
 export * from './partei-alias.js';
 export * from './ergebnis.js';

@@ -66,28 +66,40 @@ export const GET: RequestHandler = async ({ url }) => {
 		);
 	}
 	const manifest = await loadManifest();
-	const layer = manifest.layers.find((l) => l.slug === `wahlbezirke-${geoSlug}`);
-	if (!layer) {
+	const urnenLayer = manifest.layers.find((l) => l.slug === `wahlbezirke-${geoSlug}`);
+	const gruppenLayer = manifest.layers.find((l) => l.slug === `wahlgruppen-${geoSlug}`);
+	if (!urnenLayer) {
 		return new Response(JSON.stringify({ error: 'layer_not_found', geoSlug }), {
 			status: 404,
 			headers: { 'content-type': 'application/json' }
 		});
 	}
-	const fc = await loadFc(layer.filename);
-	for (const f of fc.features) {
+	const urnenFc = await loadFc(urnenLayer.filename);
+	for (const f of urnenFc.features) {
 		const geom = f.geometry as Polygon | MultiPolygon | null;
 		if (!geom || (geom.type !== 'Polygon' && geom.type !== 'MultiPolygon')) continue;
 		const props = (f.properties ?? {}) as Record<string, unknown>;
 		const candidates = candidateDbUwbIds(props);
 		if (!candidates.includes(districtId)) continue;
 		const bezirkCode = typeof props.BEZ === 'string' ? props.BEZ.padStart(2, '0') : null;
+
+		// Story 17 (Briefwahl-Gruppen als kleinste Kartenebene): die Karte
+		// zeigt keine einzelne Urnen-Fläche mehr, sondern die dissolvierte
+		// Gruppen-Fläche (Urne + ihre Geschwister-Urnen + Briefwahlbezirk).
+		// `briefwahlMatchKey` vergleicht rohe BEZ+BWB*-Werte statt einer
+		// wahlSlug-formatierten Gruppen-ID -- diese Route kennt nur `year`
+		// (mehrdeutig zwischen btw/agh/bvv), nicht den wahlSlug.
+		const gruppenGeom = gruppenLayer ? await findGruppenGeometry(gruppenLayer, props) : null;
+		const geometry = gruppenGeom ?? geom;
+
 		const feature: Feature = {
 			type: 'Feature',
-			geometry: geom,
+			geometry,
 			properties: {
 				district_id: districtId,
 				year,
-				bezirk_code: bezirkCode
+				bezirk_code: bezirkCode,
+				is_gruppe: gruppenGeom !== null
 			}
 		};
 		return new Response(JSON.stringify(feature), {
@@ -111,3 +123,38 @@ export const GET: RequestHandler = async ({ url }) => {
 		}
 	);
 };
+
+/** Roher Vergleichs-Schlüssel BEZ+Briefwahlbezirk-Suffix aus welchem BWB*-Feld
+ * auch immer vorhanden ist (BWB3 bevorzugt, dann BWB2, dann BWB) -- identisch
+ * auf Urnen- UND (dissolvierten) Gruppen-Features, weil der Dissolve-Schritt
+ * (`sbb-geo-pipeline.ts#dissolveGruppen`) diese Felder unverändert kopiert. */
+function briefwahlMatchKey(props: Record<string, unknown>): string | null {
+	const bez = typeof props.BEZ === 'string' ? props.BEZ.padStart(2, '0') : null;
+	if (!bez) return null;
+	const suffix =
+		typeof props.BWB3 === 'string'
+			? props.BWB3
+			: typeof props.BWB2 === 'string'
+				? props.BWB2
+				: typeof props.BWB === 'string'
+					? props.BWB
+					: null;
+	if (!suffix) return null;
+	return `${bez}|${suffix}`;
+}
+
+async function findGruppenGeometry(
+	gruppenLayer: { filename: string },
+	urneProps: Record<string, unknown>
+): Promise<Polygon | MultiPolygon | null> {
+	const key = briefwahlMatchKey(urneProps);
+	if (!key) return null;
+	const fc = await loadFc(gruppenLayer.filename);
+	for (const f of fc.features) {
+		const props = (f.properties ?? {}) as Record<string, unknown>;
+		if (briefwahlMatchKey(props) !== key) continue;
+		const geom = f.geometry as Polygon | MultiPolygon | null;
+		if (geom && (geom.type === 'Polygon' || geom.type === 'MultiPolygon')) return geom;
+	}
+	return null;
+}

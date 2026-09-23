@@ -22,7 +22,8 @@ import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson'
 import { loadManifest } from '$lib/data/manifest.js';
 import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
 import { buildIndex, type FeatureIndex } from '$lib/data/internal/spatial-index.js';
-import { dbUwbIdFromGeo, type GeoUwbProps } from '$lib/data/wahl-geo-mapping.js';
+import { gruppeIdFromGeo, type GeoUwbProps } from '$lib/data/wahl-geo-mapping.js';
+import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
 import type { WinnerApiRow } from './winner-map-data.js';
 
 export type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error';
@@ -129,8 +130,11 @@ export class StimmbezirkLoader {
 		this.geometryStatus = 'loading';
 		try {
 			const manifest = await loadManifest(this.#fetchFn);
-			const layer = manifest.layers.find((l) => l.slug === `wahlbezirke-${geoSlug}`);
-			if (!layer) throw new Error(`wahlbezirke-${geoSlug}-Layer fehlt im Manifest`);
+			// Story 17: die kleinste Kartenebene ist die dissolvierte Briefwahl-
+			// Gruppen-Fläche, nicht mehr die einzelne Urne (`wahlgruppen-<geoSlug>`,
+			// gebaut in `sbb-geo-pipeline.ts#dissolveGruppen`).
+			const layer = manifest.layers.find((l) => l.slug === `wahlgruppen-${geoSlug}`);
+			if (!layer) throw new Error(`wahlgruppen-${geoSlug}-Layer fehlt im Manifest`);
 			const fc = await fetchLayer(layer.filename, this.#fetchFn);
 			const next: StimmbezirkGeometryState = { geoSlug, wahlSlug, fc, index: buildIndex(fc) };
 			this.#geometryCache[geoSlug] = next;
@@ -143,10 +147,9 @@ export class StimmbezirkLoader {
 		}
 	}
 
-	/** Point-in-Polygon auf der geladenen Geometrie, liefert die DB-uwbId oder `null`. */
-	resolveAddress(lat: number, lng: number): string | null {
+	#findFeature(lat: number, lng: number): Feature<Polygon | MultiPolygon> | null {
 		if (!this.geometry) return null;
-		const { fc, index, wahlSlug } = this.geometry;
+		const { fc, index } = this.geometry;
 		const candidates = index.search({
 			minX: lng - 0.001,
 			minY: lat - 0.001,
@@ -156,10 +159,32 @@ export class StimmbezirkLoader {
 		const queryPoint = point([lng, lat]);
 		for (const cand of candidates) {
 			const feature = fc.features[cand.featureIndex] as Feature<Polygon | MultiPolygon>;
-			if (booleanPointInPolygon(queryPoint, feature)) {
-				return dbUwbIdFromGeo((feature.properties ?? {}) as GeoUwbProps, wahlSlug);
-			}
+			if (booleanPointInPolygon(queryPoint, feature)) return feature;
 		}
 		return null;
+	}
+
+	/** Point-in-Polygon auf der geladenen Gruppen-Geometrie, liefert die
+	 * Briefwahl-Gruppen-ID oder `null`. */
+	resolveAddress(lat: number, lng: number): string | null {
+		if (!this.geometry) return null;
+		const feature = this.#findFeature(lat, lng);
+		if (!feature) return null;
+		return gruppeIdFromGeo((feature.properties ?? {}) as GeoUwbProps, this.geometry.wahlSlug);
+	}
+
+	/** Wie `resolveAddress`, liefert aber den Gruppen-Anzeige-Namen
+	 * ("Stimmbezirke 726, 727 und Briefwahl 7P") statt der rohen Gruppen-ID
+	 * -- für nutzersichtbare Hinweistexte (Review-Fund: der Adress-Hinweis
+	 * zeigte bisher die rohe uwbId/Gruppen-ID statt der benannten Gruppe). */
+	resolveAddressLabel(lat: number, lng: number): string | null {
+		if (!this.geometry) return null;
+		const feature = this.#findFeature(lat, lng);
+		if (!feature) return null;
+		const props = (feature.properties ?? {}) as GeoUwbProps;
+		const gruppeId = gruppeIdFromGeo(props, this.geometry.wahlSlug);
+		if (!gruppeId) return null;
+		const members = props.MEMBERS;
+		return gruppenAnzeigeName(gruppeId, typeof members === 'string' ? members : undefined);
 	}
 }

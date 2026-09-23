@@ -83,3 +83,15 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
   summary: Flaky Test `winner-map.svelte.test.ts:347` (Adress-Hint „Hansaviertel hervorgehoben.“) stabilisieren; dazu die Unhandled Rejection in `wahl-bezirk-choropleth.svelte` beim Unmount (async fetch nach Container-Abbau).
   evidence: Voller Vitest-Lauf 23.09. zweimal rot (Matcher-Timeout unter Last), isoliert 3/3 grün; Story 15 ändert an der Datei nur Fixture-Felder. Choropleth-Rejection meldete der Story-15-Agent aus `wahl-detail-page.svelte.test.ts`.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/17-briefwahl-gruppen.md`
+  summary: Gruppen-Gate in `check-wahl-data.ts` als pure Funktion testen und vor dem ersten Prod-Deploy gegen eine Alt-DB ohne `wahl_stimmbezirk_gruppe` prüfen.
+  evidence: maybe-false (medium, unverifiziert). Fehlt die Bedingung, überspringt der Prod-Build `data:wahl-kiez`, und die Stimmbezirks-Karte bleibt leer.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/17-briefwahl-gruppen.md`
+  summary: Portal-Hero „Datenstand“ um „Landeswahlleiterin Berlin“ ergänzen.
+  evidence: Browser-Check 23.09.: Zeile nennt nur Bundeswahlleiterin und Amt für Statistik, obwohl AGH/BVV 2026 von wahlen-berlin.de stammen (Rest aus Story 15).
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/17-briefwahl-gruppen.md`
+  summary: `tests/e2e/wahl-flow.e2e.ts` reparieren: alle 5 Tests hängen am Klick in die Adresssuche auf `/explore` („element was detached from the DOM“, 30 s Timeout).
+  evidence: 23.09. auf Story-17-Branch und auf `main` vor Story 17 (6e5eb13, eigener Worktree-Build) identisch 5/5 rot; vorbestehend, nicht Teil des bisher geprüften E2E-Trios.

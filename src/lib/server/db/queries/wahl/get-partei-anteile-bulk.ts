@@ -71,19 +71,18 @@ export async function getParteiAnteileBulk(
 
 /** Identisches Row-Shape zu `StimmbezirkWinner` (get-stimmbezirks-winners.ts). */
 export type StimmbezirkParteiAnteil = {
-	uwbId: string;
+	gruppeId: string;
 	parteiKurzname: string;
 	parteiVollname: string;
 	farbeHex: string;
 	stimmen: number;
 	anteil: number;
-	istBriefwahlAggregat: boolean;
 };
 
 /**
- * Stimmbezirks-Variante (Muster `get-stimmbezirks-winners.ts`): Anteil EINER
- * Partei je Stimmbezirk einer Wahl, OHNE `DISTINCT ON` (eine Row je
- * Stimmbezirk × Partei statt eine Auswahl unter allen Parteien).
+ * Gruppen-Variante (Story 17, Muster `get-stimmbezirks-winners.ts`): Anteil
+ * EINER Partei je Briefwahl-Gruppe einer Wahl, OHNE `DISTINCT ON` (eine Row
+ * je Gruppe × Partei statt eine Auswahl unter allen Parteien).
  */
 export async function getParteiAnteileStimmbezirk(
 	wahlId: number,
@@ -91,34 +90,43 @@ export async function getParteiAnteileStimmbezirk(
 ): Promise<StimmbezirkParteiAnteil[]> {
 	if (!process.env.DATABASE_URL) return [];
 	const rows = await getDb().execute<{
-		uwb_id: string;
+		gruppe_id: string;
 		kurzname: string;
 		vollname: string;
 		farbe_hex: string;
 		stimmen: number;
 		anteil: number;
-		ist_briefwahl_aggregat: boolean;
 	}>(sql`
-		SELECT
-			e.uwb_id,
-			p.kurzname,
-			p.vollname,
-			p.farbe_hex,
-			e.stimmen,
-			e.anteil,
-			e.ist_briefwahl_aggregat
-		FROM ergebnis e
-		JOIN partei p ON p.id = e.partei_id
-		WHERE e.wahl_id = ${wahlId} AND p.kurzname = ${partei}
-		ORDER BY e.uwb_id
+		WITH gruppen_summen AS (
+			SELECT
+				g.gruppe_id,
+				e.partei_id,
+				SUM(e.stimmen)::int AS stimmen
+			FROM ergebnis e
+			JOIN wahl_stimmbezirk_gruppe g ON g.wahl_id = e.wahl_id AND g.uwb_id = e.uwb_id
+			WHERE e.wahl_id = ${wahlId}
+			GROUP BY g.gruppe_id, e.partei_id
+		),
+		mit_anteil AS (
+			SELECT
+				gruppe_id,
+				partei_id,
+				stimmen,
+				(stimmen::float / NULLIF(SUM(stimmen) OVER (PARTITION BY gruppe_id), 0))::real AS anteil
+			FROM gruppen_summen
+		)
+		SELECT m.gruppe_id, p.kurzname, p.vollname, p.farbe_hex, m.stimmen, m.anteil
+		FROM mit_anteil m
+		JOIN partei p ON p.id = m.partei_id
+		WHERE p.kurzname = ${partei}
+		ORDER BY m.gruppe_id
 	`);
 	return rows.map((r) => ({
-		uwbId: r.uwb_id,
+		gruppeId: r.gruppe_id,
 		parteiKurzname: r.kurzname,
 		parteiVollname: r.vollname,
 		farbeHex: r.farbe_hex,
 		stimmen: r.stimmen,
-		anteil: r.anteil,
-		istBriefwahlAggregat: r.ist_briefwahl_aggregat
+		anteil: r.anteil
 	}));
 }

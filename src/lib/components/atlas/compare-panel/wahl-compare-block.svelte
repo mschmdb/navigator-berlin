@@ -96,8 +96,15 @@
 
 	const sameAggregat = $derived.by(() => {
 		if (selectedLevel === 'stimmbezirk') {
+			// Story 17: die kleinste Kartenebene ist die Briefwahl-Gruppe, nicht
+			// die einzelne Urne -- zwei Adressen mit unterschiedlicher `uwbId`
+			// (Urne) können trotzdem zur selben Gruppe gehören (Review-Fund:
+			// verglich bisher `uwbId`, meldete "verschieden" auch innerhalb
+			// derselben Gruppe).
 			return (
-				bundleA?.uwbId !== null && bundleA?.uwbId !== undefined && bundleA.uwbId === bundleB?.uwbId
+				bundleA?.gruppeId !== null &&
+				bundleA?.gruppeId !== undefined &&
+				bundleA.gruppeId === bundleB?.gruppeId
 			);
 		}
 		if (selectedLevel === 'kiez') {
@@ -119,9 +126,11 @@
 
 	const jahr = $derived(bundleA?.wahl.jahr ?? bundleB?.wahl.jahr ?? null);
 
-	const isBriefwahlContext = $derived(
-		selectedLevel === 'stimmbezirk' && jahr !== null && jahr < 2021
-	);
+	// Stimmbezirks-Werte sind für jede Wahl mit Geometrie echte Gruppen-
+	// Summen aus Urne + Briefwahlbezirk, kein Caveat nötig. Kiez-Werte
+	// verteilen die Briefwahl einer Gruppe anteilig nach Wahlberechtigten
+	// auf ihre Urnen: eine Schätzung, keine amtliche Aufteilung.
+	const isKiezBriefwahlSchaetzung = $derived(selectedLevel === 'kiez');
 
 	function formatPct(n: number): string {
 		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
@@ -207,7 +216,9 @@
 		</p>
 
 		<BriefwahlMarker
-			showBadge={isBriefwahlContext}
+			showBadge={isKiezBriefwahlSchaetzung}
+			tooltip="Kiez-Werte verteilen die Briefwahl einer Gruppe anteilig nach Wahlberechtigten auf ihre Urnen: eine Schätzung, keine amtliche Aufteilung."
+			label="Briefwahl geschätzt"
 			methodikHref={`${methodikHref}#wahldaten-briefwahl`}
 			testid="wahl-compare-briefwahl-marker"
 		/>
@@ -218,7 +229,7 @@
 				data-testid="wahl-compare-same-aggregat"
 			>
 				{selectedLevel === 'stimmbezirk'
-					? 'Beide Adressen liegen im selben Stimmbezirk · Werte identisch auf dieser Ebene'
+					? 'Beide Adressen liegen in derselben Briefwahl-Gruppe · Werte identisch auf dieser Ebene'
 					: selectedLevel === 'kiez'
 						? 'Beide Adressen liegen im selben Kiez · für Adress-Unterschiede die Ebene Stimmbezirk wählen'
 						: 'Beide Adressen liegen im selben Bezirk · für feinere Unterschiede die Ebene Kiez oder Stimmbezirk wählen'}

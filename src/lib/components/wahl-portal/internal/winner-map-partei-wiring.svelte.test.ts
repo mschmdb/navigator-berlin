@@ -64,8 +64,8 @@ const MANIFEST = {
 	generatedAt: '2026-05-16T06:56:28.400Z',
 	layers: [
 		layerMeta({
-			slug: 'wahlbezirke-bt25',
-			filename: 'wahlbezirke-bt25.cccccccc.geojson',
+			slug: 'wahlgruppen-bt25',
+			filename: 'wahlgruppen-bt25.cccccccc.geojson',
 			featureCount: 2
 		})
 	]
@@ -88,8 +88,16 @@ function polygon() {
 const STIMMBEZIRK_FC = {
 	type: 'FeatureCollection',
 	features: [
-		{ type: 'Feature', geometry: polygon(), properties: { BWK: '75', BEZ: '01', UWB3: '100' } },
-		{ type: 'Feature', geometry: polygon(), properties: { BWK: '75', BEZ: '01', UWB3: '101' } }
+		{
+			type: 'Feature',
+			geometry: polygon(),
+			properties: { BWK: '75', BEZ: '01', BWB3: '1A', MEMBERS: '100' }
+		},
+		{
+			type: 'Feature',
+			geometry: polygon(),
+			properties: { BWK: '75', BEZ: '01', BWB3: '1B', MEMBERS: '101' }
+		}
 	]
 };
 
@@ -127,15 +135,15 @@ function winnersResponse(rows: Array<{ gebiet_slug: string; partei: string; ante
 	};
 }
 
-// dbUwbIdFromGeo('bt25', {BWK:'75',BEZ:'01',UWB3:'100'}) -> `${BWK}-${BEZ}-${UWB3}-0`.
+// gruppeIdFromGeo('bt25', {BWK:'75',BEZ:'01',BWB3:'1A'}) -> `${BWK}-${BEZ}-${BWB3}-5`.
 const GEWINNER_RESPONSE = winnersResponse([
-	{ gebiet_slug: '075-01-100-0', partei: 'SPD', anteil: 0.4 },
-	{ gebiet_slug: '075-01-101-0', partei: 'CDU', anteil: 0.3 }
+	{ gebiet_slug: '075-01-1A-5', partei: 'SPD', anteil: 0.4 },
+	{ gebiet_slug: '075-01-1B-5', partei: 'CDU', anteil: 0.3 }
 ]);
 
 const SPD_RESPONSE = winnersResponse([
-	{ gebiet_slug: '075-01-100-0', partei: 'SPD', anteil: 0.089 },
-	{ gebiet_slug: '075-01-101-0', partei: 'SPD', anteil: 0.349 }
+	{ gebiet_slug: '075-01-1A-5', partei: 'SPD', anteil: 0.089 },
+	{ gebiet_slug: '075-01-1B-5', partei: 'SPD', anteil: 0.349 }
 ]);
 
 function fakeFetch(): typeof fetch {
@@ -147,7 +155,7 @@ function fakeFetch(): typeof fetch {
 				headers: { 'content-type': 'application/json' }
 			});
 		}
-		if (url.includes('wahlbezirke-bt25.cccccccc.geojson')) {
+		if (url.includes('wahlgruppen-bt25.cccccccc.geojson')) {
 			return new Response(JSON.stringify(STIMMBEZIRK_FC), {
 				status: 200,
 				headers: { 'content-type': 'application/json' }

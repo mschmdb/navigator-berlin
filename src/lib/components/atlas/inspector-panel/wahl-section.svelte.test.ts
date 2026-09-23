@@ -28,6 +28,7 @@ function makeBundle(overrides: Partial<WahlResultBundle> = {}): WahlResultBundle
 			sourceUpdatedAt: null
 		},
 		uwbId: '075-01-100-0',
+		gruppeId: '075-01-1A-5',
 		levels: {
 			stimmbezirk: makeLevel([
 				{ kurzname: 'SPD', vollname: 'SPD', farbeHex: '#E3000F', stimmen: 300, anteil: 0.3 },
@@ -212,7 +213,7 @@ describe('WahlSection', () => {
 			.toHaveTextContent('Landeswahlleiterin Berlin');
 	});
 
-	it('zeigt BriefwahlMarker + Hairline auf Stimmbezirks-Level bei pre-2021-Wahl', async () => {
+	it('unterdrückt BriefwahlMarker + Hairline auf Stimmbezirks-Level auch bei pre-2021-Wahl (Story 17: Briefwahl-Gruppen gelten für alle Jahre mit Geometrie)', async () => {
 		const b = makeBundle({
 			wahl: {
 				id: 17,
@@ -230,8 +231,8 @@ describe('WahlSection', () => {
 		render(WahlSection, { results: makeResults([b]) });
 		const stimmbezirkPill = page.getByTestId('wahl-level-stimmbezirk');
 		await stimmbezirkPill.click();
-		await expect.element(page.getByTestId('briefwahl-marker')).toBeInTheDocument();
-		await expect.element(page.getByTestId('wahl-confidence-hairline')).toBeInTheDocument();
+		await expect.element(page.getByTestId('briefwahl-marker')).not.toBeInTheDocument();
+		await expect.element(page.getByTestId('wahl-confidence-hairline')).not.toBeInTheDocument();
 	});
 
 	it('unterdrückt BriefwahlMarker bei post-2021-Wahl auch auf Stimmbezirks-Level', async () => {
@@ -243,24 +244,20 @@ describe('WahlSection', () => {
 		await expect.element(page.getByTestId('wahl-confidence-hairline')).not.toBeInTheDocument();
 	});
 
-	it('unterdrückt BriefwahlMarker auf höheren Ebenen auch bei pre-2021', async () => {
-		const b = makeBundle({
-			wahl: {
-				id: 17,
-				jahr: 2017,
-				typ: 'btw',
-				stimmtyp: 'zweitstimme',
-				isRepeatElection: false,
-				parentElectionId: null,
-				sourceUrl: 'https://bundeswahlleiterin.de/dam/jcr/abc/btw17_wbz.zip',
-				license: 'dl-de/by-2.0',
-				vorlaeufig: false,
-				sourceUpdatedAt: null
-			}
-		});
-		render(WahlSection, { results: makeResults([b]) });
+	it('zeigt BriefwahlMarker auf Kiez-Ebene als Schätzungs-Hinweis (Review-Fund: Kiez-Werte enthalten anteilig verteilte Briefwahl ohne jeden Hinweis)', async () => {
+		render(WahlSection, { results: makeResults([makeBundle()]) });
 		const kiezPill = page.getByTestId('wahl-level-kiez');
 		await kiezPill.click();
+		await expect.element(page.getByTestId('briefwahl-marker')).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('briefwahl-marker-trigger'))
+			.toHaveTextContent('Briefwahl geschätzt');
+	});
+
+	it('unterdrückt BriefwahlMarker auf Bezirks-Ebene', async () => {
+		render(WahlSection, { results: makeResults([makeBundle()]) });
+		const bezirkPill = page.getByTestId('wahl-level-bezirk');
+		await bezirkPill.click();
 		await expect.element(page.getByTestId('briefwahl-marker')).not.toBeInTheDocument();
 	});
 

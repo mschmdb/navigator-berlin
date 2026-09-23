@@ -114,14 +114,22 @@ const WAHLEN_2023: WahlPortalListEntry[] = [
 	}
 ];
 
-// Story 5: Stimmbezirks-Fixture im AGH-Format (BEZ+UWB3, kein BWK/-Suffix,
-// dbUwbIdFromGeo('agh23') -> `${BEZ}W${UWB3}`). agh23 mappt per
-// geoSlugForWahl auf die ah21-Geometrie (Wiederholungswahl-Bestand).
+// Story 17: Gruppen-Fixture (dissolvierte Gruppen-Fläche) im AGH-Format
+// (BEZ+B+BWB3, gruppeIdFromGeo('agh23') -> `${BEZ}B${BWB3}`). agh23 mappt
+// per geoSlugForWahl auf die ah21-Geometrie (Wiederholungswahl-Bestand).
 const STIMMBEZIRK_FC = {
 	type: 'FeatureCollection',
 	features: [
-		{ type: 'Feature', geometry: polygon(), properties: { BEZ: '01', UWB3: '100' } },
-		{ type: 'Feature', geometry: polygon(), properties: { BEZ: '01', UWB3: '101' } }
+		{
+			type: 'Feature',
+			geometry: polygon(),
+			properties: { BEZ: '01', BWB3: '1A', MEMBERS: '100,101' }
+		},
+		{
+			type: 'Feature',
+			geometry: polygon(),
+			properties: { BEZ: '01', BWB3: '2B', MEMBERS: '200' }
+		}
 	]
 };
 
@@ -134,7 +142,7 @@ const WINNERS_STIMMBEZIRK_2023 = {
 	winners: [
 		{
 			jahr: 2023,
-			gebiet_slug: '01W100',
+			gebiet_slug: '01B1A',
 			partei: 'SPD',
 			farbe_hex: '#000000',
 			anteil: 0.4,
@@ -152,8 +160,8 @@ const MANIFEST_WITH_STIMMBEZIRK = {
 	layers: [
 		...MANIFEST.layers,
 		layerMeta({
-			slug: 'wahlbezirke-ah21',
-			filename: 'wahlbezirke-ah21.cccccccc.geojson',
+			slug: 'wahlgruppen-ah21',
+			filename: 'wahlgruppen-ah21.cccccccc.geojson',
 			featureCount: 2
 		})
 	]
@@ -552,11 +560,11 @@ describe('winner-map.svelte', () => {
 		expect(el.getAttribute('style')).toContain('background-image');
 	});
 
-	it('rendert die Stimmbezirks-Karte auf der Default-Ebene mit uwbId-Tabellen-Labels', async () => {
+	it('rendert die Stimmbezirks-Karte auf der Default-Ebene mit Gruppen-Tabellen-Labels (Story 17)', async () => {
 		const fetchFn = fakeFetch([
 			['ebene=stimmbezirk', WINNERS_STIMMBEZIRK_2023],
 			['MANIFEST.json', MANIFEST_WITH_STIMMBEZIRK],
-			['wahlbezirke-ah21', STIMMBEZIRK_FC]
+			['wahlgruppen-ah21', STIMMBEZIRK_FC]
 		]);
 		render(WinnerMapContextProbe, {
 			reihe: 'agh',
@@ -570,11 +578,13 @@ describe('winner-map.svelte', () => {
 		await expect.element(page.getByTestId('winner-map-takeaway')).toHaveTextContent(/SPD/);
 		await expect
 			.element(page.getByTestId('winner-map-aggregation-hinweis'))
-			.toHaveTextContent(/Urnenwahl/);
+			.toHaveTextContent(/Briefwahl-Gruppen/);
 		await expect.element(page.getByTestId('winner-map-fallback-hinweis')).not.toBeInTheDocument();
 
 		await page.getByTestId('table-toggle').click();
-		await expect.element(page.getByTestId('data-table')).toHaveTextContent('Stimmbezirk 01W100');
+		await expect
+			.element(page.getByTestId('data-table'))
+			.toHaveTextContent('Stimmbezirke 100, 101 und Briefwahl 1A');
 	});
 
 	it('zeigt den Fallback-Hinweis und rendert Bezirke, wenn dem Jahr die Stimmbezirks-Geometrie fehlt', async () => {

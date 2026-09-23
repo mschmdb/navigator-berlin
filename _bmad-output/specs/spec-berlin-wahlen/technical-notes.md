@@ -59,6 +59,17 @@ DSB-Legende + CSV), nicht über die SBB-XLSX-Pipeline wie 2011-2023. Details:
 6. `lint:wahl`: neue Dateien in `TARGET_PATHS` (`scripts/lint-wahl-editorial.ts:7-13`) eintragen; prüfen, ob `lint:wahl` in die `lint`-Kette gehört.
 7. Editorial-Bausteine: `editorial-disclaimer.svelte`, `data-stand-banner.svelte`, Caveat-Logik aus `get-election-result.ts:49-62`.
 
+## Briefwahl-Gruppen (Story 17, erledigt)
+
+Löst die Briefwahl-Lücke auf Stimmbezirks-/Kiez-Ebene (Zeile 8/10 oben
+teilweise überholt): kleinste Kartenebene ist jetzt die Briefwahl-Gruppe
+(Urnen-Stimmbezirke + ihr Briefwahlbezirk, Dissolve-Geometrie), Kiez-Aggregat
+verteilt Briefstimmen anteilig nach Wahlberechtigten statt sie
+auszuschließen. Löst nebenbei den CAP-15-Punkt aus Zeile 10: `wahlberechtigte`
+ist jetzt Teil des `stimmbezirk`-Schemas und wird vom Loader persistiert.
+Details: `docs/wahldaten-methodik.md` ("Briefwahl-Gruppen (Story 17)"),
+Spec: `_bmad-output/specs/spec-berlin-wahlen/stories/17-briefwahl-gruppen.md`.
+
 ## Bekannte Stolpersteine
 
 - `get_election_result` liefert `updated_at` hart als `jahr-01-01` statt `wahl.source_updated_at` (`get-election-result.ts:121`); bei Tool-Arbeit mitfixen.

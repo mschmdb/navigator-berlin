@@ -57,7 +57,8 @@ export class AddressHighlight {
 				mapCtl.highlight(getJoinedFc(), null);
 				return;
 			}
-			this.hint = `Stimmbezirk ${uwbId} hervorgehoben.`;
+			const gruppenName = sbLoader.resolveAddressLabel(s.lat, s.lng) ?? `Gruppe ${uwbId}`;
+			this.hint = `${gruppenName} hervorgehoben.`;
 			mapCtl.highlight(getJoinedFc(), uwbId);
 			return;
 		}

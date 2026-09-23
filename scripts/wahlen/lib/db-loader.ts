@@ -142,7 +142,10 @@ export async function insertStimmbezirke(
 			wahlkreis: r.wahlkreis,
 			wahlbezirk: r.wahlbezirk,
 			bezirkCode: r.bezirkCode,
-			bezirksart: r.bezirksart || null
+			bezirksart: r.bezirksart || null,
+			// Story 17 (Briefwahl-Gruppen): bisher geparst, nie persistiert --
+			// Grundlage für die anteilige Briefwahl-Verteilung im Kiez-Aggregat.
+			wahlberechtigte: r.wahlberechtigte
 		}));
 
 	let inserted = 0;
