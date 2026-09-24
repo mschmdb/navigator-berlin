@@ -41,9 +41,8 @@
 		TREND_STEIGEND_DUNKEL,
 		TREND_STEIGEND_HELL,
 		TRENDS_FILL_OPACITY,
-		VOLATILITAET_FARBE_STUFE_1,
-		VOLATILITAET_FARBE_STUFE_2_PLUS,
-		VOLATILITAET_NEUTRAL_FARBE,
+		buildVolatilitaetLegende,
+		volatilitaetTerzileFor,
 		type TrendsGebietInput,
 		type TrendsToggle,
 		type TrendsTableRow
@@ -68,12 +67,6 @@
 		{ label: 'Leicht steigend: ab +0,2 Pp./Jahr', farbe: TREND_STEIGEND_HELL },
 		{ label: 'Stark steigend: ab +1,0 Pp./Jahr', farbe: TREND_STEIGEND_DUNKEL },
 		{ label: 'Keine Daten', farbe: TREND_NEUTRAL_FARBE, opacity: NEUTRAL_OPACITY }
-	];
-	const VOLATILITAET_LEGENDE: readonly LegendeEintrag[] = [
-		{ label: 'Gering: unter 5,0 Pp.', farbe: VOLATILITAET_NEUTRAL_FARBE },
-		{ label: 'Mittel: 5,0 bis 12,0 Pp.', farbe: VOLATILITAET_FARBE_STUFE_1 },
-		{ label: 'Hoch: ab 12,0 Pp. Gesamtverschiebung', farbe: VOLATILITAET_FARBE_STUFE_2_PLUS },
-		{ label: 'Keine Daten', farbe: VOLATILITAET_NEUTRAL_FARBE, opacity: NEUTRAL_OPACITY }
 	];
 
 	function swatchStyle(farbe: string, opacity: number): string {
@@ -172,6 +165,19 @@
 			FINDER_PARTIES
 		);
 	});
+
+	/** Klassen = Drittel der Kieze dieser Reihe; Karte und Legende nutzen
+	 * dieselben Terzile (`volatilitaetTerzileFor`). */
+	const volatilitaetLegende = $derived<readonly LegendeEintrag[]>(
+		buildVolatilitaetLegende(
+			volatilitaetTerzileFor(gebieteBySlug, geometry?.slugs ?? []),
+			thinFc?.features.some((f) => f.properties.hat_daten === 0) ?? false
+		).map((e) => ({
+			label: e.label,
+			farbe: e.farbe,
+			opacity: e.keineDaten ? NEUTRAL_OPACITY : undefined
+		}))
+	);
 
 	const tableRows = $derived<TrendsTableRow[]>(thinFc ? buildTrendsTableRows(thinFc, toggle) : []);
 	const takeawayText = $derived(
@@ -351,10 +357,11 @@
 		</figure>
 
 		<ul
+			aria-describedby={toggle === 'volatilitaet' ? 'trends-kapitel-volatilitaet-hinweis' : undefined}
 			data-testid="trends-kapitel-legende"
 			class="flex flex-wrap gap-3 border border-rule bg-bg p-3 font-mono text-xs text-ink"
 		>
-			{#each toggle === 'trend' ? TREND_LEGENDE : VOLATILITAET_LEGENDE as eintrag (eintrag.label)}
+			{#each toggle === 'trend' ? TREND_LEGENDE : volatilitaetLegende as eintrag (eintrag.label)}
 				<li class="flex items-center gap-1.5">
 					<span
 						aria-hidden="true"
@@ -365,6 +372,17 @@
 				</li>
 			{/each}
 		</ul>
+		{#if toggle === 'volatilitaet'}
+			<p
+				id="trends-kapitel-volatilitaet-hinweis"
+				data-testid="trends-kapitel-volatilitaet-hinweis"
+				class="font-mono text-xs text-ink-subtle"
+			>
+				Einteilung: je ein Drittel der Kieze dieser Wahl-Reihe. Netto-Verschiebung
+				(Pedersen-Index): Summe aller Anteilsgewinne von Wahl zu Wahl, gleich der Summe der
+				Verluste. Mindestens so viele Stimmen haben die Partei gewechselt.
+			</p>
+		{/if}
 
 		{#if response}
 			<p

@@ -12,6 +12,8 @@ import {
 	TREND_NEUTRAL_FARBE,
 	TREND_STEIGEND_DUNKEL,
 	VOLATILITAET_FARBE_STUFE_1,
+	VOLATILITAET_FARBE_STUFE_2_PLUS,
+	VOLATILITAET_NEUTRAL_FARBE,
 	type TrendsGebietInput
 } from './trends-map-data.js';
 
@@ -85,6 +87,38 @@ describe('trendsFillColorExpression / trendsFillOpacityExpression', () => {
 			['==', ['get', keys.hatDaten], 1],
 			0.9,
 			0.1
+		]);
+	});
+});
+
+describe('bakeTrendsProperties Volatilität nach Terzilen', () => {
+	it('färbt drei Gebiete in drei Stufen (Live-Karte nutzt die gebackenen Properties)', () => {
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0.1, trends: [] }],
+			['b', { kiez_slug: 'b', volatilitaet: 0.2, trends: [] }],
+			['c', { kiez_slug: 'c', volatilitaet: 0.3, trends: [] }]
+		]);
+		const baked = bakeTrendsProperties(fc(3), ['a', 'b', 'c'], ['A', 'B', 'C'], gebiete, []);
+		expect(baked.features.map((f) => f.properties[VOLATILITAET_FARBE_KEY])).toEqual([
+			VOLATILITAET_NEUTRAL_FARBE,
+			VOLATILITAET_FARBE_STUFE_1,
+			VOLATILITAET_FARBE_STUFE_2_PLUS
+		]);
+	});
+
+	it('Volatilität 0 (< 2 Legislaturen) zählt als keine Daten und nicht in die Terzile', () => {
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0, trends: [] }],
+			['b', { kiez_slug: 'b', volatilitaet: 0.1, trends: [] }],
+			['c', { kiez_slug: 'c', volatilitaet: 0.2, trends: [] }],
+			['d', { kiez_slug: 'd', volatilitaet: 0.3, trends: [] }]
+		]);
+		const baked = bakeTrendsProperties(fc(4), ['a', 'b', 'c', 'd'], ['A', 'B', 'C', 'D'], gebiete, []);
+		expect(baked.features[0].properties[VOLATILITAET_HAT_DATEN_KEY]).toBe(0);
+		expect(baked.features.slice(1).map((f) => f.properties[VOLATILITAET_FARBE_KEY])).toEqual([
+			VOLATILITAET_NEUTRAL_FARBE,
+			VOLATILITAET_FARBE_STUFE_1,
+			VOLATILITAET_FARBE_STUFE_2_PLUS
 		]);
 	});
 });

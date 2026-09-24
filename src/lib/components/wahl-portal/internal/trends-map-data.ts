@@ -48,9 +48,32 @@ export const VOLATILITAET_FARBE_STUFE_2_PLUS = WECHSEL_FARBE_STUFE_2_PLUS;
 export const TREND_SCHWELLE_LEICHT = 0.2;
 export const TREND_SCHWELLE_STARK = 1.0;
 
-/** Schwellen der Volatilität (Rohwert, mittlere L1-Distanz aufeinanderfolgender Anteils-Vektoren). */
-export const VOLATILITAET_SCHWELLE_LEICHT = 0.05;
-export const VOLATILITAET_SCHWELLE_STARK = 0.12;
+/**
+ * Klassengrenzen der Volatilitäts-Karte: Terzile der angezeigten Reihe statt
+ * fester Schwellen. Feste Schwellen (früher 5/12 Pp.) lagen unter dem
+ * Minimum jeder Reihe und färbten ganz Berlin „hoch“ (Live-Fund 23.09.).
+ * Die Karte zeigt damit, welche Kieze relativ zum Rest Berlins stabiler oder
+ * wechselhafter wählen.
+ */
+export interface VolatilitaetTerzile {
+	readonly untere: number;
+	readonly obere: number;
+}
+
+function quantil(sorted: readonly number[], p: number): number {
+	const pos = (sorted.length - 1) * p;
+	const lo = Math.floor(pos);
+	const hi = Math.ceil(pos);
+	return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
+}
+
+/** Terzil-Grenzen (lineare Interpolation); `null` bei < 3 Werten oder ohne Streuung. */
+export function computeVolatilitaetTerzile(werte: readonly number[]): VolatilitaetTerzile | null {
+	if (werte.length < 3) return null;
+	const sorted = [...werte].sort((a, b) => a - b);
+	if (sorted[0] === sorted[sorted.length - 1]) return null;
+	return { untere: quantil(sorted, 1 / 3), obere: quantil(sorted, 2 / 3) };
+}
 
 /**
  * Farbe für die Trend-Karte aus `slope` (Anteil/Jahr, roh aus der API).
@@ -65,10 +88,18 @@ export function farbeForTrendSlope(slope: number): string {
 	return ppJahr <= -TREND_SCHWELLE_STARK ? TREND_FALLEND_DUNKEL : TREND_FALLEND_HELL;
 }
 
-/** Farbe für die Volatilitäts-Karte (Strukturell-Indigo, 3 Stufen). */
-export function farbeForVolatilitaet(volatilitaet: number): string {
-	if (volatilitaet < VOLATILITAET_SCHWELLE_LEICHT) return VOLATILITAET_NEUTRAL_FARBE;
-	if (volatilitaet < VOLATILITAET_SCHWELLE_STARK) return VOLATILITAET_FARBE_STUFE_1;
+/**
+ * Farbe für die Volatilitäts-Karte (Strukturell-Indigo, 3 Stufen nach
+ * Terzilen). Ohne Terzile eine einheitliche Mittelstufe: bei zu wenigen
+ * Kiezen wäre jede Drittelung Scheingenauigkeit.
+ */
+export function farbeForVolatilitaet(
+	volatilitaet: number,
+	terzile: VolatilitaetTerzile | null
+): string {
+	if (!terzile) return VOLATILITAET_FARBE_STUFE_1;
+	if (volatilitaet < terzile.untere) return VOLATILITAET_NEUTRAL_FARBE;
+	if (volatilitaet < terzile.obere) return VOLATILITAET_FARBE_STUFE_1;
 	return VOLATILITAET_FARBE_STUFE_2_PLUS;
 }
 
@@ -98,6 +129,74 @@ export interface TrendsGebietInput {
 }
 
 /**
+ * Volatilität 0 ist die Server-Semantik für „< 2 Legislaturen“ und damit
+ * kein Messwert: solche Gebiete gelten als ohne Daten.
+ */
+export function hatVolatilitaetsDaten(gebiet: TrendsGebietInput | undefined): gebiet is TrendsGebietInput {
+	return gebiet !== undefined && gebiet.volatilitaet > 0;
+}
+
+/**
+ * Terzile nur aus Gebieten, die die Karte auch zeigt (`slugs` der
+ * Geometrie) und die echte Werte haben. Karte, Legende und Takeaway rechnen
+ * damit auf derselben Menge.
+ */
+export function volatilitaetTerzileFor(
+	gebieteBySlug: ReadonlyMap<string, TrendsGebietInput>,
+	slugs: readonly string[]
+): VolatilitaetTerzile | null {
+	const werte: number[] = [];
+	for (const slug of new Set(slugs)) {
+		const gebiet = gebieteBySlug.get(slug);
+		if (hatVolatilitaetsDaten(gebiet)) werte.push(gebiet.volatilitaet);
+	}
+	return computeVolatilitaetTerzile(werte);
+}
+
+export interface VolatilitaetLegendeEintrag {
+	readonly label: string;
+	readonly farbe: string;
+	readonly keineDaten?: true;
+}
+
+function formatProzentZahl(anteil: number): string {
+	return (anteil * 100).toFixed(1).replace('.', ',');
+}
+
+function formatProzent(anteil: number): string {
+	return `${formatProzentZahl(anteil)} %`;
+}
+
+/**
+ * Legende mit den echten Spannen der Reihe. „Keine Daten“ nur, wenn die
+ * Karte solche Gebiete zeigt: sonst ähnelt der Eintrag der hellen Stufe
+ * „Stabiler“ und verwirrt (Gestalt-Ähnlichkeit). Grenzen, die gerundet
+ * gleich aussehen, ergeben keine lesbare Drittelung und fallen auf eine Stufe
+ * zurück.
+ */
+export function buildVolatilitaetLegende(
+	terzile: VolatilitaetTerzile | null,
+	hatGebieteOhneDaten: boolean
+): VolatilitaetLegendeEintrag[] {
+	const eintraege: VolatilitaetLegendeEintrag[] = [];
+	const u = terzile ? formatProzentZahl(terzile.untere) : null;
+	const o = terzile ? formatProzentZahl(terzile.obere) : null;
+	if (u === null || o === null || u === o) {
+		eintraege.push({ label: 'Netto-Verschiebung je Wahl', farbe: VOLATILITAET_FARBE_STUFE_1 });
+	} else {
+		eintraege.push(
+			{ label: `Stabiler: unter ${u} %`, farbe: VOLATILITAET_NEUTRAL_FARBE },
+			{ label: `Mittel: ${u} bis ${o} %`, farbe: VOLATILITAET_FARBE_STUFE_1 },
+			{ label: `Wechselhafter: ab ${o} %`, farbe: VOLATILITAET_FARBE_STUFE_2_PLUS }
+		);
+	}
+	if (hatGebieteOhneDaten) {
+		eintraege.push({ label: 'Keine Daten', farbe: VOLATILITAET_NEUTRAL_FARBE, keineDaten: true });
+	}
+	return eintraege;
+}
+
+/**
  * Joint Kiez-Geometrie mit der Analytik (Muster `buildWechselFeatureCollection`).
  * `toggle==='trend'` braucht die aktive Partei; ohne Partei-Eintrag (kein
  * Datenpunkt für diese Partei in diesem Kiez) bleibt das Gebiet neutral
@@ -112,11 +211,12 @@ export function buildTrendsFeatureCollection(
 	toggle: TrendsToggle,
 	aktivePartei: string
 ): TrendsFeatureCollection {
+	const terzile = toggle === 'volatilitaet' ? volatilitaetTerzileFor(gebieteBySlug, slugs) : null;
 	const features: Feature<Geometry, TrendsFeatureProperties>[] = fc.features.map((f, i) => {
 		const slug = slugs[i] ?? '';
 		const name = names[i] ?? '';
 		const gebiet = gebieteBySlug.get(slug);
-		if (!gebiet) {
+		if (!gebiet || (toggle === 'volatilitaet' && !hatVolatilitaetsDaten(gebiet))) {
 			return {
 				type: 'Feature',
 				geometry: f.geometry,
@@ -137,7 +237,7 @@ export function buildTrendsFeatureCollection(
 					gebiet_slug: slug,
 					gebiet_name: name,
 					wert: gebiet.volatilitaet,
-					farbe: farbeForVolatilitaet(gebiet.volatilitaet),
+					farbe: farbeForVolatilitaet(gebiet.volatilitaet, terzile),
 					hat_daten: 1
 				}
 			};
@@ -186,14 +286,13 @@ function formatTrendWertLabel(ppJahr: number): string {
 }
 
 /**
- * `x,x Pp. Gesamtverschiebung` (kein Vorzeichen, Volatilität ist eine
- * Magnitude): `volatilitaet × 100` ist die L1-SUMME der Anteils-Differenzen
- * über ALLE Parteien zwischen zwei Legislaturen, keine Verschiebung einer
- * einzelnen Partei -- „Gesamtverschiebung" macht das im Label explizit
- * (Review Triage Log #5, vorher methodisch irreführend als bloßes „x,x Pp.").
+ * `x,x % Netto-Verschiebung` (kein Vorzeichen, Volatilität ist eine
+ * Magnitude): Pedersen-Index, die Summe aller Anteilsgewinne zwischen zwei
+ * Legislaturen (gleich der Summe der Verluste). Bewusst nicht
+ * „Wählerwanderung“: das meint im Wahljournalismus Bruttoströme.
  */
 export function formatVolatilitaetLabel(volatilitaet: number): string {
-	return `${(volatilitaet * 100).toFixed(1).replace('.', ',')} Pp. Gesamtverschiebung`;
+	return `${formatProzent(volatilitaet)} Netto-Verschiebung`;
 }
 
 /** Coverage-Fußnote: die LOR-Kiez-Geometrie selbst ist über alle Jahre
@@ -239,5 +338,11 @@ export function buildVolatilitaetTakeaway(fc: TrendsFeatureCollection): string {
 	if (stabilste.properties.wert === wechselhafteste.properties.wert) {
 		return `Alle ${mitDaten.length} Kieze liegen bei ${formatVolatilitaetLabel(stabilste.properties.wert)} je Wahl.`;
 	}
-	return `Stabilster Kiez: ${stabilste.properties.gebiet_name} (${formatVolatilitaetLabel(stabilste.properties.wert)} je Wahl). Wechselhaftester Kiez: ${wechselhafteste.properties.gebiet_name} (${formatVolatilitaetLabel(wechselhafteste.properties.wert)} je Wahl).`;
+	const extreme = `Stabilster Kiez: ${stabilste.properties.gebiet_name} (${formatVolatilitaetLabel(stabilste.properties.wert)} je Wahl). Wechselhaftester Kiez: ${wechselhafteste.properties.gebiet_name} (${formatVolatilitaetLabel(wechselhafteste.properties.wert)} je Wahl).`;
+	const terzile = computeVolatilitaetTerzile(mitDaten.map((f) => f.properties.wert));
+	if (!terzile) return extreme;
+	const u = formatProzent(terzile.untere);
+	const o = formatProzent(terzile.obere);
+	if (u === o) return extreme;
+	return `${extreme} Ein Drittel der Kieze liegt unter ${u}, ein Drittel ab ${o}.`;
 }

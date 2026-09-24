@@ -124,14 +124,14 @@ describe('computeTrendSlope', () => {
 });
 
 describe('computeVolatilitaet', () => {
-	it('berechnet die mittlere L1-Distanz aufeinanderfolgender Vektoren', () => {
+	it('berechnet den mittleren Pedersen-Index (halbe L1-Distanz) aufeinanderfolgender Vektoren', () => {
 		const points = [
 			entry(2011, { A: 0.5, B: 0.5 }),
 			entry(2016, { A: 0.6, B: 0.4 }),
 			entry(2021, { A: 0.6, B: 0.4 })
 		];
-		// Transition 1: |0.6-0.5|+|0.4-0.5| = 0.2; Transition 2: 0
-		expect(computeVolatilitaet(points)).toBeCloseTo(0.1, 10);
+		// Transition 1: (|0.6-0.5|+|0.4-0.5|) / 2 = 0.1; Transition 2: 0
+		expect(computeVolatilitaet(points)).toBeCloseTo(0.05, 10);
 	});
 
 	it('liefert 0 mit weniger als 2 Legislaturen', () => {
@@ -145,8 +145,8 @@ describe('computeVolatilitaet', () => {
 			entry(2021, { A: 0.9, B: 0.1 }),
 			entry(2023, { A: 0.6, B: 0.4 }, { parentJahr: 2021 })
 		];
-		// effektiv: 2016 {0.5,0.5} -> 2023 {0.6,0.4}: L1 = 0.2, ein Übergang
-		expect(computeVolatilitaet(points)).toBeCloseTo(0.2, 10);
+		// effektiv: 2016 {0.5,0.5} -> 2023 {0.6,0.4}: Pedersen = 0.2 / 2, ein Übergang
+		expect(computeVolatilitaet(points)).toBeCloseTo(0.1, 10);
 	});
 });
 

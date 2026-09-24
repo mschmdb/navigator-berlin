@@ -16,6 +16,7 @@ export const wahlAnalytikKiez = pgTable(
 		stimmtyp: wahlStimmtypEnum('stimmtyp').notNull(),
 		wechselCount: integer('wechsel_count').notNull(),
 		wechselJahre: jsonb('wechsel_jahre').$type<number[]>().notNull(),
+		/** Mittlerer Pedersen-Index (halbe L1-Distanz) je Legislatur-Übergang, 0..1; 0 = < 2 Legislaturen. */
 		volatilitaet: real('volatilitaet').notNull(),
 		computedAt: timestamp('computed_at', { withTimezone: true }).notNull().defaultNow()
 	},

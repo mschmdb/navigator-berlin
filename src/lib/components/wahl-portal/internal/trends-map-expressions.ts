@@ -11,6 +11,8 @@ import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import {
 	farbeForTrendSlope,
 	farbeForVolatilitaet,
+	volatilitaetTerzileFor,
+	hatVolatilitaetsDaten,
 	TREND_NEUTRAL_FARBE,
 	VOLATILITAET_NEUTRAL_FARBE,
 	type TrendsGebietInput,
@@ -57,6 +59,7 @@ export function bakeTrendsProperties(
 	gebieteBySlug: ReadonlyMap<string, TrendsGebietInput>,
 	parteien: readonly string[]
 ): BakedTrendsFeatureCollection {
+	const terzile = volatilitaetTerzileFor(gebieteBySlug, slugs);
 	const features: Feature<Geometry, BakedTrendsProperties>[] = fc.features.map((f, i) => {
 		const slug = slugs[i] ?? '';
 		const name = names[i] ?? '';
@@ -65,8 +68,10 @@ export function bakeTrendsProperties(
 			gebiet_slug: slug,
 			gebiet_name: name,
 			[VOLATILITAET_WERT_KEY]: gebiet?.volatilitaet ?? 0,
-			[VOLATILITAET_FARBE_KEY]: gebiet ? farbeForVolatilitaet(gebiet.volatilitaet) : VOLATILITAET_NEUTRAL_FARBE,
-			[VOLATILITAET_HAT_DATEN_KEY]: gebiet ? 1 : 0
+			[VOLATILITAET_FARBE_KEY]: hatVolatilitaetsDaten(gebiet)
+				? farbeForVolatilitaet(gebiet.volatilitaet, terzile)
+				: VOLATILITAET_NEUTRAL_FARBE,
+			[VOLATILITAET_HAT_DATEN_KEY]: hatVolatilitaetsDaten(gebiet) ? 1 : 0
 		};
 		for (const partei of parteien) {
 			const keys = trendPropKeys(partei);

@@ -217,6 +217,19 @@ describe('trends-kapitel.svelte', () => {
 		await expect
 			.element(page.getByTestId('trends-kapitel-takeaway'))
 			.toHaveTextContent('Hansaviertel');
+		await expect
+			.element(page.getByTestId('trends-kapitel-takeaway'))
+			.toHaveTextContent('% Netto-Verschiebung');
+		await expect
+			.element(page.getByTestId('trends-kapitel-volatilitaet-hinweis'))
+			.toHaveTextContent('je ein Drittel der Kieze');
+		// Fixture mit weniger als 3 Kiezen: einstufige Legende statt Drittelung.
+		await expect
+			.element(page.getByTestId('trends-kapitel-legende'))
+			.toHaveTextContent('Netto-Verschiebung je Wahl');
+		await expect
+			.element(page.getByTestId('trends-kapitel-legende'))
+			.toHaveAttribute('aria-describedby', 'trends-kapitel-volatilitaet-hinweis');
 	});
 
 	it('Volatilitäts-Modus: aria-describedby zeigt auf einen sichtbaren Hinweissatz an der Partei-Radiogroup (Review Triage Log #12)', async () => {
