@@ -54,6 +54,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		kiez_slug: a.kiezSlug,
 		wechsel_count: a.wechselCount,
 		wechsel_jahre: a.wechselJahre,
+		// Pedersen-Index 0..1 (Netto-Verschiebung je Wahl), siehe docs/wahldaten-methodik.md.
 		volatilitaet: a.volatilitaet,
 		trends: trendsByKiez.get(a.kiezSlug) ?? []
 	}));

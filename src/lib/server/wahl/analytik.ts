@@ -118,8 +118,10 @@ export function computeTrendSlope(points: readonly SeriesEntry[], parteiKurzname
 }
 
 /**
- * Volatilität = mittlere L1-Distanz aufeinanderfolgender Anteils-Vektoren
- * über die effektive Legislatur-Reihe. Mit < 2 Legislaturen: 0.
+ * Volatilität = mittlerer Pedersen-Index aufeinanderfolgender Anteils-
+ * Vektoren über die effektive Legislatur-Reihe. Pedersen = halbe L1-Distanz
+ * und damit der Anteil der Stimmen, der mindestens netto die Partei
+ * gewechselt haben muss (0..1). Mit < 2 Legislaturen: 0.
  */
 export function computeVolatilitaet(points: readonly SeriesEntry[]): number {
 	const effective = mergeRepeatElections(points);
@@ -127,7 +129,7 @@ export function computeVolatilitaet(points: readonly SeriesEntry[]): number {
 
 	let total = 0;
 	for (let i = 1; i < effective.length; i++) {
-		total += l1Distance(effective[i - 1].shares, effective[i].shares);
+		total += l1Distance(effective[i - 1].shares, effective[i].shares) / 2;
 	}
 	return total / (effective.length - 1);
 }

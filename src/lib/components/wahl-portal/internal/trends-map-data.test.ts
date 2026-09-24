@@ -9,6 +9,8 @@ import {
 	farbeForTrendSlope,
 	farbeForVolatilitaet,
 	formatVolatilitaetLabel,
+	computeVolatilitaetTerzile,
+	buildVolatilitaetLegende,
 	slopeForPartei,
 	TRENDS_FILL_OPACITY,
 	TREND_FALLEND_DUNKEL,
@@ -90,11 +92,70 @@ describe('farbeForTrendSlope', () => {
 	});
 });
 
+describe('computeVolatilitaetTerzile', () => {
+	it('liefert die Terzil-Grenzen (lineare Interpolation) der übergebenen Werte', () => {
+		const t = computeVolatilitaetTerzile([0.3, 0.1, 0.2, 0.4]);
+		// sortiert 0.1..0.4, Position (n-1)*p: 1/3 -> 1.0 -> 0.2; 2/3 -> 2.0 -> 0.3
+		expect(t?.untere).toBeCloseTo(0.2, 10);
+		expect(t?.obere).toBeCloseTo(0.3, 10);
+	});
+
+	it('null bei weniger als 3 Werten oder ohne Streuung (keine sinnvolle Drittelung)', () => {
+		expect(computeVolatilitaetTerzile([])).toBeNull();
+		expect(computeVolatilitaetTerzile([0.1, 0.2])).toBeNull();
+		expect(computeVolatilitaetTerzile([0.2, 0.2, 0.2])).toBeNull();
+	});
+});
+
 describe('farbeForVolatilitaet', () => {
-	it('klassifiziert nach Schwellen', () => {
-		expect(farbeForVolatilitaet(0.01)).toBe(VOLATILITAET_NEUTRAL_FARBE);
-		expect(farbeForVolatilitaet(0.08)).toBe(VOLATILITAET_FARBE_STUFE_1);
-		expect(farbeForVolatilitaet(0.2)).toBe(VOLATILITAET_FARBE_STUFE_2_PLUS);
+	const terzile = { untere: 0.18, obere: 0.22 };
+
+	it('klassifiziert relativ zu den Terzil-Grenzen der Reihe', () => {
+		expect(farbeForVolatilitaet(0.15, terzile)).toBe(VOLATILITAET_NEUTRAL_FARBE);
+		expect(farbeForVolatilitaet(0.18, terzile)).toBe(VOLATILITAET_FARBE_STUFE_1);
+		expect(farbeForVolatilitaet(0.2, terzile)).toBe(VOLATILITAET_FARBE_STUFE_1);
+		expect(farbeForVolatilitaet(0.22, terzile)).toBe(VOLATILITAET_FARBE_STUFE_2_PLUS);
+		expect(farbeForVolatilitaet(0.28, terzile)).toBe(VOLATILITAET_FARBE_STUFE_2_PLUS);
+	});
+
+	it('ohne Terzile (zu wenige Kieze) eine einheitliche Mittelstufe statt Scheingenauigkeit', () => {
+		expect(farbeForVolatilitaet(0.05, null)).toBe(VOLATILITAET_FARBE_STUFE_1);
+		expect(farbeForVolatilitaet(0.3, null)).toBe(VOLATILITAET_FARBE_STUFE_1);
+	});
+
+	it('echte Kiez-Werte (Pedersen 9 bis 29 %) verteilen sich auf alle drei Stufen', () => {
+		const werte = [0.087, 0.12, 0.15, 0.18, 0.19, 0.2, 0.21, 0.22, 0.25, 0.287];
+		const t = computeVolatilitaetTerzile(werte);
+		const farben = new Set(werte.map((w) => farbeForVolatilitaet(w, t)));
+		expect(farben).toEqual(
+			new Set([VOLATILITAET_NEUTRAL_FARBE, VOLATILITAET_FARBE_STUFE_1, VOLATILITAET_FARBE_STUFE_2_PLUS])
+		);
+	});
+});
+
+describe('buildVolatilitaetLegende', () => {
+	it('nennt die echten Spannen der Reihe in Prozent, ohne „Keine Daten“ wenn alle Gebiete Daten haben', () => {
+		const labels = buildVolatilitaetLegende({ untere: 0.185, obere: 0.217 }, false).map((e) => e.label);
+		expect(labels).toEqual([
+			'Stabiler: unter 18,5 %',
+			'Mittel: 18,5 bis 21,7 %',
+			'Wechselhafter: ab 21,7 %'
+		]);
+	});
+
+	it('führt „Keine Daten“ nur, wenn es Gebiete ohne Daten gibt', () => {
+		const labels = buildVolatilitaetLegende({ untere: 0.185, obere: 0.217 }, true).map((e) => e.label);
+		expect(labels.at(-1)).toBe('Keine Daten');
+	});
+
+	it('ohne Terzile nur eine Stufe', () => {
+		const labels = buildVolatilitaetLegende(null, false).map((e) => e.label);
+		expect(labels).toEqual(['Netto-Verschiebung je Wahl']);
+	});
+
+	it('Grenzen, die gerundet gleich sind, fallen auf die einstufige Legende zurück', () => {
+		const labels = buildVolatilitaetLegende({ untere: 0.1851, obere: 0.1854 }, false).map((e) => e.label);
+		expect(labels).toEqual(['Netto-Verschiebung je Wahl']);
 	});
 });
 
@@ -185,8 +246,8 @@ describe('buildTrendsTableRows', () => {
 });
 
 describe('formatVolatilitaetLabel', () => {
-	it('formatiert als Pp. mit de-DE-Komma und nennt die Gesamtverschiebung', () => {
-		expect(formatVolatilitaetLabel(0.084)).toBe('8,4 Pp. Gesamtverschiebung');
+	it('formatiert als Prozent Netto-Verschiebung mit de-DE-Komma', () => {
+		expect(formatVolatilitaetLabel(0.084)).toBe('8,4 % Netto-Verschiebung');
 	});
 });
 
@@ -213,6 +274,72 @@ describe('buildTrendTakeaway', () => {
 		expect(takeaway).toContain('1 von 2');
 		expect(takeaway).toContain('steigendem');
 		expect(takeaway).toContain('fallendem');
+	});
+});
+
+describe('buildVolatilitaetTakeaway mit Terzilen', () => {
+	it('nennt die Drittel-Grenzen der Reihe', () => {
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0.1, trends: [] }],
+			['b', { kiez_slug: 'b', volatilitaet: 0.2, trends: [] }],
+			['c', { kiez_slug: 'c', volatilitaet: 0.3, trends: [] }]
+		]);
+		const trendFc = buildTrendsFeatureCollection(
+			fc(3),
+			['a', 'b', 'c'],
+			['A', 'B', 'C'],
+			gebiete,
+			'volatilitaet',
+			'SPD'
+		);
+		expect(buildVolatilitaetTakeaway(trendFc)).toContain(
+			'Ein Drittel der Kieze liegt unter 16,7 %, ein Drittel ab 23,3 %.'
+		);
+	});
+});
+
+describe('buildTrendsFeatureCollection Volatilität', () => {
+	it('Terzile nur aus Gebieten, die die Karte auch zeigt (Geometrie-Slugs)', () => {
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0.1, trends: [] }],
+			['b', { kiez_slug: 'b', volatilitaet: 0.2, trends: [] }],
+			['c', { kiez_slug: 'c', volatilitaet: 0.3, trends: [] }],
+			['x', { kiez_slug: 'x', volatilitaet: 0.05, trends: [] }]
+		]);
+		const out = buildTrendsFeatureCollection(
+			fc(3),
+			['a', 'b', 'c'],
+			['A', 'B', 'C'],
+			gebiete,
+			'volatilitaet',
+			'SPD'
+		);
+		expect(out.features.map((f) => f.properties.farbe)).toEqual([
+			VOLATILITAET_NEUTRAL_FARBE,
+			VOLATILITAET_FARBE_STUFE_1,
+			VOLATILITAET_FARBE_STUFE_2_PLUS
+		]);
+	});
+
+	it('färbt nach den Terzilen aller Gebiete der Reihe', () => {
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0.1, trends: [] }],
+			['b', { kiez_slug: 'b', volatilitaet: 0.2, trends: [] }],
+			['c', { kiez_slug: 'c', volatilitaet: 0.3, trends: [] }]
+		]);
+		const out = buildTrendsFeatureCollection(
+			fc(3),
+			['a', 'b', 'c'],
+			['A', 'B', 'C'],
+			gebiete,
+			'volatilitaet',
+			'SPD'
+		);
+		expect(out.features.map((f) => f.properties.farbe)).toEqual([
+			VOLATILITAET_NEUTRAL_FARBE,
+			VOLATILITAET_FARBE_STUFE_1,
+			VOLATILITAET_FARBE_STUFE_2_PLUS
+		]);
 	});
 });
 
@@ -245,6 +372,7 @@ describe('buildVolatilitaetTakeaway', () => {
 		const takeaway = buildVolatilitaetTakeaway(trendFc);
 		expect(takeaway).toContain('Ruhig');
 		expect(takeaway).toContain('Wechselhaft');
+		expect(takeaway).not.toContain('Drittel');
 		expect(takeaway).not.toMatch(/hochburg/i);
 	});
 
@@ -264,7 +392,7 @@ describe('buildVolatilitaetTakeaway', () => {
 		);
 		const takeaway = buildVolatilitaetTakeaway(trendFc);
 		expect(takeaway).toContain('Alle 3 Kieze liegen bei');
-		expect(takeaway).toContain('8,0 Pp. Gesamtverschiebung');
+		expect(takeaway).toContain('8,0 % Netto-Verschiebung');
 		expect(takeaway).not.toMatch(/stabilster|wechselhaftester/i);
 	});
 });
