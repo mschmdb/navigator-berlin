@@ -1,21 +1,17 @@
 import type { RequestHandler } from './$types';
 import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { hasGeometry, wahlSlugFromTypJahr } from '$lib/data/wahl-geo-mapping.js';
+import { buildWahlSlug } from '$lib/data/wahl-slug.js';
 import { sourceName } from '$lib/server/wahl/source-label.js';
-
-function buildSlug(jahr: number, typ: 'btw' | 'agh' | 'bvv', stimmtyp: string): string {
-	if (typ === 'bvv') return `${jahr}-bvv`;
-	return `${jahr}-${typ}-${stimmtyp}`;
-}
 
 export const GET: RequestHandler = async () => {
 	const list = await getWahlList();
 	const parentIdToSlug = new Map<number, string>();
 	for (const w of list) {
-		parentIdToSlug.set(w.id, buildSlug(w.jahr, w.typ, w.stimmtyp));
+		parentIdToSlug.set(w.id, buildWahlSlug({ jahr: w.jahr, typ: w.typ, stimmtyp: w.stimmtyp }));
 	}
 	const elections = list.map((w) => ({
-		slug: buildSlug(w.jahr, w.typ, w.stimmtyp),
+		slug: buildWahlSlug({ jahr: w.jahr, typ: w.typ, stimmtyp: w.stimmtyp }),
 		jahr: w.jahr,
 		typ: w.typ,
 		stimmtyp: w.stimmtyp,

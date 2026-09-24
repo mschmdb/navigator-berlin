@@ -5,7 +5,7 @@ import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for
 import { getStimmbezirksWinners } from '$lib/server/db/queries/wahl/get-stimmbezirks-winners.js';
 import { WAHL_TO_GEO, wahlSlugFromTypJahr } from '$lib/data/wahl-geo-mapping.js';
 import { sourceName } from '$lib/server/wahl/source-label.js';
-import { parseWahlSlug, buildWahlSlug, type WahlSlug } from './slug-utils.js';
+import { parseWahlSlug, buildWahlSlug, buildWahlFallbackList } from '$lib/data/wahl-slug.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
 export const prerender = true;
@@ -54,18 +54,8 @@ const STIMMTYP_LABELS = {
 
 export const entries: EntryGenerator = async () => {
 	if (!process.env.DATABASE_URL) {
-		// Build ohne DB: deterministische Fallback-Liste der 20 wahl-Rows
-		const fallback: WahlSlug[] = [];
-		for (const jahr of [2013, 2017, 2021, 2025]) {
-			fallback.push({ jahr, typ: 'btw', stimmtyp: 'erststimme' });
-			fallback.push({ jahr, typ: 'btw', stimmtyp: 'zweitstimme' });
-		}
-		for (const jahr of [2011, 2016, 2021, 2023, 2026]) {
-			fallback.push({ jahr, typ: 'agh', stimmtyp: 'erststimme' });
-			fallback.push({ jahr, typ: 'agh', stimmtyp: 'zweitstimme' });
-			fallback.push({ jahr, typ: 'bvv', stimmtyp: 'einstimme' });
-		}
-		return fallback.map((s) => ({ slug: buildWahlSlug(s) }));
+		// Build ohne DB: deterministische Fallback-Liste der 23 wahl-Rows.
+		return buildWahlFallbackList().map((s) => ({ slug: buildWahlSlug(s) }));
 	}
 	const list = await getWahlList();
 	return list.map((w) => ({

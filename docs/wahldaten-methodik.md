@@ -26,7 +26,7 @@ Quelle der Wahrheit für die Wahldaten-Pipeline in navigator.berlin. Erweitert i
 
 **AGH/BVV 2026 (vorläufig):** Wahltag 20.09.2026. Ingest lief am 23.09.2026 mit dem
 amtlichen vorläufigen Ergebnis (Stand 21.09.2026, Quelle wahlen-berlin.de).
-`wahl.vorlaeufig = true` für `agh26`/`bvv26`, Portal/`/wahl/[slug]`/Tool-Responses
+`wahl.vorlaeufig = true` für `agh26`/`bvv26`, Portal/`/berlin-wahlen/[slug]`/Tool-Responses
 zeigen die Kennzeichnung „vorläufig" plus Stand-Datum (`wahl.sourceUpdatedAt`,
 aus `Datum`/`Zeit` der Wahlbezirks-CSV berechnet).
 

@@ -57,7 +57,7 @@ describe('buildWahlShortDescription', () => {
 describe('renderWahlMarkdown', () => {
 	it('enthält URL + Methodik-Verweis', () => {
 		const md = renderWahlMarkdown(BASE);
-		expect(md).toContain('https://navigator.berlin/wahl/2025-btw-zweitstimme');
+		expect(md).toContain('https://navigator.berlin/berlin-wahlen/2025-btw-zweitstimme');
 		expect(md).toContain('https://navigator.berlin/methodik/wahldaten');
 	});
 

@@ -33,7 +33,12 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
 			if (!process.env.DATABASE_URL) return [];
 			try {
 				const list = await getWahlList();
-				return list.map((w) => ({ jahr: w.jahr, typ: w.typ, stimmtyp: w.stimmtyp }));
+				return list.map((w) => ({
+					jahr: w.jahr,
+					typ: w.typ,
+					stimmtyp: w.stimmtyp,
+					sourceUpdatedAt: w.sourceUpdatedAt ? w.sourceUpdatedAt.toISOString() : null
+				}));
 			} catch {
 				return [];
 			}

@@ -165,4 +165,33 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 		expect(sitemapUrls).toContain(`${ctx.origin}/berlin-wahlen`);
 		expect(llmsUrls).toContain(`${ctx.origin}/berlin-wahlen`);
 	});
+
+	// Review-Fund: der Wahl-Detail-Zweig (ctx.wahlen) war in diesem
+	// Konsistenz-Test ungetestet.
+	it('Story 16: /berlin-wahlen/<slug> erscheint konsistent in Sitemap und llms.txt, kein /wahl-Pfad', () => {
+		const sitemapUrls = collectPrerenderedUrls({
+			origin: ctx.origin,
+			locale: ctx.locale,
+			manifest: ctx.manifest,
+			buildTimestamp: ctx.buildTimestamp,
+			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
+		}).map((e) => e.loc);
+		const llmsUrls = collectLlmsSourceEntries({
+			...ctx,
+			wahlen: [
+				{
+					slug: '2025-btw-zweitstimme',
+					name: 'Bundestagswahl 2025 · Zweitstimme',
+					short: 'Quelle Bundeswahlleiterin',
+					markdown: '## Bundestagswahl 2025 · Zweitstimme\n'
+				}
+			]
+		}).map((e) => e.loc);
+
+		const expectedUrl = `${ctx.origin}/berlin-wahlen/2025-btw-zweitstimme`;
+		expect(sitemapUrls).toContain(expectedUrl);
+		expect(llmsUrls).toContain(expectedUrl);
+		expect(sitemapUrls.some((u) => u.includes('/wahl/'))).toBe(false);
+		expect(llmsUrls.some((u) => u.includes('/wahl/'))).toBe(false);
+	});
 });

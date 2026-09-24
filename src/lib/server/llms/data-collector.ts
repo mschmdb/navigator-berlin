@@ -19,6 +19,7 @@ import { getBezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import { getKiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
 import { getBezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
 import { sourceName as wahlSourceName } from '$lib/server/wahl/source-label.js';
+import { buildWahlSlug } from '$lib/data/wahl-slug.js';
 import { getKiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 import { loadEinwohnerAggregates } from './internal/einwohner-aggregates.js';
 import { renderBezirkMarkdown } from './bezirk-renderer.js';
@@ -221,13 +222,8 @@ async function collectWahlen(origin: string): Promise<LlmsWahlEntry[]> {
 		]);
 		const wahlen = await getWahlList();
 		const out: LlmsWahlEntry[] = [];
-		const parentIdToSlug = new Map<number, string>();
 		for (const w of wahlen) {
-			const slug = w.typ === 'bvv' ? `${w.jahr}-bvv` : `${w.jahr}-${w.typ}-${w.stimmtyp}`;
-			parentIdToSlug.set(w.id, slug);
-		}
-		for (const w of wahlen) {
-			const slug = parentIdToSlug.get(w.id) ?? `${w.jahr}-${w.typ}-${w.stimmtyp}`;
+			const slug = buildWahlSlug({ jahr: w.jahr, typ: w.typ, stimmtyp: w.stimmtyp });
 			const typLabel =
 				w.typ === 'btw' ? 'Bundestagswahl' : w.typ === 'agh' ? 'Abgeordnetenhauswahl' : 'BVV-Wahl';
 			const stimmTeil =

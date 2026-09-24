@@ -105,8 +105,8 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 		);
 		expect(response.status).toBe(200);
 		const body = await response.text();
-		// Story 3: Flag-Verdrahtung am echten Handler (featureFlags.wahlPortal=false).
-		expect(body).not.toContain('/berlin-wahlen');
+		// Story 16: Flag-Verdrahtung am echten Handler (featureFlags.wahlPortal=true seit 1A).
+		expect(body).toContain('/berlin-wahlen');
 		expect(body).toContain('<urlset');
 		expect(body).toContain('https://navigator.berlin/');
 		expect(body).toContain('https://navigator.berlin/methodik');
@@ -118,5 +118,70 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 	it('has prerender = true so it is built statically', { timeout: 20_000 }, async () => {
 		const mod = await import('../../routes/sitemap-de.xml/+server.js');
 		expect(mod.prerender).toBe(true);
+	});
+
+	// Review-Fund: die vorherigen Tests prüften nur den echten Flag-Wert
+	// (aktuell true) -- hier beide Zustände am echten Handler, gemockt statt
+	// vom aktuellen `featureFlags.wahlPortal`-Wert abhängig zu sein.
+	it('enthält /berlin-wahlen wenn featureFlags.wahlPortal=true', { timeout: 20_000 }, async () => {
+		vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
+		const mod = await import('../../routes/sitemap-de.xml/+server.js');
+		const response = await mod.GET(
+			makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
+		);
+		const body = await response.text();
+		expect(body).toContain('https://navigator.berlin/berlin-wahlen</loc>');
+	});
+
+	it('enthält KEINE /berlin-wahlen-Portalseite wenn featureFlags.wahlPortal=false', {
+		timeout: 20_000
+	}, async () => {
+		vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: false } }));
+		const mod = await import('../../routes/sitemap-de.xml/+server.js');
+		const response = await mod.GET(
+			makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
+		);
+		const body = await response.text();
+		// Nur der Portal-Hauptseiten-Eintrag hängt am Flag -- die einzelnen
+		// /berlin-wahlen/<slug>-Detailseiten (WAHL_DETAIL_SOURCE) sind
+		// unabhängig davon vorhanden, sobald `wahlen`-Daten existieren.
+		expect(body).not.toContain('https://navigator.berlin/berlin-wahlen</loc>');
+	});
+
+	// Review-Fund: `sourceUpdatedAt` (Story 16 `lastmod`-Fallback-Logik) war am
+	// echten Sitemap-Handler ungetestet.
+	it('nutzt sourceUpdatedAt als lastmod für die Wahl-Detailseite (echter Handler, gemockte DB)', {
+		timeout: 20_000
+	}, async () => {
+		const originalDatabaseUrl = process.env.DATABASE_URL;
+		process.env.DATABASE_URL = 'postgres://test/test';
+		vi.doMock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+			getWahlList: vi.fn(async () => [
+				{
+					id: 1,
+					jahr: 2026,
+					typ: 'bvv',
+					stimmtyp: 'einstimme',
+					isRepeatElection: false,
+					parentElectionId: null,
+					sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/x.csv',
+					license: 'dl-de/by-2-0',
+					vorlaeufig: true,
+					sourceUpdatedAt: new Date('2026-09-20T23:55:55.000Z')
+				}
+			])
+		}));
+		try {
+			const mod = await import('../../routes/sitemap-de.xml/+server.js');
+			const response = await mod.GET(
+				makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
+			);
+			const body = await response.text();
+			expect(body).toContain('https://navigator.berlin/berlin-wahlen/2026-bvv</loc>');
+			expect(body).toContain('<lastmod>2026-09-20T23:55:55.000Z</lastmod>');
+		} finally {
+			if (originalDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+			else process.env.DATABASE_URL = originalDatabaseUrl;
+		}
 	});
 });

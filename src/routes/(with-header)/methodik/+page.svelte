@@ -314,8 +314,10 @@
 				>/methodik/wahldaten</a
 			>
 			·
-			<a href="/wahl" class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>Übersicht aller Wahlen</a
+			<a
+				href="/berlin-wahlen#alle-wahlen"
+				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				>Alle Wahlen einzeln</a
 			>
 		</p>
 	</section>

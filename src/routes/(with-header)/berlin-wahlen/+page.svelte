@@ -35,11 +35,15 @@
 	import KapitelSection from '$lib/components/wahl-portal/kapitel-section.svelte';
 	import PortalDatenstand from '$lib/components/wahl-portal/portal-datenstand.svelte';
 	import PortalQuellen from '$lib/components/wahl-portal/portal-quellen.svelte';
+	import AlleWahlenBlock from '$lib/components/wahl-portal/alle-wahlen-block.svelte';
+	import type { PageData } from './$types';
 	import WinnerMap from '$lib/components/wahl-portal/winner-map.svelte';
 	import WechselKapitel from '$lib/components/wahl-portal/wechsel-kapitel.svelte';
 	import TrendsKapitel from '$lib/components/wahl-portal/trends-kapitel.svelte';
 	import SankeyWahljahre from '$lib/components/wahl-portal/sankey-wahljahre.svelte';
 	import SmallMultiples from '$lib/components/wahl-portal/small-multiples.svelte';
+
+	let { data }: { data: PageData } = $props();
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
@@ -208,7 +212,7 @@
 					name: 'Berliner Wahlergebnisse seit 2011',
 					description:
 						'Bundestags-, Abgeordnetenhaus- und BVV-Wahlergebnisse je Stimmbezirk, Kiez, Bezirk und Berlin gesamt.',
-					urlPath: '/wahl',
+					urlPath: '/berlin-wahlen',
 					license: 'dl-de/by-2-0'
 				}
 			]
@@ -353,5 +357,6 @@
 		subtext={METHODIK_SUBTEXT}
 	>
 		<PortalQuellen {quellen} />
+		<AlleWahlenBlock wahlen={data.alleWahlen} />
 	</KapitelSection>
 </div>

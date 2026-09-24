@@ -9,6 +9,13 @@
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import VorlaeufigBadge from '$lib/components/wahl-portal/vorlaeufig-badge.svelte';
+	import KapitelSection from '$lib/components/wahl-portal/kapitel-section.svelte';
+	import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
+	import {
+		serializePortalState,
+		DEFAULT_EBENE,
+		REIHE_LABELS
+	} from '$lib/utils/wahl-portal-url-state.js';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -23,6 +30,7 @@
 
 	const totalStimmen = $derived(data.berlin.reduce((s, e) => s + e.stimmen, 0));
 	const berlinTop5 = $derived(data.berlin.slice(0, 5));
+	const karteTitle = $derived(data.geoSlug ? 'Stimmbezirkskarte' : 'Bezirkskarte');
 
 	function formatPct(n: number): string {
 		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
@@ -37,7 +45,7 @@
 			origin,
 			items: [
 				{ name: 'Berlin', path: '/' },
-				{ name: 'Wahlen', path: '/wahl' },
+				{ name: 'Wahlen', path: '/berlin-wahlen' },
 				{ name: data.wahl.title, path: pathname }
 			]
 		})
@@ -61,6 +69,28 @@
 			inLanguage: 'de-DE'
 		})
 	);
+
+	// Entscheidung Matze 23.09. (2A): Deep-Link ins Portal mit `?reihe=&jahr=`.
+	// Erststimme hat im Portal keinen eigenen Stimmtyp-Toggle (die Karte zeigt
+	// dort immer die Zweitstimme/Einstimme, siehe `stimmtypForReihe`) -- der
+	// Link führt deshalb auf dieselbe Reihe/Jahr, ohne Stimmtyp zu wechseln.
+	// Review-Fund: der Hinweis hing vorher per `&nbsp;` im Linknamen und nannte
+	// weder Wahl noch Jahr -- Linktext nennt jetzt Reihe+Jahr, der Hinweis
+	// steht als eigener Text außerhalb des Links und ist per `aria-describedby`
+	// verknüpft statt stillschweigend im Link-Namen zu verschwinden.
+	const portalDeepLinkHref = $derived.by(() => {
+		const params = serializePortalState({
+			reihe: data.wahl.typ,
+			jahr: data.wahl.jahr,
+			ebene: DEFAULT_EBENE
+		});
+		const qs = params.toString();
+		return qs ? `/berlin-wahlen?${qs}` : '/berlin-wahlen';
+	});
+	const portalDeepLinkLabel = $derived(
+		`${REIHE_LABELS[data.wahl.typ]} ${data.wahl.jahr} im Portal ansehen`
+	);
+	const portalDeepLinkIstErststimme = $derived(data.wahl.stimmtyp === 'erststimme');
 </script>
 
 <SeoHead
@@ -81,7 +111,9 @@
 		<p class="font-mono text-xs tracking-wide text-ink-muted uppercase">
 			<a href="/" class="underline-offset-2 hover:text-ink hover:underline">Berlin</a>
 			·
-			<a href="/wahl" class="underline-offset-2 hover:text-ink hover:underline">Wahlen</a>
+			<a href="/berlin-wahlen" class="underline-offset-2 hover:text-ink hover:underline">
+				Wahlen
+			</a>
 		</p>
 		<h1
 			class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl"
@@ -105,7 +137,7 @@
 			>
 				Wiederholungswahl ·
 				<a
-					href={`/wahl/${data.wahl.parentSlug}`}
+					href={`/berlin-wahlen/${data.wahl.parentSlug}`}
 					class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>
 					Original-Wahl ansehen
@@ -113,13 +145,38 @@
 			</p>
 		{/if}
 		<p class="font-mono text-xs text-ink-muted" data-testid="wahl-detail-meta">
-			Quelle: {data.wahl.sourceName} · Lizenz {data.wahl.license}
+			Quelle: {data.wahl.sourceName} · Lizenz {data.wahl.license}{#if data.wahl.sourceUpdatedAt}
+				· Stand {formatBerlinDate(data.wahl.sourceUpdatedAt)}{/if}
 		</p>
+		<p>
+			<a
+				href={portalDeepLinkHref}
+				data-testid="wahl-detail-portal-link"
+				aria-describedby={portalDeepLinkIstErststimme
+					? 'wahl-detail-portal-link-hinweis'
+					: undefined}
+				class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
+			>
+				{portalDeepLinkLabel}
+			</a>
+		</p>
+		{#if portalDeepLinkIstErststimme}
+			<p
+				id="wahl-detail-portal-link-hinweis"
+				data-testid="wahl-detail-portal-link-hinweis"
+				class="font-mono text-[10px] text-ink-muted"
+			>
+				Das Portal zeigt die Zweitstimme; die Erststimme gibt es nur auf dieser Seite.
+			</p>
+		{/if}
 	</header>
 
-	<section data-testid="wahl-detail-berlin" class="space-y-4">
-		<h2 class="font-sans text-xl font-semibold text-ink">Berlin gesamt</h2>
-
+	<KapitelSection
+		id="detail-berlin"
+		title="Berlin gesamt"
+		testid="wahl-detail-berlin"
+		withPortalChrome={false}
+	>
 		{#if berlinTop5.length > 0 && totalStimmen > 0}
 			<div
 				class="bg-bg-muted relative h-8 w-full overflow-hidden rounded border border-rule"
@@ -187,19 +244,22 @@
 				Keine Berlin-Aggregat-Daten für diese Wahl.
 			</p>
 		{/if}
-	</section>
+	</KapitelSection>
 
-	<section data-testid="wahl-detail-choropleth" class="space-y-3">
-		<div class="flex flex-wrap items-baseline justify-between gap-2">
-			<h2 class="font-sans text-xl font-semibold text-ink">
-				{data.geoSlug ? 'Stimmbezirkskarte' : 'Bezirkskarte'}
-			</h2>
-			{#if data.geoSlug}
-				<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-					~{data.winnersByUwb.length.toLocaleString('de-DE')} Briefwahl-Gruppen
-				</span>
-			{/if}
-		</div>
+	<KapitelSection
+		id="detail-karte"
+		title={karteTitle}
+		testid="wahl-detail-choropleth"
+		withPortalChrome={false}
+	>
+		{#if data.geoSlug}
+			<p
+				class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+				data-testid="wahl-detail-choropleth-count"
+			>
+				~{data.winnersByUwb.length.toLocaleString('de-DE')} Briefwahl-Gruppen
+			</p>
+		{/if}
 		{#if data.geoSlug && data.winnersByUwb.length > 0}
 			<WahlStimmbezirkChoropleth
 				geoSlug={data.geoSlug}
@@ -216,10 +276,14 @@
 			</p>
 			<WahlBezirkChoropleth bezirke={data.bezirke} title={data.wahl.title} />
 		{/if}
-	</section>
+	</KapitelSection>
 
-	<section data-testid="wahl-detail-bezirke" class="space-y-4">
-		<h2 class="font-sans text-xl font-semibold text-ink">Top-3 je Bezirk</h2>
+	<KapitelSection
+		id="detail-bezirke"
+		title="Top-3 je Bezirk"
+		testid="wahl-detail-bezirke"
+		withPortalChrome={false}
+	>
 		<ul class="grid gap-3 sm:grid-cols-2">
 			{#each data.bezirke as bezirk (bezirk.slug)}
 				<li
@@ -254,7 +318,7 @@
 				</li>
 			{/each}
 		</ul>
-	</section>
+	</KapitelSection>
 
 	<EditorialDisclaimer variant="wahl-stimmenanteile" />
 

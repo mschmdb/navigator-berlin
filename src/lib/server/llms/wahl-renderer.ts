@@ -70,7 +70,7 @@ export function renderWahlMarkdown(input: WahlMarkdownInput): string {
 	const lines: string[] = [];
 	lines.push(`## ${input.title}`);
 	lines.push('');
-	lines.push(`URL: ${input.origin}/wahl/${input.slug}`);
+	lines.push(`URL: ${input.origin}/berlin-wahlen/${input.slug}`);
 	lines.push('');
 	lines.push(`Jahr: ${input.jahr}. Wahltyp: ${TYP_LABELS[input.typ]}.`);
 	if (input.typ !== 'bvv') {

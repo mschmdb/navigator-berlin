@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseWahlSlug, buildWahlSlug } from './slug-utils.js';
+import { parseWahlSlug, buildWahlSlug } from './wahl-slug.js';
 
 describe('parseWahlSlug', () => {
 	it('parsed BTW-Slug mit Stimmtyp', () => {
