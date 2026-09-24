@@ -17,8 +17,13 @@ export const featureFlags = Object.freeze({
 	 * Story 3 (Portal-Skeleton /berlin-wahlen): Start-Zustand `false` bis
 	 * UX-Review. Route rendert immer (kein 404 am Flag), aber `noindex` +
 	 * kein Sitemap-/llms-Eintrag solange aus.
+	 *
+	 * Story 16 (Detailseiten-Umzug): Matze-Entscheidung 23.09. (1A) auf `true`
+	 * gesetzt. Portal ist ab diesem Deploy indexierbar, in Sitemap und llms;
+	 * die `/wahl`→`/berlin-wahlen`-Redirects greifen mit dem ersten Deploy
+	 * dieses Stands (das Launch-Deploy folgt frühestens 29.09.).
 	 */
-	wahlPortal: false
+	wahlPortal: true
 });
 
 export type FeatureFlag = keyof typeof featureFlags;

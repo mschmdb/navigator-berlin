@@ -16,7 +16,7 @@ Suche eine Adresse, scrolle zum Block „Wahlverhalten hier". Umschaltbar zwisch
 
 ## Wahl-Seiten
 
-Unter [`/wahl`](/wahl) listet jede der 20 Wahl-Varianten (Erst- und Zweitstimme zählen einzeln). Pro Seite: Balken Berlin gesamt mit Top-5, Top-3 pro Bezirk und eine Karte mit allen 3500 Stimmbezirken, eingefärbt nach stärkster Partei.
+Unter [`/wahl`](/berlin-wahlen) listet jede der 20 Wahl-Varianten (Erst- und Zweitstimme zählen einzeln). Pro Seite: Balken Berlin gesamt mit Top-5, Top-3 pro Bezirk und eine Karte mit allen 3500 Stimmbezirken, eingefärbt nach stärkster Partei.
 
 ## Kiez-Verlauf
 

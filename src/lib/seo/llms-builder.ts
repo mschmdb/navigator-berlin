@@ -208,17 +208,11 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		});
 	}
 
-	// Wahl-Index + Detail-Pages (Story 6.4)
+	// Wahl-Detail-Pages (Story 6.4, Story 16: Umzug nach /berlin-wahlen/[slug])
 	if (ctx.wahlen && ctx.wahlen.length > 0) {
-		out.push({
-			loc: `${ctx.origin}/wahl`,
-			name: 'Wahl-Übersicht',
-			description: 'Alle abgedeckten Berliner Wahlen seit 2011',
-			section: 'wahl'
-		});
 		for (const w of ctx.wahlen) {
 			out.push({
-				loc: `${ctx.origin}/wahl/${w.slug}`,
+				loc: `${ctx.origin}/berlin-wahlen/${w.slug}`,
 				name: w.name,
 				description: w.short,
 				section: 'wahl'

@@ -14,7 +14,7 @@ Destillat des Bestands-Inventars vom 19.09.2026. Pfade relativ zum Repo-Root.
 
 - Queries: `src/lib/server/db/queries/wahl/` (`get-wahl-list`, `get-results-for-*`, `get-sparkline-for-kiez`, `get-stimmbezirks-winners`, `get-kiez-shares-for-wahl`). Alle mit DB-losem Fallback (leere Liste).
 - APIs: `/api/wahl/list`, `/api/wahl/results-at-point`, `/api/wahl/geometry`, `/api/wahl/kiez-shares`.
-- UI: `wahl-section.svelte` (ARIA-Muster, Caveats), `wahl-stimmbezirk-choropleth.svelte` (Winner-Farb-Backen + Opacity-Expression), `wahl-bezirk-choropleth.svelte`, `home-wahl-teaser.svelte`, `/wahl/[slug]`-Seite.
+- UI: `wahl-section.svelte` (ARIA-Muster, Caveats), `wahl-stimmbezirk-choropleth.svelte` (Winner-Farb-Backen + Opacity-Expression), `wahl-bezirk-choropleth.svelte`, `home-wahl-teaser.svelte`, `/berlin-wahlen/[slug]`-Seite.
 - Finder-Engine-Muster für GPU-Live-Umfärbung: `internal/kiez-finder-engine.ts` (`fitColorExpression`, JS-Zwilling, `NEUTRAL_METRIC`, `rankNormalize`), Daten-Bau `internal/kiez-finder-data.ts` (`buildParteiMetric`).
 - Partei-Farben: `src/lib/data/partei-farben.ts` (einzige Render-Quelle, Patterns, `wcagAaPasses`).
 - WebMCP: Tools rufen ausschließlich HTTP-APIs (`src/lib/webmcp/mount.ts` Composition-Root); Manifest via `scripts/build-webmcp-manifest.ts`.
@@ -46,7 +46,7 @@ DSB-Legende + CSV), nicht über die SBB-XLSX-Pipeline wie 2011-2023. Details:
 6. ✅ Doku, Fallback-Liste, Home-Teaser (2026er-Slugs) fortgeschrieben. OG-Images (`pnpm og:images --type=wahl`) und `list_elections`-Description-Zahl: noch offen, siehe Dev-Report.
 7. ✅ `data:rank`/`data:comparison` unberührt (Boundary, nicht angefasst).
 8. ✅ `parent_election_id`-Bug (agh23-Zweitstimme zeigte auf agh21-Erststimme) behoben: `parent-lookup.ts` filtert jetzt nach `stimmtyp`.
-9. ✅ Vorläufig-Kennzeichnung (Matze-Entscheidung 23.09., 1B): `wahl.vorlaeufig` + `wahl.sourceUpdatedAt` (aus CSV `Datum`/`Zeit`, DST-korrekt `Europe/Berlin`), Badge in `/wahl/[slug]`, `/berlin-wahlen` (`ergebnis-panel.svelte`), Inspector-Wahl-Sektion, `/api/wahl/list`, `list_elections`/`compare_elections`/`get_election_result`, LLM-Export (`llm-export-builder.ts`, `llms-full.txt`).
+9. ✅ Vorläufig-Kennzeichnung (Matze-Entscheidung 23.09., 1B): `wahl.vorlaeufig` + `wahl.sourceUpdatedAt` (aus CSV `Datum`/`Zeit`, DST-korrekt `Europe/Berlin`), Badge in `/berlin-wahlen/[slug]`, `/berlin-wahlen` (`ergebnis-panel.svelte`), Inspector-Wahl-Sektion, `/api/wahl/list`, `list_elections`/`compare_elections`/`get_election_result`, LLM-Export (`llm-export-builder.ts`, `llms-full.txt`).
 10. ⏳ Re-Ingest beim Endergebnis ist NICHT automatisch: `vorlaeufig`-Flag in `sources.ts` bleibt `true`, bis er von Hand entfernt wird, und das prebuild-Gate überspringt den Ingest sonst (23/18 bereits erfüllt). Checkliste: `docs/wahldaten-methodik.md` ("AGH/BVV 2026 (vorläufig)" → "Re-Ingest-Checkliste beim Endergebnis").
 
 ## Pflicht-Muster neues Portal (aus dem Bestand abgeleitet)
@@ -74,5 +74,5 @@ Spec: `_bmad-output/specs/spec-berlin-wahlen/stories/17-briefwahl-gruppen.md`.
 
 - `get_election_result` liefert `updated_at` hart als `jahr-01-01` statt `wahl.source_updated_at` (`get-election-result.ts:121`); bei Tool-Arbeit mitfixen.
 - Zwei Farbquellen (DB-Seed vs. `partei-farben.ts`): Entscheidung gefallen, nur `partei-farben.ts` rendern.
-- `/wahl`-Detailseiten sind prerendered mit DB-losem Fallback über 20 Slugs; Portal-Prerender braucht dasselbe Muster.
+- `/berlin-wahlen/[slug]`-Detailseiten sind prerendered mit DB-losem Fallback über 20 Slugs; Portal-Prerender braucht dasselbe Muster.
 - `layerchart` 227 KB gzip: nicht ins Portal-Initial-Bundle.

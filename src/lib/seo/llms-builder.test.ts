@@ -7,6 +7,7 @@ import {
 	type LlmsBezirkEntry,
 	type LlmsKiezEntry,
 	type LlmsLayerEntry,
+	type LlmsWahlEntry,
 	type LlmsSourceContext
 } from './llms-builder.js';
 
@@ -73,6 +74,15 @@ const fixtureLayer: LlmsLayerEntry[] = [
 	}
 ];
 
+const fixtureWahlen: LlmsWahlEntry[] = [
+	{
+		slug: '2025-btw-zweitstimme',
+		name: 'Bundestagswahl 2025 · Zweitstimme',
+		short: 'Bundestagswahl 2025 · Zweitstimme · Quelle Bundeswahlleiterin',
+		markdown: '## Bundestagswahl 2025 · Zweitstimme\n\nDaten.'
+	}
+];
+
 const ctx: LlmsSourceContext = {
 	origin: 'https://navigator.berlin',
 	locale: 'de',
@@ -125,6 +135,22 @@ describe('collectLlmsSourceEntries', () => {
 		const urls = collectLlmsSourceEntries({ ...ctx, wahlPortalEnabled: true }).map((e) => e.loc);
 		expect(urls).toContain('https://navigator.berlin/berlin-wahlen');
 	});
+
+	// Review-Fund: der Wahl-Zweig (ctx.wahlen) war komplett ungetestet.
+	it('enthält /berlin-wahlen/<slug> pro Wahl wenn ctx.wahlen gesetzt ist, keinen /wahl-Pfad', () => {
+		const entries = collectLlmsSourceEntries({ ...ctx, wahlen: fixtureWahlen });
+		const urls = entries.map((e) => e.loc);
+		expect(urls).toContain('https://navigator.berlin/berlin-wahlen/2025-btw-zweitstimme');
+		expect(urls.some((u) => u.includes('/wahl/'))).toBe(false);
+		expect(urls).not.toContain('https://navigator.berlin/wahl');
+		const wahlEntry = entries.find((e) => e.section === 'wahl');
+		expect(wahlEntry?.name).toBe('Bundestagswahl 2025 · Zweitstimme');
+	});
+
+	it('enthält keine Wahl-Entries ohne ctx.wahlen', () => {
+		const entries = collectLlmsSourceEntries(ctx);
+		expect(entries.some((e) => e.section === 'wahl')).toBe(false);
+	});
 });
 
 describe('buildLlmsTxt', () => {
@@ -172,6 +198,15 @@ describe('buildLlmsTxt', () => {
 		const txt = buildLlmsTxt(ctx);
 		expect(txt).not.toContain('—');
 	});
+
+	it('rendert ## Wahldaten mit /berlin-wahlen/<slug>-Link wenn ctx.wahlen gesetzt ist', () => {
+		const txt = buildLlmsTxt({ ...ctx, wahlen: fixtureWahlen });
+		expect(txt).toContain('## Wahldaten');
+		expect(txt).toMatch(
+			/-\s+\[Bundestagswahl 2025 · Zweitstimme\]\(https:\/\/navigator\.berlin\/berlin-wahlen\/2025-btw-zweitstimme\)/
+		);
+		expect(txt).not.toContain('/wahl/2025-btw-zweitstimme');
+	});
 });
 
 describe('buildLlmsFullTxt', () => {
@@ -200,6 +235,16 @@ describe('buildLlmsFullTxt', () => {
 	it('contains layer markdown blocks', () => {
 		const txt = buildLlmsFullTxt(ctx);
 		expect(txt).toContain('## Layer Lärm 2023');
+	});
+
+	it('contains wahl markdown blocks when ctx.wahlen is set', () => {
+		const txt = buildLlmsFullTxt({ ...ctx, wahlen: fixtureWahlen });
+		expect(txt).toContain('## Bundestagswahl 2025 · Zweitstimme');
+	});
+
+	it('omits wahl markdown blocks without ctx.wahlen', () => {
+		const txt = buildLlmsFullTxt(ctx);
+		expect(txt).not.toContain('## Bundestagswahl 2025');
 	});
 
 	it('lists overflow kieze as URL-only references at the end (Top-50-cap)', () => {

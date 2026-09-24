@@ -19,13 +19,13 @@ describe('buildWahlSitemapEntries', () => {
 			]
 		});
 		expect(entries.map((e) => e.loc)).toEqual([
-			'https://navigator.berlin/wahl/2025-btw-zweitstimme',
-			'https://navigator.berlin/wahl/2025-btw-erststimme',
-			'https://navigator.berlin/wahl/2023-bvv'
+			'https://navigator.berlin/berlin-wahlen/2025-btw-zweitstimme',
+			'https://navigator.berlin/berlin-wahlen/2025-btw-erststimme',
+			'https://navigator.berlin/berlin-wahlen/2023-bvv'
 		]);
 	});
 
-	it('lastmod = Wahljahr-01-01, changefreq yearly, priority 0.7', () => {
+	it('lastmod = Wahljahr-01-01 ohne sourceUpdatedAt, changefreq yearly, priority 0.7', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin',
 			wahlen: [{ jahr: 2017, typ: 'btw', stimmtyp: 'zweitstimme' }]
@@ -35,12 +35,35 @@ describe('buildWahlSitemapEntries', () => {
 		expect(entries[0].priority).toBe(0.7);
 	});
 
+	it('lastmod = sourceUpdatedAt wenn vorhanden (Story 16)', () => {
+		const entries = buildWahlSitemapEntries({
+			origin: 'https://navigator.berlin',
+			wahlen: [
+				{
+					jahr: 2026,
+					typ: 'agh',
+					stimmtyp: 'zweitstimme',
+					sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+				}
+			]
+		});
+		expect(entries[0].lastmod).toBe('2026-09-20T23:55:55.000Z');
+	});
+
+	it('lastmod fällt auf Wahljahr-01-01 zurück wenn sourceUpdatedAt null ist', () => {
+		const entries = buildWahlSitemapEntries({
+			origin: 'https://navigator.berlin',
+			wahlen: [{ jahr: 2023, typ: 'bvv', stimmtyp: 'einstimme', sourceUpdatedAt: null }]
+		});
+		expect(entries[0].lastmod).toBe('2023-01-01');
+	});
+
 	it('trimmt trailing slash aus origin', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin/',
 			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
 		});
-		expect(entries[0].loc).toBe('https://navigator.berlin/wahl/2025-btw-zweitstimme');
+		expect(entries[0].loc).toBe('https://navigator.berlin/berlin-wahlen/2025-btw-zweitstimme');
 	});
 });
 
@@ -78,7 +101,7 @@ describe('WAHL_DETAIL_SOURCE', () => {
 			]
 		});
 		expect(entries).toHaveLength(2);
-		expect(entries[0].loc).toContain('/wahl/2025-btw-zweitstimme');
-		expect(entries[1].loc).toContain('/wahl/2023-bvv');
+		expect(entries[0].loc).toContain('/berlin-wahlen/2025-btw-zweitstimme');
+		expect(entries[1].loc).toContain('/berlin-wahlen/2023-bvv');
 	});
 });

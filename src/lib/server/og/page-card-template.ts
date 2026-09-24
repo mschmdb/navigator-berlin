@@ -643,7 +643,7 @@ export function buildWahlCardVdom(params: WahlCardParams): SatoriNode {
 			},
 			[wahlStackedBar(top5), wahlInfoRow(params)]
 		),
-		footerUrl: `/wahl/${params.slug}`,
+		footerUrl: `/berlin-wahlen/${params.slug}`,
 		footerDate: params.footerDate ?? null,
 		logoDataUri: params.logoDataUri,
 		watermarkDataUri: params.watermarkDataUri,

@@ -27,11 +27,13 @@ export interface SitemapSourceContext {
 	readonly bezirkSlugs?: readonly string[];
 	/** Reserved for story 2.4 (kiez-pages). */
 	readonly kiezSlugs?: readonly string[];
-	/** Story 6.4: 12-20 wahl-Rows aus wahl-Tabelle für /wahl/[slug]-Routes. */
+	/** Story 6.4, Story 16: wahl-Rows aus wahl-Tabelle für /berlin-wahlen/[slug]-Routes. */
 	readonly wahlen?: readonly {
 		readonly jahr: number;
 		readonly typ: 'btw' | 'agh' | 'bvv';
 		readonly stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
+		/** Story 16: `lastmod`-Quelle, sonst Jahres-Fallback (`wahl-detail-pages.ts`). */
+		readonly sourceUpdatedAt?: string | null;
 	}[];
 	/**
 	 * Story 3 (Portal-Skeleton /berlin-wahlen): `featureFlags.wahlPortal`.

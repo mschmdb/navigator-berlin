@@ -25,8 +25,14 @@ const handleStaleLocaleRedirect: Handle = ({ event, resolve }) => {
 /**
  * 301 umbenannte Routes auf ihren neuen Slug (ADR-015: /wo-lebt-es-sich-gut →
  * /umwelt-infrastruktur-score). Läuft vor Paraglide, erhält Query-String.
+ *
+ * Named export (statt nur intern in `sequence(...)`) für `hooks.server.test.ts`:
+ * der zusammengesetzte `handle` hängt über `sequence()` an SvelteKits
+ * Request-Store (`AsyncLocalStorage`), der außerhalb eines echten Requests
+ * nicht existiert -- der einzelne Handler braucht das nicht und ist direkt
+ * mit einem Fake-Event testbar.
  */
-const handleRenamedRouteRedirect: Handle = ({ event, resolve }) => {
+export const handleRenamedRouteRedirect: Handle = ({ event, resolve }) => {
 	const target = renamedRouteRedirectTarget(event.url.pathname);
 	if (target !== null) {
 		return new Response(null, {

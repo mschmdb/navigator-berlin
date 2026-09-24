@@ -3,6 +3,7 @@
 	import BriefwahlMarker from '../briefwahl-marker.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
+	import { buildWahlSlug } from '$lib/data/wahl-slug.js';
 	import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
 	import type {
 		WahlResultsAtPoint,
@@ -546,12 +547,13 @@
 
 		<div class="flex flex-wrap gap-3">
 			{#if currentBundle}
-				{@const slug =
-					currentBundle.wahl.typ === 'bvv'
-						? `${currentBundle.wahl.jahr}-bvv`
-						: `${currentBundle.wahl.jahr}-${currentBundle.wahl.typ}-${currentBundle.wahl.stimmtyp}`}
+				{@const slug = buildWahlSlug({
+					jahr: currentBundle.wahl.jahr,
+					typ: currentBundle.wahl.typ,
+					stimmtyp: currentBundle.wahl.stimmtyp
+				})}
 				<a
-					href={`/wahl/${slug}`}
+					href={`/berlin-wahlen/${slug}`}
 					data-testid="wahl-detail-link"
 					class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 				>

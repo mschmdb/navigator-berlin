@@ -277,9 +277,9 @@
 	</section>
 
 	<a
-		href="/wahl"
+		href="/berlin-wahlen#alle-wahlen"
 		class="hover:text-accent-strong inline-block font-mono text-sm text-accent underline underline-offset-2"
 	>
-		Zurück zur Wahl-Übersicht
+		Alle Wahlen einzeln
 	</a>
 </article>

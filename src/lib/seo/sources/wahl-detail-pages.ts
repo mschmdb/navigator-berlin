@@ -1,4 +1,5 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
+import { buildWahlSlug } from '$lib/data/wahl-slug.js';
 
 /**
  * Story 6.4 AC-1: Sitemap-Source für Per-Wahl-Detail-Pages.
@@ -7,8 +8,10 @@ import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
  * - BTW/AGH: `2025-btw-zweitstimme`, `2025-btw-erststimme` etc.
  * - BVV: `2023-bvv` (einstimme implizit).
  *
- * Wahl-Daten sind statisch (Wahljahr abgeschlossen) → `changefreq=yearly`,
- * `lastmod` = Wahljahr-01-01.
+ * Story 16: Detailseiten zogen von `/wahl/[slug]` nach `/berlin-wahlen/[slug]`.
+ * `lastmod` bevorzugt `sourceUpdatedAt` (echter Ingest-Zeitstempel, z.B. für
+ * die vorläufigen AGH/BVV-2026-Ergebnisse), fällt ohne diesen auf
+ * `Wahljahr-01-01` zurück (abgeschlossene Wahlen ohne Re-Ingest-Historie).
  *
  * Phase 1 DE-only.
  */
@@ -19,12 +22,9 @@ export type WahlSitemapEntry = {
 	readonly jahr: number;
 	readonly typ: 'btw' | 'agh' | 'bvv';
 	readonly stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
+	/** Ingest-Zeitstempel (ISO-8601), sofern bekannt; sonst Jahres-Fallback. */
+	readonly sourceUpdatedAt?: string | null;
 };
-
-function slugFor(w: WahlSitemapEntry): string {
-	if (w.typ === 'bvv') return `${w.jahr}-bvv`;
-	return `${w.jahr}-${w.typ}-${w.stimmtyp}`;
-}
 
 export interface BuildWahlSitemapEntriesInput {
 	readonly origin: string;
@@ -34,8 +34,8 @@ export interface BuildWahlSitemapEntriesInput {
 export function buildWahlSitemapEntries(input: BuildWahlSitemapEntriesInput): SitemapEntry[] {
 	const origin = input.origin.replace(/\/+$/, '');
 	return input.wahlen.map((w) => ({
-		loc: `${origin}/wahl/${slugFor(w)}`,
-		lastmod: `${w.jahr}-01-01`,
+		loc: `${origin}/berlin-wahlen/${buildWahlSlug(w)}`,
+		lastmod: w.sourceUpdatedAt ?? `${w.jahr}-01-01`,
 		changefreq: 'yearly' as const,
 		priority: PRIORITY
 	}));

@@ -106,8 +106,8 @@ describe('routes/llms.txt/+server.ts', () => {
 			makeEvent('https://navigator.berlin/llms.txt') as Parameters<typeof mod.GET>[0]
 		);
 		const body = await response.text();
-		// Story 3: Flag-Verdrahtung am echten Handler (featureFlags.wahlPortal=false).
-		expect(body).not.toContain('/berlin-wahlen');
+		// Story 16: Flag-Verdrahtung am echten Handler (featureFlags.wahlPortal=true seit 1A).
+		expect(body).toContain('/berlin-wahlen');
 		expect(body).toContain('## Bezirke');
 		expect(body).toContain('## Kieze');
 		expect(body).toContain('## Daten-Layer');
@@ -119,6 +119,29 @@ describe('routes/llms.txt/+server.ts', () => {
 	it('has prerender = true so it is built statically', async () => {
 		const mod = await import('../../routes/llms.txt/+server.js');
 		expect(mod.prerender).toBe(true);
+	});
+
+	// Review-Fund: der vorherige Test prüfte nur den echten Flag-Wert (aktuell
+	// true) -- hier beide Zustände am echten Handler, gemockt statt vom
+	// aktuellen `featureFlags.wahlPortal`-Wert abhängig zu sein.
+	it('enthält /berlin-wahlen wenn featureFlags.wahlPortal=true', async () => {
+		vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
+		const mod = await import('../../routes/llms.txt/+server.js');
+		const response = await mod.GET(
+			makeEvent('https://navigator.berlin/llms.txt') as Parameters<typeof mod.GET>[0]
+		);
+		const body = await response.text();
+		expect(body).toContain('https://navigator.berlin/berlin-wahlen)');
+	});
+
+	it('enthält KEIN /berlin-wahlen wenn featureFlags.wahlPortal=false', async () => {
+		vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: false } }));
+		const mod = await import('../../routes/llms.txt/+server.js');
+		const response = await mod.GET(
+			makeEvent('https://navigator.berlin/llms.txt') as Parameters<typeof mod.GET>[0]
+		);
+		const body = await response.text();
+		expect(body).not.toContain('/berlin-wahlen');
 	});
 
 	it('contains no banned word "lebenswert"', async () => {

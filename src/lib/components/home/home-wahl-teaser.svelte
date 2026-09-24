@@ -53,7 +53,7 @@
 		{#each CARDS as card (card.slug)}
 			<li class="rounded border border-rule p-4">
 				<a
-					href={`/wahl/${card.slug}`}
+					href={`/berlin-wahlen/${card.slug}`}
 					data-testid={`home-wahl-card-${card.slug}`}
 					class="flex flex-col gap-2 text-ink hover:text-accent"
 				>
@@ -72,7 +72,7 @@
 
 	<div class="flex flex-wrap items-center gap-x-6 gap-y-2">
 		<a
-			href="/wahl"
+			href="/berlin-wahlen"
 			data-testid="home-wahl-teaser-all"
 			class="inline-flex items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
 		>

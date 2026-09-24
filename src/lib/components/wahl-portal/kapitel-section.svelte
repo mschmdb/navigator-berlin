@@ -12,9 +12,24 @@
 		subtext?: string;
 		takeaway?: Snippet;
 		children?: Snippet;
+		/** Review-Fund: die 5.5rem-Zusatzmarge gilt nur auf der Portal-Hauptseite
+		 * (ReihenLeiste 2.5rem + Kapitel-Nav sitzen dort sticky über den
+		 * Abschnitten). Seiten ohne dieses Sticky-Chrome -- z.B. die
+		 * Wahl-Detailseite, die `KapitelSection` nur für den Portal-Look
+		 * wiederverwendet -- geben `false`, sonst springen Anker-Ziele zu weit
+		 * unter den Site-Header. */
+		withPortalChrome?: boolean;
 	};
 
-	let { id, title, testid, subtext, takeaway, children }: Props = $props();
+	let {
+		id,
+		title,
+		testid,
+		subtext,
+		takeaway,
+		children,
+		withPortalChrome = true
+	}: Props = $props();
 </script>
 
 <!-- Story 10: Puffer wuchs von 3rem auf 5.5rem -- über der Kapitel-Nav sitzt
@@ -24,7 +39,11 @@
 	{id}
 	aria-labelledby={`${id}-h`}
 	data-testid={testid}
-	class="flex scroll-mt-[calc(var(--header-height,72px)+5.5rem)] flex-col gap-4 border-t border-rule py-10"
+	class={`flex flex-col gap-4 border-t border-rule py-10 ${
+		withPortalChrome
+			? 'scroll-mt-[calc(var(--header-height,72px)+5.5rem)]'
+			: 'scroll-mt-[var(--header-height,72px)]'
+	}`}
 >
 	<h2 id={`${id}-h`} class="font-serif text-2xl text-ink">{title}</h2>
 	{#if subtext}
