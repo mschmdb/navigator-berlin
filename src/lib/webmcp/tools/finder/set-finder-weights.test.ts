@@ -66,6 +66,15 @@ describe('set_finder_weights', () => {
 		expect(props.map_url?.description).toMatch(/shareable|reproduc/i);
 	});
 
+	it('Description nennt die Wahl hinter voting_similarity und verweist für den Vorläufig-Status auf list_elections', () => {
+		const tool = createSetFinderWeightsTool(makeDeps());
+		expect(tool.description).toContain('Berlin state election 2026');
+		expect(tool.description).toContain('list_elections');
+		expect(tool.description).not.toContain('BTW 2025');
+		// Kein fest eingebautes „provisional until…“: der Text wäre nach dem Endergebnis falsch.
+		expect(tool.description).not.toMatch(/provisional results until/i);
+	});
+
 	it('setzt voting_similarity samt Partei um', async () => {
 		const deps = makeDeps();
 		const tool = createSetFinderWeightsTool(deps);

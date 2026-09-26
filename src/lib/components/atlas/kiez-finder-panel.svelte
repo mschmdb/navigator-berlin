@@ -14,8 +14,13 @@
 	import {
 		buildFinderCollection,
 		buildParteiMetric,
+		FINDER_ELECTION,
+		formatFinderWahlHinweis,
+		parseKiezSharesResponse,
 		type FinderBaseData,
-		type KiezShareRow
+		type KiezShareRow,
+		type KiezSharesMeta,
+		type KiezSharesResult
 	} from './internal/kiez-finder-data.js';
 	import {
 		FINDER_LAYER_ID,
@@ -46,25 +51,22 @@
 		map: FinderMapApi | null;
 		/** Injektierbar für Tests; Default lädt die echten Quellen. */
 		loadData?: () => Promise<FinderBaseData>;
-		loadShares?: (election: string) => Promise<readonly KiezShareRow[]>;
+		loadShares?: (election: string) => Promise<KiezSharesResult | null>;
 		/** Startzustand aus der URL (geteilter Finder-Link). */
 		initialWeights?: FinderWeights | null;
 		initialParty?: string | null;
 		onClose?: () => void;
 	};
 
-	const ELECTION = '2025-btw-zweitstimme';
-
 	async function defaultLoadData(): Promise<FinderBaseData> {
 		const { loadFinderBaseData } = await import('./internal/kiez-finder-data.js');
 		return loadFinderBaseData();
 	}
 
-	async function defaultLoadShares(election: string): Promise<readonly KiezShareRow[]> {
+	async function defaultLoadShares(election: string): Promise<KiezSharesResult | null> {
 		const res = await fetch(`/api/wahl/kiez-shares?election=${election}`);
-		if (!res.ok) return [];
-		const body = (await res.json()) as { shares?: KiezShareRow[] };
-		return body.shares ?? [];
+		if (!res.ok) return null;
+		return parseKiezSharesResponse(await res.json());
 	}
 
 	let {
@@ -106,6 +108,8 @@
 
 	let base: FinderBaseData | null = null;
 	let sharesCache: readonly KiezShareRow[] | null = null;
+	let sharesMeta = $state<KiezSharesMeta | null>(null);
+	const wahlHinweis = $derived(formatFinderWahlHinweis(sharesMeta));
 	let collection: FeatureCollection<Polygon | MultiPolygon> | null = null;
 	// Für welche Partei m_partei tatsächlich gebaut wurde: die Collection
 	// trägt IMMER ein m_partei-Property (Neutral-Fallback), dessen Existenz
@@ -120,9 +124,21 @@
 		if (!base) return;
 		const metrics = { ...base.metrics };
 		if (weights.partei !== 0) {
-			if (!sharesCache) sharesCache = await loadShares(ELECTION);
-			metrics.m_partei = buildParteiMetric(sharesCache, base.plrIds, partei);
-			loadedPartei = partei;
+			if (!sharesCache) {
+				const result = await loadShares(FINDER_ELECTION);
+				if (result) {
+					sharesCache = result.shares;
+					sharesMeta = {
+						vorlaeufig: result.vorlaeufig,
+						sourceUpdatedAt: result.sourceUpdatedAt,
+						sourceName: result.sourceName
+					};
+				}
+			}
+			metrics.m_partei = buildParteiMetric(sharesCache ?? [], base.plrIds, partei);
+			// Nur als geladen markieren, wenn Anteile da sind: sonst versucht der
+			// nächste Regler-Move erneut zu laden (kein Fehlschlag als Dauerzustand).
+			loadedPartei = sharesCache ? partei : null;
 		} else {
 			loadedPartei = null;
 		}
@@ -478,7 +494,7 @@
 
 			<p class="mt-2 font-serif text-[10px] leading-snug text-ink-subtle">
 				Die Karte bewertet weder Nachbarschaften noch Menschen, sie zeigt nur, wie gut eine Gegend
-				zu deinen Reglern passt. Wahlverhalten: Zweitstimmen BTW 2025 (Bundeswahlleiterin).
+				zu deinen Reglern passt. <span data-testid="finder-wahl-hinweis">{wahlHinweis}</span>
 			</p>
 		{/if}
 	</div>

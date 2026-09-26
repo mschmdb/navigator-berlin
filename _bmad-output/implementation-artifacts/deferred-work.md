@@ -95,3 +95,7 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/17-briefwahl-gruppen.md`
   summary: `tests/e2e/wahl-flow.e2e.ts` reparieren: alle 5 Tests hängen am Klick in die Adresssuche auf `/explore` („element was detached from the DOM“, 30 s Timeout).
   evidence: 23.09. auf Story-17-Branch und auf `main` vor Story 17 (6e5eb13, eigener Worktree-Build) identisch 5/5 rot; vorbestehend, nicht Teil des bisher geprüften E2E-Trios.
+
+- source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/19-finder-agh26.md`
+  summary: `get_finder_state` und `set_finder_weights` sollen Wahl-Slug, `provisional` und `source_updated_at` im Output liefern.
+  evidence: Agenten sehen heute nur über `list_elections`, dass die Finder-Rangliste auf vorläufigen AGH-2026-Zahlen beruht; Output-Felder wären neue Tool-Surface (englisch), daher nicht im Oneshot.

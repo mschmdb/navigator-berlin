@@ -37,7 +37,10 @@ const Unipolar = v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2));
  * Engine-Modul, damit Panel, URL-Zustand und Tool-Schemas nicht
  * auseinanderlaufen; der Panel-Test verklammert die Liste zusätzlich.
  */
-export { FINDER_PARTIES, type FinderParty } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+export {
+	FINDER_PARTIES,
+	type FinderParty
+} from '$lib/components/atlas/internal/kiez-finder-engine.js';
 
 export const SetFinderWeightsInputSchema = v.object({
 	quiet_air: v.optional(Bipolar),
@@ -101,7 +104,7 @@ export const SET_FINDER_WEIGHTS_INPUT_JSON_SCHEMA = {
 		voting_similarity: {
 			...UNIPOLAR_JSON,
 			description:
-				'Similarity of local voting behavior (BTW 2025 Zweitstimme) to the chosen party. Combine with "party".'
+				'Similarity of local voting behavior (Berlin state election 2026, Zweitstimme; list_elections shows whether these results are still provisional) to the chosen party. Combine with "party".'
 		},
 		party: {
 			type: 'string',

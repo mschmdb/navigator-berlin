@@ -791,7 +791,7 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 2,
-            "description": "Similarity of local voting behavior (BTW 2025 Zweitstimme) to the chosen party. Combine with \"party\"."
+            "description": "Similarity of local voting behavior (Berlin state election 2026, Zweitstimme; list_elections shows whether these results are still provisional) to the chosen party. Combine with \"party\"."
           },
           "party": {
             "type": "string",
