@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { LayerHit } from '$lib/data';
 	import type { PointCountResult } from '$lib/data/count-points-in-polygon.js';
+	import type { Locale } from '$lib/paraglide/runtime';
 	import type { LayerLevelView } from './internal/aggregate-layer-for-level.js';
 	import LayerHitRow from './layer-hit-row.svelte';
 	import DistributionBar, { type DistributionClass } from '../charts/distribution-bar.svelte';
@@ -12,7 +13,7 @@
 		view: LayerLevelView;
 		hit: LayerHit;
 		layerName: string;
-		lang?: string;
+		lang?: Locale;
 		lat?: number;
 		lng?: number;
 		isActive?: boolean;

@@ -1,20 +1,20 @@
 /**
- * Zentrale Zahlen-/Prozent-/Datums-Formatter fuer das Wahlportal (i18n
+ * Zentrale Zahlen-/Prozent-/Datums-Formatter für das Wahlportal (i18n
  * Block B). Ersetzt die bisherigen `.toFixed(1).replace('.', ',')`- und
  * `toLocaleString('de-DE')`-Aufrufe direkt in den Komponenten/Buildern,
  * damit EN- und DE-Ausgabe an EINER Stelle divergieren.
  *
  * Format-Entscheidungen (Matze 26.09.2026, Spec i18n Block B):
- * - DE: Komma als Dezimaltrennzeichen, Leerzeichen vor `%`, „Pp." fuer
+ * - DE: Komma als Dezimaltrennzeichen, Leerzeichen vor `%`, „Pp." für
  *   Prozentpunkte (Grossbuchstabe, Punkt).
  * - EN: Punkt als Dezimaltrennzeichen, kein Leerzeichen vor `%`, „pp"
- *   (klein) fuer Prozentpunkte, mit Leerzeichen davor.
+ *   (klein) für Prozentpunkte, mit Leerzeichen davor.
  * - Beide Locales: echtes Minuszeichen (U+2212, kein Bindestrich/U+00B1)
- *   fuer negative Deltas.
+ *   für negative Deltas.
  *
- * Locale-Aufloesung: explizites `{ locale }` hat Vorrang, sonst
+ * Locale-Auflösung: explizites `{ locale }` hat Vorrang, sonst
  * `getLocale()` (Paraglide-Runtime, URL-basiert). TS-Builder ohne
- * Component-Kontext (z. B. server-seitige Aggregation) uebergeben
+ * Component-Kontext (z. B. server-seitige Aggregation) übergeben
  * `{ locale }` explizit statt sich auf den globalen Request-Kontext zu
  * verlassen (Boundary: „Auswertung beim Aufruf").
  */
@@ -30,9 +30,9 @@ function resolveLocale(locale?: Locale): Locale {
 
 function decimalString(value: number, decimals: number, locale: Locale): string {
 	const fixed = value.toFixed(decimals);
-	// "-0,0"/"-0.0" vermeiden: prueft das GERUNDETE Ergebnis (`Number(fixed)
+	// "-0,0"/"-0.0" vermeiden: prüft das GERUNDETE Ergebnis (`Number(fixed)
 	// === 0`), nicht das rohe `value` -- ein Wert wie `-0.04` rundet auf
-	// `decimals: 1` NICHT auf 0 und behaelt sein Vorzeichen, waehrend `-0.0001`
+	// `decimals: 1` NICHT auf 0 und behält sein Vorzeichen, während `-0.0001`
 	// oder `-0` selbst das Minuszeichen verlieren soll.
 	const normalized = fixed.startsWith('-') && Number(fixed) === 0 ? fixed.slice(1) : fixed;
 	return locale === 'de' ? normalized.replace('.', ',') : normalized;
@@ -54,8 +54,7 @@ export function formatPercent(
 	// Fund) -- `toFixed(decimals)` direkt auf `pct` ist exakt die alte, vor
 	// dieser Konsolidierung genutzte Rundung (`pct.toFixed(1)` in
 	// `winner-map-data.ts`/`wahl-bezirk-choropleth.svelte` etc.).
-	const numStr =
-		decimals === 0 ? String(Math.round(pct)) : decimalString(pct, 1, locale);
+	const numStr = decimals === 0 ? String(Math.round(pct)) : decimalString(pct, 1, locale);
 	return locale === 'de' ? `${numStr} %` : `${numStr}%`;
 }
 
@@ -89,12 +88,48 @@ export function formatCount(n: number, opts?: LocaleFormatOptions): string {
 }
 
 /**
- * Datum in `Europe/Berlin`, locale-abhaengig formatiert: `DD.MM.YYYY` (de,
+ * Dezimalzahl mit Locale-Tausendertrennzeichen UND fester maximaler
+ * Nachkommastellenzahl, z. B. `formatDecimal(24.567, { maximumFractionDigits:
+ * 1 })` -> `24,6` (de) / `24.6` (en). Ersetzt die früher direkt in den
+ * Atlas-Formattern verstreuten `new Intl.NumberFormat('de-DE', {
+ * maximumFractionDigits: ... })`-Aufrufe (i18n Block B3a, Boundary
+ * "Komma-Hacks auf format.ts").
+ *
+ * `minimumFractionDigits` ist optional und NICHT identisch mit
+ * `maximumFractionDigits`: manche Alt-Call-Sites (z. B. `formatDistanceDe`,
+ * vormals `.toFixed(1)`) zeigten IMMER eine feste Nachkommastellenzahl (z. B.
+ * `1,0 km`, nicht `1 km`), andere (PET/Einwohnerdichte, vormals
+ * `Intl.NumberFormat` ohne `minimumFractionDigits`) rundeten ganze Zahlen
+ * schon immer ohne Nachkommastellen. Beide Alt-Verhalten bleiben über diesen
+ * einen Parameter erhalten.
+ */
+export function formatDecimal(
+	value: number,
+	opts?: LocaleFormatOptions & { maximumFractionDigits?: number; minimumFractionDigits?: number }
+): string {
+	const locale = resolveLocale(opts?.locale);
+	const min = opts?.minimumFractionDigits;
+	// `Intl.NumberFormat` wirft ein RangeError, wenn `minimumFractionDigits` >
+	// `maximumFractionDigits` (Review-Fund) -- z. B. bei
+	// `formatDecimal(x, { minimumFractionDigits: 1 })` ohne explizites `max`
+	// (Default 3 wäre hier unproblematisch, aber ein Aufrufer mit z. B.
+	// `{ minimumFractionDigits: 4 }` hätte den Default 3 unterlaufen).
+	// `max` wird deshalb nie kleiner als `min` gewählt.
+	const max = Math.max(opts?.maximumFractionDigits ?? 3, min ?? 0);
+	const numFmt = new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-GB', {
+		maximumFractionDigits: max,
+		minimumFractionDigits: min
+	});
+	return numFmt.format(value);
+}
+
+/**
+ * Datum in `Europe/Berlin`, locale-abhängig formatiert: `DD.MM.YYYY` (de,
  * identisch zu `formatBerlinDate`) bzw. `D MMMM YYYY` (en, z. B. `21
  * September 2026`, ausgeschriebener Monat statt `'short'` -- Review-Fund:
- * `'short'` ist ICU-Versions-abhaengig zwischen "Sep" und "Sept" und damit
- * nicht stabil). Fuer DE-Aufrufer ausserhalb des Wahlportals bleibt
- * `$lib/utils/format-berlin-date.ts` die eigenstaendige Quelle (Boundary:
+ * `'short'` ist ICU-Versions-abhängig zwischen "Sep" und "Sept" und damit
+ * nicht stabil). Für DE-Aufrufer ausserhalb des Wahlportals bleibt
+ * `$lib/utils/format-berlin-date.ts` die eigenständige Quelle (Boundary:
  * „Keine anderen Seiten übersetzen").
  */
 export function formatWahlDate(iso: string, opts?: LocaleFormatOptions): string {
@@ -129,7 +164,7 @@ export function formatShortDate(iso: string, opts?: LocaleFormatOptions): string
 	if (Number.isNaN(d.getTime())) return iso;
 	// Review-Fund (i18n Block B2): KEIN `timeZone: 'Europe/Berlin'` -- die
 	// bisherige `home-updates-teaser.svelte`-Formatierung setzte nie eine
-	// Zeitzone (Host-Zeitzone), ein hinzugefuegtes `timeZone` haette das
+	// Zeitzone (Host-Zeitzone), ein hinzugefügtes `timeZone` hätte das
 	// Datum je nach Host-TZ (z. B. UTC in Production) springen lassen. DE
 	// bleibt damit exakt Byte-identisch zum Alt-Verhalten.
 	return d.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-GB', {

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { LayerHit } from '$lib/data';
 	import { ExternalLink, Eye, EyeOff } from '@lucide/svelte';
-	import { resolve } from '$app/paths';
-	import type { Pathname } from '$app/types';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import type { Locale } from '$lib/paraglide/runtime';
 	import DataStandBanner from './data-stand-banner.svelte';
 	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
 	import { getValueSeverity } from './internal/value-severity-mapping.js';
@@ -16,7 +16,7 @@
 	type Props = {
 		hit: LayerHit;
 		layerName: string;
-		lang?: string;
+		lang?: Locale;
 		lat?: number;
 		lng?: number;
 		isActive?: boolean;
@@ -75,9 +75,7 @@
 
 	const groupLabel = $derived(`${layerName}: ${valueText}`);
 
-	const learnMoreHref = $derived(
-		(resolve as (path: string) => string)(`/${lang}/layer/${hit.layer}`)
-	);
+	const learnMoreHref = $derived(localizedHref(`/layer/${hit.layer}`, lang));
 
 	const showSeasonalActivePill = $derived(
 		hit.layer === 'trinkbrunnen' && rowState === 'with-value'

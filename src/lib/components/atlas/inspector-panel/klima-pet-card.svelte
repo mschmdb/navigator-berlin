@@ -2,7 +2,8 @@
 	import type { LayerHit } from '$lib/data';
 	import type { NumericMedianAggregate } from '$lib/data/layer-aggregates-types.js';
 	import { Eye, EyeOff, ExternalLink, ChevronDown } from '@lucide/svelte';
-	import { resolve } from '$app/paths';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import type { Locale } from '$lib/paraglide/runtime';
 	import { getValueSeverity } from './internal/value-severity-mapping.js';
 	import { getLayerExplainEntry, getLayerExternalLink } from './internal/layer-explain.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
@@ -13,7 +14,7 @@
 	type Props = {
 		hit: LayerHit;
 		layerName: string;
-		lang?: string;
+		lang?: Locale;
 		isActive?: boolean;
 		onToggleLayer?: (slug: string) => void;
 		kiezName: string | null;
@@ -61,9 +62,7 @@
 	const explainEntry = $derived(getLayerExplainEntry('klima-pet-2022'));
 	const externalLink = $derived(getLayerExternalLink('klima-pet-2022'));
 	const editorial = $derived(getEditorialConfig('klima-pet-2022'));
-	const learnMoreHref = $derived(
-		(resolve as (p: string) => string)(`/${lang}/layer/klima-pet-2022`)
-	);
+	const learnMoreHref = $derived(localizedHref('/layer/klima-pet-2022', lang));
 
 	const SEVERITY_TEXT: Record<string, string> = {
 		success: 'text-severity-success',

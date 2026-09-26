@@ -1,8 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import MapAccessibilityLayer from './map-accessibility-layer.svelte';
 import type { LayerMetadata } from '$lib/data/types.js';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const bezirkeLayer: LayerMetadata = {
 	slug: 'bezirke',
@@ -70,6 +75,18 @@ describe('MapAccessibilityLayer', () => {
 		await expect.element(heading).toBeInTheDocument();
 	});
 
+	// i18n Block B3a: A11y-Layer folgt der URL-Locale (`getLocale()`).
+	it('rendert englischen Heading + Empty-State wenn Locale "en" ist', async () => {
+		overwriteGetLocale(() => 'en');
+		render(MapAccessibilityLayer, { props: { map: null, layers: [bezirkeLayer] } });
+		await expect
+			.element(page.getByText('Visible places and boundaries on the map'))
+			.toBeInTheDocument();
+		await expect
+			.element(page.getByText('No visible features in the current view.'))
+			.toBeInTheDocument();
+	});
+
 	it('rendert <ul role="list"> mit <button>-Einträgen pro Feature', async () => {
 		const map = createFakeMap([
 			{
@@ -123,6 +140,38 @@ describe('MapAccessibilityLayer', () => {
 		]);
 		expect(all[0].textContent).toMatch(/Mitte/);
 		expect(all[1].textContent).toMatch(/Lärmkarte/);
+	});
+
+	// i18n Block B3a: EN-Beschreibungstext über echte Features (nicht nur
+	// Heading/Empty-State) -- "residents" statt "Einwohner", "Bezirk" bleibt
+	// deutsch (Glossar).
+	it('EN-Feature-Beschreibung zeigt "residents" statt "Einwohner"', async () => {
+		overwriteGetLocale(() => 'en');
+		const map = createFakeMap([
+			{
+				id: 'f1',
+				layer: { id: 'bezirke' },
+				geometry: {
+					type: 'MultiPolygon',
+					coordinates: [
+						[
+							[
+								[13.4, 52.5],
+								[13.5, 52.5],
+								[13.5, 52.6],
+								[13.4, 52.5]
+							]
+						]
+					]
+				},
+				properties: { name: 'Mitte', einwohner: 380000 }
+			}
+		]);
+		render(MapAccessibilityLayer, {
+			props: { map, layers: [bezirkeLayer] }
+		});
+		const button = (await page.getByTestId('map-a11y-feature-button').element()) as HTMLElement;
+		expect(button.textContent).toContain('Bezirk: Mitte, 380,000 residents');
 	});
 
 	it('Klick auf Button ruft onSelectFeature mit AccessibleFeature', async () => {

@@ -25,6 +25,7 @@
 		type MultiHoverContent
 	} from './internal/hover-tooltip-logic.js';
 	import { layerIdFor } from './internal/layer-diff.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	type Props = {
 		map: MapHoverApi | null;
@@ -42,7 +43,7 @@
 
 	function onMouseMove(e: HoverEvent): void {
 		if (!map) return;
-		// Defensive Filter: queryRenderedFeatures wirft wenn LayerID fehlt (Race waehrend
+		// Defensive Filter: queryRenderedFeatures wirft wenn LayerID fehlt (Race während
 		// Symbol-Sprite-Loading oder Layer-Add-Cycle). map.getLayer ist falsy bei missing.
 		const existing = map.getLayer ? layerIds.filter((id) => Boolean(map.getLayer!(id))) : layerIds;
 		if (existing.length === 0) {
@@ -50,7 +51,7 @@
 			return;
 		}
 		const features = map.queryRenderedFeatures(e.point, { layers: existing });
-		const next = buildMultiHoverContent(features);
+		const next = buildMultiHoverContent(features, { locale: getLocale() });
 		if (!next) {
 			visible = false;
 			return;

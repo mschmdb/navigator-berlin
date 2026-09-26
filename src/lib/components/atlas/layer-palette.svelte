@@ -17,6 +17,8 @@
 	import { getLayerExplain } from './inspector-panel/internal/layer-explain.js';
 	import { shouldHandleSlash } from './internal/palette-shortcut.js';
 	import { classifyViewportWidth, type Breakpoint } from '$lib/utils/use-viewport.svelte.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	type Props = {
 		layers?: readonly LayerMetadata[];
@@ -28,6 +30,7 @@
 	let { layers = [], initialBreakpoint = 'desktop', forceBreakpoint = false }: Props = $props();
 
 	const ui = getUiState();
+	const localeOpts = $derived({ locale: getLocale() });
 
 	let searchInput: HTMLInputElement | null = $state(null);
 	let searchQuery = $state('');
@@ -67,8 +70,8 @@
 		};
 	});
 
-	const filtered = $derived(filterLayers(layers, searchQuery));
-	const groups = $derived(groupLayersByBundle(filtered));
+	const filtered = $derived(filterLayers(layers, searchQuery, localeOpts));
+	const groups = $derived(groupLayersByBundle(filtered, localeOpts));
 	const activeCount = $derived(ui.activeLayerSlugs.length);
 	const hasQuery = $derived(searchQuery.trim().length > 0);
 	const showEmptyState = $derived(!hasQuery);
@@ -129,16 +132,16 @@
 {#snippet paletteBody()}
 	<header class="flex items-start justify-between gap-3 border-b border-rule px-4 pt-2 pb-3">
 		<div>
-			<h2 class="font-serif text-xl text-ink">Layer auswählen</h2>
+			<h2 class="font-serif text-xl text-ink">{m.atlas_palette_heading(undefined, localeOpts)}</h2>
 			<p class="text-xs text-ink-subtle">
-				{activeCount} aktiv · {layers.length} verfügbar
+				{m.atlas_palette_active_count({ active: activeCount, total: layers.length }, localeOpts)}
 			</p>
 		</div>
 		<button
 			type="button"
 			data-testid="palette-close"
 			onclick={close}
-			aria-label="Layer-Palette schließen"
+			aria-label={m.atlas_palette_close_aria_label(undefined, localeOpts)}
 			class="rounded-sm p-1 text-ink-muted hover:text-ink"
 		>
 			<X size={18} aria-hidden="true" />
@@ -153,8 +156,8 @@
 				bind:value={searchQuery}
 				data-testid="palette-search"
 				type="search"
-				placeholder="Layer durchsuchen…"
-				aria-label="Layer durchsuchen"
+				placeholder={m.atlas_palette_search_placeholder(undefined, localeOpts)}
+				aria-label={m.atlas_palette_search_aria_label(undefined, localeOpts)}
 				class="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-subtle"
 			/>
 		</label>
@@ -166,7 +169,8 @@
 				<h3
 					class="mb-2 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ink-muted"
 				>
-					<Clock size={14} aria-hidden="true" /> Meistgenutzt
+					<Clock size={14} aria-hidden="true" />
+					{m.atlas_palette_frequent(undefined, localeOpts)}
 				</h3>
 				<ul class="space-y-1.5">
 					{#each frequentLayers as layer (layer.slug)}
@@ -185,7 +189,9 @@
 									.filter(Boolean)
 									.join(' ')}
 							>
-								<span class="font-medium text-ink">{getLayerDisplayName(layer.slug)}</span>
+								<span class="font-medium text-ink"
+									>{getLayerDisplayName(layer.slug, localeOpts)}</span
+								>
 								<span class="font-mono text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
 							</button>
 						</li>
@@ -198,7 +204,8 @@
 				<h3
 					class="mb-2 inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ink-muted"
 				>
-					<Clock size={14} aria-hidden="true" /> Zuletzt verwendet
+					<Clock size={14} aria-hidden="true" />
+					{m.atlas_palette_recent(undefined, localeOpts)}
 				</h3>
 				<ul class="space-y-1.5">
 					{#each recentLayers as layer (layer.slug)}
@@ -219,7 +226,9 @@
 									.join(' ')}
 							>
 								<span class="flex min-w-0 flex-1 flex-col">
-									<span class="font-medium text-ink">{getLayerDisplayName(layer.slug)}</span>
+									<span class="font-medium text-ink"
+										>{getLayerDisplayName(layer.slug, localeOpts)}</span
+									>
 									{#if subline}
 										<span
 											data-testid={`palette-subline-${layer.slug}`}
@@ -239,7 +248,7 @@
 
 		{#if groups.length === 0 && hasQuery}
 			<p data-testid="palette-empty" class="py-6 text-center font-serif text-ink-subtle italic">
-				Kein Layer matched „{searchQuery}".
+				{m.atlas_palette_empty({ query: searchQuery }, localeOpts)}
 			</p>
 		{:else if groups.length > 0}
 			{#each groups as group (group.bundle)}
@@ -270,7 +279,9 @@
 										.join(' ')}
 								>
 									<span class="flex min-w-0 flex-1 flex-col">
-										<span class="font-medium text-ink">{getLayerDisplayName(layer.slug)}</span>
+										<span class="font-medium text-ink"
+											>{getLayerDisplayName(layer.slug, localeOpts)}</span
+										>
 										{#if subline}
 											<span
 												data-testid={`palette-subline-${layer.slug}`}
@@ -298,7 +309,7 @@
 			disabled={activeCount === 0}
 			class="font-mono text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline disabled:opacity-40"
 		>
-			Alle deaktivieren
+			{m.atlas_palette_clear_all(undefined, localeOpts)}
 		</button>
 		<span data-testid="palette-active-count" class="font-mono text-xs text-ink-subtle">
 			{activeCount}
@@ -312,7 +323,7 @@
 		snapVh={70}
 		onSnap={() => {}}
 		onClose={close}
-		ariaLabel="Layer-Palette"
+		ariaLabel={m.atlas_palette_aria_label(undefined, localeOpts)}
 	>
 		<div data-testid="layer-palette" data-variant="sheet" class="flex h-full flex-col">
 			{@render paletteBody()}
@@ -322,7 +333,7 @@
 	<div
 		role="dialog"
 		aria-modal="true"
-		aria-label="Layer-Palette"
+		aria-label={m.atlas_palette_aria_label(undefined, localeOpts)}
 		data-testid="layer-palette"
 		data-variant="dialog"
 		tabindex="-1"

@@ -182,7 +182,9 @@ function renderHit(hit: LayerHit, lines: string[], laermDb?: number | null): voi
 function isRenderableHit(hit: LayerHit): boolean {
 	if (hit.reason === 'no-coverage') return false;
 	if (reasonText(hit)) return true;
-	return formatLayerValue(hit.layer, hit.value).text !== 'Daten nicht vorhanden';
+	// Review-Fund: Sentinel-Stringvergleich statt `isMissing` (i18n Block
+	// B3a hat den Sentinel genau dafür durch das Flag ersetzt).
+	return !formatLayerValue(hit.layer, hit.value).isMissing;
 }
 
 function renderSections(input: LlmExportInput, lines: string[]): void {

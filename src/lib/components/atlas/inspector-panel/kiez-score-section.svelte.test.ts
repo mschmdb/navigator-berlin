@@ -232,12 +232,22 @@ describe('KiezScoreSection', () => {
 		expect(toggled).toBe('kiez-score-ruhe-luft');
 	});
 
-	it('Dimension-Learn-More verlinkt auf /{lang}/layer/kiez-score-{dim}', async () => {
+	// i18n Block B3a Task 3: kein `/de/layer/...`-301-Umweg mehr -- DE hat
+	// keinen URL-Präfix (Boundary Spec i18n B3a).
+	it('Dimension-Learn-More verlinkt auf /layer/kiez-score-{dim} (DE ohne Präfix)', async () => {
 		render(KiezScoreSection, { score: makeScore(), lang: 'de', onToggleLayer: () => {} });
 		const link = (await page
 			.getByTestId('kiez-score-learn-more-mobilitaet')
 			.element()) as HTMLAnchorElement;
-		expect(link.getAttribute('href')).toBe('/de/layer/kiez-score-mobilitaet');
+		expect(link.getAttribute('href')).toBe('/layer/kiez-score-mobilitaet');
+	});
+
+	it('Dimension-Learn-More verlinkt auf /en/layer/kiez-score-{dim} für lang="en"', async () => {
+		render(KiezScoreSection, { score: makeScore(), lang: 'en', onToggleLayer: () => {} });
+		const link = (await page
+			.getByTestId('kiez-score-learn-more-mobilitaet')
+			.element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/en/layer/kiez-score-mobilitaet');
 	});
 
 	it('Gesamt-Block zeigt Eye + Link für kiez-score-gesamt', async () => {
@@ -250,7 +260,7 @@ describe('KiezScoreSection', () => {
 		const link = (await page
 			.getByTestId('kiez-score-learn-more-gesamt')
 			.element()) as HTMLAnchorElement;
-		expect(link.getAttribute('href')).toBe('/de/layer/kiez-score-gesamt');
+		expect(link.getAttribute('href')).toBe('/layer/kiez-score-gesamt');
 		const eye = (await page
 			.getByTestId('kiez-score-map-toggle-gesamt')
 			.element()) as HTMLButtonElement;

@@ -1,11 +1,69 @@
 import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
+import { m } from '$lib/paraglide/messages.js';
+import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
+import { dimensionLabel, kiezScoreScaleLabel, scaleIdFor } from './kiez-score-display.js';
 
+type MessageFn = (
+	params?: undefined,
+	options?: { locale: import('$lib/paraglide/runtime').Locale }
+) => string;
+
+/**
+ * Geschlossene Kategorien-Wörter (Koordinator-Entscheidung): Lärm/Luft/
+ * Bioklima-`kategorie` und (nach Harmonisierung) Grünversorgung nutzen die
+ * gleichen 5 Stufen-Wörter wie `atlas_scale_label_*`; Wohnlage/`wol_mode`
+ * nutzt dieselben 3 Wörter wie die Legende (`atlas_legend_word_einfach`/
+ * `atlas_scale_label_mittel`/`atlas_legend_word_gut`). Ein unbekannter/
+ * offener Rohwert (z. B. ein neuer MSS-Status) bleibt unverändert (Boundary).
+ */
+const CLOSED_CATEGORY_MESSAGE: Record<string, MessageFn> = {
+	'sehr gering': m.atlas_scale_label_sehr_gering,
+	gering: m.atlas_scale_label_gering,
+	mittel: m.atlas_scale_label_mittel,
+	hoch: m.atlas_scale_label_hoch,
+	'sehr hoch': m.atlas_scale_label_sehr_hoch,
+	einfach: m.atlas_legend_word_einfach,
+	gut: m.atlas_legend_word_gut
+};
+
+export function translateClosedCategory(raw: string, opts?: LocaleOptions): string {
+	const key = raw.toLowerCase().trim();
+	const fn = Object.hasOwn(CLOSED_CATEGORY_MESSAGE, key) ? CLOSED_CATEGORY_MESSAGE[key] : undefined;
+	return fn ? fn(undefined, toAtlasMessageOptions(opts)) : raw;
+}
+
+/**
+ * i18n Block B3a: `isMissing` ersetzt den vormaligen Sentinel-String-Vergleich
+ * (`formatted.text === 'Daten nicht vorhanden'`) als Logik-Schluessel
+ * (Boundary: "isMissing-Flag statt Sentinel"). `text` bleibt für die reine
+ * Anzeige lokalisiert.
+ */
 export interface FormattedValue {
 	text: string;
 	isNumeric: boolean;
+	isMissing: boolean;
 }
 
-const FALLBACK: FormattedValue = { text: 'Daten nicht vorhanden', isNumeric: false };
+/**
+ * Rohe, aus Quelldaten stammende Werte (Umweltatlas-`kategorie`, MSS-`si_v`/
+ * `di_v`, Wohnlage-`wol`/`wol_mode`, `gruppe_txt`, Adressen, Namen, Aemter-
+ * /Schulart-Freitext etc.) bleiben LOCALE-UNABHAENGIG unverändert (Boundary
+ * Spec i18n B3a: "Datenwerte ... unverändert", analog zu Partei-Kurznamen/
+ * `'gültig'` in Block B). Nur die umgebenden UI-Wörter (Präfixe,
+ * Verbindungstexte, Skalen-Wörter, Layer-/Dimension-Namen) werden pro
+ * Locale aufgelöst -- eine vollständige Uebersetzung jeder offenen
+ * Roh-Kategorie über den gesamten Layer-Katalog ist bewusst ausserhalb
+ * dieses Fundament-Scopes (siehe Implementation Notes).
+ */
+function missingValue(opts?: LocaleOptions): FormattedValue {
+	const options = toAtlasMessageOptions(opts);
+	return { text: m.atlas_value_missing(undefined, options), isNumeric: false, isMissing: true };
+}
+
+function value(text: string, isNumeric = false): FormattedValue {
+	return { text, isNumeric, isMissing: false };
+}
 
 function safeString(value: unknown): string {
 	if (value === null || value === undefined) return '';
@@ -35,69 +93,76 @@ function firstString(value: unknown, ...keys: string[]): string | undefined {
 	return undefined;
 }
 
-function formatBrw(value: unknown): FormattedValue {
-	if (typeof value === 'number') {
-		const numFmt = new Intl.NumberFormat('de-DE');
-		return { text: `${numFmt.format(value)} €/m²`, isNumeric: true };
+function formatBrw(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	if (typeof raw === 'number') {
+		return value(`${formatCount(raw, toAtlasMessageOptions(opts))} €/m²`, true);
 	}
-	const brw = pickProp(value, 'brw');
-	const nutzung = pickProp(value, 'nutzung');
-	if (typeof brw !== 'number') return FALLBACK;
-	const numFmt = new Intl.NumberFormat('de-DE');
+	const brw = pickProp(raw, 'brw');
+	const nutzung = pickProp(raw, 'nutzung');
+	if (typeof brw !== 'number') return missingValue(opts);
 	const suffix = typeof nutzung === 'string' ? ` · ${nutzung}` : '';
-	return { text: `${numFmt.format(brw)} €/m²${suffix}`, isNumeric: true };
+	return value(`${formatCount(brw, toAtlasMessageOptions(opts))} €/m²${suffix}`, true);
 }
 
-function formatStrassenlaerm(value: unknown): FormattedValue {
-	const gruppe = pickProp(value, 'gruppe_txt');
-	if (typeof gruppe !== 'string') return FALLBACK;
-	return { text: `Schienenverkehr: ${gruppe}`, isNumeric: false };
+function formatStrassenlaerm(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const gruppe = pickProp(raw, 'gruppe_txt');
+	if (typeof gruppe !== 'string') return missingValue(opts);
+	const options = toAtlasMessageOptions(opts);
+	return value(`${m.atlas_value_schienenverkehr(undefined, options)}: ${gruppe}`);
 }
 
 function formatUmweltatlasKategorie(
-	value: unknown,
+	raw: unknown,
 	prefix: string,
+	opts?: LocaleOptions,
 	mapKategorie?: (raw: string) => string
 ): FormattedValue {
-	const kategorie = pickProp(value, 'kategorie');
-	const plr = pickProp(value, 'plr_name');
-	if (typeof kategorie !== 'string') return FALLBACK;
-	const display = mapKategorie ? mapKategorie(kategorie) : kategorie;
+	const kategorie = pickProp(raw, 'kategorie');
+	const plr = pickProp(raw, 'plr_name');
+	if (typeof kategorie !== 'string') return missingValue(opts);
+	// Koordinator-Entscheidung: die geschlossene Kategorien-Menge (gering/
+	// mittel/hoch, nach Gruenversorgungs-Harmonisierung auch sehr gering/sehr
+	// hoch) wird übersetzt; ein echter offener Rohwert bleibt unverändert.
+	const harmonized = mapKategorie ? mapKategorie(kategorie) : kategorie;
+	const display = translateClosedCategory(harmonized, opts);
 	const suffix = typeof plr === 'string' ? ` · ${plr}` : '';
-	return { text: `${prefix}: ${display}${suffix}`, isNumeric: false };
+	return value(`${prefix}: ${display}${suffix}`);
 }
 
-function formatWohnlage(value: unknown): FormattedValue {
+function formatWohnlage(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	// Raw-Adress-Feature aus FIS-Broker (401k Punkte, sources.ts wohnlagen-2024)
 	// hat `wol` direkt pro Adresse. Aggregat-Variante mit `wol_mode` /
 	// `count_*` kommt aus dem (deferred) PLR-Polygon-Aggregator; wir
 	// behandeln beide Pfade damit zukünftige Aggregat-Migration nicht den
 	// Inspector bricht.
-	const aggregateMode = pickProp(value, 'wol_mode');
+	const options = toAtlasMessageOptions(opts);
+	const aggregateMode = pickProp(raw, 'wol_mode');
 	if (typeof aggregateMode === 'string' && aggregateMode !== 'unbekannt') {
-		const plr = pickProp(value, 'plr_name');
+		const plr = pickProp(raw, 'plr_name');
 		const counts: string[] = [];
-		for (const [k, label] of [
+		for (const [k, rawLabel] of [
 			['count_einfach', 'einfach'],
 			['count_mittel', 'mittel'],
 			['count_gut', 'gut']
 		] as const) {
-			const c = pickProp(value, k);
-			if (typeof c === 'number' && c > 0) counts.push(`${c} ${label}`);
+			const c = pickProp(raw, k);
+			if (typeof c === 'number' && c > 0) {
+				counts.push(`${c} ${translateClosedCategory(rawLabel, opts)}`);
+			}
 		}
 		const plrPart = typeof plr === 'string' ? ` · ${plr}` : '';
 		const breakdown = counts.length > 1 ? ` (${counts.join(', ')})` : '';
-		return {
-			text: `Wohnlage überwiegend ${aggregateMode}${plrPart}${breakdown}`,
-			isNumeric: false
-		};
+		// Ganzer Satz als Message (Review-Fund: kein `${prefix} ${wert}`-
+		// Zusammenkleben), `mode` ist bereits übersetzt (geschlossene Menge).
+		const mode = translateClosedCategory(aggregateMode, opts);
+		return value(`${m.atlas_value_wohnlage_ueberwiegend({ mode }, options)}${plrPart}${breakdown}`);
 	}
 
-	const rawWol = pickProp(value, 'wol');
+	const rawWol = pickProp(raw, 'wol');
 	if (typeof rawWol === 'string' && rawWol.length > 0) {
-		const strasse = pickProp(value, 'strasse');
-		const hnr = pickProp(value, 'hnr');
-		const plr = pickProp(value, 'plr_name');
+		const strasse = pickProp(raw, 'strasse');
+		const hnr = pickProp(raw, 'hnr');
+		const plr = pickProp(raw, 'plr_name');
 		const addr =
 			typeof strasse === 'string' && typeof hnr === 'string' ? `${strasse} ${hnr}` : null;
 		const tail =
@@ -108,353 +173,421 @@ function formatWohnlage(value: unknown): FormattedValue {
 					: typeof plr === 'string'
 						? ` · ${plr}`
 						: '';
-		return { text: `Wohnlage ${rawWol}${tail}`, isNumeric: false };
+		const wolValue = translateClosedCategory(rawWol, opts);
+		return value(`${m.atlas_value_wohnlage({ value: wolValue }, options)}${tail}`);
 	}
 
-	return FALLBACK;
+	return missingValue(opts);
 }
 
-function formatMilieuschutz(value: unknown): FormattedValue {
-	const name = firstString(value, 'gebietsname');
-	const bezirk = firstString(value, 'bezirk');
-	if (!name) return FALLBACK;
+function formatMilieuschutz(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const name = firstString(raw, 'gebietsname');
+	const bezirk = firstString(raw, 'bezirk');
+	if (!name) return missingValue(opts);
 	const suffix = bezirk ? ` · ${bezirk}` : '';
-	return { text: `${name}${suffix}`, isNumeric: false };
+	return value(`${name}${suffix}`);
 }
 
-function formatKita(value: unknown): FormattedValue {
-	const name = firstString(value, 'e_name');
-	const strasse = firstString(value, 'e_strasse');
-	const hnr = firstString(value, 'e_hnr');
-	if (!name) return FALLBACK;
+function formatKita(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const name = firstString(raw, 'e_name');
+	const strasse = firstString(raw, 'e_strasse');
+	const hnr = firstString(raw, 'e_hnr');
+	if (!name) return missingValue(opts);
 	const addr = strasse && hnr ? ` · ${strasse} ${hnr}` : '';
-	return { text: `${name}${addr}`, isNumeric: false };
+	return value(`${name}${addr}`);
 }
 
 // OSM-POI (Kultur, Nahversorgung): Name + Adresse statt rohem Tag-Dump.
-function formatOsmPoi(value: unknown): FormattedValue {
-	const name = firstString(value, 'name');
-	const strasse = firstString(value, 'addr:street');
-	const hnr = firstString(value, 'addr:housenumber');
+function formatOsmPoi(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const name = firstString(raw, 'name');
+	const strasse = firstString(raw, 'addr:street');
+	const hnr = firstString(raw, 'addr:housenumber');
 	const addr = strasse ? ` · ${strasse}${hnr ? ' ' + hnr : ''}` : '';
-	if (name) return { text: `${name}${addr}`, isNumeric: false };
-	const typ = firstString(value, 'amenity', 'shop', 'tourism');
-	return { text: typ ?? 'Ohne Namen', isNumeric: false };
+	if (name) return value(`${name}${addr}`);
+	const typ = firstString(raw, 'amenity', 'shop', 'tourism');
+	if (typ) return value(typ);
+	const options = toAtlasMessageOptions(opts);
+	return value(m.atlas_value_ohne_namen(undefined, options));
 }
 
-function formatSchule(value: unknown): FormattedValue {
-	const name = firstString(value, 'schulname');
-	const art = firstString(value, 'schulart');
-	if (!name) return FALLBACK;
+function formatSchule(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const name = firstString(raw, 'schulname');
+	const art = firstString(raw, 'schulart');
+	if (!name) return missingValue(opts);
 	const suffix = art ? ` · ${art}` : '';
-	return { text: `${name}${suffix}`, isNumeric: false };
+	return value(`${name}${suffix}`);
 }
 
-function formatEinschulbereich(value: unknown): FormattedValue {
-	const esb = firstString(value, 'esb');
-	const bez = firstString(value, 'bezname');
-	if (!esb) return FALLBACK;
+function formatEinschulbereich(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const esb = firstString(raw, 'esb');
+	const bez = firstString(raw, 'bezname');
+	if (!esb) return missingValue(opts);
 	const suffix = bez ? ` · ${bez}` : '';
-	return { text: `ESB ${esb}${suffix}`, isNumeric: false };
+	return value(`ESB ${esb}${suffix}`);
 }
 
-function formatKrankenhaus(value: unknown): FormattedValue {
-	const name = firstString(value, 'kkh', 'name');
-	const strasse = firstString(value, 'gc_strasse');
-	const betten = pickProp(value, 'betten');
-	if (!name) return FALLBACK;
-	const bettenPart = typeof betten === 'number' ? ` · ${betten} Betten` : '';
+function formatKrankenhaus(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const name = firstString(raw, 'kkh', 'name');
+	const strasse = firstString(raw, 'gc_strasse');
+	const betten = pickProp(raw, 'betten');
+	if (!name) return missingValue(opts);
+	const options = toAtlasMessageOptions(opts);
+	const bettenPart =
+		typeof betten === 'number'
+			? ` · ${formatCount(betten, options)} ${m.atlas_value_betten(undefined, options)}`
+			: '';
 	const strPart = strasse ? ` · ${strasse}` : '';
-	return { text: `${name}${strPart}${bettenPart}`, isNumeric: false };
+	return value(`${name}${strPart}${bettenPart}`);
 }
 
-function formatSportanlage(value: unknown): FormattedValue {
-	const name = firstString(value, 'name');
-	const flaeche = pickProp(value, 'gesamtflaeche_standort_qm');
-	if (!name) return FALLBACK;
+function formatSportanlage(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const name = firstString(raw, 'name');
+	const flaeche = pickProp(raw, 'gesamtflaeche_standort_qm');
+	if (!name) return missingValue(opts);
 	const flPart =
-		typeof flaeche === 'number' ? ` · ${new Intl.NumberFormat('de-DE').format(flaeche)} m²` : '';
-	return { text: `${name}${flPart}`, isNumeric: false };
+		typeof flaeche === 'number' ? ` · ${formatCount(flaeche, toAtlasMessageOptions(opts))} m²` : '';
+	return value(`${name}${flPart}`);
 }
 
-function formatGruenflaeche(value: unknown): FormattedValue {
-	const name = firstString(value, 'namenr', 'kennzeich');
-	const objart = firstString(value, 'objartname');
-	const bezirk = firstString(value, 'bezirkname');
+function formatGruenflaeche(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const name = firstString(raw, 'namenr', 'kennzeich');
+	const objart = firstString(raw, 'objartname');
+	const bezirk = firstString(raw, 'bezirkname');
 	const label = name ?? objart;
-	if (!label) return FALLBACK;
+	if (!label) return missingValue(opts);
 	const suffix = bezirk ? ` · ${bezirk}` : '';
-	return { text: `${label}${suffix}`, isNumeric: false };
+	return value(`${label}${suffix}`);
 }
 
-function formatSchwimmbad(value: unknown): FormattedValue {
-	const name = firstString(value, 'name_des_schwimmbads');
-	const kategorie = firstString(value, 'badkategorie');
-	if (!name) return FALLBACK;
+function formatSchwimmbad(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const name = firstString(raw, 'name_des_schwimmbads');
+	const kategorie = firstString(raw, 'badkategorie');
+	if (!name) return missingValue(opts);
 	const suffix = kategorie ? ` · ${kategorie}` : '';
-	return { text: `${name}${suffix}`, isNumeric: false };
+	return value(`${name}${suffix}`);
 }
 
-function formatRadverkehrsnetz(value: unknown): FormattedValue {
-	const netz = firstString(value, 'ist_radvorrangnetz');
-	if (!netz) return FALLBACK;
-	return { text: netz, isNumeric: false };
+function formatRadverkehrsnetz(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const netz = firstString(raw, 'ist_radvorrangnetz');
+	if (!netz) return missingValue(opts);
+	return value(netz);
 }
 
-function formatFahrradstrasse(value: unknown): FormattedValue {
-	const strasse = firstString(value, 'strasse');
-	const bezirk = firstString(value, 'bezirk');
-	if (!strasse) return FALLBACK;
+function formatFahrradstrasse(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const strasse = firstString(raw, 'strasse');
+	const bezirk = firstString(raw, 'bezirk');
+	if (!strasse) return missingValue(opts);
 	const suffix = bezirk ? ` · ${bezirk}` : '';
-	return { text: `${strasse}${suffix}`, isNumeric: false };
+	return value(`${strasse}${suffix}`);
 }
 
-function formatOepnvStation(value: unknown, prefix: string): FormattedValue {
-	const name = firstString(value, 'name');
-	if (!name) return { text: prefix, isNumeric: false };
-	return { text: `${prefix}: ${name}`, isNumeric: false };
+function formatOepnvStation(raw: unknown, prefix: string): FormattedValue {
+	const name = firstString(raw, 'name');
+	if (!name) return value(prefix);
+	return value(`${prefix}: ${name}`);
 }
 
-function formatKlimaPet(value: unknown): FormattedValue {
-	const pet = pickProp(value, 'pet14h');
-	if (typeof pet !== 'number') return FALLBACK;
-	const numFmt = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 });
-	return { text: `${numFmt.format(pet)} °C (gefühlt, 14 Uhr)`, isNumeric: true };
+function formatKlimaPet(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const pet = pickProp(raw, 'pet14h');
+	if (typeof pet !== 'number') return missingValue(opts);
+	const options = toAtlasMessageOptions(opts);
+	const formatted = formatDecimal(pet, { ...options, maximumFractionDigits: 1 });
+	return value(`${formatted} °C (${m.atlas_value_gefuehlt_14uhr(undefined, options)})`, true);
 }
 
-function formatEinwohnerdichte(value: unknown): FormattedValue {
-	const dichte = pickProp(value, 'dichte');
-	if (typeof dichte !== 'number' || !Number.isFinite(dichte)) return FALLBACK;
-	const numFmt = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
-	return { text: `${numFmt.format(dichte)} Einwohner/km²`, isNumeric: true };
+function formatEinwohnerdichte(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const dichte = pickProp(raw, 'dichte');
+	if (typeof dichte !== 'number' || !Number.isFinite(dichte)) return missingValue(opts);
+	const options = toAtlasMessageOptions(opts);
+	const formatted = formatDecimal(dichte, { ...options, maximumFractionDigits: 0 });
+	return value(`${formatted} ${m.atlas_value_einwohner_pro_km2(undefined, options)}`, true);
 }
 
-function formatKlimaHighlight(value: unknown, label: string): FormattedValue {
-	if (!value || (typeof value === 'object' && Object.keys(value).length === 0)) return FALLBACK;
-	return { text: label, isNumeric: false };
+function formatKlimaHighlight(raw: unknown, label: string, opts?: LocaleOptions): FormattedValue {
+	if (!raw || (typeof raw === 'object' && Object.keys(raw).length === 0)) return missingValue(opts);
+	return value(label);
 }
 
-function formatUmweltgerechtigkeit(value: unknown): FormattedValue {
-	const kategorie = pickProp(value, 'kategorie');
-	if (typeof kategorie !== 'string') return FALLBACK;
+function formatUmweltgerechtigkeit(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const kategorie = pickProp(raw, 'kategorie');
+	if (typeof kategorie !== 'string') return missingValue(opts);
+	const options = toAtlasMessageOptions(opts);
 	const subs: string[] = [];
-	const map = [
-		['laerm', 'Lärm'],
-		['luft', 'Luft'],
-		['bioklima', 'Bioklima'],
-		['gruenvers', 'Grün']
+	const topicMap = [
+		['laerm', m.atlas_value_topic_laerm(undefined, options)],
+		['luft', m.atlas_value_topic_luft(undefined, options)],
+		['bioklima', m.atlas_value_topic_bioklima(undefined, options)],
+		['gruenvers', m.atlas_value_topic_gruen(undefined, options)]
 	] as const;
-	for (const [key, label] of map) {
-		const v = pickProp(value, key);
+	for (const [key, label] of topicMap) {
+		const v = pickProp(raw, key);
 		if (typeof v === 'string') subs.push(`${label}: ${v}`);
 	}
-	const social = pickProp(value, 'status_ind');
+	const social = pickProp(raw, 'status_ind');
 	const suffix = subs.length > 0 ? ` · ${subs.join(', ')}` : '';
-	const socialPart = typeof social === 'string' ? ` · Soziales: ${social}` : '';
-	return { text: `Belastung: ${kategorie}${suffix}${socialPart}`, isNumeric: false };
+	const socialPart =
+		typeof social === 'string' ? ` · ${m.atlas_value_soziales(undefined, options)}: ${social}` : '';
+	return value(
+		`${m.atlas_value_belastung(undefined, options)}: ${kategorie}${suffix}${socialPart}`
+	);
 }
 
-function formatBezirk(value: unknown): FormattedValue {
-	if (typeof value === 'string') return { text: value, isNumeric: false };
-	const name = firstString(value, 'Gemeinde_name');
-	if (name) return { text: name, isNumeric: false };
-	return FALLBACK;
+function formatBezirk(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	if (typeof raw === 'string') return value(raw);
+	const name = firstString(raw, 'Gemeinde_name');
+	if (name) return value(name);
+	return missingValue(opts);
 }
 
-function formatOrtsteil(value: unknown): FormattedValue {
-	if (typeof value === 'string') return { text: value, isNumeric: false };
-	const name = firstString(value, 'OTEIL', 'spatial_alias');
-	const bezirk = firstString(value, 'BEZIRK');
-	if (!name) return FALLBACK;
+function formatOrtsteil(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	if (typeof raw === 'string') return value(raw);
+	const name = firstString(raw, 'OTEIL', 'spatial_alias');
+	const bezirk = firstString(raw, 'BEZIRK');
+	if (!name) return missingValue(opts);
 	const suffix = bezirk && bezirk !== name ? ` · ${bezirk}` : '';
-	return { text: `${name}${suffix}`, isNumeric: false };
+	return value(`${name}${suffix}`);
 }
 
-function formatPlz(value: unknown): FormattedValue {
-	if (typeof value === 'string') return { text: value, isNumeric: false };
-	const plz = firstString(value, 'plz');
-	return plz ? { text: plz, isNumeric: false } : FALLBACK;
+function formatPlz(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	if (typeof raw === 'string') return value(raw);
+	const plz = firstString(raw, 'plz');
+	return plz ? value(plz) : missingValue(opts);
 }
 
-function formatLor(value: unknown, idKey: string, nameKey: string): FormattedValue {
-	if (typeof value === 'string') return { text: value, isNumeric: false };
-	const name = firstString(value, nameKey);
-	const id = firstString(value, idKey);
-	if (!name && !id) return FALLBACK;
+function formatLor(
+	raw: unknown,
+	idKey: string,
+	nameKey: string,
+	opts?: LocaleOptions
+): FormattedValue {
+	if (typeof raw === 'string') return value(raw);
+	const name = firstString(raw, nameKey);
+	const id = firstString(raw, idKey);
+	if (!name && !id) return missingValue(opts);
 	const text = name && id ? `${name} (${id})` : (name ?? id ?? '');
-	return { text, isNumeric: false };
+	return value(text);
 }
 
-function formatMssGesamtindex(value: unknown): FormattedValue {
-	const si = firstString(value, 'si_v');
-	const di = firstString(value, 'di_v');
-	const plr = firstString(value, 'plr_name');
-	const kom = firstString(value, 'kom');
+function formatMssGesamtindex(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const si = firstString(raw, 'si_v');
+	const di = firstString(raw, 'di_v');
+	const plr = firstString(raw, 'plr_name');
+	const kom = firstString(raw, 'kom');
+	const options = toAtlasMessageOptions(opts);
 	const plrSuffix = plr ? ` · ${plr}` : '';
 	if (kom && kom !== 'gültig') {
-		return {
-			text: `Aggregat nicht aussagekräftig${plrSuffix} (${kom})`,
-			isNumeric: false
-		};
+		return value(
+			`${m.atlas_value_aggregat_nicht_aussagekraeftig(undefined, options)}${plrSuffix} (${kom})`
+		);
 	}
-	if (!si || !di) return FALLBACK;
-	return { text: `Status ${si}, Dynamik ${di}${plrSuffix}`, isNumeric: false };
+	if (!si || !di) return missingValue(opts);
+	return value(
+		`${m.atlas_value_status(undefined, options)} ${si}, ${m.atlas_value_dynamik(undefined, options)} ${di}${plrSuffix}`
+	);
 }
 
-function formatStolperstein(value: unknown): FormattedValue {
-	const person = firstString(value, 'person', 'name', 'vorname_nachname');
-	if (person) return { text: `Für ${person}`, isNumeric: false };
-	return { text: 'Gedenkstein in der Nähe', isNumeric: false };
+function formatStolperstein(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const options = toAtlasMessageOptions(opts);
+	const person = firstString(raw, 'person', 'name', 'vorname_nachname');
+	if (person) return value(m.atlas_value_stolperstein_fuer({ name: person }, options));
+	return value(m.atlas_value_gedenkstein_in_der_naehe(undefined, options));
 }
 
-function kiezScoreStufe(value: number): 'gering' | 'mittel' | 'hoch' | 'sehr hoch' {
-	if (value <= 25) return 'gering';
-	if (value <= 50) return 'mittel';
-	if (value <= 75) return 'hoch';
-	return 'sehr hoch';
+/** Nutzt dieselbe Schwellen-Quelle wie `scaleFor()` (`scaleIdFor`, Review-
+ * Fund: keine dritte Kopie derselben Zahlen). */
+function kiezScoreStufeLabel(v: number, opts?: LocaleOptions): string {
+	return kiezScoreScaleLabel(scaleIdFor(v), opts);
 }
 
-function kiezScoreNeutralStufe(value: number): string {
-	if (value <= 25) return 'Stufe sehr niedrig';
-	if (value <= 50) return 'Stufe niedrig';
-	if (value <= 75) return 'Stufe mittel';
-	return 'Stufe hoch';
+/** Eigene, neutrale 4-Stufen-Wortfamilie für die Kriminalitäts-Dimension
+ * (ADR-019, Stigma-Schutz: "niedrig" statt "gering", kein "sehr hoch") --
+ * bewusst NICHT `atlas_scale_label_*`, die eine andere Wortfamilie ist
+ * ("gering"/"mittel"/"hoch"/"sehr hoch"). Ganze Phrasen als Message (Review-
+ * Fund: kein `${stufeWort} ${level}`-Zusammenkleben). */
+function kiezScoreNeutralStufeLabel(v: number, opts?: LocaleOptions): string {
+	const options = toAtlasMessageOptions(opts);
+	if (v <= 25) return m.atlas_value_neutral_level_sehr_niedrig(undefined, options);
+	if (v <= 50) return m.atlas_value_neutral_level_niedrig(undefined, options);
+	if (v <= 75) return m.atlas_value_neutral_level_mittel(undefined, options);
+	return m.atlas_value_neutral_level_hoch(undefined, options);
 }
 
 function formatKiezScoreValue(
-	value: unknown,
-	dimensionLabel: string,
-	options: { neutral?: boolean } = {}
+	raw: unknown,
+	dimensionLabelText: string,
+	variant: { neutral?: boolean } = {},
+	opts?: LocaleOptions
 ): FormattedValue {
-	if (!value || typeof value !== 'object') return FALLBACK;
-	const obj = value as Record<string, unknown>;
-	const raw = obj.value;
-	if (raw === null || raw === undefined) {
-		return { text: `${dimensionLabel}: keine Zuordnung`, isNumeric: false };
+	if (!raw || typeof raw !== 'object') return missingValue(opts);
+	const obj = raw as Record<string, unknown>;
+	const rawValue = obj.value;
+	const options = toAtlasMessageOptions(opts);
+	if (rawValue === null || rawValue === undefined) {
+		return value(`${dimensionLabelText}: ${m.atlas_value_keine_zuordnung(undefined, options)}`);
 	}
-	const num = typeof raw === 'number' ? raw : Number(raw);
+	const num = typeof rawValue === 'number' ? rawValue : Number(rawValue);
 	if (!Number.isFinite(num)) {
-		return { text: `${dimensionLabel}: keine Zuordnung`, isNumeric: false };
+		return value(`${dimensionLabelText}: ${m.atlas_value_keine_zuordnung(undefined, options)}`);
 	}
-	const stufe = options.neutral ? kiezScoreNeutralStufe(num) : kiezScoreStufe(num);
-	return { text: `${dimensionLabel}: ${stufe} (${Math.round(num)}/100)`, isNumeric: false };
+	const stufe = variant.neutral
+		? kiezScoreNeutralStufeLabel(num, opts)
+		: kiezScoreStufeLabel(num, opts);
+	return value(`${dimensionLabelText}: ${stufe} (${Math.round(num)}/100)`);
 }
 
-export function formatLayerValue(slug: string, value: unknown): FormattedValue {
-	if (value === null || value === undefined) return FALLBACK;
-	if (typeof value === 'object' && value !== null && Object.keys(value).length === 0) {
-		return FALLBACK;
+export function formatLayerValue(slug: string, raw: unknown, opts?: LocaleOptions): FormattedValue {
+	if (raw === null || raw === undefined) return missingValue(opts);
+	if (typeof raw === 'object' && raw !== null && Object.keys(raw).length === 0) {
+		return missingValue(opts);
 	}
+	const options = toAtlasMessageOptions(opts);
 
 	switch (slug) {
 		case 'bezirke':
-			return formatBezirk(value);
+			return formatBezirk(raw, opts);
 		case 'ortsteile':
-			return formatOrtsteil(value);
+			return formatOrtsteil(raw, opts);
 		case 'plz':
-			return formatPlz(value);
+			return formatPlz(raw, opts);
 		case 'lor-prognoseraum':
-			return formatLor(value, 'PGR_ID', 'PGR_NAME');
+			return formatLor(raw, 'PGR_ID', 'PGR_NAME', opts);
 		case 'lor-bezirksregion':
-			return formatLor(value, 'BZR_ID', 'BZR_NAME');
+			return formatLor(raw, 'BZR_ID', 'BZR_NAME', opts);
 		case 'lor-planungsraum':
-			return formatLor(value, 'PLR_ID', 'PLR_NAME');
+			return formatLor(raw, 'PLR_ID', 'PLR_NAME', opts);
 		case 'bodenrichtwerte':
-			return formatBrw(value);
+			return formatBrw(raw, opts);
 		case 'strassenlaerm-2022':
-			return formatStrassenlaerm(value);
+			return formatStrassenlaerm(raw, opts);
 		case 'laerm-2023':
-			return formatUmweltatlasKategorie(value, 'Lärmbelastung');
+			return formatUmweltatlasKategorie(
+				raw,
+				m.atlas_value_prefix_laermbelastung(undefined, options),
+				opts
+			);
 		case 'luft-2023':
-			return formatUmweltatlasKategorie(value, 'Luftbelastung');
+			return formatUmweltatlasKategorie(
+				raw,
+				m.atlas_value_prefix_luftbelastung(undefined, options),
+				opts
+			);
 		case 'bioklima-2023':
-			return formatUmweltatlasKategorie(value, 'Thermische Belastung');
+			return formatUmweltatlasKategorie(
+				raw,
+				m.atlas_value_prefix_thermische_belastung(undefined, options),
+				opts
+			);
 		case 'gruenversorgung-2023':
-			return formatUmweltatlasKategorie(value, 'Grünversorgung', mapGruenversorgungKategorie);
+			return formatUmweltatlasKategorie(
+				raw,
+				m.atlas_value_prefix_gruenversorgung(undefined, options),
+				opts,
+				mapGruenversorgungKategorie
+			);
 		case 'umweltgerechtigkeit-2023':
-			return formatUmweltgerechtigkeit(value);
+			return formatUmweltgerechtigkeit(raw, opts);
 		case 'klima-pet-2022':
-			return formatKlimaPet(value);
+			return formatKlimaPet(raw, opts);
 		case 'einwohner-dichte-2024':
-			return formatEinwohnerdichte(value);
+			return formatEinwohnerdichte(raw, opts);
 		case 'klima-kaltlufteinwirkbereich-2022':
-			return formatKlimaHighlight(value, 'Kaltluft-Einwirkbereich');
+			return formatKlimaHighlight(
+				raw,
+				m.atlas_value_kaltluft_einwirkbereich(undefined, options),
+				opts
+			);
 		case 'klima-leitbahnkorridor-2022':
-			return formatKlimaHighlight(value, 'Kaltluft-Leitbahn-Korridor');
+			return formatKlimaHighlight(
+				raw,
+				m.atlas_value_kaltluft_leitbahn_korridor(undefined, options),
+				opts
+			);
 		case 'wohnlagen-2024':
-			return formatWohnlage(value);
+			return formatWohnlage(raw, opts);
 		case 'milieuschutz-erhaltungsmiete':
 		case 'milieuschutz-staedtebau':
-			return formatMilieuschutz(value);
+			return formatMilieuschutz(raw, opts);
 		case 'mss-gesamtindex-2025':
-			return formatMssGesamtindex(value);
+			return formatMssGesamtindex(raw, opts);
 		case 'kitas-2024':
-			return formatKita(value);
+			return formatKita(raw, opts);
 		case 'schulen-2024':
-			return formatSchule(value);
+			return formatSchule(raw, opts);
 		case 'einschulbereiche-2024':
-			return formatEinschulbereich(value);
+			return formatEinschulbereich(raw, opts);
 		case 'krankenhaeuser-plan':
 		case 'krankenhaeuser-weitere':
-			return formatKrankenhaus(value);
+			return formatKrankenhaus(raw, opts);
 		case 'sportanlagen-2024':
-			return formatSportanlage(value);
+			return formatSportanlage(raw, opts);
 		case 'gruenanlagen':
 		case 'spielplaetze':
-			return formatGruenflaeche(value);
+			return formatGruenflaeche(raw, opts);
 		case 'schwimmbaeder':
-			return formatSchwimmbad(value);
+			return formatSchwimmbad(raw, opts);
 		case 'radverkehrsnetz-2025':
-			return formatRadverkehrsnetz(value);
+			return formatRadverkehrsnetz(raw, opts);
 		case 'fahrradstrassen-2024':
-			return formatFahrradstrasse(value);
+			return formatFahrradstrasse(raw, opts);
 		case 'ubahn-stationen':
-			return formatOepnvStation(value, 'U-Bahn');
+			return formatOepnvStation(raw, 'U-Bahn');
 		case 'sbahn-stationen':
-			return formatOepnvStation(value, 'S-Bahn');
+			return formatOepnvStation(raw, 'S-Bahn');
 		case 'tram-haltestellen':
-			return formatOepnvStation(value, 'Tram');
+			return formatOepnvStation(raw, 'Tram');
 		case 'bus-haltestellen':
-			return formatOepnvStation(value, 'Bus');
+			return formatOepnvStation(raw, 'Bus');
+		// Konsolidiert mit den Legenden-Labels (Review-Fund: derselbe Begriff
+		// "U-/S-Bahn-/Tram-Trasse" existierte doppelt).
 		case 'ubahn-netz':
-			return { text: 'U-Bahn-Trasse', isNumeric: false };
+			return value(m.atlas_legend_line_ubahn_trasse(undefined, options));
 		case 'sbahn-netz':
-			return { text: 'S-Bahn-Trasse', isNumeric: false };
+			return value(m.atlas_legend_line_sbahn_trasse(undefined, options));
 		case 'tram-netz':
-			return { text: 'Tram-Trasse', isNumeric: false };
+			return value(m.atlas_legend_line_tram_trasse(undefined, options));
 		case 'stolpersteine':
-			return formatStolperstein(value);
+			return formatStolperstein(raw, opts);
 		case 'trinkbrunnen':
-			return { text: 'Trinkbrunnen vor Ort', isNumeric: false };
+			return value(m.atlas_value_trinkbrunnen_vor_ort(undefined, options));
 		case 'kiez-score-gesamt':
-			return formatKiezScoreValue(value, 'Gesamt');
+			return formatKiezScoreValue(
+				raw,
+				m.atlas_value_kiez_score_overall(undefined, options),
+				{},
+				opts
+			);
 		case 'kiez-score-ruhe-luft':
-			return formatKiezScoreValue(value, 'Ruhe & Luft');
+			return formatKiezScoreValue(raw, dimensionLabel('ruhe-luft', opts), {}, opts);
 		case 'kiez-score-gruen-hitze':
-			return formatKiezScoreValue(value, 'Grün & Hitze');
+			return formatKiezScoreValue(raw, dimensionLabel('gruen-hitze', opts), {}, opts);
 		case 'kiez-score-mobilitaet':
-			return formatKiezScoreValue(value, 'Mobilität');
+			return formatKiezScoreValue(raw, dimensionLabel('mobilitaet', opts), {}, opts);
 		case 'kiez-score-versorgung':
-			return formatKiezScoreValue(value, 'Versorgung');
+			return formatKiezScoreValue(raw, dimensionLabel('versorgung', opts), {}, opts);
 		case 'kiez-score-wohnschutz':
-			return formatKiezScoreValue(value, 'Wohnschutz');
+			return formatKiezScoreValue(raw, dimensionLabel('wohnschutz', opts), {}, opts);
 		case 'kiez-score-kultur':
-			return formatKiezScoreValue(value, 'Kultur');
+			return formatKiezScoreValue(raw, dimensionLabel('kultur', opts), {}, opts);
 		case 'kiez-score-kriminalitaet':
 			// Magnitude, neutrale Stufen (kein „gut/schlecht", ADR-019).
-			return formatKiezScoreValue(value, 'Erfasste Kriminalität', { neutral: true });
+			return formatKiezScoreValue(
+				raw,
+				dimensionLabel('kriminalitaet', opts),
+				{ neutral: true },
+				opts
+			);
 		// Legacy/fictitious Slugs (Story 1.3 Re-Run TODO):
 		case 'mietspiegel-wohnlage':
-			return { text: safeString(value), isNumeric: false };
+			return value(safeString(raw));
 		case 'laerm-den':
 		case 'laerm-night':
-			return { text: `${safeString(value)} dB`, isNumeric: true };
+			return value(`${safeString(raw)} dB`, true);
 		case 'solarpotenzial':
-			return { text: `${safeString(value)} kWh/m²`, isNumeric: true };
+			return value(`${safeString(raw)} kWh/m²`, true);
 		case 'gebaeudealter':
-			return { text: safeString(value), isNumeric: false };
+			return value(safeString(raw));
 		case 'klimaanalyse':
-			return { text: safeString(value), isNumeric: false };
+			return value(safeString(raw));
 		case 'nahversorgung-lebensmittel':
 		case 'nahversorgung-apotheke':
 		case 'nahversorgung-post':
@@ -466,8 +599,8 @@ export function formatLayerValue(slug: string, value: unknown): FormattedValue {
 		case 'kultur-kino':
 		case 'kultur-soziokultur':
 		case 'kultur-club':
-			return formatOsmPoi(value);
+			return formatOsmPoi(raw, opts);
 		default:
-			return { text: safeString(value), isNumeric: typeof value === 'number' };
+			return value(safeString(raw), typeof raw === 'number');
 	}
 }

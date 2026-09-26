@@ -136,4 +136,27 @@ describe('buildMultiHoverContent (Multi-Layer-Tooltip)', () => {
 			buildMultiHoverContent([{ layer: { id: 'basemap-water' }, properties: null }])
 		).toBeNull();
 	});
+
+	// i18n Block B3a: EN-Karte (`/en/explore`) übergibt `{ locale: 'en' }`.
+	it('liefert EN layerName/hint mit { locale: "en" }, DE ohne opts', () => {
+		const de = buildHoverTooltipContent('laerm-2023', { kategorie: 'hoch', plr_name: 'X' });
+		expect(de.layerName).toBe('Lärmbelastung 2023');
+		expect(de.hint).toBe('Klick für volle Adresse-Inspektion');
+		const en = buildHoverTooltipContent(
+			'laerm-2023',
+			{ kategorie: 'hoch', plr_name: 'X' },
+			{ locale: 'en' }
+		);
+		expect(en.layerName).toBe('Noise pollution 2023');
+		expect(en.hint).toBe('Click for full address inspection');
+	});
+
+	it('POI-Hint englisch mit { locale: "en" }', () => {
+		const c = buildHoverTooltipContent(
+			'ubahn-stationen',
+			{ name: 'Boddinstraße' },
+			{ locale: 'en' }
+		);
+		expect(c.hint).toBe('More in the inspector →');
+	});
 });

@@ -8,7 +8,8 @@
 <script lang="ts">
 	import type { LayerHit } from '$lib/data';
 	import { Eye, EyeOff, ExternalLink, ChevronDown } from '@lucide/svelte';
-	import { resolve } from '$app/paths';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import type { Locale } from '$lib/paraglide/runtime';
 	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
 	import { getValueSeverity } from './internal/value-severity-mapping.js';
 	import { getLayerExplainEntry, getLayerExternalLink } from './internal/layer-explain.js';
@@ -20,7 +21,7 @@
 	type Props = {
 		hit: LayerHit;
 		layerName: string;
-		lang?: string;
+		lang?: Locale;
 		isActive?: boolean;
 		onToggleLayer?: (slug: string) => void;
 		/** Vom Parent vorgebaute Umfeld-Zeilen (Kiez/Bezirk/Berlin), aggregat-typ-agnostisch. */
@@ -41,7 +42,7 @@
 	const explainEntry = $derived(getLayerExplainEntry(hit.layer));
 	const externalLink = $derived(getLayerExternalLink(hit.layer));
 	const editorial = $derived(getEditorialConfig(hit.layer));
-	const learnMoreHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/${hit.layer}`));
+	const learnMoreHref = $derived(localizedHref(`/layer/${hit.layer}`, lang));
 
 	type RowState =
 		| 'with-value'

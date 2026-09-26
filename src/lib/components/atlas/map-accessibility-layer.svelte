@@ -22,6 +22,8 @@
 		type AccessibleFeature,
 		type AccessibleFeatureInput
 	} from './internal/feature-describer.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	type CompareAddressInfo = { displayName: string };
 
@@ -49,6 +51,7 @@
 
 	let visibleFeatures = $state<AccessibleFeature[]>([]);
 	let overflowCount = $state(0);
+	const localeOpts = $derived({ locale: getLocale() });
 
 	const layerBySlug = $derived(new Map(layers.map((l) => [l.slug, l])));
 	const layerIdsToQuery = $derived(layers.map((l) => l.slug));
@@ -122,7 +125,7 @@
 				properties: r.properties ?? {},
 				centroid: firstCoord(r.geometry)
 			};
-			const accessible = describeFeature(input, layer);
+			const accessible = describeFeature(input, layer, localeOpts);
 			if (seen[accessible.id]) continue;
 			seen[accessible.id] = true;
 			result.push(accessible);
@@ -169,7 +172,9 @@
 				onclick={() => onSelectCompareSide?.('a')}
 				class="w-full border border-rule bg-bg px-3 py-2 text-left text-sm text-ink hover:bg-bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
 			>
-				<span class="block font-medium">Adresse A: {compareA.displayName}</span>
+				<span class="block font-medium"
+					>{m.atlas_a11y_compare_a({ name: compareA.displayName }, localeOpts)}</span
+				>
 			</button>
 			<button
 				type="button"
@@ -177,15 +182,17 @@
 				onclick={() => onSelectCompareSide?.('b')}
 				class="w-full border border-rule bg-bg px-3 py-2 text-left text-sm text-ink hover:bg-bg-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
 			>
-				<span class="block font-medium">Adresse B: {compareB.displayName}</span>
+				<span class="block font-medium"
+					>{m.atlas_a11y_compare_b({ name: compareB.displayName }, localeOpts)}</span
+				>
 			</button>
 		</div>
 	{/if}
 	<p id="map-a11y-layer-heading" class="text-sm font-semibold text-ink">
-		Sichtbare Orte und Grenzen auf der Karte
+		{m.atlas_a11y_heading(undefined, localeOpts)}
 	</p>
 	{#if visibleFeatures.length === 0}
-		<p class="mt-2 text-sm text-ink-muted">Keine sichtbaren Features im aktuellen Ausschnitt.</p>
+		<p class="mt-2 text-sm text-ink-muted">{m.atlas_a11y_empty(undefined, localeOpts)}</p>
 	{:else}
 		<ul
 			role="list"
@@ -212,7 +219,9 @@
 			{/each}
 		</ul>
 		{#if overflowCount > 0}
-			<p class="mt-2 text-xs text-ink-subtle">und {overflowCount} weitere Features ausgeblendet</p>
+			<p class="mt-2 text-xs text-ink-subtle">
+				{m.atlas_a11y_overflow({ count: overflowCount }, localeOpts)}
+			</p>
 		{/if}
 	{/if}
 </div>

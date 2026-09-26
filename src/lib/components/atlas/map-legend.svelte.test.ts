@@ -1,8 +1,13 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import MapLegend from './map-legend.svelte';
 import type { LayerMetadata } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 import { dotSpecForSlug } from './internal/choropleth-dots.js';
 import { SCORE_DOT_BASE_PX } from './internal/dimension-ramps.js';
 
@@ -36,6 +41,28 @@ describe('map-legend.svelte', () => {
 		await expect.element(page.getByText('gering', { exact: true })).toBeInTheDocument();
 		await expect.element(page.getByText('mittel', { exact: true })).toBeInTheDocument();
 		await expect.element(page.getByText('hoch', { exact: true })).toBeInTheDocument();
+	});
+
+	// i18n Block B3a: `lang="en"` übersetzt Layer-Name, Legend-Items und
+	// aria-label; Karten-Legende bleibt sonst identisch aufgebaut.
+	it('rendert englische Legende für lang="en"', async () => {
+		render(MapLegend, { activeLayerSlugs: ['laerm-2023'], lang: 'en' });
+		await expect
+			.element(page.getByRole('complementary', { name: 'Map legend' }))
+			.toBeInTheDocument();
+		await expect.element(page.getByText('Noise Pollution 2023')).toBeInTheDocument();
+		await expect.element(page.getByText('low', { exact: true })).toBeInTheDocument();
+		await expect.element(page.getByText('medium', { exact: true })).toBeInTheDocument();
+		await expect.element(page.getByText('high', { exact: true })).toBeInTheDocument();
+	});
+
+	// Review-Fund: bisher nur über das explizite `lang`-Prop getestet -- die
+	// Karten-Oberfläche selbst übergibt kein `lang`-Prop, sondern verlässt
+	// sich auf den `getLocale()`-Default-Pfad.
+	it('rendert englische Legende über den Default-Pfad (getLocale()), ohne explizites lang-Prop', async () => {
+		overwriteGetLocale(() => 'en');
+		render(MapLegend, { activeLayerSlugs: ['laerm-2023'] });
+		await expect.element(page.getByText('Noise Pollution 2023')).toBeInTheDocument();
 	});
 
 	it('rendert gradient-Legend mit Range-Labels (choropleth-pet)', async () => {
@@ -121,14 +148,26 @@ describe('map-legend.svelte', () => {
 			expect(scale.textContent).toMatch(/32 °C|extrem heiß/);
 		});
 
-		it('Expand zeigt Mehr-erfahren-Link auf /lang/layer/slug', async () => {
+		// i18n Block B3a Task 3: kein `/de/layer/...`-301-Umweg mehr -- DE hat
+		// keinen URL-Präfix (Boundary Spec i18n B3a).
+		it('Expand zeigt Mehr-erfahren-Link auf /layer/slug (DE ohne Präfix)', async () => {
 			const m = [meta('laerm-2023')];
 			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m, lang: 'de' });
 			await page.getByTestId('legend-summary-laerm-2023').click();
 			const link = (await page
 				.getByTestId('legend-more-link-laerm-2023')
 				.element()) as HTMLAnchorElement;
-			expect(link.getAttribute('href')).toBe('/de/layer/laerm-2023');
+			expect(link.getAttribute('href')).toBe('/layer/laerm-2023');
+		});
+
+		it('Expand zeigt Mehr-erfahren-Link auf /en/layer/slug für lang="en"', async () => {
+			const m = [meta('laerm-2023')];
+			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m, lang: 'en' });
+			await page.getByTestId('legend-summary-laerm-2023').click();
+			const link = (await page
+				.getByTestId('legend-more-link-laerm-2023')
+				.element()) as HTMLAnchorElement;
+			expect(link.getAttribute('href')).toBe('/en/layer/laerm-2023');
 		});
 
 		it('Zweiter Click auf Summary kollabiert wieder', async () => {
@@ -242,7 +281,7 @@ describe('map-legend.svelte', () => {
 			expect(c.getAttribute('data-variant')).toBe('outline');
 		});
 
-		it('cascadeVariants rendert KEIN Variant-Badge fuer non-polygon-Slugs', async () => {
+		it('cascadeVariants rendert KEIN Variant-Badge für non-polygon-Slugs', async () => {
 			const variants = new Map<string, 'fill' | 'outline'>();
 			render(MapLegend, {
 				activeLayerSlugs: ['ubahn-netz', 'kitas-2024'],

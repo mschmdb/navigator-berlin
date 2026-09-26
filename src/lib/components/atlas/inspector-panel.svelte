@@ -63,10 +63,11 @@
 	import { browser } from '$app/environment';
 	import { resolveAppMode } from '$lib/app-mode';
 	import { resolve } from '$app/paths';
+	import type { Locale } from '$lib/paraglide/runtime';
 
 	type Props = {
 		layerMeta?: readonly LayerMetadata[];
-		lang?: string;
+		lang?: Locale;
 		variant?: 'panel' | 'sheet';
 		mountId?: string;
 	};
@@ -379,7 +380,7 @@
 		for (const hit of enrichedHits) {
 			if (topLayers.length >= 3) break;
 			const formatted = formatLayerValue(hit.layer, hit.value);
-			if (formatted.text === 'Daten nicht vorhanden') continue;
+			if (formatted.isMissing) continue;
 			topLayers.push(`${getLayerDisplayName(hit.layer)}: ${formatted.text}`);
 		}
 		return {
@@ -605,84 +606,84 @@
 		{#key ui.selectedAddress?.id}
 			<div class="lc-inspector-body flex-1 space-y-4 px-6 py-4">
 				{#if !hitzeMode}
-				<KiezScoreSection
-					score={ui.kiezScore}
-					{lang}
-					activeLayerSlugs={ui.activeLayerSlugs}
-					onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-				/>
-				{#if level.kiezSlug || level.bezirkSlug}
-					<nav
-						data-testid="inspector-profile-links"
-						aria-label="Profilseiten"
-						class="flex flex-col gap-1"
-					>
-						{#if level.kiezSlug}
-							{@const kiezHref = resolve('/(with-header)/kiez/[slug]', { slug: level.kiezSlug })}
-							<div class="flex items-baseline justify-between gap-2">
-								<a
-									data-testid="inspector-kiez-link"
-									class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
-									href={kiezHref}
-								>
-									Kiez-Profil{level.kiezName ? `: ${level.kiezName}` : ''}
-								</a>
-								{#if kiezComposite !== null}
-									<span
-										data-testid="inspector-kiez-composite"
-										class="shrink-0 font-mono text-xs text-ink-muted"
-										title="Gesamt-Score der Bezirksregion (Mittel ihrer Planungsräume)"
+					<KiezScoreSection
+						score={ui.kiezScore}
+						{lang}
+						activeLayerSlugs={ui.activeLayerSlugs}
+						onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+					/>
+					{#if level.kiezSlug || level.bezirkSlug}
+						<nav
+							data-testid="inspector-profile-links"
+							aria-label="Profilseiten"
+							class="flex flex-col gap-1"
+						>
+							{#if level.kiezSlug}
+								{@const kiezHref = resolve('/(with-header)/kiez/[slug]', { slug: level.kiezSlug })}
+								<div class="flex items-baseline justify-between gap-2">
+									<a
+										data-testid="inspector-kiez-link"
+										class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+										href={kiezHref}
 									>
-										Score {Math.round(kiezComposite)}
-									</span>
-								{/if}
-							</div>
-						{/if}
-						{#if level.bezirkSlug}
-							{@const bezirkHref = resolve('/(with-header)/bezirk/[slug]', {
-								slug: level.bezirkSlug
-							})}
-							<div class="flex items-baseline justify-between gap-2">
-								<a
-									data-testid="inspector-bezirk-link"
-									class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
-									href={bezirkHref}
-								>
-									Bezirks-Profil{level.bezirkName ? `: ${level.bezirkName}` : ''}
-								</a>
-								{#if bezirkComposite !== null}
-									<span
-										data-testid="inspector-bezirk-composite"
-										class="shrink-0 font-mono text-xs text-ink-muted"
-										title="Gesamt-Score des Bezirks (Mittel seiner Planungsräume)"
+										Kiez-Profil{level.kiezName ? `: ${level.kiezName}` : ''}
+									</a>
+									{#if kiezComposite !== null}
+										<span
+											data-testid="inspector-kiez-composite"
+											class="shrink-0 font-mono text-xs text-ink-muted"
+											title="Gesamt-Score der Bezirksregion (Mittel ihrer Planungsräume)"
+										>
+											Score {Math.round(kiezComposite)}
+										</span>
+									{/if}
+								</div>
+							{/if}
+							{#if level.bezirkSlug}
+								{@const bezirkHref = resolve('/(with-header)/bezirk/[slug]', {
+									slug: level.bezirkSlug
+								})}
+								<div class="flex items-baseline justify-between gap-2">
+									<a
+										data-testid="inspector-bezirk-link"
+										class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+										href={bezirkHref}
 									>
-										Score {Math.round(bezirkComposite)}
-									</span>
-								{/if}
-							</div>
-						{/if}
-					</nav>
-				{/if}
-				<div class="border-t border-rule pt-4" data-testid="weitere-daten-header">
-					<h3 class="font-sans text-xs font-semibold tracking-wide text-ink-muted uppercase">
-						Weitere Daten an dieser Adresse
-					</h3>
-					<p class="mt-1 font-serif text-[11px] leading-snug text-ink-muted italic">
-						Markierte Werte fließen in den Kiez-Score oben ein, die übrigen sind zusätzlicher
-						Kontext.
-					</p>
-				</div>
-				<WahlSection results={ui.wahlResults} />
-				<DemografieBlock
-					data={activeDemografie}
-					isActive={ui.activeLayerSlugs.includes('einwohner-dichte-2024')}
-					onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
-					scope={ui.demografieScope}
-					scopeName={demografieScopeName}
-					kiezAvailable={kiezDemografieAvailable}
-					bezirkAvailable={bezirkDemografieAvailable}
-					onScopeChange={changeDemografieScope}
-				/>
+										Bezirks-Profil{level.bezirkName ? `: ${level.bezirkName}` : ''}
+									</a>
+									{#if bezirkComposite !== null}
+										<span
+											data-testid="inspector-bezirk-composite"
+											class="shrink-0 font-mono text-xs text-ink-muted"
+											title="Gesamt-Score des Bezirks (Mittel seiner Planungsräume)"
+										>
+											Score {Math.round(bezirkComposite)}
+										</span>
+									{/if}
+								</div>
+							{/if}
+						</nav>
+					{/if}
+					<div class="border-t border-rule pt-4" data-testid="weitere-daten-header">
+						<h3 class="font-sans text-xs font-semibold tracking-wide text-ink-muted uppercase">
+							Weitere Daten an dieser Adresse
+						</h3>
+						<p class="mt-1 font-serif text-[11px] leading-snug text-ink-muted italic">
+							Markierte Werte fließen in den Kiez-Score oben ein, die übrigen sind zusätzlicher
+							Kontext.
+						</p>
+					</div>
+					<WahlSection results={ui.wahlResults} />
+					<DemografieBlock
+						data={activeDemografie}
+						isActive={ui.activeLayerSlugs.includes('einwohner-dichte-2024')}
+						onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+						scope={ui.demografieScope}
+						scopeName={demografieScopeName}
+						kiezAvailable={kiezDemografieAvailable}
+						bezirkAvailable={bezirkDemografieAvailable}
+						onScopeChange={changeDemografieScope}
+					/>
 				{/if}
 				{#each sections as section (section.key)}
 					{#if shouldRenderSection(section.key, section.hits.length)}
@@ -778,16 +779,16 @@
 						</section>
 					{/if}
 				{/each}
-			{#if hitzeMode}
-				<div class="border-t border-rule pt-4" data-testid="hitze-full-navigator">
-					<a
-						href="https://navigator.berlin/explore"
-						class="inline-flex items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
-					>
-						Alle Layer und Daten im vollen navigator.berlin
-					</a>
-				</div>
-			{/if}
+				{#if hitzeMode}
+					<div class="border-t border-rule pt-4" data-testid="hitze-full-navigator">
+						<a
+							href="https://navigator.berlin/explore"
+							class="inline-flex items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+						>
+							Alle Layer und Daten im vollen navigator.berlin
+						</a>
+					</div>
+				{/if}
 			</div>
 		{/key}
 

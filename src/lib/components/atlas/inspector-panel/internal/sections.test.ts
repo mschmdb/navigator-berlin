@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { groupHitsBySection, SECTION_ORDER } from './sections.js';
+import { groupHitsBySection, sectionLabel, SECTION_ORDER, SECTION_LABELS } from './sections.js';
 import type { LayerHit, LayerMetadata } from '$lib/data';
 
 function meta(slug: string, bundle: LayerMetadata['bundleGroup']): LayerMetadata {
@@ -77,5 +77,27 @@ describe('groupHitsBySection', () => {
 		const result = groupHitsBySection(hits, layerMeta);
 		const order = result.find((s) => s.key === 'boundaries')?.hits.map((h) => h.layer);
 		expect(order).toEqual(['bezirke', 'ortsteile', 'plz']);
+	});
+
+	// i18n Block B3a: ohne `opts.locale` bleibt DE (Boundary), matched
+	// SECTION_LABELS (DE-only-Direktimporter wie Compare-Panel/LLM-Export).
+	it('liefert DE-Section-Labels ohne opts, EN mit { locale: "en" }', () => {
+		const result = groupHitsBySection([], []);
+		expect(result.find((s) => s.key === 'umwelt')?.label).toBe(SECTION_LABELS.umwelt);
+		const resultEn = groupHitsBySection([], [], { locale: 'en' });
+		expect(resultEn.find((s) => s.key === 'umwelt')?.label).toBe('Environment');
+	});
+});
+
+describe('sectionLabel', () => {
+	it('liefert DE ohne opts, matched SECTION_LABELS', () => {
+		for (const key of Object.keys(SECTION_LABELS) as (keyof typeof SECTION_LABELS)[]) {
+			expect(sectionLabel(key)).toBe(SECTION_LABELS[key]);
+		}
+	});
+
+	it('liefert EN mit { locale: "en" }', () => {
+		expect(sectionLabel('boundaries', { locale: 'en' })).toBe('Location & administration');
+		expect(sectionLabel('klima', { locale: 'en' })).toBe('Climate');
 	});
 });

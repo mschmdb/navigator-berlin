@@ -5,14 +5,16 @@ describe('formatLayerValue', () => {
 	it('null → "Daten nicht vorhanden"', () => {
 		expect(formatLayerValue('bezirke', null)).toEqual({
 			text: 'Daten nicht vorhanden',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: true
 		});
 	});
 
 	it('undefined → Fallback', () => {
 		expect(formatLayerValue('bezirke', undefined)).toEqual({
 			text: 'Daten nicht vorhanden',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: true
 		});
 	});
 
@@ -23,35 +25,40 @@ describe('formatLayerValue', () => {
 			formatLayerValue('einwohner-dichte-2024', { plr_id: '12200414', dichte: 11293.98552911116 })
 		).toEqual({
 			text: '11.294 Einwohner/km²',
-			isNumeric: true
+			isNumeric: true,
+			isMissing: false
 		});
 	});
 
 	it('Einwohnerdichte ohne dichte-Property → Fallback', () => {
 		expect(formatLayerValue('einwohner-dichte-2024', { plr_id: '099' })).toEqual({
 			text: 'Daten nicht vorhanden',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: true
 		});
 	});
 
 	it('S-Bahn-Netz → Trassen-Label statt JSON-Default', () => {
 		expect(formatLayerValue('sbahn-netz', { fid: 7 })).toEqual({
 			text: 'S-Bahn-Trasse',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Mietspiegel-Wohnlage als String', () => {
 		expect(formatLayerValue('mietspiegel-wohnlage', 'gut')).toEqual({
 			text: 'gut',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Bodenrichtwerte numeric primitive → "€/m²" mit Tausender-Trennung', () => {
 		expect(formatLayerValue('bodenrichtwerte', 4200)).toEqual({
 			text: '4.200 €/m²',
-			isNumeric: true
+			isNumeric: true,
+			isMissing: false
 		});
 	});
 
@@ -60,21 +67,24 @@ describe('formatLayerValue', () => {
 			formatLayerValue('bodenrichtwerte', { brw: 1500, nutzung: 'W - Wohngebiet', gfz: 1.2 })
 		).toEqual({
 			text: '1.500 €/m² · W - Wohngebiet',
-			isNumeric: true
+			isNumeric: true,
+			isMissing: false
 		});
 	});
 
 	it('Bodenrichtwerte Props ohne brw → Fallback', () => {
 		expect(formatLayerValue('bodenrichtwerte', { nutzung: 'foo' })).toEqual({
 			text: 'Daten nicht vorhanden',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: true
 		});
 	});
 
 	it('Bezirke Props-Objekt → Gemeinde_name', () => {
 		expect(formatLayerValue('bezirke', { Gemeinde_name: 'Pankow', Land_name: 'Berlin' })).toEqual({
 			text: 'Pankow',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
@@ -83,14 +93,16 @@ describe('formatLayerValue', () => {
 			formatLayerValue('ortsteile', { OTEIL: 'Friedrichshain', BEZIRK: 'Friedrichshain-Kreuzberg' })
 		).toEqual({
 			text: 'Friedrichshain · Friedrichshain-Kreuzberg',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('PLZ Props-Objekt → plz-String', () => {
 		expect(formatLayerValue('plz', { plz: '10115' })).toEqual({
 			text: '10115',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
@@ -99,91 +111,104 @@ describe('formatLayerValue', () => {
 			formatLayerValue('lor-bezirksregion', { BZR_NAME: 'MV Nord', BZR_ID: '126011' })
 		).toEqual({
 			text: 'MV Nord (126011)',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Strassenlaerm-2022 → gruppe_txt', () => {
 		expect(formatLayerValue('strassenlaerm-2022', { gruppe_txt: 'U-Bahn' })).toEqual({
 			text: 'Schienenverkehr: U-Bahn',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Lärm-Den → dB-Suffix', () => {
 		expect(formatLayerValue('laerm-den', 65)).toEqual({
 			text: '65 dB',
-			isNumeric: true
+			isNumeric: true,
+			isMissing: false
 		});
 	});
 
 	it('Lärm-Night → dB-Suffix', () => {
 		expect(formatLayerValue('laerm-night', 50)).toEqual({
 			text: '50 dB',
-			isNumeric: true
+			isNumeric: true,
+			isMissing: false
 		});
 	});
 
 	it('Solarpotenzial → "kWh/m²"', () => {
 		expect(formatLayerValue('solarpotenzial', 900)).toEqual({
 			text: '900 kWh/m²',
-			isNumeric: true
+			isNumeric: true,
+			isMissing: false
 		});
 	});
 
 	it('Stolpersteine mit person-Property → "Für {person}"', () => {
 		expect(formatLayerValue('stolpersteine', { person: 'Anna Müller' })).toEqual({
 			text: 'Für Anna Müller',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Stolpersteine ohne person → "Gedenkstein in der Nähe"', () => {
 		expect(formatLayerValue('stolpersteine', { other: 'x' })).toEqual({
 			text: 'Gedenkstein in der Nähe',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Bezirke → String', () => {
 		expect(formatLayerValue('bezirke', 'Pankow')).toEqual({
 			text: 'Pankow',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Trinkbrunnen → fixer Text', () => {
 		expect(formatLayerValue('trinkbrunnen', { ok: true })).toEqual({
 			text: 'Trinkbrunnen vor Ort',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('kiez-score-gesamt → Gesamt-Label + Stufe + Wert', () => {
 		expect(formatLayerValue('kiez-score-gesamt', { plr_id: '04501148', value: 52.4 })).toEqual({
 			text: 'Gesamt: hoch (52/100)',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Unbekannter slug + number → isNumeric=true', () => {
 		expect(formatLayerValue('unknown-slug', 42)).toEqual({
 			text: '42',
-			isNumeric: true
+			isNumeric: true,
+			isMissing: false
 		});
 	});
 
 	it('Unbekannter slug + string → isNumeric=false', () => {
 		expect(formatLayerValue('unknown-slug', 'foo')).toEqual({
 			text: 'foo',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: false
 		});
 	});
 
 	it('Empty object {} → Fallback', () => {
 		expect(formatLayerValue('bezirke', {})).toEqual({
 			text: 'Daten nicht vorhanden',
-			isNumeric: false
+			isNumeric: false,
+			isMissing: true
 		});
 	});
 
@@ -192,23 +217,25 @@ describe('formatLayerValue', () => {
 		it('schlecht → "Grünversorgung: gering"', () => {
 			expect(
 				formatLayerValue('gruenversorgung-2023', { kategorie: 'schlecht', plr_name: 'Pankow' })
-			).toEqual({ text: 'Grünversorgung: gering · Pankow', isNumeric: false });
+			).toEqual({ text: 'Grünversorgung: gering · Pankow', isNumeric: false, isMissing: false });
 		});
 		it('gut → "Grünversorgung: hoch"', () => {
 			expect(
 				formatLayerValue('gruenversorgung-2023', { kategorie: 'gut', plr_name: 'Wilmersdorf' })
-			).toEqual({ text: 'Grünversorgung: hoch · Wilmersdorf', isNumeric: false });
+			).toEqual({ text: 'Grünversorgung: hoch · Wilmersdorf', isNumeric: false, isMissing: false });
 		});
 		it('mittel → "Grünversorgung: mittel" (unverändert)', () => {
 			expect(formatLayerValue('gruenversorgung-2023', { kategorie: 'mittel' })).toEqual({
 				text: 'Grünversorgung: mittel',
-				isNumeric: false
+				isNumeric: false,
+				isMissing: false
 			});
 		});
 		it('sehr gut → "Grünversorgung: sehr hoch"', () => {
 			expect(formatLayerValue('gruenversorgung-2023', { kategorie: 'sehr gut' })).toEqual({
 				text: 'Grünversorgung: sehr hoch',
-				isNumeric: false
+				isNumeric: false,
+				isMissing: false
 			});
 		});
 	});
@@ -227,7 +254,11 @@ describe('formatLayerValue', () => {
 					kom: 'gültig',
 					ew: 3580
 				})
-			).toEqual({ text: 'Status mittel, Dynamik stabil · Stülerstraße', isNumeric: false });
+			).toEqual({
+				text: 'Status mittel, Dynamik stabil · Stülerstraße',
+				isNumeric: false,
+				isMissing: false
+			});
 		});
 
 		it('sehr niedrig + negativ → vollständig formatiert', () => {
@@ -240,7 +271,8 @@ describe('formatLayerValue', () => {
 				})
 			).toEqual({
 				text: 'Status sehr niedrig, Dynamik negativ · Beispiel',
-				isNumeric: false
+				isNumeric: false,
+				isMissing: false
 			});
 		});
 
@@ -254,7 +286,8 @@ describe('formatLayerValue', () => {
 				})
 			).toEqual({
 				text: 'Aggregat nicht aussagekräftig · Pankower Tor (ungültig (EW unter 300))',
-				isNumeric: false
+				isNumeric: false,
+				isMissing: false
 			});
 		});
 
@@ -268,21 +301,74 @@ describe('formatLayerValue', () => {
 				})
 			).toEqual({
 				text: 'Aggregat nicht aussagekräftig · Beispiel (ungültig (Ausreißer))',
-				isNumeric: false
+				isNumeric: false,
+				isMissing: false
 			});
 		});
 
 		it('fehlende Status-/Dynamik-Felder → Fallback', () => {
 			expect(formatLayerValue('mss-gesamtindex-2025', { plr_name: 'X' })).toEqual({
 				text: 'Daten nicht vorhanden',
-				isNumeric: false
+				isNumeric: false,
+				isMissing: true
 			});
 		});
 
 		it('ohne plr_name → Status + Dynamik bleiben', () => {
 			expect(
 				formatLayerValue('mss-gesamtindex-2025', { si_v: 'hoch', di_v: 'positiv', kom: 'gültig' })
-			).toEqual({ text: 'Status hoch, Dynamik positiv', isNumeric: false });
+			).toEqual({ text: 'Status hoch, Dynamik positiv', isNumeric: false, isMissing: false });
+		});
+	});
+
+	// i18n Block B3a: `isMissing` ersetzt den Sentinel-String-Vergleich;
+	// `{ locale: 'en' }` liefert englische Präfix-/Verbindungswörter, Rohdaten
+	// (Namen, Kategorien) bleiben unverändert (Boundary).
+	describe('i18n Block B3a: locale + isMissing', () => {
+		it('isMissing:true bei fehlenden Daten, unabhängig von der Locale', () => {
+			expect(formatLayerValue('bezirke', null).isMissing).toBe(true);
+			expect(formatLayerValue('bezirke', null, { locale: 'en' }).isMissing).toBe(true);
+			expect(formatLayerValue('bezirke', { Gemeinde_name: 'Pankow' }).isMissing).toBe(false);
+		});
+
+		it('ohne opts bleibt DE (Boundary: kein getLocale()-Fallback)', () => {
+			expect(formatLayerValue('bezirke', null).text).toBe('Daten nicht vorhanden');
+		});
+
+		it('EN: Sentinel-Text englisch', () => {
+			expect(formatLayerValue('bezirke', null, { locale: 'en' })).toEqual({
+				text: 'No data available',
+				isNumeric: false,
+				isMissing: true
+			});
+		});
+
+		it('EN: Bodenrichtwerte-Zahl mit englischer Tausendertrennung', () => {
+			expect(formatLayerValue('bodenrichtwerte', 4200, { locale: 'en' })).toEqual({
+				text: '4,200 €/m²',
+				isNumeric: true,
+				isMissing: false
+			});
+		});
+
+		it('EN: Trinkbrunnen-Text englisch', () => {
+			expect(formatLayerValue('trinkbrunnen', { ok: true }, { locale: 'en' })).toEqual({
+				text: 'Drinking fountain on site',
+				isNumeric: false,
+				isMissing: false
+			});
+		});
+
+		it('EN: Stolpersteine mit Person, Rohname unverändert', () => {
+			expect(
+				formatLayerValue('stolpersteine', { person: 'Anna Müller' }, { locale: 'en' })
+			).toEqual({ text: 'For Anna Müller', isNumeric: false, isMissing: false });
+		});
+
+		it('EN: kiez-score-gesamt Dimension-Label + Stufe englisch, Wert unverändert', () => {
+			expect(
+				formatLayerValue('kiez-score-gesamt', { plr_id: '04501148', value: 52.4 }, { locale: 'en' })
+			).toEqual({ text: 'Overall: high (52/100)', isNumeric: false, isMissing: false });
 		});
 	});
 });

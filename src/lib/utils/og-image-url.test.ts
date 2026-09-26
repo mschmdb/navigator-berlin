@@ -70,6 +70,19 @@ describe('buildOgDescription', () => {
 	it('liefert leeren String für null-Input', () => {
 		expect(buildOgDescription(null)).toBe('');
 	});
+
+	// i18n Block B3a: Meta-Description bleibt EN auf /en/explore, unabhängig
+	// davon, dass das server-seitige OG-Bild (og-pipeline.ts) DE-only bleibt.
+	it('EN mit { locale: "en" }', () => {
+		const text = buildOgDescription(FULL, { locale: 'en' });
+		expect(text).toMatch(/^Data for the address:/);
+		expect(text).toContain('Wohnlage: gut');
+	});
+
+	it('EN-Fallback ohne topLayers', () => {
+		const text = buildOgDescription({ ...FULL, topLayers: [] }, { locale: 'en' });
+		expect(text).toMatch(/^Data for the address /);
+	});
 });
 
 describe('DEFAULT_OG_IMAGE_PATH', () => {

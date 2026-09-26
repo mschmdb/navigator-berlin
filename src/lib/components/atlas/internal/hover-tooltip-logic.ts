@@ -3,6 +3,8 @@ import { getLayerDisplayName } from './layer-palette-filter.js';
 import { formatLayerValue } from '../inspector-panel/internal/value-formatters.js';
 import { hasPinIcon } from './pin-icon-mapping.js';
 import { getPopoverSummary } from './poi-summary-builder.js';
+import { m } from '$lib/paraglide/messages.js';
+import { toAtlasMessageOptions, type LocaleOptions } from './atlas-label-options.js';
 
 export type HoverTooltipKind = 'polygon' | 'poi';
 
@@ -18,11 +20,13 @@ export interface HoverTooltipContent {
 	readonly poiSubtitle?: string;
 }
 
-const CLICK_HINT_DE = 'Klick für volle Adresse-Inspektion';
-const POI_HINT_DE = 'Mehr im Inspektor →';
-
-export function buildHoverTooltipContent(slug: string, value: unknown): HoverTooltipContent {
-	const layerName = getLayerDisplayName(slug);
+export function buildHoverTooltipContent(
+	slug: string,
+	value: unknown,
+	opts?: LocaleOptions
+): HoverTooltipContent {
+	const options = toAtlasMessageOptions(opts);
+	const layerName = getLayerDisplayName(slug, opts);
 	if (hasPinIcon(slug)) {
 		const summary = getPopoverSummary(slug, (value as Record<string, unknown> | null) ?? null);
 		return {
@@ -31,19 +35,21 @@ export function buildHoverTooltipContent(slug: string, value: unknown): HoverToo
 			layerName,
 			valueText: summary.title,
 			shortExplain: '',
-			hint: POI_HINT_DE,
+			hint: m.atlas_tooltip_poi_hint(undefined, options),
 			poiTitle: summary.title,
 			poiSubtitle: summary.subtitle
 		};
 	}
-	const formatted = formatLayerValue(slug, value);
+	const formatted = formatLayerValue(slug, value, opts);
 	return {
 		kind: 'polygon',
 		slug,
 		layerName,
 		valueText: formatted.text,
+		// Erklärtexte (`layer-explain.ts`) bleiben Block C -- DE, unabhängig
+		// von `opts.locale` (Boundary Spec i18n B3a).
 		shortExplain: getLayerExplain(slug, 'short'),
-		hint: CLICK_HINT_DE
+		hint: m.atlas_tooltip_click_hint(undefined, options)
 	};
 }
 
@@ -81,7 +87,8 @@ export interface MultiHoverContent {
  * Ein-Zeilen-Fassung, sonst wächst der Tooltip ins Bild.
  */
 export function buildMultiHoverContent(
-	features: readonly HoveredFeature[]
+	features: readonly HoveredFeature[],
+	opts?: LocaleOptions
 ): MultiHoverContent | null {
 	const seen = new Set<string>();
 	const slugsInOrder: { slug: string; properties: Record<string, unknown> | null }[] = [];
@@ -93,7 +100,7 @@ export function buildMultiHoverContent(
 	}
 	if (slugsInOrder.length === 0) return null;
 
-	const top = buildHoverTooltipContent(slugsInOrder[0].slug, slugsInOrder[0].properties);
+	const top = buildHoverTooltipContent(slugsInOrder[0].slug, slugsInOrder[0].properties, opts);
 	if (top.kind === 'poi') {
 		return {
 			kind: 'poi',
@@ -115,7 +122,7 @@ export function buildMultiHoverContent(
 	// Score-Fill) gehört nicht in die Wert-Liste, er hat seinen eigenen
 	// Tooltip, wenn er selbst oben liegt.
 	const polygonContents = slugsInOrder
-		.map(({ slug, properties }) => buildHoverTooltipContent(slug, properties))
+		.map(({ slug, properties }) => buildHoverTooltipContent(slug, properties, opts))
 		.filter((content) => content.kind === 'polygon');
 	const multiple = polygonContents.length > 1;
 	const rows = polygonContents.map((content) => ({

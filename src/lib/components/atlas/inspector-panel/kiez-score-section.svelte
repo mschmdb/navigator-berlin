@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Eye, EyeOff, ExternalLink } from '@lucide/svelte';
-	import { resolve } from '$app/paths';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import type { Locale } from '$lib/paraglide/runtime';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import KiezScoreDimensionRow from './kiez-score-dimension-row.svelte';
 	import KiezScoreRing from '../charts/kiez-score-ring.svelte';
@@ -13,7 +14,7 @@
 	type Props = {
 		score: KiezScore | null;
 		methodikHref?: string;
-		lang?: string;
+		lang?: Locale;
 		activeLayerSlugs?: readonly string[];
 		onToggleLayer?: (slug: string) => void;
 	};
@@ -26,7 +27,7 @@
 	}: Props = $props();
 
 	const gesamtActive = $derived(activeLayerSlugs.includes(GESAMT_SLUG));
-	const gesamtHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/${GESAMT_SLUG}`));
+	const gesamtHref = $derived(localizedHref(`/layer/${GESAMT_SLUG}`, lang));
 
 	const enabled = $derived(featureFlags.kiezScore && score !== null);
 	// Option C: der Gesamt-Score ist das Mittel der fünf Composite-Dimensionen (Kultur zählt

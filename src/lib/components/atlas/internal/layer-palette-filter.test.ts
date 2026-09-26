@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import type { LayerMetadata } from '$lib/data';
+import type { Bundle, LayerMetadata } from '$lib/data';
 import {
 	filterLayers,
 	groupLayersByBundle,
 	getLayerDisplayName,
-	BUNDLE_ORDER
+	bundleLabel,
+	BUNDLE_ORDER,
+	LAYER_EXPLAIN_DE,
+	BUNDLE_LABEL_DE
 } from './layer-palette-filter.js';
 
 function makeLayer(
@@ -65,6 +68,13 @@ describe('filterLayers', () => {
 		const out = filterLayers(LAYERS, 'laerm');
 		expect(out.map((l) => l.slug)).toContain('laerm-2023');
 	});
+
+	// i18n Block B3a: mit { locale: 'en' } matcht die Suche gegen den englischen
+	// Display-Namen ("Noise Pollution 2023"), nicht nur gegen den DE-Namen.
+	it('matched EN-Display-Namen mit { locale: "en" }', () => {
+		const out = filterLayers(LAYERS, 'noise', { locale: 'en' });
+		expect(out.map((l) => l.slug)).toEqual(['laerm-2023']);
+	});
 });
 
 describe('groupLayersByBundle', () => {
@@ -100,6 +110,11 @@ describe('groupLayersByBundle', () => {
 		expect(groups).toHaveLength(1);
 		expect(groups[0].layers.map((l) => l.slug)).toEqual(['bezirke', 'plz']);
 	});
+
+	it('liefert EN-Bundle-Label mit { locale: "en" }', () => {
+		const groups = groupLayersByBundle(LAYERS, { locale: 'en' });
+		expect(groups[1].label).toBe('B · Housing data');
+	});
 });
 
 describe('getLayerDisplayName', () => {
@@ -113,6 +128,61 @@ describe('getLayerDisplayName', () => {
 
 	it('liefert "S-Bahn-Netz" für sbahn-netz (Story 1.13)', () => {
 		expect(getLayerDisplayName('sbahn-netz')).toBe('S-Bahn-Netz');
+	});
+
+	// i18n Block B3a: ohne `opts.locale` bleibt DE (Boundary), auch wenn eine
+	// EN-URL-Locale aktiv ist -- Aufrufer auf der übersetzten Kartenoberfläche
+	// übergeben `{ locale: 'en' }` explizit.
+	it('liefert DE ohne opts, EN mit { locale: "en" }', () => {
+		expect(getLayerDisplayName('bodenrichtwerte')).toBe('Bodenrichtwerte (EUR/m²)');
+		expect(getLayerDisplayName('bodenrichtwerte', { locale: 'de' })).toBe(
+			'Bodenrichtwerte (EUR/m²)'
+		);
+		expect(getLayerDisplayName('bodenrichtwerte', { locale: 'en' })).toBe(
+			'Standard land values (EUR/m²)'
+		);
+	});
+
+	it('liefert Slug-Fallback für unbekannten Slug auch mit EN-Locale', () => {
+		expect(getLayerDisplayName('unknown', { locale: 'en' })).toBe('unknown');
+	});
+
+	// Review-Fund: `LAYER_NAME_MESSAGE[slug]`/`LAYER_EXPLAIN_DE[slug]` ohne Guard
+	// träfe bei diesen Slugs `Object.prototype` (Funktion bzw. `[object
+	// Object]`-Methode) statt "kein Eintrag" -- `slug` kann aus `?layers=`
+	// kommen, also aus nicht vertrauenswürdiger Nutzereingabe.
+	it('Prototype-Pollution-Guard: constructor/toString/hasOwnProperty liefern den Slug selbst zurück', () => {
+		expect(getLayerDisplayName('constructor')).toBe('constructor');
+		expect(getLayerDisplayName('toString')).toBe('toString');
+		expect(getLayerDisplayName('hasOwnProperty')).toBe('hasOwnProperty');
+		expect(getLayerDisplayName('__proto__')).toBe('__proto__');
+		expect(getLayerDisplayName('constructor', { locale: 'en' })).toBe('constructor');
+	});
+
+	// Versprochener Paritätstest (Review-Fund): jeder LAYER_EXPLAIN_DE-Eintrag
+	// muss über den Resolver 1:1 DE zurückkommen (keine Drift zwischen der
+	// DE-Referenz-Konstante und den Message-Keys) und eine echte EN-Message haben.
+	it('Parität: getLayerDisplayName(slug) === LAYER_EXPLAIN_DE[slug], EN-Message vorhanden', () => {
+		for (const slug of Object.keys(LAYER_EXPLAIN_DE)) {
+			expect(getLayerDisplayName(slug)).toBe(LAYER_EXPLAIN_DE[slug]);
+			const en = getLayerDisplayName(slug, { locale: 'en' });
+			expect(en).toBeTruthy();
+		}
+	});
+});
+
+describe('bundleLabel', () => {
+	it('liefert DE ohne opts, EN mit { locale: "en" }', () => {
+		expect(bundleLabel('B: Wohn-Daten')).toBe('B · Wohn-Daten');
+		expect(bundleLabel('B: Wohn-Daten', { locale: 'en' })).toBe('B · Housing data');
+	});
+
+	// Versprochener Paritätstest (Review-Fund), analog zu LAYER_EXPLAIN_DE oben.
+	it('Parität: bundleLabel(bundle) === BUNDLE_LABEL_DE[bundle], EN-Message vorhanden', () => {
+		for (const bundle of Object.keys(BUNDLE_LABEL_DE) as Bundle[]) {
+			expect(bundleLabel(bundle)).toBe(BUNDLE_LABEL_DE[bundle]);
+			expect(bundleLabel(bundle, { locale: 'en' })).toBeTruthy();
+		}
 	});
 });
 

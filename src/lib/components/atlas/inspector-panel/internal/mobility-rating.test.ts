@@ -136,4 +136,13 @@ describe('getMobilityRating residential soft-cutoff', () => {
 		expect(r.key).toBe('schwach');
 		expect(r.score).toBe(0);
 	});
+
+	// i18n Block B3a: ohne `opts.locale` bleibt DE (Boundary, Fundament --
+	// aktuell nur vom Inspector-Panel genutzt, das ohne opts aufruft).
+	it('liefert DE-Label ohne locale, EN mit { locale: "en" }', () => {
+		const r = getMobilityRating(nearest({ ubahn: stop(200) }));
+		expect(r.label).toBe('Sehr gut angebunden');
+		const rEn = getMobilityRating(nearest({ ubahn: stop(200) }), { locale: 'en' });
+		expect(rEn.label).toBe('Very well connected');
+	});
 });

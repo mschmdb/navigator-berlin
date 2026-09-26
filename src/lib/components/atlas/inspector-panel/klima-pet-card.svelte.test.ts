@@ -106,4 +106,36 @@ describe('KlimaPetCard', () => {
 		await expect.element(page.getByTestId('pet-address-value')).toBeInTheDocument();
 		await expect.element(page.getByTestId('score-bar')).not.toBeInTheDocument();
 	});
+
+	// i18n Block B3a Task 3: DE hat KEINEN URL-Präfix (Boundary), vormals
+	// `/de/layer/...` (301-Umweg-Bug).
+	it('Learn-more-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
+		render(KlimaPetCard, {
+			hit,
+			layerName: 'Gefühlte Temperatur 2022',
+			lang: 'de',
+			kiezName: null,
+			kiezAggregate: null,
+			bezirkName: null,
+			bezirkAggregate: null,
+			berlinAggregate: null
+		});
+		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/layer/klima-pet-2022');
+	});
+
+	it('Learn-more-Link nutzt /en/-Präfix bei lang: "en"', async () => {
+		render(KlimaPetCard, {
+			hit,
+			layerName: 'Perceived temperature 2022',
+			lang: 'en',
+			kiezName: null,
+			kiezAggregate: null,
+			bezirkName: null,
+			bezirkAggregate: null,
+			berlinAggregate: null
+		});
+		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/en/layer/klima-pet-2022');
+	});
 });

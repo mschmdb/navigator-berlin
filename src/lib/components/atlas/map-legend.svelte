@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import type { Pathname } from '$app/types';
 	import { ArrowDownUp, Eye, EyeOff, X } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { getLegendSpec } from './internal/layer-style-builder.js';
 	import { getPinIcon } from './internal/pin-icon-mapping.js';
 	import { COLORS } from './internal/colors.js';
@@ -20,7 +21,10 @@
 		hiddenSlugs?: readonly string[];
 		cascadeVariants?: ReadonlyMap<string, CascadeVariant>;
 		showLimitWarning?: boolean;
-		lang?: string;
+		/** Ohne Angabe: aktuelle Locale (`getLocale()`) -- die Karten-Oberfläche
+		 * folgt der URL-Locale (i18n Block B3a), anders als die (noch DE-only)
+		 * Inspector-Panel-Bausteine. */
+		lang?: Locale;
 		onToggleHidden?: (slug: string) => void;
 		onRemove?: (slug: string) => void;
 		/** Legenden-Tausch: dieser Choropleth soll die Fläche werden. */
@@ -33,21 +37,25 @@
 		hiddenSlugs = [],
 		cascadeVariants,
 		showLimitWarning = false,
-		lang = 'de',
+		lang,
 		onToggleHidden,
 		onRemove,
 		onPromoteLayer
 	}: Props = $props();
+
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	const metaBySlug = $derived(new Map(manifestLayers.map((l) => [l.slug, l] as const)));
 	const hiddenSet = $derived(new Set(hiddenSlugs));
 	// PET & Co. belegen die Fläche fest; dann gibt es nichts zu tauschen.
 	const promoteLocked = $derived(hasPinnedChoropleth(activeLayerSlugs));
 
-	const VARIANT_LABEL: Record<CascadeVariant, string> = {
-		fill: 'gefüllt',
-		outline: 'Symbole'
-	};
+	const variantLabel = $derived((variant: CascadeVariant): string =>
+		variant === 'fill'
+			? m.atlas_legend_variant_fill(undefined, localeOpts)
+			: m.atlas_legend_variant_outline(undefined, localeOpts)
+	);
 
 	const entries = $derived(
 		activeLayerSlugs.map((slug) => {
@@ -56,8 +64,8 @@
 			const pinIcon = getPinIcon(slug);
 			return {
 				slug,
-				name: getLayerDisplayName(slug),
-				spec: getLegendSpec(slug),
+				name: getLayerDisplayName(slug, localeOpts),
+				spec: getLegendSpec(slug, localeOpts),
 				explain: getLayerExplainEntry(slug),
 				meta: metaBySlug.get(slug),
 				hidden: hiddenSet.has(slug),
@@ -72,7 +80,7 @@
 {#if entries.length > 0}
 	<aside
 		data-testid="map-legend"
-		aria-label="Karten-Legende"
+		aria-label={m.atlas_legend_aria_label(undefined, localeOpts)}
 		class="pointer-events-auto absolute bottom-3 left-3 z-20 flex max-h-[60vh] max-w-xs flex-col gap-3 overflow-auto rounded-md border border-rule-strong bg-bg-elevated/95 p-3 text-xs text-ink backdrop-blur-sm"
 	>
 		{#each entries as entry (entry.slug)}
@@ -95,7 +103,7 @@
 								data-variant={entry.variant}
 								class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 							>
-								{VARIANT_LABEL[entry.variant]}
+								{variantLabel(entry.variant)}
 							</span>
 						{/if}
 					</div>
@@ -104,8 +112,8 @@
 							<button
 								type="button"
 								data-testid={`legend-promote-${entry.slug}`}
-								aria-label={`${entry.name} als Fläche darstellen`}
-								title="Mit der Fläche tauschen"
+								aria-label={m.atlas_legend_promote_aria_label({ name: entry.name }, localeOpts)}
+								title={m.atlas_legend_promote_title(undefined, localeOpts)}
 								onclick={() => onPromoteLayer!(entry.slug)}
 								class="p-0.5 text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
 							>
@@ -117,7 +125,9 @@
 								type="button"
 								data-testid={`legend-eye-${entry.slug}`}
 								aria-pressed={entry.hidden}
-								aria-label={entry.hidden ? `${entry.name} einblenden` : `${entry.name} ausblenden`}
+								aria-label={entry.hidden
+									? m.atlas_legend_show_aria_label({ name: entry.name }, localeOpts)
+									: m.atlas_legend_hide_aria_label({ name: entry.name }, localeOpts)}
 								onclick={() => onToggleHidden!(entry.slug)}
 								class="p-0.5 text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
 							>
@@ -132,7 +142,7 @@
 							<button
 								type="button"
 								data-testid={`legend-remove-${entry.slug}`}
-								aria-label={`${entry.name} aus aktiven Layern entfernen`}
+								aria-label={m.atlas_legend_remove_aria_label({ name: entry.name }, localeOpts)}
 								onclick={() => onRemove!(entry.slug)}
 								class="hover:text-vermillion p-0.5 text-ink-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
 							>
@@ -163,7 +173,7 @@
 					</div>
 				{:else}
 					<ul class="flex flex-col gap-1">
-						{#each entry.spec.items as item, itemIndex (item.label)}
+						{#each entry.spec.items as item, itemIndex (itemIndex)}
 							<li class="flex items-center gap-2">
 								{#if entry.pinIcon}
 									<span
@@ -241,8 +251,12 @@
 						>
 							▾
 						</span>
-						<span class="group-open:hidden">Mehr erklären</span>
-						<span class="hidden group-open:inline">Weniger</span>
+						<span class="group-open:hidden"
+							>{m.atlas_legend_explain_more(undefined, localeOpts)}</span
+						>
+						<span class="hidden group-open:inline"
+							>{m.atlas_legend_explain_less(undefined, localeOpts)}</span
+						>
 					</summary>
 
 					<div data-testid={`legend-expand-${entry.slug}`} class="mt-1.5 flex flex-col gap-1.5">
@@ -263,7 +277,7 @@
 							<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px]">
 								{#if entry.meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
 									<span data-testid={`legend-source-link-${entry.slug}`} class="text-ink-subtle">
-										Eigene Berechnung
+										{m.atlas_legend_own_calculation(undefined, localeOpts)}
 									</span>
 								{:else}
 									<a
@@ -273,7 +287,7 @@
 										rel="noopener noreferrer"
 										class="hover:text-accent-strong text-accent underline underline-offset-2"
 									>
-										Quelle
+										{m.atlas_legend_source(undefined, localeOpts)}
 									</a>
 								{/if}
 								<span
@@ -287,10 +301,10 @@
 						{/if}
 						<a
 							data-testid={`legend-more-link-${entry.slug}`}
-							href={(resolve as (path: string) => string)(`/${lang}/layer/${entry.slug}`)}
+							href={localizedHref(`/layer/${entry.slug}`, locale)}
 							class="self-start text-[11px] font-medium text-accent underline-offset-2 hover:underline"
 						>
-							Mehr erfahren →
+							{m.atlas_legend_learn_more(undefined, localeOpts)}
 						</a>
 					</div>
 				</details>
@@ -304,7 +318,7 @@
 				aria-live="polite"
 				class="text-vermillion border-t border-rule pt-2 font-mono text-[10px] leading-snug"
 			>
-				Mehr als 3 Polygon-Layer aktiv. Lesbarkeit eingeschränkt, ein Layer per Auge ausblenden.
+				{m.atlas_legend_limit_warning(undefined, localeOpts)}
 			</p>
 		{/if}
 	</aside>

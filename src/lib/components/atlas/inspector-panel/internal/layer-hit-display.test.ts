@@ -209,4 +209,48 @@ describe('getLayerHitDisplay()', () => {
 			expect(d.fallbackText).toBeNull();
 		});
 	});
+
+	// i18n Block B3a: ohne `opts.locale` bleibt DE (Boundary, Fundament --
+	// aktuell nur vom Inspector-/Compare-Panel genutzt, die ohne opts aufrufen).
+	describe('i18n Block B3a: locale-Parameter', () => {
+		it('Bodenrichtwerte: DE ohne opts, EN-Tausendertrennung mit { locale: "en" }', () => {
+			expect(getLayerHitDisplay('bodenrichtwerte', 4200).chip?.value).toBe('4.200');
+			expect(getLayerHitDisplay('bodenrichtwerte', 4200, { locale: 'en' }).chip?.value).toBe(
+				'4,200'
+			);
+		});
+
+		it('Umweltgerechtigkeit-Topics: EN übersetzt, Kategorie-Rohwert unverändert', () => {
+			const d = getLayerHitDisplay(
+				'umweltgerechtigkeit-2023',
+				{ kategorie: 'zweifach', laerm: 'hoch' },
+				{ locale: 'en' }
+			);
+			expect(d.chip?.value).toBe('2× burdened');
+			expect(d.context).toBe('Noise: hoch');
+		});
+
+		it('MSS-Gesamtindex: "Aggregat nicht aussagekräftig" englisch', () => {
+			const d = getLayerHitDisplay(
+				'mss-gesamtindex-2025',
+				{ plr_name: 'Pankower Tor', kom: 'ungültig (EW unter 300)' },
+				{ locale: 'en' }
+			);
+			expect(d.fallbackText).toBe('Aggregate not meaningful');
+		});
+
+		it('Stolpersteine/Trinkbrunnen/Trassen: feste Wörter englisch', () => {
+			expect(
+				getLayerHitDisplay('stolpersteine', { person: 'Anna Müller' }, { locale: 'en' })
+					.fallbackText
+			).toBe('For Anna Müller');
+			expect(
+				getLayerHitDisplay('trinkbrunnen', { name: 'Bornholmer Platz' }, { locale: 'en' }).chip
+					?.value
+			).toBe('Drinking fountain on site');
+			expect(getLayerHitDisplay('ubahn-netz', { fid: 7 }, { locale: 'en' }).chip?.value).toBe(
+				'U-Bahn line'
+			);
+		});
+	});
 });

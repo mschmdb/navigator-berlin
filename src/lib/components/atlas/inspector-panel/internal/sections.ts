@@ -1,4 +1,10 @@
 import type { Bundle, LayerHit, LayerMetadata } from '$lib/data';
+import { m } from '$lib/paraglide/messages.js';
+import {
+	assertUnreachable,
+	toAtlasMessageOptions,
+	type LocaleOptions
+} from '../../internal/atlas-label-options.js';
 
 export type SectionKey = 'boundaries' | 'wohn' | 'umwelt' | 'sozial' | 'mobilitaet' | 'klima';
 
@@ -27,6 +33,29 @@ export const SECTION_LABELS: Record<SectionKey, string> = {
 	mobilitaet: 'Mobilität',
 	klima: 'Klima'
 };
+
+/** Locale-fähiges Section-Label. Ohne `opts.locale`: DE (Boundary Spec i18n
+ * B3a). `SECTION_LABELS` bleibt für DE-only-Direktimporter (Compare-Panel,
+ * LLM-Export, Inspector-Panel vor B3b/B3c) unverändert exportiert. */
+export function sectionLabel(key: SectionKey, opts?: LocaleOptions): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (key) {
+		case 'boundaries':
+			return m.atlas_section_label_boundaries(undefined, options);
+		case 'wohn':
+			return m.atlas_section_label_wohn(undefined, options);
+		case 'umwelt':
+			return m.atlas_section_label_umwelt(undefined, options);
+		case 'sozial':
+			return m.atlas_section_label_sozial(undefined, options);
+		case 'mobilitaet':
+			return m.atlas_section_label_mobilitaet(undefined, options);
+		case 'klima':
+			return m.atlas_section_label_klima(undefined, options);
+		default:
+			return assertUnreachable(key);
+	}
+}
 
 const BUNDLE_TO_SECTION: Record<Bundle, SectionKey> = {
 	'A: Boundaries': 'boundaries',
@@ -80,7 +109,8 @@ function compareBoundaries(a: LayerHit, b: LayerHit): number {
 
 export function groupHitsBySection(
 	hits: readonly LayerHit[],
-	layerMeta: readonly LayerMetadata[]
+	layerMeta: readonly LayerMetadata[],
+	opts?: LocaleOptions
 ): InspectorSection[] {
 	const metaBySlug = new Map(layerMeta.map((m) => [m.slug, m]));
 	const buckets: Record<SectionKey, LayerHit[]> = {
@@ -100,7 +130,7 @@ export function groupHitsBySection(
 	buckets.boundaries.sort(compareBoundaries);
 	return SECTION_ORDER.map((key) => ({
 		key,
-		label: SECTION_LABELS[key],
+		label: sectionLabel(key, opts),
 		hits: buckets[key]
 	}));
 }

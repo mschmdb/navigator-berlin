@@ -1,11 +1,16 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import MapControls from './map-controls.svelte';
 
 async function openCompass(): Promise<void> {
 	await page.getByTestId('compass-trigger').click();
 }
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 describe('map-controls.svelte', () => {
 	it('rendert Compass-Trigger + 2 Zoom-Buttons direkt sichtbar (Story 1.31 AC-1)', async () => {
@@ -75,5 +80,16 @@ describe('map-controls.svelte', () => {
 		await trigger.click();
 		const triggerAfter = (await page.getByTestId('compass-trigger').element()) as HTMLButtonElement;
 		expect(triggerAfter.getAttribute('aria-expanded')).toBe('true');
+	});
+
+	// i18n Block B3a: Karten-Oberfläche folgt der URL-Locale (`getLocale()`).
+	it('rendert EN-Aria-Labels wenn Locale "en" ist', async () => {
+		overwriteGetLocale(() => 'en');
+		render(MapControls, {});
+		await expect.element(page.getByRole('group', { name: /Map controls/i })).toBeInTheDocument();
+		await expect.element(page.getByRole('button', { name: /Zoom in/i })).toBeInTheDocument();
+		await expect.element(page.getByRole('button', { name: /Zoom out/i })).toBeInTheDocument();
+		await openCompass();
+		await expect.element(page.getByRole('menuitem', { name: /north/i })).toBeInTheDocument();
 	});
 });

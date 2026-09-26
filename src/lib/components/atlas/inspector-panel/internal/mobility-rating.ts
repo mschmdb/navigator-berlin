@@ -1,5 +1,11 @@
 import type { NearestStop, Modus } from './nearest-oepnv-stop.js';
 import type { SeverityLevel } from './value-severity-mapping.js';
+import { m } from '$lib/paraglide/messages.js';
+import {
+	assertUnreachable,
+	toAtlasMessageOptions,
+	type LocaleOptions
+} from '../../internal/atlas-label-options.js';
 
 export type MobilityRatingKey = 'top' | 'gut' | 'solide' | 'ausreichend' | 'schwach' | 'keine';
 
@@ -14,19 +20,33 @@ export interface MobilityRating {
 export const MOBILITY_SCORE_MAX = 7.5;
 export const MOBILITY_SCORE_TOP_THRESHOLD = 4;
 
-export interface MobilityRatingOptions {
+export interface MobilityRatingOptions extends LocaleOptions {
 	/** When true, allow upgrading "keine" to "schwach" if soft stops exist (Story 1.21). */
 	isResidential?: boolean;
 }
 
-const LABEL: Record<MobilityRatingKey, string> = {
-	top: 'Sehr gut angebunden',
-	gut: 'Gut angebunden',
-	solide: 'Solide angebunden',
-	ausreichend: 'Ausreichend angebunden',
-	schwach: 'Schwach angebunden',
-	keine: 'Nicht angebunden'
-};
+/** Locale-fähiges Mobilitaets-Rating-Label. Ohne `opts.locale`: DE
+ * (Boundary Spec i18n B3a, Fundament -- aktuell nur vom Inspector-Panel
+ * (B3b) genutzt, das ohne `locale` aufruft). */
+function mobilityRatingLabel(key: MobilityRatingKey, opts?: LocaleOptions): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (key) {
+		case 'top':
+			return m.atlas_mobility_label_top(undefined, options);
+		case 'gut':
+			return m.atlas_mobility_label_gut(undefined, options);
+		case 'solide':
+			return m.atlas_mobility_label_solide(undefined, options);
+		case 'ausreichend':
+			return m.atlas_mobility_label_ausreichend(undefined, options);
+		case 'schwach':
+			return m.atlas_mobility_label_schwach(undefined, options);
+		case 'keine':
+			return m.atlas_mobility_label_keine(undefined, options);
+		default:
+			return assertUnreachable(key);
+	}
+}
 
 const SEVERITY: Record<MobilityRatingKey, SeverityLevel> = {
 	top: 'success',
@@ -59,8 +79,8 @@ function busScore(distance: number | null): number {
 	return 0;
 }
 
-function rating(key: MobilityRatingKey, score: number): MobilityRating {
-	return { key, label: LABEL[key], severity: SEVERITY[key], score };
+function rating(key: MobilityRatingKey, score: number, opts?: LocaleOptions): MobilityRating {
+	return { key, label: mobilityRatingLabel(key, opts), severity: SEVERITY[key], score };
 }
 
 function hardStop(stop: NearestStop | null): NearestStop | null {
@@ -93,12 +113,12 @@ export function getMobilityRating(
 
 	if (score === 0) {
 		if (options.isResidential && anySoftStop(nearest)) {
-			return rating('schwach', 0);
+			return rating('schwach', 0, options);
 		}
-		return rating('keine', 0);
+		return rating('keine', 0, options);
 	}
-	if (score >= 4) return rating('top', score);
-	if (score >= 2.5) return rating('gut', score);
-	if (score >= 1.5) return rating('solide', score);
-	return rating('ausreichend', score);
+	if (score >= 4) return rating('top', score, options);
+	if (score >= 2.5) return rating('gut', score, options);
+	if (score >= 1.5) return rating('solide', score, options);
+	return rating('ausreichend', score, options);
 }

@@ -192,10 +192,10 @@ describe('layer-style-builder.buildLayerSpec', () => {
 	});
 
 	it('Polygon-non-pin point-Profile (z.B. wohnlage) bleiben circle', () => {
-		// Wohnlage-Points werden ueber separates point-wohnlage-Profil rendered,
-		// kein Pin-Icon-Mapping. Heutige Manifest hat keinen Slug fuer point-wohnlage,
-		// daher Smoke-Check: Slug ohne Pin-Icon-Mapping fuer point-Profil
-		// faellt auf circle zurueck (z.B. trinkbrunnen war point; jetzt symbol).
+		// Wohnlage-Points werden über separates point-wohnlage-Profil rendered,
+		// kein Pin-Icon-Mapping. Heutige Manifest hat keinen Slug für point-wohnlage,
+		// daher Smoke-Check: Slug ohne Pin-Icon-Mapping für point-Profil
+		// fällt auf circle zurück (z.B. trinkbrunnen war point; jetzt symbol).
 		expect(true).toBe(true);
 	});
 
@@ -430,4 +430,119 @@ describe('layer-style-builder · Dimension-Rampen (Multi-Layer-Kartenfarben)', (
 	it('Legende der Kaltluft-Layer trägt das Cyan', () => {
 		expect(getLegendSpec('klima-leitbahnkorridor-2022').items[0].color).toBe(KALTLUFT_HIGHLIGHT);
 	});
+});
+
+// i18n Block B3a: ohne `opts.locale` bleibt DE (Boundary), Farben/Kind
+// unverändert -- nur `label`/`range` werden für `{ locale: 'en' }` übersetzt
+// bzw. (für Zahlen-Gradienten) locale-abhängig neu formatiert.
+describe('getLegendSpec i18n Block B3a (EN)', () => {
+	it('DE ohne opts bleibt Byte-identisch zum Alt-Verhalten', () => {
+		const de = getLegendSpec('kuehle-orte');
+		expect(de.items[0].label).toBe('Kühler Ort');
+		expect(getLegendSpec('kuehle-orte', { locale: 'de' })).toEqual(de);
+	});
+
+	it('kategoriale Legende: einfaches Item-Label übersetzt', () => {
+		expect(getLegendSpec('kuehle-orte', { locale: 'en' }).items[0].label).toBe('Cool place');
+		expect(getLegendSpec('boundary-slug-does-not-exist', { locale: 'en' }).items[0].label).toBe(
+			'Border'
+		);
+	});
+
+	it('Score-Dimension-Legende: dieselben 4 Stufen-Wörter wie scaleFor/kiezScoreScaleLabel', () => {
+		const legend = getLegendSpec('kiez-score-mobilitaet', { locale: 'en' });
+		expect(legend.items.map((i) => i.label)).toEqual(['low', 'medium', 'high', 'very high']);
+	});
+
+	it('choropleth-mehrfach: alle 6 Kategorien übersetzt', () => {
+		const legend = getLegendSpec('umweltgerechtigkeit-2023', { locale: 'en' });
+		expect(legend.items.map((i) => i.label)).toEqual([
+			'no major burden',
+			'basic',
+			'double',
+			'triple',
+			'quadruple',
+			'quintuple'
+		]);
+	});
+
+	it('choropleth-brw: Zahlen-Gradient mit englischer Tausendertrennung + Range-Wörter', () => {
+		const legend = getLegendSpec('bodenrichtwerte', { locale: 'en' });
+		expect(legend.items.map((i) => i.label)).toEqual(['10 €/m²', '100', '1,000', '10,000']);
+		expect(legend.range).toEqual(['low', 'high']);
+	});
+
+	it('choropleth-dichte: "+"-Suffix bleibt nach der Zahl erhalten', () => {
+		const legend = getLegendSpec('einwohner-dichte-2024', { locale: 'en' });
+		expect(legend.items.at(-1)?.label).toBe('24,000+');
+		expect(legend.range).toEqual(['sparse', 'dense']);
+	});
+
+	it('point/line-Profile: 1:1-Label-Uebersetzung', () => {
+		expect(getLegendSpec('ubahn-stationen', { locale: 'en' }).items[0].label).toBe(
+			'U-Bahn station'
+		);
+		expect(
+			getLegendSpec('radverkehrsnetz-2025', { locale: 'en' }).items.map((i) => i.label)
+		).toEqual(['Priority cycling network', 'Supplementary network']);
+	});
+});
+
+// Review-Fund: versprochener Paritätstest über ALLE StyleProfile (ein
+// Beispiel-Slug je Profil, aus `LAYER_STYLE_PROFILE`) -- hält `kind`,
+// Item-Anzahl, Farbfolge und `range.length` zwischen DE und EN identisch und
+// stellt sicher, dass jedes Wort-Label übersetzt wird (reine Zahlen-Labels
+// dürfen gleich bleiben, z. B. "100" < 1000 braucht kein Tausendertrennzeichen).
+describe('getLegendSpec i18n Block B3a: Parität über ALLE StyleProfile', () => {
+	const PROFILE_SAMPLE_SLUG: Record<string, string> = {
+		boundary: 'bezirke',
+		'choropleth-brw': 'bodenrichtwerte',
+		'choropleth-belastung-3': 'laerm-2023',
+		'choropleth-versorgung-3': 'gruenversorgung-2023',
+		'choropleth-mehrfach': 'umweltgerechtigkeit-2023',
+		'choropleth-pet': 'klima-pet-2022',
+		'choropleth-wohnlage-3': 'wohnlagen-2024',
+		'choropleth-mss-12': 'mss-gesamtindex-2025',
+		'choropleth-kiez-score-ordinal-4': 'kiez-score-ruhe-luft',
+		'choropleth-kiez-score-strukturell-4': 'kiez-score-kriminalitaet',
+		'choropleth-dichte': 'einwohner-dichte-2024',
+		'polygon-highlight': 'klima-kaltlufteinwirkbereich-2022',
+		'polygon-outline-soft': 'gruenanlagen',
+		'polygon-outline-milieuschutz-erhaltungsmiete': 'milieuschutz-erhaltungsmiete',
+		'polygon-outline-milieuschutz-staedtebau': 'milieuschutz-staedtebau',
+		point: 'nahversorgung-lebensmittel',
+		'point-ubahn': 'ubahn-stationen',
+		'point-sbahn': 'sbahn-stationen',
+		'point-tram': 'tram-haltestellen',
+		'point-bus': 'bus-haltestellen',
+		'point-bildung': 'kitas-2024',
+		'point-gesundheit': 'krankenhaeuser-plan',
+		'point-freizeit': 'sportanlagen-2024',
+		'point-kuehle-orte': 'kuehle-orte',
+		'line-radverkehr': 'radverkehrsnetz-2025',
+		'line-rail-ubahn': 'ubahn-netz',
+		'line-rail-tram': 'tram-netz',
+		'line-rail-sbahn': 'sbahn-netz',
+		'line-fahrradstrasse': 'fahrradstrassen-2024'
+	};
+
+	for (const [profile, slug] of Object.entries(PROFILE_SAMPLE_SLUG)) {
+		it(`${profile} (${slug}): gleiche Struktur DE/EN, Wort-Labels übersetzt`, () => {
+			const de = getLegendSpec(slug);
+			const en = getLegendSpec(slug, { locale: 'en' });
+			expect(en.kind).toBe(de.kind);
+			expect(en.items.length).toBe(de.items.length);
+			expect(en.items.map((i) => i.color)).toEqual(de.items.map((i) => i.color));
+			expect(en.range?.length ?? 0).toBe(de.range?.length ?? 0);
+			for (let i = 0; i < de.items.length; i++) {
+				const deLabel = de.items[i]!.label;
+				const enLabel = en.items[i]!.label;
+				// Zahlen-Labels (beginnen mit einer Ziffer) dürfen identisch
+				// bleiben, wenn der Wert < 1000 kein Tausendertrennzeichen braucht.
+				if (!/^-?\d/.test(deLabel)) {
+					expect(enLabel).not.toBe(deLabel);
+				}
+			}
+		});
+	}
 });

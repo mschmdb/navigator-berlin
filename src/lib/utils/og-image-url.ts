@@ -1,3 +1,7 @@
+import { m } from '$lib/paraglide/messages.js';
+import type { LocaleOptions } from '$lib/components/atlas/internal/atlas-label-options.js';
+import { toAtlasMessageOptions } from '$lib/components/atlas/internal/atlas-label-options.js';
+
 export const DEFAULT_OG_IMAGE_PATH = '/og/page/home.png';
 const MAX_TOP_LAYERS = 3;
 
@@ -26,10 +30,14 @@ export function buildOgImageUrl(input: OgImageInput | null, baseUrl: string): st
 	return `${base}/api/og/share?${params.toString()}`;
 }
 
-export function buildOgDescription(input: OgImageInput | null): string {
+export function buildOgDescription(input: OgImageInput | null, opts?: LocaleOptions): string {
 	if (!input) return '';
+	const options = toAtlasMessageOptions(opts);
 	if (input.topLayers.length === 0) {
-		return `Daten zur Adresse ${input.address}.`;
+		return m.atlas_og_description_address({ address: input.address }, options);
 	}
-	return `Daten zur Adresse: ${input.topLayers.slice(0, MAX_TOP_LAYERS).join(', ')}.`;
+	return m.atlas_og_description_top_layers(
+		{ topLayers: input.topLayers.slice(0, MAX_TOP_LAYERS).join(', ') },
+		options
+	);
 }

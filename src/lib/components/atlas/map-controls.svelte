@@ -9,6 +9,8 @@
 		Minus,
 		Plus
 	} from '@lucide/svelte';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	export type PanDirection = 'north' | 'east' | 'south' | 'west';
 
@@ -21,6 +23,7 @@
 	};
 
 	let { onPan, onZoom, onLocate, locating = false }: Props = $props();
+	const localeOpts = $derived({ locale: getLocale() });
 	let popoutOpen = $state(false);
 
 	function togglePopout(): void {
@@ -41,13 +44,13 @@
 
 <div
 	role="group"
-	aria-label="Karten-Steuerung"
+	aria-label={m.atlas_controls_group_aria_label(undefined, localeOpts)}
 	class="absolute top-3 right-3 flex flex-col items-end gap-2"
 >
 	<div class="relative">
 		<button
 			type="button"
-			aria-label="Karten-Pan-Steuerung öffnen"
+			aria-label={m.atlas_controls_pan_open_aria_label(undefined, localeOpts)}
 			aria-expanded={popoutOpen}
 			aria-haspopup="menu"
 			data-testid="compass-trigger"
@@ -67,7 +70,7 @@
 				<button
 					type="button"
 					role="menuitem"
-					aria-label="Karte nach Norden verschieben"
+					aria-label={m.atlas_controls_pan_north_aria_label(undefined, localeOpts)}
 					style="position:absolute;top:4px;left:50%;transform:translateX(-50%);{panSize}"
 					class={panBase}
 					onclick={() => onPan?.('north')}
@@ -77,7 +80,7 @@
 				<button
 					type="button"
 					role="menuitem"
-					aria-label="Karte nach Westen verschieben"
+					aria-label={m.atlas_controls_pan_west_aria_label(undefined, localeOpts)}
 					style="position:absolute;top:50%;left:4px;transform:translateY(-50%);{panSize}"
 					class={panBase}
 					onclick={() => onPan?.('west')}
@@ -87,7 +90,7 @@
 				<button
 					type="button"
 					role="menuitem"
-					aria-label="Karte nach Osten verschieben"
+					aria-label={m.atlas_controls_pan_east_aria_label(undefined, localeOpts)}
 					style="position:absolute;top:50%;right:4px;transform:translateY(-50%);{panSize}"
 					class={panBase}
 					onclick={() => onPan?.('east')}
@@ -97,7 +100,7 @@
 				<button
 					type="button"
 					role="menuitem"
-					aria-label="Karte nach Sueden verschieben"
+					aria-label={m.atlas_controls_pan_south_aria_label(undefined, localeOpts)}
 					style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);{panSize}"
 					class={panBase}
 					onclick={() => onPan?.('south')}
@@ -110,7 +113,7 @@
 	<div class="flex flex-col gap-1">
 		<button
 			type="button"
-			aria-label="Hineinzoomen"
+			aria-label={m.atlas_controls_zoom_in_aria_label(undefined, localeOpts)}
 			style={compactSize}
 			class={compactBase}
 			onclick={() => onZoom?.(1)}
@@ -119,7 +122,7 @@
 		</button>
 		<button
 			type="button"
-			aria-label="Herauszoomen"
+			aria-label={m.atlas_controls_zoom_out_aria_label(undefined, localeOpts)}
 			style={compactSize}
 			class={compactBase}
 			onclick={() => onZoom?.(-1)}
@@ -131,7 +134,7 @@
 		<button
 			type="button"
 			data-testid="map-locate-trigger"
-			aria-label="Mein Standort"
+			aria-label={m.atlas_controls_locate_aria_label(undefined, localeOpts)}
 			aria-busy={locating}
 			disabled={locating}
 			style={compactSize}

@@ -2,6 +2,13 @@ import { COLORS } from './colors.js';
 import { KALTLUFT_HIGHLIGHT, rampForSlug, type Ramp } from './dimension-ramps.js';
 import { hasPinIcon } from './pin-icon-mapping.js';
 import { pinImageId } from './pin-sprite-renderer.js';
+import { m } from '$lib/paraglide/messages.js';
+import { formatCount } from '$lib/i18n/format.js';
+import { assertUnreachable, type LocaleOptions } from './atlas-label-options.js';
+import type { Locale } from '$lib/paraglide/runtime';
+import { kiezScoreScaleLabel } from '../inspector-panel/internal/kiez-score-display.js';
+
+type MessageFn = (params?: undefined, options?: { locale: Locale }) => string;
 
 export type StyleProfile =
 	| 'boundary'
@@ -42,7 +49,7 @@ export interface MapLibreLayerSpec {
 	layout?: Record<string, unknown>;
 }
 
-// Story 1.15: Pin-Icon-Layer (type=symbol) fuer 12 Point-Layer mit Lucide-Icons.
+// Story 1.15: Pin-Icon-Layer (type=symbol) für 12 Point-Layer mit Lucide-Icons.
 // Sprite-Image wird zur Laufzeit per map.addImage(pinImageId(slug), ...) registriert.
 function buildPinSymbolSpec(slug: string, sourceId: string): MapLibreLayerSpec {
 	return {
@@ -142,7 +149,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 const TRANSITION_MS = 200;
 
 // Fallback-Rampen, falls ein Score-Profil-Slug keine Dimension-Rampe hat
-// (sollte nicht vorkommen, haelt den Builder aber total).
+// (sollte nicht vorkommen, hält den Builder aber total).
 const GUT_RAMP: Ramp = [
 	COLORS.scaleGut1,
 	COLORS.scaleGut2,
@@ -372,26 +379,197 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 /**
  * Multi-Layer-Kartenfarben: Score-Choroplethen ziehen ihre Rampe pro Slug
  * (Hue = Dimension), nicht mehr pro Profil. Alle übrigen Profile bleiben statisch.
+ *
+ * Labels über `kiezScoreScaleLabel` (i18n Block B3a: "Skalen-Union -> IDs"),
+ * dieselbe Quelle wie `scaleFor()`/`scaleForOverall()` -- keine zweite
+ * Übersetzung derselben 4 Stufen-Wörter.
  */
-function scoreLegend(ramp: Ramp): LegendSpec {
+function scoreLegend(ramp: Ramp, opts?: LocaleOptions): LegendSpec {
 	return {
 		kind: 'categorical',
 		items: [
-			{ color: ramp[0], label: 'gering' },
-			{ color: ramp[1], label: 'mittel' },
-			{ color: ramp[3], label: 'hoch' },
-			{ color: ramp[4], label: 'sehr hoch' }
+			{ color: ramp[0], label: kiezScoreScaleLabel('gering', opts) },
+			{ color: ramp[1], label: kiezScoreScaleLabel('mittel', opts) },
+			{ color: ramp[3], label: kiezScoreScaleLabel('hoch', opts) },
+			{ color: ramp[4], label: kiezScoreScaleLabel('sehr-hoch', opts) }
 		]
 	};
 }
 
-export function getLegendSpec(slug: string): LegendSpec {
+/**
+ * DE-Wort/-Phrase -> EN-Message, deckt ALLE nicht-numerischen Legend-Item-
+ * Labels aus `LEGEND_BY_PROFILE` ab (1:1-Registrierung; ein Paritätstest in
+ * `layer-style-builder.test.ts` iteriert über jedes Profil und prüft, dass
+ * kein Label unübersetzt durchrutscht). Ein Label taucht nur einmal auf,
+ * auch wenn mehrere Profile es teilen (z. B. "gering"/"mittel"/"hoch" in
+ * `choropleth-belastung-3` UND den beiden Kiez-Score-Strukturell/Ordinal-
+ * Profilen) -- das IST die Dedupe-Wirkung eines Label->Message-Dictionaries
+ * gegenüber der vormaligen Index-pro-Profil-Kopie.
+ */
+const LEGEND_WORD_MESSAGE: Record<string, MessageFn> = {
+	Grenze: m.atlas_legend_word_grenze,
+	gering: m.atlas_scale_label_gering,
+	mittel: m.atlas_scale_label_mittel,
+	hoch: m.atlas_scale_label_hoch,
+	'sehr hoch': m.atlas_scale_label_sehr_hoch,
+	gut: m.atlas_legend_word_gut,
+	schlecht: m.atlas_legend_word_schlecht,
+	'keine starke Belastung': m.atlas_legend_mehrfach_keine,
+	einfach: m.atlas_legend_word_einfach,
+	zweifach: m.atlas_legend_mehrfach_zweifach,
+	dreifach: m.atlas_legend_mehrfach_dreifach,
+	vierfach: m.atlas_legend_mehrfach_vierfach,
+	fünffach: m.atlas_legend_mehrfach_fuenffach,
+	'Status sehr niedrig': m.atlas_legend_mss_status_sehr_niedrig,
+	'Status niedrig': m.atlas_legend_mss_status_niedrig,
+	'Status mittel': m.atlas_legend_mss_status_mittel,
+	'Status hoch': m.atlas_legend_mss_status_hoch,
+	betroffen: m.atlas_legend_word_betroffen,
+	Fläche: m.atlas_legend_word_flaeche,
+	'Erhaltungsmiete (§172 BauGB)': m.atlas_legend_milieuschutz_erhaltungsmiete,
+	'Städtebaulicher Schutz (§172 BauGB)': m.atlas_legend_milieuschutz_staedtebau,
+	Standort: m.atlas_legend_word_standort,
+	'Kühler Ort': m.atlas_legend_point_kuehler_ort,
+	'U-Bahn-Station': m.atlas_legend_point_ubahn_station,
+	'S-Bahn-Station': m.atlas_legend_point_sbahn_station,
+	'Tram-Haltestelle': m.atlas_legend_point_tram_haltestelle,
+	'Bus-Haltestelle': m.atlas_legend_point_bus_haltestelle,
+	'Bildungs-Standort': m.atlas_legend_point_bildung,
+	'Gesundheits-Standort': m.atlas_legend_point_gesundheit,
+	'Freizeit-Standort': m.atlas_legend_point_freizeit,
+	Radvorrangnetz: m.atlas_legend_line_radvorrangnetz,
+	Ergänzungsnetz: m.atlas_legend_line_ergaenzungsnetz,
+	'U-Bahn-Trasse': m.atlas_legend_line_ubahn_trasse,
+	'Tram-Trasse': m.atlas_legend_line_tram_trasse,
+	'S-Bahn-Trasse': m.atlas_legend_line_sbahn_trasse,
+	Fahrradstraße: m.atlas_legend_line_fahrradstrasse
+};
+
+function translatedWordLabel(label: string, options: { locale: Locale }): string {
+	const fn = Object.hasOwn(LEGEND_WORD_MESSAGE, label) ? LEGEND_WORD_MESSAGE[label] : undefined;
+	return fn ? fn(undefined, options) : label;
+}
+
+function translatedWordItems(
+	items: readonly LegendItem[],
+	options: { locale: Locale }
+): LegendItem[] {
+	return items.map((item) => ({ ...item, label: translatedWordLabel(item.label, options) }));
+}
+
+/**
+ * Parst ein DE-formatiertes Zahlen-Label ("10.000", "28 °C", "24.000+") in
+ * Zahlwert + Suffix und formatiert die Zahl für die Ziel-Locale neu (Review-
+ * Fund: ersetzt eine zweite, fest kopierte Zahlenreihe je Profil -- die
+ * Schwellenwerte leben nur noch EINMAL, in `LEGEND_BY_PROFILE`).
+ */
+function translatedNumericLabel(label: string, options: { locale: Locale }): string {
+	const match = label.match(/^(-?[\d.]+)(.*)$/);
+	if (!match) return label;
+	const [, numPart, suffix] = match;
+	const value = Number(numPart.replace(/\./g, ''));
+	if (!Number.isFinite(value)) return label;
+	return `${formatCount(value, options)}${suffix}`;
+}
+
+function translatedNumericItems(
+	items: readonly LegendItem[],
+	options: { locale: Locale }
+): LegendItem[] {
+	return items.map((item) => ({ ...item, label: translatedNumericLabel(item.label, options) }));
+}
+
+/** Die beiden Score-Profile werden nie mit `translateLegendSpec` übersetzt
+ * (`getLegendSpec` fängt sie vorher per `scoreLegend()` ab) -- aus dem
+ * Eingabetyp ausgeschlossen, damit der Switch unten ohne totes `default`
+ * exhaustiv bleibt (`assertUnreachable`, TS erzwingt einen neuen Case bei
+ * einem künftigen Profil). */
+type TranslatableStyleProfile = Exclude<
+	StyleProfile,
+	'choropleth-kiez-score-ordinal-4' | 'choropleth-kiez-score-strukturell-4'
+>;
+
+/**
+ * Übersetzt die statischen `LEGEND_BY_PROFILE`-Items/-Ranges für EN. Der
+ * DE-Pfad (Default, `getLegendSpec`) gibt `base` unverändert zurück --
+ * keine zweite DE-Textquelle, keine Paritäts-Drift möglich. Farben kommen
+ * IMMER 1:1 aus `base.items` (kein Farb-Zugriff per Index), Zahlen werden
+ * aus `base.items` geparst statt zweimal hart codiert.
+ */
+function translateLegendSpec(
+	profile: TranslatableStyleProfile,
+	base: LegendSpec,
+	locale: NonNullable<LocaleOptions['locale']>
+): LegendSpec {
+	const options = { locale };
+	switch (profile) {
+		case 'choropleth-brw':
+			return {
+				...base,
+				items: translatedNumericItems(base.items, options),
+				range: [
+					m.atlas_legend_word_niedrig(undefined, options),
+					m.atlas_scale_label_hoch(undefined, options)
+				]
+			};
+		case 'choropleth-pet':
+			return {
+				...base,
+				items: translatedNumericItems(base.items, options),
+				range: [
+					m.atlas_legend_pet_range_min(undefined, options),
+					m.atlas_legend_pet_range_max(undefined, options)
+				]
+			};
+		case 'choropleth-dichte':
+			return {
+				...base,
+				items: translatedNumericItems(base.items, options),
+				range: [
+					m.atlas_legend_dichte_range_min(undefined, options),
+					m.atlas_legend_dichte_range_max(undefined, options)
+				]
+			};
+		case 'boundary':
+		case 'choropleth-belastung-3':
+		case 'choropleth-versorgung-3':
+		case 'choropleth-mehrfach':
+		case 'choropleth-wohnlage-3':
+		case 'choropleth-mss-12':
+		case 'polygon-highlight':
+		case 'polygon-outline-soft':
+		case 'polygon-outline-milieuschutz-erhaltungsmiete':
+		case 'polygon-outline-milieuschutz-staedtebau':
+		case 'point':
+		case 'point-kuehle-orte':
+		case 'point-ubahn':
+		case 'point-sbahn':
+		case 'point-tram':
+		case 'point-bus':
+		case 'point-bildung':
+		case 'point-gesundheit':
+		case 'point-freizeit':
+		case 'line-radverkehr':
+		case 'line-rail-ubahn':
+		case 'line-rail-tram':
+		case 'line-rail-sbahn':
+		case 'line-fahrradstrasse':
+			return { ...base, items: translatedWordItems(base.items, options) };
+		default:
+			return assertUnreachable(profile);
+	}
+}
+
+export function getLegendSpec(slug: string, opts?: LocaleOptions): LegendSpec {
 	const profile = getStyleProfile(slug);
 	if (profile === 'choropleth-kiez-score-ordinal-4')
-		return scoreLegend(rampForSlug(slug) ?? GUT_RAMP);
+		return scoreLegend(rampForSlug(slug) ?? GUT_RAMP, opts);
 	if (profile === 'choropleth-kiez-score-strukturell-4')
-		return scoreLegend(rampForSlug(slug) ?? STRUKTURELL_RAMP);
-	return LEGEND_BY_PROFILE[profile];
+		return scoreLegend(rampForSlug(slug) ?? STRUKTURELL_RAMP, opts);
+	const base = LEGEND_BY_PROFILE[profile];
+	const locale = opts?.locale;
+	if (!locale || locale === 'de') return base;
+	return translateLegendSpec(profile, base, locale);
 }
 
 export function buildLayerSpec(

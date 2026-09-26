@@ -80,4 +80,23 @@ describe('LayerCard', () => {
 		await page.getByTestId('card-details-toggle').click();
 		await expect.element(page.getByTestId('card-details')).toBeInTheDocument();
 	});
+
+	// i18n Block B3a Task 3: DE hat KEINEN URL-Präfix (Boundary), vormals
+	// `/de/layer/...` (301-Umweg-Bug).
+	it('Learn-more-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
+		render(LayerCard, { hit, layerName: 'Lärmbelastung 2023', contextRows: [], lang: 'de' });
+		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/layer/laerm-2023');
+	});
+
+	it('Learn-more-Link nutzt /en/-Präfix bei lang: "en"', async () => {
+		render(LayerCard, {
+			hit,
+			layerName: 'Noise pollution 2023',
+			contextRows: [],
+			lang: 'en'
+		});
+		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/en/layer/laerm-2023');
+	});
 });

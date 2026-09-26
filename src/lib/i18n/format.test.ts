@@ -4,7 +4,8 @@ import {
 	formatPercentagePointsDelta,
 	formatCount,
 	formatWahlDate,
-	formatShortDate
+	formatShortDate,
+	formatDecimal
 } from './format.js';
 
 describe('formatPercent', () => {
@@ -45,7 +46,7 @@ describe('formatPercentagePointsDelta', () => {
 		expect(formatPercentagePointsDelta(10.2, { locale: 'en' })).toBe('+10.2 pp');
 	});
 
-	it('nutzt ein echtes Minuszeichen (U+2212) fuer negative Deltas, in beiden Locales', () => {
+	it('nutzt ein echtes Minuszeichen (U+2212) für negative Deltas, in beiden Locales', () => {
 		expect(formatPercentagePointsDelta(-3.4, { locale: 'de' })).toBe('−3,4 Pp.');
 		expect(formatPercentagePointsDelta(-3.4, { locale: 'en' })).toBe('−3.4 pp');
 	});
@@ -83,29 +84,29 @@ describe('formatWahlDate', () => {
 		expect(formatWahlDate('2026-09-20T23:55:55.000Z', { locale: 'en' })).toBe('21 September 2026');
 	});
 
-	it('gibt den Roh-String zurueck, wenn er kein valides Datum ist', () => {
+	it('gibt den Roh-String zurück, wenn er kein valides Datum ist', () => {
 		expect(formatWahlDate('nicht-valide', { locale: 'de' })).toBe('nicht-valide');
 	});
 });
 
 describe('formatShortDate', () => {
-	it('formatiert de mit abgekuerztem Monat (byte-identisch zum Alt-Verhalten der Updates-Teaser)', () => {
+	it('formatiert de mit abgekürztem Monat (byte-identisch zum Alt-Verhalten der Updates-Teaser)', () => {
 		expect(formatShortDate('2026-05-15', { locale: 'de' })).toBe('15. Mai 2026');
 	});
 
-	it('formatiert en mit abgekuerztem Monat', () => {
+	it('formatiert en mit abgekürztem Monat', () => {
 		expect(formatShortDate('2026-05-15', { locale: 'en' })).toBe('15 May 2026');
 	});
 
-	it('gibt den Roh-String zurueck, wenn er kein valides Datum ist', () => {
+	it('gibt den Roh-String zurück, wenn er kein valides Datum ist', () => {
 		expect(formatShortDate('nicht-valide', { locale: 'de' })).toBe('nicht-valide');
 	});
 
 	// Review-Fund (i18n Block B2): die alte `home-updates-teaser.svelte`-
 	// Formatierung erzwang NIE eine Zeitzone (Host-Zeitzone) -- ein
-	// hinzugefuegtes `timeZone: 'Europe/Berlin'` haette das Datum je nach
+	// hinzugefügtes `timeZone: 'Europe/Berlin'` hätte das Datum je nach
 	// Host-TZ (z. B. UTC in Production) auf den Vor-/Folgetag springen
-	// lassen. Test host-TZ-unabhaengig: vergleicht gegen denselben nativen
+	// lassen. Test host-TZ-unabhängig: vergleicht gegen denselben nativen
 	// `toLocaleDateString`-Aufruf OHNE `timeZone`-Option statt einen fest
 	// erwarteten Kalendertag zu behaupten.
 	it('erzwingt keine Zeitzone (Datum nahe Mitternacht UTC, Alt-Verhalten)', () => {
@@ -122,5 +123,35 @@ describe('formatShortDate', () => {
 			year: 'numeric'
 		});
 		expect(formatShortDate(iso, { locale: 'en' })).toBe(expectedEn);
+	});
+});
+
+// i18n Block B3a: ersetzt verstreute `new Intl.NumberFormat('de-DE', {
+// maximumFractionDigits: ... })`-Aufrufe in den Atlas-Formattern.
+describe('formatDecimal', () => {
+	it('formatiert de mit Komma-Dezimaltrennzeichen und Tausenderpunkt', () => {
+		expect(formatDecimal(24.567, { locale: 'de', maximumFractionDigits: 1 })).toBe('24,6');
+		expect(formatDecimal(10000, { locale: 'de', maximumFractionDigits: 0 })).toBe('10.000');
+	});
+
+	it('formatiert en mit Punkt-Dezimaltrennzeichen und Tausenderkomma', () => {
+		expect(formatDecimal(24.567, { locale: 'en', maximumFractionDigits: 1 })).toBe('24.6');
+		expect(formatDecimal(10000, { locale: 'en', maximumFractionDigits: 0 })).toBe('10,000');
+	});
+
+	it('fällt ohne locale auf getLocale() zurück (Default-Verhalten wie andere format.ts-Helper)', () => {
+		expect(formatDecimal(1000)).toBe('1.000');
+	});
+
+	// Review-Fund: `Intl.NumberFormat` wirft ein RangeError, wenn
+	// `minimumFractionDigits` > `maximumFractionDigits` -- `formatDistance`
+	// ruft genau so auf (`minimumFractionDigits: 1` ohne eigenes `max`).
+	it('wirft kein RangeError bei minimumFractionDigits > maximumFractionDigits', () => {
+		expect(() =>
+			formatDecimal(1.5, { locale: 'de', minimumFractionDigits: 4, maximumFractionDigits: 1 })
+		).not.toThrow();
+		expect(formatDecimal(1.5, { locale: 'de', minimumFractionDigits: 4, maximumFractionDigits: 1 })).toBe(
+			'1,5000'
+		);
 	});
 });

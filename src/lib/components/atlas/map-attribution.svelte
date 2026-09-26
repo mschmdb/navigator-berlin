@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+
 	type Props = {
 		variant?: 'overlay' | 'inline';
 	};
 	let { variant = 'overlay' }: Props = $props();
+	const localeOpts = $derived({ locale: getLocale() });
 </script>
 
 <p
@@ -36,6 +40,6 @@
 		href="https://www.openstreetmap.org/copyright"
 		target="_blank"
 		rel="noopener"
-		class="underline-offset-2 hover:underline">OpenStreetMap-Contributors</a
+		class="underline-offset-2 hover:underline">{m.atlas_attribution_osm_contributors(undefined, localeOpts)}</a
 	>
 </p>

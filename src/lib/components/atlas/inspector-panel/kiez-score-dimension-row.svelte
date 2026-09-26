@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ChevronDown, ChevronRight, Eye, EyeOff, ExternalLink } from '@lucide/svelte';
-	import { resolve } from '$app/paths';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import type { Locale } from '$lib/paraglide/runtime';
 	import ValueChip from '../value-chip.svelte';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import { getLayerDisplayName } from '../internal/layer-palette-filter.js';
@@ -12,7 +13,7 @@
 		/** Optional kontrolliert: wenn gesetzt, steuert der Konsument den Aufklapp-Zustand (z.B. via Ring-Klick). */
 		open?: boolean;
 		onToggle?: (dimension: DimensionScore['dimension']) => void;
-		lang?: string;
+		lang?: Locale;
 		isActive?: boolean;
 		onToggleLayer?: (slug: string) => void;
 	};
@@ -22,7 +23,7 @@
 	const label = $derived(DIMENSION_LABELS_DE[score.dimension]);
 	const hasSources = $derived(score.sources.length > 0);
 	const layerSlug = $derived(`kiez-score-${score.dimension}`);
-	const learnMoreHref = $derived((resolve as (p: string) => string)(`/${lang}/layer/${layerSlug}`));
+	const learnMoreHref = $derived(localizedHref(`/layer/${layerSlug}`, lang));
 	let internalOpen = $state(false);
 	const sourcesOpen = $derived(open ?? internalOpen);
 

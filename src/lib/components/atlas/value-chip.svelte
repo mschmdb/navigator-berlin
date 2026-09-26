@@ -11,6 +11,10 @@
 		/** Kompakte Variante für dichte Card-Header (kein 32px-Touch-Target, kleinerer Text). */
 		compact?: boolean;
 		icon?: Component<{ size?: number | string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
+		/** i18n Block B3a (Fundament): Geteilter Baustein mit DE-Default (Lehre
+		 * Block-B2-Review #2) -- aktuell nur von Inspector-/Compare-Panel (B3b/
+		 * B3c) genutzt, die ohne dieses Prop aufrufen und damit DE bleiben. */
+		severityDescriptions?: Partial<Record<SeverityLevel, string>>;
 	};
 
 	let {
@@ -20,10 +24,11 @@
 		layerName,
 		numeric,
 		compact = false,
-		icon: IconCmp
+		icon: IconCmp,
+		severityDescriptions
 	}: Props = $props();
 
-	const SEVERITY_DESCRIPTIONS: Record<SeverityLevel, string> = {
+	const SEVERITY_DESCRIPTIONS_DE: Record<SeverityLevel, string> = {
 		success: 'günstige Belastung',
 		'success-soft': 'leicht günstige Belastung',
 		neutral: 'neutrale Einstufung',
@@ -40,7 +45,9 @@
 	};
 
 	const isNumeric = $derived(numeric ?? typeof value === 'number');
-	const description = $derived(SEVERITY_DESCRIPTIONS[severity]);
+	const description = $derived(
+		severityDescriptions?.[severity] ?? SEVERITY_DESCRIPTIONS_DE[severity]
+	);
 	const ariaLabel = $derived(`${layerName}: ${value}${unit ? ' ' + unit : ''} (${description})`);
 </script>
 

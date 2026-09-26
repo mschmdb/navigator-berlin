@@ -152,4 +152,79 @@ describe('describeFeature', () => {
 		);
 		expect(out.id.startsWith('bezirke:')).toBe(true);
 	});
+
+	// i18n Block B3a: map-accessibility-layer.svelte ist auf `/en/explore`
+	// übersetzt, `describeFeature` bekommt dort `{ locale: 'en' }` explizit.
+	describe('i18n Block B3a: { locale: "en" }', () => {
+		it('Bezirk: "Bezirk"-Präfix bleibt deutsch (Glossar), Zahl englisch formatiert', () => {
+			const out = describeFeature(
+				feature('bezirke', 'MultiPolygon', { name: 'Friedrichshain-Kreuzberg', einwohner: 295000 }),
+				baseLayer,
+				{ locale: 'en' }
+			);
+			expect(out.description).toBe('Bezirk: Friedrichshain-Kreuzberg, 295,000 residents');
+		});
+
+		it('Ortsteil-Präfix wird "Locality" (Koordinator-Entscheidung, anders als Bezirk/Kiez)', () => {
+			const layer: LayerMetadata = { ...baseLayer, slug: 'ortsteile' };
+			const out = describeFeature(
+				feature('ortsteile', 'MultiPolygon', { name: 'Friedrichshain' }),
+				layer,
+				{ locale: 'en' }
+			);
+			expect(out.description).toBe('Locality: Friedrichshain');
+		});
+
+		it('LOR-Region: "Kiez"-Präfix bleibt deutsch (Glossar)', () => {
+			const layer: LayerMetadata = { ...baseLayer, slug: 'lor-regionen' };
+			const out = describeFeature(
+				feature('lor-regionen', 'MultiPolygon', { name: 'Boxhagener Platz' }),
+				layer,
+				{ locale: 'en' }
+			);
+			expect(out.description).toBe('Kiez: Boxhagener Platz');
+		});
+
+		it('Lärm L_DEN → englischer Präfix + "Road traffic, day"', () => {
+			const layer: LayerMetadata = {
+				...baseLayer,
+				slug: 'laerm-den',
+				fetchedAt: '2022-06-01T00:00:00Z'
+			};
+			const out = describeFeature(feature('laerm-den', 'Polygon', { value: 65 }), layer, {
+				locale: 'en'
+			});
+			expect(out.description).toBe('Noise map (Road traffic, day): 65 dB, as of 2022');
+		});
+
+		it('Stolperstein mit Person → "Stolperstein for {person}"', () => {
+			const layer: LayerMetadata = { ...baseLayer, slug: 'stolpersteine', geometryType: 'Point' };
+			const out = describeFeature(
+				feature('stolpersteine', 'Point', { person: 'Anna Müller' }),
+				layer,
+				{ locale: 'en' }
+			);
+			expect(out.description).toBe('Stolperstein for Anna Müller');
+		});
+
+		it('layerName für bezirke/ortsteile/stolpersteine via getLayerDisplayName (konsolidiert, Layer-Palette-Namen)', () => {
+			const layer: LayerMetadata = { ...baseLayer, slug: 'bezirke' };
+			const out = describeFeature(feature('bezirke', 'MultiPolygon', { name: 'Pankow' }), layer, {
+				locale: 'en'
+			});
+			expect(out.layerName).toBe('Bezirke');
+		});
+
+		// Review-Fund: DE-Ausgabe für nicht explizit gelistete Layer (z. B.
+		// "laerm-2023") muss Byte-identisch zum Alt-Verhalten (vor B3a) bleiben
+		// -- roher Slug, auch unter { locale: 'en' } (kein neues Uebersetzungs-
+		// Verhalten für den Default-Fall).
+		it('layerName für nicht explizit gelistete Layer bleibt der rohe Slug, auch mit EN-Locale', () => {
+			const layer: LayerMetadata = { ...baseLayer, slug: 'laerm-2023' };
+			const out = describeFeature(feature('laerm-2023', 'Polygon', { kategorie: 'hoch' }), layer, {
+				locale: 'en'
+			});
+			expect(out.layerName).toBe('laerm-2023');
+		});
+	});
 });

@@ -141,6 +141,18 @@ describe('layer-hit-row.svelte', () => {
 		expect(link.getAttribute('href')).toBe('/en/layer/mietspiegel-wohnlage');
 	});
 
+	// i18n Block B3a Task 3: DE hat KEINEN URL-Präfix (Boundary), vormals
+	// `/de/layer/...` (301-Umweg-Bug).
+	it('Learn-more-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
+		render(LayerHitRow, {
+			hit: recentHit,
+			layerName: 'Mietspiegel-Wohnlage',
+			lang: 'de'
+		});
+		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/layer/mietspiegel-wohnlage');
+	});
+
 	it('Editorial: legal-Disclaimer für mietspiegel-wohnlage sichtbar', async () => {
 		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
 		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;

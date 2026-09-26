@@ -1,8 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Harness from './layer-palette-harness.svelte';
 import type { LayerMetadata } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function meta(slug: string, bundle: LayerMetadata['bundleGroup']): LayerMetadata {
 	return {
@@ -145,5 +150,20 @@ describe('layer-palette.svelte', () => {
 		await expect
 			.element(page.getByTestId('palette-subline-does-not-exist-yz'))
 			.not.toBeInTheDocument();
+	});
+
+	// i18n Block B3a: Layer-Palette folgt der URL-Locale (`getLocale()`).
+	it('rendert englische Palette-Texte + Layer-Namen wenn Locale "en" ist', async () => {
+		overwriteGetLocale(() => 'en');
+		render(Harness, { open: true, layers: LAYERS });
+		await expect.element(page.getByText('Select layers')).toBeInTheDocument();
+		await expect.element(page.getByPlaceholder('Search layers…')).toBeInTheDocument();
+		await expect
+			.element(
+				page
+					.getByTestId('palette-toggle-bodenrichtwerte')
+					.getByText('Standard land values (EUR/m²)')
+			)
+			.toBeInTheDocument();
 	});
 });

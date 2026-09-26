@@ -123,3 +123,7 @@
 - source_spec: none
   summary: i18n Block B3c „Finder, Compare, Bookmarks“: kiez-finder-panel + kiez-finder-data, compare-panel/-row, wahl-compare-block, kiez-score-compare-block, layer-compare.ts, bookmark-dialog/-row auf Messages + EN (~110 Keys); danach /explore ins Übersetzungs-Register.
   evidence: Split aus B3 (Koordinator-Entscheidung 27.09. 00:05, Matze AFK); /explore erst nach B3a-c registrieren, sonst indexierbar halb deutsch.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3a-atlas-fundament.md`
+  summary: DE-Textmängel im Atlas korrigieren: aria-label „Karte nach Sueden verschieben“ (Umlaut), Palette-Leerzustand „Kein Layer matched“ (Denglisch).
+  evidence: Beim Migrieren in Messages aufgefallen; B3a hält die DE-Ausgabe bewusst Zeichen für Zeichen gleich, daher eigene kleine Korrektur.

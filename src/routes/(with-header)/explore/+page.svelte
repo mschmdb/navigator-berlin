@@ -65,6 +65,8 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import {
 		buildLayerSpec,
 		type MapLibreLayerSpec
@@ -111,6 +113,10 @@
 	const selection = useAddressSelection();
 	const ui = getUiState();
 	const viewport = useViewport('desktop');
+	// i18n Block B3a: Karten-Oberfläche + Route folgen der URL-Locale (anders
+	// als die DE-only-Atlas-Resolver-Defaults, siehe atlas-label-options.ts).
+	const locale = $derived(getLocale());
+	const localeOpts = $derived({ locale });
 
 	let mapHandle: MapHandle | null = $state.raw(null);
 	let rawMap = $state.raw<unknown>(null);
@@ -652,7 +658,7 @@
 		currentMarker = null;
 		currentMarkerEl = null;
 		selectedFeatureId = null;
-		announceGlobal('Auswahl entfernt');
+		announceGlobal(m.atlas_route_announce_selection_cleared(undefined, localeOpts));
 		ui.inspectorOpen = false;
 		ui.selectedAddress = null;
 		ui.selectedLayerHits = [];
@@ -716,7 +722,7 @@
 		}
 		if (!hasBerlinBezirkHit(hits)) {
 			showOutsideBerlinHint();
-			announceGlobal('Bitte wähle eine Adresse innerhalb Berlins');
+			announceGlobal(m.atlas_route_outside_berlin(undefined, localeOpts));
 			return false;
 		}
 		ui.selectedAddress = suggestion;
@@ -738,7 +744,9 @@
 		ui.kiezScore = null;
 		ui.wahlResults = null;
 		ui.kiezLaermDb = null;
-		announceGlobal(`Inspektor geöffnet für ${suggestion.displayName}`);
+		announceGlobal(
+			m.atlas_route_announce_inspector_opened({ name: suggestion.displayName }, localeOpts)
+		);
 		// Demografie lädt der Inspector selbst (scope-abhängig, Story 10.5).
 		void (async () => {
 			try {
@@ -839,7 +847,7 @@
 		if (ui.compareMode && ui.selectedAddress) {
 			if (!isInBerlin(lngLat[1], lngLat[0])) {
 				showOutsideBerlinHint();
-				announceGlobal('Bitte wähle eine Adresse innerhalb Berlins');
+				announceGlobal(m.atlas_route_outside_berlin(undefined, localeOpts));
 				return;
 			}
 			pendingReplaceLngLat = lngLat;
@@ -858,18 +866,25 @@
 		// Phase-2-Filter (bezirke-Polygon) sitzt in openInspectorFor.
 		if (!isInBerlin(lngLat[1], lngLat[0])) {
 			showOutsideBerlinHint();
-			announceGlobal('Bitte wähle eine Adresse innerhalb Berlins');
+			announceGlobal(m.atlas_route_outside_berlin(undefined, localeOpts));
 			return;
 		}
-		// Story 1.15 AC-3: Click auf Pin-Layer setzt scroll-target fuer Inspector.
+		// Story 1.15 AC-3: Click auf Pin-Layer setzt scroll-target für Inspector.
 		const pinSlug = detectPinSlugAtPoint(lngLat);
 		if (pinSlug) ui.scrollToLayerSlug = pinSlug;
 		try {
 			const suggestion = await reverseGeocodeAddress({ lat: lngLat[1], lng: lngLat[0] });
 			if (suggestion) {
 				await placeMarker([suggestion.lng, suggestion.lat], suggestion.displayName);
-				const bezirkPart = suggestion.bezirk ? `, Bezirk ${suggestion.bezirk}` : '';
-				announceGlobal(`Adresse ausgewählt: ${suggestion.displayName}${bezirkPart}`);
+				const bezirkPart = suggestion.bezirk
+					? m.atlas_route_bezirk_suffix({ bezirk: suggestion.bezirk }, localeOpts)
+					: '';
+				announceGlobal(
+					m.atlas_route_announce_address_selected(
+						{ name: suggestion.displayName, bezirk: bezirkPart },
+						localeOpts
+					)
+				);
 				const opened = await openInspectorFor(suggestion);
 				if (opened) {
 					trackEvent('MapClick', suggestion.bezirk ? { bezirk: suggestion.bezirk } : undefined);
@@ -879,18 +894,26 @@
 				return;
 			}
 		} catch {
-			announceGlobal('Adresse konnte nicht aufgelöst werden, Punkt-Auswahl');
+			announceGlobal(m.atlas_route_announce_address_resolve_failed(undefined, localeOpts));
 		}
 		await placeMarker(lngLat);
 		const synthetic: GeocodeSuggestion = {
 			id: `point-${lngLat[0].toFixed(5)}-${lngLat[1].toFixed(5)}`,
-			displayName: `Punkt ${lngLat[1].toFixed(4)}, ${lngLat[0].toFixed(4)}`,
+			displayName: m.atlas_route_point_label(
+				{ lat: lngLat[1].toFixed(4), lng: lngLat[0].toFixed(4) },
+				localeOpts
+			),
 			lat: lngLat[1],
 			lng: lngLat[0],
 			type: 'point',
 			addresstype: 'point'
 		};
-		announceGlobal(`Punkt ausgewählt: ${lngLat[1].toFixed(4)}, ${lngLat[0].toFixed(4)}`);
+		announceGlobal(
+			m.atlas_route_announce_point_selected(
+				{ lat: lngLat[1].toFixed(4), lng: lngLat[0].toFixed(4) },
+				localeOpts
+			)
+		);
 		const opened = await openInspectorFor(synthetic);
 		if (opened) {
 			trackEvent('MapClick', { type: 'point' });
@@ -973,8 +996,12 @@
 		suppressedSelectionId = null;
 		flyToSuggestion(s);
 		void placeMarker([s.lng, s.lat], s.displayName);
-		const bezirkPart = s.bezirk ? `, Bezirk ${s.bezirk}` : '';
-		announceGlobal(`Karte gezoomt auf ${s.displayName}${bezirkPart}`);
+		const bezirkPart = s.bezirk
+			? m.atlas_route_bezirk_suffix({ bezirk: s.bezirk }, localeOpts)
+			: '';
+		announceGlobal(
+			m.atlas_route_announce_map_zoomed({ name: s.displayName, bezirk: bezirkPart }, localeOpts)
+		);
 		void openInspectorFor(s);
 	});
 
@@ -1133,7 +1160,7 @@
 
 	async function onLocate(): Promise<void> {
 		if (typeof navigator === 'undefined' || !navigator.geolocation) {
-			announceGlobal('Standort-Bestimmung wird vom Browser nicht unterstützt');
+			announceGlobal(m.atlas_route_announce_geolocation_unsupported(undefined, localeOpts));
 			return;
 		}
 		locating = true;
@@ -1155,7 +1182,10 @@
 			// Fallback wenn Reverse-Geocode leer (z.B. außerhalb Berlin)
 			selection.set({
 				id: `geo:${lat.toFixed(6)},${lng.toFixed(6)}`,
-				displayName: `Mein Standort (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+				displayName: m.atlas_route_my_location_label(
+					{ lat: lat.toFixed(4), lng: lng.toFixed(4) },
+					localeOpts
+				),
 				lat,
 				lng,
 				type: 'geolocation',
@@ -1164,8 +1194,8 @@
 		} catch (err) {
 			const msg =
 				err instanceof GeolocationPositionError && err.code === err.PERMISSION_DENIED
-					? 'Standort-Berechtigung verweigert'
-					: 'Standort konnte nicht ermittelt werden';
+					? m.atlas_route_announce_geolocation_denied(undefined, localeOpts)
+					: m.atlas_route_announce_geolocation_failed(undefined, localeOpts);
 			announceGlobal(msg);
 		} finally {
 			locating = false;
@@ -1187,9 +1217,9 @@
 		const topLayers: string[] = [];
 		for (const hit of ui.selectedLayerHits) {
 			if (topLayers.length >= 3) break;
-			const formatted = formatLayerValue(hit.layer, hit.value);
-			if (formatted.text === 'Daten nicht vorhanden') continue;
-			topLayers.push(`${getLayerDisplayName(hit.layer)}: ${formatted.text}`);
+			const formatted = formatLayerValue(hit.layer, hit.value, localeOpts);
+			if (formatted.isMissing) continue;
+			topLayers.push(`${getLayerDisplayName(hit.layer, localeOpts)}: ${formatted.text}`);
 		}
 		return {
 			address: addr.displayName,
@@ -1200,17 +1230,39 @@
 		};
 	});
 
+	// Koordinator-Entscheidung: die server-seitig gerenderte OG-Bild-PNG
+	// (`server/og/og-pipeline.ts`) bleibt bis Block C DE-only (keine EN-
+	// Karten-Vorlage) -- die Bild-URL bekommt deshalb DE-Labels ohne
+	// `localeOpts`, unabhängig von der aktuellen Seiten-Locale. Titel/
+	// Description (`ogTitle`/`ogDescription`, reiner Text in `<meta>`) folgen
+	// weiterhin der Seiten-Locale über `ogInput` oben.
+	const ogImageTopLayersDe = $derived.by<string[]>(() => {
+		const topLayers: string[] = [];
+		for (const hit of ui.selectedLayerHits) {
+			if (topLayers.length >= 3) break;
+			const formatted = formatLayerValue(hit.layer, hit.value);
+			if (formatted.isMissing) continue;
+			topLayers.push(`${getLayerDisplayName(hit.layer)}: ${formatted.text}`);
+		}
+		return topLayers;
+	});
+
 	const ogTitle = $derived(
 		ogInput
-			? `${ogInput.address} - Berlin in Daten - navigator.berlin`
-			: 'Atlas - Berlin in Daten - navigator.berlin'
+			? m.atlas_og_title_address({ address: ogInput.address }, localeOpts)
+			: m.atlas_og_title_default(undefined, localeOpts)
 	);
 	const ogDescription = $derived(
 		ogInput
-			? buildOgDescription(ogInput)
-			: 'Berliner Open-Data-Atlas: pro Adresse Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen. Karte plus Kiez-Score.'
+			? buildOgDescription(ogInput, localeOpts)
+			: m.atlas_og_description_default(undefined, localeOpts)
 	);
-	const ogImageUrl = $derived(buildOgImageUrl(ogInput, page.url.origin));
+	const ogImageUrl = $derived(
+		buildOgImageUrl(
+			ogInput ? { ...ogInput, topLayers: ogImageTopLayersDe } : null,
+			page.url.origin
+		)
+	);
 </script>
 
 <SeoHead
@@ -1237,10 +1289,9 @@
 	<!-- sr-only H1 + Intro: crawlbarer Seiten-Content (fixt Google-Soft-404 +
 	     Bing-H1-missing) und a11y-Landmark, ohne das visuelle Karten-Layout zu
 	     verändern. Statischer Page-Titel, unabhängig von der Adress-Auswahl. -->
-	<h1 class="sr-only">Berlin-Atlas: Daten zu jeder Adresse</h1>
+	<h1 class="sr-only">{m.atlas_route_h1(undefined, localeOpts)}</h1>
 	<p class="sr-only">
-		Suche eine Adresse oder setze einen Pin auf der Karte. Sieh Lärm, Klima, Grün, Mobilität,
-		Wohnen, Sozialstruktur und Wahlergebnisse für deinen Kiez, über Bezirksgrenzen hinweg.
+		{m.atlas_route_intro(undefined, localeOpts)}
 	</p>
 	<div class="relative min-h-0 w-full flex-1 lg:h-full lg:flex-none">
 		<MapLibreCanvas
@@ -1295,7 +1346,7 @@
 				aria-live="polite"
 				data-testid="outside-berlin-hint"
 			>
-				Bitte wähle eine Adresse innerhalb Berlins
+				{m.atlas_route_outside_berlin(undefined, localeOpts)}
 			</div>
 		{/if}
 	</div>
@@ -1304,10 +1355,10 @@
 		<aside
 			class="min-h-0 overflow-y-auto border-t border-rule bg-bg-elevated lg:h-full lg:border-t-0 lg:border-l"
 			aria-label={ui.compareMode
-				? 'Adress-Vergleich'
+				? m.atlas_route_aside_compare(undefined, localeOpts)
 				: inspectorActive
-					? 'Adress-Inspector-Bereich'
-					: 'Kiez-Finder'}
+					? m.atlas_route_aside_inspector_desktop(undefined, localeOpts)
+					: m.atlas_route_aside_finder(undefined, localeOpts)}
 			data-testid="inspector-slot"
 		>
 			{#if ui.compareMode}
@@ -1342,10 +1393,10 @@
 					? closeInspector
 					: () => (ui.finderOpen = false)}
 			ariaLabel={ui.compareMode
-				? 'Adress-Vergleich'
+				? m.atlas_route_aside_compare(undefined, localeOpts)
 				: inspectorActive
-					? 'Adress-Inspektor'
-					: 'Kiez-Finder'}
+					? m.atlas_route_aside_inspector_mobile(undefined, localeOpts)
+					: m.atlas_route_aside_finder(undefined, localeOpts)}
 		>
 			{#if ui.compareMode}
 				<ComparePanel
