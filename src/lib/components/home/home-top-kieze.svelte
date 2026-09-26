@@ -8,6 +8,8 @@
 -->
 <script lang="ts">
 	import { ArrowUpRight } from '@lucide/svelte';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 
 	interface TopKiez {
 		readonly slug: string;
@@ -32,13 +34,13 @@
 	<section data-testid="home-top-kieze" class="space-y-6">
 		<header class="flex items-baseline justify-between gap-4">
 			<h2 class="font-serif text-2xl text-ink md:text-3xl">
-				Jeder Kiez, ein Kiez-Score aus fünf Dimensionen
+				{m.home_top_kieze_heading()}
 			</h2>
 			<a
-				href="/umwelt-infrastruktur-score"
+				href={localizedHref('/umwelt-infrastruktur-score')}
 				class="inline-flex items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
 			>
-				Ranking ansehen
+				{m.home_top_kieze_ranking_link()}
 				<ArrowUpRight size={14} aria-hidden="true" />
 			</a>
 		</header>
@@ -47,7 +49,10 @@
 				<li class="flex items-baseline justify-between gap-4 py-3">
 					<span class="flex items-baseline gap-3">
 						<span class="font-mono text-xs text-ink-subtle">{idx + 1}</span>
-						<a class="font-serif text-base text-ink hover:text-accent" href={`/kiez/${item.slug}`}>
+						<a
+							class="font-serif text-base text-ink hover:text-accent"
+							href={localizedHref(`/kiez/${item.slug}`)}
+						>
 							{item.displayName}
 						</a>
 						{#if item.bezirkName}
@@ -59,9 +64,7 @@
 			{/each}
 		</ol>
 		<p class="font-serif text-sm text-ink-muted">
-			Fünf gleich gewichtete Dimensionen ergeben den Gesamt-Score (0–100). Kultur und erfasste
-			Kriminalität kommen als eigenständiger Kontext dazu, fließen aber nicht in den Score ein.
-			Beschreibt Verteilung, nicht Wertung einzelner Adressen oder Personen.
+			{m.home_top_kieze_footnote()}
 		</p>
 	</section>
 {/if}

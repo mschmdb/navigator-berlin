@@ -111,3 +111,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b-wahlportal.md`
   summary: `lint:wahl` in einen regulären Prüfpfad hängen (prebuild, `test` oder CI).
   evidence: Der Lint prüft seit Block B auch die Message-Dateien inkl. EN-Tabuwörter, läuft aber nur manuell; ein „stronghold“ in `en.json` würde ausgeliefert.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b2-shell.md`
+  summary: Test für den sichtbaren „Adresse nicht gefunden“/„Address not found“-Text im `address-search`-Popover (DE-Default und übergebenes EN-Label).
+  evidence: Nur der sr-only-Pfad ist getestet; der Popover-Leerzustand braucht ein Interaktions-Gerüst (Fokus, Eingabe, 0 Treffer), das die Testdatei noch nicht hat.

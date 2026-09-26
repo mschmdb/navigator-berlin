@@ -124,7 +124,9 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 		const bodyText = await page.locator('body').innerText();
 		// Stichprobe verbotener DE-Wörter, die vor Block B ueberall standen.
 		expect(bodyText).not.toMatch(/\bWahlergebnisse\b/);
-		expect(bodyText).not.toMatch(/\bÜbersicht\b/);
+		// `\b` ist auf ASCII-Wortzeichen beschränkt -- am Wortanfang "Ü" (kein
+		// `\w`) matcht `\bÜbersicht\b` nie (Review-Fund), Unicode-Lookaround fixt das.
+		expect(bodyText).not.toMatch(/(?<!\p{L})Übersicht(?!\p{L})/u);
 		expect(bodyText).not.toMatch(/\bnoch nicht übersetzt\b/i);
 		expect(bodyText).not.toMatch(/\bAbgeordnetenhauswahl\b/);
 		expect(bodyText).not.toMatch(/\bBundestagswahl\b/);
@@ -207,8 +209,12 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 		await page.goto('/en/kiez/alexanderplatz');
 		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
 		expect(websiteJsonLd).not.toBeNull();
-		const parsed = JSON.parse(websiteJsonLd ?? '{}') as { inLanguage?: string };
+		const parsed = JSON.parse(websiteJsonLd ?? '{}') as { inLanguage?: string; description?: string };
 		expect(parsed.inLanguage).toBe('de-DE');
+		// Review-Fund: die Beschreibung folgt derselben effektiven Locale wie
+		// `inLanguage` -- eine unübersetzte Seite bekommt die deutsche Fassung,
+		// sonst würde `inLanguage: de-DE` neben englischem Text stehen.
+		expect(parsed.description).toContain('Lärm');
 	});
 
 	// i18n Block B: /en/berlin-wahlen und /en/berlin-wahlen/<slug> sind jetzt
@@ -580,5 +586,172 @@ test.describe('i18n Block B: /en/berlin-wahlen -- je Kapitel EN-Positivtext + Ne
 		expect(chapterText).not.toMatch(/Stärkste Kraft/);
 		expect(chapterText).not.toMatch(/\bSonstige\b/);
 		expect(chapterText).not.toMatch(/Netto-Verschiebung/);
+	});
+});
+
+// i18n Block B2 (spec-i18n-b2-shell.md), Entscheidung Matze 26.09. 2A: die
+// Startseite ist als übersetzt registriert -- indexierbar, hreflang, kein
+// Fallback-Disclaimer. Update-Titel/-Summaries ohne `title_en`/`summary_en`
+// fallen weiterhin auf DE zurück und tragen dann `lang="de"`.
+test.describe('i18n Block B2: Startseite /en', () => {
+	test('GET /en: 200, lang=en, indexierbar (kein noindex), kein Fallback-Disclaimer, hreflang=de/en/x-default', async ({
+		page
+	}) => {
+		const response = await page.goto('/en');
+		expect(response?.status()).toBe(200);
+		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+		await expect(page.getByTestId('translation-disclaimer')).toHaveCount(0);
+		// Home ist (Story 2.11 Pivot, SSR statt Prerender wegen Hitze-Reroute-
+		// Hook) die einzige Route ohne Prerender-Shortcut -- die absolute
+		// Origin folgt hier dem tatsächlichen Request statt dem
+		// Build-Time-`prerender.origin` (svelte.config.js), deshalb Pfad-Check
+		// statt fester `https://navigator.berlin`-Origin-Assertion.
+		await expect(page.locator('link[rel="alternate"][hreflang="de"]')).toHaveAttribute(
+			'href',
+			/\/$/
+		);
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+			'href',
+			/\/en$/
+		);
+		await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+			'href',
+			/\/$/
+		);
+	});
+
+	test('GET /en: <title> und WebSite-JSON-LD-description sind englisch', async ({ page }) => {
+		await page.goto('/en');
+		await expect(page).toHaveTitle('Home - Berlin in data - navigator.berlin');
+		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
+		expect(websiteJsonLd).not.toBeNull();
+		const parsed = JSON.parse(websiteJsonLd ?? '{}') as { description?: string; inLanguage?: string };
+		expect(parsed.inLanguage).toBe('en-US');
+		expect(parsed.description).toContain('Noise, climate');
+	});
+
+	test('GET /en: zeigt englischen Text, keine deutschen UI-Wörter außerhalb des Glossars/Eigennamen', async ({
+		page
+	}) => {
+		await page.goto('/en');
+		await expect(page.getByRole('heading', { level: 1 })).toHaveText('Berlin in data.');
+		// Update-Teaser ausgeschlossen: ohne `title_en`/`summary_en` zeigt er
+		// bewusst deutschen Fallback-Content mit `lang="de"` (Entscheidung 2A),
+		// das ist kein Uebersetzungs-Fehler. Entfernt aus dem LIVE-DOM (nicht
+		// einem losgelösten Klon), sonst liefert `innerText` mangels Layout
+		// den rohen Text inkl. `<script>`-Hydration-Payload zurück.
+		const bodyText = await page.evaluate(() => {
+			document.querySelector('[data-testid="home-updates-teaser"]')?.remove();
+			return document.body.innerText;
+		});
+		// `\b` ist auf ASCII-Wortzeichen beschränkt -- am Wortanfang "ö" (kein
+		// `\w`) matcht `\böffnen\b` nie (Review-Fund), Unicode-Lookaround fixt das.
+		expect(bodyText).not.toMatch(/(?<!\p{L})öffnen(?!\p{L})/u);
+		expect(bodyText).not.toMatch(/\bKarte\b/);
+		expect(bodyText).not.toMatch(/\bAnsehen\b/i);
+		// Glossar-Ausnahmen bleiben deutsch und dürfen vorkommen.
+		expect(bodyText).toMatch(/\bKiez\b/);
+		expect(bodyText).toMatch(/\bBezirk/);
+	});
+
+	test('GET /en: Update-Teaser ohne title_en/summary_en fällt auf DE zurück, markiert mit lang="de"', async ({
+		page
+	}) => {
+		await page.goto('/en');
+		const updates = page.getByTestId('home-updates-teaser');
+		if ((await updates.count()) === 0) test.skip();
+		const deTitles = updates.locator('[lang="de"]');
+		expect(await deTitles.count()).toBeGreaterThan(0);
+	});
+
+	test('GET /en: interne Startseiten-Links bleiben unter /en (Hero, Quick-Link, Wahl-Karte, Layer-Teaser)', async ({
+		page
+	}) => {
+		await page.goto('/en');
+		await expect(page.getByTestId('home-hero-cta-map')).toHaveAttribute('href', '/en/explore');
+		await expect(page.getByTestId('home-hero-cta-ranking')).toHaveAttribute(
+			'href',
+			'/en/umwelt-infrastruktur-score'
+		);
+		await expect(page.getByTestId('home-wahl-card-2026-bvv')).toHaveAttribute(
+			'href',
+			'/en/berlin-wahlen/2026-bvv'
+		);
+		await expect(page.getByTestId('home-wahl-teaser-all')).toHaveAttribute(
+			'href',
+			'/en/berlin-wahlen'
+		);
+		await expect(page.getByTestId('home-hitze-teaser-landing')).toHaveAttribute(
+			'href',
+			'/en/hitze'
+		);
+	});
+
+	// Review-Fund: weitere Startseiten-Sections ergänzt (Quick-Link mit
+	// unverändertem `q=`-Datenschlüssel, Layer-Teaser, Featured-Bezirk,
+	// Top-Kiez, Updates-Übersicht, Open-Block).
+	test('GET /en: Quick-Link, Layer-Teaser, Featured-Bezirk, Top-Kiez, Updates, Open-Block bleiben unter /en', async ({
+		page
+	}) => {
+		await page.goto('/en');
+
+		const quickLink = page.getByTestId('home-quick-link-pariser-platz');
+		await expect(quickLink).toHaveAttribute('href', /^\/en\/explore\?/);
+		const quickLinkHref = await quickLink.getAttribute('href');
+		// Datenschlüssel `q=` bleibt der deutsche Geocoding-Suchstring.
+		expect(quickLinkHref).toContain('q=Pariser+Platz');
+
+		const layerLink = page.getByTestId('home-layer-teasers').locator('a').first();
+		await expect(layerLink).toHaveAttribute('href', /^\/en\/layer\//);
+
+		const bezirkLink = page.getByTestId('home-featured-bezirke').locator('a').first();
+		await expect(bezirkLink).toHaveAttribute('href', /^\/en\/bezirk\//);
+
+		const kiezSection = page.getByTestId('home-top-kieze');
+		if ((await kiezSection.count()) > 0) {
+			// `.first()` allein träfe den "View ranking"-Link im Header (kommt
+			// vor der `<ol>` im DOM) statt eines Kiez-Eintrags.
+			const kiezLink = kiezSection.locator('ol a').first();
+			await expect(kiezLink).toHaveAttribute('href', /^\/en\/kiez\//);
+		}
+
+		const updatesAllLink = page.getByRole('link', { name: 'All updates' });
+		await expect(updatesAllLink).toHaveAttribute('href', '/en/updates');
+
+		const openBlockLink = page.getByRole('link', { name: 'All sources with licence' });
+		await expect(openBlockLink).toHaveAttribute('href', '/en/lizenzen');
+	});
+});
+
+// i18n Block B2, Entscheidung Matze 26.09. 1A: Shell (Header, Drawer, Footer,
+// Skip-Link) ist auf JEDER /en-Seite englisch, auch auf einer nicht
+// übersetzten (WCAG 3.1.1, konsistente Navigation). `/en/methodik` bleibt
+// bewusst nicht-übersetzt (zeigt den Fallback-Disclaimer), damit dieser Test
+// die Shell UNABHÄNGIG vom Content-Übersetzungsstatus prüft.
+test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht übersetzten', () => {
+	test('/en/methodik (nicht übersetzt): Shell englisch, Content-Fallback-Disclaimer sichtbar', async ({
+		page
+	}) => {
+		await page.goto('/en/methodik');
+		await expect(page.getByTestId('translation-disclaimer').first()).toBeVisible();
+		await expect(page.getByRole('link', { name: 'Skip to main content' })).toHaveCount(1);
+		const footer = page.getByTestId('meta-footer').last();
+		await expect(footer.getByRole('link', { name: 'Contact' })).toBeVisible();
+		await expect(footer.getByRole('link', { name: 'Methodology' })).toHaveAttribute(
+			'href',
+			'/en/methodik'
+		);
+	});
+
+	test('/en/methodik: Menü-Drawer (Mobile) zeigt englische Meta-Links inkl. Kontakt', async ({
+		page
+	}) => {
+		await page.setViewportSize({ width: 375, height: 800 });
+		await page.goto('/en/methodik');
+		await page.getByTestId('header-menu-trigger').click();
+		const drawer = page.getByTestId('mobile-meta-drawer');
+		await expect(drawer.getByRole('heading', { name: 'Menu' })).toBeVisible();
+		await expect(drawer.getByRole('link', { name: 'Contact' })).toBeVisible();
 	});
 });

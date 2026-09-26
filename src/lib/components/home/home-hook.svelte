@@ -6,7 +6,9 @@
 -->
 <script lang="ts">
 	import { ArrowRight } from '@lucide/svelte';
-	import { HOME_SCREENSHOTS } from '$lib/content/screenshot-manifest.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { HOME_SCREENSHOTS, homeScreenshotAlt } from '$lib/content/screenshot-manifest.js';
 
 	const HERO = HOME_SCREENSHOTS.heroHook;
 
@@ -19,7 +21,7 @@
 	const {
 		mapHref = '/explore',
 		screenshotSrc = HERO.path,
-		screenshotAlt = HERO.alt
+		screenshotAlt = homeScreenshotAlt('heroHook')
 	}: Props = $props();
 </script>
 
@@ -29,24 +31,22 @@
 >
 	<div class="space-y-5 md:order-2">
 		<p class="font-serif text-xl leading-relaxed text-ink md:text-2xl">
-			Adresse eingeben. Daten kombinieren.
+			{m.home_hook_lead()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink-muted">
-			Lärmpegel pro Straßenzug. Hitze-Klasse pro Kiez. ÖPNV-Dichte pro Bezirk. Werte aus den offenen
-			Daten der Senatsverwaltung. Adressen und Kieze direkt vergleichen. Für die Wohnungssuche, den
-			Umzug, die Recherche oder den nächsten Streit am Küchentisch.
+			{m.home_hook_body()}
 		</p>
 		<a
-			href={mapHref}
+			href={localizedHref(mapHref)}
 			class="inline-flex items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
 		>
-			Karte öffnen
+			{m.home_hero_cta_map()}
 			<ArrowRight size={14} aria-hidden="true" />
 		</a>
 	</div>
 	<a
-		href={mapHref}
-		aria-label="Karte öffnen"
+		href={localizedHref(mapHref)}
+		aria-label={m.home_hero_cta_map()}
 		class="group bg-bg-soft block overflow-hidden rounded border border-rule transition-colors hover:border-ink-muted md:order-1"
 	>
 		<figure>
@@ -59,7 +59,7 @@
 				height={HERO.height}
 			/>
 			<figcaption class="sr-only">
-				Vorschau der Karte mit Adress-Inspektor und ausgewählten Daten-Schichten.
+				{m.home_hook_figcaption()}
 			</figcaption>
 		</figure>
 	</a>

@@ -39,6 +39,31 @@ describe('KiezScoreRing', () => {
 		const table = (await page.getByTestId('kiez-score-ring-table').element()) as HTMLElement;
 		expect(table.textContent).toContain('keine Daten');
 	});
+
+	// i18n Block B2: geteilter Baustein behaelt DE-Defaults; Konsumenten mit
+	// eigener Locale (hier: Startseite) uebergeben ihre Labels per Prop.
+	it('EN: Ueberschreiben von overallLabel/noDataLabel/dimensionLabels per Prop', async () => {
+		const score = makeScore(50);
+		score.dimensions[1].value = null;
+		render(KiezScoreRing, {
+			score,
+			overallLabel: 'Overall',
+			noDataLabel: 'no data',
+			dimensionLabels: { 'ruhe-luft': 'Quiet & air', 'gruen-hitze': 'Green & heat' }
+		});
+		const table = (await page.getByTestId('kiez-score-ring-table').element()) as HTMLElement;
+		expect(table.textContent).toContain('Overall');
+		expect(table.textContent).toContain('no data');
+		expect(table.textContent).toContain('Quiet & air');
+		expect(table.textContent).not.toContain('Ruhe & Luft');
+	});
+
+	it('ohne Prop bleibt der DE-Default (kein getLocale()-Fallback)', async () => {
+		render(KiezScoreRing, { score: makeScore(50) });
+		const table = (await page.getByTestId('kiez-score-ring-table').element()) as HTMLElement;
+		expect(table.textContent).toContain('Gesamt');
+		expect(table.textContent).toContain('Ruhe & Luft');
+	});
 });
 
 describe('KiezScoreHero', () => {

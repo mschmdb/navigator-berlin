@@ -87,4 +87,33 @@ describe('address-search.svelte', () => {
 		expect(geocode).toHaveBeenCalledWith('Brand');
 		vi.useRealTimers();
 	});
+
+	// i18n Block B2: neue Props mit DE-Default (Review-Fund, "Adresse nicht
+	// gefunden"/"Keine Vorschläge"/"{n} Vorschläge" waren hart deutsch ohne
+	// Prop). Shell/Startseite/Wahlportal uebergeben ihre eigene Message.
+	describe('notFoundLabel/noSuggestionsLabel/suggestionsCountLabel (i18n Block B2)', () => {
+		it('DE-Default ohne Props', async () => {
+			render(AddressSearch, { variant: 'hero', geocode: async () => [], initialQuery: 'xx' });
+			const srOnly = page.getByText('Keine Vorschläge');
+			await expect.element(srOnly).toBeInTheDocument();
+		});
+
+		// Hinweis: der `address-search-empty`-Absatz sitzt im Bits-UI-Combobox-
+		// Popover-Content und rendert nur bei geoeffnetem Popover (Fokus-
+		// Interaktion) -- dafuer gibt es in dieser Test-Datei keinen
+		// Bestandsprecedent (die existierende "unter 2 Zeichen"-Assertion prueft
+		// nur Abwesenheit). Der sr-only-Live-Text (Test oben/unten) beweist den
+		// Prop-Mechanismus bereits Ende-zu-Ende.
+
+		it('suggestionsCountLabel-Prop steuert den sr-only-Live-Text', async () => {
+			render(AddressSearch, {
+				variant: 'hero',
+				geocode: async () => mockSuggestions,
+				initialQuery: 'Brand',
+				noSuggestionsLabel: 'No suggestions',
+				suggestionsCountLabel: (count: number) => `${count} suggestions`
+			});
+			await expect.element(page.getByText('2 suggestions')).toBeInTheDocument();
+		});
+	});
 });

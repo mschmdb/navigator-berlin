@@ -2,6 +2,12 @@ import { desc, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { kiezScore } from '$lib/server/db/schema/index.js';
 import { readRegionDisplayNames, type RegionDisplayNames } from '$lib/data/region-display-names.js';
+import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
+import { buildWahlFallbackList } from '$lib/data/wahl-slug.js';
+import {
+	mapHomeUpdateEntry,
+	type HomeUpdateTeaser
+} from '$lib/content/updates/map-home-update-entry.js';
 
 // SSR statt prerender: Die Hitze-Subdomain reroutet `/` → `/hitze` per reroute-Hook.
 // Prerenderte Seiten werden als statische Assets ausgeliefert und durchlaufen den
@@ -46,14 +52,6 @@ export interface HomeFeaturedScore {
 	readonly exploreHref: string;
 }
 
-export interface HomeUpdateTeaser {
-	readonly slug: string;
-	readonly title: string;
-	readonly date: string;
-	readonly category: string;
-	readonly summary: string;
-}
-
 export interface HomePageData {
 	readonly topKieze: readonly HomeTopKiez[];
 	readonly updates: readonly HomeUpdateTeaser[];
@@ -61,6 +59,9 @@ export interface HomePageData {
 	readonly layerCount: number;
 	/** Featured-Kiez (höchster Composite) mit Voll-Score für den Live-Ring; null ohne DB. */
 	readonly featured: HomeFeaturedScore | null;
+	/** Gesamtzahl der Wahlen (DB, sonst `buildWahlFallbackList()`-Fallback) für den
+	 * Wahl-Teaser-Übersichtslink (i18n Block B2 Review-Fund: war hardcoded `23`). */
+	readonly wahlCount: number;
 }
 
 /**
@@ -124,6 +125,24 @@ async function loadFeatured(fetchFn: typeof fetch): Promise<HomeFeaturedScore | 
 	}
 }
 
+/**
+ * Gesamtzahl der Wahlen für den „Alle N Wahlen"-Link (i18n Block B2
+ * Review-Fund: die Zahl war zuvor hardcoded `23` in `home-wahl-teaser.svelte`).
+ * DB-los identisch zum Fallback in `berlin-wahlen/+page.server.ts`.
+ */
+async function loadWahlCount(): Promise<number> {
+	if (!process.env.DATABASE_URL) return buildWahlFallbackList().length;
+	try {
+		const { getWahlList } = await import('$lib/server/db/queries/wahl/get-wahl-list.js');
+		const list = await getWahlList();
+		return list.length;
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[home] WARN: wahl count unavailable (${msg})\n`);
+		return buildWahlFallbackList().length;
+	}
+}
+
 async function loadLayerCount(): Promise<number> {
 	try {
 		const { readFile } = await import('node:fs/promises');
@@ -173,17 +192,18 @@ const UPDATE_MODULES = import.meta.glob('/_content/updates/*.md', {
 	eager: true
 }) as Record<string, unknown>;
 
-async function loadUpdates(): Promise<HomeUpdateTeaser[]> {
+/**
+ * i18n Block B2, Entscheidung Matze 26.09. 2A: `title_en`/`summary_en` wo
+ * vorhanden, sonst DE-Fallback -- siehe `mapHomeUpdateEntry` (eigenes,
+ * getestetes Modul: SvelteKit erlaubt in `+page.server.ts` nur
+ * `load`/`prerender`/etc. als Export, ein zusätzlicher Named-Export lässt
+ * den Build fehlschlagen).
+ */
+async function loadUpdates(locale: Locale): Promise<HomeUpdateTeaser[]> {
 	try {
 		const { loadUpdatesFromModules } = await import('$lib/content/updates/load-updates.js');
 		const entries = loadUpdatesFromModules(UPDATE_MODULES);
-		return entries.slice(0, UPDATES_TEASER).map((e) => ({
-			slug: e.slug,
-			title: e.frontmatter.title_de,
-			date: e.frontmatter.date,
-			category: e.frontmatter.category,
-			summary: e.frontmatter.summary_de
-		}));
+		return entries.slice(0, UPDATES_TEASER).map((e) => mapHomeUpdateEntry(e, locale));
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
 		process.stderr.write(`[home] WARN: updates unavailable (${msg})\n`);
@@ -192,13 +212,15 @@ async function loadUpdates(): Promise<HomeUpdateTeaser[]> {
 }
 
 export const load: PageServerLoad = async ({ fetch }) => {
+	const locale = getLocale();
 	const names = await readRegionDisplayNames();
-	const [topKieze, updates, layerCount, featured] = await Promise.all([
+	const [topKieze, updates, layerCount, featured, wahlCount] = await Promise.all([
 		loadTopKieze(names),
-		loadUpdates(),
+		loadUpdates(locale),
 		loadLayerCount(),
-		loadFeatured(fetch)
+		loadFeatured(fetch),
+		loadWahlCount()
 	]);
-	const data: HomePageData = { topKieze, updates, layerCount, featured };
+	const data: HomePageData = { topKieze, updates, layerCount, featured, wahlCount };
 	return data;
 };

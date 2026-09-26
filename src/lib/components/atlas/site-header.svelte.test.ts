@@ -1,8 +1,13 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { createRawSnippet } from 'svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import SiteHeader from './site-header.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 describe('site-header.svelte', () => {
 	it('rendert Logo-Link mit aria-label', async () => {
@@ -183,5 +188,75 @@ describe('site-header · Kiez-Finder-Link', () => {
 		expect(link.getAttribute('href')).toBe('/explore?finder=1');
 		// Seit 25.08. Icon-Control: Label hängt am aria-label, nicht im Textinhalt.
 		expect(link.getAttribute('aria-label')).toBe('Kiez-Finder öffnen');
+	});
+
+	// i18n Block B2, Entscheidung 1A: Shell ist auf jeder /en-Seite englisch,
+	// interne Shell-Links zeigen auf /en/...
+	it('EN: aria-label + Link-Ziel sind englisch/lokalisiert', async () => {
+		overwriteGetLocale(() => 'en');
+		render(SiteHeader, { geocode: async () => [] });
+		const link = (await page.getByTestId('header-finder-link').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('aria-label')).toBe('Open Kiez Finder');
+		expect(link.getAttribute('title')).toBe('Kiez Finder');
+		expect(link.getAttribute('href')).toBe('/en/explore?finder=1');
+	});
+});
+
+describe('site-header · i18n Block B2 (Shell englisch auf /en)', () => {
+	it('Logo-Link zeigt auf /en', async () => {
+		overwriteGetLocale(() => 'en');
+		render(SiteHeader, { geocode: async () => [] });
+		const link = page.getByRole('link', { name: 'navigator.berlin' });
+		const el = (await link.element()) as HTMLAnchorElement;
+		expect(el.getAttribute('href')).toBe('/en/');
+	});
+
+	it('Menü-Trigger + Layer-/Bookmark-Trigger-Aria-Labels sind englisch (Plural)', async () => {
+		overwriteGetLocale(() => 'en');
+		render(SiteHeader, {
+			geocode: async () => [],
+			activeLayerCount: 2,
+			onOpenLayerPalette: () => {},
+			bookmarkCount: 3,
+			onOpenBookmarks: () => {}
+		});
+		const menuTrigger = (await page.getByTestId('header-menu-trigger').element()) as HTMLElement;
+		expect(menuTrigger.getAttribute('aria-label')).toBe('Open menu');
+		const layerTrigger = (await page
+			.getByTestId('header-layer-trigger')
+			.element()) as HTMLElement;
+		expect(layerTrigger.getAttribute('aria-label')).toBe('2 active layers · Open palette');
+		const bookmarkTrigger = (await page
+			.getByTestId('header-bookmark-trigger')
+			.element()) as HTMLElement;
+		expect(bookmarkTrigger.getAttribute('aria-label')).toBe('Show 3 saved addresses');
+	});
+
+	// Review-Fund: Singular-Form fehlte -- "Show 1 saved addresses" wäre
+	// grammatisch falsch gewesen (Block-B-`_singular`/`_plural`-Muster).
+	it('Layer-/Bookmark-Trigger-Aria-Labels: Singular bei count=1', async () => {
+		overwriteGetLocale(() => 'en');
+		render(SiteHeader, {
+			geocode: async () => [],
+			activeLayerCount: 1,
+			onOpenLayerPalette: () => {},
+			bookmarkCount: 1,
+			onOpenBookmarks: () => {}
+		});
+		const layerTrigger = (await page
+			.getByTestId('header-layer-trigger')
+			.element()) as HTMLElement;
+		expect(layerTrigger.getAttribute('aria-label')).toBe('1 active layer · Open palette');
+		const bookmarkTrigger = (await page
+			.getByTestId('header-bookmark-trigger')
+			.element()) as HTMLElement;
+		expect(bookmarkTrigger.getAttribute('aria-label')).toBe('Show 1 saved address');
+	});
+
+	it('Adress-Suche im Header hat englischen Placeholder', async () => {
+		overwriteGetLocale(() => 'en');
+		render(SiteHeader, { geocode: async () => [] });
+		const input = (await page.getByRole('combobox').element()) as HTMLInputElement;
+		expect(input.placeholder).toBe('Enter a Berlin address');
 	});
 });

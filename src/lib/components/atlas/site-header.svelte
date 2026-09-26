@@ -8,6 +8,8 @@
 	import { SlidersHorizontal } from '@lucide/svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import type { GeocodeSuggestion } from '$lib/data';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 
 	type Props = {
 		geocode: (q: string) => Promise<GeocodeSuggestion[]>;
@@ -69,10 +71,10 @@
 	     hatte ihn zum Primär-CTA gemacht. -->
 	{#if featureFlags.kiezFinder}
 		<a
-			href="/explore?finder=1"
+			href={localizedHref('/explore?finder=1')}
 			data-testid="header-finder-link"
-			aria-label="Kiez-Finder öffnen"
-			title="Kiez-Finder"
+			aria-label={m.shell_finder_link_aria_label()}
+			title={m.shell_finder_link_title()}
 			class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:border-accent hover:text-accent"
 		>
 			<SlidersHorizontal size={18} aria-hidden="true" />
@@ -89,7 +91,7 @@
 	     Header-Inhalte auf großen Screens mittig schweben, während die Karte
 	     vollflächig läuft. Logo links außen, Controls rechts außen. -->
 	<div class="flex w-full items-center gap-4 px-4">
-		<a href="/" aria-label="navigator.berlin" class="flex shrink-0 items-center gap-2">
+		<a href={localizedHref('/')} aria-label="navigator.berlin" class="flex shrink-0 items-center gap-2">
 			<PixelLogo size={64} title="navigator.berlin" />
 			<span class="hidden font-sans text-base font-light tracking-wide text-ink sm:inline">
 				navigator.berlin
@@ -105,7 +107,7 @@
 				class="inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-accent bg-accent px-3 font-mono text-xs tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 			>
 				<MapIcon size={16} aria-hidden="true" />
-				Atlas öffnen
+				{m.shell_atlas_cta_label()}
 			</a>
 		{:else if searchCollapsed}
 			<div class="min-w-0 flex-1"></div>
@@ -113,7 +115,7 @@
 				type="button"
 				data-testid="header-search-trigger"
 				onclick={openOverlay}
-				aria-label="Adress-Suche öffnen"
+				aria-label={m.shell_search_trigger_aria_label()}
 				aria-haspopup="dialog"
 				class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:bg-bg"
 			>
@@ -127,7 +129,7 @@
 				type="button"
 				data-testid="header-search-trigger-mobile"
 				onclick={openOverlay}
-				aria-label="Adress-Suche öffnen"
+				aria-label={m.shell_search_trigger_aria_label()}
 				aria-haspopup="dialog"
 				class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:bg-bg sm:hidden"
 			>
@@ -138,7 +140,18 @@
 			     ganze Mitte, der Header wirkte linkslastig. -->
 			<div class="hidden min-w-0 flex-1 sm:flex sm:justify-center">
 				<div class="w-full max-w-xl">
-					<AddressSearch variant="header" {geocode} {onSelect} />
+					<AddressSearch
+						variant="header"
+						{geocode}
+						{onSelect}
+						placeholder={m.shell_address_search_placeholder()}
+						notFoundLabel={m.shell_address_search_not_found()}
+						noSuggestionsLabel={m.shell_address_search_no_suggestions()}
+						suggestionsCountLabel={(count) =>
+						(count === 1
+							? m.shell_address_search_suggestions_count_singular
+							: m.shell_address_search_suggestions_count_plural)({ count })}
+					/>
 				</div>
 			</div>
 		{/if}
@@ -151,8 +164,10 @@
 				data-testid="header-layer-trigger"
 				onclick={onOpenLayerPalette}
 				aria-label={activeLayerCount > 0
-					? `${activeLayerCount} aktive Layer · Palette öffnen`
-					: 'Layer-Palette öffnen'}
+					? (activeLayerCount === 1
+							? m.shell_layer_trigger_aria_label_active_singular
+							: m.shell_layer_trigger_aria_label_active_plural)({ count: activeLayerCount })
+					: m.shell_layer_trigger_aria_label_inactive()}
 				aria-haspopup="dialog"
 				class="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-sm border border-rule px-2 text-ink hover:bg-bg"
 			>
@@ -175,8 +190,10 @@
 				data-bookmarked={currentAddressBookmarked ? 'true' : 'false'}
 				onclick={onOpenBookmarks}
 				aria-label={bookmarkCount > 0
-					? `${bookmarkCount} gespeicherte Adressen anzeigen`
-					: 'Bookmark-Verwaltung öffnen'}
+					? (bookmarkCount === 1
+							? m.shell_bookmark_trigger_aria_label_active_singular
+							: m.shell_bookmark_trigger_aria_label_active_plural)({ count: bookmarkCount })
+					: m.shell_bookmark_trigger_aria_label_inactive()}
 				aria-haspopup="dialog"
 				class="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-sm border border-rule px-2 text-ink hover:bg-bg"
 			>
@@ -204,7 +221,7 @@
 			type="button"
 			data-testid="header-menu-trigger"
 			onclick={openDrawer}
-			aria-label="Menü öffnen"
+			aria-label={m.shell_menu_trigger_aria_label()}
 			aria-haspopup="dialog"
 			aria-expanded={drawerOpen}
 			class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:bg-bg sm:hidden"

@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+
 	type Props = { label?: string; href?: string };
-	let { label = 'Zum Hauptinhalt springen', href = '#main' }: Props = $props();
+	let { label = m.shell_skip_link_label(), href = '#main' }: Props = $props();
 </script>
 
 <a

@@ -15,6 +15,11 @@
 		onSelect?: (suggestion: GeocodeSuggestion) => void;
 		geocode: GeocodeFn;
 		initialQuery?: string;
+		/** i18n Block B2: DE-Default, wie `placeholder` -- Shell, Startseite und
+		 * Wahlportal uebergeben ihre eigene, locale-bewusste Message. */
+		notFoundLabel?: string;
+		noSuggestionsLabel?: string;
+		suggestionsCountLabel?: (count: number) => string;
 	};
 
 	let {
@@ -29,7 +34,10 @@
 		value = $bindable(''),
 		onSelect,
 		geocode,
-		initialQuery = ''
+		initialQuery = '',
+		notFoundLabel = 'Adresse nicht gefunden. Bitte korrigieren oder Bezirks-Mittelpunkt wählen.',
+		noSuggestionsLabel = 'Keine Vorschläge',
+		suggestionsCountLabel = (count) => `${count} Vorschläge`
 	}: Props = $props();
 
 	// svelte-ignore state_referenced_locally
@@ -106,13 +114,13 @@
 			{/each}
 			{#if !loading && query.length >= 2 && suggestions.length === 0}
 				<p data-testid="address-search-empty" class="px-3 py-2 text-sm text-ink-muted">
-					Adresse nicht gefunden. Bitte korrigieren oder Bezirks-Mittelpunkt wählen.
+					{notFoundLabel}
 				</p>
 			{/if}
 		</BitsCombobox.Content>
 	</BitsCombobox.Portal>
 
 	<p aria-live="polite" class="sr-only">
-		{suggestions.length === 0 ? 'Keine Vorschläge' : `${suggestions.length} Vorschläge`}
+		{suggestions.length === 0 ? noSuggestionsLabel : suggestionsCountLabel(suggestions.length)}
 	</p>
 </BitsCombobox.Root>

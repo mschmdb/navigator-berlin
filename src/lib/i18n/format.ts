@@ -116,3 +116,25 @@ export function formatWahlDate(iso: string, opts?: LocaleFormatOptions): string 
 		timeZone: 'Europe/Berlin'
 	});
 }
+
+/**
+ * Kompaktes Datum mit abgekürztem Monat, `Europe/Berlin`: `15. Mai 2026` (de)
+ * / `15 May 2026` (en). i18n Block B2: ersetzt das bisherige, in
+ * `home-updates-teaser.svelte` fest auf `de-DE` verdrahtete
+ * `toLocaleDateString`.
+ */
+export function formatShortDate(iso: string, opts?: LocaleFormatOptions): string {
+	const locale = resolveLocale(opts?.locale);
+	const d = new Date(iso);
+	if (Number.isNaN(d.getTime())) return iso;
+	// Review-Fund (i18n Block B2): KEIN `timeZone: 'Europe/Berlin'` -- die
+	// bisherige `home-updates-teaser.svelte`-Formatierung setzte nie eine
+	// Zeitzone (Host-Zeitzone), ein hinzugefuegtes `timeZone` haette das
+	// Datum je nach Host-TZ (z. B. UTC in Production) springen lassen. DE
+	// bleibt damit exakt Byte-identisch zum Alt-Verhalten.
+	return d.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-GB', {
+		day: '2-digit',
+		month: 'short',
+		year: 'numeric'
+	});
+}

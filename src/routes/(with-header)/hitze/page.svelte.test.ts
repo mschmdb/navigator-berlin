@@ -23,4 +23,16 @@ describe('Hitze-Home (Spin-off-Route)', () => {
 		const text = (await page.getByTestId('hitze-landing').element()).textContent ?? '';
 		expect(text.includes('—')).toBe(false);
 	});
+
+	// i18n Block B2 Review-Fund: die Hitze-Subdomain rerouted `/` intern auf
+	// diese Seite, ohne die URL zu ändern (`page.url.pathname` bleibt `/`).
+	// `/` ist seit i18n Block B2 für `en` registriert (Startseite) -- SeoHead
+	// muss hier trotzdem den LOGISCHEN Pfad `/hitze` verwenden (nicht
+	// übersetzt), sonst würde diese inhaltlich andere Seite fälschlich einen
+	// `en`-hreflang-Alternate bekommen.
+	it('hreflang-Cluster übernimmt NICHT die Home-Registrierung von "/" (kein en-Alternate)', async () => {
+		render(Page, { data: { warning: null } });
+		await new Promise((r) => setTimeout(r, 20));
+		expect(document.head.querySelector('link[rel="alternate"][hreflang="en"]')).toBeNull();
+	});
 });

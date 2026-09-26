@@ -8,23 +8,29 @@
 -->
 <script lang="ts">
 	import { MapPin } from '@lucide/svelte';
-	import { HOME_QUICK_LINKS, buildQuickLinkHref } from '$lib/content/home-quick-links.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import {
+		HOME_QUICK_LINKS,
+		buildQuickLinkHref,
+		homeQuickLinkDescription
+	} from '$lib/content/home-quick-links.js';
 </script>
 
 <section data-testid="home-quick-links" class="space-y-4">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">Fünf Orte zum Anfangen</h2>
+		<h2 class="font-serif text-2xl text-ink md:text-3xl">{m.home_quick_links_heading()}</h2>
 		<p class="font-serif text-base text-ink-muted">
-			Ein Klick öffnet die Karte am Punkt, mit allen Daten-Schichten daneben.
+			{m.home_quick_links_lead()}
 		</p>
 	</header>
 	<ul class="flex flex-wrap gap-2">
-		{#each HOME_QUICK_LINKS as q (q.label)}
+		{#each HOME_QUICK_LINKS as q (q.id)}
 			<li>
 				<a
-					href={buildQuickLinkHref(q)}
-					data-testid={`home-quick-link-${q.label}`}
-					title={q.description}
+					href={localizedHref(buildQuickLinkHref(q))}
+					data-testid={`home-quick-link-${q.id}`}
+					title={homeQuickLinkDescription(q.id)}
 					class="inline-flex items-center gap-2 rounded border border-rule px-3 py-2 font-sans text-sm text-ink hover:border-accent hover:text-accent"
 				>
 					<MapPin size={14} aria-hidden="true" />

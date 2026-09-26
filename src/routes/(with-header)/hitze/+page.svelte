@@ -28,7 +28,16 @@
 	let { data }: { data: PageData } = $props();
 
 	const origin = $derived(page.url.origin);
-	const pathname = $derived(page.url.pathname);
+	// Diese Route entspricht IMMER dem LOGISCHEN Pfad `/hitze` -- unabhängig
+	// davon, ob sie über `/hitze` direkt oder über den Host-Reroute auf der
+	// Hitze-Subdomain-Wurzel erreicht wird (dort bleibt `page.url.pathname`
+	// bewusst `/`, siehe `hitzeReroute` in `$lib/app-mode.ts`). Fix (i18n
+	// Block B2 Review): SeoHead braucht diesen LOGISCHEN Pfad für
+	// Register-Lookup/hreflang -- mit dem rohen `page.url.pathname` würde die
+	// Subdomain-Wurzel fälschlich die Home-Registrierung übernehmen (`/` ist
+	// seit i18n Block B2 für `en` registriert), obwohl diese inhaltlich
+	// andere Seite selbst nicht übersetzt ist.
+	const pathname = '/hitze';
 
 	// Dieselbe Seite ist über zwei Hosts erreichbar: navigator.berlin/hitze und
 	// hitze.navigator.berlin/ (Reroute). Canonical konsolidiert auf die Haupt-Domain,

@@ -18,6 +18,7 @@
 	import { buildWebSite } from '$lib/seo/jsonld-website.js';
 	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
 	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -28,18 +29,21 @@
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
-	const pageTitle = 'Home - Berlin in Daten - navigator.berlin';
-	const pageDescription =
-		'Berliner Daten-Atlas: Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen pro Adresse.';
+	// i18n Block B2, Entscheidung Matze 26.09. 2A: Startseite ist als übersetzt
+	// registriert -- Titel/Beschreibung folgen der effektiven Content-Locale
+	// (identisch zur URL-Locale, sobald das Register-Entry greift).
+	const effectiveLocale = $derived(resolveEffectiveLocale(pathname, getLocale()));
+	const pageTitle = $derived(m.home_page_title(undefined, { locale: effectiveLocale }));
+	const pageDescription = $derived(m.home_page_description(undefined, { locale: effectiveLocale }));
 	const ogImagePath = '/og/page/home.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
-	const ogImageAlt = 'navigator.berlin: Berlin in Daten · Karte für Adresse, Kiez und Bezirk';
+	const ogImageAlt = $derived(m.home_page_og_alt(undefined, { locale: effectiveLocale }));
 
 	const websiteJsonLd = $derived(
 		buildWebSite({
 			origin,
 			name: 'navigator.berlin',
-			locale: localeToBcp47(resolveEffectiveLocale(pathname, getLocale())),
+			locale: localeToBcp47(effectiveLocale),
 			description: pageDescription,
 			searchPath: '/explore'
 		})
@@ -64,7 +68,7 @@
 	<HomeHook />
 	<HomeSteps />
 	<HomeQuickLinks />
-	<HomeWahlTeaser />
+	<HomeWahlTeaser wahlCount={data.wahlCount} />
 	<HomeHitzeTeaser />
 	<HomeFeaturedBezirke />
 	<HomeTopKieze items={data.topKieze} />

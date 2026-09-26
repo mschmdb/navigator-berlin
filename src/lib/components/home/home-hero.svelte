@@ -7,6 +7,8 @@
 -->
 <script lang="ts">
 	import { Map as MapIcon, ListOrdered } from '@lucide/svelte';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import HomeFeaturedScore from './home-featured-score.svelte';
 	import type { HomeFeaturedScore as HomeFeaturedScoreData } from '../../../routes/(with-header)/+page.server.js';
 
@@ -29,27 +31,26 @@
 >
 	<div class="space-y-6">
 		<p class="font-mono text-xs tracking-wider text-accent uppercase">navigator.berlin · Beta</p>
-		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">Berlin in Daten.</h1>
+		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">{m.home_hero_headline()}</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
-			Gib eine Adresse ein. Du siehst, wie laut es dort ist, wie heiß es im Sommer wird, wie nah die
-			nächste S-Bahn liegt. Zusammengefasst zu einem Kiez-Score aus fünf Dimensionen.
+			{m.home_hero_lead()}
 		</p>
 		<div class="flex flex-wrap gap-3 pt-2">
 			<a
-				href={mapHref}
+				href={localizedHref(mapHref)}
 				data-testid="home-hero-cta-map"
 				class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 			>
 				<MapIcon size={16} aria-hidden="true" />
-				Karte öffnen
+				{m.home_hero_cta_map()}
 			</a>
 			<a
-				href={rankingHref}
+				href={localizedHref(rankingHref)}
 				data-testid="home-hero-cta-ranking"
 				class="inline-flex items-center gap-2 rounded border border-rule px-4 py-2 font-mono text-sm tracking-wider text-ink uppercase hover:border-ink"
 			>
 				<ListOrdered size={16} aria-hidden="true" />
-				Kiez-Ranking
+				{m.home_hero_cta_ranking()}
 			</a>
 		</div>
 	</div>

@@ -10,9 +10,28 @@
 		layerName?: string;
 		/** Klick auf ein Ring-Segment. Konsument klappt die zugehörige Detail-Row auf. */
 		onSegmentClick?: (dimension: KiezScoreDimension) => void;
+		/**
+		 * i18n Block B2: geteilter Baustein, behält DE-Defaults (Boundary "Geteilte
+		 * Bausteine ... behalten DE-Defaults"). Die Startseite übergibt ihre eigene
+		 * englische Message als Prop, weil sie als übersetzt registriert ist.
+		 */
+		overallLabel?: string;
+		noDataLabel?: string;
+		dimensionLabels?: Partial<Record<KiezScoreDimension, string>>;
 	};
 
-	let { score, layerName = 'Kiez-Score', onSegmentClick }: Props = $props();
+	let {
+		score,
+		layerName = 'Kiez-Score',
+		onSegmentClick,
+		overallLabel = 'Gesamt',
+		noDataLabel = 'keine Daten',
+		dimensionLabels
+	}: Props = $props();
+
+	function dimensionLabel(dim: KiezScoreDimension): string {
+		return dimensionLabels?.[dim] ?? DIMENSION_LABELS_DE[dim];
+	}
 
 	// Story 14.4: Der Ring visualisiert exakt den Composite (GESAMT = Mittel der fünf). Kultur und
 	// Kriminalität sind Kontext-Dimensionen (nicht im Composite) und erscheinen NICHT als Ring-Segment:
@@ -39,13 +58,13 @@
 			const scale = scaleFor(value, dim);
 			const datum: ArcDatum = {
 				key: dim,
-				label: DIMENSION_LABELS_DE[dim],
+				label: dimensionLabel(dim),
 				value: value ?? 0,
-				scoreText: value !== null ? `${Math.round(value)} / 100` : 'keine Daten'
+				scoreText: value !== null ? `${Math.round(value)} / 100` : noDataLabel
 			};
 			return {
 				key: dim,
-				label: DIMENSION_LABELS_DE[dim],
+				label: dimensionLabel(dim),
 				maxValue: 100,
 				color: value !== null && scale ? severityColor(scale.severity) : 'var(--rule, #ddd)',
 				data: [datum]
@@ -108,7 +127,8 @@
 			class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
 			aria-hidden="true"
 		>
-			<span class="font-mono text-[11px] tracking-wide text-ink-subtle uppercase">Gesamt</span>
+			<span class="font-mono text-[11px] tracking-wide text-ink-subtle uppercase">{overallLabel}</span
+			>
 			<span class="font-mono text-4xl leading-none font-semibold text-ink">{overallText}</span>
 			<span class="font-mono text-[10px] text-ink-subtle">/ 100</span>
 		</div>
@@ -118,7 +138,7 @@
 		<caption>{layerName}</caption>
 		<tbody>
 			<tr>
-				<th scope="row">Gesamt</th>
+				<th scope="row">{overallLabel}</th>
 				<td>{overallText} / 100</td>
 			</tr>
 			{#each arcSeries as s (s.key)}

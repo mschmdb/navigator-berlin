@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { onMount, type Snippet } from 'svelte';
 	import { X } from '@lucide/svelte';
+	import { m } from '$lib/paraglide/messages.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
-	import { META_LINK_GROUPS } from './internal/meta-links.js';
+	import { META_LINK_GROUPS, metaLinkLabel, metaLinkGroupTitle } from './internal/meta-links.js';
 	import SocialLinks from './internal/social-links.svelte';
 	import MtcLogo from './internal/mtc-logo.svelte';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 
 	type Props = {
 		open: boolean;
@@ -52,50 +54,50 @@
 			bind:this={drawerEl}
 			role="dialog"
 			aria-modal="true"
-			aria-label="Menü"
+			aria-label={m.shell_drawer_heading()}
 			data-testid="mobile-meta-drawer"
 			class="fixed inset-y-0 right-0 flex w-[min(88vw,360px)] flex-col border-l border-rule-strong bg-bg-elevated"
 		>
 			<header class="flex shrink-0 items-center justify-between border-b border-rule px-5 py-4">
-				<h2 class="font-serif text-lg text-ink">Menü</h2>
+				<h2 class="font-serif text-lg text-ink">{m.shell_drawer_heading()}</h2>
 				<button
 					type="button"
 					data-testid="mobile-meta-drawer-close"
 					onclick={onClose}
-					aria-label="Menü schließen"
+					aria-label={m.shell_drawer_close_aria_label()}
 					class="rounded-sm p-1 text-ink-muted hover:text-ink"
 				>
 					<X size={20} aria-hidden="true" />
 				</button>
 			</header>
 
-			<nav aria-label="Meta-Navigation" class="flex-1 overflow-y-auto px-5 py-5">
+			<nav aria-label={m.shell_meta_nav_aria_label()} class="flex-1 overflow-y-auto px-5 py-5">
 				<div class="flex flex-col gap-6">
-					{#each META_LINK_GROUPS as group (group.title)}
+					{#each META_LINK_GROUPS as group (group.id)}
 						<div class="flex flex-col gap-2">
 							<h3 class="font-mono text-[10px] tracking-wider text-ink-subtle uppercase">
-								{group.title}
+								{metaLinkGroupTitle(group.id)}
 							</h3>
 							<ul class="flex flex-col">
-								{#each group.links as link (link.href)}
+								{#each group.links as link (link.id)}
 									<li>
 										<a
-											href={link.href}
+											href={localizedHref(link.href)}
 											onclick={onClose}
 											class="block py-2 font-serif text-sm text-ink hover:text-accent"
 										>
-											{link.label}
+											{metaLinkLabel(link.id)}
 										</a>
 									</li>
 								{/each}
-								{#if group.title === 'Sonstiges'}
+								{#if group.id === 'sonstiges'}
 									<li>
 										<a
 											href={`mailto:${FEEDBACK_EMAIL}`}
 											onclick={onClose}
 											class="block py-2 font-serif text-sm text-ink hover:text-accent"
 										>
-											Kontakt
+											{m.shell_contact_label()}
 										</a>
 									</li>
 								{/if}

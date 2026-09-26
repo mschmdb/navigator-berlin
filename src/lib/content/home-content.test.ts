@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { HOME_LAYER_TEASERS } from './home-layer-teasers.js';
-import { HOME_FEATURED_BEZIRKE } from './home-featured-bezirke.js';
-import { HOME_DATA_SOURCES } from './home-data-sources.js';
-import { HOME_QUICK_LINKS, buildQuickLinkHref } from './home-quick-links.js';
-import { HOME_SCREENSHOTS } from './screenshot-manifest.js';
+import { HOME_LAYER_TEASERS, homeLayerTeaserLabel, homeLayerTeaserSummary } from './home-layer-teasers.js';
+import { HOME_FEATURED_BEZIRKE, homeFeaturedBezirkTeaser } from './home-featured-bezirke.js';
+import { HOME_DATA_SOURCES, homeDataSourceDescription } from './home-data-sources.js';
+import { HOME_QUICK_LINKS, buildQuickLinkHref, homeQuickLinkDescription } from './home-quick-links.js';
+import { HOME_SCREENSHOTS, homeScreenshotAlt, type HomeScreenshotKey } from './screenshot-manifest.js';
 
 const REPO_ROOT = resolve(process.cwd());
 
@@ -29,8 +29,9 @@ describe('HOME_LAYER_TEASERS', () => {
 
 	it('summary niemals leer + enthält keinen em-dash', () => {
 		for (const t of HOME_LAYER_TEASERS) {
-			expect(t.summary.length).toBeGreaterThan(20);
-			expect(t.summary).not.toMatch(/—/);
+			const summary = homeLayerTeaserSummary(t.slug);
+			expect(summary.length).toBeGreaterThan(20);
+			expect(summary).not.toMatch(/—/);
 		}
 	});
 });
@@ -54,9 +55,10 @@ describe('HOME_FEATURED_BEZIRKE', () => {
 		]);
 		for (const b of HOME_FEATURED_BEZIRKE) {
 			expect(KNOWN.has(b.slug)).toBe(true);
-			expect(b.teaser.length).toBeGreaterThan(20);
-			expect(b.teaser).not.toMatch(/—/);
-			expect(b.teaser.toLowerCase()).not.toContain('lebenswert');
+			const teaser = homeFeaturedBezirkTeaser(b.slug);
+			expect(teaser.length).toBeGreaterThan(20);
+			expect(teaser).not.toMatch(/—/);
+			expect(teaser.toLowerCase()).not.toContain('lebenswert');
 		}
 	});
 });
@@ -105,8 +107,59 @@ describe('HOME_SCREENSHOTS', () => {
 
 	it('alt-Text niemals leer + niemals em-dash', () => {
 		for (const s of Object.values(HOME_SCREENSHOTS)) {
-			expect(s.alt.length).toBeGreaterThan(10);
-			expect(s.alt).not.toMatch(/—/);
+			const alt = homeScreenshotAlt(s.key as HomeScreenshotKey);
+			expect(alt.length).toBeGreaterThan(10);
+			expect(alt).not.toMatch(/—/);
+		}
+	});
+});
+
+// i18n Block B2: `label`/`description`/`summary`/`teaser`/`alt` sind keine
+// Modul-Konstanten mehr, sondern locale-abhängig aufgelöst. Diese Tests
+// belegen die EN-Fassung UND dass sie sich von der DE-Fassung unterscheidet
+// (kein versehentlich unübersetztes Duplikat).
+describe('i18n Block B2: EN-Aufloesung unterscheidet sich von DE', () => {
+	it('HOME_LAYER_TEASERS: Label + Summary', () => {
+		for (const t of HOME_LAYER_TEASERS) {
+			const labelDe = homeLayerTeaserLabel(t.slug, { locale: 'de' });
+			const labelEn = homeLayerTeaserLabel(t.slug, { locale: 'en' });
+			expect(labelEn.length).toBeGreaterThan(0);
+			expect(labelEn).not.toBe(labelDe);
+			const summaryDe = homeLayerTeaserSummary(t.slug, { locale: 'de' });
+			const summaryEn = homeLayerTeaserSummary(t.slug, { locale: 'en' });
+			expect(summaryEn).not.toBe(summaryDe);
+		}
+	});
+
+	it('HOME_FEATURED_BEZIRKE: Teaser (displayName bleibt Eigenname, unveraendert)', () => {
+		for (const b of HOME_FEATURED_BEZIRKE) {
+			const teaserDe = homeFeaturedBezirkTeaser(b.slug, { locale: 'de' });
+			const teaserEn = homeFeaturedBezirkTeaser(b.slug, { locale: 'en' });
+			expect(teaserEn).not.toBe(teaserDe);
+		}
+	});
+
+	it('HOME_DATA_SOURCES: Description (name/license bleiben Datenschluessel)', () => {
+		for (const s of HOME_DATA_SOURCES) {
+			const descDe = homeDataSourceDescription(s.id, { locale: 'de' });
+			const descEn = homeDataSourceDescription(s.id, { locale: 'en' });
+			expect(descEn).not.toBe(descDe);
+		}
+	});
+
+	it('HOME_QUICK_LINKS: Description (label/query bleiben Eigenname/Datenschluessel)', () => {
+		for (const q of HOME_QUICK_LINKS) {
+			const descDe = homeQuickLinkDescription(q.id, { locale: 'de' });
+			const descEn = homeQuickLinkDescription(q.id, { locale: 'en' });
+			expect(descEn).not.toBe(descDe);
+		}
+	});
+
+	it('HOME_SCREENSHOTS: Alt-Text', () => {
+		for (const key of Object.keys(HOME_SCREENSHOTS) as HomeScreenshotKey[]) {
+			const altDe = homeScreenshotAlt(key, { locale: 'de' });
+			const altEn = homeScreenshotAlt(key, { locale: 'en' });
+			expect(altEn).not.toBe(altDe);
 		}
 	});
 });

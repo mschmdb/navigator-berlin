@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { page } from '$app/state';
 	import { locales, getLocale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
 	import { browser } from '$app/environment';
 	import SkipLink from '$lib/components/atlas/skip-link.svelte';
 	import MetaFooter from '$lib/components/atlas/meta-footer.svelte';
@@ -78,13 +79,17 @@
 	 * fälschlich EN-Content zu behaupten (`resolveEffectiveLocale`).
 	 * Story 2.11 Pivot: wenn Atlas auf `/explore` wandert, `searchPath: '/explore'`.
 	 */
+	// i18n Block B2: die Beschreibung folgt derselben EFFEKTIVEN Content-Locale
+	// wie `locale` selbst -- sonst würde das JSON-LD `inLanguage: de-DE` neben
+	// einem englischen Beschreibungstext behaupten, sobald eine `/en/...`-Seite
+	// mangels Register-Eintrag noch DE-Content zeigt.
+	const websiteJsonLdLocale = $derived(resolveEffectiveLocale(page.url.pathname, getLocale()));
 	const websiteJsonLd = $derived(
 		buildWebSite({
 			origin: page.url.origin,
 			name: 'navigator.berlin',
-			locale: localeToBcp47(resolveEffectiveLocale(page.url.pathname, getLocale())),
-			description:
-				'Open-Data-Atlas für Berlin. Pro Adresse Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen.'
+			locale: localeToBcp47(websiteJsonLdLocale),
+			description: m.shell_website_description(undefined, { locale: websiteJsonLdLocale })
 		})
 	);
 

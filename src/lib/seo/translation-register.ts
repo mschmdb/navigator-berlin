@@ -34,16 +34,19 @@ export interface TranslationRegisterEntry {
  *
  * Block A shipped zero entries on purpose (`/en/...` routing and SEO
  * mechanics went live with every page still un-registered/noindex). Block B
- * (Wahlportal, `spec-i18n-b-wahlportal.md`) is the first content to register:
- * `/berlin-wahlen` AND its whole detail-page subtree (`prefix: true`), so
- * every `/berlin-wahlen/{slug}` page -- including elections ingested after
- * this file was last touched -- counts as translated without a second,
- * hand-maintained slug list here. Later blocks append further
+ * (Wahlportal, `spec-i18n-b-wahlportal.md`) registered `/berlin-wahlen` AND
+ * its whole detail-page subtree (`prefix: true`), so every
+ * `/berlin-wahlen/{slug}` page -- including elections ingested after this
+ * file was last touched -- counts as translated without a second,
+ * hand-maintained slug list here. Block B2 (`spec-i18n-b2-shell.md`) adds
+ * the homepage (`/`, exact match -- no `prefix`, the rest of the route tree
+ * below `/` is untouched by this block). Later blocks append further
  * `{ pathname, locale }` entries as more EN content ships -- no other
  * module needs to change.
  */
 export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
-	{ pathname: '/berlin-wahlen', locale: 'en', prefix: true }
+	{ pathname: '/berlin-wahlen', locale: 'en', prefix: true },
+	{ pathname: '/', locale: 'en' }
 ];
 
 function normalizePathname(pathname: string): string {

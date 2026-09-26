@@ -2,7 +2,7 @@ import { page } from 'vitest/browser';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import HomeFinderTeaser from './home-finder-teaser.svelte';
-import { HOME_SCREENSHOTS } from '$lib/content/screenshot-manifest.js';
+import { HOME_SCREENSHOTS, homeScreenshotAlt } from '$lib/content/screenshot-manifest.js';
 
 describe('home-finder-teaser', () => {
 	it('rendert Section mit Überschrift, Beispiel-Wünschen als Text und CTA-Link', async () => {
@@ -21,7 +21,7 @@ describe('home-finder-teaser', () => {
 		const img = section.querySelector('img');
 		expect(img?.getAttribute('src')).toBe(HOME_SCREENSHOTS.kiezFinder.path);
 		expect(img?.getAttribute('loading')).toBe('lazy');
-		expect(img?.getAttribute('alt')).toBe(HOME_SCREENSHOTS.kiezFinder.alt);
+		expect(img?.getAttribute('alt')).toBe(homeScreenshotAlt('kiezFinder'));
 	});
 
 	it('Beispiel-Wünsche sind echter Text, kein Bild-Alt', async () => {

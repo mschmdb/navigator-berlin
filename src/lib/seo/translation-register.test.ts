@@ -14,7 +14,6 @@ describe('isRouteTranslated', () => {
 
 	it('a path not registered for EN stays untranslated (register is NOT a catch-all)', () => {
 		expect(isRouteTranslated('/kiez/mitte', 'en')).toBe(false);
-		expect(isRouteTranslated('/', 'en')).toBe(false);
 		expect(isRouteTranslated('/methodik', 'en')).toBe(false);
 	});
 
@@ -24,13 +23,23 @@ describe('isRouteTranslated', () => {
 	// Datei je wieder angefasst werden muss.
 	it('Block B: der reale Eintrag ist ein Praefix, deckt /berlin-wahlen + jede beliebige (auch zukuenftige) Detailseite ab', () => {
 		expect(TRANSLATION_REGISTER).toEqual([
-			{ pathname: '/berlin-wahlen', locale: 'en', prefix: true }
+			{ pathname: '/berlin-wahlen', locale: 'en', prefix: true },
+			{ pathname: '/', locale: 'en' }
 		]);
 		expect(isRouteTranslated('/berlin-wahlen', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen', 'en')).toBe(true);
 		// ein Beispiel-Slug, der zum Zeitpunkt dieses Commits nicht existiert.
 		expect(isRouteTranslated('/berlin-wahlen/2099-agh-zweitstimme', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen/2099-agh-zweitstimme', 'en')).toBe(true);
+	});
+
+	// Block B2 (`spec-i18n-b2-shell.md`, Entscheidung Matze 26.09. 2A):
+	// Startseite ist als übersetzt registriert, exakter Match ohne `prefix`
+	// (kein anderer Pfad unter `/` soll dadurch mit-registriert werden).
+	it('Block B2: die Startseite ist registriert, exakt, ohne Praefix-Ausbreitung', () => {
+		expect(isRouteTranslated('/', 'en')).toBe(true);
+		expect(isRouteTranslated('/en', 'en')).toBe(true);
+		expect(isRouteTranslated('/kiez/mitte', 'en')).toBe(false);
 	});
 
 	it('ein Praefix-Eintrag matcht NICHT einen aehnlich benannten, aber andersartigen Pfad (kein Segment-Grenzen-Bug)', () => {

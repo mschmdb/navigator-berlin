@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { formatPercent, formatPercentagePointsDelta, formatCount, formatWahlDate } from './format.js';
+import {
+	formatPercent,
+	formatPercentagePointsDelta,
+	formatCount,
+	formatWahlDate,
+	formatShortDate
+} from './format.js';
 
 describe('formatPercent', () => {
 	it('formatiert de mit Komma und Leerzeichen vor %', () => {
@@ -79,5 +85,42 @@ describe('formatWahlDate', () => {
 
 	it('gibt den Roh-String zurueck, wenn er kein valides Datum ist', () => {
 		expect(formatWahlDate('nicht-valide', { locale: 'de' })).toBe('nicht-valide');
+	});
+});
+
+describe('formatShortDate', () => {
+	it('formatiert de mit abgekuerztem Monat (byte-identisch zum Alt-Verhalten der Updates-Teaser)', () => {
+		expect(formatShortDate('2026-05-15', { locale: 'de' })).toBe('15. Mai 2026');
+	});
+
+	it('formatiert en mit abgekuerztem Monat', () => {
+		expect(formatShortDate('2026-05-15', { locale: 'en' })).toBe('15 May 2026');
+	});
+
+	it('gibt den Roh-String zurueck, wenn er kein valides Datum ist', () => {
+		expect(formatShortDate('nicht-valide', { locale: 'de' })).toBe('nicht-valide');
+	});
+
+	// Review-Fund (i18n Block B2): die alte `home-updates-teaser.svelte`-
+	// Formatierung erzwang NIE eine Zeitzone (Host-Zeitzone) -- ein
+	// hinzugefuegtes `timeZone: 'Europe/Berlin'` haette das Datum je nach
+	// Host-TZ (z. B. UTC in Production) auf den Vor-/Folgetag springen
+	// lassen. Test host-TZ-unabhaengig: vergleicht gegen denselben nativen
+	// `toLocaleDateString`-Aufruf OHNE `timeZone`-Option statt einen fest
+	// erwarteten Kalendertag zu behaupten.
+	it('erzwingt keine Zeitzone (Datum nahe Mitternacht UTC, Alt-Verhalten)', () => {
+		const iso = '2026-05-15T23:30:00.000Z';
+		const expectedDe = new Date(iso).toLocaleDateString('de-DE', {
+			day: '2-digit',
+			month: 'short',
+			year: 'numeric'
+		});
+		expect(formatShortDate(iso, { locale: 'de' })).toBe(expectedDe);
+		const expectedEn = new Date(iso).toLocaleDateString('en-GB', {
+			day: '2-digit',
+			month: 'short',
+			year: 'numeric'
+		});
+		expect(formatShortDate(iso, { locale: 'en' })).toBe(expectedEn);
 	});
 });

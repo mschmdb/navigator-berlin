@@ -419,6 +419,12 @@
 					{geocode}
 					onSelect={handleAddressSelect}
 					placeholder={m.wahl_portal_address_search_placeholder()}
+					notFoundLabel={m.shell_address_search_not_found()}
+					noSuggestionsLabel={m.shell_address_search_no_suggestions()}
+					suggestionsCountLabel={(count) =>
+						(count === 1
+							? m.shell_address_search_suggestions_count_singular
+							: m.shell_address_search_suggestions_count_plural)({ count })}
 				/>
 				{#if addressHighlight.hint}
 					<p

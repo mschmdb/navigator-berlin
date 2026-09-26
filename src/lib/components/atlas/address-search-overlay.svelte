@@ -3,6 +3,7 @@
 	import { X } from '@lucide/svelte';
 	import AddressSearch from './address-search.svelte';
 	import type { GeocodeSuggestion } from '$lib/data';
+	import { m } from '$lib/paraglide/messages.js';
 
 	type Props = {
 		open: boolean;
@@ -55,23 +56,34 @@
 			bind:this={overlayEl}
 			role="dialog"
 			aria-modal="true"
-			aria-label="Adress-Suche"
+			aria-label={m.shell_address_search_overlay_aria_label()}
 			data-testid="address-search-overlay"
 			class="w-full max-w-2xl rounded-md border border-rule-strong bg-bg-elevated p-4"
 		>
 			<div class="mb-3 flex items-center justify-between gap-3">
-				<h2 class="font-serif text-lg text-ink">Adresse suchen</h2>
+				<h2 class="font-serif text-lg text-ink">{m.shell_address_search_overlay_heading()}</h2>
 				<button
 					type="button"
 					data-testid="address-search-overlay-close"
 					onclick={onClose}
-					aria-label="Suche schließen"
+					aria-label={m.shell_address_search_overlay_close_aria_label()}
 					class="rounded-sm p-1 text-ink-muted hover:text-ink"
 				>
 					<X size={18} aria-hidden="true" />
 				</button>
 			</div>
-			<AddressSearch variant="hero" {geocode} onSelect={handleSelect} />
+			<AddressSearch
+				variant="hero"
+				{geocode}
+				onSelect={handleSelect}
+				placeholder={m.shell_address_search_placeholder()}
+				notFoundLabel={m.shell_address_search_not_found()}
+				noSuggestionsLabel={m.shell_address_search_no_suggestions()}
+				suggestionsCountLabel={(count) =>
+						(count === 1
+							? m.shell_address_search_suggestions_count_singular
+							: m.shell_address_search_suggestions_count_plural)({ count })}
+			/>
 		</div>
 	</div>
 {/if}

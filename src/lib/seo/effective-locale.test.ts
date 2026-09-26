@@ -12,9 +12,14 @@ describe('resolveEffectiveLocale', () => {
 		expect(resolveEffectiveLocale('/kiez/mitte', 'de')).toBe('de');
 	});
 
-	it('Block A: EN pages fall back to DE content (real register is empty)', () => {
+	it('an unregistered EN page falls back to DE content', () => {
 		expect(resolveEffectiveLocale('/kiez/mitte', 'en')).toBe('de');
-		expect(resolveEffectiveLocale('/', 'en')).toBe('de');
+	});
+
+	// i18n Block B2: die Startseite ist registriert -- eine EN-Homepage zeigt
+	// jetzt tatsächlich EN-Content, kein Fallback mehr.
+	it('Block B2: die registrierte Startseite behält ihre eigene Locale (kein Fallback mehr)', () => {
+		expect(resolveEffectiveLocale('/', 'en')).toBe('en');
 	});
 
 	// Positive case: an injected register entry (no module-mocking) proves the

@@ -6,6 +6,8 @@
 	Marken.
 -->
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+
 	interface Props {
 		size?: number;
 		class?: string;
@@ -16,7 +18,7 @@
 <div class={`flex items-center gap-3 ${cls}`}>
 	<a
 		href="https://bsky.app/profile/schmidbauer.dev"
-		aria-label="Matze Schmidbauer auf Bluesky"
+		aria-label={m.shell_social_link_aria_label({ person: 'Matze Schmidbauer', platform: 'Bluesky' })}
 		target="_blank"
 		rel="noopener noreferrer me"
 		class="inline-flex text-ink-muted transition-colors hover:text-ink"
@@ -29,7 +31,7 @@
 	</a>
 	<a
 		href="https://www.linkedin.com/in/matzeschmidbauer/"
-		aria-label="Matze Schmidbauer auf LinkedIn"
+		aria-label={m.shell_social_link_aria_label({ person: 'Matze Schmidbauer', platform: 'LinkedIn' })}
 		target="_blank"
 		rel="noopener noreferrer me"
 		class="inline-flex text-ink-muted transition-colors hover:text-ink"
@@ -42,7 +44,7 @@
 	</a>
 	<a
 		href="https://schmidbauer.dev"
-		aria-label="Matze Schmidbauer auf schmidbauer.dev"
+		aria-label={m.shell_social_link_aria_label({ person: 'Matze Schmidbauer', platform: 'schmidbauer.dev' })}
 		target="_blank"
 		rel="noopener noreferrer me"
 		class="inline-flex text-ink-muted transition-colors hover:text-ink"
@@ -92,7 +94,7 @@
 	</a>
 	<a
 		href="https://github.com/mschmdb/navigator-berlin"
-		aria-label="navigator.berlin auf GitHub"
+		aria-label={m.shell_social_link_aria_label({ person: 'navigator.berlin', platform: 'GitHub' })}
 		target="_blank"
 		rel="noopener noreferrer"
 		class="inline-flex text-ink-muted transition-colors hover:text-ink"
