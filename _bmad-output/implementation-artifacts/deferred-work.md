@@ -115,3 +115,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b2-shell.md`
   summary: Test für den sichtbaren „Adresse nicht gefunden“/„Address not found“-Text im `address-search`-Popover (DE-Default und übergebenes EN-Label).
   evidence: Nur der sr-only-Pfad ist getestet; der Popover-Leerzustand braucht ein Interaktions-Gerüst (Fokus, Eingabe, 0 Treffer), das die Testdatei noch nicht hat.
+
+- source_spec: none
+  summary: i18n Block B3b „Inspector“: inspector-panel und alle Unterkomponenten (inkl. wahl-section auf wahl-labels.ts, Klima, Demografie, Kühle Orte, Hitze-Toggle, Nearest-Stops, Share-Sheet ohne LLM-Text) auf Messages + EN, Kiez/Bezirk/Wahlportal/Methodik-Links per localizedHref (~170 Keys).
+  evidence: Split aus B3 (Koordinator-Entscheidung 27.09. 00:05, Matze AFK): B3 hätte ~550-600 Keys und 175 Module; B3b hängt nur von B3a (Label-Resolver, Formatter) ab.
+
+- source_spec: none
+  summary: i18n Block B3c „Finder, Compare, Bookmarks“: kiez-finder-panel + kiez-finder-data, compare-panel/-row, wahl-compare-block, kiez-score-compare-block, layer-compare.ts, bookmark-dialog/-row auf Messages + EN (~110 Keys); danach /explore ins Übersetzungs-Register.
+  evidence: Split aus B3 (Koordinator-Entscheidung 27.09. 00:05, Matze AFK); /explore erst nach B3a-c registrieren, sonst indexierbar halb deutsch.
