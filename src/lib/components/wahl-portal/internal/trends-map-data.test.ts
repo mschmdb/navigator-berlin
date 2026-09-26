@@ -11,6 +11,7 @@ import {
 	formatVolatilitaetLabel,
 	computeVolatilitaetTerzile,
 	buildVolatilitaetLegende,
+	kiezCoverageHinweisText,
 	slopeForPartei,
 	TRENDS_FILL_OPACITY,
 	TREND_FALLEND_DUNKEL,
@@ -128,14 +129,20 @@ describe('farbeForVolatilitaet', () => {
 		const t = computeVolatilitaetTerzile(werte);
 		const farben = new Set(werte.map((w) => farbeForVolatilitaet(w, t)));
 		expect(farben).toEqual(
-			new Set([VOLATILITAET_NEUTRAL_FARBE, VOLATILITAET_FARBE_STUFE_1, VOLATILITAET_FARBE_STUFE_2_PLUS])
+			new Set([
+				VOLATILITAET_NEUTRAL_FARBE,
+				VOLATILITAET_FARBE_STUFE_1,
+				VOLATILITAET_FARBE_STUFE_2_PLUS
+			])
 		);
 	});
 });
 
 describe('buildVolatilitaetLegende', () => {
 	it('nennt die echten Spannen der Reihe in Prozent, ohne „Keine Daten“ wenn alle Gebiete Daten haben', () => {
-		const labels = buildVolatilitaetLegende({ untere: 0.185, obere: 0.217 }, false).map((e) => e.label);
+		const labels = buildVolatilitaetLegende({ untere: 0.185, obere: 0.217 }, false).map(
+			(e) => e.label
+		);
 		expect(labels).toEqual([
 			'Stabiler: unter 18,5 %',
 			'Mittel: 18,5 bis 21,7 %',
@@ -144,7 +151,9 @@ describe('buildVolatilitaetLegende', () => {
 	});
 
 	it('führt „Keine Daten“ nur, wenn es Gebiete ohne Daten gibt', () => {
-		const labels = buildVolatilitaetLegende({ untere: 0.185, obere: 0.217 }, true).map((e) => e.label);
+		const labels = buildVolatilitaetLegende({ untere: 0.185, obere: 0.217 }, true).map(
+			(e) => e.label
+		);
 		expect(labels.at(-1)).toBe('Keine Daten');
 	});
 
@@ -154,8 +163,22 @@ describe('buildVolatilitaetLegende', () => {
 	});
 
 	it('Grenzen, die gerundet gleich sind, fallen auf die einstufige Legende zurück', () => {
-		const labels = buildVolatilitaetLegende({ untere: 0.1851, obere: 0.1854 }, false).map((e) => e.label);
+		const labels = buildVolatilitaetLegende({ untere: 0.1851, obere: 0.1854 }, false).map(
+			(e) => e.label
+		);
 		expect(labels).toEqual(['Netto-Verschiebung je Wahl']);
+	});
+
+	it('EN: übersetzte Legenden-Zeilen mit Punkt-Dezimaltrennzeichen', () => {
+		const labels = buildVolatilitaetLegende({ untere: 0.185, obere: 0.217 }, true, {
+			locale: 'en'
+		}).map((e) => e.label);
+		expect(labels).toEqual([
+			'More stable: below 18.5%',
+			'Medium: 18.5 to 21.7%',
+			'More volatile: from 21.7%',
+			'No data'
+		]);
 	});
 });
 
@@ -185,7 +208,14 @@ describe('buildTrendsFeatureCollection', () => {
 	});
 
 	it('Toggle Trend: Gebiet mit Trend-Eintrag färbt nach Slope', () => {
-		const result = buildTrendsFeatureCollection(fc(1), ['a'], ['Kiez A'], gebiete, 'trend', 'GRÜNE');
+		const result = buildTrendsFeatureCollection(
+			fc(1),
+			['a'],
+			['Kiez A'],
+			gebiete,
+			'trend',
+			'GRÜNE'
+		);
 		expect(result.features[0].properties.hat_daten).toBe(1);
 		expect(result.features[0].properties.farbe).toBe(TREND_STEIGEND_DUNKEL);
 		expect(result.features[0].properties.wert).toBeCloseTo(0.015);
@@ -239,15 +269,67 @@ describe('buildTrendsTableRows', () => {
 		const gebiete = new Map<string, TrendsGebietInput>([
 			['a', { kiez_slug: 'a', volatilitaet: 0, trends: [{ partei: 'GRÜNE', slope: -0.0003 }] }]
 		]);
-		const trendFc = buildTrendsFeatureCollection(fc(1), ['a'], ['Kiez A'], gebiete, 'trend', 'GRÜNE');
+		const trendFc = buildTrendsFeatureCollection(
+			fc(1),
+			['a'],
+			['Kiez A'],
+			gebiete,
+			'trend',
+			'GRÜNE'
+		);
 		const rows = buildTrendsTableRows(trendFc, 'trend');
 		expect(rows).toEqual([{ gebiet: 'Kiez A', wert: '0,0 Pp.' }]);
+	});
+
+	it('EN: „+1.5 pp" und Rundungs-Clamp „0.0 pp" ohne Vorzeichen', () => {
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0.08, trends: [{ partei: 'GRÜNE', slope: 0.015 }] }]
+		]);
+		const trendFc = buildTrendsFeatureCollection(
+			fc(1),
+			['a'],
+			['Kiez A'],
+			gebiete,
+			'trend',
+			'GRÜNE'
+		);
+		const rows = buildTrendsTableRows(trendFc, 'trend', { locale: 'en' });
+		expect(rows).toEqual([{ gebiet: 'Kiez A', wert: '+1.5 pp' }]);
+
+		const clampGebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0, trends: [{ partei: 'GRÜNE', slope: -0.0003 }] }]
+		]);
+		const clampFc = buildTrendsFeatureCollection(
+			fc(1),
+			['a'],
+			['Kiez A'],
+			clampGebiete,
+			'trend',
+			'GRÜNE'
+		);
+		const clampRows = buildTrendsTableRows(clampFc, 'trend', { locale: 'en' });
+		expect(clampRows).toEqual([{ gebiet: 'Kiez A', wert: '0.0 pp' }]);
 	});
 });
 
 describe('formatVolatilitaetLabel', () => {
 	it('formatiert als Prozent Netto-Verschiebung mit de-DE-Komma', () => {
 		expect(formatVolatilitaetLabel(0.084)).toBe('8,4 % Netto-Verschiebung');
+	});
+
+	it('EN: „x.x% net shift"', () => {
+		expect(formatVolatilitaetLabel(0.084, { locale: 'en' })).toBe('8.4% net shift');
+	});
+});
+
+describe('kiezCoverageHinweisText', () => {
+	it('de: nennt 2016/2017 als Grenze', () => {
+		expect(kiezCoverageHinweisText()).toMatch(/2016\/2017/);
+	});
+
+	it('en: übersetzter Hinweis, nennt ebenfalls 2016/2017', () => {
+		expect(kiezCoverageHinweisText({ locale: 'en' })).toMatch(/2016\/2017/);
+		expect(kiezCoverageHinweisText({ locale: 'en' })).toMatch(/Kiez level/);
 	});
 });
 
@@ -275,6 +357,26 @@ describe('buildTrendTakeaway', () => {
 		expect(takeaway).toContain('steigendem');
 		expect(takeaway).toContain('fallendem');
 	});
+
+	it('EN: leer und normal', () => {
+		const leerFc = buildTrendsFeatureCollection(fc(1), ['a'], ['A'], new Map(), 'trend', 'SPD');
+		expect(buildTrendTakeaway(leerFc, 'SPD', { locale: 'en' })).toContain('No trend data');
+
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0, trends: [{ partei: 'SPD', slope: 0.02 }] }],
+			['b', { kiez_slug: 'b', volatilitaet: 0, trends: [{ partei: 'SPD', slope: -0.02 }] }]
+		]);
+		const trendFc = buildTrendsFeatureCollection(
+			fc(2),
+			['a', 'b'],
+			['A', 'B'],
+			gebiete,
+			'trend',
+			'SPD'
+		);
+		const takeaway = buildTrendTakeaway(trendFc, 'SPD', { locale: 'en' });
+		expect(takeaway).toBe('SPD: 1 of 2 Kieze with rising share, 1 with falling share (pp/year).');
+	});
 });
 
 describe('buildVolatilitaetTakeaway mit Terzilen', () => {
@@ -294,6 +396,25 @@ describe('buildVolatilitaetTakeaway mit Terzilen', () => {
 		);
 		expect(buildVolatilitaetTakeaway(trendFc)).toContain(
 			'Ein Drittel der Kieze liegt unter 16,7 %, ein Drittel ab 23,3 %.'
+		);
+	});
+
+	it('EN: Drittel-Grenzen auf Englisch', () => {
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0.1, trends: [] }],
+			['b', { kiez_slug: 'b', volatilitaet: 0.2, trends: [] }],
+			['c', { kiez_slug: 'c', volatilitaet: 0.3, trends: [] }]
+		]);
+		const trendFc = buildTrendsFeatureCollection(
+			fc(3),
+			['a', 'b', 'c'],
+			['A', 'B', 'C'],
+			gebiete,
+			'volatilitaet',
+			'SPD'
+		);
+		expect(buildVolatilitaetTakeaway(trendFc, { locale: 'en' })).toContain(
+			'One third of the Kieze are below 16.7%, one third from 23.3%.'
 		);
 	});
 });
@@ -394,5 +515,34 @@ describe('buildVolatilitaetTakeaway', () => {
 		expect(takeaway).toContain('Alle 3 Kieze liegen bei');
 		expect(takeaway).toContain('8,0 % Netto-Verschiebung');
 		expect(takeaway).not.toMatch(/stabilster|wechselhaftester/i);
+	});
+
+	it('EN: leer und Gleichstand ALLER Werte', () => {
+		const leerFc = buildTrendsFeatureCollection(
+			fc(1),
+			['a'],
+			['A'],
+			new Map(),
+			'volatilitaet',
+			'SPD'
+		);
+		expect(buildVolatilitaetTakeaway(leerFc, { locale: 'en' })).toContain('No volatility data');
+
+		const gebiete = new Map<string, TrendsGebietInput>([
+			['a', { kiez_slug: 'a', volatilitaet: 0.08, trends: [] }],
+			['b', { kiez_slug: 'b', volatilitaet: 0.08, trends: [] }],
+			['c', { kiez_slug: 'c', volatilitaet: 0.08, trends: [] }]
+		]);
+		const trendFc = buildTrendsFeatureCollection(
+			fc(3),
+			['a', 'b', 'c'],
+			['Alpha', 'Beta', 'Gamma'],
+			gebiete,
+			'volatilitaet',
+			'SPD'
+		);
+		expect(buildVolatilitaetTakeaway(trendFc, { locale: 'en' })).toBe(
+			'All 3 Kieze are at 8.0% net shift per election.'
+		);
 	});
 });

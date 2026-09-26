@@ -1,9 +1,30 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import WinnerMapTooltip from './winner-map-tooltip.svelte';
 
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
+
 describe('winner-map-tooltip.svelte', () => {
+	// Review-Fund (i18n Block B): "Sonstige" ist eine Anzeige-, keine
+	// Daten-Schluessel-Uebersetzung.
+	it('zeigt "Sonstige" unter en als "Other" an', async () => {
+		overwriteGetLocale(() => 'en');
+		render(WinnerMapTooltip, {
+			visible: true,
+			pos: { x: 0, y: 0 },
+			data: { gebietName: 'Hansaviertel', partei: 'Sonstige', anteil: 0.1, hasWinner: true, wechsel: false },
+			jahr: 2023,
+			repeatElection: false
+		});
+		await expect
+			.element(page.getByTestId('winner-map-tooltip-partei'))
+			.toHaveTextContent('Other');
+	});
+
 	it('rendert nichts wenn visible=false', async () => {
 		render(WinnerMapTooltip, {
 			visible: false,

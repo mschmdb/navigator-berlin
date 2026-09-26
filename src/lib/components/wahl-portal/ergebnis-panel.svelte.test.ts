@@ -1,8 +1,13 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import ErgebnisPanelContextProbe from './internal/ergebnis-panel-context-probe.svelte';
 import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const WAHLEN_2023: WahlPortalListEntry[] = [
 	{
@@ -149,6 +154,31 @@ describe('ergebnis-panel.svelte', () => {
 			.toHaveTextContent('Amt für Statistik Berlin-Brandenburg');
 		await expect.element(page.getByTestId('ergebnis-panel-beteiligung-slot')).toBeInTheDocument();
 		await expect.element(page.getByTestId('ergebnis-panel-beteiligung-slot')).toBeEmptyDOMElement();
+	});
+
+	// Review-Fund (i18n Block B): "Sonstige" ist eine Anzeige-, keine
+	// Daten-Schluessel-Uebersetzung -- data-testid bleibt "Sonstige".
+	it('zeigt "Sonstige" unter en als "Other" an, data-testid bleibt "Sonstige"', async () => {
+		overwriteGetLocale(() => 'en');
+		const seriesMitSonstige = {
+			...SERIES_BERLIN,
+			points: [
+				...SERIES_BERLIN.points,
+				{ ...SERIES_BERLIN.points[2], partei: 'Sonstige' } // points[2] = erster jahr:2023-Punkt
+			]
+		};
+		const fetchFn = fakeFetch([['/api/wahl/series', seriesMitSonstige]]);
+		render(ErgebnisPanelContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
+		const row = page.getByTestId('ergebnis-panel-row-Sonstige');
+		await expect.element(row).toBeInTheDocument();
+		await expect.element(row).toHaveTextContent('Other');
+		await expect.element(row).not.toHaveTextContent('Sonstige');
 	});
 
 	it('zeigt Vorläufig-Badge statt „Endgültiges Ergebnis" für ein vorläufiges Jahr (Story: Ingest AGH/BVV 2026)', async () => {

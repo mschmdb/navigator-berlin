@@ -199,4 +199,16 @@ describe('StimmbezirkLoader.resolveAddressLabel', () => {
 		await loader.loadGeometry('ah21', 'btw21', () => false);
 		expect(loader.resolveAddressLabel(52.505, 13.305)).toBe('Stimmbezirk 100 und Briefwahl 1A');
 	});
+
+	// i18n Block B (Review-Fund Matze 26.09.): Adress-Hinweis-Text muss auf
+	// /en/berlin-wahlen englisch sein, nicht nur die restlichen Portal-Texte.
+	it('EN: liefert den englischen Gruppen-Anzeige-Namen mit explizitem { locale }', async () => {
+		_resetManifestCache();
+		_resetLayerCache();
+		const loader = new StimmbezirkLoader(fakeFetch(geoRoutes));
+		await loader.loadGeometry('ah21', 'agh23', () => false);
+		expect(loader.resolveAddressLabel(52.505, 13.305, 'en')).toBe(
+			'Polling district 100 and postal district 1A'
+		);
+	});
 });

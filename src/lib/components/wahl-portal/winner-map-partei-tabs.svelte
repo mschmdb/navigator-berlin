@@ -8,6 +8,7 @@
 	 */
 	import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
 	import { parteiColor } from '$lib/data/partei-farben.js';
+	import { m } from '$lib/paraglide/messages.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
 
 	type Props = {
@@ -25,7 +26,7 @@
 	}
 
 	function label(value: string | null): string {
-		return value ?? 'Gewinner';
+		return value ?? m.wahl_portal_partei_tab_gewinner();
 	}
 
 	function onKeydown(event: KeyboardEvent, index: number): void {
@@ -39,7 +40,7 @@
 
 <div
 	role="radiogroup"
-	aria-label="Kartenansicht"
+	aria-label={m.wahl_portal_partei_tabs_aria_label()}
 	data-testid="winner-map-partei-tabs"
 	class="flex flex-wrap gap-1"
 >

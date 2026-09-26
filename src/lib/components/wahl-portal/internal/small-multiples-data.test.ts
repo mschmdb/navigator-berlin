@@ -147,4 +147,22 @@ describe('buildSmallMultiplesTableRow', () => {
 		expect(tableRow.staerksterKiez).toBe('Keine Daten');
 		expect(tableRow.staerksterAnteil).toBeNull();
 	});
+
+	it('EN: „No data" statt „Keine Daten"', () => {
+		const mini = buildPartyMiniMap('BSW', CELLS, [], { min: 0, max: 1 });
+		const tableRow = buildSmallMultiplesTableRow(mini, { locale: 'en' });
+		expect(tableRow.staerksterKiez).toBe('No data');
+		expect(tableRow.schwaechsterKiez).toBe('No data');
+	});
+
+	it('EN: übersetzt die Anzeige „Sonstige" -> „Other", Farb-Lookup bleibt unangetastet', () => {
+		const rows = [
+			row({ partei: 'Sonstige', gebiet_slug: 'alpha', anteil: 0.1 }),
+			row({ partei: 'Sonstige', gebiet_slug: 'beta', anteil: 0.5 })
+		];
+		const mini = buildPartyMiniMap('Sonstige', CELLS, rows, parteiAnteilSpanne(rows));
+		expect(mini.farbe).toBe(parteiColor('Sonstige'));
+		const tableRow = buildSmallMultiplesTableRow(mini, { locale: 'en' });
+		expect(tableRow.partei).toBe('Other');
+	});
 });

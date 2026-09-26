@@ -1,23 +1,22 @@
 <script lang="ts">
 	import { Accordion } from 'bits-ui';
 	import { ChevronDown } from '@lucide/svelte';
-	import { resolve } from '$app/paths';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import {
 		getWahlPortalState,
 		currentJahr,
 		vorlaeufigStatusFor
 	} from '$lib/state/wahl-portal-context.svelte.js';
-	import {
-		stimmtypForReihe,
-		REIHE_LABELS,
-		type WahlPortalEbene
-	} from '$lib/utils/wahl-portal-url-state.js';
+	import { stimmtypForReihe, type WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+	import { wahlReiheLabel, sourceDisplayLabel, licenseDisplayLabel } from '$lib/data/wahl-labels.js';
 	import {
 		buildErgebnisPanelRows,
 		vorjahrLabel,
 		type ErgebnisSeriesPoint,
 		type ErgebnisPanelData
 	} from './internal/ergebnis-panel-data.js';
+	import { parteiDisplayName } from './internal/winner-map-data.js';
 	import VorlaeufigBadge from './vorlaeufig-badge.svelte';
 
 	type Props = {
@@ -158,7 +157,7 @@
 	);
 
 	const wahlBezeichnung = $derived(
-		jahr !== null ? `${REIHE_LABELS[portal.reihe]} ${jahr}` : REIHE_LABELS[portal.reihe]
+		jahr !== null ? `${wahlReiheLabel(portal.reihe)} ${jahr}` : wahlReiheLabel(portal.reihe)
 	);
 	const vorjahrText = $derived(berlinPanel ? vorjahrLabel(berlinPanel.vorjahr) : null);
 
@@ -169,13 +168,6 @@
 	// obwohl der Status schlicht unbekannt ist. `null` = unbekannt: weder
 	// "vorläufig" noch "endgültig" behaupten (Review-Fund 23.09.).
 	const vorlaeufigStatus = $derived(vorlaeufigStatusFor(portal, portal.reihe, jahr));
-
-	const DISCLOSURE_TEXT =
-		'Berlin- und Bezirks-Werte sind amtliche Summen der Wahlämter. Kiez-Werte sind ein ' +
-		'Flächen-Aggregat aus den Stimmbezirken, kein amtlicher Originalwert. Briefwahl-Stimmen ' +
-		'fließen in die Bezirks- und Berlin-Summen amtlich ein; auf Kiez-Ebene verteilt sich die ' +
-		'Briefwahl einer Gruppe anteilig nach Wahlberechtigten auf ihre Urnen: eine Schätzung, ' +
-		'keine amtliche Aufteilung.';
 </script>
 
 <section
@@ -183,7 +175,9 @@
 	data-testid="ergebnis-panel"
 	class="flex flex-col gap-4"
 >
-	<h3 id="ergebnis-panel-h" class="font-serif text-xl text-ink">Ergebnis</h3>
+	<h3 id="ergebnis-panel-h" class="font-serif text-xl text-ink">
+		{m.wahl_portal_ergebnis_panel_titel()}
+	</h3>
 
 	<div data-testid="ergebnis-panel-kopf" class="flex flex-col gap-1">
 		<p class="font-serif text-base text-ink">
@@ -194,14 +188,14 @@
 					testid="ergebnis-panel-vorlaeufig"
 				/>
 			{:else if vorlaeufigStatus !== null}
-				· Endgültiges Ergebnis
+				· {m.wahl_portal_ergebnis_endgueltig()}
 			{/if}
 		</p>
 		{#if berlinResponse}
 			<p data-testid="ergebnis-panel-datenstand" class="font-mono text-xs text-ink-subtle">
-				Datenstand: {berlinResponse.source_name ?? 'unbekannte Quelle'}
+				{m.wahl_portal_datenstand_label({ source: sourceDisplayLabel(berlinResponse.source_name) })}
 				{#if berlinResponse.license}
-					· Lizenz {berlinResponse.license}
+					· {m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(berlinResponse.license) })}
 				{/if}
 			</p>
 		{/if}
@@ -211,15 +205,15 @@
 
 	{#if berlinStatus === 'error'}
 		<p data-testid="ergebnis-panel-error" role="alert" class="font-serif text-ink-muted">
-			Ergebnis-Daten konnten nicht geladen werden.
+			{m.wahl_portal_ergebnis_panel_error()}
 		</p>
 	{:else if berlinStatus !== 'loaded'}
 		<p data-testid="ergebnis-panel-loading" role="status" class="font-serif text-ink-muted">
-			Lädt Ergebnis …
+			{m.wahl_portal_ergebnis_panel_loading()}
 		</p>
 	{:else if !berlinPanel || berlinPanel.rows.length === 0}
 		<p data-testid="ergebnis-panel-empty" role="status" class="font-serif text-ink-muted">
-			Für diese Auswahl liegen noch keine Ergebnis-Daten vor.
+			{m.wahl_portal_ergebnis_panel_empty()}
 		</p>
 	{:else}
 		<ol data-testid="ergebnis-panel-liste" class="flex flex-col gap-2">
@@ -234,7 +228,7 @@
 							class="h-3 w-3 shrink-0 rounded-full"
 							style:background-color={row.farbeHex}
 						></span>
-						<span class="min-w-0 flex-1 truncate">{row.partei}</span>
+						<span class="min-w-0 flex-1 truncate">{parteiDisplayName(row.partei)}</span>
 						<span
 							data-testid={`ergebnis-panel-anteil-${row.partei}`}
 							class="w-16 shrink-0 text-right tabular-nums"
@@ -269,32 +263,34 @@
 		</ol>
 		{#if vorjahrText}
 			<p data-testid="ergebnis-panel-vorjahr-label" class="font-mono text-xs text-ink-subtle">
-				Veränderung {vorjahrText}
+				{m.wahl_portal_ergebnis_veraenderung({ vorjahrText })}
 			</p>
 		{/if}
 	{/if}
 
 	{#if anzeigeEbene === 'stimmbezirk'}
 		<p data-testid="ergebnis-panel-stimmbezirk-hinweis" class="font-mono text-xs text-ink-subtle">
-			Stimmbezirks-Verteilungen liegen auf den Detailseiten der einzelnen Stimmbezirke.
+			{m.wahl_portal_stimmbezirk_hinweis()}
 		</p>
 	{:else if highlightedSlug}
 		<div
 			data-testid="ergebnis-panel-gebiet-block"
 			class="flex flex-col gap-2 border-t border-rule pt-4"
 		>
-			<h4 class="font-serif text-base text-ink">{highlightedName ?? 'Hervorgehobenes Gebiet'}</h4>
+			<h4 class="font-serif text-base text-ink">
+				{highlightedName ?? m.wahl_portal_hervorgehobenes_gebiet_default()}
+			</h4>
 			{#if gebietStatus === 'error'}
 				<p data-testid="ergebnis-panel-gebiet-error" role="alert" class="font-serif text-ink-muted">
-					Gebiets-Daten konnten nicht geladen werden.
+					{m.wahl_portal_gebiet_error()}
 				</p>
 			{:else if gebietStatus !== 'loaded'}
 				<p data-testid="ergebnis-panel-gebiet-loading" class="font-serif text-ink-muted">
-					Lädt Gebiets-Ergebnis …
+					{m.wahl_portal_gebiet_loading()}
 				</p>
 			{:else if !gebietPanel || gebietPanel.rows.length === 0}
 				<p data-testid="ergebnis-panel-gebiet-empty" class="font-serif text-ink-muted">
-					Für dieses Gebiet liegen keine Ergebnis-Daten vor.
+					{m.wahl_portal_gebiet_empty()}
 				</p>
 			{:else}
 				{#if gebietPanel.vorjahr !== null}
@@ -302,7 +298,9 @@
 						data-testid="ergebnis-panel-gebiet-vorjahr-label"
 						class="font-mono text-xs text-ink-subtle"
 					>
-						Veränderung {vorjahrLabel(gebietPanel.vorjahr)}
+						{m.wahl_portal_ergebnis_veraenderung({
+							vorjahrText: vorjahrLabel(gebietPanel.vorjahr) ?? ''
+						})}
 					</p>
 				{/if}
 				<ol data-testid="ergebnis-panel-gebiet-liste" class="flex flex-col gap-2">
@@ -317,7 +315,7 @@
 									class="h-3 w-3 shrink-0 rounded-full"
 									style:background-color={row.farbeHex}
 								></span>
-								<span class="min-w-0 flex-1 truncate">{row.partei}</span>
+								<span class="min-w-0 flex-1 truncate">{parteiDisplayName(row.partei)}</span>
 								<span
 									data-testid={`ergebnis-panel-gebiet-anteil-${row.partei}`}
 									class="w-16 shrink-0 text-right tabular-nums"
@@ -365,7 +363,7 @@
 					data-testid="ergebnis-panel-disclosure-trigger"
 					class="group flex w-full items-center justify-between gap-4 py-2 text-left font-sans text-sm font-semibold text-ink hover:text-accent"
 				>
-					Woher kommen diese Zahlen?
+					{m.wahl_portal_disclosure_trigger()}
 					<ChevronDown
 						size={16}
 						aria-hidden="true"
@@ -377,10 +375,10 @@
 				data-testid="ergebnis-panel-disclosure-content"
 				class="flex flex-col gap-2 pb-3 font-serif text-sm leading-relaxed text-ink-muted"
 			>
-				<p>{DISCLOSURE_TEXT}</p>
+				<p>{m.wahl_portal_disclosure_text()}</p>
 				<p class="font-mono text-xs text-ink-subtle">
 					<a
-						href={resolve('/methodik/wahldaten')}
+						href={localizedHref('/methodik/wahldaten')}
 						data-testid="ergebnis-panel-methodik-link"
 						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
@@ -388,7 +386,7 @@
 					</a>
 					·
 					<a
-						href={resolve('/lizenzen')}
+						href={localizedHref('/lizenzen')}
 						data-testid="ergebnis-panel-lizenzen-link"
 						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>

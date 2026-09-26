@@ -19,6 +19,12 @@
 
 	let {
 		variant = 'hero',
+		// Review-Fund (i18n Block B): Default bleibt das deutsche Literal --
+		// diese Komponente ist projektweit geteilt (Home-/Kiez-Hero-Suche),
+		// ein `getLocale()`-basierter Default wuerde auf nicht uebersetzten
+		// `/en/...`-Seiten (z. B. `/en/kiez/...`) faelschlich Englisch zeigen.
+		// Das Wahlportal (`winner-map.svelte`) uebergibt seine eigene,
+		// locale-bewusste Message explizit als Prop.
 		placeholder = 'Berliner Adresse eingeben',
 		value = $bindable(''),
 		onSelect,

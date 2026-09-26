@@ -1,0 +1,83 @@
+import { describe, it, expect } from 'vitest';
+import { formatPercent, formatPercentagePointsDelta, formatCount, formatWahlDate } from './format.js';
+
+describe('formatPercent', () => {
+	it('formatiert de mit Komma und Leerzeichen vor %', () => {
+		expect(formatPercent(0.282, { locale: 'de' })).toBe('28,2 %');
+	});
+
+	it('formatiert en mit Punkt und ohne Leerzeichen vor %', () => {
+		expect(formatPercent(0.282, { locale: 'en' })).toBe('28.2%');
+	});
+
+	it('rundet ganzzahlig bei decimals: 0', () => {
+		expect(formatPercent(0.2849, { locale: 'de', decimals: 0 })).toBe('28 %');
+		expect(formatPercent(0.2849, { locale: 'en', decimals: 0 })).toBe('28%');
+	});
+
+	it('vermeidet -0,0 bei sehr kleinen negativen Werten nahe 0', () => {
+		expect(formatPercent(-0.0001, { locale: 'de' })).toBe('0,0 %');
+	});
+
+	// Review-Fund: `Math.round(pct * 10) / 10` vor dem `toFixed` rundete
+	// Grenzwerte anders als ein direktes `toFixed(1)` (die vormalige,
+	// byte-genau zu erhaltende Rundung an allen 6 Alt-Call-Sites).
+	it('rundet exakt wie toFixed(1), nicht via Math.round(pct*10)/10 (Grenzwerte)', () => {
+		expect(formatPercent(0.0015, { locale: 'de' })).toBe('0,1 %');
+		expect(formatPercent(0.0045, { locale: 'de' })).toBe('0,4 %');
+		expect(formatPercent(0.0015, { locale: 'en' })).toBe('0.1%');
+		expect(formatPercent(0.0045, { locale: 'en' })).toBe('0.4%');
+	});
+});
+
+describe('formatPercentagePointsDelta', () => {
+	it('formatiert positive Deltas de mit Pp.', () => {
+		expect(formatPercentagePointsDelta(10.2, { locale: 'de' })).toBe('+10,2 Pp.');
+	});
+
+	it('formatiert positive Deltas en mit pp', () => {
+		expect(formatPercentagePointsDelta(10.2, { locale: 'en' })).toBe('+10.2 pp');
+	});
+
+	it('nutzt ein echtes Minuszeichen (U+2212) fuer negative Deltas, in beiden Locales', () => {
+		expect(formatPercentagePointsDelta(-3.4, { locale: 'de' })).toBe('−3,4 Pp.');
+		expect(formatPercentagePointsDelta(-3.4, { locale: 'en' })).toBe('−3.4 pp');
+	});
+
+	// Review-Fund: DE bleibt Byte-identisch zum alten `formatDeltaLabel`
+	// (Vorzeichen aus dem UNGERUNDETEN Delta, auch wenn das auf "0,0" rundet).
+	it('DE: sehr kleine negative Deltas runden auf "0,0" MIT Vorzeichen (Alt-Verhalten, bewusst erhalten)', () => {
+		expect(formatPercentagePointsDelta(-0.04, { locale: 'de' })).toBe('−0,0 Pp.');
+	});
+
+	// EN: Vorzeichen folgt dem GERUNDETEN Wert -- ein auf "0.0" gerundetes
+	// Delta zeigt kein Vorzeichen (kein neu eingeführtes "-0.0 pp"/"+0.0 pp").
+	it('EN: sehr kleine Deltas nahe 0 runden auf "0.0" OHNE Vorzeichen', () => {
+		expect(formatPercentagePointsDelta(-0.04, { locale: 'en' })).toBe('0.0 pp');
+		expect(formatPercentagePointsDelta(0.03, { locale: 'en' })).toBe('0.0 pp');
+	});
+});
+
+describe('formatCount', () => {
+	it('formatiert Tausendertrennzeichen de', () => {
+		expect(formatCount(1234, { locale: 'de' })).toBe('1.234');
+	});
+
+	it('formatiert Tausendertrennzeichen en', () => {
+		expect(formatCount(1234, { locale: 'en' })).toBe('1,234');
+	});
+});
+
+describe('formatWahlDate', () => {
+	it('formatiert de als DD.MM.YYYY in Europe/Berlin, identisch zu formatBerlinDate', () => {
+		expect(formatWahlDate('2026-09-20T23:55:55.000Z', { locale: 'de' })).toBe('21.09.2026');
+	});
+
+	it('formatiert en als D MMMM YYYY (ausgeschriebener Monat, ICU-stabil) in Europe/Berlin', () => {
+		expect(formatWahlDate('2026-09-20T23:55:55.000Z', { locale: 'en' })).toBe('21 September 2026');
+	});
+
+	it('gibt den Roh-String zurueck, wenn er kein valides Datum ist', () => {
+		expect(formatWahlDate('nicht-valide', { locale: 'de' })).toBe('nicht-valide');
+	});
+});

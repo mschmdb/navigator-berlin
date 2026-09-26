@@ -48,4 +48,37 @@ describe('gruppenAnzeigeName', () => {
 		expect(gruppenAnzeigeName('01B1A', undefined)).toBe('Gruppe 01B1A');
 		expect(gruppenAnzeigeName('01B1A', '')).toBe('Gruppe 01B1A');
 	});
+
+	// i18n Block B (Review-Fund Matze 26.09.): "Stimmbezirk"/"Briefwahl" sind
+	// nicht im Glossar als deutsch-bleibend gelistet, werden also übersetzt.
+	// Aufrufer: Winner-Map-Tooltip/-Tabelle (`winner-map-data.ts`), Detail-
+	// seiten-Choropleth-Popup (`wahl-stimmbezirk-choropleth.svelte`),
+	// Adress-Hinweis (`winner-map-address.svelte.ts` -> `resolveAddressLabel`).
+	it('EN: Ein-Urnen-Gruppe -> "Polling district <id> and postal district <code>"', () => {
+		expect(gruppenAnzeigeName('01B1A', '100', { locale: 'en' })).toBe(
+			'Polling district 100 and postal district 1A'
+		);
+	});
+
+	it('EN: Zwei-Urnen-Gruppe -> "Polling districts <id>, <id> and postal district <code>"', () => {
+		expect(gruppenAnzeigeName('09B7P', '726,727', { locale: 'en' })).toBe(
+			'Polling districts 726, 727 and postal district 7P'
+		);
+	});
+
+	it('EN: Drei-Urnen-Gruppe bleibt im Plural, Codes/Zahlen unverändert', () => {
+		expect(gruppenAnzeigeName('01B1A', '100,101,102', { locale: 'en' })).toBe(
+			'Polling districts 100, 101, 102 and postal district 1A'
+		);
+	});
+
+	it('EN: Fallback ohne Mitglieder-Liste -> "Group <id>"', () => {
+		expect(gruppenAnzeigeName('01B1A', undefined, { locale: 'en' })).toBe('Group 01B1A');
+		expect(gruppenAnzeigeName('01B1A', '', { locale: 'en' })).toBe('Group 01B1A');
+	});
+
+	it('DE bleibt ohne explizite locale-Option Zeichen-fuer-Zeichen gleich', () => {
+		expect(gruppenAnzeigeName('09B7P', '726,727')).toBe('Stimmbezirke 726, 727 und Briefwahl 7P');
+		expect(gruppenAnzeigeName('01B1A', undefined)).toBe('Gruppe 01B1A');
+	});
 });

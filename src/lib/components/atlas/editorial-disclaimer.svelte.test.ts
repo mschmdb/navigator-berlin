@@ -136,4 +136,26 @@ describe('editorial-disclaimer.svelte', () => {
 			expect(el.getAttribute('data-variant')).toBe('wahl-portal-footnote');
 		});
 	});
+
+	// Review-Fund (i18n Block B): `wahl-portal-stimmenanteile` (Wahl-Detail-
+	// seite) ist eine EIGENE Variante, getrennt von `wahl-stimmenanteile`
+	// (Kiez-Inspector/Compare-Modus) -- beide teilten sich vorher denselben
+	// Key, wodurch der Inspector/Compare-Disclaimer auf `/en/...` faelschlich
+	// englisch wurde.
+	describe('Wahl-Portal-Stimmenanteile-Variant vs. geteilte wahl-stimmenanteile-Variant', () => {
+		it('wahl-portal-stimmenanteile (Detailseite) zeigt den korrigierten Briefwahl-Hinweis', async () => {
+			render(EditorialDisclaimer, { variant: 'wahl-portal-stimmenanteile' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/anteilig nach Wahlberechtigten geschätzt/);
+			expect(el.textContent).not.toMatch(/ausgeschlossen/);
+			expect(el.getAttribute('data-variant')).toBe('wahl-portal-stimmenanteile');
+		});
+
+		it('wahl-stimmenanteile (Inspector/Compare) bleibt unveraendert deutsch, unabhaengig von Paraglide-Messages', async () => {
+			render(EditorialDisclaimer, { variant: 'wahl-stimmenanteile' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Brief-Stimmen sind im Kiez-Aggregat ausgeschlossen/);
+			expect(el.getAttribute('data-variant')).toBe('wahl-stimmenanteile');
+		});
+	});
 });

@@ -25,7 +25,12 @@
 
 <script lang="ts">
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
-	import { ANTEIL_OPACITY_RAMP, formatAnteilPct } from './internal/winner-map-data.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import {
+		ANTEIL_OPACITY_RAMP,
+		formatAnteilPct,
+		parteiDisplayName
+	} from './internal/winner-map-data.js';
 
 	type Props = {
 		/** Vorkommende Partei-Kurznamen (Anzeige-Reihenfolge liegt beim Aufrufer). */
@@ -42,11 +47,16 @@
 		parteien,
 		patternsEnabled,
 		onTogglePatterns,
-		titel = 'Stärkste Partei',
+		titel = m.wahl_portal_legende_titel_default(),
 		rampeText
 	}: Props = $props();
 
-	const defaultRampeText = `Sättigung nach Anteil: ${formatAnteilPct(ANTEIL_OPACITY_RAMP.minAnteil, 0)} = niedrige Deckkraft, ab ${formatAnteilPct(ANTEIL_OPACITY_RAMP.maxAnteil, 0)} volle Deckkraft.`;
+	const defaultRampeText = $derived(
+		m.wahl_portal_legende_saettigung_rampe_text({
+			min: formatAnteilPct(ANTEIL_OPACITY_RAMP.minAnteil, 0),
+			max: formatAnteilPct(ANTEIL_OPACITY_RAMP.maxAnteil, 0)
+		})
+	);
 </script>
 
 <div data-testid="winner-map-legende" class="flex flex-col gap-3 border border-rule bg-bg p-3">
@@ -65,13 +75,13 @@
 			class:bg-bg={!patternsEnabled}
 			class:text-ink={!patternsEnabled}
 		>
-			Muster anzeigen
+			{m.wahl_portal_muster_anzeigen()}
 		</button>
 	</div>
 
 	{#if parteien.length === 0}
 		<p data-testid="winner-map-legende-empty" class="font-mono text-xs text-ink-subtle">
-			Keine Partei-Daten für die aktuelle Auswahl.
+			{m.wahl_portal_legende_keine_partei_daten()}
 		</p>
 	{:else}
 		<ul class="flex flex-wrap gap-2" data-testid="winner-map-legende-list">
@@ -86,7 +96,7 @@
 							? patternPreviewStyle(parteiPattern(partei), hex)
 							: `background-color: ${hex};`}
 					></span>
-					<span class="font-mono text-xs text-ink">{partei}</span>
+					<span class="font-mono text-xs text-ink">{parteiDisplayName(partei)}</span>
 				</li>
 			{/each}
 		</ul>

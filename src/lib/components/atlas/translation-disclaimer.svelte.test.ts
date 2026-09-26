@@ -24,24 +24,22 @@ describe('TranslationDisclaimer', () => {
 		);
 	});
 
-	it('rendert Standard-Disclaimer wenn EN-Seite EN-Content liefert', async () => {
+	// Entscheidung Matze 26.09. 21:06 (i18n Block B): eine echt übersetzte
+	// Seite (effectiveLocale === pageLocale, z. B. /en/berlin-wahlen) zeigt
+	// KEINEN Übersetzungs-Hinweis mehr -- die vormalige `translated`-Variante
+	// entfiel ersatzlos, siehe ADR-005.
+	it('rendert nichts wenn EN-Seite EN-Content liefert (Block B: kein Hinweis auf übersetzten Seiten)', async () => {
 		const { container } = render(TranslationDisclaimer, {
 			props: { effectiveLocale: 'en', pageLocale: 'en' }
 		});
-		const el = container.querySelector('[data-testid="translation-disclaimer"]');
-		expect(el).not.toBeNull();
-		expect(el?.getAttribute('data-variant')).toBe('translated');
-		expect(el?.getAttribute('lang')).toBe('en');
-		expect(el?.textContent).toContain(
-			'Translated from German source. Original DE version remains authoritative.'
-		);
+		expect(container.querySelector('[data-testid="translation-disclaimer"]')).toBeNull();
 	});
 
-	// Texte kommen aus Paraglide-Messages (messages/de.json), nicht aus
+	// Texte kommen aus einer Paraglide-Message (messages/de.json), nicht aus
 	// hartcodiertem Englisch -- Block A zeigt den Disclaimer zwar nie unter
 	// pageLocale=de (Master-Source rendert null), aber die Message selbst
 	// muss trotzdem für die Basis-Locale existieren + korrekt sein.
-	it('Disclaimer-Texte sind über Paraglide-Messages lokalisiert (de-Fassung existiert)', async () => {
+	it('Disclaimer-Text ist über eine Paraglide-Message lokalisiert (de-Fassung existiert)', async () => {
 		// pageLocale=de rendert nie (Master-Source), also über effectiveLocale
 		// !== pageLocale einen anderen Nicht-Basis-Fall simulieren ist hier
 		// nicht nötig -- die Locale-Fähigkeit wird stattdessen direkt an der
@@ -50,15 +48,12 @@ describe('TranslationDisclaimer', () => {
 		expect(m.disclaimer_fallback_to_base(undefined, { locale: 'de' })).toBe(
 			'Diese Seite wird auf Deutsch angezeigt, weil die englische Übersetzung noch nicht verfügbar ist.'
 		);
-		expect(m.disclaimer_translated(undefined, { locale: 'de' })).toBe(
-			'Übersetzt aus der deutschen Quelle. Die deutsche Originalversion bleibt maßgeblich.'
-		);
 	});
 
-	it('rendert optionalen Link auf andere Locale-Variante', async () => {
+	it('rendert optionalen Link auf andere Locale-Variante (Fallback-Fall)', async () => {
 		const { container } = render(TranslationDisclaimer, {
 			props: {
-				effectiveLocale: 'en',
+				effectiveLocale: 'de',
 				pageLocale: 'en',
 				alternateLocaleHref: '/layer/laerm-2023'
 			}

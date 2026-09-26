@@ -4,6 +4,7 @@ import {
 	buildSitemapIndexXml,
 	collectPrerenderedUrls,
 	STATIC_PAGES_SOURCE,
+	WAHL_PORTAL_PAGE_SOURCE,
 	LAYER_DETAIL_SOURCE,
 	type SitemapEntry,
 	type SitemapSourceContext
@@ -180,19 +181,28 @@ describe('STATIC_PAGES_SOURCE', () => {
 		expect(entries.every((e) => e.lastmod === '2026-05-16T08:00:00.000Z')).toBe(true);
 	});
 
-	it('/berlin-wahlen fehlt wenn wahlPortalEnabled nicht gesetzt ist (Flag aus)', () => {
-		const entries = STATIC_PAGES_SOURCE(ctx());
-		expect(entries.some((e) => e.loc === 'https://navigator.berlin/berlin-wahlen')).toBe(false);
-	});
-
-	it('emittiert /berlin-wahlen wenn wahlPortalEnabled=true', () => {
-		const entries = STATIC_PAGES_SOURCE(ctx({ wahlPortalEnabled: true }));
-		expect(entries.some((e) => e.loc === 'https://navigator.berlin/berlin-wahlen')).toBe(true);
-	});
-
 	it('skips EN locale entirely in phase 1 (returns empty)', () => {
 		const entries = STATIC_PAGES_SOURCE(ctx({ locale: 'en' }));
 		expect(entries).toEqual([]);
+	});
+});
+
+describe('WAHL_PORTAL_PAGE_SOURCE (i18n Block B: /berlin-wahlen main page, split out of STATIC_PAGES_SOURCE)', () => {
+	it('leer wenn wahlPortalEnabled nicht gesetzt ist (Flag aus)', () => {
+		const entries = WAHL_PORTAL_PAGE_SOURCE(ctx());
+		expect(entries).toEqual([]);
+	});
+
+	it('emittiert /berlin-wahlen (DE, kein Praefix) wenn wahlPortalEnabled=true', () => {
+		const entries = WAHL_PORTAL_PAGE_SOURCE(ctx({ wahlPortalEnabled: true }));
+		expect(entries).toHaveLength(1);
+		expect(entries[0].loc).toBe('https://navigator.berlin/berlin-wahlen');
+	});
+
+	it('emittiert /en/berlin-wahlen fuer locale=en (die zentrale Register-Gate filtert spaeter, nicht hier)', () => {
+		const entries = WAHL_PORTAL_PAGE_SOURCE(ctx({ wahlPortalEnabled: true, locale: 'en' }));
+		expect(entries).toHaveLength(1);
+		expect(entries[0].loc).toBe('https://navigator.berlin/en/berlin-wahlen');
 	});
 });
 
@@ -231,8 +241,38 @@ describe('collectPrerenderedUrls', () => {
 		expect(locs).toContain('https://navigator.berlin/layer/bezirke');
 	});
 
-	it('returns empty for EN locale phase 1', () => {
+	it('returns empty for EN locale when nothing is registered as translated (e.g. wahlPortalEnabled off)', () => {
 		const entries = collectPrerenderedUrls(ctx({ locale: 'en' }));
 		expect(entries).toEqual([]);
+	});
+
+	it('i18n Block B: EN locale includes /en/berlin-wahlen once wahlPortalEnabled + register entry exist', () => {
+		const entries = collectPrerenderedUrls(ctx({ locale: 'en', wahlPortalEnabled: true }));
+		const locs = entries.map((e) => e.loc);
+		expect(locs).toEqual(['https://navigator.berlin/en/berlin-wahlen']);
+	});
+
+	it('i18n Block B: /berlin-wahlen (DE) gets an EN alternate once registered + enabled', () => {
+		const entries = collectPrerenderedUrls(ctx({ wahlPortalEnabled: true }));
+		const portal = entries.find((e) => e.loc === 'https://navigator.berlin/berlin-wahlen');
+		expect(portal?.alternates).toEqual([
+			{ hreflang: 'de', href: 'https://navigator.berlin/berlin-wahlen' },
+			{ hreflang: 'en', href: 'https://navigator.berlin/en/berlin-wahlen' },
+			{ hreflang: 'x-default', href: 'https://navigator.berlin/berlin-wahlen' }
+		]);
+	});
+
+	it('a page with no translated counterpart gets no alternates', () => {
+		const entries = collectPrerenderedUrls(ctx());
+		const methodik = entries.find((e) => e.loc === 'https://navigator.berlin/methodik');
+		expect(methodik?.alternates).toBeUndefined();
+	});
+
+	it('i18n Block B: a wahl-detail slug (DE) also gets its EN alternate', () => {
+		const entries = collectPrerenderedUrls(
+			ctx({ wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }] })
+		);
+		const detail = entries.find((e) => e.loc.endsWith('/berlin-wahlen/2025-btw-zweitstimme'));
+		expect(detail?.alternates?.some((a) => a.hreflang === 'en')).toBe(true);
 	});
 });

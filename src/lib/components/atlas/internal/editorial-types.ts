@@ -16,7 +16,11 @@ export type DisclaimerVariant =
 	| 'cross-layer-template'
 	| 'brw-not-aggregatable'
 	| 'level-below-threshold'
-	| 'wahl-portal-footnote';
+	| 'wahl-portal-footnote'
+	// i18n Block B (Review-Fund): eigene Variante fuer die Wahl-Detailseite,
+	// getrennt von `wahl-stimmenanteile` (Kiez-Inspector/Compare-Modus bleiben
+	// DE-only, „Keine anderen Seiten übersetzen"). Nur diese Variante lokalisiert.
+	| 'wahl-portal-stimmenanteile';
 
 export type EditorialCustomComponent = 'MauerSektorenDetail';
 

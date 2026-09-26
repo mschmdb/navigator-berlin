@@ -24,6 +24,7 @@ import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
 import { buildIndex, type FeatureIndex } from '$lib/data/internal/spatial-index.js';
 import { gruppeIdFromGeo, type GeoUwbProps } from '$lib/data/wahl-geo-mapping.js';
 import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
+import type { Locale } from '$lib/paraglide/runtime';
 import type { WinnerApiRow } from './winner-map-data.js';
 
 export type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error';
@@ -176,8 +177,10 @@ export class StimmbezirkLoader {
 	/** Wie `resolveAddress`, liefert aber den Gruppen-Anzeige-Namen
 	 * ("Stimmbezirke 726, 727 und Briefwahl 7P") statt der rohen Gruppen-ID
 	 * -- für nutzersichtbare Hinweistexte (Review-Fund: der Adress-Hinweis
-	 * zeigte bisher die rohe uwbId/Gruppen-ID statt der benannten Gruppe). */
-	resolveAddressLabel(lat: number, lng: number): string | null {
+	 * zeigte bisher die rohe uwbId/Gruppen-ID statt der benannten Gruppe).
+	 * `locale` optional (i18n Block B: `winner-map-address.svelte.ts` reicht
+	 * seine explizite Locale durch, statt sich auf `getLocale()` zu verlassen). */
+	resolveAddressLabel(lat: number, lng: number, locale?: Locale): string | null {
 		if (!this.geometry) return null;
 		const feature = this.#findFeature(lat, lng);
 		if (!feature) return null;
@@ -185,6 +188,8 @@ export class StimmbezirkLoader {
 		const gruppeId = gruppeIdFromGeo(props, this.geometry.wahlSlug);
 		if (!gruppeId) return null;
 		const members = props.MEMBERS;
-		return gruppenAnzeigeName(gruppeId, typeof members === 'string' ? members : undefined);
+		return gruppenAnzeigeName(gruppeId, typeof members === 'string' ? members : undefined, {
+			locale
+		});
 	}
 }

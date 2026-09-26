@@ -194,15 +194,25 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 	);
 });
 
-// i18n Block A: EN-Sitemap existiert als eigener Endpoint, bleibt aber leer
-// bis das Übersetzungs-Register (`translation-register.ts`) Seiten markiert.
+// i18n Block A/B: EN-Sitemap existiert als eigener Endpoint. Block A ließ
+// ihn wegen des leeren Übersetzungs-Registers leer; Block B registriert
+// /berlin-wahlen + Detailseiten, der echte Handler liefert die jetzt.
 describe('routes/sitemap-en.xml/+server.ts (EN)', () => {
 	it(
-		'returns a valid, empty urlset (translation register ships empty in Block A)',
+		'returns a valid urlset containing /en/berlin-wahlen (wahlPortalEnabled=true seit Block A)',
 		{
 			timeout: 20_000
 		},
 		async () => {
+			// Explizite Mocks statt auf Ambient-Zustand zu vertrauen: `vi.doMock`
+			// aus früheren Tests dieser Datei (featureFlags.wahlPortal=false,
+			// eine 2026-bvv-Wahlen-Fixture) bleibt sonst über `vi.resetModules()`
+			// hinweg registriert und sickert in diesen Test durch (Review-Fund,
+			// Muster wie die bestehenden sitemap-de.xml-Tests in dieser Datei).
+			vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
+			vi.doMock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+				getWahlList: vi.fn(async () => [])
+			}));
 			const mod = await import('../../routes/sitemap-en.xml/+server.js');
 			const response = await mod.GET(
 				makeEvent('https://navigator.berlin/sitemap-en.xml') as Parameters<typeof mod.GET>[0]
@@ -211,8 +221,49 @@ describe('routes/sitemap-en.xml/+server.ts (EN)', () => {
 			expect(response.headers.get('content-type')).toMatch(/(application\/xml|text\/xml)/i);
 			const body = await response.text();
 			expect(body).toContain('<urlset');
-			expect(body).not.toContain('<url>');
-			expect(body).not.toContain('<loc>');
+			expect(body).toContain('https://navigator.berlin/en/berlin-wahlen</loc>');
+			// Bezirk/Kiez/Layer bleiben unregistriert, tauchen in en.xml nicht auf.
+			expect(body).not.toContain('/en/layer/');
+			expect(body).not.toContain('/en/bezirk/');
+		}
+	);
+
+	it(
+		'liefert /en/berlin-wahlen/<slug>-Detailseiten mit echter DB (gemockt)',
+		{ timeout: 20_000 },
+		async () => {
+			const originalDatabaseUrl = process.env.DATABASE_URL;
+			process.env.DATABASE_URL = 'postgres://test/test';
+			vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
+			vi.doMock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+				getWahlList: vi.fn(async () => [
+					{
+						id: 1,
+						jahr: 2025,
+						typ: 'btw',
+						stimmtyp: 'zweitstimme',
+						isRepeatElection: false,
+						parentElectionId: null,
+						sourceUrl: 'https://www.bundeswahlleiterin.de/x.csv',
+						license: 'dl-de/by-2-0',
+						vorlaeufig: false,
+						sourceUpdatedAt: null
+					}
+				])
+			}));
+			try {
+				const mod = await import('../../routes/sitemap-en.xml/+server.js');
+				const response = await mod.GET(
+					makeEvent('https://navigator.berlin/sitemap-en.xml') as Parameters<typeof mod.GET>[0]
+				);
+				const body = await response.text();
+				expect(body).toContain(
+					'https://navigator.berlin/en/berlin-wahlen/2025-btw-zweitstimme</loc>'
+				);
+			} finally {
+				if (originalDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+				else process.env.DATABASE_URL = originalDatabaseUrl;
+			}
 		}
 	);
 

@@ -6,8 +6,11 @@
  * unit-testbar; die reaktive Hover-/Fokus-Ablage (`$state`) bleibt in
  * `sankey-wahljahre.svelte` (Muster: dünne reaktive Hülle um reine Logik).
  */
+import { m } from '$lib/paraglide/messages.js';
+import type { LocaleFormatOptions } from '$lib/i18n/format.js';
 import type { SankeyPositionedLink, SankeyPositionedNode } from './sankey-d3.svelte.js';
 import type { SankeyTooltipContent } from './sankey-tooltip.svelte';
+import { parteiDisplayName } from './winner-map-data.js';
 
 /** Eindeutiger Schlüssel eines Bandes für den Hover-Dimm-Vergleich. */
 export function linkKey(link: Pick<SankeyPositionedLink, 'source' | 'target'>): string {
@@ -18,8 +21,16 @@ export function linkKey(link: Pick<SankeyPositionedLink, 'source' | 'target'>): 
  * Tooltip-Text für ein Band: Von → Nach mit Jahr + Anzahl Gebiete
  * (I/O-Matrix „Hover Band").
  */
-export function tooltipContentForLink(link: SankeyPositionedLink): SankeyTooltipContent {
-	return { title: `${link.von} → ${link.nach}`, detail: `${link.jahr}: ${link.value} Gebiete` };
+export function tooltipContentForLink(
+	link: SankeyPositionedLink,
+	opts?: LocaleFormatOptions
+): SankeyTooltipContent {
+	const detailMessage =
+		link.value === 1 ? m.wahl_portal_sankey_band_detail_singular : m.wahl_portal_sankey_band_detail_plural;
+	return {
+		title: `${parteiDisplayName(link.von, opts)} → ${parteiDisplayName(link.nach, opts)}`,
+		detail: detailMessage({ jahr: link.jahr, value: link.value }, { locale: opts?.locale })
+	};
 }
 
 /**
@@ -30,10 +41,17 @@ export function tooltipContentForLink(link: SankeyPositionedLink): SankeyTooltip
  */
 export function tooltipContentForNode(
 	node: SankeyPositionedNode,
-	gebieteMitDatenByJahr: ReadonlyMap<number, number>
+	gebieteMitDatenByJahr: ReadonlyMap<number, number>,
+	opts?: LocaleFormatOptions
 ): SankeyTooltipContent {
 	const total = gebieteMitDatenByJahr.get(node.jahr) ?? node.anzahl;
-	return { title: node.label, detail: `stärkste Kraft in ${node.anzahl} von ${total} Gebieten` };
+	return {
+		title: parteiDisplayName(node.label, opts),
+		detail: m.wahl_portal_sankey_node_detail(
+			{ count: node.anzahl, total },
+			{ locale: opts?.locale }
+		)
+	};
 }
 
 /** Hover-Highlight (nur Bänder dimmen, Knoten bleiben immer voll sichtbar,

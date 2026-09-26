@@ -8,6 +8,8 @@
  * Wahl" ist das nächstkleinere Jahr, das in den Punkten tatsächlich
  * vorkommt (nicht zwingend `jahr - 1`, Wahlen finden nicht jährlich statt).
  */
+import { m } from '$lib/paraglide/messages.js';
+import { formatPercentagePointsDelta, type LocaleFormatOptions } from '$lib/i18n/format.js';
 import { formatAnteilPct } from './winner-map-data.js';
 
 /** Ein Punkt aus der Series-API-Response (`points[]`), identisch für
@@ -51,15 +53,16 @@ export interface ErgebnisPanelData {
 const SONSTIGE = 'Sonstige';
 
 /**
- * `±x,x Pp.` mit echtem Plus/Minus (U+2212, kein U+00B1), de-DE-Komma.
- * Story 8 (Trends): auch für `slope×100` (Pp./Jahr) in der Trend-Karten-
- * Tabelle und deren Takeaway (`trends-map-data.ts`) wiederverwendet
+ * `±x,x Pp.` (de) / `±x.x pp` (en) mit echtem Plus/Minus (U+2212, kein
+ * U+00B1). Story 8 (Trends): auch für `slope×100` (Pp./Jahr) in der Trend-
+ * Karten-Tabelle und deren Takeaway (`trends-map-data.ts`) wiederverwendet
  * (Boundary Code-Map: „Bestands-Helfer", keine zweite Formatierung).
+ * Delegiert an `formatPercentagePointsDelta` ($lib/i18n/format.ts, i18n
+ * Block B) -- DE-Ausgabe bleibt byte-identisch zur vorherigen manuellen
+ * `.toFixed(1).replace('.', ',')`-Variante.
  */
-export function formatDeltaLabel(deltaPp: number): string {
-	const sign = deltaPp < 0 ? '−' : '+';
-	const abs = Math.abs(deltaPp).toFixed(1).replace('.', ',');
-	return `${sign}${abs} Pp.`;
+export function formatDeltaLabel(deltaPp: number, opts?: LocaleFormatOptions): string {
+	return formatPercentagePointsDelta(deltaPp, { locale: opts?.locale });
 }
 
 /**
@@ -78,7 +81,8 @@ function deltaPpBetween(current: number, previous: number): number {
  */
 export function buildErgebnisPanelRows(
 	points: readonly ErgebnisSeriesPoint[],
-	jahr: number
+	jahr: number,
+	opts?: LocaleFormatOptions
 ): ErgebnisPanelData {
 	const jahre = Array.from(new Set(points.map((p) => p.jahr))).sort((a, b) => a - b);
 	const idx = jahre.indexOf(jahr);
@@ -107,9 +111,9 @@ export function buildErgebnisPanelRows(
 			partei: p.partei,
 			farbeHex: p.farbe_hex,
 			anteil: p.anteil,
-			anteilLabel: formatAnteilPct(p.anteil),
+			anteilLabel: formatAnteilPct(p.anteil, 1, opts),
 			deltaPp,
-			deltaLabel: deltaPp !== null ? formatDeltaLabel(deltaPp) : null
+			deltaLabel: deltaPp !== null ? formatDeltaLabel(deltaPp, opts) : null
 		};
 	});
 
@@ -124,6 +128,8 @@ export function buildErgebnisPanelRows(
 
 /** Text für das Vorjahres-Label neben den Delta-Badges (Wiederholungswahl-
  * Kontext, z. B. „vs. 2021"); `null` = erste Wahl der Reihe, keine Anzeige. */
-export function vorjahrLabel(vorjahr: number | null): string | null {
-	return vorjahr !== null ? `vs. ${vorjahr}` : null;
+export function vorjahrLabel(vorjahr: number | null, opts?: LocaleFormatOptions): string | null {
+	return vorjahr !== null
+		? m.wahl_portal_vorjahr_label({ jahr: vorjahr }, { locale: opts?.locale })
+		: null;
 }

@@ -1,7 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import KartenSteuerung from './karten-steuerung.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const JAHR_OPTIONS = [
 	{ jahr: 2023, isRepeatElection: true },
@@ -43,6 +48,16 @@ describe('KartenSteuerung', () => {
 			.toBeInTheDocument();
 		const el = page.getByTestId('steuerleiste-jahr-2021-wiederholung');
 		await expect.element(el).not.toBeInTheDocument();
+	});
+
+	// Review-Fund (i18n Block B): "·W" war ein hartcodiertes Literal, jetzt
+	// eine Message -- EN zeigt "·R" statt "·W".
+	it('EN: Wiederholungswahl-Chip-Marker zeigt "·R" statt "·W"', async () => {
+		overwriteGetLocale(() => 'en');
+		render(KartenSteuerung, baseProps());
+		await expect
+			.element(page.getByTestId('steuerleiste-jahr-2023-wiederholung'))
+			.toHaveTextContent('·R');
 	});
 
 	it('Klick auf Jahr/Ebene ruft die jeweiligen Callbacks', async () => {

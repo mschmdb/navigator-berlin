@@ -18,7 +18,26 @@ describe('PortalQuellen', () => {
 		await page.getByTestId('portal-quellen-trigger').click();
 		await expect
 			.element(page.getByTestId('portal-quellen-item-Bundeswahlleiterin'))
-			.toHaveTextContent('dl-de/by-2-0');
+			.toHaveTextContent('Datenlizenz Deutschland Namensnennung 2.0');
+	});
+
+	// Review-Fund (i18n Block B): Lizenz-Anzeige geht jetzt über
+	// `licenseDisplayLabel` (ausgeschriebener Name statt Rohcode); das
+	// API-Feld selbst (`quelle.license`) bleibt unveraendert.
+	it('EN: zeigt den ausgeschriebenen Lizenz-Namen statt des Rohcodes', async () => {
+		const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
+		overwriteGetLocale(() => 'en');
+		try {
+			render(PortalQuellen, {
+				quellen: [{ name: 'Bundeswahlleiterin', license: 'dl-de/by-2-0' }]
+			});
+			await page.getByTestId('portal-quellen-trigger').click();
+			await expect
+				.element(page.getByTestId('portal-quellen-item-Bundeswahlleiterin'))
+				.toHaveTextContent('Data licence Germany, attribution, version 2.0');
+		} finally {
+			overwriteGetLocale(() => 'de');
+		}
 	});
 
 	it('zeigt Leer-Hinweis ohne Quellen', async () => {

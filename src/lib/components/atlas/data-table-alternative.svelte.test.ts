@@ -36,6 +36,26 @@ describe('DataTableAlternative', () => {
 		expect(screen.container.querySelector('table')).toBeNull();
 	});
 
+	// Review-Fund (i18n Block B): die Defaults duerfen NICHT `getLocale()`-
+	// basiert sein -- diese Komponente ist projektweit geteilt (Klima-
+	// Tabellen u.a.), ein locale-abhaengiger Default wuerde auf nicht
+	// uebersetzten `/en/...`-Seiten faelschlich Englisch zeigen. Das
+	// Wahlportal uebergibt seine eigenen Messages explizit als Props.
+	it('Default-Toggle-/Close-Label ohne explizite Props bleiben deutsche Literale', async () => {
+		const screen = render(
+			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,
+			{
+				columns: COLUMNS,
+				rows: ROWS,
+				caption: 'Layer-Daten'
+			} as unknown as Parameters<typeof render>[1]
+		);
+		const toggle = screen.getByTestId('table-toggle');
+		expect((await toggle.element()).textContent).toContain('Als Tabelle ansehen');
+		await toggle.click();
+		expect((await toggle.element()).textContent).toContain('Tabelle schließen');
+	});
+
 	it('öffnet Tabelle bei Toggle-Klick', async () => {
 		const screen = render(
 			DataTableAlternative as unknown as typeof DataTableAlternative<Row>,

@@ -2,18 +2,18 @@
 	import { onMount, untrack } from 'svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import { m } from '$lib/paraglide/messages.js';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import { buildDataCatalog } from '$lib/seo/jsonld-datacatalog.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { featureFlags } from '$lib/data/feature-flags.js';
+	import { wahlReiheLabel, wahlEbeneLabel } from '$lib/data/wahl-labels.js';
 	import {
 		parsePortalState,
 		serializePortalState,
 		DEFAULT_REIHE,
 		DEFAULT_EBENE,
-		REIHE_LABELS,
-		EBENE_LABELS,
 		type WahlPortalReihe,
 		type WahlPortalEbene
 	} from '$lib/utils/wahl-portal-url-state.js';
@@ -147,71 +147,71 @@
 	// eigenes Kapitel um, das Trends-Badge nennt die Ebene deshalb wieder
 	// (Review Triage Log #11). Extreme (Small Multiples) folgt dagegen dem
 	// Karten-Jahr (`currentJahr`), fest auf Kiez-Ebene.
-	const kontextReiheLabel = $derived(REIHE_LABELS[portal.reihe]);
-	const kontextEbeneKiezText = `${EBENE_LABELS.kiez}-Ebene`;
-	const kontextAlleWahljahreText = 'alle Wahljahre';
+	const kontextReiheLabel = $derived(wahlReiheLabel(portal.reihe));
+	const kontextEbeneKiezText = $derived(
+		m.wahl_portal_kontext_ebene_label({ ebene: wahlEbeneLabel('kiez') })
+	);
+	const kontextAlleWahljahreText = $derived(m.wahl_portal_kontext_alle_wahljahre());
 	// Review Triage Log #7: `resolvedJahr === null` heißt keine Daten geladen,
 	// das Kapitel zeigt dann einen Leerzustand -- "alle Wahljahre" würde eine
 	// Auswahl suggerieren, die es nicht gibt.
 	const kontextExtremeJahreText = $derived(
-		resolvedJahr !== null ? `Wahl ${resolvedJahr}` : 'kein Wahljahr geladen'
+		resolvedJahr !== null
+			? m.wahl_portal_kontext_wahl_jahr({ jahr: resolvedJahr })
+			: m.wahl_portal_kontext_kein_wahljahr_geladen()
 	);
 
-	const KARTE_CHAPTER = { id: 'karte', label: 'Karte' } as const;
-	const WECHSEL_CHAPTER = { id: 'wechsel', label: 'Wechsel' } as const;
-	const TRENDS_CHAPTER = { id: 'trends', label: 'Trends' } as const;
+	const KARTE_CHAPTER = $derived({ id: 'karte', label: m.wahl_portal_nav_karte() });
+	const WECHSEL_CHAPTER = $derived({ id: 'wechsel', label: m.wahl_portal_nav_wechsel() });
+	const TRENDS_CHAPTER = $derived({ id: 'trends', label: m.wahl_portal_nav_trends() });
 	// Story 12: eigenes Kapitel für den Sankey -- vorher versteckte er sich als
 	// Unterabschnitt im Trends-Kapitel ohne eigenen Nav-Eintrag.
-	const UEBERGAENGE_CHAPTER = { id: 'uebergaenge', label: 'Übergänge' } as const;
-	const EXTREME_CHAPTER = { id: 'extreme-gebiete', label: 'Extreme' } as const;
+	const UEBERGAENGE_CHAPTER = $derived({
+		id: 'uebergaenge',
+		label: m.wahl_portal_nav_uebergaenge()
+	});
+	const EXTREME_CHAPTER = $derived({ id: 'extreme-gebiete', label: m.wahl_portal_nav_extreme() });
 
 	// Review Triage Log #6: die Platzhalter-Kapitel „Kontraste"/„Dein Kiez"/
 	// „Wahl × Atlas" standen hier ohne zugehörige Story -- Matze strich sie am
 	// 20.09. 15:41 (siehe stories.yaml Story 10). Sie kommen mit ihren neuen
 	// Stories zurück, bis dahin bleibt nur die Nav ohne diese Einträge.
-	const NAV_CHAPTERS = [
-		{ id: 'ueberblick', label: 'Überblick' },
+	const NAV_CHAPTERS = $derived([
+		{ id: 'ueberblick', label: m.wahl_portal_nav_ueberblick() },
 		KARTE_CHAPTER,
 		WECHSEL_CHAPTER,
 		TRENDS_CHAPTER,
 		UEBERGAENGE_CHAPTER,
 		EXTREME_CHAPTER,
-		{ id: 'methodik', label: 'Methodik' }
-	];
+		{ id: 'methodik', label: m.wahl_portal_nav_methodik() }
+	]);
 
 	// Story 12: Erklär-Subtexte direkt unter jeder Kapitel-Überschrift -- was
-	// zeigt das Kapitel, wie liest man es. Statische Strings (Boundary: keine
-	// neuen Datenpfade), lint:wahl-konform. Der Überblick-Header bekommt
-	// bewusst keinen eigenen: `pageDescription` deckt das dort bereits ab.
-	const KARTE_SUBTEXT =
-		'Im Gewinner-Tab zeigt die Färbung die stärkste Kraft je Gebiet, in den Partei-Tabs den Anteil der gewählten Partei. Jahr und Ebene gelten nur für dieses Kapitel.';
-	const WECHSEL_SUBTEXT =
-		'Die Karte zählt, wie oft ein Gebiet innerhalb der gewählten Wahl-Reihe die stärkste Kraft wechselte. Die Liste darunter nennt die Wechsel mit Jahr, alter und neuer Partei.';
-	const TRENDS_SUBTEXT =
-		'Die Karte zeigt Richtung und Stärke der Stimmenanteil-Entwicklung je Partei, wahlweise die Volatilität aller Parteien zusammen. Toggle und Partei-Chips wechseln nur die Einfärbung, kein neuer Datenabruf.';
-	const UEBERGAENGE_SUBTEXT =
-		'Jede Spalte steht für ein Wahljahr, jedes Band bündelt Gebiete mit derselben Partei-Abfolge zwischen zwei Wahlen, auch ohne Wechsel der stärksten Kraft. Hover oder Fokus zeigt die genauen Zahlen.';
-	const EXTREME_SUBTEXT =
-		'Die Karten zeigen je Partei das Gebiet mit dem höchsten und dem niedrigsten Stimmenanteil im gewählten Jahr.';
-	const METHODIK_SUBTEXT =
-		'Hier stehen die Quellen und Lizenzen aller Wahl-Datensätze, mit Links zur ausführlichen Methodik-Seite und zur Lizenzübersicht.';
+	// zeigt das Kapitel, wie liest man es. Message-Aufruf statt Modul-Konstante
+	// (Boundary: keine Texte als Modul-Konstante, Auswertung beim Aufruf),
+	// lint:wahl-konform. Der Überblick-Header bekommt bewusst keinen eigenen:
+	// `pageDescription` deckt das dort bereits ab.
+	const KARTE_SUBTEXT = $derived(m.wahl_portal_chapter_karte_subtext());
+	const WECHSEL_SUBTEXT = $derived(m.wahl_portal_chapter_wechsel_subtext());
+	const TRENDS_SUBTEXT = $derived(m.wahl_portal_chapter_trends_subtext());
+	const UEBERGAENGE_SUBTEXT = $derived(m.wahl_portal_chapter_uebergaenge_subtext());
+	const EXTREME_SUBTEXT = $derived(m.wahl_portal_chapter_extreme_subtext());
+	const METHODIK_SUBTEXT = $derived(m.wahl_portal_chapter_methodik_subtext());
 
-	const pageTitle = 'Berlin-Wahlen - Wahlergebnisse auf der Karte - navigator.berlin';
-	const pageDescription =
-		'Bundestags-, Abgeordnetenhaus- und BVV-Wahlen in Berlin seit 2011: Karte, Wechsel, Trends und Wahljahre im Übergang je Kiez und Bezirk.';
+	const pageTitle = $derived(m.wahl_portal_page_title());
+	const pageDescription = $derived(m.wahl_portal_page_description());
 
 	const dataCatalogJsonLd = $derived(
 		buildDataCatalog({
 			origin,
-			name: 'navigator.berlin Wahldaten-Katalog',
+			name: m.wahl_portal_datacatalog_name(),
 			description: pageDescription,
 			urlPath: '/berlin-wahlen',
 			publisherName: 'Matze Schmidbauer',
 			datasets: [
 				{
-					name: 'Berliner Wahlergebnisse seit 2011',
-					description:
-						'Bundestags-, Abgeordnetenhaus- und BVV-Wahlergebnisse je Stimmbezirk, Kiez, Bezirk und Berlin gesamt.',
+					name: m.wahl_portal_dataset_name(),
+					description: m.wahl_portal_dataset_description(),
 					urlPath: '/berlin-wahlen',
 					license: 'dl-de/by-2-0'
 				}
@@ -224,7 +224,7 @@
 			origin,
 			items: [
 				{ name: 'Berlin', path: '/' },
-				{ name: 'Berlin-Wahlen', path: '/berlin-wahlen' }
+				{ name: m.wahl_portal_h1(), path: '/berlin-wahlen' }
 			]
 		})
 	);
@@ -236,7 +236,7 @@
 	{pathname}
 	{origin}
 	ogImage={`${origin}/og/page/berlin-wahlen.png`}
-	ogImageAlt="navigator.berlin Berlin-Wahlen"
+	ogImageAlt={`navigator.berlin ${m.wahl_portal_h1()}`}
 	noindex={!featureFlags.wahlPortal}
 />
 <JsonLd data={dataCatalogJsonLd} testid="berlin-wahlen-datacatalog-jsonld" />
@@ -258,8 +258,8 @@
 		data-testid="wahl-portal-chapter-ueberblick"
 		class="flex scroll-mt-[calc(var(--header-height,72px)+5.5rem)] flex-col gap-6 pb-10"
 	>
-		<p class="font-mono text-xs tracking-wider text-accent uppercase">Wahlen in Berlin</p>
-		<h1 class="font-serif text-4xl text-ink md:text-5xl">Berlin-Wahlen</h1>
+		<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.wahl_portal_eyebrow()}</p>
+		<h1 class="font-serif text-4xl text-ink md:text-5xl">{m.wahl_portal_h1()}</h1>
 		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
 			{pageDescription}
 		</p>
@@ -270,7 +270,7 @@
 
 	<KapitelSection
 		id={KARTE_CHAPTER.id}
-		title="Karte"
+		title={m.wahl_portal_nav_karte()}
 		testid="wahl-portal-chapter-karte"
 		subtext={KARTE_SUBTEXT}
 	>
@@ -290,7 +290,7 @@
 
 	<KapitelSection
 		id={WECHSEL_CHAPTER.id}
-		title="Wechsel der stärksten Kraft"
+		title={m.wahl_portal_chapter_wechsel_titel()}
 		testid="wahl-portal-chapter-wechsel"
 		subtext={WECHSEL_SUBTEXT}
 	>
@@ -304,7 +304,7 @@
 
 	<KapitelSection
 		id={TRENDS_CHAPTER.id}
-		title="Trends und Volatilität"
+		title={m.wahl_portal_chapter_trends_titel()}
 		testid="wahl-portal-chapter-trends"
 		subtext={TRENDS_SUBTEXT}
 	>
@@ -318,7 +318,7 @@
 
 	<KapitelSection
 		id={UEBERGAENGE_CHAPTER.id}
-		title="Wahljahre im Übergang"
+		title={m.wahl_portal_chapter_uebergaenge_titel()}
 		testid="wahl-portal-chapter-uebergaenge"
 		subtext={UEBERGAENGE_SUBTEXT}
 	>
@@ -330,7 +330,7 @@
 
 	<KapitelSection
 		id={EXTREME_CHAPTER.id}
-		title="Stärkste und schwächste Gebiete"
+		title={m.wahl_portal_chapter_extreme_titel()}
 		testid="wahl-portal-chapter-extreme-gebiete"
 		subtext={EXTREME_SUBTEXT}
 	>
@@ -344,7 +344,7 @@
 				<SmallMultiples />
 			{:else}
 				<p data-testid="extreme-gebiete-lazy-hinweis" class="font-serif text-ink-muted">
-					Das Kapitel lädt, sobald es sichtbar wird.
+					{m.wahl_portal_lazy_hinweis()}
 				</p>
 			{/if}
 		</div>
@@ -352,7 +352,7 @@
 
 	<KapitelSection
 		id="methodik"
-		title="Methodik & Quellen"
+		title={m.wahl_portal_chapter_methodik_titel()}
 		testid="wahl-portal-chapter-methodik"
 		subtext={METHODIK_SUBTEXT}
 	>

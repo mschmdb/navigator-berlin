@@ -55,6 +55,13 @@ describe('tooltipContentForLink', () => {
 		expect(content.title).toBe('SPD → GRÜNE');
 		expect(content.detail).toBe('2023: 3 Gebiete');
 	});
+
+	it('EN: „Jahr: N areas"', () => {
+		const l = link({ von: 'SPD', nach: 'GRÜNE', jahr: 2023, value: 3 });
+		const content = tooltipContentForLink(l, { locale: 'en' });
+		expect(content.title).toBe('SPD → GRÜNE');
+		expect(content.detail).toBe('2023: 3 areas');
+	});
 });
 
 describe('columnXByJahrFromNodes', () => {
@@ -97,5 +104,12 @@ describe('tooltipContentForNode', () => {
 		const content = tooltipContentForNode(n, new Map([[2023, 143]]));
 		expect(content.title).toBe('CDU');
 		expect(content.detail).toBe('stärkste Kraft in 120 von 143 Gebieten');
+	});
+
+	it('EN: „leads in N of M areas"', () => {
+		const n = node({ label: 'CDU', partei: 'CDU', anzahl: 120, jahr: 2023 });
+		const content = tooltipContentForNode(n, new Map([[2023, 143]]), { locale: 'en' });
+		expect(content.title).toBe('CDU');
+		expect(content.detail).toBe('leads in 120 of 143 areas');
 	});
 });

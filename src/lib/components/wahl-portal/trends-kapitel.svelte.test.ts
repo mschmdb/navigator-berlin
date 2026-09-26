@@ -232,6 +232,52 @@ describe('trends-kapitel.svelte', () => {
 			.toHaveAttribute('aria-describedby', 'trends-kapitel-volatilitaet-hinweis');
 	});
 
+	// Review-Fund (i18n Block B): die Trend-Legende (Schwellen-Labels) war
+	// zuvor eine `TREND_LEGENDE`-Modul-Konstante, jetzt `$derived` aus
+	// Messages + `formatPercentagePointsDelta` -- DE muss byte-identisch
+	// bleiben, EN muss korrekt formatieren (Punkt-Dezimaltrennzeichen, "pp").
+	it('Trend-Legende (Default-Toggle) zeigt die 6 Schwellen-Labels DE byte-identisch zum Alt-Stand', async () => {
+		const fetchFn = fakeFetch([
+			['/api/wahl/analytik', ANALYTIK],
+			['/api/wahl/winners', { winners: [] }],
+			['MANIFEST.json', MANIFEST],
+			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
+			['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC]
+		]);
+		render(TrendsKapitelContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn });
+		const legende = page.getByTestId('trends-kapitel-legende');
+		await expect.element(legende).toHaveTextContent('Stark fallend: ab −1,0 Pp./Jahr');
+		await expect.element(legende).toHaveTextContent('Leicht fallend: ab −0,2 Pp./Jahr');
+		await expect.element(legende).toHaveTextContent('Stabil: unter ±0,2 Pp./Jahr');
+		await expect.element(legende).toHaveTextContent('Leicht steigend: ab +0,2 Pp./Jahr');
+		await expect.element(legende).toHaveTextContent('Stark steigend: ab +1,0 Pp./Jahr');
+		await expect.element(legende).toHaveTextContent('Keine Daten');
+	});
+
+	it('EN: Trend-Legende zeigt dieselben 6 Schwellen-Labels korrekt uebersetzt/formatiert', async () => {
+		const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
+		overwriteGetLocale(() => 'en');
+		try {
+			const fetchFn = fakeFetch([
+				['/api/wahl/analytik', ANALYTIK],
+				['/api/wahl/winners', { winners: [] }],
+				['MANIFEST.json', MANIFEST],
+				['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
+				['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC]
+			]);
+			render(TrendsKapitelContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn });
+			const legende = page.getByTestId('trends-kapitel-legende');
+			await expect.element(legende).toHaveTextContent('Sharply falling: from −1.0 pp/year');
+			await expect.element(legende).toHaveTextContent('Slightly falling: from −0.2 pp/year');
+			await expect.element(legende).toHaveTextContent('Stable: below ±0.2 pp/year');
+			await expect.element(legende).toHaveTextContent('Slightly rising: from +0.2 pp/year');
+			await expect.element(legende).toHaveTextContent('Sharply rising: from +1.0 pp/year');
+			await expect.element(legende).toHaveTextContent('No data');
+		} finally {
+			overwriteGetLocale(() => 'de');
+		}
+	});
+
 	it('Volatilitäts-Modus: aria-describedby zeigt auf einen sichtbaren Hinweissatz an der Partei-Radiogroup (Review Triage Log #12)', async () => {
 		const fetchFn = fakeFetch([
 			['/api/wahl/analytik', ANALYTIK],

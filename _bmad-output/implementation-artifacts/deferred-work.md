@@ -107,3 +107,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-a-infra-routing.md`
   summary: Prerenderte `/de/…`-URLs antworten 200 statt 301 (Stale-Locale-Redirect greift nur für nicht prerenderte Routen).
   evidence: adapter-node liefert Prerender-Dateien vor `handle`, Paraglides `deLocalizeUrl` entfernt auch das Base-Präfix `de`; vorbestehend (hooks.ts unverändert). Canonical zeigt korrekt auf die Präfix-lose URL, SEO-Schaden gering. Fix bräuchte Reroute-Anpassung oder Redirect im `server.js` vor dem Handler.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b-wahlportal.md`
+  summary: `lint:wahl` in einen regulären Prüfpfad hängen (prebuild, `test` oder CI).
+  evidence: Der Lint prüft seit Block B auch die Message-Dateien inkl. EN-Tabuwörter, läuft aber nur manuell; ein „stronghold“ in `en.json` würde ausgeliefert.

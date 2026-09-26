@@ -21,7 +21,9 @@
 	 * Winner-Map hat nur einen einzigen Custom-Layer mit eigenen Properties.
 	 */
 	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { formatAnteilPct } from './internal/winner-map-data.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
+	import { formatAnteilPct, parteiDisplayName } from './internal/winner-map-data.js';
 
 	type Props = {
 		visible: boolean;
@@ -32,8 +34,6 @@
 	};
 
 	let { visible, pos, data, jahr, repeatElection }: Props = $props();
-
-
 </script>
 
 {#if visible && data}
@@ -54,14 +54,14 @@
 					class="inline-block h-2.5 w-2.5 rounded-sm border border-rule-strong"
 					style="background-color: {parteiColor(data.partei)};"
 				></span>
-				<span data-testid="winner-map-tooltip-partei">{data.partei}</span>
+				<span data-testid="winner-map-tooltip-partei">{parteiDisplayName(data.partei)}</span>
 				<span data-testid="winner-map-tooltip-anteil" class="tabular-nums"
 					>{formatAnteilPct(data.anteil)}</span
 				>
 			</p>
 		{:else}
 			<p class="mt-0.5 font-mono text-xs text-ink-subtle" data-testid="winner-map-tooltip-empty">
-				Keine Daten für dieses Gebiet
+				{m.wahl_portal_tooltip_keine_daten()}
 			</p>
 		{/if}
 		{#if jahr !== null}
@@ -69,12 +69,15 @@
 				class="mt-1 font-sans text-[10px] tracking-wide text-ink-subtle uppercase"
 				data-testid="winner-map-tooltip-jahr"
 			>
-				{jahr}{repeatElection ? ' · Wiederholungswahl' : ''}
+				{jahr}{repeatElection ? ` · ${wahlWiederholungLabel()}` : ''}
 			</p>
 		{/if}
 		{#if data.wechsel}
-			<p class="mt-0.5 font-mono text-[10px] text-ink-subtle" data-testid="winner-map-tooltip-wechsel">
-				Wechsel der stärksten Kraft in diesem Jahr
+			<p
+				class="mt-0.5 font-mono text-[10px] text-ink-subtle"
+				data-testid="winner-map-tooltip-wechsel"
+			>
+				{m.wahl_portal_tooltip_wechsel_hinweis()}
 			</p>
 		{/if}
 	</div>

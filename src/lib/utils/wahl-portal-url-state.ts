@@ -24,18 +24,6 @@ export const REIHE_VALUES: readonly WahlPortalReihe[] = ['btw', 'agh', 'bvv'];
 // keine Gebietskarte und kommt erst mit einem konkreten Kapitel-Bedarf.
 export const EBENE_VALUES: readonly WahlPortalEbene[] = ['stimmbezirk', 'kiez', 'bezirk'];
 
-export const REIHE_LABELS: Record<WahlPortalReihe, string> = {
-	btw: 'Bundestag',
-	agh: 'Abgeordnetenhaus',
-	bvv: 'BVV'
-};
-
-export const EBENE_LABELS: Record<WahlPortalEbene, string> = {
-	stimmbezirk: 'Stimmbezirk',
-	kiez: 'Kiez',
-	bezirk: 'Bezirk'
-};
-
 export interface WahlPortalUrlState {
 	readonly reihe: WahlPortalReihe;
 	/** `null` = kein expliziter User-Override, Context löst Default-Jahr auf. */

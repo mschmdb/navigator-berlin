@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { lintWahlText, WAHL_FORBIDDEN_PATTERNS } from './wahl-forbidden-tokens.js';
+import {
+	lintWahlText,
+	WAHL_FORBIDDEN_PATTERNS,
+	WAHL_FORBIDDEN_PATTERNS_EN
+} from './wahl-forbidden-tokens.js';
 
 describe('lintWahlText', () => {
 	it('passes clean text', () => {
@@ -85,5 +89,79 @@ describe('lintWahlText', () => {
 		const clean =
 			'Die SPD erreichte 32 Prozent. Stärkste Partei im Kiez. Deutlicher Vorsprung gegenüber 2017.';
 		expect(lintWahlText(clean).ok).toBe(true);
+	});
+});
+
+describe('lintWahlText mit WAHL_FORBIDDEN_PATTERNS_EN (i18n Block B, nur messages/en.json)', () => {
+	it('passes clean EN text', () => {
+		const result = lintWahlText(
+			'The strongest party reached 32 percent.',
+			WAHL_FORBIDDEN_PATTERNS_EN
+		);
+		expect(result.ok).toBe(true);
+	});
+
+	it('catches stronghold (singular + plural)', () => {
+		expect(lintWahlText('a Green stronghold', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+		expect(lintWahlText('traditional strongholds', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+	});
+
+	it('catches colour-coded districts', () => {
+		expect(lintWahlText('red districts dominate', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+		expect(lintWahlText('in green districts', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+	});
+
+	it('catches election winner/loser', () => {
+		expect(lintWahlText('SPD is the election winner', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+		expect(lintWahlText('the election loser', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+	});
+
+	it('catches vote king', () => {
+		expect(lintWahlText('the vote king', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+	});
+
+	it('catches landslide', () => {
+		expect(lintWahlText('a landslide victory', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+		expect(lintWahlText('landslide', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+	});
+
+	it('catches election debacle/disaster/collapse', () => {
+		expect(lintWahlText('an election debacle', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+		expect(lintWahlText('election disaster', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+	});
+
+	it('catches em-dash', () => {
+		expect(lintWahlText('SPD vs CDU — close win', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(false);
+	});
+
+	it('does not apply DE-only patterns like hochburg to EN text', () => {
+		// "hochburg" ist kein WAHL_FORBIDDEN_PATTERNS_EN-Eintrag; EN-Scan
+		// nutzt ausschließlich die EN-Musterliste.
+		expect(lintWahlText('Hochburg', WAHL_FORBIDDEN_PATTERNS_EN).ok).toBe(true);
+	});
+
+	it('all EN patterns have non-empty hint', () => {
+		for (const p of WAHL_FORBIDDEN_PATTERNS_EN) {
+			expect(p.hint.length).toBeGreaterThan(10);
+		}
+	});
+
+	// Matrix-Zeile "Lint" (spec-i18n-b-wahlportal.md): "EN-Text stronghold ->
+	// lint:wahl meldet Verstoß". Simuliert ein `messages/en.json`-Fragment mit
+	// einem verbotenen Wort, wie es `lint-wahl-editorial.ts` real scannt
+	// (JSON-Text, nicht Fließtext) -- belegt, dass ein Verstoß in echtem
+	// en.json-JSON von der EN-Musterliste gefunden würde.
+	it('findet einen Verstoß in einem en.json-artigen JSON-Ausschnitt (nicht nur in Fließtext)', () => {
+		const enJsonExcerpt = [
+			'{',
+			'\t"$schema": "https://inlang.com/schema/inlang-message-format",',
+			'\t"wahl_portal_beispiel": "SPD remains a stronghold in this district."',
+			'}'
+		].join('\n');
+		const result = lintWahlText(enJsonExcerpt, WAHL_FORBIDDEN_PATTERNS_EN);
+		expect(result.ok).toBe(false);
+		expect(result.violations).toHaveLength(1);
+		expect(result.violations[0].token).toBe('stronghold');
+		expect(result.violations[0].line).toBe(3);
 	});
 });

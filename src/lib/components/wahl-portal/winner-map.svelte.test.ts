@@ -608,3 +608,31 @@ describe('winner-map.svelte', () => {
 		await expect.element(page.getByTestId('winner-map-takeaway')).toHaveTextContent(/CDU/);
 	});
 });
+
+// Review-Fund (i18n Block B): der Fallback-Hinweis nutzte vorher
+// `jahr ?? 0` (zeigte "0:" statt eines Jahres) und `${label}e`-Anhaengen
+// fuer den Plural (auf EN nicht uebertragbar, z. B. "Polling districte").
+// Beide Baustellen sind jetzt eigene Message-Keys je Ebene mit fest
+// eingebautem Plural + einer eigenen jahrlosen Variante -- direkt an den
+// Messages geprueft (das Svelte-Ternary selbst ist trivial).
+describe('wahl_portal_fallback_hinweis_* Messages (Review-Fund)', () => {
+	it('DE: "ohne Jahr"-Varianten zeigen keine Jahreszahl (kein "0:")', async () => {
+		const { m } = await import('$lib/paraglide/messages.js');
+		expect(m.wahl_portal_fallback_hinweis_bezirk_ohne_jahr(undefined, { locale: 'de' })).toBe(
+			'Keine Stimmbezirks-Daten, Karte zeigt Bezirke.'
+		);
+		expect(m.wahl_portal_fallback_hinweis_kiez_ohne_jahr(undefined, { locale: 'de' })).toBe(
+			'Keine Stimmbezirks-Daten, Karte zeigt Kieze.'
+		);
+	});
+
+	it('EN: "mit Jahr"/"ohne Jahr"-Varianten je Ebene mit korrektem, fest eingebautem Plural', async () => {
+		const { m } = await import('$lib/paraglide/messages.js');
+		expect(
+			m.wahl_portal_fallback_hinweis_bezirk_mit_jahr({ jahr: 2011 }, { locale: 'en' })
+		).toBe('2011: no polling district data, map shows Bezirke.');
+		expect(m.wahl_portal_fallback_hinweis_kiez_ohne_jahr(undefined, { locale: 'en' })).toBe(
+			'No polling district data, map shows Kieze.'
+		);
+	});
+});

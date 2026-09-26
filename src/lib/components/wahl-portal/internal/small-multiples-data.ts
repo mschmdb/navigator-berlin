@@ -6,9 +6,16 @@
  * Kiez-Pfade (`geo-svg.ts`, gemeinsamer Ausschnitt über alle Minis) und
  * liefert Zellen + Extrem-Kieze + eine Tabellen-Row.
  */
+import { m } from '$lib/paraglide/messages.js';
+import type { LocaleFormatOptions } from '$lib/i18n/format.js';
 import { parteiColor } from '$lib/data/partei-farben.js';
 import { parteiOpacityForAnteil, type AnteilSpanne } from './winner-map-expressions.js';
-import { NEUTRAL_FARBE, NEUTRAL_OPACITY, type WinnerApiRow } from './winner-map-data.js';
+import {
+	NEUTRAL_FARBE,
+	NEUTRAL_OPACITY,
+	parteiDisplayName,
+	type WinnerApiRow
+} from './winner-map-data.js';
 
 export interface KiezPathCell {
 	readonly slug: string;
@@ -46,8 +53,6 @@ export interface SmallMultiplesTableRow {
 	readonly schwaechsterKiez: string;
 	readonly schwaechsterAnteil: number | null;
 }
-
-const KEIN_KIEZ_LABEL = 'Keine Daten';
 
 /**
  * Extrem-Ermittlung mit deterministischem Gleichstand: bei gleichem Anteil
@@ -141,12 +146,16 @@ export function buildPartyMiniMap(
 	return { partei, farbe, hasData: true, cells, staerkste, schwaechste };
 }
 
-export function buildSmallMultiplesTableRow(mini: PartyMiniMap): SmallMultiplesTableRow {
+export function buildSmallMultiplesTableRow(
+	mini: PartyMiniMap,
+	opts?: LocaleFormatOptions
+): SmallMultiplesTableRow {
+	const keinKiezLabel = m.wahl_portal_keine_daten_label(undefined, { locale: opts?.locale });
 	return {
-		partei: mini.partei,
-		staerksterKiez: mini.staerkste?.name ?? KEIN_KIEZ_LABEL,
+		partei: parteiDisplayName(mini.partei, opts),
+		staerksterKiez: mini.staerkste?.name ?? keinKiezLabel,
 		staerksterAnteil: mini.staerkste?.anteil ?? null,
-		schwaechsterKiez: mini.schwaechste?.name ?? KEIN_KIEZ_LABEL,
+		schwaechsterKiez: mini.schwaechste?.name ?? keinKiezLabel,
 		schwaechsterAnteil: mini.schwaechste?.anteil ?? null
 	};
 }

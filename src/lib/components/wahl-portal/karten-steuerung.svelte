@@ -9,12 +9,10 @@
 	 * (`steuerleiste-jahr*`, `steuerleiste-ebene*`) und Tastatursteuerung
 	 * bleiben unverändert, damit die bestehenden E2E-Stellen stabil bleiben.
 	 */
-	import {
-		EBENE_VALUES,
-		EBENE_LABELS,
-		type WahlPortalEbene
-	} from '$lib/utils/wahl-portal-url-state.js';
+	import { EBENE_VALUES, type WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { wahlEbeneLabel, wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
 
 	export interface JahrOption {
 		readonly jahr: number;
@@ -61,11 +59,11 @@
 			id="steuerleiste-jahr-label"
 			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 		>
-			Jahr
+			{m.wahl_portal_spalte_jahr()}
 		</span>
 		{#if jahrOptions.length === 0}
 			<p data-testid="steuerleiste-jahr-empty" class="font-mono text-xs text-ink-subtle">
-				Keine Wahl-Daten verfügbar.
+				{m.wahl_portal_jahr_keine_optionen()}
 			</p>
 		{:else}
 			<div
@@ -83,7 +81,9 @@
 						data-testid={`steuerleiste-jahr-${opt.jahr}`}
 						aria-checked={checked}
 						aria-disabled={disabled}
-						aria-label={opt.isRepeatElection ? `${opt.jahr} · Wiederholungswahl` : String(opt.jahr)}
+						aria-label={opt.isRepeatElection
+							? `${opt.jahr} · ${wahlWiederholungLabel()}`
+							: String(opt.jahr)}
 						tabindex={checked ? 0 : -1}
 						onclick={() => !disabled && onJahrChange(opt.jahr)}
 						onkeydown={(e) => onJahrKeydown(e, i)}
@@ -102,9 +102,9 @@
 								data-testid={`steuerleiste-jahr-${opt.jahr}-wiederholung`}
 								aria-hidden="true"
 								class="ml-0.5 text-[10px] text-ink-subtle"
-								title="Wiederholungswahl"
+								title={wahlWiederholungLabel()}
 							>
-								·W
+								{m.wahl_portal_wiederholung_kuerzel()}
 							</span>
 						{/if}
 					</button>
@@ -118,7 +118,7 @@
 			id="steuerleiste-ebene-label"
 			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 		>
-			Ebene
+			{m.wahl_portal_feld_ebene()}
 		</span>
 		<div
 			role="radiogroup"
@@ -147,7 +147,7 @@
 					class:opacity-40={disabled}
 					class:cursor-not-allowed={disabled}
 				>
-					{EBENE_LABELS[value]}
+					{wahlEbeneLabel(value)}
 				</button>
 			{/each}
 		</div>

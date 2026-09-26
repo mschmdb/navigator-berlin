@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildErgebnisPanelRows, type ErgebnisSeriesPoint } from './ergebnis-panel-data.js';
+import {
+	buildErgebnisPanelRows,
+	formatDeltaLabel,
+	vorjahrLabel,
+	type ErgebnisSeriesPoint
+} from './ergebnis-panel-data.js';
 
 // Fixture-Reihe (AGH Zweitstimme, Berlin gesamt): 2016 (erste Wahl der
 // Fixture-Reihe), 2021, 2023 (Wiederholungswahl von 2021). Anteile bewusst
@@ -91,6 +96,29 @@ const POINTS: ErgebnisSeriesPoint[] = [
 	}
 ];
 
+describe('formatDeltaLabel', () => {
+	it('de: „+x,x Pp."/„−x,x Pp." mit echtem Minus', () => {
+		expect(formatDeltaLabel(10.2)).toBe('+10,2 Pp.');
+		expect(formatDeltaLabel(-2.9)).toBe('−2,9 Pp.');
+	});
+
+	it('en: „+x.x pp"/„−x.x pp"', () => {
+		expect(formatDeltaLabel(10.2, { locale: 'en' })).toBe('+10.2 pp');
+		expect(formatDeltaLabel(-2.9, { locale: 'en' })).toBe('−2.9 pp');
+	});
+});
+
+describe('vorjahrLabel', () => {
+	it('de/en: „vs. Jahr", identisch in beiden Locales', () => {
+		expect(vorjahrLabel(2021)).toBe('vs. 2021');
+		expect(vorjahrLabel(2021, { locale: 'en' })).toBe('vs. 2021');
+	});
+
+	it('null ohne Vorjahr', () => {
+		expect(vorjahrLabel(null)).toBeNull();
+	});
+});
+
 describe('buildErgebnisPanelRows', () => {
 	it('sortiert nach Anteil absteigend, Sonstige immer ans Ende', () => {
 		const { rows } = buildErgebnisPanelRows(POINTS, 2023);
@@ -177,6 +205,15 @@ describe('buildErgebnisPanelRows', () => {
 		const { vorlaeufig, sourceUpdatedAt } = buildErgebnisPanelRows(POINTS, 2023);
 		expect(vorlaeufig).toBe(false);
 		expect(sourceUpdatedAt).toBeNull();
+	});
+
+	it('EN: formatiert Anteil und Delta mit Punkt-Dezimaltrennzeichen und echtem Minus', () => {
+		const { rows } = buildErgebnisPanelRows(POINTS, 2023, { locale: 'en' });
+		const cdu = rows.find((r) => r.partei === 'CDU');
+		const spd = rows.find((r) => r.partei === 'SPD');
+		expect(cdu?.anteilLabel).toBe('28.2%');
+		expect(cdu?.deltaLabel).toBe('+10.2 pp');
+		expect(spd?.deltaLabel).toBe('−2.9 pp');
 	});
 
 	it('vorlaeufig/sourceUpdatedAt gelten für DAS Jahr, nicht die ganze Reihe (Story: Ingest AGH/BVV 2026)', () => {

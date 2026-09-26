@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { WahlPortalListStatus } from '$lib/state/wahl-portal-context.svelte.js';
+	import { m } from '$lib/paraglide/messages.js';
 
 	type Props = {
 		minJahr: number | null;
@@ -15,16 +16,18 @@
 	class="flex flex-wrap items-baseline gap-x-2 font-mono text-[10px] text-ink-subtle"
 >
 	{#if status === 'loading' || status === 'idle'}
-		<span data-testid="portal-datenstand-loading">Wahl-Daten laden.</span>
+		<span data-testid="portal-datenstand-loading">{m.wahl_portal_datenstand_laden()}</span>
 	{:else if status === 'error'}
-		<span data-testid="portal-datenstand-error">Wahl-Daten aktuell nicht verfügbar.</span>
+		<span data-testid="portal-datenstand-error">{m.wahl_portal_datenstand_nicht_verfuegbar()}</span>
 	{:else if minJahr !== null && maxJahr !== null}
 		<span data-testid="portal-datenstand-text">
-			Datenstand: Wahlen {minJahr}–{maxJahr} · Bundeswahlleiterin · Amt für Statistik Berlin-Brandenburg
+			{m.wahl_portal_datenstand_spanne({ min: minJahr, max: maxJahr })} ·
+			{m.wahl_label_source_bundeswahlleiterin()} ·
+			{m.wahl_label_source_amt_fuer_statistik()}
 		</span>
 	{:else}
 		<span data-testid="portal-datenstand-empty">
-			Wahl-Daten werden mit dem nächsten Build freigeschaltet.
+			{m.wahl_portal_datenstand_empty()}
 		</span>
 	{/if}
 </p>

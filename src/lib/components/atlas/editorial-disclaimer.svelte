@@ -33,12 +33,18 @@
 		'level-below-threshold':
 			'Auf dieser Ebene zu wenig Daten für eine belastbare Aussage. Wir zeigen lieber keinen Wert als einen irreführenden.',
 		'wahl-portal-footnote':
-			'Karten und Vergleiche auf dieser Seite sind deskriptiv, kein Ranking von Kiezen oder Bezirken. Stimmenanteile sind kein Hinweis auf künftige Wahlen.'
+			'Karten und Vergleiche auf dieser Seite sind deskriptiv, kein Ranking von Kiezen oder Bezirken. Stimmenanteile sind kein Hinweis auf künftige Wahlen.',
+		// Wird nie gerendert (siehe `text`-Ableitung unten, immer über
+		// `m.wahl_portal_disclaimer_stimmenanteile()`) -- Eintrag existiert nur,
+		// damit `Record<DisclaimerVariant, string>` vollstaendig bleibt.
+		'wahl-portal-stimmenanteile':
+			'Daten beschreiben Stimmenanteile, keine Bewertung. Auf Kiez-Ebene ist die Briefwahl anteilig nach Wahlberechtigten geschätzt, nicht amtlich. Amtliche Werte gibt es auf Stimmbezirks-, Bezirks- und Berlin-Ebene.'
 	};
 </script>
 
 <script lang="ts">
 	import { ExternalLink } from '@lucide/svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	type Props = {
 		variant: DisclaimerVariant;
@@ -49,7 +55,22 @@
 
 	let { variant, sourceUrl, customText, id }: Props = $props();
 
-	const text = $derived(customText ?? DISCLAIMER_TEXTS_DE[variant]);
+	// i18n Block B: nur die beiden Wahlportal-EIGENEN Varianten laufen ueber
+	// Paraglide-Messages (locale-abhaengig, Auswertung beim Aufruf).
+	// `wahl-stimmenanteile` (Kiez-Inspector, Compare-Modus) ist NICHT dasselbe
+	// wie `wahl-portal-stimmenanteile` (Wahl-Detailseite) -- Review-Fund: beide
+	// teilten sich vorher denselben Variant-Key, wodurch der Inspector/Compare-
+	// Disclaimer auf nicht uebersetzten `/en/...`-Seiten faelschlich englisch
+	// wurde. Die restlichen 13 Varianten bleiben unangetastet ueber
+	// `DISCLAIMER_TEXTS_DE` (Boundary: "Keine anderen Seiten übersetzen").
+	const text = $derived(
+		customText ??
+			(variant === 'wahl-portal-footnote'
+				? m.wahl_portal_disclaimer_footnote()
+				: variant === 'wahl-portal-stimmenanteile'
+					? m.wahl_portal_disclaimer_stimmenanteile()
+					: DISCLAIMER_TEXTS_DE[variant])
+	);
 </script>
 
 <p

@@ -13,6 +13,7 @@
 	 */
 	import { getWahlPortalState } from '$lib/state/wahl-portal-context.svelte.js';
 	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
+	import { m } from '$lib/paraglide/messages.js';
 	import DataTableAlternative, {
 		type TableColumn
 	} from '$lib/components/atlas/data-table-alternative.svelte';
@@ -41,8 +42,9 @@
 	};
 	let { fetchFn = fetch }: Props = $props();
 
-	const FIGURE_LABEL = 'Karte der Kieze nach Anzahl der Wechsel der stärksten Kraft';
 	const DISCLOSURE_LIMIT = 20;
+
+	const figureLabel = m.wahl_portal_wechsel_figure_label();
 
 	const portal = getWahlPortalState();
 	const stimmtyp = $derived(stimmtypForReihe(portal.reihe));
@@ -73,9 +75,7 @@
 	const countsBySlug = $derived(wechselCountByGebiet(wechselEntries));
 
 	const geometry = $derived(geometryLoader.geometry);
-	const nameBySlug = $derived(
-		buildNameBySlugMap(geometry?.slugs ?? [], geometry?.names ?? [])
-	);
+	const nameBySlug = $derived(buildNameBySlugMap(geometry?.slugs ?? [], geometry?.names ?? []));
 	const entriesWithName = $derived(
 		wechselEntries.map((e) => ({ ...e, gebietName: nameBySlug.get(e.gebietSlug) ?? e.gebietSlug }))
 	);
@@ -105,16 +105,33 @@
 
 	const takeawayText = $derived(
 		wechselEntries.length === 0
-			? 'Für diese Auswahl gab es keinen Wechsel der stärksten Kraft.'
-			: `${gebieteMitWechsel} von ${totalGebiete} Kiezen ${gebieteMitWechsel === 1 ? 'wechselte' : 'wechselten'} mindestens einmal die stärkste Kraft.`
+			? m.wahl_portal_wechsel_takeaway_leer()
+			: gebieteMitWechsel === 1
+				? m.wahl_portal_wechsel_takeaway_singular({
+						count: gebieteMitWechsel,
+						total: totalGebiete
+					})
+				: m.wahl_portal_wechsel_takeaway_plural({ count: gebieteMitWechsel, total: totalGebiete })
 	);
 
 	let showAll = $state(false);
-	const visibleEntries = $derived(showAll ? sortedEntries : sortedEntries.slice(0, DISCLOSURE_LIMIT));
+	const visibleEntries = $derived(
+		showAll ? sortedEntries : sortedEntries.slice(0, DISCLOSURE_LIMIT)
+	);
 
 	const tableColumns: TableColumn<WechselTableRow>[] = [
-		{ key: 'gebiet', label: 'Gebiet', sortable: true, accessor: (r) => r.gebiet },
-		{ key: 'anzahl', label: 'Wechsel', sortable: true, accessor: (r) => r.anzahl }
+		{
+			key: 'gebiet',
+			label: m.wahl_portal_spalte_gebiet(),
+			sortable: true,
+			accessor: (r) => r.gebiet
+		},
+		{
+			key: 'anzahl',
+			label: m.wahl_portal_spalte_wechsel(),
+			sortable: true,
+			accessor: (r) => r.anzahl
+		}
 	];
 
 	const mapCtl = new WechselMapController({ getFc: () => wechselFc });
@@ -128,39 +145,47 @@
 
 {#if isError}
 	<p data-testid="wechsel-kapitel-error" role="alert" class="font-serif text-ink-muted">
-		Wahl-Daten konnten nicht geladen werden.
+		{m.wahl_portal_wahldaten_error()}
 	</p>
 {:else if isLoading}
-	<p data-testid="wechsel-kapitel-loading" class="font-serif text-ink-muted">Lädt Wechsel-Daten …</p>
+	<p data-testid="wechsel-kapitel-loading" class="font-serif text-ink-muted">
+		{m.wahl_portal_wechsel_loading()}
+	</p>
 {:else if isEmpty}
 	<p data-testid="wechsel-kapitel-empty" class="font-serif text-ink-muted">
-		Für diese Auswahl liegen noch keine Wahl-Ergebnisse vor.
+		{m.wahl_portal_wahl_ergebnisse_empty()}
 	</p>
 {:else if showInhalt}
-	<p data-testid="wechsel-kapitel-takeaway" class="max-w-prose font-serif text-lg leading-relaxed text-ink">
+	<p
+		data-testid="wechsel-kapitel-takeaway"
+		class="max-w-prose font-serif text-lg leading-relaxed text-ink"
+	>
 		{takeawayText}
 	</p>
 
-	<figure aria-label={FIGURE_LABEL} data-testid="wechsel-kapitel-figure" class="space-y-3">
+	<figure aria-label={figureLabel} data-testid="wechsel-kapitel-figure" class="space-y-3">
 		<div class="relative h-[360px] w-full overflow-hidden rounded border border-rule">
 			<div
 				bind:this={mapCtl.container}
 				role="img"
-				aria-label={FIGURE_LABEL}
+				aria-label={figureLabel}
 				data-testid="wechsel-kapitel-canvas"
 				class="h-full w-full"
 			></div>
 		</div>
 	</figure>
 
-	<ul data-testid="wechsel-kapitel-legende" class="flex flex-wrap gap-3 border border-rule bg-bg p-3 font-mono text-xs text-ink">
+	<ul
+		data-testid="wechsel-kapitel-legende"
+		class="flex flex-wrap gap-3 border border-rule bg-bg p-3 font-mono text-xs text-ink"
+	>
 		<li class="flex items-center gap-1.5">
 			<span
 				aria-hidden="true"
 				class="inline-block h-3.5 w-3.5 rounded-sm border border-rule-strong"
 				style={`background-color: ${WECHSEL_NEUTRAL_FARBE}; opacity: ${WECHSEL_FILL_OPACITY};`}
 			></span>
-			Kein Wechsel
+			{m.wahl_portal_wechsel_legende_kein()}
 		</li>
 		<li class="flex items-center gap-1.5">
 			<span
@@ -168,7 +193,7 @@
 				class="inline-block h-3.5 w-3.5 rounded-sm border border-rule-strong"
 				style={`background-color: ${WECHSEL_FARBE_STUFE_1}; opacity: ${WECHSEL_FILL_OPACITY};`}
 			></span>
-			1 Wechsel
+			{m.wahl_portal_wechsel_legende_eins()}
 		</li>
 		<li class="flex items-center gap-1.5">
 			<span
@@ -176,19 +201,21 @@
 				class="inline-block h-3.5 w-3.5 rounded-sm border border-rule-strong"
 				style={`background-color: ${WECHSEL_FARBE_STUFE_2_PLUS}; opacity: ${WECHSEL_FILL_OPACITY};`}
 			></span>
-			2 oder mehr Wechsel
+			{m.wahl_portal_wechsel_legende_mehr()}
 		</li>
 	</ul>
 
 	<DataTableAlternative
 		columns={tableColumns}
 		rows={tableRows}
-		caption="Kieze nach Anzahl der Wechsel der stärksten Kraft"
+		caption={m.wahl_portal_wechsel_table_caption()}
+		toggleLabel={m.wahl_portal_data_table_toggle()}
+		closeLabel={m.wahl_portal_data_table_close()}
 	/>
 
 	{#if sortedEntries.length === 0}
 		<p data-testid="wechsel-kapitel-liste-empty" class="font-mono text-xs text-ink-subtle">
-			Kein Kiez wechselte die stärkste Kraft.
+			{m.wahl_portal_wechsel_liste_empty()}
 		</p>
 	{:else}
 		<ul
@@ -212,9 +239,11 @@
 				aria-expanded={showAll}
 				aria-controls="wechsel-kapitel-liste"
 				onclick={() => (showAll = !showAll)}
-				class="self-start rounded border border-ink px-2.5 py-1 font-mono text-xs text-ink transition-colors hover:bg-bg-muted"
+				class="hover:bg-bg-muted self-start rounded border border-ink px-2.5 py-1 font-mono text-xs text-ink transition-colors"
 			>
-				{showAll ? 'Weniger anzeigen' : `Alle ${sortedEntries.length} Wechsel anzeigen`}
+				{showAll
+					? m.wahl_portal_wechsel_weniger_anzeigen()
+					: m.wahl_portal_wechsel_alle_anzeigen({ n: sortedEntries.length })}
 			</button>
 		{/if}
 	{/if}

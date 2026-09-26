@@ -9,8 +9,11 @@
 	 * um (`+page.svelte`, Section `uebergaenge`) -- er versteckte sich hier
 	 * vorher als Unterabschnitt ohne eigenen Nav-Eintrag.
 	 */
+	import { m } from '$lib/paraglide/messages.js';
 	import { getWahlPortalState } from '$lib/state/wahl-portal-context.svelte.js';
 	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
+	import { sourceDisplayLabel, licenseDisplayLabel } from '$lib/data/wahl-labels.js';
+	import { formatPercentagePointsDelta, type LocaleFormatOptions } from '$lib/i18n/format.js';
 	import { parteiColor } from '$lib/data/partei-farben.js';
 	import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
 	import DataTableAlternative, {
@@ -34,7 +37,7 @@
 		buildTrendsTableRows,
 		buildTrendTakeaway,
 		buildVolatilitaetTakeaway,
-		KIEZ_COVERAGE_HINWEIS,
+		kiezCoverageHinweisText,
 		TREND_FALLEND_DUNKEL,
 		TREND_FALLEND_HELL,
 		TREND_NEUTRAL_FARBE,
@@ -43,6 +46,8 @@
 		TRENDS_FILL_OPACITY,
 		buildVolatilitaetLegende,
 		volatilitaetTerzileFor,
+		TREND_SCHWELLE_LEICHT,
+		TREND_SCHWELLE_STARK,
 		type TrendsGebietInput,
 		type TrendsToggle,
 		type TrendsTableRow
@@ -56,22 +61,23 @@
 		readonly opacity?: number;
 	}
 
-	/** Legenden datengetrieben (Review Triage Log #7/#8): Labels nennen die
-	 * Klassifizierungs-Schwellen, Swatch-Farben kommen aus `blendOverBasemap`
-	 * (dieselbe Blend-Herleitung wie die Karte, statt CSS-`opacity` über den
-	 * Seitengrund -- das zeigte vorher eine andere Farbe als die Karte). */
-	const TREND_LEGENDE: readonly LegendeEintrag[] = [
-		{ label: 'Stark fallend: ab −1,0 Pp./Jahr', farbe: TREND_FALLEND_DUNKEL },
-		{ label: 'Leicht fallend: ab −0,2 Pp./Jahr', farbe: TREND_FALLEND_HELL },
-		{ label: 'Stabil: unter ±0,2 Pp./Jahr', farbe: TREND_NEUTRAL_FARBE },
-		{ label: 'Leicht steigend: ab +0,2 Pp./Jahr', farbe: TREND_STEIGEND_HELL },
-		{ label: 'Stark steigend: ab +1,0 Pp./Jahr', farbe: TREND_STEIGEND_DUNKEL },
-		{ label: 'Keine Daten', farbe: TREND_NEUTRAL_FARBE, opacity: NEUTRAL_OPACITY }
-	];
-
 	function swatchStyle(farbe: string, opacity: number): string {
 		const [r, g, b] = blendOverBasemap(farbe, opacity);
 		return `background-color: rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)});`;
+	}
+
+	/** Signierter Schwellen-Wert (z. B. `−1,0`/`+0,2`) ohne die `Pp.`/`pp`-Einheit
+	 * -- die Legende haengt ihre eigene Einheit „Pp./Jahr" an (Delegiert an
+	 * `formatPercentagePointsDelta`: echtes Minuszeichen + Locale-Dezimaltrennzeichen
+	 * bleiben dadurch identisch zur zentralen Formatierung, nur die Einheit
+	 * unterscheidet sich vom Pp.-Bestandsformat). */
+	function schwellenWert(value: number, opts?: LocaleFormatOptions): string {
+		return formatPercentagePointsDelta(value, opts).replace(/\s?(Pp\.|pp)$/, '');
+	}
+
+	/** Wie `schwellenWert`, aber ohne Vorzeichen (fuer die „Stabil"-Zeile mit `±`). */
+	function bareSchwellenWert(value: number, opts?: LocaleFormatOptions): string {
+		return schwellenWert(value, opts).replace(/^[+−]/, '');
 	}
 
 	type Props = {
@@ -85,8 +91,11 @@
 	};
 	let { fetchFn = fetch, mapFactory }: Props = $props();
 
-	const FIGURE_LABEL_TREND = 'Karte der Kieze nach Anteils-Trend der ausgewählten Partei';
-	const FIGURE_LABEL_VOLATILITAET = 'Karte der Kieze nach Volatilität';
+	function figureLabel(toggleWert: TrendsToggle): string {
+		return toggleWert === 'trend'
+			? m.wahl_portal_figure_label_trend()
+			: m.wahl_portal_figure_label_volatilitaet();
+	}
 
 	const portal = getWahlPortalState();
 	const stimmtyp = $derived(stimmtypForReihe(portal.reihe));
@@ -97,10 +106,12 @@
 	let parteiButtons: HTMLButtonElement[] = $state([]);
 
 	const TOGGLE_WERTE: readonly TrendsToggle[] = ['trend', 'volatilitaet'];
-	const TOGGLE_LABELS: Record<TrendsToggle, string> = {
-		trend: 'Trend',
-		volatilitaet: 'Volatilität'
-	};
+
+	function toggleLabel(toggleWert: TrendsToggle): string {
+		return toggleWert === 'trend'
+			? m.wahl_portal_toggle_trend()
+			: m.wahl_portal_toggle_volatilitaet();
+	}
 
 	function onToggleKeydown(event: KeyboardEvent, index: number): void {
 		const next = nextRadioIndex(event.key, index, TOGGLE_WERTE.length);
@@ -166,6 +177,52 @@
 		);
 	});
 
+	/** Legenden datengetrieben (Review Triage Log #7/#8): Labels nennen die
+	 * Klassifizierungs-Schwellen, Swatch-Farben kommen aus `blendOverBasemap`
+	 * (dieselbe Blend-Herleitung wie die Karte, statt CSS-`opacity` über den
+	 * Seitengrund -- das zeigte vorher eine andere Farbe als die Karte).
+	 * `$derived` statt Modul-Konstante: Labels lesen `getLocale()` beim Aufruf
+	 * (i18n Block B, keine Texte als Modul-Konstanten). */
+	const TREND_LEGENDE = $derived<readonly LegendeEintrag[]>([
+		{
+			label: m.wahl_portal_trend_legende_ab({
+				label: m.wahl_portal_trend_label_stark_fallend(),
+				wert: schwellenWert(-TREND_SCHWELLE_STARK)
+			}),
+			farbe: TREND_FALLEND_DUNKEL
+		},
+		{
+			label: m.wahl_portal_trend_legende_ab({
+				label: m.wahl_portal_trend_label_leicht_fallend(),
+				wert: schwellenWert(-TREND_SCHWELLE_LEICHT)
+			}),
+			farbe: TREND_FALLEND_HELL
+		},
+		{
+			label: m.wahl_portal_trend_legende_stabil({ wert: bareSchwellenWert(TREND_SCHWELLE_LEICHT) }),
+			farbe: TREND_NEUTRAL_FARBE
+		},
+		{
+			label: m.wahl_portal_trend_legende_ab({
+				label: m.wahl_portal_trend_label_leicht_steigend(),
+				wert: schwellenWert(TREND_SCHWELLE_LEICHT)
+			}),
+			farbe: TREND_STEIGEND_HELL
+		},
+		{
+			label: m.wahl_portal_trend_legende_ab({
+				label: m.wahl_portal_trend_label_stark_steigend(),
+				wert: schwellenWert(TREND_SCHWELLE_STARK)
+			}),
+			farbe: TREND_STEIGEND_DUNKEL
+		},
+		{
+			label: m.wahl_portal_keine_daten_label(),
+			farbe: TREND_NEUTRAL_FARBE,
+			opacity: NEUTRAL_OPACITY
+		}
+	]);
+
 	/** Klassen = Drittel der Kieze dieser Reihe; Karte und Legende nutzen
 	 * dieselben Terzile (`volatilitaetTerzileFor`). */
 	const volatilitaetLegende = $derived<readonly LegendeEintrag[]>(
@@ -225,20 +282,27 @@
 	});
 
 	const tableColumns: TableColumn<TrendsTableRow>[] = [
-		{ key: 'gebiet', label: 'Gebiet', sortable: true, accessor: (r) => r.gebiet },
-		{ key: 'wert', label: 'Wert', sortable: true, accessor: (r) => r.wert }
+		{
+			key: 'gebiet',
+			label: m.wahl_portal_spalte_gebiet(),
+			sortable: true,
+			accessor: (r) => r.gebiet
+		},
+		{ key: 'wert', label: m.wahl_portal_spalte_wert(), sortable: true, accessor: (r) => r.wert }
 	];
 </script>
 
 {#if isError}
 	<p data-testid="trends-kapitel-error" role="alert" class="font-serif text-ink-muted">
-		Wahl-Daten konnten nicht geladen werden.
+		{m.wahl_portal_wahldaten_error()}
 	</p>
 {:else if isLoading}
-	<p data-testid="trends-kapitel-loading" class="font-serif text-ink-muted">Lädt Trend-Daten …</p>
+	<p data-testid="trends-kapitel-loading" class="font-serif text-ink-muted">
+		{m.wahl_portal_trends_loading()}
+	</p>
 {:else if isEmpty}
 	<p data-testid="trends-kapitel-empty" class="font-serif text-ink-muted">
-		Für diese Auswahl liegen noch keine Trend- und Volatilitäts-Daten vor.
+		{m.wahl_portal_trends_empty()}
 	</p>
 {:else if showInhalt}
 	<div data-testid="trends-kapitel" class="flex flex-col gap-6">
@@ -248,7 +312,7 @@
 					id="trends-toggle-label"
 					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 				>
-					Ansicht
+					{m.wahl_portal_feld_ansicht()}
 				</span>
 				<div
 					role="radiogroup"
@@ -274,7 +338,7 @@
 							class:text-ink={!checked}
 							class:hover:bg-bg-muted={!checked}
 						>
-							{TOGGLE_LABELS[value]}
+							{toggleLabel(value)}
 						</button>
 					{/each}
 				</div>
@@ -285,7 +349,7 @@
 					id="trends-partei-label"
 					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 				>
-					Partei
+					{m.wahl_portal_spalte_partei()}
 				</span>
 				<div
 					role="radiogroup"
@@ -327,7 +391,7 @@
 						data-testid="trends-kapitel-partei-hinweis"
 						class="font-mono text-xs text-ink-subtle"
 					>
-						Die Partei-Auswahl gilt nur für die Trend-Ansicht.
+						{m.wahl_portal_partei_auswahl_nur_trend()}
 					</p>
 				{/if}
 			</div>
@@ -340,16 +404,12 @@
 			{takeawayText}
 		</p>
 
-		<figure
-			aria-label={toggle === 'trend' ? FIGURE_LABEL_TREND : FIGURE_LABEL_VOLATILITAET}
-			data-testid="trends-kapitel-figure"
-			class="space-y-3"
-		>
+		<figure aria-label={figureLabel(toggle)} data-testid="trends-kapitel-figure" class="space-y-3">
 			<div class="relative h-[360px] w-full overflow-hidden rounded border border-rule">
 				<div
 					bind:this={mapCtl.container}
 					role="img"
-					aria-label={toggle === 'trend' ? FIGURE_LABEL_TREND : FIGURE_LABEL_VOLATILITAET}
+					aria-label={figureLabel(toggle)}
 					data-testid="trends-kapitel-canvas"
 					class="h-full w-full"
 				></div>
@@ -357,7 +417,9 @@
 		</figure>
 
 		<ul
-			aria-describedby={toggle === 'volatilitaet' ? 'trends-kapitel-volatilitaet-hinweis' : undefined}
+			aria-describedby={toggle === 'volatilitaet'
+				? 'trends-kapitel-volatilitaet-hinweis'
+				: undefined}
 			data-testid="trends-kapitel-legende"
 			class="flex flex-wrap gap-3 border border-rule bg-bg p-3 font-mono text-xs text-ink"
 		>
@@ -378,9 +440,7 @@
 				data-testid="trends-kapitel-volatilitaet-hinweis"
 				class="font-mono text-xs text-ink-subtle"
 			>
-				Einteilung: je ein Drittel der Kieze dieser Wahl-Reihe. Netto-Verschiebung
-				(Pedersen-Index): Summe aller Anteilsgewinne von Wahl zu Wahl, gleich der Summe der
-				Verluste. Mindestens so viele Stimmen haben die Partei gewechselt.
+				{m.wahl_portal_volatilitaet_erklaerung()}
 			</p>
 		{/if}
 
@@ -389,20 +449,22 @@
 				data-testid="trends-kapitel-datenstand"
 				class="font-mono text-xs text-ink-subtle tabular-nums"
 			>
-				Datenstand: {response.source_name ?? 'unbekannte Quelle'}
+				{m.wahl_portal_datenstand_label({ source: sourceDisplayLabel(response.source_name) })}
 				{#if response.license}
-					· Lizenz {response.license}
+					· {m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(response.license) })}
 				{/if}
 			</p>
 		{/if}
 		<p data-testid="trends-kapitel-coverage-hinweis" class="font-mono text-xs text-ink-subtle">
-			{KIEZ_COVERAGE_HINWEIS}
+			{kiezCoverageHinweisText()}
 		</p>
 
 		<DataTableAlternative
 			columns={tableColumns}
 			rows={tableRows}
-			caption="Kieze nach Trend/Volatilität"
+			caption={m.wahl_portal_trends_table_caption()}
+			toggleLabel={m.wahl_portal_data_table_toggle()}
+			closeLabel={m.wahl_portal_data_table_close()}
 		/>
 	</div>
 {/if}

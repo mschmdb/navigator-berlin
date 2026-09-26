@@ -1,7 +1,12 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import ZeitAnimation from './zeit-animation.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const JAHR_OPTIONS = [
 	{ jahr: 2016, isRepeatElection: false },
@@ -42,6 +47,23 @@ describe('zeit-animation.svelte', () => {
 		const slider = page.getByTestId('zeit-animation-slider');
 		await expect.element(slider).toHaveAttribute('aria-valuetext', '2023 Wiederholungswahl');
 		await expect.element(page.getByTestId('zeit-animation-wiederholung')).toBeInTheDocument();
+	});
+
+	// Review-Fund (i18n Block B): "·W" war ein hartcodiertes Literal, jetzt
+	// eine Message -- EN zeigt "·R" statt "·W".
+	it('EN: Wiederholungswahl-Chip-Marker zeigt "·R" statt "·W"', async () => {
+		overwriteGetLocale(() => 'en');
+		render(ZeitAnimation, {
+			ebene: 'kiez',
+			jahrOptions: JAHR_OPTIONS,
+			jahr: 2023,
+			onDisplayJahr: vi.fn(),
+			onCommitJahr: vi.fn(),
+			onZurKiez: vi.fn()
+		});
+		await expect
+			.element(page.getByTestId('zeit-animation-wiederholung'))
+			.toHaveTextContent('·R');
 	});
 
 	it('Play-Klick setzt aria-pressed und ruft onDisplayJahr/onCommitJahr für die nächsten Jahre', async () => {

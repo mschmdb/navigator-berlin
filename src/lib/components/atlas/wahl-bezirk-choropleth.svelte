@@ -2,6 +2,8 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { parteiColor } from '$lib/data/partei-farben.js';
 	import { normalizeSlug } from '$lib/data/internal/slug.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { formatPercent } from '$lib/i18n/format.js';
 
 	export type BezirkSummary = {
 		readonly slug: string;
@@ -29,10 +31,6 @@
 		for (const b of bezirke) map.set(b.slug, b);
 		return map;
 	});
-
-	function formatPct(n: number): string {
-		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
-	}
 
 	onMount(() => {
 		void (async () => {
@@ -148,7 +146,7 @@
 				const summary = byBezirkSlug.get(slug);
 				if (!summary) return;
 				const lines = summary.top3
-					.map((t) => `<li><strong>${t.kurzname}</strong> ${formatPct(t.anteil)}</li>`)
+					.map((t) => `<li><strong>${t.kurzname}</strong> ${formatPercent(t.anteil)}</li>`)
 					.join('');
 				new Popup({ closeButton: true, closeOnClick: true, maxWidth: '280px' })
 					.setLngLat(e.lngLat)
@@ -183,16 +181,18 @@
 
 <figure
 	class="space-y-2"
-	aria-label={title ? `Choropleth-Karte: ${title}` : 'Choropleth-Karte'}
+	aria-label={title
+		? m.wahl_portal_choropleth_aria_mit_titel({ title })
+		: m.wahl_portal_choropleth_aria_ohne_titel()}
 	data-testid="wahl-bezirk-choropleth"
 >
 	<div
 		bind:this={container}
 		role="img"
-		aria-label="Berliner Bezirke gefärbt nach stärkster Partei"
+		aria-label={m.wahl_portal_bezirk_choropleth_alt()}
 		class="h-[320px] w-full overflow-hidden rounded border border-rule sm:h-[400px]"
 	></div>
 	<figcaption class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-		Farbe = stärkste Partei pro Bezirk · Sättigung skaliert mit Anteil · Klick öffnet Top-3
+		{m.wahl_portal_bezirk_choropleth_figcaption()}
 	</figcaption>
 </figure>

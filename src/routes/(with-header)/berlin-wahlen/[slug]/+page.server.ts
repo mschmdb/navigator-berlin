@@ -40,18 +40,6 @@ const BEZIRK_NAMES: Record<(typeof BEZIRK_SLUGS)[number], string> = {
 	reinickendorf: 'Reinickendorf'
 };
 
-const TYP_LABELS = {
-	btw: 'Bundestagswahl',
-	agh: 'Abgeordnetenhauswahl',
-	bvv: 'BVV-Wahl'
-} as const;
-
-const STIMMTYP_LABELS = {
-	erststimme: 'Erststimme',
-	zweitstimme: 'Zweitstimme',
-	einstimme: 'Stimme'
-} as const;
-
 export const entries: EntryGenerator = async () => {
 	if (!process.env.DATABASE_URL) {
 		// Build ohne DB: deterministische Fallback-Liste der 23 wahl-Rows.
@@ -70,9 +58,6 @@ export type WahlDetailPageData = {
 		readonly jahr: number;
 		readonly typ: 'btw' | 'agh' | 'bvv';
 		readonly stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
-		readonly typLabel: string;
-		readonly stimmtypLabel: string;
-		readonly title: string;
 		readonly isRepeatElection: boolean;
 		readonly parentSlug: string | null;
 		readonly sourceUrl: string;
@@ -146,10 +131,6 @@ export const load: PageServerLoad = async ({ params }) => {
 			? buildWahlSlugFromParentId(match.parentElectionId, list)
 			: null;
 
-	const title = `${TYP_LABELS[match.typ]} ${match.jahr}${
-		match.typ !== 'bvv' ? ` · ${STIMMTYP_LABELS[match.stimmtyp]}` : ''
-	}${match.isRepeatElection ? ' · Wiederholungswahl' : ''}`;
-
 	const data: WahlDetailPageData = {
 		slug: params.slug,
 		wahl: {
@@ -157,9 +138,6 @@ export const load: PageServerLoad = async ({ params }) => {
 			jahr: match.jahr,
 			typ: match.typ,
 			stimmtyp: match.stimmtyp,
-			typLabel: TYP_LABELS[match.typ],
-			stimmtypLabel: STIMMTYP_LABELS[match.stimmtyp],
-			title,
 			isRepeatElection: match.isRepeatElection,
 			parentSlug,
 			sourceUrl: match.sourceUrl,

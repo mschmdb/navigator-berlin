@@ -18,6 +18,12 @@
  *   „gut/schlecht"-Rampen (`scaleGut`/`scaleLast`) zu hängen.
  */
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import { m } from '$lib/paraglide/messages.js';
+import {
+	formatPercent,
+	formatPercentagePointsDelta,
+	type LocaleFormatOptions
+} from '$lib/i18n/format.js';
 import { formatDeltaLabel } from './ergebnis-panel-data.js';
 import {
 	WECHSEL_FARBE_STUFE_1,
@@ -132,7 +138,9 @@ export interface TrendsGebietInput {
  * Volatilität 0 ist die Server-Semantik für „< 2 Legislaturen“ und damit
  * kein Messwert: solche Gebiete gelten als ohne Daten.
  */
-export function hatVolatilitaetsDaten(gebiet: TrendsGebietInput | undefined): gebiet is TrendsGebietInput {
+export function hatVolatilitaetsDaten(
+	gebiet: TrendsGebietInput | undefined
+): gebiet is TrendsGebietInput {
 	return gebiet !== undefined && gebiet.volatilitaet > 0;
 }
 
@@ -159,39 +167,58 @@ export interface VolatilitaetLegendeEintrag {
 	readonly keineDaten?: true;
 }
 
-function formatProzentZahl(anteil: number): string {
-	return (anteil * 100).toFixed(1).replace('.', ',');
-}
-
-function formatProzent(anteil: number): string {
-	return `${formatProzentZahl(anteil)} %`;
+/** Prozent-Zahl OHNE Einheit (kein `%`, kein Leerzeichen) -- die Legenden-
+ * Zeilen setzen das `%`-Zeichen selbst an der passenden Stelle im Satz
+ * (Bestandsverhalten: „Mittel: 18,5 bis 21,7 %" trägt das Zeichen nur einmal). */
+function bareProzent(anteil: number, opts?: LocaleFormatOptions): string {
+	return formatPercent(anteil, { decimals: 1, locale: opts?.locale }).replace(/\s?%$/, '');
 }
 
 /**
- * Legende mit den echten Spannen der Reihe. „Keine Daten“ nur, wenn die
+ * Legende mit den echten Spannen der Reihe. „Keine Daten” nur, wenn die
  * Karte solche Gebiete zeigt: sonst ähnelt der Eintrag der hellen Stufe
- * „Stabiler“ und verwirrt (Gestalt-Ähnlichkeit). Grenzen, die gerundet
+ * „Stabiler” und verwirrt (Gestalt-Ähnlichkeit). Grenzen, die gerundet
  * gleich aussehen, ergeben keine lesbare Drittelung und fallen auf eine Stufe
  * zurück.
  */
 export function buildVolatilitaetLegende(
 	terzile: VolatilitaetTerzile | null,
-	hatGebieteOhneDaten: boolean
+	hatGebieteOhneDaten: boolean,
+	opts?: LocaleFormatOptions
 ): VolatilitaetLegendeEintrag[] {
+	const options = { locale: opts?.locale };
 	const eintraege: VolatilitaetLegendeEintrag[] = [];
-	const u = terzile ? formatProzentZahl(terzile.untere) : null;
-	const o = terzile ? formatProzentZahl(terzile.obere) : null;
+	// Bare Zahl (ohne Einheit): das „%" sitzt in der Legende nur EINMAL, am
+	// Ende der „Mittel"-Zeile (Bestandsverhalten, DE-Byte-Identität).
+	const u = terzile ? bareProzent(terzile.untere, opts) : null;
+	const o = terzile ? bareProzent(terzile.obere, opts) : null;
 	if (u === null || o === null || u === o) {
-		eintraege.push({ label: 'Netto-Verschiebung je Wahl', farbe: VOLATILITAET_FARBE_STUFE_1 });
+		eintraege.push({
+			label: m.wahl_portal_volatilitaet_legende_einzelstufe(undefined, options),
+			farbe: VOLATILITAET_FARBE_STUFE_1
+		});
 	} else {
 		eintraege.push(
-			{ label: `Stabiler: unter ${u} %`, farbe: VOLATILITAET_NEUTRAL_FARBE },
-			{ label: `Mittel: ${u} bis ${o} %`, farbe: VOLATILITAET_FARBE_STUFE_1 },
-			{ label: `Wechselhafter: ab ${o} %`, farbe: VOLATILITAET_FARBE_STUFE_2_PLUS }
+			{
+				label: m.wahl_portal_volatilitaet_stabiler({ u }, options),
+				farbe: VOLATILITAET_NEUTRAL_FARBE
+			},
+			{
+				label: m.wahl_portal_volatilitaet_mittel({ u, o }, options),
+				farbe: VOLATILITAET_FARBE_STUFE_1
+			},
+			{
+				label: m.wahl_portal_volatilitaet_wechselhafter({ o }, options),
+				farbe: VOLATILITAET_FARBE_STUFE_2_PLUS
+			}
 		);
 	}
 	if (hatGebieteOhneDaten) {
-		eintraege.push({ label: 'Keine Daten', farbe: VOLATILITAET_NEUTRAL_FARBE, keineDaten: true });
+		eintraege.push({
+			label: m.wahl_portal_keine_daten_label(undefined, options),
+			farbe: VOLATILITAET_NEUTRAL_FARBE,
+			keineDaten: true
+		});
 	}
 	return eintraege;
 }
@@ -270,29 +297,44 @@ export interface TrendsTableRow {
 const TREND_ROUNDING_CLAMP_PP = 0.05;
 
 /** Tabellen-Rows für die Karten-Alternative (nur Gebiete mit Daten). */
-export function buildTrendsTableRows(fc: TrendsFeatureCollection, toggle: TrendsToggle): TrendsTableRow[] {
+export function buildTrendsTableRows(
+	fc: TrendsFeatureCollection,
+	toggle: TrendsToggle,
+	opts?: LocaleFormatOptions
+): TrendsTableRow[] {
 	return fc.features
 		.filter((f) => f.properties.hat_daten === 1)
 		.map((f) => ({
 			gebiet: f.properties.gebiet_name,
-			wert: toggle === 'trend' ? formatTrendWertLabel(f.properties.wert * 100) : formatVolatilitaetLabel(f.properties.wert)
+			wert:
+				toggle === 'trend'
+					? formatTrendWertLabel(f.properties.wert * 100, opts)
+					: formatVolatilitaetLabel(f.properties.wert, opts)
 		}))
 		.sort((a, b) => a.gebiet.localeCompare(b.gebiet, 'de'));
 }
 
-function formatTrendWertLabel(ppJahr: number): string {
-	if (Math.abs(ppJahr) < TREND_ROUNDING_CLAMP_PP) return '0,0 Pp.';
-	return formatDeltaLabel(ppJahr);
+/** Rundungs-Clamp-Fall OHNE Vorzeichen: `formatPercentagePointsDelta(0, ...)`
+ * liefert immer ein `+` (0 ist nicht `< 0`) -- das fuehrende Zeichen wird
+ * deshalb entfernt, DE-Ausgabe bleibt `0,0 Pp.` wie zuvor. */
+function formatTrendWertLabel(ppJahr: number, opts?: LocaleFormatOptions): string {
+	if (Math.abs(ppJahr) < TREND_ROUNDING_CLAMP_PP) {
+		return formatPercentagePointsDelta(0, { locale: opts?.locale }).replace(/^\+/, '');
+	}
+	return formatDeltaLabel(ppJahr, opts);
 }
 
 /**
  * `x,x % Netto-Verschiebung` (kein Vorzeichen, Volatilität ist eine
  * Magnitude): Pedersen-Index, die Summe aller Anteilsgewinne zwischen zwei
  * Legislaturen (gleich der Summe der Verluste). Bewusst nicht
- * „Wählerwanderung“: das meint im Wahljournalismus Bruttoströme.
+ * „Wählerwanderung”: das meint im Wahljournalismus Bruttoströme.
  */
-export function formatVolatilitaetLabel(volatilitaet: number): string {
-	return `${formatProzent(volatilitaet)} Netto-Verschiebung`;
+export function formatVolatilitaetLabel(volatilitaet: number, opts?: LocaleFormatOptions): string {
+	return m.wahl_portal_volatilitaet_label(
+		{ pct: formatPercent(volatilitaet, { decimals: 1, locale: opts?.locale }) },
+		{ locale: opts?.locale }
+	);
 }
 
 /** Coverage-Fußnote: die LOR-Kiez-Geometrie selbst ist über alle Jahre
@@ -300,22 +342,28 @@ export function formatVolatilitaetLabel(volatilitaet: number): string {
  * denen das Kiez-Flächen-Aggregat gebildet wird (siehe
  * `docs/wahldaten-methodik.md`) -- geteilt zwischen Sankey (nur bei
  * `ebene==='kiez'`) und Trends-Kapitel (kein Doppel-Text). */
-export const KIEZ_COVERAGE_HINWEIS =
-	'Auf Kiez-Ebene fehlen frühere Wahljahre, weil die zugrunde liegenden Stimmbezirks-Geometrien erst ab 2016/2017 vorliegen (siehe Methodik).';
-
-const EMPTY_TREND_TAKEAWAY = 'Für diese Partei liegen noch keine Trend-Daten vor.';
-const EMPTY_VOLATILITAET_TAKEAWAY = 'Für diese Auswahl liegen noch keine Volatilitäts-Daten vor.';
+export function kiezCoverageHinweisText(opts?: LocaleFormatOptions): string {
+	return m.wahl_portal_kiez_coverage_hinweis(undefined, { locale: opts?.locale });
+}
 
 /**
  * Takeaway-Satz Trend-Karte: nennt die Anzahl steigender/fallender Kieze
- * (I/O-Matrix „Trend-Karte"). `lint:wahl`-konform: reine Anteils-Fakten.
+ * (I/O-Matrix „Trend-Karte”). `lint:wahl`-konform: reine Anteils-Fakten.
  */
-export function buildTrendTakeaway(fc: TrendsFeatureCollection, partei: string): string {
+export function buildTrendTakeaway(
+	fc: TrendsFeatureCollection,
+	partei: string,
+	opts?: LocaleFormatOptions
+): string {
+	const options = { locale: opts?.locale };
 	const mitDaten = fc.features.filter((f) => f.properties.hat_daten === 1);
-	if (mitDaten.length === 0) return EMPTY_TREND_TAKEAWAY;
+	if (mitDaten.length === 0) return m.wahl_portal_trend_takeaway_leer(undefined, options);
 	const steigend = mitDaten.filter((f) => f.properties.wert * 100 >= TREND_SCHWELLE_LEICHT).length;
 	const fallend = mitDaten.filter((f) => f.properties.wert * 100 <= -TREND_SCHWELLE_LEICHT).length;
-	return `${partei}: ${steigend} von ${mitDaten.length} Kiezen mit steigendem, ${fallend} mit fallendem Anteil (Pp./Jahr).`;
+	return m.wahl_portal_trend_takeaway(
+		{ partei, steigend, total: mitDaten.length, fallend },
+		options
+	);
 }
 
 /**
@@ -326,23 +374,44 @@ export function buildTrendTakeaway(fc: TrendsFeatureCollection, partei: string):
  * gleiche Werte, unterschiedliche Gebiete, hätten sonst als „stabilster"
  * bzw. „wechselhaftester" benannt -- obwohl beide identisch liegen).
  */
-export function buildVolatilitaetTakeaway(fc: TrendsFeatureCollection): string {
+export function buildVolatilitaetTakeaway(
+	fc: TrendsFeatureCollection,
+	opts?: LocaleFormatOptions
+): string {
+	const options = { locale: opts?.locale };
 	const mitDaten = fc.features.filter((f) => f.properties.hat_daten === 1);
-	if (mitDaten.length === 0) return EMPTY_VOLATILITAET_TAKEAWAY;
+	if (mitDaten.length === 0) return m.wahl_portal_volatilitaet_takeaway_leer(undefined, options);
 	const sorted = [...mitDaten].sort((a, b) => a.properties.wert - b.properties.wert);
 	const stabilste = sorted[0];
 	const wechselhafteste = sorted[sorted.length - 1];
 	if (mitDaten.length === 1) {
-		return `1 Kiez mit Volatilitäts-Daten: ${stabilste.properties.gebiet_name} (${formatVolatilitaetLabel(stabilste.properties.wert)} je Wahl).`;
+		return m.wahl_portal_volatilitaet_takeaway_einzeln(
+			{
+				name: stabilste.properties.gebiet_name,
+				wert: formatVolatilitaetLabel(stabilste.properties.wert, opts)
+			},
+			options
+		);
 	}
 	if (stabilste.properties.wert === wechselhafteste.properties.wert) {
-		return `Alle ${mitDaten.length} Kieze liegen bei ${formatVolatilitaetLabel(stabilste.properties.wert)} je Wahl.`;
+		return m.wahl_portal_volatilitaet_takeaway_gleichstand(
+			{ count: mitDaten.length, wert: formatVolatilitaetLabel(stabilste.properties.wert, opts) },
+			options
+		);
 	}
-	const extreme = `Stabilster Kiez: ${stabilste.properties.gebiet_name} (${formatVolatilitaetLabel(stabilste.properties.wert)} je Wahl). Wechselhaftester Kiez: ${wechselhafteste.properties.gebiet_name} (${formatVolatilitaetLabel(wechselhafteste.properties.wert)} je Wahl).`;
+	const extreme = m.wahl_portal_volatilitaet_takeaway_extreme(
+		{
+			stabilName: stabilste.properties.gebiet_name,
+			stabilWert: formatVolatilitaetLabel(stabilste.properties.wert, opts),
+			wechselName: wechselhafteste.properties.gebiet_name,
+			wechselWert: formatVolatilitaetLabel(wechselhafteste.properties.wert, opts)
+		},
+		options
+	);
 	const terzile = computeVolatilitaetTerzile(mitDaten.map((f) => f.properties.wert));
 	if (!terzile) return extreme;
-	const u = formatProzent(terzile.untere);
-	const o = formatProzent(terzile.obere);
+	const u = formatPercent(terzile.untere, { decimals: 1, locale: opts?.locale });
+	const o = formatPercent(terzile.obere, { decimals: 1, locale: opts?.locale });
 	if (u === o) return extreme;
-	return `${extreme} Ein Drittel der Kieze liegt unter ${u}, ein Drittel ab ${o}.`;
+	return `${extreme} ${m.wahl_portal_volatilitaet_takeaway_drittel({ u, o }, options)}`;
 }

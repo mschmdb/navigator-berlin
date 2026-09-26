@@ -6,6 +6,8 @@
  * für das Ergebnis-Panel (Story 6: NUR kiez/bezirk, das Panel hat keinen
  * Stimmbezirks-Zweig -- Series-API kennt diese Ebene nicht).
  */
+import { m } from '$lib/paraglide/messages.js';
+import type { Locale } from '$lib/paraglide/runtime';
 import { resolveSpatialLevel } from '$lib/data/resolve-spatial-level.js';
 import type { GeocodeSuggestion } from '$lib/data';
 import type { GebietFeatureCollection } from './winner-map-data.js';
@@ -19,6 +21,9 @@ export interface AddressHighlightDeps {
 	readonly sbLoader: StimmbezirkLoader;
 	readonly mapCtl: WinnerMapController;
 	readonly fetchFn: typeof fetch;
+	/** Optional: explizite Locale statt `getLocale()`-Default (i18n Block B,
+	 * TS-Builder ohne reaktiven Component-Kontext). */
+	readonly getLocale?: () => Locale;
 }
 
 export class AddressHighlight {
@@ -43,22 +48,25 @@ export class AddressHighlight {
 	}
 
 	async select(s: GeocodeSuggestion): Promise<void> {
-		const { getAnzeigeEbene, getJoinedFc, sbLoader, mapCtl, fetchFn } = this.#deps;
+		const { getAnzeigeEbene, getJoinedFc, sbLoader, mapCtl, fetchFn, getLocale } = this.#deps;
 		const anzeigeEbene = getAnzeigeEbene();
+		const opts = { locale: getLocale?.() };
 
 		if (anzeigeEbene === 'stimmbezirk') {
 			if (sbLoader.geometryStatus !== 'loaded' || !sbLoader.geometry) {
-				this.hint = 'Karte lädt noch, bitte gleich erneut versuchen.';
+				this.hint = m.wahl_portal_address_hint_karte_laedt(undefined, opts);
 				return;
 			}
 			const uwbId = sbLoader.resolveAddress(s.lat, s.lng);
 			if (!uwbId) {
-				this.hint = 'Für diese Adresse liegt kein Gebiet in Berlin vor.';
+				this.hint = m.wahl_portal_address_hint_kein_gebiet(undefined, opts);
 				mapCtl.highlight(getJoinedFc(), null);
 				return;
 			}
-			const gruppenName = sbLoader.resolveAddressLabel(s.lat, s.lng) ?? `Gruppe ${uwbId}`;
-			this.hint = `${gruppenName} hervorgehoben.`;
+			const gruppenName =
+				sbLoader.resolveAddressLabel(s.lat, s.lng, opts.locale) ??
+				m.wahl_portal_gruppe_fallback_label({ id: uwbId }, opts);
+			this.hint = m.wahl_portal_address_hint_hervorgehoben({ name: gruppenName }, opts);
 			mapCtl.highlight(getJoinedFc(), uwbId);
 			return;
 		}
@@ -67,7 +75,7 @@ export class AddressHighlight {
 		try {
 			ctx = await resolveSpatialLevel(s.lat, s.lng, fetchFn);
 		} catch {
-			this.hint = 'Adresse konnte nicht aufgelöst werden.';
+			this.hint = m.wahl_portal_address_hint_fehler(undefined, opts);
 			return;
 		}
 		// Re-validieren nach dem await: ein Ebenen-Wechsel im Flug hat reset()
@@ -76,13 +84,13 @@ export class AddressHighlight {
 		const slug = anzeigeEbene === 'bezirk' ? ctx.bezirkSlug : ctx.kiezSlug;
 		const name = anzeigeEbene === 'bezirk' ? ctx.bezirkName : ctx.kiezName;
 		if (!slug) {
-			this.hint = 'Für diese Adresse liegt kein Gebiet in Berlin vor.';
+			this.hint = m.wahl_portal_address_hint_kein_gebiet(undefined, opts);
 			this.gebietSlug = null;
 			this.gebietName = null;
 			mapCtl.highlight(getJoinedFc(), null);
 			return;
 		}
-		this.hint = name ? `${name} hervorgehoben.` : null;
+		this.hint = name ? m.wahl_portal_address_hint_hervorgehoben({ name }, opts) : null;
 		this.gebietSlug = slug;
 		this.gebietName = name;
 		mapCtl.highlight(getJoinedFc(), slug);

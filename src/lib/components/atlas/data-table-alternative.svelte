@@ -21,6 +21,11 @@
 		closeLabel?: string;
 	};
 
+	// Review-Fund (i18n Block B): Defaults bleiben deutsche Literale -- diese
+	// Komponente ist projektweit geteilt (Klima-Tabellen u.a.), ein
+	// `getLocale()`-basierter Default wuerde auf nicht uebersetzten
+	// `/en/...`-Seiten faelschlich Englisch zeigen. Das Wahlportal uebergibt
+	// seine eigenen, locale-bewussten Messages explizit als Props.
 	let {
 		columns,
 		rows,

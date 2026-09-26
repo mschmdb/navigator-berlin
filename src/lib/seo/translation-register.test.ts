@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { isRouteTranslated, translatedLocalesFor } from './translation-register.js';
+import {
+	isRouteTranslated,
+	translatedLocalesFor,
+	TRANSLATION_REGISTER
+} from './translation-register.js';
 import type { TranslationRegisterEntry } from './translation-register.js';
 
 describe('isRouteTranslated', () => {
@@ -8,10 +12,32 @@ describe('isRouteTranslated', () => {
 		expect(isRouteTranslated('/does-not-exist', 'de')).toBe(true);
 	});
 
-	it('Block A: the real register is empty, so no non-base locale is translated', () => {
+	it('a path not registered for EN stays untranslated (register is NOT a catch-all)', () => {
 		expect(isRouteTranslated('/kiez/mitte', 'en')).toBe(false);
 		expect(isRouteTranslated('/', 'en')).toBe(false);
 		expect(isRouteTranslated('/methodik', 'en')).toBe(false);
+	});
+
+	// Review-Fund (i18n Block B): der Register-Eintrag ist ein PRAEFIX
+	// (`prefix: true`), keine feste 23-Slug-Liste mehr -- deckt damit auch
+	// Wahlen ab, die NACH diesem Commit ins System kommen, ohne dass diese
+	// Datei je wieder angefasst werden muss.
+	it('Block B: der reale Eintrag ist ein Praefix, deckt /berlin-wahlen + jede beliebige (auch zukuenftige) Detailseite ab', () => {
+		expect(TRANSLATION_REGISTER).toEqual([
+			{ pathname: '/berlin-wahlen', locale: 'en', prefix: true }
+		]);
+		expect(isRouteTranslated('/berlin-wahlen', 'en')).toBe(true);
+		expect(isRouteTranslated('/en/berlin-wahlen', 'en')).toBe(true);
+		// ein Beispiel-Slug, der zum Zeitpunkt dieses Commits nicht existiert.
+		expect(isRouteTranslated('/berlin-wahlen/2099-agh-zweitstimme', 'en')).toBe(true);
+		expect(isRouteTranslated('/en/berlin-wahlen/2099-agh-zweitstimme', 'en')).toBe(true);
+	});
+
+	it('ein Praefix-Eintrag matcht NICHT einen aehnlich benannten, aber andersartigen Pfad (kein Segment-Grenzen-Bug)', () => {
+		const entries: readonly TranslationRegisterEntry[] = [
+			{ pathname: '/berlin-wahlen', locale: 'en', prefix: true }
+		];
+		expect(isRouteTranslated('/berlin-wahlen-archiv', 'en', entries)).toBe(false);
 	});
 
 	// Injected entries (no module-mocking): `entries` is a plain parameter, so
@@ -34,8 +60,12 @@ describe('isRouteTranslated', () => {
 });
 
 describe('translatedLocalesFor', () => {
-	it('Block A: only the base locale ever qualifies with the real register, so the non-base set is empty', () => {
+	it('a not-yet-translated path has an empty non-base set', () => {
 		expect(translatedLocalesFor('/kiez/mitte', ['de', 'en'])).toEqual([]);
+	});
+
+	it('Block B: /berlin-wahlen has en in its non-base set', () => {
+		expect(translatedLocalesFor('/berlin-wahlen', ['de', 'en'])).toEqual(['en']);
 	});
 
 	it('never includes the base locale itself (that is handled separately by callers)', () => {

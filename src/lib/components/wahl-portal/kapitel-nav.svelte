@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	export interface KapitelNavEntry {
 		readonly id: string;
@@ -48,7 +49,7 @@
      Sticky-Leisten überlappen. -->
 <nav
 	bind:this={navEl}
-	aria-label="Kapitel"
+	aria-label={m.wahl_portal_kapitel_nav_aria_label()}
 	data-testid="kapitel-nav"
 	class="sticky top-[calc(var(--header-height,72px)+2.5rem)] z-20 flex gap-1 overflow-x-auto border-b border-rule bg-bg/95 px-4 py-2"
 >

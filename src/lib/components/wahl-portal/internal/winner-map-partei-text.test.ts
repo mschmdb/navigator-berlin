@@ -12,6 +12,10 @@ describe('parteiLegendeTitel', () => {
 	it('nennt die Partei statt "Stärkste Partei"', () => {
 		expect(parteiLegendeTitel('CDU')).toBe('Anteil CDU');
 	});
+
+	it('EN: „Share Partei"', () => {
+		expect(parteiLegendeTitel('CDU', { locale: 'en' })).toBe('Share CDU');
+	});
 });
 
 describe('parteiLegendeRampeText', () => {
@@ -20,6 +24,13 @@ describe('parteiLegendeRampeText', () => {
 		expect(text).toContain('10,0 %');
 		expect(text).toContain('50,0 %');
 		expect(text.toLowerCase()).toContain('reihe');
+	});
+
+	it('EN: Spanne mit Punkt-Dezimaltrennzeichen, Bezugsgröße „series"', () => {
+		const text = parteiLegendeRampeText({ min: 0.1, max: 0.5 }, { locale: 'en' });
+		expect(text).toContain('10.0%');
+		expect(text).toContain('50.0%');
+		expect(text.toLowerCase()).toContain('series');
 	});
 });
 
@@ -30,6 +41,11 @@ describe('parteiTableCaption', () => {
 
 	it('lässt das Jahr weg, wenn keins bekannt ist', () => {
 		expect(parteiTableCaption('SPD', null)).toBe('Anteil SPD je Gebiet');
+	});
+
+	it('EN: „Share Partei by area[, Jahr]"', () => {
+		expect(parteiTableCaption('SPD', 2023, { locale: 'en' })).toBe('Share SPD by area, 2023');
+		expect(parteiTableCaption('SPD', null, { locale: 'en' })).toBe('Share SPD by area');
 	});
 });
 
@@ -47,6 +63,19 @@ describe('parteiTakeawaySentence', () => {
 	it('zeigt einen neutralen Hinweis ohne Daten (z.B. BSW vor 2023), kein Crash', () => {
 		const text = parteiTakeawaySentence('BSW', false, 143, { min: 0, max: 1 });
 		expect(text).toBe(parteiKeineDatenHinweis('BSW'));
+	});
+
+	it('EN: Spanne und Bezugsgröße auf Englisch', () => {
+		const text = parteiTakeawaySentence('CDU', true, 143, { min: 0.1, max: 0.5 }, { locale: 'en' });
+		expect(text).toBe(
+			'CDU: share between 10.0% and 50.0% across all elections in the series (143 areas).'
+		);
+	});
+
+	it('EN: neutraler Hinweis ohne Daten', () => {
+		const text = parteiTakeawaySentence('BSW', false, 143, { min: 0, max: 1 }, { locale: 'en' });
+		expect(text).toBe(parteiKeineDatenHinweis('BSW', { locale: 'en' }));
+		expect(text).toBe('No data is available for BSW in this election series.');
 	});
 });
 
@@ -76,5 +105,20 @@ describe('buildParteiViewTexts', () => {
 		expect(texts.legendeRampeText).toBe(parteiKeineDatenHinweis('BSW'));
 		expect(texts.legendeRampeText).not.toContain('0,0 %');
 		expect(texts.legendeRampeText).not.toContain('100,0 %');
+	});
+
+	it('EN: bündelt alle vier Text-Bausteine auf Englisch (locale-Feld im Input)', () => {
+		const texts = buildParteiViewTexts({
+			partei: 'GRÜNE',
+			jahr: 2021,
+			hasData: true,
+			totalGebiete: 12,
+			spanne: { min: 0.2, max: 0.4 },
+			locale: 'en'
+		});
+		expect(texts.legendeTitel).toBe('Share GRÜNE');
+		expect(texts.tableCaption).toBe('Share GRÜNE by area, 2021');
+		expect(texts.takeaway).toContain('GRÜNE');
+		expect(texts.legendeRampeText).toContain('20.0%');
 	});
 });

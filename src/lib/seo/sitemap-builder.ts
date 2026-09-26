@@ -1,6 +1,8 @@
 import type { Manifest } from '$lib/data/types.js';
-import { baseLocale, type Locale } from '$lib/paraglide/runtime';
-import { isRouteTranslated } from './translation-register.js';
+import { baseLocale, locales, type Locale } from '$lib/paraglide/runtime';
+import { isRouteTranslated, translatedLocalesFor } from './translation-register.js';
+import { buildHreflangCluster } from './hreflang.js';
+import { localizedPathname } from './canonical.js';
 
 export interface SitemapAlternate {
 	readonly hreflang: Locale | 'x-default';
@@ -158,17 +160,30 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 			changefreq: 'monthly'
 		},
 		{ loc: `${ctx.origin}/lizenzen`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
-		{ loc: `${ctx.origin}/webmcp`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
-		...(ctx.wahlPortalEnabled
-			? [
-					{
-						loc: `${ctx.origin}/berlin-wahlen`,
-						lastmod: ctx.buildTimestamp,
-						changefreq: 'weekly' as const,
-						priority: 0.8
-					}
-				]
-			: [])
+		{ loc: `${ctx.origin}/webmcp`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' }
+	];
+};
+
+/**
+ * Sources the Wahlportal main page (`/berlin-wahlen`).
+ *
+ * i18n Block B: separate from {@link STATIC_PAGES_SOURCE} because this is
+ * the first static (non-detail-page) route registered as translated
+ * (`translation-register.ts`) -- it emits an entry for every active locale
+ * (locale-prefixed `loc` via `localizedPathname`), gated only by
+ * `wahlPortalEnabled`. `collectPrerenderedUrls` filters out any
+ * non-base-locale entry that is not actually registered as translated, so
+ * this source itself needs no `ctx.locale` guard.
+ */
+export const WAHL_PORTAL_PAGE_SOURCE: SitemapSource = (ctx) => {
+	if (!ctx.wahlPortalEnabled) return [];
+	return [
+		{
+			loc: `${ctx.origin}${localizedPathname('/berlin-wahlen', ctx.locale)}`,
+			lastmod: ctx.buildTimestamp,
+			changefreq: 'weekly' as const,
+			priority: 0.8
+		}
 	];
 };
 
@@ -209,6 +224,7 @@ import { WAHL_DETAIL_SOURCE } from './sources/wahl-detail-pages.js';
 
 const ALL_SOURCES: readonly SitemapSource[] = [
 	STATIC_PAGES_SOURCE,
+	WAHL_PORTAL_PAGE_SOURCE,
 	LAYER_DETAIL_SOURCE,
 	UPDATES_PAGES_SOURCE,
 	BEZIRK_PAGES_SOURCE,
@@ -217,25 +233,47 @@ const ALL_SOURCES: readonly SitemapSource[] = [
 	WAHL_DETAIL_SOURCE
 ];
 
+function pathnameFromLoc(loc: string, originPrefix: string): string {
+	return loc.startsWith(originPrefix) ? loc.slice(originPrefix.length) || '/' : loc;
+}
+
 /**
- * Central register gate: every individual source above already returns `[]`
- * for a non-base locale (Phase 1 pattern, kept for now), but this is the
- * authoritative check -- once a source starts emitting non-base-locale
- * entries (Block B+), only pages `translation-register.ts` actually marks
- * as translated survive here. Prevents an un-registered page from silently
- * appearing in `sitemap-en.xml` just because a source forgot the guard.
+ * Central register gate: most sources above still return `[]` for a
+ * non-base locale (Phase 1 pattern, kept for now); `WAHL_PORTAL_PAGE_SOURCE`
+ * and `WAHL_DETAIL_SOURCE` (Block B) emit for every locale. Either way, this
+ * is the authoritative check -- only pages `translation-register.ts`
+ * actually marks as translated survive here for a non-base locale. Prevents
+ * an un-registered page from silently appearing in `sitemap-en.xml` just
+ * because a source forgot the guard.
+ *
+ * i18n Block B: also attaches `xhtml:link` alternates (AC "Sitemap ...
+ * xhtml:link-Alternates") to every entry that has a real cross-locale
+ * counterpart per the translation register -- reuses `buildHreflangCluster`
+ * (the same cluster `SeoHead` renders into `<link rel="alternate">`) so both
+ * stay consistent by construction. A page with no translated counterpart
+ * gets no `alternates` (matches Block A's "kein hreflang-Paar" behavior).
  */
 export function collectPrerenderedUrls(ctx: SitemapSourceContext): SitemapEntry[] {
 	const out: SitemapEntry[] = [];
 	for (const source of ALL_SOURCES) {
 		out.push(...source(ctx));
 	}
-	if (ctx.locale === baseLocale) return out;
 	const originPrefix = ctx.origin.replace(/\/+$/, '');
-	return out.filter((entry) => {
-		const pathname = entry.loc.startsWith(originPrefix)
-			? entry.loc.slice(originPrefix.length) || '/'
-			: entry.loc;
-		return isRouteTranslated(pathname, ctx.locale);
+	const filtered =
+		ctx.locale === baseLocale
+			? out
+			: out.filter((entry) =>
+					isRouteTranslated(pathnameFromLoc(entry.loc, originPrefix), ctx.locale)
+				);
+	return filtered.map((entry) => {
+		const pathname = pathnameFromLoc(entry.loc, originPrefix);
+		const translated = translatedLocalesFor(pathname, locales);
+		if (translated.length === 0) return entry;
+		const alternates = buildHreflangCluster({
+			origin: ctx.origin,
+			pathname,
+			locales: [baseLocale, ...translated]
+		});
+		return { ...entry, alternates };
 	});
 }

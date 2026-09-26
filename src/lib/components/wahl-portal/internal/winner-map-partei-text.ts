@@ -5,6 +5,8 @@
  * (`buildTakeawaySentence` etc.) unverändert bleiben (Boundary: kein
  * "Stärkste Partei"-Framing im Partei-Modus, `lint:wahl`-konform).
  */
+import { m } from '$lib/paraglide/messages.js';
+import type { LocaleFormatOptions } from '$lib/i18n/format.js';
 import type { AnteilSpanne } from './winner-map-expressions.js';
 import { formatAnteilPct } from './winner-map-data.js';
 
@@ -15,7 +17,7 @@ export interface ParteiViewTexts {
 	readonly takeaway: string;
 }
 
-export interface ParteiViewTextsInput {
+export interface ParteiViewTextsInput extends LocaleFormatOptions {
 	readonly partei: string;
 	readonly jahr: number | null;
 	/** Ob für das gewählte JAHR Rows dieser Partei existieren (I/O-Matrix
@@ -29,49 +31,78 @@ export interface ParteiViewTextsInput {
 	readonly spanne: AnteilSpanne;
 }
 
-export function parteiLegendeTitel(partei: string): string {
-	return `Anteil ${partei}`;
+export function parteiLegendeTitel(partei: string, opts?: LocaleFormatOptions): string {
+	return m.wahl_portal_partei_legende_titel({ partei }, { locale: opts?.locale });
 }
 
 /** Review-Fund #4: nennt die Bezugsgröße der Rampe explizit (reihen-weite
  * Spanne, nicht die des aktuell angezeigten Jahres) -- ohne den Satz liest
  * sich die Legende, als wäre die Spanne jahresbezogen. */
-export function parteiLegendeRampeText(spanne: AnteilSpanne): string {
-	return `Deckkraft nach Anteil: ${formatAnteilPct(spanne.min)} = niedrige Deckkraft, ab ${formatAnteilPct(spanne.max)} volle Deckkraft. Skala relativ zur Anteils-Spanne der gewählten Partei über die Reihe.`;
+export function parteiLegendeRampeText(spanne: AnteilSpanne, opts?: LocaleFormatOptions): string {
+	return m.wahl_portal_partei_legende_rampe_text(
+		{
+			min: formatAnteilPct(spanne.min, 1, opts),
+			max: formatAnteilPct(spanne.max, 1, opts)
+		},
+		{ locale: opts?.locale }
+	);
 }
 
-export function parteiTableCaption(partei: string, jahr: number | null): string {
-	return `Anteil ${partei} je Gebiet${jahr !== null ? `, ${jahr}` : ''}`;
+export function parteiTableCaption(
+	partei: string,
+	jahr: number | null,
+	opts?: LocaleFormatOptions
+): string {
+	const options = { locale: opts?.locale };
+	return jahr !== null
+		? m.wahl_portal_partei_table_caption_jahr({ partei, jahr }, options)
+		: m.wahl_portal_partei_table_caption({ partei }, options);
 }
 
 /** Review-Fund #5: geteilter Hinweis für Takeaway UND Legende -- ohne Daten
  * fürs gewählte Jahr darf die Legende nie eine erfundene Rampe (z. B. „0,0 %
  * bis 100,0 %" aus der Default-Spanne) zeigen. */
-export function parteiKeineDatenHinweis(partei: string): string {
-	return `Für ${partei} liegen in dieser Wahl-Reihe keine Daten vor.`;
+export function parteiKeineDatenHinweis(partei: string, opts?: LocaleFormatOptions): string {
+	return m.wahl_portal_partei_keine_daten({ partei }, { locale: opts?.locale });
 }
 
 export function parteiTakeawaySentence(
 	partei: string,
 	hasData: boolean,
 	totalGebiete: number,
-	spanne: AnteilSpanne
+	spanne: AnteilSpanne,
+	opts?: LocaleFormatOptions
 ): string {
-	if (!hasData) return parteiKeineDatenHinweis(partei);
+	if (!hasData) return parteiKeineDatenHinweis(partei, opts);
 	// Review-Fund #3: „über alle Wahlen der Reihe" macht explizit, dass die
 	// Spanne reihen-weit gilt, nicht nur für das aktuell angezeigte Jahr.
-	return `${partei}: Anteil zwischen ${formatAnteilPct(spanne.min)} und ${formatAnteilPct(spanne.max)} über alle Wahlen der Reihe (${totalGebiete} Gebiete).`;
+	return m.wahl_portal_partei_takeaway(
+		{
+			partei,
+			min: formatAnteilPct(spanne.min, 1, opts),
+			max: formatAnteilPct(spanne.max, 1, opts),
+			total: totalGebiete
+		},
+		{ locale: opts?.locale }
+	);
 }
 
 /** Bündelt die vier Text-Bausteine, damit der Aufrufer (winner-map.svelte)
  * nur EINE `$derived`-Stelle statt vier braucht. */
 export function buildParteiViewTexts(input: ParteiViewTextsInput): ParteiViewTexts {
+	const opts = { locale: input.locale };
 	return {
-		legendeTitel: parteiLegendeTitel(input.partei),
+		legendeTitel: parteiLegendeTitel(input.partei, opts),
 		legendeRampeText: input.hasData
-			? parteiLegendeRampeText(input.spanne)
-			: parteiKeineDatenHinweis(input.partei),
-		tableCaption: parteiTableCaption(input.partei, input.jahr),
-		takeaway: parteiTakeawaySentence(input.partei, input.hasData, input.totalGebiete, input.spanne)
+			? parteiLegendeRampeText(input.spanne, opts)
+			: parteiKeineDatenHinweis(input.partei, opts),
+		tableCaption: parteiTableCaption(input.partei, input.jahr, opts),
+		takeaway: parteiTakeawaySentence(
+			input.partei,
+			input.hasData,
+			input.totalGebiete,
+			input.spanne,
+			opts
+		)
 	};
 }

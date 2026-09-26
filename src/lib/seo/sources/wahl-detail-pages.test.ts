@@ -9,9 +9,10 @@ const emptyManifest: Manifest = {
 };
 
 describe('buildWahlSitemapEntries', () => {
-	it('liefert Entry pro Wahl mit korrektem Slug-Pattern', () => {
+	it('liefert Entry pro Wahl mit korrektem Slug-Pattern (locale=de, kein Praefix)', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin',
+			locale: 'de',
 			wahlen: [
 				{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' },
 				{ jahr: 2025, typ: 'btw', stimmtyp: 'erststimme' },
@@ -25,9 +26,19 @@ describe('buildWahlSitemapEntries', () => {
 		]);
 	});
 
+	it('i18n Block B: locale=en praefixiert jeden Slug mit /en', () => {
+		const entries = buildWahlSitemapEntries({
+			origin: 'https://navigator.berlin',
+			locale: 'en',
+			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
+		});
+		expect(entries[0].loc).toBe('https://navigator.berlin/en/berlin-wahlen/2025-btw-zweitstimme');
+	});
+
 	it('lastmod = Wahljahr-01-01 ohne sourceUpdatedAt, changefreq yearly, priority 0.7', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin',
+			locale: 'de',
 			wahlen: [{ jahr: 2017, typ: 'btw', stimmtyp: 'zweitstimme' }]
 		});
 		expect(entries[0].lastmod).toBe('2017-01-01');
@@ -38,6 +49,7 @@ describe('buildWahlSitemapEntries', () => {
 	it('lastmod = sourceUpdatedAt wenn vorhanden (Story 16)', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin',
+			locale: 'de',
 			wahlen: [
 				{
 					jahr: 2026,
@@ -53,6 +65,7 @@ describe('buildWahlSitemapEntries', () => {
 	it('lastmod fällt auf Wahljahr-01-01 zurück wenn sourceUpdatedAt null ist', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin',
+			locale: 'de',
 			wahlen: [{ jahr: 2023, typ: 'bvv', stimmtyp: 'einstimme', sourceUpdatedAt: null }]
 		});
 		expect(entries[0].lastmod).toBe('2023-01-01');
@@ -61,6 +74,7 @@ describe('buildWahlSitemapEntries', () => {
 	it('trimmt trailing slash aus origin', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin/',
+			locale: 'de',
 			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
 		});
 		expect(entries[0].loc).toBe('https://navigator.berlin/berlin-wahlen/2025-btw-zweitstimme');
@@ -68,7 +82,7 @@ describe('buildWahlSitemapEntries', () => {
 });
 
 describe('WAHL_DETAIL_SOURCE', () => {
-	it('leeres Array für non-de locale', () => {
+	it('i18n Block B: liefert /en-praefixierte Entries für locale=en (Register deckt alle Wahlen ab)', () => {
 		const entries = WAHL_DETAIL_SOURCE({
 			origin: 'https://navigator.berlin',
 			locale: 'en',
@@ -76,7 +90,8 @@ describe('WAHL_DETAIL_SOURCE', () => {
 			buildTimestamp: '2026-01-01T00:00:00Z',
 			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
 		});
-		expect(entries).toEqual([]);
+		expect(entries).toHaveLength(1);
+		expect(entries[0].loc).toBe('https://navigator.berlin/en/berlin-wahlen/2025-btw-zweitstimme');
 	});
 
 	it('leeres Array bei fehlenden wahlen', () => {

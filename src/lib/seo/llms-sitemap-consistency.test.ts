@@ -168,11 +168,16 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 
 	// Review-Fund: der Wahl-Detail-Zweig (ctx.wahlen) war in diesem
 	// Konsistenz-Test ungetestet.
-	// i18n Block A: EN-Locale bleibt für beide Builder leer, weil das
+	// i18n Block A: EN-Locale blieb für beide Builder leer, weil das
 	// Übersetzungs-Register (`translation-register.ts`) noch keine Seite
-	// markiert. Dokumentiert die Erweiterung auf N Locales aus dem Code-Map
-	// (`llms-sitemap-consistency.test.ts -- auf beide Locales erweitern`).
-	it('i18n Block A: locale=en liefert für Sitemap UND llms.txt ein leeres Ergebnis', () => {
+	// markierte.
+	// i18n Block B: das Register markiert jetzt /berlin-wahlen + Detailseiten
+	// für `en` -- die Sitemap folgt dem Register (Single Source of Truth),
+	// llms.txt bleibt für `en` bewusst leer (Plan-Entscheidung „EN-llms.txt
+	// NICHT in v1", `_user-input/plan-i18n-de-en-2026-08-22.md`). Die beiden
+	// Builder dürfen hier also auseinanderlaufen -- die Konsistenz-Regel
+	// dieser Datei gilt nur für locale=de.
+	it('i18n Block B: locale=en liefert fuer die Sitemap /en/berlin-wahlen, llms.txt bleibt bewusst leer', () => {
 		const sitemapUrls = collectPrerenderedUrls({
 			origin: ctx.origin,
 			locale: 'en',
@@ -181,7 +186,31 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 			wahlPortalEnabled: true
 		});
 		const llmsUrls = collectLlmsSourceEntries({ ...ctx, locale: 'en', wahlPortalEnabled: true });
-		expect(sitemapUrls).toEqual([]);
+		expect(sitemapUrls.map((e) => e.loc)).toEqual([`${ctx.origin}/en/berlin-wahlen`]);
+		expect(llmsUrls).toEqual([]);
+	});
+
+	it('i18n Block B: eine EN-Wahl-Detailseite landet nur in der Sitemap (registriert), nicht in llms.txt', () => {
+		const sitemapUrls = collectPrerenderedUrls({
+			origin: ctx.origin,
+			locale: 'en',
+			manifest: ctx.manifest,
+			buildTimestamp: ctx.buildTimestamp,
+			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
+		}).map((e) => e.loc);
+		const llmsUrls = collectLlmsSourceEntries({
+			...ctx,
+			locale: 'en',
+			wahlen: [
+				{
+					slug: '2025-btw-zweitstimme',
+					name: 'Bundestagswahl 2025 · Zweitstimme',
+					short: 'Quelle Bundeswahlleiterin',
+					markdown: '## Bundestagswahl 2025 · Zweitstimme\n'
+				}
+			]
+		}).map((e) => e.loc);
+		expect(sitemapUrls).toContain(`${ctx.origin}/en/berlin-wahlen/2025-btw-zweitstimme`);
 		expect(llmsUrls).toEqual([]);
 	});
 

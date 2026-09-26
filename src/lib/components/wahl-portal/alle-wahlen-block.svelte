@@ -8,7 +8,9 @@
 	crawlbar).
 -->
 <script lang="ts">
-	import { resolve } from '$app/paths';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { wahlReiheLabel, wahlStimmtypLabel } from '$lib/data/wahl-labels.js';
 	import type { AlleWahlenEntry } from '../../../routes/(with-header)/berlin-wahlen/+page.server.js';
 
 	type Props = {
@@ -16,18 +18,6 @@
 	};
 
 	let { wahlen }: Props = $props();
-
-	const TYP_LABELS: Record<AlleWahlenEntry['typ'], string> = {
-		btw: 'Bundestag',
-		agh: 'Abgeordnetenhaus',
-		bvv: 'BVV'
-	};
-
-	const STIMMTYP_LABELS: Record<AlleWahlenEntry['stimmtyp'], string> = {
-		erststimme: 'Erststimme',
-		zweitstimme: 'Zweitstimme',
-		einstimme: 'Stimme'
-	};
 
 	const TYP_ORDER: readonly AlleWahlenEntry['typ'][] = ['btw', 'agh', 'bvv'];
 	const STIMMTYP_ORDER: readonly AlleWahlenEntry['stimmtyp'][] = [
@@ -45,7 +35,7 @@
 	const groups = $derived.by((): Group[] => {
 		return TYP_ORDER.map((typ) => ({
 			typ,
-			label: TYP_LABELS[typ],
+			label: wahlReiheLabel(typ),
 			entries: wahlen
 				.filter((w) => w.typ === typ)
 				.slice()
@@ -65,17 +55,17 @@
 	 */
 	function entryLabel(entry: AlleWahlenEntry): string {
 		const parts = [String(entry.jahr)];
-		if (entry.typ !== 'bvv') parts.push(STIMMTYP_LABELS[entry.stimmtyp]);
-		if (entry.isRepeatElection) parts.push('Wiederholung');
+		if (entry.typ !== 'bvv') parts.push(wahlStimmtypLabel(entry.stimmtyp));
+		if (entry.isRepeatElection) parts.push(m.wahl_portal_alle_wahlen_wiederholung_suffix());
 		return parts.join(' · ');
 	}
 </script>
 
 <div id="alle-wahlen" class="flex scroll-mt-[var(--header-height,72px)] flex-col gap-3">
-	<h3 class="font-sans text-base font-semibold text-ink">Alle Wahlen einzeln</h3>
+	<h3 class="font-sans text-base font-semibold text-ink">{m.wahl_portal_alle_wahlen_titel()}</h3>
 	{#if groups.length === 0}
 		<p class="font-mono text-xs text-ink-muted" data-testid="alle-wahlen-empty">
-			Wahl-Liste wird mit dem nächsten Build freigeschaltet.
+			{m.wahl_portal_alle_wahlen_empty()}
 		</p>
 	{:else}
 		<div class="flex flex-col gap-4" data-testid="alle-wahlen-block">
@@ -88,7 +78,7 @@
 						{#each group.entries as entry (entry.slug)}
 							<li>
 								<a
-									href={resolve('/(with-header)/berlin-wahlen/[slug]', { slug: entry.slug })}
+									href={localizedHref(`/berlin-wahlen/${entry.slug}`)}
 									data-testid={`alle-wahlen-link-${entry.slug}`}
 									class="hover:text-accent-strong inline-flex min-h-6 items-center text-accent underline underline-offset-2"
 								>

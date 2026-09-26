@@ -12,6 +12,8 @@
 	import { untrack } from 'svelte';
 	import { Play, Pause, StepForward } from '@lucide/svelte';
 	import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
 	import { ZeitAnimationController } from './internal/zeit-animation.svelte.js';
 
 	export interface ZeitAnimationJahrOption {
@@ -59,11 +61,16 @@
 
 	// Jahr fehlt in jahrOptions (Reihen-/Ebenen-Wechsel-Zwischenstand): Index auf
 	// 0 klemmen statt den Slider/aria-valuetext leer zu lassen.
-	const activeIndex = $derived(Math.max(0, jahrOptions.findIndex((o) => o.jahr === ctl.displayJahr)));
+	const activeIndex = $derived(
+		Math.max(
+			0,
+			jahrOptions.findIndex((o) => o.jahr === ctl.displayJahr)
+		)
+	);
 	const activeOption = $derived(jahrOptions[activeIndex] ?? null);
 	const valueText = $derived(
 		activeOption
-			? `${activeOption.jahr}${activeOption.isRepeatElection ? ' Wiederholungswahl' : ''}`
+			? `${activeOption.jahr}${activeOption.isRepeatElection ? ` ${wahlWiederholungLabel()}` : ''}`
 			: String(ctl.displayJahr)
 	);
 
@@ -78,29 +85,34 @@
 </script>
 
 {#if ebene === 'stimmbezirk'}
-	<div data-testid="zeit-animation-hinweis" class="flex flex-wrap items-center gap-3 border border-rule bg-bg p-3">
+	<div
+		data-testid="zeit-animation-hinweis"
+		class="flex flex-wrap items-center gap-3 border border-rule bg-bg p-3"
+	>
 		<p class="font-mono text-xs text-ink-subtle">
-			Zeit-Animation gibt es nur auf Kiez- oder Bezirks-Ebene (Stimmbezirke wechseln zwischen
-			Wahl-Generationen ihren Zuschnitt).
+			{m.wahl_portal_zeit_animation_stimmbezirk_hinweis()}
 		</p>
 		<button
 			type="button"
 			data-testid="zeit-animation-zur-kiez-button"
 			onclick={onZurKiez}
-			class="rounded border border-ink bg-bg px-2.5 py-1 font-mono text-xs text-ink transition-colors hover:bg-bg-muted"
+			class="hover:bg-bg-muted rounded border border-ink bg-bg px-2.5 py-1 font-mono text-xs text-ink transition-colors"
 		>
-			Zur Kiez-Ebene
+			{m.wahl_portal_zeit_animation_zur_kiez()}
 		</button>
 	</div>
 {:else if jahrOptions.length > 0}
-	<div data-testid="zeit-animation" class="flex flex-wrap items-center gap-3 border border-rule bg-bg p-3">
+	<div
+		data-testid="zeit-animation"
+		class="flex flex-wrap items-center gap-3 border border-rule bg-bg p-3"
+	>
 		{#if ctl.reducedMotion}
 			<button
 				type="button"
 				data-testid="zeit-animation-play"
-				aria-label="Ein Jahr weiter"
+				aria-label={m.wahl_portal_zeit_animation_ein_jahr_weiter()}
 				onclick={() => ctl.togglePlay()}
-				class="inline-flex items-center justify-center rounded border border-ink p-1.5 text-ink transition-colors hover:bg-bg-muted"
+				class="hover:bg-bg-muted inline-flex items-center justify-center rounded border border-ink p-1.5 text-ink transition-colors"
 			>
 				<StepForward size={16} aria-hidden="true" />
 			</button>
@@ -109,9 +121,11 @@
 				type="button"
 				data-testid="zeit-animation-play"
 				aria-pressed={ctl.playing}
-				aria-label={ctl.playing ? 'Wiedergabe pausieren' : 'Wiedergabe starten'}
+				aria-label={ctl.playing
+					? m.wahl_portal_zeit_animation_pause()
+					: m.wahl_portal_zeit_animation_play()}
 				onclick={() => ctl.togglePlay()}
-				class="inline-flex items-center justify-center rounded border border-ink p-1.5 text-ink transition-colors hover:bg-bg-muted"
+				class="hover:bg-bg-muted inline-flex items-center justify-center rounded border border-ink p-1.5 text-ink transition-colors"
 			>
 				{#if ctl.playing}
 					<Pause size={16} aria-hidden="true" />
@@ -128,29 +142,29 @@
 			max={jahrOptions.length - 1}
 			step="1"
 			value={activeIndex}
-			aria-label="Jahr"
+			aria-label={m.wahl_portal_spalte_jahr()}
 			aria-valuetext={valueText}
 			oninput={onSliderInput}
 			onchange={onSliderChange}
 			class="min-w-[10rem] flex-1 accent-ink"
 		/>
 
-		<span data-testid="zeit-animation-jahr" class="font-mono text-xs tabular-nums text-ink">
+		<span data-testid="zeit-animation-jahr" class="font-mono text-xs text-ink tabular-nums">
 			{activeOption?.jahr ?? ctl.displayJahr}
 			{#if activeOption?.isRepeatElection}
 				<span
 					data-testid="zeit-animation-wiederholung"
 					aria-hidden="true"
 					class="ml-0.5 text-[10px] text-ink-subtle"
-					title="Wiederholungswahl"
+					title={wahlWiederholungLabel()}
 				>
-					·W
+					{m.wahl_portal_wiederholung_kuerzel()}
 				</span>
 			{/if}
 		</span>
 	</div>
 
 	<p data-testid="zeit-animation-wechsel-hinweis" class="font-mono text-xs text-ink-subtle">
-		Gestrichelte Kontur: Wechsel der stärksten Kraft im gewählten Jahr.
+		{m.wahl_portal_zeit_animation_wechsel_hinweis()}
 	</p>
 {/if}

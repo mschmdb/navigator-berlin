@@ -12,9 +12,11 @@
 	 * Lade-/Fehler-/Erfolgs-Zustand, der Kapitel-weite Error-Zustand gilt nur,
 	 * wenn ALLE Parteien scheitern oder die Geometrie fehlt.
 	 */
-	import { resolve } from '$app/paths';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { getWahlPortalState, currentJahr } from '$lib/state/wahl-portal-context.svelte.js';
 	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
+	import { sourceDisplayLabel, licenseDisplayLabel } from '$lib/data/wahl-labels.js';
 	import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
 	import DataTableAlternative, {
 		type TableColumn
@@ -112,7 +114,7 @@
 		miniSlots.map((s) => s.mini).filter((m): m is PartyMiniMap => m !== null)
 	);
 	const tableRows = $derived<SmallMultiplesTableRow[]>(
-		loadedMinis.map(buildSmallMultiplesTableRow)
+		loadedMinis.map((mini) => buildSmallMultiplesTableRow(mini))
 	);
 
 	const isError = $derived(geometryLoader.status === 'error' || loaders.allFailed);
@@ -133,9 +135,7 @@
 	);
 
 	const takeawayText = $derived(
-		jahr !== null
-			? `Je Partei der stärkste und der schwächste Anteil unter ${matchedKiezCount} Berliner Kiezen, Wahl ${jahr}.`
-			: ''
+		jahr !== null ? m.wahl_portal_small_multiples_takeaway({ count: matchedKiezCount, jahr }) : ''
 	);
 	// Alle Minis teilen dieselbe Wahl-Reihe/Lizenz -- die erste geladene
 	// Response reicht für die Datenstand-Zeile.
@@ -144,58 +144,71 @@
 	);
 
 	function anteilLabel(anteil: number | null): string {
-		return anteil === null ? 'keine Daten' : formatAnteilPct(anteil);
+		return anteil === null ? m.wahl_portal_keine_daten_inline() : formatAnteilPct(anteil);
 	}
 
 	function miniAriaLabel(partei: string, status: LoadStatus, mini: PartyMiniMap | null): string {
-		if (status === 'error') return `Mini-Karte ${partei}: Daten konnten nicht geladen werden`;
-		if (!mini) return `Mini-Karte ${partei}: lädt …`;
-		if (!mini.hasData) return `Mini-Karte ${partei}: keine Daten für diese Wahl-Reihe`;
-		return `Mini-Karte ${partei}: stärkster Kiez ${mini.staerkste?.name} mit ${anteilLabel(mini.staerkste?.anteil ?? null)}, schwächster Kiez ${mini.schwaechste?.name} mit ${anteilLabel(mini.schwaechste?.anteil ?? null)}`;
+		if (status === 'error') return m.wahl_portal_mini_aria_error({ partei });
+		if (!mini) return m.wahl_portal_mini_aria_loading({ partei });
+		if (!mini.hasData) return m.wahl_portal_mini_aria_keine_daten({ partei });
+		return m.wahl_portal_mini_aria_normal({
+			partei,
+			staerksterName: mini.staerkste?.name ?? '',
+			staerksterAnteil: anteilLabel(mini.staerkste?.anteil ?? null),
+			schwaechsterName: mini.schwaechste?.name ?? '',
+			schwaechsterAnteil: anteilLabel(mini.schwaechste?.anteil ?? null)
+		});
 	}
 
 	const tableColumns: TableColumn<SmallMultiplesTableRow>[] = [
-		{ key: 'partei', label: 'Partei', sortable: true, accessor: (r) => r.partei },
+		{
+			key: 'partei',
+			label: m.wahl_portal_spalte_partei(),
+			sortable: true,
+			accessor: (r) => r.partei
+		},
 		{
 			key: 'staerkster',
-			label: 'Stärkster Kiez',
+			label: m.wahl_portal_spalte_staerkster_kiez(),
 			sortable: true,
 			accessor: (r) => r.staerksterKiez
 		},
 		{
 			key: 'staerksterAnteil',
-			label: 'Anteil (stärkster)',
+			label: m.wahl_portal_spalte_anteil_staerkster(),
 			sortable: true,
 			accessor: (r) => r.staerksterAnteil ?? KEIN_ANTEIL,
-			format: (v) => (Number(v) < 0 ? 'keine Daten' : formatAnteilPct(Number(v)))
+			format: (v) =>
+				Number(v) < 0 ? m.wahl_portal_keine_daten_inline() : formatAnteilPct(Number(v))
 		},
 		{
 			key: 'schwaechster',
-			label: 'Schwächster Kiez',
+			label: m.wahl_portal_spalte_schwaechster_kiez(),
 			sortable: true,
 			accessor: (r) => r.schwaechsterKiez
 		},
 		{
 			key: 'schwaechsterAnteil',
-			label: 'Anteil (schwächster)',
+			label: m.wahl_portal_spalte_anteil_schwaechster(),
 			sortable: true,
 			accessor: (r) => r.schwaechsterAnteil ?? KEIN_ANTEIL,
-			format: (v) => (Number(v) < 0 ? 'keine Daten' : formatAnteilPct(Number(v)))
+			format: (v) =>
+				Number(v) < 0 ? m.wahl_portal_keine_daten_inline() : formatAnteilPct(Number(v))
 		}
 	];
 </script>
 
 {#if isError}
 	<p data-testid="small-multiples-error" role="alert" class="font-serif text-ink-muted">
-		Wahl-Daten konnten nicht geladen werden.
+		{m.wahl_portal_wahldaten_error()}
 	</p>
 {:else if isLoading}
 	<p data-testid="small-multiples-loading" class="font-serif text-ink-muted">
-		Lädt Partei-Anteile …
+		{m.wahl_portal_small_multiples_loading()}
 	</p>
 {:else if isEmpty}
 	<p data-testid="small-multiples-empty" class="font-serif text-ink-muted">
-		Für diese Auswahl liegen noch keine Kiez-Daten vor.
+		{m.wahl_portal_small_multiples_empty()}
 	</p>
 {:else if showInhalt}
 	<div data-testid="small-multiples" class="flex flex-col gap-6">
@@ -215,12 +228,12 @@
 							data-testid={`small-multiples-mini-${slot.partei}-error`}
 							class="bg-bg-muted flex aspect-square w-full items-center justify-center border border-rule p-2 text-center font-mono text-xs text-ink-subtle"
 						>
-							Daten für {slot.partei} konnten nicht geladen werden.
+							{m.wahl_portal_mini_kachel_error({ partei: slot.partei })}
 						</div>
 					{:else if !slot.mini}
 						<div
 							role="status"
-							aria-label={`Mini-Karte ${slot.partei} lädt`}
+							aria-label={m.wahl_portal_mini_platzhalter_loading({ partei: slot.partei })}
 							data-testid={`small-multiples-mini-${slot.partei}-loading`}
 							class="bg-bg-muted aspect-square w-full animate-pulse border border-rule"
 						></div>
@@ -250,21 +263,23 @@
 						>
 						{#if slot.mini?.hasData}
 							<span class="block text-ink-subtle tabular-nums">
-								Stärkster: {slot.mini.staerkste?.name} ({anteilLabel(
-									slot.mini.staerkste?.anteil ?? null
-								)})
+								{m.wahl_portal_mini_staerkster_zeile({
+									name: slot.mini.staerkste?.name ?? '',
+									anteil: anteilLabel(slot.mini.staerkste?.anteil ?? null)
+								})}
 							</span>
 							<span class="block text-ink-subtle tabular-nums">
-								Schwächster: {slot.mini.schwaechste?.name} ({anteilLabel(
-									slot.mini.schwaechste?.anteil ?? null
-								)})
+								{m.wahl_portal_mini_schwaechster_zeile({
+									name: slot.mini.schwaechste?.name ?? '',
+									anteil: anteilLabel(slot.mini.schwaechste?.anteil ?? null)
+								})}
 							</span>
 						{:else if slot.mini && !slot.mini.hasData}
 							<span
 								class="block text-ink-subtle"
 								data-testid={`small-multiples-mini-${slot.partei}-keine-daten`}
 							>
-								Keine Daten für diese Wahl-Reihe.
+								{m.wahl_portal_mini_kachel_keine_daten()}
 							</span>
 						{/if}
 					</figcaption>
@@ -275,13 +290,18 @@
 		<DataTableAlternative
 			columns={tableColumns}
 			rows={tableRows}
-			caption={`Stärkster/schwächster Kiez je Partei${jahr !== null ? `, ${jahr}` : ''}`}
+			caption={jahr !== null
+				? m.wahl_portal_small_multiples_caption_jahr({ jahr })
+				: m.wahl_portal_small_multiples_caption()}
+			toggleLabel={m.wahl_portal_data_table_toggle()}
+			closeLabel={m.wahl_portal_data_table_close()}
 		/>
 
 		<p data-testid="small-multiples-methodik-hinweis" class="font-mono text-xs text-ink-subtle">
-			{aggregationHinweisText('kiez')} Details:
+			{aggregationHinweisText('kiez')}
+			{m.wahl_portal_methodik_details_label()}
 			<a
-				href={resolve('/methodik/wahldaten')}
+				href={localizedHref('/methodik/wahldaten')}
 				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
 				/methodik/wahldaten
@@ -293,9 +313,9 @@
 				data-testid="small-multiples-datenstand"
 				class="font-mono text-xs text-ink-subtle tabular-nums"
 			>
-				Datenstand: {datenstand.source_name ?? 'unbekannte Quelle'}
+				{m.wahl_portal_datenstand_label({ source: sourceDisplayLabel(datenstand.source_name) })}
 				{#if datenstand.license}
-					· Lizenz {datenstand.license}
+					· {m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(datenstand.license) })}
 				{/if}
 			</p>
 		{/if}

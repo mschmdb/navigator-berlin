@@ -10,14 +10,21 @@
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
 	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { formatPercent, formatCount, formatWahlDate } from '$lib/i18n/format.js';
+	import {
+		wahlTypLabel,
+		wahlStimmtypLabel,
+		wahlReiheLabel,
+		wahlWiederholungLabel,
+		sourceDisplayLabel,
+		licenseDisplayLabel
+	} from '$lib/data/wahl-labels.js';
+	import { parteiDisplayName } from '$lib/components/wahl-portal/internal/winner-map-data.js';
 	import VorlaeufigBadge from '$lib/components/wahl-portal/vorlaeufig-badge.svelte';
 	import KapitelSection from '$lib/components/wahl-portal/kapitel-section.svelte';
-	import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
-	import {
-		serializePortalState,
-		DEFAULT_EBENE,
-		REIHE_LABELS
-	} from '$lib/utils/wahl-portal-url-state.js';
+	import { serializePortalState, DEFAULT_EBENE } from '$lib/utils/wahl-portal-url-state.js';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -25,30 +32,37 @@
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
 
-	const pageTitle = $derived(`${data.wahl.title} · Berlin · navigator.berlin`);
+	// Titel wird clientseitig aus den rohen Feldern gebaut (Boundary Spec
+	// i18n Block B, Code-Map „Titel → Keys liefern, Label im Client"): der
+	// Server liefert nur noch typ/stimmtyp/jahr/isRepeatElection, keine
+	// vorgefertigte DE-Zeichenkette mehr.
+	const typLabel = $derived(wahlTypLabel(data.wahl.typ));
+	const stimmtypLabel = $derived(wahlStimmtypLabel(data.wahl.stimmtyp));
+	const wahlTitel = $derived.by(() => {
+		const parts = [`${typLabel} ${data.wahl.jahr}`];
+		if (data.wahl.typ !== 'bvv') parts.push(stimmtypLabel);
+		if (data.wahl.isRepeatElection) parts.push(wahlWiederholungLabel());
+		return parts.join(' · ');
+	});
+
+	const pageTitle = $derived(`${wahlTitel} · Berlin · navigator.berlin`);
 	const pageDescription = $derived(
-		`Ergebnisse der ${data.wahl.typLabel} ${data.wahl.jahr} in Berlin: Stimmenanteile, Top-Parteien je Bezirk und Kiez. navigator.berlin.`
+		m.wahl_detail_page_description({ typLabel, jahr: data.wahl.jahr })
 	);
 
 	const totalStimmen = $derived(data.berlin.reduce((s, e) => s + e.stimmen, 0));
 	const berlinTop5 = $derived(data.berlin.slice(0, 5));
-	const karteTitle = $derived(data.geoSlug ? 'Stimmbezirkskarte' : 'Bezirkskarte');
-
-	function formatPct(n: number): string {
-		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
-	}
-
-	function formatStimmen(n: number): string {
-		return n.toLocaleString('de-DE');
-	}
+	const karteTitle = $derived(
+		data.geoSlug ? m.wahl_detail_karte_titel_stimmbezirk() : m.wahl_detail_karte_titel_bezirk()
+	);
 
 	const breadcrumbs = $derived(
 		buildBreadcrumbList({
 			origin,
 			items: [
 				{ name: 'Berlin', path: '/' },
-				{ name: 'Wahlen', path: '/berlin-wahlen' },
-				{ name: data.wahl.title, path: pathname }
+				{ name: m.wahl_detail_breadcrumb_wahlen(), path: '/berlin-wahlen' },
+				{ name: wahlTitel, path: pathname }
 			]
 		})
 	);
@@ -56,18 +70,18 @@
 	const dataset = $derived(
 		buildDataset({
 			origin,
-			name: data.wahl.title,
+			name: wahlTitel,
 			description: pageDescription,
 			license: 'dl-de/by-2-0',
 			dateModified: `${data.wahl.jahr}-01-01`,
-			creatorName: data.wahl.sourceName,
+			creatorName: sourceDisplayLabel(data.wahl.sourceName),
 			contentUrl: data.wahl.sourceUrl,
 			encodingFormat: data.wahl.sourceUrl.endsWith('.zip')
 				? 'application/zip'
 				: data.wahl.sourceUrl.endsWith('.xlsx')
 					? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 					: 'text/csv',
-			keywords: ['Wahl', 'Berlin', data.wahl.typLabel, String(data.wahl.jahr)],
+			keywords: [m.wahl_detail_keyword_wahl(), 'Berlin', typLabel, String(data.wahl.jahr)],
 			inLanguage: localeToBcp47(resolveEffectiveLocale(pathname, getLocale()))
 		})
 	);
@@ -87,10 +101,14 @@
 			ebene: DEFAULT_EBENE
 		});
 		const qs = params.toString();
-		return qs ? `/berlin-wahlen?${qs}` : '/berlin-wahlen';
+		const base = localizedHref('/berlin-wahlen');
+		return qs ? `${base}?${qs}` : base;
 	});
 	const portalDeepLinkLabel = $derived(
-		`${REIHE_LABELS[data.wahl.typ]} ${data.wahl.jahr} im Portal ansehen`
+		m.wahl_detail_portal_link_label({
+			reihe: wahlReiheLabel(data.wahl.typ),
+			jahr: data.wahl.jahr
+		})
 	);
 	const portalDeepLinkIstErststimme = $derived(data.wahl.stimmtyp === 'erststimme');
 </script>
@@ -101,7 +119,7 @@
 	{origin}
 	{pathname}
 	ogImage={`${origin}/og/wahl/${data.slug}.png`}
-	ogImageAlt={`OG-Karte: ${data.wahl.title}, Top-5 Berlin gesamt`}
+	ogImageAlt={m.wahl_detail_og_alt({ title: wahlTitel })}
 />
 
 <JsonLd data={breadcrumbs} />
@@ -110,18 +128,22 @@
 <article class="mx-auto max-w-4xl space-y-8 px-4 py-8" data-testid="wahl-detail-page">
 	<header class="space-y-3">
 		<p class="font-mono text-xs tracking-wide text-ink-muted uppercase">
-			<a href="/" class="underline-offset-2 hover:text-ink hover:underline">Berlin</a>
+			<a href={localizedHref('/')} class="underline-offset-2 hover:text-ink hover:underline">
+				Berlin
+			</a>
 			·
-			<a href="/berlin-wahlen" class="underline-offset-2 hover:text-ink hover:underline">
-				Wahlen
+			<a
+				href={localizedHref('/berlin-wahlen')}
+				class="underline-offset-2 hover:text-ink hover:underline"
+			>
+				{m.wahl_detail_breadcrumb_wahlen()}
 			</a>
 		</p>
 		<h1
 			class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl"
-			lang="de"
 			data-testid="wahl-detail-title"
 		>
-			{data.wahl.title}
+			{wahlTitel}
 		</h1>
 		{#if data.wahl.vorlaeufig}
 			<p>
@@ -136,18 +158,20 @@
 				class="font-mono text-xs tracking-wide text-ink-muted uppercase"
 				data-testid="wahl-detail-wiederholung"
 			>
-				Wiederholungswahl ·
+				{wahlWiederholungLabel()} ·
 				<a
-					href={`/berlin-wahlen/${data.wahl.parentSlug}`}
+					href={localizedHref(`/berlin-wahlen/${data.wahl.parentSlug}`)}
 					class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>
-					Original-Wahl ansehen
+					{m.wahl_detail_original_wahl_link()}
 				</a>
 			</p>
 		{/if}
 		<p class="font-mono text-xs text-ink-muted" data-testid="wahl-detail-meta">
-			Quelle: {data.wahl.sourceName} · Lizenz {data.wahl.license}{#if data.wahl.sourceUpdatedAt}
-				· Stand {formatBerlinDate(data.wahl.sourceUpdatedAt)}{/if}
+			{m.wahl_detail_quelle_label({ source: sourceDisplayLabel(data.wahl.sourceName) })} ·
+			{m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(data.wahl.license) })}{#if data.wahl.sourceUpdatedAt}
+				{m.wahl_portal_vorlaeufig_stand({ date: formatWahlDate(data.wahl.sourceUpdatedAt) })}
+			{/if}
 		</p>
 		<p>
 			<a
@@ -167,14 +191,17 @@
 				data-testid="wahl-detail-portal-link-hinweis"
 				class="font-mono text-[10px] text-ink-muted"
 			>
-				Das Portal zeigt die Zweitstimme; die Erststimme gibt es nur auf dieser Seite.
+				{m.wahl_detail_erststimme_hinweis({
+					zweitstimme: wahlStimmtypLabel('zweitstimme'),
+					erststimme: wahlStimmtypLabel('erststimme')
+				})}
 			</p>
 		{/if}
 	</header>
 
 	<KapitelSection
 		id="detail-berlin"
-		title="Berlin gesamt"
+		title={m.wahl_detail_section_berlin_titel()}
 		testid="wahl-detail-berlin"
 		withPortalChrome={false}
 	>
@@ -197,21 +224,23 @@
 						)};"
 						data-pattern={parteiPattern(entry.kurzname)}
 						data-partei={entry.kurzname}
-						title={`${entry.kurzname}: ${formatPct(entry.anteil)}`}
+						title={`${parteiDisplayName(entry.kurzname)}: ${formatPercent(entry.anteil)}`}
 					></span>
 				{/each}
 			</div>
 
 			<table
 				class="w-full font-mono text-xs sm:text-sm"
-				aria-label={`Top-5-Parteien Berlin gesamt ${data.wahl.title}`}
+				aria-label={m.wahl_detail_aria_top5_berlin({ title: wahlTitel })}
 				data-testid="wahl-detail-berlin-table"
 			>
 				<thead>
 					<tr class="text-[10px] tracking-wide text-ink-muted uppercase">
-						<th class="pb-2 text-left">Partei</th>
-						<th class="pb-2 pl-2 text-right whitespace-nowrap">Stimmen</th>
-						<th class="pb-2 pl-2 text-right whitespace-nowrap">Anteil</th>
+						<th class="pb-2 text-left">{m.wahl_portal_spalte_partei()}</th>
+						<th class="pb-2 pl-2 text-right whitespace-nowrap">
+							{m.wahl_detail_spalte_stimmen()}
+						</th>
+						<th class="pb-2 pl-2 text-right whitespace-nowrap">{m.wahl_portal_spalte_anteil()}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -225,16 +254,16 @@
 										aria-hidden="true"
 									></span>
 									<span class="text-ink">
-										<span class="sm:hidden">{entry.kurzname}</span>
-										<span class="hidden sm:inline">{entry.vollname}</span>
+										<span class="sm:hidden">{parteiDisplayName(entry.kurzname)}</span>
+										<span class="hidden sm:inline">{parteiDisplayName(entry.vollname)}</span>
 									</span>
 								</span>
 							</td>
 							<td class="py-1.5 pl-2 text-right whitespace-nowrap text-ink tabular-nums">
-								{formatStimmen(entry.stimmen)}
+								{formatCount(entry.stimmen)}
 							</td>
 							<td class="py-1.5 pl-2 text-right whitespace-nowrap text-ink tabular-nums">
-								{formatPct(entry.anteil)}
+								{formatPercent(entry.anteil)}
 							</td>
 						</tr>
 					{/each}
@@ -242,7 +271,7 @@
 			</table>
 		{:else}
 			<p class="font-mono text-sm text-ink-muted" data-testid="wahl-detail-berlin-empty">
-				Keine Berlin-Aggregat-Daten für diese Wahl.
+				{m.wahl_detail_berlin_empty()}
 			</p>
 		{/if}
 	</KapitelSection>
@@ -258,7 +287,7 @@
 				class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 				data-testid="wahl-detail-choropleth-count"
 			>
-				~{data.winnersByUwb.length.toLocaleString('de-DE')} Briefwahl-Gruppen
+				{m.wahl_detail_briefwahl_gruppen_count({ count: formatCount(data.winnersByUwb.length) })}
 			</p>
 		{/if}
 		{#if data.geoSlug && data.winnersByUwb.length > 0}
@@ -266,22 +295,22 @@
 				geoSlug={data.geoSlug}
 				wahlSlug={`${data.wahl.typ}${String(data.wahl.jahr).slice(-2)}`}
 				winnersByUwb={data.winnersByUwb}
-				title={data.wahl.title}
+				title={wahlTitel}
 			/>
 		{:else}
 			<p
 				class="border-l-2 border-ink/30 pl-2 font-serif text-sm text-ink-muted italic"
 				data-testid="wahl-detail-choropleth-fallback-note"
 			>
-				Stimmbezirks-Geometrie nicht verfügbar für diese Wahl. Karte zeigt Bezirks-Aggregat.
+				{m.wahl_detail_choropleth_fallback_note()}
 			</p>
-			<WahlBezirkChoropleth bezirke={data.bezirke} title={data.wahl.title} />
+			<WahlBezirkChoropleth bezirke={data.bezirke} title={wahlTitel} />
 		{/if}
 	</KapitelSection>
 
 	<KapitelSection
 		id="detail-bezirke"
-		title="Top-3 je Bezirk"
+		title={m.wahl_detail_section_bezirke_titel()}
 		testid="wahl-detail-bezirke"
 		withPortalChrome={false}
 	>
@@ -292,7 +321,7 @@
 					data-testid={`wahl-detail-bezirk-${bezirk.slug}`}
 				>
 					<a
-						href={`/bezirk/${bezirk.slug}`}
+						href={localizedHref(`/bezirk/${bezirk.slug}`)}
 						class="font-sans font-semibold text-ink hover:text-accent"
 					>
 						{bezirk.name}
@@ -306,28 +335,28 @@
 										style="background-color:{parteiColor(entry.kurzname)};"
 										aria-hidden="true"
 									></span>
-									<span class="truncate text-ink">{entry.kurzname}</span>
+									<span class="truncate text-ink">{parteiDisplayName(entry.kurzname)}</span>
 									<span class="ml-auto text-ink-muted tabular-nums">
-										{formatPct(entry.anteil)}
+										{formatPercent(entry.anteil)}
 									</span>
 								</li>
 							{/each}
 						</ul>
 					{:else}
-						<p class="font-mono text-xs text-ink-muted">Keine Daten.</p>
+						<p class="font-mono text-xs text-ink-muted">{m.wahl_detail_bezirk_keine_daten()}</p>
 					{/if}
 				</li>
 			{/each}
 		</ul>
 	</KapitelSection>
 
-	<EditorialDisclaimer variant="wahl-stimmenanteile" />
+	<EditorialDisclaimer variant="wahl-portal-stimmenanteile" />
 
 	<a
-		href="/methodik/wahldaten"
+		href={localizedHref('/methodik/wahldaten')}
 		class="hover:text-accent-strong inline-block font-mono text-sm text-accent underline underline-offset-2"
 		data-testid="wahl-detail-methodik-link"
 	>
-		Methodik · Wahldaten
+		{m.wahl_detail_methodik_link_label()}
 	</a>
 </article>

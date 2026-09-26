@@ -1,8 +1,13 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import WahlDetailPage from './+page.svelte';
 import type { WahlDetailPageData } from './+page.server.js';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function makeData(overrides: Partial<WahlDetailPageData['wahl']> = {}): WahlDetailPageData {
 	return {
@@ -12,9 +17,6 @@ function makeData(overrides: Partial<WahlDetailPageData['wahl']> = {}): WahlDeta
 			jahr: 2026,
 			typ: 'bvv',
 			stimmtyp: 'einstimme',
-			typLabel: 'BVV-Wahl',
-			stimmtypLabel: 'Stimme',
-			title: 'BVV-Wahl 2026',
 			isRepeatElection: false,
 			parentSlug: null,
 			sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/x.csv',
@@ -30,6 +32,64 @@ function makeData(overrides: Partial<WahlDetailPageData['wahl']> = {}): WahlDeta
 		winnersByUwb: []
 	};
 }
+
+// Review-Fund (i18n Block B): "Sonstige" ist eine Anzeige-, keine
+// Daten-Schluessel-Uebersetzung -- `data-partei`/Sortier-Key bleiben roh.
+describe('berlin-wahlen/[slug]/+page.svelte: "Sonstige" in der Berlin-Top-5-Tabelle unter en', () => {
+	it('zeigt "Sonstige" als "Other" an', async () => {
+		overwriteGetLocale(() => 'en');
+		const data = {
+			...makeData(),
+			berlin: [
+				{
+					kurzname: 'Sonstige',
+					vollname: 'Sonstige',
+					farbeHex: '#999999',
+					stimmen: 42,
+					anteil: 0.05
+				}
+			]
+		};
+		render(WahlDetailPage, { data });
+		await expect
+			.element(page.getByTestId('wahl-detail-berlin-table'))
+			.toHaveTextContent('Other');
+		await expect
+			.element(page.getByTestId('wahl-detail-berlin-table'))
+			.not.toHaveTextContent('Sonstige');
+	});
+});
+
+// Review-Fund (i18n Block B): der Titel wird seit "Keys liefern, Label im
+// Client" komplett client-seitig aus typ/stimmtyp/jahr/isRepeatElection
+// zusammengesetzt (`wahlTitel` in +page.svelte) -- direkt gegen den
+// gerenderten H1 geprueft, nicht nur implizit ueber andere Tests.
+describe('berlin-wahlen/[slug]/+page.svelte: H1-Titel-Komposition (DE)', () => {
+	it('AGH-Wiederholungswahl MIT Stimmtyp: "Abgeordnetenhauswahl {jahr} · Zweitstimme · Wiederholungswahl"', async () => {
+		const data = makeData({
+			typ: 'agh',
+			stimmtyp: 'zweitstimme',
+			jahr: 2023,
+			isRepeatElection: true
+		});
+		render(WahlDetailPage, { data });
+		await expect
+			.element(page.getByTestId('wahl-detail-title'))
+			.toHaveTextContent('Abgeordnetenhauswahl 2023 · Zweitstimme · Wiederholungswahl');
+	});
+
+	it('BVV OHNE Stimtyp-Segment: "BVV-Wahl {jahr}" (kein Stimmtyp, keine Wiederholung)', async () => {
+		const data = makeData({
+			typ: 'bvv',
+			stimmtyp: 'einstimme',
+			jahr: 2026,
+			isRepeatElection: false
+		});
+		render(WahlDetailPage, { data });
+		const h1 = await page.getByTestId('wahl-detail-title').element();
+		expect(h1.textContent?.trim()).toBe('BVV-Wahl 2026');
+	});
+});
 
 describe('berlin-wahlen/[slug]/+page.svelte: Vorläufig-Badge (Review-Fund 23.09.)', () => {
 	it('zeigt den Vorläufig-Badge mit Stand-Datum wenn vorlaeufig=true', async () => {
@@ -82,12 +142,16 @@ describe('berlin-wahlen/[slug]/+page.svelte: Story 16 (Umzug + Portal-Deep-Link)
 		await expect.element(link).toHaveAttribute('href', '/berlin-wahlen?reihe=btw&jahr=2025');
 		await expect.element(link).toHaveTextContent('Bundestag 2025 im Portal ansehen');
 		await expect.element(link).not.toHaveTextContent('Zweitstimme');
-		await expect.element(link).toHaveAttribute('aria-describedby', 'wahl-detail-portal-link-hinweis');
+		await expect
+			.element(link)
+			.toHaveAttribute('aria-describedby', 'wahl-detail-portal-link-hinweis');
 
 		const hinweis = page.getByTestId('wahl-detail-portal-link-hinweis');
-		await expect.element(hinweis).toHaveTextContent(
-			'Das Portal zeigt die Zweitstimme; die Erststimme gibt es nur auf dieser Seite.'
-		);
+		await expect
+			.element(hinweis)
+			.toHaveTextContent(
+				'Das Portal zeigt die Zweitstimme; die Erststimme gibt es nur auf dieser Seite.'
+			);
 		const hinweisEl = (await hinweis.element()) as HTMLElement;
 		expect(hinweisEl.id).toBe('wahl-detail-portal-link-hinweis');
 	});
@@ -97,7 +161,9 @@ describe('berlin-wahlen/[slug]/+page.svelte: Story 16 (Umzug + Portal-Deep-Link)
 		render(WahlDetailPage, { data });
 		const link = page.getByTestId('wahl-detail-portal-link');
 		await expect.element(link).not.toHaveAttribute('aria-describedby');
-		await expect.element(page.getByTestId('wahl-detail-portal-link-hinweis')).not.toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('wahl-detail-portal-link-hinweis'))
+			.not.toBeInTheDocument();
 	});
 
 	it('Wiederholungswahl-Link zeigt auf /berlin-wahlen/<parent-slug>', async () => {
@@ -124,9 +190,7 @@ describe('berlin-wahlen/[slug]/+page.svelte: detailseiten-eigene Stand-Zeile (Re
 		// PortalDatenstand rendert immer diese feste, portalweite Quellenliste --
 		// die darf auf der Detailseite nicht mehr auftauchen.
 		await expect.element(meta).not.toHaveTextContent('Amt für Statistik Berlin-Brandenburg');
-		await expect
-			.element(page.getByTestId('portal-datenstand'))
-			.not.toBeInTheDocument();
+		await expect.element(page.getByTestId('portal-datenstand')).not.toBeInTheDocument();
 	});
 
 	it('zeigt ein Stand-Datum wenn sourceUpdatedAt gesetzt ist', async () => {

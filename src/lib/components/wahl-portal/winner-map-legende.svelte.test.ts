@@ -1,8 +1,13 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import WinnerMapLegende, { patternPreviewStyle } from './winner-map-legende.svelte';
 import { parteiColor } from '$lib/data/partei-farben.js';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function hexToRgb(hex: string): string {
 	const clean = hex.replace('#', '');
@@ -27,6 +32,23 @@ describe('winner-map-legende.svelte', () => {
 
 		const gruene = page.getByTestId('winner-map-swatch-GRÜNE');
 		await expect.element(gruene).toBeInTheDocument();
+	});
+
+	// Review-Fund (i18n Block B): "Sonstige" ist eine Anzeige-, keine
+	// Daten-Schluessel-Uebersetzung -- `data-testid`/`data-partei` bleiben
+	// "Sonstige", nur der sichtbare Text wird zu "Other".
+	it('zeigt "Sonstige" unter en als "Other" an, data-testid bleibt "Sonstige"', async () => {
+		overwriteGetLocale(() => 'en');
+		render(WinnerMapLegende, {
+			parteien: ['Sonstige'],
+			patternsEnabled: false,
+			onTogglePatterns: () => {}
+		});
+		const swatchLi = page.getByTestId('winner-map-swatch-Sonstige');
+		await expect.element(swatchLi).toBeInTheDocument();
+		const container = (await swatchLi.element()) as HTMLElement;
+		expect(container.parentElement?.textContent).toContain('Other');
+		expect(container.parentElement?.textContent).not.toContain('Sonstige');
 	});
 
 	it('zeigt Leer-Hinweis ohne vorkommende Parteien', async () => {

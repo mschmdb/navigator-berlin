@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import {
 		getWahlPortalState,
 		currentJahr,
@@ -7,7 +6,10 @@
 		setJahr,
 		setEbene
 	} from '$lib/state/wahl-portal-context.svelte.js';
-	import { stimmtypForReihe, EBENE_LABELS } from '$lib/utils/wahl-portal-url-state.js';
+	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { wahlEbeneLabel, wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { geocodeAddress } from '$lib/data/geocode.remote.js';
 	import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
 	import type { GeocodeSuggestion } from '$lib/data';
@@ -244,8 +246,21 @@
 		Array.from(new Set(tableRows.map((r) => r.partei))).sort((a, b) => a.localeCompare(b, 'de'))
 	);
 	const aggregationHinweis = $derived(aggregationHinweisText(anzeigeEbene));
+	// Review-Fund (i18n Block B): eigene Keys je Ebene mit fest eingebautem,
+	// grammatisch korrektem Plural (kein `${label}e`-Anhängen mehr, das war
+	// EN nicht uebertragbar), plus ein eigener Satz OHNE Jahreszahl statt des
+	// vorherigen `jahr ?? 0` (der bei `jahr === null` faelschlich "0:" zeigte).
+	// `fallbackActive` (siehe oben) gilt nur, wenn `anzeigeEbene` 'kiez' oder
+	// 'bezirk' ist -- die Fallback-Leiter verlaesst 'stimmbezirk' nie zu einer
+	// anderen Ebene.
 	const fallbackHinweisText = $derived(
-		`${jahr}: keine Stimmbezirks-Daten, Karte zeigt ${anzeigeEbene === 'bezirk' ? 'Bezirke' : 'Kieze'}.`
+		anzeigeEbene === 'bezirk'
+			? jahr !== null
+				? m.wahl_portal_fallback_hinweis_bezirk_mit_jahr({ jahr })
+				: m.wahl_portal_fallback_hinweis_bezirk_ohne_jahr()
+			: jahr !== null
+				? m.wahl_portal_fallback_hinweis_kiez_mit_jahr({ jahr })
+				: m.wahl_portal_fallback_hinweis_kiez_ohne_jahr()
 	);
 
 	const tableColumns = buildWinnerTableColumns();
@@ -319,7 +334,7 @@
 		return () => mapCtl.destroy();
 	});
 
-	const ebeneLabel = $derived(EBENE_LABELS[anzeigeEbene]);
+	const ebeneLabel = $derived(wahlEbeneLabel(anzeigeEbene));
 	// Review-Fund #6: aria-label + role=status-Announcement für den Tab-Wechsel.
 	const figureLabel = $derived(
 		buildFigureLabel({
@@ -352,7 +367,7 @@
 	>
 		{#if repeatElection}
 			<p data-testid="winner-map-wiederholung" class="font-mono text-xs text-ink-subtle">
-				Wiederholungswahl
+				{wahlWiederholungLabel()}
 			</p>
 		{/if}
 
@@ -373,22 +388,22 @@
 				class="font-mono text-xs text-ink-subtle"
 			>
 				{activeWinnersStatus === 'error' || activeGeometryStatus === 'error'
-					? 'Aktualisierung fehlgeschlagen, die Karte zeigt den letzten Stand.'
-					: 'Für diese Auswahl liegen keine Gebiets-Ergebnisse vor.'}
+					? m.wahl_portal_status_hinweis_fehler()
+					: m.wahl_portal_status_hinweis_keine_ergebnisse()}
 			</p>
 		{/if}
 
 		{#if visibility.isErrorState}
 			<p data-testid="winner-map-error" role="alert" class="font-serif text-ink-muted">
-				Wahl-Daten konnten nicht geladen werden.
+				{m.wahl_portal_wahldaten_error()}
 			</p>
 		{:else if visibility.isLoadingState}
 			<p data-testid="winner-map-loading" class="font-serif text-ink-muted">
-				Lädt Wahl-Ergebnisse …
+				{m.wahl_portal_winner_map_loading()}
 			</p>
 		{:else if visibility.isEmptyState}
 			<p data-testid="winner-map-empty" class="font-serif text-ink-muted">
-				Für diese Auswahl liegen noch keine Wahl-Ergebnisse vor.
+				{m.wahl_portal_wahl_ergebnisse_empty()}
 			</p>
 		{:else}
 			<p
@@ -399,7 +414,12 @@
 			</p>
 
 			<div class="max-w-md">
-				<AddressSearch variant="header" {geocode} onSelect={handleAddressSelect} />
+				<AddressSearch
+					variant="header"
+					{geocode}
+					onSelect={handleAddressSelect}
+					placeholder={m.wahl_portal_address_search_placeholder()}
+				/>
 				{#if addressHighlight.hint}
 					<p
 						aria-live="polite"
@@ -454,9 +474,10 @@
 				data-testid="winner-map-aggregation-hinweis"
 				class="font-mono text-xs text-ink-subtle"
 			>
-				{aggregationHinweis} Details:
+				{aggregationHinweis}
+				{m.wahl_portal_methodik_details_label()}
 				<a
-					href={resolve('/methodik/wahldaten')}
+					href={localizedHref('/methodik/wahldaten')}
 					class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>
 					/methodik/wahldaten
@@ -492,7 +513,11 @@
 				rows={tableRows}
 				caption={parteiTexts
 					? parteiTexts.tableCaption
-					: `Stärkste Partei je Gebiet${jahr !== null ? `, ${jahr}` : ''}`}
+					: jahr !== null
+						? m.wahl_portal_sieger_table_caption_jahr({ jahr })
+						: m.wahl_portal_sieger_table_caption()}
+				toggleLabel={m.wahl_portal_data_table_toggle()}
+				closeLabel={m.wahl_portal_data_table_close()}
 			/>
 		</div>
 	{/if}

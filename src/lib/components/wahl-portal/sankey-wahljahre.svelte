@@ -22,6 +22,8 @@
 	 */
 	import { getWahlPortalState } from '$lib/state/wahl-portal-context.svelte.js';
 	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { wahlEbeneLabel, sourceDisplayLabel, licenseDisplayLabel } from '$lib/data/wahl-labels.js';
 	import { parteiColor } from '$lib/data/partei-farben.js';
 	import DataTableAlternative, {
 		type TableColumn
@@ -29,6 +31,7 @@
 	import { KiezBezirkWinnersLoader } from './internal/winner-map-winners.svelte.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
 	import { buildSankeyGraph } from './internal/sankey-graph.js';
+	import { parteiDisplayName } from './internal/winner-map-data.js';
 	import {
 		SankeyD3Controller,
 		computeSankeyDimensions,
@@ -37,11 +40,10 @@
 	import SankeyTooltip from './internal/sankey-tooltip.svelte';
 	import { columnXByJahrFromNodes, isLinkDimmed, linkKey } from './internal/sankey-interaction.js';
 	import { SankeyInteractionState } from './internal/sankey-interaction-state.svelte.js';
-	import { KIEZ_COVERAGE_HINWEIS } from './internal/trends-map-data.js';
+	import { kiezCoverageHinweisText } from './internal/trends-map-data.js';
 
 	type SankeyEbene = 'kiez' | 'bezirk';
 	const EBENEN: readonly SankeyEbene[] = ['kiez', 'bezirk'];
-	const EBENE_LABELS: Record<SankeyEbene, string> = { kiez: 'Kiez', bezirk: 'Bezirk' };
 
 	/** Seitlicher Rand für die Partei-Kurzname-Labels rechts jeder Spalte. */
 	const LABEL_MARGIN = 90;
@@ -63,14 +65,13 @@
 	};
 	let { fetchFn = fetch, showCoverageHinweis = true, sankeyFactory }: Props = $props();
 
-	/** Zitat aus `docs/wahldaten-methodik.md` (Kernsatz, reihe-generisch). */
-	const WIEDERHOLUNGS_SATZ =
-		'Eine Wiederholungswahl ersetzt ihre Eltern-Wahl an deren Position in der Reihe, statt einen eigenen Slot zu belegen (Wiederholungswahl-Regel, siehe Methodik).';
+	/** Zitat aus `docs/wahldaten-methodik.md` (Kernsatz, reihe-generisch). Als
+	 * `$derived` statt Modul-Konstante: Auswertung beim Aufruf (i18n Block B). */
+	const wiederholungsSatz = $derived(m.wahl_portal_sankey_wiederholungs_satz());
 	/** Sieger-Semantik-Erklärung (Matze-Direktive 20.09.): beantwortet „Wo sind
 	 * die anderen Parteien?" direkt in der Grafik, siehe Knoten-Tooltip für die
 	 * konkreten Zahlen je Partei/Jahr. */
-	const ERKLAERUNGS_SATZ =
-		'Jeder Partei-Knoten zeigt, in wie vielen Gebieten diese Partei stärkste Kraft war; Parteien ohne Platz-1-Gebiet erscheinen in diesem Jahr nicht.';
+	const erklaerungsSatz = $derived(m.wahl_portal_sankey_erklaerung());
 
 	const portal = getWahlPortalState();
 	const stimmtyp = $derived(stimmtypForReihe(portal.reihe));
@@ -131,7 +132,9 @@
 	const isLoading = $derived(
 		!isError && (winnersStatus !== 'loaded' || (graph.links.length > 0 && !layout))
 	);
-	const isEmpty = $derived(!isError && !isLoading && (rows.length === 0 || graph.links.length === 0));
+	const isEmpty = $derived(
+		!isError && !isLoading && (rows.length === 0 || graph.links.length === 0)
+	);
 	const showInhalt = $derived(!isError && !isLoading && !isEmpty);
 
 	const totalGebiete = $derived(graph.totalGebiete);
@@ -141,17 +144,28 @@
 			? ''
 			: anzahlSpalten === 1
 				? `${graph.spalten[0].jahr}`
-				: `${graph.spalten[0].jahr} bis ${graph.spalten[anzahlSpalten - 1].jahr}`
+				: m.wahl_portal_sankey_jahresspanne({
+						von: graph.spalten[0].jahr,
+						bis: graph.spalten[anzahlSpalten - 1].jahr
+					})
 	);
 	/** Sprechendes aria-label (Ebene, Jahres-Spanne, Gebietszahl) statt eines
 	 * generischen Textes -- einzige Stelle, `figure` verliert ihr eigenes
 	 * (Review Triage Log #4/#19: dedupe figure+svg). */
 	const figureLabel = $derived(
-		`Sankey der Partei-Übergänge, Ebene ${EBENE_LABELS[ebene]}, ${jahresSpanneText}, ${totalGebiete} Gebiete`
+		m.wahl_portal_sankey_figure_label({
+			ebene: wahlEbeneLabel(ebene),
+			spanne: jahresSpanneText,
+			total: totalGebiete
+		})
 	);
 
 	const takeawayText = $derived(
-		`Sankey über ${anzahlSpalten} Wahljahre (Ebene ${EBENE_LABELS[ebene]}): ${totalGebiete} Gebiete, Bandbreite = Anzahl Gebiete je Partei-Übergang.`
+		m.wahl_portal_sankey_takeaway({
+			anzahl: anzahlSpalten,
+			ebene: wahlEbeneLabel(ebene),
+			total: totalGebiete
+		})
 	);
 
 	interface SankeyTableRow {
@@ -168,10 +182,15 @@
 	);
 
 	const tableColumns: TableColumn<SankeyTableRow>[] = [
-		{ key: 'von', label: 'Von', sortable: true, accessor: (r) => r.von },
-		{ key: 'nach', label: 'Nach', sortable: true, accessor: (r) => r.nach },
-		{ key: 'jahr', label: 'Jahr', sortable: true, accessor: (r) => r.jahr },
-		{ key: 'anzahl', label: 'Gebiete', sortable: true, accessor: (r) => r.anzahl }
+		{ key: 'von', label: m.wahl_portal_spalte_von(), sortable: true, accessor: (r) => r.von },
+		{ key: 'nach', label: m.wahl_portal_spalte_nach(), sortable: true, accessor: (r) => r.nach },
+		{ key: 'jahr', label: m.wahl_portal_spalte_jahr(), sortable: true, accessor: (r) => r.jahr },
+		{
+			key: 'anzahl',
+			label: m.wahl_portal_spalte_gebiete(),
+			sortable: true,
+			accessor: (r) => r.anzahl
+		}
 	];
 
 	const interaction = new SankeyInteractionState();
@@ -188,8 +207,11 @@
 
 <div class="flex flex-col gap-3" data-testid="sankey-wahljahre">
 	<div class="flex flex-col gap-1.5">
-		<span id="sankey-ebene-label" class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-			Sankey-Ebene
+		<span
+			id="sankey-ebene-label"
+			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+		>
+			{m.wahl_portal_sankey_ebene_label()}
 		</span>
 		<div
 			role="radiogroup"
@@ -215,7 +237,7 @@
 					class:text-ink={!checked}
 					class:hover:bg-bg-muted={!checked}
 				>
-					{EBENE_LABELS[value]}
+					{wahlEbeneLabel(value)}
 				</button>
 			{/each}
 		</div>
@@ -223,13 +245,15 @@
 
 	{#if isError}
 		<p data-testid="sankey-wahljahre-error" role="alert" class="font-serif text-ink-muted">
-			Wahl-Daten konnten nicht geladen werden.
+			{m.wahl_portal_wahldaten_error()}
 		</p>
 	{:else if isLoading}
-		<p data-testid="sankey-wahljahre-loading" class="font-serif text-ink-muted">Lädt Wahljahre …</p>
+		<p data-testid="sankey-wahljahre-loading" class="font-serif text-ink-muted">
+			{m.wahl_portal_sankey_loading()}
+		</p>
 	{:else if isEmpty}
 		<p data-testid="sankey-wahljahre-empty" class="font-serif text-ink-muted">
-			Für diese Auswahl liegen noch keine Übergänge zwischen Wahljahren vor.
+			{m.wahl_portal_sankey_empty()}
 		</p>
 	{:else if showInhalt && layout}
 		<p
@@ -238,8 +262,11 @@
 		>
 			{takeawayText}
 		</p>
-		<p data-testid="sankey-wahljahre-erklaerung" class="max-w-prose font-mono text-xs text-ink-subtle">
-			{ERKLAERUNGS_SATZ}
+		<p
+			data-testid="sankey-wahljahre-erklaerung"
+			class="max-w-prose font-mono text-xs text-ink-subtle"
+		>
+			{erklaerungsSatz}
 		</p>
 
 		<figure data-testid="sankey-wahljahre-figure" class="space-y-3">
@@ -278,10 +305,16 @@
 							stroke={parteiColor(band.von)}
 							stroke-width={Math.max(band.width, 1)}
 							stroke-opacity={isHovered ? 0.85 : dimmed ? 0.15 : 0.5}
-							class="motion-safe:transition-opacity motion-safe:duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
+							class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus motion-safe:transition-opacity motion-safe:duration-150"
 							tabindex="0"
 							role="img"
-							aria-label={`${band.von} → ${band.nach}: ${band.value} Gebiete`}
+							aria-label={(band.value === 1
+								? m.wahl_portal_sankey_band_aria_label_singular
+								: m.wahl_portal_sankey_band_aria_label_plural)({
+								von: parteiDisplayName(band.von),
+								nach: parteiDisplayName(band.nach),
+								value: band.value
+							})}
 							data-testid="sankey-band"
 							data-von={band.von}
 							data-nach={band.nach}
@@ -311,12 +344,19 @@
 							tabindex="0"
 							role="img"
 							class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
-							aria-label={`${node.partei} (${node.jahr}): ${node.anzahl} Gebiete`}
+							aria-label={(node.anzahl === 1
+								? m.wahl_portal_sankey_node_aria_label_singular
+								: m.wahl_portal_sankey_node_aria_label_plural)({
+								partei: parteiDisplayName(node.partei),
+								jahr: node.jahr,
+								anzahl: node.anzahl
+							})}
 							data-testid="sankey-node"
 							data-jahr={node.jahr}
 							data-partei={node.partei}
 							data-anzahl={node.anzahl}
-							onpointermove={(e) => interaction.onNodePointerMove(e, node, graph.gebieteMitDatenByJahr)}
+							onpointermove={(e) =>
+								interaction.onNodePointerMove(e, node, graph.gebieteMitDatenByJahr)}
 							onpointerleave={() => interaction.onNodeLeave()}
 							onpointercancel={() => interaction.onNodeLeave()}
 							onfocus={(e) => interaction.onNodeFocus(e, node, graph.gebieteMitDatenByJahr)}
@@ -338,7 +378,7 @@
 								class="fill-ink font-mono text-[10px]"
 								data-testid="sankey-node-label"
 							>
-								{node.label}
+								{parteiDisplayName(node.label)}
 							</text>
 						{/if}
 					{/each}
@@ -350,30 +390,46 @@
 							class="fill-ink font-mono text-[11px] tabular-nums"
 							data-testid="sankey-column-label"
 						>
-							{spalte.jahr}{spalte.istWiederholung ? ' ·W' : ''}
+							{spalte.jahr}{spalte.istWiederholung ? ` ${m.wahl_portal_wiederholung_kuerzel()}` : ''}
 						</text>
 					{/each}
 				</svg>
-				<SankeyTooltip visible={interaction.tooltipVisible} pos={interaction.tooltipPos} content={interaction.tooltipContent} />
+				<SankeyTooltip
+					visible={interaction.tooltipVisible}
+					pos={interaction.tooltipPos}
+					content={interaction.tooltipContent}
+				/>
 			</div>
 		</figure>
 
-		<DataTableAlternative columns={tableColumns} rows={tableRows} caption="Partei-Übergänge nach Jahr" />
+		<DataTableAlternative
+			columns={tableColumns}
+			rows={tableRows}
+			caption={m.wahl_portal_sankey_table_caption()}
+			toggleLabel={m.wahl_portal_data_table_toggle()}
+			closeLabel={m.wahl_portal_data_table_close()}
+		/>
 
 		{#if response}
-			<p data-testid="sankey-wahljahre-datenstand" class="font-mono text-xs text-ink-subtle tabular-nums">
-				Datenstand: {response.source_name ?? 'unbekannte Quelle'}
+			<p
+				data-testid="sankey-wahljahre-datenstand"
+				class="font-mono text-xs text-ink-subtle tabular-nums"
+			>
+				{m.wahl_portal_datenstand_label({ source: sourceDisplayLabel(response.source_name) })}
 				{#if response.license}
-					· Lizenz {response.license}
+					· {m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(response.license) })}
 				{/if}
 			</p>
 		{/if}
-		<p data-testid="sankey-wahljahre-footnote-wiederholung" class="font-mono text-xs text-ink-subtle">
-			{WIEDERHOLUNGS_SATZ}
+		<p
+			data-testid="sankey-wahljahre-footnote-wiederholung"
+			class="font-mono text-xs text-ink-subtle"
+		>
+			{wiederholungsSatz}
 		</p>
 		{#if ebene === 'kiez' && showCoverageHinweis}
 			<p data-testid="sankey-wahljahre-footnote-coverage" class="font-mono text-xs text-ink-subtle">
-				{KIEZ_COVERAGE_HINWEIS}
+				{kiezCoverageHinweisText()}
 			</p>
 		{/if}
 	{/if}

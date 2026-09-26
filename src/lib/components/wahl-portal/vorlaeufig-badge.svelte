@@ -10,7 +10,9 @@
 	dunkle `--ink`-Farbe (>4,5:1 auf jedem Seiten-Hintergrund).
 -->
 <script lang="ts">
-	import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { formatWahlDate } from '$lib/i18n/format.js';
+	import { wahlVorlaeufigLabel } from '$lib/data/wahl-labels.js';
 
 	type Props = {
 		/** ISO-Zeitstempel für „· Stand DD.MM.YYYY"; `null`/fehlend = nur „Vorläufig". */
@@ -26,5 +28,7 @@
 	data-testid={testid}
 	class="inline-flex items-center rounded-sm border border-state-warning px-1.5 py-0.5 font-mono text-xs font-semibold tracking-wide text-ink uppercase"
 >
-	Vorläufig{#if sourceUpdatedAt}&nbsp;· Stand {formatBerlinDate(sourceUpdatedAt)}{/if}
+	{wahlVorlaeufigLabel()}{#if sourceUpdatedAt}&nbsp;{m.wahl_portal_vorlaeufig_stand({
+			date: formatWahlDate(sourceUpdatedAt)
+		})}{/if}
 </span>

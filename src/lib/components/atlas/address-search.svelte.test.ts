@@ -42,6 +42,21 @@ describe('address-search.svelte', () => {
 		expect(el.placeholder).toBe('Adresse eingeben');
 	});
 
+	// Review-Fund (i18n Block B): der Default darf NICHT `getLocale()`-basiert
+	// sein -- diese Komponente ist projektweit geteilt (Home-/Kiez-Hero-Suche),
+	// ein locale-abhaengiger Default wuerde auf nicht uebersetzten
+	// `/en/...`-Seiten faelschlich Englisch zeigen. Bleibt deutsches Literal.
+	it('Default-Placeholder ohne explizites Prop bleibt das deutsche Literal (kein getLocale()-Default)', async () => {
+		render(AddressSearch, {
+			variant: 'hero',
+			geocode: async () => []
+		});
+		const input = page.getByRole('combobox');
+		await expect.element(input).toBeInTheDocument();
+		const el = (await input.element()) as HTMLInputElement;
+		expect(el.placeholder).toBe('Berliner Adresse eingeben');
+	});
+
 	it('variant hero hat text-xl Klasse', async () => {
 		render(AddressSearch, { variant: 'hero', geocode: async () => [] });
 		const input = (await page.getByRole('combobox').element()) as HTMLInputElement;

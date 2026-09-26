@@ -10,6 +10,8 @@
  * (Boundary: „Rampen-Konstanten in einem internal/-Modul, geteilt").
  */
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import { m } from '$lib/paraglide/messages.js';
+import { formatPercent, type LocaleFormatOptions } from '$lib/i18n/format.js';
 import { parteiColor, parteiPattern, type Pattern } from '$lib/data/partei-farben.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.js';
@@ -310,7 +312,17 @@ export function buildTableRows(fc: WinnerFeatureCollection): WinnerTableRow[] {
 	return rows;
 }
 
-const EMPTY_TAKEAWAY = 'Für dieses Jahr liegen keine Gebiets-Ergebnisse vor.';
+/**
+ * Anzeige-Label einer Partei: `Sonstige` (Sammel-Kategorie unbekannter/kleiner
+ * Parteien) wird in EN als „Other" angezeigt (Matze-Entscheidung, Spec i18n
+ * Block B). Der Datenschlüssel (Vergleiche, `parteiColor`/`parteiPattern`-
+ * Lookup) bleibt IMMER der rohe `partei`-Wert -- nur an dieser Anzeige-Stelle
+ * wird übersetzt, nie in den zugrunde liegenden Daten-Strukturen.
+ */
+export function parteiDisplayName(partei: string, opts?: LocaleFormatOptions): string {
+	if (partei !== 'Sonstige') return partei;
+	return m.wahl_portal_partei_sonstige_anzeige(undefined, { locale: opts?.locale });
+}
 
 /**
  * Deskriptiver Kapitel-Satz aus den abgeleiteten Rows (CAP-8-Vorgriff).
@@ -318,9 +330,11 @@ const EMPTY_TAKEAWAY = 'Für dieses Jahr liegen keine Gebiets-Ergebnisse vor.';
  */
 export function buildTakeawaySentence(
 	rows: readonly WinnerTableRow[],
-	totalGebiete: number
+	totalGebiete: number,
+	opts?: LocaleFormatOptions
 ): string {
-	if (rows.length === 0) return EMPTY_TAKEAWAY;
+	const options = { locale: opts?.locale };
+	if (rows.length === 0) return m.wahl_portal_takeaway_keine_ergebnisse(undefined, options);
 	const counts = new Map<string, number>();
 	for (const r of rows) counts.set(r.partei, (counts.get(r.partei) ?? 0) + 1);
 	let topPartei = rows[0].partei;
@@ -333,7 +347,14 @@ export function buildTakeawaySentence(
 			topPartei = partei;
 		}
 	}
-	return `Stärkste Kraft in ${topCount} von ${totalGebiete} Gebieten: ${topPartei}`;
+	const takeawayMessage =
+		totalGebiete === 1
+			? m.wahl_portal_takeaway_staerkste_kraft_singular
+			: m.wahl_portal_takeaway_staerkste_kraft_plural;
+	return takeawayMessage(
+		{ count: topCount, total: totalGebiete, partei: parteiDisplayName(topPartei, opts) },
+		options
+	);
 }
 
 /**
@@ -342,13 +363,14 @@ export function buildTakeawaySentence(
  * amtlicher Originalwert wie die Bezirks-Summen -- muss direkt an der Karte
  * stehen, nicht nur in der Methodik-Doku verlinkt).
  */
-export function aggregationHinweisText(ebene: WahlPortalEbene): string {
+export function aggregationHinweisText(ebene: WahlPortalEbene, opts?: LocaleFormatOptions): string {
+	const options = { locale: opts?.locale };
 	if (ebene === 'stimmbezirk') {
-		return 'Stimmbezirks-Werte: Briefwahl-Gruppen (Urnen-Stimmbezirke + ihr Briefwahlbezirk zusammen). Amtliche Gruppen-Summe, Urne und Briefwahl vollständig enthalten.';
+		return m.wahl_portal_aggregation_hinweis_stimmbezirk(undefined, options);
 	}
 	return ebene === 'kiez'
-		? 'Kiez-Werte: Stimmbezirke der Wahl, per Flächen-Zuordnung auf die 143 Berliner Kieze aggregiert; Briefwahl anteilig nach Wahlberechtigten auf die Kieze ihrer Gruppe verteilt (Schätzung).'
-		: 'Bezirks-Werte: amtliche Bezirks-Summen.';
+		? m.wahl_portal_aggregation_hinweis_kiez(undefined, options)
+		: m.wahl_portal_aggregation_hinweis_bezirk(undefined, options);
 }
 
 export type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error';
@@ -408,9 +430,16 @@ export function deriveKarteVisibility(params: {
 	};
 }
 
-/** Geteilte Prozent-Formatierung (Tooltip, Tabelle, Legende). */
-export function formatAnteilPct(anteil: number, decimals: 0 | 1 = 1): string {
-	const pct = anteil * 100;
-	if (decimals === 0) return `${Math.round(pct)} %`;
-	return `${pct.toFixed(1).replace('.', ',')} %`;
+/**
+ * Geteilte Prozent-Formatierung (Tooltip, Tabelle, Legende). Delegiert an
+ * `formatPercent` ($lib/i18n/format.ts, i18n Block B) -- DE-Ausgabe bleibt
+ * dadurch byte-identisch zur vorherigen `.toFixed(1).replace('.', ',')`-
+ * Variante, EN bekommt Punkt-Dezimaltrennzeichen ohne Leerzeichen vor `%`.
+ */
+export function formatAnteilPct(
+	anteil: number,
+	decimals: 0 | 1 = 1,
+	opts?: LocaleFormatOptions
+): string {
+	return formatPercent(anteil, { decimals, locale: opts?.locale });
 }

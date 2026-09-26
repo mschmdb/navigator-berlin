@@ -1,6 +1,7 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
 import { buildWahlSlug } from '$lib/data/wahl-slug.js';
-import { baseLocale } from '$lib/paraglide/runtime';
+import { localizedPathname } from '../canonical.js';
+import type { Locale } from '$lib/paraglide/runtime';
 
 /**
  * Story 6.4 AC-1: Sitemap-Source für Per-Wahl-Detail-Pages.
@@ -14,7 +15,12 @@ import { baseLocale } from '$lib/paraglide/runtime';
  * die vorläufigen AGH/BVV-2026-Ergebnisse), fällt ohne diesen auf
  * `Wahljahr-01-01` zurück (abgeschlossene Wahlen ohne Re-Ingest-Historie).
  *
- * Phase 1 DE-only.
+ * i18n Block B: jede Detailseite ist im Übersetzungs-Register
+ * (`translation-register.ts`) für `en` eingetragen, diese Source emittiert
+ * deshalb für JEDE aktive Locale einen Eintrag mit locale-präfixiertem
+ * `loc` (`localizedPathname`); `collectPrerenderedUrls` filtert nicht-
+ * registrierte Locale/Pfad-Paare zentral heraus, kein lokaler
+ * `ctx.locale`-Gate mehr nötig.
  */
 
 const PRIORITY = 0.7;
@@ -30,12 +36,13 @@ export type WahlSitemapEntry = {
 export interface BuildWahlSitemapEntriesInput {
 	readonly origin: string;
 	readonly wahlen: readonly WahlSitemapEntry[];
+	readonly locale: Locale;
 }
 
 export function buildWahlSitemapEntries(input: BuildWahlSitemapEntriesInput): SitemapEntry[] {
 	const origin = input.origin.replace(/\/+$/, '');
 	return input.wahlen.map((w) => ({
-		loc: `${origin}/berlin-wahlen/${buildWahlSlug(w)}`,
+		loc: `${origin}${localizedPathname(`/berlin-wahlen/${buildWahlSlug(w)}`, input.locale)}`,
 		lastmod: w.sourceUpdatedAt ?? `${w.jahr}-01-01`,
 		changefreq: 'yearly' as const,
 		priority: PRIORITY
@@ -43,8 +50,7 @@ export function buildWahlSitemapEntries(input: BuildWahlSitemapEntriesInput): Si
 }
 
 export const WAHL_DETAIL_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== baseLocale) return [];
 	const wahlen = ctx.wahlen;
 	if (!wahlen || wahlen.length === 0) return [];
-	return buildWahlSitemapEntries({ origin: ctx.origin, wahlen });
+	return buildWahlSitemapEntries({ origin: ctx.origin, wahlen, locale: ctx.locale });
 };

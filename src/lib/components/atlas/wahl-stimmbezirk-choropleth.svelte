@@ -3,6 +3,8 @@
 	import { parteiColor } from '$lib/data/partei-farben.js';
 	import { gruppeIdFromGeo } from '$lib/data/wahl-geo-mapping.js';
 	import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { formatPercent } from '$lib/i18n/format.js';
 
 	type WinnerEntry = {
 		/** Briefwahl-Gruppen-ID, nicht die einzelne Urnen-uwbId. */
@@ -30,10 +32,6 @@
 		for (const w of winnersByUwb) m.set(w.uwbId, w);
 		return m;
 	});
-
-	function formatPct(n: number): string {
-		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
-	}
 
 	onMount(() => {
 		void (async () => {
@@ -78,8 +76,11 @@
 				props.anteil = winner?.anteil ?? 0;
 				props.gruppe_id = gruppeId;
 				props.gruppe_name = gruppeId
-				? gruppenAnzeigeName(gruppeId, typeof props.MEMBERS === 'string' ? props.MEMBERS : undefined)
-				: null;
+					? gruppenAnzeigeName(
+							gruppeId,
+							typeof props.MEMBERS === 'string' ? props.MEMBERS : undefined
+						)
+					: null;
 				props.has_winner = winner ? 1 : 0;
 			}
 			const map = new MapLibreMap({
@@ -159,14 +160,16 @@
 				const props = feature.properties as Record<string, unknown>;
 				const partei = typeof props.partei === 'string' ? props.partei : null;
 				const gruppenName =
-					typeof props.gruppe_name === 'string' ? props.gruppe_name : 'Briefwahl-Gruppe';
+					typeof props.gruppe_name === 'string'
+						? props.gruppe_name
+						: m.wahl_portal_choropleth_briefwahl_gruppe_fallback();
 				const anteilNum = typeof props.anteil === 'number' ? props.anteil : 0;
 				const html = partei
 					? `<div style="font-family:monospace;font-size:12px;line-height:1.4;">` +
 						`<div style="font-weight:600;margin-bottom:4px;">${gruppenName}</div>` +
-						`<div>Stärkste: <strong>${partei}</strong> ${formatPct(anteilNum)}</div>` +
+						`<div>${m.wahl_portal_choropleth_staerkste_zeile({ partei: `<strong>${partei}</strong>`, pct: formatPercent(anteilNum) })}</div>` +
 						`</div>`
-					: `<div style="font-family:monospace;font-size:12px;">${gruppenName}<br/>Keine Daten</div>`;
+					: `<div style="font-family:monospace;font-size:12px;">${gruppenName}<br/>${m.wahl_portal_keine_daten_label()}</div>`;
 				new Popup({ closeButton: true, closeOnClick: true, maxWidth: '260px' })
 					.setLngLat(e.lngLat)
 					.setHTML(html)
@@ -195,17 +198,18 @@
 
 <figure
 	class="space-y-2"
-	aria-label={title ? `Choropleth-Karte: ${title}` : 'Choropleth-Karte'}
+	aria-label={title
+		? m.wahl_portal_choropleth_aria_mit_titel({ title })
+		: m.wahl_portal_choropleth_aria_ohne_titel()}
 	data-testid="wahl-stimmbezirk-choropleth"
 >
 	<div
 		bind:this={container}
 		role="img"
-		aria-label="Berliner Briefwahl-Gruppen gefärbt nach stärkster Partei"
+		aria-label={m.wahl_portal_stimmbezirk_choropleth_alt()}
 		class="h-[360px] w-full overflow-hidden rounded border border-rule sm:h-[480px] md:h-[520px]"
 	></div>
 	<figcaption class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-		Farbe = stärkste Partei pro Briefwahl-Gruppe (Urnen + ihr Briefwahlbezirk) · Sättigung skaliert
-		mit Anteil · Klick öffnet Detail
+		{m.wahl_portal_stimmbezirk_choropleth_figcaption()}
 	</figcaption>
 </figure>

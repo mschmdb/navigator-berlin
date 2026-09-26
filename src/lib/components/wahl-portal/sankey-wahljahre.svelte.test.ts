@@ -1,6 +1,7 @@
 import { page } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import SankeyWahljahreContextProbe from './internal/sankey-wahljahre-context-probe.svelte';
 import { _resetWinnersCache } from './internal/winner-map-winners.svelte.js';
 import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
@@ -72,6 +73,7 @@ beforeEach(() => {
 
 afterEach(() => {
 	_resetWinnersCache();
+	overwriteGetLocale(() => 'de');
 });
 
 describe('sankey-wahljahre.svelte', () => {
@@ -167,6 +169,35 @@ describe('sankey-wahljahre.svelte', () => {
 		await page.getByTestId('table-toggle').click();
 		await expect.element(page.getByTestId('data-table')).toHaveTextContent('SPD');
 		await expect.element(page.getByTestId('data-table')).toHaveTextContent('GRÜNE');
+	});
+
+	// Review-Fund (i18n Block B): "Sonstige" ist eine Anzeige-, keine
+	// Daten-Schluessel-Uebersetzung -- `data-partei` bleibt "Sonstige".
+	it('zeigt "Sonstige" im Knoten-Label + Node-Aria-Label unter en als "Other" an', async () => {
+		overwriteGetLocale(() => 'en');
+		try {
+			const winners = {
+				winners: [
+					winnerRow(2016, 'a', 'SPD'),
+					winnerRow(2021, 'a', 'Sonstige')
+				],
+				license: 'dl-de/by-2.0',
+				source_name: 'Amt für Statistik Berlin-Brandenburg'
+			};
+			const fetchFn = fakeFetch([['/api/wahl/winners', winners]]);
+			render(SankeyWahljahreContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn });
+
+			await expect.element(page.getByTestId('sankey-wahljahre-svg')).toBeInTheDocument();
+			const nodeLabels = page.getByTestId('sankey-node-label');
+			await expect.element(nodeLabels.nth(1)).toHaveTextContent('Other');
+			const sonstigeNode = page.getByTestId('sankey-node').nth(1);
+			await expect.element(sonstigeNode).toHaveAttribute('data-partei', 'Sonstige');
+			const nodeEl = (await sonstigeNode.element()) as SVGRectElement;
+			expect(nodeEl.getAttribute('aria-label')).toContain('Other');
+			expect(nodeEl.getAttribute('aria-label')).not.toContain('Sonstige');
+		} finally {
+			overwriteGetLocale(() => 'de');
+		}
 	});
 
 	it('Hover auf einem Partei-Band zeigt den Tooltip und hebt das Band hervor', async () => {

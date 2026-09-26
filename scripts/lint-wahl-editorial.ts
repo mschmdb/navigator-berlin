@@ -1,8 +1,32 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
-import { lintWahlText, type LintViolation } from './wahlen/lib/wahl-forbidden-tokens.js';
+import {
+	lintWahlText,
+	WAHL_FORBIDDEN_PATTERNS,
+	WAHL_FORBIDDEN_PATTERNS_EN,
+	type LintViolation,
+	type Pattern
+} from './wahlen/lib/wahl-forbidden-tokens.js';
 
 const ROOT = process.cwd();
+
+/**
+ * i18n Block B: die Paraglide-Message-Quellen tragen die gesamte
+ * Wahlportal-Prosa. `de.json` bekommt die normalen (DE) Forbidden-Patterns
+ * wie jede andere Wahl-Datei, `en.json` bekommt ausschließlich die
+ * EN-Musterliste (Boundary Spec i18n Block B: "EN bekommt eigene
+ * Forbidden-Tokens (nur auf en.json)").
+ *
+ * Exportiert (Review-Fund), damit die Datei-zu-Musterliste-Zuordnung selbst
+ * unit-testbar ist, statt nur implizit über `main()` geprüft zu werden.
+ */
+export const MESSAGE_FILE_PATTERNS: readonly {
+	readonly path: string;
+	readonly patterns: readonly Pattern[];
+}[] = [
+	{ path: 'messages/de.json', patterns: WAHL_FORBIDDEN_PATTERNS },
+	{ path: 'messages/en.json', patterns: WAHL_FORBIDDEN_PATTERNS_EN }
+];
 
 const TARGET_PATHS: readonly string[] = [
 	'src/lib/components/atlas/inspector-panel/wahl-section.svelte',
@@ -71,8 +95,30 @@ async function main(): Promise<void> {
 		}
 	}
 
+	let messageFilesScanned = 0;
+	for (const { path, patterns } of MESSAGE_FILE_PATTERNS) {
+		const abs = join(ROOT, path);
+		// Review-Fund: eine fehlende Message-Datei wurde bisher STILL
+		// übersprungen (0 Verstöße gemeldet, obwohl gar nicht gescannt wurde) --
+		// das ist ein stiller Lint-Gate-Ausfall. Eine fehlende Datei ist jetzt
+		// selbst ein Fehler.
+		if (!(await pathExists(abs))) {
+			console.error(`[lint-wahl-editorial] Message-Datei fehlt: ${path}`);
+			process.exit(1);
+		}
+		messageFilesScanned++;
+		const text = await readFile(abs, 'utf-8');
+		const result = lintWahlText(text, patterns);
+		if (!result.ok) {
+			for (const v of result.violations) {
+				failures.push({ file: abs, violation: v });
+			}
+		}
+	}
+
+	const totalScanned = files.length + messageFilesScanned;
 	if (failures.length === 0) {
-		console.log(`[lint-wahl-editorial] ${files.length} files scanned, 0 violations.`);
+		console.log(`[lint-wahl-editorial] ${totalScanned} files scanned, 0 violations.`);
 		return;
 	}
 
@@ -86,7 +132,11 @@ async function main(): Promise<void> {
 	process.exit(1);
 }
 
-main().catch((err) => {
-	console.error(err);
-	process.exit(1);
-});
+// Review-Fund: Guard, damit `MESSAGE_FILE_PATTERNS` (oben) unit-testbar
+// importiert werden kann, ohne dass `main()` als Nebeneffekt mitlaeuft.
+if (import.meta.url === `file://${process.argv[1]}`) {
+	main().catch((err) => {
+		console.error(err);
+		process.exit(1);
+	});
+}

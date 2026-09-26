@@ -4,7 +4,18 @@
  * selbst). Geteiltes Modul für Winner-Map und Detailseiten-Choropleth --
  * vorher zwei unabhängige, divergierende Kopien mit unterschiedlichen Bugs
  * (Review-Fund).
+ *
+ * i18n Block B (Review-Fund Matze 26.09.): "Stimmbezirk"/"Briefwahl" stehen
+ * NICHT im Glossar als deutsch-bleibend (anders als "Kiez"/"Bezirk"), werden
+ * also übersetzt -- über Paraglide-Messages, ausgewertet beim Aufruf
+ * (`getLocale()` bzw. explizites `{ locale }`).
  */
+import { m } from '$lib/paraglide/messages.js';
+import type { Locale } from '$lib/paraglide/runtime';
+
+export interface GruppenAnzeigeNameOptions {
+	readonly locale?: Locale;
+}
 
 /**
  * Extrahiert den Briefwahl-Code aus einer Gruppen-ID (== DB-uwbId des
@@ -34,15 +45,27 @@ export function briefCodeFromGruppeId(gruppeId: string): string {
  * hängt genau einmal am Ende -- kein zweites "und" zwischen den letzten
  * beiden Stimmbezirken.
  */
-export function gruppenAnzeigeName(gruppeId: string, membersRaw: string | undefined): string {
+export function gruppenAnzeigeName(
+	gruppeId: string,
+	membersRaw: string | undefined,
+	opts?: GruppenAnzeigeNameOptions
+): string {
+	const options = opts?.locale ? { locale: opts.locale } : undefined;
 	const members = (membersRaw ?? '')
 		.split(',')
 		.map((m) => m.trim())
 		.filter(Boolean);
-	if (members.length === 0) return `Gruppe ${gruppeId}`;
+	if (members.length === 0) return m.wahl_portal_gruppe_fallback_label({ id: gruppeId }, options);
 
 	const briefCode = briefCodeFromGruppeId(gruppeId);
-	const stimmbezirkeText =
-		members.length === 1 ? `Stimmbezirk ${members[0]}` : `Stimmbezirke ${members.join(', ')}`;
-	return `${stimmbezirkeText} und Briefwahl ${briefCode}`;
+	if (members.length === 1) {
+		return m.wahl_portal_gruppe_stimmbezirk_singular(
+			{ member: members[0], brief: briefCode },
+			options
+		);
+	}
+	return m.wahl_portal_gruppe_stimmbezirk_plural(
+		{ members: members.join(', '), brief: briefCode },
+		options
+	);
 }

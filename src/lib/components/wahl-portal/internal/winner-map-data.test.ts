@@ -17,6 +17,8 @@ import {
 	aggregationHinweisText,
 	deriveActiveWinnersState,
 	deriveKarteVisibility,
+	formatAnteilPct,
+	parteiDisplayName,
 	ANTEIL_OPACITY_RAMP,
 	NEUTRAL_OPACITY,
 	NEUTRAL_FARBE,
@@ -376,6 +378,50 @@ describe('buildTakeawaySentence', () => {
 		const sentence = buildTakeawaySentence([{ gebiet: 'A', partei: 'SPD', anteil: 0.4 }], 1);
 		expect(sentence).not.toMatch(/hochburg|wahlsieger|erdrutsch/i);
 	});
+
+	it('EN: „Leading party in N of M areas: Partei"', () => {
+		const rows = [
+			{ gebiet: 'A', partei: 'SPD', anteil: 0.4 },
+			{ gebiet: 'B', partei: 'SPD', anteil: 0.3 },
+			{ gebiet: 'C', partei: 'CDU', anteil: 0.5 }
+		];
+		expect(buildTakeawaySentence(rows, 5, { locale: 'en' })).toBe(
+			'Leading party in 2 of 5 areas: SPD'
+		);
+	});
+
+	it('EN: zeigt „Other" statt „Sonstige", wenn diese Partei führt', () => {
+		const rows = [{ gebiet: 'A', partei: 'Sonstige', anteil: 0.4 }];
+		expect(buildTakeawaySentence(rows, 1, { locale: 'en' })).toBe(
+			'Leading party in 1 of 1 area: Other'
+		);
+	});
+});
+
+describe('formatAnteilPct', () => {
+	it('formatiert de mit Komma und Leerzeichen vor %', () => {
+		expect(formatAnteilPct(0.282)).toBe('28,2 %');
+	});
+
+	it('formatiert en mit Punkt und ohne Leerzeichen vor %', () => {
+		expect(formatAnteilPct(0.282, 1, { locale: 'en' })).toBe('28.2%');
+	});
+
+	it('rundet ganzzahlig bei decimals: 0', () => {
+		expect(formatAnteilPct(0.2849, 0)).toBe('28 %');
+	});
+});
+
+describe('parteiDisplayName', () => {
+	it('lässt echte Parteinamen unverändert (de/en)', () => {
+		expect(parteiDisplayName('SPD')).toBe('SPD');
+		expect(parteiDisplayName('SPD', { locale: 'en' })).toBe('SPD');
+	});
+
+	it('zeigt „Sonstige" auf de, „Other" auf en, Datenschlüssel bleibt unangetastet', () => {
+		expect(parteiDisplayName('Sonstige')).toBe('Sonstige');
+		expect(parteiDisplayName('Sonstige', { locale: 'en' })).toBe('Other');
+	});
 });
 
 describe('aggregationHinweisText', () => {
@@ -394,6 +440,12 @@ describe('aggregationHinweisText', () => {
 
 	it('nennt die anteilige Briefwahl-Schätzung auf Kiez-Ebene (Story 17)', () => {
 		expect(aggregationHinweisText('kiez')).toMatch(/Briefwahl anteilig/);
+	});
+
+	it('EN: liefert die entsprechenden englischen Hinweis-Texte je Ebene', () => {
+		expect(aggregationHinweisText('stimmbezirk', { locale: 'en' })).toMatch(/postal district groups/);
+		expect(aggregationHinweisText('kiez', { locale: 'en' })).toMatch(/143 Berlin Kieze/);
+		expect(aggregationHinweisText('bezirk', { locale: 'en' })).toMatch(/official district totals/);
 	});
 });
 

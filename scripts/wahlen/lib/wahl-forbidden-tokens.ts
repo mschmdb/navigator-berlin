@@ -59,6 +59,50 @@ export const WAHL_FORBIDDEN_PATTERNS: readonly Pattern[] = [
 	}
 ];
 
+/**
+ * EN-Pendant zu `WAHL_FORBIDDEN_PATTERNS` (i18n Block B, Spec-Boundary:
+ * "EN bekommt eigene Forbidden-Tokens (nur auf en.json)"). Gilt NUR für
+ * `messages/en.json`, nicht für Code-/Markdown-Dateien -- die englische
+ * Wahl-Editorial-Prosa lebt ausschließlich in den Messages.
+ */
+export const WAHL_FORBIDDEN_PATTERNS_EN: readonly Pattern[] = [
+	{
+		name: 'stronghold',
+		regex: /\bstrongholds?\b/i,
+		hint: 'Implies dominance/conquest. Replace with: high vote share, dominant party (neutral)'
+	},
+	{
+		name: 'colour-coded-districts',
+		regex: /\b(?:red|blue|green|black|yellow)\s+districts?\b/i,
+		hint: 'Colour adjectives personalise parties. Replace with: districts with a dominant party share'
+	},
+	{
+		name: 'election-winner-loser',
+		regex: /\belection\s+(?:winners?|losers?)\b/i,
+		hint: 'Winner/loser framing implies a contest. Replace with: strongest party, lowest share'
+	},
+	{
+		name: 'vote-king',
+		regex: /\bvote\s+kings?\b/i,
+		hint: 'Monarchical metaphors are not allowed. Replace with: strongest vote share'
+	},
+	{
+		name: 'landslide',
+		regex: /\blandslide(?:\s+(?:victory|win))?\b/i,
+		hint: 'Natural-disaster metaphor dramatises. Replace with: clear margin in percentage points'
+	},
+	{
+		name: 'election-debacle',
+		regex: /\belection\s+(?:debacle|disaster|collapse)\b/i,
+		hint: 'Judgemental catastrophe terms. Replace with: clear decline versus the previous election'
+	},
+	{
+		name: 'em-dash',
+		regex: /—/,
+		hint: 'em-dash verboten in UI/Doku/Code-Strings (siehe MEMORY feedback_no_em_dashes)'
+	}
+];
+
 export interface LintViolation {
 	readonly token: string;
 	readonly line: number;
@@ -71,12 +115,15 @@ export interface LintResult {
 	readonly violations: readonly LintViolation[];
 }
 
-export function lintWahlText(text: string): LintResult {
+export function lintWahlText(
+	text: string,
+	patterns: readonly Pattern[] = WAHL_FORBIDDEN_PATTERNS
+): LintResult {
 	const violations: LintViolation[] = [];
 	const lines = text.split('\n');
 	for (let i = 0; i < lines.length; i++) {
 		const line = lines[i];
-		for (const p of WAHL_FORBIDDEN_PATTERNS) {
+		for (const p of patterns) {
 			if (p.regex.test(line)) {
 				violations.push({
 					token: p.name,
