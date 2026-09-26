@@ -2,7 +2,8 @@
 title: 'i18n Block B: Wahlportal auf Englisch'
 type: 'feature'
 created: '2026-09-26'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'e9fbc096cce6d4f72f5b6a2147e53a386e67f06c'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
