@@ -2,7 +2,8 @@
 title: 'i18n Block B3a: Atlas-Fundament und Karte auf Englisch'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'eadc61da58042b916b1260583283abc6b64aeb27'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
