@@ -1,5 +1,5 @@
 /**
- * GET /api/wahl/kiez-shares?election=2025-btw-zweitstimme
+ * GET /api/wahl/kiez-shares?election=2026-agh-zweitstimme
  *
  * Bulk-Endpoint für den Kiez-Finder: alle Partei-Anteile einer Wahl auf
  * Kiez-Ebene (143 Bezirksregionen) in einem Rutsch, gekeyt auf BZR_ID,
@@ -15,6 +15,7 @@ import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { getKiezSharesForWahl } from '$lib/server/db/queries/wahl/get-kiez-shares-for-wahl.js';
 import { loadKiezSlugToBzrId } from '$lib/server/wahl/kiez-slug-to-bzr.js';
 import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
+import { sourceName } from '$lib/server/wahl/source-label.js';
 
 const ElectionSlugSchema = v.pipe(v.string(), v.regex(/^\d{4}-(btw|agh|bvv)(-[a-z]+)?$/));
 
@@ -25,7 +26,7 @@ function slugOf(item: { jahr: number; typ: string; stimmtyp: string }): string {
 
 export const GET: RequestHandler = async ({ url }) => {
 	const parsed = v.safeParse(ElectionSlugSchema, url.searchParams.get('election'));
-	if (!parsed.success) throw error(400, 'election muss z.B. 2025-btw-zweitstimme sein');
+	if (!parsed.success) throw error(400, 'election muss z.B. 2026-agh-zweitstimme sein');
 	const electionSlug = parsed.output;
 
 	const elections = await getWahlList();
@@ -40,7 +41,13 @@ export const GET: RequestHandler = async ({ url }) => {
 	});
 
 	return json(
-		{ election: electionSlug, shares },
+		{
+			election: electionSlug,
+			shares,
+			vorlaeufig: match?.vorlaeufig ?? false,
+			source_updated_at: match?.sourceUpdatedAt ? match.sourceUpdatedAt.toISOString() : null,
+			source_name: match ? sourceName(match.sourceUrl) : null
+		},
 		{ headers: wahlCacheHeaders() }
 	);
 };

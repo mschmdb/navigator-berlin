@@ -7,6 +7,7 @@
  * Panels, danach ist jeder Slider-Move nur noch eine Paint-Expression.
  */
 
+import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
 import type { FeatureCollection, Point, Position } from 'geojson';
 import { loadManifest } from '$lib/data/manifest.js';
 import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
@@ -74,6 +75,56 @@ export interface KiezShareRow {
 	readonly bzrId: string;
 	readonly partei: string;
 	readonly anteil: number;
+}
+
+/** Wahl hinter dem Regler „Wahlverhalten ähnlich“ (Story 19, Entscheidung Matze 26.09.2026). */
+export const FINDER_ELECTION = '2026-agh-zweitstimme';
+const FINDER_ELECTION_LABEL = 'Zweitstimmen Abgeordnetenhaus 2026';
+
+/** Herkunft der Anteile; `vorlaeufig` kommt aus der DB und entfällt nach dem Endergebnis-Re-Ingest. */
+export interface KiezSharesMeta {
+	readonly vorlaeufig: boolean;
+	readonly sourceUpdatedAt: string | null;
+	readonly sourceName: string | null;
+}
+
+export interface KiezSharesResult extends KiezSharesMeta {
+	readonly shares: readonly KiezShareRow[];
+}
+
+/**
+ * API-Antwort von `/api/wahl/kiez-shares` → Finder-Format. `null` bei leeren
+ * oder fehlenden Anteilen: der Aufrufer cached dann nicht und versucht es
+ * beim nächsten Regler-Move erneut, statt einen Fehlschlag als „endgültig“
+ * anzuzeigen.
+ */
+export function parseKiezSharesResponse(body: unknown): KiezSharesResult | null {
+	if (!body || typeof body !== 'object') return null;
+	const b = body as {
+		shares?: KiezShareRow[];
+		vorlaeufig?: boolean;
+		source_updated_at?: string | null;
+		source_name?: string | null;
+	};
+	if (!Array.isArray(b.shares) || b.shares.length === 0) return null;
+	return {
+		shares: b.shares,
+		vorlaeufig: b.vorlaeufig ?? false,
+		sourceUpdatedAt: b.source_updated_at ?? null,
+		sourceName: b.source_name ?? null
+	};
+}
+
+/**
+ * Hinweistext unter den Reglern. Ohne Metadaten (Anteile noch nicht geladen)
+ * nur die Wahl; vorläufige Zahlen tragen immer „vorläufig“ (Story 15, 1B).
+ */
+export function formatFinderWahlHinweis(meta: KiezSharesMeta | null): string {
+	if (!meta) return `Wahlverhalten: ${FINDER_ELECTION_LABEL}.`;
+	const quelle = meta.sourceName ? ` (${meta.sourceName})` : '';
+	if (!meta.vorlaeufig) return `Wahlverhalten: ${FINDER_ELECTION_LABEL}${quelle}.`;
+	const stand = meta.sourceUpdatedAt ? `, Stand ${formatBerlinDate(meta.sourceUpdatedAt)}` : '';
+	return `Wahlverhalten: ${FINDER_ELECTION_LABEL}${quelle}, vorläufig${stand}.`;
 }
 
 /**

@@ -4,7 +4,9 @@ import {
 	buildKiezNames,
 	buildParteiMetric,
 	buildSbahnMetric,
-	buildScoreMetric
+	buildScoreMetric,
+	formatFinderWahlHinweis,
+	parseKiezSharesResponse
 } from './kiez-finder-data.js';
 
 const square = (id: string, x: number): GeoJSON.Feature => ({
@@ -106,5 +108,66 @@ describe('buildParteiMetric', () => {
 
 	it('unbekannte Partei ergibt leere Map', () => {
 		expect(buildParteiMetric([], ['01100101'], 'CDU').size).toBe(0);
+	});
+});
+
+describe('formatFinderWahlHinweis', () => {
+	it('ohne geladene Metadaten: nennt nur die Wahl', () => {
+		expect(formatFinderWahlHinweis(null)).toBe(
+			'Wahlverhalten: Zweitstimmen Abgeordnetenhaus 2026.'
+		);
+	});
+
+	it('vorläufig: nennt Quelle und Stand als Berliner Datum', () => {
+		expect(
+			formatFinderWahlHinweis({
+				vorlaeufig: true,
+				sourceUpdatedAt: '2026-09-20T23:55:55.000Z',
+				sourceName: 'Landeswahlleiterin Berlin'
+			})
+		).toBe(
+			'Wahlverhalten: Zweitstimmen Abgeordnetenhaus 2026 (Landeswahlleiterin Berlin), vorläufig, Stand 21.09.2026.'
+		);
+	});
+
+	it('Endergebnis: kein Vorläufig-Zusatz', () => {
+		expect(
+			formatFinderWahlHinweis({
+				vorlaeufig: false,
+				sourceUpdatedAt: '2026-10-07T10:00:00.000Z',
+				sourceName: 'Landeswahlleiterin Berlin'
+			})
+		).toBe('Wahlverhalten: Zweitstimmen Abgeordnetenhaus 2026 (Landeswahlleiterin Berlin).');
+	});
+
+	it('vorläufig ohne Stand-Datum: Zusatz ohne Datum', () => {
+		expect(
+			formatFinderWahlHinweis({ vorlaeufig: true, sourceUpdatedAt: null, sourceName: null })
+		).toBe('Wahlverhalten: Zweitstimmen Abgeordnetenhaus 2026, vorläufig.');
+	});
+});
+
+describe('parseKiezSharesResponse', () => {
+	it('mappt die snake_case-Felder der API auf das Finder-Format', () => {
+		expect(
+			parseKiezSharesResponse({
+				election: '2026-agh-zweitstimme',
+				shares: [{ bzrId: '011001', partei: 'SPD', anteil: 0.3 }],
+				vorlaeufig: true,
+				source_updated_at: '2026-09-20T23:55:55.000Z',
+				source_name: 'Landeswahlleiterin Berlin'
+			})
+		).toEqual({
+			shares: [{ bzrId: '011001', partei: 'SPD', anteil: 0.3 }],
+			vorlaeufig: true,
+			sourceUpdatedAt: '2026-09-20T23:55:55.000Z',
+			sourceName: 'Landeswahlleiterin Berlin'
+		});
+	});
+
+	it('leere oder fehlende Anteile ergeben null (kein Cache, kein „endgültig“-Anschein)', () => {
+		expect(parseKiezSharesResponse({ shares: [] })).toBeNull();
+		expect(parseKiezSharesResponse({})).toBeNull();
+		expect(parseKiezSharesResponse(null)).toBeNull();
 	});
 });

@@ -173,16 +173,54 @@ describe('kiez-finder-panel', () => {
 	});
 
 	it('lädt die Partei-Anteile schon beim Slider-Move, nicht erst beim Chip-Klick', async () => {
-		const loadShares = vi.fn(async () => [
-			{ bzrId: '011001', partei: 'SPD', anteil: 0.3 } as const
-		]);
+		const loadShares = vi.fn(async () => ({
+			shares: [{ bzrId: '011001', partei: 'SPD', anteil: 0.3 } as const],
+			vorlaeufig: true,
+			sourceUpdatedAt: '2026-09-20T23:55:55.000Z',
+			sourceName: 'Landeswahlleiterin Berlin'
+		}));
 		await renderPanel({ loadShares });
+		await expect
+			.element(page.getByTestId('finder-wahl-hinweis'))
+			.toHaveTextContent('Wahlverhalten: Zweitstimmen Abgeordnetenhaus 2026.');
 		const slider = (await page.getByTestId('finder-slider-partei').element()) as HTMLInputElement;
 		slider.value = '2';
 		slider.dispatchEvent(new Event('input', { bubbles: true }));
 		await vi.waitFor(() => {
-			expect(loadShares).toHaveBeenCalledWith('2025-btw-zweitstimme');
+			expect(loadShares).toHaveBeenCalledWith('2026-agh-zweitstimme');
 		});
+		await expect
+			.element(page.getByTestId('finder-wahl-hinweis'))
+			.toHaveTextContent('(Landeswahlleiterin Berlin), vorläufig, Stand 21.09.2026');
+	});
+
+	it('lädt nach einem Fehlschlag erneut und zeigt bis dahin keinen Status', async () => {
+		let aufrufe = 0;
+		const loadShares = vi.fn(async () => {
+			aufrufe++;
+			return aufrufe === 1
+				? null
+				: {
+						shares: [{ bzrId: '011001', partei: 'SPD', anteil: 0.3 } as const],
+						vorlaeufig: true,
+						sourceUpdatedAt: '2026-09-20T23:55:55.000Z',
+						sourceName: 'Landeswahlleiterin Berlin'
+					};
+		});
+		await renderPanel({ loadShares });
+		const slider = (await page.getByTestId('finder-slider-partei').element()) as HTMLInputElement;
+		slider.value = '1';
+		slider.dispatchEvent(new Event('input', { bubbles: true }));
+		await vi.waitFor(() => expect(loadShares).toHaveBeenCalledTimes(1));
+		await expect
+			.element(page.getByTestId('finder-wahl-hinweis'))
+			.toHaveTextContent('Wahlverhalten: Zweitstimmen Abgeordnetenhaus 2026.');
+		slider.value = '2';
+		slider.dispatchEvent(new Event('input', { bubbles: true }));
+		await vi.waitFor(() => expect(loadShares).toHaveBeenCalledTimes(2));
+		await expect
+			.element(page.getByTestId('finder-wahl-hinweis'))
+			.toHaveTextContent('vorläufig, Stand 21.09.2026');
 	});
 
 	it('meldet die genutzten Kriterien beim Unmount an Plausible', async () => {
@@ -235,7 +273,7 @@ describe('kiez-finder-panel', () => {
 		await renderPanel();
 		const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
 		expect(panel.textContent?.replace(/\s+/g, ' ')).toContain('bewertet weder Nachbarschaften');
-		expect(panel.textContent).toContain('Zweitstimmen BTW 2025');
+		expect(panel.textContent).toContain('Zweitstimmen Abgeordnetenhaus 2026');
 	});
 
 	// Verklammert die Boundary-Duplikation: das WebMCP-Schema darf nur
@@ -279,7 +317,12 @@ describe('kiez-finder-panel', () => {
 
 	it('wendet eine Agent-Partei an: Select wechselt, Shares werden geladen', async () => {
 		resetFinderBridgeForTests();
-		const loadShares = vi.fn(async () => [] as never[]);
+		const loadShares = vi.fn(async () => ({
+			shares: [],
+			vorlaeufig: false,
+			sourceUpdatedAt: null,
+			sourceName: null
+		}));
 		await renderPanel({ loadShares });
 		requestAgentWeights({ partei: 2 }, 'GRÜNE');
 		await vi.waitFor(() => {

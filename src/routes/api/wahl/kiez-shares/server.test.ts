@@ -29,5 +29,31 @@ describe('GET /api/wahl/kiez-shares', () => {
 		const body = await res.json();
 		expect(body.election).toBe('2025-btw-zweitstimme');
 		expect(body.shares).toEqual([]);
+		expect(body.vorlaeufig).toBe(false);
+		expect(body.source_updated_at).toBeNull();
+		expect(body.source_name).toBeNull();
+	});
+});
+
+describe.skipIf(!process.env.DATABASE_URL)('GET /api/wahl/kiez-shares mit Datenbank', () => {
+	afterAll(async () => {
+		await closeDb();
+	});
+
+	it('liefert für AGH 2026 den Vorläufig-Status, Stand und Quelle der Wahl', async () => {
+		const res = await call('?election=2026-agh-zweitstimme');
+		const body = await res.json();
+		if (body.shares.length === 0) return;
+		expect(body.vorlaeufig).toBe(true);
+		expect(body.source_updated_at).toMatch(/^2026-09-2\dT\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+		expect(body.source_name).toBe('Landeswahlleiterin Berlin');
+	});
+
+	it('liefert für BTW 2025 kein Vorläufig-Flag', async () => {
+		const res = await call('?election=2025-btw-zweitstimme');
+		const body = await res.json();
+		if (body.shares.length === 0) return;
+		expect(body.vorlaeufig).toBe(false);
+		expect(body.source_name).toBe('Bundeswahlleiterin');
 	});
 });
