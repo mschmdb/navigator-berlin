@@ -2,7 +2,8 @@
 title: 'i18n Block A: Locale-Infrastruktur, /en-Routing und SEO-Mechanik'
 type: 'feature'
 created: '2026-09-26'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '87d68639ba458e0ce27daaf1c29999f3ef54650a'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
