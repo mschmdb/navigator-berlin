@@ -2,7 +2,8 @@
 title: 'i18n Block B3b: Inspector auf Englisch'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'ff891961c92a3bafc2666854a3b0e7d5368ded5b'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
