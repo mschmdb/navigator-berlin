@@ -2,7 +2,8 @@
 title: 'i18n Block B2: Shell und Startseite auf Englisch'
 type: 'feature'
 created: '2026-09-26'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '0f2b46b88e1b37e0c7bf2cd9836945dc6ecadb65'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
