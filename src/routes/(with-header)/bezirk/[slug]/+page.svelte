@@ -86,7 +86,6 @@
 	{pathname}
 	ogImage={ogImageAbsolute}
 	{ogImageAlt}
-	locales={['de']}
 />
 <JsonLd data={placeJsonLd} testid="bezirk-place-jsonld" />
 <JsonLd data={adminAreaJsonLd} testid="bezirk-administrative-area-jsonld" />

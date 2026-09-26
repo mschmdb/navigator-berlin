@@ -18,7 +18,7 @@
  */
 
 import type { Manifest } from '$lib/data/types.js';
-import type { SitemapLocale } from './sitemap-builder.js';
+import { baseLocale, type Locale } from '$lib/paraglide/runtime';
 
 export const KIEZ_FULL_TXT_CAP = 50;
 
@@ -57,7 +57,7 @@ export interface LlmsWahlEntry {
 
 export interface LlmsSourceContext {
 	readonly origin: string;
-	readonly locale: SitemapLocale;
+	readonly locale: Locale;
 	readonly manifest: Manifest;
 	readonly buildTimestamp: string;
 	readonly bezirke: readonly LlmsBezirkEntry[];
@@ -101,7 +101,7 @@ function buildSiteIntro(): string[] {
  * Kiez-Pages aus DB. Phase 1 DE-only: für `locale !== 'de'` leeres Array.
  */
 export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntry[] {
-	if (ctx.locale !== 'de') return [];
+	if (ctx.locale !== baseLocale) return [];
 
 	const out: LlmsSourceEntry[] = [];
 

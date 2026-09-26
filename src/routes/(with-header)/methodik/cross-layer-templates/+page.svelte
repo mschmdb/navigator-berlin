@@ -16,7 +16,6 @@
 	{origin}
 	{pathname}
 	noindex
-	locales={['de']}
 />
 
 <article class="mx-auto max-w-3xl space-y-8 px-4 py-8" data-testid="cross-layer-templates-preview">

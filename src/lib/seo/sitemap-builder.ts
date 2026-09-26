@@ -1,10 +1,23 @@
 import type { Manifest } from '$lib/data/types.js';
+import { baseLocale, type Locale } from '$lib/paraglide/runtime';
+import { isRouteTranslated } from './translation-register.js';
+
+export interface SitemapAlternate {
+	readonly hreflang: Locale | 'x-default';
+	readonly href: string;
+}
 
 export interface SitemapEntry {
 	readonly loc: string;
 	readonly lastmod?: string;
 	readonly changefreq?: 'daily' | 'weekly' | 'monthly' | 'yearly';
 	readonly priority?: number;
+	/**
+	 * `xhtml:link rel="alternate"` entries for pages with a translated
+	 * counterpart. Empty/omitted in Block A because the translation register
+	 * (`translation-register.ts`) ships no entries yet.
+	 */
+	readonly alternates?: readonly SitemapAlternate[];
 }
 
 export interface SitemapIndexEntry {
@@ -12,11 +25,9 @@ export interface SitemapIndexEntry {
 	readonly lastmod?: string;
 }
 
-export type SitemapLocale = 'de' | 'en';
-
 export interface SitemapSourceContext {
 	readonly origin: string;
-	readonly locale: SitemapLocale;
+	readonly locale: Locale;
 	readonly manifest: Manifest;
 	/**
 	 * ISO-8601 build timestamp used as fallback `lastmod` for pages without a
@@ -65,20 +76,25 @@ function escapeXml(input: string): string {
  * Empty entries return a valid empty `<urlset>` (acceptable per spec).
  */
 export function buildSitemapXml(entries: readonly SitemapEntry[]): string {
+	const hasAlternates = entries.some((e) => (e.alternates?.length ?? 0) > 0);
 	const urls = entries.map((e) => {
 		const parts: string[] = [`<loc>${escapeXml(e.loc)}</loc>`];
+		for (const alt of e.alternates ?? []) {
+			parts.push(
+				`<xhtml:link rel="alternate" hreflang="${escapeXml(alt.hreflang)}" href="${escapeXml(alt.href)}" />`
+			);
+		}
 		if (e.lastmod) parts.push(`<lastmod>${escapeXml(e.lastmod)}</lastmod>`);
 		if (e.changefreq) parts.push(`<changefreq>${e.changefreq}</changefreq>`);
 		if (typeof e.priority === 'number') parts.push(`<priority>${e.priority.toFixed(1)}</priority>`);
 		return `\t<url>\n\t\t${parts.join('\n\t\t')}\n\t</url>`;
 	});
-	return [
-		'<?xml version="1.0" encoding="UTF-8"?>',
-		'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-		...urls,
-		'</urlset>',
-		''
-	].join('\n');
+	const urlsetOpenTag = hasAlternates
+		? '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'
+		: '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+	return ['<?xml version="1.0" encoding="UTF-8"?>', urlsetOpenTag, ...urls, '</urlset>', ''].join(
+		'\n'
+	);
 }
 
 /**
@@ -111,7 +127,7 @@ export function buildSitemapIndexXml(entries: readonly SitemapIndexEntry[]): str
  * `child_process.execSync` calls during prerender).
  */
 export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== 'de') return [];
+	if (ctx.locale !== baseLocale) return [];
 	return [
 		{ loc: `${ctx.origin}/`, lastmod: ctx.buildTimestamp, changefreq: 'weekly', priority: 1.0 },
 		{
@@ -163,7 +179,7 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
  * Phase 1: returns empty list for `locale === 'en'`.
  */
 export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== 'de') return [];
+	if (ctx.locale !== baseLocale) return [];
 	// Build-only-Layer (weder Karte noch Inspector) haben keine Detail-Seite → nicht in Sitemap.
 	return ctx.manifest.layers
 		.filter((layer) => !(layer.inspectorRelevant === false && layer.mapRelevant === false))
@@ -201,10 +217,25 @@ const ALL_SOURCES: readonly SitemapSource[] = [
 	WAHL_DETAIL_SOURCE
 ];
 
+/**
+ * Central register gate: every individual source above already returns `[]`
+ * for a non-base locale (Phase 1 pattern, kept for now), but this is the
+ * authoritative check -- once a source starts emitting non-base-locale
+ * entries (Block B+), only pages `translation-register.ts` actually marks
+ * as translated survive here. Prevents an un-registered page from silently
+ * appearing in `sitemap-en.xml` just because a source forgot the guard.
+ */
 export function collectPrerenderedUrls(ctx: SitemapSourceContext): SitemapEntry[] {
 	const out: SitemapEntry[] = [];
 	for (const source of ALL_SOURCES) {
 		out.push(...source(ctx));
 	}
-	return out;
+	if (ctx.locale === baseLocale) return out;
+	const originPrefix = ctx.origin.replace(/\/+$/, '');
+	return out.filter((entry) => {
+		const pathname = entry.loc.startsWith(originPrefix)
+			? entry.loc.slice(originPrefix.length) || '/'
+			: entry.loc;
+		return isRouteTranslated(pathname, ctx.locale);
+	});
 }

@@ -99,3 +99,11 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/19-finder-agh26.md`
   summary: `get_finder_state` und `set_finder_weights` sollen Wahl-Slug, `provisional` und `source_updated_at` im Output liefern.
   evidence: Agenten sehen heute nur über `list_elections`, dass die Finder-Rangliste auf vorläufigen AGH-2026-Zahlen beruht; Output-Felder wären neue Tool-Surface (englisch), daher nicht im Oneshot.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-a-infra-routing.md`
+  summary: Interne Links auf `/en`-Seiten lokalisieren (`localizeHref` bzw. gemeinsamer Helper), damit Navigation in EN bleibt.
+  evidence: Header, Karten, Teaser und Footer nutzen rohe `href`; von `/en/…` führt jeder Klick zurück auf DE. Gehört in Block B, weil die Extraktion jede Komponente ohnehin anfasst.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-a-infra-routing.md`
+  summary: Prerenderte `/de/…`-URLs antworten 200 statt 301 (Stale-Locale-Redirect greift nur für nicht prerenderte Routen).
+  evidence: adapter-node liefert Prerender-Dateien vor `handle`, Paraglides `deLocalizeUrl` entfernt auch das Base-Präfix `de`; vorbestehend (hooks.ts unverändert). Canonical zeigt korrekt auf die Präfix-lose URL, SEO-Schaden gering. Fix bräuchte Reroute-Anpassung oder Redirect im `server.js` vor dem Handler.

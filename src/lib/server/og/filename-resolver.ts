@@ -1,16 +1,20 @@
 /**
  * OG-Image-Pfad-Konvention (Story 2.6, Pure-Satori-Pivot 2026-05-16).
  *
- * Phase 1 ist DE-only (Memory `project_i18n_phase_1_de_only`). Pro Page-Type
- * + Slug existiert genau ein PNG, kein Locale-Suffix, kein Filename-Hash
+ * Pro Page-Type + Slug existiert genau ein PNG, kein Filename-Hash
  * (User-Decision Story 2.6 Open-Question 3: max-age=86400, kein immutable).
  *
  * Konvention:
  *   static/og/{type}/{slug}.png                  → finale OG-Card (Satori-Only)
  *
  * Public-URL (Meta-Tag): `${origin}/og/{type}/{slug}.png`
+ *
+ * i18n Block A: OG-Karten sind nicht pro Locale gerendert -- alle Locales
+ * nutzen dieselbe DE-Karte, weil keine EN-Karten existieren und Slugs
+ * ohnehin locale-identisch sind (keine übersetzten Pfad-Slugs). Per-Locale-
+ * OG-Karten kommen mit Block C (ADR-005); bis dahin braucht dieser Resolver
+ * kein Locale-Argument.
  */
-
 const SLUG_INVALID_RE = /[\\/]|^\./;
 
 export const ogTargetTypes = ['bezirk', 'kiez', 'layer', 'page', 'wahl'] as const;

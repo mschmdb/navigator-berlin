@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import type { TranslationRegisterEntry } from '$lib/seo/translation-register.js';
 import SeoHead from './seo-head.svelte';
 
 /**
@@ -34,6 +36,7 @@ afterEach(() => {
 	// Reset any title set by SeoHead so subsequent tests start clean.
 	const titles = document.head.querySelectorAll('title');
 	for (let i = titles.length - 1; i > 0; i--) titles[i].remove();
+	overwriteGetLocale(() => 'de');
 });
 
 describe('SeoHead', () => {
@@ -150,5 +153,156 @@ describe('SeoHead', () => {
 		await new Promise((r) => setTimeout(r, 10));
 		const robots = queryHead('meta[name="robots"]') as HTMLMetaElement | null;
 		expect(robots?.content).toBe('noindex,nofollow');
+	});
+
+	it('rendert og:locale = de_DE für die DE-Seite (default)', async () => {
+		render(SeoHead, {
+			title: 'Methodik',
+			description: 'desc',
+			pathname: '/methodik',
+			origin: 'https://navigator.berlin'
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		const ogLocale = queryHead('meta[property="og:locale"]') as HTMLMetaElement | null;
+		expect(ogLocale?.content).toBe('de_DE');
+		expect(queryHead('meta[property="og:locale:alternate"]')).toBeNull();
+	});
+
+	// i18n Block A: das Übersetzungs-Register ist leer -- jede Nicht-Basis-
+	// Locale-Seite ist automatisch noindex, unabhängig vom noindex-Prop.
+	it('i18n Block A: EN-Seite ist automatisch noindex, weil sie nicht im Übersetzungs-Register steht', async () => {
+		overwriteGetLocale(() => 'en');
+		render(SeoHead, {
+			title: 'Kiez Mitte',
+			description: 'desc',
+			pathname: '/en/kiez/mitte',
+			origin: 'https://navigator.berlin'
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		const robots = queryHead('meta[name="robots"]') as HTMLMetaElement | null;
+		expect(robots?.content).toBe('noindex,nofollow');
+		// Content-Review-Fund: og:locale muss der EFFEKTIVEN Content-Locale
+		// folgen, nicht der URL-Locale -- eine nicht-übersetzte /en-Seite zeigt
+		// 1:1 DE-Content, og:locale darf das nicht als EN behaupten.
+		const ogLocale = queryHead('meta[property="og:locale"]') as HTMLMetaElement | null;
+		expect(ogLocale?.content).toBe('de_DE');
+		expect(queryHead('meta[property="og:locale:alternate"]')).toBeNull();
+		// Nicht übersetzt: kein hreflang-Paar (nur die self+x-default-Kombination
+		// wäre vorhanden, aber die enthält kein "en", siehe hreflang.test.ts).
+		const hreflangs = queryAllHead('link[rel="alternate"]').map((el) =>
+			el.getAttribute('hreflang')
+		);
+		expect(hreflangs).not.toContain('en');
+	});
+
+	it('DE-Seite bleibt indexierbar, auch wenn en (noch) nicht übersetzt ist', async () => {
+		overwriteGetLocale(() => 'de');
+		render(SeoHead, {
+			title: 'Kiez Mitte',
+			description: 'desc',
+			pathname: '/kiez/mitte',
+			origin: 'https://navigator.berlin'
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		expect(queryHead('meta[name="robots"]')).toBeNull();
+	});
+
+	// Content-Review-Fund: eine nicht-übersetzte /en-Seite zeigt 1:1 DE-Content
+	// -- ihr Canonical darf nicht auf sich selbst zeigen (das würde Google zwei
+	// separate URLs für identischen Content melden), sondern auf die DE-URL.
+	it('Canonical einer nicht-übersetzten EN-Seite zeigt auf die DE-URL', async () => {
+		overwriteGetLocale(() => 'en');
+		render(SeoHead, {
+			title: 'Kiez Mitte',
+			description: 'desc',
+			pathname: '/en/kiez/mitte',
+			origin: 'https://navigator.berlin'
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		const canonical = queryHead('link[rel="canonical"]') as HTMLLinkElement | null;
+		expect(canonical?.href).toBe('https://navigator.berlin/kiez/mitte');
+	});
+
+	// Real register entry (injected via `registerEntries`, no module-mocking):
+	// proves the full de+en+x-default hreflang triple, self-canonical, and
+	// "no robots" on a genuinely translated EN page -- rendered end to end
+	// through SeoHead itself, under both locales.
+	describe('mit einem echten Registereintrag für /methodik (injiziert, kein Modul-Mock)', () => {
+		const registerEntries: readonly TranslationRegisterEntry[] = [
+			{ pathname: '/methodik', locale: 'en' }
+		];
+
+		it('unter de: hreflang de + en + x-default, self-canonical, kein robots', async () => {
+			overwriteGetLocale(() => 'de');
+			render(SeoHead, {
+				title: 'Methodik',
+				description: 'desc',
+				pathname: '/methodik',
+				origin: 'https://navigator.berlin',
+				registerEntries
+			});
+			await new Promise((r) => setTimeout(r, 10));
+
+			const hreflangs = queryAllHead('link[rel="alternate"]').map((el) => ({
+				hreflang: el.getAttribute('hreflang'),
+				href: el.getAttribute('href')
+			}));
+			expect(hreflangs).toContainEqual({
+				hreflang: 'de',
+				href: 'https://navigator.berlin/methodik'
+			});
+			expect(hreflangs).toContainEqual({
+				hreflang: 'en',
+				href: 'https://navigator.berlin/en/methodik'
+			});
+			expect(hreflangs).toContainEqual({
+				hreflang: 'x-default',
+				href: 'https://navigator.berlin/methodik'
+			});
+
+			const canonical = queryHead('link[rel="canonical"]') as HTMLLinkElement | null;
+			expect(canonical?.href).toBe('https://navigator.berlin/methodik');
+			expect(queryHead('meta[name="robots"]')).toBeNull();
+		});
+
+		it('unter en: hreflang de + en + x-default, self-canonical, kein robots', async () => {
+			overwriteGetLocale(() => 'en');
+			render(SeoHead, {
+				title: 'Methodik',
+				description: 'desc',
+				pathname: '/en/methodik',
+				origin: 'https://navigator.berlin',
+				registerEntries
+			});
+			await new Promise((r) => setTimeout(r, 10));
+
+			const hreflangs = queryAllHead('link[rel="alternate"]').map((el) => ({
+				hreflang: el.getAttribute('hreflang'),
+				href: el.getAttribute('href')
+			}));
+			expect(hreflangs).toContainEqual({
+				hreflang: 'de',
+				href: 'https://navigator.berlin/methodik'
+			});
+			expect(hreflangs).toContainEqual({
+				hreflang: 'en',
+				href: 'https://navigator.berlin/en/methodik'
+			});
+			expect(hreflangs).toContainEqual({
+				hreflang: 'x-default',
+				href: 'https://navigator.berlin/methodik'
+			});
+
+			const canonical = queryHead('link[rel="canonical"]') as HTMLLinkElement | null;
+			expect(canonical?.href).toBe('https://navigator.berlin/en/methodik');
+			expect(queryHead('meta[name="robots"]')).toBeNull();
+
+			const ogLocale = queryHead('meta[property="og:locale"]') as HTMLMetaElement | null;
+			expect(ogLocale?.content).toBe('en_US');
+			const ogAlternates = queryAllHead('meta[property="og:locale:alternate"]').map(
+				(el) => (el as HTMLMetaElement).content
+			);
+			expect(ogAlternates).toEqual(['de_DE']);
+		});
 	});
 });

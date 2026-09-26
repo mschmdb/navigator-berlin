@@ -117,7 +117,6 @@
 	{origin}
 	{canonical}
 	ogImage={ogImageAbsolute}
-	locales={['de']}
 />
 <JsonLd data={datasetJsonLd} testid="hitze-dataset-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="hitze-breadcrumb-jsonld" />
@@ -183,7 +182,7 @@
 				{@const Icon = step.icon}
 				<li class="flex items-start gap-3">
 					<span
-						class="bg-accent/10 text-accent flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-sans text-sm font-semibold"
+						class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 font-sans text-sm font-semibold text-accent"
 						aria-hidden="true">{i + 1}</span
 					>
 					<span class="flex flex-col">

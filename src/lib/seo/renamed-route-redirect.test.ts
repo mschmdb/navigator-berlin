@@ -25,6 +25,33 @@ describe('renamedRouteRedirectTarget', () => {
 		expect(renamedRouteRedirectTarget('/')).toBeNull();
 	});
 
+	// i18n Block A, I/O-Matrix "Umbenannte Route EN": redirect bleibt innerhalb
+	// der Locale, landet nicht auf dem DE-Canonical.
+	it('mappt /en/wo-lebt-es-sich-gut auf /en/umwelt-infrastruktur-score', () => {
+		expect(renamedRouteRedirectTarget('/en/wo-lebt-es-sich-gut')).toBe(
+			'/en/umwelt-infrastruktur-score'
+		);
+	});
+
+	it('mappt /en/wahl/<slug> auf /en/berlin-wahlen/<slug>', () => {
+		expect(renamedRouteRedirectTarget('/en/wahl/2023-bvv')).toBe('/en/berlin-wahlen/2023-bvv');
+	});
+
+	it('liefert null für unbekannte EN-Pfade (kein falsches Locale-Matching)', () => {
+		expect(renamedRouteRedirectTarget('/en/umwelt-infrastruktur-score')).toBeNull();
+		expect(renamedRouteRedirectTarget('/en/explore')).toBeNull();
+	});
+
+	// Code-review fix: Groß-/Kleinschreibung des Locale-Präfix darf den Match
+	// nicht verhindern (wie im Stale-Locale-Redirect bereits), Ziel wird auf
+	// die kanonische Kleinschreibung normalisiert.
+	it('erkennt /EN/... groß geschrieben und normalisiert das Ziel auf Kleinschreibung', () => {
+		expect(renamedRouteRedirectTarget('/EN/wo-lebt-es-sich-gut')).toBe(
+			'/en/umwelt-infrastruktur-score'
+		);
+		expect(renamedRouteRedirectTarget('/En/wahl/2023-bvv')).toBe('/en/berlin-wahlen/2023-bvv');
+	});
+
 	it('ignoriert Query (Caller hängt search wieder an)', () => {
 		// Resolver bekommt nur pathname, daher kein Query-Handling hier.
 		expect(renamedRouteRedirectTarget('/wo-lebt-es-sich-gut')).toBe('/umwelt-infrastruktur-score');

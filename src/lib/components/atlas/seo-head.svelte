@@ -1,6 +1,20 @@
 <script lang="ts">
-	import { buildCanonical } from '$lib/seo/canonical.js';
-	import { buildHreflangCluster, type SupportedLocale } from '$lib/seo/hreflang.js';
+	import { buildCanonical, localizedPathname } from '$lib/seo/canonical.js';
+	import { buildHreflangCluster } from '$lib/seo/hreflang.js';
+	import { localeToOgLocale } from '$lib/seo/locale-meta.js';
+	import {
+		isRouteTranslated,
+		translatedLocalesFor,
+		TRANSLATION_REGISTER,
+		type TranslationRegisterEntry
+	} from '$lib/seo/translation-register.js';
+	import { resolveEffectiveLocale } from '$lib/seo/effective-locale.js';
+	import {
+		baseLocale,
+		getLocale,
+		locales as siteLocales,
+		type Locale
+	} from '$lib/paraglide/runtime';
 
 	interface Props {
 		/** Page title rendered in `<title>` and `og:title`. */
@@ -12,8 +26,9 @@
 		/** Current origin (use `page.url.origin`). */
 		origin: string;
 		/**
-		 * Optional explicit canonical override. If not provided, built from `origin + pathname`
-		 * via {@link buildCanonical} (strips query/hash/trailing-slashes).
+		 * Optional explicit canonical override. If not provided, built from the
+		 * EFFECTIVE-locale path via {@link buildCanonical} (strips query/hash/
+		 * trailing-slashes) -- see `canonical` derivation below.
 		 */
 		canonical?: string;
 		/**
@@ -28,16 +43,30 @@
 		/** Optional alt-text für og:image (a11y + LinkedIn-Preview-Tool). */
 		ogImageAlt?: string;
 		/**
-		 * Active locales for the hreflang cluster. Phase 1 default: `['de']` only
-		 * (memory `project_i18n_phase_1_de_only`). When EN coverage lands (story 3.1/3.2),
-		 * pass `['de', 'en']`.
+		 * Locales to render into the hreflang cluster. Default (recommended):
+		 * omit this and let SeoHead compute it from `translation-register.ts` --
+		 * `[baseLocale, ...translatedLocalesFor(pathname, locales)]`. Block A:
+		 * the register is empty, so this always reduces to `['de']` (DE +
+		 * x-default, no `en` alternate) until a page gets marked translated.
+		 * Pass explicitly only to override that derivation.
 		 */
-		locales?: readonly SupportedLocale[];
+		locales?: readonly Locale[];
 		/**
 		 * Story 5.9 AC-9: wenn true, rendert `<meta name="robots" content="noindex,nofollow">`.
 		 * API-Endpoints setzen den X-Robots-Tag-Header zusaetzlich serverseitig.
+		 *
+		 * i18n Block A: wird zusätzlich automatisch `true`, wenn die aktuelle
+		 * Locale nicht die Basis-Locale ist UND der Pfad nicht im
+		 * Übersetzungs-Register steht (Entscheidung Matze 26.09. 17:10, Variante A).
 		 */
 		noindex?: boolean;
+		/**
+		 * Übersetzungs-Register-Override. Default: das echte, in Block A leere
+		 * `TRANSLATION_REGISTER`. Nur zum Testen gedacht (rendert SeoHead mit
+		 * einem injizierten Eintrag, ohne Modul-Mock) -- Produktionscode lässt
+		 * dieses Prop weg.
+		 */
+		registerEntries?: readonly TranslationRegisterEntry[];
 	}
 
 	const {
@@ -50,18 +79,51 @@
 		ogImageWidth = 1200,
 		ogImageHeight = 630,
 		ogImageAlt,
-		locales = ['de'],
-		noindex = false
+		locales,
+		noindex = false,
+		registerEntries = TRANSLATION_REGISTER
 	}: Props = $props();
 
-	const canonicalUrl = $derived(canonical ?? buildCanonical(origin, pathname));
-	const hreflangCluster = $derived(buildHreflangCluster({ origin, pathname, locales }));
+	const pageLocale = $derived(getLocale());
+	/**
+	 * The locale whose CONTENT is actually shown, not the URL locale -- an
+	 * `/en/...` page without a register entry still shows DE content, so its
+	 * `og:locale`/canonical must say so too (code review, 2026-09-26).
+	 */
+	const effectiveLocale = $derived(resolveEffectiveLocale(pathname, pageLocale, registerEntries));
+	/**
+	 * Canonical target: a translated page (effectiveLocale === pageLocale) is
+	 * self-canonical; an untranslated non-base page points at the DE URL --
+	 * its content is byte-identical DE content, so self-canonical would tell
+	 * crawlers two different URLs both DE + EN carry duplicate content.
+	 */
+	const canonicalUrl = $derived(
+		canonical ?? buildCanonical(origin, localizedPathname(pathname, effectiveLocale))
+	);
+	const effectiveLocales = $derived(
+		locales ??
+			([
+				baseLocale,
+				...translatedLocalesFor(pathname, siteLocales, registerEntries)
+			] as readonly Locale[])
+	);
+	const hreflangCluster = $derived(
+		buildHreflangCluster({ origin, pathname, locales: effectiveLocales })
+	);
+	const autoNoindex = $derived(
+		pageLocale !== baseLocale && !isRouteTranslated(pathname, pageLocale, registerEntries)
+	);
+	const effectiveNoindex = $derived(noindex || autoNoindex);
+	const ogLocale = $derived(localeToOgLocale(effectiveLocale));
+	const ogLocaleAlternates = $derived(
+		effectiveLocales.filter((l) => l !== effectiveLocale).map(localeToOgLocale)
+	);
 </script>
 
 <svelte:head>
 	<title>{title}</title>
 	<meta name="description" content={description} />
-	{#if noindex}
+	{#if effectiveNoindex}
 		<meta name="robots" content="noindex,nofollow" />
 	{/if}
 	<link rel="canonical" href={canonicalUrl} />
@@ -73,7 +135,10 @@
 	<meta property="og:url" content={canonicalUrl} />
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="navigator.berlin" />
-	<meta property="og:locale" content="de_DE" />
+	<meta property="og:locale" content={ogLocale} />
+	{#each ogLocaleAlternates as alt (alt)}
+		<meta property="og:locale:alternate" content={alt} />
+	{/each}
 	{#if ogImage}
 		<meta property="og:image" content={ogImage} />
 		<meta property="og:image:width" content={String(ogImageWidth)} />

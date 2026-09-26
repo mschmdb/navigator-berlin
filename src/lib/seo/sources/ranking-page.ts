@@ -1,4 +1,5 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
+import { baseLocale } from '$lib/paraglide/runtime';
 
 /**
  * Story 2.9b T4.3: Sitemap-Source für die Ranking-Page.
@@ -30,6 +31,6 @@ export function buildRankingSitemapEntry(input: BuildRankingSitemapEntryInput): 
 }
 
 export const RANKING_PAGE_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== 'de') return [];
+	if (ctx.locale !== baseLocale) return [];
 	return [buildRankingSitemapEntry({ origin: ctx.origin, lastmod: ctx.buildTimestamp })];
 };

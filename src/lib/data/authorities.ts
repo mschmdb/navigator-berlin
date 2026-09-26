@@ -11,9 +11,15 @@
  * Composites (z.B. "BVG · OpenStreetMap-Contributors (ODbL 1.0)") werden in
  * `layer-methodology.ts` per `authoritySuffix` zusammengesetzt, damit Suffixe
  * (OSM-Attribution, Lizenz-Marker) sprach-neutral bleiben können.
+ *
+ * i18n Block A: `Locale` kommt aus `$lib/paraglide/runtime` statt einem
+ * eigenen `'de' | 'en'`-Union-Type, damit weitere Locales (es/tr) nur an
+ * einer Stelle ergänzt werden müssen (Entscheidung Matze 26.09.2026).
  */
 
-export type Locale = 'de' | 'en';
+import type { Locale } from '$lib/paraglide/runtime';
+
+export type { Locale };
 
 export interface AuthorityMeta {
 	readonly de: string;

@@ -1,22 +1,20 @@
 export { buildCanonical } from './canonical.js';
-export {
-	buildHreflangCluster,
-	type HreflangInput,
-	type HreflangLink,
-	type SupportedLocale
-} from './hreflang.js';
+export { buildHreflangCluster, type HreflangInput, type HreflangLink } from './hreflang.js';
 export {
 	buildSitemapXml,
 	buildSitemapIndexXml,
 	collectPrerenderedUrls,
 	STATIC_PAGES_SOURCE,
 	LAYER_DETAIL_SOURCE,
+	type SitemapAlternate,
 	type SitemapEntry,
 	type SitemapIndexEntry,
-	type SitemapLocale,
 	type SitemapSource,
 	type SitemapSourceContext
 } from './sitemap-builder.js';
+export { isRouteTranslated, translatedLocalesFor } from './translation-register.js';
+export { resolveEffectiveLocale } from './effective-locale.js';
+export { localeToBcp47, localeToOgLocale } from './locale-meta.js';
 
 // Story 2.2: JSON-LD-Generator-Bibliothek
 export { serializeJsonLd } from './serialize-jsonld.js';

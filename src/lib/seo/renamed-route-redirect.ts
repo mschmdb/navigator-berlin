@@ -1,4 +1,5 @@
 import { parseWahlSlug, buildWahlSlug } from '$lib/data/wahl-slug.js';
+import { locales, baseLocale } from '$lib/paraglide/runtime';
 
 /**
  * Renamed-route redirect resolver.
@@ -43,7 +44,38 @@ export function resolveWahlRedirect(pathname: string): string | null {
 	return parsed ? `/berlin-wahlen/${buildWahlSlug(parsed)}` : null;
 }
 
+/**
+ * Splits an active, non-base locale prefix off `pathname` (e.g. `/en/wahl`
+ * → `{ locale: 'en', rest: '/wahl' }`). `de` never carries a prefix (base
+ * locale, default Paraglide pattern) so it never matches here; any locale
+ * that isn't currently active has already 301'd away in
+ * `handleStaleLocaleRedirect`, which runs before this hook.
+ *
+ * Matches the segment case-insensitively (`/EN/...` counts, like
+ * `stale-locale-redirect.ts` already does) and canonicalizes the returned
+ * `locale` to lowercase, so the 301 target always uses the canonical-case
+ * prefix regardless of how the request spelled it (code review, 2026-09-26).
+ */
+function splitLocalePrefix(pathname: string): { locale: string | null; rest: string } {
+	const firstSlash = pathname.indexOf('/', 1);
+	const segment = firstSlash === -1 ? pathname.slice(1) : pathname.slice(1, firstSlash);
+	const lowerSegment = segment.toLowerCase();
+	if (lowerSegment !== baseLocale && (locales as readonly string[]).includes(lowerSegment)) {
+		const rest = firstSlash === -1 ? '/' : pathname.slice(firstSlash);
+		return { locale: lowerSegment, rest };
+	}
+	return { locale: null, rest: pathname };
+}
+
+/**
+ * i18n Block A: renamed routes must redirect within their own locale, e.g.
+ * `/en/wo-lebt-es-sich-gut` → `/en/umwelt-infrastruktur-score`, not onto the
+ * DE canonical (decision Matze 26.09.2026, I/O-matrix "Umbenannte Route EN").
+ */
 export function renamedRouteRedirectTarget(pathname: string): string | null {
-	const normalized = pathname.replace(/\/+$/, '') || '/';
-	return RENAMED_ROUTES.get(normalized) ?? resolveWahlRedirect(normalized);
+	const { locale, rest } = splitLocalePrefix(pathname);
+	const normalized = rest.replace(/\/+$/, '') || '/';
+	const target = RENAMED_ROUTES.get(normalized) ?? resolveWahlRedirect(normalized);
+	if (target === null) return null;
+	return locale ? `/${locale}${target}` : target;
 }

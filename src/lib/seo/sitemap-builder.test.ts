@@ -103,6 +103,51 @@ describe('buildSitemapXml', () => {
 		expect(xml).toContain('</urlset>');
 		expect(xml).not.toContain('<url>');
 	});
+
+	it('omits the xmlns:xhtml namespace when no entry has alternates', () => {
+		const xml = buildSitemapXml([{ loc: 'https://navigator.berlin/methodik' }]);
+		expect(xml).not.toContain('xmlns:xhtml');
+		expect(xml).not.toContain('xhtml:link');
+	});
+
+	it('renders xhtml:link alternates + the xmlns:xhtml namespace for an entry with alternates', () => {
+		const entries: SitemapEntry[] = [
+			{
+				loc: 'https://navigator.berlin/methodik',
+				alternates: [
+					{ hreflang: 'de', href: 'https://navigator.berlin/methodik' },
+					{ hreflang: 'en', href: 'https://navigator.berlin/en/methodik' },
+					{ hreflang: 'x-default', href: 'https://navigator.berlin/methodik' }
+				]
+			}
+		];
+		const xml = buildSitemapXml(entries);
+		expect(xml).toContain(
+			'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'
+		);
+		expect(xml).toContain(
+			'<xhtml:link rel="alternate" hreflang="de" href="https://navigator.berlin/methodik" />'
+		);
+		expect(xml).toContain(
+			'<xhtml:link rel="alternate" hreflang="en" href="https://navigator.berlin/en/methodik" />'
+		);
+		expect(xml).toContain(
+			'<xhtml:link rel="alternate" hreflang="x-default" href="https://navigator.berlin/methodik" />'
+		);
+	});
+
+	it('only the sitemap-wide namespace is added once, even when just one of several entries has alternates', () => {
+		const entries: SitemapEntry[] = [
+			{ loc: 'https://navigator.berlin/lizenzen' },
+			{
+				loc: 'https://navigator.berlin/methodik',
+				alternates: [{ hreflang: 'en', href: 'https://navigator.berlin/en/methodik' }]
+			}
+		];
+		const xml = buildSitemapXml(entries);
+		expect(xml.match(/xmlns:xhtml/g)?.length).toBe(1);
+		expect(xml).toContain('<loc>https://navigator.berlin/lizenzen</loc>');
+	});
 });
 
 describe('buildSitemapIndexXml', () => {

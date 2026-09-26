@@ -1,13 +1,15 @@
 <script lang="ts">
 	import '../app.css';
-	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { locales, localizeHref, getLocale } from '$lib/paraglide/runtime';
+	import { locales, getLocale } from '$lib/paraglide/runtime';
 	import { browser } from '$app/environment';
 	import SkipLink from '$lib/components/atlas/skip-link.svelte';
 	import MetaFooter from '$lib/components/atlas/meta-footer.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { buildWebSite } from '$lib/seo/index.js';
+	import LangSwitcher from '$lib/components/atlas/lang-switcher.svelte';
+	import { buildWebSite, localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
+	import { basePathname } from '$lib/i18n/base-path.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { createUiState } from '$lib/state/ui-context.svelte.js';
 	import { STORAGE_KEY, loadBookmarks, persistBookmarks } from '$lib/state/bookmark-store.js';
 	import { mountWebMcpServer, unmountWebMcpServer } from '$lib/webmcp';
@@ -70,21 +72,36 @@
 
 	/**
 	 * Story 2.2 AC-3: WebSite-JSON-LD inkl. SearchAction im Root-Layout.
-	 * Phase 1 (Memory `project_i18n_phase_1_de_only`): Locale-Tag pro Paraglide-Locale.
+	 * i18n Block A: `locale` folgt der EFFEKTIVEN Content-Locale, nicht der
+	 * URL-Locale -- solange eine `/en/...`-Seite mangels Übersetzungs-Register-
+	 * Eintrag DE-Content zeigt, meldet das JSON-LD auch `de-DE`, statt
+	 * fälschlich EN-Content zu behaupten (`resolveEffectiveLocale`).
 	 * Story 2.11 Pivot: wenn Atlas auf `/explore` wandert, `searchPath: '/explore'`.
 	 */
 	const websiteJsonLd = $derived(
 		buildWebSite({
 			origin: page.url.origin,
 			name: 'navigator.berlin',
-			locale: ({ de: 'de-DE', en: 'en-US' } as Record<string, string>)[getLocale()] ?? 'de-DE',
+			locale: localeToBcp47(resolveEffectiveLocale(page.url.pathname, getLocale())),
 			description:
 				'Open-Data-Atlas für Berlin. Pro Adresse Lärm, Klima, Grün, Mobilität, Wohnen, Sozialstruktur und Wahlen.'
 		})
 	);
 
-	const isExplore = $derived(page.url.pathname.startsWith('/explore'));
+	// Code-review fix (i18n Block A): `page.url.pathname` trägt auf `/en/...`
+	// den Locale-Präfix, ein nackter `startsWith` hätte `/en/explore` in den
+	// falschen Layout-Zweig gesteckt. `basePathname()` normalisiert zuerst.
+	const isExplore = $derived(basePathname(page.url).startsWith('/explore'));
 </script>
+
+{#snippet langSwitcher()}
+	<!-- landmark=false: die Header/Drawer-Instanz (with-header)/+layout.svelte
+	     ist bei jeder Viewport-Breite die einzige SICHTBARE zweite Instanz
+	     (CSS display:none schließt die jeweils andere aus), aber der Footer
+	     ist IMMER zusätzlich sichtbar -- ohne diese Prop entstünden zwei
+	     gleichnamige "Sprache"-<nav>-Landmarks (WCAG code review). -->
+	<LangSwitcher currentPath={page.url.pathname} landmark={false} />
+{/snippet}
 
 <JsonLd data={websiteJsonLd} testid="website-jsonld" />
 
@@ -95,10 +112,10 @@
 {#if isExplore}
 	<!-- Compact-Bottom-Bar auf /explore. Mobile aus, da Header-Drawer dieselben Links hat. -->
 	<div class="hidden md:block">
-		<MetaFooter variant="compact" />
+		<MetaFooter variant="compact" {langSwitcher} />
 	</div>
 {:else}
-	<MetaFooter variant="full" />
+	<MetaFooter variant="full" {langSwitcher} />
 {/if}
 
 <div id="global-aria-live" aria-live="polite" aria-atomic="false" class="sr-only"></div>
@@ -111,8 +128,6 @@
 
 <div style="display:none">
 	{#each locales as locale (locale)}
-		<a href={(resolve as (path: string) => string)(localizeHref(page.url.pathname, { locale }))}
-			>{locale}</a
-		>
+		<a href={localizedHref(page.url.pathname, locale)}>{locale}</a>
 	{/each}
 </div>

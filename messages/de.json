@@ -1,4 +1,8 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from de!"
+	"lang_switcher_label": "Sprache",
+	"lang_switcher_current": "Aktuelle Sprache",
+	"disclaimer_translated": "Übersetzt aus der deutschen Quelle. Die deutsche Originalversion bleibt maßgeblich.",
+	"disclaimer_fallback_to_base": "Diese Seite wird auf Deutsch angezeigt, weil die englische Übersetzung noch nicht verfügbar ist.",
+	"disclaimer_alt_link_label": "Auf Deutsch lesen"
 }

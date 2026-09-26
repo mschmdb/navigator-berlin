@@ -1,5 +1,6 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
 import type { UpdateEntry } from '$lib/content/updates/types.js';
+import { baseLocale } from '$lib/paraglide/runtime';
 import { loadUpdatesFromModules, sortByDateDesc } from '$lib/content/updates/load-updates.js';
 
 /**
@@ -53,7 +54,7 @@ export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInpu
  * Wird in `$lib/seo/sitemap-builder.ts ALL_SOURCES` registriert.
  */
 export const UPDATES_PAGES_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== 'de') return [];
+	if (ctx.locale !== baseLocale) return [];
 	// Build-Time-Glob. eager:true → Module sync verfügbar.
 	const modules = import.meta.glob('/_content/updates/*.md', {
 		eager: true,

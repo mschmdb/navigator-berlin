@@ -64,7 +64,6 @@
 	{origin}
 	{pathname}
 	ogImage={ogImageAbsolute}
-	locales={['de']}
 />
 <JsonLd data={datasetJsonLd} testid="ranking-dataset-jsonld" />
 <JsonLd data={itemListJsonLd} testid="ranking-itemlist-jsonld" />

@@ -47,6 +47,17 @@ describe('buildBlogPosting', () => {
 		expect(obj.mainEntityOfPage['@id']).toBe('https://navigator.berlin/updates/launch');
 	});
 
+	// Code-review fix: inLanguage muss über localeToBcp47 kommen statt einem
+	// hartcodierten 'de'|'en'-Ternary -- hier die EN-Fassung eines Eintrags.
+	it('inLanguage = en-US wenn frontmatter.lang = en', () => {
+		const enEntry: UpdateEntry = {
+			...entry,
+			frontmatter: { ...entry.frontmatter, lang: 'en' }
+		};
+		const obj = buildBlogPosting({ entry: enEntry, origin });
+		expect(obj.inLanguage).toBe('en-US');
+	});
+
 	it('hat keywords aus tags (komma-getrennt)', () => {
 		const obj = buildBlogPosting({ entry, origin });
 		expect(obj.keywords).toBe('launch, demo');
@@ -81,5 +92,10 @@ describe('buildBlogIndex', () => {
 		}));
 		const obj = buildBlogIndex({ entries: many, origin });
 		expect(obj.blogPost).toHaveLength(10);
+	});
+
+	it('inLanguage ist de-DE (baseLocale) über localeToBcp47', () => {
+		const obj = buildBlogIndex({ entries: [entry], origin });
+		expect(obj.inLanguage).toBe('de-DE');
 	});
 });

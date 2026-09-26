@@ -23,7 +23,7 @@
 	);
 </script>
 
-<SeoHead title={pageTitle} description={pageDescription} {origin} {pathname} locales={['de']} />
+<SeoHead title={pageTitle} description={pageDescription} {origin} {pathname} />
 
 <JsonLd data={breadcrumbs} />
 

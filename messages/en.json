@@ -1,0 +1,8 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"lang_switcher_label": "Language",
+	"lang_switcher_current": "Current language",
+	"disclaimer_translated": "Translated from German source. Original DE version remains authoritative.",
+	"disclaimer_fallback_to_base": "This page is shown in German because the English translation is not yet available.",
+	"disclaimer_alt_link_label": "Read in German"
+}

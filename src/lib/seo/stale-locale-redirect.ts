@@ -1,3 +1,5 @@
+import { locales, baseLocale } from '$lib/paraglide/runtime';
+
 /**
  * Stale locale-prefix redirect resolver.
  *
@@ -17,14 +19,22 @@
  * scheme-relative remainder (`/de//evil.com`) or a backslash trick
  * (`/de/\evil.com`) must never survive into the 301 Location header, otherwise
  * the hook becomes an open redirect off navigator.berlin.
+ *
+ * i18n Block A: `en` went live as a real `/en/…` route (`locales` in
+ * `$lib/paraglide/runtime` now includes it), so it must NOT collapse onto DE
+ * anymore. The stale-prefix set is derived as "every locale prefix this site
+ * has ever exposed, minus every locale that is currently active with its own
+ * URL prefix" (decision Matze 26.09.2026) -- `de` stays stale forever because
+ * the base locale never gets a URL prefix under strategy `['url', 'baseLocale']`,
+ * so `/de/…` was never a real route to begin with.
  */
 
 /**
- * Locale prefixes that the old multi-locale scheme exposed and that must now
- * collapse onto the prefix-less DE canonical. `de` is included because the base
- * locale no longer carries a prefix, so `/de/…` is itself stale.
+ * Every locale prefix this site has ever exposed under the old multi-locale
+ * scheme. Extend when retiring a locale, never when activating one (that's
+ * what `locales` in `$lib/paraglide/runtime` is for).
  */
-const STALE_LOCALE_PREFIXES: ReadonlySet<string> = new Set([
+const HISTORICAL_LOCALE_PREFIXES: ReadonlySet<string> = new Set([
 	'de',
 	'en',
 	'es',
@@ -34,6 +44,18 @@ const STALE_LOCALE_PREFIXES: ReadonlySet<string> = new Set([
 	'tr',
 	'ar'
 ]);
+
+/**
+ * Historical prefixes minus locales that currently own a real `/{locale}/…`
+ * route. The base locale is excluded from that subtraction -- it never gets
+ * a URL prefix (default Paraglide pattern), so `/de/…` stays stale even
+ * though `de` is itself an "active" locale.
+ */
+const STALE_LOCALE_PREFIXES: ReadonlySet<string> = new Set(
+	[...HISTORICAL_LOCALE_PREFIXES].filter(
+		(prefix) => !((locales as readonly string[]).includes(prefix) && prefix !== baseLocale)
+	)
+);
 
 export function staleLocaleRedirectTarget(pathname: string): string | null {
 	const firstSlash = pathname.indexOf('/', 1);

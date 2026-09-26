@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { handleRenamedRouteRedirect } from './hooks.server.js';
+import { handleRenamedRouteRedirect, handleNoIndexHeaders } from './hooks.server.js';
 
 function fakeEvent(url: string): Parameters<typeof handleRenamedRouteRedirect>[0]['event'] {
 	return { url: new URL(url) } as Parameters<typeof handleRenamedRouteRedirect>[0]['event'];
@@ -51,5 +51,37 @@ describe('hooks.server.ts: handleRenamedRouteRedirect', () => {
 
 		expect(resolve).toHaveBeenCalledTimes(1);
 		expect(response).toBe(expected);
+	});
+});
+
+// Code-review fix (i18n Block A): /en/api/* muss den X-Robots-Tag-Header
+// genauso wie /api/* bekommen -- basePathname() normalisiert den
+// Locale-Präfix weg, bevor der /api/-Check läuft.
+describe('hooks.server.ts: handleNoIndexHeaders', () => {
+	it('setzt X-Robots-Tag auf /api/*-Responses', async () => {
+		const resolve = vi.fn(async () => new Response('{}'));
+		const response = await handleNoIndexHeaders({
+			event: fakeEvent('http://localhost/api/geocode'),
+			resolve
+		} as unknown as Parameters<typeof handleNoIndexHeaders>[0]);
+		expect(response.headers.get('X-Robots-Tag')).toBe('noindex,nofollow');
+	});
+
+	it('setzt X-Robots-Tag auch auf /en/api/*-Responses (Locale-Präfix)', async () => {
+		const resolve = vi.fn(async () => new Response('{}'));
+		const response = await handleNoIndexHeaders({
+			event: fakeEvent('http://localhost/en/api/geocode'),
+			resolve
+		} as unknown as Parameters<typeof handleNoIndexHeaders>[0]);
+		expect(response.headers.get('X-Robots-Tag')).toBe('noindex,nofollow');
+	});
+
+	it('lässt Nicht-API-Responses unverändert (auch mit Locale-Präfix)', async () => {
+		const resolve = vi.fn(async () => new Response('<html></html>'));
+		const response = await handleNoIndexHeaders({
+			event: fakeEvent('http://localhost/en/kiez/mitte'),
+			resolve
+		} as unknown as Parameters<typeof handleNoIndexHeaders>[0]);
+		expect(response.headers.get('X-Robots-Tag')).toBeNull();
 	});
 });

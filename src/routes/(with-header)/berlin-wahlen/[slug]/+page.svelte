@@ -8,6 +8,8 @@
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
+	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import VorlaeufigBadge from '$lib/components/wahl-portal/vorlaeufig-badge.svelte';
 	import KapitelSection from '$lib/components/wahl-portal/kapitel-section.svelte';
 	import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
@@ -66,7 +68,7 @@
 					? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 					: 'text/csv',
 			keywords: ['Wahl', 'Berlin', data.wahl.typLabel, String(data.wahl.jahr)],
-			inLanguage: 'de-DE'
+			inLanguage: localeToBcp47(resolveEffectiveLocale(pathname, getLocale()))
 		})
 	);
 
@@ -100,7 +102,6 @@
 	{pathname}
 	ogImage={`${origin}/og/wahl/${data.slug}.png`}
 	ogImageAlt={`OG-Karte: ${data.wahl.title}, Top-5 Berlin gesamt`}
-	locales={['de']}
 />
 
 <JsonLd data={breadcrumbs} />

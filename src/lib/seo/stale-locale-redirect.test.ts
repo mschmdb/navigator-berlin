@@ -33,6 +33,14 @@ describe('staleLocaleRedirectTarget', () => {
 		expect(staleLocaleRedirectTarget('/api/geocode')).toBeNull();
 	});
 
+	// i18n Block A: `en` is now an active, non-base locale with its own real
+	// `/en/…` route -- it must no longer collapse onto the DE canonical.
+	it('no longer redirects /en/… now that en is an active locale', () => {
+		expect(staleLocaleRedirectTarget('/en/kiez/marzahn-mitte')).toBeNull();
+		expect(staleLocaleRedirectTarget('/en')).toBeNull();
+		expect(staleLocaleRedirectTarget('/en/')).toBeNull();
+	});
+
 	it('does not treat real route segments that merely start with locale letters as locales', () => {
 		// "explore" starts with no locale; guard against accidental 2-char-prefix matching
 		expect(staleLocaleRedirectTarget('/architektur')).toBeNull();
@@ -47,7 +55,9 @@ describe('staleLocaleRedirectTarget', () => {
 	it('never returns an off-site target (scheme-relative remainder)', () => {
 		// /de//evil.com would otherwise yield //evil.com, an absolute redirect off-origin
 		expect(staleLocaleRedirectTarget('/de//evil.com/login')).toBe('/evil.com/login');
-		expect(staleLocaleRedirectTarget('/en//attacker.example')).toBe('/attacker.example');
+		// Moved from /en/… to /es/… (i18n Block A code map decision): en is now an
+		// active locale and must not be redirected at all, see test above.
+		expect(staleLocaleRedirectTarget('/es//attacker.example')).toBe('/attacker.example');
 		expect(staleLocaleRedirectTarget('/fr///triple.example')).toBe('/triple.example');
 	});
 

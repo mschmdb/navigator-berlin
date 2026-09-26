@@ -16,6 +16,8 @@
 	import HomeWahlTeaser from '$lib/components/home/home-wahl-teaser.svelte';
 	import HomeHitzeTeaser from '$lib/components/home/home-hitze-teaser.svelte';
 	import { buildWebSite } from '$lib/seo/jsonld-website.js';
+	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -37,7 +39,7 @@
 		buildWebSite({
 			origin,
 			name: 'navigator.berlin',
-			locale: 'de-DE',
+			locale: localeToBcp47(resolveEffectiveLocale(pathname, getLocale())),
 			description: pageDescription,
 			searchPath: '/explore'
 		})
@@ -51,7 +53,6 @@
 	{pathname}
 	ogImage={ogImageAbsolute}
 	{ogImageAlt}
-	locales={['de']}
 />
 <JsonLd data={websiteJsonLd} testid="home-website-jsonld" />
 

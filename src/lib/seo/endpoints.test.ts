@@ -80,7 +80,7 @@ describe('routes/robots.txt/+server.ts', () => {
 
 describe('routes/sitemap.xml/+server.ts (index)', () => {
 	it(
-		'returns sitemap-index XML referencing sitemap-de.xml only (phase 1 DE-only)',
+		'i18n Block A: returns sitemap-index XML referencing both sitemap-de.xml and sitemap-en.xml',
 		{ timeout: 20_000 },
 		async () => {
 			const mod = await import('../../routes/sitemap.xml/+server.js');
@@ -92,7 +92,7 @@ describe('routes/sitemap.xml/+server.ts (index)', () => {
 			const body = await response.text();
 			expect(body).toContain('<sitemapindex');
 			expect(body).toContain('https://navigator.berlin/sitemap-de.xml');
-			expect(body).not.toContain('sitemap-en.xml');
+			expect(body).toContain('https://navigator.berlin/sitemap-en.xml');
 		}
 	);
 });
@@ -133,55 +133,91 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 		expect(body).toContain('https://navigator.berlin/berlin-wahlen</loc>');
 	});
 
-	it('enthält KEINE /berlin-wahlen-Portalseite wenn featureFlags.wahlPortal=false', {
-		timeout: 20_000
-	}, async () => {
-		vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: false } }));
-		const mod = await import('../../routes/sitemap-de.xml/+server.js');
-		const response = await mod.GET(
-			makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
-		);
-		const body = await response.text();
-		// Nur der Portal-Hauptseiten-Eintrag hängt am Flag -- die einzelnen
-		// /berlin-wahlen/<slug>-Detailseiten (WAHL_DETAIL_SOURCE) sind
-		// unabhängig davon vorhanden, sobald `wahlen`-Daten existieren.
-		expect(body).not.toContain('https://navigator.berlin/berlin-wahlen</loc>');
-	});
-
-	// Review-Fund: `sourceUpdatedAt` (Story 16 `lastmod`-Fallback-Logik) war am
-	// echten Sitemap-Handler ungetestet.
-	it('nutzt sourceUpdatedAt als lastmod für die Wahl-Detailseite (echter Handler, gemockte DB)', {
-		timeout: 20_000
-	}, async () => {
-		const originalDatabaseUrl = process.env.DATABASE_URL;
-		process.env.DATABASE_URL = 'postgres://test/test';
-		vi.doMock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
-			getWahlList: vi.fn(async () => [
-				{
-					id: 1,
-					jahr: 2026,
-					typ: 'bvv',
-					stimmtyp: 'einstimme',
-					isRepeatElection: false,
-					parentElectionId: null,
-					sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/x.csv',
-					license: 'dl-de/by-2-0',
-					vorlaeufig: true,
-					sourceUpdatedAt: new Date('2026-09-20T23:55:55.000Z')
-				}
-			])
-		}));
-		try {
+	it(
+		'enthält KEINE /berlin-wahlen-Portalseite wenn featureFlags.wahlPortal=false',
+		{
+			timeout: 20_000
+		},
+		async () => {
+			vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: false } }));
 			const mod = await import('../../routes/sitemap-de.xml/+server.js');
 			const response = await mod.GET(
 				makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
 			);
 			const body = await response.text();
-			expect(body).toContain('https://navigator.berlin/berlin-wahlen/2026-bvv</loc>');
-			expect(body).toContain('<lastmod>2026-09-20T23:55:55.000Z</lastmod>');
-		} finally {
-			if (originalDatabaseUrl === undefined) delete process.env.DATABASE_URL;
-			else process.env.DATABASE_URL = originalDatabaseUrl;
+			// Nur der Portal-Hauptseiten-Eintrag hängt am Flag -- die einzelnen
+			// /berlin-wahlen/<slug>-Detailseiten (WAHL_DETAIL_SOURCE) sind
+			// unabhängig davon vorhanden, sobald `wahlen`-Daten existieren.
+			expect(body).not.toContain('https://navigator.berlin/berlin-wahlen</loc>');
 		}
+	);
+
+	// Review-Fund: `sourceUpdatedAt` (Story 16 `lastmod`-Fallback-Logik) war am
+	// echten Sitemap-Handler ungetestet.
+	it(
+		'nutzt sourceUpdatedAt als lastmod für die Wahl-Detailseite (echter Handler, gemockte DB)',
+		{
+			timeout: 20_000
+		},
+		async () => {
+			const originalDatabaseUrl = process.env.DATABASE_URL;
+			process.env.DATABASE_URL = 'postgres://test/test';
+			vi.doMock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+				getWahlList: vi.fn(async () => [
+					{
+						id: 1,
+						jahr: 2026,
+						typ: 'bvv',
+						stimmtyp: 'einstimme',
+						isRepeatElection: false,
+						parentElectionId: null,
+						sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/x.csv',
+						license: 'dl-de/by-2-0',
+						vorlaeufig: true,
+						sourceUpdatedAt: new Date('2026-09-20T23:55:55.000Z')
+					}
+				])
+			}));
+			try {
+				const mod = await import('../../routes/sitemap-de.xml/+server.js');
+				const response = await mod.GET(
+					makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
+				);
+				const body = await response.text();
+				expect(body).toContain('https://navigator.berlin/berlin-wahlen/2026-bvv</loc>');
+				expect(body).toContain('<lastmod>2026-09-20T23:55:55.000Z</lastmod>');
+			} finally {
+				if (originalDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+				else process.env.DATABASE_URL = originalDatabaseUrl;
+			}
+		}
+	);
+});
+
+// i18n Block A: EN-Sitemap existiert als eigener Endpoint, bleibt aber leer
+// bis das Übersetzungs-Register (`translation-register.ts`) Seiten markiert.
+describe('routes/sitemap-en.xml/+server.ts (EN)', () => {
+	it(
+		'returns a valid, empty urlset (translation register ships empty in Block A)',
+		{
+			timeout: 20_000
+		},
+		async () => {
+			const mod = await import('../../routes/sitemap-en.xml/+server.js');
+			const response = await mod.GET(
+				makeEvent('https://navigator.berlin/sitemap-en.xml') as Parameters<typeof mod.GET>[0]
+			);
+			expect(response.status).toBe(200);
+			expect(response.headers.get('content-type')).toMatch(/(application\/xml|text\/xml)/i);
+			const body = await response.text();
+			expect(body).toContain('<urlset');
+			expect(body).not.toContain('<url>');
+			expect(body).not.toContain('<loc>');
+		}
+	);
+
+	it('has prerender = true so it is built statically', { timeout: 20_000 }, async () => {
+		const mod = await import('../../routes/sitemap-en.xml/+server.js');
+		expect(mod.prerender).toBe(true);
 	});
 });

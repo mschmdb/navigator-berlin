@@ -23,6 +23,7 @@ const config = {
 				'/robots.txt',
 				'/sitemap.xml',
 				'/sitemap-de.xml',
+				'/sitemap-en.xml',
 				'/webmcp-manifest.json',
 				'/.well-known/webmcp.json'
 			],

@@ -1,4 +1,5 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
+import { baseLocale } from '$lib/paraglide/runtime';
 
 /**
  * Story 2.3 AC-6: Sitemap-Source für Bezirks-Routes (12 Bezirke).
@@ -37,7 +38,7 @@ export function buildBezirkSitemapEntries(input: BuildBezirkSitemapEntriesInput)
 }
 
 export const BEZIRK_PAGES_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== 'de') return [];
+	if (ctx.locale !== baseLocale) return [];
 	const slugs = ctx.bezirkSlugs;
 	if (!slugs || slugs.length === 0) return [];
 	const bezirkeLayer = ctx.manifest.layers.find((l) => l.slug === 'bezirke');

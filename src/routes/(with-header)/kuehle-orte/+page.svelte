@@ -23,13 +23,9 @@
 	{pathname}
 	{origin}
 	ogImage={ogImageAbsolute}
-	locales={['de']}
 />
 
-<article
-	data-testid="kuehle-orte-landing"
-	class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8"
->
+<article data-testid="kuehle-orte-landing" class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8">
 	<header class="flex flex-col gap-3">
 		<h1 class="flex items-center gap-2 font-sans text-3xl font-semibold text-ink">
 			<Snowflake size={28} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
@@ -57,7 +53,7 @@
 		<a
 			href={explorerLink}
 			data-testid="explorer-cta"
-			class="bg-accent hover:bg-accent-strong focus-visible:ring-accent inline-flex min-h-11 w-fit items-center gap-2 rounded px-5 py-3 font-sans text-base font-semibold text-bg-elevated focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+			class="hover:bg-accent-strong inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
 		>
 			Karte erkunden
 			<ArrowRight size={18} aria-hidden="true" />

@@ -96,7 +96,6 @@
 	{pathname}
 	ogImage={ogImageAbsolute}
 	{ogImageAlt}
-	locales={['de']}
 />
 <JsonLd data={placeJsonLd} testid="kiez-place-jsonld" />
 <JsonLd data={adminAreaJsonLd} testid="kiez-administrative-area-jsonld" />

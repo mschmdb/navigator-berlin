@@ -1,5 +1,6 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
 import { buildWahlSlug } from '$lib/data/wahl-slug.js';
+import { baseLocale } from '$lib/paraglide/runtime';
 
 /**
  * Story 6.4 AC-1: Sitemap-Source für Per-Wahl-Detail-Pages.
@@ -42,7 +43,7 @@ export function buildWahlSitemapEntries(input: BuildWahlSitemapEntriesInput): Si
 }
 
 export const WAHL_DETAIL_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== 'de') return [];
+	if (ctx.locale !== baseLocale) return [];
 	const wahlen = ctx.wahlen;
 	if (!wahlen || wahlen.length === 0) return [];
 	return buildWahlSitemapEntries({ origin: ctx.origin, wahlen });

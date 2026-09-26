@@ -1,4 +1,5 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
+import { baseLocale } from '$lib/paraglide/runtime';
 
 /**
  * Story 2.4 AC-6: Sitemap-Source für Kiez-Routes (143 LOR-Bezirksregionen).
@@ -36,7 +37,7 @@ export function buildKiezSitemapEntries(input: BuildKiezSitemapEntriesInput): Si
 }
 
 export const KIEZ_PAGES_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== 'de') return [];
+	if (ctx.locale !== baseLocale) return [];
 	const slugs = ctx.kiezSlugs;
 	if (!slugs || slugs.length === 0) return [];
 	const lorLayer = ctx.manifest.layers.find((l) => l.slug === 'lor-bezirksregion');

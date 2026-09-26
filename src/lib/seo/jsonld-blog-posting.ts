@@ -1,6 +1,8 @@
 import type { WithContext } from 'schema-dts';
 import type { UpdateEntry } from '$lib/content/updates/types.js';
 import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
+import { baseLocale } from '$lib/paraglide/runtime';
+import { localeToBcp47 } from './locale-meta.js';
 
 /**
  * Story 2.2 T3.9: BlogPosting + Blog-Index-Generator.
@@ -67,8 +69,8 @@ export interface BlogPostingInput {
 export function buildBlogPosting(input: BlogPostingInput): BlogPostingJsonLd {
 	const origin = input.origin.replace(/\/+$/, '');
 	const url = `${origin}/updates/${input.entry.slug}`;
-	const lang = input.entry.frontmatter.lang ?? 'de';
-	const inLanguage = lang === 'en' ? 'en-US' : 'de-DE';
+	const lang = input.entry.frontmatter.lang ?? baseLocale;
+	const inLanguage = localeToBcp47(lang);
 	const tags = input.entry.frontmatter.tags;
 	const keywords = tags && tags.length > 0 ? tags.join(', ') : undefined;
 
@@ -108,7 +110,7 @@ export function buildBlogIndex(input: BlogIndexInput): BlogJsonLd {
 		name: 'Navigator Berlin · Updates',
 		description: 'Daten-Updates, Features, Methodik-Aenderungen.',
 		url: `${origin}/updates`,
-		inLanguage: 'de-DE',
+		inLanguage: localeToBcp47(baseLocale),
 		publisher: PUBLISHER,
 		// Inhaltlich sind alle Posts BlogPostings; im Leaf-Type ist das auch der Constraint.
 		blogPost: sorted.map((entry) => {

@@ -9,7 +9,15 @@ export default defineConfig({
 	plugins: [
 		tailwindcss(),
 		sveltekit(),
-		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' }),
+		paraglideVitePlugin({
+			project: './project.inlang',
+			outdir: './src/lib/paraglide',
+			// Block A (i18n): URL-Präfix-Routing statt Cookie/Accept-Language.
+			// DE bleibt unpräfixiert (baseLocale), `/en/...` bekommt den Präfix
+			// über das Default-URL-Pattern. Kein Cookie-Fallback (MUST #10,
+			// ADR-004 Cookieless) -- `baseLocale` ist die einzige Fallback-Stufe.
+			strategy: ['url', 'baseLocale']
+		}),
 		FontaineTransform.vite({
 			fallbacks: ['system-ui', 'Georgia', 'ui-monospace'],
 			resolvePath: (id) => new URL(`./static${id}`, import.meta.url)

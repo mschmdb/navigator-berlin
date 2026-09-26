@@ -168,6 +168,23 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 
 	// Review-Fund: der Wahl-Detail-Zweig (ctx.wahlen) war in diesem
 	// Konsistenz-Test ungetestet.
+	// i18n Block A: EN-Locale bleibt für beide Builder leer, weil das
+	// Übersetzungs-Register (`translation-register.ts`) noch keine Seite
+	// markiert. Dokumentiert die Erweiterung auf N Locales aus dem Code-Map
+	// (`llms-sitemap-consistency.test.ts -- auf beide Locales erweitern`).
+	it('i18n Block A: locale=en liefert für Sitemap UND llms.txt ein leeres Ergebnis', () => {
+		const sitemapUrls = collectPrerenderedUrls({
+			origin: ctx.origin,
+			locale: 'en',
+			manifest: ctx.manifest,
+			buildTimestamp: ctx.buildTimestamp,
+			wahlPortalEnabled: true
+		});
+		const llmsUrls = collectLlmsSourceEntries({ ...ctx, locale: 'en', wahlPortalEnabled: true });
+		expect(sitemapUrls).toEqual([]);
+		expect(llmsUrls).toEqual([]);
+	});
+
 	it('Story 16: /berlin-wahlen/<slug> erscheint konsistent in Sitemap und llms.txt, kein /wahl-Pfad', () => {
 		const sitemapUrls = collectPrerenderedUrls({
 			origin: ctx.origin,
