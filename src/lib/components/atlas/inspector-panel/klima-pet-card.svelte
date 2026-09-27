@@ -41,6 +41,9 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
+	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.long` bleibt bis
+	// Block C deutsch (WCAG 3.1.2).
+	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	function fmt(n: number): string {
 		return formatDecimal(n, { ...localeOpts, maximumFractionDigits: 1 });
@@ -73,7 +76,11 @@
 				label: bezirkName ?? m.inspector_context_row_bezirk_fallback(undefined, localeOpts),
 				agg: bezirkAggregate
 			},
-			{ id: 'berlin', label: m.inspector_context_row_berlin(undefined, localeOpts), agg: berlinAggregate }
+			{
+				id: 'berlin',
+				label: m.inspector_context_row_berlin(undefined, localeOpts),
+				agg: berlinAggregate
+			}
 		].filter(
 			(r): r is { id: string; label: string; agg: NumericMedianAggregate } => r.agg?.median != null
 		)
@@ -140,7 +147,9 @@
 				<dt class="truncate text-ink-muted">{row.label}</dt>
 				<dd class="text-right font-mono text-ink tabular-nums">
 					{fmt(row.agg.median as number)}°C
-					<span class="text-ink-subtle">· {fmt(row.agg.min as number)}–{fmt(row.agg.max as number)}</span>
+					<span class="text-ink-subtle"
+						>· {fmt(row.agg.min as number)}–{fmt(row.agg.max as number)}</span
+					>
 				</dd>
 			{/each}
 		</dl>
@@ -195,7 +204,9 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="pet-details" class="mt-1.5 space-y-1.5">
-			<p class="font-serif text-xs leading-snug text-ink-muted">{explainEntry.long}</p>
+			<p lang={contentLang} class="font-serif text-xs leading-snug text-ink-muted">
+				{explainEntry.long}
+			</p>
 			{#if externalLink}
 				<a
 					href={externalLink.href}

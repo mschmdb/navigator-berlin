@@ -49,6 +49,28 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/', locale: 'en' }
 ];
 
+/**
+ * Partial-translation register -- a SECOND, separate list from
+ * {@link TRANSLATION_REGISTER} (spec `spec-i18n-teiluebersetzung-banner.md`).
+ *
+ * A route in here has a translated FRAME (chrome, headings, labels) but
+ * still shows German content fragments (profiles, layer-explain text, …)
+ * until Block C finishes full content translation. That is a distinct
+ * state from "translated" (`TRANSLATION_REGISTER`): it does NOT flip
+ * `isRouteTranslated`, so noindex/hreflang/sitemap/llms stay exactly as
+ * they are for these routes -- only the banner text and `<main lang>`
+ * (via `resolveFrameLocale`) react to a partial-translation entry.
+ *
+ * `/explore` is an exact match (no `prefix`); `/kiez`, `/bezirk`, `/layer`
+ * use `prefix: true` so every detail slug underneath counts too.
+ */
+export const PARTIAL_TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
+	{ pathname: '/explore', locale: 'en' },
+	{ pathname: '/kiez', locale: 'en', prefix: true },
+	{ pathname: '/bezirk', locale: 'en', prefix: true },
+	{ pathname: '/layer', locale: 'en', prefix: true }
+];
+
 function normalizePathname(pathname: string): string {
 	const deLocalized = deLocalizeHref(pathname);
 	const withoutQuery = deLocalized.split(/[?#]/)[0] ?? deLocalized;
@@ -82,6 +104,28 @@ export function isRouteTranslated(
 	entries: readonly TranslationRegisterEntry[] = TRANSLATION_REGISTER
 ): boolean {
 	if (locale === baseLocale) return true;
+	const normalized = normalizePathname(pathname);
+	return entries.some((entry) => entry.locale === locale && matchesEntry(normalized, entry));
+}
+
+/**
+ * Whether `pathname` is registered as "partially translated" for `locale`:
+ * the frame (chrome, headings, labels) is translated, but the page still
+ * shows German content fragments alongside it -- see
+ * {@link PARTIAL_TRANSLATION_REGISTER}.
+ *
+ * The base locale is never "partially translated" (it IS the content, there
+ * is nothing to fall back from). This is intentionally independent of
+ * {@link isRouteTranslated}: a path can be partially translated without
+ * ever being marked fully "translated" (that would require a separate
+ * `TRANSLATION_REGISTER` entry, which Block C decides later).
+ */
+export function isRoutePartiallyTranslated(
+	pathname: string,
+	locale: Locale,
+	entries: readonly TranslationRegisterEntry[] = PARTIAL_TRANSLATION_REGISTER
+): boolean {
+	if (locale === baseLocale) return false;
 	const normalized = normalizePathname(pathname);
 	return entries.some((entry) => entry.locale === locale && matchesEntry(normalized, entry));
 }

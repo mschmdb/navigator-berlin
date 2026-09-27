@@ -148,6 +148,39 @@ describe('map-legend.svelte', () => {
 			expect(scale.textContent).toMatch(/32 °C|extrem heiß/);
 		});
 
+		// spec-i18n-teiluebersetzung-banner.md: `explain.long`/`valueScaleExplain`
+		// bleiben bis Block C deutsch -- auf `lang="en"` bekommen sie ein
+		// `lang="de"` (WCAG 3.1.2), auf DE keins.
+		it('explain.long + valueScaleExplain bekommen lang="de" wenn lang="en"', async () => {
+			const m = [meta('klima-pet-2022')];
+			render(MapLegend, { activeLayerSlugs: ['klima-pet-2022'], manifestLayers: m, lang: 'en' });
+			await page.getByTestId('legend-summary-klima-pet-2022').click();
+			const expand = (await page
+				.getByTestId('legend-expand-klima-pet-2022')
+				.element()) as HTMLElement;
+			const long = expand.querySelector('p:not([data-testid])');
+			expect(long?.getAttribute('lang')).toBe('de');
+			const scale = (await page
+				.getByTestId('legend-scale-klima-pet-2022')
+				.element()) as HTMLElement;
+			expect(scale.getAttribute('lang')).toBe('de');
+		});
+
+		it('explain.long + valueScaleExplain haben KEIN lang-Attribut wenn lang="de"', async () => {
+			const m = [meta('klima-pet-2022')];
+			render(MapLegend, { activeLayerSlugs: ['klima-pet-2022'], manifestLayers: m, lang: 'de' });
+			await page.getByTestId('legend-summary-klima-pet-2022').click();
+			const expand = (await page
+				.getByTestId('legend-expand-klima-pet-2022')
+				.element()) as HTMLElement;
+			const long = expand.querySelector('p:not([data-testid])');
+			expect(long?.getAttribute('lang')).toBeNull();
+			const scale = (await page
+				.getByTestId('legend-scale-klima-pet-2022')
+				.element()) as HTMLElement;
+			expect(scale.getAttribute('lang')).toBeNull();
+		});
+
 		// i18n Block B3a Task 3: kein `/de/layer/...`-301-Umweg mehr -- DE hat
 		// keinen URL-Präfix (Boundary Spec i18n B3a).
 		it('Expand zeigt Mehr-erfahren-Link auf /layer/slug (DE ohne Präfix)', async () => {

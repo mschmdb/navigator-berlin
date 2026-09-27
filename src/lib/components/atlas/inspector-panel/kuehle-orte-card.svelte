@@ -39,6 +39,9 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
+	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.short`/`.long`
+	// bleibt bis Block C deutsch (WCAG 3.1.2).
+	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	const LIMIT = 5;
 	let filters = $state<KuehleOrteFilters>({
@@ -151,7 +154,9 @@
 		</div>
 	</div>
 
-	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">{explainEntry.short}</p>
+	<p lang={contentLang} class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
+		{explainEntry.short}
+	</p>
 
 	<!-- Filter-Chips (multi-select, kombinierbar) -->
 	<div
@@ -196,16 +201,21 @@
 							data-testid="ort-status">{status.text}</span
 						>
 						<span class="font-mono text-[11px] text-ink-muted">{ort.cat}</span>
-						<span class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted">
+						<span
+							class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted"
+						>
 							{m.inspector_kuehle_orte_cool_score({ score: String(ort.coolScore) }, localeOpts)}
 						</span>
 						{#if ort.acStatus === 'yes'}
-							<span class="inline-flex items-center rounded-sm bg-[#0277BD]/12 px-1 font-mono text-[10px] text-[#0277BD]">
+							<span
+								class="inline-flex items-center rounded-sm bg-[#0277BD]/12 px-1 font-mono text-[10px] text-[#0277BD]"
+							>
 								{m.inspector_kuehle_orte_klimatisiert(undefined, localeOpts)}
 							</span>
 						{/if}
 						{#if free}
-							<span class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted"
+							<span
+								class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted"
 								>{free}</span
 							>
 						{/if}
@@ -293,7 +303,9 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
-			<p class="font-serif text-xs leading-snug text-ink-muted">{explainEntry.long}</p>
+			<p lang={contentLang} class="font-serif text-xs leading-snug text-ink-muted">
+				{explainEntry.long}
+			</p>
 			{#if editorial?.primarySourceUrl}
 				<a
 					href={editorial.primarySourceUrl}

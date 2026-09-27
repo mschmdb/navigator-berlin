@@ -28,6 +28,9 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
+	// spec-i18n-teiluebersetzung-banner.md: `explain`/`explainEntry.*` bleibt
+	// bis Block C deutsch (WCAG 3.1.2).
+	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	let showMore = $state(false);
 	function toggleMore(): void {
@@ -214,17 +217,25 @@
 	{/if}
 
 	{#if explain}
-		<p class="font-serif text-sm leading-snug text-ink-muted" data-testid="explain">
+		<p
+			lang={contentLang}
+			class="font-serif text-sm leading-snug text-ink-muted"
+			data-testid="explain"
+		>
 			{explain}
 		</p>
 	{/if}
 	{#if hasMore}
 		{#if showMore}
-			<p data-testid="explain-long" class="font-serif text-sm leading-snug text-ink-muted">
+			<p
+				data-testid="explain-long"
+				lang={contentLang}
+				class="font-serif text-sm leading-snug text-ink-muted"
+			>
 				{explainEntry.long}
 			</p>
 			{#if explainEntry.valueScaleExplain}
-				<p data-testid="explain-scale" class="font-mono text-xs text-ink-subtle">
+				<p data-testid="explain-scale" lang={contentLang} class="font-mono text-xs text-ink-subtle">
 					{explainEntry.valueScaleExplain}
 				</p>
 			{/if}

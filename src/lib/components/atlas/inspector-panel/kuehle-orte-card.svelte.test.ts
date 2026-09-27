@@ -37,6 +37,37 @@ describe('kuehle-orte-card.svelte', () => {
 	});
 
 	// i18n Block B3b: Filter-Chips, Status, Distanz, Navi-Links + Legende englisch.
+	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.short`/`.long`
+	// bleiben bis Block C deutsch (WCAG 3.1.2).
+	it('explainEntry.short + .long bekommen lang="de" bei lang="en"', async () => {
+		const { container } = render(KuehleOrteCard, {
+			layerName: 'Cool places',
+			address: null,
+			index: null,
+			lang: 'en'
+		});
+		const shortP = container.querySelector('[data-testid="kuehle-orte-card"] > p');
+		expect(shortP?.getAttribute('lang')).toBe('de');
+		await page.getByTestId('card-details-toggle').click();
+		const details = (await page.getByTestId('card-details').element()) as HTMLElement;
+		const longP = details.querySelector('p');
+		expect(longP?.getAttribute('lang')).toBe('de');
+	});
+
+	it('explainEntry.short + .long haben KEIN lang-Attribut auf DE', async () => {
+		const { container } = render(KuehleOrteCard, {
+			layerName: 'Kühle Orte',
+			address: null,
+			index: null
+		});
+		const shortP = container.querySelector('[data-testid="kuehle-orte-card"] > p');
+		expect(shortP?.getAttribute('lang')).toBeNull();
+		await page.getByTestId('card-details-toggle').click();
+		const details = (await page.getByTestId('card-details').element()) as HTMLElement;
+		const longP = details.querySelector('p');
+		expect(longP?.getAttribute('lang')).toBeNull();
+	});
+
 	it('lang="en": Filter, Status, Distanz und Navi-Links englisch', async () => {
 		render(KuehleOrteCard, {
 			layerName: 'Cool places',

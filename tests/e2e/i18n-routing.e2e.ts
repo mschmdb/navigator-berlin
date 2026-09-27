@@ -209,7 +209,10 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 		await page.goto('/en/kiez/alexanderplatz');
 		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
 		expect(websiteJsonLd).not.toBeNull();
-		const parsed = JSON.parse(websiteJsonLd ?? '{}') as { inLanguage?: string; description?: string };
+		const parsed = JSON.parse(websiteJsonLd ?? '{}') as {
+			inLanguage?: string;
+			description?: string;
+		};
 		expect(parsed.inLanguage).toBe('de-DE');
 		// Review-Fund: die Beschreibung folgt derselben effektiven Locale wie
 		// `inLanguage` -- eine unübersetzte Seite bekommt die deutsche Fassung,
@@ -439,9 +442,7 @@ test.describe('i18n Block B: Glossar-Zeile (Kiez/Bezirk bleiben deutsch)', () =>
 		await expect(page.getByTestId('steuerleiste-ebene-bezirk')).toHaveText('Bezirk');
 		// Stimmbezirk (dritte Ebene) uebersetzt dagegen, Glossar-Ausnahme gilt
 		// nicht dafuer.
-		await expect(page.getByTestId('steuerleiste-ebene-stimmbezirk')).toHaveText(
-			'Polling district'
-		);
+		await expect(page.getByTestId('steuerleiste-ebene-stimmbezirk')).toHaveText('Polling district');
 		const bodyText = await page.locator('body').innerText();
 		expect(bodyText).not.toMatch(/\bneighbourhood\b/i);
 	});
@@ -555,9 +556,10 @@ test.describe('i18n Block B: /en/berlin-wahlen -- je Kapitel EN-Positivtext + Ne
 		const trendsChapter = page.getByTestId('wahl-portal-chapter-trends');
 		await expect(trendsChapter.getByTestId('trends-kapitel-canvas')).toBeVisible();
 		await trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet').click();
-		await expect(
-			trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet')
-		).toHaveAttribute('aria-checked', 'true');
+		await expect(trendsChapter.getByTestId('trends-kapitel-toggle-volatilitaet')).toHaveAttribute(
+			'aria-checked',
+			'true'
+		);
 		const chapterText = await trendsChapter.innerText();
 		expect(chapterText).toMatch(/net shift/);
 		expect(chapterText).not.toMatch(/Netto-Verschiebung/);
@@ -626,7 +628,10 @@ test.describe('i18n Block B2: Startseite /en', () => {
 		await expect(page).toHaveTitle('Home - Berlin in data - navigator.berlin');
 		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
 		expect(websiteJsonLd).not.toBeNull();
-		const parsed = JSON.parse(websiteJsonLd ?? '{}') as { description?: string; inLanguage?: string };
+		const parsed = JSON.parse(websiteJsonLd ?? '{}') as {
+			description?: string;
+			inLanguage?: string;
+		};
 		expect(parsed.inLanguage).toBe('en-US');
 		expect(parsed.description).toContain('Noise, climate');
 	});
@@ -753,5 +758,23 @@ test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht
 		const drawer = page.getByTestId('mobile-meta-drawer');
 		await expect(drawer.getByRole('heading', { name: 'Menu' })).toBeVisible();
 		await expect(drawer.getByRole('link', { name: 'Contact' })).toBeVisible();
+	});
+});
+
+// spec-i18n-teiluebersetzung-banner.md: `/en/methodik` ist NICHT im
+// Teil-Übersetzungs-Register (nur `/explore`, `/kiez`, `/bezirk`, `/layer`
+// sind es) -- Banner und `<main lang>` bleiben deshalb exakt wie vor dieser
+// Spec (Kontroll-Test, verhindert eine versehentliche Ausweitung).
+test.describe('spec-i18n-teiluebersetzung-banner: /en/methodik unverändert (Kontrolle)', () => {
+	test('Banner bleibt "not yet available" (fallback-to-base), main lang=de', async ({ page }) => {
+		await page.goto('/en/methodik');
+		await expect(page.locator('main#main')).toHaveAttribute('lang', 'de');
+		const disclaimer = page.getByTestId('translation-disclaimer').first();
+		await expect(disclaimer).toBeVisible();
+		await expect(disclaimer).toHaveAttribute('data-variant', 'fallback-to-base');
+		await expect(disclaimer).toContainText(
+			'This page is shown in German because the English translation is not yet available.'
+		);
+		await expect(disclaimer).not.toContainText('only available in German');
 	});
 });

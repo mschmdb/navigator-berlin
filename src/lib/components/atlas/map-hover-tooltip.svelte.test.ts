@@ -1,11 +1,16 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import MapHoverTooltip, {
 	type HoverEvent,
 	type HoverFeature,
 	type MapHoverApi
 } from './map-hover-tooltip.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function makeFakeMap(featuresByCall: HoverFeature[][] = []) {
 	const handlers: Record<string, ((e: HoverEvent) => void)[]> = {};
@@ -67,6 +72,31 @@ describe('map-hover-tooltip.svelte', () => {
 		expect(v.textContent).toMatch(/hoch/);
 		const ex = (await page.getByTestId('hover-tooltip-explain').element()) as HTMLElement;
 		expect(ex.textContent).toMatch(/Lärmbelastung/);
+	});
+
+	// spec-i18n-teiluebersetzung-banner.md: `shortExplain` bleibt bis Block C
+	// deutsch (WCAG 3.1.2).
+	it('hover-tooltip-explain bekommt lang="de" wenn getLocale() "en" ist', async () => {
+		overwriteGetLocale(() => 'en');
+		const { api, fire } = makeFakeMap([
+			[{ layer: { id: 'navigator-layer-laerm-2023' }, properties: { kategorie: 'hoch' } }]
+		]);
+		render(MapHoverTooltip, { map: api, activeLayerSlugs: ['laerm-2023'] });
+		fire('mousemove', { point: { x: 100, y: 100 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const ex = (await page.getByTestId('hover-tooltip-explain').element()) as HTMLElement;
+		expect(ex.getAttribute('lang')).toBe('de');
+	});
+
+	it('hover-tooltip-explain hat KEIN lang-Attribut auf DE (Default)', async () => {
+		const { api, fire } = makeFakeMap([
+			[{ layer: { id: 'navigator-layer-laerm-2023' }, properties: { kategorie: 'hoch' } }]
+		]);
+		render(MapHoverTooltip, { map: api, activeLayerSlugs: ['laerm-2023'] });
+		fire('mousemove', { point: { x: 100, y: 100 } });
+		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
+		const ex = (await page.getByTestId('hover-tooltip-explain').element()) as HTMLElement;
+		expect(ex.getAttribute('lang')).toBeNull();
 	});
 
 	it('Empty features → Tooltip versteckt sich (auch ohne mouseleave)', async () => {

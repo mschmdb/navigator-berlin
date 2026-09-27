@@ -62,4 +62,71 @@ describe('TranslationDisclaimer', () => {
 		expect(link).not.toBeNull();
 		expect(link?.getAttribute('href')).toBe('/layer/laerm-2023');
 	});
+
+	// Review-Fund: der "Read in German"-Link zeigt immer auf die Basis-Locale
+	// -- `hreflang` muss das ebenfalls sagen (N-Locale-faehig: `baseLocale`
+	// aus dem Runtime, kein hartcodiertes `'de'`).
+	it('der Alt-Link traegt hreflang="de" (Basis-Locale)', async () => {
+		const { container } = render(TranslationDisclaimer, {
+			props: {
+				effectiveLocale: 'de',
+				pageLocale: 'en',
+				alternateLocaleHref: '/layer/laerm-2023'
+			}
+		});
+		const link = container.querySelector('[data-testid="translation-disclaimer-alt-link"]');
+		expect(link?.getAttribute('hreflang')).toBe('de');
+	});
+
+	// spec-i18n-teiluebersetzung-banner.md: eine Teil-Route (Rahmen übersetzt,
+	// Content noch nicht) zeigt die `partial`-Variante statt `fallback-to-base`
+	// -- auch wenn `effectiveLocale !== pageLocale` (Content-Locale bleibt ja
+	// bewusst DE, das Register wird für diese Routen NICHT angefasst).
+	describe('partial-Variante (Teil-Übersetzungs-Banner)', () => {
+		it('rendert partial statt fallback-to-base, wenn partial=true', async () => {
+			const { container } = render(TranslationDisclaimer, {
+				props: { effectiveLocale: 'de', pageLocale: 'en', partial: true }
+			});
+			const el = container.querySelector('[data-testid="translation-disclaimer"]');
+			expect(el).not.toBeNull();
+			expect(el?.getAttribute('data-variant')).toBe('partial');
+			expect(el?.textContent).toContain('Some content on this page is only available in German.');
+		});
+
+		it('ohne partial-Prop bleibt es beim fallback-to-base-Text (Default false)', async () => {
+			const { container } = render(TranslationDisclaimer, {
+				props: { effectiveLocale: 'de', pageLocale: 'en' }
+			});
+			const el = container.querySelector('[data-testid="translation-disclaimer"]');
+			expect(el?.getAttribute('data-variant')).toBe('fallback-to-base');
+		});
+
+		it('partial=true auf einer echt übersetzten Seite (effectiveLocale === pageLocale) rendert weiterhin nichts', async () => {
+			const { container } = render(TranslationDisclaimer, {
+				props: { effectiveLocale: 'en', pageLocale: 'en', partial: true }
+			});
+			expect(container.querySelector('[data-testid="translation-disclaimer"]')).toBeNull();
+		});
+
+		it('der "Read in German"-Alt-Link bleibt auch bei partial erhalten', async () => {
+			const { container } = render(TranslationDisclaimer, {
+				props: {
+					effectiveLocale: 'de',
+					pageLocale: 'en',
+					partial: true,
+					alternateLocaleHref: '/kiez/alexanderplatz'
+				}
+			});
+			const link = container.querySelector('[data-testid="translation-disclaimer-alt-link"]');
+			expect(link).not.toBeNull();
+			expect(link?.textContent).toBe('Read in German');
+		});
+
+		it('die DE-Fassung von disclaimer_partial_translation existiert', async () => {
+			const { m } = await import('$lib/paraglide/messages.js');
+			expect(m.disclaimer_partial_translation(undefined, { locale: 'de' })).toBe(
+				'Einzelne Inhalte auf dieser Seite sind nur auf Deutsch verfügbar.'
+			);
+		});
+	});
 });

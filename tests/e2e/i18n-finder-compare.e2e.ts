@@ -117,6 +117,26 @@ test.describe('i18n Block B3c: /en/explore Compare englisch', () => {
 		await expect(plzRow).toContainText('Postcodes');
 	});
 
+	// spec-i18n-teiluebersetzung-banner.md: der Wahl-Hinweis (Editorial-
+	// Disclaimer `wahl-stimmenanteile`) im Compare-Modus war bisher auf `/en`
+	// deutsch -- jetzt über dieselbe Message wie der Inspector lokalisiert.
+	test('Wahl-Compare-Block: Stimmenanteile-Hinweis englisch', async ({ page }) => {
+		await seedBookmarkB(page);
+		await page.goto(exploreUrl('/en/explore'));
+		await waitForMap(page);
+		await expect(page.getByTestId('inspector-panel')).toBeVisible({ timeout: 10000 });
+		await page.getByTestId('compare-trigger').click();
+		await expect(page.getByTestId('compare-panel')).toBeVisible();
+		await page.getByTestId('compare-pick-bookmarks').click();
+		await expect(page.getByTestId('bookmark-dialog')).toBeVisible();
+		await page.getByTestId('bookmark-select').click();
+		const wahlBlock = page.getByTestId('wahl-compare-block');
+		await expect(wahlBlock).toBeVisible({ timeout: 10000 });
+		const disclaimer = wahlBlock.getByTestId('editorial-disclaimer');
+		await expect(disclaimer).toHaveAttribute('data-variant', 'wahl-stimmenanteile');
+		await expect(disclaimer).toContainText('Postal votes are included at every level');
+	});
+
 	test('Compare-Exit-Aria englisch', async ({ page }) => {
 		await page.goto(exploreUrl('/en/explore'));
 		await waitForMap(page);

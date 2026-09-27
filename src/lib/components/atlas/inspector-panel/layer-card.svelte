@@ -30,17 +30,13 @@
 		contextRows?: readonly ContextRow[];
 	};
 
-	let {
-		hit,
-		layerName,
-		lang,
-		isActive = false,
-		onToggleLayer,
-		contextRows = []
-	}: Props = $props();
+	let { hit, layerName, lang, isActive = false, onToggleLayer, contextRows = [] }: Props = $props();
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
+	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.long` bleibt bis
+	// Block C deutsch (WCAG 3.1.2).
+	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	const display = $derived(getLayerHitDisplay(hit.layer, hit.value, localeOpts));
 	const severity = $derived(getValueSeverity(hit.layer, hit.value));
@@ -182,7 +178,9 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
-			<p class="font-serif text-xs leading-snug text-ink-muted">{explainEntry.long}</p>
+			<p lang={contentLang} class="font-serif text-xs leading-snug text-ink-muted">
+				{explainEntry.long}
+			</p>
 			{#if externalLink}
 				<a
 					href={externalLink.href}

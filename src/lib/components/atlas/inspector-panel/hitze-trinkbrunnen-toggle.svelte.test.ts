@@ -3,10 +3,7 @@ import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import HitzeTrinkbrunnenToggle from './hitze-trinkbrunnen-toggle.svelte';
-import {
-	featureToTrinkbrunnen,
-	type Trinkbrunnen
-} from '$lib/data/get-trinkbrunnen-index.js';
+import { featureToTrinkbrunnen, type Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');
@@ -59,7 +56,9 @@ describe('HitzeTrinkbrunnenToggle', () => {
 		});
 		await expect.element(page.getByTestId('trinkbrunnen-nearest')).toBeInTheDocument();
 		await expect.element(page.getByText('Nächster: Nah-Brunnen')).toBeInTheDocument();
-		const g = (await page.getByRole('link', { name: /Google Maps/ }).element()) as HTMLAnchorElement;
+		const g = (await page
+			.getByRole('link', { name: /Google Maps/ })
+			.element()) as HTMLAnchorElement;
 		expect(g.getAttribute('href')).toContain('google.com/maps');
 	});
 
@@ -89,5 +88,26 @@ describe('HitzeTrinkbrunnenToggle', () => {
 		overwriteGetLocale(() => 'en');
 		render(HitzeTrinkbrunnenToggle, { isActive: true, onToggleLayer: () => {} });
 		await expect.element(page.getByText('Hide drinking fountains')).toBeInTheDocument();
+	});
+
+	// spec-i18n-teiluebersetzung-banner.md: `explain.short` bleibt bis Block C
+	// deutsch (WCAG 3.1.2).
+	it('explain.short bekommt lang="de" bei lang="en"', async () => {
+		const { container } = render(HitzeTrinkbrunnenToggle, {
+			isActive: false,
+			onToggleLayer: () => {},
+			lang: 'en'
+		});
+		const explain = container.querySelector('[data-testid="hitze-trinkbrunnen-toggle"] > p');
+		expect(explain?.getAttribute('lang')).toBe('de');
+	});
+
+	it('explain.short hat KEIN lang-Attribut auf DE', async () => {
+		const { container } = render(HitzeTrinkbrunnenToggle, {
+			isActive: false,
+			onToggleLayer: () => {}
+		});
+		const explain = container.querySelector('[data-testid="hitze-trinkbrunnen-toggle"] > p');
+		expect(explain?.getAttribute('lang')).toBeNull();
 	});
 });

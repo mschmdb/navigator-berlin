@@ -1,6 +1,7 @@
 <script lang="ts">
 	import EditorialDisclaimer from './editorial-disclaimer.svelte';
 	import type { RenderedTemplate } from '$lib/data/cross-layer-templates/index.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	type SourceRef = {
 		readonly label: string;
@@ -25,6 +26,9 @@
 	}: Props = $props();
 
 	const hasMissing = $derived(rendered.missingVars.length > 0);
+	// spec-i18n-teiluebersetzung-banner.md: `rendered.body` (Template-Prosa)
+	// bleibt bis Block C deutsch (WCAG 3.1.2).
+	const contentLang = $derived(getLocale() === 'de' ? undefined : 'de');
 </script>
 
 {#if !hasMissing}
@@ -33,7 +37,11 @@
 		data-testid={testid}
 		data-template-id={rendered.id}
 	>
-		<p class="font-serif text-base leading-relaxed text-ink" data-testid={`${testid}-body`}>
+		<p
+			lang={contentLang}
+			class="font-serif text-base leading-relaxed text-ink"
+			data-testid={`${testid}-body`}
+		>
 			{rendered.body}
 		</p>
 

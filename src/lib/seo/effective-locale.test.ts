@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import { resolveEffectiveLocale } from './effective-locale.js';
+import { resolveEffectiveLocale, resolveFrameLocale } from './effective-locale.js';
 import type { TranslationRegisterEntry } from './translation-register.js';
 
 afterEach(() => {
@@ -42,5 +42,43 @@ describe('resolveEffectiveLocale', () => {
 
 		overwriteGetLocale(() => 'de');
 		expect(resolveEffectiveLocale('/kiez/mitte')).toBe('de');
+	});
+});
+
+describe('resolveFrameLocale', () => {
+	it('eine teilweise uebersetzte Route behaelt die Rahmen-Locale (Content faellt trotzdem auf DE zurueck)', () => {
+		expect(resolveFrameLocale('/kiez/mitte', 'en')).toBe('en');
+		expect(resolveFrameLocale('/explore', 'en')).toBe('en');
+		// Kein Register-Eintrag als "uebersetzt" -- Content-Locale bleibt DE.
+		expect(resolveEffectiveLocale('/kiez/mitte', 'en')).toBe('de');
+	});
+
+	it('/en/methodik (nicht registriert) faellt wie effectiveLocale auf DE zurueck', () => {
+		expect(resolveFrameLocale('/methodik', 'en')).toBe('de');
+	});
+
+	it('eine voll uebersetzte Route (z. B. /en/berlin-wahlen) behaelt ihre eigene Locale', () => {
+		expect(resolveFrameLocale('/berlin-wahlen', 'en')).toBe('en');
+		expect(resolveFrameLocale('/', 'en')).toBe('en');
+	});
+
+	it('DE-Seiten bleiben immer DE', () => {
+		expect(resolveFrameLocale('/kiez/mitte', 'de')).toBe('de');
+	});
+
+	it('injizierte Teil-Register-Entries ueberschreiben das reale Register', () => {
+		const partialEntries: readonly TranslationRegisterEntry[] = [
+			{ pathname: '/foo', locale: 'en' }
+		];
+		expect(resolveFrameLocale('/foo', 'en', partialEntries)).toBe('en');
+		expect(resolveFrameLocale('/kiez/mitte', 'en', partialEntries)).toBe('de');
+	});
+
+	it('defaults pageLocale to getLocale() when omitted', () => {
+		overwriteGetLocale(() => 'en');
+		expect(resolveFrameLocale('/explore')).toBe('en');
+
+		overwriteGetLocale(() => 'de');
+		expect(resolveFrameLocale('/explore')).toBe('de');
 	});
 });

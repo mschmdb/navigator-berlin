@@ -48,6 +48,33 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		await expect(lead).toContainText(/Kategorisierte Lärm-Gesamtbelastung/);
 	});
 
+	// spec-i18n-teiluebersetzung-banner.md: `/en/layer/…` hat einen übersetzten
+	// Rahmen, layer-explain-Fließtext bleibt deutsch bis Block C -- `<main
+	// lang>` folgt deshalb der Rahmen- statt der Content-Locale, und das
+	// Banner zeigt den Teil-Übersetzungs-Text statt "not yet available".
+	test('Teil-Übersetzungs-Banner: "only available in German", Read-in-German-Link, main lang=en, noindex bleibt', async ({
+		page
+	}) => {
+		const response = await page.goto(`/en/layer/${LAYER_WITH_METHODOLOGY}`);
+		expect(response?.status()).toBe(200);
+		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+			'content',
+			'noindex,nofollow'
+		);
+		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
+		const disclaimer = page.getByTestId('translation-disclaimer').first();
+		await expect(disclaimer).toBeVisible();
+		await expect(disclaimer).toHaveAttribute('data-variant', 'partial');
+		await expect(disclaimer).toContainText(
+			'Some content on this page is only available in German.'
+		);
+		await expect(disclaimer.getByTestId('translation-disclaimer-alt-link')).toContainText(
+			'Read in German'
+		);
+		// AC "teilweise übersetzt ≠ übersetzt": noindex ohne hreflang.
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
+	});
+
 	test('Dataset- und Breadcrumb-JSON-LD bleiben auf /en vollständig deutsch (Boundary inLanguage de-DE)', async ({
 		page
 	}) => {

@@ -152,6 +152,21 @@ describe('layer-palette.svelte', () => {
 			.not.toBeInTheDocument();
 	});
 
+	// spec-i18n-teiluebersetzung-banner.md: die Subline bleibt bis Block C
+	// deutsch -- auf `getLocale() === 'en'` bekommt sie `lang="de"`.
+	it('Subline bekommt lang="de" wenn getLocale() "en" ist', async () => {
+		overwriteGetLocale(() => 'en');
+		render(Harness, { open: true, layers: LAYERS });
+		const subline = (await page.getByTestId('palette-subline-bezirke').element()) as HTMLElement;
+		expect(subline.getAttribute('lang')).toBe('de');
+	});
+
+	it('Subline hat KEIN lang-Attribut auf DE-Locale', async () => {
+		render(Harness, { open: true, layers: LAYERS });
+		const subline = (await page.getByTestId('palette-subline-bezirke').element()) as HTMLElement;
+		expect(subline.getAttribute('lang')).toBeNull();
+	});
+
 	// i18n Block B3a: Layer-Palette folgt der URL-Locale (`getLocale()`).
 	it('rendert englische Palette-Texte + Layer-Namen wenn Locale "en" ist', async () => {
 		overwriteGetLocale(() => 'en');

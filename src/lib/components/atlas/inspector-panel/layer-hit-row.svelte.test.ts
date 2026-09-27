@@ -604,6 +604,49 @@ describe('layer-hit-row.svelte', () => {
 			await expect.element(page.getByTestId('mauer-footer')).toHaveTextContent('As of');
 		});
 
+		// spec-i18n-teiluebersetzung-banner.md: `explain`/`explainEntry.long`/
+		// `.valueScaleExplain` bleiben bis Block C deutsch (WCAG 3.1.2).
+		it('explain + explain-long/-scale bekommen lang="de" auf lang="en"', async () => {
+			render(LayerHitRow, {
+				hit: {
+					...recentHit,
+					layer: 'wohnlagen-2024',
+					value: { wol_mode: 'gut', plr_name: 'Mitte' }
+				},
+				layerName: 'Test-Layer',
+				lang: 'en'
+			});
+			const explain = (await page.getByTestId('explain').element()) as HTMLElement;
+			expect(explain.getAttribute('lang')).toBe('de');
+			await page.getByTestId('explain-more').click();
+			const long = (await page.getByTestId('explain-long').element()) as HTMLElement;
+			expect(long.getAttribute('lang')).toBe('de');
+			const scale = (await page.getByTestId('explain-scale').element()) as HTMLElement;
+			expect(scale.getAttribute('lang')).toBe('de');
+		});
+
+		it('explain hat KEIN lang-Attribut auf DE (Default)', async () => {
+			render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
+			const explain = (await page.getByTestId('explain').element()) as HTMLElement;
+			expect(explain.getAttribute('lang')).toBeNull();
+		});
+
+		it('explain-long + explain-scale haben KEIN lang-Attribut auf DE (Default)', async () => {
+			render(LayerHitRow, {
+				hit: {
+					...recentHit,
+					layer: 'wohnlagen-2024',
+					value: { wol_mode: 'gut', plr_name: 'Mitte' }
+				},
+				layerName: 'Mietspiegel-Wohnlage 2024'
+			});
+			await page.getByTestId('explain-more').click();
+			const long = (await page.getByTestId('explain-long').element()) as HTMLElement;
+			expect(long.getAttribute('lang')).toBeNull();
+			const scale = (await page.getByTestId('explain-scale').element()) as HTMLElement;
+			expect(scale.getAttribute('lang')).toBeNull();
+		});
+
 		it('ValueChip Severity-Beschreibung englisch (aria-label)', async () => {
 			render(LayerHitRow, {
 				hit: {

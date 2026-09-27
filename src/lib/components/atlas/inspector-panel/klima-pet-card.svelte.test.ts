@@ -197,4 +197,39 @@ describe('KlimaPetCard', () => {
 		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/layer/klima-pet-2022');
 	});
+
+	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.long` bleibt bis
+	// Block C deutsch (WCAG 3.1.2).
+	it('explainEntry.long bekommt lang="de" bei lang="en"', async () => {
+		render(KlimaPetCard, {
+			hit,
+			layerName: 'Perceived temperature 2022',
+			lang: 'en',
+			kiezName: null,
+			kiezAggregate: null,
+			bezirkName: null,
+			bezirkAggregate: null,
+			berlinAggregate: null
+		});
+		await page.getByTestId('pet-details-toggle').click();
+		const details = (await page.getByTestId('pet-details').element()) as HTMLElement;
+		const explain = details.querySelector('p');
+		expect(explain?.getAttribute('lang')).toBe('de');
+	});
+
+	it('explainEntry.long hat KEIN lang-Attribut auf DE', async () => {
+		render(KlimaPetCard, {
+			hit,
+			layerName: 'Gefühlte Temperatur 2022',
+			kiezName: null,
+			kiezAggregate: null,
+			bezirkName: null,
+			bezirkAggregate: null,
+			berlinAggregate: null
+		});
+		await page.getByTestId('pet-details-toggle').click();
+		const details = (await page.getByTestId('pet-details').element()) as HTMLElement;
+		const explain = details.querySelector('p');
+		expect(explain?.getAttribute('lang')).toBeNull();
+	});
 });

@@ -86,6 +86,29 @@ describe('LayerCard', () => {
 		await expect.element(page.getByTestId('card-details')).toBeInTheDocument();
 	});
 
+	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.long` bleibt bis
+	// Block C deutsch (WCAG 3.1.2).
+	it('explainEntry.long bekommt lang="de" bei lang="en"', async () => {
+		render(LayerCard, {
+			hit,
+			layerName: 'Noise pollution 2023',
+			contextRows: [],
+			lang: 'en'
+		});
+		await page.getByTestId('card-details-toggle').click();
+		const details = (await page.getByTestId('card-details').element()) as HTMLElement;
+		const explain = details.querySelector('p');
+		expect(explain?.getAttribute('lang')).toBe('de');
+	});
+
+	it('explainEntry.long hat KEIN lang-Attribut auf DE', async () => {
+		render(LayerCard, { hit, layerName: 'Lärmbelastung 2023', contextRows: [] });
+		await page.getByTestId('card-details-toggle').click();
+		const details = (await page.getByTestId('card-details').element()) as HTMLElement;
+		const explain = details.querySelector('p');
+		expect(explain?.getAttribute('lang')).toBeNull();
+	});
+
 	// i18n Block B3a Task 3: DE hat KEINEN URL-Präfix (Boundary), vormals
 	// `/de/layer/...` (301-Umweg-Bug).
 	it('Learn-more-Link hat bei lang: "de" keinen /de/-Präfix', async () => {

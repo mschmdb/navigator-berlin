@@ -82,6 +82,33 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/?$/);
 	});
 
+	// spec-i18n-teiluebersetzung-banner.md: `/en/kiez/…` hat einen übersetzten
+	// Rahmen, einzelne Inhalte (Prosa, FAQ) bleiben deutsch bis Block C --
+	// `<main lang>` folgt deshalb der Rahmen- statt der Content-Locale, und
+	// das Banner zeigt den Teil-Übersetzungs-Text statt "not yet available".
+	test('Teil-Übersetzungs-Banner: "only available in German", Read-in-German-Link, main lang=en, noindex bleibt', async ({
+		page
+	}) => {
+		const response = await page.goto(`/en/kiez/${KIEZ_SLUG}`);
+		expect(response?.status()).toBe(200);
+		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+			'content',
+			'noindex,nofollow'
+		);
+		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
+		const disclaimer = page.getByTestId('translation-disclaimer').first();
+		await expect(disclaimer).toBeVisible();
+		await expect(disclaimer).toHaveAttribute('data-variant', 'partial');
+		await expect(disclaimer).toContainText(
+			'Some content on this page is only available in German.'
+		);
+		await expect(disclaimer.getByTestId('translation-disclaimer-alt-link')).toContainText(
+			'Read in German'
+		);
+		// AC "teilweise übersetzt ≠ übersetzt": noindex ohne hreflang.
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
+	});
+
 	test('Steckbrief, Vergleichstabelle und Wahl-Verlauf englisch; FAQ-Heading englisch, Q&A-Inhalte bleiben deutsch', async ({
 		page
 	}) => {
@@ -185,6 +212,30 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		await expect(kiezeList.locator('h2')).toContainText('Kieze in Bezirk');
 		await kiezeList.getByTestId('bezirk-kieze-link').first().click();
 		await expect(page).toHaveURL(/\/en\/kiez\//);
+	});
+
+	// spec-i18n-teiluebersetzung-banner.md, siehe Kiez-Pendant oben.
+	test('Teil-Übersetzungs-Banner: "only available in German", Read-in-German-Link, main lang=en, noindex bleibt', async ({
+		page
+	}) => {
+		const response = await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
+		expect(response?.status()).toBe(200);
+		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+			'content',
+			'noindex,nofollow'
+		);
+		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
+		const disclaimer = page.getByTestId('translation-disclaimer').first();
+		await expect(disclaimer).toBeVisible();
+		await expect(disclaimer).toHaveAttribute('data-variant', 'partial');
+		await expect(disclaimer).toContainText(
+			'Some content on this page is only available in German.'
+		);
+		await expect(disclaimer.getByTestId('translation-disclaimer-alt-link')).toContainText(
+			'Read in German'
+		);
+		// AC "teilweise übersetzt ≠ übersetzt": noindex ohne hreflang.
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
 	});
 
 	test('Meta-Description + og:image:alt englisch (Zahlen, Kiez score, Bezirk data)', async ({

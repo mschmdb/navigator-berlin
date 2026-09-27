@@ -79,6 +79,21 @@ test.describe('i18n Block B3b: /en/explore Inspector englisch', () => {
 		);
 	});
 
+	// spec-i18n-teiluebersetzung-banner.md: der Wahl-Hinweis (Editorial-
+	// Disclaimer `wahl-stimmenanteile`, Inspector/Compare) war bisher auf
+	// `/en` deutsch -- jetzt über eine eigene Message lokalisiert, gleiche
+	// Fakten wie DE (Briefstimmen auf allen Ebenen enthalten, Kiez-Wert eine
+	// Schätzung).
+	test('Wahl-Stimmenanteile-Hinweis (Editorial-Disclaimer) englisch', async ({ page }) => {
+		await openInspector(page, '/en/explore');
+		const wahlSection = page.getByTestId('wahl-section');
+		await expect(wahlSection).toBeVisible({ timeout: 8000 });
+		const disclaimer = wahlSection.getByTestId('editorial-disclaimer');
+		await expect(disclaimer).toHaveAttribute('data-variant', 'wahl-stimmenanteile');
+		await expect(disclaimer).toContainText('Postal votes are included at every level');
+		await expect(disclaimer).toContainText('an estimate, not an official breakdown');
+	});
+
 	test('Demografie-Block englisch, "Kiez"/"Bezirk" bleiben deutsch, Learn-more auf /en/layer/…', async ({
 		page
 	}) => {
@@ -117,7 +132,9 @@ test.describe('i18n Block B3b: /en/explore Inspector englisch', () => {
 	// treffen hier nicht) -- Map-Toggle/Learn-more-Muster ist bei beiden
 	// identisch (siehe Unit-Tests `layer-hit-row.svelte.test.ts`, `layer-card.
 	// svelte.test.ts`), LayerCard genügt hier als e2e-Stichprobe.
-	test('Layer-Card Map-Toggle-Titel englisch + Learn-more-Link auf /en/layer/…', async ({ page }) => {
+	test('Layer-Card Map-Toggle-Titel englisch + Learn-more-Link auf /en/layer/…', async ({
+		page
+	}) => {
 		await openInspector(page, '/en/explore');
 		const toggles = page.locator('[data-testid="layer-card"] [data-testid="map-toggle"]');
 		await expect(toggles.first()).toHaveAttribute('title', /on map$/, { timeout: 8000 });
@@ -131,11 +148,9 @@ test.describe('i18n Block B3b: /en/explore Inspector englisch', () => {
 	// asynchrone Spatial-Context-Auflösung.
 	test('Kiez-/Bezirk-Profil-Links zeigen auf /en/kiez/… bzw. /en/bezirk/…', async ({ page }) => {
 		await openInspector(page, '/en/explore');
-		await expect(page.getByTestId('inspector-kiez-link')).toHaveAttribute(
-			'href',
-			/^\/en\/kiez\//,
-			{ timeout: 10000 }
-		);
+		await expect(page.getByTestId('inspector-kiez-link')).toHaveAttribute('href', /^\/en\/kiez\//, {
+			timeout: 10000
+		});
 		await expect(page.getByTestId('inspector-bezirk-link')).toHaveAttribute(
 			'href',
 			/^\/en\/bezirk\//,
@@ -173,10 +188,8 @@ test.describe('i18n Block B3b: /explore (DE) Inspector unverändert', () => {
 		await expect(page.getByTestId('inspector-kiez-link')).toHaveAttribute('href', /^\/kiez\//, {
 			timeout: 10000
 		});
-		await expect(page.getByTestId('inspector-bezirk-link')).toHaveAttribute(
-			'href',
-			/^\/bezirk\//,
-			{ timeout: 10000 }
-		);
+		await expect(page.getByTestId('inspector-bezirk-link')).toHaveAttribute('href', /^\/bezirk\//, {
+			timeout: 10000
+		});
 	});
 });

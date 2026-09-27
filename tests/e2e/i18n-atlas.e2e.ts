@@ -31,6 +31,30 @@ test.describe('i18n Block B3a: /en/explore -- noindex (nicht registriert bis B3c
 		await expect(page.locator('h1')).toHaveText('Berlin Atlas: data for every address');
 		await expect(page).toHaveTitle('Atlas - Berlin in data - navigator.berlin');
 	});
+
+	// spec-i18n-teiluebersetzung-banner.md: `/en/explore` hat einen
+	// übersetzten Rahmen (Atlas-Fundament seit B3a), einzelne Inhalte bleiben
+	// deutsch -- `<main lang>` folgt deshalb der Rahmen- statt der Content-
+	// Locale, und das Banner zeigt den Teil-Übersetzungs-Text statt
+	// "not yet available". noindex bleibt unverändert (kein Register-Eintrag).
+	test('Teil-Übersetzungs-Banner: "only available in German", Read-in-German-Link, main lang=en', async ({
+		page
+	}) => {
+		await page.goto('/en/explore');
+		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
+		const disclaimer = page.getByTestId('translation-disclaimer').first();
+		await expect(disclaimer).toBeVisible();
+		await expect(disclaimer).toHaveAttribute('data-variant', 'partial');
+		await expect(disclaimer).toContainText(
+			'Some content on this page is only available in German.'
+		);
+		await expect(disclaimer.getByTestId('translation-disclaimer-alt-link')).toContainText(
+			'Read in German'
+		);
+		// AC "teilweise übersetzt ≠ übersetzt": noindex ohne hreflang.
+		await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
+	});
 });
 
 test.describe('i18n Block B3a: /en/explore -- Legende + Map-Controls + Layer-Link englisch', () => {
@@ -38,7 +62,9 @@ test.describe('i18n Block B3a: /en/explore -- Legende + Map-Controls + Layer-Lin
 		page
 	}) => {
 		await page.goto('/en/explore?layers=laerm-2023');
-		await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
+		await page
+			.locator('[data-testid="map-skeleton"]')
+			.waitFor({ state: 'detached', timeout: 15000 });
 
 		const controls = page.getByRole('group', { name: 'Map controls' });
 		await expect(controls).toBeVisible();
@@ -77,7 +103,9 @@ test.describe('i18n Block B3a: /en/explore -- Legende + Map-Controls + Layer-Lin
 
 	test('Legenden-Link zeigt ohne 301-Umweg auf /en/layer/laerm-2023', async ({ page }) => {
 		await page.goto('/en/explore?layers=laerm-2023');
-		await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
+		await page
+			.locator('[data-testid="map-skeleton"]')
+			.waitFor({ state: 'detached', timeout: 15000 });
 		await page.getByTestId('legend-summary-laerm-2023').click();
 		await expect(page.getByTestId('legend-more-link-laerm-2023')).toHaveAttribute(
 			'href',
@@ -89,7 +117,9 @@ test.describe('i18n Block B3a: /en/explore -- Legende + Map-Controls + Layer-Lin
 		page
 	}) => {
 		await page.goto('/en/explore');
-		await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
+		await page
+			.locator('[data-testid="map-skeleton"]')
+			.waitFor({ state: 'detached', timeout: 15000 });
 		await page.getByRole('button', { name: /Open (layer palette|palette)/ }).click();
 		const palette = page.getByTestId('layer-palette');
 		await expect(palette).toBeVisible();
@@ -110,7 +140,9 @@ test.describe('i18n Block B3a: /en/explore -- Legende + Map-Controls + Layer-Lin
 	// Kartenmitte hier zuverlässig eine Fläche, kein Sweep nötig.
 	test('Hover über die Karte zeigt englischen Tooltip-Layer-Namen', async ({ page }) => {
 		await page.goto('/en/explore?layers=laerm-2023');
-		await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
+		await page
+			.locator('[data-testid="map-skeleton"]')
+			.waitFor({ state: 'detached', timeout: 15000 });
 		const map = page.locator('[role="application"]').first();
 		const box = await map.boundingBox();
 		if (!box) throw new Error('Map nicht renderbar');
@@ -131,13 +163,19 @@ test.describe('i18n Block B3a: /en/explore -- Legende + Map-Controls + Layer-Lin
 		// Erklärtext (`getLayerExplain(slug, 'short')`) bleibt laut Boundary
 		// Block C (Fließtexte) bewusst deutsch, auch im EN-Tooltip -- nur der
 		// Layer-NAME (oben geprüft) ist B3a-Scope.
+		// spec-i18n-teiluebersetzung-banner.md: der deutsch bleibende
+		// Erklärtext trägt lang="de" (WCAG 3.1.2), der Rahmen (main) lang="en".
+		await expect(page.getByTestId('hover-tooltip-explain')).toHaveAttribute('lang', 'de');
+		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
 	});
 });
 
 test.describe('i18n Block B3a: /explore (DE) bleibt unverändert', () => {
 	test('Legende + Legenden-Link bleiben deutsch, Link ohne /de/-Präfix', async ({ page }) => {
 		await page.goto('/explore?layers=laerm-2023');
-		await page.locator('[data-testid="map-skeleton"]').waitFor({ state: 'detached', timeout: 15000 });
+		await page
+			.locator('[data-testid="map-skeleton"]')
+			.waitFor({ state: 'detached', timeout: 15000 });
 
 		const legend = page.getByTestId('map-legend');
 		await expect(legend).toBeVisible();

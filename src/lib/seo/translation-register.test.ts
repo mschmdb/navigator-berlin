@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
+	isRoutePartiallyTranslated,
 	isRouteTranslated,
+	PARTIAL_TRANSLATION_REGISTER,
 	translatedLocalesFor,
 	TRANSLATION_REGISTER
 } from './translation-register.js';
@@ -65,6 +67,46 @@ describe('isRouteTranslated', () => {
 	it('an injected entry for a different locale does not match', () => {
 		const entries: readonly TranslationRegisterEntry[] = [{ pathname: '/methodik', locale: 'en' }];
 		expect(isRouteTranslated('/methodik', 'de', entries)).toBe(true); // base locale always true
+	});
+});
+
+describe('isRoutePartiallyTranslated', () => {
+	it('der reale Eintrag deckt die vier Teil-Routen ab (/explore exakt, Rest als Praefix)', () => {
+		expect(PARTIAL_TRANSLATION_REGISTER).toEqual([
+			{ pathname: '/explore', locale: 'en' },
+			{ pathname: '/kiez', locale: 'en', prefix: true },
+			{ pathname: '/bezirk', locale: 'en', prefix: true },
+			{ pathname: '/layer', locale: 'en', prefix: true }
+		]);
+	});
+
+	it('/explore, /kiez/x, /bezirk/x, /layer/x sind fuer en teilweise uebersetzt', () => {
+		expect(isRoutePartiallyTranslated('/explore', 'en')).toBe(true);
+		expect(isRoutePartiallyTranslated('/en/explore', 'en')).toBe(true);
+		expect(isRoutePartiallyTranslated('/kiez/mitte', 'en')).toBe(true);
+		expect(isRoutePartiallyTranslated('/bezirk/pankow', 'en')).toBe(true);
+		expect(isRoutePartiallyTranslated('/layer/laerm-2023', 'en')).toBe(true);
+	});
+
+	it('DE (Basis-Locale) ist nie "teilweise uebersetzt"', () => {
+		expect(isRoutePartiallyTranslated('/explore', 'de')).toBe(false);
+		expect(isRoutePartiallyTranslated('/kiez/mitte', 'de')).toBe(false);
+	});
+
+	it('/en/methodik ist NICHT registriert (bleibt "nicht uebersetzt")', () => {
+		expect(isRoutePartiallyTranslated('/methodik', 'en')).toBe(false);
+		expect(isRoutePartiallyTranslated('/en/methodik', 'en')).toBe(false);
+	});
+
+	it('/en und /en/berlin-wahlen (voll uebersetzt) sind NICHT im Teil-Register', () => {
+		expect(isRoutePartiallyTranslated('/', 'en')).toBe(false);
+		expect(isRoutePartiallyTranslated('/berlin-wahlen', 'en')).toBe(false);
+	});
+
+	it('injizierte entries ueberschreiben das reale Register (kein Modul-Mock noetig)', () => {
+		const entries: readonly TranslationRegisterEntry[] = [{ pathname: '/foo', locale: 'en' }];
+		expect(isRoutePartiallyTranslated('/foo', 'en', entries)).toBe(true);
+		expect(isRoutePartiallyTranslated('/explore', 'en', entries)).toBe(false);
 	});
 });
 

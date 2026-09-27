@@ -6,10 +6,7 @@
 <script lang="ts">
 	import { Eye, EyeOff, Droplet, Navigation } from '@lucide/svelte';
 	import { getLayerExplainEntry } from './internal/layer-explain.js';
-	import {
-		findNearestTrinkbrunnen,
-		type Trinkbrunnen
-	} from '$lib/data/get-trinkbrunnen-index.js';
+	import { findNearestTrinkbrunnen, type Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
 	import { formatDistance } from './internal/format-distance.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale, type Locale } from '$lib/paraglide/runtime';
@@ -28,6 +25,9 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
+	// spec-i18n-teiluebersetzung-banner.md: `explain.short` bleibt bis
+	// Block C deutsch (WCAG 3.1.2).
+	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	const explain = getLayerExplainEntry(SLUG);
 
@@ -54,7 +54,9 @@
 		<Droplet size={15} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
 		{m.inspector_trinkbrunnen_heading(undefined, localeOpts)}
 	</h4>
-	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">{explain.short}</p>
+	<p lang={contentLang} class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
+		{explain.short}
+	</p>
 
 	{#if nearest}
 		{@const badgeText = badges(nearest)}

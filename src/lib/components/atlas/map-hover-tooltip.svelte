@@ -40,6 +40,9 @@
 	let content = $state<MultiHoverContent | null>(null);
 
 	const layerIds = $derived(activeLayerSlugs.map((s) => layerIdFor(s)));
+	// spec-i18n-teiluebersetzung-banner.md: `shortExplain` bleibt bis Block C
+	// deutsch (WCAG 3.1.2).
+	const contentLang = $derived(getLocale() === 'de' ? undefined : 'de');
 
 	function onMouseMove(e: HoverEvent): void {
 		if (!map) return;
@@ -116,6 +119,7 @@
 			</p>
 			{#if first.shortExplain}
 				<p
+					lang={contentLang}
 					class="font-serif text-[11px] leading-snug text-ink-muted italic"
 					data-testid="hover-tooltip-explain"
 				>

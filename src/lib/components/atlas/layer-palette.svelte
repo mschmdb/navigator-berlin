@@ -31,6 +31,9 @@
 
 	const ui = getUiState();
 	const localeOpts = $derived({ locale: getLocale() });
+	// spec-i18n-teiluebersetzung-banner.md: die `subline` (`getLayerExplain`)
+	// bleibt bis Block C deutsch (WCAG 3.1.2).
+	const contentLang = $derived(getLocale() === 'de' ? undefined : 'de');
 
 	let searchInput: HTMLInputElement | null = $state(null);
 	let searchQuery = $state('');
@@ -232,6 +235,7 @@
 									{#if subline}
 										<span
 											data-testid={`palette-subline-${layer.slug}`}
+											lang={contentLang}
 											class="font-serif text-xs leading-snug text-ink-subtle italic"
 										>
 											{subline}
@@ -285,6 +289,7 @@
 										{#if subline}
 											<span
 												data-testid={`palette-subline-${layer.slug}`}
+												lang={contentLang}
 												class="font-serif text-xs leading-snug text-ink-subtle italic"
 											>
 												{subline}

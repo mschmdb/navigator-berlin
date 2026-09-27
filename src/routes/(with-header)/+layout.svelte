@@ -17,6 +17,7 @@
 	import type { Bookmark } from '$lib/state/bookmark-schema.js';
 	import { getLocale, baseLocale } from '$lib/paraglide/runtime';
 	import { resolveEffectiveLocale } from '$lib/seo/effective-locale.js';
+	import { isRoutePartiallyTranslated } from '$lib/seo/translation-register.js';
 	import { basePathname } from '$lib/i18n/base-path.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 
@@ -75,6 +76,18 @@
 	// Route-Group (Statik-Seiten, /explore, kiez/bezirk/layer, Wahlportal).
 	const pageLocale = $derived(getLocale());
 	const effectiveLocale = $derived(resolveEffectiveLocale(page.url.pathname, pageLocale));
+	// spec-i18n-teiluebersetzung-banner.md: `/en/explore`, `/en/kiez/…`,
+	// `/en/bezirk/…`, `/en/layer/…` haben einen übersetzten Rahmen, obwohl
+	// ihr Content (noch) nicht im Übersetzungs-Register steht -- die
+	// Rahmen-Locale (`<main lang>`, Banner-Variante) folgt deshalb NICHT
+	// `effectiveLocale` (das bleibt die reine SEO-/Content-Locale).
+	// Review-Fund: `isRoutePartiallyTranslated` einmal berechnen statt
+	// zusätzlich nochmal implizit in `resolveFrameLocale` -- `frameLocale`
+	// leitet sich direkt aus `partial` ab (siehe `resolveFrameLocale` in
+	// `effective-locale.ts` für dieselbe Logik als reine, eigenständig
+	// getestete Funktion).
+	const partial = $derived(isRoutePartiallyTranslated(page.url.pathname, pageLocale));
+	const frameLocale = $derived(partial ? pageLocale : effectiveLocale);
 	const deAlternateHref = $derived(localizedHref(page.url.pathname, baseLocale));
 </script>
 
@@ -96,18 +109,24 @@
 />
 
 <!--
-	Code-review fix: `lang` auf `<main>` folgt der EFFEKTIVEN Content-Locale,
-	nicht der URL-Locale -- eine nicht-übersetzte `/en/...`-Seite zeigt 1:1
+	Code-review fix: `lang` auf `<main>` folgt der RAHMEN-Locale
+	(`resolveFrameLocale`), nicht mehr direkt der Content-Locale
+	(`effectiveLocale`) -- eine nicht-übersetzte `/en/...`-Seite zeigt 1:1
 	DE-Text; `<html lang="en">` (URL-Locale, bleibt laut I/O-Matrix so) über
 	deutschem Fließtext ohne Gegenkorrektur verletzt WCAG 3.1.1 "Language of
-	Page". `<main lang={effectiveLocale}>` korrigiert das für den Content-
-	Bereich, während `<html lang>` weiterhin die URL-Locale zeigt (Switcher/
-	Disclaimer/Chrome bleiben ja tatsächlich in der URL-Locale).
+	Page". Für die vier teilweise übersetzten Routen (`/explore`,
+	`/kiez/…`, `/bezirk/…`, `/layer/…`) ist der RAHMEN aber tatsächlich
+	englisch, auch wenn `effectiveLocale` (SEO-/Content-Locale, unverändert)
+	weiter DE bleibt -- `resolveFrameLocale` liefert dort `pageLocale`, siehe
+	spec-i18n-teiluebersetzung-banner.md. `<html lang>` bleibt weiterhin die
+	URL-Locale (Switcher/Disclaimer/Chrome bleiben ja tatsächlich in der
+	URL-Locale).
 -->
-<main id="main" lang={effectiveLocale}>
+<main id="main" lang={frameLocale}>
 	<TranslationDisclaimer
 		{pageLocale}
 		{effectiveLocale}
+		{partial}
 		alternateLocaleHref={pageLocale === baseLocale ? undefined : deAlternateHref}
 	/>
 	{@render children()}
