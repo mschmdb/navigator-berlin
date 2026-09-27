@@ -2,7 +2,8 @@
 title: 'i18n Block B4b: Rahmen der Layer-Detailseite auf Englisch'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'c442ee05a4627c1930721eafe46e9118b7a7118d'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
