@@ -1,0 +1,472 @@
+[
+  {
+    "id": "A-01",
+    "source": "messages/de.json + messages/en.json `layer_explain_kiez_score_gesamt_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kiez-score-gesamt'].long (Zeile 256+)",
+    "artefact": "methodik-pfad",
+    "de_old": "Ungewichtetes Mittel der fünf Dimensionen (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz) pro LOR-Planungsraum. Misst nur Größen mit eindeutiger Besser-Richtung. Methodik: /methodik/kiez-score.",
+    "de_new": "Ungewichtetes Mittel der fünf Dimensionen (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz) pro LOR-Planungsraum. Misst nur Größen mit eindeutiger Besser-Richtung.",
+    "en_old": "Unweighted mean of the five dimensions (Quiet & air, Green & heat, Mobility, Local amenities, Tenant protection) per LOR planning area. Only measures variables where it is clear which direction is better. Methodology: /methodik/kiez-score.",
+    "en_new": "Unweighted mean of the five dimensions (Quiet & air, Green & heat, Mobility, Local amenities, Tenant protection) per LOR planning area. Only measures variables where it is clear which direction is better.",
+    "note": "Rendert in: Legende (Aufklapper 'Mehr erklären', kein Methodik-Link, nur Text 'Eigene Berechnung'), Lead auf /layer/kiez-score-gesamt (Aside verlinkt nur /methodik allgemein), llms-full.txt/LLM-Export. Inspector zeigt den Langtext für Kiez-Score-Layer nicht (kiez-score-section, dort echter Link auf /methodik/kiez-score). Echter Link nötig: /layer/kiez-score-* Aside auf /methodik/kiez-score und Legende ('Eigene Berechnung' als Link)."
+  },
+  {
+    "id": "A-02",
+    "source": "messages/de.json + messages/en.json `layer_explain_kiez_score_ruhe_luft_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kiez-score-ruhe-luft'].long (Zeile 261+)",
+    "artefact": "methodik-pfad, palettenname",
+    "de_old": "Gewichtete Aggregation aus Lärm und Luftbelastung pro LOR-Planungsraum. Cloud-Dancer-Skala: niedrig = stärker belastet, hoch = ruhiger und sauberer. Methodik: /methodik/kiez-score.",
+    "de_new": "Gewichtete Aggregation aus Lärm und Luftbelastung pro LOR-Planungsraum. Skala: niedrig = stärker belastet, hoch = ruhiger und sauberer.",
+    "en_old": "Weighted aggregation of noise and air pollution per LOR planning area. Cloud Dancer scale: low = more polluted, high = quieter and cleaner. Methodology: /methodik/kiez-score.",
+    "en_new": "Weighted aggregation of noise and air pollution per LOR planning area. Scale: low = more polluted, high = quieter and cleaner.",
+    "note": "Rendert in: Legende (Aufklapper 'Mehr erklären', kein Methodik-Link, nur Text 'Eigene Berechnung'), Lead auf /layer/kiez-score-ruhe-luft (Aside verlinkt nur /methodik allgemein), llms-full.txt/LLM-Export. Inspector zeigt den Langtext für Kiez-Score-Layer nicht (kiez-score-section, dort echter Link auf /methodik/kiez-score). Echter Link nötig: /layer/kiez-score-* Aside auf /methodik/kiez-score und Legende ('Eigene Berechnung' als Link)."
+  },
+  {
+    "id": "A-03",
+    "source": "messages/de.json + messages/en.json `layer_explain_kiez_score_gruen_hitze_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kiez-score-gruen-hitze'].long (Zeile 266+)",
+    "artefact": "methodik-pfad",
+    "de_old": "Grünversorgung und Grünanlagen-Nähe plus thermische Resilienz (Bioklima, PET-Hitzebelastung, Kaltluft-Einwirkbereich, Leitbahnkorridor) pro Planungsraum, gewichtet auf 0–100. Methodik: /methodik/kiez-score.",
+    "de_new": "Grünversorgung und Grünanlagen-Nähe plus thermische Resilienz (Bioklima, PET-Hitzebelastung, Kaltluft-Einwirkbereich, Leitbahnkorridor) pro Planungsraum, gewichtet auf 0–100.",
+    "en_old": "Green space provision and proximity to green spaces plus thermal resilience (bioclimate, PET heat stress, cold air influence zone, cold air flow corridor) per planning area, weighted to 0–100. Methodology: /methodik/kiez-score.",
+    "en_new": "Green space provision and proximity to green spaces plus thermal resilience (bioclimate, PET heat stress, cold air influence zone, cold air flow corridor) per planning area, weighted to 0–100.",
+    "note": "Rendert in: Legende (Aufklapper 'Mehr erklären', kein Methodik-Link, nur Text 'Eigene Berechnung'), Lead auf /layer/kiez-score-gruen-hitze (Aside verlinkt nur /methodik allgemein), llms-full.txt/LLM-Export. Inspector zeigt den Langtext für Kiez-Score-Layer nicht (kiez-score-section, dort echter Link auf /methodik/kiez-score). Echter Link nötig: /layer/kiez-score-* Aside auf /methodik/kiez-score und Legende ('Eigene Berechnung' als Link)."
+  },
+  {
+    "id": "A-04",
+    "source": "messages/de.json + messages/en.json `layer_explain_kiez_score_mobilitaet_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kiez-score-mobilitaet'].long (Zeile 271+)",
+    "artefact": "methodik-pfad",
+    "de_old": "Distance-basiert vom Planungsraum-Centroid zu nächster U-Bahn, S-Bahn, Tram und Bus plus Radverkehrs-Presence. Pro Adresse wird der Wert mit der exakten Adress-Distance überschrieben. Methodik: /methodik/kiez-score.",
+    "de_new": "Distance-basiert vom Planungsraum-Centroid zu nächster U-Bahn, S-Bahn, Tram und Bus plus Radverkehrs-Presence. Pro Adresse wird der Wert mit der exakten Adress-Distance überschrieben.",
+    "en_old": "Based on the distance from the planning area centroid to the nearest U-Bahn, S-Bahn, tram and bus stop, plus cycling network presence. For each address, the exact address distance overrides the value. Methodology: /methodik/kiez-score.",
+    "en_new": "Based on the distance from the planning area centroid to the nearest U-Bahn, S-Bahn, tram and bus stop, plus cycling network presence. For each address, the exact address distance overrides the value.",
+    "note": "Rendert in: Legende (Aufklapper 'Mehr erklären', kein Methodik-Link, nur Text 'Eigene Berechnung'), Lead auf /layer/kiez-score-mobilitaet (Aside verlinkt nur /methodik allgemein), llms-full.txt/LLM-Export. Inspector zeigt den Langtext für Kiez-Score-Layer nicht (kiez-score-section, dort echter Link auf /methodik/kiez-score). Echter Link nötig: /layer/kiez-score-* Aside auf /methodik/kiez-score und Legende ('Eigene Berechnung' als Link)."
+  },
+  {
+    "id": "A-05",
+    "source": "messages/de.json + messages/en.json `layer_explain_kiez_score_versorgung_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kiez-score-versorgung'].long (Zeile 276+)",
+    "artefact": "methodik-pfad",
+    "de_old": "Distance vom Planungsraum-Centroid zu nächster Kita, Schule, Plan-Krankenhaus und Spielplatz. Threshold pro POI individuell (Kita 500 m, Schule 800 m, Krankenhaus 2.000 m, Spielplatz 400 m). Methodik: /methodik/kiez-score.",
+    "de_new": "Distance vom Planungsraum-Centroid zu nächster Kita, Schule, Plan-Krankenhaus und Spielplatz. Threshold pro POI individuell (Kita 500 m, Schule 800 m, Krankenhaus 2.000 m, Spielplatz 400 m).",
+    "en_old": "Distance from the planning area centroid to the nearest daycare centre, school, hospital in the Berlin hospital plan and playground. Individual threshold per POI (daycare 500 m, school 800 m, hospital 2,000 m, playground 400 m). Methodology: /methodik/kiez-score.",
+    "en_new": "Distance from the planning area centroid to the nearest daycare centre, school, hospital in the Berlin hospital plan and playground. Individual threshold per POI (daycare 500 m, school 800 m, hospital 2,000 m, playground 400 m).",
+    "note": "Rendert in: Legende (Aufklapper 'Mehr erklären', kein Methodik-Link, nur Text 'Eigene Berechnung'), Lead auf /layer/kiez-score-versorgung (Aside verlinkt nur /methodik allgemein), llms-full.txt/LLM-Export. Inspector zeigt den Langtext für Kiez-Score-Layer nicht (kiez-score-section, dort echter Link auf /methodik/kiez-score). Echter Link nötig: /layer/kiez-score-* Aside auf /methodik/kiez-score und Legende ('Eigene Berechnung' als Link)."
+  },
+  {
+    "id": "A-06",
+    "source": "messages/de.json + messages/en.json `layer_explain_kiez_score_wohnschutz_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kiez-score-wohnschutz'].long (Zeile 281+)",
+    "artefact": "methodik-pfad",
+    "de_old": "Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner. Methodik: /methodik/kiez-score.",
+    "de_new": "Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner.",
+    "en_old": "Protection against displacement: share of the area inside a Milieuschutz area (residential or urban preservation statute) per planning area. Unambiguously positive: protection in place = better for residents. Methodology: /methodik/kiez-score.",
+    "en_new": "Protection against displacement: share of the area inside a Milieuschutz area (residential or urban preservation statute) per planning area. Unambiguously positive: protection in place = better for residents.",
+    "note": "Rendert in: Legende (Aufklapper 'Mehr erklären', kein Methodik-Link, nur Text 'Eigene Berechnung'), Lead auf /layer/kiez-score-wohnschutz (Aside verlinkt nur /methodik allgemein), llms-full.txt/LLM-Export. Inspector zeigt den Langtext für Kiez-Score-Layer nicht (kiez-score-section, dort echter Link auf /methodik/kiez-score). Echter Link nötig: /layer/kiez-score-* Aside auf /methodik/kiez-score und Legende ('Eigene Berechnung' als Link)."
+  },
+  {
+    "id": "A-07",
+    "source": "messages/de.json + messages/en.json `layer_explain_kiez_score_kultur_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kiez-score-kultur'].long (Zeile 286+)",
+    "artefact": "methodik-pfad, interne-entscheidung",
+    "de_old": "Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Methodik: /methodik/kiez-score.",
+    "de_new": "Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score: Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber.",
+    "en_old": "Cultural access: log-damped density of libraries, theatres, museums, cinemas, galleries, community culture centres, public art and clubs nearby (OSM/ODbL). A separate dimension, NOT part of the overall score (Option C): culture clusters in the city centre, so it does not drive the headline score. Methodology: /methodik/kiez-score.",
+    "en_new": "Cultural access: log-damped density of libraries, theatres, museums, cinemas, galleries, community culture centres, public art and clubs nearby (OSM/ODbL). A separate dimension, NOT part of the overall score: culture clusters in the city centre, so it does not drive the headline score.",
+    "note": "Rendert in: Legende (Aufklapper 'Mehr erklären', kein Methodik-Link, nur Text 'Eigene Berechnung'), Lead auf /layer/kiez-score-kultur (Aside verlinkt nur /methodik allgemein), llms-full.txt/LLM-Export. Inspector zeigt den Langtext für Kiez-Score-Layer nicht (kiez-score-section, dort echter Link auf /methodik/kiez-score). Echter Link nötig: /layer/kiez-score-* Aside auf /methodik/kiez-score und Legende ('Eigene Berechnung' als Link)."
+  },
+  {
+    "id": "A-08",
+    "source": "messages/de.json + messages/en.json `layer_explain_kiez_score_kriminalitaet_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kiez-score-kriminalitaet'].long (Zeile 291+)",
+    "artefact": "methodik-pfad, interne-entscheidung",
+    "de_old": "Häufigkeitszahl ausgewählter wohn-relevanter Delikte, 3-Jahres-Mittel aus dem Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0). Granularität Bezirksregion, auf Planungsräume gespiegelt. Strukturelle Aggregat-Größe, NICHT im Gesamt-Score (Option C). Bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen/Pendler. Methodik: /methodik/kiez-score.",
+    "de_new": "Häufigkeitszahl ausgewählter wohn-relevanter Delikte, 3-Jahres-Mittel aus dem Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0). Granularität Bezirksregion, auf Planungsräume gespiegelt. Strukturelle Aggregat-Größe, NICHT im Gesamt-Score. Bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen/Pendler.",
+    "en_old": "Frequency rate of selected housing-relevant offences, 3-year average from the Berlin crime atlas (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0). Granularity Bezirksregion, mirrored onto planning areas. A structural aggregate, NOT part of the overall score (Option C). Relates cases only to registered residents, not to tourists/commuters. Methodology: /methodik/kiez-score.",
+    "en_new": "Frequency rate of selected housing-relevant offences, 3-year average from the Berlin crime atlas (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0). Granularity Bezirksregion, mirrored onto planning areas. A structural aggregate, NOT part of the overall score. Relates cases only to registered residents, not to tourists/commuters.",
+    "note": "Rendert in: Legende (Aufklapper 'Mehr erklären', kein Methodik-Link, nur Text 'Eigene Berechnung'), Lead auf /layer/kiez-score-kriminalitaet (Aside verlinkt nur /methodik allgemein), llms-full.txt/LLM-Export. Inspector zeigt den Langtext für Kiez-Score-Layer nicht (kiez-score-section, dort echter Link auf /methodik/kiez-score). Echter Link nötig: /layer/kiez-score-* Aside auf /methodik/kiez-score und Legende ('Eigene Berechnung' als Link)."
+  },
+  {
+    "id": "B-09",
+    "source": "messages/de.json + messages/en.json `layer_explain_laerm_den_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['laerm-den'].long (Zeile 324+)",
+    "artefact": "legacy-slug",
+    "de_old": "Lärmpegel als 24-Stunden-Mittelwert (Day-Evening-Night). Legacy-Slug aus früherem Strassenlärm-Datensatz.",
+    "de_new": "Lärmpegel als 24-Stunden-Mittelwert (Day-Evening-Night). Aus einem früheren Straßenlärm-Datensatz.",
+    "en_old": "Noise level as a 24-hour average (day-evening-night). Legacy slug from an earlier road noise dataset.",
+    "en_new": "Noise level as a 24-hour average (day-evening-night). From an earlier road noise dataset.",
+    "note": "Schreibung „Strassenlärm“ nebenbei zu „Straßenlärm“ korrigiert. Slug steht nicht in static/layers/MANIFEST.json (71 Layer). Text erscheint derzeit weder in Legende, Inspector noch auf /layer/*. Alternative: Keys und LAYER_EXPLAIN_DE-Eintrag löschen."
+  },
+  {
+    "id": "B-10",
+    "source": "messages/de.json + messages/en.json `layer_explain_laerm_night_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['laerm-night'].long (Zeile 329+)",
+    "artefact": "legacy-slug",
+    "de_old": "Lärmpegel als Nacht-Mittelwert. Legacy-Slug aus früherem Strassenlärm-Datensatz.",
+    "de_new": "Lärmpegel als Nacht-Mittelwert. Aus einem früheren Straßenlärm-Datensatz.",
+    "en_old": "Noise level as a night-time average. Legacy slug from an earlier road noise dataset.",
+    "en_new": "Noise level as a night-time average. From an earlier road noise dataset.",
+    "note": "Schreibung „Strassenlärm“ nebenbei zu „Straßenlärm“ korrigiert. Slug steht nicht in static/layers/MANIFEST.json (71 Layer). Text erscheint derzeit weder in Legende, Inspector noch auf /layer/*. Alternative: Keys und LAYER_EXPLAIN_DE-Eintrag löschen."
+  },
+  {
+    "id": "B-11",
+    "source": "messages/de.json + messages/en.json `layer_explain_solarpotenzial_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['solarpotenzial'].long (Zeile 334+)",
+    "artefact": "legacy-slug",
+    "de_old": "Modelliertes jährliches PV-Ertragspotenzial pro Dachfläche. Legacy-Slug.",
+    "de_new": "Modelliertes jährliches PV-Ertragspotenzial pro Dachfläche.",
+    "en_old": "Modelled annual PV yield potential per roof area. Legacy slug.",
+    "en_new": "Modelled annual PV yield potential per roof area.",
+    "note": "Slug steht nicht in static/layers/MANIFEST.json (71 Layer). Text erscheint derzeit weder in Legende, Inspector noch auf /layer/*. Alternative: Keys und LAYER_EXPLAIN_DE-Eintrag löschen."
+  },
+  {
+    "id": "B-12",
+    "source": "messages/de.json + messages/en.json `layer_explain_klimaanalyse_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['klimaanalyse'].long (Zeile 339+)",
+    "artefact": "legacy-slug, slug-statt-name",
+    "de_old": "Klimafunktionale Bewertung städtischer Flächen. Legacy-Slug, ersetzt durch klima-pet-2022 und Verwandte.",
+    "de_new": "Klimafunktionale Bewertung städtischer Flächen. Abgelöst durch den Layer „Gefühlte Temperatur 2022\" und verwandte Klima-Layer.",
+    "en_old": "Climate-function rating of urban areas. Legacy slug, replaced by klima-pet-2022 and related slugs.",
+    "en_new": "Climate-function rating of urban areas. Replaced by the layer “Perceived temperature 2022” and related climate layers.",
+    "note": "Name aus atlas_layer_name_klima_pet_2022 (DE/EN). Slug steht nicht in static/layers/MANIFEST.json (71 Layer). Text erscheint derzeit weder in Legende, Inspector noch auf /layer/*. Alternative: Keys und LAYER_EXPLAIN_DE-Eintrag löschen."
+  },
+  {
+    "id": "B-13",
+    "source": "messages/de.json + messages/en.json `layer_explain_gebaeudealter_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['gebaeudealter'].long (Zeile 343+)",
+    "artefact": "legacy-slug, interner-technikbegriff",
+    "de_old": "Aggregierte Baujahr-Klassifikation der Gebäudebestände. Legacy-Slug ohne aktive Manifest-Quelle.",
+    "de_new": "Aggregierte Baujahr-Klassifikation der Gebäudebestände. Derzeit ohne aktive Datenquelle.",
+    "en_old": "Aggregated construction year classification of the building stock. Legacy slug without an active manifest source.",
+    "en_new": "Aggregated construction year classification of the building stock. Currently without an active data source.",
+    "note": "Slug steht nicht in static/layers/MANIFEST.json (71 Layer). Text erscheint derzeit weder in Legende, Inspector noch auf /layer/*. Alternative: Keys und LAYER_EXPLAIN_DE-Eintrag löschen."
+  },
+  {
+    "id": "B-14",
+    "source": "messages/de.json + messages/en.json `layer_explain_mietspiegel_wohnlage_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['mietspiegel-wohnlage'].long (Zeile 308+)",
+    "artefact": "slug-statt-name",
+    "de_old": "Veraltete Wohnlagen-Quelle (vor 2024). Aktuelle Daten siehe Layer „wohnlagen-2024\".",
+    "de_new": "Veraltete Wohnlagen-Quelle (vor 2024). Aktuelle Daten siehe Layer „Mietspiegel-Wohnlage 2024\".",
+    "en_old": "Outdated residential area source (before 2024). For current data, see the layer “wohnlagen-2024”.",
+    "en_new": "Outdated residential area source (before 2024). For current data, see the layer “Rent index: residential area 2024”.",
+    "note": "Name aus atlas_layer_name_wohnlagen_2024 (DE/EN). Optional: echter Link auf /layer/wohnlagen-2024. Slug steht nicht in static/layers/MANIFEST.json (71 Layer). Text erscheint derzeit weder in Legende, Inspector noch auf /layer/*. Alternative: Keys und LAYER_EXPLAIN_DE-Eintrag löschen."
+  },
+  {
+    "id": "B-15",
+    "source": "messages/de.json + messages/en.json `layer_explain_kultur_soziokultur_long`; Referenzkopie src/lib/components/atlas/inspector-panel/internal/layer-explain.ts LAYER_EXPLAIN_DE['kultur-soziokultur'].long (Zeile 208+)",
+    "artefact": "code-bezeichner",
+    "de_old": "Kulturhaus, soziokulturelles Zentrum oder Kunsthaus (arts_centre). Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+    "de_new": "Kulturhaus, soziokulturelles Zentrum oder Kunsthaus. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+    "en_old": "Cultural centre, community culture centre or arts centre (arts_centre). Part of the culture score. Location data from OpenStreetMap (ODbL 1.0).",
+    "en_new": "Cultural centre, community culture centre or arts centre. Part of the culture score. Location data from OpenStreetMap (ODbL 1.0).",
+    "note": "OSM-Tag. Die drei deutschen Begriffe decken ihn inhaltlich ab. Rendert in Inspector, Legende, /layer/kultur-soziokultur."
+  },
+  {
+    "id": "C-16",
+    "source": "messages `layer_methodology_stolpersteine_omission_1`; DE-Spec src/lib/data/layer-methodology.ts Zeile 270 ('stolpersteine'.omissions[1]); EN abgenommen in c2-uebersetzung.json methodology['stolpersteine'].omissions[1]",
+    "artefact": "anforderungs-id",
+    "de_old": "Kein Wohn-Score, keine Bewertung, keine Verdichtungs-Statistik. Würde-Prinzip gemäß FR50 und FR51.",
+    "de_new": "Kein Wohn-Score, keine Bewertung, keine Verdichtungs-Statistik. Die Würde der Opfer steht über Vergleichbarkeit.",
+    "en_old": "No housing score, no rating, no density statistics. Dignity principle under FR50 and FR51.",
+    "en_new": "No housing score, no rating, no density statistics. The victims’ dignity outweighs comparability.",
+    "note": "Satz aus compare_advisory_stolperstein (DE/EN bereits abgenommen), EN mit typografischem Apostroph nach C2-Glossar. Variante siehe Offene Fragen. Rendert auf /layer/stolpersteine (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-17",
+    "source": "messages `layer_methodology_kiez_score_ruhe_luft_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 452 ('kiez-score-ruhe-luft'.calculation); EN abgenommen in c2-uebersetzung.json methodology['kiez-score-ruhe-luft'].calculation",
+    "artefact": "story-nummer",
+    "de_old": "Gewichtete Aggregation aus Lärm und Luft pro Planungsraum (Lärm 0.5, Luft 0.5). Lärm seit Story 10.6b als dB-Mittel (L_DEN) aus den Fassadenpunkten der Strategischen Lärmkarte 2022: ≤45 dB → 100, ≥75 dB → 0, linear. Luft als 3-Stufen-Index (gering bis hoch). Beides auf 0–100 normalisiert, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.",
+    "de_new": "Gewichtete Aggregation aus Lärm und Luft pro Planungsraum (Lärm 0.5, Luft 0.5). Lärm als dB-Mittel (L_DEN) aus den Fassadenpunkten der Strategischen Lärmkarte 2022: ≤45 dB → 100, ≥75 dB → 0, linear. Luft als 3-Stufen-Index (gering bis hoch). Beides auf 0–100 normalisiert, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.",
+    "en_old": "Weighted aggregation of noise and air per planning area (noise 0.5, air 0.5). Since story 10.6b, noise is a dB average (L_DEN) from the facade points of the 2022 strategic noise map: ≤45 dB → 100, ≥75 dB → 0, linear. Air as a 3-level index (low to high). Both normalised to 0–100, centroid-accurate per LOR polygon. Since the score reorganisation, bioclimate counts under Green & heat.",
+    "en_new": "Weighted aggregation of noise and air per planning area (noise 0.5, air 0.5). Noise is a dB average (L_DEN) from the facade points of the 2022 strategic noise map: ≤45 dB → 100, ≥75 dB → 0, linear. Air as a 3-level index (low to high). Both normalised to 0–100, centroid-accurate per LOR polygon. Since the score reorganisation, bioclimate counts under Green & heat.",
+    "note": "L_DEN bleibt: amtliche Kenngröße der Strategischen Lärmkarte. Rendert auf /layer/kiez-score-ruhe-luft (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-18",
+    "source": "messages `layer_methodology_kiez_score_versorgung_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 511 ('kiez-score-versorgung'.calculation); EN abgenommen in c2-uebersetzung.json methodology['kiez-score-versorgung'].calculation",
+    "artefact": "story-nummer, code-bezeichner",
+    "de_old": "Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.12, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.12). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze (e_platz) im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Die Erreichbarkeit zählt dabei die Anzahl Einrichtungen im Radius (Dichte), nicht nur die nächste: mehr Kitas/Schulen/Spielplätze im Umkreis scoren höher, ein einzelner Standort weniger. Schule nach Schulart getrennt: Grundschule (0.12, Radius 600 m) und weiterführende Schule (0.12, 1.200 m). Plus Spielplatz-Dichte (0.10, 400 m) und Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12, 500 m: Supermarkt, Discounter, Spätkauf, Bäcker), Apotheke (0.07, 800 m) und Post-/Paketstelle (0.05, 1.000 m). Liegt keine Einrichtung im Radius, greift ein weicher Übergang über die Distanz zur nächsten statt eines harten Abbruchs. Plan-Krankenhaus (0.18, 2.000 m) zusätzlich nach Bettenkapazität gewichtet: ein großes Versorgungs-Klinikum zählt mehr als eine kleine Fachklinik. 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze. Versorgung umfasst damit öffentliche Daseinsvorsorge und private Alltags-Nahversorgung; die internen Gewichte sind vorläufig (finale Kalibrierung in Epic 12 Story 12.3).",
+    "de_new": "Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.12, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.12). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Die Erreichbarkeit zählt dabei die Anzahl Einrichtungen im Radius (Dichte), nicht nur die nächste: mehr Kitas/Schulen/Spielplätze im Umkreis scoren höher, ein einzelner Standort weniger. Schule nach Schulart getrennt: Grundschule (0.12, Radius 600 m) und weiterführende Schule (0.12, 1.200 m). Plus Spielplatz-Dichte (0.10, 400 m) und Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12, 500 m: Supermarkt, Discounter, Spätkauf, Bäcker), Apotheke (0.07, 800 m) und Post-/Paketstelle (0.05, 1.000 m). Liegt keine Einrichtung im Radius, greift ein weicher Übergang über die Distanz zur nächsten statt eines harten Abbruchs. Plan-Krankenhaus (0.18, 2.000 m) zusätzlich nach Bettenkapazität gewichtet: ein großes Versorgungs-Klinikum zählt mehr als eine kleine Fachklinik. 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze. Versorgung umfasst damit öffentliche Daseinsvorsorge und private Alltags-Nahversorgung; die internen Gewichte sind vorläufig.",
+    "en_old": "Daycare measured twice: distance to the nearest daycare centre (weight 0.12, threshold 500 m) plus places per child aged 0–6 in the planning area (0.12). The per-capita term sums the registered daycare places (e_platz) in the LOR and divides them by the children aged 0–6 from the resident dataset: full points from 0.35 places per child, linear below that. Accessibility counts the number of facilities within the radius (density), not just the nearest one: more daycare centres/schools/playgrounds nearby score higher, a single location lower. Schools split by type: primary school (0.12, radius 600 m) and secondary school (0.12, 1,200 m). Plus playground density (0.10, 400 m) and local shops from OpenStreetMap (ODbL): groceries (0.12, 500 m: supermarket, discounter, Späti, bakery), pharmacy (0.07, 800 m) and post/parcel point (0.05, 1,000 m). If there is no facility within the radius, a soft transition based on the distance to the nearest one applies instead of a hard cut-off. Hospital in the Berlin hospital plan (0.18, 2,000 m) additionally weighted by bed capacity: a large general hospital counts more than a small specialist clinic. 0 m → 100, threshold → 0, linear. Playgrounds (polygons) use the geometric centre as the POI point. Since the score reorganisation, green spaces count under Green & heat. Local amenities therefore cover public services and private everyday local shops; the internal weights are provisional (final calibration in Epic 12 Story 12.3).",
+    "en_new": "Daycare measured twice: distance to the nearest daycare centre (weight 0.12, threshold 500 m) plus places per child aged 0–6 in the planning area (0.12). The per-capita term sums the registered daycare places in the LOR and divides them by the children aged 0–6 from the resident dataset: full points from 0.35 places per child, linear below that. Accessibility counts the number of facilities within the radius (density), not just the nearest one: more daycare centres/schools/playgrounds nearby score higher, a single location lower. Schools split by type: primary school (0.12, radius 600 m) and secondary school (0.12, 1,200 m). Plus playground density (0.10, 400 m) and local shops from OpenStreetMap (ODbL): groceries (0.12, 500 m: supermarket, discounter, Späti, bakery), pharmacy (0.07, 800 m) and post/parcel point (0.05, 1,000 m). If there is no facility within the radius, a soft transition based on the distance to the nearest one applies instead of a hard cut-off. Hospital in the Berlin hospital plan (0.18, 2,000 m) additionally weighted by bed capacity: a large general hospital counts more than a small specialist clinic. 0 m → 100, threshold → 0, linear. Playgrounds (polygons) use the geometric centre as the POI point. Since the score reorganisation, green spaces count under Green & heat. Local amenities therefore cover public services and private everyday local shops; the internal weights are provisional.",
+    "note": "Story 12.3 steht in sprint-status.yaml auf review; die Gewichte im Text entsprechen bereits dem 12.3-Zielstand. Ob „vorläufig“ bleibt, siehe Offene Fragen. Rendert auf /layer/kiez-score-versorgung (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-19",
+    "source": "messages `layer_methodology_kiez_score_versorgung_coverage_gap_0`; DE-Spec src/lib/data/layer-methodology.ts Zeile 516 ('kiez-score-versorgung'.coverageGaps[0]); EN abgenommen in c2-uebersetzung.json methodology['kiez-score-versorgung'].coverageGaps[0]",
+    "artefact": "code-bezeichner",
+    "de_old": "Der Platz-Kind-Quotient basiert auf gemeldeten Kapazitäten (e_platz), nicht auf realen Belegungsquoten oder Wartelisten.",
+    "de_new": "Der Platz-Kind-Quotient basiert auf gemeldeten Kapazitäten, nicht auf realen Belegungsquoten oder Wartelisten.",
+    "en_old": "The places-per-child ratio is based on registered capacity (e_platz), not on actual occupancy rates or waiting lists.",
+    "en_new": "The places-per-child ratio is based on registered capacity, not on actual occupancy rates or waiting lists.",
+    "note": "Feldname aus dem Kita-Datensatz. Rendert auf /layer/kiez-score-versorgung (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-20",
+    "source": "messages `layer_methodology_kiez_score_kultur_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 553 ('kiez-score-kultur'.calculation); EN abgenommen in c2-uebersetzung.json methodology['kiez-score-kultur'].calculation",
+    "artefact": "interne-entscheidung",
+    "de_old": "Kultureller Zugang pro Planungsraum: log-gedämpfte Dichte kulturkollektiver POIs im Umkreis (Anzahl Einrichtungen, der erste Ort zählt stark, weitere flachen ab). Bibliothek (Gewicht 0.20, 1.000 m), Theater (0.15, 1.500 m), Museum (0.15, 1.500 m), Kino (0.12, 1.500 m), Soziokultur (0.13, 1.200 m), Galerie (0.10, 1.200 m), Kunst im Stadtraum (0.08, 800 m), Club (0.07, 1.200 m). Quelle OpenStreetMap (ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Die Log-Dämpfung verhindert, dass Außenbezirke flächendeckend auf null fallen.",
+    "de_new": "Kultureller Zugang pro Planungsraum: log-gedämpfte Dichte kulturkollektiver POIs im Umkreis (Anzahl Einrichtungen, der erste Ort zählt stark, weitere flachen ab). Bibliothek (Gewicht 0.20, 1.000 m), Theater (0.15, 1.500 m), Museum (0.15, 1.500 m), Kino (0.12, 1.500 m), Soziokultur (0.13, 1.200 m), Galerie (0.10, 1.200 m), Kunst im Stadtraum (0.08, 800 m), Club (0.07, 1.200 m). Quelle OpenStreetMap (ODbL). Eigenständige Dimension, NICHT im Gesamt-Score: Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Die Log-Dämpfung verhindert, dass Außenbezirke flächendeckend auf null fallen.",
+    "en_old": "Cultural access per planning area: log-damped density of collective cultural POIs nearby (number of facilities, the first place counts strongly, further ones level off). Library (weight 0.20, 1,000 m), theatre (0.15, 1,500 m), museum (0.15, 1,500 m), cinema (0.12, 1,500 m), community culture centre (0.13, 1,200 m), gallery (0.10, 1,200 m), public art (0.08, 800 m), club (0.07, 1,200 m). Source OpenStreetMap (ODbL). A separate dimension, NOT part of the overall score (Option C): culture clusters in the city centre, so it does not drive the headline score. Log damping prevents outer Bezirke from dropping to zero across the board.",
+    "en_new": "Cultural access per planning area: log-damped density of collective cultural POIs nearby (number of facilities, the first place counts strongly, further ones level off). Library (weight 0.20, 1,000 m), theatre (0.15, 1,500 m), museum (0.15, 1,500 m), cinema (0.12, 1,500 m), community culture centre (0.13, 1,200 m), gallery (0.10, 1,200 m), public art (0.08, 800 m), club (0.07, 1,200 m). Source OpenStreetMap (ODbL). A separate dimension, NOT part of the overall score: culture clusters in the city centre, so it does not drive the headline score. Log damping prevents outer Bezirke from dropping to zero across the board.",
+    "note": " Rendert auf /layer/kiez-score-kultur (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-21",
+    "source": "messages `layer_methodology_kiez_score_kriminalitaet_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 575 ('kiez-score-kriminalitaet'.calculation); EN abgenommen in c2-uebersetzung.json methodology['kiez-score-kriminalitaet'].calculation",
+    "artefact": "interne-entscheidung, palettenname",
+    "de_old": "Erfasste Kriminalität pro Bezirksregion: Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. Pro Delikt das 3-Jahres-Mittel (2023–2025), daraus der gewichtete Index, normalisiert auf 0–100 (300 → 0, ab 1750 → 100). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Die Werte liegen nur je Bezirksregion vor und werden auf die enthaltenen Planungsräume gespiegelt (innerhalb der Bezirksregion konstant). Eigenständige Dimension, NICHT im Gesamt-Score (Option C), Strukturell-Kontext wie die Soziale Lage. Höher heißt mehr erfasste Fälle, kein Sicherheits-Ranking.",
+    "de_new": "Erfasste Kriminalität pro Bezirksregion: Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. Pro Delikt das 3-Jahres-Mittel (2023–2025), daraus der gewichtete Index, normalisiert auf 0–100 (300 → 0, ab 1750 → 100). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Die Werte liegen nur je Bezirksregion vor und werden auf die enthaltenen Planungsräume gespiegelt (innerhalb der Bezirksregion konstant). Eigenständige Dimension, NICHT im Gesamt-Score, struktureller Kontext wie die Soziale Lage. Höher heißt mehr erfasste Fälle, kein Sicherheits-Ranking.",
+    "en_old": "Recorded crime per Bezirksregion: frequency rate (cases per 100,000 residents) of selected housing-relevant offences, equally weighted (0.20 each): neighbourhood offences (Kieztaten), residential burglary, vandalism, street robbery/bag snatching, bicycle theft. For each offence the 3-year average (2023–2025), from which the weighted index is derived, normalised to 0–100 (300 → 0, from 1,750 → 100). The upper limit caps city-centre outliers (government quarter, Alexanderplatz) whose frequency rate is overstated by tourists and commuters. The values are only available per Bezirksregion and are mirrored onto the planning areas it contains (constant within the Bezirksregion). A separate dimension, NOT part of the overall score (Option C), structural context like the social situation. Higher means more recorded cases, not a safety ranking.",
+    "en_new": "Recorded crime per Bezirksregion: frequency rate (cases per 100,000 residents) of selected housing-relevant offences, equally weighted (0.20 each): neighbourhood offences (Kieztaten), residential burglary, vandalism, street robbery/bag snatching, bicycle theft. For each offence the 3-year average (2023–2025), from which the weighted index is derived, normalised to 0–100 (300 → 0, from 1,750 → 100). The upper limit caps city-centre outliers (government quarter, Alexanderplatz) whose frequency rate is overstated by tourists and commuters. The values are only available per Bezirksregion and are mirrored onto the planning areas it contains (constant within the Bezirksregion). A separate dimension, NOT part of the overall score, structural context like the social situation. Higher means more recorded cases, not a safety ranking.",
+    "note": "„Strukturell-“ ist der interne Name der Indigo-Farbfamilie. EN „structural context“ liest sich bereits normal. Rendert auf /layer/kiez-score-kriminalitaet (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-22",
+    "source": "messages `layer_methodology_sbahn_stationen_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 401 ('sbahn-stationen'.calculation); EN abgenommen in c2-uebersetzung.json methodology['sbahn-stationen'].calculation",
+    "artefact": "code-bezeichner",
+    "de_old": "S-Bahn-Bahnhöfe aus OpenStreetMap (railway=station, station=light_rail).",
+    "de_new": "S-Bahn-Bahnhöfe aus OpenStreetMap.",
+    "en_old": "S-Bahn stations from OpenStreetMap (railway=station, station=light_rail).",
+    "en_new": "S-Bahn stations from OpenStreetMap.",
+    "note": "OSM-Tags. Einziger Methodik-Text mit Tag-Filter. Variante siehe Offene Fragen. Rendert auf /layer/sbahn-stationen (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-23",
+    "source": "messages `layer_methodology_ubahn_stationen_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 393 ('ubahn-stationen'.calculation); EN abgenommen in c2-uebersetzung.json methodology['ubahn-stationen'].calculation",
+    "artefact": "code-bezeichner",
+    "de_old": "BVG-U-Bahnhöfe aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.",
+    "de_new": "BVG-U-Bahnhöfe aus OpenStreetMap-Routen-Relationen, gefiltert nach Betreiber BVG.",
+    "en_old": "BVG U-Bahn stations from OpenStreetMap route relations, filtered by operator BVG.",
+    "en_new": "BVG U-Bahn stations from OpenStreetMap route relations, filtered by operator BVG.",
+    "note": "OSM-Key „operator“ im DE. EN „filtered by operator …“ ist normales Englisch und bleibt. Rendert auf /layer/ubahn-stationen (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-24",
+    "source": "messages `layer_methodology_ubahn_netz_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 425 ('ubahn-netz'.calculation); EN abgenommen in c2-uebersetzung.json methodology['ubahn-netz'].calculation",
+    "artefact": "code-bezeichner",
+    "de_old": "BVG-U-Bahn-Linienverlauf 9 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.",
+    "de_new": "BVG-U-Bahn-Linienverlauf 9 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach Betreiber BVG.",
+    "en_old": "BVG U-Bahn line routes, 9 lines, from OpenStreetMap route relations, filtered by operator BVG.",
+    "en_new": "BVG U-Bahn line routes, 9 lines, from OpenStreetMap route relations, filtered by operator BVG.",
+    "note": "OSM-Key „operator“ im DE. EN „filtered by operator …“ ist normales Englisch und bleibt. Rendert auf /layer/ubahn-netz (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-25",
+    "source": "messages `layer_methodology_sbahn_netz_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 442 ('sbahn-netz'.calculation); EN abgenommen in c2-uebersetzung.json methodology['sbahn-netz'].calculation",
+    "artefact": "code-bezeichner",
+    "de_old": "Linienverlauf des Berliner S-Bahn-Netzes 16 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach operator S-Bahn Berlin GmbH.",
+    "de_new": "Linienverlauf des Berliner S-Bahn-Netzes 16 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach Betreiber S-Bahn Berlin GmbH.",
+    "en_old": "Routes of the Berlin S-Bahn network, 16 lines, from OpenStreetMap route relations, filtered by operator S-Bahn Berlin GmbH.",
+    "en_new": "Routes of the Berlin S-Bahn network, 16 lines, from OpenStreetMap route relations, filtered by operator S-Bahn Berlin GmbH.",
+    "note": "OSM-Key „operator“ im DE. EN „filtered by operator …“ ist normales Englisch und bleibt. Rendert auf /layer/sbahn-netz (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-26",
+    "source": "messages `layer_methodology_bezirke_calculation`; DE-Spec src/lib/data/layer-methodology.ts Zeile 76 ('bezirke'.calculation); EN abgenommen in c2-uebersetzung.json methodology['bezirke'].calculation",
+    "artefact": "werkzeug-optionen",
+    "de_old": "Polygone der 12 Berliner Verwaltungsbezirke aus dem Berliner Geoportal, vereinfacht via mapshaper visvalingam mit keep-shapes.",
+    "de_new": "Polygone der 12 Berliner Verwaltungsbezirke aus dem Berliner Geoportal, für die Karte vereinfacht (kleine Flächen bleiben erhalten).",
+    "en_old": "Polygons of Berlin’s 12 administrative Bezirke from the Berlin geoportal, simplified via mapshaper visvalingam with keep-shapes.",
+    "en_new": "Polygons of Berlin’s 12 administrative Bezirke from the Berlin geoportal, simplified for the map (small areas are kept).",
+    "note": "Tool-Details stehen weiter auf /methodik (Abschnitt Datenarchitektur). Rendert auf /layer/bezirke (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-27",
+    "source": "messages `layer_methodology_klima_pet_2022_coverage_gap_0`; DE-Spec src/lib/data/layer-methodology.ts Zeile 229 ('klima-pet-2022'.coverageGaps[0]); EN abgenommen in c2-uebersetzung.json methodology['klima-pet-2022'].coverageGaps[0]",
+    "artefact": "code-bezeichner",
+    "de_old": "Nicht alle Stadtflächen modelliert. nearestPolygonFallbackKm fängt Lücken an Block-Rändern ab.",
+    "de_new": "Nicht alle Stadtflächen modelliert. Liegt eine Adresse bis zu 50 m neben einer modellierten Fläche, etwa an Block-Rändern, zeigen wir deren Wert.",
+    "en_old": "Not all urban areas are modelled. nearestPolygonFallbackKm covers gaps at block edges.",
+    "en_new": "Not all urban areas are modelled. If an address lies up to 50 m from a modelled area, for example at a block edge, we show that area’s value.",
+    "note": "50 m geprüft: MANIFEST.json klima-pet-2022 nearestPolygonFallbackKm = 0.05; Logik in src/lib/data/get-layers-at-point.ts (nächstes Polygon innerhalb des Radius). Rendert auf /layer/klima-pet-2022 (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "C-28",
+    "source": "messages `layer_methodology_bodenrichtwerte_omission_0`; DE-Spec src/lib/data/layer-methodology.ts Zeile 110 ('bodenrichtwerte'.omissions[0]); EN abgenommen in c2-uebersetzung.json methodology['bodenrichtwerte'].omissions[0]",
+    "artefact": "slug-statt-name",
+    "de_old": "Kein Mietpreis und kein Verkaufspreis. Mietspiegel-Werte gehören zu wohnlagen-2024.",
+    "de_new": "Kein Mietpreis und kein Verkaufspreis. Mietspiegel-Werte gehören zum Layer „Mietspiegel-Wohnlage 2024\".",
+    "en_old": "No rent and no sale price. Rent index values belong to wohnlagen-2024.",
+    "en_new": "No rent and no sale price. Rent index values belong to the layer “Rent index: residential area 2024”.",
+    "note": "Name aus atlas_layer_name_wohnlagen_2024. Rendert auf /layer/bodenrichtwerte (Methodik-Block) und über WebMCP get-layer-metadata."
+  },
+  {
+    "id": "D-29",
+    "source": "messages `profile_faq_placeholder` (rendert in kiez-hero.svelte und bezirk-hero.svelte, wenn keine FAQ vorliegt)",
+    "artefact": "story-nummer, interner-technikbegriff",
+    "de_old": "FAQ-Einträge werden mit dem nächsten Daten-Build aus Story 2.5b ergänzt.",
+    "de_new": "FAQ-Einträge ergänzen wir mit dem nächsten Daten-Update.",
+    "en_old": "FAQ entries will be added with the next data build from Story 2.5b.",
+    "en_new": "We will add FAQ entries with the next data update.",
+    "note": "„Daten-Build“ ebenfalls ersetzt."
+  },
+  {
+    "id": "E-30",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte Zeile 287-292 (Absatz nach Aggregation)",
+    "artefact": "adr-nummer, palettenname",
+    "de_old": "Seit der Score-Neuordnung (ADR-015) sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt\", Gut-Skala), zusätzlich zu den Einzel-Dimensionen. Kultur (ADR-018) und erfasste Kriminalität (ADR-019) sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in Strukturell-Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score\" gibt es nicht.",
+    "de_new": "Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt\", hoch = besser), zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score\" gibt es nicht.",
+    "en_old": null,
+    "en_new": null,
+    "note": "Seite ist hart codiert DE, kein EN. „Composite-Dimensionen“ und „MSS-Aggregat“ bleiben (Fachjargon, kein internes Artefakt), siehe Offene Fragen."
+  },
+  {
+    "id": "E-31",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte Zeile 77 (dimensions[kriminalitaet].detail)",
+    "artefact": "palettenname",
+    "de_old": "Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten\" ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in Strukturell-Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher\" oder „gefährlich\".",
+    "de_new": "Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten\" ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in neutralem Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher\" oder „gefährlich\".",
+    "en_old": null,
+    "en_new": null,
+    "note": "Seite DE-only."
+  },
+  {
+    "id": "E-32",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte dimensions[ruhe-luft].layers (Zeile 30), gerendert als Mono-Zeile (Zeile 193)",
+    "artefact": "slug-statt-name",
+    "de_old": "laerm-2023, luft-2023",
+    "de_new": "Lärmbelastung 2023, Luftbelastung 2023",
+    "en_old": null,
+    "en_new": null,
+    "note": "Namen aus atlas_layer_name_* (DE). Besser: Liste als Links auf /layer/{slug} rendern, Namen über getLayerDisplayName."
+  },
+  {
+    "id": "E-33",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte dimensions[gruen-hitze].layers (Zeile 38), gerendert als Mono-Zeile (Zeile 193)",
+    "artefact": "slug-statt-name",
+    "de_old": "gruenversorgung-2023, gruenanlagen, bioklima-2023, klima-pet-2022, klima-kaltlufteinwirkbereich-2022, klima-leitbahnkorridor-2022",
+    "de_new": "Grünversorgung 2023, Grünanlagen, Thermische Belastung 2023, Gefühlte Temperatur 2022, Kaltluft-Einwirkbereich (2022), Kaltluft-Leitbahn-Korridor (2022)",
+    "en_old": null,
+    "en_new": null,
+    "note": "Namen aus atlas_layer_name_* (DE). Besser: Liste als Links auf /layer/{slug} rendern, Namen über getLayerDisplayName."
+  },
+  {
+    "id": "E-34",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte dimensions[mobilitaet].layers (Zeile 45), gerendert als Mono-Zeile (Zeile 193)",
+    "artefact": "slug-statt-name",
+    "de_old": "U-Bahn-, S-Bahn-, Tram-, Bus-Stops · radverkehrsnetz-2025, fahrradstrassen-2024",
+    "de_new": "U-Bahn-, S-Bahn-, Tram-, Bus-Stops · Radverkehrsnetz, Fahrradstraßen",
+    "en_old": null,
+    "en_new": null,
+    "note": "Namen aus atlas_layer_name_* (DE). Besser: Liste als Links auf /layer/{slug} rendern, Namen über getLayerDisplayName."
+  },
+  {
+    "id": "E-35",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte dimensions[versorgung].layers (Zeile 53), gerendert als Mono-Zeile (Zeile 193)",
+    "artefact": "slug-statt-name",
+    "de_old": "kitas-2024, schulen-2024, krankenhaeuser-plan, spielplaetze, nahversorgung-lebensmittel, nahversorgung-apotheke, nahversorgung-post",
+    "de_new": "Kindertagesstätten, Schulen, Plan-Krankenhäuser, Spielplätze, Lebensmittel, Apotheke, Post",
+    "en_old": null,
+    "en_new": null,
+    "note": "Namen aus atlas_layer_name_* (DE). Besser: Liste als Links auf /layer/{slug} rendern, Namen über getLayerDisplayName."
+  },
+  {
+    "id": "E-36",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte dimensions[wohnschutz].layers (Zeile 60), gerendert als Mono-Zeile (Zeile 193)",
+    "artefact": "slug-statt-name",
+    "de_old": "milieuschutz-erhaltungsmiete, milieuschutz-staedtebau",
+    "de_new": "Milieuschutz: Erhaltungsmiete, Milieuschutz: Städtebau",
+    "en_old": null,
+    "en_new": null,
+    "note": "Namen aus atlas_layer_name_* (DE). Besser: Liste als Links auf /layer/{slug} rendern, Namen über getLayerDisplayName."
+  },
+  {
+    "id": "E-37",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte dimensions[kultur].layers (Zeile 68), gerendert als Mono-Zeile (Zeile 193)",
+    "artefact": "slug-statt-name",
+    "de_old": "kultur-museum, kultur-galerie, kultur-theater, kultur-bibliothek, kultur-kino, kultur-soziokultur, kultur-kunst-im-raum, kultur-club",
+    "de_new": "Museen, Galerien, Theater & Bühnen, Bibliotheken, Kinos, Soziokultur, Kunst im Stadtraum, Clubs",
+    "en_old": null,
+    "en_new": null,
+    "note": "Namen aus atlas_layer_name_* (DE). Besser: Liste als Links auf /layer/{slug} rendern, Namen über getLayerDisplayName."
+  },
+  {
+    "id": "E-38",
+    "source": "src/routes/(with-header)/methodik/kiez-score/+page.svelte dimensions[kriminalitaet].layers (Zeile 75), gerendert als Mono-Zeile (Zeile 193)",
+    "artefact": "slug-statt-name",
+    "de_old": "kiez-score-kriminalitaet (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)",
+    "de_new": "Kiez-Score · Erfasste Kriminalität (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)",
+    "en_old": null,
+    "en_new": null,
+    "note": "Namen aus atlas_layer_name_* (DE). Besser: Liste als Links auf /layer/{slug} rendern, Namen über getLayerDisplayName."
+  },
+  {
+    "id": "E-39",
+    "source": "src/routes/(with-header)/lizenzen/+page.svelte Abschnitt Wahldaten (Zeile 240)",
+    "artefact": "interner-technikbegriff",
+    "de_old": "Wahl-Ergebnisse aus 12 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV) liegen nicht als Geo-Layer im Manifest, sondern als Datenbank-Aggregate.",
+    "de_new": "Wahl-Ergebnisse aus 12 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV) liegen nicht als eigener Geo-Layer vor, sondern als Datenbank-Aggregate.",
+    "en_old": null,
+    "en_new": null,
+    "note": "„Manifest“ und „Build-Aggregat“ sind Pipeline-Begriffe. Seite DE-only."
+  },
+  {
+    "id": "E-40",
+    "source": "src/routes/(with-header)/lizenzen/+page.svelte Abschnitt Demografie (Zeile 297)",
+    "artefact": "interner-technikbegriff",
+    "de_old": "Einwohner pro LOR-Planungsraum liegen nicht als Geo-Layer im Manifest, sondern als Build-Aggregat für Pro-Kopf-Metriken und den Demografie-Kontext.",
+    "de_new": "Einwohner pro LOR-Planungsraum liegen nicht als eigener Geo-Layer vor. Wir nutzen sie als vorberechnete Summen für Pro-Kopf-Werte und den Demografie-Kontext.",
+    "en_old": null,
+    "en_new": null,
+    "note": "„Manifest“ und „Build-Aggregat“ sind Pipeline-Begriffe. Seite DE-only."
+  },
+  {
+    "id": "E-41",
+    "source": "src/routes/(with-header)/lizenzen/+page.svelte Abschnitt Kriminalitätsatlas (Zeile 331)",
+    "artefact": "interner-technikbegriff",
+    "de_old": "Fallzahlen und Häufigkeitszahlen je LOR-Bezirksregion fließen als Build-Aggregat in den Kiez-Score ein, nicht als Geo-Layer im Manifest.",
+    "de_new": "Fallzahlen und Häufigkeitszahlen je LOR-Bezirksregion fließen als vorberechnete Werte in den Kiez-Score ein, nicht als eigener Geo-Layer.",
+    "en_old": null,
+    "en_new": null,
+    "note": "„Manifest“ und „Build-Aggregat“ sind Pipeline-Begriffe. Seite DE-only."
+  },
+  {
+    "id": "E-42",
+    "source": "_content/updates/2026-05-15-kiez-score-versorgungs-dimension.md Zeile 11",
+    "artefact": "story-nummer",
+    "de_old": "Der Kiez-Score hat ab Story 1.28 fünf Dimensionen statt vier. Neu dazu: **Versorgung**.",
+    "de_new": "Der Kiez-Score hat ab sofort fünf Dimensionen statt vier. Neu dazu: **Versorgung**.",
+    "en_old": null,
+    "en_new": null,
+    "note": "Update-Post, DE-only (title_de). „ab sofort“ bezieht sich auf das Post-Datum 15.05.2026."
+  },
+  {
+    "id": "E-43",
+    "source": "_content/updates/2026-05-15-kiez-score-versorgungs-dimension.md Zeile 39",
+    "artefact": "methodik-pfad",
+    "de_old": "Siehe `/methodik/kiez-score`.",
+    "de_new": "Siehe [Methodik zum Kiez-Score](/methodik/kiez-score).",
+    "en_old": null,
+    "en_new": null,
+    "note": "Einziger Pfad ohne Link in den Update-Posts. Die übrigen Posts verlinken bereits, nutzen aber den Pfad als Linktext (siehe Offene Fragen)."
+  },
+  {
+    "id": "E-44",
+    "source": "src/routes/(with-header)/methodik/cross-layer-templates/+page.svelte Zeile 15 (SeoHead description) und Zeile 34 (Intro)",
+    "artefact": "story-nummer",
+    "de_old": "Render-Vorschau der Cross-Layer-Story-Templates (Story 6.7). Co-Design-Review-Stage. | Render-Vorschau der {data.totalTemplates} Templates aus Story 6.7. Daten sind Fixtures, kein Live-Wiring auf Produktiv-Pages.",
+    "de_new": "Render-Vorschau der Cross-Layer-Story-Templates. Co-Design-Review-Stage. | Render-Vorschau der {data.totalTemplates} Templates. Daten sind Fixtures, kein Live-Wiring auf Produktiv-Pages.",
+    "en_old": null,
+    "en_new": null,
+    "note": "Interne Vorschauseite (noindex), aber öffentlich erreichbar und von /methodik/wahldaten verlinkt (Zeile 273). Ganze Seite ist Entwickler-Jargon. Minimal-Fix hier, Grundsatzfrage siehe Offene Fragen."
+  },
+  {
+    "id": "F-45",
+    "source": "src/lib/server/llms/internal/aggregate-renderer.ts Zeile 219 (llms-full.txt)",
+    "artefact": "methodik-pfad",
+    "de_old": "… Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.",
+    "de_new": "… Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: ${origin}/methodik/kiez-score",
+    "en_old": null,
+    "en_new": null,
+    "note": "Maschinenlesbarer Export. Relativer Pfad ist dort kein Leserproblem, aber ohne Host nicht auflösbar. wahl-renderer.ts nutzt bereits `${input.origin}/methodik/wahldaten`. Niedrige Priorität."
+  },
+  {
+    "id": "F-46",
+    "source": "src/lib/utils/llm-export-builder.ts Zeile 369 (LLM-Export/Kopierfunktion)",
+    "artefact": "methodik-pfad",
+    "de_old": "… Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.",
+    "de_new": "… Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: https://navigator.berlin/methodik/kiez-score",
+    "en_old": null,
+    "en_new": null,
+    "note": "Wie oben. Builder kennt aktuell keinen origin (ungeprüft), deshalb absolute URL."
+  },
+  {
+    "id": "G-47",
+    "source": "src/routes/(with-header)/layer/[slug]/+page.svelte Zeile 252-256 (dd „Aggregation“ zeigt methodology.aggregationLevel roh)",
+    "artefact": "enum-wert-in-ui",
+    "de_old": "address | lor-planungsraum | lor-bezirksregion | lor-prognoseraum | bezirk | block | point-osm",
+    "de_new": "Adresse | LOR-Planungsraum | LOR-Bezirksregion | LOR-Prognoseraum | Bezirk | Baublock | Einzelstandort (OpenStreetMap)",
+    "en_old": "address | lor-planungsraum | lor-bezirksregion | lor-prognoseraum | bezirk | block | point-osm",
+    "en_new": "Address | LOR planning area | LOR Bezirksregion | LOR forecast area (Prognoseraum) | Bezirk | City block | Individual location (OpenStreetMap)",
+    "note": "Kein Textfix, sondern Code: Label-Map plus Messages (z. B. layer_page_aggregation_level_*). Werte aus AGGREGATION_LEVELS in layer-methodology.ts. EN-Begriffe aus dem Glossar (planning area, Bezirksregion, forecast area aus layer_explain_lor_prognoseraum_short). „Baublock“/„City block“ und „Einzelstandort“ sind neue Begriffe, ungeprüft."
+  }
+]
