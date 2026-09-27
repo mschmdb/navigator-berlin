@@ -1,8 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import BezirkKiezeList from './bezirk-kieze-list.svelte';
 import type { KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const KIEZE: KiezRef[] = [
 	{ slug: 'prenzlauer-berg', name: 'Prenzlauer Berg', composite: 78 },
@@ -38,5 +43,24 @@ describe('bezirk-kieze-list.svelte', () => {
 	it('rendert nichts wenn Kieze leer', async () => {
 		render(BezirkKiezeList, { kieze: [], bezirkName: 'Mitte' });
 		expect(document.querySelector('[data-testid="bezirk-kieze-list"]')).toBeNull();
+	});
+
+	// i18n Block B4a
+	describe('opts.locale (EN)', () => {
+		it('Headline, Top-5-Label + Score-Aria englisch, Link mit /en-Präfix', async () => {
+			overwriteGetLocale(() => 'en');
+			render(BezirkKiezeList, { kieze: KIEZE, bezirkName: 'Pankow' });
+			const h2 = page.getByRole('heading', { level: 2 });
+			await expect.element(h2).toHaveTextContent(/Kieze in Bezirk Pankow/);
+			const section = (await page.getByTestId('bezirk-kieze-list').element()) as HTMLElement;
+			expect(section.textContent).toMatch(/Top 5 by Kiez score/);
+			const link = (await page
+				.getByTestId('bezirk-kieze-link')
+				.first()
+				.element()) as HTMLAnchorElement;
+			expect(link.getAttribute('href')).toBe('/en/kiez/prenzlauer-berg');
+			const scoreEl = section.querySelector('[aria-label]');
+			expect(scoreEl?.getAttribute('aria-label')).toBe('Kiez score 78 of 100');
+		});
 	});
 });

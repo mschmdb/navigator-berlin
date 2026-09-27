@@ -3,11 +3,23 @@
  *
  * Werte stammen aus `oepnv-composite` (Stops pro km²), aggregiert aus
  * BVG/VBB-Stops + S-Bahn-Stationen pro Bezirksregion.
+ *
+ * i18n Block B4a: `opts` mit DE-Default (Boundary: geteilte Helfer ohne
+ * `opts.locale` bleiben DE). `describeOepnvDichte`/`formatStopsPerKm2`
+ * rendern auch direkt im Kiez-/Bezirk-Steckbrief (Client, übersetzt);
+ * `oepnvErklaerungDe` bleibt ausschließlich ein Server-FAQ-Slot (bleibt
+ * deutsch).
  */
+import { m } from '$lib/paraglide/messages.js';
+import { formatDecimal, type LocaleFormatOptions } from '$lib/i18n/format.js';
+import {
+	toAtlasMessageOptions,
+	type LocaleOptions
+} from '../../components/atlas/internal/atlas-label-options.js';
 
 export type OepnvDichte = 'sehr dicht' | 'dicht' | 'mittel' | 'dünn' | 'unbekannt';
 
-export function describeOepnvDichte(stopsPerKm2: number | null | undefined): OepnvDichte {
+function normalizeDichte(stopsPerKm2: number | null | undefined): OepnvDichte {
 	if (stopsPerKm2 === null || stopsPerKm2 === undefined) return 'unbekannt';
 	if (stopsPerKm2 >= 20) return 'sehr dicht';
 	if (stopsPerKm2 >= 12) return 'dicht';
@@ -15,22 +27,49 @@ export function describeOepnvDichte(stopsPerKm2: number | null | undefined): Oep
 	return 'dünn';
 }
 
-export function oepnvErklaerungDe(stopsPerKm2: number | null | undefined): string {
-	const cat = describeOepnvDichte(stopsPerKm2);
-	switch (cat) {
+export function describeOepnvDichte(
+	stopsPerKm2: number | null | undefined,
+	opts?: LocaleOptions
+): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (normalizeDichte(stopsPerKm2)) {
 		case 'sehr dicht':
-			return 'Das entspricht dem Niveau innerstädtischer Bezirke, mit Tram- und Bus-Halten in kurzem Fußweg-Abstand.';
+			return m.faq_helper_oepnv_dichte_sehr_dicht(undefined, options);
 		case 'dicht':
-			return 'Das Netz erreicht typische Werte für gemischte Innenstadt-Lagen mit gutem Anschluss an U- oder S-Bahn.';
+			return m.faq_helper_oepnv_dichte_dicht(undefined, options);
 		case 'mittel':
-			return 'Das Netz liegt im Berliner Mittelfeld, vorrangig getragen durch Bus und Tram.';
+			return m.faq_helper_oepnv_dichte_mittel(undefined, options);
 		case 'dünn':
-			return 'Die Haltedichte liegt unter dem Berliner Schnitt, lange Wege zum nächsten Halt sind möglich.';
+			return m.faq_helper_oepnv_dichte_duenn(undefined, options);
 		default:
-			return 'Für diesen Bereich liegt keine ÖPNV-Dichte im Aggregat vor.';
+			return m.faq_helper_oepnv_dichte_unbekannt(undefined, options);
 	}
 }
 
-export function formatStopsPerKm2(value: number): string {
-	return value.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+export function oepnvErklaerungDe(
+	stopsPerKm2: number | null | undefined,
+	opts?: LocaleOptions
+): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (normalizeDichte(stopsPerKm2)) {
+		case 'sehr dicht':
+			return m.faq_helper_oepnv_erklaerung_sehr_dicht(undefined, options);
+		case 'dicht':
+			return m.faq_helper_oepnv_erklaerung_dicht(undefined, options);
+		case 'mittel':
+			return m.faq_helper_oepnv_erklaerung_mittel(undefined, options);
+		case 'dünn':
+			return m.faq_helper_oepnv_erklaerung_duenn(undefined, options);
+		default:
+			return m.faq_helper_oepnv_erklaerung_unbekannt(undefined, options);
+	}
+}
+
+/** i18n Block B4a: Zahl über `format.ts::formatDecimal` (ersetzt `toLocaleString('de-DE', ...)`). */
+export function formatStopsPerKm2(value: number, opts?: LocaleFormatOptions): string {
+	return formatDecimal(value, {
+		locale: opts?.locale ?? 'de',
+		minimumFractionDigits: 1,
+		maximumFractionDigits: 1
+	});
 }

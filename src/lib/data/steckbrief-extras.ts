@@ -1,4 +1,5 @@
 import type { CategoryDistribution } from '$lib/server/db/schema/aggregate-types.js';
+import { formatCount, type LocaleFormatOptions } from '$lib/i18n/format.js';
 
 /**
  * Helfer für Story 11.5: Verteilungen + Zähldaten im Steckbrief.
@@ -27,12 +28,18 @@ export function distributionText(segments: readonly DistSegment[]): string {
 	return segments.map((s) => `${s.label} ${Math.round(s.share * 100)}%`).join(' · ');
 }
 
-/** Zähl-Text aus Label/Wert-Paaren; null/0-Werte fallen raus. „U 3 · Bus 12". */
+/**
+ * Zähl-Text aus Label/Wert-Paaren; null/0-Werte fallen raus. „U 3 · Bus 12".
+ * i18n Block B4a: Zahl über `format.ts::formatCount` (ersetzt das vormals
+ * fest auf `de-DE` verdrahtete `toLocaleString`), `opts` mit DE-Default. Die
+ * Labels selbst kommen bereits übersetzt vom Aufrufer (Kiez-/Bezirk-Hero).
+ */
 export function countsText(
-	pairs: ReadonlyArray<readonly [string, number | null | undefined]>
+	pairs: ReadonlyArray<readonly [string, number | null | undefined]>,
+	opts?: LocaleFormatOptions
 ): string {
 	return pairs
 		.filter((p): p is [string, number] => typeof p[1] === 'number' && p[1] > 0)
-		.map(([label, n]) => `${label} ${n.toLocaleString('de-DE')}`)
+		.map(([label, n]) => `${label} ${formatCount(n, { locale: opts?.locale ?? 'de' })}`)
 		.join(' · ');
 }

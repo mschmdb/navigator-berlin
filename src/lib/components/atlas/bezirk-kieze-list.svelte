@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 
 	interface Props {
 		readonly kieze: readonly KiezRef[];
@@ -19,11 +21,11 @@
 	>
 		<header class="flex flex-col gap-1">
 			<h2 id="kieze-im-bezirk-h" class="font-serif text-2xl text-ink">
-				Kieze im Bezirk {bezirkName}
+				{m.bezirk_kieze_heading({ bezirk: bezirkName })}
 			</h2>
 			{#if hasScores}
 				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
-					Top 5 nach Kiez-Score
+					{m.bezirk_kieze_top5_label()}
 				</p>
 			{/if}
 		</header>
@@ -34,7 +36,7 @@
 						{idx + 1}.
 					</span>
 					<a
-						href={`/kiez/${kiez.slug}`}
+						href={localizedHref(`/kiez/${kiez.slug}`)}
 						class="hover:text-accent-strong grow text-accent underline underline-offset-2"
 						data-testid="bezirk-kieze-link"
 					>
@@ -43,7 +45,7 @@
 					{#if typeof kiez.composite === 'number'}
 						<span
 							class="shrink-0 font-mono text-sm text-ink-muted tabular-nums"
-							aria-label={`Kiez-Score ${kiez.composite} von 100`}
+							aria-label={m.bezirk_kieze_score_aria({ score: kiez.composite })}
 						>
 							{kiez.composite}
 						</span>

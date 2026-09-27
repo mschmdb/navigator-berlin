@@ -152,3 +152,28 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: i18n Block B4b „Layer-Detailseite“: Rahmen von `/layer/[slug]` (~30 Strings: Quelle/Lizenz/Datenstand, Werte/Skala, Berechnung, Coverage-Lücken, „Was wir NICHT zeigen“, Verwandte Layer, Methodik-Aside, Leerzustand, Hitze-CTA, `toLocaleString('de-DE')`, rohe Hrefs) plus Dataset-JSON-LD (`inLanguage`, Description-Fallback) auf Messages + EN.
   evidence: Split aus B4 (Koordinator-Entscheidung 27.09. 04:55, Matze AFK); Layer-Seite teilt keine Komponenten mit Kiez/Bezirk, eigenes PR-fähiges Paket.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
+  summary: `/kiez` und `/bezirk` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/kiez/…`- und `/en/bezirk/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
+  evidence: Koordinator-Entscheidung 27.09. (Matze AFK): Prosa (`profileProse`) und FAQ-Inhalte (`faq_qna`) bleiben bis Block C deutsch -- eine indexierte `/en/kiez/…`-Seite wäre editorial halb deutsch. Registrierung erst nach Block C (Prosa/FAQ-Übersetzung).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
+  summary: EN-OG-Bilder für `/kiez/[slug]` und `/bezirk/[slug]` (eigener vorgenerierter Schritt, `scripts/generate-og-images.ts` bleibt DE).
+  evidence: Boundary Spec i18n B4a ("Never"): keine EN-OG-Bilder in B4a. `/en/kiez/…` und `/en/bezirk/…` zeigen weiterhin die DE-Karte im `og:image` (ADR-005: alle Locales nutzen die DE-Karte, keine übersetzten Slugs).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
+  summary: `toSegments`/`distributionText` (`steckbrief-extras.ts`) zeigen die Verteilungs-Segmente (Lärm-/Grün-/Wohnlage-Kategorien im Steckbrief-Disclosure „Verteilung & Zahlen") weiterhin als rohe DE-Kategorie-Wörter, auch unter `/en/…`.
+  evidence: Außerhalb der B4a-Code-Map (dort nur die `de-DE`-Zahlenformatierung in `countsText` benannt); Übersetzung bräuchte eine Cluster-spezifische Kategorie-Tabelle (Lärm-/Grün-/Wohnlage-Rohwerte unterscheiden sich je Layer) statt der generischen `capitalize()`. Analog zum B3c-Fund `map-libre-canvas`-loadError: bewusst zurückgestellt, kein Blocker für B4a.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
+  summary: `error-feedback-mailto.svelte` bleibt deutsch (Fehler-Melden-Link + Aria-Label), gehört zu B4b (Layer-Detailseite), nicht zu B4a.
+  evidence: Der Inventur-Code-Map von B4a listete die Komponente versehentlich mit, ihr einziger Aufrufer ist `/layer/[slug]/+page.svelte` (explizit "Never: Kein `/layer` (B4b)"). Übersetzung gehört in den B4b-Task.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
+  summary: Lokalisierte 404-Meldung auf `/en/kiez/…` und `/en/bezirk/…` per Test absichern.
+  evidence: Review B4a Fund #7; Routen sind prerendered, 404 selten erreichbar, kein Route-Test vorhanden.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
+  summary: `formatMonthYear` (vormals `formatStand`) ohne `timeZone`: Datums-ISO wie `2023-01-01` zeigt westlich von UTC den Vormonat, Prerender und Client können abweichen.
+  evidence: Review B4a Fund #16; vorbestehend, B4a hat nur die Locale geöffnet. Fix: `timeZone: 'Europe/Berlin'` wie `formatShortDate`.
+

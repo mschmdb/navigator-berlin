@@ -10,6 +10,10 @@
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { bezirkSameAs } from '$lib/seo/sources/bezirk-sameas.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { formatCount } from '$lib/i18n/format.js';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -25,22 +29,28 @@
 	const ogImagePath = $derived(`/og/bezirk/${slug}.png`);
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 
-	const pageTitle = $derived(`Bezirk ${name} - Berlin in Daten - navigator.berlin`);
-	const numberDe = new Intl.NumberFormat('de-DE');
+	const localeOpts = $derived({ locale: getLocale() });
+
+	const pageTitle = $derived(m.bezirk_page_title({ name }, localeOpts));
+
 	const pageDescription = $derived.by(() => {
 		const parts: string[] = [];
 		if (data.profile.einwohner > 0) {
-			parts.push(`${numberDe.format(data.profile.einwohner)} Einwohner:innen`);
+			parts.push(
+				m.profile_lead_einwohner({ count: formatCount(data.profile.einwohner, localeOpts) })
+			);
 		}
 		if (data.profile.flaecheHa > 0) {
-			parts.push(`${numberDe.format(data.profile.flaecheHa)} ha`);
+			parts.push(m.profile_lead_flaeche({ ha: formatCount(data.profile.flaecheHa, localeOpts) }));
 		}
 		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-		return `Bezirk ${name}${suffix}: Kiez-Score, Lärm, Klima, Grün, Mobilität, Versorgung, Sozialstruktur. Berliner Daten-Atlas.`;
+		return m.profile_page_description(
+			{ subject: `Bezirk ${name}`, bezirkPart: '', suffix },
+			localeOpts
+		);
 	});
-	const ogImageAlt = $derived(
-		`Bezirk ${name}: navigator.berlin-Karten-Vorschau mit Kiez-Score und Bezirks-Daten`
-	);
+
+	const ogImageAlt = $derived(m.bezirk_page_og_alt({ name }, localeOpts));
 
 	const sameAs = $derived(bezirkSameAs(slug));
 
@@ -109,9 +119,9 @@
 <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
 	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="bezirke" />
 	<a
-		href="/methodik/kiez-score"
+		href={localizedHref('/methodik/kiez-score')}
 		class="hover:text-accent-strong text-accent underline underline-offset-2"
 	>
-		Wie der Bezirks-Score entsteht →
+		{m.bezirk_page_methodik_link_label()} →
 	</a>
 </div>

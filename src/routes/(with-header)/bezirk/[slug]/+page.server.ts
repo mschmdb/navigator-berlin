@@ -1,32 +1,28 @@
 import { error } from '@sveltejs/kit';
 import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
+import { m } from '$lib/paraglide/messages.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
 import { buildKiezeInBezirk, pickTop, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
 import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
-import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
+import { SCORE_DIMENSION_KEYS, type ComparisonDimRow } from '$lib/data/comparison-types.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
-const SCORE_DIMS: readonly { key: string; label: string }[] = [
-	{ key: 'ruheLuft', label: 'Ruhe & Luft' },
-	{ key: 'gruenHitze', label: 'Grün & Hitze' },
-	{ key: 'mobilitaet', label: 'Mobilität' },
-	{ key: 'versorgung', label: 'Versorgung' },
-	{ key: 'wohnschutz', label: 'Wohnschutz' },
-	// Option C: Kultur ist eigenständig (nicht im Gesamt-Score), wird aber als Vergleichszeile gezeigt.
-	{ key: 'kultur', label: 'Kultur' },
-	// Story 14.9: Kriminalität als Kontext-Vergleichszeile (Option C). Kein Rang, neutral, BR-Granularität.
-	{ key: 'kriminalitaet', label: 'Erfasste Kriminalität' }
-];
+// i18n Block B4a: geteilte Zuordnung camelCase-Datenschlüssel → hyphenierter
+// KiezScoreDimension-Anzeige-Schlüssel, siehe `comparison-types.ts`
+// (Review-Fund: vormals 3x dupliziert -- hier, in `kiez/[slug]/+page.server.ts`
+// und `kiez-hero.svelte`).
+const SCORE_DIMS = SCORE_DIMENSION_KEYS;
 
 export const prerender = true;
 
 /**
- * Story 2.3 T1.1: 12 prerendered Bezirks-Routes Phase-1 DE-only
- * (Memory `project_i18n_phase_1_de_only`). EN-Variante kommt in
- * Phase-3-Future-Epic.
+ * Story 2.3 T1.1: 12 prerendered Bezirks-Routes, je einmal DE + einmal
+ * `/en` (Crawl-Links im Layout, ADR-005). i18n Block B4a übersetzt den
+ * Seitenrahmen; Prosa (`profileProse`) und FAQ-Inhalte (`faq_qna`) bleiben
+ * deutsch (Boundary).
  */
 export const entries: EntryGenerator = async () => {
 	const slugs = await readBezirkSlugsFromGeoJson();
@@ -163,7 +159,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	try {
 		profile = await getBezirkProfile(getLocale() as 'de' | 'en', slug, fetch);
 	} catch {
-		throw error(404, `Bezirk ${slug} nicht gefunden`);
+		throw error(404, m.bezirk_page_not_found({ slug }, { locale: getLocale() }));
 	}
 	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
 	const [stats, faq, kieze, rank, comparisonMap, profileProse] = await Promise.all([
@@ -174,11 +170,11 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		tryLoadBezirkComparison(slug),
 		getProfileParagraphs('bezirk', slug)
 	]);
-	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ key, label }) => {
-		const cmp = comparisonMap?.get(key);
-		const rk = rank?.get(key);
+	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
+		const cmp = comparisonMap?.get(field);
+		const rk = rank?.get(field);
 		return {
-			label,
+			key,
 			value: cmp?.bezirkValue ?? null,
 			berlinMedian: cmp?.berlinMedian ?? null,
 			rang: rk?.rang ?? null,

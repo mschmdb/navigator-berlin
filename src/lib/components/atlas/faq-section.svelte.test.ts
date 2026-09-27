@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import FaqSection from './faq-section.svelte';
 import type { FaqEntry } from '$lib/data/types.js';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const items: FaqEntry[] = [
 	{
@@ -68,5 +73,37 @@ describe('FaqSection.svelte', () => {
 	it('zeigt keinen Methodik-Link auf Layer-Seiten (Erklärungen stehen dort selbst)', async () => {
 		render(FaqSection, { items, pageType: 'layer' });
 		expect(document.querySelector('[data-testid="faq-methodik-link"]')).toBeNull();
+	});
+
+	it('Q&A-Accordion trägt kein lang-Attribut auf der DE-Seite', async () => {
+		render(FaqSection, { items, pageType: 'kiez' });
+		const accordion = document.querySelector(
+			'[data-testid="faq-section"] .divide-y.divide-rule.border-y.border-rule'
+		);
+		expect(accordion?.hasAttribute('lang')).toBe(false);
+	});
+
+	// i18n Block B4a
+	describe('opts.locale (EN)', () => {
+		it('Heading + Methodik-Link englisch mit /en-Href', async () => {
+			overwriteGetLocale(() => 'en');
+			render(FaqSection, { items, pageType: 'kiez' });
+			const section = document.querySelector('[data-testid="faq-section"]');
+			expect(section?.querySelector('h2')?.textContent).toMatch(/Frequently asked questions/i);
+			const link = document.querySelector('[data-testid="faq-methodik-link"] a');
+			expect(link?.getAttribute('href')).toBe('/en/methodik');
+			expect(link?.textContent).toMatch(/methodology page/i);
+		});
+
+		it('Q&A-Inhalte bleiben deutsch, Accordion trägt lang="de" (WCAG 3.1.2), Heading bleibt ohne lang', async () => {
+			overwriteGetLocale(() => 'en');
+			render(FaqSection, { items, pageType: 'kiez' });
+			const section = document.querySelector('[data-testid="faq-section"]');
+			const heading = section?.querySelector('h2');
+			expect(heading?.hasAttribute('lang')).toBe(false);
+			const accordion = section?.querySelector('.divide-y.divide-rule.border-y.border-rule');
+			expect(accordion?.getAttribute('lang')).toBe('de');
+			expect(accordion?.textContent).toContain('Wie laut ist es in Mitte?');
+		});
 	});
 });

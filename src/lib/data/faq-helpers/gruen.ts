@@ -4,7 +4,17 @@
  * Werte stammen aus `gruenversorgung-2023` (ordinal-kategorisch pro Planungsraum)
  * plus aggregierte Zähler `gruenanlagenCount` / `spielplaetzeCount` aus
  * separaten Punkt-Layern.
+ *
+ * i18n Block B4a: `opts` mit DE-Default (Boundary: geteilte Helfer ohne
+ * `opts.locale` bleiben DE). `describeGruenversorgungDe` rendert auch direkt
+ * im Kiez-/Bezirk-Steckbrief (Client, übersetzt); `gruenErklaerungDe` bleibt
+ * ausschließlich ein Server-FAQ-Slot (bleibt deutsch, ruft ohne `opts` auf).
  */
+import { m } from '$lib/paraglide/messages.js';
+import {
+	toAtlasMessageOptions,
+	type LocaleOptions
+} from '../../components/atlas/internal/atlas-label-options.js';
 
 export type GruenCategoryDe = 'gut' | 'mittel' | 'gering' | 'unbekannt';
 
@@ -23,21 +33,38 @@ const NORMALISATION: Record<string, GruenCategoryDe> = {
 	gering: 'gering'
 };
 
-export function describeGruenversorgungDe(raw: string | null | undefined): GruenCategoryDe {
+function normalizeCategory(raw: string | null | undefined): GruenCategoryDe {
 	if (!raw) return 'unbekannt';
 	return NORMALISATION[raw.trim().toLowerCase()] ?? 'unbekannt';
 }
 
-export function gruenErklaerungDe(raw: string | null | undefined): string {
-	const cat = describeGruenversorgungDe(raw);
-	switch (cat) {
+export function describeGruenversorgungDe(
+	raw: string | null | undefined,
+	opts?: LocaleOptions
+): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (normalizeCategory(raw)) {
 		case 'gut':
-			return 'Die Berliner Senatsverwaltung stuft die Grünversorgung pro Einwohnerin hier als ausreichend ein.';
+			return m.faq_helper_gruen_category_gut(undefined, options);
 		case 'mittel':
-			return 'Die Grünversorgung pro Einwohnerin liegt im mittleren Bereich der Berliner Verteilung.';
+			return m.faq_helper_gruen_category_mittel(undefined, options);
 		case 'gering':
-			return 'Die Grünversorgung pro Einwohnerin liegt unter dem Berliner Richtwert von 6 m² pro Person.';
+			return m.faq_helper_gruen_category_gering(undefined, options);
 		default:
-			return 'Für diesen Bereich liegt im Datensatz keine Grünversorgungs-Kategorie vor.';
+			return m.faq_helper_gruen_category_unbekannt(undefined, options);
+	}
+}
+
+export function gruenErklaerungDe(raw: string | null | undefined, opts?: LocaleOptions): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (normalizeCategory(raw)) {
+		case 'gut':
+			return m.faq_helper_gruen_erklaerung_gut(undefined, options);
+		case 'mittel':
+			return m.faq_helper_gruen_erklaerung_mittel(undefined, options);
+		case 'gering':
+			return m.faq_helper_gruen_erklaerung_gering(undefined, options);
+		default:
+			return m.faq_helper_gruen_erklaerung_unbekannt(undefined, options);
 	}
 }

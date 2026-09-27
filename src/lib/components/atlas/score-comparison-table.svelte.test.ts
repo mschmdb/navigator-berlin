@@ -1,11 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import ScoreComparisonTable from './score-comparison-table.svelte';
 import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
 
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
+
 const rows: ComparisonDimRow[] = [
 	{
-		label: 'Grün & Hitze',
+		key: 'gruen-hitze',
 		value: 72,
 		bezirkMean: 65,
 		berlinMedian: 58,
@@ -14,7 +19,7 @@ const rows: ComparisonDimRow[] = [
 		total: 143
 	},
 	{
-		label: 'Versorgung',
+		key: 'versorgung',
 		value: 30,
 		bezirkMean: 55,
 		berlinMedian: 60,
@@ -33,7 +38,7 @@ describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
 	it('rendert nichts wenn alle Werte null sind (kein leerer Block ohne DB)', async () => {
 		const empty: ComparisonDimRow[] = [
 			{
-				label: 'Grün & Hitze',
+				key: 'gruen-hitze',
 				value: null,
 				bezirkMean: null,
 				berlinMedian: null,
@@ -62,6 +67,12 @@ describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
 		expect(text).not.toMatch(/Platz 140 von 143/);
 	});
 
+	it('Default-Spaltentitel ohne valueLabel-Prop bleibt "Wert" (DE)', async () => {
+		render(ScoreComparisonTable, { rows, showBezirkColumn: false });
+		const section = document.querySelector('[data-testid="score-comparison"]');
+		expect(section?.textContent).toMatch(/Wert/);
+	});
+
 	it('ohne Bezirk-Spalte (Bezirks-Seite)', async () => {
 		render(ScoreComparisonTable, { rows, showBezirkColumn: false, valueLabel: 'Bezirk' });
 		const section = document.querySelector('[data-testid="score-comparison"]');
@@ -72,7 +83,7 @@ describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
 		const withKrimi: ComparisonDimRow[] = [
 			...rows,
 			{
-				label: 'Erfasste Kriminalität',
+				key: 'kriminalitaet',
 				value: 84,
 				bezirkMean: 70,
 				berlinMedian: 65,
@@ -94,5 +105,48 @@ describe('ScoreComparisonTable.svelte (Story 11.4)', () => {
 	it('Story 14.9: ohne Kriminalitäts-Zeile keine Fußnote', async () => {
 		render(ScoreComparisonTable, { rows, showBezirkColumn: true });
 		expect(document.querySelector('[data-testid="kriminalitaet-footnote"]')).toBeNull();
+	});
+
+	// i18n Block B4a
+	describe('opts.locale (EN)', () => {
+		it('Header, Dimension-Labels, Rang + Legende englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(ScoreComparisonTable, { rows, showBezirkColumn: true, valueLabel: 'Kiez' });
+			const section = document.querySelector('[data-testid="score-comparison"]');
+			expect(section?.querySelector('h2')?.textContent).toBe('In comparison');
+			expect(section?.textContent).toMatch(/Green & heat/);
+			expect(section?.textContent).toMatch(/Rank 12 of 143/);
+			expect(section?.textContent).toMatch(/bottom quartile/);
+			expect(section?.textContent).toMatch(/Bezirk avg/);
+		});
+
+		it('Default-Spaltentitel ohne valueLabel-Prop ist "Value" (EN)', async () => {
+			overwriteGetLocale(() => 'en');
+			render(ScoreComparisonTable, { rows, showBezirkColumn: false });
+			const section = document.querySelector('[data-testid="score-comparison"]');
+			expect(section?.textContent).toMatch(/Value/);
+		});
+
+		it('Kriminalitäts-Fußnote + Methodik-Link englisch mit /en-Href', async () => {
+			overwriteGetLocale(() => 'en');
+			const withKrimi: ComparisonDimRow[] = [
+				...rows,
+				{
+					key: 'kriminalitaet',
+					value: 84,
+					bezirkMean: 70,
+					berlinMedian: 65,
+					rang: null,
+					quartil: null,
+					total: 0
+				}
+			];
+			render(ScoreComparisonTable, { rows: withKrimi, showBezirkColumn: true });
+			const note = document.querySelector('[data-testid="kriminalitaet-footnote"]');
+			expect(note?.textContent).toMatch(/Recorded crime/);
+			expect(note?.textContent).toMatch(/no rank/i);
+			const link = note?.querySelector('a');
+			expect(link?.getAttribute('href')).toBe('/en/methodik/kiez-score');
+		});
 	});
 });

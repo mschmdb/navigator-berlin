@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Breadcrumb from './breadcrumb.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const ITEMS = [
 	{ name: 'Berlin', path: '/' },
@@ -35,5 +40,18 @@ describe('breadcrumb.svelte', () => {
 	it('rendert nichts bei leerer Liste', async () => {
 		render(Breadcrumb, { items: [] });
 		expect(document.querySelector('[data-testid="breadcrumb"]')).toBeNull();
+	});
+
+	// i18n Block B4a
+	describe('opts.locale (EN)', () => {
+		it('aria-label + Hrefs englisch/mit /en-Präfix', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Breadcrumb, { items: ITEMS });
+			const nav = (await page.getByTestId('breadcrumb').element()) as HTMLElement;
+			expect(nav.getAttribute('aria-label')).toBe('Breadcrumb');
+			const links = document.querySelectorAll('[data-testid="breadcrumb"] a');
+			expect(links[0].getAttribute('href')).toBe('/en/');
+			expect(links[1].getAttribute('href')).toBe('/en/bezirk/pankow');
+		});
 	});
 });

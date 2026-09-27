@@ -10,6 +10,10 @@
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { normalizeSlug } from '$lib/data/internal/slug.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { formatCount } from '$lib/i18n/format.js';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -27,29 +31,34 @@
 	const ogImagePath = $derived(`/og/kiez/${slug}.png`);
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 
+	const localeOpts = $derived({ locale: getLocale() });
+
 	const pageTitle = $derived(
 		bezirkName.length > 0
-			? `Kiez ${name} (${bezirkName}) - Berlin in Daten - navigator.berlin`
-			: `Kiez ${name} - Berlin in Daten - navigator.berlin`
+			? m.kiez_page_title_with_bezirk({ name, bezirk: bezirkName }, localeOpts)
+			: m.kiez_page_title_no_bezirk({ name }, localeOpts)
 	);
 
-	const numberDe = new Intl.NumberFormat('de-DE');
 	const pageDescription = $derived.by(() => {
 		const parts: string[] = [];
 		if (data.profile.einwohner > 0) {
-			parts.push(`${numberDe.format(data.profile.einwohner)} Einwohner:innen`);
+			parts.push(
+				m.profile_lead_einwohner({ count: formatCount(data.profile.einwohner, localeOpts) })
+			);
 		}
 		if (data.profile.flaecheHa > 0) {
-			parts.push(`${numberDe.format(data.profile.flaecheHa)} ha`);
+			parts.push(m.profile_lead_flaeche({ ha: formatCount(data.profile.flaecheHa, localeOpts) }));
 		}
 		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-		const bezirkPart = bezirkName.length > 0 ? ` in Bezirk ${bezirkName}` : '';
-		return `Kiez ${name}${bezirkPart}${suffix}: Kiez-Score, Lärm, Klima, Grün, Mobilität, Versorgung, Sozialstruktur. Berliner Daten-Atlas.`;
+		const bezirkPart =
+			bezirkName.length > 0 ? m.kiez_page_description_bezirk_part({ bezirk: bezirkName }) : '';
+		return m.profile_page_description({ subject: `Kiez ${name}`, bezirkPart, suffix }, localeOpts);
 	});
+
 	const ogImageAlt = $derived(
 		bezirkName.length > 0
-			? `Kiez ${name} (${bezirkName}): navigator.berlin-Vorschau mit Kiez-Score`
-			: `Kiez ${name}: navigator.berlin-Vorschau mit Kiez-Score`
+			? m.kiez_page_og_alt_with_bezirk({ name, bezirk: bezirkName }, localeOpts)
+			: m.kiez_page_og_alt_no_bezirk({ name }, localeOpts)
 	);
 
 	const placeJsonLd = $derived(
@@ -124,9 +133,9 @@
 <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
 	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="kieze" />
 	<a
-		href="/methodik/kiez-score"
+		href={localizedHref('/methodik/kiez-score')}
 		class="hover:text-accent-strong text-accent underline underline-offset-2"
 	>
-		Wie der Kiez-Score entsteht →
+		{m.kiez_page_methodik_link_label()} →
 	</a>
 </div>

@@ -5,6 +5,9 @@
 	aus derselben Quelle speisen.
 -->
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+
 	interface BreadcrumbItem {
 		readonly name: string;
 		readonly path: string;
@@ -18,13 +21,13 @@
 </script>
 
 {#if items.length > 0}
-	<nav data-testid="breadcrumb" aria-label="Brotkrumen" class="font-sans text-sm">
+	<nav data-testid="breadcrumb" aria-label={m.breadcrumb_aria_label()} class="font-sans text-sm">
 		<ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-ink-subtle">
 			{#each items as item, idx (item.path)}
 				<li class="flex items-center gap-x-2">
 					{#if idx < items.length - 1}
 						<a
-							href={item.path}
+							href={localizedHref(item.path)}
 							class="hover:text-accent-strong text-accent underline underline-offset-2"
 						>
 							{item.name}

@@ -1,11 +1,13 @@
 import { error } from '@sveltejs/kit';
 import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
+import { m } from '$lib/paraglide/messages.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
 import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
 import { buildKiezeInBezirk, pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { featureFlags } from '$lib/data/feature-flags.js';
+import { SCORE_DIMENSION_KEYS, type ComparisonDimRow } from '$lib/data/comparison-types.js';
 import type { WahlVerlaufRow } from '$lib/components/atlas/kiez-wahl-verlauf.svelte';
 import type { KiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
 import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
@@ -15,9 +17,10 @@ import type { EntryGenerator, PageServerLoad } from './$types';
 export const prerender = true;
 
 /**
- * Story 2.4 T1.1: 143 prerendered Kiez-Routes Phase-1 DE-only
- * (Memory `project_i18n_phase_1_de_only` + Variante A LOR-Bezirksregion
- * 2021, User-Lock 2026-05-16). EN-Variante in Phase-3-Future-Epic.
+ * Story 2.4 T1.1: 143 prerendered Kiez-Routes (Variante A LOR-Bezirksregion
+ * 2021, User-Lock 2026-05-16), je einmal DE + einmal `/en` (Crawl-Links im
+ * Layout, ADR-005). i18n Block B4a übersetzt den Seitenrahmen; Prosa
+ * (`profileProse`) und FAQ-Inhalte (`faq_qna`) bleiben deutsch (Boundary).
  */
 export const entries: EntryGenerator = async () => {
 	const slugs = await readKiezSlugsFromGeoJson();
@@ -72,6 +75,12 @@ async function tryLoadKiezComparison(slug: string) {
 	}
 }
 
+// i18n Block B4a: FAQ-Inhalte bleiben bewusst deutsch (Boundary „Never":
+// keine Übersetzung von `faq_qna`-Frage-/Antwort-Inhalten; `faq-section.svelte`
+// markiert sie per `lang="de"` fürs Screenreader-WCAG-3.1.2). Den Fallback-
+// Hinweis (`TranslationDisclaimer`) zeigt nicht diese Section, sondern einmal
+// pro Seite das Layout (`(with-header)/+layout.svelte`), solange `/kiez` nicht
+// im Übersetzungs-Register steht (`deferred-work.md`).
 async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
@@ -84,28 +93,11 @@ async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
 	}
 }
 
-export interface ComparisonDimRow {
-	readonly label: string;
-	readonly value: number | null;
-	readonly bezirkMean: number | null;
-	readonly berlinMedian: number | null;
-	readonly rang: number | null;
-	readonly quartil: number | null;
-	readonly total: number;
-}
-
-const SCORE_DIMS: readonly { key: keyof KiezScore; label: string }[] = [
-	{ key: 'ruheLuft', label: 'Ruhe & Luft' },
-	{ key: 'gruenHitze', label: 'Grün & Hitze' },
-	{ key: 'mobilitaet', label: 'Mobilität' },
-	{ key: 'versorgung', label: 'Versorgung' },
-	{ key: 'wohnschutz', label: 'Wohnschutz' },
-	// Option C: Kultur ist eigenständig (nicht im Gesamt-Score), wird aber als Vergleichszeile gezeigt.
-	{ key: 'kultur', label: 'Kultur' },
-	// Story 14.9: Kriminalität als Kontext-Vergleichszeile (Option C). Kein Rang (nicht in METRICS),
-	// Strukturell-Indigo/neutral, BR-Granularität (ADR-019). NICHT in der Prosa (14.8).
-	{ key: 'kriminalitaet', label: 'Erfasste Kriminalität' }
-];
+// i18n Block B4a: geteilte Zuordnung camelCase-Datenschlüssel → hyphenierter
+// KiezScoreDimension-Anzeige-Schlüssel, siehe `comparison-types.ts`
+// (Review-Fund: vormals 3x dupliziert -- hier, in `bezirk/[slug]/+page.server.ts`
+// und `kiez-hero.svelte`).
+const SCORE_DIMS = SCORE_DIMENSION_KEYS;
 
 export type KiezPageData = {
 	readonly profile: KiezProfile;
@@ -122,33 +114,18 @@ export type KiezPageData = {
 interface WahlTrendVariant {
 	readonly key: string;
 	readonly typ: 'btw' | 'agh' | 'bvv';
-	readonly stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
-	readonly wahlTypLabel: string;
-	readonly stimmtypLabel: string;
+	readonly stimmtyp: 'zweitstimme' | 'einstimme';
 }
 
+// i18n Block B4a: liefert nur noch Schlüssel (Boundary „Server liefert
+// Schlüssel, der Client baut die Labels", analog `berlin-wahlen/[slug]`).
+// `kiez-wahl-verlauf.svelte` löst `typ`/`stimmtyp` über eigene, PLURAL-Messages
+// auf (Bundestagswahlen/Zweitstimmen) -- nicht über `wahl-labels.ts`, das
+// SINGULAR liefert.
 const WAHL_TREND_VARIANTS: readonly WahlTrendVariant[] = [
-	{
-		key: 'btw',
-		typ: 'btw',
-		stimmtyp: 'zweitstimme',
-		wahlTypLabel: 'Bundestagswahlen',
-		stimmtypLabel: 'Zweitstimmen'
-	},
-	{
-		key: 'agh',
-		typ: 'agh',
-		stimmtyp: 'zweitstimme',
-		wahlTypLabel: 'Abgeordnetenhauswahlen',
-		stimmtypLabel: 'Zweitstimmen'
-	},
-	{
-		key: 'bvv',
-		typ: 'bvv',
-		stimmtyp: 'einstimme',
-		wahlTypLabel: 'BVV-Wahlen',
-		stimmtypLabel: 'Stimmen'
-	}
+	{ key: 'btw', typ: 'btw', stimmtyp: 'zweitstimme' },
+	{ key: 'agh', typ: 'agh', stimmtyp: 'zweitstimme' },
+	{ key: 'bvv', typ: 'bvv', stimmtyp: 'einstimme' }
 ];
 
 function reduceTopPerYear(
@@ -192,8 +169,8 @@ async function tryBuildWahlVerlauf(kiezSlug: string): Promise<KiezPageData['wahl
 			if (top.length < 2) continue;
 			out.push({
 				key: variant.key,
-				wahlTypLabel: variant.wahlTypLabel,
-				stimmtypLabel: variant.stimmtypLabel,
+				typ: variant.typ,
+				stimmtyp: variant.stimmtyp,
 				jahre: top
 			});
 		}
@@ -261,7 +238,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	try {
 		profile = await getKiezProfile(getLocale() as 'de' | 'en', slug, fetch);
 	} catch {
-		throw error(404, `Kiez ${slug} nicht gefunden`);
+		throw error(404, m.kiez_page_not_found({ slug }, { locale: getLocale() }));
 	}
 	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
 	const [stats, score, faq, siblings, wahlVerlauf, rank, comparisonMap, profileProse] =
@@ -275,12 +252,12 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			tryLoadKiezComparison(slug),
 			getProfileParagraphs('kiez', slug)
 		]);
-	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ key, label }) => {
-		const cmp = comparisonMap?.get(key as string);
-		const rk = rank?.get(key as string);
+	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
+		const cmp = comparisonMap?.get(field);
+		const rk = rank?.get(field);
 		return {
-			label,
-			value: (score?.[key] as number | null | undefined) ?? null,
+			key,
+			value: (score?.[field as keyof KiezScore] as number | null | undefined) ?? null,
 			bezirkMean: cmp?.bezirkMean ?? null,
 			berlinMedian: cmp?.berlinMedian ?? null,
 			rang: rk?.rang ?? null,

@@ -169,6 +169,25 @@ export function formatDate(iso: string, opts?: LocaleFormatOptions): string {
 }
 
 /**
+ * Datum als „Monat YYYY" (ausgeschriebener Monat), Host-Zeitzone (kein
+ * `timeZone`-Override, analog `formatShortDate`): `Juni 2023` (de) / `June
+ * 2023` (en). i18n Block B4a: ersetzt das bisherige, in `kiez-hero.svelte` /
+ * `bezirk-hero.svelte` je einmal duplizierte `formatStand` (fest auf
+ * `de-DE` verdrahtet). `template-renderer.ts`s eigenständiges
+ * `formatSourceStand` (Server-FAQ, bleibt DE) bleibt davon unberührt
+ * (Boundary: Server-FAQ-Renderer bleibt deutsch).
+ */
+export function formatMonthYear(iso: string, opts?: LocaleFormatOptions): string {
+	const locale = resolveLocale(opts?.locale);
+	const d = new Date(iso);
+	if (Number.isNaN(d.getTime())) return iso;
+	return d.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-GB', {
+		month: 'long',
+		year: 'numeric'
+	});
+}
+
+/**
  * Kompaktes Datum mit abgekürztem Monat, `Europe/Berlin`: `15. Mai 2026` (de)
  * / `15 May 2026` (en). i18n Block B2: ersetzt das bisherige, in
  * `home-updates-teaser.svelte` fest auf `de-DE` verdrahtete

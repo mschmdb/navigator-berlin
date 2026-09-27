@@ -9,7 +9,17 @@
  * Sprachliche Disziplin (Memory `project_compare_editorial_profiles`,
  * `feedback_no_lebenswert`): KEINE evaluativen Adjektive wie „gut/schlecht"
  * über ganze Kieze; ausschließlich kategoriale Beschreibungen aus der Quelle.
+ *
+ * i18n Block B4a: `opts` mit DE-Default (Boundary: geteilte Helfer ohne
+ * `opts.locale` bleiben DE). `describeWohnlageDe`/`mssBeschreibungDe`
+ * rendern auch direkt im Kiez-/Bezirk-Steckbrief (Client, übersetzt);
+ * `describeMssDe` bleibt ausschließlich ein Server-FAQ-Zwischenschritt.
  */
+import { m } from '$lib/paraglide/messages.js';
+import {
+	toAtlasMessageOptions,
+	type LocaleOptions
+} from '../../components/atlas/internal/atlas-label-options.js';
 
 export type WohnlageDe = 'einfache Wohnlage' | 'mittlere Wohnlage' | 'gute Wohnlage' | 'unbekannt';
 
@@ -22,9 +32,23 @@ const WOHNLAGE_MAP: Record<string, WohnlageDe> = {
 	'gute wohnlage': 'gute Wohnlage'
 };
 
-export function describeWohnlageDe(raw: string | null | undefined): WohnlageDe {
+function normalizeWohnlage(raw: string | null | undefined): WohnlageDe {
 	if (!raw) return 'unbekannt';
 	return WOHNLAGE_MAP[raw.trim().toLowerCase()] ?? 'unbekannt';
+}
+
+export function describeWohnlageDe(raw: string | null | undefined, opts?: LocaleOptions): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (normalizeWohnlage(raw)) {
+		case 'einfache Wohnlage':
+			return m.faq_helper_wohnen_wohnlage_einfach(undefined, options);
+		case 'mittlere Wohnlage':
+			return m.faq_helper_wohnen_wohnlage_mittel(undefined, options);
+		case 'gute Wohnlage':
+			return m.faq_helper_wohnen_wohnlage_gut(undefined, options);
+		default:
+			return m.faq_helper_wohnen_wohnlage_unbekannt(undefined, options);
+	}
 }
 
 export type MssDe = 'sehr niedrig' | 'niedrig' | 'mittel' | 'hoch' | 'sehr hoch' | 'unbekannt';
@@ -37,9 +61,27 @@ const MSS_MAP: Record<string, MssDe> = {
 	'sehr hoch': 'sehr hoch'
 };
 
-export function describeMssDe(raw: string | null | undefined): MssDe {
+function normalizeMss(raw: string | null | undefined): MssDe {
 	if (!raw) return 'unbekannt';
 	return MSS_MAP[raw.trim().toLowerCase()] ?? 'unbekannt';
+}
+
+export function describeMssDe(raw: string | null | undefined, opts?: LocaleOptions): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (normalizeMss(raw)) {
+		case 'sehr niedrig':
+			return m.faq_helper_wohnen_mss_sehr_niedrig(undefined, options);
+		case 'niedrig':
+			return m.faq_helper_wohnen_mss_niedrig(undefined, options);
+		case 'mittel':
+			return m.faq_helper_wohnen_mss_mittel(undefined, options);
+		case 'hoch':
+			return m.faq_helper_wohnen_mss_hoch(undefined, options);
+		case 'sehr hoch':
+			return m.faq_helper_wohnen_mss_sehr_hoch(undefined, options);
+		default:
+			return m.faq_helper_wohnen_mss_unbekannt(undefined, options);
+	}
 }
 
 /**
@@ -47,20 +89,20 @@ export function describeMssDe(raw: string | null | undefined): MssDe {
  * Bezieht sich immer auf den Aggregat-Raum (Bezirk/Kiez), niemals auf einzelne
  * Adressen. Vermeidet wertende Begriffe wie „schlechte Lage" oder „sozial schwach".
  */
-export function mssBeschreibungDe(raw: string | null | undefined): string {
-	const cat = describeMssDe(raw);
-	switch (cat) {
+export function mssBeschreibungDe(raw: string | null | undefined, opts?: LocaleOptions): string {
+	const options = toAtlasMessageOptions(opts);
+	switch (normalizeMss(raw)) {
 		case 'sehr niedrig':
-			return 'Der Index zeigt für diesen Raum die niedrigste sozio-ökonomische Belastung in der Berliner Klassifikation.';
+			return m.faq_helper_wohnen_mss_erklaerung_sehr_niedrig(undefined, options);
 		case 'niedrig':
-			return 'Der Index zeigt für diesen Raum aktuell wenig sozio-ökonomische Belastung.';
+			return m.faq_helper_wohnen_mss_erklaerung_niedrig(undefined, options);
 		case 'mittel':
-			return 'Der Index liegt im mittleren Bereich der Berliner Verteilung.';
+			return m.faq_helper_wohnen_mss_erklaerung_mittel(undefined, options);
 		case 'hoch':
-			return 'Der Index zeigt überdurchschnittliche sozio-ökonomische Belastung im Berliner Vergleich.';
+			return m.faq_helper_wohnen_mss_erklaerung_hoch(undefined, options);
 		case 'sehr hoch':
-			return 'Der Index gehört zur höchsten Belastungsstufe in der Berliner Klassifikation.';
+			return m.faq_helper_wohnen_mss_erklaerung_sehr_hoch(undefined, options);
 		default:
-			return 'Für diesen Raum liegt aktuell keine MSS-Einstufung im Datensatz vor.';
+			return m.faq_helper_wohnen_mss_erklaerung_unbekannt(undefined, options);
 	}
 }

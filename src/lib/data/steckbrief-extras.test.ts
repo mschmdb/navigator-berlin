@@ -38,4 +38,12 @@ describe('countsText', () => {
 	it('leer wenn nichts > 0', () => {
 		expect(countsText([['U', 0]])).toBe('');
 	});
+
+	// i18n Block B4a
+	it('formatiert die Zahl englisch mit opts.locale', () => {
+		expect(countsText([['U', 1234]], { locale: 'en' })).toBe('U 1,234');
+	});
+	it('bleibt ohne opts deutsch (Boundary: geteilter Helfer ohne opts.locale)', () => {
+		expect(countsText([['U', 1234]])).toBe('U 1.234');
+	});
 });

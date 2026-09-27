@@ -10,6 +10,10 @@
 	Stats-Section rendert Placeholder wenn `stats === null` (DATABASE_URL fehlt
 	im Build oder Story-2.0-Aggregat noch nicht gelaufen). FAQ rendert sich
 	selbst aus wenn leer (siehe `faq-section.svelte`).
+
+	i18n Block B4a: Rahmen (Lead, Steckbrief, FAQ-Platzhalter) auf Paraglide-
+	Messages umgestellt. `profileProse` (Prosa) und `faq` (Frage/Antwort-
+	Inhalte) bleiben deutsch (Boundary, Block C).
 -->
 <script lang="ts">
 	import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
@@ -26,6 +30,9 @@
 	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
 	import { describeOepnvDichte, formatStopsPerKm2 } from '$lib/data/faq-helpers/oepnv.js';
 	import { describePetKategorie, formatPet } from '$lib/data/faq-helpers/klima.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { formatCount, formatMonthYear } from '$lib/i18n/format.js';
 
 	type BezirkStatsRow = InferSelectModel<typeof bezirkStats>;
 
@@ -39,16 +46,17 @@
 
 	const { profile, stats, faq, comparison = [], profileProse = [] }: Props = $props();
 
-	const numberDe = new Intl.NumberFormat('de-DE');
+	const localeOpts = $derived({ locale: getLocale() });
+
 	const leadText = $derived.by(() => {
 		const parts: string[] = [`Bezirk ${profile.name}`];
 		if (profile.einwohner > 0) {
-			parts.push(`${numberDe.format(profile.einwohner)} Einwohner:innen`);
+			parts.push(m.profile_lead_einwohner({ count: formatCount(profile.einwohner, localeOpts) }));
 		}
 		if (profile.flaecheHa > 0) {
-			parts.push(`${numberDe.format(profile.flaecheHa)} ha`);
+			parts.push(m.profile_lead_flaeche({ ha: formatCount(profile.flaecheHa, localeOpts) }));
 		}
-		return `${parts.join(', ')}. Daten zu Wohnen, Umwelt, Klima und Mobilität auf dieser Seite.`;
+		return `${parts.join(', ')}. ${m.profile_lead_suffix(undefined, localeOpts)}`;
 	});
 
 	interface SteckbriefRow {
@@ -60,12 +68,6 @@
 		readonly extra?: string;
 	}
 
-	function formatStand(iso: string): string {
-		const date = new Date(iso);
-		if (isNaN(date.getTime())) return iso;
-		return date.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
-	}
-
 	function buildSteckbrief(row: BezirkStatsRow): SteckbriefRow[] {
 		const out: SteckbriefRow[] = [];
 		if (row.laerm.dominantCategory) {
@@ -74,10 +76,10 @@
 					? row.laerm.dominantCategory.value
 					: null;
 			out.push({
-				cluster: 'Lärm',
-				value: describeLaermCategoryDe(raw),
-				source: sourceLabel(row.laerm.dominantCategory.layer),
-				sourceUpdatedAt: formatStand(row.laerm.dominantCategory.sourceUpdatedAt),
+				cluster: m.steckbrief_cluster_laerm(undefined, localeOpts),
+				value: describeLaermCategoryDe(raw, localeOpts),
+				source: sourceLabel(row.laerm.dominantCategory.layer, localeOpts),
+				sourceUpdatedAt: formatMonthYear(row.laerm.dominantCategory.sourceUpdatedAt, localeOpts),
 				distribution: toSegments(row.laerm.categoryDistribution?.value)
 			});
 		}
@@ -85,49 +87,61 @@
 		if (gruen) {
 			const raw = typeof gruen.value === 'string' ? gruen.value : null;
 			out.push({
-				cluster: 'Grünversorgung',
-				value: describeGruenversorgungDe(raw),
-				source: sourceLabel(gruen.layer),
-				sourceUpdatedAt: formatStand(gruen.sourceUpdatedAt),
+				cluster: m.steckbrief_cluster_gruenversorgung(undefined, localeOpts),
+				value: describeGruenversorgungDe(raw, localeOpts),
+				source: sourceLabel(gruen.layer, localeOpts),
+				sourceUpdatedAt: formatMonthYear(gruen.sourceUpdatedAt, localeOpts),
 				distribution: toSegments(row.gruen.versorgungDistribution?.value),
-				extra: countsText([
-					['Grünanlagen', row.gruen.gruenanlagenCount?.value ?? null],
-					['Spielplätze', row.gruen.spielplaetzeCount?.value ?? null]
-				])
+				extra: countsText(
+					[
+						[
+							m.steckbrief_extra_gruenanlagen(undefined, localeOpts),
+							row.gruen.gruenanlagenCount?.value ?? null
+						],
+						[
+							m.steckbrief_extra_spielplaetze(undefined, localeOpts),
+							row.gruen.spielplaetzeCount?.value ?? null
+						]
+					],
+					localeOpts
+				)
 			});
 		}
 		const pet = row.klima.meanPet;
 		if (pet && typeof pet.value === 'number') {
 			out.push({
-				cluster: 'Klima · PET',
-				value: `${formatPet(pet.value)} (${describePetKategorie(pet.value)})`,
-				source: sourceLabel(pet.layer),
-				sourceUpdatedAt: formatStand(pet.sourceUpdatedAt)
+				cluster: m.steckbrief_cluster_klima_pet(undefined, localeOpts),
+				value: `${formatPet(pet.value, localeOpts)} (${describePetKategorie(pet.value, localeOpts)})`,
+				source: sourceLabel(pet.layer, localeOpts),
+				sourceUpdatedAt: formatMonthYear(pet.sourceUpdatedAt, localeOpts)
 			});
 		}
 		const stops = row.oepnv.stopsPerKm2;
 		if (stops && typeof stops.value === 'number') {
 			out.push({
-				cluster: 'ÖPNV-Dichte',
-				value: `${formatStopsPerKm2(stops.value)} (${describeOepnvDichte(stops.value)})`,
-				source: sourceLabel(stops.layer),
-				sourceUpdatedAt: formatStand(stops.sourceUpdatedAt),
-				extra: countsText([
-					['U', row.oepnv.uBahnCount?.value ?? null],
-					['S', row.oepnv.sBahnCount?.value ?? null],
-					['Tram', row.oepnv.tramCount?.value ?? null],
-					['Bus', row.oepnv.busCount?.value ?? null]
-				])
+				cluster: m.steckbrief_cluster_oepnv_dichte(undefined, localeOpts),
+				value: `${formatStopsPerKm2(stops.value, localeOpts)} (${describeOepnvDichte(stops.value, localeOpts)})`,
+				source: sourceLabel(stops.layer, localeOpts),
+				sourceUpdatedAt: formatMonthYear(stops.sourceUpdatedAt, localeOpts),
+				extra: countsText(
+					[
+						[m.steckbrief_extra_u(undefined, localeOpts), row.oepnv.uBahnCount?.value ?? null],
+						[m.steckbrief_extra_s(undefined, localeOpts), row.oepnv.sBahnCount?.value ?? null],
+						[m.steckbrief_extra_tram(undefined, localeOpts), row.oepnv.tramCount?.value ?? null],
+						[m.steckbrief_extra_bus(undefined, localeOpts), row.oepnv.busCount?.value ?? null]
+					],
+					localeOpts
+				)
 			});
 		}
 		const wohnlage = row.wohnen.dominantWohnlage;
 		if (wohnlage) {
 			const raw = typeof wohnlage.value === 'string' ? wohnlage.value : null;
 			out.push({
-				cluster: 'Wohnlage',
-				value: describeWohnlageDe(raw),
-				source: sourceLabel(wohnlage.layer),
-				sourceUpdatedAt: formatStand(wohnlage.sourceUpdatedAt),
+				cluster: m.steckbrief_cluster_wohnlage(undefined, localeOpts),
+				value: describeWohnlageDe(raw, localeOpts),
+				source: sourceLabel(wohnlage.layer, localeOpts),
+				sourceUpdatedAt: formatMonthYear(wohnlage.sourceUpdatedAt, localeOpts),
 				distribution: toSegments(row.wohnen.wohnlageDistribution?.value)
 			});
 		}
@@ -135,10 +149,10 @@
 		if (mss) {
 			const raw = typeof mss.value === 'string' ? mss.value : null;
 			out.push({
-				cluster: 'Soziale Lage (MSS)',
-				value: mssBeschreibungDe(raw),
-				source: sourceLabel(mss.layer),
-				sourceUpdatedAt: formatStand(mss.sourceUpdatedAt)
+				cluster: m.steckbrief_cluster_soziale_lage(undefined, localeOpts),
+				value: mssBeschreibungDe(raw, localeOpts),
+				source: sourceLabel(mss.layer, localeOpts),
+				sourceUpdatedAt: formatMonthYear(mss.sourceUpdatedAt, localeOpts)
 			});
 		}
 		return out;
@@ -154,7 +168,12 @@
 	</header>
 
 	{#if profileProse.length > 0}
-		<section aria-label="Profil" class="space-y-3" data-testid="bezirk-profile">
+		<section
+			aria-label={m.profile_section_aria(undefined, localeOpts)}
+			lang={localeOpts.locale === 'de' ? undefined : 'de'}
+			class="space-y-3"
+			data-testid="bezirk-profile"
+		>
 			{#each profileProse as para (para)}
 				<p class="font-serif text-base leading-relaxed text-ink">{para}</p>
 			{/each}
@@ -164,20 +183,26 @@
 	<ScoreComparisonTable rows={comparison} showBezirkColumn={false} valueLabel="Bezirk" />
 
 	<section aria-labelledby="steckbrief-heading" class="space-y-4">
-		<h2 id="steckbrief-heading" class="font-serif text-2xl text-ink">Steckbrief</h2>
+		<h2 id="steckbrief-heading" class="font-serif text-2xl text-ink">
+			{m.steckbrief_heading(undefined, localeOpts)}
+		</h2>
 		{#if !stats}
 			<p class="font-serif text-base text-ink-muted">
-				Aggregat-Werte werden mit dem nächsten Daten-Build freigeschaltet.
+				{m.steckbrief_no_data_build(undefined, localeOpts)}
 			</p>
 		{:else if steckbrief.length === 0}
-			<p class="font-serif text-base text-ink-muted">Keine Aggregat-Werte verfügbar.</p>
+			<p class="font-serif text-base text-ink-muted">
+				{m.steckbrief_no_data_empty(undefined, localeOpts)}
+			</p>
 		{:else}
 			<table class="w-full font-sans text-base" data-testid="bezirk-steckbrief">
 				<thead>
 					<tr class="border-b border-rule text-left">
-						<th class="py-2 pr-4 font-semibold">Cluster</th>
-						<th class="py-2 pr-4 font-semibold">Wert</th>
-						<th class="py-2 font-semibold">Stand</th>
+						<th class="py-2 pr-4 font-semibold"
+							>{m.steckbrief_col_cluster(undefined, localeOpts)}</th
+						>
+						<th class="py-2 pr-4 font-semibold">{m.steckbrief_col_wert(undefined, localeOpts)}</th>
+						<th class="py-2 font-semibold">{m.steckbrief_col_stand(undefined, localeOpts)}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -190,7 +215,7 @@
 									<details class="mt-1">
 										<summary
 											class="hover:text-accent-strong cursor-pointer font-mono text-xs text-accent"
-											>Verteilung & Zahlen</summary
+											>{m.steckbrief_distribution_summary(undefined, localeOpts)}</summary
 										>
 										{#if row.extra}<span class="mt-1 block font-mono text-xs text-ink-muted"
 												>{row.extra}</span
@@ -200,7 +225,9 @@
 											/>{/if}
 									</details>
 								{/if}
-								<span class="block font-mono text-xs text-ink-subtle">Quelle: {row.source}</span>
+								<span class="block font-mono text-xs text-ink-subtle"
+									>{m.steckbrief_source_prefix({ source: row.source }, localeOpts)}</span
+								>
 							</td>
 							<td class="py-3 text-left font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
 						</tr>
@@ -214,9 +241,11 @@
 		<FaqSection items={faq} pageType="bezirk" />
 	{:else}
 		<section aria-labelledby="faq-placeholder-heading" class="space-y-3">
-			<h2 id="faq-placeholder-heading" class="font-serif text-2xl text-ink">Häufige Fragen</h2>
+			<h2 id="faq-placeholder-heading" class="font-serif text-2xl text-ink">
+				{m.faq_section_heading(undefined, localeOpts)}
+			</h2>
 			<p class="font-serif text-base text-ink-muted">
-				FAQ-Einträge werden mit dem nächsten Daten-Build aus Story 2.5b ergänzt.
+				{m.profile_faq_placeholder(undefined, localeOpts)}
 			</p>
 		</section>
 	{/if}

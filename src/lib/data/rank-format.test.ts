@@ -13,4 +13,17 @@ describe('formatRank (Story 11.4 Anti-Stigma)', () => {
 		expect(formatRank(null, null, 143)).toBe('–');
 		expect(formatRank(1, 1, 0)).toBe('–');
 	});
+
+	// i18n Block B4a
+	describe('opts.locale (EN)', () => {
+		it('zeigt exakten Rang englisch', () => {
+			expect(formatRank(12, 1, 143, { locale: 'en' })).toBe('Rank 12 of 143');
+		});
+		it('zeigt "bottom quartile" für Quartil 4', () => {
+			expect(formatRank(143, 4, 143, { locale: 'en' })).toBe('bottom quartile');
+		});
+		it('Gedankenstrich bleibt locale-neutral', () => {
+			expect(formatRank(null, null, 143, { locale: 'en' })).toBe('–');
+		});
+	});
 });

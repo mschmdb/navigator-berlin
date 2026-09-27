@@ -5,7 +5,8 @@ import {
 	formatCount,
 	formatWahlDate,
 	formatShortDate,
-	formatDecimal
+	formatDecimal,
+	formatMonthYear
 } from './format.js';
 
 describe('formatPercent', () => {
@@ -123,6 +124,22 @@ describe('formatShortDate', () => {
 			year: 'numeric'
 		});
 		expect(formatShortDate(iso, { locale: 'en' })).toBe(expectedEn);
+	});
+});
+
+// i18n Block B4a: ersetzt das in `kiez-hero.svelte`/`bezirk-hero.svelte`
+// duplizierte, fest auf `de-DE` verdrahtete lokale `formatStand`.
+describe('formatMonthYear', () => {
+	it('formatiert de mit ausgeschriebenem Monat (byte-identisch zum Alt-Verhalten)', () => {
+		expect(formatMonthYear('2023-06-01', { locale: 'de' })).toBe('Juni 2023');
+	});
+
+	it('formatiert en mit ausgeschriebenem Monat', () => {
+		expect(formatMonthYear('2023-06-01', { locale: 'en' })).toBe('June 2023');
+	});
+
+	it('gibt den Roh-String zurück, wenn er kein valides Datum ist', () => {
+		expect(formatMonthYear('nicht-valide', { locale: 'de' })).toBe('nicht-valide');
 	});
 });
 

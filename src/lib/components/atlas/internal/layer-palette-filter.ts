@@ -91,7 +91,11 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'oepnv-tram': 'Tram-Nähe',
 	'oepnv-bus': 'Bus-Nähe',
 	'radverkehr-presence': 'Radverkehrsnetz',
-	'wohnschutz-presence': 'Milieuschutz-Gebiet'
+	'wohnschutz-presence': 'Milieuschutz-Gebiet',
+	// i18n Block B4a: vormals eine separate `EXTRA_SOURCE_LABELS`-Ausnahme in
+	// `data/source-label.ts` (kein Kiez-/Bezirk-Layer, sondern eine
+	// synthetische Quelle für den Steckbrief-ÖPNV-Cluster).
+	'oepnv-composite': 'ÖPNV-Haltestellen (BVG + S-Bahn)'
 };
 
 export const BUNDLE_ORDER: readonly Bundle[] = [
@@ -209,7 +213,8 @@ const LAYER_NAME_MESSAGE: Partial<Record<string, MessageFn>> = {
 	'oepnv-tram': m.atlas_layer_name_oepnv_tram,
 	'oepnv-bus': m.atlas_layer_name_oepnv_bus,
 	'radverkehr-presence': m.atlas_layer_name_radverkehr_presence,
-	'wohnschutz-presence': m.atlas_layer_name_wohnschutz_presence
+	'wohnschutz-presence': m.atlas_layer_name_wohnschutz_presence,
+	'oepnv-composite': m.atlas_layer_name_oepnv_composite
 };
 
 const BUNDLE_LABEL_MESSAGE: Record<Bundle, MessageFn> = {
