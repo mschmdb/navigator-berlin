@@ -2,7 +2,8 @@
 title: 'i18n Block B4a: Rahmen der Kiez- und Bezirk-Seiten auf Englisch'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '9b59e4fa081c30855bf86e4ab4af873db3f4df64'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
