@@ -2,7 +2,8 @@
 title: 'Briefwahl-Hinweise auf Story-17-Stand bringen'
 type: 'bugfix'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '76e50ed59d4730d47ef8e5ed7758e472772f583f'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
