@@ -2,7 +2,8 @@
 title: 'i18n: Teil-Übersetzungs-Banner und Wahl-Hinweis EN'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'ba35ebc6209387d3132f3e5d285dc354581c28ef'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
