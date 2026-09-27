@@ -2,7 +2,8 @@
 title: 'i18n Block C1: Hinweistexte und Layer-Erklärungen auf Englisch'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'd603da9409bb2a78735cd67d3776a30dd241f99e'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
