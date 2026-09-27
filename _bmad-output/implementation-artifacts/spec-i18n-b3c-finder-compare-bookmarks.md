@@ -2,7 +2,8 @@
 title: 'i18n Block B3c: Finder, Compare, Bookmarks auf Englisch'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: 'e76cf085d34c96479872fe1ef587a88c46f936de'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
