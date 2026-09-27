@@ -2,7 +2,8 @@
 title: 'Sprachumschalter als Dropdown im Header'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '183d61d3a70c6a024ce5771dfd5f6c444859afdc'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
