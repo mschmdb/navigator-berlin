@@ -17,6 +17,7 @@
 		BUNDLE_LABEL_DE
 	} from '$lib/components/atlas/internal/layer-palette-filter.js';
 	import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
+	import { getLayerMethodology } from '$lib/data/layer-methodology.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -33,9 +34,14 @@
 	const localeOpts = $derived({ locale });
 	// i18n Block B4b, Review-Fund #6: einmal ableiten statt 9x wiederholen.
 	// i18n Block C1: `explain.*` (Lead, Skala) und die EditorialDisclaimer-
-	// Varianten sind jetzt selbst locale-fähig (Messages) -- `contentLang`
-	// gilt deshalb nur noch für den Methodik-Block (`layer-methodology.ts`
-	// bleibt DE-only, Boundary C1: "keine Methodik-Texte").
+	// Varianten sind selbst locale-fähig (Messages).
+	// i18n Block C2: `methodology.*` (Berechnung, Pflege, Aktualisierung,
+	// Coverage-Lücken, Omissions) ist jetzt ebenfalls locale-fähig
+	// (`layer-methodology.ts` löst über Paraglide-Messages auf). Review-Fund:
+	// `aggregationLevel` bleibt ein deutsch-abgeleitetes Enum ohne EN-Label-Map
+	// (Boundary: "aggregationLevel ... bleiben unverändert") -- `contentLang`
+	// bleibt deshalb für genau dieses eine `<dd>` erhalten, bis eine Label-Map
+	// existiert.
 	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 	// i18n Block B4b, Spec Change Log 27.09. 06:20: JSON-LD bleibt bis zur
 	// Registrierung vollständig deutsch (Boundary `inLanguage` `de-DE`) --
@@ -47,6 +53,12 @@
 	// sonst würde die Description auf `/en/layer/…` englisch ins JSON-LD
 	// durchsickern.
 	const deExplain = $derived(getLayerExplainEntry(detail.slug));
+	// i18n Block C2: `methodology` (oben) folgt jetzt ebenfalls der URL-Locale
+	// -- `creatorName` im Dataset-JSON-LD braucht deshalb dieselbe DE-only-
+	// Quelle wie `deExplain`/`deLayerName`, sonst würde die Behörde auf
+	// `/en/layer/…` englisch ins JSON-LD durchsickern (Boundary: "`/layer`-
+	// JSON-LD `creatorName` bleibt DE bis zur Registrierung").
+	const deMethodology = $derived(getLayerMethodology(detail.slug));
 
 	const inspectorHref = $derived(
 		localizedHref(`/explore?layers=${encodeURIComponent(detail.slug)}`)
@@ -91,7 +103,7 @@
 			),
 			license: meta.license,
 			dateModified: meta.sourceUpdatedAt ?? meta.fetchedAt,
-			creatorName: methodology?.authority,
+			creatorName: deMethodology?.authority,
 			contentUrl: `${page.url.origin}/layers/${meta.filename}`,
 			encodingFormat:
 				meta.format === 'pmtiles' ? 'application/vnd.pmtiles' : 'application/geo+json',
@@ -235,7 +247,7 @@
 				{m.layer_page_calculation_heading()}
 			</h2>
 			{#if methodology.calculation}
-				<p lang={contentLang} class="font-serif text-base leading-relaxed text-ink">
+				<p class="font-serif text-base leading-relaxed text-ink">
 					{methodology.calculation}
 				</p>
 			{/if}
@@ -248,13 +260,13 @@
 				{/if}
 				{#if methodology.authority}
 					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_maintenance_label()}</dt>
-					<dd lang={contentLang} class="text-ink">
+					<dd class="text-ink">
 						{methodology.authority}
 					</dd>
 				{/if}
 				{#if methodology.updateFrequency}
 					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_update_frequency_label()}</dt>
-					<dd lang={contentLang} class="text-ink">
+					<dd class="text-ink">
 						{methodology.updateFrequency}
 					</dd>
 				{/if}
@@ -273,7 +285,7 @@
 				>
 					{m.layer_page_coverage_gaps_heading()}
 				</h2>
-				<ul lang={contentLang} class="list-disc pl-5 font-serif text-base text-ink">
+				<ul class="list-disc pl-5 font-serif text-base text-ink">
 					{#each methodology.coverageGaps as gap (gap)}
 						<li>{gap}</li>
 					{/each}
@@ -293,7 +305,7 @@
 				>
 					{m.layer_page_omissions_heading()}
 				</h2>
-				<ul lang={contentLang} class="list-disc pl-5 font-serif text-base text-ink">
+				<ul class="list-disc pl-5 font-serif text-base text-ink">
 					{#each methodology.omissions as o (o)}
 						<li>{o}</li>
 					{/each}

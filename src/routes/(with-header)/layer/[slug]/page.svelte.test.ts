@@ -194,10 +194,14 @@ describe('layer-detail +page.svelte', () => {
 		expect(parsed.inLanguage).toBe('de-DE');
 	});
 
-	it('Dataset-JSON-LD nutzt navigator.berlin als creator-Fallback wenn authority fehlt', async () => {
-		const d = detail('laerm-2023', {
-			methodology: { ...methodology(), authority: undefined }
-		});
+	// i18n Block C2: `creatorName` im JSON-LD löst jetzt über eine eigene
+	// DE-only-Quelle auf (`deMethodology = getLayerMethodology(detail.slug)`,
+	// echte Daten für den Slug, NICHT `detail.methodology` aus den Props --
+	// Boundary "`/layer`-JSON-LD `creatorName` bleibt DE"). Der Fallback
+	// greift deshalb nur, wenn der Slug real keinen Methodology-Eintrag hat,
+	// nicht mehr über ein Props-Override.
+	it('Dataset-JSON-LD nutzt navigator.berlin als creator-Fallback wenn der Slug keine reale Methodology hat', async () => {
+		const d = detail('does-not-exist-xyz');
 		render(Page, { data: { detail: d, faq: [] } });
 		const script = document.querySelector(
 			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
@@ -308,17 +312,28 @@ describe('layer-detail +page.svelte', () => {
 		});
 
 		// i18n Block C1: `explain.*` (Lead, Skala) und alle EditorialDisclaimer-
-		// Varianten sind jetzt selbst locale-fähig (Messages) -- die Loader-
-		// Daten (`detail.explain`) sind schon in der richtigen Sprache, die
+		// Varianten sind selbst locale-fähig (Messages) -- die Loader-Daten
+		// (`detail.explain`) sind schon in der richtigen Sprache, die
 		// Komponente braucht also kein `lang="de"`-Override mehr dafür.
-		// `layer-methodology.ts` bleibt DE-only (Boundary C1), Methodik-Block
-		// behält `lang="de"`.
-		it('Lead/Editorial/Skala bekommen KEIN lang="de" mehr (jetzt selbst lokalisiert), Methodik behält es', async () => {
+		// i18n Block C2: `layer-methodology.ts` löst jetzt ebenfalls über
+		// Paraglide-Messages auf -- `detail.methodology` kommt bereits in der
+		// richtigen Sprache aus dem Loader, die Komponente setzt deshalb auch
+		// im Methodik-Block kein `lang`-Attribut mehr (vormals `lang="de"`,
+		// Boundary C1 jetzt aufgehoben).
+		it('Lead/Editorial/Skala/Methodik-Text bekommen KEIN lang="de" mehr, aggregationLevel behält es (deutsch-abgeleitetes Enum)', async () => {
 			overwriteGetLocale(() => 'en');
 			const d: LayerDetail = {
-				...detail('wohnlagen-2024'),
+				...detail('laerm-2023', {
+					methodology: {
+						...methodology(),
+						calculation: 'Modelled overall noise pollution per LOR planning area.',
+						updateFrequency: 'every 5 years',
+						coverageGaps: ['Model values, no city-wide network of monitoring stations.'],
+						omissions: ['No breakdown by source (road, rail, air traffic).']
+					}
+				}),
 				editorial: {
-					slug: 'wohnlagen-2024',
+					slug: 'laerm-2023',
 					disclaimerVariants: ['legal'],
 					primarySourceUrl: 'https://mietspiegel.berlin.de/',
 					feedbackMailto: true
@@ -331,24 +346,32 @@ describe('layer-detail +page.svelte', () => {
 			expect(editorial.hasAttribute('lang')).toBe(false);
 			const scale = (await page.getByTestId('layer-detail-scale').element()) as HTMLElement;
 			expect(scale.querySelector('dd')?.hasAttribute('lang')).toBe(false);
-			const methodology = (await page
+			const methodologySec = (await page
 				.getByTestId('layer-detail-methodology')
 				.element()) as HTMLElement;
-			expect(methodology.querySelector('p[lang="de"]')?.textContent).toMatch(
-				/Modellierte Lärm-Gesamtbelastung/
+			expect(methodologySec.querySelector('p')?.hasAttribute('lang')).toBe(false);
+			expect(methodologySec.querySelector('p')?.textContent).toMatch(
+				/Modelled overall noise pollution/
 			);
-			// aggregationLevel, authority, updateFrequency -- alle drei `dd`s.
-			const dds = methodology.querySelectorAll('dd');
+			// Reihenfolge im Markup: aggregationLevel, authority, updateFrequency.
+			// `aggregationLevel` ist ein deutsch-abgeleitetes Enum ohne EN-Label-Map
+			// (Boundary "aggregationLevel ... bleiben unverändert") -- behält
+			// `lang="de"`, bis eine Label-Map existiert. `authority`/
+			// `updateFrequency` sind seit C2 selbst lokalisiert, kein `lang` mehr.
+			const dds = methodologySec.querySelectorAll('dd');
 			expect(dds.length).toBe(3);
-			for (const dd of dds) {
-				expect(dd.getAttribute('lang')).toBe('de');
-			}
+			const [aggregationDd, authorityDd, updateFrequencyDd] = dds;
+			expect(aggregationDd.getAttribute('lang')).toBe('de');
+			expect(authorityDd.hasAttribute('lang')).toBe(false);
+			expect(updateFrequencyDd.hasAttribute('lang')).toBe(false);
 			const coverageGaps = (await page
 				.getByTestId('layer-detail-coverage-gaps')
 				.element()) as HTMLElement;
-			expect(coverageGaps.querySelector('ul')?.getAttribute('lang')).toBe('de');
+			expect(coverageGaps.querySelector('ul')?.hasAttribute('lang')).toBe(false);
+			expect(coverageGaps.textContent).toMatch(/Model values/);
 			const omissions = (await page.getByTestId('layer-detail-omissions').element()) as HTMLElement;
-			expect(omissions.querySelector('ul')?.getAttribute('lang')).toBe('de');
+			expect(omissions.querySelector('ul')?.hasAttribute('lang')).toBe(false);
+			expect(omissions.textContent).toMatch(/No breakdown by source/);
 		});
 
 		it('Verwandter-Layer-Link zeigt englischen Namen mit /en-Href', async () => {
@@ -425,9 +448,14 @@ describe('layer-detail +page.svelte', () => {
 			// liefern würde) -- das JSON-LD zieht seine Description trotzdem über
 			// eine eigene DE-only-Quelle (`deExplain`, echte Message für den
 			// Slug), nicht über diesen Loader-Wert (Boundary: JSON-LD bleibt DE).
+			// i18n Block C2: `methodology` im Loader-Datensatz ist jetzt ebenfalls
+			// locale-fähig (hier absichtlich EN gesetzt) -- `creatorName` im
+			// JSON-LD zieht trotzdem über die eigene DE-only-Quelle
+			// (`deMethodology`), nicht über diesen Loader-Wert.
 			const d = {
 				...detail(),
-				explain: { short: 'Noise pollution in the area', long: 'EN loader text, must not leak.' }
+				explain: { short: 'Noise pollution in the area', long: 'EN loader text, must not leak.' },
+				methodology: { ...methodology(), authority: 'EN authority text, must not leak.' }
 			};
 			render(Page, { data: { detail: d, faq: [] } });
 			const breadcrumbScript = document.querySelector(
@@ -447,6 +475,9 @@ describe('layer-detail +page.svelte', () => {
 			expect(dataset.description).toMatch(/Lärm-Gesamtbelastung/);
 			expect(dataset.description).not.toMatch(/EN loader text/);
 			expect(dataset.inLanguage).toBe('de-DE');
+			// Echte DE-Authority für `laerm-2023`, NICHT der EN-Loader-Fixture-Text.
+			expect(dataset.creator?.name).toMatch(/Senatsverwaltung/);
+			expect(dataset.creator?.name).not.toMatch(/EN authority text/);
 		});
 	});
 });

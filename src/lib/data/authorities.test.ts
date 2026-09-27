@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
 	AUTHORITIES,
 	AUTHORITY_KEYS,
+	AUTHORITY_SUFFIX_OSM_ODBL,
 	resolveAuthority,
 	type AuthorityKey,
 	type AuthorityMeta
@@ -43,36 +44,70 @@ describe('resolveAuthority', () => {
 		expect(result).toMatch(/Senatsverwaltung/);
 	});
 
-	it('fällt auf DE zurück wenn EN-String fehlt (Phase 3 deferred)', () => {
+	// i18n Block C2: alle 25 Einträge sind jetzt EN-befüllt (Abnahme
+	// c2-uebersetzung-review.md, Matze 27.09. 10:59) -- der DE-Fallback greift
+	// für `en` nicht mehr.
+	it('liefert echten EN-String, nicht den DE-Fallback', () => {
 		const de = resolveAuthority('odis', 'de');
 		const en = resolveAuthority('odis', 'en');
-		expect(en).toBe(de);
+		expect(en).not.toBe(de);
+		expect(en).toMatch(/Open Data Information Office/);
 	});
 
-	it('alle Keys lassen sich auflösen ohne Fehler', () => {
+	it('liefert den offiziellen englischen Senatsverwaltungs-Namen laut berlin.de', () => {
+		const en = resolveAuthority('senatsvw-umwelt', 'en');
+		expect(en).toMatch(
+			/Senate Department for Urban Mobility, Transport, Climate Action and the Environment/
+		);
+	});
+
+	it('alle Keys lassen sich auflösen ohne Fehler (DE + EN)', () => {
 		for (const key of AUTHORITY_KEYS) {
-			const resolved = resolveAuthority(key);
-			expect(resolved, `Key ${key}`).toBeTruthy();
-			expect(typeof resolved).toBe('string');
+			const de = resolveAuthority(key, 'de');
+			const en = resolveAuthority(key, 'en');
+			expect(de, `Key ${key} DE`).toBeTruthy();
+			expect(en, `Key ${key} EN`).toBeTruthy();
 		}
 	});
 });
 
-describe('Authority-Phase-3-Bereitschaft', () => {
-	it('Schema akzeptiert optionales EN-Feld pro Eintrag', () => {
-		// Test prüft Type-Compat: EN ist optional, kann später ohne Schema-Bruch
-		// gesetzt werden. Aktuell Phase 1 DE-only → keine EN-Werte vorhanden.
+describe('Authority-EN-Vollständigkeit (i18n Block C2)', () => {
+	it('Schema verlangt DE- und EN-String pro Eintrag (beide Pflichtfelder)', () => {
 		const sample: AuthorityMeta = AUTHORITIES.odis;
 		expect(sample.de).toBeTruthy();
-		// EN darf undefined sein (Phase 1) ODER ein String sein (Phase 3)
-		const enType = typeof sample.en;
-		expect(['undefined', 'string']).toContain(enType);
+		expect(typeof sample.en).toBe('string');
 	});
 
-	it('Phase-1-Lock: aktuell sind keine EN-Strings gesetzt (Phase 3 deferred)', () => {
-		const withEn = AUTHORITY_KEYS.filter(
-			(key) => (AUTHORITIES[key] as AuthorityMeta).en !== undefined
-		);
-		expect(withEn).toEqual([]);
+	it('jeder Authority-Eintrag hat einen nicht-leeren EN-String', () => {
+		for (const key of AUTHORITY_KEYS) {
+			const meta = AUTHORITIES[key] as AuthorityMeta;
+			expect(meta.en, `EN-String ${key}`).toBeTruthy();
+			expect(meta.en!.length).toBeGreaterThan(1);
+		}
+	});
+
+	it('EN-String unterscheidet sich vom DE-String (echte Übersetzung, kein Copy-Paste)', () => {
+		// Ausnahmen: Eigennamen/Kurzformen, die auf EN identisch bleiben
+		// (Abnahme c2-uebersetzung-review.md).
+		const identicalAllowed = new Set(['senatsvw-mvku-short', 'wasser-betriebe']);
+		for (const key of AUTHORITY_KEYS) {
+			if (identicalAllowed.has(key)) continue;
+			const meta = AUTHORITIES[key] as AuthorityMeta;
+			expect(meta.en, `EN-String ${key}`).not.toBe(meta.de);
+		}
+	});
+});
+
+// i18n Block C2: der OSM-Suffix war vormals ein fixer, als "sprachneutral"
+// behandelter String und schrieb auf EN fälschlich die DE-Bindestrich-Form
+// "OpenStreetMap-Contributors". Jetzt ein Locale-Textbaustein.
+describe('AUTHORITY_SUFFIX_OSM_ODBL · locale-fähig', () => {
+	it('DE bleibt unverändert (Bindestrich-Schreibweise)', () => {
+		expect(AUTHORITY_SUFFIX_OSM_ODBL.de).toBe('· OpenStreetMap-Contributors (ODbL 1.0)');
+	});
+
+	it('EN schreibt "OpenStreetMap contributors" mit Leerzeichen, nicht Bindestrich', () => {
+		expect(AUTHORITY_SUFFIX_OSM_ODBL.en).toBe('· OpenStreetMap contributors (ODbL 1.0)');
+		expect(AUTHORITY_SUFFIX_OSM_ODBL.en).not.toMatch(/OpenStreetMap-Contributors/);
 	});
 });

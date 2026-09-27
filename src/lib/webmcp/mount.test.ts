@@ -11,7 +11,7 @@ import type { WebMcpServerHandle } from './adapter.js';
  */
 
 const hoisted = vi.hoisted(() => ({
-	registerWebMcpServer: vi.fn<() => Promise<WebMcpServerHandle>>()
+	registerWebMcpServer: vi.fn<(deps?: unknown) => Promise<WebMcpServerHandle>>()
 }));
 
 vi.mock('$app/environment', () => ({ browser: true }));
@@ -100,5 +100,51 @@ describe('mountWebMcpServer', () => {
 
 		expect(handle.unregister).toHaveBeenCalledTimes(1);
 		expect(hoisted.registerWebMcpServer).toHaveBeenCalledTimes(2);
+	});
+});
+
+// i18n Block C2 (spec-i18n-c2-layer-methodik.md, Boundary "WebMCP bleibt
+// DE"): dieser Test verdrahtet die ECHTE `$lib/data/layer-methodology` und
+// die ECHTE `$lib/paraglide/runtime` statt der oben gemockten Stand-ins --
+// nur so lässt sich zeigen, dass `deps.getLayerMethodology`, das `mount.ts`
+// tatsächlich an `registerWebMcpServer` übergibt, unter einer EN-Seiten-
+// Locale DE bleibt. Die anderen Tests in dieser Datei mocken
+// `getLayerMethodology` komplett weg (`vi.fn()`) und könnten ein
+// versehentliches Locale-Durchreichen deshalb nicht bemerken.
+describe('mountWebMcpServer · getLayerMethodology bleibt DE (Boundary i18n Block C2)', () => {
+	it('deps.getLayerMethodology liefert DE, auch wenn die Seiten-Locale "en" ist', async () => {
+		vi.doUnmock('$lib/data/layer-methodology');
+		vi.doUnmock('$lib/paraglide/runtime');
+		vi.resetModules();
+		hoisted.registerWebMcpServer.mockReset();
+
+		const handle = makeHandle();
+		let capturedDeps: { getLayerMethodology: (slug: string) => unknown } | undefined;
+		hoisted.registerWebMcpServer.mockImplementation(async (deps) => {
+			capturedDeps = deps as typeof capturedDeps;
+			return handle;
+		});
+
+		try {
+			const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
+			overwriteGetLocale(() => 'en');
+
+			const { mountWebMcpServer } = await importMount();
+			await mountWebMcpServer();
+
+			expect(capturedDeps).toBeDefined();
+			const laerm = capturedDeps!.getLayerMethodology('laerm-2023') as {
+				calculation?: string;
+				authority?: string;
+			} | null;
+			expect(laerm?.calculation).toMatch(/Modellierte Lärm-Gesamtbelastung/);
+			expect(laerm?.calculation).not.toMatch(/Modelled overall noise pollution/);
+
+			overwriteGetLocale(() => 'de');
+		} finally {
+			vi.doMock('$lib/data/layer-methodology', () => ({ getLayerMethodology: vi.fn() }));
+			vi.doMock('$lib/paraglide/runtime', () => ({ getLocale: () => 'de' }));
+			vi.resetModules();
+		}
 	});
 });

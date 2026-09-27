@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
 	AGGREGATION_LEVELS,
 	getLayerMethodology,
@@ -6,7 +8,14 @@ import {
 	LAYER_METHODOLOGY_DE,
 	type AggregationLevel
 } from './layer-methodology.js';
-import { AUTHORITY_KEYS, resolveAuthority } from './authorities.js';
+import { LAYER_METHODOLOGY_MESSAGE } from './layer-methodology-messages.js';
+import { AUTHORITY_KEYS, AUTHORITY_SUFFIX_OSM_ODBL, resolveAuthority } from './authorities.js';
+
+// i18n Block C2: alle 44 Slugs aus `LAYER_METHODOLOGY_SPECS`, nicht nur die
+// (kleinere) Manifest-Teilmenge oben -- die Kiez-Score-Dimensionen
+// (`kiez-score-*`) haben keinen eigenen Manifest-Eintrag, aber eine
+// Methodik-Spec + EN-Übersetzung.
+const ALL_METHODOLOGY_SLUGS = Object.keys(LAYER_METHODOLOGY_DE);
 
 const MANIFEST_SLUGS = [
 	'bezirke',
@@ -177,5 +186,233 @@ describe('Authority-Zentralisierung (Story 2.5a)', () => {
 
 	it('getLayerMethodologySpec liefert null für unbekannten Slug', () => {
 		expect(getLayerMethodologySpec('does-not-exist-xyz')).toBeNull();
+	});
+});
+
+// i18n Block C2 (spec-i18n-c2-layer-methodik.md): `getLayerMethodology`
+// bekommt einen optionalen Locale-Parameter. Ohne `opts`: DE-Default
+// (Nicht-UI-Konsumenten, WebMCP), siehe get-layer-detail.test.ts +
+// webmcp-Tests für die DE-unter-EN-Boundary.
+describe('getLayerMethodology · Locale-Parameter (i18n Block C2)', () => {
+	it('ohne opts: identisch zu explizitem locale="de" (DE-Default)', () => {
+		const withoutOpts = getLayerMethodology('laerm-2023');
+		const withDe = getLayerMethodology('laerm-2023', { locale: 'de' });
+		expect(withoutOpts).toEqual(withDe);
+	});
+
+	it('liefert null für unbekannten Slug, auch unter locale="en"', () => {
+		expect(getLayerMethodology('does-not-exist-xyz', { locale: 'en' })).toBeNull();
+	});
+
+	it('aggregationLevel + relatedLayers bleiben locale-unabhängig (Enum/Slugs, nicht übersetzt)', () => {
+		const de = getLayerMethodology('kiez-score-versorgung', { locale: 'de' });
+		const en = getLayerMethodology('kiez-score-versorgung', { locale: 'en' });
+		expect(en?.aggregationLevel).toBe(de?.aggregationLevel);
+		expect(en?.relatedLayers).toEqual(de?.relatedLayers);
+	});
+});
+
+// Review-Fund-Analogon zu i18n Block C1 (#3/#4): erzwingt Message-Mapping-
+// Vollständigkeit für JEDEN Slug + JEDES Feld über alle 44 Specs statt nur
+// stichprobenartig. Ein fehlendes Feld-Mapping wirft NICHT mehr (Review-Fund:
+// ein Server-Error auf `/en/layer/<slug>` wäre schlimmer als deutscher Rest),
+// sondern fällt still auf DE zurück -- dieser Test macht die Lücke trotzdem
+// sichtbar, weil `en === de` dann die `.not.toBe(de...)`-Assertion bricht.
+describe('EN-Vollständigkeit über alle 44 Methodik-Slugs (i18n Block C2)', () => {
+	it.each(ALL_METHODOLOGY_SLUGS)(
+		'%s: EN löst auf, ohne zu werfen, und weicht von DE ab',
+		(slug) => {
+			const de = getLayerMethodology(slug, { locale: 'de' });
+			const resolveEn = () => getLayerMethodology(slug, { locale: 'en' });
+			expect(resolveEn, `EN-Eintrag ${slug}`).not.toThrow();
+			const en = resolveEn();
+			expect(en, `EN-Eintrag ${slug}`).not.toBeNull();
+
+			if (de?.calculation) {
+				expect(en?.calculation, `${slug}.calculation`).toBeTruthy();
+				expect(en?.calculation).not.toBe(de.calculation);
+			}
+			if (de?.updateFrequency) {
+				expect(en?.updateFrequency, `${slug}.updateFrequency`).toBeTruthy();
+				expect(en?.updateFrequency).not.toBe(de.updateFrequency);
+			}
+			if (de?.coverageGaps) {
+				expect(en?.coverageGaps, `${slug}.coverageGaps`).toHaveLength(de.coverageGaps.length);
+				de.coverageGaps.forEach((deGap, idx) => {
+					expect(en?.coverageGaps?.[idx], `${slug}.coverageGaps[${idx}]`).toBeTruthy();
+					expect(en?.coverageGaps?.[idx]).not.toBe(deGap);
+				});
+			}
+			if (de?.omissions) {
+				expect(en?.omissions, `${slug}.omissions`).toHaveLength(de.omissions.length);
+				de.omissions.forEach((deOmission, idx) => {
+					expect(en?.omissions?.[idx], `${slug}.omissions[${idx}]`).toBeTruthy();
+					expect(en?.omissions?.[idx]).not.toBe(deOmission);
+				});
+			}
+		}
+	);
+});
+
+describe('AUTHORITY_SUFFIX_OSM_ODBL · locale-fähiger Composite-Suffix (i18n Block C2)', () => {
+	it('EN-Authority für OSM-Composites nutzt "OpenStreetMap contributors" (Leerzeichen)', () => {
+		const stolperEn = getLayerMethodology('stolpersteine', { locale: 'en' });
+		expect(stolperEn?.authority).toMatch(/OpenStreetMap contributors \(ODbL 1\.0\)/);
+		expect(stolperEn?.authority).not.toMatch(/OpenStreetMap-Contributors/);
+
+		const ubahnEn = getLayerMethodology('ubahn-stationen', { locale: 'en' });
+		expect(ubahnEn?.authority).toMatch(/BVG/);
+		expect(ubahnEn?.authority).toMatch(/OpenStreetMap contributors \(ODbL 1\.0\)/);
+	});
+
+	it('DE bleibt "OpenStreetMap-Contributors" (Bindestrich) -- Parität unverändert', () => {
+		const stolperDe = getLayerMethodology('stolpersteine', { locale: 'de' });
+		expect(stolperDe?.authority).toMatch(/OpenStreetMap-Contributors \(ODbL 1\.0\)/);
+	});
+
+	it('AUTHORITY_SUFFIX_OSM_ODBL deckt beide aktiven Locales ab', () => {
+		expect(AUTHORITY_SUFFIX_OSM_ODBL.de).toBeTruthy();
+		expect(AUTHORITY_SUFFIX_OSM_ODBL.en).toBeTruthy();
+	});
+});
+
+// Review-Fund: bisher gab es keinen direkten Beweis, dass jede einzelne
+// `layer_methodology_*`-Message-Funktion mit `{locale:'de'}` exakt den
+// Spec-String liefert -- die bisherigen Tests prüften nur den End-zu-End-Pfad
+// über `getLayerMethodology`. Dieser Test iteriert `LAYER_METHODOLOGY_MESSAGE`
+// direkt und vergleicht jede Message (calculation/updateFrequency/jedes
+// coverageGaps- und omissions-Element) gegen `LAYER_METHODOLOGY_SPECS`.
+describe('DE-Parität: jede Message-Funktion liefert exakt den Spec-String (i18n Block C2)', () => {
+	const slugs = Object.keys(
+		LAYER_METHODOLOGY_MESSAGE
+	) as (keyof typeof LAYER_METHODOLOGY_MESSAGE)[];
+
+	it.each(slugs)('%s: DE-Messages == Spec-Strings', (slug) => {
+		const spec = getLayerMethodologySpec(slug);
+		expect(spec, `Spec ${slug}`).not.toBeNull();
+		const msgs = LAYER_METHODOLOGY_MESSAGE[slug];
+
+		if (msgs.calculation) {
+			expect(msgs.calculation(undefined, { locale: 'de' }), `${slug}.calculation`).toBe(
+				spec!.calculation
+			);
+		}
+		if (msgs.updateFrequency) {
+			expect(msgs.updateFrequency(undefined, { locale: 'de' }), `${slug}.updateFrequency`).toBe(
+				spec!.updateFrequency
+			);
+		}
+		msgs.coverageGaps?.forEach((fn, idx) => {
+			expect(fn(undefined, { locale: 'de' }), `${slug}.coverageGaps[${idx}]`).toBe(
+				spec!.coverageGaps?.[idx]
+			);
+		});
+		msgs.omissions?.forEach((fn, idx) => {
+			expect(fn(undefined, { locale: 'de' }), `${slug}.omissions[${idx}]`).toBe(
+				spec!.omissions?.[idx]
+			);
+		});
+	});
+});
+
+// Review-Fund: Reverse-Check zwischen `messages/de.json` und dem TS-Mapping.
+// Fängt zwei Fehlerklassen ab, die die obigen Tests nicht sehen: (a) einen
+// Message-Key, der in `messages/de.json` existiert, aber von KEINEM Mapping-
+// Eintrag referenziert wird (toter Key, z.B. nach einem Slug-Rename), und
+// (b) ein Mapping-Array (`coverageGaps`/`omissions`), das mehr Einträge hat
+// als die Spec -- das würde beim DE-Parity-Test oben nicht auffallen, weil
+// dort nur über `spec.coverageGaps`/`spec.omissions` (nicht über die
+// Message-Arrays) iteriert wird.
+describe('Reverse-Check: messages/de.json <-> LAYER_METHODOLOGY_MESSAGE (i18n Block C2)', () => {
+	function loadDeMethodologyKeys(): Set<string> {
+		const raw = readFileSync(join(process.cwd(), 'messages', 'de.json'), 'utf-8');
+		const parsed = JSON.parse(raw) as Record<string, unknown>;
+		return new Set(Object.keys(parsed).filter((k) => k.startsWith('layer_methodology_')));
+	}
+
+	function expectedKeysFromSpecs(): Set<string> {
+		const keys = new Set<string>();
+		for (const slug of Object.keys(LAYER_METHODOLOGY_MESSAGE)) {
+			const spec = getLayerMethodologySpec(slug)!;
+			const kb = `layer_methodology_${slug.replaceAll('-', '_')}`;
+			if (spec.calculation) keys.add(`${kb}_calculation`);
+			if (spec.updateFrequency) keys.add(`${kb}_update_frequency`);
+			spec.coverageGaps?.forEach((_, idx) => keys.add(`${kb}_coverage_gap_${idx}`));
+			spec.omissions?.forEach((_, idx) => keys.add(`${kb}_omission_${idx}`));
+		}
+		return keys;
+	}
+
+	it('jeder layer_methodology_*-Key in messages/de.json ist von einer Spec erwartet (keine Waisen)', () => {
+		const jsonKeys = loadDeMethodologyKeys();
+		const expected = expectedKeysFromSpecs();
+		const orphaned = [...jsonKeys].filter((k) => !expected.has(k)).sort();
+		expect(orphaned).toEqual([]);
+	});
+
+	it('jeder von einer Spec erwartete Key existiert in messages/de.json (keine Lücken)', () => {
+		const jsonKeys = loadDeMethodologyKeys();
+		const expected = expectedKeysFromSpecs();
+		const missing = [...expected].filter((k) => !jsonKeys.has(k)).sort();
+		expect(missing).toEqual([]);
+	});
+
+	it('kein Mapping-Array (coverageGaps/omissions) hat mehr Einträge als die Spec', () => {
+		for (const slug of Object.keys(LAYER_METHODOLOGY_MESSAGE)) {
+			const spec = getLayerMethodologySpec(slug)!;
+			const msgs = LAYER_METHODOLOGY_MESSAGE[slug as keyof typeof LAYER_METHODOLOGY_MESSAGE];
+			expect(msgs.coverageGaps?.length ?? 0, `${slug}.coverageGaps`).toBeLessThanOrEqual(
+				spec.coverageGaps?.length ?? 0
+			);
+			expect(msgs.omissions?.length ?? 0, `${slug}.omissions`).toBeLessThanOrEqual(
+				spec.omissions?.length ?? 0
+			);
+		}
+	});
+});
+
+// Review-Fund: `requireMessage` warf früher bei fehlendem Feld-Mapping --
+// ein neuer Spec-Slug/ein neues Feld ohne Message-Mapping hätte `/en/layer/
+// <slug>` mit einem Server-Error (500) abgeschossen. Der Resolver fällt jetzt
+// pro Feld auf den DE-Text zurück (+ Dev-Warnung). Dieser Test simuliert eine
+// Lücke direkt am Modul (statt auf einen echten Datenfehler zu warten) und
+// beweist, dass der Fallback greift statt zu werfen.
+describe('Runtime-Fallback bei fehlendem Feld-Mapping (kein Throw, DE-Fallback + Dev-Warnung)', () => {
+	it('coverageGaps ohne EN-Mapping fällt für dieses Feld auf DE zurück, wirft nicht', async () => {
+		vi.resetModules();
+		vi.doMock('./layer-methodology-messages.js', async () => {
+			const actual = await vi.importActual<typeof import('./layer-methodology-messages.js')>(
+				'./layer-methodology-messages.js'
+			);
+			return {
+				LAYER_METHODOLOGY_MESSAGE: {
+					...actual.LAYER_METHODOLOGY_MESSAGE,
+					bodenrichtwerte: {
+						...actual.LAYER_METHODOLOGY_MESSAGE.bodenrichtwerte,
+						coverageGaps: undefined
+					}
+				}
+			};
+		});
+		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+		try {
+			const { getLayerMethodology: getLayerMethodologyWithGap } =
+				await import('./layer-methodology.js');
+			const de = getLayerMethodologyWithGap('bodenrichtwerte', { locale: 'de' });
+			expect(() => getLayerMethodologyWithGap('bodenrichtwerte', { locale: 'en' })).not.toThrow();
+			const en = getLayerMethodologyWithGap('bodenrichtwerte', { locale: 'en' });
+			// coverageGaps fehlt im Mock-Mapping -> Fallback liefert die DE-Texte.
+			expect(en?.coverageGaps).toEqual(de?.coverageGaps);
+			// calculation/updateFrequency sind im Mock unverändert -> bleiben EN.
+			expect(en?.calculation).not.toBe(de?.calculation);
+			expect(warnSpy).toHaveBeenCalled();
+			expect(warnSpy.mock.calls.some(([msg]) => String(msg).includes('bodenrichtwerte'))).toBe(
+				true
+			);
+		} finally {
+			warnSpy.mockRestore();
+			vi.doUnmock('./layer-methodology-messages.js');
+			vi.resetModules();
+		}
 	});
 });

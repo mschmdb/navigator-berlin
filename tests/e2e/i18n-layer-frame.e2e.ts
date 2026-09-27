@@ -7,12 +7,16 @@ import { expect, test } from '@playwright/test';
 //
 // i18n Block C1 (spec-i18n-c1-hinweise-layer-erklaerungen.md): `explain.*`
 // (Lead, Skala) ist jetzt ebenfalls lokalisiert (Messages), kein lang="de"
-// mehr dafür. `methodology.*` (Berechnung, Aggregation, Pflege,
-// Aktualisierung, Coverage-Lücken, Omissions) bleibt weiterhin deutsch mit
-// lang="de" -- out of C1 scope. `/layer` bleibt im TEIL-Übersetzungs-Register
-// (anders als `/explore`, das C1 ins volle Register verschoben hat):
-// `/en/layer/…` zeigt deshalb weiterhin das Teil-Übersetzungs-Banner und
-// bleibt noindex ohne hreflang (siehe `i18n-routing.e2e.ts`).
+// mehr dafür.
+//
+// i18n Block C2 (spec-i18n-c2-layer-methodik.md): `methodology.*`
+// (Berechnung, Aggregation, Pflege, Aktualisierung, Coverage-Lücken,
+// Omissions) ist jetzt ebenfalls lokalisiert (Messages), kein lang="de"
+// mehr dafür -- der Methodik-Block ist damit komplett aus der Teil-
+// Übersetzung raus. `/layer` bleibt trotzdem im TEIL-Übersetzungs-Register
+// (FAQ-Inhalte bleiben deutsch, eigener Block, Boundary C2): `/en/layer/…`
+// zeigt weiterhin das Teil-Übersetzungs-Banner und bleibt noindex ohne
+// hreflang (siehe `i18n-routing.e2e.ts`).
 
 const LAYER_WITH_METHODOLOGY = 'laerm-2023';
 const LAYER_WITHOUT_METHODOLOGY = 'kultur-museum';
@@ -45,12 +49,17 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		await expect(scaleDd).not.toHaveAttribute('lang', 'de');
 		await expect(scaleDd).toContainText('low (good) to very high (problematic)');
 
+		// i18n Block C2: die Methodik-Felder (Berechnung, Pflege, Aktualisierung)
+		// sind jetzt selbst lokalisiert (Messages) -- kein lang="de" mehr,
+		// echter EN-Text.
 		const methodology = page.getByTestId('layer-detail-methodology');
 		await expect(methodology).toContainText('Calculation');
 		await expect(methodology).toContainText('Aggregation');
 		await expect(methodology).toContainText('Maintenance');
-		await expect(methodology.locator('p[lang="de"]')).toContainText(
-			/Modellierte Lärm-Gesamtbelastung/
+		await expect(methodology.locator('p')).not.toHaveAttribute('lang', 'de');
+		await expect(methodology.locator('p')).toContainText(/Modelled overall noise pollution/);
+		await expect(methodology).toContainText(
+			'Senate Department for Urban Mobility, Transport, Climate Action and the Environment'
 		);
 
 		// i18n Block C1: der Lead (`explain.long`) ist jetzt selbst lokalisiert
@@ -98,6 +107,12 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		);
 		expect(dataset.name).toBe('Lärmbelastung 2023');
 		expect(dataset.inLanguage).toBe('de-DE');
+		// i18n Block C2: `creator.name` (Behörde) muss DE bleiben wie Name +
+		// Description -- Regressionsschutz für den Review-Fund, bei dem
+		// `creatorName` versehentlich der Seiten-Locale statt einer eigenen
+		// DE-only-Quelle folgte (`deMethodology`).
+		expect(dataset.creator?.name).toMatch(/Senatsverwaltung/);
+		expect(dataset.creator?.name).not.toMatch(/Senate Department/);
 
 		const breadcrumb = JSON.parse(
 			(await page
@@ -109,17 +124,25 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		expect(breadcrumb.itemListElement[2].name).toBe('Lärmbelastung 2023');
 	});
 
-	test('Coverage-Lücken + „Was wir NICHT zeigen"-Überschriften englisch, Inhalte bleiben deutsch mit lang="de"', async ({
+	test('Coverage-Lücken + „Was wir NICHT zeigen"-Überschriften UND Inhalte englisch, kein lang="de"', async ({
 		page
 	}) => {
+		// i18n Block C2: `coverageGaps`/`omissions` sind jetzt selbst
+		// lokalisiert (Messages) -- kein lang="de" mehr, echter EN-Text.
 		await page.goto(`/en/layer/${LAYER_WITH_METHODOLOGY}`);
 		const coverageGaps = page.getByTestId('layer-detail-coverage-gaps');
 		await expect(coverageGaps.locator('h2')).toHaveText('Coverage gaps');
-		await expect(coverageGaps.locator('ul')).toHaveAttribute('lang', 'de');
+		await expect(coverageGaps.locator('ul')).not.toHaveAttribute('lang', 'de');
+		await expect(coverageGaps.locator('ul')).toContainText(
+			'Model values, no city-wide network of monitoring stations.'
+		);
 
 		const omissions = page.getByTestId('layer-detail-omissions');
 		await expect(omissions.locator('h2')).toHaveText("What we don't show");
-		await expect(omissions.locator('ul')).toHaveAttribute('lang', 'de');
+		await expect(omissions.locator('ul')).not.toHaveAttribute('lang', 'de');
+		await expect(omissions.locator('ul')).toContainText(
+			'No breakdown by source (road, rail, air traffic) at this aggregate level.'
+		);
 	});
 
 	test('Verwandte Layer: englischer Name, Klick führt auf /en/layer/…', async ({ page }) => {
@@ -190,8 +213,33 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		const lead = page.getByTestId('layer-detail-lead');
 		await expect(lead).not.toHaveAttribute('lang', 'de');
 
+		// i18n Block C2: DE-Parität für den Methodik-Block -- Berechnung bleibt
+		// wörtlich der deutsche Spec-Text, kein Message-Umweg verändert ihn.
+		const methodology = page.getByTestId('layer-detail-methodology');
+		await expect(methodology).toContainText('Modellierte Lärm-Gesamtbelastung');
+		await expect(methodology).toContainText(
+			'Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt'
+		);
+
 		await page.getByTestId('layer-detail-methodik-link').getByRole('link').click();
 		await expect(page).toHaveURL(/\/methodik/);
 		expect(page.url()).not.toMatch(/\/en\//);
+	});
+
+	// i18n Block C2: der OSM-Composite-Suffix (`AUTHORITY_SUFFIX_OSM_ODBL`)
+	// bleibt auf DE bei der Bindestrich-Schreibweise "OpenStreetMap-Contributors"
+	// -- Regressionsschutz dafür, dass die neue Locale-Faehigkeit des Suffix
+	// (Review-Fund) die DE-Ausgabe nicht verändert hat.
+	// `trinkbrunnen` statt `stolpersteine`: `stolpersteine` ist ein Build-only-
+	// Layer ohne öffentliche `/layer/<slug>`-Seite (404, siehe
+	// `get-layer-detail.ts`-Kommentar), `trinkbrunnen` hat denselben
+	// OSM-Suffix und eine echte Detailseite.
+	test('DE-Kontrolle: OSM-Composite-Authority zeigt "OpenStreetMap-Contributors" (Bindestrich)', async ({
+		page
+	}) => {
+		const response = await page.goto('/layer/trinkbrunnen');
+		expect(response?.status()).toBe(200);
+		const methodology = page.getByTestId('layer-detail-methodology');
+		await expect(methodology).toContainText('OpenStreetMap-Contributors (ODbL 1.0)');
 	});
 });

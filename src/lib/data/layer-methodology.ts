@@ -1,21 +1,39 @@
-// TODO Story 3.1: i18n-Migration → Paraglide-Messages `layer.methodik.{slug}.*`.
+// i18n Block C2 (spec-i18n-c2-layer-methodik.md): Methodik-Texte
+// (`calculation`, `updateFrequency`, `coverageGaps`, `omissions`) laufen
+// jetzt ueber Paraglide-Messages. Das Slug -> Message-Mapping
+// (`LAYER_METHODOLOGY_MESSAGE`) lebt in `./layer-methodology-messages.ts`
+// (Review-Fund: diese Datei war > 1000 Zeilen mit dem Mapping inline).
 //
-// Phase 1 (Story 2.5a, DE-only): Authority-Strings sind aus zentraler Map
-// `$lib/data/authorities.ts` aufgelöst. EN-Coverage komplett auf Phase 3
-// verschoben (Memory `project_i18n_phase_1_de_only`). Spec-Struktur ist
-// i18n-ready: `authorityKey` löst per `resolveAuthority(key, locale)` auf,
-// Phase 3 muss nur EN-Strings in `authorities.ts` ergänzen, kein Refactor
-// hier.
+// `LAYER_METHODOLOGY_SPECS` bleibt die DE-Quelle (Boundary: DE-Ausgabe
+// Zeichen-fuer-Zeichen gleich) -- `LAYER_METHODOLOGY_DE` wird direkt aus den
+// Spec-Strings gebaut, OHNE ueber Messages zu gehen, damit die DE-Parity
+// nicht von der Message-Pipeline abhaengt. Fuer Nicht-DE-Locales faellt ein
+// fehlendes Feld-Mapping zur Laufzeit auf den DE-Text zurueck (+ Dev-Warnung)
+// statt zu werfen -- ein neuer Spec-Slug OHNE Message-Mapping wuerde sonst
+// `/en/layer/<slug>` mit einem Server-Error abschiessen. Fehlt ein ganzer
+// SLUG im Mapping, meldet das `pnpm check` (`LAYER_METHODOLOGY_MESSAGE` ist
+// ueber `Record<LayerMethodologySlug, ...>` getypt, nicht `Partial`).
 //
+// Authority-Strings loesen ueber `resolveAuthority(key, locale)` auf
+// (`$lib/data/authorities.ts`), das `en`-Feld ist seit C2 befuellt.
 // Composites (z.B. BVG-Stops aus OSM) werden via `authoritySuffix`
-// zusammengesetzt. Suffixe bleiben sprach-neutral (technische Lizenz-Marker).
+// zusammengesetzt -- der Suffix ist seit C2 selbst locale-faehig
+// (`AUTHORITY_SUFFIX_OSM_ODBL: Record<Locale, string>`), vormals ein fixer,
+// als "sprachneutral" behandelter String (Review-Fund c2-uebersetzung-review.md:
+// der DE-Suffix schrieb "OpenStreetMap-Contributors", EN braucht
+// "OpenStreetMap contributors").
+//
+// `aggregationLevel` (Enum) und `relatedLayers` (Slugs) bleiben unuebersetzt
+// (Boundary).
 
+import type { LocaleOptions } from '$lib/i18n/message-options.js';
 import {
 	AUTHORITY_SUFFIX_OSM_ODBL,
 	resolveAuthority,
 	type AuthorityKey,
 	type Locale
 } from './authorities.js';
+import { LAYER_METHODOLOGY_MESSAGE } from './layer-methodology-messages.js';
 
 export const AGGREGATION_LEVELS = [
 	'address',
@@ -48,13 +66,21 @@ interface LayerMethodologySpec {
 	readonly updateFrequency?: string;
 	readonly authorityKey: AuthorityKey;
 	/**
-	 * Optionaler sprach-neutraler Suffix (z.B. OSM-Attribution + Lizenz-Marker).
-	 * Wird an den aufgelösten Authority-String angehängt.
+	 * Optionaler, locale-fähiger Suffix (z.B. OSM-Attribution + Lizenz-Marker).
+	 * Wird an den aufgelösten Authority-String angehängt. Seit i18n Block C2
+	 * ein Locale-Textbaustein statt eines festen Strings (Review-Fund: der
+	 * DE-Suffix "OpenStreetMap-Contributors" ist auf EN falsch geschrieben).
 	 */
-	readonly authoritySuffix?: string;
+	readonly authoritySuffix?: Readonly<Record<Locale, string>>;
 }
 
-const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
+// `satisfies` statt einer expliziten `Record<string, LayerMethodologySpec>`-
+// Annotation: validiert jeden Eintrag genauso, behaelt aber die LITERALEN
+// Slug-Keys (statt sie auf `string` zu verbreitern). `LayerMethodologySlug`
+// unten ist dadurch eine endliche Union aus den echten Slugs, nicht `string`
+// -- das macht `LAYER_METHODOLOGY_MESSAGE` in `layer-methodology-messages.ts`
+// gegen fehlende Slugs Compile-Fehler-sicher.
+const LAYER_METHODOLOGY_SPECS = {
 	bezirke: {
 		calculation:
 			'Polygone der 12 Berliner Verwaltungsbezirke aus dem Berliner Geoportal, vereinfacht via mapshaper visvalingam mit keep-shapes.',
@@ -570,12 +596,32 @@ const LAYER_METHODOLOGY_SPECS: Record<string, LayerMethodologySpec> = {
 			'Keine Aussage über persönliches Risiko und keine Wertung als „sicherer" oder „gefährlicher" Kiez.'
 		]
 	}
-};
+} satisfies Record<string, LayerMethodologySpec>;
 
-function specToMethodology(spec: LayerMethodologySpec, locale: Locale): LayerMethodology {
-	const authorityBase = resolveAuthority(spec.authorityKey, locale);
+export type LayerMethodologySlug = keyof typeof LAYER_METHODOLOGY_SPECS;
+
+/**
+ * Guarded Lookup gegen `LAYER_METHODOLOGY_SPECS`: `slug` kommt zur Laufzeit
+ * oft aus der URL (`params.slug`) und ist deshalb ein simpler `string`, kein
+ * `LayerMethodologySlug`. `Object.hasOwn` prueft die Existenz, bevor indiziert
+ * wird -- danach ist der Cast sicher (Muster wie `getLayerDisplayName` in
+ * `layer-palette-filter.ts`).
+ */
+function getSpec(slug: string): LayerMethodologySpec | undefined {
+	return Object.hasOwn(LAYER_METHODOLOGY_SPECS, slug)
+		? (LAYER_METHODOLOGY_SPECS as Record<string, LayerMethodologySpec>)[slug]
+		: undefined;
+}
+
+/**
+ * DE-Resolver: liest ausschliesslich die rohen Spec-Strings, OHNE ueber
+ * Messages zu gehen. Garantiert Zeichen-fuer-Zeichen-Paritaet mit dem
+ * Vor-C2-Verhalten (Boundary: "DE-Ausgabe Zeichen fuer Zeichen gleich").
+ */
+function specToMethodologyDe(spec: LayerMethodologySpec): LayerMethodology {
+	const authorityBase = resolveAuthority(spec.authorityKey, 'de');
 	const authority = spec.authoritySuffix
-		? `${authorityBase} ${spec.authoritySuffix}`
+		? `${authorityBase} ${spec.authoritySuffix.de}`
 		: authorityBase;
 	return {
 		calculation: spec.calculation,
@@ -588,34 +634,116 @@ function specToMethodology(spec: LayerMethodologySpec, locale: Locale): LayerMet
 	};
 }
 
-function buildResolvedMap(locale: Locale): Record<string, LayerMethodology> {
+function buildResolvedMapDe(): Record<string, LayerMethodology> {
 	const result: Record<string, LayerMethodology> = {};
 	for (const [slug, spec] of Object.entries(LAYER_METHODOLOGY_SPECS)) {
-		result[slug] = specToMethodology(spec, locale);
+		result[slug] = specToMethodologyDe(spec);
 	}
 	return result;
 }
 
 /**
- * Resolved Methodology-Map für DE (Phase 1).
- *
- * Output-API bleibt rückwärtskompatibel: `authority` ist ein String. Phase 3
- * wird `LAYER_METHODOLOGY_EN` (oder `LAYER_METHODOLOGY[locale]`) ergänzen ohne
- * Schema-Bruch.
+ * Resolved Methodology-Map fuer DE. Bleibt der DE-Referenz-Export fuer Tests
+ * und DE-only-Direktimporter (Boundary: "Nicht-UI-Konsumenten bleiben DE").
  */
-export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = buildResolvedMap('de');
+export const LAYER_METHODOLOGY_DE: Record<string, LayerMethodology> = buildResolvedMapDe();
 
-export function getLayerMethodology(slug: string): LayerMethodology | null {
-	return LAYER_METHODOLOGY_DE[slug] ?? null;
+type MessageFn = (params?: undefined, options?: { locale: Locale }) => string;
+
+/**
+ * Loest ein einzelnes Methodik-Feld gegen `LAYER_METHODOLOGY_MESSAGE` auf.
+ * Fehlt fuer `slug`/`field` ein Eintrag (z.B. ein Array-Index, der bei einer
+ * kuenftigen Uebersetzungs-Runde vergessen wurde), liefert der Resolver den
+ * DE-Fallback-Wert zurueck statt zu werfen -- ein Server-Error auf
+ * `/en/layer/<slug>` waere schlimmer als ein sichtbar deutscher Rest
+ * (Review-Fund). Im Dev-Modus meldet ein `console.warn`, damit die Luecke
+ * nicht unbemerkt bleibt; Vollstaendigkeit selbst deckt ein Test in
+ * `layer-methodology.test.ts` ab (DE-Parity + Reverse-Key-Check gegen
+ * `messages/de.json`).
+ */
+function resolveFieldOrFallback(
+	fn: MessageFn | undefined,
+	deFallback: string,
+	slug: string,
+	field: string,
+	options: { locale: Locale }
+): string {
+	if (fn) return fn(undefined, options);
+	if (import.meta.env.DEV) {
+		console.warn(
+			`layer-methodology: missing "${options.locale}" message mapping for "${slug}.${field}", falling back to DE.`
+		);
+	}
+	return deFallback;
 }
 
 /**
- * Phase-3-Bereitstellung: liefert die rohe Spec inkl. `authorityKey`. Phase 3
- * kann darauf basierend EN-Resolved-Map bauen oder Tests gegen Key-Coverage
- * schreiben.
+ * Locale-Resolver fuer Nicht-DE-Locales (aktuell nur `en`). Loest jedes Feld
+ * ueber `LAYER_METHODOLOGY_MESSAGE` auf, mit DE-Fallback pro Feld (siehe
+ * `resolveFieldOrFallback`).
+ */
+function resolveMethodologyForLocale(
+	slug: LayerMethodologySlug,
+	spec: LayerMethodologySpec,
+	locale: Locale
+): LayerMethodology {
+	const authorityBase = resolveAuthority(spec.authorityKey, locale);
+	const authority = spec.authoritySuffix
+		? `${authorityBase} ${spec.authoritySuffix[locale]}`
+		: authorityBase;
+	const msgs = LAYER_METHODOLOGY_MESSAGE[slug];
+	const options = { locale };
+
+	const calculation = spec.calculation
+		? resolveFieldOrFallback(msgs.calculation, spec.calculation, slug, 'calculation', options)
+		: undefined;
+	const updateFrequency = spec.updateFrequency
+		? resolveFieldOrFallback(
+				msgs.updateFrequency,
+				spec.updateFrequency,
+				slug,
+				'updateFrequency',
+				options
+			)
+		: undefined;
+	const coverageGaps = spec.coverageGaps?.map((deGap, idx) =>
+		resolveFieldOrFallback(msgs.coverageGaps?.[idx], deGap, slug, `coverageGaps[${idx}]`, options)
+	);
+	const omissions = spec.omissions?.map((deOmission, idx) =>
+		resolveFieldOrFallback(msgs.omissions?.[idx], deOmission, slug, `omissions[${idx}]`, options)
+	);
+
+	return {
+		calculation,
+		coverageGaps,
+		omissions,
+		relatedLayers: spec.relatedLayers,
+		aggregationLevel: spec.aggregationLevel,
+		updateFrequency,
+		authority
+	};
+}
+
+/**
+ * Locale-faehiger Methodik-Resolver. Ohne `opts.locale`: DE (Boundary
+ * Spec i18n C2, wie `getLayerExplain`/`getLayerDisplayName`) -- Nicht-UI-
+ * Konsumenten (WebMCP, `tools/get-layer-metadata.ts`) rufen ohne `opts` auf
+ * und bleiben dadurch unveraendert deutsch.
+ */
+export function getLayerMethodology(slug: string, opts?: LocaleOptions): LayerMethodology | null {
+	const locale: Locale = opts?.locale ?? 'de';
+	if (locale === 'de') return LAYER_METHODOLOGY_DE[slug] ?? null;
+	const spec = getSpec(slug);
+	if (!spec) return null;
+	return resolveMethodologyForLocale(slug as LayerMethodologySlug, spec, locale);
+}
+
+/**
+ * Liefert die rohe Spec inkl. `authorityKey`. Genutzt von Tests gegen
+ * Key-Coverage (Authority-Referenzen, Message-Mapping-Vollstaendigkeit).
  */
 export function getLayerMethodologySpec(slug: string): LayerMethodologySpec | null {
-	return LAYER_METHODOLOGY_SPECS[slug] ?? null;
+	return getSpec(slug) ?? null;
 }
 
 export type { LayerMethodologySpec };

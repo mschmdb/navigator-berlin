@@ -38,6 +38,8 @@ export function buildLayerDetail(
 		explain: getLayerExplainEntry(slug, { locale: lang }),
 		meta,
 		editorial: getEditorialConfig(slug),
-		methodology: getLayerMethodology(slug)
+		// i18n Block C2: `methodology` folgt jetzt ebenfalls der Aufrufer-Locale
+		// (vormals immer DE, Boundary C1: "keine Methodik-Texte").
+		methodology: getLayerMethodology(slug, { locale: lang })
 	};
 }

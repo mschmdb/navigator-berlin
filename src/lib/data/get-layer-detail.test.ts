@@ -92,6 +92,23 @@ describe('buildLayerDetail', () => {
 		expect(en?.explain.long).not.toMatch(/Kategorisierte Lärm-Gesamtbelastung/);
 	});
 
+	// i18n Block C2: `methodology` folgt jetzt ebenfalls `lang` (vorher immer
+	// DE, unabhängig vom `lang`-Parameter -- Boundary C1: "keine
+	// Methodik-Texte", jetzt aufgehoben).
+	it('liefert englische methodology-Felder für lang "en", deutsche für lang "de"', () => {
+		const de = buildLayerDetail('laerm-2023', 'de', sampleManifest);
+		expect(de?.methodology?.calculation).toMatch(/Modellierte Lärm-Gesamtbelastung/);
+		expect(de?.methodology?.updateFrequency).toMatch(/alle 5 Jahre/);
+
+		const en = buildLayerDetail('laerm-2023', 'en', sampleManifest);
+		expect(en?.methodology?.calculation).toMatch(/Modelled overall noise pollution/);
+		expect(en?.methodology?.updateFrequency).toMatch(/every 5 years/);
+		expect(en?.methodology?.calculation).not.toMatch(/Modellierte Lärm-Gesamtbelastung/);
+		// aggregationLevel bleibt Enum, relatedLayers bleiben Slugs (unübersetzt).
+		expect(en?.methodology?.aggregationLevel).toBe(de?.methodology?.aggregationLevel);
+		expect(en?.methodology?.relatedLayers).toEqual(de?.methodology?.relatedLayers);
+	});
+
 	it('methodology ist null wenn Slug keinen LayerMethodology-Eintrag hat', () => {
 		const manifestWithoutMethodology = {
 			...sampleManifest,

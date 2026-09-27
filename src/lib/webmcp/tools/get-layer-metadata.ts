@@ -67,7 +67,7 @@ export function createGetLayerMetadataTool(deps: GetLayerMetadataDeps): WebMcpTo
 	return {
 		name: 'get_layer_metadata',
 		description:
-			'Return rich metadata for a single data layer by slug: source URL, license, license URL, geometry type, feature count, last update, and methodology summary. The slug must match a manifest layer-slug exactly (e.g. mss-gesamtindex-2025, laerm-2023, klima-pet-2022) — semantic guesses like "social-status" or "noise" will fail. Use list_layers_at_point or cross_layer_query to discover valid slugs from a location first. On unknown slug, returns { error: "layer_not_found", slug, hint } instead of throwing.',
+			'Return rich metadata for a single data layer by slug: source URL, license, license URL, geometry type, feature count, last update, and methodology summary. The slug must match a manifest layer-slug exactly (e.g. mss-gesamtindex-2025, laerm-2023, klima-pet-2022) — semantic guesses like "social-status" or "noise" will fail. Use list_layers_at_point or cross_layer_query to discover valid slugs from a location first. On unknown slug, returns { error: "layer_not_found", slug, hint } instead of throwing. The methodology summary is always German, regardless of the locale param.',
 		readOnly: true,
 		inputSchema: LAYER_METADATA_INPUT_JSON_SCHEMA,
 		outputSchema: LAYER_METADATA_OUTPUT_JSON_SCHEMA,
@@ -76,9 +76,12 @@ export function createGetLayerMetadataTool(deps: GetLayerMetadataDeps): WebMcpTo
 			// Side-effect: gewährleistet, dass das Manifest in den Modul-Cache geladen ist,
 			// bevor `getLayerMetadata` darauf zugreift.
 			await deps.loadManifest();
-			// Locale wird derzeit nicht für Methodology-Translation genutzt (DE-only,
-			// Phase-1-Lock per Memory `project_i18n_phase_1_de_only`). Der Param bleibt
-			// für zukünftige EN-Coverage erhalten.
+			// i18n Block C2 (spec-i18n-c2-layer-methodik.md): WebMCP bleibt bewusst
+			// DE, auch nachdem `layer-methodology.ts` locale-fähig wurde --
+			// `deps.getLayerMethodology(slug)` unten läuft ohne Locale-Arg (DE-
+			// Default). Der `locale`-Input-Param bleibt akzeptiert (Schema-
+			// Kompatibilität), wird aber für die Methodology-Ausgabe nicht
+			// verwendet (Boundary: "Nicht-UI-Konsumenten bleiben DE").
 			void (input.locale ?? deps.defaultLocale());
 			try {
 				const meta = deps.getLayerMetadata(input.slug);

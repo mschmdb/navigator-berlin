@@ -1,6 +1,5 @@
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildLayerDetail } from '$lib/data/get-layer-detail.js';
-import { getLocale } from '$lib/paraglide/runtime.js';
 import { pickDatasetDescription } from '$lib/seo/dataset-description.js';
 import type { DataCatalogDatasetRef } from '$lib/seo/jsonld-datacatalog.js';
 import type { PageLoad } from './$types';
@@ -13,14 +12,21 @@ export const prerender = true;
  * only-Layer haben keine `/layer/<slug>`-Page, ihr `@id` wuerde sonst auf eine
  * 404-URL zeigen. `description` aus `explain.short` (Pflichtfeld fuer Schema.org-
  * Dataset, GSC 2026-05-29), `creatorName` aus `methodology.authority`.
+ *
+ * i18n Block C2 (spec-i18n-c2-layer-methodik.md): Das DataCatalog-JSON-LD
+ * bleibt bis zur Registrierung vollstaendig DE (Boundary "B4b-Linie"), auch
+ * auf `/en/lizenzen`. `buildLayerDetail` bekommt deshalb bewusst `'de'` fest
+ * statt der Seiten-Locale -- ein `getLocale()`-Aufruf hier wuerde auf
+ * `/en/lizenzen` (prerendert) sonst Name, Beschreibung und Behoerde englisch
+ * ins JSON-LD durchsickern lassen, analog zum Fix auf `/layer/[slug]`
+ * (`deLayerName`/`deExplain`/`deMethodology`).
  */
 export const load: PageLoad = async ({ fetch }) => {
 	const manifest = await loadManifest(fetch);
-	const locale = getLocale();
 
 	const catalogDatasets: DataCatalogDatasetRef[] = manifest.layers
 		.map((layer): DataCatalogDatasetRef | null => {
-			const detail = buildLayerDetail(layer.slug, locale, manifest);
+			const detail = buildLayerDetail(layer.slug, 'de', manifest);
 			if (!detail) return null;
 			return {
 				name: detail.layerName,

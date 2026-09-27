@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect } from 'vitest';
 import { createGetLayerMetadataTool } from './get-layer-metadata.js';
 import type { LayerMetadata } from '$lib/data';
 import type { LayerMethodology } from '$lib/data/layer-methodology.js';
+import { getLayerMethodology } from '$lib/data/layer-methodology.js';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 
 const FIXTURE_LAYER: LayerMetadata = {
 	slug: 'wohnlagen-2024',
@@ -24,7 +26,51 @@ const FIXTURE_METHODOLOGY: LayerMethodology = {
 	authority: 'ODIS Berlin'
 };
 
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
+
 describe('get-layer-metadata tool', () => {
+	// i18n Block C2 (spec-i18n-c2-layer-methodik.md): der Tool-Handler ruft
+	// `deps.getLayerMethodology(input.slug)` bewusst ohne Locale-Arg auf
+	// (Boundary: "WebMCP bleibt DE"). Dieser Test verdrahtet die ECHTE
+	// `getLayerMethodology` statt einer Fixture, damit ein versehentliches
+	// Durchreichen von `input.locale`/`defaultLocale()` in die Dependency
+	// hier auffliegt (Fixtures würden das nicht bemerken, weil sie die
+	// Locale ohnehin ignorieren). Die separate Mount-Wiring
+	// (`mount.ts` -> `registerWebMcpServer`) deckt `mount.test.ts` ab.
+	it('liefert DE-Methodik auch wenn die Seiten-Locale "en" ist (Boundary: WebMCP bleibt DE)', async () => {
+		overwriteGetLocale(() => 'en');
+		const tool = createGetLayerMetadataTool({
+			getLayerMetadata: () => ({ ...FIXTURE_LAYER, slug: 'laerm-2023' }),
+			getLayerMethodology,
+			loadManifest: async () => undefined,
+			defaultLocale: () => 'en'
+		});
+		const out = (await tool.handler({ slug: 'laerm-2023' })) as Record<string, unknown>;
+		const methodology = out.methodology as Record<string, unknown>;
+		expect(methodology.summary).toMatch(/Modellierte Lärm-Gesamtbelastung/);
+		expect(methodology.summary).not.toMatch(/Modelled overall noise pollution/);
+	});
+
+	// Composite-Authority mit OSM-Suffix (`stolpersteine`): der Suffix ist
+	// seit C2 selbst locale-fähig (`AUTHORITY_SUFFIX_OSM_ODBL`) -- dieser
+	// Test stellt sicher, dass auch der zusammengesetzte String unter einer
+	// EN-Seiten-Locale komplett DE bleibt, nicht nur der Basis-Teil.
+	it('Authority inkl. OSM-Suffix bleibt DE auch unter EN-Seiten-Locale', async () => {
+		overwriteGetLocale(() => 'en');
+		const tool = createGetLayerMetadataTool({
+			getLayerMetadata: () => ({ ...FIXTURE_LAYER, slug: 'stolpersteine' }),
+			getLayerMethodology,
+			loadManifest: async () => undefined,
+			defaultLocale: () => 'en'
+		});
+		const out = (await tool.handler({ slug: 'stolpersteine' })) as Record<string, unknown>;
+		const methodology = out.methodology as Record<string, unknown>;
+		expect(methodology.authority).toMatch(/OpenStreetMap-Contributors \(ODbL 1\.0\)/);
+		expect(methodology.authority).not.toMatch(/OpenStreetMap contributors/);
+	});
+
 	it('hat snake_case-name', () => {
 		const tool = createGetLayerMetadataTool({
 			getLayerMetadata: () => FIXTURE_LAYER,
