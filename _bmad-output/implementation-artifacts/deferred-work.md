@@ -148,3 +148,7 @@
   summary: Wahl-Vergleich zeigt bei |Diff| < 0,05 pp „+0,0“ bzw. „höher in A“ statt „±0,0“/„gleich“.
   evidence: Review B3c Fund #19; Vorzeichen kommt aus dem Rohwert, Anzeige aus dem gerundeten Wert. Vorbestehend, B3c änderte nur die Formatierung.
 
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
+  summary: i18n Block B4b „Layer-Detailseite“: Rahmen von `/layer/[slug]` (~30 Strings: Quelle/Lizenz/Datenstand, Werte/Skala, Berechnung, Coverage-Lücken, „Was wir NICHT zeigen“, Verwandte Layer, Methodik-Aside, Leerzustand, Hitze-CTA, `toLocaleString('de-DE')`, rohe Hrefs) plus Dataset-JSON-LD (`inLanguage`, Description-Fallback) auf Messages + EN.
+  evidence: Split aus B4 (Koordinator-Entscheidung 27.09. 04:55, Matze AFK); Layer-Seite teilt keine Komponenten mit Kiez/Bezirk, eigenes PR-fähiges Paket.
