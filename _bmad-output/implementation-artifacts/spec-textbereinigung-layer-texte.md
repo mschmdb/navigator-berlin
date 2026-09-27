@@ -2,7 +2,8 @@
 title: 'Textbereinigung: interne Artefakte aus öffentlichen DE+EN-Texten'
 type: 'refactor'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '3370babc7d535e9bbd37794430dc585a5685badb'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
