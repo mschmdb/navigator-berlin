@@ -153,6 +153,22 @@ export function formatWahlDate(iso: string, opts?: LocaleFormatOptions): string 
 }
 
 /**
+ * Neutrales Kurzdatum ohne feste Format-Optionen, z. B. `1.1.2025` (de) /
+ * `01/01/2025` (en-GB). DE ruft `toLocaleDateString('de-DE')` OHNE weitere
+ * Optionen auf -- bewusst NICHT `formatWahlDate` (das erzwingt `2-digit`
+ * Tag/Monat + `Europe/Berlin`, z. B. `01.01.2025` statt `1.1.2025`, andere
+ * Zeitzonen-Semantik). Ersetzt Alt-Aufrufer wie
+ * `kiez-score-dimension-row.svelte`s vormals fest auf `'de-DE'` verdrahtetes
+ * `toLocaleDateString`, DE bleibt dadurch Zeichen-für-Zeichen gleich.
+ */
+export function formatDate(iso: string, opts?: LocaleFormatOptions): string {
+	const locale = resolveLocale(opts?.locale);
+	const d = new Date(iso);
+	if (Number.isNaN(d.getTime())) return iso;
+	return d.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-GB');
+}
+
+/**
  * Kompaktes Datum mit abgekürztem Monat, `Europe/Berlin`: `15. Mai 2026` (de)
  * / `15 May 2026` (en). i18n Block B2: ersetzt das bisherige, in
  * `home-updates-teaser.svelte` fest auf `de-DE` verdrahtete

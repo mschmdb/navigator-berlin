@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { Eye, EyeOff, ExternalLink } from '@lucide/svelte';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import KiezScoreDimensionRow from './kiez-score-dimension-row.svelte';
 	import KiezScoreRing from '../charts/kiez-score-ring.svelte';
@@ -21,13 +22,16 @@
 	let {
 		score,
 		methodikHref = '/methodik/kiez-score',
-		lang = 'de',
+		lang,
 		activeLayerSlugs = [],
 		onToggleLayer
 	}: Props = $props();
 
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
+
 	const gesamtActive = $derived(activeLayerSlugs.includes(GESAMT_SLUG));
-	const gesamtHref = $derived(localizedHref(`/layer/${GESAMT_SLUG}`, lang));
+	const gesamtHref = $derived(localizedHref(`/layer/${GESAMT_SLUG}`, locale));
 
 	const enabled = $derived(featureFlags.kiezScore && score !== null);
 	// Option C: der Gesamt-Score ist das Mittel der fünf Composite-Dimensionen (Kultur zählt
@@ -52,7 +56,7 @@
 			class="font-mono text-xs tracking-wide text-ink-muted uppercase"
 			data-testid="kiez-score-section-header"
 		>
-			Kiez-Score
+			{m.inspector_kiez_score_heading(undefined, localeOpts)}
 		</h3>
 
 		{#if score.overall !== undefined}
@@ -62,7 +66,10 @@
 					class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 					data-testid="kiez-score-overall-meta"
 				>
-					Gesamt · Mittel über {usedDimsCount}/{COMPOSITE_DIMENSIONS.length} Dimensionen
+					{m.inspector_kiez_score_overall_meta(
+						{ used: String(usedDimsCount), total: String(COMPOSITE_DIMENSIONS.length) },
+						localeOpts
+					)}
 				</span>
 				<div class="flex items-center gap-1" data-testid="kiez-score-overall-actions">
 					{#if onToggleLayer}
@@ -71,9 +78,11 @@
 							data-testid="kiez-score-map-toggle-gesamt"
 							aria-pressed={gesamtActive}
 							aria-label={gesamtActive
-								? 'Gesamt-Score von Karte entfernen'
-								: 'Gesamt-Score auf Karte zeigen'}
-							title={gesamtActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
+								? m.inspector_kiez_score_map_toggle_remove_gesamt(undefined, localeOpts)
+								: m.inspector_kiez_score_map_toggle_add_gesamt(undefined, localeOpts)}
+							title={gesamtActive
+								? m.inspector_common_map_toggle_remove_title(undefined, localeOpts)
+								: m.inspector_common_map_toggle_add_title(undefined, localeOpts)}
 							onclick={() => onToggleLayer?.(GESAMT_SLUG)}
 							class={`inline-flex h-6 w-6 items-center justify-center rounded-sm hover:bg-bg ${gesamtActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
 						>
@@ -86,8 +95,8 @@
 					<a
 						href={gesamtHref}
 						data-testid="kiez-score-learn-more-gesamt"
-						aria-label="Mehr über den Gesamt-Score"
-						title="Layer-Details"
+						aria-label={m.inspector_kiez_score_learn_more_gesamt_aria(undefined, localeOpts)}
+						title={m.inspector_common_learn_more_title(undefined, localeOpts)}
 						class="inline-flex h-6 w-6 items-center justify-center rounded-sm text-ink-subtle hover:bg-bg hover:text-ink"
 					>
 						<ExternalLink size={13} aria-hidden="true" />
@@ -102,7 +111,7 @@
 					score={dim}
 					open={expandedDim === dim.dimension}
 					onToggle={toggleDim}
-					{lang}
+					lang={locale}
 					isActive={activeLayerSlugs.includes(`kiez-score-${dim.dimension}`)}
 					{onToggleLayer}
 				/>
@@ -111,11 +120,11 @@
 
 		<EditorialDisclaimer variant="kiez-score-explainer" />
 		<a
-			href={methodikHref}
+			href={localizedHref(methodikHref, locale)}
 			data-testid="kiez-score-methodik-link"
 			class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 		>
-			Methodik · Wie der Kiez-Score berechnet wird
+			{m.inspector_kiez_score_methodik_link(undefined, localeOpts)}
 		</a>
 	</section>
 {/if}

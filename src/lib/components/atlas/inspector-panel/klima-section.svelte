@@ -2,6 +2,8 @@
 	import type { ClimateStation, ClimateData, LayerHit } from '$lib/data';
 	import type { Component } from 'svelte';
 	import DataStandBanner from './data-stand-banner.svelte';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
 	type Props = {
 		station: ClimateStation | null;
@@ -9,6 +11,7 @@
 		sourceUrl?: string;
 		updatedAt?: string;
 		license?: LayerHit['license'];
+		lang?: Locale;
 	};
 
 	let {
@@ -16,8 +19,12 @@
 		series,
 		sourceUrl = 'https://opendata.dwd.de/climate_environment/CDC/',
 		updatedAt = new Date().toISOString().slice(0, 10),
-		license = 'dl-de/by-2-0'
+		license = 'dl-de/by-2-0',
+		lang
 	}: Props = $props();
+
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	let Sparkline = $state<Component<Record<string, unknown>> | null>(null);
 	let LongView = $state<Component<Record<string, unknown>> | null>(null);
@@ -55,7 +62,7 @@
 
 {#if !station || !series}
 	<p class="py-3 font-serif text-ink-subtle italic" data-testid="section-klima-empty">
-		Klima-Daten werden geladen oder konnten nicht ermittelt werden.
+		{m.inspector_klima_section_empty(undefined, localeOpts)}
 	</p>
 {:else}
 	<section
@@ -63,38 +70,63 @@
 		data-testid="klima-section"
 	>
 		<div class="flex items-start justify-between gap-2">
-			<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">Klima · DWD-Station</h4>
+			<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">
+				{m.inspector_klima_section_heading(undefined, localeOpts)}
+			</h4>
 			<span class="shrink-0 font-serif text-sm text-ink-subtle italic">{station.name}</span>
 		</div>
 		<p class="font-mono text-[11px] text-ink-subtle" data-testid="klima-station-hint">
-			Messreihe seit {station.firstYear}
+			{m.inspector_klima_section_since({ year: String(station.firstYear) }, localeOpts)}
 		</p>
 
 		{#if loadError}
 			<p class="py-2 font-mono text-xs text-state-error" data-testid="klima-load-error">
-				Klima-Charts konnten nicht geladen werden.
+				{m.inspector_klima_section_load_error(undefined, localeOpts)}
 			</p>
 		{:else if Sparkline === null}
 			<div class="space-y-3" data-testid="klima-skeleton" aria-live="polite" aria-busy="true">
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
-				<span class="font-mono text-xs text-ink-subtle">lädt…</span>
+				<span class="font-mono text-xs text-ink-subtle"
+					>{m.inspector_klima_section_loading(undefined, localeOpts)}</span
+				>
 			</div>
 		{:else}
 			<div class="space-y-3" data-testid="klima-sparkline-grid">
-				<Sparkline series={series.summerDays} metric="summer" stationName={station.name} compact />
-				<Sparkline series={series.frostDays} metric="frost" stationName={station.name} compact />
-				<Sparkline series={series.hotDays} metric="hot" stationName={station.name} compact />
+				<Sparkline
+					series={series.summerDays}
+					metric="summer"
+					stationName={station.name}
+					compact
+					lang={locale}
+					unit={m.inspector_climate_unit_days_per_year(undefined, localeOpts)}
+				/>
+				<Sparkline
+					series={series.frostDays}
+					metric="frost"
+					stationName={station.name}
+					compact
+					lang={locale}
+					unit={m.inspector_climate_unit_days_per_year(undefined, localeOpts)}
+				/>
+				<Sparkline
+					series={series.hotDays}
+					metric="hot"
+					stationName={station.name}
+					compact
+					lang={locale}
+					unit={m.inspector_climate_unit_days_per_year(undefined, localeOpts)}
+				/>
 			</div>
 
 			{#if showLongView && LongView}
 				<div class="mt-4" data-testid="klima-long-view-slot">
-					<LongView series={series.annualMeanTemp ?? []} stationName={station.name} />
+					<LongView series={series.annualMeanTemp ?? []} stationName={station.name} lang={locale} />
 				</div>
 			{/if}
 		{/if}
 
-		<DataStandBanner hit={bannerHit()} />
+		<DataStandBanner hit={bannerHit()} lang={locale} />
 	</section>
 {/if}

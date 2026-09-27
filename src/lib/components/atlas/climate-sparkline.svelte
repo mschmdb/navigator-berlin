@@ -9,6 +9,9 @@
 	import { linearRegression } from '$lib/utils/regression.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
 	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '$lib/utils/normalperiod.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { formatDecimal } from '$lib/i18n/format.js';
 
 	type Props = {
 		series: readonly YearValue[];
@@ -17,28 +20,34 @@
 		unit?: string;
 		/** Kompakt: nur Chart sichtbar, Werte (Min/Max/Mittel) + Tabelle hinter Toggle. */
 		compact?: boolean;
+		lang?: Locale;
 	};
 
-	let { series, metric, stationName, unit = 'Tage/Jahr', compact = false }: Props = $props();
+	let { series, metric, stationName, unit = 'Tage/Jahr', compact = false, lang }: Props = $props();
 	let detailsOpen = $state(false);
 
-	const TITLES: Record<ClimateMetric, string> = {
-		summer: 'Sommertage (T_max ≥ 25°C)',
-		frost: 'Frosttage (T_min < 0°C)',
-		hot: 'Heiße Tage (T_max ≥ 30°C)'
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
+
+	const TITLES: Record<ClimateMetric, () => string> = {
+		summer: () => m.inspector_climate_summer_title(undefined, localeOpts),
+		frost: () => m.inspector_climate_frost_title(undefined, localeOpts),
+		hot: () => m.inspector_climate_hot_title(undefined, localeOpts)
 	};
 
-	const SHORT_LABELS: Record<ClimateMetric, string> = {
-		summer: 'Sommertage',
-		frost: 'Frosttage',
-		hot: 'Heiße Tage'
+	const SHORT_LABELS: Record<ClimateMetric, () => string> = {
+		summer: () => m.inspector_climate_summer_short(undefined, localeOpts),
+		frost: () => m.inspector_climate_frost_short(undefined, localeOpts),
+		hot: () => m.inspector_climate_hot_short(undefined, localeOpts)
 	};
 
-	const DEFINITIONS: Record<ClimateMetric, string> = {
-		summer: 'Tage mit Tagesmaximum ≥ 25 °C',
-		frost: 'Tage mit Tagesminimum < 0 °C',
-		hot: 'Tage mit Tagesmaximum ≥ 30 °C'
+	const DEFINITIONS: Record<ClimateMetric, () => string> = {
+		summer: () => m.inspector_climate_summer_definition(undefined, localeOpts),
+		frost: () => m.inspector_climate_frost_definition(undefined, localeOpts),
+		hot: () => m.inspector_climate_hot_definition(undefined, localeOpts)
 	};
+
+	const shortLabel = $derived(SHORT_LABELS[metric]());
 
 	type Row = { year: number; value: number; trend: number };
 
@@ -78,21 +87,47 @@
 
 	const description = $derived(
 		stats === null
-			? `Keine Daten für ${SHORT_LABELS[metric]} an DWD-Station ${stationName}.`
-			: `Sparkline ${SHORT_LABELS[metric]} pro Jahr seit ${stats.firstYear} für DWD-Station ${stationName}. Aktueller Wert ${stats.latest} ${unit}, Mittelwert ${stats.avg.toFixed(1)}.`
+			? m.inspector_climate_sparkline_desc_empty(
+					{ metric: shortLabel, station: stationName },
+					localeOpts
+				)
+			: m.inspector_climate_sparkline_desc(
+					{
+						metric: shortLabel,
+						from: String(stats.firstYear),
+						station: stationName,
+						latest: String(stats.latest),
+						unit,
+						avg: formatDecimal(stats.avg, { ...localeOpts, maximumFractionDigits: 1, minimumFractionDigits: 1 })
+					},
+					localeOpts
+				)
 	);
 
 	const figcaption = $derived(
 		stats === null
-			? 'Keine Daten verfügbar.'
-			: `Min: ${stats.min} · Max: ${stats.max} · Latest: ${stats.latest} ${unit}`
+			? m.inspector_climate_figcaption_empty(undefined, localeOpts)
+			: m.inspector_climate_sparkline_figcaption(
+					{
+						min: String(stats.min),
+						max: String(stats.max),
+						latest: String(stats.latest),
+						unit
+					},
+					localeOpts
+				)
 	);
 
 	const normalOldMean = $derived(getNormalperiodMean(points, NORMAL_OLD.from, NORMAL_OLD.to));
 	const normalNewMean = $derived(getNormalperiodMean(points, NORMAL_NEW.from, NORMAL_NEW.to));
 
+	// Review-Fund: anders als `climate-long-view.svelte` (dort `toFixed()`,
+	// der eigentliche vorbestehende Formatfehler "9,45 °C" → "9.45 °C") nutzte
+	// `formatMean` hier bereits `Intl.NumberFormat('de-DE', ...)` und zeigte
+	// DE also schon vor B3b korrekt ein Komma. `formatDecimal` (format.ts)
+	// reicht dieses Verhalten unverändert durch, reine Konsolidierung.
 	function formatMean(n: number): string {
-		return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(n);
+		return formatDecimal(n, { ...localeOpts, maximumFractionDigits: 1 });
 	}
 
 	const chartId = $derived(`sparkline-${metric}-${stationName.replace(/\W+/g, '-').toLowerCase()}`);
@@ -105,7 +140,16 @@
 		const r = rows[idx];
 		if (!r) return;
 		announceGlobal(
-			`${SHORT_LABELS[metric]} ${r.year}, ${r.value} ${unit}, Trend ${Math.round(r.trend)} ${unit}`
+			m.inspector_climate_sparkline_announce(
+				{
+					metric: shortLabel,
+					year: String(r.year),
+					value: String(r.value),
+					unit,
+					trend: String(Math.round(r.trend))
+				},
+				localeOpts
+			)
 		);
 	}
 
@@ -129,7 +173,12 @@
 	}
 
 	const tableColumns = $derived<TableColumn<Row>[]>([
-		{ key: 'year', label: 'Jahr', sortable: true, accessor: (r) => r.year },
+		{
+			key: 'year',
+			label: m.inspector_climate_table_year(undefined, localeOpts),
+			sortable: true,
+			accessor: (r) => r.year
+		},
 		{
 			key: 'value',
 			label: unit,
@@ -148,13 +197,13 @@
 		data-testid="climate-sparkline-heading"
 		id={titleId}
 	>
-		{SHORT_LABELS[metric]}
+		{shortLabel}
 	</h4>
 	<p
 		class="mb-1 font-serif text-xs text-ink-subtle italic"
 		data-testid="climate-sparkline-definition"
 	>
-		{DEFINITIONS[metric]}
+		{DEFINITIONS[metric]()}
 	</p>
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
@@ -170,7 +219,7 @@
 		class="climate-sparkline-figure relative block w-full focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-rule-strong"
 	>
 		<span id={descId} class="sr-only">{description}</span>
-		<span class="sr-only">{TITLES[metric]}</span>
+		<span class="sr-only">{TITLES[metric]()}</span>
 		{#if rows.length > 0 && stats}
 			<LineChart
 				data={rows}
@@ -182,12 +231,12 @@
 				series={[
 					{
 						key: 'value',
-						label: SHORT_LABELS[metric],
+						label: shortLabel,
 						color: 'var(--chart-line, currentColor)'
 					},
 					{
 						key: 'trend',
-						label: 'Trend',
+						label: m.inspector_climate_annotation_trend(undefined, localeOpts),
 						color: 'var(--chart-line-secondary, currentColor)',
 						props: { 'stroke-dasharray': '2 2' }
 					}
@@ -213,8 +262,11 @@
 						<Tooltip.Root>
 							<Tooltip.Header value={String(data.year)} />
 							<Tooltip.List>
-								<Tooltip.Item label={SHORT_LABELS[metric]} value={`${data.value} ${unit}`} />
-								<Tooltip.Item label="Trend" value={`${Math.round(data.trend)} ${unit}`} />
+								<Tooltip.Item label={shortLabel} value={`${data.value} ${unit}`} />
+								<Tooltip.Item
+									label={m.inspector_climate_annotation_trend(undefined, localeOpts)}
+									value={`${Math.round(data.trend)} ${unit}`}
+								/>
 							</Tooltip.List>
 						</Tooltip.Root>
 					{/if}
@@ -233,7 +285,9 @@
 			data-testid="climate-sparkline-details-toggle"
 			class="mt-1 inline-flex items-center gap-1 font-mono text-[11px] tracking-wide text-ink-muted uppercase hover:text-ink"
 		>
-			{detailsOpen ? 'Werte & Tabelle verbergen' : 'Werte & Tabelle'}
+			{detailsOpen
+				? m.inspector_climate_details_toggle_hide(undefined, localeOpts)
+				: m.inspector_climate_details_toggle_show(undefined, localeOpts)}
 		</button>
 	{/if}
 	{#if !compact || detailsOpen}
@@ -244,7 +298,7 @@
 					class="mt-0.5 block font-mono text-xs text-ink-subtle"
 					data-testid="climate-sparkline-normal-old"
 				>
-					Mittel 1961–1990: {formatMean(normalOldMean)}
+					{m.inspector_climate_normal_old({ value: formatMean(normalOldMean) }, localeOpts)}
 				</span>
 			{/if}
 			{#if normalNewMean !== null}
@@ -252,7 +306,7 @@
 					class="block font-mono text-xs text-ink-subtle"
 					data-testid="climate-sparkline-normal-new"
 				>
-					Mittel 1991–2020: {formatMean(normalNewMean)}
+					{m.inspector_climate_normal_new({ value: formatMean(normalNewMean) }, localeOpts)}
 				</span>
 			{/if}
 		</div>
@@ -260,7 +314,10 @@
 			<DataTableAlternative
 				columns={tableColumns}
 				rows={tableRows}
-				caption={`${SHORT_LABELS[metric]} bei ${stationName}`}
+				caption={m.inspector_climate_sparkline_table_caption(
+					{ metric: shortLabel, station: stationName },
+					localeOpts
+				)}
 			/>
 		</div>
 	{/if}

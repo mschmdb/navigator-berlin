@@ -1,8 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import LayerHitRow from './layer-hit-row.svelte';
 import type { LayerHit } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const recentHit: LayerHit = {
 	layer: 'mietspiegel-wohnlage',
@@ -542,6 +547,77 @@ describe('layer-hit-row.svelte', () => {
 			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
 			expect(chip.getAttribute('data-severity')).toBe('success-soft');
 			expect(chip.textContent).toMatch(/mittel/);
+		});
+	});
+
+	// i18n Block B3b
+	describe('i18n (lang="en")', () => {
+		it('no-coverage/out-of-concept/seasonal-Texte englisch', async () => {
+			render(LayerHitRow, {
+				hit: { ...recentHit, reason: 'no-coverage', value: null },
+				layerName: 'Test-Layer',
+				lang: 'en'
+			});
+			await expect
+				.element(page.getByTestId('value-no-coverage'))
+				.toHaveTextContent('No data available');
+		});
+
+		it('Learn-more-Link zeigt /en/layer/... und Map-Toggle-Label englisch', async () => {
+			let toggled: string | null = null;
+			render(LayerHitRow, {
+				hit: recentHit,
+				layerName: 'Test-Layer',
+				lang: 'en',
+				onToggleLayer: (slug: string) => (toggled = slug)
+			});
+			const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+			expect(link.getAttribute('href')).toBe('/en/layer/mietspiegel-wohnlage');
+			const toggle = (await page.getByTestId('map-toggle').element()) as HTMLButtonElement;
+			expect(toggle.getAttribute('aria-label')).toBe('Show Test-Layer on map');
+			toggle.click();
+			expect(toggled).toBe('mietspiegel-wohnlage');
+		});
+
+		it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+			overwriteGetLocale(() => 'en');
+			render(LayerHitRow, { hit: recentHit, layerName: 'Test-Layer' });
+			const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+			expect(link.getAttribute('href')).toBe('/en/layer/mietspiegel-wohnlage');
+		});
+
+		it('Mauer-Sektoren-Detail zeigt englische Labels', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'mauer-sektoren',
+					value: 'x',
+					source: 'https://osm.org',
+					updatedAt: '2025-01-01T00:00:00Z',
+					license: 'ODbL 1.0'
+				},
+				layerName: 'Berliner Mauer',
+				lang: 'en'
+			});
+			await expect
+				.element(page.getByTestId('mauer-sektoren-detail'))
+				.toHaveTextContent('Berlin Wall Memorial');
+			await expect.element(page.getByTestId('mauer-footer')).toHaveTextContent('As of');
+		});
+
+		it('ValueChip Severity-Beschreibung englisch (aria-label)', async () => {
+			render(LayerHitRow, {
+				hit: {
+					layer: 'gruenversorgung-2023',
+					value: { kategorie: 'mittel', plr_name: 'Mitte' },
+					source: 'https://gdi.berlin.de/wfs',
+					updatedAt: '2024-01-15T00:00:00Z',
+					license: 'dl-de/zero-2-0'
+				},
+				layerName: 'Grünversorgung 2023',
+				lang: 'en'
+			});
+			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
+			expect(chip.getAttribute('aria-label')).toMatch(/slightly favourable exposure/);
 		});
 	});
 });

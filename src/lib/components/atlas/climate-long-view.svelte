@@ -2,28 +2,27 @@
 	import type { YearValue } from '$lib/data';
 	import { AreaChart, Tooltip } from 'layerchart';
 	import DataTableAlternative, { type TableColumn } from './data-table-alternative.svelte';
-	import {
-		BERLIN_NARRATIVE_MARKERS,
-		markersInRange,
-		type NarrativeMarker
-	} from './internal/narrative-markers.js';
+	import { getNarrativeMarkers, markersInRange, type NarrativeMarker } from './internal/narrative-markers.js';
 	import { rollingMean } from '$lib/utils/rolling-mean.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
 	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '$lib/utils/normalperiod.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { formatDecimal } from '$lib/i18n/format.js';
 
 	type Props = {
 		series: readonly YearValue[];
 		stationName: string;
 		unit?: string;
 		narrativeMarkers?: readonly NarrativeMarker[];
+		lang?: Locale;
 	};
 
-	let {
-		series,
-		stationName,
-		unit = '°C',
-		narrativeMarkers = BERLIN_NARRATIVE_MARKERS
-	}: Props = $props();
+	let { series, stationName, unit = '°C', narrativeMarkers, lang }: Props = $props();
+
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
+	const effectiveMarkers = $derived(narrativeMarkers ?? getNarrativeMarkers(localeOpts));
 
 	type Row = { year: number; value: number; rolling: number | null };
 
@@ -60,23 +59,48 @@
 		};
 	});
 
+	// i18n Block B3b, Koordinator-Entscheidung: vorbestehender Formatfehler
+	// (DE zeigte "9.45 °C" mit Punkt) wird über `format.ts` behoben -- DE
+	// bekommt jetzt ein Komma. Bewusste Ausnahme von der sonstigen
+	// Zeichen-für-Zeichen-DE-Parität dieser Story.
+	function formatTemp(n: number, decimals: 1 | 2): string {
+		return formatDecimal(n, { ...localeOpts, maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+	}
+
 	const description = $derived(
 		stats === null
-			? `Keine Daten für Jahresmitteltemperatur an Station ${stationName}.`
-			: `Jahresmitteltemperatur ${stationName} von ${stats.firstYear} bis ${stats.latestYear}. Aktueller Wert ${stats.latest.toFixed(2)} ${unit}.`
+			? m.inspector_climate_long_view_desc_empty({ station: stationName }, localeOpts)
+			: m.inspector_climate_long_view_desc(
+					{
+						station: stationName,
+						from: String(stats.firstYear),
+						to: String(stats.latestYear),
+						latest: formatTemp(stats.latest, 2),
+						unit
+					},
+					localeOpts
+				)
 	);
 
 	const figcaption = $derived(
 		stats === null
-			? 'Keine Daten verfügbar.'
-			: `Min: ${stats.min.toFixed(1)} ${unit} · Max: ${stats.max.toFixed(1)} ${unit} · Latest: ${stats.latest.toFixed(2)} ${unit}`
+			? m.inspector_climate_figcaption_empty(undefined, localeOpts)
+			: m.inspector_climate_long_view_figcaption(
+					{
+						min: formatTemp(stats.min, 1),
+						max: formatTemp(stats.max, 1),
+						latest: formatTemp(stats.latest, 2),
+						unit
+					},
+					localeOpts
+				)
 	);
 
 	const normalOldMean = $derived(getNormalperiodMean(points, NORMAL_OLD.from, NORMAL_OLD.to));
 	const normalNewMean = $derived(getNormalperiodMean(points, NORMAL_NEW.from, NORMAL_NEW.to));
 
 	function formatMean(n: number): string {
-		return `${n.toFixed(2)} ${unit}`;
+		return `${formatTemp(n, 2)} ${unit}`;
 	}
 
 	const chartId = $derived(`long-view-${stationName.replace(/\W+/g, '-').toLowerCase()}`);
@@ -84,7 +108,7 @@
 	const descId = $derived(`chart-desc-${chartId}`);
 
 	const visibleMarkers = $derived(
-		stats === null ? [] : markersInRange(narrativeMarkers, stats.firstYear, stats.latestYear)
+		stats === null ? [] : markersInRange(effectiveMarkers, stats.firstYear, stats.latestYear)
 	);
 
 	const decadeTicks = $derived.by<number[]>(() => {
@@ -107,9 +131,25 @@
 	function announceFocus(idx: number): void {
 		const r = rows[idx];
 		if (!r) return;
-		announceGlobal(
-			`Jahresmitteltemperatur ${r.year}, ${r.value.toFixed(2)} ${unit}${r.rolling != null ? `, 30-Jahr-Mittel ${r.rolling.toFixed(2)} ${unit}` : ''}`
-		);
+		// Zwei vollstaendige Satz-Messages statt Basis-Satz + angehaengtem
+		// `{rolling}`-Fragment (Review-Fund): eine Uebersetzung kann Wortstellung/
+		// Grammatik je Fall frei anpassen, statt an ein Fragment gebunden zu sein.
+		const announcement =
+			r.rolling != null
+				? m.inspector_climate_long_view_announce_with_rolling(
+						{
+							year: String(r.year),
+							value: formatTemp(r.value, 2),
+							unit,
+							rollingValue: formatTemp(r.rolling, 2)
+						},
+						localeOpts
+					)
+				: m.inspector_climate_long_view_announce(
+						{ year: String(r.year), value: formatTemp(r.value, 2), unit },
+						localeOpts
+					);
+		announceGlobal(announcement);
 	}
 
 	function onKeydown(event: KeyboardEvent): void {
@@ -132,13 +172,18 @@
 	}
 
 	const tableColumns = $derived<TableColumn<Row>[]>([
-		{ key: 'year', label: 'Jahr', sortable: true, accessor: (r) => r.year },
+		{
+			key: 'year',
+			label: m.inspector_climate_table_year(undefined, localeOpts),
+			sortable: true,
+			accessor: (r) => r.year
+		},
 		{
 			key: 'value',
-			label: `Wert (${unit})`,
+			label: m.inspector_climate_table_value_col({ unit }, localeOpts),
 			sortable: true,
 			accessor: (r) => r.value,
-			format: (v) => `${Number(v).toFixed(2)} ${unit}`
+			format: (v) => `${formatTemp(Number(v), 2)} ${unit}`
 		}
 	]);
 
@@ -159,7 +204,9 @@
 		onkeydown={onKeydown}
 		class="climate-long-view-figure relative block w-full focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-rule-strong"
 	>
-		<span id={titleId} class="sr-only">Jahresmitteltemperatur {stationName}</span>
+		<span id={titleId} class="sr-only"
+			>{m.inspector_climate_long_view_title({ station: stationName }, localeOpts)}</span
+		>
 		<span id={descId} class="sr-only">{description}</span>
 		{#if rows.length > 0 && stats}
 			<AreaChart
@@ -170,7 +217,7 @@
 				series={[
 					{
 						key: 'value',
-						label: 'Jahresmittel',
+						label: m.inspector_climate_long_view_series_label(undefined, localeOpts),
 						color: 'var(--chart-line, currentColor)',
 						props: {
 							fill: 'var(--chart-area, currentColor)',
@@ -180,7 +227,7 @@
 					},
 					{
 						key: 'rolling',
-						label: '30-Jahr-Mittel',
+						label: m.inspector_climate_long_view_rolling_label(undefined, localeOpts),
 						color: 'var(--chart-line-secondary, currentColor)',
 						props: {
 							fillOpacity: 0,
@@ -236,11 +283,14 @@
 						<Tooltip.Root>
 							<Tooltip.Header value={String(data.year)} />
 							<Tooltip.List>
-								<Tooltip.Item label="Jahresmittel" value={`${data.value.toFixed(2)} ${unit}`} />
+								<Tooltip.Item
+									label={m.inspector_climate_long_view_series_label(undefined, localeOpts)}
+									value={`${formatTemp(data.value, 2)} ${unit}`}
+								/>
 								{#if data.rolling != null}
 									<Tooltip.Item
-										label="30-Jahr-Mittel"
-										value={`${data.rolling.toFixed(2)} ${unit}`}
+										label={m.inspector_climate_long_view_rolling_label(undefined, localeOpts)}
+										value={`${formatTemp(data.rolling, 2)} ${unit}`}
 									/>
 								{/if}
 							</Tooltip.List>
@@ -256,7 +306,7 @@
 					class="mt-0.5 block font-mono text-xs text-ink-subtle"
 					data-testid="climate-long-view-normal-old"
 				>
-					Mittel 1961–1990: {formatMean(normalOldMean)}
+					{m.inspector_climate_normal_old({ value: formatMean(normalOldMean) }, localeOpts)}
 				</span>
 			{/if}
 			{#if normalNewMean !== null}
@@ -264,7 +314,7 @@
 					class="block font-mono text-xs text-ink-subtle"
 					data-testid="climate-long-view-normal-new"
 				>
-					Mittel 1991–2020: {formatMean(normalNewMean)}
+					{m.inspector_climate_normal_new({ value: formatMean(normalNewMean) }, localeOpts)}
 				</span>
 			{/if}
 		</figcaption>
@@ -273,7 +323,7 @@
 		<DataTableAlternative
 			columns={tableColumns}
 			rows={tableRows}
-			caption={`Jahresmitteltemperatur ${stationName}`}
+			caption={m.inspector_climate_long_view_table_caption({ station: stationName }, localeOpts)}
 		/>
 	</div>
 </div>

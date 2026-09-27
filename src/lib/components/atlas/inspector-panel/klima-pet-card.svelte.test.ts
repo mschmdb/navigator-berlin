@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import KlimaPetCard from './klima-pet-card.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 import type { LayerHit } from '$lib/data';
 import type { NumericMedianAggregate } from '$lib/data/layer-aggregates-types.js';
 
@@ -129,6 +134,60 @@ describe('KlimaPetCard', () => {
 			hit,
 			layerName: 'Perceived temperature 2022',
 			lang: 'en',
+			kiezName: null,
+			kiezAggregate: null,
+			bezirkName: null,
+			bezirkAggregate: null,
+			berlinAggregate: null
+		});
+		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/en/layer/klima-pet-2022');
+	});
+
+	// i18n Block B3b
+	it('lang="en": kein direkter Messwert-Hinweis + Details-Toggle + Map-Toggle-Titel englisch', async () => {
+		render(KlimaPetCard, {
+			hit: { ...hit, value: null },
+			layerName: 'Perceived temperature 2022',
+			lang: 'en',
+			kiezName: 'Lichtenrade',
+			kiezAggregate: agg(36, 24, 45),
+			bezirkName: 'Tempelhof-Schöneberg',
+			bezirkAggregate: agg(37, 22, 46),
+			berlinAggregate: agg(35.5, 20, 48),
+			onToggleLayer: () => {}
+		});
+		await expect
+			.element(page.getByTestId('pet-no-point-value'))
+			.toHaveTextContent('No direct reading at this exact point');
+		await expect
+			.element(page.getByTestId('pet-details-toggle'))
+			.toHaveTextContent('Source & details');
+		const toggle = (await page.getByTestId('map-toggle').element()) as HTMLButtonElement;
+		expect(toggle.getAttribute('title')).toBe('Show on map');
+	});
+
+	it('lang="en": Score-Bar-Anchor + sr-only-Tabelle englisch ("Value"/"Median")', async () => {
+		render(KlimaPetCard, {
+			hit,
+			layerName: 'Perceived temperature 2022',
+			lang: 'en',
+			kiezName: 'Lichtenrade',
+			kiezAggregate: agg(36, 24, 45),
+			bezirkName: 'X',
+			bezirkAggregate: null,
+			berlinAggregate: agg(35.5, 20, 48)
+		});
+		const table = (await page.getByTestId('score-bar-table').element()) as HTMLElement;
+		expect(table.textContent).toContain('Value');
+		expect(table.textContent).toContain('Median');
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		render(KlimaPetCard, {
+			hit,
+			layerName: 'Perceived temperature 2022',
 			kiezName: null,
 			kiezAggregate: null,
 			bezirkName: null,

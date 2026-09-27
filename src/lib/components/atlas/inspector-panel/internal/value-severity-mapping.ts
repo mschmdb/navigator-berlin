@@ -3,8 +3,31 @@
 // Story 1.22: Grünversorgung als Versorgungs-Skala invertiert (siehe severityFromGruenversorgung).
 
 import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
+import { m } from '$lib/paraglide/messages.js';
+import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 
 export type SeverityLevel = 'success' | 'success-soft' | 'neutral' | 'warning' | 'danger';
+
+/**
+ * Locale-fähige Severity-Beschreibungen für `ValueChip`s `severityDescriptions`-
+ * Prop (i18n Block B3b). Ein Baustein statt vier fast identischer Kopien in
+ * `layer-hit-row`, `layer-card`, `kiez-score-dimension-row`,
+ * `nearest-stops-card`. Ohne `opts.locale`: DE (Boundary, Atlas-Fundament) --
+ * `ValueChip`s eigener DE-Default bleibt zusätzlich als letzte Fallback-Stufe
+ * bestehen.
+ */
+export function severityDescriptions(
+	opts?: LocaleOptions
+): Record<SeverityLevel, string> {
+	const options = toAtlasMessageOptions(opts);
+	return {
+		success: m.inspector_severity_desc_success(undefined, options),
+		'success-soft': m.inspector_severity_desc_success_soft(undefined, options),
+		neutral: m.inspector_severity_desc_neutral(undefined, options),
+		warning: m.inspector_severity_desc_warning(undefined, options),
+		danger: m.inspector_severity_desc_danger(undefined, options)
+	};
+}
 
 const NUMERIC_THRESHOLD_LAYERS = new Set(['laerm-2023', 'laerm-den', 'laerm-night']);
 const UMWELTATLAS_KATEGORIE_LAYERS = new Set([

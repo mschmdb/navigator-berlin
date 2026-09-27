@@ -9,6 +9,7 @@
 		OepnvStopIndex
 	} from '$lib/data';
 	import InspectorPanel from './inspector-panel.svelte';
+	import type { Locale } from '$lib/paraglide/runtime';
 
 	type Props = {
 		open?: boolean;
@@ -18,6 +19,9 @@
 		nearestStation?: ClimateStation | null;
 		climateSeries?: ClimateData | null;
 		oepnvStopIndex?: OepnvStopIndex | null;
+		/** Story 10.6b Lärm-dB-Kiez-Mittel, für Kontextzeilen-Tests (Review-Fund). */
+		kiezLaermDb?: number | null;
+		lang?: Locale;
 	};
 
 	let {
@@ -27,7 +31,9 @@
 		layerMeta = [],
 		nearestStation = null,
 		climateSeries = null,
-		oepnvStopIndex = null
+		oepnvStopIndex = null,
+		kiezLaermDb = null,
+		lang
 	}: Props = $props();
 
 	const ui = createUiState();
@@ -39,7 +45,8 @@
 		ui.nearestStation = nearestStation;
 		ui.climateSeries = climateSeries;
 		ui.oepnvStopIndex = oepnvStopIndex;
+		ui.kiezLaermDb = kiezLaermDb;
 	});
 </script>
 
-<InspectorPanel {layerMeta} />
+<InspectorPanel {layerMeta} {lang} />

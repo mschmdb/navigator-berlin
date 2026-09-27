@@ -4,7 +4,24 @@
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
 	import { buildWahlSlug } from '$lib/data/wahl-slug.js';
-	import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
+	import {
+		wahlReiheLabel,
+		wahlEbeneLabel,
+		wahlStimmtypLabel,
+		wahlWiederholungLabel,
+		wahlVorlaeufigLabel,
+		sourceDisplayLabel,
+		type WahlTyp as Wahltyp
+	} from '$lib/data/wahl-labels.js';
+	import {
+		formatPercent,
+		formatCount,
+		formatWahlDate,
+		formatPercentagePointsDelta
+	} from '$lib/i18n/format.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import type {
 		WahlResultsAtPoint,
 		WahlResultBundle,
@@ -16,24 +33,13 @@
 	type Props = {
 		results: WahlResultsAtPoint | null;
 		methodikHref?: string;
+		lang?: Locale;
 	};
 
-	let { results, methodikHref = '/methodik/wahldaten' }: Props = $props();
+	let { results, methodikHref = '/methodik/wahldaten', lang }: Props = $props();
 
-	const LEVEL_LABELS: Record<LevelKey, string> = {
-		stimmbezirk: 'Stimmbezirk',
-		kiez: 'Kiez',
-		bezirk: 'Bezirk',
-		berlin: 'Berlin gesamt'
-	};
-
-	const TYP_LABELS: Record<'btw' | 'agh' | 'bvv', string> = {
-		btw: 'Bundestag',
-		agh: 'Abgeordnetenhaus',
-		bvv: 'BVV'
-	};
-
-	type Wahltyp = 'btw' | 'agh' | 'bvv';
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	function bundleKey(b: WahlResultBundle): string {
 		return `${b.wahl.typ}-${b.wahl.jahr}-${b.wahl.stimmtyp}`;
@@ -141,18 +147,29 @@
 	}
 
 	function formatPct(n: number): string {
-		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
+		return formatPercent(n, localeOpts);
+	}
+
+	// Reuses `formatPercentagePointsDelta` (Muster `trends-kapitel.svelte::
+	// bareSchwellenWert`, Block B): Vorzeichen + Pp./pp-Einheit abstreifen,
+	// die reine Dezimalzahl bleibt so Zeichen-fuer-Zeichen gleich zum
+	// vormaligen `toFixed(1)`-Hack, ohne die Logik zu duplizieren.
+	function formatDeltaAbs(pp: number): string {
+		return formatPercentagePointsDelta(pp, localeOpts)
+			.replace(/^[+−]/, '')
+			.replace(/\s?(Pp\.|pp)$/, '');
 	}
 
 	function formatDeltaLong(pp: number): string {
-		const direction = pp > 0 ? 'höher' : pp < 0 ? 'niedriger' : 'gleich';
-		const abs = Math.abs(pp).toFixed(1).replace('.', ',');
-		if (Math.abs(pp) < 0.05) return 'gleich';
-		return `${abs} Prozent-Punkte ${direction}`;
+		if (Math.abs(pp) < 0.05) return m.inspector_wahl_delta_equal(undefined, localeOpts);
+		const abs = formatDeltaAbs(pp);
+		return pp > 0
+			? m.inspector_wahl_delta_higher({ abs }, localeOpts)
+			: m.inspector_wahl_delta_lower({ abs }, localeOpts);
 	}
 
 	function formatStimmen(n: number): string {
-		return n.toLocaleString('de-DE');
+		return formatCount(n, localeOpts);
 	}
 
 	function uniqueId(b: WahlResultBundle): string {
@@ -224,6 +241,20 @@
 			};
 		});
 	});
+
+	// Quelle wird bisher über die URL statt über ein `source_name`-Feld
+	// erkannt (Datenlage). Mappt trotzdem über dieselbe Message-Quelle wie
+	// `sourceDisplayLabel`, damit DE/EN nicht zweimal gepflegt werden.
+	const sourceLabel = $derived.by(() => {
+		const url = currentBundle?.wahl.sourceUrl ?? '';
+		if (url.includes('bundeswahlleiterin')) {
+			return sourceDisplayLabel('Bundeswahlleiterin', localeOpts);
+		}
+		if (url.includes('wahlen-berlin.de')) {
+			return sourceDisplayLabel('Landeswahlleiterin Berlin', localeOpts);
+		}
+		return sourceDisplayLabel('Amt für Statistik Berlin-Brandenburg', localeOpts);
+	});
 </script>
 
 {#if featureFlags.wahlSection && results && results.wahlen.length > 0 && availableTypen.length > 0}
@@ -232,10 +263,15 @@
 			class="border-t border-rule pt-4 font-mono text-xs tracking-wide text-ink-muted uppercase"
 			data-testid="wahl-section-header"
 		>
-			Wahlverhalten hier
+			{m.inspector_wahl_section_header(undefined, localeOpts)}
 		</h3>
 
-		<div role="tablist" aria-label="Wahltyp wählen" class="flex gap-1" data-testid="wahl-typ-tabs">
+		<div
+			role="tablist"
+			aria-label={m.inspector_wahl_typ_tabs_aria_label(undefined, localeOpts)}
+			class="flex gap-1"
+			data-testid="wahl-typ-tabs"
+		>
 			{#each availableTypen as typ (typ)}
 				<button
 					role="tab"
@@ -250,7 +286,7 @@
 					class:text-ink={selectedTyp !== typ}
 					class:hover:bg-bg-muted={selectedTyp !== typ}
 				>
-					{TYP_LABELS[typ]}
+					{wahlReiheLabel(typ, localeOpts)}
 				</button>
 			{/each}
 		</div>
@@ -261,7 +297,7 @@
 					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					data-testid="wahl-wiederholung-marker"
 				>
-					Wiederholungswahl
+					{wahlWiederholungLabel(localeOpts)}
 				</p>
 			{/if}
 			{#if currentBundle.wahl.vorlaeufig}
@@ -269,8 +305,9 @@
 					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					data-testid="wahl-vorlaeufig-marker"
 				>
-					Vorläufig{#if currentBundle.wahl.sourceUpdatedAt}&nbsp;· Stand {formatBerlinDate(
-							currentBundle.wahl.sourceUpdatedAt
+					{wahlVorlaeufigLabel(localeOpts)}{#if currentBundle.wahl.sourceUpdatedAt}&nbsp;{m.inspector_wahl_vorlaeufig_stand(
+							{ date: formatWahlDate(currentBundle.wahl.sourceUpdatedAt, localeOpts) },
+							localeOpts
 						)}{/if}
 				</p>
 			{/if}
@@ -281,7 +318,7 @@
 						id="wahl-jahr-label"
 						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					>
-						Jahr
+						{m.inspector_wahl_jahr_label(undefined, localeOpts)}
 					</span>
 					<div
 						role="radiogroup"
@@ -308,7 +345,9 @@
 						{/each}
 					</div>
 				{:else if jahreForTypStimmtyp.length === 1}
-					<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">Jahr</span>
+					<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+						{m.inspector_wahl_jahr_label(undefined, localeOpts)}
+					</span>
 					<span class="font-mono text-[11px] text-ink tabular-nums" data-testid="wahl-jahr-static">
 						{jahreForTypStimmtyp[0]}
 					</span>
@@ -319,7 +358,7 @@
 						id="wahl-stimmtyp-label"
 						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					>
-						Stimme
+						{m.inspector_wahl_stimmtyp_group_label(undefined, localeOpts)}
 					</span>
 					<div
 						role="radiogroup"
@@ -341,11 +380,7 @@
 								class:text-ink={selectedStimmtyp !== st}
 								class:hover:bg-bg-muted={selectedStimmtyp !== st}
 							>
-								{st === 'zweitstimme'
-									? 'Zweitstimme'
-									: st === 'erststimme'
-										? 'Erststimme'
-										: 'Stimme'}
+								{wahlStimmtypLabel(st, localeOpts)}
 							</button>
 						{/each}
 					</div>
@@ -356,7 +391,7 @@
 						id="wahl-level-label"
 						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					>
-						Ebene
+						{m.inspector_wahl_ebene_group_label(undefined, localeOpts)}
 					</span>
 					<div
 						role="radiogroup"
@@ -378,7 +413,7 @@
 								class:text-ink={selectedLevel !== lvl}
 								class:hover:bg-bg-muted={selectedLevel !== lvl}
 							>
-								{LEVEL_LABELS[lvl]}
+								{wahlEbeneLabel(lvl, localeOpts)}
 							</button>
 						{/each}
 					</div>
@@ -432,10 +467,20 @@
 												data-testid={`wahl-delta-${entry.kurzname}-${lvl}`}
 												data-delta={pp !== null ? pp.toFixed(2) : 'na'}
 												title={pp !== null
-													? `${LEVEL_LABELS[lvl]}: ${formatPct(ref!)} (hier ${formatDeltaLong(pp)})`
-													: `${LEVEL_LABELS[lvl]}: nicht in Top-5`}
+													? m.inspector_wahl_delta_title(
+															{
+																level: wahlEbeneLabel(lvl, localeOpts),
+																value: formatPct(ref!),
+																delta: formatDeltaLong(pp)
+															},
+															localeOpts
+														)
+													: m.inspector_wahl_delta_not_in_top5(
+															{ level: wahlEbeneLabel(lvl, localeOpts) },
+															localeOpts
+														)}
 											>
-												{LEVEL_LABELS[lvl]}
+												{wahlEbeneLabel(lvl, localeOpts)}
 												{ref !== null ? formatPct(ref) : '–'}
 											</span>
 										{/each}
@@ -449,17 +494,30 @@
 				<table
 					class="sr-only"
 					data-testid="wahl-a11y-table"
-					aria-label={`Top-5 Parteien · ${TYP_LABELS[currentBundle.wahl.typ]} ${currentBundle.wahl.jahr} · Ebene ${LEVEL_LABELS[selectedLevel]}`}
+					aria-label={m.inspector_wahl_a11y_table_aria_label(
+						{
+							typ: wahlReiheLabel(currentBundle.wahl.typ, localeOpts),
+							jahr: String(currentBundle.wahl.jahr),
+							ebene: wahlEbeneLabel(selectedLevel, localeOpts)
+						},
+						localeOpts
+					)}
 				>
 					<caption>
-						Top-5-Parteien für {TYP_LABELS[currentBundle.wahl.typ]}
-						{currentBundle.wahl.jahr}, Ebene {LEVEL_LABELS[selectedLevel]}
+						{m.inspector_wahl_a11y_caption(
+							{
+								typ: wahlReiheLabel(currentBundle.wahl.typ, localeOpts),
+								jahr: String(currentBundle.wahl.jahr),
+								ebene: wahlEbeneLabel(selectedLevel, localeOpts)
+							},
+							localeOpts
+						)}
 					</caption>
 					<thead>
 						<tr>
-							<th scope="col">Partei</th>
-							<th scope="col">Stimmen</th>
-							<th scope="col">Anteil</th>
+							<th scope="col">{m.inspector_wahl_table_partei(undefined, localeOpts)}</th>
+							<th scope="col">{m.inspector_wahl_table_stimmen(undefined, localeOpts)}</th>
+							<th scope="col">{m.inspector_wahl_table_anteil(undefined, localeOpts)}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -475,13 +533,13 @@
 
 				<BriefwahlMarker
 					showBadge={isKiezBriefwahlSchaetzung}
-					tooltip="Kiez-Werte verteilen die Briefwahl einer Gruppe anteilig nach Wahlberechtigten auf ihre Urnen: eine Schätzung, keine amtliche Aufteilung."
-					label="Briefwahl geschätzt"
-					methodikHref={`${methodikHref}#wahldaten-briefwahl`}
+					tooltip={m.inspector_wahl_briefwahl_tooltip(undefined, localeOpts)}
+					label={m.inspector_wahl_briefwahl_label(undefined, localeOpts)}
+					methodikHref={localizedHref(`${methodikHref}#wahldaten-briefwahl`, locale)}
 				/>
 			{:else}
 				<p data-testid="wahl-empty" class="font-mono text-xs text-ink-subtle">
-					Keine Daten für diese Ebene verfügbar.
+					{m.inspector_wahl_empty(undefined, localeOpts)}
 				</p>
 			{/if}
 
@@ -491,9 +549,13 @@
 						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 						data-testid="wahl-sparkline-label"
 					>
-						Verlauf Kiez-Ebene · {sparklineLines[0]?.years[0]}–{sparklineLines[0]?.years[
-							sparklineLines[0].years.length - 1
-						]}
+						{m.inspector_wahl_sparkline_label(
+							{
+								from: String(sparklineLines[0]?.years[0] ?? ''),
+								to: String(sparklineLines[0]?.years[sparklineLines[0].years.length - 1] ?? '')
+							},
+							localeOpts
+						)}
 					</p>
 					<ul class="space-y-1" data-testid="wahl-sparkline-list">
 						{#each sparklineLines as line (line.kurzname)}
@@ -507,7 +569,10 @@
 									viewBox="0 0 80 24"
 									preserveAspectRatio="none"
 									role="img"
-									aria-label={`${line.kurzname} Verlauf`}
+									aria-label={m.inspector_wahl_sparkline_aria(
+										{ partei: line.kurzname },
+										localeOpts
+									)}
 									class="flex-shrink-0"
 								>
 									<path
@@ -535,11 +600,10 @@
 				class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 				data-testid="wahl-meta"
 			>
-				Quelle: {currentBundle.wahl.sourceUrl.includes('bundeswahlleiterin')
-					? 'Bundeswahlleiterin'
-					: currentBundle.wahl.sourceUrl.includes('wahlen-berlin.de')
-						? 'Landeswahlleiterin Berlin'
-						: 'Amt für Statistik Berlin-Brandenburg'} · Lizenz {currentBundle.wahl.license}
+				{m.inspector_wahl_meta(
+					{ source: sourceLabel, license: currentBundle.wahl.license },
+					localeOpts
+				)}
 			</p>
 		{/if}
 
@@ -553,19 +617,19 @@
 					stimmtyp: currentBundle.wahl.stimmtyp
 				})}
 				<a
-					href={`/berlin-wahlen/${slug}`}
+					href={localizedHref(`/berlin-wahlen/${slug}`, locale)}
 					data-testid="wahl-detail-link"
 					class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 				>
-					Detail-Seite öffnen
+					{m.inspector_wahl_detail_link(undefined, localeOpts)}
 				</a>
 			{/if}
 			<a
-				href={methodikHref}
+				href={localizedHref(methodikHref, locale)}
 				data-testid="wahl-methodik-link"
 				class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 			>
-				Methodik · Wahldaten
+				{m.inspector_wahl_methodik_link(undefined, localeOpts)}
 			</a>
 		</div>
 	</section>

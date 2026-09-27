@@ -1,3 +1,6 @@
+import { m } from '$lib/paraglide/messages.js';
+import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
+
 /**
  * Demografie-Kontext pro LOR-Planungsraum (Story 10.5). Neutraler Kontext, kein
  * Score-Input (ADR-015). Anteile als 0-1, Quotienten je 100 Erwerbsfähige.
@@ -32,9 +35,20 @@ export interface DemografieByScope {
 /**
  * Räumlicher Bezug als Label (Inspector-Block + LLM-Export teilen sich diese Quelle,
  * damit beide denselben Bezug nennen). `scopeName` = aufgelöster Kiez/Bezirk-Name.
+ *
+ * i18n Block B3b: `opts` optional, Default DE (Boundary "geteilte Helfer ohne
+ * Locale-Angabe DE" -- der KI-Export (`inspector-panel.svelte`) ruft ohne
+ * `opts` auf und bleibt damit deutsch). "Kiez"/"Bezirk" bleiben in JEDER
+ * Locale deutsche Glossar-Begriffe (B3a-Linie), nur "Umgebung · statistischer
+ * Planungsraum" wird übersetzt.
  */
-export function demografieBezugLabel(scope: DemografieScope, scopeName: string | null): string {
-	if (scope === 'standort') return 'Umgebung · statistischer Planungsraum';
+export function demografieBezugLabel(
+	scope: DemografieScope,
+	scopeName: string | null,
+	opts?: LocaleOptions
+): string {
+	const options = toAtlasMessageOptions(opts);
+	if (scope === 'standort') return m.inspector_demografie_bezug_umgebung(undefined, options);
 	const label = scope === 'kiez' ? 'Kiez' : 'Bezirk';
 	return scopeName ? `${label} ${scopeName}` : label;
 }

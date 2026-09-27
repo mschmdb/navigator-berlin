@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import ClimateLongView from './climate-long-view.svelte';
 import type { YearValue } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function buildSeries(): YearValue[] {
 	const out: YearValue[] = [];
@@ -162,5 +167,37 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 		});
 		const figure = screen.container.querySelector('[data-testid="climate-long-view-figure"]');
 		expect(figure).not.toBeNull();
+	});
+
+	// i18n Block B3b
+	it('lang="en": figcaption + Normalperioden-Label englisch, Narrative-Marker übersetzt', async () => {
+		const screen = render(ClimateLongView, {
+			series: SERIES,
+			stationName: 'Berlin-Dahlem',
+			lang: 'en'
+		});
+		// "Min:"/"Max:"/"Latest:" sind auch im DE-Text englische Labels (vorbestehend,
+		// beweisen also keine Übersetzung) -- die Zahl dahinter beweist EN (Punkt statt Komma).
+		const fc = screen.container.querySelector('[data-testid="chart-figcaption"]');
+		expect(fc?.textContent).toMatch(/Min: \d+\.\d °C/);
+		const oldRow = screen.container.querySelector('[data-testid="climate-long-view-normal-old"]');
+		expect(oldRow?.textContent).toContain('Mean 1961');
+		const marker = screen.container.querySelector('[data-marker-year="1989"]');
+		expect(marker?.textContent).toContain('Fall of the Berlin Wall');
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		const screen = render(ClimateLongView, { series: SERIES, stationName: 'Berlin-Dahlem' });
+		const oldRow = screen.container.querySelector('[data-testid="climate-long-view-normal-old"]');
+		expect(oldRow?.textContent).toContain('Mean 1961');
+	});
+
+	// Koordinator-Entscheidung (Boundary Spec i18n B3b): vorbestehender
+	// Formatfehler behoben, DE bekommt jetzt ein Komma statt Punkt.
+	it('DE-Werte nutzen jetzt Komma statt Punkt (Format-Fix)', async () => {
+		const screen = render(ClimateLongView, { series: SERIES, stationName: 'Berlin-Dahlem' });
+		const fc = screen.container.querySelector('[data-testid="chart-figcaption"]');
+		expect(fc?.textContent).toMatch(/,\d\d? °C/);
 	});
 });

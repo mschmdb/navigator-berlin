@@ -23,7 +23,7 @@ import type { Locale } from '$lib/paraglide/runtime';
 
 export type WahlTyp = 'btw' | 'agh' | 'bvv';
 export type WahlStimmtyp = 'erststimme' | 'zweitstimme' | 'einstimme';
-export type WahlEbene = 'stimmbezirk' | 'kiez' | 'bezirk';
+export type WahlEbene = 'stimmbezirk' | 'kiez' | 'bezirk' | 'berlin';
 
 export interface WahlLabelOptions {
 	readonly locale?: Locale;
@@ -60,7 +60,11 @@ export function wahlEbeneLabel(ebene: WahlEbene, o?: WahlLabelOptions): string {
 	const options = toOptions(o);
 	if (ebene === 'stimmbezirk') return m.wahl_label_ebene_stimmbezirk(undefined, options);
 	if (ebene === 'kiez') return m.wahl_label_ebene_kiez(undefined, options);
-	return m.wahl_label_ebene_bezirk(undefined, options);
+	if (ebene === 'bezirk') return m.wahl_label_ebene_bezirk(undefined, options);
+	// i18n Block B3b: Inspector-Wahlsektion zeigt die Berlin-weite Ebene
+	// zusaetzlich zu den drei Bestands-Ebenen (Block B kannte nur Detailseiten-
+	// Ebenen ohne "Berlin gesamt").
+	return m.wahl_label_ebene_berlin(undefined, options);
 }
 
 export function wahlWiederholungLabel(o?: WahlLabelOptions): string {

@@ -1,33 +1,14 @@
 <script lang="ts" module>
 	const FEEDBACK_RESET_MS = 1800;
-
-	export const SHARE_STRINGS = {
-		title: 'Teilen',
-		closeAriaLabel: 'Share-Sheet schließen',
-		permalinkIdle: 'Permalink kopieren',
-		permalinkDone: 'Permalink kopiert',
-		llmIdle: 'Für KI kopieren',
-		llmDone: 'Markdown kopiert',
-		print: 'Drucken',
-		nativeShare: 'Teilen…',
-		ariaPreviewTemplate: (addr: string) => `Vorschau der Teilen-Karte für ${addr}`,
-		liveLinkCopied: 'Permalink in Zwischenablage',
-		liveLlmCopied: (tokens: string) => `LLM-Markdown kopiert, ${tokens}`
-	} as const;
-
-	function formatTokensApprox(count: number): string {
-		if (count >= 1000) {
-			const k = (count / 1000).toFixed(1).replace('.', ',');
-			return `${k}k`;
-		}
-		return `${count}`;
-	}
 </script>
 
 <script lang="ts">
 	import { Check, Link2, Printer, Share2, Sparkles, X } from '@lucide/svelte';
 	import { approximateTokens } from '$lib/utils/llm-export-builder.js';
 	import { canNativeShare, nativeShare } from '$lib/utils/native-share.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { formatCount, formatDecimal } from '$lib/i18n/format.js';
 
 	type FeedbackState = 'idle' | 'done';
 	type Variant = 'popover' | 'sheet';
@@ -41,6 +22,7 @@
 		addressName: string;
 		variant?: Variant;
 		nativeShareData?: ShareData;
+		lang?: Locale;
 	};
 
 	let {
@@ -51,8 +33,12 @@
 		ogImageUrl,
 		addressName,
 		variant = 'popover',
-		nativeShareData
+		nativeShareData,
+		lang
 	}: Props = $props();
+
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	let linkState = $state<FeedbackState>('idle');
 	let llmState = $state<FeedbackState>('idle');
@@ -65,7 +51,25 @@
 	let imgFailed = $state(false);
 
 	const tokenCount = $derived(approximateTokens(llmExportText));
-	const tokenLabel = $derived(`≈ ${formatTokensApprox(tokenCount)} Tokens`);
+	// Grössenordnungs-Angabe ("≈ 2,3k Tokens" / "≈ 2.3k tokens"), keine exakte
+	// Zahl -- `formatDecimal` ersetzt den vormals fest verdrahteten
+	// `.replace('.', ',')`-Hack (i18n Block B3b).
+	function formatTokensApprox(count: number): string {
+		if (count >= 1000) {
+			// `minimumFractionDigits: 1` erzwingt (wie vormals `.toFixed(1)`)
+			// immer eine Nachkommastelle, z. B. "2,0k" statt "2k" (Review-Fund).
+			const k = formatDecimal(count / 1000, {
+				...localeOpts,
+				maximumFractionDigits: 1,
+				minimumFractionDigits: 1
+			});
+			return `${k}k`;
+		}
+		return formatCount(count, localeOpts);
+	}
+	const tokenLabel = $derived(
+		m.inspector_share_tokens_approx({ count: formatTokensApprox(tokenCount) }, localeOpts)
+	);
 	const nativeSupported = $derived(canNativeShare(nativeShareData));
 
 	function resetLink(): void {
@@ -88,7 +92,7 @@
 			return;
 		}
 		linkState = 'done';
-		liveText = SHARE_STRINGS.liveLinkCopied;
+		liveText = m.inspector_share_live_link_copied(undefined, localeOpts);
 		if (linkTimer) clearTimeout(linkTimer);
 		linkTimer = setTimeout(resetLink, FEEDBACK_RESET_MS);
 	}
@@ -101,7 +105,7 @@
 			return;
 		}
 		llmState = 'done';
-		liveText = SHARE_STRINGS.liveLlmCopied(tokenLabel);
+		liveText = m.inspector_share_live_llm_copied({ tokens: tokenLabel }, localeOpts);
 		if (llmTimer) clearTimeout(llmTimer);
 		llmTimer = setTimeout(resetLlm, FEEDBACK_RESET_MS);
 	}
@@ -198,12 +202,12 @@
 	>
 		<header class="flex items-center justify-between gap-2 border-b border-rule px-4 py-3">
 			<h2 id="share-sheet-title" class="font-mono text-xs tracking-wide text-ink-muted uppercase">
-				{SHARE_STRINGS.title}
+				{m.inspector_share_title(undefined, localeOpts)}
 			</h2>
 			<button
 				type="button"
 				onclick={onClose}
-				aria-label={SHARE_STRINGS.closeAriaLabel}
+				aria-label={m.inspector_share_close_aria(undefined, localeOpts)}
 				data-testid="share-sheet-close"
 				class="rounded-sm p-1 text-ink-muted hover:text-ink"
 			>
@@ -215,7 +219,7 @@
 			<div class="px-4 pt-3">
 				<img
 					src={ogImageUrl}
-					alt={SHARE_STRINGS.ariaPreviewTemplate(addressName)}
+					alt={m.inspector_share_preview_aria({ address: addressName }, localeOpts)}
 					loading="lazy"
 					data-testid="share-og-preview"
 					class="block w-full rounded border border-rule shadow-sm"
@@ -236,10 +240,10 @@
 				>
 					{#if linkState === 'done'}
 						<Check size={18} aria-hidden="true" class="text-state-success" />
-						<span class="font-mono">{SHARE_STRINGS.permalinkDone}</span>
+						<span class="font-mono">{m.inspector_share_permalink_done(undefined, localeOpts)}</span>
 					{:else}
 						<Link2 size={18} aria-hidden="true" />
-						<span class="font-mono">{SHARE_STRINGS.permalinkIdle}</span>
+						<span class="font-mono">{m.inspector_share_permalink_idle(undefined, localeOpts)}</span>
 					{/if}
 				</button>
 			</li>
@@ -252,10 +256,10 @@
 				>
 					{#if llmState === 'done'}
 						<Check size={18} aria-hidden="true" class="text-state-success" />
-						<span class="font-mono">{SHARE_STRINGS.llmDone}</span>
+						<span class="font-mono">{m.inspector_share_llm_done(undefined, localeOpts)}</span>
 					{:else}
 						<Sparkles size={18} aria-hidden="true" />
-						<span class="font-mono">{SHARE_STRINGS.llmIdle}</span>
+						<span class="font-mono">{m.inspector_share_llm_idle(undefined, localeOpts)}</span>
 					{/if}
 					<span
 						data-testid="share-option-llm-tokens"
@@ -273,7 +277,7 @@
 					class="flex min-h-10 w-full items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
 				>
 					<Printer size={18} aria-hidden="true" />
-					<span class="font-mono">{SHARE_STRINGS.print}</span>
+					<span class="font-mono">{m.inspector_share_print(undefined, localeOpts)}</span>
 				</button>
 			</li>
 			{#if nativeSupported}
@@ -285,7 +289,7 @@
 						class="flex min-h-10 w-full items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
 					>
 						<Share2 size={18} aria-hidden="true" />
-						<span class="font-mono">{SHARE_STRINGS.nativeShare}</span>
+						<span class="font-mono">{m.inspector_share_native(undefined, localeOpts)}</span>
 					</button>
 				</li>
 			{/if}

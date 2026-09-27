@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import NearestStopsCard from './nearest-stops-card.svelte';
 import type { OepnvStopIndex } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const FRANKFURTER_TOR = { lat: 52.5159, lng: 13.4544 };
 
@@ -160,6 +165,20 @@ describe('NearestStopsCard', () => {
 		expect(badge?.textContent).toMatch(/Sehr gut angebunden/);
 	});
 
+	// Review-Fund: Mobility-Badge-Text/aria-label war für lang="en" ungetestet.
+	it('mobility-rating badge zeigt EN-Text + aria-label für lang="en"', () => {
+		const screen = render(NearestStopsCard, {
+			address: FRANKFURTER_TOR,
+			index: INDEX_FULL,
+			lang: 'en'
+		});
+		const badge = screen.container.querySelector('[data-testid="mobility-rating-badge"]');
+		expect(badge?.textContent).toMatch(/Very well connected/);
+		expect(badge?.getAttribute('aria-label')).toBe(
+			'Public transport connection: Very well connected'
+		);
+	});
+
 	it('badge shows "keine" rating when nothing reachable', () => {
 		const screen = render(NearestStopsCard, {
 			address: { lat: 52.3, lng: 13.0 },
@@ -248,6 +267,41 @@ describe('NearestStopsCard', () => {
 			);
 			expect(row?.textContent).toContain('NearHit');
 			expect(row?.getAttribute('data-soft')).toBeNull();
+		});
+	});
+
+	// i18n Block B3b
+	describe('i18n (lang="en")', () => {
+		it('Heading, Modus-Labels, Methoden-Hinweis und leerer Zustand englisch', () => {
+			const screen = render(NearestStopsCard, {
+				address: FRANKFURTER_TOR,
+				index: INDEX_FULL,
+				lang: 'en'
+			});
+			expect(screen.container.querySelector('h3')?.textContent).toBe('Nearest stops');
+			expect(screen.container.textContent).toContain('Estimated: straight-line distance');
+			// Review-Fund: "U-Bahn" ist in DE/EN identisch (Glossar), beweist keine
+			// Übersetzung -- Minuten-Text ("6 minutes") ist eindeutig englisch.
+			const row = screen.container.querySelector(
+				'[data-testid="nearest-stop-row"][data-modus="ubahn"]'
+			);
+			expect(row?.getAttribute('aria-label')).toMatch(/minute[s]?$/);
+			expect(row?.getAttribute('aria-label')).not.toMatch(/Minute/);
+		});
+
+		it('Leerer Zustand englisch (600m/1500m)', () => {
+			const screen = render(NearestStopsCard, {
+				address: FRANKFURTER_TOR,
+				index: INDEX_EMPTY,
+				lang: 'en'
+			});
+			expect(screen.container.textContent).toContain('No public transport stop within 600 m');
+		});
+
+		it('rendert englisch über den Default-Pfad (getLocale())', () => {
+			overwriteGetLocale(() => 'en');
+			const screen = render(NearestStopsCard, { address: FRANKFURTER_TOR, index: INDEX_FULL });
+			expect(screen.container.querySelector('h3')?.textContent).toBe('Nearest stops');
 		});
 	});
 });

@@ -1,6 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import DemografieBlock from './demografie-block.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 import type { KiezDemografieData } from './internal/demografie-types.js';
 
 const DATA: KiezDemografieData = {
@@ -99,5 +104,55 @@ describe('DemografieBlock', () => {
 		await expect
 			.element(screen.getByTestId('demografie-scope-bezirk'))
 			.toHaveAttribute('aria-disabled', 'true');
+	});
+
+	// i18n Block B3b: englischer Block via `lang="en"`, "Kiez"/"Bezirk" bleiben deutsch.
+	it('rendert englisch für lang="en" ("Kiez"/"Bezirk" bleiben deutsch)', async () => {
+		const screen = render(DemografieBlock, { data: DATA, lang: 'en' });
+		await expect.element(screen.getByText('Population profile')).toBeInTheDocument();
+		await expect.element(screen.getByText('20%')).toBeInTheDocument();
+		await expect.element(screen.getByText(/residents\/km²/)).toBeInTheDocument();
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		const screen = render(DemografieBlock, { data: DATA });
+		await expect.element(screen.getByText('Population profile')).toBeInTheDocument();
+	});
+
+	it('Scope kiez auf Englisch: Bezug-Zeile nennt weiter "Kiez"', async () => {
+		const screen = render(DemografieBlock, {
+			data: DATA,
+			scope: 'kiez',
+			scopeName: 'Beispielkiez',
+			kiezAvailable: true,
+			bezirkAvailable: true,
+			onScopeChange: () => {},
+			lang: 'en'
+		});
+		await expect
+			.element(screen.getByTestId('demografie-bezug'))
+			.toHaveTextContent('Reference: Kiez Beispielkiez');
+	});
+
+	it('Default-Scope standort auf Englisch nennt "Surrounding area"', async () => {
+		const screen = render(DemografieBlock, { data: DATA, onScopeChange: () => {}, lang: 'en' });
+		await expect
+			.element(screen.getByTestId('demografie-bezug'))
+			.toHaveTextContent(/Surrounding area.*planning zone/);
+	});
+
+	// Review-Fund: Learn-more-Link nutzte `resolve()` ohne Locale-Präfix
+	// (immer DE-Pfad, unabhängig von `lang`).
+	it('Learn-more-Link zeigt /layer/einwohner-dichte-2024 ohne Präfix (DE)', async () => {
+		const screen = render(DemografieBlock, { data: DATA });
+		const link = (await screen.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/layer/einwohner-dichte-2024');
+	});
+
+	it('Learn-more-Link zeigt /en/layer/einwohner-dichte-2024 für lang="en"', async () => {
+		const screen = render(DemografieBlock, { data: DATA, lang: 'en' });
+		const link = (await screen.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/en/layer/einwohner-dichte-2024');
 	});
 });

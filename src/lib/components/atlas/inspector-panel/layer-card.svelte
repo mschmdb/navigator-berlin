@@ -1,5 +1,6 @@
 <script lang="ts" module>
 	export interface ContextRow {
+		id: string;
 		label: string;
 		text: string;
 	}
@@ -9,9 +10,10 @@
 	import type { LayerHit } from '$lib/data';
 	import { Eye, EyeOff, ExternalLink, ChevronDown } from '@lucide/svelte';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
-	import { getValueSeverity } from './internal/value-severity-mapping.js';
+	import { getValueSeverity, severityDescriptions } from './internal/value-severity-mapping.js';
 	import { getLayerExplainEntry, getLayerExternalLink } from './internal/layer-explain.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
 	import DataStandBanner from './data-stand-banner.svelte';
@@ -31,18 +33,21 @@
 	let {
 		hit,
 		layerName,
-		lang = 'de',
+		lang,
 		isActive = false,
 		onToggleLayer,
 		contextRows = []
 	}: Props = $props();
 
-	const display = $derived(getLayerHitDisplay(hit.layer, hit.value));
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
+
+	const display = $derived(getLayerHitDisplay(hit.layer, hit.value, localeOpts));
 	const severity = $derived(getValueSeverity(hit.layer, hit.value));
 	const explainEntry = $derived(getLayerExplainEntry(hit.layer));
 	const externalLink = $derived(getLayerExternalLink(hit.layer));
 	const editorial = $derived(getEditorialConfig(hit.layer));
-	const learnMoreHref = $derived(localizedHref(`/layer/${hit.layer}`, lang));
+	const learnMoreHref = $derived(localizedHref(`/layer/${hit.layer}`, locale));
 
 	type RowState =
 		| 'with-value'
@@ -60,13 +65,13 @@
 	const stateText = $derived.by(() => {
 		switch (rowState) {
 			case 'no-coverage':
-				return 'Daten nicht vorhanden';
+				return m.inspector_layer_card_no_coverage(undefined, localeOpts);
 			case 'coverage-out-of-scope':
-				return 'Datensatz deckt diese Lage nicht ab';
+				return m.inspector_layer_card_coverage_out_of_scope(undefined, localeOpts);
 			case 'out-of-concept':
-				return 'N. a. für diese Lage';
+				return m.inspector_layer_card_out_of_concept(undefined, localeOpts);
 			case 'seasonal':
-				return 'Layer Mai–Oktober aktiv';
+				return m.inspector_layer_card_seasonal(undefined, localeOpts);
 			default:
 				return null;
 		}
@@ -84,7 +89,7 @@
 	data-testid="layer-card"
 	data-layer={hit.layer}
 	class="-mx-2 rounded border border-rule bg-bg-elevated px-2.5 py-2"
-	aria-label={`${layerName} an dieser Adresse und im Umfeld`}
+	aria-label={m.inspector_layer_card_aria_label({ layerName }, localeOpts)}
 >
 	<div class="flex items-start justify-between gap-2">
 		<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">{layerName}</h4>
@@ -97,11 +102,14 @@
 					numeric={display.chip.numeric}
 					{layerName}
 					compact
+					severityDescriptions={severityDescriptions(localeOpts)}
 				/>
 			{:else if stateText}
 				<span class="font-serif text-sm text-ink-subtle italic">{stateText}</span>
 			{:else if !poiName}
-				<span class="font-serif text-sm text-ink-subtle italic">k. A.</span>
+				<span class="font-serif text-sm text-ink-subtle italic"
+					>{m.inspector_layer_card_no_data(undefined, localeOpts)}</span
+				>
 			{/if}
 		</div>
 	</div>
@@ -118,7 +126,7 @@
 
 	{#if contextRows.length > 0}
 		<dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-xs">
-			{#each contextRows as row (row.label)}
+			{#each contextRows as row (row.id)}
 				<dt class="truncate text-ink-muted">{row.label}</dt>
 				<dd class="text-right text-ink">{row.text}</dd>
 			{/each}
@@ -138,7 +146,7 @@
 				aria-hidden="true"
 				class={detailsOpen ? 'rotate-180 transition-transform' : 'transition-transform'}
 			/>
-			Quelle &amp; Details
+			{m.inspector_common_details_toggle(undefined, localeOpts)}
 		</button>
 		<div class="flex shrink-0 items-center gap-1">
 			{#if onToggleLayer}
@@ -147,9 +155,11 @@
 					data-testid="map-toggle"
 					aria-pressed={isActive}
 					aria-label={isActive
-						? `${layerName} von Karte entfernen`
-						: `${layerName} auf Karte zeigen`}
-					title={isActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
+						? m.inspector_common_map_toggle_remove_named({ layerName }, localeOpts)
+						: m.inspector_common_map_toggle_add_named({ layerName }, localeOpts)}
+					title={isActive
+						? m.inspector_common_map_toggle_remove_title(undefined, localeOpts)
+						: m.inspector_common_map_toggle_add_title(undefined, localeOpts)}
 					onclick={() => onToggleLayer?.(hit.layer)}
 					class={`inline-flex h-6 w-6 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
 				>
@@ -162,8 +172,8 @@
 			<a
 				href={learnMoreHref}
 				data-testid="learn-more"
-				aria-label={`Mehr über ${layerName}`}
-				title="Layer-Details"
+				aria-label={m.inspector_layer_card_learn_more_aria({ layerName }, localeOpts)}
+				title={m.inspector_common_learn_more_title(undefined, localeOpts)}
 				class="inline-flex h-6 w-6 items-center justify-center rounded-sm text-ink-subtle hover:bg-bg hover:text-ink"
 			>
 				<ExternalLink size={13} aria-hidden="true" />
@@ -184,7 +194,7 @@
 					{externalLink.label}
 				</a>
 			{/if}
-			<DataStandBanner {hit} />
+			<DataStandBanner {hit} lang={locale} />
 			{#each editorial?.disclaimerVariants ?? [] as variant (variant)}
 				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
 			{/each}

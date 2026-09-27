@@ -10,7 +10,9 @@
 		findNearestTrinkbrunnen,
 		type Trinkbrunnen
 	} from '$lib/data/get-trinkbrunnen-index.js';
-	import { formatDistanceDe } from './internal/format-distance.js';
+	import { formatDistance } from './internal/format-distance.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
 	const SLUG = 'trinkbrunnen';
 
@@ -19,9 +21,13 @@
 		onToggleLayer?: (slug: string) => void;
 		address?: { lat: number; lng: number } | null;
 		index?: readonly Trinkbrunnen[] | null;
+		lang?: Locale;
 	};
 
-	let { isActive = false, onToggleLayer, address = null, index = null }: Props = $props();
+	let { isActive = false, onToggleLayer, address = null, index = null, lang }: Props = $props();
+
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	const explain = getLayerExplainEntry(SLUG);
 
@@ -29,10 +35,12 @@
 
 	function badges(b: Trinkbrunnen): string {
 		const parts: string[] = [];
-		if (b.kostenlos) parts.push('kostenlos');
-		if (b.bottle) parts.push('Flaschen auffüllen');
-		if (b.wheelchair === 'yes') parts.push('barrierefrei');
-		else if (b.wheelchair === 'limited') parts.push('teils barrierefrei');
+		if (b.kostenlos) parts.push(m.inspector_trinkbrunnen_badge_kostenlos(undefined, localeOpts));
+		if (b.bottle) parts.push(m.inspector_trinkbrunnen_badge_bottle(undefined, localeOpts));
+		if (b.wheelchair === 'yes')
+			parts.push(m.inspector_trinkbrunnen_badge_wheelchair(undefined, localeOpts));
+		else if (b.wheelchair === 'limited')
+			parts.push(m.inspector_trinkbrunnen_badge_wheelchair_limited(undefined, localeOpts));
 		return parts.slice(0, 2).join(' · ');
 	}
 </script>
@@ -44,7 +52,7 @@
 >
 	<h4 class="flex min-w-0 items-center gap-1.5 font-sans text-sm font-semibold text-ink">
 		<Droplet size={15} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
-		Trinkbrunnen
+		{m.inspector_trinkbrunnen_heading(undefined, localeOpts)}
 	</h4>
 	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">{explain.short}</p>
 
@@ -53,10 +61,10 @@
 		<div class="mt-2 border-t border-rule pt-2" data-testid="trinkbrunnen-nearest">
 			<div class="flex items-baseline justify-between gap-2">
 				<span class="min-w-0 truncate font-sans text-sm font-medium text-ink">
-					Nächster: {nearest.name}
+					{m.inspector_trinkbrunnen_nearest_prefix({ name: nearest.name }, localeOpts)}
 				</span>
 				<span class="shrink-0 font-mono text-xs text-ink-subtle tabular-nums">
-					{formatDistanceDe(nearest.distanceM)}
+					{formatDistance(nearest.distanceM, localeOpts)}
 				</span>
 			</div>
 			{#if badgeText}
@@ -69,7 +77,8 @@
 					rel="noopener noreferrer"
 					class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
 				>
-					<Navigation size={11} aria-hidden="true" /> Google Maps
+					<Navigation size={11} aria-hidden="true" />
+					Google Maps
 				</a>
 				<a
 					href={nearest.appleMapsUrl}
@@ -77,7 +86,8 @@
 					rel="noopener noreferrer"
 					class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
 				>
-					<Navigation size={11} aria-hidden="true" /> Apple Maps
+					<Navigation size={11} aria-hidden="true" />
+					Apple Maps
 				</a>
 			</div>
 		</div>
@@ -97,10 +107,10 @@
 		>
 			{#if isActive}
 				<EyeOff size={14} aria-hidden="true" />
-				Trinkbrunnen ausblenden
+				{m.inspector_trinkbrunnen_hide(undefined, localeOpts)}
 			{:else}
 				<Eye size={14} aria-hidden="true" />
-				Trinkbrunnen einblenden
+				{m.inspector_trinkbrunnen_show(undefined, localeOpts)}
 			{/if}
 		</button>
 	{/if}

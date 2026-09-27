@@ -1,8 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import DataStandBanner from './data-stand-banner.svelte';
 import type { LayerHit } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const baseHit: LayerHit = {
 	layer: 'mietspiegel-wohnlage',
@@ -77,5 +82,23 @@ describe('data-stand-banner.svelte (Story 1.18 Compact)', () => {
 		render(DataStandBanner, { hit: baseHit });
 		const txt = (await page.getByTestId('banner-text').element()).textContent ?? '';
 		expect(txt).toMatch(/·/);
+	});
+
+	// i18n Block B3b
+	it('lang="en": Source-Info + Outdated-Pille englisch', async () => {
+		const oldHit: LayerHit = { ...baseHit, updatedAt: '2018-08-20T00:00:00Z' };
+		render(DataStandBanner, { hit: oldHit, lang: 'en' });
+		const info = (await page.getByTestId('banner-source-info').element()) as HTMLElement;
+		expect(info.getAttribute('title')).toContain('Source: fbinter.stadt-berlin.de');
+		const pille = (await page.getByTestId('banner-outdated').element()) as HTMLElement;
+		expect(pille.textContent).toBe('Outdated');
+		expect(pille.getAttribute('title')).toBe('Data as of: 2018-08-20T00:00:00Z');
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		render(DataStandBanner, { hit: baseHit });
+		const info = (await page.getByTestId('banner-source-info').element()) as HTMLElement;
+		expect(info.getAttribute('title')).toContain('Source:');
 	});
 });

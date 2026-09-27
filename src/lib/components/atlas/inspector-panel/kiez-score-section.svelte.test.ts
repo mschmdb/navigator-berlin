@@ -1,8 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import KiezScoreSection from './kiez-score-section.svelte';
 import type { KiezScore } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function makeScore(overrides: Partial<KiezScore> = {}): KiezScore {
 	return {
@@ -102,6 +107,15 @@ describe('KiezScoreSection', () => {
 			.getByTestId('kiez-score-methodik-link')
 			.element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/methodik/kiez-score');
+	});
+
+	// Review-Fund: Methodik-Link war NICHT über `localizedHref` lokalisiert.
+	it('rendert Methodik-Link auf /en/methodik/kiez-score für lang="en"', async () => {
+		render(KiezScoreSection, { score: makeScore(), lang: 'en' });
+		const link = (await page
+			.getByTestId('kiez-score-methodik-link')
+			.element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/en/methodik/kiez-score');
 	});
 
 	it('Wohnschutz ValueChip ist positiv-eindeutig (hoher Schutz = success)', async () => {
@@ -219,6 +233,32 @@ describe('KiezScoreSection', () => {
 		await expect.element(page.getByTestId('kiez-score-stand-ruhe-luft')).toBeInTheDocument();
 	});
 
+	// Review-Fund: `formatWahlDate` erzwingt 2-stellige Tag/Monat-Anzeige +
+	// `Europe/Berlin` ("01.01.2024") statt des vormaligen ungepolsterten
+	// `toLocaleDateString('de-DE')` ("1.1.2024") -- `formatDate` reicht das
+	// Alt-Verhalten unverändert durch.
+	it('Stand-Footer zeigt DE-Datum ungepolstert ("1.1.2024", kein "01.01.")', async () => {
+		render(KiezScoreSection, { score: makeScore() });
+		const toggle = (await page
+			.getByTestId('kiez-score-toggle-sources-ruhe-luft')
+			.element()) as HTMLButtonElement;
+		toggle.click();
+		await expect
+			.element(page.getByTestId('kiez-score-stand-ruhe-luft'))
+			.toHaveTextContent('Stand: 1.1.2024');
+	});
+
+	it('Stand-Footer zeigt EN-Datum für lang="en"', async () => {
+		render(KiezScoreSection, { score: makeScore(), lang: 'en' });
+		const toggle = (await page
+			.getByTestId('kiez-score-toggle-sources-ruhe-luft')
+			.element()) as HTMLButtonElement;
+		toggle.click();
+		await expect
+			.element(page.getByTestId('kiez-score-stand-ruhe-luft'))
+			.toHaveTextContent('As of: 01/01/2024');
+	});
+
 	it('Dimension-Map-Toggle ruft onToggleLayer mit kiez-score-{dim}', async () => {
 		let toggled: string | null = null;
 		render(KiezScoreSection, {
@@ -266,5 +306,75 @@ describe('KiezScoreSection', () => {
 			.element()) as HTMLButtonElement;
 		eye.click();
 		expect(toggled).toBe('kiez-score-gesamt');
+	});
+
+	// i18n Block B3b: englische Section-/Dimension-Labels via `lang="en"`.
+	it('rendert englisch für lang="en" (Heading, Dimension-Label, Methodik-Link)', async () => {
+		render(KiezScoreSection, { score: makeScore(), lang: 'en' });
+		await expect
+			.element(page.getByTestId('kiez-score-section-header'))
+			.toHaveTextContent('Kiez score');
+		await expect
+			.element(page.getByTestId('kiez-score-dim-ruhe-luft'))
+			.toHaveTextContent('Quiet & air');
+		await expect
+			.element(page.getByTestId('kiez-score-methodik-link'))
+			.toHaveTextContent('Methodology · How the Kiez score is calculated');
+		// Review-Fund: ValueChip-severityDescriptions war zunächst nicht verdrahtet.
+		// ruhe-luft=80 → Severity "success" → EN "favourable exposure".
+		const chip = (await page
+			.getByTestId('kiez-score-dim-ruhe-luft')
+			.element()) as HTMLElement;
+		const status = chip.querySelector('[data-testid="value-chip"]');
+		expect(status?.getAttribute('aria-label')).toContain('favourable exposure');
+		expect(status?.getAttribute('aria-label')).not.toMatch(
+			/günstige Belastung|neutrale Einstufung|erhöhte Belastung|hohe kritische Belastung/
+		);
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		render(KiezScoreSection, { score: makeScore() });
+		await expect
+			.element(page.getByTestId('kiez-score-section-header'))
+			.toHaveTextContent('Kiez score');
+	});
+
+	it('Dimension mit value=null zeigt englisch „Insufficient data"', async () => {
+		const score = makeScore();
+		score.dimensions[1].value = null;
+		render(KiezScoreSection, { score, lang: 'en' });
+		await expect
+			.element(page.getByTestId('kiez-score-missing-gruen-hitze'))
+			.toHaveTextContent('Insufficient data');
+	});
+
+	it('Kriminalität-Delikte englisch, Zahl bleibt Locale-formatiert', async () => {
+		const score = makeScore();
+		score.dimensions.push({
+			dimension: 'kriminalitaet',
+			value: 84,
+			sources: [
+				{
+					layer: 'kriminalitaet',
+					rawValue: { index: 1500, delikte: { kieztaten: 3467, wohnraumeinbruch: 149 } },
+					normalizedValue: 84,
+					weight: 1
+				}
+			],
+			missingData: [],
+			dataStand: '2025-01-01T00:00:00.000Z'
+		});
+		render(KiezScoreSection, { score, lang: 'en' });
+		const toggle = (await page
+			.getByTestId('kiez-score-toggle-sources-kriminalitaet')
+			.element()) as HTMLButtonElement;
+		toggle.click();
+		await expect.element(page.getByTestId('kiez-score-delikte-kriminalitaet')).toBeInTheDocument();
+		const kieztaten = (await page
+			.getByTestId('kriminalitaet-delikt-kieztaten')
+			.element()) as HTMLElement;
+		expect(kieztaten.textContent).toContain('Neighbourhood offences');
+		expect(kieztaten.textContent).toContain('3,467');
 	});
 });

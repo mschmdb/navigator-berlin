@@ -15,4 +15,20 @@ describe('demografieBezugLabel', () => {
 		expect(demografieBezugLabel('kiez', null)).toBe('Kiez');
 		expect(demografieBezugLabel('bezirk', null)).toBe('Bezirk');
 	});
+
+	// i18n Block B3b: ohne `opts.locale` bleibt die Funktion DE (Boundary,
+	// vom KI-Export ohne `opts` genutzt).
+	it('ohne opts bleibt DE', () => {
+		expect(demografieBezugLabel('standort', null)).toBe('Umgebung · statistischer Planungsraum');
+	});
+
+	it('opts.locale "en" übersetzt Umgebung, "Kiez"/"Bezirk" bleiben deutsch', () => {
+		expect(demografieBezugLabel('standort', null, { locale: 'en' })).toBe(
+			'Surrounding area · statistical planning zone'
+		);
+		expect(demografieBezugLabel('kiez', 'Beispielkiez', { locale: 'en' })).toBe(
+			'Kiez Beispielkiez'
+		);
+		expect(demografieBezugLabel('bezirk', 'Mitte', { locale: 'en' })).toBe('Bezirk Mitte');
+	});
 });

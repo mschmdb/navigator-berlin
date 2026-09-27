@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import WahlSection from './wahl-section.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 import type {
 	WahlResultsAtPoint,
 	WahlResultBundle,
@@ -280,5 +285,131 @@ describe('WahlSection', () => {
 		await expect.element(page.getByTestId('wahl-typ-tab-btw')).toBeInTheDocument();
 		await expect.element(page.getByTestId('wahl-typ-tab-agh')).toBeInTheDocument();
 		await expect.element(page.getByTestId('wahl-typ-tab-bvv')).toBeInTheDocument();
+	});
+
+	// Review-Fund: Detail-/Methodik-Link waren NICHT über `localizedHref`
+	// lokalisiert (immer DE-Pfad, unabhängig von `lang`).
+	it('Detail-Link + Methodik-Link zeigen DE-Pfade ohne Präfix', async () => {
+		render(WahlSection, { results: makeResults([makeBundle()]) });
+		const detail = (await page.getByTestId('wahl-detail-link').element()) as HTMLAnchorElement;
+		const methodik = (await page.getByTestId('wahl-methodik-link').element()) as HTMLAnchorElement;
+		expect(detail.getAttribute('href')).toBe('/berlin-wahlen/2025-btw-zweitstimme');
+		expect(methodik.getAttribute('href')).toBe('/methodik/wahldaten');
+	});
+
+	it('Detail-Link + Methodik-Link zeigen /en/-Pfade für lang="en"', async () => {
+		render(WahlSection, { results: makeResults([makeBundle()]), lang: 'en' });
+		const detail = (await page.getByTestId('wahl-detail-link').element()) as HTMLAnchorElement;
+		const methodik = (await page.getByTestId('wahl-methodik-link').element()) as HTMLAnchorElement;
+		expect(detail.getAttribute('href')).toBe('/en/berlin-wahlen/2025-btw-zweitstimme');
+		expect(methodik.getAttribute('href')).toBe('/en/methodik/wahldaten');
+	});
+
+	// Review-Fund: Delta-Pill-`title` (positiv + negativ) und der exakte
+	// DE-Prozent-String waren ungetestet.
+	it('Delta-Pill-title DE: positiv "höher" (GRÜNE ggü. Stimmbezirk) + negativ "niedriger" (SPD ggü. Bezirk)', async () => {
+		render(WahlSection, { results: makeResults([makeBundle()]) });
+		const gruene = page.getByTestId('wahl-delta-GRÜNE-stimmbezirk');
+		await expect
+			.element(gruene)
+			.toHaveAttribute('title', 'Stimmbezirk: 20,0 % (hier 10,0 Prozent-Punkte höher)');
+		const spd = page.getByTestId('wahl-delta-SPD-bezirk');
+		await expect
+			.element(spd)
+			.toHaveAttribute('title', 'Bezirk: 23,0 % (hier 3,0 Prozent-Punkte niedriger)');
+	});
+
+	it('Delta-Pill-title EN: positiv "higher" + negativ "lower"', async () => {
+		render(WahlSection, { results: makeResults([makeBundle()]), lang: 'en' });
+		const gruene = page.getByTestId('wahl-delta-GRÜNE-stimmbezirk');
+		await expect
+			.element(gruene)
+			.toHaveAttribute(
+				'title',
+				'Polling district: 20.0% (here 10.0 percentage points higher)'
+			);
+		const spd = page.getByTestId('wahl-delta-SPD-bezirk');
+		await expect
+			.element(spd)
+			.toHaveAttribute('title', 'Bezirk: 23.0% (here 3.0 percentage points lower)');
+	});
+
+	it('Top-5-Anteil zeigt DE-Prozent mit Komma + Leerzeichen ("30,0 %")', async () => {
+		render(WahlSection, { results: makeResults([makeBundle()]) });
+		await expect.element(page.getByTestId('wahl-legend')).toHaveTextContent('30,0 %');
+	});
+
+	// i18n Block B3b: englische Wahlsektion via `lang="en"`-Prop.
+	it('rendert englische Wahlsektion für lang="en" (Header, Ebene, Glossar, Prozent)', async () => {
+		render(WahlSection, { results: makeResults([makeBundle()]), lang: 'en' });
+		await expect
+			.element(page.getByTestId('wahl-section-header'))
+			.toHaveTextContent('Voting behaviour here');
+		await expect.element(page.getByTestId('wahl-typ-tab-btw')).toHaveTextContent('Bundestag');
+		await expect
+			.element(page.getByTestId('wahl-methodik-link'))
+			.toHaveTextContent('Methodology · Election data');
+		const berlinPill = page.getByTestId('wahl-level-berlin');
+		await expect.element(berlinPill).toHaveTextContent('Berlin overall');
+		await expect.element(page.getByTestId('wahl-legend')).toHaveTextContent('%');
+		await expect.element(page.getByTestId('wahl-legend')).not.toHaveTextContent(' %');
+	});
+
+	// Review-relevant: die Karten-/Inspector-Oberfläche übergibt kein `lang`-Prop,
+	// sondern verlässt sich auf den `getLocale()`-Default-Pfad (Muster B3a).
+	it('rendert englisch über den Default-Pfad (getLocale()), ohne explizites lang-Prop', async () => {
+		overwriteGetLocale(() => 'en');
+		render(WahlSection, { results: makeResults([makeBundle()]) });
+		await expect
+			.element(page.getByTestId('wahl-section-header'))
+			.toHaveTextContent('Voting behaviour here');
+	});
+
+	it('zeigt Vorläufig-Marker mit englischem Datum für lang="en"', async () => {
+		const b = makeBundle({
+			wahl: {
+				id: 22,
+				jahr: 2026,
+				typ: 'agh',
+				stimmtyp: 'zweitstimme',
+				isRepeatElection: false,
+				parentElectionId: null,
+				sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/x.csv',
+				license: 'dl-de/by-2.0',
+				vorlaeufig: true,
+				sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+			}
+		});
+		render(WahlSection, { results: makeResults([b]), lang: 'en' });
+		const tab = page.getByTestId('wahl-typ-tab-agh');
+		await tab.click();
+		await expect
+			.element(page.getByTestId('wahl-vorlaeufig-marker'))
+			.toHaveTextContent('Provisional · as of 21 September 2026');
+	});
+
+	it('zeigt englische Quelle + Lizenz-Code unverändert in wahl-meta für lang="en"', async () => {
+		const b = makeBundle({
+			wahl: {
+				id: 22,
+				jahr: 2026,
+				typ: 'agh',
+				stimmtyp: 'zweitstimme',
+				isRepeatElection: false,
+				parentElectionId: null,
+				sourceUrl: 'https://www.wahlen-berlin.de/wahlen/BE2026/x.csv',
+				license: 'dl-de/by-2.0',
+				vorlaeufig: true,
+				sourceUpdatedAt: '2026-09-20T23:55:55.000Z'
+			}
+		});
+		render(WahlSection, { results: makeResults([b]), lang: 'en' });
+		const tab = page.getByTestId('wahl-typ-tab-agh');
+		await tab.click();
+		const meta = page.getByTestId('wahl-meta');
+		await expect
+			.element(meta)
+			.toHaveTextContent('Berlin State Election Commissioner (Landeswahlleiterin Berlin)');
+		await expect.element(meta).toHaveTextContent('Licence dl-de/by-2.0');
 	});
 });

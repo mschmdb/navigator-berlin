@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { BERLIN_NARRATIVE_MARKERS, markersInRange } from './narrative-markers.js';
+import { BERLIN_NARRATIVE_MARKERS, getNarrativeMarkers, markersInRange } from './narrative-markers.js';
 
 describe('BERLIN_NARRATIVE_MARKERS', () => {
 	it('contains the six confirmed anchor points in chronological order', () => {
@@ -29,5 +29,19 @@ describe('markersInRange', () => {
 	it('returns all markers for the full historical range from 1700', () => {
 		const out = markersInRange(BERLIN_NARRATIVE_MARKERS, 1700, 2030);
 		expect(out).toHaveLength(BERLIN_NARRATIVE_MARKERS.length);
+	});
+});
+
+// i18n Block B3b
+describe('getNarrativeMarkers', () => {
+	it('ohne opts bleibt DE (Byte-Parität zu BERLIN_NARRATIVE_MARKERS)', () => {
+		expect(getNarrativeMarkers()).toEqual(BERLIN_NARRATIVE_MARKERS);
+	});
+
+	it('opts.locale "en" übersetzt alle 6 Marker', () => {
+		const markers = getNarrativeMarkers({ locale: 'en' });
+		expect(markers.map((mk) => mk.year)).toEqual([1763, 1871, 1945, 1961, 1989, 2018]);
+		expect(markers[3].label).toBe('Berlin Wall built');
+		expect(markers[4].label).toBe('Fall of the Berlin Wall');
 	});
 });

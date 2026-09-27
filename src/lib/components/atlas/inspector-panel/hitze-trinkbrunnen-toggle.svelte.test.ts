@@ -1,11 +1,16 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import HitzeTrinkbrunnenToggle from './hitze-trinkbrunnen-toggle.svelte';
 import {
 	featureToTrinkbrunnen,
 	type Trinkbrunnen
 } from '$lib/data/get-trinkbrunnen-index.js';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const brunnen: Trinkbrunnen[] = [
 	featureToTrinkbrunnen({
@@ -61,5 +66,28 @@ describe('HitzeTrinkbrunnenToggle', () => {
 	it('ohne address keine Nächster-Zeile', async () => {
 		render(HitzeTrinkbrunnenToggle, { isActive: false, onToggleLayer: () => {}, index: brunnen });
 		await expect.element(page.getByTestId('trinkbrunnen-nearest')).not.toBeInTheDocument();
+	});
+
+	// i18n Block B3b
+	it('lang="en": Heading, Nächster-Zeile, Badges und Toggle-Label englisch', async () => {
+		render(HitzeTrinkbrunnenToggle, {
+			isActive: false,
+			onToggleLayer: () => {},
+			address: { lat: 52.52, lng: 13.405 },
+			index: brunnen,
+			lang: 'en'
+		});
+		await expect
+			.element(page.getByRole('heading', { name: 'Drinking fountains' }))
+			.toBeInTheDocument();
+		await expect.element(page.getByText('Nearest: Nah-Brunnen')).toBeInTheDocument();
+		await expect.element(page.getByText('bottle refill')).toBeInTheDocument();
+		await expect.element(page.getByText('Show drinking fountains')).toBeInTheDocument();
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		render(HitzeTrinkbrunnenToggle, { isActive: true, onToggleLayer: () => {} });
+		await expect.element(page.getByText('Hide drinking fountains')).toBeInTheDocument();
 	});
 });

@@ -5,6 +5,8 @@
 -->
 <script lang="ts">
 	import { ArrowUp } from '@lucide/svelte';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import {
 		scoreDimensionFor,
 		scoreDimensionLabelFor,
@@ -15,12 +17,16 @@
 		slug: string;
 		/** Sprung zur Score-Dimension (Konsument scrollt die Zeile in den Blick). */
 		onJump?: (dimension: string) => void;
+		lang?: Locale;
 	};
-	let { slug, onJump }: Props = $props();
+	let { slug, onJump, lang }: Props = $props();
+
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	const dimension = $derived(scoreDimensionFor(slug));
-	const label = $derived(scoreDimensionLabelFor(slug));
-	const note = $derived(contextNoteFor(slug));
+	const label = $derived(scoreDimensionLabelFor(slug, localeOpts));
+	const note = $derived(contextNoteFor(slug, localeOpts));
 </script>
 
 <div class="mb-1 flex items-baseline gap-2" data-testid="score-membership-{slug}">
@@ -30,17 +36,17 @@
 			data-testid="score-membership-link-{slug}"
 			class="inline-flex items-center gap-1 rounded-sm bg-severity-success-soft-bg px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-severity-success-soft uppercase hover:underline"
 			onclick={() => onJump?.(dimension)}
-			title="Im Kiez-Score · {label} (zur Dimension springen)"
+			title={m.inspector_score_membership_in_score_title({ label }, localeOpts)}
 		>
 			<ArrowUp size={11} aria-hidden="true" />
-			Im Score · {label}
+			{m.inspector_score_membership_in_score_label({ label }, localeOpts)}
 		</button>
 	{:else}
 		<span
 			data-testid="score-membership-context-{slug}"
 			class="rounded-sm bg-bg px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 		>
-			Kontext · nicht im Score
+			{m.inspector_score_membership_context_only(undefined, localeOpts)}
 		</span>
 	{/if}
 </div>

@@ -110,4 +110,25 @@ describe('bottom-sheet.svelte', () => {
 		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 		expect(onClose).toHaveBeenCalledTimes(1);
 	});
+
+	// i18n Block B3b (Fundament): Label-Props mit DE-Default, wie
+	// `mauer-sektoren-detail.svelte`/`value-chip.svelte` (B3a) -- ein
+	// bereits übersetzter Aufrufer (`layer-palette.svelte`, `explore/+page.svelte`)
+	// übergibt lokalisierte Werte, dieser Baustein selbst bleibt ohne Props DE.
+	it('expandLabel/shrinkLabel-Props überschreiben den DE-Default', async () => {
+		render(BottomSheet, {
+			open: true,
+			snapVh: 40,
+			onSnap: () => {},
+			onClose: () => {},
+			expandLabel: 'Enlarge sheet',
+			shrinkLabel: 'Shrink sheet',
+			ariaLabel: 'Inspector panel',
+			children: body
+		});
+		const expand = (await page.getByTestId('sheet-expand').element()) as HTMLElement;
+		const shrink = (await page.getByTestId('sheet-shrink').element()) as HTMLElement;
+		expect(expand.getAttribute('aria-label')).toBe('Enlarge sheet');
+		expect(shrink.getAttribute('aria-label')).toBe('Shrink sheet');
+	});
 });

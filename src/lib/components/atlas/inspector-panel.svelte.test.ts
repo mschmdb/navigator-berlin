@@ -1,7 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Harness from './inspector-panel-harness.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 import type {
 	GeocodeSuggestion,
 	LayerHit,
@@ -408,6 +413,164 @@ describe('inspector-panel.svelte', () => {
 			const section = (await page.getByTestId('section-boundaries').element()) as HTMLElement;
 			const link = section.querySelector('[data-testid^="section-methodik-link-"]');
 			expect(link, 'Methodik-Link soll NICHT pro Section sichtbar sein').toBeNull();
+		});
+	});
+
+	// i18n Block B3b: /en/explore Inspector -- Kopf, Sections, Weitere-Daten-
+	// Header und Hitze-Link englisch; DE bleibt über den Default-Pfad unverändert.
+	describe('i18n (lang="en")', () => {
+		it('Panel-aria-label, Schließen-Button und Bookmark-Label englisch', async () => {
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta, lang: 'en' });
+			const panel = (await page.getByTestId('inspector-panel').element()) as HTMLElement;
+			expect(panel.getAttribute('aria-label')).toBe(`Layer data for ${address.displayName}`);
+			expect(
+				(await page.getByTestId('inspector-close').element()).getAttribute('aria-label')
+			).toBe('Close inspector');
+			// "Bookmark" ist DE/EN identisch (Lehnwort, beweist keine Übersetzung) --
+			// das aria-label unterscheidet sich eindeutig.
+			const bookmarkTrigger = (await page
+				.getByTestId('inspector-bookmark-trigger')
+				.element()) as HTMLElement;
+			expect(bookmarkTrigger.getAttribute('aria-label')).toBe('Save address as bookmark');
+		});
+
+		it('Section-Labels englisch (Umwelt → Environment, Wohnen → Housing)', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Friedrichshain-Kreuzberg'), hit('mietspiegel-wohnlage', 'gut')],
+				layerMeta: fullLayerMeta,
+				lang: 'en'
+			});
+			await expect
+				.element(page.getByTestId('section-header-boundaries'))
+				.toHaveTextContent('Location & administration');
+			await expect.element(page.getByTestId('section-header-wohn')).toHaveTextContent('Housing');
+		});
+
+		// Review-Fund: Titel behauptete bisher auch eine Hitze-Link-Prüfung, die
+		// der Testkörper nie ausführte. `hitzeMode` hängt an `$app/state`s
+		// `page.url.host`/`?mode=hitze`, das dieser reine Komponenten-Harness
+		// (kein SvelteKit-Router-Kontext) nicht steuern kann -- Titel korrigiert,
+		// Hitze-Link bleibt ungetestet (Seiten-/e2e-Ebene, nicht Komponenten-Ebene).
+		it('"Weitere Daten"-Header englisch', async () => {
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta, lang: 'en' });
+			await expect
+				.element(page.getByTestId('weitere-daten-header'))
+				.toHaveTextContent('More data at this address');
+		});
+
+		it('rendert englisch über den Default-Pfad (getLocale()), ohne explizites lang-Prop', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
+			await expect
+				.element(page.getByTestId('weitere-daten-header'))
+				.toHaveTextContent('More data at this address');
+		});
+
+		it('DE bleibt über den Default-Pfad unverändert', async () => {
+			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta });
+			await expect
+				.element(page.getByTestId('weitere-daten-header'))
+				.toHaveTextContent('Weitere Daten an dieser Adresse');
+		});
+	});
+
+	// Review-Fund: Kontextzeilen (Kiez/Bezirk/Berlin-Aggregate, Lärm-dB) und
+	// die Card-Singular-Labels waren ungetestet -- insbesondere ob `String(...)`
+	// am Formatter vorbei DE weiterhin roh (Punkt-Dezimaltrennzeichen aus den
+	// Aggregat-Daten, kein Komma) und EN korrekt zeigt.
+	describe('Kontextzeilen (Aggregate) + Singular-Labels', () => {
+		const bioklimaMeta = meta('bioklima-2023', 'C: Umwelt');
+		const laermMeta = meta('laerm-2023', 'C: Umwelt');
+		const plzMeta = meta('plz', 'A: Boundaries');
+
+		it('Berlin-Kontextzeile bleibt DE roh mit Punkt-Dezimaltrennzeichen ("39.5%"), kein Komma', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bioklima-2023', 'mittel')],
+				layerMeta: [...fullLayerMeta, bioklimaMeta]
+			});
+			await vi.waitUntil(
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('39.5%') ?? false,
+				{ timeout: 5000, interval: 50 }
+			);
+			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+			expect(card.textContent).toContain('meist mittel (39.5%)');
+			expect(card.textContent).not.toContain('39,5');
+		});
+
+		it('Berlin-Kontextzeile EN übersetzt "meist" → "mostly", Zahl bleibt "39.5%"', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bioklima-2023', 'mittel')],
+				layerMeta: [...fullLayerMeta, bioklimaMeta],
+				lang: 'en'
+			});
+			await vi.waitUntil(
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('39.5%') ?? false,
+				{ timeout: 5000, interval: 50 }
+			);
+			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+			expect(card.textContent).toContain('mostly mittel (39.5%)');
+		});
+
+		it('Lärm-dB-Kontextzeile (Kiez-Mittel) DE: "Lärm-Mittel (Kiez)" · "49.8 dB (L_DEN)"', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('laerm-2023', { kategorie: 'gering' })],
+				layerMeta: [...fullLayerMeta, laermMeta],
+				kiezLaermDb: 49.8
+			});
+			await vi.waitUntil(
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('49.8 dB') ?? false,
+				{ timeout: 5000, interval: 50 }
+			);
+			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+			expect(card.textContent).toContain('Lärm-Mittel (Kiez)');
+			expect(card.textContent).toContain('49.8 dB (L_DEN)');
+		});
+
+		it('Lärm-dB-Kontextzeile EN: "Noise mean (Kiez)" · "49.8 dB (L_DEN)"', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('laerm-2023', { kategorie: 'gering' })],
+				layerMeta: [...fullLayerMeta, laermMeta],
+				kiezLaermDb: 49.8,
+				lang: 'en'
+			});
+			await vi.waitUntil(
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('49.8 dB') ?? false,
+				{ timeout: 5000, interval: 50 }
+			);
+			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+			expect(card.textContent).toContain('Noise mean (Kiez)');
+			expect(card.textContent).toContain('49.8 dB (L_DEN)');
+		});
+
+		it('Singular-Label "plz" ist DE "Postleitzahl"', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('plz', '10245')],
+				layerMeta: [...fullLayerMeta, plzMeta]
+			});
+			await expect.element(page.getByText('Postleitzahl', { exact: true })).toBeInTheDocument();
+		});
+
+		it('Singular-Label "plz" ist EN "Postcode"', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('plz', '10245')],
+				layerMeta: [...fullLayerMeta, plzMeta],
+				lang: 'en'
+			});
+			await expect.element(page.getByText('Postcode', { exact: true })).toBeInTheDocument();
 		});
 	});
 });

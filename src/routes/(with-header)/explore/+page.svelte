@@ -1397,6 +1397,8 @@
 				: inspectorActive
 					? m.atlas_route_aside_inspector_mobile(undefined, localeOpts)
 					: m.atlas_route_aside_finder(undefined, localeOpts)}
+			expandLabel={m.atlas_palette_sheet_expand_label(undefined, localeOpts)}
+			shrinkLabel={m.atlas_palette_sheet_shrink_label(undefined, localeOpts)}
 		>
 			{#if ui.compareMode}
 				<ComparePanel

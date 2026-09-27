@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getValueSeverity } from './value-severity-mapping.js';
+import { getValueSeverity, severityDescriptions } from './value-severity-mapping.js';
 
 describe('getValueSeverity()', () => {
 	describe('null/undefined Werte', () => {
@@ -207,5 +207,22 @@ describe('getValueSeverity()', () => {
 				})
 			).toBe('neutral');
 		});
+	});
+});
+
+// i18n Block B3b
+describe('severityDescriptions()', () => {
+	it('ohne opts bleibt DE', () => {
+		expect(severityDescriptions().success).toBe('günstige Belastung');
+		expect(severityDescriptions().danger).toBe('hohe kritische Belastung');
+	});
+
+	it('opts.locale "en" übersetzt', () => {
+		const d = severityDescriptions({ locale: 'en' });
+		expect(d.success).toBe('favourable exposure');
+		expect(d['success-soft']).toBe('slightly favourable exposure');
+		expect(d.neutral).toBe('neutral rating');
+		expect(d.warning).toBe('elevated exposure');
+		expect(d.danger).toBe('critical exposure');
 	});
 });

@@ -10,6 +10,11 @@
 		max?: number;
 		anchorValue?: number | null;
 		anchorLabel?: string;
+		/** i18n Block B3b (Fundament wie B3a `mauer-sektoren-detail`/`value-chip`):
+		 * Label-Prop mit DE-Default. `klima-pet-card.svelte` übergibt lokalisierte
+		 * Werte (`m.inspector_score_bar_value_label`); andere denkbare Aufrufer
+		 * ohne dieses Prop bleiben DE. */
+		valueLabel?: string;
 		unit?: string;
 		severity?: SeverityLevel;
 	};
@@ -21,6 +26,7 @@
 		max = 100,
 		anchorValue = null,
 		anchorLabel = 'Median',
+		valueLabel = 'Wert',
 		unit = '',
 		severity = 'neutral'
 	}: Props = $props();
@@ -59,7 +65,7 @@
 		<caption>{layerName}</caption>
 		<tbody>
 			<tr>
-				<th scope="row">Wert</th>
+				<th scope="row">{valueLabel}</th>
 				<td>{value}{unitSuffix}</td>
 			</tr>
 			{#if anchorPct !== null}

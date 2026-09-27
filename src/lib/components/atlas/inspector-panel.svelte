@@ -62,8 +62,10 @@
 	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { resolveAppMode } from '$lib/app-mode';
-	import { resolve } from '$app/paths';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { formatDate } from '$lib/i18n/format.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
 	type Props = {
 		layerMeta?: readonly LayerMetadata[];
@@ -74,10 +76,16 @@
 
 	let {
 		layerMeta = [],
-		lang = 'de',
+		lang,
 		variant = 'panel',
 		mountId = crypto.randomUUID()
 	}: Props = $props();
+
+	// i18n Block B3b: Inspector-Locale aus `getLocale()` statt festem DE-Default
+	// (Boundary: der Inspector ist eine übersetzte Oberfläche, kein DE-only-
+	// Fundament-Konsument wie Methodik/Lizenzen/`layer/[slug]`).
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	const ui = getUiState();
 
@@ -258,46 +266,75 @@
 		if (agg.type === 'ordinal-distribution') {
 			if (agg.dominant === null) return null;
 			const share = agg.classes.find((c) => c.label === agg.dominant)?.share;
-			return share != null ? `meist ${agg.dominant} (${share}%)` : `meist ${agg.dominant}`;
+			// `agg.dominant` ist ein roher Kategorie-Wert (Boundary: Rohwerte
+			// bleiben unverändert), nur die umgebenden Wörter werden übersetzt.
+			return share != null
+				? m.inspector_context_dominant_with_share(
+						{ dominant: agg.dominant, share: String(share) },
+						localeOpts
+					)
+				: m.inspector_context_dominant({ dominant: agg.dominant }, localeOpts);
 		}
 		if (agg.type === 'coverage-share' || agg.type === 'area-share') {
-			return `${agg.share}% der Fläche`;
+			return m.inspector_context_area_share({ share: String(agg.share) }, localeOpts);
 		}
 		return null;
 	}
 
 	// Eine Card zeigt EINEN Wert → Singular-Label, obwohl der Layer-Name (Map-Legende) Plural ist.
-	const CARD_LABEL_SINGULAR: Record<string, string> = {
-		bezirke: 'Bezirk',
-		ortsteile: 'Ortsteil',
-		plz: 'Postleitzahl',
-		'einschulbereiche-2024': 'Einschulbereich'
-	};
+	// Locale-fähig über `cardLayerNameLabel()`; DE-Ausgabe bleibt Zeichen-für-
+	// Zeichen gleich (vormals `CARD_LABEL_SINGULAR`-Objekt-Lookup).
+	function cardLayerNameLabel(slug: string): string | null {
+		switch (slug) {
+			case 'bezirke':
+				return m.inspector_card_label_bezirk(undefined, localeOpts);
+			case 'ortsteile':
+				return m.inspector_card_label_ortsteil(undefined, localeOpts);
+			case 'plz':
+				return m.inspector_card_label_plz(undefined, localeOpts);
+			case 'einschulbereiche-2024':
+				return m.inspector_card_label_einschulbereich(undefined, localeOpts);
+			default:
+				return null;
+		}
+	}
 
 	function cardLayerName(slug: string): string {
-		return CARD_LABEL_SINGULAR[slug] ?? getLayerDisplayName(slug);
+		return cardLayerNameLabel(slug) ?? getLayerDisplayName(slug, localeOpts);
 	}
 
 	function contextRowsFor(slug: string): ContextRow[] {
-		const scopes: { label: string; scope: 'kiez' | 'bezirk' | 'berlin' }[] = [
-			{ label: level.kiezName ?? 'Kiez', scope: 'kiez' },
-			{ label: level.bezirkName ?? 'Bezirk', scope: 'bezirk' },
-			{ label: 'Berlin', scope: 'berlin' }
+		const scopes: { id: string; label: string; scope: 'kiez' | 'bezirk' | 'berlin' }[] = [
+			{
+				id: 'kiez',
+				label: level.kiezName ?? m.inspector_context_row_kiez_fallback(undefined, localeOpts),
+				scope: 'kiez'
+			},
+			{
+				id: 'bezirk',
+				label: level.bezirkName ?? m.inspector_context_row_bezirk_fallback(undefined, localeOpts),
+				scope: 'bezirk'
+			},
+			{ id: 'berlin', label: m.inspector_context_row_berlin(undefined, localeOpts), scope: 'berlin' }
 		];
 		const rows = scopes.flatMap((s) => {
 			const agg = aggFor(slug, s.scope);
 			const text = agg ? contextText(agg) : null;
-			return text ? [{ label: s.label, text }] : [];
+			return text ? [{ id: s.id, label: s.label, text }] : [];
 		});
 		// Story 10.6b: Lärm-dB-Kiez-Mittel (L_DEN) als Kontext zur adress-genauen 3-Stufen-Karte.
 		if (slug === 'laerm-2023' && ui.kiezLaermDb !== null) {
-			rows.unshift({ label: 'Lärm-Mittel (Kiez)', text: `${ui.kiezLaermDb} dB (L_DEN)` });
+			rows.unshift({
+				id: 'laerm-db',
+				label: m.inspector_context_row_laerm_mittel_label(undefined, localeOpts),
+				text: m.inspector_context_row_laerm_mittel_text({ db: String(ui.kiezLaermDb) }, localeOpts)
+			});
 		}
 		return rows;
 	}
 
 	const enrichedHits = $derived(applyApplicabilityReasons(ui.selectedLayerHits));
-	const sections = $derived(groupHitsBySection(enrichedHits, layerMeta));
+	const sections = $derived(groupHitsBySection(enrichedHits, layerMeta, localeOpts));
 
 	function close(): void {
 		ui.inspectorOpen = false;
@@ -496,7 +533,7 @@
 		bind:this={panelEl}
 		aria-live="polite"
 		aria-atomic="false"
-		aria-label={`Layer-Daten für ${addressName}`}
+		aria-label={m.inspector_panel_aria_label({ name: addressName }, localeOpts)}
 		data-testid="inspector-panel"
 		data-mount-id={mountId}
 		data-variant={variant}
@@ -522,7 +559,7 @@
 					type="button"
 					onclick={close}
 					data-testid="inspector-close"
-					aria-label="Inspektor schließen"
+					aria-label={m.inspector_panel_close_aria(undefined, localeOpts)}
 					class="rounded-sm p-1 text-ink-muted hover:text-ink"
 				>
 					<X size={18} aria-hidden="true" />
@@ -540,19 +577,21 @@
 						data-bookmarked={addressBookmarked ? 'true' : 'false'}
 						onclick={handleInspectorBookmark}
 						aria-label={addressBookmarked
-							? 'Adresse ist gespeichert · Bookmark-Liste öffnen'
-							: 'Adresse als Bookmark speichern'}
+							? m.inspector_bookmark_saved_open_list(undefined, localeOpts)
+							: m.inspector_bookmark_save(undefined, localeOpts)}
 						class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
 					>
 						{#if inspectorSaveJustHappened}
 							<Check size={14} aria-hidden="true" />
-							<span data-testid="inspector-bookmark-confirmation">Gespeichert</span>
+							<span data-testid="inspector-bookmark-confirmation"
+								>{m.inspector_bookmark_saved_label(undefined, localeOpts)}</span
+							>
 						{:else if addressBookmarked}
 							<BookmarkCheck size={14} aria-hidden="true" />
-							<span>Gespeichert</span>
+							<span>{m.inspector_bookmark_saved_label(undefined, localeOpts)}</span>
 						{:else}
 							<Bookmark size={14} aria-hidden="true" />
-							<span>Bookmark</span>
+							<span>{m.inspector_bookmark_label(undefined, localeOpts)}</span>
 						{/if}
 					</button>
 					{#if featureFlags.compareMode}
@@ -563,12 +602,12 @@
 								toggleCompareMode(ui);
 							}}
 							data-testid="compare-trigger"
-							aria-label="Mit Adresse vergleichen"
+							aria-label={m.inspector_compare_aria(undefined, localeOpts)}
 							aria-pressed={ui.compareMode}
 							class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
 						>
 							<GitCompare size={14} aria-hidden="true" />
-							<span>Vergleichen</span>
+							<span>{m.inspector_compare_label(undefined, localeOpts)}</span>
 						</button>
 					{/if}
 					<div class="relative">
@@ -583,7 +622,7 @@
 							class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
 						>
 							<Share2 size={14} aria-hidden="true" />
-							<span>Teilen</span>
+							<span>{m.inspector_share_trigger_label(undefined, localeOpts)}</span>
 						</button>
 						<div id="inspector-share-sheet">
 							<ShareSheet
@@ -595,6 +634,7 @@
 								{addressName}
 								variant={variant === 'sheet' ? 'sheet' : 'popover'}
 								{nativeShareData}
+								lang={locale}
 							/>
 						</div>
 					</div>
@@ -608,56 +648,67 @@
 				{#if !hitzeMode}
 					<KiezScoreSection
 						score={ui.kiezScore}
-						{lang}
+						lang={locale}
 						activeLayerSlugs={ui.activeLayerSlugs}
 						onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 					/>
 					{#if level.kiezSlug || level.bezirkSlug}
 						<nav
 							data-testid="inspector-profile-links"
-							aria-label="Profilseiten"
+							aria-label={m.inspector_profile_links_aria(undefined, localeOpts)}
 							class="flex flex-col gap-1"
 						>
 							{#if level.kiezSlug}
-								{@const kiezHref = resolve('/(with-header)/kiez/[slug]', { slug: level.kiezSlug })}
+								{@const kiezHref = localizedHref(`/kiez/${level.kiezSlug}`, locale)}
 								<div class="flex items-baseline justify-between gap-2">
 									<a
 										data-testid="inspector-kiez-link"
 										class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
 										href={kiezHref}
 									>
-										Kiez-Profil{level.kiezName ? `: ${level.kiezName}` : ''}
+										{level.kiezName
+											? m.inspector_kiez_profile_link_named(
+													{ name: level.kiezName },
+													localeOpts
+												)
+											: m.inspector_kiez_profile_link_unnamed(undefined, localeOpts)}
 									</a>
 									{#if kiezComposite !== null}
 										<span
 											data-testid="inspector-kiez-composite"
 											class="shrink-0 font-mono text-xs text-ink-muted"
-											title="Gesamt-Score der Bezirksregion (Mittel ihrer Planungsräume)"
+											title={m.inspector_kiez_composite_title(undefined, localeOpts)}
 										>
-											Score {Math.round(kiezComposite)}
+											{m.inspector_score_label({ value: String(Math.round(kiezComposite)) }, localeOpts)}
 										</span>
 									{/if}
 								</div>
 							{/if}
 							{#if level.bezirkSlug}
-								{@const bezirkHref = resolve('/(with-header)/bezirk/[slug]', {
-									slug: level.bezirkSlug
-								})}
+								{@const bezirkHref = localizedHref(`/bezirk/${level.bezirkSlug}`, locale)}
 								<div class="flex items-baseline justify-between gap-2">
 									<a
 										data-testid="inspector-bezirk-link"
 										class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
 										href={bezirkHref}
 									>
-										Bezirks-Profil{level.bezirkName ? `: ${level.bezirkName}` : ''}
+										{level.bezirkName
+											? m.inspector_bezirk_profile_link_named(
+													{ name: level.bezirkName },
+													localeOpts
+												)
+											: m.inspector_bezirk_profile_link_unnamed(undefined, localeOpts)}
 									</a>
 									{#if bezirkComposite !== null}
 										<span
 											data-testid="inspector-bezirk-composite"
 											class="shrink-0 font-mono text-xs text-ink-muted"
-											title="Gesamt-Score des Bezirks (Mittel seiner Planungsräume)"
+											title={m.inspector_bezirk_composite_title(undefined, localeOpts)}
 										>
-											Score {Math.round(bezirkComposite)}
+											{m.inspector_score_label(
+												{ value: String(Math.round(bezirkComposite)) },
+												localeOpts
+											)}
 										</span>
 									{/if}
 								</div>
@@ -666,14 +717,13 @@
 					{/if}
 					<div class="border-t border-rule pt-4" data-testid="weitere-daten-header">
 						<h3 class="font-sans text-xs font-semibold tracking-wide text-ink-muted uppercase">
-							Weitere Daten an dieser Adresse
+							{m.inspector_weitere_daten_heading(undefined, localeOpts)}
 						</h3>
 						<p class="mt-1 font-serif text-[11px] leading-snug text-ink-muted italic">
-							Markierte Werte fließen in den Kiez-Score oben ein, die übrigen sind zusätzlicher
-							Kontext.
+							{m.inspector_weitere_daten_hint(undefined, localeOpts)}
 						</p>
 					</div>
-					<WahlSection results={ui.wahlResults} />
+					<WahlSection results={ui.wahlResults} lang={locale} />
 					<DemografieBlock
 						data={activeDemografie}
 						isActive={ui.activeLayerSlugs.includes('einwohner-dichte-2024')}
@@ -683,6 +733,7 @@
 						kiezAvailable={kiezDemografieAvailable}
 						bezirkAvailable={bezirkDemografieAvailable}
 						onScopeChange={changeDemografieScope}
+						lang={locale}
 					/>
 				{/if}
 				{#each sections as section (section.key)}
@@ -710,15 +761,17 @@
 										address={nearestAddressPoint}
 										index={ui.oepnvStopIndex}
 										{isResidential}
+										lang={locale}
 									/>
 								{/if}
 								{#if section.key === 'umwelt' && hasKuehleOrte}
 									<KuehleOrteCard
-										layerName={getLayerDisplayName('kuehle-orte')}
+										layerName={getLayerDisplayName('kuehle-orte', localeOpts)}
 										address={nearestAddressPoint}
 										index={ui.kuehleOrteIndex}
 										isActive={ui.activeLayerSlugs.includes('kuehle-orte')}
 										onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+										lang={locale}
 									/>
 									{#if hitzeMode}
 										<HitzeTrinkbrunnenToggle
@@ -726,21 +779,30 @@
 											onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 											address={nearestAddressPoint}
 											index={ui.trinkbrunnenIndex}
+											lang={locale}
 										/>
 									{/if}
 								{/if}
 								{#if section.key === 'klima'}
-									<KlimaSection station={ui.nearestStation} series={ui.climateSeries} />
+									<KlimaSection
+										station={ui.nearestStation}
+										series={ui.climateSeries}
+										lang={locale}
+									/>
 								{:else if section.hits.length > 0 && !hitzeMode}
 									<div class="space-y-2">
 										{#each section.hits as hit (hit.layer)}
 											<div data-testid="hit-{hit.layer}">
-												<ScoreMembershipBadge slug={hit.layer} onJump={jumpToDimension} />
+												<ScoreMembershipBadge
+													slug={hit.layer}
+													onJump={jumpToDimension}
+													lang={locale}
+												/>
 												{#if hit.layer === 'klima-pet-2022'}
 													<KlimaPetCard
 														{hit}
-														layerName={getLayerDisplayName(hit.layer)}
-														{lang}
+														layerName={getLayerDisplayName(hit.layer, localeOpts)}
+														lang={locale}
 														isActive={ui.activeLayerSlugs.includes(hit.layer)}
 														onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 														kiezName={level.kiezName}
@@ -755,7 +817,7 @@
 													<LayerCard
 														{hit}
 														layerName={cardLayerName(hit.layer)}
-														{lang}
+														lang={locale}
 														isActive={ui.activeLayerSlugs.includes(hit.layer)}
 														onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 														contextRows={contextRowsFor(hit.layer)}
@@ -763,8 +825,8 @@
 												{:else}
 													<LayerHitRow
 														{hit}
-														layerName={getLayerDisplayName(hit.layer)}
-														{lang}
+														layerName={getLayerDisplayName(hit.layer, localeOpts)}
+														lang={locale}
 														lat={ui.selectedAddress?.lat}
 														lng={ui.selectedAddress?.lng}
 														isActive={ui.activeLayerSlugs.includes(hit.layer)}
@@ -782,10 +844,10 @@
 				{#if hitzeMode}
 					<div class="border-t border-rule pt-4" data-testid="hitze-full-navigator">
 						<a
-							href="https://navigator.berlin/explore"
+							href={localizedHref('/explore', locale)}
 							class="inline-flex items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
 						>
-							Alle Layer und Daten im vollen navigator.berlin
+							{m.inspector_hitze_full_navigator_link(undefined, localeOpts)}
 						</a>
 					</div>
 				{/if}
@@ -794,7 +856,9 @@
 
 		<div data-testid="inspector-print-meta">
 			<p>{addressName}</p>
-			<p>navigator.berlin · {new Date().toLocaleDateString('de-DE')}</p>
+			<p>
+				{m.inspector_print_footer({ date: formatDate(new Date().toISOString(), localeOpts) }, localeOpts)}
+			</p>
 			<p>{page.url.toString()}</p>
 		</div>
 	</section>

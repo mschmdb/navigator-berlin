@@ -324,6 +324,8 @@
 		onSnap={() => {}}
 		onClose={close}
 		ariaLabel={m.atlas_palette_aria_label(undefined, localeOpts)}
+		expandLabel={m.atlas_palette_sheet_expand_label(undefined, localeOpts)}
+		shrinkLabel={m.atlas_palette_sheet_shrink_label(undefined, localeOpts)}
 	>
 		<div data-testid="layer-palette" data-variant="sheet" class="flex h-full flex-col">
 			{@render paletteBody()}

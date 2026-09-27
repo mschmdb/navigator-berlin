@@ -1,5 +1,7 @@
 import type { KiezScoreDimension } from '$lib/data';
-import { DIMENSION_LABELS_DE } from './kiez-score-display.js';
+import { m } from '$lib/paraglide/messages.js';
+import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
+import { dimensionLabel } from './kiez-score-display.js';
 
 /**
  * Story 14.11: Welcher Inspector-Layer fließt in welche Kiez-Score-Dimension ein.
@@ -46,22 +48,28 @@ export function scoreDimensionFor(slug: string): KiezScoreDimension | null {
 	return LAYER_SCORE_DIMENSION[slug] ?? null;
 }
 
-/** Lesbares Dimensions-Label für ein Score-Input-Layer, oder null. */
-export function scoreDimensionLabelFor(slug: string): string | null {
+/** Lesbares Dimensions-Label für ein Score-Input-Layer, oder null. Locale-
+ * fähig über `dimensionLabel` (i18n Block B3b); ohne `opts.locale`: DE
+ * (Boundary, Atlas-Fundament). */
+export function scoreDimensionLabelFor(slug: string, opts?: LocaleOptions): string | null {
 	const dim = scoreDimensionFor(slug);
-	return dim ? DIMENSION_LABELS_DE[dim] : null;
+	return dim ? dimensionLabel(dim, opts) : null;
 }
 
 /**
  * Story 14.11 (V5): Layer, deren aktuelle Variante anders in den Score einfließt, bekommen einen
  * klärenden Hinweis (gegen die „doppelt"-Verwirrung). `laerm-2023` (3-Stufen) ist im Score durch
  * das dB-Mittel (`laerm-db`) abgelöst.
+ *
+ * i18n Block B3b: `contextNoteFor` ist jetzt locale-fähig (`opts`, Default
+ * DE). Der vormals exportierte DE-Text-Konstante `LAYER_CONTEXT_NOTE` (Record
+ * Slug→String) hatte keine externen Importer und wich der Message-basierten
+ * `LAYER_CONTEXT_NOTE_SLUGS` (reiner Slug-Set-Check, Text kommt aus `m.*`).
  */
-export const LAYER_CONTEXT_NOTE: Readonly<Record<string, string>> = {
-	'laerm-2023':
-		'Diese 3-Stufen-Karte ist Kontext. In den Score fließt der genauere Lärm-dB-Mittelwert (Ruhe & Luft) ein.'
-};
+const LAYER_CONTEXT_NOTE_SLUGS = new Set(['laerm-2023']);
 
-export function contextNoteFor(slug: string): string | null {
-	return LAYER_CONTEXT_NOTE[slug] ?? null;
+export function contextNoteFor(slug: string, opts?: LocaleOptions): string | null {
+	if (!LAYER_CONTEXT_NOTE_SLUGS.has(slug)) return null;
+	const options = toAtlasMessageOptions(opts);
+	return m.inspector_score_membership_laerm_note(undefined, options);
 }

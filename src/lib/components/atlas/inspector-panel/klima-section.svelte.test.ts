@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import KlimaSection from './klima-section.svelte';
 import type { ClimateStation, ClimateData, YearValue } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function makeSeries(): YearValue[] {
 	return [
@@ -79,5 +84,20 @@ describe('KlimaSection lazy-load', () => {
 		});
 		const banner = screen.container.querySelector('[data-testid="data-stand-banner"]');
 		expect(banner).not.toBeNull();
+	});
+
+	// i18n Block B3b
+	it('lang="en": Heading + Messreihe-Hinweis englisch', async () => {
+		const screen = render(KlimaSection, { station: STATION, series: SERIES, lang: 'en' });
+		expect(screen.container.querySelector('h4')?.textContent).toContain('Climate · DWD station');
+		const hint = screen.container.querySelector('[data-testid="klima-station-hint"]');
+		expect(hint?.textContent).toBe('Data series since 1881');
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		const screen = render(KlimaSection, { station: STATION, series: SERIES });
+		const hint = screen.container.querySelector('[data-testid="klima-station-hint"]');
+		expect(hint?.textContent).toBe('Data series since 1881');
 	});
 });

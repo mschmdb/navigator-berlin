@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import ShareSheet from './share-sheet.svelte';
 
 const PERMALINK = 'https://navigator.berlin/?address=13.4622,52.5135';
@@ -18,6 +19,7 @@ beforeEach(() => {
 
 afterEach(() => {
 	vi.restoreAllMocks();
+	overwriteGetLocale(() => 'de');
 });
 
 function defaultProps() {
@@ -105,5 +107,46 @@ describe('share-sheet.svelte', () => {
 	it('OG-Preview ausgeblendet ohne ogImageUrl', async () => {
 		render(ShareSheet, defaultProps());
 		await expect.element(page.getByTestId('share-og-preview')).not.toBeInTheDocument();
+	});
+
+	// i18n Block B3b
+	it('lang="en": Titel, Optionen und Token-Approximation englisch', async () => {
+		render(ShareSheet, { ...defaultProps(), lang: 'en' });
+		await expect.element(page.getByText('Share', { exact: true })).toBeInTheDocument();
+		await expect
+			.element(page.getByTestId('share-option-permalink'))
+			.toHaveTextContent('Copy permalink');
+		await expect.element(page.getByTestId('share-option-llm')).toHaveTextContent('Copy for AI');
+		await expect.element(page.getByTestId('share-option-print')).toHaveTextContent('Print');
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		render(ShareSheet, defaultProps());
+		await expect.element(page.getByText('Share', { exact: true })).toBeInTheDocument();
+	});
+
+	it('KI-Kopieren englisch zeigt Live-Region-Text mit Token-Approximation', async () => {
+		render(ShareSheet, { ...defaultProps(), lang: 'en' });
+		await page.getByTestId('share-option-llm').click();
+		const live = (await page.getByTestId('share-sheet-live').element()) as HTMLElement;
+		expect(live.textContent).toMatch(/LLM markdown copied/);
+	});
+
+	// Review-Fund: `formatDecimal` ohne `minimumFractionDigits` liess die
+	// Nachkommastelle bei runden Tausendern verschwinden ("≈ 2k Tokens" statt
+	// vormals "≈ 2,0k Tokens" via `.toFixed(1)`).
+	it('Token-Approximation > 1000 zeigt DE eine Nachkommastelle ("2,0k")', async () => {
+		const bigText = 'x'.repeat(8000); // 8000 Zeichen / 4 = 2000 Tokens exakt
+		render(ShareSheet, { ...defaultProps(), llmExportText: bigText });
+		const subtext = (await page.getByTestId('share-option-llm-tokens').element()) as HTMLElement;
+		expect(subtext.textContent).toContain('2,0k');
+	});
+
+	it('Token-Approximation > 1000 zeigt EN eine Nachkommastelle ("2.0k")', async () => {
+		const bigText = 'x'.repeat(8000);
+		render(ShareSheet, { ...defaultProps(), llmExportText: bigText, lang: 'en' });
+		const subtext = (await page.getByTestId('share-option-llm-tokens').element()) as HTMLElement;
+		expect(subtext.textContent).toContain('2.0k');
 	});
 });

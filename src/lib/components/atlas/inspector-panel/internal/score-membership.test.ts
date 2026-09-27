@@ -50,4 +50,10 @@ describe('score-membership', () => {
 		expect(contextNoteFor('laerm-2023')).toMatch(/dB-Mittel/);
 		expect(contextNoteFor('luft-2023')).toBeNull();
 	});
+
+	// i18n Block B3b: ohne `opts.locale` bleibt DE (Boundary); mit `{ locale: 'en' }` übersetzt.
+	it('opts.locale "en" übersetzt Label + Kontext-Note', () => {
+		expect(scoreDimensionLabelFor('luft-2023', { locale: 'en' })).toBe('Quiet & air');
+		expect(contextNoteFor('laerm-2023', { locale: 'en' })).toMatch(/noise dB average/);
+	});
 });

@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { ChevronDown, ChevronRight, Eye, EyeOff, ExternalLink } from '@lucide/svelte';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { formatCount, formatDate } from '$lib/i18n/format.js';
 	import ValueChip from '../value-chip.svelte';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import { getLayerDisplayName } from '../internal/layer-palette-filter.js';
-	import { DIMENSION_LABELS_DE, scaleFor } from './internal/kiez-score-display.js';
+	import { dimensionLabel, scaleFor } from './internal/kiez-score-display.js';
+	import { severityDescriptions } from './internal/value-severity-mapping.js';
 	import type { DimensionScore } from '$lib/data';
 
 	type Props = {
@@ -17,30 +20,34 @@
 		isActive?: boolean;
 		onToggleLayer?: (slug: string) => void;
 	};
-	let { score, open, onToggle, lang = 'de', isActive = false, onToggleLayer }: Props = $props();
+	let { score, open, onToggle, lang, isActive = false, onToggleLayer }: Props = $props();
 
-	const scale = $derived(scaleFor(score.value, score.dimension));
-	const label = $derived(DIMENSION_LABELS_DE[score.dimension]);
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
+
+	const scale = $derived(scaleFor(score.value, score.dimension, localeOpts));
+	const label = $derived(dimensionLabel(score.dimension, localeOpts));
 	const hasSources = $derived(score.sources.length > 0);
 	const layerSlug = $derived(`kiez-score-${score.dimension}`);
-	const learnMoreHref = $derived(localizedHref(`/layer/${layerSlug}`, lang));
+	const learnMoreHref = $derived(localizedHref(`/layer/${layerSlug}`, locale));
 	let internalOpen = $state(false);
 	const sourcesOpen = $derived(open ?? internalOpen);
 
 	// Story 14.4: Kriminalität nach Delikt-Art aufschlüsseln. Die Roh-HZ (3-Jahres-Mittel pro
 	// 100.000 Einwohner) liegen im rawValue der Single-Index-Quelle (build-kiez-scores).
-	const KRIMINALITAET_DELIKT_ORDER: readonly (readonly [string, string, string?])[] = [
+	const KRIMINALITAET_DELIKT_ORDER = $derived<
+		(readonly [string, string, string | undefined])[]
+	>([
 		[
 			'kieztaten',
-			'Kieztaten',
-			'Sammelkategorie der Polizei Berlin: Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch).'
+			m.inspector_kiez_score_delikt_kieztaten(undefined, localeOpts),
+			m.inspector_kiez_score_delikt_kieztaten_hint(undefined, localeOpts)
 		],
-		['wohnraumeinbruch', 'Wohnraumeinbruch'],
-		['sachbeschaedigung', 'Sachbeschädigung'],
-		['strassenraub', 'Straßenraub/Handtaschenraub'],
-		['fahrraddiebstahl', 'Fahrraddiebstahl']
-	];
-	const hzFormatter = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
+		['wohnraumeinbruch', m.inspector_kiez_score_delikt_wohnraumeinbruch(undefined, localeOpts), undefined],
+		['sachbeschaedigung', m.inspector_kiez_score_delikt_sachbeschaedigung(undefined, localeOpts), undefined],
+		['strassenraub', m.inspector_kiez_score_delikt_strassenraub(undefined, localeOpts), undefined],
+		['fahrraddiebstahl', m.inspector_kiez_score_delikt_fahrraddiebstahl(undefined, localeOpts), undefined]
+	]);
 	const krimiDelikte = $derived.by(() => {
 		if (score.dimension !== 'kriminalitaet') return null;
 		const raw = score.sources[0]?.rawValue as
@@ -83,13 +90,18 @@
 		{/if}
 
 		{#if scale}
-			<ValueChip severity={scale.severity} value={scale.label} layerName={label} />
+			<ValueChip
+				severity={scale.severity}
+				value={scale.label}
+				layerName={label}
+				severityDescriptions={severityDescriptions(localeOpts)}
+			/>
 		{:else}
 			<span
 				class="font-mono text-xs text-ink-subtle"
 				data-testid="kiez-score-missing-{score.dimension}"
 			>
-				Daten unzureichend
+				{m.inspector_kiez_score_missing(undefined, localeOpts)}
 			</span>
 		{/if}
 
@@ -98,8 +110,12 @@
 				type="button"
 				data-testid="kiez-score-map-toggle-{score.dimension}"
 				aria-pressed={isActive}
-				aria-label={isActive ? `${label} von Karte entfernen` : `${label} auf Karte zeigen`}
-				title={isActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
+				aria-label={isActive
+					? m.inspector_kiez_score_map_toggle_remove_dim({ label }, localeOpts)
+					: m.inspector_kiez_score_map_toggle_add_dim({ label }, localeOpts)}
+				title={isActive
+					? m.inspector_common_map_toggle_remove_title(undefined, localeOpts)
+					: m.inspector_common_map_toggle_add_title(undefined, localeOpts)}
 				onclick={() => onToggleLayer?.(layerSlug)}
 				class={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
 			>
@@ -112,8 +128,8 @@
 		<a
 			href={learnMoreHref}
 			data-testid="kiez-score-learn-more-{score.dimension}"
-			aria-label={`Mehr über ${label}`}
-			title="Layer-Details"
+			aria-label={m.inspector_kiez_score_learn_more_dim_aria({ label }, localeOpts)}
+			title={m.inspector_common_learn_more_title(undefined, localeOpts)}
 			class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-ink-subtle hover:bg-bg hover:text-ink"
 		>
 			<ExternalLink size={13} aria-hidden="true" />
@@ -126,7 +142,7 @@
 			data-testid="kiez-score-delikte-kriminalitaet"
 		>
 			<li class="text-[10px] tracking-wide text-ink-subtle uppercase">
-				Häufigkeitszahl je Delikt (Fälle pro 100.000 Ew., 3-Jahres-Mittel)
+				{m.inspector_kiez_score_delikt_heading(undefined, localeOpts)}
 			</li>
 			{#each krimiDelikte as d (d.key)}
 				<li
@@ -139,13 +155,16 @@
 							>{/if}
 					</span>
 					<span class="shrink-0 whitespace-nowrap text-ink-subtle tabular-nums">
-						{d.hz === null ? '—' : hzFormatter.format(d.hz)}
+						{d.hz === null ? '—' : formatCount(Math.round(d.hz), localeOpts)}
 					</span>
 				</li>
 			{/each}
 			{#if score.dataStand}
 				<li class="pt-0.5 text-[10px] text-ink-subtle" data-testid="kiez-score-stand-kriminalitaet">
-					Stand: {new Date(score.dataStand).toLocaleDateString('de-DE')}
+					{m.inspector_kiez_score_stand(
+						{ date: formatDate(score.dataStand, localeOpts) },
+						localeOpts
+					)}
 				</li>
 			{/if}
 		</ul>
@@ -159,11 +178,16 @@
 		>
 			{#each score.sources as src (src.layer)}
 				<li class="flex items-baseline justify-between gap-2">
-					<span class="min-w-0 flex-1">{getLayerDisplayName(src.layer)}</span>
+					<span class="min-w-0 flex-1">{getLayerDisplayName(src.layer, localeOpts)}</span>
 					<span class="shrink-0 whitespace-nowrap text-ink-subtle">
 						{src.normalizedValue === null ? '—' : `${Math.round(src.normalizedValue)}/100`}
 						<span class="ml-1 text-[10px]">·</span>
-						<span class="ml-1 text-[10px]">w {Math.round(src.weight * 100)}%</span>
+						<span class="ml-1 text-[10px]"
+							>{m.inspector_kiez_score_weight_label(
+								{ pct: formatCount(Math.round(src.weight * 100), localeOpts) },
+								localeOpts
+							)}</span
+						>
 					</span>
 				</li>
 			{/each}
@@ -172,7 +196,10 @@
 					class="pt-0.5 text-[10px] text-ink-subtle"
 					data-testid="kiez-score-stand-{score.dimension}"
 				>
-					Stand: {new Date(score.dataStand).toLocaleDateString('de-DE')}
+					{m.inspector_kiez_score_stand(
+						{ date: formatDate(score.dataStand, localeOpts) },
+						localeOpts
+					)}
 				</li>
 			{/if}
 		</ul>

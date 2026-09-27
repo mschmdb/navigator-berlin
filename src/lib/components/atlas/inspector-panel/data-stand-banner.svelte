@@ -7,9 +7,14 @@
 		isOutdated,
 		formatYearMonth
 	} from './internal/source-shortener.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
-	type Props = { hit: LayerHit };
-	let { hit }: Props = $props();
+	type Props = { hit: LayerHit; lang?: Locale };
+	let { hit, lang }: Props = $props();
+
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	const sourceShort = $derived(shortenSourceCompact(hit.source));
 	const licenseShort = $derived(shortenLicense(hit.license));
@@ -36,8 +41,8 @@
 		data-testid="banner-source-info"
 		role="img"
 		class="inline-flex items-center text-ink-subtle hover:text-ink-muted"
-		title={`Quelle: ${hostname}`}
-		aria-label={`Quelle: ${hostname}`}
+		title={m.inspector_data_stand_source_info({ hostname }, localeOpts)}
+		aria-label={m.inspector_data_stand_source_info({ hostname }, localeOpts)}
 	>
 		<Info size={10} aria-hidden="true" />
 	</span>
@@ -45,9 +50,9 @@
 		<span
 			data-testid="banner-outdated"
 			class="ml-auto inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-state-warning uppercase"
-			title={`Datenstand: ${hit.updatedAt}`}
+			title={m.inspector_data_stand_outdated_title({ date: hit.updatedAt }, localeOpts)}
 		>
-			Veraltet
+			{m.inspector_data_stand_outdated(undefined, localeOpts)}
 		</span>
 	{/if}
 </p>

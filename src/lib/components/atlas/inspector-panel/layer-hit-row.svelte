@@ -2,10 +2,11 @@
 	import type { LayerHit } from '$lib/data';
 	import { ExternalLink, Eye, EyeOff } from '@lucide/svelte';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import DataStandBanner from './data-stand-banner.svelte';
 	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
-	import { getValueSeverity } from './internal/value-severity-mapping.js';
+	import { getValueSeverity, severityDescriptions } from './internal/value-severity-mapping.js';
 	import { getLayerExplainEntry, getLayerExternalLink } from './internal/layer-explain.js';
 	import { isOutdated } from './internal/source-shortener.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
@@ -23,7 +24,10 @@
 		onToggleLayer?: (slug: string) => void;
 	};
 
-	let { hit, layerName, lang = 'de', lat, lng, isActive = false, onToggleLayer }: Props = $props();
+	let { hit, layerName, lang, lat, lng, isActive = false, onToggleLayer }: Props = $props();
+
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
 
 	let showMore = $state(false);
 	function toggleMore(): void {
@@ -38,7 +42,7 @@
 		| 'seasonal'
 		| 'outdated';
 
-	const display = $derived(getLayerHitDisplay(hit.layer, hit.value));
+	const display = $derived(getLayerHitDisplay(hit.layer, hit.value, localeOpts));
 	const severity = $derived(getValueSeverity(hit.layer, hit.value));
 	const explainEntry = $derived(getLayerExplainEntry(hit.layer));
 	const explain = $derived(explainEntry.short);
@@ -62,20 +66,22 @@
 	});
 
 	const valueText = $derived.by(() => {
-		if (rowState === 'no-coverage') return 'Daten nicht vorhanden';
-		if (rowState === 'coverage-out-of-scope') return 'Datensatz deckt diese Lage nicht ab';
-		if (rowState === 'out-of-concept') return 'Nicht ausgewiesen für diese Lage';
-		if (rowState === 'seasonal') return 'Layer Mai–Oktober aktiv';
+		if (rowState === 'no-coverage') return m.inspector_layer_hit_no_coverage(undefined, localeOpts);
+		if (rowState === 'coverage-out-of-scope')
+			return m.inspector_layer_hit_coverage_out_of_scope(undefined, localeOpts);
+		if (rowState === 'out-of-concept')
+			return m.inspector_layer_hit_out_of_concept(undefined, localeOpts);
+		if (rowState === 'seasonal') return m.inspector_layer_hit_seasonal(undefined, localeOpts);
 		if (display.chip) {
 			return display.chip.unit ? `${display.chip.value} ${display.chip.unit}` : display.chip.value;
 		}
 		if (display.fallbackText) return display.fallbackText;
-		return 'Daten nicht vorhanden';
+		return m.inspector_layer_hit_no_coverage(undefined, localeOpts);
 	});
 
 	const groupLabel = $derived(`${layerName}: ${valueText}`);
 
-	const learnMoreHref = $derived(localizedHref(`/layer/${hit.layer}`, lang));
+	const learnMoreHref = $derived(localizedHref(`/layer/${hit.layer}`, locale));
 
 	const showSeasonalActivePill = $derived(
 		hit.layer === 'trinkbrunnen' && rowState === 'with-value'
@@ -120,6 +126,7 @@
 					unit={display.chip.unit}
 					numeric={display.chip.numeric}
 					{layerName}
+					severityDescriptions={severityDescriptions(localeOpts)}
 				/>
 			{:else if rowState === 'with-value' && display.fallbackText}
 				<span class="text-base font-semibold text-ink" data-testid="value">
@@ -127,22 +134,22 @@
 				</span>
 			{:else if rowState === 'no-coverage'}
 				<span class="font-serif text-sm text-ink-subtle italic" data-testid="value-no-coverage">
-					Daten nicht vorhanden
+					{m.inspector_layer_hit_no_coverage(undefined, localeOpts)}
 				</span>
 			{:else if rowState === 'coverage-out-of-scope'}
 				<span
 					class="font-serif text-sm text-ink-subtle italic"
 					data-testid="value-coverage-out-of-scope"
 				>
-					Datensatz deckt diese Lage nicht ab
+					{m.inspector_layer_hit_coverage_out_of_scope(undefined, localeOpts)}
 				</span>
 			{:else if rowState === 'out-of-concept'}
 				<span class="font-serif text-sm text-ink-subtle italic" data-testid="value-out-of-concept">
-					Nicht ausgewiesen für diese Lage
+					{m.inspector_layer_hit_out_of_concept(undefined, localeOpts)}
 				</span>
 			{:else if rowState === 'seasonal'}
 				<span class="font-mono text-sm text-ink-muted" data-testid="value-seasonal">
-					Layer Mai–Oktober aktiv
+					{m.inspector_layer_hit_seasonal(undefined, localeOpts)}
 				</span>
 			{/if}
 
@@ -151,14 +158,14 @@
 					data-testid="seasonal-pill-active"
 					class="inline-flex items-center rounded-sm bg-state-success/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide text-state-success uppercase"
 				>
-					aktiv (Mai–Oktober)
+					{m.inspector_layer_hit_seasonal_active_pill(undefined, localeOpts)}
 				</span>
 			{:else if showSeasonalOutOfSeasonPill}
 				<span
 					data-testid="seasonal-pill-outofseason"
 					class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide text-state-warning uppercase"
 				>
-					außerhalb der Saison
+					{m.inspector_layer_hit_seasonal_outofseason_pill(undefined, localeOpts)}
 				</span>
 			{/if}
 
@@ -169,9 +176,11 @@
 					data-state={isActive ? 'on' : 'off'}
 					aria-pressed={isActive}
 					aria-label={isActive
-						? `${layerName} von Karte entfernen`
-						: `${layerName} auf Karte zeigen`}
-					title={isActive ? `${layerName} von Karte entfernen` : `${layerName} auf Karte zeigen`}
+						? m.inspector_common_map_toggle_remove_named({ layerName }, localeOpts)
+						: m.inspector_common_map_toggle_add_named({ layerName }, localeOpts)}
+					title={isActive
+						? m.inspector_common_map_toggle_remove_named({ layerName }, localeOpts)
+						: m.inspector_common_map_toggle_add_named({ layerName }, localeOpts)}
 					onclick={() => onToggleLayer?.(hit.layer)}
 					class={[
 						'inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:bg-bg hover:text-ink',
@@ -191,11 +200,11 @@
 				href={learnMoreHref}
 				class="inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:bg-bg hover:text-ink"
 				data-testid="learn-more"
-				aria-label={`Mehr Details über ${layerName}`}
-				title={`Mehr Details über ${layerName}`}
+				aria-label={m.inspector_layer_hit_learn_more_aria({ layerName }, localeOpts)}
+				title={m.inspector_layer_hit_learn_more_aria({ layerName }, localeOpts)}
 			>
 				<ExternalLink size={14} aria-hidden="true" />
-				<span class="sr-only">Mehr Details</span>
+				<span class="sr-only">{m.inspector_layer_hit_learn_more_sr(undefined, localeOpts)}</span>
 			</a>
 		</div>
 	</div>
@@ -228,7 +237,9 @@
 			onclick={toggleMore}
 			class="self-start text-xs font-medium text-accent underline-offset-2 hover:underline"
 		>
-			{showMore ? 'Weniger' : 'Mehr'}
+			{showMore
+				? m.inspector_layer_hit_explain_less(undefined, localeOpts)
+				: m.inspector_layer_hit_explain_more(undefined, localeOpts)}
 		</button>
 	{/if}
 	{#if externalLink && rowState === 'with-value'}
@@ -243,11 +254,18 @@
 			{externalLink.label}
 		</a>
 	{/if}
-	<DataStandBanner {hit} />
+	<DataStandBanner {hit} lang={locale} />
 	{#each disclaimerVariants as variant (variant)}
 		<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
 	{/each}
 	{#if showMauerDetail}
-		<MauerSektorenDetail fetchedAt={hit.updatedAt} />
+		<MauerSektorenDetail
+			fetchedAt={hit.updatedAt}
+			historicalNoteLabel={m.inspector_mauer_historical_note(undefined, localeOpts)}
+			memorialLinkLabel={m.inspector_mauer_memorial_link(undefined, localeOpts)}
+			sourcePrefixLabel={m.inspector_mauer_source_prefix(undefined, localeOpts)}
+			sourceLabel={m.inspector_mauer_source_label(undefined, localeOpts)}
+			standLabel={m.inspector_mauer_stand_label(undefined, localeOpts)}
+		/>
 	{/if}
 </div>

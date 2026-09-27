@@ -9,10 +9,25 @@
 		onSnap: (vh: SheetSnapVh) => void;
 		onClose: () => void;
 		ariaLabel?: string;
+		/** i18n Block B3b (Fundament wie B3a `mauer-sektoren-detail`/`value-chip`):
+		 * Label-Props mit DE-Default. Aufrufer, die selbst schon übersetzt sind
+		 * (`layer-palette.svelte`, `explore/+page.svelte`, B3a), übergeben
+		 * lokalisierte Werte; `bookmark-dialog.svelte` (B3c) bleibt DE. */
+		expandLabel?: string;
+		shrinkLabel?: string;
 		children: Snippet;
 	};
 
-	let { open, snapVh, onSnap, onClose, ariaLabel = 'Inspektor-Panel', children }: Props = $props();
+	let {
+		open,
+		snapVh,
+		onSnap,
+		onClose,
+		ariaLabel = 'Inspektor-Panel',
+		expandLabel = 'Sheet vergrößern',
+		shrinkLabel = 'Sheet verkleinern',
+		children
+	}: Props = $props();
 
 	const SNAP_CYCLE: SheetSnapVh[] = [40, 70, 100];
 
@@ -62,7 +77,7 @@
 					type="button"
 					data-testid="sheet-expand"
 					onclick={nextSnap}
-					aria-label="Sheet vergrößern"
+					aria-label={expandLabel}
 					class="rounded-sm p-1 text-ink-muted hover:text-ink"
 				>
 					<ChevronUp size={18} aria-hidden="true" />
@@ -71,7 +86,7 @@
 					type="button"
 					data-testid="sheet-shrink"
 					onclick={prevSnap}
-					aria-label="Sheet verkleinern"
+					aria-label={shrinkLabel}
 					class="rounded-sm p-1 text-ink-muted hover:text-ink"
 				>
 					<ChevronDown size={18} aria-hidden="true" />

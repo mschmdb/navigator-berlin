@@ -3,7 +3,9 @@
 	import type { NumericMedianAggregate } from '$lib/data/layer-aggregates-types.js';
 	import { Eye, EyeOff, ExternalLink, ChevronDown } from '@lucide/svelte';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { formatDecimal } from '$lib/i18n/format.js';
 	import { getValueSeverity } from './internal/value-severity-mapping.js';
 	import { getLayerExplainEntry, getLayerExternalLink } from './internal/layer-explain.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
@@ -27,7 +29,7 @@
 	let {
 		hit,
 		layerName,
-		lang = 'de',
+		lang,
 		isActive = false,
 		onToggleLayer,
 		kiezName,
@@ -37,7 +39,12 @@
 		berlinAggregate
 	}: Props = $props();
 
-	const fmt = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 });
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
+
+	function fmt(n: number): string {
+		return formatDecimal(n, { ...localeOpts, maximumFractionDigits: 1 });
+	}
 
 	function petOf(value: unknown): number | null {
 		if (value && typeof value === 'object' && 'pet14h' in value) {
@@ -51,18 +58,31 @@
 	const severity = $derived(getValueSeverity('klima-pet-2022', hit.value));
 	const scale = $derived(kiezAggregate?.median != null ? kiezAggregate : (berlinAggregate ?? null));
 
+	// Fallback-Labels teilen sich dieselben Keys wie `inspector-panel.svelte`s
+	// `contextRowsFor` (Review-Fund: vormals eigene 'Kiez'/'Bezirk'/'Berlin'-
+	// Literale statt derselben Message-Quelle).
 	const contextRows = $derived(
 		[
-			{ label: kiezName ?? 'Kiez', agg: kiezAggregate },
-			{ label: bezirkName ?? 'Bezirk', agg: bezirkAggregate },
-			{ label: 'Berlin', agg: berlinAggregate }
-		].filter((r): r is { label: string; agg: NumericMedianAggregate } => r.agg?.median != null)
+			{
+				id: 'kiez',
+				label: kiezName ?? m.inspector_context_row_kiez_fallback(undefined, localeOpts),
+				agg: kiezAggregate
+			},
+			{
+				id: 'bezirk',
+				label: bezirkName ?? m.inspector_context_row_bezirk_fallback(undefined, localeOpts),
+				agg: bezirkAggregate
+			},
+			{ id: 'berlin', label: m.inspector_context_row_berlin(undefined, localeOpts), agg: berlinAggregate }
+		].filter(
+			(r): r is { id: string; label: string; agg: NumericMedianAggregate } => r.agg?.median != null
+		)
 	);
 
 	const explainEntry = $derived(getLayerExplainEntry('klima-pet-2022'));
 	const externalLink = $derived(getLayerExternalLink('klima-pet-2022'));
 	const editorial = $derived(getEditorialConfig('klima-pet-2022'));
-	const learnMoreHref = $derived(localizedHref('/layer/klima-pet-2022', lang));
+	const learnMoreHref = $derived(localizedHref('/layer/klima-pet-2022', locale));
 
 	const SEVERITY_TEXT: Record<string, string> = {
 		success: 'text-severity-success',
@@ -78,7 +98,7 @@
 <section
 	data-testid="klima-pet-card"
 	class="-mx-2 rounded border border-rule bg-bg-elevated px-2.5 py-2"
-	aria-label={`${layerName} an dieser Adresse und im Umfeld`}
+	aria-label={m.inspector_klima_pet_aria_label({ layerName }, localeOpts)}
 >
 	<div class="flex items-start justify-between gap-2">
 		<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">{layerName}</h4>
@@ -87,7 +107,7 @@
 				data-testid="pet-address-value"
 				class={`shrink-0 font-mono text-lg leading-none tabular-nums ${SEVERITY_TEXT[severity] ?? 'text-ink'}`}
 			>
-				{fmt.format(addressPet)}<span class="text-xs">°C</span>
+				{fmt(addressPet)}<span class="text-xs">°C</span>
 			</span>
 		{/if}
 	</div>
@@ -99,29 +119,28 @@
 				min={scale.min}
 				max={scale.max}
 				anchorValue={scale.median}
-				anchorLabel="Median"
+				anchorLabel={m.inspector_score_bar_anchor_median(undefined, localeOpts)}
+				valueLabel={m.inspector_score_bar_value_label(undefined, localeOpts)}
 				unit="°C"
 				{severity}
-				layerName={`${layerName} im Kiez-Kontext`}
+				layerName={m.inspector_klima_pet_kiez_context_label({ layerName }, localeOpts)}
 			/>
 		</div>
 	{/if}
 
 	{#if addressPet === null && contextRows.length > 0}
 		<p data-testid="pet-no-point-value" class="mt-2 font-serif text-xs text-ink-subtle italic">
-			An dieser Stelle kein direkter Messwert · Werte im Umfeld:
+			{m.inspector_klima_pet_no_point_value(undefined, localeOpts)}
 		</p>
 	{/if}
 
 	{#if contextRows.length > 0}
 		<dl class="mt-2 grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 text-xs">
-			{#each contextRows as row (row.label)}
+			{#each contextRows as row (row.id)}
 				<dt class="truncate text-ink-muted">{row.label}</dt>
 				<dd class="text-right font-mono text-ink tabular-nums">
-					{fmt.format(row.agg.median as number)}°C
-					<span class="text-ink-subtle"
-						>· {fmt.format(row.agg.min as number)}–{fmt.format(row.agg.max as number)}</span
-					>
+					{fmt(row.agg.median as number)}°C
+					<span class="text-ink-subtle">· {fmt(row.agg.min as number)}–{fmt(row.agg.max as number)}</span>
 				</dd>
 			{/each}
 		</dl>
@@ -140,7 +159,7 @@
 				aria-hidden="true"
 				class={detailsOpen ? 'rotate-180 transition-transform' : 'transition-transform'}
 			/>
-			Quelle &amp; Details
+			{m.inspector_common_details_toggle(undefined, localeOpts)}
 		</button>
 		<div class="flex shrink-0 items-center gap-1">
 			{#if onToggleLayer}
@@ -149,9 +168,11 @@
 					data-testid="map-toggle"
 					aria-pressed={isActive}
 					aria-label={isActive
-						? `${layerName} von Karte entfernen`
-						: `${layerName} auf Karte zeigen`}
-					title={isActive ? 'Von Karte entfernen' : 'Auf Karte zeigen'}
+						? m.inspector_klima_pet_map_toggle_remove({ layerName }, localeOpts)
+						: m.inspector_klima_pet_map_toggle_add({ layerName }, localeOpts)}
+					title={isActive
+						? m.inspector_common_map_toggle_remove_title(undefined, localeOpts)
+						: m.inspector_common_map_toggle_add_title(undefined, localeOpts)}
 					onclick={() => onToggleLayer?.('klima-pet-2022')}
 					class={`inline-flex h-6 w-6 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
 				>
@@ -164,8 +185,8 @@
 			<a
 				href={learnMoreHref}
 				data-testid="learn-more"
-				aria-label={`Mehr über ${layerName}`}
-				title="Layer-Details"
+				aria-label={m.inspector_klima_pet_learn_more_aria({ layerName }, localeOpts)}
+				title={m.inspector_common_learn_more_title(undefined, localeOpts)}
 				class="inline-flex h-6 w-6 items-center justify-center rounded-sm text-ink-subtle hover:bg-bg hover:text-ink"
 			>
 				<ExternalLink size={13} aria-hidden="true" />
@@ -186,7 +207,7 @@
 					{externalLink.label}
 				</a>
 			{/if}
-			<DataStandBanner {hit} />
+			<DataStandBanner {hit} lang={locale} />
 			{#each editorial?.disclaimerVariants ?? [] as variant (variant)}
 				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
 			{/each}

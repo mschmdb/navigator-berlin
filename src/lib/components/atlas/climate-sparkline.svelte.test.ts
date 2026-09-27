@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import ClimateSparkline from './climate-sparkline.svelte';
 import type { YearValue } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const SUMMER: YearValue[] = [
 	{ year: 1950, count: 8 },
@@ -312,5 +317,52 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 		expect(figure).not.toBeNull();
 		const layerChart = screen.container.querySelector('.lc-root-container');
 		expect(layerChart).toBeNull();
+	});
+
+	// i18n Block B3b
+	it('lang="en": heading, definition und figcaption englisch', async () => {
+		const screen = render(ClimateSparkline, {
+			series: SUMMER,
+			metric: 'summer',
+			stationName: 'Berlin-Dahlem',
+			lang: 'en'
+		});
+		const heading = screen.container.querySelector('[data-testid="climate-sparkline-heading"]');
+		expect(heading?.textContent).toContain('Summer days');
+		const def = screen.container.querySelector('[data-testid="climate-sparkline-definition"]');
+		expect(def?.textContent).toContain('daily maximum');
+		// "Min:"/"Max:"/"Latest:" sind auch im DE-Text englische Labels
+		// (vorbestehend, beweisen also keine Übersetzung); Heading + Definition
+		// oben beweisen EN bereits eindeutig, hier nur Werte-Sanity-Check.
+		const fc = screen.container.querySelector('[data-testid="chart-figcaption"]');
+		expect(fc?.textContent).toContain('Min: 8');
+	});
+
+	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
+		overwriteGetLocale(() => 'en');
+		const screen = render(ClimateSparkline, {
+			series: SUMMER,
+			metric: 'summer',
+			stationName: 'Berlin-Dahlem'
+		});
+		const heading = screen.container.querySelector('[data-testid="climate-sparkline-heading"]');
+		expect(heading?.textContent).toContain('Summer days');
+	});
+
+	// Review-Fund: anders als `climate-long-view.svelte` (dort der tatsächliche
+	// vorbestehende Formatfehler, siehe `climate-long-view.svelte.test.ts`)
+	// zeigte DE hier schon vor B3b korrekt ein Komma (`Intl.NumberFormat('de-DE', ...)`
+	// statt `toFixed()`) -- Regressions-Test, kein Fix.
+	it('DE-Mittelwert nutzt weiterhin Komma statt Punkt ("5,3", kein "5.3")', async () => {
+		const series: YearValue[] = [
+			{ year: 1965, count: 4 },
+			{ year: 1975, count: 5 },
+			{ year: 1980, count: 7 }
+		];
+		const screen = render(ClimateSparkline, { series, metric: 'hot', stationName: 'Berlin-Dahlem' });
+		const oldRow = screen.container.querySelector('[data-testid="climate-sparkline-normal-old"]');
+		// (4+5+7)/3 = 5.33...
+		expect(oldRow?.textContent).toContain('5,3');
+		expect(oldRow?.textContent).not.toContain('5.3');
 	});
 });

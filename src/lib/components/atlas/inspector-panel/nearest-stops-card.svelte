@@ -2,7 +2,17 @@
 	import type { OepnvStopIndex } from '$lib/data';
 	import { TrainFront, TrainTrack, TramFront, Bus } from '@lucide/svelte';
 	import ValueChip from '../value-chip.svelte';
-	import { walkingSeverity } from '$lib/utils/oepnv-walking.js';
+	import {
+		walkingSeverity,
+		MAX_WALKING_DISTANCE_M,
+		EXTENDED_WALKING_DISTANCE_M,
+		WALKING_SPEED_M_PER_MIN,
+		DETOUR_FACTOR
+	} from '$lib/utils/oepnv-walking.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { formatDecimal } from '$lib/i18n/format.js';
+	import { severityDescriptions } from './internal/value-severity-mapping.js';
 	import {
 		findAllNearestStops,
 		findAllNearestStopsWithSoft,
@@ -15,15 +25,40 @@
 		address: { lat: number; lng: number } | null;
 		index: OepnvStopIndex | null;
 		isResidential?: boolean;
+		lang?: Locale;
 	};
 
-	let { address, index, isResidential = false }: Props = $props();
+	let { address, index, isResidential = false, lang }: Props = $props();
 
-	const MODUS_LABEL: Record<Modus, string> = {
-		ubahn: 'U-Bahn',
-		sbahn: 'S-Bahn',
-		tram: 'Tram',
-		bus: 'Bus'
+	const locale = $derived(lang ?? getLocale());
+	const localeOpts = $derived({ locale });
+
+	// Faktor/Geschwindigkeit stammen aus `oepnv-walking.ts` statt einem
+	// zweiten hartcodierten Literal in der Message (Review-Fund). `formatDecimal`
+	// mit fester 1-Nachkommastelle reicht DE ("1,3"/"4,8") unverändert durch.
+	const detourFactorText = $derived(
+		formatDecimal(DETOUR_FACTOR, { ...localeOpts, maximumFractionDigits: 1, minimumFractionDigits: 1 })
+	);
+	const walkingSpeedKmhText = $derived(
+		formatDecimal((WALKING_SPEED_M_PER_MIN * 60) / 1000, {
+			...localeOpts,
+			maximumFractionDigits: 1,
+			minimumFractionDigits: 1
+		})
+	);
+	// Radien ebenfalls aus dem Code (statt zweitem Literal), aber bewusst OHNE
+	// `formatCount`: dessen Tausendertrennzeichen würde "1500m" zu "1.500m"
+	// machen und damit die DE-Ausgabe ändern (Boundary: Zeichen-für-Zeichen
+	// gleich) -- roh wie vormals im Message-String selbst.
+	const emptyStateRadiusText = $derived(
+		String(isResidential ? EXTENDED_WALKING_DISTANCE_M : MAX_WALKING_DISTANCE_M)
+	);
+
+	const MODUS_LABEL: Record<Modus, () => string> = {
+		ubahn: () => m.inspector_nearest_stops_modus_ubahn(undefined, localeOpts),
+		sbahn: () => m.inspector_nearest_stops_modus_sbahn(undefined, localeOpts),
+		tram: () => m.inspector_nearest_stops_modus_tram(undefined, localeOpts),
+		bus: () => m.inspector_nearest_stops_modus_bus(undefined, localeOpts)
 	};
 
 	const MODUS_ICON: Record<Modus, typeof TrainFront> = {
@@ -56,12 +91,31 @@
 
 	const rating = $derived.by(() => {
 		if (!nearestPerModus) return null;
-		return getMobilityRating(nearestPerModus, { isResidential });
+		return getMobilityRating(nearestPerModus, { isResidential, ...localeOpts });
 	});
 
 	function rowAriaLabel(modus: Modus, stop: NearestStop): string {
-		const softPart = stop.soft ? ', schwach angebunden' : '';
-		return `${MODUS_LABEL[modus]} ${stop.name}, ${stop.distanceM} Meter Fußweg, ungefähr ${stop.walkingMin} ${stop.walkingMin === 1 ? 'Minute' : 'Minuten'}${softPart}`;
+		const softPart = stop.soft ? m.inspector_nearest_stops_row_soft_suffix(undefined, localeOpts) : '';
+		const minutes =
+			stop.walkingMin === 1
+				? m.inspector_nearest_stops_minutes_singular(
+						{ count: String(stop.walkingMin) },
+						localeOpts
+					)
+				: m.inspector_nearest_stops_minutes_plural(
+						{ count: String(stop.walkingMin) },
+						localeOpts
+					);
+		return m.inspector_nearest_stops_row_aria(
+			{
+				modus: MODUS_LABEL[modus](),
+				name: stop.name,
+				distance: String(stop.distanceM),
+				minutes,
+				soft: softPart
+			},
+			localeOpts
+		);
 	}
 </script>
 
@@ -73,18 +127,20 @@
 			aria-busy="true"
 			aria-live="polite"
 		>
-			<p class="font-mono text-xs text-ink-subtle">Nächste Haltestellen werden geladen…</p>
+			<p class="font-mono text-xs text-ink-subtle">
+				{m.inspector_nearest_stops_loading(undefined, localeOpts)}
+			</p>
 		</div>
 	{:else}
 		<div
 			class="rounded-sm border border-rule bg-bg-elevated p-3"
 			data-testid="nearest-stops-card"
 			role="region"
-			aria-label="Nächste ÖPNV-Haltestellen"
+			aria-label={m.inspector_nearest_stops_aria_label(undefined, localeOpts)}
 		>
 			<div class="flex items-center justify-between gap-2 border-b border-rule pb-1">
 				<h3 class="font-mono text-xs tracking-wide text-ink-muted uppercase">
-					Nächste Haltestellen
+					{m.inspector_nearest_stops_heading(undefined, localeOpts)}
 				</h3>
 				{#if rating}
 					<span
@@ -101,7 +157,7 @@
 						]
 							.filter(Boolean)
 							.join(' ')}
-						aria-label={`ÖPNV-Anbindung: ${rating.label}`}
+						aria-label={m.inspector_nearest_stops_rating_aria({ label: rating.label }, localeOpts)}
 					>
 						{rating.label}
 					</span>
@@ -111,14 +167,22 @@
 				class="mt-1 pb-2 font-mono text-[10px] leading-snug text-ink-subtle"
 				data-testid="nearest-stops-method"
 			>
-				Berechnete Schätzung: Luftlinie × 1,3 Umweg-Faktor, 4,8 km/h Gehgeschwindigkeit. Reale
-				Fußwege können abweichen.
+				{m.inspector_nearest_stops_method(
+					{ factor: detourFactorText, speed: walkingSpeedKmhText },
+					localeOpts
+				)}
 			</p>
 			{#if entries.length === 0}
 				<p class="py-1 font-mono text-xs text-ink-subtle" data-testid="nearest-stops-empty">
 					{isResidential
-						? 'Keine ÖPNV-Haltestelle im Umkreis von 1500m'
-						: 'Keine ÖPNV-Haltestelle im Umkreis von 600m'}
+						? m.inspector_nearest_stops_empty_residential(
+								{ radius: emptyStateRadiusText },
+								localeOpts
+							)
+						: m.inspector_nearest_stops_empty_default(
+								{ radius: emptyStateRadiusText },
+								localeOpts
+							)}
 				</p>
 			{:else}
 				<ul class="divide-y divide-rule/40">
@@ -143,7 +207,7 @@
 							<span
 								class="w-12 shrink-0 font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 							>
-								{MODUS_LABEL[modus]}
+								{MODUS_LABEL[modus]()}
 							</span>
 							<span class="flex-1 truncate text-sm text-ink">{stop.name}</span>
 							<span
@@ -158,8 +222,9 @@
 									severity={sev}
 									value={stop.walkingMin}
 									unit="min"
-									layerName={`${MODUS_LABEL[modus]} ${stop.name}`}
+									layerName={`${MODUS_LABEL[modus]()} ${stop.name}`}
 									numeric={true}
+									severityDescriptions={severityDescriptions(localeOpts)}
 								/>
 							</span>
 						</li>
