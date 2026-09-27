@@ -73,6 +73,12 @@ describe('buildLayerDetail', () => {
 		expect(d?.methodology?.relatedLayers).toContain('luft-2023');
 	});
 
+	it('liefert englischen layerName für lang "en" (i18n Block B4b)', () => {
+		const d = buildLayerDetail('laerm-2023', 'en', sampleManifest);
+		expect(d?.layerName).toMatch(/Noise/);
+		expect(d?.layerName).not.toMatch(/Lärm/);
+	});
+
 	it('methodology ist null wenn Slug keinen LayerMethodology-Eintrag hat', () => {
 		const manifestWithoutMethodology = {
 			...sampleManifest,

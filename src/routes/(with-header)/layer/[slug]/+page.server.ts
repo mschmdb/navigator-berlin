@@ -2,6 +2,7 @@ import { error } from '@sveltejs/kit';
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildLayerDetail, type LayerDetail } from '$lib/data/get-layer-detail.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
+import { m } from '$lib/paraglide/messages.js';
 import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
 import type { FaqEntry } from '$lib/data/types.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
@@ -51,7 +52,7 @@ export type LayerPageData = {
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	const manifest = await loadManifest(fetch);
 	const detail: LayerDetail | null = buildLayerDetail(params.slug, getLocale(), manifest);
-	if (!detail) error(404, `Layer ${params.slug} nicht gefunden`);
+	if (!detail) error(404, m.layer_page_not_found({ slug: params.slug }, { locale: getLocale() }));
 	const faq = await tryLoadFaq(params.slug);
 	const data: LayerPageData = { detail, faq };
 	return data;

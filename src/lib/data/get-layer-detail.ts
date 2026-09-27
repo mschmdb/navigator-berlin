@@ -1,4 +1,5 @@
 import type { LayerMetadata, Manifest } from './types.js';
+import type { Locale } from '$lib/paraglide/runtime';
 import {
 	getLayerExplainEntry,
 	type LayerExplain
@@ -10,7 +11,7 @@ import { getLayerMethodology, type LayerMethodology } from './layer-methodology.
 
 export interface LayerDetail {
 	readonly slug: string;
-	readonly lang: string;
+	readonly lang: Locale;
 	readonly layerName: string;
 	readonly explain: LayerExplain;
 	readonly meta: LayerMetadata;
@@ -20,7 +21,7 @@ export interface LayerDetail {
 
 export function buildLayerDetail(
 	slug: string,
-	lang: string,
+	lang: Locale,
 	manifest: Manifest
 ): LayerDetail | null {
 	const meta = manifest.layers.find((l) => l.slug === slug);
@@ -31,7 +32,9 @@ export function buildLayerDetail(
 	return {
 		slug,
 		lang,
-		layerName: getLayerDisplayName(slug),
+		// i18n Block B4b: `layerName` folgt der Aufrufer-Locale (`+page.server.ts`
+		// übergibt `getLocale()` als `lang`).
+		layerName: getLayerDisplayName(slug, { locale: lang }),
 		explain: getLayerExplainEntry(slug),
 		meta,
 		editorial: getEditorialConfig(slug),

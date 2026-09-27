@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import ErrorFeedbackMailto from './error-feedback-mailto.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 describe('error-feedback-mailto.svelte', () => {
 	it('rendert "Fehler im Eintrag?"-Text', async () => {
@@ -64,5 +69,37 @@ describe('error-feedback-mailto.svelte', () => {
 		render(ErrorFeedbackMailto, { layerSlug: 'x', layerName: 'Mietspiegel' });
 		const a = (await page.getByTestId('error-feedback-mailto').element()) as HTMLElement;
 		expect(a.getAttribute('aria-label')).toMatch(/Fehler.+Mietspiegel.+melden/);
+	});
+
+	// i18n Block B4b: Komponente liest die globale Locale über `getLocale()`,
+	// nicht über einen `opts`-Prop.
+	describe('EN locale (getLocale() = "en")', () => {
+		it('sichtbarer Text + Aria-Label englisch, Mail-Subject/Body bleiben deutsch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(ErrorFeedbackMailto, {
+				layerSlug: 'mietspiegel-wohnlage',
+				layerName: 'Mietspiegel'
+			});
+			const a = (await page.getByTestId('error-feedback-mailto').element()) as HTMLAnchorElement;
+			expect(a.textContent).toMatch(/Error in this entry/);
+			expect(a.getAttribute('aria-label')).toMatch(/Report an error.+Mietspiegel/);
+			expect(a.getAttribute('href')).toContain('subject=Fehler%20im%20Eintrag%3A%20Mietspiegel');
+			const decoded = decodeURIComponent(a.getAttribute('href') ?? '');
+			expect(decoded).toContain('Beschreibung:');
+		});
+
+		it('Review-Fund #20: `layerName` (Mail-Betreff/-Body) bleibt deutsch, `ariaLayerName` steuert nur das englische Aria-Label', async () => {
+			overwriteGetLocale(() => 'en');
+			render(ErrorFeedbackMailto, {
+				layerSlug: 'laerm-2023',
+				layerName: 'Lärmbelastung 2023',
+				ariaLayerName: 'Noise pollution 2023'
+			});
+			const a = (await page.getByTestId('error-feedback-mailto').element()) as HTMLAnchorElement;
+			const decoded = decodeURIComponent(a.getAttribute('href') ?? '');
+			expect(decoded).toContain('subject=Fehler im Eintrag: Lärmbelastung 2023');
+			expect(a.getAttribute('aria-label')).toBe('Report an error in Noise pollution 2023');
+			expect(a.textContent).toMatch(/Error in this entry/);
+		});
 	});
 });

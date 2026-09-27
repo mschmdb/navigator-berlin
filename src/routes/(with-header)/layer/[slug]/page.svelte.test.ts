@@ -1,10 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Page from './+page.svelte';
 import type { LayerDetail } from '$lib/data/get-layer-detail.js';
 import type { LayerMetadata } from '$lib/data';
 import type { LayerMethodology } from '$lib/data/layer-methodology.js';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function makeMeta(slug: string, overrides: Partial<LayerMetadata> = {}): LayerMetadata {
 	return {
@@ -120,7 +125,10 @@ describe('layer-detail +page.svelte', () => {
 		await expect.element(page.getByTestId('layer-detail-editorial')).not.toBeInTheDocument();
 	});
 
-	it('rendert Bundle-Group oberhalb h1', async () => {
+	it('rendert Bundle-Group roh oberhalb h1 (DE-Parität, Spec Change Log 27.09.)', async () => {
+		// i18n Block B4b: DE zeigt weiter den rohen `meta.bundleGroup`-Wert aus
+		// dem Manifest, byte-identisch zum Vor-B4b-Verhalten -- nur EN läuft
+		// über `bundleLabel()`. Review-Fund #19 (Koordinator, Matze AFK).
 		render(Page, { data: { detail: detail(), faq: [] } });
 		const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
 		expect(article.textContent).toMatch(/C: Umwelt/);
@@ -207,5 +215,222 @@ describe('layer-detail +page.svelte', () => {
 		expect(banner.textContent).toMatch(/Methodik in Vorbereitung/);
 		expect(banner.querySelector('a[href*="methodik"]')).not.toBeNull();
 		expect(banner.querySelector('[data-testid="error-feedback-mailto"]')).not.toBeNull();
+	});
+
+	it('Features-Zahl mit deutschem Tausendertrennzeichen (Punkt)', async () => {
+		const d = detail('laerm-2023', { meta: makeMeta('laerm-2023', { featureCount: 12345 }) });
+		render(Page, { data: { detail: d, faq: [] } });
+		const sourceCard = (await page
+			.getByTestId('layer-detail-source-card')
+			.element()) as HTMLElement;
+		expect(sourceCard.textContent).toMatch(/12\.345/);
+	});
+
+	it('DE-Seite: kein `lang`-Attribut an Lead, Editorial-Section, Skala, Berechnung, Aggregation, Pflege, Aktualisierung, Coverage-Lücken, Omissions', async () => {
+		const d: LayerDetail = {
+			...detail('wohnlagen-2024'),
+			editorial: {
+				slug: 'wohnlagen-2024',
+				disclaimerVariants: ['legal'],
+				primarySourceUrl: 'https://mietspiegel.berlin.de/',
+				feedbackMailto: true
+			}
+		};
+		render(Page, { data: { detail: d, faq: [] } });
+
+		const lead = (await page.getByTestId('layer-detail-lead').element()) as HTMLElement;
+		expect(lead.hasAttribute('lang')).toBe(false);
+
+		const editorial = (await page.getByTestId('layer-detail-editorial').element()) as HTMLElement;
+		expect(editorial.hasAttribute('lang')).toBe(false);
+
+		const scale = (await page.getByTestId('layer-detail-scale').element()) as HTMLElement;
+		expect(scale.querySelector('dd')?.hasAttribute('lang')).toBe(false);
+
+		const methodologySec = (await page
+			.getByTestId('layer-detail-methodology')
+			.element()) as HTMLElement;
+		expect(methodologySec.querySelector('p')?.hasAttribute('lang')).toBe(false);
+		const dds = methodologySec.querySelectorAll('dd');
+		for (const dd of dds) {
+			expect(dd.hasAttribute('lang')).toBe(false);
+		}
+
+		const coverageGaps = (await page
+			.getByTestId('layer-detail-coverage-gaps')
+			.element()) as HTMLElement;
+		expect(coverageGaps.querySelector('ul')?.hasAttribute('lang')).toBe(false);
+
+		const omissions = (await page.getByTestId('layer-detail-omissions').element()) as HTMLElement;
+		expect(omissions.querySelector('ul')?.hasAttribute('lang')).toBe(false);
+	});
+
+	// i18n Block B4b: Komponente liest die globale Locale über `getLocale()`,
+	// nicht über einen `opts`-Prop -- `overwriteGetLocale` simuliert die
+	// URL-Locale von `/en/…`.
+	describe('EN locale (getLocale() = "en")', () => {
+		it('Bundle-Eyebrow, Quelle-Karte-Labels, Werte/Berechnung-Heading und Features-Zahl englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			const d = detail('laerm-2023', {
+				meta: makeMeta('laerm-2023', { featureCount: 12345 })
+			});
+			render(Page, { data: { detail: d, faq: [] } });
+			const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
+			expect(article.textContent).toMatch(/C · Environment/);
+			expect(article.textContent).toMatch(/Source/);
+			expect(article.textContent).toMatch(/Provider/);
+			expect(article.textContent).toMatch(/Licence/);
+			expect(article.textContent).toMatch(/Data as of/);
+			expect(article.textContent).toMatch(/Features/);
+			expect(article.textContent).toMatch(/12,345/);
+			expect(article.textContent).toMatch(/Values/);
+			expect(article.textContent).toMatch(/Scale/);
+			expect(article.textContent).toMatch(/Calculation/);
+			expect(article.textContent).toMatch(/Aggregation/);
+			expect(article.textContent).toMatch(/Maintenance/);
+			expect(article.textContent).toMatch(/Update frequency/);
+			expect(article.textContent).toMatch(/Coverage gaps/);
+			expect(article.textContent).toMatch(/What we don't show/);
+			expect(article.textContent).toMatch(/Related layers/);
+			expect(article.textContent).toMatch(/View layer on the map/);
+		});
+
+		it('Roh-Fallback: unbekannter bundleGroup-Wert bleibt roh, auch auf EN', async () => {
+			overwriteGetLocale(() => 'en');
+			const d = detail('laerm-2023', {
+				meta: makeMeta('laerm-2023', {
+					bundleGroup: 'Z: Unbekannt' as unknown as LayerMetadata['bundleGroup']
+				})
+			});
+			render(Page, { data: { detail: d, faq: [] } });
+			const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
+			expect(article.textContent).toMatch(/Z: Unbekannt/);
+		});
+
+		it('deutsche Layer-Explain-/Methodik-/Editorial-Inhalte tragen lang="de" (WCAG 3.1.2)', async () => {
+			overwriteGetLocale(() => 'en');
+			const d: LayerDetail = {
+				...detail('wohnlagen-2024'),
+				editorial: {
+					slug: 'wohnlagen-2024',
+					disclaimerVariants: ['legal'],
+					primarySourceUrl: 'https://mietspiegel.berlin.de/',
+					feedbackMailto: true
+				}
+			};
+			render(Page, { data: { detail: d, faq: [] } });
+			const lead = (await page.getByTestId('layer-detail-lead').element()) as HTMLElement;
+			expect(lead.getAttribute('lang')).toBe('de');
+			const editorial = (await page.getByTestId('layer-detail-editorial').element()) as HTMLElement;
+			expect(editorial.getAttribute('lang')).toBe('de');
+			const scale = (await page.getByTestId('layer-detail-scale').element()) as HTMLElement;
+			expect(scale.querySelector('dd[lang="de"]')?.textContent).toMatch(/niedrig bis sehr hoch/);
+			const methodology = (await page
+				.getByTestId('layer-detail-methodology')
+				.element()) as HTMLElement;
+			expect(methodology.querySelector('p[lang="de"]')?.textContent).toMatch(
+				/Modellierte Lärm-Gesamtbelastung/
+			);
+			// aggregationLevel, authority, updateFrequency -- alle drei `dd`s.
+			const dds = methodology.querySelectorAll('dd');
+			expect(dds.length).toBe(3);
+			for (const dd of dds) {
+				expect(dd.getAttribute('lang')).toBe('de');
+			}
+			const coverageGaps = (await page
+				.getByTestId('layer-detail-coverage-gaps')
+				.element()) as HTMLElement;
+			expect(coverageGaps.querySelector('ul')?.getAttribute('lang')).toBe('de');
+			const omissions = (await page.getByTestId('layer-detail-omissions').element()) as HTMLElement;
+			expect(omissions.querySelector('ul')?.getAttribute('lang')).toBe('de');
+		});
+
+		it('Verwandter-Layer-Link zeigt englischen Namen mit /en-Href', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Page, { data: { detail: detail(), faq: [] } });
+			const sec = (await page.getByTestId('layer-detail-related').element()) as HTMLElement;
+			const link = sec.querySelector('a[href="/en/layer/luft-2023"]');
+			expect(link, 'Auto-Link zu /en/layer/luft-2023').not.toBeNull();
+			expect(link?.textContent).toMatch(/Air pollution/i);
+		});
+
+		it('Inspector-Link + Methodik-Links zeigen auf /en/…, Query bleibt erhalten', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Page, { data: { detail: detail('wohnlagen-2024'), faq: [] } });
+			const inspectorLink = (await page
+				.getByTestId('layer-detail-inspector-link')
+				.element()) as HTMLAnchorElement;
+			expect(inspectorLink.getAttribute('href')).toMatch(/^\/en\/explore\?layers=wohnlagen-2024/);
+			const banner = (await page
+				.getByTestId('layer-detail-methodik-link')
+				.element()) as HTMLElement;
+			expect(banner.querySelector('a')?.getAttribute('href')).toBe('/en/methodik');
+		});
+
+		it('Hitze-CTA zeigt englischen Text mit /en/hitze-Href', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Page, { data: { detail: detail('kuehle-orte'), faq: [] } });
+			const cta = (await page
+				.getByTestId('layer-detail-hitze-link')
+				.element()) as HTMLAnchorElement;
+			expect(cta.getAttribute('href')).toBe('/en/hitze');
+			expect(cta.textContent).toMatch(/Heat Navigator/);
+		});
+
+		it('Eigene-Berechnung-Zeile zeigt englischen Text mit /en/lizenzen-Link', async () => {
+			overwriteGetLocale(() => 'en');
+			const d = detail('oepnv-composite', {
+				meta: makeMeta('oepnv-composite', {
+					sourceUrl: 'https://navigator.berlin/derived/oepnv-composite'
+				})
+			});
+			render(Page, { data: { detail: d, faq: [] } });
+			const span = (await page.getByTestId('layer-detail-source-link').element()) as HTMLElement;
+			expect(span.textContent).toMatch(/Own calculation from open sources/);
+			expect(span.querySelector('a')?.getAttribute('href')).toBe('/en/lizenzen');
+			expect(span.querySelector('a')?.textContent).toMatch(/Sources & licences/);
+		});
+
+		it('zeigt englisches Leerzustand-Banner + EN-Mailto-Label wenn methodology null, Mailto-Betreff bleibt deutsch', async () => {
+			overwriteGetLocale(() => 'en');
+			const d = detail('laerm-2023', { methodology: null });
+			render(Page, { data: { detail: d, faq: [] } });
+			const banner = (await page
+				.getByTestId('layer-detail-methodology-empty')
+				.element()) as HTMLElement;
+			expect(banner.textContent).toMatch(/not fully documented yet/);
+			expect(banner.querySelector('a')?.getAttribute('href')).toBe('/en/methodik');
+			const mailto = banner.querySelector(
+				'[data-testid="error-feedback-mailto"]'
+			) as HTMLAnchorElement;
+			expect(mailto.textContent).toMatch(/Error in this entry/);
+			// Review-Fund #20: Mailto-Betreff/-Body laufen über den DE-Layer-Namen
+			// (`deLayerName`), damit die Redaktions-Mail nicht gemischtsprachig
+			// wird -- slug `laerm-2023` -> DE-Message "Lärmbelastung 2023", NICHT
+			// die fixture-eigene `layerName` ("Lärmbelastung (Umweltatlas 2023)").
+			const decodedHref = decodeURIComponent(mailto.getAttribute('href') ?? '');
+			expect(decodedHref).toContain('subject=Fehler im Eintrag: Lärmbelastung 2023');
+		});
+
+		it('Breadcrumb- und Dataset-JSON-LD bleiben auf /en vollständig deutsch (Boundary inLanguage de-DE)', async () => {
+			overwriteGetLocale(() => 'en');
+			const d = { ...detail(), explain: { short: '', long: '' } };
+			render(Page, { data: { detail: d, faq: [] } });
+			const breadcrumbScript = document.querySelector(
+				'script[type="application/ld+json"][data-testid="layer-breadcrumb-jsonld"]'
+			);
+			const breadcrumb = JSON.parse(breadcrumbScript?.textContent ?? '{}');
+			expect(breadcrumb.itemListElement[0].name).toBe('Berlin');
+			expect(breadcrumb.itemListElement[1].name).toBe('Daten');
+			// slug `laerm-2023` -> real DE message, not the fixture's `layerName`.
+			expect(breadcrumb.itemListElement[2].name).toBe('Lärmbelastung 2023');
+			const datasetScript = document.querySelector(
+				'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
+			);
+			const dataset = JSON.parse(datasetScript?.textContent ?? '{}');
+			expect(dataset.name).toBe('Lärmbelastung 2023');
+			expect(dataset.description).toMatch(/Geo-Datenlayer/);
+			expect(dataset.inLanguage).toBe('de-DE');
+		});
 	});
 });

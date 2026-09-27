@@ -177,3 +177,31 @@
   summary: `formatMonthYear` (vormals `formatStand`) ohne `timeZone`: Datums-ISO wie `2023-01-01` zeigt westlich von UTC den Vormonat, Prerender und Client können abweichen.
   evidence: Review B4a Fund #16; vorbestehend, B4a hat nur die Locale geöffnet. Fix: `timeZone: 'Europe/Berlin'` wie `formatShortDate`.
 
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
+  summary: `/layer` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit `/en/layer/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
+  evidence: Koordinator-Entscheidung (Matze AFK): Layer-Explain-Fließtext (`explain.*`) und Methodik-Inhalte (`methodology.*`) bleiben bis Block C deutsch -- eine indexierte `/en/layer/…`-Seite wäre editorial halb deutsch. Registrierung erst nach Block C (Explain-/Methodik-Übersetzung).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
+  summary: EN-OG-Bilder für `/layer/[slug]` (eigener vorgenerierter Schritt, `scripts/generate-og-images.ts` bleibt DE).
+  evidence: Boundary Spec i18n B4b ("Never"): keine EN-OG-Bilder in B4b. `/en/layer/…` zeigt weiterhin die DE-Karte im `og:image` (ADR-005: alle Locales nutzen die DE-Karte).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
+  summary: `/en/lizenzen` zeigt seit B4b bereits übersetzte Layer-Namen im DataCatalog-JSON-LD (Nebeneffekt der `getLayerDisplayName(slug, { locale })`-Korrektur in `get-layer-detail.ts`), die Dataset-`description`-Fallback-Zeile (`Geo-Datensatz {layerName} in Berlin im Daten-Atlas navigator.berlin.`) bleibt dort aber weiterhin hart deutsch.
+  evidence: `/lizenzen` liegt außerhalb der B4b-Code-Map (kein Boundary-Auftrag dafür); der Layer-Name-Fix wirkt dort nur als Seiteneffekt. Volle `/lizenzen`-Übersetzung ist ein eigener Block.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
+  summary: `layer-explain-coverage.e2e.ts` hat 3 vorbestehende, B4b-unabhängige Fails: „Detail-Page hat 0 axe-Violations" (WCAG 2.5.8 `target-size`/`target-offset` an Verwandte-Layer-Links, FAQ-Accordion-Buttons und Footer-Meta-Links -- keine dieser Elemente wurde von B4b berührt), „Map-Legend: Click expandiert Panel..." und „Legend Expand-Panel hat 0 axe-Violations" (Timeout beim Warten auf `legend-summary-*`, `/explore`-Map-Legend, komplett außerhalb der B4b-Code-Map).
+  evidence: `git status` zeigt B4b änderte nur `layer/[slug]/+page(.server).svelte/ts`, `get-layer-detail.ts`, `error-feedback-mailto.svelte`, Messages -- weder `map-legend.svelte`, `faq-section.svelte` noch die Footer-Komponente. Verifiziert per Ad-hoc-Axe-Scan auf `/kiez/alexanderplatz` (0 Violations) vs. `/de/layer/laerm-2023` (29 `target-size`-Knoten, überwiegend Footer/FAQ/Related-Layer) -- Layout-abhängig, nicht B4b-spezifisch. Braucht eigenen Fix-Task (Touch-Target-Größe global oder je Layout).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
+  summary: Lokalisierte 404-Meldungen von `/kiez`, `/bezirk`, `/layer` sind in Produktion unerreichbar (`prerender = true`, adapter-node liefert unbekannte Slugs nie an `load`); 404-Seite selbst lokalisieren statt `error()`-Text.
+  evidence: Review B4b Fund #2 (VG, `builder.generateManifest` filtert prerenderte Routen); ergänzt den B4a-Eintrag zur ungetesteten 404.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
+  summary: `/en/layer/…` sendet `meta description`/`og:description` deutsch, wenn `explain.short` gesetzt ist.
+  evidence: Review B4b Fund #5; `explain.short` ist layer-explain-Inhalt (Block C). Mit der Übersetzung in Block C erledigt, dann prüfen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
+  summary: B4a prüfen: Place-/AdministrativeArea-/Breadcrumb-JSON-LD auf `/en/kiez` und `/en/bezirk` mit EN-Namen bei `inLanguage` de-DE angleichen (B4b-Linie: JSON-LD bleibt bis zur Registrierung DE).
+  evidence: Review B4b Funde #3/#4, Koordinator-Entscheidung 27.09. 06:20; B4a nicht nachgezogen, um den abgeschlossenen Block nicht zu öffnen.
+

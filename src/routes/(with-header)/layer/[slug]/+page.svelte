@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { resolve } from '$app/paths';
-	import type { Pathname } from '$app/types';
 	import {
 		shortenSource,
 		shortenLicense,
@@ -13,7 +11,15 @@
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import FaqSection from '$lib/components/atlas/faq-section.svelte';
 	import { buildDataset, buildBreadcrumbList, pickDatasetDescription } from '$lib/seo/index.js';
-	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
+	import {
+		getLayerDisplayName,
+		bundleLabel,
+		BUNDLE_LABEL_DE
+	} from '$lib/components/atlas/internal/layer-palette-filter.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { formatCount } from '$lib/i18n/format.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
@@ -22,28 +28,54 @@
 	const meta = $derived(detail.meta);
 	const explain = $derived(detail.explain);
 	const methodology = $derived(detail.methodology);
+	const locale = $derived(getLocale());
+	const localeOpts = $derived({ locale });
+	// i18n Block B4b, Review-Fund #6: einmal ableiten statt 9x wiederholen.
+	const contentLang = $derived(locale === 'de' ? undefined : 'de');
+	// i18n Block B4b, Spec Change Log 27.09. 06:20: JSON-LD bleibt bis zur
+	// Registrierung vollständig deutsch (Boundary `inLanguage` `de-DE`) --
+	// Name/Description/Breadcrumb-Einträge laufen deshalb NICHT über die
+	// aktuelle URL-Locale, sondern immer über den DE-Default.
+	const deLayerName = $derived(getLayerDisplayName(detail.slug));
+
 	const inspectorHref = $derived(
-		(resolve as (path: string) => string)(`/explore?layers=${encodeURIComponent(detail.slug)}`)
+		localizedHref(`/explore?layers=${encodeURIComponent(detail.slug)}`)
 	);
-	const pageTitle = $derived(`${detail.layerName} - Berlin in Daten - navigator.berlin`);
-	const pageDescription = $derived(
-		explain.short ||
-			`Geo-Datenlayer ${detail.layerName} in Berlin. Datengrundlage und Anwendung im Daten-Atlas.`
+
+	// i18n Block B4b, Spec Change Log 27.09. 06:20 (Review-Fund #19): DE zeigt
+	// weiter den Rohwert aus dem Manifest (Zeichen-für-Zeichen-Parität), nur
+	// EN läuft über `bundleLabel()` -- mit Roh-Fallback für unbekannte Werte
+	// (defensiv, der Wert kommt zur Laufzeit aus `MANIFEST.json`).
+	const bundleGroupLabel = $derived(
+		locale === 'de'
+			? meta.bundleGroup
+			: Object.hasOwn(BUNDLE_LABEL_DE, meta.bundleGroup)
+				? bundleLabel(meta.bundleGroup, localeOpts)
+				: meta.bundleGroup
+	);
+
+	const descriptionFallback = $derived(
+		m.layer_page_description_fallback({ layerName: detail.layerName }, localeOpts)
+	);
+	const pageTitle = $derived(m.layer_page_title({ layerName: detail.layerName }, localeOpts));
+	const pageDescription = $derived(explain.short || descriptionFallback);
+	const ogImageAlt = $derived(m.layer_page_og_alt({ layerName: detail.layerName }, localeOpts));
+	const jsonLdDescriptionFallback = $derived(
+		m.layer_page_description_fallback({ layerName: deLayerName }, { locale: 'de' })
 	);
 
 	/**
 	 * Story 2.2 AC-5: Dataset-JSON-LD pro Layer-Detail-Page.
-	 * Phase 1 DE-only: `inLanguage: 'de-DE'` per Default in buildDataset.
-	 * EN-Variante kommt mit Story 2.5a (`inLanguage: 'en-US'`-Override).
+	 * i18n Block B4b: `inLanguage` bleibt bewusst `de-DE` (Default in
+	 * `buildDataset`, wie B4a) -- Name, Description-Fallback und Breadcrumb-
+	 * Namen folgen deshalb konsequent DE, nicht der URL-Locale (Spec Change
+	 * Log, Review-Funde #3/#4/#19).
 	 */
 	const datasetJsonLd = $derived(
 		buildDataset({
 			origin: page.url.origin,
-			name: detail.layerName,
-			description: pickDatasetDescription(
-				[explain.long, explain.short],
-				`Geo-Datenlayer ${detail.layerName} in Berlin. Datengrundlage und Anwendung im Daten-Atlas.`
-			),
+			name: deLayerName,
+			description: pickDatasetDescription([explain.long, explain.short], jsonLdDescriptionFallback),
 			license: meta.license,
 			dateModified: meta.sourceUpdatedAt ?? meta.fetchedAt,
 			creatorName: methodology?.authority,
@@ -60,7 +92,7 @@
 			items: [
 				{ name: 'Berlin', path: '/' },
 				{ name: 'Daten', path: '/explore' },
-				{ name: detail.layerName, path: `/layer/${detail.slug}` }
+				{ name: deLayerName, path: `/layer/${detail.slug}` }
 			]
 		})
 	);
@@ -72,7 +104,7 @@
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	ogImage={`${page.url.origin}/og/layer/${detail.slug}.png`}
-	ogImageAlt={`Layer ${detail.layerName}`}
+	{ogImageAlt}
 />
 <JsonLd data={datasetJsonLd} testid="layer-dataset-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="layer-breadcrumb-jsonld" />
@@ -84,13 +116,17 @@
 >
 	<header class="flex flex-col gap-2">
 		<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
-			{meta.bundleGroup}
+			{bundleGroupLabel}
 		</p>
 		<h1 data-testid="layer-detail-name" class="font-serif text-3xl text-ink">
 			{detail.layerName}
 		</h1>
 		{#if explain.long}
-			<p data-testid="layer-detail-lead" class="font-serif text-lg leading-relaxed text-ink-muted">
+			<p
+				data-testid="layer-detail-lead"
+				lang={contentLang}
+				class="font-serif text-lg leading-relaxed text-ink-muted"
+			>
 				{explain.long}
 			</p>
 		{/if}
@@ -98,16 +134,16 @@
 
 	{#if detail.slug === 'kuehle-orte'}
 		<a
-			href="/hitze"
+			href={localizedHref('/hitze')}
 			data-testid="layer-detail-hitze-link"
 			class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 		>
-			Zum Hitze-Navigator: kühle Orte in deiner Nähe
+			{m.layer_page_hitze_cta()}
 		</a>
 	{/if}
 
 	{#if detail.editorial}
-		<section data-testid="layer-detail-editorial">
+		<section data-testid="layer-detail-editorial" lang={contentLang}>
 			{#each detail.editorial.disclaimerVariants as variant (variant)}
 				<EditorialDisclaimer {variant} sourceUrl={detail.editorial.primarySourceUrl} />
 			{/each}
@@ -118,16 +154,18 @@
 		data-testid="layer-detail-source-card"
 		class="flex flex-col gap-2 border border-rule bg-bg-elevated p-4"
 	>
-		<h2 class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase">Quelle</h2>
+		<h2 class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase">
+			{m.layer_page_source_heading()}
+		</h2>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
-			<dt class="font-mono text-xs text-ink-subtle">Anbieter</dt>
+			<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_provider_label()}</dt>
 			<dd class="text-ink">
 				{#if meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
 					<span data-testid="layer-detail-source-link">
-						Eigene Berechnung aus offenen Quellen (<a
-							href={(resolve as (p: string) => string)('/lizenzen')}
+						{m.layer_page_own_calculation_label()} (<a
+							href={localizedHref('/lizenzen')}
 							class="hover:text-accent-strong text-accent underline underline-offset-2"
-							>Quellen & Lizenzen</a
+							>{m.layer_page_own_calculation_link_label()}</a
 						>)
 					</span>
 				{:else}
@@ -142,30 +180,34 @@
 					</a>
 				{/if}
 			</dd>
-			<dt class="font-mono text-xs text-ink-subtle">Lizenz</dt>
+			<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_license_label()}</dt>
 			<dd data-testid="layer-detail-license" class="font-mono text-xs text-ink">
 				{shortenLicense(meta.license)}
 			</dd>
-			<dt class="font-mono text-xs text-ink-subtle">Datenstand</dt>
+			<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_data_status_label()}</dt>
 			<dd class="text-ink">
 				{formatYearMonth(meta.sourceUpdatedAt ?? meta.fetchedAt)}
 			</dd>
-			<dt class="font-mono text-xs text-ink-subtle">Features</dt>
-			<dd class="font-mono text-xs text-ink">{meta.featureCount.toLocaleString('de-DE')}</dd>
+			<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_features_label()}</dt>
+			<dd class="font-mono text-xs text-ink">{formatCount(meta.featureCount, localeOpts)}</dd>
 		</dl>
 	</section>
 
 	{#if explain.valueScaleExplain || explain.unit}
 		<section data-testid="layer-detail-scale" class="flex flex-col gap-2 border border-rule p-4">
-			<h2 class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase">Werte</h2>
+			<h2 class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase">
+				{m.layer_page_values_heading()}
+			</h2>
 			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 				{#if explain.unit}
-					<dt class="font-mono text-xs text-ink-subtle">Einheit</dt>
+					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_unit_label()}</dt>
 					<dd class="font-mono text-sm text-ink">{explain.unit}</dd>
 				{/if}
 				{#if explain.valueScaleExplain}
-					<dt class="font-mono text-xs text-ink-subtle">Skala</dt>
-					<dd class="text-ink">{explain.valueScaleExplain}</dd>
+					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_scale_label()}</dt>
+					<dd lang={contentLang} class="text-ink">
+						{explain.valueScaleExplain}
+					</dd>
 				{/if}
 			</dl>
 		</section>
@@ -181,25 +223,31 @@
 				id="layer-detail-methodology-h"
 				class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
 			>
-				Berechnung
+				{m.layer_page_calculation_heading()}
 			</h2>
 			{#if methodology.calculation}
-				<p class="font-serif text-base leading-relaxed text-ink">
+				<p lang={contentLang} class="font-serif text-base leading-relaxed text-ink">
 					{methodology.calculation}
 				</p>
 			{/if}
 			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 				{#if methodology.aggregationLevel}
-					<dt class="font-mono text-xs text-ink-subtle">Aggregation</dt>
-					<dd class="font-mono text-xs text-ink">{methodology.aggregationLevel}</dd>
+					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_aggregation_label()}</dt>
+					<dd lang={contentLang} class="font-mono text-xs text-ink">
+						{methodology.aggregationLevel}
+					</dd>
 				{/if}
 				{#if methodology.authority}
-					<dt class="font-mono text-xs text-ink-subtle">Pflege</dt>
-					<dd class="text-ink">{methodology.authority}</dd>
+					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_maintenance_label()}</dt>
+					<dd lang={contentLang} class="text-ink">
+						{methodology.authority}
+					</dd>
 				{/if}
 				{#if methodology.updateFrequency}
-					<dt class="font-mono text-xs text-ink-subtle">Aktualisierung</dt>
-					<dd class="text-ink">{methodology.updateFrequency}</dd>
+					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_update_frequency_label()}</dt>
+					<dd lang={contentLang} class="text-ink">
+						{methodology.updateFrequency}
+					</dd>
 				{/if}
 			</dl>
 		</section>
@@ -214,9 +262,9 @@
 					id="layer-detail-coverage-h"
 					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
 				>
-					Coverage-Lücken
+					{m.layer_page_coverage_gaps_heading()}
 				</h2>
-				<ul class="list-disc pl-5 font-serif text-base text-ink">
+				<ul lang={contentLang} class="list-disc pl-5 font-serif text-base text-ink">
 					{#each methodology.coverageGaps as gap (gap)}
 						<li>{gap}</li>
 					{/each}
@@ -234,9 +282,9 @@
 					id="layer-detail-omissions-h"
 					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
 				>
-					Was wir NICHT zeigen
+					{m.layer_page_omissions_heading()}
 				</h2>
-				<ul class="list-disc pl-5 font-serif text-base text-ink">
+				<ul lang={contentLang} class="list-disc pl-5 font-serif text-base text-ink">
 					{#each methodology.omissions as o (o)}
 						<li>{o}</li>
 					{/each}
@@ -254,16 +302,16 @@
 					id="layer-detail-related-h"
 					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
 				>
-					Verwandte Layer
+					{m.layer_page_related_heading()}
 				</h2>
 				<ul class="flex flex-wrap gap-x-4 gap-y-1.5 text-base">
 					{#each methodology.relatedLayers as relSlug (relSlug)}
 						<li>
 							<a
-								href={`/layer/${relSlug}`}
+								href={localizedHref(`/layer/${relSlug}`)}
 								class="hover:text-accent-strong text-accent underline underline-offset-2"
 							>
-								{getLayerDisplayName(relSlug)}
+								{getLayerDisplayName(relSlug, localeOpts)}
 							</a>
 						</li>
 					{/each}
@@ -274,12 +322,12 @@
 		<aside data-testid="layer-detail-methodik-link" class="border border-rule bg-bg p-3">
 			<p class="font-mono text-xs text-ink-muted">
 				<a
-					href="/methodik"
+					href={localizedHref('/methodik')}
 					class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>
-					Methodik
+					{m.layer_page_methodik_link_label()}
 				</a>
-				· Datenarchitektur, Aggregations-Ebenen, was wir nicht zeigen.
+				{m.layer_page_methodik_suffix()}
 			</p>
 		</aside>
 	{:else}
@@ -288,19 +336,20 @@
 			class="flex flex-col gap-2 border border-rule bg-bg p-4"
 		>
 			<p class="font-serif text-base text-ink">
-				Methodik in Vorbereitung. Wir dokumentieren diesen Layer derzeit noch nicht vollständig.
+				{m.layer_page_methodology_empty_text()}
 			</p>
 			<p class="font-mono text-xs text-ink-muted">
 				<a
-					href="/methodik"
+					href={localizedHref('/methodik')}
 					class="hover:text-accent-strong text-accent underline underline-offset-2"
 				>
-					Methodik öffnen
+					{m.layer_page_methodik_open_label()}
 				</a>
 			</p>
 			<ErrorFeedbackMailto
 				layerSlug={detail.slug}
-				layerName={detail.layerName}
+				layerName={deLayerName}
+				ariaLayerName={detail.layerName}
 				sourceUrl={meta.sourceUrl}
 				fetchedAt={meta.fetchedAt}
 			/>
@@ -312,7 +361,7 @@
 		href={inspectorHref}
 		class="hover:text-accent-strong inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2"
 	>
-		Layer auf Karte anschauen →
+		{m.layer_page_inspector_link_label()} <span aria-hidden="true">→</span>
 	</a>
 
 	<FaqSection items={data.faq} pageType="layer" />
