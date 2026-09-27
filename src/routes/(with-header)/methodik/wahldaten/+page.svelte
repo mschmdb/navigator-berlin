@@ -64,7 +64,7 @@
 			</li>
 			<li>
 				<a href="#wahldaten-briefwahl" class="underline-offset-2 hover:text-ink hover:underline"
-					>3. Briefwahl-Asymmetrie</a
+					>3. Briefwahl-Gruppen</a
 				>
 			</li>
 			<li>
@@ -155,24 +155,24 @@
 	</section>
 
 	<section id="wahldaten-briefwahl" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">3. Briefwahl-Asymmetrie</h2>
+		<h2 class="font-sans text-xl font-semibold text-ink">3. Briefwahl-Gruppen</h2>
 		<p>
-			Stimmbezirks-Werte enthalten Urne-Stimmen plus eine räumliche Zuteilung der Briefstimmen,
-			sofern die jeweilige Wahlleitung diese Zuordnung publiziert. In den Berliner
-			Wahlbezirks-Datensätzen vor 2021 sind Briefstimmen ausschließlich als separater
-			Brief-Wahlbezirks-Aggregat erfasst, der keinen räumlichen Bezug zu den Urnenwahl-Stimmbezirken
-			besitzt.
+			Berlin zählt Briefstimmen in eigenen Briefwahlbezirken ohne eigene Fläche, getrennt von den
+			Urnenwahlbezirken. Bezirk und Berlin gesamt enthalten immer alle Stimmen, weil sie über alle
+			Stimmbezirke summieren.
 		</p>
 		<p>
-			Konsequenz für die Aggregation: auf den Ebenen Bezirk und Berlin sind alle abgegebenen Stimmen
-			enthalten. Auf Stimmbezirks-Ebene fehlen die Brief- Stimmen pre-2021, weswegen Inspector +
-			Stimmbezirks-Choropleth in dieser Konstellation einen dezenten Schraffur-Streifen und einen
-			Inline-Badge zeigen (siehe Story 6.5).
+			Auf der Karte ist deshalb die Briefwahl-Gruppe die kleinste Ebene: alle Urnenwahlbezirke eines
+			Briefwahlbezirks plus dieser Briefwahlbezirk bilden zusammen eine Fläche (Dissolve der
+			Urnen-Polygone), analog zur Tagesspiegel-Darstellung „Stimmbezirke 726, 727 und 7P“. Das gilt
+			für alle Wahlen mit Stimmbezirks-Geometrie.
 		</p>
 		<p>
-			Für 2021+ verteilen die Wahlleitungen Briefstimmen auf Brief-Wahlbezirks- Distrikte, die
-			räumlich auf Stimmbezirks-Ebene mit-ausgewiesen werden. Die Asymmetrie entfällt damit ab BTW
-			2021 / AGH 2021 / BVV 2021.
+			Im Kiez-Aggregat ist die Briefwahl eine anteilige Schätzung nach Wahlberechtigten, siehe
+			<a href="#aggregation" class="underline-offset-2 hover:text-ink hover:underline">Abschnitt 4</a
+			>. Wahlen ohne Stimmbezirks-Geometrie zeigt die Karte nur auf Bezirks- und Berlin-Ebene, siehe
+			<a href="#geometrien" class="underline-offset-2 hover:text-ink hover:underline">Abschnitt 6</a
+			>.
 		</p>
 	</section>
 
@@ -190,9 +190,11 @@
 			scripts/build-wahl-kiez-aggregat.ts).
 		</p>
 		<p>
-			Brief-Wahlbezirks-Rows (<code class="font-mono text-xs">ist_briefwahl_aggregat = true</code>)
-			werden für das Kiez-Aggregat ausgeschlossen, weil sie keinen räumlichen Bezug haben. Sie
-			zählen ausschließlich für Bezirk und Berlin gesamt.
+			Briefstimmen fließen anteilig ein: Jede Urne einer Briefwahl-Gruppe erhält einen Anteil an
+			deren Briefstimmen (<code class="font-mono text-xs">ist_briefwahl_aggregat = true</code>) nach
+			ihren Wahlberechtigten. Das ist eine Schätzung, keine amtliche Aufteilung. Fehlen die
+			Wahlberechtigten für eine oder mehrere Urnen einer Gruppe, verteilt sich die Briefwahl
+			gleichmäßig auf die Urnen der Gruppe.
 		</p>
 	</section>
 

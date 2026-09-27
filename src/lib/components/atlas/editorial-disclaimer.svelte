@@ -25,7 +25,7 @@
 		'kriminalitaet-aggregat':
 			'Häufigkeitszahl je Bezirksregion, nicht adressgenau. Sie misst erfasste Fälle pro gemeldete Einwohner, kein persönliches Risiko. Touristen- und Pendler-Orte erscheinen überzeichnet, das Dunkelfeld bleibt unerfasst. Kein Sicherheits-Ranking, fließt nicht in den Gesamt-Score.',
 		'wahl-stimmenanteile':
-			'Daten beschreiben Stimmenanteile, keine Bewertung. Brief-Stimmen sind im Kiez-Aggregat ausgeschlossen (nur Bezirk und Berlin), weil sie keine räumliche Zuordnung haben.',
+			'Daten beschreiben Stimmenanteile, keine Bewertung. Briefstimmen sind auf allen Ebenen enthalten, im Stimmbezirk über die Briefwahl-Gruppe, im Kiez anteilig nach Wahlberechtigten verteilt (Schätzung, keine amtliche Aufteilung).',
 		'cross-layer-template':
 			'Werte aus verschiedenen Layern nebeneinander gestellt, ohne kausale Verknüpfung. Aggregat-Daten pro Planungsraum, nicht pro Adresse.',
 		'brw-not-aggregatable':

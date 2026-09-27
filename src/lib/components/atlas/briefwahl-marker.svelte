@@ -11,9 +11,9 @@
 
 	let {
 		showBadge,
-		tooltip = 'Stimmbezirks-Werte ohne Briefstimmen. Briefwähler nur als Bezirks-Aggregat.',
+		tooltip = 'Kiez-Werte verteilen die Briefwahl einer Gruppe anteilig nach Wahlberechtigten auf ihre Urnen: eine Schätzung, keine amtliche Aufteilung.',
 		methodikHref = '/methodik/wahldaten#wahldaten-briefwahl',
-		label = 'Ohne Briefstimmen',
+		label = 'Briefwahl geschätzt',
 		testid = 'briefwahl-marker'
 	}: Props = $props();
 

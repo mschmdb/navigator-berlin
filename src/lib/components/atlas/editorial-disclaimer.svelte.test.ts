@@ -151,10 +151,13 @@ describe('editorial-disclaimer.svelte', () => {
 			expect(el.getAttribute('data-variant')).toBe('wahl-portal-stimmenanteile');
 		});
 
-		it('wahl-stimmenanteile (Inspector/Compare) bleibt unveraendert deutsch, unabhaengig von Paraglide-Messages', async () => {
+		it('wahl-stimmenanteile (Inspector/Compare, Story 17) nennt Briefstimmen als enthalten und den Kiez-Wert als Schätzung', async () => {
 			render(EditorialDisclaimer, { variant: 'wahl-stimmenanteile' });
 			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.textContent).toMatch(/Brief-Stimmen sind im Kiez-Aggregat ausgeschlossen/);
+			expect(el.textContent).toMatch(/Briefstimmen sind auf allen Ebenen enthalten/);
+			expect(el.textContent).toMatch(/Briefwahl-Gruppe/);
+			expect(el.textContent).toMatch(/Schätzung, keine amtliche Aufteilung/);
+			expect(el.textContent).not.toMatch(/ausgeschlossen/);
 			expect(el.getAttribute('data-variant')).toBe('wahl-stimmenanteile');
 		});
 	});

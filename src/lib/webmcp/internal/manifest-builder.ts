@@ -121,7 +121,7 @@ const TOOL_DESCRIPTIONS: readonly WebMcpManifestToolEntry[] = [
 	{
 		name: 'get_election_result',
 		description:
-			'Return the top parties at a Berlin address for one election on a selectable aggregation level (stimmbezirk/kiez/bezirk/berlin). Default: finest available. Output: top-5 with vote count + share + color, source + license, caveats for pre-2021 stimmbezirks-level (Briefwahl-asymmetry) or repeat elections.',
+			'Return the top parties at a Berlin address for one election on a selectable aggregation level (stimmbezirk/kiez/bezirk/berlin). Default: finest available. Output: top-5 with vote count + share + color, source + license, caveats for kiez-level postal-vote estimates or repeat elections.',
 		input_schema: GET_ELECTION_RESULT_INPUT_JSON_SCHEMA,
 		output_schema: GET_ELECTION_RESULT_OUTPUT_JSON_SCHEMA
 	},

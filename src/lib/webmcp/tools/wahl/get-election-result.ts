@@ -5,8 +5,8 @@
  * verfügbar, sonst kiez, sonst bezirk, sonst berlin.
  *
  * Adress-Input: lat/lng (rufe address_lookup vorher für Adress-zu-Koord).
- * Bei pre-2021-Stimmbezirks-Level wird `caveats` mit Briefwahl-Asymmetrie-
- * Hinweis ergänzt.
+ * Auf Kiez-Level wird `caveats` mit einem Hinweis auf die anteilige
+ * Briefwahl-Schätzung ergänzt (Story 17: Briefwahl-Gruppen).
  */
 
 import * as v from 'valibot';
