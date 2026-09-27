@@ -1,8 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Harness from './compare-panel-harness.svelte';
 import type { GeocodeSuggestion, LayerHit, LayerMetadata } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 const addressA: GeocodeSuggestion = {
 	id: 'a',
@@ -208,5 +213,86 @@ describe('compare-panel.svelte', () => {
 			layerMeta: fullLayerMeta
 		});
 		await expect.element(page.getByTestId('compare-empty')).toBeInTheDocument();
+	});
+
+	// i18n Block B3c: EN-Locale übersetzt Kopf, Tabs, Th's, Section-Labels + Empty-Text.
+	describe('i18n Block B3c (EN)', () => {
+		it("Kopf, Tabs und th's englisch", async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				compareMode: true,
+				selectedAddress: addressA,
+				comparisonAddress: addressB,
+				selectedLayerHits: [hit('bezirke', 'Mitte'), hit('laerm-den', 55)],
+				comparisonLayerHits: [hit('bezirke', 'Neukölln'), hit('laerm-den', 70)],
+				layerMeta: fullLayerMeta
+			});
+			const panel = (await page.getByTestId('compare-panel').element()) as HTMLElement;
+			expect(panel.getAttribute('aria-label')).toBe('Compare addresses');
+			const table = (await page.getByTestId('compare-table').element()) as HTMLTableElement;
+			const ths = [...table.querySelectorAll('thead th')].map((th) => th.textContent?.trim());
+			expect(ths).toEqual(['Indicator', 'Address A', 'Address B']);
+			const tabA = (await page.getByTestId('compare-tab-a').element()) as HTMLElement;
+			expect(tabA.textContent?.trim()).toBe('Address A');
+		});
+
+		it('Empty-Message englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				compareMode: true,
+				selectedAddress: addressA,
+				comparisonAddress: addressB,
+				selectedLayerHits: [],
+				comparisonLayerHits: [],
+				layerMeta: fullLayerMeta
+			});
+			await expect
+				.element(page.getByTestId('compare-empty'))
+				.toHaveTextContent('No comparable layer data for both addresses.');
+		});
+
+		it('Caption + Section-Header + Layer-Name englisch (2 Sections)', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				compareMode: true,
+				selectedAddress: addressA,
+				comparisonAddress: addressB,
+				selectedLayerHits: [hit('bodenrichtwerte', { richtwert: 5500 }), hit('laerm-den', 55)],
+				comparisonLayerHits: [hit('bodenrichtwerte', { richtwert: 8000 }), hit('laerm-den', 70)],
+				layerMeta: fullLayerMeta
+			});
+			const table = (await page.getByTestId('compare-table').element()) as HTMLTableElement;
+			const caption = table.querySelector('caption');
+			expect(caption?.textContent).toMatch(/Comparison:/);
+			expect(caption?.textContent).toMatch(/Karl-Marx-Allee 1/);
+			expect(caption?.textContent).toMatch(/Sonnenallee/);
+			const umweltSection = (await page
+				.getByTestId('compare-section-umwelt')
+				.element()) as HTMLElement;
+			expect(umweltSection.textContent?.trim()).toBe('Environment');
+			const wohnSection = (await page.getByTestId('compare-section-wohn').element()) as HTMLElement;
+			expect(wohnSection.textContent?.trim()).toBe('Housing');
+			const rowNames = [...table.querySelectorAll('[data-testid="compare-row"] th')].map((th) =>
+				th.textContent?.trim()
+			);
+			expect(rowNames).toContain('Standard land values (EUR/m²)');
+		});
+
+		it('Adresse B fehlt + Picker-Labels + Placeholder englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				compareMode: true,
+				selectedAddress: addressA,
+				geocode: async () => [],
+				onOpenBookmarkPicker: vi.fn()
+			});
+			const addressBSpan = (await page.getByTestId('compare-address-b').element()) as HTMLElement;
+			expect(addressBSpan.textContent?.trim()).toBe('Address B missing');
+			const pickerLabel = (await page.getByTestId('compare-b-picker').element()) as HTMLElement;
+			expect(pickerLabel.textContent).toContain('Choose address B');
+			expect(pickerLabel.textContent).toContain('Choose from bookmarks');
+			const input = pickerLabel.querySelector('input');
+			expect(input?.getAttribute('placeholder')).toBe('Search for address B');
+		});
 	});
 });

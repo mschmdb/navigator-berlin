@@ -1,7 +1,8 @@
 import { page } from 'vitest/browser';
 import { __setEmbeddedForTests } from '$lib/utils/plausible.js';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import KiezFinderPanel from './kiez-finder-panel.svelte';
 import { neutralWeights } from './internal/kiez-finder-engine.js';
 import type { FinderBaseData } from './internal/kiez-finder-data.js';
@@ -97,6 +98,10 @@ async function renderPanel(overrides: Record<string, unknown> = {}) {
 	});
 	return { map, onClose, result };
 }
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 describe('kiez-finder-panel', () => {
 	it('rendert als gedockte Section mit Überschrift und beschrifteten Slidern', async () => {
@@ -429,5 +434,218 @@ describe('kiez-finder-panel', () => {
 		await result.unmount();
 		expect(readFinderBridge().panelActive).toBe(false);
 		resetFinderBridgeForTests();
+	});
+
+	// i18n Block B3c: EN-Panel zeigt englische Titel/Stufen/Wahl-Hinweis, DE bleibt Default.
+	describe('i18n Block B3c (EN)', () => {
+		it('Titel, Close-Aria und Beste-Passung-Heading englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			await renderPanel();
+			const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
+			expect(panel.querySelector('h2')?.textContent).toContain('Kiez finder');
+			const close = (await page.getByTestId('finder-close').element()) as HTMLElement;
+			expect(close.getAttribute('aria-label')).toBe('Close Kiez finder');
+		});
+
+		it('Slider-Stufentext + Aria-Label englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			await renderPanel();
+			const slider = (await page
+				.getByTestId('finder-slider-ruheLuft')
+				.element()) as HTMLInputElement;
+			expect(slider.getAttribute('aria-label')).toBe('Quiet & air: little to a lot');
+			slider.value = '2';
+			slider.dispatchEvent(new Event('input', { bubbles: true }));
+			await vi.waitFor(() => {
+				expect(slider.getAttribute('aria-valuetext')).toBe('as much as possible');
+			});
+		});
+
+		it('Wahl-Hinweis englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			await renderPanel();
+			await expect
+				.element(page.getByTestId('finder-wahl-hinweis'))
+				.toHaveTextContent(
+					'Voting behaviour: Berlin House of Representatives (Abgeordnetenhaus) party vote 2026.'
+				);
+		});
+
+		it('DE Slider-Aria-Label bleibt „Ruhe & Luft: wenig bis viel"', async () => {
+			await renderPanel();
+			const slider = (await page
+				.getByTestId('finder-slider-ruheLuft')
+				.element()) as HTMLInputElement;
+			expect(slider.getAttribute('aria-label')).toBe('Ruhe & Luft: wenig bis viel');
+		});
+	});
+
+	// Stufen-Familien-Matrix: jede der 4 stufenText()-Familien (wenigViel,
+	// dichte, sbahn, partei) über ihre möglichen Regler-Werte, DE + EN.
+	// Bipolar-Familien (wenigViel, dichte) setzen zusätzlich `aria-valuetext`.
+	type FamilyCase = {
+		family: 'wenigViel' | 'dichte' | 'sbahn' | 'partei';
+		sliderTestId: string;
+		value: number;
+		de: string;
+		en: string;
+		hasValueText: boolean;
+	};
+
+	const FAMILY_CASES: FamilyCase[] = [
+		{
+			family: 'wenigViel',
+			sliderTestId: 'finder-slider-ruheLuft',
+			value: -2,
+			de: 'möglichst wenig',
+			en: 'as little as possible',
+			hasValueText: true
+		},
+		{
+			family: 'wenigViel',
+			sliderTestId: 'finder-slider-ruheLuft',
+			value: -1,
+			de: 'eher wenig',
+			en: 'rather little',
+			hasValueText: true
+		},
+		{
+			family: 'wenigViel',
+			sliderTestId: 'finder-slider-ruheLuft',
+			value: 0,
+			de: 'egal',
+			en: 'no preference',
+			hasValueText: true
+		},
+		{
+			family: 'wenigViel',
+			sliderTestId: 'finder-slider-ruheLuft',
+			value: 1,
+			de: 'eher viel',
+			en: 'rather a lot',
+			hasValueText: true
+		},
+		{
+			family: 'wenigViel',
+			sliderTestId: 'finder-slider-ruheLuft',
+			value: 2,
+			de: 'möglichst viel',
+			en: 'as much as possible',
+			hasValueText: true
+		},
+		{
+			family: 'dichte',
+			sliderTestId: 'finder-slider-dichte',
+			value: -2,
+			de: 'möglichst locker',
+			en: 'as sparse as possible',
+			hasValueText: true
+		},
+		{
+			family: 'dichte',
+			sliderTestId: 'finder-slider-dichte',
+			value: -1,
+			de: 'eher locker',
+			en: 'rather sparse',
+			hasValueText: true
+		},
+		{
+			family: 'dichte',
+			sliderTestId: 'finder-slider-dichte',
+			value: 0,
+			de: 'egal',
+			en: 'no preference',
+			hasValueText: true
+		},
+		{
+			family: 'dichte',
+			sliderTestId: 'finder-slider-dichte',
+			value: 1,
+			de: 'eher dicht',
+			en: 'rather dense',
+			hasValueText: true
+		},
+		{
+			family: 'dichte',
+			sliderTestId: 'finder-slider-dichte',
+			value: 2,
+			de: 'möglichst dicht',
+			en: 'as dense as possible',
+			hasValueText: true
+		},
+		{
+			family: 'sbahn',
+			sliderTestId: 'finder-slider-sbahn',
+			value: 0,
+			de: 'egal',
+			en: 'no preference',
+			hasValueText: false
+		},
+		{
+			family: 'sbahn',
+			sliderTestId: 'finder-slider-sbahn',
+			value: 1,
+			de: 'eher nah',
+			en: 'rather close',
+			hasValueText: false
+		},
+		{
+			family: 'sbahn',
+			sliderTestId: 'finder-slider-sbahn',
+			value: 2,
+			de: 'möglichst nah',
+			en: 'as close as possible',
+			hasValueText: false
+		},
+		{
+			family: 'partei',
+			sliderTestId: 'finder-slider-partei',
+			value: 0,
+			de: 'egal',
+			en: 'no preference',
+			hasValueText: false
+		},
+		{
+			family: 'partei',
+			sliderTestId: 'finder-slider-partei',
+			value: 1,
+			de: 'eher ähnlich',
+			en: 'rather similar',
+			hasValueText: false
+		},
+		{
+			family: 'partei',
+			sliderTestId: 'finder-slider-partei',
+			value: 2,
+			de: 'möglichst ähnlich',
+			en: 'as similar as possible',
+			hasValueText: false
+		}
+	];
+
+	type LocaleRow = [locale: 'de' | 'en', c: FamilyCase];
+	const LOCALE_CASES: LocaleRow[] = FAMILY_CASES.flatMap((c) => [
+		['de', c] as LocaleRow,
+		['en', c] as LocaleRow
+	]);
+
+	describe('Stufen-Familien-Matrix (DE + EN)', () => {
+		it.each(LOCALE_CASES)('%s %s value=%o', async (locale, c) => {
+			overwriteGetLocale(() => locale);
+			await renderPanel();
+			const slider = (await page.getByTestId(c.sliderTestId).element()) as HTMLInputElement;
+			if (Number(slider.value) !== c.value) {
+				slider.value = String(c.value);
+				slider.dispatchEvent(new Event('input', { bubbles: true }));
+			}
+			const expected = locale === 'de' ? c.de : c.en;
+			await vi.waitFor(() => {
+				const valueSpan = slider.parentElement?.querySelector('span') as HTMLElement | null;
+				expect(valueSpan?.textContent?.trim()).toBe(expected);
+			});
+			if (c.hasValueText) {
+				expect(slider.getAttribute('aria-valuetext')).toBe(expected);
+			}
+		});
 	});
 });

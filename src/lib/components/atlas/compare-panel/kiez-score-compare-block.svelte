@@ -2,11 +2,15 @@
 	import ValueChip from '../value-chip.svelte';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import {
-		DIMENSION_LABELS_DE,
+		dimensionLabel,
 		scaleFor,
 		scaleForOverall
 	} from '../inspector-panel/internal/kiez-score-display.js';
+	import { severityDescriptions } from '../inspector-panel/internal/value-severity-mapping.js';
 	import type { KiezScore, KiezScoreDimension } from '$lib/data';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 
 	type Props = {
 		scoreA: KiezScore | null;
@@ -14,6 +18,9 @@
 		methodikHref?: string;
 	};
 	let { scoreA, scoreB, methodikHref = '/methodik/kiez-score' }: Props = $props();
+
+	const localeOpts = $derived({ locale: getLocale() });
+	const chipSeverityDescriptions = $derived(severityDescriptions(localeOpts));
 
 	const visible = $derived(scoreA !== null || scoreB !== null);
 
@@ -33,8 +40,8 @@
 		'kriminalitaet'
 	];
 
-	const overallA = $derived(scaleForOverall(scoreA?.overall));
-	const overallB = $derived(scaleForOverall(scoreB?.overall));
+	const overallA = $derived(scaleForOverall(scoreA?.overall, localeOpts));
+	const overallB = $derived(scaleForOverall(scoreB?.overall, localeOpts));
 
 	interface DimRow {
 		dim: KiezScoreDimension;
@@ -51,11 +58,11 @@
 			const valueB = getDimensionValue(scoreB, dim);
 			return {
 				dim,
-				label: DIMENSION_LABELS_DE[dim],
+				label: dimensionLabel(dim, localeOpts),
 				valueA,
 				valueB,
-				scaleA: scaleFor(valueA, dim),
-				scaleB: scaleFor(valueB, dim)
+				scaleA: scaleFor(valueA, dim, localeOpts),
+				scaleB: scaleFor(valueB, dim, localeOpts)
 			};
 		})
 	);
@@ -65,13 +72,13 @@
 	<section
 		data-testid="compare-kiez-score"
 		class="border-b border-rule px-6 py-4"
-		aria-label="Kiez-Score-Vergleich"
+		aria-label={m.compare_kiez_score_aria()}
 	>
 		<h3
 			class="mb-3 font-mono text-xs tracking-wide text-ink-muted uppercase"
 			data-testid="compare-kiez-score-header"
 		>
-			Kiez-Score
+			{m.inspector_kiez_score_heading()}
 		</h3>
 		<table class="w-full border-collapse">
 			<thead>
@@ -80,7 +87,7 @@
 						scope="col"
 						class="py-1 pr-3 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
 					>
-						Dimension
+						{m.compare_kiez_score_th_dimension()}
 					</th>
 					<th
 						scope="col"
@@ -101,14 +108,15 @@
 			<tbody>
 				<tr data-testid="compare-kiez-score-overall" class="border-b border-rule">
 					<th scope="row" class="py-2 pr-3 text-left font-sans text-sm font-semibold text-ink">
-						Gesamt
+						{m.compare_kiez_score_overall_label()}
 					</th>
 					<td data-cell="a" class="py-2 pr-3">
 						{#if overallA && scoreA?.overall !== undefined}
 							<ValueChip
 								severity={overallA.severity}
 								value={`${overallA.label} (${Math.round(scoreA.overall)}/100)`}
-								layerName="Kiez-Score gesamt"
+								layerName={m.compare_kiez_score_overall_layername()}
+								severityDescriptions={chipSeverityDescriptions}
 							/>
 						{:else}
 							<span class="font-mono text-xs text-ink-subtle">—</span>
@@ -119,7 +127,8 @@
 							<ValueChip
 								severity={overallB.severity}
 								value={`${overallB.label} (${Math.round(scoreB.overall)}/100)`}
-								layerName="Kiez-Score gesamt"
+								layerName={m.compare_kiez_score_overall_layername()}
+								severityDescriptions={chipSeverityDescriptions}
 							/>
 						{:else}
 							<span class="font-mono text-xs text-ink-subtle">—</span>
@@ -137,6 +146,7 @@
 									severity={row.scaleA.severity}
 									value={`${row.scaleA.label} (${Math.round(row.valueA)})`}
 									layerName={row.label}
+									severityDescriptions={chipSeverityDescriptions}
 								/>
 							{:else}
 								<span class="font-mono text-xs text-ink-subtle">—</span>
@@ -148,6 +158,7 @@
 									severity={row.scaleB.severity}
 									value={`${row.scaleB.label} (${Math.round(row.valueB)})`}
 									layerName={row.label}
+									severityDescriptions={chipSeverityDescriptions}
 								/>
 							{:else}
 								<span class="font-mono text-xs text-ink-subtle">—</span>
@@ -160,11 +171,11 @@
 		<div class="mt-3 flex flex-col gap-2">
 			<EditorialDisclaimer variant="kiez-score-explainer" />
 			<a
-				href={methodikHref}
+				href={localizedHref(methodikHref)}
 				data-testid="compare-kiez-score-methodik-link"
 				class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 			>
-				Methodik · Wie der Kiez-Score berechnet wird
+				{m.inspector_kiez_score_methodik_link()}
 			</a>
 		</div>
 	</section>

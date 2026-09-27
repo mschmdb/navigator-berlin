@@ -131,3 +131,20 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3a-atlas-fundament.md`
   summary: DE-Textmängel im Atlas korrigieren: aria-label „Karte nach Sueden verschieben“ (Umlaut), Palette-Leerzustand „Kein Layer matched“ (Denglisch).
   evidence: Beim Migrieren in Messages aufgefallen; B3a hält die DE-Ausgabe bewusst Zeichen für Zeichen gleich, daher eigene kleine Korrektur.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
+  summary: `/explore` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/explore`-Seite als echt übersetzt gilt (kein `TranslationDisclaimer`-Fallback-Hinweis, `hreflang`/Sitemap-Eintrag).
+  evidence: Koordinator-Entscheidung 27.09. (Matze AFK): Compare- und Inspector-`EditorialDisclaimer`-Varianten (Bodenrichtwerte, Milieuschutz, Stolperstein, Stigma-Footer, Kiez-Score-Explainer, Wahl-Stimmenanteile) bleiben bis Block C deutsch -- eine indexierte `/en/explore` waere damit editorial halb deutsch. Registrierung erst nach Block C (EditorialDisclaimer-Uebersetzung).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
+  summary: Kiez-Finder-Slider S-Bahn-Nähe und Wahlverhalten ohne `aria-valuetext`, Screenreader lesen nur 0/1/2.
+  evidence: Review B3c Fund #6; bipolare Slider haben `aria-valuetext`, unipolare seit jeher nicht. `stufenText` liefert den Text schon.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
+  summary: `map-libre-canvas.svelte` loadError-Block („Karte konnte nicht geladen werden…“, „Unbekannter Karten-Fehler“, „Neu laden“) auf Messages + EN.
+  evidence: Review B3c Fund #7; lag außerhalb der B3c-Code-Map, `/en/explore` zeigt ihn bei Kartenfehler deutsch. Vor Register-Eintrag `/explore` erledigen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
+  summary: Wahl-Vergleich zeigt bei |Diff| < 0,05 pp „+0,0“ bzw. „höher in A“ statt „±0,0“/„gleich“.
+  evidence: Review B3c Fund #19; Vorzeichen kommt aus dem Rohwert, Anzeige aus dem gerundeten Wert. Vorbestehend, B3c änderte nur die Formatierung.
+

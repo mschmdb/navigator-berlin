@@ -98,6 +98,15 @@ describe('mergeCompareSections', () => {
 		expect(labels.klima).toBe('Klima');
 	});
 
+	// i18n Block B3c: `opts.locale` schaltet Section-Labels auf EN um, ohne
+	// `opts` bleibt DE (Boundary, `sectionLabel`-Default).
+	it('opts.locale=en liefert englische Section-Labels', () => {
+		const merged = mergeCompareSections([], [], layerMeta, { locale: 'en' });
+		const labels = Object.fromEntries(merged.map((s) => [s.key, s.label]));
+		expect(labels.boundaries).toBe('Location & administration');
+		expect(labels.klima).toBe('Climate');
+	});
+
 	it('boundaries-Section sortiert bezirke vor ortsteile vor plz', () => {
 		const layerMetaExt = [
 			...layerMeta,

@@ -147,6 +147,49 @@ describe('formatFinderWahlHinweis', () => {
 	});
 });
 
+// i18n Block B3c: `opts.locale` schaltet auf EN um, ohne `opts` bleibt DE (Boundary).
+describe('formatFinderWahlHinweis — i18n Block B3c (opts.locale)', () => {
+	it('EN ohne Metadaten', () => {
+		expect(formatFinderWahlHinweis(null, { locale: 'en' })).toBe(
+			'Voting behaviour: Berlin House of Representatives (Abgeordnetenhaus) party vote 2026.'
+		);
+	});
+
+	// Review-Fund: `sourceDisplayLabel`s EN-Text traegt fuer die
+	// Landeswahlleiterin selbst schon Klammern -- ein zweites Klammernpaar
+	// aussenherum ergaebe "((...))". `finder_source_wrapper` haengt die
+	// Quelle deshalb per ", source: ..." an statt sie erneut zu klammern.
+	it('EN vorläufig: Quelle + Datum ausgeschrieben, keine doppelten Klammern', () => {
+		expect(
+			formatFinderWahlHinweis(
+				{
+					vorlaeufig: true,
+					sourceUpdatedAt: '2026-09-20T23:55:55.000Z',
+					sourceName: 'Landeswahlleiterin Berlin'
+				},
+				{ locale: 'en' }
+			)
+		).toBe(
+			'Voting behaviour: Berlin House of Representatives (Abgeordnetenhaus) party vote 2026, source: Berlin State Election Commissioner (Landeswahlleiterin Berlin), provisional, as of 21 September 2026.'
+		);
+	});
+
+	it('EN Endergebnis: kein Vorläufig-Zusatz, keine doppelten Klammern', () => {
+		expect(
+			formatFinderWahlHinweis(
+				{
+					vorlaeufig: false,
+					sourceUpdatedAt: '2026-10-07T10:00:00.000Z',
+					sourceName: 'Landeswahlleiterin Berlin'
+				},
+				{ locale: 'en' }
+			)
+		).toBe(
+			'Voting behaviour: Berlin House of Representatives (Abgeordnetenhaus) party vote 2026, source: Berlin State Election Commissioner (Landeswahlleiterin Berlin).'
+		);
+	});
+});
+
 describe('parseKiezSharesResponse', () => {
 	it('mappt die snake_case-Felder der API auf das Finder-Format', () => {
 		expect(

@@ -9,6 +9,11 @@
 		Top5Entry,
 		LevelKey
 	} from '$lib/data/get-wahl-results-at-point.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { formatDecimal, formatPercent } from '$lib/i18n/format.js';
+	import { wahlEbeneLabel, wahlReiheLabel, wahlStimmtypLabel } from '$lib/data/wahl-labels.js';
 
 	type Props = {
 		resultsA: WahlResultsAtPoint | null;
@@ -18,20 +23,10 @@
 
 	let { resultsA, resultsB, methodikHref = '/methodik/wahldaten' }: Props = $props();
 
+	const localeOpts = $derived({ locale: getLocale() });
+	const localizedMethodikHref = $derived(localizedHref(methodikHref));
+
 	type Wahltyp = 'btw' | 'agh' | 'bvv';
-
-	const TYP_LABELS: Record<Wahltyp, string> = {
-		btw: 'Bundestag',
-		agh: 'Abgeordnetenhaus',
-		bvv: 'BVV'
-	};
-
-	const LEVEL_LABELS: Record<LevelKey, string> = {
-		stimmbezirk: 'Stimmbezirk',
-		kiez: 'Kiez',
-		bezirk: 'Bezirk',
-		berlin: 'Berlin gesamt'
-	};
 
 	const availableTypen = $derived.by<Wahltyp[]>(() => {
 		const set = new Set<Wahltyp>();
@@ -133,12 +128,12 @@
 	const isKiezBriefwahlSchaetzung = $derived(selectedLevel === 'kiez');
 
 	function formatPct(n: number): string {
-		return `${(n * 100).toFixed(1).replace('.', ',')} %`;
+		return formatPercent(n, localeOpts);
 	}
 
 	function anteilForPartei(top: Top5Entry[], kurzname: string): number | null {
-		const m = top.find((e) => e.kurzname === kurzname);
-		return m ? m.anteil : null;
+		const match = top.find((e) => e.kurzname === kurzname);
+		return match ? match.anteil : null;
 	}
 
 	function anteilForPartieFull(side: 'a' | 'b', kurzname: string): number | null {
@@ -156,10 +151,15 @@
 			class="border-t border-rule pt-4 font-mono text-xs tracking-wide text-ink-muted uppercase"
 			data-testid="wahl-compare-header"
 		>
-			Wahlverhalten · Vergleich
+			{m.wahl_compare_header()}
 		</h3>
 
-		<div role="tablist" aria-label="Wahltyp" class="flex gap-1" data-testid="wahl-compare-typ-tabs">
+		<div
+			role="tablist"
+			aria-label={m.wahl_compare_typ_aria()}
+			class="flex gap-1"
+			data-testid="wahl-compare-typ-tabs"
+		>
 			{#each availableTypen as typ (typ)}
 				<button
 					role="tab"
@@ -174,7 +174,7 @@
 					class:text-ink={selectedTyp !== typ}
 					class:hover:bg-bg-muted={selectedTyp !== typ}
 				>
-					{TYP_LABELS[typ]}
+					{wahlReiheLabel(typ, localeOpts)}
 				</button>
 			{/each}
 		</div>
@@ -182,7 +182,7 @@
 		{#if availableLevels.length > 1}
 			<div
 				role="radiogroup"
-				aria-label="Ebene"
+				aria-label={m.wahl_compare_ebene_aria()}
 				class="flex flex-wrap gap-1"
 				data-testid="wahl-compare-level-switch"
 			>
@@ -200,26 +200,26 @@
 						class:text-ink={selectedLevel !== lvl}
 						class:hover:bg-bg-muted={selectedLevel !== lvl}
 					>
-						{LEVEL_LABELS[lvl]}
+						{wahlEbeneLabel(lvl, localeOpts)}
 					</button>
 				{/each}
 			</div>
 		{/if}
 
-		<p class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-			{TYP_LABELS[selectedTyp]}
-			{jahr} · Ebene {LEVEL_LABELS[selectedLevel]} · {defaultStimmtyp === 'einstimme'
-				? 'Stimme'
-				: defaultStimmtyp === 'zweitstimme'
-					? 'Zweitstimme'
-					: 'Erststimme'}
+		<p
+			data-testid="wahl-compare-meta"
+			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+		>
+			{wahlReiheLabel(selectedTyp, localeOpts)}
+			{jahr} · {m.wahl_compare_ebene_prefix()}
+			{wahlEbeneLabel(selectedLevel, localeOpts)} · {wahlStimmtypLabel(defaultStimmtyp, localeOpts)}
 		</p>
 
 		<BriefwahlMarker
 			showBadge={isKiezBriefwahlSchaetzung}
-			tooltip="Kiez-Werte verteilen die Briefwahl einer Gruppe anteilig nach Wahlberechtigten auf ihre Urnen: eine Schätzung, keine amtliche Aufteilung."
-			label="Briefwahl geschätzt"
-			methodikHref={`${methodikHref}#wahldaten-briefwahl`}
+			tooltip={m.wahl_compare_briefwahl_tooltip()}
+			label={m.wahl_compare_briefwahl_label()}
+			methodikHref={localizedHref(`${methodikHref}#wahldaten-briefwahl`)}
 			testid="wahl-compare-briefwahl-marker"
 		/>
 
@@ -229,16 +229,16 @@
 				data-testid="wahl-compare-same-aggregat"
 			>
 				{selectedLevel === 'stimmbezirk'
-					? 'Beide Adressen liegen in derselben Briefwahl-Gruppe · Werte identisch auf dieser Ebene'
+					? m.wahl_compare_same_aggregat_stimmbezirk()
 					: selectedLevel === 'kiez'
-						? 'Beide Adressen liegen im selben Kiez · für Adress-Unterschiede die Ebene Stimmbezirk wählen'
-						: 'Beide Adressen liegen im selben Bezirk · für feinere Unterschiede die Ebene Kiez oder Stimmbezirk wählen'}
+						? m.wahl_compare_same_aggregat_kiez()
+						: m.wahl_compare_same_aggregat_bezirk()}
 			</p>
 		{/if}
 
 		{#if topA.length === 0 && topB.length === 0}
 			<p data-testid="wahl-compare-empty" class="font-mono text-xs text-ink-muted">
-				Keine Kiez-Wahl-Daten für diesen Wahltyp.
+				{m.wahl_compare_empty()}
 			</p>
 		{:else}
 			{@const allParteien = Array.from(
@@ -247,10 +247,10 @@
 			<table class="w-full font-mono text-xs" data-testid="wahl-compare-table">
 				<thead>
 					<tr class="text-[10px] tracking-wide text-ink-muted uppercase">
-						<th class="pb-1 text-left">Partei</th>
+						<th class="pb-1 text-left">{m.wahl_compare_th_partei()}</th>
 						<th class="px-2 pb-1 text-right">A</th>
 						<th class="px-2 pb-1 text-right">B</th>
-						<th class="pb-1 text-right">Diff</th>
+						<th class="pb-1 text-right">{m.wahl_compare_th_diff()}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -258,6 +258,19 @@
 						{@const a = anteilForPartieFull('a', kurzname)}
 						{@const b = anteilForPartieFull('b', kurzname)}
 						{@const diff = a !== null && b !== null ? (a - b) * 100 : null}
+						{@const diffAbs = formatDecimal(Math.abs(diff ?? 0), {
+							...localeOpts,
+							maximumFractionDigits: 1,
+							minimumFractionDigits: 1
+						})}
+						{@const diffDirection =
+							diff === null
+								? null
+								: diff > 0
+									? m.wahl_compare_diff_higher_in({ side: 'A' }, localeOpts)
+									: diff < 0
+										? m.wahl_compare_diff_higher_in({ side: 'B' }, localeOpts)
+										: m.wahl_compare_diff_equal(undefined, localeOpts)}
 						<tr class="border-t border-rule/50" data-testid={`wahl-compare-row-${kurzname}`}>
 							<td class="py-1">
 								<span class="inline-flex items-center gap-1.5">
@@ -285,12 +298,10 @@
 								class="text-right text-ink-muted tabular-nums"
 								data-testid={`wahl-compare-${kurzname}-diff`}
 								title={diff !== null
-									? `Differenz A−B: ${Math.abs(diff).toFixed(1).replace('.', ',')} Prozent-Punkte ${diff > 0 ? 'höher in A' : diff < 0 ? 'höher in B' : 'gleich'}`
-									: 'Vergleich nicht möglich'}
+									? `${m.wahl_compare_diff_prefix(undefined, localeOpts)}: ${diffAbs} ${m.wahl_compare_diff_unit(undefined, localeOpts)} ${diffDirection}`
+									: m.wahl_compare_diff_not_possible(undefined, localeOpts)}
 							>
-								{diff !== null
-									? `${diff > 0 ? '+' : diff < 0 ? '−' : '±'}${Math.abs(diff).toFixed(1).replace('.', ',')}`
-									: '–'}
+								{diff !== null ? `${diff > 0 ? '+' : diff < 0 ? '−' : '±'}${diffAbs}` : '–'}
 							</td>
 						</tr>
 					{/each}
@@ -298,18 +309,18 @@
 			</table>
 
 			<p class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
-				Diff in Prozent-Punkten (A minus B). Top-5 je Adresse zusammengeführt.
+				{m.wahl_compare_footer_note()}
 			</p>
 		{/if}
 
 		<EditorialDisclaimer variant="wahl-stimmenanteile" />
 
 		<a
-			href={methodikHref}
+			href={localizedMethodikHref}
 			data-testid="wahl-compare-methodik-link"
 			class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
 		>
-			Methodik · Wahldaten
+			{m.wahl_compare_methodik_link()}
 		</a>
 	</section>
 {/if}

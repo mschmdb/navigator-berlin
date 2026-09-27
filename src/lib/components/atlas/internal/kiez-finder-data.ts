@@ -7,7 +7,6 @@
  * Panels, danach ist jeder Slider-Move nur noch eine Paint-Expression.
  */
 
-import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
 import type { FeatureCollection, Point, Position } from 'geojson';
 import { loadManifest } from '$lib/data/manifest.js';
 import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
@@ -20,6 +19,19 @@ import {
 	type FinderMetricInput,
 	type FinderMetricKey
 } from './kiez-finder-engine.js';
+import { m } from '$lib/paraglide/messages.js';
+import { formatWahlDate, type LocaleFormatOptions } from '$lib/i18n/format.js';
+import { sourceDisplayLabel } from '$lib/data/wahl-labels.js';
+import type { Locale } from '$lib/paraglide/runtime';
+
+/**
+ * i18n Block B3c: Geteilter Helfer OHNE `opts.locale`: DE (Boundary, wie
+ * `layer-compare.ts`/`merge-sections.ts`). `kiez-finder-panel.svelte`
+ * uebergibt `{ locale: getLocale() }` explizit.
+ */
+function toOptions(opts?: LocaleFormatOptions): { locale: Locale } {
+	return { locale: opts?.locale ?? 'de' };
+}
 
 const SCORE_SLUG_TO_METRIC: readonly (readonly [string, FinderMetricKey])[] = [
 	['kiez-score-ruhe-luft', 'm_ruhe_luft'],
@@ -77,9 +89,8 @@ export interface KiezShareRow {
 	readonly anteil: number;
 }
 
-/** Wahl hinter dem Regler „Wahlverhalten ähnlich“ (Story 19, Entscheidung Matze 26.09.2026). */
+/** Wahl hinter dem Regler „Wahlverhalten ähnlich" (Story 19, Entscheidung Matze 26.09.2026). */
 export const FINDER_ELECTION = '2026-agh-zweitstimme';
-const FINDER_ELECTION_LABEL = 'Zweitstimmen Abgeordnetenhaus 2026';
 
 /** Herkunft der Anteile; `vorlaeufig` kommt aus der DB und entfällt nach dem Endergebnis-Re-Ingest. */
 export interface KiezSharesMeta {
@@ -117,14 +128,34 @@ export function parseKiezSharesResponse(body: unknown): KiezSharesResult | null 
 
 /**
  * Hinweistext unter den Reglern. Ohne Metadaten (Anteile noch nicht geladen)
- * nur die Wahl; vorläufige Zahlen tragen immer „vorläufig“ (Story 15, 1B).
+ * nur die Wahl; vorläufige Zahlen tragen immer „vorläufig" (Story 15, 1B).
+ *
+ * i18n Block B3c: `opts` fehlt → DE (Boundary). `formatWahlDate` liefert fuer
+ * DE dasselbe Datumsformat wie das vormalige `formatBerlinDate`
+ * (`Europe/Berlin`, 2-stellig) -- byte-identische DE-Ausgabe. Die Quelle
+ * laeuft ueber `finder_source_wrapper` statt eines fest verdrahteten " (...)",
+ * weil `sourceDisplayLabel`s EN-Text (Landeswahlleiterin) selbst schon
+ * Klammern traegt -- ein zweites Klammernpaar aussenherum erzeugte
+ * "((...))" (Review-Fund).
  */
-export function formatFinderWahlHinweis(meta: KiezSharesMeta | null): string {
-	if (!meta) return `Wahlverhalten: ${FINDER_ELECTION_LABEL}.`;
-	const quelle = meta.sourceName ? ` (${meta.sourceName})` : '';
-	if (!meta.vorlaeufig) return `Wahlverhalten: ${FINDER_ELECTION_LABEL}${quelle}.`;
-	const stand = meta.sourceUpdatedAt ? `, Stand ${formatBerlinDate(meta.sourceUpdatedAt)}` : '';
-	return `Wahlverhalten: ${FINDER_ELECTION_LABEL}${quelle}, vorläufig${stand}.`;
+export function formatFinderWahlHinweis(
+	meta: KiezSharesMeta | null,
+	opts?: LocaleFormatOptions
+): string {
+	const options = toOptions(opts);
+	const prefix = m.finder_wahlverhalten_label(undefined, options);
+	const election = m.finder_election_label(undefined, options);
+	if (!meta) return `${prefix}: ${election}.`;
+	const quelle = meta.sourceName
+		? m.finder_source_wrapper({ source: sourceDisplayLabel(meta.sourceName, options) }, options)
+		: '';
+	if (!meta.vorlaeufig) return `${prefix}: ${election}${quelle}.`;
+	const standWord = m.finder_stand_word(undefined, options);
+	const stand = meta.sourceUpdatedAt
+		? `, ${standWord} ${formatWahlDate(meta.sourceUpdatedAt, options)}`
+		: '';
+	const vorlaeufigWord = m.finder_vorlaeufig_word(undefined, options);
+	return `${prefix}: ${election}${quelle}, ${vorlaeufigWord}${stand}.`;
 }
 
 /**

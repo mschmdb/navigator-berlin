@@ -3,7 +3,24 @@
  * Slug-Pattern-Dispatch via LAYER_COMPARE_PROFILE. Heuristiken bewusst konservativ:
  * - Editorial-Schutz: stolpersteine, bodenrichtwerte, milieuschutz NIE 'a-better'/'b-better'.
  * - Unknown-Slug-Default = categorical-neutral (equal bei gleich, sonst not-comparable).
+ *
+ * i18n Block B3c: Delta-Labels und Advisories laufen ueber Paraglide-Messages
+ * + `format.ts`. Geteilter Helfer OHNE `opts.locale`: DE (Boundary, wie
+ * `atlas-label-options.ts`/`kiez-finder-data.ts`/`merge-sections.ts`) --
+ * `compare-row.svelte` ist der einzige Aufrufer und uebergibt `{ locale:
+ * getLocale() }` explizit.
  */
+import { m } from '$lib/paraglide/messages.js';
+import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+import type { Locale } from '$lib/paraglide/runtime';
+
+export interface CompareLocaleOptions {
+	readonly locale?: Locale;
+}
+
+function toOptions(o?: CompareLocaleOptions): { locale: Locale } {
+	return { locale: o?.locale ?? 'de' };
+}
 
 export type CompareDirection = 'a-better' | 'b-better' | 'equal' | 'not-comparable';
 
@@ -176,36 +193,58 @@ function isPresent(value: unknown): boolean {
 	return true;
 }
 
-function formatDelta(n: number): string {
-	if (Number.isInteger(n)) return n.toLocaleString('de-DE');
-	return n.toLocaleString('de-DE', { maximumFractionDigits: 1 });
+function formatDelta(n: number, opts?: CompareLocaleOptions): string {
+	const options = toOptions(opts);
+	if (Number.isInteger(n)) return formatCount(n, options);
+	return formatDecimal(n, { ...options, maximumFractionDigits: 1 });
 }
 
-function compareNumeric(slug: string, a: number, b: number, lowerIsBetter: boolean): CompareResult {
+function compareNumeric(
+	slug: string,
+	a: number,
+	b: number,
+	lowerIsBetter: boolean,
+	opts?: CompareLocaleOptions
+): CompareResult {
 	if (Math.abs(a - b) < EQUALITY_TOLERANCE) return { direction: 'equal' };
+	const options = toOptions(opts);
 	const aBetter = lowerIsBetter ? a < b : a > b;
 	const diff = Math.abs(a - b);
 	const unit = NUMERIC_UNITS[slug] ?? '';
-	const suffix = lowerIsBetter ? (aBetter ? 'weniger' : 'mehr') : aBetter ? 'mehr' : 'weniger';
+	const suffixWord = lowerIsBetter
+		? aBetter
+			? m.compare_delta_less(undefined, options)
+			: m.compare_delta_more(undefined, options)
+		: aBetter
+			? m.compare_delta_more(undefined, options)
+			: m.compare_delta_less(undefined, options);
 	const unitPart = unit ? `${unit} ` : '';
 	return {
 		direction: aBetter ? 'a-better' : 'b-better',
-		deltaLabel: `${formatDelta(diff)} ${unitPart}${suffix}`.trim()
+		deltaLabel: `${formatDelta(diff, opts)} ${unitPart}${suffixWord}`.trim()
 	};
 }
 
-function compareNumericNoJudgment(slug: string, a: number, b: number): CompareResult {
+function compareNumericNoJudgment(
+	slug: string,
+	a: number,
+	b: number,
+	opts?: CompareLocaleOptions
+): CompareResult {
 	if (Math.abs(a - b) < EQUALITY_TOLERANCE) return { direction: 'equal' };
+	const options = toOptions(opts);
 	const diff = Math.abs(a - b);
 	const unit = slug === 'bodenrichtwerte' ? '€/m²' : (NUMERIC_UNITS[slug] ?? '');
 	const higherSide = a > b ? 'A' : 'B';
 	const advisory =
 		slug === 'bodenrichtwerte'
-			? 'Höherer Bodenrichtwert kann teurere Miete bedeuten, oft aber auch bessere Versorgung. Wir zeigen die Differenz, ohne Bewertung.'
-			: 'Kontextuelle Werte, keine Wertung.';
+			? m.compare_advisory_bodenrichtwerte(undefined, options)
+			: m.compare_advisory_context_neutral(undefined, options);
 	return {
 		direction: 'not-comparable',
-		deltaLabel: `${formatDelta(diff)} ${unit} höher in ${higherSide}`.trim(),
+		deltaLabel: m
+			.compare_delta_higher_in({ amount: formatDelta(diff, opts), unit, side: higherSide }, options)
+			.trim(),
 		advisory
 	};
 }
@@ -261,15 +300,19 @@ function extractCategoricalKey(slug: string, value: unknown): string | null {
 	return null;
 }
 
-function compareCategorical(slug: string, a: unknown, b: unknown): CompareResult {
+function compareCategorical(
+	slug: string,
+	a: unknown,
+	b: unknown,
+	opts?: CompareLocaleOptions
+): CompareResult {
 	const aPresent = isPresent(a);
 	const bPresent = isPresent(b);
 	if (slug === 'milieuschutz-erhaltungsmiete' || slug === 'milieuschutz-staedtebau') {
 		if (aPresent === bPresent) return { direction: aPresent ? 'equal' : 'equal' };
 		return {
 			direction: 'not-comparable',
-			advisory:
-				'Milieuschutz wirkt ambivalent: Schutz für Bewohner, kann aber Umzugschancen mindern.'
+			advisory: m.compare_advisory_milieuschutz(undefined, toOptions(opts))
 		};
 	}
 	const aKey =
@@ -288,31 +331,43 @@ function comparePresence(a: unknown, b: unknown): CompareResult {
 	return { direction: aP ? 'a-better' : 'b-better' };
 }
 
-function compareDistance(a: number | null, b: number | null): CompareResult {
+function compareDistance(
+	a: number | null,
+	b: number | null,
+	opts?: CompareLocaleOptions
+): CompareResult {
 	if (a === null || b === null) return { direction: 'not-comparable' };
 	if (Math.abs(a - b) < EQUALITY_TOLERANCE) return { direction: 'equal' };
 	const aBetter = a < b;
 	const diff = Math.abs(a - b);
 	return {
 		direction: aBetter ? 'a-better' : 'b-better',
-		deltaLabel: `${formatDelta(diff)} m näher`
+		deltaLabel: m.compare_delta_closer({ amount: formatDelta(diff, opts) }, toOptions(opts))
 	};
 }
 
-function compareCount(a: unknown, b: unknown): CompareResult {
+function compareCount(a: unknown, b: unknown, opts?: CompareLocaleOptions): CompareResult {
+	const options = toOptions(opts);
 	const ca = extractCount(a);
 	const cb = extractCount(b);
-	const advisory =
-		'Erinnerungs-Layer, kein Wohn-Score. Würde der Opfer steht über Vergleichbarkeit.';
+	const advisory = m.compare_advisory_stolperstein(undefined, options);
 	if (ca === null && cb === null) return { direction: 'not-comparable', advisory };
 	return {
 		direction: 'not-comparable',
-		deltaLabel: `${ca ?? 0} vs ${cb ?? 0} im 200m-Radius`,
+		deltaLabel: m.compare_delta_count_radius(
+			{ a: formatCount(ca ?? 0, options), b: formatCount(cb ?? 0, options) },
+			options
+		),
 		advisory
 	};
 }
 
-export function compareLayerValues(slug: string, valueA: unknown, valueB: unknown): CompareResult {
+export function compareLayerValues(
+	slug: string,
+	valueA: unknown,
+	valueB: unknown,
+	opts?: CompareLocaleOptions
+): CompareResult {
 	const profile = getCompareProfile(slug);
 
 	switch (profile) {
@@ -320,13 +375,13 @@ export function compareLayerValues(slug: string, valueA: unknown, valueB: unknow
 			const a = extractNumber(slug, valueA);
 			const b = extractNumber(slug, valueB);
 			if (a === null || b === null) return { direction: 'not-comparable' };
-			return compareNumeric(slug, a, b, true);
+			return compareNumeric(slug, a, b, true, opts);
 		}
 		case 'numeric-no-judgment': {
 			const a = extractNumber(slug, valueA);
 			const b = extractNumber(slug, valueB);
 			if (a === null || b === null) return { direction: 'not-comparable' };
-			return compareNumericNoJudgment(slug, a, b);
+			return compareNumericNoJudgment(slug, a, b, opts);
 		}
 		case 'ordinal-higher-better': {
 			const a = extractKategorie(valueA);
@@ -341,12 +396,12 @@ export function compareLayerValues(slug: string, valueA: unknown, valueB: unknow
 			return compareOrdinal(slug, a, b, false);
 		}
 		case 'categorical-neutral':
-			return compareCategorical(slug, valueA, valueB);
+			return compareCategorical(slug, valueA, valueB, opts);
 		case 'presence-neutral-positive':
 			return comparePresence(valueA, valueB);
 		case 'distance-lower-better':
-			return compareDistance(extractDistanceM(valueA), extractDistanceM(valueB));
+			return compareDistance(extractDistanceM(valueA), extractDistanceM(valueB), opts);
 		case 'count-no-judgment':
-			return compareCount(valueA, valueB);
+			return compareCount(valueA, valueB, opts);
 	}
 }

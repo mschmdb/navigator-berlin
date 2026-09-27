@@ -1,8 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Harness from './compare-row-harness.svelte';
 import type { LayerHit } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function hit(slug: string, value: unknown): LayerHit {
 	return {
@@ -115,5 +120,91 @@ describe('compare-row.svelte', () => {
 		const row = (await page.getByTestId('compare-row').element()) as HTMLElement;
 		const th = row.querySelector('th');
 		expect(th?.getAttribute('scope')).toBe('row');
+	});
+
+	// i18n Block B3c: EN-Locale schaltet Aria-Labels, Delta-Label und "keine
+	// Daten"-Text auf Englisch um.
+	describe('i18n Block B3c (EN)', () => {
+		it('A günstiger: Aria-Label + Delta-Label englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				slug: 'laerm-den',
+				layerName: 'Straßenlärm',
+				hitA: hit('laerm-den', 55),
+				hitB: hit('laerm-den', 70)
+			});
+			const cellA = (await page.getByTestId('compare-row').element()) as HTMLElement;
+			const groupA = cellA.querySelector('[role="group"]');
+			expect(groupA?.getAttribute('aria-label')).toBe('Address A is better for Straßenlärm');
+			const delta = (await page.getByTestId('compare-delta-label').element()) as HTMLElement;
+			expect(delta.textContent).toMatch(/15.*dB.*less/i);
+		});
+
+		it('fehlender Wert: "No data available" statt "Keine Daten verfügbar"', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				slug: 'laerm-den',
+				layerName: 'Straßenlärm',
+				hitA: hit('laerm-den', 55),
+				hitB: null
+			});
+			const row = (await page.getByTestId('compare-row').element()) as HTMLElement;
+			const bDash = row
+				.querySelectorAll('td')[1]
+				?.querySelector('[aria-label="No data available"]');
+			expect(bDash).not.toBeNull();
+		});
+
+		it('A ungünstiger (worse): Aria-Label englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				slug: 'laerm-den',
+				layerName: 'Straßenlärm',
+				hitA: hit('laerm-den', 70),
+				hitB: hit('laerm-den', 55)
+			});
+			const row = (await page.getByTestId('compare-row').element()) as HTMLElement;
+			const groupA = row.querySelector('[role="group"]');
+			expect(groupA?.getAttribute('aria-label')).toBe('Address A is worse for Straßenlärm');
+		});
+
+		it('gleicher Wert (equal): Aria-Label englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				slug: 'laerm-den',
+				layerName: 'Straßenlärm',
+				hitA: hit('laerm-den', 60),
+				hitB: hit('laerm-den', 60)
+			});
+			const row = (await page.getByTestId('compare-row').element()) as HTMLElement;
+			const groupA = row.querySelector('[role="group"]');
+			expect(groupA?.getAttribute('aria-label')).toBe('Address A and B are equal for Straßenlärm');
+		});
+
+		it('not-comparable (kategorisch, unterschiedlich): Aria-Label englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				slug: 'bezirke',
+				layerName: 'Bezirke',
+				hitA: hit('bezirke', 'Mitte'),
+				hitB: hit('bezirke', 'Pankow')
+			});
+			const row = (await page.getByTestId('compare-row').element()) as HTMLElement;
+			expect(row.getAttribute('data-direction')).toBe('not-comparable');
+			const groupA = row.querySelector('[role="group"]');
+			expect(groupA?.getAttribute('aria-label')).toBe('Bezirke, comparison not possible');
+		});
+
+		it('ValueChip-Aria-Label trägt die englische Severity-Beschreibung', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, {
+				slug: 'laerm-den',
+				layerName: 'Straßenlärm',
+				hitA: hit('laerm-den', 55),
+				hitB: hit('laerm-den', 70)
+			});
+			const chip = (await page.getByTestId('value-chip').first().element()) as HTMLElement;
+			expect(chip.getAttribute('aria-label')).toMatch(/elevated exposure/);
+		});
 	});
 });

@@ -1,7 +1,12 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import MapLibreCanvas from './map-libre-canvas.svelte';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 describe('map-libre-canvas.svelte', () => {
 	it('rendert Container mit role=application + tabindex=0 + aria-describedby', async () => {
@@ -41,5 +46,16 @@ describe('map-libre-canvas.svelte', () => {
 		expect(txt).toMatch(/Enter/);
 		expect(txt).toMatch(/Escape/);
 		expect(txt).toMatch(/Bezirke|Stolperstein|Lärm/);
+	});
+
+	// i18n Block B3c: EN-Locale übersetzt die sr-only-Kartenbeschreibung.
+	it('EN: sr-only-Beschreibung englisch', async () => {
+		overwriteGetLocale(() => 'en');
+		render(MapLibreCanvas, {});
+		const help = page.getByText(/Arrow keys to pan/);
+		await expect.element(help).toBeInTheDocument();
+		const helpEl = (await help.element()) as HTMLElement;
+		expect(helpEl.id).toBe('map-help');
+		expect(helpEl.textContent).toMatch(/Home|Tab|Enter|Escape/);
 	});
 });

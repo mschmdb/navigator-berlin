@@ -20,6 +20,8 @@
 	import BookmarkRow from './bookmark-row.svelte';
 	import { classifyViewportWidth, type Breakpoint } from '$lib/utils/use-viewport.svelte.js';
 	import { createFocusTrap } from '$lib/utils/focus-trap.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
 
 	type Props = {
 		showCompareAction?: boolean;
@@ -95,7 +97,7 @@
 		});
 		persistFailed = !persisted;
 		saveJustHappened = true;
-		announce(`Adresse ${bm.displayName} gespeichert`);
+		announce(m.bookmark_announce_saved({ name: bm.displayName }));
 		setTimeout(() => {
 			saveJustHappened = false;
 		}, 1800);
@@ -115,7 +117,7 @@
 	function handleDelete(id: string): void {
 		const bm = ui.bookmarks.find((b) => b.id === id);
 		removeBookmark(ui, id);
-		if (bm) announce(`Bookmark ${bm.displayName} entfernt`);
+		if (bm) announce(m.bookmark_announce_removed({ name: bm.displayName }));
 	}
 
 	let clearAllConfirming = $state(false);
@@ -145,7 +147,7 @@
 			clearTimeout(clearAllTimer);
 			clearAllTimer = null;
 		}
-		announce('Alle Bookmarks entfernt');
+		announce(m.bookmark_announce_cleared_all());
 	}
 
 	function handleAddToCompare(bookmark: Bookmark): void {
@@ -200,13 +202,13 @@
 {#snippet dialogBody()}
 	<header class="flex items-start justify-between gap-3 border-b border-rule px-6 pt-5 pb-4">
 		<h2 id="bookmarks-dialog-title" class="font-serif text-xl leading-tight text-ink">
-			Gespeicherte Adressen
+			{m.bookmark_dialog_title()}
 		</h2>
 		<button
 			type="button"
 			data-testid="bookmark-dialog-close"
 			onclick={close}
-			aria-label="Bookmark-Dialog schließen"
+			aria-label={m.bookmark_dialog_close_aria()}
 			class="rounded-sm p-1 text-ink-muted hover:text-ink"
 		>
 			<X size={18} aria-hidden="true" />
@@ -224,15 +226,15 @@
 					class="flex items-center gap-2 font-sans text-sm text-ink"
 				>
 					<Check size={16} aria-hidden="true" class="shrink-0" />
-					<span>Gespeichert.</span>
+					<span>{m.bookmark_saved_confirmation()}</span>
 				</div>
 			{:else if alreadyBookmarked}
 				<p data-testid="bookmark-current-saved" class="font-sans text-sm text-ink-muted">
-					Aktuelle Adresse ist bereits gespeichert.
+					{m.bookmark_already_saved()}
 				</p>
 			{:else if limitReached}
 				<p data-testid="bookmark-limit-reached" class="font-sans text-sm text-ink-muted">
-					Limit erreicht ({MAX_BOOKMARKS}). Lösche alte Bookmarks zum Hinzufügen.
+					{m.bookmark_limit_reached({ max: MAX_BOOKMARKS })}
 				</p>
 			{:else}
 				<button
@@ -244,7 +246,7 @@
 					class="inline-flex items-center gap-2 font-sans text-sm text-ink hover:text-ink disabled:opacity-40"
 				>
 					<BookmarkPlus size={16} aria-hidden="true" class="shrink-0" />
-					<span>Aktuelle Adresse speichern</span>
+					<span>{m.bookmark_save_action()}</span>
 				</button>
 			{/if}
 		</div>
@@ -256,7 +258,7 @@
 				data-testid="bookmark-empty"
 				class="px-6 py-8 text-center font-serif text-sm text-ink-subtle italic"
 			>
-				Noch keine Bookmarks. Wähle eine Adresse und tippe auf das Bookmark-Symbol.
+				{m.bookmark_empty()}
 			</p>
 		{:else}
 			<ul role="list" data-testid="bookmark-list" class="divide-y divide-rule">
@@ -282,18 +284,18 @@
 					onclick={startClearAll}
 					class="font-mono text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline"
 				>
-					Alle löschen
+					{m.bookmark_clear_all_action()}
 				</button>
 			{:else if clearAllConfirming}
 				<span class="flex items-center gap-1.5">
-					<span class="font-mono text-xs text-ink">Wirklich alle?</span>
+					<span class="font-mono text-xs text-ink">{m.bookmark_clear_all_confirm_question()}</span>
 					<button
 						type="button"
 						data-testid="bookmark-clear-all-cancel"
 						onclick={cancelClearAll}
 						class="min-h-[44px] border border-rule px-2 py-1 font-mono text-xs text-ink hover:bg-bg"
 					>
-						Abbrechen
+						{m.bookmark_action_cancel()}
 					</button>
 					<button
 						type="button"
@@ -301,18 +303,18 @@
 						onclick={confirmClearAll}
 						class="min-h-[44px] border border-accent bg-accent-soft px-2 py-1 font-mono text-xs text-ink hover:bg-accent hover:text-bg"
 					>
-						Löschen
+						{m.bookmark_action_delete()}
 					</button>
 				</span>
 			{/if}
 		</div>
 		<div class="flex items-center gap-3">
 			<a
-				href="/datenschutz#bookmarks"
+				href={localizedHref('/datenschutz#bookmarks')}
 				data-testid="bookmark-privacy-link"
 				class="font-mono text-xs text-ink-subtle underline-offset-2 hover:text-ink hover:underline"
 			>
-				Datenschutz
+				{m.bookmark_privacy_link_label()}
 			</a>
 			<span data-testid="bookmark-counter" class="font-mono text-xs text-ink-subtle">
 				{sortedBookmarks.length}/{MAX_BOOKMARKS}
@@ -326,7 +328,7 @@
 			role="status"
 			class="border-t border-rule-strong bg-severity-warning-bg px-4 py-2 font-mono text-xs text-ink"
 		>
-			Speicher nicht verfügbar. Bookmarks bleiben nur in dieser Session.
+			{m.bookmark_persist_error()}
 		</div>
 	{/if}
 {/snippet}
@@ -338,7 +340,9 @@
 			snapVh={40}
 			onSnap={() => {}}
 			onClose={close}
-			ariaLabel="Gespeicherte Adressen"
+			ariaLabel={m.bookmark_dialog_title()}
+			expandLabel={m.atlas_palette_sheet_expand_label()}
+			shrinkLabel={m.atlas_palette_sheet_shrink_label()}
 		>
 			<div
 				bind:this={dialogEl}

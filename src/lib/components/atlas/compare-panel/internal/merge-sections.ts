@@ -1,10 +1,11 @@
 import type { LayerHit, LayerMetadata } from '$lib/data';
 import {
 	groupHitsBySection,
-	SECTION_LABELS,
+	sectionLabel,
 	SECTION_ORDER,
 	type SectionKey
 } from '../../inspector-panel/internal/sections.js';
+import type { LocaleOptions } from '../../internal/atlas-label-options.js';
 
 export interface CompareRow {
 	slug: string;
@@ -21,10 +22,11 @@ export interface CompareSection {
 export function mergeCompareSections(
 	hitsA: readonly LayerHit[],
 	hitsB: readonly LayerHit[],
-	layerMeta: readonly LayerMetadata[]
+	layerMeta: readonly LayerMetadata[],
+	opts?: LocaleOptions
 ): CompareSection[] {
-	const sectionsA = groupHitsBySection(hitsA, layerMeta);
-	const sectionsB = groupHitsBySection(hitsB, layerMeta);
+	const sectionsA = groupHitsBySection(hitsA, layerMeta, opts);
+	const sectionsB = groupHitsBySection(hitsB, layerMeta, opts);
 	const byKeyA = new Map(sectionsA.map((s) => [s.key, s]));
 	const byKeyB = new Map(sectionsB.map((s) => [s.key, s]));
 
@@ -49,7 +51,7 @@ export function mergeCompareSections(
 		}));
 		return {
 			key,
-			label: SECTION_LABELS[key],
+			label: sectionLabel(key, opts),
 			rows
 		};
 	});

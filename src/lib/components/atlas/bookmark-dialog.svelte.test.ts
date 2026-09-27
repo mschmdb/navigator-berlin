@@ -1,9 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Harness from './bookmark-dialog-harness.svelte';
 import type { Bookmark } from '$lib/state/bookmark-schema.js';
 import type { GeocodeSuggestion } from '$lib/data';
+
+afterEach(() => {
+	overwriteGetLocale(() => 'de');
+});
 
 function makeBookmark(overrides: Partial<Bookmark> = {}): Bookmark {
 	return {
@@ -205,5 +210,122 @@ describe('bookmark-dialog', () => {
 		await page.getByTestId('bookmark-clear-all').click();
 		await page.getByTestId('bookmark-clear-all-confirm').click();
 		await expect.element(page.getByTestId('bookmark-empty')).toBeInTheDocument();
+	});
+
+	describe('bookmark-aria-live Ansagen', () => {
+		it('Save-Ansage deutsch', async () => {
+			render(Harness, { open: true, selectedAddress: makeSuggestion() });
+			await page.getByTestId('bookmark-save').click();
+			await vi.waitFor(async () => {
+				await expect
+					.element(page.getByTestId('bookmark-aria-live'))
+					.toHaveTextContent('Adresse Neue Straße 7, 10115 Berlin gespeichert');
+			});
+		});
+
+		it('Save-Ansage englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true, selectedAddress: makeSuggestion() });
+			await page.getByTestId('bookmark-save').click();
+			await vi.waitFor(async () => {
+				await expect
+					.element(page.getByTestId('bookmark-aria-live'))
+					.toHaveTextContent('Address Neue Straße 7, 10115 Berlin saved');
+			});
+		});
+
+		it('Delete-Ansage deutsch', async () => {
+			render(Harness, { open: true, initialBookmarks: [makeBookmark()] });
+			await page.getByTestId('bookmark-delete').click();
+			await page.getByTestId('bookmark-confirm-delete').click();
+			await vi.waitFor(async () => {
+				await expect
+					.element(page.getByTestId('bookmark-aria-live'))
+					.toHaveTextContent('Bookmark Wörther Str. 11, 10405 Berlin entfernt');
+			});
+		});
+
+		it('Delete-Ansage englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true, initialBookmarks: [makeBookmark()] });
+			await page.getByTestId('bookmark-delete').click();
+			await page.getByTestId('bookmark-confirm-delete').click();
+			await vi.waitFor(async () => {
+				await expect
+					.element(page.getByTestId('bookmark-aria-live'))
+					.toHaveTextContent('Bookmark Wörther Str. 11, 10405 Berlin removed');
+			});
+		});
+
+		it('Clear-All-Ansage deutsch', async () => {
+			render(Harness, { open: true, initialBookmarks: [makeBookmark()] });
+			await page.getByTestId('bookmark-clear-all').click();
+			await page.getByTestId('bookmark-clear-all-confirm').click();
+			await vi.waitFor(async () => {
+				await expect
+					.element(page.getByTestId('bookmark-aria-live'))
+					.toHaveTextContent('Alle Bookmarks entfernt');
+			});
+		});
+
+		it('Clear-All-Ansage englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true, initialBookmarks: [makeBookmark()] });
+			await page.getByTestId('bookmark-clear-all').click();
+			await page.getByTestId('bookmark-clear-all-confirm').click();
+			await vi.waitFor(async () => {
+				await expect
+					.element(page.getByTestId('bookmark-aria-live'))
+					.toHaveTextContent('All bookmarks removed');
+			});
+		});
+	});
+
+	// i18n Block B3c: EN-Locale übersetzt Titel, Aktionen, Bestätigungen und
+	// lokalisiert den Datenschutz-Link.
+	describe('i18n Block B3c (EN)', () => {
+		it('Titel, Empty-Text und Save-Action englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true, selectedAddress: makeSuggestion() });
+			const dialog = (await page.getByTestId('bookmark-dialog').element()) as HTMLElement;
+			expect(dialog.querySelector('h2')?.textContent?.trim()).toBe('Saved addresses');
+			const save = (await page.getByTestId('bookmark-save').element()) as HTMLElement;
+			expect(save.textContent?.trim()).toBe('Save current address');
+		});
+
+		it('Save-Click zeigt englische Bestätigung', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true, selectedAddress: makeSuggestion() });
+			await page.getByTestId('bookmark-save').click();
+			await expect
+				.element(page.getByTestId('bookmark-save-confirmation'))
+				.toHaveTextContent('Saved.');
+		});
+
+		it('Delete-Bestätigung englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true, initialBookmarks: [makeBookmark()] });
+			await page.getByTestId('bookmark-delete').click();
+			const confirmCancel = (await page
+				.getByTestId('bookmark-confirm-cancel')
+				.element()) as HTMLElement;
+			expect(confirmCancel.textContent?.trim()).toBe('Cancel');
+		});
+
+		it('Datenschutz-Link lokalisiert auf /en/datenschutz#bookmarks', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true });
+			const link = (await page.getByTestId('bookmark-privacy-link').element()) as HTMLAnchorElement;
+			expect(link.getAttribute('href')).toBe('/en/datenschutz#bookmarks');
+			expect(link.textContent?.trim()).toBe('Privacy');
+		});
+
+		it('Empty-State englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Harness, { open: true });
+			await expect
+				.element(page.getByTestId('bookmark-empty'))
+				.toHaveTextContent('No bookmarks yet.');
+		});
 	});
 });

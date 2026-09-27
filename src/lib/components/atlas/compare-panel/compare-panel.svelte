@@ -15,6 +15,8 @@
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import type { DisclaimerVariant } from '../internal/editorial-types.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	type GeocodeFn = (q: string) => Promise<GeocodeSuggestion[]>;
 
@@ -28,8 +30,10 @@
 
 	const ui = getUiState();
 
+	const localeOpts = $derived({ locale: getLocale() });
+
 	const sections: CompareSection[] = $derived(
-		mergeCompareSections(ui.selectedLayerHits, ui.comparisonLayerHits, layerMeta)
+		mergeCompareSections(ui.selectedLayerHits, ui.comparisonLayerHits, layerMeta, localeOpts)
 	);
 
 	const hasAnyRows = $derived(sections.some((s) => s.rows.length > 0));
@@ -59,19 +63,21 @@
 {#if ui.compareMode && ui.selectedAddress}
 	<section
 		data-testid="compare-panel"
-		aria-label="Adressen vergleichen"
+		aria-label={m.compare_panel_aria()}
 		class="flex h-full flex-col overflow-auto bg-bg-elevated text-ink"
 	>
 		<header
 			class="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-rule bg-bg-elevated px-6 pt-5 pb-4"
 		>
 			<div>
-				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">Vergleich</p>
+				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
+					{m.compare_panel_eyebrow()}
+				</p>
 				<div class="mt-1 flex items-baseline gap-2 font-serif text-lg leading-tight text-ink">
 					<span data-testid="compare-address-a">{ui.selectedAddress.displayName}</span>
 					<ArrowLeftRight size={14} aria-hidden="true" class="text-ink-muted" />
 					<span data-testid="compare-address-b" class="text-ink-muted">
-						{ui.comparisonAddress?.displayName ?? 'Adresse B fehlt'}
+						{ui.comparisonAddress?.displayName ?? m.compare_address_b_missing()}
 					</span>
 				</div>
 			</div>
@@ -79,7 +85,7 @@
 				type="button"
 				onclick={exit}
 				data-testid="compare-exit"
-				aria-label="Vergleich verlassen"
+				aria-label={m.compare_exit_aria()}
 				class="rounded-sm p-1 text-ink-muted hover:text-ink"
 			>
 				<X size={18} aria-hidden="true" />
@@ -91,7 +97,9 @@
 				data-testid="compare-b-picker"
 				class="flex flex-col gap-3 border-b border-rule px-6 py-4"
 			>
-				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">Adresse B wählen</p>
+				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
+					{m.compare_pick_address_b_label()}
+				</p>
 				{#if geocode}
 					<div class="flex items-center gap-2">
 						<Search size={14} aria-hidden="true" class="text-ink-muted" />
@@ -100,7 +108,13 @@
 								variant="header"
 								{geocode}
 								onSelect={pickAddressB}
-								placeholder="Adresse B suchen"
+								placeholder={m.compare_address_b_search_placeholder()}
+								notFoundLabel={m.shell_address_search_not_found()}
+								noSuggestionsLabel={m.shell_address_search_no_suggestions()}
+								suggestionsCountLabel={(count) =>
+									(count === 1
+										? m.shell_address_search_suggestions_count_singular
+										: m.shell_address_search_suggestions_count_plural)({ count })}
 							/>
 						</div>
 					</div>
@@ -113,7 +127,7 @@
 						class="inline-flex items-center gap-2 self-start border-b border-rule-strong text-sm text-ink hover:text-ink"
 					>
 						<Bookmark size={14} aria-hidden="true" />
-						<span>Aus Bookmarks wählen</span>
+						<span>{m.compare_pick_from_bookmarks()}</span>
 					</button>
 				{/if}
 			</div>
@@ -125,7 +139,7 @@
 				class="px-6 py-6 font-mono text-sm text-ink-muted"
 				aria-live="polite"
 			>
-				Daten für Adresse B werden geladen…
+				{m.compare_loading_b()}
 			</div>
 		{/if}
 
@@ -141,7 +155,7 @@
 			<div
 				data-testid="compare-mobile-tabs"
 				role="tablist"
-				aria-label="Vergleichs-Spalte auswählen"
+				aria-label={m.compare_tabs_aria()}
 				class="flex gap-2 border-b border-rule px-6 py-2 lg:hidden"
 			>
 				<button
@@ -153,7 +167,7 @@
 					onclick={() => (activeTab = 'a')}
 					class="min-h-11 px-3 py-1 text-sm aria-selected:border-b-2 aria-selected:border-accent aria-selected:font-semibold"
 				>
-					Adresse A
+					{m.compare_tab_a_label()}
 				</button>
 				<button
 					type="button"
@@ -164,14 +178,14 @@
 					onclick={() => (activeTab = 'b')}
 					class="min-h-11 px-3 py-1 text-sm aria-selected:border-b-2 aria-selected:border-accent aria-selected:font-semibold"
 				>
-					Adresse B
+					{m.compare_tab_b_label()}
 				</button>
 			</div>
 
 			<div class="flex-1 px-6 py-4">
 				{#if !hasAnyRows}
 					<p data-testid="compare-empty" class="py-6 font-mono text-sm text-ink-subtle">
-						Keine vergleichbaren Layer-Daten für beide Adressen.
+						{m.compare_empty()}
 					</p>
 				{:else}
 					<table
@@ -181,7 +195,10 @@
 						class="w-full border-collapse"
 					>
 						<caption class="sr-only">
-							Vergleich: {ui.selectedAddress.displayName} vs {ui.comparisonAddress.displayName}
+							{m.compare_caption({
+								a: ui.selectedAddress.displayName,
+								b: ui.comparisonAddress.displayName
+							})}
 						</caption>
 						<thead>
 							<tr class="border-b border-rule-strong">
@@ -189,21 +206,21 @@
 									scope="col"
 									class="py-2 pr-3 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
 								>
-									Indikator
+									{m.compare_th_indicator()}
 								</th>
 								<th
 									scope="col"
 									data-cell="a"
 									class="py-2 pr-3 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
 								>
-									Adresse A
+									{m.compare_tab_a_label()}
 								</th>
 								<th
 									scope="col"
 									data-cell="b"
 									class="py-2 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
 								>
-									Adresse B
+									{m.compare_tab_b_label()}
 								</th>
 							</tr>
 						</thead>
@@ -223,7 +240,7 @@
 									{#each section.rows as row (row.slug)}
 										<CompareRow
 											slug={row.slug}
-											layerName={getLayerDisplayName(row.slug)}
+											layerName={getLayerDisplayName(row.slug, localeOpts)}
 											hitA={row.hitA}
 											hitB={row.hitB}
 										/>
@@ -246,7 +263,7 @@
 				data-testid="compare-footer"
 				class="border-t border-rule px-6 py-3"
 				role="note"
-				aria-label="Editorial-Hinweis zum Adress-Vergleich"
+				aria-label={m.compare_footer_aria()}
 			>
 				<EditorialDisclaimer variant="compare-stigma-footer" />
 			</footer>

@@ -2,6 +2,7 @@
 	import { Trash2, GitCompare } from '@lucide/svelte';
 	import type { Bookmark } from '$lib/state/bookmark-schema.js';
 	import { extractPrimaryName } from './internal/address-subline.js';
+	import { m } from '$lib/paraglide/messages.js';
 
 	type Props = {
 		bookmark: Bookmark;
@@ -58,10 +59,10 @@
 		<div
 			data-testid="bookmark-confirm"
 			role="group"
-			aria-label="Bookmark löschen bestätigen"
+			aria-label={m.bookmark_row_confirm_group_aria()}
 			class="flex items-center justify-between gap-2 px-6 py-3"
 		>
-			<span class="font-mono text-xs text-ink">Wirklich löschen?</span>
+			<span class="font-mono text-xs text-ink">{m.bookmark_row_confirm_question()}</span>
 			<div class="flex items-center gap-1.5">
 				<button
 					type="button"
@@ -69,7 +70,7 @@
 					onclick={cancelConfirm}
 					class="min-h-[44px] border border-rule px-3 py-1 font-mono text-xs text-ink hover:bg-bg"
 				>
-					Abbrechen
+					{m.bookmark_action_cancel()}
 				</button>
 				<button
 					type="button"
@@ -77,7 +78,7 @@
 					onclick={confirmDelete}
 					class="min-h-[44px] border border-accent bg-accent-soft px-3 py-1 font-mono text-xs text-ink hover:bg-accent hover:text-bg"
 				>
-					Löschen
+					{m.bookmark_action_delete()}
 				</button>
 			</div>
 		</div>
@@ -101,7 +102,7 @@
 						type="button"
 						data-testid="bookmark-compare"
 						onclick={() => onAddToCompare(bookmark)}
-						aria-label={`„${primaryName}" zum Vergleich hinzufügen`}
+						aria-label={m.bookmark_row_add_to_compare_aria({ name: primaryName })}
 						class="inline-flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink"
 					>
 						<GitCompare size={16} aria-hidden="true" />
@@ -111,7 +112,7 @@
 					type="button"
 					data-testid="bookmark-delete"
 					onclick={startConfirm}
-					aria-label={`„${primaryName}" löschen`}
+					aria-label={m.bookmark_row_delete_aria({ name: primaryName })}
 					class="inline-flex h-10 w-10 items-center justify-center text-ink-muted hover:text-ink"
 				>
 					<Trash2 size={16} aria-hidden="true" />

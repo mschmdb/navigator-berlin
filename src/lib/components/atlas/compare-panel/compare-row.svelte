@@ -4,6 +4,7 @@
 	import { getLayerHitDisplay } from '../inspector-panel/internal/layer-hit-display.js';
 	import {
 		getValueSeverity,
+		severityDescriptions,
 		type SeverityLevel
 	} from '../inspector-panel/internal/value-severity-mapping.js';
 	import {
@@ -13,6 +14,8 @@
 		type CompareResult
 	} from '$lib/utils/layer-compare.js';
 	import ValueChip from '../value-chip.svelte';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	type Props = {
 		slug: string;
@@ -34,14 +37,17 @@
 		'distance-lower-better'
 	]);
 
+	const localeOpts = $derived({ locale: getLocale() });
+
 	const compareResult: CompareResult = $derived(
-		compareLayerValues(slug, hitA?.value ?? null, hitB?.value ?? null)
+		compareLayerValues(slug, hitA?.value ?? null, hitB?.value ?? null, localeOpts)
 	);
 	const profile = $derived(getCompareProfile(slug));
 	const isEvaluative = $derived(EVALUATIVE_PROFILES.has(profile));
 
-	const displayA = $derived(hitA ? getLayerHitDisplay(slug, hitA.value) : null);
-	const displayB = $derived(hitB ? getLayerHitDisplay(slug, hitB.value) : null);
+	const displayA = $derived(hitA ? getLayerHitDisplay(slug, hitA.value, localeOpts) : null);
+	const displayB = $derived(hitB ? getLayerHitDisplay(slug, hitB.value, localeOpts) : null);
+	const chipSeverityDescriptions = $derived(severityDescriptions(localeOpts));
 
 	function chipSeverity(value: unknown): SeverityLevel {
 		if (NEUTRAL_CHIP_SLUGS.has(slug)) return 'neutral';
@@ -51,17 +57,24 @@
 	const severityB = $derived(hitB ? chipSeverity(hitB.value) : null);
 
 	const ariaLabelA = $derived.by(() => {
-		if (compareResult.direction === 'a-better') return `Adresse A ist günstiger bei ${layerName}`;
-		if (compareResult.direction === 'b-better') return `Adresse A ist ungünstiger bei ${layerName}`;
-		if (compareResult.direction === 'equal') return `Adresse A und B gleich bei ${layerName}`;
-		return `${layerName}, Vergleich nicht möglich`;
+		if (compareResult.direction === 'a-better')
+			return m.compare_row_aria_better({ side: 'A', layerName }, localeOpts);
+		if (compareResult.direction === 'b-better')
+			return m.compare_row_aria_worse({ side: 'A', layerName }, localeOpts);
+		if (compareResult.direction === 'equal')
+			return m.compare_row_aria_equal({ layerName }, localeOpts);
+		return m.compare_row_aria_not_comparable({ layerName }, localeOpts);
 	});
 	const ariaLabelB = $derived.by(() => {
-		if (compareResult.direction === 'b-better') return `Adresse B ist günstiger bei ${layerName}`;
-		if (compareResult.direction === 'a-better') return `Adresse B ist ungünstiger bei ${layerName}`;
-		if (compareResult.direction === 'equal') return `Adresse A und B gleich bei ${layerName}`;
-		return `${layerName}, Vergleich nicht möglich`;
+		if (compareResult.direction === 'b-better')
+			return m.compare_row_aria_better({ side: 'B', layerName }, localeOpts);
+		if (compareResult.direction === 'a-better')
+			return m.compare_row_aria_worse({ side: 'B', layerName }, localeOpts);
+		if (compareResult.direction === 'equal')
+			return m.compare_row_aria_equal({ layerName }, localeOpts);
+		return m.compare_row_aria_not_comparable({ layerName }, localeOpts);
 	});
+	const noDataLabel = $derived(m.compare_row_no_data(undefined, localeOpts));
 </script>
 
 <tr
@@ -82,6 +95,7 @@
 					unit={displayA.chip.unit}
 					numeric={displayA.chip.numeric}
 					{layerName}
+					severityDescriptions={chipSeverityDescriptions}
 				/>
 				{#if isEvaluative && compareResult.direction === 'a-better'}
 					<ArrowUp
@@ -108,9 +122,7 @@
 				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayA.context}</div>
 			{/if}
 		{:else}
-			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar"
-				>–</span
-			>
+			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label={noDataLabel}>–</span>
 		{/if}
 	</td>
 	<td class="py-2 align-top">
@@ -122,6 +134,7 @@
 					unit={displayB.chip.unit}
 					numeric={displayB.chip.numeric}
 					{layerName}
+					severityDescriptions={chipSeverityDescriptions}
 				/>
 				{#if isEvaluative && compareResult.direction === 'b-better'}
 					<ArrowUp
@@ -141,9 +154,7 @@
 				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayB.context}</div>
 			{/if}
 		{:else}
-			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label="Keine Daten verfügbar"
-				>–</span
-			>
+			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label={noDataLabel}>–</span>
 		{/if}
 	</td>
 </tr>

@@ -349,3 +349,56 @@ describe('compareLayerValues — Edge-Cases + unbekannte Slugs', () => {
 		expect(() => JSON.parse(JSON.stringify(r))).not.toThrow();
 	});
 });
+
+// i18n Block B3c: `opts.locale` schaltet Delta-Labels/Advisories auf EN um,
+// ohne `opts` bleibt jeder Aufruf DE (Boundary, wie kiez-finder-data/merge-sections).
+describe('compareLayerValues — i18n Block B3c (opts.locale)', () => {
+	it('ohne opts bleibt DE (Boundary-Default)', () => {
+		const r = compareLayerValues('laerm-den', 55, 70);
+		expect(r.deltaLabel).toMatch(/weniger/);
+	});
+
+	it('opts.locale=en: numeric-lower-better Delta englisch', () => {
+		const r = compareLayerValues('laerm-den', 55, 70, { locale: 'en' });
+		expect(r.deltaLabel).toMatch(/15.*dB.*less/i);
+	});
+
+	it('opts.locale=en: Bodenrichtwerte Delta + Advisory englisch, Zahl im en-GB-Format', () => {
+		const r = compareLayerValues(
+			'bodenrichtwerte',
+			{ richtwert: 8000 },
+			{ richtwert: 5500 },
+			{ locale: 'en' }
+		);
+		expect(r.deltaLabel).toMatch(/2,500.*€\/m².*higher in A/);
+		expect(r.advisory).toMatch(/standard land value/i);
+	});
+
+	it('opts.locale=en: Milieuschutz-Advisory englisch', () => {
+		const r = compareLayerValues(
+			'milieuschutz-erhaltungsmiete',
+			{ name: 'Karl-Marx-Allee' },
+			null,
+			{ locale: 'en' }
+		);
+		expect(r.advisory).toMatch(/preservation status/i);
+	});
+
+	it('opts.locale=en: Distanz-Delta englisch', () => {
+		const r = compareLayerValues(
+			'kitas-2024',
+			{ distanceM: 200 },
+			{ distanceM: 800 },
+			{
+				locale: 'en'
+			}
+		);
+		expect(r.deltaLabel).toMatch(/600 m closer/);
+	});
+
+	it('opts.locale=en: Stolperstein-Advisory + Delta englisch', () => {
+		const r = compareLayerValues('stolpersteine', 3, 8, { locale: 'en' });
+		expect(r.deltaLabel).toMatch(/3.*vs.*8.*200 m radius/i);
+		expect(r.advisory).toMatch(/memorial layer/i);
+	});
+});

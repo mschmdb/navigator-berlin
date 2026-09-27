@@ -34,6 +34,8 @@
 		type FinderResult,
 		type FinderWeights
 	} from './internal/kiez-finder-engine.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	/** Minimaler Map-Ausschnitt, den das Panel braucht (testbar ohne MapLibre). */
 	export interface FinderMapApi {
@@ -79,21 +81,93 @@
 	}: Props = $props();
 
 	// Slider-Definitionen: Score-Dimensionen und Dichte bipolar, Nähe unipolar.
-	const BIPOLAR = [
-		{ key: 'ruheLuft', label: 'Ruhe & Luft', low: 'wenig', high: 'viel' },
-		{ key: 'gruenHitze', label: 'Grün & Hitzeschutz', low: 'wenig', high: 'viel' },
-		{ key: 'mobilitaet', label: 'Mobilität', low: 'wenig', high: 'viel' },
-		{ key: 'versorgung', label: 'Versorgung', low: 'wenig', high: 'viel' },
-		{ key: 'wohnschutz', label: 'Wohnschutz', low: 'wenig', high: 'viel' },
-		{ key: 'kultur', label: 'Kulturangebot', low: 'wenig', high: 'viel' },
-		{ key: 'dichte', label: 'Bebauung & Dichte', low: 'locker', high: 'dicht' }
+	// i18n Block B3c: Label/Low/High sind Message-Funktionen (locale-frei
+	// aufgerufen -- sie loesen bei jedem Aufruf ueber `getLocale()` auf, kein
+	// gecachter DE-String), `family` waehlt die Stufen-Phrase in `stufenText`.
+	type StufeFamily = 'wenigViel' | 'dichte' | 'sbahn' | 'partei';
+	type MessageFn = (
+		params?: undefined,
+		options?: { locale: import('$lib/paraglide/runtime').Locale }
+	) => string;
+	const BIPOLAR: readonly {
+		key: keyof FinderWeights;
+		label: MessageFn;
+		low: MessageFn;
+		high: MessageFn;
+		family: StufeFamily;
+	}[] = [
+		{
+			key: 'ruheLuft',
+			label: m.finder_dim_label_ruhe_luft,
+			low: m.finder_word_wenig,
+			high: m.finder_word_viel,
+			family: 'wenigViel'
+		},
+		{
+			key: 'gruenHitze',
+			label: m.finder_dim_label_gruen_hitze,
+			low: m.finder_word_wenig,
+			high: m.finder_word_viel,
+			family: 'wenigViel'
+		},
+		{
+			key: 'mobilitaet',
+			label: m.finder_dim_label_mobilitaet,
+			low: m.finder_word_wenig,
+			high: m.finder_word_viel,
+			family: 'wenigViel'
+		},
+		{
+			key: 'versorgung',
+			label: m.finder_dim_label_versorgung,
+			low: m.finder_word_wenig,
+			high: m.finder_word_viel,
+			family: 'wenigViel'
+		},
+		{
+			key: 'wohnschutz',
+			label: m.finder_dim_label_wohnschutz,
+			low: m.finder_word_wenig,
+			high: m.finder_word_viel,
+			family: 'wenigViel'
+		},
+		{
+			key: 'kultur',
+			label: m.finder_dim_label_kultur,
+			low: m.finder_word_wenig,
+			high: m.finder_word_viel,
+			family: 'wenigViel'
+		},
+		{
+			key: 'dichte',
+			label: m.finder_dim_label_dichte,
+			low: m.finder_word_locker,
+			high: m.finder_word_dicht,
+			family: 'dichte'
+		}
 	] as const;
-	const UNIPOLAR = [
-		{ key: 'sbahn', label: 'S-Bahn-Nähe', low: 'egal', high: 'nah' },
-		{ key: 'partei', label: 'Wahlverhalten ähnlich', low: 'egal', high: 'ähnlich' }
+	const UNIPOLAR: readonly {
+		key: keyof FinderWeights;
+		label: MessageFn;
+		low: MessageFn;
+		high: MessageFn;
+		family: StufeFamily;
+	}[] = [
+		{
+			key: 'sbahn',
+			label: m.finder_dim_label_sbahn,
+			low: m.finder_word_egal,
+			high: m.finder_word_nah,
+			family: 'sbahn'
+		},
+		{
+			key: 'partei',
+			label: m.finder_dim_label_partei,
+			low: m.finder_word_egal,
+			high: m.finder_word_aehnlich,
+			family: 'partei'
+		}
 	] as const;
-
-	const STUFEN_BIPOLAR = ['möglichst wenig', 'eher wenig', 'egal', 'eher viel', 'möglichst viel'];
 
 	// Bewusst nur der Startwert: danach führt das Panel den Zustand, die URL
 	// wird von der Seite nachgezogen. Ein reaktives Zurückschreiben würde die
@@ -109,7 +183,7 @@
 	let base: FinderBaseData | null = null;
 	let sharesCache: readonly KiezShareRow[] | null = null;
 	let sharesMeta = $state<KiezSharesMeta | null>(null);
-	const wahlHinweis = $derived(formatFinderWahlHinweis(sharesMeta));
+	const wahlHinweis = $derived(formatFinderWahlHinweis(sharesMeta, { locale: getLocale() }));
 	let collection: FeatureCollection<Polygon | MultiPolygon> | null = null;
 	// Für welche Partei m_partei tatsächlich gebaut wurde: die Collection
 	// trägt IMMER ein m_partei-Property (Neutral-Fallback), dessen Existenz
@@ -349,12 +423,27 @@
 		};
 	});
 
-	function stufenText(value: number, low: string, high: string): string {
-		if (value === 0) return 'egal';
-		const grad = Math.abs(value) === 2 ? 'möglichst' : 'eher';
-		return `${grad} ${value < 0 ? low : high}`;
+	function stufenText(family: StufeFamily, value: number): string {
+		if (value === 0) return m.finder_level_egal();
+		if (family === 'wenigViel') {
+			if (value === -2) return m.finder_level_wenig_viel_moeglichst_wenig();
+			if (value === -1) return m.finder_level_wenig_viel_eher_wenig();
+			if (value === 1) return m.finder_level_wenig_viel_eher_viel();
+			return m.finder_level_wenig_viel_moeglichst_viel();
+		}
+		if (family === 'dichte') {
+			if (value === -2) return m.finder_level_dichte_moeglichst_locker();
+			if (value === -1) return m.finder_level_dichte_eher_locker();
+			if (value === 1) return m.finder_level_dichte_eher_dicht();
+			return m.finder_level_dichte_moeglichst_dicht();
+		}
+		if (family === 'sbahn') {
+			return value === 1 ? m.finder_level_sbahn_eher_nah() : m.finder_level_sbahn_moeglichst_nah();
+		}
+		return value === 1
+			? m.finder_level_partei_eher_aehnlich()
+			: m.finder_level_partei_moeglichst_aehnlich();
 	}
-	void STUFEN_BIPOLAR;
 </script>
 
 <section
@@ -365,11 +454,11 @@
 		class="sticky top-0 z-10 flex items-center gap-2 border-b border-rule bg-bg-elevated px-4 py-3"
 	>
 		<SlidersHorizontal size={16} aria-hidden="true" class="text-accent" />
-		<h2 class="flex-1 font-serif text-lg leading-tight text-ink">Kiez-Finder</h2>
+		<h2 class="flex-1 font-serif text-lg leading-tight text-ink">{m.finder_panel_title()}</h2>
 		<button
 			type="button"
 			data-testid="finder-close"
-			aria-label="Kiez-Finder schließen"
+			aria-label={m.finder_close_aria()}
 			onclick={() => onClose?.()}
 			class="hover:text-vermillion p-0.5 text-ink-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
 		>
@@ -380,23 +469,24 @@
 	<div class="flex-1 overflow-y-auto px-4 py-3">
 		{#if loading}
 			<p class="py-6 text-center font-mono text-xs text-ink-muted" role="status">
-				Daten werden geladen …
+				{m.finder_loading()}
 			</p>
 		{:else if loadFailed}
 			<p class="py-6 text-center font-mono text-xs text-ink-muted" role="alert">
-				Daten nicht ladbar. Später erneut versuchen.
+				{m.finder_load_error()}
 			</p>
 		{:else}
 			<p class="mb-2 font-serif text-xs leading-snug text-ink-muted">
-				Verschiebe die Regler, die Karte färbt sich sofort: dunkel heißt hohe Passung.
+				{m.finder_intro()}
 			</p>
 
 			{#each BIPOLAR as def (def.key)}
 				<div class="mb-2">
 					<div class="flex items-baseline justify-between">
-						<label for={`finder-${def.key}`} class="font-sans text-xs text-ink">{def.label}</label>
+						<label for={`finder-${def.key}`} class="font-sans text-xs text-ink">{def.label()}</label
+						>
 						<span class="font-mono text-[10px] text-ink-subtle">
-							{stufenText(weights[def.key], def.low, def.high)}
+							{stufenText(def.family, weights[def.key])}
 						</span>
 					</div>
 					<input
@@ -407,8 +497,12 @@
 						max="2"
 						step="1"
 						value={weights[def.key]}
-						aria-label={`${def.label}: ${def.low} bis ${def.high}`}
-						aria-valuetext={stufenText(weights[def.key], def.low, def.high)}
+						aria-label={m.finder_slider_aria({
+							label: def.label(),
+							low: def.low(),
+							high: def.high()
+						})}
+						aria-valuetext={stufenText(def.family, weights[def.key])}
 						oninput={(e) => setWeight(def.key, Number(e.currentTarget.value))}
 						class="finder-range w-full"
 					/>
@@ -418,13 +512,10 @@
 			{#each UNIPOLAR as def (def.key)}
 				<div class="mb-2">
 					<div class="flex items-baseline justify-between">
-						<label for={`finder-${def.key}`} class="font-sans text-xs text-ink">{def.label}</label>
+						<label for={`finder-${def.key}`} class="font-sans text-xs text-ink">{def.label()}</label
+						>
 						<span class="font-mono text-[10px] text-ink-subtle">
-							{weights[def.key] === 0
-								? 'egal'
-								: weights[def.key] === 1
-									? `eher ${def.high}`
-									: `möglichst ${def.high}`}
+							{stufenText(def.family, weights[def.key])}
 						</span>
 					</div>
 					<input
@@ -435,7 +526,11 @@
 						max="2"
 						step="1"
 						value={weights[def.key]}
-						aria-label={`${def.label}: ${def.low} bis ${def.high}`}
+						aria-label={m.finder_slider_aria({
+							label: def.label(),
+							low: def.low(),
+							high: def.high()
+						})}
 						oninput={(e) => setWeight(def.key, Number(e.currentTarget.value))}
 						class="finder-range w-full"
 					/>
@@ -443,7 +538,11 @@
 			{/each}
 
 			{#if weights.partei > 0}
-				<div class="mb-2 flex flex-wrap gap-1" role="group" aria-label="Partei wählen">
+				<div
+					class="mb-2 flex flex-wrap gap-1"
+					role="group"
+					aria-label={m.finder_party_group_aria()}
+				>
 					{#each PARTEIEN as p (p)}
 						<button
 							type="button"
@@ -463,7 +562,7 @@
 			{#if top.length > 0}
 				<div class="mt-3 border-t border-rule pt-2">
 					<h3 class="mb-1 font-mono text-[10px] tracking-wider text-ink-subtle uppercase">
-						Beste Passung
+						{m.finder_best_match_heading()}
 					</h3>
 					<ol data-testid="finder-top-list" class="flex flex-col gap-0.5">
 						{#each top as result (result.plrId)}
@@ -488,13 +587,13 @@
 					class="inline-flex items-center gap-1 font-mono text-[10px] tracking-wider text-ink-muted uppercase hover:text-ink"
 				>
 					<RotateCcw size={11} aria-hidden="true" />
-					Zurücksetzen
+					{m.finder_reset_label()}
 				</button>
 			</div>
 
 			<p class="mt-2 font-serif text-[10px] leading-snug text-ink-subtle">
-				Die Karte bewertet weder Nachbarschaften noch Menschen, sie zeigt nur, wie gut eine Gegend
-				zu deinen Reglern passt. <span data-testid="finder-wahl-hinweis">{wahlHinweis}</span>
+				{m.finder_footer_note()}
+				<span data-testid="finder-wahl-hinweis">{wahlHinweis}</span>
 			</p>
 		{/if}
 	</div>
