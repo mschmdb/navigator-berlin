@@ -2,7 +2,8 @@
 title: 'i18n Block C2: Layer-Methodik und Behörden auf Englisch'
 type: 'feature'
 created: '2026-09-27'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '5fe9a120c7e54bc462207c81c2738a4623229548'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
