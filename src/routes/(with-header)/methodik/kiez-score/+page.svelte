@@ -27,7 +27,7 @@
 		{
 			id: 'ruhe-luft',
 			label: 'Ruhe & Luft',
-			layers: 'laerm-2023, luft-2023',
+			layers: 'Lärmbelastung 2023, Luftbelastung 2023',
 			detail:
 				'Lärm- und Luftbelastung, je zur Hälfte gewichtet. Kategorisches 3-Stufen-Mapping von gering bis hoch. Bioklima zählt nicht mehr hier mit, es ist nach Grün & Hitze gewandert.'
 		},
@@ -35,14 +35,14 @@
 			id: 'gruen-hitze',
 			label: 'Grün & Hitze',
 			layers:
-				'gruenversorgung-2023, gruenanlagen, bioklima-2023, klima-pet-2022, klima-kaltlufteinwirkbereich-2022, klima-leitbahnkorridor-2022',
+				'Grünversorgung 2023, Grünanlagen, Thermische Belastung 2023, Gefühlte Temperatur 2022, Kaltluft-Einwirkbereich (2022), Kaltluft-Leitbahn-Korridor (2022)',
 			detail:
 				'Nutzbares Grün und Schutz vor Hitze. Grünversorgung 0.30, Grünanlagen-Nähe 0.15, Bioklima 0.20, PET-Hitzebelastung 0.15, Kaltluft-Einwirkbereich 0.10, Leitbahnkorridor 0.10. PET zählt invertiert: kühlere Werte geben mehr Punkte.'
 		},
 		{
 			id: 'mobilitaet',
 			label: 'Mobilität',
-			layers: 'U-Bahn-, S-Bahn-, Tram-, Bus-Stops · radverkehrsnetz-2025, fahrradstrassen-2024',
+			layers: 'U-Bahn-, S-Bahn-, Tram-, Bus-Stops · Radverkehrsnetz, Fahrradstraßen',
 			detail:
 				'Luftlinien-Distanz vom Adress-Punkt zur nächsten Haltestelle, mit 1,3-fachem Umwegfaktor. U-Bahn 0.35, S-Bahn 0.25, Tram 0.20, Bus 0.10, Radverkehrs-Presence 0.10. Bei 0 m hundert Punkte, bei 1.000 m null. Mobilität nutzt die exakte Adress-Distance, andere Dimensionen den Planungsraum-Centroid.'
 		},
@@ -50,14 +50,14 @@
 			id: 'versorgung',
 			label: 'Versorgung',
 			layers:
-				'kitas-2024, schulen-2024, krankenhaeuser-plan, spielplaetze, nahversorgung-lebensmittel, nahversorgung-apotheke, nahversorgung-post',
+				'Kindertagesstätten, Schulen, Plan-Krankenhäuser, Spielplätze, Lebensmittel, Apotheke, Post',
 			detail:
 				'Versorgung umfasst öffentliche Daseinsvorsorge und private Alltags-Nahversorgung, jeweils als Dichte im Umkreis (Anzahl Einrichtungen, weicher Übergang statt hartem Distanz-Cliff). Kita-Erreichbarkeit (0.12) plus Plätze pro Kind (0.12), Schule nach Schulart (Grundschule 0.12, weiterführend 0.12), Plan-Krankenhaus kapazitätsgewichtet (0.18), Spielplatz (0.10). Dazu Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12), Apotheke (0.07), Post (0.05). Grünanlagen zählen unter Grün & Hitze. Belegungsquote, Trägerschaft und Pflege-Qualität bleiben außen vor.'
 		},
 		{
 			id: 'wohnschutz',
 			label: 'Wohnschutz',
-			layers: 'milieuschutz-erhaltungsmiete, milieuschutz-staedtebau',
+			layers: 'Milieuschutz: Erhaltungsmiete, Milieuschutz: Städtebau',
 			detail:
 				'Verdrängungsschutz: Liegt ein Planungsraum in einem Milieuschutzgebiet, gilt Schutz als vorhanden. Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft. Diese Größe ist positiv eindeutig, mehr Schutz ist besser für Bewohner. Schutz-Status sagt nichts über die tatsächliche Mietentwicklung.'
 		},
@@ -65,16 +65,17 @@
 			id: 'kultur',
 			label: 'Kultur (eigenständig, nicht im Gesamt-Score)',
 			layers:
-				'kultur-museum, kultur-galerie, kultur-theater, kultur-bibliothek, kultur-kino, kultur-soziokultur, kultur-kunst-im-raum, kultur-club',
+				'Museen, Galerien, Theater & Bühnen, Bibliotheken, Kinos, Soziokultur, Kunst im Stadtraum, Clubs',
 			detail:
 				'Kultureller Zugang als log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OpenStreetMap, ODbL). Der erste Kulturort zählt stark, weitere flachen ab, das dämpft das Innen-Außen-Gefälle. Kultur ist eine eigene, sichtbare Dimension, fließt aber NICHT in den Gesamt-Score: Kulturinfrastruktur ballt sich in der Innenstadt und würde sonst jeden Außenbezirk-Gesamt-Score drücken. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.'
 		},
 		{
 			id: 'kriminalitaet',
 			label: 'Erfasste Kriminalität (eigenständig, nicht im Gesamt-Score)',
-			layers: 'kiez-score-kriminalitaet (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)',
+			layers:
+				'Kiez-Score · Erfasste Kriminalität (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)',
 			detail:
-				'Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten" ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in Strukturell-Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher" oder „gefährlich".'
+				'Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten“ ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in neutralem Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher“ oder „gefährlich“.'
 		}
 	];
 
@@ -172,7 +173,7 @@
 	<section id="worum" aria-labelledby="worum-h" class="flex flex-col gap-3">
 		<h2 id="worum-h" class="font-serif text-2xl text-ink">Worum es geht</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking". Die Karte zeigt sieben
+			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking“. Die Karte zeigt sieben
 			Dimensionen separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse.
 			Fünf Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als
 			eigenständige Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst
@@ -200,7 +201,7 @@
 	<section id="gewichte" aria-labelledby="gewichte-h" class="flex flex-col gap-3">
 		<h2 id="gewichte-h" class="font-serif text-2xl text-ink">Gewichte</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Persona „allgemein" gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur
+			Persona „allgemein“ gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur
 			und erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den
 			Gesamt-Score (Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in
 			Phase 2. Eigene Slider-Gewichtung kommt ebenfalls später.
@@ -284,12 +285,12 @@
 			seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Seit der Score-Neuordnung (ADR-015) sind alle Composite-Dimensionen positiv eindeutig. Deshalb
-			zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt",
-			Gut-Skala), zusätzlich zu den Einzel-Dimensionen. Kultur (ADR-018) und erfasste Kriminalität
-			(ADR-019) sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score.
-			Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in Strukturell-Indigo, ohne
-			Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score" gibt es nicht.
+			Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen
+			wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt“, hoch = besser),
+			zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige
+			Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat
+			bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten
+			„Berlin-Score“ gibt es nicht.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Build-Pipeline: <code class="font-mono text-sm">pnpm data:aggregate-scores</code> liest die
@@ -332,7 +333,7 @@
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Der Score wertet keine Sozialstruktur. Ein Kiez mit niedrigem Sozialstatus lebt nicht
-			„schlechter". Das MSS-Aggregat zeigen wir als neutralen Kontext, nicht als Bewertung.
+			„schlechter“. Das MSS-Aggregat zeigen wir als neutralen Kontext, nicht als Bewertung.
 			Choropleth-Farben dafür bleiben neutral, ohne Rot-Grün-Sprünge. Einzelne Adressen können stark
 			vom Planungsraum-Mittel abweichen.
 		</p>

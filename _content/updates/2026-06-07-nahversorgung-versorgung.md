@@ -28,4 +28,4 @@ Der Score bleibt bei fünf Dimensionen mit je 20 Prozent. Nur innerhalb der Vers
 
 ## Methodik
 
-Alle Terme, Gewichte und Datenquellen stehen unter [`/methodik/kiez-score`](/methodik/kiez-score).
+Alle Terme, Gewichte und Datenquellen stehen unter [Methodik zum Kiez-Score](/methodik/kiez-score).

@@ -303,7 +303,7 @@ describe('winner-map.svelte', () => {
 			.toHaveTextContent('143 Berliner Kieze aggregiert');
 		await expect
 			.element(page.getByTestId('winner-map-aggregation-hinweis'))
-			.toHaveTextContent('/methodik/wahldaten');
+			.toHaveTextContent('Methodik Wahldaten');
 	});
 
 	it('Adress-Auswahl: Punkt im Gebiet hebt hervor und benennt es, Punkt außerhalb gibt Hinweis', async () => {

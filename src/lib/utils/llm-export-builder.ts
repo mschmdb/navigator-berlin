@@ -366,7 +366,7 @@ function renderKiezScore(input: LlmExportInput, lines: string[]): void {
 	}
 	lines.push('');
 	lines.push(
-		`> Umwelt- & Infrastruktur-Score aus ${COMPOSITE_DIMENSIONS.length} Dimensionen pro Planungsraum (rund 7.500 Einwohner:innen). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.`
+		`> Umwelt- & Infrastruktur-Score aus ${COMPOSITE_DIMENSIONS.length} Dimensionen pro Planungsraum (rund 7.500 Einwohner:innen). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: https://navigator.berlin/methodik/kiez-score`
 	);
 	lines.push('');
 }

@@ -743,7 +743,7 @@ describe('buildLlmExportMarkdown — Kiez-Score (Story 1.28)', () => {
 		expect(md).toContain('Ruhe & Luft: sehr hoch (80/100)');
 		expect(md).toContain('laerm-2023');
 		expect(md).toContain('Wohnschutz: Daten unzureichend');
-		expect(md).toMatch(/Methodik:.*\/methodik\/kiez-score/);
+		expect(md).toContain('Methodik: https://navigator.berlin/methodik/kiez-score');
 	});
 
 	it('nennt Sozialstruktur-Ausschluss im Footer-Hinweis', () => {

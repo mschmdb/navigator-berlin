@@ -1,6 +1,7 @@
 import { page } from 'vitest/browser';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import SmallMultiplesContextProbe from './internal/small-multiples-context-probe.svelte';
 import { _resetManifestCache } from '$lib/data/manifest.js';
 import { _resetLayerCache } from '$lib/data/internal/layer-fetch.js';
@@ -273,6 +274,37 @@ describe('small-multiples.svelte', () => {
 		await expect
 			.element(page.getByTestId('small-multiples-methodik-hinweis').getByRole('link'))
 			.toHaveAttribute('href', '/methodik/wahldaten');
+	});
+
+	// Textbereinigung (spec-textbereinigung-layer-texte.md): Pfad als
+	// sichtbarer Linktext wurde durch sprechenden Text ersetzt.
+	it('Methodik-Link zeigt sprechenden Text statt Pfad (DE)', async () => {
+		render(SmallMultiplesContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			wahlen: WAHLEN_2023,
+			fetchFn: fakeFetch()
+		});
+		await expect
+			.element(page.getByTestId('small-multiples-methodik-hinweis').getByRole('link'))
+			.toHaveTextContent('Methodik Wahldaten');
+	});
+
+	it('Methodik-Link zeigt sprechenden Text statt Pfad (EN)', async () => {
+		overwriteGetLocale(() => 'en');
+		try {
+			render(SmallMultiplesContextProbe, {
+				reihe: 'agh',
+				ebene: 'kiez',
+				wahlen: WAHLEN_2023,
+				fetchFn: fakeFetch()
+			});
+			await expect
+				.element(page.getByTestId('small-multiples-methodik-hinweis').getByRole('link'))
+				.toHaveTextContent('Election data methodology');
+		} finally {
+			overwriteGetLocale(() => 'de');
+		}
 	});
 
 	it('zeigt einen Kapitel-Hinweis statt leerer Minis, wenn DB-los (alle Parteien ohne Daten)', async () => {

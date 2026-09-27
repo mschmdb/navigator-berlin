@@ -18,6 +18,11 @@
 	} from '$lib/components/atlas/internal/layer-palette-filter.js';
 	import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
 	import { getLayerMethodology } from '$lib/data/layer-methodology.js';
+	import {
+		aggregationLevelLabel,
+		isKnownAggregationLevel
+	} from '$lib/data/aggregation-level-label.js';
+	import { isKiezScoreLayer } from '$lib/data/kiez-score-layer.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -37,12 +42,25 @@
 	// Varianten sind selbst locale-fähig (Messages).
 	// i18n Block C2: `methodology.*` (Berechnung, Pflege, Aktualisierung,
 	// Coverage-Lücken, Omissions) ist jetzt ebenfalls locale-fähig
-	// (`layer-methodology.ts` löst über Paraglide-Messages auf). Review-Fund:
-	// `aggregationLevel` bleibt ein deutsch-abgeleitetes Enum ohne EN-Label-Map
-	// (Boundary: "aggregationLevel ... bleiben unverändert") -- `contentLang`
-	// bleibt deshalb für genau dieses eine `<dd>` erhalten, bis eine Label-Map
-	// existiert.
+	// (`layer-methodology.ts` löst über Paraglide-Messages auf).
+	// Textbereinigung (G-47): `aggregationLevel` selbst bleibt unverändert
+	// (Boundary), bekommt aber eine Label-Map (`aggregation-level-label.ts`).
+	// `contentLang` bleibt nur noch für unbekannte Enum-Werte gesetzt (I/O-
+	// Matrix: "unbekannter Enum: Rohwert mit lang=de") -- alle bekannten Werte
+	// zeigen jetzt ein lokalisiertes Label ohne `lang`-Override.
 	const contentLang = $derived(locale === 'de' ? undefined : 'de');
+	const aggregationLevelKnown = $derived(
+		methodology?.aggregationLevel ? isKnownAggregationLevel(methodology.aggregationLevel) : true
+	);
+	const aggregationLevelText = $derived(
+		methodology?.aggregationLevel
+			? aggregationLevelLabel(methodology.aggregationLevel, localeOpts)
+			: ''
+	);
+	// Textbereinigung (Entscheidung 6): zwei echte Links auf die lokalisierte
+	// Kiez-Score-Methodik statt des Pfad-Satzes im Fließtext. `isKiezScoreLayer`
+	// ist ein geteilter Helper (auch von `map-legend.svelte` genutzt).
+	const isKiezScore = $derived(isKiezScoreLayer(detail.slug));
 	// i18n Block B4b, Spec Change Log 27.09. 06:20: JSON-LD bleibt bis zur
 	// Registrierung vollständig deutsch (Boundary `inLanguage` `de-DE`) --
 	// Name/Description/Breadcrumb-Einträge laufen deshalb NICHT über die
@@ -254,8 +272,11 @@
 			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 				{#if methodology.aggregationLevel}
 					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_aggregation_label()}</dt>
-					<dd lang={contentLang} class="font-mono text-xs text-ink">
-						{methodology.aggregationLevel}
+					<dd
+						lang={aggregationLevelKnown ? undefined : contentLang}
+						class={aggregationLevelKnown ? 'text-xs text-ink' : 'font-mono text-xs text-ink'}
+					>
+						{aggregationLevelText}
 					</dd>
 				{/if}
 				{#if methodology.authority}
@@ -341,15 +362,27 @@
 		{/if}
 
 		<aside data-testid="layer-detail-methodik-link" class="border border-rule bg-bg p-3">
-			<p class="font-mono text-xs text-ink-muted">
-				<a
-					href={localizedHref('/methodik')}
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>
-					{m.layer_page_methodik_link_label()}
-				</a>
-				{m.layer_page_methodik_suffix()}
-			</p>
+			{#if isKiezScore}
+				<p class="font-mono text-xs text-ink-muted">
+					<a
+						href={localizedHref('/methodik/kiez-score')}
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
+					>
+						{m.layer_page_methodik_kiez_score_link_label()}
+					</a>
+					{m.layer_page_methodik_kiez_score_suffix()}
+				</p>
+			{:else}
+				<p class="font-mono text-xs text-ink-muted">
+					<a
+						href={localizedHref('/methodik')}
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
+					>
+						{m.layer_page_methodik_link_label()}
+					</a>
+					{m.layer_page_methodik_suffix()}
+				</p>
+			{/if}
 		</aside>
 	{:else}
 		<aside

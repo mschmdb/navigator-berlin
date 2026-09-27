@@ -12,7 +12,7 @@
 
 <SeoHead
 	title="Cross-Layer-Templates · Co-Design-Preview · navigator.berlin"
-	description="Render-Vorschau der Cross-Layer-Story-Templates (Story 6.7). Co-Design-Review-Stage."
+	description="Render-Vorschau der Cross-Layer-Story-Templates. Co-Design-Review-Stage."
 	{origin}
 	{pathname}
 	noindex
@@ -31,8 +31,8 @@
 			Cross-Layer-Templates · Preview
 		</h1>
 		<p class="font-serif text-base leading-relaxed text-ink-muted">
-			Render-Vorschau der {data.totalTemplates} Templates aus Story 6.7. Daten sind Fixtures, kein Live-Wiring
-			auf Produktiv-Pages. Feature-Flag
+			Render-Vorschau der {data.totalTemplates} Templates. Daten sind Fixtures, kein Live-Wiring auf Produktiv-Pages.
+			Feature-Flag
 			<code class="font-mono text-xs">crossLayerStoryBlock</code> bleibt OFF bis Co-Design-Sign-off.
 		</p>
 		<p class="border-l-2 border-rule pl-2 font-serif text-sm text-ink-muted italic">

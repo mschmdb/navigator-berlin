@@ -130,6 +130,81 @@ describe('map-legend.svelte', () => {
 			expect(link.target).toBe('_blank');
 		});
 
+		// Textbereinigung (spec-textbereinigung-layer-texte.md, Entscheidung 6):
+		// "Eigene Berechnung" bei navigator.berlin/derived-Layern (Kiez-Score)
+		// ist jetzt ein echter Link auf die Kiez-Score-Methodik statt reinem Text.
+		it('Eigene-Berechnung-Text bei derived-Layern ist ein Link auf /methodik/kiez-score', async () => {
+			const m = [
+				meta('kiez-score-ruhe-luft', {
+					sourceUrl: 'https://navigator.berlin/derived/kiez-score-ruhe-luft'
+				})
+			];
+			render(MapLegend, { activeLayerSlugs: ['kiez-score-ruhe-luft'], manifestLayers: m });
+			await page.getByTestId('legend-summary-kiez-score-ruhe-luft').click();
+			const link = (await page
+				.getByTestId('legend-source-link-kiez-score-ruhe-luft')
+				.element()) as HTMLAnchorElement;
+			expect(link.tagName).toBe('A');
+			expect(new URL(link.href).pathname).toBe('/methodik/kiez-score');
+			// Sichtbarer Text bleibt "Eigene Berechnung" -- der Methodik-Hinweis ist
+			// nur für Screenreader (sr-only-Suffix, separater Test unten).
+			const srSuffix = link.querySelector(
+				'[data-testid="legend-source-link-sr-suffix-kiez-score-ruhe-luft"]'
+			);
+			const visibleText = link.textContent?.replace(srSuffix?.textContent ?? '', '').trim();
+			expect(visibleText).toBe('Eigene Berechnung');
+		});
+
+		// Accessibility (WCAG 2.5.3 Label in Name): der Link braucht einen
+		// zugänglichen Namen, der das Linkziel nennt, ohne den sichtbaren Text
+		// "Eigene Berechnung" zu verlieren.
+		it('Eigene-Berechnung-Link hat einen zugänglichen Namen, der die Kiez-Score-Methodik nennt', async () => {
+			const m = [
+				meta('kiez-score-ruhe-luft', {
+					sourceUrl: 'https://navigator.berlin/derived/kiez-score-ruhe-luft'
+				})
+			];
+			render(MapLegend, { activeLayerSlugs: ['kiez-score-ruhe-luft'], manifestLayers: m });
+			await page.getByTestId('legend-summary-kiez-score-ruhe-luft').click();
+			const link = (await page
+				.getByTestId('legend-source-link-kiez-score-ruhe-luft')
+				.element()) as HTMLAnchorElement;
+			expect(link.textContent?.trim()).toBe('Eigene Berechnung, Methodik zum Kiez-Score');
+		});
+
+		it('Nicht-Kiez-Score-derived-Layer: "Eigene Berechnung" bleibt reiner Text ohne Link', async () => {
+			const m = [
+				meta('irgendein-eigenberechneter-layer', {
+					sourceUrl: 'https://navigator.berlin/derived/irgendein-eigenberechneter-layer'
+				})
+			];
+			render(MapLegend, {
+				activeLayerSlugs: ['irgendein-eigenberechneter-layer'],
+				manifestLayers: m
+			});
+			await page.getByTestId('legend-summary-irgendein-eigenberechneter-layer').click();
+			const el = (await page
+				.getByTestId('legend-source-link-irgendein-eigenberechneter-layer')
+				.element()) as HTMLElement;
+			expect(el.tagName).toBe('SPAN');
+			expect(el.textContent?.trim()).toBe('Eigene Berechnung');
+		});
+
+		it('Eigene-Berechnung-Link zeigt unter EN auf /en/methodik/kiez-score', async () => {
+			overwriteGetLocale(() => 'en');
+			const m = [
+				meta('kiez-score-ruhe-luft', {
+					sourceUrl: 'https://navigator.berlin/derived/kiez-score-ruhe-luft'
+				})
+			];
+			render(MapLegend, { activeLayerSlugs: ['kiez-score-ruhe-luft'], manifestLayers: m });
+			await page.getByTestId('legend-summary-kiez-score-ruhe-luft').click();
+			const link = (await page
+				.getByTestId('legend-source-link-kiez-score-ruhe-luft')
+				.element()) as HTMLAnchorElement;
+			expect(new URL(link.href).pathname).toBe('/en/methodik/kiez-score');
+		});
+
 		it('Expand zeigt License-Label (gekürzt)', async () => {
 			const m = [meta('laerm-2023', { license: 'dl-de/zero-2-0' })];
 			render(MapLegend, { activeLayerSlugs: ['laerm-2023'], manifestLayers: m });

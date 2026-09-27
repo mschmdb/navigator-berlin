@@ -43,6 +43,12 @@ export interface BezirkRenderInput {
 	readonly faq: readonly BezirkFaqEntry[];
 	/** KI-Profil-Absätze (Story 11.6/11.9). Optional; leer → keine Sektion. */
 	readonly profile?: readonly string[];
+	/**
+	 * Textbereinigung (spec-textbereinigung-layer-texte.md, F-45): Host für den
+	 * absoluten Methodik-Link im Score-Abschnitt. Optional, Default wie
+	 * `collectLlmsData`.
+	 */
+	readonly origin?: string;
 }
 
 function renderHeader(input: BezirkRenderInput, lines: string[]): void {
@@ -79,7 +85,7 @@ export function renderBezirkMarkdown(input: BezirkRenderInput): string {
 	}
 
 	if (input.score) {
-		renderScoreSection(input.score, 'Bezirks-Score', lines);
+		renderScoreSection(input.score, 'Bezirks-Score', lines, input.origin);
 	}
 
 	renderFaqSection(input.faq, lines);

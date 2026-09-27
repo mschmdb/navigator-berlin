@@ -120,9 +120,12 @@ describe('layer-hit-row.svelte', () => {
 	});
 
 	it('rendert Layer-Explain-Text aus LAYER_EXPLAIN_DE', async () => {
-		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
+		render(LayerHitRow, {
+			hit: { ...recentHit, layer: 'ortsteile' },
+			layerName: 'Ortsteil'
+		});
 		const explain = (await page.getByTestId('explain').element()) as HTMLElement;
-		expect(explain.textContent).toMatch(/Wohnlagen-Bewertung/);
+		expect(explain.textContent).toMatch(/Statistischer Ortsteil/);
 	});
 
 	it('DataStandBanner ist eingebettet', async () => {
@@ -630,7 +633,10 @@ describe('layer-hit-row.svelte', () => {
 		});
 
 		it('explain hat KEIN lang-Attribut auf DE (Default)', async () => {
-			render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
+			render(LayerHitRow, {
+				hit: { ...recentHit, layer: 'ortsteile' },
+				layerName: 'Ortsteil'
+			});
 			const explain = (await page.getByTestId('explain').element()) as HTMLElement;
 			expect(explain.getAttribute('lang')).toBeNull();
 		});

@@ -42,6 +42,7 @@
 		"data:wahl-analytik": "tsx scripts/build-wahl-analytik.ts",
 		"data:wahl-check": "tsx scripts/check-wahl-data.ts",
 		"lint:wahl": "tsx scripts/lint-wahl-editorial.ts",
+		"lint:cleartext": "tsx scripts/lint-cleartext-artifacts.ts",
 		"lint:cross-layer-templates": "tsx scripts/lint-cross-layer-templates.ts",
 		"data:faq": "tsx scripts/render-faq.ts",
 		"webmcp:manifest": "tsx scripts/build-webmcp-manifest.ts",

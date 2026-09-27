@@ -105,6 +105,19 @@ describe('renderKiezMarkdown', () => {
 		expect(md).toContain('58'); // composite gerundet
 	});
 
+	// Textbereinigung (spec-textbereinigung-layer-texte.md, F-45): der
+	// Methodik-Hinweis im Score-Abschnitt nutzte einen relativen Pfad, der in
+	// einer heruntergeladenen Markdown-Datei nicht auflösbar ist.
+	it('Methodik-Hinweis nutzt eine absolute URL mit Default-Origin', () => {
+		const md = renderKiezMarkdown(baseInput);
+		expect(md).toContain('Methodik: https://navigator.berlin/methodik/kiez-score');
+	});
+
+	it('Methodik-Hinweis nutzt den übergebenen Origin', () => {
+		const md = renderKiezMarkdown({ ...baseInput, origin: 'https://staging.navigator.berlin' });
+		expect(md).toContain('Methodik: https://staging.navigator.berlin/methodik/kiez-score');
+	});
+
 	it('handles missing stats + score gracefully', () => {
 		const md = renderKiezMarkdown({ ...baseInput, stats: null, score: null });
 		expect(md).toContain('## Kiez Boxhagener Kiez');

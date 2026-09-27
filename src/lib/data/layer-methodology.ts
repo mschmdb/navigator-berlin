@@ -83,7 +83,7 @@ interface LayerMethodologySpec {
 const LAYER_METHODOLOGY_SPECS = {
 	bezirke: {
 		calculation:
-			'Polygone der 12 Berliner Verwaltungsbezirke aus dem Berliner Geoportal, vereinfacht via mapshaper visvalingam mit keep-shapes.',
+			'Polygone der 12 Berliner Verwaltungsbezirke aus dem Berliner Geoportal, für die Karte vereinfacht (kleine Flächen bleiben erhalten).',
 		aggregationLevel: 'bezirk',
 		updateFrequency: 'sehr selten (administrative Änderungen)',
 		authorityKey: 'odis',
@@ -117,7 +117,7 @@ const LAYER_METHODOLOGY_SPECS = {
 			'Sonderlagen (Bahnflächen, Friedhöfe, Wasser) erscheinen ohne Wert.'
 		],
 		omissions: [
-			'Kein Mietpreis und kein Verkaufspreis. Mietspiegel-Werte gehören zu wohnlagen-2024.',
+			'Kein Mietpreis und kein Verkaufspreis. Mietspiegel-Werte gehören zum Layer „Mietspiegel-Wohnlage 2024“.',
 			'Keine Spekulations- oder Marktpreis-Indikation.'
 		],
 		relatedLayers: ['wohnlagen-2024']
@@ -134,7 +134,7 @@ const LAYER_METHODOLOGY_SPECS = {
 		],
 		omissions: [
 			'Konkrete €/m² liefert nur der offizielle Mietspiegel-Rechner unter mietspiegel.berlin.de.',
-			'Keine Aussage zu Wohnqualität im Sinne von „besser oder schlechter wohnen".'
+			'Keine Aussage zu Wohnqualität im Sinne von „besser oder schlechter wohnen“.'
 		],
 		relatedLayers: ['bodenrichtwerte', 'milieuschutz-erhaltungsmiete']
 	},
@@ -167,7 +167,7 @@ const LAYER_METHODOLOGY_SPECS = {
 		],
 		omissions: [
 			'Einzel-Indikatoren wie Arbeitslosenquote oder Transferbezug-Quote werden bewusst nicht in der Adress-Anzeige ausgespielt. Sie wären auf Adress-Ebene schärfer und stigmatisierender als das Aggregat.',
-			'Keine Bewertung als „guter" oder „schlechter" Kiez. Niedriger Status spiegelt strukturelle Unterschiede in Einkommen, Beschäftigung und Bildung, keine Wohnqualität.'
+			'Keine Bewertung als „guter“ oder „schlechter“ Kiez. Niedriger Status spiegelt strukturelle Unterschiede in Einkommen, Beschäftigung und Bildung, keine Wohnqualität.'
 		],
 		relatedLayers: ['wohnlagen-2024', 'bodenrichtwerte', 'umweltgerechtigkeit-2023']
 	},
@@ -236,7 +236,7 @@ const LAYER_METHODOLOGY_SPECS = {
 		updateFrequency: 'unregelmäßig (zuletzt 2022, davor 2015)',
 		authorityKey: 'senatsvw-umwelt',
 		coverageGaps: [
-			'Nicht alle Stadtflächen modelliert. nearestPolygonFallbackKm fängt Lücken an Block-Rändern ab.'
+			'Nicht alle Stadtflächen modelliert. Liegt eine Adresse bis zu 50 m neben einer modellierten Fläche, etwa an Block-Rändern, zeigen wir deren Wert.'
 		],
 		omissions: ['Nachtwerte werden separat ausgewiesen.'],
 		relatedLayers: [
@@ -277,7 +277,7 @@ const LAYER_METHODOLOGY_SPECS = {
 		],
 		omissions: [
 			'Personen-Biografien sind externe Primärquellen (stolpersteine-berlin.de). Wir generieren keine Texte.',
-			'Kein Wohn-Score, keine Bewertung, keine Verdichtungs-Statistik. Würde-Prinzip gemäß FR50 und FR51.'
+			'Kein Wohn-Score, keine Bewertung, keine Verdichtungs-Statistik. Die Würde der Opfer steht über Vergleichbarkeit.'
 		]
 	},
 
@@ -400,7 +400,8 @@ const LAYER_METHODOLOGY_SPECS = {
 		relatedLayers: ['radverkehrsnetz-2025']
 	},
 	'ubahn-stationen': {
-		calculation: 'BVG-U-Bahnhöfe aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.',
+		calculation:
+			'BVG-U-Bahnhöfe aus OpenStreetMap-Routen-Relationen, gefiltert nach Betreiber BVG.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend (OSM)',
 		authorityKey: 'bvg',
@@ -408,7 +409,7 @@ const LAYER_METHODOLOGY_SPECS = {
 		relatedLayers: ['ubahn-netz']
 	},
 	'sbahn-stationen': {
-		calculation: 'S-Bahn-Bahnhöfe aus OpenStreetMap (railway=station, station=light_rail).',
+		calculation: 'S-Bahnhöfe und Haltepunkte aus OpenStreetMap.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
 		authorityKey: 'sbahn',
@@ -432,7 +433,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'ubahn-netz': {
 		calculation:
-			'BVG-U-Bahn-Linienverlauf 9 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.',
+			'BVG-U-Bahn-Linienverlauf 9 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach Betreiber BVG.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
 		authorityKey: 'bvg',
@@ -449,7 +450,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'sbahn-netz': {
 		calculation:
-			'Linienverlauf des Berliner S-Bahn-Netzes 16 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach operator S-Bahn Berlin GmbH.',
+			'Linienverlauf des Berliner S-Bahn-Netzes 16 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach Betreiber S-Bahn Berlin GmbH.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'fortlaufend',
 		authorityKey: 'sbahn',
@@ -459,7 +460,7 @@ const LAYER_METHODOLOGY_SPECS = {
 
 	'kiez-score-ruhe-luft': {
 		calculation:
-			'Gewichtete Aggregation aus Lärm und Luft pro Planungsraum (Lärm 0.5, Luft 0.5). Lärm seit Story 10.6b als dB-Mittel (L_DEN) aus den Fassadenpunkten der Strategischen Lärmkarte 2022: ≤45 dB → 100, ≥75 dB → 0, linear. Luft als 3-Stufen-Index (gering bis hoch). Beides auf 0–100 normalisiert, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.',
+			'Gewichtete Aggregation aus Lärm und Luft pro Planungsraum (Lärm 0.5, Luft 0.5). Lärm als dB-Mittel (L_DEN) aus den Fassadenpunkten der Strategischen Lärmkarte 2022: ≤45 dB → 100, ≥75 dB → 0, linear. Luft als 3-Stufen-Index (gering bis hoch). Beides auf 0–100 normalisiert, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 3 bis 5 Jahre (sync mit Umweltatlas-Update)',
 		authorityKey: 'navigator-eigenberechnung-senats-daten',
@@ -518,12 +519,12 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'kiez-score-versorgung': {
 		calculation:
-			'Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.12, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.12). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze (e_platz) im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Die Erreichbarkeit zählt dabei die Anzahl Einrichtungen im Radius (Dichte), nicht nur die nächste: mehr Kitas/Schulen/Spielplätze im Umkreis scoren höher, ein einzelner Standort weniger. Schule nach Schulart getrennt: Grundschule (0.12, Radius 600 m) und weiterführende Schule (0.12, 1.200 m). Plus Spielplatz-Dichte (0.10, 400 m) und Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12, 500 m: Supermarkt, Discounter, Spätkauf, Bäcker), Apotheke (0.07, 800 m) und Post-/Paketstelle (0.05, 1.000 m). Liegt keine Einrichtung im Radius, greift ein weicher Übergang über die Distanz zur nächsten statt eines harten Abbruchs. Plan-Krankenhaus (0.18, 2.000 m) zusätzlich nach Bettenkapazität gewichtet: ein großes Versorgungs-Klinikum zählt mehr als eine kleine Fachklinik. 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze. Versorgung umfasst damit öffentliche Daseinsvorsorge und private Alltags-Nahversorgung; die internen Gewichte sind vorläufig (finale Kalibrierung in Epic 12 Story 12.3).',
+			'Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.12, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.12). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Die Erreichbarkeit zählt dabei die Anzahl Einrichtungen im Radius (Dichte), nicht nur die nächste: mehr Kitas/Schulen/Spielplätze im Umkreis scoren höher, ein einzelner Standort weniger. Schule nach Schulart getrennt: Grundschule (0.12, Radius 600 m) und weiterführende Schule (0.12, 1.200 m). Plus Spielplatz-Dichte (0.10, 400 m) und Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12, 500 m: Supermarkt, Discounter, Spätkauf, Bäcker), Apotheke (0.07, 800 m) und Post-/Paketstelle (0.05, 1.000 m). Liegt keine Einrichtung im Radius, greift ein weicher Übergang über die Distanz zur nächsten statt eines harten Abbruchs. Plan-Krankenhaus (0.18, 2.000 m) zusätzlich nach Bettenkapazität gewichtet: ein großes Versorgungs-Klinikum zählt mehr als eine kleine Fachklinik. 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze. Versorgung umfasst damit öffentliche Daseinsvorsorge und private Alltags-Nahversorgung; die internen Gewichte sind vorläufig.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'jährlich (sync mit Bildungs- und Bezirks-Daten)',
 		authorityKey: 'navigator-eigenberechnung-bezirke',
 		coverageGaps: [
-			'Der Platz-Kind-Quotient basiert auf gemeldeten Kapazitäten (e_platz), nicht auf realen Belegungsquoten oder Wartelisten.',
+			'Der Platz-Kind-Quotient basiert auf gemeldeten Kapazitäten, nicht auf realen Belegungsquoten oder Wartelisten.',
 			'Belegungsquoten, Wartelisten und Trägerschaft sind im Score nicht berücksichtigt.',
 			'Polygon-Layer kollabieren zum Mittelpunkt. Ein langgezogener Park am Rand erscheint im Score zentriert.',
 			'Nahversorgung (Lebensmittel, Apotheke, Post) basiert auf OpenStreetMap (Crowdsourcing): einzelne Standorte können fehlen oder veraltet sein.'
@@ -560,7 +561,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'kiez-score-kultur': {
 		calculation:
-			'Kultureller Zugang pro Planungsraum: log-gedämpfte Dichte kulturkollektiver POIs im Umkreis (Anzahl Einrichtungen, der erste Ort zählt stark, weitere flachen ab). Bibliothek (Gewicht 0.20, 1.000 m), Theater (0.15, 1.500 m), Museum (0.15, 1.500 m), Kino (0.12, 1.500 m), Soziokultur (0.13, 1.200 m), Galerie (0.10, 1.200 m), Kunst im Stadtraum (0.08, 800 m), Club (0.07, 1.200 m). Quelle OpenStreetMap (ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Die Log-Dämpfung verhindert, dass Außenbezirke flächendeckend auf null fallen.',
+			'Kultureller Zugang pro Planungsraum: log-gedämpfte Dichte kulturkollektiver POIs im Umkreis (Anzahl Einrichtungen, der erste Ort zählt stark, weitere flachen ab). Bibliothek (Gewicht 0.20, 1.000 m), Theater (0.15, 1.500 m), Museum (0.15, 1.500 m), Kino (0.12, 1.500 m), Soziokultur (0.13, 1.200 m), Galerie (0.10, 1.200 m), Kunst im Stadtraum (0.08, 800 m), Club (0.07, 1.200 m). Quelle OpenStreetMap (ODbL). Eigenständige Dimension, NICHT im Gesamt-Score: Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Die Log-Dämpfung verhindert, dass Außenbezirke flächendeckend auf null fallen.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'fortlaufend (OSM-Sync)',
 		authorityKey: 'navigator-eigenberechnung-bezirke',
@@ -582,7 +583,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'kiez-score-kriminalitaet': {
 		calculation:
-			'Erfasste Kriminalität pro Bezirksregion: Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. Pro Delikt das 3-Jahres-Mittel (2023–2025), daraus der gewichtete Index, normalisiert auf 0–100 (300 → 0, ab 1750 → 100). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Die Werte liegen nur je Bezirksregion vor und werden auf die enthaltenen Planungsräume gespiegelt (innerhalb der Bezirksregion konstant). Eigenständige Dimension, NICHT im Gesamt-Score (Option C), Strukturell-Kontext wie die Soziale Lage. Höher heißt mehr erfasste Fälle, kein Sicherheits-Ranking.',
+			'Erfasste Kriminalität pro Bezirksregion: Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. Pro Delikt das 3-Jahres-Mittel (2023–2025), daraus der gewichtete Index, normalisiert auf 0–100 (300 → 0, ab 1750 → 100). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Die Werte liegen nur je Bezirksregion vor und werden auf die enthaltenen Planungsräume gespiegelt (innerhalb der Bezirksregion konstant). Eigenständige Dimension, NICHT im Gesamt-Score, struktureller Kontext wie die Soziale Lage. Höher heißt mehr erfasste Fälle, kein Sicherheits-Ranking.',
 		aggregationLevel: 'lor-bezirksregion',
 		updateFrequency: 'jährlich (Kriminalitätsatlas, Stichtag 31.12.)',
 		authorityKey: 'navigator-eigenberechnung-kriminalitaetsatlas',
@@ -593,7 +594,7 @@ const LAYER_METHODOLOGY_SPECS = {
 		],
 		omissions: [
 			'Tatortprinzip: nur Fälle mit exaktem Tatort, Taschendiebstahl ausgeschlossen.',
-			'Keine Aussage über persönliches Risiko und keine Wertung als „sicherer" oder „gefährlicher" Kiez.'
+			'Keine Aussage über persönliches Risiko und keine Wertung als „sicherer“ oder „gefährlicher“ Kiez.'
 		]
 	}
 } satisfies Record<string, LayerMethodologySpec>;

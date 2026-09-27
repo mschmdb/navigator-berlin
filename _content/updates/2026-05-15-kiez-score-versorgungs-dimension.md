@@ -6,9 +6,9 @@ category: methodik
 tags: [kiez-score, versorgung, methodik]
 ---
 
-## Was wir geändert haben
+## Fünf Dimensionen statt vier
 
-Der Kiez-Score hat ab Story 1.28 fünf Dimensionen statt vier. Neu dazu: **Versorgung**.
+Der Kiez-Score bekommt eine fünfte Dimension: **Versorgung**.
 
 | Dimension     | Anteil |
 | ------------- | ------ |
@@ -36,4 +36,4 @@ Die reine Anzahl von Kitas pro km² differenziert dicht-besiedelte Kieze nicht. 
 
 ## Vollständige Methodik
 
-Siehe `/methodik/kiez-score`.
+Siehe [Methodik zum Kiez-Score](/methodik/kiez-score).

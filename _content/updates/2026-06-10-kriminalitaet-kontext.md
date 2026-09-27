@@ -32,4 +32,4 @@ Erfasste Kriminalität fließt bewusst nicht in den Gesamt-Score und in kein Ran
 
 ## Methodik
 
-Delikt-Auswahl, Skala und alle Grenzen stehen unter [`/methodik/kiez-score`](/methodik/kiez-score).
+Delikt-Auswahl, Skala und alle Grenzen stehen unter [Methodik zum Kiez-Score](/methodik/kiez-score).

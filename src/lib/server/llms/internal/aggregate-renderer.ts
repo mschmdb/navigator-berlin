@@ -189,7 +189,8 @@ export interface ScoreLike {
 export function renderScoreSection(
 	score: ScoreLike,
 	heading: 'Bezirks-Score' | 'Kiez-Score',
-	lines: string[]
+	lines: string[],
+	origin = 'https://navigator.berlin'
 ): void {
 	lines.push(`### ${heading} (Umwelt- & Infrastruktur-Score)`);
 	lines.push('');
@@ -216,7 +217,7 @@ export function renderScoreSection(
 	}
 	lines.push('');
 	lines.push(
-		'> Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: /methodik/kiez-score.'
+		`> Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten. Methodik: ${origin}/methodik/kiez-score`
 	);
 	lines.push('');
 }

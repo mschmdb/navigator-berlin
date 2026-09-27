@@ -46,6 +46,28 @@ describe('PortalQuellen', () => {
 		await expect.element(page.getByTestId('portal-quellen-empty')).toBeInTheDocument();
 	});
 
+	// Textbereinigung (spec-textbereinigung-layer-texte.md): Pfad als
+	// sichtbarer Linktext wurde durch sprechenden Text ersetzt.
+	it('Methodik-Link zeigt sprechenden Text statt Pfad (DE)', async () => {
+		render(PortalQuellen, { quellen: [] });
+		await expect
+			.element(page.getByTestId('portal-quellen-methodik-link'))
+			.toHaveTextContent('Methodik Wahldaten');
+	});
+
+	it('Methodik-Link zeigt sprechenden Text statt Pfad (EN)', async () => {
+		const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
+		overwriteGetLocale(() => 'en');
+		try {
+			render(PortalQuellen, { quellen: [] });
+			await expect
+				.element(page.getByTestId('portal-quellen-methodik-link'))
+				.toHaveTextContent('Election data methodology');
+		} finally {
+			overwriteGetLocale(() => 'de');
+		}
+	});
+
 	it('Links zeigen auf /methodik/wahldaten und /lizenzen', async () => {
 		render(PortalQuellen, { quellen: [] });
 		const methodik = (await page

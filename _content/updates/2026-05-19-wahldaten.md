@@ -34,4 +34,4 @@ Vier neue Tools im Manifest: Wahlen auflisten, Ergebnis an einer Adresse abfrage
 
 ## Methodik
 
-Datenquellen, Aggregations-Logik, Briefwahl-Behandlung und Coverage-Lücken: [`/methodik/wahldaten`](/methodik/wahldaten).
+Datenquellen, Aggregations-Logik, Briefwahl-Behandlung und Coverage-Lücken: [Methodik Wahldaten](/methodik/wahldaten).

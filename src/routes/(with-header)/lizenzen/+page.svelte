@@ -237,7 +237,7 @@
 		<h2 id="wahldaten-h" class="font-serif text-2xl text-ink">Wahldaten</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
 			Wahl-Ergebnisse aus 12 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV) liegen
-			nicht als Geo-Layer im Manifest, sondern als Datenbank-Aggregate. Quellen und Lizenz beider
+			nicht als eigener Geo-Layer vor, sondern als Datenbank-Aggregate. Quellen und Lizenz beider
 			Datenanbieter:
 		</p>
 		<dl class="flex flex-col gap-3">
@@ -286,7 +286,7 @@
 				href="/methodik/wahldaten"
 				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
-				/methodik/wahldaten
+				Wahldaten
 			</a>
 		</p>
 	</section>
@@ -294,8 +294,8 @@
 	<section id="demografie" aria-labelledby="demografie-h" class="flex flex-col gap-3">
 		<h2 id="demografie-h" class="font-serif text-2xl text-ink">Demografie</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Einwohner pro LOR-Planungsraum liegen nicht als Geo-Layer im Manifest, sondern als
-			Build-Aggregat für Pro-Kopf-Metriken und den Demografie-Kontext.
+			Einwohner pro LOR-Planungsraum liegen nicht als eigener Geo-Layer vor. Wir nutzen sie als
+			vorberechnete Summen für Pro-Kopf-Werte und den Demografie-Kontext.
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
@@ -327,8 +327,8 @@
 	>
 		<h2 id="kriminalitaetsatlas-h" class="font-serif text-2xl text-ink">Kriminalitätsatlas</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Fallzahlen und Häufigkeitszahlen je LOR-Bezirksregion fließen als Build-Aggregat in den
-			Kiez-Score ein, nicht als Geo-Layer im Manifest.
+			Fallzahlen und Häufigkeitszahlen je LOR-Bezirksregion fließen als vorberechnete Werte in den
+			Kiez-Score ein, nicht als eigener Geo-Layer.
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
@@ -355,7 +355,7 @@
 				href="/methodik/kiez-score"
 				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
-				/methodik/kiez-score
+				Kiez-Score
 			</a>
 		</p>
 	</section>

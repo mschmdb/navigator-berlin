@@ -222,3 +222,19 @@
   summary: Compare-Replace-Dialog auf `/en/explore` per e2e oder Page-Test absichern (5 Strings).
   evidence: Review C1 Fund #8; braucht Map-Klick plus Compare-State.
 
+- source_spec: `_bmad-output/implementation-artifacts/spec-textbereinigung-layer-texte.md`
+  summary: Zählung Bezirksregionen prüfen: `kiez_score_kriminalitaet_coverage_gap_0` sagt „Bezirksregion (143)“, `layer_explain_lor_bezirksregion_short` „138 in Berlin“.
+  evidence: Review Textbereinigung #6; eine der Zahlen ist falsch, Datenprüfung nötig.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-textbereinigung-layer-texte.md`
+  summary: `/methodik/kiez-score` ohne Build-Interna: `pnpm data:aggregate-scores`, Tabellennamen `bezirk_score`/`kiez_score`, „Persona-Switcher … Phase 2“; Layernamen dort aus `getLayerDisplayName` statt Literalen.
+  evidence: Review Textbereinigung #11/#14; Spec schloss weitere `/methodik`-Überarbeitung aus.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-textbereinigung-layer-texte.md`
+  summary: Code-Zweige der 6 gelöschten Legacy-Layer entfernen (`value-formatters.ts`, `applicability.ts`, `feature-describer.ts`, `layer-compare.ts`, `editorial-config.ts`, Tests).
+  evidence: Review Textbereinigung #13; nur Texte gelöscht, Zweige sind toter Code.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-textbereinigung-layer-texte.md`
+  summary: `collectLlmsData` reicht `origin` an Kiez-/Bezirks-Markdown weiter: Test ergänzen, Origin mit Schluss-Slash normalisieren.
+  evidence: Review Textbereinigung #15; Default ist Prod-URL, wirkt nur auf Staging/Preview.
+

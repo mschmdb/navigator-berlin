@@ -27,4 +27,4 @@ Neuer Layer „Kiez-Score · Kultur" pro Planungsraum, dazu die einzelnen Kultur
 
 ## Methodik
 
-Gewichte, Dämpfung und Datenquellen stehen unter [`/methodik/kiez-score`](/methodik/kiez-score).
+Gewichte, Dämpfung und Datenquellen stehen unter [Methodik zum Kiez-Score](/methodik/kiez-score).

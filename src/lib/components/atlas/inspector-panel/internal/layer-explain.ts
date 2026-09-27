@@ -35,7 +35,7 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	},
 	ortsteile: {
 		short: 'Statistischer Ortsteil innerhalb des Bezirks',
-		long: 'Berlin gliedert sich in 96 Ortsteile, historisch oft eigenständige Gemeinden. Genutzt für Statistik, Adress-Zuordnung und Identifikation (z.B. „Ich wohne in Friedrichshain"). Quelle: ODIS Berlin.'
+		long: 'Berlin gliedert sich in 96 Ortsteile, historisch oft eigenständige Gemeinden. Genutzt für Statistik, Adress-Zuordnung und Identifikation (z.B. „Ich wohne in Friedrichshain“). Quelle: ODIS Berlin.'
 	},
 	plz: {
 		short: 'Postleitzahlen-Region',
@@ -66,7 +66,7 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		short: 'Strukturelle soziale Lage je Planungsraum (MSS 2025, SenStadt Berlin)',
 		long: 'Monitoring Soziale Stadtentwicklung 2025: aggregierter Gesamtindex aus Status- und Dynamik-Indikatoren pro LOR-Planungsraum (rund 7.500 Einwohner:innen). Strukturelle Aggregat-Größe, keine Bewertung einzelner Adressen oder Personen. Quelle: Senatsverwaltung für Stadtentwicklung Berlin.',
 		valueScaleExplain:
-			'Status hoch / mittel / niedrig / sehr niedrig kombiniert mit Dynamik positiv / stabil / negativ. Niedriger Status bedeutet nicht „schlechter Kiez", sondern strukturelle Unterschiede in Einkommen, Beschäftigung und Bildung.'
+			'Status hoch / mittel / niedrig / sehr niedrig kombiniert mit Dynamik positiv / stabil / negativ. Niedriger Status bedeutet nicht „schlechter Kiez“, sondern strukturelle Unterschiede in Einkommen, Beschäftigung und Bildung.'
 	},
 
 	// C: Umwelt — Umweltatlas 2023
@@ -207,7 +207,7 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	},
 	'kultur-soziokultur': {
 		short: 'Soziokulturelles Zentrum',
-		long: 'Kulturhaus, soziokulturelles Zentrum oder Kunsthaus (arts_centre). Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
+		long: 'Kulturhaus, soziokulturelles Zentrum oder Kunsthaus. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).'
 	},
 	'kultur-club': {
 		short: 'Club oder Musikspielstätte',
@@ -255,44 +255,44 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	// G: Kiez-Score (Story 1.28 · virtuelle Aggregat-Layer pro LOR-Planungsraum)
 	'kiez-score-gesamt': {
 		short: 'Umwelt- & Infrastruktur-Score gesamt pro Planungsraum (0–100)',
-		long: 'Ungewichtetes Mittel der fünf Dimensionen (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz) pro LOR-Planungsraum. Misst nur Größen mit eindeutiger Besser-Richtung. Methodik: /methodik/kiez-score.',
+		long: 'Ungewichtetes Mittel der fünf Dimensionen (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz) pro LOR-Planungsraum. Misst nur Größen mit eindeutiger Besser-Richtung.',
 		valueScaleExplain: 'Höher = besser über alle fünf Dimensionen'
 	},
 	'kiez-score-ruhe-luft': {
-		short: 'Aggregat „Ruhe & Luft" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Gewichtete Aggregation aus Lärm und Luftbelastung pro LOR-Planungsraum. Cloud-Dancer-Skala: niedrig = stärker belastet, hoch = ruhiger und sauberer. Methodik: /methodik/kiez-score.',
+		short: 'Aggregat „Ruhe & Luft“ pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Gewichtete Aggregation aus Lärm und Luftbelastung pro LOR-Planungsraum. Skala: niedrig = stärker belastet, hoch = ruhiger und sauberer.',
 		valueScaleExplain: 'Höher = ruhiger und sauberer'
 	},
 	'kiez-score-gruen-hitze': {
-		short: 'Aggregat „Grün & Hitze" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Grünversorgung und Grünanlagen-Nähe plus thermische Resilienz (Bioklima, PET-Hitzebelastung, Kaltluft-Einwirkbereich, Leitbahnkorridor) pro Planungsraum, gewichtet auf 0–100. Methodik: /methodik/kiez-score.',
+		short: 'Aggregat „Grün & Hitze“ pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Grünversorgung und Grünanlagen-Nähe plus thermische Resilienz (Bioklima, PET-Hitzebelastung, Kaltluft-Einwirkbereich, Leitbahnkorridor) pro Planungsraum, gewichtet auf 0–100.',
 		valueScaleExplain: 'Höher = mehr nutzbares Grün und besserer Hitzeschutz'
 	},
 	'kiez-score-mobilitaet': {
-		short: 'Aggregat „Mobilität" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Distance-basiert vom Planungsraum-Centroid zu nächster U-Bahn, S-Bahn, Tram und Bus plus Radverkehrs-Presence. Pro Adresse wird der Wert mit der exakten Adress-Distance überschrieben. Methodik: /methodik/kiez-score.',
+		short: 'Aggregat „Mobilität“ pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Distance-basiert vom Planungsraum-Centroid zu nächster U-Bahn, S-Bahn, Tram und Bus plus Radverkehrs-Presence. Pro Adresse wird der Wert mit der exakten Adress-Distance überschrieben.',
 		valueScaleExplain: 'Höher = besser angebunden'
 	},
 	'kiez-score-versorgung': {
-		short: 'Aggregat „Versorgung" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Distance vom Planungsraum-Centroid zu nächster Kita, Schule, Plan-Krankenhaus und Spielplatz. Threshold pro POI individuell (Kita 500 m, Schule 800 m, Krankenhaus 2.000 m, Spielplatz 400 m). Methodik: /methodik/kiez-score.',
+		short: 'Aggregat „Versorgung“ pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Dichte von Kita, Schule, Plan-Krankenhaus und Spielplatz im Umkreis des Planungsraum-Centroids, plus Nahversorgung (Lebensmittel, Apotheke, Post). Radius pro POI individuell (Kita 500 m, Grundschule 600 m, weiterführende Schule 1.200 m, Krankenhaus 2.000 m, Spielplatz 400 m).',
 		valueScaleExplain: 'Höher = bessere Versorgung mit Familien- und Gesundheits-Infrastruktur'
 	},
 	'kiez-score-wohnschutz': {
-		short: 'Aggregat „Wohnschutz" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner. Methodik: /methodik/kiez-score.',
+		short: 'Aggregat „Wohnschutz“ pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner.',
 		valueScaleExplain: 'Höher = mehr Schutz vor Verdrängung'
 	},
 	'kiez-score-kultur': {
-		short: 'Aggregat „Kultur" pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Methodik: /methodik/kiez-score.',
+		short: 'Aggregat „Kultur“ pro Planungsraum (0–100, Kiez-Score)',
+		long: 'Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score: Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber.',
 		valueScaleExplain: 'Höher = mehr Kulturorte in Reichweite'
 	},
 	'kiez-score-kriminalitaet': {
 		short: 'Erfasste Kriminalität (Häufigkeitszahl) je Bezirksregion',
-		long: 'Häufigkeitszahl ausgewählter wohn-relevanter Delikte, 3-Jahres-Mittel aus dem Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0). Granularität Bezirksregion, auf Planungsräume gespiegelt. Strukturelle Aggregat-Größe, NICHT im Gesamt-Score (Option C). Bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen/Pendler. Methodik: /methodik/kiez-score.',
+		long: 'Häufigkeitszahl ausgewählter wohn-relevanter Delikte, 3-Jahres-Mittel aus dem Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0). Granularität Bezirksregion, auf Planungsräume gespiegelt. Strukturelle Aggregat-Größe, NICHT im Gesamt-Score. Bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen/Pendler.',
 		valueScaleExplain:
-			'Höher = mehr erfasste Fälle pro Einwohner, kein Maß für persönliches Risiko und keine Wertung als „guter" oder „schlechter" Kiez.'
+			'Höher = mehr erfasste Fälle pro Einwohner, kein Maß für persönliches Risiko und keine Wertung als „guter“ oder „schlechter“ Kiez.'
 	},
 
 	// I: Demografie (Story 10.0 · neutraler Kontext, kein Score-Input)
@@ -303,46 +303,19 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		valueScaleExplain: 'Höher = dichter besiedelt, ohne Qualitätswertung'
 	},
 
-	// Legacy / non-Manifest-Slugs (Story 1.3 Re-Run TODO):
-	// referenziert in value-formatters.ts und Tests, halten wir bis Refactor.
-	'mietspiegel-wohnlage': {
-		short: 'Wohnlagen-Bewertung im Berliner Mietspiegel',
-		long: 'Veraltete Wohnlagen-Quelle (vor 2024). Aktuelle Daten siehe Layer „wohnlagen-2024".'
-	},
+	// Glossar-Slugs ohne eigenen Manifest-Layer (referenziert in value-formatters.ts
+	// und Tests als Formatierungs-Kontext, halten wir bis Refactor).
 	'lor-prognoseraum': {
 		short: 'LOR-Prognoseraum (Senatsverwaltung-Gliederung)',
-		long: 'Lebensweltlich orientierter Raum, Ebene Prognoseraum. Grobste der drei LOR-Ebenen, genutzt für Bevölkerungsprognosen.'
+		long: 'Lebensweltlich orientierter Raum, Ebene Prognoseraum. Gröbste der drei LOR-Ebenen, genutzt für Bevölkerungsprognosen.'
 	},
 	'lor-bezirksregion': {
 		short: 'LOR-Bezirksregion (Kiez-Ebene, 138 in Berlin)',
-		long: 'Lebensweltlich orientierter Raum, Ebene Bezirksregion. Mittel-Ebene der LOR-Gliederung, häufig als „Kiez-Ebene" verwendet.'
+		long: 'Lebensweltlich orientierter Raum, Ebene Bezirksregion. Mittel-Ebene der LOR-Gliederung, häufig als „Kiez-Ebene“ verwendet.'
 	},
 	'lor-planungsraum': {
 		short: 'LOR-Planungsraum (feinste Ebene)',
 		long: 'Lebensweltlich orientierter Raum, Ebene Planungsraum. Feinste der drei LOR-Ebenen, Grundlage für sozialräumliche Statistik.'
-	},
-	'laerm-den': {
-		short: 'Straßenverkehrs-Lärmpegel Tag/Abend/Nacht (24h-Mittel)',
-		long: 'Lärmpegel als 24-Stunden-Mittelwert (Day-Evening-Night). Legacy-Slug aus früherem Strassenlärm-Datensatz.',
-		unit: 'dB'
-	},
-	'laerm-night': {
-		short: 'Straßenverkehrs-Lärmpegel nur Nacht (22 bis 6 Uhr)',
-		long: 'Lärmpegel als Nacht-Mittelwert. Legacy-Slug aus früherem Strassenlärm-Datensatz.',
-		unit: 'dB'
-	},
-	solarpotenzial: {
-		short: 'Geschätztes Solar-Energie-Potenzial des Daches',
-		long: 'Modelliertes jährliches PV-Ertragspotenzial pro Dachfläche. Legacy-Slug.',
-		unit: 'kWh/m²'
-	},
-	klimaanalyse: {
-		short: 'Klimafunktionsraum-Bewertung (Senatsverwaltung)',
-		long: 'Klimafunktionale Bewertung städtischer Flächen. Legacy-Slug, ersetzt durch klima-pet-2022 und Verwandte.'
-	},
-	gebaeudealter: {
-		short: 'Baujahr-Klasse der Gebäude im Gebiet',
-		long: 'Aggregierte Baujahr-Klassifikation der Gebäudebestände. Legacy-Slug ohne aktive Manifest-Quelle.'
 	},
 	'wahlbezirke-btw17': {
 		short: 'Wahlbezirks-Grenzen Bundestagswahl 2017',
@@ -627,10 +600,6 @@ export const LAYER_EXPLAIN_MESSAGE: Partial<Record<string, LayerExplainMessages>
 		scale: m.layer_explain_einwohner_dichte_2024_scale,
 		unit: m.layer_explain_einwohner_dichte_2024_unit
 	},
-	'mietspiegel-wohnlage': {
-		short: m.layer_explain_mietspiegel_wohnlage_short,
-		long: m.layer_explain_mietspiegel_wohnlage_long
-	},
 	'lor-prognoseraum': {
 		short: m.layer_explain_lor_prognoseraum_short,
 		long: m.layer_explain_lor_prognoseraum_long
@@ -642,29 +611,6 @@ export const LAYER_EXPLAIN_MESSAGE: Partial<Record<string, LayerExplainMessages>
 	'lor-planungsraum': {
 		short: m.layer_explain_lor_planungsraum_short,
 		long: m.layer_explain_lor_planungsraum_long
-	},
-	'laerm-den': {
-		short: m.layer_explain_laerm_den_short,
-		long: m.layer_explain_laerm_den_long,
-		unit: m.layer_explain_laerm_den_unit
-	},
-	'laerm-night': {
-		short: m.layer_explain_laerm_night_short,
-		long: m.layer_explain_laerm_night_long,
-		unit: m.layer_explain_laerm_night_unit
-	},
-	solarpotenzial: {
-		short: m.layer_explain_solarpotenzial_short,
-		long: m.layer_explain_solarpotenzial_long,
-		unit: m.layer_explain_solarpotenzial_unit
-	},
-	klimaanalyse: {
-		short: m.layer_explain_klimaanalyse_short,
-		long: m.layer_explain_klimaanalyse_long
-	},
-	gebaeudealter: {
-		short: m.layer_explain_gebaeudealter_short,
-		long: m.layer_explain_gebaeudealter_long
 	},
 	'wahlbezirke-btw17': {
 		short: m.layer_explain_wahlbezirke_btw17_short,

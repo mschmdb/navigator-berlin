@@ -39,6 +39,12 @@ export interface KiezRenderInput {
 	readonly faq: readonly KiezFaqEntry[];
 	/** KI-Profil-Absätze (Story 11.6/11.9). Optional; leer → keine Sektion. */
 	readonly profile?: readonly string[];
+	/**
+	 * Textbereinigung (spec-textbereinigung-layer-texte.md, F-45): Host für den
+	 * absoluten Methodik-Link im Score-Abschnitt. Optional, Default wie
+	 * `collectLlmsData`.
+	 */
+	readonly origin?: string;
 }
 
 function renderHeader(input: KiezRenderInput, lines: string[]): void {
@@ -79,7 +85,7 @@ export function renderKiezMarkdown(input: KiezRenderInput): string {
 	}
 
 	if (input.score) {
-		renderScoreSection(input.score, 'Kiez-Score', lines);
+		renderScoreSection(input.score, 'Kiez-Score', lines, input.origin);
 	}
 
 	renderFaqSection(input.faq, lines);

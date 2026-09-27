@@ -419,6 +419,39 @@ describe('ergebnis-panel.svelte', () => {
 		await expect.element(page.getByTestId('ergebnis-panel-lizenzen-link')).toBeInTheDocument();
 	});
 
+	// Textbereinigung (spec-textbereinigung-layer-texte.md): Pfad als
+	// sichtbarer Linktext wurde durch sprechenden Text ersetzt.
+	it('Methodik-Link zeigt sprechenden Text statt Pfad (DE)', async () => {
+		const fetchFn = fakeFetch([['/api/wahl/series', SERIES_BERLIN]]);
+		render(ErgebnisPanelContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
+		await page.getByTestId('ergebnis-panel-disclosure-trigger').click();
+		await expect
+			.element(page.getByTestId('ergebnis-panel-methodik-link'))
+			.toHaveTextContent('Methodik Wahldaten');
+	});
+
+	it('Methodik-Link zeigt sprechenden Text statt Pfad (EN)', async () => {
+		overwriteGetLocale(() => 'en');
+		const fetchFn = fakeFetch([['/api/wahl/series', SERIES_BERLIN]]);
+		render(ErgebnisPanelContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2023,
+			wahlen: WAHLEN_2023,
+			fetchFn
+		});
+		await page.getByTestId('ergebnis-panel-disclosure-trigger').click();
+		await expect
+			.element(page.getByTestId('ergebnis-panel-methodik-link'))
+			.toHaveTextContent('Election data methodology');
+	});
+
 	it('Kiez-Ebene mit hervorgehobenem Gebiet: zweiter Block mit Gebiets-Werten, Berlin-Block bleibt', async () => {
 		const fetchFn = fakeFetch([
 			['/api/wahl/series?typ=agh&stimmtyp=zweitstimme&ebene=berlin', SERIES_BERLIN],

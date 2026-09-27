@@ -25,6 +25,32 @@ const manifestSlugs = manifest.layers.map((l) => l.slug);
 const MAX_SHORT_LENGTH = 80;
 const MAX_LONG_LENGTH = 400;
 
+// Textbereinigung (spec-textbereinigung-layer-texte.md, Entscheidung 1):
+// 6 Legacy-Layer ohne Manifest-Eintrag wurden komplett entfernt statt nur
+// den "Legacy-Slug"-Hinweis im Text zu bereinigen.
+const REMOVED_LEGACY_SLUGS = [
+	'mietspiegel-wohnlage',
+	'laerm-den',
+	'laerm-night',
+	'solarpotenzial',
+	'klimaanalyse',
+	'gebaeudealter'
+];
+
+describe('Legacy-Layer-Entfernung (6 Slugs ohne Manifest-Eintrag)', () => {
+	it.each(REMOVED_LEGACY_SLUGS)('"%s" hat keinen LAYER_EXPLAIN_DE-Eintrag mehr', (slug) => {
+		expect(slug in LAYER_EXPLAIN_DE).toBe(false);
+	});
+
+	it.each(REMOVED_LEGACY_SLUGS)('"%s" hat kein LAYER_EXPLAIN_MESSAGE-Mapping mehr', (slug) => {
+		expect(slug in LAYER_EXPLAIN_MESSAGE).toBe(false);
+	});
+
+	it.each(REMOVED_LEGACY_SLUGS)('"%s": getLayerExplainEntry() liefert leeren Fallback', (slug) => {
+		expect(getLayerExplainEntry(slug)).toEqual({ short: '', long: '' });
+	});
+});
+
 describe('LAYER_EXPLAIN_DE coverage-guard', () => {
 	it('hat Entry für JEDEN Manifest-Slug', () => {
 		const missing = manifestSlugs.filter((slug) => !(slug in LAYER_EXPLAIN_DE));

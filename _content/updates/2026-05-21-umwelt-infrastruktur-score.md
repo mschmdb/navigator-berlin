@@ -34,4 +34,4 @@ Soziale Lage (Monitoring Soziale Stadtentwicklung) und Umweltgerechtigkeit zähl
 
 ## Methodik
 
-Dimensionen, Normalisierung, Gewichte und die Farbskala der Karte: [`/methodik/kiez-score`](/methodik/kiez-score).
+Dimensionen, Normalisierung, Gewichte und die Farbskala der Karte: [Methodik zum Kiez-Score](/methodik/kiez-score).

@@ -14,6 +14,7 @@
 	import { hasPinnedChoropleth } from './internal/layer-visibility.js';
 	import { dotSpecForSlug } from './internal/choropleth-dots.js';
 	import { SCORE_DOT_BASE_PX } from './internal/dimension-ramps.js';
+	import { isKiezScoreLayer } from '$lib/data/kiez-score-layer.js';
 
 	type Props = {
 		activeLayerSlugs: readonly string[];
@@ -275,7 +276,19 @@
 						{/if}
 						{#if entry.meta}
 							<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px]">
-								{#if entry.meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
+								{#if entry.meta.sourceUrl.startsWith('https://navigator.berlin/derived') && isKiezScoreLayer(entry.slug)}
+									<a
+										data-testid={`legend-source-link-${entry.slug}`}
+										href={localizedHref('/methodik/kiez-score', locale)}
+										class="hover:text-accent-strong text-accent underline underline-offset-2"
+									>
+										{m.atlas_legend_own_calculation(undefined, localeOpts)}<span
+											class="sr-only"
+											data-testid={`legend-source-link-sr-suffix-${entry.slug}`}
+											>, {m.layer_page_methodik_kiez_score_link_label(undefined, localeOpts)}</span
+										>
+									</a>
+								{:else if entry.meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
 									<span data-testid={`legend-source-link-${entry.slug}`} class="text-ink-subtle">
 										{m.atlas_legend_own_calculation(undefined, localeOpts)}
 									</span>

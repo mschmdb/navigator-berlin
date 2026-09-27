@@ -94,7 +94,7 @@ function tryGet<T>(loader: () => Promise<T>): Promise<T | null> {
 	});
 }
 
-async function collectBezirke(): Promise<LlmsBezirkEntry[]> {
+async function collectBezirke(origin: string): Promise<LlmsBezirkEntry[]> {
 	const out: LlmsBezirkEntry[] = [];
 	const einwohnerAgg = await loadEinwohnerAggregates(process.cwd());
 	for (const slug of BERLIN_BEZIRK_SLUGS) {
@@ -111,7 +111,8 @@ async function collectBezirke(): Promise<LlmsBezirkEntry[]> {
 			stats,
 			score,
 			faq: [],
-			profile: await getProfileParagraphs('bezirk', slug)
+			profile: await getProfileParagraphs('bezirk', slug),
+			origin
 		});
 		out.push({ slug, name, markdown });
 	}
@@ -122,7 +123,7 @@ async function collectBezirke(): Promise<LlmsBezirkEntry[]> {
  * Kiez-Slugs liest aus Postgres `kiez_stats`-Tabelle (Story 2.0 hat 143 BZR).
  * Bei fehlender DB = leere Liste (akzeptabel in CI).
  */
-async function collectKieze(): Promise<LlmsKiezEntry[]> {
+async function collectKieze(origin: string): Promise<LlmsKiezEntry[]> {
 	const { getDb } = await import('$lib/server/db/index.js');
 	const { kiezStats } = await import('$lib/server/db/schema/index.js');
 	let rows: { slug: string; bezirkSlug: string }[] = [];
@@ -160,7 +161,8 @@ async function collectKieze(): Promise<LlmsKiezEntry[]> {
 			stats,
 			score,
 			faq: [],
-			profile: await getProfileParagraphs('kiez', row.slug)
+			profile: await getProfileParagraphs('kiez', row.slug),
+			origin
 		});
 		// Ranking: bis Story 2.9a Scores liefert, sortieren wir alphabetisch nach Bezirks-Alphabet
 		const topRank = score?.composite !== undefined ? -score.composite : i;
@@ -272,7 +274,7 @@ export async function collectLlmsData(
 	let kieze: LlmsKiezEntry[] = [];
 
 	try {
-		bezirke = await collectBezirke();
+		bezirke = await collectBezirke(origin);
 	} catch (err) {
 		// eslint-disable-next-line no-console
 		console.warn(
@@ -282,7 +284,7 @@ export async function collectLlmsData(
 	}
 
 	try {
-		kieze = await collectKieze();
+		kieze = await collectKieze(origin);
 	} catch (err) {
 		// eslint-disable-next-line no-console
 		console.warn(

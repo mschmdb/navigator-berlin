@@ -274,7 +274,7 @@
 				href="/methodik/kiez-score"
 				data-testid="methodik-kiez-score-link"
 				class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>/methodik/kiez-score</a
+				>Kiez-Score</a
 			>
 		</p>
 		<h3 class="mt-2 font-serif text-xl text-ink">MSS 2025 als neutraler Kontext</h3>
@@ -311,7 +311,7 @@
 				href="/methodik/wahldaten"
 				data-testid="methodik-wahldaten-link"
 				class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>/methodik/wahldaten</a
+				>Wahldaten</a
 			>
 			·
 			<a

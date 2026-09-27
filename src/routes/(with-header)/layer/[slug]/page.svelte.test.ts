@@ -169,6 +169,68 @@ describe('layer-detail +page.svelte', () => {
 		expect(link?.getAttribute('href')).toMatch(/^\/methodik/);
 	});
 
+	// Textbereinigung (spec-textbereinigung-layer-texte.md, Entscheidung 6):
+	// Kiez-Score-Layer verlinken direkt auf die Kiez-Score-Methodik statt auf
+	// die allgemeine /methodik-Seite.
+	it('Kiez-Score-Layer: Methodik-Banner verlinkt auf /methodik/kiez-score', async () => {
+		const d = detail('kiez-score-ruhe-luft');
+		render(Page, { data: { detail: d, faq: [] } });
+		const banner = (await page.getByTestId('layer-detail-methodik-link').element()) as HTMLElement;
+		const link = banner.querySelector('a');
+		expect(link?.getAttribute('href')).toBe('/methodik/kiez-score');
+	});
+
+	it('Kiez-Score-Layer unter EN: Methodik-Banner verlinkt auf /en/methodik/kiez-score', async () => {
+		overwriteGetLocale(() => 'en');
+		const d = detail('kiez-score-gesamt');
+		render(Page, { data: { detail: d, faq: [] } });
+		const banner = (await page.getByTestId('layer-detail-methodik-link').element()) as HTMLElement;
+		const link = banner.querySelector('a');
+		expect(link?.getAttribute('href')).toBe('/en/methodik/kiez-score');
+	});
+
+	it('Nicht-Kiez-Score-Layer: Methodik-Banner bleibt auf /methodik', async () => {
+		const d = detail('laerm-2023');
+		render(Page, { data: { detail: d, faq: [] } });
+		const banner = (await page.getByTestId('layer-detail-methodik-link').element()) as HTMLElement;
+		const link = banner.querySelector('a');
+		expect(link?.getAttribute('href')).toBe('/methodik');
+	});
+
+	// Textbereinigung (G-47): aggregationLevel zeigt ein lokalisiertes Label
+	// statt des rohen Enum-Werts.
+	it('zeigt ein lesbares DE-Label für aggregationLevel statt des rohen Enum-Werts', async () => {
+		const d = detail('laerm-2023', {
+			methodology: { ...methodology(), aggregationLevel: 'point-osm' }
+		});
+		render(Page, { data: { detail: d, faq: [] } });
+		const methodologySec = (await page
+			.getByTestId('layer-detail-methodology')
+			.element()) as HTMLElement;
+		const aggregationDd = methodologySec.querySelector('dd');
+		expect(aggregationDd?.textContent?.trim()).toBe('Einzelstandort');
+		expect(aggregationDd?.hasAttribute('lang')).toBe(false);
+		expect(aggregationDd?.className).not.toMatch(/font-mono/);
+	});
+
+	it('unbekannter aggregationLevel-Wert unter EN: Rohwert mit lang="de"', async () => {
+		overwriteGetLocale(() => 'en');
+		const d = detail('laerm-2023', {
+			methodology: {
+				...methodology(),
+				aggregationLevel: 'unbekannte-ebene' as unknown as LayerMethodology['aggregationLevel']
+			}
+		});
+		render(Page, { data: { detail: d, faq: [] } });
+		const methodologySec = (await page
+			.getByTestId('layer-detail-methodology')
+			.element()) as HTMLElement;
+		const aggregationDd = methodologySec.querySelector('dd');
+		expect(aggregationDd?.textContent?.trim()).toBe('unbekannte-ebene');
+		expect(aggregationDd?.getAttribute('lang')).toBe('de');
+		expect(aggregationDd?.className).toMatch(/font-mono/);
+	});
+
 	it('blendet Sections mit leerem Inhalt aus (kein Coverage-Gaps wenn fehlt)', async () => {
 		const d = detail('laerm-2023', {
 			methodology: { ...methodology(), coverageGaps: undefined, omissions: undefined }
@@ -354,14 +416,15 @@ describe('layer-detail +page.svelte', () => {
 				/Modelled overall noise pollution/
 			);
 			// Reihenfolge im Markup: aggregationLevel, authority, updateFrequency.
-			// `aggregationLevel` ist ein deutsch-abgeleitetes Enum ohne EN-Label-Map
-			// (Boundary "aggregationLevel ... bleiben unverändert") -- behält
-			// `lang="de"`, bis eine Label-Map existiert. `authority`/
+			// Textbereinigung (G-47): `aggregationLevel` selbst bleibt unverändert
+			// (Boundary), zeigt aber jetzt ein lokalisiertes Label über die
+			// Label-Map -- bekannte Werte verlieren `lang="de"`. `authority`/
 			// `updateFrequency` sind seit C2 selbst lokalisiert, kein `lang` mehr.
 			const dds = methodologySec.querySelectorAll('dd');
 			expect(dds.length).toBe(3);
 			const [aggregationDd, authorityDd, updateFrequencyDd] = dds;
-			expect(aggregationDd.getAttribute('lang')).toBe('de');
+			expect(aggregationDd.hasAttribute('lang')).toBe(false);
+			expect(aggregationDd.textContent?.trim()).toBe('LOR planning area');
 			expect(authorityDd.hasAttribute('lang')).toBe(false);
 			expect(updateFrequencyDd.hasAttribute('lang')).toBe(false);
 			const coverageGaps = (await page

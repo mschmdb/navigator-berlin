@@ -116,7 +116,7 @@ describe('BezirkHero.svelte', () => {
 	it('zeigt Steckbrief-Platzhalter wenn stats null', async () => {
 		render(BezirkHero, { profile: baseProfile, stats: null, faq: [] });
 		const placeholder = document.querySelector('[data-testid="bezirk-hero"]');
-		expect(placeholder?.textContent).toMatch(/Aggregat-Werte werden mit dem nächsten Daten-Build/);
+		expect(placeholder?.textContent).toMatch(/Aggregat-Werte werden mit dem nächsten Daten-Update/);
 		expect(document.querySelector('[data-testid="bezirk-steckbrief"]')).toBeNull();
 	});
 
@@ -133,7 +133,7 @@ describe('BezirkHero.svelte', () => {
 		render(BezirkHero, { profile: baseProfile, stats: null, faq: [] });
 		expect(document.querySelector('[data-testid="faq-section"]')).toBeNull();
 		const hero = document.querySelector('[data-testid="bezirk-hero"]');
-		expect(hero?.textContent).toMatch(/FAQ-Einträge werden mit dem nächsten Daten-Build/);
+		expect(hero?.textContent).toMatch(/FAQ-Einträge ergänzen wir mit dem nächsten Daten-Update/);
 	});
 
 	it('rendert FaqSection wenn faq-Items vorhanden', async () => {

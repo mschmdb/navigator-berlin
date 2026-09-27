@@ -304,7 +304,7 @@
 				href={localizedHref('/methodik/wahldaten')}
 				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
-				/methodik/wahldaten
+				{m.wahl_portal_methodik_wahldaten_link_label()}
 			</a>
 		</p>
 
