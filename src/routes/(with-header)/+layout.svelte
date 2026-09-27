@@ -92,6 +92,15 @@
 </script>
 
 {#snippet langSwitcher()}
+	<!-- spec-lang-switcher-dropdown.md: Header-Slot (Desktop) zeigt das
+	     Dropdown, der Mobile-Drawer bekommt weiterhin die Linkliste
+	     (langSwitcherDrawer unten) -- site-header.svelte's `langSwitcher`-Prop
+	     rendert im Header-Slot, `langSwitcherDrawer`-Prop geht an den
+	     MobileMetaDrawer. -->
+	<LangSwitcher currentPath={page.url.pathname} variant="dropdown" />
+{/snippet}
+
+{#snippet langSwitcherDrawer()}
 	<LangSwitcher currentPath={page.url.pathname} />
 {/snippet}
 
@@ -106,6 +115,7 @@
 	searchCollapsed={ui.inspectorOpen || ui.compareMode || ui.finderOpen}
 	{atlasCtaHref}
 	{langSwitcher}
+	{langSwitcherDrawer}
 />
 
 <!--

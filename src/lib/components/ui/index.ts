@@ -2,6 +2,7 @@ export { default as Button } from './button.svelte';
 export { default as Dialog } from './dialog.svelte';
 export { default as Combobox } from './combobox.svelte';
 export { default as Popover } from './popover.svelte';
+export { default as DropdownMenu } from './dropdown-menu.svelte';
 export { default as Tooltip } from './tooltip.svelte';
 export { default as ToggleGroup } from './toggle-group.svelte';
 export { default as Skeleton } from './skeleton.svelte';

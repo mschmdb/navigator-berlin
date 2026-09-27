@@ -2,7 +2,7 @@
 title: 'Sprachumschalter als Dropdown im Header'
 type: 'feature'
 created: '2026-09-27'
-status: 'in-progress'
+status: 'done'
 baseline_commit: '183d61d3a70c6a024ce5771dfd5f6c444859afdc'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -69,11 +69,11 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `ui/dropdown-menu.svelte` + Test (Öffnen, Escape, Fokus-Rückgabe)
-- [ ] `lang-switcher.svelte` Variante `dropdown` + Tests (Links, aktive Sprache, Namen in Zielsprache, no-JS-Fallback)
-- [ ] Layout/Header-Verdrahtung: Header `dropdown`, Drawer und Footer `list`
-- [ ] e2e: Sprachwechsel über das Dropdown (Maus und Tastatur), bestehende i18n-routing-Tests grün
-- [ ] Zeitmessung
+- [x] `ui/dropdown-menu.svelte` + Test (Öffnen, Escape, Fokus-Rückgabe)
+- [x] `lang-switcher.svelte` Variante `dropdown` + Tests (Links, aktive Sprache, Namen in Zielsprache, no-JS-Fallback)
+- [x] Layout/Header-Verdrahtung: Header `dropdown`, Drawer und Footer `list`
+- [x] e2e: Sprachwechsel über das Dropdown (Maus und Tastatur), bestehende i18n-routing-Tests grün
+- [x] Zeitmessung
 
 **Acceptance Criteria:**
 - Given eine Seite mit Header auf Desktop, when der Nutzer den Sprachknopf öffnet und „English“ wählt, then lädt dieselbe Seite unter `/en/…`.
@@ -83,14 +83,38 @@ context:
 ## Implementation Notes
 
 - 27.09. 09:03 Start Planung, Inventur Koordinator direkt. Umsetzung nach dem Banner-Commit (gleiches Layout). 09:03 Checkpoint 1 durch Matze („freigeben weiter“).
+- 27.09. 09:36 Umsetzung fertig (TDD pro AC, Red→Green je Datei): `ui/dropdown-menu.svelte` (neuer Wrapper), `lang-switcher.svelte` Variante `dropdown`, Header/Drawer-Verdrahtung über zwei getrennte Snippet-Props (`langSwitcher`/`langSwitcherDrawer`) an `site-header.svelte`. `pnpm exec vitest run` (4749 Tests) und `pnpm check` grün. `pnpm build` + volle `i18n-routing`-e2e-Suite (51 Tests, inkl. 3 neuer Dropdown-Tests + 1 No-JS-Fallback-Test mit `javaScriptEnabled: false`) 4× wiederholt grün.
+- Ein Flake gefunden und gefixt (nicht in der Spec vorgesehen, aber blockierend für „e2e grün"): bits-ui verschiebt beim Öffnen den DOM-Fokus asynchron auf das erste Menu-Item; ein sofortiges Escape traf gelegentlich einen Zwischenzustand und der Fokus-Rücksprung auf den Trigger schlug fehl. Fix: kurze Wartezeit (100ms) zwischen Öffnen und Escape im Tastatur-Test, siehe Kommentar dort.
 
-## Spec Change Log
+- Zeitmessung gesamt (Koordinator): Planung 09:03 (inkl. Freigabe Matze), Umsetzung 09:15-09:41 (26 min), Review 09:41-09:43, Patch-Runde 09:43-09:58 (15 min), Abschluss 09:59. Gesamt rund 45 min.
+- Qualität: 25 Review-Funde in 15 Einträgen (3 medium Barrierefreiheit: ARIA-Menü, Label in Name, Fokus), 11 gepatcht, 4 rejected. Abschluss: vitest 4753/4754 (winner-map-Flake), check 0, e2e i18n-routing 52/52 (4× wiederholt).
+
 
 ## Review Triage Log
 
+Runde 1 (27.09.2026 09:43), 3 Layer: Blind Hunter (BH) 11, Edge Case (EC) 10, Verification Gap (VG) 1 + 2. Triage Koordinator. P = patch, R = reject.
+
+| # | Layer | Fund | Verdict | Evidenz | Route |
+|---|---|---|---|---|---|
+| 1 | BH/EC/VG | Aktive Sprache als `<div aria-current>` direkt in `role="menu"` | medium | ARIA `aria-required-children`, per Pfeiltaste unerreichbar | P: deaktiviertes Menü-Item mit Häkchen und sr-only-Hinweis |
+| 2 | BH/EC | Label in Name: sichtbar „DE“, Name „Sprache: Deutsch“ | medium | WCAG 2.5.3 | P: Name beginnt mit sichtbarem Kürzel |
+| 3 | BH | Kein sichtbarer Tastaturfokus an Trigger und Items | medium | WCAG 2.4.7 | P |
+| 4 | BH/EC | Ohne JS toter Trigger neben `<noscript>`-Liste | low | | P: Trigger erst nach Mount |
+| 5 | EC | Menü-Portal außerhalb des Sprach-Landmarks | low | übliches Portal-Verhalten, Header clippt sonst | R |
+| 6 | EC | Menü offen, Viewport schrumpft unter sm | low | selten, Escape/Klick schließt | R |
+| 7 | BH/EC | e2e mit `waitForTimeout` statt Zustands-Warten | gap | Flake-Risiko | P |
+| 8 | BH/EC | Tastatur-e2e prüft Pfeiltaste nicht, Selektoren setzen genau 2 Locales voraus | gap | N-Locale-Ziel | P |
+| 9 | BH | `Record<string, unknown>` statt bits-ui-Typen | low | Projektregel typsicher | P |
+| 10 | BH | Wrapper-Tests ohne `bind:open`/`class`, `landmark={false}` im Dropdown ungetestet | gap | | P |
+| 11 | BH | `static/kiez-scores/region-composites.json` Build-Artefakt im Diff | low | | P: zurücksetzen |
+| 12 | BH | Prettier-Hunks in `site-header` | low | | R |
+| 13 | BH | Veralteter Zeilenverweis im Layout-Kommentar | low | | P |
+| 14 | BH | Zeitmessung/Change Log in Spec | low | Fix editiert Spec | R |
+| 15 | VG | Drawer-Verdrahtung (`langSwitcherDrawer`) ohne Test | gap | VG vorverifiziert | P: Mobile-e2e |
+
 ## Verification
 
-**Commands:**
-- `pnpm exec vitest run` -- expected: alle grün
-- `pnpm check` -- expected: 0 Fehler
-- `pnpm build` + e2e `i18n-routing` -- expected: grün
+**Commands (alle ausgeführt, 27.09.):**
+- `pnpm exec vitest run` → 4749 Tests grün (0 fehlgeschlagen).
+- `pnpm check` → 0 Fehler, 0 Warnungen.
+- `pnpm build` + `pnpm exec playwright test tests/e2e/i18n-routing.e2e.ts` → 51/51 grün, 4× in Folge wiederholt zur Flake-Kontrolle.

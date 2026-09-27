@@ -106,7 +106,17 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 		// Footnote) bleibt unabhängig davon sichtbar, wie auf der DE-Seite.
 		await expect(page.getByTestId('editorial-disclaimer').first()).toBeVisible();
 
-		const deLink = page.getByTestId('lang-switcher-link').first();
+		// spec-lang-switcher-dropdown.md: der Header-Switcher ist jetzt ein
+		// Dropdown (bits-ui), muss vor dem Klick auf den Sprach-Link erst per
+		// Trigger geöffnet werden. Der Trigger rendert erst nach Hydration
+		// (`mounted`-Gate in lang-switcher.svelte) -- `.click()` wartet als
+		// Locator-Action selbst darauf, dass er existiert/aktionierbar wird,
+		// kein `waitForTimeout` nötig. Selektor über `data-locale` statt
+		// Testid+Reihenfolge, damit eine dritte Locale die Auswahl nicht
+		// verändert; `[role="menu"]`-Scope trifft nicht versehentlich den immer
+		// sichtbaren Footer-Linkliste-Switcher.
+		await page.getByTestId('lang-switcher-trigger').click();
+		const deLink = page.locator('[role="menu"] [data-locale="de"]');
 		await expect(deLink).toHaveText('Deutsch');
 		await deLink.click();
 		await expect(page).toHaveURL(/\/berlin-wahlen$/);
@@ -191,11 +201,57 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 		page
 	}) => {
 		await page.goto('/kiez/alexanderplatz');
-		const enLink = page.getByTestId('lang-switcher-link').first();
+		await page.getByTestId('lang-switcher-trigger').click();
+		const enLink = page.locator('[role="menu"] [data-locale="en"]');
 		await expect(enLink).toHaveText('English');
 		await enLink.click();
 		await expect(page).toHaveURL(/\/en\/kiez\/alexanderplatz$/);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+	});
+
+	// spec-lang-switcher-dropdown.md AC "Tastaturbedienung": Enter öffnet,
+	// Pfeiltasten wählen, Enter bestätigt (Reload auf die andere Locale).
+	test('Switcher per Tastatur: Enter öffnet, ArrowDown+Enter wählt "English"', async ({ page }) => {
+		await page.goto('/kiez/alexanderplatz');
+		const trigger = page.getByTestId('lang-switcher-trigger');
+		await trigger.focus();
+		await page.keyboard.press('Enter');
+		await expect(page.getByRole('menu')).toBeVisible();
+		await page.keyboard.press('ArrowDown');
+		// Explizit prüfen, WELCHES Item fokussiert ist (statt blind Enter zu
+		// drücken) -- Selektor über `data-locale`, damit eine dritte Locale die
+		// Reihenfolge/Anzahl nicht mehr voraussetzt. `de` ist die aktuelle
+		// Sprache und als `disabled`-Item von der Pfeiltasten-Navigation
+		// ausgeschlossen (siehe lang-switcher.svelte), ArrowDown von Trigger aus
+		// muss also direkt auf `en` landen.
+		const enItem = page.locator('[role="menu"] [data-locale="en"]');
+		await expect(enItem).toBeFocused();
+		await page.keyboard.press('Enter');
+		await expect(page).toHaveURL(/\/en\/kiez\/alexanderplatz$/);
+		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+	});
+
+	// spec-lang-switcher-dropdown.md AC "Tastaturbedienung": Escape schließt,
+	// Fokus geht zurück auf den Trigger.
+	test('Switcher per Tastatur: Escape schließt das Dropdown, Fokus zurück auf den Trigger', async ({
+		page
+	}) => {
+		await page.goto('/kiez/alexanderplatz');
+		const trigger = page.getByTestId('lang-switcher-trigger');
+		await trigger.focus();
+		await page.keyboard.press('Enter');
+		await expect(page.getByRole('menu')).toBeVisible();
+		// bits-ui verschiebt den DOM-Fokus beim Öffnen automatisch auf das erste
+		// (nicht-disabled) Menu-Item -- ein Escape, das diesen Übergang
+		// überholt, findet gelegentlich einen Zwischenzustand und der
+		// Fokus-Rücksprung auf den Trigger schlägt fehl (per Repro bestätigt).
+		// Zustands-Wait statt Timeout: erst wenn das Item wirklich fokussiert
+		// ist, Escape drücken.
+		const enItem = page.locator('[role="menu"] [data-locale="en"]');
+		await expect(enItem).toBeFocused();
+		await page.keyboard.press('Escape');
+		await expect(page.getByRole('menu')).toHaveCount(0);
+		await expect(trigger).toBeFocused();
 	});
 
 	// JSON-LD inLanguage muss der EFFEKTIVEN Content-Locale folgen (DE, da
@@ -759,6 +815,24 @@ test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht
 		await expect(drawer.getByRole('heading', { name: 'Menu' })).toBeVisible();
 		await expect(drawer.getByRole('link', { name: 'Contact' })).toBeVisible();
 	});
+
+	// spec-lang-switcher-dropdown.md: Header (Desktop) zeigt das Dropdown,
+	// Mobile-Drawer und Footer behalten die Linkliste (`langSwitcherDrawer`
+	// vs. `langSwitcher`-Prop, site-header.svelte). Der Drawer darf also
+	// weiterhin einen sichtbaren `lang-switcher-link` zeigen, aber KEINEN
+	// `lang-switcher-trigger` (der gehört nur zur Header-Dropdown-Instanz).
+	test('/en/methodik: Menü-Drawer zeigt die Sprach-Linkliste (kein Dropdown-Trigger)', async ({
+		page
+	}) => {
+		await page.setViewportSize({ width: 375, height: 800 });
+		await page.goto('/en/methodik');
+		await page.getByTestId('header-menu-trigger').click();
+		const drawer = page.getByTestId('mobile-meta-drawer');
+		const deLink = drawer.getByTestId('lang-switcher-link');
+		await expect(deLink).toBeVisible();
+		await expect(deLink).toHaveAttribute('href', /\/methodik$/);
+		await expect(drawer.getByTestId('lang-switcher-trigger')).toHaveCount(0);
+	});
 });
 
 // spec-i18n-teiluebersetzung-banner.md: `/en/methodik` ist NICHT im
@@ -776,5 +850,36 @@ test.describe('spec-i18n-teiluebersetzung-banner: /en/methodik unverändert (Kon
 			'This page is shown in German because the English translation is not yet available.'
 		);
 		await expect(disclaimer).not.toContainText('only available in German');
+	});
+});
+
+// spec-lang-switcher-dropdown.md, I/O-Matrix "Ohne JS": das Header-Dropdown
+// selbst braucht JS zum Öffnen (bits-ui) -- `LangSwitcher`s `<noscript>`-Block
+// liefert dieselbe Linkliste wie die `list`-Variante als Fallback. Nur ein
+// echter No-JS-Kontext (`javaScriptEnabled: false`) parst diesen Block als
+// echte Kind-Elemente (siehe Kommentar in `lang-switcher.svelte.test.ts` --
+// im JS-aktiven Testbrowser bleibt er laut HTML-Spec inerter Text).
+test.describe('spec-lang-switcher-dropdown: No-JS-Fallback', () => {
+	test.use({ javaScriptEnabled: false });
+
+	test('/kiez/alexanderplatz ohne JS: noscript-Fallback zeigt einen echten, funktionierenden EN-Link', async ({
+		page
+	}) => {
+		await page.goto('/kiez/alexanderplatz');
+		// Code-review fix: der Dropdown-Trigger rendert jetzt erst nach
+		// `onMount` (`mounted`-Gate in lang-switcher.svelte) -- ohne JS läuft
+		// `onMount` nie, der Trigger darf also gar nicht erst im DOM stehen
+		// (kein toter Knopf mehr neben dem funktionierenden noscript-Fallback).
+		await expect(page.getByTestId('lang-switcher-trigger')).toHaveCount(0);
+		const fallbackLink = page.locator('noscript [data-testid="lang-switcher-link"]').first();
+		await expect(fallbackLink).toBeVisible();
+		// `localizedHref()` löst über SvelteKits `resolve()` auf, das (wie
+		// überall sonst im Projekt, `paths.relative`-Default) einen
+		// Root-relativen Pfad als Seiten-relative URL ausgibt
+		// (`../en/kiez/alexanderplatz`), keinen absoluten -- Regex statt
+		// exaktem String-Match.
+		await expect(fallbackLink).toHaveAttribute('href', /\/en\/kiez\/alexanderplatz$/);
+		await fallbackLink.click();
+		await expect(page).toHaveURL(/\/en\/kiez\/alexanderplatz$/);
 	});
 });

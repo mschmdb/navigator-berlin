@@ -42,6 +42,24 @@ describe('site-header.svelte', () => {
 		await expect.element(page.getByTestId('lang-switch')).toBeInTheDocument();
 	});
 
+	// spec-lang-switcher-dropdown.md: Header-Slot (`langSwitcher`) und
+	// Mobile-Drawer (`langSwitcherDrawer`) brauchen unterschiedliche Varianten
+	// (dropdown vs. Linkliste) -- getrennte Snippet-Props, damit jede Instanz
+	// unabhängig gerendert wird.
+	it('rendert langSwitcherDrawer im Mobile-Drawer, unabhängig vom Header-langSwitcher', async () => {
+		const langSwitcher = createRawSnippet(() => ({
+			render: () => '<span data-testid="lang-switch-header">HeaderVariant</span>'
+		}));
+		const langSwitcherDrawer = createRawSnippet(() => ({
+			render: () => '<span data-testid="lang-switch-drawer">DrawerVariant</span>'
+		}));
+		render(SiteHeader, { geocode: async () => [], langSwitcher, langSwitcherDrawer });
+		await expect.element(page.getByTestId('lang-switch-header')).toBeInTheDocument();
+		await expect.element(page.getByTestId('lang-switch-drawer')).not.toBeInTheDocument();
+		await page.getByTestId('header-menu-trigger').click();
+		await expect.element(page.getByTestId('lang-switch-drawer')).toBeInTheDocument();
+	});
+
 	it('rendert Layer-Trigger wenn onOpenLayerPalette gegeben', async () => {
 		let opened = 0;
 		render(SiteHeader, {
@@ -222,9 +240,7 @@ describe('site-header · i18n Block B2 (Shell englisch auf /en)', () => {
 		});
 		const menuTrigger = (await page.getByTestId('header-menu-trigger').element()) as HTMLElement;
 		expect(menuTrigger.getAttribute('aria-label')).toBe('Open menu');
-		const layerTrigger = (await page
-			.getByTestId('header-layer-trigger')
-			.element()) as HTMLElement;
+		const layerTrigger = (await page.getByTestId('header-layer-trigger').element()) as HTMLElement;
 		expect(layerTrigger.getAttribute('aria-label')).toBe('2 active layers · Open palette');
 		const bookmarkTrigger = (await page
 			.getByTestId('header-bookmark-trigger')
@@ -243,9 +259,7 @@ describe('site-header · i18n Block B2 (Shell englisch auf /en)', () => {
 			bookmarkCount: 1,
 			onOpenBookmarks: () => {}
 		});
-		const layerTrigger = (await page
-			.getByTestId('header-layer-trigger')
-			.element()) as HTMLElement;
+		const layerTrigger = (await page.getByTestId('header-layer-trigger').element()) as HTMLElement;
 		expect(layerTrigger.getAttribute('aria-label')).toBe('1 active layer · Open palette');
 		const bookmarkTrigger = (await page
 			.getByTestId('header-bookmark-trigger')

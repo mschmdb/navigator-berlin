@@ -2,6 +2,7 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"lang_switcher_label": "Sprache",
 	"lang_switcher_current": "Aktuelle Sprache",
+	"lang_switcher_trigger_label": "{code} · Sprache: {name}",
 	"disclaimer_fallback_to_base": "Diese Seite wird auf Deutsch angezeigt, weil die englische Übersetzung noch nicht verfügbar ist.",
 	"disclaimer_partial_translation": "Einzelne Inhalte auf dieser Seite sind nur auf Deutsch verfügbar.",
 	"disclaimer_alt_link_label": "Auf Deutsch lesen",

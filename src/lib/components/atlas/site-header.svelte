@@ -14,7 +14,19 @@
 	type Props = {
 		geocode: (q: string) => Promise<GeocodeSuggestion[]>;
 		onSelect?: (suggestion: GeocodeSuggestion) => void;
+		/**
+		 * Header-Slot (Desktop, `sm:block`). spec-lang-switcher-dropdown.md:
+		 * trägt dort die `dropdown`-Variante von `LangSwitcher`.
+		 */
 		langSwitcher?: Snippet;
+		/**
+		 * Mobile-Drawer-Slot. Eigene Prop statt `langSwitcher` zweitzuverwenden,
+		 * weil Header und Drawer seit spec-lang-switcher-dropdown.md
+		 * unterschiedliche Varianten brauchen (Header `dropdown`, Drawer
+		 * `list`) -- CSS schließt beide Instanzen je nach Viewport/Open-State
+		 * weiterhin gegenseitig aus, beide dürfen also ein `<nav>`-Landmark sein.
+		 */
+		langSwitcherDrawer?: Snippet;
 		activeLayerCount?: number;
 		onOpenLayerPalette?: () => void;
 		bookmarkCount?: number;
@@ -35,6 +47,7 @@
 		geocode,
 		onSelect,
 		langSwitcher,
+		langSwitcherDrawer,
 		activeLayerCount = 0,
 		onOpenLayerPalette,
 		bookmarkCount = 0,
@@ -91,7 +104,11 @@
 	     Header-Inhalte auf großen Screens mittig schweben, während die Karte
 	     vollflächig läuft. Logo links außen, Controls rechts außen. -->
 	<div class="flex w-full items-center gap-4 px-4">
-		<a href={localizedHref('/')} aria-label="navigator.berlin" class="flex shrink-0 items-center gap-2">
+		<a
+			href={localizedHref('/')}
+			aria-label="navigator.berlin"
+			class="flex shrink-0 items-center gap-2"
+		>
 			<PixelLogo size={64} title="navigator.berlin" />
 			<span class="hidden font-sans text-base font-light tracking-wide text-ink sm:inline">
 				navigator.berlin
@@ -148,9 +165,9 @@
 						notFoundLabel={m.shell_address_search_not_found()}
 						noSuggestionsLabel={m.shell_address_search_no_suggestions()}
 						suggestionsCountLabel={(count) =>
-						(count === 1
-							? m.shell_address_search_suggestions_count_singular
-							: m.shell_address_search_suggestions_count_plural)({ count })}
+							(count === 1
+								? m.shell_address_search_suggestions_count_singular
+								: m.shell_address_search_suggestions_count_plural)({ count })}
 					/>
 				</div>
 			</div>
@@ -238,4 +255,4 @@
 	onClose={closeOverlay}
 />
 
-<MobileMetaDrawer open={drawerOpen} onClose={closeDrawer} {langSwitcher} />
+<MobileMetaDrawer open={drawerOpen} onClose={closeDrawer} langSwitcher={langSwitcherDrawer} />
