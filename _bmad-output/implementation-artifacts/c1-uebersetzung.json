@@ -1,0 +1,959 @@
+{
+  "disclaimers": {
+    "legal": {
+      "de": "Ersetzt keine rechtliche Aussage.",
+      "en": "Not legal advice."
+    },
+    "historic": {
+      "de": "Historischer Stand. Geometrie aus OpenStreetMap-Community-Daten.",
+      "en": "Historical record. Geometry from OpenStreetMap community data."
+    },
+    "seasonal": {
+      "de": "Layer aktiv Mai–Oktober. November–April außerhalb der Saison.",
+      "en": "Layer active May–October. November–April out of season."
+    },
+    "source": {
+      "de": "Personen-Hintergrund aus zitierter Quelle. Nicht algorithmisch generiert.",
+      "en": "Personal background taken from the cited source. Not generated algorithmically."
+    },
+    "kuehle-orte": {
+      "de": "Geometrie aus OpenStreetMap (ODbL), ergänzt um eine redaktionelle Anreicherung. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.",
+      "en": "Geometry from OpenStreetMap (ODbL), supplemented with editorial enrichment. An offer, not a replacement for public authorities, and no legal entitlement to access."
+    },
+    "compare-stolperstein": {
+      "de": "Stolpersteine sind Erinnerung an NS-Opfer, kein Wohn-Bewertungs-Kriterium. Wir zählen nur, ohne zu vergleichen oder zu werten.",
+      "en": "Stolpersteine commemorate victims of National Socialism. They are not a criterion for rating where to live. We only count them, without comparing or judging."
+    },
+    "compare-mietspiegel": {
+      "de": "Mietspiegel-Wohnlage ist keine Wohnqualität. Niedrigere Stufe heißt nicht „schlechter\".",
+      "en": "The rent index residential area class is not a measure of housing quality. A lower class does not mean “worse”."
+    },
+    "compare-bodenrichtwerte": {
+      "de": "Höherer Bodenrichtwert kann teurere Miete bedeuten, oft aber auch bessere Versorgung. Wir zeigen die Differenz, ohne Bewertung.",
+      "en": "A higher standard land value can mean pricier rent, but often better amenities too. We show the difference without judging it."
+    },
+    "compare-stigma-footer": {
+      "de": "Aggregierte Daten pro Lage spiegeln statistische Mittel wider, nicht individuelle Wohnsituationen.",
+      "en": "Aggregated data per area reflect statistical averages, not individual living situations."
+    },
+    "mss-aggregat": {
+      "de": "Strukturelle Aggregat-Daten pro Planungsraum (rund 7.500 Einwohner:innen). Einzelne Adressen oder Personen sind dadurch nicht abgebildet. Stand: SenStadt MSS 2025.",
+      "en": "Structural aggregate data per planning area (around 7,500 residents). They do not represent individual addresses or people. As of: SenStadt MSS 2025."
+    },
+    "compare-mss-aggregat": {
+      "de": "Wir zeigen die Stufe, ohne Bewertung. Niedriger Status heißt nicht „schlechter Kiez\". Daten je Planungsraum, nicht je Adresse.",
+      "en": "We show the level without judging it. Low status does not mean “bad Kiez”. Data per planning area, not per address."
+    },
+    "kiez-score-explainer": {
+      "de": "Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten.",
+      "en": "Environment & infrastructure score from five dimensions per planning area (Quiet & air, Green & heat, Mobility, Local amenities, Tenant protection). Only measures variables where it is clear which direction is better. Social structure and affordability are deliberately excluded."
+    },
+    "kriminalitaet-aggregat": {
+      "de": "Häufigkeitszahl je Bezirksregion, nicht adressgenau. Sie misst erfasste Fälle pro gemeldete Einwohner, kein persönliches Risiko. Touristen- und Pendler-Orte erscheinen überzeichnet, das Dunkelfeld bleibt unerfasst. Kein Sicherheits-Ranking, fließt nicht in den Gesamt-Score.",
+      "en": "Frequency rate per Bezirksregion, not address-level. It measures recorded cases per registered resident, not personal risk. Places with many tourists or commuters appear overstated, and unreported crime remains uncaptured. Not a safety ranking, not part of the overall score."
+    },
+    "cross-layer-template": {
+      "de": "Werte aus verschiedenen Layern nebeneinander gestellt, ohne kausale Verknüpfung. Aggregat-Daten pro Planungsraum, nicht pro Adresse.",
+      "en": "Values from different layers shown side by side, with no causal link. Aggregate data per planning area, not per address."
+    },
+    "brw-not-aggregatable": {
+      "de": "Auf dieser Ebene nicht sinnvoll aggregierbar. Ein Median über das ganze Gebiet würde lokale Unterschiede verwischen, deshalb zeigen wir hier keinen Wert.",
+      "en": "Cannot be meaningfully aggregated at this level. A median across the whole area would blur local differences, so we show no value here."
+    },
+    "level-below-threshold": {
+      "de": "Auf dieser Ebene zu wenig Daten für eine belastbare Aussage. Wir zeigen lieber keinen Wert als einen irreführenden.",
+      "en": "Too little data at this level for a reliable statement. We would rather show no value than a misleading one."
+    },
+    "quelle_ansehen": {
+      "de": "Quelle ansehen",
+      "en": "View source"
+    }
+  },
+  "layerExplain": {
+    "bezirke": {
+      "short": {
+        "de": "Verwaltungsbezirk Berlins (12 insgesamt)",
+        "en": "Administrative Bezirk of Berlin (12 in total)"
+      },
+      "long": {
+        "de": "Politisch-administrative Gliederung Berlins in 12 Bezirke. Jeder Bezirk hat eigenes Bezirksamt, Bezirksbürgermeister:in und eigenständige Schul-, Sport- und Gesundheitsämter. Quelle: ODIS Berlin (dl-de/zero).",
+        "en": "Political and administrative division of Berlin into 12 Bezirke. Each Bezirk has its own Bezirk office (Bezirksamt), Bezirk mayor and its own school, sports and health offices. Source: ODIS Berlin (dl-de/zero)."
+      }
+    },
+    "ortsteile": {
+      "short": {
+        "de": "Statistischer Ortsteil innerhalb des Bezirks",
+        "en": "Statistical locality within the Bezirk"
+      },
+      "long": {
+        "de": "Berlin gliedert sich in 96 Ortsteile, historisch oft eigenständige Gemeinden. Genutzt für Statistik, Adress-Zuordnung und Identifikation (z.B. „Ich wohne in Friedrichshain\"). Quelle: ODIS Berlin.",
+        "en": "Berlin is divided into 96 localities (Ortsteile), historically often independent municipalities. Used for statistics, address assignment and identification (e.g. “I live in Friedrichshain”). Source: ODIS Berlin."
+      }
+    },
+    "plz": {
+      "short": {
+        "de": "Postleitzahlen-Region",
+        "en": "Postcode area"
+      },
+      "long": {
+        "de": "Berliner Postleitzahlen-Gebiete. Eine PLZ kann mehrere Kieze oder Ortsteile umfassen, deckt sich also nicht mit Bezirks- oder Ortsteilgrenzen. Quelle: ODIS Berlin.",
+        "en": "Berlin postcode areas. One postcode can cover several Kieze or localities, so it does not match Bezirk or locality boundaries. Source: ODIS Berlin."
+      }
+    },
+    "bodenrichtwerte": {
+      "short": {
+        "de": "Durchschnittlicher Grundstückspreis pro Quadratmeter (Stand 2026)",
+        "en": "Average land price per square metre (as of 2026)"
+      },
+      "long": {
+        "de": "Vom Berliner Gutachterausschuss jährlich festgestellte Lagewerte für unbebauten Boden. Indikator für Bodenwert, kein Marktpreis und kein Mietpreis. Differenziert nach Nutzungsart (Wohnen, Gewerbe, Mischgebiet).",
+        "en": "Location values for undeveloped land, set annually by the Berlin Committee of Valuation Experts (Gutachterausschuss). An indicator of land value, not a market price and not a rent. Differentiated by type of use (residential, commercial, mixed-use area)."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = teurer (Innenstadt-Lagen oft >5000 €/m², Rand-Lagen <500 €/m²)",
+        "en": "Higher = more expensive (inner-city locations often >5,000 €/m², outskirts <500 €/m²)"
+      },
+      "unit": {
+        "de": "€/m²",
+        "en": "€/m²"
+      }
+    },
+    "wohnlagen-2024": {
+      "short": {
+        "de": "Wohnlagen-Bewertung im Berliner Mietspiegel 2024 (Aggregat pro Planungsraum)",
+        "en": "Residential area rating in the Berlin rent index 2024 (aggregate per planning area)"
+      },
+      "long": {
+        "de": "Aggregierte Wohnlagen-Einstufung aus dem Berliner Mietspiegel 2024 pro Planungsraum. Konkrete €/m² siehe offizieller Mietspiegel-Rechner. Einstufung beruht auf Lage, Verkehrsanbindung, Versorgung und Wohnumfeld.",
+        "en": "Aggregated residential area classification from the Berlin rent index (Mietspiegel) 2024 per planning area. For concrete €/m², see the official rent index calculator. The classification is based on location, transport links, local amenities and residential surroundings."
+      },
+      "valueScaleExplain": {
+        "de": "1 einfach, 2 mittel, 3 gut, 4 sehr gut, 5 bestlage (Mietspiegel-Definition)",
+        "en": "1 simple, 2 medium, 3 good, 4 very good, 5 prime location (rent index definition)"
+      }
+    },
+    "milieuschutz-erhaltungsmiete": {
+      "short": {
+        "de": "Milieuschutzgebiet (soziale Erhaltungsverordnung §172 BauGB)",
+        "en": "Milieuschutz area (social preservation order, §172 BauGB)"
+      },
+      "long": {
+        "de": "Gebiet mit sozialer Erhaltungsverordnung. Schützt vor Verdrängung durch Modernisierung, Umwandlung in Eigentumswohnungen und Luxussanierung. Mietsteigerungen und Umbauten brauchen Genehmigung des Bezirks.",
+        "en": "Area with a social preservation order. Protects against displacement through modernisation, conversion into owner-occupied flats and luxury refurbishment. Rent increases and conversions require approval from the Bezirk."
+      }
+    },
+    "milieuschutz-staedtebau": {
+      "short": {
+        "de": "Städtebauliche Erhaltungsverordnung (Stadtbildschutz nach §172 BauGB)",
+        "en": "Urban preservation order (protection of townscape under §172 BauGB)"
+      },
+      "long": {
+        "de": "Gebiet mit städtebaulicher Erhaltungsverordnung zum Schutz des städtebaulichen Erscheinungsbildes. Abriss oder Veränderungen brauchen Genehmigung, häufig in Altbau- oder Gründerzeit-Quartieren.",
+        "en": "Area with an urban preservation order protecting the townscape. Demolition or alterations require approval, often in old-building or Gründerzeit neighbourhoods."
+      }
+    },
+    "mss-gesamtindex-2025": {
+      "short": {
+        "de": "Strukturelle soziale Lage je Planungsraum (MSS 2025, SenStadt Berlin)",
+        "en": "Structural social situation per planning area (MSS 2025, SenStadt Berlin)"
+      },
+      "long": {
+        "de": "Monitoring Soziale Stadtentwicklung 2025: aggregierter Gesamtindex aus Status- und Dynamik-Indikatoren pro LOR-Planungsraum (rund 7.500 Einwohner:innen). Strukturelle Aggregat-Größe, keine Bewertung einzelner Adressen oder Personen. Quelle: Senatsverwaltung für Stadtentwicklung Berlin.",
+        "en": "Monitoring Social Urban Development 2025: aggregated overall index from status and dynamics indicators per LOR planning area (around 7,500 residents). A structural aggregate, not an assessment of individual addresses or people. Source: Senate Department for Urban Development Berlin."
+      },
+      "valueScaleExplain": {
+        "de": "Status hoch / mittel / niedrig / sehr niedrig kombiniert mit Dynamik positiv / stabil / negativ. Niedriger Status bedeutet nicht „schlechter Kiez\", sondern strukturelle Unterschiede in Einkommen, Beschäftigung und Bildung.",
+        "en": "Status high / medium / low / very low combined with dynamics positive / stable / negative. Low status does not mean “bad Kiez”, but reflects structural differences in income, employment and education."
+      }
+    },
+    "laerm-2023": {
+      "short": {
+        "de": "Lärmbelastung im Stadtteil (Umweltatlas 2023)",
+        "en": "Noise pollution in the area (Environmental Atlas 2023)"
+      },
+      "long": {
+        "de": "Kategorisierte Lärm-Gesamtbelastung pro Planungsraum aus dem Berliner Umweltatlas 2023. Berücksichtigt Straßen-, Schienen- und Fluglärm. Indikator für Verdrängung der Wohnruhe.",
+        "en": "Categorised overall noise pollution per planning area from the Berlin Environmental Atlas (Umweltatlas) 2023. Covers road, rail and aircraft noise. An indicator of lost residential quiet."
+      },
+      "valueScaleExplain": {
+        "de": "niedrig (gut) bis sehr hoch (problematisch)",
+        "en": "low (good) to very high (problematic)"
+      }
+    },
+    "luft-2023": {
+      "short": {
+        "de": "Luftbelastung im Stadtteil (Umweltatlas 2023)",
+        "en": "Air pollution in the area (Environmental Atlas 2023)"
+      },
+      "long": {
+        "de": "Kategorisierte Luftqualität pro Planungsraum: Stickoxide und Feinstaub. Datengrundlage: Berliner Umweltatlas 2023, Verkehrsmodell plus Messstationen.",
+        "en": "Categorised air quality per planning area: nitrogen oxides and particulate matter. Data basis: Berlin Environmental Atlas (Umweltatlas) 2023, traffic model plus monitoring stations."
+      },
+      "valueScaleExplain": {
+        "de": "niedrig (gut) bis sehr hoch (problematisch)",
+        "en": "low (good) to very high (problematic)"
+      }
+    },
+    "gruenversorgung-2023": {
+      "short": {
+        "de": "Grünversorgung im Stadtteil (Umweltatlas 2023)",
+        "en": "Green space provision in the area (Environmental Atlas 2023)"
+      },
+      "long": {
+        "de": "Pro-Kopf-Versorgung mit nutzbarem öffentlichem Grün im Planungsraum. Indikator für Erholungsräume und Klimaresilienz. Kategorisch von niedrig bis sehr hoch.",
+        "en": "Per-capita provision of usable public green space in the planning area. An indicator of recreational space and climate resilience. Categorised from low to very high."
+      },
+      "valueScaleExplain": {
+        "de": "niedrig = wenig Grün, sehr hoch = gut versorgt",
+        "en": "low = little green space, very high = well provided"
+      }
+    },
+    "bioklima-2023": {
+      "short": {
+        "de": "Thermische Belastung im Sommer (Umweltatlas 2023)",
+        "en": "Thermal stress in summer (Environmental Atlas 2023)"
+      },
+      "long": {
+        "de": "Bioklimatische Belastung an Hitzetagen pro Planungsraum: Hitzeinsel-Effekt, Versiegelung, Kühlung durch Grün. Relevant für Hitzeschutz besonders älterer Menschen und chronisch Kranker.",
+        "en": "Bioclimatic stress on hot days per planning area: urban heat island effect, soil sealing, cooling by green space. Relevant for heat protection, especially for older people and the chronically ill."
+      },
+      "valueScaleExplain": {
+        "de": "niedrig bis sehr hoch (Hitzestress-Risiko)",
+        "en": "low to very high (heat stress risk)"
+      }
+    },
+    "umweltgerechtigkeit-2023": {
+      "short": {
+        "de": "Umweltgerechtigkeit gesamt: Mehrfachbelastung im Stadtteil",
+        "en": "Environmental justice overall: multiple burdens in the area"
+      },
+      "long": {
+        "de": "Kombinierter Indikator aus Lärm, Luft, Bioklima und Grünversorgung zusammen mit dem sozialen Status. Identifiziert Mehrfachbelastung in benachteiligten Stadtteilen (Berliner Umweltgerechtigkeitsbericht 2023).",
+        "en": "Combined indicator of noise, air, bioclimate and green space provision together with social status. Identifies multiple burdens in disadvantaged areas (Berlin Environmental Justice Report 2023)."
+      },
+      "valueScaleExplain": {
+        "de": "niedrig bis sehr hoch (kumulierte Belastung)",
+        "en": "low to very high (cumulative burden)"
+      }
+    },
+    "klima-pet-2022": {
+      "short": {
+        "de": "Gefühlte Temperatur an Hitzetagen um 14 Uhr (Klimaanalyse 2022)",
+        "en": "Perceived temperature on hot days at 2 pm (Climate Analysis 2022)"
+      },
+      "long": {
+        "de": "Physiologisch Äquivalente Temperatur (PET) als Maß für die gefühlte Hitzebelastung an einem Sommertag um 14 Uhr. Berücksichtigt Lufttemperatur, Strahlung, Wind und Feuchte. Die Karte deckt Siedlung, Straßenraum und Grünflächen ab. Gewässer wie Seen und Kanäle tragen keinen PET-Wert und bleiben leer. Quelle: Berliner Klimaanalyse 2022.",
+        "en": "Physiological Equivalent Temperature (PET) as a measure of perceived heat stress on a summer day at 2 pm. Takes air temperature, radiation, wind and humidity into account. The map covers built-up areas, street space and green spaces. Water bodies such as lakes and canals have no PET value and stay empty. Source: Berlin Climate Analysis 2022."
+      },
+      "valueScaleExplain": {
+        "de": "unter 32 °C neutral, 32 bis 41 °C warm bis heiß, über 41 °C extrem heiß",
+        "en": "below 32 °C neutral, 32 to 41 °C warm to hot, above 41 °C extremely hot"
+      },
+      "unit": {
+        "de": "°C",
+        "en": "°C"
+      }
+    },
+    "klima-kaltlufteinwirkbereich-2022": {
+      "short": {
+        "de": "Bereich, der nachts von Kaltluft aus dem Umland gekühlt wird",
+        "en": "Area cooled at night by cold air from the surrounding countryside"
+      },
+      "long": {
+        "de": "Stadtgebiete, die nachts von der Kaltluft-Produktion aus Wäldern, Wiesen und Parks profitieren. Wichtig für sommerliche Nachtkühlung und Stadtklima-Resilienz. Quelle: Berliner Klimaanalyse 2022.",
+        "en": "Urban areas that benefit at night from cold air produced by forests, meadows and parks. Important for night-time cooling in summer and urban climate resilience. Source: Berlin Climate Analysis 2022."
+      }
+    },
+    "klima-leitbahnkorridor-2022": {
+      "short": {
+        "de": "Korridor, durch den nachts Kaltluft in die Stadt strömt",
+        "en": "Corridor through which cold air flows into the city at night"
+      },
+      "long": {
+        "de": "Talraum-Strukturen, Straßenzüge oder Freiflächen, durch die nachts Kaltluft aus dem Umland in die Stadt strömt. Bebauung in diesen Korridoren bremst die Kühlung. Quelle: Berliner Klimaanalyse 2022.",
+        "en": "Valley structures, street corridors or open spaces through which cold air flows from the surrounding countryside into the city at night. Buildings in these corridors slow down the cooling. Source: Berlin Climate Analysis 2022."
+      }
+    },
+    "stolpersteine": {
+      "short": {
+        "de": "Gedenkstein für Opfer des Nationalsozialismus",
+        "en": "Memorial stone for victims of National Socialism"
+      },
+      "long": {
+        "de": "Vor letzten frei gewählten Wohnorten verlegte Messing-Plaketten, die Namen und Schicksal von NS-Opfern bewahren. Konzept Gunter Demnig. Daten aus OpenStreetMap, kuratiert von lokalen Stolpersteine-Initiativen.",
+        "en": "Brass plaques laid in front of the last freely chosen homes, preserving the names and fates of victims of the Nazi regime. Concept by Gunter Demnig. Data from OpenStreetMap, curated by local Stolpersteine initiatives."
+      }
+    },
+    "denkmal-2024": {
+      "short": {
+        "de": "Eingetragenes Bau- oder Gartendenkmal Berlins",
+        "en": "Listed building or garden monument in Berlin"
+      },
+      "long": {
+        "de": "Objekte aus der Berliner Denkmalliste (Landesdenkmalamt). Umfasst Baudenkmale, Gartendenkmale, Bodendenkmale und Denkmalbereiche. Datengrundlage für Heritage-Dichte-Aggregat pro Bezirk/Kiez.",
+        "en": "Objects from the Berlin list of monuments (Landesdenkmalamt). Includes architectural monuments, garden monuments, archaeological monuments and heritage areas. Data basis for the heritage density aggregate per Bezirk/Kiez."
+      }
+    },
+    "trinkbrunnen": {
+      "short": {
+        "de": "Öffentlicher Trinkwasser-Brunnen (Mai bis Oktober aktiv)",
+        "en": "Public drinking fountain (active May to October)"
+      },
+      "long": {
+        "de": "Von den Berliner Wasserbetrieben betriebener öffentlicher Trinkbrunnen. Saisonal aktiv: Mai bis Oktober wegen Frostschutz. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Public drinking fountain operated by Berliner Wasserbetriebe. Active seasonally: May to October due to frost protection. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "kuehle-orte": {
+      "short": {
+        "de": "Orte zum Abkühlen bei Hitze in deiner Nähe",
+        "en": "Places to cool down in the heat near you"
+      },
+      "long": {
+        "de": "Orte in Berlin, die bei Hitze Abkühlung bieten: Kinos, Bibliotheken, Malls, Schwimmhallen, Museen und mehr. Geometrie und Basis-Tags aus OpenStreetMap (ODbL 1.0), ergänzt um eine redaktionelle navigator.berlin-Anreicherung: Kühle-Score, Klimatisierung, Sommer-Verfügbarkeit. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.",
+        "en": "Places in Berlin that offer relief from the heat: cinemas, libraries, malls, indoor pools, museums and more. Geometry and base tags from OpenStreetMap (ODbL 1.0), supplemented with editorial navigator.berlin enrichment: cool score, air conditioning, summer availability. An offer, not a replacement for public authorities, and no legal entitlement to access."
+      }
+    },
+    "kitas-2024": {
+      "short": {
+        "de": "Kindertagesstätte (Kita)",
+        "en": "Daycare centre (Kita)"
+      },
+      "long": {
+        "de": "Anerkannte Berliner Kindertageseinrichtung 2024. Trägerschaft öffentlich, kirchlich oder frei. Quelle: Senatsverwaltung für Bildung, Jugend und Familie.",
+        "en": "Recognised Berlin daycare facility 2024. Run by public, church or independent providers. Source: Senate Department for Education, Youth and Family."
+      }
+    },
+    "schulen-2024": {
+      "short": {
+        "de": "Allgemeinbildende Schule (Stand 2024)",
+        "en": "General education school (as of 2024)"
+      },
+      "long": {
+        "de": "Grundschule, Sekundarschule, Gemeinschaftsschule oder Gymnasium im Berliner Schulverzeichnis 2024. Quelle: Senatsverwaltung für Bildung.",
+        "en": "Primary school, secondary school, community school or Gymnasium in the Berlin school directory 2024. Source: Senate Department for Education."
+      }
+    },
+    "einschulbereiche-2024": {
+      "short": {
+        "de": "Einschulbereich: Grundschule für die Kinder dieses Gebiets",
+        "en": "School catchment area: primary school for children in this area"
+      },
+      "long": {
+        "de": "Räumlich definierter Grundschulbezirk. Kinder werden in der Regel der Schule des Einschulbereichs zugewiesen, in dem sie wohnen. Ausnahmen möglich. Quelle: Senatsverwaltung Bildung, Stand 2024.",
+        "en": "Spatially defined primary school district. As a rule, children are assigned to the school of the catchment area they live in. Exceptions are possible. Source: Senate Department for Education, as of 2024."
+      }
+    },
+    "krankenhaeuser-plan": {
+      "short": {
+        "de": "Plan-Krankenhaus aus dem Berliner Krankenhausplan",
+        "en": "Hospital in the Berlin hospital plan"
+      },
+      "long": {
+        "de": "Im Berliner Krankenhausplan aufgeführte Klinik mit gesetzlichem Versorgungsauftrag. Quelle: Senatsverwaltung für Wissenschaft, Gesundheit und Pflege.",
+        "en": "Hospital listed in the Berlin hospital plan (Krankenhausplan) with a statutory care mandate. Source: Senate Department for Science, Health and Care."
+      }
+    },
+    "krankenhaeuser-weitere": {
+      "short": {
+        "de": "Weiteres Krankenhaus außerhalb des Krankenhausplans",
+        "en": "Other hospital outside the hospital plan"
+      },
+      "long": {
+        "de": "Private oder spezialisierte Klinik außerhalb des Berliner Krankenhausplans, häufig Privatklinik oder Rehabilitations-Einrichtung. Quelle: Senatsverwaltung Gesundheit.",
+        "en": "Private or specialised hospital outside the Berlin hospital plan, often a private clinic or rehabilitation facility. Source: Senate Department for Health."
+      }
+    },
+    "sportanlagen-2024": {
+      "short": {
+        "de": "Öffentlich oder vereinsgenutzte Sportanlage",
+        "en": "Sports facility for public or club use"
+      },
+      "long": {
+        "de": "Sportstätte (Sportplatz, Sporthalle, Schwimmbecken, Tennisplatz) im Bezirklichen Sportstättenverzeichnis 2024. Quelle: Senatsverwaltung für Inneres und Sport.",
+        "en": "Sports venue (sports ground, sports hall, swimming pool, tennis court) in the Bezirk register of sports facilities 2024. Source: Senate Department for the Interior and Sport."
+      }
+    },
+    "gruenanlagen": {
+      "short": {
+        "de": "Öffentliche Grünanlage (Park, Schmuckplatz, Stadtwald)",
+        "en": "Public green space (park, ornamental square, urban forest)"
+      },
+      "long": {
+        "de": "Öffentlich gewidmete Grünfläche zur Naherholung: Park, Schmuckplatz, Stadtplatz, Spielplatz oder Stadtwald. Pflege durch die Grünflächenämter der Bezirke.",
+        "en": "Officially designated green space for local recreation: park, ornamental square, town square, playground or urban forest. Maintained by the Bezirke's parks departments (Grünflächenämter)."
+      }
+    },
+    "spielplaetze": {
+      "short": {
+        "de": "Öffentlicher Spielplatz",
+        "en": "Public playground"
+      },
+      "long": {
+        "de": "Öffentlich zugänglicher Kinderspielplatz mit Spielgeräten, gepflegt durch das Grünflächenamt des Bezirks. Quelle: Berliner Grünanlagen-Register.",
+        "en": "Publicly accessible children's playground with play equipment, maintained by the Bezirk parks department (Grünflächenamt). Source: Berlin green spaces register (Grünanlagen-Register)."
+      }
+    },
+    "nahversorgung-lebensmittel": {
+      "short": {
+        "de": "Lebensmittel-Nahversorgung (Supermarkt, Discounter, Spätkauf, Bäcker)",
+        "en": "Local grocery shopping (supermarket, discounter, Späti, bakery)"
+      },
+      "long": {
+        "de": "Geschäfte der täglichen Lebensmittelversorgung: Supermarkt, Discounter, Convenience/Spätkauf und Bäckerei. Fließt als Dichte-Term in die Versorgungs-Dimension des Kiez-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Shops for daily groceries: supermarket, discounter, convenience store/Späti and bakery. Feeds into the Local amenities dimension of the Kiez score as a density term. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "nahversorgung-apotheke": {
+      "short": {
+        "de": "Apotheke",
+        "en": "Pharmacy"
+      },
+      "long": {
+        "de": "Öffentliche Apotheke für Arzneimittel und gesundheitsnahe Grundversorgung. Teil des Nahversorgungs-Terms der Versorgungs-Dimension. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Public pharmacy for medicines and basic health-related supplies. Part of the local shopping term in the Local amenities dimension. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "nahversorgung-post": {
+      "short": {
+        "de": "Post- oder Paketstelle",
+        "en": "Post office or parcel point"
+      },
+      "long": {
+        "de": "Postfiliale, Paketshop oder Postdienststelle für Brief- und Paketversand. Teil des Nahversorgungs-Terms der Versorgungs-Dimension. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Post office, parcel shop or postal service point for sending letters and parcels. Part of the local shopping term in the Local amenities dimension. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "schwimmbaeder": {
+      "short": {
+        "de": "Öffentliches Schwimmbad oder Schwimmhalle",
+        "en": "Public swimming pool or indoor pool"
+      },
+      "long": {
+        "de": "Berliner Bäder-Betriebe (BBB) und vergleichbare Einrichtungen: Hallenbad, Sommerbad, Kombibad oder Strandbad. Saisonale Öffnungszeiten beachten.",
+        "en": "Berliner Bäder-Betriebe (BBB) and comparable facilities: indoor pool, outdoor summer pool, combined pool or lakeside bathing beach. Note seasonal opening hours."
+      }
+    },
+    "kultur-museum": {
+      "short": {
+        "de": "Museum",
+        "en": "Museum"
+      },
+      "long": {
+        "de": "Museum oder Ausstellungshaus. Teil des Kultur-Scores (Zugang zu Kulturorten im Umkreis). Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Museum or exhibition venue. Part of the culture score (access to cultural venues nearby). Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "kultur-galerie": {
+      "short": {
+        "de": "Galerie",
+        "en": "Gallery"
+      },
+      "long": {
+        "de": "Kunstgalerie oder Ausstellungsraum. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Art gallery or exhibition space. Part of the culture score. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "kultur-kunst-im-raum": {
+      "short": {
+        "de": "Kunst im Stadtraum",
+        "en": "Public art"
+      },
+      "long": {
+        "de": "Kunstwerk im öffentlichen Raum: Skulptur, Wandbild, Installation, Denkmal-Kunst. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Artwork in public space: sculpture, mural, installation, memorial art. Part of the culture score. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "kultur-theater": {
+      "short": {
+        "de": "Theater oder Bühne",
+        "en": "Theatre or stage"
+      },
+      "long": {
+        "de": "Theater, Bühne oder Opernhaus. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Theatre, stage or opera house. Part of the culture score. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "kultur-bibliothek": {
+      "short": {
+        "de": "Bibliothek",
+        "en": "Library"
+      },
+      "long": {
+        "de": "Öffentliche, wissenschaftliche oder Spezial-Bibliothek. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Public, academic or special library. Part of the culture score. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "kultur-kino": {
+      "short": {
+        "de": "Kino",
+        "en": "Cinema"
+      },
+      "long": {
+        "de": "Kino oder Lichtspielhaus. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Cinema or picture house. Part of the culture score. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "kultur-soziokultur": {
+      "short": {
+        "de": "Soziokulturelles Zentrum",
+        "en": "Community culture centre"
+      },
+      "long": {
+        "de": "Kulturhaus, soziokulturelles Zentrum oder Kunsthaus (arts_centre). Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Cultural centre, community culture centre or arts centre (arts_centre). Part of the culture score. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "kultur-club": {
+      "short": {
+        "de": "Club oder Musikspielstätte",
+        "en": "Club or live music venue"
+      },
+      "long": {
+        "de": "Club, Diskothek oder Live-Musikspielstätte. Teil des Kultur-Scores. Standort-Daten aus OpenStreetMap (ODbL 1.0).",
+        "en": "Club, discotheque or live music venue. Part of the culture score. Location data from OpenStreetMap (ODbL 1.0)."
+      }
+    },
+    "radverkehrsnetz-2025": {
+      "short": {
+        "de": "Radverkehrsnetz 2025 mit Vorrangrouten",
+        "en": "Cycling network 2025 with priority routes"
+      },
+      "long": {
+        "de": "Berliner Radverkehrsnetz inklusive Radvorrangrouten 2025. Hauptrouten für den Alltagsradverkehr, ausgebaut nach Berliner Mobilitätsgesetz. Quelle: SenMVKU.",
+        "en": "Berlin cycling network including cycling priority routes 2025. Main routes for everyday cycling, developed under the Berlin Mobility Act (Mobilitätsgesetz). Source: SenMVKU."
+      }
+    },
+    "fahrradstrassen-2024": {
+      "short": {
+        "de": "Fahrradstraße: Radverkehr hat Vorrang",
+        "en": "Bicycle street: cyclists have priority"
+      },
+      "long": {
+        "de": "Straße, die für den Fahrradverkehr gewidmet ist (Zeichen 244.1 StVO). Andere Fahrzeuge dürfen nur ausnahmsweise und mit Schrittgeschwindigkeit fahren. Stand 2024.",
+        "en": "Street designated for cycling (sign 244.1 of the StVO, German road traffic regulations). Other vehicles may only use it by exception and at walking pace. As of 2024."
+      }
+    },
+    "ubahn-stationen": {
+      "short": {
+        "de": "U-Bahn-Station (BVG)",
+        "en": "U-Bahn station (BVG)"
+      },
+      "long": {
+        "de": "BVG-U-Bahn-Bahnhof. 9 Linien, rund 175 Stationen im Netz. Quelle: BVG / VBB-GTFS.",
+        "en": "BVG U-Bahn station. 9 lines, around 175 stations in the network. Source: BVG / VBB GTFS."
+      }
+    },
+    "sbahn-stationen": {
+      "short": {
+        "de": "S-Bahn-Station",
+        "en": "S-Bahn station"
+      },
+      "long": {
+        "de": "S-Bahn-Berlin-Bahnhof. 16 Linien, rund 170 Stationen in Berlin und Umland. Quelle: VBB-GTFS / Deutsche Bahn.",
+        "en": "S-Bahn Berlin station. 16 lines, around 170 stations in Berlin and the surrounding area. Source: VBB GTFS / Deutsche Bahn."
+      }
+    },
+    "tram-haltestellen": {
+      "short": {
+        "de": "Straßenbahn-Haltestelle (BVG)",
+        "en": "Tram stop (BVG)"
+      },
+      "long": {
+        "de": "BVG-Straßenbahn-Haltestelle, vor allem im Ostteil der Stadt. 22 Linien. Quelle: BVG GTFS.",
+        "en": "BVG tram stop, mainly in the eastern part of the city. 22 lines. Source: BVG GTFS."
+      }
+    },
+    "bus-haltestellen": {
+      "short": {
+        "de": "Bushaltestelle (BVG)",
+        "en": "Bus stop (BVG)"
+      },
+      "long": {
+        "de": "BVG-Bushaltestelle, Stadt- und Regionalbusse. Über 7000 Haltestellen in Berlin. Quelle: BVG GTFS.",
+        "en": "BVG bus stop, city and regional buses. Over 7,000 stops in Berlin. Source: BVG GTFS."
+      }
+    },
+    "ubahn-netz": {
+      "short": {
+        "de": "U-Bahn-Linie (BVG)",
+        "en": "U-Bahn line (BVG)"
+      },
+      "long": {
+        "de": "BVG-U-Bahn-Linienverlauf, 9 Linien (U1 bis U9). Quelle: BVG Geo-Daten.",
+        "en": "BVG U-Bahn line routes, 9 lines (U1 to U9). Source: BVG geodata."
+      }
+    },
+    "tram-netz": {
+      "short": {
+        "de": "Straßenbahn-Linie (BVG)",
+        "en": "Tram line (BVG)"
+      },
+      "long": {
+        "de": "BVG-Straßenbahn-Linienverlauf, vor allem im Ostteil Berlins, 22 Linien. Quelle: BVG Geo-Daten.",
+        "en": "BVG tram line routes, mainly in the eastern part of Berlin, 22 lines. Source: BVG geodata."
+      }
+    },
+    "sbahn-netz": {
+      "short": {
+        "de": "S-Bahn-Linien-Netz Berlin (Betreiber: S-Bahn Berlin GmbH)",
+        "en": "Berlin S-Bahn line network (operator: S-Bahn Berlin GmbH)"
+      },
+      "long": {
+        "de": "Linienverlauf des Berliner S-Bahn-Netzes, betrieben von der S-Bahn Berlin GmbH (DB-Konzern-Tochter). 16 Linien, rund 330 km Streckennetz, dichteste Verkehrsachsen in Berlin und Umland. Quelle: OpenStreetMap-Routen-Relationen (ODbL 1.0).",
+        "en": "Routes of the Berlin S-Bahn network, operated by S-Bahn Berlin GmbH (a subsidiary of the DB group). 16 lines, around 330 km of track, the busiest transport axes in Berlin and the surrounding area. Source: OpenStreetMap route relations (ODbL 1.0)."
+      }
+    },
+    "kiez-score-gesamt": {
+      "short": {
+        "de": "Umwelt- & Infrastruktur-Score gesamt pro Planungsraum (0–100)",
+        "en": "Environment & infrastructure score overall per planning area (0–100)"
+      },
+      "long": {
+        "de": "Ungewichtetes Mittel der fünf Dimensionen (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz) pro LOR-Planungsraum. Misst nur Größen mit eindeutiger Besser-Richtung. Methodik: /methodik/kiez-score.",
+        "en": "Unweighted mean of the five dimensions (Quiet & air, Green & heat, Mobility, Local amenities, Tenant protection) per LOR planning area. Only measures variables where it is clear which direction is better. Methodology: /methodik/kiez-score."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = besser über alle fünf Dimensionen",
+        "en": "Higher = better across all five dimensions"
+      }
+    },
+    "kiez-score-ruhe-luft": {
+      "short": {
+        "de": "Aggregat „Ruhe & Luft\" pro Planungsraum (0–100, Kiez-Score)",
+        "en": "“Quiet & air” aggregate per planning area (0–100, Kiez score)"
+      },
+      "long": {
+        "de": "Gewichtete Aggregation aus Lärm und Luftbelastung pro LOR-Planungsraum. Cloud-Dancer-Skala: niedrig = stärker belastet, hoch = ruhiger und sauberer. Methodik: /methodik/kiez-score.",
+        "en": "Weighted aggregation of noise and air pollution per LOR planning area. Cloud Dancer scale: low = more polluted, high = quieter and cleaner. Methodology: /methodik/kiez-score."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = ruhiger und sauberer",
+        "en": "Higher = quieter and cleaner"
+      }
+    },
+    "kiez-score-gruen-hitze": {
+      "short": {
+        "de": "Aggregat „Grün & Hitze\" pro Planungsraum (0–100, Kiez-Score)",
+        "en": "“Green & heat” aggregate per planning area (0–100, Kiez score)"
+      },
+      "long": {
+        "de": "Grünversorgung und Grünanlagen-Nähe plus thermische Resilienz (Bioklima, PET-Hitzebelastung, Kaltluft-Einwirkbereich, Leitbahnkorridor) pro Planungsraum, gewichtet auf 0–100. Methodik: /methodik/kiez-score.",
+        "en": "Green space provision and proximity to green spaces plus thermal resilience (bioclimate, PET heat stress, cold air influence zone, cold air flow corridor) per planning area, weighted to 0–100. Methodology: /methodik/kiez-score."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = mehr nutzbares Grün und besserer Hitzeschutz",
+        "en": "Higher = more usable green space and better heat protection"
+      }
+    },
+    "kiez-score-mobilitaet": {
+      "short": {
+        "de": "Aggregat „Mobilität\" pro Planungsraum (0–100, Kiez-Score)",
+        "en": "“Mobility” aggregate per planning area (0–100, Kiez score)"
+      },
+      "long": {
+        "de": "Distance-basiert vom Planungsraum-Centroid zu nächster U-Bahn, S-Bahn, Tram und Bus plus Radverkehrs-Presence. Pro Adresse wird der Wert mit der exakten Adress-Distance überschrieben. Methodik: /methodik/kiez-score.",
+        "en": "Based on the distance from the planning area centroid to the nearest U-Bahn, S-Bahn, tram and bus stop, plus cycling network presence. For each address, the exact address distance overrides the value. Methodology: /methodik/kiez-score."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = besser angebunden",
+        "en": "Higher = better connected"
+      }
+    },
+    "kiez-score-versorgung": {
+      "short": {
+        "de": "Aggregat „Versorgung\" pro Planungsraum (0–100, Kiez-Score)",
+        "en": "“Local amenities” aggregate per planning area (0–100, Kiez score)"
+      },
+      "long": {
+        "de": "Distance vom Planungsraum-Centroid zu nächster Kita, Schule, Plan-Krankenhaus und Spielplatz. Threshold pro POI individuell (Kita 500 m, Schule 800 m, Krankenhaus 2.000 m, Spielplatz 400 m). Methodik: /methodik/kiez-score.",
+        "en": "Distance from the planning area centroid to the nearest daycare centre, school, hospital in the Berlin hospital plan and playground. Individual threshold per POI (daycare 500 m, school 800 m, hospital 2,000 m, playground 400 m). Methodology: /methodik/kiez-score."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = bessere Versorgung mit Familien- und Gesundheits-Infrastruktur",
+        "en": "Higher = better provision of family and health infrastructure"
+      }
+    },
+    "kiez-score-wohnschutz": {
+      "short": {
+        "de": "Aggregat „Wohnschutz\" pro Planungsraum (0–100, Kiez-Score)",
+        "en": "“Tenant protection” aggregate per planning area (0–100, Kiez score)"
+      },
+      "long": {
+        "de": "Verdrängungsschutz: Anteil der Fläche in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebaulich) pro Planungsraum. Positiv-eindeutig: Schutz vorhanden = besser für Bewohner. Methodik: /methodik/kiez-score.",
+        "en": "Protection against displacement: share of the area inside a Milieuschutz area (residential or urban preservation statute) per planning area. Unambiguously positive: protection in place = better for residents. Methodology: /methodik/kiez-score."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = mehr Schutz vor Verdrängung",
+        "en": "Higher = more protection against displacement"
+      }
+    },
+    "kiez-score-kultur": {
+      "short": {
+        "de": "Aggregat „Kultur\" pro Planungsraum (0–100, Kiez-Score)",
+        "en": "“Culture” aggregate per planning area (0–100, Kiez score)"
+      },
+      "long": {
+        "de": "Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Methodik: /methodik/kiez-score.",
+        "en": "Cultural access: log-damped density of libraries, theatres, museums, cinemas, galleries, community culture centres, public art and clubs nearby (OSM/ODbL). A separate dimension, NOT part of the overall score (Option C): culture clusters in the city centre, so it does not drive the headline score. Methodology: /methodik/kiez-score."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = mehr Kulturorte in Reichweite",
+        "en": "Higher = more cultural venues within reach"
+      }
+    },
+    "kiez-score-kriminalitaet": {
+      "short": {
+        "de": "Erfasste Kriminalität (Häufigkeitszahl) je Bezirksregion",
+        "en": "Recorded crime (frequency rate) per Bezirksregion"
+      },
+      "long": {
+        "de": "Häufigkeitszahl ausgewählter wohn-relevanter Delikte, 3-Jahres-Mittel aus dem Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0). Granularität Bezirksregion, auf Planungsräume gespiegelt. Strukturelle Aggregat-Größe, NICHT im Gesamt-Score (Option C). Bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen/Pendler. Methodik: /methodik/kiez-score.",
+        "en": "Frequency rate of selected housing-relevant offences, 3-year average from the Berlin crime atlas (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0). Granularity Bezirksregion, mirrored onto planning areas. A structural aggregate, NOT part of the overall score (Option C). Relates cases only to registered residents, not to tourists/commuters. Methodology: /methodik/kiez-score."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = mehr erfasste Fälle pro Einwohner, kein Maß für persönliches Risiko und keine Wertung als „guter\" oder „schlechter\" Kiez.",
+        "en": "Higher = more recorded cases per resident, not a measure of personal risk and not a judgement of a “good” or “bad” Kiez."
+      }
+    },
+    "einwohner-dichte-2024": {
+      "short": {
+        "de": "Einwohnerdichte pro LOR-Planungsraum (EW/km², 31.12.2024)",
+        "en": "Population density per LOR planning area (residents/km², 31 Dec 2024)"
+      },
+      "long": {
+        "de": "Einwohner je Quadratkilometer pro LOR-Planungsraum. Neutraler Demografie-Kontext, keine Wertung: dicht ist nicht besser oder schlechter als locker. Quelle: Amt für Statistik Berlin-Brandenburg (CC BY 4.0).",
+        "en": "Residents per square kilometre per LOR planning area. Neutral demographic context, no judgement: dense is not better or worse than sparse. Source: Statistics Office Berlin-Brandenburg (Amt für Statistik Berlin-Brandenburg) (CC BY 4.0)."
+      },
+      "valueScaleExplain": {
+        "de": "Höher = dichter besiedelt, ohne Qualitätswertung",
+        "en": "Higher = more densely populated, no quality judgement"
+      },
+      "unit": {
+        "de": "EW/km²",
+        "en": "residents/km²"
+      }
+    },
+    "mietspiegel-wohnlage": {
+      "short": {
+        "de": "Wohnlagen-Bewertung im Berliner Mietspiegel",
+        "en": "Residential area rating in the Berlin rent index"
+      },
+      "long": {
+        "de": "Veraltete Wohnlagen-Quelle (vor 2024). Aktuelle Daten siehe Layer „wohnlagen-2024\".",
+        "en": "Outdated residential area source (before 2024). For current data, see the layer “wohnlagen-2024”."
+      }
+    },
+    "lor-prognoseraum": {
+      "short": {
+        "de": "LOR-Prognoseraum (Senatsverwaltung-Gliederung)",
+        "en": "LOR forecast area (Prognoseraum, Senate Department division)"
+      },
+      "long": {
+        "de": "Lebensweltlich orientierter Raum, Ebene Prognoseraum. Grobste der drei LOR-Ebenen, genutzt für Bevölkerungsprognosen.",
+        "en": "Life-world-oriented area (Lebensweltlich orientierter Raum), Prognoseraum level. Coarsest of the three LOR levels, used for population forecasts."
+      }
+    },
+    "lor-bezirksregion": {
+      "short": {
+        "de": "LOR-Bezirksregion (Kiez-Ebene, 138 in Berlin)",
+        "en": "LOR Bezirksregion (Kiez level, 138 in Berlin)"
+      },
+      "long": {
+        "de": "Lebensweltlich orientierter Raum, Ebene Bezirksregion. Mittel-Ebene der LOR-Gliederung, häufig als „Kiez-Ebene\" verwendet.",
+        "en": "Life-world-oriented area (Lebensweltlich orientierter Raum), Bezirksregion level. Middle level of the LOR division, often used as the “Kiez level”."
+      }
+    },
+    "lor-planungsraum": {
+      "short": {
+        "de": "LOR-Planungsraum (feinste Ebene)",
+        "en": "LOR planning area (finest level)"
+      },
+      "long": {
+        "de": "Lebensweltlich orientierter Raum, Ebene Planungsraum. Feinste der drei LOR-Ebenen, Grundlage für sozialräumliche Statistik.",
+        "en": "Life-world-oriented area (Lebensweltlich orientierter Raum), planning area level. Finest of the three LOR levels, basis for social-spatial statistics."
+      }
+    },
+    "laerm-den": {
+      "short": {
+        "de": "Straßenverkehrs-Lärmpegel Tag/Abend/Nacht (24h-Mittel)",
+        "en": "Road traffic noise level day/evening/night (24h average)"
+      },
+      "long": {
+        "de": "Lärmpegel als 24-Stunden-Mittelwert (Day-Evening-Night). Legacy-Slug aus früherem Strassenlärm-Datensatz.",
+        "en": "Noise level as a 24-hour average (day-evening-night). Legacy slug from an earlier road noise dataset."
+      },
+      "unit": {
+        "de": "dB",
+        "en": "dB"
+      }
+    },
+    "laerm-night": {
+      "short": {
+        "de": "Straßenverkehrs-Lärmpegel nur Nacht (22 bis 6 Uhr)",
+        "en": "Road traffic noise level, night only (10 pm to 6 am)"
+      },
+      "long": {
+        "de": "Lärmpegel als Nacht-Mittelwert. Legacy-Slug aus früherem Strassenlärm-Datensatz.",
+        "en": "Noise level as a night-time average. Legacy slug from an earlier road noise dataset."
+      },
+      "unit": {
+        "de": "dB",
+        "en": "dB"
+      }
+    },
+    "solarpotenzial": {
+      "short": {
+        "de": "Geschätztes Solar-Energie-Potenzial des Daches",
+        "en": "Estimated solar energy potential of the roof"
+      },
+      "long": {
+        "de": "Modelliertes jährliches PV-Ertragspotenzial pro Dachfläche. Legacy-Slug.",
+        "en": "Modelled annual PV yield potential per roof area. Legacy slug."
+      },
+      "unit": {
+        "de": "kWh/m²",
+        "en": "kWh/m²"
+      }
+    },
+    "klimaanalyse": {
+      "short": {
+        "de": "Klimafunktionsraum-Bewertung (Senatsverwaltung)",
+        "en": "Climate function area rating (Senate Department)"
+      },
+      "long": {
+        "de": "Klimafunktionale Bewertung städtischer Flächen. Legacy-Slug, ersetzt durch klima-pet-2022 und Verwandte.",
+        "en": "Climate-function rating of urban areas. Legacy slug, replaced by klima-pet-2022 and related slugs."
+      }
+    },
+    "gebaeudealter": {
+      "short": {
+        "de": "Baujahr-Klasse der Gebäude im Gebiet",
+        "en": "Construction year class of buildings in the area"
+      },
+      "long": {
+        "de": "Aggregierte Baujahr-Klassifikation der Gebäudebestände. Legacy-Slug ohne aktive Manifest-Quelle.",
+        "en": "Aggregated construction year classification of the building stock. Legacy slug without an active manifest source."
+      }
+    },
+    "wahlbezirke-btw17": {
+      "short": {
+        "de": "Wahlbezirks-Grenzen Bundestagswahl 2017",
+        "en": "Polling district boundaries, Bundestag election 2017"
+      },
+      "long": {
+        "de": "Geometrie der Berliner Wahlbezirke zur Bundestagswahl 2017. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.",
+        "en": "Geometry of Berlin's polling districts for the Bundestag election 2017. Basis for spatially assigning election results at the finest level."
+      }
+    },
+    "wahlbezirke-ah16": {
+      "short": {
+        "de": "Wahlbezirks-Grenzen Abgeordnetenhauswahl 2016",
+        "en": "Polling district boundaries, House of Representatives election 2016"
+      },
+      "long": {
+        "de": "Geometrie der Berliner Wahlbezirke zur Abgeordnetenhauswahl 2016. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.",
+        "en": "Geometry of Berlin's polling districts for the Berlin House of Representatives (Abgeordnetenhaus) election 2016. Basis for spatially assigning election results at the finest level."
+      }
+    },
+    "wahlbezirke-ah21": {
+      "short": {
+        "de": "Wahlbezirks-Grenzen Abgeordnetenhauswahl 2021",
+        "en": "Polling district boundaries, House of Representatives election 2021"
+      },
+      "long": {
+        "de": "Geometrie der Berliner Wahlbezirke zur Abgeordnetenhauswahl 2021. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.",
+        "en": "Geometry of Berlin's polling districts for the Berlin House of Representatives (Abgeordnetenhaus) election 2021. Basis for spatially assigning election results at the finest level."
+      }
+    },
+    "wahlbezirke-ah23": {
+      "short": {
+        "de": "Wahlbezirks-Grenzen Wiederholungswahl 2023",
+        "en": "Polling district boundaries, repeat election 2023"
+      },
+      "long": {
+        "de": "Geometrie der Berliner Wahlbezirke zur Wiederholungswahl des Abgeordnetenhauses 2023. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.",
+        "en": "Geometry of Berlin's polling districts for the 2023 repeat election of the Berlin House of Representatives (Abgeordnetenhaus). Basis for spatially assigning election results at the finest level."
+      }
+    },
+    "wahlbezirke-bt25": {
+      "short": {
+        "de": "Wahlbezirks-Grenzen Bundestagswahl 2025",
+        "en": "Polling district boundaries, Bundestag election 2025"
+      },
+      "long": {
+        "de": "Geometrie der Berliner Wahlbezirke zur Bundestagswahl 2025. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.",
+        "en": "Geometry of Berlin's polling districts for the Bundestag election 2025. Basis for spatially assigning election results at the finest level."
+      }
+    },
+    "wahlbezirke-ah26": {
+      "short": {
+        "de": "Wahlbezirks-Grenzen Abgeordnetenhauswahl 2026",
+        "en": "Polling district boundaries, House of Representatives election 2026"
+      },
+      "long": {
+        "de": "Geometrie der Berliner Wahlbezirke zur Abgeordnetenhaus- und BVV-Wahl 2026. Grundlage zur räumlichen Zuordnung der Wahlergebnisse auf der feinsten Ebene.",
+        "en": "Geometry of Berlin's polling districts for the Berlin House of Representatives (Abgeordnetenhaus) and District Assembly (BVV) elections 2026. Basis for spatially assigning election results at the finest level."
+      }
+    },
+    "wahlgruppen-btw17": {
+      "short": {
+        "de": "Briefwahl-Gruppen Bundestagswahl 2017",
+        "en": "Postal district groups, Bundestag election 2017"
+      },
+      "long": {
+        "de": "Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Bundestagswahl 2017. Kleinste Kartenebene der Wahl-Ergebniskarte.",
+        "en": "Combined areas of polling districts and their shared postal district for the Bundestag election 2017. Smallest map level of the election results map."
+      }
+    },
+    "wahlgruppen-ah16": {
+      "short": {
+        "de": "Briefwahl-Gruppen Abgeordnetenhaus- und BVV-Wahl 2016",
+        "en": "Postal district groups, House of Representatives and District Assembly (BVV) elections 2016"
+      },
+      "long": {
+        "de": "Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Abgeordnetenhaus- und BVV-Wahl 2016. Kleinste Kartenebene der Wahl-Ergebniskarte.",
+        "en": "Combined areas of polling districts and their shared postal district for the Berlin House of Representatives (Abgeordnetenhaus) and District Assembly (BVV) elections 2016. Smallest map level of the election results map."
+      }
+    },
+    "wahlgruppen-ah21": {
+      "short": {
+        "de": "Briefwahl-Gruppen Bundestags-, Abgeordnetenhaus- und BVV-Wahl 2021",
+        "en": "Postal district groups, Bundestag, House of Representatives and District Assembly (BVV) elections 2021"
+      },
+      "long": {
+        "de": "Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Bundestagswahl 2021 sowie zur Abgeordnetenhaus- und BVV-Wahl 2021 und deren Wiederholungswahl 2023. Kleinste Kartenebene der Wahl-Ergebniskarte.",
+        "en": "Combined areas of polling districts and their shared postal district for the Bundestag election 2021, the Berlin House of Representatives (Abgeordnetenhaus) and District Assembly (BVV) elections 2021 and their 2023 repeat election. Smallest map level of the election results map."
+      }
+    },
+    "wahlgruppen-bt25": {
+      "short": {
+        "de": "Briefwahl-Gruppen Bundestagswahl 2025",
+        "en": "Postal district groups, Bundestag election 2025"
+      },
+      "long": {
+        "de": "Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Bundestagswahl 2025. Kleinste Kartenebene der Wahl-Ergebniskarte.",
+        "en": "Combined areas of polling districts and their shared postal district for the Bundestag election 2025. Smallest map level of the election results map."
+      }
+    },
+    "wahlgruppen-ah26": {
+      "short": {
+        "de": "Briefwahl-Gruppen Abgeordnetenhaus- und BVV-Wahl 2026",
+        "en": "Postal district groups, House of Representatives and District Assembly (BVV) elections 2026"
+      },
+      "long": {
+        "de": "Zusammengefasste Flächen aus Wahlbezirken und ihrem gemeinsamen Briefwahlbezirk zur Abgeordnetenhaus- und BVV-Wahl 2026. Kleinste Kartenebene der Wahl-Ergebniskarte.",
+        "en": "Combined areas of polling districts and their shared postal district for the Berlin House of Representatives (Abgeordnetenhaus) and District Assembly (BVV) elections 2026. Smallest map level of the election results map."
+      }
+    }
+  },
+  "externalLinks": {
+    "wohnlagen-2024": {
+      "href": "https://mietspiegel.berlin.de/",
+      "label": {
+        "de": "Mietpreise im Berliner Mietspiegel-Rechner nachschlagen",
+        "en": "Look up rents in the Berlin rent index calculator (Mietspiegel-Rechner)"
+      }
+    }
+  }
+}

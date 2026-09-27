@@ -205,3 +205,7 @@
   summary: B4a prüfen: Place-/AdministrativeArea-/Breadcrumb-JSON-LD auf `/en/kiez` und `/en/bezirk` mit EN-Namen bei `inLanguage` de-DE angleichen (B4b-Linie: JSON-LD bleibt bis zur Registrierung DE).
   evidence: Review B4b Funde #3/#4, Koordinator-Entscheidung 27.09. 06:20; B4a nicht nachgezogen, um den abgeschlossenen Block nicht zu öffnen.
 
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
+  summary: DE-Textbereinigung: „Cloud-Dancer-Skala“ in `layer-explain.ts` (`kiez-score-ruhe-luft`) ist ein interner Farbskalen-Name und für Nutzer unverständlich, in DE und EN ersetzen.
+  evidence: C1-Übersetzungsreview, Matze 27.09. 09:21; C1 ändert DE-Texte bewusst nicht.

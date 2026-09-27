@@ -88,6 +88,8 @@ Sie erscheinen in Inspector, Legende, Palette, Vergleich und auf `/layer`.
 
 ## Implementation Notes
 
+- Übersetzung vorgezogen (09:15-09:19, 1 Subagent außerhalb des Repos). Abgenommene Quelle: `_bmad-output/implementation-artifacts/c1-uebersetzung.json` (DE wörtlich, EN von Matze abgenommen 09:21, siehe Abschnitt „Abnahme“ in `c1-uebersetzung-review.md`). Die Umsetzung übernimmt die EN-Texte unverändert. Zusätzlich: EN-Layer-Namen „Kiez Score“ → „Kiez score“ in `messages/en.json` (Matze-Entscheidung). Review-Tabelle als Datei statt Artifact (Artifact-Tool in der Session abgeschaltet).
+
 - 27.09. 08:52 Start Planung, 08:52-08:54 Inventur (1 Subagent). Umsetzung erst nach Commit der Banner-Spec (gleiche Dateien). 08:56 Fragen beantwortet und Checkpoint 1 durch Matze („wie du empfiehlst“).
 
 ## Spec Change Log
