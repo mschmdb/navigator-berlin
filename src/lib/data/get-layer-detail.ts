@@ -32,10 +32,10 @@ export function buildLayerDetail(
 	return {
 		slug,
 		lang,
-		// i18n Block B4b: `layerName` folgt der Aufrufer-Locale (`+page.server.ts`
-		// übergibt `getLocale()` als `lang`).
+		// i18n Block B4b/C1: `layerName` und `explain` folgen der Aufrufer-Locale
+		// (`+page.server.ts` übergibt `getLocale()` als `lang`).
 		layerName: getLayerDisplayName(slug, { locale: lang }),
-		explain: getLayerExplainEntry(slug),
+		explain: getLayerExplainEntry(slug, { locale: lang }),
 		meta,
 		editorial: getEditorialConfig(slug),
 		methodology: getLayerMethodology(slug)

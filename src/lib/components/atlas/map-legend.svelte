@@ -45,10 +45,6 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
-	// spec-i18n-teiluebersetzung-banner.md: `entry.explain.*` bleibt bis
-	// Block C deutsch, auch wenn die restliche Legende schon lokalisiert ist
-	// (WCAG 3.1.2).
-	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	const metaBySlug = $derived(new Map(manifestLayers.map((l) => [l.slug, l] as const)));
 	const hiddenSet = $derived(new Set(hiddenSlugs));
@@ -70,7 +66,7 @@
 				slug,
 				name: getLayerDisplayName(slug, localeOpts),
 				spec: getLegendSpec(slug, localeOpts),
-				explain: getLayerExplainEntry(slug),
+				explain: getLayerExplainEntry(slug, localeOpts),
 				meta: metaBySlug.get(slug),
 				hidden: hiddenSet.has(slug),
 				variant: cascadeVariants && isPolygonSlug(slug) ? cascadeVariants.get(slug) : undefined,
@@ -265,14 +261,13 @@
 
 					<div data-testid={`legend-expand-${entry.slug}`} class="mt-1.5 flex flex-col gap-1.5">
 						{#if entry.explain.long}
-							<p lang={contentLang} class="font-serif text-xs leading-snug text-ink-muted">
+							<p class="font-serif text-xs leading-snug text-ink-muted">
 								{entry.explain.long}
 							</p>
 						{/if}
 						{#if entry.explain.valueScaleExplain}
 							<p
 								data-testid={`legend-scale-${entry.slug}`}
-								lang={contentLang}
 								class="font-mono text-[10px] text-ink-subtle"
 							>
 								{entry.explain.valueScaleExplain}

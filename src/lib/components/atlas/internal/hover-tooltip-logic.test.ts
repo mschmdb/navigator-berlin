@@ -151,6 +151,20 @@ describe('buildMultiHoverContent (Multi-Layer-Tooltip)', () => {
 		expect(en.hint).toBe('Click for full address inspection');
 	});
 
+	// i18n Block C1: `shortExplain` (`layer-explain.ts`) ist jetzt selbst
+	// locale-fähig -- vormals Boundary Spec i18n B3a ("bleibt DE, unabhängig
+	// von opts.locale"), das hat sich mit C1 geändert.
+	it('shortExplain folgt { locale: "en" }, DE ohne opts', () => {
+		const de = buildHoverTooltipContent('laerm-2023', { kategorie: 'hoch', plr_name: 'X' });
+		expect(de.shortExplain).toBe('Lärmbelastung im Stadtteil (Umweltatlas 2023)');
+		const en = buildHoverTooltipContent(
+			'laerm-2023',
+			{ kategorie: 'hoch', plr_name: 'X' },
+			{ locale: 'en' }
+		);
+		expect(en.shortExplain).toBe('Noise pollution in the area (Environmental Atlas 2023)');
+	});
+
 	it('POI-Hint englisch mit { locale: "en" }', () => {
 		const c = buildHoverTooltipContent(
 			'ubahn-stationen',

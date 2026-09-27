@@ -198,9 +198,9 @@ describe('KlimaPetCard', () => {
 		expect(link.getAttribute('href')).toBe('/en/layer/klima-pet-2022');
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.long` bleibt bis
-	// Block C deutsch (WCAG 3.1.2).
-	it('explainEntry.long bekommt lang="de" bei lang="en"', async () => {
+	// i18n Block C1: `explainEntry.long` ist jetzt selbst locale-fähig
+	// (Messages) -- kein `lang="de"`-Override mehr auf EN.
+	it('explainEntry.long zeigt EN-Text ohne lang-Attribut bei lang="en"', async () => {
 		render(KlimaPetCard, {
 			hit,
 			layerName: 'Perceived temperature 2022',
@@ -214,7 +214,8 @@ describe('KlimaPetCard', () => {
 		await page.getByTestId('pet-details-toggle').click();
 		const details = (await page.getByTestId('pet-details').element()) as HTMLElement;
 		const explain = details.querySelector('p');
-		expect(explain?.getAttribute('lang')).toBe('de');
+		expect(explain?.textContent).toMatch(/Physiological Equivalent Temperature/);
+		expect(explain?.getAttribute('lang')).toBeNull();
 	});
 
 	it('explainEntry.long hat KEIN lang-Attribut auf DE', async () => {

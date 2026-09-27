@@ -34,14 +34,11 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
-	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.long` bleibt bis
-	// Block C deutsch (WCAG 3.1.2).
-	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	const display = $derived(getLayerHitDisplay(hit.layer, hit.value, localeOpts));
 	const severity = $derived(getValueSeverity(hit.layer, hit.value));
-	const explainEntry = $derived(getLayerExplainEntry(hit.layer));
-	const externalLink = $derived(getLayerExternalLink(hit.layer));
+	const explainEntry = $derived(getLayerExplainEntry(hit.layer, localeOpts));
+	const externalLink = $derived(getLayerExternalLink(hit.layer, localeOpts));
 	const editorial = $derived(getEditorialConfig(hit.layer));
 	const learnMoreHref = $derived(localizedHref(`/layer/${hit.layer}`, locale));
 
@@ -178,7 +175,7 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
-			<p lang={contentLang} class="font-serif text-xs leading-snug text-ink-muted">
+			<p class="font-serif text-xs leading-snug text-ink-muted">
 				{explainEntry.long}
 			</p>
 			{#if externalLink}
@@ -194,7 +191,7 @@
 			{/if}
 			<DataStandBanner {hit} lang={locale} />
 			{#each editorial?.disclaimerVariants ?? [] as variant (variant)}
-				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
+				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} {locale} />
 			{/each}
 		</div>
 	{/if}

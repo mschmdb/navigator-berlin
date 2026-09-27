@@ -1258,10 +1258,7 @@
 			: m.atlas_og_description_default(undefined, localeOpts)
 	);
 	const ogImageUrl = $derived(
-		buildOgImageUrl(
-			ogInput ? { ...ogInput, topLayers: ogImageTopLayersDe } : null,
-			page.url.origin
-		)
+		buildOgImageUrl(ogInput ? { ...ogInput, topLayers: ogImageTopLayersDe } : null, page.url.origin)
 	);
 </script>
 
@@ -1431,10 +1428,10 @@
 		>
 			<div class="w-full max-w-sm border border-rule bg-bg-elevated p-5 shadow-md">
 				<h3 id="compare-replace-title" class="font-serif text-lg text-ink">
-					Welche Adresse ersetzen?
+					{m.compare_replace_dialog_title(undefined, localeOpts)}
 				</h3>
 				<p class="mt-2 font-sans text-sm text-ink-muted">
-					Du bist im Vergleichs-Modus. Klick auf die Karte hat eine neue Adresse erfasst.
+					{m.compare_replace_dialog_description(undefined, localeOpts)}
 				</p>
 				<div class="mt-4 flex flex-wrap gap-2">
 					<button
@@ -1443,7 +1440,7 @@
 						onclick={() => void applyReplace('a')}
 						class="border-b border-rule-strong px-3 py-2 text-sm hover:bg-bg"
 					>
-						Adresse A ersetzen
+						{m.compare_replace_a_label(undefined, localeOpts)}
 					</button>
 					<button
 						type="button"
@@ -1451,7 +1448,7 @@
 						onclick={() => void applyReplace('b')}
 						class="border-b border-rule-strong px-3 py-2 text-sm hover:bg-bg"
 					>
-						Adresse B ersetzen
+						{m.compare_replace_b_label(undefined, localeOpts)}
 					</button>
 					<button
 						type="button"
@@ -1459,7 +1456,7 @@
 						onclick={() => (pendingReplaceLngLat = null)}
 						class="px-3 py-2 text-sm text-ink-muted hover:text-ink"
 					>
-						Abbrechen
+						{m.compare_replace_cancel_label(undefined, localeOpts)}
 					</button>
 				</div>
 			</div>

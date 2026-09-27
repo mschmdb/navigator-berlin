@@ -86,9 +86,9 @@ describe('LayerCard', () => {
 		await expect.element(page.getByTestId('card-details')).toBeInTheDocument();
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.long` bleibt bis
-	// Block C deutsch (WCAG 3.1.2).
-	it('explainEntry.long bekommt lang="de" bei lang="en"', async () => {
+	// i18n Block C1: `explainEntry.long` ist jetzt selbst locale-fähig
+	// (Messages) -- kein `lang="de"`-Override mehr auf EN.
+	it('explainEntry.long zeigt EN-Text ohne lang-Attribut bei lang="en"', async () => {
 		render(LayerCard, {
 			hit,
 			layerName: 'Noise pollution 2023',
@@ -98,7 +98,8 @@ describe('LayerCard', () => {
 		await page.getByTestId('card-details-toggle').click();
 		const details = (await page.getByTestId('card-details').element()) as HTMLElement;
 		const explain = details.querySelector('p');
-		expect(explain?.getAttribute('lang')).toBe('de');
+		expect(explain?.textContent).toMatch(/Categorised overall noise pollution/);
+		expect(explain?.getAttribute('lang')).toBeNull();
 	});
 
 	it('explainEntry.long hat KEIN lang-Attribut auf DE', async () => {

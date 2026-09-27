@@ -28,9 +28,6 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
-	// spec-i18n-teiluebersetzung-banner.md: `explain`/`explainEntry.*` bleibt
-	// bis Block C deutsch (WCAG 3.1.2).
-	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	let showMore = $state(false);
 	function toggleMore(): void {
@@ -47,7 +44,7 @@
 
 	const display = $derived(getLayerHitDisplay(hit.layer, hit.value, localeOpts));
 	const severity = $derived(getValueSeverity(hit.layer, hit.value));
-	const explainEntry = $derived(getLayerExplainEntry(hit.layer));
+	const explainEntry = $derived(getLayerExplainEntry(hit.layer, localeOpts));
 	const explain = $derived(explainEntry.short);
 	const hasMore = $derived(
 		Boolean(
@@ -55,7 +52,7 @@
 			(explainEntry.long !== explainEntry.short || explainEntry.valueScaleExplain)
 		)
 	);
-	const externalLink = $derived(getLayerExternalLink(hit.layer));
+	const externalLink = $derived(getLayerExternalLink(hit.layer, localeOpts));
 	const outdated = $derived(isOutdated(hit.updatedAt));
 	const editorial = $derived(getEditorialConfig(hit.layer));
 
@@ -217,25 +214,17 @@
 	{/if}
 
 	{#if explain}
-		<p
-			lang={contentLang}
-			class="font-serif text-sm leading-snug text-ink-muted"
-			data-testid="explain"
-		>
+		<p class="font-serif text-sm leading-snug text-ink-muted" data-testid="explain">
 			{explain}
 		</p>
 	{/if}
 	{#if hasMore}
 		{#if showMore}
-			<p
-				data-testid="explain-long"
-				lang={contentLang}
-				class="font-serif text-sm leading-snug text-ink-muted"
-			>
+			<p data-testid="explain-long" class="font-serif text-sm leading-snug text-ink-muted">
 				{explainEntry.long}
 			</p>
 			{#if explainEntry.valueScaleExplain}
-				<p data-testid="explain-scale" lang={contentLang} class="font-mono text-xs text-ink-subtle">
+				<p data-testid="explain-scale" class="font-mono text-xs text-ink-subtle">
 					{explainEntry.valueScaleExplain}
 				</p>
 			{/if}
@@ -267,7 +256,7 @@
 	{/if}
 	<DataStandBanner {hit} lang={locale} />
 	{#each disclaimerVariants as variant (variant)}
-		<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
+		<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} {locale} />
 	{/each}
 	{#if showMauerDetail}
 		<MauerSektorenDetail

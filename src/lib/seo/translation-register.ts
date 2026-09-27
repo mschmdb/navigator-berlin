@@ -40,13 +40,28 @@ export interface TranslationRegisterEntry {
  * file was last touched -- counts as translated without a second,
  * hand-maintained slug list here. Block B2 (`spec-i18n-b2-shell.md`) adds
  * the homepage (`/`, exact match -- no `prefix`, the rest of the route tree
- * below `/` is untouched by this block). Later blocks append further
- * `{ pathname, locale }` entries as more EN content ships -- no other
- * module needs to change.
+ * below `/` is untouched by this block). Block C1
+ * (`spec-i18n-c1-hinweise-layer-erklaerungen.md`) moves `/explore` here from
+ * {@link PARTIAL_TRANSLATION_REGISTER}: with layer-explain texts and
+ * editorial disclaimers now fully translated (Messages, DE-default),
+ * `/explore` has no remaining German content fragments in the UI, so it
+ * graduates from "partially translated" to "translated" -- noindex lifts,
+ * `SeoHead`'s hreflang cluster now includes `/en/explore`. `sitemap-en.xml`
+ * does NOT gain a dedicated `/en/explore` `<loc>` entry from this, though:
+ * `STATIC_PAGES_SOURCE` (`sitemap-builder.ts`) still returns `[]` for every
+ * non-base locale (pre-existing "Phase 1" gate, same reason `/en` itself --
+ * registered since Block B2 -- is also absent from `sitemap-en.xml`). Two
+ * DE exceptions remain on the registered page regardless of locale: the
+ * server-rendered OG-image text (`server/og/og-pipeline.ts`, no EN map
+ * template yet) and the KI-Export/LLM export (`llm-export-builder.ts`,
+ * `data-collector.ts`, `webmcp/**` -- boundary "stay German regardless of
+ * page locale"). Later blocks append further `{ pathname, locale }` entries
+ * as more EN content ships -- no other module needs to change.
  */
 export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/berlin-wahlen', locale: 'en', prefix: true },
-	{ pathname: '/', locale: 'en' }
+	{ pathname: '/', locale: 'en' },
+	{ pathname: '/explore', locale: 'en' }
 ];
 
 /**
@@ -61,11 +76,12 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
  * they are for these routes -- only the banner text and `<main lang>`
  * (via `resolveFrameLocale`) react to a partial-translation entry.
  *
- * `/explore` is an exact match (no `prefix`); `/kiez`, `/bezirk`, `/layer`
- * use `prefix: true` so every detail slug underneath counts too.
+ * `/kiez`, `/bezirk`, `/layer` use `prefix: true` so every detail slug
+ * underneath counts too. `/explore` moved OUT of this register in Block C1
+ * (`spec-i18n-c1-hinweise-layer-erklaerungen.md`) into
+ * {@link TRANSLATION_REGISTER} -- see the comment there.
  */
 export const PARTIAL_TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
-	{ pathname: '/explore', locale: 'en' },
 	{ pathname: '/kiez', locale: 'en', prefix: true },
 	{ pathname: '/bezirk', locale: 'en', prefix: true },
 	{ pathname: '/layer', locale: 'en', prefix: true }

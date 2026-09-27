@@ -152,13 +152,14 @@ describe('layer-palette.svelte', () => {
 			.not.toBeInTheDocument();
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md: die Subline bleibt bis Block C
-	// deutsch -- auf `getLocale() === 'en'` bekommt sie `lang="de"`.
-	it('Subline bekommt lang="de" wenn getLocale() "en" ist', async () => {
+	// i18n Block C1: die Subline (`getLayerExplain`) ist jetzt selbst
+	// locale-fähig (Messages) -- kein `lang="de"`-Override mehr auf EN.
+	it('Subline zeigt EN-Text ohne lang-Attribut wenn getLocale() "en" ist', async () => {
 		overwriteGetLocale(() => 'en');
 		render(Harness, { open: true, layers: LAYERS });
 		const subline = (await page.getByTestId('palette-subline-bezirke').element()) as HTMLElement;
-		expect(subline.getAttribute('lang')).toBe('de');
+		expect(subline.textContent).toMatch(/Administrative Bezirk/);
+		expect(subline.getAttribute('lang')).toBeNull();
 	});
 
 	it('Subline hat KEIN lang-Attribut auf DE-Locale', async () => {

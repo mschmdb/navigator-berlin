@@ -46,9 +46,10 @@ export function buildHoverTooltipContent(
 		slug,
 		layerName,
 		valueText: formatted.text,
-		// Erklärtexte (`layer-explain.ts`) bleiben Block C -- DE, unabhängig
-		// von `opts.locale` (Boundary Spec i18n B3a).
-		shortExplain: getLayerExplain(slug, 'short'),
+		// i18n Block C1: Erklärtexte (`layer-explain.ts`) folgen jetzt selbst
+		// `opts.locale` (vormals Boundary Spec i18n B3a: DE, unabhängig von
+		// `opts.locale`).
+		shortExplain: getLayerExplain(slug, 'short', opts),
 		hint: m.atlas_tooltip_click_hint(undefined, options)
 	};
 }

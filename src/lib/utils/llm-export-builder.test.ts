@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import {
 	approximateTokens,
 	buildLlmExportMarkdown,
@@ -426,6 +427,26 @@ describe('buildLlmExportMarkdown — Sections', () => {
 	it('hängt legal-Disclaimer bei mietspiegel/bodenrichtwerte-Layern an', () => {
 		const md = buildLlmExportMarkdown(fullInput());
 		expect(md).toMatch(/Ersetzt keine rechtliche Aussage/);
+	});
+
+	// Review-Fund (i18n Block C1): der KI-Export ist ein Nicht-UI-Konsument
+	// (Boundary "bleiben deutsch, unabhängig von der Seiten-Locale") --
+	// `getLayerExplainEntry`/`DISCLAIMER_TEXTS_DE` werden hier ohne `opts`
+	// aufgerufen, bleiben also DE-only, auch wenn `getLocale()` "en" liefert.
+	// `wohnlagen-2024` deckt explain.short/long + valueScaleExplain (Skala)
+	// + einen `legal`-Disclaimer in einem Hit ab.
+	describe('Nicht-UI-Konsument bleibt deutsch unter EN-Locale', () => {
+		afterEach(() => {
+			overwriteGetLocale(() => 'de');
+		});
+
+		it('explain- und disclaimer-Zeilen bleiben deutsch, wenn getLocale() "en" ist', () => {
+			overwriteGetLocale(() => 'en');
+			const md = buildLlmExportMarkdown(fullInput());
+			expect(md).toContain('Was: Wohnlagen-Bewertung im Berliner Mietspiegel 2024');
+			expect(md).toMatch(/Skala: 1 einfach, 2 mittel, 3 gut, 4 sehr gut, 5 bestlage/);
+			expect(md).toMatch(/Hinweis \(legal\): Ersetzt keine rechtliche Aussage\./);
+		});
 	});
 
 	// Story 1.23: Reason-aufdröseln im LLM-Export

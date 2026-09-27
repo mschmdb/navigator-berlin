@@ -604,9 +604,10 @@ describe('layer-hit-row.svelte', () => {
 			await expect.element(page.getByTestId('mauer-footer')).toHaveTextContent('As of');
 		});
 
-		// spec-i18n-teiluebersetzung-banner.md: `explain`/`explainEntry.long`/
-		// `.valueScaleExplain` bleiben bis Block C deutsch (WCAG 3.1.2).
-		it('explain + explain-long/-scale bekommen lang="de" auf lang="en"', async () => {
+		// i18n Block C1: `explain`/`explainEntry.long`/`.valueScaleExplain` sind
+		// jetzt selbst locale-fähig (Messages) -- kein `lang="de"`-Override mehr
+		// auf EN.
+		it('explain + explain-long/-scale zeigen EN-Text ohne lang-Attribut auf lang="en"', async () => {
 			render(LayerHitRow, {
 				hit: {
 					...recentHit,
@@ -617,12 +618,15 @@ describe('layer-hit-row.svelte', () => {
 				lang: 'en'
 			});
 			const explain = (await page.getByTestId('explain').element()) as HTMLElement;
-			expect(explain.getAttribute('lang')).toBe('de');
+			expect(explain.textContent).toMatch(/Residential area rating/);
+			expect(explain.getAttribute('lang')).toBeNull();
 			await page.getByTestId('explain-more').click();
 			const long = (await page.getByTestId('explain-long').element()) as HTMLElement;
-			expect(long.getAttribute('lang')).toBe('de');
+			expect(long.textContent).toMatch(/Aggregated residential area classification/);
+			expect(long.getAttribute('lang')).toBeNull();
 			const scale = (await page.getByTestId('explain-scale').element()) as HTMLElement;
-			expect(scale.getAttribute('lang')).toBe('de');
+			expect(scale.textContent).toMatch(/prime location/);
+			expect(scale.getAttribute('lang')).toBeNull();
 		});
 
 		it('explain hat KEIN lang-Attribut auf DE (Default)', async () => {

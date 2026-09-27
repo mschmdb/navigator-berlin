@@ -307,7 +307,13 @@ describe('layer-detail +page.svelte', () => {
 			expect(article.textContent).toMatch(/Z: Unbekannt/);
 		});
 
-		it('deutsche Layer-Explain-/Methodik-/Editorial-Inhalte tragen lang="de" (WCAG 3.1.2)', async () => {
+		// i18n Block C1: `explain.*` (Lead, Skala) und alle EditorialDisclaimer-
+		// Varianten sind jetzt selbst locale-fähig (Messages) -- die Loader-
+		// Daten (`detail.explain`) sind schon in der richtigen Sprache, die
+		// Komponente braucht also kein `lang="de"`-Override mehr dafür.
+		// `layer-methodology.ts` bleibt DE-only (Boundary C1), Methodik-Block
+		// behält `lang="de"`.
+		it('Lead/Editorial/Skala bekommen KEIN lang="de" mehr (jetzt selbst lokalisiert), Methodik behält es', async () => {
 			overwriteGetLocale(() => 'en');
 			const d: LayerDetail = {
 				...detail('wohnlagen-2024'),
@@ -320,11 +326,11 @@ describe('layer-detail +page.svelte', () => {
 			};
 			render(Page, { data: { detail: d, faq: [] } });
 			const lead = (await page.getByTestId('layer-detail-lead').element()) as HTMLElement;
-			expect(lead.getAttribute('lang')).toBe('de');
+			expect(lead.hasAttribute('lang')).toBe(false);
 			const editorial = (await page.getByTestId('layer-detail-editorial').element()) as HTMLElement;
-			expect(editorial.getAttribute('lang')).toBe('de');
+			expect(editorial.hasAttribute('lang')).toBe(false);
 			const scale = (await page.getByTestId('layer-detail-scale').element()) as HTMLElement;
-			expect(scale.querySelector('dd[lang="de"]')?.textContent).toMatch(/niedrig bis sehr hoch/);
+			expect(scale.querySelector('dd')?.hasAttribute('lang')).toBe(false);
 			const methodology = (await page
 				.getByTestId('layer-detail-methodology')
 				.element()) as HTMLElement;
@@ -414,7 +420,15 @@ describe('layer-detail +page.svelte', () => {
 
 		it('Breadcrumb- und Dataset-JSON-LD bleiben auf /en vollständig deutsch (Boundary inLanguage de-DE)', async () => {
 			overwriteGetLocale(() => 'en');
-			const d = { ...detail(), explain: { short: '', long: '' } };
+			// i18n Block C1: `explain` im Loader-Datensatz ist jetzt locale-fähig
+			// (hier absichtlich EN gesetzt, wie ein echter `/en`-Loader-Call es
+			// liefern würde) -- das JSON-LD zieht seine Description trotzdem über
+			// eine eigene DE-only-Quelle (`deExplain`, echte Message für den
+			// Slug), nicht über diesen Loader-Wert (Boundary: JSON-LD bleibt DE).
+			const d = {
+				...detail(),
+				explain: { short: 'Noise pollution in the area', long: 'EN loader text, must not leak.' }
+			};
 			render(Page, { data: { detail: d, faq: [] } });
 			const breadcrumbScript = document.querySelector(
 				'script[type="application/ld+json"][data-testid="layer-breadcrumb-jsonld"]'
@@ -429,7 +443,9 @@ describe('layer-detail +page.svelte', () => {
 			);
 			const dataset = JSON.parse(datasetScript?.textContent ?? '{}');
 			expect(dataset.name).toBe('Lärmbelastung 2023');
-			expect(dataset.description).toMatch(/Geo-Datenlayer/);
+			// Echte DE-Message für `laerm-2023`, NICHT der EN-Loader-Fixture-Text.
+			expect(dataset.description).toMatch(/Lärm-Gesamtbelastung/);
+			expect(dataset.description).not.toMatch(/EN loader text/);
 			expect(dataset.inLanguage).toBe('de-DE');
 		});
 	});

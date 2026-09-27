@@ -82,7 +82,7 @@
 		// einer intakten Karte. Dort erst prüfen, wenn der Tab sichtbar wird.
 		const timer = setTimeout(() => {
 			if (!isReady && !cancelled && !document.hidden) {
-				loadError = 'Karte konnte nicht geladen werden. Bitte Seite neu laden.';
+				loadError = m.map_load_error_timeout();
 			}
 		}, TIMEOUT_MS);
 
@@ -186,7 +186,7 @@
 				});
 			} catch (err) {
 				if (!cancelled) {
-					loadError = err instanceof Error ? err.message : 'Unbekannter Karten-Fehler';
+					loadError = err instanceof Error ? err.message : m.map_load_error_unknown();
 				}
 			}
 		})();
@@ -231,7 +231,7 @@
 				class="border border-rule-strong px-4 py-2 text-base hover:bg-bg"
 				onclick={() => location.reload()}
 			>
-				Neu laden
+				{m.map_load_error_reload_button()}
 			</button>
 		</div>
 	{/if}

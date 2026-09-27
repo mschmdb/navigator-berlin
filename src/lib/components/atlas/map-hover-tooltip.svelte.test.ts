@@ -74,9 +74,9 @@ describe('map-hover-tooltip.svelte', () => {
 		expect(ex.textContent).toMatch(/Lärmbelastung/);
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md: `shortExplain` bleibt bis Block C
-	// deutsch (WCAG 3.1.2).
-	it('hover-tooltip-explain bekommt lang="de" wenn getLocale() "en" ist', async () => {
+	// i18n Block C1: `shortExplain` ist jetzt selbst locale-fähig (Messages)
+	// -- kein `lang="de"`-Override mehr auf EN.
+	it('hover-tooltip-explain zeigt EN-Text ohne lang-Attribut wenn getLocale() "en" ist', async () => {
 		overwriteGetLocale(() => 'en');
 		const { api, fire } = makeFakeMap([
 			[{ layer: { id: 'navigator-layer-laerm-2023' }, properties: { kategorie: 'hoch' } }]
@@ -85,7 +85,8 @@ describe('map-hover-tooltip.svelte', () => {
 		fire('mousemove', { point: { x: 100, y: 100 } });
 		await expect.element(page.getByTestId('map-hover-tooltip')).toBeInTheDocument();
 		const ex = (await page.getByTestId('hover-tooltip-explain').element()) as HTMLElement;
-		expect(ex.getAttribute('lang')).toBe('de');
+		expect(ex.textContent).toMatch(/Noise pollution in the area/);
+		expect(ex.getAttribute('lang')).toBeNull();
 	});
 
 	it('hover-tooltip-explain hat KEIN lang-Attribut auf DE (Default)', async () => {

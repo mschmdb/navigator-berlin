@@ -39,9 +39,6 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
-	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.short`/`.long`
-	// bleibt bis Block C deutsch (WCAG 3.1.2).
-	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	const LIMIT = 5;
 	let filters = $state<KuehleOrteFilters>({
@@ -60,7 +57,7 @@
 	});
 
 	const editorial = $derived(getEditorialConfig(SLUG));
-	const explainEntry = $derived(getLayerExplainEntry(SLUG));
+	const explainEntry = $derived(getLayerExplainEntry(SLUG, localeOpts));
 
 	const nearest = $derived.by(() => {
 		if (!address || !index) return [];
@@ -154,7 +151,7 @@
 		</div>
 	</div>
 
-	<p lang={contentLang} class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
+	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
 		{explainEntry.short}
 	</p>
 
@@ -303,7 +300,7 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
-			<p lang={contentLang} class="font-serif text-xs leading-snug text-ink-muted">
+			<p class="font-serif text-xs leading-snug text-ink-muted">
 				{explainEntry.long}
 			</p>
 			{#if editorial?.primarySourceUrl}
@@ -318,7 +315,7 @@
 				</a>
 			{/if}
 			{#each editorial?.disclaimerVariants ?? [] as variant (variant)}
-				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
+				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} {locale} />
 			{/each}
 			<a
 				href={buildOptOutMailto()}

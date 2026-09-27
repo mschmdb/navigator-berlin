@@ -209,3 +209,16 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
   summary: DE-Textbereinigung: „Cloud-Dancer-Skala“ in `layer-explain.ts` (`kiez-score-ruhe-luft`) ist ein interner Farbskalen-Name und für Nutzer unverständlich, in DE und EN ersetzen.
   evidence: C1-Übersetzungsreview, Matze 27.09. 09:21; C1 ändert DE-Texte bewusst nicht.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
+  summary: DE+EN-Textbereinigung Layer-Texte: rohe Pfade („Methodik: /methodik/kiez-score“, 8 Kiez-Score-Texte), „Option C“, Slug statt Name („wohnlagen-2024“), „Legacy-Slug“-Hinweise, „Cloud-Dancer-Skala“, interne Verweise in Methodik („Story 10.6b“, „Epic 12 Story 12.3“, „FR50/FR51“). Pfade als lokalisierte Links statt Text.
+  evidence: Review C1 Fund #9 und C2-Übersetzungsreview; Texte spiegeln das DE-Original, C1/C2 überarbeiten DE bewusst nicht. `/en/explore` ist jetzt indexierbar.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
+  summary: Registrierte EN-Seiten (`/en`, `/en/explore`, `/en/berlin-wahlen/…`) als eigene `<loc>` in `sitemap-en.xml` aufnehmen; `STATIC_PAGES_SOURCE` liefert für Nicht-Basis-Locales `[]`.
+  evidence: Review C1 Fund #5; heute erscheinen sie nur als hreflang-Alternate am DE-Eintrag.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
+  summary: Compare-Replace-Dialog auf `/en/explore` per e2e oder Page-Test absichern (5 Strings).
+  evidence: Review C1 Fund #8; braucht Map-Klick plus Compare-State.
+

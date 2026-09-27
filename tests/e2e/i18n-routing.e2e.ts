@@ -836,9 +836,11 @@ test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht
 });
 
 // spec-i18n-teiluebersetzung-banner.md: `/en/methodik` ist NICHT im
-// Teil-Übersetzungs-Register (nur `/explore`, `/kiez`, `/bezirk`, `/layer`
-// sind es) -- Banner und `<main lang>` bleiben deshalb exakt wie vor dieser
-// Spec (Kontroll-Test, verhindert eine versehentliche Ausweitung).
+// Teil-Übersetzungs-Register (nur `/kiez`, `/bezirk`, `/layer` sind es seit
+// i18n Block C1 -- `/explore` zog ins volle Übersetzungs-Register um, siehe
+// spec-i18n-c1-hinweise-layer-erklaerungen.md) -- Banner und `<main lang>`
+// bleiben deshalb exakt wie vor dieser Spec (Kontroll-Test, verhindert eine
+// versehentliche Ausweitung).
 test.describe('spec-i18n-teiluebersetzung-banner: /en/methodik unverändert (Kontrolle)', () => {
 	test('Banner bleibt "not yet available" (fallback-to-base), main lang=de', async ({ page }) => {
 		await page.goto('/en/methodik');

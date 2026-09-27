@@ -2,10 +2,15 @@ import { expect, test } from '@playwright/test';
 
 // i18n Block B3a (spec-i18n-b3a-atlas-fundament.md): Atlas-Fundament auf
 // `/en/explore` -- Layer-Palette, Legende, Map-Controls, Layer-Link, Hover-
-// Tooltip englisch; `/explore` (DE) bleibt unverändert; `/en/explore` bleibt
-// bis B3c unregistriert (noindex). Layer `laerm-2023` ist real (Prerender-
-// Output, echtes Legend-Profil `choropleth-belastung-3`), dient als
-// durchgängiges Beispiel für Legende/Palette/Tooltip.
+// Tooltip englisch; `/explore` (DE) bleibt unverändert. Layer `laerm-2023`
+// ist real (Prerender-Output, echtes Legend-Profil `choropleth-belastung-3`),
+// dient als durchgängiges Beispiel für Legende/Palette/Tooltip.
+//
+// i18n Block C1 (spec-i18n-c1-hinweise-layer-erklaerungen.md): `/en/explore`
+// ist jetzt im vollen Übersetzungs-Register (`translation-register.ts`) --
+// vorher unregistriert/noindex (B3a), dann teilweise übersetzt mit Banner
+// (spec-i18n-teiluebersetzung-banner.md), jetzt vollständig übersetzt ohne
+// Banner, indexierbar, mit hreflang.
 
 test.beforeEach(async ({ page }) => {
 	await page.route('**/api/geocode**', (route) => route.fulfill({ json: { suggestions: [] } }));
@@ -14,15 +19,18 @@ test.beforeEach(async ({ page }) => {
 	);
 });
 
-test.describe('i18n Block B3a: /en/explore -- noindex (nicht registriert bis B3c)', () => {
-	test('GET /en/explore: 200, lang=en, noindex,nofollow', async ({ page }) => {
+test.describe('i18n Block C1: /en/explore -- vollständig übersetzt, indexierbar', () => {
+	// i18n Block C1 (spec-i18n-c1-hinweise-layer-erklaerungen.md): `/explore`
+	// zog aus dem Teil-Übersetzungs-Register in das volle Register um
+	// (`translation-register.ts`) -- layer-explain-Texte und alle
+	// EditorialDisclaimer-Varianten sind jetzt vollständig lokalisiert, kein
+	// deutscher Rest mehr auf der Seite. Entsprechend: kein noindex mehr,
+	// hreflang erscheint (wie `/en/berlin-wahlen`).
+	test('GET /en/explore: 200, lang=en, kein noindex', async ({ page }) => {
 		const response = await page.goto('/en/explore');
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-			'content',
-			'noindex,nofollow'
-		);
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
 	});
 
 	// Review-Fund: Route-Content (sr-only H1 + <title>) war noch ungeprüft.
@@ -32,28 +40,33 @@ test.describe('i18n Block B3a: /en/explore -- noindex (nicht registriert bis B3c
 		await expect(page).toHaveTitle('Atlas - Berlin in data - navigator.berlin');
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md: `/en/explore` hat einen
-	// übersetzten Rahmen (Atlas-Fundament seit B3a), einzelne Inhalte bleiben
-	// deutsch -- `<main lang>` folgt deshalb der Rahmen- statt der Content-
-	// Locale, und das Banner zeigt den Teil-Übersetzungs-Text statt
-	// "not yet available". noindex bleibt unverändert (kein Register-Eintrag).
-	test('Teil-Übersetzungs-Banner: "only available in German", Read-in-German-Link, main lang=en', async ({
-		page
-	}) => {
+	// i18n Block C1: `/explore` graduierte von "teilweise übersetzt" zu
+	// "übersetzt" -- kein Banner mehr (wie `/en/berlin-wahlen`), `<main lang>`
+	// bleibt `en`, hreflang erscheint jetzt (AC "übersetzt ≠ teilweise
+	// übersetzt": hreflang + kein noindex, statt umgekehrt vorher).
+	// `/explore` ist (wie `/en`, siehe Kommentar dort weiter unten) SSR statt
+	// prerendered (dynamische Query-Params: Adresse, Layer, Finder-Gewichte)
+	// -- die absolute Origin folgt hier dem tatsächlichen Request statt dem
+	// Build-Time-`prerender.origin` (svelte.config.js), deshalb Pfad-Check
+	// statt fester `https://navigator.berlin`-Origin-Assertion.
+	test('Kein Übersetzungs-Banner mehr, main lang=en, hreflang=en vorhanden', async ({ page }) => {
 		await page.goto('/en/explore');
 		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
-		const disclaimer = page.getByTestId('translation-disclaimer').first();
-		await expect(disclaimer).toBeVisible();
-		await expect(disclaimer).toHaveAttribute('data-variant', 'partial');
-		await expect(disclaimer).toContainText(
-			'Some content on this page is only available in German.'
+		await expect(page.getByTestId('translation-disclaimer')).toHaveCount(0);
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+			'href',
+			/\/en\/explore$/
 		);
-		await expect(disclaimer.getByTestId('translation-disclaimer-alt-link')).toContainText(
-			'Read in German'
+	});
+
+	test('GET /explore (DE): hreflang=en vorhanden, kein noindex', async ({ page }) => {
+		await page.goto('/explore');
+		await expect(page.locator('html')).toHaveAttribute('lang', 'de');
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+			'href',
+			/\/en\/explore$/
 		);
-		// AC "teilweise übersetzt ≠ übersetzt": noindex ohne hreflang.
-		await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
-		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
 	});
 });
 
@@ -138,7 +151,9 @@ test.describe('i18n Block B3a: /en/explore -- Legende + Map-Controls + Layer-Lin
 	// laerm-2023 ist ein Flächen-Choroplath (deckt praktisch ganz Berlin ab) --
 	// anders als der POI-Sweep in poi-popover.e2e.ts trifft ein Hover auf die
 	// Kartenmitte hier zuverlässig eine Fläche, kein Sweep nötig.
-	test('Hover über die Karte zeigt englischen Tooltip-Layer-Namen', async ({ page }) => {
+	test('Hover über die Karte zeigt englischen Tooltip-Layer-Namen + englischen Erklärtext', async ({
+		page
+	}) => {
 		await page.goto('/en/explore?layers=laerm-2023');
 		await page
 			.locator('[data-testid="map-skeleton"]')
@@ -159,13 +174,13 @@ test.describe('i18n Block B3a: /en/explore -- Legende + Map-Controls + Layer-Lin
 			await expect(tooltip).toBeVisible({ timeout: 500 });
 		}).toPass({ timeout: 15000 });
 		await expect(tooltip).toContainText('Noise pollution 2023');
-		// Kein Negativ-Check auf "Lärmbelastung" im gesamten Tooltip: der kurze
-		// Erklärtext (`getLayerExplain(slug, 'short')`) bleibt laut Boundary
-		// Block C (Fließtexte) bewusst deutsch, auch im EN-Tooltip -- nur der
-		// Layer-NAME (oben geprüft) ist B3a-Scope.
-		// spec-i18n-teiluebersetzung-banner.md: der deutsch bleibende
-		// Erklärtext trägt lang="de" (WCAG 3.1.2), der Rahmen (main) lang="en".
-		await expect(page.getByTestId('hover-tooltip-explain')).toHaveAttribute('lang', 'de');
+		// i18n Block C1: der kurze Erklärtext (`getLayerExplain(slug, 'short',
+		// opts)`) ist jetzt selbst lokalisiert (Messages, vormals Boundary
+		// Block C: DE, unabhängig von `opts.locale`) -- kein `lang="de"`-
+		// Override mehr, echter englischer Text im Tooltip.
+		const explain = page.getByTestId('hover-tooltip-explain');
+		await expect(explain).toContainText('Noise pollution in the area');
+		await expect(explain).not.toHaveAttribute('lang', 'de');
 		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
 	});
 });

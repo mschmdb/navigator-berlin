@@ -41,9 +41,6 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
-	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.long` bleibt bis
-	// Block C deutsch (WCAG 3.1.2).
-	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
 	function fmt(n: number): string {
 		return formatDecimal(n, { ...localeOpts, maximumFractionDigits: 1 });
@@ -86,8 +83,8 @@
 		)
 	);
 
-	const explainEntry = $derived(getLayerExplainEntry('klima-pet-2022'));
-	const externalLink = $derived(getLayerExternalLink('klima-pet-2022'));
+	const explainEntry = $derived(getLayerExplainEntry('klima-pet-2022', localeOpts));
+	const externalLink = $derived(getLayerExternalLink('klima-pet-2022', localeOpts));
 	const editorial = $derived(getEditorialConfig('klima-pet-2022'));
 	const learnMoreHref = $derived(localizedHref('/layer/klima-pet-2022', locale));
 
@@ -204,7 +201,7 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="pet-details" class="mt-1.5 space-y-1.5">
-			<p lang={contentLang} class="font-serif text-xs leading-snug text-ink-muted">
+			<p class="font-serif text-xs leading-snug text-ink-muted">
 				{explainEntry.long}
 			</p>
 			{#if externalLink}
@@ -220,7 +217,7 @@
 			{/if}
 			<DataStandBanner {hit} lang={locale} />
 			{#each editorial?.disclaimerVariants ?? [] as variant (variant)}
-				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} />
+				<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} {locale} />
 			{/each}
 		</div>
 	{/if}

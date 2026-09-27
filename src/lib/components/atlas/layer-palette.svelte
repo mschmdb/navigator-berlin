@@ -31,9 +31,6 @@
 
 	const ui = getUiState();
 	const localeOpts = $derived({ locale: getLocale() });
-	// spec-i18n-teiluebersetzung-banner.md: die `subline` (`getLayerExplain`)
-	// bleibt bis Block C deutsch (WCAG 3.1.2).
-	const contentLang = $derived(getLocale() === 'de' ? undefined : 'de');
 
 	let searchInput: HTMLInputElement | null = $state(null);
 	let searchQuery = $state('');
@@ -213,7 +210,7 @@
 				<ul class="space-y-1.5">
 					{#each recentLayers as layer (layer.slug)}
 						{@const isOn = ui.activeLayerSlugs.includes(layer.slug)}
-						{@const subline = getLayerExplain(layer.slug, 'short')}
+						{@const subline = getLayerExplain(layer.slug, 'short', localeOpts)}
 						<li>
 							<button
 								type="button"
@@ -235,7 +232,6 @@
 									{#if subline}
 										<span
 											data-testid={`palette-subline-${layer.slug}`}
-											lang={contentLang}
 											class="font-serif text-xs leading-snug text-ink-subtle italic"
 										>
 											{subline}
@@ -267,7 +263,7 @@
 					<ul class="space-y-1.5">
 						{#each group.layers as layer (layer.slug)}
 							{@const isOn = ui.activeLayerSlugs.includes(layer.slug)}
-							{@const subline = getLayerExplain(layer.slug, 'short')}
+							{@const subline = getLayerExplain(layer.slug, 'short', localeOpts)}
 							<li>
 								<button
 									type="button"
@@ -289,7 +285,6 @@
 										{#if subline}
 											<span
 												data-testid={`palette-subline-${layer.slug}`}
-												lang={contentLang}
 												class="font-serif text-xs leading-snug text-ink-subtle italic"
 											>
 												{subline}

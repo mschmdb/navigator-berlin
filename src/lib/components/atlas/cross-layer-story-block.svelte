@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import EditorialDisclaimer from './editorial-disclaimer.svelte';
 	import type { RenderedTemplate } from '$lib/data/cross-layer-templates/index.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { resolveEffectiveLocale } from '$lib/seo/effective-locale.js';
 
 	type SourceRef = {
 		readonly label: string;
@@ -15,6 +16,11 @@
 		methodikHref?: string;
 		methodikLinkLabel?: string;
 		testid?: string;
+		/** Pathname used to resolve the effective content locale. Defaults to
+		 * the current route (`page.url.pathname`) -- an explicit prop keeps the
+		 * component testable without a real SvelteKit route context (same
+		 * pattern as `SeoHead`'s `pathname` prop). */
+		pathname?: string;
 	};
 
 	let {
@@ -22,13 +28,21 @@
 		sources,
 		methodikHref = '/methodik',
 		methodikLinkLabel = 'Methodik',
-		testid = 'cross-layer-story-block'
+		testid = 'cross-layer-story-block',
+		pathname
 	}: Props = $props();
 
 	const hasMissing = $derived(rendered.missingVars.length > 0);
 	// spec-i18n-teiluebersetzung-banner.md: `rendered.body` (Template-Prosa)
-	// bleibt bis Block C deutsch (WCAG 3.1.2).
-	const contentLang = $derived(getLocale() === 'de' ? undefined : 'de');
+	// bleibt bis Block C deutsch. Review-Fund (i18n Block C1): diese
+	// Komponente rendert auf `/methodik/cross-layer-templates`, einer NICHT
+	// registrierten Seite -- die Content-Locale ist dort immer die effektive
+	// Locale (`resolveEffectiveLocale`, faellt fuer unregistrierte Pfade auf
+	// DE zurueck), nicht die URL-Locale (`getLocale()`). Auf `/en/methodik/
+	// cross-layer-templates` waere `getLocale() === 'en'`, obwohl der Content
+	// (Rahmen UND `EditorialDisclaimer`) tatsaechlich deutsch bleibt.
+	const effectiveLocale = $derived(resolveEffectiveLocale(pathname ?? page.url.pathname));
+	const contentLang = $derived(effectiveLocale === 'de' ? undefined : 'de');
 </script>
 
 {#if !hasMissing}
@@ -72,7 +86,7 @@
 			</ul>
 		{/if}
 
-		<EditorialDisclaimer variant="cross-layer-template" />
+		<EditorialDisclaimer variant="cross-layer-template" locale={effectiveLocale} />
 
 		<a
 			href={methodikHref}

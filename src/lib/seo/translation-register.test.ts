@@ -26,13 +26,24 @@ describe('isRouteTranslated', () => {
 	it('Block B: der reale Eintrag ist ein Praefix, deckt /berlin-wahlen + jede beliebige (auch zukuenftige) Detailseite ab', () => {
 		expect(TRANSLATION_REGISTER).toEqual([
 			{ pathname: '/berlin-wahlen', locale: 'en', prefix: true },
-			{ pathname: '/', locale: 'en' }
+			{ pathname: '/', locale: 'en' },
+			{ pathname: '/explore', locale: 'en' }
 		]);
 		expect(isRouteTranslated('/berlin-wahlen', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen', 'en')).toBe(true);
 		// ein Beispiel-Slug, der zum Zeitpunkt dieses Commits nicht existiert.
 		expect(isRouteTranslated('/berlin-wahlen/2099-agh-zweitstimme', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen/2099-agh-zweitstimme', 'en')).toBe(true);
+	});
+
+	// Block C1 (`spec-i18n-c1-hinweise-layer-erklaerungen.md`): `/explore`
+	// graduiert von "teilweise uebersetzt" zu "uebersetzt" -- layer-explain +
+	// editorial disclaimers sind jetzt vollstaendig lokalisiert, kein
+	// deutscher Rest mehr auf der Seite.
+	it('Block C1: /explore ist jetzt vollstaendig uebersetzt, exakter Match ohne Praefix', () => {
+		expect(isRouteTranslated('/explore', 'en')).toBe(true);
+		expect(isRouteTranslated('/en/explore', 'en')).toBe(true);
+		expect(isRouteTranslated('/explore/foo', 'en')).toBe(false);
 	});
 
 	// Block B2 (`spec-i18n-b2-shell.md`, Entscheidung Matze 26.09. 2A):
@@ -71,21 +82,26 @@ describe('isRouteTranslated', () => {
 });
 
 describe('isRoutePartiallyTranslated', () => {
-	it('der reale Eintrag deckt die vier Teil-Routen ab (/explore exakt, Rest als Praefix)', () => {
+	// Block C1: `/explore` zog ins volle Register um (siehe oben), das
+	// Teil-Register deckt seitdem nur noch die drei verbleibenden Routen ab.
+	it('der reale Eintrag deckt die drei verbleibenden Teil-Routen ab (je als Praefix)', () => {
 		expect(PARTIAL_TRANSLATION_REGISTER).toEqual([
-			{ pathname: '/explore', locale: 'en' },
 			{ pathname: '/kiez', locale: 'en', prefix: true },
 			{ pathname: '/bezirk', locale: 'en', prefix: true },
 			{ pathname: '/layer', locale: 'en', prefix: true }
 		]);
 	});
 
-	it('/explore, /kiez/x, /bezirk/x, /layer/x sind fuer en teilweise uebersetzt', () => {
-		expect(isRoutePartiallyTranslated('/explore', 'en')).toBe(true);
-		expect(isRoutePartiallyTranslated('/en/explore', 'en')).toBe(true);
+	it('/kiez/x, /bezirk/x, /layer/x sind fuer en teilweise uebersetzt', () => {
 		expect(isRoutePartiallyTranslated('/kiez/mitte', 'en')).toBe(true);
 		expect(isRoutePartiallyTranslated('/bezirk/pankow', 'en')).toBe(true);
 		expect(isRoutePartiallyTranslated('/layer/laerm-2023', 'en')).toBe(true);
+	});
+
+	// Block C1: `/explore` ist jetzt voll uebersetzt, nicht mehr "teilweise".
+	it('/explore ist NICHT mehr im Teil-Register (jetzt voll uebersetzt)', () => {
+		expect(isRoutePartiallyTranslated('/explore', 'en')).toBe(false);
+		expect(isRoutePartiallyTranslated('/en/explore', 'en')).toBe(false);
 	});
 
 	it('DE (Basis-Locale) ist nie "teilweise uebersetzt"', () => {
@@ -106,7 +122,7 @@ describe('isRoutePartiallyTranslated', () => {
 	it('injizierte entries ueberschreiben das reale Register (kein Modul-Mock noetig)', () => {
 		const entries: readonly TranslationRegisterEntry[] = [{ pathname: '/foo', locale: 'en' }];
 		expect(isRoutePartiallyTranslated('/foo', 'en', entries)).toBe(true);
-		expect(isRoutePartiallyTranslated('/explore', 'en', entries)).toBe(false);
+		expect(isRoutePartiallyTranslated('/kiez/mitte', 'en', entries)).toBe(false);
 	});
 });
 
@@ -117,6 +133,10 @@ describe('translatedLocalesFor', () => {
 
 	it('Block B: /berlin-wahlen has en in its non-base set', () => {
 		expect(translatedLocalesFor('/berlin-wahlen', ['de', 'en'])).toEqual(['en']);
+	});
+
+	it('Block C1: /explore has en in its non-base set', () => {
+		expect(translatedLocalesFor('/explore', ['de', 'en'])).toEqual(['en']);
 	});
 
 	it('never includes the base locale itself (that is handled separately by callers)', () => {

@@ -16,6 +16,7 @@
 		bundleLabel,
 		BUNDLE_LABEL_DE
 	} from '$lib/components/atlas/internal/layer-palette-filter.js';
+	import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -31,12 +32,21 @@
 	const locale = $derived(getLocale());
 	const localeOpts = $derived({ locale });
 	// i18n Block B4b, Review-Fund #6: einmal ableiten statt 9x wiederholen.
+	// i18n Block C1: `explain.*` (Lead, Skala) und die EditorialDisclaimer-
+	// Varianten sind jetzt selbst locale-fähig (Messages) -- `contentLang`
+	// gilt deshalb nur noch für den Methodik-Block (`layer-methodology.ts`
+	// bleibt DE-only, Boundary C1: "keine Methodik-Texte").
 	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 	// i18n Block B4b, Spec Change Log 27.09. 06:20: JSON-LD bleibt bis zur
 	// Registrierung vollständig deutsch (Boundary `inLanguage` `de-DE`) --
 	// Name/Description/Breadcrumb-Einträge laufen deshalb NICHT über die
 	// aktuelle URL-Locale, sondern immer über den DE-Default.
 	const deLayerName = $derived(getLayerDisplayName(detail.slug));
+	// i18n Block C1: `explain` (oben) folgt jetzt der URL-Locale (Messages) --
+	// das JSON-LD braucht wegen der DE-Boundary eine eigene DE-only-Quelle,
+	// sonst würde die Description auf `/en/layer/…` englisch ins JSON-LD
+	// durchsickern.
+	const deExplain = $derived(getLayerExplainEntry(detail.slug));
 
 	const inspectorHref = $derived(
 		localizedHref(`/explore?layers=${encodeURIComponent(detail.slug)}`)
@@ -75,7 +85,10 @@
 		buildDataset({
 			origin: page.url.origin,
 			name: deLayerName,
-			description: pickDatasetDescription([explain.long, explain.short], jsonLdDescriptionFallback),
+			description: pickDatasetDescription(
+				[deExplain.long, deExplain.short],
+				jsonLdDescriptionFallback
+			),
 			license: meta.license,
 			dateModified: meta.sourceUpdatedAt ?? meta.fetchedAt,
 			creatorName: methodology?.authority,
@@ -122,11 +135,7 @@
 			{detail.layerName}
 		</h1>
 		{#if explain.long}
-			<p
-				data-testid="layer-detail-lead"
-				lang={contentLang}
-				class="font-serif text-lg leading-relaxed text-ink-muted"
-			>
+			<p data-testid="layer-detail-lead" class="font-serif text-lg leading-relaxed text-ink-muted">
 				{explain.long}
 			</p>
 		{/if}
@@ -143,7 +152,7 @@
 	{/if}
 
 	{#if detail.editorial}
-		<section data-testid="layer-detail-editorial" lang={contentLang}>
+		<section data-testid="layer-detail-editorial">
 			{#each detail.editorial.disclaimerVariants as variant (variant)}
 				<EditorialDisclaimer {variant} sourceUrl={detail.editorial.primarySourceUrl} />
 			{/each}
@@ -205,7 +214,7 @@
 				{/if}
 				{#if explain.valueScaleExplain}
 					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_scale_label()}</dt>
-					<dd lang={contentLang} class="text-ink">
+					<dd class="text-ink">
 						{explain.valueScaleExplain}
 					</dd>
 				{/if}

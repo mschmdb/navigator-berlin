@@ -79,6 +79,19 @@ describe('buildLayerDetail', () => {
 		expect(d?.layerName).not.toMatch(/Lärm/);
 	});
 
+	// Review-Fund (i18n Block C1): `explain` folgt jetzt ebenfalls `lang`
+	// (vorher DE-only ueber `getLayerExplainEntry(slug)` ohne opts).
+	it('liefert englischen explain-Text für lang "en", deutschen für lang "de"', () => {
+		const de = buildLayerDetail('laerm-2023', 'de', sampleManifest);
+		expect(de?.explain.long).toMatch(/Kategorisierte Lärm-Gesamtbelastung/);
+		expect(de?.explain.valueScaleExplain).toMatch(/niedrig \(gut\) bis sehr hoch/);
+
+		const en = buildLayerDetail('laerm-2023', 'en', sampleManifest);
+		expect(en?.explain.long).toMatch(/Categorised overall noise pollution/);
+		expect(en?.explain.valueScaleExplain).toMatch(/low \(good\) to very high/);
+		expect(en?.explain.long).not.toMatch(/Kategorisierte Lärm-Gesamtbelastung/);
+	});
+
 	it('methodology ist null wenn Slug keinen LayerMethodology-Eintrag hat', () => {
 		const manifestWithoutMethodology = {
 			...sampleManifest,

@@ -90,16 +90,17 @@ describe('HitzeTrinkbrunnenToggle', () => {
 		await expect.element(page.getByText('Hide drinking fountains')).toBeInTheDocument();
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md: `explain.short` bleibt bis Block C
-	// deutsch (WCAG 3.1.2).
-	it('explain.short bekommt lang="de" bei lang="en"', async () => {
+	// i18n Block C1: `explain.short` ist jetzt selbst locale-fähig (Messages)
+	// -- kein `lang="de"`-Override mehr auf EN.
+	it('explain.short zeigt EN-Text ohne lang-Attribut bei lang="en"', async () => {
 		const { container } = render(HitzeTrinkbrunnenToggle, {
 			isActive: false,
 			onToggleLayer: () => {},
 			lang: 'en'
 		});
 		const explain = container.querySelector('[data-testid="hitze-trinkbrunnen-toggle"] > p');
-		expect(explain?.getAttribute('lang')).toBe('de');
+		expect(explain?.textContent).toMatch(/Public drinking fountain/);
+		expect(explain?.getAttribute('lang')).toBeNull();
 	});
 
 	it('explain.short hat KEIN lang-Attribut auf DE', async () => {

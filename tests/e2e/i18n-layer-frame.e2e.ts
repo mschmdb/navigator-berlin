@@ -2,10 +2,17 @@ import { expect, test } from '@playwright/test';
 
 // i18n Block B4b (spec-i18n-b4b-layer-rahmen.md): Rahmen der Layer-Detailseite
 // auf Englisch. Layer-Explain-Fließtext (`explain.*`) und Methodik-Inhalte
-// (`methodology.*`) bleiben deutsch (Boundary, Block C) -- die Section-Chrome
-// (Überschriften, Labels, Links) ist übersetzt. `/layer` ist NICHT im
-// Übersetzungs-Register (Registrierung erst nach Block C), `/en/layer/…`
-// bleibt deshalb noindex mit Fallback-Disclaimer (siehe `i18n-routing.e2e.ts`).
+// (`methodology.*`) blieben zunächst deutsch (Boundary, Block C) -- die
+// Section-Chrome (Überschriften, Labels, Links) war schon übersetzt.
+//
+// i18n Block C1 (spec-i18n-c1-hinweise-layer-erklaerungen.md): `explain.*`
+// (Lead, Skala) ist jetzt ebenfalls lokalisiert (Messages), kein lang="de"
+// mehr dafür. `methodology.*` (Berechnung, Aggregation, Pflege,
+// Aktualisierung, Coverage-Lücken, Omissions) bleibt weiterhin deutsch mit
+// lang="de" -- out of C1 scope. `/layer` bleibt im TEIL-Übersetzungs-Register
+// (anders als `/explore`, das C1 ins volle Register verschoben hat):
+// `/en/layer/…` zeigt deshalb weiterhin das Teil-Übersetzungs-Banner und
+// bleibt noindex ohne hreflang (siehe `i18n-routing.e2e.ts`).
 
 const LAYER_WITH_METHODOLOGY = 'laerm-2023';
 const LAYER_WITHOUT_METHODOLOGY = 'kultur-museum';
@@ -32,8 +39,11 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		const scale = page.getByTestId('layer-detail-scale');
 		await expect(scale).toContainText('Values');
 		await expect(scale).toContainText('Scale');
-		// Skala-Wert bleibt deutsch (Boundary, Block C), trägt lang="de".
-		await expect(scale.locator('dd[lang="de"]')).toContainText('niedrig (gut) bis sehr hoch');
+		// i18n Block C1: die Skala (`explain.valueScaleExplain`) ist jetzt
+		// selbst lokalisiert (Messages) -- kein lang="de" mehr, echter EN-Text.
+		const scaleDd = scale.locator('dd').last();
+		await expect(scaleDd).not.toHaveAttribute('lang', 'de');
+		await expect(scaleDd).toContainText('low (good) to very high (problematic)');
 
 		const methodology = page.getByTestId('layer-detail-methodology');
 		await expect(methodology).toContainText('Calculation');
@@ -43,9 +53,11 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 			/Modellierte Lärm-Gesamtbelastung/
 		);
 
+		// i18n Block C1: der Lead (`explain.long`) ist jetzt selbst lokalisiert
+		// (Messages) -- kein lang="de" mehr, echter EN-Text.
 		const lead = page.getByTestId('layer-detail-lead');
-		await expect(lead).toHaveAttribute('lang', 'de');
-		await expect(lead).toContainText(/Kategorisierte Lärm-Gesamtbelastung/);
+		await expect(lead).not.toHaveAttribute('lang', 'de');
+		await expect(lead).toContainText(/Categorised overall noise pollution/);
 	});
 
 	// spec-i18n-teiluebersetzung-banner.md: `/en/layer/…` hat einen übersetzten

@@ -37,9 +37,9 @@ describe('kuehle-orte-card.svelte', () => {
 	});
 
 	// i18n Block B3b: Filter-Chips, Status, Distanz, Navi-Links + Legende englisch.
-	// spec-i18n-teiluebersetzung-banner.md: `explainEntry.short`/`.long`
-	// bleiben bis Block C deutsch (WCAG 3.1.2).
-	it('explainEntry.short + .long bekommen lang="de" bei lang="en"', async () => {
+	// i18n Block C1: `explainEntry.short`/`.long` sind jetzt selbst
+	// locale-fähig (Messages) -- kein `lang="de"`-Override mehr auf EN.
+	it('explainEntry.short + .long zeigen EN-Text ohne lang-Attribut bei lang="en"', async () => {
 		const { container } = render(KuehleOrteCard, {
 			layerName: 'Cool places',
 			address: null,
@@ -47,11 +47,13 @@ describe('kuehle-orte-card.svelte', () => {
 			lang: 'en'
 		});
 		const shortP = container.querySelector('[data-testid="kuehle-orte-card"] > p');
-		expect(shortP?.getAttribute('lang')).toBe('de');
+		expect(shortP?.textContent).toMatch(/Places to cool down in the heat/);
+		expect(shortP?.getAttribute('lang')).toBeNull();
 		await page.getByTestId('card-details-toggle').click();
 		const details = (await page.getByTestId('card-details').element()) as HTMLElement;
 		const longP = details.querySelector('p');
-		expect(longP?.getAttribute('lang')).toBe('de');
+		expect(longP?.textContent).toMatch(/Places in Berlin that offer relief from the heat/);
+		expect(longP?.getAttribute('lang')).toBeNull();
 	});
 
 	it('explainEntry.short + .long haben KEIN lang-Attribut auf DE', async () => {

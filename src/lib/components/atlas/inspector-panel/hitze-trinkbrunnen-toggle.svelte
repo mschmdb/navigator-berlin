@@ -25,11 +25,8 @@
 
 	const locale = $derived(lang ?? getLocale());
 	const localeOpts = $derived({ locale });
-	// spec-i18n-teiluebersetzung-banner.md: `explain.short` bleibt bis
-	// Block C deutsch (WCAG 3.1.2).
-	const contentLang = $derived(locale === 'de' ? undefined : 'de');
 
-	const explain = getLayerExplainEntry(SLUG);
+	const explain = $derived(getLayerExplainEntry(SLUG, localeOpts));
 
 	const nearest = $derived(address && index ? findNearestTrinkbrunnen(address, index) : null);
 
@@ -54,7 +51,7 @@
 		<Droplet size={15} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
 		{m.inspector_trinkbrunnen_heading(undefined, localeOpts)}
 	</h4>
-	<p lang={contentLang} class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
+	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
 		{explain.short}
 	</p>
 

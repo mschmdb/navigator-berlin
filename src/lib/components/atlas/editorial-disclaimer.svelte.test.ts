@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import EditorialDisclaimer from './editorial-disclaimer.svelte';
+import EditorialDisclaimer, { DISCLAIMER_TEXTS_DE } from './editorial-disclaimer.svelte';
+import type { DisclaimerVariant } from './internal/editorial-types.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');
@@ -171,7 +172,7 @@ describe('editorial-disclaimer.svelte', () => {
 	// hierher hart ueber `DISCLAIMER_TEXTS_DE`, jetzt ueber eine eigene
 	// Message (`disclaimer_wahl_stimmenanteile`) -- DE-Wortlaut bleibt Zeichen
 	// fuer Zeichen wie oben (Story 17 / `main` a253e14), EN kommt neu dazu.
-	describe('i18n Teil-Übersetzung: wahl-stimmenanteile + lang="de" an DISCLAIMER_TEXTS_DE-Varianten', () => {
+	describe('i18n Teil-Übersetzung (Block B): wahl-stimmenanteile EN, kein lang-Override', () => {
 		it('wahl-stimmenanteile zeigt auf EN-Locale den englischen Text, gleiche Fakten wie DE', async () => {
 			overwriteGetLocale(() => 'en');
 			render(EditorialDisclaimer, { variant: 'wahl-stimmenanteile' });
@@ -182,89 +183,99 @@ describe('editorial-disclaimer.svelte', () => {
 			expect(el.getAttribute('lang')).toBeNull();
 		});
 
-		it('eine DISCLAIMER_TEXTS_DE-Variante (z. B. legal) bekommt lang="de" auf EN-Locale', async () => {
-			overwriteGetLocale(() => 'en');
-			render(EditorialDisclaimer, { variant: 'legal' });
-			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.getAttribute('lang')).toBe('de');
-		});
-
-		it('dieselbe Variante hat auf DE-Locale KEIN lang-Attribut', async () => {
-			render(EditorialDisclaimer, { variant: 'legal' });
-			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.getAttribute('lang')).toBeNull();
-		});
-
-		it('lokalisierte Varianten (wahl-portal-footnote, wahl-portal-stimmenanteile, wahl-stimmenanteile) bekommen KEIN lang="de" auf EN', async () => {
-			overwriteGetLocale(() => 'en');
-			const footnoteRender = render(EditorialDisclaimer, { variant: 'wahl-portal-footnote' });
-			const footnote = footnoteRender.container.querySelector(
-				'[data-testid="editorial-disclaimer"]'
-			);
-			expect(footnote?.getAttribute('lang')).toBeNull();
-
-			const stimmenanteileRender = render(EditorialDisclaimer, {
-				variant: 'wahl-portal-stimmenanteile'
-			});
-			const stimmenanteile = stimmenanteileRender.container.querySelector(
-				'[data-testid="editorial-disclaimer"]'
-			);
-			expect(stimmenanteile?.getAttribute('lang')).toBeNull();
-
-			const wahlStimmenanteileRender = render(EditorialDisclaimer, {
-				variant: 'wahl-stimmenanteile'
-			});
-			const wahlStimmenanteile = wahlStimmenanteileRender.container.querySelector(
-				'[data-testid="editorial-disclaimer"]'
-			);
-			expect(wahlStimmenanteile?.getAttribute('lang')).toBeNull();
-		});
-
-		// Review-Fund: "Quelle ansehen" ist hartcodiertes Deutsch, unabhaengig
-		// von `variant` -- auf einer lokalisierten Variante (Absatz selbst hat
-		// kein `lang="de"`) braucht das Label ein eigenes `lang="de"`.
-		it('"Quelle ansehen" bekommt lang="de" auf einer lokalisierten Variante unter EN, der Absatz selbst nicht', async () => {
-			overwriteGetLocale(() => 'en');
-			render(EditorialDisclaimer, {
-				variant: 'wahl-portal-footnote',
-				sourceUrl: 'https://example.invalid/quelle'
-			});
-			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.getAttribute('lang')).toBeNull();
-			const label = el.querySelector('[data-testid="disclaimer-source-link"] span');
-			expect(label?.getAttribute('lang')).toBe('de');
-		});
-
-		it('"Quelle ansehen" bekommt lang="de" bei customText unter EN', async () => {
-			overwriteGetLocale(() => 'en');
-			render(EditorialDisclaimer, {
-				variant: 'legal',
-				customText: 'My own note.',
-				sourceUrl: 'https://example.invalid/quelle'
-			});
-			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.getAttribute('lang')).toBeNull();
-			const label = el.querySelector('[data-testid="disclaimer-source-link"] span');
-			expect(label?.getAttribute('lang')).toBe('de');
-		});
-
-		it('"Quelle ansehen" hat KEIN eigenes lang, wenn der Absatz schon lang="de" traegt (DISCLAIMER_TEXTS_DE auf EN)', async () => {
-			overwriteGetLocale(() => 'en');
-			render(EditorialDisclaimer, {
-				variant: 'legal',
-				sourceUrl: 'https://example.invalid/quelle'
-			});
-			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.getAttribute('lang')).toBe('de');
-			const label = el.querySelector('[data-testid="disclaimer-source-link"] span');
-			expect(label?.getAttribute('lang')).toBeNull();
-		});
-
 		it('customText bekommt KEIN lang-Override auf EN-Locale', async () => {
 			overwriteGetLocale(() => 'en');
 			render(EditorialDisclaimer, { variant: 'legal', customText: 'My own note.' });
 			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
 			expect(el.getAttribute('lang')).toBeNull();
+		});
+	});
+
+	// i18n Block C1: die vormals hart deutschen 16 Varianten (vorher
+	// `DISCLAIMER_TEXTS_DE`) laufen jetzt ebenfalls ueber Paraglide-Messages.
+	// Kein `lang="de"`-Override mehr noetig (Boundary Spec i18n C1: "ohne
+	// lang=de" auf `/en/explore`), weil nichts mehr hart deutsch ist.
+	describe('i18n Block C1: vormals DISCLAIMER_TEXTS_DE-Varianten sind jetzt uebersetzt', () => {
+		it('legal zeigt auf EN-Locale den englischen Text ohne lang-Override', async () => {
+			overwriteGetLocale(() => 'en');
+			render(EditorialDisclaimer, { variant: 'legal' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Not legal advice/);
+			expect(el.getAttribute('lang')).toBeNull();
+		});
+
+		it('legal zeigt auf DE-Locale weiterhin den unveraenderten DE-Text ohne lang-Attribut', async () => {
+			render(EditorialDisclaimer, { variant: 'legal' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Ersetzt keine rechtliche Aussage/);
+			expect(el.getAttribute('lang')).toBeNull();
+		});
+
+		it('kuehle-orte zeigt auf EN-Locale den englischen Text', async () => {
+			overwriteGetLocale(() => 'en');
+			render(EditorialDisclaimer, { variant: 'kuehle-orte' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/not a replacement for public authorities/);
+			expect(el.getAttribute('lang')).toBeNull();
+		});
+
+		it('"Quelle ansehen" ist auf EN-Locale "View source", ohne eigenes lang-Attribut', async () => {
+			overwriteGetLocale(() => 'en');
+			render(EditorialDisclaimer, {
+				variant: 'legal',
+				sourceUrl: 'https://example.invalid/quelle'
+			});
+			const label = page.getByTestId('disclaimer-source-link').getByText('View source');
+			await expect.element(label).toBeInTheDocument();
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.getAttribute('lang')).toBeNull();
+		});
+
+		it('"Quelle ansehen" bleibt auf DE-Locale unveraendert', async () => {
+			render(EditorialDisclaimer, {
+				variant: 'legal',
+				sourceUrl: 'https://example.invalid/quelle'
+			});
+			const label = page.getByTestId('disclaimer-source-link').getByText('Quelle ansehen');
+			await expect.element(label).toBeInTheDocument();
+		});
+	});
+
+	// Review-Fund (i18n Block C1): Blanket-Probe ueber ALLE 19 Varianten statt
+	// nur Stichproben -- DE-Text muss exakt `DISCLAIMER_TEXTS_DE[variant]`
+	// entsprechen (Boundary: "DE unveraendert"), EN-Text muss nicht-leer sein
+	// und sich von DE unterscheiden.
+	describe('i18n Block C1 Review-Fund: alle Varianten, DE exakt + EN nicht-leer/unterschiedlich', () => {
+		const ALL_VARIANTS = Object.keys(DISCLAIMER_TEXTS_DE) as DisclaimerVariant[];
+
+		it.each(ALL_VARIANTS)(
+			'%s: DE-Text === DISCLAIMER_TEXTS_DE, EN-Text nicht-leer und != DE',
+			async (variant) => {
+				const deRender = render(EditorialDisclaimer, { variant });
+				const deEl = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+				const deText = deEl.textContent?.trim();
+				expect(deText, `${variant}: DE-Text`).toBe(DISCLAIMER_TEXTS_DE[variant]);
+				deRender.unmount();
+
+				overwriteGetLocale(() => 'en');
+				const enRender = render(EditorialDisclaimer, { variant });
+				const enEl = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+				const enText = enEl.textContent?.trim();
+				expect(enText, `${variant}: EN-Text ist leer`).not.toBe('');
+				expect(enText, `${variant}: EN-Text == DE-Text`).not.toBe(deText);
+				enRender.unmount();
+			}
+		);
+	});
+
+	// Review-Fund (i18n Block C1): unbekannter Variant-Wert (z.B. Laufzeit-Daten
+	// statt des TS-Unions) rendert leeren Text statt zu werfen.
+	describe('i18n Block C1 Review-Fund: unbekannte Variante', () => {
+		it('rendert leeren Text statt zu werfen, wenn DISCLAIMER_MESSAGE[variant] fehlt', async () => {
+			const unknownVariant = 'does-not-exist' as unknown as DisclaimerVariant;
+			expect(() => render(EditorialDisclaimer, { variant: unknownVariant })).not.toThrow();
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent?.trim()).toBe('');
 		});
 	});
 });

@@ -1,6 +1,11 @@
 <script lang="ts" module>
 	import type { DisclaimerVariant } from './internal/editorial-types.js';
 
+	// i18n Block C1: `DISCLAIMER_TEXTS_DE` wird von dieser Komponente selbst
+	// NICHT mehr gerendert (siehe `DISCLAIMER_MESSAGE`-Weiche unten, alle 19
+	// Varianten laufen jetzt ueber Paraglide-Messages). Der Record bleibt als
+	// DE-Referenz-Export fuer `llm-export-builder.ts` (Boundary: "Nicht-UI-
+	// Konsumenten bleiben unveraendert", Ausgabe identisch).
 	export const DISCLAIMER_TEXTS_DE: Record<DisclaimerVariant, string> = {
 		legal: 'Ersetzt keine rechtliche Aussage.',
 		historic: 'Historischer Stand. Geometrie aus OpenStreetMap-Community-Daten.',
@@ -24,10 +29,6 @@
 			'Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten.',
 		'kriminalitaet-aggregat':
 			'Häufigkeitszahl je Bezirksregion, nicht adressgenau. Sie misst erfasste Fälle pro gemeldete Einwohner, kein persönliches Risiko. Touristen- und Pendler-Orte erscheinen überzeichnet, das Dunkelfeld bleibt unerfasst. Kein Sicherheits-Ranking, fließt nicht in den Gesamt-Score.',
-		// Wird nie gerendert (siehe `text`-Ableitung unten, immer über
-		// `m.disclaimer_wahl_stimmenanteile()`, spec-i18n-teiluebersetzung-
-		// banner.md) -- Eintrag existiert nur, damit
-		// `Record<DisclaimerVariant, string>` vollstaendig bleibt.
 		'wahl-stimmenanteile':
 			'Daten beschreiben Stimmenanteile, keine Bewertung. Briefstimmen sind auf allen Ebenen enthalten, im Stimmbezirk über die Briefwahl-Gruppe, im Kiez anteilig nach Wahlberechtigten verteilt (Schätzung, keine amtliche Aufteilung).',
 		'cross-layer-template':
@@ -38,9 +39,6 @@
 			'Auf dieser Ebene zu wenig Daten für eine belastbare Aussage. Wir zeigen lieber keinen Wert als einen irreführenden.',
 		'wahl-portal-footnote':
 			'Karten und Vergleiche auf dieser Seite sind deskriptiv, kein Ranking von Kiezen oder Bezirken. Stimmenanteile sind kein Hinweis auf künftige Wahlen.',
-		// Wird nie gerendert (siehe `text`-Ableitung unten, immer über
-		// `m.wahl_portal_disclaimer_stimmenanteile()`) -- Eintrag existiert nur,
-		// damit `Record<DisclaimerVariant, string>` vollstaendig bleibt.
 		'wahl-portal-stimmenanteile':
 			'Daten beschreiben Stimmenanteile, keine Bewertung. Auf Kiez-Ebene ist die Briefwahl anteilig nach Wahlberechtigten geschätzt, nicht amtlich. Amtliche Werte gibt es auf Stimmbezirks-, Bezirks- und Berlin-Ebene.'
 	};
@@ -49,69 +47,67 @@
 <script lang="ts">
 	import { ExternalLink } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
 	type Props = {
 		variant: DisclaimerVariant;
 		sourceUrl?: string;
 		customText?: string;
 		id?: string;
+		/** Explicit content locale, overrides `getLocale()` (URL locale). Needed
+		 * by callers whose content locale differs from the URL locale -- e.g.
+		 * `cross-layer-story-block.svelte` on an unregistered fallback page. */
+		locale?: Locale;
 	};
 
-	let { variant, sourceUrl, customText, id }: Props = $props();
+	let { variant, sourceUrl, customText, id, locale }: Props = $props();
 
-	// i18n Block B: die Wahlportal-EIGENEN Varianten laufen ueber Paraglide-
-	// Messages (locale-abhaengig, Auswertung beim Aufruf). `wahl-stimmenanteile`
-	// (Kiez-Inspector, Compare-Modus) ist NICHT dasselbe wie
-	// `wahl-portal-stimmenanteile` (Wahl-Detailseite) -- Review-Fund: beide
-	// teilten sich vorher denselben Variant-Key, wodurch der Inspector/Compare-
-	// Disclaimer auf nicht uebersetzten `/en/...`-Seiten faelschlich englisch
-	// wurde. `wahl-stimmenanteile` selbst lief bis
-	// spec-i18n-teiluebersetzung-banner.md ueber `DISCLAIMER_TEXTS_DE` (hart
-	// deutsch) -- jetzt ebenfalls eine eigene Message, DE-Wortlaut unveraendert
-	// (Story 17 / `main` a253e14). Die restlichen 12 Varianten bleiben
-	// unangetastet ueber `DISCLAIMER_TEXTS_DE` (Boundary: "Keine anderen Seiten
-	// übersetzen").
-	const LOCALIZED_VARIANTS = new Set<DisclaimerVariant>([
-		'wahl-portal-footnote',
-		'wahl-portal-stimmenanteile',
-		'wahl-stimmenanteile'
-	]);
+	type MessageFn = (params?: undefined, options?: { locale: Locale }) => string;
 
+	// i18n Block C1: alle 19 Varianten laufen jetzt ueber Paraglide-Messages.
+	// Ohne `locale`-Prop folgt der Text reaktiv der Seiten-Locale
+	// (`getLocale()`, analog zu `m.wahl_portal_disclaimer_*()` seit
+	// spec-i18n-teiluebersetzung-banner.md); mit `locale`-Prop uebersteuert der
+	// Aufrufer das explizit. Damit entfaellt die vorherige
+	// `contentLang`/`LOCALIZED_VARIANTS`-Unterscheidung (B4b) komplett: nichts
+	// in dieser Komponente ist mehr hart deutsch, also braucht auch nichts
+	// mehr ein `lang="de"`-Override (WCAG 3.1.2 -- kein falsches `lang` auf
+	// tatsaechlich uebersetztem Inhalt).
+	const DISCLAIMER_MESSAGE: Partial<Record<DisclaimerVariant, MessageFn>> = {
+		legal: m.disclaimer_legal,
+		historic: m.disclaimer_historic,
+		seasonal: m.disclaimer_seasonal,
+		source: m.disclaimer_source,
+		'kuehle-orte': m.disclaimer_kuehle_orte,
+		'compare-stolperstein': m.disclaimer_compare_stolperstein,
+		'compare-mietspiegel': m.disclaimer_compare_mietspiegel,
+		'compare-bodenrichtwerte': m.disclaimer_compare_bodenrichtwerte,
+		'compare-stigma-footer': m.disclaimer_compare_stigma_footer,
+		'mss-aggregat': m.disclaimer_mss_aggregat,
+		'compare-mss-aggregat': m.disclaimer_compare_mss_aggregat,
+		'kiez-score-explainer': m.disclaimer_kiez_score_explainer,
+		'kriminalitaet-aggregat': m.disclaimer_kriminalitaet_aggregat,
+		'wahl-stimmenanteile': m.disclaimer_wahl_stimmenanteile,
+		'cross-layer-template': m.disclaimer_cross_layer_template,
+		'brw-not-aggregatable': m.disclaimer_brw_not_aggregatable,
+		'level-below-threshold': m.disclaimer_level_below_threshold,
+		'wahl-portal-footnote': m.wahl_portal_disclaimer_footnote,
+		'wahl-portal-stimmenanteile': m.wahl_portal_disclaimer_stimmenanteile
+	};
+
+	// Guard: ein Variant-Wert ausserhalb der bekannten 19 (z.B. via Laufzeit-
+	// Daten statt des TS-Unions) rendert leeren Text statt zu werfen.
 	const text = $derived(
 		customText ??
-			(variant === 'wahl-portal-footnote'
-				? m.wahl_portal_disclaimer_footnote()
-				: variant === 'wahl-portal-stimmenanteile'
-					? m.wahl_portal_disclaimer_stimmenanteile()
-					: variant === 'wahl-stimmenanteile'
-						? m.disclaimer_wahl_stimmenanteile()
-						: DISCLAIMER_TEXTS_DE[variant])
+			DISCLAIMER_MESSAGE[variant]?.(undefined, { locale: locale ?? getLocale() }) ??
+			''
 	);
-
-	// spec-i18n-teiluebersetzung-banner.md: Varianten, die weiterhin aus
-	// `DISCLAIMER_TEXTS_DE` kommen (hart deutscher Text, kein `customText`),
-	// bekommen `lang="de"` auf jeder Nicht-DE-Seite (WCAG 3.1.2) -- das gilt
-	// auch fuer den "Quelle ansehen"-Link, weil er Teil desselben Absatzes
-	// ist. Lokalisierte Varianten (Set oben) und `customText` sind schon
-	// selbst locale-korrekt und bleiben deshalb ohne `lang`-Override.
-	const contentLang = $derived(
-		!customText && !LOCALIZED_VARIANTS.has(variant) && getLocale() !== 'de' ? 'de' : undefined
-	);
-
-	// Review-Fund: "Quelle ansehen" ist hartcodiertes Deutsch, unabhaengig von
-	// `variant` -- wenn der umschliessende Absatz KEIN `lang="de"` traegt
-	// (lokalisierte Variante oder `customText` auf Nicht-DE), braucht das
-	// Label selbst ein `lang="de"` (WCAG 3.1.2). Traegt der Absatz schon
-	// `contentLang="de"`, ist das Label bereits mit erfasst.
-	const sourceLinkLang = $derived(!contentLang && getLocale() !== 'de' ? 'de' : undefined);
 </script>
 
 <p
 	{id}
 	data-testid="editorial-disclaimer"
 	data-variant={variant}
-	lang={contentLang}
 	class="font-serif text-sm leading-snug text-ink-muted italic"
 >
 	<span>{text}</span>
@@ -124,7 +120,7 @@
 			class="hover:text-accent-strong inline-flex items-center gap-1 text-accent not-italic underline underline-offset-2"
 		>
 			<ExternalLink size={12} aria-hidden="true" />
-			<span lang={sourceLinkLang}>Quelle ansehen</span>
+			<span>{m.disclaimer_quelle_ansehen(undefined, { locale: locale ?? getLocale() })}</span>
 		</a>
 	{/if}
 </p>

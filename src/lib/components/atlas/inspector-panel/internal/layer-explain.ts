@@ -1,4 +1,11 @@
-// TODO Story 3.1: i18n-Migration → Paraglide-Messages `layer.{slug}.short` / `layer.{slug}.long`.
+// i18n Block C1: Layer-Erklärungen laufen ueber Paraglide-Messages
+// (`layer_explain_{slug}_{short|long|scale|unit}`), Slug-Mapping analog zu
+// `LAYER_NAME_MESSAGE` in `internal/layer-palette-filter.ts`. `LAYER_EXPLAIN_DE`
+// bleibt als DE-Referenz-Export für Tests und DE-only-Direktimporter erhalten
+// (Boundary: "Nicht-UI-Konsumenten bleiben unveraendert").
+import { m } from '$lib/paraglide/messages.js';
+import type { Locale } from '$lib/paraglide/runtime';
+import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 
 export interface LayerExplain {
 	readonly short: string;
@@ -10,6 +17,15 @@ export interface LayerExplain {
 export type LayerExplainKind = 'short' | 'long';
 
 const EMPTY_EXPLAIN: LayerExplain = { short: '', long: '' };
+
+type MessageFn = (params?: undefined, options?: { locale: Locale }) => string;
+
+interface LayerExplainMessages {
+	readonly short: MessageFn;
+	readonly long: MessageFn;
+	readonly scale?: MessageFn;
+	readonly unit?: MessageFn;
+}
 
 export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	// A: Boundaries
@@ -374,18 +390,358 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	}
 };
 
-export function getLayerExplain(slug: string, kind: LayerExplainKind): string {
-	const entry = LAYER_EXPLAIN_DE[slug];
-	if (!entry) return '';
-	return entry[kind];
+// Exportiert (statt modul-privat) fuer den Struktur-Paritaets-Test
+// (`layer-explain.test.ts`): eine fehlende Zuordnung soll den Test hart
+// fehlschlagen lassen, nicht still auf `LAYER_EXPLAIN_DE`-Fallback-Verhalten
+// vertrauen (Review-Fund i18n Block C1).
+export const LAYER_EXPLAIN_MESSAGE: Partial<Record<string, LayerExplainMessages>> = {
+	bezirke: { short: m.layer_explain_bezirke_short, long: m.layer_explain_bezirke_long },
+	ortsteile: { short: m.layer_explain_ortsteile_short, long: m.layer_explain_ortsteile_long },
+	plz: { short: m.layer_explain_plz_short, long: m.layer_explain_plz_long },
+	bodenrichtwerte: {
+		short: m.layer_explain_bodenrichtwerte_short,
+		long: m.layer_explain_bodenrichtwerte_long,
+		scale: m.layer_explain_bodenrichtwerte_scale,
+		unit: m.layer_explain_bodenrichtwerte_unit
+	},
+	'wohnlagen-2024': {
+		short: m.layer_explain_wohnlagen_2024_short,
+		long: m.layer_explain_wohnlagen_2024_long,
+		scale: m.layer_explain_wohnlagen_2024_scale
+	},
+	'milieuschutz-erhaltungsmiete': {
+		short: m.layer_explain_milieuschutz_erhaltungsmiete_short,
+		long: m.layer_explain_milieuschutz_erhaltungsmiete_long
+	},
+	'milieuschutz-staedtebau': {
+		short: m.layer_explain_milieuschutz_staedtebau_short,
+		long: m.layer_explain_milieuschutz_staedtebau_long
+	},
+	'mss-gesamtindex-2025': {
+		short: m.layer_explain_mss_gesamtindex_2025_short,
+		long: m.layer_explain_mss_gesamtindex_2025_long,
+		scale: m.layer_explain_mss_gesamtindex_2025_scale
+	},
+	'laerm-2023': {
+		short: m.layer_explain_laerm_2023_short,
+		long: m.layer_explain_laerm_2023_long,
+		scale: m.layer_explain_laerm_2023_scale
+	},
+	'luft-2023': {
+		short: m.layer_explain_luft_2023_short,
+		long: m.layer_explain_luft_2023_long,
+		scale: m.layer_explain_luft_2023_scale
+	},
+	'gruenversorgung-2023': {
+		short: m.layer_explain_gruenversorgung_2023_short,
+		long: m.layer_explain_gruenversorgung_2023_long,
+		scale: m.layer_explain_gruenversorgung_2023_scale
+	},
+	'bioklima-2023': {
+		short: m.layer_explain_bioklima_2023_short,
+		long: m.layer_explain_bioklima_2023_long,
+		scale: m.layer_explain_bioklima_2023_scale
+	},
+	'umweltgerechtigkeit-2023': {
+		short: m.layer_explain_umweltgerechtigkeit_2023_short,
+		long: m.layer_explain_umweltgerechtigkeit_2023_long,
+		scale: m.layer_explain_umweltgerechtigkeit_2023_scale
+	},
+	'klima-pet-2022': {
+		short: m.layer_explain_klima_pet_2022_short,
+		long: m.layer_explain_klima_pet_2022_long,
+		scale: m.layer_explain_klima_pet_2022_scale,
+		unit: m.layer_explain_klima_pet_2022_unit
+	},
+	'klima-kaltlufteinwirkbereich-2022': {
+		short: m.layer_explain_klima_kaltlufteinwirkbereich_2022_short,
+		long: m.layer_explain_klima_kaltlufteinwirkbereich_2022_long
+	},
+	'klima-leitbahnkorridor-2022': {
+		short: m.layer_explain_klima_leitbahnkorridor_2022_short,
+		long: m.layer_explain_klima_leitbahnkorridor_2022_long
+	},
+	stolpersteine: {
+		short: m.layer_explain_stolpersteine_short,
+		long: m.layer_explain_stolpersteine_long
+	},
+	'denkmal-2024': {
+		short: m.layer_explain_denkmal_2024_short,
+		long: m.layer_explain_denkmal_2024_long
+	},
+	trinkbrunnen: {
+		short: m.layer_explain_trinkbrunnen_short,
+		long: m.layer_explain_trinkbrunnen_long
+	},
+	'kuehle-orte': {
+		short: m.layer_explain_kuehle_orte_short,
+		long: m.layer_explain_kuehle_orte_long
+	},
+	'kitas-2024': { short: m.layer_explain_kitas_2024_short, long: m.layer_explain_kitas_2024_long },
+	'schulen-2024': {
+		short: m.layer_explain_schulen_2024_short,
+		long: m.layer_explain_schulen_2024_long
+	},
+	'einschulbereiche-2024': {
+		short: m.layer_explain_einschulbereiche_2024_short,
+		long: m.layer_explain_einschulbereiche_2024_long
+	},
+	'krankenhaeuser-plan': {
+		short: m.layer_explain_krankenhaeuser_plan_short,
+		long: m.layer_explain_krankenhaeuser_plan_long
+	},
+	'krankenhaeuser-weitere': {
+		short: m.layer_explain_krankenhaeuser_weitere_short,
+		long: m.layer_explain_krankenhaeuser_weitere_long
+	},
+	'sportanlagen-2024': {
+		short: m.layer_explain_sportanlagen_2024_short,
+		long: m.layer_explain_sportanlagen_2024_long
+	},
+	gruenanlagen: {
+		short: m.layer_explain_gruenanlagen_short,
+		long: m.layer_explain_gruenanlagen_long
+	},
+	spielplaetze: {
+		short: m.layer_explain_spielplaetze_short,
+		long: m.layer_explain_spielplaetze_long
+	},
+	'nahversorgung-lebensmittel': {
+		short: m.layer_explain_nahversorgung_lebensmittel_short,
+		long: m.layer_explain_nahversorgung_lebensmittel_long
+	},
+	'nahversorgung-apotheke': {
+		short: m.layer_explain_nahversorgung_apotheke_short,
+		long: m.layer_explain_nahversorgung_apotheke_long
+	},
+	'nahversorgung-post': {
+		short: m.layer_explain_nahversorgung_post_short,
+		long: m.layer_explain_nahversorgung_post_long
+	},
+	schwimmbaeder: {
+		short: m.layer_explain_schwimmbaeder_short,
+		long: m.layer_explain_schwimmbaeder_long
+	},
+	'kultur-museum': {
+		short: m.layer_explain_kultur_museum_short,
+		long: m.layer_explain_kultur_museum_long
+	},
+	'kultur-galerie': {
+		short: m.layer_explain_kultur_galerie_short,
+		long: m.layer_explain_kultur_galerie_long
+	},
+	'kultur-kunst-im-raum': {
+		short: m.layer_explain_kultur_kunst_im_raum_short,
+		long: m.layer_explain_kultur_kunst_im_raum_long
+	},
+	'kultur-theater': {
+		short: m.layer_explain_kultur_theater_short,
+		long: m.layer_explain_kultur_theater_long
+	},
+	'kultur-bibliothek': {
+		short: m.layer_explain_kultur_bibliothek_short,
+		long: m.layer_explain_kultur_bibliothek_long
+	},
+	'kultur-kino': {
+		short: m.layer_explain_kultur_kino_short,
+		long: m.layer_explain_kultur_kino_long
+	},
+	'kultur-soziokultur': {
+		short: m.layer_explain_kultur_soziokultur_short,
+		long: m.layer_explain_kultur_soziokultur_long
+	},
+	'kultur-club': {
+		short: m.layer_explain_kultur_club_short,
+		long: m.layer_explain_kultur_club_long
+	},
+	'radverkehrsnetz-2025': {
+		short: m.layer_explain_radverkehrsnetz_2025_short,
+		long: m.layer_explain_radverkehrsnetz_2025_long
+	},
+	'fahrradstrassen-2024': {
+		short: m.layer_explain_fahrradstrassen_2024_short,
+		long: m.layer_explain_fahrradstrassen_2024_long
+	},
+	'ubahn-stationen': {
+		short: m.layer_explain_ubahn_stationen_short,
+		long: m.layer_explain_ubahn_stationen_long
+	},
+	'sbahn-stationen': {
+		short: m.layer_explain_sbahn_stationen_short,
+		long: m.layer_explain_sbahn_stationen_long
+	},
+	'tram-haltestellen': {
+		short: m.layer_explain_tram_haltestellen_short,
+		long: m.layer_explain_tram_haltestellen_long
+	},
+	'bus-haltestellen': {
+		short: m.layer_explain_bus_haltestellen_short,
+		long: m.layer_explain_bus_haltestellen_long
+	},
+	'ubahn-netz': { short: m.layer_explain_ubahn_netz_short, long: m.layer_explain_ubahn_netz_long },
+	'tram-netz': { short: m.layer_explain_tram_netz_short, long: m.layer_explain_tram_netz_long },
+	'sbahn-netz': { short: m.layer_explain_sbahn_netz_short, long: m.layer_explain_sbahn_netz_long },
+	'kiez-score-gesamt': {
+		short: m.layer_explain_kiez_score_gesamt_short,
+		long: m.layer_explain_kiez_score_gesamt_long,
+		scale: m.layer_explain_kiez_score_gesamt_scale
+	},
+	'kiez-score-ruhe-luft': {
+		short: m.layer_explain_kiez_score_ruhe_luft_short,
+		long: m.layer_explain_kiez_score_ruhe_luft_long,
+		scale: m.layer_explain_kiez_score_ruhe_luft_scale
+	},
+	'kiez-score-gruen-hitze': {
+		short: m.layer_explain_kiez_score_gruen_hitze_short,
+		long: m.layer_explain_kiez_score_gruen_hitze_long,
+		scale: m.layer_explain_kiez_score_gruen_hitze_scale
+	},
+	'kiez-score-mobilitaet': {
+		short: m.layer_explain_kiez_score_mobilitaet_short,
+		long: m.layer_explain_kiez_score_mobilitaet_long,
+		scale: m.layer_explain_kiez_score_mobilitaet_scale
+	},
+	'kiez-score-versorgung': {
+		short: m.layer_explain_kiez_score_versorgung_short,
+		long: m.layer_explain_kiez_score_versorgung_long,
+		scale: m.layer_explain_kiez_score_versorgung_scale
+	},
+	'kiez-score-wohnschutz': {
+		short: m.layer_explain_kiez_score_wohnschutz_short,
+		long: m.layer_explain_kiez_score_wohnschutz_long,
+		scale: m.layer_explain_kiez_score_wohnschutz_scale
+	},
+	'kiez-score-kultur': {
+		short: m.layer_explain_kiez_score_kultur_short,
+		long: m.layer_explain_kiez_score_kultur_long,
+		scale: m.layer_explain_kiez_score_kultur_scale
+	},
+	'kiez-score-kriminalitaet': {
+		short: m.layer_explain_kiez_score_kriminalitaet_short,
+		long: m.layer_explain_kiez_score_kriminalitaet_long,
+		scale: m.layer_explain_kiez_score_kriminalitaet_scale
+	},
+	'einwohner-dichte-2024': {
+		short: m.layer_explain_einwohner_dichte_2024_short,
+		long: m.layer_explain_einwohner_dichte_2024_long,
+		scale: m.layer_explain_einwohner_dichte_2024_scale,
+		unit: m.layer_explain_einwohner_dichte_2024_unit
+	},
+	'mietspiegel-wohnlage': {
+		short: m.layer_explain_mietspiegel_wohnlage_short,
+		long: m.layer_explain_mietspiegel_wohnlage_long
+	},
+	'lor-prognoseraum': {
+		short: m.layer_explain_lor_prognoseraum_short,
+		long: m.layer_explain_lor_prognoseraum_long
+	},
+	'lor-bezirksregion': {
+		short: m.layer_explain_lor_bezirksregion_short,
+		long: m.layer_explain_lor_bezirksregion_long
+	},
+	'lor-planungsraum': {
+		short: m.layer_explain_lor_planungsraum_short,
+		long: m.layer_explain_lor_planungsraum_long
+	},
+	'laerm-den': {
+		short: m.layer_explain_laerm_den_short,
+		long: m.layer_explain_laerm_den_long,
+		unit: m.layer_explain_laerm_den_unit
+	},
+	'laerm-night': {
+		short: m.layer_explain_laerm_night_short,
+		long: m.layer_explain_laerm_night_long,
+		unit: m.layer_explain_laerm_night_unit
+	},
+	solarpotenzial: {
+		short: m.layer_explain_solarpotenzial_short,
+		long: m.layer_explain_solarpotenzial_long,
+		unit: m.layer_explain_solarpotenzial_unit
+	},
+	klimaanalyse: {
+		short: m.layer_explain_klimaanalyse_short,
+		long: m.layer_explain_klimaanalyse_long
+	},
+	gebaeudealter: {
+		short: m.layer_explain_gebaeudealter_short,
+		long: m.layer_explain_gebaeudealter_long
+	},
+	'wahlbezirke-btw17': {
+		short: m.layer_explain_wahlbezirke_btw17_short,
+		long: m.layer_explain_wahlbezirke_btw17_long
+	},
+	'wahlbezirke-ah16': {
+		short: m.layer_explain_wahlbezirke_ah16_short,
+		long: m.layer_explain_wahlbezirke_ah16_long
+	},
+	'wahlbezirke-ah21': {
+		short: m.layer_explain_wahlbezirke_ah21_short,
+		long: m.layer_explain_wahlbezirke_ah21_long
+	},
+	'wahlbezirke-ah23': {
+		short: m.layer_explain_wahlbezirke_ah23_short,
+		long: m.layer_explain_wahlbezirke_ah23_long
+	},
+	'wahlbezirke-bt25': {
+		short: m.layer_explain_wahlbezirke_bt25_short,
+		long: m.layer_explain_wahlbezirke_bt25_long
+	},
+	'wahlbezirke-ah26': {
+		short: m.layer_explain_wahlbezirke_ah26_short,
+		long: m.layer_explain_wahlbezirke_ah26_long
+	},
+	'wahlgruppen-btw17': {
+		short: m.layer_explain_wahlgruppen_btw17_short,
+		long: m.layer_explain_wahlgruppen_btw17_long
+	},
+	'wahlgruppen-ah16': {
+		short: m.layer_explain_wahlgruppen_ah16_short,
+		long: m.layer_explain_wahlgruppen_ah16_long
+	},
+	'wahlgruppen-ah21': {
+		short: m.layer_explain_wahlgruppen_ah21_short,
+		long: m.layer_explain_wahlgruppen_ah21_long
+	},
+	'wahlgruppen-bt25': {
+		short: m.layer_explain_wahlgruppen_bt25_short,
+		long: m.layer_explain_wahlgruppen_bt25_long
+	},
+	'wahlgruppen-ah26': {
+		short: m.layer_explain_wahlgruppen_ah26_short,
+		long: m.layer_explain_wahlgruppen_ah26_long
+	}
+};
+
+/**
+ * Locale-fähiger Layer-Explain-Resolver. Ohne `opts.locale`: DE (Boundary
+ * Spec i18n C1). Fehlt ein Slug im Message-Mapping (z.B. neu angelegter Layer
+ * vor dem nächsten i18n-Pass), fällt der Resolver auf `LAYER_EXPLAIN_DE`
+ * zurück -- liefert dann fuer JEDE Locale den DE-Text (besser als leer).
+ */
+export function getLayerExplain(
+	slug: string,
+	kind: LayerExplainKind,
+	opts?: LocaleOptions
+): string {
+	const msg = LAYER_EXPLAIN_MESSAGE[slug];
+	if (!msg) return LAYER_EXPLAIN_DE[slug]?.[kind] ?? '';
+	return msg[kind](undefined, toAtlasMessageOptions(opts));
 }
 
-export function getLayerExplainEntry(slug: string): LayerExplain {
-	return LAYER_EXPLAIN_DE[slug] ?? EMPTY_EXPLAIN;
+export function getLayerExplainEntry(slug: string, opts?: LocaleOptions): LayerExplain {
+	const msg = LAYER_EXPLAIN_MESSAGE[slug];
+	if (!msg) return LAYER_EXPLAIN_DE[slug] ?? EMPTY_EXPLAIN;
+	const options = toAtlasMessageOptions(opts);
+	return {
+		short: msg.short(undefined, options),
+		long: msg.long(undefined, options),
+		unit: msg.unit ? msg.unit(undefined, options) : undefined,
+		valueScaleExplain: msg.scale ? msg.scale(undefined, options) : undefined
+	};
 }
 
-export function explainLayer(slug: string): string {
-	return getLayerExplain(slug, 'short');
+export function explainLayer(slug: string, opts?: LocaleOptions): string {
+	return getLayerExplain(slug, 'short', opts);
 }
 
 export interface LayerExternalLink {
@@ -393,13 +749,15 @@ export interface LayerExternalLink {
 	readonly label: string;
 }
 
-const LAYER_EXTERNAL_LINK: Record<string, LayerExternalLink> = {
+const LAYER_EXTERNAL_LINK: Partial<Record<string, { href: string; label: MessageFn }>> = {
 	'wohnlagen-2024': {
 		href: 'https://mietspiegel.berlin.de/',
-		label: 'Mietpreise im Berliner Mietspiegel-Rechner nachschlagen'
+		label: m.layer_explain_wohnlagen_2024_external_link_label
 	}
 };
 
-export function getLayerExternalLink(slug: string): LayerExternalLink | null {
-	return LAYER_EXTERNAL_LINK[slug] ?? null;
+export function getLayerExternalLink(slug: string, opts?: LocaleOptions): LayerExternalLink | null {
+	const entry = LAYER_EXTERNAL_LINK[slug];
+	if (!entry) return null;
+	return { href: entry.href, label: entry.label(undefined, toAtlasMessageOptions(opts)) };
 }

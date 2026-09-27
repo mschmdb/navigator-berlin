@@ -148,10 +148,9 @@ describe('map-legend.svelte', () => {
 			expect(scale.textContent).toMatch(/32 °C|extrem heiß/);
 		});
 
-		// spec-i18n-teiluebersetzung-banner.md: `explain.long`/`valueScaleExplain`
-		// bleiben bis Block C deutsch -- auf `lang="en"` bekommen sie ein
-		// `lang="de"` (WCAG 3.1.2), auf DE keins.
-		it('explain.long + valueScaleExplain bekommen lang="de" wenn lang="en"', async () => {
+		// i18n Block C1: `explain.long`/`valueScaleExplain` sind jetzt selbst
+		// locale-fähig (Messages) -- kein `lang="de"`-Override mehr auf EN.
+		it('explain.long + valueScaleExplain zeigen EN-Text ohne lang-Attribut wenn lang="en"', async () => {
 			const m = [meta('klima-pet-2022')];
 			render(MapLegend, { activeLayerSlugs: ['klima-pet-2022'], manifestLayers: m, lang: 'en' });
 			await page.getByTestId('legend-summary-klima-pet-2022').click();
@@ -159,11 +158,13 @@ describe('map-legend.svelte', () => {
 				.getByTestId('legend-expand-klima-pet-2022')
 				.element()) as HTMLElement;
 			const long = expand.querySelector('p:not([data-testid])');
-			expect(long?.getAttribute('lang')).toBe('de');
+			expect(long?.textContent).toMatch(/Physiological Equivalent Temperature/);
+			expect(long?.getAttribute('lang')).toBeNull();
 			const scale = (await page
 				.getByTestId('legend-scale-klima-pet-2022')
 				.element()) as HTMLElement;
-			expect(scale.getAttribute('lang')).toBe('de');
+			expect(scale.textContent).toMatch(/extremely hot/);
+			expect(scale.getAttribute('lang')).toBeNull();
 		});
 
 		it('explain.long + valueScaleExplain haben KEIN lang-Attribut wenn lang="de"', async () => {
