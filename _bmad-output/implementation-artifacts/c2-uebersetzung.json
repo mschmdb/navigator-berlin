@@ -1,0 +1,898 @@
+{
+	"methodology": {
+		"bezirke": {
+			"calculation": {
+				"de": "Polygone der 12 Berliner Verwaltungsbezirke aus dem Berliner Geoportal, vereinfacht via mapshaper visvalingam mit keep-shapes.",
+				"en": "Polygons of Berlin’s 12 administrative Bezirke from the Berlin geoportal, simplified via mapshaper visvalingam with keep-shapes."
+			},
+			"updateFrequency": {
+				"de": "sehr selten (administrative Änderungen)",
+				"en": "very rarely (administrative changes)"
+			}
+		},
+		"ortsteile": {
+			"calculation": {
+				"de": "Polygone der 96 statistischen Ortsteile, historisch oft eigene Gemeinden vor der Eingemeindung 1920. Quelle ODIS Berlin.",
+				"en": "Polygons of the 96 statistical localities (Ortsteile), historically often independent municipalities before their incorporation in 1920. Source: ODIS Berlin."
+			},
+			"updateFrequency": {
+				"de": "sehr selten",
+				"en": "very rarely"
+			}
+		},
+		"plz": {
+			"calculation": {
+				"de": "Postleitzahlen-Gebiete für Berlin. Eine PLZ kann mehrere Ortsteile schneiden, deckt sich also nicht mit politischen Grenzen.",
+				"en": "Postcode areas for Berlin. One postcode can intersect several localities, so it does not match political boundaries."
+			},
+			"updateFrequency": {
+				"de": "selten (Anpassung durch Deutsche Post)",
+				"en": "rarely (adjusted by Deutsche Post)"
+			}
+		},
+		"bodenrichtwerte": {
+			"calculation": {
+				"de": "Vom Berliner Gutachterausschuss jährlich festgestellte Lagewerte für unbebauten Boden, blockweise aggregiert. Wert pro Quadratmeter, differenziert nach Nutzungsart.",
+				"en": "Location values for undeveloped land, set annually by the Berlin Committee of Valuation Experts (Gutachterausschuss) and aggregated by block. Value per square metre, differentiated by type of use."
+			},
+			"updateFrequency": {
+				"de": "jährlich",
+				"en": "annually"
+			},
+			"coverageGaps": [
+				{
+					"de": "Nur unbebaute Vergleichsbasis. Bebaute Grundstücke werden indirekt abgeleitet.",
+					"en": "Undeveloped land is the only basis of comparison. Values for developed plots are derived indirectly."
+				},
+				{
+					"de": "Sonderlagen (Bahnflächen, Friedhöfe, Wasser) erscheinen ohne Wert.",
+					"en": "Special locations (railway land, cemeteries, water) appear without a value."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Kein Mietpreis und kein Verkaufspreis. Mietspiegel-Werte gehören zu wohnlagen-2024.",
+					"en": "No rent and no sale price. Rent index values belong to wohnlagen-2024."
+				},
+				{
+					"de": "Keine Spekulations- oder Marktpreis-Indikation.",
+					"en": "No indication of speculation or market prices."
+				}
+			]
+		},
+		"wohnlagen-2024": {
+			"calculation": {
+				"de": "Wohnlagen-Aggregat aus dem Berliner Mietspiegel 2024 pro LOR-Planungsraum, vom IBB Wohnungsmarktbericht abgeleitet. Ordinalskala einfach bis bestlage.",
+				"en": "Aggregated residential area classification from the Berlin rent index (Mietspiegel) 2024 per LOR planning area, derived from the IBB housing market report. Ordinal scale from simple to prime location."
+			},
+			"updateFrequency": {
+				"de": "alle zwei Jahre (Mietspiegel-Zyklus)",
+				"en": "every two years (rent index cycle)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Pro Planungsraum nur ein Wert. Block-Mikrolagen verschwinden.",
+					"en": "Only one value per planning area. Block-level micro-locations disappear."
+				},
+				{
+					"de": "Gewerbe- und Mischgebiete erscheinen ggf. ohne Wohnlagen-Eintrag.",
+					"en": "Commercial and mixed-use areas may appear without a residential area entry."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Konkrete €/m² liefert nur der offizielle Mietspiegel-Rechner unter mietspiegel.berlin.de.",
+					"en": "Only the official rent index calculator (Mietspiegel-Rechner) at mietspiegel.berlin.de gives concrete €/m²."
+				},
+				{
+					"de": "Keine Aussage zu Wohnqualität im Sinne von „besser oder schlechter wohnen\".",
+					"en": "No statement on housing quality in the sense of “living better or worse”."
+				}
+			]
+		},
+		"milieuschutz-erhaltungsmiete": {
+			"calculation": {
+				"de": "Polygone der sozialen Erhaltungsverordnungen nach §172 BauGB. Schutz vor Verdrängung durch Modernisierung und Umwandlung.",
+				"en": "Polygons of the social preservation orders under §172 BauGB. Protection against displacement through modernisation and conversion."
+			},
+			"updateFrequency": {
+				"de": "unregelmäßig (Bezirksbeschlüsse)",
+				"en": "irregularly (Bezirk resolutions)"
+			},
+			"omissions": [
+				{
+					"de": "Schutz vor Mieterhöhung kann Umzugschancen mindern. Layer wertet das nicht.",
+					"en": "Protection against rent increases can reduce the chances of moving. The layer does not assess this."
+				}
+			]
+		},
+		"milieuschutz-staedtebau": {
+			"calculation": {
+				"de": "Polygone der städtebaulichen Erhaltungsverordnungen nach §172 BauGB zum Schutz des Stadtbildes (häufig Altbau- oder Gründerzeit-Quartiere).",
+				"en": "Polygons of the urban preservation orders under §172 BauGB protecting the townscape (often old-building or Gründerzeit neighbourhoods)."
+			},
+			"updateFrequency": {
+				"de": "unregelmäßig",
+				"en": "irregularly"
+			}
+		},
+		"mss-gesamtindex-2025": {
+			"calculation": {
+				"de": "Monitoring Soziale Stadtentwicklung 2025: Gesamtindex aus zwei Achsen pro LOR-Planungsraum. Status-Index (sehr niedrig bis hoch) gewichtet Einkommen, Beschäftigung und Bildung. Dynamik-Index (negativ, stabil, positiv) zeigt die Veränderung gegenüber dem vorhergehenden MSS-Zyklus. Berechnung durch die Senatsverwaltung für Stadtentwicklung Berlin.",
+				"en": "Monitoring Social Urban Development 2025: overall index from two axes per LOR planning area. The status index (very low to high) weights income, employment and education. The dynamics index (negative, stable, positive) shows the change compared with the previous MSS cycle. Calculated by the Senate Department for Urban Development Berlin."
+			},
+			"updateFrequency": {
+				"de": "rund alle zwei Jahre (MSS-Zyklus)",
+				"en": "roughly every two years (MSS cycle)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Planungsräume mit unter 300 Einwohner:innen oder Ausreißer-Profil bleiben ohne Zuordnung.",
+					"en": "Planning areas with fewer than 300 residents or an outlier profile remain unclassified."
+				},
+				{
+					"de": "Aggregat-Daten je rund 7.500 Einwohner:innen. Mikro-Lagen verschwinden im Mittel.",
+					"en": "Aggregate data for around 7,500 residents each. Micro-locations disappear in the average."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Einzel-Indikatoren wie Arbeitslosenquote oder Transferbezug-Quote werden bewusst nicht in der Adress-Anzeige ausgespielt. Sie wären auf Adress-Ebene schärfer und stigmatisierender als das Aggregat.",
+					"en": "Individual indicators such as the unemployment rate or the rate of welfare receipt are deliberately not shown in the address view. At address level they would be sharper and more stigmatising than the aggregate."
+				},
+				{
+					"de": "Keine Bewertung als „guter\" oder „schlechter\" Kiez. Niedriger Status spiegelt strukturelle Unterschiede in Einkommen, Beschäftigung und Bildung, keine Wohnqualität.",
+					"en": "No rating as a “good” or “bad” Kiez. Low status reflects structural differences in income, employment and education, not housing quality."
+				}
+			]
+		},
+		"laerm-2023": {
+			"calculation": {
+				"de": "Modellierte Lärm-Gesamtbelastung pro LOR-Planungsraum aus dem Berliner Umweltatlas 2023. Aggregation in Kategorien gering bis sehr hoch.",
+				"en": "Modelled overall noise pollution per LOR planning area from the Berlin Environmental Atlas (Umweltatlas) 2023. Aggregated into categories from low to very high."
+			},
+			"updateFrequency": {
+				"de": "alle 5 Jahre (EU-Umgebungslärm-Richtlinie)",
+				"en": "every 5 years (EU Environmental Noise Directive)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Modellwerte, keine flächendeckenden Mess-Stationen.",
+					"en": "Model values, no city-wide network of monitoring stations."
+				},
+				{
+					"de": "Innenraum-Lärm in Wohnungen bleibt unberücksichtigt.",
+					"en": "Indoor noise in flats is not taken into account."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Keine Trennung nach Quelle (Straße, Schiene, Flug) auf dieser Aggregat-Ebene.",
+					"en": "No breakdown by source (road, rail, air traffic) at this aggregate level."
+				},
+				{
+					"de": "Nachtruhe-Kennwerte separat im Umweltatlas, hier nur Gesamtbelastung.",
+					"en": "Night-time noise indicators are separate in the Environmental Atlas, this layer shows overall pollution only."
+				}
+			]
+		},
+		"luft-2023": {
+			"calculation": {
+				"de": "Modellierte Stickoxid- und Feinstaub-Belastung pro LOR-Planungsraum aus dem Berliner Umweltatlas 2023. Verkehrsmodell plus Mess-Stationen.",
+				"en": "Modelled nitrogen oxide and particulate matter pollution per LOR planning area from the Berlin Environmental Atlas (Umweltatlas) 2023. Traffic model plus monitoring stations."
+			},
+			"updateFrequency": {
+				"de": "alle 3 bis 5 Jahre",
+				"en": "every 3 to 5 years"
+			},
+			"coverageGaps": [
+				{
+					"de": "Aggregat pro Planungsraum, einzelne Hot-Spots gemittelt.",
+					"en": "Aggregate per planning area, individual hotspots are averaged out."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Pollen- und Allergen-Belastung sind nicht enthalten.",
+					"en": "Pollen and allergen exposure are not included."
+				}
+			]
+		},
+		"bioklima-2023": {
+			"calculation": {
+				"de": "Bioklimatische Sommer-Belastung pro LOR-Planungsraum aus dem Umweltatlas 2023. Indikator für Hitzeinsel-Effekte und Versiegelung.",
+				"en": "Bioclimatic summer stress per LOR planning area from the Environmental Atlas 2023. An indicator of urban heat island effects and soil sealing."
+			},
+			"updateFrequency": {
+				"de": "alle 5 Jahre",
+				"en": "every 5 years"
+			},
+			"coverageGaps": [
+				{
+					"de": "Aggregat pro Planungsraum, Mikroklima im Hof unsichtbar.",
+					"en": "Aggregate per planning area, the microclimate in courtyards is invisible."
+				}
+			]
+		},
+		"gruenversorgung-2023": {
+			"calculation": {
+				"de": "Pro-Kopf-Versorgung mit nutzbarem öffentlichem Grün pro LOR-Planungsraum aus dem Umweltatlas 2023. Skala gering bis sehr hoch.",
+				"en": "Per-capita provision of usable public green space per LOR planning area from the Environmental Atlas 2023. Scale from low to very high."
+			},
+			"updateFrequency": {
+				"de": "alle 5 Jahre",
+				"en": "every 5 years"
+			},
+			"omissions": [
+				{
+					"de": "Private Gärten und Hofflächen zählen nicht zur Pro-Kopf-Versorgung.",
+					"en": "Private gardens and courtyards do not count towards per-capita provision."
+				}
+			]
+		},
+		"umweltgerechtigkeit-2023": {
+			"calculation": {
+				"de": "Kombinierter Index aus Lärm, Luft, Bioklima und Grünversorgung gewichtet mit sozialem Status. Identifiziert Mehrfachbelastung pro LOR-Planungsraum.",
+				"en": "Combined index of noise, air, bioclimate and green space provision, weighted with social status. Identifies multiple burdens per LOR planning area."
+			},
+			"updateFrequency": {
+				"de": "alle 3 bis 5 Jahre",
+				"en": "every 3 to 5 years"
+			},
+			"coverageGaps": [
+				{
+					"de": "Vor-Aggregat aus vier Einzel-Layern. Doppelzählung in Cross-Layer-Indices vermeiden.",
+					"en": "Pre-aggregate of four individual layers. Avoid double counting in cross-layer indices."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Keine personenbezogene Bewertung, nur Stadtteil-Aggregat.",
+					"en": "No assessment of individuals, only a neighbourhood-level aggregate."
+				}
+			]
+		},
+		"klima-pet-2022": {
+			"calculation": {
+				"de": "Physiologisch Äquivalente Temperatur (PET) an einem Hitzetag um 14 Uhr aus der Berliner Klimaanalyse 2022. Modelliert für 10×10 Meter Raster, hier auf Polygon-Geometrie reduziert.",
+				"en": "Physiological Equivalent Temperature (PET) on a hot day at 2 pm from the Berlin Climate Analysis 2022. Modelled on a 10 × 10 metre grid, reduced to polygon geometry here."
+			},
+			"updateFrequency": {
+				"de": "unregelmäßig (zuletzt 2022, davor 2015)",
+				"en": "irregularly (last in 2022, previously 2015)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Nicht alle Stadtflächen modelliert. nearestPolygonFallbackKm fängt Lücken an Block-Rändern ab.",
+					"en": "Not all urban areas are modelled. nearestPolygonFallbackKm covers gaps at block edges."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Nachtwerte werden separat ausgewiesen.",
+					"en": "Night-time values are reported separately."
+				}
+			]
+		},
+		"klima-kaltlufteinwirkbereich-2022": {
+			"calculation": {
+				"de": "Stadtgebiete, die nachts von Kaltluft aus Wäldern, Wiesen und Parks profitieren. Quelle: Berliner Klimaanalyse 2022.",
+				"en": "Urban areas that benefit at night from cold air from forests, meadows and parks. Source: Berlin Climate Analysis 2022."
+			},
+			"updateFrequency": {
+				"de": "unregelmäßig",
+				"en": "irregularly"
+			}
+		},
+		"klima-leitbahnkorridor-2022": {
+			"calculation": {
+				"de": "Talraum-Strukturen, Straßenzüge und Freiflächen, durch die nachts Kaltluft in die Stadt strömt.",
+				"en": "Valley structures, street corridors and open spaces through which cold air flows into the city at night."
+			},
+			"updateFrequency": {
+				"de": "unregelmäßig",
+				"en": "irregularly"
+			},
+			"omissions": [
+				{
+					"de": "Bebauung in Korridoren bremst die Kühlung. Layer zeigt nur Geometrie, keine Verlustrechnung.",
+					"en": "Buildings in the corridors slow down the cooling. The layer shows geometry only, no calculation of losses."
+				}
+			]
+		},
+		"stolpersteine": {
+			"calculation": {
+				"de": "Standorte der vor letzten frei gewählten Wohnorten verlegten Messing-Plaketten für NS-Opfer. Konzept Gunter Demnig, Daten aus OpenStreetMap, gepflegt von lokalen Initiativen.",
+				"en": "Locations of the brass plaques for victims of National Socialism, laid in front of their last freely chosen homes. Concept by Gunter Demnig, data from OpenStreetMap, curated by local initiatives."
+			},
+			"updateFrequency": {
+				"de": "kontinuierlich (Verlegungen + OSM-Korrekturen)",
+				"en": "continuously (new stones laid + OSM corrections)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Erfassung in OSM ist nicht vollständig. Nicht jedes verlegte Stein-Set ist gemappt.",
+					"en": "Coverage in OSM is incomplete. Not every set of stones laid has been mapped."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Personen-Biografien sind externe Primärquellen (stolpersteine-berlin.de). Wir generieren keine Texte.",
+					"en": "Personal biographies come from external primary sources (stolpersteine-berlin.de). We do not generate any texts."
+				},
+				{
+					"de": "Kein Wohn-Score, keine Bewertung, keine Verdichtungs-Statistik. Würde-Prinzip gemäß FR50 und FR51.",
+					"en": "No housing score, no rating, no density statistics. Dignity principle under FR50 and FR51."
+				}
+			]
+		},
+		"kitas-2024": {
+			"calculation": {
+				"de": "Anerkannte Berliner Kindertageseinrichtungen 2024 als Punkt-Layer. Trägerschaft öffentlich, kirchlich oder frei.",
+				"en": "Recognised Berlin daycare facilities 2024 as a point layer. Run by public, church or independent providers."
+			},
+			"updateFrequency": {
+				"de": "jährlich",
+				"en": "annually"
+			},
+			"omissions": [
+				{
+					"de": "Keine Belegungsquoten oder Wartelisten-Daten.",
+					"en": "No occupancy rates or waiting list data."
+				}
+			]
+		},
+		"schulen-2024": {
+			"calculation": {
+				"de": "Allgemeinbildende Schulen aus dem Berliner Schulverzeichnis 2024 als Punkt-Layer.",
+				"en": "General education schools from the Berlin school directory 2024 as a point layer."
+			},
+			"updateFrequency": {
+				"de": "jährlich",
+				"en": "annually"
+			},
+			"omissions": [
+				{
+					"de": "Keine Schul-Qualitäts-Bewertung. Inspektions-Berichte separat über Senatsverwaltung.",
+					"en": "No rating of school quality. Inspection reports are available separately from the Senate Department."
+				}
+			]
+		},
+		"einschulbereiche-2024": {
+			"calculation": {
+				"de": "Räumlich definierte Grundschul-Einzugsbereiche. Kinder werden in der Regel der Schule des Einschulbereichs ihres Wohnorts zugewiesen.",
+				"en": "Spatially defined primary school catchment areas. As a rule, children are assigned to the school of the catchment area they live in."
+			},
+			"updateFrequency": {
+				"de": "jährlich (zum Schuljahres-Wechsel)",
+				"en": "annually (at the change of school year)"
+			},
+			"omissions": [
+				{
+					"de": "Ausnahmen sind möglich, Layer zeigt nur die Regel-Zuordnung.",
+					"en": "Exceptions are possible, the layer shows only the standard assignment."
+				}
+			]
+		},
+		"krankenhaeuser-plan": {
+			"calculation": {
+				"de": "Kliniken aus dem Berliner Krankenhausplan mit gesetzlichem Versorgungsauftrag.",
+				"en": "Hospitals in the Berlin hospital plan (Krankenhausplan) with a statutory care mandate."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend (Plan-Änderungen)",
+				"en": "ongoing (plan changes)"
+			}
+		},
+		"krankenhaeuser-weitere": {
+			"calculation": {
+				"de": "Private oder spezialisierte Kliniken außerhalb des Krankenhausplans, häufig Reha- oder Privatkliniken.",
+				"en": "Private or specialised hospitals outside the hospital plan, often rehabilitation or private clinics."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			}
+		},
+		"sportanlagen-2024": {
+			"calculation": {
+				"de": "Sportstätten aus dem Bezirklichen Sportstättenverzeichnis 2024: Sportplätze, Hallen, Tennisanlagen, Schwimmbecken.",
+				"en": "Sports venues from the Bezirk register of sports facilities 2024: sports grounds, halls, tennis facilities, swimming pools."
+			},
+			"updateFrequency": {
+				"de": "jährlich",
+				"en": "annually"
+			}
+		},
+		"gruenanlagen": {
+			"calculation": {
+				"de": "Öffentlich gewidmete Grün- und Erholungsflächen, gepflegt durch die Bezirks-Grünflächenämter.",
+				"en": "Officially designated public green and recreational spaces, maintained by the Bezirk parks departments (Grünflächenämter)."
+			},
+			"updateFrequency": {
+				"de": "unregelmäßig (Bezirks-Pflege-Daten)",
+				"en": "irregularly (Bezirk maintenance data)"
+			}
+		},
+		"spielplaetze": {
+			"calculation": {
+				"de": "Öffentlich zugängliche Kinderspielplätze aus dem Berliner Grünanlagen-Register.",
+				"en": "Publicly accessible children’s playgrounds from the Berlin green spaces register (Grünanlagen-Register)."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			},
+			"omissions": [
+				{
+					"de": "Keine Geräte-Inventur, keine Sanierungs-Status-Daten.",
+					"en": "No inventory of play equipment, no data on refurbishment status."
+				}
+			]
+		},
+		"schwimmbaeder": {
+			"calculation": {
+				"de": "Standorte der Berliner Bäder-Betriebe und vergleichbarer Einrichtungen: Hallenbäder, Sommerbäder, Kombibäder, Strandbäder.",
+				"en": "Locations of Berliner Bäder-Betriebe and comparable facilities: indoor pools, outdoor summer pools, combined pools, lakeside bathing beaches."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			},
+			"omissions": [
+				{
+					"de": "Saisonale Öffnungszeiten und Eintrittspreise sind nicht enthalten.",
+					"en": "Seasonal opening hours and admission prices are not included."
+				}
+			]
+		},
+		"trinkbrunnen": {
+			"calculation": {
+				"de": "Standorte öffentlicher Trinkwasser-Brunnen der Berliner Wasserbetriebe, abgeleitet aus OpenStreetMap.",
+				"en": "Locations of public drinking fountains operated by Berliner Wasserbetriebe, derived from OpenStreetMap."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend (OSM)",
+				"en": "ongoing (OSM)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Layer aktiv Mai bis Oktober. Außerhalb der Saison Frostschutz-Abschaltung.",
+					"en": "Layer active May to October. Switched off outside the season for frost protection."
+				}
+			]
+		},
+		"kuehle-orte": {
+			"calculation": {
+				"de": "Orte zum Abkühlen bei Hitze aus OpenStreetMap, redaktionell angereichert. Der Kühle-Score von 1 bis 5 folgt Typ und Bauart (5 Eishalle, 4 klimatisiert oder am Wasser, 3 kühler Massivbau). Von 659 recherchierten Orten fließen die 519 geeigneten in den Layer.",
+				"en": "Places to cool down in the heat from OpenStreetMap, with editorial enrichment. The cool score from 1 to 5 follows type and construction (5 ice rink, 4 air-conditioned or by the water, 3 cool solid building). Of 659 places researched, the 519 suitable ones are included in the layer."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend (OSM + redaktionelle Anreicherung)",
+				"en": "ongoing (OSM + editorial enrichment)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Klimatisierung ist selten belegbar: 29 von 659 Orten mit belegtem AC-Status, der Rest wahrscheinlich oder unbekannt. Der AC-Hinweis ist ein Indiz, keine Zusage.",
+					"en": "Air conditioning can rarely be verified: 29 of 659 places have a verified AC status, the rest are likely or unknown. The AC note is an indication, not a guarantee."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang. Private Orte wie Malls und Kinos üben Hausrecht aus.",
+					"en": "Not a replacement for public authorities, no legal entitlement to access. Private places such as malls and cinemas exercise their right to refuse entry (Hausrecht)."
+				}
+			]
+		},
+		"radverkehrsnetz-2025": {
+			"calculation": {
+				"de": "Berliner Radverkehrsnetz inklusive Vorrangrouten 2025 nach dem Mobilitätsgesetz. Linien-Layer, abgeleitet aus offiziellen Geo-Daten.",
+				"en": "Berlin cycling network including cycling priority routes 2025 under the Berlin Mobility Act (Mobilitätsgesetz). Line layer, derived from official geodata."
+			},
+			"updateFrequency": {
+				"de": "jährlich",
+				"en": "annually"
+			}
+		},
+		"fahrradstrassen-2024": {
+			"calculation": {
+				"de": "Straßen mit StVO-Zeichen 244.1 (Fahrradstraße). Andere Fahrzeuge nur ausnahmsweise und mit Schrittgeschwindigkeit.",
+				"en": "Streets with sign 244.1 of the StVO, German road traffic regulations (bicycle street). Other vehicles only by exception and at walking pace."
+			},
+			"updateFrequency": {
+				"de": "jährlich",
+				"en": "annually"
+			}
+		},
+		"ubahn-stationen": {
+			"calculation": {
+				"de": "BVG-U-Bahnhöfe aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.",
+				"en": "BVG U-Bahn stations from OpenStreetMap route relations, filtered by operator BVG."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend (OSM)",
+				"en": "ongoing (OSM)"
+			}
+		},
+		"sbahn-stationen": {
+			"calculation": {
+				"de": "S-Bahn-Bahnhöfe aus OpenStreetMap (railway=station, station=light_rail).",
+				"en": "S-Bahn stations from OpenStreetMap (railway=station, station=light_rail)."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			}
+		},
+		"tram-haltestellen": {
+			"calculation": {
+				"de": "BVG-Tram-Haltestellen aus OpenStreetMap, vor allem im Ostteil der Stadt.",
+				"en": "BVG tram stops from OpenStreetMap, mainly in the eastern part of the city."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			}
+		},
+		"bus-haltestellen": {
+			"calculation": {
+				"de": "BVG-Bushaltestellen Stadt- und Regionalbusse aus OpenStreetMap.",
+				"en": "BVG bus stops for city and regional buses from OpenStreetMap."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			}
+		},
+		"ubahn-netz": {
+			"calculation": {
+				"de": "BVG-U-Bahn-Linienverlauf 9 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach operator BVG.",
+				"en": "BVG U-Bahn line routes, 9 lines, from OpenStreetMap route relations, filtered by operator BVG."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			}
+		},
+		"tram-netz": {
+			"calculation": {
+				"de": "BVG-Straßenbahn-Linienverlauf 22 Linien aus OpenStreetMap.",
+				"en": "BVG tram line routes, 22 lines, from OpenStreetMap."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			}
+		},
+		"sbahn-netz": {
+			"calculation": {
+				"de": "Linienverlauf des Berliner S-Bahn-Netzes 16 Linien aus OpenStreetMap-Routen-Relationen, gefiltert nach operator S-Bahn Berlin GmbH.",
+				"en": "Routes of the Berlin S-Bahn network, 16 lines, from OpenStreetMap route relations, filtered by operator S-Bahn Berlin GmbH."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend",
+				"en": "ongoing"
+			}
+		},
+		"kiez-score-ruhe-luft": {
+			"calculation": {
+				"de": "Gewichtete Aggregation aus Lärm und Luft pro Planungsraum (Lärm 0.5, Luft 0.5). Lärm seit Story 10.6b als dB-Mittel (L_DEN) aus den Fassadenpunkten der Strategischen Lärmkarte 2022: ≤45 dB → 100, ≥75 dB → 0, linear. Luft als 3-Stufen-Index (gering bis hoch). Beides auf 0–100 normalisiert, Centroid-genau pro LOR-Polygon. Bioklima zählt seit der Score-Neuordnung unter Grün & Hitze.",
+				"en": "Weighted aggregation of noise and air per planning area (noise 0.5, air 0.5). Since story 10.6b, noise is a dB average (L_DEN) from the facade points of the 2022 strategic noise map: ≤45 dB → 100, ≥75 dB → 0, linear. Air as a 3-level index (low to high). Both normalised to 0–100, centroid-accurate per LOR polygon. Since the score reorganisation, bioclimate counts under Green & heat."
+			},
+			"updateFrequency": {
+				"de": "alle 3 bis 5 Jahre (sync mit Umweltatlas-Update)",
+				"en": "every 3 to 5 years (in sync with Environmental Atlas updates)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Lärm-dB ist das Mittel über die Fassadenpunkte im LOR; ruhige Hinterhöfe ohne Fassadenpunkt fließen nicht ein.",
+					"en": "Noise dB is the average across the facade points in the LOR; quiet back courtyards without a facade point are not included."
+				},
+				{
+					"de": "Modell-Werte, keine Mess-Stationen. Mikrolagen einzelner Adressen bleiben unsichtbar.",
+					"en": "Model values, no monitoring stations. Micro-locations of individual addresses remain invisible."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Innenraum-Belastung in Wohnungen nicht enthalten.",
+					"en": "Indoor exposure in flats not included."
+				},
+				{
+					"de": "Keine getrennte Wertung nach Quelle (Straße, Schiene, Flug).",
+					"en": "No separate rating by source (road, rail, air traffic)."
+				}
+			]
+		},
+		"kiez-score-gruen-hitze": {
+			"calculation": {
+				"de": "Nutzbares Grün und Hitzeschutz pro Planungsraum: Grünversorgung 0.30, Grünanlagen-Nähe 0.15, Bioklima 0.20, PET-Hitzebelastung 0.15, Kaltluft-Einwirkbereich 0.10, Leitbahnkorridor 0.10. PET zählt invertiert (kühler = mehr Punkte). Normalisiert auf 0–100.",
+				"en": "Usable green space and heat protection per planning area: green space provision 0.30, proximity to green spaces 0.15, bioclimate 0.20, PET heat stress 0.15, cold air influence zone 0.10, cold air flow corridor 0.10. PET counts inversely (cooler = more points). Normalised to 0–100."
+			},
+			"updateFrequency": {
+				"de": "alle 5 Jahre",
+				"en": "every 5 years"
+			},
+			"coverageGaps": [
+				{
+					"de": "Private Gärten und Höfe zählen nicht zur öffentlichen Grünversorgung.",
+					"en": "Private gardens and courtyards do not count towards public green space provision."
+				},
+				{
+					"de": "PET variiert auf Block-Ebene stark, im LOR-Aggregat geglättet.",
+					"en": "PET varies strongly at block level and is smoothed out in the LOR aggregate."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Qualität und Pflege-Zustand der Parks nicht enthalten.",
+					"en": "Quality and state of maintenance of parks not included."
+				}
+			]
+		},
+		"kiez-score-mobilitaet": {
+			"calculation": {
+				"de": "Distance-basiert vom Adress-Punkt zu nächster U-Bahn (0.35), S-Bahn (0.25), Tram (0.20) und Bus (0.10) Haltestelle plus Berlin-weite Radverkehrs-Presence (0.10). 0 m entspricht 100, 1.000 m entspricht 0, linear interpoliert.",
+				"en": "Distance-based, from the address point to the nearest U-Bahn (0.35), S-Bahn (0.25), tram (0.20) and bus (0.10) stop, plus Berlin-wide cycling network presence (0.10). 0 m equals 100, 1,000 m equals 0, linearly interpolated."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend (OSM)",
+				"en": "ongoing (OSM)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Taktfrequenz und Linien-Angebot der Haltestelle nicht berücksichtigt.",
+					"en": "Service frequency and range of lines at the stop not taken into account."
+				},
+				{
+					"de": "Barrierefreiheit der Stops nicht gewertet.",
+					"en": "Accessibility of stops not rated."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Sharing-Angebote (Bike, Scooter, Car) nicht enthalten.",
+					"en": "Sharing services (bike, scooter, car) not included."
+				},
+				{
+					"de": "Fußwege-Qualität jenseits der Luftlinie nicht abgebildet.",
+					"en": "Quality of walking routes beyond straight-line distance not represented."
+				}
+			]
+		},
+		"kiez-score-versorgung": {
+			"calculation": {
+				"de": "Kita doppelt gemessen: Distanz zur nächsten Kita (Gewicht 0.12, Threshold 500 m) plus Plätze pro Kind 0-6 im Planungsraum (0.12). Der Pro-Kopf-Term summiert die gemeldeten Kita-Plätze (e_platz) im LOR und teilt durch die Kinder 0-6 aus dem Einwohner-Datensatz: ab 0.35 Plätzen pro Kind volle Punktzahl, linear darunter. Die Erreichbarkeit zählt dabei die Anzahl Einrichtungen im Radius (Dichte), nicht nur die nächste: mehr Kitas/Schulen/Spielplätze im Umkreis scoren höher, ein einzelner Standort weniger. Schule nach Schulart getrennt: Grundschule (0.12, Radius 600 m) und weiterführende Schule (0.12, 1.200 m). Plus Spielplatz-Dichte (0.10, 400 m) und Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12, 500 m: Supermarkt, Discounter, Spätkauf, Bäcker), Apotheke (0.07, 800 m) und Post-/Paketstelle (0.05, 1.000 m). Liegt keine Einrichtung im Radius, greift ein weicher Übergang über die Distanz zur nächsten statt eines harten Abbruchs. Plan-Krankenhaus (0.18, 2.000 m) zusätzlich nach Bettenkapazität gewichtet: ein großes Versorgungs-Klinikum zählt mehr als eine kleine Fachklinik. 0 m → 100, Threshold → 0, linear. Spielplätze (Polygone) nutzen den Geometrie-Mittelpunkt als POI-Punkt. Grünanlagen zählen seit der Score-Neuordnung unter Grün & Hitze. Versorgung umfasst damit öffentliche Daseinsvorsorge und private Alltags-Nahversorgung; die internen Gewichte sind vorläufig (finale Kalibrierung in Epic 12 Story 12.3).",
+				"en": "Daycare measured twice: distance to the nearest daycare centre (weight 0.12, threshold 500 m) plus places per child aged 0–6 in the planning area (0.12). The per-capita term sums the registered daycare places (e_platz) in the LOR and divides them by the children aged 0–6 from the resident dataset: full points from 0.35 places per child, linear below that. Accessibility counts the number of facilities within the radius (density), not just the nearest one: more daycare centres/schools/playgrounds nearby score higher, a single location lower. Schools split by type: primary school (0.12, radius 600 m) and secondary school (0.12, 1,200 m). Plus playground density (0.10, 400 m) and local shops from OpenStreetMap (ODbL): groceries (0.12, 500 m: supermarket, discounter, Späti, bakery), pharmacy (0.07, 800 m) and post/parcel point (0.05, 1,000 m). If there is no facility within the radius, a soft transition based on the distance to the nearest one applies instead of a hard cut-off. Hospital in the Berlin hospital plan (0.18, 2,000 m) additionally weighted by bed capacity: a large general hospital counts more than a small specialist clinic. 0 m → 100, threshold → 0, linear. Playgrounds (polygons) use the geometric centre as the POI point. Since the score reorganisation, green spaces count under Green & heat. Local amenities therefore cover public services and private everyday local shops; the internal weights are provisional (final calibration in Epic 12 Story 12.3)."
+			},
+			"updateFrequency": {
+				"de": "jährlich (sync mit Bildungs- und Bezirks-Daten)",
+				"en": "annually (in sync with education and Bezirk data)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Der Platz-Kind-Quotient basiert auf gemeldeten Kapazitäten (e_platz), nicht auf realen Belegungsquoten oder Wartelisten.",
+					"en": "The places-per-child ratio is based on registered capacity (e_platz), not on actual occupancy rates or waiting lists."
+				},
+				{
+					"de": "Belegungsquoten, Wartelisten und Trägerschaft sind im Score nicht berücksichtigt.",
+					"en": "Occupancy rates, waiting lists and type of provider are not taken into account in the score."
+				},
+				{
+					"de": "Polygon-Layer kollabieren zum Mittelpunkt. Ein langgezogener Park am Rand erscheint im Score zentriert.",
+					"en": "Polygon layers collapse to their centre. A long, narrow park on the edge appears centred in the score."
+				},
+				{
+					"de": "Nahversorgung (Lebensmittel, Apotheke, Post) basiert auf OpenStreetMap (Crowdsourcing): einzelne Standorte können fehlen oder veraltet sein.",
+					"en": "Local shops (groceries, pharmacy, post) are based on OpenStreetMap (crowdsourcing): individual locations may be missing or out of date."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Keine Qualitäts-Bewertung der Einrichtung (Layer zeigt nur Standort).",
+					"en": "No quality rating of the facility (the layer shows the location only)."
+				},
+				{
+					"de": "Privat-Krankenhäuser und Reha-Kliniken bleiben außen vor (nur Plan-Krankenhäuser).",
+					"en": "Private hospitals and rehabilitation clinics are left out (hospitals in the Berlin hospital plan only)."
+				}
+			]
+		},
+		"kiez-score-wohnschutz": {
+			"calculation": {
+				"de": "Verdrängungsschutz pro Planungsraum: Liegt der Raum in einem Milieuschutzgebiet (Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft), gilt Schutz als vorhanden (100), sonst 0. Auf Bezirksregion/Bezirk flächen-gewichteter Anteil geschützter Planungsräume. Positiv eindeutig: mehr Schutz ist besser.",
+				"en": "Protection against displacement per planning area: if the area lies in a Milieuschutz area (residential preservation statute or urban preservation statute, combined with OR), protection counts as in place (100), otherwise 0. At Bezirksregion/Bezirk level, the area-weighted share of protected planning areas. Unambiguously positive: more protection is better."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend (Bezirks-Verordnungen)",
+				"en": "ongoing (Bezirk orders)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Schutz-Status sagt nichts über die tatsächliche Mietentwicklung im Gebiet.",
+					"en": "Protection status says nothing about actual rent trends in the area."
+				},
+				{
+					"de": "Gebiets-Grenzen ändern sich durch neue Verordnungen, der Datenstand kann nachlaufen.",
+					"en": "Area boundaries change with new orders, the data may lag behind."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Umwandlungsverbot, Vorkaufsrecht und Genehmigungspraxis einzelner Bezirke nicht abgebildet.",
+					"en": "Conversion ban, right of first refusal and approval practice of individual Bezirke not represented."
+				},
+				{
+					"de": "Keine Aussage über konkrete Miethöhe oder Verdrängungsdruck.",
+					"en": "No statement on actual rent levels or displacement pressure."
+				}
+			]
+		},
+		"kiez-score-kultur": {
+			"calculation": {
+				"de": "Kultureller Zugang pro Planungsraum: log-gedämpfte Dichte kulturkollektiver POIs im Umkreis (Anzahl Einrichtungen, der erste Ort zählt stark, weitere flachen ab). Bibliothek (Gewicht 0.20, 1.000 m), Theater (0.15, 1.500 m), Museum (0.15, 1.500 m), Kino (0.12, 1.500 m), Soziokultur (0.13, 1.200 m), Galerie (0.10, 1.200 m), Kunst im Stadtraum (0.08, 800 m), Club (0.07, 1.200 m). Quelle OpenStreetMap (ODbL). Eigenständige Dimension, NICHT im Gesamt-Score (Option C): Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Die Log-Dämpfung verhindert, dass Außenbezirke flächendeckend auf null fallen.",
+				"en": "Cultural access per planning area: log-damped density of collective cultural POIs nearby (number of facilities, the first place counts strongly, further ones level off). Library (weight 0.20, 1,000 m), theatre (0.15, 1,500 m), museum (0.15, 1,500 m), cinema (0.12, 1,500 m), community culture centre (0.13, 1,200 m), gallery (0.10, 1,200 m), public art (0.08, 800 m), club (0.07, 1,200 m). Source OpenStreetMap (ODbL). A separate dimension, NOT part of the overall score (Option C): culture clusters in the city centre, so it does not drive the headline score. Log damping prevents outer Bezirke from dropping to zero across the board."
+			},
+			"updateFrequency": {
+				"de": "fortlaufend (OSM-Sync)",
+				"en": "ongoing (OSM sync)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Kulturorte aus OpenStreetMap (Crowdsourcing): einzelne Standorte können fehlen oder veraltet sein.",
+					"en": "Cultural venues from OpenStreetMap (crowdsourcing): individual locations may be missing or out of date."
+				},
+				{
+					"de": "Innen-Außen-Gefälle ist real: Kulturinfrastruktur konzentriert sich in der Innenstadt.",
+					"en": "The gap between inner city and outskirts is real: cultural infrastructure is concentrated in the city centre."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Keine Bewertung von Programm, Qualität oder Eintrittspreis der Einrichtung.",
+					"en": "No rating of programme, quality or admission price of the venue."
+				},
+				{
+					"de": "Stolpersteine und Denkmale zählen NICHT (Memorial/Heritage, keine Kultur-Amenity).",
+					"en": "Stolpersteine and monuments do NOT count (memorial/heritage, not a cultural amenity)."
+				}
+			]
+		},
+		"kiez-score-kriminalitaet": {
+			"calculation": {
+				"de": "Erfasste Kriminalität pro Bezirksregion: Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. Pro Delikt das 3-Jahres-Mittel (2023–2025), daraus der gewichtete Index, normalisiert auf 0–100 (300 → 0, ab 1750 → 100). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Die Werte liegen nur je Bezirksregion vor und werden auf die enthaltenen Planungsräume gespiegelt (innerhalb der Bezirksregion konstant). Eigenständige Dimension, NICHT im Gesamt-Score (Option C), Strukturell-Kontext wie die Soziale Lage. Höher heißt mehr erfasste Fälle, kein Sicherheits-Ranking.",
+				"en": "Recorded crime per Bezirksregion: frequency rate (cases per 100,000 residents) of selected housing-relevant offences, equally weighted (0.20 each): neighbourhood offences (Kieztaten), residential burglary, vandalism, street robbery/bag snatching, bicycle theft. For each offence the 3-year average (2023–2025), from which the weighted index is derived, normalised to 0–100 (300 → 0, from 1,750 → 100). The upper limit caps city-centre outliers (government quarter, Alexanderplatz) whose frequency rate is overstated by tourists and commuters. The values are only available per Bezirksregion and are mirrored onto the planning areas it contains (constant within the Bezirksregion). A separate dimension, NOT part of the overall score (Option C), structural context like the social situation. Higher means more recorded cases, not a safety ranking."
+			},
+			"updateFrequency": {
+				"de": "jährlich (Kriminalitätsatlas, Stichtag 31.12.)",
+				"en": "annually (Kriminalitätsatlas, reference date 31 Dec)"
+			},
+			"coverageGaps": [
+				{
+					"de": "Granularität Bezirksregion (143), gröber als die fünf Planungsraum-nativen Dimensionen.",
+					"en": "Granularity Bezirksregion (143), coarser than the five dimensions native to planning areas."
+				},
+				{
+					"de": "Häufigkeitszahl bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen, Pendler oder Kundschaft: innerstädtische Hotspots erscheinen überzeichnet.",
+					"en": "The frequency rate relates cases only to registered residents, not to tourists, commuters or customers: inner-city hotspots appear overstated."
+				},
+				{
+					"de": "Dunkelfeld: nur angezeigte Fälle, das Anzeigeverhalten variiert räumlich.",
+					"en": "Unreported crime: only reported cases, and reporting behaviour varies by location."
+				}
+			],
+			"omissions": [
+				{
+					"de": "Tatortprinzip: nur Fälle mit exaktem Tatort, Taschendiebstahl ausgeschlossen.",
+					"en": "Crime scene principle: only cases with an exact crime scene, pickpocketing excluded."
+				},
+				{
+					"de": "Keine Aussage über persönliches Risiko und keine Wertung als „sicherer\" oder „gefährlicher\" Kiez.",
+					"en": "No statement on personal risk and no rating as a “safer” or “more dangerous” Kiez."
+				}
+			]
+		}
+	},
+	"authorities": {
+		"odis": {
+			"de": "ODIS Berlin · Open Data Informationsstelle",
+			"en": "ODIS Berlin · Open Data Information Office"
+		},
+		"osm": {
+			"de": "OpenStreetMap-Contributors",
+			"en": "OpenStreetMap contributors"
+		},
+		"senatsvw-umwelt": {
+			"de": "Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt · Umweltatlas Berlin",
+			"en": "Senate Department for Urban Mobility, Transport, Climate Action and the Environment · Berlin Environmental Atlas (Umweltatlas)"
+		},
+		"senatsvw-mvku": {
+			"de": "Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt (SenMVKU)",
+			"en": "Senate Department for Urban Mobility, Transport, Climate Action and the Environment (SenMVKU)"
+		},
+		"senatsvw-mvku-short": {
+			"de": "SenMVKU",
+			"en": "SenMVKU"
+		},
+		"senatsvw-bildung": {
+			"de": "Senatsverwaltung für Bildung, Jugend und Familie",
+			"en": "Senate Department for Education, Youth and Families"
+		},
+		"senatsvw-gesundheit": {
+			"de": "Senatsverwaltung für Wissenschaft, Gesundheit und Pflege",
+			"en": "Senate Department for Higher Education and Research, Health and Long-Term Care"
+		},
+		"senatsvw-stadtentwicklung": {
+			"de": "Senatsverwaltung für Stadtentwicklung Berlin",
+			"en": "Senate Department for Urban Development Berlin"
+		},
+		"senatsvw-mietspiegel": {
+			"de": "Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen · Mietspiegel-Geschäftsstelle",
+			"en": "Senate Department for Urban Development, Building and Housing · Rent index office (Mietspiegel-Geschäftsstelle)"
+		},
+		"senatsvw-stadtentwicklung-bezirke": {
+			"de": "Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen · Bezirksämter",
+			"en": "Senate Department for Urban Development, Building and Housing · Bezirk offices (Bezirksämter)"
+		},
+		"senatsvw-inneres-sport": {
+			"de": "Senatsverwaltung für Inneres und Sport · Bezirksämter",
+			"en": "Senate Department for the Interior and Sport · Bezirk offices (Bezirksämter)"
+		},
+		"bezirksamt-bauamt": {
+			"de": "Bezirksämter Berlin · Bauämter",
+			"en": "Berlin Bezirk offices (Bezirksämter) · Building authorities (Bauämter)"
+		},
+		"bezirksamt-gruenflaeche": {
+			"de": "Bezirksämter Berlin · Grünflächenämter",
+			"en": "Berlin Bezirk offices (Bezirksämter) · Parks departments (Grünflächenämter)"
+		},
+		"gutachterausschuss-grundstuecke": {
+			"de": "Geschäftsstelle des Gutachterausschusses für Grundstückswerte in Berlin",
+			"en": "Office of the Berlin Committee of Valuation Experts (Geschäftsstelle des Gutachterausschusses für Grundstückswerte in Berlin)"
+		},
+		"baeder-betriebe": {
+			"de": "Berliner Bäder-Betriebe (BBB) · Bezirksämter",
+			"en": "Berliner Bäder-Betriebe (BBB) · Bezirk offices (Bezirksämter)"
+		},
+		"wasser-betriebe": {
+			"de": "Berliner Wasserbetriebe",
+			"en": "Berliner Wasserbetriebe"
+		},
+		"bvg": {
+			"de": "BVG · Berliner Verkehrsbetriebe · Halte und Netze aus OpenStreetMap",
+			"en": "BVG · Berliner Verkehrsbetriebe · Stops and networks from OpenStreetMap"
+		},
+		"sbahn": {
+			"de": "S-Bahn Berlin GmbH (DB-Konzern) · Routen aus OpenStreetMap-Relationen",
+			"en": "S-Bahn Berlin GmbH (DB group) · Routes from OpenStreetMap relations"
+		},
+		"stolpersteine-initiativen": {
+			"de": "Stolpersteine-Initiativen Berlin",
+			"en": "Stolpersteine initiatives in Berlin"
+		},
+		"navigator-eigenberechnung-senats-daten": {
+			"de": "navigator.berlin (Eigenberechnung aus Senats-Daten)",
+			"en": "navigator.berlin (own calculation from Senate data)"
+		},
+		"navigator-eigenberechnung-mss-2025": {
+			"de": "navigator.berlin (Eigenberechnung aus SenStadt MSS 2025)",
+			"en": "navigator.berlin (own calculation from SenStadt MSS 2025)"
+		},
+		"navigator-eigenberechnung-osm-radverkehr": {
+			"de": "navigator.berlin (Eigenberechnung aus OSM-Stops + Berliner Radverkehrsnetz)",
+			"en": "navigator.berlin (own calculation from OSM stops + Berlin cycling network)"
+		},
+		"navigator-eigenberechnung-bezirke": {
+			"de": "navigator.berlin (Eigenberechnung aus Senats-Daten und Bezirks-Registern)",
+			"en": "navigator.berlin (own calculation from Senate data and Bezirk registers)"
+		},
+		"navigator-eigenberechnung-kriminalitaetsatlas": {
+			"de": "navigator.berlin (Eigenberechnung aus dem Kriminalitätsatlas Berlin, Polizei Berlin)",
+			"en": "navigator.berlin (own calculation from the Berlin crime atlas, Kriminalitätsatlas Berlin, Polizei Berlin)"
+		},
+		"navigator-redaktion-osm-kuehle-orte": {
+			"de": "navigator.berlin (redaktionelle Anreicherung aus OpenStreetMap)",
+			"en": "navigator.berlin (editorial enrichment from OpenStreetMap)"
+		}
+	}
+}
