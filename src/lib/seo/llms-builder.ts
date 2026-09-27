@@ -156,7 +156,7 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		loc: `${ctx.origin}/methodik/wahldaten`,
 		name: 'Methodik · Wahldaten',
 		description:
-			'Datenquellen, Daten-Cutoff, Briefwahl-Asymmetrie, Stimmbezirks-zu-Kiez-Aggregation, Wiederholungswahl 2023',
+			'Datenquellen, Daten-Cutoff, Briefwahl-Gruppen, Stimmbezirks-zu-Kiez-Aggregation, Wiederholungswahl 2023',
 		section: 'methodik'
 	});
 	if (ctx.wahlPortalEnabled) {

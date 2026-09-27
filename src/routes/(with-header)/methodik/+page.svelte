@@ -301,9 +301,9 @@
 			beschreiben Stimmenanteile, keine Bewertung.
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Spezialfälle dokumentieren wir transparent: Briefwahl-Asymmetrie pre-2021 (Stimmbezirks-Werte
-			ohne Briefstimmen), Wiederholungswahlen 2023 mit Original-Wahl-Verweis, Coverage-Lücken
-			pre-2017 ohne Stimmbezirks-Geometrie.
+			Spezialfälle dokumentieren wir transparent: Briefwahl-Gruppen als kleinste Kartenebene (Kiez-Wert
+			als Schätzung), Wiederholungswahlen 2023 mit Original-Wahl-Verweis, Coverage-Lücken pre-2017
+			ohne Stimmbezirks-Geometrie.
 		</p>
 		<p class="font-mono text-xs text-ink-muted">
 			Vollständige Methodik:

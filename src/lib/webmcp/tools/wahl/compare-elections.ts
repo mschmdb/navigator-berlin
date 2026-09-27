@@ -3,8 +3,8 @@
  * demselben Aggregations-Level. Sparkline-kompatibel: alle Series teilen
  * denselben Level (per Default kiez, falls auf allen Wahlen vorhanden).
  *
- * Bei pre-2021-Stimmbezirks-Level wird pro Wahl die Briefwahl-Caveat
- * mitgegeben.
+ * Auf Kiez-Level wird pro Wahl der Hinweis auf die anteilige
+ * Briefwahl-Schätzung mitgegeben (Story 17: Briefwahl-Gruppen).
  */
 
 import * as v from 'valibot';

@@ -136,4 +136,16 @@ describe('editorial-disclaimer.svelte', () => {
 			expect(el.getAttribute('data-variant')).toBe('wahl-portal-footnote');
 		});
 	});
+
+	describe('Wahl-Stimmenanteile-Variant (Story 17: Briefwahl-Gruppen)', () => {
+		it('nennt Briefstimmen als enthalten und den Kiez-Wert als Schätzung', async () => {
+			render(EditorialDisclaimer, { variant: 'wahl-stimmenanteile' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/Briefstimmen sind auf allen Ebenen enthalten/);
+			expect(el.textContent).toMatch(/Briefwahl-Gruppe/);
+			expect(el.textContent).toMatch(/Schätzung, keine amtliche Aufteilung/);
+			expect(el.textContent).not.toMatch(/ausgeschlossen/);
+			expect(el.getAttribute('data-variant')).toBe('wahl-stimmenanteile');
+		});
+	});
 });

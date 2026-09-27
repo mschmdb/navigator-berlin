@@ -14,7 +14,14 @@ describe('briefwahl-marker', () => {
 		await expect.element(page.getByTestId('briefwahl-marker')).toBeInTheDocument();
 		await expect
 			.element(page.getByTestId('briefwahl-marker-trigger'))
-			.toHaveTextContent('Ohne Briefstimmen');
+			.toHaveTextContent('Briefwahl geschätzt');
+	});
+
+	it('Default-Tooltip nennt die Kiez-Schätzung (Story 17: Briefwahl-Gruppen)', async () => {
+		render(BriefwahlMarker, { showBadge: true });
+		await expect
+			.element(page.getByTestId('briefwahl-marker-tooltip'))
+			.toHaveTextContent('Schätzung, keine amtliche Aufteilung');
 	});
 
 	it('Trigger linkt auf methodikHref-Default mit Anchor', async () => {

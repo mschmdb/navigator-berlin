@@ -93,9 +93,11 @@ describe('renderWahlMarkdown', () => {
 		expect(md).not.toContain('vorläufig');
 	});
 
-	it('Briefwahl-Caveat immer enthalten', () => {
+	it('Briefwahl-Hinweis nennt Kiez-Schätzung (Story 17: Briefwahl-Gruppen)', () => {
 		const md = renderWahlMarkdown(BASE);
-		expect(md).toContain('Brief-Stimmen');
+		expect(md).toContain('Briefstimmen sind auf allen Ebenen enthalten');
+		expect(md).toContain('anteilig nach Wahlberechtigten geschätzt');
+		expect(md).not.toContain('pre-2021');
 	});
 });
 

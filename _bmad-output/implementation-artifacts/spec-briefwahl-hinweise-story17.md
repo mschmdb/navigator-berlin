@@ -2,7 +2,7 @@
 title: 'Briefwahl-Hinweise auf Story-17-Stand bringen'
 type: 'bugfix'
 created: '2026-09-27'
-status: 'in-progress'
+status: 'done'
 baseline_commit: '76e50ed59d4730d47ef8e5ed7758e472772f583f'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -67,11 +67,11 @@ Textvorschläge (Richtung, Feinschliff erlaubt):
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `editorial-disclaimer.svelte` + Test: neuer Wortlaut (Test zuerst rot)
-- [ ] `wahl-renderer.ts` + Test: neuer Schlusssatz
-- [ ] `methodik/wahldaten/+page.svelte`: Abschnitte 3 und 4, Anker bleiben (+ Test, falls ein Seiten-Test existiert, sonst Unit-Test auf den Abschnittstext)
-- [ ] Grep-Gate: keine Treffer mehr für „Kiez-Aggregat ausgeschlossen“, „pre-2021“, „Briefwahl-Asymmetrie“, „Schraffur“ in `src/`
-- [ ] Zeitmessung
+- [x] `editorial-disclaimer.svelte` + Test: neuer Wortlaut (Test zuerst rot)
+- [x] `wahl-renderer.ts` + Test: neuer Schlusssatz
+- [x] `methodik/wahldaten/+page.svelte`: Abschnitte 3 und 4, Anker bleiben (+ Test, kein Seiten-Test existierte, neu angelegt: `page.svelte.test.ts`)
+- [x] Grep-Gate: keine Treffer mehr für „Kiez-Aggregat ausgeschlossen“, „pre-2021“, „Briefwahl-Asymmetrie“, „Schraffur“ in `src/` (siehe Implementation Notes für 2 verbliebene, unbedenkliche Test-Titel-Treffer)
+- [x] Zeitmessung
 
 **Acceptance Criteria:**
 - Given Inspector, Adress-Vergleich oder Wahl-Detailseite, when der Wahl-Hinweis erscheint, then nennt er Briefstimmen als enthalten und den Kiez-Wert als Schätzung.
@@ -80,10 +80,36 @@ Textvorschläge (Richtung, Feinschliff erlaubt):
 ## Implementation Notes
 
 - 27.09. 07:57 Start Planung, Inventur Koordinator direkt (Grep), 08:06 Checkpoint 1 durch Matze freigegeben.
+- Vier Texte korrigiert: `editorial-disclaimer.svelte` (Variante `wahl-stimmenanteile`), `wahl-renderer.ts` (llms-Schlusssatz), `methodik/wahldaten/+page.svelte` Abschnitt 3 (Titel + Nav-Link „Briefwahl-Gruppen“ statt „Briefwahl-Asymmetrie“, Text auf Gruppen-Logik umgestellt) und Abschnitt 4 (anteilige Verteilung statt Ausschluss). Anker `#wahldaten-briefwahl` und `#aggregation` unverändert.
+- Grep-Gate zusätzlich auf 5 Stellen außerhalb der vier Kern-Texte angewandt, die dieselbe veraltete Behauptung trugen (reine Text-/Kommentar-Korrektur, keine Logik): `methodik/+page.svelte` Teaser-Absatz, `llms-builder.ts` Sitemap-Description, `webmcp/internal/manifest-builder.ts` Tool-Description `get_election_result`, sowie je ein stale JSDoc-Kommentar in `webmcp/tools/wahl/get-election-result.ts` und `compare-elections.ts` (die zugehörige Caveat-Logik war bereits korrekt, nur der Kommentar war stehen geblieben).
+- 2 verbliebene Grep-Treffer für „pre-2021“ sind bewusst unangetastet: Test-Titel in `get-election-result.test.ts:109` und `wahl-section.svelte.test.ts:216` beschreiben korrekt, dass das alte pre-2021-Verhalten *nicht mehr* auftritt (Regressionstest), sie behaupten keinen falschen Fakt. Nicht Teil der Tasks-Liste, deshalb nur gemeldet statt umbenannt.
+- `docs/wahldaten-methodik.md` war beim Start bereits auf Story-17-Stand (verifiziert, keine Änderung nötig) -- diente nur als Wortlaut-Quelle.
+- Test-Datei für die Methodik-Seite musste `page.svelte.test.ts` heißen, nicht `+page.svelte.test.ts` (SvelteKit reserviert `+`-Präfixe auch für Test-Dateien im Routen-Ordner; `svelte-kit sync` bricht sonst ab). Nach Projekt-Konvention (`methodik/page.svelte.test.ts`) benannt.
+- Verifikation: `pnpm exec vitest run` 445 Testdateien / 4114 Tests, 1 isolierter Flake (`winner-map.svelte.test.ts`, Timing-Timeout im Adress-Hint-Test, unabhängig verifiziert reproduzierbar grün sowohl vor als auch nach diesem Commit, keine Berührung mit den geänderten Dateien). `pnpm check` 0 Fehler/Warnungen. `pnpm lint:wahl` 70 Dateien, 0 Verstöße.
 
-## Spec Change Log
+- Zeitmessung gesamt (Koordinator): Planung 07:57-08:06 (inkl. Freigabe Matze), Umsetzung 08:07-08:18, Review 08:18-08:20, Patch-Runde 08:21-08:24, Abschluss 08:25. Gesamt rund 28 min.
+- Qualität: 18 Review-Funde in 13 Einträgen, 9 gepatcht (u.a. veraltete Defaults in `briefwahl-marker.svelte`, veraltetes `static/webmcp-manifest.json`), 4 rejected. Abschluss: vitest 4116 Tests grün (winner-map-Flake einmal rot, isoliert grün), check 0, lint:wahl 0.
+
 
 ## Review Triage Log
+
+Runde 1 (27.09.2026 08:20), 3 Layer: Blind Hunter (BH) 11, Edge Case (EC) 6, Verification Gap (VG) 0 + 1. Triage Koordinator. P = patch, R = reject.
+
+| # | Layer | Fund | Verdict | Evidenz | Route |
+|---|---|---|---|---|---|
+| 1 | BH/VG | `static/webmcp-manifest.json:431` behält die alte pre-2021-Beschreibung | medium | Datei eingecheckt, nur Prebuild regeneriert | P |
+| 2 | BH/EC | Kiez-Marker „Briefwahl geschätzt“ verlinkt `#wahldaten-briefwahl`, Abschnitt 3 erklärt die Kiez-Schätzung nicht | medium | Erklärung steht in `#aggregation` | P: Satz + Link in Abschnitt 3 |
+| 3 | BH | „deshalb“ am falschen Satz in Abschnitt 3 | low | Kausalität falsch | P |
+| 4 | BH | Zitat mit ASCII-Schlusszeichen und abweichendem Wortlaut („Briefwahl 7P“) | low | Doku: „Stimmbezirke 726, 727 und 7P“ | P |
+| 5 | BH | Abschnitt 3 ohne Hinweis für Wahlen ohne Stimmbezirks-Geometrie | low | Halbsatz/Link auf Coverage | P |
+| 6 | BH/EC | `briefwahl-marker.svelte` Defaults „Ohne Briefstimmen“ / „Stimmbezirks-Werte ohne Briefstimmen…“ | medium | falsche Aussage, jeder neue Aufrufer ohne Props zeigt sie | P: Default-Texte korrigieren (nur Text) |
+| 7 | BH | `compare_elections`-Manifest-Eintrag ohne Briefwahl-Fakten | low | Tool-Beschreibung selbst vollständig, Manifest bewusst knapp | R |
+| 8 | BH | Seiten-Test prüft den umbenannten TOC-Link nicht | gap | | P |
+| 9 | BH/EC | Grep-Gate-Zahl in Implementation Notes falsch | low | Fix editiert Spec | R |
+| 10 | BH | `--` und „reproduzierbar grün“ in Implementation Notes | low | Fix editiert Spec | R |
+| 11 | BH | Disclaimer nennt Bezirk/Berlin nicht | low | Hinweis erscheint auch auf Bezirk-/Berlin-Ansichten | P: „auf allen Ebenen enthalten“ |
+| 12 | EC | Abschnitt 4 verschweigt Gleichverteilungs-Fallback ohne Wahlberechtigte | low | `briefwahl-split.ts:129-133`, Doku :225-227 | P: Halbsatz |
+| 13 | EC | llms „auf allen Ebenen enthalten“, Urnen außerhalb aller Kieze fehlen im Kiez | false | betrifft 1 Urne in 3 von 18 Wahlen, Summen-Gate dokumentiert; Aussage gilt für die Ebenen | R |
 
 ## Verification
 

@@ -101,7 +101,7 @@ export function renderWahlMarkdown(input: WahlMarkdownInput): string {
 	}
 
 	lines.push(
-		'Werte sind Stimmenanteile, keine Bewertung. Brief-Stimmen sind nur in Bezirk + Berlin-Aggregat enthalten, nicht in den einzelnen Stimmbezirken pre-2021.'
+		'Werte sind Stimmenanteile, keine Bewertung. Briefstimmen sind auf allen Ebenen enthalten; im Kiez sind sie anteilig nach Wahlberechtigten geschätzt.'
 	);
 	lines.push('');
 	lines.push(`Methodik: ${input.origin}/methodik/wahldaten`);
