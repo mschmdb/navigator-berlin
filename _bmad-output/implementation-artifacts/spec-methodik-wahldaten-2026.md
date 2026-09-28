@@ -2,7 +2,8 @@
 title: 'Methodik Wahldaten auf den Stand der Wahlen 2026 bringen'
 type: 'bugfix'
 created: '2026-09-28'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '7f7e8dfbb32b162d43cb1e8657d41bbef199b5ed'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
