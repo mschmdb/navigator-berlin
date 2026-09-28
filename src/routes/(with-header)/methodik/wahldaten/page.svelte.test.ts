@@ -37,3 +37,64 @@ describe('methodik/wahldaten +page.svelte (Story 17: Briefwahl-Gruppen)', () => 
 		expect(text).not.toMatch(/ausgeschlossen, weil sie keinen räumlichen Bezug/);
 	});
 });
+
+describe('methodik/wahldaten +page.svelte (Wahlen 2026: Stand auf Prod-Daten bringen)', () => {
+	it('Abschnitt 2 pinnt die vollständigen Jahreslisten, je eine pro <li>, ohne Phase/Backlog', () => {
+		render(Page);
+		const section = document.getElementById('cutoff');
+		const items = Array.from(section?.querySelectorAll('li') ?? []).map((li) =>
+			(li.textContent ?? '').replace(/\s+/g, ' ').trim()
+		);
+		expect(items).toContain('Bundestagswahlen: 2013, 2017, 2021, 2025');
+		expect(items).toContain(
+			'Abgeordnetenhauswahlen: 2011, 2016, 2021, 2023 (Wiederholung), 2026 (vorläufig)'
+		);
+		expect(items).toContain(
+			'Bezirksverordneten-Versammlungen: 2011, 2016, 2021, 2023 (Wiederholung), 2026 (vorläufig)'
+		);
+		const text = section?.textContent ?? '';
+		expect(text).not.toMatch(/Phase 1/);
+		expect(text).not.toMatch(/Backlog/);
+	});
+
+	it('Abschnitt 6: 2026 im Polygon-Satz mit AGH + BVV, BTW 2013 und AGH + BVV 2011 im Ohne-Geometrie-Satz', () => {
+		render(Page);
+		const section = document.getElementById('geometrien');
+		const firstParagraph = (section?.querySelector('p')?.textContent ?? '')
+			.replace(/\s+/g, ' ')
+			.trim();
+		const [polygonSentence, noGeoSentence] = firstParagraph.split(/(?<=\.)\s+/);
+		expect(polygonSentence).toMatch(
+			/AGH \+ BVV 2016, 2021 \(verwendet auch für 2023-Wiederholung\) und 2026\.$/
+		);
+		expect(polygonSentence).not.toMatch(/BTW 2013/);
+		expect(noGeoSentence).toMatch(/^BTW 2013 sowie AGH \+ BVV 2011 besitzen keine/);
+		const text = section?.textContent ?? '';
+		expect(text).not.toMatch(/pre-2011/);
+		expect(text).not.toMatch(/Memory/);
+	});
+
+	it('Abschnitt 7 bindet die Endergebnis-Termine an BVV/AGH und zeigt Wahltag, Stand und Quelle', () => {
+		render(Page);
+		const section = document.getElementById('update-cadence');
+		const text = (section?.textContent ?? '').replace(/\s+/g, ' ');
+		expect(text).toMatch(/20\.09\.2026/);
+		expect(text).toMatch(/21\.09\.2026/);
+		expect(text).toMatch(/wahlen-berlin\.de/);
+		expect(text).toMatch(/30\.09\.2026\s*\(BVV\)/);
+		expect(text).toMatch(/05\.\s*bis\s*08\.10\.2026\s*\(AGH\)/);
+		expect(text).toMatch(/wo verfügbar/);
+		expect(text).toMatch(/vorläufig/);
+		expect(text).not.toMatch(/Memory/);
+		expect(text).not.toMatch(/pnpm/);
+	});
+
+	it('kein Phase-1/Backlog/Memory/pnpm im sichtbaren Seitentext', () => {
+		const { container } = render(Page);
+		const text = container.textContent ?? '';
+		expect(text).not.toMatch(/Phase 1/);
+		expect(text).not.toMatch(/Backlog/);
+		expect(text).not.toMatch(/Memory/);
+		expect(text).not.toMatch(/pnpm/);
+	});
+});

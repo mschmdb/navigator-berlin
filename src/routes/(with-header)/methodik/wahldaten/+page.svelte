@@ -125,13 +125,22 @@
 					class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>statistik-berlin-brandenburg.de</a
 				>. Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+				AGH und BVV 2026 kommen direkt von
+				<a
+					href="https://www.wahlen-berlin.de"
+					rel="noopener noreferrer"
+					class="hover:text-accent-strong text-accent underline underline-offset-2"
+					>wahlen-berlin.de</a
+				> (Landeswahlleiterin Berlin), Stand des vorläufigen amtlichen Ergebnisses.
 			</dd>
 			<dt class="font-medium text-ink">Stimmbezirks-Geometrien</dt>
 			<dd class="text-ink-muted">
 				Amt für Statistik Berlin-Brandenburg, Shapefile-Releases pro Wahlgang:
 				<code class="font-mono text-xs">RBS_OD_Wahlgebiete_BTW17.zip</code>,
-				<code class="font-mono text-xs">RBS_OD_UWB_AH21.zip</code> u. a. Reprojektion von ETRS89 UTM33
-				nach WGS84 via mapshaper-Pipeline, Simplify visvalingam + keep-shapes.
+				<code class="font-mono text-xs">RBS_OD_UWB_AH21.zip</code>,
+				<code class="font-mono text-xs">RBS_OD_UWB_AH26.zip</code> (Stimmbezirks-Geometrie AGH/BVV
+				2026) u. a. Reprojektion von ETRS89 UTM33 nach WGS84 via mapshaper-Pipeline, Simplify
+				visvalingam + keep-shapes.
 			</dd>
 		</dl>
 	</section>
@@ -139,18 +148,23 @@
 	<section id="cutoff" class="space-y-3">
 		<h2 class="font-sans text-xl font-semibold text-ink">2. Daten-Cutoff</h2>
 		<p>
-			Aktuell ist Phase 1 mit Wahlen ab 2011 abgedeckt. Pre-2011-Daten liegen bei der
-			Bundeswahlleiterin teilweise in unterschiedlichen Formaten vor und erfordern Mapping zur
-			Bezirksreform 2001. Reaktivierung als FragDenStaat-Backlog für Phase 2.
+			Die Wahldaten decken Wahlen ab 2011 ab. Pre-2011-Daten liegen bei der Bundeswahlleiterin
+			teilweise in unterschiedlichen Formaten vor und erfordern Mapping zur Bezirksreform 2001.
+			Bundestagswahlen beginnen 2013, weil die Bundeswahlleiterin Wahlbezirksdaten erst ab diesem
+			Jahr veröffentlicht.
 		</p>
 		<ul class="space-y-1">
 			<li><strong>Bundestagswahlen:</strong> 2013, 2017, 2021, 2025</li>
-			<li><strong>Abgeordnetenhauswahlen:</strong> 2011, 2016, 2021, 2023 (Wiederholung)</li>
 			<li>
-				<strong>Bezirksverordneten-Versammlungen:</strong> 2011, 2016, 2021, 2023 (Wiederholung)
+				<strong>Abgeordnetenhauswahlen:</strong> 2011, 2016, 2021, 2023 (Wiederholung), 2026
+				(vorläufig)
 			</li>
-			<li><strong>Europawahlen:</strong> Phase 2 Backlog, aktuell nicht enthalten</li>
-			<li><strong>Volksentscheide:</strong> out-of-scope Phase 1</li>
+			<li>
+				<strong>Bezirksverordneten-Versammlungen:</strong> 2011, 2016, 2021, 2023 (Wiederholung), 2026
+				(vorläufig)
+			</li>
+			<li><strong>Europawahlen:</strong> aktuell nicht enthalten</li>
+			<li><strong>Volksentscheide:</strong> nicht enthalten</li>
 		</ul>
 	</section>
 
@@ -221,8 +235,8 @@
 	<section id="geometrien" class="space-y-3">
 		<h2 class="font-sans text-xl font-semibold text-ink">6. Geometrien + Coverage</h2>
 		<p>
-			Stimmbezirks-Polygone sind verfügbar für: BTW 2017, 2021, 2025 sowie AGH + BVV 2016 und 2021
-			(verwendet auch für 2023-Wiederholung). Pre-2017 BTW und pre-2011 AGH/BVV besitzen keine
+			Stimmbezirks-Polygone sind verfügbar für: BTW 2017, 2021, 2025 sowie AGH + BVV 2016, 2021
+			(verwendet auch für 2023-Wiederholung) und 2026. BTW 2013 sowie AGH + BVV 2011 besitzen keine
 			publizierten Stimmbezirks-Geometrien. Diese Wahlen sind ausschließlich auf Bezirks- und
 			Berlin-Aggregat zugänglich; das Kiez-Aggregat ist für sie leer und die Choropleth-Komponente
 			fällt auf 12 Bezirks-Polygone zurück mit einem Inline-Hinweis.
@@ -230,7 +244,7 @@
 		<p>
 			Reprojektion: ETRS89 UTM33 → WGS84 via mapshaper Node-API, Simplify visvalingam + <code
 				class="font-mono text-xs">keep-shapes</code
-			> (Memory project_simplify_keep_shapes) damit Sliver-Polygone den Simplify-Schritt überleben.
+			> damit Sliver-Polygone den Simplify-Schritt überleben.
 		</p>
 	</section>
 
@@ -238,15 +252,21 @@
 		<h2 class="font-sans text-xl font-semibold text-ink">7. Update-Cadence</h2>
 		<p>
 			Wahldaten werden manuell nach jedem Wahlgang aktualisiert. Es gibt keinen Live-Refresh aus den
-			Quell-APIs, weil die offiziellen Endgültige-Ergebnisse erst Wochen nach dem Wahltag vorliegen
-			und die Bundeswahlleiterin / SBB ihre Datensätze nicht via stabile API ausspielen.
+			Quell-APIs, weil die amtlichen Endergebnisse erst Wochen nach dem Wahltag vorliegen und die
+			Bundeswahlleiterin / Landeswahlleiterin Berlin ihre Datensätze nicht über eine stabile API
+			ausspielen.
 		</p>
 		<p>
-			Build-Pipeline: <code class="font-mono text-xs">pnpm data:wahl-fetch</code>
-			lädt + parsed Roh-Daten, <code class="font-mono text-xs">pnpm data:wahl-geo</code>
-			rebuilded Stimmbezirks-Layer, <code class="font-mono text-xs">pnpm data:wahl-kiez</code>
-			rebuildet das Kiez-Aggregat. Lint-Gate
-			<code class="font-mono text-xs">pnpm lint:wahl</code> blockt Wertungsvokabel in Code + Doku.
+			AGH und BVV 2026 zeigen das vorläufige amtliche Ergebnis vom Wahltag, dem 20.09.2026.
+			Datenstand ist der 21.09.2026. Quelle ist wahlen-berlin.de (Landeswahlleiterin Berlin).
+			Portal, Wahl-Detailseiten und API-/Tool-Antworten markieren die Zahlen als „vorläufig“ und
+			zeigen ein Stand-Datum, wo verfügbar. Das Endergebnis erscheint voraussichtlich ab dem
+			30.09.2026 (BVV) und vom 05. bis 08.10.2026 (AGH). Beim Endergebnis ersetzt ein erneuter
+			Datenimport die vorläufigen Zahlen. Die Kennzeichnung entfällt.
+		</p>
+		<p>
+			Die Build-Pipeline lädt und parsed die Roh-Daten, baut die Stimmbezirks-Layer neu und
+			aktualisiert das Kiez-Aggregat. Ein Lint-Gate blockt Wertungsvokabel in Code und Doku.
 		</p>
 	</section>
 

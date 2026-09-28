@@ -2,7 +2,7 @@
 title: 'Methodik Wahldaten auf den Stand der Wahlen 2026 bringen'
 type: 'bugfix'
 created: '2026-09-28'
-status: 'in-progress'
+status: 'done'
 baseline_commit: '7f7e8dfbb32b162d43cb1e8657d41bbef199b5ed'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -59,9 +59,9 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] Page-Test für die drei Abschnitte (rot), dann Texte anpassen (grün)
-- [ ] Grep: kein „Phase 1“, „Backlog“, „Memory“, `pnpm` im sichtbaren Text der Seite
-- [ ] `lint:wahl` grün
+- [x] Page-Test für die drei Abschnitte (rot), dann Texte anpassen (grün)
+- [x] Grep: kein „Phase 1“, „Backlog“, „Memory“, `pnpm` im sichtbaren Text der Seite
+- [x] `lint:wahl` grün
 
 **Acceptance Criteria:**
 - Given `/methodik/wahldaten`, when die Abschnitte 2, 6 und 7 gelesen werden, then stimmen Jahreslisten, Geometrie und vorläufig-Hinweis mit den Prod-Daten überein.
@@ -69,10 +69,29 @@ context:
 ## Implementation Notes
 
 - 28.09. 20:52 Hinweis Matze, 20:55 Inventur Koordinator (Grep + `WAHL_TO_GEO`), 20:53 Checkpoint 1 durch Matze („freigeben weiter“).
+- 28.09. Umsetzung: 4 neue Page-Tests (rot) für Abschnitt 2/6/7 + Grep-Test, dann Texte in `+page.svelte` angepasst (grün). `pnpm exec vitest run "src/routes/(with-header)/methodik"` 30/30 grün, `pnpm lint:wahl` 70 Dateien/0 Verstöße, `pnpm check` 0 Fehler.
+- 28.09. 21:20 Review-Nachbesserung (10 Punkte, siehe Review Triage Log): Re-Ingest-Checkliste in `docs/wahldaten-methodik.md` um Methodik-Seiten-Schritt ergänzt; Abschnitt 1 nennt jetzt wahlen-berlin.de + `RBS_OD_UWB_AH26.zip`; Abschnitt 2 erklärt den BTW-2013-Cutoff; Abschnitt 7 nennt Wahltag 20.09., Stand 21.09., Quelle und die echten Endergebnis-Termine (30.09. BVV, 05.-08.10. AGH), Sätze gekürzt, „dann"/vages „das" entfernt, Stand-Datum „wo verfügbar"; Anführungszeichen bei „vorläufig" auf U+201C-Schließer korrigiert; Grep-Task-Zeile ebenso zurückgesetzt. Tests präzisiert (Listen pro `<li>`, Abschnitt 6 Satz-Zuordnung, Abschnitt 7 Datums-Bindung BVV/AGH).
 
-## Spec Change Log
+- Zeitmessung gesamt (Koordinator): Planung 20:52-20:53 (inkl. Freigabe), Umsetzung 20:53-20:56, Review 20:56-20:57, Patch-Runde 20:57-21:02, Abschluss 21:03. Gesamt rund 11 min.
+- Qualität: 19 Review-Funde in 10 Einträgen (3 medium: Re-Ingest-Checkliste ohne Methodik-Seite, veraltende Terminangabe, Abschnitt 1 ohne 2026-Quelle), 8 gepatcht, 2 rejected. Abschluss: vitest 4120/4120, check 0, lint:wahl 0.
+
 
 ## Review Triage Log
+
+Runde 1 (28.09.2026 20:57), 3 Layer: Blind Hunter (BH) 11, Edge Case (EC) 6, Verification Gap (VG) 0 + 2. Triage Koordinator. P = patch, R = reject.
+
+| # | Layer | Fund | Verdict | Evidenz | Route |
+|---|---|---|---|---|---|
+| 1 | BH/EC | Re-Ingest-Checkliste in `docs/wahldaten-methodik.md` nennt die Methodik-Seite nicht, „2026 (vorläufig)“ bleibt nach Endergebnis stehen | medium | statischer Text | P: Checklisten-Schritt |
+| 2 | BH | „Ende September (BVV)“ in zwei Tagen veraltet; Wahltag, Datenstand, Quelle fehlen | medium | Doku: BVV ab ~30.09., AGH ~05.-08.10., Stand 21.09., wahlen-berlin.de | P |
+| 3 | BH | Abschnitt 1 nennt 2026-Quelle und Geometrie `ah26` nicht, widerspricht Abschnitt 7 | medium | Intent: Seite an Prod angleichen | P: minimal ergänzen |
+| 4 | BH | BTW-Cutoff 2013 unerklärt | low | Doku: `_wbz.zip` erst ab 2013 | P |
+| 5 | BH/VG/EC | Anführungszeichen „vorläufig" | low | | P |
+| 6 | EC | „mit Stand-Datum“ gilt nicht überall | low | Teaser ohne Datum | P: „wo verfügbar“ |
+| 7 | BH/EC | Tests zu locker (Abschnitt 2, 6, Datumszuordnung) | gap | | P |
+| 8 | BH | Satzlänge/„dann“ in Abschnitt 7 | low | Stilregeln | P |
+| 9 | BH | Meta-Description und Doku sagen noch „Phase“ | low | Doku intern, Meta ohne Phase-Bezug geprüft | R |
+| 10 | BH | TDD-Historie, Zeitstempel-Reihenfolge | low | Prozess/Spec | R |
 
 ## Verification
 
