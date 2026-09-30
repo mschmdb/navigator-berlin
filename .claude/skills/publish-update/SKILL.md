@@ -28,11 +28,12 @@ Für jeden Commit im Range:
 
 1. **Allowlist-Filter** (`scripts/publish-update/filter-commit.ts`): Commits mit ausschließlich denylisted Files (`.env`, `_bmad-output/`, `.claude/skills/`, `coolify.yml`, `lefthook.yml`, etc.) werden geskipped. Mixed-Commits (Allowlist + Denylist) ebenfalls geskipped mit Aufsplit-Hinweis.
 
-2. **Subagent-Klassifikation** (`scripts/publish-update/invoke-classifier.ts`): Claude-CLI wird mit System-Prompt-Lock + Commit-Diff aufgerufen. Output: JSON nach `DraftResultSchema` (entweder `kind: skip` oder `kind: draft` mit category/title_de/summary_de/tags/body).
+2. **Subagent-Klassifikation** (`scripts/publish-update/invoke-classifier.ts`): Claude-CLI wird mit System-Prompt-Lock + Commit-Diff aufgerufen. Output: JSON nach `DraftResultSchema` (entweder `kind: skip` oder `kind: draft` mit category/title_de/summary_de/title_en/summary_en/tags/body/body_en). Ohne EN-Felder gilt der Draft als Schema-Verstoß und wird geskipped.
 
-3. **Forbidden-Token-Lint** (`scripts/publish-update/forbidden-tokens.ts`): 14 Regex-Patterns (em-dash, „lebenswert", env-vars, hetzner, coolify, traefik, lefthook, github-actions-paths, commit-shas, docker, absolute-fs-paths, mietpreis-€/m²). Sammelt ALLE Verstöße inkl. Zeilennummer.
+3. **Forbidden-Token-Lint** (`scripts/publish-update/forbidden-tokens.ts`): 14 Regex-Patterns (em-dash, „lebenswert", env-vars, hetzner, coolify, traefik, lefthook, github-actions-paths, commit-shas, docker, absolute-fs-paths, mietpreis-€/m²). Sammelt ALLE Verstöße inkl. Zeilennummer. Läuft über den DE-Body und über `body_en`.
 
 4. **Atomic Draft-Write** (`scripts/publish-update/write-draft.ts`): `_content/updates/_drafts/{YYYY-MM-DD}-{slug}.md`. Bei Lint-Verstoß Präfix `_FAIL_` + Markdown-Header mit Verstoß-Liste. Slug deterministisch aus title_de (DE-Umlaut-Translit).
+   Daneben entsteht die EN-Schwester `_content/updates/_drafts/{YYYY-MM-DD}-{slug}.en.md` (nur `body_en`, kein Frontmatter). `title_en` und `summary_en` stehen im Frontmatter der DE-Datei. Verstößt eine der beiden Fassungen, tragen beide Dateien `_FAIL_`.
 
 ## Output-Report
 
@@ -52,12 +53,15 @@ pnpm publish-update   # default: letzte 24h
 Drafts in `_content/updates/_drafts/` sind gitignored. Owner reviewt manuell, dann:
 
 ```bash
-git mv _content/updates/_drafts/2026-05-20-foo.md _content/updates/2026-05-20-foo.md
-git add _content/updates/2026-05-20-foo.md
+mv _content/updates/_drafts/2026-05-20-foo.md _content/updates/2026-05-20-foo.md
+mv _content/updates/_drafts/2026-05-20-foo.en.md _content/updates/2026-05-20-foo.en.md
+git add _content/updates/2026-05-20-foo.md _content/updates/2026-05-20-foo.en.md
 git commit -m "feat(updates): publish ..."
 ```
 
-Bei `_FAIL_`-Drafts: Lint-Verstöße im Body korrigieren ODER Draft komplett verwerfen, NICHT promoten.
+Beide Dateien wandern zusammen. `git mv` scheitert, weil `_drafts/` ignoriert ist: `mv` und danach `git add`. Eine `.en.md` ohne DE-Datei bricht den Build ab.
+
+Bei `_FAIL_`-Drafts: Lint-Verstöße im Body (DE und EN) korrigieren ODER Draft komplett verwerfen, NICHT promoten.
 
 ## Maintenance
 
@@ -67,7 +71,7 @@ Bei `_FAIL_`-Drafts: Lint-Verstöße im Body korrigieren ODER Draft komplett ver
 
 ## Memory-Marker
 
-Konsumiert: `feedback_no_em_dashes`, `feedback_no_lebenswert`, `project_i18n_phase_1_de_only`, `project_server_purchase_sequencing`, `project_kiez_score_naming`.
+Konsumiert: `feedback_no_em_dashes`, `feedback_no_lebenswert`, `project_i18n_phase_1_de_only` (überholt: seit i18n C4d liefert der Skill die EN-Fassung mit), `project_server_purchase_sequencing`, `project_kiez_score_naming`.
 
 ## Story-Referenz
 

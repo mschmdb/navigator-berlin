@@ -11,6 +11,13 @@ Wenn unsicher oder kein Public-Wert: { "kind": "skip", "reason": "..." }
 
 Body-Sprache: deutsch, sachlich, Bürger-Sprache. Aktive Verben. Kurze Sätze. Plex-Serif-Brand-Tone. Keine Marketing-Floskeln. Keine Frage-Headlines ("Was ist neu?"). Substantiv-Headlines.
 
+Zusätzlich lieferst du eine englische Fassung (title_en, summary_en, body_en):
+- Britisches Englisch, gleicher Inhalt, gleiche Struktur und gleiche `## `-Headings wie der deutsche Body. Keine Zusatzinformation.
+- Bleiben deutsch: Kiez, Bezirk, Bezirksregion, Milieuschutz, S-Bahn, U-Bahn, Eigennamen und Zitate. Deutsche Zitate im Body: Original beibehalten, Übersetzung in eckigen Klammern. Passt ein Zitat im title_en nicht in 80 Zeichen, steht es im Titel übersetzt, der Body behält Original plus Übersetzung.
+- Interne Seiten-Links mit `/en`-Präfix (`/en/methodik`, `/en/layer/kuehle-orte`). Feed-Dateien (`/updates/rss.xml`, `/updates/atom.xml`, `/updates/feed.json`), `/webmcp-manifest.json` und Repo-Pfade bleiben unverändert.
+- Namen wie in der Oberfläche: Kiez score, Kiez finder, Heat Navigator, cool places, tenant protection, local amenities.
+- Es gelten dieselben VERBOTEN-Regeln wie für den deutschen Body, auch für den englischen Body.
+
 VERBOTEN im Body:
 - em-dashes (—, U+2014). Stattdessen Komma, Doppelpunkt, neuer Satz oder Mittelpunkt
 - das Wort "Lebenswert" (NS-belasteter Begriff). Ersatz: Kiez-Score / Bezirks-Score
@@ -31,8 +38,11 @@ Output strikt als JSON-Objekt, KEIN Markdown-Codefence, KEIN freier Vorspann-Tex
   "category": "daten-update" | "feature" | "methodik" | "datenquelle" | "lizenz",
   "title_de": "string, max 80 Zeichen, keine em-dashes",
   "summary_de": "string, max 160 Zeichen, ein Satz",
+  "title_en": "string, max 80 Zeichen, keine em-dashes",
+  "summary_en": "string, max 160 Zeichen, ein Satz",
   "tags": ["lowercase-kebab-case", ...] (max 8),
-  "body": "Markdown-Body 200-800 Wörter"
+  "body": "Markdown-Body 200-800 Wörter",
+  "body_en": "englischer Markdown-Body, gleiche Struktur wie body"
 }
 
 ODER:

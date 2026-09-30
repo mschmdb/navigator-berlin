@@ -40,6 +40,7 @@
 		href="https://www.openstreetmap.org/copyright"
 		target="_blank"
 		rel="noopener"
-		class="underline-offset-2 hover:underline">{m.atlas_attribution_osm_contributors(undefined, localeOpts)}</a
+		class="underline-offset-2 hover:underline"
+		>{m.atlas_attribution_osm_contributors(undefined, localeOpts)}</a
 	>
 </p>

@@ -61,9 +61,7 @@ describe('zeit-animation.svelte', () => {
 			onCommitJahr: vi.fn(),
 			onZurKiez: vi.fn()
 		});
-		await expect
-			.element(page.getByTestId('zeit-animation-wiederholung'))
-			.toHaveTextContent('·R');
+		await expect.element(page.getByTestId('zeit-animation-wiederholung')).toHaveTextContent('·R');
 	});
 
 	it('Play-Klick setzt aria-pressed und ruft onDisplayJahr/onCommitJahr für die nächsten Jahre', async () => {
@@ -79,7 +77,9 @@ describe('zeit-animation.svelte', () => {
 			onZurKiez: vi.fn()
 		});
 		await page.getByTestId('zeit-animation-play').click();
-		await expect.element(page.getByTestId('zeit-animation-play')).toHaveAttribute('aria-pressed', 'true');
+		await expect
+			.element(page.getByTestId('zeit-animation-play'))
+			.toHaveAttribute('aria-pressed', 'true');
 
 		await vi.advanceTimersByTimeAsync(1500);
 		expect(onDisplayJahr).toHaveBeenCalledWith(2021);
@@ -88,7 +88,9 @@ describe('zeit-animation.svelte', () => {
 		await vi.advanceTimersByTimeAsync(1500);
 		expect(onDisplayJahr).toHaveBeenCalledWith(2023);
 		// Auto-Pause am letzten Jahr.
-		await expect.element(page.getByTestId('zeit-animation-play')).toHaveAttribute('aria-pressed', 'false');
+		await expect
+			.element(page.getByTestId('zeit-animation-play'))
+			.toHaveAttribute('aria-pressed', 'false');
 		vi.useRealTimers();
 	});
 

@@ -1,6 +1,8 @@
 ---
 title_de: 'Versorgung zählt jetzt Supermarkt, Apotheke und Post'
+title_en: 'Amenities now count supermarkets, pharmacies and post offices'
 summary_de: 'Der Versorgungs-Score misst neben Kita, Schule und Klinik jetzt die Nahversorgung im Kiez: Lebensmittel, Apotheke und Post aus OpenStreetMap.'
+summary_en: 'Besides daycare, schools and hospitals, the amenities score now measures local shops in the Kiez: groceries, pharmacy and post from OpenStreetMap.'
 date: 2026-06-07
 category: feature
 tags: [kiez-score, versorgung, nahversorgung, score, osm]

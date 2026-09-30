@@ -98,9 +98,7 @@
 	// Guard: ein Variant-Wert ausserhalb der bekannten 19 (z.B. via Laufzeit-
 	// Daten statt des TS-Unions) rendert leeren Text statt zu werfen.
 	const text = $derived(
-		customText ??
-			DISCLAIMER_MESSAGE[variant]?.(undefined, { locale: locale ?? getLocale() }) ??
-			''
+		customText ?? DISCLAIMER_MESSAGE[variant]?.(undefined, { locale: locale ?? getLocale() }) ?? ''
 	);
 </script>
 

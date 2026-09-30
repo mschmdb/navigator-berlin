@@ -35,18 +35,28 @@
 
 	// Story 14.4: Kriminalität nach Delikt-Art aufschlüsseln. Die Roh-HZ (3-Jahres-Mittel pro
 	// 100.000 Einwohner) liegen im rawValue der Single-Index-Quelle (build-kiez-scores).
-	const KRIMINALITAET_DELIKT_ORDER = $derived<
-		(readonly [string, string, string | undefined])[]
-	>([
+	const KRIMINALITAET_DELIKT_ORDER = $derived<(readonly [string, string, string | undefined])[]>([
 		[
 			'kieztaten',
 			m.inspector_kiez_score_delikt_kieztaten(undefined, localeOpts),
 			m.inspector_kiez_score_delikt_kieztaten_hint(undefined, localeOpts)
 		],
-		['wohnraumeinbruch', m.inspector_kiez_score_delikt_wohnraumeinbruch(undefined, localeOpts), undefined],
-		['sachbeschaedigung', m.inspector_kiez_score_delikt_sachbeschaedigung(undefined, localeOpts), undefined],
+		[
+			'wohnraumeinbruch',
+			m.inspector_kiez_score_delikt_wohnraumeinbruch(undefined, localeOpts),
+			undefined
+		],
+		[
+			'sachbeschaedigung',
+			m.inspector_kiez_score_delikt_sachbeschaedigung(undefined, localeOpts),
+			undefined
+		],
 		['strassenraub', m.inspector_kiez_score_delikt_strassenraub(undefined, localeOpts), undefined],
-		['fahrraddiebstahl', m.inspector_kiez_score_delikt_fahrraddiebstahl(undefined, localeOpts), undefined]
+		[
+			'fahrraddiebstahl',
+			m.inspector_kiez_score_delikt_fahrraddiebstahl(undefined, localeOpts),
+			undefined
+		]
 	]);
 	const krimiDelikte = $derived.by(() => {
 		if (score.dimension !== 'kriminalitaet') return null;

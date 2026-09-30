@@ -1,6 +1,8 @@
 ---
 title_de: 'Kühle Orte: 18 offene Kirchen sind jetzt dabei, die Passionskirche zuerst'
+title_en: 'Cool places: 18 open churches added, Passionskirche first'
 summary_de: '18 verifizierte offene Kirchen und ein Stadtteilzentrum ergänzen die Karte. Neue Zahlen: 491 im Sommer geöffnete kühle Orte, 298 kostenlos.'
+summary_en: '18 verified open churches and one neighbourhood centre join the map. New figures: 491 cool places open in summer, 298 free of charge.'
 date: 2026-08-08
 category: daten-update
 tags: [kuehle-orte, hitze, kirchen]

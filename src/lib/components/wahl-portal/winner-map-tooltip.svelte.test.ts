@@ -16,20 +16,30 @@ describe('winner-map-tooltip.svelte', () => {
 		render(WinnerMapTooltip, {
 			visible: true,
 			pos: { x: 0, y: 0 },
-			data: { gebietName: 'Hansaviertel', partei: 'Sonstige', anteil: 0.1, hasWinner: true, wechsel: false },
+			data: {
+				gebietName: 'Hansaviertel',
+				partei: 'Sonstige',
+				anteil: 0.1,
+				hasWinner: true,
+				wechsel: false
+			},
 			jahr: 2023,
 			repeatElection: false
 		});
-		await expect
-			.element(page.getByTestId('winner-map-tooltip-partei'))
-			.toHaveTextContent('Other');
+		await expect.element(page.getByTestId('winner-map-tooltip-partei')).toHaveTextContent('Other');
 	});
 
 	it('rendert nichts wenn visible=false', async () => {
 		render(WinnerMapTooltip, {
 			visible: false,
 			pos: { x: 0, y: 0 },
-			data: { gebietName: 'Hansaviertel', partei: 'SPD', anteil: 0.4, hasWinner: true, wechsel: false },
+			data: {
+				gebietName: 'Hansaviertel',
+				partei: 'SPD',
+				anteil: 0.4,
+				hasWinner: true,
+				wechsel: false
+			},
 			jahr: 2023,
 			repeatElection: false
 		});
@@ -40,13 +50,19 @@ describe('winner-map-tooltip.svelte', () => {
 		render(WinnerMapTooltip, {
 			visible: true,
 			pos: { x: 10, y: 20 },
-			data: { gebietName: 'Hansaviertel', partei: 'SPD', anteil: 0.4, hasWinner: true, wechsel: false },
+			data: {
+				gebietName: 'Hansaviertel',
+				partei: 'SPD',
+				anteil: 0.4,
+				hasWinner: true,
+				wechsel: false
+			},
 			jahr: 2023,
 			repeatElection: false
 		});
-		await expect.element(page.getByTestId('winner-map-tooltip-gebiet')).toHaveTextContent(
-			'Hansaviertel'
-		);
+		await expect
+			.element(page.getByTestId('winner-map-tooltip-gebiet'))
+			.toHaveTextContent('Hansaviertel');
 		await expect.element(page.getByTestId('winner-map-tooltip-partei')).toHaveTextContent('SPD');
 		await expect.element(page.getByTestId('winner-map-tooltip-anteil')).toHaveTextContent('40,0 %');
 		await expect.element(page.getByTestId('winner-map-tooltip-jahr')).toHaveTextContent('2023');
@@ -56,7 +72,13 @@ describe('winner-map-tooltip.svelte', () => {
 		render(WinnerMapTooltip, {
 			visible: true,
 			pos: { x: 0, y: 0 },
-			data: { gebietName: 'Hansaviertel', partei: 'SPD', anteil: 0.4, hasWinner: true, wechsel: false },
+			data: {
+				gebietName: 'Hansaviertel',
+				partei: 'SPD',
+				anteil: 0.4,
+				hasWinner: true,
+				wechsel: false
+			},
 			jahr: 2023,
 			repeatElection: true
 		});
@@ -69,7 +91,13 @@ describe('winner-map-tooltip.svelte', () => {
 		render(WinnerMapTooltip, {
 			visible: true,
 			pos: { x: 0, y: 0 },
-			data: { gebietName: 'Marienfelde Nord', partei: null, anteil: 0, hasWinner: false, wechsel: false },
+			data: {
+				gebietName: 'Marienfelde Nord',
+				partei: null,
+				anteil: 0,
+				hasWinner: false,
+				wechsel: false
+			},
 			jahr: 2023,
 			repeatElection: false
 		});
@@ -94,7 +122,13 @@ describe('winner-map-tooltip.svelte', () => {
 		render(WinnerMapTooltip, {
 			visible: true,
 			pos: { x: 0, y: 0 },
-			data: { gebietName: 'Hansaviertel', partei: 'GRÜNE', anteil: 0.35, hasWinner: true, wechsel: true },
+			data: {
+				gebietName: 'Hansaviertel',
+				partei: 'GRÜNE',
+				anteil: 0.35,
+				hasWinner: true,
+				wechsel: true
+			},
 			jahr: 2023,
 			repeatElection: false
 		});
@@ -107,7 +141,13 @@ describe('winner-map-tooltip.svelte', () => {
 		render(WinnerMapTooltip, {
 			visible: true,
 			pos: { x: 0, y: 0 },
-			data: { gebietName: 'Hansaviertel', partei: 'SPD', anteil: 0.4, hasWinner: true, wechsel: false },
+			data: {
+				gebietName: 'Hansaviertel',
+				partei: 'SPD',
+				anteil: 0.4,
+				hasWinner: true,
+				wechsel: false
+			},
 			jahr: 2023,
 			repeatElection: false
 		});

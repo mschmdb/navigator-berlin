@@ -8,6 +8,8 @@ export interface UpdateEntry {
 	readonly filePath: string;
 	readonly frontmatter: UpdateFrontmatter;
 	readonly body: string;
+	/** Englischer Body aus der Schwesterdatei `YYYY-MM-DD-<slug>.en.md`, sonst `undefined`. */
+	readonly bodyEn?: string;
 }
 
 export type { UpdateCategory, UpdateFrontmatter };

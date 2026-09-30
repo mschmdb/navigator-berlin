@@ -282,3 +282,15 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4c-hitze-quellen.md`
   summary: `sitemap-builder.test.ts` nutzt `/layer/mietspiegel-2024` als Seite ohne EN-Alternate; bei der `/layer`-Registrierung im Abschluss-Block eine andere Kontrolle wählen.
   evidence: Review C4c (Edge Case). `/impressum` ist keine Sitemap-Quelle.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4d-updates.md`
+  summary: Kategorie-Filter auf `/updates` reagiert im Build nicht auf Toggle-Klicks; ein Effect setzt den Zustand sofort auf den URL-Wert zurück. Vorbestehend, DE und EN gleich, vermutlich auch auf Prod.
+  evidence: Beim C4d-e2e gefunden (Implementierer). `?cat=` in der URL filtert. Fix gehört auf `main`.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4d-updates.md`
+  summary: `scripts/publish-update/main.ts` hat keinen Test; EN-Lint-Verdrahtung und Erfolg/Fehler-Zweig sind nur über die Helfer geprüft.
+  evidence: Review C4d (Verification Gap). Braucht injizierbare Git- und Dateisystem-Seams.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4d-updates.md`
+  summary: `tests/e2e/a11y.e2e.ts` hat vorbestehende Fails: `/_dev/wortmarke` ohne `<title>` (axe document-title), „Escape löscht Selection“ (30-s-Timeout auf `/explore`), „Root (Karte)“ flaky.
+  evidence: Beim C4d-Verifikationslauf erstmals mitgelaufen; keine der Seiten von C3-C4d berührt.

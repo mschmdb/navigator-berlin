@@ -111,7 +111,12 @@ function buildAnchorChain(columnCount: number): { nodes: D3Node[]; links: D3Link
 			original: null
 		});
 		if (c > 0) {
-			links.push({ source: `${ANCHOR_PREFIX}${c - 1}`, target: `${ANCHOR_PREFIX}${c}`, value: 0, original: null });
+			links.push({
+				source: `${ANCHOR_PREFIX}${c - 1}`,
+				target: `${ANCHOR_PREFIX}${c}`,
+				value: 0,
+				original: null
+			});
 		}
 	}
 	return { nodes, links };
@@ -141,7 +146,10 @@ export function computeSankeyLayoutWithModule(
 	// durch 0 -- die Anker-Kette erzwingt `x >= 2` (Review Triage Log #12,
 	// heute durch den `isEmpty`-Gate der Komponente verdeckt, aber die
 	// Funktion ist exportiert und `?? 0` fängt NaN nicht ab).
-	const maxColumn = graph.nodes.reduce((max, n) => Math.max(max, n.column), graph.spalten.length - 1);
+	const maxColumn = graph.nodes.reduce(
+		(max, n) => Math.max(max, n.column),
+		graph.spalten.length - 1
+	);
 	const anchor = buildAnchorChain(Math.max(maxColumn, 1));
 	const realNodes: D3Node[] = graph.nodes.map((n) => ({
 		id: n.id,

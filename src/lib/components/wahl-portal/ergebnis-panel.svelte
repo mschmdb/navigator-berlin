@@ -9,7 +9,11 @@
 		vorlaeufigStatusFor
 	} from '$lib/state/wahl-portal-context.svelte.js';
 	import { stimmtypForReihe, type WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
-	import { wahlReiheLabel, sourceDisplayLabel, licenseDisplayLabel } from '$lib/data/wahl-labels.js';
+	import {
+		wahlReiheLabel,
+		sourceDisplayLabel,
+		licenseDisplayLabel
+	} from '$lib/data/wahl-labels.js';
 	import {
 		buildErgebnisPanelRows,
 		vorjahrLabel,

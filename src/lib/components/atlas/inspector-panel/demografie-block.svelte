@@ -114,7 +114,9 @@
 >
 	<h4 class="flex min-w-0 items-center gap-2 font-sans text-sm font-semibold text-ink">
 		<Users class="size-4 shrink-0 text-ink-muted" aria-hidden="true" />
-		<span class="break-words hyphens-auto">{m.inspector_demografie_heading(undefined, localeOpts)}</span>
+		<span class="break-words hyphens-auto"
+			>{m.inspector_demografie_heading(undefined, localeOpts)}</span
+		>
 	</h4>
 
 	{#if onScopeChange}
@@ -180,7 +182,9 @@
 							localeOpts
 						)}
 			</dd>
-			<dt class="text-ink-muted">{m.inspector_demografie_einwohner_label(undefined, localeOpts)}</dt>
+			<dt class="text-ink-muted">
+				{m.inspector_demografie_einwohner_label(undefined, localeOpts)}
+			</dt>
 			<dd class="text-right font-mono text-ink">{formatCount(data.einwohner, localeOpts)}</dd>
 			<dt class="break-words hyphens-auto text-ink-muted">
 				{m.inspector_demografie_kinder_0_6_label(undefined, localeOpts)}

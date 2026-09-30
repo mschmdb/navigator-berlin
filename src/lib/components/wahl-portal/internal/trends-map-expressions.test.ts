@@ -70,7 +70,10 @@ describe('bakeTrendsProperties', () => {
 
 describe('trendsFillColorExpression / trendsFillOpacityExpression', () => {
 	it('liest den Volatilitäts-Key bei Toggle volatilitaet', () => {
-		expect(trendsFillColorExpression('volatilitaet', 'SPD')).toEqual(['get', VOLATILITAET_FARBE_KEY]);
+		expect(trendsFillColorExpression('volatilitaet', 'SPD')).toEqual([
+			'get',
+			VOLATILITAET_FARBE_KEY
+		]);
 		expect(trendsFillOpacityExpression('volatilitaet', 'SPD', 0.9, 0.1)).toEqual([
 			'case',
 			['==', ['get', VOLATILITAET_HAT_DATEN_KEY], 1],
@@ -113,7 +116,13 @@ describe('bakeTrendsProperties Volatilität nach Terzilen', () => {
 			['c', { kiez_slug: 'c', volatilitaet: 0.2, trends: [] }],
 			['d', { kiez_slug: 'd', volatilitaet: 0.3, trends: [] }]
 		]);
-		const baked = bakeTrendsProperties(fc(4), ['a', 'b', 'c', 'd'], ['A', 'B', 'C', 'D'], gebiete, []);
+		const baked = bakeTrendsProperties(
+			fc(4),
+			['a', 'b', 'c', 'd'],
+			['A', 'B', 'C', 'D'],
+			gebiete,
+			[]
+		);
 		expect(baked.features[0].properties[VOLATILITAET_HAT_DATEN_KEY]).toBe(0);
 		expect(baked.features.slice(1).map((f) => f.properties[VOLATILITAET_FARBE_KEY])).toEqual([
 			VOLATILITAET_NEUTRAL_FARBE,

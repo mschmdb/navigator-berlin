@@ -98,7 +98,11 @@
 						station: stationName,
 						latest: String(stats.latest),
 						unit,
-						avg: formatDecimal(stats.avg, { ...localeOpts, maximumFractionDigits: 1, minimumFractionDigits: 1 })
+						avg: formatDecimal(stats.avg, {
+							...localeOpts,
+							maximumFractionDigits: 1,
+							minimumFractionDigits: 1
+						})
 					},
 					localeOpts
 				)

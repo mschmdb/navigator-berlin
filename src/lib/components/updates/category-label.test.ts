@@ -1,34 +1,53 @@
 import { describe, expect, it } from 'vitest';
-import { CATEGORY_LABEL_DE, formatDateDe } from './category-label.js';
+import { categoryLabel, formatUpdateDate } from './category-label.js';
 import { UPDATE_CATEGORIES } from '$lib/content/updates/frontmatter-schema.js';
 
-describe('CATEGORY_LABEL_DE', () => {
-	it('hat Label für alle 6 Categories', () => {
-		for (const cat of UPDATE_CATEGORIES) {
-			expect(CATEGORY_LABEL_DE[cat]).toBeDefined();
-			expect(typeof CATEGORY_LABEL_DE[cat]).toBe('string');
-		}
+describe('categoryLabel', () => {
+	it('liefert DE-Labels wie vor der Übersetzung', () => {
+		expect(UPDATE_CATEGORIES.map((c) => categoryLabel(c, 'de'))).toEqual([
+			'Daten-Update',
+			'Feature',
+			'Methodik',
+			'Datenquelle',
+			'Lizenz',
+			'Presse'
+		]);
 	});
 
-	it('hat das Label Presse für die Category presse', () => {
-		expect(CATEGORY_LABEL_DE.presse).toBe('Presse');
+	it('liefert EN-Labels', () => {
+		expect(UPDATE_CATEGORIES.map((c) => categoryLabel(c, 'en'))).toEqual([
+			'Data update',
+			'Feature',
+			'Methodology',
+			'Data source',
+			'Licence',
+			'Press'
+		]);
 	});
 
 	it('verwendet keine em-dashes (U+2014)', () => {
-		for (const label of Object.values(CATEGORY_LABEL_DE)) {
-			expect(label).not.toMatch(/—/);
+		for (const locale of ['de', 'en'] as const) {
+			for (const cat of UPDATE_CATEGORIES) {
+				expect(categoryLabel(cat, locale)).not.toMatch(/—/);
+			}
 		}
 	});
 });
 
-describe('formatDateDe', () => {
+describe('formatUpdateDate', () => {
 	it('formatiert ISO-Datum zu DE-Lang', () => {
-		expect(formatDateDe('2026-05-15')).toBe('15. Mai 2026');
-		expect(formatDateDe('2026-01-01')).toBe('1. Januar 2026');
-		expect(formatDateDe('2026-12-31')).toBe('31. Dezember 2026');
+		expect(formatUpdateDate('2026-05-15', 'de')).toBe('15. Mai 2026');
+		expect(formatUpdateDate('2026-01-01', 'de')).toBe('1. Januar 2026');
+		expect(formatUpdateDate('2026-12-31', 'de')).toBe('31. Dezember 2026');
+	});
+
+	it('formatiert ISO-Datum zu EN ohne Punkt, Tag zuerst', () => {
+		expect(formatUpdateDate('2026-05-15', 'en')).toBe('15 May 2026');
+		expect(formatUpdateDate('2026-01-01', 'en')).toBe('1 January 2026');
 	});
 
 	it('Fallback bei invalidem Input', () => {
-		expect(formatDateDe('invalid')).toBe('invalid');
+		expect(formatUpdateDate('invalid', 'de')).toBe('invalid');
+		expect(formatUpdateDate('invalid', 'en')).toBe('invalid');
 	});
 });

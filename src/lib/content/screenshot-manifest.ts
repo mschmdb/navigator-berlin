@@ -14,7 +14,11 @@
  * geführt.
  */
 import { m } from '$lib/paraglide/messages.js';
-import { toMessageOptions, assertUnreachable, type LocaleOptions } from '$lib/i18n/message-options.js';
+import {
+	toMessageOptions,
+	assertUnreachable,
+	type LocaleOptions
+} from '$lib/i18n/message-options.js';
 
 export interface HomeScreenshot {
 	readonly key: string;

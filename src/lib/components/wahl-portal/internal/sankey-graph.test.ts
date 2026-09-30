@@ -102,7 +102,12 @@ describe('buildSankeyGraph', () => {
 		const rows: WinnerApiRow[] = [
 			row({ jahr: 2016, partei: 'SPD' }),
 			row({ jahr: 2021, partei: 'GRÜNE' }),
-			row({ jahr: 2023, partei: 'GRÜNE', is_repeat_election: true, parent_slug: '2021-agh-zweitstimme' })
+			row({
+				jahr: 2023,
+				partei: 'GRÜNE',
+				is_repeat_election: true,
+				parent_slug: '2021-agh-zweitstimme'
+			})
 		];
 		const graph = buildSankeyGraph(rows);
 		expect(graph.spalten.map((s) => s.jahr)).toEqual([2016, 2023]);

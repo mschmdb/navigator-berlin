@@ -63,12 +63,10 @@ describe('home-wahl-teaser', () => {
 		await expect
 			.element(page.getByTestId('home-wahl-card-2025-btw-zweitstimme'))
 			.toHaveTextContent('Bundestag election 2025');
-		await expect.element(page.getByTestId('home-wahl-teaser-all')).toHaveTextContent(
-			'All 23 elections'
-		);
-		const link = (await page
-			.getByTestId('home-wahl-card-2026-bvv')
-			.element()) as HTMLAnchorElement;
+		await expect
+			.element(page.getByTestId('home-wahl-teaser-all'))
+			.toHaveTextContent('All 23 elections');
+		const link = (await page.getByTestId('home-wahl-card-2026-bvv').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/berlin-wahlen/2026-bvv');
 	});
 });

@@ -1,6 +1,8 @@
 ---
 title_de: 'Erfasste Kriminalität: neue Kontext-Dimension'
+title_en: 'Recorded crime: new context dimension'
 summary_de: 'Erfasste Kriminalität pro Bezirksregion als eigenständiger Kontext. Kein Sicherheits-Urteil, kein Rang, nicht im Gesamt-Score.'
+summary_en: 'Recorded crime per Bezirksregion as standalone context. No safety verdict, no rank, not in the overall score.'
 date: 2026-06-10
 category: feature
 tags: [kiez-score, kriminalitaet, score, dimension, kontext]

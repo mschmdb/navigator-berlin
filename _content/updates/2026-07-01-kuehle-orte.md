@@ -1,6 +1,8 @@
 ---
 title_de: 'Kühle Orte bei Hitze: neuer Layer und Hitze-Navigator'
+title_en: 'Cool places in hot weather: new layer and Heat Navigator'
 summary_de: 'Über 500 kühle Orte in Berlin, mit Live-Öffnungsstatus, Ein-Tap-Navigation und ehrlichen Flags. Ein Angebot auf offenen Daten, kein Stadt-Ersatz.'
+summary_en: 'Over 500 cool places in Berlin, with live opening status, one-tap navigation and honest flags. A service on open data, not a replacement for the city.'
 date: 2026-07-01
 category: feature
 tags: [kuehle-orte, hitze, karte, navigation, feature]

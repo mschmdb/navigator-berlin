@@ -1,6 +1,8 @@
 ---
 title_de: 'Umwelt- & Infrastruktur-Score: neu zusammengesetzt'
+title_en: 'Environment & infrastructure score: rebuilt'
 summary_de: 'Fünf gleich gewichtete Dimensionen, ein Gesamt-Layer auf der Karte und ein neu gebauter Inspektor mit klickbarem Score-Ring.'
+summary_en: 'Five equally weighted dimensions, an overall map layer and a rebuilt inspector with a clickable score ring.'
 date: 2026-05-21
 category: feature
 tags: [kiez-score, umwelt-infrastruktur-score, inspektor, karte, score]

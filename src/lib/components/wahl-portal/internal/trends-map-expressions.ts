@@ -87,7 +87,8 @@ export function bakeTrendsProperties(
 
 /** `fill-color`-Expression für den aktiven Toggle/Chip-Stand. */
 export function trendsFillColorExpression(toggle: TrendsToggle, aktivePartei: string): unknown[] {
-	const key = toggle === 'volatilitaet' ? VOLATILITAET_FARBE_KEY : trendPropKeys(aktivePartei).farbe;
+	const key =
+		toggle === 'volatilitaet' ? VOLATILITAET_FARBE_KEY : trendPropKeys(aktivePartei).farbe;
 	return ['get', key];
 }
 
@@ -98,6 +99,7 @@ export function trendsFillOpacityExpression(
 	volleDeckkraft: number,
 	neutraleDeckkraft: number
 ): unknown[] {
-	const key = toggle === 'volatilitaet' ? VOLATILITAET_HAT_DATEN_KEY : trendPropKeys(aktivePartei).hatDaten;
+	const key =
+		toggle === 'volatilitaet' ? VOLATILITAET_HAT_DATEN_KEY : trendPropKeys(aktivePartei).hatDaten;
 	return ['case', ['==', ['get', key], 1], volleDeckkraft, neutraleDeckkraft];
 }

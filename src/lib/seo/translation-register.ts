@@ -21,6 +21,11 @@ export interface TranslationRegisterEntry {
 	 * entries, silently excluding any election ingested later).
 	 */
 	readonly prefix?: boolean;
+	/**
+	 * Pfade unterhalb eines `prefix`-Eintrags, die NICHT übersetzt sind
+	 * (exakter Vergleich nach Normalisierung), z. B. DE-only Feed-Endpoints.
+	 */
+	readonly except?: readonly string[];
 }
 
 /**
@@ -66,8 +71,14 @@ export interface TranslationRegisterEntry {
  * manifest stay German (boundary C1/C2), the OG images stay German. Block C4c
  * (`spec-i18n-c4c-hitze-quellen.md`) adds three more exact entries: `/hitze`,
  * `/kuehle-orte` and `/lizenzen`. The DataCatalog JSON-LD on `/lizenzen` and the
- * live DWD warning text stay German, the OG images stay German. Later blocks append further `{ pathname, locale }` entries
- * as more EN content ships -- no other module needs to change.
+ * live DWD warning text stay German, the OG images stay German. Block C4d
+ * (`spec-i18n-c4d-updates.md`) registers `/updates` with `prefix: true`: the
+ * index and every `/updates/{slug}` detail page, including entries added later.
+ * An entry without `.en.md` sibling or `title_en`/`summary_en` shows its German
+ * text with `lang="de"` on the affected element. The feeds stay German, there is
+ * no EN feed, no `sitemap-en.xml` entry and the OG images stay German. Later
+ * blocks append further `{ pathname, locale }` entries as more EN content ships
+ * -- no other module needs to change.
  */
 export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/berlin-wahlen', locale: 'en', prefix: true },
@@ -82,7 +93,14 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/umwelt-infrastruktur-score', locale: 'en' },
 	{ pathname: '/hitze', locale: 'en' },
 	{ pathname: '/kuehle-orte', locale: 'en' },
-	{ pathname: '/lizenzen', locale: 'en' }
+	{ pathname: '/lizenzen', locale: 'en' },
+	{
+		pathname: '/updates',
+		locale: 'en',
+		prefix: true,
+		// Feeds sind DE-only, `/en/updates/rss.xml` existiert nicht.
+		except: ['/updates/rss.xml', '/updates/atom.xml', '/updates/feed.json']
+	}
 ];
 
 /**
@@ -119,6 +137,7 @@ function normalizePathname(pathname: string): string {
  * `entry.prefix`) the entry's pathname itself plus everything below it. */
 function matchesEntry(normalizedPathname: string, entry: TranslationRegisterEntry): boolean {
 	const normalizedEntry = normalizePathname(entry.pathname);
+	if (entry.except?.some((path) => normalizePathname(path) === normalizedPathname)) return false;
 	if (!entry.prefix) return normalizedPathname === normalizedEntry;
 	if (normalizedPathname === normalizedEntry) return true;
 	const prefixWithSlash = normalizedEntry.endsWith('/') ? normalizedEntry : `${normalizedEntry}/`;

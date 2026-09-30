@@ -1,6 +1,8 @@
 ---
 title_de: 'Wahldaten seit 2011'
+title_en: 'Election data since 2011'
 summary_de: 'Vier Bundestags-, vier Abgeordnetenhaus- und vier BVV-Wahlen. Pro Adresse die stärkste Partei, pro Stimmbezirk eine Karte, pro Kiez der Verlauf über die Jahre.'
+summary_en: 'Four Bundestag, four House of Representatives and four District Assembly elections. Strongest party per address, a map per polling district, the trend per Kiez.'
 date: 2026-05-19
 category: feature
 tags: [wahlen, daten, btw, agh, bvv]
@@ -16,7 +18,7 @@ Suche eine Adresse, scrolle zum Block „Wahlverhalten hier". Umschaltbar zwisch
 
 ## Wahl-Seiten
 
-Unter [`/wahl`](/berlin-wahlen) listet jede der 20 Wahl-Varianten (Erst- und Zweitstimme zählen einzeln). Pro Seite: Balken Berlin gesamt mit Top-5, Top-3 pro Bezirk und eine Karte mit allen 3500 Stimmbezirken, eingefärbt nach stärkster Partei.
+Unter [`/wahl`](/berlin-wahlen) hat jede der 20 Wahl-Varianten eine eigene Seite (Erst- und Zweitstimme zählen einzeln). Pro Seite: Balken Berlin gesamt mit Top-5, Top-3 pro Bezirk und eine Karte mit allen 3500 Stimmbezirken, eingefärbt nach stärkster Partei.
 
 ## Kiez-Verlauf
 

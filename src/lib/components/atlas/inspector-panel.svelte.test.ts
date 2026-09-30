@@ -423,9 +423,9 @@ describe('inspector-panel.svelte', () => {
 			render(Harness, { open: true, address, hits: [], layerMeta: fullLayerMeta, lang: 'en' });
 			const panel = (await page.getByTestId('inspector-panel').element()) as HTMLElement;
 			expect(panel.getAttribute('aria-label')).toBe(`Layer data for ${address.displayName}`);
-			expect(
-				(await page.getByTestId('inspector-close').element()).getAttribute('aria-label')
-			).toBe('Close inspector');
+			expect((await page.getByTestId('inspector-close').element()).getAttribute('aria-label')).toBe(
+				'Close inspector'
+			);
 			// "Bookmark" ist DE/EN identisch (Lehnwort, beweist keine Übersetzung) --
 			// das aria-label unterscheidet sich eindeutig.
 			const bookmarkTrigger = (await page

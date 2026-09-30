@@ -272,7 +272,8 @@ describe('KiezHero FAQ-Sprache (Block C3)', () => {
 		render(KiezHero, {
 			profile: baseProfile,
 			stats: null,
-			score: null, faq: [{ question: 'Frage?', answer: 'Antwort.' }],
+			score: null,
+			faq: [{ question: 'Frage?', answer: 'Antwort.' }],
 			faqLocale: 'de'
 		});
 		const accordion = document.querySelector(

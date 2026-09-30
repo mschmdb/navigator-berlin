@@ -177,10 +177,7 @@ describe('sankey-wahljahre.svelte', () => {
 		overwriteGetLocale(() => 'en');
 		try {
 			const winners = {
-				winners: [
-					winnerRow(2016, 'a', 'SPD'),
-					winnerRow(2021, 'a', 'Sonstige')
-				],
+				winners: [winnerRow(2016, 'a', 'SPD'), winnerRow(2021, 'a', 'Sonstige')],
 				license: 'dl-de/by-2.0',
 				source_name: 'Amt für Statistik Berlin-Brandenburg'
 			};

@@ -35,9 +35,10 @@ pnpm publish-update HEAD~7..HEAD
 1. Drafts in `_content/updates/_drafts/` öffnen.
 2. **`_FAIL_*.md`-Drafts:** entweder Lint-Verstöße im Body korrigieren (em-dashes, internal-Tokens, Mietpreis-Werte) oder Draft verwerfen.
 3. Verbleibende Drafts inhaltlich prüfen: Brand-Tone, Faktentreue, keine versteckten Leaks, kein „lebenswert", keine Hostnames.
-4. Promote via:
+4. Promote via (Drafts sind per `.gitignore` ignoriert, deshalb `mv` statt `git mv`; die EN-Schwester `.en.md` immer mitnehmen):
    ```bash
-   git mv _content/updates/_drafts/2026-05-20-foo.md _content/updates/2026-05-20-foo.md
+   mv _content/updates/_drafts/2026-05-20-foo.md _content/updates/_drafts/2026-05-20-foo.en.md _content/updates/
+   git add _content/updates/2026-05-20-foo.md _content/updates/2026-05-20-foo.en.md
    ```
 5. `pnpm dev` lokal: `/updates` rendert den Entry korrekt.
 6. Commit + Push wie in [add-update-entry.md](./add-update-entry.md) Schritt 5-6.
@@ -46,7 +47,7 @@ pnpm publish-update HEAD~7..HEAD
 
 `_FAIL_`-Datei NICHT promoten. Optionen:
 
-- **Edit:** Body bereinigen, `_FAIL_`-Header + `_FAIL_`-Präfix entfernen, dann `git mv` ohne Präfix.
+- **Edit:** Body bereinigen, `_FAIL_`-Header + `_FAIL_`-Präfix entfernen, dann ohne Präfix per `mv` + `git add` promoten (DE und `.en.md`).
 - **Verwerfen:** `rm _content/updates/_drafts/_FAIL_*.md`, ggf. Skill nochmal mit `--commit=<sha>` laufen lassen.
 
 ## Anti-Patterns

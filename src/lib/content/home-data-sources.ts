@@ -11,7 +11,11 @@
  * echter UI-Text, aufgelöst über `homeDataSourceDescription()`.
  */
 import { m } from '$lib/paraglide/messages.js';
-import { toMessageOptions, assertUnreachable, type LocaleOptions } from '$lib/i18n/message-options.js';
+import {
+	toMessageOptions,
+	assertUnreachable,
+	type LocaleOptions
+} from '$lib/i18n/message-options.js';
 
 export const HOME_DATA_SOURCE_IDS = [
 	'odis-berlin',

@@ -359,7 +359,11 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 			{ year: 1975, count: 5 },
 			{ year: 1980, count: 7 }
 		];
-		const screen = render(ClimateSparkline, { series, metric: 'hot', stationName: 'Berlin-Dahlem' });
+		const screen = render(ClimateSparkline, {
+			series,
+			metric: 'hot',
+			stationName: 'Berlin-Dahlem'
+		});
 		const oldRow = screen.container.querySelector('[data-testid="climate-sparkline-normal-old"]');
 		// (4+5+7)/3 = 5.33...
 		expect(oldRow?.textContent).toContain('5,3');

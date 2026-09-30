@@ -99,3 +99,63 @@ describe('buildBlogIndex', () => {
 		expect(obj.inLanguage).toBe('de-DE');
 	});
 });
+
+describe('BlogPosting und Blog-Index in der Seiten-Locale (i18n C4d)', () => {
+	const enEntry: UpdateEntry = {
+		...entry,
+		frontmatter: {
+			...entry.frontmatter,
+			title_en: 'Launch test',
+			summary_en: 'First entry.'
+		},
+		bodyEn: 'English body.'
+	};
+
+	it('EN: englischer Titel, Summary, /en-URL und en-US', () => {
+		const obj = buildBlogPosting({ entry: enEntry, origin, locale: 'en' });
+		expect(obj.headline).toBe('Launch test');
+		expect(obj.description).toBe('First entry.');
+		expect(obj.inLanguage).toBe('en-US');
+		expect(obj.mainEntityOfPage['@id']).toBe('https://navigator.berlin/en/updates/launch');
+	});
+
+	it('EN ohne EN-Felder: DE-Text, inLanguage de-DE, /en-URL', () => {
+		const obj = buildBlogPosting({ entry, origin, locale: 'en' });
+		expect(obj.headline).toBe('Launch · Test');
+		expect(obj.description).toBe('Erster Eintrag.');
+		expect(obj.inLanguage).toBe('de-DE');
+		expect(obj.mainEntityOfPage['@id']).toBe('https://navigator.berlin/en/updates/launch');
+	});
+
+	it('EN: fehlt nur die Summary oder nur der Body, bleibt inLanguage de-DE', () => {
+		const noSummary: UpdateEntry = {
+			...enEntry,
+			frontmatter: { ...enEntry.frontmatter, summary_en: undefined }
+		};
+		const noBody: UpdateEntry = { ...enEntry, bodyEn: undefined };
+		expect(buildBlogPosting({ entry: noSummary, origin, locale: 'en' }).inLanguage).toBe('de-DE');
+		expect(buildBlogPosting({ entry: noBody, origin, locale: 'en' }).inLanguage).toBe('de-DE');
+	});
+
+	it('DE bleibt ohne locale-Argument unverändert', () => {
+		const obj = buildBlogPosting({ entry: enEntry, origin });
+		expect(obj.headline).toBe('Launch · Test');
+		expect(obj.mainEntityOfPage['@id']).toBe('https://navigator.berlin/updates/launch');
+	});
+
+	it('Blog-Index EN: /en/updates, en-US, englische Posts', () => {
+		const obj = buildBlogIndex({
+			entries: [enEntry],
+			origin,
+			locale: 'en',
+			description: 'Data updates, features, methodology changes.'
+		});
+		expect(obj.url).toBe('https://navigator.berlin/en/updates');
+		expect(obj.inLanguage).toBe('en-US');
+		expect(obj.description).toBe('Data updates, features, methodology changes.');
+		expect(obj.blogPost[0]?.headline).toBe('Launch test');
+		expect(obj.blogPost[0]?.mainEntityOfPage['@id']).toBe(
+			'https://navigator.berlin/en/updates/launch'
+		);
+	});
+});

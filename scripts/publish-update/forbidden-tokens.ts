@@ -63,3 +63,25 @@ export function lintBody(body: string): LintResult {
 	}
 	return { ok: violations.length === 0, violations };
 }
+
+/**
+ * Lintet beide Sprachfassungen eines Drafts (DE-Body und EN-Schwesterdatei)
+ * mit denselben Mustern. Bei EN zählen auch `title_en` und `summary_en`;
+ * ihre Verstöße tragen den Feldnamen im Token (`title_en: em-dash`).
+ */
+export function lintDraftBodies(draft: {
+	readonly body: string;
+	readonly body_en: string;
+	readonly title_en: string;
+	readonly summary_en: string;
+}): {
+	readonly de: LintResult;
+	readonly en: LintResult;
+} {
+	const fieldViolations = (['title_en', 'summary_en'] as const).flatMap((field) =>
+		lintBody(draft[field]).violations.map((v) => ({ ...v, token: `${field}: ${v.token}` }))
+	);
+	const en = lintBody(draft.body_en);
+	const violations = [...fieldViolations, ...en.violations];
+	return { de: lintBody(draft.body), en: { ok: violations.length === 0, violations } };
+}

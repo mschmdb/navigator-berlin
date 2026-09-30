@@ -74,12 +74,7 @@
 		mountId?: string;
 	};
 
-	let {
-		layerMeta = [],
-		lang,
-		variant = 'panel',
-		mountId = crypto.randomUUID()
-	}: Props = $props();
+	let { layerMeta = [], lang, variant = 'panel', mountId = crypto.randomUUID() }: Props = $props();
 
 	// i18n Block B3b: Inspector-Locale aus `getLocale()` statt festem DE-Default
 	// (Boundary: der Inspector ist eine übersetzte Oberfläche, kein DE-only-
@@ -315,7 +310,11 @@
 				label: level.bezirkName ?? m.inspector_context_row_bezirk_fallback(undefined, localeOpts),
 				scope: 'bezirk'
 			},
-			{ id: 'berlin', label: m.inspector_context_row_berlin(undefined, localeOpts), scope: 'berlin' }
+			{
+				id: 'berlin',
+				label: m.inspector_context_row_berlin(undefined, localeOpts),
+				scope: 'berlin'
+			}
 		];
 		const rows = scopes.flatMap((s) => {
 			const agg = aggFor(slug, s.scope);
@@ -667,10 +666,7 @@
 										href={kiezHref}
 									>
 										{level.kiezName
-											? m.inspector_kiez_profile_link_named(
-													{ name: level.kiezName },
-													localeOpts
-												)
+											? m.inspector_kiez_profile_link_named({ name: level.kiezName }, localeOpts)
 											: m.inspector_kiez_profile_link_unnamed(undefined, localeOpts)}
 									</a>
 									{#if kiezComposite !== null}
@@ -679,7 +675,10 @@
 											class="shrink-0 font-mono text-xs text-ink-muted"
 											title={m.inspector_kiez_composite_title(undefined, localeOpts)}
 										>
-											{m.inspector_score_label({ value: String(Math.round(kiezComposite)) }, localeOpts)}
+											{m.inspector_score_label(
+												{ value: String(Math.round(kiezComposite)) },
+												localeOpts
+											)}
 										</span>
 									{/if}
 								</div>
@@ -857,7 +856,10 @@
 		<div data-testid="inspector-print-meta">
 			<p>{addressName}</p>
 			<p>
-				{m.inspector_print_footer({ date: formatDate(new Date().toISOString(), localeOpts) }, localeOpts)}
+				{m.inspector_print_footer(
+					{ date: formatDate(new Date().toISOString(), localeOpts) },
+					localeOpts
+				)}
 			</p>
 			<p>{page.url.toString()}</p>
 		</div>

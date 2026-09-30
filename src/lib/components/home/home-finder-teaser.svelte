@@ -22,7 +22,9 @@
 <section data-testid="home-finder-teaser" class="grid items-center gap-8 md:grid-cols-[1fr_1.2fr]">
 	<div class="space-y-6">
 		<header class="space-y-2">
-			<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.home_finder_eyebrow()}</p>
+			<p class="font-mono text-xs tracking-wider text-accent uppercase">
+				{m.home_finder_eyebrow()}
+			</p>
 			<h2 class="font-serif text-2xl text-ink md:text-3xl">{m.home_finder_heading()}</h2>
 			<p class="max-w-prose font-serif text-base text-ink-muted">
 				{m.home_finder_lead()}

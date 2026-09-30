@@ -305,7 +305,9 @@
 					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					data-testid="wahl-vorlaeufig-marker"
 				>
-					{wahlVorlaeufigLabel(localeOpts)}{#if currentBundle.wahl.sourceUpdatedAt}&nbsp;{m.inspector_wahl_vorlaeufig_stand(
+					{wahlVorlaeufigLabel(
+						localeOpts
+					)}{#if currentBundle.wahl.sourceUpdatedAt}&nbsp;{m.inspector_wahl_vorlaeufig_stand(
 							{ date: formatWahlDate(currentBundle.wahl.sourceUpdatedAt, localeOpts) },
 							localeOpts
 						)}{/if}

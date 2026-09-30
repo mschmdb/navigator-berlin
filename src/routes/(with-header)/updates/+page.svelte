@@ -12,12 +12,17 @@
 		applyCategoryFilter
 	} from '$lib/content/updates/parse-filter.js';
 	import { buildBlogIndex, buildBreadcrumbList } from '$lib/seo/index.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import type { UpdateCategory } from '$lib/content/updates/types.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
 
 	const entries = $derived(data.entries);
+	// Feeds bleiben DE (kein EN-Feed): auf `/en/updates` kennzeichnet hreflang das Ziel.
+	const feedLang = $derived(getLocale() === 'de' ? undefined : 'de');
 
 	// URL-State-Sync für Filter
 	const urlFilter = $derived(parseCategoryFilter(page.url.searchParams.get('cat')));
@@ -45,18 +50,24 @@
 
 	const filteredEntries = $derived(applyCategoryFilter(entries, new Set(filterValue)));
 
-	const pageTitle = 'Updates - Berlin in Daten - navigator.berlin';
-	const pageDescription =
-		'Was sich an navigator.berlin verändert: neue Daten, Features und Methodik-Änderungen. Mit RSS und Atom.';
+	const pageTitle = $derived(m.updates_index_page_title());
+	const pageDescription = $derived(m.updates_index_page_description());
 
-	const blogJsonLd = $derived(buildBlogIndex({ entries, origin: page.url.origin }));
+	const blogJsonLd = $derived(
+		buildBlogIndex({
+			entries,
+			origin: page.url.origin,
+			locale: getLocale(),
+			description: m.updates_jsonld_blog_description()
+		})
+	);
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: '/' },
-				{ name: 'Updates', path: '/updates' }
+				{ name: 'Berlin', path: localizedHref('/') },
+				{ name: 'Updates', path: localizedHref('/updates') }
 			]
 		})
 	);
@@ -78,18 +89,21 @@
 	<header class="flex flex-col gap-2">
 		<h1 data-testid="updates-page-title" class="font-serif text-3xl text-ink">Updates</h1>
 		<p class="font-serif text-lg leading-relaxed text-ink-muted">
-			Daten-Refreshes, Feature-Releases und Methodik-Änderungen. Abonnieren via
+			{m.updates_index_lead_before()}
 			<a
 				href="/updates/rss.xml"
+				hreflang={feedLang}
 				class="hover:text-accent-strong text-accent underline underline-offset-2">RSS</a
 			>,
 			<a
 				href="/updates/atom.xml"
+				hreflang={feedLang}
 				class="hover:text-accent-strong text-accent underline underline-offset-2">Atom</a
 			>
-			oder
+			{m.updates_index_lead_or()}
 			<a
 				href="/updates/feed.json"
+				hreflang={feedLang}
 				class="hover:text-accent-strong text-accent underline underline-offset-2">JSON Feed</a
 			>.
 		</p>
@@ -102,20 +116,27 @@
 		aria-live="polite"
 		data-testid="updates-filter-feedback"
 	>
-		{#if filterValue.length === 0}
-			Alle Kategorien aktiv. {filteredEntries.length} Einträge.
+		{#if filterValue.length === 0 && filteredEntries.length === 1}
+			{m.updates_index_filter_feedback_all_one()}
+		{:else if filterValue.length === 0}
+			{m.updates_index_filter_feedback_all({ count: filteredEntries.length })}
+		{:else if filteredEntries.length === 1}
+			{m.updates_index_filter_feedback_filtered_one()}
 		{:else}
-			{filteredEntries.length}
-			{filteredEntries.length === 1 ? 'Eintrag' : 'Einträge'} gefiltert.
+			{m.updates_index_filter_feedback_filtered_many({ count: filteredEntries.length })}
 		{/if}
 	</p>
 
-	<section aria-label="Update-Einträge" class="flex flex-col gap-4" data-testid="updates-list">
+	<section
+		aria-label={m.updates_index_list_aria_label()}
+		class="flex flex-col gap-4"
+		data-testid="updates-list"
+	>
 		{#each filteredEntries as entry (entry.slug)}
 			<UpdatesEntryCard {entry} />
 		{:else}
 			<p class="font-serif text-base text-ink-muted">
-				Keine Updates in dieser Auswahl. Filter zurücksetzen oder andere Kategorie wählen.
+				{m.updates_index_empty()}
 			</p>
 		{/each}
 	</section>

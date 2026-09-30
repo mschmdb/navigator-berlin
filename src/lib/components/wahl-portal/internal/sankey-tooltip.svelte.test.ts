@@ -36,7 +36,9 @@ describe('sankey-tooltip.svelte', () => {
 			pos: { x: 0, y: 0 },
 			content: { title: 'Hansaviertel' }
 		});
-		await expect.element(page.getByTestId('sankey-tooltip-title')).toHaveTextContent('Hansaviertel');
+		await expect
+			.element(page.getByTestId('sankey-tooltip-title'))
+			.toHaveTextContent('Hansaviertel');
 		await expect.element(page.getByTestId('sankey-tooltip-detail')).not.toBeInTheDocument();
 	});
 

@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { BERLIN_NARRATIVE_MARKERS, getNarrativeMarkers, markersInRange } from './narrative-markers.js';
+import {
+	BERLIN_NARRATIVE_MARKERS,
+	getNarrativeMarkers,
+	markersInRange
+} from './narrative-markers.js';
 
 describe('BERLIN_NARRATIVE_MARKERS', () => {
 	it('contains the six confirmed anchor points in chronological order', () => {

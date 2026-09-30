@@ -9,8 +9,11 @@ const DraftSchema = v.object({
 	category: v.picklist(['daten-update', 'feature', 'methodik', 'datenquelle', 'lizenz'] as const),
 	title_de: v.pipe(v.string(), v.minLength(1), v.maxLength(80)),
 	summary_de: v.pipe(v.string(), v.minLength(1), v.maxLength(160)),
+	title_en: v.pipe(v.string(), v.minLength(1), v.maxLength(80)),
+	summary_en: v.pipe(v.string(), v.minLength(1), v.maxLength(160)),
 	tags: v.pipe(v.array(v.pipe(v.string(), v.regex(/^[a-z0-9-]+$/))), v.maxLength(8)),
-	body: v.pipe(v.string(), v.minLength(1))
+	body: v.pipe(v.string(), v.minLength(1)),
+	body_en: v.pipe(v.string(), v.minLength(1))
 });
 
 const SkipSchema = v.object({

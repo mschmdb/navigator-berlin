@@ -23,7 +23,11 @@
 	import { getWahlPortalState } from '$lib/state/wahl-portal-context.svelte.js';
 	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
 	import { m } from '$lib/paraglide/messages.js';
-	import { wahlEbeneLabel, sourceDisplayLabel, licenseDisplayLabel } from '$lib/data/wahl-labels.js';
+	import {
+		wahlEbeneLabel,
+		sourceDisplayLabel,
+		licenseDisplayLabel
+	} from '$lib/data/wahl-labels.js';
 	import { parteiColor } from '$lib/data/partei-farben.js';
 	import DataTableAlternative, {
 		type TableColumn
@@ -390,7 +394,9 @@
 							class="fill-ink font-mono text-[11px] tabular-nums"
 							data-testid="sankey-column-label"
 						>
-							{spalte.jahr}{spalte.istWiederholung ? ` ${m.wahl_portal_wiederholung_kuerzel()}` : ''}
+							{spalte.jahr}{spalte.istWiederholung
+								? ` ${m.wahl_portal_wiederholung_kuerzel()}`
+								: ''}
 						</text>
 					{/each}
 				</svg>

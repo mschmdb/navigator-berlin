@@ -443,7 +443,9 @@ describe('aggregationHinweisText', () => {
 	});
 
 	it('EN: liefert die entsprechenden englischen Hinweis-Texte je Ebene', () => {
-		expect(aggregationHinweisText('stimmbezirk', { locale: 'en' })).toMatch(/postal district groups/);
+		expect(aggregationHinweisText('stimmbezirk', { locale: 'en' })).toMatch(
+			/postal district groups/
+		);
 		expect(aggregationHinweisText('kiez', { locale: 'en' })).toMatch(/143 Berlin Kieze/);
 		expect(aggregationHinweisText('bezirk', { locale: 'en' })).toMatch(/official district totals/);
 	});

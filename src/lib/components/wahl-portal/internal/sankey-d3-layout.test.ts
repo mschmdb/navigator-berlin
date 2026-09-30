@@ -132,7 +132,14 @@ describe('computeSankeyLayoutWithModule', () => {
 		const graph: SankeyGraph = {
 			nodes: [
 				node({ id: 'partei:2016:SPD', column: 0, anzahl: 4 }),
-				node({ id: 'partei:2021:GRÜNE', column: 1, jahr: 2021, label: 'GRÜNE', partei: 'GRÜNE', anzahl: 3 }),
+				node({
+					id: 'partei:2021:GRÜNE',
+					column: 1,
+					jahr: 2021,
+					label: 'GRÜNE',
+					partei: 'GRÜNE',
+					anzahl: 3
+				}),
 				node({ id: 'partei:2021:SPD', column: 1, jahr: 2021, anzahl: 1 })
 			],
 			links: [
@@ -143,7 +150,13 @@ describe('computeSankeyLayoutWithModule', () => {
 					nach: 'GRÜNE',
 					value: 3
 				}),
-				link({ source: 'partei:2016:SPD', target: 'partei:2021:SPD', von: 'SPD', nach: 'SPD', value: 1 })
+				link({
+					source: 'partei:2016:SPD',
+					target: 'partei:2021:SPD',
+					von: 'SPD',
+					nach: 'SPD',
+					value: 1
+				})
 			],
 			spalten: [
 				{ jahr: 2016, istWiederholung: false },

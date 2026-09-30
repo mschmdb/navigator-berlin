@@ -30,9 +30,13 @@ describe('AlleWahlenBlock (Matze-Entscheidung 24.09., Intent-Gap „verwaiste De
 		await expect.element(page.getByTestId('alle-wahlen-gruppe-bvv')).toBeInTheDocument();
 
 		const erststimmeLink = page.getByTestId('alle-wahlen-link-2025-btw-erststimme');
-		await expect.element(erststimmeLink).toHaveAttribute('href', '/berlin-wahlen/2025-btw-erststimme');
+		await expect
+			.element(erststimmeLink)
+			.toHaveAttribute('href', '/berlin-wahlen/2025-btw-erststimme');
 		const zweitstimmeLink = page.getByTestId('alle-wahlen-link-2025-btw-zweitstimme');
-		await expect.element(zweitstimmeLink).toHaveAttribute('href', '/berlin-wahlen/2025-btw-zweitstimme');
+		await expect
+			.element(zweitstimmeLink)
+			.toHaveAttribute('href', '/berlin-wahlen/2025-btw-zweitstimme');
 	});
 
 	it('markiert Wiederholungswahlen', async () => {

@@ -9,9 +9,9 @@ import { loadUpdatesFromModules, sortByDateDesc } from '$lib/content/updates/loa
  * - `/updates`-Index: priority 0.6, lastmod = neuestes Entry-Datum.
  * - Per-Entry `/updates/{slug}`: priority 0.7, lastmod = `date`-Frontmatter.
  *
- * Phase 1 DE-only (memory `project_i18n_phase_1_de_only`): EN-Routes existieren nicht,
- * Source liefert für `locale === 'en'` einen leeren Array. Story 3.x kann später `/en/updates`
- * ergänzen.
+ * Nur DE (i18n C4d): `/en/updates` ist übersetzt, steht aber bewusst nicht in
+ * `sitemap-en.xml` (Entscheidung Spec C4d, wie `STATIC_PAGES_SOURCE`). Für
+ * `locale !== baseLocale` liefert die Source daher einen leeren Array.
  */
 
 export interface BuildUpdatesSitemapEntriesInput {

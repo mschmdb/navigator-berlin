@@ -9,7 +9,12 @@
  * und lädt das Modul lazy.
  */
 import type { SankeyGraph } from './sankey-graph.js';
-import { computeSankeyLayoutWithModule, type D3SankeyModule, type SankeyDimensions, type SankeyLayoutResult } from './sankey-d3-layout.js';
+import {
+	computeSankeyLayoutWithModule,
+	type D3SankeyModule,
+	type SankeyDimensions,
+	type SankeyLayoutResult
+} from './sankey-d3-layout.js';
 
 export type {
 	D3SankeyModule,

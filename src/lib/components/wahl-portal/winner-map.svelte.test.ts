@@ -628,9 +628,9 @@ describe('wahl_portal_fallback_hinweis_* Messages (Review-Fund)', () => {
 
 	it('EN: "mit Jahr"/"ohne Jahr"-Varianten je Ebene mit korrektem, fest eingebautem Plural', async () => {
 		const { m } = await import('$lib/paraglide/messages.js');
-		expect(
-			m.wahl_portal_fallback_hinweis_bezirk_mit_jahr({ jahr: 2011 }, { locale: 'en' })
-		).toBe('2011: no polling district data, map shows Bezirke.');
+		expect(m.wahl_portal_fallback_hinweis_bezirk_mit_jahr({ jahr: 2011 }, { locale: 'en' })).toBe(
+			'2011: no polling district data, map shows Bezirke.'
+		);
 		expect(m.wahl_portal_fallback_hinweis_kiez_ohne_jahr(undefined, { locale: 'en' })).toBe(
 			'No polling district data, map shows Kieze.'
 		);

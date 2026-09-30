@@ -2,7 +2,12 @@
 	import type { Snippet } from 'svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
-	import { META_LINKS, META_LINK_GROUPS, metaLinkLabel, metaLinkGroupTitle } from './internal/meta-links.js';
+	import {
+		META_LINKS,
+		META_LINK_GROUPS,
+		metaLinkLabel,
+		metaLinkGroupTitle
+	} from './internal/meta-links.js';
 	import SocialLinks from './internal/social-links.svelte';
 	import MtcLogo from './internal/mtc-logo.svelte';
 	import { PixelLogo } from '$lib/components/ui';
@@ -48,7 +53,11 @@
 		<div class="mx-auto max-w-[1440px] px-4">
 			<div class="flex flex-col gap-10 md:flex-row md:justify-between">
 				<div class="flex max-w-sm flex-col gap-3">
-					<a href={localizedHref('/')} aria-label="navigator.berlin" class="flex items-center gap-2">
+					<a
+						href={localizedHref('/')}
+						aria-label="navigator.berlin"
+						class="flex items-center gap-2"
+					>
 						<PixelLogo size={36} title="navigator.berlin" />
 						<span class="font-serif text-lg text-ink">navigator.berlin</span>
 					</a>

@@ -1,6 +1,8 @@
 ---
 title_de: 'Mehrere Karten-Layer gleichzeitig, endlich lesbar'
+title_en: 'Several map layers at once, finally readable'
 summary_de: 'Jede Score-Dimension hat eine eigene Farbe, ein zweiter Layer erscheint als Größen-Symbole, die Rollen lassen sich tauschen. Dazu: neues Logo.'
+summary_en: 'Each score dimension has its own colour, a second layer appears as size symbols, and roles can be swapped. Plus: a new logo.'
 date: 2026-08-22
 category: feature
 tags: [karte, kiez-score, barrierefreiheit, design]

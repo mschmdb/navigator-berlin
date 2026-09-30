@@ -217,7 +217,8 @@ export function resolveZeitJahrOptions(params: {
 	readonly winnersAlleJahre: readonly WinnerApiRow[];
 }): ZeitJahrOption[] {
 	const { reiheJahre, aktivePartei, winnersAlleJahre } = params;
-	if (aktivePartei) return reiheJahre.map((w) => ({ jahr: w.jahr, isRepeatElection: w.isRepeatElection }));
+	if (aktivePartei)
+		return reiheJahre.map((w) => ({ jahr: w.jahr, isRepeatElection: w.isRepeatElection }));
 	const gueltigeJahre = new Set(reiheJahre.map((w) => w.jahr));
 	return buildZeitJahrOptions(winnersAlleJahre).filter((o) => gueltigeJahre.has(o.jahr));
 }

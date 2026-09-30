@@ -93,7 +93,9 @@ describe('kiez-score-compare-block', () => {
 		it('Dimension-Chip zeigt EN-Skalen-Label + EN-Severity-Text in der Aria', async () => {
 			overwriteGetLocale(() => 'en');
 			render(KiezScoreCompareBlock, { scoreA: score(), scoreB: null });
-			const dim = (await page.getByTestId('compare-kiez-score-dim-ruhe-luft').element()) as HTMLElement;
+			const dim = (await page
+				.getByTestId('compare-kiez-score-dim-ruhe-luft')
+				.element()) as HTMLElement;
 			const chip = dim.querySelector('[data-testid="value-chip"]') as HTMLElement;
 			expect(chip.querySelector('[data-testid="value-chip-value"]')?.textContent?.trim()).toBe(
 				'medium (50)'
@@ -104,7 +106,9 @@ describe('kiez-score-compare-block', () => {
 		it('Gesamt-Chip: EN-Skalen-Label + EN-Overall-LayerName in der Aria', async () => {
 			overwriteGetLocale(() => 'en');
 			render(KiezScoreCompareBlock, { scoreA: score(), scoreB: null });
-			const overall = (await page.getByTestId('compare-kiez-score-overall').element()) as HTMLElement;
+			const overall = (await page
+				.getByTestId('compare-kiez-score-overall')
+				.element()) as HTMLElement;
 			const chip = overall.querySelector('[data-testid="value-chip"]') as HTMLElement;
 			expect(chip.querySelector('[data-testid="value-chip-value"]')?.textContent?.trim()).toBe(
 				'high (64/100)'

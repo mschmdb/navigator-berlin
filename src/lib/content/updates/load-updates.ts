@@ -16,14 +16,28 @@ import type { UpdateEntry } from './types.js';
  * Pure-Function-Helper (kein I/O), damit tests fixture-basiert laufen.
  */
 
-const FILENAME_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+)\.md$/;
+/** DE-Eintrag `YYYY-MM-DD-<slug>.md`. Der Lookbehind schließt `.en.md`-Schwestern aus. */
+const FILENAME_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+?)(?<!\.en)\.md$/;
+
+/** EN-Schwester `YYYY-MM-DD-<slug>.en.md`, trägt nur den englischen Body. */
+const EN_SISTER_REGEX = /^(\d{4}-\d{2}-\d{2}-.+)\.en\.md$/;
+
+/** Dateiname mit Locale-Suffix `YYYY-MM-DD-<slug>.<xx>.md`, `xx` != `en`: nicht unterstützt. */
+const OTHER_LOCALE_REGEX = /^\d{4}-\d{2}-\d{2}-.+\.(?!en\.md$)[a-z]{2}\.md$/;
+
+function filenameOf(path: string): string {
+	return path.split('/').pop() ?? path;
+}
 
 /**
  * Strippt `YYYY-MM-DD-` Prefix + `.md`-Suffix aus Datei-Pfad.
  * Wirft bei Filename ohne Date-Prefix (verletzt Naming-Convention AC-1).
  */
 export function extractSlugFromPath(path: string): string {
-	const filename = path.split('/').pop() ?? path;
+	const filename = filenameOf(path);
+	if (EN_SISTER_REGEX.test(filename)) {
+		throw new Error(`Update-Loader: EN-Schwester ist kein eigener Eintrag: ${path}`);
+	}
 	const match = FILENAME_REGEX.exec(filename);
 	if (!match) {
 		throw new Error(`Update-Datei verletzt Naming-Pattern YYYY-MM-DD-{slug}.md: ${path}`);
@@ -65,18 +79,54 @@ export function parseUpdateModule(path: string, raw: string): UpdateEntry {
  */
 export function loadUpdatesFromModules(modules: Record<string, unknown>): UpdateEntry[] {
 	const entries: UpdateEntry[] = [];
+	const sisters = new Map<string, { path: string; bodyEn: string }>();
 	for (const [path, raw] of Object.entries(modules)) {
 		// README + nicht-Date-prefixed Files überspringen (Maintainer-Convention).
-		const filename = path.split('/').pop() ?? path;
-		if (!FILENAME_REGEX.test(filename)) continue;
+		const filename = filenameOf(path);
+		if (OTHER_LOCALE_REGEX.test(filename)) {
+			throw new Error(`Update-Loader: Locale-Suffix wird nicht unterstützt (nur .en.md): ${path}`);
+		}
+		const sisterMatch = EN_SISTER_REGEX.exec(filename);
+		if (!sisterMatch && !FILENAME_REGEX.test(filename)) continue;
 		if (typeof raw !== 'string') {
 			throw new Error(
 				`Update-Loader: Modul ${path} ist kein Raw-String. Vergessen \`query: '?raw'\` zu setzen?`
 			);
 		}
+		if (sisterMatch) {
+			if (/^\uFEFF?---\s*(\r?\n|$)/.test(raw)) {
+				throw new Error(`Update-Loader: EN-Schwester darf kein Frontmatter haben: ${path}`);
+			}
+			sisters.set(sisterMatch[1] ?? '', { path, bodyEn: raw.trim() });
+			continue;
+		}
 		entries.push(parseUpdateModule(path, raw));
 	}
-	return sortByDateDesc(entries);
+	return sortByDateDesc(attachEnglishBodies(entries, sisters));
+}
+
+/**
+ * Ordnet jede EN-Schwester dem DE-Eintrag mit gleichem `YYYY-MM-DD-<slug>` zu.
+ * Eine Schwester ohne DE-Datei wirft (Build-Fehler mit Pfad). Eine leere
+ * Schwester zählt als fehlend, der Eintrag fällt dann auf DE zurück.
+ */
+function attachEnglishBodies(
+	entries: readonly UpdateEntry[],
+	sisters: ReadonlyMap<string, { path: string; bodyEn: string }>
+): UpdateEntry[] {
+	const remaining = new Map(sisters);
+	const out = entries.map((entry) => {
+		const key = filenameOf(entry.filePath).replace(/\.md$/, '');
+		const sister = remaining.get(key);
+		if (!sister) return entry;
+		remaining.delete(key);
+		return sister.bodyEn ? { ...entry, bodyEn: sister.bodyEn } : entry;
+	});
+	const orphan = remaining.values().next().value;
+	if (orphan) {
+		throw new Error(`Update-Loader: EN-Schwester ohne DE-Datei: ${orphan.path}`);
+	}
+	return out;
 }
 
 /**

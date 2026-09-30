@@ -1,14 +1,20 @@
 <script lang="ts">
 	import type { UpdateEntry } from '$lib/content/updates/types.js';
-	import { CATEGORY_BADGE_CLASSES, CATEGORY_LABEL_DE, formatDateDe } from './category-label.js';
+	import { localizeUpdateEntry } from '$lib/content/updates/localize-update-entry.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { CATEGORY_BADGE_CLASSES, categoryLabel, formatUpdateDate } from './category-label.js';
 
 	type Props = { entry: UpdateEntry };
 	let { entry }: Props = $props();
 
-	const dateLabel = $derived(formatDateDe(entry.frontmatter.date));
-	const categoryLabel = $derived(CATEGORY_LABEL_DE[entry.frontmatter.category]);
+	const locale = $derived(getLocale());
+	const localized = $derived(localizeUpdateEntry(entry, locale));
+	const dateLabel = $derived(formatUpdateDate(entry.frontmatter.date, locale));
+	const badgeLabel = $derived(categoryLabel(entry.frontmatter.category, locale));
 	const categoryClass = $derived(CATEGORY_BADGE_CLASSES[entry.frontmatter.category]);
-	const detailHref = $derived(`/updates/${entry.slug}`);
+	const detailHref = $derived(localizedHref(`/updates/${entry.slug}`));
 </script>
 
 <article
@@ -23,24 +29,27 @@
 			class={`inline-flex items-center border px-2 py-0.5 font-mono text-xs ${categoryClass}`}
 			data-testid="category-badge"
 		>
-			{categoryLabel}
+			{badgeLabel}
 		</span>
 	</div>
-	<h2 class="font-serif text-2xl text-ink">
+	<h2 class="font-serif text-2xl text-ink" lang={localized.titleIsDeFallback ? 'de' : undefined}>
 		<a
 			href={detailHref}
 			class="hover:text-accent focus-visible:text-accent"
 			data-testid="entry-link"
 		>
-			{entry.frontmatter.title_de}
+			{localized.title}
 		</a>
 	</h2>
-	<p class="font-serif text-base leading-relaxed text-ink-muted">
-		{entry.frontmatter.summary_de}
+	<p
+		class="font-serif text-base leading-relaxed text-ink-muted"
+		lang={localized.summaryIsDeFallback ? 'de' : undefined}
+	>
+		{localized.summary}
 	</p>
 	<p class="font-mono text-xs text-ink-subtle">
 		<a href={detailHref} class="hover:text-accent-strong text-accent underline underline-offset-2">
-			Mehr lesen
+			{m.updates_card_read_more()}
 		</a>
 	</p>
 </article>

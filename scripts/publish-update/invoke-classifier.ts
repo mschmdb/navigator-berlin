@@ -129,7 +129,7 @@ function buildUserPrompt(input: {
 		'## Anweisung',
 		'Klassifiziere diesen Commit. Antwort MUSS gültiges JSON nach DraftResultSchema sein:',
 		'- `{ "kind": "skip", "reason": "..." }` falls nicht public-relevant',
-		'- `{ "kind": "draft", "category": "...", "title_de": "...", "summary_de": "...", "tags": [...], "body": "..." }` falls relevant'
+		'- `{ "kind": "draft", "category": "...", "title_de": "...", "summary_de": "...", "title_en": "...", "summary_en": "...", "tags": [...], "body": "...", "body_en": "..." }` falls relevant'
 	]
 		.filter(Boolean)
 		.join('\n');

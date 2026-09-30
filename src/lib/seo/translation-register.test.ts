@@ -37,7 +37,13 @@ describe('isRouteTranslated', () => {
 			{ pathname: '/umwelt-infrastruktur-score', locale: 'en' },
 			{ pathname: '/hitze', locale: 'en' },
 			{ pathname: '/kuehle-orte', locale: 'en' },
-			{ pathname: '/lizenzen', locale: 'en' }
+			{ pathname: '/lizenzen', locale: 'en' },
+			{
+				pathname: '/updates',
+				locale: 'en',
+				prefix: true,
+				except: ['/updates/rss.xml', '/updates/atom.xml', '/updates/feed.json']
+			}
 		]);
 		expect(isRouteTranslated('/berlin-wahlen', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen', 'en')).toBe(true);
@@ -93,10 +99,30 @@ describe('isRouteTranslated', () => {
 		}
 	});
 
-	it('Block C4c: /updates, /impressum und /datenschutz bleiben unübersetzt', () => {
-		for (const path of ['/updates', '/impressum', '/datenschutz']) {
+	it('Block C4c: /impressum und /datenschutz bleiben unübersetzt', () => {
+		for (const path of ['/impressum', '/datenschutz']) {
 			expect(isRouteTranslated(path, 'en'), path).toBe(false);
 		}
+	});
+
+	// Block C4d (`spec-i18n-c4d-updates.md`): `/updates` mit `prefix`, damit auch
+	// künftige Einträge ohne Register-Pflege mitziehen.
+	it('Block C4d: /updates und jeder Eintrag darunter sind registriert', () => {
+		for (const path of ['/updates', '/updates/launch', '/updates/ein-neuer-eintrag']) {
+			expect(isRouteTranslated(path, 'en'), path).toBe(true);
+			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
+		}
+	});
+
+	it('Block C4d: die DE-only Feeds unter /updates sind nicht registriert', () => {
+		for (const path of ['/updates/rss.xml', '/updates/atom.xml', '/updates/feed.json']) {
+			expect(isRouteTranslated(path, 'en'), path).toBe(false);
+			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(false);
+		}
+	});
+
+	it('Block C4d: ein ähnlich benannter Pfad bleibt unübersetzt (Segment-Grenze)', () => {
+		expect(isRouteTranslated('/updates-archiv', 'en')).toBe(false);
 	});
 
 	// Block B2 (`spec-i18n-b2-shell.md`, Entscheidung Matze 26.09. 2A):

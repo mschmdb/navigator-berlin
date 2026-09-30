@@ -407,7 +407,9 @@ test('Winner-Map (Ebene stimmbezirk): Default-Ansicht rendert die Stimmbezirks-K
 	// Seite mit und hat eine eigene Tabellen-Alternative mit demselben Testid.
 	const karteChapter = page.getByTestId('wahl-portal-chapter-karte');
 	await karteChapter.getByTestId('table-toggle').click();
-	await expect(karteChapter.getByTestId('data-table')).toContainText('Stimmbezirke 100, 124 und Briefwahl 1A');
+	await expect(karteChapter.getByTestId('data-table')).toContainText(
+		'Stimmbezirke 100, 124 und Briefwahl 1A'
+	);
 });
 
 test('Winner-Map (Ebene stimmbezirk): Ebenen-Wechsel zu kiez aktualisiert die bestehende Karte', async ({

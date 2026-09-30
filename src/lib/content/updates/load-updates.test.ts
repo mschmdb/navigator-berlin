@@ -43,10 +43,10 @@ describe('extractSlugFromPath', () => {
 		expect(() => extractSlugFromPath('/_content/updates/launch.md')).toThrow(/YYYY-MM-DD/);
 	});
 
-	it('wirft bei .en.md-Suffix (Phase 1 DE-only)', () => {
-		// Phase 1: EN-Variante nicht implementiert
-		const slug = extractSlugFromPath('/_content/updates/2026-05-15-launch.md');
-		expect(slug).toBe('launch');
+	it('wirft bei .en.md-Schwester, damit kein Slug "<slug>.en" entsteht', () => {
+		expect(() => extractSlugFromPath('/_content/updates/2026-05-15-launch.en.md')).toThrow(
+			/Schwester/
+		);
 	});
 });
 
@@ -101,6 +101,96 @@ describe('loadUpdatesFromModules', () => {
 		const entries = loadUpdatesFromModules(modules);
 		expect(entries).toHaveLength(1);
 		expect(entries[0]?.slug).toBe('a');
+	});
+});
+
+describe('loadUpdatesFromModules mit .en.md-Schwester', () => {
+	const enBody = '\n## Source\n\nEnglish body.\n\n';
+
+	it('ordnet die Schwester dem DE-Eintrag als bodyEn zu', () => {
+		const entries = loadUpdatesFromModules({
+			'/_content/updates/2026-05-15-a.md': fixtureA,
+			'/_content/updates/2026-05-15-a.en.md': enBody
+		});
+		expect(entries).toHaveLength(1);
+		expect(entries[0]?.slug).toBe('a');
+		expect(entries[0]?.bodyEn).toBe('## Source\n\nEnglish body.');
+		expect(entries[0]?.body).toContain('# Body A');
+	});
+
+	it('erzeugt nie einen eigenen Eintrag "a.en"', () => {
+		const entries = loadUpdatesFromModules({
+			'/_content/updates/2026-05-15-a.en.md': 'English.',
+			'/_content/updates/2026-05-15-a.md': fixtureA,
+			'/_content/updates/2026-04-01-b.md': fixtureB
+		});
+		expect(entries.map((e) => e.slug).sort()).toEqual(['a', 'b']);
+	});
+
+	it('Eintrag ohne Schwester hat kein bodyEn', () => {
+		const entries = loadUpdatesFromModules({ '/_content/updates/2026-05-15-a.md': fixtureA });
+		expect(entries[0]?.bodyEn).toBeUndefined();
+	});
+
+	it('leere Schwester zählt als fehlend', () => {
+		const entries = loadUpdatesFromModules({
+			'/_content/updates/2026-05-15-a.md': fixtureA,
+			'/_content/updates/2026-05-15-a.en.md': '  \n\n'
+		});
+		expect(entries[0]?.bodyEn).toBeUndefined();
+	});
+
+	it('verwaiste Schwester wirft mit Pfad', () => {
+		expect(() =>
+			loadUpdatesFromModules({
+				'/_content/updates/2026-05-15-a.md': fixtureA,
+				'/_content/updates/2026-06-01-ghost.en.md': 'English.'
+			})
+		).toThrow(/2026-06-01-ghost\.en\.md/);
+	});
+
+	it('Schwester mit gleichem Slug, aber anderem Datum ist verwaist', () => {
+		expect(() =>
+			loadUpdatesFromModules({
+				'/_content/updates/2026-05-15-a.md': fixtureA,
+				'/_content/updates/2026-05-16-a.en.md': 'English.'
+			})
+		).toThrow(/2026-05-16-a\.en\.md/);
+	});
+
+	it('Schwester mit ---Frontmatter wirft mit Pfad', () => {
+		expect(() =>
+			loadUpdatesFromModules({
+				'/_content/updates/2026-05-15-a.md': fixtureA,
+				'/_content/updates/2026-05-15-a.en.md': '---\ntitle_en: X\n---\n\nEnglish.'
+			})
+		).toThrow(/Frontmatter.*2026-05-15-a\.en\.md/);
+	});
+
+	it('Datei mit anderem Locale-Suffix (.fr.md) wirft statt Slug "a.fr"', () => {
+		expect(() =>
+			loadUpdatesFromModules({
+				'/_content/updates/2026-05-15-a.md': fixtureA,
+				'/_content/updates/2026-05-15-a.fr.md': 'Français.'
+			})
+		).toThrow(/2026-05-15-a\.fr\.md/);
+	});
+
+	it('Horizontale Linie im Body der Schwester (nicht am Anfang) ist erlaubt', () => {
+		const entries = loadUpdatesFromModules({
+			'/_content/updates/2026-05-15-a.md': fixtureA,
+			'/_content/updates/2026-05-15-a.en.md': 'Intro.\n\n---\n\nMore.'
+		});
+		expect(entries[0]?.bodyEn).toContain('More.');
+	});
+
+	it('Schwester ohne Raw-String wirft', () => {
+		expect(() =>
+			loadUpdatesFromModules({
+				'/_content/updates/2026-05-15-a.md': fixtureA,
+				'/_content/updates/2026-05-15-a.en.md': { default: 'x' }
+			})
+		).toThrow(/Raw-String/);
 	});
 });
 

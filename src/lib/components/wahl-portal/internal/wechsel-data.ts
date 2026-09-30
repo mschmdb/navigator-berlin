@@ -262,7 +262,10 @@ export function sortWechselEntriesForDisplay(
 	return [...entries].sort((a, b) => {
 		const countDiff = (counts.get(b.gebietSlug) ?? 0) - (counts.get(a.gebietSlug) ?? 0);
 		if (countDiff !== 0) return countDiff;
-		const nameDiff = (a.gebietName ?? a.gebietSlug).localeCompare(b.gebietName ?? b.gebietSlug, 'de');
+		const nameDiff = (a.gebietName ?? a.gebietSlug).localeCompare(
+			b.gebietName ?? b.gebietSlug,
+			'de'
+		);
 		if (nameDiff !== 0) return nameDiff;
 		return a.jahr - b.jahr;
 	});

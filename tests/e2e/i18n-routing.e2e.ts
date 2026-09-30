@@ -716,14 +716,13 @@ test.describe('i18n Block B2: Startseite /en', () => {
 		expect(bodyText).toMatch(/\bBezirk/);
 	});
 
-	test('GET /en: Update-Teaser ohne title_en/summary_en fällt auf DE zurück, markiert mit lang="de"', async ({
-		page
-	}) => {
+	// Seit i18n C4d haben alle Einträge title_en/summary_en. Der DE-Fallback
+	// mit lang="de" ist per Unit-Test abgedeckt (`map-home-update-entry.test.ts`).
+	test('GET /en: Update-Teaser zeigt die EN-Fassung ohne lang="de"', async ({ page }) => {
 		await page.goto('/en');
 		const updates = page.getByTestId('home-updates-teaser');
 		if ((await updates.count()) === 0) test.skip();
-		const deTitles = updates.locator('[lang="de"]');
-		expect(await deTitles.count()).toBeGreaterThan(0);
+		await expect(updates.locator('[lang="de"]')).toHaveCount(0);
 	});
 
 	test('GET /en: interne Startseiten-Links bleiben unter /en (Hero, Quick-Link, Wahl-Karte, Layer-Teaser)', async ({

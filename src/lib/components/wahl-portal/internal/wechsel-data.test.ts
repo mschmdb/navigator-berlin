@@ -93,7 +93,12 @@ describe('computeWechselFromRows', () => {
 		const rows: WinnerApiRow[] = [
 			row({ jahr: 2016, partei: 'SPD' }),
 			row({ jahr: 2021, partei: 'SPD' }),
-			row({ jahr: 2023, partei: 'SPD', is_repeat_election: true, parent_slug: '2021-agh-zweitstimme' })
+			row({
+				jahr: 2023,
+				partei: 'SPD',
+				is_repeat_election: true,
+				parent_slug: '2021-agh-zweitstimme'
+			})
 		];
 		expect(computeWechselFromRows(rows)).toEqual([]);
 	});
@@ -184,7 +189,12 @@ describe('sortWechselEntriesForDisplay', () => {
 			['c', 1]
 		]);
 		const sorted = sortWechselEntriesForDisplay(entries, counts);
-		expect(sorted.map((e) => `${e.gebietSlug}-${e.jahr}`)).toEqual(['a-2021', 'a-2023', 'b-2021', 'c-2021']);
+		expect(sorted.map((e) => `${e.gebietSlug}-${e.jahr}`)).toEqual([
+			'a-2021',
+			'a-2023',
+			'b-2021',
+			'c-2021'
+		]);
 	});
 });
 
@@ -198,8 +208,20 @@ describe('computeUebergaengeFromRows', () => {
 		];
 		const uebergaenge = computeUebergaengeFromRows(rows);
 		expect(uebergaenge).toHaveLength(2);
-		expect(uebergaenge).toContainEqual({ vonJahr: 2016, nachJahr: 2021, von: 'SPD', nach: 'GRÜNE', anzahl: 3 });
-		expect(uebergaenge).toContainEqual({ vonJahr: 2016, nachJahr: 2021, von: 'SPD', nach: 'SPD', anzahl: 1 });
+		expect(uebergaenge).toContainEqual({
+			vonJahr: 2016,
+			nachJahr: 2021,
+			von: 'SPD',
+			nach: 'GRÜNE',
+			anzahl: 3
+		});
+		expect(uebergaenge).toContainEqual({
+			vonJahr: 2016,
+			nachJahr: 2021,
+			von: 'SPD',
+			nach: 'SPD',
+			anzahl: 1
+		});
 	});
 
 	it('I/O-Matrix Sankey AGH Kiez: Wiederholungswahl 2023 ersetzt 2021, kein eigener Übergang 2021->2023', () => {

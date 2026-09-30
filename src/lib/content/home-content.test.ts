@@ -1,11 +1,23 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { HOME_LAYER_TEASERS, homeLayerTeaserLabel, homeLayerTeaserSummary } from './home-layer-teasers.js';
+import {
+	HOME_LAYER_TEASERS,
+	homeLayerTeaserLabel,
+	homeLayerTeaserSummary
+} from './home-layer-teasers.js';
 import { HOME_FEATURED_BEZIRKE, homeFeaturedBezirkTeaser } from './home-featured-bezirke.js';
 import { HOME_DATA_SOURCES, homeDataSourceDescription } from './home-data-sources.js';
-import { HOME_QUICK_LINKS, buildQuickLinkHref, homeQuickLinkDescription } from './home-quick-links.js';
-import { HOME_SCREENSHOTS, homeScreenshotAlt, type HomeScreenshotKey } from './screenshot-manifest.js';
+import {
+	HOME_QUICK_LINKS,
+	buildQuickLinkHref,
+	homeQuickLinkDescription
+} from './home-quick-links.js';
+import {
+	HOME_SCREENSHOTS,
+	homeScreenshotAlt,
+	type HomeScreenshotKey
+} from './screenshot-manifest.js';
 
 const REPO_ROOT = resolve(process.cwd());
 

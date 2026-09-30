@@ -37,7 +37,11 @@
 	// zweiten hartcodierten Literal in der Message (Review-Fund). `formatDecimal`
 	// mit fester 1-Nachkommastelle reicht DE ("1,3"/"4,8") unverändert durch.
 	const detourFactorText = $derived(
-		formatDecimal(DETOUR_FACTOR, { ...localeOpts, maximumFractionDigits: 1, minimumFractionDigits: 1 })
+		formatDecimal(DETOUR_FACTOR, {
+			...localeOpts,
+			maximumFractionDigits: 1,
+			minimumFractionDigits: 1
+		})
 	);
 	const walkingSpeedKmhText = $derived(
 		formatDecimal((WALKING_SPEED_M_PER_MIN * 60) / 1000, {
@@ -95,17 +99,13 @@
 	});
 
 	function rowAriaLabel(modus: Modus, stop: NearestStop): string {
-		const softPart = stop.soft ? m.inspector_nearest_stops_row_soft_suffix(undefined, localeOpts) : '';
+		const softPart = stop.soft
+			? m.inspector_nearest_stops_row_soft_suffix(undefined, localeOpts)
+			: '';
 		const minutes =
 			stop.walkingMin === 1
-				? m.inspector_nearest_stops_minutes_singular(
-						{ count: String(stop.walkingMin) },
-						localeOpts
-					)
-				: m.inspector_nearest_stops_minutes_plural(
-						{ count: String(stop.walkingMin) },
-						localeOpts
-					);
+				? m.inspector_nearest_stops_minutes_singular({ count: String(stop.walkingMin) }, localeOpts)
+				: m.inspector_nearest_stops_minutes_plural({ count: String(stop.walkingMin) }, localeOpts);
 		return m.inspector_nearest_stops_row_aria(
 			{
 				modus: MODUS_LABEL[modus](),
@@ -179,10 +179,7 @@
 								{ radius: emptyStateRadiusText },
 								localeOpts
 							)
-						: m.inspector_nearest_stops_empty_default(
-								{ radius: emptyStateRadiusText },
-								localeOpts
-							)}
+						: m.inspector_nearest_stops_empty_default({ radius: emptyStateRadiusText }, localeOpts)}
 				</p>
 			{:else}
 				<ul class="divide-y divide-rule/40">

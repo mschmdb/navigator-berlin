@@ -2,7 +2,11 @@
 	import type { YearValue } from '$lib/data';
 	import { AreaChart, Tooltip } from 'layerchart';
 	import DataTableAlternative, { type TableColumn } from './data-table-alternative.svelte';
-	import { getNarrativeMarkers, markersInRange, type NarrativeMarker } from './internal/narrative-markers.js';
+	import {
+		getNarrativeMarkers,
+		markersInRange,
+		type NarrativeMarker
+	} from './internal/narrative-markers.js';
 	import { rollingMean } from '$lib/utils/rolling-mean.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
 	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '$lib/utils/normalperiod.js';
@@ -64,7 +68,11 @@
 	// bekommt jetzt ein Komma. Bewusste Ausnahme von der sonstigen
 	// Zeichen-für-Zeichen-DE-Parität dieser Story.
 	function formatTemp(n: number, decimals: 1 | 2): string {
-		return formatDecimal(n, { ...localeOpts, maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+		return formatDecimal(n, {
+			...localeOpts,
+			maximumFractionDigits: decimals,
+			minimumFractionDigits: decimals
+		});
 	}
 
 	const description = $derived(

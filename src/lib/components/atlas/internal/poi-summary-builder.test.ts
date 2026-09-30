@@ -181,7 +181,9 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 
 	describe('kuehle-orte (Story 15.3 Tooltip-Fix)', () => {
 		it('zeigt Ortsnamen als Titel + Kategorie als Untertitel', () => {
-			expect(getPopoverSummary('kuehle-orte', { name: 'Max-Liebermann-Haus', cat: 'Museum' })).toEqual({
+			expect(
+				getPopoverSummary('kuehle-orte', { name: 'Max-Liebermann-Haus', cat: 'Museum' })
+			).toEqual({
 				title: 'Max-Liebermann-Haus',
 				subtitle: 'Museum'
 			});
@@ -195,5 +197,4 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 			expect(getPopoverSummary('kuehle-orte', { cat: 'Museum' }).title).toBe('Kühle Orte');
 		});
 	});
-
 });

@@ -8,29 +8,36 @@
 	 * Phase 1 DE-only (memory `project_i18n_phase_1_de_only`): Feeds existieren nur
 	 * unter `/updates/*` ohne Locale-Prefix.
 	 */
+	import { getLocale } from '$lib/paraglide/runtime';
+
 	type Props = {
 		/** Absolute Origin der Site (page.url.origin). */
 		origin: string;
 	};
 	let { origin }: Props = $props();
 	const cleanOrigin = $derived(origin.replace(/\/+$/, ''));
+	// Feeds bleiben DE (kein EN-Feed): auf `/en/...` kennzeichnet hreflang die Sprache des Ziels.
+	const feedLang = $derived(getLocale() === 'de' ? undefined : 'de');
 </script>
 
 <svelte:head>
 	<link
 		rel="alternate"
+		hreflang={feedLang}
 		type="application/rss+xml"
 		title="Navigator Berlin Updates (RSS)"
 		href={`${cleanOrigin}/updates/rss.xml`}
 	/>
 	<link
 		rel="alternate"
+		hreflang={feedLang}
 		type="application/atom+xml"
 		title="Navigator Berlin Updates (Atom)"
 		href={`${cleanOrigin}/updates/atom.xml`}
 	/>
 	<link
 		rel="alternate"
+		hreflang={feedLang}
 		type="application/feed+json"
 		title="Navigator Berlin Updates (JSON Feed)"
 		href={`${cleanOrigin}/updates/feed.json`}

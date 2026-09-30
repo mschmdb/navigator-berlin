@@ -242,14 +242,14 @@ describe('i18n Block C1: LAYER_EXPLAIN_MESSAGE Struktur-Paritaet', () => {
 			expect(en.long, `${slug}.long ist leer`).not.toBe('');
 			// Einzelne Kurztexte duerfen als Lehnwort mit DE identisch sein (z.B.
 			// „Museum“) -- der Eintrag als Ganzes muss sich trotzdem unterscheiden.
-			expect(
-				en.short !== de.short || en.long !== de.long,
-				`${slug}: EN-Text identisch zu DE`
-			).toBe(true);
-			expect(Boolean(en.unit), `${slug}: unit-Praesenz weicht von DE ab`).toBe(Boolean(de.unit));
-			expect(Boolean(en.valueScaleExplain), `${slug}: valueScaleExplain-Praesenz weicht von DE ab`).toBe(
-				Boolean(de.valueScaleExplain)
+			expect(en.short !== de.short || en.long !== de.long, `${slug}: EN-Text identisch zu DE`).toBe(
+				true
 			);
+			expect(Boolean(en.unit), `${slug}: unit-Praesenz weicht von DE ab`).toBe(Boolean(de.unit));
+			expect(
+				Boolean(en.valueScaleExplain),
+				`${slug}: valueScaleExplain-Praesenz weicht von DE ab`
+			).toBe(Boolean(de.valueScaleExplain));
 			if (de.unit && !LANGUAGE_NEUTRAL_UNITS.has(de.unit)) {
 				expect(en.unit, `${slug}.unit identisch zu DE`).not.toBe(de.unit);
 			}

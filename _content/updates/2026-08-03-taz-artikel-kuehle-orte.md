@@ -1,6 +1,8 @@
 ---
 title_de: 'taz testet die Kühle-Orte-Karte: "Zuflucht vor dem Hitzeschlag"'
+title_en: 'taz tests the cool places map: "Refuge from heatstroke"'
 summary_de: 'Die taz hat den Hitze-Navigator geprüft und mit den Behördenkarten verglichen. Ergebnis: 40 Orte rund um den Gendarmenmarkt statt zwei.'
+summary_en: 'The taz tested the Heat Navigator against the authorities'' maps. Result: 40 places around Gendarmenmarkt instead of two.'
 date: 2026-08-03
 category: presse
 tags: [kuehle-orte, hitze, presse]

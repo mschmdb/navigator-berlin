@@ -1,6 +1,8 @@
 ---
 title_de: 'Kultur-Score: Bibliothek, Theater, Museum in Reichweite'
+title_en: 'Culture score: library, theatre, museum within reach'
 summary_de: 'Eine eigenständige sechste Dimension misst Kulturorte im Umkreis aus OpenStreetMap. Sie zählt nicht in den Gesamt-Score, weil Kultur innenstadt-lastig ist.'
+summary_en: 'A separate sixth dimension measures cultural venues nearby, from OpenStreetMap. It stays out of the overall score because culture is inner-city heavy.'
 date: 2026-06-07
 category: feature
 tags: [kiez-score, kultur, score, osm, dimension]

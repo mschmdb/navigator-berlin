@@ -16,9 +16,7 @@ export type SeverityLevel = 'success' | 'success-soft' | 'neutral' | 'warning' |
  * `ValueChip`s eigener DE-Default bleibt zusätzlich als letzte Fallback-Stufe
  * bestehen.
  */
-export function severityDescriptions(
-	opts?: LocaleOptions
-): Record<SeverityLevel, string> {
+export function severityDescriptions(opts?: LocaleOptions): Record<SeverityLevel, string> {
 	const options = toAtlasMessageOptions(opts);
 	return {
 		success: m.inspector_severity_desc_success(undefined, options),

@@ -94,7 +94,10 @@ describe('SankeyInteractionState#onLinkFocus (Fokus-Tooltip-Position)', () => {
 
 describe('SankeyInteractionState#onLinkPointerMove (Rand-Clamping)', () => {
 	it('klemmt eine Pointer-Position außerhalb des Containers ebenfalls', () => {
-		const { container } = buildContainerWithTarget('width: 300px; height: 200px;', 'left: 0; top: 0;');
+		const { container } = buildContainerWithTarget(
+			'width: 300px; height: 200px;',
+			'left: 0; top: 0;'
+		);
 		elements.push(container);
 		const state = new SankeyInteractionState();
 		state.container = container;

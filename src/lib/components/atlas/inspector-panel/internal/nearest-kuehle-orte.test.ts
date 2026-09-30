@@ -31,7 +31,13 @@ describe('filterKuehleOrte', () => {
 		ort({ id: 'a', name: 'AC-Yes', acStatus: 'yes', isFree: 'ticket', summerAvailable: 'yes' }),
 		ort({ id: 'b', name: 'AC-Likely', acStatus: 'likely', isFree: 'free', summerAvailable: 'no' }),
 		ort({ id: 'c', name: 'AC-No', acStatus: 'no', isFree: 'free', summerAvailable: 'yes' }),
-		ort({ id: 'd', name: 'AC-Unknown', acStatus: 'unknown', isFree: 'consumption', summerAvailable: 'limited' })
+		ort({
+			id: 'd',
+			name: 'AC-Unknown',
+			acStatus: 'unknown',
+			isFree: 'consumption',
+			summerAvailable: 'limited'
+		})
 	];
 
 	it('ohne Filter alle', () => {

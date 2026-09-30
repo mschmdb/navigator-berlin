@@ -85,7 +85,10 @@ function mercatorY(latDeg: number): number {
  * Der Aufrufer zeigt in diesem Fall den Leer-Zustand statt einer sinnlosen
  * Projektion.
  */
-export function buildProjection(bounds: Bounds, options: ProjectionOptions = {}): Projection | null {
+export function buildProjection(
+	bounds: Bounds,
+	options: ProjectionOptions = {}
+): Projection | null {
 	const width = options.width ?? DEFAULT_WIDTH;
 	const height = options.height ?? DEFAULT_HEIGHT;
 	const padding = options.padding ?? DEFAULT_PADDING;

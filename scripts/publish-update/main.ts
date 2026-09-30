@@ -12,10 +12,10 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { readFile, access } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { parseRangeArgs, type RangeArg } from './resolve-commit-range.js';
 import { classifyChangedFiles } from './filter-commit.js';
-import { lintBody } from './forbidden-tokens.js';
+import { lintDraftBodies } from './forbidden-tokens.js';
 import { writeDraft } from './write-draft.js';
 import { classifyAndDraftCommit, type SubagentExecutor } from './invoke-classifier.js';
 
@@ -88,27 +88,31 @@ export async function main(
 			continue;
 		}
 
-		const lintResult = lintBody(draftResult.body);
+		const { de: lintResult, en: lintResultEn } = lintDraftBodies(draftResult);
 		const writeOut = await writeDraft({
 			commitSha: sha,
 			commitDateIso,
 			draft: {
 				title_de: draftResult.title_de,
 				summary_de: draftResult.summary_de,
+				title_en: draftResult.title_en,
+				summary_en: draftResult.summary_en,
 				category: draftResult.category,
 				tags: [...draftResult.tags],
-				body: draftResult.body
+				body: draftResult.body,
+				body_en: draftResult.body_en
 			},
 			lintResult,
+			lintResultEn,
 			draftsDir: DRAFTS_DIR
 		});
 
-		if (lintResult.ok) {
-			report.push(`✓  ${sha.slice(0, 7)} draft: ${writeOut.path}`);
+		if (writeOut.ok) {
+			report.push(`✓  ${sha.slice(0, 7)} draft: ${writeOut.path} (+ ${basename(writeOut.pathEn)})`);
 			wrote++;
 		} else {
 			report.push(
-				`⚠ ${sha.slice(0, 7)} _FAIL_ draft (${lintResult.violations.length} violations): ${writeOut.path}`
+				`⚠ ${sha.slice(0, 7)} _FAIL_ draft (DE ${lintResult.violations.length} / EN ${lintResultEn.violations.length} violations): ${writeOut.path} + ${writeOut.pathEn}`
 			);
 			failed++;
 		}

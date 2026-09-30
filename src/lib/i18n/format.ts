@@ -208,3 +208,20 @@ export function formatShortDate(iso: string, opts?: LocaleFormatOptions): string
 		year: 'numeric'
 	});
 }
+
+/**
+ * Datum mit ausgeschriebenem Monat, ohne Zeitzonenverschiebung (ISO-Datum wird
+ * als UTC gelesen und in UTC formatiert): `15. Mai 2026` (de) / `15 May 2026`
+ * (en). Nicht parsebarer Input kommt unverändert zurück.
+ */
+export function formatLongDate(iso: string, opts?: LocaleFormatOptions): string {
+	const locale = resolveLocale(opts?.locale);
+	const d = new Date(iso);
+	if (Number.isNaN(d.getTime())) return iso;
+	return d.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-GB', {
+		day: 'numeric',
+		month: 'long',
+		year: 'numeric',
+		timeZone: 'UTC'
+	});
+}

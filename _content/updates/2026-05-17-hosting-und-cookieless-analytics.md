@@ -1,6 +1,8 @@
 ---
 title_de: 'Hosting in Deutschland, Analytics ohne Cookies'
+title_en: 'Hosting in Germany, analytics without cookies'
 summary_de: 'navigator.berlin läuft jetzt auf einem deutschen Server. Reichweiten-Messung ohne Cookies, ohne US-Anbieter, ohne Banner.'
+summary_en: 'navigator.berlin now runs on a German server. Audience measurement without cookies, without US providers, without a banner.'
 date: 2026-05-17
 category: feature
 tags: [hosting, privacy, analytics, eu-foss, transparenz]

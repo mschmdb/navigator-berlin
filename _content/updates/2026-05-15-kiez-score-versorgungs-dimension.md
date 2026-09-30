@@ -1,6 +1,8 @@
 ---
 title_de: 'Kiez-Score: Versorgungs-Dimension ergänzt'
+title_en: 'Kiez score: amenities dimension added'
 summary_de: 'Fünfte Dimension prüft Kita, Schule, Krankenhaus, Spielplatz und Grünanlage in Lauf-Distanz.'
+summary_en: 'A fifth dimension checks daycare, school, hospital, playground and green space within walking distance.'
 date: 2026-05-15
 category: methodik
 tags: [kiez-score, versorgung, methodik]

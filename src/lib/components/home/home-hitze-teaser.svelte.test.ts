@@ -6,7 +6,9 @@ import HomeHitzeTeaser from './home-hitze-teaser.svelte';
 describe('HomeHitzeTeaser', () => {
 	it('verlinkt die Hitze-Landing /hitze', async () => {
 		render(HomeHitzeTeaser);
-		const link = (await page.getByTestId('home-hitze-teaser-landing').element()) as HTMLAnchorElement;
+		const link = (await page
+			.getByTestId('home-hitze-teaser-landing')
+			.element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/hitze');
 	});
 

@@ -324,10 +324,7 @@ describe('WahlSection', () => {
 		const gruene = page.getByTestId('wahl-delta-GRÜNE-stimmbezirk');
 		await expect
 			.element(gruene)
-			.toHaveAttribute(
-				'title',
-				'Polling district: 20.0% (here 10.0 percentage points higher)'
-			);
+			.toHaveAttribute('title', 'Polling district: 20.0% (here 10.0 percentage points higher)');
 		const spd = page.getByTestId('wahl-delta-SPD-bezirk');
 		await expect
 			.element(spd)

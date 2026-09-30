@@ -102,7 +102,10 @@ describe('SankeyD3Controller', () => {
 			}
 		});
 		const graphA: SankeyGraph = {
-			nodes: [node({ id: 'partei:2016:SPD' }), node({ id: 'partei:2021:SPD', column: 1, jahr: 2021 })],
+			nodes: [
+				node({ id: 'partei:2016:SPD' }),
+				node({ id: 'partei:2021:SPD', column: 1, jahr: 2021 })
+			],
 			links: [link({})],
 			spalten: [
 				{ jahr: 2016, istWiederholung: false },
@@ -116,7 +119,9 @@ describe('SankeyD3Controller', () => {
 				node({ id: 'partei:2016:CDU', label: 'CDU', partei: 'CDU' }),
 				node({ id: 'partei:2021:CDU', column: 1, jahr: 2021, label: 'CDU', partei: 'CDU' })
 			],
-			links: [link({ source: 'partei:2016:CDU', target: 'partei:2021:CDU', von: 'CDU', nach: 'CDU' })],
+			links: [
+				link({ source: 'partei:2016:CDU', target: 'partei:2021:CDU', von: 'CDU', nach: 'CDU' })
+			],
 			spalten: graphA.spalten,
 			totalGebiete: 1,
 			gebieteMitDatenByJahr: new Map([[2016, 1]])
@@ -150,7 +155,10 @@ describe('SankeyD3Controller#layoutFor', () => {
 	it('zwei nicht-leere Graphen nacheinander: der zweite gewinnt, layoutFor zeigt nie auf den alten Graph', async () => {
 		const controller = new SankeyD3Controller({ d3SankeyFactory: async () => d3Sankey });
 		const graphA: SankeyGraph = {
-			nodes: [node({ id: 'partei:2016:SPD' }), node({ id: 'partei:2021:SPD', column: 1, jahr: 2021 })],
+			nodes: [
+				node({ id: 'partei:2016:SPD' }),
+				node({ id: 'partei:2021:SPD', column: 1, jahr: 2021 })
+			],
 			links: [link({})],
 			spalten: [
 				{ jahr: 2016, istWiederholung: false },
@@ -167,7 +175,9 @@ describe('SankeyD3Controller#layoutFor', () => {
 				node({ id: 'partei:2016:CDU', label: 'CDU', partei: 'CDU' }),
 				node({ id: 'partei:2021:CDU', column: 1, jahr: 2021, label: 'CDU', partei: 'CDU' })
 			],
-			links: [link({ source: 'partei:2016:CDU', target: 'partei:2021:CDU', von: 'CDU', nach: 'CDU' })],
+			links: [
+				link({ source: 'partei:2016:CDU', target: 'partei:2021:CDU', von: 'CDU', nach: 'CDU' })
+			],
 			spalten: graphA.spalten,
 			totalGebiete: 1,
 			gebieteMitDatenByJahr: new Map([[2016, 1]])

@@ -38,9 +38,9 @@
 <section data-testid="home-layer-teasers" class="space-y-6">
 	<header class="space-y-2">
 		<h2 class="font-serif text-2xl text-ink md:text-3xl">
-			{(total === 1 ? m.home_layer_teasers_heading_singular : m.home_layer_teasers_heading_plural)(
-				{ count: total }
-			)}
+			{(total === 1 ? m.home_layer_teasers_heading_singular : m.home_layer_teasers_heading_plural)({
+				count: total
+			})}
 		</h2>
 		<p class="font-serif text-base text-ink-muted">
 			{m.home_layer_teasers_lead()}

@@ -322,9 +322,7 @@ describe('KiezScoreSection', () => {
 			.toHaveTextContent('Methodology · How the Kiez score is calculated');
 		// Review-Fund: ValueChip-severityDescriptions war zunächst nicht verdrahtet.
 		// ruhe-luft=80 → Severity "success" → EN "favourable exposure".
-		const chip = (await page
-			.getByTestId('kiez-score-dim-ruhe-luft')
-			.element()) as HTMLElement;
+		const chip = (await page.getByTestId('kiez-score-dim-ruhe-luft').element()) as HTMLElement;
 		const status = chip.querySelector('[data-testid="value-chip"]');
 		expect(status?.getAttribute('aria-label')).toContain('favourable exposure');
 		expect(status?.getAttribute('aria-label')).not.toMatch(

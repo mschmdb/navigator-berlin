@@ -61,7 +61,11 @@ export function encodeFinderUrlState(
 	const out: Record<string, string> = {
 		[FINDER_URL_KEYS.weights]: WEIGHT_ORDER.map((k) => weights[k]).join(',')
 	};
-	if (weights.partei !== 0 && party !== null && (FINDER_PARTIES as readonly string[]).includes(party)) {
+	if (
+		weights.partei !== 0 &&
+		party !== null &&
+		(FINDER_PARTIES as readonly string[]).includes(party)
+	) {
 		out[FINDER_URL_KEYS.party] = party;
 	}
 	return out;

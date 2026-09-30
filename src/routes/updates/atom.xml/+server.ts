@@ -4,7 +4,7 @@ import { buildAtomXml } from '$lib/feeds/build-atom.js';
 
 export const prerender = true;
 
-/** Story 2.13 AC-6: Atom 1.0 Feed-Endpoint. DE-only Phase 1. */
+/** Story 2.13 AC-6: Atom 1.0 Feed-Endpoint. DE-only, kein EN-Feed (i18n C4d). */
 export const GET: RequestHandler = ({ url }) => {
 	const modules = import.meta.glob('/_content/updates/*.md', {
 		eager: true,

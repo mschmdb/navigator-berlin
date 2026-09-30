@@ -3,15 +3,15 @@ import * as v from 'valibot';
 /**
  * Story 2.13 AC-1: Frontmatter-Schema für Update-Entries unter `_content/updates/`.
  *
- * Pflichtfelder (DE-only Phase 1, memory `project_i18n_phase_1_de_only`):
+ * Pflichtfelder (DE-Fassung, EN-Felder optional, siehe unten):
  *   - title_de   ≤ 80 Zeichen
  *   - summary_de ≤ 160 Zeichen (Meta-Description-Fitness)
  *   - date       ISO-8601 `YYYY-MM-DD`
  *   - category   5er-Enum
  *
  * Optional:
- *   - title_en   (Phase 3 EN-Coverage)
- *   - summary_en
+ *   - title_en   ≤ 80 Zeichen, EN-Titel (i18n C4d, Body in `<slug>.en.md`)
+ *   - summary_en ≤ 160 Zeichen
  *   - tags       max 8, lowercase-kebab-case
  *   - lang       'de' | 'en' (default 'de')
  */

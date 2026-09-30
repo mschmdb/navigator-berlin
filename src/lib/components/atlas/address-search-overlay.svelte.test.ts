@@ -16,9 +16,7 @@ describe('address-search-overlay.svelte', () => {
 
 	it('DE: Ueberschrift + Combobox mit deutschem Placeholder', async () => {
 		render(AddressSearchOverlay, { open: true, geocode: async () => [], onClose: () => {} });
-		await expect
-			.element(page.getByRole('heading', { name: 'Adresse suchen' }))
-			.toBeInTheDocument();
+		await expect.element(page.getByRole('heading', { name: 'Adresse suchen' })).toBeInTheDocument();
 		const input = (await page.getByRole('combobox').element()) as HTMLInputElement;
 		expect(input.placeholder).toBe('Berliner Adresse eingeben');
 	});
@@ -29,9 +27,7 @@ describe('address-search-overlay.svelte', () => {
 		overwriteGetLocale(() => 'en');
 		render(AddressSearchOverlay, { open: true, geocode: async () => [], onClose: () => {} });
 		await expect.element(page.getByRole('heading', { name: 'Search address' })).toBeInTheDocument();
-		const close = (await page
-			.getByTestId('address-search-overlay-close')
-			.element()) as HTMLElement;
+		const close = (await page.getByTestId('address-search-overlay-close').element()) as HTMLElement;
 		expect(close.getAttribute('aria-label')).toBe('Close search');
 		const input = (await page.getByRole('combobox').element()) as HTMLInputElement;
 		expect(input.placeholder).toBe('Enter a Berlin address');

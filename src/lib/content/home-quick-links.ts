@@ -21,7 +21,11 @@
  * Geocoding-Suchstring), unverändert für beide Locales.
  */
 import { m } from '$lib/paraglide/messages.js';
-import { toMessageOptions, assertUnreachable, type LocaleOptions } from '$lib/i18n/message-options.js';
+import {
+	toMessageOptions,
+	assertUnreachable,
+	type LocaleOptions
+} from '$lib/i18n/message-options.js';
 
 export const HOME_QUICK_LINK_IDS = [
 	'pariser-platz',

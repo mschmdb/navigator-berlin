@@ -18,25 +18,43 @@ function fakeFetch(routes: ReadonlyArray<[string, unknown]>): typeof fetch {
 }
 
 const GEWINNER_RESPONSE = {
-	winners: [{ jahr: 2023, gebiet_slug: 'a', partei: 'SPD', farbe_hex: '#000', anteil: 0.4, is_repeat_election: false, parent_slug: null }]
+	winners: [
+		{
+			jahr: 2023,
+			gebiet_slug: 'a',
+			partei: 'SPD',
+			farbe_hex: '#000',
+			anteil: 0.4,
+			is_repeat_election: false,
+			parent_slug: null
+		}
+	]
 };
 const SPD_RESPONSE = {
-	winners: [{ jahr: 2023, gebiet_slug: 'a', partei: 'SPD', farbe_hex: '#000', anteil: 0.1, is_repeat_election: false, parent_slug: null }]
+	winners: [
+		{
+			jahr: 2023,
+			gebiet_slug: 'a',
+			partei: 'SPD',
+			farbe_hex: '#000',
+			anteil: 0.1,
+			is_repeat_election: false,
+			parent_slug: null
+		}
+	]
 };
 
 describe('KbWinnersGate', () => {
 	it('triggert den Fetch nur auf kiez/bezirk, nicht auf stimmbezirk', async () => {
 		_resetWinnersCache();
 		let calls = 0;
-		const loader = new KiezBezirkWinnersLoader(
-			(async () => {
-				calls++;
-				return new Response(JSON.stringify(GEWINNER_RESPONSE), {
-					status: 200,
-					headers: { 'content-type': 'application/json' }
-				});
-			}) as typeof fetch
-		);
+		const loader = new KiezBezirkWinnersLoader((async () => {
+			calls++;
+			return new Response(JSON.stringify(GEWINNER_RESPONSE), {
+				status: 200,
+				headers: { 'content-type': 'application/json' }
+			});
+		}) as typeof fetch);
 		const gate = new KbWinnersGate({
 			loader,
 			getReihe: () => 'agh',

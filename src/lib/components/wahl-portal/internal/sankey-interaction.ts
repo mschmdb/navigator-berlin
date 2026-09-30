@@ -26,7 +26,9 @@ export function tooltipContentForLink(
 	opts?: LocaleFormatOptions
 ): SankeyTooltipContent {
 	const detailMessage =
-		link.value === 1 ? m.wahl_portal_sankey_band_detail_singular : m.wahl_portal_sankey_band_detail_plural;
+		link.value === 1
+			? m.wahl_portal_sankey_band_detail_singular
+			: m.wahl_portal_sankey_band_detail_plural;
 	return {
 		title: `${parteiDisplayName(link.von, opts)} → ${parteiDisplayName(link.nach, opts)}`,
 		detail: detailMessage({ jahr: link.jahr, value: link.value }, { locale: opts?.locale })

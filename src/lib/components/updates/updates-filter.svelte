@@ -4,7 +4,8 @@
 		UPDATE_CATEGORIES,
 		type UpdateCategory
 	} from '$lib/content/updates/frontmatter-schema.js';
-	import { CATEGORY_LABEL_DE } from './category-label.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { categoryLabel } from './category-label.js';
 
 	type Props = {
 		/** Aktive Filter-Categories (bindable). Leerer Array = „Alle". */
@@ -14,16 +15,18 @@
 </script>
 
 <section
-	aria-label="Update-Kategorien filtern"
+	aria-label={m.updates_filter_aria_label()}
 	class="flex flex-col gap-2 border-t border-b border-rule py-3"
 	data-testid="updates-filter"
 >
-	<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">Kategorien</p>
+	<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
+		{m.updates_filter_heading()}
+	</p>
 	<ToggleGroup.Root
 		bind:value
 		type="multiple"
 		class="inline-flex flex-wrap gap-2"
-		aria-label="Update-Kategorien filtern"
+		aria-label={m.updates_filter_aria_label()}
 	>
 		{#each UPDATE_CATEGORIES as cat (cat)}
 			<ToggleGroup.Item
@@ -32,7 +35,7 @@
 				data-testid="filter-toggle"
 				data-category={cat}
 			>
-				{CATEGORY_LABEL_DE[cat]}
+				{categoryLabel(cat)}
 			</ToggleGroup.Item>
 		{/each}
 	</ToggleGroup.Root>

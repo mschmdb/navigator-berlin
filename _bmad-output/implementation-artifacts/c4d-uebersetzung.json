@@ -1,0 +1,196 @@
+{
+	"entries": {
+		"2026-05-15-kiez-score-versorgungs-dimension": {
+			"title_de": "Kiez-Score: Versorgungs-Dimension ergänzt",
+			"title_en": "Kiez score: amenities dimension added",
+			"summary_de": "Fünfte Dimension prüft Kita, Schule, Krankenhaus, Spielplatz und Grünanlage in Lauf-Distanz.",
+			"summary_en": "A fifth dimension checks daycare, school, hospital, playground and green space within walking distance."
+		},
+		"2026-05-16-launch": {
+			"title_de": "Updates-Route geht live",
+			"title_en": "Updates page goes live",
+			"summary_de": "Daten-Refreshes, Feature-Releases und Methodik-Änderungen jetzt mit RSS, Atom und JSON-Feed.",
+			"summary_en": "Data refreshes, feature releases and methodology changes, now with RSS, Atom and JSON Feed."
+		},
+		"2026-05-17-hosting-und-cookieless-analytics": {
+			"title_de": "Hosting in Deutschland, Analytics ohne Cookies",
+			"title_en": "Hosting in Germany, analytics without cookies",
+			"summary_de": "navigator.berlin läuft jetzt auf einem deutschen Server. Reichweiten-Messung ohne Cookies, ohne US-Anbieter, ohne Banner.",
+			"summary_en": "navigator.berlin now runs on a German server. Audience measurement without cookies, without US providers, without a banner."
+		},
+		"2026-05-19-wahldaten": {
+			"title_de": "Wahldaten seit 2011",
+			"title_en": "Election data since 2011",
+			"summary_de": "Vier Bundestags-, vier Abgeordnetenhaus- und vier BVV-Wahlen. Pro Adresse die stärkste Partei, pro Stimmbezirk eine Karte, pro Kiez der Verlauf über die Jahre.",
+			"summary_en": "Four Bundestag, four House of Representatives and four District Assembly elections. Strongest party per address, a map per polling district, the trend per Kiez."
+		},
+		"2026-05-21-umwelt-infrastruktur-score": {
+			"title_de": "Umwelt- & Infrastruktur-Score: neu zusammengesetzt",
+			"title_en": "Environment & infrastructure score: rebuilt",
+			"summary_de": "Fünf gleich gewichtete Dimensionen, ein Gesamt-Layer auf der Karte und ein neu gebauter Inspektor mit klickbarem Score-Ring.",
+			"summary_en": "Five equally weighted dimensions, an overall map layer and a rebuilt inspector with a clickable score ring."
+		},
+		"2026-06-07-kultur-score": {
+			"title_de": "Kultur-Score: Bibliothek, Theater, Museum in Reichweite",
+			"title_en": "Culture score: library, theatre, museum within reach",
+			"summary_de": "Eine eigenständige sechste Dimension misst Kulturorte im Umkreis aus OpenStreetMap. Sie zählt nicht in den Gesamt-Score, weil Kultur innenstadt-lastig ist.",
+			"summary_en": "A separate sixth dimension measures cultural venues nearby, from OpenStreetMap. It stays out of the overall score because culture is inner-city heavy."
+		},
+		"2026-06-07-nahversorgung-versorgung": {
+			"title_de": "Versorgung zählt jetzt Supermarkt, Apotheke und Post",
+			"title_en": "Amenities now count supermarkets, pharmacies and post offices",
+			"summary_de": "Der Versorgungs-Score misst neben Kita, Schule und Klinik jetzt die Nahversorgung im Kiez: Lebensmittel, Apotheke und Post aus OpenStreetMap.",
+			"summary_en": "Besides daycare, schools and hospitals, the amenities score now measures local shops in the Kiez: groceries, pharmacy and post from OpenStreetMap."
+		},
+		"2026-06-10-kriminalitaet-kontext": {
+			"title_de": "Erfasste Kriminalität: neue Kontext-Dimension",
+			"title_en": "Recorded crime: new context dimension",
+			"summary_de": "Erfasste Kriminalität pro Bezirksregion als eigenständiger Kontext. Kein Sicherheits-Urteil, kein Rang, nicht im Gesamt-Score.",
+			"summary_en": "Recorded crime per Bezirksregion as standalone context. No safety verdict, no rank, not in the overall score."
+		},
+		"2026-07-01-kuehle-orte": {
+			"title_de": "Kühle Orte bei Hitze: neuer Layer und Hitze-Navigator",
+			"title_en": "Cool places in hot weather: new layer and Heat Navigator",
+			"summary_de": "Über 500 kühle Orte in Berlin, mit Live-Öffnungsstatus, Ein-Tap-Navigation und ehrlichen Flags. Ein Angebot auf offenen Daten, kein Stadt-Ersatz.",
+			"summary_en": "Over 500 cool places in Berlin, with live opening status, one-tap navigation and honest flags. A service on open data, not a replacement for the city."
+		},
+		"2026-08-03-taz-artikel-kuehle-orte": {
+			"title_de": "taz testet die Kühle-Orte-Karte: \"Zuflucht vor dem Hitzeschlag\"",
+			"title_en": "taz tests the cool places map: \"Refuge from heatstroke\"",
+			"summary_de": "Die taz hat den Hitze-Navigator geprüft und mit den Behördenkarten verglichen. Ergebnis: 40 Orte rund um den Gendarmenmarkt statt zwei.",
+			"summary_en": "The taz tested the Heat Navigator against the authorities' maps. Result: 40 places around Gendarmenmarkt instead of two."
+		},
+		"2026-08-08-kirchen-als-kuehle-orte": {
+			"title_de": "Kühle Orte: 18 offene Kirchen sind jetzt dabei, die Passionskirche zuerst",
+			"title_en": "Cool places: 18 open churches added, Passionskirche first",
+			"summary_de": "18 verifizierte offene Kirchen und ein Stadtteilzentrum ergänzen die Karte. Neue Zahlen: 491 im Sommer geöffnete kühle Orte, 298 kostenlos.",
+			"summary_en": "18 verified open churches and one neighbourhood centre join the map. New figures: 491 cool places open in summer, 298 free of charge."
+		},
+		"2026-08-22-kiez-finder": {
+			"title_de": "Kiez-Finder: Sag der Karte, was du suchst",
+			"title_en": "Kiez finder: tell the map what you are looking for",
+			"summary_de": "Neun Regler statt Suchfeld: gewichte Ruhe, Grün, S-Bahn-Nähe oder Wahlverhalten, die Karte färbt alle 542 Planungsräume live beim Ziehen.",
+			"summary_en": "Nine sliders instead of a search box: weight quiet, green space, S-Bahn proximity or voting behaviour, and the map recolours all 542 planning areas live."
+		},
+		"2026-08-22-mehrere-layer-lesbar": {
+			"title_de": "Mehrere Karten-Layer gleichzeitig, endlich lesbar",
+			"title_en": "Several map layers at once, finally readable",
+			"summary_de": "Jede Score-Dimension hat eine eigene Farbe, ein zweiter Layer erscheint als Größen-Symbole, die Rollen lassen sich tauschen. Dazu: neues Logo.",
+			"summary_en": "Each score dimension has its own colour, a second layer appears as size symbols, and roles can be swapped. Plus: a new logo."
+		}
+	},
+	"ui": {
+		"index_page_title": {
+			"de": "Updates - Berlin in Daten - navigator.berlin",
+			"en": "Updates - Berlin in data - navigator.berlin",
+			"note": "pageTitle in updates/+page.svelte. Muster wie home_page_title."
+		},
+		"index_page_description": {
+			"de": "Was sich an navigator.berlin verändert: neue Daten, Features und Methodik-Änderungen. Mit RSS und Atom.",
+			"en": "What is changing at navigator.berlin: new data, features and methodology changes. With RSS and Atom.",
+			"note": "pageDescription"
+		},
+		"index_lead_before": {
+			"de": "Daten-Refreshes, Feature-Releases und Methodik-Änderungen. Abonnieren via",
+			"en": "Data refreshes, feature releases and methodology changes. Subscribe via",
+			"note": "Text vor den drei Feed-Links im Lead."
+		},
+		"index_lead_or": {
+			"de": "oder",
+			"en": "or",
+			"note": "Text zwischen Atom und JSON Feed. Linktexte RSS, Atom, JSON Feed bleiben."
+		},
+		"index_filter_feedback_all": {
+			"de": "Alle Kategorien aktiv. {count} Einträge.",
+			"en": "All categories active. {count} entries.",
+			"note": "Wenn kein Filter aktiv ist. Plural-Message nötig, weil count 1 sein kann."
+		},
+		"index_filter_feedback_filtered_one": {
+			"de": "1 Eintrag gefiltert.",
+			"en": "1 entry filtered.",
+			"note": "Singular, aria-live."
+		},
+		"index_filter_feedback_filtered_many": {
+			"de": "{count} Einträge gefiltert.",
+			"en": "{count} entries filtered.",
+			"note": "Plural."
+		},
+		"index_list_aria_label": {
+			"de": "Update-Einträge",
+			"en": "Update entries",
+			"note": "aria-label der Liste."
+		},
+		"index_empty": {
+			"de": "Keine Updates in dieser Auswahl. Filter zurücksetzen oder andere Kategorie wählen.",
+			"en": "No updates in this selection. Reset the filter or choose another category."
+		},
+		"detail_page_title_suffix": {
+			"de": " - Berlin in Daten - navigator.berlin",
+			"en": " - Berlin in data - navigator.berlin",
+			"note": "Suffix hinter dem Eintragstitel (pageTitle)."
+		},
+		"detail_breadcrumb_start": {
+			"de": "Start",
+			"en": "Home",
+			"note": "Breadcrumb-Link. `hitze_breadcrumb_start` (Message) hat schon den DE-Wortlaut „Start“ und kann wiederverwendet werden."
+		},
+		"detail_tags_heading": {
+			"de": "Tags",
+			"en": "Tags",
+			"note": "Gleicher Wortlaut. Nur aufgeführt, damit es nicht fehlt; keine Übersetzung nötig."
+		},
+		"detail_back_link": {
+			"de": "← Zurück zur Update-Liste",
+			"en": "← Back to the updates list"
+		},
+		"card_read_more": {
+			"de": "Mehr lesen",
+			"en": "Read more"
+		},
+		"filter_aria_label": {
+			"de": "Update-Kategorien filtern",
+			"en": "Filter update categories",
+			"note": "aria-label auf Section und ToggleGroup."
+		},
+		"filter_heading": {
+			"de": "Kategorien",
+			"en": "Categories",
+			"note": "Sichtbare Überschrift über den Toggles (per CSS in Großbuchstaben)."
+		},
+		"category_daten_update": {
+			"de": "Daten-Update",
+			"en": "Data update",
+			"note": "CATEGORY_LABEL_DE, wie `update_category_daten_update`."
+		},
+		"category_feature": {
+			"de": "Feature",
+			"en": "Feature",
+			"note": "Gleicher Wortlaut wie `update_category_feature`."
+		},
+		"category_methodik": {
+			"de": "Methodik",
+			"en": "Methodology",
+			"note": "Wie `update_category_methodik`."
+		},
+		"category_datenquelle": {
+			"de": "Datenquelle",
+			"en": "Data source",
+			"note": "Wie `update_category_datenquelle`."
+		},
+		"category_lizenz": {
+			"de": "Lizenz",
+			"en": "Licence",
+			"note": "Wie `update_category_lizenz`."
+		},
+		"category_presse": {
+			"de": "Presse",
+			"en": "Press",
+			"note": "Wie `update_category_presse`."
+		},
+		"date_months": {
+			"de": "Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember",
+			"en": "January, February, March, April, May, June, July, August, September, October, November, December",
+			"note": "Monatsnamen für formatDateDe. EN-Format: „15 May 2026“ (Tag ohne Punkt, vor dem Monat)."
+		}
+	}
+}

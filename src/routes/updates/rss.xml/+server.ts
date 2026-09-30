@@ -6,7 +6,7 @@ export const prerender = true;
 
 /**
  * Story 2.13 AC-5: RSS 2.0 Feed-Endpoint.
- * Phase 1 DE-only (memory `project_i18n_phase_1_de_only`). EN-Feed in Phase 3.
+ * DE-only, auch seit i18n C4d: kein EN-Feed (Entscheidung Matze 30.09.). `.en.md`-Schwestern erzeugen keine Einträge.
  */
 export const GET: RequestHandler = ({ url }) => {
 	const modules = import.meta.glob('/_content/updates/*.md', {

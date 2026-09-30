@@ -4,7 +4,7 @@ import { buildJsonFeed } from '$lib/feeds/build-json-feed.js';
 
 export const prerender = true;
 
-/** Story 2.13 AC-7: JSON Feed 1.1 Endpoint. DE-only Phase 1. */
+/** Story 2.13 AC-7: JSON Feed 1.1 Endpoint. DE-only, kein EN-Feed (i18n C4d). */
 export const GET: RequestHandler = ({ url }) => {
 	const modules = import.meta.glob('/_content/updates/*.md', {
 		eager: true,

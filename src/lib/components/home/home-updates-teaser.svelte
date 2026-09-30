@@ -52,8 +52,9 @@
 							</span>
 							<span class="font-mono text-xs text-ink-subtle">{formatShortDate(u.date)}</span>
 						</span>
-						<span class="font-serif text-base font-semibold" lang={u.titleIsDeFallback ? 'de' : undefined}
-							>{u.title}</span
+						<span
+							class="font-serif text-base font-semibold"
+							lang={u.titleIsDeFallback ? 'de' : undefined}>{u.title}</span
 						>
 						<span
 							class="font-serif text-sm text-ink-muted"

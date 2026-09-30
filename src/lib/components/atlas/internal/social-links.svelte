@@ -18,7 +18,10 @@
 <div class={`flex items-center gap-3 ${cls}`}>
 	<a
 		href="https://bsky.app/profile/schmidbauer.dev"
-		aria-label={m.shell_social_link_aria_label({ person: 'Matze Schmidbauer', platform: 'Bluesky' })}
+		aria-label={m.shell_social_link_aria_label({
+			person: 'Matze Schmidbauer',
+			platform: 'Bluesky'
+		})}
 		target="_blank"
 		rel="noopener noreferrer me"
 		class="inline-flex text-ink-muted transition-colors hover:text-ink"
@@ -31,7 +34,10 @@
 	</a>
 	<a
 		href="https://www.linkedin.com/in/matzeschmidbauer/"
-		aria-label={m.shell_social_link_aria_label({ person: 'Matze Schmidbauer', platform: 'LinkedIn' })}
+		aria-label={m.shell_social_link_aria_label({
+			person: 'Matze Schmidbauer',
+			platform: 'LinkedIn'
+		})}
 		target="_blank"
 		rel="noopener noreferrer me"
 		class="inline-flex text-ink-muted transition-colors hover:text-ink"
@@ -44,7 +50,10 @@
 	</a>
 	<a
 		href="https://schmidbauer.dev"
-		aria-label={m.shell_social_link_aria_label({ person: 'Matze Schmidbauer', platform: 'schmidbauer.dev' })}
+		aria-label={m.shell_social_link_aria_label({
+			person: 'Matze Schmidbauer',
+			platform: 'schmidbauer.dev'
+		})}
 		target="_blank"
 		rel="noopener noreferrer me"
 		class="inline-flex text-ink-muted transition-colors hover:text-ink"

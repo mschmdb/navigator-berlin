@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lintBody } from './forbidden-tokens.js';
+import { lintBody, lintDraftBodies } from './forbidden-tokens.js';
 
 describe('lintBody', () => {
 	it('clean body → ok true', () => {
@@ -77,5 +77,54 @@ describe('lintBody', () => {
 		expect(r.violations.some((v) => v.token === 'hetzner' && v.line === 2)).toBe(true);
 		expect(r.violations.some((v) => v.token === 'em-dash' && v.line === 2)).toBe(true);
 		expect(r.violations.some((v) => v.line === 4)).toBe(true);
+	});
+});
+
+describe('lintDraftBodies (i18n C4d)', () => {
+	it('lintet DE- und EN-Body getrennt', () => {
+		const r = lintDraftBodies({
+			body: 'Sauber.',
+			title_en: 'T',
+			summary_en: 'S',
+			body_en: 'Line one.\nDeployed via Coolify.'
+		});
+		expect(r.de.ok).toBe(true);
+		expect(r.en.ok).toBe(false);
+		expect(r.en.violations[0]).toMatchObject({ token: 'coolify', line: 2 });
+	});
+
+	it('findet den em-dash im EN-Body', () => {
+		const r = lintDraftBodies({
+			body: 'Sauber.',
+			title_en: 'T',
+			summary_en: 'S',
+			body_en: 'A \u2014 B'
+		});
+		expect(r.en.violations.map((v) => v.token)).toContain('em-dash');
+	});
+
+	it('beide sauber → beide ok', () => {
+		const r = lintDraftBodies({
+			body: 'Sauber.',
+			title_en: 'T',
+			summary_en: 'S',
+			body_en: 'Clean.'
+		});
+		expect(r.de.ok && r.en.ok).toBe(true);
+	});
+
+	it('lintet title_en und summary_en, DE bleibt davon unberührt', () => {
+		const r = lintDraftBodies({
+			body: 'Sauber.',
+			title_en: 'Run on Coolify',
+			summary_en: 'A \u2014 B',
+			body_en: 'Clean.'
+		});
+		expect(r.de.ok).toBe(true);
+		expect(r.en.ok).toBe(false);
+		expect(r.en.violations.map((v) => v.token)).toEqual([
+			'title_en: coolify',
+			'summary_en: em-dash'
+		]);
 	});
 });

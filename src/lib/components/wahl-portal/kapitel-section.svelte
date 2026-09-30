@@ -21,15 +21,7 @@
 		withPortalChrome?: boolean;
 	};
 
-	let {
-		id,
-		title,
-		testid,
-		subtext,
-		takeaway,
-		children,
-		withPortalChrome = true
-	}: Props = $props();
+	let { id, title, testid, subtext, takeaway, children, withPortalChrome = true }: Props = $props();
 </script>
 
 <!-- Story 10: Puffer wuchs von 3rem auf 5.5rem -- über der Kapitel-Nav sitzt

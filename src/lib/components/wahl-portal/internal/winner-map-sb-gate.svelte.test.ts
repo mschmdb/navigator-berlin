@@ -34,15 +34,13 @@ const SPD_RESPONSE = {
 describe('SbWinnersGate', () => {
 	it('triggert den Fetch nur auf stimmbezirk mit bekanntem Jahr/wahlSlug', async () => {
 		let calls = 0;
-		const loader = new StimmbezirkLoader(
-			(async () => {
-				calls++;
-				return new Response(JSON.stringify(SPD_RESPONSE), {
-					status: 200,
-					headers: { 'content-type': 'application/json' }
-				});
-			}) as typeof fetch
-		);
+		const loader = new StimmbezirkLoader((async () => {
+			calls++;
+			return new Response(JSON.stringify(SPD_RESPONSE), {
+				status: 200,
+				headers: { 'content-type': 'application/json' }
+			});
+		}) as typeof fetch);
 		const gate = new SbWinnersGate({
 			loader,
 			getReihe: () => 'agh',
