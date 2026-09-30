@@ -1,3 +1,4 @@
+import { m } from '$lib/paraglide/messages.js';
 import { describe, expect, it } from 'vitest';
 import { buildPlace } from './jsonld-place.js';
 
@@ -67,5 +68,48 @@ describe('buildPlace', () => {
 			urlBasePath: '/kiez'
 		});
 		expect(out.url).toBe('https://navigator.berlin/kiez/kreuzkoelln');
+	});
+
+	it('i18n Block D1: locale=en präfigiert die url mit /en', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Kreuzkölln',
+			centroid: [13.42, 52.49],
+			slug: 'kreuzkoelln',
+			urlBasePath: '/kiez',
+			locale: 'en'
+		});
+		expect(out.url).toBe('https://navigator.berlin/en/kiez/kreuzkoelln');
+	});
+
+	it('i18n Block D1: locale=de lässt die url unpräfigiert', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Kreuzkölln',
+			centroid: [13.42, 52.49],
+			slug: 'kreuzkoelln',
+			urlBasePath: '/kiez',
+			locale: 'de'
+		});
+		expect(out.url).toBe('https://navigator.berlin/kiez/kreuzkoelln');
+	});
+
+	it('i18n Block D1: propertyNames ersetzen die additionalProperty-Namen', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Kreuzkölln',
+			centroid: [13.42, 52.49],
+			einwohner: 10,
+			flaecheHa: 20,
+			propertyNames: { einwohner: 'Population', flaecheHa: 'Area (ha)' }
+		});
+		expect(out.additionalProperty?.map((p) => p.name)).toEqual(['Population', 'Area (ha)']);
+	});
+
+	it('i18n Block D1: Messages für additionalProperty-Namen sind Klartext in DE und EN', () => {
+		expect(m.jsonld_property_einwohner(undefined, { locale: 'de' })).toBe('Einwohner');
+		expect(m.jsonld_property_flaeche_ha(undefined, { locale: 'de' })).toBe('Fläche (ha)');
+		expect(m.jsonld_property_einwohner(undefined, { locale: 'en' })).toBe('Population');
+		expect(m.jsonld_property_flaeche_ha(undefined, { locale: 'en' })).toBe('Area (ha)');
 	});
 });

@@ -84,7 +84,7 @@ p: Kontestiert und ambivalent. Hohe Bodenrichtwerte oder gut bewertete Wohnlagen
 p: Familienfreundlichkeit
 p: Hängt stark von der Persona ab: Eltern mit Kita-Kind, Schulkind oder Pflegebedarf gewichten anders. Kita-, Schul- und Krankenhaus-Layer bleiben separat im Inspector statt in einer Composite-Dimension zu verschwinden.
 h2: Datenquellen
-p: Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt), Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin), Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer: Lizenzen-Seite.
+p: Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt), Monitoring Soziale Stadtentwicklung (Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen), Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer: Lizenzen-Seite.
 a: Lizenzen-Seite
 h2: Editorial-Verantwortung
 p: Der Score ist statistische Lage-Beschreibung, keine Wohnungsbewertung. Wir nennen keinen Mietpreis und geben keine rechtliche Auskunft.

@@ -51,11 +51,7 @@ export interface TranslationRegisterEntry {
  * editorial disclaimers now fully translated (Messages, DE-default),
  * `/explore` has no remaining German content fragments in the UI, so it
  * graduates from "partially translated" to "translated" -- noindex lifts,
- * `SeoHead`'s hreflang cluster now includes `/en/explore`. `sitemap-en.xml`
- * does NOT gain a dedicated `/en/explore` `<loc>` entry from this, though:
- * `STATIC_PAGES_SOURCE` (`sitemap-builder.ts`) still returns `[]` for every
- * non-base locale (pre-existing "Phase 1" gate, same reason `/en` itself --
- * registered since Block B2 -- is also absent from `sitemap-en.xml`). Two
+ * `SeoHead`'s hreflang cluster now includes `/en/explore`. Two
  * DE exceptions remain on the registered page regardless of locale: the
  * server-rendered OG-image text (`server/og/og-pipeline.ts`, no EN map
  * template yet) and the KI-Export/LLM export (`llm-export-builder.ts`,
@@ -76,7 +72,11 @@ export interface TranslationRegisterEntry {
  * index and every `/updates/{slug}` detail page, including entries added later.
  * An entry without `.en.md` sibling or `title_en`/`summary_en` shows its German
  * text with `lang="de"` on the affected element. The feeds stay German, there is
- * no EN feed, no `sitemap-en.xml` entry and the OG images stay German. Later
+ * no EN feed and the OG images stay German. Block D1
+ * (`spec-i18n-d1-register-sitemap.md`) registers `/kiez`, `/bezirk` and `/layer`
+ * with `prefix: true` (every detail slug), and the sitemap sources emit
+ * localized URLs for every locale, so `sitemap-en.xml` lists every registered,
+ * indexable page. Later
  * blocks append further `{ pathname, locale }` entries as more EN content ships
  * -- no other module needs to change.
  */
@@ -94,6 +94,9 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/hitze', locale: 'en' },
 	{ pathname: '/kuehle-orte', locale: 'en' },
 	{ pathname: '/lizenzen', locale: 'en' },
+	{ pathname: '/kiez', locale: 'en', prefix: true },
+	{ pathname: '/bezirk', locale: 'en', prefix: true },
+	{ pathname: '/layer', locale: 'en', prefix: true },
 	{
 		pathname: '/updates',
 		locale: 'en',
@@ -115,16 +118,12 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
  * they are for these routes -- only the banner text and `<main lang>`
  * (via `resolveFrameLocale`) react to a partial-translation entry.
  *
- * `/kiez`, `/bezirk`, `/layer` use `prefix: true` so every detail slug
- * underneath counts too. `/explore` moved OUT of this register in Block C1
- * (`spec-i18n-c1-hinweise-layer-erklaerungen.md`) into
- * {@link TRANSLATION_REGISTER} -- see the comment there.
+ * The register is empty since i18n Block D1: `/explore` moved out in Block
+ * C1, `/kiez`, `/bezirk` and `/layer` (all with `prefix: true`) moved out in
+ * D1 (`spec-i18n-d1-register-sitemap.md`). The mechanism stays for future
+ * pages that ship a translated frame before their content.
  */
-export const PARTIAL_TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
-	{ pathname: '/kiez', locale: 'en', prefix: true },
-	{ pathname: '/bezirk', locale: 'en', prefix: true },
-	{ pathname: '/layer', locale: 'en', prefix: true }
-];
+export const PARTIAL_TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [];
 
 function normalizePathname(pathname: string): string {
 	const deLocalized = deLocalizeHref(pathname);

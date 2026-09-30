@@ -9,11 +9,11 @@ afterEach(() => {
 
 describe('resolveEffectiveLocale', () => {
 	it('DE pages always render DE content', () => {
-		expect(resolveEffectiveLocale('/kiez/mitte', 'de')).toBe('de');
+		expect(resolveEffectiveLocale('/impressum', 'de')).toBe('de');
 	});
 
 	it('an unregistered EN page falls back to DE content', () => {
-		expect(resolveEffectiveLocale('/kiez/mitte', 'en')).toBe('de');
+		expect(resolveEffectiveLocale('/impressum', 'en')).toBe('de');
 	});
 
 	// i18n Block B2: die Startseite ist registriert -- eine EN-Homepage zeigt
@@ -33,28 +33,38 @@ describe('resolveEffectiveLocale', () => {
 
 	it('an unregistered path still falls back to DE even with a non-matching entry present', () => {
 		const entries: readonly TranslationRegisterEntry[] = [{ pathname: '/methodik', locale: 'en' }];
-		expect(resolveEffectiveLocale('/kiez/mitte', 'en', entries)).toBe('de');
+		expect(resolveEffectiveLocale('/impressum', 'en', entries)).toBe('de');
 	});
 
 	it('defaults pageLocale to getLocale() when omitted', () => {
 		overwriteGetLocale(() => 'en');
-		expect(resolveEffectiveLocale('/kiez/mitte')).toBe('de');
+		expect(resolveEffectiveLocale('/impressum')).toBe('de');
 
 		overwriteGetLocale(() => 'de');
-		expect(resolveEffectiveLocale('/kiez/mitte')).toBe('de');
+		expect(resolveEffectiveLocale('/impressum')).toBe('de');
 	});
 });
 
 describe('resolveFrameLocale', () => {
 	it('eine teilweise uebersetzte Route behaelt die Rahmen-Locale (Content faellt trotzdem auf DE zurueck)', () => {
-		expect(resolveFrameLocale('/kiez/mitte', 'en')).toBe('en');
+		const partialEntries: readonly TranslationRegisterEntry[] = [
+			{ pathname: '/foo', locale: 'en' }
+		];
+		expect(resolveFrameLocale('/foo', 'en', partialEntries)).toBe('en');
 		expect(resolveFrameLocale('/explore', 'en')).toBe('en');
 		// Kein Register-Eintrag als "uebersetzt" -- Content-Locale bleibt DE.
-		expect(resolveEffectiveLocale('/kiez/mitte', 'en')).toBe('de');
+		expect(resolveEffectiveLocale('/impressum', 'en')).toBe('de');
 	});
 
 	it('/en/impressum (nicht registriert, bleibt dauerhaft DE) faellt wie effectiveLocale auf DE zurueck', () => {
 		expect(resolveFrameLocale('/impressum', 'en')).toBe('de');
+	});
+
+	it('Block D1: /kiez, /bezirk und /layer sind voll uebersetzt und behalten ihre Locale', () => {
+		expect(resolveFrameLocale('/kiez/mitte', 'en')).toBe('en');
+		expect(resolveFrameLocale('/bezirk/pankow', 'en')).toBe('en');
+		expect(resolveFrameLocale('/layer/laerm-2023', 'en')).toBe('en');
+		expect(resolveEffectiveLocale('/kiez/mitte', 'en')).toBe('en');
 	});
 
 	it('eine voll uebersetzte Route (z. B. /en/berlin-wahlen) behaelt ihre eigene Locale', () => {
@@ -63,7 +73,7 @@ describe('resolveFrameLocale', () => {
 	});
 
 	it('DE-Seiten bleiben immer DE', () => {
-		expect(resolveFrameLocale('/kiez/mitte', 'de')).toBe('de');
+		expect(resolveFrameLocale('/impressum', 'de')).toBe('de');
 	});
 
 	it('injizierte Teil-Register-Entries ueberschreiben das reale Register', () => {
@@ -71,7 +81,7 @@ describe('resolveFrameLocale', () => {
 			{ pathname: '/foo', locale: 'en' }
 		];
 		expect(resolveFrameLocale('/foo', 'en', partialEntries)).toBe('en');
-		expect(resolveFrameLocale('/kiez/mitte', 'en', partialEntries)).toBe('de');
+		expect(resolveFrameLocale('/impressum', 'en', partialEntries)).toBe('de');
 	});
 
 	it('defaults pageLocale to getLocale() when omitted', () => {

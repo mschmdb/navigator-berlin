@@ -92,7 +92,10 @@
 				value: describeLaermCategoryDe(raw, localeOpts),
 				source: sourceLabel(row.laerm.dominantCategory.layer, localeOpts),
 				sourceUpdatedAt: formatMonthYear(row.laerm.dominantCategory.sourceUpdatedAt, localeOpts),
-				distribution: toSegments(row.laerm.categoryDistribution?.value)
+				distribution: toSegments(row.laerm.categoryDistribution?.value, {
+					...localeOpts,
+					kind: 'laerm'
+				})
 			});
 		}
 		const gruen = row.gruen.dominantVersorgung;
@@ -103,7 +106,10 @@
 				value: describeGruenversorgungDe(raw, localeOpts),
 				source: sourceLabel(gruen.layer, localeOpts),
 				sourceUpdatedAt: formatMonthYear(gruen.sourceUpdatedAt, localeOpts),
-				distribution: toSegments(row.gruen.versorgungDistribution?.value),
+				distribution: toSegments(row.gruen.versorgungDistribution?.value, {
+					...localeOpts,
+					kind: 'gruen'
+				}),
 				extra: countsText(
 					[
 						[
@@ -154,7 +160,10 @@
 				value: describeWohnlageDe(raw, localeOpts),
 				source: sourceLabel(wohnlage.layer, localeOpts),
 				sourceUpdatedAt: formatMonthYear(wohnlage.sourceUpdatedAt, localeOpts),
-				distribution: toSegments(row.wohnen.wohnlageDistribution?.value)
+				distribution: toSegments(row.wohnen.wohnlageDistribution?.value, {
+					...localeOpts,
+					kind: 'wohnlage'
+				})
 			});
 		}
 		const mss = row.wohnen.dominantMss;

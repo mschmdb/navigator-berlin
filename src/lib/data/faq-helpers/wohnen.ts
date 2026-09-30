@@ -37,6 +37,11 @@ function normalizeWohnlage(raw: string | null | undefined): WohnlageDe {
 	return WOHNLAGE_MAP[raw.trim().toLowerCase()] ?? 'unbekannt';
 }
 
+/** Ob `raw` (nach der Normalisierung von `describeWohnlageDe`) eine bekannte Wohnlage ist. */
+export function isKnownWohnlage(raw: string | null | undefined): boolean {
+	return normalizeWohnlage(raw) !== 'unbekannt';
+}
+
 export function describeWohnlageDe(raw: string | null | undefined, opts?: LocaleOptions): string {
 	const options = toAtlasMessageOptions(opts);
 	switch (normalizeWohnlage(raw)) {

@@ -1,4 +1,6 @@
 import type { GeoCoordinates, PropertyValue, WithContext } from 'schema-dts';
+import type { Locale } from '$lib/paraglide/runtime';
+import { localizedPathname } from './canonical.js';
 
 /**
  * Place-Leaf-Type fuer mutable Builder-Output. Wir nutzen das Leaf-Interface direkt
@@ -41,6 +43,16 @@ export interface PlaceInput {
 	 * gesetzt wenn die Entität verifiziert dieselbe ist (z. B. Bezirk → Wikidata-
 	 * Bezirk). Leeres/fehlendes Array → kein sameAs (kein erfundener Link). */
 	readonly sameAs?: readonly string[];
+	/**
+	 * i18n Block D1: Seiten-Locale. Sie präfigiert `Place.url` (`/en/kiez/...`).
+	 * Ohne Angabe bleibt die URL unpräfigiert (DE).
+	 */
+	readonly locale?: Locale;
+	/**
+	 * i18n Block D1: lokalisierte `additionalProperty`-Namen. Ohne Angabe
+	 * bleiben die bisherigen Schlüssel `einwohner` und `flaecheHa`.
+	 */
+	readonly propertyNames?: { readonly einwohner: string; readonly flaecheHa: string };
 }
 
 export type PlaceJsonLd = WithContext<PlaceLeafJsonLd>;
@@ -55,10 +67,18 @@ export function buildPlace(input: PlaceInput): PlaceJsonLd {
 
 	const props: PropertyValue[] = [];
 	if (typeof input.einwohner === 'number') {
-		props.push({ '@type': 'PropertyValue', name: 'einwohner', value: input.einwohner });
+		props.push({
+			'@type': 'PropertyValue',
+			name: input.propertyNames?.einwohner ?? 'einwohner',
+			value: input.einwohner
+		});
 	}
 	if (typeof input.flaecheHa === 'number') {
-		props.push({ '@type': 'PropertyValue', name: 'flaecheHa', value: input.flaecheHa });
+		props.push({
+			'@type': 'PropertyValue',
+			name: input.propertyNames?.flaecheHa ?? 'flaecheHa',
+			value: input.flaecheHa
+		});
 	}
 
 	const out: PlaceJsonLd = {
@@ -75,7 +95,8 @@ export function buildPlace(input: PlaceInput): PlaceJsonLd {
 		const basePath = input.urlBasePath.startsWith('/')
 			? input.urlBasePath
 			: `/${input.urlBasePath}`;
-		out.url = `${origin}${basePath}/${input.slug}`;
+		const path = `${basePath}/${input.slug}`;
+		out.url = `${origin}${input.locale ? localizedPathname(path, input.locale) : path}`;
 	}
 	if (props.length > 0) {
 		out.additionalProperty = props;

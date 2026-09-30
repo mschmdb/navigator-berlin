@@ -10,8 +10,9 @@
  * Pages aus der DB. Der Konsistenz-Test stellt sicher dass beide Builder
  * dieselben Page-URLs aufzählen.
  *
- * Phase 1 (DE-only, Memory `project_i18n_phase_1_de_only`): nur `locale: 'de'`
- * liefert URLs. EN bleibt leer.
+ * llms.txt ist bewusst DE-only (kein EN-llms in v1, i18n Block D1): nur
+ * `locale: 'de'` liefert URLs, EN bleibt leer. Die Sitemap listet dagegen
+ * auch registrierte EN-Seiten, die Konsistenz-Regel gilt nur für DE.
  *
  * Variante-B-Skalierung (User-Decision): Top-50 Kieze in /llms-full.txt nach
  * `topRank`, Rest nur als URL-Referenz am Ende.
@@ -98,7 +99,7 @@ function buildSiteIntro(): string[] {
  * Sammelt alle Page-URLs für Konsistenz-Check gegen Sitemap.
  *
  * Spiegelt die Sitemap-Source-Liste (Static + Layer) und ergänzt um Bezirk-,
- * Kiez-Pages aus DB. Phase 1 DE-only: für `locale !== 'de'` leeres Array.
+ * Kiez-Pages aus DB. llms.txt bleibt bewusst DE (kein EN-llms in v1, Block D1): für `locale !== 'de'` leeres Array. Die Sitemap listet dagegen auch registrierte EN-Seiten.
  */
 export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntry[] {
 	if (ctx.locale !== baseLocale) return [];
@@ -150,6 +151,18 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		name: 'WebMCP',
 		description:
 			'Schnittstelle für KI-Assistenten: Spec-Status, Browser-Support, Tools und Chrome-Canary-Anleitung',
+		section: 'static'
+	});
+	out.push({
+		loc: `${ctx.origin}/methodik/kiez-score`,
+		name: 'Methodik · Kiez-Score',
+		description: 'Sieben Dimensionen, Normalisierung und Gewichte des Kiez-Scores',
+		section: 'methodik'
+	});
+	out.push({
+		loc: `${ctx.origin}/architektur`,
+		name: 'Architektur',
+		description: 'Open-Source-Stack, Hosting in Deutschland, kein Tracking',
 		section: 'static'
 	});
 	out.push({

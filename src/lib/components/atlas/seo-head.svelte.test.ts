@@ -168,14 +168,15 @@ describe('SeoHead', () => {
 		expect(queryHead('meta[property="og:locale:alternate"]')).toBeNull();
 	});
 
-	// i18n Block A: das Übersetzungs-Register ist leer -- jede Nicht-Basis-
-	// Locale-Seite ist automatisch noindex, unabhängig vom noindex-Prop.
-	it('i18n Block A: EN-Seite ist automatisch noindex, weil sie nicht im Übersetzungs-Register steht', async () => {
+	// i18n Block A: jede nicht registrierte Nicht-Basis-Locale-Seite (hier
+	// `/en/impressum`, bleibt dauerhaft DE) ist automatisch noindex,
+	// unabhängig vom noindex-Prop.
+	it('i18n Block A: EN-Seite ist automatisch noindex, weil sie nicht im Übersetzungs-Register steht (/impressum bleibt DE)', async () => {
 		overwriteGetLocale(() => 'en');
 		render(SeoHead, {
-			title: 'Kiez Mitte',
+			title: 'Impressum',
 			description: 'desc',
-			pathname: '/en/kiez/mitte',
+			pathname: '/en/impressum',
 			origin: 'https://navigator.berlin'
 		});
 		await new Promise((r) => setTimeout(r, 10));
@@ -195,12 +196,12 @@ describe('SeoHead', () => {
 		expect(hreflangs).not.toContain('en');
 	});
 
-	it('DE-Seite bleibt indexierbar, auch wenn en (noch) nicht übersetzt ist', async () => {
+	it('DE-Seite bleibt indexierbar, auch wenn en nicht übersetzt ist', async () => {
 		overwriteGetLocale(() => 'de');
 		render(SeoHead, {
-			title: 'Kiez Mitte',
+			title: 'Impressum',
 			description: 'desc',
-			pathname: '/kiez/mitte',
+			pathname: '/impressum',
 			origin: 'https://navigator.berlin'
 		});
 		await new Promise((r) => setTimeout(r, 10));
@@ -213,14 +214,14 @@ describe('SeoHead', () => {
 	it('Canonical einer nicht-übersetzten EN-Seite zeigt auf die DE-URL', async () => {
 		overwriteGetLocale(() => 'en');
 		render(SeoHead, {
-			title: 'Kiez Mitte',
+			title: 'Impressum',
 			description: 'desc',
-			pathname: '/en/kiez/mitte',
+			pathname: '/en/impressum',
 			origin: 'https://navigator.berlin'
 		});
 		await new Promise((r) => setTimeout(r, 10));
 		const canonical = queryHead('link[rel="canonical"]') as HTMLLinkElement | null;
-		expect(canonical?.href).toBe('https://navigator.berlin/kiez/mitte');
+		expect(canonical?.href).toBe('https://navigator.berlin/impressum');
 	});
 
 	// Real register entry (injected via `registerEntries`, no module-mocking):

@@ -222,9 +222,13 @@ describe('routes/sitemap-en.xml/+server.ts (EN)', () => {
 			const body = await response.text();
 			expect(body).toContain('<urlset');
 			expect(body).toContain('https://navigator.berlin/en/berlin-wahlen</loc>');
-			// Bezirk/Kiez/Layer bleiben unregistriert, tauchen in en.xml nicht auf.
-			expect(body).not.toContain('/en/layer/');
-			expect(body).not.toContain('/en/bezirk/');
+			// Block D1: Layer sind registriert, Impressum/Datenschutz nicht.
+			expect(body).toContain('/en/layer/');
+			expect(body).toContain('https://navigator.berlin/en/explore</loc>');
+			expect(body).not.toContain('/en/impressum');
+			expect(body).not.toContain('/en/datenschutz');
+			expect(body).toMatch(/https:\/\/navigator\.berlin\/en\/bezirk\/[a-z-]+<\/loc>/);
+			expect(body).toMatch(/https:\/\/navigator\.berlin\/en\/kiez\/[a-z0-9-]+<\/loc>/);
 		}
 	);
 

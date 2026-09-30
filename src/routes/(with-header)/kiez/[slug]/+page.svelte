@@ -9,6 +9,7 @@
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { normalizeSlug } from '$lib/data/internal/slug.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
@@ -31,7 +32,16 @@
 	const ogImagePath = $derived(`/og/kiez/${slug}.png`);
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 
-	const localeOpts = $derived({ locale: getLocale() });
+	const locale = $derived(getLocale());
+	const localeOpts = $derived({ locale });
+	// i18n Block D1: Place/AdministrativeArea/Breadcrumb folgen der Seiten-Locale.
+	const jsonLdLocaleInput = $derived({
+		locale,
+		propertyNames: {
+			einwohner: m.jsonld_property_einwohner(undefined, localeOpts),
+			flaecheHa: m.jsonld_property_flaeche_ha(undefined, localeOpts)
+		}
+	});
 
 	const pageTitle = $derived(
 		bezirkName.length > 0
@@ -70,7 +80,8 @@
 			slug,
 			urlBasePath: '/kiez',
 			einwohner: data.profile.einwohner,
-			flaecheHa: data.profile.flaecheHa
+			flaecheHa: data.profile.flaecheHa,
+			...jsonLdLocaleInput
 		})
 	);
 
@@ -83,7 +94,8 @@
 			slug,
 			urlBasePath: '/kiez',
 			einwohner: data.profile.einwohner,
-			flaecheHa: data.profile.flaecheHa
+			flaecheHa: data.profile.flaecheHa,
+			...jsonLdLocaleInput
 		})
 	);
 
@@ -95,7 +107,15 @@
 		items.push({ name, path: `/kiez/${slug}` });
 		return items;
 	});
-	const breadcrumbJsonLd = $derived(buildBreadcrumbList({ origin, items: breadcrumbItems }));
+	const breadcrumbJsonLd = $derived(
+		buildBreadcrumbList({
+			origin,
+			items: breadcrumbItems.map((item) => ({
+				...item,
+				path: localizedPathname(item.path, locale)
+			}))
+		})
+	);
 </script>
 
 <SeoHead

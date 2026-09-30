@@ -1,6 +1,7 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
 import type { UpdateEntry } from '$lib/content/updates/types.js';
-import { baseLocale } from '$lib/paraglide/runtime';
+import { localizedPathname } from '../canonical.js';
+import type { Locale } from '$lib/paraglide/runtime';
 import { loadUpdatesFromModules, sortByDateDesc } from '$lib/content/updates/load-updates.js';
 
 /**
@@ -9,14 +10,14 @@ import { loadUpdatesFromModules, sortByDateDesc } from '$lib/content/updates/loa
  * - `/updates`-Index: priority 0.6, lastmod = neuestes Entry-Datum.
  * - Per-Entry `/updates/{slug}`: priority 0.7, lastmod = `date`-Frontmatter.
  *
- * Nur DE (i18n C4d): `/en/updates` ist übersetzt, steht aber bewusst nicht in
- * `sitemap-en.xml` (Entscheidung Spec C4d, wie `STATIC_PAGES_SOURCE`). Für
- * `locale !== baseLocale` liefert die Source daher einen leeren Array.
+ * i18n Block D1: liefert je Locale `localizedPathname`-URLs (`/en/updates/...`),
+ * das zentrale Register-Gate in `collectPrerenderedUrls` filtert.
  */
 
 export interface BuildUpdatesSitemapEntriesInput {
 	readonly entries: readonly UpdateEntry[];
 	readonly origin: string;
+	readonly locale?: Locale;
 }
 
 const INDEX_PRIORITY = 0.6;
@@ -26,11 +27,12 @@ export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInpu
 	if (input.entries.length === 0) return [];
 	const origin = input.origin.replace(/\/+$/, '');
 	const sorted = sortByDateDesc(input.entries);
+	const locale = input.locale ?? 'de';
 	const latestDate = sorted[0]!.frontmatter.date;
 
 	const out: SitemapEntry[] = [
 		{
-			loc: `${origin}/updates`,
+			loc: `${origin}${localizedPathname('/updates', locale)}`,
 			lastmod: latestDate,
 			changefreq: 'weekly',
 			priority: INDEX_PRIORITY
@@ -39,7 +41,7 @@ export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInpu
 
 	for (const entry of sorted) {
 		out.push({
-			loc: `${origin}/updates/${entry.slug}`,
+			loc: `${origin}${localizedPathname(`/updates/${entry.slug}`, locale)}`,
 			lastmod: entry.frontmatter.date,
 			changefreq: 'monthly',
 			priority: DETAIL_PRIORITY
@@ -54,7 +56,6 @@ export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInpu
  * Wird in `$lib/seo/sitemap-builder.ts ALL_SOURCES` registriert.
  */
 export const UPDATES_PAGES_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== baseLocale) return [];
 	// Build-Time-Glob. eager:true → Module sync verfügbar.
 	const modules = import.meta.glob('/_content/updates/*.md', {
 		eager: true,
@@ -68,5 +69,5 @@ export const UPDATES_PAGES_SOURCE: SitemapSource = (ctx) => {
 		// Schema-Verstoß fängt Build via Index-Route ab. Sitemap silent-degraded.
 		return [];
 	}
-	return buildUpdatesSitemapEntries({ entries, origin: ctx.origin });
+	return buildUpdatesSitemapEntries({ entries, origin: ctx.origin, locale: ctx.locale });
 };

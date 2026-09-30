@@ -19,4 +19,16 @@ describe('DistributionBar.svelte (Story 11.5)', () => {
 		expect(document.body.textContent).toContain('Mittel 67%');
 		expect(document.body.textContent).toContain('Gut 33%');
 	});
+
+	it('markiert einen unübersetzten Rohwert mit lang="de"', async () => {
+		render(DistributionBar, {
+			segments: [
+				{ label: 'Medium', share: 0.6 },
+				{ label: 'Sonderlage', share: 0.4, lang: 'de' }
+			]
+		});
+		expect(document.body.textContent).toContain('Medium 60% · Sonderlage 40%');
+		const de = document.querySelector('span[lang="de"]');
+		expect(de?.textContent).toBe('Sonderlage 40%');
+	});
 });

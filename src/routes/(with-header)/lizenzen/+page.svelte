@@ -7,7 +7,8 @@
 	import { richSegments } from '$lib/i18n/rich-text.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
-	import { buildBreadcrumbList, buildDataCatalog } from '$lib/seo/index.js';
+	import { buildBreadcrumbList, buildDataCatalog, localeToBcp47 } from '$lib/seo/index.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 	import {
 		getLicenseInfo,
@@ -67,16 +68,16 @@
 		})
 	);
 
-	// DataCatalog bleibt auch auf /en/lizenzen deutsch: die Datasets zeigen auf /layer/...,
-	// das erst im Abschluss-Block registriert wird (siehe +page.ts).
+	// i18n Block D1: DataCatalog folgt der Seiten-Locale (Datasets zeigen auf /en/layer/...).
 	const dataCatalogJsonLd = $derived(
 		buildDataCatalog({
 			origin: page.url.origin,
-			name: 'navigator.berlin Daten-Katalog',
-			description: `Lizenzen aller Berliner Geo-Daten und Software-Pakete hinter navigator.berlin. Senats-Verwaltung, ODIS, OpenStreetMap.`,
-			urlPath: '/lizenzen',
+			name: m.lizenzen_datacatalog_name(undefined, { locale }),
+			description: m.lizenzen_datacatalog_description(undefined, { locale }),
+			urlPath: localizedPathname('/lizenzen', locale),
 			publisherName: 'Matze Schmidbauer',
-			datasets: data.catalogDatasets
+			datasets: data.catalogDatasets,
+			inLanguage: localeToBcp47(locale)
 		})
 	);
 </script>

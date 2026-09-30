@@ -49,7 +49,10 @@ describe('RANKING_PAGE_SOURCE', () => {
 		expect(entries[0].lastmod).toBe('2026-05-16T08:00:00.000Z');
 	});
 
-	it('liefert für locale=en einen leeren Array (Phase-1 DE-only)', () => {
-		expect(RANKING_PAGE_SOURCE(fixtureContext({ locale: 'en' }))).toEqual([]);
+	it('i18n Block D1: liefert für locale=en die /en-URL', () => {
+		const entries = RANKING_PAGE_SOURCE(fixtureContext({ locale: 'en' }));
+		expect(entries.map((e) => e.loc)).toEqual([
+			'https://navigator.berlin/en/umwelt-infrastruktur-score'
+		]);
 	});
 });

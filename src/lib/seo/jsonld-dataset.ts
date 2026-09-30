@@ -36,11 +36,9 @@ export type DatasetJsonLd = WithContext<DatasetLeafJsonLd>;
 /**
  * Story 2.2 T3.4: Dataset-JSON-LD fuer Layer-Detail-Pages.
  *
- * Konsumenten: `routes/(with-header)/layer/[slug]/+page.svelte` (DE-Variante,
- * diese Story), Story 2.5a (EN-Variante, gleiches Builder, andere `inLanguage`).
- *
- * Phase 1 DE-only (Memory `project_i18n_phase_1_de_only`): `inLanguage` Default
- * `'de-DE'`; EN-Bundle kommt Story 3.2/2.5a.
+ * Konsumenten: `routes/(with-header)/layer/[slug]/+page.svelte`. Seit i18n
+ * Block D1 übergibt die Seite `inLanguage` per `localeToBcp47` (`de-DE`,
+ * `en-US`). Ohne Angabe gilt der Default `'de-DE'`.
  *
  * Open-Decision aus Story-Spec geklaert: falls `creatorName` fehlt → Fallback auf
  * `Organization { name: 'navigator.berlin', url: origin }`. Layer wird NICHT geskippt.

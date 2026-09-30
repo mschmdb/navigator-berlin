@@ -10,14 +10,18 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import FaqSection from '$lib/components/atlas/faq-section.svelte';
-	import { buildDataset, buildBreadcrumbList, pickDatasetDescription } from '$lib/seo/index.js';
+	import {
+		buildDataset,
+		buildBreadcrumbList,
+		localeToBcp47,
+		pickDatasetDescription
+	} from '$lib/seo/index.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import {
 		getLayerDisplayName,
 		bundleLabel,
 		BUNDLE_LABEL_DE
 	} from '$lib/components/atlas/internal/layer-palette-filter.js';
-	import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
-	import { getLayerMethodology } from '$lib/data/layer-methodology.js';
 	import {
 		aggregationLevelLabel,
 		isKnownAggregationLevel
@@ -61,22 +65,9 @@
 	// Kiez-Score-Methodik statt des Pfad-Satzes im Fließtext. `isKiezScoreLayer`
 	// ist ein geteilter Helper (auch von `map-legend.svelte` genutzt).
 	const isKiezScore = $derived(isKiezScoreLayer(detail.slug));
-	// i18n Block B4b, Spec Change Log 27.09. 06:20: JSON-LD bleibt bis zur
-	// Registrierung vollständig deutsch (Boundary `inLanguage` `de-DE`) --
-	// Name/Description/Breadcrumb-Einträge laufen deshalb NICHT über die
-	// aktuelle URL-Locale, sondern immer über den DE-Default.
+	// i18n Block D1: Dataset- und Breadcrumb-JSON-LD folgen der Seiten-Locale.
+	// `deLayerName` bleibt nur für den Mailto-Body an die Redaktion (bleibt DE).
 	const deLayerName = $derived(getLayerDisplayName(detail.slug));
-	// i18n Block C1: `explain` (oben) folgt jetzt der URL-Locale (Messages) --
-	// das JSON-LD braucht wegen der DE-Boundary eine eigene DE-only-Quelle,
-	// sonst würde die Description auf `/en/layer/…` englisch ins JSON-LD
-	// durchsickern.
-	const deExplain = $derived(getLayerExplainEntry(detail.slug));
-	// i18n Block C2: `methodology` (oben) folgt jetzt ebenfalls der URL-Locale
-	// -- `creatorName` im Dataset-JSON-LD braucht deshalb dieselbe DE-only-
-	// Quelle wie `deExplain`/`deLayerName`, sonst würde die Behörde auf
-	// `/en/layer/…` englisch ins JSON-LD durchsickern (Boundary: "`/layer`-
-	// JSON-LD `creatorName` bleibt DE bis zur Registrierung").
-	const deMethodology = $derived(getLayerMethodology(detail.slug));
 
 	const inspectorHref = $derived(
 		localizedHref(`/explore?layers=${encodeURIComponent(detail.slug)}`)
@@ -100,32 +91,25 @@
 	const pageTitle = $derived(m.layer_page_title({ layerName: detail.layerName }, localeOpts));
 	const pageDescription = $derived(explain.short || descriptionFallback);
 	const ogImageAlt = $derived(m.layer_page_og_alt({ layerName: detail.layerName }, localeOpts));
-	const jsonLdDescriptionFallback = $derived(
-		m.layer_page_description_fallback({ layerName: deLayerName }, { locale: 'de' })
-	);
-
 	/**
 	 * Story 2.2 AC-5: Dataset-JSON-LD pro Layer-Detail-Page.
-	 * i18n Block B4b: `inLanguage` bleibt bewusst `de-DE` (Default in
-	 * `buildDataset`, wie B4a) -- Name, Description-Fallback und Breadcrumb-
-	 * Namen folgen deshalb konsequent DE, nicht der URL-Locale (Spec Change
-	 * Log, Review-Funde #3/#4/#19).
+	 * i18n Block D1: Name, Description, Creator, Keywords und Breadcrumb folgen
+	 * der Seiten-Locale, `inLanguage` folgt `localeToBcp47`, URLs tragen den
+	 * Locale-Präfix.
 	 */
 	const datasetJsonLd = $derived(
 		buildDataset({
 			origin: page.url.origin,
-			name: deLayerName,
-			description: pickDatasetDescription(
-				[deExplain.long, deExplain.short],
-				jsonLdDescriptionFallback
-			),
+			name: detail.layerName,
+			description: pickDatasetDescription([explain.long, explain.short], descriptionFallback),
 			license: meta.license,
 			dateModified: meta.sourceUpdatedAt ?? meta.fetchedAt,
-			creatorName: deMethodology?.authority,
+			creatorName: methodology?.authority,
 			contentUrl: `${page.url.origin}/layers/${meta.filename}`,
 			encodingFormat:
 				meta.format === 'pmtiles' ? 'application/vnd.pmtiles' : 'application/geo+json',
-			keywords: [meta.bundleGroup, detail.slug]
+			keywords: [bundleGroupLabel, detail.slug],
+			inLanguage: localeToBcp47(locale)
 		})
 	);
 
@@ -133,9 +117,12 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: '/' },
-				{ name: 'Daten', path: '/explore' },
-				{ name: deLayerName, path: `/layer/${detail.slug}` }
+				{ name: 'Berlin', path: localizedPathname('/', locale) },
+				{
+					name: m.layer_page_breadcrumb_daten(undefined, localeOpts),
+					path: localizedPathname('/explore', locale)
+				},
+				{ name: detail.layerName, path: localizedPathname(`/layer/${detail.slug}`, locale) }
 			]
 		})
 	);

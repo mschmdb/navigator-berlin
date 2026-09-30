@@ -131,6 +131,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3a-atlas-fundament.md`
   summary: DE-Textmängel im Atlas korrigieren: aria-label „Karte nach Sueden verschieben“ (Umlaut), Palette-Leerzustand „Kein Layer matched“ (Denglisch).
   evidence: Beim Migrieren in Messages aufgefallen; B3a hält die DE-Ausgabe bewusst Zeichen für Zeichen gleich, daher eigene kleine Korrektur.
+  resolved: 30.09.2026 (D1). „Süden“ mit Umlaut, Palette-Leerzustand „Kein Layer passt zu …“.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
   summary: `/explore` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/explore`-Seite als echt übersetzt gilt (kein `TranslationDisclaimer`-Fallback-Hinweis, `hreflang`/Sitemap-Eintrag).
@@ -156,6 +157,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: `/kiez` und `/bezirk` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/kiez/…`- und `/en/bezirk/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
   evidence: Koordinator-Entscheidung 27.09. (Matze AFK): Prosa (`profileProse`) und FAQ-Inhalte (`faq_qna`) bleiben bis Block C deutsch -- eine indexierte `/en/kiez/…`-Seite wäre editorial halb deutsch. Registrierung erst nach Block C (Prosa/FAQ-Übersetzung).
+  resolved: 30.09.2026 (D1). `/kiez`, `/bezirk` und `/layer` stehen mit `prefix: true` im `TRANSLATION_REGISTER`, das Teil-Register ist leer (Spec `spec-i18n-d1-register-sitemap.md`).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: EN-OG-Bilder für `/kiez/[slug]` und `/bezirk/[slug]` (eigener vorgenerierter Schritt, `scripts/generate-og-images.ts` bleibt DE).
@@ -164,6 +166,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: `toSegments`/`distributionText` (`steckbrief-extras.ts`) zeigen die Verteilungs-Segmente (Lärm-/Grün-/Wohnlage-Kategorien im Steckbrief-Disclosure „Verteilung & Zahlen") weiterhin als rohe DE-Kategorie-Wörter, auch unter `/en/…`.
   evidence: Außerhalb der B4a-Code-Map (dort nur die `de-DE`-Zahlenformatierung in `countsText` benannt); Übersetzung bräuchte eine Cluster-spezifische Kategorie-Tabelle (Lärm-/Grün-/Wohnlage-Rohwerte unterscheiden sich je Layer) statt der generischen `capitalize()`. Analog zum B3c-Fund `map-libre-canvas`-loadError: bewusst zurückgestellt, kein Blocker für B4a.
+  resolved: 30.09.2026 (D1). `toSegments` lokalisiert Lärm-, Grün- und Wohnlage-Kategorien nach Seiten-Locale, unbekannte Rohwerte behalten `lang="de"`.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: `error-feedback-mailto.svelte` bleibt deutsch (Fehler-Melden-Link + Aria-Label), gehört zu B4b (Layer-Detailseite), nicht zu B4a.
@@ -189,6 +192,7 @@
   summary: `/en/lizenzen` zeigt seit B4b bereits übersetzte Layer-Namen im DataCatalog-JSON-LD (Nebeneffekt der `getLayerDisplayName(slug, { locale })`-Korrektur in `get-layer-detail.ts`), die Dataset-`description`-Fallback-Zeile (`Geo-Datensatz {layerName} in Berlin im Daten-Atlas navigator.berlin.`) bleibt dort aber weiterhin hart deutsch.
   evidence: `/lizenzen` liegt außerhalb der B4b-Code-Map (kein Boundary-Auftrag dafür); der Layer-Name-Fix wirkt dort nur als Seiteneffekt. Volle `/lizenzen`-Übersetzung ist ein eigener Block.
   update: 30.09.2026 (C4c). Die Seite ist übersetzt und registriert. Das DataCatalog-JSON-LD bleibt bewusst komplett DE (Datasets zeigen auf `/layer/…`), auch auf `/en/lizenzen`: `+page.ts` ruft `buildLayerDetail(…, 'de', …)` fest auf. Offen bis zum Abschluss-Block, der `/layer` registriert.
+  resolved: 30.09.2026 (D1). DataCatalog-JSON-LD folgt der Seiten-Locale, Datasets zeigen auf `/en/layer/…` (`+page.ts`, `+page.svelte`).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: `layer-explain-coverage.e2e.ts` hat 3 vorbestehende, B4b-unabhängige Fails: „Detail-Page hat 0 axe-Violations" (WCAG 2.5.8 `target-size`/`target-offset` an Verwandte-Layer-Links, FAQ-Accordion-Buttons und Footer-Meta-Links -- keine dieser Elemente wurde von B4b berührt), „Map-Legend: Click expandiert Panel..." und „Legend Expand-Panel hat 0 axe-Violations" (Timeout beim Warten auf `legend-summary-*`, `/explore`-Map-Legend, komplett außerhalb der B4b-Code-Map).
@@ -205,6 +209,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: B4a prüfen: Place-/AdministrativeArea-/Breadcrumb-JSON-LD auf `/en/kiez` und `/en/bezirk` mit EN-Namen bei `inLanguage` de-DE angleichen (B4b-Linie: JSON-LD bleibt bis zur Registrierung DE).
   evidence: Review B4b Funde #3/#4, Koordinator-Entscheidung 27.09. 06:20; B4a nicht nachgezogen, um den abgeschlossenen Block nicht zu öffnen.
+  resolved: 30.09.2026 (D1). Place, AdministrativeArea, Breadcrumb und `additionalProperty`-Namen folgen der Seiten-Locale; `/layer`-JSON-LD ebenso mit `inLanguage` en-US.
 
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
@@ -218,6 +223,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
   summary: Registrierte EN-Seiten (`/en`, `/en/explore`, `/en/berlin-wahlen/…`) als eigene `<loc>` in `sitemap-en.xml` aufnehmen; `STATIC_PAGES_SOURCE` liefert für Nicht-Basis-Locales `[]`.
   evidence: Review C1 Fund #5; heute erscheinen sie nur als hreflang-Alternate am DE-Eintrag.
+  resolved: 30.09.2026 (D1). Alle Sitemap-Quellen liefern je Locale `localizedPathname`, das Register-Gate filtert; `sitemap-en.xml` lädt Kiez- und Bezirk-Slugs.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
   summary: Compare-Replace-Dialog auf `/en/explore` per e2e oder Page-Test absichern (5 Strings).
@@ -265,6 +271,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4a-methodik-kern.md`
   summary: `methodik_kiez_score_sources_p1` nennt „Senatsverwaltung Stadtentwicklung Berlin“, `methodik_mss_p1` seit C4a „Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen“ (DE und EN angleichen).
   evidence: Review C4a (Blind Hunter). DE-Änderung lag außerhalb der Abnahme vom 30.09. 08:11.
+  resolved: 30.09.2026 (D1). Behördenname in DE und EN an `methodik_mss_p1` angeglichen.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4a-methodik-kern.md`
   summary: `/methodik` und `/methodik/kiez-score` zeigen auf `/en` den Pfad „/lizenzen“ als sichtbaren Linktext; mit C4c durch ein Label ersetzen.
@@ -282,6 +289,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4c-hitze-quellen.md`
   summary: `sitemap-builder.test.ts` nutzt `/layer/mietspiegel-2024` als Seite ohne EN-Alternate; bei der `/layer`-Registrierung im Abschluss-Block eine andere Kontrolle wählen.
   evidence: Review C4c (Edge Case). `/impressum` ist keine Sitemap-Quelle.
+  resolved: 30.09.2026 (D1). Der Test prüft jetzt, dass `/impressum` und `/datenschutz` fehlen, und dass registrierte Detailseiten den vollen hreflang-Cluster tragen.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4d-updates.md`
   summary: Kategorie-Filter auf `/updates` reagiert im Build nicht auf Toggle-Klicks; ein Effect setzt den Zustand sofort auf den URL-Wert zurück. Vorbestehend, DE und EN gleich, vermutlich auch auf Prod.

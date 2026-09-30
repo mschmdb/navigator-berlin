@@ -1,11 +1,12 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
-import { baseLocale } from '$lib/paraglide/runtime';
+import { localizedPathname } from '../canonical.js';
+import type { Locale } from '$lib/paraglide/runtime';
 
 /**
  * Story 2.9b T4.3: Sitemap-Source für die Ranking-Page.
  *
- * Phase-1 DE-only (Memory `project_i18n_phase_1_de_only`): nur eine
- * Locale-Variante. Liefert für locale=en leeres Array.
+ * i18n Block D1: liefert je Locale `localizedPathname`-URLs, das zentrale
+ * Register-Gate in `collectPrerenderedUrls` filtert.
  *
  * Page ist Editorial-Single-Page, deshalb feste URL + monatlich-changefreq.
  * `lastmod` greift auf `buildTimestamp` zurück weil keine eigene
@@ -18,12 +19,13 @@ const PRIORITY = 0.7;
 export interface BuildRankingSitemapEntryInput {
 	readonly origin: string;
 	readonly lastmod: string;
+	readonly locale?: Locale;
 }
 
 export function buildRankingSitemapEntry(input: BuildRankingSitemapEntryInput): SitemapEntry {
 	const origin = input.origin.replace(/\/+$/, '');
 	return {
-		loc: `${origin}${PATH}`,
+		loc: `${origin}${localizedPathname(PATH, input.locale ?? 'de')}`,
 		lastmod: input.lastmod,
 		changefreq: 'monthly' as const,
 		priority: PRIORITY
@@ -31,6 +33,11 @@ export function buildRankingSitemapEntry(input: BuildRankingSitemapEntryInput): 
 }
 
 export const RANKING_PAGE_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== baseLocale) return [];
-	return [buildRankingSitemapEntry({ origin: ctx.origin, lastmod: ctx.buildTimestamp })];
+	return [
+		buildRankingSitemapEntry({
+			origin: ctx.origin,
+			lastmod: ctx.buildTimestamp,
+			locale: ctx.locale
+		})
+	];
 };

@@ -279,7 +279,7 @@ describe('lizenzen · EN (i18n C4c)', () => {
 		}
 	});
 
-	it('Breadcrumb-JSON-LD englisch, DataCatalog-JSON-LD bleibt deutsch', () => {
+	it('Breadcrumb-JSON-LD und DataCatalog-JSON-LD englisch (Block D1)', () => {
 		renderEn();
 		const crumbs = JSON.parse(
 			document.querySelector('[data-testid="lizenzen-breadcrumb-jsonld"]')!.textContent!
@@ -290,8 +290,10 @@ describe('lizenzen · EN (i18n C4c)', () => {
 		const catalog = JSON.parse(
 			document.querySelector('[data-testid="lizenzen-datacatalog-jsonld"]')!.textContent!
 		);
-		expect(catalog.name).toBe('navigator.berlin Daten-Katalog');
-		expect(catalog.description).toContain('Lizenzen aller Berliner Geo-Daten');
+		expect(catalog.name).toBe('navigator.berlin data catalogue');
+		expect(catalog.description).toContain('Licences of all Berlin geodata');
+		expect(catalog.inLanguage).toBe('en-US');
+		expect(catalog.url.endsWith('/en/lizenzen')).toBe(true);
 	});
 
 	it('Meta-Title englisch', async () => {

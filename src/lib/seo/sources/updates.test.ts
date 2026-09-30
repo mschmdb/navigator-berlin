@@ -31,6 +31,15 @@ describe('buildUpdatesSitemapEntries', () => {
 		expect(locs).toContain('https://navigator.berlin/updates/mss-2025');
 	});
 
+	it('i18n Block D1: locale=en liefert /en/updates und /en/updates/<slug>', () => {
+		const entries = [fixtureEntry('launch', '2026-05-15')];
+		const out = buildUpdatesSitemapEntries({ entries, origin: ORIGIN, locale: 'en' });
+		expect(out.map((e) => e.loc)).toEqual([
+			'https://navigator.berlin/en/updates',
+			'https://navigator.berlin/en/updates/launch'
+		]);
+	});
+
 	it('Index hat priority 0.6 und lastmod = neuestes Entry-Datum', () => {
 		const entries = [fixtureEntry('launch', '2026-05-15'), fixtureEntry('mss-2025', '2026-04-20')];
 		const out = buildUpdatesSitemapEntries({ entries, origin: ORIGIN });

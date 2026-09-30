@@ -4,7 +4,6 @@
 -->
 <script lang="ts">
 	import type { DistSegment } from '$lib/data/steckbrief-extras.js';
-	import { distributionText } from '$lib/data/steckbrief-extras.js';
 
 	interface Props {
 		readonly segments: readonly DistSegment[];
@@ -19,13 +18,17 @@
 {#if segments.length > 0}
 	<span class="mt-1 block">
 		<span class="flex h-1.5 w-full max-w-xs overflow-hidden rounded-full" aria-hidden="true">
-			{#each segments as seg, i (seg.label)}
+			{#each segments as seg, i (i)}
 				<span
 					class="{SHADES[Math.min(i, SHADES.length - 1)]} block h-full"
 					style="width: {pct(seg.share)}%"
 				></span>
 			{/each}
 		</span>
-		<span class="mt-1 block font-mono text-xs text-ink-subtle">{distributionText(segments)}</span>
+		<span class="mt-1 block font-mono text-xs text-ink-subtle"
+			>{#each segments as seg, i (i)}{#if i > 0}{' · '}{/if}<span lang={seg.lang}
+					>{seg.label} {pct(seg.share)}%</span
+				>{/each}</span
+		>
 	</span>
 {/if}

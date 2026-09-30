@@ -12,6 +12,7 @@
  * Sources kommen separat), ist die Schnittmenge zur Zeit Static + Layer.
  */
 
+import { isRouteTranslated } from './translation-register.js';
 import { describe, it, expect } from 'vitest';
 import type { Manifest } from '$lib/data/types.js';
 import { collectPrerenderedUrls } from './sitemap-builder.js';
@@ -186,7 +187,24 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 			wahlPortalEnabled: true
 		});
 		const llmsUrls = collectLlmsSourceEntries({ ...ctx, locale: 'en', wahlPortalEnabled: true });
-		expect(sitemapUrls.map((e) => e.loc)).toEqual([`${ctx.origin}/en/berlin-wahlen`]);
+		// Block D1: die EN-Sitemap listet alle registrierten Seiten, nicht nur die Wahlen.
+		expect(sitemapUrls.map((e) => e.loc)).toContain(`${ctx.origin}/en/berlin-wahlen`);
+		const toPath = (loc: string) => loc.slice(ctx.origin.length) || '/';
+		const enPaths = sitemapUrls.map((e) => toPath(e.loc));
+		// Jede EN-<loc> ist registriert.
+		for (const path of enPaths) expect(isRouteTranslated(path, 'en'), path).toBe(true);
+		// Und jede registrierte DE-Sitemap-Seite hat ihr EN-Gegenstück (nichts fehlt).
+		const dePaths = collectPrerenderedUrls({
+			origin: ctx.origin,
+			locale: 'de',
+			manifest: ctx.manifest,
+			buildTimestamp: ctx.buildTimestamp,
+			wahlPortalEnabled: true
+		})
+			.map((e) => toPath(e.loc))
+			.filter((path) => isRouteTranslated(path, 'en'))
+			.map((path) => (path === '/' ? '/en' : `/en${path}`));
+		expect(new Set(enPaths)).toEqual(new Set(dePaths));
 		expect(llmsUrls).toEqual([]);
 	});
 

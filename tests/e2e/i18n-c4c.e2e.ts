@@ -90,7 +90,7 @@ test.describe('i18n Block C4c: drei Seiten englisch, ohne Banner, indexierbar', 
 		);
 	});
 
-	test('/en/lizenzen: Kennungen unverändert, DataCatalog-JSON-LD bleibt deutsch', async ({
+	test('/en/lizenzen: Kennungen unverändert, DataCatalog-JSON-LD englisch (Block D1)', async ({
 		page
 	}) => {
 		await page.goto('/en/lizenzen');
@@ -99,7 +99,8 @@ test.describe('i18n Block C4c: drei Seiten englisch, ohne Banner, indexierbar', 
 		await expect(main.getByRole('link', { name: 'dl-de/by-2-0' }).first()).toBeAttached();
 		await expect(main.getByRole('link', { name: 'ODbL 1.0' }).first()).toBeAttached();
 		const catalog = await page.locator('[data-testid="lizenzen-datacatalog-jsonld"]').innerHTML();
-		expect(catalog).toContain('navigator.berlin Daten-Katalog');
+		expect(catalog).toContain('navigator.berlin data catalogue');
+		expect(catalog).toContain('/en/layer/');
 	});
 
 	test('/en/methodik: Lizenz-Verweis zeigt das Label statt des Pfads', async ({ page }) => {

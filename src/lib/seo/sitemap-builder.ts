@@ -118,49 +118,44 @@ export function buildSitemapIndexXml(entries: readonly SitemapIndexEntry[]): str
 }
 
 /**
- * Sources DE-only static pages: `/`, `/methodik`, `/lizenzen`.
+ * Sources the static pages: `/`, `/explore`, `/methodik`, `/lizenzen`, ...
  *
- * Phase 1 (memory `project_i18n_phase_1_de_only`): EN routes do not exist, so
- * we return an empty list for `locale === 'en'`. Story 3.1/3.2 will lift this
- * restriction by adding `/en/...` pages and remapping the source accordingly.
+ * i18n Block D1: emits an entry for every locale (`localizedPathname`). The
+ * central register gate in {@link collectPrerenderedUrls} drops every
+ * non-base-locale entry that `translation-register.ts` does not mark as
+ * translated, so this source needs no `ctx.locale` guard. `/impressum` and
+ * `/datenschutz` stay out (DE-only legal pages), and so does the `noindex`
+ * page `/methodik/cross-layer-templates`.
  *
  * `lastmod` uses the build timestamp as recommended by story-2.1 dev-notes
  * (Open-Question 4 resolution: build-timestamp over `git log` to avoid flaky
  * `child_process.execSync` calls during prerender).
  */
 export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== baseLocale) return [];
+	const page = (
+		path: string,
+		changefreq: SitemapEntry['changefreq'],
+		priority?: number
+	): SitemapEntry => ({
+		loc: `${ctx.origin}${localizedPathname(path, ctx.locale)}`,
+		lastmod: ctx.buildTimestamp,
+		changefreq,
+		...(priority === undefined ? {} : { priority })
+	});
 	return [
-		{ loc: `${ctx.origin}/`, lastmod: ctx.buildTimestamp, changefreq: 'weekly', priority: 1.0 },
-		{
-			loc: `${ctx.origin}/explore`,
-			lastmod: ctx.buildTimestamp,
-			changefreq: 'weekly',
-			priority: 0.9
-		},
+		page('/', 'weekly', 1.0),
+		page('/explore', 'weekly', 0.9),
 		// Kühle-Orte-Landings (Epic 16): in-Atlas + Hitze-Spin-off. Saisonale Suchintention,
 		// deshalb hohe Priorität und wöchentliche Change-Frequency.
-		{
-			loc: `${ctx.origin}/kuehle-orte`,
-			lastmod: ctx.buildTimestamp,
-			changefreq: 'weekly',
-			priority: 0.8
-		},
-		{
-			loc: `${ctx.origin}/hitze`,
-			lastmod: ctx.buildTimestamp,
-			changefreq: 'weekly',
-			priority: 0.8
-		},
-		{ loc: `${ctx.origin}/methodik`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
+		page('/kuehle-orte', 'weekly', 0.8),
+		page('/hitze', 'weekly', 0.8),
+		page('/methodik', 'monthly'),
+		page('/methodik/kiez-score', 'monthly'),
 		// Story 3: Bestandslücke geschlossen, die Seite existiert bereits (Story 2).
-		{
-			loc: `${ctx.origin}/methodik/wahldaten`,
-			lastmod: ctx.buildTimestamp,
-			changefreq: 'monthly'
-		},
-		{ loc: `${ctx.origin}/lizenzen`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' },
-		{ loc: `${ctx.origin}/webmcp`, lastmod: ctx.buildTimestamp, changefreq: 'monthly' }
+		page('/methodik/wahldaten', 'monthly'),
+		page('/lizenzen', 'monthly'),
+		page('/architektur', 'monthly'),
+		page('/webmcp', 'monthly')
 	];
 };
 
@@ -191,15 +186,15 @@ export const WAHL_PORTAL_PAGE_SOURCE: SitemapSource = (ctx) => {
  * Sources one entry per manifest layer.
  *
  * Uses `fetchedAt` from each layer as `lastmod` (per story-2.1 dev-notes).
- * Phase 1: returns empty list for `locale === 'en'`.
+ * i18n Block D1: emits `localizedPathname` URLs for every locale, the
+ * register gate filters.
  */
 export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
-	if (ctx.locale !== baseLocale) return [];
 	// Build-only-Layer (weder Karte noch Inspector) haben keine Detail-Seite → nicht in Sitemap.
 	return ctx.manifest.layers
 		.filter((layer) => !(layer.inspectorRelevant === false && layer.mapRelevant === false))
 		.map((layer) => ({
-			loc: `${ctx.origin}/layer/${layer.slug}`,
+			loc: `${ctx.origin}${localizedPathname(`/layer/${layer.slug}`, ctx.locale)}`,
 			lastmod: layer.fetchedAt,
 			changefreq: 'monthly' as const
 		}));
@@ -238,10 +233,8 @@ function pathnameFromLoc(loc: string, originPrefix: string): string {
 }
 
 /**
- * Central register gate: most sources above still return `[]` for a
- * non-base locale (Phase 1 pattern, kept for now); `WAHL_PORTAL_PAGE_SOURCE`
- * and `WAHL_DETAIL_SOURCE` (Block B) emit for every locale. Either way, this
- * is the authoritative check -- only pages `translation-register.ts`
+ * Central register gate: every source emits localized URLs for every
+ * locale (i18n Block D1). This is the authoritative check -- only pages `translation-register.ts`
  * actually marks as translated survive here for a non-base locale. Prevents
  * an un-registered page from silently appearing in `sitemap-en.xml` just
  * because a source forgot the guard.

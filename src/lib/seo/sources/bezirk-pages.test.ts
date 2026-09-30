@@ -84,9 +84,12 @@ describe('buildBezirkSitemapEntries', () => {
 });
 
 describe('BEZIRK_PAGES_SOURCE', () => {
-	it('liefert leere Liste für locale=en (Phase 1 DE-only)', () => {
+	it('i18n Block D1: liefert für locale=en /en/bezirk/<slug>-URLs', () => {
 		const ctx = fixtureContext({ locale: 'en' });
-		expect(BEZIRK_PAGES_SOURCE(ctx)).toEqual([]);
+		const locs = BEZIRK_PAGES_SOURCE(ctx).map((e) => e.loc);
+		expect(locs).toHaveLength(3);
+		expect(locs).toContain('https://navigator.berlin/en/bezirk/mitte');
+		expect(locs.every((loc) => loc.includes('/en/bezirk/'))).toBe(true);
 	});
 
 	it('liest 3 Slugs aus ctx.bezirkSlugs', () => {

@@ -164,6 +164,45 @@ describe('BezirkHero.svelte', () => {
 
 	// i18n Block B4a
 	describe('opts.locale (EN)', () => {
+		it('Verteilungen englisch: Lärm "Medium", Grün gut/schlecht → High/Low, Wohnlage "Good residential area"', async () => {
+			overwriteGetLocale(() => 'en');
+			const stats = {
+				...statsFixtureFull,
+				laerm: {
+					...statsFixtureFull.laerm,
+					categoryDistribution: {
+						value: { mittel: 0.6, niedrig: 0.4 },
+						layer: 'laerm-2023',
+						sourceUpdatedAt: '2023-06-01'
+					}
+				},
+				gruen: {
+					...statsFixtureFull.gruen,
+					versorgungDistribution: {
+						value: { gut: 0.7, schlecht: 0.3 },
+						layer: 'gruenversorgung-2023',
+						sourceUpdatedAt: '2023-09-01'
+					}
+				},
+				wohnen: {
+					...statsFixtureFull.wohnen,
+					wohnlageDistribution: {
+						value: { gut: 0.8, mittel: 0.2 },
+						layer: 'wohnlagen-2024',
+						sourceUpdatedAt: '2024-01-01'
+					}
+				}
+			} as unknown as BezirkStatsRow;
+			render(BezirkHero, { profile: baseProfile, stats, faq: [] });
+			const text = (
+				document.querySelector('[data-testid="bezirk-steckbrief"]')?.textContent ?? ''
+			).replace(/\s+/g, ' ');
+			expect(text).toContain('Medium 60% · Low 40%');
+			expect(text).toContain('High 70% · Low 30%');
+			expect(text).toContain('Good residential area 80% · Medium residential area 20%');
+			expect(text).not.toMatch(/Mittel \d+%|Schlecht \d+%/);
+		});
+
 		it('Lead + alle Steckbrief-Cluster englisch, EN-Zahlenformate (Komma-Tausender, Punkt-Dezimal, Monat-Jahr)', async () => {
 			overwriteGetLocale(() => 'en');
 			render(BezirkHero, { profile: baseProfile, stats: statsFixtureFull, faq: [] });

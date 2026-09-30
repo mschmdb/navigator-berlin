@@ -32,49 +32,51 @@ afterEach(() => {
 	overwriteGetLocale(() => 'de');
 });
 
-// i18n Block C2 (spec-i18n-c2-layer-methodik.md): das DataCatalog-JSON-LD auf
-// `/lizenzen` (prerendert pro Locale) muss bis zur Registrierung vollständig
-// DE bleiben (Boundary "B4b-Linie"), analog zu `/layer/[slug]`. Vor dem Fix
-// lief `buildLayerDetail(layer.slug, getLocale(), manifest)` -- auf
-// `/en/lizenzen` wären Name, Beschreibung und Behörde englisch ins JSON-LD
-// durchgesickert.
-describe('lizenzen +page.ts load · catalogDatasets bleiben DE (Boundary B4b)', () => {
-	it('name/description/creatorName sind DE, auch wenn die Seiten-Locale "en" ist', async () => {
-		overwriteGetLocale(() => 'en');
-		const data = (await load({
-			fetch: globalThis.fetch
-		} as unknown as Parameters<typeof load>[0])) as {
-			catalogDatasets: {
-				name: string;
-				description: string;
-				urlPath: string;
-				creatorName?: string;
-			}[];
-		};
+// i18n Block D1 (spec-i18n-d1-register-sitemap.md): das DataCatalog-JSON-LD auf
+// `/lizenzen` (prerendert pro Locale) folgt der Seiten-Locale. Name, Beschreibung
+// und Behörde kommen in `getLocale()`, die Dataset-URLs zeigen auf `/en/layer/...`.
+type CatalogRef = {
+	name: string;
+	description: string;
+	urlPath: string;
+	creatorName?: string;
+};
 
-		const laerm = data.catalogDatasets.find((d) => d.urlPath === '/layer/laerm-2023');
+async function loadCatalog(): Promise<CatalogRef[]> {
+	const data = (await load({
+		fetch: globalThis.fetch,
+		url: new URL('https://navigator.berlin/lizenzen')
+	} as unknown as Parameters<typeof load>[0])) as { catalogDatasets: CatalogRef[] };
+	return data.catalogDatasets;
+}
+
+describe('lizenzen +page.ts load · catalogDatasets folgen der Seiten-Locale (Block D1)', () => {
+	it('EN: name/description/creatorName englisch, urlPath mit /en-Präfix', async () => {
+		overwriteGetLocale(() => 'en');
+		const laerm = (await loadCatalog()).find((d) => d.urlPath === '/en/layer/laerm-2023');
+		expect(laerm).toBeDefined();
+		expect(laerm?.name).toBe('Noise pollution 2023');
+		expect(laerm?.description).toMatch(/Noise pollution in the area/);
+		expect(laerm?.creatorName).toMatch(/Senate Department/);
+	});
+
+	it('DE: name/description/creatorName deutsch, urlPath ohne Präfix', async () => {
+		overwriteGetLocale(() => 'de');
+		const laerm = (await loadCatalog()).find((d) => d.urlPath === '/layer/laerm-2023');
 		expect(laerm).toBeDefined();
 		expect(laerm?.name).toBe('Lärmbelastung 2023');
 		expect(laerm?.description).toMatch(/Kategorisierte Lärm-Gesamtbelastung/);
 		expect(laerm?.creatorName).toMatch(/Senatsverwaltung/);
-		expect(laerm?.name).not.toMatch(/Noise/);
-		expect(laerm?.description).not.toMatch(/Categorised overall noise pollution/);
-		expect(laerm?.creatorName).not.toMatch(/Senate Department/);
 	});
 
-	it('name/description/creatorName sind identisch DE für locale "de" und "en" (Zeichen-für-Zeichen-Parität)', async () => {
+	it('DE und EN liefern gleich viele Datasets mit derselben urlPath-Menge (modulo /en)', async () => {
 		overwriteGetLocale(() => 'de');
-		const de = (await load({
-			fetch: globalThis.fetch
-		} as unknown as Parameters<typeof load>[0])) as {
-			catalogDatasets: { name: string; description: string; creatorName?: string }[];
-		};
+		const de = await loadCatalog();
 		overwriteGetLocale(() => 'en');
-		const en = (await load({
-			fetch: globalThis.fetch
-		} as unknown as Parameters<typeof load>[0])) as {
-			catalogDatasets: { name: string; description: string; creatorName?: string }[];
-		};
-		expect(en.catalogDatasets).toEqual(de.catalogDatasets);
+		const en = await loadCatalog();
+		expect(en).toHaveLength(de.length);
+		expect(new Set(en.map((d) => d.urlPath.replace(/^\/en/, '')))).toEqual(
+			new Set(de.map((d) => d.urlPath))
+		);
 	});
 });

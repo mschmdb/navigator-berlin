@@ -170,10 +170,10 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 		expect(bodyText).not.toMatch(/\bVeränderung\b/);
 	});
 
-	test('GET /en/kiez/alexanderplatz (AC-2): 200, lang=en, Switcher+Disclaimer; /kiez/alexanderplatz bleibt lang=de', async ({
+	test('GET /en/impressum (AC-2, nicht registriert): 200, lang=en, Switcher+Disclaimer; /impressum bleibt lang=de', async ({
 		page
 	}) => {
-		const enResponse = await page.goto('/en/kiez/alexanderplatz');
+		const enResponse = await page.goto('/en/impressum');
 		expect(enResponse?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
@@ -182,7 +182,7 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 		);
 		await expect(page.getByTestId('translation-disclaimer').first()).toBeVisible();
 
-		const deResponse = await page.goto('/kiez/alexanderplatz');
+		const deResponse = await page.goto('/impressum');
 		expect(deResponse?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'de');
 		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
@@ -256,13 +256,13 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 
 	// JSON-LD inLanguage muss der EFFEKTIVEN Content-Locale folgen (DE, da
 	// nicht übersetzt), nicht der URL-Locale -- auf WebSite-JSON-LD
-	// (Root-Layout). `/en/kiez/...` ist (anders als `/en/berlin-wahlen` seit
-	// Block B) weiterhin unübersetzt und bleibt deshalb das Beispiel für
+	// (Root-Layout). `/en/impressum` ist (anders als `/en/berlin-wahlen` seit
+	// Block B) dauerhaft unübersetzt und bleibt deshalb das Beispiel für
 	// dieses Prinzip.
-	test('JSON-LD inLanguage auf /en/kiez/alexanderplatz bleibt de-DE (nicht übersetzt, WebSite-JSON-LD)', async ({
+	test('JSON-LD inLanguage auf /en/impressum bleibt de-DE (nicht übersetzt, WebSite-JSON-LD)', async ({
 		page
 	}) => {
-		await page.goto('/en/kiez/alexanderplatz');
+		await page.goto('/en/impressum');
 		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
 		expect(websiteJsonLd).not.toBeNull();
 		const parsed = JSON.parse(websiteJsonLd ?? '{}') as {
@@ -836,11 +836,10 @@ test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht
 });
 
 // spec-i18n-teiluebersetzung-banner.md: `/en/impressum` ist NICHT im
-// Teil-Übersetzungs-Register (nur `/kiez`, `/bezirk`, `/layer` sind es seit
-// i18n Block C1 -- `/explore` zog ins volle Übersetzungs-Register um, siehe
-// spec-i18n-c1-hinweise-layer-erklaerungen.md) -- Banner und `<main lang>`
-// bleiben deshalb exakt wie vor dieser Spec (Kontroll-Test, verhindert eine
-// versehentliche Ausweitung).
+// Teil-Übersetzungs-Register (leer seit i18n Block D1, `/kiez`, `/bezirk` und
+// `/layer` zogen ins volle Register um, siehe spec-i18n-d1-register-sitemap.md)
+// -- Banner und `<main lang>` bleiben deshalb exakt wie vor dieser Spec
+// (Kontroll-Test, verhindert eine versehentliche Ausweitung).
 test.describe('spec-i18n-teiluebersetzung-banner: /en/impressum unverändert (Kontrolle)', () => {
 	test('Banner bleibt "not yet available" (fallback-to-base), main lang=de', async ({ page }) => {
 		await page.goto('/en/impressum');

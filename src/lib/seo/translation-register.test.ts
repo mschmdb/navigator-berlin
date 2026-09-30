@@ -15,8 +15,8 @@ describe('isRouteTranslated', () => {
 	});
 
 	it('a path not registered for EN stays untranslated (register is NOT a catch-all)', () => {
-		expect(isRouteTranslated('/kiez/mitte', 'en')).toBe(false);
 		expect(isRouteTranslated('/impressum', 'en')).toBe(false);
+		expect(isRouteTranslated('/datenschutz', 'en')).toBe(false);
 	});
 
 	// Review-Fund (i18n Block B): der Register-Eintrag ist ein PRAEFIX
@@ -38,6 +38,9 @@ describe('isRouteTranslated', () => {
 			{ pathname: '/hitze', locale: 'en' },
 			{ pathname: '/kuehle-orte', locale: 'en' },
 			{ pathname: '/lizenzen', locale: 'en' },
+			{ pathname: '/kiez', locale: 'en', prefix: true },
+			{ pathname: '/bezirk', locale: 'en', prefix: true },
+			{ pathname: '/layer', locale: 'en', prefix: true },
 			{
 				pathname: '/updates',
 				locale: 'en',
@@ -99,6 +102,15 @@ describe('isRouteTranslated', () => {
 		}
 	});
 
+	// Block D1 (`spec-i18n-d1-register-sitemap.md`): drei Praefix-Eintraege.
+	it('Block D1: /kiez, /bezirk und /layer samt jeder Detailseite sind registriert', () => {
+		for (const path of ['/kiez', '/kiez/mitte', '/bezirk/pankow', '/layer/laerm-2023']) {
+			expect(isRouteTranslated(path, 'en'), path).toBe(true);
+			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
+		}
+		expect(isRouteTranslated('/kiezblock', 'en')).toBe(false);
+	});
+
 	it('Block C4c: /impressum und /datenschutz bleiben unübersetzt', () => {
 		for (const path of ['/impressum', '/datenschutz']) {
 			expect(isRouteTranslated(path, 'en'), path).toBe(false);
@@ -131,7 +143,7 @@ describe('isRouteTranslated', () => {
 	it('Block B2: die Startseite ist registriert, exakt, ohne Praefix-Ausbreitung', () => {
 		expect(isRouteTranslated('/', 'en')).toBe(true);
 		expect(isRouteTranslated('/en', 'en')).toBe(true);
-		expect(isRouteTranslated('/kiez/mitte', 'en')).toBe(false);
+		expect(isRouteTranslated('/impressum', 'en')).toBe(false);
 	});
 
 	it('ein Praefix-Eintrag matcht NICHT einen aehnlich benannten, aber andersartigen Pfad (kein Segment-Grenzen-Bug)', () => {
@@ -151,7 +163,7 @@ describe('isRouteTranslated', () => {
 
 	it('an injected entry for a different path does not match', () => {
 		const entries: readonly TranslationRegisterEntry[] = [{ pathname: '/methodik', locale: 'en' }];
-		expect(isRouteTranslated('/kiez/mitte', 'en', entries)).toBe(false);
+		expect(isRouteTranslated('/impressum', 'en', entries)).toBe(false);
 	});
 
 	it('an injected entry for a different locale does not match', () => {
@@ -161,20 +173,12 @@ describe('isRouteTranslated', () => {
 });
 
 describe('isRoutePartiallyTranslated', () => {
-	// Block C1: `/explore` zog ins volle Register um (siehe oben), das
-	// Teil-Register deckt seitdem nur noch die drei verbleibenden Routen ab.
-	it('der reale Eintrag deckt die drei verbleibenden Teil-Routen ab (je als Praefix)', () => {
-		expect(PARTIAL_TRANSLATION_REGISTER).toEqual([
-			{ pathname: '/kiez', locale: 'en', prefix: true },
-			{ pathname: '/bezirk', locale: 'en', prefix: true },
-			{ pathname: '/layer', locale: 'en', prefix: true }
-		]);
-	});
-
-	it('/kiez/x, /bezirk/x, /layer/x sind fuer en teilweise uebersetzt', () => {
-		expect(isRoutePartiallyTranslated('/kiez/mitte', 'en')).toBe(true);
-		expect(isRoutePartiallyTranslated('/bezirk/pankow', 'en')).toBe(true);
-		expect(isRoutePartiallyTranslated('/layer/laerm-2023', 'en')).toBe(true);
+	// Block D1: das Teil-Register ist leer, `/kiez`, `/bezirk`, `/layer` sind voll registriert.
+	it('das reale Teil-Register ist leer, die Mechanik bleibt', () => {
+		expect(PARTIAL_TRANSLATION_REGISTER).toEqual([]);
+		expect(isRoutePartiallyTranslated('/kiez/mitte', 'en')).toBe(false);
+		expect(isRoutePartiallyTranslated('/bezirk/pankow', 'en')).toBe(false);
+		expect(isRoutePartiallyTranslated('/layer/laerm-2023', 'en')).toBe(false);
 	});
 
 	// Block C1: `/explore` ist jetzt voll uebersetzt, nicht mehr "teilweise".
@@ -207,7 +211,7 @@ describe('isRoutePartiallyTranslated', () => {
 
 describe('translatedLocalesFor', () => {
 	it('a not-yet-translated path has an empty non-base set', () => {
-		expect(translatedLocalesFor('/kiez/mitte', ['de', 'en'])).toEqual([]);
+		expect(translatedLocalesFor('/impressum', ['de', 'en'])).toEqual([]);
 	});
 
 	it('Block B: /berlin-wahlen has en in its non-base set', () => {

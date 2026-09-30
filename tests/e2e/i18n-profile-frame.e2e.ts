@@ -87,31 +87,25 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/?$/);
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md: `/en/kiez/…` hat einen übersetzten
-	// Rahmen, einzelne Inhalte (Prosa, FAQ) bleiben deutsch bis Block C --
-	// `<main lang>` folgt deshalb der Rahmen- statt der Content-Locale, und
-	// das Banner zeigt den Teil-Übersetzungs-Text statt "not yet available".
-	test('Teil-Übersetzungs-Banner: "only available in German", Read-in-German-Link, main lang=en, noindex bleibt', async ({
+	// i18n Block D1 (spec-i18n-d1-register-sitemap.md): `/en/kiez/…` ist im
+	// Übersetzungs-Register. Kein Banner, kein noindex, hreflang de/en/x-default.
+	test('Registriert: kein Banner, kein noindex, hreflang de/en/x-default, main lang=en', async ({
 		page
 	}) => {
 		const response = await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		expect(response?.status()).toBe(200);
-		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-			'content',
-			'noindex,nofollow'
-		);
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
 		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
-		const disclaimer = page.getByTestId('translation-disclaimer').first();
-		await expect(disclaimer).toBeVisible();
-		await expect(disclaimer).toHaveAttribute('data-variant', 'partial');
-		await expect(disclaimer).toContainText(
-			'Some content on this page is only available in German.'
+		await expect(page.getByTestId('translation-disclaimer')).toHaveCount(0);
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+			'href',
+			/\/en\/kiez\/[a-z0-9-]+$/
 		);
-		await expect(disclaimer.getByTestId('translation-disclaimer-alt-link')).toContainText(
-			'Read in German'
+		await expect(page.locator('link[rel="alternate"][hreflang="de"]')).toHaveAttribute(
+			'href',
+			/\/kiez\/[a-z0-9-]+$/
 		);
-		// AC "teilweise übersetzt ≠ übersetzt": noindex ohne hreflang.
-		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
+		await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveCount(1);
 	});
 
 	test('Steckbrief, Vergleichstabelle und Wahl-Verlauf englisch; FAQ-Heading und Q&A englisch ohne lang=de', async ({
@@ -246,28 +240,25 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/kiez\//);
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md, siehe Kiez-Pendant oben.
-	test('Teil-Übersetzungs-Banner: "only available in German", Read-in-German-Link, main lang=en, noindex bleibt', async ({
+	// i18n Block D1 (spec-i18n-d1-register-sitemap.md): `/en/bezirk/…` ist im
+	// Übersetzungs-Register. Kein Banner, kein noindex, hreflang de/en/x-default.
+	test('Registriert: kein Banner, kein noindex, hreflang de/en/x-default, main lang=en', async ({
 		page
 	}) => {
 		const response = await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
 		expect(response?.status()).toBe(200);
-		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-			'content',
-			'noindex,nofollow'
-		);
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
 		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
-		const disclaimer = page.getByTestId('translation-disclaimer').first();
-		await expect(disclaimer).toBeVisible();
-		await expect(disclaimer).toHaveAttribute('data-variant', 'partial');
-		await expect(disclaimer).toContainText(
-			'Some content on this page is only available in German.'
+		await expect(page.getByTestId('translation-disclaimer')).toHaveCount(0);
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+			'href',
+			/\/en\/bezirk\/[a-z0-9-]+$/
 		);
-		await expect(disclaimer.getByTestId('translation-disclaimer-alt-link')).toContainText(
-			'Read in German'
+		await expect(page.locator('link[rel="alternate"][hreflang="de"]')).toHaveAttribute(
+			'href',
+			/\/bezirk\/[a-z0-9-]+$/
 		);
-		// AC "teilweise übersetzt ≠ übersetzt": noindex ohne hreflang.
-		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
+		await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveCount(1);
 	});
 
 	test('Meta-Description + og:image:alt englisch (Zahlen, Kiez score, Bezirk data)', async ({
@@ -341,3 +332,48 @@ test.describe('FAQ-Folge Kiez (sort_order)', () => {
 		expect(en).toEqual(de);
 	});
 });
+
+type JsonLd = {
+	url?: string;
+	additionalProperty?: { name: string }[];
+	itemListElement?: { item: string }[];
+};
+
+async function readJsonLd(page: Page, testid: string): Promise<JsonLd> {
+	const text = await page.locator(`script[data-testid="${testid}"]`).textContent();
+	return JSON.parse(text ?? '{}') as JsonLd;
+}
+
+// i18n Block D1: Place, AdministrativeArea und Breadcrumb folgen der Seiten-Locale.
+for (const { kind, slug } of [
+	{ kind: 'kiez', slug: KIEZ_SLUG },
+	{ kind: 'bezirk', slug: BEZIRK_SLUG }
+] as const) {
+	const areaTestId =
+		kind === 'kiez' ? 'kiez-administrative-area-jsonld' : 'bezirk-administrative-area-jsonld';
+	test.describe(`i18n Block D1: ${kind} JSON-LD`, () => {
+		test(`/en/${kind}/${slug}: url auf /en, EN-Property-Namen, Breadcrumb mit /en`, async ({
+			page
+		}) => {
+			await page.goto(`/en/${kind}/${slug}`);
+			for (const testid of [`${kind}-place-jsonld`, areaTestId]) {
+				const ld = await readJsonLd(page, testid);
+				expect(ld.url).toMatch(new RegExp(`/en/${kind}/${slug}$`));
+				expect(ld.additionalProperty?.map((p) => p.name)).toEqual(['Population', 'Area (ha)']);
+			}
+			const crumbs = (await readJsonLd(page, `${kind}-breadcrumb-jsonld`)).itemListElement ?? [];
+			expect(crumbs.length).toBeGreaterThan(1);
+			for (const crumb of crumbs) expect(new URL(crumb.item).pathname).toMatch(/^\/en(\/|$)/);
+		});
+
+		test(`/${kind}/${slug} (DE): url ohne Präfix, DE-Property-Namen`, async ({ page }) => {
+			await page.goto(`/${kind}/${slug}`);
+			const ld = await readJsonLd(page, `${kind}-place-jsonld`);
+			expect(ld.url).toMatch(new RegExp(`/${kind}/${slug}$`));
+			expect(ld.url).not.toContain('/en/');
+			expect(ld.additionalProperty?.map((p) => p.name)).toEqual(['Einwohner', 'Fläche (ha)']);
+			const crumbs = (await readJsonLd(page, `${kind}-breadcrumb-jsonld`)).itemListElement ?? [];
+			for (const crumb of crumbs) expect(new URL(crumb.item).pathname).not.toMatch(/^\/en(\/|$)/);
+		});
+	});
+}

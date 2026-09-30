@@ -82,8 +82,11 @@ describe('buildKiezSitemapEntries', () => {
 });
 
 describe('KIEZ_PAGES_SOURCE', () => {
-	it('liefert für locale=en einen leeren Array (Phase-1 DE-only)', () => {
-		expect(KIEZ_PAGES_SOURCE(fixtureContext({ locale: 'en' }))).toEqual([]);
+	it('i18n Block D1: liefert für locale=en /en/kiez/<slug>-URLs', () => {
+		const locs = KIEZ_PAGES_SOURCE(fixtureContext({ locale: 'en' })).map((e) => e.loc);
+		expect(locs).toHaveLength(3);
+		expect(locs).toContain('https://navigator.berlin/en/kiez/karlshorst');
+		expect(locs.every((loc) => loc.includes('/en/kiez/'))).toBe(true);
 	});
 
 	it('liefert leere Liste wenn kiezSlugs fehlt', () => {

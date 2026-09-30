@@ -76,34 +76,28 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		await expect(lead).toContainText(/Categorised overall noise pollution/);
 	});
 
-	// spec-i18n-teiluebersetzung-banner.md: `/en/layer/…` hat einen übersetzten
-	// Rahmen, layer-explain-Fließtext bleibt deutsch bis Block C -- `<main
-	// lang>` folgt deshalb der Rahmen- statt der Content-Locale, und das
-	// Banner zeigt den Teil-Übersetzungs-Text statt "not yet available".
-	test('Teil-Übersetzungs-Banner: "only available in German", Read-in-German-Link, main lang=en, noindex bleibt', async ({
+	// i18n Block D1 (spec-i18n-d1-register-sitemap.md): `/en/layer/…` ist im
+	// Übersetzungs-Register. Kein Banner, kein noindex, hreflang de/en/x-default.
+	test('Registriert: kein Banner, kein noindex, hreflang de/en/x-default, main lang=en', async ({
 		page
 	}) => {
 		const response = await page.goto(`/en/layer/${LAYER_WITH_METHODOLOGY}`);
 		expect(response?.status()).toBe(200);
-		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-			'content',
-			'noindex,nofollow'
-		);
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
 		await expect(page.locator('main#main')).toHaveAttribute('lang', 'en');
-		const disclaimer = page.getByTestId('translation-disclaimer').first();
-		await expect(disclaimer).toBeVisible();
-		await expect(disclaimer).toHaveAttribute('data-variant', 'partial');
-		await expect(disclaimer).toContainText(
-			'Some content on this page is only available in German.'
+		await expect(page.getByTestId('translation-disclaimer')).toHaveCount(0);
+		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+			'href',
+			/\/en\/layer\/[a-z0-9-]+$/
 		);
-		await expect(disclaimer.getByTestId('translation-disclaimer-alt-link')).toContainText(
-			'Read in German'
+		await expect(page.locator('link[rel="alternate"][hreflang="de"]')).toHaveAttribute(
+			'href',
+			/\/layer\/[a-z0-9-]+$/
 		);
-		// AC "teilweise übersetzt ≠ übersetzt": noindex ohne hreflang.
-		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
+		await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveCount(1);
 	});
 
-	test('Dataset- und Breadcrumb-JSON-LD bleiben auf /en vollständig deutsch (Boundary inLanguage de-DE)', async ({
+	test('Dataset- und Breadcrumb-JSON-LD folgen auf /en der Seiten-Locale (Block D1, inLanguage en-US)', async ({
 		page
 	}) => {
 		await page.goto(`/en/layer/${LAYER_WITH_METHODOLOGY}`);
@@ -112,14 +106,10 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 				.locator('script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]')
 				.textContent()) ?? '{}'
 		);
-		expect(dataset.name).toBe('Lärmbelastung 2023');
-		expect(dataset.inLanguage).toBe('de-DE');
-		// i18n Block C2: `creator.name` (Behörde) muss DE bleiben wie Name +
-		// Description -- Regressionsschutz für den Review-Fund, bei dem
-		// `creatorName` versehentlich der Seiten-Locale statt einer eigenen
-		// DE-only-Quelle folgte (`deMethodology`).
-		expect(dataset.creator?.name).toMatch(/Senatsverwaltung/);
-		expect(dataset.creator?.name).not.toMatch(/Senate Department/);
+		expect(dataset.name).toBe('Noise pollution 2023');
+		expect(dataset.inLanguage).toBe('en-US');
+		expect(dataset.creator?.name).toMatch(/Senate Department/);
+		expect(dataset.creator?.name).not.toMatch(/Senatsverwaltung/);
 
 		const breadcrumb = JSON.parse(
 			(await page
@@ -127,8 +117,11 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 				.textContent()) ?? '{}'
 		);
 		expect(breadcrumb.itemListElement[0].name).toBe('Berlin');
-		expect(breadcrumb.itemListElement[1].name).toBe('Daten');
-		expect(breadcrumb.itemListElement[2].name).toBe('Lärmbelastung 2023');
+		expect(breadcrumb.itemListElement[1].name).toBe('Data');
+		expect(breadcrumb.itemListElement[2].name).toBe('Noise pollution 2023');
+		expect(breadcrumb.itemListElement[2].item).toMatch(
+			new RegExp(`/en/layer/${LAYER_WITH_METHODOLOGY}$`)
+		);
 	});
 
 	test('Coverage-Lücken + „Was wir NICHT zeigen"-Überschriften UND Inhalte englisch, kein lang="de"', async ({

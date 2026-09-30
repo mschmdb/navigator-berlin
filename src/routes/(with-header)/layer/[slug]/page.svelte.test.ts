@@ -3,6 +3,7 @@ import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Page from './+page.svelte';
+import { bundleLabel } from '$lib/components/atlas/internal/layer-palette-filter.js';
 import type { LayerDetail } from '$lib/data/get-layer-detail.js';
 import type { LayerMetadata } from '$lib/data';
 import type { LayerMethodology } from '$lib/data/layer-methodology.js';
@@ -256,14 +257,10 @@ describe('layer-detail +page.svelte', () => {
 		expect(parsed.inLanguage).toBe('de-DE');
 	});
 
-	// i18n Block C2: `creatorName` im JSON-LD löst jetzt über eine eigene
-	// DE-only-Quelle auf (`deMethodology = getLayerMethodology(detail.slug)`,
-	// echte Daten für den Slug, NICHT `detail.methodology` aus den Props --
-	// Boundary "`/layer`-JSON-LD `creatorName` bleibt DE"). Der Fallback
-	// greift deshalb nur, wenn der Slug real keinen Methodology-Eintrag hat,
-	// nicht mehr über ein Props-Override.
+	// i18n Block D1: `creatorName` kommt aus `detail.methodology` (Seiten-Locale).
+	// Der Fallback greift, wenn der Loader keine Methodology liefert.
 	it('Dataset-JSON-LD nutzt navigator.berlin als creator-Fallback wenn der Slug keine reale Methodology hat', async () => {
-		const d = detail('does-not-exist-xyz');
+		const d = detail('does-not-exist-xyz', { methodology: null });
 		render(Page, { data: { detail: d, faq: [], faqLocale: 'de' } });
 		const script = document.querySelector(
 			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
@@ -504,43 +501,41 @@ describe('layer-detail +page.svelte', () => {
 			expect(decodedHref).toContain('subject=Fehler im Eintrag: Lärmbelastung 2023');
 		});
 
-		it('Breadcrumb- und Dataset-JSON-LD bleiben auf /en vollständig deutsch (Boundary inLanguage de-DE)', async () => {
+		it('Breadcrumb- und Dataset-JSON-LD folgen auf /en der Seiten-Locale (Block D1)', async () => {
 			overwriteGetLocale(() => 'en');
-			// i18n Block C1: `explain` im Loader-Datensatz ist jetzt locale-fähig
-			// (hier absichtlich EN gesetzt, wie ein echter `/en`-Loader-Call es
-			// liefern würde) -- das JSON-LD zieht seine Description trotzdem über
-			// eine eigene DE-only-Quelle (`deExplain`, echte Message für den
-			// Slug), nicht über diesen Loader-Wert (Boundary: JSON-LD bleibt DE).
-			// i18n Block C2: `methodology` im Loader-Datensatz ist jetzt ebenfalls
-			// locale-fähig (hier absichtlich EN gesetzt) -- `creatorName` im
-			// JSON-LD zieht trotzdem über die eigene DE-only-Quelle
-			// (`deMethodology`), nicht über diesen Loader-Wert.
+			// Loader-Daten sind auf `/en` bereits englisch (Locale-Parameter in
+			// `buildLayerDetail`); das JSON-LD zieht daraus Name, Description, Creator.
 			const d = {
 				...detail(),
-				explain: { short: 'Noise pollution in the area', long: 'EN loader text, must not leak.' },
-				methodology: { ...methodology(), authority: 'EN authority text, must not leak.' }
+				layerName: 'Noise pollution 2023',
+				explain: {
+					short: 'Noise pollution in the area',
+					long: 'Categorised overall noise pollution per planning area from the Berlin Environmental Atlas.'
+				},
+				methodology: { ...methodology(), authority: 'Senate Department (EN)' }
 			};
-			render(Page, { data: { detail: d, faq: [], faqLocale: 'de' } });
+			render(Page, { data: { detail: d, faq: [], faqLocale: 'en' } });
 			const breadcrumbScript = document.querySelector(
 				'script[type="application/ld+json"][data-testid="layer-breadcrumb-jsonld"]'
 			);
 			const breadcrumb = JSON.parse(breadcrumbScript?.textContent ?? '{}');
-			expect(breadcrumb.itemListElement[0].name).toBe('Berlin');
-			expect(breadcrumb.itemListElement[1].name).toBe('Daten');
-			// slug `laerm-2023` -> real DE message, not the fixture's `layerName`.
-			expect(breadcrumb.itemListElement[2].name).toBe('Lärmbelastung 2023');
+			const items = breadcrumb.itemListElement as { name: string; item: string }[];
+			expect(items.map((i) => i.name)).toEqual(['Berlin', 'Data', 'Noise pollution 2023']);
+			expect(items[0]?.item.endsWith('/en')).toBe(true);
+			expect(items[1]?.item.endsWith('/en/explore')).toBe(true);
+			expect(items[2]?.item.endsWith(`/en/layer/${d.slug}`)).toBe(true);
 			const datasetScript = document.querySelector(
 				'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
 			);
 			const dataset = JSON.parse(datasetScript?.textContent ?? '{}');
-			expect(dataset.name).toBe('Lärmbelastung 2023');
-			// Echte DE-Message für `laerm-2023`, NICHT der EN-Loader-Fixture-Text.
-			expect(dataset.description).toMatch(/Lärm-Gesamtbelastung/);
-			expect(dataset.description).not.toMatch(/EN loader text/);
-			expect(dataset.inLanguage).toBe('de-DE');
-			// Echte DE-Authority für `laerm-2023`, NICHT der EN-Loader-Fixture-Text.
-			expect(dataset.creator?.name).toMatch(/Senatsverwaltung/);
-			expect(dataset.creator?.name).not.toMatch(/EN authority text/);
+			expect(dataset.name).toBe('Noise pollution 2023');
+			expect(dataset.description).toBe(
+				'Categorised overall noise pollution per planning area from the Berlin Environmental Atlas.'
+			);
+			expect(dataset.inLanguage).toBe('en-US');
+			expect(dataset.creator?.name).toBe('Senate Department (EN)');
+			expect(dataset.keywords).toBe(`${bundleLabel('C: Umwelt', { locale: 'en' })}, ${d.slug}`);
+			expect(dataset.keywords).not.toContain('C: Umwelt');
 		});
 	});
 });

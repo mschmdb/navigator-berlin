@@ -9,6 +9,7 @@ import {
 	type SitemapEntry,
 	type SitemapSourceContext
 } from './sitemap-builder.js';
+import { isRouteTranslated } from './translation-register.js';
 import type { Manifest } from '$lib/data/types.js';
 
 const ORIGIN = 'https://navigator.berlin';
@@ -174,16 +175,28 @@ describe('STATIC_PAGES_SOURCE', () => {
 			'https://navigator.berlin/kuehle-orte',
 			'https://navigator.berlin/hitze',
 			'https://navigator.berlin/methodik',
+			'https://navigator.berlin/methodik/kiez-score',
 			'https://navigator.berlin/methodik/wahldaten',
 			'https://navigator.berlin/lizenzen',
+			'https://navigator.berlin/architektur',
 			'https://navigator.berlin/webmcp'
 		]);
 		expect(entries.every((e) => e.lastmod === '2026-05-16T08:00:00.000Z')).toBe(true);
 	});
 
-	it('skips EN locale entirely in phase 1 (returns empty)', () => {
-		const entries = STATIC_PAGES_SOURCE(ctx({ locale: 'en' }));
-		expect(entries).toEqual([]);
+	it('i18n Block D1: emits locale-prefixed URLs for EN (root becomes /en)', () => {
+		const locs = STATIC_PAGES_SOURCE(ctx({ locale: 'en' })).map((e) => e.loc);
+		expect(locs).toContain('https://navigator.berlin/en');
+		expect(locs).toContain('https://navigator.berlin/en/explore');
+		expect(locs).toContain('https://navigator.berlin/en/architektur');
+		expect(locs).toContain('https://navigator.berlin/en/methodik/kiez-score');
+	});
+
+	it('never lists legal pages or the noindex cross-layer-templates page', () => {
+		for (const locale of ['de', 'en'] as const) {
+			const locs = STATIC_PAGES_SOURCE(ctx({ locale })).map((e) => e.loc);
+			expect(locs.some((l) => /impressum|datenschutz|cross-layer-templates/.test(l))).toBe(false);
+		}
 	});
 });
 
@@ -224,9 +237,13 @@ describe('LAYER_DETAIL_SOURCE', () => {
 		expect(bezirkeEntry?.lastmod).toBe('2026-05-16T06:56:28.400Z');
 	});
 
-	it('returns empty for EN locale (phase 1)', () => {
-		const entries = LAYER_DETAIL_SOURCE(ctx({ locale: 'en' }));
-		expect(entries).toEqual([]);
+	it('i18n Block D1: emits /en/layer/<slug> for EN', () => {
+		const locs = LAYER_DETAIL_SOURCE(ctx({ locale: 'en' })).map((e) => e.loc);
+		expect(locs.sort()).toEqual([
+			'https://navigator.berlin/en/layer/bezirke',
+			'https://navigator.berlin/en/layer/klima-pet',
+			'https://navigator.berlin/en/layer/mietspiegel-2024'
+		]);
 	});
 });
 
@@ -241,15 +258,35 @@ describe('collectPrerenderedUrls', () => {
 		expect(locs).toContain('https://navigator.berlin/layer/bezirke');
 	});
 
-	it('returns empty for EN locale when nothing is registered as translated (e.g. wahlPortalEnabled off)', () => {
-		const entries = collectPrerenderedUrls(ctx({ locale: 'en' }));
-		expect(entries).toEqual([]);
+	it('i18n Block D1: EN locale lists exactly the registered, indexable pages', () => {
+		const entries = collectPrerenderedUrls(
+			ctx({ locale: 'en', bezirkSlugs: ['mitte'], kiezSlugs: ['karlshorst'] })
+		);
+		const locs = entries.map((e) => e.loc);
+		expect(locs).toContain('https://navigator.berlin/en');
+		expect(locs).toContain('https://navigator.berlin/en/explore');
+		expect(locs).toContain('https://navigator.berlin/en/layer/bezirke');
+		expect(locs).toContain('https://navigator.berlin/en/bezirk/mitte');
+		expect(locs).toContain('https://navigator.berlin/en/kiez/karlshorst');
+		expect(locs).toContain('https://navigator.berlin/en/umwelt-infrastruktur-score');
+		expect(locs.some((l) => l.startsWith('https://navigator.berlin/en/updates'))).toBe(true);
+		expect(locs.some((l) => /impressum|datenschutz|cross-layer-templates/.test(l))).toBe(false);
+		// Jede EN-URL ist registriert (Register-Gate).
+		for (const loc of locs) {
+			expect(
+				isRouteTranslated(loc.slice('https://navigator.berlin'.length) || '/', 'en'),
+				loc
+			).toBe(true);
+		}
 	});
 
 	it('i18n Block B: EN locale includes /en/berlin-wahlen once wahlPortalEnabled + register entry exist', () => {
 		const entries = collectPrerenderedUrls(ctx({ locale: 'en', wahlPortalEnabled: true }));
 		const locs = entries.map((e) => e.loc);
-		expect(locs).toEqual(['https://navigator.berlin/en/berlin-wahlen']);
+		expect(locs).toContain('https://navigator.berlin/en/berlin-wahlen');
+		expect(collectPrerenderedUrls(ctx({ locale: 'en' })).map((e) => e.loc)).not.toContain(
+			'https://navigator.berlin/en/berlin-wahlen'
+		);
 	});
 
 	it('i18n Block B: /berlin-wahlen (DE) gets an EN alternate once registered + enabled', () => {
@@ -262,14 +299,12 @@ describe('collectPrerenderedUrls', () => {
 		]);
 	});
 
-	it('a page with no translated counterpart gets no alternates', () => {
+	it('legal pages stay out of the sitemap, registered detail pages get the full hreflang cluster', () => {
 		const entries = collectPrerenderedUrls(ctx());
-		// `/impressum` und `/datenschutz` bleiben dauerhaft DE, stehen aber nicht in der Sitemap.
-		// Als Sitemap-Seite ohne EN-Gegenstück dient eine Layer-Detailseite (Register-Eintrag
-		// erst im Abschluss-Block).
-		const layer = entries.find((e) => e.loc === 'https://navigator.berlin/layer/mietspiegel-2024');
-		expect(layer).toBeDefined();
-		expect(layer?.alternates).toBeUndefined();
+		// `/impressum` und `/datenschutz` bleiben dauerhaft DE und stehen nicht in der Sitemap.
+		expect(entries.some((e) => /impressum|datenschutz/.test(e.loc))).toBe(false);
+		const detail = entries.find((e) => e.loc === 'https://navigator.berlin/layer/mietspiegel-2024');
+		expect(detail?.alternates?.map((a) => a.hreflang)).toEqual(['de', 'en', 'x-default']);
 	});
 
 	it('i18n Block C4c: /hitze, /kuehle-orte und /lizenzen (DE) bekommen ihren EN-Alternate', () => {
