@@ -52,9 +52,9 @@ templates:
     requires: []
     question: "Which noise sources feed into the map?"
     answer: >-
-      The strategic noise mapping covers road, rail, aircraft and industrial noise
-      separately. On the map we show road traffic noise LDEN, because it reaches the
-      largest population across the whole area.
+      The strategic noise mapping shows road, rail, aircraft and industrial noise
+      separately. The map shows total traffic noise from road, rail and air traffic
+      (LDEN), combined per planning area.
 
   - id: laerm-was-tun-bei-belastung
     applicableTo: [layer]

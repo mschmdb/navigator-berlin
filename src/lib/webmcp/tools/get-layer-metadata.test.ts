@@ -49,8 +49,8 @@ describe('get-layer-metadata tool', () => {
 		});
 		const out = (await tool.handler({ slug: 'laerm-2023' })) as Record<string, unknown>;
 		const methodology = out.methodology as Record<string, unknown>;
-		expect(methodology.summary).toMatch(/Modellierte Lärm-Gesamtbelastung/);
-		expect(methodology.summary).not.toMatch(/Modelled overall noise pollution/);
+		expect(methodology.summary).toMatch(/Gesamtverkehrslärm aus Straßen-/);
+		expect(methodology.summary).not.toMatch(/Total traffic noise from road/);
 	});
 
 	// Composite-Authority mit OSM-Suffix (`stolpersteine`): der Suffix ist

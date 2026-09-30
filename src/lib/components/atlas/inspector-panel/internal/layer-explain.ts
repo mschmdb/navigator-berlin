@@ -73,27 +73,27 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	'laerm-2023': {
 		short: 'Lärmbelastung im Stadtteil (Umweltatlas 2023)',
 		long: 'Kategorisierte Lärm-Gesamtbelastung pro Planungsraum aus dem Berliner Umweltatlas 2023. Berücksichtigt Straßen-, Schienen- und Fluglärm. Indikator für Verdrängung der Wohnruhe.',
-		valueScaleExplain: 'niedrig (gut) bis sehr hoch (problematisch)'
+		valueScaleExplain: 'gering (gut) bis hoch (problematisch)'
 	},
 	'luft-2023': {
 		short: 'Luftbelastung im Stadtteil (Umweltatlas 2023)',
 		long: 'Kategorisierte Luftqualität pro Planungsraum: Stickoxide und Feinstaub. Datengrundlage: Berliner Umweltatlas 2023, Verkehrsmodell plus Messstationen.',
-		valueScaleExplain: 'niedrig (gut) bis sehr hoch (problematisch)'
+		valueScaleExplain: 'gering (gut) bis hoch (problematisch)'
 	},
 	'gruenversorgung-2023': {
 		short: 'Grünversorgung im Stadtteil (Umweltatlas 2023)',
-		long: 'Pro-Kopf-Versorgung mit nutzbarem öffentlichem Grün im Planungsraum. Indikator für Erholungsräume und Klimaresilienz. Kategorisch von niedrig bis sehr hoch.',
-		valueScaleExplain: 'niedrig = wenig Grün, sehr hoch = gut versorgt'
+		long: 'Pro-Kopf-Versorgung mit nutzbarem öffentlichem Grün im Planungsraum. Indikator für Erholungsräume und Klimaresilienz. Drei Kategorien: gering, mittel, hoch.',
+		valueScaleExplain: 'gering = wenig Grün, hoch = gut versorgt'
 	},
 	'bioklima-2023': {
 		short: 'Thermische Belastung im Sommer (Umweltatlas 2023)',
 		long: 'Bioklimatische Belastung an Hitzetagen pro Planungsraum: Hitzeinsel-Effekt, Versiegelung, Kühlung durch Grün. Relevant für Hitzeschutz besonders älterer Menschen und chronisch Kranker.',
-		valueScaleExplain: 'niedrig bis sehr hoch (Hitzestress-Risiko)'
+		valueScaleExplain: 'gering bis hoch (Hitzestress-Risiko)'
 	},
 	'umweltgerechtigkeit-2023': {
 		short: 'Umweltgerechtigkeit gesamt: Mehrfachbelastung im Stadtteil',
 		long: 'Kombinierter Indikator aus Lärm, Luft, Bioklima und Grünversorgung zusammen mit dem sozialen Status. Identifiziert Mehrfachbelastung in benachteiligten Stadtteilen (Berliner Umweltgerechtigkeitsbericht 2023).',
-		valueScaleExplain: 'niedrig bis sehr hoch (kumulierte Belastung)'
+		valueScaleExplain: 'keine starke bis fünffache Belastung'
 	},
 
 	// C: Umwelt — Klimaanalyse 2022

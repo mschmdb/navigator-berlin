@@ -36,7 +36,7 @@ templates:
       Die Senatsverwaltung berechnet pro Planungsraum, wie viele Quadratmeter
       wohnungsnahe Grünfläche pro Einwohnerin im Einzugsbereich liegen.
       Als Richtwert gelten 6 Quadratmeter pro Person. Erreicht oder verfehlt ein
-      Planungsraum diesen Wert, ergibt sich die Kategorie „gut", „mittel" oder
+      Planungsraum diesen Wert, ergibt sich die Kategorie „hoch", „mittel" oder
       „gering".
 
   - id: gruen-rolle-hitze

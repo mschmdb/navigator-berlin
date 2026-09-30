@@ -137,8 +137,8 @@ describe('mountWebMcpServer · getLayerMethodology bleibt DE (Boundary i18n Bloc
 				calculation?: string;
 				authority?: string;
 			} | null;
-			expect(laerm?.calculation).toMatch(/Modellierte Lärm-Gesamtbelastung/);
-			expect(laerm?.calculation).not.toMatch(/Modelled overall noise pollution/);
+			expect(laerm?.calculation).toMatch(/Gesamtverkehrslärm aus Straßen-/);
+			expect(laerm?.calculation).not.toMatch(/Total traffic noise from road/);
 
 			overwriteGetLocale(() => 'de');
 		} finally {

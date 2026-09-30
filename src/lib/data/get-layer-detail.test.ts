@@ -84,11 +84,11 @@ describe('buildLayerDetail', () => {
 	it('liefert englischen explain-Text für lang "en", deutschen für lang "de"', () => {
 		const de = buildLayerDetail('laerm-2023', 'de', sampleManifest);
 		expect(de?.explain.long).toMatch(/Kategorisierte Lärm-Gesamtbelastung/);
-		expect(de?.explain.valueScaleExplain).toMatch(/niedrig \(gut\) bis sehr hoch/);
+		expect(de?.explain.valueScaleExplain).toMatch(/gering \(gut\) bis hoch/);
 
 		const en = buildLayerDetail('laerm-2023', 'en', sampleManifest);
 		expect(en?.explain.long).toMatch(/Categorised overall noise pollution/);
-		expect(en?.explain.valueScaleExplain).toMatch(/low \(good\) to very high/);
+		expect(en?.explain.valueScaleExplain).toMatch(/low \(good\) to high/);
 		expect(en?.explain.long).not.toMatch(/Kategorisierte Lärm-Gesamtbelastung/);
 	});
 
@@ -97,13 +97,13 @@ describe('buildLayerDetail', () => {
 	// Methodik-Texte", jetzt aufgehoben).
 	it('liefert englische methodology-Felder für lang "en", deutsche für lang "de"', () => {
 		const de = buildLayerDetail('laerm-2023', 'de', sampleManifest);
-		expect(de?.methodology?.calculation).toMatch(/Modellierte Lärm-Gesamtbelastung/);
+		expect(de?.methodology?.calculation).toMatch(/Gesamtverkehrslärm aus Straßen-/);
 		expect(de?.methodology?.updateFrequency).toMatch(/alle 5 Jahre/);
 
 		const en = buildLayerDetail('laerm-2023', 'en', sampleManifest);
-		expect(en?.methodology?.calculation).toMatch(/Modelled overall noise pollution/);
+		expect(en?.methodology?.calculation).toMatch(/Total traffic noise from road/);
 		expect(en?.methodology?.updateFrequency).toMatch(/every 5 years/);
-		expect(en?.methodology?.calculation).not.toMatch(/Modellierte Lärm-Gesamtbelastung/);
+		expect(en?.methodology?.calculation).not.toMatch(/Gesamtverkehrslärm aus Straßen-/);
 		// aggregationLevel bleibt Enum, relatedLayers bleiben Slugs (unübersetzt).
 		expect(en?.methodology?.aggregationLevel).toBe(de?.methodology?.aggregationLevel);
 		expect(en?.methodology?.relatedLayers).toEqual(de?.methodology?.relatedLayers);

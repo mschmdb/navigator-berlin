@@ -249,7 +249,9 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c3-faq.md`
   summary: FAQ `laerm-welche-quellen` sagt, die Karte zeige nur Straßenverkehrslärm LDEN; `layer_explain_laerm_2023_long` sagt „Straßen-, Schienen- und Fluglärm“. Eine der beiden Aussagen ist falsch (DE und EN).
   evidence: Review C3 (Blind Hunter). Unverifiziert: Datensatz-Beschreibung im Umweltatlas 2023 prüfen, dann FAQ oder Layer-Erklärung korrigieren.
+  resolved: 30.09.2026. Umweltgerechtigkeitsatlas 2023/2024 (SenMVKU-Broschüre, Flyer): Gesamtverkehrslärm aus Straßen-, Schienen- und Flugverkehr, LDEN, einwohnergewichtet, Klassen nach Quartilen. FAQ und Methodik korrigiert, Layer-Erklärung stimmte.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c3-faq.md`
   summary: Methodik `gruenversorgung-2023` (`layer-methodology.ts:212`) nennt „Skala gering bis sehr hoch“, die Daten haben `kategorie` gut/mittel/schlecht.
   evidence: Beim C3-Abgleich gefunden (Datenwerte gezählt: gut 291, schlecht 136, mittel 113). DE und EN-Message korrigieren.
+  resolved: 30.09.2026. Methodik, Layer-Erklärung und FAQ-Helper nutzen jetzt einheitlich die neutrale Skala aus Story 1.22 (gering, mittel, hoch). Skalentexte von Lärm, Luft, Bioklima (drei Klassen) und Umweltgerechtigkeit (keine starke bis fünffache Belastung) mitkorrigiert.

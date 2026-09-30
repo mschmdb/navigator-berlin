@@ -174,7 +174,7 @@ const LAYER_METHODOLOGY_SPECS = {
 
 	'laerm-2023': {
 		calculation:
-			'Modellierte Lärm-Gesamtbelastung pro LOR-Planungsraum aus dem Berliner Umweltatlas 2023. Aggregation in Kategorien gering bis sehr hoch.',
+			'Gesamtverkehrslärm aus Straßen-, Schienen- und Flugverkehr (LDEN), gewichtet nach Einwohnenden pro LOR-Planungsraum, aus dem Berliner Umweltatlas 2023. Drei Kategorien nach Quartilen: gering, mittel, hoch.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 5 Jahre (EU-Umgebungslärm-Richtlinie)',
 		authorityKey: 'senatsvw-umwelt',
@@ -209,7 +209,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'gruenversorgung-2023': {
 		calculation:
-			'Pro-Kopf-Versorgung mit nutzbarem öffentlichem Grün pro LOR-Planungsraum aus dem Umweltatlas 2023. Skala gering bis sehr hoch.',
+			'Pro-Kopf-Versorgung mit öffentlichen Grün- und Freiflächen pro LOR-Planungsraum aus dem Umweltatlas 2023. Drei Kategorien: gering, mittel, hoch.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 5 Jahre',
 		authorityKey: 'senatsvw-umwelt',

@@ -58,9 +58,9 @@ templates:
     requires: []
     question: 'Welche Lärm-Quellen fließen in die Karte ein?'
     answer: >-
-      Die strategische Lärmkartierung umfasst Straßen-, Schienen-, Flug- und
-      Industrie-Lärm separat. Auf der Karte zeigen wir den Straßen-Verkehrslärm
-      LDEN, weil er flächendeckend die größte Bevölkerung erreicht.
+      Die strategische Lärmkartierung weist Straßen-, Schienen-, Flug- und
+      Industrie-Lärm getrennt aus. Die Karte zeigt den Gesamtverkehrslärm aus
+      Straßen-, Schienen- und Flugverkehr (LDEN), zusammengefasst pro Planungsraum.
 
   - id: laerm-was-tun-bei-belastung
     applicableTo: [layer]

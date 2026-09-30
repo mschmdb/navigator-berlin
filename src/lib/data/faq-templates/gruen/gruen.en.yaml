@@ -34,7 +34,7 @@ templates:
       For each planning area, the Senate Department calculates how many square metres of
       green space near homes are available per resident within the catchment area. The
       benchmark is 6 square metres per person. Whether a planning area reaches or misses
-      this value determines the category “good”, “moderate” or “low”.
+      this value determines the category “high”, “moderate” or “low”.
 
   - id: gruen-rolle-hitze
     applicableTo: [layer]

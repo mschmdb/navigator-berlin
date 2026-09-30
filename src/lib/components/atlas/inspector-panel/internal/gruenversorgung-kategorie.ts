@@ -1,7 +1,7 @@
 // Story 1.22: Skala-Harmonisierung Grünversorgung.
 // Quelle: Umweltatlas 2023 c_gruen2023 nutzt wertende Kategorien (gut/mittel/schlecht).
 // Display-Mapping auf objektive Skala (gering/mittel/hoch), Wert-Richtung erklärt
-// `valueScaleExplain` ("niedrig = wenig Grün, sehr hoch = gut versorgt").
+// `valueScaleExplain` ("gering = wenig Grün, hoch = gut versorgt").
 // Severity-Inversion läuft separat in `value-severity-mapping.ts`.
 
 const RAW_TO_HARMONIZED: Record<string, string> = {
