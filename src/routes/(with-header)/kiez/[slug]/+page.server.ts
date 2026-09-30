@@ -20,8 +20,8 @@ export const prerender = true;
  * Story 2.4 T1.1: 143 prerendered Kiez-Routes (Variante A LOR-Bezirksregion
  * 2021, User-Lock 2026-05-16), je einmal DE + einmal `/en` (Crawl-Links im
  * Layout, ADR-005). i18n Block B4a übersetzt den Seitenrahmen; Prosa
- * (`profileProse`) bleibt deutsch (Boundary). FAQ-Inhalte (`faq_qna`) kommen in der
- * Seiten-Locale, mit DE-Fallback (Block C3).
+ * (`profileProse`) und FAQ-Inhalte (`faq_qna`) kommen in der Seiten-Locale,
+ * mit DE-Fallback (Blocks C3, C5).
  */
 export const entries: EntryGenerator = async () => {
 	const slugs = await readKiezSlugsFromGeoJson();
@@ -93,6 +93,7 @@ export type KiezPageData = {
 	readonly comparison: readonly ComparisonDimRow[];
 	readonly compositeRank: { readonly rang: number | null; readonly total: number };
 	readonly profileProse: readonly string[];
+	readonly profileLocale: Locale;
 };
 
 interface WahlTrendVariant {
@@ -224,8 +225,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, m.kiez_page_not_found({ slug }, { locale: getLocale() }));
 	}
-	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
-	const [stats, score, faqResult, siblings, wahlVerlauf, rank, comparisonMap, profileProse] =
+	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
+	const [stats, score, faqResult, siblings, wahlVerlauf, rank, comparisonMap, profileResult] =
 		await Promise.all([
 			tryLoadKiezStats(slug),
 			tryLoadKiezScore(slug),
@@ -234,7 +235,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			tryBuildWahlVerlauf(slug),
 			tryLoadKiezRank(slug),
 			tryLoadKiezComparison(slug),
-			getProfileParagraphs('kiez', slug)
+			getLocalizedProfile('kiez', slug, getLocale())
 		]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
 		const cmp = comparisonMap?.get(field);
@@ -264,7 +265,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		wahlVerlauf,
 		comparison,
 		compositeRank,
-		profileProse
+		profileProse: profileResult.paragraphs,
+		profileLocale: profileResult.locale
 	};
 	return data;
 };

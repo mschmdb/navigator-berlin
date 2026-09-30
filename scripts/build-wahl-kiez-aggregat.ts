@@ -61,9 +61,7 @@ function preflightGeometrie(
  * für Urnen, `ergebnis.ist_briefwahl_aggregat` ist bereits korrekt
  * berechnet).
  */
-async function loadStimmbezirkKlassifikation(
-	wahlId: number
-): Promise<{
+async function loadStimmbezirkKlassifikation(wahlId: number): Promise<{
 	dbUrneUwbIds: string[];
 	dbBriefUwbIds: string[];
 	wahlberechtigteByUwbId: Map<string, number | null>;

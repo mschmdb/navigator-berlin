@@ -3,7 +3,7 @@ import { expectFaqInYamlOrder } from './faq-order';
 
 // i18n Block B4a (spec-i18n-b4a-kiez-bezirk-rahmen.md): Rahmen der Kiez- und
 // Bezirk-Seiten auf Englisch. Prosa (`profileProse`) und FAQ-Inhalte
-// (`faq_qna`) bleiben deutsch (Boundary, Block C) -- `/kiez` und `/bezirk`
+// (`faq_qna`) kommen seit Block C3/C5 in der Seiten-Locale -- `/kiez` und `/bezirk`
 // sind NICHT im Übersetzungs-Register, die EN-Seiten zeigen deshalb weiterhin
 // den Fallback-Disclaimer und bleiben noindex (siehe `i18n-routing.e2e.ts`).
 //
@@ -177,6 +177,17 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/methodik\/kiez-score/);
 	});
 
+	// Block C5: Profil-Prosa in der Seiten-Locale, kein `lang="de"` am Profil.
+	test('Profil-Prosa englisch ohne lang="de"', async ({ page }) => {
+		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
+		const profile = page.getByTestId('kiez-profile');
+		await expect(profile).toBeVisible();
+		await expect(profile).not.toHaveAttribute('lang', /.+/);
+		await expect(profile.locator('[lang]')).toHaveCount(0);
+		await expect(profile).toContainText(/\b(the|and|with|of)\b/);
+		await expect(profile).not.toContainText(/\b(und|der|die|das|mit)\b/);
+	});
+
 	test('DE-Kontrolle: /kiez/[slug] bleibt unverändert deutsch', async ({ page }) => {
 		const response = await page.goto(`/kiez/${KIEZ_SLUG}`);
 		expect(response?.status()).toBe(200);
@@ -188,6 +199,9 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		const deQuestions = await faqDe.locator('[data-faq-question]').allTextContents();
 		expect(deQuestions.some((q) => DE_QUESTION_START.test(q))).toBe(true);
 		await expect(faqDe.locator('[lang]')).toHaveCount(0);
+		const profileDe = page.getByTestId('kiez-profile');
+		await expect(profileDe).toContainText(/\b(und|der|die|das|mit)\b/);
+		await expect(profileDe).not.toHaveAttribute('lang', /.+/);
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
@@ -278,12 +292,26 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/methodik\/kiez-score/);
 	});
 
+	// Block C5: Profil-Prosa in der Seiten-Locale, kein `lang="de"` am Profil.
+	test('Profil-Prosa englisch ohne lang="de"', async ({ page }) => {
+		await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
+		const profile = page.getByTestId('bezirk-profile');
+		await expect(profile).toBeVisible();
+		await expect(profile).not.toHaveAttribute('lang', /.+/);
+		await expect(profile.locator('[lang]')).toHaveCount(0);
+		await expect(profile).toContainText(/\b(the|and|with|of)\b/);
+		await expect(profile).not.toContainText(/\b(und|der|die|das|mit)\b/);
+	});
+
 	test('DE-Kontrolle: /bezirk/[slug] bleibt unverändert deutsch', async ({ page }) => {
 		const response = await page.goto(`/bezirk/${BEZIRK_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'de');
 		const kiezeList = page.getByTestId('bezirk-kieze-list');
 		await expect(kiezeList.locator('h2')).toContainText('Kieze im Bezirk');
+		const profileDe = page.getByTestId('bezirk-profile');
+		await expect(profileDe).toContainText(/\b(und|der|die|das|mit)\b/);
+		await expect(profileDe).not.toHaveAttribute('lang', /.+/);
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(

@@ -13,7 +13,8 @@
 
 	i18n Block B4a: Rahmen (Lead, Steckbrief, FAQ-Platzhalter) auf Paraglide-
 	Messages umgestellt. `profileProse` (Prosa) und `faq` (Frage/Antwort-
-	Inhalte) bleiben deutsch (Boundary, Block C).
+	Inhalte) kommen in der Seiten-Locale oder als DE-Fallback (Blocks C3, C5);
+	`profileLocale`/`faqLocale` steuern `lang`.
 -->
 <script lang="ts">
 	import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
@@ -43,9 +44,19 @@
 		readonly faqLocale?: Locale;
 		readonly comparison?: readonly ComparisonDimRow[];
 		readonly profileProse?: readonly string[];
+		/** Sprache der Profil-Absätze (C5); fehlt sie, gilt die Seiten-Locale. Weicht sie von der Seiten-Locale ab, setzt die Sektion `lang`. */
+		readonly profileLocale?: Locale;
 	}
 
-	const { profile, stats, faq, faqLocale, comparison = [], profileProse = [] }: Props = $props();
+	const {
+		profile,
+		stats,
+		faq,
+		faqLocale,
+		comparison = [],
+		profileProse = [],
+		profileLocale
+	}: Props = $props();
 
 	const localeOpts = $derived({ locale: getLocale() });
 
@@ -171,7 +182,9 @@
 	{#if profileProse.length > 0}
 		<section
 			aria-label={m.profile_section_aria(undefined, localeOpts)}
-			lang={localeOpts.locale === 'de' ? undefined : 'de'}
+			lang={profileLocale === undefined || profileLocale === localeOpts.locale
+				? undefined
+				: profileLocale}
 			class="space-y-3"
 			data-testid="bezirk-profile"
 		>

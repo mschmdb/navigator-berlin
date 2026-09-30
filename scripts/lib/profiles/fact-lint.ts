@@ -35,9 +35,35 @@ const STIGMA_PATTERNS: readonly RegExp[] = [
 	/\bverwahrlos/i
 ];
 
-function findStigma(text: string): string[] {
+/** EN-Pendant (i18n Block C5): dieselbe Boundary für die englischen Fassungen. */
+const STIGMA_PATTERNS_EN: readonly RegExp[] = [
+	/\bcrimes?\b/i,
+	/\bcriminal/i,
+	/\boffen[cs]es?\b/i,
+	/\bdangerous/i,
+	/\bunsafe/i,
+	/\bsafe(?:r|st)?\s+(?:area|neighbou?rhood|district|part|street|zone|place)/i,
+	/\bsafety\b/i,
+	/\bburglar/i,
+	/\brobber/i,
+	/\bmugging/i,
+	/\bviolen(?:t|ce)\b/i,
+	/\bdeprived|\bdeprivation/i,
+	/\brun[- ]?down/i,
+	/\bdilapidated/i,
+	/\bghetto/i,
+	/\bsketchy/i,
+	/\binsecure/i,
+	/\btheft/i,
+	/\bbreak-?ins?\b/i,
+	/\bneglected/i
+];
+
+export type LintLocale = 'de' | 'en';
+
+function findStigma(text: string, locale: LintLocale): string[] {
 	const hits: string[] = [];
-	for (const re of STIGMA_PATTERNS) {
+	for (const re of locale === 'en' ? STIGMA_PATTERNS_EN : STIGMA_PATTERNS) {
 		const m = re.exec(text);
 		if (m) hits.push(m[0]);
 	}
@@ -65,11 +91,13 @@ function isBacked(n: number, allowed: readonly number[]): boolean {
 	return false;
 }
 
-export function factLint(text: string, input: ProfileInput): LintResult {
+export function factLint(text: string, input: ProfileInput, locale: LintLocale = 'de'): LintResult {
 	const allowed = collectNumbers(input);
-	const unbacked = extractNumbers(text).filter((n) => !isBacked(n, allowed));
+	// EN-Tausendertrenner („12,000") vor der Extraktion zusammenziehen.
+	const normalized = locale === 'en' ? text.replace(/(\d),(\d{3})\b/g, '$1$2') : text;
+	const unbacked = extractNumbers(normalized).filter((n) => !isBacked(n, allowed));
 	const hasDash = /[—–]/.test(text);
-	const stigmaHits = findStigma(text);
+	const stigmaHits = findStigma(text, locale);
 	return {
 		ok: unbacked.length === 0 && !hasDash && stigmaHits.length === 0,
 		unbackedNumbers: [...new Set(unbacked)],

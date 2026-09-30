@@ -58,7 +58,9 @@ export type KiezAggregatPlan = {
 };
 
 function fail(wahlSlug: string, stimmtyp: string, wahlId: number, message: string): never {
-	throw new Error(`[kiez-aggregat] ${wahlSlug}/${stimmtyp} (wahlId=${wahlId}): ${message} -- Build-Abbruch`);
+	throw new Error(
+		`[kiez-aggregat] ${wahlSlug}/${stimmtyp} (wahlId=${wahlId}): ${message} -- Build-Abbruch`
+	);
 }
 
 /**

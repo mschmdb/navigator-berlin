@@ -68,15 +68,10 @@ export interface MergeResult {
 }
 
 function hasNumericCoords(place: PlaceItem | undefined): place is PlaceItem {
-	return (
-		place !== undefined && Number.isFinite(place.lat) && Number.isFinite(place.lon)
-	);
+	return place !== undefined && Number.isFinite(place.lat) && Number.isFinite(place.lon);
 }
 
-export function mergeKuehleOrte(
-	enrichment: EnrichmentItem[],
-	places: PlaceItem[]
-): MergeResult {
+export function mergeKuehleOrte(enrichment: EnrichmentItem[], places: PlaceItem[]): MergeResult {
 	const placeById = new Map(places.map((p) => [p.id, p]));
 	const dropped: DroppedCounts = { suitableFalse: 0, stillExistsNo: 0, missingGeometry: 0 };
 	const features: Feature<Point, KuehleOrtProperties>[] = [];

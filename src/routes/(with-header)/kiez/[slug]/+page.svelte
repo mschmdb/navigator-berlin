@@ -123,6 +123,7 @@
 	wahlVerlauf={data.wahlVerlauf}
 	comparison={data.comparison}
 	profileProse={data.profileProse}
+	profileLocale={data.profileLocale}
 />
 
 {#if bezirkName.length > 0}

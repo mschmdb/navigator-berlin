@@ -21,8 +21,8 @@ export const prerender = true;
 /**
  * Story 2.3 T1.1: 12 prerendered Bezirks-Routes, je einmal DE + einmal
  * `/en` (Crawl-Links im Layout, ADR-005). i18n Block B4a übersetzt den
- * Seitenrahmen; Prosa (`profileProse`) bleibt deutsch (Boundary). FAQ-Inhalte
- * (`faq_qna`) kommen in der Seiten-Locale, mit DE-Fallback (Block C3).
+ * Seitenrahmen; Prosa (`profileProse`) und FAQ-Inhalte
+ * (`faq_qna`) kommen in der Seiten-Locale, mit DE-Fallback (Blocks C3, C5).
  */
 export const entries: EntryGenerator = async () => {
 	const slugs = await readBezirkSlugsFromGeoJson();
@@ -74,6 +74,7 @@ export type BezirkPageData = {
 	readonly comparison: readonly ComparisonDimRow[];
 	readonly compositeRank: { readonly rang: number | null; readonly total: number };
 	readonly profileProse: readonly string[];
+	readonly profileLocale: Locale;
 };
 
 async function tryLoadKieze(bezirkSlug: string): Promise<KiezRef[]> {
@@ -150,14 +151,14 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, m.bezirk_page_not_found({ slug }, { locale: getLocale() }));
 	}
-	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
-	const [stats, faqResult, kieze, rank, comparisonMap, profileProse] = await Promise.all([
+	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
+	const [stats, faqResult, kieze, rank, comparisonMap, profileResult] = await Promise.all([
 		tryLoadBezirkStats(slug),
 		getFaqForPage({ pageType: 'bezirk', slug, locale: getLocale() }),
 		tryLoadKieze(slug),
 		tryLoadBezirkRank(slug),
 		tryLoadBezirkComparison(slug),
-		getProfileParagraphs('bezirk', slug)
+		getLocalizedProfile('bezirk', slug, getLocale())
 	]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
 		const cmp = comparisonMap?.get(field);
@@ -184,7 +185,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		kieze,
 		comparison,
 		compositeRank,
-		profileProse
+		profileProse: profileResult.paragraphs,
+		profileLocale: profileResult.locale
 	};
 	return data;
 };

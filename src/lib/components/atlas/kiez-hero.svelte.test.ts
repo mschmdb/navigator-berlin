@@ -250,18 +250,47 @@ describe('KiezHero.svelte', () => {
 			expect(heading?.textContent).toMatch(/Frequently asked questions/i);
 		});
 
-		it('Profil-Prosa bleibt deutsch und trägt lang="de" (WCAG 3.1.2)', async () => {
+		it('Profil-Prosa im DE-Fallback (profileLocale de) trägt lang="de" (WCAG 3.1.2)', async () => {
 			overwriteGetLocale(() => 'en');
 			render(KiezHero, {
 				profile: baseProfile,
 				stats: null,
 				score: null,
 				faq: [],
-				profileProse: ['Ein deutscher Absatz.']
+				profileProse: ['Ein deutscher Absatz.'],
+				profileLocale: 'de'
 			});
 			const prose = document.querySelector('[data-testid="kiez-profile"]');
 			expect(prose?.getAttribute('lang')).toBe('de');
 			expect(prose?.textContent).toContain('Ein deutscher Absatz.');
+		});
+
+		it('ohne profileLocale gilt die Seiten-Locale (kein lang auf EN-Text)', async () => {
+			overwriteGetLocale(() => 'en');
+			render(KiezHero, {
+				profile: baseProfile,
+				stats: null,
+				score: null,
+				faq: [],
+				profileProse: ['An English paragraph.']
+			});
+			const prose = document.querySelector('[data-testid="kiez-profile"]');
+			expect(prose?.hasAttribute('lang')).toBe(false);
+		});
+
+		it('englische Profil-Prosa (profileLocale en) trägt kein lang-Attribut', async () => {
+			overwriteGetLocale(() => 'en');
+			render(KiezHero, {
+				profile: baseProfile,
+				stats: null,
+				score: null,
+				faq: [],
+				profileProse: ['An English paragraph.'],
+				profileLocale: 'en'
+			});
+			const prose = document.querySelector('[data-testid="kiez-profile"]');
+			expect(prose?.hasAttribute('lang')).toBe(false);
+			expect(prose?.textContent).toContain('An English paragraph.');
 		});
 	});
 });

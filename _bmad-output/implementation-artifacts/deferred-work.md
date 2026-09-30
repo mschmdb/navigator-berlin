@@ -294,3 +294,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4d-updates.md`
   summary: `tests/e2e/a11y.e2e.ts` hat vorbestehende Fails: `/_dev/wortmarke` ohne `<title>` (axe document-title), „Escape löscht Selection“ (30-s-Timeout auf `/explore`), „Root (Karte)“ flaky.
   evidence: Beim C4d-Verifikationslauf erstmals mitgelaufen; keine der Seiten von C3-C4d berührt.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c5-profile.md`
+  summary: Generator-Prompt (`scripts/build-kiez-profiles.ts` SYSTEM_PROMPT) um die neutrale Grünversorgungs-Skala ergänzen (gering/mittel/hoch statt gut/schlecht) und DE-Lint-Muster dafür, sonst bringt eine Neu-Generierung „schlecht“/„gut“ zurück.
+  evidence: Review C5 (Blind Hunter). Korrektur am 30.09. nur in den Texten (64 Dateien DE+EN).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c5-profile.md`
+  summary: Zahlen-Lint erfasst ausgeschriebene Zahlen („Rang fünf“, „rank five“) nicht.
+  evidence: Review C5 (Blind Hunter). Betrifft DE und EN gleichermaßen.

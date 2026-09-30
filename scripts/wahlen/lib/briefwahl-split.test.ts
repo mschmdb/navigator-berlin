@@ -109,7 +109,9 @@ describe('computeKiezStimmenMitBriefwahl', () => {
 	});
 
 	it('Gruppe ohne Briefwahl-Row in ergebnis (kein Match) verteilt nichts, eigene Urnen-Stimmen bleiben', () => {
-		const urnen = [{ dbUwbId: '01W100', gruppeId: '01B1A', kiezSlug: 'kiez-a', wahlberechtigte: 100 }];
+		const urnen = [
+			{ dbUwbId: '01W100', gruppeId: '01B1A', kiezSlug: 'kiez-a', wahlberechtigte: 100 }
+		];
 		const ergebnis = [{ uwbId: '01W100', parteiId: 1, stimmen: 5 }];
 		const { kiezStimmen, ohneKiezSumme } = computeKiezStimmenMitBriefwahl(urnen, ergebnis);
 		expect(kiezStimmen).toEqual([{ kiezSlug: 'kiez-a', parteiId: 1, stimmen: 5 }]);

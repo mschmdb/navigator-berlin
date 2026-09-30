@@ -58,9 +58,7 @@ function detectGeometryType(content: Buffer): 'Polygon' | 'MultiPolygon' {
 		const fc = JSON.parse(content.toString('utf-8')) as {
 			features?: { geometry?: { type?: string } | null }[];
 		};
-		const hasMultiPolygon = (fc.features ?? []).some(
-			(f) => f.geometry?.type === 'MultiPolygon'
-		);
+		const hasMultiPolygon = (fc.features ?? []).some((f) => f.geometry?.type === 'MultiPolygon');
 		return hasMultiPolygon ? 'MultiPolygon' : 'Polygon';
 	} catch {
 		return 'Polygon';
@@ -129,9 +127,7 @@ async function buildOne(source: GeoSource): Promise<LayerEntry[]> {
 	});
 
 	const dt = ((Date.now() - t0) / 1000).toFixed(1);
-	console.log(
-		`${tag} done in ${dt}s features=${featureCount} gruppen=${gruppenFeatureCount}`
-	);
+	console.log(`${tag} done in ${dt}s features=${featureCount} gruppen=${gruppenFeatureCount}`);
 	return [urnenEntry, gruppenEntry];
 }
 

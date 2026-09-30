@@ -37,7 +37,16 @@ describe('mergeKuehleOrte', () => {
 	it('Treffer-Join setzt [lon, lat] und mappt Properties + Navi-Links', () => {
 		const res = mergeKuehleOrte(
 			[enrich({ id: 'node/1', name: 'Kino X', cool_score: 5 })],
-			[place({ id: 'node/1', lat: 52.1, lon: 13.2, oh: 'Mo-Fr 10:00-22:00', wheelchair: 'yes', plz: '10999' })]
+			[
+				place({
+					id: 'node/1',
+					lat: 52.1,
+					lon: 13.2,
+					oh: 'Mo-Fr 10:00-22:00',
+					wheelchair: 'yes',
+					plz: '10999'
+				})
+			]
 		);
 		expect(res.collection.features).toHaveLength(1);
 		const f = res.collection.features[0];
@@ -67,7 +76,10 @@ describe('mergeKuehleOrte', () => {
 	});
 
 	it('filtert suitable=false und zählt es', () => {
-		const res = mergeKuehleOrte([enrich({ id: 'node/1', suitable: false })], [place({ id: 'node/1' })]);
+		const res = mergeKuehleOrte(
+			[enrich({ id: 'node/1', suitable: false })],
+			[place({ id: 'node/1' })]
+		);
 		expect(res.collection.features).toHaveLength(0);
 		expect(res.dropped.suitableFalse).toBe(1);
 		expect(res.dropped.stillExistsNo).toBe(0);

@@ -112,6 +112,7 @@
 	faqLocale={data.faqLocale}
 	comparison={data.comparison}
 	profileProse={data.profileProse}
+	profileLocale={data.profileLocale}
 />
 <div class="mx-auto max-w-3xl px-4 pb-8">
 	<BezirkKiezeList kieze={data.kieze} bezirkName={name} />

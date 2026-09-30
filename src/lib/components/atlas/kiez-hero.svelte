@@ -17,7 +17,8 @@
 
 	i18n Block B4a: Rahmen (Lead, Score-Summary, Steckbrief, FAQ-Platzhalter)
 	auf Paraglide-Messages umgestellt. `profileProse` (Prosa) und `faq`
-	(Frage/Antwort-Inhalte) bleiben deutsch (Boundary, Block C).
+	(Frage/Antwort-Inhalte) kommen in der Seiten-Locale oder als DE-Fallback
+	(Blocks C3, C5); `profileLocale`/`faqLocale` steuern `lang`.
 -->
 <script lang="ts">
 	import type { KiezProfile, FaqEntry } from '$lib/data/types.js';
@@ -54,6 +55,8 @@
 		readonly wahlVerlauf?: readonly WahlVerlaufRow[];
 		readonly comparison?: readonly ComparisonDimRow[];
 		readonly profileProse?: readonly string[];
+		/** Sprache der Profil-Absätze (C5); fehlt sie, gilt die Seiten-Locale. Weicht sie von der Seiten-Locale ab, setzt die Sektion `lang`. */
+		readonly profileLocale?: Locale;
 	}
 
 	const {
@@ -64,7 +67,8 @@
 		faqLocale,
 		wahlVerlauf = [],
 		comparison = [],
-		profileProse = []
+		profileProse = [],
+		profileLocale
 	}: Props = $props();
 
 	const localeOpts = $derived({ locale: getLocale() });
@@ -224,7 +228,9 @@
 	{#if profileProse.length > 0}
 		<section
 			aria-label={m.profile_section_aria(undefined, localeOpts)}
-			lang={localeOpts.locale === 'de' ? undefined : 'de'}
+			lang={profileLocale === undefined || profileLocale === localeOpts.locale
+				? undefined
+				: profileLocale}
 			class="space-y-3"
 			data-testid="kiez-profile"
 		>
