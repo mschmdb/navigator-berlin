@@ -2,30 +2,129 @@
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import RichText from '$lib/components/rich-text.svelte';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { richSegments, type TagMarkers } from '$lib/i18n/rich-text.js';
+	import { m } from '$lib/paraglide/messages.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
 
-	const pageTitle = 'Methodik · Wahldaten · navigator.berlin';
-	const pageDescription =
-		'Wahldaten-Methodik: Quellen, Daten-Cutoff, Briefwahl, Stimmbezirks-zu-Kiez-Aggregation und Wiederholungswahlen im Berliner Daten-Atlas.';
+	const pageTitle = m.methodik_wahldaten_meta_title();
+	const pageDescription = m.methodik_wahldaten_meta_description();
 
 	const breadcrumbs = $derived(
 		buildBreadcrumbList({
 			origin,
 			items: [
-				{ name: 'Berlin', path: '/' },
-				{ name: 'Methodik', path: '/methodik' },
-				{ name: 'Wahldaten', path: '/methodik/wahldaten' }
+				{ name: 'Berlin', path: localizedHref('/') },
+				{ name: m.methodik_wahldaten_breadcrumb_methodik(), path: localizedHref('/methodik') },
+				{
+					name: m.methodik_wahldaten_breadcrumb_wahldaten(),
+					path: localizedHref('/methodik/wahldaten')
+				}
 			]
+		})
+	);
+
+	const sections = [
+		{ id: 'datenquellen', label: m.methodik_wahldaten_section_quellen_heading() },
+		{ id: 'cutoff', label: m.methodik_wahldaten_section_cutoff_heading() },
+		{ id: 'wahldaten-briefwahl', label: m.methodik_wahldaten_section_briefwahl_heading() },
+		{ id: 'aggregation', label: m.methodik_wahldaten_section_aggregation_heading() },
+		{ id: 'wiederholungswahl', label: m.methodik_wahldaten_section_wiederholung_heading() },
+		{ id: 'geometrien', label: m.methodik_wahldaten_section_geometrien_heading() },
+		{ id: 'update-cadence', label: m.methodik_wahldaten_section_cadence_heading() },
+		{ id: 'parteien-alias', label: m.methodik_wahldaten_section_alias_heading() },
+		{ id: 'cross-layer', label: m.methodik_wahldaten_section_cross_layer_heading() }
+	];
+
+	const anchorClass = 'underline-offset-2 hover:text-ink hover:underline';
+	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';
+
+	const EXTERNAL_LINKS: Readonly<Record<string, string>> = {
+		bundeswahlleiterin: 'https://www.bundeswahlleiterin.de',
+		statistik: 'https://www.statistik-berlin-brandenburg.de',
+		wahlenBerlin: 'https://www.wahlen-berlin.de'
+	};
+	const ANCHOR_LINKS: Readonly<Record<string, string>> = {
+		aggregation: '#aggregation',
+		geometrien: '#geometrien'
+	};
+	const crossLayerHref = $derived(localizedHref('/methodik/cross-layer-templates'));
+
+	const codeParams = (t: (name: string) => TagMarkers) =>
+		({ code_start: t('code').start, code_end: t('code').end }) as const;
+	const strongParams = (t: (name: string) => TagMarkers) =>
+		({ strong_start: t('strong').start, strong_end: t('strong').end }) as const;
+
+	const quellenBtw = richSegments((t) =>
+		m.methodik_wahldaten_quellen_btw_desc({
+			...codeParams(t),
+			link_start: t('bundeswahlleiterin').start,
+			link_end: t('bundeswahlleiterin').end
+		})
+	);
+	const quellenAgh = richSegments((t) =>
+		m.methodik_wahldaten_quellen_agh_desc({
+			...codeParams(t),
+			link1_start: t('statistik').start,
+			link1_end: t('statistik').end,
+			link2_start: t('wahlenBerlin').start,
+			link2_end: t('wahlenBerlin').end
+		})
+	);
+	const quellenGeometrien = richSegments((t) =>
+		m.methodik_wahldaten_quellen_geometrien_desc(codeParams(t))
+	);
+	const cutoffLis = [
+		richSegments((t) => m.methodik_wahldaten_cutoff_li_btw(strongParams(t))),
+		richSegments((t) => m.methodik_wahldaten_cutoff_li_agh(strongParams(t))),
+		richSegments((t) => m.methodik_wahldaten_cutoff_li_bvv(strongParams(t))),
+		richSegments((t) => m.methodik_wahldaten_cutoff_li_europa(strongParams(t))),
+		richSegments((t) => m.methodik_wahldaten_cutoff_li_volksentscheid(strongParams(t)))
+	];
+	const briefwahlP3 = richSegments((t) =>
+		m.methodik_wahldaten_briefwahl_p3({
+			link1_start: t('aggregation').start,
+			link1_end: t('aggregation').end,
+			link2_start: t('geometrien').start,
+			link2_end: t('geometrien').end
+		})
+	);
+	const aggregationP3 = richSegments((t) => m.methodik_wahldaten_aggregation_p3(codeParams(t)));
+	const wiederholungP1 = richSegments((t) => m.methodik_wahldaten_wiederholung_p1(codeParams(t)));
+	const wiederholungP2 = richSegments((t) => m.methodik_wahldaten_wiederholung_p2(codeParams(t)));
+	const geometrienP2 = richSegments((t) => m.methodik_wahldaten_geometrien_p2(codeParams(t)));
+	const aliasP1 = richSegments((t) => m.methodik_wahldaten_alias_p1(codeParams(t)));
+	const crossLayerP1 = richSegments((t) =>
+		m.methodik_wahldaten_cross_layer_p1({
+			link_start: t('crossLayer').start,
+			link_end: t('crossLayer').end
 		})
 	);
 </script>
 
+{#snippet tag(text: string, name: string)}
+	{#if name === 'code'}
+		<code class="font-mono text-xs">{text}</code>
+	{:else if name === 'strong'}
+		<strong>{text}</strong>
+	{:else if name in EXTERNAL_LINKS}
+		<a href={EXTERNAL_LINKS[name]} rel="noopener noreferrer" class={linkClass}>{text}</a>
+	{:else if name in ANCHOR_LINKS}
+		<a href={ANCHOR_LINKS[name]} class={anchorClass}>{text}</a>
+	{:else if name === 'crossLayer'}
+		<a href={crossLayerHref} class={linkClass}>{text}</a>
+	{:else}
+		{text}
+	{/if}
+{/snippet}
+
 <SeoHead title={pageTitle} description={pageDescription} {origin} {pathname} />
 
-<JsonLd data={breadcrumbs} />
+<JsonLd data={breadcrumbs} testid="wahldaten-breadcrumb-jsonld" />
 
 <article
 	class="mx-auto prose max-w-3xl space-y-8 px-4 py-8 prose-stone"
@@ -33,275 +132,121 @@
 >
 	<header class="space-y-2">
 		<p class="font-mono text-xs tracking-wide text-ink-muted uppercase">
-			<a href="/" class="underline-offset-2 hover:text-ink hover:underline">Berlin</a>
+			<a href={localizedHref('/')} class={anchorClass}>Berlin</a>
 			·
-			<a href="/methodik" class="underline-offset-2 hover:text-ink hover:underline">Methodik</a>
+			<a href={localizedHref('/methodik')} class={anchorClass}
+				>{m.methodik_wahldaten_breadcrumb_methodik()}</a
+			>
 		</p>
-		<h1
-			class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl"
-			lang="de"
-		>
-			Methodik · Wahldaten
+		<h1 class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl">
+			{m.methodik_wahldaten_h1_title()}
 		</h1>
 		<p class="font-serif text-base leading-relaxed text-ink-muted">
-			Diese Seite dokumentiert Datenquellen, Aggregations-Strategie und bekannte Coverage-Lücken der
-			Wahl-Daten. Werte beschreiben Stimmenanteile, keine Bewertung.
+			{m.methodik_wahldaten_intro_p1()}
 		</p>
 	</header>
 
-	<nav aria-label="Inhalt" class="space-y-1 font-mono text-xs text-ink-muted">
-		<p class="tracking-wide uppercase">Inhalt</p>
+	<nav
+		aria-label={m.methodik_wahldaten_toc_aria_label()}
+		class="space-y-1 font-mono text-xs text-ink-muted"
+	>
+		<p class="tracking-wide uppercase">{m.methodik_wahldaten_toc_heading()}</p>
 		<ol class="space-y-0.5">
-			<li>
-				<a href="#datenquellen" class="underline-offset-2 hover:text-ink hover:underline"
-					>1. Datenquellen</a
-				>
-			</li>
-			<li>
-				<a href="#cutoff" class="underline-offset-2 hover:text-ink hover:underline"
-					>2. Daten-Cutoff</a
-				>
-			</li>
-			<li>
-				<a href="#wahldaten-briefwahl" class="underline-offset-2 hover:text-ink hover:underline"
-					>3. Briefwahl-Gruppen</a
-				>
-			</li>
-			<li>
-				<a href="#aggregation" class="underline-offset-2 hover:text-ink hover:underline"
-					>4. Stimmbezirks-zu-Kiez-Aggregation</a
-				>
-			</li>
-			<li>
-				<a href="#wiederholungswahl" class="underline-offset-2 hover:text-ink hover:underline"
-					>5. Wiederholungswahl 2023</a
-				>
-			</li>
-			<li>
-				<a href="#geometrien" class="underline-offset-2 hover:text-ink hover:underline"
-					>6. Geometrien + Coverage</a
-				>
-			</li>
-			<li>
-				<a href="#update-cadence" class="underline-offset-2 hover:text-ink hover:underline"
-					>7. Update-Cadence</a
-				>
-			</li>
-			<li>
-				<a href="#parteien-alias" class="underline-offset-2 hover:text-ink hover:underline"
-					>8. Parteien-Aliase</a
-				>
-			</li>
-			<li>
-				<a href="#cross-layer" class="underline-offset-2 hover:text-ink hover:underline"
-					>9. Cross-Layer-Verknüpfung</a
-				>
-			</li>
+			{#each sections as sec (sec.id)}
+				<li>
+					<a href={`#${sec.id}`} class="inline-block py-1 {anchorClass}">{sec.label}</a>
+				</li>
+			{/each}
 		</ol>
 	</nav>
 
 	<section id="datenquellen" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">1. Datenquellen</h2>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_quellen_heading()}
+		</h2>
 		<dl class="space-y-3">
-			<dt class="font-medium text-ink">Bundestagswahlen</dt>
-			<dd class="text-ink-muted">
-				Bundeswahlleiterin Wahlbezirksstatistik (<code class="font-mono text-xs">_wbz.zip</code>).
-				Direkt-Bezug pro Wahl-Jahr von
-				<a
-					href="https://www.bundeswahlleiterin.de"
-					rel="noopener noreferrer"
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
-					>bundeswahlleiterin.de</a
-				>. Lizenz Datenlizenz Deutschland Namensnennung 2.0.
-			</dd>
-			<dt class="font-medium text-ink">Abgeordnetenhaus + BVV</dt>
-			<dd class="text-ink-muted">
-				Amt für Statistik Berlin-Brandenburg, XLSX-Sheet-Pipeline (<code class="font-mono text-xs"
-					>DL_BE_*.xlsx</code
-				>). Bezug von
-				<a
-					href="https://www.statistik-berlin-brandenburg.de"
-					rel="noopener noreferrer"
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
-					>statistik-berlin-brandenburg.de</a
-				>. Lizenz Datenlizenz Deutschland Namensnennung 2.0.
-				AGH und BVV 2026 kommen direkt von
-				<a
-					href="https://www.wahlen-berlin.de"
-					rel="noopener noreferrer"
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
-					>wahlen-berlin.de</a
-				> (Landeswahlleiterin Berlin), Stand des vorläufigen amtlichen Ergebnisses.
-			</dd>
-			<dt class="font-medium text-ink">Stimmbezirks-Geometrien</dt>
-			<dd class="text-ink-muted">
-				Amt für Statistik Berlin-Brandenburg, Shapefile-Releases pro Wahlgang:
-				<code class="font-mono text-xs">RBS_OD_Wahlgebiete_BTW17.zip</code>,
-				<code class="font-mono text-xs">RBS_OD_UWB_AH21.zip</code>,
-				<code class="font-mono text-xs">RBS_OD_UWB_AH26.zip</code> (Stimmbezirks-Geometrie AGH/BVV
-				2026) u. a. Reprojektion von ETRS89 UTM33 nach WGS84 via mapshaper-Pipeline, Simplify
-				visvalingam + keep-shapes.
-			</dd>
+			<dt class="font-medium text-ink">{m.methodik_wahldaten_quellen_btw_term()}</dt>
+			<dd class="text-ink-muted"><RichText segments={quellenBtw} {tag} /></dd>
+			<dt class="font-medium text-ink">{m.methodik_wahldaten_quellen_agh_term()}</dt>
+			<dd class="text-ink-muted"><RichText segments={quellenAgh} {tag} /></dd>
+			<dt class="font-medium text-ink">{m.methodik_wahldaten_quellen_geometrien_term()}</dt>
+			<dd class="text-ink-muted"><RichText segments={quellenGeometrien} {tag} /></dd>
 		</dl>
 	</section>
 
 	<section id="cutoff" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">2. Daten-Cutoff</h2>
-		<p>
-			Die Wahldaten decken Wahlen ab 2011 ab. Pre-2011-Daten liegen bei der Bundeswahlleiterin
-			teilweise in unterschiedlichen Formaten vor und erfordern Mapping zur Bezirksreform 2001.
-			Bundestagswahlen beginnen 2013, weil die Bundeswahlleiterin Wahlbezirksdaten erst ab diesem
-			Jahr veröffentlicht.
-		</p>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_cutoff_heading()}
+		</h2>
+		<p>{m.methodik_wahldaten_cutoff_p1()}</p>
 		<ul class="space-y-1">
-			<li><strong>Bundestagswahlen:</strong> 2013, 2017, 2021, 2025</li>
-			<li>
-				<strong>Abgeordnetenhauswahlen:</strong> 2011, 2016, 2021, 2023 (Wiederholung), 2026
-				(vorläufig)
-			</li>
-			<li>
-				<strong>Bezirksverordneten-Versammlungen:</strong> 2011, 2016, 2021, 2023 (Wiederholung), 2026
-				(vorläufig)
-			</li>
-			<li><strong>Europawahlen:</strong> aktuell nicht enthalten</li>
-			<li><strong>Volksentscheide:</strong> nicht enthalten</li>
+			{#each cutoffLis as segments, i (i)}
+				<li><RichText {segments} {tag} /></li>
+			{/each}
 		</ul>
 	</section>
 
 	<section id="wahldaten-briefwahl" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">3. Briefwahl-Gruppen</h2>
-		<p>
-			Berlin zählt Briefstimmen in eigenen Briefwahlbezirken ohne eigene Fläche, getrennt von den
-			Urnenwahlbezirken. Bezirk und Berlin gesamt enthalten immer alle Stimmen, weil sie über alle
-			Stimmbezirke summieren.
-		</p>
-		<p>
-			Auf der Karte ist deshalb die Briefwahl-Gruppe die kleinste Ebene: alle Urnenwahlbezirke eines
-			Briefwahlbezirks plus dieser Briefwahlbezirk bilden zusammen eine Fläche (Dissolve der
-			Urnen-Polygone), analog zur Tagesspiegel-Darstellung „Stimmbezirke 726, 727 und 7P“. Das gilt
-			für alle Wahlen mit Stimmbezirks-Geometrie.
-		</p>
-		<p>
-			Im Kiez-Aggregat ist die Briefwahl eine anteilige Schätzung nach Wahlberechtigten, siehe
-			<a href="#aggregation" class="underline-offset-2 hover:text-ink hover:underline">Abschnitt 4</a
-			>. Wahlen ohne Stimmbezirks-Geometrie zeigt die Karte nur auf Bezirks- und Berlin-Ebene, siehe
-			<a href="#geometrien" class="underline-offset-2 hover:text-ink hover:underline">Abschnitt 6</a
-			>.
-		</p>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_briefwahl_heading()}
+		</h2>
+		<p>{m.methodik_wahldaten_briefwahl_p1()}</p>
+		<p>{m.methodik_wahldaten_briefwahl_p2()}</p>
+		<p><RichText segments={briefwahlP3} {tag} /></p>
 	</section>
 
 	<section id="aggregation" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">4. Stimmbezirks-zu-Kiez-Aggregation</h2>
-		<p>
-			Stimmbezirks-Werte werden räumlich auf vier Ebenen aggregiert: Stimmbezirk, Kiez
-			(LOR-Bezirksregion), Bezirk (12) und Berlin gesamt.
-		</p>
-		<p>
-			Für die Kiez-Ebene wird pro Stimmbezirk der Polygon-Centroid berechnet (via turf-center) und
-			in die enthaltene LOR-Bezirksregion gemappt (booleanPointInPolygon). Stimmbezirke außerhalb
-			aller LOR-Polygone bleiben ungemappt und fließen nur in Bezirk + Berlin ein. Die
-			SQL-Aggregation summiert pro Kiez und Partei aus den Roh-Stimmbezirks-Rows (siehe
-			scripts/build-wahl-kiez-aggregat.ts).
-		</p>
-		<p>
-			Briefstimmen fließen anteilig ein: Jede Urne einer Briefwahl-Gruppe erhält einen Anteil an
-			deren Briefstimmen (<code class="font-mono text-xs">ist_briefwahl_aggregat = true</code>) nach
-			ihren Wahlberechtigten. Das ist eine Schätzung, keine amtliche Aufteilung. Fehlen die
-			Wahlberechtigten für eine oder mehrere Urnen einer Gruppe, verteilt sich die Briefwahl
-			gleichmäßig auf die Urnen der Gruppe.
-		</p>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_aggregation_heading()}
+		</h2>
+		<p>{m.methodik_wahldaten_aggregation_p1()}</p>
+		<p>{m.methodik_wahldaten_aggregation_p2()}</p>
+		<p><RichText segments={aggregationP3} {tag} /></p>
 	</section>
 
 	<section id="wiederholungswahl" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">5. Wiederholungswahl 2023</h2>
-		<p>
-			AGH 2021 + BVV 2021 wurden vom Berliner Verfassungsgerichtshof teilweise für ungültig erklärt.
-			AGH 2023 und BVV 2023 sind die jeweiligen Wiederholungswahlen. In der Datenbank tragen sie das
-			Flag
-			<code class="font-mono text-xs">is_repeat_election</code> mit Verweis auf die jeweilige
-			Original-Wahl über
-			<code class="font-mono text-xs">parent_election_id</code>.
-		</p>
-		<p>
-			Die Wahlbezirks-Geometrie der Wiederholungswahl ist identisch zur Original- Wahl von Sept
-			2021. Die separate SBB-Quelle
-			<code class="font-mono text-xs">RBS_OD_Wahllokale_AH23.zip</code>
-			enthält ausschließlich Wahllokal-Standorte (Punkte), nicht Wahlbezirks- Polygone; deshalb mappt
-			navigator.berlin AGH 2023 und BVV 2023 für Choropleth + Kiez-Aggregation auf den Polygon-Layer
-			<code class="font-mono text-xs">ah21</code>.
-		</p>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_wiederholung_heading()}
+		</h2>
+		<p><RichText segments={wiederholungP1} {tag} /></p>
+		<p><RichText segments={wiederholungP2} {tag} /></p>
 	</section>
 
 	<section id="geometrien" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">6. Geometrien + Coverage</h2>
-		<p>
-			Stimmbezirks-Polygone sind verfügbar für: BTW 2017, 2021, 2025 sowie AGH + BVV 2016, 2021
-			(verwendet auch für 2023-Wiederholung) und 2026. BTW 2013 sowie AGH + BVV 2011 besitzen keine
-			publizierten Stimmbezirks-Geometrien. Diese Wahlen sind ausschließlich auf Bezirks- und
-			Berlin-Aggregat zugänglich; das Kiez-Aggregat ist für sie leer und die Choropleth-Komponente
-			fällt auf 12 Bezirks-Polygone zurück mit einem Inline-Hinweis.
-		</p>
-		<p>
-			Reprojektion: ETRS89 UTM33 → WGS84 via mapshaper Node-API, Simplify visvalingam + <code
-				class="font-mono text-xs">keep-shapes</code
-			> damit Sliver-Polygone den Simplify-Schritt überleben.
-		</p>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_geometrien_heading()}
+		</h2>
+		<p>{m.methodik_wahldaten_geometrien_p1()}</p>
+		<p><RichText segments={geometrienP2} {tag} /></p>
 	</section>
 
 	<section id="update-cadence" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">7. Update-Cadence</h2>
-		<p>
-			Wahldaten werden manuell nach jedem Wahlgang aktualisiert. Es gibt keinen Live-Refresh aus den
-			Quell-APIs, weil die amtlichen Endergebnisse erst Wochen nach dem Wahltag vorliegen und die
-			Bundeswahlleiterin / Landeswahlleiterin Berlin ihre Datensätze nicht über eine stabile API
-			ausspielen.
-		</p>
-		<p>
-			AGH und BVV 2026 zeigen das vorläufige amtliche Ergebnis vom Wahltag, dem 20.09.2026.
-			Datenstand ist der 21.09.2026. Quelle ist wahlen-berlin.de (Landeswahlleiterin Berlin).
-			Portal, Wahl-Detailseiten und API-/Tool-Antworten markieren die Zahlen als „vorläufig“ und
-			zeigen ein Stand-Datum, wo verfügbar. Das Endergebnis erscheint voraussichtlich ab dem
-			30.09.2026 (BVV) und vom 05. bis 08.10.2026 (AGH). Beim Endergebnis ersetzt ein erneuter
-			Datenimport die vorläufigen Zahlen. Die Kennzeichnung entfällt.
-		</p>
-		<p>
-			Die Build-Pipeline lädt und parsed die Roh-Daten, baut die Stimmbezirks-Layer neu und
-			aktualisiert das Kiez-Aggregat. Ein Lint-Gate blockt Wertungsvokabel in Code und Doku.
-		</p>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_cadence_heading()}
+		</h2>
+		<p>{m.methodik_wahldaten_cadence_p1()}</p>
+		<p>{m.methodik_wahldaten_cadence_p2()}</p>
+		<p>{m.methodik_wahldaten_cadence_p3()}</p>
 	</section>
 
 	<section id="parteien-alias" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">8. Parteien-Aliase</h2>
-		<p>
-			Parteien-Namen variieren über die Jahre (PDS → Die Linke, GRÜNE in Schreibvarianten). Eine
-			case-insensitive Alias-Tabelle in
-			<code class="font-mono text-xs">scripts/wahlen/lib/partei-seed.ts</code>
-			resolvt Quell-Spalten zu kanonischen
-			<code class="font-mono text-xs">kurzname</code>-Werten. Nicht-aufgelöste Eintragungen landen
-			unter „Sonstige" und werden im Inspector nicht in Top-N geführt.
-		</p>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_alias_heading()}
+		</h2>
+		<p><RichText segments={aliasP1} {tag} /></p>
 	</section>
 
 	<section id="cross-layer" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">9. Cross-Layer-Verknüpfung</h2>
-		<p>
-			Wahl-Daten werden in Kiez-Pages (siehe Wahl-Verlauf-Block) und im Adress-Inspector mit anderen
-			Layern (Mietspiegel-Wohnlage, Lärmkartierung, Mietspiegel-Soziale-Stufe, Kiez-Score)
-			nebeneinander angezeigt, ohne kausale Verknüpfung oder wertendes Framing. Editorial-
-			Richtlinien dazu im
-			<a
-				href="/methodik/cross-layer-templates"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>Cross-Layer-Templates-Preview</a
-			>
-			(noindex, Co-Design-Stage).
-		</p>
+		<h2 class="font-sans text-xl font-semibold text-ink">
+			{m.methodik_wahldaten_section_cross_layer_heading()}
+		</h2>
+		<p><RichText segments={crossLayerP1} {tag} /></p>
 	</section>
 
 	<a
-		href="/berlin-wahlen#alle-wahlen"
+		href={localizedHref('/berlin-wahlen#alle-wahlen')}
 		class="hover:text-accent-strong inline-block font-mono text-sm text-accent underline underline-offset-2"
 	>
-		Alle Wahlen einzeln
+		{m.methodik_wahldaten_link_alle_wahlen()}
 	</a>
 </article>

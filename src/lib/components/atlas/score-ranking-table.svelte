@@ -16,6 +16,18 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import type { RankingRow } from '$lib/data/ranking-types.js';
+	import RichText from '$lib/components/rich-text.svelte';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { richSegments } from '$lib/i18n/rich-text.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime.js';
+	import {
+		collatorLocale,
+		columnLabel,
+		type NumericSortKey,
+		type SortKey,
+		type StringSortKey
+	} from './score-ranking-i18n.js';
 
 	// Bei Prerender (SSR statischer Build) wirft SvelteKit beim Zugriff auf
 	// url.searchParams. URL-State (sort/dir/view) ist nur browser-relevant —
@@ -32,16 +44,6 @@
 
 	const { kieze, bezirke }: Props = $props();
 
-	type NumericSortKey =
-		| 'composite'
-		| 'ruheLuft'
-		| 'gruenHitze'
-		| 'mobilitaet'
-		| 'versorgung'
-		| 'wohnschutz'
-		| 'kultur';
-	type StringSortKey = 'name' | 'bezirk';
-	type SortKey = NumericSortKey | StringSortKey;
 	type SortDir = 'asc' | 'desc';
 	type View = 'kieze' | 'bezirke';
 
@@ -56,18 +58,6 @@
 	];
 	const STRING_SORT_KEYS: readonly StringSortKey[] = ['name', 'bezirk'];
 	const ALL_SORT_KEYS: readonly SortKey[] = [...NUMERIC_SORT_KEYS, ...STRING_SORT_KEYS];
-
-	const COLUMN_LABEL: Record<SortKey, string> = {
-		name: 'Name',
-		bezirk: 'Bezirk',
-		composite: 'Score',
-		ruheLuft: 'Ruhe & Luft',
-		gruenHitze: 'Grün & Hitze',
-		mobilitaet: 'Mobilität',
-		versorgung: 'Versorgung',
-		wohnschutz: 'Wohnschutz',
-		kultur: 'Kultur'
-	};
 
 	function isNumericSortKey(key: SortKey): key is NumericSortKey {
 		return (NUMERIC_SORT_KEYS as readonly string[]).includes(key);
@@ -90,7 +80,9 @@
 
 	const rowsForView = $derived<readonly RankingRow[]>(view === 'kieze' ? kieze : bezirke);
 
-	const collator = new Intl.Collator('de-DE', { sensitivity: 'base' });
+	const collator = $derived(
+		new Intl.Collator(collatorLocale(getLocale()), { sensitivity: 'base' })
+	);
 
 	function compareString(a: string | null, b: string | null, dir: SortDir): number {
 		if (!a && !b) return 0;
@@ -153,7 +145,7 @@
 	}
 
 	function detailHref(row: RankingRow): string {
-		return view === 'kieze' ? `/kiez/${row.slug}` : `/bezirk/${row.slug}`;
+		return localizedHref(view === 'kieze' ? `/kiez/${row.slug}` : `/bezirk/${row.slug}`);
 	}
 
 	/**
@@ -227,8 +219,16 @@
 		if (sortKey === 'name' || sortKey === 'bezirk') {
 			return sortDir === 'asc' ? '· A → Z' : '· Z → A';
 		}
-		return sortDir === 'desc' ? '· hoch → niedrig' : '· niedrig → hoch';
+		return sortDir === 'desc'
+			? m.uis_ranking_sort_dir_high_low()
+			: m.uis_ranking_sort_dir_low_high();
 	});
+
+	const crimeNoteSegments = $derived(
+		richSegments((t) =>
+			m.uis_ranking_crime_note({ link_start: t('link').start, link_end: t('link').end })
+		)
+	);
 
 	const nameColumnLabel = $derived(view === 'kieze' ? 'Kiez' : 'Bezirk');
 
@@ -243,7 +243,7 @@
 	<div
 		class="flex flex-wrap items-center justify-between gap-3"
 		role="radiogroup"
-		aria-label="Ranking-Ansicht wechseln"
+		aria-label={m.uis_ranking_view_aria_label()}
 	>
 		<div class="inline-flex rounded border border-rule" role="presentation">
 			<button
@@ -273,7 +273,7 @@
 			</button>
 		</div>
 		<p class="font-mono text-xs text-ink-subtle">
-			Sortiert nach <span class="font-semibold text-ink">{COLUMN_LABEL[sortKey]}</span>
+			{m.uis_ranking_sorted_by()} <span class="font-semibold text-ink">{columnLabel(sortKey)}</span>
 			{sortDirLabel}
 		</p>
 	</div>
@@ -286,7 +286,7 @@
 						class="py-2 pr-3 font-mono text-[11px] tracking-wider whitespace-nowrap text-ink-subtle uppercase"
 						scope="col"
 					>
-						Rang
+						{m.uis_ranking_col_rank()}
 					</th>
 					<th class="py-2 pr-3 align-bottom whitespace-nowrap" scope="col">
 						<button
@@ -327,7 +327,7 @@
 								aria-pressed={sortKey === key}
 								onclick={() => toggleSort(key)}
 							>
-								{COLUMN_LABEL[key]}
+								{columnLabel(key)}
 								{#if sortKey === key}
 									<span aria-hidden="true">{sortDir === 'desc' ? '↓' : '↑'}</span>
 								{/if}
@@ -338,7 +338,7 @@
 						<span
 							class="score-col-rot font-mono text-[11px] tracking-wider text-ink-subtle uppercase"
 						>
-							Kriminalität
+							{m.uis_ranking_col_kriminalitaet()}
 						</span>
 					</th>
 				</tr>
@@ -405,33 +405,38 @@
 		class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 font-mono text-[11px] tracking-wider text-ink-subtle uppercase"
 		data-testid="ranking-legend"
 	>
-		<dt class="text-ink-muted">Farbe je Spalte, relativ:</dt>
+		<dt class="text-ink-muted">{m.uis_ranking_legend_label()}</dt>
 		<dd class="flex items-center gap-2">
-			<span class="score-pill-1 inline-block size-4 rounded-sm" aria-hidden="true"></span> unterstes Viertel
+			<span class="score-pill-1 inline-block size-4 rounded-sm" aria-hidden="true"></span>
+			{m.uis_ranking_legend_q1()}
 		</dd>
 		<dd class="flex items-center gap-2">
-			<span class="score-pill-2 inline-block size-4 rounded-sm" aria-hidden="true"></span> unteres Mittel
+			<span class="score-pill-2 inline-block size-4 rounded-sm" aria-hidden="true"></span>
+			{m.uis_ranking_legend_q2()}
 		</dd>
 		<dd class="flex items-center gap-2">
-			<span class="score-pill-3 inline-block size-4 rounded-sm" aria-hidden="true"></span> oberes Mittel
+			<span class="score-pill-3 inline-block size-4 rounded-sm" aria-hidden="true"></span>
+			{m.uis_ranking_legend_q3()}
 		</dd>
 		<dd class="flex items-center gap-2">
-			<span class="score-pill-4 inline-block size-4 rounded-sm" aria-hidden="true"></span> oberstes Viertel
+			<span class="score-pill-4 inline-block size-4 rounded-sm" aria-hidden="true"></span>
+			{m.uis_ranking_legend_q4()}
 		</dd>
-		<dd class="text-ink-muted">Kriminalität: neutral (kein Farbverlauf)</dd>
+		<dd class="text-ink-muted">{m.uis_ranking_legend_crime()}</dd>
 	</dl>
 
 	<p
 		class="pt-2 font-serif text-xs leading-snug text-ink-muted italic"
 		data-testid="ranking-kriminalitaet-note"
 	>
-		Erfasste Kriminalität ist ein neutraler Kontext-Wert (Häufigkeitszahl je Bezirksregion, höher =
-		mehr erfasste Fälle), kein Gut-Maß. Bewusst nicht sortierbar und nicht im Gesamt-Score: kein
-		Sicherheits-Ranking. Grenzen unter
-		<a
-			href="/methodik/kiez-score"
-			class="hover:text-accent-strong text-accent underline underline-offset-2">Methodik</a
-		>.
+		<RichText segments={crimeNoteSegments}>
+			{#snippet tag(text)}
+				<a
+					href={localizedHref('/methodik/kiez-score')}
+					class="hover:text-accent-strong text-accent underline underline-offset-2">{text}</a
+				>
+			{/snippet}
+		</RichText>
 	</p>
 </section>
 

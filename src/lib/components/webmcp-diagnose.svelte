@@ -7,6 +7,7 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { m } from '$lib/paraglide/messages.js';
 	import type { WebMcpServerHandle } from '$lib/webmcp/adapter.js';
 
 	let handle = $state<WebMcpServerHandle | null>(null);
@@ -37,11 +38,8 @@
 </script>
 
 <section class="mt-10" data-testid="webmcp-diagnose">
-	<h2 class="font-serif text-xl">Live-Diagnose in diesem Browser</h2>
-	<p class="text-fg-muted mt-3 leading-relaxed">
-		Dieser Abschnitt prüft beim Laden, was der Browser gerade bereitstellt. English: live check of
-		the WebMCP surface in your current browser.
-	</p>
+	<h2 class="font-serif text-xl">{m.webmcp_diagnose_heading()}</h2>
+	<p class="text-fg-muted mt-3 leading-relaxed">{m.webmcp_diagnose_intro_p1()}</p>
 	{#if fehler}
 		<p class="mt-4 font-mono text-sm text-red-700" data-testid="webmcp-diagnose-fehler">
 			Registration failed: {fehler}

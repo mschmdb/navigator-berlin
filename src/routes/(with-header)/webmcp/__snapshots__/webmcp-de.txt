@@ -1,0 +1,68 @@
+h1: WebMCP
+p: WebMCP ist eine Browser-API, mit der Websites strukturierte Tools an KI-Agenten ausliefern können. Statt HTML zu scrapen, fragt der Agent eine Adresse oder einen Datensatz direkt ab und bekommt Zahl, Quelle und Lizenz zurück. navigator.berlin liefert seit Mai 2026 solche Tools aus, inzwischen elf, seit August 2026 auch ein schreibendes: Ein Agent kann den Kiez-Finder bedienen, den ein Mensch vor sich sieht.
+h2: Status der Spec
+p: WebMCP ist ein W3C-Community-Group-Draft, gemeinsam von Microsoft und Google entwickelt, gehostet in der Web Machine Learning Community Group. Laufend aktualisiert, Stand August 2026; die API-Surface ist inzwischen von navigator.modelContext zu document.modelContext umgezogen. Ausdrücklich nicht auf dem W3C-Standards-Track. Das heißt: interessierte Parteien haben sich auf einen Entwurf geeinigt, aber noch ist kein Commitment, daraus eine offizielle Web-Plattform-API zu machen.
+a: W3C-Community-Group-Draft
+p: Spec-URL: github.com/webmachinelearning/webmcp.
+a: github.com/webmachinelearning/webmcp
+h2: Browser-Support
+dt: Chrome 149+
+dd: Origin Trial ab Version 149, native Implementation auf document.modelContext. Lokal aktivierbar über das Flag chrome://flags/#enable-webmcp-testing plus Neustart. Stand September 2026.
+dt: ChatGPT-Desktop-App
+dd: Der eingebaute Browser stellt document.modelContext nativ bereit; Tool-Aufrufe setzen ein Runtime-Modell mit Site-Tools-Support voraus (GPT-5.6 Sol oder Terra) und die Freigabe unter Settings → Browser → Permissions.
+dt: Microsoft Edge 150+
+dd: Origin Trial ab Version 150. Stand September 2026.
+dt: Firefox
+dd: Mozilla führt WebMCP in den Standards-Positions als „neutral“, ohne ausformulierte Position und ohne Release-Termin. Stand September 2026.
+dt: Safari
+dd: WebKit lehnt WebMCP ab („position: oppose“, Juni 2026). Stand September 2026.
+dt: Polyfill
+dd: Für Browser ohne native Implementation laden LLM-Browser-Extensions oft einen Polyfill, der die API nachreicht. navigator.berlin prüft document.modelContext zuerst und fällt auf navigator.modelContext plus Polyfill zurück. So funktionieren die Tools auch in Chrome Stable, Firefox oder Safari, sofern der Agent diesen Weg fährt.
+h2: Begründung für frühen Einsatz
+p: Die Spec ist Draft und der Browser-Support frisch. Wir liefern WebMCP-Tools trotzdem aus, weil:
+li: Strukturierte Tool-Discovery ist die richtige Richtung. HTML-Scraping durch LLMs erzeugt schlechte Antworten und unnötigen Traffic. Eine deklarative Schnittstelle mit Quelle und Lizenz pro Antwort ist eine ehrliche Datenausgabe.
+li: Standards entstehen, wenn früh Sites mitmachen. Eine Bürger-Daten-Plattform sollte solche Open-Web-Initiativen unterstützen, nicht nur kommerzielle.
+li: Der Aufwand ist gering. Die Tools sind Wrapper um Funktionen, die ohnehin existieren (Adress-Lookup, Layer-Abfrage, Wahl-Daten). Spec-Änderungen wirken sich nur auf eine Adapter-Datei aus.
+li: Bricht die Spec, fällt eine Subseite aus. Die Hauptseite bleibt bedienbar. Damit ist das Risiko eingegrenzt.
+h2: Verfügbare Tools
+p: Aktuell sind elf Tools registriert, zehn lesende und ein schreibendes. Volltext-Manifest mit JSON-Schemas pro Tool unter /webmcp-manifest.json.
+a: /webmcp-manifest.json
+dt: address_lookup
+dd: Berliner Adressen, Straßen und POIs suchen.
+dt: cross_layer_query
+dd: Alle Daten-Layer an einer Koordinate abfragen, mit Quelle pro Wert.
+dt: list_layers_at_point
+dd: Welche Layer decken den Punkt ab? Schlanker Vorab-Check.
+dt: get_kiez_profile
+dd: Profil einer LOR-Bezirksregion: Name, Bezirk, Einwohner, Fläche.
+dt: get_layer_metadata
+dd: Quelle, Lizenz, Stand-Datum und Methodik eines Daten-Layers.
+dt: list_elections
+dd: Alle 14 Berliner Wahlen seit 2011 auflisten.
+dt: get_election_result
+dd: Ergebnis an einer Adresse für eine bestimmte Wahl, auf wählbarer Ebene (Stimmbezirk, Kiez, Bezirk, Berlin).
+dt: compare_elections
+dd: Mehrere Wahlen am selben Ort vergleichen, Sparkline-tauglich.
+dt: get_voting_district_geometry
+dd: GeoJSON-Polygon zu einer Stimmbezirks-ID liefern.
+dt: set_finder_weights
+dd: Schreibend: Der Agent stellt die Kiez-Finder-Regler, die Karte vor den Augen des Menschen färbt sich live um.
+dt: get_finder_state
+dd: Rückkanal: Gewichte, letzte Änderungsquelle (Mensch oder Agent) und Top-Kieze lesen.
+h2: Einsatz in Chrome Canary
+a: Chrome Canary
+li: chrome://flags/#enable-webmcp-testing öffnen, „WebMCP for testing" auf „Enabled" setzen, Canary neu starten.
+li: navigator.berlin öffnen. Die elf Tools registrieren sich automatisch bei document.modelContext; die Live-Diagnose oben auf dieser Seite zeigt Surface und Tool-Liste.
+a: Model Context Tool Inspector
+h2: Einsatz ohne Canary
+p: Die ChatGPT-Desktop-App bringt WebMCP im eingebauten Browser nativ mit. Wer im Stable-Chrome ohne Flag, Firefox oder Safari bleibt, kann WebMCP über eine LLM-Browser-Extension nutzen, die einen Polyfill mitlädt.
+p: Discovery-Pfad (Konvention, nicht Standard): /.well-known/webmcp.json spiegelt /webmcp-manifest.json. Klartext-Variante für Crawler nach llmstxt.org: /llms.txt und /llms-full.txt.
+a: /.well-known/webmcp.json
+a: /webmcp-manifest.json
+a: llmstxt.org
+a: /llms.txt
+a: /llms-full.txt
+h2: Quellen
+a: WebMCP Editor's Draft, Web Machine Learning CG
+a: GitHub-Repository der Spec
+a: Patrick Brosset: WebMCP updates, clarifications, and next steps (Feb 2026)

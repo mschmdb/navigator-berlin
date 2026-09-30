@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import ScoreRankingTable from './score-ranking-table.svelte';
 import type { RankingRow } from '$lib/data/ranking-types.js';
 
@@ -125,5 +126,48 @@ describe('ScoreRankingTable.svelte', () => {
 		render(ScoreRankingTable, { kieze, bezirke });
 		const section = document.querySelector('[data-testid="score-ranking"]');
 		expect(section?.textContent?.toLowerCase()).not.toContain('lebenswert');
+	});
+});
+
+describe('ScoreRankingTable.svelte · EN (i18n C4b)', () => {
+	afterEach(() => overwriteGetLocale(() => 'de'));
+
+	function renderEn(): Element {
+		overwriteGetLocale(() => 'en');
+		render(ScoreRankingTable, { kieze, bezirke });
+		return document.querySelector('[data-testid="score-ranking"]')!;
+	}
+
+	it('Spaltenköpfe, Sortierhinweis und Legende sind englisch', async () => {
+		const section = renderEn();
+		const text = section.textContent ?? '';
+		expect(text).toMatch(/Sorted by\s+Score\s+· high → low/);
+		expect(text).toContain('Rank');
+		expect(text).toContain('Tenant protection');
+		expect(text).toContain('Recorded crime');
+		expect(text).toContain('Colour per column, relative:');
+		expect(text).toContain('bottom quartile');
+		expect(text).toContain('Recorded crime: neutral (no colour gradient)');
+		expect(text).toContain('Deliberately not sortable');
+		expect(section.querySelector('[role="radiogroup"]')?.getAttribute('aria-label')).toBe(
+			'Switch ranking view'
+		);
+	});
+
+	it('Kiez-Links und Methodik-Link zeigen auf /en/', async () => {
+		const section = renderEn();
+		const hrefs = [...section.querySelectorAll('a[href]')].map((a) => a.getAttribute('href'));
+		expect(hrefs).toContain('/en/kiez/alpha');
+		expect(hrefs).toContain('/en/methodik/kiez-score');
+		expect(hrefs.every((href) => href?.startsWith('/en/'))).toBe(true);
+	});
+
+	it('DE-Links tragen kein /en', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		const hrefs = [...document.querySelectorAll('[data-testid="score-ranking"] a[href]')].map((a) =>
+			a.getAttribute('href')
+		);
+		expect(hrefs).toContain('/kiez/alpha');
+		expect(hrefs).toContain('/methodik/kiez-score');
 	});
 });

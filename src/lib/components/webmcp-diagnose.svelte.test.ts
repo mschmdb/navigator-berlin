@@ -1,6 +1,7 @@
 import { page } from 'vitest/browser';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import WebmcpDiagnose from './webmcp-diagnose.svelte';
 
 describe('webmcp-diagnose', () => {
@@ -17,5 +18,26 @@ describe('webmcp-diagnose', () => {
 		expect(tools).toContain('set_finder_weights');
 		expect(tools).toContain('get_finder_state');
 		expect(tools).toContain('address_lookup');
+	});
+
+	it('zeigt Überschrift und Intro auf Deutsch', async () => {
+		render(WebmcpDiagnose);
+		const section = (await page.getByTestId('webmcp-diagnose').element()).textContent ?? '';
+		expect(section).toContain('Live-Diagnose in diesem Browser');
+		expect(section).toContain('Dieser Abschnitt prüft beim Laden');
+		expect(section).not.toContain('English:');
+	});
+
+	describe('EN', () => {
+		afterEach(() => overwriteGetLocale(() => 'de'));
+
+		it('zeigt Überschrift und Intro auf Englisch', async () => {
+			overwriteGetLocale(() => 'en');
+			render(WebmcpDiagnose);
+			const section = (await page.getByTestId('webmcp-diagnose').element()).textContent ?? '';
+			expect(section).toContain('Live diagnostics in this browser');
+			expect(section).toContain('This section checks on load');
+			expect(section).not.toContain('Dieser Abschnitt');
+		});
 	});
 });

@@ -264,9 +264,9 @@ describe('collectPrerenderedUrls', () => {
 
 	it('a page with no translated counterpart gets no alternates', () => {
 		const entries = collectPrerenderedUrls(ctx());
-		const wahldaten = entries.find((e) => e.loc === 'https://navigator.berlin/methodik/wahldaten');
-		expect(wahldaten).toBeDefined();
-		expect(wahldaten?.alternates).toBeUndefined();
+		const lizenzen = entries.find((e) => e.loc === 'https://navigator.berlin/lizenzen');
+		expect(lizenzen).toBeDefined();
+		expect(lizenzen?.alternates).toBeUndefined();
 	});
 
 	it('i18n Block C4a: /methodik (DE) gets its EN alternate once registered', () => {

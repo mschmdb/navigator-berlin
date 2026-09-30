@@ -151,6 +151,7 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 			document.querySelector('script[data-testid="methodik-kiez-score-breadcrumb-jsonld"]')
 				?.textContent ?? '{}'
 		);
+		expect(crumbs.itemListElement[0].item).toMatch(/\/en\/$/);
 		expect(crumbs.itemListElement[1].item).toMatch(/\/en\/methodik$/);
 		expect(crumbs.itemListElement[2].item).toMatch(/\/en\/methodik\/kiez-score$/);
 	});

@@ -80,7 +80,7 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: '/' },
+				{ name: 'Berlin', path: localizedHref('/') },
 				{ name: m.methodik_breadcrumb_methodik(), path: localizedHref('/methodik') }
 			]
 		})

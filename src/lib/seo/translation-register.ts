@@ -57,11 +57,13 @@ export interface TranslationRegisterEntry {
  * `data-collector.ts`, `webmcp/**` -- boundary "stay German regardless of
  * page locale"). Block C4a (`spec-i18n-c4a-methodik-kern.md`) registers
  * `/methodik`, `/methodik/kiez-score` and `/methodik/cross-layer-templates` as
- * exact entries (no `prefix`): `/methodik/wahldaten` follows in C4b and keeps
- * the fallback banner until then. The OG images of these pages stay German.
+ * exact entries (no `prefix`). The OG images of these pages stay German.
  * `/methodik/cross-layer-templates` keeps its explicit `noindex` (co-design
  * preview), the registration only lifts the fallback banner and the German
- * `<main lang>`. Later blocks append further `{ pathname, locale }` entries
+ * `<main lang>`. Block C4b (`spec-i18n-c4b-wahl-methodik-technik.md`) adds
+ * four more exact entries: `/methodik/wahldaten`, `/architektur`, `/webmcp` and
+ * `/umwelt-infrastruktur-score`. WebMCP tool names, tool descriptions and the
+ * manifest stay German (boundary C1/C2), the OG images stay German. Later blocks append further `{ pathname, locale }` entries
  * as more EN content ships -- no other module needs to change.
  */
 export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
@@ -70,7 +72,11 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/explore', locale: 'en' },
 	{ pathname: '/methodik', locale: 'en' },
 	{ pathname: '/methodik/kiez-score', locale: 'en' },
-	{ pathname: '/methodik/cross-layer-templates', locale: 'en' }
+	{ pathname: '/methodik/cross-layer-templates', locale: 'en' },
+	{ pathname: '/methodik/wahldaten', locale: 'en' },
+	{ pathname: '/architektur', locale: 'en' },
+	{ pathname: '/webmcp', locale: 'en' },
+	{ pathname: '/umwelt-infrastruktur-score', locale: 'en' }
 ];
 
 /**

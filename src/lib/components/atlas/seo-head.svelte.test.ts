@@ -79,7 +79,7 @@ describe('SeoHead', () => {
 		render(SeoHead, {
 			title: 'Methodik',
 			description: 'desc',
-			pathname: '/methodik/wahldaten',
+			pathname: '/impressum',
 			origin: 'https://navigator.berlin'
 		});
 		await new Promise((r) => setTimeout(r, 10));
@@ -87,7 +87,7 @@ describe('SeoHead', () => {
 		const hreflangs = alternates.map((el) => el.getAttribute('hreflang'));
 		expect(hreflangs).toContain('de');
 		expect(hreflangs).toContain('x-default');
-		// unregistrierte Seite: kein EN-Link (/methodik ist seit C4a registriert)
+		// unregistrierte Seite: kein EN-Link (/impressum bleibt dauerhaft DE)
 		expect(hreflangs).not.toContain('en');
 	});
 
@@ -159,7 +159,7 @@ describe('SeoHead', () => {
 		render(SeoHead, {
 			title: 'Methodik',
 			description: 'desc',
-			pathname: '/methodik/wahldaten',
+			pathname: '/impressum',
 			origin: 'https://navigator.berlin'
 		});
 		await new Promise((r) => setTimeout(r, 10));

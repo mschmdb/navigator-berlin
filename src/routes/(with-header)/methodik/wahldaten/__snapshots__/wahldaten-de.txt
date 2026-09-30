@@ -1,0 +1,58 @@
+p: Berlin · Methodik
+a: Berlin
+a: Methodik
+h1: Methodik · Wahldaten
+p: Diese Seite dokumentiert Datenquellen, Aggregations-Strategie und bekannte Coverage-Lücken der Wahl-Daten. Werte beschreiben Stimmenanteile, keine Bewertung.
+p: Inhalt
+a: 1. Datenquellen
+a: 2. Daten-Cutoff
+a: 3. Briefwahl-Gruppen
+a: 4. Stimmbezirks-zu-Kiez-Aggregation
+a: 5. Wiederholungswahl 2023
+a: 6. Geometrien + Coverage
+a: 7. Update-Cadence
+a: 8. Parteien-Aliase
+a: 9. Cross-Layer-Verknüpfung
+h2: 1. Datenquellen
+dt: Bundestagswahlen
+dd: Bundeswahlleiterin Wahlbezirksstatistik (_wbz.zip). Direkt-Bezug pro Wahl-Jahr von bundeswahlleiterin.de. Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+a: bundeswahlleiterin.de
+dt: Abgeordnetenhaus + BVV
+dd: Amt für Statistik Berlin-Brandenburg, XLSX-Sheet-Pipeline (DL_BE_*.xlsx). Bezug von statistik-berlin-brandenburg.de. Lizenz Datenlizenz Deutschland Namensnennung 2.0. AGH und BVV 2026 kommen direkt von wahlen-berlin.de (Landeswahlleiterin Berlin), Stand des vorläufigen amtlichen Ergebnisses.
+a: statistik-berlin-brandenburg.de
+a: wahlen-berlin.de
+dt: Stimmbezirks-Geometrien
+dd: Amt für Statistik Berlin-Brandenburg, Shapefile-Releases pro Wahlgang: RBS_OD_Wahlgebiete_BTW17.zip, RBS_OD_UWB_AH21.zip, RBS_OD_UWB_AH26.zip (Stimmbezirks-Geometrie AGH/BVV 2026) u. a. Reprojektion von ETRS89 UTM33 nach WGS84 via mapshaper-Pipeline, Simplify visvalingam + keep-shapes.
+h2: 2. Daten-Cutoff
+p: Die Wahldaten decken Wahlen ab 2011 ab. Pre-2011-Daten liegen bei der Bundeswahlleiterin teilweise in unterschiedlichen Formaten vor und erfordern Mapping zur Bezirksreform 2001. Bundestagswahlen beginnen 2013, weil die Bundeswahlleiterin Wahlbezirksdaten erst ab diesem Jahr veröffentlicht.
+li: Bundestagswahlen: 2013, 2017, 2021, 2025
+li: Abgeordnetenhauswahlen: 2011, 2016, 2021, 2023 (Wiederholung), 2026 (vorläufig)
+li: Bezirksverordneten-Versammlungen: 2011, 2016, 2021, 2023 (Wiederholung), 2026 (vorläufig)
+li: Europawahlen: aktuell nicht enthalten
+li: Volksentscheide: nicht enthalten
+h2: 3. Briefwahl-Gruppen
+p: Berlin zählt Briefstimmen in eigenen Briefwahlbezirken ohne eigene Fläche, getrennt von den Urnenwahlbezirken. Bezirk und Berlin gesamt enthalten immer alle Stimmen, weil sie über alle Stimmbezirke summieren.
+p: Auf der Karte ist deshalb die Briefwahl-Gruppe die kleinste Ebene: alle Urnenwahlbezirke eines Briefwahlbezirks plus dieser Briefwahlbezirk bilden zusammen eine Fläche (Dissolve der Urnen-Polygone), analog zur Tagesspiegel-Darstellung „Stimmbezirke 726, 727 und 7P“. Das gilt für alle Wahlen mit Stimmbezirks-Geometrie.
+p: Im Kiez-Aggregat ist die Briefwahl eine anteilige Schätzung nach Wahlberechtigten, siehe Abschnitt 4. Wahlen ohne Stimmbezirks-Geometrie zeigt die Karte nur auf Bezirks- und Berlin-Ebene, siehe Abschnitt 6.
+a: Abschnitt 4
+a: Abschnitt 6
+h2: 4. Stimmbezirks-zu-Kiez-Aggregation
+p: Stimmbezirks-Werte werden räumlich auf vier Ebenen aggregiert: Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk (12) und Berlin gesamt.
+p: Für die Kiez-Ebene wird pro Stimmbezirk der Polygon-Centroid berechnet (via turf-center) und in die enthaltene LOR-Bezirksregion gemappt (booleanPointInPolygon). Stimmbezirke außerhalb aller LOR-Polygone bleiben ungemappt und fließen nur in Bezirk + Berlin ein. Die SQL-Aggregation summiert pro Kiez und Partei aus den Roh-Stimmbezirks-Rows (siehe scripts/build-wahl-kiez-aggregat.ts).
+p: Briefstimmen fließen anteilig ein: Jede Urne einer Briefwahl-Gruppe erhält einen Anteil an deren Briefstimmen (ist_briefwahl_aggregat = true) nach ihren Wahlberechtigten. Das ist eine Schätzung, keine amtliche Aufteilung. Fehlen die Wahlberechtigten für eine oder mehrere Urnen einer Gruppe, verteilt sich die Briefwahl gleichmäßig auf die Urnen der Gruppe.
+h2: 5. Wiederholungswahl 2023
+p: AGH 2021 + BVV 2021 wurden vom Berliner Verfassungsgerichtshof teilweise für ungültig erklärt. AGH 2023 und BVV 2023 sind die jeweiligen Wiederholungswahlen. In der Datenbank tragen sie das Flag is_repeat_election mit Verweis auf die jeweilige Original-Wahl über parent_election_id.
+p: Die Wahlbezirks-Geometrie der Wiederholungswahl ist identisch zur Original-Wahl von Sept 2021. Die separate SBB-Quelle RBS_OD_Wahllokale_AH23.zip enthält ausschließlich Wahllokal-Standorte (Punkte), nicht Wahlbezirks-Polygone; deshalb mappt navigator.berlin AGH 2023 und BVV 2023 für Choropleth + Kiez-Aggregation auf den Polygon-Layer ah21.
+h2: 6. Geometrien + Coverage
+p: Stimmbezirks-Polygone sind verfügbar für: BTW 2017, 2021, 2025 sowie AGH + BVV 2016, 2021 (verwendet auch für 2023-Wiederholung) und 2026. BTW 2013 sowie AGH + BVV 2011 besitzen keine publizierten Stimmbezirks-Geometrien. Diese Wahlen sind ausschließlich auf Bezirks- und Berlin-Aggregat zugänglich; das Kiez-Aggregat ist für sie leer und die Choropleth-Komponente fällt auf 12 Bezirks-Polygone zurück mit einem Inline-Hinweis.
+p: Reprojektion: ETRS89 UTM33 → WGS84 via mapshaper Node-API, Simplify visvalingam + keep-shapes damit Sliver-Polygone den Simplify-Schritt überleben.
+h2: 7. Update-Cadence
+p: Wahldaten werden manuell nach jedem Wahlgang aktualisiert. Es gibt keinen Live-Refresh aus den Quell-APIs, weil die amtlichen Endergebnisse erst Wochen nach dem Wahltag vorliegen und die Bundeswahlleiterin / Landeswahlleiterin Berlin ihre Datensätze nicht über eine stabile API ausspielen.
+p: AGH und BVV 2026 zeigen das vorläufige amtliche Ergebnis vom Wahltag, dem 20.09.2026. Datenstand ist der 21.09.2026. Quelle ist wahlen-berlin.de (Landeswahlleiterin Berlin). Portal, Wahl-Detailseiten und API-/Tool-Antworten markieren die Zahlen als „vorläufig“ und zeigen ein Stand-Datum, wo verfügbar. Das Endergebnis erscheint voraussichtlich ab dem 30.09.2026 (BVV) und vom 05. bis 08.10.2026 (AGH). Beim Endergebnis ersetzt ein erneuter Datenimport die vorläufigen Zahlen. Die Kennzeichnung entfällt.
+p: Die Build-Pipeline lädt und parsed die Roh-Daten, baut die Stimmbezirks-Layer neu und aktualisiert das Kiez-Aggregat. Ein Lint-Gate blockt Wertungsvokabel in Code und Doku.
+h2: 8. Parteien-Aliase
+p: Parteien-Namen variieren über die Jahre (PDS → Die Linke, GRÜNE in Schreibvarianten). Eine case-insensitive Alias-Tabelle in scripts/wahlen/lib/partei-seed.ts resolvt Quell-Spalten zu kanonischen kurzname-Werten. Nicht-aufgelöste Eintragungen landen unter „Sonstige" und werden im Inspector nicht in Top-N geführt.
+h2: 9. Cross-Layer-Verknüpfung
+p: Wahl-Daten werden in Kiez-Pages (siehe Wahl-Verlauf-Block) und im Adress-Inspector mit anderen Layern (Mietspiegel-Wohnlage, Lärmkartierung, Mietspiegel-Soziale-Stufe, Kiez-Score) nebeneinander angezeigt, ohne kausale Verknüpfung oder wertendes Framing. Editorial-Richtlinien dazu im Cross-Layer-Templates-Preview (noindex, Co-Design-Stage).
+a: Cross-Layer-Templates-Preview
+a: Alle Wahlen einzeln

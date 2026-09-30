@@ -240,6 +240,7 @@ describe('methodik +page.svelte · EN (i18n C4a)', () => {
 			document.querySelector('script[data-testid="methodik-breadcrumb-jsonld"]')?.textContent ??
 				'{}'
 		);
+		expect(crumbs.itemListElement[0].item).toMatch(/\/en\/$/);
 		expect(crumbs.itemListElement[1].name).toBe('Methodology');
 		expect(crumbs.itemListElement[1].item).toMatch(/\/en\/methodik$/);
 	});

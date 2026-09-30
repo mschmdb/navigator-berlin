@@ -787,15 +787,15 @@ test.describe('i18n Block B2: Startseite /en', () => {
 
 // i18n Block B2, Entscheidung Matze 26.09. 1A: Shell (Header, Drawer, Footer,
 // Skip-Link) ist auf JEDER /en-Seite englisch, auch auf einer nicht
-// übersetzten (WCAG 3.1.1, konsistente Navigation). `/en/methodik/wahldaten`
-// dient als Kontrollseite: Sie bleibt bis C4b nicht übersetzt und zeigt den
-// Fallback-Disclaimer. `/en/methodik` ist seit C4a übersetzt. So prüft dieser
-// Test die Shell UNABHÄNGIG vom Content-Übersetzungsstatus.
+// übersetzten (WCAG 3.1.1, konsistente Navigation). `/en/impressum`
+// dient als Kontrollseite: Sie bleibt laut Entscheidung Matze 30.09. dauerhaft
+// deutsch und zeigt den Fallback-Disclaimer. So prüft dieser Test die Shell
+// UNABHÄNGIG vom Content-Übersetzungsstatus.
 test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht übersetzten', () => {
-	test('/en/methodik/wahldaten (nicht übersetzt): Shell englisch, Content-Fallback-Disclaimer sichtbar', async ({
+	test('/en/impressum (nicht übersetzt): Shell englisch, Content-Fallback-Disclaimer sichtbar', async ({
 		page
 	}) => {
-		await page.goto('/en/methodik/wahldaten');
+		await page.goto('/en/impressum');
 		await expect(page.getByTestId('translation-disclaimer').first()).toBeVisible();
 		await expect(page.getByRole('link', { name: 'Skip to main content' })).toHaveCount(1);
 		const footer = page.getByTestId('meta-footer').last();
@@ -806,11 +806,11 @@ test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht
 		);
 	});
 
-	test('/en/methodik/wahldaten: Menü-Drawer (Mobile) zeigt englische Meta-Links inkl. Kontakt', async ({
+	test('/en/impressum: Menü-Drawer (Mobile) zeigt englische Meta-Links inkl. Kontakt', async ({
 		page
 	}) => {
 		await page.setViewportSize({ width: 375, height: 800 });
-		await page.goto('/en/methodik/wahldaten');
+		await page.goto('/en/impressum');
 		await page.getByTestId('header-menu-trigger').click();
 		const drawer = page.getByTestId('mobile-meta-drawer');
 		await expect(drawer.getByRole('heading', { name: 'Menu' })).toBeVisible();
@@ -822,29 +822,29 @@ test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht
 	// vs. `langSwitcher`-Prop, site-header.svelte). Der Drawer darf also
 	// weiterhin einen sichtbaren `lang-switcher-link` zeigen, aber KEINEN
 	// `lang-switcher-trigger` (der gehört nur zur Header-Dropdown-Instanz).
-	test('/en/methodik/wahldaten: Menü-Drawer zeigt die Sprach-Linkliste (kein Dropdown-Trigger)', async ({
+	test('/en/impressum: Menü-Drawer zeigt die Sprach-Linkliste (kein Dropdown-Trigger)', async ({
 		page
 	}) => {
 		await page.setViewportSize({ width: 375, height: 800 });
-		await page.goto('/en/methodik/wahldaten');
+		await page.goto('/en/impressum');
 		await page.getByTestId('header-menu-trigger').click();
 		const drawer = page.getByTestId('mobile-meta-drawer');
 		const deLink = drawer.getByTestId('lang-switcher-link');
 		await expect(deLink).toBeVisible();
-		await expect(deLink).toHaveAttribute('href', /\/methodik\/wahldaten$/);
+		await expect(deLink).toHaveAttribute('href', /\/impressum$/);
 		await expect(drawer.getByTestId('lang-switcher-trigger')).toHaveCount(0);
 	});
 });
 
-// spec-i18n-teiluebersetzung-banner.md: `/en/methodik/wahldaten` ist NICHT im
+// spec-i18n-teiluebersetzung-banner.md: `/en/impressum` ist NICHT im
 // Teil-Übersetzungs-Register (nur `/kiez`, `/bezirk`, `/layer` sind es seit
 // i18n Block C1 -- `/explore` zog ins volle Übersetzungs-Register um, siehe
 // spec-i18n-c1-hinweise-layer-erklaerungen.md) -- Banner und `<main lang>`
 // bleiben deshalb exakt wie vor dieser Spec (Kontroll-Test, verhindert eine
 // versehentliche Ausweitung).
-test.describe('spec-i18n-teiluebersetzung-banner: /en/methodik/wahldaten unverändert (Kontrolle)', () => {
+test.describe('spec-i18n-teiluebersetzung-banner: /en/impressum unverändert (Kontrolle)', () => {
 	test('Banner bleibt "not yet available" (fallback-to-base), main lang=de', async ({ page }) => {
-		await page.goto('/en/methodik/wahldaten');
+		await page.goto('/en/impressum');
 		await expect(page.locator('main#main')).toHaveAttribute('lang', 'de');
 		const disclaimer = page.getByTestId('translation-disclaimer').first();
 		await expect(disclaimer).toBeVisible();

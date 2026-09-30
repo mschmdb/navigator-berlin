@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 // i18n Block C4a (spec-i18n-c4a-methodik-kern.md): /methodik,
 // /methodik/kiez-score und /methodik/cross-layer-templates sind im
-// Übersetzungs-Register. /methodik/wahldaten bleibt bis C4b Fallback.
+// Übersetzungs-Register. /methodik/wahldaten folgt in C4b (`i18n-c4b.e2e.ts`).
 //
 // Hinweis: hreflang-Ziele per Pfad-Regex prüfen, nicht mit fester Origin
 // (Preview-Server liefert die Request-Origin, nicht `prerender.origin`).
@@ -52,7 +52,9 @@ test.describe('i18n Block C4a: Methodik-Seiten englisch, ohne Banner, indexierba
 			const links = page.locator('main#main article a[href^="/"]');
 			// Unter Parallel-Last fehlen die Links direkt nach Load kurz; warten statt einmalig lesen.
 			await expect(links.nth(2)).toBeAttached();
-			const hrefs = await links.evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''));
+			const hrefs = await links.evaluateAll((els) =>
+				els.map((el) => el.getAttribute('href') ?? '')
+			);
 			expect(hrefs.length).toBeGreaterThanOrEqual(3);
 			expect(hrefs.filter((h) => !h.startsWith('/en/'))).toEqual([]);
 		});
@@ -77,16 +79,13 @@ test.describe('i18n Block C4a: Methodik-Seiten englisch, ohne Banner, indexierba
 		);
 	});
 
-	test('/en/methodik: Wahldaten-Link führt auf /en/methodik/wahldaten (Fallback-Banner bis C4b)', async ({
+	test('/en/methodik: Wahldaten-Link führt auf /en/methodik/wahldaten (seit C4b ohne Banner)', async ({
 		page
 	}) => {
 		await page.goto('/en/methodik');
 		await page.getByTestId('methodik-wahldaten-link').click();
 		await expect(page).toHaveURL(/\/en\/methodik\/wahldaten$/);
-		await expect(page.getByTestId('translation-disclaimer').first()).toHaveAttribute(
-			'data-variant',
-			'fallback-to-base'
-		);
+		await expect(page.getByTestId('translation-disclaimer')).toHaveCount(0);
 	});
 
 	test('/en/methodik/kiez-score: Dimensionsliste und Gewichte englisch', async ({ page }) => {

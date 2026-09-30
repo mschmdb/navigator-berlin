@@ -1,0 +1,40 @@
+h1: Architektur
+p: Open-Source-Stack, gehostet in Deutschland. Kein US-Cloud-Anbieter, kein Tracking, kein Cookie-Banner.
+h2: Hosting
+p: Server in Deutschland bei einem europäischen Anbieter. Domain ebenfalls bei einem deutschen Registrar.
+h2: Anwendung
+a: Svelte
+a: SvelteKit
+a: MapLibre GL
+a: OpenFreeMap
+a: Nominatim
+li: Styling: Tailwind CSS, IBM Plex Font-Familie (OFL-Lizenz)
+h2: Daten-Quellen
+a: ODIS Berlin
+li: FIS-Broker (Geoportal Berlin)
+li: Amt für Statistik Berlin-Brandenburg (auch Wahl-Daten AGH und BVV)
+a: Bundeswahlleiterin
+li: Deutscher Wetterdienst (DWD)
+li: OpenStreetMap
+p: Quelle, Lizenz und Stand-Datum pro Layer in der Methodik und auf der Lizenzen-Seite.
+a: Methodik
+a: Lizenzen-Seite
+h2: Schnittstelle für KI-Assistenten (alpha)
+p: Elf Tools für strukturierte Abfragen statt HTML-Scraping: Adress-Suche, Punkt-Abfrage, Layer-Discovery, Kiez-Profil, Layer-Metadaten plus vier Wahl-Tools (Wahlen auflisten, Ergebnis pro Adresse + Aggregations-Ebene, Wahl-Vergleich, Stimmbezirks-Geometrie) und zwei Kiez-Finder-Tools (Gewichte setzen, Finder-Zustand lesen). Antwort enthält jeweils Quelle, Lizenz und Stand-Datum.
+p: WebMCP ist ein W3C-Community-Group-Draft seit August 2025: eine browser-native JavaScript-API für Websites, die Tools an LLMs ausliefern. Noch keine Recommendation, Spec in Bewegung.
+a: WebMCP
+p: Bis WebMCP browser-nativ in den Stable-Releases ankommt, läuft die API über einen Polyfill, der von LLM-Browser-Extensions oder beim Mount geladen wird.
+p: Manifest-Discovery (Convention, nicht Standard): /.well-known/webmcp.json (spiegelt /webmcp-manifest.json). Klartext-Variante: /llms.txt / /llms-full.txt nach llmstxt.org.
+a: /.well-known/webmcp.json
+a: /webmcp-manifest.json
+a: /llms.txt
+a: /llms-full.txt
+a: llmstxt.org
+p: Spec-Status, Browser-Support und Anleitung für Chrome Canary: /webmcp.
+a: /webmcp
+h2: Nicht verwendet
+li: Cloudflare, AWS, GCP, Azure
+li: Google Analytics, Facebook Pixel, Werbe-Netzwerke
+li: Drittanbieter-Embeds
+li: Tracking-Cookies, Cookie-Banner
+li: User-Accounts, Login, Newsletter-Sammlung

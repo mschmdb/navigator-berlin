@@ -1,0 +1,47 @@
+h1: Umwelt- & Infrastruktur-Score
+p: Berliner Kieze und Bezirke nach fünf gleichgewichteten Dimensionen sortiert. Der Score misst Umwelt und Infrastruktur eines Kiezes, nicht den sozialen Status. Er bündelt öffentliche Daten pro Planungsraum. Eine einzelne Adresse kann davon abweichen.
+a: Vollständige Methodik · Kiez-Score
+p: Sortiert nach Score · hoch → niedrig
+th: Rang
+th: Kiez
+th: Bezirk
+th: Score ↓
+th: Ruhe & Luft
+th: Grün & Hitze
+th: Mobilität
+th: Versorgung
+th: Wohnschutz
+th: Kultur
+th: Kriminalität
+td: 1
+th: Alexanderplatz
+a: Alexanderplatz
+td: Mitte
+td: 70
+td: 30
+td: 40
+td: 50
+td: 60
+td: 55
+td: 45
+td: 70
+td: 2
+th: Wedding
+a: Wedding
+td: Mitte
+td: 60
+td: 30
+td: 40
+td: 50
+td: 60
+td: 55
+td: 45
+td: 70
+dt: Farbe je Spalte, relativ:
+dd: unterstes Viertel
+dd: unteres Mittel
+dd: oberes Mittel
+dd: oberstes Viertel
+dd: Kriminalität: neutral (kein Farbverlauf)
+p: Erfasste Kriminalität ist ein neutraler Kontext-Wert (Häufigkeitszahl je Bezirksregion, höher = mehr erfasste Fälle), kein Gut-Maß. Bewusst nicht sortierbar und nicht im Gesamt-Score: kein Sicherheits-Ranking. Grenzen unter Methodik.
+a: Methodik

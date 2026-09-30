@@ -16,7 +16,7 @@ describe('isRouteTranslated', () => {
 
 	it('a path not registered for EN stays untranslated (register is NOT a catch-all)', () => {
 		expect(isRouteTranslated('/kiez/mitte', 'en')).toBe(false);
-		expect(isRouteTranslated('/methodik/wahldaten', 'en')).toBe(false);
+		expect(isRouteTranslated('/impressum', 'en')).toBe(false);
 	});
 
 	// Review-Fund (i18n Block B): der Register-Eintrag ist ein PRAEFIX
@@ -30,7 +30,11 @@ describe('isRouteTranslated', () => {
 			{ pathname: '/explore', locale: 'en' },
 			{ pathname: '/methodik', locale: 'en' },
 			{ pathname: '/methodik/kiez-score', locale: 'en' },
-			{ pathname: '/methodik/cross-layer-templates', locale: 'en' }
+			{ pathname: '/methodik/cross-layer-templates', locale: 'en' },
+			{ pathname: '/methodik/wahldaten', locale: 'en' },
+			{ pathname: '/architektur', locale: 'en' },
+			{ pathname: '/webmcp', locale: 'en' },
+			{ pathname: '/umwelt-infrastruktur-score', locale: 'en' }
 		]);
 		expect(isRouteTranslated('/berlin-wahlen', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen', 'en')).toBe(true);
@@ -58,10 +62,29 @@ describe('isRouteTranslated', () => {
 		}
 	});
 
-	it('Block C4a: /methodik/wahldaten und unbekannte Unterseiten bleiben unübersetzt (kein prefix)', () => {
-		expect(isRouteTranslated('/methodik/wahldaten', 'en')).toBe(false);
-		expect(isRouteTranslated('/en/methodik/wahldaten', 'en')).toBe(false);
+	it('Block C4a: unbekannte Methodik-Unterseiten bleiben unübersetzt (kein prefix)', () => {
 		expect(isRouteTranslated('/methodik/unbekannt', 'en')).toBe(false);
+		expect(isRouteTranslated('/methodik/kiez-score/unbekannt', 'en')).toBe(false);
+	});
+
+	// Block C4b (`spec-i18n-c4b-wahl-methodik-technik.md`): vier exakte Einträge, ohne `prefix`.
+	it('Block C4b: Wahldaten, Architektur, WebMCP und Score-Rangliste sind exakt registriert', () => {
+		for (const path of [
+			'/methodik/wahldaten',
+			'/architektur',
+			'/webmcp',
+			'/umwelt-infrastruktur-score'
+		]) {
+			expect(isRouteTranslated(path, 'en'), path).toBe(true);
+			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
+			expect(isRouteTranslated(`${path}/unbekannt`, 'en'), `${path}/unbekannt`).toBe(false);
+		}
+	});
+
+	it('Block C4b: /lizenzen, /hitze, /kuehle-orte und /updates bleiben unübersetzt', () => {
+		for (const path of ['/lizenzen', '/hitze', '/kuehle-orte', '/updates', '/impressum']) {
+			expect(isRouteTranslated(path, 'en'), path).toBe(false);
+		}
 	});
 
 	// Block B2 (`spec-i18n-b2-shell.md`, Entscheidung Matze 26.09. 2A):

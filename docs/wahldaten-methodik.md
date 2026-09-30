@@ -41,7 +41,7 @@ aus `Datum`/`Zeit` der Wahlbezirks-CSV berechnet).
    pnpm data:wahl-analytik
    ```
 3. `src/lib/components/home/home-wahl-teaser.svelte`: `typLabel` der beiden 2026er-`CARDS`-Einträge von `„… · Vorläufig"` auf den finalen Text ändern -- das Badge dort ist statischer Text, kein Re-Ingest aktualisiert es automatisch (siehe Kommentar an `CARDS` im Code).
-4. `/methodik/wahldaten` anpassen: „(vorläufig)" in #cutoff und den Absatz in #update-cadence entfernen bzw. auf Endergebnis umstellen.
+4. `/methodik/wahldaten` anpassen: „(vorläufig)" in #cutoff und den Absatz in #update-cadence entfernen bzw. auf Endergebnis umstellen. Die Texte stehen als Messages in `messages/de.json` und `messages/en.json` (`methodik_wahldaten_cutoff_li_agh`, `methodik_wahldaten_cutoff_li_bvv`, `methodik_wahldaten_cadence_p2`, dazu `methodik_wahldaten_quellen_agh_desc`). DE und EN gemeinsam ändern: „(vorläufig)" und „(provisional)" entfallen, ebenso die Sätze zum vorläufigen Ergebnis. Danach werden diese Tests rot und müssen mitziehen: der DE-Snapshot `src/routes/(with-header)/methodik/wahldaten/__snapshots__/wahldaten-de.txt` (`pnpm exec vitest run <pfad> -u`, Diff prüfen), die EN- und DE-Unit-Tests zu „provisional“ und „vorläufig“ in `methodik/wahldaten/page.svelte.test.ts` sowie die e2e-Prüfung `#cutoff` („(provisional)“) in `tests/e2e/i18n-c4b.e2e.ts`.
 5. `pnpm data:wahl-check` grün prüfen, `wahl.vorlaeufig`/`source_updated_at` stichprobenhaft per SQL verifizieren.
 
 **Erster Prod-Deploy mit Pedersen-Volatilität:** `wahl_analytik_kiez.volatilitaet` enthält bis zum ersten Neubau der Analytik auf Prod noch die volle L1-Summe (doppelter Wert). Die Oberfläche beschriftet den Wert aber schon als Netto-Verschiebung. Beim Launch-Deploy fällt das prebuild-Gate ohnehin durch (Gruppen-Tabelle und 2026er-Wahlen fehlen auf Prod) und die Kette läuft inklusive `data:wahl-analytik`. Nach dem Deploy per SQL prüfen: `SELECT max(volatilitaet) FROM wahl_analytik_kiez` muss unter 0,5 liegen (Kiez-Pedersen lokal: 8,7 bis 28,7 %). Liegt er darüber, `pnpm data:wahl-analytik` auf Prod nachziehen.
@@ -343,11 +343,11 @@ Schlüssel = DB-uwbId des zugehörigen Briefwahl-Stimmbezirks): das
 Briefwahlbezirk-Feld im Shapefile variiert pro Geo-Slug, genau wie das
 UWB3-Äquivalent für Urnen (`pickUwb3`):
 
-| Geo-Slug           | Feld  | Beispielwert | Gruppen-ID-Format |
-| ------------------ | ----- | ------------ | ------------------ |
-| ah16               | BWB   | `011A` (BEZ+Suffix verschmolzen) | `${BEZ}B${Suffix}` |
-| btw17              | BWB2  | `2C`          | `${BWK}-${BEZ}-${BEZ}B${Suffix}-5` |
-| ah21 / ah26 / bt25 | BWB3  | `1A`          | AGH/BVV: `${BEZ}B${Suffix}`; BTW: `${BWK}-${BEZ}-${Suffix}-5` |
+| Geo-Slug           | Feld | Beispielwert                     | Gruppen-ID-Format                                             |
+| ------------------ | ---- | -------------------------------- | ------------------------------------------------------------- |
+| ah16               | BWB  | `011A` (BEZ+Suffix verschmolzen) | `${BEZ}B${Suffix}`                                            |
+| btw17              | BWB2 | `2C`                             | `${BWK}-${BEZ}-${BEZ}B${Suffix}-5`                            |
+| ah21 / ah26 / bt25 | BWB3 | `1A`                             | AGH/BVV: `${BEZ}B${Suffix}`; BTW: `${BWK}-${BEZ}-${Suffix}-5` |
 
 `ah23` fehlt bewusst: Wahllokale-Punkte statt Polygone, für Choropleth
 ungeeignet (siehe Geometrie-Coverage-Tabelle oben) -- agh23/bvv23 laufen über
