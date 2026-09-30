@@ -119,6 +119,7 @@
 	stats={data.stats}
 	score={data.score}
 	faq={data.faq}
+	faqLocale={data.faqLocale}
 	wahlVerlauf={data.wahlVerlauf}
 	comparison={data.comparison}
 	profileProse={data.profileProse}

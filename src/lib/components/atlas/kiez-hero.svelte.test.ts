@@ -265,3 +265,19 @@ describe('KiezHero.svelte', () => {
 		});
 	});
 });
+
+describe('KiezHero FAQ-Sprache (Block C3)', () => {
+	it('reicht faqLocale als contentLocale an die FaqSection durch (DE-Fallback auf EN-Seite)', async () => {
+		overwriteGetLocale(() => 'en');
+		render(KiezHero, {
+			profile: baseProfile,
+			stats: null,
+			score: null, faq: [{ question: 'Frage?', answer: 'Antwort.' }],
+			faqLocale: 'de'
+		});
+		const accordion = document.querySelector(
+			'[data-testid="faq-section"] .divide-y.divide-rule.border-y.border-rule'
+		);
+		expect(accordion?.getAttribute('lang')).toBe('de');
+	});
+});

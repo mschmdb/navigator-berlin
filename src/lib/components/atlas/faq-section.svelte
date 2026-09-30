@@ -5,11 +5,13 @@
 	`getFaqQna({pageType, slug, locale})` (Story 2.0 Schema, Story 2.5b Befüllung).
 
 	i18n Block B4a: Heading + Methodik-Satz sind übersetzt (Paraglide-Messages).
-	Die Q&A-Inhalte selbst (`items`, aus `faq_qna`) bleiben deutsch (Boundary,
-	Block C) -- der `lang="de"`-Wrap ums Accordion markiert das für Screenreader
-	(WCAG 3.1.2) auf `/en/…`-Seiten. Der Fallback-Hinweis (`TranslationDisclaimer`)
-	rendert NICHT hier, sondern einmal pro Seite im Layout
-	(`(with-header)/+layout.svelte`).
+	i18n Block C3: Die Q&A-Inhalte (`items`, aus `faq_qna`) kommen in der Seiten-
+	Locale. `contentLocale` nennt die tatsächliche Inhalts-Sprache. Weicht sie von
+	der Seiten-Locale ab (DE-Fallback, oder fest deutscher Inhalt wie `/hitze`),
+	trägt das Accordion `lang` für Screenreader (WCAG 3.1.2). Sonst kein `lang`.
+	Das FAQPage-JSON-LD spiegelt `items` und folgt damit dem sichtbaren Inhalt.
+	Der Fallback-Hinweis (`TranslationDisclaimer`) rendert NICHT hier, sondern
+	einmal pro Seite im Layout (`(with-header)/+layout.svelte`).
 
 	Progressive-Enhancement: erstes Q&A ist SSR-offen damit Crawler ohne JS die
 	Antwort sieht; bits-ui hydratet und toggelt anschließend per User-Click.
@@ -19,7 +21,7 @@
 	import JsonLd from './json-ld.svelte';
 	import { buildFaqPage } from '$lib/seo/jsonld-faqpage.js';
 	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import type { FaqEntry } from '$lib/data/types.js';
 
@@ -29,9 +31,14 @@
 		readonly items: readonly FaqEntry[];
 		readonly pageType: PageType;
 		readonly headingLevel?: 2 | 3;
+		/** Sprache von `items`. Ohne Angabe: Seiten-Locale. */
+		readonly contentLocale?: Locale;
 	}
 
-	const { items, pageType, headingLevel = 2 }: Props = $props();
+	const { items, pageType, headingLevel = 2, contentLocale }: Props = $props();
+	const contentLang = $derived(
+		contentLocale !== undefined && contentLocale !== getLocale() ? contentLocale : undefined
+	);
 	const faqJsonLd = $derived(
 		buildFaqPage({ items: items.map((i) => ({ question: i.question, answer: i.answer })) })
 	);
@@ -54,7 +61,7 @@
 		<Accordion.Root
 			type="single"
 			value={initialValue}
-			lang={getLocale() === 'de' ? undefined : 'de'}
+			lang={contentLang}
 			class="divide-y divide-rule border-y border-rule"
 		>
 			{#each items as item, index (item.question)}

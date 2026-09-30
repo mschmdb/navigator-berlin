@@ -95,15 +95,33 @@ describe('FaqSection.svelte', () => {
 			expect(link?.textContent).toMatch(/methodology page/i);
 		});
 
-		it('Q&A-Inhalte bleiben deutsch, Accordion trägt lang="de" (WCAG 3.1.2), Heading bleibt ohne lang', async () => {
+		it('Q&A auf EN-Seite mit EN-Inhalt: kein lang-Attribut, Heading ohne lang', async () => {
 			overwriteGetLocale(() => 'en');
-			render(FaqSection, { items, pageType: 'kiez' });
+			render(FaqSection, { items, pageType: 'kiez', contentLocale: 'en' });
 			const section = document.querySelector('[data-testid="faq-section"]');
-			const heading = section?.querySelector('h2');
-			expect(heading?.hasAttribute('lang')).toBe(false);
+			expect(section?.querySelector('h2')?.hasAttribute('lang')).toBe(false);
+			const accordion = section?.querySelector('.divide-y.divide-rule.border-y.border-rule');
+			expect(accordion?.hasAttribute('lang')).toBe(false);
+		});
+
+		it('DE-Fallback auf EN-Seite: Accordion trägt lang="de" (WCAG 3.1.2)', async () => {
+			overwriteGetLocale(() => 'en');
+			render(FaqSection, { items, pageType: 'kiez', contentLocale: 'de' });
+			const section = document.querySelector('[data-testid="faq-section"]');
+			expect(section?.querySelector('h2')?.hasAttribute('lang')).toBe(false);
 			const accordion = section?.querySelector('.divide-y.divide-rule.border-y.border-rule');
 			expect(accordion?.getAttribute('lang')).toBe('de');
 			expect(accordion?.textContent).toContain('Wie laut ist es in Mitte?');
+		});
+
+		it('FAQPage-JSON-LD folgt dem sichtbaren Inhalt (EN)', async () => {
+			overwriteGetLocale(() => 'en');
+			const enItems: FaqEntry[] = [{ question: 'How loud is Mitte?', answer: 'Fairly loud.' }];
+			render(FaqSection, { items: enItems, pageType: 'kiez', contentLocale: 'en' });
+			const script = document.querySelector('script[data-testid="faq-jsonld"]');
+			const parsed = JSON.parse(script?.textContent ?? '{}');
+			expect(parsed.mainEntity[0].name).toBe('How loud is Mitte?');
+			expect(parsed.mainEntity[0].acceptedAnswer.text).toBe('Fairly loud.');
 		});
 	});
 });

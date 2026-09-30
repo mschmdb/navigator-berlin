@@ -38,7 +38,7 @@
 	import { describePetKategorie, formatPet } from '$lib/data/faq-helpers/klima.js';
 	import { dimensionLabel } from './inspector-panel/internal/kiez-score-display.js';
 	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { formatCount, formatMonthYear } from '$lib/i18n/format.js';
 	import { COMPOSITE_DIMENSIONS, type KiezScoreDimension } from '$lib/data';
@@ -50,6 +50,7 @@
 		readonly stats: KiezStatsRow | null;
 		readonly score: KiezScore | null;
 		readonly faq: readonly FaqEntry[];
+		readonly faqLocale?: Locale;
 		readonly wahlVerlauf?: readonly WahlVerlaufRow[];
 		readonly comparison?: readonly ComparisonDimRow[];
 		readonly profileProse?: readonly string[];
@@ -60,6 +61,7 @@
 		stats,
 		score,
 		faq,
+		faqLocale,
 		wahlVerlauf = [],
 		comparison = [],
 		profileProse = []
@@ -324,7 +326,7 @@
 	<KiezWahlVerlauf kiezName={profile.name} rows={wahlVerlauf} />
 
 	{#if faq.length > 0}
-		<FaqSection items={faq} pageType="kiez" />
+		<FaqSection items={faq} pageType="kiez" contentLocale={faqLocale} />
 	{:else}
 		<section aria-labelledby="faq-placeholder-heading" class="space-y-3">
 			<h2 id="faq-placeholder-heading" class="font-serif text-2xl text-ink">

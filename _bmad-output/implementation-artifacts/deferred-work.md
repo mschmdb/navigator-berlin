@@ -238,3 +238,18 @@
   summary: `collectLlmsData` reicht `origin` an Kiez-/Bezirks-Markdown weiter: Test ergänzen, Origin mit Schluss-Slash normalisieren.
   evidence: Review Textbereinigung #15; Default ist Prod-URL, wirkt nur auf Staging/Preview.
 
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c3-faq.md`
+  summary: `renderAll` in `scripts/render-faq.ts` filtert Templates nicht nach Cluster: jede Layer-Seite bekommt alle 17 Layer-Templates (`applicableTo: [layer]`, `requires: []`), unabhängig vom Cluster des Layers. Cluster-Filter über das Layer-Bundle ergänzen.
+  evidence: C3-Spec, Never-Liste; bewusst nicht Teil von C3, wirkt gleich auf DE und EN.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c3-faq.md`
+  summary: `getFaqQna` hat kein ORDER BY, die FAQ-Reihenfolge auf Kiez-, Bezirk- und Layer-Seiten hängt von der physischen Zeilenfolge nach TRUNCATE+INSERT ab.
+  evidence: Review C3 (Edge Case). Unverifiziert, ob Postgres die Einfügereihenfolge je ändert. Ein ORDER BY `template_id` würde die redaktionelle Reihenfolge ändern, sauber wäre eine `sort_order`-Spalte aus der YAML-Position (Migration).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c3-faq.md`
+  summary: FAQ `laerm-welche-quellen` sagt, die Karte zeige nur Straßenverkehrslärm LDEN; `layer_explain_laerm_2023_long` sagt „Straßen-, Schienen- und Fluglärm“. Eine der beiden Aussagen ist falsch (DE und EN).
+  evidence: Review C3 (Blind Hunter). Unverifiziert: Datensatz-Beschreibung im Umweltatlas 2023 prüfen, dann FAQ oder Layer-Erklärung korrigieren.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c3-faq.md`
+  summary: Methodik `gruenversorgung-2023` (`layer-methodology.ts:212`) nennt „Skala gering bis sehr hoch“, die Daten haben `kategorie` gut/mittel/schlecht.
+  evidence: Beim C3-Abgleich gefunden (Datenwerte gezählt: gut 291, schlecht 136, mittel 113). DE und EN-Message korrigieren.

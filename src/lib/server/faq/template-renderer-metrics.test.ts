@@ -28,12 +28,12 @@ const EMPTY_AGG = {
 	heritage: { denkmalPerKm2: null, stolpersteinePerKm2: null }
 } as unknown as TemplateAggregate;
 
-function ctxWith(metric: MetricContext): TemplateContext {
+function ctxWith(metric: MetricContext, locale: TemplateContext['locale'] = 'de'): TemplateContext {
 	return {
 		pageType: 'kiez',
 		slug: 'test-kiez',
 		name: 'Test-Kiez',
-		locale: 'de',
+		locale,
 		aggregate: EMPTY_AGG,
 		metrics: new Map([['gruenHitze', metric]])
 	};
@@ -57,7 +57,7 @@ describe('template-renderer metrics slots (Story 11.3)', () => {
 				quartil: 1,
 				total: 143,
 				compareValue: 65,
-				compareLabel: 'Bezirksschnitt'
+				compareKind: 'bezirk'
 			})
 		);
 		expect(out?.answer).toBe('Test-Kiez: 72 von 100 (Platz 12 von 143), über dem Bezirksschnitt.');
@@ -72,7 +72,7 @@ describe('template-renderer metrics slots (Story 11.3)', () => {
 				quartil: 4,
 				total: 143,
 				compareValue: 60,
-				compareLabel: 'Bezirksschnitt'
+				compareKind: 'bezirk'
 			})
 		);
 		expect(out?.answer).toContain('unteres Viertel');
@@ -89,9 +89,55 @@ describe('template-renderer metrics slots (Story 11.3)', () => {
 				quartil: 2,
 				total: 143,
 				compareValue: 65,
-				compareLabel: 'Bezirksschnitt'
+				compareKind: 'bezirk'
 			})
 		);
 		expect(out?.answer).toContain('etwa im Bezirksschnitt');
+	});
+
+	it('EN: Rang, Vergleich und Anti-Stigma-Formulierung', () => {
+		const strong = renderTemplate(
+			TEMPLATE,
+			ctxWith(
+				{ value: 72, rang: 12, quartil: 1, total: 143, compareValue: 65, compareKind: 'bezirk' },
+				'en'
+			)
+		);
+		expect(strong?.answer).toBe(
+			'Test-Kiez: 72 von 100 (rank 12 of 143), above the district average.'
+		);
+		const weak = renderTemplate(
+			TEMPLATE,
+			ctxWith(
+				{ value: 30, rang: 142, quartil: 4, total: 143, compareValue: 60, compareKind: 'bezirk' },
+				'en'
+			)
+		);
+		expect(weak?.answer).toContain('bottom quartile');
+		expect(weak?.answer).toContain('below the district average');
+		expect(weak?.answer).not.toContain('142');
+		const same = renderTemplate(
+			TEMPLATE,
+			ctxWith(
+				{ value: 65, rang: 70, quartil: 2, total: 143, compareValue: 65, compareKind: 'berlin' },
+				'en'
+			)
+		);
+		expect(same?.answer).toContain('about the same as the Berlin median');
+	});
+
+	it('DE: Berlin-Median bleibt unverändert', () => {
+		const out = renderTemplate(
+			TEMPLATE,
+			ctxWith({
+				value: 65,
+				rang: 70,
+				quartil: 2,
+				total: 143,
+				compareValue: 40,
+				compareKind: 'berlin'
+			})
+		);
+		expect(out?.answer).toContain('über dem Berlin-Median');
 	});
 });

@@ -109,6 +109,7 @@
 	profile={data.profile}
 	stats={data.stats}
 	faq={data.faq}
+	faqLocale={data.faqLocale}
 	comparison={data.comparison}
 	profileProse={data.profileProse}
 />

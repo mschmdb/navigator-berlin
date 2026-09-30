@@ -1,0 +1,56 @@
+cluster: gruen
+locale: en
+templates:
+  - id: gruen-versorgung-bezirk
+    applicableTo: [bezirk]
+    requires: [gruen.dominantVersorgung]
+    question: "What is the green space provision in the Bezirk {name}?"
+    answer: >-
+      In the Bezirk {name}, the dominant category for green space provision near homes is
+      {gruenKategorie}. {gruenErklaerung} Source: {gruenSource}, as of {gruenStand}.
+
+  - id: gruen-versorgung-kiez
+    applicableTo: [kiez]
+    requires: [gruen.dominantVersorgung]
+    question: "What is the green space provision in the Kiez {name}?"
+    answer: >-
+      Green space provision near homes in the Kiez {name} is in the category
+      {gruenKategorie}. {gruenErklaerung} Source: {gruenSource}, as of {gruenStand}.
+
+  - id: gruen-anzahl-anlagen
+    applicableTo: [bezirk]
+    requires: [gruen.gruenanlagenCount]
+    question: "How many public green spaces are there in {name}?"
+    answer: >-
+      The Bezirk {name} has {gruenanlagenCount} officially designated public green spaces,
+      according to the current register of the Senate Department. Private gardens and
+      cultivated allotment gardens do not count in this category.
+
+  - id: gruen-was-bedeutet-versorgung
+    applicableTo: [layer]
+    requires: []
+    question: "What does green space provision near homes mean?"
+    answer: >-
+      For each planning area, the Senate Department calculates how many square metres of
+      green space near homes are available per resident within the catchment area. The
+      benchmark is 6 square metres per person. Whether a planning area reaches or misses
+      this value determines the category “good”, “moderate” or “low”.
+
+  - id: gruen-rolle-hitze
+    applicableTo: [layer]
+    requires: []
+    question: "What role do green spaces play in heat mitigation?"
+    answer: >-
+      Trees and larger green spaces lower the air temperature through shading and
+      evaporation. Urban climate analyses show that densely built neighbourhoods with
+      little vegetation stay measurably warmer on summer days than areas with comparable
+      buildings and more greenery. The climate category on this map reflects that.
+
+  - id: gruen-gruenhitze-einordnung
+    applicableTo: [bezirk, kiez]
+    requires: [gruen.dominantVersorgung]
+    question: "How green and cool is {name} in comparison?"
+    answer: >-
+      {name} scores {gruenHitzeScore} out of 100 in the Green & heat score
+      ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green space provision
+      and heat exposure. A higher value means greener and cooler.

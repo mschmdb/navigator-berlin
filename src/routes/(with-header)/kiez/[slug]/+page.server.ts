@@ -1,9 +1,9 @@
 import { error } from '@sveltejs/kit';
 import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
-import { getLocale } from '$lib/paraglide/runtime.js';
+import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
-import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
+import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
 import { buildKiezeInBezirk, pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { featureFlags } from '$lib/data/feature-flags.js';
@@ -20,7 +20,8 @@ export const prerender = true;
  * Story 2.4 T1.1: 143 prerendered Kiez-Routes (Variante A LOR-Bezirksregion
  * 2021, User-Lock 2026-05-16), je einmal DE + einmal `/en` (Crawl-Links im
  * Layout, ADR-005). i18n Block B4a übersetzt den Seitenrahmen; Prosa
- * (`profileProse`) und FAQ-Inhalte (`faq_qna`) bleiben deutsch (Boundary).
+ * (`profileProse`) bleibt deutsch (Boundary). FAQ-Inhalte (`faq_qna`) kommen in der
+ * Seiten-Locale, mit DE-Fallback (Block C3).
  */
 export const entries: EntryGenerator = async () => {
 	const slugs = await readKiezSlugsFromGeoJson();
@@ -75,24 +76,6 @@ async function tryLoadKiezComparison(slug: string) {
 	}
 }
 
-// i18n Block B4a: FAQ-Inhalte bleiben bewusst deutsch (Boundary „Never":
-// keine Übersetzung von `faq_qna`-Frage-/Antwort-Inhalten; `faq-section.svelte`
-// markiert sie per `lang="de"` fürs Screenreader-WCAG-3.1.2). Den Fallback-
-// Hinweis (`TranslationDisclaimer`) zeigt nicht diese Section, sondern einmal
-// pro Seite das Layout (`(with-header)/+layout.svelte`), solange `/kiez` nicht
-// im Übersetzungs-Register steht (`deferred-work.md`).
-async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
-	if (!process.env.DATABASE_URL) return [];
-	try {
-		const rows = await getFaqQna({ pageType: 'kiez', slug, locale: 'de' });
-		return rows.map((r) => ({ question: r.question, answer: r.answer }));
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[kiez-page] WARN: faq_qna unavailable (${msg})\n`);
-		return [];
-	}
-}
-
 // i18n Block B4a: geteilte Zuordnung camelCase-Datenschlüssel → hyphenierter
 // KiezScoreDimension-Anzeige-Schlüssel, siehe `comparison-types.ts`
 // (Review-Fund: vormals 3x dupliziert -- hier, in `bezirk/[slug]/+page.server.ts`
@@ -104,6 +87,7 @@ export type KiezPageData = {
 	readonly stats: KiezStats | null;
 	readonly score: KiezScore | null;
 	readonly faq: readonly FaqEntry[];
+	readonly faqLocale: Locale;
 	readonly siblings: readonly KiezRef[];
 	readonly wahlVerlauf: readonly WahlVerlaufRow[];
 	readonly comparison: readonly ComparisonDimRow[];
@@ -241,11 +225,11 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		throw error(404, m.kiez_page_not_found({ slug }, { locale: getLocale() }));
 	}
 	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
-	const [stats, score, faq, siblings, wahlVerlauf, rank, comparisonMap, profileProse] =
+	const [stats, score, faqResult, siblings, wahlVerlauf, rank, comparisonMap, profileProse] =
 		await Promise.all([
 			tryLoadKiezStats(slug),
 			tryLoadKiezScore(slug),
-			tryLoadFaq(slug),
+			getFaqForPage({ pageType: 'kiez', slug, locale: getLocale() }),
 			tryLoadSiblings(slug, profile.bezirk),
 			tryBuildWahlVerlauf(slug),
 			tryLoadKiezRank(slug),
@@ -274,7 +258,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		profile,
 		stats,
 		score,
-		faq,
+		faq: faqResult.items,
+		faqLocale: faqResult.locale,
 		siblings,
 		wahlVerlauf,
 		comparison,

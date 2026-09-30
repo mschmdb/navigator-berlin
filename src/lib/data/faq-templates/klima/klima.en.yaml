@@ -1,0 +1,56 @@
+cluster: klima
+locale: en
+templates:
+  - id: klima-pet-bezirk
+    applicableTo: [bezirk]
+    requires: [klima.meanPet]
+    question: "How hot does the Bezirk {name} get in summer?"
+    answer: >-
+      The mean Physiological Equivalent Temperature (PET) in the Bezirk {name} is
+      {klimaPet} degrees Celsius (classification: {klimaKategorie}). {klimaErklaerung}
+      Source: {klimaSource}, as of {klimaStand}.
+
+  - id: klima-pet-kiez
+    applicableTo: [kiez]
+    requires: [klima.meanPet]
+    question: "How warm does the Kiez {name} get on hot days?"
+    answer: >-
+      The mean PET in the Kiez {name} is {klimaPet} degrees Celsius. {klimaErklaerung}
+      Source: {klimaSource}, as of {klimaStand}.
+
+  - id: klima-was-ist-pet
+    applicableTo: [layer]
+    requires: []
+    question: "What is the Physiological Equivalent Temperature (PET)?"
+    answer: >-
+      PET is a bioclimatic indicator. It states which air temperature in an enclosed room
+      would correspond to the perceived temperature outdoors. Wind, humidity and radiation
+      feed into it. The value is suited to comparing heat stress across urban areas.
+
+  - id: klima-was-ist-hitzetag
+    applicableTo: [layer]
+    requires: []
+    question: "What counts as a hot day?"
+    answer: >-
+      The German Weather Service (Deutscher Wetterdienst) counts a day with a maximum
+      temperature of 30 degrees Celsius or more as a hot day. The number of hot days per
+      year in Berlin has risen markedly since the 1990s, as documented in the 1991-2020
+      climate normal period.
+
+  - id: klima-normalperiode
+    applicableTo: [layer]
+    requires: []
+    question: "What does climate normal period mean?"
+    answer: >-
+      A climate normal period is a 30-year reference period that the World Meteorological
+      Organization uses to make weather averages comparable. For Berlin, we use the
+      current period 1991-2020 as the basis for comparison.
+
+  - id: klima-rolle-versiegelung
+    applicableTo: [layer]
+    requires: []
+    question: "What role does surface sealing play in the urban climate?"
+    answer: >-
+      Asphalt and stone store heat and release it again at night. Heavily sealed
+      neighbourhoods cool down less well than neighbourhoods with vegetation or open
+      water. The urban climate analysis treats sealing as one factor among several.

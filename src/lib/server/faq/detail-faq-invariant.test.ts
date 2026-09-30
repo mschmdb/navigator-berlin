@@ -34,4 +34,31 @@ describe('Detail-FAQ-Invariante (Story 11.2)', () => {
 		// Nach der Migration tragen die verschobenen Erklär-Templates layer-Scope.
 		expect(explainerOnLayer.length).toBeGreaterThan(5);
 	});
+
+	it('EN-Templates spiegeln DE (IDs, applicableTo, requires, Slots)', async () => {
+		const loaded = await loadAllFaqTemplates();
+		const slotsOf = (text: string) =>
+			[...text.matchAll(/\{([a-zA-Z][a-zA-Z0-9]*)\}/g)].map((x) => x[1]!).sort();
+		for (const de of loaded.filter((l) => l.locale === 'de')) {
+			const en = loaded.find((l) => l.locale === 'en' && l.cluster === de.cluster);
+			expect(en, `EN-Datei fehlt für ${de.cluster}`).toBeDefined();
+			expect(en!.file.templates.map((t) => t.id)).toEqual(de.file.templates.map((t) => t.id));
+			for (const deT of de.file.templates) {
+				const enT = en!.file.templates.find((t) => t.id === deT.id)!;
+				expect(enT.applicableTo, deT.id).toEqual(deT.applicableTo);
+				expect(enT.requires, deT.id).toEqual(deT.requires);
+				expect(slotsOf(enT.question), `${deT.id} question`).toEqual(slotsOf(deT.question));
+				expect(slotsOf(enT.answer), `${deT.id} answer`).toEqual(slotsOf(deT.answer));
+				expect(enT.editorialNote, deT.id).toBeUndefined();
+			}
+		}
+	});
+
+	it('Anti-Stigma-Disclaimer existiert auch in EN', async () => {
+		const loaded = await loadAllFaqTemplates();
+		const en = loaded.find((l) => l.locale === 'en' && l.cluster === 'wohnen');
+		const disclaimer = en?.file.templates.find((t) => t.id === 'wohnen-stigma-disclaimer');
+		expect(disclaimer).toBeDefined();
+		expect(disclaimer!.applicableTo).toEqual(expect.arrayContaining(['bezirk', 'kiez']));
+	});
 });

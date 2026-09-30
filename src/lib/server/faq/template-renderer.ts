@@ -48,15 +48,18 @@ export interface TemplateAggregate {
 /**
  * Rang + Vergleich pro Score-Dimension (Story 11.3). `value` = Wert dieser Fläche,
  * `compareValue` = Bezirksschnitt (Kiez) bzw. Berliner Median (Bezirk),
- * `compareLabel` die passende Beschriftung. Optional, da Layer-Seiten kein Rang.
+ * `compareKind` benennt den Vergleichswert, das Label folgt der Template-Locale.
+ * Optional, da Layer-Seiten kein Rang.
  */
+export type CompareKind = 'bezirk' | 'berlin';
+
 export interface MetricContext {
 	readonly value: number | null;
 	readonly rang: number | null;
 	readonly quartil: number | null;
 	readonly total: number;
 	readonly compareValue: number | null;
-	readonly compareLabel: string;
+	readonly compareKind: CompareKind;
 }
 
 export interface TemplateContext {
@@ -70,11 +73,48 @@ export interface TemplateContext {
 }
 
 /** Neutrale, nicht-wertende Richtungsphrase für den Vergleich (Story 11.3). */
-function compareDirection(value: number | null, compareValue: number | null): string | null {
+const COMPARE_PHRASES: Record<
+	TemplateLocale,
+	{
+		readonly same: string;
+		readonly above: string;
+		readonly below: string;
+		readonly label: Record<CompareKind, string>;
+	}
+> = {
+	de: {
+		same: 'etwa im',
+		above: 'über dem',
+		below: 'unter dem',
+		label: { bezirk: 'Bezirksschnitt', berlin: 'Berlin-Median' }
+	},
+	en: {
+		same: 'about the same as',
+		above: 'above',
+		below: 'below',
+		label: { bezirk: 'the district average', berlin: 'the Berlin median' }
+	}
+};
+
+const NUMBER_LOCALE: Record<TemplateLocale, string> = { de: 'de-DE', en: 'en-GB' };
+
+/** Der Rang steht mitten im Satz: EN-Label „Rank 12 of 143“ wird zu „rank 12 of 143“. */
+function rankInSentence(label: string, locale: TemplateLocale): string {
+	return locale === 'en' ? label.replace(/^Rank /, 'rank ') : label;
+}
+
+function compareSentence(
+	value: number | null,
+	compareValue: number | null,
+	kind: CompareKind,
+	locale: TemplateLocale
+): string | null {
 	if (value === null || compareValue === null) return null;
+	const phrases = COMPARE_PHRASES[locale];
 	const delta = value - compareValue;
-	if (Math.abs(delta) < 1) return 'etwa im';
-	return delta > 0 ? 'über dem' : 'unter dem';
+	const direction = Math.abs(delta) < 1 ? phrases.same : delta > 0 ? phrases.above : phrases.below;
+	const label = phrases.label[kind];
+	return `${direction} ${label}`;
 }
 
 export interface RenderedFaq {
@@ -113,13 +153,13 @@ export function resolveAggregatePath(
 }
 
 /**
- * Formatiert das `sourceUpdatedAt`-ISO-Datum als deutsches „Monat YYYY".
- * Beispiel: `2023-06-01` → „Juni 2023".
+ * Formatiert das `sourceUpdatedAt`-ISO-Datum locale-abhängig als „Monat YYYY".
+ * Beispiel: `2023-06-01` → „Juni 2023" (de) / „June 2023" (en).
  */
-export function formatSourceStand(iso: string): string {
+export function formatSourceStand(iso: string, locale: TemplateLocale = 'de'): string {
 	const date = new Date(iso);
 	if (isNaN(date.getTime())) return iso;
-	return date.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+	return date.toLocaleDateString(NUMBER_LOCALE[locale], { month: 'long', year: 'numeric' });
 }
 
 /**
@@ -139,6 +179,9 @@ export function formatSourceStand(iso: string): string {
  *   `{klimaSource}`, `{klimaStand}`
  */
 function buildSlotMap(ctx: TemplateContext): Record<string, string> {
+	const locale = ctx.locale;
+	const opts = { locale };
+	const stand = (iso: string) => formatSourceStand(iso, locale);
 	const slots: Record<string, string> = {
 		name: ctx.name,
 		slug: ctx.slug
@@ -147,57 +190,57 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 	const laerm = ctx.aggregate.laerm.dominantCategory;
 	if (laerm) {
 		const raw = typeof laerm.value === 'string' ? laerm.value : null;
-		slots.laermKategorie = describeLaermCategoryDe(raw);
-		slots.laermErklaerung = laermErklaerungDe(raw);
-		slots.laermSource = sourceLabel(laerm.layer);
-		slots.laermStand = formatSourceStand(laerm.sourceUpdatedAt);
+		slots.laermKategorie = describeLaermCategoryDe(raw, opts);
+		slots.laermErklaerung = laermErklaerungDe(raw, opts);
+		slots.laermSource = sourceLabel(laerm.layer, opts);
+		slots.laermStand = stand(laerm.sourceUpdatedAt);
 	}
 
 	const gruen = ctx.aggregate.gruen;
 	if (gruen.dominantVersorgung) {
 		const raw =
 			typeof gruen.dominantVersorgung.value === 'string' ? gruen.dominantVersorgung.value : null;
-		slots.gruenKategorie = describeGruenversorgungDe(raw);
-		slots.gruenErklaerung = gruenErklaerungDe(raw);
-		slots.gruenSource = sourceLabel(gruen.dominantVersorgung.layer);
-		slots.gruenStand = formatSourceStand(gruen.dominantVersorgung.sourceUpdatedAt);
+		slots.gruenKategorie = describeGruenversorgungDe(raw, opts);
+		slots.gruenErklaerung = gruenErklaerungDe(raw, opts);
+		slots.gruenSource = sourceLabel(gruen.dominantVersorgung.layer, opts);
+		slots.gruenStand = stand(gruen.dominantVersorgung.sourceUpdatedAt);
 	}
 	if (gruen.gruenanlagenCount && typeof gruen.gruenanlagenCount.value === 'number') {
-		slots.gruenanlagenCount = gruen.gruenanlagenCount.value.toLocaleString('de-DE');
+		slots.gruenanlagenCount = gruen.gruenanlagenCount.value.toLocaleString(NUMBER_LOCALE[locale]);
 	}
 	if (gruen.spielplaetzeCount && typeof gruen.spielplaetzeCount.value === 'number') {
-		slots.spielplaetzeCount = gruen.spielplaetzeCount.value.toLocaleString('de-DE');
+		slots.spielplaetzeCount = gruen.spielplaetzeCount.value.toLocaleString(NUMBER_LOCALE[locale]);
 	}
 
 	const oepnv = ctx.aggregate.oepnv.stopsPerKm2;
 	if (oepnv && typeof oepnv.value === 'number') {
-		slots.oepnvStopsPerKm2 = formatStopsPerKm2(oepnv.value);
-		slots.oepnvDichte = describeOepnvDichte(oepnv.value);
-		slots.oepnvErklaerung = oepnvErklaerungDe(oepnv.value);
-		slots.oepnvSource = sourceLabel(oepnv.layer);
-		slots.oepnvStand = formatSourceStand(oepnv.sourceUpdatedAt);
+		slots.oepnvStopsPerKm2 = formatStopsPerKm2(oepnv.value, opts);
+		slots.oepnvDichte = describeOepnvDichte(oepnv.value, opts);
+		slots.oepnvErklaerung = oepnvErklaerungDe(oepnv.value, opts);
+		slots.oepnvSource = sourceLabel(oepnv.layer, opts);
+		slots.oepnvStand = stand(oepnv.sourceUpdatedAt);
 	}
 
 	const wohnen = ctx.aggregate.wohnen;
 	if (wohnen.dominantWohnlage) {
 		const raw =
 			typeof wohnen.dominantWohnlage.value === 'string' ? wohnen.dominantWohnlage.value : null;
-		slots.wohnenWohnlage = describeWohnlageDe(raw);
-		slots.wohnenSource = sourceLabel(wohnen.dominantWohnlage.layer);
-		slots.wohnenStand = formatSourceStand(wohnen.dominantWohnlage.sourceUpdatedAt);
+		slots.wohnenWohnlage = describeWohnlageDe(raw, opts);
+		slots.wohnenSource = sourceLabel(wohnen.dominantWohnlage.layer, opts);
+		slots.wohnenStand = stand(wohnen.dominantWohnlage.sourceUpdatedAt);
 	}
 	if (wohnen.dominantMss) {
 		const raw = typeof wohnen.dominantMss.value === 'string' ? wohnen.dominantMss.value : null;
-		slots.wohnenMssBeschreibung = mssBeschreibungDe(raw);
+		slots.wohnenMssBeschreibung = mssBeschreibungDe(raw, opts);
 	}
 
 	const klima = ctx.aggregate.klima.meanPet;
 	if (klima && typeof klima.value === 'number') {
-		slots.klimaPet = formatPet(klima.value);
-		slots.klimaKategorie = describePetKategorie(klima.value);
-		slots.klimaErklaerung = petErklaerungDe(klima.value);
-		slots.klimaSource = sourceLabel(klima.layer);
-		slots.klimaStand = formatSourceStand(klima.sourceUpdatedAt);
+		slots.klimaPet = formatPet(klima.value, opts);
+		slots.klimaKategorie = describePetKategorie(klima.value, opts);
+		slots.klimaErklaerung = petErklaerungDe(klima.value, opts);
+		slots.klimaSource = sourceLabel(klima.layer, opts);
+		slots.klimaStand = stand(klima.sourceUpdatedAt);
 	}
 
 	// Story 11.3: Rang + Vergleich je Score-Dimension. Slots `<dim>Score`,
@@ -205,9 +248,9 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 	if (ctx.metrics) {
 		for (const [key, m] of ctx.metrics) {
 			if (m.value !== null) slots[`${key}Score`] = Math.round(m.value).toString();
-			slots[`${key}Rang`] = formatRank(m.rang, m.quartil, m.total);
-			const dir = compareDirection(m.value, m.compareValue);
-			if (dir) slots[`${key}Vergleich`] = `${dir} ${m.compareLabel}`;
+			slots[`${key}Rang`] = rankInSentence(formatRank(m.rang, m.quartil, m.total, opts), locale);
+			const vergleich = compareSentence(m.value, m.compareValue, m.compareKind, locale);
+			if (vergleich) slots[`${key}Vergleich`] = vergleich;
 		}
 	}
 

@@ -418,5 +418,5 @@
 		{m.layer_page_inspector_link_label()} <span aria-hidden="true">→</span>
 	</a>
 
-	<FaqSection items={data.faq} pageType="layer" />
+	<FaqSection items={data.faq} pageType="layer" contentLocale={data.faqLocale} />
 </article>

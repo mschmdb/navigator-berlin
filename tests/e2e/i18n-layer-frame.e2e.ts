@@ -14,9 +14,16 @@ import { expect, test } from '@playwright/test';
 // Omissions) ist jetzt ebenfalls lokalisiert (Messages), kein lang="de"
 // mehr dafür -- der Methodik-Block ist damit komplett aus der Teil-
 // Übersetzung raus. `/layer` bleibt trotzdem im TEIL-Übersetzungs-Register
-// (FAQ-Inhalte bleiben deutsch, eigener Block, Boundary C2): `/en/layer/…`
+// (Register-Eintrag erst im Abschluss-Block; FAQ seit C3 englisch): `/en/layer/…`
 // zeigt weiterhin das Teil-Übersetzungs-Banner und bleibt noindex ohne
 // hreflang (siehe `i18n-routing.e2e.ts`).
+//
+// i18n Block C3 (spec-i18n-c3-faq.md): FAQ kommt in der Seiten-Locale aus
+// `faq_qna` (EN-Zeilen), ohne lang="de".
+
+// Ordnungsunabhängig: `faq_qna` wird ohne ORDER BY gelesen.
+const DE_QUESTION_START =
+	/^(Wie|Was|Warum|Welche[rsmn]?|Wo|Wann|Wer|Worin|Wodurch|Berücksichtigt|Bewertet|Ist|Gibt|Wird)\b/;
 
 const LAYER_WITH_METHODOLOGY = 'laerm-2023';
 const LAYER_WITHOUT_METHODOLOGY = 'kultur-museum';
@@ -198,9 +205,33 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/hitze/);
 	});
 
+	test('FAQ englisch ohne lang="de", Layer-Name englisch, FAQPage-JSON-LD englisch (Block C3)', async ({
+		page
+	}) => {
+		await page.goto(`/en/layer/${LAYER_WITH_METHODOLOGY}`);
+		const faq = page.getByTestId('faq-section');
+		const enQuestions = await faq.locator('[data-faq-question]').allTextContents();
+		expect(enQuestions.length).toBeGreaterThan(0);
+		for (const q of enQuestions) expect(q).not.toMatch(DE_QUESTION_START);
+		await expect(faq.locator('[lang="de"]')).toHaveCount(0);
+		await expect(faq).not.toContainText('Lärm');
+		const ld = JSON.parse(
+			(await page.locator('script[data-testid="faq-jsonld"]').textContent()) ?? '{}'
+		);
+		for (const e of ld.mainEntity as { name: string }[]) {
+			expect(e.name).not.toMatch(DE_QUESTION_START);
+		}
+	});
+
 	test('DE-Kontrolle: /layer/[slug] bleibt unverändert deutsch', async ({ page }) => {
 		const response = await page.goto(`/layer/${LAYER_WITH_METHODOLOGY}`);
 		expect(response?.status()).toBe(200);
+		const deQuestions = await page
+			.getByTestId('faq-section')
+			.locator('[data-faq-question]')
+			.allTextContents();
+		expect(deQuestions.some((q) => DE_QUESTION_START.test(q))).toBe(true);
+		await expect(page.getByTestId('faq-section').locator('[lang]')).toHaveCount(0);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'de');
 		await expect(page).toHaveTitle(/Lärmbelastung 2023 - Berlin in Daten - navigator\.berlin/);
 

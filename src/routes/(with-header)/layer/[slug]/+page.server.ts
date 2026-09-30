@@ -1,9 +1,9 @@
 import { error } from '@sveltejs/kit';
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildLayerDetail, type LayerDetail } from '$lib/data/get-layer-detail.js';
-import { getLocale } from '$lib/paraglide/runtime.js';
+import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
-import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
+import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
 import type { FaqEntry } from '$lib/data/types.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
@@ -32,28 +32,17 @@ export const entries: EntryGenerator = async () => {
 		.map((l) => ({ slug: l.slug }));
 };
 
-async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
-	if (!process.env.DATABASE_URL) return [];
-	try {
-		const rows = await getFaqQna({ pageType: 'layer', slug, locale: 'de' });
-		return rows.map((r) => ({ question: r.question, answer: r.answer }));
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[layer-page] WARN: faq_qna unavailable (${msg})\n`);
-		return [];
-	}
-}
-
 export type LayerPageData = {
 	readonly detail: LayerDetail;
 	readonly faq: readonly FaqEntry[];
+	readonly faqLocale: Locale;
 };
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	const manifest = await loadManifest(fetch);
 	const detail: LayerDetail | null = buildLayerDetail(params.slug, getLocale(), manifest);
 	if (!detail) error(404, m.layer_page_not_found({ slug: params.slug }, { locale: getLocale() }));
-	const faq = await tryLoadFaq(params.slug);
-	const data: LayerPageData = { detail, faq };
+	const faq = await getFaqForPage({ pageType: 'layer', slug: params.slug, locale: getLocale() });
+	const data: LayerPageData = { detail, faq: faq.items, faqLocale: faq.locale };
 	return data;
 };

@@ -1,0 +1,86 @@
+cluster: laerm
+locale: en
+templates:
+  - id: laerm-dominant-bezirk
+    applicableTo: [bezirk]
+    requires: [laerm.dominantCategory]
+    question: "How loud is it in the Bezirk {name}?"
+    answer: >-
+      In the Bezirk {name}, the dominant noise class is {laermKategorie}.
+      {laermErklaerung} Data basis: {laermSource}, as of {laermStand}. Values refer to
+      LDEN, the level weighted over 24 hours.
+
+  - id: laerm-dominant-kiez
+    applicableTo: [kiez]
+    requires: [laerm.dominantCategory]
+    question: "How loud is the Kiez {name}?"
+    answer: >-
+      The Kiez {name} lies mostly in the noise class {laermKategorie}. {laermErklaerung}
+      Source: {laermSource}, as of {laermStand}.
+
+  - id: laerm-warum-nacht-schaedlicher
+    applicableTo: [layer]
+    requires: []
+    question: "Why is night-time noise considered more relevant to health?"
+    answer: >-
+      Night-time noise disturbs the sleep phases in which the cardiovascular system and
+      nerves recover. The World Health Organization recommends a guideline value of 40 dB
+      for night-time noise (LNIGHT). The Berlin noise mapping therefore reports LDEN and
+      LNIGHT separately.
+
+  - id: laerm-was-bedeutet-lden
+    applicableTo: [layer]
+    requires: []
+    question: "What does the LDEN value mean?"
+    answer: >-
+      LDEN stands for “Level Day-Evening-Night” and is a noise average weighted over 24
+      hours. Evening and night levels count with penalties of 5 and 10 dB, because noise
+      is more disturbing then. The value serves as a uniform comparison standard across
+      the EU.
+
+  - id: laerm-wie-aktuell
+    applicableTo: [bezirk, kiez]
+    requires: [laerm.dominantCategory]
+    question: "How up to date is the noise data for {name}?"
+    answer: >-
+      The Berlin noise mapping is recalculated every five years, in line with the EU
+      cycle. The class {laermKategorie} reported for {name} comes from the {laermStand}
+      mapping.
+
+  - id: laerm-welche-quellen
+    applicableTo: [layer]
+    requires: []
+    question: "Which noise sources feed into the map?"
+    answer: >-
+      The strategic noise mapping covers road, rail, aircraft and industrial noise
+      separately. On the map we show road traffic noise LDEN, because it reaches the
+      largest population across the whole area.
+
+  - id: laerm-was-tun-bei-belastung
+    applicableTo: [layer]
+    requires: []
+    question: "What can I do if I find the noise at my address disturbing?"
+    answer: >-
+      The Senate Department for Urban Mobility, Transport, Climate Action and the
+      Environment takes suggestions on strategic noise reduction into the action plan.
+      Complaints about specific sources (construction sites, businesses) go to the
+      responsible Bezirk office (Bezirksamt) or public order office (Ordnungsamt). On the
+      methodology page we link to the official points of contact.
+
+  - id: laerm-warum-keine-db-werte
+    applicableTo: [layer]
+    requires: []
+    question: "Why does the layer not show specific dB figures?"
+    answer: >-
+      The open Berlin data provides one noise class per planning area (for example
+      “medium” or “high”), not point values. We reproduce the value exactly as published,
+      so as not to suggest a precision that the dataset does not contain.
+
+  - id: laerm-ruheluft-einordnung
+    applicableTo: [bezirk, kiez]
+    requires: [laerm.dominantCategory]
+    question: "How quiet and clean is {name} in comparison?"
+    answer: >-
+      {name} scores {ruheLuftScore} out of 100 in the Quiet & air score ({ruheLuftRang}),
+      {ruheLuftVergleich}. The score combines noise and air pollution. A higher value
+      means quieter and cleaner.

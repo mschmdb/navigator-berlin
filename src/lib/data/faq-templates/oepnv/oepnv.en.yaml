@@ -1,0 +1,64 @@
+cluster: oepnv
+locale: en
+templates:
+  - id: oepnv-dichte-bezirk
+    applicableTo: [bezirk]
+    requires: [oepnv.stopsPerKm2]
+    question: "How dense is the public transport network in the Bezirk {name}?"
+    answer: >-
+      The Bezirk {name} has {oepnvStopsPerKm2} stops per square kilometre. The network is
+      therefore considered {oepnvDichte}. {oepnvErklaerung} Data basis: {oepnvSource}, as
+      of {oepnvStand}.
+
+  - id: oepnv-dichte-kiez
+    applicableTo: [kiez]
+    requires: [oepnv.stopsPerKm2]
+    question: "How well is the Kiez {name} connected to public transport?"
+    answer: >-
+      The Kiez {name} has {oepnvStopsPerKm2} stops per square kilometre. {oepnvErklaerung}
+      Source: {oepnvSource}, as of {oepnvStand}.
+
+  - id: oepnv-was-bedeutet-dichte
+    applicableTo: [layer]
+    requires: []
+    question: "What does stop density per square kilometre tell you?"
+    answer: >-
+      Stop density is a first, rough indicator of connectivity. It says nothing about
+      frequency, routes or accessibility. In Berlin, a high density often correlates with
+      inner-city locations and interchange hubs, a low density with outer-city areas.
+
+  - id: oepnv-walk-score-logik
+    applicableTo: [layer]
+    requires: []
+    question: "Does the value take walking routes or accessibility into account?"
+    answer: >-
+      Not at present. The value counts stops within the area boundaries and divides them
+      by the area. We are gradually extending the indicator with walking distances and
+      station categories. The methodology page documents every extension.
+
+  - id: oepnv-welche-modi
+    applicableTo: [layer]
+    requires: []
+    question: "Which modes of transport feed into the stop density?"
+    answer: >-
+      We count U-Bahn, S-Bahn, tram and bus stops of the BVG and S-Bahn Berlin GmbH
+      together. Regional rail stations are reported additionally, because they are
+      relevant for commuting.
+
+  - id: oepnv-warum-nicht-fahrplandaten
+    applicableTo: [layer]
+    requires: []
+    question: "Why does navigator.berlin not show live timetable data?"
+    answer: >-
+      Live data requires server caching and licence costs, and is often available only for
+      a short time. We deliberately rely on static aggregates from open datasets that we
+      can check and version.
+
+  - id: oepnv-mobilitaet-einordnung
+    applicableTo: [bezirk, kiez]
+    requires: [oepnv.stopsPerKm2]
+    question: "How well is {name} connected to local public transport?"
+    answer: >-
+      {name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}),
+      {mobilitaetVergleich}. The score reflects public transport connectivity. A higher
+      value means better connectivity.

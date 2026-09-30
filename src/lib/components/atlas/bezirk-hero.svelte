@@ -31,7 +31,7 @@
 	import { describeOepnvDichte, formatStopsPerKm2 } from '$lib/data/faq-helpers/oepnv.js';
 	import { describePetKategorie, formatPet } from '$lib/data/faq-helpers/klima.js';
 	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import { formatCount, formatMonthYear } from '$lib/i18n/format.js';
 
 	type BezirkStatsRow = InferSelectModel<typeof bezirkStats>;
@@ -40,11 +40,12 @@
 		readonly profile: BezirkProfile;
 		readonly stats: BezirkStatsRow | null;
 		readonly faq: readonly FaqEntry[];
+		readonly faqLocale?: Locale;
 		readonly comparison?: readonly ComparisonDimRow[];
 		readonly profileProse?: readonly string[];
 	}
 
-	const { profile, stats, faq, comparison = [], profileProse = [] }: Props = $props();
+	const { profile, stats, faq, faqLocale, comparison = [], profileProse = [] }: Props = $props();
 
 	const localeOpts = $derived({ locale: getLocale() });
 
@@ -238,7 +239,7 @@
 	</section>
 
 	{#if faq.length > 0}
-		<FaqSection items={faq} pageType="bezirk" />
+		<FaqSection items={faq} pageType="bezirk" contentLocale={faqLocale} />
 	{:else}
 		<section aria-labelledby="faq-placeholder-heading" class="space-y-3">
 			<h2 id="faq-placeholder-heading" class="font-serif text-2xl text-ink">

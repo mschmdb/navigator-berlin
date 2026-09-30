@@ -41,6 +41,10 @@ async function berlinCellText(row: Locator): Promise<string> {
 	return (await cells.nth(count - 2).textContent())?.trim() ?? '';
 }
 
+// Ordnungsunabhängig: `faq_qna` wird ohne ORDER BY gelesen.
+const DE_QUESTION_START =
+	/^(Wie|Was|Warum|Welche[rsmn]?|Wo|Wann|Wer|Worin|Wodurch|Berücksichtigt|Bewertet|Ist|Gibt|Wird)\b/;
+
 test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 	test('lang=en, Titel + Lead + Breadcrumb englisch', async ({ page }) => {
 		const response = await page.goto(`/en/kiez/${KIEZ_SLUG}`);
@@ -109,7 +113,7 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveCount(0);
 	});
 
-	test('Steckbrief, Vergleichstabelle und Wahl-Verlauf englisch; FAQ-Heading englisch, Q&A-Inhalte bleiben deutsch', async ({
+	test('Steckbrief, Vergleichstabelle und Wahl-Verlauf englisch; FAQ-Heading und Q&A englisch ohne lang=de', async ({
 		page
 	}) => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
@@ -127,10 +131,19 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 
 		const faqHeading = page.getByRole('heading', { name: 'Frequently asked questions' });
 		await expect(faqHeading).toBeVisible();
-		// Q&A-Inhalte selbst bleiben deutsch (Boundary, Block C) -- nur die
-		// Section-Chrome (Heading, Methodik-Link) ist übersetzt.
+		// Block C3: Q&A-Inhalte kommen aus den EN-Zeilen von `faq_qna`,
+		// ohne lang="de" am Accordion.
 		const faqSection = page.getByTestId('faq-section');
-		await expect(faqSection.locator('[data-faq-question]').first()).toContainText(/Wie /);
+		const enQuestions = await faqSection.locator('[data-faq-question]').allTextContents();
+		expect(enQuestions.length).toBeGreaterThan(0);
+		for (const q of enQuestions) expect(q).not.toMatch(DE_QUESTION_START);
+		await expect(faqSection.locator('[lang="de"]')).toHaveCount(0);
+		const faqLd = JSON.parse(
+			(await page.locator('script[data-testid="faq-jsonld"]').textContent()) ?? '{}'
+		);
+		for (const e of faqLd.mainEntity as { name: string }[]) {
+			expect(e.name).not.toMatch(DE_QUESTION_START);
+		}
 
 		const wahlVerlauf = page.getByTestId('kiez-wahl-verlauf');
 		await expect(wahlVerlauf).toContainText('Election history here');
@@ -170,6 +183,10 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		const hero = page.getByTestId('kiez-hero');
 		await expect(hero).toContainText('Einwohner:innen');
 		await expect(page.getByTestId('breadcrumb')).toHaveAttribute('aria-label', 'Brotkrumen');
+		const faqDe = page.getByTestId('faq-section');
+		const deQuestions = await faqDe.locator('[data-faq-question]').allTextContents();
+		expect(deQuestions.some((q) => DE_QUESTION_START.test(q))).toBe(true);
+		await expect(faqDe.locator('[lang]')).toHaveCount(0);
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(

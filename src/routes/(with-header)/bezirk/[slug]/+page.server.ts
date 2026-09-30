@@ -1,9 +1,9 @@
 import { error } from '@sveltejs/kit';
 import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
-import { getLocale } from '$lib/paraglide/runtime.js';
+import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
-import { getFaqQna } from '$lib/server/db/queries/get-faq-qna.js';
+import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
 import { buildKiezeInBezirk, pickTop, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
 import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
@@ -21,8 +21,8 @@ export const prerender = true;
 /**
  * Story 2.3 T1.1: 12 prerendered Bezirks-Routes, je einmal DE + einmal
  * `/en` (Crawl-Links im Layout, ADR-005). i18n Block B4a übersetzt den
- * Seitenrahmen; Prosa (`profileProse`) und FAQ-Inhalte (`faq_qna`) bleiben
- * deutsch (Boundary).
+ * Seitenrahmen; Prosa (`profileProse`) bleibt deutsch (Boundary). FAQ-Inhalte
+ * (`faq_qna`) kommen in der Seiten-Locale, mit DE-Fallback (Block C3).
  */
 export const entries: EntryGenerator = async () => {
 	const slugs = await readBezirkSlugsFromGeoJson();
@@ -38,18 +38,6 @@ async function tryLoadBezirkStats(slug: string): Promise<BezirkStats | null> {
 		const msg = err instanceof Error ? err.message : String(err);
 		process.stderr.write(`[bezirk-page] WARN: bezirk_stats unavailable (${msg})\n`);
 		return null;
-	}
-}
-
-async function tryLoadFaq(slug: string): Promise<FaqEntry[]> {
-	if (!process.env.DATABASE_URL) return [];
-	try {
-		const rows = await getFaqQna({ pageType: 'bezirk', slug, locale: 'de' });
-		return rows.map((r) => ({ question: r.question, answer: r.answer }));
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[bezirk-page] WARN: faq_qna unavailable (${msg})\n`);
-		return [];
 	}
 }
 
@@ -81,6 +69,7 @@ export type BezirkPageData = {
 	readonly profile: BezirkProfile;
 	readonly stats: BezirkStats | null;
 	readonly faq: readonly FaqEntry[];
+	readonly faqLocale: Locale;
 	readonly kieze: readonly KiezRef[];
 	readonly comparison: readonly ComparisonDimRow[];
 	readonly compositeRank: { readonly rang: number | null; readonly total: number };
@@ -162,9 +151,9 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		throw error(404, m.bezirk_page_not_found({ slug }, { locale: getLocale() }));
 	}
 	const { getProfileParagraphs } = await import('$lib/server/profile/get-profile.js');
-	const [stats, faq, kieze, rank, comparisonMap, profileProse] = await Promise.all([
+	const [stats, faqResult, kieze, rank, comparisonMap, profileProse] = await Promise.all([
 		tryLoadBezirkStats(slug),
-		tryLoadFaq(slug),
+		getFaqForPage({ pageType: 'bezirk', slug, locale: getLocale() }),
 		tryLoadKieze(slug),
 		tryLoadBezirkRank(slug),
 		tryLoadBezirkComparison(slug),
@@ -190,7 +179,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	const data: BezirkPageData = {
 		profile,
 		stats,
-		faq,
+		faq: faqResult.items,
+		faqLocale: faqResult.locale,
 		kieze,
 		comparison,
 		compositeRank,

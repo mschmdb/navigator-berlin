@@ -5,9 +5,8 @@
  * Run: `pnpm data:faq`. Reihenfolge: `data:aggregate` (Story 2.0) → `data:faq`
  * (diese Story) → `build` (SvelteKit-Prerender).
  *
- * Phase-1 DE-only (Memory `project_i18n_phase_1_de_only`). 5 Cluster (laerm,
- * gruen, oepnv, wohnen, klima) × {bezirk, kiez, layer} × `de`. EN-Coverage
- * wird in Phase-3-Future-Epic nachgezogen.
+ * 5 Cluster (laerm, gruen, oepnv, wohnen, klima) × {bezirk, kiez, layer} ×
+ * {`de`, `en`} (i18n Block C3: EN aus `*.en.yaml`).
  *
  * Idempotenz: TRUNCATE+Insert-Pattern wie `aggregate-data.ts` (Memory
  * `project_aggregate_truncate_insert`). Zweimal aufrufen liefert identische
@@ -57,6 +56,7 @@ import type {
 	TemplateLocale
 } from '../src/lib/server/faq/template-schema.js';
 import { buildLayerTargetsFromManifest } from '../src/lib/server/og/og-pipeline.js';
+import { getLayerDisplayName } from '../src/lib/components/atlas/internal/layer-palette-filter.js';
 
 const REPO_ROOT = process.cwd();
 const MANIFEST_PATH = join(REPO_ROOT, 'static/layers/MANIFEST.json');
@@ -77,6 +77,8 @@ interface RenderTarget {
 	readonly pageType: PageType;
 	readonly slug: string;
 	readonly name: string;
+	/** Locale-spezifische Namen (Layer). Fehlt die Locale, gilt `name`. */
+	readonly localizedName?: Readonly<Partial<Record<TemplateLocale, string>>>;
 	readonly aggregate: TemplateAggregate;
 	readonly metrics?: ReadonlyMap<string, MetricContext>;
 }
@@ -101,7 +103,7 @@ async function loadKiezMetrics(): Promise<Map<string, Map<string, MetricContext>
 			quartil: r.quartil,
 			total: r.total,
 			compareValue: c?.bezirkMean ?? null,
-			compareLabel: 'Bezirksschnitt'
+			compareKind: 'bezirk'
 		};
 		if (!out.has(r.slug)) out.set(r.slug, new Map());
 		out.get(r.slug)!.set(r.metricKey, m);
@@ -127,7 +129,7 @@ async function loadBezirkMetrics(): Promise<Map<string, Map<string, MetricContex
 			quartil: r.quartil,
 			total: r.total,
 			compareValue: c?.berlinMedian ?? null,
-			compareLabel: 'Berlin-Median'
+			compareKind: 'berlin'
 		};
 		if (!out.has(r.slug)) out.set(r.slug, new Map());
 		out.get(r.slug)!.set(r.metricKey, m);
@@ -237,12 +239,17 @@ async function loadKiezTargets(
 async function loadLayerTargets(): Promise<RenderTarget[]> {
 	const manifest = await readManifest();
 	const layerTargets = buildLayerTargetsFromManifest(manifest.layers);
-	return layerTargets.map((t) => ({
-		pageType: 'layer' as const,
-		slug: t.slug,
-		name: t.label,
-		aggregate: EMPTY_AGGREGATE
-	}));
+	return layerTargets.map((t) => {
+		const en = getLayerDisplayName(t.slug, { locale: 'en' });
+		return {
+			pageType: 'layer' as const,
+			slug: t.slug,
+			name: t.label,
+			// getLayerDisplayName liefert für unbekannte Slugs den Roh-Slug.
+			localizedName: { en: en !== t.slug ? en : t.label },
+			aggregate: EMPTY_AGGREGATE
+		};
+	});
 }
 
 interface RenderedRow {
@@ -264,7 +271,7 @@ async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[
 				const context: TemplateContext = {
 					pageType: target.pageType,
 					slug: target.slug,
-					name: target.name,
+					name: target.localizedName?.[locale] ?? target.name,
 					locale,
 					aggregate: target.aggregate,
 					metrics: target.metrics

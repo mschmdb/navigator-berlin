@@ -238,7 +238,7 @@
 		</ul>
 	</section>
 
-	<FaqSection items={HITZE_FAQ} pageType="landing" />
+	<FaqSection items={HITZE_FAQ} pageType="landing" contentLocale="de" />
 
 	<KuehleOrteTransparenz />
 </div>

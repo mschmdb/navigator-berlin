@@ -1,0 +1,362 @@
+{
+	"laerm": {
+		"laerm-dominant-bezirk": {
+			"question": {
+				"de": "Wie laut ist es im Bezirk {name}?",
+				"en": "How loud is it in the Bezirk {name}?"
+			},
+			"answer": {
+				"de": "Im Bezirk {name} dominiert die Lärm-Klasse {laermKategorie}. {laermErklaerung} Datengrundlage: {laermSource}, Stand {laermStand}. Werte beziehen sich auf LDEN, also den über 24 Stunden gewichteten Pegel.",
+				"en": "In the Bezirk {name}, the dominant noise class is {laermKategorie}. {laermErklaerung} Data basis: {laermSource}, as of {laermStand}. Values refer to LDEN, the level weighted over 24 hours."
+			}
+		},
+		"laerm-dominant-kiez": {
+			"question": {
+				"de": "Wie laut ist der Kiez {name}?",
+				"en": "How loud is the Kiez {name}?"
+			},
+			"answer": {
+				"de": "Der Kiez {name} liegt überwiegend in der Lärm-Klasse {laermKategorie}. {laermErklaerung} Quelle: {laermSource}, Stand {laermStand}.",
+				"en": "The Kiez {name} lies mostly in the noise class {laermKategorie}. {laermErklaerung} Source: {laermSource}, as of {laermStand}."
+			}
+		},
+		"laerm-warum-nacht-schaedlicher": {
+			"question": {
+				"de": "Warum gilt Nacht-Lärm als gesundheitlich relevanter?",
+				"en": "Why is night-time noise considered more relevant to health?"
+			},
+			"answer": {
+				"de": "Lärm in der Nacht stört Schlafphasen, in denen sich Herz-Kreislauf-System und Nerven erholen. Die Weltgesundheitsorganisation empfiehlt für Nacht-Lärm (LNIGHT) einen Richtwert von 40 dB. Die Berliner Lärmkartierung weist daher LDEN und LNIGHT getrennt aus.",
+				"en": "Night-time noise disturbs the sleep phases in which the cardiovascular system and nerves recover. The World Health Organization recommends a guideline value of 40 dB for night-time noise (LNIGHT). The Berlin noise mapping therefore reports LDEN and LNIGHT separately."
+			}
+		},
+		"laerm-was-bedeutet-lden": {
+			"question": {
+				"de": "Was bedeutet der Wert LDEN?",
+				"en": "What does the LDEN value mean?"
+			},
+			"answer": {
+				"de": "LDEN steht für „Level Day-Evening-Night\" und ist ein über 24 Stunden gewichteter Lärm-Mittelwert. Abend- und Nachtpegel gehen mit Aufschlägen von 5 und 10 dB ein, weil Lärm dann stärker stört. Der Wert dient als EU-weit einheitlicher Vergleichsmaßstab.",
+				"en": "LDEN stands for “Level Day-Evening-Night” and is a noise average weighted over 24 hours. Evening and night levels count with penalties of 5 and 10 dB, because noise is more disturbing then. The value serves as a uniform comparison standard across the EU."
+			}
+		},
+		"laerm-wie-aktuell": {
+			"question": {
+				"de": "Wie aktuell sind die Lärm-Daten für {name}?",
+				"en": "How up to date is the noise data for {name}?"
+			},
+			"answer": {
+				"de": "Die Berliner Lärmkartierung wird im EU-Rhythmus alle fünf Jahre neu gerechnet. Die in {name} ausgewiesene Klasse {laermKategorie} stammt aus der Kartierung {laermStand}.",
+				"en": "The Berlin noise mapping is recalculated every five years, in line with the EU cycle. The class {laermKategorie} reported for {name} comes from the {laermStand} mapping."
+			}
+		},
+		"laerm-welche-quellen": {
+			"question": {
+				"de": "Welche Lärm-Quellen fließen in die Karte ein?",
+				"en": "Which noise sources feed into the map?"
+			},
+			"answer": {
+				"de": "Die strategische Lärmkartierung umfasst Straßen-, Schienen-, Flug- und Industrie-Lärm separat. Auf der Karte zeigen wir den Straßen-Verkehrslärm LDEN, weil er flächendeckend die größte Bevölkerung erreicht.",
+				"en": "The strategic noise mapping covers road, rail, aircraft and industrial noise separately. On the map we show road traffic noise LDEN, because it reaches the largest population across the whole area."
+			}
+		},
+		"laerm-was-tun-bei-belastung": {
+			"question": {
+				"de": "Was kann ich tun, wenn ich Lärm an meiner Adresse als belastend empfinde?",
+				"en": "What can I do if I find the noise at my address disturbing?"
+			},
+			"answer": {
+				"de": "Die Senatsverwaltung für Mobilität nimmt Hinweise zur strategischen Lärmminderung im Aktionsplan auf. Beschwerden zu konkreten Quellen (Baustellen, Gewerbe) gehen an das jeweils zuständige Bezirksamt oder Ordnungsamt. Wir verlinken auf der Methodik-Seite die offiziellen Anlaufstellen.",
+				"en": "The Senate Department for Urban Mobility, Transport, Climate Action and the Environment takes suggestions on strategic noise reduction into the action plan. Complaints about specific sources (construction sites, businesses) go to the responsible Bezirk office (Bezirksamt) or public order office (Ordnungsamt). On the methodology page we link to the official points of contact."
+			}
+		},
+		"laerm-warum-keine-db-werte": {
+			"question": {
+				"de": "Warum zeigt der Layer keine konkreten dB-Zahlen?",
+				"en": "Why does the layer not show specific dB figures?"
+			},
+			"answer": {
+				"de": "Die offene Berliner Datengrundlage liefert pro Planungsraum eine Pegel-Klasse (zum Beispiel „mittel\" oder „hoch\"), keine Punktwerte. Wir geben den Wert genauso wieder, wie er publiziert wird, um keine Genauigkeit zu suggerieren, die im Datensatz nicht enthalten ist.",
+				"en": "The open Berlin data provides one noise class per planning area (for example “medium” or “high”), not point values. We reproduce the value exactly as published, so as not to suggest a precision that the dataset does not contain."
+			}
+		},
+		"laerm-ruheluft-einordnung": {
+			"question": {
+				"de": "Wie ruhig und sauber ist {name} im Vergleich?",
+				"en": "How quiet and clean is {name} in comparison?"
+			},
+			"answer": {
+				"de": "{name} erreicht im Ruhe-und-Luft-Score {ruheLuftScore} von 100 ({ruheLuftRang}), {ruheLuftVergleich}. Der Score bündelt Lärm- und Luft-Belastung; ein höherer Wert heißt ruhiger und sauberer.",
+				"en": "{name} scores {ruheLuftScore} out of 100 in the Quiet & air score ({ruheLuftRang}), {ruheLuftVergleich}. The score combines noise and air pollution. A higher value means quieter and cleaner."
+			}
+		}
+	},
+	"gruen": {
+		"gruen-versorgung-bezirk": {
+			"question": {
+				"de": "Wie ist die Grünversorgung im Bezirk {name}?",
+				"en": "What is the green space provision in the Bezirk {name}?"
+			},
+			"answer": {
+				"de": "Im Bezirk {name} dominiert die Kategorie {gruenKategorie} für die wohnungsnahe Grünversorgung. {gruenErklaerung} Quelle: {gruenSource}, Stand {gruenStand}.",
+				"en": "In the Bezirk {name}, the dominant category for green space provision near homes is {gruenKategorie}. {gruenErklaerung} Source: {gruenSource}, as of {gruenStand}."
+			}
+		},
+		"gruen-versorgung-kiez": {
+			"question": {
+				"de": "Wie ist die Grünversorgung im Kiez {name}?",
+				"en": "What is the green space provision in the Kiez {name}?"
+			},
+			"answer": {
+				"de": "Die wohnungsnahe Grünversorgung im Kiez {name} liegt in der Kategorie {gruenKategorie}. {gruenErklaerung} Quelle: {gruenSource}, Stand {gruenStand}.",
+				"en": "Green space provision near homes in the Kiez {name} is in the category {gruenKategorie}. {gruenErklaerung} Source: {gruenSource}, as of {gruenStand}."
+			}
+		},
+		"gruen-anzahl-anlagen": {
+			"question": {
+				"de": "Wie viele öffentliche Grünanlagen liegen in {name}?",
+				"en": "How many public green spaces are there in {name}?"
+			},
+			"answer": {
+				"de": "Im Bezirk {name} liegen {gruenanlagenCount} öffentlich gewidmete Grünanlagen gemäß dem aktuellen Kataster der Senatsverwaltung. Privat-Gärten und bewirtschaftete Kleingärten zählen nicht zu dieser Kategorie.",
+				"en": "The Bezirk {name} has {gruenanlagenCount} officially designated public green spaces, according to the current register of the Senate Department. Private gardens and cultivated allotment gardens do not count in this category."
+			}
+		},
+		"gruen-was-bedeutet-versorgung": {
+			"question": {
+				"de": "Was bedeutet wohnungsnahe Grünversorgung?",
+				"en": "What does green space provision near homes mean?"
+			},
+			"answer": {
+				"de": "Die Senatsverwaltung berechnet pro Planungsraum, wie viele Quadratmeter wohnungsnahe Grünfläche pro Einwohnerin im Einzugsbereich liegen. Als Richtwert gelten 6 Quadratmeter pro Person. Erreicht oder verfehlt ein Planungsraum diesen Wert, ergibt sich die Kategorie „gut\", „mittel\" oder „gering\".",
+				"en": "For each planning area, the Senate Department calculates how many square metres of green space near homes are available per resident within the catchment area. The benchmark is 6 square metres per person. Whether a planning area reaches or misses this value determines the category “good”, “moderate” or “low”."
+			}
+		},
+		"gruen-rolle-hitze": {
+			"question": {
+				"de": "Welche Rolle spielen Grünflächen für Hitze-Mitigation?",
+				"en": "What role do green spaces play in heat mitigation?"
+			},
+			"answer": {
+				"de": "Bäume und größere Grünflächen senken die Lufttemperatur durch Verschattung und Verdunstung. Stadtklima-Analysen zeigen, dass dicht bebaute Quartiere mit wenig Vegetation an Sommertagen messbar wärmer bleiben als Gebiete mit vergleichbarer Bebauung und mehr Grün. Die Klima-Kategorie auf dieser Karte bildet das ab.",
+				"en": "Trees and larger green spaces lower the air temperature through shading and evaporation. Urban climate analyses show that densely built neighbourhoods with little vegetation stay measurably warmer on summer days than areas with comparable buildings and more greenery. The climate category on this map reflects that."
+			}
+		},
+		"gruen-gruenhitze-einordnung": {
+			"question": {
+				"de": "Wie grün und kühl ist {name} im Vergleich?",
+				"en": "How green and cool is {name} in comparison?"
+			},
+			"answer": {
+				"de": "{name} erreicht im Grün-und-Hitze-Score {gruenHitzeScore} von 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. Der Score verbindet Grünversorgung und Hitzebelastung; ein höherer Wert heißt grüner und kühler.",
+				"en": "{name} scores {gruenHitzeScore} out of 100 in the Green & heat score ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green space provision and heat exposure. A higher value means greener and cooler."
+			}
+		}
+	},
+	"oepnv": {
+		"oepnv-dichte-bezirk": {
+			"question": {
+				"de": "Wie dicht ist das ÖPNV-Netz im Bezirk {name}?",
+				"en": "How dense is the public transport network in the Bezirk {name}?"
+			},
+			"answer": {
+				"de": "Im Bezirk {name} liegen {oepnvStopsPerKm2} Haltestellen pro Quadratkilometer. Das Netz gilt damit als {oepnvDichte}. {oepnvErklaerung} Datengrundlage: {oepnvSource}, Stand {oepnvStand}.",
+				"en": "The Bezirk {name} has {oepnvStopsPerKm2} stops per square kilometre. The network is therefore considered {oepnvDichte}. {oepnvErklaerung} Data basis: {oepnvSource}, as of {oepnvStand}."
+			}
+		},
+		"oepnv-dichte-kiez": {
+			"question": {
+				"de": "Wie ist der Kiez {name} an den ÖPNV angebunden?",
+				"en": "How well is the Kiez {name} connected to public transport?"
+			},
+			"answer": {
+				"de": "Im Kiez {name} liegen {oepnvStopsPerKm2} Halte pro Quadratkilometer. {oepnvErklaerung} Quelle: {oepnvSource}, Stand {oepnvStand}.",
+				"en": "The Kiez {name} has {oepnvStopsPerKm2} stops per square kilometre. {oepnvErklaerung} Source: {oepnvSource}, as of {oepnvStand}."
+			}
+		},
+		"oepnv-was-bedeutet-dichte": {
+			"question": {
+				"de": "Was sagt die Haltedichte pro Quadratkilometer aus?",
+				"en": "What does stop density per square kilometre tell you?"
+			},
+			"answer": {
+				"de": "Die Haltedichte ist ein erster grober Indikator für Anbindung. Sie sagt nichts über Taktung, Linienführung oder Barrierefreiheit aus. Eine hohe Dichte korreliert in Berlin häufig mit Innenstadt-Lagen und Verknüpfungs- Knoten, eine niedrige Dichte mit Stadtrand-Bereichen.",
+				"en": "Stop density is a first, rough indicator of connectivity. It says nothing about frequency, routes or accessibility. In Berlin, a high density often correlates with inner-city locations and interchange hubs, a low density with outer-city areas."
+			}
+		},
+		"oepnv-walk-score-logik": {
+			"question": {
+				"de": "Berücksichtigt der Wert Fußwege oder Barrierefreiheit?",
+				"en": "Does the value take walking routes or accessibility into account?"
+			},
+			"answer": {
+				"de": "Aktuell nicht. Der Wert zählt Haltepunkte innerhalb der Flächengrenzen und teilt sie durch die Fläche. Wir verbessern den Indikator schrittweise um Fußweg-Distanzen und Stationskategorien. Die Methodik-Seite dokumentiert jede Erweiterung.",
+				"en": "Not at present. The value counts stops within the area boundaries and divides them by the area. We are gradually extending the indicator with walking distances and station categories. The methodology page documents every extension."
+			}
+		},
+		"oepnv-welche-modi": {
+			"question": {
+				"de": "Welche Verkehrsmittel fließen in die Haltedichte ein?",
+				"en": "Which modes of transport feed into the stop density?"
+			},
+			"answer": {
+				"de": "Wir zählen U-Bahn-, S-Bahn-, Tram- und Bus-Haltestellen der BVG und der S-Bahn Berlin GmbH zusammen. Regional-Bahn-Stationen werden zusätzlich ausgewiesen, weil sie für Pendelverkehr relevant sind.",
+				"en": "We count U-Bahn, S-Bahn, tram and bus stops of the BVG and S-Bahn Berlin GmbH together. Regional rail stations are reported additionally, because they are relevant for commuting."
+			}
+		},
+		"oepnv-warum-nicht-fahrplandaten": {
+			"question": {
+				"de": "Warum zeigt navigator.berlin keine Live-Fahrplan-Daten?",
+				"en": "Why does navigator.berlin not show live timetable data?"
+			},
+			"answer": {
+				"de": "Live-Daten erfordern Server-Caching, Lizenz-Kosten und stehen oft nur kurzfristig zur Verfügung. Wir setzen bewusst auf statische Aggregate aus offenen Datensätzen, die wir prüfen und versionieren können.",
+				"en": "Live data requires server caching and licence costs, and is often available only for a short time. We deliberately rely on static aggregates from open datasets that we can check and version."
+			}
+		},
+		"oepnv-mobilitaet-einordnung": {
+			"question": {
+				"de": "Wie gut ist {name} an den Nahverkehr angebunden?",
+				"en": "How well is {name} connected to local public transport?"
+			},
+			"answer": {
+				"de": "{name} erreicht im Mobilitäts-Score {mobilitaetScore} von 100 ({mobilitaetRang}), {mobilitaetVergleich}. Der Score bildet die ÖPNV-Anbindung ab; ein höherer Wert heißt besser angebunden.",
+				"en": "{name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}), {mobilitaetVergleich}. The score reflects public transport connectivity. A higher value means better connectivity."
+			}
+		}
+	},
+	"wohnen": {
+		"wohnen-wohnlage-bezirk": {
+			"question": {
+				"de": "Welche Wohnlage dominiert im Bezirk {name}?",
+				"en": "Which residential area type dominates in the Bezirk {name}?"
+			},
+			"answer": {
+				"de": "Im Bezirk {name} dominiert die {wohnenWohnlage} gemäß dem Berliner Mietspiegel. Die Wohnlage ist eine raumbezogene Kategorie aus drei Stufen (einfach, mittel, gut). Sie fasst Bebauungs- und Umfeld-Merkmale zusammen und ist keine Bewertung der Lebensumstände einzelner Adressen. Quelle: {wohnenSource}, Stand {wohnenStand}.",
+				"en": "In the Bezirk {name}, the {wohnenWohnlage} dominates according to the Berlin Mietspiegel. The Wohnlage is a spatial category with three levels (simple, medium, good). It summarises building and surroundings characteristics and is not an assessment of the living circumstances of individual addresses. Source: {wohnenSource}, as of {wohnenStand}."
+			}
+		},
+		"wohnen-wohnlage-kiez": {
+			"question": {
+				"de": "Welche Wohnlage dominiert im Kiez {name}?",
+				"en": "Which residential area type dominates in the Kiez {name}?"
+			},
+			"answer": {
+				"de": "Der Kiez {name} liegt überwiegend in der {wohnenWohnlage} des Berliner Mietspiegels. Die Stufe ist eine räumliche Kategorie aus dem Mietspiegel- Verfahren und gilt jeweils für Blockseiten oder Häuserzeilen, nicht für Einzeladressen. Quelle: {wohnenSource}, Stand {wohnenStand}.",
+				"en": "The Kiez {name} lies mostly in the {wohnenWohnlage} of the Berlin Mietspiegel. The level is a spatial category from the Mietspiegel procedure and applies to block sides or rows of houses, not to individual addresses. Source: {wohnenSource}, as of {wohnenStand}."
+			}
+		},
+		"wohnen-mss-bezirk": {
+			"question": {
+				"de": "Wie schneidet {name} im Monitoring Soziale Stadtentwicklung ab?",
+				"en": "How does {name} fare in the Monitoring Social Urban Development?"
+			},
+			"answer": {
+				"de": "Das Monitoring Soziale Stadtentwicklung (MSS) ordnet Planungsräume in vier Stufen nach sozio-ökonomischen Indikatoren ein. Für {name} ergibt der aktuelle MSS einen Aggregat-Status. {wohnenMssBeschreibung} Der Index bezieht sich auf den gesamten Raum, nicht auf einzelne Haushalte.",
+				"en": "The Monitoring Social Urban Development (MSS) classifies planning areas into four levels based on socio-economic indicators. For {name}, the current MSS gives an aggregate status. {wohnenMssBeschreibung} The index refers to the whole area, not to individual households."
+			}
+		},
+		"wohnen-warum-keine-mietpreise": {
+			"question": {
+				"de": "Warum gibt navigator.berlin keine konkreten Mietpreise pro Adresse aus?",
+				"en": "Why does navigator.berlin not show specific rents per address?"
+			},
+			"answer": {
+				"de": "Mietpreise hängen von Baujahr, Ausstattung, Lage und Stichtagen ab. Der Berliner Mietspiegel liefert Spannen pro Wohnlage und Baualters-Klasse, keine Punktwerte pro Adresse. Wir verlinken auf der Methodik-Seite den offiziellen Mietspiegel-Rechner.",
+				"en": "Rents depend on year of construction, fittings, location and reference dates. The Berlin Mietspiegel provides ranges per residential area and age-of-building class, not point values per address. On the methodology page we link to the official Mietspiegel calculator."
+			}
+		},
+		"wohnen-was-ist-brw": {
+			"question": {
+				"de": "Worin unterscheiden sich Bodenrichtwert und Mietspiegel?",
+				"en": "How do the standard land value and the Mietspiegel differ?"
+			},
+			"answer": {
+				"de": "Der Bodenrichtwert beschreibt einen durchschnittlichen Grundstückspreis pro Quadratmeter, geprüft durch den Gutachterausschuss. Der Mietspiegel beschreibt ortsübliche Vergleichsmieten für Wohnraum. Beide Werte gelten für Räume, nicht für Einzel-Adressen.",
+				"en": "The standard land value (Bodenrichtwert) describes an average land price per square metre, verified by the Berlin Committee of Valuation Experts (Gutachterausschuss). The Mietspiegel describes the local comparative rents for housing. Both values apply to areas, not to individual addresses."
+			}
+		},
+		"wohnen-stigma-disclaimer": {
+			"question": {
+				"de": "Bewertet navigator.berlin Wohngebiete als gut oder schlecht?",
+				"en": "Does navigator.berlin rate residential areas as good or bad?"
+			},
+			"answer": {
+				"de": "Nein. Wir geben kategoriale Werte aus offiziellen Datenquellen wieder (Mietspiegel-Wohnlage, MSS, BRW). Diese Kategorien sind beschreibend, nicht wertend. Bezeichnungen wie „beliebter Kiez\" oder „guter Bezirk\" verwenden wir aus methodischen Gründen nicht.",
+				"en": "No. We reproduce categorical values from official data sources (Mietspiegel Wohnlage, MSS, standard land value). These categories are descriptive, not evaluative. For methodological reasons, we do not use labels such as “popular Kiez” or “good Bezirk”."
+			}
+		},
+		"wohnen-wohnschutz-einordnung": {
+			"question": {
+				"de": "Wie viel Wohnschutz gibt es in {name}?",
+				"en": "How much tenant protection is there in {name}?"
+			},
+			"answer": {
+				"de": "{name} erreicht im Wohnschutz-Score {wohnschutzScore} von 100 ({wohnschutzRang}), {wohnschutzVergleich}. Der Score erfasst die Milieuschutz-Abdeckung; ein höherer Wert heißt mehr Schutz vor Verdrängung.",
+				"en": "{name} scores {wohnschutzScore} out of 100 in the Tenant protection score ({wohnschutzRang}), {wohnschutzVergleich}. The score captures Milieuschutz coverage. A higher value means more protection against displacement."
+			}
+		}
+	},
+	"klima": {
+		"klima-pet-bezirk": {
+			"question": {
+				"de": "Wie heiß wird der Bezirk {name} im Sommer?",
+				"en": "How hot does the Bezirk {name} get in summer?"
+			},
+			"answer": {
+				"de": "Die mittlere Physiologische Äquivalent-Temperatur (PET) im Bezirk {name} liegt bei {klimaPet} Grad Celsius (Klassifikation: {klimaKategorie}). {klimaErklaerung} Quelle: {klimaSource}, Stand {klimaStand}.",
+				"en": "The mean Physiological Equivalent Temperature (PET) in the Bezirk {name} is {klimaPet} degrees Celsius (classification: {klimaKategorie}). {klimaErklaerung} Source: {klimaSource}, as of {klimaStand}."
+			}
+		},
+		"klima-pet-kiez": {
+			"question": {
+				"de": "Wie warm wird der Kiez {name} an Hitzetagen?",
+				"en": "How warm does the Kiez {name} get on hot days?"
+			},
+			"answer": {
+				"de": "Die mittlere PET im Kiez {name} liegt bei {klimaPet} Grad Celsius. {klimaErklaerung} Quelle: {klimaSource}, Stand {klimaStand}.",
+				"en": "The mean PET in the Kiez {name} is {klimaPet} degrees Celsius. {klimaErklaerung} Source: {klimaSource}, as of {klimaStand}."
+			}
+		},
+		"klima-was-ist-pet": {
+			"question": {
+				"de": "Was ist die Physiologische Äquivalent-Temperatur (PET)?",
+				"en": "What is the Physiological Equivalent Temperature (PET)?"
+			},
+			"answer": {
+				"de": "PET ist ein bioklimatischer Kennwert. Er gibt an, welche Lufttemperatur in einem geschlossenen Raum einer gefühlten Temperatur draußen entsprechen würde. Wind, Luftfeuchte und Strahlung gehen ein. Der Wert eignet sich, um Hitzestress in Stadtgebieten zu vergleichen.",
+				"en": "PET is a bioclimatic indicator. It states which air temperature in an enclosed room would correspond to the perceived temperature outdoors. Wind, humidity and radiation feed into it. The value is suited to comparing heat stress across urban areas."
+			}
+		},
+		"klima-was-ist-hitzetag": {
+			"question": {
+				"de": "Was zählt als Hitzetag?",
+				"en": "What counts as a hot day?"
+			},
+			"answer": {
+				"de": "Der Deutsche Wetterdienst zählt einen Tag mit Tageshöchsttemperatur ab 30 Grad Celsius als Hitzetag. Die Anzahl der Hitzetage pro Jahr ist in Berlin seit den 1990er Jahren deutlich gestiegen, was in der Klima- Normalperiode 1991-2020 dokumentiert ist.",
+				"en": "The German Weather Service (Deutscher Wetterdienst) counts a day with a maximum temperature of 30 degrees Celsius or more as a hot day. The number of hot days per year in Berlin has risen markedly since the 1990s, as documented in the 1991-2020 climate normal period."
+			}
+		},
+		"klima-normalperiode": {
+			"question": {
+				"de": "Was bedeutet Klima-Normalperiode?",
+				"en": "What does climate normal period mean?"
+			},
+			"answer": {
+				"de": "Eine Klima-Normalperiode ist ein 30-Jahres-Referenzzeitraum, mit dem die Weltorganisation für Meteorologie Wetter-Mittelwerte vergleichbar macht. In Berlin nutzen wir die aktuelle Periode 1991-2020 als Vergleichsbasis.",
+				"en": "A climate normal period is a 30-year reference period that the World Meteorological Organization uses to make weather averages comparable. For Berlin, we use the current period 1991-2020 as the basis for comparison."
+			}
+		},
+		"klima-rolle-versiegelung": {
+			"question": {
+				"de": "Welche Rolle spielt die Versiegelung für das Stadtklima?",
+				"en": "What role does surface sealing play in the urban climate?"
+			},
+			"answer": {
+				"de": "Asphalt und Stein speichern Wärme und geben sie nachts wieder ab. Stark versiegelte Quartiere kühlen schlechter aus als Quartiere mit Vegetation oder offenen Wasserflächen. Die Stadtklima-Analyse berücksichtigt Versiegelung als einen Faktor unter mehreren.",
+				"en": "Asphalt and stone store heat and release it again at night. Heavily sealed neighbourhoods cool down less well than neighbourhoods with vegetation or open water. The urban climate analysis treats sealing as one factor among several."
+			}
+		}
+	}
+}
