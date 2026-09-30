@@ -1,0 +1,1 @@
+ALTER TABLE "faq_qna" ADD COLUMN "sort_order" integer DEFAULT 0 NOT NULL;

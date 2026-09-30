@@ -2,8 +2,8 @@
 title: 'FAQ-Reihenfolge stabil nach YAML-Position'
 type: 'bugfix'
 created: '2026-09-30'
-status: 'draft'
-baseline_commit: '1e5d86bbb71bd38fbb5acdc34209c4b6debd062d'
+status: 'done'
+baseline_commit: 'c5f4ac0dd0dabc29b3a4e2b5679a9a34d82993fd'
 route: 'dispatch'
 review_loop_iteration: 0
 context: []
@@ -52,25 +52,47 @@ context: []
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] Positionsfunktion + Unit-Test (Cluster-Folge, YAML-Folge, DE = EN)
-- [ ] Schema + Migration generieren
-- [ ] `render-faq.ts` schreibt `sortOrder`
-- [ ] `getFaqQna` sortiert nach `sortOrder`
-- [ ] `deferred-work.md`: Eintrag „`getFaqQna` hat kein ORDER BY“ als erledigt markieren (Verweis auf diese Spec)
+- [x] Positionsfunktion + Unit-Test (Cluster-Folge, YAML-Folge, DE = EN)
+- [x] Schema + Migration generieren
+- [x] `render-faq.ts` schreibt `sortOrder`
+- [x] `getFaqQna` sortiert nach `sortOrder`
+- [x] `deferred-work.md`: Eintrag „`getFaqQna` hat kein ORDER BY“ als erledigt markieren (Verweis auf diese Spec)
 
 **Acceptance Criteria:**
 - Given lokale DB nach `pnpm db:migrate` und `pnpm data:faq`, when `/kiez/<slug>` und `/en/kiez/<slug>` gerendert werden, then erscheinen die FAQ in derselben `template_id`-Folge wie in den YAML-Dateien.
 
 ## Implementation Notes
 
+- 30.09. Spec 07:44, Abnahme Matze 07:46, Umsetzung 07:46-07:50, Review 07:50-07:52, Patches 07:52-07:55, Verifikation 07:55-08:02.
+- `computeFaqPositions` (neu, `src/lib/server/faq/faq-positions.ts`): Cluster-Folge, dann YAML-Position, DE-Folge hat Vorrang. `render-faq.ts` wirft bei fehlender Position. Query sortiert `sort_order, cluster, template_id`.
+- Migration `0011_spooky_mantis.sql` (additiv, `DEFAULT 0`). Prod: `db:migrate` und danach `data:faq` im `prebuild`.
+- AC-Test: e2e `FAQ-Folge Kiez (sort_order)` mit Helper `tests/e2e/faq-order.ts`, DE und EN gleiche Template-Folge in YAML-Reihenfolge.
+- Qualität: 14 Review-Funde, 7 gepatcht (1 davon als eigener Commit 5307ee2), 4 rejected.
+
 ## Spec Change Log
 
 ## Review Triage Log
 
+Runde 1 (30.09.2026 07:52), 3 Layer: Blind Hunter (BH) 10, Edge Case (EC) 1, Verification Gap (VG) 2 + 1. P = patch, R = reject.
+
+| # | Layer | Fund | Verdict | Evidenz | Route |
+|---|---|---|---|---|---|
+| 1 | BH/VG | AC (Folge = YAML, DE = EN) ohne Test, `.orderBy` entfernen bliebe grün | medium | e2e explizit ordnungsunabhängig, Query-Tests nur leere Ergebnisse | P: e2e-Reihenfolge-Assertion |
+| 2 | BH/VG | `?? 0` verschluckt fehlende Position | medium | kollidiert still mit Position 0 | P: werfen |
+| 3 | BH/EC/VG | kein Tiebreaker bei `sort_order`-Gleichstand | low | nur zwischen `db:migrate` und `data:faq` im `prebuild`, Fix trivial | P: `cluster`, `templateId` als Zweitschlüssel |
+| 4 | BH | irreführender Testname DE=EN | low | Map hat keinen Locale-Key | P |
+| 5 | BH | `as unknown as LoadedTemplate` im Test | low | Projektregel typsicher | P |
+| 6 | BH | `faqPositionKey(cluster: string)` | low | `ClusterKey` existiert | P |
+| 7 | BH | e2e-Textkorrekturen aus c5f4ac0 im Diff | low | gehört zum Umweltatlas-Fix | P (Koordinator: eigener Commit 5307ee2) |
+| 8 | BH | Diff ohne `meta/`-Snapshot | false | vom Koordinator bewusst ausgeschlossen, Dateien liegen vor | R |
+| 9 | BH | SQL ohne Newline am Ende | low | von drizzle-kit generiert | R |
+| 10 | BH | Spec ohne Notes/Verification | low | Fix editiert Spec, folgt in Step 5 | R |
+| 11 | BH | kein Duplikat-Check für `template.id` | low | Duplikat scheitert laut am Primary Key beim Insert | R |
+
 ## Verification
 
 **Commands:**
-- `pnpm exec vitest run` -- expected: alle grün (bekannter Flake `winner-map.svelte.test.ts`)
-- `pnpm check` -- expected: 0 Fehler
-- `pnpm db:migrate && pnpm data:faq` lokal -- expected: `sort_order` befüllt, SQL-Stichprobe Reihenfolge = YAML
-- `pnpm build` + e2e `i18n-profile-frame`, `i18n-layer-frame` -- expected: grün (Port 4173 ist belegt: temporäre Config auf freiem Port, danach löschen)
+- `pnpm exec vitest run` -- expected: alle grün -- **grün**: 5034/5034
+- `pnpm check` -- expected: 0 Fehler -- **grün**
+- `pnpm db:migrate && pnpm data:faq` lokal -- expected: `sort_order` befüllt, SQL-Stichprobe Reihenfolge = YAML -- **grün** (5242 Q&As)
+- `pnpm build` + e2e `i18n-profile-frame`, `i18n-layer-frame` -- expected: grün (Port 4173 ist belegt: temporäre Config auf freiem Port, danach löschen) -- **grün**: Build 0 Fehler, e2e 78/78

@@ -245,6 +245,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c3-faq.md`
   summary: `getFaqQna` hat kein ORDER BY, die FAQ-Reihenfolge auf Kiez-, Bezirk- und Layer-Seiten hängt von der physischen Zeilenfolge nach TRUNCATE+INSERT ab.
   evidence: Review C3 (Edge Case). Unverifiziert, ob Postgres die Einfügereihenfolge je ändert. Ein ORDER BY `template_id` würde die redaktionelle Reihenfolge ändern, sauber wäre eine `sort_order`-Spalte aus der YAML-Position (Migration).
+  resolved: 30.09.2026. Spalte `sort_order` (Cluster-Folge, dann YAML-Position), `getFaqQna` sortiert danach. Spec: `_bmad-output/implementation-artifacts/spec-faq-reihenfolge.md`.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c3-faq.md`
   summary: FAQ `laerm-welche-quellen` sagt, die Karte zeige nur Straßenverkehrslärm LDEN; `layer_explain_laerm_2023_long` sagt „Straßen-, Schienen- und Fluglärm“. Eine der beiden Aussagen ist falsch (DE und EN).

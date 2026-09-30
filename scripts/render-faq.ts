@@ -44,6 +44,7 @@ import type {
 	OepnvAggregat,
 	WohnenAggregat
 } from '../src/lib/server/db/schema/aggregate-types.js';
+import { computeFaqPositions, faqPositionKey } from '../src/lib/server/faq/faq-positions.js';
 import { loadAllFaqTemplates } from '../src/lib/server/faq/load-templates.js';
 import {
 	renderTemplate,
@@ -260,10 +261,12 @@ interface RenderedRow {
 	readonly templateId: string;
 	readonly question: string;
 	readonly answer: string;
+	readonly sortOrder: number;
 }
 
 async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[]> {
 	const loaded = await loadAllFaqTemplates();
+	const positions = computeFaqPositions(loaded);
 	const out: RenderedRow[] = [];
 	for (const target of targets) {
 		for (const { cluster, locale, file } of loaded) {
@@ -278,6 +281,10 @@ async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[
 				};
 				const rendered = renderTemplate(template, context);
 				if (!rendered) continue;
+				const sortOrder = positions.get(faqPositionKey(cluster, template.id));
+				if (sortOrder === undefined) {
+					throw new Error(`Keine FAQ-Position für Template ${cluster}/${template.id}`);
+				}
 				out.push({
 					pageType: target.pageType,
 					slug: target.slug,
@@ -285,7 +292,8 @@ async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[
 					locale,
 					templateId: template.id,
 					question: rendered.question,
-					answer: rendered.answer
+					answer: rendered.answer,
+					sortOrder
 				});
 			}
 		}
@@ -306,7 +314,8 @@ async function upsertRows(rows: readonly RenderedRow[]): Promise<void> {
 			locale: r.locale,
 			templateId: r.templateId,
 			question: r.question,
-			answer: r.answer
+			answer: r.answer,
+			sortOrder: r.sortOrder
 		}));
 		await db.insert(faqQna).values(slice);
 	}

@@ -21,7 +21,7 @@ import { expect, test } from '@playwright/test';
 // i18n Block C3 (spec-i18n-c3-faq.md): FAQ kommt in der Seiten-Locale aus
 // `faq_qna` (EN-Zeilen), ohne lang="de".
 
-// Ordnungsunabhängig: `faq_qna` wird ohne ORDER BY gelesen.
+// Sprachprüfung ohne Ordnung; die FAQ-Reihenfolge prüft `i18n-profile-frame.e2e.ts` (`sort_order`).
 const DE_QUESTION_START =
 	/^(Wie|Was|Warum|Welche[rsmn]?|Wo|Wann|Wer|Worin|Wodurch|Berücksichtigt|Bewertet|Ist|Gibt|Wird)\b/;
 

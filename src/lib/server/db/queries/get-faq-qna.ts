@@ -27,7 +27,8 @@ export async function getFaqQna(input: GetFaqQnaInput): Promise<FaqEntry[]> {
 				eq(faqQna.slug, input.slug),
 				eq(faqQna.locale, input.locale)
 			)
-		);
+		)
+		.orderBy(faqQna.sortOrder, faqQna.cluster, faqQna.templateId);
 }
 
 export interface FaqForPage {

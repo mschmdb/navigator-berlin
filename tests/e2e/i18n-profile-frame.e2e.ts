@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
+import { expectFaqInYamlOrder } from './faq-order';
 
 // i18n Block B4a (spec-i18n-b4a-kiez-bezirk-rahmen.md): Rahmen der Kiez- und
 // Bezirk-Seiten auf Englisch. Prosa (`profileProse`) und FAQ-Inhalte
@@ -41,7 +42,7 @@ async function berlinCellText(row: Locator): Promise<string> {
 	return (await cells.nth(count - 2).textContent())?.trim() ?? '';
 }
 
-// Ordnungsunabhängig: `faq_qna` wird ohne ORDER BY gelesen.
+// Sprachprüfung ohne Ordnung; die FAQ-Reihenfolge prüft der Test `FAQ-Folge` (`sort_order`).
 const DE_QUESTION_START =
 	/^(Wie|Was|Warum|Welche[rsmn]?|Wo|Wann|Wer|Worin|Wodurch|Berücksichtigt|Bewertet|Ist|Gibt|Wird)\b/;
 
@@ -297,5 +298,18 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		await page.getByRole('link', { name: /Wie der Bezirks-Score entsteht/ }).click();
 		await expect(page).toHaveURL(/\/methodik\/kiez-score/);
 		expect(page.url()).not.toMatch(/\/en\//);
+	});
+});
+
+test.describe('FAQ-Folge Kiez (sort_order)', () => {
+	test('DE und EN zeigen dieselben Template-IDs in YAML-Folge', async ({ page }) => {
+		const read = async (path: string) => {
+			await page.goto(path);
+			return page.getByTestId('faq-section').locator('[data-faq-question]').allTextContents();
+		};
+		const de = await expectFaqInYamlOrder(await read(`/kiez/${KIEZ_SLUG}`), 'kiez', 'de');
+		const en = await expectFaqInYamlOrder(await read(`/en/kiez/${KIEZ_SLUG}`), 'kiez', 'en');
+		expect(de.length).toBeGreaterThan(1);
+		expect(en).toEqual(de);
 	});
 });

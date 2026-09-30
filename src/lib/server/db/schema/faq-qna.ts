@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, primaryKey, pgEnum } from 'drizzle-orm/pg-core';
+import { pgTable, text, integer, timestamp, primaryKey, pgEnum } from 'drizzle-orm/pg-core';
 
 /**
  * Page-Type-Enum für FAQ-Section-Template (Story 2.5b).
@@ -29,6 +29,8 @@ export const faqQna = pgTable(
 		templateId: text('template_id').notNull(),
 		question: text('question').notNull(),
 		answer: text('answer').notNull(),
+		/** Redaktionelle Position (Cluster-Folge, dann YAML-Position). Sortierschlüssel der Seiten. */
+		sortOrder: integer('sort_order').notNull().default(0),
 		computedAt: timestamp('computed_at', { withTimezone: true }).notNull().defaultNow()
 	},
 	(t) => [primaryKey({ columns: [t.pageType, t.slug, t.cluster, t.locale, t.templateId] })]
