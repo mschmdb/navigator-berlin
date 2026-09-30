@@ -16,6 +16,7 @@ export {
 	renderTemplate,
 	canRender,
 	type RenderedTemplate,
+	type TemplateRenderOptions,
 	type TemplateContext
 } from './renderer.js';
 export {

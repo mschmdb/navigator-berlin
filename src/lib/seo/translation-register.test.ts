@@ -16,7 +16,7 @@ describe('isRouteTranslated', () => {
 
 	it('a path not registered for EN stays untranslated (register is NOT a catch-all)', () => {
 		expect(isRouteTranslated('/kiez/mitte', 'en')).toBe(false);
-		expect(isRouteTranslated('/methodik', 'en')).toBe(false);
+		expect(isRouteTranslated('/methodik/wahldaten', 'en')).toBe(false);
 	});
 
 	// Review-Fund (i18n Block B): der Register-Eintrag ist ein PRAEFIX
@@ -27,7 +27,10 @@ describe('isRouteTranslated', () => {
 		expect(TRANSLATION_REGISTER).toEqual([
 			{ pathname: '/berlin-wahlen', locale: 'en', prefix: true },
 			{ pathname: '/', locale: 'en' },
-			{ pathname: '/explore', locale: 'en' }
+			{ pathname: '/explore', locale: 'en' },
+			{ pathname: '/methodik', locale: 'en' },
+			{ pathname: '/methodik/kiez-score', locale: 'en' },
+			{ pathname: '/methodik/cross-layer-templates', locale: 'en' }
 		]);
 		expect(isRouteTranslated('/berlin-wahlen', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen', 'en')).toBe(true);
@@ -44,6 +47,21 @@ describe('isRouteTranslated', () => {
 		expect(isRouteTranslated('/explore', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/explore', 'en')).toBe(true);
 		expect(isRouteTranslated('/explore/foo', 'en')).toBe(false);
+	});
+
+	// Block C4a (`spec-i18n-c4a-methodik-kern.md`): drei exakte Methodik-Einträge,
+	// ohne `prefix`. `/methodik/wahldaten` folgt erst in C4b und bleibt Fallback.
+	it('Block C4a: /methodik, /methodik/kiez-score und /methodik/cross-layer-templates sind exakt registriert', () => {
+		for (const path of ['/methodik', '/methodik/kiez-score', '/methodik/cross-layer-templates']) {
+			expect(isRouteTranslated(path, 'en'), path).toBe(true);
+			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
+		}
+	});
+
+	it('Block C4a: /methodik/wahldaten und unbekannte Unterseiten bleiben unübersetzt (kein prefix)', () => {
+		expect(isRouteTranslated('/methodik/wahldaten', 'en')).toBe(false);
+		expect(isRouteTranslated('/en/methodik/wahldaten', 'en')).toBe(false);
+		expect(isRouteTranslated('/methodik/unbekannt', 'en')).toBe(false);
 	});
 
 	// Block B2 (`spec-i18n-b2-shell.md`, Entscheidung Matze 26.09. 2A):

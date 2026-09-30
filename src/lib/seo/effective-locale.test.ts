@@ -53,8 +53,8 @@ describe('resolveFrameLocale', () => {
 		expect(resolveEffectiveLocale('/kiez/mitte', 'en')).toBe('de');
 	});
 
-	it('/en/methodik (nicht registriert) faellt wie effectiveLocale auf DE zurueck', () => {
-		expect(resolveFrameLocale('/methodik', 'en')).toBe('de');
+	it('/en/methodik/wahldaten (nicht registriert) faellt wie effectiveLocale auf DE zurueck', () => {
+		expect(resolveFrameLocale('/methodik/wahldaten', 'en')).toBe('de');
 	});
 
 	it('eine voll uebersetzte Route (z. B. /en/berlin-wahlen) behaelt ihre eigene Locale', () => {

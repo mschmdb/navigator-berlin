@@ -264,8 +264,19 @@ describe('collectPrerenderedUrls', () => {
 
 	it('a page with no translated counterpart gets no alternates', () => {
 		const entries = collectPrerenderedUrls(ctx());
+		const wahldaten = entries.find((e) => e.loc === 'https://navigator.berlin/methodik/wahldaten');
+		expect(wahldaten).toBeDefined();
+		expect(wahldaten?.alternates).toBeUndefined();
+	});
+
+	it('i18n Block C4a: /methodik (DE) gets its EN alternate once registered', () => {
+		const entries = collectPrerenderedUrls(ctx());
 		const methodik = entries.find((e) => e.loc === 'https://navigator.berlin/methodik');
-		expect(methodik?.alternates).toBeUndefined();
+		expect(methodik?.alternates).toEqual([
+			{ hreflang: 'de', href: 'https://navigator.berlin/methodik' },
+			{ hreflang: 'en', href: 'https://navigator.berlin/en/methodik' },
+			{ hreflang: 'x-default', href: 'https://navigator.berlin/methodik' }
+		]);
 	});
 
 	it('i18n Block B: a wahl-detail slug (DE) also gets its EN alternate', () => {

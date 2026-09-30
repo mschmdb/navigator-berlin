@@ -55,13 +55,22 @@ export interface TranslationRegisterEntry {
  * server-rendered OG-image text (`server/og/og-pipeline.ts`, no EN map
  * template yet) and the KI-Export/LLM export (`llm-export-builder.ts`,
  * `data-collector.ts`, `webmcp/**` -- boundary "stay German regardless of
- * page locale"). Later blocks append further `{ pathname, locale }` entries
+ * page locale"). Block C4a (`spec-i18n-c4a-methodik-kern.md`) registers
+ * `/methodik`, `/methodik/kiez-score` and `/methodik/cross-layer-templates` as
+ * exact entries (no `prefix`): `/methodik/wahldaten` follows in C4b and keeps
+ * the fallback banner until then. The OG images of these pages stay German.
+ * `/methodik/cross-layer-templates` keeps its explicit `noindex` (co-design
+ * preview), the registration only lifts the fallback banner and the German
+ * `<main lang>`. Later blocks append further `{ pathname, locale }` entries
  * as more EN content ships -- no other module needs to change.
  */
 export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/berlin-wahlen', locale: 'en', prefix: true },
 	{ pathname: '/', locale: 'en' },
-	{ pathname: '/explore', locale: 'en' }
+	{ pathname: '/explore', locale: 'en' },
+	{ pathname: '/methodik', locale: 'en' },
+	{ pathname: '/methodik/kiez-score', locale: 'en' },
+	{ pathname: '/methodik/cross-layer-templates', locale: 'en' }
 ];
 
 /**

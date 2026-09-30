@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import EditorialDisclaimer from './editorial-disclaimer.svelte';
 	import type { RenderedTemplate } from '$lib/data/cross-layer-templates/index.js';
-	import { resolveEffectiveLocale } from '$lib/seo/effective-locale.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { m } from '$lib/paraglide/messages.js';
 
 	type SourceRef = {
 		readonly label: string;
@@ -10,39 +10,26 @@
 		readonly license?: string;
 	};
 
+	// `rendered.body` liefert der Aufrufer bereits in der Seiten-Locale
+	// (`renderTemplate(..., { locale })`). Rahmen, Hinweis und Body teilen damit
+	// eine Sprache, ein eigenes `lang` entfällt (i18n C4a).
 	type Props = {
 		rendered: RenderedTemplate;
 		sources: ReadonlyArray<SourceRef>;
 		methodikHref?: string;
 		methodikLinkLabel?: string;
 		testid?: string;
-		/** Pathname used to resolve the effective content locale. Defaults to
-		 * the current route (`page.url.pathname`) -- an explicit prop keeps the
-		 * component testable without a real SvelteKit route context (same
-		 * pattern as `SeoHead`'s `pathname` prop). */
-		pathname?: string;
 	};
 
 	let {
 		rendered,
 		sources,
-		methodikHref = '/methodik',
-		methodikLinkLabel = 'Methodik',
-		testid = 'cross-layer-story-block',
-		pathname
+		methodikHref = localizedHref('/methodik'),
+		methodikLinkLabel = m.cross_layer_story_methodik_link_label(),
+		testid = 'cross-layer-story-block'
 	}: Props = $props();
 
 	const hasMissing = $derived(rendered.missingVars.length > 0);
-	// spec-i18n-teiluebersetzung-banner.md: `rendered.body` (Template-Prosa)
-	// bleibt bis Block C deutsch. Review-Fund (i18n Block C1): diese
-	// Komponente rendert auf `/methodik/cross-layer-templates`, einer NICHT
-	// registrierten Seite -- die Content-Locale ist dort immer die effektive
-	// Locale (`resolveEffectiveLocale`, faellt fuer unregistrierte Pfade auf
-	// DE zurueck), nicht die URL-Locale (`getLocale()`). Auf `/en/methodik/
-	// cross-layer-templates` waere `getLocale() === 'en'`, obwohl der Content
-	// (Rahmen UND `EditorialDisclaimer`) tatsaechlich deutsch bleibt.
-	const effectiveLocale = $derived(resolveEffectiveLocale(pathname ?? page.url.pathname));
-	const contentLang = $derived(effectiveLocale === 'de' ? undefined : 'de');
 </script>
 
 {#if !hasMissing}
@@ -51,11 +38,7 @@
 		data-testid={testid}
 		data-template-id={rendered.id}
 	>
-		<p
-			lang={contentLang}
-			class="font-serif text-base leading-relaxed text-ink"
-			data-testid={`${testid}-body`}
-		>
+		<p class="font-serif text-base leading-relaxed text-ink" data-testid={`${testid}-body`}>
 			{rendered.body}
 		</p>
 
@@ -63,7 +46,7 @@
 			<ul
 				class="space-y-0.5 font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 				data-testid={`${testid}-sources`}
-				aria-label="Quellen für diese Beobachtung"
+				aria-label={m.cross_layer_story_sources_aria_label()}
 			>
 				{#each sources as src, i (i)}
 					<li>
@@ -79,14 +62,14 @@
 							<span>{src.label}</span>
 						{/if}
 						{#if src.license}
-							· Lizenz {src.license}
+							· {m.cross_layer_story_license_prefix()} {src.license}
 						{/if}
 					</li>
 				{/each}
 			</ul>
 		{/if}
 
-		<EditorialDisclaimer variant="cross-layer-template" locale={effectiveLocale} />
+		<EditorialDisclaimer variant="cross-layer-template" />
 
 		<a
 			href={methodikHref}

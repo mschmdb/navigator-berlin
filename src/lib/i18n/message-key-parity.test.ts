@@ -32,4 +32,19 @@ describe('messages/de.json <-> messages/en.json Key-Paritaet', () => {
 		const missingInDe = [...en].filter((k) => !de.has(k)).sort();
 		expect(missingInDe).toEqual([]);
 	});
+
+	// i18n C4a: Rich-Text-Messages (`{link_start}`, `{code_end}`) brechen still,
+	// wenn EN einen Platzhalter verliert oder erfindet.
+	it('jede Message nutzt in DE und EN dieselben Platzhalter', () => {
+		const de = loadMessages('de');
+		const en = loadMessages('en');
+		const placeholders = (value: unknown): string[] =>
+			typeof value === 'string'
+				? [...value.matchAll(/\{([a-zA-Z0-9_]+)\}/g)].map((m) => m[1]!).sort()
+				: [];
+		const mismatches = Object.keys(de).filter(
+			(k) => placeholders(de[k]).join() !== placeholders(en[k]).join()
+		);
+		expect(mismatches).toEqual([]);
+	});
 });

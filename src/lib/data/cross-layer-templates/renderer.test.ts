@@ -79,3 +79,57 @@ describe('canRender', () => {
 		).toBe(false);
 	});
 });
+
+describe('renderTemplate mit Locale', () => {
+	const bilingual: Template = {
+		...T,
+		body_en: 'In the Kiez {kiez_name}, {top_partei_label} reached {top_anteil_pct}.'
+	};
+	const ctx = { kiez_name: 'Friedrichshain', top_partei_label: 'GRÜNE', top_anteil_pct: '28.4%' };
+
+	it('nutzt body_de ohne Locale-Angabe (DE-Default)', () => {
+		expect(renderTemplate(bilingual, ctx).body).toBe('Im Kiez Friedrichshain kam GRÜNE auf 28.4%.');
+	});
+
+	it('nutzt body_de bei locale de', () => {
+		expect(renderTemplate(bilingual, ctx, { locale: 'de' }).body).toBe(
+			'Im Kiez Friedrichshain kam GRÜNE auf 28.4%.'
+		);
+	});
+
+	it('nutzt body_en bei locale en', () => {
+		expect(renderTemplate(bilingual, ctx, { locale: 'en' }).body).toBe(
+			'In the Kiez Friedrichshain, GRÜNE reached 28.4%.'
+		);
+	});
+
+	it('fällt bei locale en ohne body_en auf body_de zurück', () => {
+		expect(renderTemplate(T, ctx, { locale: 'en' }).body).toBe(
+			'Im Kiez Friedrichshain kam GRÜNE auf 28.4%.'
+		);
+	});
+
+	it('meldet missingVars aus dem body der gewählten Locale', () => {
+		const out = renderTemplate(
+			{ ...bilingual, body_en: 'Only {other_var} here, long enough text.' },
+			ctx,
+			{ locale: 'en' }
+		);
+		expect(out.missingVars).toEqual(['other_var']);
+	});
+});
+
+describe('canRender mit Locale', () => {
+	const t: Template = {
+		...T,
+		body_de: 'Im Kiez {kiez_name} kam {partei} auf {anteil}.',
+		body_en: 'In the Kiez {kiez_name}, {party} reached {share}.'
+	};
+
+	it('prüft die Platzhalter der gewählten Locale', () => {
+		const ctxEn = { kiez_name: 'A', party: 'B', share: 'C' };
+		expect(canRender(t, ctxEn, { locale: 'en' })).toBe(true);
+		expect(canRender(t, ctxEn, { locale: 'de' })).toBe(false);
+		expect(canRender(t, ctxEn)).toBe(false);
+	});
+});

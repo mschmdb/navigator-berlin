@@ -1,0 +1,130 @@
+h1: Methodik
+p: Methodik des Berliner Daten-Atlas: Auflösung, Aktualität, Editorial-Regeln und was bewusst nicht enthalten ist.
+p: Inhalt
+a: Worum es geht
+a: Datenarchitektur
+a: Aggregations-Ebenen
+a: Karten-Darstellung
+a: Was „Kiez" hier bedeutet
+a: Aggregat-Indizes
+a: Wahldaten
+a: Kühle Orte
+a: Coverage-Strategie
+a: Was wir weglassen
+a: Editorial-Verantwortung
+a: Daten-Stand
+a: Quellen und Lizenzen
+a: Feedback
+h2: Worum es geht
+p: navigator.berlin sammelt 3 öffentliche Berliner Geo-Datensätze und zeigt pro Adresse die zutreffenden Werte. Statisch ausgeliefert, ohne Cookies, ohne Login, ohne Tracker.
+p: Die Idee: Daten lesbar machen, ohne sie zu einem „Wohn-Score" zu verdichten. Stadtteil-Statistik bleibt Stadtteil-Statistik. Was an einer Adresse zutrifft, steht im Inspector. Was nicht zutrifft, sagen wir auch.
+h2: Datenarchitektur
+p: Beim Build-Schritt fetchen wir jeden Layer von der Quelle, reprojizieren auf EPSG:4326, vereinfachen die Geometrie mit mapshaper und schreiben Hash plus Datenstand ins Manifest. Zur Laufzeit liefert ein Punkt-im-Polygon-Lookup pro Adresse die zutreffenden Werte. Keine Datenbank, kein API-Call zum Server.
+li: Source · Berliner Geoportal · OSM · DWD →
+li: fetch · WFS-Pull · Overpass-Query →
+li: reproject · EPSG:3035 → EPSG:4326 →
+li: simplify · mapshaper visvalingam · keep-shapes →
+li: hash · SHA-256 →
+li: manifest · MANIFEST.json →
+li: build · SvelteKit · prerender →
+li: edge · CDN · Hetzner
+figcaption: Build-Pipeline: alle Schritte deterministisch, idempotent, im Source-Repo dokumentiert.
+h2: Aggregations-Ebenen
+p: Nicht jeder Wert ist adressgenau. Lärm und Luft stammen aus Stadtteil-Statistiken (LOR-Planungsraum, 542 Polygone). Bodenrichtwerte hängen am Häuserblock. Wer im Inspector einen Lärm-Wert liest, sieht den Mittelwert für den ganzen Planungsraum, nicht das eigene Schlafzimmer.
+dt: Adress-genau
+dd: Punkt-Geocode + Punkt-Layer (Stolpersteine, Kitas, ÖPNV-Stops)
+dt: LOR-Planungsraum (542)
+dd: Lärm, Luft, Bioklima, Grünversorgung, Umweltgerechtigkeit, Wohnlagen-2024
+dt: Bezirk (12) und Ortsteil (96)
+dd: Verwaltungs-Stammdaten
+dt: Block-Aggregat
+dd: Bodenrichtwerte, Klima-PET, Milieuschutz, Einschulbereiche
+dt: Punkt-OSM
+dd: Radverkehrsnetz, Fahrradstraßen, ÖPNV-Stationen, Stolpersteine, Trinkbrunnen
+h2: Karten-Darstellung
+p: Die Karte zeigt höchstens zwei Wertkarten gleichzeitig, mit festen Rollen: Die erste füllt die Fläche, die zweite erscheint als abgestufte Quadrat-Symbole, ein Quadrat pro Planungsraum, dessen Größe die Stufe zeigt. Ein dritter Wert-Layer ersetzt automatisch den ältesten. In der Legende lassen sich die Rollen per Klick tauschen; die Einstellung wandert mit in geteilte Links.
+p: Jede Score-Dimension hat eine eigene Farbe (Ruhe & Luft blau, Mobilität violett, Versorgung ocker, Wohnschutz petrol, Kultur beere; Grün gehört dem Gesamt-Score und Grün & Hitze). Innerhalb jeder Farbe gilt: hell = niedrige, dunkel = hohe Stufe. Die Formsprache trennt Bedeutungen: Quadrate stehen für zusammengefasste Flächenwerte, runde Marker und Pins für konkrete Orte. Gebiets-Layer wie Milieuschutz oder Kaltluft-Korridore sagen nur „hier gilt etwas", legen sich als Flächen darunter und zählen nicht ins Zwei-Karten-Limit.
+p: Die Größen-Staffelung der Symbole trägt die Information auch bei Rot-Grün-Schwäche, wo sich Farbtöne annähern können. Die Unterscheidbarkeit der Farb-Kombinationen haben wir mit simulierter Farbfehlsichtigkeit gemessen, nicht geschätzt.
+h2: Was „Kiez" hier bedeutet
+p: Umgangssprachlich ist ein Kiez ein gefühltes Viertel, von den Bewohnern definiert, ohne feste Grenze. Auf navigator.berlin meint „Kiez" dagegen eine amtliche Einheit: die Lebensweltlich orientierte Raum-Bezirksregion (LOR-BZR, Stand 2021), 143 Stück.
+p: Wir nutzen die LOR-Bezirksregion, weil nur sie eine klare, statistisch belegte Grenze hat, an der alle Daten hängen. Dein gefühlter Kiez kann kleiner sein oder über mehrere Bezirksregionen reichen. Die Werte auf einer Kiez-Seite gelten für die LOR-BZR, nicht für eine einzelne Straße.
+h2: Aggregat-Indizes
+p: Der Umwelt- & Infrastruktur-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und Luft, Grün und Hitze, Mobilität, Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze) und Wohnschutz (Milieuschutzgebiete). Jede Dimension bleibt separat abrufbar im Inspector und als eigener Karten-Layer. Fünf mal 20 Prozent Gewicht. Ein Gesamt-Layer aggregiert sie als Mittel.
+p: Der Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur wertet er nicht: ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter". Bezahlbarkeit bleibt ebenfalls draußen, kontestiert und ohne belastbare Adress-Daten.
+p: Es gibt keinen einzelnen „Berlin-Score". Aggregation auf eine Zahl würde stigmatisieren und individuelle Prioritäten verschleiern. Wer Familie sucht, gewichtet anders als jemand mit Hitze-Empfindlichkeit.
+p: Vollständige Methodik: Kiez-Score
+a: Kiez-Score
+h3: MSS 2025 als neutraler Kontext
+p: Das Monitoring Soziale Stadtentwicklung der Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen liefert pro Planungsraum einen Gesamtindex aus Status (Einkommen, Beschäftigung, Bildung) und Dynamik (Veränderung). Seit der Score-Neuordnung fließt es nicht mehr in den Score ein. Wir zeigen es als neutralen Kontext-Layer, nur den Aggregat-Wert, nicht die Einzel-Indikatoren wie Arbeitslosen-Quote oder Transferbezugs-Anteil. Einzelwerte wären auf Adress-Ebene schärfer und stigmatisierender.
+p: Niedriger Status bedeutet nicht „schlechter Kiez". Die Stufe spiegelt strukturelle Unterschiede, keine Wohnqualität. Choropleth-Farben sind neutral gehalten, kein Rot-Grün. Quelle: SenStadt MSS 2025, Lizenz dl-de/zero-2-0.
+h2: Wahldaten
+p: Bundestags-, Abgeordnetenhaus- und BVV-Wahlen seit 2011 mit Aggregaten auf vier Ebenen: Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk und Berlin gesamt. Quellen sind Bundeswahlleiterin (BTW) und Amt für Statistik Berlin-Brandenburg (AGH + BVV). Werte beschreiben Stimmenanteile, keine Bewertung.
+p: Spezialfälle dokumentieren wir transparent: Briefwahl-Gruppen als kleinste Kartenebene (Kiez-Wert als Schätzung), Wiederholungswahlen 2023 mit Original-Wahl-Verweis, Coverage-Lücken pre-2017 ohne Stimmbezirks-Geometrie.
+p: Vollständige Methodik: Wahldaten · Alle Wahlen einzeln
+a: Wahldaten
+a: Alle Wahlen einzeln
+h2: Kühle Orte
+p: Der Kühle-Orte-Layer zeigt Orte zum Abkühlen bei Hitze. Der Kühle-Score von 1 bis 5 folgt Typ und Bauart: 5 sehr kalt (Eishalle), 4 klimatisiert oder am Wasser, 3 kühler Massivbau wie Bibliothek oder Museum, darunter weniger kühl. Geometrie und Basis-Tags stammen aus OpenStreetMap (ODbL 1.0, Namensnennung), ergänzt um eine redaktionelle navigator.berlin-Anreicherung: Kühle-Score, Klimatisierung und Sommer-Verfügbarkeit.
+p: Klimatisierung ist selten belegbar: nur 29 von 659 Orten tragen einen belegten AC-Status, der Rest steht auf wahrscheinlich oder unbekannt. Der AC-Hinweis ist ein Indiz, keine Zusage. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.
+p: Quellen und Lizenzen
+a: Quellen und Lizenzen
+h2: Coverage-Strategie
+p: Liefert ein Layer für eine Adresse keinen Wert, nennen wir den Grund.
+dt: no-coverage
+dd: Datensatz für diese Adresse nicht verfügbar.
+dt: outdated
+dd: Geo-Datensatz älter als 5 Jahre.
+dt: seasonal
+dd: Layer aktiv nur in Saison (Trinkbrunnen Mai bis Oktober).
+dt: coverage-out-of-scope
+dd: Adresse außerhalb des räumlichen Geltungsbereichs.
+dt: out-of-concept
+dd: Layer konzeptionell nicht anwendbar (Mietspiegel-Layer in Gewerbe-Lage).
+h2: Was wir weglassen
+p: Cookies, Tracker, User-Konten
+p: Keine Browser-Identifikation. Bookmarks liegen im LocalStorage.
+p: Mietpreise
+p: Wir nennen keinen €/m². Den offiziellen Wert liefert mietspiegel.berlin.de.
+p: Personenbezogene Daten
+p: Kein Profil, keine Verhaltens-Auswertung, keine Login-Pflicht.
+p: Algorithmisch generierte Layer-Texte
+p: Layer-Beschreibungen schreiben wir manuell. Kein LLM-Output für Personen-Biografien.
+p: Stadtweiter Einzel-Score
+p: Pro Kiez gibt es einen Gesamt-Wert, aber keine einzelne Zahl für ganz Berlin. Persönliche Prioritäten gewichten ohnehin anders.
+p: Werbung, Partner-Tracking, A/B-Tests
+p: Kein kommerzielles Modell.
+h2: Editorial-Verantwortung
+p: Stolpersteine zeigen wir als Erinnerungs-Marker. Wir zählen sie nicht und werten sie nicht. Personen-Biografien gehören zur Primärquelle stolpersteine-berlin.de.
+p: navigator.berlin nennt keinen Mietpreis und gibt keine rechtliche Auskunft. Den gesetzlichen Wohnlagen-Mietspiegel liefert mietspiegel.berlin.de.
+p: Aggregierte Werte sind Stadtteil-Mittel, keine Wohnungs-Eigenschaften. Wir verzichten bewusst auf einen „Berlin-Score" und zeigen keine Bezirks-Rankings.
+p: Layer-Texte schreiben wir manuell. Kein Layer-Inhalt wird per LLM zusammengefasst, keine Personen-Biografie generiert.
+h2: Daten-Stand
+p: Alphabetisch sortiert nach Layer-Name, kein Aktualitäts-Ranking.
+caption: Daten-Stand-Tabelle aller aktiven Layer
+th: Layer
+th: Bundle
+th: Stand
+th: Lizenz
+td: Bezirke
+a: Bezirke
+td: A: Boundaries
+td: 2024-06
+td: dl-de/zero
+td: Lärmbelastung 2023
+a: Lärmbelastung 2023
+td: C: Umwelt
+td: 2024-06
+td: dl-de/zero
+td: Mietspiegel-Wohnlage 2024
+a: Mietspiegel-Wohnlage 2024
+td: B: Wohn-Daten
+td: 2024-06
+td: dl-de/zero
+h2: Quellen und Lizenzen
+p: Die meisten Layer stehen unter dl-de/zero-2-0 oder dl-de/by-2-0. OSM-basierte Layer (Stolpersteine, ÖPNV, Trinkbrunnen, Radverkehr) unter ODbL 1.0 mit Namensnennung OpenStreetMap-Contributors.
+p: Vollständige Auflistung: /lizenzen
+a: /lizenzen
+h2: Feedback
+p: Methodik-Korrektur, Datenfehler oder Layer-Vorschlag: per Mail.
+p: hey@navigator.berlin
+a: hey@navigator.berlin

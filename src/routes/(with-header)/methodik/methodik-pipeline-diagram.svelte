@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+
 	const stages = [
-		{ label: 'Source', detail: 'Berliner Geoportal · OSM · DWD' },
+		{ label: 'Source', detail: m.methodik_pipeline_stage_source_detail() },
 		{ label: 'fetch', detail: 'WFS-Pull · Overpass-Query' },
 		{ label: 'reproject', detail: 'EPSG:3035 → EPSG:4326' },
 		{ label: 'simplify', detail: 'mapshaper visvalingam · keep-shapes' },
@@ -13,12 +15,12 @@
 
 <figure
 	data-testid="methodik-pipeline-diagram"
-	aria-label="Build-Pipeline der Geo-Daten"
+	aria-label={m.methodik_pipeline_figure_aria_label()}
 	class="border border-rule bg-bg p-4"
 >
 	<ol
 		class="flex flex-wrap items-center gap-x-2 gap-y-3 font-mono text-xs text-ink"
-		aria-label="Pipeline-Schritte"
+		aria-label={m.methodik_pipeline_steps_aria_label()}
 	>
 		{#each stages as stage, i (stage.label)}
 			<li class="flex items-center gap-2">
@@ -33,6 +35,6 @@
 		{/each}
 	</ol>
 	<figcaption class="mt-3 font-mono text-xs text-ink-subtle">
-		Build-Pipeline: alle Schritte deterministisch, idempotent, im Source-Repo dokumentiert.
+		{m.methodik_pipeline_figcaption()}
 	</figcaption>
 </figure>

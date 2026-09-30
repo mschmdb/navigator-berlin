@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import MethodikDatenTabelle from './methodik-daten-tabelle.svelte';
 import type { LayerMetadata } from '$lib/data';
 
@@ -71,5 +72,38 @@ describe('methodik-daten-tabelle.svelte', () => {
 		render(MethodikDatenTabelle, { layers: [meta('laerm-2023')] });
 		const text = (await page.getByTestId('methodik-daten-table').element()).textContent ?? '';
 		expect(text).toMatch(/dl-de\/zero/);
+	});
+});
+
+describe('methodik-daten-tabelle.svelte · Locale (i18n C4a)', () => {
+	afterEach(() => {
+		overwriteGetLocale(() => 'de');
+	});
+
+	it('DE: Kopf, Caption und Bundle-Rohwert unverändert', async () => {
+		render(MethodikDatenTabelle, { layers: [meta('laerm-2023')] });
+		const table = (await page.getByTestId('methodik-daten-table').element()) as HTMLTableElement;
+		expect(table.querySelector('caption')?.textContent?.trim()).toBe(
+			'Daten-Stand-Tabelle aller aktiven Layer'
+		);
+		const heads = [...table.querySelectorAll('th')].map((th) => th.textContent?.trim());
+		expect(heads).toEqual(['Layer', 'Bundle', 'Stand', 'Lizenz']);
+		expect(table.querySelector('tbody tr td:nth-child(2)')?.textContent?.trim()).toBe('C: Umwelt');
+	});
+
+	it('EN: Kopf, Caption, Bundle-Label und Layer-Link unter /en', async () => {
+		overwriteGetLocale(() => 'en');
+		render(MethodikDatenTabelle, { layers: [meta('laerm-2023')] });
+		const table = (await page.getByTestId('methodik-daten-table').element()) as HTMLTableElement;
+		expect(table.querySelector('caption')?.textContent?.trim()).toBe(
+			'Data status table of all active layers'
+		);
+		const heads = [...table.querySelectorAll('th')].map((th) => th.textContent?.trim());
+		expect(heads).toEqual(['Layer', 'Bundle', 'Last updated', 'Licence']);
+		expect(table.querySelector('tbody tr td:nth-child(2)')?.textContent?.trim()).toBe(
+			'C · Environment'
+		);
+		expect(table.querySelector('tbody a')?.getAttribute('href')).toBe('/en/layer/laerm-2023');
+		expect(table.querySelector('tbody a')?.textContent?.trim()).toBe('Noise pollution 2023');
 	});
 });

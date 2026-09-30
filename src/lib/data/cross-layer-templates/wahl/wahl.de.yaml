@@ -9,6 +9,10 @@ templates:
       Im Kiez {kiez_name} verteilten sich die {stimmtyp_label} bei den
       letzten {wahl_typ_label} wie folgt: {sparkline_jahre} mit jeweils
       stärkster Partei {sparkline_jahre_top_parteien}.
+    body_en: >-
+      In the Kiez {kiez_name}, the {stimmtyp_label} were distributed as
+      follows in the most recent {wahl_typ_label}: {sparkline_jahre}, with the
+      strongest party in each case being {sparkline_jahre_top_parteien}.
     editorialNote: >-
       Nüchterne Zeitreihe ohne Trend-Bewertung. Sparkline-Daten kommen aus
       get_sparkline_for_kiez. Keine Steigungs- oder Schwankungs-Adjektive.

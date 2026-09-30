@@ -1,0 +1,96 @@
+a: Methodik
+h1: Umwelt- & Infrastruktur-Score
+p: Fünf Dimensionen pro Planungsraum, gleich gewichtet, transparent zurückverfolgbar. Der Score misst Umwelt und Infrastruktur, nicht den sozialen Status.
+p: Inhalt
+a: Worum es geht
+a: Dimensionen
+a: Gewichte
+a: Normalisierung
+a: Kiez-Score (Bezirksregion)
+a: Bezirks-Score
+a: Was fehlt und warum
+a: Datenquellen
+a: Editorial-Verantwortung
+a: Feedback
+h2: Worum es geht
+p: Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking“. Die Karte zeigt sieben Dimensionen separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Fünf Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als eigenständige Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.
+p: Aggregations-Ebene Planungsraum entspricht rund 7.500 Einwohner:innen. Wohnungs-Mikrolagen liegen darunter und tauchen im Aggregat nicht auf.
+h2: Dimensionen
+p: Ruhe & Luft
+p: Lärmbelastung 2023, Luftbelastung 2023
+p: Lärm- und Luftbelastung, je zur Hälfte gewichtet. Kategorisches 3-Stufen-Mapping von gering bis hoch. Bioklima zählt nicht mehr hier mit, es ist nach Grün & Hitze gewandert.
+p: Grün & Hitze
+p: Grünversorgung 2023, Grünanlagen, Thermische Belastung 2023, Gefühlte Temperatur 2022, Kaltluft-Einwirkbereich (2022), Kaltluft-Leitbahn-Korridor (2022)
+p: Nutzbares Grün und Schutz vor Hitze. Grünversorgung 0.30, Grünanlagen-Nähe 0.15, Bioklima 0.20, PET-Hitzebelastung 0.15, Kaltluft-Einwirkbereich 0.10, Leitbahnkorridor 0.10. PET zählt invertiert: kühlere Werte geben mehr Punkte.
+p: Mobilität
+p: U-Bahn-, S-Bahn-, Tram-, Bus-Stops · Radverkehrsnetz, Fahrradstraßen
+p: Luftlinien-Distanz vom Adress-Punkt zur nächsten Haltestelle, mit 1,3-fachem Umwegfaktor. U-Bahn 0.35, S-Bahn 0.25, Tram 0.20, Bus 0.10, Radverkehrs-Presence 0.10. Bei 0 m hundert Punkte, bei 1.000 m null. Mobilität nutzt die exakte Adress-Distance, andere Dimensionen den Planungsraum-Centroid.
+p: Versorgung
+p: Kindertagesstätten, Schulen, Plan-Krankenhäuser, Spielplätze, Lebensmittel, Apotheke, Post
+p: Versorgung umfasst öffentliche Daseinsvorsorge und private Alltags-Nahversorgung, jeweils als Dichte im Umkreis (Anzahl Einrichtungen, weicher Übergang statt hartem Distanz-Cliff). Kita-Erreichbarkeit (0.12) plus Plätze pro Kind (0.12), Schule nach Schulart (Grundschule 0.12, weiterführend 0.12), Plan-Krankenhaus kapazitätsgewichtet (0.18), Spielplatz (0.10). Dazu Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12), Apotheke (0.07), Post (0.05). Grünanlagen zählen unter Grün & Hitze. Belegungsquote, Trägerschaft und Pflege-Qualität bleiben außen vor.
+p: Wohnschutz
+p: Milieuschutz: Erhaltungsmiete, Milieuschutz: Städtebau
+p: Verdrängungsschutz: Liegt ein Planungsraum in einem Milieuschutzgebiet, gilt Schutz als vorhanden. Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft. Diese Größe ist positiv eindeutig, mehr Schutz ist besser für Bewohner. Schutz-Status sagt nichts über die tatsächliche Mietentwicklung.
+p: Kultur (eigenständig, nicht im Gesamt-Score)
+p: Museen, Galerien, Theater & Bühnen, Bibliotheken, Kinos, Soziokultur, Kunst im Stadtraum, Clubs
+p: Kultureller Zugang als log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OpenStreetMap, ODbL). Der erste Kulturort zählt stark, weitere flachen ab, das dämpft das Innen-Außen-Gefälle. Kultur ist eine eigene, sichtbare Dimension, fließt aber NICHT in den Gesamt-Score: Kulturinfrastruktur ballt sich in der Innenstadt und würde sonst jeden Außenbezirk-Gesamt-Score drücken. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.
+p: Erfasste Kriminalität (eigenständig, nicht im Gesamt-Score)
+p: Kiez-Score · Erfasste Kriminalität (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)
+p: Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten“ ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in neutralem Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher“ oder „gefährlich“.
+h2: Gewichte
+p: Persona „allgemein“ gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur und erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den Gesamt-Score (Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in Phase 2. Eigene Slider-Gewichtung kommt ebenfalls später.
+th: Dimension
+th: Gewicht
+td: Ruhe & Luft
+td: 0.20
+td: Grün & Hitze
+td: 0.20
+td: Mobilität
+td: 0.20
+td: Wohnschutz
+td: 0.20
+td: Versorgung
+td: 0.20
+td: Kultur (nicht im Gesamt-Score)
+td: 0
+td: Erfasste Kriminalität (nicht im Gesamt-Score)
+td: 0
+h2: Normalisierung
+p: Jeder Roh-Wert wird in eine 0-bis-100-Skala übersetzt. Höher heißt günstiger.
+dt: Ordinal-3
+dd: gering 100, mittel 50, hoch 0 (Belastung)
+dt: Ordinal-4
+dd: gering 0, mittel 33, hoch 66, sehr hoch 100 (Versorgung)
+dt: PET invertiert
+dd: 29 °C oder kühler 100, 41 °C oder heißer 0, linear dazwischen
+dt: Distance
+dd: linear: 0 m → 100, 1.000 m → 0
+dt: Presence
+dd: vorhanden 100, fehlend 0
+p: Aus den 0-bis-100-Werten innerhalb einer Dimension wird mit den Layer-Gewichten ein gewichteter Mittelwert. Der Dimensions-Wert wird in vier UI-Stufen abgebildet: gering (0–25), mittel (26–50), hoch (51–75), sehr hoch (76–100).
+h2: Kiez-Score (Bezirksregion)
+p: Die 542 Planungsraum-Werte werden zu 143 LOR-Bezirksregionen flächen-gewichtet aggregiert. Pro Dimension wird ein gewichteter Mittelwert gebildet, wobei jeder Planungsraum mit seiner Fläche gewichtet wird. Mindestens 50 Prozent der enthaltenen Planungsräume müssen einen Wert haben, sonst bleibt die Dimension ohne Aggregat.
+p: Der Composite-Score einer Bezirksregion entsteht als ungewichtetes Mittel der nicht-null-Werte ihrer fünf Dimensionen, parallel zur Adress-Logik.
+p: LOR-Hierarchie: die ersten sechs Zeichen einer Planungsraum-ID ergeben die Bezirksregion-ID, die ersten zwei den Bezirks-Code. Property-basiertes Mapping ohne Geometrie-Test. Falls zwei Bezirksregionen denselben Namen tragen, wird der Bezirks-Slug als Suffix angehängt (z.B. heerstrasse-spandau, heerstrasse-charlottenburg-wilmersdorf).
+h2: Bezirks-Score
+p: Auf Bezirks-Ebene werden die 542 Planungsräume direkt flächen-gewichtet aggregiert, nicht über die Bezirksregion-Zwischenebene. Damit bleibt das Gewicht jedes Planungsraums proportional zu seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
+p: Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt“, hoch = besser), zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score“ gibt es nicht.
+p: Build-Pipeline: pnpm data:aggregate-scores liest die Planungsraum-Quelle, baut die LOR-Hierarchie und schreibt die Aggregate idempotent in die Postgres-Tabellen bezirk_score und kiez_score.
+h2: Was fehlt und warum
+p: Sozialstruktur
+p: Der soziale Status eines Kiezes ist kein Qualitäts-Kriterium. Würden wir ihn werten, schnitten Kieze mit niedrigem Status schlechter ab und würden stigmatisiert. Das MSS-Aggregat bleibt als neutraler Kontext sichtbar, fließt aber nicht in den Score.
+p: Bezahlbarkeit
+p: Kontestiert und ambivalent. Hohe Bodenrichtwerte oder gut bewertete Wohnlagen bedeuten teure Miete, nicht schlechte Wohnqualität. Belastbare Adress-Daten fehlen. Mietspiegel-Werte liefert mietspiegel.berlin.de.
+p: Familienfreundlichkeit
+p: Hängt stark von der Persona ab: Eltern mit Kita-Kind, Schulkind oder Pflegebedarf gewichten anders. Kita-, Schul- und Krankenhaus-Layer bleiben separat im Inspector statt in einer Composite-Dimension zu verschwinden.
+h2: Datenquellen
+p: Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt), Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin), Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer: /lizenzen.
+a: /lizenzen
+h2: Editorial-Verantwortung
+p: Der Score ist statistische Lage-Beschreibung, keine Wohnungsbewertung. Wir nennen keinen Mietpreis und geben keine rechtliche Auskunft.
+p: Der Score wertet keine Sozialstruktur. Ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter“. Das MSS-Aggregat zeigen wir als neutralen Kontext, nicht als Bewertung. Choropleth-Farben dafür bleiben neutral, ohne Rot-Grün-Sprünge. Einzelne Adressen können stark vom Planungsraum-Mittel abweichen.
+h2: Feedback
+p: Methodik-Korrektur, Datenfehler oder Layer-Vorschlag: per Mail.
+p: hey@navigator.berlin
+a: hey@navigator.berlin
+a: Zur Atlas-Methodik

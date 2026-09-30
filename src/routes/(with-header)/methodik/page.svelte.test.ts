@@ -1,7 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Page from './+page.svelte';
+import { internalHrefs, textLines } from './methodik-test-utils.js';
 import type { Manifest, LayerMetadata } from '$lib/data';
 
 function meta(slug: string, bundle: LayerMetadata['bundleGroup']): LayerMetadata {
@@ -141,5 +143,104 @@ describe('methodik +page.svelte', () => {
 		expect(sec?.textContent).toMatch(/29 von 659/);
 		expect(sec?.textContent).toMatch(/OpenStreetMap/);
 		await expect.element(page.getByTestId('methodik-kuehle-orte-link')).toBeInTheDocument();
+	});
+});
+
+describe('methodik +page.svelte · DE unverändert (i18n C4a)', () => {
+	afterEach(() => {
+		overwriteGetLocale(() => 'de');
+	});
+
+	it('sichtbarer DE-Text entspricht dem festgehaltenen Stand vor C4a', async () => {
+		render(Page, { data: { manifest: sampleManifest } });
+		const article = document.querySelector('[data-testid="methodik-page"]')!;
+		await expect(textLines(article)).toMatchFileSnapshot('./__snapshots__/methodik-de.txt');
+	});
+
+	it('DE-Links bleiben ohne Locale-Präfix', async () => {
+		render(Page, { data: { manifest: sampleManifest } });
+		const article = document.querySelector('[data-testid="methodik-page"]')!;
+		const hrefs = internalHrefs(article);
+		expect(hrefs).toContain('/methodik/kiez-score');
+		expect(hrefs).toContain('/methodik/wahldaten');
+		expect(hrefs).toContain('/berlin-wahlen#alle-wahlen');
+		expect(hrefs).toContain('/lizenzen');
+		expect(hrefs.some((h) => h.startsWith('/en'))).toBe(false);
+	});
+});
+
+describe('methodik +page.svelte · EN (i18n C4a)', () => {
+	afterEach(() => {
+		overwriteGetLocale(() => 'de');
+	});
+
+	it('rendert Titel, Inhaltsverzeichnis und Sektionsüberschriften auf Englisch', async () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { manifest: sampleManifest } });
+		const h1 = document.querySelector('[data-testid="methodik-page-title"]');
+		expect(h1?.textContent?.trim()).toBe('Methodology');
+		await expect.element(page.getByRole('navigation', { name: 'Contents' })).toBeInTheDocument();
+		const tocLabels = [...document.querySelectorAll('[data-testid="methodik-toc"] li a')].map((a) =>
+			a.textContent?.trim()
+		);
+		expect(tocLabels).toContain('Aggregation levels');
+		expect(tocLabels).toContain('What “Kiez” means here');
+		expect(tocLabels).toContain('Sources and licences');
+	});
+
+	it('setzt die Layer-Anzahl als Parameter in den Lead-Absatz', () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { manifest: sampleManifest } });
+		expect(document.querySelector('#mission p')?.textContent).toContain(
+			'collects 3 public Berlin geodata sets'
+		);
+	});
+
+	it('alle internen Links liegen unter /en, inklusive Wahldaten', () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { manifest: sampleManifest } });
+		const article = document.querySelector('[data-testid="methodik-page"]')!;
+		const hrefs = internalHrefs(article);
+		expect(hrefs.length).toBeGreaterThan(5);
+		expect(hrefs.filter((h) => !h.startsWith('/en/'))).toEqual([]);
+		expect(hrefs).toContain('/en/methodik/wahldaten');
+		expect(hrefs).toContain('/en/methodik/kiez-score');
+		expect(hrefs).toContain('/en/berlin-wahlen#alle-wahlen');
+		expect(hrefs).toContain('/en/lizenzen');
+	});
+
+	it('trägt kein lang="de" und keinen deutschen Resttext', () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { manifest: sampleManifest } });
+		const article = document.querySelector('[data-testid="methodik-page"]')!;
+		expect(article.querySelector('[lang="de"]')).toBeNull();
+		const text = article.textContent ?? '';
+		for (const german of ['Worum es geht', 'Datenarchitektur', 'Kühle', 'Lärm', 'Daten-Stand']) {
+			expect(text, german).not.toContain(german);
+		}
+	});
+
+	it('Feedback-Mail trägt den englischen Betreff', () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { manifest: sampleManifest } });
+		const mailto = document.querySelector('#feedback a[href^="mailto:"]');
+		expect(mailto?.getAttribute('href')).toContain('subject=Methodology%20feedback');
+	});
+
+	it('JSON-LD folgt der Locale: Headline, Beschreibung, Sprache, Breadcrumb', () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { manifest: sampleManifest } });
+		const tech = JSON.parse(
+			document.querySelector('script[data-testid="methodik-jsonld"]')?.textContent ?? '{}'
+		);
+		expect(tech.headline).toBe('Data methodology');
+		expect(tech.description).toMatch(/^Methodology of the Berlin data atlas/);
+		expect(tech.inLanguage).toBe('en-US');
+		const crumbs = JSON.parse(
+			document.querySelector('script[data-testid="methodik-breadcrumb-jsonld"]')?.textContent ??
+				'{}'
+		);
+		expect(crumbs.itemListElement[1].name).toBe('Methodology');
+		expect(crumbs.itemListElement[1].item).toMatch(/\/en\/methodik$/);
 	});
 });

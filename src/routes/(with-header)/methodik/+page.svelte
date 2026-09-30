@@ -2,8 +2,21 @@
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import RichText from '$lib/components/rich-text.svelte';
+	import { formatCount } from '$lib/i18n/format.js';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { richSegments } from '$lib/i18n/rich-text.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime.js';
 	import { buildBreadcrumbList } from '$lib/seo/index.js';
+	import { localeToBcp47 } from '$lib/seo/locale-meta.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+	import {
+		getAggregationLevels,
+		getCoverageReasons,
+		getMethodikSections,
+		getOmissions
+	} from './methodik-content.js';
 	import MethodikDatenTabelle from './methodik-daten-tabelle.svelte';
 	import MethodikPipelineDiagram from './methodik-pipeline-diagram.svelte';
 
@@ -18,26 +31,34 @@
 	);
 	const layerCount = $derived(visibleLayers.length);
 
-	const sections = [
-		{ id: 'mission', label: 'Worum es geht' },
-		{ id: 'datenarchitektur', label: 'Datenarchitektur' },
-		{ id: 'aggregations-ebenen', label: 'Aggregations-Ebenen' },
-		{ id: 'karten-darstellung', label: 'Karten-Darstellung' },
-		{ id: 'was-ist-kiez', label: 'Was „Kiez" hier bedeutet' },
-		{ id: 'cross-layer', label: 'Aggregat-Indizes' },
-		{ id: 'wahldaten-section', label: 'Wahldaten' },
-		{ id: 'kuehle-orte', label: 'Kühle Orte' },
-		{ id: 'coverage-strategie', label: 'Coverage-Strategie' },
-		{ id: 'omissions', label: 'Was wir weglassen' },
-		{ id: 'editorial', label: 'Editorial-Verantwortung' },
-		{ id: 'daten-stand', label: 'Daten-Stand' },
-		{ id: 'lizenzen', label: 'Quellen und Lizenzen' },
-		{ id: 'feedback', label: 'Feedback' }
-	];
+	const sections = getMethodikSections();
+	const aggregationLevels = getAggregationLevels();
+	const coverageReasons = getCoverageReasons();
+	const omissions = getOmissions();
 
-	const pageTitle = 'Methodik - Berlin in Daten - navigator.berlin';
-	const pageDescription =
-		'Methodik des Berliner Daten-Atlas: Auflösung, Aktualität, Editorial-Regeln und was bewusst nicht enthalten ist.';
+	const pageTitle = m.methodik_meta_title();
+	const pageDescription = m.methodik_meta_description();
+
+	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';
+	const feedbackHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(m.methodik_feedback_mail_subject())}`;
+
+	const kiezScoreLinkSegments = richSegments((t) =>
+		m.methodik_cross_layer_full_methodology({
+			link_start: t('link').start,
+			link_end: t('link').end
+		})
+	);
+	const electionLinkSegments = richSegments((t) =>
+		m.methodik_election_full_methodology({
+			link1_start: t('link1').start,
+			link1_end: t('link1').end,
+			link2_start: t('link2').start,
+			link2_end: t('link2').end
+		})
+	);
+	const licencesLinkSegments = richSegments((t) =>
+		m.methodik_licences_full_list({ link_start: t('link').start, link_end: t('link').end })
+	);
 
 	/**
 	 * Story 2.2 AC-4: Methodik-Page bleibt bei `TechArticle`. Inline-Object,
@@ -47,81 +68,20 @@
 	const jsonLd = $derived({
 		'@context': 'https://schema.org' as const,
 		'@type': 'TechArticle',
-		headline: 'Methodik der Daten',
+		headline: m.methodik_jsonld_headline(),
 		description: pageDescription,
+		inLanguage: localeToBcp47(getLocale()),
 		datePublished: '2026-05-15',
 		dateModified: manifest.generatedAt,
 		author: { '@type': 'Organization', name: 'navigator.berlin' }
 	});
-
-	const aggregationLevels = [
-		{
-			level: 'Adress-genau',
-			detail: 'Punkt-Geocode + Punkt-Layer (Stolpersteine, Kitas, ÖPNV-Stops)'
-		},
-		{
-			level: 'LOR-Planungsraum (542)',
-			detail: 'Lärm, Luft, Bioklima, Grünversorgung, Umweltgerechtigkeit, Wohnlagen-2024'
-		},
-		{
-			level: 'Bezirk (12) und Ortsteil (96)',
-			detail: 'Verwaltungs-Stammdaten'
-		},
-		{
-			level: 'Block-Aggregat',
-			detail: 'Bodenrichtwerte, Klima-PET, Milieuschutz, Einschulbereiche'
-		},
-		{
-			level: 'Punkt-OSM',
-			detail: 'Radverkehrsnetz, Fahrradstraßen, ÖPNV-Stationen, Stolpersteine, Trinkbrunnen'
-		}
-	];
-
-	const coverageReasons = [
-		{ key: 'no-coverage', text: 'Datensatz für diese Adresse nicht verfügbar.' },
-		{ key: 'outdated', text: 'Geo-Datensatz älter als 5 Jahre.' },
-		{ key: 'seasonal', text: 'Layer aktiv nur in Saison (Trinkbrunnen Mai bis Oktober).' },
-		{
-			key: 'coverage-out-of-scope',
-			text: 'Adresse außerhalb des räumlichen Geltungsbereichs.'
-		},
-		{
-			key: 'out-of-concept',
-			text: 'Layer konzeptionell nicht anwendbar (Mietspiegel-Layer in Gewerbe-Lage).'
-		}
-	];
-
-	const omissions = [
-		{
-			label: 'Cookies, Tracker, User-Konten',
-			reason: 'Keine Browser-Identifikation. Bookmarks liegen im LocalStorage.'
-		},
-		{
-			label: 'Mietpreise',
-			reason: 'Wir nennen keinen €/m². Den offiziellen Wert liefert mietspiegel.berlin.de.'
-		},
-		{
-			label: 'Personenbezogene Daten',
-			reason: 'Kein Profil, keine Verhaltens-Auswertung, keine Login-Pflicht.'
-		},
-		{
-			label: 'Algorithmisch generierte Layer-Texte',
-			reason: 'Layer-Beschreibungen schreiben wir manuell. Kein LLM-Output für Personen-Biografien.'
-		},
-		{
-			label: 'Stadtweiter Einzel-Score',
-			reason:
-				'Pro Kiez gibt es einen Gesamt-Wert, aber keine eine Zahl für ganz Berlin. Persönliche Prioritäten gewichten ohnehin anders.'
-		},
-		{ label: 'Werbung, Partner-Tracking, A/B-Tests', reason: 'Kein kommerzielles Modell.' }
-	];
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
 				{ name: 'Berlin', path: '/' },
-				{ name: 'Methodik', path: '/methodik' }
+				{ name: m.methodik_breadcrumb_methodik(), path: localizedHref('/methodik') }
 			]
 		})
 	);
@@ -133,7 +93,7 @@
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	ogImage={`${page.url.origin}/og/page/methodik.png`}
-	ogImageAlt="navigator.berlin Methodik"
+	ogImageAlt={m.methodik_og_image_alt()}
 />
 
 <JsonLd data={jsonLd} testid="methodik-jsonld" />
@@ -141,14 +101,22 @@
 
 <article data-testid="methodik-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-2">
-		<h1 data-testid="methodik-page-title" class="font-serif text-3xl text-ink">Methodik</h1>
+		<h1 data-testid="methodik-page-title" class="font-serif text-3xl text-ink">
+			{m.methodik_h1_title()}
+		</h1>
 		<p class="font-serif text-lg leading-relaxed text-ink-muted">
 			{pageDescription}
 		</p>
 	</header>
 
-	<nav data-testid="methodik-toc" aria-label="Inhalt" class="border border-rule bg-bg p-4">
-		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">Inhalt</p>
+	<nav
+		data-testid="methodik-toc"
+		aria-label={m.methodik_toc_aria_label()}
+		class="border border-rule bg-bg p-4"
+	>
+		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">
+			{m.methodik_toc_heading()}
+		</p>
 		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
@@ -164,26 +132,20 @@
 	</nav>
 
 	<section id="mission" aria-labelledby="mission-h" class="flex flex-col gap-3">
-		<h2 id="mission-h" class="font-serif text-2xl text-ink">Worum es geht</h2>
+		<h2 id="mission-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_mission_heading()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			navigator.berlin sammelt {layerCount} öffentliche Berliner Geo-Datensätze und zeigt pro Adresse
-			die zutreffenden Werte. Statisch ausgeliefert, ohne Cookies, ohne Login, ohne Tracker.
+			{m.methodik_mission_p1({ layerCount: formatCount(layerCount) })}
 		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Die Idee: Daten lesbar machen, ohne sie zu einem „Wohn-Score" zu verdichten.
-			Stadtteil-Statistik bleibt Stadtteil-Statistik. Was an einer Adresse zutrifft, steht im
-			Inspector. Was nicht zutrifft, sagen wir auch.
-		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_mission_p2()}</p>
 	</section>
 
 	<section id="datenarchitektur" aria-labelledby="datenarchitektur-h" class="flex flex-col gap-3">
-		<h2 id="datenarchitektur-h" class="font-serif text-2xl text-ink">Datenarchitektur</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Beim Build-Schritt fetchen wir jeden Layer von der Quelle, reprojizieren auf EPSG:4326,
-			vereinfachen die Geometrie mit mapshaper und schreiben Hash plus Datenstand ins Manifest. Zur
-			Laufzeit liefert ein Punkt-im-Polygon-Lookup pro Adresse die zutreffenden Werte. Keine
-			Datenbank, kein API-Call zum Server.
-		</p>
+		<h2 id="datenarchitektur-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_architecture_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_architecture_p1()}</p>
 		<MethodikPipelineDiagram />
 	</section>
 
@@ -192,13 +154,10 @@
 		aria-labelledby="aggregations-ebenen-h"
 		class="flex flex-col gap-3"
 	>
-		<h2 id="aggregations-ebenen-h" class="font-serif text-2xl text-ink">Aggregations-Ebenen</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Nicht jeder Wert ist adressgenau. Lärm und Luft stammen aus Stadtteil-Statistiken
-			(LOR-Planungsraum, 542 Polygone). Bodenrichtwerte hängen am Häuserblock. Wer im Inspector
-			einen Lärm-Wert liest, sieht den Mittelwert für den ganzen Planungsraum, nicht das eigene
-			Schlafzimmer.
-		</p>
+		<h2 id="aggregations-ebenen-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_aggregation_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_aggregation_p1()}</p>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 			{#each aggregationLevels as agg (agg.level)}
 				<dt class="font-mono text-xs text-ink-muted">{agg.level}</dt>
@@ -212,136 +171,77 @@
 		aria-labelledby="karten-darstellung-h"
 		class="flex flex-col gap-3"
 	>
-		<h2 id="karten-darstellung-h" class="font-serif text-2xl text-ink">Karten-Darstellung</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Die Karte zeigt höchstens zwei Wertkarten gleichzeitig, mit festen Rollen: Die erste füllt die
-			Fläche, die zweite erscheint als abgestufte Quadrat-Symbole, ein Quadrat pro Planungsraum,
-			dessen Größe die Stufe zeigt. Ein dritter Wert-Layer ersetzt automatisch den ältesten. In der
-			Legende lassen sich die Rollen per Klick tauschen; die Einstellung wandert mit in geteilte
-			Links.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Jede Score-Dimension hat eine eigene Farbe (Ruhe & Luft blau, Mobilität violett, Versorgung
-			ocker, Wohnschutz petrol, Kultur beere; Grün gehört dem Gesamt-Score und Grün & Hitze).
-			Innerhalb jeder Farbe gilt: hell = niedrige, dunkel = hohe Stufe. Die Formsprache trennt
-			Bedeutungen: Quadrate stehen für zusammengefasste Flächenwerte, runde Marker und Pins für
-			konkrete Orte. Gebiets-Layer wie Milieuschutz oder Kaltluft-Korridore sagen nur „hier gilt
-			etwas", legen sich als Flächen darunter und zählen nicht ins Zwei-Karten-Limit.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Die Größen-Staffelung der Symbole trägt die Information auch bei Rot-Grün-Schwäche, wo sich
-			Farbtöne annähern können. Die Unterscheidbarkeit der Farb-Kombinationen haben wir mit
-			simulierter Farbfehlsichtigkeit gemessen, nicht geschätzt.
-		</p>
+		<h2 id="karten-darstellung-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_map_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_map_p1()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_map_p2()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_map_p3()}</p>
 	</section>
 
 	<section id="was-ist-kiez" aria-labelledby="was-ist-kiez-h" class="flex flex-col gap-3">
-		<h2 id="was-ist-kiez-h" class="font-serif text-2xl text-ink">Was „Kiez" hier bedeutet</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Umgangssprachlich ist ein Kiez ein gefühltes Viertel, von den Bewohnern definiert, ohne feste
-			Grenze. Auf navigator.berlin meint „Kiez" dagegen eine amtliche Einheit: die Lebensweltlich
-			orientierte Raum-Bezirksregion (LOR-BZR, Stand 2021), 143 Stück.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Wir nutzen die LOR-Bezirksregion, weil nur sie eine klare, statistisch belegte Grenze hat, an
-			der alle Daten hängen. Dein gefühlter Kiez kann kleiner sein oder über mehrere Bezirksregionen
-			reichen. Die Werte auf einer Kiez-Seite gelten für die LOR-BZR, nicht für eine einzelne
-			Straße.
-		</p>
+		<h2 id="was-ist-kiez-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_kiez_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_kiez_p1()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_kiez_p2()}</p>
 	</section>
 
 	<section id="cross-layer" aria-labelledby="cross-layer-h" class="flex flex-col gap-3">
-		<h2 id="cross-layer-h" class="font-serif text-2xl text-ink">Aggregat-Indizes</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Umwelt- & Infrastruktur-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und
-			Luft, Grün und Hitze, Mobilität, Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze) und
-			Wohnschutz (Milieuschutzgebiete). Jede Dimension bleibt separat abrufbar im Inspector und als
-			eigener Karten-Layer. Fünf mal 20 Prozent Gewicht. Ein Gesamt-Layer aggregiert sie als Mittel.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur wertet
-			er nicht: ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter". Bezahlbarkeit bleibt
-			ebenfalls draußen, kontestiert und ohne belastbare Adress-Daten.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Es gibt keinen einzelnen „Berlin-Score". Aggregation auf eine Zahl würde stigmatisieren und
-			individuelle Prioritäten verschleiern. Wer Familie sucht, gewichtet anders als jemand mit
-			Hitze-Empfindlichkeit.
-		</p>
+		<h2 id="cross-layer-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_cross_layer_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cross_layer_p1()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cross_layer_p2()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cross_layer_p3()}</p>
 		<p class="font-mono text-xs text-ink-muted">
-			Vollständige Methodik:
-			<a
-				href="/methodik/kiez-score"
-				data-testid="methodik-kiez-score-link"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>Kiez-Score</a
-			>
+			<RichText segments={kiezScoreLinkSegments}>
+				{#snippet tag(text)}
+					<a
+						href={localizedHref('/methodik/kiez-score')}
+						data-testid="methodik-kiez-score-link"
+						class={linkClass}>{text}</a
+					>
+				{/snippet}
+			</RichText>
 		</p>
-		<h3 class="mt-2 font-serif text-xl text-ink">MSS 2025 als neutraler Kontext</h3>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Das Monitoring Soziale Stadtentwicklung der Senatsverwaltung Berlin liefert pro Planungsraum
-			einen Gesamtindex aus Status (Einkommen, Beschäftigung, Bildung) und Dynamik (Veränderung).
-			Seit der Score-Neuordnung fließt es nicht mehr in den Score ein. Wir zeigen es als neutralen
-			Kontext-Layer, nur den Aggregat-Wert, nicht die Einzel-Indikatoren wie Arbeitslosen-Quote oder
-			Transferbezugs-Anteil. Einzelwerte wären auf Adress-Ebene schärfer und stigmatisierender.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Niedriger Status bedeutet nicht „schlechter Kiez". Die Stufe spiegelt strukturelle
-			Unterschiede, keine Wohnqualität. Choropleth-Farben sind neutral gehalten, kein Rot-Grün.
-			Quelle: SenStadt MSS 2025, Lizenz dl-de/zero-2-0.
-		</p>
+		<h3 class="mt-2 font-serif text-xl text-ink">{m.methodik_mss_heading()}</h3>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_mss_p1()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_mss_p2()}</p>
 	</section>
 
 	<section id="wahldaten-section" aria-labelledby="wahldaten-section-h" class="flex flex-col gap-3">
-		<h2 id="wahldaten-section-h" class="font-serif text-2xl text-ink">Wahldaten</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Bundestags-, Abgeordnetenhaus- und BVV-Wahlen seit 2011 mit Aggregaten auf vier Ebenen:
-			Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk und Berlin gesamt. Quellen sind
-			Bundeswahlleiterin (BTW) und Amt für Statistik Berlin-Brandenburg (AGH + BVV). Werte
-			beschreiben Stimmenanteile, keine Bewertung.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Spezialfälle dokumentieren wir transparent: Briefwahl-Gruppen als kleinste Kartenebene (Kiez-Wert
-			als Schätzung), Wiederholungswahlen 2023 mit Original-Wahl-Verweis, Coverage-Lücken pre-2017
-			ohne Stimmbezirks-Geometrie.
-		</p>
+		<h2 id="wahldaten-section-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_election_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_election_p1()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_election_p2()}</p>
 		<p class="font-mono text-xs text-ink-muted">
-			Vollständige Methodik:
-			<a
-				href="/methodik/wahldaten"
-				data-testid="methodik-wahldaten-link"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>Wahldaten</a
-			>
-			·
-			<a
-				href="/berlin-wahlen#alle-wahlen"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>Alle Wahlen einzeln</a
-			>
+			<RichText segments={electionLinkSegments}>
+				{#snippet tag(text, name)}
+					{#if name === 'link1'}
+						<a
+							href={localizedHref('/methodik/wahldaten')}
+							data-testid="methodik-wahldaten-link"
+							class={linkClass}>{text}</a
+						>
+					{:else}
+						<a href={`${localizedHref('/berlin-wahlen')}#alle-wahlen`} class={linkClass}>{text}</a>
+					{/if}
+				{/snippet}
+			</RichText>
 		</p>
 	</section>
 
 	<section id="kuehle-orte" aria-labelledby="kuehle-orte-h" class="flex flex-col gap-3">
-		<h2 id="kuehle-orte-h" class="font-serif text-2xl text-ink">Kühle Orte</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Kühle-Orte-Layer zeigt Orte zum Abkühlen bei Hitze. Der Kühle-Score von 1 bis 5 folgt Typ
-			und Bauart: 5 sehr kalt (Eishalle), 4 klimatisiert oder am Wasser, 3 kühler Massivbau wie
-			Bibliothek oder Museum, darunter weniger kühl. Geometrie und Basis-Tags stammen aus
-			OpenStreetMap (ODbL 1.0, Namensnennung), ergänzt um eine redaktionelle
-			navigator.berlin-Anreicherung: Kühle-Score, Klimatisierung und Sommer-Verfügbarkeit.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Klimatisierung ist selten belegbar: nur 29 von 659 Orten tragen einen belegten AC-Status, der
-			Rest steht auf wahrscheinlich oder unbekannt. Der AC-Hinweis ist ein Indiz, keine Zusage. Ein
-			Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.
-		</p>
+		<h2 id="kuehle-orte-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_cool_places_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cool_places_p1()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cool_places_p2()}</p>
 		<p class="font-serif text-sm text-ink-muted">
-			<a
-				href="/lizenzen"
-				data-testid="methodik-kuehle-orte-link"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>Quellen und Lizenzen</a
+			<a href={localizedHref('/lizenzen')} data-testid="methodik-kuehle-orte-link" class={linkClass}
+				>{m.methodik_cool_places_sources_link()}</a
 			>
 		</p>
 	</section>
@@ -351,10 +251,10 @@
 		aria-labelledby="coverage-strategie-h"
 		class="flex flex-col gap-3"
 	>
-		<h2 id="coverage-strategie-h" class="font-serif text-2xl text-ink">Coverage-Strategie</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Liefert ein Layer für eine Adresse keinen Wert, nennen wir den Grund.
-		</p>
+		<h2 id="coverage-strategie-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_coverage_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_coverage_p1()}</p>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 			{#each coverageReasons as reason (reason.key)}
 				<dt class="font-mono text-xs text-ink-muted">{reason.key}</dt>
@@ -364,7 +264,9 @@
 	</section>
 
 	<section id="omissions" aria-labelledby="omissions-h" class="flex flex-col gap-3">
-		<h2 id="omissions-h" class="font-serif text-2xl text-ink">Was wir weglassen</h2>
+		<h2 id="omissions-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_omissions_heading()}
+		</h2>
 		<ul class="flex flex-col gap-3">
 			{#each omissions as o (o.label)}
 				<li class="border-l-2 border-rule pl-3">
@@ -376,58 +278,46 @@
 	</section>
 
 	<section id="editorial" aria-labelledby="editorial-h" class="flex flex-col gap-3">
-		<h2 id="editorial-h" class="font-serif text-2xl text-ink">Editorial-Verantwortung</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Stolpersteine zeigen wir als Erinnerungs-Marker. Wir zählen sie nicht und werten sie nicht.
-			Personen-Biografien gehören zur Primärquelle stolpersteine-berlin.de.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			navigator.berlin nennt keinen Mietpreis und gibt keine rechtliche Auskunft. Den gesetzlichen
-			Wohnlagen-Mietspiegel liefert mietspiegel.berlin.de.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Aggregierte Werte sind Stadtteil-Mittel, keine Wohnungs-Eigenschaften. Wir verzichten bewusst
-			auf einen „Berlin-Score" und zeigen keine Bezirks-Rankings.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Layer-Texte schreiben wir manuell. Kein Layer-Inhalt wird per LLM zusammengefasst, keine
-			Personen-Biografie generiert.
-		</p>
+		<h2 id="editorial-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_editorial_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_editorial_p1()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_editorial_p2()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_editorial_p3()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_editorial_p4()}</p>
 	</section>
 
 	<section id="daten-stand" aria-labelledby="daten-stand-h" class="flex flex-col gap-3">
-		<h2 id="daten-stand-h" class="font-serif text-2xl text-ink">Daten-Stand</h2>
+		<h2 id="daten-stand-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_data_status_heading()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink-muted">
-			Alphabetisch sortiert nach Layer-Name, kein Aktualitäts-Ranking.
+			{m.methodik_data_status_intro()}
 		</p>
 		<MethodikDatenTabelle layers={visibleLayers} />
 	</section>
 
 	<section id="lizenzen" aria-labelledby="lizenzen-h" class="flex flex-col gap-3">
-		<h2 id="lizenzen-h" class="font-serif text-2xl text-ink">Quellen und Lizenzen</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Die meisten Layer stehen unter dl-de/zero-2-0 oder dl-de/by-2-0. OSM-basierte Layer
-			(Stolpersteine, ÖPNV, Trinkbrunnen, Radverkehr) unter ODbL 1.0 mit Namensnennung
-			OpenStreetMap-Contributors.
-		</p>
+		<h2 id="lizenzen-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_licences_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_licences_p1()}</p>
 		<p class="font-mono text-xs text-ink-muted">
-			Vollständige Auflistung: <a
-				href="/lizenzen"
-				class="hover:text-accent-strong text-accent underline underline-offset-2">/lizenzen</a
-			>
+			<RichText segments={licencesLinkSegments}>
+				{#snippet tag(text)}
+					<a href={localizedHref('/lizenzen')} class={linkClass}>{text}</a>
+				{/snippet}
+			</RichText>
 		</p>
 	</section>
 
 	<section id="feedback" aria-labelledby="feedback-h" class="flex flex-col gap-3">
-		<h2 id="feedback-h" class="font-serif text-2xl text-ink">Feedback</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Methodik-Korrektur, Datenfehler oder Layer-Vorschlag: per Mail.
-		</p>
+		<h2 id="feedback-h" class="font-serif text-2xl text-ink">
+			{m.methodik_section_feedback_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_feedback_p1()}</p>
 		<p class="font-mono text-sm">
-			<a
-				href={`mailto:${FEEDBACK_EMAIL}?subject=Methodik-Feedback`}
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
-			>
+			<a href={feedbackHref} class={linkClass}>
 				{FEEDBACK_EMAIL}
 			</a>
 		</p>

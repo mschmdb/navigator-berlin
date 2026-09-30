@@ -26,6 +26,8 @@ export const TemplateSchema = v.object({
 	applicableTo: v.pipe(v.array(TemplateScopeSchema), v.minLength(1)),
 	requires: TemplateRequiresSchema,
 	body_de: v.pipe(v.string(), v.minLength(20)),
+	/** Englischer Text mit denselben Platzhaltern wie `body_de`. Jedes Template braucht ihn (Test). */
+	body_en: v.optional(v.pipe(v.string(), v.minLength(20))),
 	editorialNote: v.optional(v.string()),
 	tags: v.optional(v.array(v.string()))
 });

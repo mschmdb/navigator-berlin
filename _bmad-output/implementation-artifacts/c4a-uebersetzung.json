@@ -1,0 +1,916 @@
+{
+	"methodik": {
+		"meta_title": {
+			"de": "Methodik - Berlin in Daten - navigator.berlin",
+			"en": "Methodology - Berlin in data - navigator.berlin"
+		},
+		"meta_description": {
+			"de": "Methodik des Berliner Daten-Atlas: Auflösung, Aktualität, Editorial-Regeln und was bewusst nicht enthalten ist.",
+			"en": "Methodology of the Berlin data atlas: resolution, timeliness, editorial rules and what is deliberately not included.",
+			"note": "Auch sichtbarer Untertitel unter der H1 und JSON-LD description."
+		},
+		"jsonld_headline": {
+			"de": "Methodik der Daten",
+			"en": "Data methodology"
+		},
+		"og_image_alt": {
+			"de": "navigator.berlin Methodik",
+			"en": "navigator.berlin methodology"
+		},
+		"breadcrumb_methodik": {
+			"de": "Methodik",
+			"en": "Methodology",
+			"note": "Breadcrumb-JSON-LD, Name des Eintrags. Der Eintrag „Berlin“ bleibt unverändert."
+		},
+		"h1_title": {
+			"de": "Methodik",
+			"en": "Methodology"
+		},
+		"toc_aria_label": {
+			"de": "Inhalt",
+			"en": "Contents"
+		},
+		"toc_heading": {
+			"de": "Inhalt",
+			"en": "Contents"
+		},
+		"section_mission_heading": {
+			"de": "Worum es geht",
+			"en": "What this is about",
+			"note": "Auch TOC-Label."
+		},
+		"section_architecture_heading": {
+			"de": "Datenarchitektur",
+			"en": "Data architecture",
+			"note": "Auch TOC-Label."
+		},
+		"section_aggregation_heading": {
+			"de": "Aggregations-Ebenen",
+			"en": "Aggregation levels",
+			"note": "Auch TOC-Label."
+		},
+		"section_map_heading": {
+			"de": "Karten-Darstellung",
+			"en": "Map display",
+			"note": "Auch TOC-Label."
+		},
+		"section_kiez_heading": {
+			"de": "Was „Kiez\" hier bedeutet",
+			"en": "What “Kiez” means here",
+			"note": "Auch TOC-Label. Das DE nutzt ein ASCII-Schlusszeichen (\")."
+		},
+		"section_cross_layer_heading": {
+			"de": "Aggregat-Indizes",
+			"en": "Aggregate indices",
+			"note": "Auch TOC-Label."
+		},
+		"section_election_heading": {
+			"de": "Wahldaten",
+			"en": "Election data",
+			"note": "Auch TOC-Label."
+		},
+		"section_cool_places_heading": {
+			"de": "Kühle Orte",
+			"en": "Cool places",
+			"note": "Auch TOC-Label."
+		},
+		"section_coverage_heading": {
+			"de": "Coverage-Strategie",
+			"en": "Coverage strategy",
+			"note": "Auch TOC-Label."
+		},
+		"section_omissions_heading": {
+			"de": "Was wir weglassen",
+			"en": "What we leave out",
+			"note": "Auch TOC-Label."
+		},
+		"section_editorial_heading": {
+			"de": "Editorial-Verantwortung",
+			"en": "Editorial responsibility",
+			"note": "Auch TOC-Label."
+		},
+		"section_data_status_heading": {
+			"de": "Daten-Stand",
+			"en": "Data status",
+			"note": "Auch TOC-Label."
+		},
+		"section_licences_heading": {
+			"de": "Quellen und Lizenzen",
+			"en": "Sources and licences",
+			"note": "Auch TOC-Label."
+		},
+		"section_feedback_heading": {
+			"de": "Feedback",
+			"en": "Feedback",
+			"note": "Auch TOC-Label. DE und EN identisch."
+		},
+		"mission_p1": {
+			"de": "navigator.berlin sammelt {layerCount} öffentliche Berliner Geo-Datensätze und zeigt pro Adresse die zutreffenden Werte. Statisch ausgeliefert, ohne Cookies, ohne Login, ohne Tracker.",
+			"en": "navigator.berlin collects {layerCount} public Berlin geodata sets and shows the values that apply to each address. Served statically, without cookies, without login, without trackers."
+		},
+		"mission_p2": {
+			"de": "Die Idee: Daten lesbar machen, ohne sie zu einem „Wohn-Score\" zu verdichten. Stadtteil-Statistik bleibt Stadtteil-Statistik. Was an einer Adresse zutrifft, steht im Inspector. Was nicht zutrifft, sagen wir auch.",
+			"en": "The idea: make data readable without condensing it into a “residential score”. Neighbourhood statistics stay neighbourhood statistics. What applies at an address appears in the inspector. Where something does not apply, we say so."
+		},
+		"architecture_p1": {
+			"de": "Beim Build-Schritt fetchen wir jeden Layer von der Quelle, reprojizieren auf EPSG:4326, vereinfachen die Geometrie mit mapshaper und schreiben Hash plus Datenstand ins Manifest. Zur Laufzeit liefert ein Punkt-im-Polygon-Lookup pro Adresse die zutreffenden Werte. Keine Datenbank, kein API-Call zum Server.",
+			"en": "In the build step we fetch every layer from its source, reproject to EPSG:4326, simplify the geometry with mapshaper and write the hash plus the data update date into the manifest. At runtime a point-in-polygon lookup returns the applicable values per address. No database, no API call to the server."
+		},
+		"aggregation_p1": {
+			"de": "Nicht jeder Wert ist adressgenau. Lärm und Luft stammen aus Stadtteil-Statistiken (LOR-Planungsraum, 542 Polygone). Bodenrichtwerte hängen am Häuserblock. Wer im Inspector einen Lärm-Wert liest, sieht den Mittelwert für den ganzen Planungsraum, nicht das eigene Schlafzimmer.",
+			"en": "Not every value is address-exact. Noise and air come from neighbourhood-level statistics (LOR planning area, 542 polygons). Standard land values attach to the city block. Anyone who reads a noise value in the inspector sees the mean for the whole planning area, not their own bedroom."
+		},
+		"aggregation_level_address": {
+			"de": "Adress-genau",
+			"en": "Address-exact"
+		},
+		"aggregation_level_address_detail": {
+			"de": "Punkt-Geocode + Punkt-Layer (Stolpersteine, Kitas, ÖPNV-Stops)",
+			"en": "Point geocode + point layers (Stolpersteine, daycare centres, public transport stops)"
+		},
+		"aggregation_level_lor": {
+			"de": "LOR-Planungsraum (542)",
+			"en": "LOR planning area (542)"
+		},
+		"aggregation_level_lor_detail": {
+			"de": "Lärm, Luft, Bioklima, Grünversorgung, Umweltgerechtigkeit, Wohnlagen-2024",
+			"en": "Noise, air, bioclimate, green space provision, environmental justice, residential areas 2024"
+		},
+		"aggregation_level_admin": {
+			"de": "Bezirk (12) und Ortsteil (96)",
+			"en": "Bezirk (12) and locality (96)"
+		},
+		"aggregation_level_admin_detail": {
+			"de": "Verwaltungs-Stammdaten",
+			"en": "Administrative master data"
+		},
+		"aggregation_level_block": {
+			"de": "Block-Aggregat",
+			"en": "Block aggregate"
+		},
+		"aggregation_level_block_detail": {
+			"de": "Bodenrichtwerte, Klima-PET, Milieuschutz, Einschulbereiche",
+			"en": "Standard land values, climate PET, Milieuschutz, school catchment areas"
+		},
+		"aggregation_level_osm": {
+			"de": "Punkt-OSM",
+			"en": "Point OSM"
+		},
+		"aggregation_level_osm_detail": {
+			"de": "Radverkehrsnetz, Fahrradstraßen, ÖPNV-Stationen, Stolpersteine, Trinkbrunnen",
+			"en": "Cycling network, bicycle streets, public transport stations, Stolpersteine, drinking fountains"
+		},
+		"map_p1": {
+			"de": "Die Karte zeigt höchstens zwei Wertkarten gleichzeitig, mit festen Rollen: Die erste füllt die Fläche, die zweite erscheint als abgestufte Quadrat-Symbole, ein Quadrat pro Planungsraum, dessen Größe die Stufe zeigt. Ein dritter Wert-Layer ersetzt automatisch den ältesten. In der Legende lassen sich die Rollen per Klick tauschen; die Einstellung wandert mit in geteilte Links.",
+			"en": "The map shows at most two value maps at the same time, with fixed roles: the first fills the area, the second appears as graduated square symbols, one square per planning area, whose size shows the level. A third value layer automatically replaces the oldest. In the legend you can swap the roles with a click; the setting is carried over into shared links."
+		},
+		"map_p2": {
+			"de": "Jede Score-Dimension hat eine eigene Farbe (Ruhe & Luft blau, Mobilität violett, Versorgung ocker, Wohnschutz petrol, Kultur beere; Grün gehört dem Gesamt-Score und Grün & Hitze). Innerhalb jeder Farbe gilt: hell = niedrige, dunkel = hohe Stufe. Die Formsprache trennt Bedeutungen: Quadrate stehen für zusammengefasste Flächenwerte, runde Marker und Pins für konkrete Orte. Gebiets-Layer wie Milieuschutz oder Kaltluft-Korridore sagen nur „hier gilt etwas\", legen sich als Flächen darunter und zählen nicht ins Zwei-Karten-Limit.",
+			"en": "Each score dimension has its own colour (Quiet & air blue, Mobility violet, Local amenities ochre, Tenant protection teal, Culture berry; green belongs to the overall score and Green & heat). Within each colour: light = low level, dark = high level. The shape language separates meanings: squares stand for aggregated area values, round markers and pins for specific places. Area layers such as Milieuschutz or cold air corridors only say “this applies here”, sit underneath as areas and do not count towards the two-map limit.",
+			"note": "Das DE nutzt ein ASCII-Schlusszeichen (\") bei „hier gilt etwas\"."
+		},
+		"map_p3": {
+			"de": "Die Größen-Staffelung der Symbole trägt die Information auch bei Rot-Grün-Schwäche, wo sich Farbtöne annähern können. Die Unterscheidbarkeit der Farb-Kombinationen haben wir mit simulierter Farbfehlsichtigkeit gemessen, nicht geschätzt.",
+			"en": "The size gradation of the symbols carries the information even with red-green colour vision deficiency, where hues can converge. We measured the distinguishability of the colour combinations with simulated colour vision deficiency, not estimated it."
+		},
+		"kiez_p1": {
+			"de": "Umgangssprachlich ist ein Kiez ein gefühltes Viertel, von den Bewohnern definiert, ohne feste Grenze. Auf navigator.berlin meint „Kiez\" dagegen eine amtliche Einheit: die Lebensweltlich orientierte Raum-Bezirksregion (LOR-BZR, Stand 2021), 143 Stück.",
+			"en": "In everyday speech a Kiez is a felt neighbourhood, defined by its residents, without a fixed boundary. On navigator.berlin, “Kiez” instead means an official unit: the LOR Bezirksregion (lifeworld-oriented spaces, LOR-BZR, as of 2021), 143 in total."
+		},
+		"kiez_p2": {
+			"de": "Wir nutzen die LOR-Bezirksregion, weil nur sie eine klare, statistisch belegte Grenze hat, an der alle Daten hängen. Dein gefühlter Kiez kann kleiner sein oder über mehrere Bezirksregionen reichen. Die Werte auf einer Kiez-Seite gelten für die LOR-BZR, nicht für eine einzelne Straße.",
+			"en": "We use the LOR Bezirksregion because only it has a clear, statistically backed boundary that all data hangs on. Your felt Kiez can be smaller or span several Bezirksregionen. The values on a Kiez page apply to the LOR-BZR, not to a single street."
+		},
+		"cross_layer_p1": {
+			"de": "Der Umwelt- & Infrastruktur-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und Luft, Grün und Hitze, Mobilität, Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze) und Wohnschutz (Milieuschutzgebiete). Jede Dimension bleibt separat abrufbar im Inspector und als eigener Karten-Layer. Fünf mal 20 Prozent Gewicht. Ein Gesamt-Layer aggregiert sie als Mittel.",
+			"en": "The environment & infrastructure score combines five dimensions per planning area: Quiet & air, Green & heat, Mobility, Local amenities (daycare centres, schools, hospitals, playgrounds) and Tenant protection (Milieuschutz areas). Each dimension stays separately available in the inspector and as its own map layer. Five times 20 percent weight. An overall layer aggregates them as a mean."
+		},
+		"cross_layer_p2": {
+			"de": "Der Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur wertet er nicht: ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter\". Bezahlbarkeit bleibt ebenfalls draußen, kontestiert und ohne belastbare Adress-Daten.",
+			"en": "The score only measures quantities with an unambiguous better direction for residents. It does not rate social structure: a Kiez with low social status does not live “worse”. Affordability also stays out: contested and without reliable address-level data.",
+			"note": "Das DE nutzt ein ASCII-Schlusszeichen (\") bei „schlechter\"."
+		},
+		"cross_layer_p3": {
+			"de": "Es gibt keinen einzelnen „Berlin-Score\". Aggregation auf eine Zahl würde stigmatisieren und individuelle Prioritäten verschleiern. Wer Familie sucht, gewichtet anders als jemand mit Hitze-Empfindlichkeit.",
+			"en": "There is no single “Berlin score”. Aggregation to one number would stigmatise and obscure individual priorities. Someone looking for a place for a family weights differently from someone sensitive to heat.",
+			"note": "Das DE nutzt ein ASCII-Schlusszeichen (\") bei „Berlin-Score\"."
+		},
+		"cross_layer_full_methodology": {
+			"de": "Vollständige Methodik: {link_start}Kiez-Score{link_end}",
+			"en": "Full methodology: {link_start}Kiez score{link_end}",
+			"note": "Link-Ziel: /methodik/kiez-score"
+		},
+		"mss_heading": {
+			"de": "MSS 2025 als neutraler Kontext",
+			"en": "MSS 2025 as neutral context"
+		},
+		"mss_p1": {
+			"de": "Das Monitoring Soziale Stadtentwicklung der Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen liefert pro Planungsraum einen Gesamtindex aus Status (Einkommen, Beschäftigung, Bildung) und Dynamik (Veränderung). Seit der Score-Neuordnung fließt es nicht mehr in den Score ein. Wir zeigen es als neutralen Kontext-Layer, nur den Aggregat-Wert, nicht die Einzel-Indikatoren wie Arbeitslosen-Quote oder Transferbezugs-Anteil. Einzelwerte wären auf Adress-Ebene schärfer und stigmatisierender.",
+			"en": "The Monitoring Soziale Stadtentwicklung (social urban development monitoring) of the Senate Department for Urban Development, Building and Housing provides an overall index per planning area, made up of status (income, employment, education) and dynamics (change). Since the score reorganisation it no longer feeds into the score. We show it as a neutral context layer, only the aggregate value, not the individual indicators such as unemployment rate or rate of welfare receipt. Individual values would be sharper and more stigmatising at address level."
+		},
+		"mss_p2": {
+			"de": "Niedriger Status bedeutet nicht „schlechter Kiez\". Die Stufe spiegelt strukturelle Unterschiede, keine Wohnqualität. Choropleth-Farben sind neutral gehalten, kein Rot-Grün. Quelle: SenStadt MSS 2025, Lizenz dl-de/zero-2-0.",
+			"en": "Low status does not mean “bad Kiez”. The level reflects structural differences, not housing quality. Choropleth colours are kept neutral, no red-green. Source: SenStadt MSS 2025, licence dl-de/zero-2-0.",
+			"note": "Das DE nutzt ein ASCII-Schlusszeichen (\") bei „schlechter Kiez\"."
+		},
+		"election_p1": {
+			"de": "Bundestags-, Abgeordnetenhaus- und BVV-Wahlen seit 2011 mit Aggregaten auf vier Ebenen: Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk und Berlin gesamt. Quellen sind Bundeswahlleiterin (BTW) und Amt für Statistik Berlin-Brandenburg (AGH + BVV). Werte beschreiben Stimmenanteile, keine Bewertung.",
+			"en": "Bundestag, Berlin House of Representatives (Abgeordnetenhaus) and District Assembly (BVV) elections since 2011 with aggregates at four levels: polling district, Kiez (LOR Bezirksregion), Bezirk and Berlin overall. Sources are the Federal Election Commissioner (Bundeswahlleiterin, BTW) and the Statistics Office Berlin-Brandenburg (Amt für Statistik Berlin-Brandenburg, AGH + BVV). Values describe vote shares, not an assessment."
+		},
+		"election_p2": {
+			"de": "Spezialfälle dokumentieren wir transparent: Briefwahl-Gruppen als kleinste Kartenebene (Kiez-Wert als Schätzung), Wiederholungswahlen 2023 mit Original-Wahl-Verweis, Coverage-Lücken pre-2017 ohne Stimmbezirks-Geometrie.",
+			"en": "We document special cases transparently: postal-vote groups as the smallest map level (Kiez value as an estimate), repeat elections 2023 with a reference to the original election, coverage gaps before 2017 without polling district geometry."
+		},
+		"election_full_methodology": {
+			"de": "Vollständige Methodik: {link1_start}Wahldaten{link1_end} · {link2_start}Alle Wahlen einzeln{link2_end}",
+			"en": "Full methodology: {link1_start}Election data{link1_end} · {link2_start}All elections individually{link2_end}",
+			"note": "Link 1: /methodik/wahldaten. Link 2: /berlin-wahlen#alle-wahlen"
+		},
+		"cool_places_p1": {
+			"de": "Der Kühle-Orte-Layer zeigt Orte zum Abkühlen bei Hitze. Der Kühle-Score von 1 bis 5 folgt Typ und Bauart: 5 sehr kalt (Eishalle), 4 klimatisiert oder am Wasser, 3 kühler Massivbau wie Bibliothek oder Museum, darunter weniger kühl. Geometrie und Basis-Tags stammen aus OpenStreetMap (ODbL 1.0, Namensnennung), ergänzt um eine redaktionelle navigator.berlin-Anreicherung: Kühle-Score, Klimatisierung und Sommer-Verfügbarkeit.",
+			"en": "The Cool places layer shows places to cool down during heat. The cool score from 1 to 5 follows type and construction: 5 very cold (ice rink), 4 air-conditioned or by the water, 3 cool solid building such as a library or museum, below that less cool. Geometry and base tags come from OpenStreetMap (ODbL 1.0, attribution), supplemented by an editorial navigator.berlin enrichment: cool score, air conditioning and summer availability."
+		},
+		"cool_places_p2": {
+			"de": "Klimatisierung ist selten belegbar: nur 29 von 659 Orten tragen einen belegten AC-Status, der Rest steht auf wahrscheinlich oder unbekannt. Der AC-Hinweis ist ein Indiz, keine Zusage. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.",
+			"en": "Air conditioning is rarely verifiable: only 29 of 659 places have a verified AC status, the rest are marked probable or unknown. The AC note is an indication, not a promise. An offer, not a substitute for authorities, no legal right of access."
+		},
+		"cool_places_sources_link": {
+			"de": "Quellen und Lizenzen",
+			"en": "Sources and licences",
+			"note": "Link-Text. Link-Ziel: /lizenzen"
+		},
+		"coverage_p1": {
+			"de": "Liefert ein Layer für eine Adresse keinen Wert, nennen wir den Grund.",
+			"en": "If a layer delivers no value for an address, we state the reason."
+		},
+		"coverage_reason_no_coverage": {
+			"de": "Datensatz für diese Adresse nicht verfügbar.",
+			"en": "Dataset not available for this address.",
+			"note": "Schlüssel „no-coverage“ (dt) bleibt unübersetzt (Bezeichner)."
+		},
+		"coverage_reason_outdated": {
+			"de": "Geo-Datensatz älter als 5 Jahre.",
+			"en": "Geodataset older than 5 years.",
+			"note": "Schlüssel „outdated“ bleibt unübersetzt."
+		},
+		"coverage_reason_seasonal": {
+			"de": "Layer aktiv nur in Saison (Trinkbrunnen Mai bis Oktober).",
+			"en": "Layer active only in season (drinking fountains May to October).",
+			"note": "Schlüssel „seasonal“ bleibt unübersetzt."
+		},
+		"coverage_reason_out_of_scope": {
+			"de": "Adresse außerhalb des räumlichen Geltungsbereichs.",
+			"en": "Address outside the spatial scope.",
+			"note": "Schlüssel „coverage-out-of-scope“ bleibt unübersetzt."
+		},
+		"coverage_reason_out_of_concept": {
+			"de": "Layer konzeptionell nicht anwendbar (Mietspiegel-Layer in Gewerbe-Lage).",
+			"en": "Layer conceptually not applicable (rent index layer in a commercial location).",
+			"note": "Schlüssel „out-of-concept“ bleibt unübersetzt."
+		},
+		"omission_cookies_label": {
+			"de": "Cookies, Tracker, User-Konten",
+			"en": "Cookies, trackers, user accounts"
+		},
+		"omission_cookies_reason": {
+			"de": "Keine Browser-Identifikation. Bookmarks liegen im LocalStorage.",
+			"en": "No browser identification. Bookmarks live in LocalStorage."
+		},
+		"omission_rent_label": {
+			"de": "Mietpreise",
+			"en": "Rent prices"
+		},
+		"omission_rent_reason": {
+			"de": "Wir nennen keinen €/m². Den offiziellen Wert liefert mietspiegel.berlin.de.",
+			"en": "We state no €/m². The official value comes from mietspiegel.berlin.de."
+		},
+		"omission_personal_data_label": {
+			"de": "Personenbezogene Daten",
+			"en": "Personal data"
+		},
+		"omission_personal_data_reason": {
+			"de": "Kein Profil, keine Verhaltens-Auswertung, keine Login-Pflicht.",
+			"en": "No profile, no behavioural analysis, no login requirement."
+		},
+		"omission_generated_texts_label": {
+			"de": "Algorithmisch generierte Layer-Texte",
+			"en": "Algorithmically generated layer texts"
+		},
+		"omission_generated_texts_reason": {
+			"de": "Layer-Beschreibungen schreiben wir manuell. Kein LLM-Output für Personen-Biografien.",
+			"en": "We write layer descriptions by hand. No LLM output for personal biographies."
+		},
+		"omission_single_score_label": {
+			"de": "Stadtweiter Einzel-Score",
+			"en": "City-wide single score"
+		},
+		"omission_single_score_reason": {
+			"de": "Pro Kiez gibt es einen Gesamt-Wert, aber keine einzelne Zahl für ganz Berlin. Persönliche Prioritäten gewichten ohnehin anders.",
+			"en": "There is one overall value per Kiez, but no single number for the whole of Berlin. Personal priorities weight things differently anyway.",
+			"note": "DE enthält „keine eine Zahl“ (vermutlich Tippfehler), EN gibt den Sinn wieder."
+		},
+		"omission_advertising_label": {
+			"de": "Werbung, Partner-Tracking, A/B-Tests",
+			"en": "Advertising, partner tracking, A/B tests"
+		},
+		"omission_advertising_reason": {
+			"de": "Kein kommerzielles Modell.",
+			"en": "No commercial model."
+		},
+		"editorial_p1": {
+			"de": "Stolpersteine zeigen wir als Erinnerungs-Marker. Wir zählen sie nicht und werten sie nicht. Personen-Biografien gehören zur Primärquelle stolpersteine-berlin.de.",
+			"en": "We show Stolpersteine as memorial markers. We neither count nor rate them. Personal biographies belong to the primary source stolpersteine-berlin.de."
+		},
+		"editorial_p2": {
+			"de": "navigator.berlin nennt keinen Mietpreis und gibt keine rechtliche Auskunft. Den gesetzlichen Wohnlagen-Mietspiegel liefert mietspiegel.berlin.de.",
+			"en": "navigator.berlin states no rent price and gives no legal advice. The statutory rent index by residential area (Wohnlagen-Mietspiegel) comes from mietspiegel.berlin.de."
+		},
+		"editorial_p3": {
+			"de": "Aggregierte Werte sind Stadtteil-Mittel, keine Wohnungs-Eigenschaften. Wir verzichten bewusst auf einen „Berlin-Score\" und zeigen keine Bezirks-Rankings.",
+			"en": "Aggregated values are neighbourhood means, not properties of a flat. We deliberately forgo a “Berlin score” and show no Bezirk rankings.",
+			"note": "Das DE nutzt ein ASCII-Schlusszeichen (\") bei „Berlin-Score\"."
+		},
+		"editorial_p4": {
+			"de": "Layer-Texte schreiben wir manuell. Kein Layer-Inhalt wird per LLM zusammengefasst, keine Personen-Biografie generiert.",
+			"en": "We write layer texts by hand. No layer content is summarised by LLM, no personal biography generated."
+		},
+		"data_status_intro": {
+			"de": "Alphabetisch sortiert nach Layer-Name, kein Aktualitäts-Ranking.",
+			"en": "Sorted alphabetically by layer name, not a ranking by recency."
+		},
+		"licences_p1": {
+			"de": "Die meisten Layer stehen unter dl-de/zero-2-0 oder dl-de/by-2-0. OSM-basierte Layer (Stolpersteine, ÖPNV, Trinkbrunnen, Radverkehr) unter ODbL 1.0 mit Namensnennung OpenStreetMap-Contributors.",
+			"en": "Most layers are under dl-de/zero-2-0 or dl-de/by-2-0. OSM-based layers (Stolpersteine, public transport, drinking fountains, cycling) are under ODbL 1.0 with attribution to OpenStreetMap contributors."
+		},
+		"licences_full_list": {
+			"de": "Vollständige Auflistung: {link_start}/lizenzen{link_end}",
+			"en": "Full list: {link_start}/lizenzen{link_end}",
+			"note": "Link-Ziel: /lizenzen. Link-Text bleibt der Pfad."
+		},
+		"feedback_p1": {
+			"de": "Methodik-Korrektur, Datenfehler oder Layer-Vorschlag: per Mail.",
+			"en": "Methodology correction, data error or layer suggestion: by email."
+		},
+		"feedback_mail_subject": {
+			"de": "Methodik-Feedback",
+			"en": "Methodology feedback",
+			"note": "mailto-Betreff (URL-Parameter subject), nicht sichtbarer Seitentext."
+		}
+	},
+	"daten_tabelle": {
+		"caption": {
+			"de": "Daten-Stand-Tabelle aller aktiven Layer",
+			"en": "Data status table of all active layers"
+		},
+		"th_layer": {
+			"de": "Layer",
+			"en": "Layer",
+			"note": "DE und EN identisch."
+		},
+		"th_bundle": {
+			"de": "Bundle",
+			"en": "Bundle",
+			"note": "DE und EN identisch."
+		},
+		"th_updated": {
+			"de": "Stand",
+			"en": "Last updated"
+		},
+		"th_licence": {
+			"de": "Lizenz",
+			"en": "Licence"
+		}
+	},
+	"pipeline": {
+		"figure_aria_label": {
+			"de": "Build-Pipeline der Geo-Daten",
+			"en": "Build pipeline for the geodata"
+		},
+		"steps_aria_label": {
+			"de": "Pipeline-Schritte",
+			"en": "Pipeline steps"
+		},
+		"stage_source_detail": {
+			"de": "Berliner Geoportal · OSM · DWD",
+			"en": "Berlin Geoportal · OSM · DWD",
+			"note": "Nur dieses Detail ist deutsch. Alle anderen Stage-Labels und -Details (Source, fetch, reproject, simplify, hash, manifest, build, edge) sind technisch/englisch und bleiben unverändert."
+		},
+		"figcaption": {
+			"de": "Build-Pipeline: alle Schritte deterministisch, idempotent, im Source-Repo dokumentiert.",
+			"en": "Build pipeline: all steps deterministic, idempotent, documented in the source repo."
+		}
+	},
+	"kiez_score": {
+		"meta_title": {
+			"de": "Methodik des Umwelt- & Infrastruktur-Scores - Berlin in Daten - navigator.berlin",
+			"en": "Methodology of the environment & infrastructure score - Berlin in data - navigator.berlin"
+		},
+		"meta_description": {
+			"de": "Kiez-Score-Methodik: sieben Dimensionen (fünf im Gesamt-Score, Kultur und Kriminalität separat), Normalisierung, Gewichte. Warum Sozialstruktur nicht eingerechnet wird. Berliner Daten-Atlas.",
+			"en": "Kiez score methodology: seven dimensions (five in the overall score, culture and crime separate), normalisation, weights. Why social structure is not factored in. Berlin data atlas."
+		},
+		"og_image_alt": {
+			"de": "navigator.berlin Kiez-Score Methodik",
+			"en": "navigator.berlin Kiez score methodology"
+		},
+		"breadcrumb_aria_label": {
+			"de": "Brotkrumen",
+			"en": "Breadcrumb"
+		},
+		"breadcrumb_methodik": {
+			"de": "Methodik",
+			"en": "Methodology",
+			"note": "Sichtbarer Breadcrumb-Link und JSON-LD-Name."
+		},
+		"breadcrumb_kiez_score": {
+			"de": "Kiez-Score",
+			"en": "Kiez score",
+			"note": "Sichtbarer Breadcrumb-Text und JSON-LD-Name."
+		},
+		"speakable_name": {
+			"de": "Methodik des Umwelt- & Infrastruktur-Scores",
+			"en": "Methodology of the environment & infrastructure score",
+			"note": "Speakable-JSON-LD, Feld name."
+		},
+		"h1_title": {
+			"de": "Umwelt- & Infrastruktur-Score",
+			"en": "Environment & infrastructure score"
+		},
+		"lead": {
+			"de": "Fünf Dimensionen pro Planungsraum, gleich gewichtet, transparent zurückverfolgbar. Der Score misst Umwelt und Infrastruktur, nicht den sozialen Status.",
+			"en": "Five dimensions per planning area, equally weighted, transparently traceable. The score measures environment and infrastructure, not social status."
+		},
+		"toc_aria_label": {
+			"de": "Inhalt",
+			"en": "Contents"
+		},
+		"toc_heading": {
+			"de": "Inhalt",
+			"en": "Contents"
+		},
+		"section_worum_heading": {
+			"de": "Worum es geht",
+			"en": "What this is about",
+			"note": "Auch TOC-Label."
+		},
+		"section_dimensions_heading": {
+			"de": "Dimensionen",
+			"en": "Dimensions",
+			"note": "Auch TOC-Label."
+		},
+		"section_weights_heading": {
+			"de": "Gewichte",
+			"en": "Weights",
+			"note": "Auch TOC-Label."
+		},
+		"section_normalisation_heading": {
+			"de": "Normalisierung",
+			"en": "Normalisation",
+			"note": "Auch TOC-Label."
+		},
+		"section_kiez_score_heading": {
+			"de": "Kiez-Score (Bezirksregion)",
+			"en": "Kiez score (Bezirksregion)",
+			"note": "Auch TOC-Label."
+		},
+		"section_bezirk_score_heading": {
+			"de": "Bezirks-Score",
+			"en": "Bezirk score",
+			"note": "Auch TOC-Label."
+		},
+		"section_missing_heading": {
+			"de": "Was fehlt und warum",
+			"en": "What is missing and why",
+			"note": "Auch TOC-Label."
+		},
+		"section_sources_heading": {
+			"de": "Datenquellen",
+			"en": "Data sources",
+			"note": "Auch TOC-Label."
+		},
+		"section_editorial_heading": {
+			"de": "Editorial-Verantwortung",
+			"en": "Editorial responsibility",
+			"note": "Auch TOC-Label."
+		},
+		"section_feedback_heading": {
+			"de": "Feedback",
+			"en": "Feedback",
+			"note": "Auch TOC-Label. DE und EN identisch."
+		},
+		"worum_p1": {
+			"de": "Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking“. Die Karte zeigt sieben Dimensionen separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Fünf Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als eigenständige Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.",
+			"en": "The environment & infrastructure score is not a “Berlin ranking”. The map shows seven dimensions separately per planning area; the inspector aggregates them for a specific address. Five dimensions make up the overall score; culture and recorded crime sit alongside as standalone context dimensions. What applies is shown there. We also say what is missing or deliberately left out."
+		},
+		"worum_p2": {
+			"de": "Aggregations-Ebene Planungsraum entspricht rund 7.500 Einwohner:innen. Wohnungs-Mikrolagen liegen darunter und tauchen im Aggregat nicht auf.",
+			"en": "The planning area aggregation level corresponds to roughly 7,500 residents. Micro-locations of individual flats lie below that and do not appear in the aggregate."
+		},
+		"dim_ruhe_luft_label": {
+			"de": "Ruhe & Luft",
+			"en": "Quiet & air",
+			"note": "Auch Tabellenzeile in „Gewichte“."
+		},
+		"dim_ruhe_luft_layers": {
+			"de": "Lärmbelastung 2023, Luftbelastung 2023",
+			"en": "Noise pollution 2023, Air pollution 2023"
+		},
+		"dim_ruhe_luft_detail": {
+			"de": "Lärm- und Luftbelastung, je zur Hälfte gewichtet. Kategorisches 3-Stufen-Mapping von gering bis hoch. Bioklima zählt nicht mehr hier mit, es ist nach Grün & Hitze gewandert.",
+			"en": "Noise and air pollution, each weighted by half. Categorical 3-level mapping from low to high. Bioclimate no longer counts here; it has moved to Green & heat."
+		},
+		"dim_gruen_hitze_label": {
+			"de": "Grün & Hitze",
+			"en": "Green & heat",
+			"note": "Auch Tabellenzeile in „Gewichte“."
+		},
+		"dim_gruen_hitze_layers": {
+			"de": "Grünversorgung 2023, Grünanlagen, Thermische Belastung 2023, Gefühlte Temperatur 2022, Kaltluft-Einwirkbereich (2022), Kaltluft-Leitbahn-Korridor (2022)",
+			"en": "Green space provision 2023, Green spaces, Thermal stress 2023, Perceived temperature 2022, Cold air influence zone (2022), Cold air flow corridor (2022)"
+		},
+		"dim_gruen_hitze_detail": {
+			"de": "Nutzbares Grün und Schutz vor Hitze. Grünversorgung 0.30, Grünanlagen-Nähe 0.15, Bioklima 0.20, PET-Hitzebelastung 0.15, Kaltluft-Einwirkbereich 0.10, Leitbahnkorridor 0.10. PET zählt invertiert: kühlere Werte geben mehr Punkte.",
+			"en": "Usable green space and protection from heat. Green space provision 0.30, proximity to green spaces 0.15, bioclimate 0.20, PET heat stress 0.15, cold air influence zone 0.10, cold air flow corridor 0.10. PET counts inverted: cooler values give more points."
+		},
+		"dim_mobilitaet_label": {
+			"de": "Mobilität",
+			"en": "Mobility",
+			"note": "Auch Tabellenzeile in „Gewichte“."
+		},
+		"dim_mobilitaet_layers": {
+			"de": "U-Bahn-, S-Bahn-, Tram-, Bus-Stops · Radverkehrsnetz, Fahrradstraßen",
+			"en": "U-Bahn, S-Bahn, tram and bus stops · Cycling network, Bicycle streets"
+		},
+		"dim_mobilitaet_detail": {
+			"de": "Luftlinien-Distanz vom Adress-Punkt zur nächsten Haltestelle, mit 1,3-fachem Umwegfaktor. U-Bahn 0.35, S-Bahn 0.25, Tram 0.20, Bus 0.10, Radverkehrs-Presence 0.10. Bei 0 m hundert Punkte, bei 1.000 m null. Mobilität nutzt die exakte Adress-Distance, andere Dimensionen den Planungsraum-Centroid.",
+			"en": "Straight-line distance from the address point to the nearest stop, with a detour factor of 1.3. U-Bahn 0.35, S-Bahn 0.25, tram 0.20, bus 0.10, cycling network presence 0.10. At 0 m one hundred points, at 1,000 m zero. Mobility uses the exact address distance, other dimensions the planning area centroid."
+		},
+		"dim_versorgung_label": {
+			"de": "Versorgung",
+			"en": "Local amenities",
+			"note": "Auch Tabellenzeile in „Gewichte“."
+		},
+		"dim_versorgung_layers": {
+			"de": "Kindertagesstätten, Schulen, Plan-Krankenhäuser, Spielplätze, Lebensmittel, Apotheke, Post",
+			"en": "Daycare centres, Schools, Hospitals in the Berlin hospital plan, Playgrounds, Groceries, Pharmacy, Post office"
+		},
+		"dim_versorgung_detail": {
+			"de": "Versorgung umfasst öffentliche Daseinsvorsorge und private Alltags-Nahversorgung, jeweils als Dichte im Umkreis (Anzahl Einrichtungen, weicher Übergang statt hartem Distanz-Cliff). Kita-Erreichbarkeit (0.12) plus Plätze pro Kind (0.12), Schule nach Schulart (Grundschule 0.12, weiterführend 0.12), Plan-Krankenhaus kapazitätsgewichtet (0.18), Spielplatz (0.10). Dazu Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12), Apotheke (0.07), Post (0.05). Grünanlagen zählen unter Grün & Hitze. Belegungsquote, Trägerschaft und Pflege-Qualität bleiben außen vor.",
+			"en": "Local amenities cover public services and private everyday local supply, each as density within a radius (number of facilities, soft transition instead of a hard distance cliff). Daycare accessibility (0.12) plus places per child (0.12), school by type (primary 0.12, secondary 0.12), hospital in the Berlin hospital plan weighted by capacity (0.18), playground (0.10). Plus local supply from OpenStreetMap (ODbL): groceries (0.12), pharmacy (0.07), post office (0.05). Green spaces count under Green & heat. Occupancy rate, ownership type and care quality are left out."
+		},
+		"dim_wohnschutz_label": {
+			"de": "Wohnschutz",
+			"en": "Tenant protection",
+			"note": "Auch Tabellenzeile in „Gewichte“."
+		},
+		"dim_wohnschutz_layers": {
+			"de": "Milieuschutz: Erhaltungsmiete, Milieuschutz: Städtebau",
+			"en": "Milieuschutz: rent preservation, Milieuschutz: urban planning"
+		},
+		"dim_wohnschutz_detail": {
+			"de": "Verdrängungsschutz: Liegt ein Planungsraum in einem Milieuschutzgebiet, gilt Schutz als vorhanden. Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft. Diese Größe ist positiv eindeutig, mehr Schutz ist besser für Bewohner. Schutz-Status sagt nichts über die tatsächliche Mietentwicklung.",
+			"en": "Protection against displacement: if a planning area lies within a Milieuschutz area, protection counts as present. Residential preservation statute or urban planning preservation statute, combined with OR. This quantity is unambiguously positive: more protection is better for residents. Protection status says nothing about actual rent development."
+		},
+		"dim_kultur_label": {
+			"de": "Kultur (eigenständig, nicht im Gesamt-Score)",
+			"en": "Culture (standalone, not in the overall score)"
+		},
+		"dim_kultur_layers": {
+			"de": "Museen, Galerien, Theater & Bühnen, Bibliotheken, Kinos, Soziokultur, Kunst im Stadtraum, Clubs",
+			"en": "Museums, Galleries, Theatres & stages, Libraries, Cinemas, Community culture centres, Public art, Clubs"
+		},
+		"dim_kultur_detail": {
+			"de": "Kultureller Zugang als log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OpenStreetMap, ODbL). Der erste Kulturort zählt stark, weitere flachen ab, das dämpft das Innen-Außen-Gefälle. Kultur ist eine eigene, sichtbare Dimension, fließt aber NICHT in den Gesamt-Score: Kulturinfrastruktur ballt sich in der Innenstadt und würde sonst jeden Außenbezirk-Gesamt-Score drücken. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.",
+			"en": "Cultural access as a log-dampened density of libraries, theatres, museums, cinemas, galleries, community culture centres, public art and clubs within a radius (OpenStreetMap, ODbL). The first cultural venue counts strongly, further ones flatten off, which dampens the inner-outer gradient. Culture is a separate, visible dimension but does NOT feed into the overall score: cultural infrastructure clusters in the inner city and would otherwise pull down the overall score of every outer Bezirk. Memorial sites (Stolpersteine, monuments) deliberately do not count."
+		},
+		"dim_kriminalitaet_label": {
+			"de": "Erfasste Kriminalität (eigenständig, nicht im Gesamt-Score)",
+			"en": "Recorded crime (standalone, not in the overall score)"
+		},
+		"dim_kriminalitaet_layers": {
+			"de": "Kiez-Score · Erfasste Kriminalität (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)",
+			"en": "Kiez score · recorded crime (Kriminalitätsatlas Berlin crime atlas, Berlin Police, dl-de-by-2.0)"
+		},
+		"dim_kriminalitaet_detail": {
+			"de": "Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten“ ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in neutralem Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher“ oder „gefährlich“.",
+			"en": "Frequency rate of selected housing-relevant offences (neighbourhood offences/Kieztaten, residential burglary, vandalism, street robbery, bicycle theft), equally weighted, as a 3-year mean 2023–2025. “Kieztaten” is a collective category of the Berlin Police for offences closely tied to the residential area (including bodily harm, threats, robbery, vandalism of motor vehicles, cellar and residential burglary). The values exist only per Bezirksregion (coarser than the five planning area dimensions) and are mirrored onto the planning areas they contain. City-core places with tourist and commuter distortion (government quarter, Alexanderplatz) are capped. A standalone context dimension in neutral indigo, NOT in the overall score and NOT a safety ranking. The frequency rate measures recorded cases per resident, not personal risk: the place-of-offence principle (Tatortprinzip), unreported crime and the resident denominator distort it. No “safe” or “dangerous”."
+		},
+		"weights_p1": {
+			"de": "Persona „allgemein“ gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur und erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den Gesamt-Score (Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in Phase 2. Eigene Slider-Gewichtung kommt ebenfalls später.",
+			"en": "The “general” persona weights the five composite dimensions equally (20 percent each). Culture and recorded crime are visible context dimensions but do not count towards the overall score (weight 0). A persona switcher for family, single or senior users is in phase 2. Custom slider weighting also comes later."
+		},
+		"weights_th_dimension": {
+			"de": "Dimension",
+			"en": "Dimension",
+			"note": "DE und EN identisch."
+		},
+		"weights_th_weight": {
+			"de": "Gewicht",
+			"en": "Weight"
+		},
+		"weights_row_culture": {
+			"de": "Kultur",
+			"en": "Culture",
+			"note": "Zeilenlabel. Die anderen fünf Zeilen nutzen die Dimensions-Labels (dim_*_label)."
+		},
+		"weights_row_crime": {
+			"de": "Erfasste Kriminalität",
+			"en": "Recorded crime",
+			"note": "Zeilenlabel."
+		},
+		"weights_row_not_in_overall": {
+			"de": "(nicht im Gesamt-Score)",
+			"en": "(not in the overall score)",
+			"note": "Span hinter Kultur und Erfasste Kriminalität."
+		},
+		"norm_p1": {
+			"de": "Jeder Roh-Wert wird in eine 0-bis-100-Skala übersetzt. Höher heißt günstiger.",
+			"en": "Each raw value is translated to a 0-to-100 scale. Higher means more favourable."
+		},
+		"norm_ordinal3_term": {
+			"de": "Ordinal-3",
+			"en": "Ordinal-3",
+			"note": "Bezeichner, DE und EN identisch."
+		},
+		"norm_ordinal3_def": {
+			"de": "gering 100, mittel 50, hoch 0 (Belastung)",
+			"en": "low 100, medium 50, high 0 (pollution)"
+		},
+		"norm_ordinal4_term": {
+			"de": "Ordinal-4",
+			"en": "Ordinal-4",
+			"note": "Bezeichner, DE und EN identisch."
+		},
+		"norm_ordinal4_def": {
+			"de": "gering 0, mittel 33, hoch 66, sehr hoch 100 (Versorgung)",
+			"en": "low 0, medium 33, high 66, very high 100 (local amenities)"
+		},
+		"norm_pet_term": {
+			"de": "PET invertiert",
+			"en": "PET inverted"
+		},
+		"norm_pet_def": {
+			"de": "29 °C oder kühler 100, 41 °C oder heißer 0, linear dazwischen",
+			"en": "29 °C or cooler 100, 41 °C or hotter 0, linear in between"
+		},
+		"norm_distance_term": {
+			"de": "Distance",
+			"en": "Distance",
+			"note": "Bezeichner, DE und EN identisch."
+		},
+		"norm_distance_def": {
+			"de": "linear: 0 m → 100, 1.000 m → 0",
+			"en": "linear: 0 m → 100, 1,000 m → 0"
+		},
+		"norm_presence_term": {
+			"de": "Presence",
+			"en": "Presence",
+			"note": "Bezeichner, DE und EN identisch."
+		},
+		"norm_presence_def": {
+			"de": "vorhanden 100, fehlend 0",
+			"en": "present 100, absent 0"
+		},
+		"norm_p2": {
+			"de": "Aus den 0-bis-100-Werten innerhalb einer Dimension wird mit den Layer-Gewichten ein gewichteter Mittelwert. Der Dimensions-Wert wird in vier UI-Stufen abgebildet: gering (0–25), mittel (26–50), hoch (51–75), sehr hoch (76–100).",
+			"en": "The 0-to-100 values within a dimension become a weighted mean using the layer weights. The dimension value is mapped to four UI levels: low (0–25), medium (26–50), high (51–75), very high (76–100)."
+		},
+		"kiez_score_p1": {
+			"de": "Die 542 Planungsraum-Werte werden zu 143 LOR-Bezirksregionen flächen-gewichtet aggregiert. Pro Dimension wird ein gewichteter Mittelwert gebildet, wobei jeder Planungsraum mit seiner Fläche gewichtet wird. Mindestens 50 Prozent der enthaltenen Planungsräume müssen einen Wert haben, sonst bleibt die Dimension ohne Aggregat.",
+			"en": "The 542 planning area values are aggregated to 143 LOR Bezirksregionen, weighted by area. A weighted mean is formed per dimension, with each planning area weighted by its area. At least 50 percent of the contained planning areas must have a value, otherwise the dimension stays without an aggregate."
+		},
+		"kiez_score_p2": {
+			"de": "Der Composite-Score einer Bezirksregion entsteht als ungewichtetes Mittel der nicht-null-Werte ihrer fünf Dimensionen, parallel zur Adress-Logik.",
+			"en": "The composite score of a Bezirksregion is the unweighted mean of the non-null values of its five dimensions, in parallel with the address logic."
+		},
+		"kiez_score_p3": {
+			"de": "LOR-Hierarchie: die ersten sechs Zeichen einer Planungsraum-ID ergeben die Bezirksregion-ID, die ersten zwei den Bezirks-Code. Property-basiertes Mapping ohne Geometrie-Test. Falls zwei Bezirksregionen denselben Namen tragen, wird der Bezirks-Slug als Suffix angehängt (z.B. heerstrasse-spandau, heerstrasse-charlottenburg-wilmersdorf).",
+			"en": "LOR hierarchy: the first six characters of a planning area ID give the Bezirksregion ID, the first two the Bezirk code. Property-based mapping without a geometry test. If two Bezirksregionen share the same name, the Bezirk slug is appended as a suffix (e.g. heerstrasse-spandau, heerstrasse-charlottenburg-wilmersdorf)."
+		},
+		"bezirk_score_p1": {
+			"de": "Auf Bezirks-Ebene werden die 542 Planungsräume direkt flächen-gewichtet aggregiert, nicht über die Bezirksregion-Zwischenebene. Damit bleibt das Gewicht jedes Planungsraums proportional zu seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.",
+			"en": "At Bezirk level the 542 planning areas are aggregated directly, weighted by area, not via the Bezirksregion intermediate level. This keeps the weight of each planning area proportional to its actual area and independent of the LOR intermediate grouping."
+		},
+		"bezirk_score_p2": {
+			"de": "Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt“, hoch = besser), zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score“ gibt es nicht.",
+			"en": "Since the score reorganisation, all composite dimensions are unambiguously positive. That is why we also show an overall choropleth on the map (layer “Kiez score · overall”, high = better), in addition to the individual dimensions. Culture and recorded crime are standalone context dimensions and do not feed into the overall score. Crime and the MSS aggregate stay neutral context layers in neutral indigo, without red-green jumps. A city-wide “Berlin score” does not exist.",
+			"note": "Layername „Kiez score · overall“ entspricht atlas_layer_name_kiez_score_gesamt in messages/en.json."
+		},
+		"bezirk_score_pipeline": {
+			"de": "Build-Pipeline: {code_start}pnpm data:aggregate-scores{code_end} liest die Planungsraum-Quelle, baut die LOR-Hierarchie und schreibt die Aggregate idempotent in die Postgres-Tabellen {code_start}bezirk_score{code_end} und {code_start}kiez_score{code_end}.",
+			"en": "Build pipeline: {code_start}pnpm data:aggregate-scores{code_end} reads the planning area source, builds the LOR hierarchy and writes the aggregates idempotently into the Postgres tables {code_start}bezirk_score{code_end} and {code_start}kiez_score{code_end}.",
+			"note": "Drei <code>-Spans (font-mono text-sm). Der Inhalt zwischen {code_start} und {code_end} bleibt in beiden Sprachen unverändert."
+		},
+		"missing_social_label": {
+			"de": "Sozialstruktur",
+			"en": "Social structure"
+		},
+		"missing_social_reason": {
+			"de": "Der soziale Status eines Kiezes ist kein Qualitäts-Kriterium. Würden wir ihn werten, schnitten Kieze mit niedrigem Status schlechter ab und würden stigmatisiert. Das MSS-Aggregat bleibt als neutraler Kontext sichtbar, fließt aber nicht in den Score.",
+			"en": "The social status of a Kiez is not a quality criterion. If we rated it, Kieze with low status would score worse and be stigmatised. The MSS aggregate stays visible as neutral context but does not feed into the score."
+		},
+		"missing_affordability_label": {
+			"de": "Bezahlbarkeit",
+			"en": "Affordability"
+		},
+		"missing_affordability_reason": {
+			"de": "Kontestiert und ambivalent. Hohe Bodenrichtwerte oder gut bewertete Wohnlagen bedeuten teure Miete, nicht schlechte Wohnqualität. Belastbare Adress-Daten fehlen. Mietspiegel-Werte liefert mietspiegel.berlin.de.",
+			"en": "Contested and ambivalent. High standard land values or highly rated residential areas mean expensive rent, not poor housing quality. Reliable address-level data is missing. Rent index values come from mietspiegel.berlin.de."
+		},
+		"missing_family_label": {
+			"de": "Familienfreundlichkeit",
+			"en": "Family-friendliness"
+		},
+		"missing_family_reason": {
+			"de": "Hängt stark von der Persona ab: Eltern mit Kita-Kind, Schulkind oder Pflegebedarf gewichten anders. Kita-, Schul- und Krankenhaus-Layer bleiben separat im Inspector statt in einer Composite-Dimension zu verschwinden.",
+			"en": "Depends strongly on the persona: parents with a daycare child, a school-age child or care needs weight things differently. Daycare, school and hospital layers stay separate in the inspector instead of disappearing into a composite dimension."
+		},
+		"sources_p1": {
+			"de": "Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt), Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin), Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer: {link_start}/lizenzen{link_end}.",
+			"en": "Berlin Environmental Atlas (Umweltatlas; Senate Department for Urban Mobility, Transport, Climate Action and the Environment), Monitoring Soziale Stadtentwicklung (Senate Department for Urban Development Berlin), Berlin crime atlas (Kriminalitätsatlas Berlin; Berlin Police, dl-de-by-2.0) and public transport locations from OpenStreetMap (ODbL 1.0). Full list with licence and data date per layer: {link_start}/lizenzen{link_end}.",
+			"note": "Link-Ziel: /lizenzen. Link-Text bleibt der Pfad. Der Satz endet mit Punkt nach dem Link."
+		},
+		"editorial_p1": {
+			"de": "Der Score ist statistische Lage-Beschreibung, keine Wohnungsbewertung. Wir nennen keinen Mietpreis und geben keine rechtliche Auskunft.",
+			"en": "The score is a statistical description of location, not an assessment of a flat. We state no rent price and give no legal advice."
+		},
+		"editorial_p2": {
+			"de": "Der Score wertet keine Sozialstruktur. Ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter“. Das MSS-Aggregat zeigen wir als neutralen Kontext, nicht als Bewertung. Choropleth-Farben dafür bleiben neutral, ohne Rot-Grün-Sprünge. Einzelne Adressen können stark vom Planungsraum-Mittel abweichen.",
+			"en": "The score does not rate social structure. A Kiez with low social status does not live “worse”. We show the MSS aggregate as neutral context, not as an assessment. Choropleth colours for it stay neutral, without red-green jumps. Individual addresses can deviate strongly from the planning area mean."
+		},
+		"feedback_p1": {
+			"de": "Methodik-Korrektur, Datenfehler oder Layer-Vorschlag: per Mail.",
+			"en": "Methodology correction, data error or layer suggestion: by email."
+		},
+		"feedback_mail_subject": {
+			"de": "Kiez-Score-Methodik",
+			"en": "Kiez score methodology",
+			"note": "mailto-Betreff (URL-Parameter subject), nicht sichtbarer Seitentext."
+		},
+		"back_link": {
+			"de": "Zur Atlas-Methodik",
+			"en": "Back to the atlas methodology",
+			"note": "Link-Ziel: /methodik"
+		}
+	},
+	"clt_page": {
+		"meta_title": {
+			"de": "Cross-Layer-Templates · Co-Design-Preview · navigator.berlin",
+			"en": "Cross-layer templates · Co-design preview · navigator.berlin"
+		},
+		"meta_description": {
+			"de": "Render-Vorschau der Cross-Layer-Story-Templates. Co-Design-Review-Stage.",
+			"en": "Render preview of the cross-layer story templates. Co-design review stage."
+		},
+		"breadcrumb_methodik": {
+			"de": "Methodik",
+			"en": "Methodology",
+			"note": "Link-Text. Link-Ziel: /methodik"
+		},
+		"breadcrumb_stage": {
+			"de": "· Co-Design-Stage",
+			"en": "· Co-design stage",
+			"note": "Text hinter dem Link im selben <p>, inkl. führendem Mittelpunkt."
+		},
+		"h1_title": {
+			"de": "Cross-Layer-Templates · Preview",
+			"en": "Cross-layer templates · Preview",
+			"note": "Das H1 trägt lang=\"de\". Bei EN auf lang=\"en\" umstellen."
+		},
+		"intro_p1": {
+			"de": "Render-Vorschau der {totalTemplates} Templates. Daten sind Fixtures, kein Live-Wiring auf Produktiv-Pages. Feature-Flag {code_start}crossLayerStoryBlock{code_end} bleibt OFF bis Co-Design-Sign-off.",
+			"en": "Render preview of the {totalTemplates} templates. Data are fixtures, no live wiring to production pages. Feature flag {code_start}crossLayerStoryBlock{code_end} stays OFF until co-design sign-off.",
+			"note": "{totalTemplates} = data.totalTemplates. {code_start}/{code_end} = <code>. Inhalt in beiden Sprachen unverändert."
+		},
+		"intro_p2": {
+			"de": "Vor Roll-out auf 143 Kieze: Style-Guide in {code_start}docs/cross-layer-templates-style-guide.md{code_end} abarbeiten und {code_start}pnpm lint:cross-layer-templates{code_end} grün halten.",
+			"en": "Before rolling out to 143 Kieze: work through the style guide in {code_start}docs/cross-layer-templates-style-guide.md{code_end} and keep {code_start}pnpm lint:cross-layer-templates{code_end} green.",
+			"note": "Zwei <code>-Spans, Inhalt unverändert."
+		},
+		"source_label_wahl": {
+			"de": "Wahlbezirksstatistik",
+			"en": "Polling district statistics",
+			"note": "Prop sources, Feld label. Lizenzen (dl-de/by-2-0) bleiben."
+		},
+		"source_label_mietspiegel": {
+			"de": "Mietspiegel Wohnlagen 2024",
+			"en": "Rent index residential areas 2024",
+			"note": "Prop sources, Feld label."
+		},
+		"source_label_laerm": {
+			"de": "Lärmkartierung 2023",
+			"en": "Noise mapping 2023",
+			"note": "Prop sources, Feld label."
+		},
+		"render_skip": {
+			"de": "Render-Skip wegen fehlender Variablen: {missingVars}",
+			"en": "Render skipped because of missing variables: {missingVars}",
+			"note": "{missingVars} = preview.rendered.missingVars.join(', ')"
+		},
+		"editorial_note_summary": {
+			"de": "Editorial-Note",
+			"en": "Editorial note",
+			"note": "<summary>. Der Inhalt selbst (editorialNote) bleibt unübersetzt."
+		},
+		"schema_details_summary": {
+			"de": "Schema-Details",
+			"en": "Schema details"
+		},
+		"render_context_term": {
+			"de": "Render-Context",
+			"en": "Render context",
+			"note": "<dt>, in der Quelle uppercase per CSS."
+		},
+		"style_guide_label": {
+			"de": "Style-Guide:",
+			"en": "Style guide:",
+			"note": "Der Link-Text (Dateipfad) bleibt unverändert."
+		}
+	},
+	"clt_fixture": {
+		"kiez_context_label": {
+			"de": "Kiez Friedrichshain Nord",
+			"en": "Kiez Friedrichshain Nord",
+			"note": "contextLabel, DE und EN identisch (Eigenname)."
+		},
+		"kiez_name": {
+			"de": "Friedrichshain Nord",
+			"en": "Friedrichshain Nord",
+			"note": "Eigenname, DE und EN identisch."
+		},
+		"kiez_wahl_typ_label": {
+			"de": "Bundestagswahlen",
+			"en": "Bundestag elections"
+		},
+		"kiez_stimmtyp_label": {
+			"de": "Zweitstimmen",
+			"en": "party votes",
+			"note": "Nach wahl_label_stimmtyp_zweitstimme in messages/en.json („party vote“), hier Plural wegen Satzbau."
+		},
+		"kiez_sparkline_jahre": {
+			"de": "2013, 2017, 2021, 2025",
+			"en": "2013, 2017, 2021, 2025",
+			"note": "DE und EN identisch."
+		},
+		"kiez_sparkline_top_parteien": {
+			"de": "Die Linke (2013), GRÜNE (2017), GRÜNE (2021), GRÜNE (2025)",
+			"en": "Die Linke (2013), GRÜNE (2017), GRÜNE (2021), GRÜNE (2025)",
+			"note": "Parteinamen unverändert (keine EN-Formen in messages/en.json)."
+		},
+		"bezirk_context_label": {
+			"de": "Bezirk Pankow",
+			"en": "Bezirk Pankow",
+			"note": "contextLabel, DE und EN identisch (Eigenname)."
+		},
+		"bezirk_name": {
+			"de": "Pankow",
+			"en": "Pankow",
+			"note": "Eigenname, DE und EN identisch."
+		},
+		"bezirk_wahl_typ_label": {
+			"de": "Abgeordnetenhauswahl",
+			"en": "Berlin House of Representatives (Abgeordnetenhaus) election",
+			"note": "Nach wahl_label_typ_agh in messages/en.json."
+		},
+		"bezirk_top_partei_label": {
+			"de": "CDU",
+			"en": "CDU",
+			"note": "Parteiname, unverändert."
+		},
+		"bezirk_top_anteil_pct": {
+			"de": "23,1 %",
+			"en": "23.1%"
+		},
+		"bezirk_zweite_partei_label": {
+			"de": "Bündnis 90/Die Grünen",
+			"en": "Bündnis 90/Die Grünen",
+			"note": "Parteiname, unverändert."
+		},
+		"bezirk_zweite_anteil_pct": {
+			"de": "21,4 %",
+			"en": "21.4%"
+		}
+	},
+	"clt_wahl_yaml": {
+		"wahl_trend_zeit_kiez_body": {
+			"de": "Im Kiez {kiez_name} verteilten sich die {stimmtyp_label} bei den letzten {wahl_typ_label} wie folgt: {sparkline_jahre} mit jeweils stärkster Partei {sparkline_jahre_top_parteien}.",
+			"en": "In the Kiez {kiez_name}, the {stimmtyp_label} were distributed as follows in the most recent {wahl_typ_label}: {sparkline_jahre}, with the strongest party in each case being {sparkline_jahre_top_parteien}.",
+			"note": "Template wahl-trend-zeit-kiez, Feld body_de (YAML-Folded-Scalar, hier zu einer Zeile zusammengezogen). Mustache-Platzhalter unverändert."
+		},
+		"tag_wahl": {
+			"de": "wahl",
+			"en": "election",
+			"note": "Nur Vorschau: tags werden als Chips angezeigt. Bezeichner, ggf. unübersetzt lassen."
+		},
+		"tag_trend": {
+			"de": "trend",
+			"en": "trend",
+			"note": "Nur Vorschau, DE und EN identisch."
+		},
+		"tag_zeitreihe": {
+			"de": "zeitreihe",
+			"en": "time series",
+			"note": "Nur Vorschau: Bezeichner, ggf. unübersetzt lassen."
+		}
+	}
+}

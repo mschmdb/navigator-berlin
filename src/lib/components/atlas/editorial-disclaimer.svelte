@@ -55,8 +55,8 @@
 		customText?: string;
 		id?: string;
 		/** Explicit content locale, overrides `getLocale()` (URL locale). Needed
-		 * by callers whose content locale differs from the URL locale -- e.g.
-		 * `cross-layer-story-block.svelte` on an unregistered fallback page. */
+		 * by callers whose content locale differs from the URL locale, e.g. a
+		 * page that still shows German content under an `/en` URL. */
 		locale?: Locale;
 	};
 

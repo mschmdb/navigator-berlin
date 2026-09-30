@@ -84,4 +84,26 @@ describe('cross-layer-template schema', () => {
 		});
 		expect(r.success).toBe(false);
 	});
+
+	it('akzeptiert optionales body_en', () => {
+		const ok = v.safeParse(TemplateSchema, {
+			id: 'wahl-test',
+			applicableTo: ['kiez'],
+			requires: ['x'],
+			body_de: 'Test-Body mit ausreichend Zeichen.',
+			body_en: 'Test body with enough characters.'
+		});
+		expect(ok.success).toBe(true);
+	});
+
+	it('lehnt zu kurzen body_en ab', () => {
+		const r = v.safeParse(TemplateSchema, {
+			id: 'wahl-test',
+			applicableTo: ['kiez'],
+			requires: ['x'],
+			body_de: 'Test-Body mit ausreichend Zeichen.',
+			body_en: 'short'
+		});
+		expect(r.success).toBe(false);
+	});
 });

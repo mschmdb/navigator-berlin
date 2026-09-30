@@ -256,3 +256,15 @@
   summary: Methodik `gruenversorgung-2023` (`layer-methodology.ts:212`) nennt „Skala gering bis sehr hoch“, die Daten haben `kategorie` gut/mittel/schlecht.
   evidence: Beim C3-Abgleich gefunden (Datenwerte gezählt: gut 291, schlecht 136, mittel 113). DE und EN-Message korrigieren.
   resolved: 30.09.2026. Methodik, Layer-Erklärung und FAQ-Helper nutzen jetzt einheitlich die neutrale Skala aus Story 1.22 (gering, mittel, hoch). Skalentexte von Lärm, Luft, Bioklima (drei Klassen) und Umweltgerechtigkeit (keine starke bis fünffache Belastung) mitkorrigiert.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4a-methodik-kern.md`
+  summary: `cross-layer-story-block.svelte` löst seit C4a keine Effective-Locale mehr auf; montiert man ihn auf einer nicht registrierten Seite (z. B. `/kiez`), entsteht ein EN-Rahmen in deutschem `<main>`.
+  evidence: Review C4a (Edge Case). Heute nur auf `/methodik/cross-layer-templates` (registriert) montiert. Vor einer Nutzung auf Profilseiten Effective-Locale wieder einbauen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4a-methodik-kern.md`
+  summary: `methodik_kiez_score_sources_p1` nennt „Senatsverwaltung Stadtentwicklung Berlin“, `methodik_mss_p1` seit C4a „Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen“ (DE und EN angleichen).
+  evidence: Review C4a (Blind Hunter). DE-Änderung lag außerhalb der Abnahme vom 30.09. 08:11.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4a-methodik-kern.md`
+  summary: `/methodik` und `/methodik/kiez-score` zeigen auf `/en` den Pfad „/lizenzen“ als sichtbaren Linktext; mit C4c durch ein Label ersetzen.
+  evidence: Review C4a (Blind Hunter). Messages `methodik_licences_full_list`, `methodik_kiez_score_sources_p1`.

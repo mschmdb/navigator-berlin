@@ -2,108 +2,52 @@
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import RichText from '$lib/components/rich-text.svelte';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { richSegments } from '$lib/i18n/rich-text.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime.js';
 	import { buildBreadcrumbList, buildSpeakableWebPage } from '$lib/seo/index.js';
+	import { localeToBcp47 } from '$lib/seo/locale-meta.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+	import {
+		getKiezScoreDimensions,
+		getKiezScoreOmissions,
+		getKiezScoreSections,
+		getKiezScoreWeightRows
+	} from './kiez-score-content.js';
 
-	const pageTitle =
-		'Methodik des Umwelt- & Infrastruktur-Scores - Berlin in Daten - navigator.berlin';
-	const pageDescription =
-		'Kiez-Score-Methodik: sieben Dimensionen (fünf im Gesamt-Score, Kultur und Kriminalität separat), Normalisierung, Gewichte. Warum Sozialstruktur nicht eingerechnet wird. Berliner Daten-Atlas.';
+	const pageTitle = m.methodik_kiez_score_meta_title();
+	const pageDescription = m.methodik_kiez_score_meta_description();
 
-	const sections = [
-		{ id: 'worum', label: 'Worum es geht' },
-		{ id: 'dimensionen', label: 'Dimensionen' },
-		{ id: 'gewichte', label: 'Gewichte' },
-		{ id: 'normalisierung', label: 'Normalisierung' },
-		{ id: 'kiez-score', label: 'Kiez-Score (Bezirksregion)' },
-		{ id: 'bezirks-score', label: 'Bezirks-Score' },
-		{ id: 'fehlt', label: 'Was fehlt und warum' },
-		{ id: 'quellen', label: 'Datenquellen' },
-		{ id: 'editorial', label: 'Editorial-Verantwortung' },
-		{ id: 'feedback', label: 'Feedback' }
-	];
+	const sections = getKiezScoreSections();
+	const dimensions = getKiezScoreDimensions();
+	const weightRows = getKiezScoreWeightRows();
+	const omissions = getKiezScoreOmissions();
 
-	const dimensions = [
-		{
-			id: 'ruhe-luft',
-			label: 'Ruhe & Luft',
-			layers: 'Lärmbelastung 2023, Luftbelastung 2023',
-			detail:
-				'Lärm- und Luftbelastung, je zur Hälfte gewichtet. Kategorisches 3-Stufen-Mapping von gering bis hoch. Bioklima zählt nicht mehr hier mit, es ist nach Grün & Hitze gewandert.'
-		},
-		{
-			id: 'gruen-hitze',
-			label: 'Grün & Hitze',
-			layers:
-				'Grünversorgung 2023, Grünanlagen, Thermische Belastung 2023, Gefühlte Temperatur 2022, Kaltluft-Einwirkbereich (2022), Kaltluft-Leitbahn-Korridor (2022)',
-			detail:
-				'Nutzbares Grün und Schutz vor Hitze. Grünversorgung 0.30, Grünanlagen-Nähe 0.15, Bioklima 0.20, PET-Hitzebelastung 0.15, Kaltluft-Einwirkbereich 0.10, Leitbahnkorridor 0.10. PET zählt invertiert: kühlere Werte geben mehr Punkte.'
-		},
-		{
-			id: 'mobilitaet',
-			label: 'Mobilität',
-			layers: 'U-Bahn-, S-Bahn-, Tram-, Bus-Stops · Radverkehrsnetz, Fahrradstraßen',
-			detail:
-				'Luftlinien-Distanz vom Adress-Punkt zur nächsten Haltestelle, mit 1,3-fachem Umwegfaktor. U-Bahn 0.35, S-Bahn 0.25, Tram 0.20, Bus 0.10, Radverkehrs-Presence 0.10. Bei 0 m hundert Punkte, bei 1.000 m null. Mobilität nutzt die exakte Adress-Distance, andere Dimensionen den Planungsraum-Centroid.'
-		},
-		{
-			id: 'versorgung',
-			label: 'Versorgung',
-			layers:
-				'Kindertagesstätten, Schulen, Plan-Krankenhäuser, Spielplätze, Lebensmittel, Apotheke, Post',
-			detail:
-				'Versorgung umfasst öffentliche Daseinsvorsorge und private Alltags-Nahversorgung, jeweils als Dichte im Umkreis (Anzahl Einrichtungen, weicher Übergang statt hartem Distanz-Cliff). Kita-Erreichbarkeit (0.12) plus Plätze pro Kind (0.12), Schule nach Schulart (Grundschule 0.12, weiterführend 0.12), Plan-Krankenhaus kapazitätsgewichtet (0.18), Spielplatz (0.10). Dazu Nahversorgung aus OpenStreetMap (ODbL): Lebensmittel (0.12), Apotheke (0.07), Post (0.05). Grünanlagen zählen unter Grün & Hitze. Belegungsquote, Trägerschaft und Pflege-Qualität bleiben außen vor.'
-		},
-		{
-			id: 'wohnschutz',
-			label: 'Wohnschutz',
-			layers: 'Milieuschutz: Erhaltungsmiete, Milieuschutz: Städtebau',
-			detail:
-				'Verdrängungsschutz: Liegt ein Planungsraum in einem Milieuschutzgebiet, gilt Schutz als vorhanden. Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft. Diese Größe ist positiv eindeutig, mehr Schutz ist besser für Bewohner. Schutz-Status sagt nichts über die tatsächliche Mietentwicklung.'
-		},
-		{
-			id: 'kultur',
-			label: 'Kultur (eigenständig, nicht im Gesamt-Score)',
-			layers:
-				'Museen, Galerien, Theater & Bühnen, Bibliotheken, Kinos, Soziokultur, Kunst im Stadtraum, Clubs',
-			detail:
-				'Kultureller Zugang als log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OpenStreetMap, ODbL). Der erste Kulturort zählt stark, weitere flachen ab, das dämpft das Innen-Außen-Gefälle. Kultur ist eine eigene, sichtbare Dimension, fließt aber NICHT in den Gesamt-Score: Kulturinfrastruktur ballt sich in der Innenstadt und würde sonst jeden Außenbezirk-Gesamt-Score drücken. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.'
-		},
-		{
-			id: 'kriminalitaet',
-			label: 'Erfasste Kriminalität (eigenständig, nicht im Gesamt-Score)',
-			layers:
-				'Kiez-Score · Erfasste Kriminalität (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)',
-			detail:
-				'Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten“ ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in neutralem Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher“ oder „gefährlich“.'
-		}
-	];
+	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';
+	const feedbackHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(m.methodik_kiez_score_feedback_mail_subject())}`;
 
-	const omissions = [
-		{
-			label: 'Sozialstruktur',
-			reason:
-				'Der soziale Status eines Kiezes ist kein Qualitäts-Kriterium. Würden wir ihn werten, schnitten Kieze mit niedrigem Status schlechter ab und würden stigmatisiert. Das MSS-Aggregat bleibt als neutraler Kontext sichtbar, fließt aber nicht in den Score.'
-		},
-		{
-			label: 'Bezahlbarkeit',
-			reason:
-				'Kontestiert und ambivalent. Hohe Bodenrichtwerte oder gut bewertete Wohnlagen bedeuten teure Miete, nicht schlechte Wohnqualität. Belastbare Adress-Daten fehlen. Mietspiegel-Werte liefert mietspiegel.berlin.de.'
-		},
-		{
-			label: 'Familienfreundlichkeit',
-			reason:
-				'Hängt stark von der Persona ab: Eltern mit Kita-Kind, Schulkind oder Pflegebedarf gewichten anders. Kita-, Schul- und Krankenhaus-Layer bleiben separat im Inspector statt in einer Composite-Dimension zu verschwinden.'
-		}
-	];
+	const pipelineSegments = richSegments((t) =>
+		m.methodik_kiez_score_bezirk_score_pipeline({
+			code_start: t('code').start,
+			code_end: t('code').end
+		})
+	);
+	const sourcesSegments = richSegments((t) =>
+		m.methodik_kiez_score_sources_p1({ link_start: t('link').start, link_end: t('link').end })
+	);
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
 				{ name: 'Berlin', path: '/' },
-				{ name: 'Methodik', path: '/methodik' },
-				{ name: 'Kiez-Score', path: '/methodik/kiez-score' }
+				{ name: m.methodik_kiez_score_breadcrumb_methodik(), path: localizedHref('/methodik') },
+				{
+					name: m.methodik_kiez_score_breadcrumb_kiez_score(),
+					path: localizedHref('/methodik/kiez-score')
+				}
 			]
 		})
 	);
@@ -111,8 +55,9 @@
 	const speakableJsonLd = $derived(
 		buildSpeakableWebPage({
 			origin: page.url.origin,
-			urlPath: '/methodik/kiez-score',
-			name: 'Methodik des Umwelt- & Infrastruktur-Scores',
+			urlPath: localizedHref('/methodik/kiez-score'),
+			name: m.methodik_kiez_score_speakable_name(),
+			inLanguage: localeToBcp47(getLocale()),
 			cssSelectors: ['#worum', '#dimensionen', '#gewichte', '#normalisierung', '#fehlt']
 		})
 	);
@@ -124,7 +69,7 @@
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	ogImage={`${page.url.origin}/og/page/methodik-kiez-score.png`}
-	ogImageAlt="navigator.berlin Kiez-Score Methodik"
+	ogImageAlt={m.methodik_kiez_score_og_image_alt()}
 />
 <JsonLd data={breadcrumbJsonLd} testid="methodik-kiez-score-breadcrumb-jsonld" />
 <JsonLd data={speakableJsonLd} testid="methodik-kiez-score-speakable-jsonld" />
@@ -135,34 +80,32 @@
 >
 	<header class="flex flex-col gap-2">
 		<nav
-			aria-label="Brotkrumen"
+			aria-label={m.methodik_kiez_score_breadcrumb_aria_label()}
 			data-testid="methodik-kiez-score-breadcrumb"
 			class="font-mono text-xs text-ink-muted"
 		>
-			<a href="/methodik" class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>Methodik</a
+			<a href={localizedHref('/methodik')} class={linkClass}
+				>{m.methodik_kiez_score_breadcrumb_methodik()}</a
 			>
 			<span aria-hidden="true">·</span>
-			<span>Kiez-Score</span>
+			<span>{m.methodik_kiez_score_breadcrumb_kiez_score()}</span>
 		</nav>
 		<h1 data-testid="methodik-kiez-score-h1" class="font-serif text-3xl text-ink">
-			Umwelt- & Infrastruktur-Score
+			{m.methodik_kiez_score_h1_title()}
 		</h1>
 		<p class="font-serif text-lg leading-relaxed text-ink-muted">
-			Fünf Dimensionen pro Planungsraum, gleich gewichtet, transparent zurückverfolgbar. Der Score
-			misst Umwelt und Infrastruktur, nicht den sozialen Status.
+			{m.methodik_kiez_score_lead()}
 		</p>
 	</header>
 
-	<nav aria-label="Inhalt" class="border border-rule bg-bg p-4">
-		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">Inhalt</p>
+	<nav aria-label={m.methodik_kiez_score_toc_aria_label()} class="border border-rule bg-bg p-4">
+		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">
+			{m.methodik_kiez_score_toc_heading()}
+		</p>
 		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
-					<a
-						href={`#${sec.id}`}
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
-					>
+					<a href={`#${sec.id}`} class={linkClass}>
 						{sec.label}
 					</a>
 				</li>
@@ -171,22 +114,17 @@
 	</nav>
 
 	<section id="worum" aria-labelledby="worum-h" class="flex flex-col gap-3">
-		<h2 id="worum-h" class="font-serif text-2xl text-ink">Worum es geht</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking“. Die Karte zeigt sieben
-			Dimensionen separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse.
-			Fünf Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als
-			eigenständige Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst
-			weggelassen ist, sagen wir auch.
-		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Aggregations-Ebene Planungsraum entspricht rund 7.500 Einwohner:innen. Wohnungs-Mikrolagen
-			liegen darunter und tauchen im Aggregat nicht auf.
-		</p>
+		<h2 id="worum-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_worum_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_kiez_score_worum_p1()}</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_kiez_score_worum_p2()}</p>
 	</section>
 
 	<section id="dimensionen" aria-labelledby="dimensionen-h" class="flex flex-col gap-3">
-		<h2 id="dimensionen-h" class="font-serif text-2xl text-ink">Dimensionen</h2>
+		<h2 id="dimensionen-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_dimensions_heading()}
+		</h2>
 		<ul class="flex flex-col gap-4">
 			{#each dimensions as dim (dim.id)}
 				<li class="border-l-2 border-rule pl-3">
@@ -199,109 +137,96 @@
 	</section>
 
 	<section id="gewichte" aria-labelledby="gewichte-h" class="flex flex-col gap-3">
-		<h2 id="gewichte-h" class="font-serif text-2xl text-ink">Gewichte</h2>
+		<h2 id="gewichte-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_weights_heading()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Persona „allgemein“ gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur
-			und erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den
-			Gesamt-Score (Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in
-			Phase 2. Eigene Slider-Gewichtung kommt ebenfalls später.
+			{m.methodik_kiez_score_weights_p1()}
 		</p>
 		<table class="border border-rule text-sm">
 			<thead class="bg-bg">
 				<tr>
-					<th class="px-3 py-2 text-left font-mono text-xs text-ink-muted uppercase">Dimension</th>
-					<th class="px-3 py-2 text-left font-mono text-xs text-ink-muted uppercase">Gewicht</th>
+					<th class="px-3 py-2 text-left font-mono text-xs text-ink-muted uppercase">
+						{m.methodik_kiez_score_weights_th_dimension()}
+					</th>
+					<th class="px-3 py-2 text-left font-mono text-xs text-ink-muted uppercase">
+						{m.methodik_kiez_score_weights_th_weight()}
+					</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td class="px-3 py-2">Ruhe & Luft</td><td class="px-3 py-2 font-mono">0.20</td></tr>
-				<tr><td class="px-3 py-2">Grün & Hitze</td><td class="px-3 py-2 font-mono">0.20</td></tr>
-				<tr><td class="px-3 py-2">Mobilität</td><td class="px-3 py-2 font-mono">0.20</td></tr>
-				<tr><td class="px-3 py-2">Wohnschutz</td><td class="px-3 py-2 font-mono">0.20</td></tr>
-				<tr><td class="px-3 py-2">Versorgung</td><td class="px-3 py-2 font-mono">0.20</td></tr>
-				<tr
-					><td class="px-3 py-2"
-						>Kultur <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td
-					><td class="px-3 py-2 font-mono">0</td></tr
-				>
-				<tr
-					><td class="px-3 py-2"
-						>Erfasste Kriminalität <span class="text-ink-subtle">(nicht im Gesamt-Score)</span></td
-					><td class="px-3 py-2 font-mono">0</td></tr
-				>
+				{#each weightRows as row (row.id)}
+					<tr>
+						<td class="px-3 py-2">
+							{row.label}{#if row.note}<!-- eslint-disable-next-line svelte/no-useless-mustaches -->{' '}<span
+									class="text-ink-subtle">{row.note}</span
+								>{/if}
+						</td>
+						<td class="px-3 py-2 font-mono">{row.weight}</td>
+					</tr>
+				{/each}
 			</tbody>
 		</table>
 	</section>
 
 	<section id="normalisierung" aria-labelledby="normalisierung-h" class="flex flex-col gap-3">
-		<h2 id="normalisierung-h" class="font-serif text-2xl text-ink">Normalisierung</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Jeder Roh-Wert wird in eine 0-bis-100-Skala übersetzt. Höher heißt günstiger.
-		</p>
+		<h2 id="normalisierung-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_normalisation_heading()}
+		</h2>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_kiez_score_norm_p1()}</p>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
-			<dt class="font-mono text-xs text-ink-muted">Ordinal-3</dt>
-			<dd class="text-ink">gering 100, mittel 50, hoch 0 (Belastung)</dd>
-			<dt class="font-mono text-xs text-ink-muted">Ordinal-4</dt>
-			<dd class="text-ink">gering 0, mittel 33, hoch 66, sehr hoch 100 (Versorgung)</dd>
-			<dt class="font-mono text-xs text-ink-muted">PET invertiert</dt>
-			<dd class="text-ink">29 °C oder kühler 100, 41 °C oder heißer 0, linear dazwischen</dd>
-			<dt class="font-mono text-xs text-ink-muted">Distance</dt>
-			<dd class="text-ink">linear: 0 m → 100, 1.000 m → 0</dd>
-			<dt class="font-mono text-xs text-ink-muted">Presence</dt>
-			<dd class="text-ink">vorhanden 100, fehlend 0</dd>
+			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_ordinal3_term()}</dt>
+			<dd class="text-ink">{m.methodik_kiez_score_norm_ordinal3_def()}</dd>
+			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_ordinal4_term()}</dt>
+			<dd class="text-ink">{m.methodik_kiez_score_norm_ordinal4_def()}</dd>
+			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_pet_term()}</dt>
+			<dd class="text-ink">{m.methodik_kiez_score_norm_pet_def()}</dd>
+			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_distance_term()}</dt>
+			<dd class="text-ink">{m.methodik_kiez_score_norm_distance_def()}</dd>
+			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_presence_term()}</dt>
+			<dd class="text-ink">{m.methodik_kiez_score_norm_presence_def()}</dd>
 		</dl>
-		<p class="font-serif text-base leading-relaxed text-ink">
-			Aus den 0-bis-100-Werten innerhalb einer Dimension wird mit den Layer-Gewichten ein
-			gewichteter Mittelwert. Der Dimensions-Wert wird in vier UI-Stufen abgebildet: gering (0–25),
-			mittel (26–50), hoch (51–75), sehr hoch (76–100).
-		</p>
+		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_kiez_score_norm_p2()}</p>
 	</section>
 
 	<section id="kiez-score" aria-labelledby="kiez-score-h" class="flex flex-col gap-3">
-		<h2 id="kiez-score-h" class="font-serif text-2xl text-ink">Kiez-Score (Bezirksregion)</h2>
+		<h2 id="kiez-score-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_kiez_score_heading()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Die 542 Planungsraum-Werte werden zu 143 LOR-Bezirksregionen flächen-gewichtet aggregiert. Pro
-			Dimension wird ein gewichteter Mittelwert gebildet, wobei jeder Planungsraum mit seiner Fläche
-			gewichtet wird. Mindestens 50 Prozent der enthaltenen Planungsräume müssen einen Wert haben,
-			sonst bleibt die Dimension ohne Aggregat.
+			{m.methodik_kiez_score_kiez_score_p1()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Composite-Score einer Bezirksregion entsteht als ungewichtetes Mittel der nicht-null-Werte
-			ihrer fünf Dimensionen, parallel zur Adress-Logik.
+			{m.methodik_kiez_score_kiez_score_p2()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			LOR-Hierarchie: die ersten sechs Zeichen einer Planungsraum-ID ergeben die Bezirksregion-ID,
-			die ersten zwei den Bezirks-Code. Property-basiertes Mapping ohne Geometrie-Test. Falls zwei
-			Bezirksregionen denselben Namen tragen, wird der Bezirks-Slug als Suffix angehängt (z.B.
-			heerstrasse-spandau, heerstrasse-charlottenburg-wilmersdorf).
+			{m.methodik_kiez_score_kiez_score_p3()}
 		</p>
 	</section>
 
 	<section id="bezirks-score" aria-labelledby="bezirks-score-h" class="flex flex-col gap-3">
-		<h2 id="bezirks-score-h" class="font-serif text-2xl text-ink">Bezirks-Score</h2>
+		<h2 id="bezirks-score-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_bezirk_score_heading()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Auf Bezirks-Ebene werden die 542 Planungsräume direkt flächen-gewichtet aggregiert, nicht über
-			die Bezirksregion-Zwischenebene. Damit bleibt das Gewicht jedes Planungsraums proportional zu
-			seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
+			{m.methodik_kiez_score_bezirk_score_p1()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen
-			wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt“, hoch = besser),
-			zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige
-			Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat
-			bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten
-			„Berlin-Score“ gibt es nicht.
+			{m.methodik_kiez_score_bezirk_score_p2()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Build-Pipeline: <code class="font-mono text-sm">pnpm data:aggregate-scores</code> liest die
-			Planungsraum-Quelle, baut die LOR-Hierarchie und schreibt die Aggregate idempotent in die
-			Postgres-Tabellen <code class="font-mono text-sm">bezirk_score</code> und
-			<code class="font-mono text-sm">kiez_score</code>.
+			<RichText segments={pipelineSegments}>
+				{#snippet tag(text)}
+					<code class="font-mono text-sm">{text}</code>
+				{/snippet}
+			</RichText>
 		</p>
 	</section>
 
 	<section id="fehlt" aria-labelledby="fehlt-h" class="flex flex-col gap-3">
-		<h2 id="fehlt-h" class="font-serif text-2xl text-ink">Was fehlt und warum</h2>
+		<h2 id="fehlt-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_missing_heading()}
+		</h2>
 		<ul class="flex flex-col gap-3">
 			{#each omissions as o (o.label)}
 				<li class="border-l-2 border-rule pl-3">
@@ -313,53 +238,49 @@
 	</section>
 
 	<section id="quellen" aria-labelledby="quellen-h" class="flex flex-col gap-3">
-		<h2 id="quellen-h" class="font-serif text-2xl text-ink">Datenquellen</h2>
+		<h2 id="quellen-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_sources_heading()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt),
-			Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin),
-			Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap
-			(ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer:
-			<a href="/lizenzen" class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>/lizenzen</a
-			>.
+			<RichText segments={sourcesSegments}>
+				{#snippet tag(text)}
+					<a href={localizedHref('/lizenzen')} class={linkClass}>{text}</a>
+				{/snippet}
+			</RichText>
 		</p>
 	</section>
 
 	<section id="editorial" aria-labelledby="editorial-h" class="flex flex-col gap-3">
-		<h2 id="editorial-h" class="font-serif text-2xl text-ink">Editorial-Verantwortung</h2>
+		<h2 id="editorial-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_editorial_heading()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Score ist statistische Lage-Beschreibung, keine Wohnungsbewertung. Wir nennen keinen
-			Mietpreis und geben keine rechtliche Auskunft.
+			{m.methodik_kiez_score_editorial_p1()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Der Score wertet keine Sozialstruktur. Ein Kiez mit niedrigem Sozialstatus lebt nicht
-			„schlechter“. Das MSS-Aggregat zeigen wir als neutralen Kontext, nicht als Bewertung.
-			Choropleth-Farben dafür bleiben neutral, ohne Rot-Grün-Sprünge. Einzelne Adressen können stark
-			vom Planungsraum-Mittel abweichen.
+			{m.methodik_kiez_score_editorial_p2()}
 		</p>
 	</section>
 
 	<section id="feedback" aria-labelledby="feedback-h" class="flex flex-col gap-3">
-		<h2 id="feedback-h" class="font-serif text-2xl text-ink">Feedback</h2>
+		<h2 id="feedback-h" class="font-serif text-2xl text-ink">
+			{m.methodik_kiez_score_section_feedback_heading()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Methodik-Korrektur, Datenfehler oder Layer-Vorschlag: per Mail.
+			{m.methodik_kiez_score_feedback_p1()}
 		</p>
 		<p class="font-mono text-sm">
-			<a
-				href={`mailto:${FEEDBACK_EMAIL}?subject=Kiez-Score-Methodik`}
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
-				>{FEEDBACK_EMAIL}</a
-			>
+			<a href={feedbackHref} class={linkClass}>{FEEDBACK_EMAIL}</a>
 		</p>
 	</section>
 
 	<footer class="border-t border-rule pt-4">
 		<a
-			href="/methodik"
+			href={localizedHref('/methodik')}
 			data-testid="methodik-kiez-score-back-link"
 			class="hover:text-accent-strong font-mono text-sm text-accent underline underline-offset-2"
 		>
-			Zur Atlas-Methodik
+			{m.methodik_kiez_score_back_link()}
 		</a>
 	</footer>
 </article>
