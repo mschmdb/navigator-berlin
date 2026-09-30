@@ -74,7 +74,7 @@ describe('kiez-wahl-verlauf.svelte', () => {
 			expect(section?.textContent).toMatch(/District Assembly \(BVV\) elections/);
 			expect(section?.textContent).not.toMatch(/Bundestagswahlen/);
 			const source = document.querySelector('[data-testid="kiez-wahl-verlauf-source"]');
-			expect(source?.textContent).toMatch(/License dl-de\/by-2-0/);
+			expect(source?.textContent).toMatch(/Licence dl-de\/by-2-0/);
 			const link = document.querySelector(
 				'[data-testid="kiez-wahl-verlauf-methodik-link"]'
 			) as HTMLAnchorElement;

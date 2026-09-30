@@ -47,7 +47,7 @@ describe('kuehle-orte-card.svelte', () => {
 			lang: 'en'
 		});
 		const shortP = container.querySelector('[data-testid="kuehle-orte-card"] > p');
-		expect(shortP?.textContent).toMatch(/Places to cool down in the heat/);
+		expect(shortP?.textContent).toMatch(/Places to cool down in hot weather/);
 		expect(shortP?.getAttribute('lang')).toBeNull();
 		await page.getByTestId('card-details-toggle').click();
 		const details = (await page.getByTestId('card-details').element()) as HTMLElement;

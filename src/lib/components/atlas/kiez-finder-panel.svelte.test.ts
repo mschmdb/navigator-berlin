@@ -442,9 +442,9 @@ describe('kiez-finder-panel', () => {
 			overwriteGetLocale(() => 'en');
 			await renderPanel();
 			const panel = (await page.getByTestId('finder-panel').element()) as HTMLElement;
-			expect(panel.querySelector('h2')?.textContent).toContain('Kiez finder');
+			expect(panel.querySelector('h2')?.textContent).toContain('Kiez Finder');
 			const close = (await page.getByTestId('finder-close').element()) as HTMLElement;
-			expect(close.getAttribute('aria-label')).toBe('Close Kiez finder');
+			expect(close.getAttribute('aria-label')).toBe('Close Kiez Finder');
 		});
 
 		it('Slider-Stufentext + Aria-Label englisch', async () => {

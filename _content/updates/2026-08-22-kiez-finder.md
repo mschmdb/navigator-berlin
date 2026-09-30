@@ -1,6 +1,6 @@
 ---
 title_de: 'Kiez-Finder: Sag der Karte, was du suchst'
-title_en: 'Kiez finder: tell the map what you are looking for'
+title_en: 'Kiez Finder: tell the map what you are looking for'
 summary_de: 'Neun Regler statt Suchfeld: gewichte Ruhe, Grün, S-Bahn-Nähe oder Wahlverhalten, die Karte färbt alle 542 Planungsräume live beim Ziehen.'
 summary_en: 'Nine sliders instead of a search box: weight quiet, green space, S-Bahn proximity or voting behaviour, and the map recolours all 542 planning areas live.'
 date: 2026-08-22

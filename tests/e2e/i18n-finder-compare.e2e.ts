@@ -56,10 +56,10 @@ test.describe('i18n Block B3c: /en/explore Kiez-Finder englisch', () => {
 		await waitForMap(page);
 		const panel = page.getByTestId('finder-panel');
 		await expect(panel).toBeVisible({ timeout: 10000 });
-		await expect(panel.locator('h2')).toContainText('Kiez finder');
+		await expect(panel.locator('h2')).toContainText('Kiez Finder');
 		await expect(page.getByTestId('finder-close')).toHaveAttribute(
 			'aria-label',
-			'Close Kiez finder'
+			'Close Kiez Finder'
 		);
 		const ruheLuftSlider = page.getByTestId('finder-slider-ruheLuft');
 		await expect(ruheLuftSlider).toHaveAttribute('aria-label', 'Quiet & air: little to a lot');

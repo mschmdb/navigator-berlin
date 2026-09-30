@@ -1,6 +1,6 @@
-Until now, navigator.berlin answered the question "What is it like at this address?". The new Kiez finder reverses the direction: you tell the map what matters to you, and it shows you where Berlin fits.
+Until now, navigator.berlin answered the question "What is it like at this address?". The new Kiez Finder reverses the direction: you tell the map what matters to you, and it shows you where Berlin fits.
 
-The panel opens via the Kiez finder link in the header or directly from the home page. Nine sliders are ready:
+The panel opens via the Kiez Finder link in the header or directly from the home page. Nine sliders are ready:
 
 - **Quiet & air, green space & heat protection, mobility, local amenities, tenant protection, cultural offer:** the six Kiez score dimensions, each from "as little as possible" to "as much as possible". If you want quiet, drag to the right. If you deliberately want bustle, drag to the left.
 - **Development & density:** from spacious to densely populated, calculated from residents per area.

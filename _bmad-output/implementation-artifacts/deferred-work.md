@@ -302,3 +302,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c5-profile.md`
   summary: Zahlen-Lint erfasst ausgeschriebene Zahlen („Rang fünf“, „rank five“) nicht.
   evidence: Review C5 (Blind Hunter). Betrifft DE und EN gleichermaßen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c5-profile.md`
+  summary: Nach `pnpm exec vitest run` ist die lokale Tabelle `kiez_rank` leer (0 Zeilen); `pnpm lint:profiles` meldet dann ungedeckte Rang-Zahlen. Vermutlich leert ein DB-Test (CASCADE) die Tabelle.
+  evidence: 30.09. reproduziert: vor `data:rank` 0 Zeilen und EN failed=142, danach 2145 Zeilen und failed=0. Betrifft nur lokale Dev-DB.
