@@ -41,7 +41,8 @@ aus `Datum`/`Zeit` der Wahlbezirks-CSV berechnet).
    pnpm data:wahl-analytik
    ```
 3. `src/lib/components/home/home-wahl-teaser.svelte`: `typLabel` der beiden 2026er-`CARDS`-Einträge von `„… · Vorläufig"` auf den finalen Text ändern -- das Badge dort ist statischer Text, kein Re-Ingest aktualisiert es automatisch (siehe Kommentar an `CARDS` im Code).
-4. `pnpm data:wahl-check` grün prüfen, `wahl.vorlaeufig`/`source_updated_at` stichprobenhaft per SQL verifizieren.
+4. `/methodik/wahldaten` anpassen: „(vorläufig)" in #cutoff und den Absatz in #update-cadence entfernen bzw. auf Endergebnis umstellen.
+5. `pnpm data:wahl-check` grün prüfen, `wahl.vorlaeufig`/`source_updated_at` stichprobenhaft per SQL verifizieren.
 
 **Erster Prod-Deploy mit Pedersen-Volatilität:** `wahl_analytik_kiez.volatilitaet` enthält bis zum ersten Neubau der Analytik auf Prod noch die volle L1-Summe (doppelter Wert). Die Oberfläche beschriftet den Wert aber schon als Netto-Verschiebung. Beim Launch-Deploy fällt das prebuild-Gate ohnehin durch (Gruppen-Tabelle und 2026er-Wahlen fehlen auf Prod) und die Kette läuft inklusive `data:wahl-analytik`. Nach dem Deploy per SQL prüfen: `SELECT max(volatilitaet) FROM wahl_analytik_kiez` muss unter 0,5 liegen (Kiez-Pedersen lokal: 8,7 bis 28,7 %). Liegt er darüber, `pnpm data:wahl-analytik` auf Prod nachziehen.
 
