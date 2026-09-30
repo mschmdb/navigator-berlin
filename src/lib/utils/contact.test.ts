@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import { FEEDBACK_EMAIL, buildErrorReportMailto, buildOptOutMailto } from './contact.js';
 
 describe('FEEDBACK_EMAIL', () => {
@@ -110,5 +111,20 @@ describe('buildOptOutMailto (Story 16.4)', () => {
 		for (const token of ['einzige', 'vollständig', 'garantiert', 'beste']) {
 			expect(decoded.toLowerCase()).not.toContain(token);
 		}
+	});
+});
+
+describe('buildOptOutMailto · EN (i18n C4c)', () => {
+	afterEach(() => overwriteGetLocale(() => 'de'));
+
+	it('Betreff und Body englisch', () => {
+		overwriteGetLocale(() => 'en');
+		const url = buildOptOutMailto({ name: 'Kino Central', address: 'Rosenthaler Str. 39' });
+		expect(url).toContain(`subject=${encodeURIComponent('Removal of a cool place')}`);
+		const decoded = decodeURIComponent(url.split('&body=')[1] ?? '');
+		expect(decoded).toContain('Venue name: Kino Central');
+		expect(decoded).toContain('Address: Rosenthaler Str. 39');
+		expect(decoded).toContain('Reason:');
+		expect(decoded).not.toContain('Begründung');
 	});
 });

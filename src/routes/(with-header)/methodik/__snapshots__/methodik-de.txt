@@ -122,8 +122,8 @@ td: 2024-06
 td: dl-de/zero
 h2: Quellen und Lizenzen
 p: Die meisten Layer stehen unter dl-de/zero-2-0 oder dl-de/by-2-0. OSM-basierte Layer (Stolpersteine, ÖPNV, Trinkbrunnen, Radverkehr) unter ODbL 1.0 mit Namensnennung OpenStreetMap-Contributors.
-p: Vollständige Auflistung: /lizenzen
-a: /lizenzen
+p: Vollständige Auflistung auf der Lizenzen-Seite
+a: Lizenzen-Seite
 h2: Feedback
 p: Methodik-Korrektur, Datenfehler oder Layer-Vorschlag: per Mail.
 p: hey@navigator.berlin

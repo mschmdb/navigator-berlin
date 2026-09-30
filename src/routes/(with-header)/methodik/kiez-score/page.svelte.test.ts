@@ -64,6 +64,7 @@ describe('methodik/kiez-score · DE unverändert (i18n C4a)', () => {
 		const hrefs = internalHrefs(article);
 		expect(hrefs).toContain('/methodik');
 		expect(hrefs).toContain('/lizenzen');
+		expect(document.querySelector('a[href="/lizenzen"]')?.textContent).toBe('Lizenzen-Seite');
 		expect(hrefs.some((h) => h.startsWith('/en'))).toBe(false);
 	});
 });
@@ -115,6 +116,7 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 		expect(hrefs.filter((h) => !h.startsWith('/en/'))).toEqual([]);
 		expect(hrefs).toContain('/en/methodik');
 		expect(hrefs).toContain('/en/lizenzen');
+		expect(article.querySelector('a[href="/en/lizenzen"]')?.textContent).toBe('licences page');
 		expect(
 			document.querySelector('[data-testid="methodik-kiez-score-back-link"]')?.getAttribute('href')
 		).toBe('/en/methodik');

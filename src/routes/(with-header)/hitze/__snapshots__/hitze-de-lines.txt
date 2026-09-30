@@ -1,0 +1,35 @@
+p: Kühle Orte bei Hitze
+h1: Hitze-Navigator Berlin
+p: Gib deinen Standort ein. Du siehst die nächsten kühlen Orte in Berlin, sortiert nach Entfernung, mit Öffnungsstatus und dem Weg dorthin. Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen, über 500 Orte aus offenen Daten.
+a: Kühle Orte auf der Karte
+p: Interaktive Karte mit allen kühlen Orten, Live-Status und Filtern.
+a: Methodik: wie wir kühle Orte bewerten
+h2: In deiner Nähe
+p: Wir fragen deinen Standort ab und zeigen die nächsten jetzt geöffneten kühlen Orte.
+h2: Kühle Orte in Berlin: wo du Abkühlung findest
+li: Kinos meist klimatisiert
+li: Bibliotheken kühl und ruhig
+li: Schwimmhallen Abkühlung im Wasser
+li: Museen oft klimatisiert
+li: Malls und Kaufhäuser frei zugänglich
+li: Trinkbrunnen Mai bis Oktober
+h2: In drei Schritten zum kühlen Ort
+li: 1 Adresse eingeben Tippe deinen Standort in die Karte.
+li: 2 Nächste Orte sehen Die Karte zeigt die kühlen Orte in deiner Nähe, sortiert nach Entfernung.
+li: 3 Hinnavigieren Ein Tap öffnet die Route in Google oder Apple Maps.
+h2: Offizielle Angebote der Stadt Berlin
+p: Der Hitze-Navigator ergänzt die Angebote der Stadt, er ersetzt sie nicht. Die offiziellen Quellen:
+a: Hitzeschutzportal der Stadt Berlin Warnungen, Verhaltenstipps und Hintergründe der Senatsverwaltung.
+a: Offizielle Kühle-Orte-Karte Die städtische Karte mit Grünanlagen, Badestellen und Trinkbrunnen.
+a: Berliner Hitzeaktionsplan Die Strategie der Stadt gegen Hitzefolgen.
+h2: Häufige Fragen
+h2: Transparenz und Quellen
+p: Der Hitze-Navigator sammelt öffentlich zugängliche kühle Orte und prüft sie redaktionell. Er ergänzt die Angebote der Stadt, er ersetzt sie nicht. Die Liste kann Lücken haben und lebt von Korrekturen. Kein Rechtsanspruch auf Zugang: private Orte wie Malls und Kinos üben Hausrecht aus.
+li: OpenStreetMap ODbL 1.0 Geometrie und Basis-Angaben der Orte, © OpenStreetMap-Contributors. Weitergabe unter denselben Bedingungen (Share-Alike).
+li: Redaktionelle Anreicherung navigator.berlin prüft Eignung, Adresse, Kühle-Score, Klimatisierung und Sommer-Verfügbarkeit. Wo eine Angabe nicht belegbar war, sagen wir das offen.
+li: Deutscher Wetterdienst Amtliche Hitzewarnung für Berlin, live abgefragt und ohne Warnung ausgeblendet.
+p: Die vollständige Lizenz-Übersicht steht auf der Lizenzen-Seite.
+a: Lizenzen-Seite
+h3: Ihre Einrichtung soll nicht gelistet sein?
+p: Schreiben Sie uns, wir tragen den Ort aus. Ein Klick öffnet einen vorbereiteten Entwurf.
+a: Austragung anfragen

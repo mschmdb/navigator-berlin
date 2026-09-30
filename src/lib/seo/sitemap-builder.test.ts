@@ -264,9 +264,24 @@ describe('collectPrerenderedUrls', () => {
 
 	it('a page with no translated counterpart gets no alternates', () => {
 		const entries = collectPrerenderedUrls(ctx());
-		const lizenzen = entries.find((e) => e.loc === 'https://navigator.berlin/lizenzen');
-		expect(lizenzen).toBeDefined();
-		expect(lizenzen?.alternates).toBeUndefined();
+		// `/impressum` und `/datenschutz` bleiben dauerhaft DE, stehen aber nicht in der Sitemap.
+		// Als Sitemap-Seite ohne EN-Gegenstück dient eine Layer-Detailseite (Register-Eintrag
+		// erst im Abschluss-Block).
+		const layer = entries.find((e) => e.loc === 'https://navigator.berlin/layer/mietspiegel-2024');
+		expect(layer).toBeDefined();
+		expect(layer?.alternates).toBeUndefined();
+	});
+
+	it('i18n Block C4c: /hitze, /kuehle-orte und /lizenzen (DE) bekommen ihren EN-Alternate', () => {
+		const entries = collectPrerenderedUrls(ctx());
+		for (const path of ['/hitze', '/kuehle-orte', '/lizenzen']) {
+			const entry = entries.find((e) => e.loc === `https://navigator.berlin${path}`);
+			expect(entry?.alternates, path).toEqual([
+				{ hreflang: 'de', href: `https://navigator.berlin${path}` },
+				{ hreflang: 'en', href: `https://navigator.berlin/en${path}` },
+				{ hreflang: 'x-default', href: `https://navigator.berlin${path}` }
+			]);
+		}
 	});
 
 	it('i18n Block C4a: /methodik (DE) gets its EN alternate once registered', () => {

@@ -1,6 +1,10 @@
 // Story 16.4: Quellen-Transparenz + Angebot-Haltung für die Kühle-Orte-Landing (/hitze).
 // Content getrennt vom Markup, damit die Strings ohne DOM auf em-dashes und Absolutismen
 // prüfbar sind. Naming an home-data-sources.ts und /lizenzen angelehnt.
+// i18n C4c: Die Texte kommen aus Paraglide-Messages und folgen der Seiten-Locale,
+// deshalb Funktionen statt Konstanten.
+
+import { m } from '$lib/paraglide/messages.js';
 
 export interface TransparenzQuelle {
 	/** Anzeigename des Quellen-Strangs. */
@@ -11,23 +15,24 @@ export interface TransparenzQuelle {
 	readonly lizenz?: string;
 }
 
-export const KUEHLE_ORTE_QUELLEN: readonly TransparenzQuelle[] = [
-	{
-		name: 'OpenStreetMap',
-		detail:
-			'Geometrie und Basis-Angaben der Orte, © OpenStreetMap-Contributors. Weitergabe unter denselben Bedingungen (Share-Alike).',
-		lizenz: 'ODbL 1.0'
-	},
-	{
-		name: 'Redaktionelle Anreicherung',
-		detail:
-			'navigator.berlin prüft Eignung, Adresse, Kühle-Score, Klimatisierung und Sommer-Verfügbarkeit. Wo eine Angabe nicht belegbar war, sagen wir das offen.'
-	},
-	{
-		name: 'Deutscher Wetterdienst',
-		detail: 'Amtliche Hitzewarnung für Berlin, live abgefragt und ohne Warnung ausgeblendet.'
-	}
-];
+export function getKuehleOrteQuellen(): readonly TransparenzQuelle[] {
+	return [
+		{
+			name: 'OpenStreetMap',
+			detail: m.transparenz_quelle_osm_detail(),
+			lizenz: 'ODbL 1.0'
+		},
+		{
+			name: m.transparenz_quelle_redaktion_name(),
+			detail: m.transparenz_quelle_redaktion_detail()
+		},
+		{
+			name: m.transparenz_quelle_dwd_name(),
+			detail: m.transparenz_quelle_dwd_detail()
+		}
+	];
+}
 
-export const KUEHLE_ORTE_HALTUNG =
-	'Der Hitze-Navigator sammelt öffentlich zugängliche kühle Orte und prüft sie redaktionell. Er ergänzt die Angebote der Stadt, er ersetzt sie nicht. Die Liste kann Lücken haben und lebt von Korrekturen. Kein Rechtsanspruch auf Zugang: private Orte wie Malls und Kinos üben Hausrecht aus.';
+export function getKuehleOrteHaltung(): string {
+	return m.transparenz_haltung();
+}

@@ -34,7 +34,10 @@ describe('isRouteTranslated', () => {
 			{ pathname: '/methodik/wahldaten', locale: 'en' },
 			{ pathname: '/architektur', locale: 'en' },
 			{ pathname: '/webmcp', locale: 'en' },
-			{ pathname: '/umwelt-infrastruktur-score', locale: 'en' }
+			{ pathname: '/umwelt-infrastruktur-score', locale: 'en' },
+			{ pathname: '/hitze', locale: 'en' },
+			{ pathname: '/kuehle-orte', locale: 'en' },
+			{ pathname: '/lizenzen', locale: 'en' }
 		]);
 		expect(isRouteTranslated('/berlin-wahlen', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen', 'en')).toBe(true);
@@ -81,8 +84,17 @@ describe('isRouteTranslated', () => {
 		}
 	});
 
-	it('Block C4b: /lizenzen, /hitze, /kuehle-orte und /updates bleiben unübersetzt', () => {
-		for (const path of ['/lizenzen', '/hitze', '/kuehle-orte', '/updates', '/impressum']) {
+	// Block C4c (`spec-i18n-c4c-hitze-quellen.md`): drei exakte Einträge, ohne `prefix`.
+	it('Block C4c: Hitze, Kühle Orte und Lizenzen sind exakt registriert', () => {
+		for (const path of ['/hitze', '/kuehle-orte', '/lizenzen']) {
+			expect(isRouteTranslated(path, 'en'), path).toBe(true);
+			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
+			expect(isRouteTranslated(`${path}/unbekannt`, 'en'), `${path}/unbekannt`).toBe(false);
+		}
+	});
+
+	it('Block C4c: /updates, /impressum und /datenschutz bleiben unübersetzt', () => {
+		for (const path of ['/updates', '/impressum', '/datenschutz']) {
 			expect(isRouteTranslated(path, 'en'), path).toBe(false);
 		}
 	});

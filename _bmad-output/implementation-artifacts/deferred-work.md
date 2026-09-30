@@ -188,6 +188,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: `/en/lizenzen` zeigt seit B4b bereits übersetzte Layer-Namen im DataCatalog-JSON-LD (Nebeneffekt der `getLayerDisplayName(slug, { locale })`-Korrektur in `get-layer-detail.ts`), die Dataset-`description`-Fallback-Zeile (`Geo-Datensatz {layerName} in Berlin im Daten-Atlas navigator.berlin.`) bleibt dort aber weiterhin hart deutsch.
   evidence: `/lizenzen` liegt außerhalb der B4b-Code-Map (kein Boundary-Auftrag dafür); der Layer-Name-Fix wirkt dort nur als Seiteneffekt. Volle `/lizenzen`-Übersetzung ist ein eigener Block.
+  update: 30.09.2026 (C4c). Die Seite ist übersetzt und registriert. Das DataCatalog-JSON-LD bleibt bewusst komplett DE (Datasets zeigen auf `/layer/…`), auch auf `/en/lizenzen`: `+page.ts` ruft `buildLayerDetail(…, 'de', …)` fest auf. Offen bis zum Abschluss-Block, der `/layer` registriert.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: `layer-explain-coverage.e2e.ts` hat 3 vorbestehende, B4b-unabhängige Fails: „Detail-Page hat 0 axe-Violations" (WCAG 2.5.8 `target-size`/`target-offset` an Verwandte-Layer-Links, FAQ-Accordion-Buttons und Footer-Meta-Links -- keine dieser Elemente wurde von B4b berührt), „Map-Legend: Click expandiert Panel..." und „Legend Expand-Panel hat 0 axe-Violations" (Timeout beim Warten auf `legend-summary-*`, `/explore`-Map-Legend, komplett außerhalb der B4b-Code-Map).
@@ -268,3 +269,16 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4a-methodik-kern.md`
   summary: `/methodik` und `/methodik/kiez-score` zeigen auf `/en` den Pfad „/lizenzen“ als sichtbaren Linktext; mit C4c durch ein Label ersetzen.
   evidence: Review C4a (Blind Hunter). Messages `methodik_licences_full_list`, `methodik_kiez_score_sources_p1`.
+  resolved: 30.09.2026 (C4c). Linktext heißt „Lizenzen-Seite“ bzw. „licences page“ (Messages DE und EN, Snapshots nachgezogen).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4c-hitze-quellen.md`
+  summary: `/hitze` reicht `explorerHref={localizedHref(explorerLink)}` an `InDeinerNaehe`; kein Seiten-Test deckt die Fallback-Phasen (verweigert, leer, Fehler) ab.
+  evidence: Review C4c (Verification Gap). Seite exponiert `requestPositionFn` nicht, Harness-Aufwand.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4c-hitze-quellen.md`
+  summary: `lizenzen_klima_p1` nennt „vier Berliner Wetterstationen (Dahlem, Tempelhof, Buch, Brandenburg)“; „Brandenburg“ ist keine Berliner Station.
+  evidence: Review C4c (Blind Hunter). Unverifiziert: Stationsliste der Klima-Quelle (DWD) prüfen, DE und EN korrigieren.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4c-hitze-quellen.md`
+  summary: `sitemap-builder.test.ts` nutzt `/layer/mietspiegel-2024` als Seite ohne EN-Alternate; bei der `/layer`-Registrierung im Abschluss-Block eine andere Kontrolle wählen.
+  evidence: Review C4c (Edge Case). `/impressum` ist keine Sitemap-Quelle.

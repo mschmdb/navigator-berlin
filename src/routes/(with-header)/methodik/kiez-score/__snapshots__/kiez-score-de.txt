@@ -84,8 +84,8 @@ p: Kontestiert und ambivalent. Hohe Bodenrichtwerte oder gut bewertete Wohnlagen
 p: Familienfreundlichkeit
 p: Hängt stark von der Persona ab: Eltern mit Kita-Kind, Schulkind oder Pflegebedarf gewichten anders. Kita-, Schul- und Krankenhaus-Layer bleiben separat im Inspector statt in einer Composite-Dimension zu verschwinden.
 h2: Datenquellen
-p: Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt), Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin), Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer: /lizenzen.
-a: /lizenzen
+p: Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt), Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin), Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer: Lizenzen-Seite.
+a: Lizenzen-Seite
 h2: Editorial-Verantwortung
 p: Der Score ist statistische Lage-Beschreibung, keine Wohnungsbewertung. Wir nennen keinen Mietpreis und geben keine rechtliche Auskunft.
 p: Der Score wertet keine Sozialstruktur. Ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter“. Das MSS-Aggregat zeigen wir als neutralen Kontext, nicht als Bewertung. Choropleth-Farben dafür bleiben neutral, ohne Rot-Grün-Sprünge. Einzelne Adressen können stark vom Planungsraum-Mittel abweichen.

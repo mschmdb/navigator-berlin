@@ -1,0 +1,131 @@
+h1: Lizenzen
+p: Welche Lizenz pro Geo-Datensatz gilt und welche Software wir nutzen.
+p: Inhalt
+a: Daten-Lizenzen
+a: Wahldaten
+a: Demografie
+a: Kriminalitätsatlas
+a: Klimadaten (DWD)
+a: Entitäts-Verweise
+a: Software
+a: Schriften
+a: OpenStreetMap-Namensnennung
+h2: Daten-Lizenzen
+p: Die 3 aktiven Geo-Layer stehen unter 3 verschiedenen Lizenzen. Sie sind nach Lizenz gruppiert, mit Link auf den jeweiligen Volltext.
+h3: Datenlizenz Deutschland Zero 2.0
+a: dl-de/zero-2-0
+p: Freie Verwendung. Keine Namensnennung nötig.
+a: Lärmbelastung 2023
+h3: Datenlizenz Deutschland Namensnennung 2.0
+a: dl-de/by-2-0
+p: Freie Verwendung mit Namensnennung der Quelle.
+a: Mietspiegel-Wohnlage 2024
+h3: Open Database License 1.0
+a: ODbL 1.0
+p: Namensnennung „© OpenStreetMap-Contributors" plus Share-Alike bei abgeleiteten Datenbanken.
+a: Stolpersteine
+p: Zusätzlich fließt die Strategische Lärmkarte 2022 (Umweltatlas, ua_stratlaerm_2022, Lizenz Datenlizenz Deutschland Zero 2.0) als Build-Aggregat je Planungsraum in den Kiez-Score ein.
+h2: Wahldaten
+p: Wahl-Ergebnisse aus 14 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV) liegen nicht als eigener Geo-Layer vor, sondern als Datenbank-Aggregate. Quellen und Lizenz der drei Datenanbieter:
+dt: Bundeswahlleiterin
+dd: Bundestagswahlen 2013, 2017, 2021, 2025 als Wahlbezirksstatistik (_wbz.zip). Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+dd: bundeswahlleiterin.de
+a: bundeswahlleiterin.de
+dt: Amt für Statistik Berlin-Brandenburg
+dd: Abgeordnetenhaus- und BVV-Wahlen 2011, 2016, 2021, 2023 als XLSX-Sheet-Pipeline plus Stimmbezirks-Polygone (Shapefile-Releases pro Wahlgang, reprojiziert nach WGS84). Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+dd: statistik-berlin-brandenburg.de
+a: statistik-berlin-brandenburg.de
+dt: Landeswahlleiterin Berlin
+dd: Abgeordnetenhaus- und BVV-Wahlen 2026 als CSV-Datenexport pro Wahlbezirk (wahlen-berlin.de). Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+dd: wahlen-berlin.de
+a: wahlen-berlin.de
+p: Methodik: Wahldaten
+a: Wahldaten
+h2: Demografie
+p: Einwohner pro LOR-Planungsraum liegen nicht als eigener Geo-Layer vor. Wir nutzen sie als vorberechnete Summen für Pro-Kopf-Werte und den Demografie-Kontext.
+dt: Einwohner in LOR-Planungsräumen am 31.12.2024
+dd: Einwohner nach Altersjahren je 542 LOR-Planungsräume, gejoint über die 8-stellige RAUMID. Lizenz CC BY 4.0, Amt für Statistik Berlin-Brandenburg.
+dd: daten.berlin.de
+a: daten.berlin.de
+h2: Kriminalitätsatlas
+p: Fallzahlen und Häufigkeitszahlen je LOR-Bezirksregion fließen als vorberechnete Werte in den Kiez-Score ein, nicht als eigener Geo-Layer.
+dt: Kriminalitätsatlas Berlin
+dd: Straftaten-Fallzahlen und Häufigkeitszahlen 2016 bis 2025 der Polizei Berlin, geocodiert auf LOR-Ebene. Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+dd: kriminalitaetsatlas.berlin.de
+a: kriminalitaetsatlas.berlin.de
+p: Methodik: Kiez-Score
+a: Kiez-Score
+h2: Klimadaten (DWD)
+p: Historische Sommertage- und Hitzetage-Zeitreihen von vier Berliner Wetterstationen (Dahlem, Tempelhof, Buch, Brandenburg) liegen als Build-Aggregat im Hitze-Kontext.
+dt: Deutscher Wetterdienst · Climate Data Center
+dd: Tageswerte der Stationsmessungen (daily KL, historical). Lizenz CC BY 4.0, Namensnennung Deutscher Wetterdienst.
+dd: opendata.dwd.de/climate_environment/CDC
+a: opendata.dwd.de/climate_environment/CDC
+h2: Entitäts-Verweise
+p: Bezirks-Seiten verweisen per sameAs auf die passende Entität in offenen Wissensdatenbanken, damit Suchmaschinen die Seite eindeutig zuordnen.
+dt: Wikidata
+dd: Q-IDs der 12 aktuellen Berliner Bezirke als sameAs-Verweis im JSON-LD. Lizenz CC0.
+dd: wikidata.org
+a: wikidata.org
+dt: Wikipedia (deutsch)
+dd: Artikel-Verweis pro Bezirk als zusätzlicher sameAs-Eintrag. Lizenz CC BY-SA 4.0.
+dd: de.wikipedia.org
+a: de.wikipedia.org
+h2: Software
+p: Wichtigste Runtime-Bibliotheken. Vollständige Auflistung im Repository unter package.json.
+th: Bibliothek
+th: Lizenz
+td: SvelteKit
+a: SvelteKit
+td: MIT
+td: Svelte
+a: Svelte
+td: MIT
+td: MapLibre GL JS
+a: MapLibre GL JS
+td: BSD-3-Clause
+td: PMTiles
+a: PMTiles
+td: BSD-3-Clause
+td: @lucide/svelte
+a: @lucide/svelte
+td: ISC
+td: Turf.js (turf-bbox, turf-distance, …)
+a: Turf.js (turf-bbox, turf-distance, …)
+td: MIT
+td: d3-array, d3-scale, d3-interpolate
+a: d3-array, d3-scale, d3-interpolate
+td: ISC
+td: bits-ui
+a: bits-ui
+td: MIT
+td: LayerChart
+a: LayerChart
+td: MIT
+td: valibot
+a: valibot
+td: MIT
+td: rbush
+a: rbush
+td: MIT
+td: lru-cache
+a: lru-cache
+td: ISC
+td: Paraglide JS (i18n)
+a: Paraglide JS (i18n)
+td: Apache-2.0
+td: Tailwind CSS
+a: Tailwind CSS
+td: MIT
+td: Satori + @resvg/resvg-js (OG-Image-Generator)
+a: Satori + @resvg/resvg-js (OG-Image-Generator)
+td: MPL-2.0
+h2: Schriften
+p: IBM Plex Serif, Sans und Mono unter SIL Open Font License 1.1, geliefert via Fontsource.
+p: github.com/IBM/plex · OFL 1.1
+a: github.com/IBM/plex
+a: OFL 1.1
+h2: OpenStreetMap-Namensnennung
+p: Die ODbL-Layer (Stolpersteine, ÖPNV-Stationen, Trinkbrunnen, Kühle Orte, S-Bahn-Netz, U-Bahn-Netz, Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten. Lizenz: Open Database License 1.0.
+p: © OpenStreetMap-Contributors. Daten verfügbar unter openstreetmap.org/copyright.
+a: openstreetmap.org/copyright

@@ -2,147 +2,73 @@
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import RichText from '$lib/components/rich-text.svelte';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { richSegments } from '$lib/i18n/rich-text.js';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { buildBreadcrumbList, buildDataCatalog } from '$lib/seo/index.js';
-	import type { LayerMetadata, License } from '$lib/data';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
+	import {
+		getLicenseInfo,
+		getRuntimeSoftware,
+		getSections,
+		groupByLicense
+	} from './lizenzen-content.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
 
 	const manifest = $derived(data.manifest);
+	const locale = $derived(getLocale());
+	const sections = $derived(getSections());
+	const licenseGroups = $derived(groupByLicense(manifest.layers, locale));
+	const runtimeSoftware = $derived(getRuntimeSoftware());
+	const datenIntro = $derived.by(() => {
+		const count = manifest.layers.length;
+		const licenseCount = licenseGroups.size;
+		if (count === 1) return m.lizenzen_daten_p1_single();
+		if (licenseCount === 1) return m.lizenzen_daten_p1_one_license({ count });
+		return m.lizenzen_daten_p1({ count, licenseCount });
+	});
 
-	const sections = [
-		{ id: 'daten-lizenzen', label: 'Daten-Lizenzen' },
-		{ id: 'wahldaten', label: 'Wahldaten' },
-		{ id: 'demografie', label: 'Demografie' },
-		{ id: 'kriminalitaetsatlas', label: 'Kriminalitätsatlas' },
-		{ id: 'klimadaten-dwd', label: 'Klimadaten (DWD)' },
-		{ id: 'entitaets-verweise', label: 'Entitäts-Verweise' },
-		{ id: 'software', label: 'Software' },
-		{ id: 'schriften', label: 'Schriften' },
-		{ id: 'osm-namensnennung', label: 'OpenStreetMap-Namensnennung' }
-	];
-
-	interface LicenseInfo {
-		readonly key: License;
-		readonly label: string;
-		readonly summary: string;
-		readonly url: string;
-	}
-
-	const LICENSE_INFO: Partial<Record<License, LicenseInfo>> = {
-		'dl-de/zero-2-0': {
-			key: 'dl-de/zero-2-0',
-			label: 'Datenlizenz Deutschland Zero 2.0',
-			summary: 'Freie Verwendung. Keine Namensnennung nötig.',
-			url: 'https://www.govdata.de/dl-de/zero-2-0'
-		},
-		'dl-de/by-2-0': {
-			key: 'dl-de/by-2-0',
-			label: 'Datenlizenz Deutschland Namensnennung 2.0',
-			summary: 'Freie Verwendung mit Namensnennung der Quelle.',
-			url: 'https://www.govdata.de/dl-de/by-2-0'
-		},
-		'ODbL 1.0': {
-			key: 'ODbL 1.0',
-			label: 'Open Database License 1.0',
-			summary:
-				'Namensnennung „© OpenStreetMap-Contributors" plus Share-Alike bei abgeleiteten Datenbanken.',
-			url: 'https://opendatacommons.org/licenses/odbl/1-0/'
-		},
-		'CC BY 4.0': {
-			key: 'CC BY 4.0',
-			label: 'Creative Commons Attribution 4.0',
-			summary: 'Freie Verwendung mit Namensnennung der Quelle.',
-			url: 'https://creativecommons.org/licenses/by/4.0/deed.de'
-		},
-		Geodatenzugangsgesetz: {
-			key: 'Geodatenzugangsgesetz',
-			label: 'Geodatenzugangsgesetz (GeoZG)',
-			summary:
-				'Geo-Daten der Verwaltung sind zur kommerziellen und nicht-kommerziellen Nachnutzung freigegeben.',
-			url: 'https://www.gesetze-im-internet.de/geozg/'
-		}
-	};
-
-	function infoFor(license: License): LicenseInfo {
-		return (
-			LICENSE_INFO[license] ?? {
-				key: license,
-				label: license,
-				summary: 'Lizenz-Volltext siehe Quelle.',
-				url: '#'
-			}
-		);
-	}
-
-	function groupByLicense(layers: readonly LayerMetadata[]): Map<License, LayerMetadata[]> {
-		const map = new Map<License, LayerMetadata[]>();
-		for (const layer of layers) {
-			const list = map.get(layer.license) ?? [];
-			list.push(layer);
-			map.set(layer.license, list);
-		}
-		for (const list of map.values()) {
-			list.sort((a, b) =>
-				getLayerDisplayName(a.slug).localeCompare(getLayerDisplayName(b.slug), 'de')
-			);
-		}
-		return map;
-	}
-
-	const licenseGroups = $derived(groupByLicense(manifest.layers));
-
-	interface SoftwareEntry {
-		readonly name: string;
-		readonly license: string;
-		readonly url: string;
-	}
-
-	const RUNTIME_SOFTWARE: SoftwareEntry[] = [
-		{ name: 'SvelteKit', license: 'MIT', url: 'https://kit.svelte.dev/' },
-		{ name: 'Svelte', license: 'MIT', url: 'https://svelte.dev/' },
-		{ name: 'MapLibre GL JS', license: 'BSD-3-Clause', url: 'https://maplibre.org/' },
-		{ name: 'PMTiles', license: 'BSD-3-Clause', url: 'https://protomaps.com/' },
-		{ name: '@lucide/svelte', license: 'ISC', url: 'https://lucide.dev/' },
-		{ name: 'Turf.js (turf-bbox, turf-distance, …)', license: 'MIT', url: 'https://turfjs.org/' },
-		{ name: 'd3-array, d3-scale, d3-interpolate', license: 'ISC', url: 'https://d3js.org/' },
-		{ name: 'bits-ui', license: 'MIT', url: 'https://bits-ui.com/' },
-		{
-			name: 'LayerChart',
-			license: 'MIT',
-			url: 'https://www.layerchart.com/'
-		},
-		{ name: 'valibot', license: 'MIT', url: 'https://valibot.dev/' },
-		{ name: 'rbush', license: 'MIT', url: 'https://github.com/mourner/rbush' },
-		{ name: 'lru-cache', license: 'ISC', url: 'https://github.com/isaacs/node-lru-cache' },
-		{
-			name: 'Paraglide JS (i18n)',
-			license: 'Apache-2.0',
-			url: 'https://inlang.com/m/gerre34r/library-inlang-paraglideJs'
-		},
-		{
-			name: 'Tailwind CSS',
-			license: 'MIT',
-			url: 'https://tailwindcss.com/'
-		},
-		{
-			name: 'Satori + @resvg/resvg-js (OG-Image-Generator)',
-			license: 'MPL-2.0',
-			url: 'https://github.com/vercel/satori'
-		}
-	];
+	const codeSegments = (render: (open: string, close: string) => string) =>
+		richSegments((t) => render(t('code').start, t('code').end));
+	const bwlDescSegments = $derived(
+		codeSegments((code_start, code_end) => m.lizenzen_wahl_bwl_desc({ code_start, code_end }))
+	);
+	const entitaetenSegments = $derived(
+		codeSegments((code_start, code_end) => m.lizenzen_entitaeten_p1({ code_start, code_end }))
+	);
+	const wikidataSegments = $derived(
+		codeSegments((code_start, code_end) =>
+			m.lizenzen_entitaeten_wikidata_desc({ code_start, code_end })
+		)
+	);
+	const wikipediaSegments = $derived(
+		codeSegments((code_start, code_end) =>
+			m.lizenzen_entitaeten_wikipedia_desc({ code_start, code_end })
+		)
+	);
+	const softwareSegments = $derived(
+		codeSegments((code_start, code_end) => m.lizenzen_software_p1({ code_start, code_end }))
+	);
+	const osmSegments = $derived(
+		richSegments((t) => m.lizenzen_osm_p2({ link_start: t('link').start, link_end: t('link').end }))
+	);
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: '/' },
-				{ name: 'Lizenzen', path: '/lizenzen' }
+				{ name: 'Berlin', path: localizedHref('/') },
+				{ name: m.lizenzen_breadcrumb_lizenzen(), path: localizedHref('/lizenzen') }
 			]
 		})
 	);
 
+	// DataCatalog bleibt auch auf /en/lizenzen deutsch: die Datasets zeigen auf /layer/...,
+	// das erst im Abschluss-Block registriert wird (siehe +page.ts).
 	const dataCatalogJsonLd = $derived(
 		buildDataCatalog({
 			origin: page.url.origin,
@@ -155,27 +81,38 @@
 	);
 </script>
 
+{#snippet codeXs(text: string)}<code class="font-mono text-xs">{text}</code>{/snippet}
+{#snippet codeSm(text: string)}<code class="font-mono text-sm">{text}</code>{/snippet}
+
 <SeoHead
-	title="Lizenzen - Berlin in Daten - navigator.berlin"
-	description="Lizenzen der Geo-Daten und der verwendeten Software."
+	title={m.lizenzen_meta_title()}
+	description={m.lizenzen_meta_description()}
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	ogImage={`${page.url.origin}/og/page/lizenzen.png`}
-	ogImageAlt="navigator.berlin Lizenzen"
+	ogImageAlt={m.lizenzen_og_image_alt()}
 />
 <JsonLd data={breadcrumbJsonLd} testid="lizenzen-breadcrumb-jsonld" />
 <JsonLd data={dataCatalogJsonLd} testid="lizenzen-datacatalog-jsonld" />
 
 <article data-testid="lizenzen-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-2">
-		<h1 data-testid="lizenzen-page-title" class="font-serif text-3xl text-ink">Lizenzen</h1>
+		<h1 data-testid="lizenzen-page-title" class="font-serif text-3xl text-ink">
+			{m.lizenzen_h1_title()}
+		</h1>
 		<p class="font-serif text-lg leading-relaxed text-ink-muted">
-			Welche Lizenz pro Geo-Datensatz gilt und welche Software wir nutzen.
+			{m.lizenzen_intro_p1()}
 		</p>
 	</header>
 
-	<nav data-testid="lizenzen-toc" aria-label="Inhalt" class="border border-rule bg-bg p-4">
-		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">Inhalt</p>
+	<nav
+		data-testid="lizenzen-toc"
+		aria-label={m.lizenzen_toc_aria_label()}
+		class="border border-rule bg-bg p-4"
+	>
+		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">
+			{m.lizenzen_toc_heading()}
+		</p>
 		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
@@ -191,14 +128,15 @@
 	</nav>
 
 	<section id="daten-lizenzen" aria-labelledby="daten-lizenzen-h" class="flex flex-col gap-4">
-		<h2 id="daten-lizenzen-h" class="font-serif text-2xl text-ink">Daten-Lizenzen</h2>
+		<h2 id="daten-lizenzen-h" class="font-serif text-2xl text-ink">
+			{m.lizenzen_section_daten_lizenzen()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Die {manifest.layers.length} aktiven Geo-Layer stehen unter drei verschiedenen Lizenzen. Jede gruppiert
-			nach Lizenz, mit Link auf den jeweiligen Volltext.
+			{datenIntro}
 		</p>
 
 		{#each [...licenseGroups.entries()] as [license, layers] (license)}
-			{@const info = infoFor(license)}
+			{@const info = getLicenseInfo(license)}
 			<div class="flex flex-col gap-2 border border-rule p-4">
 				<div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
 					<h3 class="font-sans text-base font-semibold text-ink">{info.label}</h3>
@@ -216,10 +154,10 @@
 					{#each layers as layer (layer.slug)}
 						<li>
 							<a
-								href={`/layer/${layer.slug}`}
+								href={localizedHref(`/layer/${layer.slug}`)}
 								class="hover:text-accent-strong text-accent underline underline-offset-2"
 							>
-								{getLayerDisplayName(layer.slug)}
+								{getLayerDisplayName(layer.slug, { locale })}
 							</a>
 						</li>
 					{/each}
@@ -228,25 +166,22 @@
 		{/each}
 
 		<p class="font-serif text-sm text-ink-muted">
-			Zusätzlich fließt die Strategische Lärmkarte 2022 (Umweltatlas, ua_stratlaerm_2022, Lizenz
-			Datenlizenz Deutschland Zero 2.0) als Build-Aggregat je Planungsraum in den Kiez-Score ein.
+			{m.lizenzen_daten_laerm()}
 		</p>
 	</section>
 
 	<section id="wahldaten" aria-labelledby="wahldaten-h" class="flex flex-col gap-3">
-		<h2 id="wahldaten-h" class="font-serif text-2xl text-ink">Wahldaten</h2>
+		<h2 id="wahldaten-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_wahldaten()}</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Wahl-Ergebnisse aus 12 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV) liegen
-			nicht als eigener Geo-Layer vor, sondern als Datenbank-Aggregate. Quellen und Lizenz beider
-			Datenanbieter:
+			{m.lizenzen_wahl_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
-				<dt class="font-sans text-base font-semibold text-ink">Bundeswahlleiterin</dt>
+				<dt class="font-sans text-base font-semibold text-ink">{m.lizenzen_wahl_bwl_name()}</dt>
 				<dd class="mt-1 font-serif text-sm text-ink-muted">
-					Bundestagswahlen 2013, 2017, 2021, 2025 als Wahlbezirksstatistik (<code
-						class="font-mono text-xs">_wbz.zip</code
-					>). Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+					<RichText segments={bwlDescSegments}>
+						{#snippet tag(text)}{@render codeXs(text)}{/snippet}
+					</RichText>
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
@@ -261,12 +196,10 @@
 			</div>
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">
-					Amt für Statistik Berlin-Brandenburg
+					{m.lizenzen_wahl_statistik_name()}
 				</dt>
 				<dd class="mt-1 font-serif text-sm text-ink-muted">
-					Abgeordnetenhaus- und BVV-Wahlen 2011, 2016, 2021, 2023 als XLSX-Sheet-Pipeline plus
-					Stimmbezirks-Polygone (Shapefile-Releases pro Wahlgang, reprojiziert nach WGS84). Lizenz
-					Datenlizenz Deutschland Namensnennung 2.0.
+					{m.lizenzen_wahl_statistik_desc()}
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
@@ -279,32 +212,50 @@
 					</a>
 				</dd>
 			</div>
+			<div class="border border-rule p-4">
+				<dt class="font-sans text-base font-semibold text-ink">
+					{m.lizenzen_wahl_landeswahl_name()}
+				</dt>
+				<dd class="mt-1 font-serif text-sm text-ink-muted">
+					{m.lizenzen_wahl_landeswahl_desc()}
+				</dd>
+				<dd class="mt-2 font-mono text-xs">
+					<a
+						href="https://www.wahlen-berlin.de"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
+					>
+						wahlen-berlin.de
+					</a>
+				</dd>
+			</div>
 		</dl>
 		<p class="font-mono text-xs text-ink-muted">
-			Methodik:
+			{m.lizenzen_wahl_methodik_label()}
 			<a
-				href="/methodik/wahldaten"
+				href={localizedHref('/methodik/wahldaten')}
 				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
-				Wahldaten
+				{m.lizenzen_wahl_methodik_link()}
 			</a>
 		</p>
 	</section>
 
 	<section id="demografie" aria-labelledby="demografie-h" class="flex flex-col gap-3">
-		<h2 id="demografie-h" class="font-serif text-2xl text-ink">Demografie</h2>
+		<h2 id="demografie-h" class="font-serif text-2xl text-ink">
+			{m.lizenzen_section_demografie()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Einwohner pro LOR-Planungsraum liegen nicht als eigener Geo-Layer vor. Wir nutzen sie als
-			vorberechnete Summen für Pro-Kopf-Werte und den Demografie-Kontext.
+			{m.lizenzen_demografie_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">
-					Einwohner in LOR-Planungsräumen am 31.12.2024
+					{m.lizenzen_demografie_name()}
 				</dt>
 				<dd class="mt-1 font-serif text-sm text-ink-muted">
-					Einwohner nach Altersjahren je 542 LOR-Planungsräume, gejoint über die 8-stellige RAUMID.
-					Lizenz CC BY 4.0, Amt für Statistik Berlin-Brandenburg.
+					{m.lizenzen_demografie_desc()}
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
@@ -325,17 +276,17 @@
 		aria-labelledby="kriminalitaetsatlas-h"
 		class="flex flex-col gap-3"
 	>
-		<h2 id="kriminalitaetsatlas-h" class="font-serif text-2xl text-ink">Kriminalitätsatlas</h2>
+		<h2 id="kriminalitaetsatlas-h" class="font-serif text-2xl text-ink">
+			{m.lizenzen_section_kriminalitaet()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Fallzahlen und Häufigkeitszahlen je LOR-Bezirksregion fließen als vorberechnete Werte in den
-			Kiez-Score ein, nicht als eigener Geo-Layer.
+			{m.lizenzen_krim_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
-				<dt class="font-sans text-base font-semibold text-ink">Kriminalitätsatlas Berlin</dt>
+				<dt class="font-sans text-base font-semibold text-ink">{m.lizenzen_krim_name()}</dt>
 				<dd class="mt-1 font-serif text-sm text-ink-muted">
-					Straftaten-Fallzahlen und Häufigkeitszahlen 2016 bis 2025 der Polizei Berlin,
-					geocodiert auf LOR-Ebene. Lizenz Datenlizenz Deutschland Namensnennung 2.0.
+					{m.lizenzen_krim_desc()}
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
@@ -350,30 +301,30 @@
 			</div>
 		</dl>
 		<p class="font-mono text-xs text-ink-muted">
-			Methodik:
+			{m.lizenzen_krim_methodik_label()}
 			<a
-				href="/methodik/kiez-score"
+				href={localizedHref('/methodik/kiez-score')}
 				class="hover:text-accent-strong text-accent underline underline-offset-2"
 			>
-				Kiez-Score
+				{m.lizenzen_krim_methodik_link()}
 			</a>
 		</p>
 	</section>
 
 	<section id="klimadaten-dwd" aria-labelledby="klimadaten-dwd-h" class="flex flex-col gap-3">
-		<h2 id="klimadaten-dwd-h" class="font-serif text-2xl text-ink">Klimadaten (DWD)</h2>
+		<h2 id="klimadaten-dwd-h" class="font-serif text-2xl text-ink">
+			{m.lizenzen_section_klimadaten()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Historische Sommertage- und Hitzetage-Zeitreihen von vier Berliner Wetterstationen
-			(Dahlem, Tempelhof, Buch, Brandenburg) liegen als Build-Aggregat im Hitze-Kontext.
+			{m.lizenzen_klima_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">
-					Deutscher Wetterdienst · Climate Data Center
+					{m.lizenzen_klima_name()}
 				</dt>
 				<dd class="mt-1 font-serif text-sm text-ink-muted">
-					Tageswerte der Stationsmessungen (daily KL, historical). Lizenz CC BY 4.0,
-					Namensnennung Deutscher Wetterdienst.
+					{m.lizenzen_klima_desc()}
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
@@ -394,17 +345,21 @@
 		aria-labelledby="entitaets-verweise-h"
 		class="flex flex-col gap-3"
 	>
-		<h2 id="entitaets-verweise-h" class="font-serif text-2xl text-ink">Entitäts-Verweise</h2>
+		<h2 id="entitaets-verweise-h" class="font-serif text-2xl text-ink">
+			{m.lizenzen_section_entitaeten()}
+		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Bezirks-Seiten verweisen per <code class="font-mono text-sm">sameAs</code> auf die passende Entität
-			in offenen Wissensdatenbanken, damit Suchmaschinen die Seite eindeutig zuordnen.
+			<RichText segments={entitaetenSegments}>
+				{#snippet tag(text)}{@render codeSm(text)}{/snippet}
+			</RichText>
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">Wikidata</dt>
 				<dd class="mt-1 font-serif text-sm text-ink-muted">
-					Q-IDs der 12 aktuellen Berliner Bezirke als <code class="font-mono text-xs">sameAs</code
-					>-Verweis im JSON-LD. Lizenz CC0.
+					<RichText segments={wikidataSegments}>
+						{#snippet tag(text)}{@render codeXs(text)}{/snippet}
+					</RichText>
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
@@ -418,10 +373,13 @@
 				</dd>
 			</div>
 			<div class="border border-rule p-4">
-				<dt class="font-sans text-base font-semibold text-ink">Wikipedia (deutsch)</dt>
+				<dt class="font-sans text-base font-semibold text-ink">
+					{m.lizenzen_entitaeten_wikipedia_name()}
+				</dt>
 				<dd class="mt-1 font-serif text-sm text-ink-muted">
-					Artikel-Verweis pro Bezirk als zusätzlicher <code class="font-mono text-xs">sameAs</code
-					>-Eintrag. Lizenz CC BY-SA 4.0.
+					<RichText segments={wikipediaSegments}>
+						{#snippet tag(text)}{@render codeXs(text)}{/snippet}
+					</RichText>
 				</dd>
 				<dd class="mt-2 font-mono text-xs">
 					<a
@@ -438,25 +396,26 @@
 	</section>
 
 	<section id="software" aria-labelledby="software-h" class="flex flex-col gap-3">
-		<h2 id="software-h" class="font-serif text-2xl text-ink">Software</h2>
+		<h2 id="software-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_software()}</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Wichtigste Runtime-Bibliotheken. Vollständige Auflistung im Repository unter
-			<code class="font-mono text-sm">package.json</code>.
+			<RichText segments={softwareSegments}>
+				{#snippet tag(text)}{@render codeSm(text)}{/snippet}
+			</RichText>
 		</p>
 		<div class="overflow-auto border border-rule">
 			<table class="w-full border-collapse text-sm">
 				<thead class="bg-bg">
 					<tr>
 						<th scope="col" class="border-b border-rule px-3 py-2 text-left font-sans font-medium">
-							Library
+							{m.lizenzen_software_th_library()}
 						</th>
 						<th scope="col" class="border-b border-rule px-3 py-2 text-left font-sans font-medium">
-							Lizenz
+							{m.lizenzen_software_th_license()}
 						</th>
 					</tr>
 				</thead>
 				<tbody>
-					{#each RUNTIME_SOFTWARE as sw (sw.name)}
+					{#each runtimeSoftware as sw (sw.name)}
 						<tr class="border-b border-rule/60">
 							<td class="px-3 py-2">
 								<a
@@ -477,9 +436,9 @@
 	</section>
 
 	<section id="schriften" aria-labelledby="schriften-h" class="flex flex-col gap-3">
-		<h2 id="schriften-h" class="font-serif text-2xl text-ink">Schriften</h2>
+		<h2 id="schriften-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_schriften()}</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			IBM Plex Serif, Sans und Mono unter SIL Open Font License 1.1, geliefert via Fontsource.
+			{m.lizenzen_schriften_p1()}
 		</p>
 		<p class="font-mono text-xs text-ink-muted">
 			<a
@@ -504,23 +463,24 @@
 
 	<section id="osm-namensnennung" aria-labelledby="osm-namensnennung-h" class="flex flex-col gap-3">
 		<h2 id="osm-namensnennung-h" class="font-serif text-2xl text-ink">
-			OpenStreetMap-Namensnennung
+			{m.lizenzen_section_osm()}
 		</h2>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			Die ODbL-Layer (Stolpersteine, ÖPNV-Stationen, Trinkbrunnen, Kühle Orte, S-Bahn-Netz,
-			U-Bahn-Netz, Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten.
-			Lizenz: Open Database License 1.0.
+			{m.lizenzen_osm_p1()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			© OpenStreetMap-Contributors. Daten verfügbar unter
-			<a
-				href="https://www.openstreetmap.org/copyright"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
-			>
-				openstreetmap.org/copyright
-			</a>.
+			<RichText segments={osmSegments}>
+				{#snippet tag(text)}
+					<a
+						href="https://www.openstreetmap.org/copyright"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="hover:text-accent-strong text-accent underline underline-offset-2"
+					>
+						{text}
+					</a>
+				{/snippet}
+			</RichText>
 		</p>
 	</section>
 </article>

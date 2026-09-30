@@ -13,9 +13,10 @@ export const prerender = true;
  * 404-URL zeigen. `description` aus `explain.short` (Pflichtfeld fuer Schema.org-
  * Dataset, GSC 2026-05-29), `creatorName` aus `methodology.authority`.
  *
- * i18n Block C2 (spec-i18n-c2-layer-methodik.md): Das DataCatalog-JSON-LD
- * bleibt bis zur Registrierung vollstaendig DE (Boundary "B4b-Linie"), auch
- * auf `/en/lizenzen`. `buildLayerDetail` bekommt deshalb bewusst `'de'` fest
+ * i18n Block C2 (spec-i18n-c2-layer-methodik.md), bestaetigt in C4c: Das
+ * DataCatalog-JSON-LD bleibt vollstaendig DE, auch auf `/en/lizenzen`, obwohl die
+ * Seite ab C4c registriert ist. Die Datasets zeigen auf `/layer/...`, das erst im
+ * Abschluss-Block registriert wird. `buildLayerDetail` bekommt deshalb bewusst `'de'` fest
  * statt der Seiten-Locale -- ein `getLocale()`-Aufruf hier wuerde auf
  * `/en/lizenzen` (prerendert) sonst Name, Beschreibung und Behoerde englisch
  * ins JSON-LD durchsickern lassen, analog zum Fix auf `/layer/[slug]`

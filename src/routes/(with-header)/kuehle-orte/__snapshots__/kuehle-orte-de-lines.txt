@@ -1,0 +1,8 @@
+h1: Kühle Orte in Berlin
+p: Bei Hitze hilft keine lange Suche, sondern eine schnelle Antwort: Wohin zum Abkühlen? Diese Seite zeigt Orte in Berlin, an denen du der Hitze entkommst. Kinos, Bibliotheken, Schwimmhallen, Malls und mehr, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten, kein Ersatz für die Hinweise der Stadt.
+h2: Kartenvorschau
+figcaption: Karten-Ansicht: Kühle Orte in Berlin.
+p: Die Vorschau zeigt Berlin. Die interaktive Karte mit allen kühlen Orten, Live-Status und Filtern öffnet sich im Explorer.
+h2: Zur interaktiven Karte
+a: Karte erkunden
+p: Öffnet den Atlas mit bereits aktivem Kühle-Orte-Layer.

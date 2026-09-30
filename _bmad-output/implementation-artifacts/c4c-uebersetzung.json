@@ -1,0 +1,686 @@
+{
+	"hitze": {
+		"meta_title": {
+			"de": "Hitze-Navigator Berlin - kühle Orte bei Hitze finden",
+			"en": "Heat Navigator Berlin - find cool places in hot weather",
+			"note": "Auch SeoHead-Title (pageTitle)."
+		},
+		"meta_description": {
+			"de": "Über 500 kühle Orte in Berlin bei Hitze: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten.",
+			"en": "Over 500 cool places in Berlin in hot weather: cinemas, libraries, swimming pools, museums, malls and drinking fountains, each with address and directions. A service built on open data.",
+			"note": "Auch description im Dataset-JSON-LD (pageDescription)."
+		},
+		"jsonld_name": {
+			"de": "Kühle Orte in Berlin",
+			"en": "Cool places in Berlin",
+			"note": "Dataset-JSON-LD `name` der Seite `/hitze`."
+		},
+		"jsonld_keywords": {
+			"de": "Kühle Orte, Hitze, Berlin, Abkühlung, Klimaanlage, Trinkbrunnen",
+			"en": "Cool places, heat, Berlin, cooling down, air conditioning, drinking fountains",
+			"note": "Dataset-JSON-LD `keywords`, ein Array-Eintrag je Komma-Teil (gleiche Reihenfolge). „Berlin“ bleibt gleich."
+		},
+		"breadcrumb_start": {
+			"de": "Start",
+			"en": "Home",
+			"note": "Breadcrumb-JSON-LD, erster Eintrag (Ziel /)."
+		},
+		"breadcrumb_hitze": {
+			"de": "Kühle Orte bei Hitze",
+			"en": "Cool places in hot weather",
+			"note": "Breadcrumb-JSON-LD, letzter Eintrag. Wortlaut wie `shell_meta_link_hitze`."
+		},
+		"eyebrow": {
+			"de": "Kühle Orte bei Hitze",
+			"en": "Cool places in hot weather"
+		},
+		"h1_title": {
+			"de": "Hitze-Navigator Berlin",
+			"en": "Heat Navigator Berlin"
+		},
+		"intro_p1": {
+			"de": "Gib deinen Standort ein. Du siehst die nächsten kühlen Orte in Berlin, sortiert nach Entfernung, mit Öffnungsstatus und dem Weg dorthin. Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen, über 500 Orte aus offenen Daten.",
+			"en": "Enter your location. You see the nearest cool places in Berlin, sorted by distance, with opening status and directions. Cinemas, libraries, swimming pools, museums, malls and drinking fountains, over 500 places from open data."
+		},
+		"cta_map": {
+			"de": "Kühle Orte auf der Karte",
+			"en": "Cool places on the map",
+			"note": "Ziel: Explorer mit Layer kuehle-orte, `mode=hitze`."
+		},
+		"cta_map_hint": {
+			"de": "Interaktive Karte mit allen kühlen Orten, Live-Status und Filtern.",
+			"en": "Interactive map with all cool places, live status and filters."
+		},
+		"methodik_link": {
+			"de": "Methodik: wie wir kühle Orte bewerten",
+			"en": "Methodology: how we rate cool places",
+			"note": "Link-Ziel: /layer/kuehle-orte (lokalisieren)."
+		},
+		"orte_heading": {
+			"de": "Kühle Orte in Berlin: wo du Abkühlung findest",
+			"en": "Cool places in Berlin: where you can cool down"
+		},
+		"cat_kinos_name": {
+			"de": "Kinos",
+			"en": "Cinemas"
+		},
+		"cat_kinos_note": {
+			"de": "meist klimatisiert",
+			"en": "mostly air-conditioned"
+		},
+		"cat_bibliotheken_name": {
+			"de": "Bibliotheken",
+			"en": "Libraries"
+		},
+		"cat_bibliotheken_note": {
+			"de": "kühl und ruhig",
+			"en": "cool and quiet"
+		},
+		"cat_schwimmhallen_name": {
+			"de": "Schwimmhallen",
+			"en": "Swimming pools"
+		},
+		"cat_schwimmhallen_note": {
+			"de": "Abkühlung im Wasser",
+			"en": "cooling off in the water"
+		},
+		"cat_museen_name": {
+			"de": "Museen",
+			"en": "Museums"
+		},
+		"cat_museen_note": {
+			"de": "oft klimatisiert",
+			"en": "often air-conditioned"
+		},
+		"cat_malls_name": {
+			"de": "Malls und Kaufhäuser",
+			"en": "Malls and department stores"
+		},
+		"cat_malls_note": {
+			"de": "frei zugänglich",
+			"en": "freely accessible"
+		},
+		"cat_trinkbrunnen_name": {
+			"de": "Trinkbrunnen",
+			"en": "Drinking fountains"
+		},
+		"cat_trinkbrunnen_note": {
+			"de": "Mai bis Oktober",
+			"en": "May to October"
+		},
+		"schritte_heading": {
+			"de": "In drei Schritten zum kühlen Ort",
+			"en": "To a cool place in three steps"
+		},
+		"step1_title": {
+			"de": "Adresse eingeben",
+			"en": "Enter an address"
+		},
+		"step1_text": {
+			"de": "Tippe deinen Standort in die Karte.",
+			"en": "Type your location into the map."
+		},
+		"step2_title": {
+			"de": "Nächste Orte sehen",
+			"en": "See the nearest places"
+		},
+		"step2_text": {
+			"de": "Die Karte zeigt die kühlen Orte in deiner Nähe, sortiert nach Entfernung.",
+			"en": "The map shows the cool places near you, sorted by distance."
+		},
+		"step3_title": {
+			"de": "Hinnavigieren",
+			"en": "Get directions"
+		},
+		"step3_text": {
+			"de": "Ein Tap öffnet die Route in Google oder Apple Maps.",
+			"en": "One tap opens the route in Google or Apple Maps."
+		},
+		"offiziell_heading": {
+			"de": "Offizielle Angebote der Stadt Berlin",
+			"en": "Official services of the City of Berlin"
+		},
+		"offiziell_intro": {
+			"de": "Der Hitze-Navigator ergänzt die Angebote der Stadt, er ersetzt sie nicht. Die offiziellen Quellen:",
+			"en": "The Heat Navigator complements the city's services and does not replace them. The official sources:"
+		},
+		"offiziell_hitzeschutz_title": {
+			"de": "Hitzeschutzportal der Stadt Berlin",
+			"en": "Heat protection portal of the City of Berlin",
+			"note": "Link-Ziel: https://www.berlin.de/hitzeschutz/ (extern)."
+		},
+		"offiziell_hitzeschutz_text": {
+			"de": "Warnungen, Verhaltenstipps und Hintergründe der Senatsverwaltung.",
+			"en": "Warnings, behaviour tips and background information from the Senate department."
+		},
+		"offiziell_karte_title": {
+			"de": "Offizielle Kühle-Orte-Karte",
+			"en": "Official cool places map",
+			"note": "Link-Ziel: https://kuehle-orte.berlin.de/hsp/ (extern)."
+		},
+		"offiziell_karte_text": {
+			"de": "Die städtische Karte mit Grünanlagen, Badestellen und Trinkbrunnen.",
+			"en": "The city's map with green spaces, bathing spots and drinking fountains."
+		},
+		"offiziell_aktionsplan_title": {
+			"de": "Berliner Hitzeaktionsplan",
+			"en": "Berlin heat action plan",
+			"note": "Link-Ziel: https://www.berlin.de/hitzeschutz/hitzeaktionsplan/ (extern)."
+		},
+		"offiziell_aktionsplan_text": {
+			"de": "Die Strategie der Stadt gegen Hitzefolgen.",
+			"en": "The city's strategy against the effects of heat."
+		}
+	},
+	"hitze_faq": {
+		"cool_places_where_q": {
+			"de": "Wo finde ich in Berlin kühle Orte bei Hitze?",
+			"en": "Where can I find cool places in Berlin in hot weather?"
+		},
+		"cool_places_where_a": {
+			"de": "Der Hitze-Navigator zeigt über 500 kühle Orte in ganz Berlin: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen. Gib deinen Standort ein, die Karte sortiert die nächsten geöffneten Orte nach Entfernung.",
+			"en": "The Heat Navigator shows over 500 cool places across Berlin: cinemas, libraries, swimming pools, museums, malls and drinking fountains. Enter your location and the map sorts the nearest open places by distance."
+		},
+		"air_conditioned_q": {
+			"de": "Welche Orte in Berlin sind bei Hitze klimatisiert?",
+			"en": "Which places in Berlin are air-conditioned in hot weather?"
+		},
+		"air_conditioned_a": {
+			"de": "Viele Kinos, Museen und Malls sind klimatisiert. Wo die Klimatisierung belegt ist, markiert der Navigator den Ort entsprechend. Ist sie nicht belegbar, sagen wir das offen statt zu raten.",
+			"en": "Many cinemas, museums and malls are air-conditioned. Where air conditioning is verified, the navigator marks the place accordingly. Where it cannot be verified, we say so openly instead of guessing."
+		},
+		"free_access_q": {
+			"de": "Sind die kühlen Orte kostenlos zugänglich?",
+			"en": "Are the cool places free to enter?"
+		},
+		"free_access_a": {
+			"de": "Bibliotheken, Trinkbrunnen und Malls sind meist frei zugänglich. Schwimmhallen und Museen kosten oft Eintritt. Jeder Ort trägt eine Angabe, ob kostenlos oder mit Ticket.",
+			"en": "Libraries, drinking fountains and malls are mostly freely accessible. Swimming pools and museums often charge admission. Every place states whether it is free or needs a ticket."
+		},
+		"what_helps_q": {
+			"de": "Was hilft bei Hitze in Berlin?",
+			"en": "What helps in hot weather in Berlin?"
+		},
+		"what_helps_a": {
+			"de": "Kühle Innenräume aufsuchen, viel trinken, direkte Sonne meiden. Der Hitze-Navigator zeigt den nächsten kühlen Ort, die Stadt Berlin bündelt Verhaltenstipps im Hitzeschutzportal.",
+			"en": "Seek out cool indoor spaces, drink plenty of water and avoid direct sun. The Heat Navigator shows the nearest cool place, and the City of Berlin collects behaviour tips in its heat protection portal."
+		},
+		"data_source_q": {
+			"de": "Woher stammen die Daten zu den kühlen Orten?",
+			"en": "Where does the data on the cool places come from?"
+		},
+		"data_source_a": {
+			"de": "Geometrie und Basis-Angaben kommen aus OpenStreetMap (ODbL), ergänzt um eine redaktionelle Prüfung von navigator.berlin. Die aktuelle Hitzewarnung liefert der Deutsche Wetterdienst.",
+			"en": "Geometry and base details come from OpenStreetMap (ODbL), supplemented by an editorial check by navigator.berlin. The current heat warning comes from the German Weather Service (DWD)."
+		}
+	},
+	"dwd_banner": {
+		"level_label_stark": {
+			"de": "Starke Hitze",
+			"en": "Strong heat",
+			"note": "Aus `levelLabel('stark')`. Siehe „Unsicher“ zur DWD-Terminologie."
+		},
+		"level_label_extrem": {
+			"de": "Extreme Hitze",
+			"en": "Extreme heat",
+			"note": "Aus `levelLabel('extrem')`. Siehe „Unsicher“."
+		},
+		"source": {
+			"de": "Deutscher Wetterdienst (DWD)",
+			"en": "German Weather Service (DWD)",
+			"note": "Konstante `SOURCE`, sichtbarer Linktext. Ziel: https://www.dwd.de/warnungen (extern)."
+		}
+	},
+	"in_deiner_naehe": {
+		"heading": {
+			"de": "In deiner Nähe",
+			"en": "Near you"
+		},
+		"button_locate": {
+			"de": "Orte in meiner Nähe",
+			"en": "Places near me"
+		},
+		"button_locating": {
+			"de": "Standort wird bestimmt …",
+			"en": "Determining your location …"
+		},
+		"announce_locating": {
+			"de": "Standort wird bestimmt",
+			"en": "Determining your location",
+			"note": "Screenreader-Ansage (announceGlobal)."
+		},
+		"hint": {
+			"de": "Wir fragen deinen Standort ab und zeigen die nächsten jetzt geöffneten kühlen Orte.",
+			"en": "We ask for your location and show the nearest cool places that are open now."
+		},
+		"fallback_denied": {
+			"de": "Ohne Standort können wir keine Orte in deiner Nähe zeigen.",
+			"en": "Without your location we cannot show places near you.",
+			"note": "Auch Screenreader-Ansage."
+		},
+		"fallback_unsupported": {
+			"de": "Dein Browser unterstützt keine Standort-Bestimmung.",
+			"en": "Your browser does not support location detection.",
+			"note": "Auch Screenreader-Ansage."
+		},
+		"fallback_error": {
+			"de": "Standort konnte nicht bestimmt werden.",
+			"en": "Your location could not be determined.",
+			"note": "Auch Screenreader-Ansage."
+		},
+		"announce_found": {
+			"de": "{count} offene kühle Orte in der Nähe gefunden",
+			"en": "{count} open cool places found nearby",
+			"note": "Screenreader-Ansage. `{count}` = Anzahl Treffer (1 bis 5). Siehe „Unsicher“ zu Plural."
+		},
+		"announce_none": {
+			"de": "Keine offenen kühlen Orte in der Nähe gefunden",
+			"en": "No open cool places found nearby",
+			"note": "Screenreader-Ansage."
+		},
+		"distance_aria_label": {
+			"de": "Entfernung {distance}",
+			"en": "Distance {distance}",
+			"note": "aria-label; `{distance}` = formatierte Entfernung (`formatDistanceDe`)."
+		},
+		"status_closing_soon": {
+			"de": "schließt bald",
+			"en": "closing soon",
+			"note": "Wie `inspector_kuehle_orte_status_closing_soon`."
+		},
+		"status_open_now": {
+			"de": "jetzt offen",
+			"en": "open now",
+			"note": "Wie `inspector_kuehle_orte_status_open`."
+		},
+		"empty": {
+			"de": "Gerade sind keine offenen kühlen Orte in deiner Nähe. Auf der Karte siehst du alle, inklusive der geschlossenen.",
+			"en": "No cool places are open near you right now. On the map you see all of them, including the closed ones."
+		},
+		"link_all_on_map": {
+			"de": "Alle kühlen Orte auf der Karte",
+			"en": "All cool places on the map",
+			"note": "Kommt zweimal vor (leeres Ergebnis und Fallback). Ziel: `explorerHref`."
+		}
+	},
+	"transparenz": {
+		"heading": {
+			"de": "Transparenz und Quellen",
+			"en": "Transparency and sources"
+		},
+		"haltung": {
+			"de": "Der Hitze-Navigator sammelt öffentlich zugängliche kühle Orte und prüft sie redaktionell. Er ergänzt die Angebote der Stadt, er ersetzt sie nicht. Die Liste kann Lücken haben und lebt von Korrekturen. Kein Rechtsanspruch auf Zugang: private Orte wie Malls und Kinos üben Hausrecht aus.",
+			"en": "The Heat Navigator collects publicly accessible cool places and checks them editorially. It complements the city's services and does not replace them. The list may have gaps and relies on corrections. No legal entitlement to access: private places such as malls and cinemas can refuse entry (Hausrecht).",
+			"note": "`KUEHLE_ORTE_HALTUNG`."
+		},
+		"quelle_osm_detail": {
+			"de": "Geometrie und Basis-Angaben der Orte, © OpenStreetMap-Contributors. Weitergabe unter denselben Bedingungen (Share-Alike).",
+			"en": "Geometry and base details of the places, © OpenStreetMap contributors. Redistribution under the same terms (share-alike).",
+			"note": "`name` „OpenStreetMap“ und `lizenz` „ODbL 1.0“ bleiben unverändert."
+		},
+		"quelle_redaktion_name": {
+			"de": "Redaktionelle Anreicherung",
+			"en": "Editorial enrichment"
+		},
+		"quelle_redaktion_detail": {
+			"de": "navigator.berlin prüft Eignung, Adresse, Kühle-Score, Klimatisierung und Sommer-Verfügbarkeit. Wo eine Angabe nicht belegbar war, sagen wir das offen.",
+			"en": "navigator.berlin checks suitability, address, cool score, air conditioning and summer availability. Where a detail could not be verified, we say so openly."
+		},
+		"quelle_dwd_name": {
+			"de": "Deutscher Wetterdienst",
+			"en": "German Weather Service (DWD)"
+		},
+		"quelle_dwd_detail": {
+			"de": "Amtliche Hitzewarnung für Berlin, live abgefragt und ohne Warnung ausgeblendet.",
+			"en": "Official heat warning for Berlin, queried live and hidden when there is no warning."
+		},
+		"lizenzen_hinweis": {
+			"de": "Die vollständige Lizenz-Übersicht steht auf der {link_start}Lizenzen-Seite{link_end}.",
+			"en": "The full licence overview is on the {link_start}licences page{link_end}.",
+			"note": "Link-Ziel: /lizenzen (lokalisieren)."
+		},
+		"optout_heading": {
+			"de": "Ihre Einrichtung soll nicht gelistet sein?",
+			"en": "Don't want your venue listed?",
+			"note": "Anrede „Ihre“ (Sie) bleibt als „your“."
+		},
+		"optout_text": {
+			"de": "Schreiben Sie uns, wir tragen den Ort aus. Ein Klick öffnet einen vorbereiteten Entwurf.",
+			"en": "Write to us and we will remove the place. One click opens a prepared draft."
+		},
+		"optout_aria_label": {
+			"de": "Einrichtung aus der Kühle-Orte-Karte austragen lassen",
+			"en": "Have your venue removed from the cool places map",
+			"note": "Wie `inspector_kuehle_orte_opt_out_aria_label`."
+		},
+		"optout_link": {
+			"de": "Austragung anfragen",
+			"en": "Request removal",
+			"note": "Ziel: mailto (`buildOptOutMailto`)."
+		}
+	},
+	"kuehle_orte": {
+		"meta_title": {
+			"de": "Kühle Orte in Berlin - navigator.berlin",
+			"en": "Cool places in Berlin - navigator.berlin"
+		},
+		"meta_description": {
+			"de": "Wo du dich in Berlin bei Hitze abkühlen kannst: Kinos, Bibliotheken, Schwimmhallen und mehr, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten.",
+			"en": "Where you can cool down in Berlin in hot weather: cinemas, libraries, swimming pools and more, each with address and directions. A service built on open data."
+		},
+		"h1_title": {
+			"de": "Kühle Orte in Berlin",
+			"en": "Cool places in Berlin"
+		},
+		"intro_p1": {
+			"de": "Bei Hitze hilft keine lange Suche, sondern eine schnelle Antwort: Wohin zum Abkühlen? Diese Seite zeigt Orte in Berlin, an denen du der Hitze entkommst. Kinos, Bibliotheken, Schwimmhallen, Malls und mehr, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten, kein Ersatz für die Hinweise der Stadt.",
+			"en": "In the heat you do not need a long search but a quick answer: where can I cool down? This page shows places in Berlin where you can escape the heat. Cinemas, libraries, swimming pools, malls and more, each with address and directions. A service built on open data, not a substitute for the city's advice."
+		},
+		"map_heading": {
+			"de": "Kartenvorschau",
+			"en": "Map preview",
+			"note": "Nur für Screenreader (`sr-only`)."
+		},
+		"map_label": {
+			"de": "Kühle Orte in Berlin",
+			"en": "Cool places in Berlin",
+			"note": "`label` der Karten-Einbettung (aria)."
+		},
+		"map_hint": {
+			"de": "Die Vorschau zeigt Berlin. Die interaktive Karte mit allen kühlen Orten, Live-Status und Filtern öffnet sich im Explorer.",
+			"en": "The preview shows Berlin. The interactive map with all cool places, live status and filters opens in the Explorer."
+		},
+		"cta_heading": {
+			"de": "Zur interaktiven Karte",
+			"en": "To the interactive map",
+			"note": "Nur für Screenreader (`sr-only`)."
+		},
+		"cta_button": {
+			"de": "Karte erkunden",
+			"en": "Explore the map"
+		},
+		"cta_hint": {
+			"de": "Öffnet den Atlas mit bereits aktivem Kühle-Orte-Layer.",
+			"en": "Opens the atlas with the cool places layer already active."
+		}
+	},
+	"lizenzen": {
+		"meta_title": {
+			"de": "Lizenzen - Berlin in Daten - navigator.berlin",
+			"en": "Licences - Berlin in data - navigator.berlin"
+		},
+		"meta_description": {
+			"de": "Lizenzen der Geo-Daten und der verwendeten Software.",
+			"en": "Licences of the geodata and the software used."
+		},
+		"og_image_alt": {
+			"de": "navigator.berlin Lizenzen",
+			"en": "navigator.berlin licences"
+		},
+		"breadcrumb_lizenzen": {
+			"de": "Lizenzen",
+			"en": "Licences",
+			"note": "Nur Breadcrumb-JSON-LD, letzter Eintrag (Ziel /lizenzen). „Berlin“ bleibt gleich. Das DataCatalog-JSON-LD bleibt DE und ist nicht Teil dieser Datei."
+		},
+		"h1_title": {
+			"de": "Lizenzen",
+			"en": "Licences"
+		},
+		"intro_p1": {
+			"de": "Welche Lizenz pro Geo-Datensatz gilt und welche Software wir nutzen.",
+			"en": "Which licence applies to each geodata set and which software we use."
+		},
+		"toc_aria_label": {
+			"de": "Inhalt",
+			"en": "Contents"
+		},
+		"toc_heading": {
+			"de": "Inhalt",
+			"en": "Contents"
+		},
+		"section_daten_lizenzen": {
+			"de": "Daten-Lizenzen",
+			"en": "Data licences",
+			"note": "Auch TOC-Label und H2."
+		},
+		"section_wahldaten": {
+			"de": "Wahldaten",
+			"en": "Election data",
+			"note": "Auch TOC-Label und H2."
+		},
+		"section_demografie": {
+			"de": "Demografie",
+			"en": "Demographics",
+			"note": "Auch TOC-Label und H2."
+		},
+		"section_kriminalitaet": {
+			"de": "Kriminalitätsatlas",
+			"en": "Crime atlas",
+			"note": "Auch TOC-Label und H2."
+		},
+		"section_klimadaten": {
+			"de": "Klimadaten (DWD)",
+			"en": "Climate data (German Weather Service, DWD)",
+			"note": "Auch TOC-Label und H2."
+		},
+		"section_entitaeten": {
+			"de": "Entitäts-Verweise",
+			"en": "Entity references",
+			"note": "Auch TOC-Label und H2."
+		},
+		"section_software": {
+			"de": "Software",
+			"en": "Software",
+			"note": "Gleich in DE und EN, Auslassen möglich."
+		},
+		"section_schriften": {
+			"de": "Schriften",
+			"en": "Fonts",
+			"note": "Auch TOC-Label und H2."
+		},
+		"section_osm": {
+			"de": "OpenStreetMap-Namensnennung",
+			"en": "OpenStreetMap attribution",
+			"note": "Auch TOC-Label und H2."
+		},
+		"license_dl_zero_label": {
+			"de": "Datenlizenz Deutschland Zero 2.0",
+			"en": "Data licence Germany, zero, version 2.0",
+			"note": "Kennung `dl-de/zero-2-0` (Link) bleibt."
+		},
+		"license_dl_zero_summary": {
+			"de": "Freie Verwendung. Keine Namensnennung nötig.",
+			"en": "Free use. No attribution required."
+		},
+		"license_dl_by_label": {
+			"de": "Datenlizenz Deutschland Namensnennung 2.0",
+			"en": "Data licence Germany, attribution, version 2.0",
+			"note": "Wie `wahl_label_*`/`methodik_wahldaten_*`. Kennung `dl-de/by-2-0` bleibt."
+		},
+		"license_dl_by_summary": {
+			"de": "Freie Verwendung mit Namensnennung der Quelle.",
+			"en": "Free use with attribution of the source."
+		},
+		"license_odbl_summary": {
+			"de": "Namensnennung „© OpenStreetMap-Contributors\" plus Share-Alike bei abgeleiteten Datenbanken.",
+			"en": "Attribution “© OpenStreetMap contributors” plus share-alike for derived databases.",
+			"note": "Label „Open Database License 1.0“ ist schon englisch, Kennung „ODbL 1.0“ bleibt."
+		},
+		"license_cc_by_summary": {
+			"de": "Freie Verwendung mit Namensnennung der Quelle.",
+			"en": "Free use with attribution of the source.",
+			"note": "Label „Creative Commons Attribution 4.0“ ist schon englisch. Linkziel der Lizenz endet auf `deed.de` (Code)."
+		},
+		"license_geozg_label": {
+			"de": "Geodatenzugangsgesetz (GeoZG)",
+			"en": "Geodata Access Act (Geodatenzugangsgesetz, GeoZG)",
+			"note": "Sichtbarer Link-Text bleibt der Schlüssel `Geodatenzugangsgesetz` (`info.key`)."
+		},
+		"license_geozg_summary": {
+			"de": "Geo-Daten der Verwaltung sind zur kommerziellen und nicht-kommerziellen Nachnutzung freigegeben.",
+			"en": "Geodata of the administration is released for commercial and non-commercial reuse."
+		},
+		"license_fallback_summary": {
+			"de": "Lizenz-Volltext siehe Quelle.",
+			"en": "See the source for the full licence text.",
+			"note": "Fallback für unbekannte Lizenzen."
+		},
+		"daten_p1": {
+			"de": "Die {count} aktiven Geo-Layer stehen unter {licenseCount} verschiedenen Lizenzen. Sie sind nach Lizenz gruppiert, mit Link auf den jeweiligen Volltext.",
+			"en": "The {count} active geo layers fall under {licenseCount} different licences. They are grouped by licence, with a link to the full text of each.",
+			"note": "DE-Korrektur 30.09.: Anzahl aus den Daten ({licenseCount}), vorher fest „drei“ (sichtbare Layer nutzen 4 Lizenzen)."
+		},
+		"daten_laerm": {
+			"de": "Zusätzlich fließt die Strategische Lärmkarte 2022 (Umweltatlas, ua_stratlaerm_2022, Lizenz Datenlizenz Deutschland Zero 2.0) als Build-Aggregat je Planungsraum in den Kiez-Score ein.",
+			"en": "In addition, the Strategic Noise Map 2022 (Berlin Environmental Atlas, ua_stratlaerm_2022, licence: Data licence Germany, zero, version 2.0) feeds into the Kiez score as a build aggregate per planning area."
+		},
+		"wahl_p1": {
+			"de": "Wahl-Ergebnisse aus 14 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV) liegen nicht als eigener Geo-Layer vor, sondern als Datenbank-Aggregate. Quellen und Lizenz der drei Datenanbieter:",
+			"en": "Election results from 14 Berlin elections since 2011 (Bundestag, House of Representatives, District Assembly) are not available as a separate geo layer but as database aggregates. Sources and licence of the three data providers:"
+		},
+		"wahl_bwl_name": {
+			"de": "Bundeswahlleiterin",
+			"en": "Federal Election Commissioner (Bundeswahlleiterin)",
+			"note": "Wie `wahl_label_source_bundeswahlleiterin`. Link `bundeswahlleiterin.de` bleibt."
+		},
+		"wahl_bwl_desc": {
+			"de": "Bundestagswahlen 2013, 2017, 2021, 2025 als Wahlbezirksstatistik ({code_start}_wbz.zip{code_end}). Lizenz Datenlizenz Deutschland Namensnennung 2.0.",
+			"en": "Bundestag elections 2013, 2017, 2021, 2025 as polling district statistics ({code_start}_wbz.zip{code_end}). Licence: Data licence Germany, attribution, version 2.0."
+		},
+		"wahl_statistik_name": {
+			"de": "Amt für Statistik Berlin-Brandenburg",
+			"en": "Statistics Office Berlin-Brandenburg (Amt für Statistik Berlin-Brandenburg)",
+			"note": "Wie `wahl_label_source_amt_fuer_statistik`. Link `statistik-berlin-brandenburg.de` bleibt."
+		},
+		"wahl_statistik_desc": {
+			"de": "Abgeordnetenhaus- und BVV-Wahlen 2011, 2016, 2021, 2023 als XLSX-Sheet-Pipeline plus Stimmbezirks-Polygone (Shapefile-Releases pro Wahlgang, reprojiziert nach WGS84). Lizenz Datenlizenz Deutschland Namensnennung 2.0.",
+			"en": "House of Representatives and District Assembly elections 2011, 2016, 2021, 2023 as an XLSX sheet pipeline plus polling district polygons (shapefile releases per election, reprojected to WGS84). Licence: Data licence Germany, attribution, version 2.0."
+		},
+		"wahl_methodik_label": {
+			"de": "Methodik:",
+			"en": "Methodology:"
+		},
+		"wahl_methodik_link": {
+			"de": "Wahldaten",
+			"en": "Election data",
+			"note": "Link-Ziel: /methodik/wahldaten (lokalisieren)."
+		},
+		"demografie_p1": {
+			"de": "Einwohner pro LOR-Planungsraum liegen nicht als eigener Geo-Layer vor. Wir nutzen sie als vorberechnete Summen für Pro-Kopf-Werte und den Demografie-Kontext.",
+			"en": "Residents per LOR planning area are not available as a separate geo layer. We use them as precomputed totals for per-capita values and the demographic context."
+		},
+		"demografie_name": {
+			"de": "Einwohner in LOR-Planungsräumen am 31.12.2024",
+			"en": "Residents in LOR planning areas on 31 December 2024"
+		},
+		"demografie_desc": {
+			"de": "Einwohner nach Altersjahren je 542 LOR-Planungsräume, gejoint über die 8-stellige RAUMID. Lizenz CC BY 4.0, Amt für Statistik Berlin-Brandenburg.",
+			"en": "Residents by year of age for each of 542 LOR planning areas, joined via the 8-digit RAUMID. Licence: CC BY 4.0, Statistics Office Berlin-Brandenburg (Amt für Statistik Berlin-Brandenburg).",
+			"note": "Link `daten.berlin.de` bleibt."
+		},
+		"krim_p1": {
+			"de": "Fallzahlen und Häufigkeitszahlen je LOR-Bezirksregion fließen als vorberechnete Werte in den Kiez-Score ein, nicht als eigener Geo-Layer.",
+			"en": "Case numbers and frequency rates per LOR Bezirksregion feed into the Kiez score as precomputed values, not as a separate geo layer."
+		},
+		"krim_name": {
+			"de": "Kriminalitätsatlas Berlin",
+			"en": "Berlin crime atlas (Kriminalitätsatlas Berlin)",
+			"note": "Wie `methodik_kiez_score_dim_kriminalitaet_layers`. Link `kriminalitaetsatlas.berlin.de` bleibt."
+		},
+		"krim_desc": {
+			"de": "Straftaten-Fallzahlen und Häufigkeitszahlen 2016 bis 2025 der Polizei Berlin, geocodiert auf LOR-Ebene. Lizenz Datenlizenz Deutschland Namensnennung 2.0.",
+			"en": "Offence case numbers and frequency rates 2016 to 2025 from the Berlin Police, geocoded at LOR level. Licence: Data licence Germany, attribution, version 2.0."
+		},
+		"krim_methodik_label": {
+			"de": "Methodik:",
+			"en": "Methodology:"
+		},
+		"krim_methodik_link": {
+			"de": "Kiez-Score",
+			"en": "Kiez score",
+			"note": "Link-Ziel: /methodik/kiez-score (lokalisieren)."
+		},
+		"klima_p1": {
+			"de": "Historische Sommertage- und Hitzetage-Zeitreihen von vier Berliner Wetterstationen (Dahlem, Tempelhof, Buch, Brandenburg) liegen als Build-Aggregat im Hitze-Kontext.",
+			"en": "Historical time series of summer days and heat days from four Berlin weather stations (Dahlem, Tempelhof, Buch, Brandenburg) are available as a build aggregate in the heat context."
+		},
+		"klima_name": {
+			"de": "Deutscher Wetterdienst · Climate Data Center",
+			"en": "German Weather Service (DWD) · Climate Data Center",
+			"note": "Link `opendata.dwd.de/climate_environment/CDC` bleibt."
+		},
+		"klima_desc": {
+			"de": "Tageswerte der Stationsmessungen (daily KL, historical). Lizenz CC BY 4.0, Namensnennung Deutscher Wetterdienst.",
+			"en": "Daily values of the station measurements (daily KL, historical). Licence: CC BY 4.0, attribution German Weather Service."
+		},
+		"entitaeten_p1": {
+			"de": "Bezirks-Seiten verweisen per {code_start}sameAs{code_end} auf die passende Entität in offenen Wissensdatenbanken, damit Suchmaschinen die Seite eindeutig zuordnen.",
+			"en": "Bezirk pages point via {code_start}sameAs{code_end} to the matching entity in open knowledge bases, so that search engines can assign the page unambiguously."
+		},
+		"entitaeten_wikidata_desc": {
+			"de": "Q-IDs der 12 aktuellen Berliner Bezirke als {code_start}sameAs{code_end}-Verweis im JSON-LD. Lizenz CC0.",
+			"en": "Q IDs of the 12 current Berlin Bezirke as a {code_start}sameAs{code_end} reference in the JSON-LD. Licence: CC0.",
+			"note": "Name „Wikidata“ und Link `wikidata.org` bleiben."
+		},
+		"entitaeten_wikipedia_name": {
+			"de": "Wikipedia (deutsch)",
+			"en": "Wikipedia (German)",
+			"note": "Link `de.wikipedia.org` bleibt."
+		},
+		"entitaeten_wikipedia_desc": {
+			"de": "Artikel-Verweis pro Bezirk als zusätzlicher {code_start}sameAs{code_end}-Eintrag. Lizenz CC BY-SA 4.0.",
+			"en": "Article reference per Bezirk as an additional {code_start}sameAs{code_end} entry. Licence: CC BY-SA 4.0."
+		},
+		"software_p1": {
+			"de": "Wichtigste Runtime-Bibliotheken. Vollständige Auflistung im Repository unter {code_start}package.json{code_end}.",
+			"en": "Main runtime libraries. Full list in the repository under {code_start}package.json{code_end}."
+		},
+		"software_th_license": {
+			"de": "Lizenz",
+			"en": "Licence",
+			"note": "Tabellenkopf. „Library“ ist schon englisch. Softwarenamen und Lizenzen (MIT, ISC, BSD-3-Clause, Apache-2.0, MPL-2.0) bleiben."
+		},
+		"software_satori_name": {
+			"de": "Satori + @resvg/resvg-js (OG-Image-Generator)",
+			"en": "Satori + @resvg/resvg-js (OG image generator)",
+			"note": "Einziger `RUNTIME_SOFTWARE`-Eintrag mit deutschem Anteil. Paraglide JS (i18n) und Turf.js (…) bleiben."
+		},
+		"schriften_p1": {
+			"de": "IBM Plex Serif, Sans und Mono unter SIL Open Font License 1.1, geliefert via Fontsource.",
+			"en": "IBM Plex Serif, Sans and Mono under SIL Open Font License 1.1, delivered via Fontsource.",
+			"note": "Links `github.com/IBM/plex` und „OFL 1.1“ bleiben."
+		},
+		"osm_p1": {
+			"de": "Die ODbL-Layer (Stolpersteine, ÖPNV-Stationen, Trinkbrunnen, Kühle Orte, S-Bahn-Netz, U-Bahn-Netz, Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten. Lizenz: Open Database License 1.0.",
+			"en": "The ODbL layers (Stolpersteine, public transport stations, drinking fountains, cool places, S-Bahn network, U-Bahn network, tram network, cycling network, bicycle streets) are based on OpenStreetMap data. Licence: Open Database License 1.0.",
+			"note": "Layer-Namen wie `atlas_layer_name_*`."
+		},
+		"osm_p2": {
+			"de": "© OpenStreetMap-Contributors. Daten verfügbar unter {link_start}openstreetmap.org/copyright{link_end}.",
+			"en": "© OpenStreetMap contributors. Data available at {link_start}openstreetmap.org/copyright{link_end}.",
+			"note": "Link-Ziel: https://www.openstreetmap.org/copyright (extern)."
+		},
+		"wahl_landeswahl_name": {
+			"de": "Landeswahlleiterin Berlin",
+			"en": "Berlin State Election Commissioner (Landeswahlleiterin Berlin)",
+			"note": "Neu 30.09. (Abnahme Matze). Link wahlen-berlin.de. Wie `wahl_label_source_landeswahlleiterin`, wiederverwenden."
+		},
+		"wahl_landeswahl_desc": {
+			"de": "Abgeordnetenhaus- und BVV-Wahlen 2026 als CSV-Datenexport pro Wahlbezirk (wahlen-berlin.de). Lizenz Datenlizenz Deutschland Namensnennung 2.0.",
+			"en": "House of Representatives and District Assembly elections 2026 as a CSV data export per polling district (wahlen-berlin.de). Licence: Data licence Germany, attribution, version 2.0.",
+			"note": "Neu 30.09. (Abnahme Matze). Lizenz laut Tabelle `wahl` (dl-de/by-2.0), Quelle `source_url` wahlen-berlin.de/wahlen/BE2026/Afspraes/…"
+		}
+	},
+	"methodik_linktext": {
+		"methodik_licences_full_list": {
+			"de": "Vollständige Auflistung auf der {link_start}Lizenzen-Seite{link_end}",
+			"en": "Full list on the {link_start}licences page{link_end}",
+			"note": "DE-Korrektur. Ersetzt `{link_start}/lizenzen{link_end}`. Link-Ziel: /lizenzen (lokalisieren)."
+		},
+		"methodik_kiez_score_sources_p1": {
+			"de": "Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt), Monitoring Soziale Stadtentwicklung (Senatsverwaltung Stadtentwicklung Berlin), Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer: {link_start}Lizenzen-Seite{link_end}.",
+			"en": "Berlin Environmental Atlas (Umweltatlas; Senate Department for Urban Mobility, Transport, Climate Action and the Environment), Monitoring Soziale Stadtentwicklung (Senate Department for Urban Development Berlin), Berlin crime atlas (Kriminalitätsatlas Berlin; Berlin Police, dl-de-by-2.0) and public transport locations from OpenStreetMap (ODbL 1.0). Full list with licence and data date per layer: {link_start}licences page{link_end}.",
+			"note": "DE-Korrektur. Ersetzt nur den Linktext, Rest wörtlich aus `messages/de.json` und `en.json`. Link-Ziel: /lizenzen (lokalisieren)."
+		}
+	}
+}

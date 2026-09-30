@@ -165,6 +165,9 @@ describe('methodik +page.svelte · DE unverändert (i18n C4a)', () => {
 		expect(hrefs).toContain('/methodik/wahldaten');
 		expect(hrefs).toContain('/berlin-wahlen#alle-wahlen');
 		expect(hrefs).toContain('/lizenzen');
+		expect(
+			[...document.querySelectorAll('a[href="/lizenzen"]')].map((a) => a.textContent)
+		).toContain('Lizenzen-Seite');
 		expect(hrefs.some((h) => h.startsWith('/en'))).toBe(false);
 	});
 });
@@ -207,6 +210,8 @@ describe('methodik +page.svelte · EN (i18n C4a)', () => {
 		expect(hrefs).toContain('/en/methodik/kiez-score');
 		expect(hrefs).toContain('/en/berlin-wahlen#alle-wahlen');
 		expect(hrefs).toContain('/en/lizenzen');
+		const texts = [...article.querySelectorAll('a[href="/en/lizenzen"]')].map((a) => a.textContent);
+		expect(texts).toContain('licences page');
 	});
 
 	it('trägt kein lang="de" und keinen deutschen Resttext', () => {

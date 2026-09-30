@@ -14,6 +14,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import turfBbox from '@turf/bbox';
 	import type { Feature, MultiPolygon, Polygon } from 'geojson';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		readonly geometry: Polygon | MultiPolygon;
@@ -72,6 +73,9 @@
 					dragRotate: false,
 					pitchWithRotate: false
 				});
+				// Der Container ist aria-hidden: der Canvas darf keinen Tastaturfokus halten
+				// (axe `aria-hidden-focus`, WCAG 4.1.2). Mausbedienung bleibt.
+				instance.getCanvas().setAttribute('tabindex', '-1');
 				map = instance as unknown as { remove: () => void };
 				instance.on('error', (e: { error?: Error }) => {
 					if (e?.error) console.warn('[map-embed]', e.error.message);
@@ -127,14 +131,14 @@
 
 <figure
 	class="relative w-full overflow-hidden rounded border border-rule {heightClass}"
-	aria-label={`Karten-Embed: ${label}`}
+	aria-label={m.map_embed_aria_label({ label })}
 	data-testid="map-embed"
 >
 	<div bind:this={container} class="absolute inset-0" aria-hidden="true"></div>
 	{#if mountFailed && ogImagePath}
 		<img
 			src={ogImagePath}
-			alt={`Karten-Ansicht ${label}`}
+			alt={m.map_embed_image_alt({ label })}
 			class="absolute inset-0 h-full w-full object-cover"
 		/>
 	{/if}
@@ -142,16 +146,16 @@
 		{#if ogImagePath}
 			<img
 				src={ogImagePath}
-				alt={`Karten-Ansicht ${label}`}
+				alt={m.map_embed_image_alt({ label })}
 				class="absolute inset-0 h-full w-full object-cover"
 			/>
 		{:else}
 			<div class="bg-bg-soft flex h-full items-center justify-center text-ink-muted">
-				Karte für {label}
+				{m.map_embed_noscript({ label })}
 			</div>
 		{/if}
 	</noscript>
 	<figcaption class="sr-only">
-		Karten-Ansicht des Bezirks {label} mit hervorgehobener Grenze.
+		{m.map_embed_caption({ label })}
 	</figcaption>
 </figure>

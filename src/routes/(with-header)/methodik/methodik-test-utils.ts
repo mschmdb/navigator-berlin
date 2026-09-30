@@ -19,3 +19,19 @@ export function internalHrefs(root: Element): string[] {
 		.map((a) => a.getAttribute('href') ?? '')
 		.filter((href) => href.startsWith('/'));
 }
+
+/** Gesamter sichtbarer Text eines Elements, Whitespace normalisiert. */
+export function normalizedText(root: Element): string {
+	return (root.textContent ?? '').replace(/\s+/g, ' ').trim() + '\n';
+}
+
+/**
+ * Alle `aria-label`-Werte in DOM-Reihenfolge, eine Zeile je Wert.
+ * `canvas` bleibt draußen: MapLibre setzt dort asynchron ein eigenes Label.
+ */
+export function ariaLabels(root: Element): string {
+	const labels = [...root.querySelectorAll('[aria-label]:not(canvas)')].map(
+		(el) => `${el.tagName.toLowerCase()}: ${el.getAttribute('aria-label')}`
+	);
+	return labels.join('\n') + '\n';
+}
