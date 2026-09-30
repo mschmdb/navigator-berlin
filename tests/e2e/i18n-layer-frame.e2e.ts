@@ -54,7 +54,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		// selbst lokalisiert (Messages) -- kein lang="de" mehr, echter EN-Text.
 		const scaleDd = scale.locator('dd').last();
 		await expect(scaleDd).not.toHaveAttribute('lang', 'de');
-		await expect(scaleDd).toContainText('low (good) to very high (problematic)');
+		await expect(scaleDd).toContainText('low (good) to high (problematic)');
 
 		// i18n Block C2: die Methodik-Felder (Berechnung, Pflege, Aktualisierung)
 		// sind jetzt selbst lokalisiert (Messages) -- kein lang="de" mehr,
@@ -64,7 +64,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		await expect(methodology).toContainText('Aggregation');
 		await expect(methodology).toContainText('Maintenance');
 		await expect(methodology.locator('p')).not.toHaveAttribute('lang', 'de');
-		await expect(methodology.locator('p')).toContainText(/Modelled overall noise pollution/);
+		await expect(methodology.locator('p')).toContainText(/Total traffic noise from road/);
 		await expect(methodology).toContainText(
 			'Senate Department for Urban Mobility, Transport, Climate Action and the Environment'
 		);
@@ -247,7 +247,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		// i18n Block C2: DE-Parität für den Methodik-Block -- Berechnung bleibt
 		// wörtlich der deutsche Spec-Text, kein Message-Umweg verändert ihn.
 		const methodology = page.getByTestId('layer-detail-methodology');
-		await expect(methodology).toContainText('Modellierte Lärm-Gesamtbelastung');
+		await expect(methodology).toContainText('Gesamtverkehrslärm aus Straßen-');
 		await expect(methodology).toContainText(
 			'Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt'
 		);
