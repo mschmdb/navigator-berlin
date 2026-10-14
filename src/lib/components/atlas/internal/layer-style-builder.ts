@@ -188,15 +188,17 @@ export interface LegendSpec {
 	readonly range?: readonly [string, string];
 }
 
-/** Legenden-Label eines Miete-Stops: erste mit Einheit, letzte mit "+". */
-function mieteStopLabel(index: number, options: { locale: Locale }): string {
-	const text = formatDecimal(MIETE_STOPS[index], {
-		...options,
-		minimumFractionDigits: 1,
-		maximumFractionDigits: 1
-	});
-	if (index === 0) return `${text} €/m²`;
-	return index === MIETE_STOPS.length - 1 ? `${text}+` : text;
+/** Legenden-Label einer Miete-Klasse: "von-bis" in EUR/m², erste mit Einheit, letzte "ab"/"+". */
+function mieteClassLabel(index: number, options: { locale: Locale }): string {
+	const fmt = (value: number) =>
+		formatDecimal(value, { ...options, minimumFractionDigits: 1, maximumFractionDigits: 1 });
+	const last = MIETE_STOPS.length - 1;
+	if (index === last) {
+		return options.locale === 'de'
+			? `ab ${fmt(MIETE_STOPS[last])} €/m²`
+			: `${fmt(MIETE_STOPS[last])}+ €/m²`;
+	}
+	return `${fmt(MIETE_STOPS[index])}-${fmt(MIETE_STOPS[index + 1])} €/m²`;
 }
 
 const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
@@ -217,17 +219,16 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		range: ['niedrig', 'hoch']
 	},
 	'choropleth-miete': {
-		// Bestandsmiete Zensus 2022 (EUR/m2 netto kalt): Strukturell-Indigo, keine Wertung.
-		// Stops sind die Quintile der Planungsraum-Werte (`MIETE_STOPS`), passend zur Quantile-Familie.
-		kind: 'gradient',
+		// Bestandsmiete Zensus 2022 (EUR/m2 netto kalt): eigene Miete-Skala (Indigo,
+		// buildScaleFamily bis #1A2A5E), harte Klassen auf den Quintilen (`MIETE_STOPS`).
+		kind: 'categorical',
 		items: [
-			{ color: COLORS.scaleStrukturell1, label: mieteStopLabel(0, { locale: 'de' }) },
-			{ color: COLORS.scaleStrukturell2, label: mieteStopLabel(1, { locale: 'de' }) },
-			{ color: COLORS.scaleStrukturell3, label: mieteStopLabel(2, { locale: 'de' }) },
-			{ color: COLORS.scaleStrukturell4, label: mieteStopLabel(3, { locale: 'de' }) },
-			{ color: COLORS.scaleStrukturell5, label: mieteStopLabel(4, { locale: 'de' }) }
-		],
-		range: ['niedrig', 'hoch']
+			{ color: COLORS.scaleMiete1, label: mieteClassLabel(0, { locale: 'de' }) },
+			{ color: COLORS.scaleMiete2, label: mieteClassLabel(1, { locale: 'de' }) },
+			{ color: COLORS.scaleMiete3, label: mieteClassLabel(2, { locale: 'de' }) },
+			{ color: COLORS.scaleMiete4, label: mieteClassLabel(3, { locale: 'de' }) },
+			{ color: COLORS.scaleMiete5, label: mieteClassLabel(4, { locale: 'de' }) }
+		]
 	},
 	'choropleth-belastung-3': {
 		// Story 1.31: Last-Familie (Vermillion). Umwelt-Schaden ist Schaden, kein Stigma.
@@ -542,11 +543,7 @@ function translateLegendSpec(
 		case 'choropleth-miete':
 			return {
 				...base,
-				items: base.items.map((item, i) => ({ ...item, label: mieteStopLabel(i, options) })),
-				range: [
-					m.atlas_legend_word_niedrig(undefined, options),
-					m.atlas_scale_label_hoch(undefined, options)
-				]
+				items: base.items.map((item, i) => ({ ...item, label: mieteClassLabel(i, options) }))
 			};
 		case 'choropleth-pet':
 			return {
@@ -845,7 +842,8 @@ export function buildLayerSpec(
 				}
 			];
 		case 'choropleth-miete':
-			// Bestandsmiete: neutral (Strukturell-Indigo). Planungsraeume unter 30 vermieteten
+			// Bestandsmiete: eigene Miete-Skala (Indigo, buildScaleFamily bis #1A2A5E), harte
+			// Klassen auf den Quintilen. Planungsraeume unter 30 vermieteten
 			// Wohnungen tragen miete null und bleiben transparent ("keine Angabe").
 			return [
 				{
@@ -854,21 +852,19 @@ export function buildLayerSpec(
 					source: sourceId,
 					paint: {
 						'fill-color': [
-							'interpolate',
-							['linear'],
+							'step',
 							['to-number', ['get', 'miete'], 0],
-							MIETE_STOPS[0],
-							COLORS.scaleStrukturell1,
+							COLORS.scaleMiete1,
 							MIETE_STOPS[1],
-							COLORS.scaleStrukturell2,
+							COLORS.scaleMiete2,
 							MIETE_STOPS[2],
-							COLORS.scaleStrukturell3,
+							COLORS.scaleMiete3,
 							MIETE_STOPS[3],
-							COLORS.scaleStrukturell4,
+							COLORS.scaleMiete4,
 							MIETE_STOPS[4],
-							COLORS.scaleStrukturell5
+							COLORS.scaleMiete5
 						],
-						'fill-opacity': ['case', ['==', ['get', 'miete'], null], 0, 0.55],
+						'fill-opacity': ['case', ['==', ['get', 'miete'], null], 0, 0.7],
 						'fill-outline-color': COLORS.accent
 					}
 				}

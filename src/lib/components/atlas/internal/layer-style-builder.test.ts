@@ -338,16 +338,33 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(flat).toContain(COLORS.scaleStrukturell1);
 	});
 
-	it('Bestandsmiete nutzt neutralen choropleth-miete-Gradient auf miete, null bleibt transparent', () => {
+	it('Bestandsmiete nutzt fünf harte Klassen (step) auf miete, null bleibt transparent', () => {
 		expect(getStyleProfile('zensus-bestandsmiete-2022')).toBe('choropleth-miete');
 		const paint = buildLayerSpec('zensus-bestandsmiete-2022', SOURCE)[0].paint ?? {};
-		const flat = JSON.stringify(paint);
-		expect(flat).toContain('"miete"');
-		expect(flat).toContain('interpolate');
-		expect(flat).toContain(COLORS.scaleStrukturell1);
-		const stops = (paint['fill-color'] as unknown[]).filter((x) => typeof x === 'number');
-		expect(stops).toEqual([...MIETE_STOPS]);
-		expect(JSON.stringify(paint['fill-opacity'])).toContain('null');
+		const colors = [
+			COLORS.scaleMiete1,
+			COLORS.scaleMiete2,
+			COLORS.scaleMiete3,
+			COLORS.scaleMiete4,
+			COLORS.scaleMiete5
+		];
+		expect(paint['fill-color']).toEqual([
+			'step',
+			['to-number', ['get', 'miete'], 0],
+			colors[0],
+			MIETE_STOPS[1],
+			colors[1],
+			MIETE_STOPS[2],
+			colors[2],
+			MIETE_STOPS[3],
+			colors[3],
+			MIETE_STOPS[4],
+			colors[4]
+		]);
+		expect(paint['fill-opacity']).toEqual(['case', ['==', ['get', 'miete'], null], 0, 0.7]);
+		const legend = getLegendSpec('zensus-bestandsmiete-2022');
+		expect(legend.kind).toBe('categorical');
+		expect(legend.items.map((i) => i.color)).toEqual(colors);
 	});
 
 	it('Geteilte Family polygon-outline-soft bleibt für gruenanlagen/einschulbereiche/spielplaetze', () => {
@@ -491,15 +508,25 @@ describe('getLegendSpec i18n Block B3a (EN)', () => {
 		expect(legend.range).toEqual(['sparse', 'dense']);
 	});
 
-	it('choropleth-miete: €/m²-Einheit am ersten Label, "+" am letzten, EN-Range', () => {
+	it('choropleth-miete: Klassen als Von-bis-Spannen in €/m², DE und EN', () => {
 		const de = getLegendSpec('zensus-bestandsmiete-2022');
-		expect(de.items.map((i) => i.label)).toEqual(['5,1 €/m²', '6,9', '7,5', '7,9', '8,6+']);
-		const en = getLegendSpec('zensus-bestandsmiete-2022', { locale: 'en' });
-		expect(en.items.map((i) => i.label)).toEqual(['5.1 €/m²', '6.9', '7.5', '7.9', '8.6+']);
-		expect(getLegendSpec('zensus-bestandsmiete-2022', { locale: 'en' }).range).toEqual([
-			'low',
-			'high'
+		expect(de.items.map((i) => i.label)).toEqual([
+			'5,1-6,9 €/m²',
+			'6,9-7,5 €/m²',
+			'7,5-7,9 €/m²',
+			'7,9-8,6 €/m²',
+			'ab 8,6 €/m²'
 		]);
+		expect(de.range).toBeUndefined();
+		const en = getLegendSpec('zensus-bestandsmiete-2022', { locale: 'en' });
+		expect(en.items.map((i) => i.label)).toEqual([
+			'5.1-6.9 €/m²',
+			'6.9-7.5 €/m²',
+			'7.5-7.9 €/m²',
+			'7.9-8.6 €/m²',
+			'8.6+ €/m²'
+		]);
+		expect(en.range).toBeUndefined();
 	});
 
 	it('point/line-Profile: 1:1-Label-Uebersetzung', () => {

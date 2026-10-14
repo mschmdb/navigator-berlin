@@ -92,7 +92,7 @@ export async function registerPinIcons(
 
 /**
  * Aggregat-Symbol der Choroplethen-Sekundärdarstellung: abgerundetes QUADRAT
- * in der Familien-/Dimensionsfarbe mit hellem Rand. Quadrat = Flächen-Aggregat,
+ * in der Familien-/Dimensionsfarbe mit weißem Rand. Quadrat = Flächen-Aggregat,
  * Kreis/Pin = konkreter Ort; die Form-Grammatik hält die Symbolwelten
  * unterscheidbar (und zitiert nebenbei das Pixel-Logo-Raster).
  */
@@ -102,7 +102,7 @@ export function buildScoreDotSvg(hexColor: string): string {
 	const radius = Math.round(side * 0.22 * 100) / 100;
 	return (
 		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SCORE_DOT_BASE_PX} ${SCORE_DOT_BASE_PX}" width="${SCORE_DOT_BASE_PX}" height="${SCORE_DOT_BASE_PX}">` +
-		`<rect x="${inset}" y="${inset}" width="${side}" height="${side}" rx="${radius}" fill="${hexColor}" stroke="#ECEAE0" stroke-width="1.5" />` +
+		`<rect x="${inset}" y="${inset}" width="${side}" height="${side}" rx="${radius}" fill="${hexColor}" stroke="#FFFFFF" stroke-width="1.5" />` +
 		`</svg>`
 	);
 }
