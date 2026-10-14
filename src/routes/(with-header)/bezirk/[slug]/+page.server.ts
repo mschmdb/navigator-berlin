@@ -3,7 +3,12 @@ import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
-import { readBezirkComposite, readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
+import {
+	readBezirkComposite,
+	readEinwohnerStichtag,
+	readLayerAggregatesFile
+} from '$lib/server/profile/meta-sources.js';
+import { buildKeyFigures, type KeyFigure } from '$lib/data/region-key-figures.js';
 import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
 import {
@@ -85,6 +90,8 @@ export type BezirkPageData = {
 	};
 	readonly einwohnerStichtag: string | null;
 	readonly bezirkComposite: number | null;
+	/** Sechs Kennzahl-Kacheln mit Berlin-Wert (L4), DB-frei aus den Layer-Aggregaten. */
+	readonly keyFigures: readonly KeyFigure[];
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
 };
@@ -187,7 +194,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		comparisonMap,
 		profileResult,
 		einwohnerStichtag,
-		bezirkComposite
+		bezirkComposite,
+		layerAggregates
 	] = await Promise.all([
 		tryLoadBezirkStats(slug),
 		getFaqForPage({ pageType: 'bezirk', slug, locale: getLocale() }),
@@ -196,7 +204,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		tryLoadBezirkComparison(slug),
 		getLocalizedProfile('bezirk', slug, getLocale()),
 		readEinwohnerStichtag(),
-		readBezirkComposite(slug)
+		readBezirkComposite(slug),
+		readLayerAggregatesFile()
 	]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
 		const cmp = comparisonMap?.get(field);
@@ -221,6 +230,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		compositeRank,
 		einwohnerStichtag,
 		bezirkComposite,
+		keyFigures: buildKeyFigures(layerAggregates, { kind: 'bezirk', slug }),
 		profileProse: profileResult.paragraphs,
 		profileLocale: profileResult.locale
 	};

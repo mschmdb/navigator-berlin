@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import KiezHero from '$lib/components/atlas/kiez-hero.svelte';
+	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
 	import KiezDetails from '$lib/components/atlas/kiez-details.svelte';
 	import KiezSiblingsList from '$lib/components/atlas/kiez-siblings-list.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
@@ -139,6 +140,7 @@
 		outline={data.outline}
 		einwohnerStichtag={data.einwohnerStichtag}
 	/>
+	<KeyFigureTiles figures={data.keyFigures} regionName={name} kind="kiez" {slug} />
 	<KiezDetails
 		profile={data.profile}
 		stats={data.stats}

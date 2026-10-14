@@ -3,7 +3,11 @@ import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
-import { readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
+import {
+	readEinwohnerStichtag,
+	readLayerAggregatesFile
+} from '$lib/server/profile/meta-sources.js';
+import { buildKeyFigures, type KeyFigure } from '$lib/data/region-key-figures.js';
 import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
 import { pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
@@ -103,6 +107,8 @@ export type KiezPageData = {
 		readonly total: number;
 	};
 	readonly einwohnerStichtag: string | null;
+	/** Sechs Kennzahl-Kacheln mit Berlin-Wert (L4), DB-frei aus den Layer-Aggregaten. */
+	readonly keyFigures: readonly KeyFigure[];
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
 };
@@ -257,7 +263,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		rank,
 		comparisonMap,
 		profileResult,
-		einwohnerStichtag
+		einwohnerStichtag,
+		layerAggregates
 	] = await Promise.all([
 		tryLoadKiezStats(slug),
 		tryLoadKiezScore(slug),
@@ -267,7 +274,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		tryLoadKiezRank(slug),
 		tryLoadKiezComparison(slug),
 		getLocalizedProfile('kiez', slug, getLocale()),
-		readEinwohnerStichtag()
+		readEinwohnerStichtag(),
+		readLayerAggregatesFile()
 	]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
 		const cmp = comparisonMap?.get(field);
@@ -295,6 +303,11 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		comparison,
 		compositeRank,
 		einwohnerStichtag,
+		keyFigures: buildKeyFigures(layerAggregates, {
+			kind: 'kiez',
+			slug,
+			bezirkSlug: profile.bezirk ? normalizeSlug(profile.bezirk) : null
+		}),
 		profileProse: profileResult.paragraphs,
 		profileLocale: profileResult.locale
 	};

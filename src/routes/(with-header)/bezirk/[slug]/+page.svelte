@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import BezirkHero from '$lib/components/atlas/bezirk-hero.svelte';
+	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
 	import BezirkDetails from '$lib/components/atlas/bezirk-details.svelte';
 	import BezirkKiezeList from '$lib/components/atlas/bezirk-kieze-list.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
@@ -137,6 +138,7 @@
 			<BezirkKiezeList kieze={data.kiezeView.kieze} bezirkName={name} />
 		{/key}
 	</div>
+	<KeyFigureTiles figures={data.keyFigures} regionName={name} kind="bezirk" {slug} />
 	<BezirkDetails
 		stats={data.stats}
 		faq={data.faq}
