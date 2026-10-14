@@ -12,6 +12,9 @@
  *     Briefwahl-Gruppen, gefüllt im selben Kiez-Build -- ohne diesen Check
  *     würde ein Re-Deploy auf einer VOR Story 17 bereits vollständigen DB
  *     `data:wahl-kiez` überspringen und die Gruppen-Tabelle leer lassen)
+ *   - `wahl.vorlaeufig` stimmt pro Wahl mit `WAHL_SOURCES` überein (sonst
+ *     liegt z. B. ein Endergebnis vor, die DB trägt noch den vorläufigen
+ *     Ingest)
  *   - env WAHL_REFRESH != true
  *
  * Exit 1 (refresh) sonst. prebuild-Kette nutzt `|| (data:wahl-fetch && …)`
@@ -24,6 +27,8 @@
 import 'dotenv/config';
 import { sql } from 'drizzle-orm';
 import { getDb, closeDb } from '../src/lib/server/db/index.js';
+import { WAHL_SOURCES } from './wahlen/lib/sources.js';
+import { findVorlaeufigDrift, type WahlVorlaeufigRow } from './wahlen/lib/vorlaeufig-drift.js';
 
 const MIN_WAHLEN = 23;
 const MIN_ERGEBNIS_PER_WAHL = 100;
@@ -58,6 +63,17 @@ async function main(): Promise<void> {
 		const distinctGruppenWahlen = await db.execute<{ count: number }>(
 			sql`SELECT count(DISTINCT wahl_id)::int AS count FROM wahl_stimmbezirk_gruppe`
 		);
+
+		const vorlaeufigRows = await db.execute<WahlVorlaeufigRow>(
+			sql`SELECT typ, jahr, vorlaeufig FROM wahl`
+		);
+		const drift = findVorlaeufigDrift(vorlaeufigRows, WAHL_SOURCES);
+		if (drift.length > 0) {
+			console.log(
+				`[wahl-check] vorlaeufig drift (DB != WAHL_SOURCES): ${drift.join(', ')} · refreshing`
+			);
+			process.exit(1);
+		}
 
 		const w = wahlCount[0]?.count ?? 0;
 		const kw = distinctKiezWahlen[0]?.count ?? 0;
