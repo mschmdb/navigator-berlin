@@ -5,7 +5,7 @@
 	import KiezHero from '$lib/components/atlas/kiez-hero.svelte';
 	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
 	import KiezDetails from '$lib/components/atlas/kiez-details.svelte';
-	import KiezSiblingsList from '$lib/components/atlas/kiez-siblings-list.svelte';
+	import KiezNeighbors from '$lib/components/atlas/kiez-neighbors.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
@@ -141,6 +141,11 @@
 		einwohnerStichtag={data.einwohnerStichtag}
 	/>
 	<KeyFigureTiles figures={data.keyFigures} regionName={name} kind="kiez" {slug} />
+	{#if data.neighbors.length > 0 || data.similar.length > 0}
+		<div class="mx-auto max-w-3xl px-4 py-8">
+			<KiezNeighbors neighbors={data.neighbors} similar={data.similar} />
+		</div>
+	{/if}
 	<KiezDetails
 		profile={data.profile}
 		stats={data.stats}
@@ -153,12 +158,6 @@
 		profileLocale={data.profileLocale}
 	/>
 </article>
-
-{#if bezirkName.length > 0}
-	<div class="mx-auto max-w-3xl px-4 pb-8">
-		<KiezSiblingsList siblings={data.siblings} parentBezirkName={bezirkName} />
-	</div>
-{/if}
 
 <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
 	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="kieze" />

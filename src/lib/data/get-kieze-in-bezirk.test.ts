@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildKiezeInBezirk, pickSiblings, type KiezRef } from './get-kieze-in-bezirk.js';
+import { buildKiezeInBezirk } from './get-kieze-in-bezirk.js';
 
 const fc = {
 	features: [
@@ -89,25 +89,6 @@ describe('buildKiezeInBezirk', () => {
 			bezirkSlug: 'pankow'
 		});
 		expect(refs.map((r) => r.name)).toEqual(['Buchholz']);
-	});
-});
-
-describe('pickSiblings', () => {
-	const kieze: KiezRef[] = [
-		{ slug: 'buchholz', name: 'Buchholz', composite: 42 },
-		{ slug: 'pankow-zentrum', name: 'Pankow Zentrum', composite: 55 },
-		{ slug: 'prenzlauer-berg', name: 'Prenzlauer Berg', composite: 78 }
-	];
-
-	it('exkludiert current + alphabetisch sortiert', () => {
-		const siblings = pickSiblings({ kieze, currentSlug: 'pankow-zentrum' }, 3);
-		expect(siblings.map((k) => k.slug)).toEqual(['buchholz', 'prenzlauer-berg']);
-	});
-
-	it('respektiert max-N', () => {
-		const siblings = pickSiblings({ kieze, currentSlug: 'buchholz' }, 1);
-		expect(siblings).toHaveLength(1);
-		expect(siblings[0].slug).toBe('pankow-zentrum');
 	});
 });
 

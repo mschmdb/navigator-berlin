@@ -10,7 +10,8 @@ import {
 import { buildKeyFigures, type KeyFigure } from '$lib/data/region-key-figures.js';
 import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
-import { pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
+import type { NeighborEntry } from '$lib/data/kiez-neighbors.js';
+import { getKiezNeighborLists } from '$lib/server/kiez-neighbors-index.js';
 import { buildKiezContext } from '$lib/data/bezirk-kieze-view.js';
 import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
@@ -96,7 +97,10 @@ export type KiezPageData = {
 	readonly score: KiezScore | null;
 	readonly faq: readonly FaqEntry[];
 	readonly faqLocale: Locale;
-	readonly siblings: readonly KiezRef[];
+	/** Angrenzende Kieze (L6), nach Score absteigend. */
+	readonly neighbors: readonly NeighborEntry[];
+	/** Kieze mit ähnlichem Dimensionsprofil (L6), leer ohne Score-Daten. */
+	readonly similar: readonly NeighborEntry[];
 	/** Umriss aller Kieze des Bezirks (Lage des Kiezes im Hero), `null` ohne Geometrie. */
 	readonly outline: RegionOutline | null;
 	readonly wahlVerlauf: readonly WahlVerlaufRow[];
@@ -185,17 +189,13 @@ async function tryBuildWahlVerlauf(kiezSlug: string): Promise<KiezPageData['wahl
 }
 
 interface BezirkContext {
-	readonly siblings: KiezRef[];
 	readonly outline: RegionOutline | null;
 }
 
-const EMPTY_CONTEXT: BezirkContext = { siblings: [], outline: null };
+const EMPTY_CONTEXT: BezirkContext = { outline: null };
 
-/** Geschwister-Kieze und gemeinsamer Umriss des Bezirks (Lage-Grafik im Hero). */
-async function tryLoadBezirkContext(
-	currentSlug: string,
-	parentBezirkName: string
-): Promise<BezirkContext> {
+/** Gemeinsamer Umriss des Bezirks (Lage-Grafik im Hero). */
+async function tryLoadBezirkContext(parentBezirkName: string): Promise<BezirkContext> {
 	if (!parentBezirkName) return EMPTY_CONTEXT;
 	const parentBezirkSlug = normalizeSlug(parentBezirkName);
 	try {
@@ -231,13 +231,13 @@ async function tryLoadBezirkContext(
 			}
 		}
 
-		const { kieze, outline } = buildKiezContext({
+		const { outline } = buildKiezContext({
 			lorFeatureCollection: lorFc,
 			bezirkCodeToSlug,
 			scores: new Map(),
 			bezirkSlug: parentBezirkSlug
 		});
-		return { siblings: pickSiblings({ kieze, currentSlug }, 3), outline };
+		return { outline };
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
 		process.stderr.write(`[kiez-page] WARN: bezirk-context load failed (${msg})\n`);
@@ -259,6 +259,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		score,
 		faqResult,
 		bezirkContext,
+		neighborLists,
 		wahlVerlauf,
 		rank,
 		comparisonMap,
@@ -269,7 +270,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		tryLoadKiezStats(slug),
 		tryLoadKiezScore(slug),
 		getFaqForPage({ pageType: 'kiez', slug, locale: getLocale() }),
-		tryLoadBezirkContext(slug, profile.bezirk),
+		tryLoadBezirkContext(profile.bezirk),
+		getKiezNeighborLists(slug),
 		tryBuildWahlVerlauf(slug),
 		tryLoadKiezRank(slug),
 		tryLoadKiezComparison(slug),
@@ -297,7 +299,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		score,
 		faq: faqResult.items,
 		faqLocale: faqResult.locale,
-		siblings: bezirkContext.siblings,
+		neighbors: neighborLists.neighbors,
+		similar: neighborLists.similar,
 		outline: bezirkContext.outline,
 		wahlVerlauf,
 		comparison,

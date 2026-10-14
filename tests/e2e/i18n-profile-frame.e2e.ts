@@ -154,12 +154,12 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/umwelt-infrastruktur-score/);
 	});
 
-	test('Kiez-Geschwister-Liste (statische GeoJSON-Daten): Überschrift englisch, Klick bleibt unter /en/kiez/…', async ({
+	test('Nachbar-Kieze (statische GeoJSON-Daten): Überschrift englisch, Klick bleibt unter /en/kiez/…', async ({
 		page
 	}) => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		const siblings = page.getByTestId('kiez-siblings-list');
-		await expect(siblings.locator('h2')).toContainText('Other Kieze in');
+		await expect(siblings.locator('h2')).toContainText('Neighbouring Kieze');
 		await siblings.getByTestId('kiez-sibling-link').first().click();
 		await expect(page).toHaveURL(/\/en\/kiez\//);
 	});

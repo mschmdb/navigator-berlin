@@ -5,10 +5,8 @@
  *   den passenden Bezirk anhand der BEZ-Code-Map (BezirkCode → BezirkSlug).
  *   Sortierung primaer kiez_score.composite desc, sekundaer Name alphabetisch
  *   wenn Score fehlt.
- * - `getSiblingKieze(parentBezirkSlug, currentKiezSlug)`: alle Geschwister
- *   im selben Bezirk ohne den aktuellen, alphabetisch.
  *
- * Beide Funktionen lesen direkt aus den geladenen GeoJSON-FeatureCollections;
+ * Die Funktionen lesen direkt aus den geladenen GeoJSON-FeatureCollections;
  * Postgres-`kiez_score`-Join macht der Aufrufer (Server-Load), damit der Helper
  * Server-Pfad-unabhaengig + im Test fixturable bleibt.
  */
@@ -100,14 +98,4 @@ export function sortKieze(refs: KiezRef[]): KiezRef[] {
 		if (bc !== null) return 1;
 		return a.name.localeCompare(b.name, 'de');
 	});
-}
-
-export interface SiblingKiezeInput {
-	readonly kieze: readonly KiezRef[];
-	readonly currentSlug: string;
-}
-
-export function pickSiblings(input: SiblingKiezeInput, n: number): KiezRef[] {
-	const siblings = input.kieze.filter((k) => k.slug !== input.currentSlug);
-	return [...siblings].sort((a, b) => a.name.localeCompare(b.name, 'de')).slice(0, n);
 }
