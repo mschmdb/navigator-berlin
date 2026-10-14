@@ -350,3 +350,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story Leerstand. Datenqualität auf Planungsraum-Ebene zu schwach.
   evidence: Leerstandsquote-Gitter Berlin-BBox: 51.435 von 57.698 Zellen „–“ (= 0), von ~6.300 Zellen mit Wert 5.690 KLAMMERN; gewichtet (Wohnungen aus Wohnungen_nach_Zahl_der_Raeume) 1,55 % gegen amtlich 1,97 % (Abgeordnetenhaus S19/20607). Unterschiede zwischen PLR wären überwiegend Rauschen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story Heizungsart/Energieträger.
+  evidence: Heizart folgt in Berlin weitgehend dem Baujahr (redundant zum Altbau-Anteil); Wärmepumpen-/Solaranteil 2022 vermutlich klein (ungeprüft, Rausch-Risiko wie Leerstand); Stand Mai 2022 seit GEG schnell veraltet; Nutzen eher wohnungs- als kiezbezogen. Falls später: als Brücke zur kommunalen Wärmeplanung neu bewerten.
