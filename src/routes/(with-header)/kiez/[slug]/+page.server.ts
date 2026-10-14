@@ -3,6 +3,8 @@ import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
+import { readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
+import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
 import { buildKiezeInBezirk, pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
@@ -91,7 +93,12 @@ export type KiezPageData = {
 	readonly siblings: readonly KiezRef[];
 	readonly wahlVerlauf: readonly WahlVerlaufRow[];
 	readonly comparison: readonly ComparisonDimRow[];
-	readonly compositeRank: { readonly rang: number | null; readonly total: number };
+	readonly compositeRank: {
+		readonly rang: number | null;
+		readonly quartil: number | null;
+		readonly total: number;
+	};
+	readonly einwohnerStichtag: string | null;
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
 };
@@ -226,17 +233,27 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		throw error(404, m.kiez_page_not_found({ slug }, { locale: getLocale() }));
 	}
 	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
-	const [stats, score, faqResult, siblings, wahlVerlauf, rank, comparisonMap, profileResult] =
-		await Promise.all([
-			tryLoadKiezStats(slug),
-			tryLoadKiezScore(slug),
-			getFaqForPage({ pageType: 'kiez', slug, locale: getLocale() }),
-			tryLoadSiblings(slug, profile.bezirk),
-			tryBuildWahlVerlauf(slug),
-			tryLoadKiezRank(slug),
-			tryLoadKiezComparison(slug),
-			getLocalizedProfile('kiez', slug, getLocale())
-		]);
+	const [
+		stats,
+		score,
+		faqResult,
+		siblings,
+		wahlVerlauf,
+		rank,
+		comparisonMap,
+		profileResult,
+		einwohnerStichtag
+	] = await Promise.all([
+		tryLoadKiezStats(slug),
+		tryLoadKiezScore(slug),
+		getFaqForPage({ pageType: 'kiez', slug, locale: getLocale() }),
+		tryLoadSiblings(slug, profile.bezirk),
+		tryBuildWahlVerlauf(slug),
+		tryLoadKiezRank(slug),
+		tryLoadKiezComparison(slug),
+		getLocalizedProfile('kiez', slug, getLocale()),
+		readEinwohnerStichtag()
+	]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
 		const cmp = comparisonMap?.get(field);
 		const rk = rank?.get(field);
@@ -250,11 +267,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			total: rk?.total ?? 0
 		};
 	});
-	const compositeRk = rank?.get('composite');
-	const compositeRank = {
-		rang: compositeRk?.rang ?? null,
-		total: compositeRk?.total ?? 0
-	};
+	const compositeRank = toCompositeRank(rank);
 	const data: KiezPageData = {
 		profile,
 		stats,
@@ -265,6 +278,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		wahlVerlauf,
 		comparison,
 		compositeRank,
+		einwohnerStichtag,
 		profileProse: profileResult.paragraphs,
 		profileLocale: profileResult.locale
 	};

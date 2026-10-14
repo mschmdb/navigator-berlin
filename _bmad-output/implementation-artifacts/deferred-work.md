@@ -366,3 +366,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-l1-explore-ortsfokus.md`
   summary: Prüfen, ob ein entprellter `syncViewport`/`syncLayers` nach `dropRegionFocusParams` den `kiez`-Parameter aus einem alten href zurückschreibt (unverifiziert, wäre medium).
   evidence: Beide lesen `window.location.href` erst beim Ausführen; offen ist, ob SvelteKits `goto(replaceState)` die URL bis dahin ersetzt hat. Klären per E2E: Fokus schließen und sofort danach die Karte verschieben, dann URL prüfen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l3-title-meta-fakten.md`
+  summary: E2E für Score- und Rang-Satz in Kiez-/Bezirks-Meta-Descriptions braucht einen DB-gestützten Build (heute nur Unit-Tests).
+  evidence: Playwright baut ohne `DATABASE_URL`; `tryLoadKiezScore`/`tryLoadBezirkRank` liefern dann null, der Satz entfällt. Ein Wiring-Fehler (Score oder Quartil nicht durchgereicht) bliebe in E2E unsichtbar.

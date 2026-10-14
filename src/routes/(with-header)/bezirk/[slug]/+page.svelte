@@ -9,12 +9,12 @@
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
+	import { buildBezirkMeta } from '$lib/seo/profile-meta.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { bezirkSameAs } from '$lib/seo/sources/bezirk-sameas.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { formatCount } from '$lib/i18n/format.js';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -41,24 +41,22 @@
 		}
 	});
 
-	const pageTitle = $derived(m.bezirk_page_title({ name }, localeOpts));
-
-	const pageDescription = $derived.by(() => {
-		const parts: string[] = [];
-		if (data.profile.einwohner > 0) {
-			parts.push(
-				m.profile_lead_einwohner({ count: formatCount(data.profile.einwohner, localeOpts) })
-			);
-		}
-		if (data.profile.flaecheHa > 0) {
-			parts.push(m.profile_lead_flaeche({ ha: formatCount(data.profile.flaecheHa, localeOpts) }));
-		}
-		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-		return m.profile_page_description(
-			{ subject: `Bezirk ${name}`, bezirkPart: '', suffix },
-			localeOpts
-		);
-	});
+	const meta = $derived(
+		buildBezirkMeta({
+			name,
+			einwohner: data.profile.einwohner,
+			flaecheHa: data.profile.flaecheHa,
+			stichtag: data.einwohnerStichtag,
+			// Score nur mit Rang aus demselben Datenstand (DB), sonst kein Score-Satz.
+			score: data.compositeRank.rang === null ? null : data.bezirkComposite,
+			rang: data.compositeRank.rang,
+			quartil: data.compositeRank.quartil,
+			total: data.compositeRank.total,
+			locale
+		})
+	);
+	const pageTitle = $derived(meta.title);
+	const pageDescription = $derived(meta.description);
 
 	const ogImageAlt = $derived(m.bezirk_page_og_alt({ name }, localeOpts));
 

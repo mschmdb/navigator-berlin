@@ -3,6 +3,8 @@ import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
+import { readBezirkComposite, readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
+import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
 import { buildKiezeInBezirk, pickTop, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
 import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
@@ -72,7 +74,13 @@ export type BezirkPageData = {
 	readonly faqLocale: Locale;
 	readonly kieze: readonly KiezRef[];
 	readonly comparison: readonly ComparisonDimRow[];
-	readonly compositeRank: { readonly rang: number | null; readonly total: number };
+	readonly compositeRank: {
+		readonly rang: number | null;
+		readonly quartil: number | null;
+		readonly total: number;
+	};
+	readonly einwohnerStichtag: string | null;
+	readonly bezirkComposite: number | null;
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
 };
@@ -152,13 +160,24 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		throw error(404, m.bezirk_page_not_found({ slug }, { locale: getLocale() }));
 	}
 	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
-	const [stats, faqResult, kieze, rank, comparisonMap, profileResult] = await Promise.all([
+	const [
+		stats,
+		faqResult,
+		kieze,
+		rank,
+		comparisonMap,
+		profileResult,
+		einwohnerStichtag,
+		bezirkComposite
+	] = await Promise.all([
 		tryLoadBezirkStats(slug),
 		getFaqForPage({ pageType: 'bezirk', slug, locale: getLocale() }),
 		tryLoadKieze(slug),
 		tryLoadBezirkRank(slug),
 		tryLoadBezirkComparison(slug),
-		getLocalizedProfile('bezirk', slug, getLocale())
+		getLocalizedProfile('bezirk', slug, getLocale()),
+		readEinwohnerStichtag(),
+		readBezirkComposite(slug)
 	]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
 		const cmp = comparisonMap?.get(field);
@@ -172,11 +191,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			total: rk?.total ?? 0
 		};
 	});
-	const compositeRk = rank?.get('composite');
-	const compositeRank = {
-		rang: compositeRk?.rang ?? null,
-		total: compositeRk?.total ?? 0
-	};
+	const compositeRank = toCompositeRank(rank);
 	const data: BezirkPageData = {
 		profile,
 		stats,
@@ -185,6 +200,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		kieze,
 		comparison,
 		compositeRank,
+		einwohnerStichtag,
+		bezirkComposite,
 		profileProse: profileResult.paragraphs,
 		profileLocale: profileResult.locale
 	};

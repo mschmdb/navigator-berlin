@@ -9,12 +9,12 @@
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
+	import { buildKiezMeta } from '$lib/seo/profile-meta.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { normalizeSlug } from '$lib/data/internal/slug.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { formatCount } from '$lib/i18n/format.js';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -43,27 +43,22 @@
 		}
 	});
 
-	const pageTitle = $derived(
-		bezirkName.length > 0
-			? m.kiez_page_title_with_bezirk({ name, bezirk: bezirkName }, localeOpts)
-			: m.kiez_page_title_no_bezirk({ name }, localeOpts)
+	const meta = $derived(
+		buildKiezMeta({
+			name,
+			bezirk: bezirkName,
+			einwohner: data.profile.einwohner,
+			flaecheHa: data.profile.flaecheHa,
+			stichtag: data.einwohnerStichtag,
+			score: data.score?.composite ?? null,
+			rang: data.compositeRank.rang,
+			quartil: data.compositeRank.quartil,
+			total: data.compositeRank.total,
+			locale
+		})
 	);
-
-	const pageDescription = $derived.by(() => {
-		const parts: string[] = [];
-		if (data.profile.einwohner > 0) {
-			parts.push(
-				m.profile_lead_einwohner({ count: formatCount(data.profile.einwohner, localeOpts) })
-			);
-		}
-		if (data.profile.flaecheHa > 0) {
-			parts.push(m.profile_lead_flaeche({ ha: formatCount(data.profile.flaecheHa, localeOpts) }));
-		}
-		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-		const bezirkPart =
-			bezirkName.length > 0 ? m.kiez_page_description_bezirk_part({ bezirk: bezirkName }) : '';
-		return m.profile_page_description({ subject: `Kiez ${name}`, bezirkPart, suffix }, localeOpts);
-	});
+	const pageTitle = $derived(meta.title);
+	const pageDescription = $derived(meta.description);
 
 	const ogImageAlt = $derived(
 		bezirkName.length > 0

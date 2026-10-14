@@ -51,7 +51,9 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		const response = await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page).toHaveTitle(/Berlin in data - navigator\.berlin/);
+		await expect(page).toHaveTitle(
+			/^Alexanderplatz \(Mitte\): [\d,]+ residents.* \| navigator\.berlin$/
+		);
 
 		const hero = page.getByTestId('kiez-hero');
 		await expect(hero.locator('h1')).toBeVisible();
@@ -71,9 +73,8 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
-			/^Kiez Alexanderplatz in Bezirk Mitte \(\d[\d,.]* residents, \d[\d,.]* ha\): Kiez score,/
+			/^Alexanderplatz has [\d,]+ residents across \d+\.\d km² \(as of end of \d{4}\)\./
 		);
-		expect(description).toContain('Berlin data atlas.');
 
 		const ogImageAlt = await metaContent(page, 'meta[property="og:image:alt"]');
 		expect(ogImageAlt).toBe(
@@ -199,9 +200,8 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
-			/^Kiez Alexanderplatz in Bezirk Mitte \(\d[\d.,]* Einwohner:innen, \d[\d.,]* ha\): Kiez-Score,/
+			/^Alexanderplatz hat [\d.]+ Einwohner:innen auf \d+,\d km² \(Stand Ende \d{4}\)\./
 		);
-		expect(description).toContain('Berliner Daten-Atlas.');
 		const ogImageAlt = await metaContent(page, 'meta[property="og:image:alt"]');
 		expect(ogImageAlt).toBe(
 			'Kiez Alexanderplatz (Mitte): navigator.berlin-Vorschau mit Kiez-Score'
@@ -222,7 +222,9 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		const response = await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page).toHaveTitle(/Berlin in data - navigator\.berlin/);
+		await expect(page).toHaveTitle(
+			/^Charlottenburg-Wilmersdorf: [\d,]+ residents, \d+\.\d km² \| navigator\.berlin$/
+		);
 
 		const hero = page.getByTestId('bezirk-hero');
 		await expect(hero.locator('h1')).toBeVisible();
@@ -267,9 +269,8 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
-			/^Bezirk Charlottenburg-Wilmersdorf \(\d[\d,.]* residents, \d[\d,.]* ha\): Kiez score,/
+			/^Charlottenburg-Wilmersdorf has [\d,]+ residents across \d+\.\d km² \(as of end of \d{4}\)\./
 		);
-		expect(description).toContain('Berlin data atlas.');
 
 		const ogImageAlt = await metaContent(page, 'meta[property="og:image:alt"]');
 		expect(ogImageAlt).toBe(
@@ -306,9 +307,8 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
-			/^Bezirk Charlottenburg-Wilmersdorf \(\d[\d.,]* Einwohner:innen, \d[\d.,]* ha\): Kiez-Score,/
+			/^Charlottenburg-Wilmersdorf hat [\d.]+ Einwohner:innen auf \d+,\d km² \(Stand Ende \d{4}\)\./
 		);
-		expect(description).toContain('Berliner Daten-Atlas.');
 		const ogImageAlt = await metaContent(page, 'meta[property="og:image:alt"]');
 		expect(ogImageAlt).toBe(
 			'Bezirk Charlottenburg-Wilmersdorf: navigator.berlin-Karten-Vorschau mit Kiez-Score und Bezirks-Daten'
