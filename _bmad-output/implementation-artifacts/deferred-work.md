@@ -338,3 +338,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-miete-farben.md`
   summary: Größen-Symbole bei kleinsten Faktoren (Einwohnerdichte 0,3, Wohnlagen 0,45) haben nur einen Sub-Pixel-Rand; auf dunklen Flächenklassen (Bestandsmiete Klasse 4/5) prüfen, ob Mindest-Randbreite oder Mindestgröße nötig ist.
   evidence: maybe-false (medium), unverifiziert. `buildScoreDotSvg` 1,5 px auf 18-px-Basis skaliert mit `icon-size`; klären per Screenshot bei kleinster Symbolgröße auf Klasse 5 (Zoom-Stufen durchgehen).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story 1 (Bestandsmiete als 100m-Raster). Matze: Unterschied zum Planungsraum-Layer für Nutzer nicht verständlich, zwei fast gleiche Inspector-Karten verwirren.
+  evidence: Prototyp lief (28.463 Zellen, 1,74 MB PMTiles), wurde verworfen. Kosten: eigener PMTiles-Layer, Ein-PMTiles-Regel, Werte nur im sichtbaren Ausschnitt. Falls später: als Zoom-Detail desselben Layers mit einer Inspector-Karte („Planungsraum x · diese Zelle y“), nicht als eigener Slug.
