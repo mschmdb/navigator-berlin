@@ -374,3 +374,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-l5-bezirksseite-karte-liste.md`
   summary: Pixel-Logo wird zweimal inline als SVG ausgeliefert (je ~39,5 KB, zusammen ~79 KB pro Seite); Bezirksseiten bleiben dadurch über 200 KB HTML.
   evidence: Messung L5 (14.10.2026): Treptow-Köpenick 206 KB HTML, davon Bezirkskarte nur ~22 KB. Logo als externe, gecachte SVG-Datei oder vereinfachtes Raster würde jede Seite um ~75 KB entlasten; relevant für mobilen Absprung.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l7-layer-seiten.md`
+  summary: Ältere E2E-Suiten (share-sheet, inspector-panel, tab-order, wahl-flow, address-search, compare-flow, bookmark-flow, climate-*, u. a.) scheitern, weil `getByRole('combobox')` auf `/explore` nicht klickbar wird; 76 Fehlschläge im vollen Lauf.
+  evidence: Gegenprobe 14.10.2026 auf `main` (69d8588): dieselben Suiten 26 failed / 5 passed mit demselben Fehlerbild, also vor dem Landing-Epic entstanden. Die Epic-Suiten (explore-region-focus, profile-meta-fakten, bezirk-landing, kiez-landing, key-figures, kiez-neighbors, layer-kiez-ranking, i18n-profile-frame, i18n-d1) sind grün.
