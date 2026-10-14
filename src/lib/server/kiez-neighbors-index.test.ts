@@ -32,7 +32,8 @@ const ROWS = [
 	row('alexanderplatz', 30, 80)
 ];
 
-describe('getKiezNeighborLists', () => {
+// Liest und verschneidet die echten LOR-Polygone; unter Volllast der Suite dauert das länger als 5 s.
+describe('getKiezNeighborLists', { timeout: 30_000 }, () => {
 	const originalUrl = process.env.DATABASE_URL;
 	let stderr: ReturnType<typeof vi.spyOn>;
 

@@ -164,7 +164,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 
 		await page.goto(`/en/layer/${LAYER_WITH_METHODOLOGY}`);
 		const inspectorLink = page.getByTestId('layer-detail-inspector-link');
-		await expect(inspectorLink).toContainText('View layer on the map');
+		await expect(inspectorLink).toContainText('View on the map');
 		await inspectorLink.click();
 		await expect(page).toHaveURL(new RegExp(`/en/explore\\?layers=${LAYER_WITH_METHODOLOGY}`));
 	});

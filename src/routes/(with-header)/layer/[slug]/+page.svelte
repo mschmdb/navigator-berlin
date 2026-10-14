@@ -10,6 +10,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import FaqSection from '$lib/components/atlas/faq-section.svelte';
+	import LayerKiezRanking from '$lib/components/atlas/layer-kiez-ranking.svelte';
 	import {
 		buildDataset,
 		buildBreadcrumbList,
@@ -151,6 +152,13 @@
 		<h1 data-testid="layer-detail-name" class="font-serif text-3xl text-ink">
 			{detail.layerName}
 		</h1>
+		<a
+			data-testid="layer-detail-map-button"
+			href={inspectorHref}
+			class="mt-2 inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+		>
+			{m.layer_page_map_button()} <span aria-hidden="true">→</span>
+		</a>
 		{#if explain.long}
 			<p data-testid="layer-detail-lead" class="font-serif text-lg leading-relaxed text-ink-muted">
 				{explain.long}
@@ -166,6 +174,10 @@
 		>
 			{m.layer_page_hitze_cta()}
 		</a>
+	{/if}
+
+	{#if data.ranking}
+		<LayerKiezRanking ranking={data.ranking} measure={explain.short || undefined} />
 	{/if}
 
 	{#if detail.editorial}
@@ -402,7 +414,7 @@
 		href={inspectorHref}
 		class="hover:text-accent-strong inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2"
 	>
-		{m.layer_page_inspector_link_label()} <span aria-hidden="true">→</span>
+		{m.layer_page_map_button()} <span aria-hidden="true">→</span>
 	</a>
 
 	<FaqSection items={data.faq} pageType="layer" contentLocale={data.faqLocale} />

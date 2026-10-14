@@ -19,7 +19,7 @@ interface BuildResult {
 let cached: Index | null = null;
 let inflight: Promise<BuildResult> | null = null;
 
-async function readLayer(slug: string): Promise<NeighborLorCollection> {
+export async function readLayer(slug: string): Promise<NeighborLorCollection> {
 	const { readFile } = await import('node:fs/promises');
 	const { resolve } = await import('node:path');
 	const manifest = JSON.parse(
