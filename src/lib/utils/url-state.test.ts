@@ -10,7 +10,9 @@ import {
 	parseComparison,
 	buildComparePermalink,
 	buildExplorerDeepLink,
-	parseLead
+	parseLead,
+	parseRegionFocus,
+	buildRegionFocusHref
 } from './url-state.js';
 
 describe('serializeViewport', () => {
@@ -318,5 +320,67 @@ describe('parseLead (Legenden-Tausch im Permalink)', () => {
 		expect(parseLead(null, ['laerm-2023'])).toBeNull();
 		expect(parseLead('', ['laerm-2023'])).toBeNull();
 		expect(parseLead('kiez-score-ruhe-luft', ['laerm-2023'])).toBeNull();
+	});
+});
+
+describe('parseRegionFocus (Ortsfokus ?kiez= / ?bezirk=)', () => {
+	it('liest einen Kiez-Slug', () => {
+		expect(parseRegionFocus(new URLSearchParams('kiez=reuterstrasse'))).toEqual({
+			kind: 'kiez',
+			slug: 'reuterstrasse'
+		});
+	});
+
+	it('liest einen Bezirk-Slug', () => {
+		expect(parseRegionFocus(new URLSearchParams('bezirk=neukoelln'))).toEqual({
+			kind: 'bezirk',
+			slug: 'neukoelln'
+		});
+	});
+
+	it('akzeptiert Dubletten-Slugs mit Bezirk-Suffix', () => {
+		expect(parseRegionFocus(new URLSearchParams('kiez=heerstrasse-spandau'))?.slug).toBe(
+			'heerstrasse-spandau'
+		);
+	});
+
+	it('Kiez gewinnt gegen Bezirk', () => {
+		expect(parseRegionFocus(new URLSearchParams('bezirk=pankow&kiez=reuterstrasse'))).toEqual({
+			kind: 'kiez',
+			slug: 'reuterstrasse'
+		});
+	});
+
+	it('fällt auf Bezirk zurück, wenn der Kiez-Slug ungültig ist', () => {
+		expect(parseRegionFocus(new URLSearchParams('kiez=%3Cx%3E&bezirk=pankow'))).toEqual({
+			kind: 'bezirk',
+			slug: 'pankow'
+		});
+	});
+
+	it('liefert null ohne Parameter, bei leerem oder ungültigem Format', () => {
+		expect(parseRegionFocus(new URLSearchParams(''))).toBeNull();
+		expect(parseRegionFocus(new URLSearchParams('kiez='))).toBeNull();
+		expect(parseRegionFocus(new URLSearchParams('kiez=Reuter Strasse'))).toBeNull();
+		expect(parseRegionFocus(new URLSearchParams('kiez=-x'))).toBeNull();
+		expect(parseRegionFocus(new URLSearchParams('kiez=x--y'))).toBeNull();
+		expect(parseRegionFocus(new URLSearchParams('kiez=../etc'))).toBeNull();
+		expect(parseRegionFocus(new URLSearchParams(`kiez=${'a'.repeat(81)}`))).toBeNull();
+	});
+});
+
+describe('buildRegionFocusHref', () => {
+	it('baut den Kiez-Link', () => {
+		expect(buildRegionFocusHref('kiez', 'reuterstrasse')).toBe('/explore?kiez=reuterstrasse');
+	});
+
+	it('baut den Bezirk-Link mit Layern', () => {
+		expect(buildRegionFocusHref('bezirk', 'neukoelln', ['zensus-altbau-anteil-2022'])).toBe(
+			'/explore?bezirk=neukoelln&layers=zensus-altbau-anteil-2022'
+		);
+	});
+
+	it('lässt layers bei leerer Liste weg', () => {
+		expect(buildRegionFocusHref('kiez', 'x', [])).toBe('/explore?kiez=x');
 	});
 });

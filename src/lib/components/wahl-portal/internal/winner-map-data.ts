@@ -94,7 +94,7 @@ export function isRepeatElectionYear(winnersForJahr: readonly WinnerApiRow[]): b
 	return winnersForJahr.length > 0 && winnersForJahr.some((w) => w.is_repeat_election);
 }
 
-function bezCodeToBezirkName(bezirkeFc: FeatureCollection): Map<string, string> {
+export function bezCodeToBezirkName(bezirkeFc: FeatureCollection): Map<string, string> {
 	const map = new Map<string, string>();
 	for (const f of bezirkeFc.features) {
 		const props = (f.properties ?? {}) as Record<string, unknown>;

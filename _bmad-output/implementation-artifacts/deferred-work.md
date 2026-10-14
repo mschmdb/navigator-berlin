@@ -354,3 +354,15 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story Heizungsart/Energieträger.
   evidence: Heizart folgt in Berlin weitgehend dem Baujahr (redundant zum Altbau-Anteil); Wärmepumpen-/Solaranteil 2022 vermutlich klein (ungeprüft, Rausch-Risiko wie Leerstand); Stand Mai 2022 seit GEG schnell veraltet; Nutzen eher wohnungs- als kiezbezogen. Falls später: als Brücke zur kommunalen Wärmeplanung neu bewerten.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l1-explore-ortsfokus.md`
+  summary: Fokus-Kontur `region-focus-line` und ihre Lage über Choroplethen sind nur im Helper-Unit-Test und per Screenshot geprüft, nicht auf der Seite.
+  evidence: Kein E2E-Zugriff auf MapLibre-Layer im Repo (kein Map-Handle auf window); Entfernen von `showRegionFocusOutline` oder `moveLayer(REGION_FOCUS_LINE_ID)` ließe alle Tests grün.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l1-explore-ortsfokus.md`
+  summary: In L2 testen, dass eine frühere Adressauswahl den Fokus nach In-App-Navigation auf `/explore?kiez=` nicht verdrängt (`suppressedSelectionId` im Fokus-Zweig).
+  evidence: Alle L1-E2E starten mit frischem `page.goto`; erst der Karten-Button aus L2 erzeugt die clientseitige Navigation mit erhaltener Auswahl.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l1-explore-ortsfokus.md`
+  summary: Prüfen, ob ein entprellter `syncViewport`/`syncLayers` nach `dropRegionFocusParams` den `kiez`-Parameter aus einem alten href zurückschreibt (unverifiziert, wäre medium).
+  evidence: Beide lesen `window.location.href` erst beim Ausführen; offen ist, ob SvelteKits `goto(replaceState)` die URL bis dahin ersetzt hat. Klären per E2E: Fokus schließen und sofort danach die Karte verschieben, dann URL prüfen.
