@@ -318,3 +318,19 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-fix-prerender-404-links.md`
   summary: Prerender-404 im Build sichtbar machen (CI-Schritt oder `handleHttpError` mit Fehler), damit tote interne Links nicht wieder unbemerkt live gehen.
   evidence: `svelte.config.js` loggt Prerender-404 nur per `console.warn`; die 32 Treffer vom 14.10.2026 fielen nur zufällig im Coolify-Log auf.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Zensus-Folge-Story 1 · Bestandsmiete als 100m-Raster (PMTiles, Muster klima-pet-2022) für die Detail-Ansicht; KLAMMERN-Zellen dämpfen oder ausblenden; PMTiles ist im Zwei-Karten-Regelwerk immer Fläche.
+  evidence: Owner-Entscheidung 14.10.2026: Kiez-/PLR-Aggregat zuerst, Raster als eigene Story (Recherche 3.1 + Nachtrag 22.08.).
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Zensus-Folge-Story 2 · Leerstandsquote und marktaktive Leerstandsquote als PLR-Choropleth (Leerstandsquote_in_Gitterzellen.zip, Marktaktive_Leerstandsquote_in_Gitterzellen.zip).
+  evidence: Owner-Entscheidung 14.10.2026; Pipeline aus der Bestandsmiete-Story wiederverwenden.
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Zensus-Folge-Story 3 · Gebäudealter (Gebaeude_nach_Baujahr_Jahrzehnte.zip bzw. Wohnungen_nach_Baujahresklassen) als PLR-Choropleth, z. B. Anteil Altbau vor 1949.
+  evidence: Owner-Entscheidung 14.10.2026; Kennzahl vor Umsetzung festlegen.
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Zensus-Folge-Story 4 · Heizungsart/Energieträger als Anteil Fernwärme bzw. Wärmepumpe pro PLR (Zensus2022_Heizungsart.zip, Zensus2022_Energietraeger.zip), anschlussfähig an Wärmeplanung.
+  evidence: Owner-Entscheidung 14.10.2026.
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Kiez-, Bezirks- und Layer-Seiten grundsätzlich attraktiver machen, damit Einsteiger bleiben und weiterklicken (Bestandsmiete ist nur ein Baustein); Ausgangspunkt Brainstorming, dann Epic-Schnitt.
+  evidence: Bounce-Befund Plausible 08.10.2026 (Kiez-Seiten ~100 % bei 0 s); Matze 14.10.2026: „müssen generell besser und attraktiver werden“, Prio-Thema.
