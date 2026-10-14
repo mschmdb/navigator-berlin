@@ -7,6 +7,7 @@
 	import type { KeyFigure, KeyFigureId } from '$lib/data/region-key-figures.js';
 	import { buildRegionFocusHref } from '$lib/utils/url-state.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { trackLanding } from '$lib/utils/plausible.js';
 	import { formatPercent } from '$lib/i18n/format.js';
 	import {
 		formatLayerValue,
@@ -117,6 +118,7 @@
 					<p class="text-xs text-ink-muted">{tile.note}</p>
 					<a
 						href={tile.href}
+						onclick={() => trackLanding('key_figure', kind)}
 						data-testid="key-figure-link"
 						class="hover:text-accent-strong mt-auto pt-1 text-sm text-accent underline underline-offset-2"
 					>

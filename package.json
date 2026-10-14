@@ -57,7 +57,8 @@
 		"db:migrate": "tsx scripts/db/migrate.ts",
 		"publish-update": "tsx scripts/publish-update/main.ts",
 		"doc:pipelines": "tsx scripts/generate-data-flow-doc.ts",
-		"doc:story-map": "tsx scripts/generate-story-map.ts"
+		"doc:story-map": "tsx scripts/generate-story-map.ts",
+		"metrics:landing": "tsx scripts/landing-metrics.ts"
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "^4.11.3",

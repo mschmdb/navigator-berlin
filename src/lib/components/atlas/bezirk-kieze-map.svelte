@@ -11,6 +11,7 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { trackLanding } from '$lib/utils/plausible.js';
 	import { NO_SCORE_FILL, scoreClassFill } from './internal/score-class-color.js';
 
 	interface Props {
@@ -66,6 +67,7 @@
 				<a
 					href={entry.href}
 					tabindex="-1"
+					onclick={() => trackLanding('map_link', 'bezirk')}
 					aria-label={entry.label}
 					class="kiez-link"
 					data-testid="bezirk-map-link"

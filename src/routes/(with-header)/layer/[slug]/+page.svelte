@@ -31,6 +31,7 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { trackLanding } from '$lib/utils/plausible.js';
 	import { formatCount } from '$lib/i18n/format.js';
 
 	type Props = { data: import('./$types').PageData };
@@ -155,6 +156,7 @@
 		<a
 			data-testid="layer-detail-map-button"
 			href={inspectorHref}
+			onclick={() => trackLanding('map_button', 'layer')}
 			class="mt-2 inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 		>
 			{m.layer_page_map_button()} <span aria-hidden="true">→</span>
@@ -412,6 +414,7 @@
 	<a
 		data-testid="layer-detail-inspector-link"
 		href={inspectorHref}
+		onclick={() => trackLanding('map_link_bottom', 'layer')}
 		class="hover:text-accent-strong inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2"
 	>
 		{m.layer_page_map_button()} <span aria-hidden="true">→</span>

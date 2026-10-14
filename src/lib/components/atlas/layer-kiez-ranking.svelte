@@ -3,6 +3,7 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { trackLanding } from '$lib/utils/plausible.js';
 	import { formatDecimal } from '$lib/i18n/format.js';
 
 	interface Props {
@@ -68,6 +69,7 @@
 					<li class="flex flex-wrap items-baseline justify-between gap-x-4">
 						<a
 							href={localizedHref(`/kiez/${entry.slug}`)}
+							onclick={() => trackLanding('ranking_link', 'layer')}
 							data-testid="layer-kiez-ranking-link"
 							aria-label={m.layer_ranking_link_label(
 								{ name: entry.name, bezirk: entry.bezirkName, value: formatValue(entry.value) },

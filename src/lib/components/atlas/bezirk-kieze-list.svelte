@@ -11,6 +11,7 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
+	import { trackLanding } from '$lib/utils/plausible.js';
 	import ArrowDown from '@lucide/svelte/icons/arrow-down';
 	import ArrowUp from '@lucide/svelte/icons/arrow-up';
 	import ArrowUpDown from '@lucide/svelte/icons/arrow-up-down';
@@ -42,6 +43,7 @@
 
 	function sortBy(key: KiezSortKey): void {
 		override = nextSortState(sortState, key);
+		trackLanding('list_sort', 'bezirk');
 		const column =
 			key === 'name'
 				? m.bezirk_kieze_col_name(undefined, localeOpts)
@@ -119,6 +121,7 @@
 							<a
 								href={localizedHref(`/kiez/${kiez.slug}`)}
 								class="hover:text-accent-strong text-accent underline underline-offset-2"
+								onclick={() => trackLanding('list_link', 'bezirk')}
 								data-testid="bezirk-kieze-link"
 							>
 								{kiez.name}

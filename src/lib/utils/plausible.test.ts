@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { trackPageview, trackEvent } from './plausible.js';
+import { trackPageview, trackEvent, trackLanding, __setEmbeddedForTests } from './plausible.js';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -63,5 +63,43 @@ describe('trackEvent', () => {
 		const fn = stubPlausible();
 		trackEvent('Search', { q: 'x' });
 		expect(fn).toHaveBeenCalledWith('Search', { props: { q: 'x' } });
+	});
+});
+
+describe('trackLanding', () => {
+	it('sendet genau ein Landing-Event mit action und page_type', () => {
+		const fn = stubPlausible();
+		__setEmbeddedForTests(false);
+		try {
+			trackLanding('map_button', 'bezirk');
+			expect(fn).toHaveBeenCalledTimes(1);
+			expect(fn).toHaveBeenCalledWith('Landing', {
+				props: { action: 'map_button', page_type: 'bezirk' },
+				interactive: false
+			});
+		} finally {
+			__setEmbeddedForTests(null);
+		}
+	});
+
+	it('bricht nicht, wenn window.plausible fehlt', () => {
+		vi.stubGlobal('window', {});
+		__setEmbeddedForTests(false);
+		try {
+			expect(() => trackLanding('list_sort', 'kiez')).not.toThrow();
+		} finally {
+			__setEmbeddedForTests(null);
+		}
+	});
+
+	it('sendet nichts im iframe', () => {
+		const fn = stubPlausible();
+		__setEmbeddedForTests(true);
+		try {
+			trackLanding('neighbor', 'kiez');
+			expect(fn).not.toHaveBeenCalled();
+		} finally {
+			__setEmbeddedForTests(null);
+		}
 	});
 });

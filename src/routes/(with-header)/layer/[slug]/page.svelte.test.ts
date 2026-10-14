@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { __setEmbeddedForTests } from '$lib/utils/plausible.js';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
@@ -94,6 +95,30 @@ describe('layer-detail +page.svelte', () => {
 			.getByTestId('layer-detail-inspector-link')
 			.element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toMatch(/\/explore\?layers=wohnlagen-2024/);
+	});
+
+	it.each([
+		['layer-detail-map-button', 'map_button'],
+		['layer-detail-inspector-link', 'map_link_bottom']
+	])('%s sendet genau ein Landing-Event (%s/layer)', async (testid, action) => {
+		const events: Array<[string, unknown]> = [];
+		(window as { plausible?: unknown }).plausible = (name: string, opts?: unknown) =>
+			events.push([name, opts]);
+		__setEmbeddedForTests(false);
+		const block = (e: Event) => e.preventDefault();
+		document.addEventListener('click', block);
+		try {
+			render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+			const button = (await page.getByTestId(testid).element()) as HTMLElement;
+			button.click();
+			expect(events).toEqual([
+				['Landing', { props: { action, page_type: 'layer' }, interactive: false }]
+			]);
+		} finally {
+			document.removeEventListener('click', block);
+			__setEmbeddedForTests(null);
+			delete (window as { plausible?: unknown }).plausible;
+		}
 	});
 
 	it('rendert Scale-Section bei vorhandenem valueScaleExplain', async () => {

@@ -16,6 +16,7 @@
 	import { formatRank } from '$lib/data/rank-format.js';
 	import { buildRegionFocusHref } from '$lib/utils/url-state.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { trackLanding } from '$lib/utils/plausible.js';
 	import { formatCount } from '$lib/i18n/format.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
@@ -92,6 +93,7 @@
 
 	<a
 		href={mapHref}
+		onclick={() => trackLanding('map_button', 'bezirk')}
 		data-testid="bezirk-map-button"
 		class="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-5 py-2.5 font-sans text-base font-semibold text-bg hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
 	>

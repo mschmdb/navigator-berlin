@@ -2,6 +2,7 @@
 	import type { NeighborEntry } from '$lib/data/kiez-neighbors.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { trackLanding, type LandingAction } from '$lib/utils/plausible.js';
 
 	interface Props {
 		readonly neighbors: readonly NeighborEntry[];
@@ -29,6 +30,7 @@
 	entries: readonly NeighborEntry[],
 	testid: string,
 	linkTestid: string,
+	action: LandingAction,
 	headingId: string,
 	title: string
 )}
@@ -44,6 +46,7 @@
 					<a
 						href={localizedHref(`/kiez/${entry.slug}`)}
 						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						onclick={() => trackLanding(action, 'kiez')}
 						data-testid={linkTestid}
 						aria-label={linkLabel(entry)}
 					>
@@ -66,6 +69,7 @@
 				neighbors,
 				'kiez-siblings-list',
 				'kiez-sibling-link',
+				'neighbor',
 				'kiez-neighbors-adjacent-h',
 				m.kiez_neighbors_adjacent_heading()
 			)}
@@ -75,6 +79,7 @@
 				similar,
 				'kiez-similar-list',
 				'kiez-similar-link',
+				'similar',
 				'kiez-neighbors-similar-h',
 				m.kiez_neighbors_similar_heading()
 			)}
