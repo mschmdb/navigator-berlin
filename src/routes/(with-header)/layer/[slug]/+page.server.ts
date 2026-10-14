@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { loadManifest } from '$lib/data/manifest.js';
 import { buildLayerDetail, type LayerDetail } from '$lib/data/get-layer-detail.js';
+import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
@@ -26,10 +27,7 @@ export const entries: EntryGenerator = async () => {
 	const manifest = JSON.parse(raw) as {
 		layers: { slug: string; inspectorRelevant?: boolean; mapRelevant?: boolean }[];
 	};
-	// Build-only-Layer (weder Karte noch Inspector) bekommen keine Detail-Seite.
-	return manifest.layers
-		.filter((l) => !(l.inspectorRelevant === false && l.mapRelevant === false))
-		.map((l) => ({ slug: l.slug }));
+	return manifest.layers.filter((l) => hasLayerDetailPage(l)).map((l) => ({ slug: l.slug }));
 };
 
 export type LayerPageData = {

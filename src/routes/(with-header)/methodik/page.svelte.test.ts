@@ -249,4 +249,23 @@ describe('methodik +page.svelte · EN (i18n C4a)', () => {
 		expect(crumbs.itemListElement[1].name).toBe('Methodology');
 		expect(crumbs.itemListElement[1].item).toMatch(/\/en\/methodik$/);
 	});
+
+	it('blendet Build-only-Layer aus Tabelle, Links und Layer-Anzahl aus', () => {
+		const manifest: Manifest = {
+			...sampleManifest,
+			layers: [
+				...sampleManifest.layers,
+				{ ...meta('denkmal-2024', 'C: Umwelt'), inspectorRelevant: false, mapRelevant: false }
+			]
+		};
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { manifest } });
+		expect(document.querySelector('a[href$="/layer/denkmal-2024"]')).toBeNull();
+		expect(document.querySelectorAll('[data-testid="methodik-daten-table"] tbody tr').length).toBe(
+			3
+		);
+		expect(document.querySelector('#mission p')?.textContent).toContain(
+			'collects 3 public Berlin geodata sets'
+		);
+	});
 });

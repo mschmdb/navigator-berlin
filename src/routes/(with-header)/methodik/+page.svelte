@@ -17,6 +17,7 @@
 		getMethodikSections,
 		getOmissions
 	} from './methodik-content.js';
+	import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
 	import MethodikDatenTabelle from './methodik-daten-tabelle.svelte';
 	import MethodikPipelineDiagram from './methodik-pipeline-diagram.svelte';
 
@@ -26,9 +27,7 @@
 	const manifest = $derived(data.manifest);
 	// Build-only-Layer (weder Karte noch Inspector, z.B. Heritage-Dichte-Signal) tauchen
 	// nicht im Frontend auf, also auch nicht in der Methodik-Tabelle.
-	const visibleLayers = $derived(
-		manifest.layers.filter((l) => !(l.inspectorRelevant === false && l.mapRelevant === false))
-	);
+	const visibleLayers = $derived(manifest.layers.filter((l) => hasLayerDetailPage(l)));
 	const layerCount = $derived(visibleLayers.length);
 
 	const sections = getMethodikSections();

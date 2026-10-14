@@ -9,6 +9,7 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { buildBreadcrumbList, buildDataCatalog, localeToBcp47 } from '$lib/seo/index.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 	import {
 		getLicenseInfo,
@@ -154,12 +155,16 @@
 				<ul class="flex flex-wrap gap-x-3 gap-y-1 font-sans text-sm">
 					{#each layers as layer (layer.slug)}
 						<li>
-							<a
-								href={localizedHref(`/layer/${layer.slug}`)}
-								class="hover:text-accent-strong text-accent underline underline-offset-2"
-							>
-								{getLayerDisplayName(layer.slug, { locale })}
-							</a>
+							{#if hasLayerDetailPage(layer)}
+								<a
+									href={localizedHref(`/layer/${layer.slug}`)}
+									class="hover:text-accent-strong text-accent underline underline-offset-2"
+								>
+									{getLayerDisplayName(layer.slug, { locale })}
+								</a>
+							{:else}
+								<span class="text-ink">{getLayerDisplayName(layer.slug, { locale })}</span>
+							{/if}
 						</li>
 					{/each}
 				</ul>

@@ -13,7 +13,7 @@
  * Server-Pfad-unabhaengig + im Test fixturable bleibt.
  */
 
-import { normalizeSlug } from './internal/slug.js';
+import { buildKiezSlugs } from './internal/kiez-slug.js';
 
 export interface KiezRef {
 	readonly slug: string;
@@ -58,21 +58,22 @@ export interface BuildKiezListInput {
 }
 
 export function buildKiezeInBezirk(input: BuildKiezListInput): KiezRef[] {
-	const refs: KiezRef[] = [];
+	// Slugs Berlin-weit disambiguieren (alle Features), erst danach nach Bezirk filtern.
+	const candidates: { name: string; bezirk: string }[] = [];
 	for (const feature of input.lorFeatureCollection.features) {
 		const props = feature.properties ?? {};
 		const name = readKiezName(props);
 		const code = readBezirkCode(props);
 		if (!name || !code) continue;
 		const parentSlug = input.bezirkCodeToSlug.get(code);
-		if (parentSlug !== input.bezirkSlug) continue;
-		const slug = normalizeSlug(name);
-		refs.push({
-			slug,
-			name,
-			composite: input.scores.get(slug) ?? null
-		});
+		candidates.push({ name, bezirk: parentSlug ?? '' });
 	}
+	const slugs = buildKiezSlugs(candidates);
+	const refs: KiezRef[] = [];
+	candidates.forEach((c, i) => {
+		if (c.bezirk !== input.bezirkSlug) return;
+		refs.push({ slug: slugs[i], name: c.name, composite: input.scores.get(slugs[i]) ?? null });
+	});
 	return sortKieze(refs);
 }
 

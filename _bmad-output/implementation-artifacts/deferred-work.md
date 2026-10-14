@@ -314,3 +314,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c5-profile.md`
   summary: Nach `pnpm exec vitest run` ist die lokale Tabelle `kiez_rank` leer (0 Zeilen); `pnpm lint:profiles` meldet dann ungedeckte Rang-Zahlen. Vermutlich leert ein DB-Test (CASCADE) die Tabelle.
   evidence: 30.09. reproduziert: vor `data:rank` 0 Zeilen und EN failed=142, danach 2145 Zeilen und failed=0. Betrifft nur lokale Dev-DB.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-fix-prerender-404-links.md`
+  summary: Prerender-404 im Build sichtbar machen (CI-Schritt oder `handleHttpError` mit Fehler), damit tote interne Links nicht wieder unbemerkt live gehen.
+  evidence: `svelte.config.js` loggt Prerender-404 nur per `console.warn`; die 32 Treffer vom 14.10.2026 fielen nur zufällig im Coolify-Log auf.

@@ -122,3 +122,57 @@ describe('pickSiblings', () => {
 		expect(siblings[0].slug).toBe('pankow-zentrum');
 	});
 });
+
+describe('buildKiezeInBezirk Slug-Disambiguierung', () => {
+	const dupFc = {
+		features: [
+			{ properties: { BZR_NAME: 'Heerstraße', BEZ: '05' } },
+			{ properties: { BZR_NAME: 'Heerstraße', BEZ: '04' } },
+			{ properties: { BZR_NAME: 'Charlottenburg Nord', BEZ: '04' } }
+		]
+	};
+	const dupCodes = new Map([
+		['05', 'spandau'],
+		['04', 'charlottenburg-wilmersdorf']
+	]);
+
+	it('suffigiert Duplikatnamen Berlin-weit mit dem Bezirk-Slug', () => {
+		const spandau = buildKiezeInBezirk({
+			lorFeatureCollection: dupFc,
+			bezirkCodeToSlug: dupCodes,
+			scores: new Map(),
+			bezirkSlug: 'spandau'
+		});
+		expect(spandau.map((r) => r.slug)).toEqual(['heerstrasse-spandau']);
+		const cw = buildKiezeInBezirk({
+			lorFeatureCollection: dupFc,
+			bezirkCodeToSlug: dupCodes,
+			scores: new Map(),
+			bezirkSlug: 'charlottenburg-wilmersdorf'
+		});
+		expect(cw.map((r) => r.slug).sort()).toEqual([
+			'charlottenburg-nord',
+			'heerstrasse-charlottenburg-wilmersdorf'
+		]);
+	});
+
+	it('findet den Score über den suffigierten Slug', () => {
+		const refs = buildKiezeInBezirk({
+			lorFeatureCollection: dupFc,
+			bezirkCodeToSlug: dupCodes,
+			scores: new Map([['heerstrasse-spandau', 61]]),
+			bezirkSlug: 'spandau'
+		});
+		expect(refs[0].composite).toBe(61);
+	});
+
+	it('lässt fehlende Scores null', () => {
+		const refs = buildKiezeInBezirk({
+			lorFeatureCollection: dupFc,
+			bezirkCodeToSlug: dupCodes,
+			scores: new Map([['heerstrasse', 99]]),
+			bezirkSlug: 'spandau'
+		});
+		expect(refs[0].composite).toBeNull();
+	});
+});
