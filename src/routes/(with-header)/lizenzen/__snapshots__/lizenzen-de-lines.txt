@@ -25,7 +25,7 @@ a: ODbL 1.0
 p: Namensnennung „© OpenStreetMap-Contributors" plus Share-Alike bei abgeleiteten Datenbanken.
 a: Stolpersteine
 p: Zusätzlich fließt die Strategische Lärmkarte 2022 (Umweltatlas, ua_stratlaerm_2022, Lizenz Datenlizenz Deutschland Zero 2.0) als Build-Aggregat je Planungsraum in den Kiez-Score ein.
-p: Datenquelle: Statistische Ämter des Bundes und der Länder, Zensus 2022. Der Layer „Bestandsmiete (Zensus 2022)“ nutzt die Gitterdaten zur Nettokaltmiete (Lizenz Datenlizenz Deutschland Namensnennung 2.0). Wir haben die Zellen auf Planungsräume, Kieze und Bezirke umgerechnet.
+p: Datenquelle: Statistische Ämter des Bundes und der Länder, Zensus 2022. Die Layer „Bestandsmiete (Zensus 2022)“ und „Altbau-Anteil (Zensus 2022)“ nutzen die Gitterdaten zur Nettokaltmiete und zu den Baujahresklassen der Wohnungen (Lizenz Datenlizenz Deutschland Namensnennung 2.0). Wir haben die Zellen auf Planungsräume, Kieze und Bezirke umgerechnet.
 h2: Wahldaten
 p: Wahl-Ergebnisse aus 14 Berliner Wahlen seit 2011 (Bundestag, Abgeordnetenhaus, BVV) liegen nicht als eigener Geo-Layer vor, sondern als Datenbank-Aggregate. Quellen und Lizenz der drei Datenanbieter:
 dt: Bundeswahlleiterin

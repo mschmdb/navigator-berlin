@@ -168,6 +168,7 @@ export function getValueSeverity(slug: string, value: unknown): SeverityLevel {
 		case 'stolpersteine':
 		case 'bodenrichtwerte':
 		case 'zensus-bestandsmiete-2022':
+		case 'zensus-altbau-anteil-2022':
 		case 'gebaeudealter':
 		case 'bezirke':
 		case 'ortsteile':

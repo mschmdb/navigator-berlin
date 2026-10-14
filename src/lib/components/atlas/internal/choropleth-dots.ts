@@ -13,6 +13,7 @@
  */
 
 import { COLORS } from './colors.js';
+import { ALTBAU_STOPS } from './altbau-stops.js';
 import { MIETE_STOPS } from './miete-stops.js';
 import { rampForSlug, SCORE_DOT_SIZES, SCORE_SLUGS } from './dimension-ramps.js';
 
@@ -148,6 +149,30 @@ const SPEC_BY_SLUG: Record<string, ChoroplethDotSpec> = {
 			]
 		],
 		// Legenden-Reihenfolge des Profils: die fünf MIETE_STOPS in EUR/m².
+		legendFactors: [0.3, 0.45, 0.6, 0.8, 1]
+	},
+	'zensus-altbau-anteil-2022': {
+		imageColor: COLORS.scaleStrukturell5,
+		// Planungsraeume ohne Angabe (altbau_anteil null) bekommen kein Symbol.
+		sizeExpression: [
+			'case',
+			['==', ['get', 'altbau_anteil'], null],
+			0,
+			[
+				'step',
+				['to-number', ['get', 'altbau_anteil'], 0],
+				0.3,
+				ALTBAU_STOPS[1],
+				0.45,
+				ALTBAU_STOPS[2],
+				0.6,
+				ALTBAU_STOPS[3],
+				0.8,
+				ALTBAU_STOPS[4],
+				1
+			]
+		],
+		// Legenden-Reihenfolge des Profils: die fünf ALTBAU_STOPS in Prozent.
 		legendFactors: [0.3, 0.45, 0.6, 0.8, 1]
 	},
 	bodenrichtwerte: {

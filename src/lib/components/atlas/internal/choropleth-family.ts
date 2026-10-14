@@ -34,6 +34,7 @@ export const LAYER_TO_CHOROPLETH_FAMILY: Record<string, LayerFamilyMapping> = {
 	'wohnlagen-2024': 'strukturell',
 	bodenrichtwerte: 'strukturell',
 	'zensus-bestandsmiete-2022': 'strukturell',
+	'zensus-altbau-anteil-2022': 'strukturell',
 	// Story 14.1: Kriminalität als Strukturell-Indigo (NICHT Gut-Grün wie Kultur). Magnitude,
 	// kein Sicherheits-Ranking, kein "besser"-Pfeil (ADR-019). Surfacing in 14.4.
 	'kiez-score-kriminalitaet': 'strukturell'
@@ -80,6 +81,7 @@ export const LAYER_CLASSIFICATION_METHOD: Record<string, ClassificationMethod> =
 	'wohnlagen-2024': 'manual-categorical', // Mietspiegel-Stufen
 	bodenrichtwerte: 'quantile', // Long-Tail 0.6-60000 EUR/m²
 	'zensus-bestandsmiete-2022': 'quantile', // Planungsraum-Werte 5-13 EUR/m², Stops quantilnah
+	'zensus-altbau-anteil-2022': 'quantile', // Planungsraum-Werte 0-93 %, Stops auf Quintilen
 	'kiez-score-kriminalitaet': 'manual-quartile' // 0/26/51/76, Magnitude-Index (Story 14.1)
 };
 

@@ -9,6 +9,7 @@ export const CARD_SLUGS: ReadonlySet<string> = new Set([
 	'mss-gesamtindex-2025',
 	'bodenrichtwerte',
 	'zensus-bestandsmiete-2022',
+	'zensus-altbau-anteil-2022',
 	'milieuschutz-erhaltungsmiete',
 	'milieuschutz-staedtebau',
 	// Lage & Verwaltung + Einschulbereiche: nur kompakter Name/Code, kein Umfeld-Kontext.

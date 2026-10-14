@@ -59,6 +59,13 @@ describe('filterLayers', () => {
 		expect(out.map((l) => l.slug)).toEqual(['plz']);
 	});
 
+	it('findet den Altbau-Anteil über Name, „altbau“ und „gründerzeit“', () => {
+		const layers = [...LAYERS, makeLayer('zensus-altbau-anteil-2022', 'B: Wohn-Daten')];
+		for (const q of ['altbau', 'gründerzeit', 'gruenderzeit']) {
+			expect(filterLayers(layers, q).map((l) => l.slug)).toEqual(['zensus-altbau-anteil-2022']);
+		}
+	});
+
 	it('matched Synonym „Lärm" auf laerm-2023', () => {
 		const out = filterLayers(LAYERS, 'lärm');
 		expect(out.map((l) => l.slug)).toContain('laerm-2023');

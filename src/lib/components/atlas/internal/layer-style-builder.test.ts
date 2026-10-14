@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { KALTLUFT_HIGHLIGHT, rampForSlug } from './dimension-ramps.js';
 import { MIETE_STOPS } from './miete-stops.js';
+import { ALTBAU_STOPS } from './altbau-stops.js';
 import {
 	buildLayerSpec,
 	getLegendSpec,
@@ -367,6 +368,51 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(legend.items.map((i) => i.color)).toEqual(colors);
 	});
 
+	it('Altbau-Anteil nutzt fünf harte Klassen (step) auf altbau_anteil, null bleibt transparent', () => {
+		expect(getStyleProfile('zensus-altbau-anteil-2022')).toBe('choropleth-altbau');
+		const paint = buildLayerSpec('zensus-altbau-anteil-2022', SOURCE)[0].paint ?? {};
+		const colors = [
+			COLORS.scaleAltbau1,
+			COLORS.scaleAltbau2,
+			COLORS.scaleAltbau3,
+			COLORS.scaleAltbau4,
+			COLORS.scaleAltbau5
+		];
+		expect(paint['fill-color']).toEqual([
+			'step',
+			['to-number', ['get', 'altbau_anteil'], 0],
+			colors[0],
+			ALTBAU_STOPS[1],
+			colors[1],
+			ALTBAU_STOPS[2],
+			colors[2],
+			ALTBAU_STOPS[3],
+			colors[3],
+			ALTBAU_STOPS[4],
+			colors[4]
+		]);
+		expect(paint['fill-opacity']).toEqual(['case', ['==', ['get', 'altbau_anteil'], null], 0, 0.7]);
+		const legend = getLegendSpec('zensus-altbau-anteil-2022');
+		expect(legend.kind).toBe('categorical');
+		expect(legend.items.map((i) => i.color)).toEqual(colors);
+	});
+
+	it('Altbau-Skala hat dieselben Werte wie die Miete-Skala', () => {
+		expect([
+			COLORS.scaleAltbau1,
+			COLORS.scaleAltbau2,
+			COLORS.scaleAltbau3,
+			COLORS.scaleAltbau4,
+			COLORS.scaleAltbau5
+		]).toEqual([
+			COLORS.scaleMiete1,
+			COLORS.scaleMiete2,
+			COLORS.scaleMiete3,
+			COLORS.scaleMiete4,
+			COLORS.scaleMiete5
+		]);
+	});
+
 	it('Geteilte Family polygon-outline-soft bleibt für gruenanlagen/einschulbereiche/spielplaetze', () => {
 		expect(getStyleProfile('gruenanlagen')).toBe('polygon-outline-soft');
 		expect(getStyleProfile('einschulbereiche-2024')).toBe('polygon-outline-soft');
@@ -529,6 +575,25 @@ describe('getLegendSpec i18n Block B3a (EN)', () => {
 		expect(en.range).toBeUndefined();
 	});
 
+	it('choropleth-altbau: Klassen als Von-bis-Spannen in Prozent, DE und EN', () => {
+		const de = getLegendSpec('zensus-altbau-anteil-2022');
+		expect(de.items.map((i) => i.label)).toEqual([
+			'0-10 %',
+			'10-26 %',
+			'26-44 %',
+			'44-62 %',
+			'ab 62 %'
+		]);
+		const en = getLegendSpec('zensus-altbau-anteil-2022', { locale: 'en' });
+		expect(en.items.map((i) => i.label)).toEqual([
+			'0-10 %',
+			'10-26 %',
+			'26-44 %',
+			'44-62 %',
+			'62+ %'
+		]);
+	});
+
 	it('point/line-Profile: 1:1-Label-Uebersetzung', () => {
 		expect(getLegendSpec('ubahn-stationen', { locale: 'en' }).items[0].label).toBe(
 			'U-Bahn station'
@@ -558,6 +623,7 @@ describe('getLegendSpec i18n Block B3a: Parität über ALLE StyleProfile', () =>
 		'choropleth-kiez-score-strukturell-4': 'kiez-score-kriminalitaet',
 		'choropleth-dichte': 'einwohner-dichte-2024',
 		'choropleth-miete': 'zensus-bestandsmiete-2022',
+		'choropleth-altbau': 'zensus-altbau-anteil-2022',
 		'polygon-highlight': 'klima-kaltlufteinwirkbereich-2022',
 		'polygon-outline-soft': 'gruenanlagen',
 		'polygon-outline-milieuschutz-erhaltungsmiete': 'milieuschutz-erhaltungsmiete',

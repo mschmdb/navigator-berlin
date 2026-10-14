@@ -8,6 +8,7 @@ export type DisclaimerVariant =
 	| 'compare-mietspiegel'
 	| 'compare-bodenrichtwerte'
 	| 'zensus-bestandsmiete'
+	| 'zensus-altbau'
 	| 'compare-stigma-footer'
 	| 'mss-aggregat'
 	| 'compare-mss-aggregat'

@@ -11,7 +11,7 @@ related:
 
 Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 2026-10-14.
 
-**52 Layer total**, gruppiert nach Bundle.
+**53 Layer total**, gruppiert nach Bundle.
 
 ## Pro-Bundle-Übersicht
 ### A: Boundaries
@@ -34,6 +34,7 @@ Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 202
 | `milieuschutz-staedtebau` | fis-broker | gdi.berlin.de/services/wfs/erhaltungsverordnungsgebiete | dl-de/zero-2-0 | 2025-01-01 | - |
 | `mss-gesamtindex-2025` | fis-broker | gdi.berlin.de/services/wfs/mss_2025 | dl-de/zero-2-0 | 2024-12-01 | - |
 | `zensus-bestandsmiete-2022` | build-script | www.destatis.de/static/DE/zensus/gitterdaten/Durchschnittliche_Nettokaltmiete_und_Anzahl_der_Wohnungen.zip | dl-de/by-2-0 | 2022-05-15 | `scripts/fetch-zensus-miete.ts` |
+| `zensus-altbau-anteil-2022` | build-script | www.destatis.de/static/DE/zensus/gitterdaten/Wohnungen_mod_MZ_Baujahresklassen_in_Gitterzellen.zip | dl-de/by-2-0 | 2022-05-15 | `scripts/fetch-zensus-altbau.ts` |
 
 ### C: Umwelt
 

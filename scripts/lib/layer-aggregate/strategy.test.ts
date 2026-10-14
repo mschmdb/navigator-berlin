@@ -39,6 +39,17 @@ describe('layer-aggregate strategy', () => {
 		expect(isPrecomputed(LAYER_STRATEGY['zensus-bestandsmiete-2022'])).toBe(true);
 	});
 
+	it('Altbau-Anteil ist weighted-mean ueber Planungsraeume', () => {
+		expect(LAYER_STRATEGY['zensus-altbau-anteil-2022']).toMatchObject({
+			type: 'weighted-mean',
+			memberMode: 'plr',
+			valueKey: 'altbau_summe',
+			weightKey: 'wohnungen',
+			minWeight: 30,
+			neutral: true
+		});
+	});
+
 	it('bodenrichtwerte not-aggregatable', () => {
 		expect(LAYER_STRATEGY['bodenrichtwerte'].type).toBe('not-aggregatable');
 		expect(isPrecomputed(LAYER_STRATEGY['bodenrichtwerte'])).toBe(false);

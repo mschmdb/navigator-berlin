@@ -56,6 +56,7 @@
 				variants.add('compare-mietspiegel');
 			if (row.slug === 'bodenrichtwerte') variants.add('compare-bodenrichtwerte');
 			if (row.slug === 'zensus-bestandsmiete-2022') variants.add('zensus-bestandsmiete');
+			if (row.slug === 'zensus-altbau-anteil-2022') variants.add('zensus-altbau');
 		}
 		return [...variants];
 	}

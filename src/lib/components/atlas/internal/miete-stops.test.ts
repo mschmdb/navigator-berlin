@@ -31,7 +31,7 @@ describe('MIETE_STOPS', () => {
 		expect([...MIETE_STOPS]).toEqual(expected);
 	});
 
-	it('steigen streng monoton', () => {
+	it('steigen streng monoton (MapLibre-step verlangt aufsteigende Stops)', () => {
 		for (let i = 1; i < MIETE_STOPS.length; i++) {
 			expect(MIETE_STOPS[i]).toBeGreaterThan(MIETE_STOPS[i - 1]);
 		}

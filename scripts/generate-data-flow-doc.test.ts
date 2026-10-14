@@ -128,4 +128,10 @@ describe('BUILD_SCRIPT_ROWS', () => {
 		const md = renderDataFlowMarkdown([...BUILD_SCRIPT_ROWS], '2026-10-14');
 		expect(md).toContain('`zensus-bestandsmiete-2022`');
 	});
+
+	it('führt den Altbau-Anteil mit Build-Skript und Lizenz auf', () => {
+		const row = BUILD_SCRIPT_ROWS.find((r) => r.slug === 'zensus-altbau-anteil-2022');
+		expect(row?.license).toBe('dl-de/by-2-0');
+		expect(row?.buildStep).toBe('scripts/fetch-zensus-altbau.ts');
+	});
 });

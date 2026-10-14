@@ -94,6 +94,25 @@ describe('getLayerHitDisplay()', () => {
 			expect(d.fallbackText).toBe('keine Angabe');
 		});
 
+		it('zensus-altbau-anteil-2022: chip=ganze Prozent (numeric)', () => {
+			const d = getLayerHitDisplay('zensus-altbau-anteil-2022', {
+				altbau_anteil: 70.4,
+				wohnungen: 900
+			});
+			expect(d.chip?.value).toBe('70');
+			expect(d.chip?.unit).toBe('%');
+			expect(d.chip?.numeric).toBe(true);
+		});
+
+		it('zensus-altbau-anteil-2022: null → Fallback "keine Angabe" ohne Chip', () => {
+			const d = getLayerHitDisplay('zensus-altbau-anteil-2022', {
+				altbau_anteil: null,
+				wohnungen: 4
+			});
+			expect(d.chip).toBeNull();
+			expect(d.fallbackText).toBe('keine Angabe');
+		});
+
 		it('klima-pet-2022: chip=value °C + numeric', () => {
 			const d = getLayerHitDisplay('klima-pet-2022', { pet14h: 36.5 });
 			expect(d.chip?.value).toMatch(/^36(,5)?/);

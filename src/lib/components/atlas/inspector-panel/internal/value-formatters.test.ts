@@ -102,6 +102,20 @@ describe('formatLayerValue', () => {
 		).toBe('7.60 €/m²');
 	});
 
+	it('Altbau-Anteil: ganze Prozent mit " %"', () => {
+		expect(formatLayerValue('zensus-altbau-anteil-2022', { altbau_anteil: 70.4 })).toEqual({
+			text: '70 %',
+			isNumeric: true,
+			isMissing: false
+		});
+	});
+
+	it('Altbau-Anteil: null → "keine Angabe"', () => {
+		expect(
+			formatLayerValue('zensus-altbau-anteil-2022', { altbau_anteil: null, wohnungen: 12 })
+		).toEqual({ text: 'keine Angabe', isNumeric: false, isMissing: false });
+	});
+
 	it('Bezirke Props-Objekt → Gemeinde_name', () => {
 		expect(formatLayerValue('bezirke', { Gemeinde_name: 'Pankow', Land_name: 'Berlin' })).toEqual({
 			text: 'Pankow',

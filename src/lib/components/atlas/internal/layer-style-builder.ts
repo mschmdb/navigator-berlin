@@ -4,6 +4,7 @@ import { hasPinIcon } from './pin-icon-mapping.js';
 import { pinImageId } from './pin-sprite-renderer.js';
 import { m } from '$lib/paraglide/messages.js';
 import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+import { ALTBAU_STOPS } from './altbau-stops.js';
 import { MIETE_STOPS } from './miete-stops.js';
 import { assertUnreachable, type LocaleOptions } from './atlas-label-options.js';
 import type { Locale } from '$lib/paraglide/runtime';
@@ -15,6 +16,7 @@ export type StyleProfile =
 	| 'boundary'
 	| 'choropleth-brw'
 	| 'choropleth-miete'
+	| 'choropleth-altbau'
 	| 'choropleth-belastung-3'
 	| 'choropleth-versorgung-3'
 	| 'choropleth-mehrfach'
@@ -83,6 +85,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	// B: Wohn-Daten
 	bodenrichtwerte: 'choropleth-brw',
 	'zensus-bestandsmiete-2022': 'choropleth-miete',
+	'zensus-altbau-anteil-2022': 'choropleth-altbau',
 	'wohnlagen-2024': 'choropleth-wohnlage-3',
 	'milieuschutz-erhaltungsmiete': 'polygon-outline-milieuschutz-erhaltungsmiete',
 	'milieuschutz-staedtebau': 'polygon-outline-milieuschutz-staedtebau',
@@ -201,6 +204,19 @@ function mieteClassLabel(index: number, options: { locale: Locale }): string {
 	return `${fmt(MIETE_STOPS[index])}-${fmt(MIETE_STOPS[index + 1])} €/m²`;
 }
 
+/** Legenden-Label einer Altbau-Klasse: "von-bis" in Prozent, erste mit Einheit-frei, letzte "ab"/"+". */
+function altbauClassLabel(index: number, options: { locale: Locale }): string {
+	const fmt = (value: number) =>
+		formatDecimal(value, { ...options, minimumFractionDigits: 0, maximumFractionDigits: 0 });
+	const last = ALTBAU_STOPS.length - 1;
+	if (index === last) {
+		return options.locale === 'de'
+			? `ab ${fmt(ALTBAU_STOPS[last])} %`
+			: `${fmt(ALTBAU_STOPS[last])}+ %`;
+	}
+	return `${fmt(ALTBAU_STOPS[index])}-${fmt(ALTBAU_STOPS[index + 1])} %`;
+}
+
 const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 	boundary: {
 		kind: 'line',
@@ -228,6 +244,18 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 			{ color: COLORS.scaleMiete3, label: mieteClassLabel(2, { locale: 'de' }) },
 			{ color: COLORS.scaleMiete4, label: mieteClassLabel(3, { locale: 'de' }) },
 			{ color: COLORS.scaleMiete5, label: mieteClassLabel(4, { locale: 'de' }) }
+		]
+	},
+	'choropleth-altbau': {
+		// Altbau-Anteil Zensus 2022 (Prozent der Wohnungen, Baujahr vor 1949): gleiche Indigo-Skala
+		// wie die Bestandsmiete, harte Klassen auf den Quintilen (`ALTBAU_STOPS`).
+		kind: 'categorical',
+		items: [
+			{ color: COLORS.scaleAltbau1, label: altbauClassLabel(0, { locale: 'de' }) },
+			{ color: COLORS.scaleAltbau2, label: altbauClassLabel(1, { locale: 'de' }) },
+			{ color: COLORS.scaleAltbau3, label: altbauClassLabel(2, { locale: 'de' }) },
+			{ color: COLORS.scaleAltbau4, label: altbauClassLabel(3, { locale: 'de' }) },
+			{ color: COLORS.scaleAltbau5, label: altbauClassLabel(4, { locale: 'de' }) }
 		]
 	},
 	'choropleth-belastung-3': {
@@ -544,6 +572,11 @@ function translateLegendSpec(
 			return {
 				...base,
 				items: base.items.map((item, i) => ({ ...item, label: mieteClassLabel(i, options) }))
+			};
+		case 'choropleth-altbau':
+			return {
+				...base,
+				items: base.items.map((item, i) => ({ ...item, label: altbauClassLabel(i, options) }))
 			};
 		case 'choropleth-pet':
 			return {
@@ -865,6 +898,33 @@ export function buildLayerSpec(
 							COLORS.scaleMiete5
 						],
 						'fill-opacity': ['case', ['==', ['get', 'miete'], null], 0, 0.7],
+						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
+		case 'choropleth-altbau':
+			// Altbau-Anteil: Miete-Skala-Werte, harte Klassen auf den Quintilen. Planungsraeume
+			// unter 30 Wohnungen tragen altbau_anteil null und bleiben transparent.
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'step',
+							['to-number', ['get', 'altbau_anteil'], 0],
+							COLORS.scaleAltbau1,
+							ALTBAU_STOPS[1],
+							COLORS.scaleAltbau2,
+							ALTBAU_STOPS[2],
+							COLORS.scaleAltbau3,
+							ALTBAU_STOPS[3],
+							COLORS.scaleAltbau4,
+							ALTBAU_STOPS[4],
+							COLORS.scaleAltbau5
+						],
+						'fill-opacity': ['case', ['==', ['get', 'altbau_anteil'], null], 0, 0.7],
 						'fill-outline-color': COLORS.accent
 					}
 				}

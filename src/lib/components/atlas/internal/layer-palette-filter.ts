@@ -20,6 +20,7 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	// B: Wohn-Daten
 	bodenrichtwerte: 'Bodenrichtwerte (EUR/m²)',
 	'zensus-bestandsmiete-2022': 'Bestandsmiete (Zensus 2022)',
+	'zensus-altbau-anteil-2022': 'Altbau-Anteil (Zensus 2022)',
 	'wohnlagen-2024': 'Mietspiegel-Wohnlage 2024',
 	'milieuschutz-erhaltungsmiete': 'Milieuschutz: Erhaltungsmiete',
 	'milieuschutz-staedtebau': 'Milieuschutz: Städtebau',
@@ -152,6 +153,7 @@ const LAYER_NAME_MESSAGE: Partial<Record<string, MessageFn>> = {
 	plz: m.atlas_layer_name_plz,
 	bodenrichtwerte: m.atlas_layer_name_bodenrichtwerte,
 	'zensus-bestandsmiete-2022': m.atlas_layer_name_zensus_bestandsmiete_2022,
+	'zensus-altbau-anteil-2022': m.atlas_layer_name_zensus_altbau_anteil_2022,
 	'wohnlagen-2024': m.atlas_layer_name_wohnlagen_2024,
 	'milieuschutz-erhaltungsmiete': m.atlas_layer_name_milieuschutz_erhaltungsmiete,
 	'milieuschutz-staedtebau': m.atlas_layer_name_milieuschutz_staedtebau,

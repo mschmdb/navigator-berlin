@@ -79,6 +79,14 @@ export const LAYER_STRATEGY: Record<string, LayerStrategy> = {
 		minWeight: MIN_WOHNUNGEN,
 		neutral: true
 	},
+	'zensus-altbau-anteil-2022': {
+		type: 'weighted-mean',
+		memberMode: 'plr',
+		valueKey: 'altbau_summe',
+		weightKey: 'wohnungen',
+		minWeight: MIN_WOHNUNGEN,
+		neutral: true
+	},
 
 	// Numeric-median (Raster, spatial).
 	'klima-pet-2022': { type: 'numeric-median', memberMode: 'spatial', valueKey: 'pet14h' },

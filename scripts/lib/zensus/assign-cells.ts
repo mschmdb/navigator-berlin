@@ -24,10 +24,14 @@ export interface AccumulateResult {
  * Ordnet Gitterzellen per Mittelpunkt (Point-in-Polygon) den Planungsraeumen zu und
  * summiert Wohnungen und Miete x Wohnungen. `project` wandelt EPSG:3035 nach WGS84.
  */
-export function accumulateByPlr(
-	cells: readonly MieteCell[],
+export function accumulateByPlr<C extends { x: number; y: number } = MieteCell>(
+	cells: readonly C[],
 	plrFeatures: readonly Feature<Polygon | MultiPolygon>[],
-	project: (x: number, y: number) => [number, number]
+	project: (x: number, y: number) => [number, number],
+	add: (acc: MieteAccumulator, cell: C) => void = (acc, cell) => {
+		const m = cell as unknown as MieteCell;
+		addCell(acc, m.mieteQm, m.wohnungen, m.klammern);
+	}
 ): AccumulateResult {
 	const byPlr = new Map<string, MieteAccumulator>();
 	const ids = plrFeatures.map((f) => {
@@ -56,7 +60,7 @@ export function accumulateByPlr(
 			outside++;
 			continue;
 		}
-		addCell(byPlr.get(ids[hit.idx])!, cell.mieteQm, cell.wohnungen, cell.klammern);
+		add(byPlr.get(ids[hit.idx])!, cell);
 	}
 	return { byPlr, outside };
 }

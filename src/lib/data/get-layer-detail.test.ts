@@ -77,6 +77,36 @@ describe('buildLayerDetail: Bestandsmiete (Seiteninhalt der /layer/<slug>-Seite)
 	});
 });
 
+describe('buildLayerDetail: Altbau-Anteil (Seiteninhalt der /layer/<slug>-Seite)', () => {
+	const altbauManifest: Manifest = {
+		...zensusManifest,
+		layers: [
+			{
+				...zensusManifest.layers[0],
+				slug: 'zensus-altbau-anteil-2022',
+				filename: 'zensus-altbau-anteil-2022.x.geojson'
+			}
+		]
+	};
+
+	it('DE nennt vor 1949, Wohnungen statt Gebäude und Stichtag', () => {
+		const d = buildLayerDetail('zensus-altbau-anteil-2022', 'de', altbauManifest);
+		const text = JSON.stringify([d?.explain, d?.methodology]);
+		expect(d?.layerName).toBe('Altbau-Anteil (Zensus 2022)');
+		expect(d?.explain.long).toMatch(/vor 1949/);
+		expect(text).toMatch(/Wohnungen, nicht Gebäude/);
+		expect(d?.methodology?.calculation).toMatch(/vor 1949/);
+		expect(d?.editorial?.disclaimerVariants).toContain('zensus-altbau');
+	});
+
+	it('EN nennt before 1949 und reference date', () => {
+		const d = buildLayerDetail('zensus-altbau-anteil-2022', 'en', altbauManifest);
+		expect(d?.layerName).toBe('Pre-1949 housing share (Census 2022)');
+		expect(d?.explain.long).toMatch(/before 1949/);
+		expect(d?.methodology?.calculation).toMatch(/before 1949/);
+	});
+});
+
 describe('buildLayerDetail', () => {
 	it('liefert Detail-Objekt für bekannten Slug', () => {
 		const d = buildLayerDetail('laerm-2023', 'de', sampleManifest);

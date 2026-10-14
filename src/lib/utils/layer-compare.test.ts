@@ -144,6 +144,47 @@ describe('compareLayerValues: Bestandsmiete numeric-no-judgment', () => {
 	});
 });
 
+describe('compareLayerValues: Altbau-Anteil numeric-no-judgment', () => {
+	it('A=70, B=40 → not-comparable mit Delta in %', () => {
+		const r = compareLayerValues(
+			'zensus-altbau-anteil-2022',
+			{ altbau_anteil: 70, wohnungen: 500 },
+			{ altbau_anteil: 40, wohnungen: 800 }
+		);
+		expect(r.direction).toBe('not-comparable');
+		expect(r.deltaLabel).toBe('30 Prozentpunkte höher in A');
+	});
+
+	it('EN: Delta in percentage points', () => {
+		const r = compareLayerValues(
+			'zensus-altbau-anteil-2022',
+			{ altbau_anteil: 70 },
+			{ altbau_anteil: 40 },
+			{ locale: 'en' }
+		);
+		expect(r.deltaLabel).toBe('30 percentage points higher in A');
+	});
+
+	it('Differenz unter 0,5 Punkten → equal', () => {
+		const r = compareLayerValues(
+			'zensus-altbau-anteil-2022',
+			{ altbau_anteil: 50 },
+			{ altbau_anteil: 50.2 }
+		);
+		expect(r.direction).toBe('equal');
+	});
+
+	it('keine Angabe (null) → not-comparable ohne Delta', () => {
+		const r = compareLayerValues(
+			'zensus-altbau-anteil-2022',
+			{ altbau_anteil: null },
+			{ altbau_anteil: 40 }
+		);
+		expect(r.direction).toBe('not-comparable');
+		expect(r.deltaLabel).toBeUndefined();
+	});
+});
+
 describe('compareLayerValues — Wohnlage/Mietspiegel categorical-neutral (Editorial-Würde)', () => {
 	it('Wohnlage A=gut, B=mittel → not-comparable (keine Hierarchie-Wertung)', () => {
 		const r = compareLayerValues('wohnlagen-2024', { wol_mode: 'gut' }, { wol_mode: 'mittel' });

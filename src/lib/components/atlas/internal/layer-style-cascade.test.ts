@@ -209,6 +209,21 @@ describe('Bestandsmiete als zweite Choropleth-Rolle', () => {
 	});
 });
 
+describe('Altbau-Anteil als zweite Choropleth-Rolle', () => {
+	it('computeCascadeVariants: zweiter Choropleth bekommt outline', () => {
+		const map = computeCascadeVariants(['laerm-2023', 'zensus-altbau-anteil-2022']);
+		expect(map.get('zensus-altbau-anteil-2022')).toBe<CascadeVariant>('outline');
+	});
+
+	it('outline liefert Größen-Symbole auf altbau_anteil', () => {
+		const [hit, dots] = buildLayerSpecCascade('zensus-altbau-anteil-2022', 'src', 'outline');
+		expect(hit.type).toBe('fill');
+		expect(dots.type).toBe('symbol');
+		expect(dots.layout?.['icon-image']).toBe('navigator-score-dot-zensus-altbau-anteil-2022');
+		expect(JSON.stringify(dots.layout?.['icon-size'])).toContain('"altbau_anteil"');
+	});
+});
+
 describe('isChoroplethSlug · Overlay-Klasse', () => {
 	it('Choroplethen: Scores, Umweltatlas, MSS, Wohnlagen, BRW, Dichte, PET', () => {
 		for (const slug of [

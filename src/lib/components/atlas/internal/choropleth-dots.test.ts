@@ -3,6 +3,7 @@ import { COLORS } from './colors.js';
 import { DIMENSION_RAMPS, SCORE_DOT_SIZES } from './dimension-ramps.js';
 import { choroplethDotImageId, dotSpecForSlug } from './choropleth-dots.js';
 import { MIETE_STOPS } from './miete-stops.js';
+import { ALTBAU_STOPS } from './altbau-stops.js';
 
 describe('dotSpecForSlug', () => {
 	it('liefert für jeden Score-Layer Spec mit Dimension-Anker und Quartil-Größen', () => {
@@ -101,6 +102,18 @@ describe('Bestandsmiete-Symbole', () => {
 		const step = (spec?.sizeExpression as unknown[])[3] as unknown[];
 		const thresholds = step.filter((x, i) => i >= 3 && i % 2 === 1 && typeof x === 'number');
 		expect(thresholds).toEqual([...MIETE_STOPS.slice(1)]);
+	});
+});
+
+describe('Altbau-Anteil-Symbole', () => {
+	it('hat Spec mit 5 Legenden-Faktoren und blendet null-Planungsräume aus', () => {
+		const spec = dotSpecForSlug('zensus-altbau-anteil-2022');
+		expect(spec?.legendFactors).toHaveLength(5);
+		expect(JSON.stringify(spec?.sizeExpression)).toContain('"altbau_anteil"');
+		expect(JSON.stringify(spec?.sizeExpression)).toContain('null');
+		const step = (spec?.sizeExpression as unknown[])[3] as unknown[];
+		const thresholds = step.filter((x, i) => i >= 3 && i % 2 === 1 && typeof x === 'number');
+		expect(thresholds).toEqual([...ALTBAU_STOPS.slice(1)]);
 	});
 });
 

@@ -50,6 +50,8 @@ export const LAYER_COMPARE_PROFILE: Record<string, CompareProfile> = {
 	bodenrichtwerte: 'numeric-no-judgment',
 	// Bestandsmiete: Faktum, kein „besser“ (Editorial-Würde wie Bodenrichtwerte).
 	'zensus-bestandsmiete-2022': 'numeric-no-judgment',
+	// Altbau-Anteil: Faktum zum Baualter, keine Wertung.
+	'zensus-altbau-anteil-2022': 'numeric-no-judgment',
 	'wohnlagen-2024': 'categorical-neutral',
 	'mietspiegel-wohnlage': 'categorical-neutral',
 	'milieuschutz-erhaltungsmiete': 'categorical-neutral',
@@ -119,13 +121,15 @@ const NUMERIC_UNITS: Record<string, string> = {
 	'laerm-2023': 'dB',
 	'laerm-den': 'dB',
 	'laerm-night': 'dB',
-	'klima-pet-2022': '°C'
+	'klima-pet-2022': '°C',
+	'zensus-altbau-anteil-2022': '%'
 };
 
 const NUMERIC_KEYS: Record<string, readonly string[]> = {
 	'klima-pet-2022': ['pet14h'],
 	bodenrichtwerte: ['richtwert', 'eur_qm', 'wert'],
-	'zensus-bestandsmiete-2022': ['miete']
+	'zensus-bestandsmiete-2022': ['miete'],
+	'zensus-altbau-anteil-2022': ['altbau_anteil']
 };
 
 const CURRENCY_PER_M2: Record<string, true> = {
@@ -261,6 +265,18 @@ function compareNumericNoJudgment(
 			: slug === 'zensus-bestandsmiete-2022'
 				? m.compare_advisory_zensus_bestandsmiete(undefined, options)
 				: m.compare_advisory_context_neutral(undefined, options);
+	if (slug === 'zensus-altbau-anteil-2022') {
+		return {
+			direction: 'not-comparable',
+			deltaLabel: m
+				.compare_delta_higher_in_points(
+					{ amount: formatDelta(diff, opts), side: higherSide },
+					options
+				)
+				.trim(),
+			advisory
+		};
+	}
 	return {
 		direction: 'not-comparable',
 		deltaLabel: m

@@ -57,6 +57,7 @@ const fullLayerMeta = [
 	meta('mietspiegel-wohnlage', 'B: Wohn-Daten'),
 	meta('bodenrichtwerte', 'B: Wohn-Daten'),
 	meta('zensus-bestandsmiete-2022', 'B: Wohn-Daten'),
+	meta('zensus-altbau-anteil-2022', 'B: Wohn-Daten'),
 	meta('laerm-den', 'C: Umwelt'),
 	meta('stolpersteine', 'D: Memorial')
 ];
@@ -172,6 +173,18 @@ describe('compare-panel.svelte', () => {
 		await expect
 			.element(page.getByTestId('compare-disclaimer-zensus-bestandsmiete'))
 			.toBeInTheDocument();
+	});
+
+	it('rendert den Altbau-Hinweis für den Altbau-Anteil', async () => {
+		render(Harness, {
+			compareMode: true,
+			selectedAddress: addressA,
+			comparisonAddress: addressB,
+			selectedLayerHits: [hit('zensus-altbau-anteil-2022', { altbau_anteil: 70 })],
+			comparisonLayerHits: [hit('zensus-altbau-anteil-2022', { altbau_anteil: 40 })],
+			layerMeta: fullLayerMeta
+		});
+		await expect.element(page.getByTestId('compare-disclaimer-zensus-altbau')).toBeInTheDocument();
 	});
 
 	it('Footer rendert compare-stigma-disclaimer', async () => {

@@ -21,6 +21,8 @@
 			'Höherer Bodenrichtwert kann teurere Miete bedeuten, oft aber auch bessere Versorgung. Wir zeigen die Differenz, ohne Bewertung.',
 		'zensus-bestandsmiete':
 			'Bestandsmiete, keine Angebotsmiete. Stichtag 15.05.2022. Die Werte sind datenschutzbedingt leicht verrauscht. Bis zum Registerzensus 2031 gibt es kein Update.',
+		'zensus-altbau':
+			'Anteil der Wohnungen in Gebäuden von vor 1949, keine Aussage über den heutigen Zustand. Stichtag 15.05.2022. Die Werte sind datenschutzbedingt leicht verrauscht. Bis zum Registerzensus 2031 gibt es kein Update.',
 		'compare-stigma-footer':
 			'Aggregierte Daten pro Lage spiegeln statistische Mittel wider, nicht individuelle Wohnsituationen.',
 		'mss-aggregat':
@@ -85,6 +87,7 @@
 		'compare-mietspiegel': m.disclaimer_compare_mietspiegel,
 		'compare-bodenrichtwerte': m.disclaimer_compare_bodenrichtwerte,
 		'zensus-bestandsmiete': m.disclaimer_zensus_bestandsmiete,
+		'zensus-altbau': m.disclaimer_zensus_altbau,
 		'compare-stigma-footer': m.disclaimer_compare_stigma_footer,
 		'mss-aggregat': m.disclaimer_mss_aggregat,
 		'compare-mss-aggregat': m.disclaimer_compare_mss_aggregat,

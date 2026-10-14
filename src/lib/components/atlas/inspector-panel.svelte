@@ -230,7 +230,7 @@
 		return level.bezirkSlug ? entry.bezirk[level.bezirkSlug] : undefined;
 	}
 
-	function contextText(agg: LayerAggregate): string | null {
+	function contextText(slug: string, agg: LayerAggregate): string | null {
 		if (agg.type === 'ordinal-distribution') {
 			if (agg.dominant === null) return null;
 			const share = agg.classes.find((c) => c.label === agg.dominant)?.share;
@@ -243,7 +243,7 @@
 					)
 				: m.inspector_context_dominant({ dominant: agg.dominant }, localeOpts);
 		}
-		if (agg.type === 'weighted-mean') return formatWeightedMeanContext(agg, localeOpts);
+		if (agg.type === 'weighted-mean') return formatWeightedMeanContext(agg, localeOpts, slug);
 		if (agg.type === 'coverage-share' || agg.type === 'area-share') {
 			return m.inspector_context_area_share({ share: String(agg.share) }, localeOpts);
 		}
@@ -292,7 +292,7 @@
 		];
 		const rows = scopes.flatMap((s) => {
 			const agg = aggFor(slug, s.scope);
-			const text = agg ? contextText(agg) : null;
+			const text = agg ? contextText(slug, agg) : null;
 			return text ? [{ id: s.id, label: s.label, text }] : [];
 		});
 		// Story 10.6b: Lärm-dB-Kiez-Mittel (L_DEN) als Kontext zur adress-genauen 3-Stufen-Karte.

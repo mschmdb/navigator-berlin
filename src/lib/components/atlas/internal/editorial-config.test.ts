@@ -13,7 +13,8 @@ const ALLOWED_VARIANTS: DisclaimerVariant[] = [
 	'source',
 	'kuehle-orte',
 	'mss-aggregat',
-	'zensus-bestandsmiete'
+	'zensus-bestandsmiete',
+	'zensus-altbau'
 ];
 
 describe('EDITORIAL_CONFIG', () => {
@@ -45,6 +46,12 @@ describe('EDITORIAL_CONFIG', () => {
 		expect(c.disclaimerVariants).toContain('historic');
 		expect(c.customComponent).toBe('MauerSektorenDetail');
 		expect(c.neverMachineTranslate).toBe(true);
+	});
+
+	it('zensus-altbau-anteil-2022 trägt Hinweis und Quelle', () => {
+		const c = EDITORIAL_CONFIG['zensus-altbau-anteil-2022'];
+		expect(c.disclaimerVariants).toContain('zensus-altbau');
+		expect(c.primarySourceUrl).toMatch(/destatis\.de/);
 	});
 
 	it('zensus-bestandsmiete-2022 trägt den Bestand-statt-Angebot-Hinweis', () => {

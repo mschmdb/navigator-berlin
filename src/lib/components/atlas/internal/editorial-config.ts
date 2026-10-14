@@ -25,6 +25,12 @@ export const EDITORIAL_CONFIG: Record<string, EditorialConfig> = {
 		primarySourceUrl: 'https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Wohnen/_inhalt.html',
 		feedbackMailto: true
 	},
+	'zensus-altbau-anteil-2022': {
+		slug: 'zensus-altbau-anteil-2022',
+		disclaimerVariants: ['zensus-altbau'],
+		primarySourceUrl: 'https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Wohnen/_inhalt.html',
+		feedbackMailto: true
+	},
 	trinkbrunnen: {
 		slug: 'trinkbrunnen',
 		disclaimerVariants: ['seasonal'],

@@ -56,6 +56,16 @@ export const BUILD_SCRIPT_ROWS: readonly DataFlowRow[] = [
 		license: 'dl-de/by-2-0',
 		stand: '2022-05-15',
 		buildStep: 'scripts/fetch-zensus-miete.ts'
+	},
+	{
+		slug: 'zensus-altbau-anteil-2022',
+		bundle: 'B: Wohn-Daten',
+		kind: 'build-script',
+		source:
+			'www.destatis.de/static/DE/zensus/gitterdaten/Wohnungen_mod_MZ_Baujahresklassen_in_Gitterzellen.zip',
+		license: 'dl-de/by-2-0',
+		stand: '2022-05-15',
+		buildStep: 'scripts/fetch-zensus-altbau.ts'
 	}
 ];
 

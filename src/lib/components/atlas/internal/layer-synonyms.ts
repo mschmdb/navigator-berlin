@@ -20,6 +20,17 @@ export const LAYER_SYNONYMS_DE: Record<string, readonly string[]> = {
 		'zensus',
 		'census'
 	],
+	'zensus-altbau-anteil-2022': [
+		'altbau',
+		'baujahr',
+		'gründerzeit',
+		'gruenderzeit',
+		'gebäudealter',
+		'old buildings',
+		'pre-war',
+		'zensus',
+		'census'
+	],
 	'laerm-2023': ['lärm', 'laerm', 'ruhe', 'verkehr'],
 	'luft-2023': ['luft', 'feinstaub', 'stickoxid'],
 	'klima-pet-2022': ['hitze', 'sommer', 'klima', 'pet'],

@@ -56,6 +56,13 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		valueScaleExplain:
 			'Höher = höhere Bestandsmiete, ohne Wertung (Planungsräume liegen bei rund 5 bis 13,5 €/m²)'
 	},
+	'zensus-altbau-anteil-2022': {
+		short: 'Anteil der Wohnungen in Gebäuden von vor 1949 je Planungsraum (Zensus 2022)',
+		long: 'Anteil der Wohnungen in Gebäuden mit Baujahr vor 1949 an allen Wohnungen. Gezählt werden Wohnungen, nicht Gebäude. Stichtag 15.05.2022. Das Cell-Key-Verfahren verrauscht die Werte leicht. Kein Update bis zum Registerzensus 2031. Unter 30 Wohnungen: keine Angabe. Quelle: Statistische Ämter des Bundes und der Länder, Zensus 2022.',
+		unit: '%',
+		valueScaleExplain:
+			'Höher = mehr Wohnungen in Gebäuden von vor 1949, ohne Wertung (Planungsräume liegen zwischen 0 und rund 93 %)'
+	},
 	'wohnlagen-2024': {
 		short: 'Wohnlagen-Bewertung im Berliner Mietspiegel 2024 (Aggregat pro Planungsraum)',
 		long: 'Aggregierte Wohnlagen-Einstufung aus dem Berliner Mietspiegel 2024 pro Planungsraum. Konkrete €/m² siehe offizieller Mietspiegel-Rechner. Einstufung beruht auf Lage, Verkehrsanbindung, Versorgung und Wohnumfeld.',
@@ -389,6 +396,12 @@ export const LAYER_EXPLAIN_MESSAGE: Partial<Record<string, LayerExplainMessages>
 		long: m.layer_explain_zensus_bestandsmiete_2022_long,
 		scale: m.layer_explain_zensus_bestandsmiete_2022_scale,
 		unit: m.layer_explain_zensus_bestandsmiete_2022_unit
+	},
+	'zensus-altbau-anteil-2022': {
+		short: m.layer_explain_zensus_altbau_anteil_2022_short,
+		long: m.layer_explain_zensus_altbau_anteil_2022_long,
+		scale: m.layer_explain_zensus_altbau_anteil_2022_scale,
+		unit: m.layer_explain_zensus_altbau_anteil_2022_unit
 	},
 	'wohnlagen-2024': {
 		short: m.layer_explain_wohnlagen_2024_short,

@@ -316,6 +316,15 @@ function formatBestandsmiete(raw: unknown, opts?: LocaleOptions): FormattedValue
 	return value(`${formatted} €/m²`, true);
 }
 
+function formatAltbauAnteil(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const options = toAtlasMessageOptions(opts);
+	const anteil = pickProp(raw, 'altbau_anteil');
+	if (anteil === null) return value(m.atlas_value_keine_angabe(undefined, options));
+	if (typeof anteil !== 'number' || !Number.isFinite(anteil)) return missingValue(opts);
+	const formatted = formatDecimal(anteil, { ...options, maximumFractionDigits: 0 });
+	return value(`${formatted} %`, true);
+}
+
 function formatKlimaHighlight(raw: unknown, label: string, opts?: LocaleOptions): FormattedValue {
 	if (!raw || (typeof raw === 'object' && Object.keys(raw).length === 0)) return missingValue(opts);
 	return value(label);
@@ -505,6 +514,8 @@ export function formatLayerValue(slug: string, raw: unknown, opts?: LocaleOption
 			return formatEinwohnerdichte(raw, opts);
 		case 'zensus-bestandsmiete-2022':
 			return formatBestandsmiete(raw, opts);
+		case 'zensus-altbau-anteil-2022':
+			return formatAltbauAnteil(raw, opts);
 		case 'klima-kaltlufteinwirkbereich-2022':
 			return formatKlimaHighlight(
 				raw,

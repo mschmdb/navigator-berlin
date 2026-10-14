@@ -66,7 +66,13 @@ export const COLORS = {
 	scaleMiete2: '#60687E',
 	scaleMiete3: '#475374',
 	scaleMiete4: '#303F69',
-	scaleMiete5: '#1A2A5E'
+	scaleMiete5: '#1A2A5E',
+	// Altbau-Anteil: gleiche Werte wie die Miete-Skala, eigene Tokens (Bestandsmiete bleibt unberührt)
+	scaleAltbau1: '#797D88',
+	scaleAltbau2: '#60687E',
+	scaleAltbau3: '#475374',
+	scaleAltbau4: '#303F69',
+	scaleAltbau5: '#1A2A5E'
 } as const;
 
 export type ColorToken = keyof typeof COLORS;

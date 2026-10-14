@@ -16,7 +16,7 @@ import { dimensionLabel } from './kiez-score-display.js';
  * ÖPNV-Stops (`oepnv-*`) erscheinen als NearestStopsCard (Mobilität), nicht als reguläre Card.
  *
  * NICHT enthalten (bewusst Kontext, ADR-015): laerm-2023 (durch laerm-db abgelöst),
- * umweltgerechtigkeit-2023, mss-gesamtindex-2025, wohnlagen-2024, bodenrichtwerte, zensus-bestandsmiete-2022, sportanlagen-2024,
+ * umweltgerechtigkeit-2023, mss-gesamtindex-2025, wohnlagen-2024, bodenrichtwerte, zensus-bestandsmiete-2022, zensus-altbau-anteil-2022, sportanlagen-2024,
  * schwimmbaeder, krankenhaeuser-weitere, Boundaries, Demografie, Wahldaten.
  */
 export const LAYER_SCORE_DIMENSION: Readonly<Record<string, KiezScoreDimension>> = {
