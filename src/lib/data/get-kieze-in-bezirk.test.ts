@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildKiezeInBezirk, pickTop, pickSiblings, type KiezRef } from './get-kieze-in-bezirk.js';
+import { buildKiezeInBezirk, pickSiblings, type KiezRef } from './get-kieze-in-bezirk.js';
 
 const fc = {
 	features: [
@@ -89,18 +89,6 @@ describe('buildKiezeInBezirk', () => {
 			bezirkSlug: 'pankow'
 		});
 		expect(refs.map((r) => r.name)).toEqual(['Buchholz']);
-	});
-});
-
-describe('pickTop', () => {
-	it('liefert top-N', () => {
-		const refs: KiezRef[] = [
-			{ slug: 'a', name: 'A', composite: 90 },
-			{ slug: 'b', name: 'B', composite: 80 },
-			{ slug: 'c', name: 'C', composite: 70 }
-		];
-		expect(pickTop(refs, 2)).toHaveLength(2);
-		expect(pickTop(refs, 2)[0].slug).toBe('a');
 	});
 });
 

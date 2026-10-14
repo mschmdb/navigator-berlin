@@ -6,7 +6,11 @@ import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 import { readBezirkComposite, readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
 import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
-import { buildKiezeInBezirk, pickTop, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
+import {
+	buildBezirkKiezeView,
+	type BezirkKiezeView,
+	type KiezRankInfo
+} from '$lib/data/bezirk-kieze-view.js';
 import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
 import { SCORE_DIMENSION_KEYS, type ComparisonDimRow } from '$lib/data/comparison-types.js';
@@ -72,7 +76,7 @@ export type BezirkPageData = {
 	readonly stats: BezirkStats | null;
 	readonly faq: readonly FaqEntry[];
 	readonly faqLocale: Locale;
-	readonly kieze: readonly KiezRef[];
+	readonly kiezeView: BezirkKiezeView;
 	readonly comparison: readonly ComparisonDimRow[];
 	readonly compositeRank: {
 		readonly rang: number | null;
@@ -85,7 +89,22 @@ export type BezirkPageData = {
 	readonly profileLocale: Locale;
 };
 
-async function tryLoadKieze(bezirkSlug: string): Promise<KiezRef[]> {
+const EMPTY_VIEW: BezirkKiezeView = { kieze: [], outline: null };
+
+async function tryLoadKiezRanks(): Promise<Map<string, KiezRankInfo>> {
+	if (!process.env.DATABASE_URL) return new Map();
+	try {
+		const { getKiezCompositeRanks } =
+			await import('$lib/server/db/queries/get-kiez-composite-ranks.js');
+		return await getKiezCompositeRanks();
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[bezirk-page] WARN: kiez_rank unavailable (${msg})\n`);
+		return new Map();
+	}
+}
+
+async function tryLoadKiezeView(bezirkSlug: string): Promise<BezirkKiezeView> {
 	try {
 		const { readFile } = await import('node:fs/promises');
 		const { resolve } = await import('node:path');
@@ -96,7 +115,7 @@ async function tryLoadKieze(bezirkSlug: string): Promise<KiezRef[]> {
 		};
 		const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
 		const lorLayer = manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
-		if (!bezirkeLayer || !lorLayer) return [];
+		if (!bezirkeLayer || !lorLayer) return EMPTY_VIEW;
 
 		const [bezirkeRaw, lorRaw] = await Promise.all([
 			readFile(resolve(process.cwd(), 'static/layers', bezirkeLayer.filename), 'utf-8'),
@@ -137,17 +156,17 @@ async function tryLoadKieze(bezirkSlug: string): Promise<KiezRef[]> {
 			}
 		}
 
-		const all = buildKiezeInBezirk({
+		return buildBezirkKiezeView({
 			lorFeatureCollection: lorFc,
 			bezirkCodeToSlug,
 			scores,
+			ranks: await tryLoadKiezRanks(),
 			bezirkSlug
 		});
-		return pickTop(all, 5);
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
 		process.stderr.write(`[bezirk-page] WARN: kieze-load failed (${msg})\n`);
-		return [];
+		return EMPTY_VIEW;
 	}
 }
 
@@ -163,7 +182,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	const [
 		stats,
 		faqResult,
-		kieze,
+		kiezeView,
 		rank,
 		comparisonMap,
 		profileResult,
@@ -172,7 +191,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	] = await Promise.all([
 		tryLoadBezirkStats(slug),
 		getFaqForPage({ pageType: 'bezirk', slug, locale: getLocale() }),
-		tryLoadKieze(slug),
+		tryLoadKiezeView(slug),
 		tryLoadBezirkRank(slug),
 		tryLoadBezirkComparison(slug),
 		getLocalizedProfile('bezirk', slug, getLocale()),
@@ -197,7 +216,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		stats,
 		faq: faqResult.items,
 		faqLocale: faqResult.locale,
-		kieze,
+		kiezeView,
 		comparison,
 		compositeRank,
 		einwohnerStichtag,

@@ -39,7 +39,7 @@ export function formatStichtag(iso: string | null, locale: Locale): string | nul
 	return m.meta_stand_date({ date: formatDate(iso, opts) }, opts);
 }
 
-function formatKm2(flaecheHa: number, locale: Locale): string {
+export function formatKm2(flaecheHa: number, locale: Locale): string {
 	return formatDecimal(flaecheHa / 100, {
 		locale,
 		maximumFractionDigits: 1,

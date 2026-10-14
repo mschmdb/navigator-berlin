@@ -370,3 +370,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-l3-title-meta-fakten.md`
   summary: E2E für Score- und Rang-Satz in Kiez-/Bezirks-Meta-Descriptions braucht einen DB-gestützten Build (heute nur Unit-Tests).
   evidence: Playwright baut ohne `DATABASE_URL`; `tryLoadKiezScore`/`tryLoadBezirkRank` liefern dann null, der Satz entfällt. Ein Wiring-Fehler (Score oder Quartil nicht durchgereicht) bliebe in E2E unsichtbar.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l5-bezirksseite-karte-liste.md`
+  summary: Pixel-Logo wird zweimal inline als SVG ausgeliefert (je ~39,5 KB, zusammen ~79 KB pro Seite); Bezirksseiten bleiben dadurch über 200 KB HTML.
+  evidence: Messung L5 (14.10.2026): Treptow-Köpenick 206 KB HTML, davon Bezirkskarte nur ~22 KB. Logo als externe, gecachte SVG-Datei oder vereinfachtes Raster würde jede Seite um ~75 KB entlasten; relevant für mobilen Absprung.

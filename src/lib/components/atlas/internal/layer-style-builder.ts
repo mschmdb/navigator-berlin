@@ -9,6 +9,7 @@ import { MIETE_STOPS } from './miete-stops.js';
 import { assertUnreachable, type LocaleOptions } from './atlas-label-options.js';
 import type { Locale } from '$lib/paraglide/runtime';
 import { kiezScoreScaleLabel } from '../inspector-panel/internal/kiez-score-display.js';
+import { scoreClassStops } from './score-class-color.js';
 
 type MessageFn = (params?: undefined, options?: { locale: Locale }) => string;
 
@@ -1201,14 +1202,7 @@ export function buildLayerSpec(
 							'step',
 							['to-number', ['get', 'value'], -1],
 							COLORS.bg,
-							0,
-							ramp[0],
-							26,
-							ramp[1],
-							51,
-							ramp[3],
-							76,
-							ramp[4]
+							...scoreClassStops(ramp)
 						],
 						'fill-opacity': 0.55,
 						'fill-outline-color': COLORS.accent

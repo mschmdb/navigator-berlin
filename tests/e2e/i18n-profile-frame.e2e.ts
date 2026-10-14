@@ -228,7 +228,7 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 
 		const hero = page.getByTestId('bezirk-hero');
 		await expect(hero.locator('h1')).toBeVisible();
-		await expect(hero).toContainText('residents');
+		await expect(hero).toContainText('Residents');
 
 		const comparison = page.getByTestId('score-comparison');
 		await expect(comparison).toContainText('In comparison');

@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import BezirkHero from '$lib/components/atlas/bezirk-hero.svelte';
+	import BezirkDetails from '$lib/components/atlas/bezirk-details.svelte';
 	import BezirkKiezeList from '$lib/components/atlas/bezirk-kieze-list.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
@@ -123,18 +124,28 @@
 	<Breadcrumb items={breadcrumbItems} />
 </div>
 
-<BezirkHero
-	profile={data.profile}
-	stats={data.stats}
-	faq={data.faq}
-	faqLocale={data.faqLocale}
-	comparison={data.comparison}
-	profileProse={data.profileProse}
-	profileLocale={data.profileLocale}
-/>
-<div class="mx-auto max-w-3xl px-4 pb-8">
-	<BezirkKiezeList kieze={data.kieze} bezirkName={name} />
-</div>
+<article>
+	<BezirkHero
+		profile={data.profile}
+		kieze={data.kiezeView.kieze}
+		outline={data.kiezeView.outline}
+		compositeRank={data.compositeRank}
+		einwohnerStichtag={data.einwohnerStichtag}
+	/>
+	<div class="mx-auto max-w-3xl px-4 pb-8">
+		{#key slug}
+			<BezirkKiezeList kieze={data.kiezeView.kieze} bezirkName={name} />
+		{/key}
+	</div>
+	<BezirkDetails
+		stats={data.stats}
+		faq={data.faq}
+		faqLocale={data.faqLocale}
+		comparison={data.comparison}
+		profileProse={data.profileProse}
+		profileLocale={data.profileLocale}
+	/>
+</article>
 
 <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
 	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="bezirke" />
