@@ -346,3 +346,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: Präzisierung Zensus-Folge-Story 2 (Matze 14.10.2026): EIN Layer „Leerstand (Zensus 2022)“ mit der normalen Leerstandsquote; die marktaktive Leerstandsquote (Destatis: leer und innerhalb von drei Monaten wieder verfügbar) entfällt, weil der Begriff Nutzern nichts sagt.
   evidence: Destatis-Datensatzbeschreibung `Marktaktive_Leerstandsquote_in_Gitterzellen.zip`; Matze: „marktaktive Leerstandsquote wtf?“.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story Leerstand. Datenqualität auf Planungsraum-Ebene zu schwach.
+  evidence: Leerstandsquote-Gitter Berlin-BBox: 51.435 von 57.698 Zellen „–“ (= 0), von ~6.300 Zellen mit Wert 5.690 KLAMMERN; gewichtet (Wohnungen aus Wohnungen_nach_Zahl_der_Raeume) 1,55 % gegen amtlich 1,97 % (Abgeordnetenhaus S19/20607). Unterschiede zwischen PLR wären überwiegend Rauschen.
