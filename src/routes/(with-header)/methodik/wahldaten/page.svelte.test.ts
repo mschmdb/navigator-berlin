@@ -48,11 +48,9 @@ describe('methodik/wahldaten +page.svelte (Wahlen 2026: Stand auf Prod-Daten bri
 			(li.textContent ?? '').replace(/\s+/g, ' ').trim()
 		);
 		expect(items).toContain('Bundestagswahlen: 2013, 2017, 2021, 2025');
+		expect(items).toContain('Abgeordnetenhauswahlen: 2011, 2016, 2021, 2023 (Wiederholung), 2026');
 		expect(items).toContain(
-			'Abgeordnetenhauswahlen: 2011, 2016, 2021, 2023 (Wiederholung), 2026 (vorläufig)'
-		);
-		expect(items).toContain(
-			'Bezirksverordneten-Versammlungen: 2011, 2016, 2021, 2023 (Wiederholung), 2026 (vorläufig)'
+			'Bezirksverordneten-Versammlungen: 2011, 2016, 2021, 2023 (Wiederholung), 2026'
 		);
 		const text = section?.textContent ?? '';
 		expect(text).not.toMatch(/Phase 1/);
@@ -76,17 +74,15 @@ describe('methodik/wahldaten +page.svelte (Wahlen 2026: Stand auf Prod-Daten bri
 		expect(text).not.toMatch(/Memory/);
 	});
 
-	it('Abschnitt 7 bindet die Endergebnis-Termine an BVV/AGH und zeigt Wahltag, Stand und Quelle', () => {
+	it('Abschnitt 7 nennt Wahltag, Endergebnis-Datum und Quelle, ohne Vorläufig-Hinweis', () => {
 		render(Page);
 		const section = document.getElementById('update-cadence');
 		const text = (section?.textContent ?? '').replace(/\s+/g, ' ');
 		expect(text).toMatch(/20\.09\.2026/);
-		expect(text).toMatch(/21\.09\.2026/);
+		expect(text).toMatch(/12\.10\.2026/);
+		expect(text).toMatch(/amtliche Endergebnis/);
 		expect(text).toMatch(/wahlen-berlin\.de/);
-		expect(text).toMatch(/30\.09\.2026\s*\(BVV\)/);
-		expect(text).toMatch(/05\.\s*bis\s*08\.10\.2026\s*\(AGH\)/);
-		expect(text).toMatch(/wo verfügbar/);
-		expect(text).toMatch(/vorläufig/);
+		expect(text).not.toMatch(/vorläufig/);
 		expect(text).not.toMatch(/Memory/);
 		expect(text).not.toMatch(/pnpm/);
 	});
@@ -153,16 +149,16 @@ describe('methodik/wahldaten · EN (i18n C4b)', () => {
 		expect(toc?.querySelectorAll('a').length).toBe(9);
 	});
 
-	it('setzt „provisional“ an den Stellen von „vorläufig“ und lässt kein deutsches Wort stehen', () => {
+	it('EN: nennt das Endergebnis ohne „provisional“ und lässt kein deutsches Wort stehen', () => {
 		overwriteGetLocale(() => 'en');
 		render(Page);
 		const cutoff = document.getElementById('cutoff')?.textContent ?? '';
-		expect(cutoff.match(/\(provisional\)/g)?.length).toBe(2);
+		expect(cutoff).not.toContain('provisional');
 		const cadence = document.getElementById('update-cadence')?.textContent ?? '';
-		expect(cadence).toContain('provisional official result');
-		expect(cadence).toContain('“provisional”');
+		expect(cadence).not.toContain('provisional');
+		expect(cadence).toContain('final official result');
 		expect(cadence).toContain('20 September 2026');
-		expect(cadence).toContain('5 to 8 October 2026');
+		expect(cadence).toContain('12 October 2026');
 		const text = document.querySelector('[data-testid="wahl-methodik-page"]')?.textContent ?? '';
 		for (const german of ['vorläufig', 'Datenquellen', 'Briefwahl-Gruppen', 'Wiederholungswahl']) {
 			expect(text, german).not.toContain(german);

@@ -40,10 +40,10 @@
 		readonly quelle: string;
 	};
 
-	// „Vorläufig" in den beiden 2026er-Karten ist statischer Text, kein
-	// API-Feld -- ein Re-Ingest mit dem Endergebnis aktualisiert ihn NICHT
-	// automatisch. Beim Endergebnis von Hand entfernen, siehe Re-Ingest-
-	// Checkliste in docs/wahldaten-methodik.md ("AGH/BVV 2026 (vorläufig)").
+	// `vorlaeufig` ist statische Config, kein API-Feld: ein Re-Ingest mit dem
+	// Endergebnis setzt es NICHT automatisch zurück. Bei einer neuen Wahl mit
+	// vorläufigem Ergebnis hier auf true setzen und beim Endergebnis von Hand
+	// zurücknehmen (Re-Ingest-Checkliste in docs/wahldaten-methodik.md).
 	const CARDS: ReadonlyArray<WahlCardSource> = [
 		{
 			slug: '2026-agh-zweitstimme',
@@ -51,7 +51,7 @@
 			reiheOnly: true,
 			jahr: '2026',
 			stimmtyp: 'zweitstimme',
-			vorlaeufig: true,
+			vorlaeufig: false,
 			quelle: 'Landeswahlleiterin Berlin'
 		},
 		{
@@ -60,7 +60,7 @@
 			reiheOnly: false,
 			jahr: '2026',
 			stimmtyp: 'einstimme',
-			vorlaeufig: true,
+			vorlaeufig: false,
 			quelle: 'Landeswahlleiterin Berlin'
 		},
 		{

@@ -17,6 +17,16 @@ describe('home-wahl-teaser', () => {
 		await expect.element(page.getByTestId('home-wahl-card-2026-bvv')).toBeInTheDocument();
 	});
 
+	it('zeigt kein Vorläufig-Badge mehr an den 2026er-Karten (Endergebnis 12.10.2026)', async () => {
+		render(HomeWahlTeaser);
+		await expect
+			.element(page.getByTestId('home-wahl-card-2026-agh-zweitstimme'))
+			.not.toHaveTextContent('Vorläufig');
+		await expect
+			.element(page.getByTestId('home-wahl-card-2026-bvv'))
+			.not.toHaveTextContent('Vorläufig');
+	});
+
 	it('behält den BTW25-Zweitstimme-Link', async () => {
 		render(HomeWahlTeaser);
 		await expect

@@ -113,11 +113,12 @@ test.describe('i18n Block C4b: vier Seiten englisch, ohne Banner, indexierbar', 
 		await expect(main.getByRole('heading', { name: 'Available tools' })).toBeVisible();
 	});
 
-	test('/en/methodik/wahldaten: „provisional“ statt „vorläufig“, Anker bleiben', async ({
+	test('/en/methodik/wahldaten: Endergebnis ohne „provisional“, Anker bleiben', async ({
 		page
 	}) => {
 		await page.goto('/en/methodik/wahldaten');
-		await expect(page.locator('#cutoff')).toContainText('(provisional)');
+		await expect(page.locator('#cutoff')).toContainText('2026');
+		await expect(page.locator('#cutoff')).not.toContainText('provisional');
 		await expect(page.locator('#cutoff')).not.toContainText('vorläufig');
 		await expect(page.locator('#wahldaten-briefwahl a[href="#aggregation"]')).toBeAttached();
 	});

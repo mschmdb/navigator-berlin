@@ -24,25 +24,24 @@ Quelle der Wahrheit für die Wahldaten-Pipeline in navigator.berlin. Erweitert i
 
 **Summe Phase 1: 14 aktive Wahlen, 23 `wahl`-Rows in DB** (BTW + AGH je 2 Stimmtypen, BVV je 1 Einstimme).
 
-**AGH/BVV 2026 (vorläufig):** Wahltag 20.09.2026. Ingest lief am 23.09.2026 mit dem
-amtlichen vorläufigen Ergebnis (Stand 21.09.2026, Quelle wahlen-berlin.de).
-`wahl.vorlaeufig = true` für `agh26`/`bvv26`, Portal/`/berlin-wahlen/[slug]`/Tool-Responses
-zeigen die Kennzeichnung „vorläufig" plus Stand-Datum (`wahl.sourceUpdatedAt`,
-aus `Datum`/`Zeit` der Wahlbezirks-CSV berechnet).
+**AGH/BVV 2026 (Endergebnis):** Wahltag 20.09.2026. Erster Ingest am 23.09.2026 mit dem
+vorläufigen Ergebnis (Stand 21.09.2026). Der Landeswahlausschuss hat das Endergebnis am
+12.10.2026 festgestellt, wahlen-berlin.de hat die Wahlbezirks-CSVs am selben Tag unter
+denselben URLs ersetzt. `WB_AGH2026`/`WB_BVV2026` tragen seitdem kein `vorlaeufig` mehr.
 
-**Re-Ingest-Checkliste beim Endergebnis** (BVV ab ~30.09., AGH ab ~05.–08.10.):
+**Re-Ingest-Checkliste beim Endergebnis** (Vorlage für künftige Wahlen):
 
-1. `scripts/wahlen/lib/sources.ts`: `vorlaeufig: true` bei `WB_AGH2026`/`WB_BVV2026` entfernen (oder auf `false` setzen).
-2. Re-Ingest erzwingen -- das prebuild-Gate (`scripts/check-wahl-data.ts`) überspringt `data:wahl-fetch`/`data:wahl-kiez`/`data:wahl-analytik` sonst, weil `wahlen=23`/`wahlen-mit-kiez-aggregat=18` bereits erfüllt sind: entweder `WAHL_REFRESH=true` setzen (läuft die volle Kette einmal durch) oder gezielt
+1. `scripts/wahlen/lib/sources.ts`: `vorlaeufig: true` an der Quelle entfernen.
+2. Re-Ingest: das prebuild-Gate (`scripts/check-wahl-data.ts`) vergleicht `wahl.vorlaeufig` mit `WAHL_SOURCES` und fährt bei Abweichung die volle Kette (fetch, geo, kiez, analytik). Kein `WAHL_REFRESH` nötig. Gezielt von Hand:
    ```bash
    pnpm data:wahl-fetch -- --only=agh26,bvv26
    pnpm data:wahl-kiez -- --only=agh26
    pnpm data:wahl-kiez -- --only=bvv26
    pnpm data:wahl-analytik
    ```
-3. `src/lib/components/home/home-wahl-teaser.svelte`: `typLabel` der beiden 2026er-`CARDS`-Einträge von `„… · Vorläufig"` auf den finalen Text ändern -- das Badge dort ist statischer Text, kein Re-Ingest aktualisiert es automatisch (siehe Kommentar an `CARDS` im Code).
-4. `/methodik/wahldaten` anpassen: „(vorläufig)" in #cutoff und den Absatz in #update-cadence entfernen bzw. auf Endergebnis umstellen. Die Texte stehen als Messages in `messages/de.json` und `messages/en.json` (`methodik_wahldaten_cutoff_li_agh`, `methodik_wahldaten_cutoff_li_bvv`, `methodik_wahldaten_cadence_p2`, dazu `methodik_wahldaten_quellen_agh_desc`). DE und EN gemeinsam ändern: „(vorläufig)" und „(provisional)" entfallen, ebenso die Sätze zum vorläufigen Ergebnis. Danach werden diese Tests rot und müssen mitziehen: der DE-Snapshot `src/routes/(with-header)/methodik/wahldaten/__snapshots__/wahldaten-de.txt` (`pnpm exec vitest run <pfad> -u`, Diff prüfen), die EN- und DE-Unit-Tests zu „provisional“ und „vorläufig“ in `methodik/wahldaten/page.svelte.test.ts` sowie die e2e-Prüfung `#cutoff` („(provisional)“) in `tests/e2e/i18n-c4b.e2e.ts`.
-5. `pnpm data:wahl-check` grün prüfen, `wahl.vorlaeufig`/`source_updated_at` stichprobenhaft per SQL verifizieren.
+3. `src/lib/components/home/home-wahl-teaser.svelte`: `vorlaeufig` der betroffenen `CARDS` auf `false`. Das Badge ist statische Config, kein Re-Ingest aktualisiert es.
+4. `/methodik/wahldaten`: „(vorläufig)" in #cutoff entfernen, #update-cadence auf Endergebnis umstellen. Messages in `messages/de.json` und `messages/en.json` (`methodik_wahldaten_cutoff_li_agh`, `methodik_wahldaten_cutoff_li_bvv`, `methodik_wahldaten_cadence_p2`, `methodik_wahldaten_quellen_agh_desc`), DE und EN gemeinsam. Mitziehen: DE-Snapshot `src/routes/(with-header)/methodik/wahldaten/__snapshots__/wahldaten-de.txt` (`-u`, Diff prüfen), `methodik/wahldaten/page.svelte.test.ts`, `tests/e2e/i18n-c4b.e2e.ts`.
+5. Nach dem Deploy per SQL prüfen: `SELECT typ, jahr, stimmtyp, vorlaeufig, source_updated_at FROM wahl WHERE jahr = 2026` (alle `vorlaeufig = false`; `source_updated_at` = jüngster `Datum`/`Zeit`-Stempel der CSV, beim 2026er-Endergebnis 01.10.2026).
 
 **Erster Prod-Deploy mit Pedersen-Volatilität:** `wahl_analytik_kiez.volatilitaet` enthält bis zum ersten Neubau der Analytik auf Prod noch die volle L1-Summe (doppelter Wert). Die Oberfläche beschriftet den Wert aber schon als Netto-Verschiebung. Beim Launch-Deploy fällt das prebuild-Gate ohnehin durch (Gruppen-Tabelle und 2026er-Wahlen fehlen auf Prod) und die Kette läuft inklusive `data:wahl-analytik`. Nach dem Deploy per SQL prüfen: `SELECT max(volatilitaet) FROM wahl_analytik_kiez` muss unter 0,5 liegen (Kiez-Pedersen lokal: 8,7 bis 28,7 %). Liegt er darüber, `pnpm data:wahl-analytik` auf Prod nachziehen.
 

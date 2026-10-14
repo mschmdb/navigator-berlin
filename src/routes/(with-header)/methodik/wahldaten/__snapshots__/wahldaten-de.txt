@@ -18,7 +18,7 @@ dt: Bundestagswahlen
 dd: Bundeswahlleiterin Wahlbezirksstatistik (_wbz.zip). Direkt-Bezug pro Wahl-Jahr von bundeswahlleiterin.de. Lizenz Datenlizenz Deutschland Namensnennung 2.0.
 a: bundeswahlleiterin.de
 dt: Abgeordnetenhaus + BVV
-dd: Amt für Statistik Berlin-Brandenburg, XLSX-Sheet-Pipeline (DL_BE_*.xlsx). Bezug von statistik-berlin-brandenburg.de. Lizenz Datenlizenz Deutschland Namensnennung 2.0. AGH und BVV 2026 kommen direkt von wahlen-berlin.de (Landeswahlleiterin Berlin), Stand des vorläufigen amtlichen Ergebnisses.
+dd: Amt für Statistik Berlin-Brandenburg, XLSX-Sheet-Pipeline (DL_BE_*.xlsx). Bezug von statistik-berlin-brandenburg.de. Lizenz Datenlizenz Deutschland Namensnennung 2.0. AGH und BVV 2026 kommen direkt von wahlen-berlin.de (Landeswahlleiterin Berlin), Stand des amtlichen Endergebnisses.
 a: statistik-berlin-brandenburg.de
 a: wahlen-berlin.de
 dt: Stimmbezirks-Geometrien
@@ -26,8 +26,8 @@ dd: Amt für Statistik Berlin-Brandenburg, Shapefile-Releases pro Wahlgang: RBS_
 h2: 2. Daten-Cutoff
 p: Die Wahldaten decken Wahlen ab 2011 ab. Pre-2011-Daten liegen bei der Bundeswahlleiterin teilweise in unterschiedlichen Formaten vor und erfordern Mapping zur Bezirksreform 2001. Bundestagswahlen beginnen 2013, weil die Bundeswahlleiterin Wahlbezirksdaten erst ab diesem Jahr veröffentlicht.
 li: Bundestagswahlen: 2013, 2017, 2021, 2025
-li: Abgeordnetenhauswahlen: 2011, 2016, 2021, 2023 (Wiederholung), 2026 (vorläufig)
-li: Bezirksverordneten-Versammlungen: 2011, 2016, 2021, 2023 (Wiederholung), 2026 (vorläufig)
+li: Abgeordnetenhauswahlen: 2011, 2016, 2021, 2023 (Wiederholung), 2026
+li: Bezirksverordneten-Versammlungen: 2011, 2016, 2021, 2023 (Wiederholung), 2026
 li: Europawahlen: aktuell nicht enthalten
 li: Volksentscheide: nicht enthalten
 h2: 3. Briefwahl-Gruppen
@@ -48,7 +48,7 @@ p: Stimmbezirks-Polygone sind verfügbar für: BTW 2017, 2021, 2025 sowie AGH + 
 p: Reprojektion: ETRS89 UTM33 → WGS84 via mapshaper Node-API, Simplify visvalingam + keep-shapes damit Sliver-Polygone den Simplify-Schritt überleben.
 h2: 7. Update-Cadence
 p: Wahldaten werden manuell nach jedem Wahlgang aktualisiert. Es gibt keinen Live-Refresh aus den Quell-APIs, weil die amtlichen Endergebnisse erst Wochen nach dem Wahltag vorliegen und die Bundeswahlleiterin / Landeswahlleiterin Berlin ihre Datensätze nicht über eine stabile API ausspielen.
-p: AGH und BVV 2026 zeigen das vorläufige amtliche Ergebnis vom Wahltag, dem 20.09.2026. Datenstand ist der 21.09.2026. Quelle ist wahlen-berlin.de (Landeswahlleiterin Berlin). Portal, Wahl-Detailseiten und API-/Tool-Antworten markieren die Zahlen als „vorläufig“ und zeigen ein Stand-Datum, wo verfügbar. Das Endergebnis erscheint voraussichtlich ab dem 30.09.2026 (BVV) und vom 05. bis 08.10.2026 (AGH). Beim Endergebnis ersetzt ein erneuter Datenimport die vorläufigen Zahlen. Die Kennzeichnung entfällt.
+p: AGH und BVV 2026 zeigen das amtliche Endergebnis der Wahl vom 20.09.2026. Der Landeswahlausschuss hat es am 12.10.2026 festgestellt. Quelle ist wahlen-berlin.de (Landeswahlleiterin Berlin). Bis zum Endergebnis zeigte das Portal das Ergebnis vom Wahlabend und kennzeichnete es.
 p: Die Build-Pipeline lädt und parsed die Roh-Daten, baut die Stimmbezirks-Layer neu und aktualisiert das Kiez-Aggregat. Ein Lint-Gate blockt Wertungsvokabel in Code und Doku.
 h2: 8. Parteien-Aliase
 p: Parteien-Namen variieren über die Jahre (PDS → Die Linke, GRÜNE in Schreibvarianten). Eine case-insensitive Alias-Tabelle in scripts/wahlen/lib/partei-seed.ts resolvt Quell-Spalten zu kanonischen kurzname-Werten. Nicht-aufgelöste Eintragungen landen unter „Sonstige" und werden im Inspector nicht in Top-N geführt.

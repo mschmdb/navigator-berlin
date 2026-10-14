@@ -209,8 +209,7 @@ export const WB_AGH2026: WahlSource = {
 	wbCsvZweit: {
 		data: `${WB_AGH26_BASE}/Datenexport_AGH2026_Zweitstimme_W_BE.csv`,
 		legend: `${WB_AGH26_BASE}/DSB/DSB_Datenexport_AGH2026_Zweitstimme_W_BE.csv`
-	},
-	vorlaeufig: true
+	}
 };
 
 export const WB_BVV2026: WahlSource = {
@@ -224,8 +223,7 @@ export const WB_BVV2026: WahlSource = {
 	wbCsvEin: {
 		data: `${WB_BVV26_BASE}/Datenexport_BVV2026_Stimme_W_BE.csv`,
 		legend: `${WB_BVV26_BASE}/DSB/DSB_Datenexport_BVV2026_Stimme_W_BE.csv`
-	},
-	vorlaeufig: true
+	}
 };
 
 export const WAHL_SOURCES: readonly WahlSource[] = [
