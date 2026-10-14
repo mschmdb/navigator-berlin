@@ -6,7 +6,9 @@ import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
 import { readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
 import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
-import { buildKiezeInBezirk, pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
+import { pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
+import { buildKiezContext } from '$lib/data/bezirk-kieze-view.js';
+import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { featureFlags } from '$lib/data/feature-flags.js';
 import { SCORE_DIMENSION_KEYS, type ComparisonDimRow } from '$lib/data/comparison-types.js';
@@ -91,6 +93,8 @@ export type KiezPageData = {
 	readonly faq: readonly FaqEntry[];
 	readonly faqLocale: Locale;
 	readonly siblings: readonly KiezRef[];
+	/** Umriss aller Kieze des Bezirks (Lage des Kiezes im Hero), `null` ohne Geometrie. */
+	readonly outline: RegionOutline | null;
 	readonly wahlVerlauf: readonly WahlVerlaufRow[];
 	readonly comparison: readonly ComparisonDimRow[];
 	readonly compositeRank: {
@@ -174,8 +178,19 @@ async function tryBuildWahlVerlauf(kiezSlug: string): Promise<KiezPageData['wahl
 	}
 }
 
-async function tryLoadSiblings(currentSlug: string, parentBezirkName: string): Promise<KiezRef[]> {
-	if (!parentBezirkName) return [];
+interface BezirkContext {
+	readonly siblings: KiezRef[];
+	readonly outline: RegionOutline | null;
+}
+
+const EMPTY_CONTEXT: BezirkContext = { siblings: [], outline: null };
+
+/** Geschwister-Kieze und gemeinsamer Umriss des Bezirks (Lage-Grafik im Hero). */
+async function tryLoadBezirkContext(
+	currentSlug: string,
+	parentBezirkName: string
+): Promise<BezirkContext> {
+	if (!parentBezirkName) return EMPTY_CONTEXT;
 	const parentBezirkSlug = normalizeSlug(parentBezirkName);
 	try {
 		const { readFile } = await import('node:fs/promises');
@@ -187,7 +202,7 @@ async function tryLoadSiblings(currentSlug: string, parentBezirkName: string): P
 		};
 		const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
 		const lorLayer = manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
-		if (!bezirkeLayer || !lorLayer) return [];
+		if (!bezirkeLayer || !lorLayer) return EMPTY_CONTEXT;
 
 		const [bezirkeRaw, lorRaw] = await Promise.all([
 			readFile(resolve(process.cwd(), 'static/layers', bezirkeLayer.filename), 'utf-8'),
@@ -210,17 +225,17 @@ async function tryLoadSiblings(currentSlug: string, parentBezirkName: string): P
 			}
 		}
 
-		const all = buildKiezeInBezirk({
+		const { kieze, outline } = buildKiezContext({
 			lorFeatureCollection: lorFc,
 			bezirkCodeToSlug,
 			scores: new Map(),
 			bezirkSlug: parentBezirkSlug
 		});
-		return pickSiblings({ kieze: all, currentSlug }, 3);
+		return { siblings: pickSiblings({ kieze, currentSlug }, 3), outline };
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[kiez-page] WARN: sibling-load failed (${msg})\n`);
-		return [];
+		process.stderr.write(`[kiez-page] WARN: bezirk-context load failed (${msg})\n`);
+		return EMPTY_CONTEXT;
 	}
 }
 
@@ -237,7 +252,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		stats,
 		score,
 		faqResult,
-		siblings,
+		bezirkContext,
 		wahlVerlauf,
 		rank,
 		comparisonMap,
@@ -247,7 +262,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		tryLoadKiezStats(slug),
 		tryLoadKiezScore(slug),
 		getFaqForPage({ pageType: 'kiez', slug, locale: getLocale() }),
-		tryLoadSiblings(slug, profile.bezirk),
+		tryLoadBezirkContext(slug, profile.bezirk),
 		tryBuildWahlVerlauf(slug),
 		tryLoadKiezRank(slug),
 		tryLoadKiezComparison(slug),
@@ -274,7 +289,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		score,
 		faq: faqResult.items,
 		faqLocale: faqResult.locale,
-		siblings,
+		siblings: bezirkContext.siblings,
+		outline: bezirkContext.outline,
 		wahlVerlauf,
 		comparison,
 		compositeRank,

@@ -127,7 +127,7 @@ describe('formatShortDate', () => {
 	});
 });
 
-// i18n Block B4a: ersetzt das in `kiez-hero.svelte`/`bezirk-hero.svelte`
+// i18n Block B4a: ersetzt das in `kiez-details.svelte`/`bezirk-hero.svelte`
 // duplizierte, fest auf `de-DE` verdrahtete lokale `formatStand`.
 describe('formatMonthYear', () => {
 	it('formatiert de mit ausgeschriebenem Monat (byte-identisch zum Alt-Verhalten)', () => {
@@ -167,8 +167,8 @@ describe('formatDecimal', () => {
 		expect(() =>
 			formatDecimal(1.5, { locale: 'de', minimumFractionDigits: 4, maximumFractionDigits: 1 })
 		).not.toThrow();
-		expect(formatDecimal(1.5, { locale: 'de', minimumFractionDigits: 4, maximumFractionDigits: 1 })).toBe(
-			'1,5000'
-		);
+		expect(
+			formatDecimal(1.5, { locale: 'de', minimumFractionDigits: 4, maximumFractionDigits: 1 })
+		).toBe('1,5000');
 	});
 });

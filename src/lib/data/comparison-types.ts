@@ -31,7 +31,7 @@ export interface ScoreDimensionKey {
  * Kanonische Zuordnung camelCase-Datenschlüssel → hyphenierter
  * `KiezScoreDimension`-Anzeige-Schlüssel. Eine Quelle für `kiez/[slug]` und
  * `bezirk/[slug]` `+page.server.ts` (Vergleichstabelle, alle 7 Dimensionen)
- * und `kiez-hero.svelte` (Score-Summary, nur die `COMPOSITE_DIMENSIONS`-
+ * und `kiez-details.svelte` (Score-Summary, nur die `COMPOSITE_DIMENSIONS`-
  * Teilmenge, siehe `scripts/lib/kiez-score/types.ts`). Vormals 3x dupliziert
  * (Review-Fund i18n Block B4a).
  */

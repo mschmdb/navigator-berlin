@@ -36,7 +36,7 @@ const statsFixture: BezirkStatsRow = {
 };
 
 // i18n Block B4a Review-Fund: alle Steckbrief-Cluster befüllt (PET, ÖPNV,
-// Wohnlage, MSS, Grünanlagen-Zähler), analog `kiez-hero.svelte.test.ts`.
+// Wohnlage, MSS, Grünanlagen-Zähler), analog `kiez-details.svelte.test.ts`.
 const statsFixtureFull: BezirkStatsRow = {
 	slug: 'mitte',
 	laerm: {

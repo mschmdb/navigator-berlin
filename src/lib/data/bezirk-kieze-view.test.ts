@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildBezirkKiezeView } from './bezirk-kieze-view.js';
+import { buildBezirkKiezeView, buildKiezContext } from './bezirk-kieze-view.js';
 
 const poly = (x: number, y: number) => ({
 	type: 'Polygon',
@@ -81,5 +81,40 @@ describe('buildBezirkKiezeView', () => {
 		const v = view({ bezirkSlug: 'nirgends' });
 		expect(v.kieze).toEqual([]);
 		expect(v.outline).toBeNull();
+	});
+});
+
+describe('buildKiezContext', () => {
+	const input = {
+		lorFeatureCollection: lor,
+		bezirkCodeToSlug: codes,
+		scores: new Map<string, number>(),
+		bezirkSlug: 'spandau'
+	};
+
+	it('liefert alle Kieze des Bezirks und den gemeinsamen Umriss', () => {
+		const ctx = buildKiezContext(input);
+		expect(ctx.kieze.map((k) => k.slug).sort()).toEqual([
+			'albrechtshof',
+			'heerstrasse-spandau',
+			'wilhelmstadt'
+		]);
+		expect(ctx.outline?.paths.map((p) => p.id).sort()).toEqual([
+			'albrechtshof',
+			'heerstrasse-spandau',
+			'wilhelmstadt'
+		]);
+	});
+
+	it('liefert für die Dublette den Umriss im Bezirk Spandau', () => {
+		const ctx = buildKiezContext(input);
+		expect(ctx.outline?.paths.find((p) => p.id === 'heerstrasse-spandau')).toBeDefined();
+		expect(ctx.outline?.paths).toHaveLength(3);
+	});
+
+	it('liefert leere Liste und keinen Umriss für unbekannten Bezirk', () => {
+		const ctx = buildKiezContext({ ...input, bezirkSlug: 'nirgends' });
+		expect(ctx.kieze).toEqual([]);
+		expect(ctx.outline).toBeNull();
 	});
 });

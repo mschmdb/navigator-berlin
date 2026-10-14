@@ -2,7 +2,8 @@ import {
 	buildKiezeWithGeometry,
 	sortKieze,
 	type BuildKiezListInput,
-	type KiezRef
+	type KiezRef,
+	type KiezWithGeometry
 } from './get-kieze-in-bezirk.js';
 import {
 	buildRegionOutline,
@@ -32,6 +33,23 @@ function isPolygonal(g: { type: string } | null | undefined): g is OutlineRegion
 	return g?.type === 'Polygon' || g?.type === 'MultiPolygon';
 }
 
+function outlineOf(withGeometry: readonly KiezWithGeometry[]): RegionOutline | null {
+	const regions: OutlineRegion[] = [];
+	for (const { ref, geometry } of withGeometry) {
+		if (isPolygonal(geometry)) regions.push({ id: ref.slug, geometry });
+	}
+	return buildRegionOutline(regions);
+}
+
+/** Kieze eines Bezirks plus gemeinsamer Umriss (Kiez-Seite: Lage im Bezirk, Geschwister). */
+export function buildKiezContext(input: BuildKiezListInput): {
+	readonly kieze: readonly KiezRef[];
+	readonly outline: RegionOutline | null;
+} {
+	const withGeometry = buildKiezeWithGeometry(input);
+	return { kieze: withGeometry.map((k) => k.ref), outline: outlineOf(withGeometry) };
+}
+
 export function buildBezirkKiezeView(input: BezirkKiezeViewInput): BezirkKiezeView {
 	const withGeometry = buildKiezeWithGeometry(input);
 	const kieze = sortKieze(withGeometry.map((k) => k.ref)).map((ref): KiezListEntry => {
@@ -43,9 +61,5 @@ export function buildBezirkKiezeView(input: BezirkKiezeViewInput): BezirkKiezeVi
 			total: rank?.total ?? 0
 		};
 	});
-	const regions: OutlineRegion[] = [];
-	for (const { ref, geometry } of withGeometry) {
-		if (isPolygonal(geometry)) regions.push({ id: ref.slug, geometry });
-	}
-	return { kieze, outline: buildRegionOutline(regions) };
+	return { kieze, outline: outlineOf(withGeometry) };
 }

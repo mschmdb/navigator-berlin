@@ -47,7 +47,7 @@ const DE_QUESTION_START =
 	/^(Wie|Was|Warum|Welche[rsmn]?|Wo|Wann|Wer|Worin|Wodurch|Berücksichtigt|Bewertet|Ist|Gibt|Wird)\b/;
 
 test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
-	test('lang=en, Titel + Lead + Breadcrumb englisch', async ({ page }) => {
+	test('lang=en, Titel + Hero-Fakten + Breadcrumb englisch', async ({ page }) => {
 		const response = await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -57,11 +57,9 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 
 		const hero = page.getByTestId('kiez-hero');
 		await expect(hero.locator('h1')).toBeVisible();
-		await expect(hero).toContainText('residents');
-		await expect(hero).toContainText(/\d+ ha/);
-		await expect(hero).toContainText(
-			'Data on housing, environment, climate and mobility on this page.'
-		);
+		await expect(hero).toContainText('Residents');
+		await expect(hero).toContainText(/\d\.\d km²/);
+		await expect(hero).toContainText('Kiez in Mitte');
 
 		const breadcrumb = page.getByTestId('breadcrumb');
 		await expect(breadcrumb).toHaveAttribute('aria-label', 'Breadcrumb');

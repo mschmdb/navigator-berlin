@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import KiezHero from '$lib/components/atlas/kiez-hero.svelte';
+	import KiezDetails from '$lib/components/atlas/kiez-details.svelte';
 	import KiezSiblingsList from '$lib/components/atlas/kiez-siblings-list.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
@@ -129,17 +130,27 @@
 	<Breadcrumb items={breadcrumbItems} />
 </div>
 
-<KiezHero
-	profile={data.profile}
-	stats={data.stats}
-	score={data.score}
-	faq={data.faq}
-	faqLocale={data.faqLocale}
-	wahlVerlauf={data.wahlVerlauf}
-	comparison={data.comparison}
-	profileProse={data.profileProse}
-	profileLocale={data.profileLocale}
-/>
+<article>
+	<KiezHero
+		profile={data.profile}
+		score={data.score}
+		compositeRank={data.compositeRank}
+		comparison={data.comparison}
+		outline={data.outline}
+		einwohnerStichtag={data.einwohnerStichtag}
+	/>
+	<KiezDetails
+		profile={data.profile}
+		stats={data.stats}
+		score={data.score}
+		faq={data.faq}
+		faqLocale={data.faqLocale}
+		wahlVerlauf={data.wahlVerlauf}
+		comparison={data.comparison}
+		profileProse={data.profileProse}
+		profileLocale={data.profileLocale}
+	/>
+</article>
 
 {#if bezirkName.length > 0}
 	<div class="mx-auto max-w-3xl px-4 pb-8">
