@@ -342,3 +342,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story 1 (Bestandsmiete als 100m-Raster). Matze: Unterschied zum Planungsraum-Layer für Nutzer nicht verständlich, zwei fast gleiche Inspector-Karten verwirren.
   evidence: Prototyp lief (28.463 Zellen, 1,74 MB PMTiles), wurde verworfen. Kosten: eigener PMTiles-Layer, Ein-PMTiles-Regel, Werte nur im sichtbaren Ausschnitt. Falls später: als Zoom-Detail desselben Layers mit einer Inspector-Karte („Planungsraum x · diese Zelle y“), nicht als eigener Slug.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Präzisierung Zensus-Folge-Story 2 (Matze 14.10.2026): EIN Layer „Leerstand (Zensus 2022)“ mit der normalen Leerstandsquote; die marktaktive Leerstandsquote (Destatis: leer und innerhalb von drei Monaten wieder verfügbar) entfällt, weil der Begriff Nutzern nichts sagt.
+  evidence: Destatis-Datensatzbeschreibung `Marktaktive_Leerstandsquote_in_Gitterzellen.zip`; Matze: „marktaktive Leerstandsquote wtf?“.
