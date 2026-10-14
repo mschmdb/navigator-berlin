@@ -19,6 +19,12 @@ export const EDITORIAL_CONFIG: Record<string, EditorialConfig> = {
 		primarySourceUrl: 'https://www.berlin.de/gutachterausschuss/',
 		feedbackMailto: true
 	},
+	'zensus-bestandsmiete-2022': {
+		slug: 'zensus-bestandsmiete-2022',
+		disclaimerVariants: ['zensus-bestandsmiete'],
+		primarySourceUrl: 'https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Wohnen/_inhalt.html',
+		feedbackMailto: true
+	},
 	trinkbrunnen: {
 		slug: 'trinkbrunnen',
 		disclaimerVariants: ['seasonal'],

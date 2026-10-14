@@ -12,7 +12,8 @@ const ALLOWED_VARIANTS: DisclaimerVariant[] = [
 	'seasonal',
 	'source',
 	'kuehle-orte',
-	'mss-aggregat'
+	'mss-aggregat',
+	'zensus-bestandsmiete'
 ];
 
 describe('EDITORIAL_CONFIG', () => {
@@ -44,6 +45,13 @@ describe('EDITORIAL_CONFIG', () => {
 		expect(c.disclaimerVariants).toContain('historic');
 		expect(c.customComponent).toBe('MauerSektorenDetail');
 		expect(c.neverMachineTranslate).toBe(true);
+	});
+
+	it('zensus-bestandsmiete-2022 trägt den Bestand-statt-Angebot-Hinweis', () => {
+		const c = EDITORIAL_CONFIG['zensus-bestandsmiete-2022'];
+		expect(c.disclaimerVariants).toContain('zensus-bestandsmiete');
+		expect(c.primarySourceUrl).toMatch(/^https:\/\/www\.destatis\.de/);
+		expect(c.feedbackMailto).toBe(true);
 	});
 
 	it('alle Slugs haben mind. eine gültige DisclaimerVariant', () => {

@@ -33,6 +33,7 @@ export const LAYER_TO_CHOROPLETH_FAMILY: Record<string, LayerFamilyMapping> = {
 	'mss-gesamtindex-2025': 'strukturell',
 	'wohnlagen-2024': 'strukturell',
 	bodenrichtwerte: 'strukturell',
+	'zensus-bestandsmiete-2022': 'strukturell',
 	// Story 14.1: Kriminalität als Strukturell-Indigo (NICHT Gut-Grün wie Kultur). Magnitude,
 	// kein Sicherheits-Ranking, kein "besser"-Pfeil (ADR-019). Surfacing in 14.4.
 	'kiez-score-kriminalitaet': 'strukturell'
@@ -78,6 +79,7 @@ export const LAYER_CLASSIFICATION_METHOD: Record<string, ClassificationMethod> =
 	'mss-gesamtindex-2025': 'manual-categorical', // si_v sehr niedrig..hoch
 	'wohnlagen-2024': 'manual-categorical', // Mietspiegel-Stufen
 	bodenrichtwerte: 'quantile', // Long-Tail 0.6-60000 EUR/m²
+	'zensus-bestandsmiete-2022': 'quantile', // Planungsraum-Werte 5-13 EUR/m², Stops quantilnah
 	'kiez-score-kriminalitaet': 'manual-quartile' // 0/26/51/76, Magnitude-Index (Story 14.1)
 };
 

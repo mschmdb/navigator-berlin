@@ -56,6 +56,7 @@ const fullLayerMeta = [
 	meta('bezirke', 'A: Boundaries'),
 	meta('mietspiegel-wohnlage', 'B: Wohn-Daten'),
 	meta('bodenrichtwerte', 'B: Wohn-Daten'),
+	meta('zensus-bestandsmiete-2022', 'B: Wohn-Daten'),
 	meta('laerm-den', 'C: Umwelt'),
 	meta('stolpersteine', 'D: Memorial')
 ];
@@ -156,6 +157,20 @@ describe('compare-panel.svelte', () => {
 			.toBeInTheDocument();
 		await expect
 			.element(page.getByTestId('compare-disclaimer-compare-bodenrichtwerte'))
+			.toBeInTheDocument();
+	});
+
+	it('rendert den Bestand-statt-Angebot-Hinweis für die Bestandsmiete', async () => {
+		render(Harness, {
+			compareMode: true,
+			selectedAddress: addressA,
+			comparisonAddress: addressB,
+			selectedLayerHits: [hit('zensus-bestandsmiete-2022', { miete: 9.1 })],
+			comparisonLayerHits: [hit('zensus-bestandsmiete-2022', { miete: 7.6 })],
+			layerMeta: fullLayerMeta
+		});
+		await expect
+			.element(page.getByTestId('compare-disclaimer-zensus-bestandsmiete'))
 			.toBeInTheDocument();
 	});
 

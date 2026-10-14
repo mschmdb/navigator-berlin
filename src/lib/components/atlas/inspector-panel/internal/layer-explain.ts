@@ -49,6 +49,13 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		unit: '€/m²',
 		valueScaleExplain: 'Höher = teurer (Innenstadt-Lagen oft >5000 €/m², Rand-Lagen <500 €/m²)'
 	},
+	'zensus-bestandsmiete-2022': {
+		short: 'Durchschnittliche Nettokaltmiete im Bestand je Planungsraum (Zensus 2022)',
+		long: 'Mittlere Nettokaltmiete der Bestandsverträge zum Stichtag 15.05.2022, gewichtet nach vermieteten Wohnungen. Bestandsmiete, keine Angebotsmiete für neue Verträge. Das Cell-Key-Verfahren verrauscht die Werte leicht. Kein Update bis zum Registerzensus 2031. Unter 30 vermieteten Wohnungen: keine Angabe. Quelle: Statistische Ämter des Bundes und der Länder, Zensus 2022.',
+		unit: '€/m²',
+		valueScaleExplain:
+			'Höher = höhere Bestandsmiete, ohne Wertung (Planungsräume liegen bei rund 5 bis 13,5 €/m²)'
+	},
 	'wohnlagen-2024': {
 		short: 'Wohnlagen-Bewertung im Berliner Mietspiegel 2024 (Aggregat pro Planungsraum)',
 		long: 'Aggregierte Wohnlagen-Einstufung aus dem Berliner Mietspiegel 2024 pro Planungsraum. Konkrete €/m² siehe offizieller Mietspiegel-Rechner. Einstufung beruht auf Lage, Verkehrsanbindung, Versorgung und Wohnumfeld.',
@@ -376,6 +383,12 @@ export const LAYER_EXPLAIN_MESSAGE: Partial<Record<string, LayerExplainMessages>
 		long: m.layer_explain_bodenrichtwerte_long,
 		scale: m.layer_explain_bodenrichtwerte_scale,
 		unit: m.layer_explain_bodenrichtwerte_unit
+	},
+	'zensus-bestandsmiete-2022': {
+		short: m.layer_explain_zensus_bestandsmiete_2022_short,
+		long: m.layer_explain_zensus_bestandsmiete_2022_long,
+		scale: m.layer_explain_zensus_bestandsmiete_2022_scale,
+		unit: m.layer_explain_zensus_bestandsmiete_2022_unit
 	},
 	'wohnlagen-2024': {
 		short: m.layer_explain_wohnlagen_2024_short,

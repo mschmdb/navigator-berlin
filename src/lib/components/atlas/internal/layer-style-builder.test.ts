@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { KALTLUFT_HIGHLIGHT, rampForSlug } from './dimension-ramps.js';
+import { MIETE_STOPS } from './miete-stops.js';
 import {
 	buildLayerSpec,
 	getLegendSpec,
@@ -337,6 +338,18 @@ describe('layer-style-builder.buildLayerSpec', () => {
 		expect(flat).toContain(COLORS.scaleStrukturell1);
 	});
 
+	it('Bestandsmiete nutzt neutralen choropleth-miete-Gradient auf miete, null bleibt transparent', () => {
+		expect(getStyleProfile('zensus-bestandsmiete-2022')).toBe('choropleth-miete');
+		const paint = buildLayerSpec('zensus-bestandsmiete-2022', SOURCE)[0].paint ?? {};
+		const flat = JSON.stringify(paint);
+		expect(flat).toContain('"miete"');
+		expect(flat).toContain('interpolate');
+		expect(flat).toContain(COLORS.scaleStrukturell1);
+		const stops = (paint['fill-color'] as unknown[]).filter((x) => typeof x === 'number');
+		expect(stops).toEqual([...MIETE_STOPS]);
+		expect(JSON.stringify(paint['fill-opacity'])).toContain('null');
+	});
+
 	it('Geteilte Family polygon-outline-soft bleibt für gruenanlagen/einschulbereiche/spielplaetze', () => {
 		expect(getStyleProfile('gruenanlagen')).toBe('polygon-outline-soft');
 		expect(getStyleProfile('einschulbereiche-2024')).toBe('polygon-outline-soft');
@@ -478,6 +491,17 @@ describe('getLegendSpec i18n Block B3a (EN)', () => {
 		expect(legend.range).toEqual(['sparse', 'dense']);
 	});
 
+	it('choropleth-miete: €/m²-Einheit am ersten Label, "+" am letzten, EN-Range', () => {
+		const de = getLegendSpec('zensus-bestandsmiete-2022');
+		expect(de.items.map((i) => i.label)).toEqual(['5,1 €/m²', '6,9', '7,5', '7,9', '8,6+']);
+		const en = getLegendSpec('zensus-bestandsmiete-2022', { locale: 'en' });
+		expect(en.items.map((i) => i.label)).toEqual(['5.1 €/m²', '6.9', '7.5', '7.9', '8.6+']);
+		expect(getLegendSpec('zensus-bestandsmiete-2022', { locale: 'en' }).range).toEqual([
+			'low',
+			'high'
+		]);
+	});
+
 	it('point/line-Profile: 1:1-Label-Uebersetzung', () => {
 		expect(getLegendSpec('ubahn-stationen', { locale: 'en' }).items[0].label).toBe(
 			'U-Bahn station'
@@ -506,6 +530,7 @@ describe('getLegendSpec i18n Block B3a: Parität über ALLE StyleProfile', () =>
 		'choropleth-kiez-score-ordinal-4': 'kiez-score-ruhe-luft',
 		'choropleth-kiez-score-strukturell-4': 'kiez-score-kriminalitaet',
 		'choropleth-dichte': 'einwohner-dichte-2024',
+		'choropleth-miete': 'zensus-bestandsmiete-2022',
 		'polygon-highlight': 'klima-kaltlufteinwirkbereich-2022',
 		'polygon-outline-soft': 'gruenanlagen',
 		'polygon-outline-milieuschutz-erhaltungsmiete': 'milieuschutz-erhaltungsmiete',

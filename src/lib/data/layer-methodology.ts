@@ -122,6 +122,22 @@ const LAYER_METHODOLOGY_SPECS = {
 		],
 		relatedLayers: ['wohnlagen-2024']
 	},
+	'zensus-bestandsmiete-2022': {
+		calculation:
+			'Mittlere Nettokaltmiete in €/m² aus dem Zensus 2022, Stichtag 15.05.2022. Das Statistische Bundesamt liefert Werte je 100-m-Gitterzelle mit der Zahl der vermieteten Wohnungen. Wir ordnen jede Zelle über ihren Mittelpunkt einem Planungsraum zu und bilden das Mittel gewichtet nach Wohnungen. Kiez und Bezirk entstehen aus denselben Zellen, nicht als Mittel der Planungsraum-Werte.',
+		aggregationLevel: 'lor-planungsraum',
+		updateFrequency: 'einmalig (Zensus 2022), nächstes Update mit dem Registerzensus 2031',
+		authorityKey: 'statistische-aemter-zensus',
+		coverageGaps: [
+			'Planungsräume mit weniger als 30 vermieteten Wohnungen zeigen „keine Angabe“.',
+			'Zellen mit hohem Schätzfehler (über 15 %, Flag KLAMMERN) gehen ins Gebietsmittel ein, erscheinen aber nie als Einzelwert.'
+		],
+		omissions: [
+			'Bestandsmiete, keine Angebotsmiete. Neuvermietungen können deutlich höher liegen.',
+			'Stichtag 2022. Das Cell-Key-Verfahren verrauscht die Werte leicht, Einzelzellen und Summen stimmen nicht exakt. Kein Update bis zum Registerzensus 2031.'
+		],
+		relatedLayers: ['bodenrichtwerte', 'wohnlagen-2024', 'milieuschutz-erhaltungsmiete']
+	},
 	'wohnlagen-2024': {
 		calculation:
 			'Wohnlagen-Aggregat aus dem Berliner Mietspiegel 2024 pro LOR-Planungsraum, vom IBB Wohnungsmarktbericht abgeleitet. Ordinalskala einfach bis bestlage.',

@@ -55,6 +55,7 @@
 			if (row.slug === 'mietspiegel-wohnlage' || row.slug === 'wohnlagen-2024')
 				variants.add('compare-mietspiegel');
 			if (row.slug === 'bodenrichtwerte') variants.add('compare-bodenrichtwerte');
+			if (row.slug === 'zensus-bestandsmiete-2022') variants.add('zensus-bestandsmiete');
 		}
 		return [...variants];
 	}

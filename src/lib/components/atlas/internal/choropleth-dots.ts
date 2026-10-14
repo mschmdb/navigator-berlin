@@ -13,6 +13,7 @@
  */
 
 import { COLORS } from './colors.js';
+import { MIETE_STOPS } from './miete-stops.js';
 import { rampForSlug, SCORE_DOT_SIZES, SCORE_SLUGS } from './dimension-ramps.js';
 
 export interface ChoroplethDotSpec {
@@ -123,6 +124,30 @@ const SPEC_BY_SLUG: Record<string, ChoroplethDotSpec> = {
 			24000,
 			1
 		],
+		legendFactors: [0.3, 0.45, 0.6, 0.8, 1]
+	},
+	'zensus-bestandsmiete-2022': {
+		imageColor: COLORS.scaleStrukturell5,
+		// Planungsraeume ohne Angabe (miete null) bekommen kein Symbol.
+		sizeExpression: [
+			'case',
+			['==', ['get', 'miete'], null],
+			0,
+			[
+				'step',
+				['to-number', ['get', 'miete'], 0],
+				0.3,
+				MIETE_STOPS[1],
+				0.45,
+				MIETE_STOPS[2],
+				0.6,
+				MIETE_STOPS[3],
+				0.8,
+				MIETE_STOPS[4],
+				1
+			]
+		],
+		// Legenden-Reihenfolge des Profils: die fünf MIETE_STOPS in EUR/m².
 		legendFactors: [0.3, 0.45, 0.6, 0.8, 1]
 	},
 	bodenrichtwerte: {

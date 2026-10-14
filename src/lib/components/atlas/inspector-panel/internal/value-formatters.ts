@@ -303,6 +303,19 @@ function formatEinwohnerdichte(raw: unknown, opts?: LocaleOptions): FormattedVal
 	return value(`${formatted} ${m.atlas_value_einwohner_pro_km2(undefined, options)}`, true);
 }
 
+function formatBestandsmiete(raw: unknown, opts?: LocaleOptions): FormattedValue {
+	const options = toAtlasMessageOptions(opts);
+	const miete = pickProp(raw, 'miete');
+	if (miete === null) return value(m.atlas_value_keine_angabe(undefined, options));
+	if (typeof miete !== 'number' || !Number.isFinite(miete)) return missingValue(opts);
+	const formatted = formatDecimal(miete, {
+		...options,
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
+	});
+	return value(`${formatted} €/m²`, true);
+}
+
 function formatKlimaHighlight(raw: unknown, label: string, opts?: LocaleOptions): FormattedValue {
 	if (!raw || (typeof raw === 'object' && Object.keys(raw).length === 0)) return missingValue(opts);
 	return value(label);
@@ -490,6 +503,8 @@ export function formatLayerValue(slug: string, raw: unknown, opts?: LocaleOption
 			return formatKlimaPet(raw, opts);
 		case 'einwohner-dichte-2024':
 			return formatEinwohnerdichte(raw, opts);
+		case 'zensus-bestandsmiete-2022':
+			return formatBestandsmiete(raw, opts);
 		case 'klima-kaltlufteinwirkbereich-2022':
 			return formatKlimaHighlight(
 				raw,

@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { buildRowsFromSources, renderDataFlowMarkdown } from './generate-data-flow-doc.js';
+import {
+	BUILD_SCRIPT_ROWS,
+	buildRowsFromSources,
+	renderDataFlowMarkdown
+} from './generate-data-flow-doc.js';
 import type { SourceConfig } from './lib/types.js';
 
 const fixture: SourceConfig[] = [
@@ -112,5 +116,16 @@ describe('buildStep (Story 15.7)', () => {
 		const md = renderDataFlowMarkdown(buildRowsFromSources(withBuild), '2026-06-30');
 		expect(md).toContain('Build-Schritt');
 		expect(md).toContain('`scripts/build-kuehle-orte.ts`');
+	});
+});
+
+describe('BUILD_SCRIPT_ROWS', () => {
+	it('führt die Bestandsmiete mit Build-Skript und Lizenz auf', () => {
+		const row = BUILD_SCRIPT_ROWS.find((r) => r.slug === 'zensus-bestandsmiete-2022');
+		expect(row?.bundle).toBe('B: Wohn-Daten');
+		expect(row?.license).toBe('dl-de/by-2-0');
+		expect(row?.buildStep).toBe('scripts/fetch-zensus-miete.ts');
+		const md = renderDataFlowMarkdown([...BUILD_SCRIPT_ROWS], '2026-10-14');
+		expect(md).toContain('`zensus-bestandsmiete-2022`');
 	});
 });

@@ -174,6 +174,9 @@
 		<p class="font-serif text-sm text-ink-muted">
 			{m.lizenzen_daten_laerm()}
 		</p>
+		<p data-testid="lizenzen-zensus-attribution" class="font-serif text-sm text-ink-muted">
+			{m.lizenzen_daten_zensus()}
+		</p>
 	</section>
 
 	<section id="wahldaten" aria-labelledby="wahldaten-h" class="flex flex-col gap-3">

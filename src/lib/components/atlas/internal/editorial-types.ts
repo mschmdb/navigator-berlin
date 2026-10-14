@@ -7,6 +7,7 @@ export type DisclaimerVariant =
 	| 'compare-stolperstein'
 	| 'compare-mietspiegel'
 	| 'compare-bodenrichtwerte'
+	| 'zensus-bestandsmiete'
 	| 'compare-stigma-footer'
 	| 'mss-aggregat'
 	| 'compare-mss-aggregat'

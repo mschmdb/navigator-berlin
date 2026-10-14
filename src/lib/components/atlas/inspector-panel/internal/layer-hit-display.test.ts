@@ -81,6 +81,19 @@ describe('getLayerHitDisplay()', () => {
 			expect(d.context).toBe('W - Wohngebiet');
 		});
 
+		it('zensus-bestandsmiete-2022: chip=x,xx €/m² (numeric)', () => {
+			const d = getLayerHitDisplay('zensus-bestandsmiete-2022', { miete: 8.4, wohnungen: 900 });
+			expect(d.chip?.value).toBe('8,40');
+			expect(d.chip?.unit).toBe('€/m²');
+			expect(d.chip?.numeric).toBe(true);
+		});
+
+		it('zensus-bestandsmiete-2022: miete null → Fallback "keine Angabe" ohne Chip', () => {
+			const d = getLayerHitDisplay('zensus-bestandsmiete-2022', { miete: null, wohnungen: 4 });
+			expect(d.chip).toBeNull();
+			expect(d.fallbackText).toBe('keine Angabe');
+		});
+
 		it('klima-pet-2022: chip=value °C + numeric', () => {
 			const d = getLayerHitDisplay('klima-pet-2022', { pet14h: 36.5 });
 			expect(d.chip?.value).toMatch(/^36(,5)?/);

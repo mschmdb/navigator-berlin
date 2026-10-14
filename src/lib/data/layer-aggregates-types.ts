@@ -4,6 +4,7 @@
 
 export type AggregateType =
 	| 'numeric-median'
+	| 'weighted-mean'
 	| 'ordinal-distribution'
 	| 'coverage-share'
 	| 'area-share';
@@ -16,6 +17,15 @@ export interface NumericMedianAggregate {
 	readonly contributingMembers: number;
 	readonly totalMembers: number;
 	readonly coverage: string;
+}
+
+/** Gewichtetes Gebietsmittel (z.B. Bestandsmiete in EUR/m2, gewichtet mit vermieteten Wohnungen). */
+export interface WeightedMeanAggregate {
+	readonly type: 'weighted-mean';
+	/** null = unter Mindest-Gewicht ("keine Angabe"). */
+	readonly mean: number | null;
+	/** Summe der Gewichte (z.B. vermietete Wohnungen). */
+	readonly wohnungen: number;
 }
 
 export interface DistributionClass {
@@ -44,6 +54,7 @@ export interface AreaShareAggregate {
 
 export type LayerAggregate =
 	| NumericMedianAggregate
+	| WeightedMeanAggregate
 	| OrdinalDistributionAggregate
 	| CoverageShareAggregate
 	| AreaShareAggregate;

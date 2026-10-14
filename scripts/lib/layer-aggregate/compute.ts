@@ -77,6 +77,50 @@ function numericMedianEntry(
 	return { type: 'numeric-median', kiez: sortedRecord(kiez), bezirk: sortedRecord(bezirk), berlin };
 }
 
+function sumNumbers(values: readonly CellValue[]): number {
+	return values.reduce<number>((acc, v) => acc + (typeof v === 'number' ? v : 0), 0);
+}
+
+function weightedMeanOf(
+	sums: readonly CellValue[],
+	weights: readonly CellValue[],
+	minWeight: number
+): LayerAggregate {
+	const wohnungen = sumNumbers(weights);
+	const mean =
+		wohnungen <= 0 || wohnungen < minWeight
+			? null
+			: Math.round((sumNumbers(sums) / wohnungen) * 100) / 100;
+	return { type: 'weighted-mean', mean, wohnungen };
+}
+
+/** Summe Wert x Gewicht / Summe Gewicht ueber alle Planungsraeume, auch unter der Anzeige-Schwelle. */
+function weightedMeanEntry(
+	source: readonly Feature[],
+	strategy: LayerStrategy,
+	ctx: ComputeContext
+): LayerAggregateEntry {
+	const { valueKey, weightKey } = strategy;
+	if (!valueKey || !weightKey) {
+		throw new Error('computeLayerEntry: weighted-mean braucht valueKey und weightKey');
+	}
+	const minWeight = strategy.minWeight ?? 0;
+	const sums = collectPlrValues(source, valueKey, ctx.hierarchy);
+	const weights = collectPlrValues(source, weightKey, ctx.hierarchy);
+	const build = (s: Map<string, CellValue[]>, w: Map<string, CellValue[]>) => {
+		const out = new Map<string, LayerAggregate>();
+		for (const [slug, vals] of s) out.set(slug, weightedMeanOf(vals, w.get(slug) ?? [], minWeight));
+		return sortedRecord(out);
+	};
+	return {
+		type: 'weighted-mean',
+		neutral: strategy.neutral,
+		kiez: build(sums.kiez, weights.kiez),
+		bezirk: build(sums.bezirk, weights.bezirk),
+		berlin: weightedMeanOf(sums.berlin, weights.berlin, minWeight)
+	};
+}
+
 function shareEntry(
 	source: readonly Feature[],
 	ctx: ComputeContext,
@@ -115,6 +159,8 @@ export function computeLayerEntry(
 	switch (strategy.type) {
 		case 'ordinal-distribution':
 			return ordinalEntry(source, strategy.valueKey ?? '', ctx, strategy.neutral);
+		case 'weighted-mean':
+			return weightedMeanEntry(source, strategy, ctx);
 		case 'numeric-median':
 			return numericMedianEntry(source, strategy.valueKey ?? '', ctx);
 		case 'coverage-share':

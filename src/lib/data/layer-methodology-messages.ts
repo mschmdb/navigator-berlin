@@ -57,6 +57,18 @@ export const LAYER_METHODOLOGY_MESSAGE: Record<LayerMethodologySlug, LayerMethod
 			m.layer_methodology_bodenrichtwerte_omission_1
 		]
 	},
+	'zensus-bestandsmiete-2022': {
+		calculation: m.layer_methodology_zensus_bestandsmiete_2022_calculation,
+		updateFrequency: m.layer_methodology_zensus_bestandsmiete_2022_update_frequency,
+		coverageGaps: [
+			m.layer_methodology_zensus_bestandsmiete_2022_coverage_gap_0,
+			m.layer_methodology_zensus_bestandsmiete_2022_coverage_gap_1
+		],
+		omissions: [
+			m.layer_methodology_zensus_bestandsmiete_2022_omission_0,
+			m.layer_methodology_zensus_bestandsmiete_2022_omission_1
+		]
+	},
 	'wohnlagen-2024': {
 		calculation: m.layer_methodology_wohnlagen_2024_calculation,
 		updateFrequency: m.layer_methodology_wohnlagen_2024_update_frequency,

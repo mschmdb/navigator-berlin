@@ -17,6 +17,8 @@
 	} from '$lib/state/inspector-level-context.svelte.js';
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
 	import KlimaPetCard from './inspector-panel/klima-pet-card.svelte';
+	import { CARD_SLUGS } from './inspector-panel/internal/card-slugs.js';
+	import { formatWeightedMeanContext } from './inspector-panel/internal/weighted-mean-context.js';
 	import LayerCard, { type ContextRow } from './inspector-panel/layer-card.svelte';
 	import { loadLayerAggregates } from '$lib/data/get-layer-aggregates.js';
 	import {
@@ -214,35 +216,6 @@
 		return a?.type === 'numeric-median' ? a : null;
 	}
 
-	// Layer im Card-Muster (Wert-Chip + Umfeld-Kontext). PET hat eigene Karte (Range-Bar).
-	const CARD_SLUGS = new Set([
-		'laerm-2023',
-		'luft-2023',
-		'bioklima-2023',
-		'gruenversorgung-2023',
-		'umweltgerechtigkeit-2023',
-		'wohnlagen-2024',
-		'mss-gesamtindex-2025',
-		'bodenrichtwerte',
-		'milieuschutz-erhaltungsmiete',
-		'milieuschutz-staedtebau',
-		// Lage & Verwaltung + Einschulbereiche: nur kompakter Name/Code, kein Umfeld-Kontext.
-		'bezirke',
-		'ortsteile',
-		'plz',
-		'einschulbereiche-2024',
-		// Einrichtungs-POIs: Name + Adresse als kompakte Card statt alter Hit-Row.
-		'kitas-2024',
-		'schulen-2024',
-		'krankenhaeuser-plan',
-		'krankenhaeuser-weitere',
-		'sportanlagen-2024',
-		'schwimmbaeder',
-		'spielplaetze',
-		'gruenanlagen',
-		'fahrradstrassen-2024'
-	]);
-
 	function aggFor(slug: string, scope: 'kiez' | 'bezirk' | 'berlin'): LayerAggregate | undefined {
 		const entry = layerAggregates?.aggregates[slug];
 		if (!entry) return undefined;
@@ -270,6 +243,7 @@
 					)
 				: m.inspector_context_dominant({ dominant: agg.dominant }, localeOpts);
 		}
+		if (agg.type === 'weighted-mean') return formatWeightedMeanContext(agg, localeOpts);
 		if (agg.type === 'coverage-share' || agg.type === 'area-share') {
 			return m.inspector_context_area_share({ share: String(agg.share) }, localeOpts);
 		}

@@ -71,6 +71,14 @@ describe('filterLayers', () => {
 
 	// i18n Block B3a: mit { locale: 'en' } matcht die Suche gegen den englischen
 	// Display-Namen ("Noise Pollution 2023"), nicht nur gegen den DE-Namen.
+	it.each(['Miete', 'Kaltmiete', 'rent', 'Zensus'])(
+		'findet die Bestandsmiete über „%s“',
+		(query) => {
+			const layers = [...LAYERS, makeLayer('zensus-bestandsmiete-2022', 'B: Wohn-Daten')];
+			expect(filterLayers(layers, query).map((l) => l.slug)).toContain('zensus-bestandsmiete-2022');
+		}
+	);
+
 	it('matched EN-Display-Namen mit { locale: "en" }', () => {
 		const out = filterLayers(LAYERS, 'noise', { locale: 'en' });
 		expect(out.map((l) => l.slug)).toEqual(['laerm-2023']);

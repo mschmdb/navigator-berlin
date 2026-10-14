@@ -120,6 +120,30 @@ describe('compareLayerValues — numeric-no-judgment (Bodenrichtwerte)', () => {
 	});
 });
 
+describe('compareLayerValues: Bestandsmiete numeric-no-judgment', () => {
+	it('A=9,10, B=7,60 → not-comparable mit Delta und Bestand-Hinweis', () => {
+		const r = compareLayerValues(
+			'zensus-bestandsmiete-2022',
+			{ miete: 9.1, wohnungen: 500 },
+			{ miete: 7.6, wohnungen: 800 }
+		);
+		expect(r.direction).toBe('not-comparable');
+		expect(r.deltaLabel).toBe('1,50 €/m² höher in A');
+		expect(r.advisory).toMatch(/Neuvermietungen/);
+	});
+
+	it('Differenz unter 5 Cent → equal', () => {
+		const r = compareLayerValues('zensus-bestandsmiete-2022', { miete: 7.6 }, { miete: 7.62 });
+		expect(r.direction).toBe('equal');
+	});
+
+	it('keine Angabe (null) auf einer Seite → not-comparable ohne Delta', () => {
+		const r = compareLayerValues('zensus-bestandsmiete-2022', { miete: null }, { miete: 7.6 });
+		expect(r.direction).toBe('not-comparable');
+		expect(r.deltaLabel).toBeUndefined();
+	});
+});
+
 describe('compareLayerValues — Wohnlage/Mietspiegel categorical-neutral (Editorial-Würde)', () => {
 	it('Wohnlage A=gut, B=mittel → not-comparable (keine Hierarchie-Wertung)', () => {
 		const r = compareLayerValues('wohnlagen-2024', { wol_mode: 'gut' }, { wol_mode: 'mittel' });

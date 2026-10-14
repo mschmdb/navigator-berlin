@@ -9,6 +9,7 @@ export const BUILD_TIME_ALLOWLIST = [
 	'bundeswahlleiterin.de',
 	'statistik-berlin-brandenburg.de',
 	'wahlen-berlin.de',
+	'destatis.de',
 	'kriminalitaetsatlas.berlin.de'
 ] as const;
 

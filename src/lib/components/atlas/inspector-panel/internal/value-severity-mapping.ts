@@ -167,6 +167,7 @@ export function getValueSeverity(slug: string, value: unknown): SeverityLevel {
 		// Editorial-Würde (Story 1.12) plus kontext-freie Werte ohne sinnvolle Severity.
 		case 'stolpersteine':
 		case 'bodenrichtwerte':
+		case 'zensus-bestandsmiete-2022':
 		case 'gebaeudealter':
 		case 'bezirke':
 		case 'ortsteile':

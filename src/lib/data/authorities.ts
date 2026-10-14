@@ -89,6 +89,10 @@ export const AUTHORITIES = {
 		de: 'Geschäftsstelle des Gutachterausschusses für Grundstückswerte in Berlin',
 		en: 'Office of the Berlin Committee of Valuation Experts (Gutachterausschuss)'
 	},
+	'statistische-aemter-zensus': {
+		de: 'Statistische Ämter des Bundes und der Länder · Zensus 2022',
+		en: 'Statistical Offices of the Federation and the Länder · Census 2022'
+	},
 	'baeder-betriebe': {
 		de: 'Berliner Bäder-Betriebe (BBB) · Bezirksämter',
 		en: 'Berliner Bäder-Betriebe (BBB) · Bezirk offices (Bezirksämter)'

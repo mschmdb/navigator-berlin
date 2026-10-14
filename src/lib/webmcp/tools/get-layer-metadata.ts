@@ -92,7 +92,7 @@ export function createGetLayerMetadataTool(deps: GetLayerMetadataDeps): WebMcpTo
 					return {
 						error: 'layer_not_found',
 						slug: input.slug,
-						hint: 'The slug must match a manifest layer-slug exactly. Use list_layers_at_point(lat, lng) to discover valid layer-slugs for a location. Semantic guesses like "social-status", "noise", or "rent" will not match — try mss-gesamtindex-2025, laerm-2023, bodenrichtwerte instead.'
+						hint: 'The slug must match a manifest layer-slug exactly. Use list_layers_at_point(lat, lng) to discover valid layer-slugs for a location. Semantic guesses like "social-status", "noise", or "rent" will not match. Try mss-gesamtindex-2025, laerm-2023, bodenrichtwerte, or zensus-bestandsmiete-2022 (existing rent, Census 2022) instead.'
 					};
 				}
 				throw err;

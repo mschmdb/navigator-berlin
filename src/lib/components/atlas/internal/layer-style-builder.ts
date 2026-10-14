@@ -3,7 +3,8 @@ import { KALTLUFT_HIGHLIGHT, rampForSlug, type Ramp } from './dimension-ramps.js
 import { hasPinIcon } from './pin-icon-mapping.js';
 import { pinImageId } from './pin-sprite-renderer.js';
 import { m } from '$lib/paraglide/messages.js';
-import { formatCount } from '$lib/i18n/format.js';
+import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+import { MIETE_STOPS } from './miete-stops.js';
 import { assertUnreachable, type LocaleOptions } from './atlas-label-options.js';
 import type { Locale } from '$lib/paraglide/runtime';
 import { kiezScoreScaleLabel } from '../inspector-panel/internal/kiez-score-display.js';
@@ -13,6 +14,7 @@ type MessageFn = (params?: undefined, options?: { locale: Locale }) => string;
 export type StyleProfile =
 	| 'boundary'
 	| 'choropleth-brw'
+	| 'choropleth-miete'
 	| 'choropleth-belastung-3'
 	| 'choropleth-versorgung-3'
 	| 'choropleth-mehrfach'
@@ -80,6 +82,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	plz: 'boundary',
 	// B: Wohn-Daten
 	bodenrichtwerte: 'choropleth-brw',
+	'zensus-bestandsmiete-2022': 'choropleth-miete',
 	'wohnlagen-2024': 'choropleth-wohnlage-3',
 	'milieuschutz-erhaltungsmiete': 'polygon-outline-milieuschutz-erhaltungsmiete',
 	'milieuschutz-staedtebau': 'polygon-outline-milieuschutz-staedtebau',
@@ -185,6 +188,17 @@ export interface LegendSpec {
 	readonly range?: readonly [string, string];
 }
 
+/** Legenden-Label eines Miete-Stops: erste mit Einheit, letzte mit "+". */
+function mieteStopLabel(index: number, options: { locale: Locale }): string {
+	const text = formatDecimal(MIETE_STOPS[index], {
+		...options,
+		minimumFractionDigits: 1,
+		maximumFractionDigits: 1
+	});
+	if (index === 0) return `${text} €/m²`;
+	return index === MIETE_STOPS.length - 1 ? `${text}+` : text;
+}
+
 const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 	boundary: {
 		kind: 'line',
@@ -199,6 +213,19 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 			{ color: COLORS.scaleStrukturell2, label: '100' },
 			{ color: COLORS.scaleStrukturell4, label: '1.000' },
 			{ color: COLORS.scaleStrukturell5, label: '10.000' }
+		],
+		range: ['niedrig', 'hoch']
+	},
+	'choropleth-miete': {
+		// Bestandsmiete Zensus 2022 (EUR/m2 netto kalt): Strukturell-Indigo, keine Wertung.
+		// Stops sind die Quintile der Planungsraum-Werte (`MIETE_STOPS`), passend zur Quantile-Familie.
+		kind: 'gradient',
+		items: [
+			{ color: COLORS.scaleStrukturell1, label: mieteStopLabel(0, { locale: 'de' }) },
+			{ color: COLORS.scaleStrukturell2, label: mieteStopLabel(1, { locale: 'de' }) },
+			{ color: COLORS.scaleStrukturell3, label: mieteStopLabel(2, { locale: 'de' }) },
+			{ color: COLORS.scaleStrukturell4, label: mieteStopLabel(3, { locale: 'de' }) },
+			{ color: COLORS.scaleStrukturell5, label: mieteStopLabel(4, { locale: 'de' }) }
 		],
 		range: ['niedrig', 'hoch']
 	},
@@ -512,6 +539,15 @@ function translateLegendSpec(
 					m.atlas_scale_label_hoch(undefined, options)
 				]
 			};
+		case 'choropleth-miete':
+			return {
+				...base,
+				items: base.items.map((item, i) => ({ ...item, label: mieteStopLabel(i, options) })),
+				range: [
+					m.atlas_legend_word_niedrig(undefined, options),
+					m.atlas_scale_label_hoch(undefined, options)
+				]
+			};
 		case 'choropleth-pet':
 			return {
 				...base,
@@ -804,6 +840,35 @@ export function buildLayerSpec(
 							COLORS.scaleLast5
 						],
 						'fill-opacity': 0.55,
+						'fill-outline-color': COLORS.accent
+					}
+				}
+			];
+		case 'choropleth-miete':
+			// Bestandsmiete: neutral (Strukturell-Indigo). Planungsraeume unter 30 vermieteten
+			// Wohnungen tragen miete null und bleiben transparent ("keine Angabe").
+			return [
+				{
+					id,
+					type: 'fill',
+					source: sourceId,
+					paint: {
+						'fill-color': [
+							'interpolate',
+							['linear'],
+							['to-number', ['get', 'miete'], 0],
+							MIETE_STOPS[0],
+							COLORS.scaleStrukturell1,
+							MIETE_STOPS[1],
+							COLORS.scaleStrukturell2,
+							MIETE_STOPS[2],
+							COLORS.scaleStrukturell3,
+							MIETE_STOPS[3],
+							COLORS.scaleStrukturell4,
+							MIETE_STOPS[4],
+							COLORS.scaleStrukturell5
+						],
+						'fill-opacity': ['case', ['==', ['get', 'miete'], null], 0, 0.55],
 						'fill-outline-color': COLORS.accent
 					}
 				}

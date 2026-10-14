@@ -80,6 +80,28 @@ describe('formatLayerValue', () => {
 		});
 	});
 
+	it('Bestandsmiete: "x,xx €/m²" mit zwei Nachkommastellen', () => {
+		expect(formatLayerValue('zensus-bestandsmiete-2022', { miete: 7.6 })).toEqual({
+			text: '7,60 €/m²',
+			isNumeric: true,
+			isMissing: false
+		});
+	});
+
+	it('Bestandsmiete: miete null → "keine Angabe"', () => {
+		expect(formatLayerValue('zensus-bestandsmiete-2022', { miete: null, wohnungen: 12 })).toEqual({
+			text: 'keine Angabe',
+			isNumeric: false,
+			isMissing: false
+		});
+	});
+
+	it('Bestandsmiete EN: englisches Dezimalformat', () => {
+		expect(
+			formatLayerValue('zensus-bestandsmiete-2022', { miete: 7.6 }, { locale: 'en' }).text
+		).toBe('7.60 €/m²');
+	});
+
 	it('Bezirke Props-Objekt → Gemeinde_name', () => {
 		expect(formatLayerValue('bezirke', { Gemeinde_name: 'Pankow', Land_name: 'Berlin' })).toEqual({
 			text: 'Pankow',

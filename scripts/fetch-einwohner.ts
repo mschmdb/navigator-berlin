@@ -32,7 +32,7 @@ const LIVE = 'https://www.statistik-berlin-brandenburg.de/opendata/EWR_L21_20241
 const DOWNLOAD =
 	'https://download.statistik-berlin-brandenburg.de/bf57f8f2d002dca0/cf0bcd27e257/EWR_L21_202412E_Matrix.csv';
 
-interface Manifest {
+export interface Manifest {
 	schemaVersion: number;
 	generatedAt: string;
 	layers: LayerEntry[];
@@ -55,7 +55,7 @@ async function fetchCsv(): Promise<string> {
 	});
 }
 
-async function loadManifest(): Promise<Manifest> {
+export async function loadManifest(): Promise<Manifest> {
 	return JSON.parse(await readFile(MANIFEST_PATH, 'utf-8')) as Manifest;
 }
 
@@ -68,14 +68,14 @@ async function loadLorFeatures(manifest: Manifest): Promise<Feature[]> {
 	return fc.features ?? [];
 }
 
-async function loadFcBySlug(manifest: Manifest, slug: string): Promise<FeatureCollection> {
+export async function loadFcBySlug(manifest: Manifest, slug: string): Promise<FeatureCollection> {
 	const entry = manifest.layers.find((l) => l.slug === slug);
 	if (!entry) throw new Error(`MANIFEST ohne ${slug}`);
 	return JSON.parse(await readFile(join(LAYERS_DIR, entry.filename), 'utf-8')) as FeatureCollection;
 }
 
 /** Bezirk-Code (2-stellig, = plrId.slice(0,2)) → Gemeinde_name aus dem Bezirke-Layer. */
-function bezCodeToName(bezFc: FeatureCollection): Map<string, string> {
+export function bezCodeToName(bezFc: FeatureCollection): Map<string, string> {
 	const m = new Map<string, string>();
 	for (const f of bezFc.features) {
 		const p = (f.properties ?? {}) as Record<string, unknown>;
@@ -92,7 +92,10 @@ function bezCodeToName(bezFc: FeatureCollection): Map<string, string> {
  * buildKiezSlugs über ALLE Bezirksregionen, damit die Slugs exakt den von
  * resolveSpatialLevel erzeugten entsprechen (Heerstraße-Disambiguierung).
  */
-function bzrIdToSlug(bzrFc: FeatureCollection, bezNames: Map<string, string>): Map<string, string> {
+export function bzrIdToSlug(
+	bzrFc: FeatureCollection,
+	bezNames: Map<string, string>
+): Map<string, string> {
 	const props = bzrFc.features.map((f) => (f.properties ?? {}) as Record<string, unknown>);
 	const refs = props.map((p) => ({
 		name: typeof p.BZR_NAME === 'string' ? p.BZR_NAME : '',
@@ -144,10 +147,11 @@ function buildDichteLayer(
 	return { type: 'FeatureCollection', features };
 }
 
-async function purgeOldHashes(slug: string): Promise<void> {
+export async function purgeOldHashes(slug: string, keepFilename?: string): Promise<void> {
 	const files = await readdir(LAYERS_DIR).catch(() => []);
 	for (const f of files) {
-		if (new RegExp(`^${slug}\\.[0-9a-f]{8}\\.geojson$`).test(f)) await unlink(join(LAYERS_DIR, f));
+		if (f !== keepFilename && new RegExp(`^${slug}\\.[0-9a-f]{8}\\.geojson$`).test(f))
+			await unlink(join(LAYERS_DIR, f));
 	}
 }
 

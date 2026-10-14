@@ -194,6 +194,21 @@ describe('Kontur-Varianten · Multi-Layer-Kartenfarben', () => {
 	});
 });
 
+describe('Bestandsmiete als zweite Choropleth-Rolle', () => {
+	it('computeCascadeVariants: zweiter Choropleth bekommt outline', () => {
+		const map = computeCascadeVariants(['laerm-2023', 'zensus-bestandsmiete-2022']);
+		expect(map.get('zensus-bestandsmiete-2022')).toBe<CascadeVariant>('outline');
+	});
+
+	it('outline liefert Größen-Symbole statt Konturen, null-Planungsräume ohne Symbol', () => {
+		const [hit, dots] = buildLayerSpecCascade('zensus-bestandsmiete-2022', 'src', 'outline');
+		expect(hit.type).toBe('fill');
+		expect(dots.type).toBe('symbol');
+		expect(dots.layout?.['icon-image']).toBe('navigator-score-dot-zensus-bestandsmiete-2022');
+		expect(JSON.stringify(dots.layout?.['icon-size'])).toContain('"miete"');
+	});
+});
+
 describe('isChoroplethSlug · Overlay-Klasse', () => {
 	it('Choroplethen: Scores, Umweltatlas, MSS, Wohnlagen, BRW, Dichte, PET', () => {
 		for (const slug of [
@@ -203,6 +218,7 @@ describe('isChoroplethSlug · Overlay-Klasse', () => {
 			'wohnlagen-2024',
 			'bodenrichtwerte',
 			'einwohner-dichte-2024',
+			'zensus-bestandsmiete-2022',
 			'klima-pet-2022'
 		]) {
 			expect(isChoroplethSlug(slug)).toBe(true);

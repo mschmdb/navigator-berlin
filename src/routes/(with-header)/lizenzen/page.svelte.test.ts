@@ -241,6 +241,14 @@ describe('lizenzen · EN (i18n C4c)', () => {
 		expect(document.querySelector('a[href="/en/layer/laerm-2023"]')).not.toBeNull();
 	});
 
+	it('EN: Zensus-Attribution im Original und in englischer Erläuterung', () => {
+		const root = renderEn();
+		const attribution = flat(root.querySelector('[data-testid="lizenzen-zensus-attribution"]'));
+		expect(attribution).toContain('Statistische Ämter des Bundes und der Länder, Zensus 2022');
+		expect(attribution).toContain('Census 2022');
+		expect(attribution).toContain('Existing rent (Census 2022)');
+	});
+
 	it('H1, Intro, Inhaltsverzeichnis und Abschnitte englisch', () => {
 		const root = renderEn();
 		expect(root.querySelector('h1')?.textContent).toBe('Licences');

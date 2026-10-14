@@ -14,6 +14,7 @@ export type CascadeVariant = 'fill' | 'outline';
 
 const POLYGON_PROFILES: ReadonlySet<StyleProfile> = new Set<StyleProfile>([
 	'choropleth-brw',
+	'choropleth-miete',
 	'choropleth-belastung-3',
 	'choropleth-versorgung-3',
 	'choropleth-mehrfach',
@@ -47,6 +48,7 @@ export function isPolygonSlug(slug: string): boolean {
  */
 const CHOROPLETH_PROFILES: ReadonlySet<StyleProfile> = new Set<StyleProfile>([
 	'choropleth-brw',
+	'choropleth-miete',
 	'choropleth-belastung-3',
 	'choropleth-versorgung-3',
 	'choropleth-mehrfach',

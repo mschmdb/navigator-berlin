@@ -27,6 +27,18 @@ describe('layer-aggregate strategy', () => {
 		expect(LAYER_STRATEGY['gruenanlagen'].type).toBe('area-share');
 	});
 
+	it('Bestandsmiete ist weighted-mean ueber Planungsraeume', () => {
+		expect(LAYER_STRATEGY['zensus-bestandsmiete-2022']).toMatchObject({
+			type: 'weighted-mean',
+			memberMode: 'plr',
+			valueKey: 'miete_summe',
+			weightKey: 'wohnungen',
+			minWeight: 30,
+			neutral: true
+		});
+		expect(isPrecomputed(LAYER_STRATEGY['zensus-bestandsmiete-2022'])).toBe(true);
+	});
+
 	it('bodenrichtwerte not-aggregatable', () => {
 		expect(LAYER_STRATEGY['bodenrichtwerte'].type).toBe('not-aggregatable');
 		expect(isPrecomputed(LAYER_STRATEGY['bodenrichtwerte'])).toBe(false);

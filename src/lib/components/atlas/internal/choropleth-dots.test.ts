@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { COLORS } from './colors.js';
 import { DIMENSION_RAMPS, SCORE_DOT_SIZES } from './dimension-ramps.js';
 import { choroplethDotImageId, dotSpecForSlug } from './choropleth-dots.js';
+import { MIETE_STOPS } from './miete-stops.js';
 
 describe('dotSpecForSlug', () => {
 	it('liefert für jeden Score-Layer Spec mit Dimension-Anker und Quartil-Größen', () => {
@@ -88,6 +89,18 @@ describe('dotSpecForSlug', () => {
 		]) {
 			expect(dotSpecForSlug(slug)).toBeNull();
 		}
+	});
+});
+
+describe('Bestandsmiete-Symbole', () => {
+	it('hat Spec mit 5 Legenden-Faktoren und blendet null-Planungsräume aus', () => {
+		const spec = dotSpecForSlug('zensus-bestandsmiete-2022');
+		expect(spec?.legendFactors).toHaveLength(5);
+		expect(JSON.stringify(spec?.sizeExpression)).toContain('"miete"');
+		expect(JSON.stringify(spec?.sizeExpression)).toContain('null');
+		const step = (spec?.sizeExpression as unknown[])[3] as unknown[];
+		const thresholds = step.filter((x, i) => i >= 3 && i % 2 === 1 && typeof x === 'number');
+		expect(thresholds).toEqual([...MIETE_STOPS.slice(1)]);
 	});
 });
 
