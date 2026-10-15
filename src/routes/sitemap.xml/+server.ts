@@ -1,5 +1,7 @@
 import type { RequestHandler } from './$types';
 import { buildSitemapIndexXml } from '$lib/seo/sitemap-builder.js';
+import { latestLastmod } from '$lib/seo/lastmod.js';
+import { loadSitemapEntries } from '$lib/seo/sitemap-context.js';
 
 export const prerender = true;
 
@@ -8,18 +10,22 @@ export const prerender = true;
  *
  * i18n Block A: lists both per-locale sitemaps. `sitemap-en.xml` renders an
  * empty `<urlset>` until the translation register marks pages translated
- * (`$lib/seo/translation-register.ts`) -- listing it now is harmless (a
- * valid, empty sitemap) and means Block B needs no change here.
+ * (`$lib/seo/translation-register.ts`).
  *
- * `lastmod` uses the build timestamp because the index itself only changes
- * when the build runs.
+ * S5: `lastmod` je Teil-Sitemap = jüngstes `lastmod` ihrer Einträge. Ohne
+ * datierte Einträge entfällt es (kein `new Date()` mehr).
  */
-export const GET: RequestHandler = ({ url }) => {
+export const GET: RequestHandler = async ({ url, fetch }) => {
 	const origin = url.origin;
-	const lastmod = new Date().toISOString();
+	const [de, en] = await Promise.all([
+		loadSitemapEntries({ origin, locale: 'de', fetch }),
+		loadSitemapEntries({ origin, locale: 'en', fetch })
+	]);
+	const deLastmod = latestLastmod(de.map((e) => e.lastmod));
+	const enLastmod = latestLastmod(en.map((e) => e.lastmod));
 	const body = buildSitemapIndexXml([
-		{ loc: `${origin}/sitemap-de.xml`, lastmod },
-		{ loc: `${origin}/sitemap-en.xml`, lastmod }
+		{ loc: `${origin}/sitemap-de.xml`, ...(deLastmod ? { lastmod: deLastmod } : {}) },
+		{ loc: `${origin}/sitemap-en.xml`, ...(enLastmod ? { lastmod: enLastmod } : {}) }
 	]);
 	return new Response(body, {
 		status: 200,

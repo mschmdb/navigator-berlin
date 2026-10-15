@@ -4,6 +4,7 @@ import { baseLocale, locales, type Locale } from '$lib/paraglide/runtime';
 import { isRouteTranslated, translatedLocalesFor } from './translation-register.js';
 import { buildHreflangCluster } from './hreflang.js';
 import { localizedPathname } from './canonical.js';
+import { validLastmod, type ProfileDates } from './lastmod.js';
 
 export interface SitemapAlternate {
 	readonly hreflang: Locale | 'x-default';
@@ -32,11 +33,13 @@ export interface SitemapSourceContext {
 	readonly origin: string;
 	readonly locale: Locale;
 	readonly manifest: Manifest;
-	/**
-	 * ISO-8601 build timestamp used as fallback `lastmod` for pages without a
-	 * dedicated data-source (e.g. methodik / lizenzen / root).
-	 */
-	readonly buildTimestamp: string;
+	/** Profil-Frontmatter-Daten je Slug (`generatedAt`, `translatedAt`) für Kiez/Bezirk-`lastmod`. */
+	readonly profileDates?: {
+		readonly kiez: Readonly<Record<string, ProfileDates>>;
+		readonly bezirk: Readonly<Record<string, ProfileDates>>;
+	};
+	/** `generatedAt` von `kiez-scores.json` (Score-Stand der Kiez-/Bezirksseiten). */
+	readonly scoresGeneratedAt?: string;
 	/** Reserved for story 2.3 (bezirks-pages). Sources may consume this when present. */
 	readonly bezirkSlugs?: readonly string[];
 	/** Reserved for story 2.4 (kiez-pages). */
@@ -46,7 +49,7 @@ export interface SitemapSourceContext {
 		readonly jahr: number;
 		readonly typ: 'btw' | 'agh' | 'bvv';
 		readonly stimmtyp: 'erststimme' | 'zweitstimme' | 'einstimme';
-		/** Story 16: `lastmod`-Quelle, sonst Jahres-Fallback (`wahl-detail-pages.ts`). */
+		/** Story 16: `lastmod`-Quelle, ohne Wert entfällt `lastmod` (`wahl-detail-pages.ts`). */
 		readonly sourceUpdatedAt?: string | null;
 	}[];
 	/**
@@ -128,9 +131,9 @@ export function buildSitemapIndexXml(entries: readonly SitemapIndexEntry[]): str
  * `/datenschutz` stay out (DE-only legal pages), and so does the `noindex`
  * page `/methodik/cross-layer-templates`.
  *
- * `lastmod` uses the build timestamp as recommended by story-2.1 dev-notes
- * (Open-Question 4 resolution: build-timestamp over `git log` to avoid flaky
- * `child_process.execSync` calls during prerender).
+ * No `lastmod` (S5): these pages carry no content date. Neither the build
+ * time nor the commit history (absent in the Docker build) says anything
+ * about content changes.
  */
 export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 	const page = (
@@ -139,7 +142,6 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 		priority?: number
 	): SitemapEntry => ({
 		loc: `${ctx.origin}${localizedPathname(path, ctx.locale)}`,
-		lastmod: ctx.buildTimestamp,
 		changefreq,
 		...(priority === undefined ? {} : { priority })
 	});
@@ -176,7 +178,6 @@ export const WAHL_PORTAL_PAGE_SOURCE: SitemapSource = (ctx) => {
 	return [
 		{
 			loc: `${ctx.origin}${localizedPathname('/berlin-wahlen', ctx.locale)}`,
-			lastmod: ctx.buildTimestamp,
 			changefreq: 'weekly' as const,
 			priority: 0.8
 		}
@@ -186,7 +187,8 @@ export const WAHL_PORTAL_PAGE_SOURCE: SitemapSource = (ctx) => {
 /**
  * Sources one entry per manifest layer.
  *
- * Uses `fetchedAt` from each layer as `lastmod` (per story-2.1 dev-notes).
+ * `lastmod` = `sourceUpdatedAt` of the layer, else `fetchedAt` (S5); invalid
+ * dates drop `lastmod`.
  * i18n Block D1: emits `localizedPathname` URLs for every locale, the
  * register gate filters.
  */
@@ -194,11 +196,14 @@ export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
 	// Build-only-Layer (weder Karte noch Inspector) haben keine Detail-Seite → nicht in Sitemap.
 	return ctx.manifest.layers
 		.filter((layer) => hasLayerDetailPage(layer))
-		.map((layer) => ({
-			loc: `${ctx.origin}${localizedPathname(`/layer/${layer.slug}`, ctx.locale)}`,
-			lastmod: layer.fetchedAt,
-			changefreq: 'monthly' as const
-		}));
+		.map((layer) => {
+			const lastmod = validLastmod(layer.sourceUpdatedAt) ?? validLastmod(layer.fetchedAt);
+			return {
+				loc: `${ctx.origin}${localizedPathname(`/layer/${layer.slug}`, ctx.locale)}`,
+				...(lastmod ? { lastmod } : {}),
+				changefreq: 'monthly' as const
+			};
+		});
 };
 
 /**

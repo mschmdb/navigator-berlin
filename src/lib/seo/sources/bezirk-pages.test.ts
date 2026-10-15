@@ -32,7 +32,6 @@ function fixtureContext(overrides: Partial<SitemapSourceContext> = {}): SitemapS
 		origin: ORIGIN,
 		locale: 'de',
 		manifest: fixtureManifest(),
-		buildTimestamp: '2026-05-16T08:00:00.000Z',
 		bezirkSlugs: ['mitte', 'friedrichshain-kreuzberg', 'pankow'],
 		...overrides
 	};
@@ -44,7 +43,7 @@ describe('buildBezirkSitemapEntries', () => {
 			buildBezirkSitemapEntries({
 				origin: ORIGIN,
 				slugs: [],
-				lastmod: '2024-01-01T00:00:00.000Z'
+				lastmodBySlug: {}
 			})
 		).toEqual([]);
 	});
@@ -53,7 +52,7 @@ describe('buildBezirkSitemapEntries', () => {
 		const entries = buildBezirkSitemapEntries({
 			origin: ORIGIN,
 			slugs: ['mitte', 'friedrichshain-kreuzberg'],
-			lastmod: '2024-01-01T00:00:00.000Z'
+			lastmodBySlug: {}
 		});
 		const locs = entries.map((e) => e.loc);
 		expect(locs).toEqual([
@@ -66,18 +65,18 @@ describe('buildBezirkSitemapEntries', () => {
 		const entries = buildBezirkSitemapEntries({
 			origin: ORIGIN,
 			slugs: ['mitte'],
-			lastmod: '2024-01-01T00:00:00.000Z'
+			lastmodBySlug: { mitte: '2026-10-14T08:00:00.000Z' }
 		});
 		expect(entries[0]?.changefreq).toBe('monthly');
 		expect(entries[0]?.priority).toBeCloseTo(0.7, 5);
-		expect(entries[0]?.lastmod).toBe('2024-01-01T00:00:00.000Z');
+		expect(entries[0]?.lastmod).toBe('2026-10-14T08:00:00.000Z');
 	});
 
 	it('strippt trailing-slash vom Origin', () => {
 		const entries = buildBezirkSitemapEntries({
 			origin: 'https://navigator.berlin/',
 			slugs: ['mitte'],
-			lastmod: '2024-01-01T00:00:00.000Z'
+			lastmodBySlug: {}
 		});
 		expect(entries[0]?.loc).toBe('https://navigator.berlin/bezirk/mitte');
 	});
@@ -98,20 +97,54 @@ describe('BEZIRK_PAGES_SOURCE', () => {
 		expect(entries.map((e) => e.loc)).toContain('https://navigator.berlin/bezirk/mitte');
 	});
 
-	it('nutzt fetchedAt (Daten-Refresh) von bezirke-Layer als lastmod', () => {
+	it('nutzt nicht das Grenzlayer-fetchedAt als lastmod', () => {
 		const entries = BEZIRK_PAGES_SOURCE(fixtureContext());
-		expect(entries[0]?.lastmod).toBe('2026-05-16T06:56:28.400Z');
+		expect(entries).toHaveLength(3);
+		expect(entries.every((e) => e.lastmod === undefined)).toBe(true);
 	});
 
-	it('faellt auf sourceUpdatedAt zurueck wenn fetchedAt fehlt', () => {
-		const ctx = fixtureContext();
-		const manifest: Manifest = {
-			...ctx.manifest,
-			// Simuliert ein Manifest ohne fetchedAt (test-only Cast: Feld ist eigentlich required).
-			layers: ctx.manifest.layers.map((l) => ({ ...l, fetchedAt: undefined as unknown as string }))
-		};
-		const entries = BEZIRK_PAGES_SOURCE({ ...ctx, manifest });
-		expect(entries[0]?.lastmod).toBe('2024-01-01T00:00:00.000Z');
+	it('lastmod = späteres Datum aus Profil-generatedAt und Scores-generatedAt', () => {
+		const entries = BEZIRK_PAGES_SOURCE(
+			fixtureContext({
+				profileDates: {
+					kiez: {},
+					bezirk: { mitte: { generatedAt: '2026-11-01T00:00:00.000Z' } }
+				},
+				scoresGeneratedAt: '2026-10-14T08:00:00.000Z'
+			})
+		);
+		const byLoc = new Map(entries.map((e) => [e.loc, e.lastmod]));
+		expect(byLoc.get(`${ORIGIN}/bezirk/mitte`)).toBe('2026-11-01T00:00:00.000Z');
+		expect(byLoc.get(`${ORIGIN}/bezirk/pankow`)).toBe('2026-10-14T08:00:00.000Z');
+	});
+
+	it('EN-Seite nutzt translatedAt', () => {
+		const entries = BEZIRK_PAGES_SOURCE(
+			fixtureContext({
+				locale: 'en',
+				bezirkSlugs: ['mitte'],
+				profileDates: {
+					kiez: {},
+					bezirk: {
+						mitte: {
+							generatedAt: '2026-06-07T12:00:00.000Z',
+							translatedAt: '2026-09-30T12:00:00.000Z'
+						}
+					}
+				}
+			})
+		);
+		expect(entries[0]?.lastmod).toBe('2026-09-30T12:00:00.000Z');
+	});
+
+	it('lässt lastmod weg bei ungültigen Datumswerten', () => {
+		const entries = BEZIRK_PAGES_SOURCE(
+			fixtureContext({
+				bezirkSlugs: ['mitte'],
+				profileDates: { kiez: {}, bezirk: { mitte: { generatedAt: 'kaputt' } } }
+			})
+		);
+		expect(entries[0]?.lastmod).toBeUndefined();
 	});
 
 	it('liefert leere Liste wenn bezirkSlugs nicht im Context ist', () => {
@@ -119,8 +152,7 @@ describe('BEZIRK_PAGES_SOURCE', () => {
 		const reduced: SitemapSourceContext = {
 			origin: ctx.origin,
 			locale: ctx.locale,
-			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp
+			manifest: ctx.manifest
 		};
 		expect(BEZIRK_PAGES_SOURCE(reduced)).toEqual([]);
 	});

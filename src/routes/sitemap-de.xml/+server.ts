@@ -1,62 +1,18 @@
 import type { RequestHandler } from './$types';
-import { loadManifest } from '$lib/data/manifest.js';
-import { buildSitemapXml, collectPrerenderedUrls } from '$lib/seo/sitemap-builder.js';
-import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
-import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-import { featureFlags } from '$lib/data/feature-flags.js';
+import { sitemapResponse } from '$lib/seo/sitemap-context.js';
 
 export const prerender = true;
 
 /**
  * Story 2.1 AC-4 + AC-6: DE-language sitemap.
  *
- * Phase 1 (memory `project_i18n_phase_1_de_only`): only DE routes exist. The EN
- * counterpart `src/routes/sitemap-en.xml/+server.ts` is intentionally NOT
- * created here, story 3.1/3.2 will add it once EN-coverage ships.
+ * Daten laden, `lastmod`-Regeln und die Build-Härte (Prod-Build ohne Wahl-Daten
+ * bricht ab) stecken in `$lib/seo/sitemap-context.ts`. Die EN-Route
+ * (`sitemap-en.xml`) und der Index (`sitemap.xml`) nutzen dieselbe Quelle.
  *
- * Background: a single dynamic route `routes/sitemap-[lang]/+server.ts` was
- * tried first but the unexpanded `[lang]` bracket leaks into the `Pathname`
- * union and breaks every `resolve(... as Pathname)` call in the codebase.
- * Two static routes are the simpler shape and match the DE-only roadmap.
- *
- * Story 2.3: Bezirks-Slugs werden hier zur Build-Time aus dem Bezirks-GeoJSON
- * gelesen und im Context an `BEZIRK_PAGES_SOURCE` durchgereicht.
+ * Zwei statische Routes statt `routes/sitemap-[lang]/+server.ts`: die
+ * unexpandierte `[lang]`-Klammer landet in der `Pathname`-Union und bricht jeden
+ * `resolve(... as Pathname)`-Aufruf.
  */
-export const GET: RequestHandler = async ({ url, fetch }) => {
-	const manifest = await loadManifest(fetch);
-	const buildTimestamp = new Date().toISOString();
-	const [bezirkSlugs, kiezSlugs, wahlen] = await Promise.all([
-		readBezirkSlugsFromGeoJson(),
-		readKiezSlugsFromGeoJson(),
-		(async () => {
-			if (!process.env.DATABASE_URL) return [];
-			try {
-				const list = await getWahlList();
-				return list.map((w) => ({
-					jahr: w.jahr,
-					typ: w.typ,
-					stimmtyp: w.stimmtyp,
-					sourceUpdatedAt: w.sourceUpdatedAt ? w.sourceUpdatedAt.toISOString() : null
-				}));
-			} catch {
-				return [];
-			}
-		})()
-	]);
-	const entries = collectPrerenderedUrls({
-		origin: url.origin,
-		locale: 'de',
-		manifest,
-		buildTimestamp,
-		bezirkSlugs,
-		kiezSlugs,
-		wahlen,
-		wahlPortalEnabled: featureFlags.wahlPortal
-	});
-	const body = buildSitemapXml(entries);
-	return new Response(body, {
-		status: 200,
-		headers: { 'content-type': 'application/xml; charset=utf-8' }
-	});
-};
+export const GET: RequestHandler = ({ url, fetch }) =>
+	sitemapResponse({ origin: url.origin, locale: 'de', fetch });

@@ -1,14 +1,16 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
 import { localizedPathname } from '../canonical.js';
 import type { Locale } from '$lib/paraglide/runtime';
+import { profileLastmod } from '../lastmod.js';
 
 /**
  * Story 2.3 AC-6: Sitemap-Source für Bezirks-Routes (12 Bezirke).
  *
  * - `/bezirk/{slug}`: priority 0.7, changefreq monthly.
- * - `lastmod` = `bezirke`-Layer `fetchedAt` (fallback `sourceUpdatedAt`),
- *   da alle 12 Bezirks-Pages aus derselben Quelle generiert werden.
- *   fetchedAt-first signalisiert Crawlern Freshness (SEO-Recrawl).
+ * - `lastmod` = späteres Datum aus Profil-Frontmatter (`generatedAt`, EN
+ *   zusätzlich `translatedAt`) und `generatedAt` von `kiez-scores.json`
+ *   (`profileLastmod`). Fehlen beide, entfällt `lastmod`. Das Datum des
+ *   Grenzlayers (`fetchedAt`) sagt nichts über den Seiteninhalt.
  *
  * i18n Block D1: liefert je Locale `localizedPathname`-URLs, das zentrale
  * Register-Gate in `collectPrerenderedUrls` filtert.
@@ -24,27 +26,40 @@ const PRIORITY = 0.7;
 export interface BuildBezirkSitemapEntriesInput {
 	readonly origin: string;
 	readonly slugs: readonly string[];
-	readonly lastmod: string;
+	/** `lastmod` je Slug; fehlender Eintrag lässt `lastmod` weg. */
+	readonly lastmodBySlug: Readonly<Record<string, string | undefined>>;
 	readonly locale?: Locale;
 }
 
 export function buildBezirkSitemapEntries(input: BuildBezirkSitemapEntriesInput): SitemapEntry[] {
 	if (input.slugs.length === 0) return [];
 	const origin = input.origin.replace(/\/+$/, '');
-	return input.slugs.map((slug) => ({
-		loc: `${origin}${localizedPathname(`/bezirk/${slug}`, input.locale ?? 'de')}`,
-		lastmod: input.lastmod,
-		changefreq: 'monthly' as const,
-		priority: PRIORITY
-	}));
+	return input.slugs.map((slug) => {
+		const lastmod = input.lastmodBySlug[slug];
+		return {
+			loc: `${origin}${localizedPathname(`/bezirk/${slug}`, input.locale ?? 'de')}`,
+			...(lastmod ? { lastmod } : {}),
+			changefreq: 'monthly' as const,
+			priority: PRIORITY
+		};
+	});
 }
 
 export const BEZIRK_PAGES_SOURCE: SitemapSource = (ctx) => {
 	const slugs = ctx.bezirkSlugs;
 	if (!slugs || slugs.length === 0) return [];
-	const bezirkeLayer = ctx.manifest.layers.find((l) => l.slug === 'bezirke');
-	// fetchedAt (Daten-Refresh ins Build) vor sourceUpdatedAt (Daten-Vintage 2024):
-	// truthful + signalisiert Crawlern Freshness statt "uralt, skip".
-	const lastmod = bezirkeLayer?.fetchedAt ?? bezirkeLayer?.sourceUpdatedAt ?? ctx.buildTimestamp;
-	return buildBezirkSitemapEntries({ origin: ctx.origin, slugs, lastmod, locale: ctx.locale });
+	const lastmodBySlug: Record<string, string | undefined> = {};
+	for (const slug of slugs) {
+		lastmodBySlug[slug] = profileLastmod(
+			ctx.profileDates?.bezirk[slug],
+			ctx.locale,
+			ctx.scoresGeneratedAt
+		);
+	}
+	return buildBezirkSitemapEntries({
+		origin: ctx.origin,
+		slugs,
+		lastmodBySlug,
+		locale: ctx.locale
+	});
 };

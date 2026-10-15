@@ -69,4 +69,24 @@ describe('buildUpdatesSitemapEntries', () => {
 		expect(out.find((e) => e.loc.endsWith('/updates/b'))?.lastmod).toBe('2026-06-01');
 		expect(out.find((e) => e.loc.endsWith('/updates'))?.lastmod).toBe('2026-07-01');
 	});
+
+	it('lässt lastmod bei ungültigem Datum weg und nimmt für den Index das jüngste gültige', () => {
+		const out = buildUpdatesSitemapEntries({
+			entries: [fixtureEntry('ok', '2026-06-01'), fixtureEntry('kaputt', 'gestern')],
+			origin: ORIGIN
+		});
+		expect(out.find((e) => e.loc.endsWith('/updates/kaputt'))?.lastmod).toBeUndefined();
+		expect(out.find((e) => e.loc.endsWith('/updates/ok'))?.lastmod).toBe('2026-06-01');
+		expect(out.find((e) => e.loc.endsWith('/updates'))?.lastmod).toBe('2026-06-01');
+	});
+
+	it('Index ohne datierte Einträge hat kein lastmod', () => {
+		const out = buildUpdatesSitemapEntries({
+			entries: [fixtureEntry('kaputt', 'gestern')],
+			origin: ORIGIN
+		});
+		const index = out.find((e) => e.loc === 'https://navigator.berlin/updates');
+		expect(index).toBeDefined();
+		expect(index?.lastmod).toBeUndefined();
+	});
 });

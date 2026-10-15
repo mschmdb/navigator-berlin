@@ -71,8 +71,7 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 			collectPrerenderedUrls({
 				origin: ctx.origin,
 				locale: ctx.locale,
-				manifest: ctx.manifest,
-				buildTimestamp: ctx.buildTimestamp
+				manifest: ctx.manifest
 			})
 				.map((e) => e.loc)
 				.filter((loc) => !isFeedRoute(loc))
@@ -91,8 +90,7 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 		const sitemap = collectPrerenderedUrls({
 			origin: ctx.origin,
 			locale: ctx.locale,
-			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp
+			manifest: ctx.manifest
 		});
 		const llms = collectLlmsSourceEntries(ctx);
 
@@ -106,8 +104,7 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 		const sitemap = collectPrerenderedUrls({
 			origin: ctx.origin,
 			locale: ctx.locale,
-			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp
+			manifest: ctx.manifest
 		});
 		const llms = collectLlmsSourceEntries(ctx);
 
@@ -144,8 +141,7 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 		const sitemapUrls = collectPrerenderedUrls({
 			origin: ctx.origin,
 			locale: ctx.locale,
-			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp
+			manifest: ctx.manifest
 		}).map((e) => e.loc);
 		const llmsUrls = collectLlmsSourceEntries(ctx).map((e) => e.loc);
 		expect(sitemapUrls).not.toContain(`${ctx.origin}/berlin-wahlen`);
@@ -157,7 +153,6 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 			origin: ctx.origin,
 			locale: ctx.locale,
 			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp,
 			wahlPortalEnabled: true
 		}).map((e) => e.loc);
 		const llmsUrls = collectLlmsSourceEntries({ ...ctx, wahlPortalEnabled: true }).map(
@@ -183,7 +178,6 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 			origin: ctx.origin,
 			locale: 'en',
 			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp,
 			wahlPortalEnabled: true
 		});
 		const llmsUrls = collectLlmsSourceEntries({ ...ctx, locale: 'en', wahlPortalEnabled: true });
@@ -198,7 +192,6 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 			origin: ctx.origin,
 			locale: 'de',
 			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp,
 			wahlPortalEnabled: true
 		})
 			.map((e) => toPath(e.loc))
@@ -213,7 +206,6 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 			origin: ctx.origin,
 			locale: 'en',
 			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp,
 			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
 		}).map((e) => e.loc);
 		const llmsUrls = collectLlmsSourceEntries({
@@ -237,7 +229,6 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 			origin: ctx.origin,
 			locale: ctx.locale,
 			manifest: ctx.manifest,
-			buildTimestamp: ctx.buildTimestamp,
 			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
 		}).map((e) => e.loc);
 		const llmsUrls = collectLlmsSourceEntries({

@@ -390,3 +390,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-s3-jsonld-entitaeten.md`
   summary: DataCatalog auf `/berlin-wahlen` übergibt kein `inLanguage` und meldet auf `/en/berlin-wahlen` `de-DE`.
   evidence: Fund aus der S3-Umsetzung (15.10.2026); Builder-Aufruf `berlin-wahlen/+page.svelte:205` ohne Locale.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-s5-sitemap-build-haerte.md`
+  summary: Layer-`lastmod` nimmt `sourceUpdatedAt` vor `fetchedAt`. 15 Layer tragen Jahres-Platzhalter (`YYYY-01-01`), zwei am 14.10.2026 neu geholte Layer melden 2022-05-15. Entscheidung für Matze: Platzhalter verwerfen oder das spätere der beiden Daten nehmen.
+  evidence: Edge-Case-Review S5 (15.10.2026), `static/layers/MANIFEST.json`; Spec-Entscheidung „Layer: sourceUpdatedAt, sonst fetchedAt“ bewusst nicht eigenmächtig geändert.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-s5-sitemap-build-haerte.md`
+  summary: Sitemap-Prerender lädt die Datenquellen viermal (Index lädt DE und EN zusätzlich zu den Teil-Sitemaps); Kiez- und Bezirks-Source bauen die `lastmod`-Schleife doppelt.
+  evidence: Blind- und Edge-Review S5; Build-Zeit unkritisch, Memoisierung oder gemeinsamer Helfer bei nächster Änderung.

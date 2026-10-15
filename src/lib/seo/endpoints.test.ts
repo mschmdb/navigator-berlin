@@ -18,6 +18,18 @@ const fixtureManifest: Manifest = {
 			featureCount: 12
 		},
 		{
+			slug: 'lor-bezirksregion',
+			filename: 'lor-bezirksregion.9479b010.geojson',
+			sourceUrl: 'https://example.com/lor.geojson',
+			fetchedAt: '2026-05-16T06:56:28.400Z',
+			license: 'dl-de/zero-2-0',
+			sha256: 'lor',
+			bundleGroup: 'A: Boundaries',
+			zoomThresholds: { min: 10, max: 14 },
+			geometryType: 'Polygon',
+			featureCount: 143
+		},
+		{
 			slug: 'klima-pet',
 			filename: 'klima-pet.cafebabe.geojson',
 			sourceUrl: 'https://example.com/klima-pet.geojson',
@@ -95,6 +107,34 @@ describe('routes/sitemap.xml/+server.ts (index)', () => {
 			expect(body).toContain('https://navigator.berlin/sitemap-en.xml');
 		}
 	);
+
+	it(
+		'S5: lastmod je Teil-Sitemap = jüngstes lastmod ihrer Einträge, nicht new Date()',
+		{ timeout: 20_000 },
+		async () => {
+			const index = await import('../../routes/sitemap.xml/+server.js');
+			const de = await import('../../routes/sitemap-de.xml/+server.js');
+			const en = await import('../../routes/sitemap-en.xml/+server.js');
+			const indexBody = await (
+				await index.GET(
+					makeEvent('https://navigator.berlin/sitemap.xml') as Parameters<typeof index.GET>[0]
+				)
+			).text();
+			const sitemaps = { de, en };
+			for (const locale of ['de', 'en'] as const) {
+				const mod = sitemaps[locale];
+				const event = makeEvent(`https://navigator.berlin/sitemap-${locale}.xml`);
+				const body = await (await mod.GET(event as never)).text();
+				const dates = [...body.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((m) => m[1]);
+				expect(dates.length).toBeGreaterThan(0);
+				const latest = dates.reduce((a, b) => (Date.parse(b) > Date.parse(a) ? b : a));
+				const block = new RegExp(
+					`<loc>https://navigator.berlin/sitemap-${locale}.xml</loc>\\s*<lastmod>([^<]+)</lastmod>`
+				).exec(indexBody);
+				expect(block?.[1]).toBe(latest);
+			}
+		}
+	);
 });
 
 describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
@@ -114,6 +154,38 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 		expect(body).toContain('https://navigator.berlin/layer/bezirke');
 		expect(body).toContain('https://navigator.berlin/layer/klima-pet');
 	});
+
+	it(
+		'S5: statische Seiten tragen kein lastmod, Kiez/Bezirk nicht das Grenzlayer-Datum',
+		{ timeout: 20_000 },
+		async () => {
+			const mod = await import('../../routes/sitemap-de.xml/+server.js');
+			const body = await (
+				await mod.GET(
+					makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
+				)
+			).text();
+			const urlBlock = (loc: string) =>
+				new RegExp(`<url>\\s*<loc>${loc}</loc>[\\s\\S]*?</url>`).exec(body)?.[0] ?? '';
+			for (const path of ['/', '/methodik', '/lizenzen', '/umwelt-infrastruktur-score']) {
+				const block = urlBlock(`https://navigator.berlin${path}`);
+				expect(block, path).not.toBe('');
+				expect(block, path).not.toContain('<lastmod>');
+			}
+			// Grenzlayer-fetchedAt der Fixture-Manifest darf keinem Kiez/Bezirk zugeordnet sein.
+			const kiezBlocks = body.match(
+				/<url>\s*<loc>https:\/\/navigator\.berlin\/kiez\/[^<]+<\/loc>[\s\S]*?<\/url>/g
+			);
+			expect(kiezBlocks?.length).toBeGreaterThan(100);
+			expect(kiezBlocks?.some((b) => b.includes('2026-05-16T06:56:28.400Z'))).toBe(false);
+			expect(kiezBlocks?.every((b) => b.includes('<lastmod>'))).toBe(true);
+			const bezirkBlocks = body.match(
+				/<url>\s*<loc>https:\/\/navigator\.berlin\/bezirk\/[^<]+<\/loc>[\s\S]*?<\/url>/g
+			);
+			expect(bezirkBlocks).toHaveLength(12);
+			expect(bezirkBlocks?.some((b) => b.includes('2026-05-16'))).toBe(false);
+		}
+	);
 
 	it('has prerender = true so it is built statically', { timeout: 20_000 }, async () => {
 		const mod = await import('../../routes/sitemap-de.xml/+server.js');
@@ -271,8 +343,81 @@ describe('routes/sitemap-en.xml/+server.ts (EN)', () => {
 		}
 	);
 
+	it(
+		'S5: strikter Build ohne DATABASE_URL bricht ab, lokaler Build (auch NODE_ENV=production) warnt',
+		{ timeout: 20_000 },
+		async () => {
+			const originalDatabaseUrl = process.env.DATABASE_URL;
+			delete process.env.DATABASE_URL;
+			const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+			try {
+				vi.stubEnv('NAVIGATOR_STRICT_BUILD', '1');
+				const mod = await import('../../routes/sitemap-en.xml/+server.js');
+				const event = makeEvent('https://navigator.berlin/sitemap-en.xml') as Parameters<
+					typeof mod.GET
+				>[0];
+				await expect(Promise.resolve(mod.GET(event))).rejects.toThrow(/DATABASE_URL/);
+
+				vi.stubEnv('NAVIGATOR_STRICT_BUILD', '');
+				vi.stubEnv('NODE_ENV', 'production');
+				const response = await mod.GET(event);
+				expect(response.status).toBe(200);
+				expect(warn).toHaveBeenCalled();
+			} finally {
+				vi.unstubAllEnvs();
+				warn.mockRestore();
+				if (originalDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+				else process.env.DATABASE_URL = originalDatabaseUrl;
+			}
+		}
+	);
+
 	it('has prerender = true so it is built statically', { timeout: 20_000 }, async () => {
 		const mod = await import('../../routes/sitemap-en.xml/+server.js');
 		expect(mod.prerender).toBe(true);
 	});
+});
+
+// S5: echter Kiez, Erwartung unabhängig aus den Quelldateien berechnet.
+describe('sitemap-{de,en}.xml: lastmod eines echten Kiez (reuterstrasse)', () => {
+	async function expectedDates() {
+		const { readFile } = await import('node:fs/promises');
+		const { default: matter } = await import('gray-matter');
+		const dir = 'src/lib/content/kiez-profile';
+		const generatedAt = new Date(
+			matter(await readFile(`${dir}/reuterstrasse.md`, 'utf-8')).data.generatedAt
+		);
+		const translatedAt = new Date(
+			matter(await readFile(`${dir}/reuterstrasse.en.md`, 'utf-8')).data.translatedAt
+		);
+		const scores = await readFile('static/kiez-scores/kiez-scores.json', 'utf-8');
+		const scoresAt = new Date(/"generatedAt":"([^"]+)"/.exec(scores.slice(0, 2048))?.[1] ?? '');
+		return { generatedAt, translatedAt, scoresAt };
+	}
+
+	function lastmodOf(body: string, loc: string): string | undefined {
+		const block = new RegExp(`<url>\\s*<loc>${loc}</loc>[\\s\\S]*?</url>`).exec(body)?.[0];
+		return block ? /<lastmod>([^<]+)<\/lastmod>/.exec(block)?.[1] : undefined;
+	}
+
+	it(
+		'DE = max(generatedAt, Scores-generatedAt), EN = max mit translatedAt',
+		{ timeout: 20_000 },
+		async () => {
+			const { generatedAt, translatedAt, scoresAt } = await expectedDates();
+			const de = await import('../../routes/sitemap-de.xml/+server.js');
+			const en = await import('../../routes/sitemap-en.xml/+server.js');
+			const deBody = await (
+				await de.GET(makeEvent('https://navigator.berlin/sitemap-de.xml') as never)
+			).text();
+			const enBody = await (
+				await en.GET(makeEvent('https://navigator.berlin/sitemap-en.xml') as never)
+			).text();
+			const deLastmod = lastmodOf(deBody, 'https://navigator.berlin/kiez/reuterstrasse');
+			const enLastmod = lastmodOf(enBody, 'https://navigator.berlin/en/kiez/reuterstrasse');
+			const max = (...dates: Date[]) => Math.max(...dates.map((d) => d.getTime()));
+			expect(Date.parse(deLastmod ?? '')).toBe(max(generatedAt, scoresAt));
+			expect(Date.parse(enLastmod ?? '')).toBe(max(generatedAt, translatedAt, scoresAt));
+		}
+	);
 });
