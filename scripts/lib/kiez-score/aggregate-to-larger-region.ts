@@ -6,7 +6,7 @@ import { computeOverallScore } from './compute-score.js';
  * Story 2.9a · Aggregations-Helper.
  *
  * Aggregiert 1.28-Planungsraum-Scores (542 PLR, Source-of-Truth) zu größeren
- * Regionen (138 LOR-Bezirksregionen oder 12 Bezirke) via flächen-gewichtetem
+ * Regionen (143 LOR-Bezirksregionen, LOR 2021, oder 12 Bezirke) via flächen-gewichtetem
  * Mittel pro Dimension. `overall` wird NICHT re-aggregiert sondern aus den
  * aggregierten Dimensionen neu berechnet (re-use `computeOverallScore`,
  * keine Drift gegenüber 1.28-Logic).

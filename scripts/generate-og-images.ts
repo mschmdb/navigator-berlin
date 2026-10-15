@@ -31,6 +31,7 @@ import {
 	type LayerManifestEntry,
 	type GeoJsonFeatureCollection
 } from '../src/lib/server/og/og-pipeline.js';
+import { sourceName as wahlSourceName } from '../src/lib/data/wahl-source-name.js';
 import { buildOgPath } from '../src/lib/server/og/filename-resolver.js';
 import {
 	buildBezirkCardVdom,
@@ -426,9 +427,6 @@ async function tryLoadWahlTargets(): Promise<WahlTarget[]> {
 				w.typ === 'bvv'
 					? `${TYP_LABELS[w.typ]} ${w.jahr}`
 					: `${TYP_LABELS[w.typ]} ${w.jahr} · ${STIMMTYP_LABELS[w.stimmtyp]}`;
-			const sourceName = w.sourceUrl.includes('bundeswahlleiterin')
-				? 'Bundeswahlleiterin'
-				: 'Amt für Statistik Berlin-Brandenburg';
 			targets.push({
 				slug,
 				title: w.isRepeatElection ? `${title} · Wiederholung` : title,
@@ -438,7 +436,7 @@ async function tryLoadWahlTargets(): Promise<WahlTarget[]> {
 					anteil: t.anteil,
 					farbeHex: parteiColor(t.parteiKurzname)
 				})),
-				sourceName,
+				sourceName: wahlSourceName(w.sourceUrl),
 				license: w.license,
 				jahr: w.jahr
 			});

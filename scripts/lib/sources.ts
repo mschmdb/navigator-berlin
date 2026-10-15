@@ -34,7 +34,7 @@ export const SOURCES: SourceConfig[] = [
 		simplifyProfile: 'boundary',
 		sourceUpdatedAt: '2024-01-01T00:00:00.000Z'
 	},
-	// Story 2.0: LOR-Bezirksregion (138 BZR) re-introduced als Kiez-Grain für die
+	// Story 2.0: LOR-Bezirksregion (143 BZR, LOR 2021) re-introduced als Kiez-Grain für die
 	// Aggregat-Schicht (bezirk_stats/kiez_stats in Postgres) und für Story 2.4
 	// (Kiez-Pages prerendered). In Story 1.10 entfernt; bestehender Code in
 	// get-kiez-profile.ts + layer-explain.ts + value-formatters.ts blieb damals

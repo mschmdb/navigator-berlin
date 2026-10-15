@@ -7,6 +7,7 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/2-daten-fundament-zeitreihen-und-bulk-winners.md`
   summary: Drei verbliebene sourceName-Duplikate auf den geteilten Helper src/lib/server/wahl/source-label.ts umziehen (webmcp/tools/wahl/get-election-result.ts, server/llms/data-collector.ts, utils/llm-export-builder.ts).
   evidence: Verification-Gap-Layer: byte-identische Ternaries, Tests pinnen nur den Output, Drift bei künftiger Regel-Änderung bliebe unbemerkt. Passt zu Story 9 (WebMCP-Tools).
+  resolved: Release-Aufräumen 15.10.2026, Helper nach `src/lib/data/wahl-source-name.ts` verschoben, drei Duplikate ersetzt
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/2-daten-fundament-zeitreihen-und-bulk-winners.md`
   summary: Test-Strategie für DB-abhängige Tests schärfen: defensive if-empty-return-Tests no-open ohne geseedetes Postgres; Build-Script-Verdrahtung (build-wahl-analytik) ungetestet.
   evidence: Haus-Muster seit wahl-queries.test.ts; CI ohne befüllte DB meldet grüne Tests, die nichts prüfen. Entscheidung über Seed-Fixtures oder Testcontainer gehört zu einer eigenen Infra-Story.
@@ -46,6 +47,7 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/10-steuerungs-klarheit.md`
   summary: a11y-E2E-Suite reparieren; /_dev/wortmarke fehlt das <title>-Element (axe document-title, serious), /explore Escape-Selection-Test laeuft ins Timeout, Root-axe-Test flakt unter Parallel-Last (solo gruen).
   evidence: Verifikationslaeufe Story 10 (20.09.); alle drei ausserhalb des Story-Scopes und vorbestehend bzw. lastabhaengig, Portal-Seiten (berlin-wahlen) durchgehend gruen.
+  resolved: Release-Aufräumen 15.10.2026, Wortmarke-Fall entfernt; Escape-Timeout und Root-Flake bleiben offen
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/11-sankey-rework.md`
   summary: Sankey-Folgethemen aus Review-Runde 1; (a) Semantik Teil-Coverage x Wiederholungswahl klaeren (Gebiet ohne Wiederholungs-Row verliert seinen Uebergang still, Verhalten identisch zu Story 8, dokumentierender Test existiert); (b) Touch-Interaktions-Konzept (Tap zeigt Tooltip nur fluechtig, WCAG 1.4.13 teilweise offen, Tabellen-Alternative traegt die Daten); (c) automatisierter Chunk-Waechter (kein Bundle-Check im Repo, Lazy-Kriterium nur per Hand belegt); (d) Sprung-Band-Tooltip nennt nur das Ziel-Jahr (vonJahr im Link mitfuehren); (e) Ein-Spalten-Reihe zeigt Leer-Satz statt Gewinner-Spalte (Produktfrage, heute hat jede Reihe >=3 Wahljahre).
   evidence: Review Story 11 Runde 1 (Triage #11, #15, #17, #19, #20); Details und Quell-Reviewer im Triage-Log der Story.
@@ -67,6 +69,7 @@
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
   summary: `sourceName` für Wahlquellen in ein geteiltes Modul unter `$lib/data/` ziehen statt vier Kopien.
   evidence: Kopien in `source-label.ts`, `get-election-result.ts`, `llm-export-builder.ts`, `wahl-section.svelte`; beim nächsten Quellwechsel driften die Labels.
+  resolved: Release-Aufräumen 15.10.2026, Helper unter `$lib/data/wahl-source-name.ts`; `wahl-section.svelte` bleibt (mappt über Message-Labels)
 
 - source_spec: `_bmad-output/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
   summary: Ingest-Gate, das bei einem Legendennamen über 3 % ohne Partei-Alias abbricht oder warnt.
@@ -120,6 +123,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3b-inspector.md`
   summary: Tote Komponenten `layer-level-card.svelte`, `inspector-level-toggle.svelte`, `charts/kiez-score-hero.svelte` bleiben unübersetzt (DE) -- prüfen, ob sie noch gebraucht werden, bevor sie ins nächste i18n-Paket aufgenommen oder entfernt werden.
   evidence: Boundary Spec i18n B3b ("Never"): keine aktiven Aufrufer in `inspector-panel.svelte`/Section-Rendering gefunden (Grep, 27.09.); falls sie doch reaktiviert werden, brauchen sie dieselbe `lang`/`localeOpts`-Behandlung wie ihre B3b-Geschwister (`kiez-score-dimension-row`, `wahl-section`, `charts/score-bar`).
+  resolved: Release-Aufräumen 15.10.2026, drei Komponenten samt Tests entfernt (keine Referenzen)
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3b-inspector.md`
   summary: Adress-Such-Combobox in E2E-Tests ist breiter kaputt als der bisher dokumentierte `wahl-flow.e2e.ts`-Fall: `getByRole('combobox').click()` auf `/explore` schlägt reproduzierbar mit „element was detached from the DOM" fehl -- auch mit `--workers=1` (keine Parallel-Last) und auch mit vorherigem `expect(input).toBeVisible()`. Betroffen: `kiez-score-flow.e2e.ts`, `share-sheet.e2e.ts`, `climate-chart-interaction.e2e.ts`, `climate-heritage.e2e.ts` (alle vier von B3b unverändert). `tests/e2e/i18n-inspector.e2e.ts` (neu, B3b) umgeht das Problem per Deep-Link (`?address=lng,lat&q=…`, Story-2.12-Muster wie `home-quick-links.ts`/`i18n-atlas.e2e.ts`-Default-Einstieg) statt über die Combobox zu tippen und ist NICHT mehr betroffen (7/7 grün, sowohl gegen einen bereits laufenden als auch gegen einen frisch von Playwright gestarteten Preview-Server).
@@ -186,6 +190,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: `formatMonthYear` (vormals `formatStand`) ohne `timeZone`: Datums-ISO wie `2023-01-01` zeigt westlich von UTC den Vormonat, Prerender und Client können abweichen.
   evidence: Review B4a Fund #16; vorbestehend, B4a hat nur die Locale geöffnet. Fix: `timeZone: 'Europe/Berlin'` wie `formatShortDate`.
+  resolved: Release-Aufräumen 15.10.2026, `timeZone: 'Europe/Berlin'` ergänzt, Test mit TZ westlich UTC
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: `/layer` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit `/en/layer/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
@@ -243,10 +248,12 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-textbereinigung-layer-texte.md`
   summary: Zählung Bezirksregionen prüfen: `kiez_score_kriminalitaet_coverage_gap_0` sagt „Bezirksregion (143)“, `layer_explain_lor_bezirksregion_short` „138 in Berlin“.
   evidence: Review Textbereinigung #6; eine der Zahlen ist falsch, Datenprüfung nötig.
+  resolved: Release-Aufräumen 15.10.2026, 143 Features im GeoJSON, Layer-Text DE/EN auf 143
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-textbereinigung-layer-texte.md`
   summary: `/methodik/kiez-score` ohne Build-Interna: `pnpm data:aggregate-scores`, Tabellennamen `bezirk_score`/`kiez_score`, „Persona-Switcher … Phase 2“; Layernamen dort aus `getLayerDisplayName` statt Literalen.
   evidence: Review Textbereinigung #11/#14; Spec schloss weitere `/methodik`-Überarbeitung aus.
+  resolved: Release-Aufräumen 15.10.2026, Build-Interna (Befehl, Tabellennamen) DE/EN entfernt; Persona-Switcher-Text und Layernamen-Helper nicht Teil dieses Punkts
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-textbereinigung-layer-texte.md`
   summary: Code-Zweige der 6 gelöschten Legacy-Layer entfernen (`value-formatters.ts`, `applicability.ts`, `feature-describer.ts`, `layer-compare.ts`, `editorial-config.ts`, Tests).
@@ -296,6 +303,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4c-hitze-quellen.md`
   summary: `lizenzen_klima_p1` nennt „vier Berliner Wetterstationen (Dahlem, Tempelhof, Buch, Brandenburg)“; „Brandenburg“ ist keine Berliner Station.
   evidence: Review C4c (Blind Hunter). Unverifiziert: Stationsliste der Klima-Quelle (DWD) prüfen, DE und EN korrigieren.
+  resolved: Release-Aufräumen 15.10.2026, Stationen laut `get-climate-station.ts`: Dahlem, Tempelhof, Buch, Schönefeld; „in und um Berlin“ DE/EN
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4c-hitze-quellen.md`
   summary: `sitemap-builder.test.ts` nutzt `/layer/mietspiegel-2024` als Seite ohne EN-Alternate; bei der `/layer`-Registrierung im Abschluss-Block eine andere Kontrolle wählen.
@@ -313,6 +321,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c4d-updates.md`
   summary: `tests/e2e/a11y.e2e.ts` hat vorbestehende Fails: `/_dev/wortmarke` ohne `<title>` (axe document-title), „Escape löscht Selection“ (30-s-Timeout auf `/explore`), „Root (Karte)“ flaky.
   evidence: Beim C4d-Verifikationslauf erstmals mitgelaufen; keine der Seiten von C3-C4d berührt.
+  resolved: Release-Aufräumen 15.10.2026, Wortmarke-Fall entfernt; Escape-Timeout und Root-Flake bleiben offen
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c5-profile.md`
   summary: Generator-Prompt (`scripts/build-kiez-profiles.ts` SYSTEM_PROMPT) um die neutrale Grünversorgungs-Skala ergänzen (gering/mittel/hoch statt gut/schlecht) und DE-Lint-Muster dafür, sonst bringt eine Neu-Generierung „schlecht“/„gut“ zurück.
@@ -406,10 +415,12 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-logo-gewicht.md`
   summary: `tests/e2e/a11y.e2e.ts` („Wortmarke-Showcase“) öffnet `/_dev/wortmarke`, die Route ist nicht im Repo.
   evidence: Der Test prüft vermutlich eine 404-Seite mit axe und sagt nichts über die Wortmarke aus; entweder Route anlegen oder Test entfernen.
+  resolved: Release-Aufräumen 15.10.2026, Test entfernt
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-s3-jsonld-entitaeten.md`
   summary: DataCatalog auf `/berlin-wahlen` übergibt kein `inLanguage` und meldet auf `/en/berlin-wahlen` `de-DE`.
   evidence: Fund aus der S3-Umsetzung (15.10.2026); Builder-Aufruf `berlin-wahlen/+page.svelte:205` ohne Locale.
+  resolved: Release-Aufräumen 15.10.2026, `inLanguage` aus Seiten-Locale, E2E-Test ergänzt
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-s5-sitemap-build-haerte.md`
   summary: Layer-`lastmod` nimmt `sourceUpdatedAt` vor `fetchedAt`. 15 Layer tragen Jahres-Platzhalter (`YYYY-01-01`), zwei am 14.10.2026 neu geholte Layer melden 2022-05-15. Entscheidung für Matze: Platzhalter verwerfen oder das spätere der beiden Daten nehmen.

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sourceName } from './source-label.js';
+import { sourceName } from './wahl-source-name.js';
 
 describe('sourceName', () => {
 	it('erkennt Bundeswahlleiterin-URLs', () => {
@@ -20,5 +20,9 @@ describe('sourceName', () => {
 				'https://www.wahlen-berlin.de/wahlen/BE2026/Afspraes/AGH/Datenexport_AGH2026_Zweitstimme_W_BE.csv'
 			)
 		).toBe('Landeswahlleiterin Berlin');
+	});
+
+	it('fällt bei leerer URL auf Amt für Statistik Berlin-Brandenburg zurück', () => {
+		expect(sourceName('')).toBe('Amt für Statistik Berlin-Brandenburg');
 	});
 });

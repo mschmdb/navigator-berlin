@@ -28,13 +28,17 @@ describe('methodik/kiez-score · Bezirks-Score-Erweiterung (Story 2.9a)', () => 
 		expect(sec?.textContent ?? '').toMatch(/50 Prozent/);
 	});
 
-	it('rendert section#bezirks-score mit Stigma-Hinweis und Pipeline-Befehl', async () => {
+	it('rendert section#bezirks-score mit Stigma-Hinweis und Pipeline-Beschreibung ohne Build-Interna', async () => {
 		render(Page, { props: {} });
 		const sec = document.getElementById('bezirks-score');
 		expect(sec, 'section#bezirks-score fehlt').not.toBeNull();
 		expect(sec?.tagName).toBe('SECTION');
 		expect(sec?.textContent ?? '').toMatch(/Gesamt-Choropleth/);
-		expect(sec?.textContent ?? '').toMatch(/data:aggregate-scores/);
+		expect(sec?.textContent ?? '').toMatch(/LOR-Hierarchie/);
+		expect(sec?.textContent ?? '').not.toMatch(
+			/data:aggregate-scores|bezirk_score|kiez_score|Postgres/
+		);
+		expect(sec?.querySelectorAll('code')).toHaveLength(0);
 	});
 
 	it('TOC enthält Anker zu #kiez-score und #bezirks-score', async () => {
@@ -145,11 +149,15 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 		}
 	});
 
-	it('Code-Spans der Build-Pipeline bleiben unverändert', async () => {
+	it('EN: Pipeline-Absatz nennt keine Build-Interna', async () => {
 		overwriteGetLocale(() => 'en');
 		render(Page, { props: {} });
-		const codes = [...document.querySelectorAll('#bezirks-score code')].map((c) => c.textContent);
-		expect(codes).toEqual(['pnpm data:aggregate-scores', 'bezirk_score', 'kiez_score']);
+		const section = document.getElementById('bezirks-score');
+		expect(section?.textContent ?? '').toMatch(/LOR hierarchy/);
+		expect(section?.textContent ?? '').not.toMatch(
+			/data:aggregate-scores|bezirk_score|kiez_score|Postgres/
+		);
+		expect(section?.querySelectorAll('code')).toHaveLength(0);
 	});
 
 	it('Breadcrumb-JSON-LD nennt lokalisierte Pfade', () => {

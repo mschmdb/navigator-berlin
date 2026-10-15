@@ -19,6 +19,7 @@ import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/inte
 import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
 import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
+import { sourceName } from '$lib/data/wahl-source-name.js';
 import { getEditorialConfig } from '$lib/components/atlas/internal/editorial-config.js';
 import { DISCLAIMER_TEXTS_DE } from '$lib/components/atlas/editorial-disclaimer.svelte';
 import {
@@ -474,11 +475,7 @@ function renderWahl(input: LlmExportInput, lines: string[]): void {
 				lines.push(`- ${entry.vollname} (${entry.kurzname}): ${formatPct(entry.anteil)}${cmpStr}`);
 			}
 		}
-		const source = bundle.wahl.sourceUrl.includes('bundeswahlleiterin')
-			? 'Bundeswahlleiterin'
-			: bundle.wahl.sourceUrl.includes('wahlen-berlin.de')
-				? 'Landeswahlleiterin Berlin'
-				: 'Amt für Statistik Berlin-Brandenburg';
+		const source = sourceName(bundle.wahl.sourceUrl);
 		lines.push(`- Quelle: ${source} · Lizenz ${bundle.wahl.license}`);
 		lines.push('');
 	}

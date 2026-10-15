@@ -30,12 +30,6 @@
 	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';
 	const feedbackHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(m.methodik_kiez_score_feedback_mail_subject())}`;
 
-	const pipelineSegments = richSegments((t) =>
-		m.methodik_kiez_score_bezirk_score_pipeline({
-			code_start: t('code').start,
-			code_end: t('code').end
-		})
-	);
 	const sourcesSegments = richSegments((t) =>
 		m.methodik_kiez_score_sources_p1({ link_start: t('link').start, link_end: t('link').end })
 	);
@@ -220,11 +214,7 @@
 			{m.methodik_kiez_score_bezirk_score_p2()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			<RichText segments={pipelineSegments}>
-				{#snippet tag(text)}
-					<code class="font-mono text-sm">{text}</code>
-				{/snippet}
-			</RichText>
+			{m.methodik_kiez_score_bezirk_score_pipeline()}
 		</p>
 	</section>
 

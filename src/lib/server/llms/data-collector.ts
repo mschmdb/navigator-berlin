@@ -18,7 +18,7 @@ import type { Manifest } from '$lib/data/types.js';
 import { getBezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
 import { getKiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
 import { getBezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
-import { sourceName as wahlSourceName } from '$lib/server/wahl/source-label.js';
+import { sourceName as wahlSourceName } from '$lib/data/wahl-source-name.js';
 import { buildWahlSlug } from '$lib/data/wahl-slug.js';
 import { getKiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 import { loadEinwohnerAggregates } from './internal/einwohner-aggregates.js';

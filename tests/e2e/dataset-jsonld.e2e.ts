@@ -45,4 +45,23 @@ test.describe('Dataset-JSON-LD (S4)', () => {
 			.find((j) => j['@type'] === 'DataCatalog');
 		expect(catalog?.['@id']).toBe('https://navigator.berlin/lizenzen#catalog');
 	});
+
+	for (const [path, lang] of [
+		['/berlin-wahlen', 'de-DE'],
+		['/en/berlin-wahlen', 'en-US']
+	] as const) {
+		test(`Wahlportal-DataCatalog trägt inLanguage ${lang} (${path})`, async ({ page }) => {
+			await page.goto(path);
+			const catalog = JSON.parse(
+				(await page
+					.locator(
+						'script[type="application/ld+json"][data-testid="berlin-wahlen-datacatalog-jsonld"]'
+					)
+					.textContent()) ?? '{}'
+			);
+			expect(catalog['@type']).toBe('DataCatalog');
+			expect(catalog.inLanguage).toBe(lang);
+			expect(new URL(catalog.url).pathname).toBe(path);
+		});
+	}
 });

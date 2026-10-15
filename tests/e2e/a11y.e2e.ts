@@ -73,14 +73,6 @@ test('Root (Karte) hat 0 axe-Violations', async ({ page }) => {
 	expect(results.violations).toEqual([]);
 });
 
-test('Wortmarke-Showcase (with-header) hat 0 axe-Violations', async ({ page }) => {
-	await page.goto('/_dev/wortmarke');
-	const results = await new AxeBuilder({ page })
-		.withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
-		.analyze();
-	expect(results.violations).toEqual([]);
-});
-
 test('Berlin-Wahlen-Portal (Story 3 Skeleton) hat 0 axe-Violations', async ({ page }) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: { elections: [] } }));
 	await page.goto('/berlin-wahlen');

@@ -85,6 +85,11 @@ describe('formatWahlDate', () => {
 		expect(formatWahlDate('2026-09-20T23:55:55.000Z', { locale: 'en' })).toBe('21 September 2026');
 	});
 
+	it('nutzt den Berliner Kalendermonat an der Monatsgrenze (23:30 UTC = 00:30 Berlin)', () => {
+		expect(formatMonthYear('2024-12-31T23:30:00Z', { locale: 'de' })).toBe('Januar 2025');
+		expect(formatMonthYear('2024-12-31T23:30:00Z', { locale: 'en' })).toBe('January 2025');
+	});
+
 	it('gibt den Roh-String zurück, wenn er kein valides Datum ist', () => {
 		expect(formatWahlDate('nicht-valide', { locale: 'de' })).toBe('nicht-valide');
 	});
@@ -136,6 +141,18 @@ describe('formatMonthYear', () => {
 
 	it('formatiert en mit ausgeschriebenem Monat', () => {
 		expect(formatMonthYear('2023-06-01', { locale: 'en' })).toBe('June 2023');
+	});
+
+	it('rechnet in Europe/Berlin, unabhängig von der Prozess-Zeitzone (UTC-Mitternacht, TZ westlich von UTC)', () => {
+		const original = process.env.TZ;
+		process.env.TZ = 'America/Los_Angeles';
+		try {
+			expect(formatMonthYear('2023-01-01', { locale: 'de' })).toBe('Januar 2023');
+			expect(formatMonthYear('2023-01-01', { locale: 'en' })).toBe('January 2023');
+		} finally {
+			if (original === undefined) delete process.env.TZ;
+			else process.env.TZ = original;
+		}
 	});
 
 	it('gibt den Roh-String zurück, wenn er kein valides Datum ist', () => {

@@ -324,7 +324,7 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		long: 'Lebensweltlich orientierter Raum, Ebene Prognoseraum. Gröbste der drei LOR-Ebenen, genutzt für Bevölkerungsprognosen.'
 	},
 	'lor-bezirksregion': {
-		short: 'LOR-Bezirksregion (Kiez-Ebene, 138 in Berlin)',
+		short: 'LOR-Bezirksregion (Kiez-Ebene, 143 in Berlin)',
 		long: 'Lebensweltlich orientierter Raum, Ebene Bezirksregion. Mittel-Ebene der LOR-Gliederung, häufig als „Kiez-Ebene“ verwendet.'
 	},
 	'lor-planungsraum': {

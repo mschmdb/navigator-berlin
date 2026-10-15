@@ -42,7 +42,7 @@ import {
 	getParteiAnteileBulk,
 	getParteiAnteileStimmbezirk
 } from '$lib/server/db/queries/wahl/get-partei-anteile-bulk.js';
-import { sourceName } from '$lib/server/wahl/source-label.js';
+import { sourceName } from '$lib/data/wahl-source-name.js';
 import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
 import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
 import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';

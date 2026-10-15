@@ -23,6 +23,7 @@ import type {
 	WahlResultBundle,
 	Top5Entry
 } from '$lib/data/get-wahl-results-at-point.js';
+import { sourceName } from '$lib/data/wahl-source-name.js';
 
 export interface GetElectionResultDeps {
 	readonly fetchResultsAtPoint: (lat: number, lng: number) => Promise<WahlResultsAtPoint | null>;
@@ -31,17 +32,6 @@ export interface GetElectionResultDeps {
 function bundleSlug(b: WahlResultBundle): string {
 	if (b.wahl.typ === 'bvv') return `${b.wahl.jahr}-bvv`;
 	return `${b.wahl.jahr}-${b.wahl.typ}-${b.wahl.stimmtyp}`;
-}
-
-/**
- * Duplikat von `$lib/server/wahl/source-label.ts#sourceName` -- dieses Tool
- * läuft client-seitig (`webmcp/adapter.ts`, `document.modelContext`), kann
- * `$lib/server/*` also nicht importieren (SvelteKit-Server-Boundary).
- */
-function sourceName(sourceUrl: string): string {
-	if (sourceUrl.includes('bundeswahlleiterin')) return 'Bundeswahlleiterin';
-	if (sourceUrl.includes('wahlen-berlin.de')) return 'Landeswahlleiterin Berlin';
-	return 'Amt für Statistik Berlin-Brandenburg';
 }
 
 function autoSelectLevel(bundle: WahlResultBundle): WahlLevel {
@@ -58,7 +48,9 @@ function autoSelectLevel(bundle: WahlResultBundle): WahlLevel {
 function caveatsFor(bundle: WahlResultBundle, level: WahlLevel): string[] {
 	const out: string[] = [];
 	if (level === 'kiez') {
-		out.push('Kiez values include postal votes allocated proportionally by eligible voters, not an official breakdown.');
+		out.push(
+			'Kiez values include postal votes allocated proportionally by eligible voters, not an official breakdown.'
+		);
 	}
 	if (bundle.wahl.isRepeatElection) {
 		out.push(
