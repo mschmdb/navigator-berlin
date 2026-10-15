@@ -117,7 +117,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 				.textContent()) ?? '{}'
 		);
 		expect(breadcrumb.itemListElement[0].name).toBe('Berlin');
-		expect(breadcrumb.itemListElement[1].name).toBe('Data');
+		expect(breadcrumb.itemListElement[1].name).toBe('Data layers');
 		expect(breadcrumb.itemListElement[2].name).toBe('Noise pollution 2023');
 		expect(breadcrumb.itemListElement[2].item).toMatch(
 			new RegExp(`/en/layer/${LAYER_WITH_METHODOLOGY}$`)

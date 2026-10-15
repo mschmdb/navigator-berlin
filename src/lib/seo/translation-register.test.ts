@@ -43,6 +43,9 @@ describe('isRouteTranslated', () => {
 			{ pathname: '/kiez', locale: 'en', prefix: true },
 			{ pathname: '/bezirk', locale: 'en', prefix: true },
 			{ pathname: '/layer', locale: 'en', prefix: true },
+			{ pathname: '/kieze', locale: 'en' },
+			{ pathname: '/bezirke', locale: 'en' },
+			{ pathname: '/daten', locale: 'en' },
 			{
 				pathname: '/updates',
 				locale: 'en',
@@ -112,6 +115,15 @@ describe('isRouteTranslated', () => {
 			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
 		}
 		expect(isRouteTranslated('/kiezblock', 'en')).toBe(false);
+	});
+
+	// S7: drei exakte Einträge. `/daten/<datei>` (Download-Redirect) bleibt unübersetzt.
+	it('S7: /kieze, /bezirke und /daten sind exakt registriert, Unterpfade nicht', () => {
+		for (const path of ['/kieze', '/bezirke', '/daten']) {
+			expect(isRouteTranslated(path, 'en'), path).toBe(true);
+			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
+			expect(isRouteTranslated(`${path}/laerm-2023.geojson`, 'en'), `${path}/x`).toBe(false);
+		}
 	});
 
 	it('Block C4c: /impressum und /datenschutz bleiben unübersetzt', () => {

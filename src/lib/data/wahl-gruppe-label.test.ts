@@ -39,9 +39,7 @@ describe('gruppenAnzeigeName', () => {
 	});
 
 	it('BTW 17: Ein-Urnen-Gruppe zeigt den echten Brief-Code trotz B-Infix + Bindestrich-Suffix', () => {
-		expect(gruppenAnzeigeName('075-01-01B1A-5', '221')).toBe(
-			'Stimmbezirk 221 und Briefwahl 1A'
-		);
+		expect(gruppenAnzeigeName('075-01-01B1A-5', '221')).toBe('Stimmbezirk 221 und Briefwahl 1A');
 	});
 
 	it('fällt ohne Mitglieder-Liste auf "Gruppe <id>" zurück', () => {

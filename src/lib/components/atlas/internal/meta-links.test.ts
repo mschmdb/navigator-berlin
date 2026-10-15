@@ -43,3 +43,33 @@ describe('Datenschluessel-Kontrakt', () => {
 		expect(erkunden?.links.find((l) => l.id === 'atlas')?.href).toBe('/explore');
 	});
 });
+
+describe('Übersichtsseiten im Footer (S7)', () => {
+	const erkunden = META_LINK_GROUPS.find((g) => g.id === 'erkunden');
+
+	it('Gruppe "erkunden" behält die bestehenden Links in Reihenfolge und endet mit den drei Übersichten', () => {
+		expect(erkunden?.links.map((l) => l.id)).toEqual([
+			'atlas',
+			'score',
+			'wahlen',
+			'hitze',
+			'kieze',
+			'bezirke',
+			'daten'
+		]);
+		expect(erkunden?.links.slice(-3).map((l) => l.href)).toEqual(['/kieze', '/bezirke', '/daten']);
+	});
+
+	it('DE/EN-Labels', () => {
+		expect(metaLinkLabel('kieze')).toBe('Alle Kieze');
+		expect(metaLinkLabel('bezirke')).toBe('Alle Bezirke');
+		expect(metaLinkLabel('daten')).toBe('Daten-Layer');
+		expect(metaLinkLabel('kieze', { locale: 'en' })).toBe('All Kieze');
+		expect(metaLinkLabel('bezirke', { locale: 'en' })).toBe('All Bezirke');
+		expect(metaLinkLabel('daten', { locale: 'en' })).toBe('Data layers');
+	});
+
+	it('die flache Kompaktliste bleibt unverändert', () => {
+		expect(META_LINKS.some((l) => l.href === '/kieze')).toBe(false);
+	});
+});

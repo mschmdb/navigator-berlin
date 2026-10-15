@@ -25,3 +25,8 @@ Suchmaschinen indexieren nur die gewollten URLs, verstehen Orte und Datensätze 
 | S7 | Übersichtsseiten `/kieze` und `/bezirke` (und Layer-Übersicht), im Footer und Breadcrumb verlinkt | 15 | niedrig |
 
 Font-Preloads (Befund 16) bleiben offen, eigene Performance-Messung nötig.
+
+## Backlog
+
+- **Weitere Sprachen aus SEO-Sicht** (Matze 15.10.2026: nur Backlog, keine Umsetzung jetzt). Voraussetzung: EN 6-8 Wochen nach Deploy des Epics in GSC messen. Schwelle: EN-Impressionen auf Kiez-/Bezirksseiten mindestens 20 % der DE-Impressionen. Sprache nach Suchvolumen wählen (Kandidaten ungeprüft: Türkisch, Arabisch mit RTL, Russisch/Ukrainisch, Polnisch, Spanisch). Risiken: Googles Richtlinie gegen massenhaft erzeugte Inhalte bei ungeprüften Übersetzungen, Crawl-Budget der jungen Domain. Stand der Zahlen 15.10.: GSC 3 Monate rund 87 % der Klicks aus Deutschland; Plausible 28 Tage 70 von 399 Sessions starten auf `/en`.
+- **About-Seite** (Matze 15.10.2026: fehlt, Backlog). Wer steckt hinter navigator.berlin, warum, wie finanziert, Kontakt. SEO-Bezug: E-E-A-T-Signal für Google, Ziel für `Organization`-JSON-LD (S3) und Footer. Quellen für Inhalt (Matze): `/Users/matze/Sites/svelte-meetup-talk` (Talk 02.09.2026: Entstehung, Motivation) und `/Users/matze/Sites/schmidbauer-dev` (Person, Profil).

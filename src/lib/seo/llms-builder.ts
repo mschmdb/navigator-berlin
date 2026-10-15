@@ -135,6 +135,24 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		section: 'static'
 	});
 	out.push({
+		loc: `${ctx.origin}/kieze`,
+		name: 'Alle Kieze',
+		description: `${ctx.kieze.length > 0 ? `Alle ${ctx.kieze.length} Kieze` : 'Alle Kieze'} nach Bezirk gruppiert, mit Kiez-Score und Link zum Steckbrief`,
+		section: 'static'
+	});
+	out.push({
+		loc: `${ctx.origin}/bezirke`,
+		name: 'Alle Bezirke',
+		description: `${ctx.bezirke.length > 0 ? `Alle ${ctx.bezirke.length} Bezirke` : 'Alle Bezirke'} mit Einwohnerzahl, Bezirks-Score und Link zum Steckbrief`,
+		section: 'static'
+	});
+	out.push({
+		loc: `${ctx.origin}/daten`,
+		name: 'Daten-Layer',
+		description: 'Alle Daten-Layer nach Themengruppe mit Kurztext und Link zur Layer-Seite',
+		section: 'static'
+	});
+	out.push({
 		loc: `${ctx.origin}/umwelt-infrastruktur-score`,
 		name: 'Umwelt- & Infrastruktur-Score',
 		description:

@@ -15,7 +15,7 @@ export interface RegionDisplayNames {
 	readonly bezirk: ReadonlyMap<string, string>;
 }
 
-interface FeatureCollectionLike {
+export interface FeatureCollectionLike {
 	readonly features: ReadonlyArray<{ readonly properties?: Record<string, unknown> | null }>;
 }
 
@@ -29,7 +29,7 @@ interface BuildInput {
  * Testbar ohne Dateizugriff.
  */
 /** Mehrfach-Whitespace im Quell-GeoJSON glätten (z.B. „Südliche  Friedrichstadt"). */
-function cleanName(raw: string): string {
+export function cleanName(raw: string): string {
 	return raw.replace(/\s+/g, ' ').trim();
 }
 

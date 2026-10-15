@@ -152,6 +152,10 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 		// deshalb hohe Priorität und wöchentliche Change-Frequency.
 		page('/kuehle-orte', 'weekly', 0.8),
 		page('/hitze', 'weekly', 0.8),
+		// S7: Übersichtsseiten mit Linklisten auf alle Kiez-, Bezirks- und Layer-Seiten.
+		page('/kieze', 'monthly', 0.7),
+		page('/bezirke', 'monthly', 0.7),
+		page('/daten', 'monthly', 0.7),
 		page('/methodik', 'monthly'),
 		page('/methodik/kiez-score', 'monthly'),
 		// Story 3: Bestandslücke geschlossen, die Seite existiert bereits (Story 2).

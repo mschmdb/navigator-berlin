@@ -657,9 +657,9 @@ describe('layer-detail +page.svelte', () => {
 			);
 			const breadcrumb = JSON.parse(breadcrumbScript?.textContent ?? '{}');
 			const items = breadcrumb.itemListElement as { name: string; item: string }[];
-			expect(items.map((i) => i.name)).toEqual(['Berlin', 'Data', 'Noise pollution 2023']);
+			expect(items.map((i) => i.name)).toEqual(['Berlin', 'Data layers', 'Noise pollution 2023']);
 			expect(items[0]?.item.endsWith('/en')).toBe(true);
-			expect(items[1]?.item.endsWith('/en/explore')).toBe(true);
+			expect(items[1]?.item.endsWith('/en/daten')).toBe(true);
 			expect(items[2]?.item.endsWith(`/en/layer/${d.slug}`)).toBe(true);
 			const datasetScript = document.querySelector(
 				'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'

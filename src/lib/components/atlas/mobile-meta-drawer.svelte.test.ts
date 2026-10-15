@@ -49,4 +49,29 @@ describe('mobile-meta-drawer.svelte', () => {
 		const close = (await page.getByTestId('mobile-meta-drawer-close').element()) as HTMLElement;
 		expect(close.getAttribute('aria-label')).toBe('Close menu');
 	});
+
+	it('S7: zeigt die drei Übersichtsseiten, DE und EN', async () => {
+		render(MobileMetaDrawer, { open: true, onClose: () => {} });
+		for (const [name, href] of [
+			['Alle Kieze', '/kieze'],
+			['Alle Bezirke', '/bezirke'],
+			['Daten-Layer', '/daten']
+		] as const) {
+			const el = (await page.getByRole('link', { name }).element()) as HTMLAnchorElement;
+			expect(el.getAttribute('href')).toBe(href);
+		}
+	});
+
+	it('S7: EN-Drawer führt die Übersichtsseiten unter /en', async () => {
+		overwriteGetLocale(() => 'en');
+		render(MobileMetaDrawer, { open: true, onClose: () => {} });
+		for (const [name, href] of [
+			['All Kieze', '/en/kieze'],
+			['All Bezirke', '/en/bezirke'],
+			['Data layers', '/en/daten']
+		] as const) {
+			const el = (await page.getByRole('link', { name }).element()) as HTMLAnchorElement;
+			expect(el.getAttribute('href')).toBe(href);
+		}
+	});
 });

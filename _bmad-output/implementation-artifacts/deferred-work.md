@@ -398,3 +398,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-s5-sitemap-build-haerte.md`
   summary: Sitemap-Prerender lädt die Datenquellen viermal (Index lädt DE und EN zusätzlich zu den Teil-Sitemaps); Kiez- und Bezirks-Source bauen die `lastmod`-Schleife doppelt.
   evidence: Blind- und Edge-Review S5; Build-Zeit unkritisch, Memoisierung oder gemeinsamer Helfer bei nächster Änderung.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-s7-uebersichtsseiten.md`
+  summary: `tests/e2e/a11y.e2e.ts` „Escape löscht Selection“ scheitert reproduzierbar mit Timeout auf `[role="application"]` (Karte auf `/?address=…`); „SkipLink springt zu main“ flaky.
+  evidence: S7-Läufe 15.10.2026; S7 ändert weder Karte noch Startseite noch `/explore`. Vorher-Vergleich auf `main` steht aus, vermutlich gleiche Ursache wie die bekannten combobox-Fehler auf `/explore`.

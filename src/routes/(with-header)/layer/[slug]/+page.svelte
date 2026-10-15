@@ -146,8 +146,8 @@
 			items: [
 				{ name: 'Berlin', path: localizedPathname('/', locale) },
 				{
-					name: m.layer_page_breadcrumb_daten(undefined, localeOpts),
-					path: localizedPathname('/explore', locale)
+					name: m.overview_daten_breadcrumb(undefined, localeOpts),
+					path: localizedPathname('/daten', locale)
 				},
 				{ name: detail.layerName, path: localizedPathname(`/layer/${detail.slug}`, locale) }
 			]

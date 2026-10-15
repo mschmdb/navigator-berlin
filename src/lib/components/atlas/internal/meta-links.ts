@@ -25,6 +25,9 @@ export const META_LINK_IDS = [
 	'score',
 	'wahlen',
 	'hitze',
+	'kieze',
+	'bezirke',
+	'daten',
 	'methodik',
 	'updates',
 	'lizenzen',
@@ -68,7 +71,10 @@ export const META_LINK_GROUPS: readonly MetaLinkGroup[] = [
 			{ id: 'atlas', href: '/explore' },
 			{ id: 'score', href: '/umwelt-infrastruktur-score' },
 			{ id: 'wahlen', href: '/berlin-wahlen' },
-			{ id: 'hitze', href: '/hitze' }
+			{ id: 'hitze', href: '/hitze' },
+			{ id: 'kieze', href: '/kieze' },
+			{ id: 'bezirke', href: '/bezirke' },
+			{ id: 'daten', href: '/daten' }
 		]
 	},
 	{
@@ -103,6 +109,12 @@ export function metaLinkLabel(id: MetaLinkId, o?: LocaleOptions): string {
 			return m.shell_meta_link_wahlen(undefined, options);
 		case 'hitze':
 			return m.shell_meta_link_hitze(undefined, options);
+		case 'kieze':
+			return m.shell_meta_link_kieze(undefined, options);
+		case 'bezirke':
+			return m.shell_meta_link_bezirke(undefined, options);
+		case 'daten':
+			return m.shell_meta_link_daten(undefined, options);
 		case 'methodik':
 			return m.shell_meta_link_methodik(undefined, options);
 		case 'updates':

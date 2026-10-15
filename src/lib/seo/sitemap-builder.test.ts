@@ -182,6 +182,9 @@ describe('STATIC_PAGES_SOURCE', () => {
 			'https://navigator.berlin/explore',
 			'https://navigator.berlin/kuehle-orte',
 			'https://navigator.berlin/hitze',
+			'https://navigator.berlin/kieze',
+			'https://navigator.berlin/bezirke',
+			'https://navigator.berlin/daten',
 			'https://navigator.berlin/methodik',
 			'https://navigator.berlin/methodik/kiez-score',
 			'https://navigator.berlin/methodik/wahldaten',
@@ -344,6 +347,18 @@ describe('collectPrerenderedUrls', () => {
 	it('i18n Block C4c: /hitze, /kuehle-orte und /lizenzen (DE) bekommen ihren EN-Alternate', () => {
 		const entries = collectPrerenderedUrls(ctx());
 		for (const path of ['/hitze', '/kuehle-orte', '/lizenzen']) {
+			const entry = entries.find((e) => e.loc === `https://navigator.berlin${path}`);
+			expect(entry?.alternates, path).toEqual([
+				{ hreflang: 'de', href: `https://navigator.berlin${path}` },
+				{ hreflang: 'en', href: `https://navigator.berlin/en${path}` },
+				{ hreflang: 'x-default', href: `https://navigator.berlin${path}` }
+			]);
+		}
+	});
+
+	it('S7: /kieze, /bezirke und /daten (DE) bekommen ihren EN-Alternate', () => {
+		const entries = collectPrerenderedUrls(ctx());
+		for (const path of ['/kieze', '/bezirke', '/daten']) {
 			const entry = entries.find((e) => e.loc === `https://navigator.berlin${path}`);
 			expect(entry?.alternates, path).toEqual([
 				{ hreflang: 'de', href: `https://navigator.berlin${path}` },
