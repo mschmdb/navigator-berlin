@@ -143,7 +143,7 @@ describe('lizenzen · DE-Parität (i18n C4c)', () => {
 	it('Meta-Title bleibt der Baseline-Titel', async () => {
 		render(Page, { data: sampleData });
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Lizenzen - Berlin in Daten - navigator.berlin');
+		expect(document.title).toBe('Lizenzen | navigator.berlin');
 	});
 });
 
@@ -326,7 +326,7 @@ describe('lizenzen · EN (i18n C4c)', () => {
 	it('Meta-Title englisch', async () => {
 		renderEn();
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Licences - Berlin in data - navigator.berlin');
+		expect(document.title).toBe('Licences | navigator.berlin');
 	});
 });
 

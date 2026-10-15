@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import CrossLayerStoryBlock from '$lib/components/atlas/cross-layer-story-block.svelte';
@@ -34,7 +35,7 @@
 </script>
 
 <SeoHead
-	title={m.methodik_clt_meta_title()}
+	title={buildPageTitle(m.methodik_clt_meta_title())}
 	description={m.methodik_clt_meta_description()}
 	{origin}
 	{pathname}

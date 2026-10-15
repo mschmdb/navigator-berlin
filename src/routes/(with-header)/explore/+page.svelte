@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { onDestroy, onMount, untrack } from 'svelte';
 	import { goto } from '$app/navigation';
 	import MapLibreCanvas from '$lib/components/atlas/map-libre-canvas.svelte';
@@ -1427,8 +1428,8 @@
 
 	const ogTitle = $derived(
 		ogInput
-			? m.atlas_og_title_address({ address: ogInput.address }, localeOpts)
-			: m.atlas_og_title_default(undefined, localeOpts)
+			? buildPageTitle(ogInput.address)
+			: buildPageTitle(m.atlas_og_title_default(undefined, localeOpts))
 	);
 	const ogDescription = $derived(
 		ogInput

@@ -6,18 +6,18 @@ import ErrorContent from './error-content.svelte';
 const CASES = [
 	{
 		status: 404,
-		de: ['Seite nicht gefunden · navigator.berlin', 'Seite nicht gefunden'],
-		en: ['Page not found · navigator.berlin', 'Page not found']
+		de: ['Seite nicht gefunden | navigator.berlin', 'Seite nicht gefunden'],
+		en: ['Page not found | navigator.berlin', 'Page not found']
 	},
 	{
 		status: 400,
-		de: ['Anfrage fehlgeschlagen · navigator.berlin', 'Anfrage nicht möglich'],
-		en: ['Request failed · navigator.berlin', 'Request not possible']
+		de: ['Anfrage fehlgeschlagen | navigator.berlin', 'Anfrage nicht möglich'],
+		en: ['Request failed | navigator.berlin', 'Request not possible']
 	},
 	{
 		status: 500,
-		de: ['Fehler · navigator.berlin', 'Etwas ist schiefgelaufen'],
-		en: ['Error · navigator.berlin', 'Something went wrong']
+		de: ['Fehler | navigator.berlin', 'Etwas ist schiefgelaufen'],
+		en: ['Error | navigator.berlin', 'Something went wrong']
 	}
 ] as const;
 

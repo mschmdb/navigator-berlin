@@ -52,7 +52,7 @@ describe('updates/+page.svelte · DE-Wortlaut (i18n C4d)', () => {
 	it('zeigt Titel, Kopf, Feedback, Liste und Links wie vor der Übersetzung', async () => {
 		render(Page, { data: { entries } as never });
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Updates - Berlin in Daten - navigator.berlin');
+		expect(document.title).toBe('Updates | navigator.berlin');
 		expect(metaDescription()).toBe(
 			'Was sich an navigator.berlin verändert: neue Daten, Features und Methodik-Änderungen. Mit RSS und Atom.'
 		);
@@ -110,7 +110,7 @@ describe('updates/+page.svelte · EN (i18n C4d)', () => {
 	it('Kopf, Feedback und Meta sind englisch, Feed-Links bleiben', async () => {
 		renderEn();
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Updates - Berlin in data - navigator.berlin');
+		expect(document.title).toBe('Updates | navigator.berlin');
 		expect(metaDescription()).toBe(
 			'What is changing at navigator.berlin: new data, features and methodology changes. With RSS and Atom.'
 		);

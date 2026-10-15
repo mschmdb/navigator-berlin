@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
@@ -13,7 +14,7 @@
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
 
-	const pageTitle = m.methodik_wahldaten_meta_title();
+	const pageTitle = buildPageTitle(m.methodik_wahldaten_meta_title());
 	const pageDescription = m.methodik_wahldaten_meta_description();
 
 	const breadcrumbs = $derived(

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { onMount, untrack } from 'svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
@@ -198,7 +199,7 @@
 	const EXTREME_SUBTEXT = $derived(m.wahl_portal_chapter_extreme_subtext());
 	const METHODIK_SUBTEXT = $derived(m.wahl_portal_chapter_methodik_subtext());
 
-	const pageTitle = $derived(m.wahl_portal_page_title());
+	const pageTitle = $derived(buildPageTitle(m.wahl_portal_page_title()));
 	const pageDescription = $derived(m.wahl_portal_page_description());
 
 	const dataCatalogJsonLd = $derived(

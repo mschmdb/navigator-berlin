@@ -1,11 +1,10 @@
 import { m } from '$lib/paraglide/messages.js';
 import type { Locale } from '$lib/paraglide/runtime';
+import { firstFitting, PAGE_TITLE_MAX } from './page-title.js';
 import { formatCount, formatDate, formatDecimal } from '$lib/i18n/format.js';
 
 const BRAND = 'navigator.berlin';
-// Spec-Beispiel (Friedrichshain-Kreuzberg, 78 Zeichen) behält die Marke; Google kürzt am Ende.
-const TITLE_MAX = 80;
-const DESCRIPTION_MAX = 160;
+export const DESCRIPTION_MAX = 160;
 
 export interface ProfileMetaInput {
 	readonly name: string;
@@ -63,10 +62,6 @@ function composeTitle(head: string, facts: readonly string[], brand: boolean): s
 	return brand ? `${body} | ${BRAND}` : body;
 }
 
-function firstFitting(candidates: readonly string[], max: number): string {
-	return candidates.find((c) => c.length <= max) ?? candidates[candidates.length - 1];
-}
-
 function descriptionFactSentence(input: ProfileMetaInput): string | null {
 	const opts = { locale: input.locale };
 	const hasEinwohner = input.einwohner > 0;
@@ -100,7 +95,7 @@ function descriptionScoreSentence(input: ProfileMetaInput, label: string): strin
 }
 
 /** Sätze in Prioritätsreihenfolge; ein Satz, der die Grenze sprengt, entfällt samt Rest. */
-function composeDescription(sentences: readonly (string | null)[]): string {
+export function composeDescription(sentences: readonly (string | null)[]): string {
 	const present = sentences.filter((s): s is string => s !== null);
 	let result = present[0] ?? '';
 	for (const sentence of present.slice(1)) {
@@ -113,11 +108,14 @@ function composeDescription(sentences: readonly (string | null)[]): string {
 
 export function buildBezirkMeta(input: ProfileMetaInput): ProfileMeta {
 	const opts = { locale: input.locale };
-	const facts = titleFacts(input, true);
-	const title = firstFitting(
-		[composeTitle(input.name, facts, true), composeTitle(input.name, facts, false)],
-		TITLE_MAX
-	);
+	const allFacts = titleFacts(input, true);
+	const einwohnerOnly = titleFacts(input, false);
+	// Weglassreihenfolge bei Überlänge: Marke, Fläche, Einwohner. Der Name bleibt immer vollständig.
+	const candidates: string[] = [];
+	for (const facts of [allFacts, einwohnerOnly, []]) {
+		candidates.push(composeTitle(input.name, facts, true), composeTitle(input.name, facts, false));
+	}
+	const title = firstFitting(candidates, PAGE_TITLE_MAX);
 	const description = composeDescription([
 		descriptionFactSentence(input),
 		descriptionScoreSentence(input, m.meta_score_label_bezirk(undefined, opts)),
@@ -136,16 +134,18 @@ export function buildKiezMeta(input: KiezMetaInput): ProfileMeta {
 			: m.meta_title_score({ label, score: String(Math.round(input.score)) }, opts);
 	const withBezirk = input.bezirk.length > 0 ? `${input.name} (${input.bezirk})` : input.name;
 
-	// Weglassreihenfolge bei Überlänge: Marke, Score, Bezirk.
+	// Weglassreihenfolge bei Überlänge: Marke, Score, Einwohner, Bezirk. Name und Bezirk
+	// sind die wichtigsten Suchbegriffe, deshalb fallen zuerst die Fakten, dann der Bezirk.
 	const heads = withBezirk === input.name ? [input.name] : [withBezirk, input.name];
-	const factSets = scoreFact === null ? [baseFacts] : [[...baseFacts, scoreFact], baseFacts];
+	const withScore = scoreFact === null ? [] : [[...baseFacts, scoreFact]];
+	const factSets = [...withScore, baseFacts, []];
 	const candidates: string[] = [];
 	for (const head of heads) {
 		for (const facts of factSets) {
 			candidates.push(composeTitle(head, facts, true), composeTitle(head, facts, false));
 		}
 	}
-	const title = firstFitting(candidates, TITLE_MAX);
+	const title = firstFitting(candidates, PAGE_TITLE_MAX);
 
 	const description = composeDescription([
 		descriptionFactSentence(input),

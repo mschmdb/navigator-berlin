@@ -18,6 +18,7 @@
 		pickDatasetDescription
 	} from '$lib/seo/index.js';
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
+	import { buildLayerMeta, layerBenefit } from '$lib/seo/layer-meta.js';
 	import {
 		deriveTemporalCoverage,
 		originOfUrl,
@@ -96,8 +97,19 @@
 	const descriptionFallback = $derived(
 		m.layer_page_description_fallback({ layerName: detail.layerName }, localeOpts)
 	);
-	const pageTitle = $derived(m.layer_page_title({ layerName: detail.layerName }, localeOpts));
-	const pageDescription = $derived(explain.short || descriptionFallback);
+	const layerMeta = $derived(
+		buildLayerMeta({
+			layerName: detail.layerName,
+			lead: explain.short,
+			bundle: meta.bundleGroup,
+			authority: methodology?.authority || shortenSource(meta.sourceUrl),
+			sourceUpdatedAt: meta.sourceUpdatedAt,
+			benefit: layerBenefit(meta, data.hasKiezAggregate),
+			locale
+		})
+	);
+	const pageTitle = $derived(layerMeta.title);
+	const pageDescription = $derived(layerMeta.description);
 	const ogImageAlt = $derived(m.layer_page_og_alt({ layerName: detail.layerName }, localeOpts));
 	/**
 	 * Story 2.2 AC-5: Dataset-JSON-LD pro Layer-Detail-Page.

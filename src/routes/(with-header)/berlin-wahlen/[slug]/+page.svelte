@@ -8,6 +8,7 @@
 	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
+	import { buildWahlMeta } from '$lib/seo/wahl-meta.js';
 	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { deriveTemporalCoverage, originOfUrl } from '$lib/seo/dataset-helpers.js';
@@ -48,10 +49,21 @@
 		return parts.join(' · ');
 	});
 
-	const pageTitle = $derived(`${wahlTitel} · Berlin · navigator.berlin`);
-	const pageDescription = $derived(
-		m.wahl_detail_page_description({ typLabel, jahr: data.wahl.jahr })
+	const topParty = $derived(data.berlin.find((e) => e.kurzname !== 'Sonstige'));
+	const wahlMeta = $derived(
+		buildWahlMeta({
+			typ: data.wahl.typ,
+			jahr: data.wahl.jahr,
+			stimmtyp: data.wahl.stimmtyp,
+			isRepeatElection: data.wahl.isRepeatElection,
+			hasStimmbezirke: data.geoSlug !== null && data.winnersByUwb.length > 0,
+			vorlaeufig: data.wahl.vorlaeufig,
+			topParty: topParty ? { kurzname: topParty.kurzname, anteil: topParty.anteil } : null,
+			locale: getLocale()
+		})
 	);
+	const pageTitle = $derived(wahlMeta.title);
+	const pageDescription = $derived(wahlMeta.description);
 
 	const totalStimmen = $derived(data.berlin.reduce((s, e) => s + e.stimmen, 0));
 	const berlinTop5 = $derived(data.berlin.slice(0, 5));

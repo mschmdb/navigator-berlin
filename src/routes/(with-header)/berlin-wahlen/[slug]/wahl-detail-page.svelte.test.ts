@@ -230,3 +230,61 @@ describe('berlin-wahlen/[slug]/+page.svelte: Dataset-JSON-LD', () => {
 		expect(ld.temporalCoverage).toBe('2026');
 	});
 });
+
+describe('berlin-wahlen/[slug]/+page.svelte: Meta-Tags (S6)', () => {
+	const party = (kurzname: string, anteil: number) => ({
+		kurzname,
+		vollname: kurzname,
+		farbeHex: '#123456',
+		stimmen: 1000,
+		anteil
+	});
+
+	function metaDescription(): string {
+		return document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
+	}
+
+	it('EN + Wiederholungswahl: Titel höchstens 60 Zeichen', () => {
+		overwriteGetLocale(() => 'en');
+		const data = {
+			...makeData({ typ: 'agh', stimmtyp: 'erststimme', jahr: 2023, isRepeatElection: true }),
+			berlin: [party('CDU', 0.297)]
+		};
+		render(WahlDetailPage, { data });
+		expect(document.title.length).toBeLessThanOrEqual(60);
+		expect(document.title).toContain('House of Representatives 2023');
+	});
+
+	it('Erst- und Zweitstimme haben verschiedene Beschreibungen', () => {
+		const base = { typ: 'agh', jahr: 2021, isRepeatElection: false } as const;
+		const berlin = [party('SPD', 0.214)];
+		const erst = render(WahlDetailPage, {
+			data: { ...makeData({ ...base, stimmtyp: 'erststimme' }), berlin }
+		});
+		const erstDescription = metaDescription();
+		erst.unmount();
+		render(WahlDetailPage, {
+			data: { ...makeData({ ...base, stimmtyp: 'zweitstimme' }), berlin }
+		});
+		expect(metaDescription()).not.toBe('');
+		expect(metaDescription()).not.toBe(erstDescription);
+	});
+
+	it('Dataset-JSON-LD übernimmt die Meta-Beschreibung', () => {
+		const data = {
+			...makeData({ typ: 'agh', stimmtyp: 'zweitstimme', jahr: 2021 }),
+			berlin: [party('SPD', 0.214)]
+		};
+		render(WahlDetailPage, { data });
+		expect(readDatasetJsonLd().description).toBe(metaDescription());
+	});
+
+	it('nimmt die erste Partei, die nicht Sonstige ist', () => {
+		const data = {
+			...makeData({ typ: 'agh', stimmtyp: 'zweitstimme', jahr: 2021 }),
+			berlin: [party('Sonstige', 0.3), party('SPD', 0.214)]
+		};
+		render(WahlDetailPage, { data });
+		expect(metaDescription()).toContain('SPD mit 21,4 %');
+	});
+});

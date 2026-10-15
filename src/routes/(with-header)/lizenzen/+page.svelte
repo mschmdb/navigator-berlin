@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -96,7 +97,7 @@
 {#snippet codeSm(text: string)}<code class="font-mono text-sm">{text}</code>{/snippet}
 
 <SeoHead
-	title={m.lizenzen_meta_title()}
+	title={buildPageTitle(m.lizenzen_meta_title())}
 	description={m.lizenzen_meta_description()}
 	pathname={page.url.pathname}
 	origin={page.url.origin}

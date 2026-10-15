@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import {
 		ArrowRight,
@@ -57,7 +58,7 @@
 
 	// mode=hitze erzwingt den reduzierten Explorer auch ohne Hitze-Host (lokal + Main-Domain).
 	const explorerLink = `${buildExplorerDeepLink(['kuehle-orte'])}&mode=hitze`;
-	const pageTitle = $derived(m.hitze_meta_title());
+	const pageTitle = $derived(buildPageTitle(m.hitze_meta_title()));
 	const pageDescription = $derived(m.hitze_meta_description());
 	const faqItems = $derived(getHitzeFaq());
 	const ogImagePath = '/og/page/hitze.png';

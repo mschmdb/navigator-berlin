@@ -141,9 +141,7 @@ describe('umwelt-infrastruktur-score · DE-Wortlaut von Aside, Accordion, Empty-
 		expect(document.querySelector('[role="radiogroup"]')?.getAttribute('aria-label')).toBe(
 			'Ranking-Ansicht wechseln'
 		);
-		expect(document.title).toBe(
-			'Umwelt- & Infrastruktur-Score - Berlin in Daten - navigator.berlin'
-		);
+		expect(document.title).toBe('Umwelt- & Infrastruktur-Score | navigator.berlin');
 	});
 
 	it('Empty-State ohne Zeilen behält den Baseline-Wortlaut', () => {

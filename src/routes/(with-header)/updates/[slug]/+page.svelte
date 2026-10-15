@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
@@ -30,7 +31,7 @@
 	const tagLang = $derived(locale === 'de' ? undefined : 'de');
 	const bodyLang = $derived(data.bodyIsDeFallback ? 'de' : undefined);
 
-	const pageTitle = $derived(m.updates_detail_page_title({ title: localized.title }));
+	const pageTitle = $derived(buildPageTitle(localized.title));
 	const pageDescription = $derived(localized.summary);
 
 	const ogImage = $derived(`${page.url.origin}/og/page/updates.png`);

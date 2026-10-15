@@ -660,7 +660,7 @@ test.describe('i18n Block B2: Startseite /en', () => {
 
 	test('GET /en: <title> und WebSite-JSON-LD-description sind englisch', async ({ page }) => {
 		await page.goto('/en');
-		await expect(page).toHaveTitle('Home - Berlin in data - navigator.berlin');
+		await expect(page).toHaveTitle('Home | navigator.berlin');
 		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
 		expect(websiteJsonLd).not.toBeNull();
 		const parsed = JSON.parse(websiteJsonLd ?? '{}') as {

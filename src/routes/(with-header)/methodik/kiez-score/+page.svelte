@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
@@ -18,7 +19,7 @@
 		getKiezScoreWeightRows
 	} from './kiez-score-content.js';
 
-	const pageTitle = m.methodik_kiez_score_meta_title();
+	const pageTitle = buildPageTitle(m.methodik_kiez_score_meta_title());
 	const pageDescription = m.methodik_kiez_score_meta_description();
 
 	const sections = getKiezScoreSections();

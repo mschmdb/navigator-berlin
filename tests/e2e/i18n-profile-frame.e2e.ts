@@ -51,9 +51,7 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		const response = await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page).toHaveTitle(
-			/^Alexanderplatz \(Mitte\): [\d,]+ residents.* \| navigator\.berlin$/
-		);
+		await expect(page).toHaveTitle(/^Alexanderplatz \(Mitte\): [\d,]+ residents.*$/);
 
 		const hero = page.getByTestId('kiez-hero');
 		await expect(hero.locator('h1')).toBeVisible();
@@ -220,9 +218,7 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		const response = await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page).toHaveTitle(
-			/^Charlottenburg-Wilmersdorf: [\d,]+ residents, \d+\.\d km² \| navigator\.berlin$/
-		);
+		await expect(page).toHaveTitle(/^Charlottenburg-Wilmersdorf: [\d,]+ residents, \d+\.\d km²$/);
 
 		const hero = page.getByTestId('bezirk-hero');
 		await expect(hero.locator('h1')).toBeVisible();

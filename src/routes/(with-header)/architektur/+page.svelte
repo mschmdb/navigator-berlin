@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
@@ -113,7 +114,7 @@
 {/snippet}
 
 <SeoHead
-	title={m.architektur_meta_title()}
+	title={buildPageTitle(m.architektur_meta_title())}
 	description={m.architektur_meta_description()}
 	pathname={page.url.pathname}
 	origin={page.url.origin}

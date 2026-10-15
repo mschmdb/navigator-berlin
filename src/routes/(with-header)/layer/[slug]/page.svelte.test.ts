@@ -60,20 +60,26 @@ function detail(slug = 'laerm-2023', overrides: Partial<LayerDetail> = {}): Laye
 
 describe('layer-detail +page.svelte', () => {
 	it('rendert layerName als h1', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const h1 = (await page.getByTestId('layer-detail-name').element()) as HTMLElement;
 		expect(h1.tagName).toBe('H1');
 		expect(h1.textContent).toMatch(/Lärmbelastung/);
 	});
 
 	it('rendert long-Explain als Lead', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const lead = (await page.getByTestId('layer-detail-lead').element()) as HTMLElement;
 		expect(lead.textContent).toMatch(/Lärm-Gesamtbelastung/);
 	});
 
 	it('rendert Source-Card mit Source-Link', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const link = (await page
 			.getByTestId('layer-detail-source-link')
 			.element()) as HTMLAnchorElement;
@@ -82,14 +88,22 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert License-Label', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const lic = (await page.getByTestId('layer-detail-license').element()) as HTMLElement;
 		expect(lic.textContent).toMatch(/dl-de\/zero/);
 	});
 
 	it('rendert Inspector-Link mit Layer-URL-State', async () => {
 		render(Page, {
-			data: { detail: detail('wohnlagen-2024'), faq: [], faqLocale: 'de', ranking: null }
+			data: {
+				detail: detail('wohnlagen-2024'),
+				faq: [],
+				faqLocale: 'de',
+				ranking: null,
+				hasKiezAggregate: false
+			}
 		});
 		const link = (await page
 			.getByTestId('layer-detail-inspector-link')
@@ -108,7 +122,9 @@ describe('layer-detail +page.svelte', () => {
 		const block = (e: Event) => e.preventDefault();
 		document.addEventListener('click', block);
 		try {
-			render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+			render(Page, {
+				data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+			});
 			const button = (await page.getByTestId(testid).element()) as HTMLElement;
 			button.click();
 			expect(events).toEqual([
@@ -122,14 +138,18 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert Scale-Section bei vorhandenem valueScaleExplain', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const scale = (await page.getByTestId('layer-detail-scale').element()) as HTMLElement;
 		expect(scale.textContent).toMatch(/niedrig bis sehr hoch/);
 	});
 
 	it('rendert keine Scale-Section ohne valueScaleExplain + ohne unit', async () => {
 		const d = { ...detail(), explain: { short: 'foo', long: 'bar' } };
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		await expect.element(page.getByTestId('layer-detail-scale')).not.toBeInTheDocument();
 	});
 
@@ -143,13 +163,17 @@ describe('layer-detail +page.svelte', () => {
 				feedbackMailto: true
 			}
 		};
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		await expect.element(page.getByTestId('layer-detail-editorial')).toBeInTheDocument();
 		await expect.element(page.getByTestId('editorial-disclaimer')).toBeInTheDocument();
 	});
 
 	it('rendert keinen Disclaimer-Bereich ohne editorial-Config', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		await expect.element(page.getByTestId('layer-detail-editorial')).not.toBeInTheDocument();
 	});
 
@@ -157,13 +181,17 @@ describe('layer-detail +page.svelte', () => {
 		// i18n Block B4b: DE zeigt weiter den rohen `meta.bundleGroup`-Wert aus
 		// dem Manifest, byte-identisch zum Vor-B4b-Verhalten -- nur EN läuft
 		// über `bundleLabel()`. Review-Fund #19 (Koordinator, Matze AFK).
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
 		expect(article.textContent).toMatch(/C: Umwelt/);
 	});
 
 	it('rendert Methodology-Section „Berechnung"', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const sec = (await page.getByTestId('layer-detail-methodology').element()) as HTMLElement;
 		expect(sec.textContent).toMatch(/Berechnung/);
 		expect(sec.textContent).not.toMatch(/Wie berechnet/);
@@ -171,19 +199,25 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert Coverage-Gaps-Section nur wenn coverageGaps gefüllt', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const sec = (await page.getByTestId('layer-detail-coverage-gaps').element()) as HTMLElement;
 		expect(sec.textContent).toMatch(/Modellwerte/);
 	});
 
 	it('rendert Omissions-Section nur wenn omissions gefüllt', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const sec = (await page.getByTestId('layer-detail-omissions').element()) as HTMLElement;
 		expect(sec.textContent).toMatch(/Trennung nach Quelle/);
 	});
 
 	it('rendert Related-Layers-Section mit Auto-Link', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const sec = (await page.getByTestId('layer-detail-related').element()) as HTMLElement;
 		const link = sec.querySelector('a[href="/layer/luft-2023"]');
 		expect(link, 'Auto-Link zu /layer/luft-2023').not.toBeNull();
@@ -191,7 +225,9 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert Methodik-Banner mit Link auf /methodik', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const banner = (await page.getByTestId('layer-detail-methodik-link').element()) as HTMLElement;
 		const link = banner.querySelector('a');
 		expect(link?.getAttribute('href')).toMatch(/^\/methodik/);
@@ -202,7 +238,9 @@ describe('layer-detail +page.svelte', () => {
 	// die allgemeine /methodik-Seite.
 	it('Kiez-Score-Layer: Methodik-Banner verlinkt auf /methodik/kiez-score', async () => {
 		const d = detail('kiez-score-ruhe-luft');
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const banner = (await page.getByTestId('layer-detail-methodik-link').element()) as HTMLElement;
 		const link = banner.querySelector('a');
 		expect(link?.getAttribute('href')).toBe('/methodik/kiez-score');
@@ -211,7 +249,9 @@ describe('layer-detail +page.svelte', () => {
 	it('Kiez-Score-Layer unter EN: Methodik-Banner verlinkt auf /en/methodik/kiez-score', async () => {
 		overwriteGetLocale(() => 'en');
 		const d = detail('kiez-score-gesamt');
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const banner = (await page.getByTestId('layer-detail-methodik-link').element()) as HTMLElement;
 		const link = banner.querySelector('a');
 		expect(link?.getAttribute('href')).toBe('/en/methodik/kiez-score');
@@ -219,7 +259,9 @@ describe('layer-detail +page.svelte', () => {
 
 	it('Nicht-Kiez-Score-Layer: Methodik-Banner bleibt auf /methodik', async () => {
 		const d = detail('laerm-2023');
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const banner = (await page.getByTestId('layer-detail-methodik-link').element()) as HTMLElement;
 		const link = banner.querySelector('a');
 		expect(link?.getAttribute('href')).toBe('/methodik');
@@ -231,7 +273,9 @@ describe('layer-detail +page.svelte', () => {
 		const d = detail('laerm-2023', {
 			methodology: { ...methodology(), aggregationLevel: 'point-osm' }
 		});
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const methodologySec = (await page
 			.getByTestId('layer-detail-methodology')
 			.element()) as HTMLElement;
@@ -249,7 +293,9 @@ describe('layer-detail +page.svelte', () => {
 				aggregationLevel: 'unbekannte-ebene' as unknown as LayerMethodology['aggregationLevel']
 			}
 		});
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const methodologySec = (await page
 			.getByTestId('layer-detail-methodology')
 			.element()) as HTMLElement;
@@ -263,13 +309,17 @@ describe('layer-detail +page.svelte', () => {
 		const d = detail('laerm-2023', {
 			methodology: { ...methodology(), coverageGaps: undefined, omissions: undefined }
 		});
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		await expect.element(page.getByTestId('layer-detail-coverage-gaps')).not.toBeInTheDocument();
 		await expect.element(page.getByTestId('layer-detail-omissions')).not.toBeInTheDocument();
 	});
 
 	it('rendert Dataset-JSON-LD mit license-URL + creator + distribution.contentUrl', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const script = document.querySelector(
 			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
 		);
@@ -290,7 +340,8 @@ describe('layer-detail +page.svelte', () => {
 				detail: detail(),
 				faq: [],
 				faqLocale: 'de',
-				ranking: null
+				ranking: null,
+				hasKiezAggregate: false
 			}
 		});
 		const script = document.querySelector(
@@ -307,7 +358,9 @@ describe('layer-detail +page.svelte', () => {
 
 	it('Dataset-JSON-LD verweist als creator-Fallback auf die Organization wenn der Slug keine reale Methodology hat', async () => {
 		const d = detail('does-not-exist-xyz', { methodology: null });
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const script = document.querySelector(
 			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
 		);
@@ -319,7 +372,9 @@ describe('layer-detail +page.svelte', () => {
 
 	it('zeigt „Methodik in Vorbereitung"-Banner wenn methodology null', async () => {
 		const d = detail('laerm-2023', { methodology: null });
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const banner = (await page
 			.getByTestId('layer-detail-methodology-empty')
 			.element()) as HTMLElement;
@@ -330,7 +385,9 @@ describe('layer-detail +page.svelte', () => {
 
 	it('Features-Zahl mit deutschem Tausendertrennzeichen (Punkt)', async () => {
 		const d = detail('laerm-2023', { meta: makeMeta('laerm-2023', { featureCount: 12345 }) });
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const sourceCard = (await page
 			.getByTestId('layer-detail-source-card')
 			.element()) as HTMLElement;
@@ -347,7 +404,9 @@ describe('layer-detail +page.svelte', () => {
 				feedbackMailto: true
 			}
 		};
-		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 
 		const lead = (await page.getByTestId('layer-detail-lead').element()) as HTMLElement;
 		expect(lead.hasAttribute('lang')).toBe(false);
@@ -385,7 +444,9 @@ describe('layer-detail +page.svelte', () => {
 			const d = detail('laerm-2023', {
 				meta: makeMeta('laerm-2023', { featureCount: 12345 })
 			});
-			render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+			render(Page, {
+				data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+			});
 			const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
 			expect(article.textContent).toMatch(/C · Environment/);
 			expect(article.textContent).toMatch(/Source/);
@@ -413,7 +474,9 @@ describe('layer-detail +page.svelte', () => {
 					bundleGroup: 'Z: Unbekannt' as unknown as LayerMetadata['bundleGroup']
 				})
 			});
-			render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+			render(Page, {
+				data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+			});
 			const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
 			expect(article.textContent).toMatch(/Z: Unbekannt/);
 		});
@@ -446,7 +509,9 @@ describe('layer-detail +page.svelte', () => {
 					feedbackMailto: true
 				}
 			};
-			render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+			render(Page, {
+				data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+			});
 			const lead = (await page.getByTestId('layer-detail-lead').element()) as HTMLElement;
 			expect(lead.hasAttribute('lang')).toBe(false);
 			const editorial = (await page.getByTestId('layer-detail-editorial').element()) as HTMLElement;
@@ -484,7 +549,9 @@ describe('layer-detail +page.svelte', () => {
 
 		it('Verwandter-Layer-Link zeigt englischen Namen mit /en-Href', async () => {
 			overwriteGetLocale(() => 'en');
-			render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+			render(Page, {
+				data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+			});
 			const sec = (await page.getByTestId('layer-detail-related').element()) as HTMLElement;
 			const link = sec.querySelector('a[href="/en/layer/luft-2023"]');
 			expect(link, 'Auto-Link zu /en/layer/luft-2023').not.toBeNull();
@@ -494,7 +561,13 @@ describe('layer-detail +page.svelte', () => {
 		it('Inspector-Link + Methodik-Links zeigen auf /en/…, Query bleibt erhalten', async () => {
 			overwriteGetLocale(() => 'en');
 			render(Page, {
-				data: { detail: detail('wohnlagen-2024'), faq: [], faqLocale: 'de', ranking: null }
+				data: {
+					detail: detail('wohnlagen-2024'),
+					faq: [],
+					faqLocale: 'de',
+					ranking: null,
+					hasKiezAggregate: false
+				}
 			});
 			const inspectorLink = (await page
 				.getByTestId('layer-detail-inspector-link')
@@ -509,7 +582,13 @@ describe('layer-detail +page.svelte', () => {
 		it('Hitze-CTA zeigt englischen Text mit /en/hitze-Href', async () => {
 			overwriteGetLocale(() => 'en');
 			render(Page, {
-				data: { detail: detail('kuehle-orte'), faq: [], faqLocale: 'de', ranking: null }
+				data: {
+					detail: detail('kuehle-orte'),
+					faq: [],
+					faqLocale: 'de',
+					ranking: null,
+					hasKiezAggregate: false
+				}
 			});
 			const cta = (await page
 				.getByTestId('layer-detail-hitze-link')
@@ -525,7 +604,9 @@ describe('layer-detail +page.svelte', () => {
 					sourceUrl: 'https://navigator.berlin/derived/oepnv-composite'
 				})
 			});
-			render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+			render(Page, {
+				data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+			});
 			const span = (await page.getByTestId('layer-detail-source-link').element()) as HTMLElement;
 			expect(span.textContent).toMatch(/Own calculation from open sources/);
 			expect(span.querySelector('a')?.getAttribute('href')).toBe('/en/lizenzen');
@@ -535,7 +616,9 @@ describe('layer-detail +page.svelte', () => {
 		it('zeigt englisches Leerzustand-Banner + EN-Mailto-Label wenn methodology null, Mailto-Betreff bleibt deutsch', async () => {
 			overwriteGetLocale(() => 'en');
 			const d = detail('laerm-2023', { methodology: null });
-			render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
+			render(Page, {
+				data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+			});
 			const banner = (await page
 				.getByTestId('layer-detail-methodology-empty')
 				.element()) as HTMLElement;
@@ -566,7 +649,9 @@ describe('layer-detail +page.svelte', () => {
 				},
 				methodology: { ...methodology(), authority: 'Senate Department (EN)' }
 			};
-			render(Page, { data: { detail: d, faq: [], faqLocale: 'en', ranking: null } });
+			render(Page, {
+				data: { detail: d, faq: [], faqLocale: 'en', ranking: null, hasKiezAggregate: false }
+			});
 			const breadcrumbScript = document.querySelector(
 				'script[type="application/ld+json"][data-testid="layer-breadcrumb-jsonld"]'
 			);
@@ -593,7 +678,13 @@ describe('layer-detail +page.svelte', () => {
 
 	it('rendert den Karten-Button nach der h1, vor der Quelle', async () => {
 		render(Page, {
-			data: { detail: detail('wohnlagen-2024'), faq: [], faqLocale: 'de', ranking: null }
+			data: {
+				detail: detail('wohnlagen-2024'),
+				faq: [],
+				faqLocale: 'de',
+				ranking: null,
+				hasKiezAggregate: false
+			}
 		});
 		const button = (await page
 			.getByTestId('layer-detail-map-button')
@@ -616,7 +707,9 @@ describe('layer-detail +page.svelte', () => {
 			},
 			bottom: null
 		} as const;
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking, hasKiezAggregate: true }
+		});
 		const list = (await page.getByTestId('layer-kiez-ranking').element()) as HTMLElement;
 		await expect
 			.element(page.getByTestId('layer-kiez-ranking-note'))
@@ -628,7 +721,9 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('Button oben und Link unten tragen denselben Text', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		const top = (await page.getByTestId('layer-detail-map-button').element()) as HTMLElement;
 		const bottom = (await page.getByTestId('layer-detail-inspector-link').element()) as HTMLElement;
 		expect(bottom.textContent?.replace(/[→\s]+$/, '').trim()).toBe(
@@ -637,7 +732,9 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it('rendert keine Rangliste ohne Ranking', async () => {
-		render(Page, { data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null } });
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
 		await expect.element(page.getByTestId('layer-kiez-ranking')).not.toBeInTheDocument();
 	});
 });
@@ -650,12 +747,60 @@ describe('layer-detail FAQ-Sprache (Block C3)', () => {
 				detail: detail(),
 				faq: [{ question: 'Frage?', answer: 'Antwort.' }],
 				faqLocale: 'de',
-				ranking: null
+				ranking: null,
+				hasKiezAggregate: false
 			}
 		});
 		const accordion = document.querySelector(
 			'[data-testid="faq-section"] .divide-y.divide-rule.border-y.border-rule'
 		);
 		expect(accordion?.getAttribute('lang')).toBe('de');
+	});
+});
+
+describe('layer-detail Meta-Tags (S6)', () => {
+	function metaDescription(): string {
+		return document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
+	}
+
+	it('setzt Titel mit Marke', () => {
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: true }
+		});
+		expect(document.title).toBe('Lärmbelastung (Umweltatlas 2023) | navigator.berlin');
+	});
+
+	it('Layer ohne Authority: Quellen-Kurzname, Jahr aus sourceUpdatedAt, Nutzensatz je Adresse', () => {
+		const base = detail('bodenrichtwerte');
+		render(Page, {
+			data: {
+				detail: {
+					...base,
+					layerName: 'Bodenrichtwerte',
+					explain: { short: 'Grundstückspreis pro Quadratmeter', long: 'Lang.' },
+					methodology: null,
+					meta: makeMeta('bodenrichtwerte', {
+						sourceUrl: 'https://fbinter.stadt-berlin.de/wfs',
+						sourceUpdatedAt: '2026-01-01T00:00:00.000Z'
+					})
+				},
+				faq: [],
+				faqLocale: 'de',
+				ranking: null,
+				hasKiezAggregate: false
+			}
+		});
+		const description = metaDescription();
+		expect(description).toContain('Quelle: FIS-Broker, Stand 2026');
+		expect(description.endsWith('Auf der Karte je Adresse, mit Quelle und Lizenz.')).toBe(true);
+		expect(description.length).toBeGreaterThanOrEqual(70);
+		expect(description.length).toBeLessThanOrEqual(160);
+	});
+
+	it('Layer mit Kiez-Aggregat nennt je Adresse und Kiez', () => {
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: true }
+		});
+		expect(metaDescription().endsWith('Auf der Karte je Adresse und Kiez.')).toBe(true);
 	});
 });

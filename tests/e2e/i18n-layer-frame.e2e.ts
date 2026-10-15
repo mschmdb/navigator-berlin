@@ -36,7 +36,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		const response = await page.goto(`/en/layer/${LAYER_WITH_METHODOLOGY}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page).toHaveTitle(/Noise pollution 2023 - Berlin in data - navigator\.berlin/);
+		await expect(page).toHaveTitle(/Noise pollution 2023 \| navigator\.berlin/);
 		await expect(page.getByTestId('layer-detail-name')).toHaveText(/Noise pollution 2023/);
 
 		const sourceCard = page.getByTestId('layer-detail-source-card');
@@ -226,7 +226,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		expect(deQuestions.some((q) => DE_QUESTION_START.test(q))).toBe(true);
 		await expect(page.getByTestId('faq-section').locator('[lang]')).toHaveCount(0);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'de');
-		await expect(page).toHaveTitle(/Lärmbelastung 2023 - Berlin in Daten - navigator\.berlin/);
+		await expect(page).toHaveTitle(/Lärmbelastung 2023 \| navigator\.berlin/);
 
 		const sourceCard = page.getByTestId('layer-detail-source-card');
 		await expect(sourceCard).toContainText('Quelle');

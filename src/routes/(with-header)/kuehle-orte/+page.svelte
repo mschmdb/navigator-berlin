@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import { Snowflake, ArrowRight } from '@lucide/svelte';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
@@ -12,7 +13,7 @@
 	const pathname = $derived(page.url.pathname);
 
 	const explorerLink = buildExplorerDeepLink(['kuehle-orte']);
-	const pageTitle = $derived(m.kuehle_orte_page_meta_title());
+	const pageTitle = $derived(buildPageTitle(m.kuehle_orte_page_meta_title()));
 	const pageDescription = $derived(m.kuehle_orte_page_meta_description());
 	const ogImagePath = '/og/page/kuehle-orte.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);

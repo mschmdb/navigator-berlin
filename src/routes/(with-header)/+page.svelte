@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -34,7 +35,9 @@
 	// registriert -- Titel/Beschreibung folgen der effektiven Content-Locale
 	// (identisch zur URL-Locale, sobald das Register-Entry greift).
 	const effectiveLocale = $derived(resolveEffectiveLocale(pathname, getLocale()));
-	const pageTitle = $derived(m.home_page_title(undefined, { locale: effectiveLocale }));
+	const pageTitle = $derived(
+		buildPageTitle(m.home_page_title(undefined, { locale: effectiveLocale }))
+	);
 	const pageDescription = $derived(m.home_page_description(undefined, { locale: effectiveLocale }));
 	const ogImagePath = '/og/page/home.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);

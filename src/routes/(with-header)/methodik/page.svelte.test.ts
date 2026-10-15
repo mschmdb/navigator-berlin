@@ -47,6 +47,12 @@ const EXPECTED_SECTION_IDS = [
 ];
 
 describe('methodik +page.svelte', () => {
+	it('setzt den Titel mit Marke', async () => {
+		render(Page, { data: { manifest: sampleManifest } });
+		await new Promise((r) => setTimeout(r, 20));
+		expect(document.title).toBe('Methodik | navigator.berlin');
+	});
+
 	it('rendert h1 „Methodik"', async () => {
 		render(Page, { data: { manifest: sampleManifest } });
 		const h1 = (await page.getByTestId('methodik-page-title').element()) as HTMLElement;

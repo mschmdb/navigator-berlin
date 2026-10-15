@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 
@@ -6,11 +7,13 @@
 
 	const kind = $derived(status === 404 ? 'notFound' : status < 500 ? 'client' : 'server');
 	const title = $derived(
-		kind === 'notFound'
-			? m.error_title_not_found()
-			: kind === 'client'
-				? m.error_title_client()
-				: m.error_title_generic()
+		buildPageTitle(
+			kind === 'notFound'
+				? m.error_title_not_found()
+				: kind === 'client'
+					? m.error_title_client()
+					: m.error_title_generic()
+		)
 	);
 	const heading = $derived(
 		kind === 'notFound'

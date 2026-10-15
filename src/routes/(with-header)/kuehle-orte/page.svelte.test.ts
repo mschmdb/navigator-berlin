@@ -52,7 +52,7 @@ describe('kuehle-orte · DE-Parität (i18n C4c)', () => {
 	it('Meta-Title bleibt der Baseline-Titel', async () => {
 		render(Page);
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Kühle Orte in Berlin - navigator.berlin');
+		expect(document.title).toBe('Kühle Orte in Berlin | navigator.berlin');
 	});
 });
 
@@ -92,6 +92,6 @@ describe('kuehle-orte · EN (i18n C4c)', () => {
 	it('Meta-Title englisch', async () => {
 		renderEn();
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Cool places in Berlin - navigator.berlin');
+		expect(document.title).toBe('Cool places in Berlin | navigator.berlin');
 	});
 });

@@ -40,7 +40,7 @@ test.describe('Indexierungs-Hygiene S1', () => {
 	test('Fehlerseite: 404 mit Titel und noindex', async ({ page }) => {
 		const response = await page.goto('/gibtsnicht');
 		expect(response?.status()).toBe(404);
-		await expect(page).toHaveTitle('Seite nicht gefunden · navigator.berlin');
+		await expect(page).toHaveTitle('Seite nicht gefunden | navigator.berlin');
 		await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
 	});
 

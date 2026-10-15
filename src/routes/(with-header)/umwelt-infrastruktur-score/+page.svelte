@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
@@ -24,7 +25,7 @@
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
-	const pageTitle = $derived(m.uis_meta_title());
+	const pageTitle = $derived(buildPageTitle(m.uis_meta_title()));
 	const pageDescription = $derived(m.uis_meta_description());
 	const ogImagePath = '/og/page/umwelt-infrastruktur-score.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);

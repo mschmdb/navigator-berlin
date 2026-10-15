@@ -206,7 +206,7 @@ describe('methodik/wahldaten · Meta und JSON-LD (i18n C4b)', () => {
 
 	it('DE: Meta-Title bleibt der Baseline-Titel', () => {
 		render(Page);
-		expect(document.title).toBe('Methodik · Wahldaten · navigator.berlin');
+		expect(document.title).toBe('Methodik · Wahldaten | navigator.berlin');
 	});
 
 	it('EN: Breadcrumb-JSON-LD nennt lokalisierte Pfade inklusive Wurzel', () => {

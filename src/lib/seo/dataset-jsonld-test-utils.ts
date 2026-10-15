@@ -4,6 +4,7 @@ export interface RenderedDatasetJsonLd {
 	'@id': string;
 	url: string;
 	dateModified: string;
+	description?: string;
 	temporalCoverage?: string;
 	creator: { name: string; url?: string };
 	distribution: { contentUrl: string };

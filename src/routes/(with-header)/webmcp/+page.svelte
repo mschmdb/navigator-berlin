@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
@@ -175,7 +176,7 @@
 {/snippet}
 
 <SeoHead
-	title={m.webmcp_meta_title()}
+	title={buildPageTitle(m.webmcp_meta_title())}
 	description={m.webmcp_meta_description()}
 	pathname={page.url.pathname}
 	origin={page.url.origin}

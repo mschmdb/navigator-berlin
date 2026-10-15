@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
@@ -37,7 +38,7 @@
 	const coverageReasons = getCoverageReasons();
 	const omissions = getOmissions();
 
-	const pageTitle = m.methodik_meta_title();
+	const pageTitle = buildPageTitle(m.methodik_meta_title());
 	const pageDescription = m.methodik_meta_description();
 
 	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';

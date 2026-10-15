@@ -78,6 +78,6 @@ describe('architektur · DE-Wortlaut der Linklisten und Meta (i18n C4b)', () => 
 
 	it('Meta-Title bleibt der Baseline-Titel', () => {
 		render(Page);
-		expect(document.title).toBe('Architektur - Berlin in Daten - navigator.berlin');
+		expect(document.title).toBe('Architektur | navigator.berlin');
 	});
 });

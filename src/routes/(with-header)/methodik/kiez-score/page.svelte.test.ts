@@ -12,6 +12,12 @@ import Page from './+page.svelte';
  */
 
 describe('methodik/kiez-score · Bezirks-Score-Erweiterung (Story 2.9a)', () => {
+	it('setzt den Titel ohne Marke, weil er mit Marke 60 Zeichen überschreitet', async () => {
+		render(Page, { props: {} });
+		await new Promise((r) => setTimeout(r, 20));
+		expect(document.title).toBe('Methodik des Umwelt- & Infrastruktur-Scores');
+	});
+
 	it('rendert section#kiez-score mit Bezirksregion-Aggregations-Erklärung', async () => {
 		render(Page, { props: {} });
 		const sec = document.getElementById('kiez-score');
