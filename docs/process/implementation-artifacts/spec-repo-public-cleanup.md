@@ -46,12 +46,25 @@ review_loop_iteration: 0
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] Schritte 1-7.
+- [x] Schritt 1: Zwischenstände aus dem Index (213 Dateien)
+- [x] Schritt 2: Sensibles entschärft
+- [x] Schritt 3: Umzug nach `docs/process/`, Override, Pfade
+- [x] Schritt 4: SECURITY, CONTRIBUTING, CODEOWNERS, README
+- [x] Schritt 5: minimale CI
+- [x] Schritt 6: Prettier plus `.git-blame-ignore-revs`
+- [x] Schritt 7: Version 0.5.0
 
 **Acceptance Criteria:**
 - Given das Repo auf GitHub, when man das Root und `docs/` ansieht, then gibt es kein `_bmad-output/`, keine Screenshots/Rohdaten im Index, `SECURITY.md`, `CONTRIBUTING.md`, `CODEOWNERS` und eine grüne CI.
 
 ## Implementation Notes
+
+- Schritt 1: 213 Dateien aus dem Index (34 Screenshots, 155 `c5-profiles-en`, 13 `c4d-updates-en`, 8 JSON-Rohdaten, 3 Brainstorming/Memlog-Dateien). `spike-artifacts/` bleibt, weil `scripts/aggregate-wahl-data.ts` den Schema-Snapshot beim Drift-Check liest.
+- Schritt 2: Plausible- und Search-Console-Zahlen in Audit, Epic, `spec-l3`, `spec-l5`, `spec-l7`, `deferred-work` und `landing-metrics.md` sind qualitative Aussagen. `server-bootstrap.md` nutzt `<admin-user>` und `<sicherer-ort-ausserhalb-des-repos>`. Home-Pfade in 12 Dateien sind Platzhalter.
+- Schritt 3: `_bmad-output/` ist `docs/process/`. Override steht in `_bmad/custom/config.toml`, `_bmad/config.toml` bleibt unverändert. `scripts/lib/paths.ts` (mit Test) liefert die Pfade. `filter-commit.ts` sperrt `docs/process/` und das alte `_bmad-output/` (ältere Commits). Pfade in Doku und Prozessdateien sind per Suchen und Ersetzen angepasst (ausgenommen diese Spec). `_bmad/bmm/config.yaml` und `_bmad/core/config.yaml` nennen noch `_bmad-output`. Der Installer verwaltet sie, der Resolver liest nur TOML.
+- Schritt 5: CI führt nur das vitest-Projekt `server` aus. `queries.test.ts` überspringt sich ohne `DATABASE_URL`. `scripts/aggregate-ranks.ts` startete `main()` beim Import im Test und leerte lokal die Rang-Tabellen. Jetzt gilt ein Entry-Guard.
+- Schritt 6: `.prettierignore` nimmt `docs/process/`, `_bmad/`, `project.inlang/`, `drizzle/migrations/` und zwei generierte Docs aus. 16 Dateien formatiert.
+- Zusatz: `npm`/`npx` in `package.json`, `playwright.config.ts` und Doku auf `pnpm` umgestellt.
 
 ## Spec Change Log
 
