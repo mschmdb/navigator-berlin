@@ -152,6 +152,11 @@ describe('stripLinkTargetArguments', () => {
 		expect(out).not.toContain('/methodik/wahldaten');
 	});
 
+	it('entfernt localizedPathname(...)-Argumente', () => {
+		const input = `const p = localizedPathname('/methodik/kiez-score', getLocale());`;
+		expect(stripLinkTargetArguments(input)).not.toContain('/methodik/kiez-score');
+	});
+
 	it('lässt andere String-Property-Werte unverändert (negativ)', () => {
 		const input = `const label = 'Kiez-Score';`;
 		expect(stripLinkTargetArguments(input)).toBe(input);

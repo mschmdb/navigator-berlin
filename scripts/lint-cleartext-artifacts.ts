@@ -138,7 +138,8 @@ export function stripImportStatements(text: string): string {
 }
 
 /**
- * Entfernt Argumente von `href:`/`href=`, `resolve(...)`, `localizedHref(...)`
+ * Entfernt Argumente von `href:`/`href=`, `resolve(...)`, `localizedHref(...)`,
+ * `localizedPathname(...)` (absolute JSON-LD-Pfade, SEO-Story S1)
  * sowie `path:`/`urlPath:` -- Routing-/Link-Ziele sind kein sichtbarer Text,
  * unabhängig davon, ob sie als Attribut, Objekt-Property (Breadcrumb-Items,
  * `buildSpeakableWebPage`-Aufrufe) oder Funktionsargument stehen.
@@ -148,7 +149,7 @@ export function stripLinkTargetArguments(text: string): string {
 		.replace(/\bhref\s*[:=]\s*(?:\{[^}]*\}|["'`](?:[^"'`\\]|\\.)*["'`])/g, '')
 		.replace(/\b(?:path|urlPath)\s*:\s*["'`](?:[^"'`\\]|\\.)*["'`]/g, '')
 		.replace(/\bresolve\(\s*["'`](?:[^"'`\\]|\\.)*["'`]\s*\)/g, '')
-		.replace(/\blocalizedHref\(\s*["'`](?:[^"'`\\]|\\.)*["'`][^)]*\)/g, '');
+		.replace(/\blocalized(?:Href|Pathname)\(\s*["'`](?:[^"'`\\]|\\.)*["'`][^)]*\)/g, '');
 }
 
 const STRING_LITERAL_RE = /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`/g;
