@@ -64,11 +64,24 @@ review_loop_iteration: 0
 - Schritt 3: `_bmad-output/` ist `docs/process/`. Override steht in `_bmad/custom/config.toml`, `_bmad/config.toml` bleibt unverändert. `scripts/lib/paths.ts` (mit Test) liefert die Pfade. `filter-commit.ts` sperrt `docs/process/` und das alte `_bmad-output/` (ältere Commits). Pfade in Doku und Prozessdateien sind per Suchen und Ersetzen angepasst (ausgenommen diese Spec). `_bmad/bmm/config.yaml` und `_bmad/core/config.yaml` nennen noch `_bmad-output`. Der Installer verwaltet sie, der Resolver liest nur TOML.
 - Schritt 5: CI führt nur das vitest-Projekt `server` aus. `queries.test.ts` überspringt sich ohne `DATABASE_URL`. `scripts/aggregate-ranks.ts` startete `main()` beim Import im Test und leerte lokal die Rang-Tabellen. Jetzt gilt ein Entry-Guard.
 - Schritt 6: `.prettierignore` nimmt `docs/process/`, `_bmad/`, `project.inlang/`, `drizzle/migrations/` und zwei generierte Docs aus. 16 Dateien formatiert.
+- Review-Runde: `scripts/lib/is-main-entry.ts` (realpath, Symlink, fehlende Endung) ersetzt die Entry-Guards in sechs Skripten. DB-Tests nutzen `skipIf(!DATABASE_URL)` ohne Fallback-URL und ohne stille Rückgaben (harte Assertions). Probe: `DOTENV_CONFIG_PATH=/nonexistent env -u DATABASE_URL pnpm exec vitest run --project server` grün (35 übersprungen). `pnpm data:rank` läuft weiter (kiez_rank 2145 vorher und nachher). Weitere Hostnamen, Memory-Verweise und Besucherzahlen entfernt. Regressionstests für Pfad-Konsistenz. Skripte mit dem Muster `import.meta.url === file://${argv[1]}` bleiben unverändert (funktionieren, nicht Teil der Story).
 - Zusatz: `npm`/`npx` in `package.json`, `playwright.config.ts` und Doku auf `pnpm` umgestellt.
 
 ## Spec Change Log
 
 ## Review Triage Log
+
+| Reviewer | Fund | Verdikt | Route |
+|---|---|---|---|
+| Review 1 | Entry-Guard bricht bei Symlink oder fehlender Endung | high | patch (`isMainEntry`, Test) |
+| Review 1 | DB-Tests ohne `skipIf`, Fallback-URLs, stille Rückgaben | high | patch |
+| Review 1 | CI: `cancel-in-progress` auch auf `main`, Prettier nach Compile | medium | patch |
+| Review 1 | Weitere Besucherzahlen, Hostnamen, `fliege`-Bezug | medium | patch |
+| Review 1 | YAML-Configs und `.dockerignore` zeigen auf Altpfad | low | patch |
+| Review 1 | Keine Regressionstests für die Pfade | medium | patch |
+| Review 1 | Persönliche Details und Memory-Verweise in Docs, ADR-004 Cookie-Gate | medium | patch |
+| Review 1 | README 503-Aussage, CONTRIBUTING-Testbefehl | low | patch |
+| Review 1 | Layer-Zahl inkonsistent (39, 44, 73) | low | defer (`deferred-work.md`) |
 
 ## Verification
 
