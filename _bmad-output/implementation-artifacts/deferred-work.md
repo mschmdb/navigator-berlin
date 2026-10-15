@@ -403,3 +403,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-s7-uebersichtsseiten.md`
   summary: `tests/e2e/a11y.e2e.ts` „Escape löscht Selection“ scheitert reproduzierbar mit Timeout auf `[role="application"]` (Karte auf `/?address=…`); „SkipLink springt zu main“ flaky.
   evidence: S7-Läufe 15.10.2026; S7 ändert weder Karte noch Startseite noch `/explore`. Vorher-Vergleich auf `main` steht aus, vermutlich gleiche Ursache wie die bekannten combobox-Fehler auf `/explore`.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-s8-hub-links.md`
+  summary: Layer-Seite, Hitze-Dataset und WebMCP `get-layer-metadata` nutzen für Stand/`dateModified` weiter `sourceUpdatedAt ?? fetchedAt`; die Sitemap seit S8 `lastmodOfLayer` (Platzhalter `YYYY-01-01` → `fetchedAt`). Bei Platzhalter-Layern zeigen Seite und Sitemap verschiedene Daten.
+  evidence: Verification-Gap-Review S8 (15.10.2026); `layer/[slug]/+page.svelte:133,254`, `hitze/+page.server.ts:30`, `get-layer-metadata.ts:54`.
