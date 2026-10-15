@@ -21,7 +21,7 @@ Requirements: Node.js 22 (see `.nvmrc`), pnpm 10.
 
 The map, all geo layers and the Kiez-Finder run with no further configuration: `static/` ships the generated data.
 
-**Postgres is optional.** Election results and supplementary data (FAQ, ranks, comparisons) come from a local Postgres database. Without `DATABASE_URL`, the election pages under `/berlin-wahlen` answer 503 and the Bezirk and Kiez pages render with reduced data; everything else works. Setup: [`docs/runbooks/local-postgres-setup.md`](./docs/runbooks/local-postgres-setup.md), variables: [`.env.example`](./.env.example).
+**Postgres is optional.** Election results and supplementary data (FAQ, ranks, comparisons) come from a local Postgres database. Without `DATABASE_URL`, the election detail pages `/berlin-wahlen/<slug>` answer 503 and the Bezirk and Kiez pages render with reduced data; everything else works. Setup: [`docs/runbooks/local-postgres-setup.md`](./docs/runbooks/local-postgres-setup.md), variables: [`.env.example`](./.env.example).
 
 ## WebMCP
 
