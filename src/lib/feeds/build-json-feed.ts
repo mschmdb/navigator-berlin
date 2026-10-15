@@ -1,4 +1,5 @@
 import type { UpdateEntry } from '$lib/content/updates/types.js';
+import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
 import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
 import { renderMarkdownBody } from '$lib/content/updates/render-markdown.js';
 
@@ -15,6 +16,7 @@ export interface JsonFeedItem {
 	readonly content_html?: string;
 	readonly summary: string;
 	readonly date_published: string;
+	readonly date_modified: string;
 	readonly tags?: readonly string[];
 	readonly language?: 'de' | 'en';
 }
@@ -52,6 +54,7 @@ export function buildJsonFeed(input: BuildJsonFeedInput): JsonFeed {
 			content_html: renderMarkdownBody(entry.body),
 			summary: entry.frontmatter.summary_de,
 			date_published: `${entry.frontmatter.date}T00:00:00.000Z`,
+			date_modified: `${entryModifiedDate(entry)}T00:00:00.000Z`,
 			tags: entry.frontmatter.tags,
 			language: entry.frontmatter.lang ?? 'de'
 		};

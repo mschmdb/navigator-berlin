@@ -41,8 +41,9 @@ test.describe('i18n Block C4d: Updates englisch, ohne Banner, indexierbar', () =
 			/\/updates$/
 		);
 		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/en\/updates$/);
-		// Feeds bleiben DE und sind als solche gekennzeichnet.
-		await expect(page.locator('link[rel="alternate"][type*="xml"][hreflang="de"]')).toHaveCount(2);
+		// Feed-Links tragen kein hreflang (Feeds sind keine Sprachalternativen).
+		await expect(page.locator('link[rel="alternate"][type*="xml"]')).toHaveCount(2);
+		await expect(page.locator('link[rel="alternate"][type*="xml"][hreflang]')).toHaveCount(0);
 		await expect(page.locator('main#main header a[hreflang="de"]')).toHaveCount(3);
 	});
 
@@ -112,6 +113,14 @@ test.describe('i18n Block C4d: Updates englisch, ohne Banner, indexierbar', () =
 			'href',
 			/\/en\/updates\/launch$/
 		);
+	});
+
+	test('/updates/launch: genau ein og:type=article, Feed-Links ohne hreflang', async ({ page }) => {
+		await page.goto('/updates/launch');
+		await expect(page.locator('meta[property="og:type"]')).toHaveCount(1);
+		await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article');
+		await expect(page.locator('meta[property="article:published_time"]')).toHaveCount(1);
+		await expect(page.locator('link[rel="alternate"][type*="xml"][hreflang]')).toHaveCount(0);
 	});
 
 	for (const path of ['/en/updates', '/en/updates/launch', '/en/updates/kiez-finder']) {

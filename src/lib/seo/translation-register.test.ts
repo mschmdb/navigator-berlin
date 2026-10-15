@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
+	UPDATE_FILE_PATHS,
+	untranslatedUpdatePaths,
 	isRoutePartiallyTranslated,
 	isRouteTranslated,
 	PARTIAL_TRANSLATION_REGISTER,
@@ -45,6 +47,7 @@ describe('isRouteTranslated', () => {
 				pathname: '/updates',
 				locale: 'en',
 				prefix: true,
+				// Alle Einträge haben heute eine `.en.md`, daher keine dynamischen Ausnahmen.
 				except: ['/updates/rss.xml', '/updates/atom.xml', '/updates/feed.json']
 			}
 		]);
@@ -230,5 +233,75 @@ describe('translatedLocalesFor', () => {
 		const entries: readonly TranslationRegisterEntry[] = [{ pathname: '/methodik', locale: 'en' }];
 		expect(translatedLocalesFor('/methodik', ['de', 'en'], entries)).toEqual(['en']);
 		expect(translatedLocalesFor('/en/methodik', ['de', 'en'], entries)).toEqual(['en']);
+	});
+});
+
+describe('untranslatedUpdatePaths', () => {
+	it('liefert Slugs ohne .en.md-Schwester', () => {
+		expect(
+			untranslatedUpdatePaths([
+				'/_content/updates/2026-05-16-launch.md',
+				'/_content/updates/2026-05-16-launch.en.md',
+				'/_content/updates/2026-06-01-nur-deutsch.md'
+			])
+		).toEqual(['/updates/nur-deutsch']);
+	});
+
+	it('liefert leere Liste, wenn alle Einträge übersetzt sind oder keine existieren', () => {
+		expect(untranslatedUpdatePaths([])).toEqual([]);
+		expect(
+			untranslatedUpdatePaths([
+				'/_content/updates/2026-05-16-launch.md',
+				'/_content/updates/2026-05-16-launch.en.md'
+			])
+		).toEqual([]);
+	});
+
+	it('ignoriert Dateien ohne Datumspräfix und verwaiste EN-Dateien', () => {
+		expect(
+			untranslatedUpdatePaths([
+				'/_content/updates/README.md',
+				'/_content/updates/2026-05-16-waise.en.md'
+			])
+		).toEqual([]);
+	});
+
+	it('Slug mit Bindestrichen bleibt ganz erhalten', () => {
+		expect(untranslatedUpdatePaths(['/_content/updates/2026-05-16-a-b-c.md'])).toEqual([
+			'/updates/a-b-c'
+		]);
+	});
+
+	it('Fixture: Update ohne EN ist auf EN nicht übersetzt, Update mit EN schon', () => {
+		const except = untranslatedUpdatePaths(['/_content/updates/2026-06-01-nur-deutsch.md']);
+		const entries: TranslationRegisterEntry[] = [
+			{ pathname: '/updates', locale: 'en', prefix: true, except }
+		];
+		expect(isRouteTranslated('/en/updates/nur-deutsch', 'en', entries)).toBe(false);
+		expect(isRouteTranslated('/en/updates/launch', 'en', entries)).toBe(true);
+	});
+
+	it('Slug mit Punkt bleibt ganz, .fr.md erzeugt keinen Slug', () => {
+		expect(
+			untranslatedUpdatePaths([
+				'/_content/updates/2026-05-16-v1.2.md',
+				'/_content/updates/2026-05-17-a.md',
+				'/_content/updates/2026-05-17-a.fr.md'
+			])
+		).toEqual(['/updates/a', '/updates/v1.2']);
+	});
+
+	it('Slug auf -en oder -open gilt nicht als EN-Schwester', () => {
+		expect(
+			untranslatedUpdatePaths([
+				'/_content/updates/2026-05-16-foo-en.md',
+				'/_content/updates/2026-05-16-open.md'
+			])
+		).toEqual(['/updates/foo-en', '/updates/open']);
+	});
+
+	it('Glob findet eine bekannte DE-Datei samt .en.md-Schwester', () => {
+		expect(UPDATE_FILE_PATHS).toContain('/_content/updates/2026-05-16-launch.md');
+		expect(UPDATE_FILE_PATHS).toContain('/_content/updates/2026-05-16-launch.en.md');
 	});
 });

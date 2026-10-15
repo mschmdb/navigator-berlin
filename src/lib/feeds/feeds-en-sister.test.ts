@@ -47,4 +47,37 @@ describe('Feeds mit .en.md-Schwester', () => {
 		expect(json).not.toContain('English');
 		expect(json).not.toContain('a.en');
 	});
+
+	it('Atom <updated> nutzt updated, <published> bleibt date', () => {
+		const updated = loadUpdatesFromModules({
+			'/_content/updates/2026-05-15-a.md': de.replace(
+				'category: feature',
+				'category: feature\nupdated: 2026-06-01'
+			),
+			'/_content/updates/2026-05-15-a.en.md': 'English body.'
+		});
+		const xml = buildAtomXml({
+			entries: updated,
+			origin,
+			buildTimestamp: '2026-07-01T00:00:00.000Z'
+		});
+		expect(xml).toContain('<updated>2026-06-01T00:00:00.000Z</updated>');
+		expect(xml).toContain('<published>2026-05-15T00:00:00.000Z</published>');
+	});
+
+	it('JSON Feed date_modified nutzt updated, sonst date', () => {
+		const updated = loadUpdatesFromModules({
+			'/_content/updates/2026-05-15-a.md': de.replace(
+				'category: feature',
+				'category: feature\nupdated: 2026-06-01'
+			),
+			'/_content/updates/2026-05-15-a.en.md': 'English body.'
+		});
+		expect(buildJsonFeed({ entries: updated, origin }).items[0]?.date_modified).toBe(
+			'2026-06-01T00:00:00.000Z'
+		);
+		expect(buildJsonFeed({ entries, origin }).items[0]?.date_modified).toBe(
+			'2026-05-15T00:00:00.000Z'
+		);
+	});
 });

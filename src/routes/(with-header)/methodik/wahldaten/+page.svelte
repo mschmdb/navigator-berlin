@@ -21,7 +21,10 @@
 			origin,
 			items: [
 				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
-				{ name: m.methodik_wahldaten_breadcrumb_methodik(), path: localizedPathname('/methodik', getLocale()) },
+				{
+					name: m.methodik_wahldaten_breadcrumb_methodik(),
+					path: localizedPathname('/methodik', getLocale())
+				},
 				{
 					name: m.methodik_wahldaten_breadcrumb_wahldaten(),
 					path: localizedPathname('/methodik/wahldaten', getLocale())
@@ -124,7 +127,14 @@
 	{/if}
 {/snippet}
 
-<SeoHead title={pageTitle} description={pageDescription} {origin} {pathname} />
+<SeoHead
+	title={pageTitle}
+	description={pageDescription}
+	{origin}
+	{pathname}
+	ogImage={`${origin}/og/page/methodik-wahldaten.png`}
+	ogImageAlt={m.methodik_wahldaten_og_image_alt()}
+/>
 
 <JsonLd data={breadcrumbs} testid="wahldaten-breadcrumb-jsonld" />
 

@@ -16,6 +16,16 @@
 		type Locale
 	} from '$lib/paraglide/runtime';
 
+	/** Artikel-Metadaten für `og:type=article` (article:* Properties). */
+	export interface SeoArticleMeta {
+		/** ISO-8601-Datum der Erstveröffentlichung. */
+		publishedTime: string;
+		/** Optionaler ISO-8601-Zeitpunkt der letzten Änderung. */
+		modifiedTime?: string;
+		section?: string;
+		author?: string;
+	}
+
 	interface Props {
 		/** Page title rendered in `<title>` and `og:title`. */
 		title: string;
@@ -67,6 +77,10 @@
 		 * dieses Prop weg.
 		 */
 		registerEntries?: readonly TranslationRegisterEntry[];
+		/** Wert für `og:type`. Default `website`; Artikel setzen `article`. */
+		ogType?: 'website' | 'article';
+		/** Rendert `article:*`-Properties, nur zusammen mit `ogType="article"` sinnvoll. */
+		article?: SeoArticleMeta;
 	}
 
 	const {
@@ -81,7 +95,9 @@
 		ogImageAlt,
 		locales,
 		noindex = false,
-		registerEntries = TRANSLATION_REGISTER
+		registerEntries = TRANSLATION_REGISTER,
+		ogType = 'website',
+		article
 	}: Props = $props();
 
 	const origin = $derived(canonicalOrigin(rawOrigin));
@@ -134,7 +150,19 @@
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={canonicalUrl} />
-	<meta property="og:type" content="website" />
+	<meta property="og:type" content={ogType} />
+	{#if ogType === 'article' && article}
+		<meta property="article:published_time" content={article.publishedTime} />
+		{#if article.modifiedTime}
+			<meta property="article:modified_time" content={article.modifiedTime} />
+		{/if}
+		{#if article.section}
+			<meta property="article:section" content={article.section} />
+		{/if}
+		{#if article.author}
+			<meta property="article:author" content={article.author} />
+		{/if}
+	{/if}
 	<meta property="og:site_name" content="navigator.berlin" />
 	<meta property="og:locale" content={ogLocale} />
 	{#each ogLocaleAlternates as alt (alt)}

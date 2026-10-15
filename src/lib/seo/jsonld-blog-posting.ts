@@ -3,6 +3,7 @@ import type { UpdateEntry } from '$lib/content/updates/types.js';
 import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
 import { localizeUpdateEntry } from '$lib/content/updates/localize-update-entry.js';
 import { baseLocale, localizeHref, type Locale } from '$lib/paraglide/runtime';
+import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
 import { localeToBcp47 } from './locale-meta.js';
 
 /**
@@ -32,6 +33,7 @@ export interface BlogPostingLeafJsonLd {
 	headline: string;
 	datePublished: string;
 	dateModified: string;
+	image: string;
 	author: OrganizationJsonLd;
 	publisher: OrganizationJsonLd;
 	mainEntityOfPage: WebPageReferenceJsonLd;
@@ -69,7 +71,11 @@ export interface BlogPostingInput {
 	readonly locale?: Locale;
 	/** Überschreibt die Body-Fallback-Ableitung, wenn `entry` ohne Body geliefert wird (Detailseite). */
 	readonly bodyIsDeFallback?: boolean;
+	/** Absolute oder origin-relative Bild-URL. Default: `/og/page/updates.png`. */
+	readonly image?: string;
 }
+
+const DEFAULT_IMAGE_PATH = '/og/page/updates.png';
 
 function localizedUrl(origin: string, path: string, locale: Locale): string {
 	return `${origin}${localizeHref(path, { locale })}`;
@@ -97,7 +103,8 @@ export function buildBlogPosting(input: BlogPostingInput): BlogPostingJsonLd {
 		'@type': 'BlogPosting',
 		headline: localized.title,
 		datePublished: input.entry.frontmatter.date,
-		dateModified: input.entry.frontmatter.date,
+		dateModified: entryModifiedDate(input.entry),
+		image: input.image ?? `${origin}${DEFAULT_IMAGE_PATH}`,
 		author: AUTHOR,
 		publisher: PUBLISHER,
 		mainEntityOfPage: { '@type': 'WebPage', '@id': url },

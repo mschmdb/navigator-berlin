@@ -87,6 +87,13 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		footerUrl: '/methodik/kiez-score'
 	},
 	{
+		slug: 'methodik-wahldaten',
+		headline: 'Wahldaten',
+		subline: 'Methodik · Berlin-Wahlen',
+		body: 'Woher die Wahlergebnisse stammen, wie wir sie auf Kieze und Bezirke übertragen und welche Grenzen die Zahlen haben.',
+		footerUrl: '/methodik/wahldaten'
+	},
+	{
 		slug: 'lizenzen',
 		headline: 'Lizenzen',
 		subline: 'Daten und Software',

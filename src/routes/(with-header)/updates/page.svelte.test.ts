@@ -196,14 +196,14 @@ describe('updates/+page.svelte · Singular und Feed-Kennzeichnung (i18n C4d)', (
 		expect(feedback()).toBe(expected);
 	});
 
-	it('EN: Feed-Links, Feed-Head-Links tragen hreflang="de"', async () => {
+	it('EN: Body-Feed-Links tragen hreflang="de", Feed-Head-Links keins', async () => {
 		await renderWith('en', '', mixed);
 		const feedLinks = [...root().querySelectorAll('header a')];
 		expect(feedLinks).toHaveLength(3);
 		expect(feedLinks.every((a) => a.getAttribute('hreflang') === 'de')).toBe(true);
 		const headLinks = document.head.querySelectorAll('link[rel="alternate"][type*="xml"]');
 		expect(headLinks.length).toBeGreaterThan(0);
-		for (const l of headLinks) expect(l.getAttribute('hreflang')).toBe('de');
+		for (const l of headLinks) expect(l.hasAttribute('hreflang')).toBe(false);
 	});
 
 	it('DE: Feed-Links tragen kein hreflang', async () => {

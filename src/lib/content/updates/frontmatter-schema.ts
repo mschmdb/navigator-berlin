@@ -13,6 +13,7 @@ import * as v from 'valibot';
  *   - title_en   ≤ 80 Zeichen, EN-Titel (i18n C4d, Body in `<slug>.en.md`)
  *   - summary_en ≤ 160 Zeichen
  *   - tags       max 8, lowercase-kebab-case
+ *   - updated    ISO-8601 `YYYY-MM-DD`, letzte inhaltliche Änderung (Fallback: `date`)
  *   - lang       'de' | 'en' (default 'de')
  */
 
@@ -30,7 +31,7 @@ export type UpdateCategory = (typeof UPDATE_CATEGORIES)[number];
 const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const KEBAB_TAG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-export const FrontmatterSchema = v.object({
+const FrontmatterObject = v.object({
 	title_de: v.pipe(v.string('title_de muss ein String sein'), v.minLength(1), v.maxLength(80)),
 	title_en: v.optional(v.pipe(v.string(), v.maxLength(80))),
 	summary_de: v.pipe(v.string('summary_de muss ein String sein'), v.minLength(1), v.maxLength(160)),
@@ -38,6 +39,12 @@ export const FrontmatterSchema = v.object({
 	date: v.pipe(
 		v.string('date muss ein ISO-8601-String sein'),
 		v.regex(ISO_DATE_REGEX, 'date muss dem Format YYYY-MM-DD entsprechen')
+	),
+	updated: v.optional(
+		v.pipe(
+			v.string('updated muss ein ISO-8601-String sein'),
+			v.regex(ISO_DATE_REGEX, 'updated muss dem Format YYYY-MM-DD entsprechen')
+		)
 	),
 	category: v.picklist(UPDATE_CATEGORIES, 'category muss eine der 6 Enum-Werte sein'),
 	tags: v.optional(
@@ -48,6 +55,17 @@ export const FrontmatterSchema = v.object({
 	),
 	lang: v.optional(v.picklist(['de', 'en'] as const), 'de')
 });
+
+export const FrontmatterSchema = v.pipe(
+	FrontmatterObject,
+	v.forward(
+		v.check(
+			(fm) => fm.updated === undefined || fm.updated >= fm.date,
+			'updated darf nicht vor date liegen'
+		),
+		['updated']
+	)
+);
 
 export type UpdateFrontmatter = v.InferOutput<typeof FrontmatterSchema>;
 

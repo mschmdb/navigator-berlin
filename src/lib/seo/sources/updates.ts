@@ -1,4 +1,5 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
+import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
 import type { UpdateEntry } from '$lib/content/updates/types.js';
 import { localizedPathname } from '../canonical.js';
 import type { Locale } from '$lib/paraglide/runtime';
@@ -28,7 +29,7 @@ export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInpu
 	const origin = input.origin.replace(/\/+$/, '');
 	const sorted = sortByDateDesc(input.entries);
 	const locale = input.locale ?? 'de';
-	const latestDate = sorted[0]!.frontmatter.date;
+	const latestDate = sorted.map(entryModifiedDate).reduce((a, b) => (b > a ? b : a));
 
 	const out: SitemapEntry[] = [
 		{
@@ -42,7 +43,7 @@ export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInpu
 	for (const entry of sorted) {
 		out.push({
 			loc: `${origin}${localizedPathname(`/updates/${entry.slug}`, locale)}`,
-			lastmod: entry.frontmatter.date,
+			lastmod: entryModifiedDate(entry),
 			changefreq: 'monthly',
 			priority: DETAIL_PRIORITY
 		});

@@ -20,6 +20,11 @@ category: daten-update
 Erster Absatz.
 `;
 
+const fixtureAEn = fixtureA.replace(
+	'category: daten-update',
+	'title_en: A update new\nsummary_en: Latest change to dataset A.\ncategory: daten-update'
+);
+
 const fixtureB = `---
 title_de: B-Update älter
 summary_de: Frühere Änderung an Datensatz B.
@@ -109,7 +114,7 @@ describe('loadUpdatesFromModules mit .en.md-Schwester', () => {
 
 	it('ordnet die Schwester dem DE-Eintrag als bodyEn zu', () => {
 		const entries = loadUpdatesFromModules({
-			'/_content/updates/2026-05-15-a.md': fixtureA,
+			'/_content/updates/2026-05-15-a.md': fixtureAEn,
 			'/_content/updates/2026-05-15-a.en.md': enBody
 		});
 		expect(entries).toHaveLength(1);
@@ -121,7 +126,7 @@ describe('loadUpdatesFromModules mit .en.md-Schwester', () => {
 	it('erzeugt nie einen eigenen Eintrag "a.en"', () => {
 		const entries = loadUpdatesFromModules({
 			'/_content/updates/2026-05-15-a.en.md': 'English.',
-			'/_content/updates/2026-05-15-a.md': fixtureA,
+			'/_content/updates/2026-05-15-a.md': fixtureAEn,
 			'/_content/updates/2026-04-01-b.md': fixtureB
 		});
 		expect(entries.map((e) => e.slug).sort()).toEqual(['a', 'b']);
@@ -132,12 +137,22 @@ describe('loadUpdatesFromModules mit .en.md-Schwester', () => {
 		expect(entries[0]?.bodyEn).toBeUndefined();
 	});
 
-	it('leere Schwester zählt als fehlend', () => {
-		const entries = loadUpdatesFromModules({
-			'/_content/updates/2026-05-15-a.md': fixtureA,
-			'/_content/updates/2026-05-15-a.en.md': '  \n\n'
-		});
-		expect(entries[0]?.bodyEn).toBeUndefined();
+	it('leere Schwester wirft mit Pfad', () => {
+		expect(() =>
+			loadUpdatesFromModules({
+				'/_content/updates/2026-05-15-a.md': fixtureAEn,
+				'/_content/updates/2026-05-15-a.en.md': '  \n\n'
+			})
+		).toThrow(/unvollständig.*Body.*2026-05-15-a\.en\.md/);
+	});
+
+	it('Schwester ohne title_en/summary_en im DE-Frontmatter wirft mit Pfad', () => {
+		expect(() =>
+			loadUpdatesFromModules({
+				'/_content/updates/2026-05-15-a.md': fixtureA,
+				'/_content/updates/2026-05-15-a.en.md': 'English.'
+			})
+		).toThrow(/title_en, summary_en.*2026-05-15-a\.en\.md/);
 	});
 
 	it('verwaiste Schwester wirft mit Pfad', () => {
@@ -178,7 +193,7 @@ describe('loadUpdatesFromModules mit .en.md-Schwester', () => {
 
 	it('Horizontale Linie im Body der Schwester (nicht am Anfang) ist erlaubt', () => {
 		const entries = loadUpdatesFromModules({
-			'/_content/updates/2026-05-15-a.md': fixtureA,
+			'/_content/updates/2026-05-15-a.md': fixtureAEn,
 			'/_content/updates/2026-05-15-a.en.md': 'Intro.\n\n---\n\nMore.'
 		});
 		expect(entries[0]?.bodyEn).toContain('More.');
@@ -191,6 +206,17 @@ describe('loadUpdatesFromModules mit .en.md-Schwester', () => {
 				'/_content/updates/2026-05-15-a.en.md': { default: 'x' }
 			})
 		).toThrow(/Raw-String/);
+	});
+});
+
+describe('parseUpdateModule updated', () => {
+	it('wandelt unquotiertes YAML-Datum in updated zu ISO-String', () => {
+		const raw = fixtureA.replace(
+			'category: daten-update',
+			'category: daten-update\nupdated: 2026-06-01'
+		);
+		const entry = parseUpdateModule('/_content/updates/2026-05-15-a.md', raw);
+		expect(entry.frontmatter.updated).toBe('2026-06-01');
 	});
 });
 

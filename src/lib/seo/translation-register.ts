@@ -1,4 +1,5 @@
 import { baseLocale, deLocalizeHref, type Locale } from '$lib/paraglide/runtime';
+import { classifyUpdateFilename, filenameOf } from '$lib/content/updates/update-filename.js';
 
 /**
  * One (pathname, locale) pair -- or, with `prefix: true`, a whole subtree --
@@ -27,6 +28,30 @@ export interface TranslationRegisterEntry {
 	 */
 	readonly except?: readonly string[];
 }
+
+/**
+ * Leitet aus den Dateipfaden unter `_content/updates/` die Routen ab, die keine
+ * EN-Fassung haben (`<slug>.md` ohne `.en.md`-Schwester). Die Routen landen in
+ * `except` des `/updates`-Eintrags: SeoHead setzt dann noindex + DE-Canonical,
+ * die Sitemap lässt sie in der EN-Sitemap weg. Gleiche Konvention wie
+ * `load-updates.ts` (bewusst dupliziert, um gray-matter nicht in den Client zu ziehen).
+ */
+export function untranslatedUpdatePaths(filePaths: readonly string[]): string[] {
+	const parsed = filePaths.map((p) => classifyUpdateFilename(filenameOf(p)));
+	const english = new Set<string>();
+	for (const file of parsed) if (file.kind === 'en') english.add(file.key);
+	const out: string[] = [];
+	for (const file of parsed) {
+		if (file.kind === 'de' && !english.has(file.key)) out.push(`/updates/${file.slug}`);
+	}
+	return out.sort();
+}
+
+// Nur die Dateinamen werden gelesen; die Module selbst werden nie geladen.
+/** Pfade aller Dateien unter `_content/updates/` (nur Namen, kein Inhalt). */
+export const UPDATE_FILE_PATHS: readonly string[] = Object.keys(
+	import.meta.glob('/_content/updates/*.md', { query: '?raw' })
+);
 
 /**
  * Translation register -- the single source of truth for which (pathname,
@@ -102,7 +127,13 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 		locale: 'en',
 		prefix: true,
 		// Feeds sind DE-only, `/en/updates/rss.xml` existiert nicht.
-		except: ['/updates/rss.xml', '/updates/atom.xml', '/updates/feed.json']
+		except: [
+			'/updates/rss.xml',
+			'/updates/atom.xml',
+			'/updates/feed.json',
+			// Einträge ohne `.en.md` bleiben DE-only (noindex, Canonical auf DE, nicht in sitemap-en).
+			...untranslatedUpdatePaths(UPDATE_FILE_PATHS)
+		]
 	}
 ];
 

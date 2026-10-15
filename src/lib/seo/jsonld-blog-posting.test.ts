@@ -35,6 +35,25 @@ describe('buildBlogPosting', () => {
 		expect(obj.inLanguage).toBe('de-DE');
 	});
 
+	it('hat image (Default /og/page/updates.png) und überschreibbar', () => {
+		expect(buildBlogPosting({ entry, origin }).image).toBe(
+			'https://navigator.berlin/og/page/updates.png'
+		);
+		expect(buildBlogPosting({ entry, origin, image: 'https://x.test/a.png' }).image).toBe(
+			'https://x.test/a.png'
+		);
+	});
+
+	it('dateModified = updated, wenn gesetzt', () => {
+		const updated: UpdateEntry = {
+			...entry,
+			frontmatter: { ...entry.frontmatter, updated: '2026-07-01' }
+		};
+		const obj = buildBlogPosting({ entry: updated, origin });
+		expect(obj.datePublished).toBe('2026-05-15');
+		expect(obj.dateModified).toBe('2026-07-01');
+	});
+
 	it('hat author + publisher als Organization', () => {
 		const obj = buildBlogPosting({ entry, origin });
 		expect(obj.author['@type']).toBe('Organization');

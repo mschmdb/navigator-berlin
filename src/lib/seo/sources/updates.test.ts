@@ -55,4 +55,18 @@ describe('buildUpdatesSitemapEntries', () => {
 		expect(detail?.priority).toBeCloseTo(0.7, 5);
 		expect(detail?.lastmod).toBe('2026-05-15');
 	});
+
+	it('lastmod nutzt updated, Index nimmt das jüngste Änderungsdatum', () => {
+		const changed: UpdateEntry = {
+			...fixtureEntry('a', '2026-05-15'),
+			frontmatter: { ...fixtureEntry('a', '2026-05-15').frontmatter, updated: '2026-07-01' }
+		};
+		const out = buildUpdatesSitemapEntries({
+			entries: [changed, fixtureEntry('b', '2026-06-01')],
+			origin: ORIGIN
+		});
+		expect(out.find((e) => e.loc.endsWith('/updates/a'))?.lastmod).toBe('2026-07-01');
+		expect(out.find((e) => e.loc.endsWith('/updates/b'))?.lastmod).toBe('2026-06-01');
+		expect(out.find((e) => e.loc.endsWith('/updates'))?.lastmod).toBe('2026-07-01');
+	});
 });

@@ -1,6 +1,7 @@
 import matter from 'gray-matter';
 import { parseFrontmatter, type UpdateFrontmatter } from './frontmatter-schema.js';
 import type { UpdateEntry } from './types.js';
+import { classifyUpdateFilename, filenameOf } from './update-filename.js';
 
 /**
  * Story 2.13 AC-1 + AC-2 + AC-3 + T2: Build-Time-Load-Helper für Update-Entries.
@@ -16,33 +17,19 @@ import type { UpdateEntry } from './types.js';
  * Pure-Function-Helper (kein I/O), damit tests fixture-basiert laufen.
  */
 
-/** DE-Eintrag `YYYY-MM-DD-<slug>.md`. Der Lookbehind schließt `.en.md`-Schwestern aus. */
-const FILENAME_REGEX = /^(\d{4}-\d{2}-\d{2})-(.+?)(?<!\.en)\.md$/;
-
-/** EN-Schwester `YYYY-MM-DD-<slug>.en.md`, trägt nur den englischen Body. */
-const EN_SISTER_REGEX = /^(\d{4}-\d{2}-\d{2}-.+)\.en\.md$/;
-
-/** Dateiname mit Locale-Suffix `YYYY-MM-DD-<slug>.<xx>.md`, `xx` != `en`: nicht unterstützt. */
-const OTHER_LOCALE_REGEX = /^\d{4}-\d{2}-\d{2}-.+\.(?!en\.md$)[a-z]{2}\.md$/;
-
-function filenameOf(path: string): string {
-	return path.split('/').pop() ?? path;
-}
-
 /**
  * Strippt `YYYY-MM-DD-` Prefix + `.md`-Suffix aus Datei-Pfad.
  * Wirft bei Filename ohne Date-Prefix (verletzt Naming-Convention AC-1).
  */
 export function extractSlugFromPath(path: string): string {
-	const filename = filenameOf(path);
-	if (EN_SISTER_REGEX.test(filename)) {
+	const parsed = classifyUpdateFilename(filenameOf(path));
+	if (parsed.kind === 'en') {
 		throw new Error(`Update-Loader: EN-Schwester ist kein eigener Eintrag: ${path}`);
 	}
-	const match = FILENAME_REGEX.exec(filename);
-	if (!match) {
+	if (parsed.kind !== 'de') {
 		throw new Error(`Update-Datei verletzt Naming-Pattern YYYY-MM-DD-{slug}.md: ${path}`);
 	}
-	return match[2] ?? '';
+	return parsed.slug;
 }
 
 /**
@@ -82,22 +69,21 @@ export function loadUpdatesFromModules(modules: Record<string, unknown>): Update
 	const sisters = new Map<string, { path: string; bodyEn: string }>();
 	for (const [path, raw] of Object.entries(modules)) {
 		// README + nicht-Date-prefixed Files überspringen (Maintainer-Convention).
-		const filename = filenameOf(path);
-		if (OTHER_LOCALE_REGEX.test(filename)) {
+		const parsed = classifyUpdateFilename(filenameOf(path));
+		if (parsed.kind === 'other-locale') {
 			throw new Error(`Update-Loader: Locale-Suffix wird nicht unterstützt (nur .en.md): ${path}`);
 		}
-		const sisterMatch = EN_SISTER_REGEX.exec(filename);
-		if (!sisterMatch && !FILENAME_REGEX.test(filename)) continue;
+		if (parsed.kind === 'ignored') continue;
 		if (typeof raw !== 'string') {
 			throw new Error(
 				`Update-Loader: Modul ${path} ist kein Raw-String. Vergessen \`query: '?raw'\` zu setzen?`
 			);
 		}
-		if (sisterMatch) {
+		if (parsed.kind === 'en') {
 			if (/^\uFEFF?---\s*(\r?\n|$)/.test(raw)) {
 				throw new Error(`Update-Loader: EN-Schwester darf kein Frontmatter haben: ${path}`);
 			}
-			sisters.set(sisterMatch[1] ?? '', { path, bodyEn: raw.trim() });
+			sisters.set(parsed.key, { path, bodyEn: raw.trim() });
 			continue;
 		}
 		entries.push(parseUpdateModule(path, raw));
@@ -108,7 +94,9 @@ export function loadUpdatesFromModules(modules: Record<string, unknown>): Update
 /**
  * Ordnet jede EN-Schwester dem DE-Eintrag mit gleichem `YYYY-MM-DD-<slug>` zu.
  * Eine Schwester ohne DE-Datei wirft (Build-Fehler mit Pfad). Eine leere
- * Schwester zählt als fehlend, der Eintrag fällt dann auf DE zurück.
+ * Schwester oder ein Eintrag ohne `title_en`/`summary_en` wirft ebenfalls:
+ * Das Übersetzungsregister wertet jede `.en.md` als übersetzt, die EN-Seite
+ * würde sonst indexierbar mit DE-Text ausgeliefert.
  */
 function attachEnglishBodies(
 	entries: readonly UpdateEntry[],
@@ -120,13 +108,26 @@ function attachEnglishBodies(
 		const sister = remaining.get(key);
 		if (!sister) return entry;
 		remaining.delete(key);
-		return sister.bodyEn ? { ...entry, bodyEn: sister.bodyEn } : entry;
+		assertEnglishComplete(entry, sister);
+		return { ...entry, bodyEn: sister.bodyEn };
 	});
 	const orphan = remaining.values().next().value;
 	if (orphan) {
 		throw new Error(`Update-Loader: EN-Schwester ohne DE-Datei: ${orphan.path}`);
 	}
 	return out;
+}
+
+function assertEnglishComplete(entry: UpdateEntry, sister: { path: string; bodyEn: string }): void {
+	const missing: string[] = [];
+	if (!sister.bodyEn) missing.push('Body');
+	if (!entry.frontmatter.title_en?.trim()) missing.push('title_en');
+	if (!entry.frontmatter.summary_en?.trim()) missing.push('summary_en');
+	if (missing.length > 0) {
+		throw new Error(
+			`Update-Loader: EN-Fassung unvollständig (${missing.join(', ')} fehlt): ${sister.path}`
+		);
+	}
 }
 
 /**
@@ -147,11 +148,12 @@ export function sortByDateDesc(entries: readonly UpdateEntry[]): UpdateEntry[] {
  */
 function normaliseDateFields(data: Record<string, unknown>): Record<string, unknown> {
 	const out: Record<string, unknown> = { ...data };
-	const dateValue = out.date;
-	if (dateValue instanceof Date) {
-		// UTC-ISO date Anteil, kein TZ-Shift
-		const iso = dateValue.toISOString().slice(0, 10);
-		out.date = iso;
+	for (const key of ['date', 'updated'] as const) {
+		const value = out[key];
+		if (value instanceof Date) {
+			// UTC-ISO date Anteil, kein TZ-Shift
+			out[key] = value.toISOString().slice(0, 10);
+		}
 	}
 	return out;
 }
