@@ -190,7 +190,8 @@ describe('STATIC_PAGES_SOURCE', () => {
 			'https://navigator.berlin/methodik/wahldaten',
 			'https://navigator.berlin/lizenzen',
 			'https://navigator.berlin/architektur',
-			'https://navigator.berlin/webmcp'
+			'https://navigator.berlin/webmcp',
+			'https://navigator.berlin/ueber'
 		]);
 		// S5: statische Seiten tragen kein lastmod (kein erfundener Build-Zeitpunkt).
 		expect(entries.every((e) => e.lastmod === undefined)).toBe(true);
@@ -203,6 +204,7 @@ describe('STATIC_PAGES_SOURCE', () => {
 		expect(locs).toContain('https://navigator.berlin/en/explore');
 		expect(locs).toContain('https://navigator.berlin/en/architektur');
 		expect(locs).toContain('https://navigator.berlin/en/methodik/kiez-score');
+		expect(locs).toContain('https://navigator.berlin/en/ueber');
 	});
 
 	it('never lists legal pages or the noindex cross-layer-templates page', () => {

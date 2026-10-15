@@ -162,7 +162,8 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 		page('/methodik/wahldaten', 'monthly'),
 		page('/lizenzen', 'monthly'),
 		page('/architektur', 'monthly'),
-		page('/webmcp', 'monthly')
+		page('/webmcp', 'monthly'),
+		page('/ueber', 'monthly')
 	];
 };
 

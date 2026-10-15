@@ -211,7 +211,6 @@
 			name: m.wahl_portal_datacatalog_name(),
 			description: pageDescription,
 			urlPath: localizedPathname('/berlin-wahlen', getLocale()),
-			publisherName: 'Matze Schmidbauer',
 			datasets: [
 				{
 					name: m.wahl_portal_dataset_name(),

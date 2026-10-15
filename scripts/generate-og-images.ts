@@ -118,9 +118,16 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 	{
 		slug: 'impressum',
 		headline: 'Impressum',
-		subline: 'Verantwortlich nach §5 TMG',
+		subline: 'Verantwortlich nach §5 DDG',
 		body: 'Matze Schmidbauer, Berlin. Kontakt: hey@navigator.berlin. Inhaltlich verantwortlich für alle Daten-Aggregationen, Layer-Beschreibungen und Methodik-Dokumentation.',
 		footerUrl: '/impressum'
+	},
+	{
+		slug: 'ueber',
+		headline: 'Über das Projekt',
+		subline: 'Wer, warum, wie',
+		body: 'Wer navigator.berlin betreibt, warum es das Projekt gibt und wie es gebaut wird. Privat betrieben, ohne Werbung.',
+		footerUrl: '/ueber'
 	},
 	{
 		slug: 'updates',

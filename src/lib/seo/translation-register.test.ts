@@ -46,6 +46,7 @@ describe('isRouteTranslated', () => {
 			{ pathname: '/kieze', locale: 'en' },
 			{ pathname: '/bezirke', locale: 'en' },
 			{ pathname: '/daten', locale: 'en' },
+			{ pathname: '/ueber', locale: 'en' },
 			{
 				pathname: '/updates',
 				locale: 'en',
@@ -78,6 +79,12 @@ describe('isRouteTranslated', () => {
 			expect(isRouteTranslated(path, 'en'), path).toBe(true);
 			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
 		}
+	});
+
+	it('/ueber ist exakt registriert (kein prefix)', () => {
+		expect(isRouteTranslated('/ueber', 'en')).toBe(true);
+		expect(isRouteTranslated('/en/ueber', 'en')).toBe(true);
+		expect(isRouteTranslated('/ueber/unbekannt', 'en')).toBe(false);
 	});
 
 	it('Block C4a: unbekannte Methodik-Unterseiten bleiben unübersetzt (kein prefix)', () => {

@@ -34,7 +34,8 @@ export const META_LINK_IDS = [
 	'datenschutz',
 	'impressum',
 	'architektur',
-	'webmcp'
+	'webmcp',
+	'ueber'
 ] as const;
 export type MetaLinkId = (typeof META_LINK_IDS)[number];
 
@@ -55,6 +56,7 @@ export const META_LINKS: readonly MetaLink[] = [
 	{ id: 'score', href: '/umwelt-infrastruktur-score' },
 	{ id: 'wahlen', href: '/berlin-wahlen' },
 	{ id: 'hitze', href: '/hitze' },
+	{ id: 'ueber', href: '/ueber' },
 	{ id: 'methodik', href: '/methodik' },
 	{ id: 'updates', href: '/updates' },
 	{ id: 'lizenzen', href: '/lizenzen' },
@@ -80,6 +82,7 @@ export const META_LINK_GROUPS: readonly MetaLinkGroup[] = [
 	{
 		id: 'transparenz',
 		links: [
+			{ id: 'ueber', href: '/ueber' },
 			{ id: 'methodik', href: '/methodik' },
 			{ id: 'lizenzen', href: '/lizenzen' },
 			{ id: 'architektur', href: '/architektur' },
@@ -129,6 +132,8 @@ export function metaLinkLabel(id: MetaLinkId, o?: LocaleOptions): string {
 			return m.shell_meta_link_architektur(undefined, options);
 		case 'webmcp':
 			return m.shell_meta_link_webmcp(undefined, options);
+		case 'ueber':
+			return m.shell_meta_link_ueber(undefined, options);
 		default:
 			return assertUnreachable(id);
 	}
