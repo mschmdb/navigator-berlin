@@ -15,7 +15,7 @@ context:
 
 ## Intent
 
-**Problem:** Bezirksseiten haben 9.764 Impressionen bei 0,19 % CTR (Search Console, 3 Monate). Gesucht wird vor allem die Einwohnerzahl („kreuzberg einwohner“ 377 Impressionen, 0 Klicks, Platz ~10). Der Title nennt keine Zahl („Bezirk Friedrichshain-Kreuzberg - Berlin in Daten - navigator.berlin“), die Description endet in einer Keyword-Liste.
+**Problem:** Bezirksseiten haben viele Impressionen bei sehr niedriger CTR (Search Console, 3 Monate). Gesucht wird vor allem die Einwohnerzahl („kreuzberg einwohner“: viele Impressionen, keine Klicks, Platz um 10). Der Title nennt keine Zahl („Bezirk Friedrichshain-Kreuzberg - Berlin in Daten - navigator.berlin“), die Description endet in einer Keyword-Liste.
 
 **Approach:** Title und Description von Kiez- und Bezirksseiten beginnen mit den gesuchten Fakten: Einwohnerzahl, Fläche in km², Stichtag, Score mit Rang. Keyword-Liste entfällt. DE und EN.
 

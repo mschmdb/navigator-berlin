@@ -435,4 +435,4 @@ Top-3-Layer-Auswahl: heuristisch — Wohnlage (wenn vorhanden), Lärm (wenn vorh
 - [Source: _bmad-output/planning-artifacts/architecture.md] (Server-Endpoint-Pattern)
 - [Source: https://github.com/vercel/satori] (Satori JSX-vDOM API)
 - [Source: https://github.com/yisibl/resvg-js] (Resvg SVG-to-PNG)
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/feedback_no_toast.md] (NEVER Toast Rule)
+- [Source: ~/.claude/projects/<projekt>/memory/feedback_no_toast.md] (NEVER Toast Rule)

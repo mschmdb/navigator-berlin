@@ -289,7 +289,7 @@ SvelteKit-Default: kein Trailing-Slash. `kit.trailingSlash` ist nicht in `svelte
 - ADR-012 TDD: [docs/adr/ADR-012-tdd-mandate.md](../../docs/adr/ADR-012-tdd-mandate.md)
 - Bestehender Root-Head mit Canonical-Bug: [src/routes/(with-header)/+page.svelte:770](../../src/routes/(with-header)/+page.svelte)
 - Paraglide-Runtime: [src/lib/paraglide/runtime.ts](../../src/lib/paraglide/runtime.ts)
-- Memory Paraglide-Reroute: [memory/project_paraglide_reroute.md](../../.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_paraglide_reroute.md)
+- Memory Paraglide-Reroute: [memory/project_paraglide_reroute.md](../../.claude/projects/<projekt>/memory/project_paraglide_reroute.md)
 
 ## Dev Agent Record
 

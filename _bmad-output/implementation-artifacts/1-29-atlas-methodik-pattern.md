@@ -445,7 +445,7 @@ Plex-Serif h2, Plex-Mono Subline „Section X von Y". Anchor `<a href="#{slug}" 
 - [Source: _bmad-output/implementation-artifacts/1-26-adress-bookmarks-localstorage.md] (ADR-004-Ausnahme im „Was wir nicht enthalten"-Section)
 - [Source: _bmad-output/implementation-artifacts/1-28-livability-index.md] (Sub-Methodik-Page als Konsument)
 - [Source: _bmad-output/planning-artifacts/architecture.md#MUST-Rules]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_paraglide_reroute.md]
+- [Source: ~/.claude/projects/<projekt>/memory/project_paraglide_reroute.md]
 
 ## Dev Agent Record
 

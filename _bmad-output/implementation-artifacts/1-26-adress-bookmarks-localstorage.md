@@ -421,8 +421,8 @@ Konflikt-Resolution: last-write-wins (Browser-Default). Akzeptabler Trade-off f�
 - [Source: _bmad-output/implementation-artifacts/1-10-layer-toggle-palette.md] (Dialog-Pattern, Bits-UI-Verwurf-Rationale)
 - [Source: https://www.datenschutzkonferenz-online.de/media/oh/20211220_oh_telemedien.pdf] (DSK OH Telemedien 2021, „Merkliste"-Beispiel)
 - [Source: https://www.gesetze-im-internet.de/tddd_g/__25.html] (TDDDG §25, ehemals TTDSG)
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/feedback_no_toast.md] (NEVER Toast)
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/feedback_browser_test_fetch_spy.md] (Browser-Test-Vorsicht)
+- [Source: ~/.claude/projects/<projekt>/memory/feedback_no_toast.md] (NEVER Toast)
+- [Source: ~/.claude/projects/<projekt>/memory/feedback_browser_test_fetch_spy.md] (Browser-Test-Vorsicht)
 
 ## Dev Agent Record
 

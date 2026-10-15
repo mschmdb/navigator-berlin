@@ -65,7 +65,7 @@ Spaltennamen geprüft am 15.10.2026 (`DESCRIBE TABLE sessions_v2`): `entry_page`
    pnpm --silent metrics:landing --events --b <nachher-von>:<nachher-bis> --site-id <site-id> | ssh ...
    ```
 
-Baseline vom 14.10.2026: `_bmad-output/planning-artifacts/landing-audit-2026-10-14.md`.
+Baseline vom 14.10.2026: `_bmad-output/planning-artifacts/landing-audit-2026-10-14.md` (nur qualitativ; konkrete Zahlen liegen außerhalb des Repos).
 
 ## Search Console
 
@@ -78,6 +78,6 @@ Filter: Seite enthält `/kiez/`, `/bezirk/` oder `/layer/`. Die Export-CSV bleib
 
 ## Auswertung eintragen
 
-Ergebnis als Tabelle ins Epic-Dokument `_bmad-output/planning-artifacts/epic-landing-enhance.md` unter einem neuen Abschnitt "Messung" nachtragen: Zeiträume, Zahlen je Seitentyp, Klickverteilung je `action`, Lesart in drei Sätzen.
+Ergebnis qualitativ (ohne konkrete Besucherzahlen) ins Epic-Dokument `_bmad-output/planning-artifacts/epic-landing-enhance.md` unter einem neuen Abschnitt "Messung" nachtragen: Zeiträume, Zahlen je Seitentyp, Klickverteilung je `action`, Lesart in drei Sätzen.
 
-Fallzahlen sind klein (rund 60 Kiez-Einstiege in 28 Tagen). Tendenzen nennen, keine Prozentpunkte als Beweis.
+Fallzahlen sind klein (wenige Dutzend Kiez-Einstiege in 28 Tagen). Tendenzen nennen, keine Prozentpunkte als Beweis.

@@ -136,7 +136,7 @@ so that alle nachfolgenden Stories auf einer deterministischen Foundation aufset
 
 ### Project-Root-Strategie
 
-**Kontext:** Working-Directory `/Users/matthiasschmidbauer/Sites/navigator.berlin/` enthält bereits BMAD-Struktur (`_bmad/`, `_bmad-output/`, `.claude/`, `_user-input/`, `docs/`). KEIN bestehendes `package.json`.
+**Kontext:** Working-Directory `<projekt-root>/` enthält bereits BMAD-Struktur (`_bmad/`, `_bmad-output/`, `.claude/`, `_user-input/`, `docs/`). KEIN bestehendes `package.json`.
 
 **Entscheidung:** Skelett via `sv create .` (Punkt = current dir) in Root initialisieren, NICHT in `navigator-berlin/`-Subdir. Begründung:
 - BMAD-Output-Pfade in Skills/Configs zeigen auf `_bmad-output/` relativ zu Root

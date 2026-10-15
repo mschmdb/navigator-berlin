@@ -15,7 +15,7 @@ context:
 
 ## Intent
 
-**Problem:** Bezirksseiten haben die meisten Such-Impressionen (9.764 in 3 Monaten) und 81 % Absprung. Oben steht nur Text; die Kieze erscheinen erst nach dem FAQ und nur als Top 5; es gibt keinen Weg zur Karte mit diesem Bezirk. Suchende wollen Einwohnerzahl, Größe und Grenzen sehen.
+**Problem:** Bezirksseiten haben die meisten Such-Impressionen (3 Monate) und einen hohen Absprung. Oben steht nur Text; die Kieze erscheinen erst nach dem FAQ und nur als Top 5; es gibt keinen Weg zur Karte mit diesem Bezirk. Suchende wollen Einwohnerzahl, Größe und Grenzen sehen.
 
 **Approach:** Der erste Bildschirm zeigt Fakten, eine statische Karte des Bezirks mit seinen Kiezen und einen Button zur interaktiven Karte. Direkt darunter folgen alle Kieze des Bezirks als sortierbare Liste. Das FAQ rückt ans Ende.
 

@@ -510,8 +510,8 @@ src/
 - [Source: _bmad-output/implementation-artifacts/1-23-datenfehlt-reason-aufdroeseln.md] (LayerHitReason)
 - [Source: _bmad-output/implementation-artifacts/1-12-editorial-verantwortung-pattern.md] (EDITORIAL_CONFIG)
 - [Source: _bmad-output/planning-artifacts/architecture.md] (MUST-Rules)
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/feedback_no_toast.md]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/feedback_browser_test_fetch_spy.md]
+- [Source: ~/.claude/projects/<projekt>/memory/feedback_no_toast.md]
+- [Source: ~/.claude/projects/<projekt>/memory/feedback_browser_test_fetch_spy.md]
 
 ## Dev Agent Record
 

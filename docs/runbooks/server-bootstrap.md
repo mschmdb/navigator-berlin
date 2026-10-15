@@ -86,21 +86,21 @@ Im Server (als root):
 
 ```bash
 # Admin-User anlegen
-adduser --disabled-password --gecos "" admin
-usermod -aG sudo admin
-passwd -l admin
+adduser --disabled-password --gecos "" <admin-user>
+usermod -aG sudo <admin-user>
+passwd -l <admin-user>
 
 # SSH-Key kopieren
-mkdir -p /home/admin/.ssh
-cp /root/.ssh/authorized_keys /home/admin/.ssh/
-chmod 700 /home/admin/.ssh
-chmod 600 /home/admin/.ssh/authorized_keys
-chown -R admin:admin /home/admin/.ssh
+mkdir -p /home/<admin-user>/.ssh
+cp /root/.ssh/authorized_keys /home/<admin-user>/.ssh/
+chmod 700 /home/<admin-user>/.ssh
+chmod 600 /home/<admin-user>/.ssh/authorized_keys
+chown -R <admin-user>:<admin-user> /home/<admin-user>/.ssh
 
 # Sudo NOPASSWD
-echo "admin ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/admin-nopasswd
-chmod 440 /etc/sudoers.d/admin-nopasswd
-visudo -c -f /etc/sudoers.d/admin-nopasswd
+echo "<admin-user> ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/<admin-user>-nopasswd
+chmod 440 /etc/sudoers.d/<admin-user>-nopasswd
+visudo -c -f /etc/sudoers.d/<admin-user>-nopasswd
 
 # Swap (4 GB RAM → 2 GB Swap-Puffer für pg_dump + Docker-Rebuild)
 fallocate -l 2G /swapfile
@@ -121,13 +121,13 @@ dpkg-reconfigure -f noninteractive unattended-upgrades
 **Verify admin-SSH ausserhalb root-Session:**
 
 ```bash
-ssh admin@<IPv4> 'sudo whoami'   # Erwartet: root
+ssh <admin-user>@<IPv4> 'sudo whoami'   # Erwartet: root
 ```
 
 **Erst dann root locken:**
 
 ```bash
-ssh admin@<IPv4> 'sudo bash -s' <<'EOF'
+ssh <admin-user>@<IPv4> 'sudo bash -s' <<'EOF'
 cat > /etc/ssh/sshd_config.d/99-hardening.conf <<'CFG'
 PermitRootLogin prohibit-password
 PasswordAuthentication no
@@ -148,7 +148,7 @@ EOF
 **fail2ban-Whitelist für Docker-Subnets** (sonst bannt fail2ban Coolify-Container nach failed-SSH-Versuchen):
 
 ```bash
-ssh admin@<IPv4> 'sudo bash -s' <<'EOF'
+ssh <admin-user>@<IPv4> 'sudo bash -s' <<'EOF'
 mkdir -p /etc/fail2ban/jail.d
 cat > /etc/fail2ban/jail.d/whitelist-docker.conf <<'CFG'
 [DEFAULT]
@@ -163,7 +163,7 @@ EOF
 ## 4. Coolify-Install
 
 ```bash
-ssh admin@<IPv4> 'sudo bash -c "curl -fsSL https://cdn.coollabs.io/coolify/install.sh -o /tmp/coolify-install.sh && bash /tmp/coolify-install.sh"'
+ssh <admin-user>@<IPv4> 'sudo bash -c "curl -fsSL https://cdn.coollabs.io/coolify/install.sh -o /tmp/coolify-install.sh && bash /tmp/coolify-install.sh"'
 ```
 
 Dauert ~3-5 min. Endet mit "Coolify is ready".
@@ -171,7 +171,7 @@ Dauert ~3-5 min. Endet mit "Coolify is ready".
 **Coolify-pubkey für root-Login anlegen** (sonst kann Coolify-Container nicht auf Host zugreifen):
 
 ```bash
-ssh admin@<IPv4> 'sudo bash -s' <<'EOF'
+ssh <admin-user>@<IPv4> 'sudo bash -s' <<'EOF'
 COOLIFY_PUBKEY=$(ssh-keygen -y -f /data/coolify/ssh/keys/id.root@host.docker.internal)
 mkdir -p /root/.ssh && chmod 700 /root/.ssh
 touch /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys
@@ -182,8 +182,8 @@ EOF
 **.env lokal sichern** (Verschlüsselungs-Keys, irreparabel wenn verloren):
 
 ```bash
-mkdir -p ~/Sites/navigator.berlin/_bmad-output/secrets
-ssh admin@<IPv4> 'sudo cat /data/coolify/source/.env' > ~/Sites/navigator.berlin/_bmad-output/secrets/coolify-prod.env.backup
+mkdir -p <sicherer-ort-ausserhalb-des-repos>
+ssh <admin-user>@<IPv4> 'sudo cat /data/coolify/source/.env' > <sicherer-ort-ausserhalb-des-repos>/coolify-prod.env.backup
 # Folder ist in .gitignore
 ```
 
@@ -194,7 +194,7 @@ ssh admin@<IPv4> 'sudo cat /data/coolify/source/.env' > ~/Sites/navigator.berlin
 SSH-Tunnel öffnen:
 
 ```bash
-ssh -L 8000:localhost:8000 admin@<IPv4>
+ssh -L 8000:localhost:8000 <admin-user>@<IPv4>
 # Lassen offen
 ```
 
@@ -329,7 +329,7 @@ curl -s https://navigator.berlin/api/healthz -m 10   # "ok"
 SSH-Key für CPX22 → CAX21 erzeugen + verteilen:
 
 ```bash
-# Auf CPX22 als admin
+# Auf CPX22 als <admin-user>
 ssh-keygen -t ed25519 -N "" -C "navigator-prod-backup-to-cax21" -f /tmp/sshkey
 sudo mkdir -p /root/.ssh-backup
 sudo mv /tmp/sshkey /root/.ssh-backup/cax21-id_ed25519
@@ -360,7 +360,7 @@ Backup-Skript + Cron auf CPX22 (siehe Memory `project_backup_pipeline` für aktu
 Test:
 
 ```bash
-ssh admin@<IPv4> 'sudo /usr/local/bin/navigator-backup.sh'
+ssh <admin-user>@<IPv4> 'sudo /usr/local/bin/navigator-backup.sh'
 ls -lh /opt/backups/   # pg-YYYY-MM-DD.sql.gz + coolify-env-YYYY-MM-DD
 ssh root@<aux-IPv4> 'ls -lh /root/backups/navigator-prod/'   # gleicher Inhalt
 ```
@@ -385,9 +385,9 @@ gunzip -c /opt/backups/pg-LATEST.sql.gz | docker exec -i <pg-container> psql -U 
 # 1. Server neu provisionieren (Schritt 2)
 # 2. Coolify-Install (Schritt 4)
 # 3. .env-Backup einspielen statt Wizard durchzulaufen:
-ssh admin@<NEW_IPv4> 'sudo systemctl stop coolify'
-scp ~/Sites/navigator.berlin/_bmad-output/secrets/coolify-prod.env.backup admin@<NEW_IPv4>:/tmp/
-ssh admin@<NEW_IPv4> 'sudo cp /tmp/coolify-prod.env.backup /data/coolify/source/.env && sudo systemctl start coolify'
+ssh <admin-user>@<NEW_IPv4> 'sudo systemctl stop coolify'
+scp <sicherer-ort-ausserhalb-des-repos>/coolify-prod.env.backup <admin-user>@<NEW_IPv4>:/tmp/
+ssh <admin-user>@<NEW_IPv4> 'sudo cp /tmp/coolify-prod.env.backup /data/coolify/source/.env && sudo systemctl start coolify'
 # 4. GitHub-App neu installieren, alle Services neu deployen
 ```
 

@@ -1,6 +1,6 @@
 # Landing-Audit Kiez-, Bezirks- und Layer-Seiten
 
-Stand: 14.10.2026 (Code-Inventur per Subagent, Branch feat/zensus-wohndaten). Anlass: Bounce-Befund Plausible 08.10.2026 (Kiez-Seiten ~100 % bei 0 s, Layer gemischt 0-67 %). Grundlage für das Brainstorming zum Prio-Thema „Seiten attraktiver machen“.
+Stand: 14.10.2026 (Code-Inventur per Subagent, Branch feat/zensus-wohndaten). Anlass: Bounce-Befund Plausible 08.10.2026 (Kiez-Seiten springen fast immer sofort ab, Layer gemischt). Grundlage für das Brainstorming zum Prio-Thema „Seiten attraktiver machen“.
 
 ## Kernbefund
 
@@ -13,7 +13,7 @@ Reihenfolge mobil: Breadcrumb → Hero (Eyebrow „Bezirk X“, h1, Lead „Kiez
 - Links: Breadcrumb, Methodik, 3 Geschwister (ganz unten), Rang-Link (ganz unten). Kein Link zur Karte mit dem Kiez, zu Layer-Seiten, Vergleich oder Finder.
 - Ungenutzt oder versteckt: `profile.centroid` (nur JSON-LD), Rang je Dimension erst weiter unten, `compositeRank` nur im letzten Link, Geschwister ohne Scores, Haltestellen/Grün/Spielplätze in `<details>`, OG-Bild ungenutzt.
 - Schwächen: Lead wiederholt Eyebrow und h1 und endet in einem Meta-Satz statt einem Fakt. Prosa liest sich wie generierter Rang-Text. Score erst ~1,5 Bildschirme tief. Steckbrief auf Mobil eng. Kein inhaltlicher nächster Schritt. Meta-Description ist eine Keyword-Liste ohne Score oder Rang.
-- Ladezeit vermutlich unkritisch (prerendered, kein Karten-JS): 0-s-Bounce deutet eher auf Inhalt/Intent oder Bots.
+- Ladezeit vermutlich unkritisch (prerendered, kein Karten-JS): Sofort-Bounce deutet eher auf Inhalt/Intent oder Bots.
 - Typische Seiten: `friedenau-ost`, `alt-lichtenberg`, `hellersdorf-nord`, `schillerpromenade`.
 
 ## Bezirk (12 Seiten)
@@ -48,23 +48,14 @@ Reihenfolge: Eyebrow (Bundle) → h1 → `explain.long` → (nur kuehle-orte: CT
 - `src/lib/content/kiez-profile/`
 - `messages/de.json` (Titel, Descriptions)
 
-## Plausible-Zahlen (Einstiege, 16.09.-14.10.2026, Site navigator.berlin)
+## Plausible-Befund (Einstiege, 16.09.-14.10.2026, Site navigator.berlin)
 
-Abgefragt am 14.10.2026 direkt aus der ClickHouse-DB der selbst gehosteten Plausible-Instanz (cax21), Tabelle `sessions_v2`, gewichtet über `sign`.
+Abgefragt am 14.10.2026 aus der selbst gehosteten Plausible-Instanz. Konkrete Zahlen stehen nicht im öffentlichen Repo. Die Lesart:
 
-| Einstieg | Besuche | Bounce | Ø Dauer | Seiten/Besuch |
-|---|---|---|---|---|
-| Startseite | 124 | 64,5 % | 146 s | 2,00 |
-| Sonstige | 97 | 57,7 % | 73 s | 1,57 |
-| Kiez | 58 | 84,5 % | 14 s | 1,29 |
-| Layer | 40 | 32,5 % | 137 s | 3,50 |
-| Explore | 30 | 46,7 % | 154 s | 1,33 |
-| Wahlen | 29 | 79,3 % | 135 s | 2,00 |
-| Bezirk | 16 | 81,2 % | 27 s | 1,50 |
-| Updates | 9 | 88,9 % | 18 s | 1,22 |
+- Startseite, Explore und Layer-Seiten halten Besuchende am besten. Layer-Einstiege von Google springen selten ab und lesen im Schnitt mehrere Seiten pro Besuch.
+- Wahlen und Updates verlieren mehr als die Hälfte der Besuche nach dem ersten Aufruf.
+- Kiez- und Bezirksseiten bouncen am stärksten, bei sehr kurzer Verweildauer.
+- Kiez-Einstiege kommen fast ausschließlich aus Suchmaschinen (Google, Bing). Das sind echte Suchende, keine Bots.
+- Einzelne Kiez-Seiten springen komplett sofort ab (Beispiele: reuterstrasse, rummelsburger-bucht, charlottenburg-nord).
 
-Herkunft: Kiez-Einstiege kommen zu 90 % aus Suchmaschinen (Google 30 bei 87 % Bounce, Bing 11 bei 91 %). Das sind echte Suchende, keine Bots. Layer-Einstiege von Google bouncen nur zu 11 % (19 Besuche). Bezirk: Google 12 bei 83 %.
-
-Einzelseiten: `/layer/kiez-score-gesamt` 7 Einstiege, 0 % Bounce, 355 s; `/layer/einschulbereiche-2024` 5, 0 %, 141 s. Kiez-Seiten mit 0 s und 100 %: reuterstrasse (5), rummelsburger-bucht (4), charlottenburg-nord (3), prenzlauer-berg-ost, volkspark-wilmersdorf, rudow (je 2).
-
-Lesart: Layer-Seiten funktionieren für Such-Traffic besser als gedacht (3,5 Seiten pro Besuch). Das Problem sitzt bei Kiez- und Bezirksseiten: Suchende landen und gehen nach Sekunden. Fallzahlen sind klein (58 Kiez-Einstiege in 28 Tagen), Tendenz aber eindeutig.
+Lesart: Layer-Seiten funktionieren für Such-Traffic besser als gedacht. Das Problem sitzt bei Kiez- und Bezirksseiten: Suchende landen und gehen nach Sekunden. Fallzahlen sind klein, die Tendenz ist eindeutig.

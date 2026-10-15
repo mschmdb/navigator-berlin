@@ -357,7 +357,7 @@
   resolved: überholt durch die Entscheidung Matze 14.10.2026 (Eintrag „ENTSCHIEDEN … Heizungsart/Energieträger“ weiter unten), nicht umsetzen.
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: Kiez-, Bezirks- und Layer-Seiten grundsätzlich attraktiver machen, damit Einsteiger bleiben und weiterklicken (Bestandsmiete ist nur ein Baustein); Ausgangspunkt Brainstorming, dann Epic-Schnitt.
-  evidence: Bounce-Befund Plausible 08.10.2026 (Kiez-Seiten ~100 % bei 0 s); Matze 14.10.2026: „müssen generell besser und attraktiver werden“, Prio-Thema.
+  evidence: Bounce-Befund Plausible 08.10.2026 (Kiez-Seiten springen fast immer sofort ab); Matze 14.10.2026: „müssen generell besser und attraktiver werden“, Prio-Thema.
   resolved: Landing-Epic L1-L8 (15.10.2026). Specs `spec-l1-explore-ortsfokus.md` bis `spec-l7-layer-seiten.md` plus S7/S8 (`spec-s7-uebersichtsseiten.md`, `spec-s8-hub-links.md`) liegen vor, Epic-Suiten grün.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-miete-farben.md`

@@ -4,24 +4,23 @@ Stand 14.10.2026. Quelle: Brainstorming `_bmad-output/brainstorming/brainstorm-k
 
 ## Ziel
 
-Such-Einsteiger auf Kiez- und Bezirksseiten bleiben und klicken weiter. Ausgangswerte (Plausible, 16.09.-14.10.): Kiez 84,5 % Bounce bei 14 s, Bezirk 81,2 % bei 27 s. Layer-Seiten liegen bei 32,5 %, Explore bei 154 s Verweildauer.
+Such-Einsteiger auf Kiez- und Bezirksseiten bleiben und klicken weiter. Ausgangslage (Plausible, 16.09.-14.10.): Kiez- und Bezirksseiten bouncen am stärksten, bei sehr kurzer Verweildauer. Layer-Seiten halten Besuchende deutlich besser, Explore am längsten. Konkrete Zahlen liegen außerhalb des Repos.
 
 Leitgedanke: Wer auf der Karte landet, bleibt. Kiez- und Bezirksseiten führen heute nicht dorthin.
 
 ## Search Console (Export 14.10.2026, letzte 3 Monate, Web)
 
-| Seitentyp | Klicks | Impressionen | CTR | Ø Position | Seiten |
-|---|---|---|---|---|---|
-| Bezirk | 19 | 9.764 | 0,19 % | 17,6 | 24 |
-| Kiez | 55 | 5.238 | 1,05 % | 12,4 | 232 |
-| Layer | 45 | 5.184 | 0,87 % | 14,8 | 90 |
+Konkrete Zahlen liegen außerhalb des Repos. Befund:
 
-Suchabsicht (von 1.000 Top-Anfragen):
-- **Einwohnerzahl und Größe:** 64 Anfragen, 1.537 Impressionen, 0 Klicks („kreuzberg einwohner“ 377, „pankow einwohner“ 133, „wie groß ist neukölln“). Die Bezirksseiten ranken auf Platz 7-11, aber das Snippet nennt die Zahl nicht.
-- **Postleitzahlen:** 172 Anfragen, 1.141 Impressionen („10245 berlin friedrichshain“), Position meist über 30.
-- **Grenze und Karte:** 64 Anfragen, 399 Impressionen („berlin lichtenberg friedrichshain grenze“).
-- **Welcher Bezirk für eine Straße:** 19 Anfragen, 122 Impressionen („frankfurter allee bezirk“).
-- Spitzenreiter: `/bezirk/friedrichshain-kreuzberg` 3.584 Impressionen, 0,14 % CTR; `/kiez/prenzlauer-berg-suedwest` 436, 0 Klicks.
+- Bezirksseiten haben die meisten Impressionen bei der niedrigsten CTR. Kiez- und Layer-Seiten klicken besser.
+- Das Snippet der Bezirksseiten nennt keine Einwohnerzahl, obwohl sie dafür auf den Plätzen 7-11 ranken.
+- Die Bezirksseite Friedrichshain-Kreuzberg liefert die meisten Impressionen bei sehr niedriger CTR. Einzelne Kiez-Seiten erhalten Impressionen ohne Klicks.
+
+Suchabsicht (aus den 1.000 Top-Anfragen):
+- **Einwohnerzahl und Größe:** Anfragen wie „kreuzberg einwohner“, „pankow einwohner“, „wie groß ist neukölln“. Viele Impressionen, keine Klicks.
+- **Postleitzahlen:** Anfragen wie „10245 berlin friedrichshain“, Position meist über 30.
+- **Grenze und Karte:** Anfragen wie „berlin lichtenberg friedrichshain grenze“.
+- **Welcher Bezirk für eine Straße:** Anfragen wie „frankfurter allee bezirk“.
 
 Folgen für den Epic:
 - L3 zuerst für Bezirke: Einwohnerzahl und Fläche in Title und Description, weil Google sonst nicht klickt.

@@ -295,7 +295,7 @@ Falls T8-Übersetzungs-Sprint nicht alle 42 Slugs schafft:
 - Methodology-Map: [src/lib/data/layer-methodology.ts](../../src/lib/data/layer-methodology.ts)
 - Layer-Explain-Map: [src/lib/components/atlas/inspector-panel/internal/layer-explain.ts](../../src/lib/components/atlas/inspector-panel/internal/layer-explain.ts)
 - Layer-Display-Name: [src/lib/components/atlas/internal/layer-palette-filter.ts:81](../../src/lib/components/atlas/internal/layer-palette-filter.ts)
-- Paraglide-Reroute-Memory: [memory/project_paraglide_reroute.md](../../.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_paraglide_reroute.md)
+- Paraglide-Reroute-Memory: [memory/project_paraglide_reroute.md](../../.claude/projects/<projekt>/memory/project_paraglide_reroute.md)
 
 ## Dev Agent Record
 

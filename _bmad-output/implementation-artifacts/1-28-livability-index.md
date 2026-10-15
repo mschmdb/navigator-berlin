@@ -525,9 +525,9 @@ export const KiezScoreOutputSchema = v.object({
 - [Source: _bmad-output/implementation-artifacts/1-29-atlas-methodik-pattern.md]
 - [Source: _bmad-output/implementation-artifacts/1-30-mss-soziale-stadtentwicklung.md]
 - [Source: _bmad-output/planning-artifacts/architecture.md#MUST-Rules]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_kiez_score_naming.md]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_mss_kiez_score_input.md]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/feedback_no_lebenswert.md]
+- [Source: ~/.claude/projects/<projekt>/memory/project_kiez_score_naming.md]
+- [Source: ~/.claude/projects/<projekt>/memory/project_mss_kiez_score_input.md]
+- [Source: ~/.claude/projects/<projekt>/memory/feedback_no_lebenswert.md]
 
 ## Dev Agent Record
 

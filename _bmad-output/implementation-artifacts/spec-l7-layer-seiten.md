@@ -14,7 +14,7 @@ context:
 
 ## Intent
 
-**Problem:** Layer-Seiten lesen sich wie Dokumentation: Quelle, Lizenz und Methodik stehen vor dem Nutzen, der Link „Layer auf Karte anschauen“ steht klein weit unten. Layer-Seiten verlinken keine Kiez-Seiten. Trotzdem funktionieren sie besser als Kiez-Seiten (32,5 % Absprung), deshalb nur leichte Änderungen.
+**Problem:** Layer-Seiten lesen sich wie Dokumentation: Quelle, Lizenz und Methodik stehen vor dem Nutzen, der Link „Layer auf Karte anschauen“ steht klein weit unten. Layer-Seiten verlinken keine Kiez-Seiten. Trotzdem funktionieren sie besser als Kiez-Seiten (deutlich geringerer Absprung), deshalb nur leichte Änderungen.
 
 **Approach:** Karten-Button in den Kopf der Layer-Seite. Für Layer mit Kiez-Werten eine kurze Rangliste der Kieze mit Links auf die Kiez-Seiten.
 

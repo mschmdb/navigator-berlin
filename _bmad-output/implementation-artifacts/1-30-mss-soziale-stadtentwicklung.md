@@ -266,9 +266,9 @@ tests/
 
 - [Source: https://daten.berlin.de/datensaetze/monitoring-soziale-stadtentwicklung-mss-2025-wms-39b8b768]
 - [Source: https://gdi.berlin.de/services/wfs/mss_2025?request=GetCapabilities&service=WFS]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_compare_editorial_profiles.md]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/feedback_no_lebenswert.md]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_simplify_keep_shapes.md]
+- [Source: ~/.claude/projects/<projekt>/memory/project_compare_editorial_profiles.md]
+- [Source: ~/.claude/projects/<projekt>/memory/feedback_no_lebenswert.md]
+- [Source: ~/.claude/projects/<projekt>/memory/project_simplify_keep_shapes.md]
 - [Source: _bmad-output/implementation-artifacts/1-12-editorial-verantwortung-pattern.md]
 - [Source: _bmad-output/implementation-artifacts/1-23-datenfehlt-reason-aufdroeseln.md]
 - [Source: _bmad-output/implementation-artifacts/1-27-adress-vergleich.md]

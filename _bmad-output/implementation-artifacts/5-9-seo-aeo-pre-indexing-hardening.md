@@ -274,8 +274,8 @@ Reihenfolge T1 → T2 → T3 → T4 → T5 → T6 → T7 → T8 → T9 (linear, 
 - `src/routes/robots.txt/robots.test.ts`
 - `scripts/indexnow-ping.ts` + `.test.ts`
 - `docs/runbooks/indexnow-deploy-ping.md`
-- Memory: `~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_seo_bot_policy.md`
-- Memory: `~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/project_indexnow_setup.md`
+- Memory: `~/.claude/projects/<projekt>/memory/project_seo_bot_policy.md`
+- Memory: `~/.claude/projects/<projekt>/memory/project_indexnow_setup.md`
 
 ### Geändert
 - `src/lib/seo/index.ts` (Exports für DataCatalog + Speakable)
@@ -299,7 +299,7 @@ Reihenfolge T1 → T2 → T3 → T4 → T5 → T6 → T7 → T8 → T9 (linear, 
 - `src/hooks.server.ts` (X-Robots-Tag-Header für /api/* + /_dev/*)
 - `package.json` (indexnow:ping-Script)
 - `docs/INDEX.md` (Runbook-Link)
-- Memory-Index: `~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/MEMORY.md`
+- Memory-Index: `~/.claude/projects/<projekt>/memory/MEMORY.md`
 
 ### Gelöscht
 - `src/routes/(with-header)/layer/[slug]/+page.ts` (umbenannt zu +page.server.ts)

@@ -434,7 +434,7 @@ Nachher:
 - [Source: src/lib/components/atlas/internal/layer-style-builder.ts] (Choropleth-Profile)
 - [Source: src/lib/components/atlas/internal/layer-palette-filter.ts] (filterLayers + BUNDLE_LABEL_DE)
 - [Source: User-UX-Review 2026-05-15 (Screenshots + 7-Punkte-Feedback)]
-- [Source: ~/.claude/projects/-Users-matthiasschmidbauer-Sites-navigator-berlin/memory/feedback_inspector_toolbar_top.md]
+- [Source: ~/.claude/projects/<projekt>/memory/feedback_inspector_toolbar_top.md]
 
 ## Dev Agent Record
 
