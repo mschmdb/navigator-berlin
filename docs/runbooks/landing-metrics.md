@@ -28,7 +28,7 @@ Jeder Klick sendet ein Plausible-Event `Landing` mit zwei Properties. Es gibt ke
 
 ### Bounce bleibt vergleichbar
 
-Das Event geht mit `interactive: false` raus. Es beendet den Bounce also nicht. Sonst würde jede Session mit einem Klick ab Deploy zur Nicht-Bounce-Session, und Zeitraum B wäre mit A nicht vergleichbar. Ältere selbst gehostete Plausible-Versionen könnten die Option ignorieren (ungeprüft). Dann ist der Bounce-Vergleich nur eingeschränkt gültig. Seiten pro Besuch und Dauer bleiben aussagekräftig.
+Das Event geht mit `interactive: false` raus. Es beendet den Bounce also nicht. Sonst würde jede Session mit einem Klick ab Deploy zur Nicht-Bounce-Session, und Zeitraum B wäre mit A nicht vergleichbar. Das ausgelieferte Plausible-Script unterstützt die Option (geprüft am 15.10.2026). Nach einem Plausible-Update erneut prüfen.
 
 ### Was nicht gemessen wird
 
@@ -38,7 +38,7 @@ Das Event geht mit `interactive: false` raus. Es beendet den Bounce also nicht. 
 
 ## Abfrage ausführen
 
-Vor dem ersten Lauf: Spaltennamen prüfen. Das Skript nimmt `entry_page`, `is_bounce`, `duration`, `pageviews`, `start`, `sign` und `site_id` an (ungeprüft). `DESCRIBE TABLE sessions_v2` im ClickHouse-Client zeigt die echten Namen; weichen sie ab, zuerst `scripts/landing-metrics.ts` anpassen.
+Spaltennamen geprüft am 15.10.2026 (`DESCRIBE TABLE sessions_v2`): `entry_page`, `is_bounce`, `duration`, `pageviews`, `start`, `sign`, `site_id`. Nach einem Plausible-Update erneut prüfen; weichen sie ab, zuerst `scripts/landing-metrics.ts` anpassen.
 
 1. SQL erzeugen. Die Zeiträume sind inklusive, Format `YYYY-MM-DD:YYYY-MM-DD`. Die Tagesgrenzen gelten in Berliner Zeit (`Europe/Berlin`). B muss nach dem Ende von A beginnen. Bei ungleicher Länge warnt das Skript auf stderr.
 
@@ -59,7 +59,7 @@ Vor dem ersten Lauf: Spaltennamen prüfen. Das Skript nimmt `entry_page`, `is_bo
 
 3. Ergebnis lesen: eine Zeile je Seitentyp und Zeitraum (`A` = vorher, `B` = nachher) mit Besuchen, Bounce in Prozent, Ø Dauer in Sekunden und Seiten pro Besuch. Die Abfrage gewichtet über `sign` und zählt nach Einstiegsseite.
 
-4. Klickverteilung je `action` für Zeitraum B: dasselbe Kommando mit `--events` und nur `--b`. Es liest `events_v2` (`name = 'Landing'`, Properties über `meta.key`/`meta.value`). Vor dem ersten Lauf mit `DESCRIBE TABLE events_v2` prüfen, ob `name`, `timestamp`, `site_id` und `meta.key`/`meta.value` so heißen (ungeprüft).
+4. Klickverteilung je `action` für Zeitraum B: dasselbe Kommando mit `--events` und nur `--b`. Es liest `events_v2` (`name = 'Landing'`, Properties über `meta.key`/`meta.value`). Spaltennamen `name`, `timestamp`, `site_id`, `meta.key`, `meta.value` geprüft am 15.10.2026.
 
    ```sh
    pnpm --silent metrics:landing --events --b <nachher-von>:<nachher-bis> --site-id <site-id> | ssh ...
