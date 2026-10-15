@@ -108,6 +108,15 @@ describe('collectLlmsSourceEntries', () => {
 		expect(urls).toContain('https://navigator.berlin/lizenzen');
 	});
 
+	it('führt /ueber als statische Seite', () => {
+		const entry = collectLlmsSourceEntries(ctx).find(
+			(e) => e.loc === 'https://navigator.berlin/ueber'
+		);
+		expect(entry?.section).toBe('static');
+		expect(entry?.name).toBe('Über das Projekt');
+		expect(entry?.description.length).toBeGreaterThan(20);
+	});
+
 	it('S7: führt die Übersichtsseiten /kieze, /bezirke und /daten', () => {
 		const entries = collectLlmsSourceEntries(ctx);
 		for (const path of ['/kieze', '/bezirke', '/daten']) {

@@ -1,14 +1,18 @@
 import type { WithContext } from 'schema-dts';
 import { canonicalOrigin } from './canonical.js';
 
+import { founderRef, type PersonRefJsonLd } from './jsonld-person.js';
 import { ORGANIZATION_LOGO_PATH, ORGANIZATION_LOGO_SIZE } from './organization-logo.js';
 
 export const ORGANIZATION_NAME = 'navigator.berlin';
 
-/** Projekt-Repository (Footer-Link in `social-links.svelte`). Persönliche Profile bleiben draußen. */
-export const ORGANIZATION_SAME_AS: readonly string[] = [
-	'https://github.com/mschmdb/navigator-berlin'
-];
+/**
+ * Projekt-Repository (Footer-Link in `social-links.svelte`). Persönliche Profile
+ * (Bluesky, LinkedIn) hängen an der Person (`founder`, `jsonld-person.ts`), nicht an der Organization.
+ */
+export const REPO_URL = 'https://github.com/mschmdb/navigator-berlin';
+
+export const ORGANIZATION_SAME_AS: readonly string[] = [REPO_URL];
 
 /**
  * Verweis auf die Organization. Die vollständige Entität steht nur auf der
@@ -29,6 +33,7 @@ export interface OrganizationLeafJsonLd {
 	url: string;
 	description?: string;
 	sameAs?: string[];
+	founder: PersonRefJsonLd;
 	logo: {
 		'@type': 'ImageObject';
 		url: string;
@@ -70,6 +75,7 @@ export function buildOrganization(input: OrganizationInput): OrganizationJsonLd 
 		url: origin,
 		...(input.description ? { description: input.description } : {}),
 		...(ORGANIZATION_SAME_AS.length > 0 ? { sameAs: [...ORGANIZATION_SAME_AS] } : {}),
+		founder: founderRef(),
 		logo: {
 			'@type': 'ImageObject',
 			url: `${origin}${ORGANIZATION_LOGO_PATH}`,

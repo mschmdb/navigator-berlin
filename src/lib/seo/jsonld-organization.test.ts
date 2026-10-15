@@ -32,6 +32,18 @@ describe('buildOrganization', () => {
 		expect(out.sameAs).toEqual(['https://github.com/mschmdb/navigator-berlin']);
 	});
 
+	it('sameAs enthält keine persönlichen Profile, sie hängen an der Person', () => {
+		const out = buildOrganization({ origin: 'https://navigator.berlin' });
+		expect(JSON.stringify(out.sameAs)).not.toMatch(/linkedin|bsky/);
+	});
+
+	it('verweist per founder auf die Person-@id (volle Person steht auf /ueber)', () => {
+		const out = buildOrganization({ origin: 'https://navigator.berlin' });
+		expect(out.founder['@id']).toBe('https://schmidbauer.dev/#person');
+		expect(out.founder['@type']).toBe('Person');
+		expect(out.founder).not.toHaveProperty('sameAs');
+	});
+
 	it('strippt trailing-slash aus origin', () => {
 		const out = buildOrganization({ origin: 'https://navigator.berlin/' });
 		expect(out['@id']).toBe('https://navigator.berlin/#organization');

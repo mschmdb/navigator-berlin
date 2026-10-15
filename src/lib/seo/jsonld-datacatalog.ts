@@ -3,6 +3,7 @@ import type { License } from '$lib/data/types.js';
 import { licenseToSchemaOrgUrl } from './license-url.js';
 import { canonicalOrigin } from './canonical.js';
 import { organizationRef, type OrganizationRefJsonLd } from './jsonld-organization.js';
+import { founderRef, type PersonRefJsonLd } from './jsonld-person.js';
 
 /**
  * Story 5.9 AC-5: DataCatalog-JSON-LD fuer /lizenzen.
@@ -25,11 +26,6 @@ export interface DataCatalogDatasetRef {
 	readonly license: License;
 	/** Authority-Name aus Layer-Methodology. Fehlt → Fallback navigator.berlin. */
 	readonly creatorName?: string;
-}
-
-export interface DataCatalogPublisherJsonLd {
-	'@type': 'Person';
-	name: string;
 }
 
 export interface DatasetCreatorJsonLd {
@@ -62,7 +58,7 @@ export interface DataCatalogLeafJsonLd {
 	description: string;
 	url: string;
 	inLanguage: string;
-	publisher: DataCatalogPublisherJsonLd;
+	publisher: PersonRefJsonLd;
 	dataset: DataCatalogDatasetJsonLd[];
 }
 
@@ -73,7 +69,6 @@ export interface DataCatalogInput {
 	readonly name: string;
 	readonly description: string;
 	readonly urlPath: string;
-	readonly publisherName: string;
 	readonly datasets: readonly DataCatalogDatasetRef[];
 	readonly inLanguage?: string;
 	/** Knoten-`@id`, auf die Datasets per `includedInDataCatalog` verweisen. */
@@ -109,10 +104,7 @@ export function buildDataCatalog(input: DataCatalogInput): DataCatalogJsonLd {
 		description: input.description,
 		url: `${origin}${path}`,
 		inLanguage: input.inLanguage ?? 'de-DE',
-		publisher: {
-			'@type': 'Person',
-			name: input.publisherName
-		},
+		publisher: founderRef(),
 		dataset: input.datasets.map((ds) => {
 			const url = `${origin}${ensureLeadingSlash(ds.urlPath)}`;
 			const creator: DatasetCreatorJsonLd | OrganizationRefJsonLd = ds.creatorName

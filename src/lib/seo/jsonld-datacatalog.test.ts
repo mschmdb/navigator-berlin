@@ -10,7 +10,6 @@ describe('buildDataCatalog', () => {
 			name: 'navigator.berlin Daten-Katalog',
 			description: 'Alle 44 Geo-Layer der Plattform navigator.berlin.',
 			urlPath: '/lizenzen',
-			publisherName: 'Matze Schmidbauer',
 			datasets: []
 		});
 		expect(jsonLd['@context']).toBe('https://schema.org');
@@ -18,8 +17,11 @@ describe('buildDataCatalog', () => {
 		expect(jsonLd.name).toBe('navigator.berlin Daten-Katalog');
 		expect(jsonLd.description).toContain('44');
 		expect(jsonLd.url).toBe(`${origin}/lizenzen`);
-		expect(jsonLd.publisher['@type']).toBe('Person');
-		expect(jsonLd.publisher.name).toBe('Matze Schmidbauer');
+		expect(jsonLd.publisher).toEqual({
+			'@type': 'Person',
+			'@id': 'https://schmidbauer.dev/#person',
+			name: 'Matze Schmidbauer'
+		});
 	});
 
 	it('emittiert vollstaendige Dataset-Nodes mit Pflichtfeldern name + description', () => {
@@ -28,7 +30,6 @@ describe('buildDataCatalog', () => {
 			name: 'Test',
 			description: 'Test',
 			urlPath: '/lizenzen',
-			publisherName: 'Tester',
 			datasets: [
 				{
 					name: 'Lärm 2023',
@@ -59,7 +60,6 @@ describe('buildDataCatalog', () => {
 			name: 'Test',
 			description: 'Test',
 			urlPath: '/lizenzen',
-			publisherName: 'Tester',
 			datasets: [
 				{
 					name: 'Wohnlagen 2024',
@@ -83,7 +83,6 @@ describe('buildDataCatalog', () => {
 			name: 'Test',
 			description: 'Test',
 			urlPath: '/lizenzen',
-			publisherName: 'Tester',
 			datasets: []
 		});
 		expect(jsonLd.url).toBe(`${origin}/lizenzen`);
@@ -95,7 +94,6 @@ describe('buildDataCatalog', () => {
 			name: 'Test',
 			description: 'Test',
 			urlPath: '/lizenzen',
-			publisherName: 'Tester',
 			datasets: []
 		});
 		expect(jsonLd.inLanguage).toBe('de-DE');
@@ -107,7 +105,6 @@ describe('buildDataCatalog', () => {
 			name: 'Test',
 			description: 'Test',
 			urlPath: '/lizenzen',
-			publisherName: 'Tester',
 			datasets: [],
 			inLanguage: 'en-US'
 		});
@@ -120,7 +117,6 @@ describe('buildDataCatalog', () => {
 			name: 'Test',
 			description: 'Test',
 			urlPath: '/lizenzen',
-			publisherName: 'Tester',
 			datasets: []
 		};
 		expect(buildDataCatalog(base)).not.toHaveProperty('@id');

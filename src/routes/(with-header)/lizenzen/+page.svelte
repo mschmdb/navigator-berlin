@@ -86,7 +86,6 @@
 			description: m.lizenzen_datacatalog_description(undefined, { locale }),
 			urlPath: localizedPathname('/lizenzen', locale),
 			catalogId: dataCatalogId(page.url.origin),
-			publisherName: 'Matze Schmidbauer',
 			datasets: data.catalogDatasets,
 			inLanguage: localeToBcp47(locale)
 		})

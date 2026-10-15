@@ -22,7 +22,7 @@
 {#if variant === 'compact'}
 	<footer
 		data-testid="meta-footer"
-		class="flex h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-[11px] text-ink-subtle backdrop-blur-sm print:hidden"
+		class="flex min-h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-[11px] text-ink-subtle backdrop-blur-sm print:hidden"
 	>
 		<nav
 			aria-label={m.shell_meta_nav_aria_label()}

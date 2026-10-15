@@ -19,7 +19,7 @@
 
 <SeoHead
 	title={buildPageTitle('Impressum')}
-	description="Impressum nach § 5 TMG für navigator.berlin."
+	description="Impressum nach § 5 DDG für navigator.berlin."
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	ogImage={`${page.url.origin}/og/page/impressum.png`}
@@ -31,7 +31,7 @@
 	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl" lang="de">Impressum</h1>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">Angaben gemäß § 5 TMG</h2>
+		<h2 class="font-serif text-xl">Angaben gemäß § 5 DDG</h2>
 		<address class="mt-3 leading-relaxed not-italic">
 			Matze Schmidbauer<br />
 			Arndtstraße 34<br />

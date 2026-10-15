@@ -166,6 +166,13 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		section: 'methodik'
 	});
 	out.push({
+		loc: `${ctx.origin}/ueber`,
+		name: 'Über das Projekt',
+		description:
+			'Wer navigator.berlin betreibt, warum es das Projekt gibt, wie es entsteht und wie es finanziert ist',
+		section: 'static'
+	});
+	out.push({
 		loc: `${ctx.origin}/webmcp`,
 		name: 'WebMCP',
 		description:

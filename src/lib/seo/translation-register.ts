@@ -102,7 +102,8 @@ export const UPDATE_FILE_PATHS: readonly string[] = Object.keys(
  * with `prefix: true` (every detail slug), and the sitemap sources emit
  * localized URLs for every locale, so `sitemap-en.xml` lists every registered,
  * indexable page. S7 registers `/kieze`, `/bezirke` and `/daten` as exact
- * entries (overview pages; `/daten/<file>` stays the unregistered download redirect). Later
+ * entries (overview pages; `/daten/<file>` stays the unregistered download redirect). `/ueber`
+ * (About page) is an exact entry as well. Later
  * blocks append further `{ pathname, locale }` entries as more EN content ships
  * -- no other module needs to change.
  */
@@ -127,6 +128,7 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/kieze', locale: 'en' },
 	{ pathname: '/bezirke', locale: 'en' },
 	{ pathname: '/daten', locale: 'en' },
+	{ pathname: '/ueber', locale: 'en' },
 	{
 		pathname: '/updates',
 		locale: 'en',

@@ -100,7 +100,7 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 		expect(new Set(sitemapLayerUrls)).toEqual(new Set(llmsLayerUrls));
 	});
 
-	it('static page URLs (/, /methodik, /lizenzen) match between sitemap and llms', () => {
+	it('static page URLs (/, /methodik, /lizenzen, /ueber) match between sitemap and llms', () => {
 		const sitemap = collectPrerenderedUrls({
 			origin: ctx.origin,
 			locale: ctx.locale,
@@ -108,7 +108,7 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 		});
 		const llms = collectLlmsSourceEntries(ctx);
 
-		const staticPaths = ['/', '/methodik', '/lizenzen'];
+		const staticPaths = ['/', '/methodik', '/lizenzen', '/ueber'];
 		for (const path of staticPaths) {
 			const target = `${ctx.origin}${path}`;
 			expect(sitemap.some((e) => e.loc === target)).toBe(true);

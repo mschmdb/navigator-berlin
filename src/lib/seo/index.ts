@@ -35,6 +35,19 @@ export {
 	type OrganizationRefJsonLd
 } from './jsonld-organization.js';
 export {
+	buildFounderPerson,
+	founderRef,
+	FOUNDER_ID,
+	type PersonLeafJsonLd,
+	type PersonRefJsonLd
+} from './jsonld-person.js';
+export {
+	buildAboutPage,
+	aboutPageId,
+	type AboutPageInput,
+	type AboutPageJsonLd
+} from './jsonld-aboutpage.js';
+export {
 	buildPlace,
 	type PlaceInput,
 	type PlaceJsonLd,

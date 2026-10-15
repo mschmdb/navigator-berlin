@@ -73,3 +73,19 @@ describe('Übersichtsseiten im Footer (S7)', () => {
 		expect(META_LINKS.some((l) => l.href === '/kieze')).toBe(false);
 	});
 });
+
+describe('Über-Seite im Footer', () => {
+	it('Gruppe "transparenz" beginnt mit dem Link auf /ueber', () => {
+		const transparenz = META_LINK_GROUPS.find((g) => g.id === 'transparenz');
+		expect(transparenz?.links[0]).toEqual({ id: 'ueber', href: '/ueber' });
+	});
+
+	it('die flache Liste enthält /ueber', () => {
+		expect(META_LINKS.find((l) => l.id === 'ueber')?.href).toBe('/ueber');
+	});
+
+	it('DE/EN-Labels', () => {
+		expect(metaLinkLabel('ueber')).toBe('Über das Projekt');
+		expect(metaLinkLabel('ueber', { locale: 'en' })).toBe('About the project');
+	});
+});
