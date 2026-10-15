@@ -403,6 +403,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-l5-bezirksseite-karte-liste.md`
   summary: Pixel-Logo wird zweimal inline als SVG ausgeliefert (je ~39,5 KB, zusammen ~79 KB pro Seite); Bezirksseiten bleiben dadurch über 200 KB HTML.
   evidence: Messung L5 (14.10.2026): Treptow-Köpenick 206 KB HTML, davon Bezirkskarte nur ~22 KB. Logo als externe, gecachte SVG-Datei oder vereinfachtes Raster würde jede Seite um ~75 KB entlasten; relevant für mobilen Absprung.
+  resolved: Logo-Gewicht-Story (15.10.2026); Messung Release-Preview: Logo einmal je Seite, ~13 KB, Bezirk Pankow 130 KB HTML (32 KB gzip). /explore zeigt es bewusst zweimal (Header + Karten-Ladeanimation).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-l7-layer-seiten.md`
   summary: Ältere E2E-Suiten (share-sheet, inspector-panel, tab-order, wahl-flow, address-search, compare-flow, bookmark-flow, climate-*, u. a.) scheitern, weil `getByRole('combobox')` auf `/explore` nicht klickbar wird; 76 Fehlschläge im vollen Lauf.
