@@ -5,6 +5,8 @@
 
 project_name: navigator.berlin
 document_output_language: German
-output_folder: "{project-root}/_bmad-output"
+output_folder: "{project-root}/docs/process"
 user_name: Matze
 communication_language: German
+
+# Hinweis: Maßgeblich ist der Override in _bmad/custom/config.toml (BMAD liest TOML).

@@ -9,6 +9,7 @@ e2e
 **/__screenshots__
 .vitest-attachments
 coverage
+_bmad-output
 _bmad
 docs
 .claude
