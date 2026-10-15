@@ -37,7 +37,7 @@ test.describe('i18n Block C1: /en/explore -- vollständig übersetzt, indexierba
 	test('sr-only H1 + <title> sind englisch', async ({ page }) => {
 		await page.goto('/en/explore');
 		await expect(page.locator('h1')).toHaveText('Berlin Atlas: data for every address');
-		await expect(page).toHaveTitle('Atlas - Berlin in data - navigator.berlin');
+		await expect(page).toHaveTitle('Atlas | navigator.berlin');
 	});
 
 	// i18n Block C1: `/explore` graduierte von "teilweise übersetzt" zu

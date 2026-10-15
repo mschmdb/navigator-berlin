@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import {
 		ArrowRight,
@@ -20,10 +21,15 @@
 	import InDeinerNaehe from '$lib/components/kuehle-orte/in-deiner-naehe.svelte';
 	import KuehleOrteTransparenz from '$lib/components/kuehle-orte/kuehle-orte-transparenz.svelte';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
+	import { originOfUrl, stableDownloadPath } from '$lib/seo/dataset-helpers.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { getHitzeFaq } from '$lib/content/hitze-faq.js';
+	import { buildCanonical, canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
+	import { getLayerMethodology } from '$lib/data/layer-methodology.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
 	import type { PageData } from './$types';
 
@@ -40,46 +46,57 @@
 	// seit i18n Block B2 für `en` registriert), obwohl diese inhaltlich
 	// andere Seite selbst nicht übersetzt ist.
 	const pathname = '/hitze';
+	const effectiveLocale = $derived(getLocale());
 
 	// Dieselbe Seite ist über zwei Hosts erreichbar: navigator.berlin/hitze und
 	// hitze.navigator.berlin/ (Reroute). Canonical konsolidiert auf die Haupt-Domain,
 	// damit kein Duplicate-Content entsteht. `hitze.`-Subdomain wird gestrippt, lokal bleibt lokal.
-	const primaryOrigin = $derived(origin.replace('://hitze.', '://'));
-	const localizedPath = $derived(localizedHref('/hitze'));
-	const canonical = $derived(`${primaryOrigin}${localizedPath}`);
+	const primaryOrigin = $derived(canonicalOrigin(origin));
+	const canonical = $derived(
+		buildCanonical(primaryOrigin, localizedPathname(pathname, effectiveLocale))
+	);
 
 	// mode=hitze erzwingt den reduzierten Explorer auch ohne Hitze-Host (lokal + Main-Domain).
 	const explorerLink = `${buildExplorerDeepLink(['kuehle-orte'])}&mode=hitze`;
-	const pageTitle = $derived(m.hitze_meta_title());
+	const pageTitle = $derived(buildPageTitle(m.hitze_meta_title()));
 	const pageDescription = $derived(m.hitze_meta_description());
 	const faqItems = $derived(getHitzeFaq());
 	const ogImagePath = '/og/page/hitze.png';
 	const ogImageAbsolute = $derived(`${primaryOrigin}${ogImagePath}`);
 
+	// Distribution = stabile Download-URL des Kühle-Orte-Layers. Ohne MANIFEST-Daten
+	// entfällt das Dataset-JSON-LD, statt Werte zu raten.
+	const datasetSource = $derived(data.datasetSource ?? null);
 	const datasetJsonLd = $derived(
-		buildDataset({
-			origin: primaryOrigin,
-			name: m.hitze_jsonld_name(),
-			description: pageDescription,
-			license: 'ODbL 1.0',
-			dateModified: '2026-06-30',
-			creatorName: 'navigator.berlin',
-			contentUrl: canonical,
-			encodingFormat: 'text/html',
-			keywords: m
-				.hitze_jsonld_keywords()
-				.split(',')
-				.map((k) => k.trim())
-				.filter(Boolean)
-		})
+		datasetSource &&
+			buildDataset({
+				origin: primaryOrigin,
+				name: m.hitze_jsonld_name(),
+				url: canonical,
+				bbox: BEZIRKE_BBOX,
+				description: pageDescription,
+				license: 'ODbL 1.0',
+				dateModified: datasetSource.dateModified,
+				// Gleiche Herausgeber-Angabe wie die Layer-Seite (Methodik-Authority).
+				creatorName: getLayerMethodology(datasetSource.slug)?.authority,
+				creatorUrl: originOfUrl(datasetSource.sourceUrl),
+				contentUrl: `${primaryOrigin}${stableDownloadPath(datasetSource.slug, datasetSource.format)}`,
+				encodingFormat:
+					datasetSource.format === 'pmtiles' ? 'application/vnd.pmtiles' : 'application/geo+json',
+				keywords: m
+					.hitze_jsonld_keywords()
+					.split(',')
+					.map((k) => k.trim())
+					.filter(Boolean)
+			})
 	);
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
 			origin: primaryOrigin,
 			items: [
-				{ name: m.hitze_breadcrumb_start(), path: localizedHref('/') },
-				{ name: m.hitze_breadcrumb_hitze(), path: localizedPath }
+				{ name: m.hitze_breadcrumb_start(), path: localizedPathname('/', getLocale()) },
+				{ name: m.hitze_breadcrumb_hitze(), path: localizedPathname('/hitze', getLocale()) }
 			]
 		})
 	);
@@ -134,11 +151,12 @@
 	title={pageTitle}
 	description={pageDescription}
 	{pathname}
-	origin={primaryOrigin}
-	{canonical}
+	{origin}
 	ogImage={ogImageAbsolute}
 />
-<JsonLd data={datasetJsonLd} testid="hitze-dataset-jsonld" />
+{#if datasetJsonLd}
+	<JsonLd data={datasetJsonLd} testid="hitze-dataset-jsonld" />
+{/if}
 <JsonLd data={breadcrumbJsonLd} testid="hitze-breadcrumb-jsonld" />
 
 <div data-testid="hitze-landing" class="mx-auto flex max-w-3xl flex-col gap-12 px-4 py-12">

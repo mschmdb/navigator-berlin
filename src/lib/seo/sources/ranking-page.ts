@@ -9,8 +9,8 @@ import type { Locale } from '$lib/paraglide/runtime';
  * Register-Gate in `collectPrerenderedUrls` filtert.
  *
  * Page ist Editorial-Single-Page, deshalb feste URL + monatlich-changefreq.
- * `lastmod` greift auf `buildTimestamp` zurück weil keine eigene
- * Datenquelle die Page-Aktualität feiner trackt.
+ * Kein `lastmod`: keine Datenquelle trackt die Page-Aktualität, der
+ * Build-Zeitpunkt wäre erfunden.
  */
 
 const PATH = '/umwelt-infrastruktur-score';
@@ -18,7 +18,6 @@ const PRIORITY = 0.7;
 
 export interface BuildRankingSitemapEntryInput {
 	readonly origin: string;
-	readonly lastmod: string;
 	readonly locale?: Locale;
 }
 
@@ -26,7 +25,6 @@ export function buildRankingSitemapEntry(input: BuildRankingSitemapEntryInput): 
 	const origin = input.origin.replace(/\/+$/, '');
 	return {
 		loc: `${origin}${localizedPathname(PATH, input.locale ?? 'de')}`,
-		lastmod: input.lastmod,
 		changefreq: 'monthly' as const,
 		priority: PRIORITY
 	};
@@ -36,7 +34,6 @@ export const RANKING_PAGE_SOURCE: SitemapSource = (ctx) => {
 	return [
 		buildRankingSitemapEntry({
 			origin: ctx.origin,
-			lastmod: ctx.buildTimestamp,
 			locale: ctx.locale
 		})
 	];

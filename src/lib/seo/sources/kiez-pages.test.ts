@@ -32,7 +32,6 @@ function fixtureContext(overrides: Partial<SitemapSourceContext> = {}): SitemapS
 		origin: ORIGIN,
 		locale: 'de',
 		manifest: fixtureManifest(),
-		buildTimestamp: '2026-05-16T08:00:00.000Z',
 		kiezSlugs: ['boxhagener-kiez', 'karlshorst', 'schillerkiez'],
 		...overrides
 	};
@@ -44,7 +43,7 @@ describe('buildKiezSitemapEntries', () => {
 			buildKiezSitemapEntries({
 				origin: ORIGIN,
 				slugs: [],
-				lastmod: '2021-01-01T00:00:00.000Z'
+				lastmodBySlug: {}
 			})
 		).toEqual([]);
 	});
@@ -53,7 +52,7 @@ describe('buildKiezSitemapEntries', () => {
 		const entries = buildKiezSitemapEntries({
 			origin: ORIGIN,
 			slugs: ['boxhagener-kiez', 'karlshorst'],
-			lastmod: '2021-01-01T00:00:00.000Z'
+			lastmodBySlug: { karlshorst: '2026-10-14T00:00:00.000Z' }
 		});
 		expect(entries.map((e) => e.loc)).toEqual([
 			'https://navigator.berlin/kiez/boxhagener-kiez',
@@ -65,7 +64,7 @@ describe('buildKiezSitemapEntries', () => {
 		const entries = buildKiezSitemapEntries({
 			origin: ORIGIN,
 			slugs: ['boxhagener-kiez'],
-			lastmod: '2021-01-01T00:00:00.000Z'
+			lastmodBySlug: {}
 		});
 		expect(entries[0].changefreq).toBe('monthly');
 		expect(entries[0].priority).toBe(0.6);
@@ -75,7 +74,7 @@ describe('buildKiezSitemapEntries', () => {
 		const entries = buildKiezSitemapEntries({
 			origin: 'https://navigator.berlin/',
 			slugs: ['boxhagener-kiez'],
-			lastmod: '2021-01-01T00:00:00.000Z'
+			lastmodBySlug: {}
 		});
 		expect(entries[0].loc).toBe('https://navigator.berlin/kiez/boxhagener-kiez');
 	});
@@ -94,17 +93,60 @@ describe('KIEZ_PAGES_SOURCE', () => {
 		expect(KIEZ_PAGES_SOURCE(fixtureContext({ kiezSlugs: [] }))).toEqual([]);
 	});
 
-	it('nutzt fetchedAt (Daten-Refresh) als lastmod statt sourceUpdatedAt-Vintage', () => {
+	it('nutzt nicht das Grenzlayer-fetchedAt als lastmod', () => {
 		const entries = KIEZ_PAGES_SOURCE(fixtureContext());
 		expect(entries).toHaveLength(3);
-		expect(entries[0].lastmod).toBe('2026-05-16T06:56:28.400Z');
+		expect(entries.every((e) => e.lastmod === undefined)).toBe(true);
 	});
 
-	it('fällt auf sourceUpdatedAt zurück wenn fetchedAt fehlt', () => {
-		const manifest = fixtureManifest();
-		// Simuliert ein Manifest ohne fetchedAt (test-only Cast: Feld ist eigentlich required).
-		manifest.layers[0] = { ...manifest.layers[0], fetchedAt: undefined as unknown as string };
-		const entries = KIEZ_PAGES_SOURCE(fixtureContext({ manifest, kiezSlugs: ['boxhagener-kiez'] }));
-		expect(entries[0].lastmod).toBe('2021-01-01T00:00:00.000Z');
+	it('lastmod = späteres Datum aus Profil-generatedAt und Scores-generatedAt', () => {
+		const entries = KIEZ_PAGES_SOURCE(
+			fixtureContext({
+				profileDates: {
+					kiez: {
+						karlshorst: { generatedAt: '2026-09-03T12:00:00.000Z' },
+						schillerkiez: { generatedAt: '2026-11-01T00:00:00.000Z' }
+					},
+					bezirk: {}
+				},
+				scoresGeneratedAt: '2026-10-14T08:00:00.000Z'
+			})
+		);
+		const byLoc = new Map(entries.map((e) => [e.loc, e.lastmod]));
+		expect(byLoc.get(`${ORIGIN}/kiez/karlshorst`)).toBe('2026-10-14T08:00:00.000Z');
+		expect(byLoc.get(`${ORIGIN}/kiez/schillerkiez`)).toBe('2026-11-01T00:00:00.000Z');
+		// Kiez ohne Profil: nur das Scores-Datum
+		expect(byLoc.get(`${ORIGIN}/kiez/boxhagener-kiez`)).toBe('2026-10-14T08:00:00.000Z');
+	});
+
+	it('EN-Seite nutzt translatedAt, wenn es das späteste Datum ist', () => {
+		const entries = KIEZ_PAGES_SOURCE(
+			fixtureContext({
+				locale: 'en',
+				kiezSlugs: ['karlshorst'],
+				profileDates: {
+					kiez: {
+						karlshorst: {
+							generatedAt: '2026-06-07T12:00:00.000Z',
+							translatedAt: '2026-11-02T00:00:00.000Z'
+						}
+					},
+					bezirk: {}
+				},
+				scoresGeneratedAt: '2026-10-14T08:00:00.000Z'
+			})
+		);
+		expect(entries[0].lastmod).toBe('2026-11-02T00:00:00.000Z');
+	});
+
+	it('lässt lastmod weg bei ungültigen Datumswerten', () => {
+		const entries = KIEZ_PAGES_SOURCE(
+			fixtureContext({
+				kiezSlugs: ['karlshorst'],
+				profileDates: { kiez: { karlshorst: { generatedAt: 'kaputt' } }, bezirk: {} },
+				scoresGeneratedAt: 'nope'
+			})
+		);
+		expect(entries[0].lastmod).toBeUndefined();
 	});
 });

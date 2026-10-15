@@ -15,7 +15,7 @@ export interface RegionDisplayNames {
 	readonly bezirk: ReadonlyMap<string, string>;
 }
 
-interface FeatureCollectionLike {
+export interface FeatureCollectionLike {
 	readonly features: ReadonlyArray<{ readonly properties?: Record<string, unknown> | null }>;
 }
 
@@ -29,8 +29,13 @@ interface BuildInput {
  * Testbar ohne Dateizugriff.
  */
 /** Mehrfach-Whitespace im Quell-GeoJSON glätten (z.B. „Südliche  Friedrichstadt"). */
-function cleanName(raw: string): string {
+export function cleanName(raw: string): string {
 	return raw.replace(/\s+/g, ' ').trim();
+}
+
+/** Route- und Anker-Slug eines Bezirks aus dem Rohnamen; einzige Ableitung für alle Seiten. */
+export function bezirkSlugFromName(raw: string): string {
+	return normalizeSlug(cleanName(raw));
 }
 
 export function buildRegionDisplayNames({ lorFc, bezirkeFc }: BuildInput): RegionDisplayNames {
@@ -43,7 +48,7 @@ export function buildRegionDisplayNames({ lorFc, bezirkeFc }: BuildInput): Regio
 		if (typeof schluessel === 'string' && typeof name === 'string') {
 			const clean = cleanName(name);
 			bezCodeToName.set(schluessel.slice(-2), clean);
-			bezirk.set(normalizeSlug(clean), clean);
+			bezirk.set(bezirkSlugFromName(clean), clean);
 		}
 	}
 

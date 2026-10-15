@@ -29,6 +29,7 @@ afterEach(() => {
 		'meta[name="description"]',
 		'meta[name="robots"]',
 		'meta[property^="og:"]',
+		'meta[property^="article:"]',
 		'meta[name^="twitter:"]'
 	]) {
 		for (const node of queryAllHead(sel)) node.remove();
@@ -37,6 +38,92 @@ afterEach(() => {
 	const titles = document.head.querySelectorAll('title');
 	for (let i = titles.length - 1; i > 0; i--) titles[i].remove();
 	overwriteGetLocale(() => 'de');
+});
+
+describe('SeoHead: ogType und article', () => {
+	it('og:type ist standardmäßig website und es gibt genau ein og:type', async () => {
+		render(SeoHead, {
+			title: 't',
+			description: 'd',
+			pathname: '/methodik',
+			origin: 'https://navigator.berlin'
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		const types = queryAllHead('meta[property="og:type"]') as HTMLMetaElement[];
+		expect(types.map((t) => t.content)).toEqual(['website']);
+		expect(queryHead('meta[property^="article:"]')).toBeNull();
+	});
+
+	it('rendert genau ein og:type=article und article:*-Properties', async () => {
+		render(SeoHead, {
+			title: 't',
+			description: 'd',
+			pathname: '/updates/launch',
+			origin: 'https://navigator.berlin',
+			ogType: 'article',
+			article: {
+				publishedTime: '2026-05-16',
+				modifiedTime: '2026-06-01',
+				section: 'feature',
+				author: 'Matze Schmidbauer'
+			}
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		const types = queryAllHead('meta[property="og:type"]') as HTMLMetaElement[];
+		expect(types.map((t) => t.content)).toEqual(['article']);
+		const content = (p: string) => (queryHead(`meta[property="${p}"]`) as HTMLMetaElement).content;
+		expect(content('article:published_time')).toBe('2026-05-16');
+		expect(content('article:modified_time')).toBe('2026-06-01');
+		expect(content('article:section')).toBe('feature');
+		expect(content('article:author')).toBe('Matze Schmidbauer');
+	});
+
+	it('lässt article:modified_time weg, wenn modifiedTime fehlt', async () => {
+		render(SeoHead, {
+			title: 't',
+			description: 'd',
+			pathname: '/updates/launch',
+			origin: 'https://navigator.berlin',
+			ogType: 'article',
+			article: { publishedTime: '2026-05-16' }
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		expect(queryHead('meta[property="article:published_time"]')).not.toBeNull();
+		expect(queryHead('meta[property="article:modified_time"]')).toBeNull();
+	});
+});
+
+describe('SeoHead: article nur bei ogType article', () => {
+	it('gibt keine article:*-Properties aus, wenn ogType website ist', async () => {
+		render(SeoHead, {
+			title: 't',
+			description: 'd',
+			pathname: '/methodik',
+			origin: 'https://navigator.berlin',
+			article: { publishedTime: '2026-05-16', section: 'feature' }
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		expect(queryHead('meta[property^="article:"]')).toBeNull();
+	});
+});
+
+describe('SeoHead: Hitze-Subdomain', () => {
+	it('Canonical, og:url und hreflang zeigen auf die Hauptdomain', async () => {
+		render(SeoHead, {
+			title: 'Hitze',
+			description: 'Hitze',
+			pathname: '/hitze',
+			origin: 'https://hitze.navigator.berlin'
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		const hrefs = [
+			queryHead('link[rel="canonical"]')?.getAttribute('href'),
+			queryHead('meta[property="og:url"]')?.getAttribute('content'),
+			...queryAllHead('link[rel="alternate"]').map((l) => l.getAttribute('href'))
+		];
+		expect(hrefs.length).toBeGreaterThan(2);
+		for (const href of hrefs) expect(href).toMatch(/^https:\/\/navigator\.berlin\//);
+	});
 });
 
 describe('SeoHead', () => {

@@ -35,13 +35,13 @@ describe('buildWahlSitemapEntries', () => {
 		expect(entries[0].loc).toBe('https://navigator.berlin/en/berlin-wahlen/2025-btw-zweitstimme');
 	});
 
-	it('lastmod = Wahljahr-01-01 ohne sourceUpdatedAt, changefreq yearly, priority 0.7', () => {
+	it('kein lastmod ohne sourceUpdatedAt, changefreq yearly, priority 0.7', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin',
 			locale: 'de',
 			wahlen: [{ jahr: 2017, typ: 'btw', stimmtyp: 'zweitstimme' }]
 		});
-		expect(entries[0].lastmod).toBe('2017-01-01');
+		expect(entries[0].lastmod).toBeUndefined();
 		expect(entries[0].changefreq).toBe('yearly');
 		expect(entries[0].priority).toBe(0.7);
 	});
@@ -62,13 +62,22 @@ describe('buildWahlSitemapEntries', () => {
 		expect(entries[0].lastmod).toBe('2026-09-20T23:55:55.000Z');
 	});
 
-	it('lastmod fällt auf Wahljahr-01-01 zurück wenn sourceUpdatedAt null ist', () => {
+	it('lastmod fehlt, wenn sourceUpdatedAt null ist', () => {
 		const entries = buildWahlSitemapEntries({
 			origin: 'https://navigator.berlin',
 			locale: 'de',
 			wahlen: [{ jahr: 2023, typ: 'bvv', stimmtyp: 'einstimme', sourceUpdatedAt: null }]
 		});
-		expect(entries[0].lastmod).toBe('2023-01-01');
+		expect(entries[0].lastmod).toBeUndefined();
+	});
+
+	it('lässt lastmod bei ungültigem sourceUpdatedAt weg', () => {
+		const entries = buildWahlSitemapEntries({
+			origin: 'https://navigator.berlin',
+			locale: 'de',
+			wahlen: [{ jahr: 2023, typ: 'bvv', stimmtyp: 'einstimme', sourceUpdatedAt: 'kaputt' }]
+		});
+		expect(entries[0].lastmod).toBeUndefined();
 	});
 
 	it('trimmt trailing slash aus origin', () => {
@@ -87,7 +96,6 @@ describe('WAHL_DETAIL_SOURCE', () => {
 			origin: 'https://navigator.berlin',
 			locale: 'en',
 			manifest: emptyManifest,
-			buildTimestamp: '2026-01-01T00:00:00Z',
 			wahlen: [{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' }]
 		});
 		expect(entries).toHaveLength(1);
@@ -98,8 +106,7 @@ describe('WAHL_DETAIL_SOURCE', () => {
 		const entries = WAHL_DETAIL_SOURCE({
 			origin: 'https://navigator.berlin',
 			locale: 'de',
-			manifest: emptyManifest,
-			buildTimestamp: '2026-01-01T00:00:00Z'
+			manifest: emptyManifest
 		});
 		expect(entries).toEqual([]);
 	});
@@ -109,7 +116,6 @@ describe('WAHL_DETAIL_SOURCE', () => {
 			origin: 'https://navigator.berlin',
 			locale: 'de',
 			manifest: emptyManifest,
-			buildTimestamp: '2026-01-01T00:00:00Z',
 			wahlen: [
 				{ jahr: 2025, typ: 'btw', stimmtyp: 'zweitstimme' },
 				{ jahr: 2023, typ: 'bvv', stimmtyp: 'einstimme' }

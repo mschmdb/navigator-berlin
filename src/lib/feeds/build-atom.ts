@@ -1,5 +1,6 @@
 import type { UpdateEntry } from '$lib/content/updates/types.js';
 import { escapeXml } from './escape-xml.js';
+import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
 import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
 
 /**
@@ -43,11 +44,12 @@ export function buildAtomXml(input: BuildAtomInput): string {
 function renderEntry(entry: UpdateEntry, origin: string): string {
 	const id = `${origin}/updates/${entry.slug}`;
 	const dateIso = `${entry.frontmatter.date}T00:00:00.000Z`;
+	const modifiedIso = `${entryModifiedDate(entry)}T00:00:00.000Z`;
 	return [
 		'\t<entry>',
 		`\t\t<id>${id}</id>`,
 		`\t\t<title>${escapeXml(entry.frontmatter.title_de)}</title>`,
-		`\t\t<updated>${dateIso}</updated>`,
+		`\t\t<updated>${modifiedIso}</updated>`,
 		`\t\t<published>${dateIso}</published>`,
 		`\t\t<link rel="alternate" type="text/html" href="${id}" />`,
 		`\t\t<summary type="text">${escapeXml(entry.frontmatter.summary_de)}</summary>`,

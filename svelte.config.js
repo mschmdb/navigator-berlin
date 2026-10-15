@@ -1,4 +1,9 @@
 import adapter from '@sveltejs/adapter-node';
+import { createHandleHttpError } from './src/lib/build/strict-build.js';
+
+/** Pfade, deren Prerender-HTTP-Fehler den strikten Build nicht abbrechen. Bewusst leer (S5). */
+/** @type {string[]} */
+const ALLOWED_HTTP_ERROR_PATHS = [];
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -30,16 +35,12 @@ const config = {
 			handleUnseenRoutes: ({ route }) => {
 				console.warn(`[prerender] unseen route ${route} (Phase-1 warn-only)`);
 			},
-			// Footer-Links (/datenschutz, /impressum, /architektur) existieren noch nicht.
-			// Eigene Legal-/Architektur-Stories werden die Routes anlegen. Ohne diesen
-			// Handler bricht `vite build` mit "404 linked from /lizenzen" ab.
-			// Wir warnen, statt zu fehlen.
-			handleHttpError: ({ path, referrer, message }) => {
-				// Phase-1-Pragmatik: 404er nur warnen, nicht das Build kicken.
-				// Tighten zu hard-fail wenn 4.6/4.7 (Compliance + Architektur)
-				// und alle OG-Endpoints stabilisiert sind.
-				console.warn(`[prerender] ${message} (referrer: ${referrer})`);
-			}
+			// S5: Im strikten Build (NAVIGATOR_STRICT_BUILD=1, setzt das Dockerfile) bricht
+			// jeder Prerender-HTTP-Fehler (404/500) den Build ab. NODE_ENV taugt nicht als
+			// Signal, weil `vite build` es selbst auf production setzt. Die Allowlist ist
+			// leer, weil der Build 0 Fehler hat. Ohne Flag bleibt es bei der Warnung.
+			// `handleUnseenRoutes` bleibt bewusst eine Warnung.
+			handleHttpError: createHandleHttpError(ALLOWED_HTTP_ERROR_PATHS)
 		}
 	}
 };

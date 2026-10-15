@@ -47,6 +47,12 @@ const EXPECTED_SECTION_IDS = [
 ];
 
 describe('methodik +page.svelte', () => {
+	it('setzt den Titel mit Marke', async () => {
+		render(Page, { data: { manifest: sampleManifest } });
+		await new Promise((r) => setTimeout(r, 20));
+		expect(document.title).toBe('Methodik | navigator.berlin');
+	});
+
 	it('rendert h1 „Methodik"', async () => {
 		render(Page, { data: { manifest: sampleManifest } });
 		const h1 = (await page.getByTestId('methodik-page-title').element()) as HTMLElement;
@@ -241,11 +247,13 @@ describe('methodik +page.svelte · EN (i18n C4a)', () => {
 		expect(tech.headline).toBe('Data methodology');
 		expect(tech.description).toMatch(/^Methodology of the Berlin data atlas/);
 		expect(tech.inLanguage).toBe('en-US');
+		expect(tech.author['@id']).toMatch(/\/#organization$/);
+		expect(tech.author.name).toBe('navigator.berlin');
 		const crumbs = JSON.parse(
 			document.querySelector('script[data-testid="methodik-breadcrumb-jsonld"]')?.textContent ??
 				'{}'
 		);
-		expect(crumbs.itemListElement[0].item).toMatch(/\/en\/$/);
+		expect(crumbs.itemListElement[0].item).toMatch(/\/en$/);
 		expect(crumbs.itemListElement[1].name).toBe('Methodology');
 		expect(crumbs.itemListElement[1].item).toMatch(/\/en\/methodik$/);
 	});

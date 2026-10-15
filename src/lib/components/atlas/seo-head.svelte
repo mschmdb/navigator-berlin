@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { buildCanonical, localizedPathname } from '$lib/seo/canonical.js';
+	import { buildCanonical, canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { buildHreflangCluster } from '$lib/seo/hreflang.js';
 	import { localeToOgLocale } from '$lib/seo/locale-meta.js';
 	import {
@@ -15,6 +15,16 @@
 		locales as siteLocales,
 		type Locale
 	} from '$lib/paraglide/runtime';
+
+	/** Artikel-Metadaten für `og:type=article` (article:* Properties). */
+	export interface SeoArticleMeta {
+		/** ISO-8601-Datum der Erstveröffentlichung. */
+		publishedTime: string;
+		/** Optionaler ISO-8601-Zeitpunkt der letzten Änderung. */
+		modifiedTime?: string;
+		section?: string;
+		author?: string;
+	}
 
 	interface Props {
 		/** Page title rendered in `<title>` and `og:title`. */
@@ -67,13 +77,17 @@
 		 * dieses Prop weg.
 		 */
 		registerEntries?: readonly TranslationRegisterEntry[];
+		/** Wert für `og:type`. Default `website`; Artikel setzen `article`. */
+		ogType?: 'website' | 'article';
+		/** Rendert `article:*`-Properties, nur zusammen mit `ogType="article"` sinnvoll. */
+		article?: SeoArticleMeta;
 	}
 
 	const {
 		title,
 		description,
 		pathname,
-		origin,
+		origin: rawOrigin,
 		canonical,
 		ogImage,
 		ogImageWidth = 1200,
@@ -81,9 +95,12 @@
 		ogImageAlt,
 		locales,
 		noindex = false,
-		registerEntries = TRANSLATION_REGISTER
+		registerEntries = TRANSLATION_REGISTER,
+		ogType = 'website',
+		article
 	}: Props = $props();
 
+	const origin = $derived(canonicalOrigin(rawOrigin));
 	const pageLocale = $derived(getLocale());
 	/**
 	 * The locale whose CONTENT is actually shown, not the URL locale -- an
@@ -133,7 +150,19 @@
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={canonicalUrl} />
-	<meta property="og:type" content="website" />
+	<meta property="og:type" content={ogType} />
+	{#if ogType === 'article' && article}
+		<meta property="article:published_time" content={article.publishedTime} />
+		{#if article.modifiedTime}
+			<meta property="article:modified_time" content={article.modifiedTime} />
+		{/if}
+		{#if article.section}
+			<meta property="article:section" content={article.section} />
+		{/if}
+		{#if article.author}
+			<meta property="article:author" content={article.author} />
+		{/if}
+	{/if}
 	<meta property="og:site_name" content="navigator.berlin" />
 	<meta property="og:locale" content={ogLocale} />
 	{#each ogLocaleAlternates as alt (alt)}

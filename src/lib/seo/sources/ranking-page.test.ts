@@ -15,38 +15,34 @@ function fixtureContext(overrides: Partial<SitemapSourceContext> = {}): SitemapS
 		origin: ORIGIN,
 		locale: 'de',
 		manifest,
-		buildTimestamp: '2026-05-16T08:00:00.000Z',
 		...overrides
 	};
 }
 
 describe('buildRankingSitemapEntry', () => {
 	it('rendert eine Entry für die deutsche Ranking-Page mit priority 0.7 / monthly', () => {
-		const entry = buildRankingSitemapEntry({
-			origin: ORIGIN,
-			lastmod: '2026-05-16T08:00:00.000Z'
-		});
+		const entry = buildRankingSitemapEntry({ origin: ORIGIN });
 		expect(entry.loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
 		expect(entry.changefreq).toBe('monthly');
 		expect(entry.priority).toBe(0.7);
-		expect(entry.lastmod).toBe('2026-05-16T08:00:00.000Z');
+		expect(entry.lastmod).toBeUndefined();
 	});
 
 	it('strippt trailing slash vom origin', () => {
 		const entry = buildRankingSitemapEntry({
-			origin: 'https://navigator.berlin/',
-			lastmod: '2026-05-16T08:00:00.000Z'
+			origin: 'https://navigator.berlin/'
 		});
 		expect(entry.loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
 	});
 });
 
 describe('RANKING_PAGE_SOURCE', () => {
-	it('liefert für locale=de eine Entry mit buildTimestamp als lastmod', () => {
+	it('liefert für locale=de eine Entry ohne lastmod', () => {
 		const entries = RANKING_PAGE_SOURCE(fixtureContext());
 		expect(entries).toHaveLength(1);
 		expect(entries[0].loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
-		expect(entries[0].lastmod).toBe('2026-05-16T08:00:00.000Z');
+		expect(entries[0].lastmod).toBeUndefined();
+		expect(entries[0]).not.toHaveProperty('lastmod');
 	});
 
 	it('i18n Block D1: liefert für locale=en die /en-URL', () => {

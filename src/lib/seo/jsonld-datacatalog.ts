@@ -1,6 +1,8 @@
 import type { WithContext } from 'schema-dts';
 import type { License } from '$lib/data/types.js';
 import { licenseToSchemaOrgUrl } from './license-url.js';
+import { canonicalOrigin } from './canonical.js';
+import { organizationRef, type OrganizationRefJsonLd } from './jsonld-organization.js';
 
 /**
  * Story 5.9 AC-5: DataCatalog-JSON-LD fuer /lizenzen.
@@ -50,11 +52,12 @@ export interface DataCatalogDatasetJsonLd {
 	description: string;
 	url: string;
 	license: string;
-	creator: DatasetCreatorJsonLd;
+	creator: DatasetCreatorJsonLd | OrganizationRefJsonLd;
 }
 
 export interface DataCatalogLeafJsonLd {
 	'@type': 'DataCatalog';
+	'@id'?: string;
 	name: string;
 	description: string;
 	url: string;
@@ -73,6 +76,18 @@ export interface DataCatalogInput {
 	readonly publisherName: string;
 	readonly datasets: readonly DataCatalogDatasetRef[];
 	readonly inLanguage?: string;
+	/** Knoten-`@id`, auf die Datasets per `includedInDataCatalog` verweisen. */
+	readonly catalogId?: string;
+}
+
+export const DATA_CATALOG_NAME = 'navigator.berlin Daten-Katalog';
+
+/**
+ * Stabile `@id` des Layer-Katalogs auf `/lizenzen`. Immer DE-Canonical:
+ * ein Knoten für alle Locales und Hosts.
+ */
+export function dataCatalogId(origin: string): string {
+	return `${canonicalOrigin(origin)}/lizenzen#catalog`;
 }
 
 function stripTrailingSlash(s: string): string {
@@ -89,6 +104,7 @@ export function buildDataCatalog(input: DataCatalogInput): DataCatalogJsonLd {
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'DataCatalog',
+		...(input.catalogId ? { '@id': input.catalogId } : {}),
 		name: input.name,
 		description: input.description,
 		url: `${origin}${path}`,
@@ -99,12 +115,12 @@ export function buildDataCatalog(input: DataCatalogInput): DataCatalogJsonLd {
 		},
 		dataset: input.datasets.map((ds) => {
 			const url = `${origin}${ensureLeadingSlash(ds.urlPath)}`;
-			const creator: DatasetCreatorJsonLd = ds.creatorName
+			const creator: DatasetCreatorJsonLd | OrganizationRefJsonLd = ds.creatorName
 				? { '@type': 'Organization', name: ds.creatorName }
-				: { '@type': 'Organization', name: 'navigator.berlin', url: origin };
+				: organizationRef(origin);
 			return {
 				'@type': 'Dataset' as const,
-				'@id': url,
+				'@id': `${url}#dataset`,
 				name: ds.name,
 				description: ds.description,
 				url,

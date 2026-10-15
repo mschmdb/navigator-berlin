@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -11,18 +14,21 @@
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
 
-	const pageTitle = m.methodik_wahldaten_meta_title();
+	const pageTitle = buildPageTitle(m.methodik_wahldaten_meta_title());
 	const pageDescription = m.methodik_wahldaten_meta_description();
 
 	const breadcrumbs = $derived(
 		buildBreadcrumbList({
 			origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: m.methodik_wahldaten_breadcrumb_methodik(), path: localizedHref('/methodik') },
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{
+					name: m.methodik_wahldaten_breadcrumb_methodik(),
+					path: localizedPathname('/methodik', getLocale())
+				},
 				{
 					name: m.methodik_wahldaten_breadcrumb_wahldaten(),
-					path: localizedHref('/methodik/wahldaten')
+					path: localizedPathname('/methodik/wahldaten', getLocale())
 				}
 			]
 		})
@@ -122,7 +128,14 @@
 	{/if}
 {/snippet}
 
-<SeoHead title={pageTitle} description={pageDescription} {origin} {pathname} />
+<SeoHead
+	title={pageTitle}
+	description={pageDescription}
+	{origin}
+	{pathname}
+	ogImage={`${origin}/og/page/methodik-wahldaten.png`}
+	ogImageAlt={m.methodik_wahldaten_og_image_alt()}
+/>
 
 <JsonLd data={breadcrumbs} testid="wahldaten-breadcrumb-jsonld" />
 

@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
 	import { Accordion } from 'bits-ui';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
@@ -8,6 +11,7 @@
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { richSegments } from '$lib/i18n/rich-text.js';
 	import { m } from '$lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import { buildItemList } from '$lib/seo/jsonld-itemlist.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
@@ -21,7 +25,7 @@
 
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
-	const pageTitle = $derived(m.uis_meta_title());
+	const pageTitle = $derived(buildPageTitle(m.uis_meta_title()));
 	const pageDescription = $derived(m.uis_meta_description());
 	const ogImagePath = '/og/page/umwelt-infrastruktur-score.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
@@ -30,10 +34,11 @@
 		buildDataset({
 			origin,
 			name: m.uis_jsonld_dataset_name(),
+			url: `${canonicalOrigin(origin)}${localizedPathname('/umwelt-infrastruktur-score', getLocale())}`,
+			bbox: BEZIRKE_BBOX,
 			description: pageDescription,
 			license: 'CC BY 4.0',
 			dateModified: data.computedAt ?? new Date().toISOString(),
-			creatorName: 'navigator.berlin',
 			contentUrl: `${origin}${pathname}`,
 			encodingFormat: 'text/html',
 			keywords: [m.uis_jsonld_keyword_kiez_score(), 'Berlin', 'Ranking']
@@ -45,7 +50,7 @@
 			origin,
 			items: data.kieze.map((row) => ({
 				name: row.displayName,
-				path: localizedHref(`/kiez/${row.slug}`)
+				path: localizedPathname(`/kiez/${row.slug}`, getLocale())
 			}))
 		})
 	);
@@ -60,7 +65,7 @@
 		buildBreadcrumbList({
 			origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
 				{ name: m.uis_h1_title(), path: pathname }
 			]
 		})

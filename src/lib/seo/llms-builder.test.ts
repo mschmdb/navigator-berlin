@@ -108,6 +108,29 @@ describe('collectLlmsSourceEntries', () => {
 		expect(urls).toContain('https://navigator.berlin/lizenzen');
 	});
 
+	it('S7: führt die Übersichtsseiten /kieze, /bezirke und /daten', () => {
+		const entries = collectLlmsSourceEntries(ctx);
+		for (const path of ['/kieze', '/bezirke', '/daten']) {
+			const entry = entries.find((e) => e.loc === `https://navigator.berlin${path}`);
+			expect(entry, path).toBeDefined();
+			expect(entry?.section).toBe('static');
+			expect(entry?.description.length).toBeGreaterThan(20);
+		}
+	});
+
+	it('S7: Zahlen in den Übersichtsbeschreibungen stammen aus dem Kontext', () => {
+		const entries = collectLlmsSourceEntries(ctx);
+		const desc = (path: string) =>
+			entries.find((e) => e.loc === `https://navigator.berlin${path}`)?.description ?? '';
+		expect(desc('/kieze')).toContain(`Alle ${ctx.kieze.length} Kieze`);
+		expect(desc('/bezirke')).toContain(`Alle ${ctx.bezirke.length} Bezirke`);
+		const empty = collectLlmsSourceEntries({ ...ctx, kieze: [], bezirke: [] });
+		const emptyDesc = (path: string) =>
+			empty.find((e) => e.loc === `https://navigator.berlin${path}`)?.description ?? '';
+		expect(emptyDesc('/kieze')).not.toMatch(/\d/);
+		expect(emptyDesc('/bezirke')).not.toMatch(/\d/);
+	});
+
 	it('includes one entry per layer from manifest', () => {
 		const urls = collectLlmsSourceEntries(ctx).map((e) => e.loc);
 		expect(urls).toContain('https://navigator.berlin/layer/laerm-2023');

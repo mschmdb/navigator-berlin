@@ -38,3 +38,21 @@ describe('buildBreadcrumbList', () => {
 		expect(out.itemListElement[0].item).toBe('https://navigator.berlin/methodik');
 	});
 });
+
+describe('buildBreadcrumbList: relative Pfade', () => {
+	it('lehnt ./ und ../ ab', () => {
+		for (const path of ['./hitze', '../en/hitze', '/a/../b', '/./x']) {
+			expect(() =>
+				buildBreadcrumbList({ origin: 'https://navigator.berlin', items: [{ name: 'x', path }] })
+			).toThrow(/absolut/);
+		}
+	});
+
+	it('akzeptiert absolute Pfade', () => {
+		const list = buildBreadcrumbList({
+			origin: 'https://navigator.berlin',
+			items: [{ name: 'x', path: '/en/hitze' }]
+		});
+		expect(list.itemListElement[0]?.item).toBe('https://navigator.berlin/en/hitze');
+	});
+});

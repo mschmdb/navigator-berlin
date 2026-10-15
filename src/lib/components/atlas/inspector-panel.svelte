@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { Share2, X, Bookmark, BookmarkCheck, Check, GitCompare } from '@lucide/svelte';
 	import type { LayerMetadata } from '$lib/data';
 	import {
@@ -446,7 +447,7 @@
 	const ogImageUrl = $derived(shareOpen ? buildOgImageUrl(ogImageInput, currentOrigin()) : null);
 	const permalinkUrl = $derived(shareOpen ? currentHref() : '');
 	const nativeShareData = $derived<ShareData>({
-		title: addressName ? `${addressName} - Berlin in Daten - navigator.berlin` : 'navigator.berlin',
+		title: addressName ? buildPageTitle(addressName) : 'navigator.berlin',
 		text: ogImageInput?.topLayers.join(' · ') ?? '',
 		url: permalinkUrl || currentHref()
 	});

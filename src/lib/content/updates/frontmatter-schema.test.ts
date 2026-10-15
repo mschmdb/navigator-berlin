@@ -99,3 +99,32 @@ describe('frontmatter-schema', () => {
 		expect(result.lang).toBe('de');
 	});
 });
+
+describe('parseFrontmatter updated', () => {
+	const base = {
+		title_de: 'T',
+		summary_de: 'S',
+		date: '2026-05-15',
+		category: 'daten-update' as UpdateCategory
+	};
+
+	it('updated ist optional', () => {
+		expect(parseFrontmatter(base).updated).toBeUndefined();
+	});
+
+	it('akzeptiert gültiges updated', () => {
+		expect(parseFrontmatter({ ...base, updated: '2026-06-01' }).updated).toBe('2026-06-01');
+	});
+
+	it('wirft bei ungültigem updated-Format', () => {
+		expect(() => parseFrontmatter({ ...base, updated: '01.06.2026' })).toThrow(/updated/);
+	});
+
+	it('wirft, wenn updated vor date liegt', () => {
+		expect(() => parseFrontmatter({ ...base, updated: '2026-05-14' })).toThrow(/updated/);
+	});
+
+	it('akzeptiert updated gleich date', () => {
+		expect(parseFrontmatter({ ...base, updated: '2026-05-15' }).updated).toBe('2026-05-15');
+	});
+});

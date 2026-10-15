@@ -3,7 +3,6 @@ import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import ScoreBar from './score-bar.svelte';
 import DistributionBar from './distribution-bar.svelte';
-import CoverageBar from './coverage-bar.svelte';
 import DistanceRing from './distance-ring.svelte';
 
 describe('ScoreBar', () => {
@@ -60,17 +59,6 @@ describe('DistributionBar', () => {
 		});
 		const el = (await page.getByTestId('distribution-bar').element()) as HTMLElement;
 		expect(el.getAttribute('data-neutral')).toBe('true');
-	});
-});
-
-describe('CoverageBar', () => {
-	it('rendert Anteil + Fill + sr-only-Tabelle', async () => {
-		render(CoverageBar, { share: 42, label: 'Kaltluft', layerName: 'Kaltluftentstehung' });
-		const val = (await page.getByTestId('coverage-bar-value').element()) as HTMLElement;
-		expect(val.textContent).toContain('42%');
-		await expect.element(page.getByTestId('coverage-bar-fill')).toBeInTheDocument();
-		const table = (await page.getByTestId('coverage-bar-table').element()) as HTMLElement;
-		expect(table.textContent).toContain('42%');
 	});
 });
 

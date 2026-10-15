@@ -57,7 +57,7 @@ a: kriminalitaetsatlas.berlin.de
 p: Methodik: Kiez-Score
 a: Kiez-Score
 h2: Klimadaten (DWD)
-p: Historische Sommertage- und Hitzetage-Zeitreihen von vier Berliner Wetterstationen (Dahlem, Tempelhof, Buch, Brandenburg) liegen als Build-Aggregat im Hitze-Kontext.
+p: Historische Sommertage- und Hitzetage-Zeitreihen von vier Wetterstationen in und um Berlin (Dahlem, Tempelhof, Buch, Schönefeld) liegen als Build-Aggregat im Hitze-Kontext.
 dt: Deutscher Wetterdienst · Climate Data Center
 dd: Tageswerte der Stationsmessungen (daily KL, historical). Lizenz CC BY 4.0, Namensnennung Deutscher Wetterdienst.
 dd: opendata.dwd.de/climate_environment/CDC

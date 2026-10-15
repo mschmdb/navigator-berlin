@@ -1,14 +1,12 @@
 <script lang="ts">
 	/**
-	 * Story 2.13 AC-8: Auto-Discovery-Links für RSS, Atom, JSON-Feed im Page-Head.
+	 * Auto-Discovery-Links für RSS, Atom, JSON-Feed im Page-Head.
 	 *
-	 * Verwendung: in `<svelte:head>` der Updates-Index, Detail-Page und Hero-Landing
-	 * `/` einbinden, damit Feed-Reader die Drei-Format-Subscription anbieten.
-	 *
-	 * Phase 1 DE-only (memory `project_i18n_phase_1_de_only`): Feeds existieren nur
-	 * unter `/updates/*` ohne Locale-Prefix.
+	 * Die Feeds existieren nur auf Deutsch unter `/updates/*` (kein EN-Feed). Sie
+	 * sind keine Sprachalternativen der Seite, deshalb tragen die Links kein
+	 * `hreflang`. Auf EN weist der `title` stattdessen auf die deutsche Sprache hin.
 	 */
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
 
 	type Props = {
 		/** Absolute Origin der Site (page.url.origin). */
@@ -16,30 +14,25 @@
 	};
 	let { origin }: Props = $props();
 	const cleanOrigin = $derived(origin.replace(/\/+$/, ''));
-	// Feeds bleiben DE (kein EN-Feed): auf `/en/...` kennzeichnet hreflang die Sprache des Ziels.
-	const feedLang = $derived(getLocale() === 'de' ? undefined : 'de');
 </script>
 
 <svelte:head>
 	<link
 		rel="alternate"
-		hreflang={feedLang}
 		type="application/rss+xml"
-		title="Navigator Berlin Updates (RSS)"
+		title={m.updates_feed_title_rss()}
 		href={`${cleanOrigin}/updates/rss.xml`}
 	/>
 	<link
 		rel="alternate"
-		hreflang={feedLang}
 		type="application/atom+xml"
-		title="Navigator Berlin Updates (Atom)"
+		title={m.updates_feed_title_atom()}
 		href={`${cleanOrigin}/updates/atom.xml`}
 	/>
 	<link
 		rel="alternate"
-		hreflang={feedLang}
 		type="application/feed+json"
-		title="Navigator Berlin Updates (JSON Feed)"
+		title={m.updates_feed_title_json()}
 		href={`${cleanOrigin}/updates/feed.json`}
 	/>
 </svelte:head>

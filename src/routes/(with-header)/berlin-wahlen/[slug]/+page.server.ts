@@ -4,7 +4,7 @@ import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for
 import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for-bezirk.js';
 import { getStimmbezirksWinners } from '$lib/server/db/queries/wahl/get-stimmbezirks-winners.js';
 import { WAHL_TO_GEO, wahlSlugFromTypJahr } from '$lib/data/wahl-geo-mapping.js';
-import { sourceName } from '$lib/server/wahl/source-label.js';
+import { sourceName } from '$lib/data/wahl-source-name.js';
 import { parseWahlSlug, buildWahlSlug, buildWahlFallbackList } from '$lib/data/wahl-slug.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
 

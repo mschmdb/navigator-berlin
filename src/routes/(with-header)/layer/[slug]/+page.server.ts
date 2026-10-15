@@ -5,6 +5,7 @@ import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { loadLayerKiezRanking } from '$lib/server/layer-kiez-ranking-loader.js';
+import { readLayerAggregatesFile } from '$lib/server/profile/meta-sources.js';
 import type { LayerKiezRanking } from '$lib/data/layer-kiez-ranking.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
 import type { FaqEntry } from '$lib/data/types.js';
@@ -37,16 +38,26 @@ export type LayerPageData = {
 	readonly faq: readonly FaqEntry[];
 	readonly faqLocale: Locale;
 	readonly ranking: LayerKiezRanking | null;
+	/** Für den Layer existieren Kiez-Aggregate (`static/layer-aggregates`). */
+	readonly hasKiezAggregate: boolean;
 };
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	const manifest = await loadManifest(fetch);
 	const detail: LayerDetail | null = buildLayerDetail(params.slug, getLocale(), manifest);
 	if (!detail) error(404, m.layer_page_not_found({ slug: params.slug }, { locale: getLocale() }));
-	const [faq, ranking] = await Promise.all([
+	const [faq, ranking, aggregates] = await Promise.all([
 		getFaqForPage({ pageType: 'layer', slug: params.slug, locale: getLocale() }),
-		loadLayerKiezRanking(params.slug)
+		loadLayerKiezRanking(params.slug),
+		readLayerAggregatesFile()
 	]);
-	const data: LayerPageData = { detail, faq: faq.items, faqLocale: faq.locale, ranking };
+	const hasKiezAggregate = Boolean(aggregates?.aggregates[params.slug]?.kiez);
+	const data: LayerPageData = {
+		detail,
+		faq: faq.items,
+		faqLocale: faq.locale,
+		ranking,
+		hasKiezAggregate
+	};
 	return data;
 };

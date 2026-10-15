@@ -14,7 +14,7 @@ import type { NeighborEntry } from '$lib/data/kiez-neighbors.js';
 import { getKiezNeighborLists } from '$lib/server/kiez-neighbors-index.js';
 import { buildKiezContext } from '$lib/data/bezirk-kieze-view.js';
 import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
-import { normalizeSlug } from '$lib/data/internal/slug.js';
+import { bezirkSlugFromName } from '$lib/data/region-display-names.js';
 import { featureFlags } from '$lib/data/feature-flags.js';
 import { SCORE_DIMENSION_KEYS, type ComparisonDimRow } from '$lib/data/comparison-types.js';
 import type { WahlVerlaufRow } from '$lib/components/atlas/kiez-wahl-verlauf.svelte';
@@ -93,6 +93,8 @@ const SCORE_DIMS = SCORE_DIMENSION_KEYS;
 
 export type KiezPageData = {
 	readonly profile: KiezProfile;
+	/** Slug der Bezirksseite (`/bezirk/<slug>`), `null` ohne Bezirk. */
+	readonly bezirkSlug: string | null;
 	readonly stats: KiezStats | null;
 	readonly score: KiezScore | null;
 	readonly faq: readonly FaqEntry[];
@@ -197,7 +199,7 @@ const EMPTY_CONTEXT: BezirkContext = { outline: null };
 /** Gemeinsamer Umriss des Bezirks (Lage-Grafik im Hero). */
 async function tryLoadBezirkContext(parentBezirkName: string): Promise<BezirkContext> {
 	if (!parentBezirkName) return EMPTY_CONTEXT;
-	const parentBezirkSlug = normalizeSlug(parentBezirkName);
+	const parentBezirkSlug = bezirkSlugFromName(parentBezirkName);
 	try {
 		const { readFile } = await import('node:fs/promises');
 		const { resolve } = await import('node:path');
@@ -227,7 +229,7 @@ async function tryLoadBezirkContext(parentBezirkName: string): Promise<BezirkCon
 			const schluessel = props.Schluessel_gesamt;
 			const name = props.Gemeinde_name;
 			if (typeof schluessel === 'string' && typeof name === 'string') {
-				bezirkCodeToSlug.set(schluessel.slice(-2), normalizeSlug(name));
+				bezirkCodeToSlug.set(schluessel.slice(-2), bezirkSlugFromName(name));
 			}
 		}
 
@@ -253,6 +255,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, m.kiez_page_not_found({ slug }, { locale: getLocale() }));
 	}
+	const bezirkSlug = profile.bezirk ? bezirkSlugFromName(profile.bezirk) : null;
 	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
 	const [
 		stats,
@@ -302,6 +305,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		neighbors: neighborLists.neighbors,
 		similar: neighborLists.similar,
 		outline: bezirkContext.outline,
+		bezirkSlug,
 		wahlVerlauf,
 		comparison,
 		compositeRank,
@@ -309,7 +313,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		keyFigures: buildKeyFigures(layerAggregates, {
 			kind: 'kiez',
 			slug,
-			bezirkSlug: profile.bezirk ? normalizeSlug(profile.bezirk) : null
+			bezirkSlug
 		}),
 		profileProse: profileResult.paragraphs,
 		profileLocale: profileResult.locale

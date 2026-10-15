@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import KiezScoreRing from './kiez-score-ring.svelte';
-import KiezScoreHero from './kiez-score-hero.svelte';
 import type { KiezScore } from '$lib/data';
 
 function makeScore(overall = 50): KiezScore {
@@ -63,31 +62,5 @@ describe('KiezScoreRing', () => {
 		const table = (await page.getByTestId('kiez-score-ring-table').element()) as HTMLElement;
 		expect(table.textContent).toContain('Gesamt');
 		expect(table.textContent).toContain('Ruhe & Luft');
-	});
-});
-
-describe('KiezScoreHero', () => {
-	it('score null → rendert nichts', async () => {
-		render(KiezScoreHero, { score: null });
-		await expect.element(page.getByTestId('kiez-score-hero')).not.toBeInTheDocument();
-	});
-
-	it('single mode: Ring + Dim-Liste + Methodik-Link', async () => {
-		render(KiezScoreHero, { score: makeScore(50) });
-		await expect.element(page.getByTestId('kiez-score-ring')).toBeInTheDocument();
-		await expect.element(page.getByTestId('kiez-score-hero-dims')).toBeInTheDocument();
-		const link = (await page
-			.getByTestId('kiez-score-hero-methodik-link')
-			.element()) as HTMLAnchorElement;
-		expect(link.getAttribute('href')).toBe('/methodik/kiez-score');
-	});
-
-	it('compare mode: 5-Dim-Bar-Stack A/B statt Ring', async () => {
-		render(KiezScoreHero, { score: makeScore(50), comparisonScore: makeScore(70) });
-		const hero = (await page.getByTestId('kiez-score-hero').element()) as HTMLElement;
-		expect(hero.getAttribute('data-compare')).toBe('true');
-		await expect.element(page.getByTestId('kiez-score-hero-compare')).toBeInTheDocument();
-		await expect.element(page.getByTestId('hero-compare-dim-ruhe-luft')).toBeInTheDocument();
-		await expect.element(page.getByTestId('kiez-score-ring')).not.toBeInTheDocument();
 	});
 });

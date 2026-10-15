@@ -1,6 +1,6 @@
 import type { GeoCoordinates, PropertyValue, WithContext } from 'schema-dts';
 import type { Locale } from '$lib/paraglide/runtime';
-import { localizedPathname } from './canonical.js';
+import { canonicalOrigin, localizedPathname } from './canonical.js';
 
 /**
  * Place-Leaf-Type fuer mutable Builder-Output. Wir nutzen das Leaf-Interface direkt
@@ -12,7 +12,12 @@ export interface PlaceLeafJsonLd {
 	name: string;
 	geo: GeoCoordinates;
 	url?: string;
-	containedInPlace?: PlaceLeafJsonLd | { '@type': 'Place'; name: string };
+	'@id'?: string;
+	containedInPlace?:
+		| PlaceLeafJsonLd
+		| { '@type': 'Place'; name: string }
+		| { '@type': 'AdministrativeArea'; '@id': string; name?: string; url: string }
+		| { '@type': 'City'; name: string; sameAs: string };
 	additionalProperty?: PropertyValue[];
 	sameAs?: string[];
 }
@@ -24,6 +29,13 @@ export interface PlaceLeafJsonLd {
  * `buildAdministrativeArea`). Generator hier ist die Basis fuer beides;
  * AdministrativeArea ergaenzt typ-spezifische Felder.
  */
+/** Berlin als Stadt-Entität (Wikidata Q64), Elternknoten der Bezirke. */
+export const BERLIN_CITY = {
+	'@type': 'City',
+	name: 'Berlin',
+	sameAs: 'https://www.wikidata.org/wiki/Q64'
+} as const;
+
 export interface PlaceInput {
 	/** Absolute Origin ohne trailing-slash. */
 	readonly origin: string;
@@ -32,6 +44,10 @@ export interface PlaceInput {
 	readonly centroid: readonly [number, number];
 	/** Optional Parent-Place-Name (z. B. Bezirk fuer Kiez). */
 	readonly containedInPlaceName?: string;
+	/** Optional. Mit Slug + Pfad der Elternseite verweist `containedInPlace` per `@id` und `url` darauf. */
+	readonly containedInPlaceRef?: { readonly slug: string; readonly urlBasePath: string };
+	/** Optional. Setzt Berlin als `City` mit Wikidata-`sameAs` als Elternknoten. */
+	readonly containedInCity?: boolean;
 	/** Optional Slug + Pfad-Praefix fuer Place.url. */
 	readonly slug?: string;
 	readonly urlBasePath?: string;
@@ -58,7 +74,7 @@ export interface PlaceInput {
 export type PlaceJsonLd = WithContext<PlaceLeafJsonLd>;
 
 export function buildPlace(input: PlaceInput): PlaceJsonLd {
-	const origin = input.origin.replace(/\/+$/, '');
+	const origin = canonicalOrigin(input.origin);
 	const geo: GeoCoordinates = {
 		'@type': 'GeoCoordinates',
 		latitude: input.centroid[1],
@@ -88,15 +104,33 @@ export function buildPlace(input: PlaceInput): PlaceJsonLd {
 		geo
 	};
 
-	if (input.containedInPlaceName) {
+	const toPath = (base: string, slug: string): string => {
+		const basePath = base.startsWith('/') ? base : `/${base}`;
+		return `${basePath}/${slug}`;
+	};
+	const toUrl = (path: string): string =>
+		`${origin}${input.locale ? localizedPathname(path, input.locale) : path}`;
+	// `@id` bleibt je Sprache gleich (unlokalisierter Pfad), nur `url` folgt der Locale.
+	const toId = (path: string): string => `${origin}${path}#place`;
+
+	const ref = input.containedInPlaceRef;
+	if (ref) {
+		const parentPath = toPath(ref.urlBasePath, ref.slug);
+		out.containedInPlace = {
+			'@type': 'AdministrativeArea',
+			'@id': toId(parentPath),
+			...(input.containedInPlaceName ? { name: input.containedInPlaceName } : {}),
+			url: toUrl(parentPath)
+		};
+	} else if (input.containedInCity) {
+		out.containedInPlace = { ...BERLIN_CITY };
+	} else if (input.containedInPlaceName) {
 		out.containedInPlace = { '@type': 'Place', name: input.containedInPlaceName };
 	}
 	if (input.slug && input.urlBasePath) {
-		const basePath = input.urlBasePath.startsWith('/')
-			? input.urlBasePath
-			: `/${input.urlBasePath}`;
-		const path = `${basePath}/${input.slug}`;
-		out.url = `${origin}${input.locale ? localizedPathname(path, input.locale) : path}`;
+		const path = toPath(input.urlBasePath, input.slug);
+		out.url = toUrl(path);
+		out['@id'] = toId(path);
 	}
 	if (props.length > 0) {
 		out.additionalProperty = props;

@@ -15,7 +15,7 @@ import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { getKiezSharesForWahl } from '$lib/server/db/queries/wahl/get-kiez-shares-for-wahl.js';
 import { loadKiezSlugToBzrId } from '$lib/server/wahl/kiez-slug-to-bzr.js';
 import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
-import { sourceName } from '$lib/server/wahl/source-label.js';
+import { sourceName } from '$lib/data/wahl-source-name.js';
 
 const ElectionSlugSchema = v.pipe(v.string(), v.regex(/^\d{4}-(btw|agh|bvv)(-[a-z]+)?$/));
 

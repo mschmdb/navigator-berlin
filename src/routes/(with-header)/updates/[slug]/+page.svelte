@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -29,12 +31,15 @@
 	const tagLang = $derived(locale === 'de' ? undefined : 'de');
 	const bodyLang = $derived(data.bodyIsDeFallback ? 'de' : undefined);
 
-	const pageTitle = $derived(m.updates_detail_page_title({ title: localized.title }));
+	const pageTitle = $derived(buildPageTitle(localized.title));
 	const pageDescription = $derived(localized.summary);
+
+	const ogImage = $derived(`${page.url.origin}/og/page/updates.png`);
 
 	const jsonLd = $derived(
 		buildBlogPosting({
 			entry,
+			image: ogImage,
 			origin: page.url.origin,
 			locale,
 			bodyIsDeFallback: data.bodyIsDeFallback
@@ -45,9 +50,9 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: 'Updates', path: localizedHref('/updates') },
-				{ name: localized.title, path: localizedHref(`/updates/${entry.slug}`) }
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{ name: 'Updates', path: localizedPathname('/updates', getLocale()) },
+				{ name: localized.title, path: localizedPathname(`/updates/${entry.slug}`, getLocale()) }
 			]
 		})
 	);
@@ -58,17 +63,17 @@
 	description={pageDescription}
 	pathname={page.url.pathname}
 	origin={page.url.origin}
-	ogImage={`${page.url.origin}/og/page/updates.png`}
-	ogImageAlt="navigator.berlin Updates"
+	{ogImage}
+	ogImageAlt={m.updates_detail_og_image_alt()}
+	ogType="article"
+	article={{
+		publishedTime: entry.frontmatter.date,
+		modifiedTime: entry.frontmatter.updated,
+		section: entry.frontmatter.category
+	}}
 />
 <FeedDiscoveryLinks origin={page.url.origin} />
 
-<svelte:head>
-	<meta property="og:type" content="article" />
-	<meta property="article:published_time" content={entry.frontmatter.date} />
-	<meta property="article:section" content={entry.frontmatter.category} />
-	<meta property="article:author" content="Matze Schmidbauer" />
-</svelte:head>
 <JsonLd data={jsonLd} testid="updates-detail-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="updates-detail-breadcrumb-jsonld" />
 

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { readDatasetJsonLd } from '$lib/seo/dataset-jsonld-test-utils.js';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Page from './+page.svelte';
 import { internalHrefs, textLines } from '../methodik/methodik-test-utils.js';
@@ -100,6 +101,9 @@ describe('umwelt-infrastruktur-score · EN (i18n C4b)', () => {
 		);
 		expect(dataset.name).toBe('Environment & infrastructure score Berlin');
 		expect(dataset.keywords).toBe('Kiez score, Berlin, Ranking');
+		expect(dataset.creator['@type']).toBe('Organization');
+		expect(dataset.creator['@id']).toMatch(/\/#organization$/);
+		expect(dataset.creator.name).toBe('navigator.berlin');
 	});
 
 	it('DE-Links tragen kein /en', async () => {
@@ -137,9 +141,7 @@ describe('umwelt-infrastruktur-score · DE-Wortlaut von Aside, Accordion, Empty-
 		expect(document.querySelector('[role="radiogroup"]')?.getAttribute('aria-label')).toBe(
 			'Ranking-Ansicht wechseln'
 		);
-		expect(document.title).toBe(
-			'Umwelt- & Infrastruktur-Score - Berlin in Daten - navigator.berlin'
-		);
+		expect(document.title).toBe('Umwelt- & Infrastruktur-Score | navigator.berlin');
 	});
 
 	it('Empty-State ohne Zeilen behält den Baseline-Wortlaut', () => {
@@ -161,10 +163,28 @@ describe('umwelt-infrastruktur-score · JSON-LD EN (i18n C4b)', () => {
 		const crumbs = JSON.parse(
 			document.querySelector('script[data-testid="ranking-breadcrumb-jsonld"]')?.textContent ?? '{}'
 		);
-		expect(crumbs.itemListElement[0].item).toMatch(/\/en\/$/);
+		expect(crumbs.itemListElement[0].item).toMatch(/\/en$/);
 		expect(crumbs.itemListElement[1].name).toBe('Environment & infrastructure score');
 		const list =
 			document.querySelector('script[data-testid="ranking-itemlist-jsonld"]')?.textContent ?? '';
 		expect(list).toContain('/en/kiez/wedding');
+	});
+});
+
+describe('umwelt-infrastruktur-score · Dataset-JSON-LD', () => {
+	afterEach(() => overwriteGetLocale(() => 'de'));
+
+	it('DE: url ohne Locale-Präfix, spatialCoverage gesetzt', () => {
+		render(Page, { data });
+		const ld = readDatasetJsonLd();
+		expect(ld.url).toMatch(/\/umwelt-infrastruktur-score$/);
+		expect(ld.url).not.toContain('/en/');
+		expect(ld.spatialCoverage.geo.box).toMatch(/^52\.\d+ 13\.\d+ 52\.\d+ 13\.\d+$/);
+	});
+
+	it('EN: url mit /en-Präfix', () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data });
+		expect(readDatasetJsonLd().url).toMatch(/\/en\/umwelt-infrastruktur-score$/);
 	});
 });

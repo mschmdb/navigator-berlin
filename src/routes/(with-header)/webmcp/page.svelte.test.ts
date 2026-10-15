@@ -93,7 +93,7 @@ describe('webmcp · DE-Wortlaut der Linklisten und Meta (i18n C4b)', () => {
 
 	it('Meta-Title bleibt der Baseline-Titel', () => {
 		render(Page);
-		expect(document.title).toBe('WebMCP - Schnittstelle für KI-Assistenten - navigator.berlin');
+		expect(document.title).toBe('WebMCP: Schnittstelle für KI-Assistenten | navigator.berlin');
 	});
 });
 

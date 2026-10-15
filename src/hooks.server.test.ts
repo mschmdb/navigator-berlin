@@ -58,6 +58,38 @@ describe('hooks.server.ts: handleRenamedRouteRedirect', () => {
 // genauso wie /api/* bekommen -- basePathname() normalisiert den
 // Locale-Präfix weg, bevor der /api/-Check läuft.
 describe('hooks.server.ts: handleNoIndexHeaders', () => {
+	// Prerender: SvelteKit wirft beim Zugriff auf url.search. Ein früher Stand
+	// las search für jeden Pfad und ließ alle prerenderten Seiten scheitern.
+	it('liest url.search außerhalb von /explore nicht (Prerender-sicher)', async () => {
+		const url = new URL('http://localhost/kiez/mitte');
+		Object.defineProperty(url, 'search', {
+			get() {
+				throw new Error('Cannot access url.search on a page with prerendering enabled');
+			}
+		});
+		const resolve = vi.fn(async () => new Response('<html></html>'));
+		const response = await handleNoIndexHeaders({
+			event: { url },
+			resolve
+		} as unknown as Parameters<typeof handleNoIndexHeaders>[0]);
+		expect(response.headers.get('X-Robots-Tag')).toBeNull();
+	});
+
+	it('übersteht /explore, wenn url.search beim Prerender wirft', async () => {
+		const url = new URL('http://localhost/explore');
+		Object.defineProperty(url, 'search', {
+			get() {
+				throw new Error('Cannot access url.search on a page with prerendering enabled');
+			}
+		});
+		const resolve = vi.fn(async () => new Response('<html></html>'));
+		const response = await handleNoIndexHeaders({
+			event: { url },
+			resolve
+		} as unknown as Parameters<typeof handleNoIndexHeaders>[0]);
+		expect(response.headers.get('X-Robots-Tag')).toBeNull();
+	});
+
 	it('setzt X-Robots-Tag auf /api/*-Responses', async () => {
 		const resolve = vi.fn(async () => new Response('{}'));
 		const response = await handleNoIndexHeaders({
@@ -83,5 +115,45 @@ describe('hooks.server.ts: handleNoIndexHeaders', () => {
 			resolve
 		} as unknown as Parameters<typeof handleNoIndexHeaders>[0]);
 		expect(response.headers.get('X-Robots-Tag')).toBeNull();
+	});
+});
+
+describe('hooks.server.ts: handleNoIndexHeaders (Indexierungs-Hygiene S1)', () => {
+	async function headerFor(url: string): Promise<string | null> {
+		const resolve = vi.fn(async () => new Response('<html></html>'));
+		const response = await handleNoIndexHeaders({
+			event: fakeEvent(url),
+			resolve
+		} as unknown as Parameters<typeof handleNoIndexHeaders>[0]);
+		return response.headers.get('X-Robots-Tag');
+	}
+
+	it('setzt noindex, follow auf /explore mit Query', async () => {
+		expect(await headerFor('http://localhost/explore?kiez=reuterstrasse')).toBe('noindex, follow');
+	});
+
+	it('setzt noindex, follow auf /en/explore mit Query', async () => {
+		expect(await headerFor('http://localhost/en/explore?layers=x')).toBe('noindex, follow');
+	});
+
+	it('lässt /explore ohne Query indexierbar', async () => {
+		expect(await headerFor('http://localhost/explore')).toBeNull();
+		expect(await headerFor('http://localhost/explore?')).toBeNull();
+	});
+
+	it('setzt noindex, follow auf /demo und Unterseiten', async () => {
+		expect(await headerFor('http://localhost/demo')).toBe('noindex, follow');
+		expect(await headerFor('http://localhost/demo/playwright')).toBe('noindex, follow');
+	});
+
+	it('behandelt Trailing Slash, /en/demo und Tracking-Parameter', async () => {
+		expect(await headerFor('http://localhost/explore/?kiez=x')).toBe('noindex, follow');
+		expect(await headerFor('http://localhost/en/demo')).toBe('noindex, follow');
+		// utm_* ist bewusst noindex: jede Query-URL auf /explore bleibt aus dem Index.
+		expect(await headerFor('http://localhost/explore?utm_source=x')).toBe('noindex, follow');
+	});
+
+	it('trifft keine Pfade, die nur mit demo beginnen', async () => {
+		expect(await headerFor('http://localhost/demokratie')).toBeNull();
 	});
 });

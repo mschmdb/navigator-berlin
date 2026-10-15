@@ -39,9 +39,7 @@ describe('buildBezirkMeta', () => {
 
 	it('DE: Title mit Einwohnern und km2', () => {
 		const { title } = buildBezirkMeta({ ...input, locale: 'de' });
-		expect(title).toBe(
-			'Friedrichshain-Kreuzberg: 292.624 Einwohner:innen, 20,3 km² | navigator.berlin'
-		);
+		expect(title).toBe('Friedrichshain-Kreuzberg: 292.624 Einwohner:innen, 20,3 km²');
 	});
 
 	it('DE: Description mit Fakt, Score, Rang', () => {
@@ -56,7 +54,7 @@ describe('buildBezirkMeta', () => {
 
 	it('EN: lokalisierte Zahlen', () => {
 		const { title, description } = buildBezirkMeta({ ...input, locale: 'en' });
-		expect(title).toBe('Friedrichshain-Kreuzberg: 292,624 residents, 20.3 km² | navigator.berlin');
+		expect(title).toBe('Friedrichshain-Kreuzberg: 292,624 residents, 20.3 km²');
 		expect(description).toContain(
 			'Friedrichshain-Kreuzberg has 292,624 residents across 20.3 km² (as of end of 2024).'
 		);
@@ -92,7 +90,7 @@ describe('buildBezirkMeta', () => {
 			flaecheHa: 0,
 			locale: 'de'
 		});
-		expect(title).toBe('Friedrichshain-Kreuzberg: 292.624 Einwohner:innen | navigator.berlin');
+		expect(title).toBe('Friedrichshain-Kreuzberg: 292.624 Einwohner:innen');
 		expect(description).toContain(
 			'Friedrichshain-Kreuzberg hat 292.624 Einwohner:innen (Stand Ende 2024).'
 		);
@@ -148,9 +146,7 @@ describe('buildKiezMeta', () => {
 
 	it('DE: Title mit Bezirk und Score', () => {
 		const { title } = buildKiezMeta({ ...input, locale: 'de' });
-		expect(title).toBe(
-			'Reuterstraße (Neukölln): 8.500 Einwohner:innen, Kiez-Score 41 | navigator.berlin'
-		);
+		expect(title).toBe('Reuterstraße (Neukölln): 8.500 Einwohner:innen');
 	});
 
 	it('DE: Description mit Fakt und Rang, Nutzen entfällt über 160 Zeichen', () => {
@@ -169,9 +165,7 @@ describe('buildKiezMeta', () => {
 
 	it('EN: Title und Description', () => {
 		const { title, description } = buildKiezMeta({ ...input, locale: 'en' });
-		expect(title).toBe(
-			'Reuterstraße (Neukölln): 8,500 residents, Kiez score 41 | navigator.berlin'
-		);
+		expect(title).toBe('Reuterstraße (Neukölln): 8,500 residents, Kiez score 41');
 		expect(description).toContain('Kiez score 41 of 100, rank 57 of 143 in Berlin.');
 	});
 
@@ -190,7 +184,7 @@ describe('buildKiezMeta', () => {
 			total: 0,
 			locale: 'de'
 		});
-		expect(title).toBe('Reuterstraße (Neukölln): 8.500 Einwohner:innen | navigator.berlin');
+		expect(title).toBe('Reuterstraße (Neukölln): 8.500 Einwohner:innen');
 		expect(description).not.toContain('Score');
 		expect(description).toContain('Karte, Lärm');
 	});

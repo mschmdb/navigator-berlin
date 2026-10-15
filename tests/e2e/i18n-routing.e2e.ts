@@ -254,40 +254,19 @@ test.describe('i18n Block A: DE unverändert / EN-Route', () => {
 		await expect(trigger).toBeFocused();
 	});
 
-	// JSON-LD inLanguage muss der EFFEKTIVEN Content-Locale folgen (DE, da
-	// nicht übersetzt), nicht der URL-Locale -- auf WebSite-JSON-LD
-	// (Root-Layout). `/en/impressum` ist (anders als `/en/berlin-wahlen` seit
-	// Block B) dauerhaft unübersetzt und bleibt deshalb das Beispiel für
-	// dieses Prinzip.
-	test('JSON-LD inLanguage auf /en/impressum bleibt de-DE (nicht übersetzt, WebSite-JSON-LD)', async ({
-		page
-	}) => {
-		await page.goto('/en/impressum');
-		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
-		expect(websiteJsonLd).not.toBeNull();
-		const parsed = JSON.parse(websiteJsonLd ?? '{}') as {
-			inLanguage?: string;
-			description?: string;
-		};
-		expect(parsed.inLanguage).toBe('de-DE');
-		// Review-Fund: die Beschreibung folgt derselben effektiven Locale wie
-		// `inLanguage` -- eine unübersetzte Seite bekommt die deutsche Fassung,
-		// sonst würde `inLanguage: de-DE` neben englischem Text stehen.
-		expect(parsed.description).toContain('Lärm');
-	});
-
-	// i18n Block B: /en/berlin-wahlen und /en/berlin-wahlen/<slug> sind jetzt
-	// im Übersetzungs-Register -- die effektive Locale ist `en`, JSON-LD
-	// `inLanguage` muss deshalb `en-US` sein, nicht mehr `de-DE`.
-	test('JSON-LD inLanguage auf /en/berlin-wahlen ist en-US (Block B: übersetzt, WebSite-JSON-LD)', async ({
-		page
-	}) => {
-		await page.goto('/en/berlin-wahlen');
-		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
-		expect(websiteJsonLd).not.toBeNull();
-		const parsed = JSON.parse(websiteJsonLd ?? '{}') as { inLanguage?: string };
-		expect(parsed.inLanguage).toBe('en-US');
-	});
+	// S3: Der WebSite-Block steht nur auf der Startseite, nie auf Unterseiten.
+	for (const route of ['/en/impressum', '/en/berlin-wahlen']) {
+		test(`Unterseite ${route}: kein WebSite-JSON-LD und keine SearchAction`, async ({ page }) => {
+			await page.goto(route);
+			await expect(page.locator('script[data-testid="website-jsonld"]')).toHaveCount(0);
+			const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+			expect(blocks.length).toBeGreaterThan(0);
+			for (const block of blocks) {
+				expect(block).not.toContain('"WebSite"');
+				expect(block).not.toContain('SearchAction');
+			}
+		});
+	}
 
 	test('JSON-LD inLanguage auf /en/berlin-wahlen/2023-bvv ist en-US (Block B: übersetzt, Dataset-JSON-LD)', async ({
 		page
@@ -681,7 +660,7 @@ test.describe('i18n Block B2: Startseite /en', () => {
 
 	test('GET /en: <title> und WebSite-JSON-LD-description sind englisch', async ({ page }) => {
 		await page.goto('/en');
-		await expect(page).toHaveTitle('Home - Berlin in data - navigator.berlin');
+		await expect(page).toHaveTitle('Home | navigator.berlin');
 		const websiteJsonLd = await page.locator('script[data-testid="website-jsonld"]').textContent();
 		expect(websiteJsonLd).not.toBeNull();
 		const parsed = JSON.parse(websiteJsonLd ?? '{}') as {
@@ -689,7 +668,7 @@ test.describe('i18n Block B2: Startseite /en', () => {
 			inLanguage?: string;
 		};
 		expect(parsed.inLanguage).toBe('en-US');
-		expect(parsed.description).toContain('Noise, climate');
+		expect(parsed.description).toContain('noise, climate');
 	});
 
 	test('GET /en: zeigt englischen Text, keine deutschen UI-Wörter außerhalb des Glossars/Eigennamen', async ({

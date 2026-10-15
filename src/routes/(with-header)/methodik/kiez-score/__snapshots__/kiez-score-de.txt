@@ -75,7 +75,7 @@ p: LOR-Hierarchie: die ersten sechs Zeichen einer Planungsraum-ID ergeben die Be
 h2: Bezirks-Score
 p: Auf Bezirks-Ebene werden die 542 Planungsräume direkt flächen-gewichtet aggregiert, nicht über die Bezirksregion-Zwischenebene. Damit bleibt das Gewicht jedes Planungsraums proportional zu seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
 p: Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score · Gesamt“, hoch = besser), zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score“ gibt es nicht.
-p: Build-Pipeline: pnpm data:aggregate-scores liest die Planungsraum-Quelle, baut die LOR-Hierarchie und schreibt die Aggregate idempotent in die Postgres-Tabellen bezirk_score und kiez_score.
+p: Die Scores entstehen beim Daten-Build. Der Build liest die Planungsraum-Quelle, baut die LOR-Hierarchie und berechnet die Aggregate für Bezirke und Kieze. Gleiche Eingangsdaten ergeben immer dieselben Scores.
 h2: Was fehlt und warum
 p: Sozialstruktur
 p: Der soziale Status eines Kiezes ist kein Qualitäts-Kriterium. Würden wir ihn werten, schnitten Kieze mit niedrigem Status schlechter ab und würden stigmatisiert. Das MSS-Aggregat bleibt als neutraler Kontext sichtbar, fließt aber nicht in den Score.

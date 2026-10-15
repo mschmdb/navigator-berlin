@@ -10,8 +10,17 @@ import type { Feature, Point } from 'geojson';
 
 beforeEach(() => _resetTrinkbrunnenIndexCache());
 
-function feat(props: Record<string, unknown>, coords: [number, number], id?: number): Feature<Point, Record<string, unknown>> {
-	return { type: 'Feature', id, geometry: { type: 'Point', coordinates: coords }, properties: props };
+function feat(
+	props: Record<string, unknown>,
+	coords: [number, number],
+	id?: number
+): Feature<Point, Record<string, unknown>> {
+	return {
+		type: 'Feature',
+		id,
+		geometry: { type: 'Point', coordinates: coords },
+		properties: props
+	};
 }
 
 describe('featureToTrinkbrunnen', () => {
@@ -24,7 +33,9 @@ describe('featureToTrinkbrunnen', () => {
 	});
 
 	it('liest fee/bottle/wheelchair und fällt auf Trinkbrunnen zurück', () => {
-		const b = featureToTrinkbrunnen(feat({ fee: 'no', bottle: 'yes', wheelchair: 'limited' }, [13.4, 52.5]));
+		const b = featureToTrinkbrunnen(
+			feat({ fee: 'no', bottle: 'yes', wheelchair: 'limited' }, [13.4, 52.5])
+		);
 		expect(b.name).toBe('Trinkbrunnen');
 		expect(b.kostenlos).toBe(true);
 		expect(b.bottle).toBe(true);
@@ -61,7 +72,9 @@ describe('getTrinkbrunnenIndex', () => {
 			if (url === '/layers/MANIFEST.json') {
 				return {
 					ok: true,
-					json: async () => ({ layers: [{ slug: 'trinkbrunnen', filename: 'trinkbrunnen.abc.geojson' }] })
+					json: async () => ({
+						layers: [{ slug: 'trinkbrunnen', filename: 'trinkbrunnen.abc.geojson' }]
+					})
 				};
 			}
 			if (url === '/layers/trinkbrunnen.abc.geojson') {

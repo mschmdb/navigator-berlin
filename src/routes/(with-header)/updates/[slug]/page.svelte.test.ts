@@ -56,7 +56,7 @@ describe('updates/[slug]/+page.svelte · DE-Wortlaut (i18n C4d)', () => {
 			data: { entry, bodyHtml: '<p>Deutscher Body.</p>', bodyIsDeFallback: false } as never
 		});
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Alpha - Berlin in Daten - navigator.berlin');
+		expect(document.title).toBe('Alpha | navigator.berlin');
 		expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toBe(
 			'Zusammenfassung Alpha.'
 		);
@@ -105,7 +105,7 @@ describe('updates/[slug]/+page.svelte · EN (i18n C4d)', () => {
 	it('übersetzter Eintrag: alles englisch, ohne lang-Attribute', async () => {
 		renderEn(entry, '<p>English body.</p>');
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Alpha EN - Berlin in data - navigator.berlin');
+		expect(document.title).toBe('Alpha EN | navigator.berlin');
 		expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toBe(
 			'Summary Alpha EN.'
 		);
@@ -153,7 +153,7 @@ describe('updates/[slug]/+page.svelte · EN (i18n C4d)', () => {
 			itemListElement: { name: string; item: string }[];
 		};
 		expect(crumbs.itemListElement.map((i) => [i.name, pathOf(i.item)])).toEqual([
-			['Berlin', '/en/'],
+			['Berlin', '/en'],
 			['Updates', '/en/updates'],
 			['Alpha EN', '/en/updates/a']
 		]);

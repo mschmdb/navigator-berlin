@@ -66,7 +66,6 @@ function ctx(overrides: Partial<SitemapSourceContext> = {}): SitemapSourceContex
 		origin: ORIGIN,
 		locale: 'de',
 		manifest: fixtureManifest(),
-		buildTimestamp: '2026-05-16T08:00:00.000Z',
 		...overrides
 	};
 }
@@ -163,6 +162,15 @@ describe('buildSitemapIndexXml', () => {
 		expect(xml).toContain('<loc>https://navigator.berlin/sitemap-de.xml</loc>');
 		expect(xml).toContain('<lastmod>2026-05-16T08:00:00.000Z</lastmod>');
 	});
+
+	it('rendert Einträge ohne lastmod ohne <lastmod>', () => {
+		const xml = buildSitemapIndexXml([
+			{ loc: 'https://navigator.berlin/sitemap-de.xml' },
+			{ loc: 'https://navigator.berlin/sitemap-en.xml', lastmod: '2026-10-14' }
+		]);
+		expect(xml.match(/<lastmod>/g)).toHaveLength(1);
+		expect(xml).toMatch(/sitemap-de\.xml<\/loc>\s*<\/sitemap>/);
+	});
 });
 
 describe('STATIC_PAGES_SOURCE', () => {
@@ -174,6 +182,9 @@ describe('STATIC_PAGES_SOURCE', () => {
 			'https://navigator.berlin/explore',
 			'https://navigator.berlin/kuehle-orte',
 			'https://navigator.berlin/hitze',
+			'https://navigator.berlin/kieze',
+			'https://navigator.berlin/bezirke',
+			'https://navigator.berlin/daten',
 			'https://navigator.berlin/methodik',
 			'https://navigator.berlin/methodik/kiez-score',
 			'https://navigator.berlin/methodik/wahldaten',
@@ -181,7 +192,9 @@ describe('STATIC_PAGES_SOURCE', () => {
 			'https://navigator.berlin/architektur',
 			'https://navigator.berlin/webmcp'
 		]);
-		expect(entries.every((e) => e.lastmod === '2026-05-16T08:00:00.000Z')).toBe(true);
+		// S5: statische Seiten tragen kein lastmod (kein erfundener Build-Zeitpunkt).
+		expect(entries.every((e) => e.lastmod === undefined)).toBe(true);
+		expect(buildSitemapXml(entries)).not.toContain('<lastmod>');
 	});
 
 	it('i18n Block D1: emits locale-prefixed URLs for EN (root becomes /en)', () => {
@@ -210,6 +223,7 @@ describe('WAHL_PORTAL_PAGE_SOURCE (i18n Block B: /berlin-wahlen main page, split
 		const entries = WAHL_PORTAL_PAGE_SOURCE(ctx({ wahlPortalEnabled: true }));
 		expect(entries).toHaveLength(1);
 		expect(entries[0].loc).toBe('https://navigator.berlin/berlin-wahlen');
+		expect(entries[0].lastmod).toBeUndefined();
 	});
 
 	it('emittiert /en/berlin-wahlen fuer locale=en (die zentrale Register-Gate filtert spaeter, nicht hier)', () => {
@@ -231,10 +245,61 @@ describe('LAYER_DETAIL_SOURCE', () => {
 		]);
 	});
 
-	it('uses layer fetchedAt as lastmod', () => {
+	it('keeps a real sourceUpdatedAt even when fetchedAt is later', () => {
 		const entries = LAYER_DETAIL_SOURCE(ctx());
-		const bezirkeEntry = entries.find((e) => e.loc.endsWith('/bezirke'));
-		expect(bezirkeEntry?.lastmod).toBe('2026-05-16T06:56:28.400Z');
+		// sourceUpdatedAt 2024-01-01T00:00:00.000Z ist Platzhalter, fetchedAt gewinnt
+		expect(entries.find((e) => e.loc.endsWith('/bezirke'))?.lastmod).toBe(
+			'2026-05-16T06:56:28.400Z'
+		);
+		// ohne sourceUpdatedAt: fetchedAt
+		expect(entries.find((e) => e.loc.endsWith('/klima-pet'))?.lastmod).toBe(
+			'2026-04-15T00:00:00.000Z'
+		);
+		const manifest = fixtureManifest();
+		manifest.layers[0] = {
+			...manifest.layers[0],
+			sourceUpdatedAt: '2022-05-15',
+			fetchedAt: '2026-10-14'
+		};
+		const real = LAYER_DETAIL_SOURCE(ctx({ manifest })).find((e) => e.loc.endsWith('/bezirke'));
+		expect(real?.lastmod).toBe('2022-05-15');
+	});
+
+	it('lets fetchedAt replace a year placeholder sourceUpdatedAt', () => {
+		const manifest = fixtureManifest();
+		manifest.layers[0] = {
+			...manifest.layers[0],
+			sourceUpdatedAt: '2022-01-01',
+			fetchedAt: '2026-10-14'
+		};
+		const entry = LAYER_DETAIL_SOURCE(ctx({ manifest })).find((e) => e.loc.endsWith('/bezirke'));
+		expect(entry?.lastmod).toBe('2026-10-14');
+	});
+
+	it('uses sourceUpdatedAt when fetchedAt is invalid', () => {
+		const manifest = fixtureManifest();
+		manifest.layers[0] = { ...manifest.layers[0], fetchedAt: 'kaputt' };
+		const entry = LAYER_DETAIL_SOURCE(ctx({ manifest })).find((e) => e.loc.endsWith('/bezirke'));
+		expect(entry?.lastmod).toBe('2024-01-01T00:00:00.000Z');
+	});
+
+	it('omits lastmod when sourceUpdatedAt and fetchedAt are invalid', () => {
+		const manifest = fixtureManifest();
+		manifest.layers[0] = {
+			...manifest.layers[0],
+			sourceUpdatedAt: 'kaputt',
+			fetchedAt: 'auch kaputt'
+		};
+		const entry = LAYER_DETAIL_SOURCE(ctx({ manifest })).find((e) => e.loc.endsWith('/bezirke'));
+		expect(entry).toBeDefined();
+		expect(entry?.lastmod).toBeUndefined();
+	});
+
+	it('falls back to fetchedAt when sourceUpdatedAt is invalid', () => {
+		const manifest = fixtureManifest();
+		manifest.layers[0] = { ...manifest.layers[0], sourceUpdatedAt: 'kaputt' };
+		const entry = LAYER_DETAIL_SOURCE(ctx({ manifest })).find((e) => e.loc.endsWith('/bezirke'));
+		expect(entry?.lastmod).toBe('2026-05-16T06:56:28.400Z');
 	});
 
 	it('i18n Block D1: emits /en/layer/<slug> for EN', () => {
@@ -310,6 +375,18 @@ describe('collectPrerenderedUrls', () => {
 	it('i18n Block C4c: /hitze, /kuehle-orte und /lizenzen (DE) bekommen ihren EN-Alternate', () => {
 		const entries = collectPrerenderedUrls(ctx());
 		for (const path of ['/hitze', '/kuehle-orte', '/lizenzen']) {
+			const entry = entries.find((e) => e.loc === `https://navigator.berlin${path}`);
+			expect(entry?.alternates, path).toEqual([
+				{ hreflang: 'de', href: `https://navigator.berlin${path}` },
+				{ hreflang: 'en', href: `https://navigator.berlin/en${path}` },
+				{ hreflang: 'x-default', href: `https://navigator.berlin${path}` }
+			]);
+		}
+	});
+
+	it('S7: /kieze, /bezirke und /daten (DE) bekommen ihren EN-Alternate', () => {
+		const entries = collectPrerenderedUrls(ctx());
+		for (const path of ['/kieze', '/bezirke', '/daten']) {
 			const entry = entries.find((e) => e.loc === `https://navigator.berlin${path}`);
 			expect(entry?.alternates, path).toEqual([
 				{ hreflang: 'de', href: `https://navigator.berlin${path}` },

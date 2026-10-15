@@ -55,4 +55,20 @@ describe('buildAdministrativeArea', () => {
 		});
 		expect(out.sameAs).toBeUndefined();
 	});
+
+	it('uebernimmt @id und containedInPlace-Verweis', () => {
+		const out = buildAdministrativeArea({
+			origin: 'https://navigator.berlin',
+			name: 'Reuterkiez',
+			centroid: [13.4, 52.5],
+			slug: 'reuterstrasse',
+			urlBasePath: '/kiez',
+			containedInPlaceName: 'Neukölln',
+			containedInPlaceRef: { slug: 'neukoelln', urlBasePath: '/bezirk' }
+		});
+		expect(out['@id']).toBe('https://navigator.berlin/kiez/reuterstrasse#place');
+		expect(out.containedInPlace).toMatchObject({
+			'@id': 'https://navigator.berlin/bezirk/neukoelln#place'
+		});
+	});
 });

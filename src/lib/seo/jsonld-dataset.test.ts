@@ -9,6 +9,7 @@ describe('buildDataset', () => {
 		license: 'dl-de/zero-2-0' as const,
 		dateModified: '2024-06-01T00:00:00.000Z',
 		creatorName: 'SenStadt Berlin',
+		url: 'https://navigator.berlin/layer/laerm-2023',
 		contentUrl: 'https://navigator.berlin/layers/laerm-2023.aaaa.geojson',
 		encodingFormat: 'application/geo+json',
 		keywords: ['umwelt', 'laerm']
@@ -34,14 +35,17 @@ describe('buildDataset', () => {
 
 	it('hat creator als Organization mit name', () => {
 		const out = buildDataset(baseInput);
-		expect(out.creator['@type']).toBe('Organization');
-		expect(out.creator.name).toBe('SenStadt Berlin');
+		expect(out.creator).toEqual({ '@type': 'Organization', name: 'SenStadt Berlin' });
 	});
 
-	it('Fallback-creator wenn creatorName leer: navigator.berlin', () => {
+	it('Fallback-creator wenn creatorName leer: Verweis auf die Organization', () => {
 		const out = buildDataset({ ...baseInput, creatorName: undefined });
-		expect(out.creator.name).toBe('navigator.berlin');
-		expect(out.creator.url).toBe('https://navigator.berlin');
+		expect(out.creator).toEqual({
+			'@type': 'Organization',
+			'@id': 'https://navigator.berlin/#organization',
+			name: 'navigator.berlin',
+			url: 'https://navigator.berlin'
+		});
 	});
 
 	it('hat distribution mit contentUrl + encodingFormat', () => {
@@ -66,5 +70,64 @@ describe('buildDataset', () => {
 	it('inLanguage override fuer EN-Variante (Story 2.5a)', () => {
 		const out = buildDataset({ ...baseInput, inLanguage: 'en-US' });
 		expect(out.inLanguage).toBe('en-US');
+	});
+
+	describe('Google-Dataset-Search-Felder', () => {
+		it('setzt url, isAccessibleForFree und includedInDataCatalog', () => {
+			const out = buildDataset(baseInput);
+			expect(out.url).toBe('https://navigator.berlin/layer/laerm-2023');
+			expect(out.isAccessibleForFree).toBe(true);
+			expect(out['@id']).toBe('https://navigator.berlin/layer/laerm-2023#dataset');
+			expect(out.includedInDataCatalog).toEqual({
+				'@type': 'DataCatalog',
+				'@id': 'https://navigator.berlin/lizenzen#catalog',
+				name: 'navigator.berlin Daten-Katalog',
+				url: 'https://navigator.berlin/lizenzen'
+			});
+		});
+
+		it('verweist auf den Katalog der Hauptdomain, auch von der Hitze-Subdomain', () => {
+			const out = buildDataset({ ...baseInput, origin: 'https://hitze.navigator.berlin' });
+			expect(out.includedInDataCatalog['@id']).toBe('https://navigator.berlin/lizenzen#catalog');
+			expect(out.includedInDataCatalog.url).toBe('https://navigator.berlin/lizenzen');
+		});
+
+		it('setzt spatialCoverage als Place mit GeoShape box', () => {
+			const out = buildDataset({ ...baseInput, bbox: [13.088, 52.338, 13.761, 52.675] });
+			expect(out.spatialCoverage).toEqual({
+				'@type': 'Place',
+				name: 'Berlin',
+				geo: { '@type': 'GeoShape', box: '52.338 13.088 52.675 13.761' }
+			});
+		});
+
+		it('laesst spatialCoverage ohne bbox weg', () => {
+			expect(buildDataset(baseInput)).not.toHaveProperty('spatialCoverage');
+		});
+
+		it('setzt temporalCoverage nur wenn uebergeben', () => {
+			expect(buildDataset({ ...baseInput, temporalCoverage: '2023' }).temporalCoverage).toBe(
+				'2023'
+			);
+			expect(buildDataset(baseInput)).not.toHaveProperty('temporalCoverage');
+		});
+
+		it('haengt creatorUrl an die Behoerde', () => {
+			const out = buildDataset({ ...baseInput, creatorUrl: 'https://daten.odis-berlin.de' });
+			expect(out.creator).toEqual({
+				'@type': 'Organization',
+				name: 'SenStadt Berlin',
+				url: 'https://daten.odis-berlin.de'
+			});
+		});
+
+		it('ignoriert creatorUrl beim navigator.berlin-Fallback', () => {
+			const out = buildDataset({
+				...baseInput,
+				creatorName: undefined,
+				creatorUrl: 'https://daten.odis-berlin.de'
+			});
+			expect(out.creator).toMatchObject({ '@id': 'https://navigator.berlin/#organization' });
+		});
 	});
 });

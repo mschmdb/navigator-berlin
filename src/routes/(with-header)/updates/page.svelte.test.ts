@@ -52,7 +52,7 @@ describe('updates/+page.svelte · DE-Wortlaut (i18n C4d)', () => {
 	it('zeigt Titel, Kopf, Feedback, Liste und Links wie vor der Übersetzung', async () => {
 		render(Page, { data: { entries } as never });
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Updates - Berlin in Daten - navigator.berlin');
+		expect(document.title).toBe('Updates | navigator.berlin');
 		expect(metaDescription()).toBe(
 			'Was sich an navigator.berlin verändert: neue Daten, Features und Methodik-Änderungen. Mit RSS und Atom.'
 		);
@@ -110,7 +110,7 @@ describe('updates/+page.svelte · EN (i18n C4d)', () => {
 	it('Kopf, Feedback und Meta sind englisch, Feed-Links bleiben', async () => {
 		renderEn();
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Updates - Berlin in data - navigator.berlin');
+		expect(document.title).toBe('Updates | navigator.berlin');
 		expect(metaDescription()).toBe(
 			'What is changing at navigator.berlin: new data, features and methodology changes. With RSS and Atom.'
 		);
@@ -155,7 +155,7 @@ describe('updates/+page.svelte · EN (i18n C4d)', () => {
 		expect(
 			crumbs.itemListElement.map((i: { name: string; item: string }) => [i.name, pathOf(i.item)])
 		).toEqual([
-			['Berlin', '/en/'],
+			['Berlin', '/en'],
 			['Updates', '/en/updates']
 		]);
 	});
@@ -196,14 +196,14 @@ describe('updates/+page.svelte · Singular und Feed-Kennzeichnung (i18n C4d)', (
 		expect(feedback()).toBe(expected);
 	});
 
-	it('EN: Feed-Links, Feed-Head-Links tragen hreflang="de"', async () => {
+	it('EN: Body-Feed-Links tragen hreflang="de", Feed-Head-Links keins', async () => {
 		await renderWith('en', '', mixed);
 		const feedLinks = [...root().querySelectorAll('header a')];
 		expect(feedLinks).toHaveLength(3);
 		expect(feedLinks.every((a) => a.getAttribute('hreflang') === 'de')).toBe(true);
 		const headLinks = document.head.querySelectorAll('link[rel="alternate"][type*="xml"]');
 		expect(headLinks.length).toBeGreaterThan(0);
-		for (const l of headLinks) expect(l.getAttribute('hreflang')).toBe('de');
+		for (const l of headLinks) expect(l.hasAttribute('hreflang')).toBe(false);
 	});
 
 	it('DE: Feed-Links tragen kein hreflang', async () => {

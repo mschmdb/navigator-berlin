@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { getNearestClimateStation, CLIMATE_STATIONS } from './get-climate-station.js';
 
 describe('CLIMATE_STATIONS', () => {
-	it('enthaelt 4 Berliner Stationen', () => {
+	it('enthaelt 4 Stationen in und um Berlin', () => {
 		expect(CLIMATE_STATIONS).toHaveLength(4);
 		expect(CLIMATE_STATIONS.map((s) => s.id).sort()).toEqual(['00400', '00403', '00427', '00433']);
 	});

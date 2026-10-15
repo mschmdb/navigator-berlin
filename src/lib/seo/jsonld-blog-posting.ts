@@ -3,7 +3,9 @@ import type { UpdateEntry } from '$lib/content/updates/types.js';
 import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
 import { localizeUpdateEntry } from '$lib/content/updates/localize-update-entry.js';
 import { baseLocale, localizeHref, type Locale } from '$lib/paraglide/runtime';
+import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
 import { localeToBcp47 } from './locale-meta.js';
+import { organizationRef, type OrganizationRefJsonLd } from './jsonld-organization.js';
 
 /**
  * Story 2.2 T3.9: BlogPosting + Blog-Index-Generator.
@@ -16,12 +18,6 @@ import { localeToBcp47 } from './locale-meta.js';
  * `routes/(with-header)/updates/[slug]/+page.svelte` (BlogPosting).
  */
 
-export interface OrganizationJsonLd {
-	'@type': 'Organization';
-	name: string;
-	url?: string;
-}
-
 export interface WebPageReferenceJsonLd {
 	'@type': 'WebPage';
 	'@id': string;
@@ -32,8 +28,9 @@ export interface BlogPostingLeafJsonLd {
 	headline: string;
 	datePublished: string;
 	dateModified: string;
-	author: OrganizationJsonLd;
-	publisher: OrganizationJsonLd;
+	image: string;
+	author: OrganizationRefJsonLd;
+	publisher: OrganizationRefJsonLd;
 	mainEntityOfPage: WebPageReferenceJsonLd;
 	articleSection: string;
 	description: string;
@@ -47,20 +44,12 @@ export interface BlogLeafJsonLd {
 	description: string;
 	url: string;
 	inLanguage: string;
-	publisher: OrganizationJsonLd;
+	publisher: OrganizationRefJsonLd;
 	blogPost: BlogPostingLeafJsonLd[];
 }
 
 export type BlogPostingJsonLd = WithContext<BlogPostingLeafJsonLd>;
 export type BlogJsonLd = WithContext<BlogLeafJsonLd>;
-
-const PUBLISHER: OrganizationJsonLd = {
-	'@type': 'Organization',
-	name: 'Navigator Berlin',
-	url: 'https://navigator.berlin/'
-};
-
-const AUTHOR: OrganizationJsonLd = PUBLISHER;
 
 export interface BlogPostingInput {
 	readonly entry: UpdateEntry;
@@ -69,7 +58,11 @@ export interface BlogPostingInput {
 	readonly locale?: Locale;
 	/** Überschreibt die Body-Fallback-Ableitung, wenn `entry` ohne Body geliefert wird (Detailseite). */
 	readonly bodyIsDeFallback?: boolean;
+	/** Absolute oder origin-relative Bild-URL. Default: `/og/page/updates.png`. */
+	readonly image?: string;
 }
+
+const DEFAULT_IMAGE_PATH = '/og/page/updates.png';
 
 function localizedUrl(origin: string, path: string, locale: Locale): string {
 	return `${origin}${localizeHref(path, { locale })}`;
@@ -97,9 +90,10 @@ export function buildBlogPosting(input: BlogPostingInput): BlogPostingJsonLd {
 		'@type': 'BlogPosting',
 		headline: localized.title,
 		datePublished: input.entry.frontmatter.date,
-		dateModified: input.entry.frontmatter.date,
-		author: AUTHOR,
-		publisher: PUBLISHER,
+		dateModified: entryModifiedDate(input.entry),
+		image: input.image ?? `${origin}${DEFAULT_IMAGE_PATH}`,
+		author: organizationRef(origin),
+		publisher: organizationRef(origin),
 		mainEntityOfPage: { '@type': 'WebPage', '@id': url },
 		articleSection: input.entry.frontmatter.category,
 		description: localized.summary,
@@ -134,7 +128,7 @@ export function buildBlogIndex(input: BlogIndexInput): BlogJsonLd {
 		description: input.description ?? 'Daten-Updates, Features, Methodik-Änderungen.',
 		url: localizedUrl(origin, '/updates', locale),
 		inLanguage: localeToBcp47(locale),
-		publisher: PUBLISHER,
+		publisher: organizationRef(origin),
 		// Inhaltlich sind alle Posts BlogPostings; im Leaf-Type ist das auch der Constraint.
 		blogPost: sorted.map((entry) => {
 			const post = buildBlogPosting({ entry, origin, locale });

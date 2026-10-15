@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { onMount, untrack } from 'svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
@@ -6,6 +7,9 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import { buildDataCatalog } from '$lib/seo/jsonld-datacatalog.js';
+	import { localeToBcp47 } from '$lib/seo/index.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { wahlReiheLabel, wahlEbeneLabel } from '$lib/data/wahl-labels.js';
@@ -198,7 +202,7 @@
 	const EXTREME_SUBTEXT = $derived(m.wahl_portal_chapter_extreme_subtext());
 	const METHODIK_SUBTEXT = $derived(m.wahl_portal_chapter_methodik_subtext());
 
-	const pageTitle = $derived(m.wahl_portal_page_title());
+	const pageTitle = $derived(buildPageTitle(m.wahl_portal_page_title()));
 	const pageDescription = $derived(m.wahl_portal_page_description());
 
 	const dataCatalogJsonLd = $derived(
@@ -206,16 +210,17 @@
 			origin,
 			name: m.wahl_portal_datacatalog_name(),
 			description: pageDescription,
-			urlPath: '/berlin-wahlen',
+			urlPath: localizedPathname('/berlin-wahlen', getLocale()),
 			publisherName: 'Matze Schmidbauer',
 			datasets: [
 				{
 					name: m.wahl_portal_dataset_name(),
 					description: m.wahl_portal_dataset_description(),
-					urlPath: '/berlin-wahlen',
+					urlPath: localizedPathname('/berlin-wahlen', getLocale()),
 					license: 'dl-de/by-2-0'
 				}
-			]
+			],
+			inLanguage: localeToBcp47(getLocale())
 		})
 	);
 

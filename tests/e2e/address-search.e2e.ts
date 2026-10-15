@@ -33,17 +33,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('SiteHeader rendert auf with-header-Route', async ({ page }) => {
-	await page.goto('/_dev/wortmarke');
+	await page.goto('/lizenzen');
 	await expect(page.getByRole('banner')).toBeVisible();
-	await expect(page.getByRole('link', { name: 'navigator.berlin Startseite' })).toBeVisible();
-});
-
-test('Wortmarke-Showcase rendert 6 Kandidaten', async ({ page }) => {
-	await page.goto('/_dev/wortmarke');
-	await expect(page.getByRole('heading', { level: 1, name: /6 Plex-Kandidaten/ })).toBeVisible();
-	for (const id of ['A', 'B', 'C', 'D', 'E', 'F']) {
-		await expect(page.getByText(new RegExp(`Kandidat ${id}:`))).toBeVisible();
-	}
+	await expect(
+		page.getByRole('banner').getByRole('link', { name: 'navigator.berlin', exact: true })
+	).toBeVisible();
 });
 
 test('Root zeigt Header (Karte ist Hauptelement seit 2026-05-11)', async ({ page }) => {

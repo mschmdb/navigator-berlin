@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -8,6 +10,7 @@
 	import { richSegments } from '$lib/i18n/rich-text.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime.js';
+	import { organizationRef } from '$lib/seo/jsonld-organization.js';
 	import { buildBreadcrumbList } from '$lib/seo/index.js';
 	import { localeToBcp47 } from '$lib/seo/locale-meta.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
@@ -35,7 +38,7 @@
 	const coverageReasons = getCoverageReasons();
 	const omissions = getOmissions();
 
-	const pageTitle = m.methodik_meta_title();
+	const pageTitle = buildPageTitle(m.methodik_meta_title());
 	const pageDescription = m.methodik_meta_description();
 
 	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';
@@ -72,15 +75,18 @@
 		inLanguage: localeToBcp47(getLocale()),
 		datePublished: '2026-05-15',
 		dateModified: manifest.generatedAt,
-		author: { '@type': 'Organization', name: 'navigator.berlin' }
+		author: organizationRef(page.url.origin)
 	});
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: m.methodik_breadcrumb_methodik(), path: localizedHref('/methodik') }
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{
+					name: m.methodik_breadcrumb_methodik(),
+					path: localizedPathname('/methodik', getLocale())
+				}
 			]
 		})
 	);

@@ -1,14 +1,17 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
+import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
 import type { UpdateEntry } from '$lib/content/updates/types.js';
 import { localizedPathname } from '../canonical.js';
+import { latestLastmod, validLastmod } from '../lastmod.js';
 import type { Locale } from '$lib/paraglide/runtime';
 import { loadUpdatesFromModules, sortByDateDesc } from '$lib/content/updates/load-updates.js';
 
 /**
  * Story 2.13 AC-10: Sitemap-Source für Updates-Routes.
  *
- * - `/updates`-Index: priority 0.6, lastmod = neuestes Entry-Datum.
- * - Per-Entry `/updates/{slug}`: priority 0.7, lastmod = `date`-Frontmatter.
+ * - `/updates`-Index: priority 0.6, lastmod = jüngstes gültiges Änderungsdatum.
+ * - Per-Entry `/updates/{slug}`: priority 0.7, lastmod = `updated`, sonst `date`
+ *   (`entryModifiedDate`). Ungültige Daten lassen `lastmod` weg.
  *
  * i18n Block D1: liefert je Locale `localizedPathname`-URLs (`/en/updates/...`),
  * das zentrale Register-Gate in `collectPrerenderedUrls` filtert.
@@ -28,21 +31,22 @@ export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInpu
 	const origin = input.origin.replace(/\/+$/, '');
 	const sorted = sortByDateDesc(input.entries);
 	const locale = input.locale ?? 'de';
-	const latestDate = sorted[0]!.frontmatter.date;
+	const latestDate = latestLastmod(sorted.map(entryModifiedDate));
 
 	const out: SitemapEntry[] = [
 		{
 			loc: `${origin}${localizedPathname('/updates', locale)}`,
-			lastmod: latestDate,
+			...(latestDate ? { lastmod: latestDate } : {}),
 			changefreq: 'weekly',
 			priority: INDEX_PRIORITY
 		}
 	];
 
 	for (const entry of sorted) {
+		const lastmod = validLastmod(entryModifiedDate(entry));
 		out.push({
 			loc: `${origin}${localizedPathname(`/updates/${entry.slug}`, locale)}`,
-			lastmod: entry.frontmatter.date,
+			...(lastmod ? { lastmod } : {}),
 			changefreq: 'monthly',
 			priority: DETAIL_PRIORITY
 		});

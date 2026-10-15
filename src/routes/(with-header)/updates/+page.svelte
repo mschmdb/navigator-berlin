@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
@@ -50,7 +52,7 @@
 
 	const filteredEntries = $derived(applyCategoryFilter(entries, new Set(filterValue)));
 
-	const pageTitle = $derived(m.updates_index_page_title());
+	const pageTitle = $derived(buildPageTitle(m.updates_index_page_title()));
 	const pageDescription = $derived(m.updates_index_page_description());
 
 	const blogJsonLd = $derived(
@@ -66,8 +68,8 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: 'Updates', path: localizedHref('/updates') }
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{ name: 'Updates', path: localizedPathname('/updates', getLocale()) }
 			]
 		})
 	);

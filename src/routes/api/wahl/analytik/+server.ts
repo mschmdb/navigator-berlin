@@ -17,7 +17,7 @@ import {
 	getAnalytikForReihe,
 	getTrendForReihe
 } from '$lib/server/db/queries/wahl/get-analytik-for-reihe.js';
-import { sourceName } from '$lib/server/wahl/source-label.js';
+import { sourceName } from '$lib/data/wahl-source-name.js';
 import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({

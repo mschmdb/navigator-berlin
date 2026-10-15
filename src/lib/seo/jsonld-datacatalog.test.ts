@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildDataCatalog } from './jsonld-datacatalog.js';
+import { buildDataCatalog, dataCatalogId } from './jsonld-datacatalog.js';
 
 describe('buildDataCatalog', () => {
 	const origin = 'https://navigator.berlin';
@@ -44,7 +44,7 @@ describe('buildDataCatalog', () => {
 		// name + description. @id = kanonische Layer-Page → Linked-Data-Merge.
 		expect(jsonLd.dataset[0]).toMatchObject({
 			'@type': 'Dataset',
-			'@id': `${origin}/layer/laerm-2023`,
+			'@id': `${origin}/layer/laerm-2023#dataset`,
 			url: `${origin}/layer/laerm-2023`,
 			name: 'Lärm 2023',
 			description: 'Umgebungslärm der EU-Kartierung 2022 in Berlin.',
@@ -53,7 +53,7 @@ describe('buildDataCatalog', () => {
 		expect(jsonLd.dataset[0].license).toContain('govdata.de');
 	});
 
-	it('faellt ohne creatorName auf navigator.berlin als Organisation zurueck', () => {
+	it('faellt ohne creatorName auf einen Verweis auf die Organization zurueck', () => {
 		const jsonLd = buildDataCatalog({
 			origin,
 			name: 'Test',
@@ -71,6 +71,7 @@ describe('buildDataCatalog', () => {
 		});
 		expect(jsonLd.dataset[0].creator).toEqual({
 			'@type': 'Organization',
+			'@id': `${origin}/#organization`,
 			name: 'navigator.berlin',
 			url: origin
 		});
@@ -111,5 +112,26 @@ describe('buildDataCatalog', () => {
 			inLanguage: 'en-US'
 		});
 		expect(jsonLd.inLanguage).toBe('en-US');
+	});
+
+	it('setzt @id nur wenn catalogId uebergeben wird', () => {
+		const base = {
+			origin,
+			name: 'Test',
+			description: 'Test',
+			urlPath: '/lizenzen',
+			publisherName: 'Tester',
+			datasets: []
+		};
+		expect(buildDataCatalog(base)).not.toHaveProperty('@id');
+		expect(buildDataCatalog({ ...base, catalogId: dataCatalogId(origin) })['@id']).toBe(
+			`${origin}/lizenzen#catalog`
+		);
+	});
+
+	it('dataCatalogId nutzt die Hauptdomain und ist locale-unabhaengig', () => {
+		expect(dataCatalogId('https://hitze.navigator.berlin/')).toBe(
+			'https://navigator.berlin/lizenzen#catalog'
+		);
 	});
 });

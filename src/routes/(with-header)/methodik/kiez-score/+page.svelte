@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -17,7 +19,7 @@
 		getKiezScoreWeightRows
 	} from './kiez-score-content.js';
 
-	const pageTitle = m.methodik_kiez_score_meta_title();
+	const pageTitle = buildPageTitle(m.methodik_kiez_score_meta_title());
 	const pageDescription = m.methodik_kiez_score_meta_description();
 
 	const sections = getKiezScoreSections();
@@ -28,12 +30,6 @@
 	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';
 	const feedbackHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(m.methodik_kiez_score_feedback_mail_subject())}`;
 
-	const pipelineSegments = richSegments((t) =>
-		m.methodik_kiez_score_bezirk_score_pipeline({
-			code_start: t('code').start,
-			code_end: t('code').end
-		})
-	);
 	const sourcesSegments = richSegments((t) =>
 		m.methodik_kiez_score_sources_p1({ link_start: t('link').start, link_end: t('link').end })
 	);
@@ -42,11 +38,14 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: m.methodik_kiez_score_breadcrumb_methodik(), path: localizedHref('/methodik') },
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{
+					name: m.methodik_kiez_score_breadcrumb_methodik(),
+					path: localizedPathname('/methodik', getLocale())
+				},
 				{
 					name: m.methodik_kiez_score_breadcrumb_kiez_score(),
-					path: localizedHref('/methodik/kiez-score')
+					path: localizedPathname('/methodik/kiez-score', getLocale())
 				}
 			]
 		})
@@ -55,7 +54,7 @@
 	const speakableJsonLd = $derived(
 		buildSpeakableWebPage({
 			origin: page.url.origin,
-			urlPath: localizedHref('/methodik/kiez-score'),
+			urlPath: localizedPathname('/methodik/kiez-score', getLocale()),
 			name: m.methodik_kiez_score_speakable_name(),
 			inLanguage: localeToBcp47(getLocale()),
 			cssSelectors: ['#worum', '#dimensionen', '#gewichte', '#normalisierung', '#fehlt']
@@ -215,11 +214,7 @@
 			{m.methodik_kiez_score_bezirk_score_p2()}
 		</p>
 		<p class="font-serif text-base leading-relaxed text-ink">
-			<RichText segments={pipelineSegments}>
-				{#snippet tag(text)}
-					<code class="font-mono text-sm">{text}</code>
-				{/snippet}
-			</RichText>
+			{m.methodik_kiez_score_bezirk_score_pipeline()}
 		</p>
 	</section>
 

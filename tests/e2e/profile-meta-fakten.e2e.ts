@@ -14,7 +14,7 @@ test.describe('L3: Bezirk-Meta mit Fakten', () => {
 	}) => {
 		await page.goto('/bezirk/friedrichshain-kreuzberg');
 		await expect(page).toHaveTitle(
-			/^Friedrichshain-Kreuzberg: [\d.]+ Einwohner:innen, \d+,\d km² \| navigator\.berlin$/
+			/^Friedrichshain-Kreuzberg: [\d.]+ Einwohner:innen, \d+,\d km²$/
 		);
 		expect(await description(page)).toMatch(
 			/^Friedrichshain-Kreuzberg hat [\d.]+ Einwohner:innen auf \d+,\d km² \(Stand Ende \d{4}\)\./
@@ -23,9 +23,7 @@ test.describe('L3: Bezirk-Meta mit Fakten', () => {
 
 	test('EN: Zahlen englisch formatiert', async ({ page }) => {
 		await page.goto('/en/bezirk/friedrichshain-kreuzberg');
-		await expect(page).toHaveTitle(
-			/^Friedrichshain-Kreuzberg: [\d,]+ residents, \d+\.\d km² \| navigator\.berlin$/
-		);
+		await expect(page).toHaveTitle(/^Friedrichshain-Kreuzberg: [\d,]+ residents, \d+\.\d km²$/);
 	});
 });
 

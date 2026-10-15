@@ -6,9 +6,9 @@
 	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
 	import BezirkDetails from '$lib/components/atlas/bezirk-details.svelte';
 	import BezirkKiezeList from '$lib/components/atlas/bezirk-kieze-list.svelte';
+	import OverviewLinks from '$lib/components/atlas/overview-links.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
-	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildBezirkMeta } from '$lib/seo/profile-meta.js';
@@ -64,27 +64,12 @@
 
 	const sameAs = $derived(bezirkSameAs(slug));
 
-	const placeJsonLd = $derived(
-		buildPlace({
-			origin,
-			name,
-			centroid: data.profile.centroid,
-			containedInPlaceName: 'Berlin',
-			slug,
-			urlBasePath: '/bezirk',
-			einwohner: data.profile.einwohner,
-			flaecheHa: data.profile.flaecheHa,
-			sameAs,
-			...jsonLdLocaleInput
-		})
-	);
-
 	const adminAreaJsonLd = $derived(
 		buildAdministrativeArea({
 			origin,
 			name,
 			centroid: data.profile.centroid,
-			containedInPlaceName: 'Berlin',
+			containedInCity: true,
 			slug,
 			urlBasePath: '/bezirk',
 			einwohner: data.profile.einwohner,
@@ -117,7 +102,6 @@
 	ogImage={ogImageAbsolute}
 	{ogImageAlt}
 />
-<JsonLd data={placeJsonLd} testid="bezirk-place-jsonld" />
 <JsonLd data={adminAreaJsonLd} testid="bezirk-administrative-area-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="bezirk-breadcrumb-jsonld" />
 
@@ -157,4 +141,5 @@
 	>
 		{m.bezirk_page_methodik_link_label()} →
 	</a>
+	<OverviewLinks kind="bezirk" bezirkName={name} bezirkSlug={slug} />
 </div>

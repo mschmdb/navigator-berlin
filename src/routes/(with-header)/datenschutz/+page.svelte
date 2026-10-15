@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -17,7 +18,7 @@
 </script>
 
 <SeoHead
-	title="Datenschutz - Berlin in Daten - navigator.berlin"
+	title={buildPageTitle('Datenschutz')}
 	description="Datenschutzerklärung für navigator.berlin. Cookieless Reichweitenmessung mit selbst gehostetem Plausible, keine Werbe-Cookies, keine personenbezogenen Daten."
 	pathname={page.url.pathname}
 	origin={page.url.origin}

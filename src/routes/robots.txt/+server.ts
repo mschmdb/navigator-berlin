@@ -32,7 +32,9 @@ const ALLOW_AI_BOTS: readonly string[] = [
 const DISALLOW_SPAM_BOTS: readonly string[] = ['Omgilibot', 'MJ12bot'];
 
 function renderBotBlock(name: string, directive: 'Allow' | 'Disallow'): string {
-	return `User-agent: ${name}\n${directive}: /`;
+	return directive === 'Allow'
+		? `User-agent: ${name}\nAllow: /\nDisallow: /api/\nDisallow: /en/api/`
+		: `User-agent: ${name}\nDisallow: /`;
 }
 
 export const GET: RequestHandler = ({ url }) => {
@@ -43,6 +45,7 @@ export const GET: RequestHandler = ({ url }) => {
 	lines.push('User-agent: *');
 	lines.push('Allow: /');
 	lines.push('Disallow: /api/');
+	lines.push('Disallow: /en/api/');
 	// WICHTIG: /layers/ NICHT disallowen. MANIFEST.json + GeoJSON sind
 	// render-nötige Ressourcen (client-seitiger loadManifest); ein robots-Block
 	// lässt Googlebots Render-Fetch fehlschlagen → Load wirft → 500-Page →
