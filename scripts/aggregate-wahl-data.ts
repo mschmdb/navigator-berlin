@@ -1,8 +1,8 @@
+import { isMainEntry } from './lib/is-main-entry.js';
 import 'dotenv/config';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { closeDb, getDb } from '../src/lib/server/db/index.js';
 import { BERLIN_LAND_CODE, filterByLand, parseBwlWbzCsv } from './wahlen/lib/bwl-csv-parser.js';
 import { extractBwlCsvs, fetchBwlZip } from './wahlen/lib/bwl-fetcher.js';
@@ -46,8 +46,9 @@ import {
 	upsertWahl
 } from './wahlen/lib/db-loader.js';
 import { diffHeaders, isDrift, formatDriftReport } from './wahlen/lib/schema-validator.js';
+import { SPIKE_ARTIFACTS_DIR } from './lib/paths.js';
 
-const SPIKE_DIR = join(process.cwd(), '_bmad-output', 'spike-artifacts');
+const SPIKE_DIR = SPIKE_ARTIFACTS_DIR;
 
 type Args = {
 	/** Kommagetrennte Slug-Liste, z.B. `--only=agh23,agh26,bvv26`. */
@@ -389,8 +390,7 @@ async function processWbCsv(
 // Nur ausführen, wenn direkt als Script gestartet (nicht beim Import fürs
 // Testen von `parseArgs` -- Import würde sonst den kompletten Ingest gegen
 // alle WAHL_SOURCES auslösen).
-const isMain = process.argv[1] === fileURLToPath(import.meta.url);
-if (isMain) {
+if (isMainEntry(import.meta.url, process.argv[1])) {
 	main().catch((err) => {
 		console.error(err);
 		process.exitCode = 1;

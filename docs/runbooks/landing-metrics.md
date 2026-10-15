@@ -6,18 +6,18 @@ Vergleicht Kiez-, Bezirks- und Layer-Seiten vor und nach dem Epic "Landing-Enhan
 
 Jeder Klick sendet ein Plausible-Event `Landing` mit zwei Properties. Es gibt keine Slugs, Cookies oder IDs.
 
-| `action` | Klickziel |
-|---|---|
-| `map_button` | Karten-Button (Kiez, Bezirk, Layer-Hero) |
-| `map_link_bottom` | Karten-Link am Ende der Layer-Seite |
-| `key_figure` | Link in einer Kennzahl-Kachel |
-| `neighbor` | Link zu einem angrenzenden Kiez |
-| `similar` | Link zu einem ähnlichen Kiez |
-| `list_sort` | Sortier-Button der Kiez-Liste (Bezirk) |
-| `list_link` | Kiez-Link in der Liste (Bezirk) |
-| `map_link` | Kiez-Link in der Bezirkskarte |
-| `ranking_link` | Kiez-Link in der Rangliste (Layer) |
-| `eyebrow_link` | Bezirks-Link über der Kiez-Überschrift |
+| `action`          | Klickziel                                |
+| ----------------- | ---------------------------------------- |
+| `map_button`      | Karten-Button (Kiez, Bezirk, Layer-Hero) |
+| `map_link_bottom` | Karten-Link am Ende der Layer-Seite      |
+| `key_figure`      | Link in einer Kennzahl-Kachel            |
+| `neighbor`        | Link zu einem angrenzenden Kiez          |
+| `similar`         | Link zu einem ähnlichen Kiez             |
+| `list_sort`       | Sortier-Button der Kiez-Liste (Bezirk)   |
+| `list_link`       | Kiez-Link in der Liste (Bezirk)          |
+| `map_link`        | Kiez-Link in der Bezirkskarte            |
+| `ranking_link`    | Kiez-Link in der Rangliste (Layer)       |
+| `eyebrow_link`    | Bezirks-Link über der Kiez-Überschrift   |
 
 `page_type` ist `kiez`, `bezirk` oder `layer`.
 
@@ -65,7 +65,7 @@ Spaltennamen geprüft am 15.10.2026 (`DESCRIBE TABLE sessions_v2`): `entry_page`
    pnpm --silent metrics:landing --events --b <nachher-von>:<nachher-bis> --site-id <site-id> | ssh ...
    ```
 
-Baseline vom 14.10.2026: `_bmad-output/planning-artifacts/landing-audit-2026-10-14.md`.
+Baseline vom 14.10.2026: `docs/process/planning-artifacts/landing-audit-2026-10-14.md` (nur qualitativ; konkrete Zahlen liegen außerhalb des Repos).
 
 ## Search Console
 
@@ -78,6 +78,6 @@ Filter: Seite enthält `/kiez/`, `/bezirk/` oder `/layer/`. Die Export-CSV bleib
 
 ## Auswertung eintragen
 
-Ergebnis als Tabelle ins Epic-Dokument `_bmad-output/planning-artifacts/epic-landing-enhance.md` unter einem neuen Abschnitt "Messung" nachtragen: Zeiträume, Zahlen je Seitentyp, Klickverteilung je `action`, Lesart in drei Sätzen.
+Ergebnis qualitativ (ohne konkrete Besucherzahlen) ins Epic-Dokument `docs/process/planning-artifacts/epic-landing-enhance.md` unter einem neuen Abschnitt "Messung" nachtragen: Zeiträume, Zahlen je Seitentyp, Klickverteilung je `action`, Lesart in drei Sätzen.
 
-Fallzahlen sind klein (rund 60 Kiez-Einstiege in 28 Tagen). Tendenzen nennen, keine Prozentpunkte als Beweis.
+Fallzahlen sind klein (wenige Dutzend Kiez-Einstiege in 28 Tagen). Tendenzen nennen, keine Prozentpunkte als Beweis.

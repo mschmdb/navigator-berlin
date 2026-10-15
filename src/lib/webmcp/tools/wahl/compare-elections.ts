@@ -48,7 +48,9 @@ function pickCommonLevel(
 function caveatsFor(bundle: WahlResultBundle, level: WahlLevel): string[] {
 	const out: string[] = [];
 	if (level === 'kiez') {
-		out.push('Kiez values include postal votes allocated proportionally by eligible voters, not an official breakdown.');
+		out.push(
+			'Kiez values include postal votes allocated proportionally by eligible voters, not an official breakdown.'
+		);
 	}
 	if (bundle.wahl.isRepeatElection) {
 		out.push(

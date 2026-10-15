@@ -72,7 +72,7 @@ Validation via `valibot`-Schema in `src/lib/state/bookmark-schema.ts`. Reject-Pa
 
 - §25 Abs. 2 Nr. 2 TDDDG (User-initiierter Telemediendienst).
 - ADR-004 dokumentiert die Cookieless-Ausnahme.
-- `_bmad-output/planning-artifacts/datenschutz-bookmarks-snippet.md` ist Vorlage für die Datenschutzerklärung (Story 4.6).
+- `docs/process/planning-artifacts/datenschutz-bookmarks-snippet.md` ist Vorlage für die Datenschutzerklärung (Story 4.6).
 
 ## Audit-Checkliste
 

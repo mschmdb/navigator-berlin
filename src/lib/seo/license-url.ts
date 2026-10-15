@@ -3,7 +3,7 @@ import type { License } from '$lib/data/types.js';
 /**
  * Story 2.2 T1.2: Mappt Manifest-License-Codes auf kanonische Schema.org-License-URLs.
  *
- * Source-of-Truth: `_bmad-output/implementation-artifacts/2-2-json-ld-generator-bibliothek.md`
+ * Source-of-Truth: `docs/process/implementation-artifacts/2-2-json-ld-generator-bibliothek.md`
  * License-Mapping-Tabelle. Wenn Manifest neue License-Typen einführt: hier ergänzen
  * (Helper wirft sonst), und `scripts/lib/types.ts::License`-Union ergänzen.
  */

@@ -37,28 +37,28 @@ Dieser ADR ist Pflicht-Foundation vor Story 8.1 und vor jedem visuellen Card-Bau
 
 ### 3. Matrix pro Layer-Familie
 
-| Layer-Familie                        | address                  | kiez/bezirk/berlin               | Visual-Typ                                    | Compare evaluierbar?                                                    |
-| ------------------------------------ | ------------------------ | -------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------- |
-| Lärm (laerm-2023)                    | Punkt-dB + Klasse        | `ordinal-distribution`           | Verteilungs-Balken + Median-Tick              | ja (ordinal, leiser=Richtung)                                           |
-| Luft (luft-2023)                     | Punkt-NO2                | `numeric-median`                 | Score-Bar + Berlin-Median-Anker               | ja                                                                      |
-| Bioklima / PET (klima-pet)           | Punkt-PET                | `numeric-median`                 | Score-Bar + Anker                             | ja                                                                      |
-| Kaltluft / Leitbahn                  | Treffer ja/nein          | `coverage-share`                 | Coverage-Bar (% Fläche)                       | neutral (Faktum)                                                        |
-| Grünversorgung                       | Punkt-Klasse             | `ordinal-distribution`           | Verteilungs-Balken                            | ja                                                                      |
-| Grünanlagen / Spielplätze            | nächste Distanz          | `area-share`                     | Anteils-Bar                                   | neutral                                                                 |
-| Umweltgerechtigkeit                  | Punkt-Composite          | `ordinal-distribution`           | Verteilungs-Balken                            | ja, aber Stigma-Gate                                                    |
-| Wohnlage (Mietspiegel)               | Punkt-Stufe              | `ordinal-distribution`           | Verteilungs-Balken                            | NEIN (categorical-neutral, Memory `project_compare_editorial_profiles`) |
-| MSS-Soziale-Lage                     | Punkt-Stufe              | `ordinal-distribution`           | Verteilungs-Balken                            | NEIN (Stigma-Lock)                                                      |
-| Milieuschutz                         | innerhalb ja/nein        | `coverage-share`                 | Coverage-Bar                                  | neutral                                                                 |
-| Bodenrichtwert                       | Block-Wert               | `not-aggregatable`               | nur address: Wert; sonst Disclaimer           | NEIN                                                                    |
-| Kitas/Schulen/Kranken./Sport/Schwimm | nächste Distanz          | `point-density`                  | Distanz-Ring (address) / Dichte-Dot (Polygon) | neutral (Anzahl=faktisch)                                               |
-| Einschulbereiche                     | enthaltender Bereich     | address-only                     | Text                                          | n/a                                                                     |
-| ÖPNV-Stops (u/s/tram/bus)            | nächste Distanz + Linien | `point-density`                  | Distanz-Ring / Dichte                         | neutral                                                                 |
-| ÖPNV-Netze, Rad (LineString)         | innerhalb-Buffer         | address-only Kontext             | Mini-Map-Annotation                           | n/a                                                                     |
-| Stolpersteine                        | Treffer im Umkreis       | `point-density` count            | Dot-Density + Disclaimer                      | NEIN (Erinnerung, kein Wohn-Kriterium, bestehender Disclaimer)          |
-| Denkmal                              | enthaltend ja/nein       | `coverage-share`                 | Coverage-Bar                                  | neutral                                                                 |
-| Kiez-Score                           | 5-Dim aus ADR-013        | `score-weighted`                 | Ring (Hero) + 5 Dim-Bars                      | NEIN auf Composite (Stigma)                                             |
-| Wahldaten                            | Stimmbezirk-Lookup       | `vote-share`                     | Stacked-Bar + Sparkline                       | ja (Stimmenanteil, kein Werturteil)                                     |
-| Boundaries                           | enthaltend               | sind die Level-Definition selbst | n/a                                           | n/a                                                                     |
+| Layer-Familie                        | address                  | kiez/bezirk/berlin               | Visual-Typ                                    | Compare evaluierbar?                                           |
+| ------------------------------------ | ------------------------ | -------------------------------- | --------------------------------------------- | -------------------------------------------------------------- |
+| Lärm (laerm-2023)                    | Punkt-dB + Klasse        | `ordinal-distribution`           | Verteilungs-Balken + Median-Tick              | ja (ordinal, leiser=Richtung)                                  |
+| Luft (luft-2023)                     | Punkt-NO2                | `numeric-median`                 | Score-Bar + Berlin-Median-Anker               | ja                                                             |
+| Bioklima / PET (klima-pet)           | Punkt-PET                | `numeric-median`                 | Score-Bar + Anker                             | ja                                                             |
+| Kaltluft / Leitbahn                  | Treffer ja/nein          | `coverage-share`                 | Coverage-Bar (% Fläche)                       | neutral (Faktum)                                               |
+| Grünversorgung                       | Punkt-Klasse             | `ordinal-distribution`           | Verteilungs-Balken                            | ja                                                             |
+| Grünanlagen / Spielplätze            | nächste Distanz          | `area-share`                     | Anteils-Bar                                   | neutral                                                        |
+| Umweltgerechtigkeit                  | Punkt-Composite          | `ordinal-distribution`           | Verteilungs-Balken                            | ja, aber Stigma-Gate                                           |
+| Wohnlage (Mietspiegel)               | Punkt-Stufe              | `ordinal-distribution`           | Verteilungs-Balken                            | NEIN (categorical-neutral, Maintainer-Regel)                   |
+| MSS-Soziale-Lage                     | Punkt-Stufe              | `ordinal-distribution`           | Verteilungs-Balken                            | NEIN (Stigma-Lock)                                             |
+| Milieuschutz                         | innerhalb ja/nein        | `coverage-share`                 | Coverage-Bar                                  | neutral                                                        |
+| Bodenrichtwert                       | Block-Wert               | `not-aggregatable`               | nur address: Wert; sonst Disclaimer           | NEIN                                                           |
+| Kitas/Schulen/Kranken./Sport/Schwimm | nächste Distanz          | `point-density`                  | Distanz-Ring (address) / Dichte-Dot (Polygon) | neutral (Anzahl=faktisch)                                      |
+| Einschulbereiche                     | enthaltender Bereich     | address-only                     | Text                                          | n/a                                                            |
+| ÖPNV-Stops (u/s/tram/bus)            | nächste Distanz + Linien | `point-density`                  | Distanz-Ring / Dichte                         | neutral                                                        |
+| ÖPNV-Netze, Rad (LineString)         | innerhalb-Buffer         | address-only Kontext             | Mini-Map-Annotation                           | n/a                                                            |
+| Stolpersteine                        | Treffer im Umkreis       | `point-density` count            | Dot-Density + Disclaimer                      | NEIN (Erinnerung, kein Wohn-Kriterium, bestehender Disclaimer) |
+| Denkmal                              | enthaltend ja/nein       | `coverage-share`                 | Coverage-Bar                                  | neutral                                                        |
+| Kiez-Score                           | 5-Dim aus ADR-013        | `score-weighted`                 | Ring (Hero) + 5 Dim-Bars                      | NEIN auf Composite (Stigma)                                    |
+| Wahldaten                            | Stimmbezirk-Lookup       | `vote-share`                     | Stacked-Bar + Sparkline                       | ja (Stimmenanteil, kein Werturteil)                            |
+| Boundaries                           | enthaltend               | sind die Level-Definition selbst | n/a                                           | n/a                                                            |
 
 ### 4. Visual-Summary-Pflicht (User-Constraint 2026-05-20)
 

@@ -6,7 +6,7 @@ last-verified: 2026-06-07
 
 # AEO-Content-Strategie für Kiez/Bezirk-Seiten (Epic 11)
 
-Wie navigator.berlin die 143 Kiez- und 12 Bezirks-Seiten von „datenstark, aber sprachlos" zu einzigartigen, zitierfähigen Seiten bringt. Quelle: `_user-input/kiez-bezirk-content-aeo-analyse-2026-06-06.md`.
+Wie navigator.berlin die 143 Kiez- und 12 Bezirks-Seiten von „datenstark, aber sprachlos" zu einzigartigen, zitierfähigen Seiten bringt. Quelle: interne Notiz (nicht im Repo).
 
 ## Problem
 

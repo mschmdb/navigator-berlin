@@ -27,7 +27,8 @@ export const DENYLIST_PATTERNS: readonly RegExp[] = [
 	/^docs\/adr\/ADR-\d+/,
 	/^\.github\/workflows\//,
 	/^scripts\/lib\/sources\.ts$/,
-	/^_bmad-output\//,
+	/^docs\/process\//,
+	/^_bmad-output\//, // Altbestand in älteren Commits
 	/^_bmad\//,
 	/^\.claude\/skills\//,
 	/^\.config\/navigator\//

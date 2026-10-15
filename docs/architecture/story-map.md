@@ -1,7 +1,7 @@
 ---
 type: architecture
 audience: both
-last-verified: 2026-07-01
+last-verified: 2026-10-15
 related:
   - docs/INDEX.md
   - docs/pipelines/data-flow.md
@@ -9,9 +9,9 @@ related:
 
 # Story-Map
 
-Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifacts/sprint-status.yaml`. Stand: 2026-07-01.
+Auto-generiert via `pnpm doc:story-map` aus `docs/process/implementation-artifacts/sprint-status.yaml`. Stand: 2026-10-15.
 
-**158 Stories total**: ✅ 86 done · 🚧 0 in-progress · 📋 9 ready-for-dev · ⏳ 4 backlog · ▫️ 59 other
+**158 Stories total**: ✅ 98 done · 🚧 0 in-progress · 📋 4 ready-for-dev · ⏳ 4 backlog · ▫️ 52 other
 
 ## Pro Epic
 ### Epic 1
@@ -131,23 +131,23 @@ Auto-generiert via `pnpm doc:story-map` aus `_bmad-output/implementation-artifac
 
 | Story | Status | Kommentar |
 |---|---|---|
-| `15-1-kuehle-orte-daten-build` | ▫️ review | Merge enrichment.json + places-osm.json per id, Filter suitable=false/still_exists=no (geloggt), Navi-Deep-Links (Goo… |
-| `15-2-layer-integration-local-manifest-lizenz` | ▫️ review | kind:'local' in sources.ts + fetchSource, MANIFEST (Quelle/Stand/SHA/Lizenz: OSM ODbL + Anreicherung getrennt), edito… |
-| `15-3-orts-inspector-adresse-navi-melde` | ▫️ review | Inspector-Reuse: Name/Typ, kopierbare Adresse, Google/Apple-Navi-Buttons, Melde-Link (stimmt nicht/gibts nicht mehr).… |
-| `15-4-live-oeffnungsstatus-filter-saison` | ▫️ review | opening_hours.js Ampel (offen/schließt bald/zu, Farbe+Text), Fallback "Zeiten unbekannt", jetzt-offen-Filter, Saison … |
-| `15-5-kuehle-score-sommer-flags` | ▫️ review | cool_score-Badge + Begründung, "im Sommer geschlossen"-Badge + Abwertung (summer_available=no), is_free/ac_status(nur… |
-| `15-6-methodik-doku-adr` | 📋 ready-for-dev | docs/kuehle-orte-methodik.md + Methodik-Route (Score-Rubrik, summer_available, AC-Ehrlichkeit, Herkunft OSM+Anreicher… |
-| `15-7-epic-15-dokumentation` | 📋 ready-for-dev | doc:pipelines + doc:story-map + INDEX/System-Map, Konsistenz-Sweep, Lizenz verlinkt. |
+| `15-1-kuehle-orte-daten-build` | ✅ done | Merge enrichment.json + places-osm.json per id, Filter suitable=false/still_exists=no (geloggt), Navi-Deep-Links (Goo… |
+| `15-2-layer-integration-local-manifest-lizenz` | ✅ done | kind:'local' in sources.ts + fetchSource, MANIFEST (Quelle/Stand/SHA/Lizenz: OSM ODbL + Anreicherung getrennt), edito… |
+| `15-3-orts-inspector-adresse-navi-melde` | ✅ done | Inspector-Reuse: Name/Typ, kopierbare Adresse, Google/Apple-Navi-Buttons, Melde-Link (stimmt nicht/gibts nicht mehr).… |
+| `15-4-live-oeffnungsstatus-filter-saison` | ✅ done | opening_hours.js Ampel (offen/schließt bald/zu, Farbe+Text), Fallback "Zeiten unbekannt", jetzt-offen-Filter, Saison … |
+| `15-5-kuehle-score-sommer-flags` | ✅ done | cool_score-Badge + Begründung, "im Sommer geschlossen"-Badge + Abwertung (summer_available=no), is_free/ac_status(nur… |
+| `15-6-methodik-doku-adr` | ✅ done | docs/kuehle-orte-methodik.md + Methodik-Route (Score-Rubrik, summer_available, AC-Ehrlichkeit, Herkunft OSM+Anreicher… |
+| `15-7-epic-15-dokumentation` | ✅ done | doc:pipelines + doc:story-map + INDEX/System-Map, Konsistenz-Sweep, Lizenz verlinkt. |
 
 ### Epic 16
 
 | Story | Status | Kommentar |
 |---|---|---|
-| `16-1-landing-geruest-eingebettete-karte` | ▫️ review | Neue Route /kuehle-orte, Angebot-Intro (kein Behörden-Ersatz), eingebettete Karte, Zum-Explorer-CTA (URL-State-Deep-L… |
-| `16-2-dwd-hitzewarn-banner` | ▫️ review | Live-DWD-Warnlage Berlin, Banner mit Stufe + Quelle, ausgeblendet ohne Warnung (kein Layout-Sprung), still degradiere… |
-| `16-3-in-deiner-naehe-geolocation` | 📋 ready-for-dev | Geolocation-Consent → nächste jetzt-offene Orte nach Distanz + Navi-Link, Fallback ohne Standort. TDD. |
-| `16-4-opt-out-mail-quellen-transparenz` | 📋 ready-for-dev | Opt-out-Mail-Link für Institutionen, Transparenz-Abschnitt (Quellen OSM/ODbL + Anreicherung + DWD, Angebot-Haltung, k… |
-| `16-5-landing-doku-updates-eintrag` | 📋 ready-for-dev | System-Map/INDEX, /updates _content/updates/2026-MM-DD-kuehle-orte.md (category feature, Nutzersprache, keine em-dash… |
+| `16-1-landing-geruest-eingebettete-karte` | ✅ done | Neue Route /kuehle-orte, Angebot-Intro (kein Behörden-Ersatz), eingebettete Karte, Zum-Explorer-CTA (URL-State-Deep-L… |
+| `16-2-dwd-hitzewarn-banner` | ✅ done | Live-DWD-Warnlage Berlin, Banner mit Stufe + Quelle, ausgeblendet ohne Warnung (kein Layout-Sprung), still degradiere… |
+| `16-3-in-deiner-naehe-geolocation` | ✅ done | Geolocation-Consent → nächste jetzt-offene Orte nach Distanz + Navi-Link, Fallback ohne Standort. TDD. |
+| `16-4-opt-out-mail-quellen-transparenz` | ✅ done | 2026-07-01 impl: buildOptOutMailto (Reuse contact.ts FEEDBACK_EMAIL+Encoding) + transparenz-content.ts (OSM/ODbL+Anre… |
+| `16-5-landing-doku-updates-eintrag` | ✅ done | 2026-07-01 impl: system-map.md /hitze-Knoten im Frontend-Routes-Mermaid + last-verified, INDEX.md Landing-Route-Verwe… |
 
 ### Epic 2
 

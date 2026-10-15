@@ -13,6 +13,7 @@
  * Quartil rang-basiert, Render zeigt Quartil statt letztem Rang bei schwachen Werten.
  */
 
+import { isMainEntry } from './lib/is-main-entry.js';
 import 'dotenv/config';
 import { sql } from 'drizzle-orm';
 import { closeDb, getDb } from '../src/lib/server/db/index.js';
@@ -227,11 +228,14 @@ async function main(): Promise<void> {
 	await closeDb();
 }
 
-main().catch(async (err: unknown) => {
-	const msg = err instanceof Error ? err.message : String(err);
-	process.stderr.write(`[aggregate-ranks] FATAL: ${msg}\n`);
-	await closeDb().catch(() => undefined);
-	process.exit(1);
-});
+// Nur beim direkten Aufruf (`pnpm data:rank`) ausführen, nicht beim Import im Test.
+if (isMainEntry(import.meta.url, process.argv[1])) {
+	main().catch(async (err: unknown) => {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[aggregate-ranks] FATAL: ${msg}\n`);
+		await closeDb().catch(() => undefined);
+		process.exit(1);
+	});
+}
 
 export { computeRanks, METRICS, type ScoreStatsRow };

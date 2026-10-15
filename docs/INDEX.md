@@ -74,5 +74,5 @@ related: [docs/path-to-related.md]
 
 ## Meta
 
-- Doku ist **intern-only** (Memory `project_epic_7_internal_only`). Hostnames, Secrets-Refs, Tool-Namen sind erlaubt. NICHT für Public-Konsum (das macht Site selbst via `/architektur`, `/datenschutz`, `/llms.txt`).
-- Auto-Sync-Approach (Story 7.1): bewusst NICHT Lefthook-post-commit (siehe Memory `project_epic_7_approach`). Stattdessen narrow Slash-Skills für derivable Targets.
+- Doku ist **intern-only**. Hostnames, Secrets-Refs, Tool-Namen sind erlaubt. NICHT für Public-Konsum (das macht Site selbst via `/architektur`, `/datenschutz`, `/llms.txt`).
+- Auto-Sync-Approach (Story 7.1): bewusst NICHT Lefthook-post-commit. Stattdessen narrow Slash-Skills für derivable Targets.

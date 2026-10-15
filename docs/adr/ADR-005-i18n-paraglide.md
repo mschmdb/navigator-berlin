@@ -9,9 +9,9 @@ deciders: solo-maintainer
 
 ## Context
 
-navigator.berlin startete deutschsprachig. Paraglide v2 war installiert, aber leer: ein Dummy-Key, eine Locale (`de`), `/en/…` wurde per 301 auf DE umgeleitet. Die ursprüngliche Architektur (`architecture.md`) plante 8 Sprachen mit `[lang=lang]`-Param-Matcher und `Accept-Language`-Redirect. Diese Route-Struktur wurde nie gebaut; stattdessen lief das Projekt über die Phase-1-Reduktion auf DE-only (Memory `project_i18n_phase_1_de_only`).
+navigator.berlin startete deutschsprachig. Paraglide v2 war installiert, aber leer: ein Dummy-Key, eine Locale (`de`), `/en/…` wurde per 301 auf DE umgeleitet. Die ursprüngliche Architektur (`architecture.md`) plante 8 Sprachen mit `[lang=lang]`-Param-Matcher und `Accept-Language`-Redirect. Diese Route-Struktur wurde nie gebaut; stattdessen lief das Projekt über die Phase-1-Reduktion auf DE-only.
 
-26.09.2026 (Matze): Umsetzung startet mit einer Infra-Spec (`spec-i18n-a-infra-routing.md`, Block A eines Vier-Block-Plans, `_user-input/plan-i18n-de-en-2026-08-22.md`). Anforderungen:
+Maintainer-Entscheidung 26.09.2026: Umsetzung startet mit einer Infra-Spec (`spec-i18n-a-infra-routing.md`, Block A eines Vier-Block-Plans). Anforderungen:
 
 - N Locales vorbereiten (aktuell `de`, `en`; später `es`/`tr`), keine `'de' | 'en'`-Hartverdrahtung in Typen.
 - DE bleibt Master ohne URL-Präfix, keine bestehende DE-URL ändert sich.
@@ -32,11 +32,11 @@ navigator.berlin startete deutschsprachig. Paraglide v2 war installiert, aber le
 
 Eine spätere Story markiert Pfade als übersetzt, indem sie Einträge in `TRANSLATION_REGISTER` ergänzt. Kein anderes Modul ändert sich dafür.
 
-**Entscheidung Matze 26.09.2026, 21:06 (i18n Block B, `spec-i18n-b-wahlportal.md`):** Eine echt übersetzte Seite (`effectiveLocale === pageLocale`, z. B. `/en/berlin-wahlen` nach der Registrierung) zeigt KEINEN Übersetzungs-Hinweis mehr. Die vormalige `translated`-Variante von `TranslationDisclaimer` ("Translated from German source. Original DE version remains authoritative.") entfiel ersatzlos -- Variante, Messages `disclaimer_translated` (de/en) und die zugehörigen Tests wurden entfernt. `TranslationDisclaimerVariant` kennt nur noch `'fallback-to-base'`; die Komponente rendert `null` sowohl für Basis-Locale-on-Basis-Locale als auch für eine echt übersetzte Nicht-Basis-Seite.
+**Maintainer-Entscheidung 26.09.2026 (i18n Block B, `spec-i18n-b-wahlportal.md`):** Eine echt übersetzte Seite (`effectiveLocale === pageLocale`, z. B. `/en/berlin-wahlen` nach der Registrierung) zeigt KEINEN Übersetzungs-Hinweis mehr. Die vormalige `translated`-Variante von `TranslationDisclaimer` ("Translated from German source. Original DE version remains authoritative.") entfiel ersatzlos -- Variante, Messages `disclaimer_translated` (de/en) und die zugehörigen Tests wurden entfernt. `TranslationDisclaimerVariant` kennt nur noch `'fallback-to-base'`; die Komponente rendert `null` sowohl für Basis-Locale-on-Basis-Locale als auch für eine echt übersetzte Nicht-Basis-Seite.
 
-*Kontext:* Der `translated`-Hinweis stand permanent über jeder echt übersetzten Seite ("Translated from German source. Original DE version remains authoritative."), unabhängig davon, wie gut oder aktuell die Übersetzung war. Matze empfand das als redundantes Dauer-Disclaimer-Rauschen: Sobald ein Pfad im Register steht, ist die Übersetzung als vollwertig freigegeben, kein laufender Vorbehalt nötig. Der `fallback-to-base`-Hinweis bleibt dagegen, weil er eine ECHTE Abweichung meldet (die Seite zeigt gerade nicht ihre eigene Sprache).
+_Kontext:_ Der `translated`-Hinweis stand permanent über jeder echt übersetzten Seite ("Translated from German source. Original DE version remains authoritative."), unabhängig davon, wie gut oder aktuell die Übersetzung war. Der Maintainer empfand das als redundantes Dauer-Disclaimer-Rauschen: Sobald ein Pfad im Register steht, ist die Übersetzung als vollwertig freigegeben, kein laufender Vorbehalt nötig. Der `fallback-to-base`-Hinweis bleibt dagegen, weil er eine ECHTE Abweichung meldet (die Seite zeigt gerade nicht ihre eigene Sprache).
 
-*Konsequenz:* DE bleibt weiterhin die maßgebliche Quelle (Master-Source-Prinzip, siehe oben), das ist ab jetzt aber nicht mehr auf jeder EN-Seite selbst als Text sichtbar. Erkennbar bleibt es über den Sprachumschalter (führt jederzeit zur DE-Originalseite) und über die Methodik-Seiten. Sollte künftig doch ein sichtbarer Provenienz-Hinweis gewünscht sein (z. B. Footer-Zeile "Translated from German"), ist das ein neuer, bewusster Entscheid, keine Wiederherstellung der entfernten Variante -- die alte Variante war ein Dauer-Banner, kein Footer-Hinweis.
+_Konsequenz:_ DE bleibt weiterhin die maßgebliche Quelle (Master-Source-Prinzip, siehe oben), das ist ab jetzt aber nicht mehr auf jeder EN-Seite selbst als Text sichtbar. Erkennbar bleibt es über den Sprachumschalter (führt jederzeit zur DE-Originalseite) und über die Methodik-Seiten. Sollte künftig doch ein sichtbarer Provenienz-Hinweis gewünscht sein (z. B. Footer-Zeile "Translated from German"), ist das ein neuer, bewusster Entscheid, keine Wiederherstellung der entfernten Variante -- die alte Variante war ein Dauer-Banner, kein Footer-Hinweis.
 
 **Redirects:** `stale-locale-redirect.ts` leitet historische Locale-Präfixe (`de`, `en`, `es`, `fr`, `it`, `pl`, `tr`, `ar` aus dem Vor-Phase-1-Schema) auf den DE-Canonical um, mit einer Ausnahme: Präfixe, die aktuell eine echte, aktive Nicht-Basis-Locale-Route sind (aktuell nur `en`), werden aus der Stale-Menge entfernt. `de` bleibt für immer "stale" als Präfix, weil die Basis-Locale nie einen URL-Präfix bekommt. `renamed-route-redirect.ts` zieht einen aktiven Locale-Präfix (case-insensitiv, wie beim Stale-Redirect) vor dem Lookup ab und hängt ihn kanonisiert ans Redirect-Ziel wieder an (`/en/wo-lebt-es-sich-gut` → `/en/umwelt-infrastruktur-score`), damit umbenannte Routes innerhalb ihrer Locale bleiben.
 
@@ -67,7 +67,6 @@ Eine spätere Story markiert Pfade als übersetzt, indem sie Einträge in `TRANS
 
 ## References
 
-- [Spec i18n Block A: Locale-Infrastruktur, /en-Routing und SEO-Mechanik](../../_bmad-output/implementation-artifacts/spec-i18n-a-infra-routing.md)
-- [Plan: Internationalisierung DE/EN](../../_user-input/plan-i18n-de-en-2026-08-22.md)
+- [Spec i18n Block A: Locale-Infrastruktur, /en-Routing und SEO-Mechanik](../process/implementation-artifacts/spec-i18n-a-infra-routing.md)
 - [ADR-004: Cookieless-Architektur](ADR-004-cookieless.md) (Strategy `['url', 'baseLocale']`, kein Cookie-Fallback)
 - [Paraglide-JS: Strategy](https://paraglidejs.com/strategy)

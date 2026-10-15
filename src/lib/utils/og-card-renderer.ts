@@ -256,4 +256,3 @@ export async function loadDefaultOgFonts(_staticDir?: string): Promise<OgFont[]>
 	];
 	return cachedFonts;
 }
-

@@ -47,8 +47,8 @@ graph LR
 
 **Key:**
 
-- CPX22 = Production-Host (navigator.berlin, coolify.navigator.berlin)
-- CAX21 = Aux-Host (plausible.navigator.berlin, coolify.fliege.dev, ggf. backup-target)
+- CPX22 = Production-Host (App-Domain, Coolify-UI)
+- CAX21 = Aux-Host (Plausible, zweite Coolify-Instanz, ggf. Backup-Ziel)
 - Browser → Traefik → App = User-Path. Traefik macht TLS-Terminierung + Routing
 - Browser → Plausible = parallel, asynchron, cookieless
 - GitHub-App-Webhook triggert Coolify-Build bei Push-to-main
@@ -151,13 +151,13 @@ graph TB
 
 ## State-Slots (Production)
 
-| State                    | Wo                                         | Persistence                                                    |
-| ------------------------ | ------------------------------------------ | -------------------------------------------------------------- |
-| Postgres-App-Daten       | CPX22 Container `u83rd482pdebahel7a1bi80n` | Docker-Volume, weekly-backup                                   |
-| Coolify-State            | CPX22 `/data/coolify/*`                    | manual-backup via `.env`-Snapshot                              |
-| Plausible-Events         | CAX21 ClickHouse-Volume                    | kein Off-Server-Backup (re-aggregation aus Web-Vitals erlaubt) |
-| User-LocalStorage        | Browser                                    | nicht auf Server, kein Server-Backup nötig                     |
-| Static-Files (committed) | GitHub-Repo + Build-Output                 | Repo = Source-of-Truth                                         |
+| State                    | Wo                               | Persistence                                                    |
+| ------------------------ | -------------------------------- | -------------------------------------------------------------- |
+| Postgres-App-Daten       | CPX22 Container `<container-id>` | Docker-Volume, weekly-backup                                   |
+| Coolify-State            | CPX22 `/data/coolify/*`          | manual-backup via `.env`-Snapshot                              |
+| Plausible-Events         | CAX21 ClickHouse-Volume          | kein Off-Server-Backup (re-aggregation aus Web-Vitals erlaubt) |
+| User-LocalStorage        | Browser                          | nicht auf Server, kein Server-Backup nötig                     |
+| Static-Files (committed) | GitHub-Repo + Build-Output       | Repo = Source-of-Truth                                         |
 
 ## Was bewusst NICHT existiert
 

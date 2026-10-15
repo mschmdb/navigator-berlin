@@ -52,9 +52,19 @@ _user-input/
 # Vitest-Browser visual-regression artifacts (auto-generated per test-run)
 **/__screenshots__/
 .vitest-attachments/
-_bmad-output/secrets/
-_bmad-output/secrets/coolify-prod.env.backup
+docs/process/secrets/
 # Lokale Agent-Tooling-Artefakte (Codex-Skill-Spiegel, Jean, Prompt-Grading)
 .agents/
 jean.json
 prompt-grader-runs/
+
+# Prozess-Zwischenstände (lokal erzeugt, nicht im Repo)
+docs/process/implementation-artifacts/screenshots/
+docs/process/implementation-artifacts/c5-profiles-en/
+docs/process/implementation-artifacts/c4d-updates-en/
+docs/process/implementation-artifacts/*.json
+docs/process/brainstorming/
+**/.memlog.md
+
+# Alter BMAD-Ausgabeordner (Pfade stehen jetzt unter docs/process)
+/_bmad-output/

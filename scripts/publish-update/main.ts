@@ -8,6 +8,7 @@
  * Exit-Code 1 = Preflight-Fail oder unerwarteter Fehler.
  */
 
+import { isMainEntry } from '../lib/is-main-entry.js';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { readFile, access } from 'node:fs/promises';
@@ -191,8 +192,7 @@ function createClaudeSubagent(): SubagentExecutor {
 	};
 }
 
-const isMainEntry = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
-if (isMainEntry) {
+if (isMainEntry(import.meta.url, process.argv[1])) {
 	const argv = process.argv.slice(2);
 	main(argv)
 		.then((r) => {

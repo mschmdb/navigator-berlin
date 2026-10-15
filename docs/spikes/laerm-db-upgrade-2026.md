@@ -78,5 +78,5 @@ Bis dahin bleibt `laerm-2023` (3-Stufen, ordinal-3) der Score-Input.
 
 - WFS GetCapabilities: `https://gdi.berlin.de/services/wfs/ua_stratlaerm_2022?REQUEST=GetCapabilities&SERVICE=WFS`
 - Datensatz: daten.berlin.de/datensaetze/strategische-larmkarten-2022-umweltatlas-wfs-2936b5b8
-- Audit V6: `_user-input/datenaufloesung-audit-2026-05-21.md` Zeilen 174-178
+- Audit V6: interne Notiz (nicht im Repo) Zeilen 174-178
 - Defer-Präzedenz: `scripts/lib/sources.ts` (wohnlagen/sol/klima Tile-Defer)

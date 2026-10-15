@@ -1,12 +1,13 @@
 ---
-title_de: "Wahlen 2026: Atlas zeigt das amtliche Endergebnis"
-summary_de: "Für Abgeordnetenhaus und BVV 2026 zeigt navigator.berlin jetzt das Endergebnis, das der Landeswahlausschuss am 12.10.2026 festgestellt hat."
-title_en: "2026 elections: atlas now shows the final official result"
-summary_en: "For the 2026 Abgeordnetenhaus and BVV elections, navigator.berlin now shows the final result confirmed by the State Electoral Committee on 12 October 2026."
+title_de: 'Wahlen 2026: Atlas zeigt das amtliche Endergebnis'
+summary_de: 'Für Abgeordnetenhaus und BVV 2026 zeigt navigator.berlin jetzt das Endergebnis, das der Landeswahlausschuss am 12.10.2026 festgestellt hat.'
+title_en: '2026 elections: atlas now shows the final official result'
+summary_en: 'For the 2026 Abgeordnetenhaus and BVV elections, navigator.berlin now shows the final result confirmed by the State Electoral Committee on 12 October 2026.'
 date: 2026-10-14
 category: daten-update
-tags: ["wahlen", "wahl-2026", "abgeordnetenhaus", "bvv", "endergebnis", "wahldaten"]
+tags: ['wahlen', 'wahl-2026', 'abgeordnetenhaus', 'bvv', 'endergebnis', 'wahldaten']
 ---
+
 ## Endergebnis statt Wahlabend-Stand
 
 Berlin hat am 20.09.2026 das Abgeordnetenhaus und die Bezirksverordnetenversammlungen gewählt. Seitdem zeigte navigator.berlin das vorläufige amtliche Ergebnis mit Datenstand 21.09.2026. Diese Zahlen trugen überall den Hinweis „vorläufig“.

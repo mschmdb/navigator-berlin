@@ -154,7 +154,11 @@ describe('finder-bridge', () => {
 				{ plrId: 'neu', name: 'Neue Liste', fit: 83 }
 			]);
 		}, 120);
-		const treffer = await waitForFinderTopMatches({ sinceSeq: seq, timeoutMs: 3000, intervallMs: 40 });
+		const treffer = await waitForFinderTopMatches({
+			sinceSeq: seq,
+			timeoutMs: 3000,
+			intervallMs: 40
+		});
 		expect(treffer[0]?.name).toBe('Neue Liste');
 	});
 

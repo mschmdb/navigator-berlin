@@ -1,7 +1,7 @@
 /**
  * Story 7.6: Story-Map-Generator.
  *
- * Liest `_bmad-output/implementation-artifacts/sprint-status.yaml` und
+ * Liest `docs/process/implementation-artifacts/sprint-status.yaml` und
  * schreibt eine Markdown-Tabelle nach `docs/architecture/story-map.md`.
  *
  * Pure YAML-parsing, kein Subagent.
@@ -9,18 +9,12 @@
  * Run: `pnpm doc:story-map`.
  */
 
+import { isMainEntry } from './lib/is-main-entry.js';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { IMPLEMENTATION_ARTIFACTS_DIR, REPO_ROOT } from './lib/paths.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, '..');
-const SPRINT_STATUS_PATH = join(
-	REPO_ROOT,
-	'_bmad-output',
-	'implementation-artifacts',
-	'sprint-status.yaml'
-);
+export const SPRINT_STATUS_PATH = join(IMPLEMENTATION_ARTIFACTS_DIR, 'sprint-status.yaml');
 const OUT_PATH = join(REPO_ROOT, 'docs', 'architecture', 'story-map.md');
 
 export interface StoryRow {
@@ -111,7 +105,7 @@ export function renderStoryMapMarkdown(rows: readonly StoryRow[], generatedAt: s
 		'',
 		'# Story-Map',
 		'',
-		`Auto-generiert via \`pnpm doc:story-map\` aus \`_bmad-output/implementation-artifacts/sprint-status.yaml\`. Stand: ${generatedAt}.`,
+		`Auto-generiert via \`pnpm doc:story-map\` aus \`docs/process/implementation-artifacts/sprint-status.yaml\`. Stand: ${generatedAt}.`,
 		'',
 		`**${totalRows} Stories total**: ✅ ${totals.done} done · 🚧 ${totals.inProgress} in-progress · 📋 ${totals.readyForDev} ready-for-dev · ⏳ ${totals.backlog} backlog · ▫️ ${totals.other} other`,
 		'',
@@ -143,8 +137,7 @@ async function main(): Promise<void> {
 	process.stdout.write(`[generate-story-map] wrote ${OUT_PATH} (${rows.length} stories)\n`);
 }
 
-const isMainEntry = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
-if (isMainEntry) {
+if (isMainEntry(import.meta.url, process.argv[1])) {
 	main().catch((err) => {
 		process.stderr.write(`[generate-story-map] FATAL: ${(err as Error).message}\n`);
 		process.exit(1);

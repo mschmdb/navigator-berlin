@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { parseSprintStatus, renderStoryMapMarkdown } from './generate-story-map.js';
+import { readFileSync } from 'node:fs';
+import {
+	parseSprintStatus,
+	renderStoryMapMarkdown,
+	SPRINT_STATUS_PATH
+} from './generate-story-map.js';
 
 const yamlFixture = `
 last_updated: 2026-05-17
@@ -77,5 +82,12 @@ development_status:
 `;
 		const md = renderStoryMapMarkdown(parseSprintStatus(longYaml), '2026-05-17');
 		expect(md).toContain('…');
+	});
+});
+
+describe('SPRINT_STATUS_PATH', () => {
+	it('zeigt auf eine vorhandene Datei mit mindestens einer Story', () => {
+		const rows = parseSprintStatus(readFileSync(SPRINT_STATUS_PATH, 'utf-8'));
+		expect(rows.length).toBeGreaterThanOrEqual(1);
 	});
 });

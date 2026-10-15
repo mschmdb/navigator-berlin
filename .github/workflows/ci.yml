@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Prettier
+        run: pnpm exec prettier --check .
+      - name: Compile Paraglide messages
+        run: pnpm i18n:compile
+      - name: Type check
+        run: pnpm check
+      # Nur das Node-Projekt. Browser-Tests (Projekt "client") und Tests
+      # gegen Postgres laufen lokal. Sie überspringen sich ohne DATABASE_URL.
+      - name: Unit tests (no database, no browser)
+        run: pnpm exec vitest run --project server

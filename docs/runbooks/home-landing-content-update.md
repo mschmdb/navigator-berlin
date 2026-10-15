@@ -64,7 +64,7 @@ Paraglide-Messages.
 
 ## Stil-Disziplin
 
-- Memory `feedback_no_em_dashes`: niemals U+2014 (`—`).
-- Memory `feedback_no_lebenswert`: niemals „lebenswert" / „Lebensqualität".
-- Memory `feedback_no_live_data`: keine „aktuell"/„live"-Sprache.
+- niemals U+2014 (`—`).
+- niemals „lebenswert" / „Lebensqualität".
+- keine „aktuell"/„live"-Sprache.
 - Skill `no-ai-slop`: keine „Was..."-Anlaut-Headings, keine Floskeln.

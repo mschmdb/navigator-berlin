@@ -14,7 +14,7 @@ extended-by: ADR-017 (Versorgung um Nahversorgung), ADR-018 (Kultur als 6. Dimen
 
 Der Kiez-Score (ADR-013, Story 1.28) wichtet fünf Dimensionen gleich (je 0.20): Ruhe-Luft, Grün, Mobilität, **Soziale Lage** (MSS), Versorgung.
 
-**Kern-Widerspruch:** Der Score wichtet „Soziale Lage" (strukturelle MSS-Daten: Status/Dynamik) mit ein, behauptet im Disclaimer aber „keine Wohnqualität". Das beißt sich. Wenn ein Kiez mit höherem Sozialstatus „besser" scort, stigmatisiert der Score genau die Kieze mit niedrigem Status als „schlechter zu leben". Das verletzt die selbstgesetzte rote Linie (Memory `feedback_no_lebenswert`, `project_compare_editorial_profiles`: Sozialstatus/Wohnlage/Bodenrichtwert sind wertungsneutral, kein „besser").
+**Kern-Widerspruch:** Der Score wichtet „Soziale Lage" (strukturelle MSS-Daten: Status/Dynamik) mit ein, behauptet im Disclaimer aber „keine Wohnqualität". Das beißt sich. Wenn ein Kiez mit höherem Sozialstatus „besser" scort, stigmatisiert der Score genau die Kieze mit niedrigem Status als „schlechter zu leben". Das verletzt die selbstgesetzte rote Linie.
 
 Zusätzlich: „Soziale Lage" mischt eine value-geladene, kontestierte Größe in einen Score, der sonst aus klar gerichteten Umwelt-/Infrastruktur-Größen besteht.
 
@@ -59,6 +59,6 @@ Der `persona`-Slot im Score-Typ bleibt, Gewichtung pro Persona (Familie/Senior:i
 5. **Content:** `/methodik/kiez-score`, `/wo-lebt-es-sich-gut`.
 6. **Tests** über alle Ebenen.
 
-**Memory:** ersetzt `project_kiez_score_dimensions` (5-Dim-Set veraltet).
+Ersetzt das veraltete 5-Dimensionen-Set aus ADR-013.
 
 **Risiko:** größter Single-Change des Projekts. Sequenziell in Stories, Foundation → Schema → Pipeline → Konsumenten → Content, jeweils grün vor dem nächsten Schritt.

@@ -35,7 +35,7 @@ Architectural-Decision-Records für navigator.berlin. Format folgt [ADR-000-temp
 
 ## Geplant / Pending
 
-- ADR-015 Hetzner-CPX22-statt-CX32 (Performance-Recherche 2026-05-17) — Memory `project_server_purchase_sequencing` als Stub
+- ADR-015 Hetzner-CPX22-statt-CX32 (Performance-Recherche 2026-05-17) — Maintainer-Regel als Stub
 - ADR-016 (vorgemerkt) — Plausible-Self-Host statt SaaS
 
 ## ADR-Workflow

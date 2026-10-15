@@ -74,7 +74,7 @@ Wenn `navigator.modelContext` `undefined` bleibt: Polyfill-Load gescheitert. Kon
 Falls keine Browser-Extension verfügbar ist (Stand Mai 2026 unklar bei Anthropic Claude Browser):
 
 ```bash
-npx @modelcontextprotocol/inspector --transport http http://localhost:5173/webmcp-manifest.json
+pnpm dlx @modelcontextprotocol/inspector --transport http http://localhost:5173/webmcp-manifest.json
 ```
 
 Der Inspector listet `tools`, `resources` und `prompts` aus dem Manifest. Tool-Calls über den Inspector funktionieren nur, wenn der Inspector die WebMCP-Transport-Layer unterstützt (Pre-1.0, prüfen).

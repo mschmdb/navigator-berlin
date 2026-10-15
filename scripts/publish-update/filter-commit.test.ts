@@ -49,7 +49,10 @@ describe('classifyChangedFiles', () => {
 		expect(classifyChangedFiles(['lefthook.yml']).relevant).toBe(false);
 	});
 
-	it('_bmad-output / .claude/skills → NICHT relevant', () => {
+	it('docs/process / _bmad-output / .claude/skills → NICHT relevant', () => {
+		expect(
+			classifyChangedFiles(['docs/process/implementation-artifacts/sprint-status.yaml']).relevant
+		).toBe(false);
 		expect(classifyChangedFiles(['_bmad-output/sprint-status.yaml']).relevant).toBe(false);
 		expect(classifyChangedFiles(['.claude/skills/publish-update/SKILL.md']).relevant).toBe(false);
 	});

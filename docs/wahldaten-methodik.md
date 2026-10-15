@@ -3,8 +3,8 @@ type: methodology
 audience: both
 last-verified: 2026-09-23
 related:
-  - _bmad-output/implementation-artifacts/6-0-wahl-daten-schema-pipeline-foundation-spike.md
-  - _bmad-output/spike-artifacts/SCHEMA-DRIFT-ANALYSIS.md
+  - docs/process/implementation-artifacts/6-0-wahl-daten-schema-pipeline-foundation-spike.md
+  - docs/process/spike-artifacts/SCHEMA-DRIFT-ANALYSIS.md
   - docs/data-pipeline.md
 ---
 
@@ -173,7 +173,7 @@ Attribution: „Datenquelle: Landeswahlleiterin Berlin".
 
 ### Pre-Indexing-Verifikation per Spike
 
-Vor Schema-Implementation wurde ein Spike-Snapshot (`_bmad-output/spike-artifacts/wahl-schema-snapshot-btw25.json`) angelegt. Aggregator-Pipeline (`scripts/aggregate-wahl-data.ts`) führt bei jedem Real-Run einen Schema-Drift-Check gegen den Snapshot durch. Bei Drift wird die Pipeline mit explizitem Diff-Output abgebrochen statt stille Daten-Korruption.
+Vor Schema-Implementation wurde ein Spike-Snapshot (`docs/process/spike-artifacts/wahl-schema-snapshot-btw25.json`) angelegt. Aggregator-Pipeline (`scripts/aggregate-wahl-data.ts`) führt bei jedem Real-Run einen Schema-Drift-Check gegen den Snapshot durch. Bei Drift wird die Pipeline mit explizitem Diff-Output abgebrochen statt stille Daten-Korruption.
 
 ## Aggregations-Strategie
 
@@ -258,7 +258,7 @@ Implementation: `scripts/wahlen/lib/kiez-mapper.ts#dbUwbIdFromGeo` und `buildKie
 ## Stimmbezirks-Ansicht (Story 5)
 
 `/berlin-wahlen` zeigt die Winner-Map standardmäßig auf Stimmbezirks-Ebene
-(Matze-Direktive 19.09., Tagesspiegel-Referenz): die amtlichen Wahleinheiten
+(Maintainer-Direktive 19.09., Tagesspiegel-Referenz): die amtlichen Wahleinheiten
 statt der abgeleiteten Kiez-/Bezirks-Aggregate.
 
 **Amtliche Einheiten:** Stimmbezirks-Rows kommen direkt aus `ergebnis`
@@ -515,5 +515,5 @@ Folgende Daten sind explizit ausgeschlossen für Phase 1:
 - Europawahlen (Phase 2 Backlog, eigene Source-Pipeline ggf. analog BTW-\_wbz)
 - BTW 2024 Wiederholung (eigene Berliner-Pipeline später)
 - pre-2011-AGH/BVV + pre-2013-BTW (FragDenStaat-IFG-Anfrage, Phase 2)
-- Live-Wahl-Auszählung am Wahltag (Memory `feedback_no_live_data` lock)
+- Live-Wahl-Auszählung am Wahltag
 - Wahlkreise als eigene Geo-Ebene (entfällt mit Story 6.1 cancelled)

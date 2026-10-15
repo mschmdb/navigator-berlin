@@ -1,6 +1,6 @@
 # navigator.berlin
 
-Cross-layer Berlin atlas: address-level inspection across 65 open-data layers (climate, noise, mobility, heritage, demographics) on one map.
+Cross-layer Berlin atlas: address-level inspection across 73 open-data layers (climate, noise, mobility, heritage, demographics) on one map.
 
 Live: <https://navigator.berlin>
 
@@ -8,7 +8,7 @@ Live: <https://navigator.berlin>
 
 ![Multi-layer inspection: several data layers stacked at one address](static/berlin-navigator-multilayer.webp)
 
-The interface is German, since the data and the audience are Berlin's. Code, commits and this file are English.
+The interface is available in German and English. German is the default, since the data and the audience are Berlin's. Code, commits and this file are English.
 
 ## Setup
 
@@ -17,11 +17,11 @@ pnpm install
 pnpm dev
 ```
 
-Requirements: Node.js ≥20 (see `.nvmrc`), pnpm 10.
+Requirements: Node.js 22 (see `.nvmrc`), pnpm 10.
 
 The map, all geo layers and the Kiez-Finder run with no further configuration: `static/` ships the generated data.
 
-**Postgres is optional.** Election results and supplementary data (FAQ, ranks, comparisons) come from a local Postgres database. Without `DATABASE_URL`, `/wahl` answers 503 and the Bezirk and Kiez pages render with reduced data; everything else works. Setup: [`docs/runbooks/local-postgres-setup.md`](./docs/runbooks/local-postgres-setup.md), variables: [`.env.example`](./.env.example).
+**Postgres is optional.** Election results and supplementary data (FAQ, ranks, comparisons) come from a local Postgres database. Without `DATABASE_URL`, the election detail pages `/berlin-wahlen/<slug>` answer 503 and the Bezirk and Kiez pages render with reduced data; everything else works. Setup: [`docs/runbooks/local-postgres-setup.md`](./docs/runbooks/local-postgres-setup.md), variables: [`.env.example`](./.env.example).
 
 ## WebMCP
 
@@ -43,9 +43,17 @@ Open data from ODIS Berlin, Umweltatlas (SenMVKU), Geoportal Berlin/FIS-Broker, 
 
 ## Stack
 
-SvelteKit 2 · Svelte 5 (runes) · TypeScript strict · Tailwind v4 · Paraglide v2 (8 languages) · MapLibre GL · Layerchart · D3 · Turf · Bits UI · WebMCP · Vitest · Playwright.
+SvelteKit 2 · Svelte 5 (runes) · TypeScript strict · Tailwind v4 · Paraglide v2 (German and English) · MapLibre GL · Layerchart · D3 · Turf · Bits UI · WebMCP · Vitest · Playwright.
 
 Architecture decisions live in `docs/adr/`.
+
+## Development process
+
+The project is built with the [BMAD method](https://github.com/bmad-code-org/BMAD-METHOD) and AI coding agents. Specs, stories, planning documents and audits live in [`docs/process/`](./docs/process/). They are working logs written while building, not user documentation. Statements in them can be outdated; the code and the ADRs in `docs/adr/` are authoritative.
+
+## Contributing and security
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md). Report vulnerabilities as described in [`SECURITY.md`](./SECURITY.md).
 
 ## License
 
