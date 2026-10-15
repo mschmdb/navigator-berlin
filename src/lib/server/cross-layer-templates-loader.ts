@@ -40,4 +40,3 @@ export async function loadCrossLayerTemplates(): Promise<LoadedTemplateBundle[]>
 	cache = loadTemplatesFromRawMap(raw);
 	return cache;
 }
-

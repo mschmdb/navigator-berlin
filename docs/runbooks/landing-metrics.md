@@ -6,18 +6,18 @@ Vergleicht Kiez-, Bezirks- und Layer-Seiten vor und nach dem Epic "Landing-Enhan
 
 Jeder Klick sendet ein Plausible-Event `Landing` mit zwei Properties. Es gibt keine Slugs, Cookies oder IDs.
 
-| `action` | Klickziel |
-|---|---|
-| `map_button` | Karten-Button (Kiez, Bezirk, Layer-Hero) |
-| `map_link_bottom` | Karten-Link am Ende der Layer-Seite |
-| `key_figure` | Link in einer Kennzahl-Kachel |
-| `neighbor` | Link zu einem angrenzenden Kiez |
-| `similar` | Link zu einem ähnlichen Kiez |
-| `list_sort` | Sortier-Button der Kiez-Liste (Bezirk) |
-| `list_link` | Kiez-Link in der Liste (Bezirk) |
-| `map_link` | Kiez-Link in der Bezirkskarte |
-| `ranking_link` | Kiez-Link in der Rangliste (Layer) |
-| `eyebrow_link` | Bezirks-Link über der Kiez-Überschrift |
+| `action`          | Klickziel                                |
+| ----------------- | ---------------------------------------- |
+| `map_button`      | Karten-Button (Kiez, Bezirk, Layer-Hero) |
+| `map_link_bottom` | Karten-Link am Ende der Layer-Seite      |
+| `key_figure`      | Link in einer Kennzahl-Kachel            |
+| `neighbor`        | Link zu einem angrenzenden Kiez          |
+| `similar`         | Link zu einem ähnlichen Kiez             |
+| `list_sort`       | Sortier-Button der Kiez-Liste (Bezirk)   |
+| `list_link`       | Kiez-Link in der Liste (Bezirk)          |
+| `map_link`        | Kiez-Link in der Bezirkskarte            |
+| `ranking_link`    | Kiez-Link in der Rangliste (Layer)       |
+| `eyebrow_link`    | Bezirks-Link über der Kiez-Überschrift   |
 
 `page_type` ist `kiez`, `bezirk` oder `layer`.
 

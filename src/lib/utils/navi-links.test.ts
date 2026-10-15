@@ -15,8 +15,6 @@ describe('buildNaviLinks', () => {
 	});
 
 	it('rundet nicht, übernimmt Koordinaten unverändert', () => {
-		expect(buildNaviLinks(52.5461978, 13.2059831).googleMapsUrl).toContain(
-			'52.5461978,13.2059831'
-		);
+		expect(buildNaviLinks(52.5461978, 13.2059831).googleMapsUrl).toContain('52.5461978,13.2059831');
 	});
 });

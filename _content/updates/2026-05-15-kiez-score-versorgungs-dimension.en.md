@@ -2,13 +2,13 @@
 
 The Kiez score gets a fifth dimension: **local amenities**.
 
-| Dimension       | Share |
-| --------------- | ----- |
-| Quiet & air     | 20 %  |
-| Green space     | 20 %  |
-| Mobility        | 20 %  |
-| Social situation | 20 % |
-| Local amenities | 20 %  |
+| Dimension        | Share |
+| ---------------- | ----- |
+| Quiet & air      | 20 %  |
+| Green space      | 20 %  |
+| Mobility         | 20 %  |
+| Social situation | 20 %  |
+| Local amenities  | 20 %  |
 
 ## What the amenities dimension measures
 

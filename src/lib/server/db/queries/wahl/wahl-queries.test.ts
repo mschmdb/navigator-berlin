@@ -139,7 +139,9 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 
 		it('getStimmbezirksWinners löst Gleichstand deterministisch alphabetisch nach Partei-Kurzname (Review-Fund, AGH26 Gruppe 03B3F: AfD=Linke=325)', async () => {
 			const list = await getWahlList();
-			const agh26Zweit = list.find((w) => w.jahr === 2026 && w.typ === 'agh' && w.stimmtyp === 'zweitstimme');
+			const agh26Zweit = list.find(
+				(w) => w.jahr === 2026 && w.typ === 'agh' && w.stimmtyp === 'zweitstimme'
+			);
 			if (!agh26Zweit) return;
 			const winners = await getStimmbezirksWinners(agh26Zweit.id);
 			if (winners.length === 0) return;

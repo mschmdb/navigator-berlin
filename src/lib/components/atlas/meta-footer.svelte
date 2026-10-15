@@ -57,7 +57,15 @@
 						aria-label="navigator.berlin"
 						class="flex items-center gap-2"
 					>
-						<img src="/logo-pixel.svg" alt="" width="36" height="36" loading="lazy" decoding="async" class="block" />
+						<img
+							src="/logo-pixel.svg"
+							alt=""
+							width="36"
+							height="36"
+							loading="lazy"
+							decoding="async"
+							class="block"
+						/>
 						<span class="font-serif text-lg text-ink">navigator.berlin</span>
 					</a>
 					<p class="font-serif text-base leading-relaxed text-ink-muted">

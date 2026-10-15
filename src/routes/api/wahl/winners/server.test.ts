@@ -131,7 +131,9 @@ describe('GET /api/wahl/winners ebene=stimmbezirk (mit lokaler DB)', () => {
 		const parteien = ['SPD', 'CDU', 'GRÜNE', 'FDP', 'AfD', 'Die Linke', 'BSW'];
 		const results = await Promise.all(
 			parteien.map((p) =>
-				call(`?typ=agh&stimmtyp=zweitstimme&ebene=stimmbezirk&jahr=2026&partei=${encodeURIComponent(p)}`)
+				call(
+					`?typ=agh&stimmtyp=zweitstimme&ebene=stimmbezirk&jahr=2026&partei=${encodeURIComponent(p)}`
+				)
 			)
 		);
 		const bodies = await Promise.all(results.map((r) => r.json()));
