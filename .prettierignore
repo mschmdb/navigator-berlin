@@ -12,3 +12,11 @@ bun.lockb
 /.claude/
 /jean.json
 /prompt-grader-runs/
+
+# Prozess-Arbeitsprotokolle, Installer-Output und generierte Dateien
+/docs/process/
+/_bmad/
+/project.inlang/
+/drizzle/migrations/
+/docs/architecture/story-map.md
+/docs/pipelines/data-flow.md
