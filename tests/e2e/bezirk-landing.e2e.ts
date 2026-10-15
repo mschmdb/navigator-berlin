@@ -21,6 +21,45 @@ test.describe('L5: Bezirksseite mit Karte und Liste', () => {
 		await page.screenshot({ path: `${SCREENSHOT_DIR}/mobile-375.png` });
 	});
 
+	test('Kartenrahmen: Score-Erklärung mit Link, Button im Rahmen, zwei Spalten ab 1280 px', async ({
+		page
+	}) => {
+		await page.setViewportSize({ width: 1280, height: 900 });
+		await page.goto(`/bezirk/${BEZIRK}`);
+		const card = page.getByTestId('hero-map-card');
+		await expect(card).toContainText('Kiez-Score der Kieze');
+		await expect(card).toContainText('von 0 bis 100');
+		await expect(card.getByTestId('bezirk-score-explain-link')).toHaveAttribute(
+			'href',
+			'/methodik/kiez-score'
+		);
+		await expect(card.getByTestId('bezirk-map-button')).toBeVisible();
+		const geometry = await page.evaluate((heroId) => {
+			const rect = (el: Element | null) => el?.getBoundingClientRect();
+			const eyebrow = rect(document.querySelector(`[data-testid="${heroId}"] p`));
+			const h1 = rect(document.querySelector(`[data-testid="${heroId}"] h1`));
+			const card = rect(document.querySelector('[data-testid="hero-map-card"]'));
+			const crumb = [...document.querySelectorAll('a')].find(
+				(a) => a.textContent?.trim() === 'Berlin'
+			);
+			const crumbLeft = rect(crumb ?? null)?.left ?? -1;
+			return {
+				crumbLeft,
+				eyebrowLeft: eyebrow?.left ?? -1,
+				h1Left: h1?.left ?? -1,
+				h1Right: h1?.right ?? -1,
+				eyebrowTop: eyebrow?.top ?? -1,
+				cardLeft: card?.left ?? -1,
+				cardTop: card?.top ?? -1
+			};
+		}, 'bezirk-hero');
+		expect(Math.abs(geometry.eyebrowLeft - geometry.crumbLeft)).toBeLessThanOrEqual(1);
+		expect(Math.abs(geometry.h1Left - geometry.crumbLeft)).toBeLessThanOrEqual(1);
+		expect(geometry.cardLeft).toBeGreaterThanOrEqual(geometry.h1Right - 1);
+		expect(Math.abs(geometry.cardTop - geometry.eyebrowTop)).toBeLessThanOrEqual(8);
+		await page.screenshot({ path: `${SCREENSHOT_DIR}/desktop-1280-hero.png` });
+	});
+
 	test('Desktop: Screenshot und Reihenfolge Hero, Liste, Details', async ({ page }) => {
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await page.goto(`/bezirk/${BEZIRK}`);
@@ -104,6 +143,10 @@ test.describe('L5: Bezirksseite mit Karte und Liste', () => {
 			'/en/explore?bezirk=pankow'
 		);
 		await expect(page.getByTestId('bezirk-map-button')).toContainText('Pankow on the map');
+		await expect(page.getByTestId('bezirk-score-explain-link')).toHaveAttribute(
+			'href',
+			'/en/methodik/kiez-score'
+		);
 		await expect(page.getByTestId('bezirk-map-link').first()).toHaveAttribute(
 			'href',
 			/^\/en\/kiez\//

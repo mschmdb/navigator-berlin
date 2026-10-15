@@ -20,6 +20,11 @@
 	const { outline, kiezSlug, kiezName, bezirkName }: Props = $props();
 
 	const localeOpts = $derived({ locale: getLocale() });
+	const ariaLabel = $derived(
+		bezirkName.length > 0
+			? m.kiez_outline_aria({ kiez: kiezName, bezirk: bezirkName }, localeOpts)
+			: m.kiez_outline_aria_no_bezirk({ kiez: kiezName }, localeOpts)
+	);
 	const current = $derived(outline?.paths.find((p) => p.id === kiezSlug) ?? null);
 	const others = $derived(
 		(outline?.paths ?? [])
@@ -33,9 +38,9 @@
 	<svg
 		viewBox={outline.viewBox}
 		role="img"
-		aria-label={m.kiez_outline_aria({ kiez: kiezName, bezirk: bezirkName }, localeOpts)}
-		class="block h-auto max-h-36 w-full sm:max-h-64"
-		preserveAspectRatio="xMidYMid meet"
+		aria-label={ariaLabel}
+		class="block h-auto max-h-32 w-full sm:max-h-64"
+		preserveAspectRatio="xMinYMid meet"
 		data-testid="kiez-location-map"
 	>
 		<path

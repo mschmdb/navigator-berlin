@@ -220,6 +220,83 @@ describe('KiezHero.svelte', () => {
 		expect(text()).not.toMatch(/auf dieser Seite/);
 	});
 
+	describe('Gestalt', () => {
+		it('setzt den Score in derselben Typo als „47 von 100“', () => {
+			render(KiezHero, props());
+			const dd = document.querySelector('[data-testid="kiez-hero-score"] dd');
+			expect(dd?.textContent).toContain('47 von 100');
+			expect(dd?.textContent).not.toContain('/ 100');
+			const other = document.querySelector('[data-testid="kiez-facts"] dd');
+			expect(dd).not.toBe(other);
+			const a = getComputedStyle(dd as Element);
+			const b = getComputedStyle(other as Element);
+			expect(a.fontFamily).toBe(b.fontFamily);
+			expect(a.fontSize).toBe(b.fontSize);
+		});
+
+		it('legt Stärke-Satz in die Textgruppe, Button in den Kartenrahmen', () => {
+			render(KiezHero, props());
+			const card = document.querySelector('[data-testid="hero-map-card"]');
+			expect(card?.querySelector('[data-testid="kiez-map-button"]')).not.toBeNull();
+			expect(card?.querySelector('[data-testid="kiez-hero-strength"]')).toBeNull();
+			const facts = document.querySelector('[data-testid="kiez-facts"]');
+			expect(
+				facts?.parentElement?.querySelector('[data-testid="kiez-hero-strength"]')
+			).not.toBeNull();
+		});
+
+		it('titelt den Rahmen „Lage im Bezirk {Bezirk}“ ohne Score-Erklärung', () => {
+			render(KiezHero, props());
+			const caption = document.querySelector('[data-testid="hero-map-card"] figcaption');
+			expect(caption?.textContent).toContain('Lage im Bezirk Friedrichshain-Kreuzberg');
+			expect(caption?.querySelector('a')).toBeNull();
+		});
+
+		it('zeigt den Button auch ohne Umriss', () => {
+			render(KiezHero, props({ outline: null }));
+			expect(document.querySelector('[data-testid="hero-map-card"]')).toBeNull();
+			expect(document.querySelector('[data-testid="kiez-map-button"]')).not.toBeNull();
+		});
+
+		it('erklärt im Rahmen, dass die dunkle Fläche der Kiez ist', () => {
+			render(KiezHero, props());
+			expect(document.querySelector('[data-testid="kiez-outline-explain"]')?.textContent).toContain(
+				'Dunkel: Boxhagener Kiez. Hell: die übrigen Kieze im Bezirk.'
+			);
+		});
+
+		it('ohne Bezirk: Rahmentitel „Lage in Berlin“, aria-Label ohne Bezirk', () => {
+			render(KiezHero, props({ profile: { ...profile, bezirk: '' } }));
+			expect(
+				document.querySelector('[data-testid="hero-map-card"] figcaption')?.textContent
+			).toContain('Lage in Berlin');
+			expect(
+				document.querySelector('[data-testid="kiez-location-map"]')?.getAttribute('aria-label')
+			).toBe('Lage von Boxhagener Kiez in Berlin');
+		});
+
+		it('rendert bei nicht passendem Umriss keinen Rahmen, aber den Button', () => {
+			const other: RegionOutline = {
+				...outline,
+				paths: [{ id: 'anderer-kiez', d: 'M0 0L1 1Z' }]
+			};
+			render(KiezHero, props({ outline: other }));
+			expect(document.querySelector('[data-testid="hero-map-card"]')).toBeNull();
+			expect(document.querySelector('[data-testid="kiez-map-button"]')).not.toBeNull();
+		});
+
+		it('EN: „47 of 100“ und Rahmentitel englisch', () => {
+			overwriteGetLocale(() => 'en');
+			render(KiezHero, props());
+			expect(document.querySelector('[data-testid="kiez-hero-score"] dd')?.textContent).toContain(
+				'47 of 100'
+			);
+			expect(
+				document.querySelector('[data-testid="hero-map-card"] figcaption')?.textContent
+			).toContain('Location in Bezirk Friedrichshain-Kreuzberg');
+		});
+	});
+
 	describe('EN', () => {
 		it('nutzt im unteren Viertel englischen Wortlaut ohne Rang und ohne Stärke-Satz', () => {
 			overwriteGetLocale(() => 'en');

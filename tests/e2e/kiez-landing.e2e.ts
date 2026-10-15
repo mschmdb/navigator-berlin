@@ -43,6 +43,44 @@ test.describe('L2: Kiez-Hero', () => {
 		await page.screenshot({ path: `${SCREENSHOT_DIR}/desktop-1280.png` });
 	});
 
+	test('Kartenrahmen: Titel Lage im Bezirk, Button im Rahmen, Stärke in der Textgruppe', async ({
+		page
+	}) => {
+		await page.setViewportSize({ width: 1280, height: 900 });
+		await page.goto(`/kiez/${KIEZ}`);
+		const card = page.getByTestId('hero-map-card');
+		await expect(card).toContainText('Lage im Bezirk Pankow');
+		await expect(card.getByTestId('kiez-map-button')).toBeVisible();
+		await expect(page.getByTestId('kiez-hero-strength')).toHaveCount(1);
+		await expect(card.getByTestId('kiez-hero-strength')).toHaveCount(0);
+		await expect(page.getByTestId('kiez-hero-score')).toContainText(/\d+ von 100/);
+		await expect(card.getByTestId('kiez-outline-explain')).toContainText('Dunkel:');
+
+		const geometry = await page.evaluate((heroId) => {
+			const rect = (el: Element | null) => el?.getBoundingClientRect();
+			const eyebrow = rect(document.querySelector(`[data-testid="${heroId}"] p`));
+			const h1 = rect(document.querySelector(`[data-testid="${heroId}"] h1`));
+			const card = rect(document.querySelector('[data-testid="hero-map-card"]'));
+			const crumb = [...document.querySelectorAll('a')].find(
+				(a) => a.textContent?.trim() === 'Berlin'
+			);
+			const crumbLeft = rect(crumb ?? null)?.left ?? -1;
+			return {
+				crumbLeft,
+				eyebrowLeft: eyebrow?.left ?? -1,
+				h1Left: h1?.left ?? -1,
+				h1Right: h1?.right ?? -1,
+				eyebrowTop: eyebrow?.top ?? -1,
+				cardLeft: card?.left ?? -1,
+				cardTop: card?.top ?? -1
+			};
+		}, 'kiez-hero');
+		expect(Math.abs(geometry.eyebrowLeft - geometry.crumbLeft)).toBeLessThanOrEqual(1);
+		expect(Math.abs(geometry.h1Left - geometry.crumbLeft)).toBeLessThanOrEqual(1);
+		expect(geometry.cardLeft).toBeGreaterThanOrEqual(geometry.h1Right - 1);
+		expect(Math.abs(geometry.cardTop - geometry.eyebrowTop)).toBeLessThanOrEqual(8);
+	});
+
 	test('Eyebrow verlinkt auf die Bezirksseite, Lage-Grafik hebt den Kiez hervor', async ({
 		page
 	}) => {

@@ -1,7 +1,7 @@
 <!--
-	L5: Statische SVG-Karte der Kieze eines Bezirks, eingefärbt nach Kiez-Score
+	L5: Statische SVG-Karte der Kieze (Inhalt des Rahmens `hero-map-card`) eines Bezirks, eingefärbt nach Kiez-Score
 	(Klassen und Palette des Score-Layers). Kein MapLibre. Jeder Kiez ist ein Link
-	mit sprechendem Namen; die Kiez-Liste daneben ist die gleichwertige
+	mit sprechendem Namen; die Kiez-Liste darunter ist die gleichwertige
 	Textalternative. Die Karten-Links liegen nicht in der Tab-Reihenfolge, die
 	Liste erreicht dieselben Seiten per Tastatur; Mausklick bleibt ein Link. Die Kontur sichert 3:1 gegen den Hintergrund.
 -->
@@ -12,6 +12,7 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { trackLanding } from '$lib/utils/plausible.js';
+	import { hasRenderableOutline } from './internal/has-renderable-outline.js';
 	import { NO_SCORE_FILL, scoreClassFill } from './internal/score-class-color.js';
 
 	interface Props {
@@ -22,6 +23,8 @@
 
 	const { outline, kieze, bezirkName }: Props = $props();
 
+	const uid = $props.id();
+	const legendId = `${uid}-legend`;
 	const localeOpts = $derived({ locale: getLocale() });
 	const bySlug = $derived(new Map(kieze.map((k) => [k.slug, k])));
 
@@ -54,14 +57,14 @@
 	]);
 </script>
 
-{#if outline && entries.length > 0}
-	<figure class="m-0 flex flex-col gap-2" data-testid="bezirk-kieze-map">
+{#if outline && hasRenderableOutline(outline, bySlug.keys())}
+	<div class="flex flex-col gap-3" data-testid="bezirk-kieze-map">
 		<svg
 			viewBox={outline.viewBox}
 			role="img"
 			aria-label={m.bezirk_map_aria({ bezirk: bezirkName }, localeOpts)}
-			class="block h-auto max-h-40 w-full sm:max-h-80"
-			preserveAspectRatio="xMidYMid meet"
+			class="block h-auto max-h-32 w-full sm:max-h-80"
+			preserveAspectRatio="xMinYMid meet"
 		>
 			{#each entries as entry (entry.slug)}
 				<a
@@ -84,10 +87,13 @@
 				</a>
 			{/each}
 		</svg>
-		<figcaption>
+		<div class="space-y-1">
+			<p id={legendId} class="sr-only">
+				{m.bezirk_map_legend_label(undefined, localeOpts)}
+			</p>
 			<ul
 				class="m-0 flex list-none flex-wrap items-center gap-x-4 gap-y-1 p-0 font-sans text-sm text-ink-muted"
-				aria-label={m.bezirk_map_legend_label(undefined, localeOpts)}
+				aria-labelledby={legendId}
 				data-testid="bezirk-map-legend"
 			>
 				{#each legend as item (item.text)}
@@ -101,8 +107,8 @@
 					</li>
 				{/each}
 			</ul>
-		</figcaption>
-	</figure>
+		</div>
+	</div>
 {/if}
 
 <style>

@@ -2,7 +2,8 @@
 	L2: Hero der Kiez-Seite. Der erste Bildschirm zeigt Eyebrow (Link auf den Bezirk),
 	H1, Fakten (Einwohner:innen, Fläche, Kiez-Score mit Rang, Stand), die Lage im
 	Bezirk als statische SVG, einen Stärke-Satz und den Button zur Karte
-	(`/explore?kiez=<slug>`). Prosa, Score-Block, Vergleich, Steckbrief und FAQ
+	(`/explore?kiez=<slug>`). Gestalt: Textgruppe (mit Stärke-Satz) links, Kartenrahmen
+	(`hero-map-card`, Button im Rahmen) rechts; mobil untereinander. Prosa, Score-Block, Vergleich, Steckbrief und FAQ
 	folgen in `kiez-details.svelte`.
 
 	Anti-Stigma (ADR-015): Rang über `formatRank` (unteres Viertel ohne „Platz X“).
@@ -28,6 +29,8 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { dimensionLabel } from './inspector-panel/internal/kiez-score-display.js';
 	import KiezLocationMap from './kiez-location-map.svelte';
+	import HeroMapCard from './hero-map-card.svelte';
+	import { hasRenderableOutline } from './internal/has-renderable-outline.js';
 
 	interface Props {
 		readonly profile: KiezProfile;
@@ -79,85 +82,105 @@
 			: null
 	);
 	const mapHref = $derived(localizedHref(buildRegionFocusHref('kiez', profile.slug)));
+	const hasMap = $derived(hasRenderableOutline(outline, [profile.slug]));
+	const mapTitle = $derived(
+		profile.bezirk.length > 0
+			? m.kiez_outline_title({ bezirk: profile.bezirk }, localeOpts)
+			: m.kiez_outline_title_no_bezirk(undefined, localeOpts)
+	);
 </script>
 
-<header class="mx-auto max-w-3xl space-y-4 px-4 pt-4 pb-8" data-testid="kiez-hero">
-	<div class="space-y-3">
-		<p class="m-0 font-mono text-xs tracking-wide text-ink-subtle uppercase">
-			{#if bezirkHref}
-				{m.kiez_hero_eyebrow(undefined, localeOpts)}
-				<a
-					href={bezirkHref}
-					onclick={() => trackLanding('eyebrow_link', 'kiez')}
-					class="inline-block py-1 text-ink-subtle underline underline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
-					data-testid="kiez-hero-bezirk-link">{profile.bezirk}</a
-				>
-			{:else}
-				{m.kiez_hero_eyebrow_no_bezirk(undefined, localeOpts)}
+<header class="mx-auto max-w-3xl px-4 pt-4 pb-8" data-testid="kiez-hero">
+	<div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:items-start md:gap-6">
+		<div class="space-y-3">
+			<p class="m-0 font-mono text-xs tracking-wide text-ink-subtle uppercase">
+				{#if bezirkHref}
+					{m.kiez_hero_eyebrow(undefined, localeOpts)}
+					<a
+						href={bezirkHref}
+						onclick={() => trackLanding('eyebrow_link', 'kiez')}
+						class="inline-block py-1 text-ink-subtle underline underline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+						data-testid="kiez-hero-bezirk-link">{profile.bezirk}</a
+					>
+				{:else}
+					{m.kiez_hero_eyebrow_no_bezirk(undefined, localeOpts)}
+				{/if}
+			</p>
+			<h1 class="font-serif text-2xl text-ink sm:text-3xl md:text-4xl">{profile.name}</h1>
+			<dl
+				class="m-0 grid grid-cols-2 gap-x-4 gap-y-2 font-sans sm:flex sm:flex-wrap sm:gap-x-8"
+				data-testid="kiez-facts"
+			>
+				{#if profile.einwohner > 0}
+					<div>
+						<dt class="text-xs text-ink-muted sm:text-sm">
+							{m.kiez_hero_fact_einwohner(undefined, localeOpts)}
+						</dt>
+						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
+							{formatCount(profile.einwohner, localeOpts)}
+							{#if stand}
+								<span class="block font-sans text-xs text-ink-muted">
+									{m.kiez_hero_fact_stand({ stand }, localeOpts)}
+								</span>
+							{/if}
+						</dd>
+					</div>
+				{/if}
+				{#if profile.flaecheHa > 0}
+					<div>
+						<dt class="text-xs text-ink-muted sm:text-sm">
+							{m.kiez_hero_fact_flaeche(undefined, localeOpts)}
+						</dt>
+						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
+							{m.kiez_hero_fact_flaeche_value({ km2: flaecheKm2 }, localeOpts)}
+						</dd>
+					</div>
+				{/if}
+				{#if scoreValue !== null}
+					<div class="col-span-2 sm:col-span-1" data-testid="kiez-hero-score">
+						<dt class="text-xs text-ink-muted sm:text-sm">
+							{m.kiez_hero_fact_score(undefined, localeOpts)}
+						</dt>
+						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
+							{m.kiez_hero_score_value({ score: scoreValue }, localeOpts)}
+							{#if hasRank}
+								<span class="block font-sans text-xs text-ink-muted" data-testid="kiez-hero-rank"
+									>{rankText}</span
+								>
+							{/if}
+						</dd>
+					</div>
+				{/if}
+			</dl>
+			{#if strengthText}
+				<p class="m-0 pt-1 font-serif text-base text-ink" data-testid="kiez-hero-strength">
+					{strengthText}
+				</p>
 			{/if}
-		</p>
-		<h1 class="font-serif text-2xl text-ink sm:text-3xl md:text-4xl">{profile.name}</h1>
-		<dl
-			class="m-0 grid grid-cols-2 gap-x-4 gap-y-2 font-sans sm:flex sm:flex-wrap sm:gap-x-8"
-			data-testid="kiez-facts"
-		>
-			{#if profile.einwohner > 0}
-				<div>
-					<dt class="text-xs text-ink-muted sm:text-sm">
-						{m.kiez_hero_fact_einwohner(undefined, localeOpts)}
-					</dt>
-					<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
-						{formatCount(profile.einwohner, localeOpts)}
-						{#if stand}
-							<span class="block font-sans text-xs text-ink-muted">
-								{m.kiez_hero_fact_stand({ stand }, localeOpts)}
-							</span>
-						{/if}
-					</dd>
-				</div>
-			{/if}
-			{#if profile.flaecheHa > 0}
-				<div>
-					<dt class="text-xs text-ink-muted sm:text-sm">
-						{m.kiez_hero_fact_flaeche(undefined, localeOpts)}
-					</dt>
-					<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
-						{m.kiez_hero_fact_flaeche_value({ km2: flaecheKm2 }, localeOpts)}
-					</dd>
-				</div>
-			{/if}
-			{#if scoreValue !== null}
-				<div class="col-span-2 sm:col-span-1" data-testid="kiez-hero-score">
-					<dt class="text-xs text-ink-muted sm:text-sm">
-						{m.kiez_hero_fact_score(undefined, localeOpts)}
-					</dt>
-					<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
-						{scoreValue}<span class="font-mono text-xs text-ink-subtle sm:text-sm"> / 100</span>
-						{#if hasRank}
-							<span
-								class="ml-2 font-sans text-xs text-ink-muted sm:ml-0 sm:block sm:text-sm"
-								data-testid="kiez-hero-rank">{rankText}</span
-							>
-						{/if}
-					</dd>
-				</div>
-			{/if}
-		</dl>
+		</div>
+
+		{#if hasMap}
+			<HeroMapCard title={mapTitle} {description} {action}>
+				<KiezLocationMap
+					{outline}
+					kiezSlug={profile.slug}
+					kiezName={profile.name}
+					bezirkName={profile.bezirk}
+				/>
+			</HeroMapCard>
+		{:else}
+			<div>{@render action()}</div>
+		{/if}
 	</div>
+</header>
 
-	<KiezLocationMap
-		{outline}
-		kiezSlug={profile.slug}
-		kiezName={profile.name}
-		bezirkName={profile.bezirk}
-	/>
+{#snippet description()}
+	<p class="m-0" data-testid="kiez-outline-explain">
+		{m.kiez_outline_explain({ kiez: profile.name }, localeOpts)}
+	</p>
+{/snippet}
 
-	{#if strengthText}
-		<p class="m-0 font-serif text-base text-ink" data-testid="kiez-hero-strength">
-			{strengthText}
-		</p>
-	{/if}
-
+{#snippet action()}
 	<a
 		href={mapHref}
 		onclick={() => trackLanding('map_button', 'kiez')}
@@ -167,4 +190,4 @@
 		{m.kiez_hero_map_button({ kiez: profile.name }, localeOpts)}
 		<ArrowRight class="size-5" aria-hidden="true" />
 	</a>
-</header>
+{/snippet}

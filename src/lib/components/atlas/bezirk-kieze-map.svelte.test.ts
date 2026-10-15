@@ -81,6 +81,14 @@ describe('bezirk-kieze-map.svelte', () => {
 		expect(legend?.textContent).toContain('ohne Score');
 	});
 
+	it('benennt die Legende „Kiez-Score“ für Screenreader (sr-only) per aria-labelledby', () => {
+		render(BezirkKiezeMap, { outline, kieze, bezirkName: 'Neukölln' });
+		const legend = document.querySelector('[data-testid="bezirk-map-legend"]');
+		const heading = document.getElementById(legend?.getAttribute('aria-labelledby') ?? '');
+		expect(heading?.textContent?.trim()).toBe('Kiez-Score');
+		expect(heading?.className).toContain('sr-only');
+	});
+
 	it('rendert nichts ohne Umriss', () => {
 		render(BezirkKiezeMap, { outline: null, kieze, bezirkName: 'Neukölln' });
 		expect(document.querySelector('[data-testid="bezirk-kieze-map"]')).toBeNull();

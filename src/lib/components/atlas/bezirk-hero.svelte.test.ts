@@ -2,6 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import BezirkHero from './bezirk-hero.svelte';
+import { m } from '$lib/paraglide/messages.js';
+import { dimensionLabel } from './inspector-panel/internal/kiez-score-display.js';
 import type { BezirkProfile } from '$lib/data/types.js';
 import type { KiezListEntry } from '$lib/data/bezirk-kieze-view.js';
 import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
@@ -121,6 +123,111 @@ describe('BezirkHero.svelte', () => {
 	it('verwendet niemals em-dash', () => {
 		render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
 		expect(text()).not.toMatch(/—/);
+	});
+
+	describe('Gestalt', () => {
+		it('setzt den Stand in das Einwohner-dd, nicht unter alle Fakten', () => {
+			render(BezirkHero, {
+				profile,
+				kieze,
+				outline,
+				compositeRank: rank,
+				einwohnerStichtag: '2024-12-31'
+			});
+			const stand = document.querySelector('[data-testid="bezirk-stand"]');
+			expect(stand?.closest('dd')?.textContent).toMatch(/386\.000/);
+			expect(stand?.textContent).toMatch(/Stand Ende 2024/);
+		});
+
+		it('benennt das Rang-Label „Rang im Kiez-Score“', () => {
+			render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+			expect(document.querySelector('[data-testid="bezirk-rank-fact"] dt')?.textContent).toContain(
+				'Rang unter den Bezirken'
+			);
+		});
+
+		it('erklärt den Score im Kartenrahmen mit Link zur Erklärung', () => {
+			render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+			const card = document.querySelector('figure[data-testid="hero-map-card"]');
+			expect(card?.querySelector('figcaption')?.textContent).toContain('Kiez-Score der Kieze');
+			expect(card?.querySelector('figcaption')?.textContent).toContain('von 0 bis 100');
+			expect(
+				card?.querySelector('[data-testid="bezirk-score-explain-link"]')?.getAttribute('href')
+			).toBe('/methodik/kiez-score');
+		});
+
+		it('legt Karten-Button und Legende in den Rahmen, Link vor Button', () => {
+			render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+			const card = document.querySelector('[data-testid="hero-map-card"]');
+			expect(card?.querySelector('[data-testid="bezirk-map-legend"]')).not.toBeNull();
+			const links = [...(card?.querySelectorAll('a:not([tabindex="-1"])') ?? [])].map((a) =>
+				a.getAttribute('data-testid')
+			);
+			expect(links).toEqual(['bezirk-score-explain-link', 'bezirk-map-button']);
+		});
+
+		it('zeigt Erklärung und Legende auch ohne Scores (Kieze grau)', () => {
+			const noScore: KiezListEntry[] = [
+				{
+					slug: 'tiergarten',
+					name: 'Tiergarten',
+					composite: null,
+					rang: null,
+					quartil: null,
+					total: 0
+				}
+			];
+			render(BezirkHero, {
+				profile,
+				kieze: noScore,
+				outline,
+				compositeRank: noRank,
+				einwohnerStichtag: null
+			});
+			expect(document.querySelector('[data-testid="bezirk-score-explain"]')).not.toBeNull();
+			expect(document.querySelector('[data-testid="bezirk-map-legend"]')?.textContent).toContain(
+				'ohne Score'
+			);
+			expect(document.querySelector('[data-testid="bezirk-rank-fact"]')).toBeNull();
+		});
+
+		it('rendert bei nicht passendem Umriss oder ohne Umriss keinen Rahmen, aber den Button', () => {
+			const other: RegionOutline = {
+				...outline,
+				paths: [{ id: 'anderer-kiez', d: 'M0 0L1 1Z' }]
+			};
+			for (const o of [other, null]) {
+				const { unmount } = render(BezirkHero, {
+					profile,
+					kieze,
+					outline: o,
+					compositeRank: rank,
+					einwohnerStichtag: null
+				});
+				expect(document.querySelector('[data-testid="hero-map-card"]')).toBeNull();
+				expect(document.querySelector('[data-testid="bezirk-map-button"]')).not.toBeNull();
+				unmount();
+			}
+		});
+
+		it('nennt in der Erklärung die UI-Labels der Composite-Dimensionen (DE und EN)', () => {
+			const dims = ['ruhe-luft', 'gruen-hitze', 'mobilitaet', 'versorgung', 'wohnschutz'] as const;
+			for (const locale of ['de', 'en'] as const) {
+				overwriteGetLocale(() => locale);
+				const text = m.bezirk_map_explain(undefined, { locale });
+				for (const dim of dims) {
+					expect(text).toContain(dimensionLabel(dim, { locale }));
+				}
+			}
+		});
+
+		it('EN: Erklärung verlinkt auf /en/methodik/kiez-score', () => {
+			overwriteGetLocale(() => 'en');
+			render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+			const link = document.querySelector('[data-testid="bezirk-score-explain-link"]');
+			expect(link?.getAttribute('href')).toBe('/en/methodik/kiez-score');
+			expect(link?.textContent).toBe('How the score works');
+		});
 	});
 
 	describe('EN', () => {
