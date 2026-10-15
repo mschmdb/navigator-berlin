@@ -24,7 +24,7 @@ Drei Varianten wurden diskutiert:
 
 **Variante A.** Story 2.9a aggregiert die 1.28-JSON via flächen-gewichtetem Mittel pro Dimension auf BR + Bezirk. Postgres-Tabellen sind Build-Time-Cache, kein zweiter Berechnungspfad.
 
-**Dimensionen bleiben wie 1.28 fest:** Ruhe-Luft, Grün, Mobilität, Soziale Lage, Versorgung. Gewichte 5 × 0.20. Memory `project_kiez_score_dimensions`.
+**Dimensionen bleiben wie 1.28 fest:** Ruhe-Luft, Grün, Mobilität, Soziale Lage, Versorgung. Gewichte 5 × 0.20.
 
 **Epic-Wortlaut „Lärm / Luft / Klima / ÖPNV / Bildung" ist hiermit superseded.** Das 1.28-Mapping bildet die Epic-Begriffe auf die fünf Dimensionen ab:
 
@@ -56,7 +56,7 @@ dim_value(R, d) = Σ (dim_value(P_i, d) × area(P_i)) / Σ area(P_i)
   - Bezirks-Score-Composite kann für die Ranking-Page (Story 2.9b) sortiert werden, ohne 1.28-Pipeline-Rerun.
 - **Negative:**
   - Hierarchie an PLR-ID-Konvention gebunden. Bei künftiger LOR-Reform-2030 müsste Mapping nachjustiert werden, dann ist Spatial-Containment-Fallback Plan B.
-  - Stigma-Empfindlichkeit: Bezirks-Composite-Score wird häufig gelesen. Editorial-Disziplin pflicht: kein Composite-Single-Score auf Karte (siehe Story-Notes + Memory `project_compare_editorial_profiles`).
+  - Stigma-Empfindlichkeit: Bezirks-Composite-Score wird häufig gelesen. Editorial-Disziplin pflicht: kein Composite-Single-Score auf Karte (siehe Story-Notes).
 - **Neutral:**
   - 143 statt der ursprünglich im Epic angenommenen 138 LOR-Bezirksregionen. Tatsächlicher ODIS-Datensatz hat 143 BZR, nicht 138. Beide Werte werden in zukünftigen Dokumenten konsistent angeglichen.
   - Heerstraße-Slug-Kollision (gleicher BZR-Name in Spandau + Charlottenburg-Wilmersdorf) wird via Bezirks-Suffix aufgelöst (`heerstrasse-spandau`, `heerstrasse-charlottenburg-wilmersdorf`). Gleicher Pattern wie Story 2.0 für `kiez_stats`.
@@ -67,4 +67,3 @@ dim_value(R, d) = Σ (dim_value(P_i, d) × area(P_i)) / Σ area(P_i)
 - Story 1.28: `docs/process/implementation-artifacts/1-28-livability-index.md`
 - Story 2.0: `docs/process/implementation-artifacts/2-0-postgres-aggregat-foundation-drizzle-build-step.md`
 - Methodology-Doku: `docs/scoring-methodology.md`
-- Memory: `project_kiez_score_dimensions`, `project_mss_kiez_score_input`, `feedback_no_lebenswert`, `project_kiez_score_naming`

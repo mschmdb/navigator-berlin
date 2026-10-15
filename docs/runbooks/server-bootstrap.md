@@ -19,7 +19,7 @@ Reproduzierbare Setup-Anleitung für Production-Host. Wer dieses Dokument in 12 
 - INWX-Account mit Domain `navigator.berlin`
 - macOS oder Linux-Workstation mit `ssh` + `brew` (oder Linux-Paketmanager)
 - SSH-Keypair lokal (z.B. `~/.ssh/id_ed25519`)
-- Bestehender CAX21-Aux-Server für Off-Server-Backup (siehe Memory `project_cax21_aux_server`)
+- Bestehender CAX21-Aux-Server für Off-Server-Backup
 
 ---
 
@@ -72,7 +72,7 @@ hcloud server create \
 
 Output notieren: IPv4 + IPv6.
 
-**Begründung CPX22 statt CX33:** Recherche 2026-05-17 — CX-Gen3 hat CPU-Lotterie (Intel-Skylake oder AMD-Rome je nach Hetzner-Slot), Single-Core-Geekbench 617-1488 vs CPX22 konstant 1974. Plus: CX→CPX-Rescale ist cross-arch-block (5-30 min Downtime), CPX22→CPX32→CPX42 ist clean. Memory: `project_server_purchase_sequencing`.
+**Begründung CPX22 statt CX33:** Recherche 2026-05-17 — CX-Gen3 hat CPU-Lotterie (Intel-Skylake oder AMD-Rome je nach Hetzner-Slot), Single-Core-Geekbench 617-1488 vs CPX22 konstant 1974. Plus: CX→CPX-Rescale ist cross-arch-block (5-30 min Downtime), CPX22→CPX32→CPX42 ist clean.
 
 ---
 
@@ -184,7 +184,7 @@ EOF
 ```bash
 mkdir -p <sicherer-ort-ausserhalb-des-repos>
 ssh <admin-user>@<IPv4> 'sudo cat /data/coolify/source/.env' > <sicherer-ort-ausserhalb-des-repos>/coolify-prod.env.backup
-# Folder ist in .gitignore
+# Ort außerhalb des Repos, nie committen
 ```
 
 ---
@@ -219,7 +219,7 @@ Vor Schritt 6 DNS für `coolify.<domain>` setzen (via Wildcard automatisch).
   echo "TOKEN_HIER" > ~/.config/navigator/coolify-token && chmod 600 ~/.config/navigator/coolify-token
   ```
 
-**Optional: HTTP-Basic-Auth-Schicht** (Memory `project_coolify_basic_auth`): in Coolify-Server-Settings Traefik-Middleware aktivieren.
+**Optional: HTTP-Basic-Auth-Schicht**: in Coolify-Server-Settings Traefik-Middleware aktivieren.
 
 ---
 
@@ -349,7 +349,7 @@ mkdir -p /root/backups/navigator-prod
 echo "<pubkey von oben>" >> /root/.ssh/authorized_keys
 ```
 
-Backup-Skript + Cron auf CPX22 (siehe Memory `project_backup_pipeline` für aktuellen Stand):
+Backup-Skript + Cron auf CPX22:
 
 ```bash
 # Script unter /usr/local/bin/navigator-backup.sh (700 root)
@@ -398,13 +398,6 @@ ssh <admin-user>@<NEW_IPv4> 'sudo cp /tmp/coolify-prod.env.backup /data/coolify/
 - Let's-Encrypt-Cert in Coolify revoken + neu issuen
 
 ---
-
-## Anhang: Eingebaute Hilfen + Memory-Referenzen
-
-- `project_server_purchase_sequencing` — CPX22 statt CX33 Begründung
-- `project_cax21_aux_server` — Aux-ARM-Server für Off-Server-Backup
-- `project_coolify_basic_auth` — Coolify-Dashboard-Schutz
-- `project_backup_pipeline` — Aktuelle Backup-Implementation
 
 ADR-015 (Hetzner-CPX22 statt CX32-ARM) wird in Story 4.4 nachdokumentiert.
 

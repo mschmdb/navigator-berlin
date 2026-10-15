@@ -29,7 +29,7 @@ navigator.berlin implementiert eine eigene Adapter-Schicht unter `src/lib/webmcp
 4. **Daten-Boundary.** Tool-Module + Adapter halten KEINE Runtime-Imports auf `$lib/data/`. Stattdessen wird Dependency-Injection genutzt (`WebMcpServerConfig`). Der Wiring-Point ist `mount.ts` als Composition-Root. Damit gilt die Architecture-Boundary `webmcp/ ↛ data/` (architecture.md Z. 1463) für die fachliche Schicht. Erst die Mount-Schicht (Composition-Root) verbindet beide Welten.
 5. **Snake-Case an der Boundary.** Tool-Namen und Param-Keys folgen der WebMCP-Spec-Konvention `snake_case`. TypeScript-intern bleibt camelCase. Mapping passiert in `internal/case-mapper.ts` und in den Tool-Serializern (one-shot pro Tool).
 6. **Manifest-Doppel-Serving.** Statisches `static/webmcp-manifest.json` (Build-Output) und prerendered Endpoint `/webmcp-manifest.json` (SvelteKit-Route) liefern beide das gleiche JSON. Discovery via beide Pfade möglich.
-7. **Locale-Default via Paraglide.** Tools ohne expliziten `locale`-Param greifen auf `getLocale()` zurück (Memory `project_paraglide_reroute`). Kein hard-gecodetes `'de'`.
+7. **Locale-Default via Paraglide.** Tools ohne expliziten `locale`-Param greifen auf `getLocale()` zurück. Kein hard-gecodetes `'de'`.
 8. **No-Cookie.** Adapter setzt keine Cookies, Resources sind read-only (MUST-Rule #10 aus architecture.md).
 
 Die `webmcp@0.0.1`-Stub-Dependency (Empty-Package) wird aus `package.json` entfernt. Ersatz: `@mcp-b/global@2.3.2` als production-dependency.

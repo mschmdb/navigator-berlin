@@ -76,7 +76,7 @@ Die Bookmark-Funktion ist eine "Merkliste" im Wortsinn der DSK-Orientierungshilf
 
 **Operational:**
 
-- CI-Gate (`.github/workflows/ci.yml`) prüft, dass keine `Set-Cookie`-Header in Production-Responses auftauchen (Story 4.3).
+- Geplant, noch nicht umgesetzt: ein CI-Gate prüft, dass keine `Set-Cookie`-Header in Production-Responses auftauchen (Story 4.3). Die aktuelle CI (`.github/workflows/ci.yml`) enthält diese Prüfung nicht.
 - `MUST-Rule #10` in `docs/process/planning-artifacts/architecture.md` annotiert die Bookmark-Exception inline.
 - Code-Review-Konvention: `localStorage`/`sessionStorage`-Nutzung außerhalb von `src/lib/state/bookmark-store.ts` wird per Default abgelehnt.
 

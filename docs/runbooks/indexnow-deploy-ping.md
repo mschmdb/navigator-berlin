@@ -56,5 +56,5 @@ Voraussetzung: `tsx` + Source-Code im Production-Container, was bei aktuellem Do
 
 - Story 2.1: sitemap.xml-Foundation. IndexNow konsumiert dasselbe Sitemap.
 - Story 5.7: Google Search Console + Bing Webmaster Tools manuell verifiziert.
-- Memory `project_seo_bot_policy`: AI-Bot-Allowlist in robots.txt.
-- Memory `project_indexnow_setup`: dieser Runbook + Key-Location.
+- AI-Bot-Allowlist in robots.txt.
+- dieser Runbook + Key-Location.

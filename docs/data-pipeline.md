@@ -54,8 +54,7 @@ pnpm data:fetch && pnpm data:aggregate && pnpm og:all && pnpm build
 
 ### Konvention
 
-- Filename: `{type}/{slug}.png`, kein Hash, kein Locale-Suffix (DE-only Phase 1
-  per `project_i18n_phase_1_de_only`).
+- Filename: `{type}/{slug}.png`, kein Hash, kein Locale-Suffix (DE-only Phase 1).
 - Meta-Tag-URL: `${origin}/og/{type}/{slug}.png`, gesetzt via SeoHead-Prop
   `ogImage` aus Story 2.1.
 - Cache: SvelteKit-Static-Adapter liefert default `cache-control: public,
@@ -71,7 +70,7 @@ pnpm og:images --force                          # Cache ignorieren
 ### Reuse
 
 - Font-Pipeline aus `src/lib/utils/og-card-renderer.ts` (Story 1.20).
-- Memory `project_satori_font_pipeline`: kein woff2 direkt, kein Variable-Font,
+- kein woff2 direkt, kein Variable-Font,
   sequenzielles wawoff2.
 - Slug-Konvention via `src/lib/data/internal/slug.ts` `normalizeSlug` (gleicher
   Algorithmus wie `scripts/aggregate-data.ts`, sonst Slug-Mismatch zwischen

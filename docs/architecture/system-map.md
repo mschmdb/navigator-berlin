@@ -151,13 +151,13 @@ graph TB
 
 ## State-Slots (Production)
 
-| State                    | Wo                                         | Persistence                                                    |
-| ------------------------ | ------------------------------------------ | -------------------------------------------------------------- |
+| State                    | Wo                               | Persistence                                                    |
+| ------------------------ | -------------------------------- | -------------------------------------------------------------- |
 | Postgres-App-Daten       | CPX22 Container `<container-id>` | Docker-Volume, weekly-backup                                   |
-| Coolify-State            | CPX22 `/data/coolify/*`                    | manual-backup via `.env`-Snapshot                              |
-| Plausible-Events         | CAX21 ClickHouse-Volume                    | kein Off-Server-Backup (re-aggregation aus Web-Vitals erlaubt) |
-| User-LocalStorage        | Browser                                    | nicht auf Server, kein Server-Backup nötig                     |
-| Static-Files (committed) | GitHub-Repo + Build-Output                 | Repo = Source-of-Truth                                         |
+| Coolify-State            | CPX22 `/data/coolify/*`          | manual-backup via `.env`-Snapshot                              |
+| Plausible-Events         | CAX21 ClickHouse-Volume          | kein Off-Server-Backup (re-aggregation aus Web-Vitals erlaubt) |
+| User-LocalStorage        | Browser                          | nicht auf Server, kein Server-Backup nötig                     |
+| Static-Files (committed) | GitHub-Repo + Build-Output       | Repo = Source-of-Truth                                         |
 
 ## Was bewusst NICHT existiert
 

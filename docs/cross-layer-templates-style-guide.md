@@ -32,7 +32,7 @@ navigator.berlin ist eine Daten-Auskunfts-Plattform, kein Bewertungsdienst.
 Automatisch geblockt durch `pnpm lint:cross-layer-templates`:
 
 - `hochburg`, `wahlsieger`, `wahlverlierer`, `stimmkönig`, `erdrutsch`,
-  `wahldebakel`, `lebenswert*` (Memory `feedback_no_lebenswert`)
+  `wahldebakel`, `lebenswert*`
 - `rote/blaue/grüne/schwarze Bezirke`
 - `dominiert von`, `wird dominiert`
 - `weit vor`, `knapp hinter`, `knapp vor`
