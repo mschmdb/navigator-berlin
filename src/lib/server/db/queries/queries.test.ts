@@ -15,11 +15,14 @@ import { getKiezCompositeRanks } from './get-kiez-composite-ranks.js';
  * nicht zuverlässig modelliert. CI-Postgres-Service kommt mit Story 4.3.
  */
 
+/** Ohne `DATABASE_URL` (z. B. in der CI) überspringen. */
+const describeDb = describe.skipIf(!process.env.DATABASE_URL);
+
 afterAll(async () => {
 	await closeDb();
 });
 
-describe('getBezirkStats (snapshot)', () => {
+describeDb('getBezirkStats (snapshot)', () => {
 	it('returns non-null data for friedrichshain-kreuzberg with provenance', async () => {
 		const row = await getBezirkStats('friedrichshain-kreuzberg');
 		expect(row).not.toBeNull();
@@ -44,7 +47,7 @@ describe('getBezirkStats (snapshot)', () => {
 	});
 });
 
-describe('getKiezStats (snapshot)', () => {
+describeDb('getKiezStats (snapshot)', () => {
 	it('returns data for a known LOR-bezirksregion (Boxhagener Kiez expects "boxhagener-kiez" or similar)', async () => {
 		// Boxhagener-Kiez ist BZR_NAME in F-K. Slug = normalizeSlug("Boxhagener Platz")
 		// oder ähnlich, abhängig vom realen BZR_NAME im ODIS-Dataset.
@@ -66,7 +69,7 @@ describe('getKiezStats (snapshot)', () => {
 	});
 });
 
-describe('getBezirkScore / getKiezScore (null-fallback)', () => {
+describeDb('getBezirkScore / getKiezScore (null-fallback)', () => {
 	// Unbekannte Slugs → null, unabhängig vom DB-Seed-Stand (Score-Tabellen sind
 	// seit Story 9.3 befüllt; ein nicht existierender Slug bleibt trotzdem null).
 	it('getBezirkScore returns null for an unknown slug', async () => {
@@ -80,7 +83,7 @@ describe('getBezirkScore / getKiezScore (null-fallback)', () => {
 	});
 });
 
-describe('getFaqQna (empty-array fallback)', () => {
+describeDb('getFaqQna (empty-array fallback)', () => {
 	it('returns empty array for an unknown bezirk slug', async () => {
 		const rows = await getFaqQna({ pageType: 'bezirk', slug: 'kein-bezirk-xyz', locale: 'de' });
 		expect(rows).toEqual([]);
@@ -92,7 +95,7 @@ describe('getFaqQna (empty-array fallback)', () => {
 	});
 });
 
-describe('getKiezCompositeRanks (snapshot)', () => {
+describeDb('getKiezCompositeRanks (snapshot)', () => {
 	it('liefert für einen bekannten Kiez Rang und Total', async () => {
 		const ranks = await getKiezCompositeRanks();
 		const row = ranks.get('reuterstrasse');

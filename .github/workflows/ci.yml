@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Compile Paraglide messages
+        run: pnpm i18n:compile
+      - name: Type check
+        run: pnpm check
+      - name: Prettier
+        run: pnpm exec prettier --check .
+      # Nur das Node-Projekt. Browser-Tests (Projekt "client") und Tests
+      # gegen Postgres (queries.test.ts) laufen nicht in der CI.
+      - name: Unit tests (no database, no browser)
+        run: pnpm exec vitest run --project server

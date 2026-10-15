@@ -14,6 +14,7 @@
  */
 
 import 'dotenv/config';
+import { fileURLToPath } from 'node:url';
 import { sql } from 'drizzle-orm';
 import { closeDb, getDb } from '../src/lib/server/db/index.js';
 import {
@@ -227,11 +228,15 @@ async function main(): Promise<void> {
 	await closeDb();
 }
 
-main().catch(async (err: unknown) => {
-	const msg = err instanceof Error ? err.message : String(err);
-	process.stderr.write(`[aggregate-ranks] FATAL: ${msg}\n`);
-	await closeDb().catch(() => undefined);
-	process.exit(1);
-});
+// Nur beim direkten Aufruf (`pnpm data:rank`) ausführen, nicht beim Import im Test.
+const isMainEntry = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+if (isMainEntry) {
+	main().catch(async (err: unknown) => {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[aggregate-ranks] FATAL: ${msg}\n`);
+		await closeDb().catch(() => undefined);
+		process.exit(1);
+	});
+}
 
 export { computeRanks, METRICS, type ScoreStatsRow };
