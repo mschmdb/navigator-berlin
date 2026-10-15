@@ -1,6 +1,9 @@
 import { buildKiezSlugs, type KiezNameRef } from './internal/kiez-slug.js';
-import { normalizeSlug } from './internal/slug.js';
-import { cleanName, type FeatureCollectionLike } from './region-display-names.js';
+import {
+	bezirkSlugFromName,
+	cleanName,
+	type FeatureCollectionLike
+} from './region-display-names.js';
 
 /** Form von `static/kiez-scores/region-composites.json`, soweit die Übersichtsseiten sie brauchen. */
 export interface CompositesLike {
@@ -85,7 +88,7 @@ export function buildRegionOverview({
 		if (!name) continue;
 		const bez = typeof props.BEZ === 'string' ? props.BEZ : null;
 		const bezirk = bez ? (bezCodeToName.get(bez.padStart(2, '0')) ?? '') : '';
-		refs.push({ name: cleanName(name), bezirk, bezirkSlug: normalizeSlug(bezirk) });
+		refs.push({ name: cleanName(name), bezirk, bezirkSlug: bezirkSlugFromName(bezirk) });
 	}
 	const slugs = buildKiezSlugs(refs);
 
@@ -116,7 +119,7 @@ export function buildRegionOverview({
 
 	const bezirke = [...bezCodeToName.values()]
 		.map((name): OverviewBezirk => {
-			const slug = normalizeSlug(name);
+			const slug = bezirkSlugFromName(name);
 			return {
 				slug,
 				name,
@@ -144,4 +147,9 @@ export function buildRegionOverview({
 		}
 	}
 	return { bezirke, problems };
+}
+
+/** Sprungziel-ID eines Bezirksabschnitts auf `/kieze`; Übersicht und Detailseiten teilen sie. */
+export function bezirkAnchorId(bezirkSlug: string): string {
+	return `bezirk-${bezirkSlug}`;
 }

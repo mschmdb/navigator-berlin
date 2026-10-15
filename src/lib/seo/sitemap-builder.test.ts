@@ -245,14 +245,42 @@ describe('LAYER_DETAIL_SOURCE', () => {
 		]);
 	});
 
-	it('uses sourceUpdatedAt as lastmod, else fetchedAt', () => {
+	it('keeps a real sourceUpdatedAt even when fetchedAt is later', () => {
 		const entries = LAYER_DETAIL_SOURCE(ctx());
+		// sourceUpdatedAt 2024-01-01T00:00:00.000Z ist Platzhalter, fetchedAt gewinnt
 		expect(entries.find((e) => e.loc.endsWith('/bezirke'))?.lastmod).toBe(
-			'2024-01-01T00:00:00.000Z'
+			'2026-05-16T06:56:28.400Z'
 		);
+		// ohne sourceUpdatedAt: fetchedAt
 		expect(entries.find((e) => e.loc.endsWith('/klima-pet'))?.lastmod).toBe(
 			'2026-04-15T00:00:00.000Z'
 		);
+		const manifest = fixtureManifest();
+		manifest.layers[0] = {
+			...manifest.layers[0],
+			sourceUpdatedAt: '2022-05-15',
+			fetchedAt: '2026-10-14'
+		};
+		const real = LAYER_DETAIL_SOURCE(ctx({ manifest })).find((e) => e.loc.endsWith('/bezirke'));
+		expect(real?.lastmod).toBe('2022-05-15');
+	});
+
+	it('lets fetchedAt replace a year placeholder sourceUpdatedAt', () => {
+		const manifest = fixtureManifest();
+		manifest.layers[0] = {
+			...manifest.layers[0],
+			sourceUpdatedAt: '2022-01-01',
+			fetchedAt: '2026-10-14'
+		};
+		const entry = LAYER_DETAIL_SOURCE(ctx({ manifest })).find((e) => e.loc.endsWith('/bezirke'));
+		expect(entry?.lastmod).toBe('2026-10-14');
+	});
+
+	it('uses sourceUpdatedAt when fetchedAt is invalid', () => {
+		const manifest = fixtureManifest();
+		manifest.layers[0] = { ...manifest.layers[0], fetchedAt: 'kaputt' };
+		const entry = LAYER_DETAIL_SOURCE(ctx({ manifest })).find((e) => e.loc.endsWith('/bezirke'));
+		expect(entry?.lastmod).toBe('2024-01-01T00:00:00.000Z');
 	});
 
 	it('omits lastmod when sourceUpdatedAt and fetchedAt are invalid', () => {

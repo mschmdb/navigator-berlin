@@ -112,6 +112,21 @@ describe('layer-detail +page.svelte', () => {
 	});
 
 	it.each([
+		['de', '/daten', 'Alle Daten-Layer'],
+		['en', '/en/daten', 'All data layers']
+	] as const)('verlinkt die Layer-Übersicht (%s)', async (locale, href, text) => {
+		overwriteGetLocale(() => locale);
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: locale, ranking: null, hasKiezAggregate: false }
+		});
+		const link = (await page
+			.getByTestId('layer-detail-overview-link')
+			.element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe(href);
+		expect(link.textContent?.trim()).toBe(text);
+	});
+
+	it.each([
 		['layer-detail-map-button', 'map_button'],
 		['layer-detail-inspector-link', 'map_link_bottom']
 	])('%s sendet genau ein Landing-Event (%s/layer)', async (testid, action) => {

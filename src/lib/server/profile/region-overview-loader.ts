@@ -1,8 +1,7 @@
 import { getEinwohnerGesamtForScope } from '$lib/data/get-kiez-demografie.js';
 import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
-import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { loadManifest } from '$lib/data/manifest.js';
-import { cleanName, type FeatureCollectionLike } from '$lib/data/region-display-names.js';
+import { bezirkSlugFromName, type FeatureCollectionLike } from '$lib/data/region-display-names.js';
 import { buildRegionOverview, type OverviewBezirk } from '$lib/data/region-overview.js';
 import type { Manifest } from '$lib/data/types.js';
 import { readRegionComposites } from './meta-sources.js';
@@ -47,7 +46,7 @@ export async function loadRegionOverview(
 		const bezirkSlugs = bezirkeFc.features
 			.map((f) => f.properties?.Gemeinde_name)
 			.filter((n): n is string => typeof n === 'string')
-			.map((n) => normalizeSlug(cleanName(n)));
+			.map((n) => bezirkSlugFromName(n));
 		await Promise.all(
 			bezirkSlugs.map(async (slug) => {
 				const count = await getEinwohnerGesamtForScope('bezirk', slug, fetchFn);

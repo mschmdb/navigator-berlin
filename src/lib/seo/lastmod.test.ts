@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { latestLastmod, profileLastmod, validLastmod } from './lastmod.js';
+import {
+	isYearPlaceholder,
+	lastmodOfLayer,
+	latestLastmod,
+	profileLastmod,
+	validLastmod
+} from './lastmod.js';
 
 describe('validLastmod', () => {
 	it('gibt gültige ISO-Daten unverändert zurück', () => {
@@ -50,6 +56,16 @@ describe('latestLastmod', () => {
 		expect(latestLastmod([undefined, 'kaputt', '2026-05-01', null])).toBe('2026-05-01');
 	});
 
+	it('vergleicht nach Zeitwert, nicht als String (gemischte Formate)', () => {
+		// 08:00+02:00 = 06:00Z, früher als 07:00Z, obwohl der String größer ist
+		expect(latestLastmod(['2026-10-14T08:00:00+02:00', '2026-10-14T07:00:00Z'])).toBe(
+			'2026-10-14T07:00:00Z'
+		);
+		expect(latestLastmod(['2026-10-14T00:00:00.000Z', '2026-10-13T23:59:59-12:00'])).toBe(
+			'2026-10-13T23:59:59-12:00'
+		);
+	});
+
 	it('liefert undefined ohne gültigen Wert', () => {
 		expect(latestLastmod([])).toBeUndefined();
 		expect(latestLastmod([undefined, 'kaputt'])).toBeUndefined();
@@ -82,5 +98,53 @@ describe('profileLastmod', () => {
 	it('lässt lastmod weg, wenn keine Quelle ein gültiges Datum liefert', () => {
 		expect(profileLastmod(undefined, 'de', undefined)).toBeUndefined();
 		expect(profileLastmod({ generatedAt: 'kaputt' }, 'en', 'kaputt')).toBeUndefined();
+	});
+});
+
+describe('isYearPlaceholder', () => {
+	it('erkennt YYYY-01-01 in allen Schreibweisen', () => {
+		for (const value of ['2022-01-01', '2022-01-01T00:00:00Z', '2022-01-01T00:00:00.000Z']) {
+			expect(isYearPlaceholder(value), value).toBe(true);
+		}
+	});
+
+	it('lässt echte Daten durch', () => {
+		for (const value of ['2022-05-15', '2022-01-02', '2022-01-01T08:30:00.000Z', 'kaputt']) {
+			expect(isYearPlaceholder(value), value).toBe(false);
+		}
+	});
+});
+
+describe('lastmodOfLayer', () => {
+	const now = new Date('2026-10-15T12:00:00Z');
+
+	it('Jahres-Platzhalter verliert gegen fetchedAt', () => {
+		expect(lastmodOfLayer('2022-01-01T00:00:00.000Z', '2026-10-14T08:00:00.000Z', now)).toBe(
+			'2026-10-14T08:00:00.000Z'
+		);
+	});
+
+	it('echtes sourceUpdatedAt bleibt, auch wenn fetchedAt später ist', () => {
+		expect(lastmodOfLayer('2022-05-15', '2026-10-14', now)).toBe('2022-05-15');
+	});
+
+	it('fehlendes oder ungültiges sourceUpdatedAt: fetchedAt', () => {
+		expect(lastmodOfLayer(undefined, '2026-10-14', now)).toBe('2026-10-14');
+		expect(lastmodOfLayer('kaputt', '2026-10-14', now)).toBe('2026-10-14');
+	});
+
+	it('beide ungültig: kein lastmod', () => {
+		expect(lastmodOfLayer('kaputt', 'auch kaputt', now)).toBeUndefined();
+		expect(lastmodOfLayer(undefined, undefined, now)).toBeUndefined();
+	});
+
+	it('Zukunftsdaten fallen weg', () => {
+		expect(lastmodOfLayer('2027-03-01', '2026-10-14', now)).toBe('2026-10-14');
+		expect(lastmodOfLayer('2022-05-15', '2027-03-01', now)).toBe('2022-05-15');
+		expect(lastmodOfLayer('2027-03-01', '2027-04-01', now)).toBeUndefined();
+	});
+
+	it('Platzhalter ohne verwertbares fetchedAt bleibt als letzter Ausweg', () => {
+		expect(lastmodOfLayer('2022-01-01', undefined, now)).toBe('2022-01-01');
 	});
 });

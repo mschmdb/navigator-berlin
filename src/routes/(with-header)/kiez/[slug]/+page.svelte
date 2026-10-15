@@ -6,6 +6,7 @@
 	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
 	import KiezDetails from '$lib/components/atlas/kiez-details.svelte';
 	import KiezNeighbors from '$lib/components/atlas/kiez-neighbors.svelte';
+	import OverviewLinks from '$lib/components/atlas/overview-links.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
@@ -155,4 +156,5 @@
 	>
 		{m.kiez_page_methodik_link_label()} →
 	</a>
+	<OverviewLinks kind="kiez" {bezirkName} {bezirkSlug} />
 </div>

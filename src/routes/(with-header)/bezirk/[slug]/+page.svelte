@@ -6,6 +6,7 @@
 	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
 	import BezirkDetails from '$lib/components/atlas/bezirk-details.svelte';
 	import BezirkKiezeList from '$lib/components/atlas/bezirk-kieze-list.svelte';
+	import OverviewLinks from '$lib/components/atlas/overview-links.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
@@ -140,4 +141,5 @@
 	>
 		{m.bezirk_page_methodik_link_label()} →
 	</a>
+	<OverviewLinks kind="bezirk" bezirkName={name} bezirkSlug={slug} />
 </div>

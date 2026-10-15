@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { buildRegionOverview } from './region-overview.js';
+import { bezirkAnchorId, buildRegionOverview } from './region-overview.js';
+
+describe('bezirkAnchorId', () => {
+	it('bildet die Sprungziel-ID aus dem Bezirk-Slug', () => {
+		expect(bezirkAnchorId('neukoelln')).toBe('bezirk-neukoelln');
+	});
+});
 
 const BEZIRKE_FC = {
 	features: [

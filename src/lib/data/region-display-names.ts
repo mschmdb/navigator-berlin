@@ -33,6 +33,11 @@ export function cleanName(raw: string): string {
 	return raw.replace(/\s+/g, ' ').trim();
 }
 
+/** Route- und Anker-Slug eines Bezirks aus dem Rohnamen; einzige Ableitung für alle Seiten. */
+export function bezirkSlugFromName(raw: string): string {
+	return normalizeSlug(cleanName(raw));
+}
+
 export function buildRegionDisplayNames({ lorFc, bezirkeFc }: BuildInput): RegionDisplayNames {
 	const bezirk = new Map<string, string>();
 	const bezCodeToName = new Map<string, string>();
@@ -43,7 +48,7 @@ export function buildRegionDisplayNames({ lorFc, bezirkeFc }: BuildInput): Regio
 		if (typeof schluessel === 'string' && typeof name === 'string') {
 			const clean = cleanName(name);
 			bezCodeToName.set(schluessel.slice(-2), clean);
-			bezirk.set(normalizeSlug(clean), clean);
+			bezirk.set(bezirkSlugFromName(clean), clean);
 		}
 	}
 

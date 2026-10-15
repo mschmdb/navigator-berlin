@@ -61,3 +61,31 @@ export function profileLastmod(
 		scoresGeneratedAt
 	]);
 }
+
+const YEAR_PLACEHOLDER = /^\d{4}-01-01(?:T00:00:00(?:\.0+)?Z)?$/;
+
+/** `YYYY-01-01` (auch als Mitternacht-UTC-Datetime): Quellen melden damit nur das Jahr. */
+export function isYearPlaceholder(value: string): boolean {
+	return YEAR_PLACEHOLDER.test(value);
+}
+
+/**
+ * `lastmod` eines Layers. `sourceUpdatedAt` gilt, solange es ein echtes, nicht
+ * zukünftiges Datum ist. Fehlt es, ist ungültig oder nur ein Jahres-Platzhalter,
+ * übernimmt `fetchedAt`. Ohne verwertbares `fetchedAt` bleibt der Platzhalter.
+ * Zukunftsdaten (nach `now`) fallen weg.
+ */
+export function lastmodOfLayer(
+	sourceUpdatedAt: string | null | undefined,
+	fetchedAt: string | null | undefined,
+	now: Date = new Date()
+): string | undefined {
+	const notFuture = (value: string | null | undefined): string | undefined => {
+		const valid = validLastmod(value);
+		return valid && Date.parse(valid) <= now.getTime() ? valid : undefined;
+	};
+	const source = notFuture(sourceUpdatedAt);
+	const fetched = notFuture(fetchedAt);
+	if (source && !isYearPlaceholder(source)) return source;
+	return fetched ?? source;
+}

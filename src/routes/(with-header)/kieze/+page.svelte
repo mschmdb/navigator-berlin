@@ -3,6 +3,7 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
+	import { bezirkAnchorId } from '$lib/data/region-overview.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
@@ -74,7 +75,7 @@
 			{#each shownBezirke as bezirk (bezirk.slug)}
 				<li>
 					<a
-						href={`#bezirk-${bezirk.slug}`}
+						href={`#${bezirkAnchorId(bezirk.slug)}`}
 						class="hover:text-accent-strong text-accent underline underline-offset-2"
 					>
 						{bezirk.name}
@@ -86,12 +87,12 @@
 
 	{#each shownBezirke as bezirk (bezirk.slug)}
 		<section
-			id={`bezirk-${bezirk.slug}`}
-			aria-labelledby={`bezirk-${bezirk.slug}-h`}
+			id={bezirkAnchorId(bezirk.slug)}
+			aria-labelledby={`${bezirkAnchorId(bezirk.slug)}-h`}
 			class="flex scroll-mt-4 flex-col gap-3 border-t border-rule pt-6"
 		>
 			<header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-				<h2 id={`bezirk-${bezirk.slug}-h`} class="font-serif text-2xl text-ink">
+				<h2 id={`${bezirkAnchorId(bezirk.slug)}-h`} class="font-serif text-2xl text-ink">
 					{bezirk.name}
 				</h2>
 				<p class="font-sans text-sm text-ink-muted">

@@ -2261,5 +2261,9 @@
 	"overview_kieze_bezirk_count_single": "1 Kiez",
 	"overview_kieze_bezirk_count_plural": "{count} Kieze",
 	"overview_daten_breadcrumb": "Data layers",
-	"overview_no_score_short": "n/a"
+	"overview_no_score_short": "n/a",
+	"overview_link_kieze_in_bezirk": "All Kieze in {bezirk}",
+	"overview_link_all_kieze": "All Kieze",
+	"overview_link_all_bezirke": "All Bezirke",
+	"overview_link_all_layers": "All data layers"
 }

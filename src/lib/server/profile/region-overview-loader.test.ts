@@ -3,6 +3,9 @@ import { resolve } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
+import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
+import { bezirkSlugFromName } from '$lib/data/region-display-names.js';
+import { bezirkAnchorId } from '$lib/data/region-overview.js';
 import { loadRegionOverview } from './region-overview-loader.js';
 
 const staticFetch: typeof fetch = async (input) => {
@@ -22,6 +25,17 @@ describe('loadRegionOverview', () => {
 		expect(overview.flatMap((b) => b.kieze.map((k) => k.slug)).sort()).toEqual(
 			await readKiezSlugsFromGeoJson()
 		);
+	});
+
+	it('Anker-Slug auf /kieze gleicht dem Bezirk-Slug der Kiez-Seite, für alle 12 Bezirke', async () => {
+		const overview = await loadRegionOverview(staticFetch, { scope: 'kieze' });
+		expect(overview).toHaveLength(12);
+		for (const bezirk of overview) {
+			const kiez = bezirk.kieze[0]!;
+			const profile = await getKiezProfile('de', kiez.slug, staticFetch);
+			expect(bezirkSlugFromName(profile.bezirk), bezirk.name).toBe(bezirk.slug);
+			expect(bezirkAnchorId(bezirk.slug)).toBe(`bezirk-${bezirk.slug}`);
+		}
 	});
 
 	it('lädt Einwohner nur auf Anfrage und meldet bei echten Daten keine Lücken', async () => {

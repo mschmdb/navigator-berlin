@@ -4,7 +4,7 @@ import { baseLocale, locales, type Locale } from '$lib/paraglide/runtime';
 import { isRouteTranslated, translatedLocalesFor } from './translation-register.js';
 import { buildHreflangCluster } from './hreflang.js';
 import { localizedPathname } from './canonical.js';
-import { validLastmod, type ProfileDates } from './lastmod.js';
+import { lastmodOfLayer, type ProfileDates } from './lastmod.js';
 
 export interface SitemapAlternate {
 	readonly hreflang: Locale | 'x-default';
@@ -191,8 +191,9 @@ export const WAHL_PORTAL_PAGE_SOURCE: SitemapSource = (ctx) => {
 /**
  * Sources one entry per manifest layer.
  *
- * `lastmod` = `sourceUpdatedAt` of the layer, else `fetchedAt` (S5); invalid
- * dates drop `lastmod`.
+ * `lastmod` = `sourceUpdatedAt`, but `fetchedAt` when that is missing, invalid
+ * or a year placeholder (`YYYY-01-01`, S8); future dates and invalid values
+ * drop out, none valid drops `lastmod`.
  * i18n Block D1: emits `localizedPathname` URLs for every locale, the
  * register gate filters.
  */
@@ -201,7 +202,7 @@ export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
 	return ctx.manifest.layers
 		.filter((layer) => hasLayerDetailPage(layer))
 		.map((layer) => {
-			const lastmod = validLastmod(layer.sourceUpdatedAt) ?? validLastmod(layer.fetchedAt);
+			const lastmod = lastmodOfLayer(layer.sourceUpdatedAt, layer.fetchedAt);
 			return {
 				loc: `${ctx.origin}${localizedPathname(`/layer/${layer.slug}`, ctx.locale)}`,
 				...(lastmod ? { lastmod } : {}),

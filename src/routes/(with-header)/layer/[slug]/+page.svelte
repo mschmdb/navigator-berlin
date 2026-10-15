@@ -436,6 +436,16 @@
 		</aside>
 	{/if}
 
+	<p class="font-sans text-base">
+		<a
+			data-testid="layer-detail-overview-link"
+			href={localizedHref('/daten')}
+			class="hover:text-accent-strong text-accent underline underline-offset-2"
+		>
+			{m.overview_link_all_layers()}
+		</a>
+	</p>
+
 	<a
 		data-testid="layer-detail-inspector-link"
 		href={inspectorHref}
