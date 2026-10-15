@@ -439,3 +439,7 @@
 - source_spec: `docs/process/implementation-artifacts/spec-s8-hub-links.md`
   summary: Layer-Seite, Hitze-Dataset und WebMCP `get-layer-metadata` nutzen für Stand/`dateModified` weiter `sourceUpdatedAt ?? fetchedAt`; die Sitemap seit S8 `lastmodOfLayer` (Platzhalter `YYYY-01-01` → `fetchedAt`). Bei Platzhalter-Layern zeigen Seite und Sitemap verschiedene Daten.
   evidence: Verification-Gap-Review S8 (15.10.2026); `layer/[slug]/+page.svelte:133,254`, `hitze/+page.server.ts:30`, `get-layer-metadata.ts:54`.
+
+- source_spec: `docs/process/implementation-artifacts/spec-repo-public-cleanup.md`
+  summary: Layer-Anzahl ist inkonsistent: `llms-builder.ts` und `site-intro-renderer.ts` sagen "rund 39 Layer", `home-data-sources.ts` nennt 44, `static/layers/MANIFEST.json` zählt 73 Einträge (README nennt 73).
+  evidence: Review-Fund beim Aufräumen (15.10.2026); gemeint ist je eine andere Zählweise (Karte, Quellen, Manifest). Eine Zahl festlegen und aus dem Manifest ableiten statt von Hand pflegen.
