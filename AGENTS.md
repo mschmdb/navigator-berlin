@@ -1,6 +1,6 @@
 # navigator.berlin: Project-Level Codex Instructions
 
-Diese Datei ergänzt `~/.Codex/AGENTS.md` mit projekt-spezifischen Hard-Rules. Wird in jeder Codex-Session für dieses Projekt automatisch geladen.
+Diese Datei ergänzt die persönlichen, globalen Agent-Regeln der Maintainer mit projekt-spezifischen Hard-Rules. Der Agent lädt sie in jeder Session für dieses Projekt automatisch. `AGENTS.md` und `CLAUDE.md` tragen denselben Inhalt.
 
 ## TDD-Mandat (Pragmatic TDD)
 
@@ -49,6 +49,6 @@ Setup-Stories (1.1, evtl. 4.1, 4.3) sind smoke-level. Tests existieren + lauffä
 
 Siehe auch:
 
-- `~/.Codex/AGENTS.md` (User-globale Regeln: @lucide/svelte, Files <500, kein `any`, kein Hardcoded Data ohne Rückfrage)
+- Persönliche globale Agent-Regeln der Maintainer (@lucide/svelte, Files <500, kein `any`, kein Hardcoded Data ohne Rückfrage)
 - `docs/adr/` (Architectural Decision Records)
-- `_bmad-output/planning-artifacts/architecture.md` (21 MUST-Rules: Enforcement Guidelines)
+- `docs/process/planning-artifacts/architecture.md` (21 MUST-Rules: Enforcement Guidelines)

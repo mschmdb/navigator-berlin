@@ -5,3 +5,11 @@
 #
 # [agents.bmad-agent-pm]
 # description = "Prefers short, bulleted PRDs over narrative drafts."
+
+# Prozessmaterial liegt unter docs/process (statt _bmad-output im Root).
+[core]
+output_folder = "{project-root}/docs/process"
+
+[modules.bmm]
+planning_artifacts = "{project-root}/docs/process/planning-artifacts"
+implementation_artifacts = "{project-root}/docs/process/implementation-artifacts"

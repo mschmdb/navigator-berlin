@@ -26,7 +26,7 @@ Nur auf explizite User-Invocation `/publish-update`. NICHT auto-trigger bei „l
 
 Für jeden Commit im Range:
 
-1. **Allowlist-Filter** (`scripts/publish-update/filter-commit.ts`): Commits mit ausschließlich denylisted Files (`.env`, `_bmad-output/`, `.claude/skills/`, `coolify.yml`, `lefthook.yml`, etc.) werden geskipped. Mixed-Commits (Allowlist + Denylist) ebenfalls geskipped mit Aufsplit-Hinweis.
+1. **Allowlist-Filter** (`scripts/publish-update/filter-commit.ts`): Commits mit ausschließlich denylisted Files (`.env`, `docs/process/`, `.claude/skills/`, `coolify.yml`, `lefthook.yml`, etc.) werden geskipped. Mixed-Commits (Allowlist + Denylist) ebenfalls geskipped mit Aufsplit-Hinweis.
 
 2. **Subagent-Klassifikation** (`scripts/publish-update/invoke-classifier.ts`): Claude-CLI wird mit System-Prompt-Lock + Commit-Diff aufgerufen. Output: JSON nach `DraftResultSchema` (entweder `kind: skip` oder `kind: draft` mit category/title_de/summary_de/title_en/summary_en/tags/body/body_en). Ohne EN-Felder gilt der Draft als Schema-Verstoß und wird geskipped.
 
@@ -75,4 +75,4 @@ Konsumiert: `feedback_no_em_dashes`, `feedback_no_lebenswert`, `project_i18n_pha
 
 ## Story-Referenz
 
-`_bmad-output/implementation-artifacts/5-8-public-update-skill.md`.
+`docs/process/implementation-artifacts/5-8-public-update-skill.md`.

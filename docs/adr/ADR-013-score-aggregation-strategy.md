@@ -63,8 +63,8 @@ dim_value(R, d) = Σ (dim_value(P_i, d) × area(P_i)) / Σ area(P_i)
 
 ## References
 
-- Story 2.9a: `_bmad-output/implementation-artifacts/2-9a-kiez-score-bezirks-score-aggregat-berechnung.md`
-- Story 1.28: `_bmad-output/implementation-artifacts/1-28-livability-index.md`
-- Story 2.0: `_bmad-output/implementation-artifacts/2-0-postgres-aggregat-foundation-drizzle-build-step.md`
+- Story 2.9a: `docs/process/implementation-artifacts/2-9a-kiez-score-bezirks-score-aggregat-berechnung.md`
+- Story 1.28: `docs/process/implementation-artifacts/1-28-livability-index.md`
+- Story 2.0: `docs/process/implementation-artifacts/2-0-postgres-aggregat-foundation-drizzle-build-step.md`
 - Methodology-Doku: `docs/scoring-methodology.md`
 - Memory: `project_kiez_score_dimensions`, `project_mss_kiez_score_input`, `feedback_no_lebenswert`, `project_kiez_score_naming`

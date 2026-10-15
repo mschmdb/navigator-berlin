@@ -113,5 +113,5 @@ pnpm data:layer-aggregate   # → static/layer-aggregates/layer-aggregates.json
 
 ## Sonstige Pipelines
 
-Siehe Story-Files in `_bmad-output/implementation-artifacts/` für Details pro
+Siehe Story-Files in `docs/process/implementation-artifacts/` für Details pro
 Schritt.

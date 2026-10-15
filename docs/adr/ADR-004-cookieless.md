@@ -48,7 +48,7 @@ Die Bookmark-Funktion ist eine "Merkliste" im Wortsinn der DSK-Orientierungshilf
 3. **Datenumfang minimal:** `displayName`, `lat`, `lng`, `bezirk`, `postcode`, `createdAt`. Keine personenbezogenen Daten über die Adresse hinaus, keine Profilbildung, keine Tracking-Funktion.
 4. **Storage-Key transparent:** `navigator-berlin.bookmarks.v1` (versioniert, dokumentiert in `docs/runbooks/`).
 5. **User-Löschpfad jederzeit verfügbar:** UI-Aktion "Alle löschen" + Browser-Settings.
-6. **Datenschutzerklärung benennt:** was, wo, wozu, wie löschen (Snippet als Artefakt unter `_bmad-output/planning-artifacts/datenschutz-bookmarks-snippet.md`, integriert in Compliance-Pages via Story 4.6).
+6. **Datenschutzerklärung benennt:** was, wo, wozu, wie löschen (Snippet als Artefakt unter `docs/process/planning-artifacts/datenschutz-bookmarks-snippet.md`, integriert in Compliance-Pages via Story 4.6).
 
 **Konsequenz:** KEIN Cookie-Banner erforderlich. Die Voraussetzungen für Einwilligungsfreiheit nach §25 Abs. 2 Nr. 2 TDDDG sind erfüllt.
 
@@ -77,13 +77,13 @@ Die Bookmark-Funktion ist eine "Merkliste" im Wortsinn der DSK-Orientierungshilf
 **Operational:**
 
 - CI-Gate (`.github/workflows/ci.yml`) prüft, dass keine `Set-Cookie`-Header in Production-Responses auftauchen (Story 4.3).
-- `MUST-Rule #10` in `_bmad-output/planning-artifacts/architecture.md` annotiert die Bookmark-Exception inline.
+- `MUST-Rule #10` in `docs/process/planning-artifacts/architecture.md` annotiert die Bookmark-Exception inline.
 - Code-Review-Konvention: `localStorage`/`sessionStorage`-Nutzung außerhalb von `src/lib/state/bookmark-store.ts` wird per Default abgelehnt.
 
 ## References
 
 - [TDDDG §25](https://www.gesetze-im-internet.de/tddd_g/__25.html)
 - [DSK-Orientierungshilfe Telemedien 2021 (PDF, S. 14)](https://www.datenschutzkonferenz-online.de/media/oh/20211220_oh_telemedien.pdf)
-- [Story 1.26 — Adress-Bookmarks LocalStorage](../../_bmad-output/implementation-artifacts/1-26-adress-bookmarks-localstorage.md)
+- [Story 1.26 — Adress-Bookmarks LocalStorage](../process/implementation-artifacts/1-26-adress-bookmarks-localstorage.md)
 - [ADR-002 — WebMCP](ADR-002-webmcp.md) (kein Client-State-Bedarf)
 - [ADR-008 — Context-API für State](ADR-008-context-api-state.md)

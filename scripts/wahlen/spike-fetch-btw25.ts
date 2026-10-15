@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { SPIKE_ARTIFACTS_DIR } from '../lib/paths.js';
 import {
 	BERLIN_LAND_CODE,
 	BERLIN_WAHLKREISE_BTW25,
@@ -9,7 +10,7 @@ import {
 import { extractBwlWbzCsv, fetchBwlZip } from './lib/bwl-fetcher.js';
 import { BWL_BTW25_WBZ } from './lib/sources.js';
 
-const SPIKE_OUT_DIR = join(process.cwd(), '_bmad-output', 'spike-artifacts');
+const SPIKE_OUT_DIR = SPIKE_ARTIFACTS_DIR;
 const SPIKE_OUT_FILE = join(SPIKE_OUT_DIR, 'wahl-schema-snapshot-btw25.json');
 
 type Snapshot = {

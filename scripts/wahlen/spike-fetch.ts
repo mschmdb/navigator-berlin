@@ -1,10 +1,11 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { SPIKE_ARTIFACTS_DIR } from '../lib/paths.js';
 import { BERLIN_LAND_CODE, filterByLand, parseBwlWbzCsv } from './lib/bwl-csv-parser.js';
 import { extractBwlWbzCsv, fetchBwlZip } from './lib/bwl-fetcher.js';
 import { WAHL_SOURCES, type WahlSource } from './lib/sources.js';
 
-const SPIKE_OUT_DIR = join(process.cwd(), '_bmad-output', 'spike-artifacts');
+const SPIKE_OUT_DIR = SPIKE_ARTIFACTS_DIR;
 
 type Snapshot = {
 	source: {

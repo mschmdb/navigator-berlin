@@ -46,8 +46,9 @@ import {
 	upsertWahl
 } from './wahlen/lib/db-loader.js';
 import { diffHeaders, isDrift, formatDriftReport } from './wahlen/lib/schema-validator.js';
+import { SPIKE_ARTIFACTS_DIR } from './lib/paths.js';
 
-const SPIKE_DIR = join(process.cwd(), '_bmad-output', 'spike-artifacts');
+const SPIKE_DIR = SPIKE_ARTIFACTS_DIR;
 
 type Args = {
 	/** Kommagetrennte Slug-Liste, z.B. `--only=agh23,agh26,bvv26`. */

@@ -3,8 +3,8 @@ type: methodology
 audience: both
 last-verified: 2026-09-23
 related:
-  - _bmad-output/implementation-artifacts/6-0-wahl-daten-schema-pipeline-foundation-spike.md
-  - _bmad-output/spike-artifacts/SCHEMA-DRIFT-ANALYSIS.md
+  - docs/process/implementation-artifacts/6-0-wahl-daten-schema-pipeline-foundation-spike.md
+  - docs/process/spike-artifacts/SCHEMA-DRIFT-ANALYSIS.md
   - docs/data-pipeline.md
 ---
 
@@ -173,7 +173,7 @@ Attribution: „Datenquelle: Landeswahlleiterin Berlin".
 
 ### Pre-Indexing-Verifikation per Spike
 
-Vor Schema-Implementation wurde ein Spike-Snapshot (`_bmad-output/spike-artifacts/wahl-schema-snapshot-btw25.json`) angelegt. Aggregator-Pipeline (`scripts/aggregate-wahl-data.ts`) führt bei jedem Real-Run einen Schema-Drift-Check gegen den Snapshot durch. Bei Drift wird die Pipeline mit explizitem Diff-Output abgebrochen statt stille Daten-Korruption.
+Vor Schema-Implementation wurde ein Spike-Snapshot (`docs/process/spike-artifacts/wahl-schema-snapshot-btw25.json`) angelegt. Aggregator-Pipeline (`scripts/aggregate-wahl-data.ts`) führt bei jedem Real-Run einen Schema-Drift-Check gegen den Snapshot durch. Bei Drift wird die Pipeline mit explizitem Diff-Output abgebrochen statt stille Daten-Korruption.
 
 ## Aggregations-Strategie
 

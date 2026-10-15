@@ -67,7 +67,7 @@ Eine spätere Story markiert Pfade als übersetzt, indem sie Einträge in `TRANS
 
 ## References
 
-- [Spec i18n Block A: Locale-Infrastruktur, /en-Routing und SEO-Mechanik](../../_bmad-output/implementation-artifacts/spec-i18n-a-infra-routing.md)
+- [Spec i18n Block A: Locale-Infrastruktur, /en-Routing und SEO-Mechanik](../process/implementation-artifacts/spec-i18n-a-infra-routing.md)
 - [Plan: Internationalisierung DE/EN](../../_user-input/plan-i18n-de-en-2026-08-22.md)
 - [ADR-004: Cookieless-Architektur](ADR-004-cookieless.md) (Strategy `['url', 'baseLocale']`, kein Cookie-Fallback)
 - [Paraglide-JS: Strategy](https://paraglidejs.com/strategy)
