@@ -11,7 +11,7 @@ Onboarding-Stub für die Postgres-Aggregat-Schicht. Production-Setup (Hetzner CP
 ## Voraussetzungen
 
 - macOS mit Homebrew, oder Linux mit Paket-Manager
-- pnpm + Node 20+ wie im Projekt-Standard
+- pnpm + Node 22 wie im Projekt-Standard
 
 ## Installation
 
