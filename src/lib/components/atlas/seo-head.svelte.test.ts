@@ -39,6 +39,25 @@ afterEach(() => {
 	overwriteGetLocale(() => 'de');
 });
 
+describe('SeoHead: Hitze-Subdomain', () => {
+	it('Canonical, og:url und hreflang zeigen auf die Hauptdomain', async () => {
+		render(SeoHead, {
+			title: 'Hitze',
+			description: 'Hitze',
+			pathname: '/hitze',
+			origin: 'https://hitze.navigator.berlin'
+		});
+		await new Promise((r) => setTimeout(r, 10));
+		const hrefs = [
+			queryHead('link[rel="canonical"]')?.getAttribute('href'),
+			queryHead('meta[property="og:url"]')?.getAttribute('content'),
+			...queryAllHead('link[rel="alternate"]').map((l) => l.getAttribute('href'))
+		];
+		expect(hrefs.length).toBeGreaterThan(2);
+		for (const href of hrefs) expect(href).toMatch(/^https:\/\/navigator\.berlin\//);
+	});
+});
+
 describe('SeoHead', () => {
 	it('rendert title-Tag aus title-Prop', async () => {
 		render(SeoHead, {

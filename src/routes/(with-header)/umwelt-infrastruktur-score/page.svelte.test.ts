@@ -161,7 +161,7 @@ describe('umwelt-infrastruktur-score · JSON-LD EN (i18n C4b)', () => {
 		const crumbs = JSON.parse(
 			document.querySelector('script[data-testid="ranking-breadcrumb-jsonld"]')?.textContent ?? '{}'
 		);
-		expect(crumbs.itemListElement[0].item).toMatch(/\/en\/$/);
+		expect(crumbs.itemListElement[0].item).toMatch(/\/en$/);
 		expect(crumbs.itemListElement[1].name).toBe('Environment & infrastructure score');
 		const list =
 			document.querySelector('script[data-testid="ranking-itemlist-jsonld"]')?.textContent ?? '';

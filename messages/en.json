@@ -2201,5 +2201,17 @@
 	"contact_optout_name_label": "Venue name:",
 	"contact_optout_address_label": "Address:",
 	"contact_optout_reason_label": "Reason:",
-	"lizenzen_software_th_library": "Library"
+	"lizenzen_software_th_library": "Library",
+	"error_title_not_found": "Page not found · navigator.berlin",
+	"error_title_generic": "Error · navigator.berlin",
+	"error_heading_not_found": "Page not found",
+	"error_heading_generic": "Something went wrong",
+	"error_text_not_found": "This address does not exist. Start on the home page or open the atlas.",
+	"error_text_generic": "The server reported an error. Try again later or start on the home page.",
+	"error_link_home": "Go to home page",
+	"error_link_atlas": "Open atlas",
+	"error_title_client": "Request failed · navigator.berlin",
+	"error_heading_client": "Request not possible",
+	"error_text_client": "This request could not be processed. Start on the home page or open the atlas.",
+	"error_nav_label": "Continue"
 }

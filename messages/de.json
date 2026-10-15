@@ -2201,5 +2201,17 @@
 	"contact_optout_name_label": "Name der Einrichtung:",
 	"contact_optout_address_label": "Adresse:",
 	"contact_optout_reason_label": "Begründung:",
-	"lizenzen_software_th_library": "Bibliothek"
+	"lizenzen_software_th_library": "Bibliothek",
+	"error_title_not_found": "Seite nicht gefunden · navigator.berlin",
+	"error_title_generic": "Fehler · navigator.berlin",
+	"error_heading_not_found": "Seite nicht gefunden",
+	"error_heading_generic": "Etwas ist schiefgelaufen",
+	"error_text_not_found": "Diese Adresse gibt es nicht. Starte auf der Startseite oder öffne den Atlas.",
+	"error_text_generic": "Der Server hat einen Fehler gemeldet. Versuche es später erneut oder starte auf der Startseite.",
+	"error_link_home": "Zur Startseite",
+	"error_link_atlas": "Atlas öffnen",
+	"error_title_client": "Anfrage fehlgeschlagen · navigator.berlin",
+	"error_heading_client": "Anfrage nicht möglich",
+	"error_text_client": "Diese Anfrage konnte nicht bearbeitet werden. Starte auf der Startseite oder öffne den Atlas.",
+	"error_nav_label": "Weiter"
 }

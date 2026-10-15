@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildCanonical, localizedPathname } from './canonical.js';
+import { buildCanonical, canonicalOrigin, localizedPathname } from './canonical.js';
 
 describe('buildCanonical', () => {
 	it('joins origin and pathname', () => {
@@ -82,5 +82,24 @@ describe('localizedPathname', () => {
 		const result = localizedPathname('/\\evil.example', 'en');
 		expect(result.startsWith('//')).toBe(false);
 		expect(result.startsWith('/')).toBe(true);
+	});
+});
+
+describe('canonicalOrigin', () => {
+	it('mappt die Hitze-Subdomain auf die Hauptdomain', () => {
+		expect(canonicalOrigin('https://hitze.navigator.berlin')).toBe('https://navigator.berlin');
+	});
+
+	it('lässt die Hauptdomain unverändert', () => {
+		expect(canonicalOrigin('https://navigator.berlin')).toBe('https://navigator.berlin');
+	});
+
+	it('entfernt Trailing Slashes', () => {
+		expect(canonicalOrigin('https://hitze.navigator.berlin/')).toBe('https://navigator.berlin');
+	});
+
+	it('lässt lokale Origins lokal', () => {
+		expect(canonicalOrigin('http://localhost:4173')).toBe('http://localhost:4173');
+		expect(canonicalOrigin('http://hitze.localhost:5173')).toBe('http://hitze.localhost:5173');
 	});
 });

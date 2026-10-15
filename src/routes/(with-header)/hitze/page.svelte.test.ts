@@ -2,6 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { page as appPage } from '$app/state';
+import { canonicalOrigin } from '$lib/seo/canonical.js';
 import Page from './+page.svelte';
 import {
 	ariaLabels,
@@ -103,6 +105,34 @@ describe('hitze · DE-Wortlaut Meta und Links (i18n C4c)', () => {
 		const faq = document.querySelector('[data-testid="faq-section"]')!;
 		expect(faq.querySelector('[lang]')).toBeNull();
 		expect(faq.textContent).toContain('Wo finde ich in Berlin kühle Orte bei Hitze?');
+	});
+});
+
+describe('hitze · Canonical (Indexierungs-Hygiene S1)', () => {
+	afterEach(() => overwriteGetLocale(() => 'de'));
+
+	async function canonicalAndOgUrl(): Promise<[string | null, string | null]> {
+		await new Promise((r) => setTimeout(r, 20));
+		return [
+			document.head.querySelector('link[rel="canonical"]')!.getAttribute('href'),
+			document.head.querySelector('meta[property="og:url"]')!.getAttribute('content')
+		];
+	}
+
+	it('DE: absolutes Canonical und og:url ohne Punkt-Artefakt', async () => {
+		render(Page, { data: { warning: null } });
+		const [canonical, ogUrl] = await canonicalAndOgUrl();
+		expect(canonical).toBe(`${canonicalOrigin(appPage.url.origin)}/hitze`);
+		expect(canonical).not.toContain('./');
+		expect(ogUrl).toBe(canonical);
+	});
+
+	it('EN: Canonical auf /en/hitze', async () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { warning: null } });
+		const [canonical, ogUrl] = await canonicalAndOgUrl();
+		expect(canonical).toBe(`${canonicalOrigin(appPage.url.origin)}/en/hitze`);
+		expect(ogUrl).toBe(canonical);
 	});
 });
 

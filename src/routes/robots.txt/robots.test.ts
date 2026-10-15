@@ -72,3 +72,22 @@ describe('robots.txt Endpoint (Story 5.9 AC-1)', () => {
 		expect(body).toContain('llms.txt');
 	});
 });
+
+describe('robots.txt: Disallow /api/ in Allow-Gruppen (S1)', () => {
+	it('jede Allow-Gruppe enthält Disallow: /api/', async () => {
+		const body = await fetchRobots();
+		const groups = body.split(/\n\n+/).filter((g) => /^User-agent: /m.test(g));
+		const allowGroups = groups.filter((g) => /^Allow: \/$/m.test(g));
+		expect(allowGroups.length).toBeGreaterThan(10);
+		for (const group of allowGroups) {
+			expect(group).toMatch(/^Disallow: \/api\/$/m);
+			expect(group).toMatch(/^Disallow: \/en\/api\/$/m);
+		}
+	});
+});
+
+describe('robots.txt: /en/api/ (S1)', () => {
+	it('Default-Block disallowed /en/api/', async () => {
+		expect(await fetchRobots()).toMatch(/^Disallow: \/en\/api\/$/m);
+	});
+});

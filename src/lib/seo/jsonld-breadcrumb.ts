@@ -33,9 +33,21 @@ export interface BreadcrumbListLeafJsonLd {
 
 export type BreadcrumbListJsonLd = WithContext<BreadcrumbListLeafJsonLd>;
 
+/**
+ * Relative Pfade (`./x`, `../en/x`) entstehen, wenn `localizedHref` beim SSR
+ * relativ auflöst. Sie ergäben `https://navigator.berlin/./x`. Aufrufer
+ * liefern absolute Pfade (`localizedPathname`).
+ */
+function assertAbsolutePath(path: string): void {
+	if (path.startsWith('./') || path.startsWith('../') || /\/\.\.?\//.test(path)) {
+		throw new Error(`Breadcrumb-Pfad muss absolut sein, erhalten: "${path}"`);
+	}
+}
+
 export function buildBreadcrumbList(input: BreadcrumbListInput): BreadcrumbListJsonLd {
 	const origin = input.origin.replace(/\/+$/, '');
 	const itemListElement: BreadcrumbListItemJsonLd[] = input.items.map((item, idx) => {
+		assertAbsolutePath(item.path);
 		const path = item.path.startsWith('/') ? item.path : `/${item.path}`;
 		return {
 			'@type': 'ListItem',

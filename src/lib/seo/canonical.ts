@@ -46,3 +46,11 @@ export function localizedPathname(pathname: string, locale: Locale): string {
 	if (withoutQuery.length > 1) return withoutQuery.replace(/\/+$/, '');
 	return withoutQuery || '/';
 }
+
+/**
+ * Origin für Canonical, `og:url` und hreflang. `hitze.navigator.berlin`
+ * konsolidiert auf die Hauptdomain, lokale Origins bleiben lokal.
+ */
+export function canonicalOrigin(origin: string): string {
+	return origin.replace(/\/+$/, '').replace(/^(https?:\/\/)hitze\.(navigator\.berlin)$/, '$1$2');
+}

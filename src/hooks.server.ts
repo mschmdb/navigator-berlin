@@ -61,6 +61,24 @@ const handleParaglide: Handle = ({ event, resolve }) =>
 	});
 
 /**
+ * Indexierungs-Hygiene S1: `/explore` mit Query (Zustands-URLs wie `?kiez=`)
+ * und `/demo*` bleiben crawlbar, kommen aber nicht in den Index. `follow`
+ * hält Links aus diesen Seiten im Graph. Canonical bleibt `/explore`.
+ * `url.search` wird nur für `/explore` gelesen: während des Prerenders wirft
+ * SvelteKit beim Zugriff ("Cannot access url.search on a page with prerendering"),
+ * auch wenn der Crawler `/explore` selbst aufruft. Dann gibt es keine Query.
+ */
+function isNoIndexFollowPath(path: string, url: URL): boolean {
+	if (path === '/demo' || path.startsWith('/demo/')) return true;
+	if (path.replace(/\/+$/, '') !== '/explore') return false;
+	try {
+		return url.search.length > 1;
+	} catch {
+		return false;
+	}
+}
+
+/**
  * Story 5.9 AC-9: X-Robots-Tag: noindex,nofollow auf alle /api/*-Responses.
  * Crawl-Budget + verhindert dass Suchmaschinen JSON-Endpoints indexieren
  * falls Default-Block in robots.txt overridden wird. Komplement zum
@@ -76,6 +94,8 @@ export const handleNoIndexHeaders: Handle = async ({ event, resolve }) => {
 	const path = basePathname(event.url);
 	if (path.startsWith('/api/')) {
 		response.headers.set('X-Robots-Tag', 'noindex,nofollow');
+	} else if (isNoIndexFollowPath(path, event.url)) {
+		response.headers.set('X-Robots-Tag', 'noindex, follow');
 	}
 	return response;
 };

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
 	import { Accordion } from 'bits-ui';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
@@ -45,7 +47,7 @@
 			origin,
 			items: data.kieze.map((row) => ({
 				name: row.displayName,
-				path: localizedHref(`/kiez/${row.slug}`)
+				path: localizedPathname(`/kiez/${row.slug}`, getLocale())
 			}))
 		})
 	);
@@ -60,7 +62,7 @@
 		buildBreadcrumbList({
 			origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
 				{ name: m.uis_h1_title(), path: pathname }
 			]
 		})

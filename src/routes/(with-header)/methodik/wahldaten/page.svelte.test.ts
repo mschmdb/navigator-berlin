@@ -216,7 +216,7 @@ describe('methodik/wahldaten · Meta und JSON-LD (i18n C4b)', () => {
 			document.querySelector('script[data-testid="wahldaten-breadcrumb-jsonld"]')?.textContent ??
 				'{}'
 		);
-		expect(crumbs.itemListElement[0].item).toMatch(/\/en\/$/);
+		expect(crumbs.itemListElement[0].item).toMatch(/\/en$/);
 		expect(crumbs.itemListElement[1].item).toMatch(/\/en\/methodik$/);
 		expect(crumbs.itemListElement[2].item).toMatch(/\/en\/methodik\/wahldaten$/);
 	});

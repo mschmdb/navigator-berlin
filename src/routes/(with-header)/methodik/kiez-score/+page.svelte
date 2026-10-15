@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -42,11 +43,11 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: m.methodik_kiez_score_breadcrumb_methodik(), path: localizedHref('/methodik') },
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{ name: m.methodik_kiez_score_breadcrumb_methodik(), path: localizedPathname('/methodik', getLocale()) },
 				{
 					name: m.methodik_kiez_score_breadcrumb_kiez_score(),
-					path: localizedHref('/methodik/kiez-score')
+					path: localizedPathname('/methodik/kiez-score', getLocale())
 				}
 			]
 		})
@@ -55,7 +56,7 @@
 	const speakableJsonLd = $derived(
 		buildSpeakableWebPage({
 			origin: page.url.origin,
-			urlPath: localizedHref('/methodik/kiez-score'),
+			urlPath: localizedPathname('/methodik/kiez-score', getLocale()),
 			name: m.methodik_kiez_score_speakable_name(),
 			inLanguage: localeToBcp47(getLocale()),
 			cssSelectors: ['#worum', '#dimensionen', '#gewichte', '#normalisierung', '#fehlt']

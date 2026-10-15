@@ -22,6 +22,8 @@
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { getHitzeFaq } from '$lib/content/hitze-faq.js';
+	import { buildCanonical, canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
@@ -40,13 +42,15 @@
 	// seit i18n Block B2 für `en` registriert), obwohl diese inhaltlich
 	// andere Seite selbst nicht übersetzt ist.
 	const pathname = '/hitze';
+	const effectiveLocale = $derived(getLocale());
 
 	// Dieselbe Seite ist über zwei Hosts erreichbar: navigator.berlin/hitze und
 	// hitze.navigator.berlin/ (Reroute). Canonical konsolidiert auf die Haupt-Domain,
 	// damit kein Duplicate-Content entsteht. `hitze.`-Subdomain wird gestrippt, lokal bleibt lokal.
-	const primaryOrigin = $derived(origin.replace('://hitze.', '://'));
-	const localizedPath = $derived(localizedHref('/hitze'));
-	const canonical = $derived(`${primaryOrigin}${localizedPath}`);
+	const primaryOrigin = $derived(canonicalOrigin(origin));
+	const canonical = $derived(
+		buildCanonical(primaryOrigin, localizedPathname(pathname, effectiveLocale))
+	);
 
 	// mode=hitze erzwingt den reduzierten Explorer auch ohne Hitze-Host (lokal + Main-Domain).
 	const explorerLink = `${buildExplorerDeepLink(['kuehle-orte'])}&mode=hitze`;
@@ -78,8 +82,8 @@
 		buildBreadcrumbList({
 			origin: primaryOrigin,
 			items: [
-				{ name: m.hitze_breadcrumb_start(), path: localizedHref('/') },
-				{ name: m.hitze_breadcrumb_hitze(), path: localizedPath }
+				{ name: m.hitze_breadcrumb_start(), path: localizedPathname('/', getLocale()) },
+				{ name: m.hitze_breadcrumb_hitze(), path: localizedPathname('/hitze', getLocale()) }
 			]
 		})
 	);
@@ -134,8 +138,7 @@
 	title={pageTitle}
 	description={pageDescription}
 	{pathname}
-	origin={primaryOrigin}
-	{canonical}
+	{origin}
 	ogImage={ogImageAbsolute}
 />
 <JsonLd data={datasetJsonLd} testid="hitze-dataset-jsonld" />

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -14,8 +16,8 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: m.architektur_breadcrumb_architektur(), path: localizedHref('/architektur') }
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{ name: m.architektur_breadcrumb_architektur(), path: localizedPathname('/architektur', getLocale()) }
 			]
 		})
 	);

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { buildCanonical, localizedPathname } from '$lib/seo/canonical.js';
+	import { buildCanonical, canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { buildHreflangCluster } from '$lib/seo/hreflang.js';
 	import { localeToOgLocale } from '$lib/seo/locale-meta.js';
 	import {
@@ -73,7 +73,7 @@
 		title,
 		description,
 		pathname,
-		origin,
+		origin: rawOrigin,
 		canonical,
 		ogImage,
 		ogImageWidth = 1200,
@@ -84,6 +84,7 @@
 		registerEntries = TRANSLATION_REGISTER
 	}: Props = $props();
 
+	const origin = $derived(canonicalOrigin(rawOrigin));
 	const pageLocale = $derived(getLocale());
 	/**
 	 * The locale whose CONTENT is actually shown, not the URL locale -- an

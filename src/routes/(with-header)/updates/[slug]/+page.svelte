@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -45,9 +46,9 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: 'Updates', path: localizedHref('/updates') },
-				{ name: localized.title, path: localizedHref(`/updates/${entry.slug}`) }
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{ name: 'Updates', path: localizedPathname('/updates', getLocale()) },
+				{ name: localized.title, path: localizedPathname(`/updates/${entry.slug}`, getLocale()) }
 			]
 		})
 	);

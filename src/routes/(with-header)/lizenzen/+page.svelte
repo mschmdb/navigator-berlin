@@ -63,8 +63,8 @@
 		buildBreadcrumbList({
 			origin: page.url.origin,
 			items: [
-				{ name: 'Berlin', path: localizedHref('/') },
-				{ name: m.lizenzen_breadcrumb_lizenzen(), path: localizedHref('/lizenzen') }
+				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
+				{ name: m.lizenzen_breadcrumb_lizenzen(), path: localizedPathname('/lizenzen', getLocale()) }
 			]
 		})
 	);

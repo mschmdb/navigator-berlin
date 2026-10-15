@@ -155,7 +155,7 @@ describe('updates/+page.svelte · EN (i18n C4d)', () => {
 		expect(
 			crumbs.itemListElement.map((i: { name: string; item: string }) => [i.name, pathOf(i.item)])
 		).toEqual([
-			['Berlin', '/en/'],
+			['Berlin', '/en'],
 			['Updates', '/en/updates']
 		]);
 	});
