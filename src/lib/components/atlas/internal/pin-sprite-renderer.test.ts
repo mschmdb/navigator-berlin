@@ -94,7 +94,7 @@ describe('buildScoreDotSvg (Aggregat-Symbole der Sekundär-Dimension)', () => {
 		expect(svg).toContain('<rect');
 		expect(svg).not.toContain('<circle');
 		expect(svg).toContain('fill="#005381"');
-		expect(svg).toContain('stroke="#ECEAE0"');
+		expect(svg).toContain('stroke="#FFFFFF"');
 		// Abgerundet, aber klar als Quadrat lesbar (kein Kreis via rx=50%).
 		expect(svg).toMatch(/rx="3(\.\d+)?"/);
 	});

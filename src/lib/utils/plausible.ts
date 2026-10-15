@@ -10,12 +10,25 @@
  * Goal-Funnel-Analyse in Plausible-UI.
  */
 
-type EventName = 'Search' | 'Bookmark' | 'Compare' | 'Share' | 'Locate' | 'MapClick' | 'Finder';
+type EventName =
+	| 'Search'
+	| 'Bookmark'
+	| 'Compare'
+	| 'Share'
+	| 'Locate'
+	| 'MapClick'
+	| 'Finder'
+	| 'Landing';
 
 interface PlausibleFn {
 	(
 		eventName: string,
-		options?: { u?: string; url?: string; props?: Record<string, string | number | boolean> }
+		options?: {
+			u?: string;
+			url?: string;
+			interactive?: boolean;
+			props?: Record<string, string | number | boolean>;
+		}
 	): void;
 }
 
@@ -52,20 +65,43 @@ function isEmbedded(): boolean {
 
 export function trackEvent(
 	name: EventName,
-	props?: Record<string, string | number | boolean>
+	props?: Record<string, string | number | boolean>,
+	options: { interactive?: boolean } = {}
 ): void {
 	if (typeof window === 'undefined') return;
 	if (typeof window.plausible !== 'function') return;
 	if (isEmbedded()) return;
 	try {
 		if (props && Object.keys(props).length > 0) {
-			window.plausible(name, { props });
+			window.plausible(name, { props, ...options });
+		} else if (Object.keys(options).length > 0) {
+			window.plausible(name, options);
 		} else {
 			window.plausible(name);
 		}
 	} catch {
 		/* analytics never breaks the app */
 	}
+}
+
+export type LandingAction =
+	| 'map_button'
+	| 'map_link_bottom'
+	| 'key_figure'
+	| 'neighbor'
+	| 'similar'
+	| 'list_sort'
+	| 'list_link'
+	| 'map_link'
+	| 'ranking_link'
+	| 'eyebrow_link';
+
+export type LandingPageType = 'kiez' | 'bezirk' | 'layer';
+
+/** L8: Klick auf ein Ziel der Kiez-, Bezirks- oder Layer-Seite. Keine Slugs, keine IDs. */
+export function trackLanding(action: LandingAction, pageType: LandingPageType): void {
+	// interactive:false hält die Session im Bounce, damit Zeiträume vor und nach L8 vergleichbar bleiben.
+	trackEvent('Landing', { action, page_type: pageType }, { interactive: false });
 }
 
 /**

@@ -17,6 +17,18 @@ describe('meta-footer.svelte', () => {
 		await expect.element(footer).toBeInTheDocument();
 	});
 
+	it('zeigt das Footer-Logo als statisches Bild, der Link-Name ist exakt navigator.berlin', async () => {
+		render(MetaFooter, {});
+		const link = page.getByRole('link', { name: 'navigator.berlin', exact: true });
+		const el = (await link.element()) as HTMLAnchorElement;
+		const img = el.querySelector('img');
+		expect(img?.getAttribute('src')).toBe('/logo-pixel.svg');
+		expect(img?.getAttribute('alt')).toBe('');
+		expect(img?.getAttribute('loading')).toBe('lazy');
+		expect(img?.getAttribute('decoding')).toBe('async');
+		expect(el.querySelector('svg')).toBeNull();
+	});
+
 	it('enthaelt alle 7 Meta-Links (Methodik, Updates, Impressum, Datenschutz, Lizenzen, Architektur, Kontakt)', async () => {
 		render(MetaFooter, {});
 		for (const name of [

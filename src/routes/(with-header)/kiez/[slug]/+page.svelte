@@ -3,18 +3,20 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import KiezHero from '$lib/components/atlas/kiez-hero.svelte';
-	import KiezSiblingsList from '$lib/components/atlas/kiez-siblings-list.svelte';
+	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
+	import KiezDetails from '$lib/components/atlas/kiez-details.svelte';
+	import KiezNeighbors from '$lib/components/atlas/kiez-neighbors.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
+	import { buildKiezMeta } from '$lib/seo/profile-meta.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { normalizeSlug } from '$lib/data/internal/slug.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { formatCount } from '$lib/i18n/format.js';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -43,27 +45,22 @@
 		}
 	});
 
-	const pageTitle = $derived(
-		bezirkName.length > 0
-			? m.kiez_page_title_with_bezirk({ name, bezirk: bezirkName }, localeOpts)
-			: m.kiez_page_title_no_bezirk({ name }, localeOpts)
+	const meta = $derived(
+		buildKiezMeta({
+			name,
+			bezirk: bezirkName,
+			einwohner: data.profile.einwohner,
+			flaecheHa: data.profile.flaecheHa,
+			stichtag: data.einwohnerStichtag,
+			score: data.score?.composite ?? null,
+			rang: data.compositeRank.rang,
+			quartil: data.compositeRank.quartil,
+			total: data.compositeRank.total,
+			locale
+		})
 	);
-
-	const pageDescription = $derived.by(() => {
-		const parts: string[] = [];
-		if (data.profile.einwohner > 0) {
-			parts.push(
-				m.profile_lead_einwohner({ count: formatCount(data.profile.einwohner, localeOpts) })
-			);
-		}
-		if (data.profile.flaecheHa > 0) {
-			parts.push(m.profile_lead_flaeche({ ha: formatCount(data.profile.flaecheHa, localeOpts) }));
-		}
-		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-		const bezirkPart =
-			bezirkName.length > 0 ? m.kiez_page_description_bezirk_part({ bezirk: bezirkName }) : '';
-		return m.profile_page_description({ subject: `Kiez ${name}`, bezirkPart, suffix }, localeOpts);
-	});
+	const pageTitle = $derived(meta.title);
+	const pageDescription = $derived(meta.description);
 
 	const ogImageAlt = $derived(
 		bezirkName.length > 0
@@ -134,23 +131,33 @@
 	<Breadcrumb items={breadcrumbItems} />
 </div>
 
-<KiezHero
-	profile={data.profile}
-	stats={data.stats}
-	score={data.score}
-	faq={data.faq}
-	faqLocale={data.faqLocale}
-	wahlVerlauf={data.wahlVerlauf}
-	comparison={data.comparison}
-	profileProse={data.profileProse}
-	profileLocale={data.profileLocale}
-/>
-
-{#if bezirkName.length > 0}
-	<div class="mx-auto max-w-3xl px-4 pb-8">
-		<KiezSiblingsList siblings={data.siblings} parentBezirkName={bezirkName} />
-	</div>
-{/if}
+<article>
+	<KiezHero
+		profile={data.profile}
+		score={data.score}
+		compositeRank={data.compositeRank}
+		comparison={data.comparison}
+		outline={data.outline}
+		einwohnerStichtag={data.einwohnerStichtag}
+	/>
+	<KeyFigureTiles figures={data.keyFigures} regionName={name} kind="kiez" {slug} />
+	{#if data.neighbors.length > 0 || data.similar.length > 0}
+		<div class="mx-auto max-w-3xl px-4 py-8">
+			<KiezNeighbors neighbors={data.neighbors} similar={data.similar} />
+		</div>
+	{/if}
+	<KiezDetails
+		profile={data.profile}
+		stats={data.stats}
+		score={data.score}
+		faq={data.faq}
+		faqLocale={data.faqLocale}
+		wahlVerlauf={data.wahlVerlauf}
+		comparison={data.comparison}
+		profileProse={data.profileProse}
+		profileLocale={data.profileLocale}
+	/>
+</article>
 
 <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
 	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="kieze" />

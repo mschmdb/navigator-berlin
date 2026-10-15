@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount, untrack } from 'svelte';
 	import { goto } from '$app/navigation';
 	import MapLibreCanvas from '$lib/components/atlas/map-libre-canvas.svelte';
 	import MapControls from '$lib/components/atlas/map-controls.svelte';
@@ -20,6 +20,20 @@
 		type MapHoverApi
 	} from '$lib/components/atlas/map-hover-tooltip.svelte';
 	import InspectorPanel from '$lib/components/atlas/inspector-panel.svelte';
+	import RegionFocusCard from '$lib/components/atlas/region-focus-card.svelte';
+	import {
+		compositeRank,
+		resolveRegionFocus,
+		type RegionFocusTarget
+	} from '$lib/components/atlas/internal/region-focus.js';
+	import {
+		fitRegionFocus,
+		REGION_FOCUS_LINE_ID,
+		removeRegionFocusOutline,
+		showRegionFocusOutline,
+		type RegionFocusMapLike
+	} from '$lib/components/atlas/internal/region-focus-map.js';
+	import { loadRegionComposites } from '$lib/data/get-region-composites.js';
 	import ComparePanel from '$lib/components/atlas/compare-panel/compare-panel.svelte';
 	import BottomSheet from '$lib/components/atlas/inspector-panel/bottom-sheet.svelte';
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
@@ -27,7 +41,11 @@
 	import { COLORS } from '$lib/components/atlas/internal/colors.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
 	import { trackEvent } from '$lib/utils/plausible.js';
-	import { serializeViewport, serializeLayers } from '$lib/utils/url-state.js';
+	import {
+		serializeViewport,
+		serializeLayers,
+		type RegionFocusRequest
+	} from '$lib/utils/url-state.js';
 	import { debounce } from '$lib/utils/debounce.js';
 	import { matchZoomForType } from '$lib/utils/zoom-mapping.js';
 	import { reverseGeocodeAddress } from '$lib/data/geocode.remote.js';
@@ -144,6 +162,7 @@
 
 	const VIEWPORT_KEYS = ['bbox', 'zoom', 'center'] as const;
 	const ADDRESS_KEYS = ['address', 'q'] as const;
+	const REGION_FOCUS_KEYS = ['kiez', 'bezirk'] as const;
 
 	// Default-Einstieg ohne URL-Adresse: Pariser Platz (Mitte) als Beispiel-Punkt.
 	const PARISER_PLATZ = { lat: 52.51631, lng: 13.3777 } as const;
@@ -158,6 +177,24 @@
 		postcode: '10117'
 	};
 	const LAYERS_KEY = 'layers';
+
+	// Kein Punkt in URL: Pariser Platz als Default setzen (Reverse-Geocode für
+	// echte Subline, Fallback auf statische Suggestion).
+	function selectDefaultPoint(): void {
+		void (async () => {
+			try {
+				const s = await reverseGeocodeAddress({
+					lat: PARISER_PLATZ.lat,
+					lng: PARISER_PLATZ.lng
+				});
+				// addresstype steuert nur den Fly-Zoom: für den Default-Einstieg
+				// bewusst Übersicht statt Gebäude-Zoom.
+				selection.set({ ...(s ?? PARISER_PLATZ_FALLBACK), addresstype: 'city_district' });
+			} catch {
+				selection.set({ ...PARISER_PLATZ_FALLBACK, addresstype: 'city_district' });
+			}
+		})();
+	}
 
 	// Finder-Zustand in die URL spiegeln, damit ein geteilter Link (auch der
 	// vom Agenten ausgegebene) die Karte überall reproduziert statt neun
@@ -274,22 +311,17 @@
 				type: 'point',
 				addresstype: 'point'
 			});
+		} else if (data.regionFocus) {
+			// Ortsfokus (?kiez= / ?bezirk=): kein Default-Punkt, kein Inspector.
+			// Eine aus früherer Session erhaltene Auswahl bleibt stumm, bis die
+			// Person neu wählt.
+			suppressedSelectionId = selection.current?.id ?? null;
+			ui.inspectorOpen = false;
+			ui.selectedAddress = null;
+			lastRegionFocusKey = `${data.regionFocus.kind}:${data.regionFocus.slug}`;
+			pendingRegionFocus = data.regionFocus;
 		} else {
-			// Kein Punkt in URL: Pariser Platz als Default setzen (Reverse-Geocode für
-			// echte Subline, Fallback auf statische Suggestion).
-			void (async () => {
-				try {
-					const s = await reverseGeocodeAddress({
-						lat: PARISER_PLATZ.lat,
-						lng: PARISER_PLATZ.lng
-					});
-					// addresstype steuert nur den Fly-Zoom: für den Default-Einstieg
-					// bewusst Übersicht statt Gebäude-Zoom.
-					selection.set({ ...(s ?? PARISER_PLATZ_FALLBACK), addresstype: 'city_district' });
-				} catch {
-					selection.set({ ...PARISER_PLATZ_FALLBACK, addresstype: 'city_district' });
-				}
-			})();
+			selectDefaultPoint();
 		}
 		void (async () => {
 			try {
@@ -517,6 +549,7 @@
 		}
 		// Die Auswahl-Kontur (Region-Outline) bleibt zuoberst.
 		if (map.getLayer(OUTLINE_LINE_ID)) map.moveLayer(OUTLINE_LINE_ID);
+		if (map.getLayer(REGION_FOCUS_LINE_ID)) map.moveLayer(REGION_FOCUS_LINE_ID);
 
 		renderedSlugs = [...ordered];
 		renderedVariantBySlug = variantBySlug;
@@ -604,6 +637,144 @@
 		void renderRegionOutline(addr.lat, addr.lng, scope, addr.id);
 	});
 
+	// Ortsfokus (?kiez=<slug> / ?bezirk=<slug>): Karte zoomt auf den Umriss, zeichnet
+	// die Kontur und sagt den Ort an. Der Parameter bleibt in der URL (teilbar), bis
+	// die Person einen anderen Ort wählt.
+	type RegionFocusView = {
+		target: RegionFocusTarget;
+		score: number | null;
+		rang: number | null;
+		total: number;
+	};
+	let regionFocus = $state.raw<RegionFocusView | null>(null);
+	let pendingRegionFocus = $state.raw<RegionFocusRequest | null>(null);
+	let regionFocusToken = 0;
+	// Letzter angewendeter Request (kind:slug): verhindert doppeltes Anwenden durch
+	// onMount und den Navigations-Effect sowie durch den Viewport-Sync der URL.
+	let lastRegionFocusKey: string | null = null;
+
+	onDestroy(() => {
+		regionFocusToken += 1;
+	});
+
+	function dropRegionFocusParams(): void {
+		const url = new URL(window.location.href);
+		if (!REGION_FOCUS_KEYS.some((key) => url.searchParams.has(key))) return;
+		for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
+		const query = url.searchParams.toString();
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		void goto(query ? `?${query}` : url.pathname, {
+			replaceState: true,
+			keepFocus: true,
+			noScroll: true
+		});
+	}
+
+	/** Beendet den Fokus (Kontur, Karte, laufende Auflösung). URL-Parameter räumt der Aufrufer. */
+	function endRegionFocus(): void {
+		regionFocusToken += 1;
+		pendingRegionFocus = null;
+		regionFocus = null;
+		if (rawMap) removeRegionFocusOutline(rawMap as RegionFocusMapLike);
+	}
+
+	function closeRegionFocus(restoreFocus = true): void {
+		endRegionFocus();
+		dropRegionFocusParams();
+		// Der Button verschwindet mit der Card: Tastaturfokus auf die Karte statt auf body (WCAG 2.4.3).
+		if (restoreFocus) document.querySelector<HTMLElement>('[role="application"]')?.focus();
+	}
+
+	// Compare-Modus belegt den Slot: Fokus samt URL-Parameter ablösen.
+	$effect(() => {
+		if (ui.compareMode && regionFocus) closeRegionFocus(false);
+	});
+
+	async function applyRegionFocus(request: RegionFocusRequest): Promise<void> {
+		const token = ++regionFocusToken;
+		let target: RegionFocusTarget | null;
+		try {
+			await loadManifest();
+			const bezirkeMeta = getLayerEntry('bezirke');
+			const kiezMeta = getLayerEntry('lor-bezirksregion');
+			if (!bezirkeMeta || (request.kind === 'kiez' && !kiezMeta)) {
+				throw new Error('Ortsfokus: Layer fehlen im Manifest');
+			}
+			const [bezirkeFc, kiezFc] = await Promise.all([
+				fetchLayer(bezirkeMeta.filename),
+				request.kind === 'kiez' && kiezMeta ? fetchLayer(kiezMeta.filename) : null
+			]);
+			target = resolveRegionFocus(request, kiezFc, bezirkeFc);
+		} catch {
+			// Ladefehler: Parameter bleibt, ein Reload des geteilten Links kann gelingen.
+			return;
+		}
+		// Stale-Guard: Person hat während des Ladens einen anderen Ort gewählt.
+		if (token !== regionFocusToken || !rawMap) return;
+		if (!target) {
+			// Unbekannter Slug: Karte startet normal (Default-Punkt), ohne Ansage.
+			dropRegionFocusParams();
+			if (!ui.selectedAddress) {
+				suppressedSelectionId = null;
+				selectDefaultPoint();
+			}
+			return;
+		}
+		const rank = compositeRank(await loadRegionComposites(), target.kind, target.slug);
+		if (token !== regionFocusToken || !rawMap) return;
+		const map = rawMap as RegionFocusMapLike;
+		showRegionFocusOutline(map, target.feature);
+		fitRegionFocus(map, target.bbox, {
+			mobile: viewport.breakpoint === 'mobile',
+			reducedMotion: prefersReducedMotion(),
+			container: mapHandle
+				? { width: mapHandle.getCanvasWidth(), height: mapHandle.getCanvasHeight() }
+				: undefined
+		});
+		regionFocus = {
+			target,
+			score: rank?.composite ?? null,
+			rang: rank?.rang ?? null,
+			total: rank?.total ?? 0
+		};
+		announceGlobal(
+			target.kind === 'kiez'
+				? m.atlas_route_announce_region_focus_kiez(
+						{ name: target.name, bezirk: target.bezirkName },
+						localeOpts
+					)
+				: m.atlas_route_announce_region_focus_bezirk({ name: target.name }, localeOpts)
+		);
+	}
+
+	$effect(() => {
+		const request = pendingRegionFocus;
+		if (!request || !rawMap) return;
+		pendingRegionFocus = null;
+		void applyRegionFocus(request);
+	});
+
+	// Client-seitige Navigation innerhalb /explore (Link, Back/Forward): onMount lief
+	// nur einmal. Finder und Adresse in der URL haben Vorrang vor dem Ortsfokus.
+	$effect(() => {
+		const request = data.regionFocus;
+		if (!request) {
+			lastRegionFocusKey = null;
+			return;
+		}
+		const hasAddress =
+			typeof data.address?.lng === 'number' && typeof data.address?.lat === 'number';
+		if (hasAddress || (featureFlags.kiezFinder && data.finderOpen)) return;
+		const key = `${request.kind}:${request.slug}`;
+		if (key === lastRegionFocusKey) return;
+		lastRegionFocusKey = key;
+		untrack(() => {
+			ui.inspectorOpen = false;
+			ui.selectedAddress = null;
+			pendingRegionFocus = request;
+		});
+	});
+
 	// ?finder=1 wird bei JEDER Navigation konsumiert, nicht nur beim Mount:
 	// der Header-Link navigiert client-seitig, onMount liefe dann nie.
 	// Nach dem Konsum fliegt der Param aus der URL, damit ein erneuter
@@ -613,9 +784,13 @@
 		ui.finderOpen = true;
 		ui.inspectorOpen = false;
 		trackEvent('Finder', { action: 'open' });
+		// Finder belegt den Slot: Ortsfokus beenden, Parameter in EINEM goto mit `finder` entfernen.
+		untrack(endRegionFocus);
 		const url = new URL(window.location.href);
-		if (url.searchParams.has('finder')) {
+		const hadFocusParams = REGION_FOCUS_KEYS.some((key) => url.searchParams.has(key));
+		if (url.searchParams.has('finder') || hadFocusParams) {
 			url.searchParams.delete('finder');
+			for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
 			// eslint-disable-next-line svelte/no-navigation-without-resolve
 			void goto(`?${url.searchParams.toString()}`, {
 				replaceState: true,
@@ -684,8 +859,11 @@
 			.addTo(rawMap);
 		if (ui.compareMode) el.style.display = 'none';
 
+		// Eine neue Wahl löst den Ortsfokus ab (Kontur, Karte, URL-Parameter).
+		endRegionFocus();
 		const url = new URL(window.location.href);
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
+		for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
 		url.searchParams.set('address', `${lngLat[0].toFixed(5)},${lngLat[1].toFixed(5)}`);
 		if (displayName) url.searchParams.set('q', displayName);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
@@ -1336,6 +1514,18 @@
 			activeLayerSlugs={ui.activeLayerSlugs}
 			isMobile={viewport.breakpoint === 'mobile'}
 		/>
+		{#if regionFocus && !inspectorActive && !ui.compareMode && !finderActive}
+			<RegionFocusCard
+				kind={regionFocus.target.kind}
+				slug={regionFocus.target.slug}
+				name={regionFocus.target.name}
+				bezirkName={regionFocus.target.bezirkName}
+				score={regionFocus.score}
+				rang={regionFocus.rang}
+				total={regionFocus.total}
+				onClose={closeRegionFocus}
+			/>
+		{/if}
 		{#if outsideBerlinHintVisible}
 			<div
 				class="pointer-events-none absolute top-4 left-1/2 z-20 -translate-x-1/2 rounded-sm border border-severity-warning/40 bg-severity-warning-bg px-3 py-2 font-sans text-sm text-severity-warning shadow-sm"

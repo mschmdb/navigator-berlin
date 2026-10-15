@@ -232,7 +232,7 @@ describe('i18n Block C1: LAYER_EXPLAIN_MESSAGE Struktur-Paritaet', () => {
 	// Sprachneutrale Einheiten (Symbole/SI-Einheiten) bleiben in DE und EN
 	// identisch -- nur `EW/km²` (Einwohner-Dichte) hat eine echte EN-Uebersetzung
 	// ("residents/km²").
-	const LANGUAGE_NEUTRAL_UNITS = new Set(['€/m²', '°C', 'dB', 'kWh/m²']);
+	const LANGUAGE_NEUTRAL_UNITS = new Set(['€/m²', '°C', 'dB', 'kWh/m²', '%']);
 
 	it('unter EN liefert jeder Slug nicht-leeren Text (der sich von DE unterscheidet), unit/valueScaleExplain-Praesenz matcht DE 1:1', () => {
 		for (const slug of Object.keys(LAYER_EXPLAIN_DE)) {

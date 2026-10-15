@@ -9,6 +9,7 @@ import {
 	normalizedText,
 	textLines
 } from '../methodik/methodik-test-utils.js';
+import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 import type { Manifest, LayerMetadata } from '$lib/data';
 
 function meta(slug: string, license: LayerMetadata['license']): LayerMetadata {
@@ -48,6 +49,17 @@ const sampleData = {
 			creatorName: 'SenMVKU'
 		}
 	]
+};
+
+const buildOnlyData = {
+	...sampleData,
+	manifest: {
+		...sampleManifest,
+		layers: [
+			...sampleManifest.layers,
+			{ ...meta('denkmal-2024', 'dl-de/by-2-0'), inspectorRelevant: false, mapRelevant: false }
+		]
+	}
 };
 
 const SECTION_IDS = ['daten-lizenzen', 'software', 'schriften', 'osm-namensnennung'];
@@ -222,6 +234,21 @@ describe('lizenzen · EN (i18n C4c)', () => {
 		return document.querySelector('[data-testid="lizenzen-page"]')!;
 	}
 
+	it('EN: Build-only-Layer ohne Link, Layer mit Seite unter /en verlinkt', () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: buildOnlyData });
+		expect(document.querySelector('a[href="/en/layer/denkmal-2024"]')).toBeNull();
+		expect(document.querySelector('a[href="/en/layer/laerm-2023"]')).not.toBeNull();
+	});
+
+	it('EN: Zensus-Attribution im Original und in englischer Erläuterung', () => {
+		const root = renderEn();
+		const attribution = flat(root.querySelector('[data-testid="lizenzen-zensus-attribution"]'));
+		expect(attribution).toContain('Statistische Ämter des Bundes und der Länder, Zensus 2022');
+		expect(attribution).toContain('Census 2022');
+		expect(attribution).toContain('Existing rent (Census 2022)');
+	});
+
 	it('H1, Intro, Inhaltsverzeichnis und Abschnitte englisch', () => {
 		const root = renderEn();
 		expect(root.querySelector('h1')?.textContent).toBe('Licences');
@@ -353,5 +380,18 @@ describe('lizenzen · EN Grammatik, Layer-Namen, Links (i18n C4c)', () => {
 		expect(
 			document.querySelector('a[href="https://creativecommons.org/licenses/by/4.0/deed.de"]')
 		).not.toBeNull();
+	});
+
+	it('zeigt Build-only-Layer als Text ohne Link, Layer mit Seite bleibt verlinkt', async () => {
+		render(Page, { data: buildOnlyData });
+		const sec = document.getElementById('daten-lizenzen');
+		expect(sec?.querySelector('a[href$="/layer/denkmal-2024"]')).toBeNull();
+		expect(sec?.querySelector('a[href$="/layer/laerm-2023"]')).not.toBeNull();
+		const name = getLayerDisplayName('denkmal-2024', { locale: 'de' });
+		const span = [...(sec?.querySelectorAll('span') ?? [])].find(
+			(el) => (el.textContent ?? '').trim() === name
+		);
+		expect(span).toBeDefined();
+		expect(span?.closest('a')).toBeNull();
 	});
 });

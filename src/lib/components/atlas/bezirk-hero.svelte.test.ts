@@ -2,294 +2,252 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import BezirkHero from './bezirk-hero.svelte';
+import { m } from '$lib/paraglide/messages.js';
+import { dimensionLabel } from './inspector-panel/internal/kiez-score-display.js';
 import type { BezirkProfile } from '$lib/data/types.js';
-import type { InferSelectModel } from 'drizzle-orm';
-import type { bezirkStats } from '$lib/server/db/schema/index.js';
+import type { KiezListEntry } from '$lib/data/bezirk-kieze-view.js';
+import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');
 });
 
-type BezirkStatsRow = InferSelectModel<typeof bezirkStats>;
-
-const baseProfile: BezirkProfile = {
+const profile: BezirkProfile = {
 	slug: 'mitte',
 	name: 'Mitte',
 	einwohner: 386000,
 	flaecheHa: 3947,
 	centroid: [13.4, 52.52],
-	geometry: {
-		type: 'Polygon',
-		coordinates: [
-			[
-				[13.35, 52.5],
-				[13.45, 52.5],
-				[13.45, 52.55],
-				[13.35, 52.55],
-				[13.35, 52.5]
-			]
-		]
-	},
+	geometry: { type: 'Polygon', coordinates: [] },
 	ortsteilSlugs: [],
 	layerCoverage: []
 };
 
-const statsFixture: BezirkStatsRow = {
-	slug: 'mitte',
-	laerm: {
-		dominantCategory: { value: 'mittel', layer: 'laerm-2023', sourceUpdatedAt: '2023-06-01' },
-		categoryDistribution: null
-	},
-	luft: { dominantCategory: null, categoryDistribution: null },
-	gruen: {
-		dominantVersorgung: {
-			value: 'hoch',
-			layer: 'gruenversorgung-2023',
-			sourceUpdatedAt: '2023-09-01'
-		},
-		gruenanlagenCount: null,
-		spielplaetzeCount: null
-	} as unknown as BezirkStatsRow['gruen'],
-	klima: { meanPet: null, hotDays: null } as unknown as BezirkStatsRow['klima'],
-	wohnen: { dominantWohnlage: null, dominantMss: null } as unknown as BezirkStatsRow['wohnen'],
-	oepnv: { stopsPerKm2: null } as unknown as BezirkStatsRow['oepnv'],
-	bildung: {} as BezirkStatsRow['bildung'],
-	heritage: {} as BezirkStatsRow['heritage'],
-	computedAt: new Date('2026-05-16T00:00:00Z')
+const kieze: KiezListEntry[] = [
+	{ slug: 'tiergarten', name: 'Tiergarten', composite: 60, rang: 30, quartil: 1, total: 143 }
+];
+const outline: RegionOutline = {
+	viewBox: '0 0 1000 800',
+	width: 1000,
+	height: 800,
+	paths: [{ id: 'tiergarten', d: 'M0 0L100 0L100 100Z' }]
 };
+const rank = { rang: 3, quartil: 1, total: 12 };
+const noRank = { rang: null, quartil: null, total: 0 };
 
-// i18n Block B4a Review-Fund: alle Steckbrief-Cluster befüllt (PET, ÖPNV,
-// Wohnlage, MSS, Grünanlagen-Zähler), analog `kiez-hero.svelte.test.ts`.
-const statsFixtureFull: BezirkStatsRow = {
-	slug: 'mitte',
-	laerm: {
-		dominantCategory: { value: 'mittel', layer: 'laerm-2023', sourceUpdatedAt: '2023-06-01' },
-		categoryDistribution: null
-	},
-	luft: { dominantCategory: null, categoryDistribution: null },
-	gruen: {
-		dominantVersorgung: {
-			value: 'hoch',
-			layer: 'gruenversorgung-2023',
-			sourceUpdatedAt: '2023-09-01'
-		},
-		versorgungDistribution: null,
-		gruenanlagenCount: { value: 1234, layer: 'gruenanlagen', sourceUpdatedAt: '2023-09-01' },
-		spielplaetzeCount: { value: 12, layer: 'spielplaetze', sourceUpdatedAt: '2023-09-01' }
-	} as unknown as BezirkStatsRow['gruen'],
-	klima: {
-		meanPet: { value: 24.567, layer: 'klima-pet-2022', sourceUpdatedAt: '2022-06-01' },
-		shareSehrHeiss: null
-	} as unknown as BezirkStatsRow['klima'],
-	wohnen: {
-		dominantWohnlage: { value: 'gut', layer: 'wohnlagen-2024', sourceUpdatedAt: '2024-01-01' },
-		wohnlageDistribution: null,
-		dominantMss: { value: 'mittel', layer: 'mss-gesamtindex-2025', sourceUpdatedAt: '2025-01-01' },
-		mssDistribution: null
-	} as unknown as BezirkStatsRow['wohnen'],
-	oepnv: {
-		stopsPerKm2: { value: 12.34, layer: 'oepnv-composite', sourceUpdatedAt: '2026-05-01' },
-		uBahnCount: { value: 3, layer: 'ubahn-stationen', sourceUpdatedAt: '2026-05-01' },
-		sBahnCount: { value: 2, layer: 'sbahn-stationen', sourceUpdatedAt: '2026-05-01' },
-		tramCount: { value: 5, layer: 'tram-haltestellen', sourceUpdatedAt: '2026-05-01' },
-		busCount: { value: 10, layer: 'bus-haltestellen', sourceUpdatedAt: '2026-05-01' }
-	} as unknown as BezirkStatsRow['oepnv'],
-	bildung: {} as BezirkStatsRow['bildung'],
-	heritage: {} as BezirkStatsRow['heritage'],
-	computedAt: new Date('2026-05-16T00:00:00Z')
-};
+function text(): string {
+	return (document.querySelector('[data-testid="bezirk-hero"]')?.textContent ?? '').replace(
+		/\s+/g,
+		' '
+	);
+}
 
 describe('BezirkHero.svelte', () => {
-	it('rendert h1 mit Bezirks-Name', async () => {
-		render(BezirkHero, { profile: baseProfile, stats: null, faq: [] });
-		const heading = document.querySelector('[data-testid="bezirk-hero"] h1');
-		expect(heading?.textContent).toBe('Mitte');
+	it('rendert h1 mit Bezirks-Name', () => {
+		render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+		expect(document.querySelector('[data-testid="bezirk-hero"] h1')?.textContent).toBe('Mitte');
 	});
 
-	it('rendert Lead mit formatierten Einwohner- und Flächen-Daten', async () => {
-		render(BezirkHero, { profile: baseProfile, stats: null, faq: [] });
-		const lead = document.querySelector('[data-testid="bezirk-hero"] p');
-		expect(lead?.textContent).toMatch(/386\.000 Einwohner:innen/);
-		expect(lead?.textContent).toMatch(/3\.947 ha/);
+	it('nennt „Bezirk“ als Eyebrow vor der h1', () => {
+		render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+		const eyebrow = document.querySelector('[data-testid="bezirk-hero"] p');
+		expect(eyebrow?.textContent?.trim()).toBe('Bezirk');
 	});
 
-	it('zeigt Steckbrief-Platzhalter wenn stats null', async () => {
-		render(BezirkHero, { profile: baseProfile, stats: null, faq: [] });
-		const placeholder = document.querySelector('[data-testid="bezirk-hero"]');
-		expect(placeholder?.textContent).toMatch(/Aggregat-Werte werden mit dem nächsten Daten-Update/);
-		expect(document.querySelector('[data-testid="bezirk-steckbrief"]')).toBeNull();
-	});
-
-	it('rendert Steckbrief-Tabelle aus stats-Fixture mit Quellen-Subline', async () => {
-		render(BezirkHero, { profile: baseProfile, stats: statsFixture, faq: [] });
-		const table = document.querySelector('[data-testid="bezirk-steckbrief"]');
-		expect(table).not.toBeNull();
-		expect(table?.textContent).toMatch(/Lärm/);
-		expect(table?.textContent).toMatch(/Quelle: Lärmbelastung 2023/);
-		expect(table?.textContent).toMatch(/Grünversorgung/);
-	});
-
-	it('zeigt FAQ-Placeholder wenn faq leer', async () => {
-		render(BezirkHero, { profile: baseProfile, stats: null, faq: [] });
-		expect(document.querySelector('[data-testid="faq-section"]')).toBeNull();
-		const hero = document.querySelector('[data-testid="bezirk-hero"]');
-		expect(hero?.textContent).toMatch(/FAQ-Einträge ergänzen wir mit dem nächsten Daten-Update/);
-	});
-
-	it('rendert FaqSection wenn faq-Items vorhanden', async () => {
+	it('zeigt Einwohner:innen, Fläche in km² und Stand', () => {
 		render(BezirkHero, {
-			profile: baseProfile,
-			stats: null,
-			faq: [{ question: 'Frage?', answer: 'Antwort.' }]
+			profile,
+			kieze,
+			outline,
+			compositeRank: rank,
+			einwohnerStichtag: '2024-12-31'
 		});
-		expect(document.querySelector('[data-testid="faq-section"]')).not.toBeNull();
+		const facts = document.querySelector('[data-testid="bezirk-facts"]');
+		expect(facts?.textContent).toMatch(/386\.000/);
+		expect(facts?.textContent).toMatch(/39,5 km²/);
+		expect(text()).toMatch(/Stand Ende 2024/);
 	});
 
-	it('verwendet niemals em-dash im Lead (memory feedback_no_em_dashes)', async () => {
-		render(BezirkHero, { profile: baseProfile, stats: null, faq: [] });
-		const hero = document.querySelector('[data-testid="bezirk-hero"]');
-		expect(hero?.textContent).not.toMatch(/—/);
+	it('zeigt den Bezirks-Rang als „Platz X von 12“', () => {
+		render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+		expect(text()).toContain('Platz 3 von 12');
 	});
 
-	it('Profil-Prosa hat kein lang-Attribut auf der DE-Seite (kein Sprachwechsel nötig)', async () => {
+	it('nutzt im unteren Viertel den Anti-Stigma-Wortlaut', () => {
 		render(BezirkHero, {
-			profile: baseProfile,
-			stats: null,
-			faq: [],
-			profileProse: ['Ein deutscher Absatz.']
+			profile,
+			kieze,
+			outline,
+			compositeRank: { rang: 11, quartil: 4, total: 12 },
+			einwohnerStichtag: null
 		});
-		const prose = document.querySelector('[data-testid="bezirk-profile"]');
-		expect(prose?.hasAttribute('lang')).toBe(false);
+		expect(text()).toContain('unteres Viertel');
+		expect(text()).not.toContain('Platz 11');
 	});
 
-	// i18n Block B4a
-	describe('opts.locale (EN)', () => {
-		it('Verteilungen englisch: Lärm "Medium", Grün gut/schlecht → High/Low, Wohnlage "Good residential area"', async () => {
-			overwriteGetLocale(() => 'en');
-			const stats = {
-				...statsFixtureFull,
-				laerm: {
-					...statsFixtureFull.laerm,
-					categoryDistribution: {
-						value: { mittel: 0.6, niedrig: 0.4 },
-						layer: 'laerm-2023',
-						sourceUpdatedAt: '2023-06-01'
-					}
-				},
-				gruen: {
-					...statsFixtureFull.gruen,
-					versorgungDistribution: {
-						value: { gut: 0.7, schlecht: 0.3 },
-						layer: 'gruenversorgung-2023',
-						sourceUpdatedAt: '2023-09-01'
-					}
-				},
-				wohnen: {
-					...statsFixtureFull.wohnen,
-					wohnlageDistribution: {
-						value: { gut: 0.8, mittel: 0.2 },
-						layer: 'wohnlagen-2024',
-						sourceUpdatedAt: '2024-01-01'
-					}
+	it('lässt den Rang ohne DB-Daten weg', () => {
+		render(BezirkHero, {
+			profile,
+			kieze,
+			outline,
+			compositeRank: noRank,
+			einwohnerStichtag: null
+		});
+		expect(document.querySelector('[data-testid="bezirk-rank-fact"]')).toBeNull();
+	});
+
+	it('verlinkt den Karten-Button auf /explore?bezirk=<slug>', () => {
+		render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+		const button = document.querySelector('[data-testid="bezirk-map-button"]');
+		expect(button?.textContent?.trim()).toBe('Mitte auf der Karte');
+		expect(button?.getAttribute('href')).toBe('/explore?bezirk=mitte');
+	});
+
+	it('rendert die Kiez-Karte', () => {
+		render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+		expect(document.querySelector('[data-testid="bezirk-kieze-map"]')).not.toBeNull();
+	});
+
+	it('rendert ohne Umriss keine Karte, aber Button und Fakten', () => {
+		render(BezirkHero, {
+			profile,
+			kieze,
+			outline: null,
+			compositeRank: rank,
+			einwohnerStichtag: null
+		});
+		expect(document.querySelector('[data-testid="bezirk-kieze-map"]')).toBeNull();
+		expect(document.querySelector('[data-testid="bezirk-map-button"]')).not.toBeNull();
+	});
+
+	it('verwendet niemals em-dash', () => {
+		render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+		expect(text()).not.toMatch(/—/);
+	});
+
+	describe('Gestalt', () => {
+		it('setzt den Stand in das Einwohner-dd, nicht unter alle Fakten', () => {
+			render(BezirkHero, {
+				profile,
+				kieze,
+				outline,
+				compositeRank: rank,
+				einwohnerStichtag: '2024-12-31'
+			});
+			const stand = document.querySelector('[data-testid="bezirk-stand"]');
+			expect(stand?.closest('dd')?.textContent).toMatch(/386\.000/);
+			expect(stand?.textContent).toMatch(/Stand Ende 2024/);
+		});
+
+		it('benennt das Rang-Label „Rang im Kiez-Score“', () => {
+			render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+			expect(document.querySelector('[data-testid="bezirk-rank-fact"] dt')?.textContent).toContain(
+				'Rang unter den Bezirken'
+			);
+		});
+
+		it('erklärt den Score im Kartenrahmen mit Link zur Erklärung', () => {
+			render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+			const card = document.querySelector('figure[data-testid="hero-map-card"]');
+			expect(card?.querySelector('figcaption')?.textContent).toContain('Kiez-Score der Kieze');
+			expect(card?.querySelector('figcaption')?.textContent).toContain('von 0 bis 100');
+			expect(
+				card?.querySelector('[data-testid="bezirk-score-explain-link"]')?.getAttribute('href')
+			).toBe('/methodik/kiez-score');
+		});
+
+		it('legt Karten-Button und Legende in den Rahmen, Link vor Button', () => {
+			render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+			const card = document.querySelector('[data-testid="hero-map-card"]');
+			expect(card?.querySelector('[data-testid="bezirk-map-legend"]')).not.toBeNull();
+			const links = [...(card?.querySelectorAll('a:not([tabindex="-1"])') ?? [])].map((a) =>
+				a.getAttribute('data-testid')
+			);
+			expect(links).toEqual(['bezirk-score-explain-link', 'bezirk-map-button']);
+		});
+
+		it('zeigt Erklärung und Legende auch ohne Scores (Kieze grau)', () => {
+			const noScore: KiezListEntry[] = [
+				{
+					slug: 'tiergarten',
+					name: 'Tiergarten',
+					composite: null,
+					rang: null,
+					quartil: null,
+					total: 0
 				}
-			} as unknown as BezirkStatsRow;
-			render(BezirkHero, { profile: baseProfile, stats, faq: [] });
-			const text = (
-				document.querySelector('[data-testid="bezirk-steckbrief"]')?.textContent ?? ''
-			).replace(/\s+/g, ' ');
-			expect(text).toContain('Medium 60% · Low 40%');
-			expect(text).toContain('High 70% · Low 30%');
-			expect(text).toContain('Good residential area 80% · Medium residential area 20%');
-			expect(text).not.toMatch(/Mittel \d+%|Schlecht \d+%/);
-		});
-
-		it('Lead + alle Steckbrief-Cluster englisch, EN-Zahlenformate (Komma-Tausender, Punkt-Dezimal, Monat-Jahr)', async () => {
-			overwriteGetLocale(() => 'en');
-			render(BezirkHero, { profile: baseProfile, stats: statsFixtureFull, faq: [] });
-			const hero = document.querySelector('[data-testid="bezirk-hero"]');
-			expect(hero?.textContent).toMatch(/386,000 residents/);
-			expect(hero?.textContent).toMatch(/3,947 ha/);
-
-			const table = document.querySelector('[data-testid="bezirk-steckbrief"]');
-			expect(table?.textContent).toMatch(/Noise/);
-			expect(table?.textContent).toMatch(/moderate/);
-			expect(table?.textContent).toMatch(/Source: Noise pollution 2023/);
-			expect(table?.textContent).toMatch(/June 2023/);
-			expect(table?.textContent).toMatch(/Green space provision/);
-			expect(table?.textContent).toMatch(/Green spaces 1,234/);
-			expect(table?.textContent).toMatch(/Playgrounds 12/);
-			expect(table?.textContent).toMatch(/Climate · PET/);
-			expect(table?.textContent).toMatch(/24\.6 \(no heat stress\)/);
-			expect(table?.textContent).toMatch(/Public transport density/);
-			expect(table?.textContent).toMatch(/12\.3 \(dense\)/);
-			expect(table?.textContent).toMatch(/U 3 · S 2 · Tram 5 · Bus 10/);
-			expect(table?.textContent).toMatch(/good residential area/);
-			expect(table?.textContent).toMatch(/Social situation \(MSS, Berlin social monitoring\)/);
-			expect(table?.textContent).toMatch(/medium range of the Berlin distribution/);
-		});
-
-		it('FAQ-Platzhalter englisch wenn keine FAQ-Einträge vorhanden', async () => {
-			overwriteGetLocale(() => 'en');
-			render(BezirkHero, { profile: baseProfile, stats: null, faq: [] });
-			const hero = document.querySelector('[data-testid="bezirk-hero"]');
-			expect(hero?.textContent).toMatch(/Frequently asked questions/i);
-		});
-
-		it('Profil-Prosa im DE-Fallback (profileLocale de) trägt lang="de" (WCAG 3.1.2)', async () => {
-			overwriteGetLocale(() => 'en');
+			];
 			render(BezirkHero, {
-				profile: baseProfile,
-				stats: null,
-				faq: [],
-				profileProse: ['Ein deutscher Absatz.'],
-				profileLocale: 'de'
+				profile,
+				kieze: noScore,
+				outline,
+				compositeRank: noRank,
+				einwohnerStichtag: null
 			});
-			const prose = document.querySelector('[data-testid="bezirk-profile"]');
-			expect(prose?.getAttribute('lang')).toBe('de');
-			expect(prose?.textContent).toContain('Ein deutscher Absatz.');
+			expect(document.querySelector('[data-testid="bezirk-score-explain"]')).not.toBeNull();
+			expect(document.querySelector('[data-testid="bezirk-map-legend"]')?.textContent).toContain(
+				'ohne Score'
+			);
+			expect(document.querySelector('[data-testid="bezirk-rank-fact"]')).toBeNull();
 		});
 
-		it('ohne profileLocale gilt die Seiten-Locale (kein lang auf EN-Text)', async () => {
-			overwriteGetLocale(() => 'en');
-			render(BezirkHero, {
-				profile: baseProfile,
-				stats: null,
-
-				faq: [],
-				profileProse: ['An English paragraph.']
-			});
-			const prose = document.querySelector('[data-testid="bezirk-profile"]');
-			expect(prose?.hasAttribute('lang')).toBe(false);
+		it('rendert bei nicht passendem Umriss oder ohne Umriss keinen Rahmen, aber den Button', () => {
+			const other: RegionOutline = {
+				...outline,
+				paths: [{ id: 'anderer-kiez', d: 'M0 0L1 1Z' }]
+			};
+			for (const o of [other, null]) {
+				const { unmount } = render(BezirkHero, {
+					profile,
+					kieze,
+					outline: o,
+					compositeRank: rank,
+					einwohnerStichtag: null
+				});
+				expect(document.querySelector('[data-testid="hero-map-card"]')).toBeNull();
+				expect(document.querySelector('[data-testid="bezirk-map-button"]')).not.toBeNull();
+				unmount();
+			}
 		});
 
-		it('englische Profil-Prosa (profileLocale en) trägt kein lang-Attribut', async () => {
+		it('nennt in der Erklärung die UI-Labels der Composite-Dimensionen (DE und EN)', () => {
+			const dims = ['ruhe-luft', 'gruen-hitze', 'mobilitaet', 'versorgung', 'wohnschutz'] as const;
+			for (const locale of ['de', 'en'] as const) {
+				overwriteGetLocale(() => locale);
+				const text = m.bezirk_map_explain(undefined, { locale });
+				for (const dim of dims) {
+					expect(text).toContain(dimensionLabel(dim, { locale }));
+				}
+			}
+		});
+
+		it('EN: Erklärung verlinkt auf /en/methodik/kiez-score', () => {
 			overwriteGetLocale(() => 'en');
-			render(BezirkHero, {
-				profile: baseProfile,
-				stats: null,
-				faq: [],
-				profileProse: ['An English paragraph.'],
-				profileLocale: 'en'
-			});
-			const prose = document.querySelector('[data-testid="bezirk-profile"]');
-			expect(prose?.hasAttribute('lang')).toBe(false);
-			expect(prose?.textContent).toContain('An English paragraph.');
+			render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
+			const link = document.querySelector('[data-testid="bezirk-score-explain-link"]');
+			expect(link?.getAttribute('href')).toBe('/en/methodik/kiez-score');
+			expect(link?.textContent).toBe('How the score works');
 		});
 	});
-});
 
-describe('BezirkHero FAQ-Sprache (Block C3)', () => {
-	it('reicht faqLocale als contentLocale an die FaqSection durch (DE-Fallback auf EN-Seite)', async () => {
-		overwriteGetLocale(() => 'en');
-		render(BezirkHero, {
-			profile: baseProfile,
-			stats: null,
-			faq: [{ question: 'Frage?', answer: 'Antwort.' }],
-			faqLocale: 'de'
+	describe('EN', () => {
+		it('Fakten, Button und Link englisch mit /en-Präfix', () => {
+			overwriteGetLocale(() => 'en');
+			render(BezirkHero, {
+				profile,
+				kieze,
+				outline,
+				compositeRank: rank,
+				einwohnerStichtag: '2024-12-31'
+			});
+			const facts = document.querySelector('[data-testid="bezirk-facts"]');
+			expect(facts?.textContent).toMatch(/386,000/);
+			expect(facts?.textContent).toMatch(/39\.5 km²/);
+			expect(text()).toMatch(/as of end of 2024/);
+			expect(text()).toContain('Rank 3 of 12');
+			const button = document.querySelector('[data-testid="bezirk-map-button"]');
+			expect(button?.textContent?.trim()).toBe('Mitte on the map');
+			expect(button?.getAttribute('href')).toBe('/en/explore?bezirk=mitte');
 		});
-		const accordion = document.querySelector(
-			'[data-testid="faq-section"] .divide-y.divide-rule.border-y.border-rule'
-		);
-		expect(accordion?.getAttribute('lang')).toBe('de');
 	});
 });

@@ -3,18 +3,20 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import BezirkHero from '$lib/components/atlas/bezirk-hero.svelte';
+	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
+	import BezirkDetails from '$lib/components/atlas/bezirk-details.svelte';
 	import BezirkKiezeList from '$lib/components/atlas/bezirk-kieze-list.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
 	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
+	import { buildBezirkMeta } from '$lib/seo/profile-meta.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { bezirkSameAs } from '$lib/seo/sources/bezirk-sameas.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { formatCount } from '$lib/i18n/format.js';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -41,24 +43,22 @@
 		}
 	});
 
-	const pageTitle = $derived(m.bezirk_page_title({ name }, localeOpts));
-
-	const pageDescription = $derived.by(() => {
-		const parts: string[] = [];
-		if (data.profile.einwohner > 0) {
-			parts.push(
-				m.profile_lead_einwohner({ count: formatCount(data.profile.einwohner, localeOpts) })
-			);
-		}
-		if (data.profile.flaecheHa > 0) {
-			parts.push(m.profile_lead_flaeche({ ha: formatCount(data.profile.flaecheHa, localeOpts) }));
-		}
-		const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : '';
-		return m.profile_page_description(
-			{ subject: `Bezirk ${name}`, bezirkPart: '', suffix },
-			localeOpts
-		);
-	});
+	const meta = $derived(
+		buildBezirkMeta({
+			name,
+			einwohner: data.profile.einwohner,
+			flaecheHa: data.profile.flaecheHa,
+			stichtag: data.einwohnerStichtag,
+			// Score nur mit Rang aus demselben Datenstand (DB), sonst kein Score-Satz.
+			score: data.compositeRank.rang === null ? null : data.bezirkComposite,
+			rang: data.compositeRank.rang,
+			quartil: data.compositeRank.quartil,
+			total: data.compositeRank.total,
+			locale
+		})
+	);
+	const pageTitle = $derived(meta.title);
+	const pageDescription = $derived(meta.description);
 
 	const ogImageAlt = $derived(m.bezirk_page_og_alt({ name }, localeOpts));
 
@@ -125,18 +125,29 @@
 	<Breadcrumb items={breadcrumbItems} />
 </div>
 
-<BezirkHero
-	profile={data.profile}
-	stats={data.stats}
-	faq={data.faq}
-	faqLocale={data.faqLocale}
-	comparison={data.comparison}
-	profileProse={data.profileProse}
-	profileLocale={data.profileLocale}
-/>
-<div class="mx-auto max-w-3xl px-4 pb-8">
-	<BezirkKiezeList kieze={data.kieze} bezirkName={name} />
-</div>
+<article>
+	<BezirkHero
+		profile={data.profile}
+		kieze={data.kiezeView.kieze}
+		outline={data.kiezeView.outline}
+		compositeRank={data.compositeRank}
+		einwohnerStichtag={data.einwohnerStichtag}
+	/>
+	<div class="mx-auto max-w-3xl px-4 pb-8">
+		{#key slug}
+			<BezirkKiezeList kieze={data.kiezeView.kieze} bezirkName={name} />
+		{/key}
+	</div>
+	<KeyFigureTiles figures={data.keyFigures} regionName={name} kind="bezirk" {slug} />
+	<BezirkDetails
+		stats={data.stats}
+		faq={data.faq}
+		faqLocale={data.faqLocale}
+		comparison={data.comparison}
+		profileProse={data.profileProse}
+		profileLocale={data.profileLocale}
+	/>
+</article>
 
 <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
 	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="bezirke" />

@@ -8,6 +8,7 @@ export type {
 	AggregateType,
 	DistributionClass,
 	NumericMedianAggregate,
+	WeightedMeanAggregate,
 	OrdinalDistributionAggregate,
 	CoverageShareAggregate,
 	AreaShareAggregate,

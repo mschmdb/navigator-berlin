@@ -3,7 +3,7 @@ import { SCORE_DIMENSION_KEYS } from './comparison-types.js';
 
 // i18n Block B4a Review-Fund: `SCORE_DIMENSION_KEYS` ersetzt eine vormals
 // 3x duplizierte field→key-Zuordnung (kiez/bezirk `+page.server.ts`,
-// `kiez-hero.svelte`). Pin auf die konkreten Paare, damit ein Tippfehler in
+// `kiez-details.svelte`). Pin auf die konkreten Paare, damit ein Tippfehler in
 // der camelCase↔hyphen-Übersetzung (z. B. beim Umbenennen eines DB-Feldes)
 // sofort auffällt.
 describe('SCORE_DIMENSION_KEYS', () => {

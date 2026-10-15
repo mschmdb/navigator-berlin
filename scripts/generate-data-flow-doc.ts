@@ -42,6 +42,33 @@ export function buildRowsFromSources(sources: readonly SourceConfig[]): DataFlow
 	}));
 }
 
+/**
+ * Layer mit eigenem Build-Skript, die bewusst nicht in `sources.ts` stehen
+ * (ein voller `pnpm data:fetch` würde ihre augmentierten Manifest-Einträge überschreiben).
+ */
+export const BUILD_SCRIPT_ROWS: readonly DataFlowRow[] = [
+	{
+		slug: 'zensus-bestandsmiete-2022',
+		bundle: 'B: Wohn-Daten',
+		kind: 'build-script',
+		source:
+			'www.destatis.de/static/DE/zensus/gitterdaten/Durchschnittliche_Nettokaltmiete_und_Anzahl_der_Wohnungen.zip',
+		license: 'dl-de/by-2-0',
+		stand: '2022-05-15',
+		buildStep: 'scripts/fetch-zensus-miete.ts'
+	},
+	{
+		slug: 'zensus-altbau-anteil-2022',
+		bundle: 'B: Wohn-Daten',
+		kind: 'build-script',
+		source:
+			'www.destatis.de/static/DE/zensus/gitterdaten/Wohnungen_mod_MZ_Baujahresklassen_in_Gitterzellen.zip',
+		license: 'dl-de/by-2-0',
+		stand: '2022-05-15',
+		buildStep: 'scripts/fetch-zensus-altbau.ts'
+	}
+];
+
 function shortenUrl(url: string): string {
 	if (!url) return '—';
 	try {
@@ -104,7 +131,7 @@ export function renderDataFlowMarkdown(rows: readonly DataFlowRow[], generatedAt
 }
 
 async function main(): Promise<void> {
-	const rows = buildRowsFromSources(SOURCES);
+	const rows = [...buildRowsFromSources(SOURCES), ...BUILD_SCRIPT_ROWS];
 	const today = new Date().toISOString().slice(0, 10);
 	const md = renderDataFlowMarkdown(rows, today);
 	await mkdir(dirname(OUT_PATH), { recursive: true });

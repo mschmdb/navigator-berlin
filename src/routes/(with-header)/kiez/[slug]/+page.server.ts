@@ -3,8 +3,17 @@ import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
+import {
+	readEinwohnerStichtag,
+	readLayerAggregatesFile
+} from '$lib/server/profile/meta-sources.js';
+import { buildKeyFigures, type KeyFigure } from '$lib/data/region-key-figures.js';
+import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
 import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
-import { buildKiezeInBezirk, pickSiblings, type KiezRef } from '$lib/data/get-kieze-in-bezirk.js';
+import type { NeighborEntry } from '$lib/data/kiez-neighbors.js';
+import { getKiezNeighborLists } from '$lib/server/kiez-neighbors-index.js';
+import { buildKiezContext } from '$lib/data/bezirk-kieze-view.js';
+import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { featureFlags } from '$lib/data/feature-flags.js';
 import { SCORE_DIMENSION_KEYS, type ComparisonDimRow } from '$lib/data/comparison-types.js';
@@ -88,10 +97,22 @@ export type KiezPageData = {
 	readonly score: KiezScore | null;
 	readonly faq: readonly FaqEntry[];
 	readonly faqLocale: Locale;
-	readonly siblings: readonly KiezRef[];
+	/** Angrenzende Kieze (L6), nach Score absteigend. */
+	readonly neighbors: readonly NeighborEntry[];
+	/** Kieze mit ähnlichem Dimensionsprofil (L6), leer ohne Score-Daten. */
+	readonly similar: readonly NeighborEntry[];
+	/** Umriss aller Kieze des Bezirks (Lage des Kiezes im Hero), `null` ohne Geometrie. */
+	readonly outline: RegionOutline | null;
 	readonly wahlVerlauf: readonly WahlVerlaufRow[];
 	readonly comparison: readonly ComparisonDimRow[];
-	readonly compositeRank: { readonly rang: number | null; readonly total: number };
+	readonly compositeRank: {
+		readonly rang: number | null;
+		readonly quartil: number | null;
+		readonly total: number;
+	};
+	readonly einwohnerStichtag: string | null;
+	/** Sechs Kennzahl-Kacheln mit Berlin-Wert (L4), DB-frei aus den Layer-Aggregaten. */
+	readonly keyFigures: readonly KeyFigure[];
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
 };
@@ -167,8 +188,15 @@ async function tryBuildWahlVerlauf(kiezSlug: string): Promise<KiezPageData['wahl
 	}
 }
 
-async function tryLoadSiblings(currentSlug: string, parentBezirkName: string): Promise<KiezRef[]> {
-	if (!parentBezirkName) return [];
+interface BezirkContext {
+	readonly outline: RegionOutline | null;
+}
+
+const EMPTY_CONTEXT: BezirkContext = { outline: null };
+
+/** Gemeinsamer Umriss des Bezirks (Lage-Grafik im Hero). */
+async function tryLoadBezirkContext(parentBezirkName: string): Promise<BezirkContext> {
+	if (!parentBezirkName) return EMPTY_CONTEXT;
 	const parentBezirkSlug = normalizeSlug(parentBezirkName);
 	try {
 		const { readFile } = await import('node:fs/promises');
@@ -180,7 +208,7 @@ async function tryLoadSiblings(currentSlug: string, parentBezirkName: string): P
 		};
 		const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
 		const lorLayer = manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
-		if (!bezirkeLayer || !lorLayer) return [];
+		if (!bezirkeLayer || !lorLayer) return EMPTY_CONTEXT;
 
 		const [bezirkeRaw, lorRaw] = await Promise.all([
 			readFile(resolve(process.cwd(), 'static/layers', bezirkeLayer.filename), 'utf-8'),
@@ -203,17 +231,17 @@ async function tryLoadSiblings(currentSlug: string, parentBezirkName: string): P
 			}
 		}
 
-		const all = buildKiezeInBezirk({
+		const { outline } = buildKiezContext({
 			lorFeatureCollection: lorFc,
 			bezirkCodeToSlug,
 			scores: new Map(),
 			bezirkSlug: parentBezirkSlug
 		});
-		return pickSiblings({ kieze: all, currentSlug }, 3);
+		return { outline };
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[kiez-page] WARN: sibling-load failed (${msg})\n`);
-		return [];
+		process.stderr.write(`[kiez-page] WARN: bezirk-context load failed (${msg})\n`);
+		return EMPTY_CONTEXT;
 	}
 }
 
@@ -226,17 +254,31 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		throw error(404, m.kiez_page_not_found({ slug }, { locale: getLocale() }));
 	}
 	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
-	const [stats, score, faqResult, siblings, wahlVerlauf, rank, comparisonMap, profileResult] =
-		await Promise.all([
-			tryLoadKiezStats(slug),
-			tryLoadKiezScore(slug),
-			getFaqForPage({ pageType: 'kiez', slug, locale: getLocale() }),
-			tryLoadSiblings(slug, profile.bezirk),
-			tryBuildWahlVerlauf(slug),
-			tryLoadKiezRank(slug),
-			tryLoadKiezComparison(slug),
-			getLocalizedProfile('kiez', slug, getLocale())
-		]);
+	const [
+		stats,
+		score,
+		faqResult,
+		bezirkContext,
+		neighborLists,
+		wahlVerlauf,
+		rank,
+		comparisonMap,
+		profileResult,
+		einwohnerStichtag,
+		layerAggregates
+	] = await Promise.all([
+		tryLoadKiezStats(slug),
+		tryLoadKiezScore(slug),
+		getFaqForPage({ pageType: 'kiez', slug, locale: getLocale() }),
+		tryLoadBezirkContext(profile.bezirk),
+		getKiezNeighborLists(slug),
+		tryBuildWahlVerlauf(slug),
+		tryLoadKiezRank(slug),
+		tryLoadKiezComparison(slug),
+		getLocalizedProfile('kiez', slug, getLocale()),
+		readEinwohnerStichtag(),
+		readLayerAggregatesFile()
+	]);
 	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
 		const cmp = comparisonMap?.get(field);
 		const rk = rank?.get(field);
@@ -250,21 +292,25 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			total: rk?.total ?? 0
 		};
 	});
-	const compositeRk = rank?.get('composite');
-	const compositeRank = {
-		rang: compositeRk?.rang ?? null,
-		total: compositeRk?.total ?? 0
-	};
+	const compositeRank = toCompositeRank(rank);
 	const data: KiezPageData = {
 		profile,
 		stats,
 		score,
 		faq: faqResult.items,
 		faqLocale: faqResult.locale,
-		siblings,
+		neighbors: neighborLists.neighbors,
+		similar: neighborLists.similar,
+		outline: bezirkContext.outline,
 		wahlVerlauf,
 		comparison,
 		compositeRank,
+		einwohnerStichtag,
+		keyFigures: buildKeyFigures(layerAggregates, {
+			kind: 'kiez',
+			slug,
+			bezirkSlug: profile.bezirk ? normalizeSlug(profile.bezirk) : null
+		}),
 		profileProse: profileResult.paragraphs,
 		profileLocale: profileResult.locale
 	};

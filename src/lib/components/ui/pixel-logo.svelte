@@ -1,4 +1,5 @@
 <script lang="ts">
+	import './pixel-logo.css';
 	import {
 		buildGeometry,
 		initialFills,
@@ -42,14 +43,38 @@
 	const geometry = buildGeometry(PRESET);
 
 	/**
+	 * Kompaktes Markup: eine Zellform in `<defs>`, je Zelle nur ein `<use>` mit
+	 * ganzzahliger Rasterposition. Die Gruppe skaliert Raster- in Viewbox-Einheiten.
+	 */
+	const step = 100 / PRESET.grid;
+	const inset = (PRESET.gap / 100) * step;
+	const unitSize = +(geometry.size / step).toFixed(4);
+	const unitRadius = +(geometry.radius / step).toFixed(4);
+	const rowMap = new Map<number, { col: number; index: number }[]>();
+	geometry.cells.forEach((cell, index) => {
+		const row = Math.round((cell.y - inset / 2) / step);
+		const col = Math.round((cell.x - inset / 2) / step);
+		const cells = rowMap.get(row) ?? [];
+		cells.push({ col, index });
+		rowMap.set(row, cells);
+	});
+	const gridRows = [...rowMap].sort(([a], [b]) => a - b).map(([row, cells]) => ({ row, cells }));
+	const gridTransform = `translate(${+(inset / 2).toFixed(3)} ${+(inset / 2).toFixed(3)}) scale(${+step.toFixed(4)})`;
+	const cellId = $props.id();
+
+	/**
 	 * Startfarben aus dem Seed statt aus `Math.random()`. Der Server rendert damit
 	 * dasselbe Bild wie der Client, sonst reklamiert die Hydration jede Zelle.
 	 * Der Farbwechsel-Takt legt seine Treffer als Overlay darüber, damit die
 	 * Grundfarben deterministisch bleiben.
 	 */
-	const baseFills = initialFills(geometry.cells.length);
-	let shifted = $state<Record<number, string>>({});
-	const fills = $derived(geometry.cells.map((_, i) => shifted[i] ?? baseFills[i]));
+	const baseSwatches = initialFills(geometry.cells.length).map((color) =>
+		Math.max(0, PALETTE.indexOf(color))
+	);
+	let shifted = $state<Record<number, number>>({});
+	const swatches = $derived(geometry.cells.map((_, i) => shifted[i] ?? baseSwatches[i]));
+	/** Palette als Custom Properties: Zellen tragen nur eine kurze Klasse `c<Index>`. */
+	const paletteVars = PALETTE.map((color, i) => `--c${i}:${color}`).join(';');
 
 	/**
 	 * Einblend-Reihenfolge des Loaders. Gestreut, aber deterministisch, damit die
@@ -72,8 +97,7 @@
 		const count = geometry.cells.length;
 		const timer = setInterval(() => {
 			for (let i = 0; i < perTick; i++) {
-				shifted[Math.floor(Math.random() * count)] =
-					PALETTE[Math.floor(Math.random() * PALETTE.length)];
+				shifted[Math.floor(Math.random() * count)] = Math.floor(Math.random() * PALETTE.length);
 			}
 		}, interval);
 		return () => clearInterval(timer);
@@ -87,6 +111,7 @@
 		width={size}
 		height={size}
 		class="nv-pixel nv-pixel--{variant}"
+		style={paletteVars}
 		role={variant === 'one-shot' && title ? 'img' : undefined}
 		aria-label={variant === 'one-shot' && title ? title : undefined}
 		aria-hidden={variant === 'loop' || !title ? 'true' : undefined}
@@ -97,17 +122,21 @@
 		{#if background}
 			<rect data-role="backdrop" width="100" height="100" fill={background} />
 		{/if}
-		{#each geometry.cells as cell, i (i)}
-			<rect
-				x={cell.x}
-				y={cell.y}
-				width={geometry.size}
-				height={geometry.size}
-				rx={geometry.radius}
-				fill={fills[i]}
-				style:--d="{delays[i]}ms"
-			/>
-		{/each}
+		<defs><rect id={cellId} width={unitSize} height={unitSize} rx={unitRadius} /></defs>
+		<g transform={gridTransform}>
+			{#each gridRows as { row, cells } (row)}
+				<svg y={row}>
+					{#each cells as { col, index } (index)}
+						<use
+							href="#{cellId}"
+							x={col}
+							class="c{swatches[index]}"
+							style={variant === 'loop' ? `--d:${delays[index]}ms` : undefined}
+						/>
+					{/each}
+				</svg>
+			{/each}
+		</g>
 	</svg>
 {/snippet}
 
@@ -121,62 +150,3 @@
 		{@render logo()}
 	</span>
 {/if}
-
-<style>
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		padding: 0;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
-		white-space: nowrap;
-		border: 0;
-	}
-
-	.nv-pixel {
-		display: block;
-	}
-
-	.nv-pixel rect {
-		transition: fill 700ms ease;
-	}
-
-	/* Loader: Zellen blenden gestreut ein, halten, blenden aus, Zyklus wiederholt.
-	   Die Grundfläche bleibt stehen, sonst blinkt der ganze Kasten. */
-	.nv-pixel--loop rect:not([data-role='backdrop']) {
-		opacity: 0;
-		animation: nv-pixel-cycle 2400ms ease-in-out infinite;
-		animation-delay: var(--d, 0ms);
-	}
-
-	@keyframes nv-pixel-cycle {
-		0% {
-			opacity: 0;
-		}
-		18% {
-			opacity: 1;
-		}
-		62% {
-			opacity: 1;
-		}
-		84% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 0;
-		}
-	}
-
-	/* Reduced Motion: volles Bild, kein Aufbau, kein Farbwechsel. */
-	@media (prefers-reduced-motion: reduce) {
-		.nv-pixel rect {
-			transition: none;
-		}
-		.nv-pixel--loop rect {
-			animation: none;
-			opacity: 1;
-		}
-	}
-</style>

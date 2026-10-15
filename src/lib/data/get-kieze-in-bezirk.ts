@@ -5,15 +5,13 @@
  *   den passenden Bezirk anhand der BEZ-Code-Map (BezirkCode → BezirkSlug).
  *   Sortierung primaer kiez_score.composite desc, sekundaer Name alphabetisch
  *   wenn Score fehlt.
- * - `getSiblingKieze(parentBezirkSlug, currentKiezSlug)`: alle Geschwister
- *   im selben Bezirk ohne den aktuellen, alphabetisch.
  *
- * Beide Funktionen lesen direkt aus den geladenen GeoJSON-FeatureCollections;
+ * Die Funktionen lesen direkt aus den geladenen GeoJSON-FeatureCollections;
  * Postgres-`kiez_score`-Join macht der Aufrufer (Server-Load), damit der Helper
  * Server-Pfad-unabhaengig + im Test fixturable bleibt.
  */
 
-import { normalizeSlug } from './internal/slug.js';
+import { buildKiezSlugs } from './internal/kiez-slug.js';
 
 export interface KiezRef {
 	readonly slug: string;
@@ -28,6 +26,7 @@ export interface BezirkCodeToSlug {
 
 interface GeoJsonFeature {
 	properties?: Record<string, unknown> | null;
+	geometry?: { type: string; coordinates?: unknown } | null;
 }
 
 interface GeoJsonFeatureCollection {
@@ -57,26 +56,40 @@ export interface BuildKiezListInput {
 	readonly bezirkSlug: string;
 }
 
-export function buildKiezeInBezirk(input: BuildKiezListInput): KiezRef[] {
-	const refs: KiezRef[] = [];
+export interface KiezWithGeometry {
+	readonly ref: KiezRef;
+	readonly geometry: GeoJsonFeature['geometry'];
+}
+
+/** Kieze des Bezirks inklusive LOR-Geometrie (unsortiert, in Feature-Reihenfolge). */
+export function buildKiezeWithGeometry(input: BuildKiezListInput): KiezWithGeometry[] {
+	// Slugs Berlin-weit disambiguieren (alle Features), erst danach nach Bezirk filtern.
+	const candidates: { name: string; bezirk: string; geometry: GeoJsonFeature['geometry'] }[] = [];
 	for (const feature of input.lorFeatureCollection.features) {
 		const props = feature.properties ?? {};
 		const name = readKiezName(props);
 		const code = readBezirkCode(props);
 		if (!name || !code) continue;
 		const parentSlug = input.bezirkCodeToSlug.get(code);
-		if (parentSlug !== input.bezirkSlug) continue;
-		const slug = normalizeSlug(name);
-		refs.push({
-			slug,
-			name,
-			composite: input.scores.get(slug) ?? null
-		});
+		candidates.push({ name, bezirk: parentSlug ?? '', geometry: feature.geometry });
 	}
-	return sortKieze(refs);
+	const slugs = buildKiezSlugs(candidates);
+	const out: KiezWithGeometry[] = [];
+	candidates.forEach((c, i) => {
+		if (c.bezirk !== input.bezirkSlug) return;
+		out.push({
+			ref: { slug: slugs[i], name: c.name, composite: input.scores.get(slugs[i]) ?? null },
+			geometry: c.geometry
+		});
+	});
+	return out;
 }
 
-function sortKieze(refs: KiezRef[]): KiezRef[] {
+export function buildKiezeInBezirk(input: BuildKiezListInput): KiezRef[] {
+	return sortKieze(buildKiezeWithGeometry(input).map((k) => k.ref));
+}
+
+export function sortKieze(refs: KiezRef[]): KiezRef[] {
 	return [...refs].sort((a, b) => {
 		const ac = a.composite;
 		const bc = b.composite;
@@ -85,18 +98,4 @@ function sortKieze(refs: KiezRef[]): KiezRef[] {
 		if (bc !== null) return 1;
 		return a.name.localeCompare(b.name, 'de');
 	});
-}
-
-export function pickTop(refs: readonly KiezRef[], n: number): KiezRef[] {
-	return refs.slice(0, n);
-}
-
-export interface SiblingKiezeInput {
-	readonly kieze: readonly KiezRef[];
-	readonly currentSlug: string;
-}
-
-export function pickSiblings(input: SiblingKiezeInput, n: number): KiezRef[] {
-	const siblings = input.kieze.filter((k) => k.slug !== input.currentSlug);
-	return [...siblings].sort((a, b) => a.name.localeCompare(b.name, 'de')).slice(0, n);
 }

@@ -7,6 +7,7 @@ import {
 import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
 import { getEditorialConfig } from '$lib/components/atlas/internal/editorial-config.js';
 import type { EditorialConfig } from '$lib/components/atlas/internal/editorial-types.js';
+import { hasLayerDetailPage } from './layer-visibility.js';
 import { getLayerMethodology, type LayerMethodology } from './layer-methodology.js';
 
 export interface LayerDetail {
@@ -26,9 +27,7 @@ export function buildLayerDetail(
 ): LayerDetail | null {
 	const meta = manifest.layers.find((l) => l.slug === slug);
 	if (!meta) return null;
-	// Build-only-Layer (weder Karte noch Inspector, z.B. Heritage-Dichte-Signal
-	// denkmal-2024/stolpersteine) bekommen keine öffentliche Detail-Seite.
-	if (meta.inspectorRelevant === false && meta.mapRelevant === false) return null;
+	if (!hasLayerDetailPage(meta)) return null;
 	return {
 		slug,
 		lang,

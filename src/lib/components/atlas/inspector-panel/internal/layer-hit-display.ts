@@ -91,6 +91,26 @@ function brwDisplay(value: unknown, opts?: LocaleOptions): LayerHitDisplay {
 	);
 }
 
+function bestandsmieteDisplay(value: unknown, opts?: LocaleOptions): LayerHitDisplay {
+	const options = toAtlasMessageOptions(opts);
+	const miete = pickProp(value, 'miete');
+	if (miete === null) return fallback(m.atlas_value_keine_angabe(undefined, options));
+	if (typeof miete !== 'number' || !Number.isFinite(miete)) return EMPTY;
+	return chipOnly(
+		formatDecimal(miete, { ...options, minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+		true,
+		'€/m²'
+	);
+}
+
+function altbauAnteilDisplay(value: unknown, opts?: LocaleOptions): LayerHitDisplay {
+	const options = toAtlasMessageOptions(opts);
+	const anteil = pickProp(value, 'altbau_anteil');
+	if (anteil === null) return fallback(m.atlas_value_keine_angabe(undefined, options));
+	if (typeof anteil !== 'number' || !Number.isFinite(anteil)) return EMPTY;
+	return chipOnly(formatDecimal(anteil, { ...options, maximumFractionDigits: 0 }), true, '%');
+}
+
 function klimaPetDisplay(value: unknown, opts?: LocaleOptions): LayerHitDisplay {
 	const pet = pickProp(value, 'pet14h');
 	if (typeof pet !== 'number') return EMPTY;
@@ -304,6 +324,10 @@ export function getLayerHitDisplay(
 			return boundaryPlz(value);
 		case 'bodenrichtwerte':
 			return brwDisplay(value, opts);
+		case 'zensus-bestandsmiete-2022':
+			return bestandsmieteDisplay(value, opts);
+		case 'zensus-altbau-anteil-2022':
+			return altbauAnteilDisplay(value, opts);
 		case 'strassenlaerm-2022':
 			return strassenlaermDisplay(value, opts);
 		case 'laerm-2023':

@@ -59,6 +59,13 @@ describe('filterLayers', () => {
 		expect(out.map((l) => l.slug)).toEqual(['plz']);
 	});
 
+	it('findet den Altbau-Anteil über Name, „altbau“ und „gründerzeit“', () => {
+		const layers = [...LAYERS, makeLayer('zensus-altbau-anteil-2022', 'B: Wohn-Daten')];
+		for (const q of ['altbau', 'gründerzeit', 'gruenderzeit']) {
+			expect(filterLayers(layers, q).map((l) => l.slug)).toEqual(['zensus-altbau-anteil-2022']);
+		}
+	});
+
 	it('matched Synonym „Lärm" auf laerm-2023', () => {
 		const out = filterLayers(LAYERS, 'lärm');
 		expect(out.map((l) => l.slug)).toContain('laerm-2023');
@@ -71,6 +78,14 @@ describe('filterLayers', () => {
 
 	// i18n Block B3a: mit { locale: 'en' } matcht die Suche gegen den englischen
 	// Display-Namen ("Noise Pollution 2023"), nicht nur gegen den DE-Namen.
+	it.each(['Miete', 'Kaltmiete', 'rent', 'Zensus'])(
+		'findet die Bestandsmiete über „%s“',
+		(query) => {
+			const layers = [...LAYERS, makeLayer('zensus-bestandsmiete-2022', 'B: Wohn-Daten')];
+			expect(filterLayers(layers, query).map((l) => l.slug)).toContain('zensus-bestandsmiete-2022');
+		}
+	);
+
 	it('matched EN-Display-Namen mit { locale: "en" }', () => {
 		const out = filterLayers(LAYERS, 'noise', { locale: 'en' });
 		expect(out.map((l) => l.slug)).toEqual(['laerm-2023']);

@@ -171,7 +171,7 @@ export function formatDate(iso: string, opts?: LocaleFormatOptions): string {
 /**
  * Datum als „Monat YYYY" (ausgeschriebener Monat), Host-Zeitzone (kein
  * `timeZone`-Override, analog `formatShortDate`): `Juni 2023` (de) / `June
- * 2023` (en). i18n Block B4a: ersetzt das bisherige, in `kiez-hero.svelte` /
+ * 2023` (en). i18n Block B4a: ersetzt das bisherige, in `kiez-details.svelte` /
  * `bezirk-hero.svelte` je einmal duplizierte `formatStand` (fest auf
  * `de-DE` verdrahtet). `template-renderer.ts`s eigenständiges
  * `formatSourceStand` (Server-FAQ, bleibt DE) bleibt davon unberührt

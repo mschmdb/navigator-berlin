@@ -47,19 +47,19 @@ const DE_QUESTION_START =
 	/^(Wie|Was|Warum|Welche[rsmn]?|Wo|Wann|Wer|Worin|Wodurch|Berücksichtigt|Bewertet|Ist|Gibt|Wird)\b/;
 
 test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
-	test('lang=en, Titel + Lead + Breadcrumb englisch', async ({ page }) => {
+	test('lang=en, Titel + Hero-Fakten + Breadcrumb englisch', async ({ page }) => {
 		const response = await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page).toHaveTitle(/Berlin in data - navigator\.berlin/);
+		await expect(page).toHaveTitle(
+			/^Alexanderplatz \(Mitte\): [\d,]+ residents.* \| navigator\.berlin$/
+		);
 
 		const hero = page.getByTestId('kiez-hero');
 		await expect(hero.locator('h1')).toBeVisible();
-		await expect(hero).toContainText('residents');
-		await expect(hero).toContainText(/\d+ ha/);
-		await expect(hero).toContainText(
-			'Data on housing, environment, climate and mobility on this page.'
-		);
+		await expect(hero).toContainText('Residents');
+		await expect(hero).toContainText(/\d\.\d km²/);
+		await expect(hero).toContainText('Kiez in Mitte');
 
 		const breadcrumb = page.getByTestId('breadcrumb');
 		await expect(breadcrumb).toHaveAttribute('aria-label', 'Breadcrumb');
@@ -71,9 +71,8 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
-			/^Kiez Alexanderplatz in Bezirk Mitte \(\d[\d,.]* residents, \d[\d,.]* ha\): Kiez score,/
+			/^Alexanderplatz has [\d,]+ residents across \d+\.\d km² \(as of end of \d{4}\)\./
 		);
-		expect(description).toContain('Berlin data atlas.');
 
 		const ogImageAlt = await metaContent(page, 'meta[property="og:image:alt"]');
 		expect(ogImageAlt).toBe(
@@ -155,12 +154,12 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/umwelt-infrastruktur-score/);
 	});
 
-	test('Kiez-Geschwister-Liste (statische GeoJSON-Daten): Überschrift englisch, Klick bleibt unter /en/kiez/…', async ({
+	test('Nachbar-Kieze (statische GeoJSON-Daten): Überschrift englisch, Klick bleibt unter /en/kiez/…', async ({
 		page
 	}) => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		const siblings = page.getByTestId('kiez-siblings-list');
-		await expect(siblings.locator('h2')).toContainText('Other Kieze in');
+		await expect(siblings.locator('h2')).toContainText('Neighbouring Kieze');
 		await siblings.getByTestId('kiez-sibling-link').first().click();
 		await expect(page).toHaveURL(/\/en\/kiez\//);
 	});
@@ -199,9 +198,8 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
-			/^Kiez Alexanderplatz in Bezirk Mitte \(\d[\d.,]* Einwohner:innen, \d[\d.,]* ha\): Kiez-Score,/
+			/^Alexanderplatz hat [\d.]+ Einwohner:innen auf \d+,\d km² \(Stand Ende \d{4}\)\./
 		);
-		expect(description).toContain('Berliner Daten-Atlas.');
 		const ogImageAlt = await metaContent(page, 'meta[property="og:image:alt"]');
 		expect(ogImageAlt).toBe(
 			'Kiez Alexanderplatz (Mitte): navigator.berlin-Vorschau mit Kiez-Score'
@@ -222,11 +220,13 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		const response = await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page).toHaveTitle(/Berlin in data - navigator\.berlin/);
+		await expect(page).toHaveTitle(
+			/^Charlottenburg-Wilmersdorf: [\d,]+ residents, \d+\.\d km² \| navigator\.berlin$/
+		);
 
 		const hero = page.getByTestId('bezirk-hero');
 		await expect(hero.locator('h1')).toBeVisible();
-		await expect(hero).toContainText('residents');
+		await expect(hero).toContainText('Residents');
 
 		const comparison = page.getByTestId('score-comparison');
 		await expect(comparison).toContainText('In comparison');
@@ -267,9 +267,8 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 		await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
-			/^Bezirk Charlottenburg-Wilmersdorf \(\d[\d,.]* residents, \d[\d,.]* ha\): Kiez score,/
+			/^Charlottenburg-Wilmersdorf has [\d,]+ residents across \d+\.\d km² \(as of end of \d{4}\)\./
 		);
-		expect(description).toContain('Berlin data atlas.');
 
 		const ogImageAlt = await metaContent(page, 'meta[property="og:image:alt"]');
 		expect(ogImageAlt).toBe(
@@ -306,9 +305,8 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
-			/^Bezirk Charlottenburg-Wilmersdorf \(\d[\d.,]* Einwohner:innen, \d[\d.,]* ha\): Kiez-Score,/
+			/^Charlottenburg-Wilmersdorf hat [\d.]+ Einwohner:innen auf \d+,\d km² \(Stand Ende \d{4}\)\./
 		);
-		expect(description).toContain('Berliner Daten-Atlas.');
 		const ogImageAlt = await metaContent(page, 'meta[property="og:image:alt"]');
 		expect(ogImageAlt).toBe(
 			'Bezirk Charlottenburg-Wilmersdorf: navigator.berlin-Karten-Vorschau mit Kiez-Score und Bezirks-Daten'

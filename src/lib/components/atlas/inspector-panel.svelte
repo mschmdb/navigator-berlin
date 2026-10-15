@@ -17,6 +17,8 @@
 	} from '$lib/state/inspector-level-context.svelte.js';
 	import LayerHitRow from './inspector-panel/layer-hit-row.svelte';
 	import KlimaPetCard from './inspector-panel/klima-pet-card.svelte';
+	import { CARD_SLUGS } from './inspector-panel/internal/card-slugs.js';
+	import { formatWeightedMeanContext } from './inspector-panel/internal/weighted-mean-context.js';
 	import LayerCard, { type ContextRow } from './inspector-panel/layer-card.svelte';
 	import { loadLayerAggregates } from '$lib/data/get-layer-aggregates.js';
 	import {
@@ -214,35 +216,6 @@
 		return a?.type === 'numeric-median' ? a : null;
 	}
 
-	// Layer im Card-Muster (Wert-Chip + Umfeld-Kontext). PET hat eigene Karte (Range-Bar).
-	const CARD_SLUGS = new Set([
-		'laerm-2023',
-		'luft-2023',
-		'bioklima-2023',
-		'gruenversorgung-2023',
-		'umweltgerechtigkeit-2023',
-		'wohnlagen-2024',
-		'mss-gesamtindex-2025',
-		'bodenrichtwerte',
-		'milieuschutz-erhaltungsmiete',
-		'milieuschutz-staedtebau',
-		// Lage & Verwaltung + Einschulbereiche: nur kompakter Name/Code, kein Umfeld-Kontext.
-		'bezirke',
-		'ortsteile',
-		'plz',
-		'einschulbereiche-2024',
-		// Einrichtungs-POIs: Name + Adresse als kompakte Card statt alter Hit-Row.
-		'kitas-2024',
-		'schulen-2024',
-		'krankenhaeuser-plan',
-		'krankenhaeuser-weitere',
-		'sportanlagen-2024',
-		'schwimmbaeder',
-		'spielplaetze',
-		'gruenanlagen',
-		'fahrradstrassen-2024'
-	]);
-
 	function aggFor(slug: string, scope: 'kiez' | 'bezirk' | 'berlin'): LayerAggregate | undefined {
 		const entry = layerAggregates?.aggregates[slug];
 		if (!entry) return undefined;
@@ -257,7 +230,7 @@
 		return level.bezirkSlug ? entry.bezirk[level.bezirkSlug] : undefined;
 	}
 
-	function contextText(agg: LayerAggregate): string | null {
+	function contextText(slug: string, agg: LayerAggregate): string | null {
 		if (agg.type === 'ordinal-distribution') {
 			if (agg.dominant === null) return null;
 			const share = agg.classes.find((c) => c.label === agg.dominant)?.share;
@@ -270,6 +243,7 @@
 					)
 				: m.inspector_context_dominant({ dominant: agg.dominant }, localeOpts);
 		}
+		if (agg.type === 'weighted-mean') return formatWeightedMeanContext(agg, localeOpts, slug);
 		if (agg.type === 'coverage-share' || agg.type === 'area-share') {
 			return m.inspector_context_area_share({ share: String(agg.share) }, localeOpts);
 		}
@@ -318,7 +292,7 @@
 		];
 		const rows = scopes.flatMap((s) => {
 			const agg = aggFor(slug, s.scope);
-			const text = agg ? contextText(agg) : null;
+			const text = agg ? contextText(slug, agg) : null;
 			return text ? [{ id: s.id, label: s.label, text }] : [];
 		});
 		// Story 10.6b: Lärm-dB-Kiez-Mittel (L_DEN) als Kontext zur adress-genauen 3-Stufen-Karte.

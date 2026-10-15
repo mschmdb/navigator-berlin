@@ -21,6 +21,10 @@ describe('allowlist', () => {
 		expect(isAllowed('https://overpass.kumi.systems/api/interpreter')).toBe(true);
 	});
 
+	it('akzeptiert Destatis host (Zensus-Gitterdaten)', () => {
+		expect(isAllowed('https://www.destatis.de/static/DE/zensus/gitterdaten/Miete.zip')).toBe(true);
+	});
+
 	it('akzeptiert Bundeswahlleiterin host', () => {
 		expect(
 			isAllowed(

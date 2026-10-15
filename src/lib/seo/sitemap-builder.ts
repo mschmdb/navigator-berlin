@@ -1,4 +1,5 @@
 import type { Manifest } from '$lib/data/types.js';
+import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
 import { baseLocale, locales, type Locale } from '$lib/paraglide/runtime';
 import { isRouteTranslated, translatedLocalesFor } from './translation-register.js';
 import { buildHreflangCluster } from './hreflang.js';
@@ -192,7 +193,7 @@ export const WAHL_PORTAL_PAGE_SOURCE: SitemapSource = (ctx) => {
 export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
 	// Build-only-Layer (weder Karte noch Inspector) haben keine Detail-Seite → nicht in Sitemap.
 	return ctx.manifest.layers
-		.filter((layer) => !(layer.inspectorRelevant === false && layer.mapRelevant === false))
+		.filter((layer) => hasLayerDetailPage(layer))
 		.map((layer) => ({
 			loc: `${ctx.origin}${localizedPathname(`/layer/${layer.slug}`, ctx.locale)}`,
 			lastmod: layer.fetchedAt,

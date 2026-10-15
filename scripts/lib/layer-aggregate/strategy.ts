@@ -14,8 +14,11 @@
  * ist `klima-pet-2022` (Feld `pet14h`).
  */
 
+import { MIN_WOHNUNGEN } from '../zensus/weighted-mean.js';
+
 export type AggregateType =
 	| 'numeric-median'
+	| 'weighted-mean'
 	| 'ordinal-distribution'
 	| 'coverage-share'
 	| 'area-share'
@@ -28,8 +31,12 @@ export interface LayerStrategy {
 	readonly type: AggregateType;
 	/** Nur für berechnete Typen (numeric/ordinal/coverage/area) gesetzt. */
 	readonly memberMode?: MemberMode;
-	/** Property-Key der den aggregierten Wert trägt (numeric/ordinal). */
+	/** Property-Key der den aggregierten Wert trägt (numeric/ordinal). Bei weighted-mean: Summe Wert x Gewicht. */
 	readonly valueKey?: string;
+	/** Nur weighted-mean: Property-Key des Gewichts (z.B. Anzahl vermieteter Wohnungen). */
+	readonly weightKey?: string;
+	/** Nur weighted-mean: Mindest-Gewicht, darunter ist der Mittelwert null. Default 0. */
+	readonly minWeight?: number;
 	/** Stigma-Lock: keine Severity-Wertung beim Konsum (ADR-014 Abschnitt 5). */
 	readonly neutral?: boolean;
 }
@@ -60,6 +67,24 @@ export const LAYER_STRATEGY: Record<string, LayerStrategy> = {
 		type: 'ordinal-distribution',
 		memberMode: 'plr',
 		valueKey: 'si_v',
+		neutral: true
+	},
+
+	// Weighted-mean (PLR-Features tragen Summe und Gewicht, Kiez/Bezirk gewichtet aus allen Zellen).
+	'zensus-bestandsmiete-2022': {
+		type: 'weighted-mean',
+		memberMode: 'plr',
+		valueKey: 'miete_summe',
+		weightKey: 'wohnungen',
+		minWeight: MIN_WOHNUNGEN,
+		neutral: true
+	},
+	'zensus-altbau-anteil-2022': {
+		type: 'weighted-mean',
+		memberMode: 'plr',
+		valueKey: 'altbau_summe',
+		weightKey: 'wohnungen',
+		minWeight: MIN_WOHNUNGEN,
 		neutral: true
 	},
 

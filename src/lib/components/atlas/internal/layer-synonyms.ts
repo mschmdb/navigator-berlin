@@ -11,6 +11,26 @@ export const LAYER_SYNONYMS_DE: Record<string, readonly string[]> = {
 	'mss-gesamtindex-2025': ['sozial', 'mss', 'einkommen', 'soziale lage'],
 	'wohnlagen-2024': ['mietspiegel', 'wohnlage', 'miete'],
 	bodenrichtwerte: ['boden', 'preis', 'grundstück', 'brw'],
+	'zensus-bestandsmiete-2022': [
+		'miete',
+		'kaltmiete',
+		'nettokaltmiete',
+		'mietspiegel',
+		'rent',
+		'zensus',
+		'census'
+	],
+	'zensus-altbau-anteil-2022': [
+		'altbau',
+		'baujahr',
+		'gründerzeit',
+		'gruenderzeit',
+		'gebäudealter',
+		'old buildings',
+		'pre-war',
+		'zensus',
+		'census'
+	],
 	'laerm-2023': ['lärm', 'laerm', 'ruhe', 'verkehr'],
 	'luft-2023': ['luft', 'feinstaub', 'stickoxid'],
 	'klima-pet-2022': ['hitze', 'sommer', 'klima', 'pet'],

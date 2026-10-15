@@ -19,6 +19,7 @@
  */
 
 import type { Manifest } from '$lib/data/types.js';
+import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
 import { baseLocale, type Locale } from '$lib/paraglide/runtime';
 
 export const KIEZ_FULL_TXT_CAP = 50;
@@ -211,7 +212,7 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 
 	// Layer aus Manifest (Build-only-Layer ohne Detail-Seite ausgenommen)
 	for (const l of ctx.manifest.layers) {
-		if (l.inspectorRelevant === false && l.mapRelevant === false) continue;
+		if (!hasLayerDetailPage(l)) continue;
 		const entry = ctx.layer.find((e) => e.slug === l.slug);
 		out.push({
 			loc: `${ctx.origin}/layer/${l.slug}`,

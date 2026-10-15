@@ -238,3 +238,45 @@ export function parseAddress(params: URLSearchParams): AddressState {
 	if (q) out.q = q;
 	return out;
 }
+
+export type RegionFocusKind = 'kiez' | 'bezirk';
+
+export interface RegionFocusRequest {
+	readonly kind: RegionFocusKind;
+	readonly slug: string;
+}
+
+/** Slugs aus `normalizeSlug`: Kleinbuchstaben/Ziffern, einzelne Bindestriche. */
+const REGION_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const REGION_SLUG_MAX_LENGTH = 80;
+
+function validRegionSlug(raw: string | null): string | null {
+	if (!raw) return null;
+	if (raw.length > REGION_SLUG_MAX_LENGTH) return null;
+	return REGION_SLUG_PATTERN.test(raw) ? raw : null;
+}
+
+/**
+ * Ortsfokus für /explore: `kiez=<slug>` gewinnt gegen `bezirk=<slug>`.
+ * Prüft nur das Format; ob der Slug existiert, entscheidet die Karte beim Laden.
+ */
+export function parseRegionFocus(params: URLSearchParams): RegionFocusRequest | null {
+	const kiez = validRegionSlug(params.get('kiez'));
+	if (kiez) return { kind: 'kiez', slug: kiez };
+	const bezirk = validRegionSlug(params.get('bezirk'));
+	if (bezirk) return { kind: 'bezirk', slug: bezirk };
+	return null;
+}
+
+/** Link auf /explore mit Ortsfokus (für Kiez-, Bezirks- und Layer-Seiten). */
+export function buildRegionFocusHref(
+	kind: RegionFocusKind,
+	slug: string,
+	layers: readonly string[] = []
+): string {
+	const params = new URLSearchParams();
+	params.set(kind, slug);
+	const query = params.toString();
+	if (layers.length === 0) return `/explore?${query}`;
+	return `/explore?${query}&layers=${serializeLayers([...layers])}`;
+}

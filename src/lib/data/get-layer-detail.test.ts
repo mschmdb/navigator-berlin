@@ -34,6 +34,79 @@ const sampleManifest: Manifest = {
 	]
 };
 
+const zensusManifest: Manifest = {
+	schemaVersion: 1,
+	generatedAt: '2026-10-14T10:00:00.000Z',
+	layers: [
+		{
+			slug: 'zensus-bestandsmiete-2022',
+			filename: 'zensus-bestandsmiete-2022.x.geojson',
+			sourceUrl: 'https://www.destatis.de/static/DE/zensus/gitterdaten/x.zip',
+			fetchedAt: '2026-10-14T10:00:00.000Z',
+			sourceUpdatedAt: '2022-05-15T00:00:00.000Z',
+			license: 'dl-de/by-2-0',
+			sha256: 'c'.repeat(64),
+			bundleGroup: 'B: Wohn-Daten',
+			zoomThresholds: { min: 9, max: 18 },
+			geometryType: 'Polygon',
+			featureCount: 542
+		}
+	]
+};
+
+describe('buildLayerDetail: Bestandsmiete (Seiteninhalt der /layer/<slug>-Seite)', () => {
+	it('DE nennt Bestand vs. Angebot, Stichtag 2022 und Cell-Key', () => {
+		const d = buildLayerDetail('zensus-bestandsmiete-2022', 'de', zensusManifest);
+		const text = JSON.stringify([d?.explain, d?.methodology, d?.editorial]);
+		expect(d?.layerName).toBe('Bestandsmiete (Zensus 2022)');
+		expect(d?.explain.long).toMatch(/Bestandsmiete, keine Angebotsmiete/);
+		expect(d?.explain.long).toMatch(/Stichtag 15\.05\.2022/);
+		expect(text).toMatch(/Cell-Key/);
+		expect(d?.methodology?.omissions?.join(' ')).toMatch(/Stichtag 2022/);
+		expect(d?.editorial?.disclaimerVariants).toContain('zensus-bestandsmiete');
+	});
+
+	it('EN nennt existing vs. asking rent, reference date und cell-key', () => {
+		const d = buildLayerDetail('zensus-bestandsmiete-2022', 'en', zensusManifest);
+		const text = JSON.stringify([d?.explain, d?.methodology]);
+		expect(d?.layerName).toBe('Existing rent (Census 2022)');
+		expect(d?.explain.long).toMatch(/Existing rent, not the asking rent/);
+		expect(d?.explain.long).toMatch(/reference date 15 May 2022/);
+		expect(text).toMatch(/cell-key/);
+		expect(d?.methodology?.omissions?.join(' ')).toMatch(/Reference date 2022/);
+	});
+});
+
+describe('buildLayerDetail: Altbau-Anteil (Seiteninhalt der /layer/<slug>-Seite)', () => {
+	const altbauManifest: Manifest = {
+		...zensusManifest,
+		layers: [
+			{
+				...zensusManifest.layers[0],
+				slug: 'zensus-altbau-anteil-2022',
+				filename: 'zensus-altbau-anteil-2022.x.geojson'
+			}
+		]
+	};
+
+	it('DE nennt vor 1949, Wohnungen statt Gebäude und Stichtag', () => {
+		const d = buildLayerDetail('zensus-altbau-anteil-2022', 'de', altbauManifest);
+		const text = JSON.stringify([d?.explain, d?.methodology]);
+		expect(d?.layerName).toBe('Altbau-Anteil (Zensus 2022)');
+		expect(d?.explain.long).toMatch(/vor 1949/);
+		expect(text).toMatch(/Wohnungen, nicht Gebäude/);
+		expect(d?.methodology?.calculation).toMatch(/vor 1949/);
+		expect(d?.editorial?.disclaimerVariants).toContain('zensus-altbau');
+	});
+
+	it('EN nennt before 1949 und reference date', () => {
+		const d = buildLayerDetail('zensus-altbau-anteil-2022', 'en', altbauManifest);
+		expect(d?.layerName).toBe('Pre-1949 housing share (Census 2022)');
+		expect(d?.explain.long).toMatch(/before 1949/);
+		expect(d?.methodology?.calculation).toMatch(/before 1949/);
+	});
+});
+
 describe('buildLayerDetail', () => {
 	it('liefert Detail-Objekt für bekannten Slug', () => {
 		const d = buildLayerDetail('laerm-2023', 'de', sampleManifest);

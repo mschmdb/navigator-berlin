@@ -314,3 +314,75 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c5-profile.md`
   summary: Nach `pnpm exec vitest run` ist die lokale Tabelle `kiez_rank` leer (0 Zeilen); `pnpm lint:profiles` meldet dann ungedeckte Rang-Zahlen. Vermutlich leert ein DB-Test (CASCADE) die Tabelle.
   evidence: 30.09. reproduziert: vor `data:rank` 0 Zeilen und EN failed=142, danach 2145 Zeilen und failed=0. Betrifft nur lokale Dev-DB.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-fix-prerender-404-links.md`
+  summary: Prerender-404 im Build sichtbar machen (CI-Schritt oder `handleHttpError` mit Fehler), damit tote interne Links nicht wieder unbemerkt live gehen.
+  evidence: `svelte.config.js` loggt Prerender-404 nur per `console.warn`; die 32 Treffer vom 14.10.2026 fielen nur zufällig im Coolify-Log auf.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Zensus-Folge-Story 1 · Bestandsmiete als 100m-Raster (PMTiles, Muster klima-pet-2022) für die Detail-Ansicht; KLAMMERN-Zellen dämpfen oder ausblenden; PMTiles ist im Zwei-Karten-Regelwerk immer Fläche.
+  evidence: Owner-Entscheidung 14.10.2026: Kiez-/PLR-Aggregat zuerst, Raster als eigene Story (Recherche 3.1 + Nachtrag 22.08.).
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Zensus-Folge-Story 2 · Leerstandsquote und marktaktive Leerstandsquote als PLR-Choropleth (Leerstandsquote_in_Gitterzellen.zip, Marktaktive_Leerstandsquote_in_Gitterzellen.zip).
+  evidence: Owner-Entscheidung 14.10.2026; Pipeline aus der Bestandsmiete-Story wiederverwenden.
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Zensus-Folge-Story 3 · Gebäudealter (Gebaeude_nach_Baujahr_Jahrzehnte.zip bzw. Wohnungen_nach_Baujahresklassen) als PLR-Choropleth, z. B. Anteil Altbau vor 1949.
+  evidence: Owner-Entscheidung 14.10.2026; Kennzahl vor Umsetzung festlegen.
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Zensus-Folge-Story 4 · Heizungsart/Energieträger als Anteil Fernwärme bzw. Wärmepumpe pro PLR (Zensus2022_Heizungsart.zip, Zensus2022_Energietraeger.zip), anschlussfähig an Wärmeplanung.
+  evidence: Owner-Entscheidung 14.10.2026.
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Kiez-, Bezirks- und Layer-Seiten grundsätzlich attraktiver machen, damit Einsteiger bleiben und weiterklicken (Bestandsmiete ist nur ein Baustein); Ausgangspunkt Brainstorming, dann Epic-Schnitt.
+  evidence: Bounce-Befund Plausible 08.10.2026 (Kiez-Seiten ~100 % bei 0 s); Matze 14.10.2026: „müssen generell besser und attraktiver werden“, Prio-Thema.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-miete-farben.md`
+  summary: Größen-Symbole bei kleinsten Faktoren (Einwohnerdichte 0,3, Wohnlagen 0,45) haben nur einen Sub-Pixel-Rand; auf dunklen Flächenklassen (Bestandsmiete Klasse 4/5) prüfen, ob Mindest-Randbreite oder Mindestgröße nötig ist.
+  evidence: maybe-false (medium), unverifiziert. `buildScoreDotSvg` 1,5 px auf 18-px-Basis skaliert mit `icon-size`; klären per Screenshot bei kleinster Symbolgröße auf Klasse 5 (Zoom-Stufen durchgehen).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story 1 (Bestandsmiete als 100m-Raster). Matze: Unterschied zum Planungsraum-Layer für Nutzer nicht verständlich, zwei fast gleiche Inspector-Karten verwirren.
+  evidence: Prototyp lief (28.463 Zellen, 1,74 MB PMTiles), wurde verworfen. Kosten: eigener PMTiles-Layer, Ein-PMTiles-Regel, Werte nur im sichtbaren Ausschnitt. Falls später: als Zoom-Detail desselben Layers mit einer Inspector-Karte („Planungsraum x · diese Zelle y“), nicht als eigener Slug.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: Präzisierung Zensus-Folge-Story 2 (Matze 14.10.2026): EIN Layer „Leerstand (Zensus 2022)“ mit der normalen Leerstandsquote; die marktaktive Leerstandsquote (Destatis: leer und innerhalb von drei Monaten wieder verfügbar) entfällt, weil der Begriff Nutzern nichts sagt.
+  evidence: Destatis-Datensatzbeschreibung `Marktaktive_Leerstandsquote_in_Gitterzellen.zip`; Matze: „marktaktive Leerstandsquote wtf?“.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story Leerstand. Datenqualität auf Planungsraum-Ebene zu schwach.
+  evidence: Leerstandsquote-Gitter Berlin-BBox: 51.435 von 57.698 Zellen „–“ (= 0), von ~6.300 Zellen mit Wert 5.690 KLAMMERN; gewichtet (Wohnungen aus Wohnungen_nach_Zahl_der_Raeume) 1,55 % gegen amtlich 1,97 % (Abgeordnetenhaus S19/20607). Unterschiede zwischen PLR wären überwiegend Rauschen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
+  summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story Heizungsart/Energieträger.
+  evidence: Heizart folgt in Berlin weitgehend dem Baujahr (redundant zum Altbau-Anteil); Wärmepumpen-/Solaranteil 2022 vermutlich klein (ungeprüft, Rausch-Risiko wie Leerstand); Stand Mai 2022 seit GEG schnell veraltet; Nutzen eher wohnungs- als kiezbezogen. Falls später: als Brücke zur kommunalen Wärmeplanung neu bewerten.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l1-explore-ortsfokus.md`
+  summary: Fokus-Kontur `region-focus-line` und ihre Lage über Choroplethen sind nur im Helper-Unit-Test und per Screenshot geprüft, nicht auf der Seite.
+  evidence: Kein E2E-Zugriff auf MapLibre-Layer im Repo (kein Map-Handle auf window); Entfernen von `showRegionFocusOutline` oder `moveLayer(REGION_FOCUS_LINE_ID)` ließe alle Tests grün.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l1-explore-ortsfokus.md`
+  summary: In L2 testen, dass eine frühere Adressauswahl den Fokus nach In-App-Navigation auf `/explore?kiez=` nicht verdrängt (`suppressedSelectionId` im Fokus-Zweig).
+  evidence: Alle L1-E2E starten mit frischem `page.goto`; erst der Karten-Button aus L2 erzeugt die clientseitige Navigation mit erhaltener Auswahl.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l1-explore-ortsfokus.md`
+  summary: Prüfen, ob ein entprellter `syncViewport`/`syncLayers` nach `dropRegionFocusParams` den `kiez`-Parameter aus einem alten href zurückschreibt (unverifiziert, wäre medium).
+  evidence: Beide lesen `window.location.href` erst beim Ausführen; offen ist, ob SvelteKits `goto(replaceState)` die URL bis dahin ersetzt hat. Klären per E2E: Fokus schließen und sofort danach die Karte verschieben, dann URL prüfen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l3-title-meta-fakten.md`
+  summary: E2E für Score- und Rang-Satz in Kiez-/Bezirks-Meta-Descriptions braucht einen DB-gestützten Build (heute nur Unit-Tests).
+  evidence: Playwright baut ohne `DATABASE_URL`; `tryLoadKiezScore`/`tryLoadBezirkRank` liefern dann null, der Satz entfällt. Ein Wiring-Fehler (Score oder Quartil nicht durchgereicht) bliebe in E2E unsichtbar.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l5-bezirksseite-karte-liste.md`
+  summary: Pixel-Logo wird zweimal inline als SVG ausgeliefert (je ~39,5 KB, zusammen ~79 KB pro Seite); Bezirksseiten bleiben dadurch über 200 KB HTML.
+  evidence: Messung L5 (14.10.2026): Treptow-Köpenick 206 KB HTML, davon Bezirkskarte nur ~22 KB. Logo als externe, gecachte SVG-Datei oder vereinfachtes Raster würde jede Seite um ~75 KB entlasten; relevant für mobilen Absprung.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-l7-layer-seiten.md`
+  summary: Ältere E2E-Suiten (share-sheet, inspector-panel, tab-order, wahl-flow, address-search, compare-flow, bookmark-flow, climate-*, u. a.) scheitern, weil `getByRole('combobox')` auf `/explore` nicht klickbar wird; 76 Fehlschläge im vollen Lauf.
+  evidence: Gegenprobe 14.10.2026 auf `main` (69d8588): dieselben Suiten 26 failed / 5 passed mit demselben Fehlerbild, also vor dem Landing-Epic entstanden. Die Epic-Suiten (explore-region-focus, profile-meta-fakten, bezirk-landing, kiez-landing, key-figures, kiez-neighbors, layer-kiez-ranking, i18n-profile-frame, i18n-d1) sind grün.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-logo-gewicht.md`
+  summary: Reduced-Motion für das Pixel-Logo (Loop-Zellen und Farbwechsel) per E2E mit `reducedMotion: 'reduce'` absichern.
+  evidence: Selektoren wechselten von `rect` auf `use`; weder vorher noch nachher prüft ein Test, dass Animation und Farbwechsel unter Reduced Motion stoppen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-logo-gewicht.md`
+  summary: `tests/e2e/a11y.e2e.ts` („Wortmarke-Showcase“) öffnet `/_dev/wortmarke`, die Route ist nicht im Repo.
+  evidence: Der Test prüft vermutlich eine 404-Seite mit axe und sagt nichts über die Wortmarke aus; entweder Route anlegen oder Test entfernen.

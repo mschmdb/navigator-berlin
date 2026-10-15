@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildKiezeInBezirk, pickTop, pickSiblings, type KiezRef } from './get-kieze-in-bezirk.js';
+import { buildKiezeInBezirk } from './get-kieze-in-bezirk.js';
 
 const fc = {
 	features: [
@@ -92,33 +92,56 @@ describe('buildKiezeInBezirk', () => {
 	});
 });
 
-describe('pickTop', () => {
-	it('liefert top-N', () => {
-		const refs: KiezRef[] = [
-			{ slug: 'a', name: 'A', composite: 90 },
-			{ slug: 'b', name: 'B', composite: 80 },
-			{ slug: 'c', name: 'C', composite: 70 }
-		];
-		expect(pickTop(refs, 2)).toHaveLength(2);
-		expect(pickTop(refs, 2)[0].slug).toBe('a');
+describe('buildKiezeInBezirk Slug-Disambiguierung', () => {
+	const dupFc = {
+		features: [
+			{ properties: { BZR_NAME: 'Heerstraße', BEZ: '05' } },
+			{ properties: { BZR_NAME: 'Heerstraße', BEZ: '04' } },
+			{ properties: { BZR_NAME: 'Charlottenburg Nord', BEZ: '04' } }
+		]
+	};
+	const dupCodes = new Map([
+		['05', 'spandau'],
+		['04', 'charlottenburg-wilmersdorf']
+	]);
+
+	it('suffigiert Duplikatnamen Berlin-weit mit dem Bezirk-Slug', () => {
+		const spandau = buildKiezeInBezirk({
+			lorFeatureCollection: dupFc,
+			bezirkCodeToSlug: dupCodes,
+			scores: new Map(),
+			bezirkSlug: 'spandau'
+		});
+		expect(spandau.map((r) => r.slug)).toEqual(['heerstrasse-spandau']);
+		const cw = buildKiezeInBezirk({
+			lorFeatureCollection: dupFc,
+			bezirkCodeToSlug: dupCodes,
+			scores: new Map(),
+			bezirkSlug: 'charlottenburg-wilmersdorf'
+		});
+		expect(cw.map((r) => r.slug).sort()).toEqual([
+			'charlottenburg-nord',
+			'heerstrasse-charlottenburg-wilmersdorf'
+		]);
 	});
-});
 
-describe('pickSiblings', () => {
-	const kieze: KiezRef[] = [
-		{ slug: 'buchholz', name: 'Buchholz', composite: 42 },
-		{ slug: 'pankow-zentrum', name: 'Pankow Zentrum', composite: 55 },
-		{ slug: 'prenzlauer-berg', name: 'Prenzlauer Berg', composite: 78 }
-	];
-
-	it('exkludiert current + alphabetisch sortiert', () => {
-		const siblings = pickSiblings({ kieze, currentSlug: 'pankow-zentrum' }, 3);
-		expect(siblings.map((k) => k.slug)).toEqual(['buchholz', 'prenzlauer-berg']);
+	it('findet den Score über den suffigierten Slug', () => {
+		const refs = buildKiezeInBezirk({
+			lorFeatureCollection: dupFc,
+			bezirkCodeToSlug: dupCodes,
+			scores: new Map([['heerstrasse-spandau', 61]]),
+			bezirkSlug: 'spandau'
+		});
+		expect(refs[0].composite).toBe(61);
 	});
 
-	it('respektiert max-N', () => {
-		const siblings = pickSiblings({ kieze, currentSlug: 'buchholz' }, 1);
-		expect(siblings).toHaveLength(1);
-		expect(siblings[0].slug).toBe('pankow-zentrum');
+	it('lässt fehlende Scores null', () => {
+		const refs = buildKiezeInBezirk({
+			lorFeatureCollection: dupFc,
+			bezirkCodeToSlug: dupCodes,
+			scores: new Map([['heerstrasse', 99]]),
+			bezirkSlug: 'spandau'
+		});
+		expect(refs[0].composite).toBeNull();
 	});
 });

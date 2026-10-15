@@ -60,7 +60,19 @@ export const COLORS = {
 	scaleStrukturell2: '#656E86',
 	scaleStrukturell3: '#515E83',
 	scaleStrukturell4: '#3D4F80',
-	scaleStrukturell5: '#2A3F7C'
+	scaleStrukturell5: '#2A3F7C',
+	// Bestandsmiete: eigene Indigo-Variante, buildScaleFamily('#DDE1ED', '#1A2A5E', BACKGROUND_TOKEN)
+	scaleMiete1: '#797D88',
+	scaleMiete2: '#60687E',
+	scaleMiete3: '#475374',
+	scaleMiete4: '#303F69',
+	scaleMiete5: '#1A2A5E',
+	// Altbau-Anteil: gleiche Werte wie die Miete-Skala, eigene Tokens (Bestandsmiete bleibt unberührt)
+	scaleAltbau1: '#797D88',
+	scaleAltbau2: '#60687E',
+	scaleAltbau3: '#475374',
+	scaleAltbau4: '#303F69',
+	scaleAltbau5: '#1A2A5E'
 } as const;
 
 export type ColorToken = keyof typeof COLORS;

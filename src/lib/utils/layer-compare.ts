@@ -48,6 +48,10 @@ export const LAYER_COMPARE_PROFILE: Record<string, CompareProfile> = {
 
 	// Wohn — Mietspiegel/Wohnlage NIE als „höher besser" werten (Editorial-Würde, niedrigere Stufe ≠ schlechter)
 	bodenrichtwerte: 'numeric-no-judgment',
+	// Bestandsmiete: Faktum, kein „besser“ (Editorial-Würde wie Bodenrichtwerte).
+	'zensus-bestandsmiete-2022': 'numeric-no-judgment',
+	// Altbau-Anteil: Faktum zum Baualter, keine Wertung.
+	'zensus-altbau-anteil-2022': 'numeric-no-judgment',
 	'wohnlagen-2024': 'categorical-neutral',
 	'mietspiegel-wohnlage': 'categorical-neutral',
 	'milieuschutz-erhaltungsmiete': 'categorical-neutral',
@@ -117,15 +121,26 @@ const NUMERIC_UNITS: Record<string, string> = {
 	'laerm-2023': 'dB',
 	'laerm-den': 'dB',
 	'laerm-night': 'dB',
-	'klima-pet-2022': '°C'
+	'klima-pet-2022': '°C',
+	'zensus-altbau-anteil-2022': '%'
 };
 
 const NUMERIC_KEYS: Record<string, readonly string[]> = {
 	'klima-pet-2022': ['pet14h'],
-	bodenrichtwerte: ['richtwert', 'eur_qm', 'wert']
+	bodenrichtwerte: ['richtwert', 'eur_qm', 'wert'],
+	'zensus-bestandsmiete-2022': ['miete'],
+	'zensus-altbau-anteil-2022': ['altbau_anteil']
 };
 
+const CURRENCY_PER_M2: Record<string, true> = {
+	bodenrichtwerte: true,
+	'zensus-bestandsmiete-2022': true
+};
+/** Nachkommastellen im Delta-Label (Standard 1). */
+const DELTA_DECIMALS: Record<string, number> = { 'zensus-bestandsmiete-2022': 2 };
 const EQUALITY_TOLERANCE = 0.5;
+/** Mieten in €/m² unterscheiden sich in Cent-Schritten; 0,5 wäre zu grob. */
+const TOLERANCE_BY_SLUG: Record<string, number> = { 'zensus-bestandsmiete-2022': 0.05 };
 
 function toFiniteNumber(value: unknown): number | null {
 	if (typeof value === 'number' && Number.isFinite(value)) return value;
@@ -193,8 +208,15 @@ function isPresent(value: unknown): boolean {
 	return true;
 }
 
-function formatDelta(n: number, opts?: CompareLocaleOptions): string {
+function formatDelta(n: number, opts?: CompareLocaleOptions, fixedDecimals?: number): string {
 	const options = toOptions(opts);
+	if (fixedDecimals !== undefined) {
+		return formatDecimal(n, {
+			...options,
+			minimumFractionDigits: fixedDecimals,
+			maximumFractionDigits: fixedDecimals
+		});
+	}
 	if (Number.isInteger(n)) return formatCount(n, options);
 	return formatDecimal(n, { ...options, maximumFractionDigits: 1 });
 }
@@ -231,19 +253,37 @@ function compareNumericNoJudgment(
 	b: number,
 	opts?: CompareLocaleOptions
 ): CompareResult {
-	if (Math.abs(a - b) < EQUALITY_TOLERANCE) return { direction: 'equal' };
+	if (Math.abs(a - b) < (TOLERANCE_BY_SLUG[slug] ?? EQUALITY_TOLERANCE))
+		return { direction: 'equal' };
 	const options = toOptions(opts);
 	const diff = Math.abs(a - b);
-	const unit = slug === 'bodenrichtwerte' ? '€/m²' : (NUMERIC_UNITS[slug] ?? '');
+	const unit = slug in CURRENCY_PER_M2 ? '€/m²' : (NUMERIC_UNITS[slug] ?? '');
 	const higherSide = a > b ? 'A' : 'B';
 	const advisory =
 		slug === 'bodenrichtwerte'
 			? m.compare_advisory_bodenrichtwerte(undefined, options)
-			: m.compare_advisory_context_neutral(undefined, options);
+			: slug === 'zensus-bestandsmiete-2022'
+				? m.compare_advisory_zensus_bestandsmiete(undefined, options)
+				: m.compare_advisory_context_neutral(undefined, options);
+	if (slug === 'zensus-altbau-anteil-2022') {
+		return {
+			direction: 'not-comparable',
+			deltaLabel: m
+				.compare_delta_higher_in_points(
+					{ amount: formatDelta(diff, opts), side: higherSide },
+					options
+				)
+				.trim(),
+			advisory
+		};
+	}
 	return {
 		direction: 'not-comparable',
 		deltaLabel: m
-			.compare_delta_higher_in({ amount: formatDelta(diff, opts), unit, side: higherSide }, options)
+			.compare_delta_higher_in(
+				{ amount: formatDelta(diff, opts, DELTA_DECIMALS[slug]), unit, side: higherSide },
+				options
+			)
 			.trim(),
 		advisory
 	};

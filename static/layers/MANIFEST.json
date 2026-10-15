@@ -1183,6 +1183,42 @@
       "featureCount": 1572,
       "inspectorRelevant": false,
       "mapRelevant": false
+    },
+    {
+      "slug": "zensus-bestandsmiete-2022",
+      "filename": "zensus-bestandsmiete-2022.bd52e4d6.geojson",
+      "sourceUrl": "https://www.destatis.de/static/DE/zensus/gitterdaten/Durchschnittliche_Nettokaltmiete_und_Anzahl_der_Wohnungen.zip",
+      "fetchedAt": "2026-10-14T12:59:34.644Z",
+      "sourceUpdatedAt": "2022-05-15T00:00:00.000Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "bd52e4d6b5344aaa5a3e8e268587a107d29575cb9b631584f5c2f923667fb375",
+      "bundleGroup": "B: Wohn-Daten",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "Polygon",
+      "featureCount": 542,
+      "inspectorRelevant": true,
+      "mapRelevant": true
+    },
+    {
+      "slug": "zensus-altbau-anteil-2022",
+      "filename": "zensus-altbau-anteil-2022.73618589.geojson",
+      "sourceUrl": "https://www.destatis.de/static/DE/zensus/gitterdaten/Wohnungen_mod_MZ_Baujahresklassen_in_Gitterzellen.zip",
+      "fetchedAt": "2026-10-14T15:55:47.542Z",
+      "sourceUpdatedAt": "2022-05-15T00:00:00.000Z",
+      "license": "dl-de/by-2-0",
+      "sha256": "73618589c0414be2fcbd5a0da9473080490610b0b1af2827e62e3330016bc35b",
+      "bundleGroup": "B: Wohn-Daten",
+      "zoomThresholds": {
+        "min": 9,
+        "max": 18
+      },
+      "geometryType": "Polygon",
+      "featureCount": 542,
+      "inspectorRelevant": true,
+      "mapRelevant": true
     }
   ]
 }
