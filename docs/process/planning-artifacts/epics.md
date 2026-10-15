@@ -2028,7 +2028,7 @@ So that das Projekt selbsterklärend bleibt und alle kritischen Operations bei B
 **Then** ADR-014 dokumentiert i18n-Scope (NFR-M2)
 
 **Given** der Hetzner-Server-Wahl 2026-05-15 (CX32 ARM → CPX22 AMD)
-**When** ich `ADR-015-hetzner-cpx22-amd.md` mit Status: Accepted, Context (Hetzner-AMD-only-Verfügbarkeit per UI 2026-05, EUR 9,51/Monat-Budget, Postgres-Co-Host-Anforderung), Decision (CPX22 8GB/2vCPU/80GB), Consequences (ausreichend für Phase 1 + Hybrid-Postgres mit 1.5-2GB Headroom, fliege-dev separat), Alternatives (CPX32 EUR 16,65 als Komfort-Variante, CX32 ARM verworfen wegen AMD-only-Verfügbarkeit) anlege
+**When** ich `ADR-015-hetzner-cpx22-amd.md` mit Status: Accepted, Context (Hetzner-AMD-only-Verfügbarkeit per UI 2026-05, EUR 9,51/Monat-Budget, Postgres-Co-Host-Anforderung), Decision (CPX22 8GB/2vCPU/80GB), Consequences (ausreichend für Phase 1 + Hybrid-Postgres mit 1.5-2GB Headroom, Aux-Server separat), Alternatives (CPX32 EUR 16,65 als Komfort-Variante, CX32 ARM verworfen wegen AMD-only-Verfügbarkeit) anlege
 **Then** ADR-015 dokumentiert Server-Wahl (NFR-M2)
 
 **Given** das `docs/runbooks/`-Verzeichnis mit 3 bereits vorhandenen Runbooks (`tile-provider-switch.md`, `a11y-smoke-test.md`, `bookmark-storage.md`)

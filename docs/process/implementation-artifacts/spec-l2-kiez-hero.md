@@ -16,7 +16,7 @@ context:
 
 ## Intent
 
-**Problem:** Kiez-Seiten verlieren 85 % der Such-Einsteiger nach 14 Sekunden. Der erste Bildschirm zeigt Eyebrow, h1 und einen Lead, der h1 wiederholt und mit „Daten zu … auf dieser Seite“ endet. Score steht 1,5 Bildschirme tiefer, Rang erst im letzten Link, ein Weg zur Karte fehlt.
+**Problem:** Kiez-Seiten verlieren die meisten Such-Einsteiger nach wenigen Sekunden. Der erste Bildschirm zeigt Eyebrow, h1 und einen Lead, der h1 wiederholt und mit „Daten zu … auf dieser Seite“ endet. Score steht 1,5 Bildschirme tiefer, Rang erst im letzten Link, ein Weg zur Karte fehlt.
 
 **Approach:** Der Kiez-Hero übernimmt das Muster der Bezirksseite (L5): Fakten, statischer Umriss, ein Satz zur Stärke des Kiezes und ein Button zur Karte mit Ortsfokus.
 

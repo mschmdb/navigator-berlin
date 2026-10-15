@@ -14,7 +14,7 @@ Reproduzierbare Setup-Anleitung für Production-Host. Wer dieses Dokument in 12 
 
 ## Voraussetzungen
 
-- Hetzner-Cloud-Account, Projekt `fliege-dev`, Zahlungsmittel hinterlegt
+- Hetzner-Cloud-Account, Projekt `<hetzner-projekt>`, Zahlungsmittel hinterlegt
 - GitHub-Account mit Repo `mschmdb/navigator-berlin` (privat)
 - INWX-Account mit Domain `navigator.berlin`
 - macOS oder Linux-Workstation mit `ssh` + `brew` (oder Linux-Paketmanager)
@@ -29,13 +29,13 @@ Reproduzierbare Setup-Anleitung für Production-Host. Wer dieses Dokument in 12 
 brew install hcloud
 ```
 
-In Hetzner-Console → Projekt `fliege-dev` → Security → API-Tokens → "Generate API Token" → Permissions **Read & Write** → Name `navigator-prod-claude-code` → Token kopieren.
+In Hetzner-Console → Projekt `<hetzner-projekt>` → Security → API-Tokens → "Generate API Token" → Permissions **Read & Write** → Name `navigator-prod-claude-code` → Token kopieren.
 
 ```bash
-hcloud context create fliege-dev
+hcloud context create <hetzner-projekt>
 # Token im Prompt einfügen
 
-hcloud context active   # sollte fliege-dev zeigen
+hcloud context active   # sollte <hetzner-projekt> zeigen
 hcloud ssh-key list     # Workstation-Key sollte da sein, sonst hcloud ssh-key create
 ```
 
@@ -206,10 +206,10 @@ Browser: `http://localhost:8000`
 
 **Instance-FQDN setzen:**
 
-- Settings → Configuration → Instance's Domain (FQDN) = `https://coolify.navigator.berlin`
+- Settings → Configuration → Instance's Domain (FQDN) = `https://coolify.<domain>`
 - Save → Coolify generiert Traefik-Labels + ACME-Cert (10-30 s)
 
-Vor Schritt 6 DNS für `coolify.navigator.berlin` setzen (via Wildcard automatisch).
+Vor Schritt 6 DNS für `coolify.<domain>` setzen (via Wildcard automatisch).
 
 **API-Token erstellen:**
 
@@ -259,7 +259,7 @@ Source-Status grün in Coolify.
 
 ```bash
 export COOLIFY_TOKEN=$(cat ~/.config/navigator/coolify-token | tr -d '\n\r ')
-API() { curl -sS -H "Authorization: Bearer $COOLIFY_TOKEN" -H "Accept: application/json" -H "Content-Type: application/json" "https://coolify.navigator.berlin/api/v1$1" "${@:2}"; }
+API() { curl -sS -H "Authorization: Bearer $COOLIFY_TOKEN" -H "Accept: application/json" -H "Content-Type: application/json" "https://coolify.<domain>/api/v1$1" "${@:2}"; }
 
 # IDs ermitteln
 PROJECT_UUID=$(API "/projects" | jq -r '.[0].uuid')
