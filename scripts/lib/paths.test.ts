@@ -21,7 +21,8 @@ describe('paths', () => {
 		expect(SPIKE_ARTIFACTS_DIR).toBe(join(PROCESS_DIR, 'spike-artifacts'));
 	});
 
-	it('alle Prozessordner existieren', () => {
+	// Nur Ordner mit getrackten Dateien. Gitignorierte Unterordner (screenshots, brainstorming) fehlen im Clone.
+	it('getrackte Prozessordner existieren', () => {
 		for (const dir of [IMPLEMENTATION_ARTIFACTS_DIR, PLANNING_ARTIFACTS_DIR, SPIKE_ARTIFACTS_DIR]) {
 			expect(existsSync(dir)).toBe(true);
 		}

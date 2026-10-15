@@ -14,7 +14,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { IMPLEMENTATION_ARTIFACTS_DIR, REPO_ROOT } from './lib/paths.js';
 
-const SPRINT_STATUS_PATH = join(IMPLEMENTATION_ARTIFACTS_DIR, 'sprint-status.yaml');
+export const SPRINT_STATUS_PATH = join(IMPLEMENTATION_ARTIFACTS_DIR, 'sprint-status.yaml');
 const OUT_PATH = join(REPO_ROOT, 'docs', 'architecture', 'story-map.md');
 
 export interface StoryRow {
