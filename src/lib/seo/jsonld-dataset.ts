@@ -1,6 +1,8 @@
 import type { WithContext } from 'schema-dts';
 import type { License } from '$lib/data/types.js';
 import { licenseToSchemaOrgUrl } from './license-url.js';
+import { DATA_CATALOG_NAME, dataCatalogId } from './jsonld-datacatalog.js';
+import { bboxToGeoShapeBox, type BboxTuple } from './dataset-helpers.js';
 import { organizationRef, type OrganizationRefJsonLd } from './jsonld-organization.js';
 
 /**
@@ -20,9 +22,21 @@ export interface DatasetDistributionJsonLd {
 	encodingFormat?: string;
 }
 
+export interface DatasetSpatialCoverageJsonLd {
+	'@type': 'Place';
+	name: string;
+	geo: { '@type': 'GeoShape'; box: string };
+}
+
 export interface DatasetLeafJsonLd {
 	'@type': 'Dataset';
+	'@id': string;
 	name: string;
+	url: string;
+	isAccessibleForFree: true;
+	includedInDataCatalog: { '@type': 'DataCatalog'; '@id': string; name: string; url: string };
+	spatialCoverage?: DatasetSpatialCoverageJsonLd;
+	temporalCoverage?: string;
 	description: string;
 	license: string;
 	dateModified: string;
@@ -47,13 +61,21 @@ export type DatasetJsonLd = WithContext<DatasetLeafJsonLd>;
 export interface DatasetInput {
 	readonly origin: string;
 	readonly name: string;
+	/** Absolute Canonical-URL der Seite, Basis der Dataset-`@id` (`<url>#dataset`). */
+	readonly url: string;
 	readonly description: string;
 	readonly license: License;
 	/** ISO-8601 oder `YYYY-MM-DD`. */
 	readonly dateModified: string;
 	/** Optional. Authority-Name aus Layer-Methodology. Wenn leer: Fallback navigator.berlin. */
 	readonly creatorName?: string;
-	/** Absolute URL zur Distribution (typisch hashed-filename in `/layers/`). */
+	/** Origin der Datenquelle, wird `creator.url`. Nur mit `creatorName` wirksam. */
+	readonly creatorUrl?: string;
+	/** Berlin-Bounding-Box [minLng, minLat, maxLng, maxLat]. Fehlt sie: kein `spatialCoverage`. */
+	readonly bbox?: BboxTuple;
+	/** Jahr oder ISO-Intervall. Nur setzen, wenn belegt. */
+	readonly temporalCoverage?: string;
+	/** Absolute URL zur Distribution (stabil, z. B. `/daten/<slug>.geojson`). */
 	readonly contentUrl: string;
 	/** MIME-Type fuer DataDownload, z. B. `application/geo+json`. */
 	readonly encodingFormat?: string;
@@ -62,17 +84,28 @@ export interface DatasetInput {
 	readonly inLanguage?: string;
 }
 
+/** Knoten-`@id` eines Datasets: Seiten-URL plus Fragment. Der Katalog verweist auf dieselbe `@id`. */
+export function datasetId(url: string): string {
+	return `${url}#dataset`;
+}
+
 export function buildDataset(input: DatasetInput): DatasetJsonLd {
 	const origin = input.origin.replace(/\/+$/, '');
 
 	const creator: DatasetCreatorJsonLd | OrganizationRefJsonLd = input.creatorName
-		? { '@type': 'Organization', name: input.creatorName }
+		? {
+				'@type': 'Organization',
+				name: input.creatorName,
+				...(input.creatorUrl ? { url: input.creatorUrl } : {})
+			}
 		: organizationRef(origin);
 
 	const out: DatasetJsonLd = {
 		'@context': 'https://schema.org',
 		'@type': 'Dataset',
+		'@id': datasetId(input.url),
 		name: input.name,
+		url: input.url,
 		description: input.description,
 		license: licenseToSchemaOrgUrl(input.license),
 		dateModified: input.dateModified,
@@ -82,8 +115,24 @@ export function buildDataset(input: DatasetInput): DatasetJsonLd {
 			contentUrl: input.contentUrl,
 			...(input.encodingFormat ? { encodingFormat: input.encodingFormat } : {})
 		},
-		inLanguage: input.inLanguage ?? 'de-DE'
+		inLanguage: input.inLanguage ?? 'de-DE',
+		isAccessibleForFree: true,
+		includedInDataCatalog: {
+			'@type': 'DataCatalog',
+			'@id': dataCatalogId(origin),
+			name: DATA_CATALOG_NAME,
+			url: dataCatalogId(origin).replace(/#catalog$/, '')
+		}
 	};
+
+	if (input.bbox) {
+		out.spatialCoverage = {
+			'@type': 'Place',
+			name: 'Berlin',
+			geo: { '@type': 'GeoShape', box: bboxToGeoShapeBox(input.bbox) }
+		};
+	}
+	if (input.temporalCoverage) out.temporalCoverage = input.temporalCoverage;
 
 	const kws = input.keywords?.filter((k) => k.length > 0) ?? [];
 	if (kws.length > 0) {

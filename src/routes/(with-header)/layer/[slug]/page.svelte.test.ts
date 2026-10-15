@@ -280,12 +280,31 @@ describe('layer-detail +page.svelte', () => {
 		expect(parsed.license).toBe('https://www.govdata.de/dl-de/zero-2-0');
 		expect(parsed.creator?.['@type']).toBe('Organization');
 		expect(parsed.creator?.name).toMatch(/Senatsverwaltung/);
-		expect(parsed.distribution?.contentUrl).toMatch(/\/layers\/laerm-2023\.geojson$/);
+		expect(parsed.distribution?.contentUrl).toMatch(/\/daten\/laerm-2023\.geojson$/);
 		expect(parsed.inLanguage).toBe('de-DE');
 	});
 
-	// i18n Block D1: `creatorName` kommt aus `detail.methodology` (Seiten-Locale).
-	// Der Fallback greift, wenn der Loader keine Methodology liefert.
+	it('Dataset-JSON-LD enthält url, spatialCoverage, temporalCoverage, Katalog und Behörden-URL', async () => {
+		render(Page, {
+			data: {
+				detail: detail(),
+				faq: [],
+				faqLocale: 'de',
+				ranking: null
+			}
+		});
+		const script = document.querySelector(
+			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
+		);
+		const parsed = JSON.parse(script?.textContent ?? '{}');
+		expect(parsed.url).toMatch(/\/layer\/laerm-2023$/);
+		expect(parsed.isAccessibleForFree).toBe(true);
+		expect(parsed.includedInDataCatalog['@id']).toMatch(/\/lizenzen#catalog$/);
+		expect(parsed.spatialCoverage.geo.box).toMatch(/^52\.\d+ 13\.\d+ 52\.\d+ 13\.\d+$/);
+		expect(parsed.temporalCoverage).toBe('2023');
+		expect(parsed.creator.url).toMatch(/^https?:\/\/[^/]+$/);
+	});
+
 	it('Dataset-JSON-LD verweist als creator-Fallback auf die Organization wenn der Slug keine reale Methodology hat', async () => {
 		const d = detail('does-not-exist-xyz', { methodology: null });
 		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });

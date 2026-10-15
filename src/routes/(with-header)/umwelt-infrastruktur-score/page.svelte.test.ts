@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { readDatasetJsonLd } from '$lib/seo/dataset-jsonld-test-utils.js';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Page from './+page.svelte';
 import { internalHrefs, textLines } from '../methodik/methodik-test-utils.js';
@@ -169,5 +170,23 @@ describe('umwelt-infrastruktur-score · JSON-LD EN (i18n C4b)', () => {
 		const list =
 			document.querySelector('script[data-testid="ranking-itemlist-jsonld"]')?.textContent ?? '';
 		expect(list).toContain('/en/kiez/wedding');
+	});
+});
+
+describe('umwelt-infrastruktur-score · Dataset-JSON-LD', () => {
+	afterEach(() => overwriteGetLocale(() => 'de'));
+
+	it('DE: url ohne Locale-Präfix, spatialCoverage gesetzt', () => {
+		render(Page, { data });
+		const ld = readDatasetJsonLd();
+		expect(ld.url).toMatch(/\/umwelt-infrastruktur-score$/);
+		expect(ld.url).not.toContain('/en/');
+		expect(ld.spatialCoverage.geo.box).toMatch(/^52\.\d+ 13\.\d+ 52\.\d+ 13\.\d+$/);
+	});
+
+	it('EN: url mit /en-Präfix', () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data });
+		expect(readDatasetJsonLd().url).toMatch(/\/en\/umwelt-infrastruktur-score$/);
 	});
 });

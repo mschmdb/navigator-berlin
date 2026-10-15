@@ -17,7 +17,12 @@
 		localeToBcp47,
 		pickDatasetDescription
 	} from '$lib/seo/index.js';
-	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
+	import {
+		deriveTemporalCoverage,
+		originOfUrl,
+		stableDownloadPath
+	} from '$lib/seo/dataset-helpers.js';
 	import {
 		getLayerDisplayName,
 		bundleLabel,
@@ -30,6 +35,7 @@
 	import { isKiezScoreLayer } from '$lib/data/kiez-score-layer.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { trackLanding } from '$lib/utils/plausible.js';
 	import { formatCount } from '$lib/i18n/format.js';
@@ -99,15 +105,22 @@
 	 * der Seiten-Locale, `inLanguage` folgt `localeToBcp47`, URLs tragen den
 	 * Locale-Präfix.
 	 */
+	const layerCanonicalUrl = $derived(
+		`${canonicalOrigin(page.url.origin)}${localizedPathname(`/layer/${detail.slug}`, locale)}`
+	);
 	const datasetJsonLd = $derived(
 		buildDataset({
 			origin: page.url.origin,
 			name: detail.layerName,
+			url: layerCanonicalUrl,
+			bbox: BEZIRKE_BBOX,
+			temporalCoverage: deriveTemporalCoverage({ slug: detail.slug }),
+			creatorUrl: originOfUrl(meta.sourceUrl),
 			description: pickDatasetDescription([explain.long, explain.short], descriptionFallback),
 			license: meta.license,
 			dateModified: meta.sourceUpdatedAt ?? meta.fetchedAt,
 			creatorName: methodology?.authority,
-			contentUrl: `${page.url.origin}/layers/${meta.filename}`,
+			contentUrl: `${canonicalOrigin(page.url.origin)}${stableDownloadPath(detail.slug, meta.format ?? 'geojson')}`,
 			encodingFormat:
 				meta.format === 'pmtiles' ? 'application/vnd.pmtiles' : 'application/geo+json',
 			keywords: [bundleGroupLabel, detail.slug],

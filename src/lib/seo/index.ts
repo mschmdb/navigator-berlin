@@ -79,6 +79,7 @@ export {
 // Story 5.9: SEO/AEO Pre-Indexing-Hardening
 export {
 	buildDataCatalog,
+	dataCatalogId,
 	type DataCatalogInput,
 	type DataCatalogDatasetRef,
 	type DataCatalogJsonLd,

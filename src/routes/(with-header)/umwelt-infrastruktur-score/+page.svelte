@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
 	import { Accordion } from 'bits-ui';
@@ -10,6 +10,7 @@
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { richSegments } from '$lib/i18n/rich-text.js';
 	import { m } from '$lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import { buildItemList } from '$lib/seo/jsonld-itemlist.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
@@ -32,6 +33,8 @@
 		buildDataset({
 			origin,
 			name: m.uis_jsonld_dataset_name(),
+			url: `${canonicalOrigin(origin)}${localizedPathname('/umwelt-infrastruktur-score', getLocale())}`,
+			bbox: BEZIRKE_BBOX,
 			description: pageDescription,
 			license: 'CC BY 4.0',
 			dateModified: data.computedAt ?? new Date().toISOString(),

@@ -17,7 +17,10 @@
 			origin: page.url.origin,
 			items: [
 				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
-				{ name: m.architektur_breadcrumb_architektur(), path: localizedPathname('/architektur', getLocale()) }
+				{
+					name: m.architektur_breadcrumb_architektur(),
+					path: localizedPathname('/architektur', getLocale())
+				}
 			]
 		})
 	);

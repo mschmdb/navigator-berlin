@@ -29,6 +29,7 @@
 		"data:kriminalitaet": "tsx scripts/build-kriminalitaet-lor.ts",
 		"data:oepnv-index": "tsx scripts/build-oepnv-stop-index.ts",
 		"data:kiez-scores": "tsx scripts/build-kiez-scores.ts",
+		"data:berlin-bbox": "tsx scripts/build-berlin-bbox.ts",
 		"data:aggregate": "tsx scripts/aggregate-data.ts",
 		"data:aggregate-scores": "tsx scripts/aggregate-scores.ts",
 		"data:rank": "tsx scripts/aggregate-ranks.ts",

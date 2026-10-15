@@ -82,7 +82,10 @@
 			origin: page.url.origin,
 			items: [
 				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
-				{ name: m.methodik_breadcrumb_methodik(), path: localizedPathname('/methodik', getLocale()) }
+				{
+					name: m.methodik_breadcrumb_methodik(),
+					path: localizedPathname('/methodik', getLocale())
+				}
 			]
 		})
 	);

@@ -1,6 +1,7 @@
 import { page } from 'vitest/browser';
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { readDatasetJsonLd } from '$lib/seo/dataset-jsonld-test-utils.js';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import WahlDetailPage from './+page.svelte';
 import type { WahlDetailPageData } from './+page.server.js';
@@ -51,9 +52,7 @@ describe('berlin-wahlen/[slug]/+page.svelte: "Sonstige" in der Berlin-Top-5-Tabe
 			]
 		};
 		render(WahlDetailPage, { data });
-		await expect
-			.element(page.getByTestId('wahl-detail-berlin-table'))
-			.toHaveTextContent('Other');
+		await expect.element(page.getByTestId('wahl-detail-berlin-table')).toHaveTextContent('Other');
 		await expect
 			.element(page.getByTestId('wahl-detail-berlin-table'))
 			.not.toHaveTextContent('Sonstige');
@@ -205,5 +204,29 @@ describe('berlin-wahlen/[slug]/+page.svelte: detailseiten-eigene Stand-Zeile (Re
 		const data = makeData({ sourceUpdatedAt: null });
 		render(WahlDetailPage, { data });
 		await expect.element(page.getByTestId('wahl-detail-meta')).not.toHaveTextContent('Stand');
+	});
+});
+
+describe('berlin-wahlen/[slug]/+page.svelte: Dataset-JSON-LD', () => {
+	it('mit sourceUpdatedAt: dateModified, temporalCoverage, creator.url, url, spatialCoverage', async () => {
+		render(WahlDetailPage, {
+			data: makeData({ sourceUpdatedAt: '2026-09-20T23:55:55.000Z' })
+		});
+		await expect.element(page.getByTestId('wahl-detail-meta')).toBeInTheDocument();
+		const ld = readDatasetJsonLd();
+		expect(ld.dateModified).toBe('2026-09-20T23:55:55.000Z');
+		expect(ld.temporalCoverage).toBe('2026');
+		expect(ld.creator.url).toBe('https://www.wahlen-berlin.de');
+		expect(ld.url).toMatch(/\/berlin-wahlen\/2026-bvv$/);
+		expect(ld['@id']).toBe(`${ld.url}#dataset`);
+		expect(ld.spatialCoverage.geo.box).toMatch(/^52\.\d+ 13\.\d+ 52\.\d+ 13\.\d+$/);
+	});
+
+	it('ohne sourceUpdatedAt: dateModified fällt auf den 1. Januar des Wahljahrs', async () => {
+		render(WahlDetailPage, { data: makeData({ sourceUpdatedAt: null }) });
+		await expect.element(page.getByTestId('wahl-detail-meta')).toBeInTheDocument();
+		const ld = readDatasetJsonLd();
+		expect(ld.dateModified).toBe('2026-01-01');
+		expect(ld.temporalCoverage).toBe('2026');
 	});
 });

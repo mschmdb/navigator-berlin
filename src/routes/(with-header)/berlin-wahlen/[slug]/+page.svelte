@@ -9,8 +9,11 @@
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
 	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
+	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
+	import { deriveTemporalCoverage, originOfUrl } from '$lib/seo/dataset-helpers.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { formatPercent, formatCount, formatWahlDate } from '$lib/i18n/format.js';
 	import {
@@ -71,10 +74,14 @@
 		buildDataset({
 			origin,
 			name: wahlTitel,
+			url: `${canonicalOrigin(origin)}${localizedPathname(`/berlin-wahlen/${data.slug}`, getLocale())}`,
+			bbox: BEZIRKE_BBOX,
+			temporalCoverage: deriveTemporalCoverage({ year: data.wahl.jahr }),
 			description: pageDescription,
 			license: 'dl-de/by-2-0',
-			dateModified: `${data.wahl.jahr}-01-01`,
+			dateModified: data.wahl.sourceUpdatedAt ?? `${data.wahl.jahr}-01-01`,
 			creatorName: sourceDisplayLabel(data.wahl.sourceName),
+			creatorUrl: originOfUrl(data.wahl.sourceUrl),
 			contentUrl: data.wahl.sourceUrl,
 			encodingFormat: data.wahl.sourceUrl.endsWith('.zip')
 				? 'application/zip'
@@ -169,7 +176,9 @@
 		{/if}
 		<p class="font-mono text-xs text-ink-muted" data-testid="wahl-detail-meta">
 			{m.wahl_detail_quelle_label({ source: sourceDisplayLabel(data.wahl.sourceName) })} ·
-			{m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(data.wahl.license) })}{#if data.wahl.sourceUpdatedAt}
+			{m.wahl_portal_lizenz_suffix({
+				license: licenseDisplayLabel(data.wahl.license)
+			})}{#if data.wahl.sourceUpdatedAt}
 				{m.wahl_portal_vorlaeufig_stand({ date: formatWahlDate(data.wahl.sourceUpdatedAt) })}
 			{/if}
 		</p>

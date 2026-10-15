@@ -7,7 +7,12 @@
 	import { richSegments } from '$lib/i18n/rich-text.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
-	import { buildBreadcrumbList, buildDataCatalog, localeToBcp47 } from '$lib/seo/index.js';
+	import {
+		buildBreadcrumbList,
+		buildDataCatalog,
+		dataCatalogId,
+		localeToBcp47
+	} from '$lib/seo/index.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
 	import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
 	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
@@ -64,7 +69,10 @@
 			origin: page.url.origin,
 			items: [
 				{ name: 'Berlin', path: localizedPathname('/', getLocale()) },
-				{ name: m.lizenzen_breadcrumb_lizenzen(), path: localizedPathname('/lizenzen', getLocale()) }
+				{
+					name: m.lizenzen_breadcrumb_lizenzen(),
+					path: localizedPathname('/lizenzen', getLocale())
+				}
 			]
 		})
 	);
@@ -76,6 +84,7 @@
 			name: m.lizenzen_datacatalog_name(undefined, { locale }),
 			description: m.lizenzen_datacatalog_description(undefined, { locale }),
 			urlPath: localizedPathname('/lizenzen', locale),
+			catalogId: dataCatalogId(page.url.origin),
 			publisherName: 'Matze Schmidbauer',
 			datasets: data.catalogDatasets,
 			inLanguage: localeToBcp47(locale)
