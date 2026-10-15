@@ -103,6 +103,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-a-infra-routing.md`
   summary: Interne Links auf `/en`-Seiten lokalisieren (`localizeHref` bzw. gemeinsamer Helper), damit Navigation in EN bleibt.
   evidence: Header, Karten, Teaser und Footer nutzen rohe `href`; von `/en/…` führt jeder Klick zurück auf DE. Gehört in Block B, weil die Extraktion jede Komponente ohnehin anfasst.
+  resolved: 15.10.2026 geprüft. `site-header.svelte`, `meta-footer.svelte`, die Home-Teaser und `updates-entry-card.svelte` nutzen `localizeHref`/`localizedHref` (85 Dateien in `src`).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-a-infra-routing.md`
   summary: Prerenderte `/de/…`-URLs antworten 200 statt 301 (Stale-Locale-Redirect greift nur für nicht prerenderte Routen).
@@ -127,6 +128,7 @@
 - source_spec: none
   summary: i18n Block B3c „Finder, Compare, Bookmarks“: kiez-finder-panel + kiez-finder-data, compare-panel/-row, wahl-compare-block, kiez-score-compare-block, layer-compare.ts, bookmark-dialog/-row auf Messages + EN (~110 Keys); danach /explore ins Übersetzungs-Register.
   evidence: Split aus B3 (Koordinator-Entscheidung 27.09. 00:05, Matze AFK); /explore erst nach B3a-c registrieren, sonst indexierbar halb deutsch.
+  resolved: B3c umgesetzt (15.10.2026 geprüft). kiez-finder-panel nutzt `m.finder_*`-Messages, `/explore` steht im `TRANSLATION_REGISTER` (Block C1).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3a-atlas-fundament.md`
   summary: DE-Textmängel im Atlas korrigieren: aria-label „Karte nach Sueden verschieben“ (Umlaut), Palette-Leerzustand „Kein Layer matched“ (Denglisch).
@@ -136,14 +138,17 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
   summary: `/explore` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/explore`-Seite als echt übersetzt gilt (kein `TranslationDisclaimer`-Fallback-Hinweis, `hreflang`/Sitemap-Eintrag).
   evidence: Koordinator-Entscheidung 27.09. (Matze AFK): Compare- und Inspector-`EditorialDisclaimer`-Varianten (Bodenrichtwerte, Milieuschutz, Stolperstein, Stigma-Footer, Kiez-Score-Explainer, Wahl-Stimmenanteile) bleiben bis Block C deutsch -- eine indexierte `/en/explore` waere damit editorial halb deutsch. Registrierung erst nach Block C (EditorialDisclaimer-Uebersetzung).
+  resolved: 15.10.2026 geprüft. `{ pathname: '/explore', locale: 'en' }` steht in `src/lib/seo/translation-register.ts:112` (Block C1).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
   summary: Kiez-Finder-Slider S-Bahn-Nähe und Wahlverhalten ohne `aria-valuetext`, Screenreader lesen nur 0/1/2.
   evidence: Review B3c Fund #6; bipolare Slider haben `aria-valuetext`, unipolare seit jeher nicht. `stufenText` liefert den Text schon.
+  resolved: 15.10.2026 geprüft. `kiez-finder-panel.svelte:505` setzt `aria-valuetext={stufenText(def.family, …)}` für alle Slider-Familien.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
   summary: `map-libre-canvas.svelte` loadError-Block („Karte konnte nicht geladen werden…“, „Unbekannter Karten-Fehler“, „Neu laden“) auf Messages + EN.
   evidence: Review B3c Fund #7; lag außerhalb der B3c-Code-Map, `/en/explore` zeigt ihn bei Kartenfehler deutsch. Vor Register-Eintrag `/explore` erledigen.
+  resolved: 15.10.2026 geprüft. `map-libre-canvas.svelte` nutzt `m.map_load_error_timeout()`, `m.map_load_error_unknown()` und `m.map_load_error_reload_button()`.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
   summary: Wahl-Vergleich zeigt bei |Diff| < 0,05 pp „+0,0“ bzw. „höher in A“ statt „±0,0“/„gleich“.
@@ -153,6 +158,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: i18n Block B4b „Layer-Detailseite“: Rahmen von `/layer/[slug]` (~30 Strings: Quelle/Lizenz/Datenstand, Werte/Skala, Berechnung, Coverage-Lücken, „Was wir NICHT zeigen“, Verwandte Layer, Methodik-Aside, Leerzustand, Hitze-CTA, `toLocaleString('de-DE')`, rohe Hrefs) plus Dataset-JSON-LD (`inLanguage`, Description-Fallback) auf Messages + EN.
   evidence: Split aus B4 (Koordinator-Entscheidung 27.09. 04:55, Matze AFK); Layer-Seite teilt keine Komponenten mit Kiez/Bezirk, eigenes PR-fähiges Paket.
+  resolved: 15.10.2026 geprüft. `layer/[slug]/+page.svelte` nutzt Messages (`layer_page_*`), `/layer` ist mit `prefix: true` registriert (D1), Dataset-JSON-LD trägt die Seiten-Locale.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: `/kiez` und `/bezirk` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/kiez/…`- und `/en/bezirk/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
@@ -171,6 +177,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: `error-feedback-mailto.svelte` bleibt deutsch (Fehler-Melden-Link + Aria-Label), gehört zu B4b (Layer-Detailseite), nicht zu B4a.
   evidence: Der Inventur-Code-Map von B4a listete die Komponente versehentlich mit, ihr einziger Aufrufer ist `/layer/[slug]/+page.svelte` (explizit "Never: Kein `/layer` (B4b)"). Übersetzung gehört in den B4b-Task.
+  resolved: 15.10.2026 geprüft. Die Komponente nutzt `m.error_feedback_mailto_label()` und `m.error_feedback_mailto_aria_label()`.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
   summary: Lokalisierte 404-Meldung auf `/en/kiez/…` und `/en/bezirk/…` per Test absichern.
@@ -183,6 +190,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: `/layer` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit `/en/layer/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
   evidence: Koordinator-Entscheidung (Matze AFK): Layer-Explain-Fließtext (`explain.*`) und Methodik-Inhalte (`methodology.*`) bleiben bis Block C deutsch -- eine indexierte `/en/layer/…`-Seite wäre editorial halb deutsch. Registrierung erst nach Block C (Explain-/Methodik-Übersetzung).
+  resolved: 15.10.2026 geprüft. `{ pathname: '/layer', locale: 'en', prefix: true }` in `translation-register.ts:125` (D1).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: EN-OG-Bilder für `/layer/[slug]` (eigener vorgenerierter Schritt, `scripts/generate-og-images.ts` bleibt DE).
@@ -205,6 +213,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: `/en/layer/…` sendet `meta description`/`og:description` deutsch, wenn `explain.short` gesetzt ist.
   evidence: Review B4b Fund #5; `explain.short` ist layer-explain-Inhalt (Block C). Mit der Übersetzung in Block C erledigt, dann prüfen.
+  resolved: S6 (15.10.2026). `buildLayerMeta` (`src/lib/seo/layer-meta.ts`) baut die Description mit Seiten-Locale, `lead` kommt aus dem übersetzten `explain.short`.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
   summary: B4a prüfen: Place-/AdministrativeArea-/Breadcrumb-JSON-LD auf `/en/kiez` und `/en/bezirk` mit EN-Namen bei `inLanguage` de-DE angleichen (B4b-Linie: JSON-LD bleibt bis zur Registrierung DE).
@@ -215,10 +224,12 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
   summary: DE-Textbereinigung: „Cloud-Dancer-Skala“ in `layer-explain.ts` (`kiez-score-ruhe-luft`) ist ein interner Farbskalen-Name und für Nutzer unverständlich, in DE und EN ersetzen.
   evidence: C1-Übersetzungsreview, Matze 27.09. 09:21; C1 ändert DE-Texte bewusst nicht.
+  resolved: 15.10.2026 geprüft. `Cloud-Dancer` steht nur noch in Code-Kommentaren (`score-ranking-table.svelte`, `partei-farben.ts`), nicht mehr in `messages/*.json` oder `layer-explain.ts`.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
   summary: DE+EN-Textbereinigung Layer-Texte: rohe Pfade („Methodik: /methodik/kiez-score“, 8 Kiez-Score-Texte), „Option C“, Slug statt Name („wohnlagen-2024“), „Legacy-Slug“-Hinweise, „Cloud-Dancer-Skala“, interne Verweise in Methodik („Story 10.6b“, „Epic 12 Story 12.3“, „FR50/FR51“). Pfade als lokalisierte Links statt Text.
   evidence: Review C1 Fund #9 und C2-Übersetzungsreview; Texte spiegeln das DE-Original, C1/C2 überarbeiten DE bewusst nicht. `/en/explore` ist jetzt indexierbar.
+  resolved: 15.10.2026 geprüft. Grep nach „Option C“, „Story 1x.“, „Epic 12“, „FR50/FR51“, „Legacy-Slug“ und „Methodik: /“ liefert in `messages/de.json` und `messages/en.json` keine Treffer.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-i18n-c1-hinweise-layer-erklaerungen.md`
   summary: Registrierte EN-Seiten (`/en`, `/en/explore`, `/en/berlin-wahlen/…`) als eigene `<loc>` in `sitemap-en.xml` aufnehmen; `STATIC_PAGES_SOURCE` liefert für Nicht-Basis-Locales `[]`.
@@ -318,22 +329,27 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-fix-prerender-404-links.md`
   summary: Prerender-404 im Build sichtbar machen (CI-Schritt oder `handleHttpError` mit Fehler), damit tote interne Links nicht wieder unbemerkt live gehen.
   evidence: `svelte.config.js` loggt Prerender-404 nur per `console.warn`; die 32 Treffer vom 14.10.2026 fielen nur zufällig im Coolify-Log auf.
+  resolved: S5 (15.10.2026). `svelte.config.js` nutzt `createHandleHttpError` (`src/lib/build/strict-build.js`), das im Strict-Build (`NAVIGATOR_STRICT_BUILD=1`, Dockerfile) bei Prerender-HTTP-Fehlern wirft; Allowlist leer.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: Zensus-Folge-Story 1 · Bestandsmiete als 100m-Raster (PMTiles, Muster klima-pet-2022) für die Detail-Ansicht; KLAMMERN-Zellen dämpfen oder ausblenden; PMTiles ist im Zwei-Karten-Regelwerk immer Fläche.
   evidence: Owner-Entscheidung 14.10.2026: Kiez-/PLR-Aggregat zuerst, Raster als eigene Story (Recherche 3.1 + Nachtrag 22.08.).
+  resolved: überholt durch die Entscheidung Matze 14.10.2026 (Eintrag „ENTSCHIEDEN … Folge-Story 1“ weiter unten), nicht umsetzen.
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: Zensus-Folge-Story 2 · Leerstandsquote und marktaktive Leerstandsquote als PLR-Choropleth (Leerstandsquote_in_Gitterzellen.zip, Marktaktive_Leerstandsquote_in_Gitterzellen.zip).
   evidence: Owner-Entscheidung 14.10.2026; Pipeline aus der Bestandsmiete-Story wiederverwenden.
+  resolved: überholt durch die Entscheidung Matze 14.10.2026 (Eintrag „ENTSCHIEDEN … Folge-Story Leerstand“ weiter unten), nicht umsetzen.
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: Zensus-Folge-Story 3 · Gebäudealter (Gebaeude_nach_Baujahr_Jahrzehnte.zip bzw. Wohnungen_nach_Baujahresklassen) als PLR-Choropleth, z. B. Anteil Altbau vor 1949.
   evidence: Owner-Entscheidung 14.10.2026; Kennzahl vor Umsetzung festlegen.
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: Zensus-Folge-Story 4 · Heizungsart/Energieträger als Anteil Fernwärme bzw. Wärmepumpe pro PLR (Zensus2022_Heizungsart.zip, Zensus2022_Energietraeger.zip), anschlussfähig an Wärmeplanung.
   evidence: Owner-Entscheidung 14.10.2026.
+  resolved: überholt durch die Entscheidung Matze 14.10.2026 (Eintrag „ENTSCHIEDEN … Heizungsart/Energieträger“ weiter unten), nicht umsetzen.
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: Kiez-, Bezirks- und Layer-Seiten grundsätzlich attraktiver machen, damit Einsteiger bleiben und weiterklicken (Bestandsmiete ist nur ein Baustein); Ausgangspunkt Brainstorming, dann Epic-Schnitt.
   evidence: Bounce-Befund Plausible 08.10.2026 (Kiez-Seiten ~100 % bei 0 s); Matze 14.10.2026: „müssen generell besser und attraktiver werden“, Prio-Thema.
+  resolved: Landing-Epic L1-L8 (15.10.2026). Specs `spec-l1-explore-ortsfokus.md` bis `spec-l7-layer-seiten.md` plus S7/S8 (`spec-s7-uebersichtsseiten.md`, `spec-s8-hub-links.md`) liegen vor, Epic-Suiten grün.
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-miete-farben.md`
   summary: Größen-Symbole bei kleinsten Faktoren (Einwohnerdichte 0,3, Wohnlagen 0,45) haben nur einen Sub-Pixel-Rand; auf dunklen Flächenklassen (Bestandsmiete Klasse 4/5) prüfen, ob Mindest-Randbreite oder Mindestgröße nötig ist.
@@ -342,18 +358,22 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story 1 (Bestandsmiete als 100m-Raster). Matze: Unterschied zum Planungsraum-Layer für Nutzer nicht verständlich, zwei fast gleiche Inspector-Karten verwirren.
   evidence: Prototyp lief (28.463 Zellen, 1,74 MB PMTiles), wurde verworfen. Kosten: eigener PMTiles-Layer, Ein-PMTiles-Regel, Werte nur im sichtbaren Ausschnitt. Falls später: als Zoom-Detail desselben Layers mit einer Inspector-Karte („Planungsraum x · diese Zelle y“), nicht als eigener Slug.
+  resolved: entschieden, nicht umsetzen (Matze 14.10.2026)
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: Präzisierung Zensus-Folge-Story 2 (Matze 14.10.2026): EIN Layer „Leerstand (Zensus 2022)“ mit der normalen Leerstandsquote; die marktaktive Leerstandsquote (Destatis: leer und innerhalb von drei Monaten wieder verfügbar) entfällt, weil der Begriff Nutzern nichts sagt.
   evidence: Destatis-Datensatzbeschreibung `Marktaktive_Leerstandsquote_in_Gitterzellen.zip`; Matze: „marktaktive Leerstandsquote wtf?“.
+  resolved: überholt durch die Entscheidung Matze 14.10.2026 (Leerstand gesamt nicht umsetzen, Eintrag weiter unten).
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story Leerstand. Datenqualität auf Planungsraum-Ebene zu schwach.
   evidence: Leerstandsquote-Gitter Berlin-BBox: 51.435 von 57.698 Zellen „–“ (= 0), von ~6.300 Zellen mit Wert 5.690 KLAMMERN; gewichtet (Wohnungen aus Wohnungen_nach_Zahl_der_Raeume) 1,55 % gegen amtlich 1,97 % (Abgeordnetenhaus S19/20607). Unterschiede zwischen PLR wären überwiegend Rauschen.
+  resolved: entschieden, nicht umsetzen (Matze 14.10.2026)
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-zensus-bestandsmiete-kiez.md`
   summary: ENTSCHIEDEN 14.10.2026, nicht umsetzen: Zensus-Folge-Story Heizungsart/Energieträger.
   evidence: Heizart folgt in Berlin weitgehend dem Baujahr (redundant zum Altbau-Anteil); Wärmepumpen-/Solaranteil 2022 vermutlich klein (ungeprüft, Rausch-Risiko wie Leerstand); Stand Mai 2022 seit GEG schnell veraltet; Nutzen eher wohnungs- als kiezbezogen. Falls später: als Brücke zur kommunalen Wärmeplanung neu bewerten.
+  resolved: entschieden, nicht umsetzen (Matze 14.10.2026)
 
 - source_spec: `_bmad-output/implementation-artifacts/spec-l1-explore-ortsfokus.md`
   summary: Fokus-Kontur `region-focus-line` und ihre Lage über Choroplethen sind nur im Helper-Unit-Test und per Screenshot geprüft, nicht auf der Seite.
