@@ -8,6 +8,7 @@
  * Run: `pnpm logo:organization`
  */
 
+import { isMainEntry } from './lib/is-main-entry.js';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -34,7 +35,7 @@ export function renderOrganizationLogo(svg: string): Buffer {
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainEntry(import.meta.url, process.argv[1])) {
 	const svg = readFileSync(path.join(root, 'static', 'logo-pixel.svg'), 'utf-8');
 	writeFileSync(path.join(root, 'static', 'logo-organization.png'), renderOrganizationLogo(svg));
 }

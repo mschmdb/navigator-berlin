@@ -9,9 +9,9 @@
  * Run: `pnpm doc:story-map`.
  */
 
+import { isMainEntry } from './lib/is-main-entry.js';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { IMPLEMENTATION_ARTIFACTS_DIR, REPO_ROOT } from './lib/paths.js';
 
 const SPRINT_STATUS_PATH = join(IMPLEMENTATION_ARTIFACTS_DIR, 'sprint-status.yaml');
@@ -137,8 +137,7 @@ async function main(): Promise<void> {
 	process.stdout.write(`[generate-story-map] wrote ${OUT_PATH} (${rows.length} stories)\n`);
 }
 
-const isMainEntry = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
-if (isMainEntry) {
+if (isMainEntry(import.meta.url, process.argv[1])) {
 	main().catch((err) => {
 		process.stderr.write(`[generate-story-map] FATAL: ${(err as Error).message}\n`);
 		process.exit(1);

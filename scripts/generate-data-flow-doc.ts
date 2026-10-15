@@ -9,6 +9,7 @@
  * Run: `pnpm doc:pipelines`.
  */
 
+import { isMainEntry } from './lib/is-main-entry.js';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -139,8 +140,7 @@ async function main(): Promise<void> {
 	process.stdout.write(`[generate-data-flow-doc] wrote ${OUT_PATH} (${rows.length} layers)\n`);
 }
 
-const isMainEntry = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
-if (isMainEntry) {
+if (isMainEntry(import.meta.url, process.argv[1])) {
 	main().catch((err) => {
 		process.stderr.write(`[generate-data-flow-doc] FATAL: ${(err as Error).message}\n`);
 		process.exit(1);
