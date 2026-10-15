@@ -43,7 +43,7 @@ describe.skipIf(!process.env.DATABASE_URL)('GET /api/wahl/kiez-shares mit Datenb
 	it('liefert für AGH 2026 das Endergebnis (nicht vorläufig), Stand und Quelle der Wahl', async () => {
 		const res = await call('?election=2026-agh-zweitstimme');
 		const body = await res.json();
-		if (body.shares.length === 0) return;
+		expect(body.shares.length).toBeGreaterThan(0);
 		expect(body.vorlaeufig).toBe(false);
 		expect(body.source_updated_at).toMatch(/^2026-10-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
 		expect(body.source_name).toBe('Landeswahlleiterin Berlin');
@@ -52,7 +52,7 @@ describe.skipIf(!process.env.DATABASE_URL)('GET /api/wahl/kiez-shares mit Datenb
 	it('liefert für BTW 2025 kein Vorläufig-Flag', async () => {
 		const res = await call('?election=2025-btw-zweitstimme');
 		const body = await res.json();
-		if (body.shares.length === 0) return;
+		expect(body.shares.length).toBeGreaterThan(0);
 		expect(body.vorlaeufig).toBe(false);
 		expect(body.source_name).toBe('Bundeswahlleiterin');
 	});

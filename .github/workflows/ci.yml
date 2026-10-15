@@ -10,7 +10,7 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   checks:
@@ -24,13 +24,13 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Prettier
+        run: pnpm exec prettier --check .
       - name: Compile Paraglide messages
         run: pnpm i18n:compile
       - name: Type check
         run: pnpm check
-      - name: Prettier
-        run: pnpm exec prettier --check .
       # Nur das Node-Projekt. Browser-Tests (Projekt "client") und Tests
-      # gegen Postgres (queries.test.ts) laufen nicht in der CI.
+      # gegen Postgres laufen lokal. Sie überspringen sich ohne DATABASE_URL.
       - name: Unit tests (no database, no browser)
         run: pnpm exec vitest run --project server

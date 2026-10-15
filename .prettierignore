@@ -20,3 +20,4 @@ bun.lockb
 /drizzle/migrations/
 /docs/architecture/story-map.md
 /docs/pipelines/data-flow.md
+/src/lib/paraglide/

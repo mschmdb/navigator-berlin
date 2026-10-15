@@ -12,7 +12,7 @@ import { getKiezCompositeRanks } from './get-kiez-composite-ranks.js';
  *
  * Voraussetzung: `pnpm db:migrate && pnpm data:aggregate` lokal gelaufen.
  * Tests gegen echte lokale Postgres weil pg-mem die JSONB-Drizzle-Inference
- * nicht zuverlässig modelliert. CI-Postgres-Service kommt mit Story 4.3.
+ * nicht zuverlässig modelliert. Ohne `DATABASE_URL` (CI) überspringt die Datei sich.
  */
 
 /** Ohne `DATABASE_URL` (z. B. in der CI) überspringen. */

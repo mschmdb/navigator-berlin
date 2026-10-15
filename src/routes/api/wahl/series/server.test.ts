@@ -49,14 +49,9 @@ describe('GET /api/wahl/series', () => {
 	});
 });
 
-// Defensiv gegen lokales Postgres (Muster wahl-queries.test.ts): grünt auch
-// ohne Daten, prüft mit Daten die Matrix-Fälle „Zeitreihe", „coverage_ab"
+// Läuft nur mit DATABASE_URL (lokal, nicht in der CI). Prüft die Matrix-Fälle „Zeitreihe", „coverage_ab"
 // und „unbekanntes Gebiet → 404 nur wenn die Reihe Daten hat".
-describe('GET /api/wahl/series (mit lokaler DB)', () => {
-	beforeAll(() => {
-		process.env.DATABASE_URL =
-			process.env.DATABASE_URL ?? 'postgres://app:app@127.0.0.1:5432/navigator_dev';
-	});
+describe.skipIf(!process.env.DATABASE_URL)('GET /api/wahl/series (mit lokaler DB)', () => {
 	afterAll(async () => {
 		await closeDb();
 	});
@@ -65,7 +60,7 @@ describe('GET /api/wahl/series (mit lokaler DB)', () => {
 		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=kiez&gebiet=adlershof');
 		expect(res.status).toBe(200);
 		const body = await res.json();
-		if (body.points.length === 0) return;
+		expect(body.points.length).toBeGreaterThan(0);
 		expect(typeof body.coverage_ab).toBe('number');
 		expect(body.coverage_ab).toBeGreaterThanOrEqual(2016);
 		const point = body.points[0];
@@ -87,7 +82,7 @@ describe('GET /api/wahl/series (mit lokaler DB)', () => {
 		expect(res.status).toBe(200);
 		const body = await res.json();
 		expect(body.gebiet).toBe('berlin');
-		if (body.points.length === 0) return;
+		expect(body.points.length).toBeGreaterThan(0);
 		const cdu2023 = body.points.find(
 			(p: { jahr: number; partei: string }) => p.jahr === 2023 && p.partei === 'CDU'
 		);
@@ -98,7 +93,7 @@ describe('GET /api/wahl/series (mit lokaler DB)', () => {
 		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=berlin');
 		expect(res.status).toBe(200);
 		const body = await res.json();
-		if (body.points.length === 0) return;
+		expect(body.points.length).toBeGreaterThan(0);
 		const punkt2026 = body.points.find((p: { jahr: number }) => p.jahr === 2026);
 		if (punkt2026) {
 			expect(punkt2026.vorlaeufig).toBe(false);
