@@ -58,3 +58,11 @@ _bmad-output/secrets/coolify-prod.env.backup
 .agents/
 jean.json
 prompt-grader-runs/
+
+# Prozess-Zwischenstände (lokal erzeugt, nicht im Repo)
+_bmad-output/implementation-artifacts/screenshots/
+_bmad-output/implementation-artifacts/c5-profiles-en/
+_bmad-output/implementation-artifacts/c4d-updates-en/
+_bmad-output/implementation-artifacts/*.json
+_bmad-output/brainstorming/
+**/.memlog.md
