@@ -1,14 +1,11 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/state';
-	import { locales, getLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
+	import { locales } from '$lib/paraglide/runtime';
 	import { browser } from '$app/environment';
 	import SkipLink from '$lib/components/atlas/skip-link.svelte';
 	import MetaFooter from '$lib/components/atlas/meta-footer.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import LangSwitcher from '$lib/components/atlas/lang-switcher.svelte';
-	import { buildWebSite, localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
 	import { basePathname } from '$lib/i18n/base-path.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { createUiState } from '$lib/state/ui-context.svelte.js';
@@ -71,28 +68,6 @@
 
 	let { children } = $props();
 
-	/**
-	 * Story 2.2 AC-3: WebSite-JSON-LD inkl. SearchAction im Root-Layout.
-	 * i18n Block A: `locale` folgt der EFFEKTIVEN Content-Locale, nicht der
-	 * URL-Locale -- solange eine `/en/...`-Seite mangels Übersetzungs-Register-
-	 * Eintrag DE-Content zeigt, meldet das JSON-LD auch `de-DE`, statt
-	 * fälschlich EN-Content zu behaupten (`resolveEffectiveLocale`).
-	 * Story 2.11 Pivot: wenn Atlas auf `/explore` wandert, `searchPath: '/explore'`.
-	 */
-	// i18n Block B2: die Beschreibung folgt derselben EFFEKTIVEN Content-Locale
-	// wie `locale` selbst -- sonst würde das JSON-LD `inLanguage: de-DE` neben
-	// einem englischen Beschreibungstext behaupten, sobald eine `/en/...`-Seite
-	// mangels Register-Eintrag noch DE-Content zeigt.
-	const websiteJsonLdLocale = $derived(resolveEffectiveLocale(page.url.pathname, getLocale()));
-	const websiteJsonLd = $derived(
-		buildWebSite({
-			origin: page.url.origin,
-			name: 'navigator.berlin',
-			locale: localeToBcp47(websiteJsonLdLocale),
-			description: m.shell_website_description(undefined, { locale: websiteJsonLdLocale })
-		})
-	);
-
 	// Code-review fix (i18n Block A): `page.url.pathname` trägt auf `/en/...`
 	// den Locale-Präfix, ein nackter `startsWith` hätte `/en/explore` in den
 	// falschen Layout-Zweig gesteckt. `basePathname()` normalisiert zuerst.
@@ -107,8 +82,6 @@
 	     gleichnamige "Sprache"-<nav>-Landmarks (WCAG code review). -->
 	<LangSwitcher currentPath={page.url.pathname} landmark={false} />
 {/snippet}
-
-<JsonLd data={websiteJsonLd} testid="website-jsonld" />
 
 <SkipLink />
 

@@ -291,7 +291,6 @@
 	"shell_meta_link_architektur": "Architecture",
 	"shell_meta_link_webmcp": "WebMCP",
 	"shell_social_link_aria_label": "{person} on {platform}",
-	"shell_website_description": "Open-data atlas for Berlin. Noise, climate, green space, mobility, housing, social structure and elections, per address.",
 	"home_hero_headline": "Berlin in data.",
 	"home_hero_lead": "Enter an address. See how loud it is, how hot it gets in summer, how close the nearest S-Bahn station is. Combined into a Kiez score across five dimensions.",
 	"home_hero_cta_map": "Open map",

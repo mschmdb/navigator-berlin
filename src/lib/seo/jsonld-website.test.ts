@@ -23,29 +23,33 @@ describe('buildWebSite', () => {
 		expect(out.description).toBe('Berliner Geo-Datenlayer pro Adresse.');
 	});
 
-	it('hat potentialAction SearchAction mit urlTemplate auf root-route', () => {
-		const out = buildWebSite(baseInput);
-		const action = out.potentialAction;
-		expect(action['@type']).toBe('SearchAction');
-		expect(action.target.urlTemplate).toBe(
-			'https://navigator.berlin/?address={search_term_string}'
-		);
-		expect(action.target['@type']).toBe('EntryPoint');
-		expect(action['query-input']).toBe('required name=search_term_string');
+	it('hat keine SearchAction', () => {
+		const out = buildWebSite(baseInput) as unknown as Record<string, unknown>;
+		expect(out.potentialAction).toBeUndefined();
 	});
 
-	it('strippt trailing-slash aus origin fuer url + urlTemplate', () => {
+	it('verweist per @id auf die Organization', () => {
+		expect(buildWebSite(baseInput).publisher).toEqual({
+			'@type': 'Organization',
+			'@id': 'https://navigator.berlin/#organization',
+			name: 'navigator.berlin',
+			url: 'https://navigator.berlin'
+		});
+	});
+
+	it('hat @id <origin>/#website', () => {
+		expect(buildWebSite(baseInput)['@id']).toBe('https://navigator.berlin/#website');
+	});
+
+	it('konsolidiert die hitze-Subdomain auf die Hauptdomain', () => {
+		const out = buildWebSite({ ...baseInput, origin: 'https://hitze.navigator.berlin' });
+		expect(out.url).toBe('https://navigator.berlin');
+		expect(out['@id']).toBe('https://navigator.berlin/#website');
+	});
+
+	it('strippt trailing-slash aus origin', () => {
 		const out = buildWebSite({ ...baseInput, origin: 'https://navigator.berlin/' });
 		expect(out.url).toBe('https://navigator.berlin');
-		expect(out.potentialAction.target.urlTemplate).toBe(
-			'https://navigator.berlin/?address={search_term_string}'
-		);
-	});
-
-	it('akzeptiert optionalen searchPath-Override fuer Atlas-Pivot Story 2.11 → /explore', () => {
-		const out = buildWebSite({ ...baseInput, searchPath: '/explore' });
-		expect(out.potentialAction.target.urlTemplate).toBe(
-			'https://navigator.berlin/explore?address={search_term_string}'
-		);
+		expect(out.publisher['@id']).toBe('https://navigator.berlin/#organization');
 	});
 });

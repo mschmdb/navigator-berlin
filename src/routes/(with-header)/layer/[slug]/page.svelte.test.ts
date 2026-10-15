@@ -286,14 +286,16 @@ describe('layer-detail +page.svelte', () => {
 
 	// i18n Block D1: `creatorName` kommt aus `detail.methodology` (Seiten-Locale).
 	// Der Fallback greift, wenn der Loader keine Methodology liefert.
-	it('Dataset-JSON-LD nutzt navigator.berlin als creator-Fallback wenn der Slug keine reale Methodology hat', async () => {
+	it('Dataset-JSON-LD verweist als creator-Fallback auf die Organization wenn der Slug keine reale Methodology hat', async () => {
 		const d = detail('does-not-exist-xyz', { methodology: null });
 		render(Page, { data: { detail: d, faq: [], faqLocale: 'de', ranking: null } });
 		const script = document.querySelector(
 			'script[type="application/ld+json"][data-testid="layer-dataset-jsonld"]'
 		);
 		const parsed = JSON.parse(script?.textContent ?? '{}');
-		expect(parsed.creator?.name).toBe('navigator.berlin');
+		expect(parsed.creator['@type']).toBe('Organization');
+		expect(parsed.creator.name).toBe('navigator.berlin');
+		expect(parsed.creator['@id']).toMatch(/\/#organization$/);
 	});
 
 	it('zeigt „Methodik in Vorbereitung"-Banner wenn methodology null', async () => {

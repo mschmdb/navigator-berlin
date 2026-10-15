@@ -1,6 +1,7 @@
 import type { WithContext } from 'schema-dts';
 import type { License } from '$lib/data/types.js';
 import { licenseToSchemaOrgUrl } from './license-url.js';
+import { organizationRef, type OrganizationRefJsonLd } from './jsonld-organization.js';
 
 /**
  * Dataset-Leaf-Type fuer Builder-Output. schema-dts modelliert Dataset als
@@ -25,7 +26,7 @@ export interface DatasetLeafJsonLd {
 	description: string;
 	license: string;
 	dateModified: string;
-	creator: DatasetCreatorJsonLd;
+	creator: DatasetCreatorJsonLd | OrganizationRefJsonLd;
 	distribution: DatasetDistributionJsonLd;
 	inLanguage: string;
 	keywords?: string;
@@ -64,9 +65,9 @@ export interface DatasetInput {
 export function buildDataset(input: DatasetInput): DatasetJsonLd {
 	const origin = input.origin.replace(/\/+$/, '');
 
-	const creator: DatasetCreatorJsonLd = input.creatorName
+	const creator: DatasetCreatorJsonLd | OrganizationRefJsonLd = input.creatorName
 		? { '@type': 'Organization', name: input.creatorName }
-		: { '@type': 'Organization', name: 'navigator.berlin', url: origin };
+		: organizationRef(origin);
 
 	const out: DatasetJsonLd = {
 		'@context': 'https://schema.org',

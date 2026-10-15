@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { BEZIRK_SAMEAS, bezirkSameAs } from './bezirk-sameas.js';
 
 const BEZIRK_SLUGS = [
@@ -37,5 +38,26 @@ describe('bezirk-sameas (Story 11.1)', () => {
 
 	it('bezirkSameAs liefert [] für unbekannten Slug (kein erfundener Link)', () => {
 		expect(bezirkSameAs('gibt-es-nicht')).toEqual([]);
+	});
+
+	it('normalizeSlug der Bezirksnamen ergibt die Bezirks-Slugs (Kiez-@id verweist auf die Bezirksseite)', () => {
+		const names: Record<string, string> = {
+			'Charlottenburg-Wilmersdorf': 'charlottenburg-wilmersdorf',
+			'Friedrichshain-Kreuzberg': 'friedrichshain-kreuzberg',
+			Lichtenberg: 'lichtenberg',
+			'Marzahn-Hellersdorf': 'marzahn-hellersdorf',
+			Mitte: 'mitte',
+			Neukölln: 'neukoelln',
+			Pankow: 'pankow',
+			Reinickendorf: 'reinickendorf',
+			Spandau: 'spandau',
+			'Steglitz-Zehlendorf': 'steglitz-zehlendorf',
+			'Tempelhof-Schöneberg': 'tempelhof-schoeneberg',
+			'Treptow-Köpenick': 'treptow-koepenick'
+		};
+		for (const [name, slug] of Object.entries(names)) {
+			expect(normalizeSlug(name)).toBe(slug);
+			expect(BEZIRK_SAMEAS[slug]).toBeDefined();
+		}
 	});
 });

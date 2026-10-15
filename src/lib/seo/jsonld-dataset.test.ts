@@ -34,14 +34,17 @@ describe('buildDataset', () => {
 
 	it('hat creator als Organization mit name', () => {
 		const out = buildDataset(baseInput);
-		expect(out.creator['@type']).toBe('Organization');
-		expect(out.creator.name).toBe('SenStadt Berlin');
+		expect(out.creator).toEqual({ '@type': 'Organization', name: 'SenStadt Berlin' });
 	});
 
-	it('Fallback-creator wenn creatorName leer: navigator.berlin', () => {
+	it('Fallback-creator wenn creatorName leer: Verweis auf die Organization', () => {
 		const out = buildDataset({ ...baseInput, creatorName: undefined });
-		expect(out.creator.name).toBe('navigator.berlin');
-		expect(out.creator.url).toBe('https://navigator.berlin');
+		expect(out.creator).toEqual({
+			'@type': 'Organization',
+			'@id': 'https://navigator.berlin/#organization',
+			name: 'navigator.berlin',
+			url: 'https://navigator.berlin'
+		});
 	});
 
 	it('hat distribution mit contentUrl + encodingFormat', () => {

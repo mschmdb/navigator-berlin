@@ -241,6 +241,8 @@ describe('methodik +page.svelte · EN (i18n C4a)', () => {
 		expect(tech.headline).toBe('Data methodology');
 		expect(tech.description).toMatch(/^Methodology of the Berlin data atlas/);
 		expect(tech.inLanguage).toBe('en-US');
+		expect(tech.author['@id']).toMatch(/\/#organization$/);
+		expect(tech.author.name).toBe('navigator.berlin');
 		const crumbs = JSON.parse(
 			document.querySelector('script[data-testid="methodik-breadcrumb-jsonld"]')?.textContent ??
 				'{}'

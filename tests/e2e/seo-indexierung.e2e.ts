@@ -72,4 +72,58 @@ test.describe('Indexierungs-Hygiene S1', () => {
 			expect(data.itemListElement.map((i) => i.item)).toEqual(items.map((p) => `${baseURL}${p}`));
 		});
 	}
+
+	for (const { route, lang } of [
+		{ route: '/', lang: 'de-DE' },
+		{ route: '/en', lang: 'en-US' }
+	]) {
+		test(`${route}: genau ein WebSite-Block ohne SearchAction, publisher verweist auf Organization`, async ({
+			page
+		}) => {
+			await page.goto(route);
+			const blocks = (
+				await page.locator('script[type="application/ld+json"]').allTextContents()
+			).map((text) => JSON.parse(text) as Record<string, unknown>);
+			const websites = blocks.filter((b) => b['@type'] === 'WebSite');
+			expect(websites).toHaveLength(1);
+			expect(websites[0].potentialAction).toBeUndefined();
+			expect(websites[0].inLanguage).toBe(lang);
+			const orgs = blocks.filter((b) => b['@type'] === 'Organization');
+			expect(orgs).toHaveLength(1);
+			expect(String(orgs[0]['@id'])).toMatch(/^https?:\/\/[^/]+\/#organization$/);
+			expect(websites[0].publisher).toMatchObject({
+				'@id': orgs[0]['@id'],
+				'@type': 'Organization',
+				name: 'navigator.berlin'
+			});
+			expect(JSON.stringify(orgs[0].logo)).toContain('/logo-organization.png');
+		});
+	}
+
+	test('/kiez/reuterstrasse: genau eine AdministrativeArea mit @id und Verweis auf den Bezirk', async ({
+		page
+	}) => {
+		await page.goto('/kiez/reuterstrasse');
+		const blocks = (await page.locator('script[type="application/ld+json"]').allTextContents()).map(
+			(text) => JSON.parse(text) as Record<string, unknown>
+		);
+		expect(blocks.filter((b) => b['@type'] === 'Place')).toHaveLength(0);
+		const areas = blocks.filter((b) => b['@type'] === 'AdministrativeArea');
+		expect(areas).toHaveLength(1);
+		expect(areas[0]['@id']).toMatch(/\/kiez\/reuterstrasse#place$/);
+		const parent = areas[0].containedInPlace as { '@id': string; url: string };
+		expect(parent['@id']).toMatch(/\/bezirk\/neukoelln#place$/);
+		expect(parent['@id']).toBe(`${parent.url}#place`);
+	});
+
+	test('/bezirk/pankow: eine AdministrativeArea mit @id und Wikidata-sameAs', async ({ page }) => {
+		await page.goto('/bezirk/pankow');
+		const blocks = (await page.locator('script[type="application/ld+json"]').allTextContents()).map(
+			(text) => JSON.parse(text) as Record<string, unknown>
+		);
+		const areas = blocks.filter((b) => b['@type'] === 'AdministrativeArea');
+		expect(areas).toHaveLength(1);
+		expect(areas[0]['@id']).toMatch(/\/bezirk\/pankow#place$/);
+		expect(JSON.stringify(areas[0].sameAs)).toContain('wikidata.org');
+	});
 });

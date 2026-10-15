@@ -93,6 +93,8 @@ const SCORE_DIMS = SCORE_DIMENSION_KEYS;
 
 export type KiezPageData = {
 	readonly profile: KiezProfile;
+	/** Slug der Bezirksseite (`/bezirk/<slug>`), `null` ohne Bezirk. */
+	readonly bezirkSlug: string | null;
 	readonly stats: KiezStats | null;
 	readonly score: KiezScore | null;
 	readonly faq: readonly FaqEntry[];
@@ -253,6 +255,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	} catch {
 		throw error(404, m.kiez_page_not_found({ slug }, { locale: getLocale() }));
 	}
+	const bezirkSlug = profile.bezirk ? normalizeSlug(profile.bezirk) : null;
 	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
 	const [
 		stats,
@@ -302,6 +305,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		neighbors: neighborLists.neighbors,
 		similar: neighborLists.similar,
 		outline: bezirkContext.outline,
+		bezirkSlug,
 		wahlVerlauf,
 		comparison,
 		compositeRank,
@@ -309,7 +313,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		keyFigures: buildKeyFigures(layerAggregates, {
 			kind: 'kiez',
 			slug,
-			bezirkSlug: profile.bezirk ? normalizeSlug(profile.bezirk) : null
+			bezirkSlug
 		}),
 		profileProse: profileResult.paragraphs,
 		profileLocale: profileResult.locale

@@ -8,12 +8,10 @@
 	import KiezNeighbors from '$lib/components/atlas/kiez-neighbors.svelte';
 	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
 	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
-	import { buildPlace } from '$lib/seo/jsonld-place.js';
 	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { buildKiezMeta } from '$lib/seo/profile-meta.js';
 	import { localizedPathname } from '$lib/seo/canonical.js';
-	import { normalizeSlug } from '$lib/data/internal/slug.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -30,7 +28,7 @@
 	const slug = $derived(data.profile.slug);
 	const name = $derived(data.profile.name);
 	const bezirkName = $derived(data.profile.bezirk);
-	const bezirkSlug = $derived(bezirkName ? normalizeSlug(bezirkName) : null);
+	const bezirkSlug = $derived(data.bezirkSlug);
 	const ogImagePath = $derived(`/og/kiez/${slug}.png`);
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 
@@ -68,26 +66,17 @@
 			: m.kiez_page_og_alt_no_bezirk({ name }, localeOpts)
 	);
 
-	const placeJsonLd = $derived(
-		buildPlace({
-			origin,
-			name,
-			centroid: data.profile.centroid,
-			containedInPlaceName: bezirkName.length > 0 ? bezirkName : 'Berlin',
-			slug,
-			urlBasePath: '/kiez',
-			einwohner: data.profile.einwohner,
-			flaecheHa: data.profile.flaecheHa,
-			...jsonLdLocaleInput
-		})
-	);
-
 	const adminAreaJsonLd = $derived(
 		buildAdministrativeArea({
 			origin,
 			name,
 			centroid: data.profile.centroid,
-			containedInPlaceName: bezirkName.length > 0 ? bezirkName : 'Berlin',
+			containedInPlaceName: bezirkName.length > 0 ? bezirkName : undefined,
+			containedInCity: bezirkName.length === 0,
+			containedInPlaceRef:
+				bezirkName.length > 0 && bezirkSlug
+					? { slug: bezirkSlug, urlBasePath: '/bezirk' }
+					: undefined,
 			slug,
 			urlBasePath: '/kiez',
 			einwohner: data.profile.einwohner,
@@ -123,7 +112,6 @@
 	ogImage={ogImageAbsolute}
 	{ogImageAlt}
 />
-<JsonLd data={placeJsonLd} testid="kiez-place-jsonld" />
 <JsonLd data={adminAreaJsonLd} testid="kiez-administrative-area-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="kiez-breadcrumb-jsonld" />
 

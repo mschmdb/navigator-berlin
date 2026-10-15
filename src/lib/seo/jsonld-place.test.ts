@@ -112,4 +112,100 @@ describe('buildPlace', () => {
 		expect(m.jsonld_property_einwohner(undefined, { locale: 'en' })).toBe('Population');
 		expect(m.jsonld_property_flaeche_ha(undefined, { locale: 'en' })).toBe('Area (ha)');
 	});
+	it('@id = url#place wenn slug + urlBasePath gesetzt', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Reuterkiez',
+			centroid: [13.42, 52.49],
+			slug: 'reuterstrasse',
+			urlBasePath: '/kiez'
+		});
+		expect(out['@id']).toBe('https://navigator.berlin/kiez/reuterstrasse#place');
+	});
+
+	it('kein @id ohne slug', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Berlin',
+			centroid: [13.4, 52.5]
+		});
+		expect(out['@id']).toBeUndefined();
+	});
+
+	it('containedInPlaceRef verweist per @id und url auf die Elternseite', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Reuterkiez',
+			centroid: [13.42, 52.49],
+			slug: 'reuterstrasse',
+			urlBasePath: '/kiez',
+			containedInPlaceName: 'Neukölln',
+			containedInPlaceRef: { slug: 'neukoelln', urlBasePath: '/bezirk' }
+		});
+		expect(out.containedInPlace).toEqual({
+			'@type': 'AdministrativeArea',
+			'@id': 'https://navigator.berlin/bezirk/neukoelln#place',
+			name: 'Neukölln',
+			url: 'https://navigator.berlin/bezirk/neukoelln'
+		});
+	});
+
+	it('@id bleibt je Sprache gleich, nur url folgt der Locale (/en)', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Reuterkiez',
+			centroid: [13.42, 52.49],
+			slug: 'reuterstrasse',
+			urlBasePath: '/kiez',
+			locale: 'en',
+			containedInPlaceName: 'Neukölln',
+			containedInPlaceRef: { slug: 'neukoelln', urlBasePath: '/bezirk' }
+		});
+		expect(out['@id']).toBe('https://navigator.berlin/kiez/reuterstrasse#place');
+		expect(out.url).toBe('https://navigator.berlin/en/kiez/reuterstrasse');
+		expect(out.containedInPlace).toMatchObject({
+			'@id': 'https://navigator.berlin/bezirk/neukoelln#place',
+			url: 'https://navigator.berlin/en/bezirk/neukoelln'
+		});
+	});
+
+	it('containedInPlaceRef ohne Name wird trotzdem ausgegeben', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Reuterkiez',
+			centroid: [13.42, 52.49],
+			containedInPlaceRef: { slug: 'neukoelln', urlBasePath: '/bezirk' }
+		});
+		expect(out.containedInPlace).toEqual({
+			'@type': 'AdministrativeArea',
+			'@id': 'https://navigator.berlin/bezirk/neukoelln#place',
+			url: 'https://navigator.berlin/bezirk/neukoelln'
+		});
+	});
+
+	it('containedInCity setzt Berlin als City mit Wikidata-sameAs', () => {
+		const out = buildPlace({
+			origin: 'https://navigator.berlin',
+			name: 'Pankow',
+			centroid: [13.4, 52.6],
+			containedInCity: true
+		});
+		expect(out.containedInPlace).toEqual({
+			'@type': 'City',
+			name: 'Berlin',
+			sameAs: 'https://www.wikidata.org/wiki/Q64'
+		});
+	});
+
+	it('nutzt die kanonische Origin statt der hitze-Subdomain', () => {
+		const out = buildPlace({
+			origin: 'https://hitze.navigator.berlin',
+			name: 'Pankow',
+			centroid: [13.4, 52.6],
+			slug: 'pankow',
+			urlBasePath: '/bezirk'
+		});
+		expect(out.url).toBe('https://navigator.berlin/bezirk/pankow');
+		expect(out['@id']).toBe('https://navigator.berlin/bezirk/pankow#place');
+	});
 });

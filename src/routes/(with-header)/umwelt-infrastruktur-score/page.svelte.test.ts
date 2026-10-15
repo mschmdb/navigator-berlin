@@ -100,6 +100,9 @@ describe('umwelt-infrastruktur-score · EN (i18n C4b)', () => {
 		);
 		expect(dataset.name).toBe('Environment & infrastructure score Berlin');
 		expect(dataset.keywords).toBe('Kiez score, Berlin, Ranking');
+		expect(dataset.creator['@type']).toBe('Organization');
+		expect(dataset.creator['@id']).toMatch(/\/#organization$/);
+		expect(dataset.creator.name).toBe('navigator.berlin');
 	});
 
 	it('DE-Links tragen kein /en', async () => {

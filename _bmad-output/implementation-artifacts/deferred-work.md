@@ -386,3 +386,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-logo-gewicht.md`
   summary: `tests/e2e/a11y.e2e.ts` („Wortmarke-Showcase“) öffnet `/_dev/wortmarke`, die Route ist nicht im Repo.
   evidence: Der Test prüft vermutlich eine 404-Seite mit axe und sagt nichts über die Wortmarke aus; entweder Route anlegen oder Test entfernen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-s3-jsonld-entitaeten.md`
+  summary: DataCatalog auf `/berlin-wahlen` übergibt kein `inLanguage` und meldet auf `/en/berlin-wahlen` `de-DE`.
+  evidence: Fund aus der S3-Umsetzung (15.10.2026); Builder-Aufruf `berlin-wahlen/+page.svelte:205` ohne Locale.

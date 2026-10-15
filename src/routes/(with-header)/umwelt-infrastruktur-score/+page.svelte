@@ -35,7 +35,6 @@
 			description: pageDescription,
 			license: 'CC BY 4.0',
 			dateModified: data.computedAt ?? new Date().toISOString(),
-			creatorName: 'navigator.berlin',
 			contentUrl: `${origin}${pathname}`,
 			encodingFormat: 'text/html',
 			keywords: [m.uis_jsonld_keyword_kiez_score(), 'Berlin', 'Ranking']

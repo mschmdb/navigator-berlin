@@ -53,7 +53,7 @@ describe('buildDataCatalog', () => {
 		expect(jsonLd.dataset[0].license).toContain('govdata.de');
 	});
 
-	it('faellt ohne creatorName auf navigator.berlin als Organisation zurueck', () => {
+	it('faellt ohne creatorName auf einen Verweis auf die Organization zurueck', () => {
 		const jsonLd = buildDataCatalog({
 			origin,
 			name: 'Test',
@@ -71,6 +71,7 @@ describe('buildDataCatalog', () => {
 		});
 		expect(jsonLd.dataset[0].creator).toEqual({
 			'@type': 'Organization',
+			'@id': `${origin}/#organization`,
 			name: 'navigator.berlin',
 			url: origin
 		});

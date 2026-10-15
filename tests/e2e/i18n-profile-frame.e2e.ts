@@ -332,6 +332,8 @@ test.describe('FAQ-Folge Kiez (sort_order)', () => {
 });
 
 type JsonLd = {
+	'@id'?: string;
+	containedInPlace?: { '@id'?: string };
 	url?: string;
 	additionalProperty?: { name: string }[];
 	itemListElement?: { item: string }[];
@@ -354,11 +356,13 @@ for (const { kind, slug } of [
 			page
 		}) => {
 			await page.goto(`/en/${kind}/${slug}`);
-			for (const testid of [`${kind}-place-jsonld`, areaTestId]) {
-				const ld = await readJsonLd(page, testid);
-				expect(ld.url).toMatch(new RegExp(`/en/${kind}/${slug}$`));
-				expect(ld.additionalProperty?.map((p) => p.name)).toEqual(['Population', 'Area (ha)']);
-			}
+			const ld = await readJsonLd(page, areaTestId);
+			expect(ld.url).toMatch(new RegExp(`/en/${kind}/${slug}$`));
+			// @id ist sprachunabhängig (ohne /en), nur url folgt der Locale.
+			expect(ld['@id']).toMatch(new RegExp(`/${kind}/${slug}#place$`));
+			expect(ld['@id']).not.toContain('/en/');
+			expect(ld.additionalProperty?.map((p) => p.name)).toEqual(['Population', 'Area (ha)']);
+			if (kind === 'kiez') expect(ld.containedInPlace?.['@id']).toMatch(/\/bezirk\/[^/]+#place$/);
 			const crumbs = (await readJsonLd(page, `${kind}-breadcrumb-jsonld`)).itemListElement ?? [];
 			expect(crumbs.length).toBeGreaterThan(1);
 			for (const crumb of crumbs) expect(new URL(crumb.item).pathname).toMatch(/^\/en(\/|$)/);
@@ -366,7 +370,7 @@ for (const { kind, slug } of [
 
 		test(`/${kind}/${slug} (DE): url ohne Präfix, DE-Property-Namen`, async ({ page }) => {
 			await page.goto(`/${kind}/${slug}`);
-			const ld = await readJsonLd(page, `${kind}-place-jsonld`);
+			const ld = await readJsonLd(page, areaTestId);
 			expect(ld.url).toMatch(new RegExp(`/${kind}/${slug}$`));
 			expect(ld.url).not.toContain('/en/');
 			expect(ld.additionalProperty?.map((p) => p.name)).toEqual(['Einwohner', 'Fläche (ha)']);

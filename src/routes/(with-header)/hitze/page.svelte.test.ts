@@ -88,6 +88,12 @@ describe('hitze · DE-Wortlaut Meta und Links (i18n C4c)', () => {
 			document.querySelector('[data-testid="hitze-dataset-jsonld"]')!.textContent!
 		);
 		expect(dataset.name).toBe('Kühle Orte in Berlin');
+		expect(dataset.creator).toEqual({
+			'@type': 'Organization',
+			'@id': `${canonicalOrigin(appPage.url.origin)}/#organization`,
+			name: 'navigator.berlin',
+			url: canonicalOrigin(appPage.url.origin)
+		});
 		expect(dataset.keywords).toBe(
 			'Kühle Orte, Hitze, Berlin, Abkühlung, Klimaanlage, Trinkbrunnen'
 		);

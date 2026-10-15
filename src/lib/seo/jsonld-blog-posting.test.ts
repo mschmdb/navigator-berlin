@@ -54,10 +54,16 @@ describe('buildBlogPosting', () => {
 		expect(obj.dateModified).toBe('2026-07-01');
 	});
 
-	it('hat author + publisher als Organization', () => {
+	it('verweist mit author + publisher per @id auf die Organization', () => {
 		const obj = buildBlogPosting({ entry, origin });
-		expect(obj.author['@type']).toBe('Organization');
-		expect(obj.author.name).toBe('Navigator Berlin');
+		const ref = {
+			'@type': 'Organization',
+			'@id': 'https://navigator.berlin/#organization',
+			name: 'navigator.berlin',
+			url: 'https://navigator.berlin'
+		};
+		expect(obj.author).toEqual(ref);
+		expect(obj.publisher).toEqual(ref);
 	});
 
 	it('hat mainEntityOfPage = WebPage mit @id', () => {

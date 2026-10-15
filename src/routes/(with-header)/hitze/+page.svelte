@@ -67,7 +67,6 @@
 			description: pageDescription,
 			license: 'ODbL 1.0',
 			dateModified: '2026-06-30',
-			creatorName: 'navigator.berlin',
 			contentUrl: canonical,
 			encodingFormat: 'text/html',
 			keywords: m

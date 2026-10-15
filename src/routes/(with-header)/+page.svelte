@@ -16,6 +16,7 @@
 	import HomeWahlTeaser from '$lib/components/home/home-wahl-teaser.svelte';
 	import HomeHitzeTeaser from '$lib/components/home/home-hitze-teaser.svelte';
 	import { buildWebSite } from '$lib/seo/jsonld-website.js';
+	import { buildOrganization } from '$lib/seo/jsonld-organization.js';
 	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
@@ -44,10 +45,10 @@
 			origin,
 			name: 'navigator.berlin',
 			locale: localeToBcp47(effectiveLocale),
-			description: pageDescription,
-			searchPath: '/explore'
+			description: pageDescription
 		})
 	);
+	const organizationJsonLd = $derived(buildOrganization({ origin, description: pageDescription }));
 </script>
 
 <SeoHead
@@ -58,7 +59,8 @@
 	ogImage={ogImageAbsolute}
 	{ogImageAlt}
 />
-<JsonLd data={websiteJsonLd} testid="home-website-jsonld" />
+<JsonLd data={websiteJsonLd} testid="website-jsonld" />
+<JsonLd data={organizationJsonLd} testid="organization-jsonld" />
 
 <article class="mx-auto max-w-5xl space-y-16 px-4 py-12" data-testid="home-landing">
 	<HomeHero featured={data.featured} />

@@ -23,9 +23,17 @@ export {
 	buildWebSite,
 	type WebSiteInput,
 	type WebSiteJsonLd,
-	type WebSiteLeafJsonLd,
-	type WebSiteSearchActionJsonLd
+	type WebSiteLeafJsonLd
 } from './jsonld-website.js';
+export {
+	buildOrganization,
+	organizationId,
+	organizationRef,
+	type OrganizationInput,
+	type OrganizationJsonLd,
+	type OrganizationLeafJsonLd,
+	type OrganizationRefJsonLd
+} from './jsonld-organization.js';
 export {
 	buildPlace,
 	type PlaceInput,

@@ -9,6 +9,7 @@
 	import { richSegments } from '$lib/i18n/rich-text.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime.js';
+	import { organizationRef } from '$lib/seo/jsonld-organization.js';
 	import { buildBreadcrumbList } from '$lib/seo/index.js';
 	import { localeToBcp47 } from '$lib/seo/locale-meta.js';
 	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
@@ -73,7 +74,7 @@
 		inLanguage: localeToBcp47(getLocale()),
 		datePublished: '2026-05-15',
 		dateModified: manifest.generatedAt,
-		author: { '@type': 'Organization', name: 'navigator.berlin' }
+		author: organizationRef(page.url.origin)
 	});
 
 	const breadcrumbJsonLd = $derived(

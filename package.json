@@ -52,6 +52,7 @@
 		"og:images": "tsx scripts/generate-og-images.ts",
 		"og:all": "pnpm og:images",
 		"logo:pixel": "tsx scripts/generate-pixel-logo.ts",
+		"logo:organization": "tsx scripts/generate-organization-logo.ts",
 		"indexnow:ping": "tsx scripts/indexnow-ping.ts",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "tsx scripts/db/migrate.ts",
