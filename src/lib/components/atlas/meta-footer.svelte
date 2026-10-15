@@ -10,7 +10,6 @@
 	} from './internal/meta-links.js';
 	import SocialLinks from './internal/social-links.svelte';
 	import MtcLogo from './internal/mtc-logo.svelte';
-	import { PixelLogo } from '$lib/components/ui';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 
 	type Props = {
@@ -58,7 +57,7 @@
 						aria-label="navigator.berlin"
 						class="flex items-center gap-2"
 					>
-						<PixelLogo size={36} title="navigator.berlin" />
+						<img src="/logo-pixel.svg" alt="" width="36" height="36" loading="lazy" decoding="async" class="block" />
 						<span class="font-serif text-lg text-ink">navigator.berlin</span>
 					</a>
 					<p class="font-serif text-base leading-relaxed text-ink-muted">

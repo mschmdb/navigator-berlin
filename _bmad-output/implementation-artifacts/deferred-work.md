@@ -378,3 +378,11 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-l7-layer-seiten.md`
   summary: Ältere E2E-Suiten (share-sheet, inspector-panel, tab-order, wahl-flow, address-search, compare-flow, bookmark-flow, climate-*, u. a.) scheitern, weil `getByRole('combobox')` auf `/explore` nicht klickbar wird; 76 Fehlschläge im vollen Lauf.
   evidence: Gegenprobe 14.10.2026 auf `main` (69d8588): dieselben Suiten 26 failed / 5 passed mit demselben Fehlerbild, also vor dem Landing-Epic entstanden. Die Epic-Suiten (explore-region-focus, profile-meta-fakten, bezirk-landing, kiez-landing, key-figures, kiez-neighbors, layer-kiez-ranking, i18n-profile-frame, i18n-d1) sind grün.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-logo-gewicht.md`
+  summary: Reduced-Motion für das Pixel-Logo (Loop-Zellen und Farbwechsel) per E2E mit `reducedMotion: 'reduce'` absichern.
+  evidence: Selektoren wechselten von `rect` auf `use`; weder vorher noch nachher prüft ein Test, dass Animation und Farbwechsel unter Reduced Motion stoppen.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-logo-gewicht.md`
+  summary: `tests/e2e/a11y.e2e.ts` („Wortmarke-Showcase“) öffnet `/_dev/wortmarke`, die Route ist nicht im Repo.
+  evidence: Der Test prüft vermutlich eine 404-Seite mit axe und sagt nichts über die Wortmarke aus; entweder Route anlegen oder Test entfernen.

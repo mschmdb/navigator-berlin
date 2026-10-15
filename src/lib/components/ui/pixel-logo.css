@@ -1,0 +1,107 @@
+/* Pixel-Logo: global statt scoped, damit die <use>-Zellen keine Svelte-Hash-Klasse tragen (296 x 22 Byte). */
+.nv-pixel {
+	display: block;
+}
+
+/* Palette: Farben stehen in PALETTE, hier nur die Zuordnung Klasse zu Variable. */
+.nv-pixel .c0 {
+	fill: var(--c0);
+}
+.nv-pixel .c1 {
+	fill: var(--c1);
+}
+.nv-pixel .c2 {
+	fill: var(--c2);
+}
+.nv-pixel .c3 {
+	fill: var(--c3);
+}
+.nv-pixel .c4 {
+	fill: var(--c4);
+}
+.nv-pixel .c5 {
+	fill: var(--c5);
+}
+.nv-pixel .c6 {
+	fill: var(--c6);
+}
+.nv-pixel .c7 {
+	fill: var(--c7);
+}
+.nv-pixel .c8 {
+	fill: var(--c8);
+}
+.nv-pixel .c9 {
+	fill: var(--c9);
+}
+.nv-pixel .c10 {
+	fill: var(--c10);
+}
+.nv-pixel .c11 {
+	fill: var(--c11);
+}
+.nv-pixel .c12 {
+	fill: var(--c12);
+}
+.nv-pixel .c13 {
+	fill: var(--c13);
+}
+.nv-pixel .c14 {
+	fill: var(--c14);
+}
+.nv-pixel .c15 {
+	fill: var(--c15);
+}
+.nv-pixel .c16 {
+	fill: var(--c16);
+}
+.nv-pixel .c17 {
+	fill: var(--c17);
+}
+.nv-pixel .c18 {
+	fill: var(--c18);
+}
+.nv-pixel .c19 {
+	fill: var(--c19);
+}
+
+.nv-pixel use {
+	transition: fill 700ms ease;
+}
+
+/* Loader: Zellen blenden gestreut ein, halten, blenden aus, Zyklus wiederholt.
+   Die Grundfläche bleibt stehen, sonst blinkt der ganze Kasten. */
+.nv-pixel--loop use {
+	opacity: 0;
+	animation: nv-pixel-cycle 2400ms ease-in-out infinite;
+	animation-delay: var(--d, 0ms);
+}
+
+@keyframes nv-pixel-cycle {
+	0% {
+		opacity: 0;
+	}
+	18% {
+		opacity: 1;
+	}
+	62% {
+		opacity: 1;
+	}
+	84% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+/* Reduced Motion: volles Bild, kein Aufbau, kein Farbwechsel. */
+@media (prefers-reduced-motion: reduce) {
+	.nv-pixel use {
+		transition: none;
+	}
+	.nv-pixel--loop use {
+		animation: none;
+		opacity: 1;
+	}
+}
