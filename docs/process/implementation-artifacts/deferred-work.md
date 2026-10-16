@@ -443,3 +443,19 @@
 - source_spec: `docs/process/implementation-artifacts/spec-repo-public-cleanup.md`
   summary: Layer-Anzahl ist inkonsistent: `llms-builder.ts` und `site-intro-renderer.ts` sagen "rund 39 Layer", `home-data-sources.ts` nennt 44, `static/layers/MANIFEST.json` zählt 73 Einträge (README nennt 73).
   evidence: Review-Fund beim Aufräumen (15.10.2026); gemeint ist je eine andere Zählweise (Karte, Quellen, Manifest). Eine Zahl festlegen und aus dem Manifest ableiten statt von Hand pflegen.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-58-59-kaelte-grundgeruest.md`
+  summary: KARUNA-Hotline zeigt an gesetzlichen Feiertagen in Berlin „Jetzt erreichbar“, obwohl sie dann vermutlich geschlossen ist.
+  evidence: `serviceStatus` prüft nur ISO-Wochentage; ein Fix braucht eine Feiertagsberechnung inkl. Oster-abhängiger Tage.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-58-59-kaelte-grundgeruest.md`
+  summary: CI führt das vitest-client-Projekt und Playwright-E2E nicht aus, Regressionen im Notfall-Block bleiben in der PR grün.
+  evidence: `.github/workflows/ci.yml` läuft nur `vitest --project server`; gilt auch für /hitze, gehört zum Backlog CI-Tests (#55).
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-58-59-kaelte-grundgeruest.md`
+  summary: `kaelte.navigator.berlin/en` (und `hitze.navigator.berlin/en`) zeigt die EN-Startseite statt der Saisonseite.
+  evidence: `kaelteReroute` und `hitzeReroute` greifen nur bei pathname `/`.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-58-59-kaelte-grundgeruest.md`
+  summary: Zweitquelle der KARUNA-Nummer (Pressemitteilung Bezirksamt Charlottenburg-Wilmersdorf) steht ohne URL und Datum in `hilfe-dienste.ts`.
+  evidence: Die Quelle hat kein `url`-Feld; bei der Kältebus-Prüfung (planning#9) mit nachtragen.
