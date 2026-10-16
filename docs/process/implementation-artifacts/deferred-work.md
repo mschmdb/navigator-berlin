@@ -463,3 +463,15 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-60-kaelte-dwd-warnungen.md`
   summary: Die 30-Sekunden-TTL des Negativ-Caches für DWD-Warnungen (Hitze und Kälte) ist ungetestet.
   evidence: Tests prüfen nur, dass der zweite Aufruf nicht fetcht; ohne `{ ttl: ERROR_TTL_MS }` bliebe alles grün. Braucht eine steuerbare Uhr für lru-cache.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-61-kaelte-warme-orte-daten.md`
+  summary: Grobe Kategorie-Sammlung in `extract-waerme-orte.py` und `categoryOf` in `filter.ts` können auseinanderlaufen; kein Test prüft, dass der Snapshot eine Obermenge ist.
+  evidence: Review-Fund 16.10.2026; greift erst bei Snapshot-Regen mit neuer Kategorie.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-61-kaelte-warme-orte-daten.md`
+  summary: 59 Wärme-Orte mit `NACHLAUF:` können nicht per `batches` erneut recherchiert werden; ein Flag für offene NACHLAUF-Einträge fehlt.
+  evidence: `buildResearchBatches` überspringt alle IDs mit Enrichment; Methodik verspricht „können nachrücken“.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-61-kaelte-warme-orte-daten.md`
+  summary: Ungeschlossene Ways und Nicht-Multipolygon-Relationen mit Kategorie-Tags fallen im Extrakt still weg und fehlen im Zähler `ohne_mittelpunkt`.
+  evidence: pyosmium-Area-Handler liefert für sie keine Fläche; Einzelfälle, Ausmaß ungeprüft.
