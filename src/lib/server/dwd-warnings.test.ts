@@ -195,6 +195,18 @@ describe('fetchBerlinHeatWarning (Degradation)', () => {
 	});
 });
 
+describe('fetchBerlinHeatWarning (WFS-URL)', () => {
+	it('fragt nur die Hitze-Codes für Berlin ab', async () => {
+		let url = '';
+		const f = (async (u: string) => {
+			url = decodeURIComponent(u);
+			return { ok: true, json: async () => fc([]) };
+		}) as unknown as typeof fetch;
+		await fetchBerlinHeatWarning(f);
+		expect(url).toContain('EC_II IN(247,248) AND WARNCELLID IN(811000000,111000000)');
+	});
+});
+
 describe('fetchBerlinHeatWarning (Negativ-Cache bei Ausfall)', () => {
 	it('HTTP-Fehler wird gecacht: zweiter Aufruf ohne erneuten Fetch', async () => {
 		let calls = 0;

@@ -11,3 +11,29 @@ export interface HeatWarning {
 	source: string;
 	sourceUrl: string;
 }
+
+// Issue #60: DWD-Kältewarnungen (Frost, Glätte, Schnee) ab Stufe 2.
+export type ColdEvent =
+	| 'strenger-frost'
+	| 'markante-glaette'
+	| 'glatteis'
+	| 'extremes-glatteis'
+	| 'schneefall'
+	| 'starker-schneefall'
+	| 'extrem-starker-schneefall'
+	| 'schneeverwehung'
+	| 'starke-schneeverwehung'
+	| 'extrem-starke-schneeverwehung';
+
+export type ColdLevel = 2 | 3 | 4;
+
+export interface ColdWarning {
+	event: ColdEvent;
+	/** DWD-Warnstufe 2 bis 4. */
+	level: ColdLevel;
+	/** DWD-Headline (getrimmt), `null` bei fehlender oder leerer Headline. */
+	headline: string | null;
+	/** Pflicht-Attribution (GeoNutzV/DWD). */
+	source: string;
+	sourceUrl: string;
+}

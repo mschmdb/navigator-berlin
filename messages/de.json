@@ -2339,5 +2339,21 @@
 	"kaelte_wegweiser_text": "Anlaufstellen der Kältehilfe Berlin im Überblick.",
 	"kaelte_new_tab_hint": "(öffnet neuen Tab)",
 	"ueber_kontakt_h": "Kontakt",
-	"ueber_kontakt_p1": "Fragen, Fehler und Hinweise auf fehlende Orte gehen an {mail_start}{email}{mail_end}. Anbieterangaben stehen im {impressum_start}Impressum{impressum_end}, Datenschutzhinweise auf der {datenschutz_start}Datenschutz-Seite{datenschutz_end}."
+	"ueber_kontakt_p1": "Fragen, Fehler und Hinweise auf fehlende Orte gehen an {mail_start}{email}{mail_end}. Anbieterangaben stehen im {impressum_start}Impressum{impressum_end}, Datenschutzhinweise auf der {datenschutz_start}Datenschutz-Seite{datenschutz_end}.",
+	"dwd_kaelte_region_label": "Amtliche Kältewarnungen des Deutschen Wetterdienstes",
+	"dwd_kaelte_level": "Warnstufe {level}",
+	"dwd_kaelte_source": "Quelle: Deutscher Wetterdienst (DWD)",
+	"dwd_kaelte_event_strenger_frost": "Strenger Frost",
+	"dwd_kaelte_event_markante_glaette": "Markante Glätte",
+	"dwd_kaelte_event_glatteis": "Glatteis",
+	"dwd_kaelte_event_extremes_glatteis": "Extremes Glatteis",
+	"dwd_kaelte_event_schneefall": "Schneefall",
+	"dwd_kaelte_event_starker_schneefall": "Starker Schneefall",
+	"dwd_kaelte_event_extrem_starker_schneefall": "Extrem starker Schneefall",
+	"dwd_kaelte_event_schneeverwehung": "Schneeverwehung",
+	"dwd_kaelte_event_starke_schneeverwehung": "Starke Schneeverwehung",
+	"dwd_kaelte_event_extrem_starke_schneeverwehung": "Extrem starke Schneeverwehung",
+	"dwd_kaelte_level_meaning_2": "Warnung vor markantem Wetter",
+	"dwd_kaelte_level_meaning_3": "Unwetterwarnung",
+	"dwd_kaelte_level_meaning_4": "Warnung vor extremem Unwetter"
 }
