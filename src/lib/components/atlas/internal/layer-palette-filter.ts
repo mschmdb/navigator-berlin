@@ -40,6 +40,7 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	stolpersteine: 'Stolpersteine',
 	trinkbrunnen: 'Trinkbrunnen',
 	'kuehle-orte': 'Kühle Orte',
+	'waerme-orte': 'Warme Orte',
 	// E: Soziale Infrastruktur
 	'kitas-2024': 'Kindertagesstätten',
 	'schulen-2024': 'Schulen',
@@ -170,6 +171,7 @@ const LAYER_NAME_MESSAGE: Partial<Record<string, MessageFn>> = {
 	stolpersteine: m.atlas_layer_name_stolpersteine,
 	trinkbrunnen: m.atlas_layer_name_trinkbrunnen,
 	'kuehle-orte': m.atlas_layer_name_kuehle_orte,
+	'waerme-orte': m.atlas_layer_name_waerme_orte,
 	'kitas-2024': m.atlas_layer_name_kitas_2024,
 	'schulen-2024': m.atlas_layer_name_schulen_2024,
 	'einschulbereiche-2024': m.atlas_layer_name_einschulbereiche_2024,

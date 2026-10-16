@@ -12,6 +12,7 @@ const ALLOWED_VARIANTS: DisclaimerVariant[] = [
 	'seasonal',
 	'source',
 	'kuehle-orte',
+	'waerme-orte',
 	'mss-aggregat',
 	'zensus-bestandsmiete',
 	'zensus-altbau'
@@ -37,6 +38,14 @@ describe('EDITORIAL_CONFIG', () => {
 		const c = EDITORIAL_CONFIG['kuehle-orte'];
 		expect(c.slug).toBe('kuehle-orte');
 		expect(c.disclaimerVariants).toContain('kuehle-orte');
+		expect(c.primarySourceUrl).toMatch(/^https:\/\//);
+		expect(c.feedbackMailto).toBe(true);
+	});
+
+	it('waerme-orte hat eigenen Disclaimer + OSM-Quelle + feedbackMailto (#71)', () => {
+		const c = EDITORIAL_CONFIG['waerme-orte'];
+		expect(c.slug).toBe('waerme-orte');
+		expect(c.disclaimerVariants).toContain('waerme-orte');
 		expect(c.primarySourceUrl).toMatch(/^https:\/\//);
 		expect(c.feedbackMailto).toBe(true);
 	});

@@ -219,6 +219,21 @@ describe('editorial-disclaimer.svelte', () => {
 			expect(el.getAttribute('lang')).toBeNull();
 		});
 
+		it('waerme-orte nennt auf DE und EN OSM und die redaktionelle Anreicherung (#71)', async () => {
+			render(EditorialDisclaimer, { variant: 'waerme-orte', locale: 'de' });
+			const de = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(de.textContent).toMatch(/OpenStreetMap/);
+			expect(de.textContent).toMatch(/redaktionell/);
+		});
+
+		it('waerme-orte zeigt auf EN-Locale den englischen Text (#71)', async () => {
+			overwriteGetLocale(() => 'en');
+			render(EditorialDisclaimer, { variant: 'waerme-orte' });
+			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(el.textContent).toMatch(/OpenStreetMap/);
+			expect(el.textContent).toMatch(/editorial/);
+		});
+
 		it('"Quelle ansehen" ist auf EN-Locale "View source", ohne eigenes lang-Attribut', async () => {
 			overwriteGetLocale(() => 'en');
 			render(EditorialDisclaimer, {

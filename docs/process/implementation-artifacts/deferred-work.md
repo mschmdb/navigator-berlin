@@ -475,3 +475,15 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-61-kaelte-warme-orte-daten.md`
   summary: Ungeschlossene Ways und Nicht-Multipolygon-Relationen mit Kategorie-Tags fallen im Extrakt still weg und fehlen im Zähler `ohne_mittelpunkt`.
   evidence: pyosmium-Area-Handler liefert für sie keine Fläche; Einzelfälle, Ausmaß ungeprüft.
+
+- source_spec: none
+  summary: Launch von /kaelte (#63): noindex entfernen, Sitemap, llms.txt, Footer- und Startseiten-Link, Updates-Eintrag DE/EN.
+  evidence: Beim Start von #63 als eigenständig auslieferbares Ziel abgetrennt (16.10.2026); zuerst Explorer-Layer in #71.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-71-warme-orte-explorer.md`
+  summary: POI-Popups im Explorer (warme Orte, kühle Orte, Trinkbrunnen) zeigen auf /en deutsche Texte; `getPopoverSummary` kennt keine Locale.
+  evidence: Review-Fund 16.10.2026; betrifft alle POI-Builder in `poi-summary-builder.ts`.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-71-warme-orte-explorer.md`
+  summary: Zahlen in der Wärme-Orte-Methodik (677/230/227/212/97) stehen hart in `layer-methodology.ts` und Messages und driften beim nächsten Datenlauf.
+  evidence: Kein Test gleicht sie mit GeoJSON oder MANIFEST ab; aus Daten ableiten.

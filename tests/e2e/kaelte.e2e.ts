@@ -66,6 +66,58 @@ test.describe('Kälte-Navigator', () => {
 		});
 	}
 
+	test('Link „Auf der Karte ansehen“ führt in den Explorer mit Layer waerme-orte (#71)', async ({
+		page
+	}) => {
+		await page.goto('/kaelte');
+		const link = page.getByTestId('kaelte-karte-link');
+		await expect(link).toHaveAttribute('href', '/explore?layers=waerme-orte');
+		await link.click();
+		await expect(page).toHaveURL(/\/explore\?layers=waerme-orte/);
+	});
+
+	test('Layer-Seite /layer/waerme-orte: 200, Quellen, Link zurück, keine Axe-Verstöße (#71)', async ({
+		page
+	}) => {
+		const res = await page.goto('/layer/waerme-orte');
+		expect(res?.status()).toBe(200);
+		await expect(page.getByTestId('layer-detail-name')).toHaveText('Warme Orte');
+		await expect(page.getByTestId('layer-detail-editorial')).toContainText('OpenStreetMap');
+		const body = page.locator('main');
+		await expect(body).toContainText('navigator.berlin');
+		await expect(body).toContainText('16.10.2026');
+		await expect(body).toContainText('nicht geprüft');
+		await expect(page.getByTestId('layer-detail-kaelte-link')).toHaveAttribute('href', '/kaelte');
+		const results = await new AxeBuilder({ page })
+			.withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+			.analyze();
+		expect(results.violations).toEqual([]);
+	});
+
+	test('EN: /en/layer/waerme-orte: 200 und englischer Name (#71)', async ({ page }) => {
+		const res = await page.goto('/en/layer/waerme-orte');
+		expect(res?.status()).toBe(200);
+		const axe = await new AxeBuilder({ page })
+			.withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+			.analyze();
+		expect(axe.violations).toEqual([]);
+		await expect(page.getByTestId('layer-detail-name')).toHaveText('Warm places');
+		await expect(page.getByTestId('layer-detail-kaelte-link')).toHaveAttribute(
+			'href',
+			'/en/kaelte'
+		);
+	});
+
+	test('Explorer mit layers=waerme-orte lädt und zeigt den Layer in der Legende (#71)', async ({
+		page
+	}) => {
+		const layerResponse = page.waitForResponse(/\/layers\/waerme-orte\.[0-9a-f]{8}\.geojson/);
+		const res = await page.goto('/explore?layers=waerme-orte');
+		expect(res?.status()).toBe(200);
+		expect((await layerResponse).status()).toBe(200);
+		await expect(page.getByTestId('legend-icon-waerme-orte')).toBeAttached();
+	});
+
 	test.describe('Warme Orte in der Nähe (#62)', () => {
 		test.use({
 			geolocation: { latitude: 52.5208, longitude: 13.4095 },

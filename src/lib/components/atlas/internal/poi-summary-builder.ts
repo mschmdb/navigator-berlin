@@ -21,6 +21,14 @@ type SummaryFn = (props: Props, layerName: string) => PopoverSummary;
 
 const STOLPERSTEIN_FALLBACK_TITLE = 'Stolperstein';
 
+// Winter-Öffnung (#71): nur belegte Werte aus dem GeoJSON, alles andere ist „nicht geprüft“.
+const WINTER_NOT_CHECKED = 'Winter-Öffnung nicht geprüft';
+const WINTER_OPEN_LABEL: Readonly<Record<string, string>> = {
+	yes: 'im Winter geöffnet',
+	limited: 'im Winter eingeschränkt geöffnet',
+	no: 'im Winter geschlossen'
+};
+
 const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 	stolpersteine: (props) => {
 		const person = readString(props, 'person');
@@ -48,6 +56,21 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 			(x): x is string => x !== null
 		);
 		return parts.length > 0 ? { title: name, subtitle: parts.join(' · ') } : { title: name };
+	},
+	'waerme-orte': (props, layerName) => {
+		const name = readString(props, 'name') ?? layerName;
+		const cat = readString(props, 'cat');
+		const raw = readString(props, 'winter_open') ?? '';
+		const winter = Object.hasOwn(WINTER_OPEN_LABEL, raw)
+			? WINTER_OPEN_LABEL[raw]
+			: WINTER_NOT_CHECKED;
+		const parts = [
+			cat,
+			winter,
+			readString(props, 'stay_without_purchase') === 'yes' ? 'ohne Konsum möglich' : null,
+			readString(props, 'is_free') === 'free' ? 'Eintritt frei' : null
+		];
+		return { title: name, subtitle: parts.filter((x) => x !== null).join(' · ') };
 	},
 	'kitas-2024': (props, layerName) => ({
 		title: readString(props, 'name') ?? layerName

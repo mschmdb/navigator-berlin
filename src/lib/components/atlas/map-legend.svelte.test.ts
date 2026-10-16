@@ -9,6 +9,7 @@ afterEach(() => {
 	overwriteGetLocale(() => 'de');
 });
 import { dotSpecForSlug } from './internal/choropleth-dots.js';
+import { COLORS } from './internal/colors.js';
 import { SCORE_DOT_BASE_PX } from './internal/dimension-ramps.js';
 
 function meta(slug: string, opts: Partial<LayerMetadata> = {}): LayerMetadata {
@@ -98,6 +99,15 @@ describe('map-legend.svelte', () => {
 		const svg = marker.querySelector('svg');
 		expect(svg).not.toBeNull();
 		expect(svg?.getAttribute('stroke')).toBe('#0277BD');
+	});
+
+	it('Pin-Layer rendert das Karten-Icon in der Legende (waerme-orte, eigene Farbe)', async () => {
+		render(MapLegend, { activeLayerSlugs: ['waerme-orte'] });
+		const marker = (await page.getByTestId('legend-icon-waerme-orte').element()) as HTMLElement;
+		const svg = marker.querySelector('svg');
+		expect(svg).not.toBeNull();
+		expect(svg?.getAttribute('stroke')).toBe(COLORS.umweltWaermeOrte);
+		await expect.element(page.getByText('Warmer Ort', { exact: true })).toBeInTheDocument();
 	});
 
 	// Story 1.16 AC-3: Legend-Expand-Panel

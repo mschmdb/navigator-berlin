@@ -612,6 +612,53 @@ describe('layer-detail +page.svelte', () => {
 			expect(cta.textContent).toMatch(/Heat Navigator/);
 		});
 
+		it('waerme-orte verlinkt zurück auf /kaelte (DE)', async () => {
+			render(Page, {
+				data: {
+					detail: detail('waerme-orte'),
+					faq: [],
+					faqLocale: 'de',
+					ranking: null,
+					hasKiezAggregate: false
+				}
+			});
+			const cta = (await page
+				.getByTestId('layer-detail-kaelte-link')
+				.element()) as HTMLAnchorElement;
+			expect(cta.getAttribute('href')).toBe('/kaelte');
+			expect(document.querySelector('[data-testid="layer-detail-hitze-link"]')).toBeNull();
+		});
+
+		it('waerme-orte verlinkt auf EN mit /en/kaelte', async () => {
+			overwriteGetLocale(() => 'en');
+			render(Page, {
+				data: {
+					detail: detail('waerme-orte'),
+					faq: [],
+					faqLocale: 'de',
+					ranking: null,
+					hasKiezAggregate: false
+				}
+			});
+			const cta = (await page
+				.getByTestId('layer-detail-kaelte-link')
+				.element()) as HTMLAnchorElement;
+			expect(cta.getAttribute('href')).toBe('/en/kaelte');
+		});
+
+		it('andere Layer zeigen keinen Kälte-Link', async () => {
+			render(Page, {
+				data: {
+					detail: detail('kuehle-orte'),
+					faq: [],
+					faqLocale: 'de',
+					ranking: null,
+					hasKiezAggregate: false
+				}
+			});
+			expect(document.querySelector('[data-testid="layer-detail-kaelte-link"]')).toBeNull();
+		});
+
 		it('Eigene-Berechnung-Zeile zeigt englischen Text mit /en/lizenzen-Link', async () => {
 			overwriteGetLocale(() => 'en');
 			const d = detail('oepnv-composite', {

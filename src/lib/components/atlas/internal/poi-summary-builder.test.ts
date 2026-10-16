@@ -197,4 +197,72 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 			expect(getPopoverSummary('kuehle-orte', { cat: 'Museum' }).title).toBe('Kühle Orte');
 		});
 	});
+
+	describe('waerme-orte (#71)', () => {
+		it('zeigt Name, Kategorie und Winter-Öffnung', () => {
+			expect(
+				getPopoverSummary('waerme-orte', {
+					name: 'Zentralbibliothek',
+					cat: 'Bibliothek',
+					winter_open: 'yes'
+				})
+			).toEqual({ title: 'Zentralbibliothek', subtitle: 'Bibliothek · im Winter geöffnet' });
+		});
+		it('bildet limited und no ab', () => {
+			expect(
+				getPopoverSummary('waerme-orte', { name: 'A', cat: 'Museum', winter_open: 'limited' })
+					.subtitle
+			).toBe('Museum · im Winter eingeschränkt geöffnet');
+			expect(
+				getPopoverSummary('waerme-orte', { name: 'A', cat: 'Museum', winter_open: 'no' }).subtitle
+			).toBe('Museum · im Winter geschlossen');
+		});
+		it('zeigt unknown als „nicht geprüft“', () => {
+			expect(
+				getPopoverSummary('waerme-orte', { name: 'A', cat: 'Kirche', winter_open: 'unknown' })
+					.subtitle
+			).toBe('Kirche · Winter-Öffnung nicht geprüft');
+		});
+		it('zeigt „nicht geprüft“ auch ohne winter_open-Feld', () => {
+			expect(getPopoverSummary('waerme-orte', { name: 'A', cat: 'Mall' }).subtitle).toBe(
+				'Mall · Winter-Öffnung nicht geprüft'
+			);
+		});
+		it('behandelt Prototyp-Keys in winter_open als „nicht geprüft“', () => {
+			for (const key of ['constructor', 'toString', '__proto__']) {
+				expect(
+					getPopoverSummary('waerme-orte', { name: 'A', cat: 'Mall', winter_open: key }).subtitle
+				).toBe('Mall · Winter-Öffnung nicht geprüft');
+			}
+		});
+		it('ergänzt „ohne Konsum möglich“ und „Eintritt frei“ nur bei belegtem yes/free', () => {
+			expect(
+				getPopoverSummary('waerme-orte', {
+					name: 'A',
+					cat: 'Bibliothek',
+					winter_open: 'yes',
+					stay_without_purchase: 'yes',
+					is_free: 'free'
+				}).subtitle
+			).toBe('Bibliothek · im Winter geöffnet · ohne Konsum möglich · Eintritt frei');
+			expect(
+				getPopoverSummary('waerme-orte', {
+					name: 'A',
+					cat: 'Mall',
+					winter_open: 'yes',
+					stay_without_purchase: 'unknown',
+					is_free: 'ticket'
+				}).subtitle
+			).toBe('Mall · im Winter geöffnet');
+		});
+		it('fällt auf den Layer-Namen zurück, wenn name fehlt', () => {
+			expect(getPopoverSummary('waerme-orte', { cat: 'Museum' }).title).toBe('Warme Orte');
+		});
+		it('Fallback ohne Properties liefert Titel und „nicht geprüft“', () => {
+			expect(getPopoverSummary('waerme-orte', null)).toEqual({
+				title: 'Warme Orte',
+				subtitle: 'Winter-Öffnung nicht geprüft'
+			});
+		});
+	});
 });

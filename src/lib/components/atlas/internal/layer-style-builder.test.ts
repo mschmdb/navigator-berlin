@@ -449,6 +449,36 @@ describe('getLegendSpec kuehle-orte (Legende-Fix)', () => {
 	});
 });
 
+describe('getLegendSpec waerme-orte (#71)', () => {
+	it('waerme-orte ist Punkt-Legende „Warmer Ort“ in eigener warmer Farbe', () => {
+		const legend = getLegendSpec('waerme-orte');
+		expect(legend.kind).toBe('point');
+		expect(legend.items[0].label).toBe('Warmer Ort');
+		expect(legend.items[0].color).toBe(COLORS.umweltWaermeOrte);
+		expect(COLORS.umweltWaermeOrte).not.toBe(COLORS.umweltKuehleOrte);
+	});
+
+	it('Legenden-Label ist auf EN „Warm place“', () => {
+		expect(getLegendSpec('waerme-orte', { locale: 'en' }).items[0].label).toBe('Warm place');
+	});
+
+	it('Pin-Farbe erreicht WCAG-2.2-AA (4.5:1) auf dem Karten-Hintergrund', () => {
+		const lum = (hex: string): number => {
+			const [r, g, b] = [1, 3, 5].map((i) => {
+				const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+				return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+			});
+			return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+		};
+		const [hi, lo] = [lum(COLORS.bg), lum(COLORS.umweltWaermeOrte)].sort((a, b) => b - a);
+		expect((hi! + 0.05) / (lo! + 0.05)).toBeGreaterThanOrEqual(4.5);
+		// WCAG 1.4.11: Pin gegen Weiß (Pin-Füllung/Icon-Kontrast) mindestens 3:1.
+		expect((lum('#FFFFFF') + 0.05) / (lum(COLORS.umweltWaermeOrte) + 0.05)).toBeGreaterThanOrEqual(
+			3
+		);
+	});
+});
+
 describe('layer-style-builder · Dimension-Rampen (Multi-Layer-Kartenfarben)', () => {
 	const SOURCE = 'src';
 
@@ -637,6 +667,7 @@ describe('getLegendSpec i18n Block B3a: Parität über ALLE StyleProfile', () =>
 		'point-gesundheit': 'krankenhaeuser-plan',
 		'point-freizeit': 'sportanlagen-2024',
 		'point-kuehle-orte': 'kuehle-orte',
+		'point-waerme-orte': 'waerme-orte',
 		'line-radverkehr': 'radverkehrsnetz-2025',
 		'line-rail-ubahn': 'ubahn-netz',
 		'line-rail-tram': 'tram-netz',

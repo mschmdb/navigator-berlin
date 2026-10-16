@@ -54,6 +54,7 @@ export const LAYER_SYNONYMS_DE: Record<string, readonly string[]> = {
 		'schatten',
 		'klimatisiert'
 	],
+	'waerme-orte': ['warme orte', 'wärmeorte', 'waermeorte', 'aufwärmen', 'aufwaermen'],
 	'kiez-score-wohnschutz': ['wohnschutz', 'milieuschutz', 'erhaltung', 'kiez-score']
 };
 

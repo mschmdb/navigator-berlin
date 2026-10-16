@@ -40,6 +40,7 @@ export type StyleProfile =
 	| 'point-gesundheit'
 	| 'point-freizeit'
 	| 'point-kuehle-orte'
+	| 'point-waerme-orte'
 	| 'line-radverkehr'
 	| 'line-rail-ubahn'
 	| 'line-rail-tram'
@@ -107,6 +108,7 @@ export const LAYER_STYLE_PROFILE: Record<string, StyleProfile> = {
 	stolpersteine: 'point',
 	trinkbrunnen: 'point',
 	'kuehle-orte': 'point-kuehle-orte',
+	'waerme-orte': 'point-waerme-orte',
 	// E: Soziale Infrastruktur
 	'kitas-2024': 'point-bildung',
 	'schulen-2024': 'point-bildung',
@@ -380,6 +382,10 @@ const LEGEND_BY_PROFILE: Record<StyleProfile, LegendSpec> = {
 		kind: 'point',
 		items: [{ color: COLORS.umweltKuehleOrte, label: 'Kühler Ort' }]
 	},
+	'point-waerme-orte': {
+		kind: 'point',
+		items: [{ color: COLORS.umweltWaermeOrte, label: 'Warmer Ort' }]
+	},
 	'point-ubahn': {
 		kind: 'point',
 		items: [{ color: COLORS.indigo, label: 'U-Bahn-Station' }]
@@ -487,6 +493,7 @@ const LEGEND_WORD_MESSAGE: Record<string, MessageFn> = {
 	'Städtebaulicher Schutz (§172 BauGB)': m.atlas_legend_milieuschutz_staedtebau,
 	Standort: m.atlas_legend_word_standort,
 	'Kühler Ort': m.atlas_legend_point_kuehler_ort,
+	'Warmer Ort': m.atlas_legend_point_warmer_ort,
 	'U-Bahn-Station': m.atlas_legend_point_ubahn_station,
 	'S-Bahn-Station': m.atlas_legend_point_sbahn_station,
 	'Tram-Haltestelle': m.atlas_legend_point_tram_haltestelle,
@@ -609,6 +616,7 @@ function translateLegendSpec(
 		case 'polygon-outline-milieuschutz-staedtebau':
 		case 'point':
 		case 'point-kuehle-orte':
+		case 'point-waerme-orte':
 		case 'point-ubahn':
 		case 'point-sbahn':
 		case 'point-tram':
@@ -773,7 +781,8 @@ export function buildLayerSpec(
 				}
 			];
 		case 'point-kuehle-orte':
-		// kuehle-orte rendert als Pin (hasPinIcon greift vorher), der circle-Case ist nur
+		case 'point-waerme-orte':
+		// kuehle-orte und waerme-orte rendern als Pin (hasPinIcon greift vorher), der circle-Case ist nur
 		// TS-Vollständigkeit. Fall-through auf das generische Punkt-Rendering.
 		case 'point':
 			return [

@@ -4,6 +4,7 @@ export type DisclaimerVariant =
 	| 'seasonal'
 	| 'source'
 	| 'kuehle-orte'
+	| 'waerme-orte'
 	| 'compare-stolperstein'
 	| 'compare-mietspiegel'
 	| 'compare-bodenrichtwerte'

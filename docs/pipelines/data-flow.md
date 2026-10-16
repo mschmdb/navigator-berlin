@@ -1,7 +1,7 @@
 ---
 type: pipeline
 audience: both
-last-verified: 2026-10-14
+last-verified: 2026-10-16
 related:
   - docs/INDEX.md
   - docs/recovery/wiedereinstieg.md
@@ -9,9 +9,9 @@ related:
 
 # Data-Flow-Atlas
 
-Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 2026-10-14.
+Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 2026-10-16.
 
-**53 Layer total**, gruppiert nach Bundle.
+**54 Layer total**, gruppiert nach Bundle.
 
 ## Pro-Bundle-Übersicht
 ### A: Boundaries
@@ -47,6 +47,7 @@ Auto-generiert via `pnpm doc:pipelines` aus `scripts/lib/sources.ts`. Stand: 202
 | `umweltgerechtigkeit-2023` | fis-broker | gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023 | dl-de/zero-2-0 | 2024-01-01 | - |
 | `trinkbrunnen` | overpass | overpass-api.de/api/interpreter | ODbL 1.0 | — | - |
 | `kuehle-orte` | local | www.openstreetmap.org/copyright | ODbL 1.0 | — | `scripts/build-kuehle-orte.ts` |
+| `waerme-orte` | local | www.openstreetmap.org/copyright | ODbL 1.0 | — | `scripts/build-waerme-orte.ts` |
 | `klima-pet-2022` | fis-broker | gdi.berlin.de/services/wfs/ua_klimaanalyse_2022 | dl-de/zero-2-0 | 2024-06-01 | - |
 | `klima-kaltlufteinwirkbereich-2022` | fis-broker | gdi.berlin.de/services/wfs/ua_klimaanalyse_2022 | dl-de/zero-2-0 | 2024-06-01 | - |
 | `klima-leitbahnkorridor-2022` | fis-broker | gdi.berlin.de/services/wfs/ua_klimaanalyse_2022 | dl-de/zero-2-0 | 2024-06-01 | - |

@@ -173,6 +173,20 @@ export const SOURCES: SourceConfig[] = [
 		zoomThresholds: { min: 11, max: 18 },
 		simplifyProfile: 'point'
 	},
+	// Wärme-Orte (#71): beheizte, öffentliche Aufenthaltsorte im Winter, lokal vorgebaut wie
+	// kuehle-orte (ADR-020). OSM-Geometrie (ODbL 1.0) plus redaktionelle Winter-Anreicherung als
+	// eigener navigator.berlin-Datensatz, getrennt gekennzeichnet in docs/waerme-orte-methodik.md.
+	{
+		slug: 'waerme-orte',
+		kind: 'local',
+		localPath: 'static/data/waerme-orte.geojson',
+		buildStep: 'scripts/build-waerme-orte.ts',
+		sourceUrl: 'https://www.openstreetmap.org/copyright',
+		license: 'ODbL 1.0',
+		bundleGroup: 'C: Umwelt',
+		zoomThresholds: { min: 11, max: 18 },
+		simplifyProfile: 'point'
+	},
 	// Epic 12 (Story 12.0): Nahversorgung als Alltagsökonomie-Input für die Versorgungs-Dimension.
 	// OSM/Overpass, ODbL. `out center;` liefert auch Flächen-POIs (Buildings) als Punkt
 	// (overpass-to-geojson centerToFeature). nwr deckt node+way+relation ab.

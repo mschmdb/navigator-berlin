@@ -203,6 +203,16 @@
 		</a>
 	{/if}
 
+	{#if detail.slug === 'waerme-orte'}
+		<a
+			href={localizedHref('/kaelte')}
+			data-testid="layer-detail-kaelte-link"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+		>
+			{m.layer_page_kaelte_cta()}
+		</a>
+	{/if}
+
 	{#if data.ranking}
 		<LayerKiezRanking ranking={data.ranking} measure={explain.short || undefined} />
 	{/if}

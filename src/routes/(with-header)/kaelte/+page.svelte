@@ -12,6 +12,9 @@
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
+	import { ArrowRight } from '@lucide/svelte';
+	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
 
 	let { data }: { data: PageData } = $props();
 
@@ -21,6 +24,7 @@
 	const pathname = '/kaelte';
 	const primaryOrigin = $derived(canonicalOrigin(origin));
 
+	const explorerLink = buildExplorerDeepLink(['waerme-orte']);
 	const pageTitle = $derived(buildPageTitle(m.kaelte_meta_title()));
 	const pageDescription = $derived(m.kaelte_meta_description());
 	const ogImageAbsolute = $derived(`${primaryOrigin}/og/page/kaelte.png`);
@@ -66,9 +70,17 @@
 		{m.kaelte_intro()}
 	</p>
 
-	<!-- Warme Orte (#62): Liste in der Nähe, darunter der Transparenz-Block. Karte folgt mit #63. -->
+	<!-- Warme Orte (#62): Liste in der Nähe, darunter der Transparenz-Block. Karten-Link (#71). -->
 	<div data-testid="kaelte-platzhalter-orte" class="flex flex-col gap-8 md:gap-10">
 		<WarmeOrteNaehe />
+		<a
+			href={localizedHref(explorerLink)}
+			data-testid="kaelte-karte-link"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+		>
+			<ArrowRight size={16} aria-hidden="true" />
+			{m.kaelte_orte_karte_link()}
+		</a>
 		<WarmeOrteTransparenz />
 	</div>
 </div>

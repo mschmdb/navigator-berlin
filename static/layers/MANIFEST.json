@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T19:18:43.811Z",
+  "generatedAt": "2026-10-16T19:04:06.353Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -1219,6 +1219,21 @@
       "featureCount": 542,
       "inspectorRelevant": true,
       "mapRelevant": true
+    },
+    {
+      "slug": "waerme-orte",
+      "filename": "waerme-orte.56fdb7c5.geojson",
+      "sourceUrl": "https://www.openstreetmap.org/copyright",
+      "fetchedAt": "2026-10-16T19:04:06.353Z",
+      "license": "ODbL 1.0",
+      "sha256": "56fdb7c50ed2154939f47c0642a91e50b16f75c48cce08ba24c3cc2eeefd4356",
+      "bundleGroup": "C: Umwelt",
+      "zoomThresholds": {
+        "min": 11,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 227
     }
   ]
 }
