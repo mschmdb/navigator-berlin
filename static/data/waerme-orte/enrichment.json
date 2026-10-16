@@ -1255,13 +1255,13 @@
 		"suitable_reason": "Öffentliche Kinder- und Jugendbibliothek im Haus der Amerika-Gedenkbibliothek mit Lernzentrum, täglich geöffnet.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo-Fr 13-19 Uhr; Sa 10-19 Uhr; So 11-17 Uhr; an Feiertagen geschlossen",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.zlb.de/eltern-kinder/mehr-ueber-die-kijubi/",
 		"source_url": "https://www.zlb.de/eltern-kinder/mehr-ueber-die-kijubi/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Adresse jetzt Eva-Mamlok-Platz 1, 10961. Richtet sich an Kinder und Jugendliche; Eintritt laut früherer Recherche frei."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.zlb.de/. Adresse jetzt Eva-Mamlok-Platz 1, 10961. Richtet sich an Kinder und Jugendliche; Eintritt laut früherer Recherche frei."
 	},
 	{
 		"id": "node/13700765940",
@@ -1447,13 +1447,13 @@
 		"suitable_reason": "Öffentliche Stadtbibliothek mit regulären Öffnungszeiten.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo und Do 13-19 Uhr, Di, Mi, Fr 12-17 Uhr",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "unknown",
 		"website": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/falkenhagener-feld/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/falkenhagener-feld/artikel.182168.php",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Westerwaldstraße 9, 13589 Berlin, barrierefrei laut Bezirksseite. Aufenthalt ohne Ausweis nicht belegt."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-spandau/service/benutzungsinformationen/neuanmeldung/artikel.178136.php. Westerwaldstraße 9, 13589 Berlin, barrierefrei laut Bezirksseite. Aufenthalt ohne Ausweis nicht belegt."
 	},
 	{
 		"id": "node/14213130189",
@@ -1863,13 +1863,13 @@
 		"suitable_reason": "Öffentliche Stadtbibliothek mit regelmäßigen Öffnungszeiten, Arbeitsplätzen und WLAN.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo, Di, Do 11-18 Uhr; Mi und Fr 9-13 Uhr; einzelne Schließtage, u. a. Putzwoche im November und zwischen Weihnachten und Neujahr",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/bibliotheken-mh/bibliotheken/stadtteilbibliothek-erich-weinert/",
 		"source_url": "https://www.berlin.de/bibliotheken-mh/bibliotheken/stadtteilbibliothek-erich-weinert/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Barrierefrei, barrierefreie Toilette, kostenloses WLAN, Arbeitsplätze mit Steckdosen, Spielbereich. Eintritt frei laut früherer Recherche; Aufenthalt ohne Ausweis nicht ausdrücklich belegt."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/bibliotheken-mh/service/fragen-und-antworten-106382.php. Barrierefrei, barrierefreie Toilette, kostenloses WLAN, Arbeitsplätze mit Steckdosen, Spielbereich. Eintritt frei laut früherer Recherche; Aufenthalt ohne Ausweis nicht ausdrücklich belegt."
 	},
 	{
 		"id": "node/2054664943",
@@ -2247,12 +2247,12 @@
 		"suitable_reason": "Große Bezirkszentralbibliothek mit Sesseln, Arbeitsplätzen und Café, täglich geöffnet.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo-Fr 10-19 Uhr, Sa und So 10-18 Uhr.",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/bezirkszentralbibliothek/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/bezirkszentralbibliothek/",
 		"still_exists": "yes",
-		"notes": "Café im Haus, barrierefreier Zugang, Aufzug und Toilette.",
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-spandau/service/benutzungsinformationen/neuanmeldung/artikel.178136.php. Café im Haus, barrierefreier Zugang, Aufzug und Toilette.",
 		"checked_at": "2026-10-16"
 	},
 	{
@@ -2263,12 +2263,12 @@
 		"suitable_reason": "Bezirkszentralbibliothek mit Arbeitsplätzen und WLAN, sechs Tage geöffnet.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo, Di, Do, Fr 10-19:30 Uhr, Mi 14-19:30 Uhr, Sa 10-14 Uhr.",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/bibliotheken-mh/bibliotheken/bezirkszentralbibliothek-mark-twain/",
 		"source_url": "https://www.berlin.de/bibliotheken-mh/bibliotheken/bezirkszentralbibliothek-mark-twain/",
 		"still_exists": "yes",
-		"notes": "Kostenloses WLAN, Dachgärten, barrierefrei mit WC und Aufzug; Ausweis nur zum Ausleihen nötig. Am 16.10.2026 schließt sie um 17 Uhr.",
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/bibliotheken-mh/service/fragen-und-antworten-106382.php. Kostenloses WLAN, Dachgärten, barrierefrei mit WC und Aufzug; Ausweis nur zum Ausleihen nötig. Am 16.10.2026 schließt sie um 17 Uhr.",
 		"checked_at": "2026-10-16"
 	},
 	{
@@ -2951,13 +2951,13 @@
 		"suitable_reason": "Öffentliche Stadtbibliothek Lichtenberg mit Arbeitsplätzen und langen Öffnungszeiten, auch am Wochenende; freier Eintritt laut früherer Recherche.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo, Di, Do, Fr 10:00 bis 18:00, Mi 13:00 bis 18:00, Sa und So 09:00 bis 19:00; teils ohne Personal (Open Library)",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/stadtbibliothek-lichtenberg/standorte/egon-erwin-kisch-bibliothek/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-lichtenberg/standorte/egon-erwin-kisch-bibliothek/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Einzel- und Internetarbeitsplätze, rollstuhlgerechtes WC. Eintritt frei laut früherer Recherche, nicht auf der Seite."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-lichtenberg/de-plain/unsere-angebote/. Einzel- und Internetarbeitsplätze, rollstuhlgerechtes WC. Eintritt frei laut früherer Recherche, nicht auf der Seite."
 	},
 	{
 		"id": "node/3269393584",
@@ -3063,13 +3063,13 @@
 		"suitable_reason": "Öffentliche Stadtbibliothek Steglitz-Zehlendorf mit Sesseln und Arbeitsplätzen; freier Eintritt laut früherer Recherche.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo bis Fr 11:00 bis 19:00, Sa 11:00 bis 16:00",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/stadtbibliothek-steglitz-zehlendorf/bibliotheken/ingeborg-drewitz-bibliothek/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-steglitz-zehlendorf/bibliotheken/ingeborg-drewitz-bibliothek/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Sessel zum Schmökern, Einzel-, Gruppen- und Computerarbeitsplätze. Eintritt frei laut früherer Recherche, nicht auf der Seite."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-steglitz-zehlendorf/service-angebote/benutzungshinweise/. Sessel zum Schmökern, Einzel-, Gruppen- und Computerarbeitsplätze. Eintritt frei laut früherer Recherche, nicht auf der Seite."
 	},
 	{
 		"id": "node/3513338376",
@@ -3783,13 +3783,13 @@
 		"suitable_reason": "Öffentliche Bibliothek, werktags regelmäßig geöffnet.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo-Fr 11-18 Uhr (undatiertes Verzeichnis; Bezirksmeldung 2021 nannte 12-18 Uhr)",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "unknown",
 		"website": "https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/bibliotheken/stadtteilbibliothek-lichtenrade/",
 		"source_url": "https://www.ortsdienst.de/berlin/tempelhof-schoeneberg/marienfelde/bibliothek/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Auch als Edith-Stein-Bibliothek, Alte Mälzerei (Steinstr. 37-41). Zeiten vor Besuch prüfen."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/service-a-z/service-faqs/. Auch als Edith-Stein-Bibliothek, Alte Mälzerei (Steinstr. 37-41). Zeiten vor Besuch prüfen."
 	},
 	{
 		"id": "node/444994924",
@@ -4471,13 +4471,13 @@
 		"suitable_reason": "Öffentliche Stadtteilbibliothek mit fünf Öffnungstagen, WLAN, Gruppenarbeitsraum und Kaffeeautomat.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo und Do 13 bis 19, Di, Mi und Fr 13 bis 17 Uhr",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "unknown",
 		"website": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/haselhorst/stadtteilbibliothek-haselhorst-182097.php",
 		"source_url": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/haselhorst/stadtteilbibliothek-haselhorst-182097.php",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Kostenloses WLAN, rollstuhlgerechter Zugang und WC, Kaffeeautomat, Gruppenarbeitsraum."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-spandau/service/benutzungsinformationen/neuanmeldung/artikel.178136.php. Kostenloses WLAN, rollstuhlgerechter Zugang und WC, Kaffeeautomat, Gruppenarbeitsraum."
 	},
 	{
 		"id": "node/5838369566",
@@ -4663,13 +4663,13 @@
 		"suitable_reason": "Öffentliche Stadtbibliothek mit Öffnung an allen sieben Tagen, seit 22.08.2026 sonntags bis 19 Uhr.",
 		"winter_open": "yes",
 		"opening_hours_note": "Werktags je nach Tag ab 9 oder 13 bis 18 oder 19 Uhr, Sonntag bis 19 Uhr (Details auf Standortseite)",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/stadtbibliothek-lichtenberg/standorte/anton-saefkow-bibliothek/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-lichtenberg/standorte/anton-saefkow-bibliothek/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Aktuelle Winterzeiten vor Besuch prüfen, Sommerzeiten waren abweichend."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-lichtenberg/de-plain/unsere-angebote/. Aktuelle Winterzeiten vor Besuch prüfen, Sommerzeiten waren abweichend."
 	},
 	{
 		"id": "node/6124184385",
@@ -5399,13 +5399,13 @@
 		"suitable_reason": "Öffentliche Stadtteilbibliothek im Forum Kienberg, 5 Öffnungstage, barrierefrei.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo, Di, Do 12-19 Uhr; Mi, Fr 9-13 Uhr; geschlossen 27.-30.10.2026",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "unknown",
 		"website": "https://www.berlin.de/bibliotheken-mh/bibliotheken/stadtteilbibliothek-kaulsdorf-nord/",
 		"source_url": "https://www.berlin.de/bibliotheken-mh/bibliotheken/stadtteilbibliothek-kaulsdorf-nord/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Rollstuhlgerecht, Aufzug, WC nach DIN 18024, Lese- und Spielbereich, Arbeitsplätze."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/bibliotheken-mh/service/fragen-und-antworten-106382.php. Rollstuhlgerecht, Aufzug, WC nach DIN 18024, Lese- und Spielbereich, Arbeitsplätze."
 	},
 	{
 		"id": "node/8371142115",
@@ -5479,13 +5479,13 @@
 		"suitable_reason": "Öffentliche Stadtteilbibliothek (VÖBB) mit regulären Öffnungszeiten.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo und Do 12 bis 19 Uhr, Di, Mi, Fr 12 bis 17 Uhr",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/heerstrasse/stadtteilbibliothek-heerstrasse-182099.php",
 		"source_url": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/heerstrasse/artikel.182099.php",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Barrierefrei laut Bezirksseite."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-spandau/service/benutzungsinformationen/neuanmeldung/artikel.178136.php. Barrierefrei laut Bezirksseite."
 	},
 	{
 		"id": "node/8462242297",
@@ -5991,13 +5991,13 @@
 		"suitable_reason": "Öffentliche Bibliothek mit Lesebereichen und Café, regulär geöffnet.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo-Fr 10-21 Uhr, Sa 10-19 Uhr, an Feiertagen geschlossen",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "unknown",
 		"website": "https://www.zlb.de/standorte/berliner-stadtbibliothek/",
 		"source_url": "https://www.zlb.de/standorte/berliner-stadtbibliothek/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Lesebereiche, Berlin-Sammlungen 2. OG, Café. Ausweispflicht für Aufenthalt nicht belegt; PC nur mit Ausweis."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.zlb.de/. Lesebereiche, Berlin-Sammlungen 2. OG, Café. Ausweispflicht für Aufenthalt nicht belegt; PC nur mit Ausweis."
 	},
 	{
 		"id": "relation/19445153",
@@ -6615,13 +6615,13 @@
 		"suitable_reason": "Öffentliche Stadtteilbibliothek mit regulären Öffnungszeiten, WLAN und Gruppenraum; Aufenthalt ohne Ausweis nicht ausdrücklich belegt.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo und Do 13-19, Di, Mi und Fr 13-17 Uhr",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "unknown",
 		"website": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/haselhorst/artikel.182097.php",
 		"source_url": "https://www.berlin.de/stadtbibliothek-spandau/bibliotheken/haselhorst/artikel.182097.php",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Barrierefrei, kostenloses WLAN, zwei PCs, Gruppenarbeitsraum. Adresse laut berlin.de Gartenfelder Str. 104 (Drittverzeichnis nennt 81A). Kein Wochenende."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-spandau/service/benutzungsinformationen/neuanmeldung/artikel.178136.php. Barrierefrei, kostenloses WLAN, zwei PCs, Gruppenarbeitsraum. Adresse laut berlin.de Gartenfelder Str. 104 (Drittverzeichnis nennt 81A). Kein Wochenende."
 	},
 	{
 		"id": "way/1238152790",
@@ -6935,13 +6935,13 @@
 		"suitable_reason": "Große öffentliche Bibliothek mit langen Öffnungszeiten.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo bis Fr 10 bis 21 Uhr, Sa 10 bis 19 Uhr, So 11 bis 17 Uhr; an Feiertagen geschlossen.",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.zlb.de/",
 		"source_url": "https://www.berlin.de/sehenswuerdigkeiten/3561110-3558930-amerika-gedenk-bibliothek.html",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Aufenthalt ohne Ausweis nicht belegt."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.zlb.de/. Aufenthalt ohne Ausweis nicht belegt."
 	},
 	{
 		"id": "way/166709624",
@@ -7351,13 +7351,13 @@
 		"suitable_reason": "Öffentliche Stadtbibliothek mit regulären Öffnungszeiten; Aufenthalt ohne Ausweis nicht auf der Seite belegt.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo-Mi 10-19 Uhr, Do 13-19 Uhr, Fr-Sa 10-19 Uhr; Sa ab 15 Uhr nur Selbstbedienung.",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/bibliothek-schoeneberg/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/bibliothek-schoeneberg/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": ""
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/service-a-z/service-faqs/."
 	},
 	{
 		"id": "way/23495060",
@@ -7767,13 +7767,13 @@
 		"suitable_reason": "Öffentliche Stadtteilbibliothek mit Lese- und Arbeitsplätzen und regelmäßigen Öffnungszeiten; freier Aufenthalt ohne Ausweis nicht ausdrücklich belegt.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo und Di 13-18, Mi und Fr 9-14, Do 13-19 Uhr; Schließtage u. a. Weihnachten/Neujahr",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "unknown",
 		"website": "https://www.berlin.de/bibliotheken-mh/bibliotheken/stadtteilbibliothek-heinrich-von-kleist/",
 		"source_url": "https://www.berlin.de/bibliotheken-mh/bibliotheken/stadtteilbibliothek-heinrich-von-kleist/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Havemannstraße 17B, 12689 Berlin. Lese- und Arbeitsplätze, Computer, barrierefreier Zugang."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/bibliotheken-mh/service/fragen-und-antworten-106382.php. Havemannstraße 17B, 12689 Berlin. Lese- und Arbeitsplätze, Computer, barrierefreier Zugang."
 	},
 	{
 		"id": "way/25041154",
@@ -8311,13 +8311,13 @@
 		"suitable_reason": "Öffentliche Stadtbibliothek mit WLAN und Arbeitsplätzen, kostenfrei besuchbar.",
 		"winter_open": "limited",
 		"opening_hours_note": "Mo und Fr 10 bis 15 Uhr, Di und Do 12 bis 18 Uhr, Mi, Sa, So geschlossen.",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/bibliothek-marienfelde/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/bibliothek-marienfelde/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Kostenloses WLAN, 6 PC-Plätze, rollstuhlgerecht. Freier Aufenthalt ohne Ausweis nicht ausdrücklich belegt."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/service-a-z/service-faqs/. Kostenloses WLAN, 6 PC-Plätze, rollstuhlgerecht. Freier Aufenthalt ohne Ausweis nicht ausdrücklich belegt."
 	},
 	{
 		"id": "way/30147803",
@@ -9255,13 +9255,13 @@
 		"suitable_reason": "Öffentliche Stadtteilbibliothek mit regulären Öffnungszeiten.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo 12-18, Mi 11-16, Do und Fr 12-18 Uhr; Di, Sa, So zu; 20.10.2026 Fortbildung",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "unknown",
 		"website": "https://www.berlin.de/stadtbibliothek-steglitz-zehlendorf/bibliotheken/stadtteilbibliothek-lankwitz/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-steglitz-zehlendorf/bibliotheken/stadtteilbibliothek-lankwitz/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Kostenloses WLAN, Internet-PC begrenzt auf 1 Stunde pro Tag."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-steglitz-zehlendorf/service-angebote/benutzungshinweise/. Kostenloses WLAN, Internet-PC begrenzt auf 1 Stunde pro Tag."
 	},
 	{
 		"id": "way/381241376",
@@ -9863,13 +9863,13 @@
 		"suitable_reason": "Öffentliche Bibliothek mit Ruhebereich und Arbeitsplätzen, regelmäßig geöffnet.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo, Di, Do 13:00-19:00; Mi, Fr 11:00-15:00; 24.12.2026 bis 01.01.2027 geschlossen",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/bibliotheken-mh/bibliotheken/mittelpunktbibliothek-ehm-welk/",
 		"source_url": "https://www.berlin.de/bibliotheken-mh/bibliotheken/mittelpunktbibliothek-ehm-welk/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Ruhebereich, Leseecke für Kinder, Arbeitsplätze; rollstuhlgerecht. Aufenthalt ohne Ausweis auf der Seite nicht ausdrücklich belegt. Kostenfreiheit folgt der früheren Recherche."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/bibliotheken-mh/service/fragen-und-antworten-106382.php. Ruhebereich, Leseecke für Kinder, Arbeitsplätze; rollstuhlgerecht. Aufenthalt ohne Ausweis auf der Seite nicht ausdrücklich belegt. Kostenfreiheit folgt der früheren Recherche."
 	},
 	{
 		"id": "way/48395703",
@@ -9943,13 +9943,13 @@
 		"suitable_reason": "Große öffentliche Bibliothek mit Arbeitsplätzen und WLAN, regelmäßig geöffnet.",
 		"winter_open": "yes",
 		"opening_hours_note": "Mo-Sa 10:00-19:00, So 11:00-17:00 (am Wochenende nur Selbstbedienung); 20.-22.10.2026 geschlossen",
-		"stay_without_purchase": "unknown",
+		"stay_without_purchase": "yes",
 		"is_free": "free",
 		"website": "https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/bibliothek-tempelhof/",
 		"source_url": "https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/bibliothek-tempelhof/",
 		"checked_at": "2026-10-16",
 		"still_exists": "yes",
-		"notes": "Kostenloses WLAN, Arbeitsplätze, Makerspace. Aufenthalt ohne Ausweis nicht ausdrücklich belegt. Kostenfreiheit folgt der früheren Recherche."
+		"notes": "Aufenthalt ohne Bibliotheksausweis laut Träger: https://www.berlin.de/stadtbibliothek-tempelhof-schoeneberg/service-a-z/service-faqs/. Kostenloses WLAN, Arbeitsplätze, Makerspace. Aufenthalt ohne Ausweis nicht ausdrücklich belegt. Kostenfreiheit folgt der früheren Recherche."
 	},
 	{
 		"id": "way/494737961",

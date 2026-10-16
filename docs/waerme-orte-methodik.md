@@ -97,7 +97,7 @@ Regeln:
 
 - 677 Kandidaten recherchiert, 219 als geeignet eingestuft: 71 Bibliotheken, 58 Museen, 49 Malls, 21 Stadtteilzentren, 13 Kirchen, 5 Kaufhäuser, 2 weitere Gotteshäuser. Nach dem Dubletten-Filter (3 Einträge) stehen 216 Orte im GeoJSON.
 - Winter-Öffnung bei 204 der 219 geeigneten Orte belegt (167 regulär, 37 eingeschränkt), bei 15 `unknown`.
-- Aufenthalt ohne Konsum ist nur bei 68 geeigneten Orten ausdrücklich belegt. Bibliotheken nennen ihn selten auf der Website, das Feld bleibt dann `unknown`.
+- Aufenthalt ohne Konsum ist bei 89 geeigneten Orten belegt. Für öffentliche Bibliotheken gilt der Beleg je Träger: Spandau, Steglitz-Zehlendorf, Tempelhof-Schöneberg, Marzahn-Hellersdorf, Lichtenberg und die ZLB schreiben ausdrücklich, dass man ihre Häuser ohne Bibliotheksausweis nutzen kann (Stand 16.10.2026, Quelle je Ort in `notes`). Für die übrigen Bezirke fehlt eine solche Aussage, das Feld bleibt dort `unknown`.
 - Ablauf: erster Durchgang je 25 Orte, danach ein langsamer Nachlauf für 166 Orte, deren Abruf scheiterte (Rate-Limit, Bot-Schutz, Zertifikatsfehler) oder die ohne Quelle als geeignet galten.
 - 60 Orte blieben auch im Nachlauf ohne Beleg (Website tot, Bot-Schutz, keine Center-Zeiten). Sie stehen als `suitable=false` mit `NACHLAUF:` in `notes` und können bei der nächsten Prüfung nachrücken.
 - Angaben ohne Quell-URL (etwa aus der Kühle-Orte-Recherche übernommen) sind auf `unknown` zurückgesetzt; ungeprüfte Zeitangaben stehen nur in `notes`.
