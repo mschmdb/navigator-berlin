@@ -95,11 +95,12 @@ Regeln:
 
 ## Recherche-Stand 16.10.2026
 
-- 677 Kandidaten recherchiert, 219 als geeignet eingestuft: 71 Bibliotheken, 58 Museen, 49 Malls, 21 Stadtteilzentren, 13 Kirchen, 5 Kaufhäuser, 2 weitere Gotteshäuser. Nach dem Dubletten-Filter (3 Einträge) stehen 216 Orte im GeoJSON.
-- Winter-Öffnung bei 204 der 219 geeigneten Orte belegt (167 regulär, 37 eingeschränkt), bei 15 `unknown`.
-- Aufenthalt ohne Konsum ist bei 89 geeigneten Orten belegt. Für öffentliche Bibliotheken gilt der Beleg je Träger: Spandau, Steglitz-Zehlendorf, Tempelhof-Schöneberg, Marzahn-Hellersdorf, Lichtenberg und die ZLB schreiben ausdrücklich, dass man ihre Häuser ohne Bibliotheksausweis nutzen kann (Stand 16.10.2026, Quelle je Ort in `notes`). Für die übrigen Bezirke fehlt eine solche Aussage, das Feld bleibt dort `unknown`.
+- 677 Kandidaten recherchiert, 230 als geeignet eingestuft: 80 Bibliotheken, 58 Museen, 50 Malls, 21 Stadtteilzentren, 13 Kirchen, 6 Kaufhäuser, 2 weitere Gotteshäuser. Nach dem Dubletten-Filter (3 Einträge) stehen 227 Orte im GeoJSON.
+- Winter-Öffnung bei 215 der 230 geeigneten Orte belegt (178 regulär, 37 eingeschränkt), bei 15 `unknown`.
+- Aufenthalt ohne Konsum ist bei 98 geeigneten Orten belegt. Für öffentliche Bibliotheken gilt der Beleg je Träger: Spandau, Steglitz-Zehlendorf, Tempelhof-Schöneberg, Marzahn-Hellersdorf, Lichtenberg und die ZLB schreiben ausdrücklich, dass man ihre Häuser ohne Bibliotheksausweis nutzen kann (Stand 16.10.2026, Quelle je Ort in `notes`). Für die übrigen Bezirke fehlt eine solche Aussage, das Feld bleibt dort `unknown`. Für die Universitätsbibliothek der HU gilt § 4 Abs. 4 ihrer Benutzungsordnung: Lesesäle und Freihandbestände sind ohne Anmeldung nutzbar.
 - Ablauf: erster Durchgang je 25 Orte, danach ein langsamer Nachlauf für 166 Orte, deren Abruf scheiterte (Rate-Limit, Bot-Schutz, Zertifikatsfehler) oder die ohne Quelle als geeignet galten.
-- 60 Orte blieben auch im Nachlauf ohne Beleg (Website tot, Bot-Schutz, keine Center-Zeiten). Sie stehen als `suitable=false` mit `NACHLAUF:` in `notes` und können bei der nächsten Prüfung nachrücken.
+- Browser-Lauf für Bot-Schutz: Seiten mit Anubis-Challenge oder HTTP 403 haben wir in einem echten Chromium (Playwright) geöffnet. Damit sind 9 HU-Bibliotheken, Taut Passage, Galeria Alexanderplatz und BENN Alt-Hohenschönhausen belegt. widerstandsmuseum.de blockt auch den Browser.
+- 49 Orte blieben auch im Nachlauf ohne Beleg (Website tot, Bot-Schutz, keine Center-Zeiten). Sie stehen als `suitable=false` mit `NACHLAUF:` in `notes` und können bei der nächsten Prüfung nachrücken.
 - Angaben ohne Quell-URL (etwa aus der Kühle-Orte-Recherche übernommen) sind auf `unknown` zurückgesetzt; ungeprüfte Zeitangaben stehen nur in `notes`.
 - Drittverzeichnisse (z. B. Kauperts) dienen nur als letzte Quelle und sind in `notes` gekennzeichnet.
 
