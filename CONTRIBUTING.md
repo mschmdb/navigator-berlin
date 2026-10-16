@@ -2,6 +2,8 @@
 
 Thanks for your interest in navigator.berlin. This is a solo-maintained project. Open an issue before you start larger work, so we can agree on scope.
 
+Fork the repo, create a branch, and open a pull request against `main`.
+
 ## Run locally
 
 Requirements: Node.js 22 (see `.nvmrc`) and pnpm 10.
