@@ -3,12 +3,26 @@ import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import Page from './+page.svelte';
+import type { PageProps } from './$types';
+
+const NO_DATA = { warnings: [] } as unknown as PageProps['data'];
+const FROST_DATA = {
+	warnings: [
+		{
+			event: 'strenger-frost',
+			level: 2,
+			headline: 'Amtliche WARNUNG vor strengem Frost',
+			source: 'Deutscher Wetterdienst (DWD)',
+			sourceUrl: 'https://www.dwd.de/warnungen'
+		}
+	]
+} as unknown as PageProps['data'];
 
 afterEach(() => overwriteGetLocale(() => 'de'));
 
 describe('Kälte-Seite', () => {
 	it('hat genau ein h1', async () => {
-		render(Page);
+		render(Page, { data: NO_DATA });
 		await expect
 			.element(page.getByRole('heading', { level: 1 }))
 			.toHaveTextContent('Kälte-Navigator Berlin');
@@ -16,57 +30,88 @@ describe('Kälte-Seite', () => {
 	});
 
 	it('enthält den Notfall-Block', async () => {
-		render(Page);
+		render(Page, { data: NO_DATA });
 		await expect.element(page.getByTestId('kaelte-notfall')).toBeVisible();
 		await expect.element(page.getByTestId('kaelte-112-link')).toHaveAttribute('href', 'tel:112');
 	});
 
-	it('hat leere Platzhalter für Warnbanner (#60) und warme Orte (#61)', async () => {
-		render(Page);
-		const warnung = document.querySelector('[data-testid="kaelte-platzhalter-warnung"]');
+	it('hat einen leeren Platzhalter für warme Orte (#61)', async () => {
+		render(Page, { data: NO_DATA });
 		const orte = document.querySelector('[data-testid="kaelte-platzhalter-orte"]');
-		expect(warnung).not.toBeNull();
 		expect(orte).not.toBeNull();
-		expect(warnung?.textContent?.trim()).toBe('');
 		expect(orte?.textContent?.trim()).toBe('');
 	});
 
+	it('zeigt ohne Warnung kein Banner', async () => {
+		render(Page, { data: NO_DATA });
+		expect(document.querySelector('[data-testid="dwd-kaeltewarn-banner"]')).toBeNull();
+	});
+
+	it('zeigt das Warnbanner oberhalb des Notfall-Blocks', async () => {
+		render(Page, { data: FROST_DATA });
+		const banner = document.querySelector('[data-testid="dwd-kaeltewarn-banner"]');
+		const notfall = document.querySelector('[data-testid="kaelte-notfall"]');
+		expect(banner).not.toBeNull();
+		expect(notfall).not.toBeNull();
+		expect(
+			banner!.compareDocumentPosition(notfall!) & Node.DOCUMENT_POSITION_FOLLOWING
+		).toBeTruthy();
+		expect(banner!.textContent).toContain('Strenger Frost');
+	});
+
+	it('AC 1: 112-Link bleibt mit drei Warnungen auf 390x844 im ersten Bildschirm', async () => {
+		await page.viewport(390, 844);
+		const long = 'Amtliche WARNUNG vor strengem Frost. '.repeat(6);
+		const warn = (event: string, level: number) => ({
+			event,
+			level,
+			headline: long,
+			source: 'Deutscher Wetterdienst (DWD)',
+			sourceUrl: 'https://www.dwd.de/warnungen'
+		});
+		const data = {
+			warnings: [warn('glatteis', 3), warn('strenger-frost', 2), warn('schneefall', 2)]
+		} as unknown as PageProps['data'];
+		render(Page, { data });
+		await expect.element(page.getByTestId('kaelte-112-link')).toBeInViewport();
+	});
+
 	it('setzt noindex bis zum Launch', async () => {
-		render(Page);
+		render(Page, { data: NO_DATA });
 		await new Promise((r) => setTimeout(r, 20));
 		const robots = document.head.querySelector('meta[name="robots"]');
 		expect(robots?.getAttribute('content')).toContain('noindex');
 	});
 
 	it('Canonical zeigt auf /kaelte der Hauptdomain-Struktur', async () => {
-		render(Page);
+		render(Page, { data: NO_DATA });
 		await new Promise((r) => setTimeout(r, 20));
 		const canonical = document.head.querySelector('link[rel="canonical"]');
 		expect(canonical?.getAttribute('href')).toMatch(/\/kaelte$/);
 	});
 
 	it('hreflang-en-Alternate zeigt auf /en/kaelte', async () => {
-		render(Page);
+		render(Page, { data: NO_DATA });
 		await new Promise((r) => setTimeout(r, 20));
 		const en = document.head.querySelector('link[rel="alternate"][hreflang="en"]');
 		expect(en?.getAttribute('href')).toMatch(/\/en\/kaelte$/);
 	});
 
 	it('rendert Breadcrumb-JSON-LD', async () => {
-		render(Page);
+		render(Page, { data: NO_DATA });
 		const ld = document.querySelector('[data-testid="kaelte-breadcrumb-jsonld"]');
 		expect(ld?.textContent).toContain('BreadcrumbList');
 	});
 
 	it('gerenderter Text enthält keine em-dashes (U+2014)', async () => {
-		render(Page);
+		render(Page, { data: NO_DATA });
 		const text = (await page.getByTestId('kaelte-landing').element()).textContent ?? '';
 		expect(text.includes('—')).toBe(false);
 	});
 
 	it('rendert englisch', async () => {
 		overwriteGetLocale(() => 'en');
-		render(Page);
+		render(Page, { data: NO_DATA });
 		await expect
 			.element(page.getByRole('heading', { level: 1 }))
 			.toHaveTextContent('Cold Navigator Berlin');

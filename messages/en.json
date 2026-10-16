@@ -2339,5 +2339,21 @@
 	"kaelte_wegweiser_text": "Overview of cold relief contact points in Berlin.",
 	"kaelte_new_tab_hint": "(opens in new tab)",
 	"ueber_kontakt_h": "Contact",
-	"ueber_kontakt_p1": "Questions, errors and tips about missing places go to {mail_start}{email}{mail_end}. The {impressum_start}legal notice{impressum_end} names the provider, and the {datenschutz_start}privacy page{datenschutz_end} covers data protection."
+	"ueber_kontakt_p1": "Questions, errors and tips about missing places go to {mail_start}{email}{mail_end}. The {impressum_start}legal notice{impressum_end} names the provider, and the {datenschutz_start}privacy page{datenschutz_end} covers data protection.",
+	"dwd_kaelte_region_label": "Official cold warnings from the German Weather Service",
+	"dwd_kaelte_level": "Warning level {level}",
+	"dwd_kaelte_source": "Source: German Weather Service (DWD)",
+	"dwd_kaelte_event_strenger_frost": "Severe frost",
+	"dwd_kaelte_event_markante_glaette": "Significant slippery conditions",
+	"dwd_kaelte_event_glatteis": "Freezing rain",
+	"dwd_kaelte_event_extremes_glatteis": "Extreme freezing rain",
+	"dwd_kaelte_event_schneefall": "Snowfall",
+	"dwd_kaelte_event_starker_schneefall": "Heavy snowfall",
+	"dwd_kaelte_event_extrem_starker_schneefall": "Extremely heavy snowfall",
+	"dwd_kaelte_event_schneeverwehung": "Snow drifts",
+	"dwd_kaelte_event_starke_schneeverwehung": "Heavy snow drifts",
+	"dwd_kaelte_event_extrem_starke_schneeverwehung": "Extreme snow drifts",
+	"dwd_kaelte_level_meaning_2": "Warning of significant weather",
+	"dwd_kaelte_level_meaning_3": "Severe weather warning",
+	"dwd_kaelte_level_meaning_4": "Warning of extreme severe weather"
 }

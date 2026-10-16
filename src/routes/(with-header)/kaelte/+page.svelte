@@ -3,11 +3,15 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import NotfallBlock from '$lib/components/kaelte/notfall-block.svelte';
+	import DwdKaeltewarnBanner from '$lib/components/kaelte/dwd-kaeltewarn-banner.svelte';
+	import type { PageData } from './$types';
 	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
+
+	let { data }: { data: PageData } = $props();
 
 	const origin = $derived(page.url.origin);
 	// Logischer Pfad: auch über den Host-Reroute der Subdomain-Wurzel ist das /kaelte
@@ -45,8 +49,8 @@
 	data-testid="kaelte-landing"
 	class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6 md:gap-10 md:py-12"
 >
-	<!-- Platzhalter für das Warnbanner (#60), bewusst leer -->
-	<div data-testid="kaelte-platzhalter-warnung"></div>
+	<!-- Amtliche DWD-Kältewarnungen (#60), oberhalb des Notfall-Blocks. Ohne Warnung entfällt alles. -->
+	<DwdKaeltewarnBanner warnings={data.warnings} />
 
 	<header class="flex flex-col gap-4">
 		<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.kaelte_eyebrow()}</p>

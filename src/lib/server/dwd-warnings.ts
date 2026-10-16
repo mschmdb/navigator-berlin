@@ -11,15 +11,19 @@ import type { HeatLevel, HeatWarning } from '$lib/data/dwd-warnung.types.js';
 // Berlingerode enthalten alle "berlin").
 const BERLIN_WARNCELL_IDS = new Set([811000000, 111000000]);
 const BERLIN_NAMES = new Set(['berlin', 'stadt berlin']);
-const WFS_URL =
-	'https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature' +
-	'&typeName=dwd:Warnungen_Gemeinden&outputFormat=application/json&CQL_FILTER=' +
-	encodeURIComponent('EC_II IN(247,248) AND WARNCELLID IN(811000000,111000000)');
-const SOURCE = 'Deutscher Wetterdienst (DWD)';
+export function buildWfsUrl(eventCodes: readonly number[]): string {
+	return (
+		'https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature' +
+		'&typeName=dwd:Warnungen_Gemeinden&outputFormat=application/json&CQL_FILTER=' +
+		encodeURIComponent(`EC_II IN(${eventCodes.join(',')}) AND WARNCELLID IN(811000000,111000000)`)
+	);
+}
+const WFS_URL = buildWfsUrl([247, 248]);
+export const SOURCE = 'Deutscher Wetterdienst (DWD)';
 // Stabiler Kurzlink, leitet auf die jeweils aktuelle Warnseite um. Der frühere tiefe
 // Pfad (…/wetter/warnungen/warnungen_node.html) liefert seit dem DWD-Umbau 404.
-const SOURCE_URL = 'https://www.dwd.de/warnungen';
-const TIMEOUT_MS = 5000;
+export const SOURCE_URL = 'https://www.dwd.de/warnungen';
+export const TIMEOUT_MS = 5000;
 
 // LRUCache erlaubt kein null als Value (muss `{}` sein). Sentinel für „geprüft, keine Warnung".
 const NO_WARNING = Symbol('no-warning');
@@ -47,7 +51,7 @@ export function levelLabel(level: HeatLevel): string {
 
 const LEVEL_RANK: Record<HeatLevel, number> = { stark: 1, extrem: 2 };
 
-interface WarnFeatureProps {
+export interface WarnFeatureProps {
 	NAME?: unknown;
 	EC_II?: unknown;
 	HEADLINE?: unknown;
@@ -56,7 +60,7 @@ interface WarnFeatureProps {
 	EXPIRES?: unknown;
 }
 
-function isBerlin(props: WarnFeatureProps): boolean {
+export function isBerlin(props: WarnFeatureProps): boolean {
 	const cell = Number(props.WARNCELLID);
 	if (Number.isFinite(cell) && cell > 0) return BERLIN_WARNCELL_IDS.has(cell);
 	// Fallback ohne Warnzellen-ID (z.B. ältere Fixtures): exakter Name, kein Substring.
@@ -70,7 +74,7 @@ const BERLIN_DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin' 
  * Kalendertag liegt (auch wenn er erst mittags beginnt), aber nicht für Folgetage.
  * Abgelaufene Warnungen (EXPIRES <= now) fallen raus. Ohne Zeitfelder: anzeigen.
  */
-function isActiveToday(props: WarnFeatureProps, now: Date): boolean {
+export function isActiveToday(props: WarnFeatureProps, now: Date): boolean {
 	if (typeof props.EXPIRES === 'string') {
 		const expires = new Date(props.EXPIRES);
 		if (!Number.isNaN(expires.getTime()) && expires.getTime() <= now.getTime()) return false;

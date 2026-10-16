@@ -459,3 +459,7 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-58-59-kaelte-grundgeruest.md`
   summary: Zweitquelle der KARUNA-Nummer (Pressemitteilung Bezirksamt Charlottenburg-Wilmersdorf) steht ohne URL und Datum in `hilfe-dienste.ts`.
   evidence: Die Quelle hat kein `url`-Feld; bei der Kältebus-Prüfung (planning#9) mit nachtragen.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-60-kaelte-dwd-warnungen.md`
+  summary: Die 30-Sekunden-TTL des Negativ-Caches für DWD-Warnungen (Hitze und Kälte) ist ungetestet.
+  evidence: Tests prüfen nur, dass der zweite Aufruf nicht fetcht; ohne `{ ttl: ERROR_TTL_MS }` bliebe alles grün. Braucht eine steuerbare Uhr für lru-cache.
