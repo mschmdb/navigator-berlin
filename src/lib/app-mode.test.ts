@@ -1,5 +1,57 @@
 import { describe, expect, it } from 'vitest';
-import { resolveAppMode, isHitzeMode, hitzeReroute } from './app-mode.js';
+import {
+	resolveAppMode,
+	isHitzeMode,
+	hitzeReroute,
+	kaelteReroute,
+	pageviewPathFor
+} from './app-mode.js';
+
+describe('kaelte-Subdomain', () => {
+	it('erkennt kaelte.-Subdomain als eigenen Modus', () => {
+		expect(resolveAppMode('kaelte.navigator.berlin')).toBe('kaelte');
+		expect(resolveAppMode('KAELTE.navigator.berlin')).toBe('kaelte');
+	});
+
+	it('?mode= bleibt auf hitze/default beschränkt', () => {
+		expect(resolveAppMode('navigator.berlin', 'kaelte')).toBe('default');
+		expect(resolveAppMode('kaelte.navigator.berlin', 'default')).toBe('default');
+	});
+
+	it('kaelteReroute rewritet die Wurzel auf /kaelte', () => {
+		expect(kaelteReroute(new URL('https://kaelte.navigator.berlin/'))).toBe('/kaelte');
+	});
+
+	it('kaelteReroute lässt andere Pfade und Hosts unangetastet', () => {
+		expect(kaelteReroute(new URL('https://kaelte.navigator.berlin/explore'))).toBeNull();
+		expect(kaelteReroute(new URL('https://kaelte.navigator.berlin/kaelte'))).toBeNull();
+		expect(kaelteReroute(new URL('https://navigator.berlin/'))).toBeNull();
+		expect(kaelteReroute(new URL('https://hitze.navigator.berlin/'))).toBeNull();
+	});
+
+	it('hitzeReroute greift nicht auf der kaelte-Subdomain', () => {
+		expect(hitzeReroute(new URL('https://kaelte.navigator.berlin/'))).toBeNull();
+	});
+});
+
+describe('pageviewPathFor', () => {
+	it('meldet die Kälte-Wurzel als /kaelte', () => {
+		expect(pageviewPathFor(new URL('https://kaelte.navigator.berlin/'))).toBe('/kaelte');
+	});
+
+	it('meldet die Hitze-Wurzel als /hitze', () => {
+		expect(pageviewPathFor(new URL('https://hitze.navigator.berlin/'))).toBe('/hitze');
+	});
+
+	it('lässt andere Pfade der Subdomains unverändert', () => {
+		expect(pageviewPathFor(new URL('https://kaelte.navigator.berlin/explore'))).toBeUndefined();
+		expect(pageviewPathFor(new URL('https://hitze.navigator.berlin/explore'))).toBeUndefined();
+	});
+
+	it('lässt die Hauptdomain unverändert', () => {
+		expect(pageviewPathFor(new URL('https://navigator.berlin/'))).toBeUndefined();
+	});
+});
 
 describe('resolveAppMode', () => {
 	it('erkennt hitze.-Subdomain', () => {

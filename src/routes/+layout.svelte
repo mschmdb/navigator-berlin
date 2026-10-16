@@ -13,7 +13,7 @@
 	import { mountWebMcpServer, unmountWebMcpServer } from '$lib/webmcp';
 	import { afterNavigate } from '$app/navigation';
 	import { trackPageview } from '$lib/utils/plausible.js';
-	import { resolveAppMode } from '$lib/app-mode';
+	import { pageviewPathFor } from '$lib/app-mode';
 
 	const ui = createUiState();
 
@@ -52,8 +52,7 @@
 		// erkennen (zuverlässiger als route.id nach Reroute) und `/hitze` an Plausible melden,
 		// sonst vermischt sich der Subdomain-Traffic mit der Homepage.
 		const toUrl = nav.to?.url;
-		const isHitzeRoot = !!toUrl && resolveAppMode(toUrl.host) === 'hitze' && toUrl.pathname === '/';
-		trackPageview(isHitzeRoot ? '/hitze' : undefined);
+		trackPageview(toUrl ? pageviewPathFor(toUrl) : undefined);
 	});
 
 	$effect(() => {

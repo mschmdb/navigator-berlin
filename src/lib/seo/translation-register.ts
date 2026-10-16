@@ -119,6 +119,7 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/webmcp', locale: 'en' },
 	{ pathname: '/umwelt-infrastruktur-score', locale: 'en' },
 	{ pathname: '/hitze', locale: 'en' },
+	{ pathname: '/kaelte', locale: 'en' },
 	{ pathname: '/kuehle-orte', locale: 'en' },
 	{ pathname: '/lizenzen', locale: 'en' },
 	{ pathname: '/kiez', locale: 'en', prefix: true },

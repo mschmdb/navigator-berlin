@@ -144,6 +144,13 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		footerUrl: '/hitze'
 	},
 	{
+		slug: 'kaelte',
+		headline: 'Kälte-Navigator Berlin',
+		subline: 'Hilfe für Menschen in der Kälte',
+		body: 'Du siehst jemanden in der Kälte? Die Nummern der Berliner Kältehilfe an einem Ort, mit Hinweis auf den gerade erreichbaren Dienst.',
+		footerUrl: '/kaelte'
+	},
+	{
 		slug: 'kuehle-orte',
 		headline: 'Kühle Orte in Berlin',
 		subline: 'Abkühlung bei Hitze',
