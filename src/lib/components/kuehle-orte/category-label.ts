@@ -11,6 +11,8 @@ const LABELS: Readonly<Record<string, () => string>> = {
 	Museum: () => m.naehe_cat_museum(),
 	Bibliothek: () => m.naehe_cat_bibliothek(),
 	'Mall/Center': () => m.naehe_cat_mall(),
+	Mall: () => m.naehe_cat_mall_plain(),
+	Gotteshaus: () => m.naehe_cat_gotteshaus(),
 	Kino: () => m.naehe_cat_kino(),
 	Schwimmzentrum: () => m.naehe_cat_schwimmzentrum(),
 	Kirche: () => m.naehe_cat_kirche(),

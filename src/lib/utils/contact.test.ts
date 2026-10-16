@@ -128,3 +128,26 @@ describe('buildOptOutMailto · EN (i18n C4c)', () => {
 		expect(decoded).not.toContain('Begründung');
 	});
 });
+
+describe('buildErrorReportMailto, Kategorie und Prüfdatum', () => {
+	it('hängt Kategorie und „Geprüft am“ getrennt vom Datenstand an', () => {
+		const href = buildErrorReportMailto({
+			layerSlug: 'waerme-orte',
+			layerName: 'X',
+			category: 'Museum',
+			checkedAt: '2026-10-16'
+		});
+		const body = decodeURIComponent(href.match(/body=(.+)$/)![1]);
+		expect(body).toContain('Kategorie: Museum');
+		expect(body).toContain('Geprüft am: 2026-10-16');
+		expect(body).not.toContain('Datenstand');
+	});
+
+	it('lässt die Zeilen ohne die Felder weg', () => {
+		const body = decodeURIComponent(
+			buildErrorReportMailto({ layerSlug: 'a', layerName: 'b' }).match(/body=(.+)$/)![1]
+		);
+		expect(body).not.toContain('Kategorie');
+		expect(body).not.toContain('Geprüft am');
+	});
+});

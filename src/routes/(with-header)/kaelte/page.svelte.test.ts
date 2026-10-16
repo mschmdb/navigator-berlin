@@ -35,11 +35,14 @@ describe('Kälte-Seite', () => {
 		await expect.element(page.getByTestId('kaelte-112-link')).toHaveAttribute('href', 'tel:112');
 	});
 
-	it('hat einen leeren Platzhalter für warme Orte (#61)', async () => {
+	it('zeigt die Liste warmer Orte und den Transparenz-Block unterhalb des Notfall-Blocks (#62)', async () => {
 		render(Page, { data: NO_DATA });
 		const orte = document.querySelector('[data-testid="kaelte-platzhalter-orte"]');
-		expect(orte).not.toBeNull();
-		expect(orte?.textContent?.trim()).toBe('');
+		const notfall = document.querySelector('[data-testid="kaelte-notfall"]');
+		expect(orte?.querySelector('[data-testid="waerme-orte-naehe"]')).not.toBeNull();
+		expect(orte?.querySelector('[data-testid="waerme-transparenz"]')).not.toBeNull();
+		expect(notfall!.compareDocumentPosition(orte!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+		await expect.element(page.getByTestId('waerme-locate')).toBeVisible();
 	});
 
 	it('zeigt ohne Warnung kein Banner', async () => {

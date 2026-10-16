@@ -3,6 +3,8 @@
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import NotfallBlock from '$lib/components/kaelte/notfall-block.svelte';
+	import WarmeOrteNaehe from '$lib/components/kaelte/warme-orte-naehe.svelte';
+	import WarmeOrteTransparenz from '$lib/components/kaelte/warme-orte-transparenz.svelte';
 	import DwdKaeltewarnBanner from '$lib/components/kaelte/dwd-kaeltewarn-banner.svelte';
 	import type { PageData } from './$types';
 	import { buildPageTitle } from '$lib/seo/page-title.js';
@@ -64,6 +66,9 @@
 		{m.kaelte_intro()}
 	</p>
 
-	<!-- Platzhalter für warme Orte (#61, #62), bewusst leer -->
-	<div data-testid="kaelte-platzhalter-orte"></div>
+	<!-- Warme Orte (#62): Liste in der Nähe, darunter der Transparenz-Block. Karte folgt mit #63. -->
+	<div data-testid="kaelte-platzhalter-orte" class="flex flex-col gap-8 md:gap-10">
+		<WarmeOrteNaehe />
+		<WarmeOrteTransparenz />
+	</div>
 </div>
