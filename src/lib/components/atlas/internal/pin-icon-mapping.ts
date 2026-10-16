@@ -59,6 +59,18 @@ export const PIN_ICON_MAP: Readonly<Record<string, PinIconSpec>> = {
 			{ tag: 'path', attrs: { d: 'm7 3 3 6h4' } }
 		]
 	},
+	'waerme-orte': {
+		iconName: 'flame',
+		colorToken: 'umweltWaermeOrte',
+		svgNodes: [
+			{
+				tag: 'path',
+				attrs: {
+					d: 'M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4'
+				}
+			}
+		]
+	},
 	'kitas-2024': {
 		iconName: 'baby',
 		colorToken: 'sozialKita',

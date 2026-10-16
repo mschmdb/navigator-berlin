@@ -144,6 +144,11 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 		long: 'Orte in Berlin, die bei Hitze Abkühlung bieten: Kinos, Bibliotheken, Malls, Schwimmhallen, Museen und mehr. Geometrie und Basis-Tags aus OpenStreetMap (ODbL 1.0), ergänzt um eine redaktionelle navigator.berlin-Anreicherung: Kühle-Score, Klimatisierung, Sommer-Verfügbarkeit. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.'
 	},
 
+	'waerme-orte': {
+		short: 'Beheizte Orte zum Aufwärmen im Winter',
+		long: 'Öffentliche, beheizte Orte in Berlin, an denen du dich im Winter ohne Konsumzwang aufhalten kannst: Bibliotheken, Museen, Malls, Kaufhäuser, Stadtteilzentren sowie Kirchen und andere Gotteshäuser. Standort aus OpenStreetMap (ODbL 1.0), Winter-Angaben aus redaktioneller Recherche. Was ungeprüft ist, steht als „nicht geprüft“ da.'
+	},
+
 	// E: Soziale Infrastruktur
 	'kitas-2024': {
 		short: 'Kindertagesstätte (Kita)',
@@ -475,6 +480,10 @@ export const LAYER_EXPLAIN_MESSAGE: Partial<Record<string, LayerExplainMessages>
 	'kuehle-orte': {
 		short: m.layer_explain_kuehle_orte_short,
 		long: m.layer_explain_kuehle_orte_long
+	},
+	'waerme-orte': {
+		short: m.layer_explain_waerme_orte_short,
+		long: m.layer_explain_waerme_orte_long
 	},
 	'kitas-2024': { short: m.layer_explain_kitas_2024_short, long: m.layer_explain_kitas_2024_long },
 	'schulen-2024': {

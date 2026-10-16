@@ -140,6 +140,25 @@ describe('Stolperstein-Methodik · Würde-Prinzip', () => {
 	});
 });
 
+describe('Wärme-Orte-Methodik (#71)', () => {
+	it('nennt OSM und redaktionelle Anreicherung als getrennte Herkunft, DE und EN', () => {
+		const de = getLayerMethodology('waerme-orte');
+		const en = getLayerMethodology('waerme-orte', { locale: 'en' });
+		expect(de?.authority).toMatch(/navigator\.berlin/);
+		expect(de?.authority).toMatch(/ODbL/);
+		expect(de?.calculation).toMatch(/OpenStreetMap/);
+		expect(en?.calculation).toMatch(/OpenStreetMap/);
+		expect(en?.calculation).not.toBe(de?.calculation);
+		expect(de?.coverageGaps?.length).toBeGreaterThan(0);
+		expect(en?.coverageGaps?.length).toBe(de?.coverageGaps?.length);
+		expect(de?.updateFrequency).toBeTruthy();
+	});
+
+	it('verweist auf kuehle-orte als verwandten Layer', () => {
+		expect(getLayerMethodology('waerme-orte')?.relatedLayers).toContain('kuehle-orte');
+	});
+});
+
 describe('Mietspiegel/Bodenrichtwerte-Methodik · keine Wertung', () => {
 	it('bodenrichtwerte-omissions thematisieren Mietpreis-Abgrenzung', () => {
 		const m = getLayerMethodology('bodenrichtwerte');

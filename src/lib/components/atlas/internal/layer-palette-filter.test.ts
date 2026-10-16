@@ -186,6 +186,13 @@ describe('getLayerDisplayName', () => {
 	});
 });
 
+describe('waerme-orte Anzeigename (#71)', () => {
+	it('liefert „Warme Orte“ (DE) und „Warm places“ (EN)', () => {
+		expect(getLayerDisplayName('waerme-orte')).toBe('Warme Orte');
+		expect(getLayerDisplayName('waerme-orte', { locale: 'en' })).toBe('Warm places');
+	});
+});
+
 describe('bundleLabel', () => {
 	it('liefert DE ohne opts, EN mit { locale: "en" }', () => {
 		expect(bundleLabel('B: Wohn-Daten')).toBe('B · Wohn-Daten');

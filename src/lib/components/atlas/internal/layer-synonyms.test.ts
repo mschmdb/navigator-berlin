@@ -78,6 +78,18 @@ describe('matchSynonyms', () => {
 		expect(matchSynonyms('kuehl')).toContain('kuehle-orte');
 	});
 
+	it('„warme orte" und „aufwärmen" finden waerme-orte', () => {
+		expect(matchSynonyms('warme orte')).toContain('waerme-orte');
+		expect(matchSynonyms('aufwärmen')).toContain('waerme-orte');
+		expect(matchSynonyms('aufwaermen')).toContain('waerme-orte');
+	});
+
+	it('„warmmiete", „wintergarten", „kältehilfe", „wärmestube" finden waerme-orte nicht', () => {
+		for (const q of ['warmmiete', 'wintergarten', 'kältehilfe', 'wärmestube']) {
+			expect(matchSynonyms(q)).not.toContain('waerme-orte');
+		}
+	});
+
 	it('„Mietspiegel" findet wohnlagen-2024', () => {
 		expect(matchSynonyms('mietspiegel')).toContain('wohnlagen-2024');
 	});

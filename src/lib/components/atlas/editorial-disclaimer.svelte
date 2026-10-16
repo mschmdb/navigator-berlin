@@ -13,6 +13,8 @@
 		source: 'Personen-Hintergrund aus zitierter Quelle. Nicht algorithmisch generiert.',
 		'kuehle-orte':
 			'Geometrie aus OpenStreetMap (ODbL), ergänzt um eine redaktionelle Anreicherung. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Zugang.',
+		'waerme-orte':
+			'Geometrie aus OpenStreetMap (ODbL), ergänzt um eine redaktionelle Winter-Recherche mit Quelle und Prüfdatum. Was nicht geprüft ist, steht als „nicht geprüft“ da. Ein Angebot, kein Behörden-Ersatz, kein Rechtsanspruch auf Aufenthalt.',
 		'compare-stolperstein':
 			'Stolpersteine sind Erinnerung an NS-Opfer, kein Wohn-Bewertungs-Kriterium. Wir zählen nur, ohne zu vergleichen oder zu werten.',
 		'compare-mietspiegel':
@@ -83,6 +85,7 @@
 		seasonal: m.disclaimer_seasonal,
 		source: m.disclaimer_source,
 		'kuehle-orte': m.disclaimer_kuehle_orte,
+		'waerme-orte': m.disclaimer_waerme_orte,
 		'compare-stolperstein': m.disclaimer_compare_stolperstein,
 		'compare-mietspiegel': m.disclaimer_compare_mietspiegel,
 		'compare-bodenrichtwerte': m.disclaimer_compare_bodenrichtwerte,

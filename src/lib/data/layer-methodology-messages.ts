@@ -224,6 +224,12 @@ export const LAYER_METHODOLOGY_MESSAGE: Record<LayerMethodologySlug, LayerMethod
 		coverageGaps: [m.layer_methodology_kuehle_orte_coverage_gap_0],
 		omissions: [m.layer_methodology_kuehle_orte_omission_0]
 	},
+	'waerme-orte': {
+		calculation: m.layer_methodology_waerme_orte_calculation,
+		updateFrequency: m.layer_methodology_waerme_orte_update_frequency,
+		coverageGaps: [m.layer_methodology_waerme_orte_coverage_gap_0],
+		omissions: [m.layer_methodology_waerme_orte_omission_0]
+	},
 	'radverkehrsnetz-2025': {
 		calculation: m.layer_methodology_radverkehrsnetz_2025_calculation,
 		updateFrequency: m.layer_methodology_radverkehrsnetz_2025_update_frequency

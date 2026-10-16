@@ -45,6 +45,21 @@ describe('Kälte-Seite', () => {
 		await expect.element(page.getByTestId('waerme-locate')).toBeVisible();
 	});
 
+	it('verlinkt „auf der Karte ansehen“ auf den Explorer mit Layer waerme-orte (#71)', async () => {
+		render(Page, { data: NO_DATA });
+		const link = (await page.getByTestId('kaelte-karte-link').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/explore?layers=waerme-orte');
+		expect(link.textContent).toMatch(/auf der Karte ansehen/i);
+	});
+
+	it('Karten-Link zeigt auf EN den englischen Text und /en/-Pfad (#71)', async () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: NO_DATA });
+		const link = (await page.getByTestId('kaelte-karte-link').element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('/en/explore?layers=waerme-orte');
+		expect(link.textContent).toMatch(/view on the map/i);
+	});
+
 	it('zeigt ohne Warnung kein Banner', async () => {
 		render(Page, { data: NO_DATA });
 		expect(document.querySelector('[data-testid="dwd-kaeltewarn-banner"]')).toBeNull();

@@ -136,6 +136,10 @@ export const AUTHORITIES = {
 	'navigator-redaktion-osm-kuehle-orte': {
 		de: 'navigator.berlin (redaktionelle Anreicherung aus OpenStreetMap)',
 		en: 'navigator.berlin (editorial enrichment from OpenStreetMap)'
+	},
+	'navigator-redaktion-osm-waerme-orte': {
+		de: 'navigator.berlin (redaktionelle Winter-Recherche auf OpenStreetMap-Basis)',
+		en: 'navigator.berlin (editorial winter research based on OpenStreetMap)'
 	}
 } as const satisfies Record<string, AuthorityMeta>;
 

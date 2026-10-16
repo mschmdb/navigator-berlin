@@ -27,6 +27,7 @@
 		"data:waerme-orte": "tsx scripts/build-waerme-orte.ts",
 		"data:waerme-orte-research": "tsx scripts/waerme-orte-research.ts",
 		"data:kuehle-orte-fetch": "tsx scripts/fetch-static.ts kuehle-orte",
+		"data:waerme-orte-fetch": "tsx scripts/fetch-static.ts waerme-orte",
 		"data:laerm-db": "tsx scripts/build-laerm-db-lor.ts",
 		"data:kriminalitaet": "tsx scripts/build-kriminalitaet-lor.ts",
 		"data:oepnv-index": "tsx scripts/build-oepnv-stop-index.ts",

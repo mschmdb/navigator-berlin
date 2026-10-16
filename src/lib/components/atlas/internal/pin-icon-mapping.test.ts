@@ -21,7 +21,8 @@ const EXPECTED_SLUGS = [
 	'sbahn-stationen',
 	'tram-haltestellen',
 	'bus-haltestellen',
-	'kuehle-orte'
+	'kuehle-orte',
+	'waerme-orte'
 ] as const;
 
 describe('pin-icon-mapping.PIN_ICON_MAP', () => {
@@ -113,6 +114,13 @@ describe('pin-icon-mapping.PIN_ICON_MAP', () => {
 		expect(PIN_ICON_MAP['kuehle-orte'].iconName).toBe('snowflake');
 		expect(PIN_ICON_MAP['kuehle-orte'].colorToken).toBe('umweltKuehleOrte');
 		expect(PIN_ICON_MAP['kuehle-orte'].svgNodes.length).toBeGreaterThan(0);
+	});
+
+	it('mapped Warme Orte auf ein eigenes Icon mit Wärme-Orte-Token', () => {
+		expect(PIN_ICON_MAP['waerme-orte'].iconName).toBe('flame');
+		expect(PIN_ICON_MAP['waerme-orte'].colorToken).toBe('umweltWaermeOrte');
+		expect(PIN_ICON_MAP['waerme-orte'].svgNodes.length).toBeGreaterThan(0);
+		expect(PIN_ICON_MAP['waerme-orte'].iconName).not.toBe(PIN_ICON_MAP['kuehle-orte'].iconName);
 	});
 
 	it('exportiert PIN_LAYER_SLUGS als ReadonlySet aller Slugs', () => {

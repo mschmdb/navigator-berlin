@@ -23,6 +23,7 @@ export const COLORS = {
 	memorialStolperstein: '#B08C57',
 	umweltTrinkbrunnen: '#1565C0',
 	umweltKuehleOrte: '#0277BD',
+	umweltWaermeOrte: '#B5390A',
 	sozialKita: '#74488E',
 	sozialSchule: '#0E6549',
 	sozialKrankenhaus: '#B71C1C',
