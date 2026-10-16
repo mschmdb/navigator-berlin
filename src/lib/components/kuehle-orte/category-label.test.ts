@@ -13,7 +13,9 @@ const PAIRS: readonly (readonly [string, string])[] = [
 	['Eishalle', 'Ice rink'],
 	['Bad', 'Pool'],
 	['Wasserpark', 'Water park'],
-	['Stadtteilzentrum', 'Community centre']
+	['Stadtteilzentrum', 'Community centre'],
+	['Mall', 'Shopping centre'],
+	['Gotteshaus', 'Place of worship']
 ];
 
 describe('categoryLabel', () => {

@@ -10,6 +10,10 @@ export interface ErrorReportContext {
 	lng?: number;
 	sourceUrl?: string;
 	fetchedAt?: string;
+	/** Kategorie des Eintrags, optional. */
+	category?: string;
+	/** Prüfdatum des Eintrags, getrennt vom Datenstand. */
+	checkedAt?: string;
 }
 
 export function buildErrorReportMailto(ctx: ErrorReportContext): string {
@@ -18,7 +22,9 @@ export function buildErrorReportMailto(ctx: ErrorReportContext): string {
 		`Layer: ${ctx.layerSlug}`,
 		ctx.displayName ? `Adresse: ${ctx.displayName}` : null,
 		ctx.lat !== undefined && ctx.lng !== undefined ? `Lat,Lng: ${ctx.lat},${ctx.lng}` : null,
+		ctx.category ? `Kategorie: ${ctx.category}` : null,
 		ctx.fetchedAt ? `Datenstand: ${ctx.fetchedAt}` : null,
+		ctx.checkedAt ? `Geprüft am: ${ctx.checkedAt}` : null,
 		ctx.sourceUrl ? `Quelle: ${ctx.sourceUrl}` : null,
 		'',
 		'Beschreibung:',
