@@ -20,7 +20,7 @@ describe('Kühle-Orte-Landing (Story 16.1)', () => {
 	it('CTA ist ein echter Link auf den Explorer-Deep-Link (FR20)', async () => {
 		render(Page);
 		const cta = page.getByTestId('explorer-cta');
-		await expect.element(cta).toHaveAttribute('href', '/explore?layers=kuehle-orte');
+		await expect.element(cta).toHaveAttribute('href', '/explore?layers=kuehle-orte&mode=hitze');
 	});
 
 	it('Intro trägt die Angebot-Haltung (kein Behörden-Ersatz)', async () => {
@@ -78,7 +78,7 @@ describe('kuehle-orte · EN (i18n C4c)', () => {
 
 	it('CTA führt unter /en in den Explorer', () => {
 		const root = renderEn();
-		expect(internalHrefs(root)).toEqual(['/en/explore?layers=kuehle-orte']);
+		expect(internalHrefs(root)).toEqual(['/en/explore?layers=kuehle-orte&mode=hitze']);
 	});
 
 	it('Karten-Einbettung trägt das englische Label', () => {

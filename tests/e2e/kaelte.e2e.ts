@@ -112,7 +112,7 @@ test.describe('Kälte-Navigator', () => {
 		page
 	}) => {
 		const layerResponse = page.waitForResponse(/\/layers\/waerme-orte\.[0-9a-f]{8}\.geojson/);
-		const res = await page.goto('/explore?layers=waerme-orte');
+		const res = await page.goto('/explore?layers=waerme-orte&mode=kaelte');
 		expect(res?.status()).toBe(200);
 		expect((await layerResponse).status()).toBe(200);
 		await expect(page.getByTestId('legend-icon-waerme-orte')).toBeAttached();

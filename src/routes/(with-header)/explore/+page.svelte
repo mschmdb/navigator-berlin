@@ -60,7 +60,12 @@
 	import { getClimateSeries } from '$lib/data/get-climate-series.js';
 	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
 	import { getKuehleOrteIndex } from '$lib/data/get-kuehle-orte-index.js';
-	import { resolveAppMode } from '$lib/app-mode';
+	import {
+		resolveAppMode,
+		isLayerAvailableInMode,
+		resolveExplorerEntry,
+		type AppMode
+	} from '$lib/app-mode';
 	import { getWaermeOrteIndex } from '$lib/data/get-waerme-orte-index.js';
 	import { getTrinkbrunnenIndex } from '$lib/data/get-trinkbrunnen-index.js';
 	import { getKiezScore } from '$lib/data/get-kiez-score.js';
@@ -146,7 +151,29 @@
 		on: (event: string, handler: () => void) => unknown;
 		off: (event: string, handler: () => void) => unknown;
 	} | null>(null);
-	let manifestLayers = $state<LayerMetadata[]>([]);
+	let rawManifestLayers = $state<LayerMetadata[]>([]);
+	// Modus, den der Einstieg gerade per replaceState nachzieht; gilt, bis `goto` fertig ist.
+	let pendingMode = $state<AppMode | null>(null);
+	const appMode = $derived(
+		resolveAppMode(page.url.host, page.url.searchParams.get('mode') ?? pendingMode)
+	);
+	// Modus-Wechsel ohne Remount (z.B. „voller Navigator“): Orte-Layer des alten Modus abschalten.
+	$effect(() => {
+		const mode = appMode;
+		untrack(() => {
+			const kept = ui.activeLayerSlugs.filter((slug) => isLayerAvailableInMode(slug, mode));
+			if (kept.length === ui.activeLayerSlugs.length) return;
+			ui.activeLayerSlugs = kept;
+			if (ui.choroplethLeadSlug && !kept.includes(ui.choroplethLeadSlug)) {
+				ui.choroplethLeadSlug = null;
+			}
+		});
+	});
+	// Kühle und Warme Orte gehören zu Hitze- bzw. Kälte-Modus (#77): im normalen
+	// Explorer fehlen sie in Palette, Suche, Häufig, Zuletzt, Legende und Inspector.
+	const manifestLayers = $derived(
+		rawManifestLayers.filter((l) => isLayerAvailableInMode(l.slug, appMode))
+	);
 	let selectedFeatureId = $state<string | null>(null);
 	let currentMarker: { remove: () => void; getLngLat: () => { lng: number; lat: number } } | null =
 		null;
@@ -288,7 +315,32 @@
 		// Explorer-Einstieg ohne ?layers die aus einer früheren Session persistierten Layer mit
 		// (z.B. kuehle-orte via Hitze-Landing → Home → Explorer).
 		// Multi-Layer-Limit auch am URL-Einstieg: höchstens 2 Choroplethen.
-		ui.activeLayerSlugs = capPolygonSlugs(data.activeLayers ?? []);
+		// Alter Link ohne `mode`: der erste Modus-Layer zieht den Modus nach (#77).
+		const entry = resolveExplorerEntry(
+			data.activeLayers ?? [],
+			appMode,
+			page.url.searchParams.get('mode')
+		);
+		const modeLayers = entry.layers;
+		if (entry.rewrite) {
+			const url = new URL(window.location.href);
+			if (entry.catchUpMode) {
+				pendingMode = entry.catchUpMode;
+				url.searchParams.set('mode', entry.catchUpMode);
+			}
+			const csv = serializeLayers(modeLayers);
+			if (csv) url.searchParams.set(LAYERS_KEY, csv);
+			else url.searchParams.delete(LAYERS_KEY);
+			// eslint-disable-next-line svelte/no-navigation-without-resolve
+			void goto(`?${url.searchParams.toString()}`, {
+				replaceState: true,
+				keepFocus: true,
+				noScroll: true
+			}).finally(() => {
+				pendingMode = null;
+			});
+		}
+		ui.activeLayerSlugs = capPolygonSlugs(modeLayers);
 		// Lead gegen die GEKAPPTE Liste prüfen: parseLead sah die rohe URL-Liste,
 		// der Cap kann den Lead-Slug gerade entfernt haben.
 		ui.choroplethLeadSlug =
@@ -329,9 +381,9 @@
 		void (async () => {
 			try {
 				const manifest = await loadManifest();
-				manifestLayers = manifest.layers;
+				rawManifestLayers = manifest.layers;
 			} catch {
-				manifestLayers = [];
+				rawManifestLayers = [];
 			}
 		})();
 	});

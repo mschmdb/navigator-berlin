@@ -12,7 +12,7 @@
 	const origin = $derived(page.url.origin);
 	const pathname = $derived(page.url.pathname);
 
-	const explorerLink = buildExplorerDeepLink(['kuehle-orte']);
+	const explorerLink = buildExplorerDeepLink(['kuehle-orte'], 'hitze');
 	const pageTitle = $derived(buildPageTitle(m.kuehle_orte_page_meta_title()));
 	const pageDescription = $derived(m.kuehle_orte_page_meta_description());
 	const ogImagePath = '/og/page/kuehle-orte.png';

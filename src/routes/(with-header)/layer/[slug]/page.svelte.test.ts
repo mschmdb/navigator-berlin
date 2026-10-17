@@ -738,6 +738,25 @@ describe('layer-detail +page.svelte', () => {
 		});
 	});
 
+	it.each([
+		['kuehle-orte', '/explore?layers=kuehle-orte&mode=hitze'],
+		['waerme-orte', '/explore?layers=waerme-orte&mode=kaelte']
+	])('Karten-Button von %s trägt den passenden Modus', async (slug, href) => {
+		render(Page, {
+			data: {
+				detail: detail(slug),
+				faq: [],
+				faqLocale: 'de',
+				ranking: null,
+				hasKiezAggregate: false
+			}
+		});
+		const button = (await page
+			.getByTestId('layer-detail-map-button')
+			.element()) as HTMLAnchorElement;
+		expect(button.getAttribute('href')).toBe(href);
+	});
+
 	it('rendert den Karten-Button nach der h1, vor der Quelle', async () => {
 		render(Page, {
 			data: {
