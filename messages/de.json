@@ -2224,7 +2224,7 @@
 	"lizenzen_software_p1": "Wichtigste Runtime-Bibliotheken. Vollständige Auflistung im Repository unter {code_start}package.json{code_end}.",
 	"lizenzen_software_th_license": "Lizenz",
 	"lizenzen_software_satori_name": "Satori + @resvg/resvg-js (OG-Image-Generator)",
-	"lizenzen_schriften_p1": "IBM Plex Serif, Sans und Mono unter SIL Open Font License 1.1, geliefert via Fontsource.",
+	"lizenzen_schriften_p1": "IBM Plex Sans, Sans Arabic und Mono unter SIL Open Font License 1.1, geliefert via Fontsource.",
 	"lizenzen_osm_p1": "Die ODbL-Layer (Stolpersteine, ÖPNV-Stationen, Trinkbrunnen, Kühle Orte, S-Bahn-Netz, U-Bahn-Netz, Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten. Lizenz: Open Database License 1.0.",
 	"lizenzen_osm_p2": "© OpenStreetMap-Contributors. Daten verfügbar unter {link_start}openstreetmap.org/copyright{link_end}.",
 	"lizenzen_wahl_landeswahl_name": "Landeswahlleiterin Berlin",

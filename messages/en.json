@@ -2224,7 +2224,7 @@
 	"lizenzen_software_p1": "Main runtime libraries. Full list in the repository under {code_start}package.json{code_end}.",
 	"lizenzen_software_th_license": "Licence",
 	"lizenzen_software_satori_name": "Satori + @resvg/resvg-js (OG image generator)",
-	"lizenzen_schriften_p1": "IBM Plex Serif, Sans and Mono under SIL Open Font License 1.1, delivered via Fontsource.",
+	"lizenzen_schriften_p1": "IBM Plex Sans, Sans Arabic and Mono under SIL Open Font License 1.1, delivered via Fontsource.",
 	"lizenzen_osm_p1": "The ODbL layers (Stolpersteine, public transport stations, drinking fountains, cool places, S-Bahn network, U-Bahn network, tram network, cycling network, bicycle streets) are based on OpenStreetMap data. Licence: Open Database License 1.0.",
 	"lizenzen_osm_p2": "© OpenStreetMap contributors. Data available at {link_start}openstreetmap.org/copyright{link_end}.",
 	"lizenzen_wahl_landeswahl_name": "Berlin State Election Commissioner (Landeswahlleiterin Berlin)",

@@ -71,7 +71,6 @@
 		"@eslint/js": "^10.0.1",
 		"@fontsource/ibm-plex-mono": "^5.2.7",
 		"@fontsource/ibm-plex-sans": "^5.2.8",
-		"@fontsource/ibm-plex-serif": "^5.2.7",
 		"@inlang/paraglide-js": "^2.25.4",
 		"@lhci/cli": "^0.15.1",
 		"@maplibre/maplibre-gl-style-spec": "^24.8.5",
