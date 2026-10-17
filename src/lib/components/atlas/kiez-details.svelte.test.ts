@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { createRawSnippet } from 'svelte';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import KiezDetails from './kiez-details.svelte';
 import type { KiezProfile } from '$lib/data/types.js';
@@ -119,21 +120,38 @@ const statsFixtureFull: KiezStatsRow = {
 };
 
 describe('KiezDetails.svelte', () => {
-	it('zeigt Score-Section wenn score vorhanden (composite + 5 ADR-015-Dimensionen)', async () => {
+	it('zeigt keinen eigenen Score-Block mehr, die Vergleichstabelle trägt die Werte (#90)', async () => {
 		render(KiezDetails, { profile: baseProfile, stats: null, score: scoreFixture, faq: [] });
-		const scoreSec = document.querySelector('[data-testid="kiez-score"]');
-		expect(scoreSec).not.toBeNull();
-		expect(scoreSec?.textContent).toMatch(/Ruhe & Luft/);
-		expect(scoreSec?.textContent).toMatch(/Grün & Hitze/);
-		expect(scoreSec?.textContent).toMatch(/Mobilität/);
-		expect(scoreSec?.textContent).toMatch(/Versorgung/);
-		expect(scoreSec?.textContent).toMatch(/Wohnschutz/);
-		expect(scoreSec?.textContent?.toLowerCase()).not.toContain('soziale');
+		expect(document.querySelector('[data-testid="kiez-score"]')).toBeNull();
+		const note = document.querySelector('[data-testid="kiez-score-note"]');
+		expect(note).not.toBeNull();
+		expect(note?.querySelector('a')?.getAttribute('href')).toBe('/methodik/kiez-score');
 	});
 
-	it('verbirgt Score-Section wenn score null', async () => {
+	it('verbirgt den Methodik-Hinweis wenn score null', async () => {
 		render(KiezDetails, { profile: baseProfile, stats: null, score: null, faq: [] });
-		expect(document.querySelector('[data-testid="kiez-score"]')).toBeNull();
+		expect(document.querySelector('[data-testid="kiez-score-note"]')).toBeNull();
+	});
+
+	it('rendert den figures-Snippet nach Profiltext und vor dem Steckbrief (#90)', async () => {
+		const figures = createRawSnippet(() => ({
+			render: () => '<div data-testid="figures-slot">Kennzahlen</div>'
+		}));
+		render(KiezDetails, {
+			profile: baseProfile,
+			stats: statsFixture,
+			score: null,
+			faq: [],
+			profileProse: ['Ein Absatz.'],
+			figures
+		});
+		const root = document.querySelector('[data-testid="kiez-details"]') as HTMLElement;
+		const order = Array.from(
+			root.querySelectorAll(
+				'[data-testid="kiez-profile"], [data-testid="figures-slot"], [data-testid="kiez-steckbrief"]'
+			)
+		).map((el) => el.getAttribute('data-testid'));
+		expect(order).toEqual(['kiez-profile', 'figures-slot', 'kiez-steckbrief']);
 	});
 
 	it('zeigt Steckbrief-Tabelle aus stats-Fixture mit Quellen-Subline', async () => {
@@ -229,9 +247,6 @@ describe('KiezDetails.svelte', () => {
 				faq: []
 			});
 			const details = document.querySelector('[data-testid="kiez-details"]');
-			const scoreSec = document.querySelector('[data-testid="kiez-score"]');
-			expect(scoreSec?.textContent).toMatch(/Quiet & air/);
-			expect(scoreSec?.textContent).toMatch(/Green & heat/);
 
 			const table = document.querySelector('[data-testid="kiez-steckbrief"]');
 			// Lärm: übersetzter Wert + EN-Monat-Jahr-Stand.
