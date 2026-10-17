@@ -18,7 +18,7 @@ const OLD_NAMES: RegExp[] = [
 	/Bezirks-Score/,
 	/\bdistrict score\b/i,
 	/\bBezirk score\b/,
-	/Kiez-Score (·|:) Gesamt/,
+	/Kiez-Score ?(·|:) Gesamt/,
 	/Kiez score: overall/i
 ];
 
