@@ -168,10 +168,10 @@ describe('buildAddressNavigation', () => {
 
 describe('createAddressHistoryWriter', () => {
 	function deferred() {
-		let resolve!: () => void;
+		let resolve!: (confirmed?: boolean) => void;
 		let reject!: (e: Error) => void;
-		const promise = new Promise<void>((res, rej) => {
-			resolve = res;
+		const promise = new Promise<boolean>((res, rej) => {
+			resolve = (confirmed = true) => res(confirmed);
 			reject = rej;
 		});
 		return { promise, resolve, reject };
@@ -197,7 +197,7 @@ describe('createAddressHistoryWriter', () => {
 		const calls: Array<[string, string]> = [];
 		const writer = createAddressHistoryWriter((search, mode) => {
 			calls.push([search, mode]);
-			return calls.length === 1 ? pending.promise : Promise.resolve();
+			return calls.length === 1 ? pending.promise : Promise.resolve(true);
 		});
 		void writer.write('a', '?address=a', 'push');
 		const second = writer.write('a', '?address=a&q=Name', 'replace');
@@ -214,6 +214,7 @@ describe('createAddressHistoryWriter', () => {
 		const calls: string[] = [];
 		const writer = createAddressHistoryWriter(async (_search, mode) => {
 			calls.push(mode);
+			return true;
 		});
 		await writer.write('a', '?address=a', 'push');
 		await writer.write('a', '?address=a', 'replace');
@@ -234,14 +235,14 @@ describe('createAddressHistoryWriter', () => {
 	});
 
 	it('merkt sich die geschriebene Adresse', async () => {
-		const writer = createAddressHistoryWriter(async () => {});
+		const writer = createAddressHistoryWriter(async () => true);
 		expect(writer.lastWritten()).toBeNull();
 		await writer.write('a', '?address=a', 'push');
 		expect(writer.lastWritten()).toBe('a');
 	});
 
 	it('vergisst die Adresse auf Wunsch, etwa wenn die Auswahl geschlossen wird', async () => {
-		const writer = createAddressHistoryWriter(async () => {});
+		const writer = createAddressHistoryWriter(async () => true);
 		await writer.write('a', '?address=a', 'push');
 		writer.forget();
 		expect(writer.lastWritten()).toBeNull();
@@ -253,6 +254,7 @@ describe('createAddressHistoryWriter', () => {
 		const writer = createAddressHistoryWriter(async (_s, mode) => {
 			calls.push(mode);
 			if (fail) throw new Error('abgebrochen');
+			return true;
 		});
 		await expect(writer.write('a', '?address=a', 'push')).rejects.toThrow('abgebrochen');
 		expect(writer.lastWritten()).toBeNull();
@@ -266,7 +268,7 @@ describe('createAddressHistoryWriter', () => {
 		const calls: Array<[string, string]> = [];
 		const writer = createAddressHistoryWriter((search, mode) => {
 			calls.push([search, mode]);
-			return calls.length === 1 ? first.promise : Promise.resolve();
+			return calls.length === 1 ? first.promise : Promise.resolve(true);
 		});
 		const a = writer.write('a', '?address=a', 'push');
 		const named = writer.write('a', '?address=a&q=Name', 'replace');
@@ -285,7 +287,7 @@ describe('createAddressHistoryWriter', () => {
 		const calls: string[] = [];
 		const writer = createAddressHistoryWriter((search) => {
 			calls.push(search);
-			return calls.length === 1 ? first.promise : Promise.resolve();
+			return calls.length === 1 ? first.promise : Promise.resolve(true);
 		});
 		void writer.write('a', '?address=a', 'push');
 		const named = writer.write('a', '?address=a&q=Name', 'replace');
@@ -301,7 +303,7 @@ describe('createAddressHistoryWriter', () => {
 		const calls: string[] = [];
 		const writer = createAddressHistoryWriter((search) => {
 			calls.push(search);
-			return calls.length === 1 ? first.promise : Promise.resolve();
+			return calls.length === 1 ? first.promise : Promise.resolve(true);
 		});
 		void writer.write('a', '?address=a', 'push');
 		const named = writer.write('a', '?address=a&q=Name', 'replace');
@@ -310,5 +312,44 @@ describe('createAddressHistoryWriter', () => {
 		await named;
 		expect(calls).toEqual(['?address=a']);
 		expect(writer.lastWritten()).toBeNull();
+	});
+
+	it('zählt eine überholte Navigation nicht als geschrieben und schreibt den Namen mit Push nach', async () => {
+		const first = deferred();
+		const calls: Array<[string, string]> = [];
+		const writer = createAddressHistoryWriter((search, mode) => {
+			calls.push([search, mode]);
+			return calls.length === 1 ? first.promise : Promise.resolve(true);
+		});
+		const a = writer.write('a', '?address=a', 'push');
+		const named = writer.write('a', '?address=a&q=Name', 'replace');
+		first.resolve(false);
+		await a;
+		await named;
+		expect(calls).toEqual([
+			['?address=a', 'push'],
+			['?address=a&q=Name', 'push']
+		]);
+	});
+
+	it('setzt lastWritten nicht, wenn die Navigation nicht bestätigt ist', async () => {
+		const writer = createAddressHistoryWriter(async () => false);
+		await writer.write('a', '?address=a', 'push');
+		expect(writer.lastWritten()).toBeNull();
+	});
+
+	it('schreibt nach forget dieselbe Adresse neu, auch wenn der alte Vorgang noch läuft', () => {
+		const first = deferred();
+		const calls: string[] = [];
+		const writer = createAddressHistoryWriter((search) => {
+			calls.push(search);
+			return first.promise;
+		});
+		const a = writer.write('a', '?address=a', 'push');
+		writer.forget();
+		const again = writer.write('a', '?address=a', 'push');
+		expect(again).not.toBe(a);
+		expect(calls).toEqual(['?address=a', '?address=a']);
+		first.resolve();
 	});
 });
