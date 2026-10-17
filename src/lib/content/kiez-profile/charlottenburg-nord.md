@@ -3,7 +3,7 @@ slug: charlottenburg-nord
 name: Charlottenburg Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 745d13ee8bc5ffbf
+inputHash: 48513d74c38fae1d
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

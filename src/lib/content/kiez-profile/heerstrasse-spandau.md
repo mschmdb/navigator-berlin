@@ -1,9 +1,9 @@
 ---
 slug: heerstrasse-spandau
-name: Heerstrasse Spandau
+name: Heerstraße
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 54311a125795372a
+inputHash: 7946a778d9e33a63
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

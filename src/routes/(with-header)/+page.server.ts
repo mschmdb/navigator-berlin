@@ -1,7 +1,11 @@
 import { desc, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { kiezScore } from '$lib/server/db/schema/index.js';
-import { readRegionDisplayNames, type RegionDisplayNames } from '$lib/data/region-display-names.js';
+import {
+	fallbackNameFromSlug,
+	readRegionDisplayNames,
+	type RegionDisplayNames
+} from '$lib/data/region-display-names.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { buildWahlFallbackList } from '$lib/data/wahl-slug.js';
 import {
@@ -85,7 +89,7 @@ async function loadFeatured(fetchFn: typeof fetch): Promise<HomeFeaturedScore | 
 		const { getKiezProfile } = await import('$lib/data/get-kiez-profile.js');
 		const { getLocale } = await import('$lib/paraglide/runtime.js');
 		const profile = await getKiezProfile(getLocale(), r.slug, fetchFn);
-		const displayName = profile.name || slugToDisplayName(r.slug);
+		const displayName = profile.name || fallbackNameFromSlug(r.slug);
 		// Auf 5 Dezimalen runden = exakt die Coords, die im /explore?address=lng,lat landen.
 		const lng = Number(profile.centroid[0].toFixed(5));
 		const lat = Number(profile.centroid[1].toFixed(5));
@@ -155,13 +159,6 @@ async function loadLayerCount(): Promise<number> {
 	}
 }
 
-function slugToDisplayName(slug: string): string {
-	return slug
-		.split('-')
-		.map((p) => (p.length > 0 ? p[0].toUpperCase() + p.slice(1) : p))
-		.join(' ');
-}
-
 async function loadTopKieze(names: RegionDisplayNames): Promise<HomeTopKiez[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
@@ -173,9 +170,9 @@ async function loadTopKieze(names: RegionDisplayNames): Promise<HomeTopKiez[]> {
 			.limit(TOP_KIEZ_TEASER);
 		return rows.map((r) => ({
 			slug: r.slug,
-			displayName: names.kiez.get(r.slug) ?? slugToDisplayName(r.slug),
+			displayName: names.kiez.get(r.slug) ?? fallbackNameFromSlug(r.slug),
 			bezirkName: r.bezirkSlug
-				? (names.bezirk.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug))
+				? (names.bezirk.get(r.bezirkSlug) ?? fallbackNameFromSlug(r.bezirkSlug))
 				: null,
 			composite: typeof r.composite === 'number' ? r.composite : null
 		}));

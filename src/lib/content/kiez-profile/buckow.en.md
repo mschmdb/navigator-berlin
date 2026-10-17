@@ -3,7 +3,7 @@ slug: buckow
 name: Buckow
 pageType: kiez
 locale: en
-sourceInputHash: '8686f5d0121b5029'
+sourceInputHash: '482892ad79dca58b'
 sourceTextHash: '0d76377a6068e9fe'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

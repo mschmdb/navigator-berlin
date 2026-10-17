@@ -3,7 +3,7 @@ slug: adlershof
 name: Adlershof
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 84f4f1b4f4f3d2c0
+inputHash: 70e43b70c38d48b0
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

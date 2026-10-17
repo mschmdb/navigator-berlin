@@ -17,6 +17,7 @@
 		serviceStatus,
 		type ServiceStatus
 	} from '$lib/utils/berlin-time.js';
+	import QuellenZeile from './quellen-zeile.svelte';
 
 	/** Zeitpunkt der Berechnung. Ohne Angabe: aktuelle Zeit, minütlich aktualisiert. */
 	let { now }: { now?: Date } = $props();
@@ -177,18 +178,7 @@
 							{m.kaelte_unbestaetigt({ stand: standText })}
 						</p>
 					{/if}
-					<p class="font-sans text-xs text-ink-subtle">
-						{m.kaelte_quellen()}:
-						{#each dienst.quellen as quelle, i (quelle.label)}
-							{#if i > 0},
-							{/if}{#if quelle.url}<a
-									href={quelle.url}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="underline underline-offset-2 hover:text-ink">{quelle.label}</a
-								><span class="sr-only"> {m.kaelte_new_tab_hint()}</span>{:else}{quelle.label}{/if}
-						{/each}
-					</p>
+					<QuellenZeile quellen={dienst.quellen} />
 				</li>
 			{/each}
 		</ul>

@@ -1,9 +1,9 @@
 ---
 slug: lietzenburger-strasse
-name: Lietzenburger Strasse
+name: Lietzenburger Straße
 pageType: kiez
 locale: en
-sourceInputHash: 'a1b02147e463645f'
+sourceInputHash: '0fb48e389164b00a'
 sourceTextHash: '0c9526848b1d5256'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

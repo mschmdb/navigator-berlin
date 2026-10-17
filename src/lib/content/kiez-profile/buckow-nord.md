@@ -3,7 +3,7 @@ slug: buckow-nord
 name: Buckow Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: ae98b1d8fc49ec7d
+inputHash: b2530a87d3315ec9
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

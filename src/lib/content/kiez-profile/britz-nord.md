@@ -3,7 +3,7 @@ slug: britz-nord
 name: Britz Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 7c0f89da0113d540
+inputHash: 00f3aa1d4eb5ddd0
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
