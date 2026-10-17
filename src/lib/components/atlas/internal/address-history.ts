@@ -120,10 +120,15 @@ export function createAddressHistoryWriter(
 				const own = ++generation;
 				const confirmed = prior.confirmed
 					.then(
-						(landed): AddressHistoryMode => (landed ? 'replace' : prior.mode),
-						(): AddressHistoryMode => prior.mode
+						(landed) => landed,
+						() => false
 					)
-					.then((effective) => (own === generation ? navigate(search, effective) : false));
+					.then((landed) => {
+						// Verworfener Zwischenstand: den Stand des Vorgängers weiterreichen,
+						// damit ein gelandeter Push nicht ein zweites Mal gepusht wird.
+						if (own !== generation) return landed;
+						return navigate(search, landed ? 'replace' : prior.mode);
+					});
 				return track(address, search, prior.mode, own, confirmed);
 			}
 			const own = ++generation;

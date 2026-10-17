@@ -967,6 +967,9 @@
 	// Ortsfokus und Finder behandeln eigene Effekte.
 	afterNavigate(({ type }) => {
 		if (type !== 'popstate') return;
+		// Back/Forward wechselt den History-Eintrag; die zuletzt geschriebene Adresse
+		// gilt nicht mehr und darf die nächste Wahl nicht zum Replace machen.
+		addressWriter.forget();
 		const marker = currentMarker?.getLngLat() ?? null;
 		const next = resolvePopstateSelection(data.address ?? {}, marker);
 		if (next.kind === 'clear') {
