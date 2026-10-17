@@ -69,14 +69,14 @@
 					<Accordion.Header>
 						<Accordion.Trigger
 							data-faq-question
-							class="flex w-full items-center justify-between gap-4 py-4 text-left font-sans text-base font-semibold text-ink hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+							class="flex w-full items-center justify-between gap-4 py-4 text-left font-sans text-base font-semibold text-ink hover:text-accent"
 						>
 							{item.question}
 						</Accordion.Trigger>
 					</Accordion.Header>
 					<Accordion.Content
 						data-faq-answer-index={index}
-						class="pb-4 font-sans text-base leading-relaxed text-ink-muted"
+						class="pb-4 font-sans text-base leading-body text-ink-muted"
 					>
 						{item.answer}
 					</Accordion.Content>

@@ -22,7 +22,7 @@
 {#if variant === 'compact'}
 	<footer
 		data-testid="meta-footer"
-		class="flex min-h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-[11px] text-ink-subtle backdrop-blur-sm print:hidden"
+		class="flex min-h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-dense-meta text-ink-subtle backdrop-blur-sm print:hidden"
 	>
 		<nav
 			aria-label={m.shell_meta_nav_aria_label()}
@@ -30,11 +30,17 @@
 		>
 			{#each META_LINKS as link (link.id)}
 				<span class="whitespace-nowrap">
-					<a href={localizedHref(link.href)} class="hover:text-accent">{metaLinkLabel(link.id)}</a>
+					<a
+						href={localizedHref(link.href)}
+						class="inline-flex min-h-(--target-min) items-center hover:text-accent"
+						>{metaLinkLabel(link.id)}</a
+					>
 					<span aria-hidden="true" class="px-1.5 text-ink-subtle/50">·</span>
 				</span>
 			{/each}
-			<a href={`mailto:${FEEDBACK_EMAIL}`} class="whitespace-nowrap hover:text-accent"
+			<a
+				href={`mailto:${FEEDBACK_EMAIL}`}
+				class="inline-flex min-h-(--target-min) items-center whitespace-nowrap hover:text-accent"
 				>{m.shell_contact_label()}</a
 			>
 			<span aria-hidden="true" class="px-2 text-ink-subtle/50">·</span>
@@ -68,7 +74,7 @@
 						/>
 						<span class="font-serif text-lg text-ink">navigator.berlin</span>
 					</a>
-					<p class="font-serif text-base leading-relaxed text-ink-muted">
+					<p class="font-serif text-base leading-body text-ink-muted">
 						{m.shell_footer_claim()}
 					</p>
 				</div>
@@ -79,20 +85,24 @@
 				>
 					{#each META_LINK_GROUPS as group (group.id)}
 						<div class="flex flex-col gap-2.5">
-							<h2 class="font-mono text-[10px] tracking-wider text-ink-subtle uppercase">
+							<h2 class="font-mono text-dense-meta tracking-wider text-ink-subtle uppercase">
 								{metaLinkGroupTitle(group.id)}
 							</h2>
-							<ul class="flex flex-col gap-2">
+							<ul class="flex flex-col">
 								{#each group.links as link (link.id)}
 									<li>
-										<a href={localizedHref(link.href)} class="hover:text-accent"
+										<a
+											href={localizedHref(link.href)}
+											class="inline-flex min-h-(--target-min) items-center hover:text-accent"
 											>{metaLinkLabel(link.id)}</a
 										>
 									</li>
 								{/each}
 								{#if group.id === 'sonstiges'}
 									<li>
-										<a href={`mailto:${FEEDBACK_EMAIL}`} class="hover:text-accent"
+										<a
+											href={`mailto:${FEEDBACK_EMAIL}`}
+											class="inline-flex min-h-(--target-min) items-center hover:text-accent"
 											>{m.shell_contact_label()}</a
 										>
 									</li>

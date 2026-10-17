@@ -294,7 +294,7 @@
 		{#if currentBundle}
 			{#if currentBundle.wahl.isRepeatElection}
 				<p
-					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+					class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 					data-testid="wahl-wiederholung-marker"
 				>
 					{wahlWiederholungLabel(localeOpts)}
@@ -302,7 +302,7 @@
 			{/if}
 			{#if currentBundle.wahl.vorlaeufig}
 				<p
-					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+					class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 					data-testid="wahl-vorlaeufig-marker"
 				>
 					{wahlVorlaeufigLabel(
@@ -318,7 +318,7 @@
 				{#if jahreForTypStimmtyp.length > 1}
 					<span
 						id="wahl-jahr-label"
-						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+						class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 					>
 						{m.inspector_wahl_jahr_label(undefined, localeOpts)}
 					</span>
@@ -335,7 +335,7 @@
 								aria-checked={selectedJahr === jahr}
 								data-testid={`wahl-jahr-${jahr}`}
 								onclick={() => (selectedJahr = jahr)}
-								class="rounded border border-ink px-2 py-0.5 font-mono text-[11px] tabular-nums transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label tabular-nums transition-colors"
 								class:bg-ink={selectedJahr === jahr}
 								class:text-bg={selectedJahr === jahr}
 								class:bg-bg={selectedJahr !== jahr}
@@ -347,10 +347,13 @@
 						{/each}
 					</div>
 				{:else if jahreForTypStimmtyp.length === 1}
-					<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+					<span class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
 						{m.inspector_wahl_jahr_label(undefined, localeOpts)}
 					</span>
-					<span class="font-mono text-[11px] text-ink tabular-nums" data-testid="wahl-jahr-static">
+					<span
+						class="font-mono text-dense-meta text-ink tabular-nums"
+						data-testid="wahl-jahr-static"
+					>
 						{jahreForTypStimmtyp[0]}
 					</span>
 				{/if}
@@ -358,7 +361,7 @@
 				{#if stimmtypenForTyp.length > 1}
 					<span
 						id="wahl-stimmtyp-label"
-						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+						class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 					>
 						{m.inspector_wahl_stimmtyp_group_label(undefined, localeOpts)}
 					</span>
@@ -375,7 +378,7 @@
 								aria-checked={selectedStimmtyp === st}
 								data-testid={`wahl-stimmtyp-${st}`}
 								onclick={() => (selectedStimmtyp = st)}
-								class="rounded border border-ink px-2 py-0.5 font-mono text-[11px] transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
 								class:bg-ink={selectedStimmtyp === st}
 								class:text-bg={selectedStimmtyp === st}
 								class:bg-bg={selectedStimmtyp !== st}
@@ -391,7 +394,7 @@
 				{#if availableLevels.length > 1}
 					<span
 						id="wahl-level-label"
-						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+						class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 					>
 						{m.inspector_wahl_ebene_group_label(undefined, localeOpts)}
 					</span>
@@ -408,7 +411,7 @@
 								aria-checked={selectedLevel === lvl}
 								data-testid={`wahl-level-${lvl}`}
 								onclick={() => (selectedLevel = lvl)}
-								class="rounded border border-ink px-2 py-0.5 font-mono text-[11px] transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
 								class:bg-ink={selectedLevel === lvl}
 								class:text-bg={selectedLevel === lvl}
 								class:bg-bg={selectedLevel !== lvl}
@@ -458,7 +461,7 @@
 								</div>
 								{#if deltaLevels.length > 0}
 									<div
-										class="flex flex-wrap gap-x-3 gap-y-0.5 pl-4 text-[10px] text-ink-muted"
+										class="flex flex-wrap gap-x-3 gap-y-0.5 pl-4 text-dense-meta text-ink-muted"
 										data-testid={`wahl-delta-row-${entry.kurzname}`}
 									>
 										{#each deltaLevels as lvl (lvl)}
@@ -548,7 +551,7 @@
 			{#if sparklineLines.length > 0}
 				<div data-testid="wahl-sparkline" class="space-y-2 border-t border-rule pt-2">
 					<p
-						class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+						class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 						data-testid="wahl-sparkline-label"
 					>
 						{m.inspector_wahl_sparkline_label(
@@ -562,7 +565,7 @@
 					<ul class="space-y-1" data-testid="wahl-sparkline-list">
 						{#each sparklineLines as line (line.kurzname)}
 							<li
-								class="flex items-center gap-3 font-mono text-[11px] text-ink"
+								class="flex items-center gap-3 font-mono text-dense-meta text-ink"
 								data-testid={`wahl-sparkline-${line.kurzname}`}
 							>
 								<svg
@@ -599,7 +602,7 @@
 
 			<p
 				id={uniqueId(currentBundle) + '-meta'}
-				class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+				class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 				data-testid="wahl-meta"
 			>
 				{m.inspector_wahl_meta(
@@ -621,7 +624,7 @@
 				<a
 					href={localizedHref(`/berlin-wahlen/${slug}`, locale)}
 					data-testid="wahl-detail-link"
-					class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.inspector_wahl_detail_link(undefined, localeOpts)}
 				</a>
@@ -629,7 +632,7 @@
 			<a
 				href={localizedHref(methodikHref, locale)}
 				data-testid="wahl-methodik-link"
-				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.inspector_wahl_methodik_link(undefined, localeOpts)}
 			</a>

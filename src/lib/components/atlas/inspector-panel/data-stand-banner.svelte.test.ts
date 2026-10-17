@@ -28,10 +28,10 @@ describe('data-stand-banner.svelte (Story 1.18 Compact)', () => {
 		expect(txt).not.toMatch(/Quelle:/);
 	});
 
-	it('Schriftgröße 10px (text-[10px])', async () => {
+	it('Schriftgröße Dichte-Skala (text-dense-meta)', async () => {
 		render(DataStandBanner, { hit: baseHit });
 		const el = (await page.getByTestId('data-stand-banner').element()) as HTMLElement;
-		expect(el.className).toMatch(/text-\[10px\]/);
+		expect(el.className).toMatch(/text-dense-meta/);
 		expect(el.className).toMatch(/font-mono/);
 		expect(el.className).toMatch(/text-ink-subtle/);
 	});

@@ -401,10 +401,10 @@ describe('layer-hit-row.svelte', () => {
 			expect(row.getAttribute('aria-label')).toMatch(/Lärmbelastung 2023.*mittel/);
 		});
 
-		it('DataStandBanner ist im Row vorhanden (10px-Format)', async () => {
+		it('DataStandBanner ist im Row vorhanden (Dichte-Skala)', async () => {
 			render(LayerHitRow, { hit: laermKatHit, layerName: 'Lärmbelastung 2023' });
 			const banner = (await page.getByTestId('data-stand-banner').element()) as HTMLElement;
-			expect(banner.className).toMatch(/text-\[10px\]/);
+			expect(banner.className).toMatch(/text-dense-meta/);
 		});
 	});
 

@@ -5,6 +5,9 @@
 
 export const COLORS = {
 	bg: '#ECEAE0',
+	ink: '#141414',
+	// Fläche ohne Wahldaten im Choropleth (keine Partei vorn).
+	noData: '#CCCCCC',
 	accent: '#2A3F7C',
 	accentSoft: '#E0E4F0',
 	vermillion: '#9E5520',

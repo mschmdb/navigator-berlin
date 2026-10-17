@@ -158,7 +158,7 @@
 {:else if showInhalt}
 	<p
 		data-testid="wechsel-kapitel-takeaway"
-		class="max-w-prose font-serif text-lg leading-relaxed text-ink"
+		class="max-w-prose font-serif text-lg leading-body text-ink"
 	>
 		{takeawayText}
 	</p>

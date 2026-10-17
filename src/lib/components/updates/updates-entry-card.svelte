@@ -42,7 +42,7 @@
 		</a>
 	</h2>
 	<p
-		class="font-serif text-base leading-relaxed text-ink-muted"
+		class="font-serif text-base leading-body text-ink-muted"
 		lang={localized.summaryIsDeFallback ? 'de' : undefined}
 	>
 		{localized.summary}

@@ -77,7 +77,7 @@
 		</div>
 		<button
 			type="button"
-			class="-mt-1 -mr-1 inline-flex size-11 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:bg-bg hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+			class="-mt-1 -mr-1 inline-flex size-11 shrink-0 items-center justify-center rounded-sm text-ink-muted hover:bg-bg hover:text-ink"
 			aria-label={m.region_focus_card_close(undefined, localeOpts)}
 			data-testid="region-focus-close"
 			onclick={onClose}

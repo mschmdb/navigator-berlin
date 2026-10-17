@@ -14,7 +14,7 @@
 	rel="noopener noreferrer"
 	data-testid="footer-mtc-link"
 	aria-label="mtc.berlin"
-	class="inline-flex text-ink-muted transition-colors hover:text-ink"
+	class="-m-1 inline-flex min-h-(--target-min) min-w-(--target-min) items-center justify-center text-ink-muted transition-colors hover:text-ink"
 >
 	<svg
 		viewBox="0 0 546 367"

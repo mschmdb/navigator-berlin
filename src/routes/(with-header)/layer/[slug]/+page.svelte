@@ -189,7 +189,7 @@
 			{m.layer_page_map_button()} <span aria-hidden="true">→</span>
 		</a>
 		{#if explain.long}
-			<p data-testid="layer-detail-lead" class="font-serif text-lg leading-relaxed text-ink-muted">
+			<p data-testid="layer-detail-lead" class="font-serif text-lg leading-body text-ink-muted">
 				{explain.long}
 			</p>
 		{/if}
@@ -209,7 +209,7 @@
 		<a
 			href={localizedHref('/kaelte')}
 			data-testid="layer-detail-kaelte-link"
-			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 		>
 			{m.layer_page_kaelte_cta()}
 		</a>
@@ -303,7 +303,7 @@
 				{m.layer_page_calculation_heading()}
 			</h2>
 			{#if methodology.calculation}
-				<p class="font-serif text-base leading-relaxed text-ink">
+				<p class="font-serif text-base leading-body text-ink">
 					{methodology.calculation}
 				</p>
 			{/if}

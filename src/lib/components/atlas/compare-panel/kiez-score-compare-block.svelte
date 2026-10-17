@@ -85,21 +85,21 @@
 				<tr class="border-b border-rule-strong">
 					<th
 						scope="col"
-						class="py-1 pr-3 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+						class="py-1 pr-3 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 					>
 						{m.compare_kiez_score_th_dimension()}
 					</th>
 					<th
 						scope="col"
 						data-cell="a"
-						class="py-1 pr-3 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+						class="py-1 pr-3 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 					>
 						A
 					</th>
 					<th
 						scope="col"
 						data-cell="b"
-						class="py-1 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+						class="py-1 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 					>
 						B
 					</th>
@@ -173,7 +173,7 @@
 			<a
 				href={localizedHref(methodikHref)}
 				data-testid="compare-kiez-score-methodik-link"
-				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.inspector_kiez_score_methodik_link()}
 			</a>

@@ -219,7 +219,7 @@
 			data-testid="kiez-profile"
 		>
 			{#each profileProse as para (para)}
-				<p class="font-serif text-base leading-relaxed text-ink">{para}</p>
+				<p class="font-serif text-base leading-body text-ink">{para}</p>
 			{/each}
 		</section>
 	{/if}
@@ -286,7 +286,7 @@
 								{#if row.extra || (row.distribution && row.distribution.length > 0)}
 									<details class="mt-1">
 										<summary
-											class="cursor-pointer font-mono text-xs text-accent hover:text-accent-strong"
+											class="cursor-pointer py-1 font-mono text-xs text-accent hover:text-accent-strong"
 											>{m.steckbrief_distribution_summary(undefined, localeOpts)}</summary
 										>
 										{#if row.extra}<span class="mt-1 block font-mono text-xs text-ink-muted"

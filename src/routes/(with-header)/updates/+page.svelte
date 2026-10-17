@@ -90,7 +90,7 @@
 <article data-testid="updates-index-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-2">
 		<h1 data-testid="updates-page-title" class="font-serif text-3xl text-ink">Updates</h1>
-		<p class="font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="font-serif text-lg leading-body text-ink-muted">
 			{m.updates_index_lead_before()}
 			<a
 				href="/updates/rss.xml"

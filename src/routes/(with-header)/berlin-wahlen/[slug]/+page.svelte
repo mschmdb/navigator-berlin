@@ -210,7 +210,7 @@
 			<p
 				id="wahl-detail-portal-link-hinweis"
 				data-testid="wahl-detail-portal-link-hinweis"
-				class="font-mono text-[10px] text-ink-muted"
+				class="font-mono text-dense-meta text-ink-muted"
 			>
 				{m.wahl_detail_erststimme_hinweis({
 					zweitstimme: wahlStimmtypLabel('zweitstimme'),
@@ -256,7 +256,7 @@
 				data-testid="wahl-detail-berlin-table"
 			>
 				<thead>
-					<tr class="text-[10px] tracking-wide text-ink-muted uppercase">
+					<tr class="text-dense-meta tracking-wide text-ink-muted uppercase">
 						<th class="pb-2 text-left">{m.wahl_portal_spalte_partei()}</th>
 						<th class="pb-2 pl-2 text-right whitespace-nowrap">
 							{m.wahl_detail_spalte_stimmen()}
@@ -305,7 +305,7 @@
 	>
 		{#if data.geoSlug}
 			<p
-				class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+				class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 				data-testid="wahl-detail-choropleth-count"
 			>
 				{m.wahl_detail_briefwahl_gruppen_count({ count: formatCount(data.winnersByUwb.length) })}

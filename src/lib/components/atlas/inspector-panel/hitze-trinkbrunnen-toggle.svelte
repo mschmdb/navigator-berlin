@@ -48,7 +48,7 @@
 	class="-mx-2 rounded border border-rule bg-bg-elevated px-2.5 py-2"
 >
 	<h4 class="flex min-w-0 items-center gap-1.5 font-sans text-sm font-semibold text-ink">
-		<Droplet size={15} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
+		<Droplet size={15} aria-hidden="true" class="shrink-0 text-umwelt-kuehle-orte" />
 		{m.inspector_trinkbrunnen_heading(undefined, localeOpts)}
 	</h4>
 	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
@@ -67,7 +67,7 @@
 				</span>
 			</div>
 			{#if badgeText}
-				<p class="mt-0.5 font-mono text-[11px] text-ink-muted">{badgeText}</p>
+				<p class="mt-0.5 font-mono text-dense-meta text-ink-muted">{badgeText}</p>
 			{/if}
 			<div class="mt-1 flex flex-wrap gap-3">
 				<a

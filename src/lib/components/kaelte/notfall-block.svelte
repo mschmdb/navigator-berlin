@@ -94,7 +94,7 @@
 	);
 
 	const externalLinkClass =
-		'group flex items-start gap-2 rounded border border-rule px-3 py-2.5 hover:border-ink-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+		'group flex items-start gap-2 rounded border border-rule px-3 py-2.5 hover:border-ink-subtle';
 </script>
 
 <section
@@ -116,7 +116,7 @@
 		<a
 			href={`tel:${NOTRUF.phoneTel}`}
 			data-testid="kaelte-112-link"
-			class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded border border-accent bg-accent px-4 py-3 font-sans text-xl font-semibold text-bg hover:border-ink hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:w-fit"
+			class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded border border-accent bg-accent px-4 py-3 font-sans text-xl font-semibold text-bg hover:border-ink hover:bg-ink sm:w-fit"
 		>
 			<Phone size={22} aria-hidden="true" />
 			{m.kaelte_notfall_112()}
@@ -162,7 +162,7 @@
 					<a
 						href={`tel:${dienst.phoneTel}`}
 						aria-label={m.kaelte_anrufen_label({ name, nummer: dienst.phoneDisplay })}
-						class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent px-3 py-1.5 font-mono text-base text-accent hover:bg-accent hover:text-bg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+						class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent px-3 py-1.5 font-mono text-base text-accent hover:bg-accent hover:text-bg"
 						>{dienst.phoneDisplay}</a
 					>
 					<p class="font-serif text-sm text-ink-muted">{descriptions[dienst.id]()}</p>

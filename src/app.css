@@ -116,6 +116,19 @@
 	--text-3xl: 2.441rem;
 	--text-4xl: 3.052rem;
 
+	/* GH-86 Dichte-Skala für Werkzeugflächen (Inspector, Legende, Finder, Wahlportal).
+	   Viel Information auf wenig Platz, darum kleiner als die Lese-Skala. Untergrenze 11 px. */
+	--text-dense-meta: 0.6875rem; /* 11 px: Quellen, Stand, Achsen */
+	--text-dense-label: 0.75rem; /* 12 px: Labels, Badges, Zeilenköpfe */
+	--text-dense-value: 0.8125rem; /* 13 px: dichte Werte und Tabellen */
+
+	/* GH-86 Zeilenabstände (Leitlinie 14: 120 bis 145 %). Name wie schmidbauer.dev. */
+	--leading-body: 1.45;
+	--leading-dense: 1.35;
+
+	/* GH-86 Mindestgröße für Klickziele (WCAG 2.2 SC 2.5.8). */
+	--target-min: 24px;
+
 	--space-1: 0.25rem;
 	--space-2: 0.5rem;
 	--space-3: 0.75rem;
@@ -180,6 +193,11 @@
 	/* Story 1.15 POI-Pin-Tokens. */
 	--memorial-stolperstein: #b08c57;
 	--umwelt-trinkbrunnen: #1565c0;
+	/* GH-86: Kühle- und Wärme-Orte. Die Icon-Farbe erreicht 3:1 (Grafik), für Text
+	   auf Tint gilt die -ink-Stufe (≥ 4,5:1). Wärme-Orte = Pin-Farbe der Karte. */
+	--umwelt-kuehle-orte: #0277bd;
+	--umwelt-kuehle-orte-ink: #01579b;
+	--umwelt-waerme-orte: #b5390a;
 	--sozial-kita: #74488e;
 	--sozial-schule: #0e6549;
 	--sozial-krankenhaus: #b71c1c;
@@ -234,6 +252,10 @@
 	--color-accent-soft: var(--accent-soft);
 	--color-accent-strong: var(--accent-strong);
 	--color-focus: var(--focus);
+	--color-umwelt-kuehle-orte: var(--umwelt-kuehle-orte);
+	--color-umwelt-kuehle-orte-ink: var(--umwelt-kuehle-orte-ink);
+	--color-umwelt-waerme-orte: var(--umwelt-waerme-orte);
+	--color-umwelt-trinkbrunnen: var(--umwelt-trinkbrunnen);
 
 	--color-state-error: var(--state-error);
 	--color-state-warning: var(--state-warning);
@@ -263,6 +285,12 @@
 	--text-2xl: var(--text-2xl);
 	--text-3xl: var(--text-3xl);
 	--text-4xl: var(--text-4xl);
+	--text-dense-meta: var(--text-dense-meta);
+	--text-dense-label: var(--text-dense-label);
+	--text-dense-value: var(--text-dense-value);
+
+	--leading-body: var(--leading-body);
+	--leading-dense: var(--leading-dense);
 
 	--spacing-1: var(--space-1);
 	--spacing-2: var(--space-2);
@@ -316,9 +344,24 @@ body.route-explore {
 	overflow: hidden;
 }
 
-:where(a, button, [role='application'], [tabindex]):focus-visible {
+:where(
+	a,
+	button,
+	summary,
+	input,
+	select,
+	textarea,
+	[role='application'],
+	[tabindex]
+):focus-visible {
 	outline: 2px solid var(--focus);
 	outline-offset: 2px;
+}
+
+/* GH-86: Das Typography-Plugin setzt 1,75 bis 1,78. Fließtext folgt --leading-body. */
+.prose,
+.prose :where(p, li, blockquote) {
+	line-height: var(--leading-body);
 }
 
 [role='application'] {

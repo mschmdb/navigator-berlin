@@ -214,7 +214,7 @@
 	<div data-testid="small-multiples" class="flex flex-col gap-6">
 		<p
 			data-testid="small-multiples-takeaway"
-			class="max-w-prose font-serif text-lg leading-relaxed text-ink tabular-nums"
+			class="max-w-prose font-serif text-lg leading-body text-ink tabular-nums"
 		>
 			{takeawayText}
 		</p>
@@ -250,7 +250,7 @@
 									fill={cell.farbe}
 									fill-opacity={cell.opacity}
 									stroke={cell.isStaerkste || cell.isSchwaechste
-										? '#141414'
+										? 'var(--ink)'
 										: 'rgba(20,20,20,0.18)'}
 									stroke-width={cell.isStaerkste || cell.isSchwaechste ? 1.5 : 0.5}
 								/>

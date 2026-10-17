@@ -408,7 +408,7 @@
 		{:else}
 			<p
 				data-testid="winner-map-takeaway"
-				class="max-w-prose font-serif text-lg leading-relaxed text-ink tabular-nums"
+				class="max-w-prose font-serif text-lg leading-body text-ink tabular-nums"
 			>
 				{parteiTexts ? parteiTexts.takeaway : takeawayText}
 			</p>

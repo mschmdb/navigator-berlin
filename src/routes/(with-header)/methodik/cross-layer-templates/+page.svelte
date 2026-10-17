@@ -53,7 +53,7 @@
 		<h1 class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl">
 			{m.methodik_clt_h1_title()}
 		</h1>
-		<p class="font-serif text-base leading-relaxed text-ink-muted">
+		<p class="font-serif text-base leading-body text-ink-muted">
 			<RichText segments={introSegments}>
 				{#snippet tag(text)}
 					<code class="font-mono text-xs">{text}</code>
@@ -77,16 +77,16 @@
 			<header class="flex flex-wrap items-baseline gap-2 border-b border-rule/40 pb-3">
 				<h2 class="font-sans text-lg font-semibold text-ink">{preview.id}</h2>
 				<span
-					class="rounded-sm border border-rule px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink uppercase"
+					class="rounded-sm border border-rule px-1.5 py-0.5 font-mono text-dense-meta tracking-wide text-ink uppercase"
 				>
 					Scope {preview.scope}
 				</span>
-				<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+				<span class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
 					Fixture: {preview.contextLabel}
 				</span>
 				{#each preview.tags as tag (tag)}
 					<span
-						class="rounded-sm bg-bg-muted px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+						class="rounded-sm bg-bg-muted px-1.5 py-0.5 font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 					>
 						{previewTagLabel(tag, locale)}
 					</span>
@@ -114,7 +114,7 @@
 					<summary class="cursor-pointer font-sans font-medium text-ink">
 						{m.methodik_clt_editorial_note_summary()}
 					</summary>
-					<p class="pt-2 leading-relaxed" lang={editorialNoteLang}>{preview.editorialNote}</p>
+					<p class="pt-2 leading-body" lang={editorialNoteLang}>{preview.editorialNote}</p>
 				</details>
 			{/if}
 
@@ -123,7 +123,7 @@
 					{m.methodik_clt_schema_details_summary()}
 				</summary>
 				<dl class="space-y-1 pt-2">
-					<dt class="text-[10px] tracking-wide text-ink-muted uppercase">Requires</dt>
+					<dt class="text-dense-meta tracking-wide text-ink-muted uppercase">Requires</dt>
 					<dd>
 						<ul class="space-y-0.5">
 							{#each preview.requires as r (r)}
@@ -131,12 +131,12 @@
 							{/each}
 						</ul>
 					</dd>
-					<dt class="pt-2 text-[10px] tracking-wide text-ink-muted uppercase">
+					<dt class="pt-2 text-dense-meta tracking-wide text-ink-muted uppercase">
 						{m.methodik_clt_render_context_term()}
 					</dt>
 					<dd>
 						<pre
-							class="overflow-x-auto rounded border border-rule bg-bg-muted p-2 text-[10px]">{preview.contextJson}</pre>
+							class="overflow-x-auto rounded border border-rule bg-bg-muted p-2 text-dense-meta">{preview.contextJson}</pre>
 					</dd>
 				</dl>
 			</details>

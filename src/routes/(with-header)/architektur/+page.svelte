@@ -128,16 +128,16 @@
 		{m.architektur_h1_title()}
 	</h1>
 
-	<p class="mt-6 leading-relaxed text-ink-muted">{m.architektur_intro_p1()}</p>
+	<p class="mt-6 leading-body text-ink-muted">{m.architektur_intro_p1()}</p>
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Hosting</h2>
-		<p class="mt-3 leading-relaxed">{m.architektur_hosting_p1()}</p>
+		<p class="mt-3 leading-body">{m.architektur_hosting_p1()}</p>
 	</section>
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.architektur_anwendung_heading()}</h2>
-		<ul class="mt-3 ml-6 list-disc space-y-2 leading-relaxed">
+		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>
 				<RichText segments={svelteSegments}>
 					{#snippet tag(text, name)}
@@ -170,7 +170,7 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.architektur_quellen_heading()}</h2>
-		<ul class="mt-3 ml-6 list-disc space-y-2 leading-relaxed">
+		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>
 				<a
 					class="text-accent underline"
@@ -191,7 +191,7 @@
 			<li>{m.architektur_quellen_li_dwd()}</li>
 			<li>OpenStreetMap</li>
 		</ul>
-		<p class="mt-3 leading-relaxed">
+		<p class="mt-3 leading-body">
 			<RichText segments={quellenSegments}>
 				{#snippet tag(text, name)}
 					{@const path = quellenPaths[name]}
@@ -203,16 +203,16 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.architektur_ki_heading()}</h2>
-		<p class="mt-3 leading-relaxed">{m.architektur_ki_p1()}</p>
-		<p class="mt-3 leading-relaxed">
+		<p class="mt-3 leading-body">{m.architektur_ki_p1()}</p>
+		<p class="mt-3 leading-body">
 			<RichText segments={webmcpSegments}>
 				{#snippet tag(text)}
 					{@render externalLink('https://github.com/webmachinelearning/webmcp', text)}
 				{/snippet}
 			</RichText>
 		</p>
-		<p class="mt-3 leading-relaxed">{m.architektur_ki_p3()}</p>
-		<p class="mt-3 leading-relaxed">
+		<p class="mt-3 leading-body">{m.architektur_ki_p3()}</p>
+		<p class="mt-3 leading-body">
 			<RichText segments={manifestSegments}>
 				{#snippet tag(text, name)}
 					{@const href = manifestHrefs[name]}
@@ -224,7 +224,7 @@
 				{/snippet}
 			</RichText>
 		</p>
-		<p class="mt-3 leading-relaxed">
+		<p class="mt-3 leading-body">
 			<RichText segments={specStatusSegments}>
 				{#snippet tag(text)}
 					<a class={linkClass} href={localizedHref('/webmcp')}>{text}</a>
@@ -235,7 +235,7 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.architektur_nicht_verwendet_heading()}</h2>
-		<ul class="mt-3 ml-6 list-disc space-y-2 leading-relaxed">
+		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>Cloudflare, AWS, GCP, Azure</li>
 			<li>{m.architektur_nicht_verwendet_li_tracker()}</li>
 			<li>{m.architektur_nicht_verwendet_li_embeds()}</li>

@@ -31,7 +31,7 @@
 </script>
 
 <p
-	class="flex flex-wrap items-baseline gap-x-2 font-mono text-[10px] text-ink-subtle"
+	class="flex flex-wrap items-baseline gap-x-2 font-mono text-dense-meta text-ink-subtle"
 	data-testid="data-stand-banner"
 >
 	<span data-testid="banner-text">
@@ -49,7 +49,7 @@
 	{#if outdated}
 		<span
 			data-testid="banner-outdated"
-			class="ml-auto inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-state-warning uppercase"
+			class="ml-auto inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 text-dense-meta font-semibold tracking-wide text-state-warning uppercase"
 			title={m.inspector_data_stand_outdated_title({ date: hit.updatedAt }, localeOpts)}
 		>
 			{m.inspector_data_stand_outdated(undefined, localeOpts)}

@@ -137,7 +137,7 @@
 		{/if}
 		<a
 			href={localizedHref(featured.exploreHref)}
-			class="inline-flex items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
 		>
 			{m.home_featured_score_link_label({ name: featured.displayName })}
 			<ArrowUpRight size={14} aria-hidden="true" />

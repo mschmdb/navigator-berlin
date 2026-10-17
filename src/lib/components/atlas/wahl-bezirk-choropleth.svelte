@@ -3,6 +3,7 @@
 	import { parteiColor } from '$lib/data/partei-farben.js';
 	import { normalizeSlug } from '$lib/data/internal/slug.js';
 	import { m } from '$lib/paraglide/messages.js';
+	import { COLORS } from './internal/colors.js';
 	import { formatPercent } from '$lib/i18n/format.js';
 
 	export type BezirkSummary = {
@@ -62,7 +63,7 @@
 				const summary = byBezirkSlug.get(slug);
 				const top = summary?.top3[0];
 				props.partei = top?.kurzname ?? 'Sonstige';
-				props.partei_farbe = top ? parteiColor(top.kurzname) : '#CCCCCC';
+				props.partei_farbe = top ? parteiColor(top.kurzname) : COLORS.noData;
 				props.anteil = top?.anteil ?? 0;
 				props.bezirk_slug = slug;
 				props.bezirk_name = name;
@@ -98,7 +99,7 @@
 							type: 'line',
 							source: 'bezirke',
 							paint: {
-								'line-color': '#141414',
+								'line-color': COLORS.ink,
 								'line-width': 1
 							}
 						}
@@ -192,7 +193,7 @@
 		aria-label={m.wahl_portal_bezirk_choropleth_alt()}
 		class="h-[320px] w-full overflow-hidden rounded border border-rule sm:h-[400px]"
 	></div>
-	<figcaption class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+	<figcaption class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
 		{m.wahl_portal_bezirk_choropleth_figcaption()}
 	</figcaption>
 </figure>

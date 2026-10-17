@@ -30,10 +30,10 @@
 <article data-testid="kuehle-orte-landing" class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8">
 	<header class="flex flex-col gap-3">
 		<h1 class="flex items-center gap-2 font-sans text-3xl font-semibold text-ink">
-			<Snowflake size={28} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
+			<Snowflake size={28} aria-hidden="true" class="shrink-0 text-umwelt-kuehle-orte" />
 			{m.kuehle_orte_page_h1_title()}
 		</h1>
-		<p class="font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="font-serif text-lg leading-body text-ink-muted">
 			{m.kuehle_orte_page_intro_p1()}
 		</p>
 	</header>
@@ -55,7 +55,7 @@
 		<a
 			href={localizedHref(explorerLink)}
 			data-testid="explorer-cta"
-			class="inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated hover:bg-accent-strong focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated hover:bg-accent-strong"
 		>
 			{m.kuehle_orte_page_cta_button()}
 			<ArrowRight size={18} aria-hidden="true" />

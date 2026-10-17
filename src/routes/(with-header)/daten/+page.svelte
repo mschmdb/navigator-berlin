@@ -55,7 +55,7 @@
 <article data-testid="daten-overview" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-3">
 		<h1 class="font-serif text-3xl text-ink">{m.overview_daten_h1()}</h1>
-		<p class="font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="font-serif text-lg leading-body text-ink-muted">
 			{m.overview_daten_intro({ count: layerCount })}
 		</p>
 		<ul class="flex flex-wrap gap-x-6 gap-y-1 font-sans text-base">

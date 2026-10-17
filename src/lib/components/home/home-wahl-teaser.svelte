@@ -119,7 +119,7 @@
 		<a
 			href={localizedHref('/berlin-wahlen')}
 			data-testid="home-wahl-teaser-all"
-			class="inline-flex items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
 		>
 			{(wahlCount === 1 ? m.home_wahl_all_link_singular : m.home_wahl_all_link_plural)({
 				count: wahlCount
@@ -129,7 +129,7 @@
 		<a
 			href={localizedHref('/methodik/wahldaten')}
 			data-testid="home-wahl-teaser-methodik"
-			class="font-mono text-sm tracking-wider text-ink-muted uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center font-mono text-sm tracking-wider text-ink-muted uppercase hover:text-ink"
 		>
 			{m.wahl_detail_methodik_link_label()}
 		</a>

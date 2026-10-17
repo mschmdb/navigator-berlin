@@ -499,6 +499,12 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-63-kaelte-launch.md`
   summary: E2E „Root (Karte) hat 0 axe-Violations“ ist flaky: axe misst Kontrast im Inspector während der Einblend-Animation (Farben #b8b7b0/#c0beb7 auf #f5f3ea).
   evidence: 17.10.2026 mehrfach rot/grün ohne Codeänderung; Fix: auf Ende der Animation warten oder `prefers-reduced-motion` im Test setzen.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-86-redesign-fundament.md`
+  summary: Ring-Legende im Kiez-Score ordnet Dimensionen nur über die Reihenfolge den Ringen zu; #88 (Inspector nach Mockup) soll die Zuordnung sichtbar machen.
+  evidence: Ringfarbe zeigt die Stufe, nicht die Dimension; mehrere Ringe können gleich gefärbt sein (Codex-Review GH-86).
+- source_spec: `docs/process/implementation-artifacts/spec-gh-86-redesign-fundament.md`
+  summary: Sankey-Labels im Wahlportal skalieren im responsiven SVG auf Mobil auf rund 4,8 px; Labels gehören aus dem skalierten SVG heraus (#90).
+  evidence: codex-review GH-86 (gpt-6.1-sol), Messung bei 390 px Viewport; bestand vor dem Diff.
 - source_spec: `docs/process/implementation-artifacts/spec-gh-103-bezirk-karte-a11y.md`
   summary: `winner-map.svelte.test.ts` „Adress-Auswahl: Punkt im Gebiet …“ ist instabil und findet `winner-map-address-hint` zeitweise nicht.
   evidence: Am 17.10.2026 in einem vollen `pnpm test:unit --run` und in 2 von 3 Einzelläufen rot, im dritten grün; die Datei importiert nichts aus dieser Änderung.

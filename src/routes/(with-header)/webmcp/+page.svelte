@@ -188,13 +188,13 @@
 <main class="mx-auto max-w-2xl px-4 py-12" data-testid="webmcp-page">
 	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl">WebMCP</h1>
 
-	<p class="mt-6 leading-relaxed text-ink-muted">{m.webmcp_intro_p1()}</p>
+	<p class="mt-6 leading-body text-ink-muted">{m.webmcp_intro_p1()}</p>
 
 	<WebmcpDiagnose />
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.webmcp_spec_heading()}</h2>
-		<p class="mt-3 leading-relaxed">
+		<p class="mt-3 leading-body">
 			<RichText segments={specP1Segments}>
 				{#snippet tag(text, name)}
 					{#if name === 'link'}
@@ -205,7 +205,7 @@
 				{/snippet}
 			</RichText>
 		</p>
-		<p class="mt-3 leading-relaxed">
+		<p class="mt-3 leading-body">
 			<RichText segments={specP2Segments}>
 				{#snippet tag(text)}
 					{@render externalLink('https://github.com/webmachinelearning/webmcp', text)}
@@ -216,7 +216,7 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.webmcp_support_heading()}</h2>
-		<dl class="mt-3 space-y-3 leading-relaxed">
+		<dl class="mt-3 space-y-3 leading-body">
 			<div>
 				<dt class="font-medium">Chrome 149+</dt>
 				<dd class="text-ink-muted">{@render codeOnly(chromeSegments)}</dd>
@@ -246,8 +246,8 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.webmcp_rationale_heading()}</h2>
-		<p class="mt-3 leading-relaxed">{m.webmcp_rationale_lead()}</p>
-		<ul class="mt-3 ml-6 list-disc space-y-2 leading-relaxed">
+		<p class="mt-3 leading-body">{m.webmcp_rationale_lead()}</p>
+		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>{m.webmcp_rationale_li_discovery()}</li>
 			<li>{m.webmcp_rationale_li_standards()}</li>
 			<li>{m.webmcp_rationale_li_effort()}</li>
@@ -257,14 +257,14 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.webmcp_tools_heading()}</h2>
-		<p class="mt-3 leading-relaxed">
+		<p class="mt-3 leading-body">
 			<RichText segments={toolsP1Segments}>
 				{#snippet tag(text)}
 					<a class={linkClass} href="/webmcp-manifest.json">{text}</a>
 				{/snippet}
 			</RichText>
 		</p>
-		<dl class="mt-3 space-y-2 leading-relaxed">
+		<dl class="mt-3 space-y-2 leading-body">
 			{#each toolRows as tool (tool.name)}
 				<div>
 					<dt class="font-mono text-sm">{tool.name}</dt>
@@ -276,7 +276,7 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.webmcp_canary_heading()}</h2>
-		<ol class="mt-3 ml-6 list-decimal space-y-2 leading-relaxed">
+		<ol class="mt-3 ml-6 list-decimal space-y-2 leading-body">
 			<li>
 				<RichText segments={step1Segments}>
 					{#snippet tag(text)}
@@ -298,8 +298,8 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.webmcp_no_canary_heading()}</h2>
-		<p class="mt-3 leading-relaxed">{m.webmcp_no_canary_p1()}</p>
-		<p class="mt-3 leading-relaxed">
+		<p class="mt-3 leading-body">{m.webmcp_no_canary_p1()}</p>
+		<p class="mt-3 leading-body">
 			<RichText segments={noCanaryP2Segments}>
 				{#snippet tag(text, name)}
 					{@const href = noCanaryHrefs[name]}
@@ -315,7 +315,7 @@
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">{m.webmcp_sources_heading()}</h2>
-		<ul class="mt-3 ml-6 list-disc space-y-2 leading-relaxed">
+		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>
 				{@render externalLink(
 					'https://webmachinelearning.github.io/webmcp/',

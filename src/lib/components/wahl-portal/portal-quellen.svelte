@@ -24,7 +24,7 @@
 		</Accordion.Header>
 		<Accordion.Content
 			data-testid="portal-quellen-content"
-			class="flex flex-col gap-3 pb-4 font-serif text-base leading-relaxed text-ink-muted"
+			class="flex flex-col gap-3 pb-4 font-serif text-base leading-body text-ink-muted"
 		>
 			{#if quellen.length > 0}
 				<ul class="flex flex-col gap-1.5" data-testid="portal-quellen-list">

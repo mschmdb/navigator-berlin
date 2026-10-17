@@ -264,7 +264,7 @@
 	>
 		<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.wahl_portal_eyebrow()}</p>
 		<h1 class="font-serif text-4xl text-ink md:text-5xl">{m.wahl_portal_h1()}</h1>
-		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
 			{pageDescription}
 		</p>
 

@@ -63,7 +63,7 @@
 			<div class="flex flex-col items-center gap-1 pb-1" data-testid="kiez-score-overall">
 				<KiezScoreRing {score} onSegmentClick={toggleDim} />
 				<span
-					class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+					class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 					data-testid="kiez-score-overall-meta"
 				>
 					{m.inspector_kiez_score_overall_meta(
@@ -122,7 +122,7 @@
 		<a
 			href={localizedHref(methodikHref, locale)}
 			data-testid="kiez-score-methodik-link"
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.inspector_kiez_score_methodik_link(undefined, localeOpts)}
 		</a>

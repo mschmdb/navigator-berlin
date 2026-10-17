@@ -13,7 +13,7 @@
 
 <p
 	data-testid="portal-datenstand"
-	class="flex flex-wrap items-baseline gap-x-2 font-mono text-[10px] text-ink-subtle"
+	class="flex flex-wrap items-baseline gap-x-2 font-mono text-dense-meta text-ink-subtle"
 >
 	{#if status === 'loading' || status === 'idle'}
 		<span data-testid="portal-datenstand-loading">{m.wahl_portal_datenstand_laden()}</span>

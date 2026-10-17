@@ -91,7 +91,7 @@
 				lang={locale}
 				data-testid="lang-switcher-link"
 				data-locale={locale}
-				class="underline underline-offset-2 hover:text-accent"
+				class="inline-flex min-h-(--target-min) items-center underline underline-offset-2 hover:text-accent"
 			>
 				{displayName(locale)}
 			</a>
@@ -144,7 +144,7 @@
 						hreflang={locale}
 						data-testid="lang-switcher-link"
 						data-locale={locale}
-						class="flex items-center gap-2 px-2 py-1.5 font-sans text-sm text-ink hover:bg-bg hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent data-[highlighted]:bg-bg data-[highlighted]:text-accent"
+						class="flex items-center gap-2 px-2 py-1.5 font-sans text-sm text-ink hover:bg-bg hover:text-accent data-[highlighted]:bg-bg data-[highlighted]:text-accent"
 					>
 						{displayName(locale)}
 					</a>
@@ -176,7 +176,7 @@
 					name: displayName(currentLocale)
 				}),
 				class:
-					'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-sm border border-rule px-2 text-ink hover:bg-bg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+					'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-sm border border-rule px-2 text-ink hover:bg-bg'
 			}}
 		>
 			{@render dropdownItems()}

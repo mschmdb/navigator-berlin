@@ -24,7 +24,7 @@
 		})}
 		target="_blank"
 		rel="noopener noreferrer me"
-		class="inline-flex text-ink-muted transition-colors hover:text-ink"
+		class="-m-1 inline-flex size-(--target-min) items-center justify-center text-ink-muted transition-colors hover:text-ink"
 	>
 		<svg width={size} height={size} viewBox="0 0 600 530" fill="currentColor" aria-hidden="true">
 			<path
@@ -40,7 +40,7 @@
 		})}
 		target="_blank"
 		rel="noopener noreferrer me"
-		class="inline-flex text-ink-muted transition-colors hover:text-ink"
+		class="-m-1 inline-flex size-(--target-min) items-center justify-center text-ink-muted transition-colors hover:text-ink"
 	>
 		<svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
 			<path
@@ -56,7 +56,7 @@
 		})}
 		target="_blank"
 		rel="noopener noreferrer me"
-		class="inline-flex text-ink-muted transition-colors hover:text-ink"
+		class="-m-1 inline-flex size-(--target-min) items-center justify-center text-ink-muted transition-colors hover:text-ink"
 	>
 		<svg
 			width={size}
@@ -106,7 +106,7 @@
 		aria-label={m.shell_social_link_aria_label({ person: 'navigator.berlin', platform: 'GitHub' })}
 		target="_blank"
 		rel="noopener noreferrer"
-		class="inline-flex text-ink-muted transition-colors hover:text-ink"
+		class="-m-1 inline-flex size-(--target-min) items-center justify-center text-ink-muted transition-colors hover:text-ink"
 	>
 		<svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
 			<path

@@ -46,7 +46,7 @@
 	{#if takeaway}
 		<p
 			data-testid={`${testid}-takeaway`}
-			class="max-w-prose font-serif text-lg leading-relaxed text-ink"
+			class="max-w-prose font-serif text-lg leading-body text-ink"
 		>
 			{@render takeaway()}
 		</p>

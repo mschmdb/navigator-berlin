@@ -156,14 +156,14 @@
 			{#if showSeasonalActivePill}
 				<span
 					data-testid="seasonal-pill-active"
-					class="inline-flex items-center rounded-sm bg-state-success/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide text-state-success uppercase"
+					class="inline-flex items-center rounded-sm bg-state-success/15 px-1.5 py-0.5 font-mono text-dense-meta font-semibold tracking-wide text-state-success uppercase"
 				>
 					{m.inspector_layer_hit_seasonal_active_pill(undefined, localeOpts)}
 				</span>
 			{:else if showSeasonalOutOfSeasonPill}
 				<span
 					data-testid="seasonal-pill-outofseason"
-					class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide text-state-warning uppercase"
+					class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 font-mono text-dense-meta font-semibold tracking-wide text-state-warning uppercase"
 				>
 					{m.inspector_layer_hit_seasonal_outofseason_pill(undefined, localeOpts)}
 				</span>

@@ -45,7 +45,7 @@
 	</ul>
 	<a
 		href={localizedHref('/umwelt-infrastruktur-score?view=bezirke')}
-		class="inline-flex items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
+		class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
 	>
 		{m.home_featured_bezirke_all_link()}
 		<ArrowUpRight size={14} aria-hidden="true" />

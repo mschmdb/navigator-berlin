@@ -210,7 +210,7 @@
 		data-chart-id={chartId}
 		data-focused-index={focusedIndex}
 		onkeydown={onKeydown}
-		class="climate-long-view-figure relative block w-full focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-rule-strong"
+		class="climate-long-view-figure relative block w-full"
 	>
 		<span id={titleId} class="sr-only"
 			>{m.inspector_climate_long_view_title({ station: stationName }, localeOpts)}</span
@@ -275,7 +275,7 @@
 									x={mx + 4}
 									y={12}
 									class="font-serif italic"
-									font-size="10"
+									font-size="11"
 									fill="var(--ink-subtle, currentColor)"
 								>
 									{marker.label}

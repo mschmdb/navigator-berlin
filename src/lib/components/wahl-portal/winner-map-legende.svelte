@@ -61,7 +61,7 @@
 
 <div data-testid="winner-map-legende" class="flex flex-col gap-3 border border-rule bg-bg p-3">
 	<div class="flex items-center justify-between gap-3">
-		<span class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+		<span class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
 			{titel}
 		</span>
 		<button
@@ -102,7 +102,7 @@
 		</ul>
 	{/if}
 
-	<p data-testid="winner-map-legende-rampe" class="font-mono text-[10px] text-ink-subtle">
+	<p data-testid="winner-map-legende-rampe" class="font-mono text-dense-meta text-ink-subtle">
 		{rampeText ?? defaultRampeText}
 	</p>
 </div>

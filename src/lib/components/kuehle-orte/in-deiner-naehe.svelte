@@ -111,7 +111,7 @@
 			data-testid="naehe-locate"
 			disabled={phase === 'locating'}
 			onclick={locate}
-			class="inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated hover:bg-accent-strong focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-60"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated hover:bg-accent-strong disabled:opacity-60"
 		>
 			<LocateFixed size={18} aria-hidden="true" />
 			{phase === 'locating' ? m.naehe_button_locating() : m.naehe_button_locate()}
@@ -136,10 +136,12 @@
 						</div>
 						<div class="mt-0.5 flex flex-wrap items-center gap-1.5">
 							<span
-								class="inline-flex items-center rounded-sm bg-state-success/15 px-1 font-mono text-[10px] font-semibold text-state-success"
+								class="inline-flex items-center rounded-sm bg-state-success/15 px-1 font-mono text-dense-meta font-semibold text-state-success"
 								>{statusText(ort.openingHours)}</span
 							>
-							<span class="font-mono text-[11px] text-ink-muted" lang={cat.lang}>{cat.text}</span>
+							<span class="font-mono text-dense-meta text-ink-muted" lang={cat.lang}
+								>{cat.text}</span
+							>
 						</div>
 						{#if ort.address}
 							<p class="mt-0.5 font-serif text-xs text-ink-subtle">{ort.address}</p>
