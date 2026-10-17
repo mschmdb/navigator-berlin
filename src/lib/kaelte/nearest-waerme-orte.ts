@@ -1,7 +1,10 @@
 import distance from '@turf/distance';
 import { point } from '@turf/helpers';
 import type { WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
-import { getOpeningStatus } from '$lib/components/atlas/inspector-panel/internal/opening-status.js';
+import {
+	getOpeningStatus,
+	isOpenNow
+} from '$lib/components/atlas/inspector-panel/internal/opening-status.js';
 
 export type WaermeOrtStatus = 'open' | 'closing-soon' | 'closed';
 
@@ -35,10 +38,13 @@ export function openingStatusOf(oh: string, now: Date): WaermeOrtStatus | null {
 export function nearestWaermeOrte(
 	from: { lat: number; lng: number },
 	places: readonly WaermeOrt[],
-	options: { category?: string | null; limit: number; now: Date }
+	options: { category?: string | null; limit: number; now: Date; onlyOpen?: boolean }
 ): NearestResult {
-	const { category, limit, now } = options;
-	const selection = category ? places.filter((p) => p.cat === category) : places;
+	const { category, limit, now, onlyOpen = false } = options;
+	const inCategory = category ? places.filter((p) => p.cat === category) : places;
+	const selection = onlyOpen
+		? inCategory.filter((p) => isOpenNow(getOpeningStatus(p.openingHours, now)))
+		: inCategory;
 	const origin = point([from.lng, from.lat]);
 	const items = selection
 		.map((p) => ({

@@ -51,6 +51,7 @@
 	const deLang = $derived(locale === 'de' ? undefined : 'de');
 
 	let category = $state<string | null>(null);
+	let onlyOpen = $state(false);
 	let detailsOpen = $state(false);
 
 	// Live-Uhr für den Öffnungsstatus, aktualisiert minütlich.
@@ -65,13 +66,30 @@
 	const kategorien = $derived(index ? waermeKategorien(index) : []);
 	const result = $derived(
 		address && index
-			? nearestWaermeOrte(address, index, { category, limit: LIMIT, now })
+			? nearestWaermeOrte(address, index, { category, limit: LIMIT, now, onlyOpen })
 			: { items: [] as WaermeOrtMitDistanz[], total: 0 }
 	);
 
+	const emptyText = $derived(
+		onlyOpen
+			? m.inspector_waerme_orte_empty_offen(undefined, localeOpts)
+			: m.kaelte_orte_empty(undefined, localeOpts)
+	);
+
+	function announceResult(): void {
+		announceGlobal(
+			result.items.length === 0 ? emptyText : counterText(result.items.length, result.total, locale)
+		);
+	}
+
 	function selectCategory(next: string | null): void {
 		category = next;
-		announceGlobal(counterText(result.items.length, result.total, locale));
+		announceResult();
+	}
+
+	function toggleOnlyOpen(): void {
+		onlyOpen = !onlyOpen;
+		announceResult();
 	}
 
 	const linkClass =
@@ -152,6 +170,16 @@
 			role="group"
 			aria-label={m.inspector_waerme_orte_filter_group_aria_label(undefined, localeOpts)}
 		>
+			<button
+				type="button"
+				data-testid="waerme-orte-filter-offen"
+				aria-pressed={onlyOpen}
+				onclick={toggleOnlyOpen}
+				class={`${chipBase} ${onlyOpen ? 'border-accent bg-accent text-bg-elevated' : 'border-rule text-ink-muted hover:border-ink-subtle hover:text-ink'}`}
+			>
+				{m.inspector_kuehle_orte_filter_jetzt_offen(undefined, localeOpts)}
+			</button>
+			<span aria-hidden="true" class="mx-1 self-stretch border-l border-rule"></span>
 			<button
 				type="button"
 				data-testid="waerme-orte-filter-all"
@@ -278,7 +306,7 @@
 			</ul>
 		{:else}
 			<p class="mt-2.5 font-serif text-sm text-ink-subtle" data-testid="waerme-orte-empty">
-				{m.kaelte_orte_empty(undefined, localeOpts)}
+				{emptyText}
 			</p>
 		{/if}
 	{/if}

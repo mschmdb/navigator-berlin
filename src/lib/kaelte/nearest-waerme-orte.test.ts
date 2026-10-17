@@ -83,6 +83,54 @@ describe('openingStatusOf', () => {
 	});
 });
 
+describe('nearestWaermeOrte onlyOpen', () => {
+	const orte = [
+		ort({ id: 'offen', lat: 52.521, openingHours: 'Mo-Su 00:00-24:00' }),
+		ort({ id: 'bald', lat: 52.522, openingHours: 'Mo-Su 10:00-12:30' }),
+		ort({ id: 'zu', lat: 52.523, openingHours: 'Mo-Su 03:00-04:00' }),
+		ort({ id: 'ohne', lat: 52.524, openingHours: '' }),
+		ort({ id: 'kaputt', lat: 52.525, openingHours: 'nach Absprache irgendwie' }),
+		ort({ id: 'museum', lat: 52.526, cat: 'Museum', openingHours: 'Mo-Su 00:00-24:00' })
+	];
+
+	it('ohne onlyOpen bleibt alles wie bisher', () => {
+		const r = nearestWaermeOrte(FROM, orte, { limit: 10, now: NOW });
+		expect(r.total).toBe(6);
+	});
+
+	it('behält open und closing-soon, blendet closed, ohne oh und unlesbares oh aus', () => {
+		const r = nearestWaermeOrte(FROM, orte, { limit: 10, now: NOW, onlyOpen: true });
+		expect(r.items.map((o) => o.id)).toEqual(['offen', 'bald', 'museum']);
+		expect(r.items.map((o) => o.status)).toEqual(['open', 'closing-soon', 'open']);
+		expect(r.total).toBe(3);
+	});
+
+	it('kombiniert mit Kategorie (UND)', () => {
+		const r = nearestWaermeOrte(FROM, orte, {
+			category: 'Bibliothek',
+			limit: 10,
+			now: NOW,
+			onlyOpen: true
+		});
+		expect(r.items.map((o) => o.id)).toEqual(['offen', 'bald']);
+		expect(r.total).toBe(2);
+	});
+
+	it('total zählt die gefilterte Auswahl, nicht das Limit', () => {
+		const r = nearestWaermeOrte(FROM, orte, { limit: 1, now: NOW, onlyOpen: true });
+		expect(r.items).toHaveLength(1);
+		expect(r.total).toBe(3);
+	});
+
+	it('liefert leer, wenn nichts offen ist', () => {
+		const zu = [ort({ id: 'zu', openingHours: 'Mo-Su 03:00-04:00' })];
+		expect(nearestWaermeOrte(FROM, zu, { limit: 5, now: NOW, onlyOpen: true })).toEqual({
+			items: [],
+			total: 0
+		});
+	});
+});
+
 describe('waermeKategorien', () => {
 	it('liefert vorhandene Kategorien in fester Reihenfolge', () => {
 		const orte = [

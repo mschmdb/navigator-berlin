@@ -111,6 +111,130 @@ describe('waerme-orte-card.svelte', () => {
 		expect(items[0]!.textContent).toContain('Stadtmuseum');
 	});
 
+	describe('Filter „jetzt offen“', () => {
+		const NOON = new Date('2026-10-14T10:00:00Z');
+		const OFFEN: WaermeOrt = {
+			...BASE,
+			id: 'o',
+			name: 'Offene Bibliothek',
+			openingHours: 'Mo-Su 00:00-24:00'
+		};
+		const ZU: WaermeOrt = {
+			...BASE,
+			id: 'z',
+			name: 'Zu Bibliothek',
+			openingHours: 'Mo-Su 03:00-03:01'
+		};
+		const OFFENES_MUSEUM: WaermeOrt = {
+			...MUSEUM,
+			id: 'm',
+			name: 'Offenes Museum',
+			openingHours: 'Mo-Su 00:00-24:00'
+		};
+		const OHNE: WaermeOrt = { ...BASE, id: 'x', name: 'Ohne Zeiten', openingHours: '' };
+
+		function itemNames(): string[] {
+			return [...document.querySelectorAll('[data-testid="waerme-orte-item"]')].map((el) =>
+				el.querySelector('span')!.textContent!.trim()
+			);
+		}
+
+		it('Chip ist ein aria-pressed-Umschalter, Default aus, alle Orte sichtbar', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(NOON);
+			render(WaermeOrteCard, props({ index: [OFFEN, ZU, OHNE] }));
+			const chip = page.getByTestId('waerme-orte-filter-offen');
+			await expect.element(chip).toHaveAttribute('aria-pressed', 'false');
+			await expect.element(chip).toHaveTextContent('jetzt offen');
+			expect(itemNames()).toHaveLength(3);
+		});
+
+		it('zeigt bei aktivem Filter nur offene Orte, ohne oh ausgeblendet', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(NOON);
+			render(WaermeOrteCard, props({ index: [OFFEN, ZU, OHNE] }));
+			const chip = page.getByTestId('waerme-orte-filter-offen');
+			await chip.click();
+			await expect.element(chip).toHaveAttribute('aria-pressed', 'true');
+			expect(itemNames()).toEqual(['Offene Bibliothek']);
+			await chip.click();
+			await expect.element(chip).toHaveAttribute('aria-pressed', 'false');
+			expect(itemNames()).toHaveLength(3);
+		});
+
+		it('kombiniert mit Kategorie (UND)', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(NOON);
+			render(WaermeOrteCard, props({ index: [OFFEN, ZU, OFFENES_MUSEUM] }));
+			await page.getByTestId('waerme-orte-filter-offen').click();
+			await page.getByRole('button', { name: 'Museum', exact: true }).click();
+			expect(itemNames()).toEqual(['Offenes Museum']);
+		});
+
+		it('zeigt Leertext, wenn nichts offen ist', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(NOON);
+			render(WaermeOrteCard, props({ index: [ZU, OHNE] }));
+			await page.getByTestId('waerme-orte-filter-offen').click();
+			expect(document.querySelector('[data-testid="waerme-orte-list"]')).toBeNull();
+			await expect
+				.element(page.getByTestId('waerme-orte-empty'))
+				.toHaveTextContent('Gerade ist kein passender Ort offen');
+		});
+
+		it('meldet bei 0 Treffern den Leertext statt „0 von 0“', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(NOON);
+			const live = document.createElement('div');
+			live.id = 'global-aria-live';
+			document.body.appendChild(live);
+			render(WaermeOrteCard, props({ index: [ZU] }));
+			await page.getByTestId('waerme-orte-filter-offen').click();
+			expect(live.textContent).toBe(
+				'Gerade ist kein passender Ort offen. Schalte „jetzt offen“ aus, um alle Orte zu sehen.'
+			);
+			live.remove();
+		});
+
+		it('EN: Leertext bei aktivem Filter', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(NOON);
+			render(WaermeOrteCard, props({ lang: 'en', index: [ZU] }));
+			await page.getByTestId('waerme-orte-filter-offen').click();
+			await expect
+				.element(page.getByTestId('waerme-orte-empty'))
+				.toHaveTextContent(
+					'No matching place is open right now. Turn off “open now” to see all places.'
+				);
+		});
+
+		it('Filter aus und kein Ort: Standard-Leertext', async () => {
+			render(WaermeOrteCard, props({ index: [] }));
+			await expect
+				.element(page.getByTestId('waerme-orte-empty'))
+				.toHaveTextContent('In dieser Kategorie gibt es keine Orte.');
+		});
+
+		it('meldet die Anzahl per Live-Region', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(NOON);
+			const live = document.createElement('div');
+			live.id = 'global-aria-live';
+			document.body.appendChild(live);
+			render(WaermeOrteCard, props({ index: [OFFEN, ZU, OHNE] }));
+			await page.getByTestId('waerme-orte-filter-offen').click();
+			expect(live.textContent).toBe('1 von 1 Orten, nächste zuerst');
+			live.remove();
+		});
+
+		it('EN: Chip heißt „open now“', async () => {
+			render(WaermeOrteCard, props({ lang: 'en', index: [OFFEN] }));
+			await expect
+				.element(page.getByTestId('waerme-orte-filter-offen'))
+				.toHaveTextContent('open now');
+		});
+	});
+
 	it('zeigt Ladehinweis ohne Index', async () => {
 		render(WaermeOrteCard, props({ index: null }));
 		await expect.element(page.getByTestId('waerme-orte-loading')).toBeVisible();
