@@ -80,6 +80,10 @@ function shouldPaint(pattern: Pattern, x: number, y: number): boolean {
 		}
 		case 'stripes':
 			return Math.floor(y / 2) % 2 === 0;
+		case 'vertical':
+			return Math.floor(x / 2) % 2 === 0;
+		case 'grid':
+			return x % 4 === 0 || y % 4 === 0;
 		case 'diagonal':
 			return (x + y) % 4 < 2;
 		case 'diagonal-reverse': {

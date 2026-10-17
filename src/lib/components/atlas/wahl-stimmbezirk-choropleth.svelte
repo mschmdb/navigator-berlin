@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import type { ExpressionSpecification } from 'maplibre-gl';
 	import { parteiColor } from '$lib/data/partei-farben.js';
 	import { gruppeIdFromGeo } from '$lib/data/wahl-geo-mapping.js';
 	import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
@@ -9,6 +10,7 @@
 	import DataTableAlternative from './data-table-alternative.svelte';
 	import WinnerMapLegende from '$lib/components/wahl-portal/winner-map-legende.svelte';
 	import { buildWinnerTableColumns } from '$lib/components/wahl-portal/internal/winner-map-labels.js';
+	import { ANTEIL_OPACITY_RAMP } from '$lib/components/wahl-portal/internal/winner-map-data.js';
 	import {
 		patternImageId,
 		registerPartyPatterns
@@ -23,6 +25,17 @@
 
 	/** #107: Muster-Ebene über der Farbfläche, trennt z. B. CDU und AfD auch ohne Farbe. */
 	const MUSTER_LAYER = 'wahlbezirke-muster';
+
+	/** Deckkraft nach Anteil, dieselbe Rampe, die die Legende beschreibt. */
+	const ANTEIL_RAMPE: ExpressionSpecification = [
+		'interpolate',
+		['linear'],
+		['get', 'anteil'],
+		ANTEIL_OPACITY_RAMP.minAnteil,
+		ANTEIL_OPACITY_RAMP.minOpacity,
+		ANTEIL_OPACITY_RAMP.maxAnteil,
+		ANTEIL_OPACITY_RAMP.maxOpacity
+	];
 
 	type Props = {
 		geoSlug: string;
@@ -137,12 +150,7 @@
 							source: 'wahlbezirke',
 							paint: {
 								'fill-color': ['get', 'partei_farbe'],
-								'fill-opacity': [
-									'case',
-									['==', ['get', 'has_winner'], 1],
-									['interpolate', ['linear'], ['get', 'anteil'], 0.15, 0.4, 0.45, 0.9],
-									0.1
-								],
+								'fill-opacity': ['case', ['==', ['get', 'has_winner'], 1], ANTEIL_RAMPE, 0.1],
 								'fill-outline-color': 'rgba(20,20,20,0.18)'
 							}
 						},
@@ -174,7 +182,9 @@
 						source: 'wahlbezirke',
 						filter: ['==', ['get', 'has_winner'], 1],
 						layout: { visibility: patternsEnabled ? 'visible' : 'none' },
-						paint: { 'fill-pattern': ['get', 'pattern_id'] }
+						// Dieselbe Anteils-Rampe wie die Farbfläche, sonst überdeckt das
+						// Muster die Abstufung, die die Legende erklärt.
+						paint: { 'fill-pattern': ['get', 'pattern_id'], 'fill-opacity': ANTEIL_RAMPE }
 					},
 					'bezirke-outline'
 				);

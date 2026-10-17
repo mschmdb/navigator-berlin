@@ -31,9 +31,15 @@ describe('PARTEI_FARBEN', () => {
 
 	it('Pattern-Variants verfügbar pro Partei (Achromatopsie-Fallback)', () => {
 		for (const k of Object.keys(PARTEI_FARBEN) as ParteiKurzname[]) {
-			expect(['solid', 'stripes', 'dots', 'diagonal', 'diagonal-reverse']).toContain(
-				PARTEI_FARBEN[k].pattern
-			);
+			expect([
+				'solid',
+				'stripes',
+				'vertical',
+				'dots',
+				'grid',
+				'diagonal',
+				'diagonal-reverse'
+			]).toContain(PARTEI_FARBEN[k].pattern);
 		}
 	});
 
@@ -93,7 +99,15 @@ describe('PARTEI_FARBEN', () => {
 	});
 
 	it('#107: jede FINDER_PARTIES-Partei hat ein eigenes Muster', () => {
-		const finderParties: ParteiKurzname[] = ['SPD', 'CDU', 'GRÜNE', 'FDP', 'AfD', 'Die Linke', 'BSW'];
+		const finderParties: ParteiKurzname[] = [
+			'SPD',
+			'CDU',
+			'GRÜNE',
+			'FDP',
+			'AfD',
+			'Die Linke',
+			'BSW'
+		];
 		const patterns = finderParties.map((k) => PARTEI_FARBEN[k].pattern);
 		expect(new Set(patterns).size).toBe(finderParties.length);
 	});

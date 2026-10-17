@@ -10,7 +10,14 @@
  * rendered, damit Bars auch ohne Farbe unterscheidbar bleiben.
  */
 
-export type Pattern = 'solid' | 'stripes' | 'dots' | 'diagonal' | 'diagonal-reverse';
+export type Pattern =
+	| 'solid'
+	| 'stripes'
+	| 'vertical'
+	| 'dots'
+	| 'grid'
+	| 'diagonal'
+	| 'diagonal-reverse';
 
 export type ParteiFarbe = {
 	hex: string;
@@ -25,13 +32,15 @@ export const PARTEI_FARBEN = {
 	CSU: { hex: '#00557A', pattern: 'diagonal' },
 	GRÜNE: { hex: '#0F6E2C', pattern: 'dots' },
 	FDP: { hex: '#7A6500', pattern: 'diagonal' },
-	AfD: { hex: '#004A6E', pattern: 'stripes' },
+	// #107: senkrecht statt waagerecht, sonst wie CDU (dunkle Fläche, gleiche Streifen).
+	AfD: { hex: '#004A6E', pattern: 'vertical' },
 	// Pattern 'diagonal-reverse' statt 'diagonal' (Review-Fund #16): 'diagonal'
 	// kollidierte exakt mit FDP (identische 45°-Streifen). Die Linke bekommt
 	// dieselbe Form in Gegenrichtung (135°) -- unterscheidbar auch für
 	// Achromatopsie (Streifen-RICHTUNG statt Farbe).
 	'Die Linke': { hex: '#8C2057', pattern: 'diagonal-reverse' },
-	BSW: { hex: '#4A1559', pattern: 'dots' },
+	// #107: Gitter statt Punkte, sonst identisch zu GRÜNE.
+	BSW: { hex: '#4A1559', pattern: 'grid' },
 	'FREIE WÄHLER': { hex: '#8A4200', pattern: 'diagonal' },
 	Sonstige: { hex: '#525252', pattern: 'stripes' }
 } as const satisfies Record<string, ParteiFarbe>;
