@@ -25,6 +25,9 @@ export interface EnrichmentItem {
 	notes: string;
 }
 
+/** „Lehrter Straße 35, 10557 Berlin“: Straße und PLZ. Vorrang vor OSM-addr/plz. */
+const ADDRESS_VERIFIED = /^(.+?),\s*(\d{5})\b/;
+
 export interface PlaceItem {
 	id: string;
 	lat: number;
@@ -91,7 +94,12 @@ export function mergeKuehleOrte(enrichment: EnrichmentItem[], places: PlaceItem[
 			dropped.missingGeometry += 1;
 			continue;
 		}
-		const navi = buildNaviLinks(place.lat, place.lon);
+		const verified = ADDRESS_VERIFIED.exec(e.address_verified ?? '');
+		const navi = buildNaviLinks(place.lat, place.lon, {
+			name: e.name,
+			street: verified?.[1] ?? place.addr,
+			plz: verified?.[2] ?? place.plz
+		});
 		features.push({
 			type: 'Feature',
 			geometry: { type: 'Point', coordinates: [place.lon, place.lat] },

@@ -8,9 +8,9 @@ describe('buildNaviLinks', () => {
 		);
 	});
 
-	it('Apple-Deeplink mit daddr=lat,lng', () => {
+	it('Apple-Deeplink mit place?coordinate=lat,lng', () => {
 		expect(buildNaviLinks(52.52, 13.405).appleMapsUrl).toBe(
-			'https://maps.apple.com/?daddr=52.52,13.405'
+			'https://maps.apple.com/place?coordinate=52.52,13.405'
 		);
 	});
 

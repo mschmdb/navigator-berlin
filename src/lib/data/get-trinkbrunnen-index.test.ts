@@ -29,7 +29,7 @@ describe('featureToTrinkbrunnen', () => {
 		expect(b.lat).toBe(52.52);
 		expect(b.lng).toBe(13.405);
 		expect(b.googleMapsUrl).toContain('destination=52.52,13.405');
-		expect(b.appleMapsUrl).toContain('daddr=52.52,13.405');
+		expect(b.appleMapsUrl).toContain('place?coordinate=52.52,13.405');
 	});
 
 	it('liest fee/bottle/wheelchair und fällt auf Trinkbrunnen zurück', () => {

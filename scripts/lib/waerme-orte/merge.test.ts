@@ -95,8 +95,32 @@ describe('mergeWaermeOrte', () => {
 		expect(f.properties.cat).toBe('Bibliothek');
 		expect(f.properties.addr).toBe('Teststr 1');
 		expect(f.properties.website).toBe('https://betreiber.example/bib');
-		expect(f.properties.googleMapsUrl).toContain('destination=52.1,13.2');
-		expect(f.properties.appleMapsUrl).toContain('daddr=52.1,13.2');
+		expect(f.properties.googleMapsUrl).toBe(
+			'https://www.google.com/maps/dir/?api=1&destination=Bibliothek%20X%2C%20Teststr%201%2C%2010117%20Berlin'
+		);
+		expect(f.properties.appleMapsUrl).toBe(
+			'https://maps.apple.com/place?coordinate=52.1,13.2&name=Bibliothek%20X'
+		);
+	});
+
+	it('Navi-Links nutzen den Enrichment-Namen; leerer Name fällt auf den OSM-Namen zurück', () => {
+		const named = mergeWaermeOrte(
+			[enrich({ id: 'node/1', name: 'Redaktionsname' })],
+			[place({ id: 'node/1', name: 'OSM Name' })]
+		).collection.features[0].properties;
+		expect(named.appleMapsUrl).toBe(
+			'https://maps.apple.com/place?coordinate=52.5,13.4&name=Redaktionsname'
+		);
+		const blank = mergeWaermeOrte(
+			[enrich({ id: 'node/1', name: '   ' })],
+			[place({ id: 'node/1', name: 'OSM Name' })]
+		).collection.features[0].properties;
+		expect(blank.appleMapsUrl).toBe(
+			'https://maps.apple.com/place?coordinate=52.5,13.4&name=OSM%20Name'
+		);
+		expect(blank.googleMapsUrl).toBe(
+			'https://www.google.com/maps/dir/?api=1&destination=OSM%20Name%2C%20Teststr%201%2C%2010117%20Berlin'
+		);
 	});
 
 	it('nimmt die OSM-Website, wenn das Enrichment keine nennt', () => {

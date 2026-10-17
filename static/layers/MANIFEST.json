@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-17T10:33:14.802Z",
+  "generatedAt": "2026-10-17T11:38:25.976Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -1000,21 +1000,6 @@
       "mapRelevant": true
     },
     {
-      "slug": "kuehle-orte",
-      "filename": "kuehle-orte.2c027642.geojson",
-      "sourceUrl": "https://www.openstreetmap.org/copyright",
-      "fetchedAt": "2026-08-08T10:55:22.829Z",
-      "license": "ODbL 1.0",
-      "sha256": "2c02764223126f818bfacd88c863be027b2ff567889b695b2f59021b0a3838fd",
-      "bundleGroup": "C: Umwelt",
-      "zoomThresholds": {
-        "min": 11,
-        "max": 18
-      },
-      "geometryType": "Point",
-      "featureCount": 538
-    },
-    {
       "slug": "wahlbezirke-btw17",
       "filename": "wahlbezirke-btw17.452b6766.geojson",
       "sourceUrl": "https://www.statistik-berlin-brandenburg.de/opendata/RBS_OD_Wahlgebiete_BTW17.zip",
@@ -1222,11 +1207,11 @@
     },
     {
       "slug": "waerme-orte",
-      "filename": "waerme-orte.5a3fc364.geojson",
+      "filename": "waerme-orte.e5d9bd2f.geojson",
       "sourceUrl": "https://www.openstreetmap.org/copyright",
-      "fetchedAt": "2026-10-17T10:33:14.802Z",
+      "fetchedAt": "2026-10-17T11:38:25.645Z",
       "license": "ODbL 1.0",
-      "sha256": "5a3fc364f66ae64c8abd4e407ec2706e055bbf4bf7bc458df83e0eda91b5af74",
+      "sha256": "e5d9bd2fa660b9d713d973cac084240bc1fe1fb6194421159cbd211fe96e2ea1",
       "bundleGroup": "C: Umwelt",
       "zoomThresholds": {
         "min": 11,
@@ -1234,6 +1219,21 @@
       },
       "geometryType": "Point",
       "featureCount": 227
+    },
+    {
+      "slug": "kuehle-orte",
+      "filename": "kuehle-orte.86ebf562.geojson",
+      "sourceUrl": "https://www.openstreetmap.org/copyright",
+      "fetchedAt": "2026-10-17T11:38:25.976Z",
+      "license": "ODbL 1.0",
+      "sha256": "86ebf56248342861541ef52c4f1a3bea8d22ed76db617f39c821ba6d34cd6bd6",
+      "bundleGroup": "C: Umwelt",
+      "zoomThresholds": {
+        "min": 11,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 538
     }
   ]
 }

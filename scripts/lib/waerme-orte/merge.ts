@@ -151,7 +151,11 @@ export function mergeWaermeOrte(
 			dropped.missingGeometry += 1;
 			continue;
 		}
-		const navi = buildNaviLinks(place.lat, place.lon);
+		const navi = buildNaviLinks(place.lat, place.lon, {
+			name: e.name?.trim() || place.name,
+			street: place.addr,
+			plz: place.plz
+		});
 		features.push({
 			type: 'Feature',
 			geometry: { type: 'Point', coordinates: [place.lon, place.lat] },
