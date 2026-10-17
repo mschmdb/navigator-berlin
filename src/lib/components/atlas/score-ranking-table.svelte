@@ -231,9 +231,33 @@
 	const nameColumnLabel = $derived(view === 'kieze' ? 'Kiez' : 'Bezirk');
 
 	function headerButtonClass(active: boolean): string {
-		const base = 'inline-flex items-center gap-1 whitespace-nowrap text-dense-label hover:text-ink';
+		const base =
+			'inline-flex min-h-(--target-min) items-center gap-1 whitespace-nowrap text-dense-label hover:text-ink';
 		return active ? `${base} text-ink` : `${base} text-ink-subtle`;
 	}
+
+	function ariaSort(key: SortKey): 'ascending' | 'descending' | 'none' {
+		if (key !== sortKey) return 'none';
+		return sortDir === 'asc' ? 'ascending' : 'descending';
+	}
+
+	// GH-94: Auf Desktop passt die Tabelle in die Spalte; auf schmalen Viewports scrollt sie.
+	// Den Hinweis zeigen wir nur, wenn wirklich etwas verdeckt ist.
+	let wrapperEl = $state<HTMLDivElement | undefined>(undefined);
+	let overflowing = $state(false);
+	$effect(() => {
+		const el = wrapperEl;
+		if (!el) return;
+		const check = (): void => {
+			overflowing = el.scrollWidth > el.clientWidth + 1;
+		};
+		check();
+		const observer = new ResizeObserver(check);
+		observer.observe(el);
+		const table = el.querySelector('table');
+		if (table) observer.observe(table);
+		return () => observer.disconnect();
+	});
 </script>
 
 <section data-testid="score-ranking" class="space-y-6">
@@ -274,19 +298,41 @@
 		</p>
 	</div>
 
-	<div class="overflow-x-auto" data-testid="ranking-table-wrapper">
+	{#if overflowing}
+		<p
+			id="ranking-scroll-hint"
+			class="text-dense-meta text-ink-subtle"
+			data-testid="ranking-scroll-hint"
+		>
+			{m.uis_ranking_scroll_hint()}
+		</p>
+	{/if}
+	<!-- Scrollbare Region per Tastatur erreichbar (WCAG 2.1.1), Name per aria-label. -->
+	<div
+		bind:this={wrapperEl}
+		class="overflow-x-auto"
+		data-testid="ranking-table-wrapper"
+		role="region"
+		tabindex="0"
+		aria-label={m.uis_ranking_table_region_aria()}
+		aria-describedby={overflowing ? 'ranking-scroll-hint' : undefined}
+	>
 		<table class="w-full font-sans text-sm" data-testid="ranking-table">
+			<caption class="sr-only">{m.uis_h1_title()}</caption>
 			<thead>
 				<tr class="border-b border-rule text-left align-bottom">
 					<th class="py-2 pr-3 text-dense-label whitespace-nowrap text-ink-subtle" scope="col">
 						{m.uis_ranking_col_rank()}
 					</th>
-					<th class="py-2 pr-3 align-bottom whitespace-nowrap" scope="col">
+					<th
+						class="py-2 pr-3 align-bottom whitespace-nowrap"
+						scope="col"
+						aria-sort={ariaSort('name')}
+					>
 						<button
 							type="button"
 							data-testid="ranking-sort-name"
 							class={headerButtonClass(sortKey === 'name')}
-							aria-pressed={sortKey === 'name'}
 							onclick={() => toggleSort('name')}
 						>
 							{nameColumnLabel}
@@ -296,12 +342,15 @@
 						</button>
 					</th>
 					{#if view === 'kieze'}
-						<th class="py-2 pr-3 align-bottom whitespace-nowrap" scope="col">
+						<th
+							class="py-2 pr-3 align-bottom whitespace-nowrap"
+							scope="col"
+							aria-sort={ariaSort('bezirk')}
+						>
 							<button
 								type="button"
 								data-testid="ranking-sort-bezirk"
 								class={headerButtonClass(sortKey === 'bezirk')}
-								aria-pressed={sortKey === 'bezirk'}
 								onclick={() => toggleSort('bezirk')}
 							>
 								Bezirk
@@ -312,12 +361,15 @@
 						</th>
 					{/if}
 					{#each NUMERIC_SORT_KEYS as key (key)}
-						<th class="score-col-th" scope="col">
+						<th
+							class={['score-col-th', key === 'kultur' && 'context-start']}
+							scope="col"
+							aria-sort={ariaSort(key)}
+						>
 							<button
 								type="button"
 								data-testid={`ranking-sort-${key}`}
 								class={`${headerButtonClass(sortKey === key)} score-col-rot`}
-								aria-pressed={sortKey === key}
 								onclick={() => toggleSort(key)}
 							>
 								{columnLabel(key)}
@@ -339,7 +391,10 @@
 					<tr class="border-b border-rule align-top">
 						<td class="py-3 pr-3 text-xs text-ink-subtle tabular-nums">{index + 1}</td>
 						<th scope="row" class="py-3 pr-3 text-left font-semibold text-ink">
-							<a class="text-ink hover:text-accent hover:underline" href={detailHref(row)}>
+							<a
+								class="inline-flex min-h-(--target-min) items-center text-ink hover:text-accent hover:underline"
+								href={detailHref(row)}
+							>
 								{row.displayName}
 							</a>
 						</th>
@@ -378,7 +433,7 @@
 								>{formatScore(row.wohnschutz)}</span
 							></td
 						>
-						<td class={cellPadding}
+						<td class={[cellPadding, 'context-start']} data-testid="ranking-cell-kultur"
 							><span class={pillClassRel('kultur', row.kultur)}>{formatScore(row.kultur)}</span></td
 						>
 						<td class={cellPadding} data-testid="ranking-cell-kriminalitaet"
@@ -449,17 +504,41 @@
 		background-color: color-mix(in srgb, var(--scale-gut-5) 35%, var(--bg));
 	}
 
-	/* Story 14.9: Dimensions-Spalten-Header 45° gedreht — spart horizontalen Platz, weil die
-	 * Spalten dann nur so breit wie die Score-Pills sein müssen statt wie die Label-Texte. */
+	/* Story 14.9 + GH-94: Dimensions-Köpfe 45° gedreht. Das Label steht absolut im Kopf,
+	 * sonst bestimmt seine ungedrehte Breite die Spalte (transform ändert das Layout nicht).
+	 * Die Spalte ist so breit wie die Pille plus Abstand: 2.25rem + 0.75rem. */
 	.score-col-th {
+		position: relative;
+		width: 3rem;
+		min-width: 3rem;
 		height: 8.5rem;
 		vertical-align: bottom;
-		padding: 0 0 0.4rem 0;
+		padding: 0;
 		white-space: nowrap;
 	}
 	.score-col-rot {
-		display: inline-block;
+		position: absolute;
+		left: 0.6rem;
+		bottom: 0.25rem;
 		transform-origin: left bottom;
-		transform: translateX(0.7rem) rotate(-45deg);
+		transform: rotate(-45deg);
+	}
+	/* Das letzte gedrehte Label ragt nach rechts über die Spalte hinaus; der Platz gehört
+	 * zur Tabelle, damit der Scroll-Container ihn nicht abschneidet. */
+	.score-col-th:last-child {
+		/* Reicht für das längste Label „Recorded crime“ (EN) bei 45°. */
+		padding-right: 4.75rem;
+	}
+
+	/* GH-94: Kultur und Kriminalität fließen nicht in den Score. Eine Linie trennt sie in den
+	 * Datenzeilen ab; im hohen Kopfbereich reicht der Abstand, die Linie wäre dort zu lang. */
+	.context-start {
+		padding-left: 0.75rem;
+	}
+	td.context-start {
+		border-left: 1px solid var(--rule);
+	}
+	.context-start .score-col-rot {
+		left: 1.35rem;
 	}
 </style>

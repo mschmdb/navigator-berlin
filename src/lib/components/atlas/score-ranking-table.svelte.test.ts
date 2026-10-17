@@ -136,7 +136,15 @@ describe('ScoreRankingTable.svelte · GH-94 Layout und Semantik', () => {
 		expect(heads.length).toBe(8);
 		for (const th of heads) {
 			// Ohne Fix diktiert das ungedrehte Label („Wohnschutz“, „Grün & Hitze“) die Breite.
-			expect(th.getBoundingClientRect().width).toBeLessThanOrEqual(56);
+			// Gemessen wird die Inhaltsbreite; Trennlinie und Randabstände sind gewollt.
+			const style = getComputedStyle(th);
+			const content =
+				th.getBoundingClientRect().width -
+				parseFloat(style.paddingLeft) -
+				parseFloat(style.paddingRight) -
+				parseFloat(style.borderLeftWidth) -
+				parseFloat(style.borderRightWidth);
+			expect(content).toBeLessThanOrEqual(56);
 		}
 	});
 
