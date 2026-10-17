@@ -9,6 +9,10 @@ import {
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { buildWahlFallbackList } from '$lib/data/wahl-slug.js';
 import {
+	buildFeaturedScore,
+	type HomeFeaturedScore
+} from '$lib/components/home/internal/featured-score.js';
+import {
 	mapHomeUpdateEntry,
 	type HomeUpdateTeaser
 } from '$lib/content/updates/map-home-update-entry.js';
@@ -42,19 +46,7 @@ export interface HomeTopKiez {
 	readonly composite: number | null;
 }
 
-/** Voll-Score eines Featured-Kiez für den Live-Ring auf der Landing (Story Home-Modernize). */
-export interface HomeFeaturedScore {
-	readonly slug: string;
-	readonly displayName: string;
-	readonly composite: number | null;
-	readonly ruheLuft: number | null;
-	readonly gruenHitze: number | null;
-	readonly mobilitaet: number | null;
-	readonly versorgung: number | null;
-	readonly wohnschutz: number | null;
-	/** Deep-Link auf die Karte am Kiez-Centroid (address=lng,lat&q=name); Fallback /explore. */
-	readonly exploreHref: string;
-}
+export type { HomeFeaturedScore } from '$lib/components/home/internal/featured-score.js';
 
 export interface HomePageData {
 	readonly topKieze: readonly HomeTopKiez[];
@@ -69,10 +61,10 @@ export interface HomePageData {
 }
 
 /**
- * Featured-Kiez: höchster Composite wählt WELCHER Kiez gezeigt wird; der angezeigte Score wird
- * dann EXAKT so berechnet wie der explore-Inspector beim Deep-Link (getKiezScore am Centroid +
- * Mobility-Override), damit Home-Ring und Karten-Inspector denselben Wert zeigen (kein
- * Aggregat-vs-Punkt-Mismatch). Coords auf 5 Dezimalen gerundet = identische Inputs wie die URL.
+ * Featured-Kiez: der Kiez mit dem höchsten Composite. #102: Ring und Legende zeigen die
+ * Werte aus `kiez_score`, also exakt die Zahlen der Rangliste und der Kiez-Seite. Der Link
+ * öffnet die Karte am Kiez-Mittelpunkt; der Inspector zeigt dort den Punkt-Score der
+ * Adresse, der vom Kiez-Wert abweichen darf (gewollt, Punkt statt Fläche).
  */
 async function loadFeatured(fetchFn: typeof fetch): Promise<HomeFeaturedScore | null> {
 	if (!process.env.DATABASE_URL) return null;
@@ -87,43 +79,9 @@ async function loadFeatured(fetchFn: typeof fetch): Promise<HomeFeaturedScore | 
 		if (!r || typeof r.composite !== 'number') return null;
 
 		const { getKiezProfile } = await import('$lib/data/get-kiez-profile.js');
-		const { getLocale } = await import('$lib/paraglide/runtime.js');
 		const profile = await getKiezProfile(getLocale(), r.slug, fetchFn);
 		const displayName = profile.name || fallbackNameFromSlug(r.slug);
-		// Auf 5 Dezimalen runden = exakt die Coords, die im /explore?address=lng,lat landen.
-		const lng = Number(profile.centroid[0].toFixed(5));
-		const lat = Number(profile.centroid[1].toFixed(5));
-
-		const { getOepnvStopIndex } = await import('$lib/data/get-oepnv-stop-index.js');
-		const { findAllNearestStops } =
-			await import('$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js');
-		const { getKiezScore } = await import('$lib/data/get-kiez-score.js');
-		const stopIndex = await getOepnvStopIndex(fetchFn);
-		const stops = findAllNearestStops({ lat, lng }, stopIndex, 1000);
-		const override = {
-			nearestStops: {
-				ubahn: stops.ubahn ? { distanceM: stops.ubahn.distanceM } : null,
-				sbahn: stops.sbahn ? { distanceM: stops.sbahn.distanceM } : null,
-				tram: stops.tram ? { distanceM: stops.tram.distanceM } : null,
-				bus: stops.bus ? { distanceM: stops.bus.distanceM } : null
-			}
-		};
-		const score = await getKiezScore(lat, lng, fetchFn, override);
-		if (!score) return null;
-		const dim = (d: string): number | null =>
-			score.dimensions.find((x) => x.dimension === d)?.value ?? null;
-
-		return {
-			slug: r.slug,
-			displayName,
-			composite: score.overall ?? null,
-			ruheLuft: dim('ruhe-luft'),
-			gruenHitze: dim('gruen-hitze'),
-			mobilitaet: dim('mobilitaet'),
-			versorgung: dim('versorgung'),
-			wohnschutz: dim('wohnschutz'),
-			exploreHref: `/explore?address=${lng.toFixed(5)},${lat.toFixed(5)}&q=${encodeURIComponent(displayName)}`
-		};
+		return buildFeaturedScore(r, displayName, [profile.centroid[0], profile.centroid[1]]);
 	} catch {
 		return null;
 	}
