@@ -108,7 +108,7 @@
 </script>
 
 <section
-	class="-mx-2 rounded border border-rule bg-bg-elevated px-2.5 py-2"
+	class="py-1"
 	aria-label={m.inspector_demografie_aria_label(undefined, localeOpts)}
 	data-testid="demografie-block"
 >

@@ -59,6 +59,33 @@ export function formatPercent(
 }
 
 /**
+ * GH-88: Wert, der schon in Prozent vorliegt (0..100), z. B. `66,7 %` (de) /
+ * `66.7%` (en). Höchstens eine Nachkommastelle, ganze Zahlen ohne `,0`.
+ */
+export function formatPercentValue(pct: number, opts?: LocaleFormatOptions): string {
+	const locale = resolveLocale(opts?.locale);
+	const numStr = formatDecimal(pct, { locale, maximumFractionDigits: 1 });
+	return locale === 'de' ? `${numStr} %` : `${numStr}%`;
+}
+
+/**
+ * GH-88: Zahl mit Einheit, getrennt durch ein Leerzeichen, z. B. `57,4 dB`,
+ * `60.000 €/m²`. Standard: höchstens eine Nachkommastelle.
+ */
+export function formatWithUnit(
+	value: number,
+	unit: string,
+	opts?: LocaleFormatOptions & { maximumFractionDigits?: number }
+): string {
+	const locale = resolveLocale(opts?.locale);
+	const numStr = formatDecimal(value, {
+		locale,
+		maximumFractionDigits: opts?.maximumFractionDigits ?? 1
+	});
+	return `${numStr} ${unit}`;
+}
+
+/**
  * Prozentpunkt-Differenz mit echtem Vorzeichen, z. B. `+10,2 Pp.` (de) /
  * `+10.2 pp` (en). `deltaPp` ist bereits in Prozentpunkten (nicht 0..1).
  *

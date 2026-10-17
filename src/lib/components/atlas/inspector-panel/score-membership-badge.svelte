@@ -1,10 +1,9 @@
 <!--
-	Story 14.11: Pro Inspector-Layer-Card ein Badge, das zeigt, ob der Layer in den Kiez-Score
-	einfließt (V1) und in welche Dimension. Score-Inputs sind klickbar und springen zur Dimension.
-	Kontext-Layer bekommen ein neutrales „Kontext"-Tag (+ ggf. einen klärenden Hinweis, V5).
+	Story 14.11 / GH-88: Zeigt unter dem Datensatz-Titel, in welche Kiez-Score-Dimension der Layer
+	einfließt. Die Zeile springt zur Dimension. Kontext-Layer bekommen kein Label: Dass sie nicht im
+	Score stehen, sagt schon die Gruppe „Zusätzlich, nicht im Score" im Score-Block (Regel 2).
 -->
 <script lang="ts">
-	import { ArrowUp } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import {
@@ -29,29 +28,19 @@
 	const note = $derived(contextNoteFor(slug, localeOpts));
 </script>
 
-<div class="mb-1 flex items-baseline gap-2" data-testid="score-membership-{slug}">
-	{#if dimension && label}
-		<button
-			type="button"
-			data-testid="score-membership-link-{slug}"
-			class="inline-flex min-h-(--target-min) items-center gap-1 rounded-sm bg-severity-success-soft-bg px-1.5 py-0.5 text-dense-meta text-severity-success-soft hover:underline"
-			onclick={() => onJump?.(dimension)}
-			title={m.inspector_score_membership_in_score_title({ label }, localeOpts)}
-		>
-			<ArrowUp size={11} aria-hidden="true" />
-			{m.inspector_score_membership_in_score_label({ label }, localeOpts)}
-		</button>
-	{:else}
-		<span
-			data-testid="score-membership-context-{slug}"
-			class="rounded-sm bg-bg px-1.5 py-0.5 text-dense-meta text-ink-subtle"
-		>
-			{m.inspector_score_membership_context_only(undefined, localeOpts)}
-		</span>
-	{/if}
-</div>
+{#if dimension && label}
+	<button
+		type="button"
+		data-testid="score-membership-link-{slug}"
+		class="inline-flex min-h-(--target-min) w-fit items-center text-left text-dense-label text-accent underline-offset-2 hover:underline"
+		onclick={() => onJump?.(dimension)}
+		title={m.inspector_score_membership_in_score_title({ label }, localeOpts)}
+	>
+		{m.inspector_score_membership_in_score_label({ label }, localeOpts)}
+	</button>
+{/if}
 {#if note}
-	<p class="mb-1 text-dense-meta leading-snug text-ink-muted" data-testid="context-note-{slug}">
+	<p class="text-dense-label leading-snug text-ink-muted" data-testid="context-note-{slug}">
 		{note}
 	</p>
 {/if}

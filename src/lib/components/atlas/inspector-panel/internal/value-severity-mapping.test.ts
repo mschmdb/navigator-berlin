@@ -38,7 +38,8 @@ describe('getValueSeverity()', () => {
 		});
 		it('Umweltatlas-Kategorie via kategorie-Feld', () => {
 			expect(getValueSeverity('laerm-2023', { kategorie: 'niedrig' })).toBe('success');
-			expect(getValueSeverity('laerm-2023', { kategorie: 'mittel' })).toBe('warning');
+			// GH-88: „mittel" ist überall neutral.
+			expect(getValueSeverity('laerm-2023', { kategorie: 'mittel' })).toBe('neutral');
 			expect(getValueSeverity('laerm-2023', { kategorie: 'hoch' })).toBe('danger');
 		});
 		it('NaN-String → neutral', () => {
@@ -51,9 +52,9 @@ describe('getValueSeverity()', () => {
 			expect(getValueSeverity('mietspiegel-wohnlage', 'einfach')).toBe('neutral');
 			expect(getValueSeverity('wohnlagen-2024', { wol_mode: 'einfach' })).toBe('neutral');
 		});
-		it('mittel → success-soft (User-Feedback Story 1.18: weniger Grau-Monotonie)', () => {
-			expect(getValueSeverity('mietspiegel-wohnlage', 'mittel')).toBe('success-soft');
-			expect(getValueSeverity('wohnlagen-2024', { wol_mode: 'mittel' })).toBe('success-soft');
+		it('mittel → neutral (GH-88: Stufenfarben einheitlich, löst Story 1.18 ab)', () => {
+			expect(getValueSeverity('mietspiegel-wohnlage', 'mittel')).toBe('neutral');
+			expect(getValueSeverity('wohnlagen-2024', { wol_mode: 'mittel' })).toBe('neutral');
 		});
 		it('gut → success-soft', () => {
 			expect(getValueSeverity('mietspiegel-wohnlage', 'gut')).toBe('success-soft');
@@ -73,8 +74,8 @@ describe('getValueSeverity()', () => {
 			expect(getValueSeverity('luft-2023', { kategorie: 'niedrig' })).toBe('success');
 			expect(getValueSeverity('bioklima-2023', { kategorie: 'niedrig' })).toBe('success');
 		});
-		it('mittel → warning', () => {
-			expect(getValueSeverity('luft-2023', { kategorie: 'mittel' })).toBe('warning');
+		it('mittel → neutral (GH-88)', () => {
+			expect(getValueSeverity('luft-2023', { kategorie: 'mittel' })).toBe('neutral');
 		});
 		it('hoch / sehr hoch → danger', () => {
 			expect(getValueSeverity('luft-2023', { kategorie: 'hoch' })).toBe('danger');
@@ -91,10 +92,8 @@ describe('getValueSeverity()', () => {
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr hoch' })).toBe('success');
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'sehr gut' })).toBe('success');
 		});
-		it('mittel → success-soft (User-Pattern Story 1.18: gegen Grau-Monotonie)', () => {
-			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'mittel' })).toBe(
-				'success-soft'
-			);
+		it('mittel → neutral (GH-88: Stufenfarben einheitlich)', () => {
+			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'mittel' })).toBe('neutral');
 		});
 		it('gering / schlecht (raw) / niedrig → warning', () => {
 			expect(getValueSeverity('gruenversorgung-2023', { kategorie: 'gering' })).toBe('warning');

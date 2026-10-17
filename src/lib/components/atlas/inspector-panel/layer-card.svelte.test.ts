@@ -38,6 +38,42 @@ describe('LayerCard', () => {
 		expect(card.textContent).toContain('meist mittel (66.7%)');
 	});
 
+	it('Kontext-Zeile mit Stufe: Punkt in Stufenfarbe, aria-hidden (GH-88)', async () => {
+		render(LayerCard, {
+			hit,
+			layerName: 'Lärmbelastung 2023',
+			contextRows: [
+				{ id: 'kiez', label: 'Parkviertel', text: 'meist hoch, 50 %', severity: 'danger' },
+				{ id: 'laerm-db', label: 'Lärm-Mittel (Kiez)', text: '56 dB (L_DEN)' }
+			]
+		});
+		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+		const dots = card.querySelectorAll('[data-testid="context-severity-dot"]');
+		expect(dots).toHaveLength(1);
+		const dot = dots[0] as HTMLElement;
+		expect(dot.getAttribute('aria-hidden')).toBe('true');
+		expect(dot.dataset.severity).toBe('danger');
+		expect(dot.className).toMatch(/bg-severity-danger(\s|$)/);
+	});
+
+	it('Titel, Stufen-Badge und Auge liegen auf einer Mittelachse (GH-88)', async () => {
+		// Komponententests laden kein Tailwind-CSS, darum Klassen statt Geometrie prüfen.
+		render(LayerCard, {
+			hit,
+			layerName: 'Lärmbelastung 2023',
+			contextRows: [],
+			onToggleLayer: () => {}
+		});
+		const toggle = (await page.getByTestId('map-toggle').element()) as HTMLElement;
+		const header = toggle.parentElement as HTMLElement;
+		expect(header.className).toMatch(/(^|\s)items-center(\s|$)/);
+		const chipWrap = ((await page.getByTestId('value-chip').element()) as HTMLElement)
+			.parentElement as HTMLElement;
+		expect(chipWrap.className).not.toMatch(/(^|\s)(pt|mt|-my|-mt)-/);
+		expect(toggle.className).not.toMatch(/(^|\s)-my-/);
+		expect(toggle.className).toMatch(/size-\(--target-min\)/);
+	});
+
 	it('ohne Kontext-Zeilen: nur Chip, keine dl', async () => {
 		render(LayerCard, { hit, layerName: 'Lärmbelastung 2023', contextRows: [] });
 		await expect.element(page.getByTestId('value-chip')).toBeInTheDocument();
@@ -75,62 +111,27 @@ describe('LayerCard', () => {
 		expect(card.querySelector('[data-testid="poi-value"]')).toBeNull();
 	});
 
-	it('Details-Collapsible togglet Quelle/Beschreibung', async () => {
-		render(LayerCard, {
-			hit,
-			layerName: 'Lärmbelastung 2023',
-			contextRows: [{ id: 'kiez', label: 'Parkviertel', text: 'meist mittel (66.7%)' }]
-		});
-		await expect.element(page.getByTestId('card-details')).not.toBeInTheDocument();
-		await page.getByTestId('card-details-toggle').click();
-		await expect.element(page.getByTestId('card-details')).toBeInTheDocument();
-	});
-
-	// i18n Block C1: `explainEntry.long` ist jetzt selbst locale-fähig
-	// (Messages) -- kein `lang="de"`-Override mehr auf EN.
-	it('explainEntry.long zeigt EN-Text ohne lang-Attribut bei lang="en"', async () => {
-		render(LayerCard, {
-			hit,
-			layerName: 'Noise pollution 2023',
-			contextRows: [],
-			lang: 'en'
-		});
-		await page.getByTestId('card-details-toggle').click();
-		const details = (await page.getByTestId('card-details').element()) as HTMLElement;
-		const explain = details.querySelector('p');
-		expect(explain?.textContent).toMatch(/Categorised overall noise pollution/);
-		expect(explain?.getAttribute('lang')).toBeNull();
-	});
-
-	it('explainEntry.long hat KEIN lang-Attribut auf DE', async () => {
-		render(LayerCard, { hit, layerName: 'Lärmbelastung 2023', contextRows: [] });
-		await page.getByTestId('card-details-toggle').click();
-		const details = (await page.getByTestId('card-details').element()) as HTMLElement;
-		const explain = details.querySelector('p');
-		expect(explain?.getAttribute('lang')).toBeNull();
-	});
-
 	// i18n Block B3a Task 3: DE hat KEINEN URL-Präfix (Boundary), vormals
 	// `/de/layer/...` (301-Umweg-Bug).
-	it('Learn-more-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
+	it('Titel-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
 		render(LayerCard, { hit, layerName: 'Lärmbelastung 2023', contextRows: [], lang: 'de' });
-		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('layer-card-title-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/layer/laerm-2023');
 	});
 
-	it('Learn-more-Link nutzt /en/-Präfix bei lang: "en"', async () => {
+	it('Titel-Link nutzt /en/-Präfix bei lang: "en"', async () => {
 		render(LayerCard, {
 			hit,
 			layerName: 'Noise pollution 2023',
 			contextRows: [],
 			lang: 'en'
 		});
-		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('layer-card-title-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/layer/laerm-2023');
 	});
 
 	// i18n Block B3b
-	it('lang="en": no-coverage-Text + Details-Toggle + Map-Toggle-Titel englisch', async () => {
+	it('lang="en": no-coverage-Text + Map-Toggle-Titel englisch', async () => {
 		const miss: LayerHit = {
 			layer: 'kitas-2024',
 			value: null,
@@ -148,9 +149,7 @@ describe('LayerCard', () => {
 		});
 		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
 		expect(card.textContent).toContain('No data available');
-		await expect
-			.element(page.getByTestId('card-details-toggle'))
-			.toHaveTextContent('Source & details');
+		await expect.element(page.getByTestId('card-details-toggle')).not.toBeInTheDocument();
 		const toggle = (await page.getByTestId('map-toggle').element()) as HTMLButtonElement;
 		expect(toggle.getAttribute('title')).toBe('Show on map');
 	});
@@ -158,7 +157,7 @@ describe('LayerCard', () => {
 	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
 		overwriteGetLocale(() => 'en');
 		render(LayerCard, { hit, layerName: 'Noise pollution 2023', contextRows: [] });
-		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('layer-card-title-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/layer/laerm-2023');
 	});
 });

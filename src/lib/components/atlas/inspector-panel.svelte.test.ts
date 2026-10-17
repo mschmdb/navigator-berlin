@@ -66,6 +66,41 @@ describe('inspector-panel.svelte', () => {
 		await expect.element(page.getByTestId('inspector-panel')).not.toBeInTheDocument();
 	});
 
+	// GH-88 AC3: Quellen, Stand und Lizenz einmal pro Sektion, im Inspector erreichbar.
+	it('GH-88: eine Quellenliste pro Sektion mit Stand, Lizenz und Quelle je Datensatz', async () => {
+		render(Harness, {
+			open: true,
+			address,
+			hits: [
+				hit('mietspiegel-wohnlage', 'gut'),
+				hit('bodenrichtwerte', 4500, { source: 'https://fbinter.stadt-berlin.de/brw' }),
+				hit('laerm-den', 60)
+			],
+			layerMeta: [...fullLayerMeta, meta('bodenrichtwerte', 'B: Wohn-Daten')]
+		});
+		const wohn = (await page.getByTestId('section-wohn').element()) as HTMLElement;
+		const toggles = wohn.querySelectorAll('[data-testid="section-sources-toggle"]');
+		expect(toggles.length).toBe(1);
+		expect(wohn.querySelector('[data-testid="card-details-toggle"]')).toBeNull();
+		(toggles[0] as HTMLButtonElement).click();
+		await vi.waitUntil(
+			() => wohn.querySelectorAll('[data-testid="section-sources-item"]').length === 2
+		);
+		const items = wohn.querySelectorAll('[data-testid="section-sources-item"]');
+		for (const item of items) {
+			expect(item.querySelector('[data-testid="data-stand-banner"]')).not.toBeNull();
+			expect(item.querySelector('[data-testid="section-sources-source-link"]')).not.toBeNull();
+		}
+		// Lizenz steht im Banner, legal-Hinweis bleibt für Mietspiegel und Bodenrichtwerte.
+		expect(items[0].textContent).toMatch(/dl-de/i);
+		const legal = wohn.querySelectorAll(
+			'[data-testid="editorial-disclaimer"][data-variant="legal"]'
+		);
+		expect(legal.length).toBe(2);
+		const umwelt = (await page.getByTestId('section-umwelt').element()) as HTMLElement;
+		expect(umwelt.querySelectorAll('[data-testid="section-sources-toggle"]').length).toBe(1);
+	});
+
 	it('rendert nicht wenn keine Adresse selektiert', async () => {
 		render(Harness, { open: true, address: null, hits: [] });
 		await expect.element(page.getByTestId('inspector-panel')).not.toBeInTheDocument();
@@ -275,7 +310,7 @@ describe('inspector-panel.svelte', () => {
 	});
 
 	describe('Story 1.18: Section-Header + Empty-Section-Toggle', () => {
-		it('Section-Header in Satzschreibung, Gewicht statt Versalien (GH-87; Story 1.31: border-t am Section-Wrapper)', async () => {
+		it('Section-Header in Satzschreibung, Gewicht statt Versalien (GH-87/88; Story 1.31: border-t am Section-Wrapper)', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -283,7 +318,7 @@ describe('inspector-panel.svelte', () => {
 				layerMeta: fullLayerMeta
 			});
 			const h = (await page.getByTestId('section-header-boundaries').element()) as HTMLElement;
-			expect(h.className).toMatch(/text-xs/);
+			expect(h.className).toMatch(/text-sm/);
 			expect(h.className).not.toMatch(/uppercase/);
 			expect(h.className).toMatch(/font-semibold/);
 			const sec = (await page.getByTestId('section-boundaries').element()) as HTMLElement;
@@ -499,7 +534,7 @@ describe('inspector-panel.svelte', () => {
 		const laermMeta = meta('laerm-2023', 'C: Umwelt');
 		const plzMeta = meta('plz', 'A: Boundaries');
 
-		it('Berlin-Kontextzeile bleibt DE roh mit Punkt-Dezimaltrennzeichen ("39.5%"), kein Komma', async () => {
+		it('Berlin-Kontextzeile DE mit Komma und Leerzeichen ("39,5 %", GH-88)', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -507,15 +542,15 @@ describe('inspector-panel.svelte', () => {
 				layerMeta: [...fullLayerMeta, bioklimaMeta]
 			});
 			await vi.waitUntil(
-				() => page.getByTestId('layer-card').query()?.textContent?.includes('39.5%') ?? false,
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('39,5 %') ?? false,
 				{ timeout: 5000, interval: 50 }
 			);
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
-			expect(card.textContent).toContain('meist mittel (39.5%)');
-			expect(card.textContent).not.toContain('39,5');
+			expect(card.textContent).toContain('meist mittel, 39,5 %');
+			expect(card.textContent).not.toContain('39.5');
 		});
 
-		it('Berlin-Kontextzeile EN übersetzt "meist" → "mostly", Zahl bleibt "39.5%"', async () => {
+		it('Berlin-Kontextzeile EN übersetzt "meist" → "mostly", Zahl "39.5%"', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -528,10 +563,10 @@ describe('inspector-panel.svelte', () => {
 				{ timeout: 5000, interval: 50 }
 			);
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
-			expect(card.textContent).toContain('mostly mittel (39.5%)');
+			expect(card.textContent).toContain('mostly mittel, 39.5%');
 		});
 
-		it('Lärm-dB-Kontextzeile (Kiez-Mittel) DE: "Lärm-Mittel (Kiez)" · "49.8 dB (L_DEN)"', async () => {
+		it('Lärm-dB-Kontextzeile (Kiez-Mittel) DE: "Lärm-Mittel (Kiez)", "49,8 dB (L_DEN)"', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -540,12 +575,12 @@ describe('inspector-panel.svelte', () => {
 				kiezLaermDb: 49.8
 			});
 			await vi.waitUntil(
-				() => page.getByTestId('layer-card').query()?.textContent?.includes('49.8 dB') ?? false,
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('49,8 dB') ?? false,
 				{ timeout: 5000, interval: 50 }
 			);
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
 			expect(card.textContent).toContain('Lärm-Mittel (Kiez)');
-			expect(card.textContent).toContain('49.8 dB (L_DEN)');
+			expect(card.textContent).toContain('49,8 dB (L_DEN)');
 		});
 
 		it('Lärm-dB-Kontextzeile EN: "Noise mean (Kiez)" · "49.8 dB (L_DEN)"', async () => {

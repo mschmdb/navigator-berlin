@@ -18,44 +18,6 @@ const recentHit: LayerHit = {
 };
 
 describe('layer-hit-row.svelte', () => {
-	it('rendert external-link für wohnlagen-2024 (Mietspiegel-Rechner)', async () => {
-		render(LayerHitRow, {
-			hit: {
-				layer: 'wohnlagen-2024',
-				value: { wol_mode: 'mittel', plr_name: 'Karlshorst', count_mittel: 12 },
-				source: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
-				updatedAt: '2024-06-10T00:00:00Z',
-				license: 'dl-de/by-2-0'
-			},
-			layerName: 'Mietspiegel-Wohnlage 2024'
-		});
-		const link = (await page.getByTestId('external-link').element()) as HTMLAnchorElement;
-		expect(link.href).toBe('https://mietspiegel.berlin.de/');
-		expect(link.getAttribute('target')).toBe('_blank');
-		expect(link.getAttribute('rel')).toMatch(/noopener/);
-		expect(link.textContent).toMatch(/Mietspiegel-Rechner/);
-	});
-
-	it('rendert keinen external-link für Layer ohne LAYER_EXTERNAL_LINK-Eintrag', async () => {
-		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
-		await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
-	});
-
-	it('versteckt external-link bei no-coverage', async () => {
-		render(LayerHitRow, {
-			hit: {
-				layer: 'wohnlagen-2024',
-				value: null,
-				reason: 'no-coverage',
-				source: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
-				updatedAt: '2024-06-10T00:00:00Z',
-				license: 'dl-de/by-2-0'
-			},
-			layerName: 'Mietspiegel-Wohnlage 2024'
-		});
-		await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
-	});
-
 	it('rendert with-value State default', async () => {
 		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
 		const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
@@ -89,14 +51,13 @@ describe('layer-hit-row.svelte', () => {
 		await expect.element(page.getByTestId('value-seasonal')).toBeInTheDocument();
 	});
 
-	it('Outdated (>5 Jahre) → data-state="outdated" + banner-outdated-Pille', async () => {
+	it('Outdated (>5 Jahre) → data-state="outdated" (Pille in den Sektions-Quellen, GH-88)', async () => {
 		render(LayerHitRow, {
 			hit: { ...recentHit, updatedAt: '2019-01-01T00:00:00Z' },
 			layerName: 'Mietspiegel-Wohnlage'
 		});
 		const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
 		expect(row.getAttribute('data-state')).toBe('outdated');
-		await expect.element(page.getByTestId('banner-outdated')).toBeInTheDocument();
 	});
 
 	it('Numeric Wert nutzt Mono + tabular-nums im ValueChip', async () => {
@@ -110,27 +71,13 @@ describe('layer-hit-row.svelte', () => {
 		expect(val.textContent?.trim()).toMatch(/65\s*dB/);
 	});
 
-	it('Kategorischer Wert: ValueChip mit Semibold (kein tabular-nums)', async () => {
+	it('Kategorischer Wert: kompakter ValueChip (kein tabular-nums)', async () => {
 		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
 		const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
-		expect(chip.className).toMatch(/font-semibold/);
+		expect(chip.className).toMatch(/font-medium/);
 		const val = (await page.getByTestId('value-chip-value').element()) as HTMLElement;
 		expect(val.className).not.toMatch(/font-mono/);
 		expect(val.className).not.toMatch(/tabular-nums/);
-	});
-
-	it('rendert Layer-Explain-Text aus LAYER_EXPLAIN_DE', async () => {
-		render(LayerHitRow, {
-			hit: { ...recentHit, layer: 'ortsteile' },
-			layerName: 'Ortsteil'
-		});
-		const explain = (await page.getByTestId('explain').element()) as HTMLElement;
-		expect(explain.textContent).toMatch(/Statistischer Ortsteil/);
-	});
-
-	it('DataStandBanner ist eingebettet', async () => {
-		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
-		await expect.element(page.getByTestId('data-stand-banner')).toBeInTheDocument();
 	});
 
 	it('Inspector-Row enthält KEINEN Mailto-Link (Footer-Page deferred)', async () => {
@@ -139,42 +86,30 @@ describe('layer-hit-row.svelte', () => {
 		await expect.element(page.getByTestId('report-error')).not.toBeInTheDocument();
 	});
 
-	it('Learn-more-Link nutzt lang-Prefix', async () => {
+	it('Titel-Link nutzt lang-Prefix', async () => {
 		render(LayerHitRow, {
 			hit: recentHit,
 			layerName: 'Mietspiegel-Wohnlage',
 			lang: 'en'
 		});
-		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('layer-name').element()).querySelector(
+			'a'
+		) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/layer/mietspiegel-wohnlage');
 	});
 
 	// i18n Block B3a Task 3: DE hat KEINEN URL-Präfix (Boundary), vormals
 	// `/de/layer/...` (301-Umweg-Bug).
-	it('Learn-more-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
+	it('Titel-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
 		render(LayerHitRow, {
 			hit: recentHit,
 			layerName: 'Mietspiegel-Wohnlage',
 			lang: 'de'
 		});
-		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('layer-name').element()).querySelector(
+			'a'
+		) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/layer/mietspiegel-wohnlage');
-	});
-
-	it('Editorial: legal-Disclaimer für mietspiegel-wohnlage sichtbar', async () => {
-		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
-		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-		expect(d.getAttribute('data-variant')).toBe('legal');
-		expect(d.textContent).toMatch(/rechtliche Aussage/);
-	});
-
-	it('Editorial: bodenrichtwerte-Layer zeigt legal-Disclaimer', async () => {
-		render(LayerHitRow, {
-			hit: { ...recentHit, layer: 'bodenrichtwerte', value: 4500 },
-			layerName: 'Bodenrichtwerte'
-		});
-		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-		expect(d.getAttribute('data-variant')).toBe('legal');
 	});
 
 	it('Editorial: trinkbrunnen INSEASON zeigt aktiv-Pille, KEINEN seasonal-Disclaimer', async () => {
@@ -186,32 +121,8 @@ describe('layer-hit-row.svelte', () => {
 		await expect.element(page.getByTestId('editorial-disclaimer')).not.toBeInTheDocument();
 	});
 
-	it('Editorial: trinkbrunnen OUTOFSEASON zeigt warning-Pille + seasonal-Disclaimer', async () => {
-		render(LayerHitRow, {
-			hit: { ...recentHit, layer: 'trinkbrunnen', value: null, reason: 'seasonal' },
-			layerName: 'Trinkbrunnen'
-		});
-		await expect.element(page.getByTestId('seasonal-pill-outofseason')).toBeInTheDocument();
-		const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-		expect(d.getAttribute('data-variant')).toBe('seasonal');
-	});
-
-	it('Editorial: Layer ohne Config zeigt KEINEN Disclaimer', async () => {
-		render(LayerHitRow, {
-			hit: { ...recentHit, layer: 'gebaeudealter', value: 'vor 1949' },
-			layerName: 'Gebäudealter'
-		});
-		await expect.element(page.getByTestId('editorial-disclaimer')).not.toBeInTheDocument();
-	});
-
-	it('Editorial: Disclaimer rendert Source-Link wenn primarySourceUrl in Config', async () => {
-		render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
-		const link = (await page.getByTestId('disclaimer-source-link').element()) as HTMLAnchorElement;
-		expect(link.href).toMatch(/^https:\/\//);
-	});
-
 	// Story 1.16: Mehr-Toggle + Action-Icons
-	describe('Story 1.16 Mehr-Toggle + Action-Icons', () => {
+	describe('Story 1.16 Action-Icons', () => {
 		const wohnlagenHit: LayerHit = {
 			layer: 'wohnlagen-2024',
 			value: { wol_mode: 'gut', plr_name: 'Mitte' },
@@ -219,42 +130,6 @@ describe('layer-hit-row.svelte', () => {
 			updatedAt: '2024-06-10T00:00:00Z',
 			license: 'dl-de/by-2-0'
 		};
-
-		it('Mehr-Toggle existiert bei Layer mit long-Text (wohnlagen-2024)', async () => {
-			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
-			await expect.element(page.getByTestId('explain-more')).toBeInTheDocument();
-		});
-
-		it('Long-Text initial nicht sichtbar (Default kollabiert)', async () => {
-			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
-			await expect.element(page.getByTestId('explain-long')).not.toBeInTheDocument();
-		});
-
-		it('Click Mehr expandiert long-Text + valueScale', async () => {
-			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
-			await page.getByTestId('explain-more').click();
-			const long = (await page.getByTestId('explain-long').element()) as HTMLElement;
-			expect(long.textContent).toMatch(/Wohnlagen-Einstufung/);
-			const scale = (await page.getByTestId('explain-scale').element()) as HTMLElement;
-			expect(scale.textContent).toMatch(/einfach.*bestlage/);
-		});
-
-		it('Click Weniger (zweiter Click) kollabiert wieder', async () => {
-			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
-			const btn = page.getByTestId('explain-more');
-			await btn.click();
-			await btn.click();
-			await expect.element(page.getByTestId('explain-long')).not.toBeInTheDocument();
-		});
-
-		it('aria-expanded reflektiert Toggle-State', async () => {
-			render(LayerHitRow, { hit: wohnlagenHit, layerName: 'Mietspiegel-Wohnlage 2024' });
-			const btn0 = (await page.getByTestId('explain-more').element()) as HTMLElement;
-			expect(btn0.getAttribute('aria-expanded')).toBe('false');
-			await page.getByTestId('explain-more').click();
-			const btn1 = (await page.getByTestId('explain-more').element()) as HTMLElement;
-			expect(btn1.getAttribute('aria-expanded')).toBe('true');
-		});
 
 		it('Eye-Icon (off-state) wenn isActive=false und onToggleLayer gesetzt', async () => {
 			let called = '';
@@ -292,22 +167,14 @@ describe('layer-hit-row.svelte', () => {
 			await expect.element(page.getByTestId('map-toggle')).not.toBeInTheDocument();
 		});
 
-		it('Map-Toggle Touch-Target ≥ 32px', async () => {
+		it('Map-Toggle Touch-Target über --target-min (24 px)', async () => {
 			render(LayerHitRow, {
 				hit: wohnlagenHit,
 				layerName: 'Mietspiegel-Wohnlage 2024',
 				onToggleLayer: () => {}
 			});
 			const btn = (await page.getByTestId('map-toggle').element()) as HTMLElement;
-			// h-8 w-8 = 2rem = 32px in default Tailwind
-			expect(btn.className).toMatch(/h-8/);
-			expect(btn.className).toMatch(/w-8/);
-		});
-
-		it('Learn-more aria-label aktualisiert auf "Mehr Details" (AC-7)', async () => {
-			render(LayerHitRow, { hit: recentHit, layerName: 'Mietspiegel-Wohnlage' });
-			const link = (await page.getByTestId('learn-more').element()) as HTMLElement;
-			expect(link.getAttribute('aria-label')).toMatch(/Mehr Details/);
+			expect(btn.className).toMatch(/size-\(--target-min\)/);
 		});
 	});
 
@@ -320,10 +187,10 @@ describe('layer-hit-row.svelte', () => {
 			license: 'dl-de/by-2-0'
 		};
 
-		it('Severity-Chip rendert für kategorischen Wert', async () => {
+		it('Severity-Chip rendert für kategorischen Wert (mittel = neutral, GH-88)', async () => {
 			render(LayerHitRow, { hit: laermKatHit, layerName: 'Lärmbelastung 2023' });
 			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
-			expect(chip.getAttribute('data-severity')).toBe('warning');
+			expect(chip.getAttribute('data-severity')).toBe('neutral');
 			expect(chip.textContent).toMatch(/mittel/);
 		});
 
@@ -400,12 +267,6 @@ describe('layer-hit-row.svelte', () => {
 			const row = (await page.getByTestId('layer-hit-row').element()) as HTMLElement;
 			expect(row.getAttribute('aria-label')).toMatch(/Lärmbelastung 2023.*mittel/);
 		});
-
-		it('DataStandBanner ist im Row vorhanden (Dichte-Skala)', async () => {
-			render(LayerHitRow, { hit: laermKatHit, layerName: 'Lärmbelastung 2023' });
-			const banner = (await page.getByTestId('data-stand-banner').element()) as HTMLElement;
-			expect(banner.className).toMatch(/text-dense-meta/);
-		});
 	});
 
 	// Story 1.23: Reason aufdröseln (Geltungsbereich / nicht-anwendbar / Lücke)
@@ -449,36 +310,6 @@ describe('layer-hit-row.svelte', () => {
 			});
 			const val = (await page.getByTestId('value-no-coverage').element()) as HTMLElement;
 			expect(val.textContent).toMatch(/Daten nicht vorhanden/);
-		});
-
-		it('external-link bei coverage-out-of-scope ausgeblendet', async () => {
-			render(LayerHitRow, {
-				hit: {
-					layer: 'wohnlagen-2024',
-					value: null,
-					reason: 'coverage-out-of-scope',
-					source: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
-					updatedAt: '2024-06-10T00:00:00Z',
-					license: 'dl-de/by-2-0'
-				},
-				layerName: 'Mietspiegel-Wohnlage 2024'
-			});
-			await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
-		});
-
-		it('external-link bei out-of-concept ausgeblendet', async () => {
-			render(LayerHitRow, {
-				hit: {
-					layer: 'wohnlagen-2024',
-					value: null,
-					reason: 'out-of-concept',
-					source: 'https://gdi.berlin.de/services/wfs/wohnlagenadr2024',
-					updatedAt: '2024-06-10T00:00:00Z',
-					license: 'dl-de/by-2-0'
-				},
-				layerName: 'Mietspiegel-Wohnlage 2024'
-			});
-			await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
 		});
 
 		it('aria-label kombiniert Layer-Name + Reason-Wording (coverage-out-of-scope)', async () => {
@@ -536,7 +367,7 @@ describe('layer-hit-row.svelte', () => {
 			expect(chip.textContent).not.toMatch(/schlecht/);
 		});
 
-		it('Grünversorgung "mittel" → ValueChip "mittel" mit success-soft-Severity', async () => {
+		it('Grünversorgung "mittel" → ValueChip "mittel" mit neutral-Severity (GH-88)', async () => {
 			render(LayerHitRow, {
 				hit: {
 					layer: 'gruenversorgung-2023',
@@ -548,7 +379,7 @@ describe('layer-hit-row.svelte', () => {
 				layerName: 'Grünversorgung 2023'
 			});
 			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
-			expect(chip.getAttribute('data-severity')).toBe('success-soft');
+			expect(chip.getAttribute('data-severity')).toBe('neutral');
 			expect(chip.textContent).toMatch(/mittel/);
 		});
 	});
@@ -566,7 +397,7 @@ describe('layer-hit-row.svelte', () => {
 				.toHaveTextContent('No data available');
 		});
 
-		it('Learn-more-Link zeigt /en/layer/... und Map-Toggle-Label englisch', async () => {
+		it('Titel-Link zeigt /en/layer/... und Map-Toggle-Label englisch', async () => {
 			let toggled: string | null = null;
 			render(LayerHitRow, {
 				hit: recentHit,
@@ -574,7 +405,9 @@ describe('layer-hit-row.svelte', () => {
 				lang: 'en',
 				onToggleLayer: (slug: string) => (toggled = slug)
 			});
-			const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+			const link = (await page.getByTestId('layer-name').element()).querySelector(
+				'a'
+			) as HTMLAnchorElement;
 			expect(link.getAttribute('href')).toBe('/en/layer/mietspiegel-wohnlage');
 			const toggle = (await page.getByTestId('map-toggle').element()) as HTMLButtonElement;
 			expect(toggle.getAttribute('aria-label')).toBe('Show Test-Layer on map');
@@ -585,7 +418,9 @@ describe('layer-hit-row.svelte', () => {
 		it('rendert englisch über den Default-Pfad (getLocale())', async () => {
 			overwriteGetLocale(() => 'en');
 			render(LayerHitRow, { hit: recentHit, layerName: 'Test-Layer' });
-			const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+			const link = (await page.getByTestId('layer-name').element()).querySelector(
+				'a'
+			) as HTMLAnchorElement;
 			expect(link.getAttribute('href')).toBe('/en/layer/mietspiegel-wohnlage');
 		});
 
@@ -607,56 +442,6 @@ describe('layer-hit-row.svelte', () => {
 			await expect.element(page.getByTestId('mauer-footer')).toHaveTextContent('As of');
 		});
 
-		// i18n Block C1: `explain`/`explainEntry.long`/`.valueScaleExplain` sind
-		// jetzt selbst locale-fähig (Messages) -- kein `lang="de"`-Override mehr
-		// auf EN.
-		it('explain + explain-long/-scale zeigen EN-Text ohne lang-Attribut auf lang="en"', async () => {
-			render(LayerHitRow, {
-				hit: {
-					...recentHit,
-					layer: 'wohnlagen-2024',
-					value: { wol_mode: 'gut', plr_name: 'Mitte' }
-				},
-				layerName: 'Test-Layer',
-				lang: 'en'
-			});
-			const explain = (await page.getByTestId('explain').element()) as HTMLElement;
-			expect(explain.textContent).toMatch(/Residential area rating/);
-			expect(explain.getAttribute('lang')).toBeNull();
-			await page.getByTestId('explain-more').click();
-			const long = (await page.getByTestId('explain-long').element()) as HTMLElement;
-			expect(long.textContent).toMatch(/Aggregated residential area classification/);
-			expect(long.getAttribute('lang')).toBeNull();
-			const scale = (await page.getByTestId('explain-scale').element()) as HTMLElement;
-			expect(scale.textContent).toMatch(/prime location/);
-			expect(scale.getAttribute('lang')).toBeNull();
-		});
-
-		it('explain hat KEIN lang-Attribut auf DE (Default)', async () => {
-			render(LayerHitRow, {
-				hit: { ...recentHit, layer: 'ortsteile' },
-				layerName: 'Ortsteil'
-			});
-			const explain = (await page.getByTestId('explain').element()) as HTMLElement;
-			expect(explain.getAttribute('lang')).toBeNull();
-		});
-
-		it('explain-long + explain-scale haben KEIN lang-Attribut auf DE (Default)', async () => {
-			render(LayerHitRow, {
-				hit: {
-					...recentHit,
-					layer: 'wohnlagen-2024',
-					value: { wol_mode: 'gut', plr_name: 'Mitte' }
-				},
-				layerName: 'Mietspiegel-Wohnlage 2024'
-			});
-			await page.getByTestId('explain-more').click();
-			const long = (await page.getByTestId('explain-long').element()) as HTMLElement;
-			expect(long.getAttribute('lang')).toBeNull();
-			const scale = (await page.getByTestId('explain-scale').element()) as HTMLElement;
-			expect(scale.getAttribute('lang')).toBeNull();
-		});
-
 		it('ValueChip Severity-Beschreibung englisch (aria-label)', async () => {
 			render(LayerHitRow, {
 				hit: {
@@ -670,7 +455,8 @@ describe('layer-hit-row.svelte', () => {
 				lang: 'en'
 			});
 			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
-			expect(chip.getAttribute('aria-label')).toMatch(/slightly favourable exposure/);
+			// GH-88: „mittel" ist neutral.
+			expect(chip.getAttribute('aria-label')).toMatch(/neutral rating/);
 		});
 	});
 });

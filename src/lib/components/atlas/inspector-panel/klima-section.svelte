@@ -65,10 +65,7 @@
 		{m.inspector_klima_section_empty(undefined, localeOpts)}
 	</p>
 {:else}
-	<section
-		class="-mx-2 space-y-3 rounded border border-rule bg-bg-elevated px-2.5 py-2"
-		data-testid="klima-section"
-	>
+	<section class="space-y-3 py-1" data-testid="klima-section">
 		<div class="flex items-start justify-between gap-2">
 			<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">
 				{m.inspector_klima_section_heading(undefined, localeOpts)}

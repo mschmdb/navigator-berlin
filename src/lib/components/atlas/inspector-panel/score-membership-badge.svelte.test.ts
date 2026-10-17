@@ -8,7 +8,7 @@ afterEach(() => {
 });
 
 describe('ScoreMembershipBadge', () => {
-	it('Score-Input: zeigt klickbaren „Im Score · {Dimension}"-Link', async () => {
+	it('Score-Input: zeigt klickbaren „Im Kiez-Score: {Dimension}"-Link', async () => {
 		const onJump = vi.fn();
 		render(ScoreMembershipBadge, { slug: 'luft-2023', onJump });
 		const link = document.querySelector('[data-testid="score-membership-link-luft-2023"]');
@@ -18,11 +18,11 @@ describe('ScoreMembershipBadge', () => {
 		expect(onJump).toHaveBeenCalledWith('ruhe-luft');
 	});
 
-	it('Kontext-Layer: zeigt „Kontext · nicht im Score", kein Link', async () => {
+	it('Kontext-Layer: kein Label, kein Link (GH-88: die Gruppe sagt es)', async () => {
 		render(ScoreMembershipBadge, { slug: 'umweltgerechtigkeit-2023' });
 		expect(
 			document.querySelector('[data-testid="score-membership-context-umweltgerechtigkeit-2023"]')
-		).not.toBeNull();
+		).toBeNull();
 		expect(
 			document.querySelector('[data-testid="score-membership-link-umweltgerechtigkeit-2023"]')
 		).toBeNull();
@@ -35,15 +35,10 @@ describe('ScoreMembershipBadge', () => {
 	});
 
 	// i18n Block B3b
-	it('lang="en": Score-Input-Link + Kontext-Tag + Kontext-Note englisch', async () => {
+	it('lang="en": Score-Input-Link + Kontext-Note englisch', async () => {
 		render(ScoreMembershipBadge, { slug: 'luft-2023', lang: 'en' });
 		const link = document.querySelector('[data-testid="score-membership-link-luft-2023"]');
-		expect(link?.textContent).toMatch(/Quiet & air/);
-		render(ScoreMembershipBadge, { slug: 'umweltgerechtigkeit-2023', lang: 'en' });
-		const context = document.querySelectorAll(
-			'[data-testid="score-membership-context-umweltgerechtigkeit-2023"]'
-		);
-		expect(context[context.length - 1]?.textContent).toMatch(/Context/);
+		expect(link?.textContent).toMatch(/In the Kiez score: Quiet & air/);
 		render(ScoreMembershipBadge, { slug: 'laerm-2023', lang: 'en' });
 		const notes = document.querySelectorAll('[data-testid="context-note-laerm-2023"]');
 		expect(notes[notes.length - 1]?.textContent).toMatch(/noise dB average/);

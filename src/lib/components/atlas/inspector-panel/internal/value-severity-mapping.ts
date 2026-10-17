@@ -76,7 +76,8 @@ function severityFromLaermDb(raw: unknown): SeverityLevel {
 function severityFromUmweltatlasKategorie(kategorie: string): SeverityLevel {
 	const v = kategorie.toLowerCase().trim();
 	if (v === 'niedrig' || v === 'gering' || v === 'gut' || v === 'sehr niedrig') return 'success';
-	if (v === 'mittel' || v === 'mittlere belastung') return 'warning';
+	// GH-88: „mittel" ist überall neutral (gut grün, mittel neutral, schlecht orange/rot).
+	if (v === 'mittel' || v === 'mittlere belastung') return 'neutral';
 	if (v === 'hoch' || v === 'sehr hoch' || v === 'schlecht' || v === 'kritisch') return 'danger';
 	return 'neutral';
 }
@@ -89,7 +90,7 @@ function severityFromGruenversorgung(value: unknown): SeverityLevel {
 	if (!kat) return 'neutral';
 	const v = mapGruenversorgungKategorie(kat).toLowerCase().trim();
 	if (v === 'hoch' || v === 'sehr hoch') return 'success';
-	if (v === 'mittel') return 'success-soft';
+	if (v === 'mittel') return 'neutral';
 	if (v === 'gering' || v === 'sehr gering') return 'warning';
 	return 'neutral';
 }
@@ -100,7 +101,7 @@ function severityFromWohnlage(value: unknown): SeverityLevel {
 	const v = mode.toLowerCase().trim();
 	if (v === 'sehr gut' || v === 'bestlage') return 'success';
 	if (v === 'gut') return 'success-soft';
-	if (v === 'mittel') return 'success-soft';
+	if (v === 'mittel') return 'neutral';
 	if (v === 'einfach') return 'neutral';
 	return 'neutral';
 }
@@ -109,9 +110,10 @@ function severityFromUmweltgerechtigkeit(value: unknown): SeverityLevel {
 	const kat = pickKategorie(value);
 	if (!kat) return 'neutral';
 	const v = kat.toLowerCase().trim();
-	if (v === 'keine' || v === 'keine belastung' || v === 'gering') return 'success';
+	// Aggregate nennen die unbelastete Klasse „keine starke Belastung“, Stufen reichen bis fünffach.
+	if (v === 'gering' || v.startsWith('keine')) return 'success';
 	if (v === 'einfach' || v === 'einfache belastung') return 'warning';
-	if (v === 'zweifach' || v === 'dreifach' || v.includes('mehrfach')) return 'danger';
+	if (/^(zwei|drei|vier|fünf)fach/.test(v) || v.includes('mehrfach')) return 'danger';
 	return 'neutral';
 }
 
@@ -132,6 +134,23 @@ function hasNonEmptyValue(value: unknown): boolean {
 	if (value === null || value === undefined) return false;
 	if (typeof value === 'object' && Object.keys(value as object).length === 0) return false;
 	return true;
+}
+
+const RATED_LAYERS = new Set([
+	...NUMERIC_THRESHOLD_LAYERS,
+	...UMWELTATLAS_KATEGORIE_LAYERS,
+	'gruenversorgung-2023',
+	'mietspiegel-wohnlage',
+	'wohnlagen-2024',
+	'umweltgerechtigkeit-2023'
+]);
+
+/**
+ * GH-88: Hat der Layer eine Stufenskala (gut, mittel, belastet)? Nur dann tragen die
+ * Umfeld-Zeilen einen Stufenpunkt. MSS und Fakten-Layer bleiben ohne Farbe.
+ */
+export function hasRatedCategories(slug: string): boolean {
+	return RATED_LAYERS.has(slug);
 }
 
 export function getValueSeverity(slug: string, value: unknown): SeverityLevel {
