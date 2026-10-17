@@ -36,7 +36,7 @@ function place(over: Partial<PlaceItem> & Pick<PlaceItem, 'id'>): PlaceItem {
 describe('mergeKuehleOrte', () => {
 	it('Treffer-Join setzt [lon, lat] und mappt Properties + Navi-Links', () => {
 		const res = mergeKuehleOrte(
-			[enrich({ id: 'node/1', name: 'Kino X', cool_score: 5 })],
+			[enrich({ id: 'node/1', name: 'Kino X', cool_score: 5, address_verified: '' })],
 			[
 				place({
 					id: 'node/1',
@@ -56,8 +56,12 @@ describe('mergeKuehleOrte', () => {
 		expect(f.properties.oh).toBe('Mo-Fr 10:00-22:00');
 		expect(f.properties.wheelchair).toBe('yes');
 		expect(f.properties.plz).toBe('10999');
-		expect(f.properties.googleMapsUrl).toContain('destination=52.1,13.2');
-		expect(f.properties.appleMapsUrl).toContain('daddr=52.1,13.2');
+		expect(f.properties.googleMapsUrl).toBe(
+			'https://www.google.com/maps/dir/?api=1&destination=Kino%20X%2C%20Teststr%201%2C%2010999%20Berlin'
+		);
+		expect(f.properties.appleMapsUrl).toBe(
+			'https://maps.apple.com/place?coordinate=52.1,13.2&name=Kino%20X'
+		);
 		expect(res.dropped).toEqual({ suitableFalse: 0, stillExistsNo: 0, missingGeometry: 0 });
 	});
 
@@ -131,5 +135,33 @@ describe('mergeKuehleOrte', () => {
 			[place({ id: 'node/2' }), place({ id: 'node/1' })]
 		);
 		expect(res.collection.features.map((f) => f.properties.name)).toEqual(['A', 'B']);
+	});
+});
+
+describe('mergeKuehleOrte Navi-Links aus address_verified', () => {
+	it('address_verified hat Vorrang vor addr und plz', () => {
+		const res = mergeKuehleOrte(
+			[
+				enrich({
+					id: 'node/1',
+					name: 'Kino X',
+					address_verified: 'Lehrter Straße 35, 10557 Berlin'
+				})
+			],
+			[place({ id: 'node/1', addr: 'Andere 9', plz: '10999' })]
+		);
+		expect(res.collection.features[0].properties.googleMapsUrl).toBe(
+			'https://www.google.com/maps/dir/?api=1&destination=Kino%20X%2C%20Lehrter%20Stra%C3%9Fe%2035%2C%2010557%20Berlin'
+		);
+	});
+
+	it('nicht parsebarer address_verified: Fallback auf addr und plz', () => {
+		const res = mergeKuehleOrte(
+			[enrich({ id: 'node/1', name: 'Kino X', address_verified: 'unbekannt' })],
+			[place({ id: 'node/1', addr: 'Andere 9', plz: '10999' })]
+		);
+		expect(res.collection.features[0].properties.googleMapsUrl).toBe(
+			'https://www.google.com/maps/dir/?api=1&destination=Kino%20X%2C%20Andere%209%2C%2010999%20Berlin'
+		);
 	});
 });
