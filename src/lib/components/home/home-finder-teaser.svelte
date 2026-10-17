@@ -4,6 +4,7 @@
 	Text (crawl- und vorlesbar), CTA öffnet den Finder auf der Karte.
 -->
 <script lang="ts">
+	import { ctaPrimary } from './internal/cta.js';
 	import { SlidersHorizontal } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -43,7 +44,7 @@
 			<a
 				href={localizedHref('/explore?finder=1')}
 				data-testid="home-finder-teaser-cta"
-				class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
+				class={ctaPrimary}
 			>
 				<SlidersHorizontal size={16} aria-hidden="true" />
 				{m.home_finder_cta()}

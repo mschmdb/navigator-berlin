@@ -110,7 +110,7 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 			'Tenant protection'
 		]);
 		expect(labels[5]).toBe('Culture (standalone, not in the overall score)');
-		const weightRows = [...document.querySelectorAll('#gewichte tbody tr td:first-child')].map(
+		const weightRows = [...document.querySelectorAll('#gewichte tbody tr th[scope="row"]')].map(
 			(td) => td.textContent?.replace(/\s+/g, ' ').trim()
 		);
 		expect(weightRows).toContain('Culture (not in the overall score)');
@@ -185,5 +185,14 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 		expect(speakable.name).toBe('Methodology of the environment & infrastructure score');
 		expect(speakable.inLanguage).toBe('en-US');
 		expect(speakable.url).toMatch(/\/en\/methodik\/kiez-score$/);
+	});
+
+	it('Gewichte-Tabelle hat caption, Spalten- und Zeilenköpfe und keinen Kasten (#90)', async () => {
+		render(Page, { props: {} });
+		const table = document.querySelector('#gewichte table') as HTMLTableElement;
+		expect(table.caption?.textContent?.trim().length ?? 0).toBeGreaterThan(0);
+		expect(table.querySelectorAll('thead th[scope="col"]')).toHaveLength(2);
+		expect(table.querySelectorAll('tbody th[scope="row"]').length).toBeGreaterThan(4);
+		expect(table.className).not.toMatch(/(^|\s)border(\s|$)/);
 	});
 });

@@ -7,6 +7,7 @@
 	dynamisch); bis dahin hardcoded.
 -->
 <script lang="ts">
+	import { ctaSecondary } from './internal/cta.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { HOME_DATA_SOURCES, homeDataSourceDescription } from '$lib/content/home-data-sources.js';
@@ -34,10 +35,7 @@
 			</li>
 		{/each}
 	</ul>
-	<a
-		class="inline-flex min-h-(--target-min) text-xs text-accent hover:text-ink"
-		href={localizedHref('/lizenzen')}
-	>
+	<a class={ctaSecondary} href={localizedHref('/lizenzen')}>
 		{m.home_open_block_link()}
 	</a>
 </section>

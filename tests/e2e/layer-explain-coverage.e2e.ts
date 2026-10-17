@@ -44,7 +44,8 @@ test.describe('Story 1.16 Layer-Explain-Coverage + Multi-Surface', () => {
 			/^https:\/\//
 		);
 		await expect(page.getByTestId('layer-detail-license')).toContainText(/dl-de/);
-		await expect(page.getByTestId('layer-detail-inspector-link')).toHaveAttribute(
+		// #90: der untere Karten-Link erscheint nur mit FAQ, der obere Button immer.
+		await expect(page.getByTestId('layer-detail-map-button')).toHaveAttribute(
 			'href',
 			/\?layers=wohnlagen-2024/
 		);

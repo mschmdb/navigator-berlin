@@ -23,15 +23,13 @@ test.describe('L4: Kennzahl-Kacheln', () => {
 		await page.screenshot({ path: `${SCREENSHOT_DIR}/kiez-desktop.png`, fullPage: true });
 	});
 
-	test('Kiez 375 px: zwei Spalten, kein horizontaler Überlauf', async ({ page }) => {
+	test('Kiez 375 px: Zeilen mit Linie, kein horizontaler Überlauf (#90)', async ({ page }) => {
 		await page.setViewportSize({ width: 375, height: 667 });
 		await page.goto(`/kiez/${KIEZ}`);
 		const list = page.getByTestId('key-figure-list');
 		await expect(list).toBeVisible();
-		const columns = await list.evaluate(
-			(el) => getComputedStyle(el).gridTemplateColumns.split(' ').length
-		);
-		expect(columns).toBe(2);
+		const display = await list.evaluate((el) => getComputedStyle(el).flexDirection);
+		expect(display).toBe('column');
 		const overflow = await page.evaluate(
 			() => document.documentElement.scrollWidth - document.documentElement.clientWidth
 		);
@@ -39,25 +37,22 @@ test.describe('L4: Kennzahl-Kacheln', () => {
 		await list.screenshot({ path: `${SCREENSHOT_DIR}/kiez-mobile-375.png` });
 	});
 
-	test('Desktop 1280 px: drei Spalten', async ({ page }) => {
-		await page.setViewportSize({ width: 1280, height: 800 });
-		await page.goto(`/kiez/${KIEZ}`);
-		const columns = await page
-			.getByTestId('key-figure-list')
-			.evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length);
-		expect(columns).toBe(3);
-	});
-
-	test('Kacheln stehen zwischen Hero und Details', async ({ page }) => {
+	test('Kennzahlen stehen nach dem Vergleich und vor dem Steckbrief (#90)', async ({ page }) => {
 		await page.goto(`/kiez/${KIEZ}`);
 		const order = await page.evaluate(() => {
-			const top = (id: string): number =>
-				document.querySelector(`[data-testid="${id}"]`)?.getBoundingClientRect().top ?? -1;
-			return [top('kiez-hero'), top('key-figures'), top('kiez-details')];
+			const top = (sel: string): number =>
+				document.querySelector(sel)?.getBoundingClientRect().top ?? -1;
+			return [
+				top('[data-testid="kiez-hero"]'),
+				top('[data-testid="score-comparison"]'),
+				top('[data-testid="key-figures"]'),
+				top('[data-testid="kiez-steckbrief"]')
+			];
 		});
 		expect(order.every((y) => y >= 0)).toBe(true);
 		expect(order[0]).toBeLessThan(order[1]!);
 		expect(order[1]).toBeLessThan(order[2]!);
+		expect(order[2]).toBeLessThan(order[3]!);
 	});
 
 	test('Dublette heerstrasse-spandau: Kacheln mit Werten', async ({ page }) => {

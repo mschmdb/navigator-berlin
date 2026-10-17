@@ -82,15 +82,32 @@ describe('kiez-wahl-verlauf.svelte', () => {
 			expect(link.textContent).toMatch(/Methodology/);
 		});
 
-		it('<ol>-aria-label übersetzt den Typ-Namen pro Zeile', async () => {
+		it('Tabellen-aria-label übersetzt den Typ-Namen pro Wahl', async () => {
 			overwriteGetLocale(() => 'en');
 			render(KiezWahlVerlauf, { kiezName: 'Mitte', rows: ROWS });
-			const lists = document.querySelectorAll('[data-testid="kiez-wahl-verlauf"] ol');
+			const lists = document.querySelectorAll('[data-testid="kiez-wahl-verlauf"] table');
 			const ariaLabels = Array.from(lists).map((el) => el.getAttribute('aria-label'));
 			expect(ariaLabels).toContain('Strongest party per year for Bundestag elections');
 			expect(ariaLabels).toContain(
 				'Strongest party per year for District Assembly (BVV) elections'
 			);
 		});
+	});
+
+	it('zeigt den Verlauf als kompakte Tabelle je Wahl statt als Kachel-Raster (#90)', async () => {
+		render(KiezWahlVerlauf, { kiezName: 'Mitte', rows: ROWS });
+		const section = document.querySelector('[data-testid="kiez-wahl-verlauf"]') as HTMLElement;
+		const tables = section.querySelectorAll('table');
+		expect(tables).toHaveLength(2);
+		const years = Array.from(tables[0].querySelectorAll('thead th[scope="col"]')).map((th) =>
+			th.textContent?.trim()
+		);
+		expect(years).toEqual(['2017', '2021']);
+		const parties = Array.from(tables[0].querySelectorAll('tbody td')).map((td) =>
+			td.textContent?.trim()
+		);
+		expect(parties).toEqual(['SPD', 'Grüne']);
+		expect(section.querySelector('.rounded.border')).toBeNull();
+		expect(section.className).not.toMatch(/border-l-2/);
 	});
 });

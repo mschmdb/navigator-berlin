@@ -209,6 +209,19 @@ describe('NotfallBlock', () => {
 		}
 	});
 
+	it('der Notfall-Block ist die einzige Box, Dienste und Links stehen auf Linien (#90)', async () => {
+		render(NotfallBlock, { now: JUNI });
+		await expect.element(page.getByTestId('kaelte-112-link')).toBeInTheDocument();
+		// Anruf-Buttons (tel:) bleiben Buttons, gemeint sind Karten um Dienste, Hinweise und Links.
+		const boxed = [...root().querySelectorAll('li, li > a:not([href^="tel:"]), p')].filter(
+			(el) => /(^|\s)rounded(\s|$)/.test(el.className) && /(^|\s)border(\s|$)/.test(el.className)
+		);
+		expect(boxed).toHaveLength(0);
+		for (const li of root().querySelectorAll('[data-testid^="kaelte-dienst-"]')) {
+			expect(li.className).toMatch(/border-b/);
+		}
+	});
+
 	it('enthält keine em-dashes', async () => {
 		render(NotfallBlock, { now: ABEND_NOVEMBER });
 		expect((root().textContent ?? '').includes('—')).toBe(false);

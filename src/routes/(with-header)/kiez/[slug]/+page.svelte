@@ -129,12 +129,6 @@
 		outline={data.outline}
 		einwohnerStichtag={data.einwohnerStichtag}
 	/>
-	<KeyFigureTiles figures={data.keyFigures} regionName={name} kind="kiez" {slug} />
-	{#if data.neighbors.length > 0 || data.similar.length > 0}
-		<div class="mx-auto max-w-3xl px-4 py-8">
-			<KiezNeighbors neighbors={data.neighbors} similar={data.similar} />
-		</div>
-	{/if}
 	<KiezDetails
 		profile={data.profile}
 		stats={data.stats}
@@ -145,7 +139,22 @@
 		comparison={data.comparison}
 		profileProse={data.profileProse}
 		profileLocale={data.profileLocale}
-	/>
+	>
+		{#snippet figures()}
+			<KeyFigureTiles
+				figures={data.keyFigures}
+				regionName={name}
+				kind="kiez"
+				{slug}
+				inset={false}
+			/>
+		{/snippet}
+	</KiezDetails>
+	{#if data.neighbors.length > 0 || data.similar.length > 0}
+		<div class="mx-auto max-w-3xl px-4 pb-10">
+			<KiezNeighbors neighbors={data.neighbors} similar={data.similar} />
+		</div>
+	{/if}
 </article>
 
 <div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">

@@ -13,6 +13,9 @@ afterEach(() => {
 	overwriteGetLocale(() => 'de');
 });
 
+// #90: Der untere Karten-Link erscheint nur, wenn ein FAQ die Seite verlängert.
+const ONE_FAQ = [{ question: 'Frage?', answer: 'Antwort.' }];
+
 function makeMeta(slug: string, overrides: Partial<LayerMetadata> = {}): LayerMetadata {
 	return {
 		slug,
@@ -99,7 +102,7 @@ describe('layer-detail +page.svelte', () => {
 		render(Page, {
 			data: {
 				detail: detail('wohnlagen-2024'),
-				faq: [],
+				faq: ONE_FAQ,
 				faqLocale: 'de',
 				ranking: null,
 				hasKiezAggregate: false
@@ -138,7 +141,13 @@ describe('layer-detail +page.svelte', () => {
 		document.addEventListener('click', block);
 		try {
 			render(Page, {
-				data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+				data: {
+					detail: detail(),
+					faq: ONE_FAQ,
+					faqLocale: 'de',
+					ranking: null,
+					hasKiezAggregate: false
+				}
 			});
 			const button = (await page.getByTestId(testid).element()) as HTMLElement;
 			button.click();
@@ -560,7 +569,7 @@ describe('layer-detail +page.svelte', () => {
 			render(Page, {
 				data: {
 					detail: detail('wohnlagen-2024'),
-					faq: [],
+					faq: ONE_FAQ,
 					faqLocale: 'de',
 					ranking: null,
 					hasKiezAggregate: false
@@ -785,13 +794,47 @@ describe('layer-detail +page.svelte', () => {
 
 	it('Button oben und Link unten tragen denselben Text', async () => {
 		render(Page, {
-			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+			data: {
+				detail: detail(),
+				faq: ONE_FAQ,
+				faqLocale: 'de',
+				ranking: null,
+				hasKiezAggregate: false
+			}
 		});
 		const top = (await page.getByTestId('layer-detail-map-button').element()) as HTMLElement;
 		const bottom = (await page.getByTestId('layer-detail-inspector-link').element()) as HTMLElement;
 		expect(bottom.textContent?.replace(/[→\s]+$/, '').trim()).toBe(
 			top.textContent?.replace(/[→\s]+$/, '').trim()
 		);
+	});
+
+	it('zeigt den unteren Karten-Link nur mit FAQ (#90)', async () => {
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
+		await expect.element(page.getByTestId('layer-detail-map-button')).toBeInTheDocument();
+		expect(document.querySelector('[data-testid="layer-detail-inspector-link"]')).toBeNull();
+	});
+
+	it('gliedert Quelle, Werte und Berechnung über Linien statt Boxen (#90)', async () => {
+		render(Page, {
+			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
+		});
+		await expect.element(page.getByTestId('layer-detail-source-card')).toBeInTheDocument();
+		for (const id of [
+			'layer-detail-source-card',
+			'layer-detail-scale',
+			'layer-detail-methodology',
+			'layer-detail-methodik-link'
+		]) {
+			const el = document.querySelector(`[data-testid="${id}"]`) as HTMLElement;
+			expect(el, id).not.toBeNull();
+			expect(el.className, id).not.toMatch(/(^|\s)border(\s|$)|(^|\s)p-[34](\s|$)|bg-bg-elevated/);
+		}
+		const h2 = document.querySelector('[data-testid="layer-detail-source-card"] h2') as HTMLElement;
+		expect(h2.className).toMatch(/text-ink(\s|$)/);
+		expect(h2.className).not.toMatch(/text-ink-muted/);
 	});
 
 	it('rendert keine Rangliste ohne Ranking', async () => {

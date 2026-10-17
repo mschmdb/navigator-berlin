@@ -99,6 +99,9 @@
 	--leading-body: 1.45;
 	--leading-dense: 1.35;
 
+	/* #90 Zeilenlänge für Leseseiten (Leitlinie 14: 45 bis 90 Zeichen). */
+	--measure: 70ch;
+
 	/* GH-86 Mindestgröße für Klickziele (WCAG 2.2 SC 2.5.8). */
 	--target-min: 24px;
 
@@ -336,12 +339,24 @@ body.route-explore {
 	line-height: var(--leading-body);
 }
 
+/* #90: Leseseiten begrenzen Fließtext auf --measure, Tabellen und Überschriften laufen breiter. */
+.text-measure :where(p, li, dd) {
+	max-inline-size: var(--measure);
+}
+
 [role='application'] {
 	scroll-margin-top: calc(var(--header-height) + 0.5rem);
 }
 
 .tabular {
 	font-feature-settings: 'tnum';
+}
+
+/* #90: Lange Kiez- und Bezirksnamen umbrechen statt die Spalte neben der Lagekarte zu sprengen. */
+.region-title {
+	overflow-wrap: anywhere;
+	hyphens: auto;
+	text-wrap: pretty;
 }
 
 /* Story 1.20 Print-CSS — Inspector als wohnungssuche-tauglicher Ausdruck */

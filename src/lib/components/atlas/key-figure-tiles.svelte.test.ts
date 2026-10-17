@@ -147,6 +147,35 @@ describe('key-figure-tiles.svelte', () => {
 			.toBeVisible();
 	});
 
+	it('zeigt Kennzahlen als Zeilen mit Linie statt als Kacheln (#90)', async () => {
+		render(KeyFigureTiles, {
+			figures: FIGURES,
+			regionName: 'Reuterstraße',
+			kind: 'kiez',
+			slug: 'reuterstrasse'
+		});
+		await expect.element(page.getByRole('heading', { level: 2 })).toBeInTheDocument();
+		const list = document.querySelector('[data-testid="key-figure-list"]') as HTMLElement;
+		expect(list.className).not.toMatch(/grid-cols-2|md:grid-cols-3/);
+		for (const li of document.querySelectorAll('[data-testid="key-figure-tile"]')) {
+			expect(li.className).not.toMatch(/\brounded|\bborder\b(?!-)/);
+			expect(li.className).toMatch(/border-b/);
+		}
+	});
+
+	it('setzt den Wert nicht in Display-Größe, damit lange Stufen nicht überlaufen (#90)', async () => {
+		render(KeyFigureTiles, {
+			figures: FIGURES,
+			regionName: 'Reuterstraße',
+			kind: 'kiez',
+			slug: 'reuterstrasse'
+		});
+		await expect.element(page.getByRole('heading', { level: 2 })).toBeInTheDocument();
+		for (const v of document.querySelectorAll('[data-testid="key-figure-value"]')) {
+			expect(v.className).not.toMatch(/text-2xl/);
+		}
+	});
+
 	it('färbt Werte nicht nach Gut/Schlecht', async () => {
 		render(KeyFigureTiles, {
 			figures: FIGURES,

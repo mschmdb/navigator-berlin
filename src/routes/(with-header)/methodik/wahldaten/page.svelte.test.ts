@@ -11,10 +11,10 @@ describe('methodik/wahldaten +page.svelte (Story 17: Briefwahl-Gruppen)', () => 
 		expect(document.getElementById('aggregation')).not.toBeNull();
 	});
 
-	it('TOC-Link auf #wahldaten-briefwahl liest „3. Briefwahl-Gruppen"', () => {
+	it('TOC-Link auf #wahldaten-briefwahl liest „Briefwahl-Gruppen"', () => {
 		render(Page);
 		const link = document.querySelector('a[href="#wahldaten-briefwahl"]');
-		expect(link?.textContent?.trim()).toBe('3. Briefwahl-Gruppen');
+		expect(link?.textContent?.trim()).toBe('Briefwahl-Gruppen');
 	});
 
 	it('Abschnitt 3 nennt Briefwahl-Gruppen statt Asymmetrie und linkt auf #aggregation', () => {
@@ -137,15 +137,15 @@ describe('methodik/wahldaten · EN (i18n C4b)', () => {
 		expect(document.querySelector('h1')?.textContent?.trim()).toBe('Methodology: Election data');
 		const headings = [...document.querySelectorAll('h2')].map((h) => h.textContent?.trim());
 		expect(headings).toEqual([
-			'1. Data sources',
-			'2. Data cutoff',
-			'3. Postal-vote groups',
-			'4. Polling district to Kiez aggregation',
-			'5. Repeat election 2023',
-			'6. Geometries + coverage',
-			'7. Update cadence',
-			'8. Party aliases',
-			'9. Cross-layer linking'
+			'Data sources',
+			'Data cutoff',
+			'Postal-vote groups',
+			'Polling district to Kiez aggregation',
+			'Repeat election 2023',
+			'Geometries + coverage',
+			'Update cadence',
+			'Party aliases',
+			'Cross-layer linking'
 		]);
 		const toc = document.querySelector('nav[aria-label="Contents"]');
 		expect(toc?.querySelectorAll('a').length).toBe(9);
@@ -220,5 +220,21 @@ describe('methodik/wahldaten · Meta und JSON-LD (i18n C4b)', () => {
 		expect(crumbs.itemListElement[0].item).toMatch(/\/en$/);
 		expect(crumbs.itemListElement[1].item).toMatch(/\/en\/methodik$/);
 		expect(crumbs.itemListElement[2].item).toMatch(/\/en\/methodik\/wahldaten$/);
+	});
+
+	it('folgt der Methodik-Vorlage: keine Nummern in den H2, kein prose-Container (#90)', () => {
+		render(Page);
+		const article = document.querySelector('[data-testid="wahl-methodik-page"]') as HTMLElement;
+		expect(article.className).not.toMatch(/\bprose\b/);
+		const numbered = [...article.querySelectorAll('h2')].filter((h) =>
+			/^\s*\d+\.\s/.test(h.textContent ?? '')
+		);
+		expect(numbered).toHaveLength(0);
+	});
+
+	it('verweist im Text auf Abschnitte beim Namen, nicht mit Nummer (#90)', () => {
+		render(Page);
+		const article = document.querySelector('[data-testid="wahl-methodik-page"]') as HTMLElement;
+		expect(article.textContent ?? '').not.toMatch(/Abschnitt \d/);
 	});
 });

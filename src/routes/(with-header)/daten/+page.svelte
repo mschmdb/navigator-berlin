@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { isRedundantDescription } from '$lib/utils/redundant-description.js';
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
@@ -98,7 +99,7 @@
 						>
 							{layer.name}
 						</a>
-						{#if layer.description}
+						{#if layer.description && !isRedundantDescription(layer.name, layer.description)}
 							<p class="text-sm text-ink-muted">{layer.description}</p>
 						{/if}
 					</li>

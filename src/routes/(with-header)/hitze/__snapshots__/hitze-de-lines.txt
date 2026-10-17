@@ -1,10 +1,10 @@
 h1: Hitze-Navigator Berlin
 p: Gib deinen Standort ein. Du siehst die nächsten kühlen Orte in Berlin, sortiert nach Entfernung, mit Öffnungsstatus und dem Weg dorthin. Kinos, Bibliotheken, Schwimmhallen, Museen, Malls und Trinkbrunnen, über 500 Orte aus offenen Daten.
+h2: In deiner Nähe
+p: Wir fragen deinen Standort ab und zeigen die nächsten jetzt geöffneten kühlen Orte.
 a: Kühle Orte auf der Karte
 p: Interaktive Karte mit allen kühlen Orten, Live-Status und Filtern.
 a: Methodik: wie wir kühle Orte bewerten
-h2: In deiner Nähe
-p: Wir fragen deinen Standort ab und zeigen die nächsten jetzt geöffneten kühlen Orte.
 h2: Kühle Orte in Berlin: wo du Abkühlung findest
 li: Kinos meist klimatisiert
 li: Bibliotheken kühl und ruhig

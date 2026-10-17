@@ -104,7 +104,10 @@
 <JsonLd data={jsonLd} testid="methodik-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="methodik-breadcrumb-jsonld" />
 
-<article data-testid="methodik-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
+<article
+	data-testid="methodik-page"
+	class="text-measure mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
+>
 	<header class="flex flex-col gap-2">
 		<h1 data-testid="methodik-page-title" class="text-3xl font-bold text-ink">
 			{m.methodik_h1_title()}
@@ -117,12 +120,12 @@
 	<nav
 		data-testid="methodik-toc"
 		aria-label={m.methodik_toc_aria_label()}
-		class="border border-rule bg-bg p-4"
+		class="border-y border-rule py-4"
 	>
-		<p class="mb-2 text-xs text-ink-subtle">
+		<p class="mb-2 text-sm text-ink-muted">
 			{m.methodik_toc_heading()}
 		</p>
-		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
+		<ol class="grid gap-1.5 font-sans text-base sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
 					<a
@@ -163,9 +166,9 @@
 			{m.methodik_section_aggregation_heading()}
 		</h2>
 		<p class="text-base leading-body text-ink">{m.methodik_aggregation_p1()}</p>
-		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
+		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-base leading-body">
 			{#each aggregationLevels as agg (agg.level)}
-				<dt class="text-xs text-ink-muted">{agg.level}</dt>
+				<dt class="text-sm text-ink-muted">{agg.level}</dt>
 				<dd class="text-ink">{agg.detail}</dd>
 			{/each}
 		</dl>
@@ -260,9 +263,9 @@
 			{m.methodik_section_coverage_heading()}
 		</h2>
 		<p class="text-base leading-body text-ink">{m.methodik_coverage_p1()}</p>
-		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
+		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-base leading-body">
 			{#each coverageReasons as reason (reason.key)}
-				<dt class="text-xs text-ink-muted">{reason.key}</dt>
+				<dt class="text-sm text-ink-muted">{reason.key}</dt>
 				<dd class="text-ink">{reason.text}</dd>
 			{/each}
 		</dl>
@@ -276,7 +279,7 @@
 			{#each omissions as o (o.label)}
 				<li class="border-l-2 border-rule pl-3">
 					<p class="font-sans text-base font-semibold text-ink">{o.label}</p>
-					<p class="text-sm text-ink-muted">{o.reason}</p>
+					<p class="text-base leading-body text-ink-muted">{o.reason}</p>
 				</li>
 			{/each}
 		</ul>

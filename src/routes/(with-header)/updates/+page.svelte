@@ -87,7 +87,10 @@
 <JsonLd data={blogJsonLd} testid="updates-index-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="updates-index-breadcrumb-jsonld" />
 
-<article data-testid="updates-index-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
+<article
+	data-testid="updates-index-page"
+	class="text-measure mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
+>
 	<header class="flex flex-col gap-2">
 		<h1 data-testid="updates-page-title" class="text-3xl font-bold text-ink">Updates</h1>
 		<p class="text-lg leading-body text-ink-muted">

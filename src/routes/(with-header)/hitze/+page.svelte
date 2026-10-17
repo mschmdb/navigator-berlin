@@ -165,41 +165,43 @@
 		<p class="max-w-prose text-lg leading-body text-ink-muted">
 			{m.hitze_intro_p1()}
 		</p>
-		<div class="flex flex-col gap-2 pt-1">
-			<a
-				href={localizedHref(explorerLink)}
-				data-testid="hitze-cta"
-				class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
-			>
-				{m.hitze_cta_map()}
-			</a>
-			<p class="font-sans text-sm text-ink-subtle">
-				{m.hitze_cta_map_hint()}
-			</p>
-			<a
-				href={localizedHref('/layer/kuehle-orte')}
-				data-testid="hitze-methodik-link"
-				class="inline-flex min-h-(--target-min) w-fit items-center text-sm text-ink-muted hover:text-ink"
-			>
-				{m.hitze_methodik_link()}
-			</a>
-		</div>
 	</header>
 
 	<InDeinerNaehe explorerHref={localizedHref(explorerLink)} />
+
+	<!-- #90: Wer Hilfe sucht, will zuerst Orte in der Nähe, die Karte folgt (wie /kaelte). -->
+	<div class="flex flex-col gap-2">
+		<a
+			href={localizedHref(explorerLink)}
+			data-testid="hitze-cta"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
+		>
+			{m.hitze_cta_map()}
+		</a>
+		<p class="font-sans text-sm text-ink-subtle">
+			{m.hitze_cta_map_hint()}
+		</p>
+		<a
+			href={localizedHref('/layer/kuehle-orte')}
+			data-testid="hitze-methodik-link"
+			class="inline-flex min-h-(--target-min) w-fit items-center text-sm text-ink-muted hover:text-ink"
+		>
+			{m.hitze_methodik_link()}
+		</a>
+	</div>
 
 	<section aria-labelledby="orte-h" class="flex flex-col gap-4">
 		<h2 id="orte-h" class="font-sans text-2xl font-semibold text-ink">
 			{m.hitze_orte_heading()}
 		</h2>
-		<ul class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+		<ul class="flex flex-col border-t border-rule">
 			{#each categories as cat (cat.name)}
 				{@const Icon = cat.icon}
-				<li class="flex items-start gap-3 rounded border border-rule bg-bg-elevated px-3 py-2.5">
+				<li class="flex items-start gap-3 border-b border-rule py-3">
 					<Icon size={20} aria-hidden="true" class="mt-0.5 shrink-0 text-umwelt-kuehle-orte" />
 					<span class="flex flex-col">
-						<span class="font-sans text-sm font-medium text-ink">{cat.name}</span>
-						<span class="text-sm text-ink-muted">{cat.note}</span>
+						<span class="font-sans text-base font-semibold text-ink">{cat.name}</span>
+						<span class="text-base text-ink-muted">{cat.note}</span>
 					</span>
 				</li>
 			{/each}
@@ -237,14 +239,14 @@
 		<p class="text-base text-ink-muted">
 			{m.hitze_offiziell_intro()}
 		</p>
-		<ul class="flex flex-col gap-3">
+		<ul class="flex flex-col border-t border-rule">
 			{#each offiziell as link (link.href)}
-				<li>
+				<li class="border-b border-rule">
 					<a
 						href={link.href}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="group flex items-start gap-2 rounded border border-rule px-3 py-2.5 hover:border-ink-subtle"
+						class="group flex items-start gap-2 py-3"
 					>
 						<ExternalLink
 							size={16}
