@@ -106,6 +106,13 @@ describe('winner-map-legende.svelte', () => {
 		expect(diagonal).not.toBe(diagonalReverse);
 	});
 
+	it('#107: patternPreviewStyle zeigt vertical als 90°-Streifen und grid als Gitter', () => {
+		expect(patternPreviewStyle('vertical', '#004A6E')).toContain('90deg');
+		const grid = patternPreviewStyle('grid', '#4A1559');
+		expect(grid).toContain('0deg');
+		expect(grid).toContain('90deg');
+	});
+
 	it('rendert den Anteils-Rampen-Hinweis', async () => {
 		render(WinnerMapLegende, {
 			parteien: ['SPD'],

@@ -90,6 +90,22 @@ describe('buildPatternImageData', () => {
 		expect(pixelAlpha(spec.data, 16, 0, 0)).toBe(0);
 	});
 
+	it('#107: vertical malt senkrechte 2px-Spalten (AfD, unterscheidbar von CDU-stripes)', () => {
+		const spec = buildPatternImageData('vertical', '#004a6e', 8);
+		expect(pixelAlpha(spec.data, 8, 0, 0)).toBe(255);
+		expect(pixelAlpha(spec.data, 8, 0, 5)).toBe(255);
+		expect(pixelAlpha(spec.data, 8, 2, 0)).toBe(0);
+		expect(spec.data).not.toEqual(buildPatternImageData('stripes', '#004a6e', 8).data);
+	});
+
+	it('#107: grid malt ein Gitter aus 1px-Linien (BSW, unterscheidbar von GRÜNE-dots)', () => {
+		const spec = buildPatternImageData('grid', '#4a1559', 16);
+		expect(pixelAlpha(spec.data, 16, 0, 5)).toBe(255);
+		expect(pixelAlpha(spec.data, 16, 5, 0)).toBe(255);
+		expect(pixelAlpha(spec.data, 16, 2, 2)).toBe(0);
+		expect(spec.data).not.toEqual(buildPatternImageData('dots', '#4a1559', 16).data);
+	});
+
 	it('ist deterministisch (gleicher Input → identischer Output)', () => {
 		const a = buildPatternImageData('dots', '#4a1559');
 		const b = buildPatternImageData('dots', '#4a1559');
