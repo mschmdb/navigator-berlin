@@ -259,6 +259,20 @@ describe('KiezScoreSection', () => {
 			.toHaveTextContent('As of: 01/01/2024');
 	});
 
+	it('Dimensionszeile: Titel, Stufen-Badge und Auge auf einer Mittelachse (GH-88)', async () => {
+		render(KiezScoreSection, { score: makeScore(), onToggleLayer: () => {} });
+		const row = (await page.getByTestId('kiez-score-dim-ruhe-luft').element()) as HTMLElement;
+		const center = (el: Element | null) => {
+			const r = (el as HTMLElement).getBoundingClientRect();
+			return r.top + r.height / 2;
+		};
+		const title = center(row.querySelector('[data-testid="kiez-score-toggle-sources-ruhe-luft"]'));
+		const chip = center(row.querySelector('[data-testid="value-chip"]'));
+		const toggle = center(row.querySelector('[data-testid="kiez-score-map-toggle-ruhe-luft"]'));
+		expect(Math.abs(chip - title)).toBeLessThanOrEqual(1);
+		expect(Math.abs(toggle - title)).toBeLessThanOrEqual(1);
+	});
+
 	it('Dimension-Map-Toggle ruft onToggleLayer mit kiez-score-{dim}', async () => {
 		let toggled: string | null = null;
 		render(KiezScoreSection, {

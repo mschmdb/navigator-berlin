@@ -56,6 +56,29 @@ describe('LayerCard', () => {
 		expect(dot.className).toMatch(/bg-severity-danger(\s|$)/);
 	});
 
+	it('Titel, Stufen-Badge und Auge liegen auf einer Mittelachse (GH-88)', async () => {
+		const mittel: LayerHit = { ...hit, value: { ...(hit.value as object), kategorie: 'mittel' } };
+		render(LayerCard, {
+			hit: mittel,
+			layerName: 'Lärmbelastung 2023',
+			contextRows: [],
+			onToggleLayer: () => {}
+		});
+		const center = async (testId: string) => {
+			const r = ((await page.getByTestId(testId).element()) as HTMLElement).getBoundingClientRect();
+			return r.top + r.height / 2;
+		};
+		const title = await center('layer-card-title-link');
+		const chip = await center('value-chip');
+		const toggle = await center('map-toggle');
+		expect(Math.abs(chip - title)).toBeLessThanOrEqual(1);
+		expect(Math.abs(toggle - title)).toBeLessThanOrEqual(1);
+		const toggleBox = (
+			(await page.getByTestId('map-toggle').element()) as HTMLElement
+		).getBoundingClientRect();
+		expect(toggleBox.height).toBeGreaterThanOrEqual(24);
+	});
+
 	it('ohne Kontext-Zeilen: nur Chip, keine dl', async () => {
 		render(LayerCard, { hit, layerName: 'Lärmbelastung 2023', contextRows: [] });
 		await expect.element(page.getByTestId('value-chip')).toBeInTheDocument();
