@@ -7,7 +7,7 @@
 	auch ohne DB-Anbindung baut.
 -->
 <script lang="ts">
-	import { ArrowUpRight } from '@lucide/svelte';
+	import { ctaSecondary } from './internal/cta.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 
@@ -32,16 +32,12 @@
 
 {#if items.length > 0}
 	<section data-testid="home-top-kieze" class="space-y-6">
-		<header class="flex items-baseline justify-between gap-4">
+		<header class="flex flex-wrap items-center justify-between gap-4">
 			<h2 class="text-2xl font-bold text-ink md:text-3xl">
 				{m.home_top_kieze_heading()}
 			</h2>
-			<a
-				href={localizedHref('/umwelt-infrastruktur-score')}
-				class="inline-flex items-center gap-1 text-xs text-accent hover:text-ink"
-			>
+			<a href={localizedHref('/umwelt-infrastruktur-score')} class={ctaSecondary}>
 				{m.home_top_kieze_ranking_link()}
-				<ArrowUpRight size={14} aria-hidden="true" />
 			</a>
 		</header>
 		<ol class="divide-y divide-rule border-y border-rule">

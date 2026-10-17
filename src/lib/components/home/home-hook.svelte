@@ -5,6 +5,7 @@
 	dahin Brand-Card als Fallback.
 -->
 <script lang="ts">
+	import { ctaSecondary } from './internal/cta.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { HOME_SCREENSHOTS, homeScreenshotAlt } from '$lib/content/screenshot-manifest.js';
@@ -35,10 +36,7 @@
 		<p class="text-base leading-body text-ink-muted">
 			{m.home_hook_body()}
 		</p>
-		<a
-			href={localizedHref(mapHref)}
-			class="inline-flex min-h-(--target-min) items-center gap-2 text-sm text-accent hover:text-ink"
-		>
+		<a href={localizedHref(mapHref)} class={ctaSecondary}>
 			{m.home_hero_cta_map()}
 		</a>
 	</div>

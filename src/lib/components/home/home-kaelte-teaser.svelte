@@ -4,6 +4,7 @@
 	`compact` blendet die Lead aus (Teaser steht dann unter dem Saison-Teaser).
 -->
 <script lang="ts">
+	import { ctaPrimary, ctaSecondary } from './internal/cta.js';
 	import { Flame } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -27,19 +28,11 @@
 	</header>
 
 	<div class="flex flex-wrap items-center gap-x-6 gap-y-2">
-		<a
-			href={localizedHref('/kaelte')}
-			data-testid="home-kaelte-teaser-landing"
-			class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
-		>
+		<a href={localizedHref('/kaelte')} data-testid="home-kaelte-teaser-landing" class={ctaPrimary}>
 			<Flame size={16} aria-hidden="true" />
 			{m.home_kaelte_cta_landing()}
 		</a>
-		<a
-			href={localizedHref(explorerLink)}
-			data-testid="home-kaelte-teaser-map"
-			class="inline-flex min-h-(--target-min) items-center gap-2 text-sm text-accent hover:text-ink"
-		>
+		<a href={localizedHref(explorerLink)} data-testid="home-kaelte-teaser-map" class={ctaSecondary}>
 			{m.home_kaelte_cta_map()}
 		</a>
 	</div>

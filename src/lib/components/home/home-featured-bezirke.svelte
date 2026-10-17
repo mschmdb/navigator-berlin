@@ -5,7 +5,7 @@
 	Rationale-Kommentar pro Auswahl.
 -->
 <script lang="ts">
-	import { ArrowUpRight } from '@lucide/svelte';
+	import { ctaSecondary } from './internal/cta.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import {
@@ -32,11 +32,6 @@
 						<span class="text-xl font-semibold text-ink group-hover:text-accent"
 							>{b.displayName}</span
 						>
-						<ArrowUpRight
-							size={18}
-							class="text-ink-subtle group-hover:text-accent"
-							aria-hidden="true"
-						/>
 					</span>
 					<span class="text-sm leading-snug text-ink-muted">{homeFeaturedBezirkTeaser(b.slug)}</span
 					>
@@ -44,11 +39,7 @@
 			</li>
 		{/each}
 	</ul>
-	<a
-		href={localizedHref('/umwelt-infrastruktur-score?view=bezirke')}
-		class="inline-flex min-h-(--target-min) items-center gap-1 text-xs text-accent hover:text-ink"
-	>
+	<a href={localizedHref('/umwelt-infrastruktur-score?view=bezirke')} class={ctaSecondary}>
 		{m.home_featured_bezirke_all_link()}
-		<ArrowUpRight size={14} aria-hidden="true" />
 	</a>
 </section>

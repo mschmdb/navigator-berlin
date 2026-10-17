@@ -5,6 +5,7 @@
 	HomeHook.
 -->
 <script lang="ts">
+	import { ctaSecondary } from './internal/cta.js';
 	import { Vote } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -119,7 +120,7 @@
 		<a
 			href={localizedHref('/berlin-wahlen')}
 			data-testid="home-wahl-teaser-all"
-			class="inline-flex min-h-(--target-min) items-center gap-2 text-sm text-accent hover:text-ink"
+			class={ctaSecondary}
 		>
 			{(wahlCount === 1 ? m.home_wahl_all_link_singular : m.home_wahl_all_link_plural)({
 				count: wahlCount

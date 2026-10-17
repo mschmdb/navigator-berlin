@@ -6,6 +6,7 @@
 	„KI-Übersetzungs"-Bauklotz-Sätze.
 -->
 <script lang="ts">
+	import { ctaPrimary, ctaSecondary } from './internal/cta.js';
 	import { Map as MapIcon, ListOrdered } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -35,19 +36,11 @@
 			{m.home_hero_lead()}
 		</p>
 		<div class="flex flex-wrap gap-3 pt-2">
-			<a
-				href={localizedHref(mapHref)}
-				data-testid="home-hero-cta-map"
-				class="inline-flex min-h-(--target-min) items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
-			>
+			<a href={localizedHref(mapHref)} data-testid="home-hero-cta-map" class={ctaPrimary}>
 				<MapIcon size={16} aria-hidden="true" />
 				{m.home_hero_cta_map()}
 			</a>
-			<a
-				href={localizedHref(rankingHref)}
-				data-testid="home-hero-cta-ranking"
-				class="inline-flex items-center gap-2 rounded border border-rule px-4 py-2 text-sm font-medium text-ink hover:border-ink"
-			>
+			<a href={localizedHref(rankingHref)} data-testid="home-hero-cta-ranking" class={ctaSecondary}>
 				<ListOrdered size={16} aria-hidden="true" />
 				{m.home_hero_cta_ranking()}
 			</a>

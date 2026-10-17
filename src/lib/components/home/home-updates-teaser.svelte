@@ -5,7 +5,7 @@
 	leer (kein Update-Eintrag): Komponente versteckt sich.
 -->
 <script lang="ts">
-	import { ArrowUpRight } from '@lucide/svelte';
+	import { ctaSecondary } from './internal/cta.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { formatShortDate } from '$lib/i18n/format.js';
@@ -29,14 +29,10 @@
 
 {#if items.length > 0}
 	<section data-testid="home-updates-teaser" class="space-y-6">
-		<header class="flex items-baseline justify-between gap-4">
+		<header class="flex flex-wrap items-center justify-between gap-4">
 			<h2 class="text-2xl font-bold text-ink md:text-3xl">{m.home_updates_heading()}</h2>
-			<a
-				href={localizedHref('/updates')}
-				class="inline-flex min-h-(--target-min) items-center gap-1 text-xs text-accent hover:text-ink"
-			>
+			<a href={localizedHref('/updates')} class={ctaSecondary}>
 				{m.home_updates_all_link()}
-				<ArrowUpRight size={14} aria-hidden="true" />
 			</a>
 		</header>
 		<ul class="divide-y divide-rule border-y border-rule">
