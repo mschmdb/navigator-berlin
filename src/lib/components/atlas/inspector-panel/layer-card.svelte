@@ -94,7 +94,7 @@
 	class="border-b border-rule py-3"
 	aria-label={m.inspector_layer_card_aria_label({ layerName }, localeOpts)}
 >
-	<div class="flex items-start gap-2">
+	<div class="flex items-center gap-2">
 		<h4 class="min-w-0 flex-1 font-sans text-sm font-semibold text-ink">
 			<a
 				href={layerHref}
@@ -105,7 +105,7 @@
 			>
 		</h4>
 		{#if rowState === 'with-value' && display.chip}
-			<div class="shrink-0 pt-0.5">
+			<div class="flex shrink-0 items-center">
 				<ValueChip
 					{severity}
 					value={display.chip.value}
@@ -129,7 +129,7 @@
 					? m.inspector_common_map_toggle_remove_title(undefined, localeOpts)
 					: m.inspector_common_map_toggle_add_title(undefined, localeOpts)}
 				onclick={() => onToggleLayer?.(hit.layer)}
-				class={`-my-1 inline-flex size-(--target-min) shrink-0 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
+				class={`inline-flex size-(--target-min) shrink-0 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
 			>
 				{#if isActive}<EyeOff size={14} aria-hidden="true" />{:else}<Eye
 						size={14}

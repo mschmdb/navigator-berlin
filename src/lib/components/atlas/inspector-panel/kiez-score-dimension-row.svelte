@@ -124,7 +124,7 @@
 					? m.inspector_common_map_toggle_remove_title(undefined, localeOpts)
 					: m.inspector_common_map_toggle_add_title(undefined, localeOpts)}
 				onclick={() => onToggleLayer?.(layerSlug)}
-				class={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
+				class={`inline-flex size-(--target-min) shrink-0 items-center justify-center rounded-sm hover:bg-bg ${isActive ? 'text-accent' : 'text-ink-subtle hover:text-ink'}`}
 			>
 				{#if isActive}<EyeOff size={14} aria-hidden="true" />{:else}<Eye
 						size={14}
@@ -137,7 +137,7 @@
 			data-testid="kiez-score-learn-more-{score.dimension}"
 			aria-label={m.inspector_kiez_score_learn_more_dim_aria({ label }, localeOpts)}
 			title={m.inspector_common_learn_more_title(undefined, localeOpts)}
-			class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-ink-subtle hover:bg-bg hover:text-ink"
+			class="inline-flex size-(--target-min) shrink-0 items-center justify-center rounded-sm text-ink-subtle hover:bg-bg hover:text-ink"
 		>
 			<ExternalLink size={13} aria-hidden="true" />
 		</a>
