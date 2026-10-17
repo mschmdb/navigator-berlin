@@ -231,4 +231,10 @@ describe('methodik/wahldaten · Meta und JSON-LD (i18n C4b)', () => {
 		);
 		expect(numbered).toHaveLength(0);
 	});
+
+	it('verweist im Text auf Abschnitte beim Namen, nicht mit Nummer (#90)', () => {
+		render(Page);
+		const article = document.querySelector('[data-testid="wahl-methodik-page"]') as HTMLElement;
+		expect(article.textContent ?? '').not.toMatch(/Abschnitt \d/);
+	});
 });

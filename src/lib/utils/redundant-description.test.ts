@@ -5,7 +5,6 @@ describe('isRedundantDescription (#90, /daten)', () => {
 	it.each([
 		['Apotheke', 'Apotheke'],
 		['S-Bahn-Stationen', 'S-Bahn-Station'],
-		['Post', 'Post- oder Paketstelle'],
 		['Spielplätze', 'Spielplatz']
 	])('%s / %s gilt als Dopplung', (name, description) => {
 		expect(isRedundantDescription(name, description)).toBe(true);
@@ -14,7 +13,11 @@ describe('isRedundantDescription (#90, /daten)', () => {
 	it.each([
 		['Lärmbelastung 2023', 'Strategische Lärmkarte, Tag-Abend-Nacht-Pegel je Fassadenpunkt'],
 		['Trinkbrunnen', 'Öffentliche Trinkbrunnen der Berliner Wasserbetriebe'],
-		['Kitas', 'Kindertagesstätten mit Plätzen']
+		['Kitas', 'Kindertagesstätten mit Plätzen'],
+		['Radverkehrsnetz', 'Radverkehrsnetz 2025 mit Vorrangrouten'],
+		['Fahrradstraßen', 'Fahrradstraße: Radverkehr hat Vorrang'],
+		['Clubs', 'Club oder Musikspielstätte'],
+		['Post', 'Post- oder Paketstelle']
 	])('%s / %s ergänzt etwas und bleibt', (name, description) => {
 		expect(isRedundantDescription(name, description)).toBe(false);
 	});

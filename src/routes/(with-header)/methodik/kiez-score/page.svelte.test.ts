@@ -187,11 +187,10 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 		expect(speakable.url).toMatch(/\/en\/methodik\/kiez-score$/);
 	});
 
-	it('Gewichte-Tabelle hat einen Namen, Spalten- und Zeilenköpfe und keinen Kasten (#90)', async () => {
+	it('Gewichte-Tabelle hat caption, Spalten- und Zeilenköpfe und keinen Kasten (#90)', async () => {
 		render(Page, { props: {} });
 		const table = document.querySelector('#gewichte table') as HTMLTableElement;
-		// Name über die Abschnittsüberschrift statt einer caption: der DE-Text-Snapshot bleibt stabil.
-		expect(table.getAttribute('aria-labelledby')).toBe('gewichte-h');
+		expect(table.caption?.textContent?.trim().length ?? 0).toBeGreaterThan(0);
 		expect(table.querySelectorAll('thead th[scope="col"]')).toHaveLength(2);
 		expect(table.querySelectorAll('tbody th[scope="row"]').length).toBeGreaterThan(4);
 		expect(table.className).not.toMatch(/(^|\s)border(\s|$)/);
