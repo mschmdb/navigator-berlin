@@ -499,3 +499,6 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-63-kaelte-launch.md`
   summary: E2E „Root (Karte) hat 0 axe-Violations“ ist flaky: axe misst Kontrast im Inspector während der Einblend-Animation (Farben #b8b7b0/#c0beb7 auf #f5f3ea).
   evidence: 17.10.2026 mehrfach rot/grün ohne Codeänderung; Fix: auf Ende der Animation warten oder `prefers-reduced-motion` im Test setzen.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-103-bezirk-karte-a11y.md`
+  summary: `winner-map.svelte.test.ts` „Adress-Auswahl: Punkt im Gebiet …“ ist instabil und findet `winner-map-address-hint` zeitweise nicht.
+  evidence: Am 17.10.2026 in einem vollen `pnpm test:unit --run` und in 2 von 3 Einzelläufen rot, im dritten grün; die Datei importiert nichts aus dieser Änderung.

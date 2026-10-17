@@ -1,9 +1,11 @@
 <!--
 	L5: Statische SVG-Karte der Kieze (Inhalt des Rahmens `hero-map-card`) eines Bezirks, eingefärbt nach Kiez-Score
-	(Klassen und Palette des Score-Layers). Kein MapLibre. Jeder Kiez ist ein Link
-	mit sprechendem Namen; die Kiez-Liste darunter ist die gleichwertige
-	Textalternative. Die Karten-Links liegen nicht in der Tab-Reihenfolge, die
-	Liste erreicht dieselben Seiten per Tastatur; Mausklick bleibt ein Link. Die Kontur sichert 3:1 gegen den Hintergrund.
+	(Klassen und Palette des Score-Layers). Kein MapLibre. Für Hilfstechnik ist die Karte
+	ein benanntes Bild ohne Inhalt; die Kiez-Liste darunter ist die gleichwertige
+	Alternative. Die Grafik selbst ist aria-hidden und ohne Rolle: axe meldet jede
+	role="img" mit Links darin als nested-interactive, auch mit tabindex="-1" (#103).
+	Die Kiez-Links sind reine Mausziele ohne Tab-Stopp, Name und Score stehen als
+	<title>-Tooltip. Die Kontur sichert 3:1 gegen den Hintergrund.
 -->
 <script lang="ts">
 	import type { KiezListEntry } from '$lib/data/bezirk-kieze-view.js';
@@ -59,10 +61,14 @@
 
 {#if outline && hasRenderableOutline(outline, bySlug.keys())}
 	<div class="flex flex-col gap-3" data-testid="bezirk-kieze-map">
-		<svg
-			viewBox={outline.viewBox}
+		<div
 			role="img"
 			aria-label={m.bezirk_map_aria({ bezirk: bezirkName }, localeOpts)}
+			class="sr-only"
+		></div>
+		<svg
+			viewBox={outline.viewBox}
+			aria-hidden="true"
 			class="block h-auto max-h-32 w-full sm:max-h-80"
 			preserveAspectRatio="xMinYMid meet"
 		>
@@ -71,11 +77,11 @@
 					href={entry.href}
 					tabindex="-1"
 					onclick={() => trackLanding('map_link', 'bezirk')}
-					aria-label={entry.label}
 					class="kiez-link"
 					data-testid="bezirk-map-link"
 					data-slug={entry.slug}
 				>
+					<title>{entry.label}</title>
 					<path
 						d={entry.d}
 						fill={entry.fill}
