@@ -76,7 +76,7 @@
 					<li data-testid="section-sources-item" data-layer={hit.layer} class="space-y-1 py-2">
 						<a
 							href={localizedHref(`/layer/${hit.layer}`, locale)}
-							class="text-dense-value font-semibold text-ink underline-offset-2 hover:underline"
+							class="inline-flex min-h-(--target-min) items-center text-dense-value font-semibold text-ink underline-offset-2 hover:underline"
 						>
 							{layerNameFor(hit.layer)}
 						</a>
@@ -97,7 +97,7 @@
 								href={external.href}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="inline-flex w-fit items-center gap-1 text-dense-label text-accent underline underline-offset-2 hover:text-accent-strong"
+								class="inline-flex min-h-(--target-min) w-fit items-center gap-1 text-dense-label text-accent underline underline-offset-2 hover:text-accent-strong"
 							>
 								<ExternalLink size={12} aria-hidden="true" />
 								{external.label}

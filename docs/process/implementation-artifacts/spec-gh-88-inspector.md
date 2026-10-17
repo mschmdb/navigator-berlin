@@ -51,6 +51,7 @@ Drei Review-Layer per `codex exec --model gpt-6.1-sol` (Forks dürfen keine Suba
 | Gap | Spezial-Datensätze (Haltestellen, Klima, Bevölkerung) noch als Box | gepatcht, Guard-Test; Kühle/Warme Orte (Hitze-/Kälte-Modus) bleiben Box, außerhalb des Mockups |
 | Gap | gelöschte Tests nicht gleichwertig ersetzt | gepatcht: Einklappen, externe Links je Reason, legal für alle drei Slugs, PET-Erklärung |
 | Gap | externe Datenquelle nur als Kürzel | gepatcht: Link auf `hit.source` je Datensatz |
+| codex-review (gpt-6.1-sol, APPROVE) | Datensatz- und externe Links in den Sektions-Quellen unter 24 px | gepatcht: `min-h-(--target-min)` |
 | Gap | Beta-Label im Diff | verworfen: kam aus veraltetem `origin/main`, nach Rebase weg |
 
 Bewusst offen: Numerische Lärm-/PET-Schwellen (55 bis 65 dB, 30 bis 35 °C) bleiben orange, sie sind keine „mittel"-Kategorie. Die Dimensionszeilen im Score-Block behalten ihr Layer-Link-Icon.
