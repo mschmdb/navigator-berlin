@@ -101,6 +101,17 @@ describe('Typografie-Guard (GH-87)', () => {
 		expect(css).not.toMatch(/IBM Plex Serif|--font-serif/);
 		expect(html).not.toMatch(/plex-serif/);
 	});
+
+	it('liefert keine Serif-Dateien mehr aus und nennt Serif nicht auf der Lizenzseite', () => {
+		const fonts = readdirSync(join(ROOT, 'static', 'fonts'));
+		expect(fonts.filter((f) => f.startsWith('plex-serif'))).toEqual([]);
+		for (const lang of ['de', 'en']) {
+			const messages = JSON.parse(
+				readFileSync(join(ROOT, 'messages', `${lang}.json`), 'utf8')
+			) as Record<string, string>;
+			expect(messages.lizenzen_schriften_p1).not.toMatch(/Serif/);
+		}
+	});
 });
 
 /* ---------- Messages ---------- */
