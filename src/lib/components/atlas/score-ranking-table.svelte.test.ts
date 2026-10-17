@@ -129,6 +129,76 @@ describe('ScoreRankingTable.svelte', () => {
 	});
 });
 
+describe('ScoreRankingTable.svelte · GH-94 Layout und Semantik', () => {
+	it('gedrehte Spaltenköpfe zählen nicht zur Spaltenbreite', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		const heads = [...document.querySelectorAll<HTMLElement>('th.score-col-th')];
+		expect(heads.length).toBe(8);
+		for (const th of heads) {
+			// Ohne Fix diktiert das ungedrehte Label („Wohnschutz“, „Grün & Hitze“) die Breite.
+			expect(th.getBoundingClientRect().width).toBeLessThanOrEqual(56);
+		}
+	});
+
+	it('sortierbare Köpfe tragen aria-sort, Buttons kein aria-pressed', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		const thOf = (testId: string) =>
+			document.querySelector(`[data-testid="${testId}"]`)?.closest('th');
+		expect(thOf('ranking-sort-composite')?.getAttribute('aria-sort')).toBe('descending');
+		expect(thOf('ranking-sort-ruheLuft')?.getAttribute('aria-sort')).toBe('none');
+		expect(thOf('ranking-sort-name')?.getAttribute('aria-sort')).toBe('none');
+		expect(thOf('ranking-sort-bezirk')?.getAttribute('aria-sort')).toBe('none');
+		expect(
+			document.querySelector('[data-testid="ranking-col-kriminalitaet"]')?.hasAttribute('aria-sort')
+		).toBe(false);
+		const pressed = document.querySelectorAll('[data-testid^="ranking-sort-"][aria-pressed]');
+		expect(pressed.length).toBe(0);
+	});
+
+	it('Tabelle hat eine Caption', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		const caption = document.querySelector('[data-testid="ranking-table"] caption');
+		expect(caption?.textContent?.trim().length).toBeGreaterThan(0);
+	});
+
+	it('Scroll-Container ist eine benannte, fokussierbare Region', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		const wrap = document.querySelector('[data-testid="ranking-table-wrapper"]');
+		expect(wrap?.getAttribute('role')).toBe('region');
+		expect(wrap?.getAttribute('tabindex')).toBe('0');
+		expect(wrap?.getAttribute('aria-label')?.length ?? 0).toBeGreaterThan(0);
+	});
+
+	it('zeigt den Scroll-Hinweis nur bei Überlauf', async () => {
+		const { container } = render(ScoreRankingTable, { kieze, bezirke });
+		container.style.width = '2400px';
+		await expect
+			.poll(() => document.querySelector('[data-testid="ranking-scroll-hint"]'))
+			.toBeNull();
+		container.style.width = '200px';
+		await expect
+			.poll(() => document.querySelector('[data-testid="ranking-scroll-hint"]'))
+			.not.toBeNull();
+	});
+
+	it('setzt Kontext-Spalten (Kultur, Kriminalität) mit einer Linie ab', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		const kulturTh = document.querySelector('[data-testid="ranking-sort-kultur"]')?.closest('th');
+		expect(kulturTh?.classList.contains('context-start')).toBe(true);
+		const firstRow = document.querySelector('[data-testid="ranking-table"] tbody tr');
+		const kulturCell = firstRow?.querySelector('[data-testid="ranking-cell-kultur"]');
+		expect(kulturCell?.classList.contains('context-start')).toBe(true);
+	});
+
+	it('Kiez-Links und Sortier-Buttons nutzen das 24-px-Ziel-Token', async () => {
+		render(ScoreRankingTable, { kieze, bezirke });
+		const link = document.querySelector('[data-testid="ranking-table"] tbody a');
+		expect(link?.className).toMatch(/min-h-\(--target-min\)/);
+		const sortBtn = document.querySelector('[data-testid="ranking-sort-name"]');
+		expect(sortBtn?.className).toMatch(/min-h-\(--target-min\)/);
+	});
+});
+
 describe('ScoreRankingTable.svelte · EN (i18n C4b)', () => {
 	afterEach(() => overwriteGetLocale(() => 'de'));
 
