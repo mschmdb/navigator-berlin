@@ -37,4 +37,11 @@ describe('Definitionslisten laufen auf schmalen Bildschirmen nicht über (#105)'
 			.map((file) => file.replace(`${ROOT}/`, ''));
 		expect(offenders).toEqual([]);
 	});
+
+	it('Fließtext auf Leseseiten bricht lange Links und Bezeichner um', () => {
+		const css = readFileSync(join(ROOT, 'src/app.css'), 'utf8');
+		expect(css).toMatch(
+			/\.text-measure\s+:where\(p,\s*li,\s*dd\)\s*\{[^}]*overflow-wrap:\s*break-word/
+		);
+	});
 });

@@ -9,7 +9,8 @@ const PAGES = [
 	'/en/architektur',
 	'/methodik',
 	'/methodik/kiez-score',
-	'/methodik/wahldaten'
+	'/methodik/wahldaten',
+	'/layer/bodenrichtwerte'
 ];
 const VIEWPORTS = [
 	{ width: 390, height: 844 },
