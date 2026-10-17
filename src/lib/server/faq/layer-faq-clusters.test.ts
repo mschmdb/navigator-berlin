@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { layerFaqClusters, templateAppliesToTarget } from './layer-faq-clusters.js';
+import {
+	LAYER_FAQ_SLUGS,
+	layerFaqClusters,
+	templateAppliesToTarget
+} from './layer-faq-clusters.js';
 
 const manifest = JSON.parse(
 	readFileSync(join(process.cwd(), 'static/layers/MANIFEST.json'), 'utf8')
@@ -21,11 +25,14 @@ describe('layerFaqClusters (#99)', () => {
 	});
 
 	it('kennt nur Slugs, die es im Manifest gibt', () => {
-		const mapped = ['laerm', 'gruen', 'oepnv', 'wohnen', 'klima'].flatMap((c) =>
-			[...manifestSlugs].filter((s) => layerFaqClusters(s).includes(c as never))
-		);
-		expect(mapped.length).toBeGreaterThan(0);
-		for (const slug of mapped) expect(manifestSlugs.has(slug)).toBe(true);
+		expect(LAYER_FAQ_SLUGS.length).toBeGreaterThan(0);
+		for (const slug of LAYER_FAQ_SLUGS) expect(manifestSlugs.has(slug)).toBe(true);
+	});
+
+	it('gibt Netz-Layern keine Haltedichte-Fragen', () => {
+		for (const slug of ['ubahn-netz', 'sbahn-netz', 'tram-netz']) {
+			expect(layerFaqClusters(slug)).toEqual([]);
+		}
 	});
 });
 
