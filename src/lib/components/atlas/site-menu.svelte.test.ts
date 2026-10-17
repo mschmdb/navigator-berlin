@@ -104,6 +104,16 @@ describe('site-menu.svelte', () => {
 		expect(kontakt.getAttribute('href')).toMatch(/^mailto:/);
 	});
 
+	it('Navigation und Rechtliches scrollen gemeinsam (Reflow bei geringer Höhe)', async () => {
+		render(SiteMenu, { open: true, onClose: () => {}, now: OCT, currentPath: '/' });
+		const scroll = (await page.getByTestId('site-menu-scroll').element()) as HTMLElement;
+		expect(scroll.className).toMatch(/overflow-y-auto/);
+		const impressum = (await page
+			.getByRole('link', { name: 'Impressum', exact: true })
+			.element()) as HTMLElement;
+		expect(scroll.contains(impressum)).toBe(true);
+	});
+
 	it('EN: englische Texte und /en-Links', async () => {
 		overwriteGetLocale(() => 'en');
 		render(SiteMenu, { open: true, onClose: () => {}, now: OCT, currentPath: '/en' });
