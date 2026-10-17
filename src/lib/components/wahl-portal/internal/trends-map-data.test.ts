@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { blendOverBasemap, contrastRatio, relativeLuminance } from './wechsel-map-data.js';
 import {
 	buildTrendSchraffur,
+	trendSchraffurLinie,
 	buildTrendsFeatureCollection,
 	TREND_SCHRAFFUR_FARBEN,
 	buildTrendsTableRows,
@@ -92,8 +93,16 @@ describe('#108: Schraffur für „fallend“ (Richtung ohne Farbe ablesbar)', ()
 		expect(TREND_SCHRAFFUR_FARBEN).toEqual([TREND_FALLEND_HELL, TREND_FALLEND_DUNKEL]);
 	});
 
+	it('Schraffur-Linie erreicht auf beiden Stufen ≥3:1 gegen die Fläche (WCAG 1.4.11, Codex #108)', () => {
+		for (const farbe of TREND_SCHRAFFUR_FARBEN) {
+			const flaeche = blendOverBasemap(farbe, TRENDS_FILL_OPACITY);
+			const linie = blendOverBasemap(trendSchraffurLinie(farbe), 1);
+			expect(contrastRatio(flaeche, linie)).toBeGreaterThanOrEqual(3);
+		}
+	});
+
 	it('baut ein kachelbares Diagonal-Tile mit sichtbaren und transparenten Pixeln', () => {
-		const spec = buildTrendSchraffur();
+		const spec = buildTrendSchraffur(trendSchraffurLinie(TREND_FALLEND_HELL));
 		expect(spec.width).toBe(spec.height);
 		expect(spec.data.length).toBe(spec.width * spec.height * 4);
 		const alphas = Array.from({ length: spec.width * spec.height }, (_, i) => spec.data[i * 4 + 3]);
