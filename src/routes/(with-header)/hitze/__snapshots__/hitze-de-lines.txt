@@ -17,7 +17,7 @@ li: 1 Adresse eingeben Tippe deinen Standort in die Karte.
 li: 2 Nächste Orte sehen Die Karte zeigt die kühlen Orte in deiner Nähe, sortiert nach Entfernung.
 li: 3 Hinnavigieren Ein Tap öffnet die Route in Google oder Apple Maps.
 h2: Offizielle Angebote der Stadt Berlin
-p: Der Hitze-Navigator ergänzt die Angebote der Stadt, er ersetzt sie nicht. Die offiziellen Quellen:
+p: Der Hitze-Navigator ergänzt die Angebote der Stadt. Die offiziellen Quellen:
 a: Hitzeschutzportal der Stadt Berlin Warnungen, Verhaltenstipps und Hintergründe der Senatsverwaltung.
 a: Offizielle Kühle-Orte-Karte Die städtische Karte mit Grünanlagen, Badestellen und Trinkbrunnen.
 a: Berliner Hitzeaktionsplan Die Strategie der Stadt gegen Hitzefolgen.

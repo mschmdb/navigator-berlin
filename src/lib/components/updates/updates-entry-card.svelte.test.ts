@@ -34,7 +34,7 @@ describe('updates-entry-card.svelte', () => {
 		render(UpdatesEntryCard, { entry });
 		const badge = page.getByTestId('category-badge');
 		await expect.element(badge).toBeInTheDocument();
-		await expect.element(badge).toHaveTextContent('Feature');
+		await expect.element(badge).toHaveTextContent('Funktion');
 	});
 
 	it('Detail-Link zeigt auf /updates/{slug}', async () => {
@@ -55,7 +55,7 @@ describe('updates-entry-card.svelte · DE-Wortlaut (i18n C4d)', () => {
 		render(UpdatesEntryCard, { entry });
 		const card = document.querySelector('[data-testid="updates-entry-card"]')!;
 		expect(card.textContent?.replace(/\s+/g, ' ').trim()).toBe(
-			'15. Mai 2026 Feature Launch · Test Erster Eintrag. Mehr lesen'
+			'15. Mai 2026 Funktion Launch · Test Erster Eintrag. Mehr lesen'
 		);
 		expect(card.querySelector('[lang]')).toBeNull();
 	});

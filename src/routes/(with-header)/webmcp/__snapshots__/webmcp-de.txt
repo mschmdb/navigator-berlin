@@ -9,7 +9,7 @@ h2: Browser-Support
 dt: Chrome 149+
 dd: Origin Trial ab Version 149, native Implementation auf document.modelContext. Lokal aktivierbar über das Flag chrome://flags/#enable-webmcp-testing plus Neustart. Stand September 2026.
 dt: ChatGPT-Desktop-App
-dd: Der eingebaute Browser stellt document.modelContext nativ bereit; Tool-Aufrufe setzen ein Runtime-Modell mit Site-Tools-Support voraus (GPT-5.6 Sol oder Terra) und die Freigabe unter Settings → Browser → Permissions.
+dd: Der eingebaute Browser stellt document.modelContext nativ bereit. Tool-Aufrufe brauchen ein Modell, das Site-Tools unterstützt (GPT-5.6 Sol oder Terra), und die Freigabe unter Settings → Browser → Permissions.
 dt: Microsoft Edge 150+
 dd: Origin Trial ab Version 150. Stand September 2026.
 dt: Firefox

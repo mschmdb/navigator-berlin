@@ -613,7 +613,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'kiez-score-kultur': {
 		calculation:
-			'Kultureller Zugang pro Planungsraum: log-gedämpfte Dichte kulturkollektiver POIs im Umkreis (Anzahl Einrichtungen, der erste Ort zählt stark, weitere flachen ab). Bibliothek (Gewicht 0.20, 1.000 m), Theater (0.15, 1.500 m), Museum (0.15, 1.500 m), Kino (0.12, 1.500 m), Soziokultur (0.13, 1.200 m), Galerie (0.10, 1.200 m), Kunst im Stadtraum (0.08, 800 m), Club (0.07, 1.200 m). Quelle OpenStreetMap (ODbL). Eigenständige Dimension, NICHT im Gesamt-Score: Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber. Die Log-Dämpfung verhindert, dass Außenbezirke flächendeckend auf null fallen.',
+			'Kultureller Zugang pro Planungsraum: log-gedämpfte Dichte kulturkollektiver POIs im Umkreis (Anzahl Einrichtungen, der erste Ort zählt stark, weitere flachen ab). Bibliothek (Gewicht 0.20, 1.000 m), Theater (0.15, 1.500 m), Museum (0.15, 1.500 m), Kino (0.12, 1.500 m), Soziokultur (0.13, 1.200 m), Galerie (0.10, 1.200 m), Kunst im Stadtraum (0.08, 800 m), Club (0.07, 1.200 m). Quelle OpenStreetMap (ODbL). Eigene Dimension außerhalb des Gesamt-Scores, weil sich Kultur in der Innenstadt ballt. Die Log-Dämpfung verhindert, dass Außenbezirke flächendeckend auf null fallen.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'fortlaufend (OSM-Sync)',
 		authorityKey: 'navigator-eigenberechnung-bezirke',
@@ -623,7 +623,7 @@ const LAYER_METHODOLOGY_SPECS = {
 		],
 		omissions: [
 			'Keine Bewertung von Programm, Qualität oder Eintrittspreis der Einrichtung.',
-			'Stolpersteine und Denkmale zählen NICHT (Memorial/Heritage, keine Kultur-Amenity).'
+			'Stolpersteine und Denkmale fließen nicht in die Kultur-Dimension ein.'
 		],
 		relatedLayers: [
 			'kultur-museum',
@@ -635,7 +635,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'kiez-score-kriminalitaet': {
 		calculation:
-			'Erfasste Kriminalität pro Bezirksregion: Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. Pro Delikt das 3-Jahres-Mittel (2023–2025), daraus der gewichtete Index, normalisiert auf 0–100 (300 → 0, ab 1750 → 100). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Die Werte liegen nur je Bezirksregion vor und werden auf die enthaltenen Planungsräume gespiegelt (innerhalb der Bezirksregion konstant). Eigenständige Dimension, NICHT im Gesamt-Score, struktureller Kontext wie die Soziale Lage. Höher heißt mehr erfasste Fälle, kein Sicherheits-Ranking.',
+			'Erfasste Kriminalität pro Bezirksregion: Häufigkeitszahl (Fälle pro 100.000 Einwohner) ausgewählter wohn-relevanter Delikte, gleichgewichtet (je 0.20): Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub/Handtaschenraub, Fahrraddiebstahl. Pro Delikt das 3-Jahres-Mittel (2023–2025), daraus der gewichtete Index, normalisiert auf 0–100 (300 → 0, ab 1750 → 100). Die Obergrenze kappt City-Core-Ausreißer (Regierungsviertel, Alexanderplatz), deren Häufigkeitszahl durch Touristen und Pendler überzeichnet ist. Die Werte liegen nur je Bezirksregion vor und werden auf die enthaltenen Planungsräume gespiegelt (innerhalb der Bezirksregion konstant). Eigene Dimension außerhalb des Gesamt-Scores, struktureller Kontext wie die Soziale Lage. Höher heißt mehr erfasste Fälle, kein Sicherheits-Ranking.',
 		aggregationLevel: 'lor-bezirksregion',
 		updateFrequency: 'jährlich (Kriminalitätsatlas, Stichtag 31.12.)',
 		authorityKey: 'navigator-eigenberechnung-kriminalitaetsatlas',

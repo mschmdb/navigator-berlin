@@ -18,7 +18,7 @@
 
 	const sourceShort = $derived(shortenSourceCompact(hit.source));
 	const licenseShort = $derived(shortenLicense(hit.license));
-	const formattedDate = $derived(formatYearMonth(hit.updatedAt));
+	const formattedDate = $derived(formatYearMonth(hit.updatedAt, localeOpts));
 	const outdated = $derived(isOutdated(hit.updatedAt));
 
 	let hostname = $derived.by(() => {

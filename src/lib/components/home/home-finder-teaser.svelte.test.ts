@@ -30,4 +30,13 @@ describe('home-finder-teaser', () => {
 		const chips = section.querySelectorAll('[data-testid="home-finder-beispiel"]');
 		expect(chips.length).toBeGreaterThanOrEqual(3);
 	});
+
+	it('setzt deutsche Anführungszeichen „…“ um die Beispiele (GH-92)', async () => {
+		render(HomeFinderTeaser, {});
+		const section = (await page.getByTestId('home-finder-teaser').element()) as HTMLElement;
+		const chips = [...section.querySelectorAll('[data-testid="home-finder-beispiel"]')];
+		for (const chip of chips) {
+			expect(chip.textContent?.trim()).toMatch(/^„[^"“”]+“$/);
+		}
+	});
 });

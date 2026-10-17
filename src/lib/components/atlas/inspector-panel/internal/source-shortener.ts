@@ -67,10 +67,13 @@ export function isOutdated(updatedAt: string, now: Date = new Date()): boolean {
 	return now.getTime() - updated > OUTDATED_MS;
 }
 
-export function formatYearMonth(updatedAt: string): string {
+/** Datenstand als ausgeschriebener Monat, z. B. „Juni 2024“ (GH-92). Ohne Locale: DE. */
+export function formatYearMonth(updatedAt: string, opts?: { locale?: string }): string {
 	const d = new Date(updatedAt);
 	if (Number.isNaN(d.getTime())) return updatedAt;
-	const year = d.getUTCFullYear();
-	const month = String(d.getUTCMonth() + 1).padStart(2, '0');
-	return `${year}-${month}`;
+	return new Intl.DateTimeFormat(opts?.locale === 'en' ? 'en-GB' : 'de-DE', {
+		month: 'long',
+		year: 'numeric',
+		timeZone: 'UTC'
+	}).format(d);
 }

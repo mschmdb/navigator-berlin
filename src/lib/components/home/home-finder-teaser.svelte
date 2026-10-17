@@ -31,7 +31,9 @@
 
 		<ul class="space-y-1 text-base text-ink" aria-label={m.home_finder_aria_label()}>
 			{#each BEISPIELE as beispiel (beispiel)}
-				<li data-testid="home-finder-beispiel">„{beispiel()}“</li>
+				<li data-testid="home-finder-beispiel">
+					{m.home_finder_beispiel_zitat({ text: beispiel() })}
+				</li>
 			{/each}
 		</ul>
 

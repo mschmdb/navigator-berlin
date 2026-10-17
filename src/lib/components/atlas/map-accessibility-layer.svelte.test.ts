@@ -64,7 +64,7 @@ describe('MapAccessibilityLayer', () => {
 		render(MapAccessibilityLayer, { props: { map: null, layers: [bezirkeLayer] } });
 		const list = page.getByTestId('map-a11y-feature-list');
 		await expect.element(list).not.toBeInTheDocument();
-		const empty = page.getByText(/Keine sichtbaren Features/);
+		const empty = page.getByText(/Keine sichtbaren Objekte/);
 		await expect.element(empty).toBeInTheDocument();
 	});
 
@@ -83,7 +83,7 @@ describe('MapAccessibilityLayer', () => {
 			.element(page.getByText('Visible places and boundaries on the map'))
 			.toBeInTheDocument();
 		await expect
-			.element(page.getByText('No visible features in the current view.'))
+			.element(page.getByText('No visible objects in the current view.'))
 			.toBeInTheDocument();
 	});
 
@@ -300,7 +300,7 @@ describe('MapAccessibilityLayer', () => {
 		];
 		const map = createFakeMap(features);
 		render(MapAccessibilityLayer, { props: { map, layers: [bezirkeLayer] } });
-		const empty = page.getByText(/Keine sichtbaren Features/);
+		const empty = page.getByText(/Keine sichtbaren Objekte/);
 		await expect.element(empty).toBeInTheDocument();
 	});
 

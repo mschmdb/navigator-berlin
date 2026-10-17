@@ -101,11 +101,14 @@ describe('isOutdated', () => {
 });
 
 describe('formatYearMonth', () => {
-	it('ISO mit Zeit → YYYY-MM', () => {
-		expect(formatYearMonth('2024-03-15T12:34:56Z')).toBe('2024-03');
+	it('ISO mit Zeit → ausgeschriebener Monat (GH-92)', () => {
+		expect(formatYearMonth('2024-03-15T12:34:56Z')).toBe('März 2024');
 	});
-	it('Date-only ISO → YYYY-MM', () => {
-		expect(formatYearMonth('2025-09-01')).toBe('2025-09');
+	it('Date-only ISO → ausgeschriebener Monat (GH-92)', () => {
+		expect(formatYearMonth('2025-09-01')).toBe('September 2025');
+	});
+	it('EN → englischer Monatsname (GH-92)', () => {
+		expect(formatYearMonth('2024-06-01', { locale: 'en' })).toBe('June 2024');
 	});
 	it('Invalid date → Input unverändert', () => {
 		expect(formatYearMonth('invalid')).toBe('invalid');

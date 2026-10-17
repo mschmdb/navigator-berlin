@@ -251,7 +251,7 @@ describe('KiezDetails.svelte', () => {
 			const table = document.querySelector('[data-testid="kiez-steckbrief"]');
 			// Lärm: übersetzter Wert + EN-Monat-Jahr-Stand.
 			expect(table?.textContent).toMatch(/Noise/);
-			expect(table?.textContent).toMatch(/loud/);
+			expect(table?.textContent).toMatch(/high/);
 			expect(table?.textContent).toMatch(/Source: Noise pollution 2023/);
 			expect(table?.textContent).toMatch(/June 2023/);
 			// Grünversorgung: übersetzter Wert + EN-Zähler (Komma-Tausender).

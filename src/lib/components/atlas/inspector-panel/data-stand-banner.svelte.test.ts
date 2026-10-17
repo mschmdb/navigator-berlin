@@ -18,10 +18,10 @@ const baseHit: LayerHit = {
 };
 
 describe('data-stand-banner.svelte (Story 1.18 Compact)', () => {
-	it('Kompakt-Format: "YYYY-MM · source · lizenz" ohne Stand:/Quelle:-Präfix', async () => {
+	it('Kompakt-Format: "Monat Jahr · source · lizenz" ohne Stand:/Quelle:-Präfix', async () => {
 		render(DataStandBanner, { hit: baseHit });
 		const txt = (await page.getByTestId('banner-text').element()).textContent ?? '';
-		expect(txt).toMatch(/2025-06/);
+		expect(txt).toMatch(/Juni 2025/);
 		expect(txt).toMatch(/FIS/);
 		expect(txt).toMatch(/dl-de\/zero/);
 		expect(txt).not.toMatch(/Stand:/);

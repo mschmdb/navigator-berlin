@@ -78,7 +78,7 @@ describe('renderTemplate', () => {
 
 	it('substituiert Lärm-Slots (Kategorie + Erklärung + Quelle + Stand)', () => {
 		const result = renderTemplate(laermDominantTemplate, ctx());
-		expect(result?.answer).toContain('laut'); // hoch → laut
+		expect(result?.answer).toContain('hoch'); // GH-92: Stufenwort wie im Inspector
 		expect(result?.answer).toContain('Hauptverkehrsstraßen');
 		expect(result?.answer).toContain('Lärmbelastung 2023'); // lesbarer Quellen-Name statt slug (11.3-Fix)
 		expect(result?.answer).not.toContain('laerm-2023');

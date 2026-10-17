@@ -45,5 +45,5 @@ dd: unteres Mittel
 dd: oberes Mittel
 dd: oberstes Viertel
 dd: Kriminalität: neutral (kein Farbverlauf)
-p: Erfasste Kriminalität ist ein neutraler Kontext-Wert (Häufigkeitszahl je Bezirksregion, höher = mehr erfasste Fälle), kein Gut-Maß. Bewusst nicht sortierbar und nicht im Gesamt-Score: kein Sicherheits-Ranking. Grenzen unter Methodik.
+p: Erfasste Kriminalität ist ein Kontext-Wert: die Häufigkeitszahl je Bezirksregion, höher heißt mehr erfasste Fälle. Die Spalte lässt sich bewusst nicht sortieren, zählt nicht zum Gesamt-Score und ist kein Sicherheits-Ranking. Grenzen unter Methodik.
 a: Methodik

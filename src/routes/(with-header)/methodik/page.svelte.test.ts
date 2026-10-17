@@ -193,7 +193,7 @@ describe('methodik +page.svelte · EN (i18n C4a)', () => {
 			a.textContent?.trim()
 		);
 		expect(tocLabels).toContain('Aggregation levels');
-		expect(tocLabels).toContain('What “Kiez” means here');
+		expect(tocLabels).toContain('The term Kiez');
 		expect(tocLabels).toContain('Sources and licences');
 	});
 

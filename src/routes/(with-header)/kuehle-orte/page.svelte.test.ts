@@ -23,10 +23,10 @@ describe('Kühle-Orte-Landing (Story 16.1)', () => {
 		await expect.element(cta).toHaveAttribute('href', '/explore?layers=kuehle-orte&mode=hitze');
 	});
 
-	it('Intro trägt die Angebot-Haltung (kein Behörden-Ersatz)', async () => {
+	it('Intro verweist auf die Hinweise der Stadt (GH-92)', async () => {
 		render(Page);
 		await expect
-			.element(page.getByText(/kein Ersatz für die Hinweise der Stadt/))
+			.element(page.getByText(/Die Hinweise der Stadt gelten weiter/))
 			.toBeInTheDocument();
 	});
 
@@ -69,7 +69,7 @@ describe('kuehle-orte · EN (i18n C4c)', () => {
 		const root = renderEn();
 		expect(root.querySelector('h1')?.textContent?.trim()).toBe('Cool places in Berlin');
 		const text = root.textContent ?? '';
-		expect(text).toContain('where can I cool down?');
+		expect(text).toContain('Where can you cool down?');
 		expect(text).toContain('Explore the map');
 		expect(text).toContain('Opens the atlas with the cool places layer already active.');
 		expect(text).not.toContain('Karte');

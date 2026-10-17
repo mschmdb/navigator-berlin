@@ -12,7 +12,8 @@
 	import {
 		filterLayers,
 		groupLayersByBundle,
-		getLayerDisplayName
+		getLayerDisplayName,
+		bundleLabel
 	} from './internal/layer-palette-filter.js';
 	import { getLayerExplain } from './inspector-panel/internal/layer-explain.js';
 	import { shouldHandleSlash } from './internal/palette-shortcut.js';
@@ -192,7 +193,9 @@
 								<span class="font-medium text-ink"
 									>{getLayerDisplayName(layer.slug, localeOpts)}</span
 								>
-								<span class="text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
+								<span class="shrink-0 text-xs text-ink-subtle"
+									>{bundleLabel(layer.bundleGroup, localeOpts)}</span
+								>
 							</button>
 						</li>
 					{/each}
@@ -238,7 +241,9 @@
 										</span>
 									{/if}
 								</span>
-								<span class="text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
+								<span class="shrink-0 text-xs text-ink-subtle"
+									>{bundleLabel(layer.bundleGroup, localeOpts)}</span
+								>
 							</button>
 						</li>
 					{/each}

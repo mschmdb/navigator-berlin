@@ -230,7 +230,7 @@ describe('ScoreRankingTable.svelte · EN (i18n C4b)', () => {
 		expect(text).toContain('Colour per column, relative:');
 		expect(text).toContain('bottom quartile');
 		expect(text).toContain('Recorded crime: neutral (no colour gradient)');
-		expect(text).toContain('Deliberately not sortable');
+		expect(text).toContain('deliberately not sortable');
 		expect(section.querySelector('[role="radiogroup"]')?.getAttribute('aria-label')).toBe(
 			'Switch ranking view'
 		);

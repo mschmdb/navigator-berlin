@@ -142,7 +142,7 @@ describe('methodik/wahldaten · EN (i18n C4b)', () => {
 			'Postal-vote groups',
 			'Polling district to Kiez aggregation',
 			'Repeat election 2023',
-			'Geometries + coverage',
+			'Geometries and coverage',
 			'Update cadence',
 			'Party aliases',
 			'Cross-layer linking'

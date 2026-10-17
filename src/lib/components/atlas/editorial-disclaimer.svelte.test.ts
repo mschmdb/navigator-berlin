@@ -126,7 +126,7 @@ describe('editorial-disclaimer.svelte', () => {
 		it('kiez-score-explainer nennt MSS-Anteil + scope-Schnitte', async () => {
 			render(EditorialDisclaimer, { variant: 'kiez-score-explainer' });
 			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.textContent).toMatch(/Umwelt- & Infrastruktur-Score/);
+			expect(el.textContent).toMatch(/fünf Dimensionen pro Planungsraum/);
 			expect(el.textContent).toMatch(/Sozialstruktur/);
 			expect(el.textContent).toMatch(/Bezahlbarkeit/);
 			expect(el.getAttribute('data-variant')).toBe('kiez-score-explainer');
@@ -137,8 +137,8 @@ describe('editorial-disclaimer.svelte', () => {
 		it('wahl-portal-footnote → deskriptiv-ohne-Ranking-Hinweis', async () => {
 			render(EditorialDisclaimer, { variant: 'wahl-portal-footnote' });
 			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-			expect(el.textContent).toMatch(/deskriptiv/);
-			expect(el.textContent).toMatch(/kein Ranking/);
+			expect(el.textContent).toMatch(/beschreiben Stimmenanteile/);
+			expect(el.textContent).toMatch(/nicht in eine Rangfolge/);
 			expect(el.getAttribute('data-variant')).toBe('wahl-portal-footnote');
 		});
 	});
@@ -162,7 +162,7 @@ describe('editorial-disclaimer.svelte', () => {
 			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
 			expect(el.textContent).toMatch(/Briefstimmen sind auf allen Ebenen enthalten/);
 			expect(el.textContent).toMatch(/Briefwahl-Gruppe/);
-			expect(el.textContent).toMatch(/Schätzung, keine amtliche Aufteilung/);
+			expect(el.textContent).toMatch(/nach Wahlberechtigten geschätzt/);
 			expect(el.textContent).not.toMatch(/ausgeschlossen/);
 			expect(el.getAttribute('data-variant')).toBe('wahl-stimmenanteile');
 		});
@@ -179,7 +179,7 @@ describe('editorial-disclaimer.svelte', () => {
 			const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
 			expect(el.textContent).toMatch(/Postal votes are included at every level/);
 			expect(el.textContent).toMatch(/postal-vote group/);
-			expect(el.textContent).toMatch(/an estimate, not an official breakdown/);
+			expect(el.textContent).toMatch(/estimated proportionally by eligible voters/);
 			expect(el.getAttribute('lang')).toBeNull();
 		});
 

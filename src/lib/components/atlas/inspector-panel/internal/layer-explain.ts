@@ -304,12 +304,12 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	},
 	'kiez-score-kultur': {
 		short: 'Aggregat „Kultur“ pro Planungsraum (0–100, Kiez-Score)',
-		long: 'Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigenständige Dimension, NICHT im Gesamt-Score: Kultur ballt sich in der Innenstadt, daher kein Headline-Treiber.',
+		long: 'Kultureller Zugang: log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OSM/ODbL). Eigene Dimension außerhalb des Gesamt-Scores, weil sich Kultur in der Innenstadt ballt.',
 		valueScaleExplain: 'Höher = mehr Kulturorte in Reichweite'
 	},
 	'kiez-score-kriminalitaet': {
 		short: 'Erfasste Kriminalität (Häufigkeitszahl) je Bezirksregion',
-		long: 'Häufigkeitszahl ausgewählter wohn-relevanter Delikte, 3-Jahres-Mittel aus dem Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0). Granularität Bezirksregion, auf Planungsräume gespiegelt. Strukturelle Aggregat-Größe, NICHT im Gesamt-Score. Bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen/Pendler.',
+		long: 'Häufigkeitszahl ausgewählter wohn-relevanter Delikte, 3-Jahres-Mittel aus dem Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0). Granularität Bezirksregion, auf Planungsräume gespiegelt. Strukturelle Aggregat-Größe außerhalb des Gesamt-Scores. Bezieht Fälle nur auf gemeldete Einwohner, nicht auf Touristen/Pendler.',
 		valueScaleExplain:
 			'Höher = mehr erfasste Fälle pro Einwohner, kein Maß für persönliches Risiko und keine Wertung als „guter“ oder „schlechter“ Kiez.'
 	},

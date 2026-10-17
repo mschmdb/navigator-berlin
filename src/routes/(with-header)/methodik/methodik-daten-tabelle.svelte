@@ -10,15 +10,14 @@
 	} from '$lib/components/atlas/internal/layer-palette-filter.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
-	import { baseLocale, getLocale } from '$lib/paraglide/runtime.js';
+	import { getLocale } from '$lib/paraglide/runtime.js';
 
 	type Props = { layers: readonly LayerMetadata[] };
 	let { layers }: Props = $props();
 
 	const locale = getLocale();
-	// DE zeigt den Manifest-Rohwert ("C: Umwelt"), jede weitere Locale das Bundle-Label.
-	const bundleCell = (layer: LayerMetadata): string =>
-		locale === baseLocale ? layer.bundleGroup : bundleLabel(layer.bundleGroup, { locale });
+	// Alle Locales zeigen das Kategorie-Label ohne Bundle-Buchstaben (GH-92).
+	const bundleCell = (layer: LayerMetadata): string => bundleLabel(layer.bundleGroup, { locale });
 
 	const sortedLayers = $derived(
 		[...layers].sort((a, b) =>
@@ -64,7 +63,7 @@
 					</td>
 					<td class="px-3 py-2 text-xs text-ink-muted">{bundleCell(layer)}</td>
 					<td class="px-3 py-2 text-xs text-ink tabular-nums">
-						{formatYearMonth(layer.sourceUpdatedAt ?? layer.fetchedAt)}
+						{formatYearMonth(layer.sourceUpdatedAt ?? layer.fetchedAt, { locale })}
 					</td>
 					<td class="px-3 py-2 text-xs text-ink">
 						{shortenLicense(layer.license)}

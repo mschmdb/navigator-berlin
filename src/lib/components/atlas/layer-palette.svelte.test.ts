@@ -121,6 +121,20 @@ describe('layer-palette.svelte', () => {
 		await expect.element(page.getByTestId('palette-recent')).toBeInTheDocument();
 	});
 
+	it('nennt die Kategorie ausgeschrieben statt als Bundle-Buchstabe (GH-92)', async () => {
+		render(Harness, {
+			open: true,
+			layers: LAYERS,
+			breakpoint: 'mobile',
+			initialRecent: ['bezirke']
+		});
+		const toggle = page.getByTestId('palette-recent').getByTestId('palette-toggle-bezirke');
+		await expect.element(toggle).toBeInTheDocument();
+		const text = ((await toggle.element()) as HTMLElement).textContent ?? '';
+		expect(text).toContain('Grenzen');
+		expect(text).not.toMatch(/\bA\s*$/);
+	});
+
 	it('Active-Count im Header zeigt korrekte Zahl', async () => {
 		render(Harness, {
 			open: true,
