@@ -61,7 +61,16 @@ export default defineConfig({
 					// selbst `d3-shape` nutzt -- Home/Atlas luden d3-sankey dadurch
 					// ungewollt mit). Beide Regeln bleiben VOR der layerchart-Regel, sonst
 					// zöge diese `d3-shape` zuerst in den `layerchart`-Chunk.
-					if (id.includes('node_modules/d3-sankey')) return 'sankey';
+					// #127: die Grafik nutzt LayerCharts `Sankey` über den Einstieg
+					// `layerchart/svg`. Barrel und Sankey-Komponente gehören in den
+					// sankey-Chunk, sonst importiert der `layerchart`-Chunk (Home/Atlas)
+					// d3-sankey statisch mit.
+					if (
+						id.includes('node_modules/d3-sankey') ||
+						id.includes('node_modules/layerchart/dist/svg.js') ||
+						id.includes('node_modules/layerchart/dist/components/graph/Sankey.svelte')
+					)
+						return 'sankey';
 					if (id.includes('node_modules/d3-shape')) return 'd3-shape';
 					if (
 						id.includes('node_modules/layerchart') ||

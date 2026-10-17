@@ -1,6 +1,6 @@
 import { describe, expect, it, afterEach } from 'vitest';
 import { SankeyInteractionState } from './sankey-interaction-state.svelte.js';
-import type { SankeyPositionedLink } from './sankey-d3.svelte.js';
+import type { SankeyPositionedLink } from './sankey-layout.js';
 
 /** Baut einen relativ positionierten Container + ein Zielelement mit
  * bekannter Größe/Position darin -- echte Browser-Layout-Maße statt
@@ -34,7 +34,6 @@ function link(overrides: Partial<SankeyPositionedLink> = {}): SankeyPositionedLi
 		nach: 'GRÜNE',
 		jahr: 2021,
 		width: 10,
-		path: 'M0,0',
 		...overrides
 	};
 }
@@ -109,5 +108,36 @@ describe('SankeyInteractionState#onLinkPointerMove (Rand-Clamping)', () => {
 		);
 
 		expect(state.tooltipPos.x).toBeLessThanOrEqual(40);
+	});
+});
+
+describe('SankeyInteractionState#toggleSelectedLink (#127 Übergangs-Liste)', () => {
+	it('hebt ein angetipptes Band hervor und hebt es beim zweiten Antippen auf', () => {
+		const state = new SankeyInteractionState();
+		state.toggleSelectedLink('a->b');
+		expect(state.selectedLinkKey).toBe('a->b');
+		expect(state.hoveredLinkKey).toBe('a->b');
+		state.toggleSelectedLink('a->b');
+		expect(state.selectedLinkKey).toBeNull();
+		expect(state.hoveredLinkKey).toBeNull();
+	});
+
+	it('Hover überlagert die Auswahl nur vorübergehend', () => {
+		const state = new SankeyInteractionState();
+		state.toggleSelectedLink('a->b');
+		state.onLinkPointerMove({ clientX: 0, clientY: 0 } as PointerEvent, link());
+		expect(state.hoveredLinkKey).not.toBe('a->b');
+		state.onLinkLeave();
+		expect(state.hoveredLinkKey).toBe('a->b');
+	});
+
+	it('reset löscht Auswahl, Hover und Tooltip', () => {
+		const state = new SankeyInteractionState();
+		state.toggleSelectedLink('a->b');
+		state.tooltipVisible = true;
+		state.reset();
+		expect(state.selectedLinkKey).toBeNull();
+		expect(state.hoveredLinkKey).toBeNull();
+		expect(state.tooltipVisible).toBe(false);
 	});
 });

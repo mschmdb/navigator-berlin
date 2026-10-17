@@ -155,6 +155,8 @@
 	"wahl_portal_spalte_nach": "Nach",
 	"wahl_portal_spalte_jahr": "Jahr",
 	"wahl_portal_spalte_gebiete": "Gebiete",
+	"wahl_portal_sankey_liste_eintrag": "{value} Gebiete, {anteil}",
+	"wahl_portal_sankey_liste_hinweis": "Antippen hebt den Übergang in der Grafik hervor.",
 	"wahl_portal_sankey_table_caption": "Partei-Übergänge nach Jahr",
 	"wahl_portal_sankey_band_aria_label_singular": "{von} → {nach}: {value} Gebiete",
 	"wahl_portal_sankey_band_aria_label_plural": "{von} → {nach}: {value} Gebiete",

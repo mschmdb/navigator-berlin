@@ -8,7 +8,7 @@
  */
 import { m } from '$lib/paraglide/messages.js';
 import type { LocaleFormatOptions } from '$lib/i18n/format.js';
-import type { SankeyPositionedLink, SankeyPositionedNode } from './sankey-d3.svelte.js';
+import type { SankeyPositionedLink, SankeyPositionedNode } from './sankey-layout.js';
 import type { SankeyTooltipContent } from './sankey-tooltip.svelte';
 import { parteiDisplayName } from './winner-map-data.js';
 

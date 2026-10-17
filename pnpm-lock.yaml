@@ -48,9 +48,6 @@ importers:
       d3-interpolate:
         specifier: ^3.0.1
         version: 3.0.1
-      d3-sankey:
-        specifier: ^0.12.3
-        version: 0.12.3
       d3-scale:
         specifier: ^4.0.2
         version: 4.0.2
@@ -169,6 +166,9 @@ importers:
       csv-parse:
         specifier: ^6.2.1
         version: 6.2.1
+      d3-sankey:
+        specifier: ^0.12.3
+        version: 0.12.3
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -3690,8 +3690,8 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
 
-  legacy-javascript@0.0.1:
-    resolution: {integrity: sha512-lPyntS4/aS7jpuvOlitZDFifBCb4W8L/3QU0PLbUTUj+zYah8rfVjYic88yG7ZKTxhS5h9iz7duT8oUXKszLhg==}
+  legacy-javascript@0.0.3:
+    resolution: {integrity: sha512-1r6MT4dVaJyXt4G07Cm2cQ0AUaLJdefiEp4SmIAylA++gnEQ82YvmzE58RkM5EP0fk5hROLCslUPGnwIYdZQVA==}
 
   lerc@3.0.0:
     resolution: {integrity: sha512-Rm4J/WaHhRa93nCN2mwWDZFoRVF18G1f47C+kvQWyHGEZxFpTUi73p7lMVSAndyxGt6lJ2/CFbOcf9ra5p8aww==}
@@ -6247,7 +6247,7 @@ snapshots:
 
   '@paulirish/trace_engine@0.0.53':
     dependencies:
-      legacy-javascript: 0.0.1
+      legacy-javascript: 0.0.3
       third-party-web: 0.30.0
 
   '@petamoriken/float16@3.9.3':
@@ -8554,7 +8554,7 @@ snapshots:
       - '@sveltejs/kit'
       - zod
 
-  legacy-javascript@0.0.1: {}
+  legacy-javascript@0.0.3: {}
 
   lerc@3.0.0:
     optional: true
