@@ -196,7 +196,7 @@
 		<a
 			href={localizedHref('/hitze')}
 			data-testid="layer-detail-hitze-link"
-			class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
 		>
 			{m.layer_page_hitze_cta()}
 		</a>
@@ -226,9 +226,9 @@
 
 	<section
 		data-testid="layer-detail-source-card"
-		class="flex flex-col gap-2 border border-rule bg-bg-elevated p-4"
+		class="flex flex-col gap-2 border-t border-rule pt-4"
 	>
-		<h2 class="font-sans text-sm font-semibold text-ink-muted">
+		<h2 class="text-base font-semibold text-ink">
 			{m.layer_page_source_heading()}
 		</h2>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
@@ -270,8 +270,8 @@
 	</section>
 
 	{#if explain.valueScaleExplain || explain.unit}
-		<section data-testid="layer-detail-scale" class="flex flex-col gap-2 border border-rule p-4">
-			<h2 class="font-sans text-sm font-semibold text-ink-muted">
+		<section data-testid="layer-detail-scale" class="flex flex-col gap-2 border-t border-rule pt-4">
+			<h2 class="text-base font-semibold text-ink">
 				{m.layer_page_values_heading()}
 			</h2>
 			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
@@ -293,9 +293,9 @@
 		<section
 			data-testid="layer-detail-methodology"
 			aria-labelledby="layer-detail-methodology-h"
-			class="flex flex-col gap-2 border border-rule p-4"
+			class="flex flex-col gap-2 border-t border-rule pt-4"
 		>
-			<h2 id="layer-detail-methodology-h" class="font-sans text-sm font-semibold text-ink-muted">
+			<h2 id="layer-detail-methodology-h" class="text-base font-semibold text-ink">
 				{m.layer_page_calculation_heading()}
 			</h2>
 			{#if methodology.calculation}
@@ -332,9 +332,9 @@
 			<section
 				data-testid="layer-detail-coverage-gaps"
 				aria-labelledby="layer-detail-coverage-h"
-				class="flex flex-col gap-2 border border-rule p-4"
+				class="flex flex-col gap-2 border-t border-rule pt-4"
 			>
-				<h2 id="layer-detail-coverage-h" class="font-sans text-sm font-semibold text-ink-muted">
+				<h2 id="layer-detail-coverage-h" class="text-base font-semibold text-ink">
 					{m.layer_page_coverage_gaps_heading()}
 				</h2>
 				<ul class="list-disc pl-5 text-base text-ink">
@@ -349,9 +349,9 @@
 			<section
 				data-testid="layer-detail-omissions"
 				aria-labelledby="layer-detail-omissions-h"
-				class="flex flex-col gap-2 border border-rule p-4"
+				class="flex flex-col gap-2 border-t border-rule pt-4"
 			>
-				<h2 id="layer-detail-omissions-h" class="font-sans text-sm font-semibold text-ink-muted">
+				<h2 id="layer-detail-omissions-h" class="text-base font-semibold text-ink">
 					{m.layer_page_omissions_heading()}
 				</h2>
 				<ul class="list-disc pl-5 text-base text-ink">
@@ -366,9 +366,9 @@
 			<section
 				data-testid="layer-detail-related"
 				aria-labelledby="layer-detail-related-h"
-				class="flex flex-col gap-2 border border-rule p-4"
+				class="flex flex-col gap-2 border-t border-rule pt-4"
 			>
-				<h2 id="layer-detail-related-h" class="font-sans text-sm font-semibold text-ink-muted">
+				<h2 id="layer-detail-related-h" class="text-base font-semibold text-ink">
 					{m.layer_page_related_heading()}
 				</h2>
 				<ul class="flex flex-wrap gap-x-4 gap-y-1.5 text-base">
@@ -386,7 +386,7 @@
 			</section>
 		{/if}
 
-		<aside data-testid="layer-detail-methodik-link" class="border border-rule bg-bg p-3">
+		<aside data-testid="layer-detail-methodik-link" class="border-t border-rule pt-4">
 			{#if isKiezScore}
 				<p class="text-xs text-ink-muted">
 					<a
@@ -410,7 +410,7 @@
 	{:else}
 		<aside
 			data-testid="layer-detail-methodology-empty"
-			class="flex flex-col gap-2 border border-rule bg-bg p-4"
+			class="flex flex-col gap-2 border-t border-rule pt-4"
 		>
 			<p class="text-base text-ink">
 				{m.layer_page_methodology_empty_text()}
@@ -443,14 +443,17 @@
 		</a>
 	</p>
 
-	<a
-		data-testid="layer-detail-inspector-link"
-		href={inspectorHref}
-		onclick={() => trackLanding('map_link_bottom', 'layer')}
-		class="inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2 hover:text-accent-strong"
-	>
-		{m.layer_page_map_button()}
-	</a>
+	<!-- #90: Den zweiten Karten-Link braucht nur eine lange Seite, also eine mit FAQ. -->
+	{#if data.faq.length > 0}
+		<a
+			data-testid="layer-detail-inspector-link"
+			href={inspectorHref}
+			onclick={() => trackLanding('map_link_bottom', 'layer')}
+			class="inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2 hover:text-accent-strong"
+		>
+			{m.layer_page_map_button()}
+		</a>
+	{/if}
 
 	<FaqSection items={data.faq} pageType="layer" contentLocale={data.faqLocale} />
 </article>

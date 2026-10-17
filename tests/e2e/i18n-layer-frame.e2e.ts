@@ -163,7 +163,8 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		await expect(page).toHaveURL(/\/en\/methodik/);
 
 		await page.goto(`/en/layer/${LAYER_WITH_METHODOLOGY}`);
-		const inspectorLink = page.getByTestId('layer-detail-inspector-link');
+		// #90: der untere Karten-Link erscheint nur mit FAQ, der obere Button immer.
+		const inspectorLink = page.getByTestId('layer-detail-map-button');
 		await expect(inspectorLink).toContainText('View on the map');
 		await inspectorLink.click();
 		await expect(page).toHaveURL(new RegExp(`/en/explore\\?layers=${LAYER_WITH_METHODOLOGY}`));
