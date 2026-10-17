@@ -93,7 +93,8 @@ function text(value: string, style: Record<string, unknown>): SatoriNode {
 function buildHeader(params: OgParams): SatoriNode {
 	const lines: SatoriNode[] = [
 		text(params.address, {
-			fontFamily: 'Plex Serif',
+			fontFamily: 'Plex Sans',
+			fontWeight: 700,
 			fontSize: 64,
 			color: COLOR_INK,
 			lineHeight: 1.1,
@@ -123,7 +124,7 @@ function buildLayerList(params: OgParams): SatoriNode {
 	}
 	const items = params.topLayers.map((label) =>
 		text(label, {
-			fontFamily: 'Plex Mono',
+			fontFamily: 'Plex Sans',
 			fontSize: 30,
 			color: COLOR_INK,
 			lineHeight: 1.3
@@ -151,7 +152,7 @@ function buildFooter(params: OgParams): SatoriNode {
 				fontWeight: 600
 			}),
 			text(`Stand ${params.generatedDate}`, {
-				fontFamily: 'Plex Mono',
+				fontFamily: 'Plex Sans',
 				fontSize: 20,
 				color: COLOR_INK_SUBTLE
 			})
@@ -182,9 +183,9 @@ export function buildOgCardVdom(params: OgParams): SatoriNode {
 }
 
 export interface OgFont {
-	name: 'Plex Sans' | 'Plex Serif' | 'Plex Mono';
+	name: 'Plex Sans';
 	data: Buffer | ArrayBuffer;
-	weight: 400 | 600;
+	weight: 400 | 600 | 700;
 	style: 'normal';
 }
 
@@ -222,8 +223,7 @@ async function woff2ToTtf(woff2: Buffer): Promise<Buffer> {
 const FONTSOURCE_FILES = {
 	sans400: '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2',
 	sans600: '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2',
-	serif400: '@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-400-normal.woff2',
-	mono400: '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2'
+	sans700: '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-700-normal.woff2'
 } as const;
 
 async function loadFontsourceWoff2(pkg: string): Promise<Buffer> {
@@ -237,22 +237,19 @@ async function loadFontsourceWoff2(pkg: string): Promise<Buffer> {
 export async function loadDefaultOgFonts(_staticDir?: string): Promise<OgFont[]> {
 	void _staticDir;
 	if (cachedFonts) return cachedFonts;
-	const [sansRaw, sansBoldRaw, serifRaw, monoRaw] = await Promise.all([
+	const [sansRaw, sansSemiRaw, sansBoldRaw] = await Promise.all([
 		loadFontsourceWoff2(FONTSOURCE_FILES.sans400),
 		loadFontsourceWoff2(FONTSOURCE_FILES.sans600),
-		loadFontsourceWoff2(FONTSOURCE_FILES.serif400),
-		loadFontsourceWoff2(FONTSOURCE_FILES.mono400)
+		loadFontsourceWoff2(FONTSOURCE_FILES.sans700)
 	]);
 	// wawoff2 uses shared WASM memory state. Sequential decompression avoids cross-call corruption.
 	const sans = await woff2ToTtf(sansRaw);
+	const sansSemi = await woff2ToTtf(sansSemiRaw);
 	const sansBold = await woff2ToTtf(sansBoldRaw);
-	const serif = await woff2ToTtf(serifRaw);
-	const mono = await woff2ToTtf(monoRaw);
 	cachedFonts = [
 		{ name: 'Plex Sans', data: sans, weight: 400, style: 'normal' },
-		{ name: 'Plex Sans', data: sansBold, weight: 600, style: 'normal' },
-		{ name: 'Plex Serif', data: serif, weight: 400, style: 'normal' },
-		{ name: 'Plex Mono', data: mono, weight: 400, style: 'normal' }
+		{ name: 'Plex Sans', data: sansSemi, weight: 600, style: 'normal' },
+		{ name: 'Plex Sans', data: sansBold, weight: 700, style: 'normal' }
 	];
 	return cachedFonts;
 }

@@ -113,9 +113,9 @@ describe('buildBezirkCardVdom', () => {
 		expect(texts.some((t) => t.includes('/bezirk/mitte'))).toBe(true);
 	});
 
-	it('renders Sub-Label „Bezirk Berlin"', () => {
+	it('renders Sub-Label „Bezirk in Berlin"', () => {
 		const texts = collectText(buildBezirkCardVdom(params));
-		expect(texts.some((t) => /Bezirk Berlin/i.test(t))).toBe(true);
+		expect(texts.some((t) => /Bezirk in Berlin/i.test(t))).toBe(true);
 	});
 
 	it('falls back to en-dash when composite is null', () => {

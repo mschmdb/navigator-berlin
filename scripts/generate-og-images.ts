@@ -76,21 +76,21 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 	{
 		slug: 'methodik',
 		headline: 'Methodik',
-		subline: 'Wie wir Daten verarbeiten',
+		subline: 'Quellen und Berechnung',
 		body: 'Quellen, Lizenzen, Aktualität, Aggregations-Regeln. Auflösung pro Adresse, Kiez und Bezirk.',
 		footerUrl: '/methodik'
 	},
 	{
 		slug: 'methodik-kiez-score',
 		headline: 'Kiez-Score',
-		subline: 'Methodik · 5 Dimensionen',
-		body: 'Ruhe, Grün, Mobilität, soziale Lage, Versorgung. Pro Dimension 0 bis 100, gleich gewichtet zum Composite. Quellen und Berechnung offen dokumentiert.',
+		subline: 'Methodik, fünf Dimensionen',
+		body: 'Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz. Pro Dimension 0 bis 100, gleich gewichtet zum Gesamtwert. Quellen und Berechnung offen dokumentiert.',
 		footerUrl: '/methodik/kiez-score'
 	},
 	{
 		slug: 'methodik-wahldaten',
 		headline: 'Wahldaten',
-		subline: 'Methodik · Berlin-Wahlen',
+		subline: 'Methodik der Berlin-Wahlen',
 		body: 'Woher die Wahlergebnisse stammen, wie wir sie auf Kieze und Bezirke übertragen und welche Grenzen die Zahlen haben.',
 		footerUrl: '/methodik/wahldaten'
 	},
@@ -104,14 +104,14 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 	{
 		slug: 'architektur',
 		headline: 'Architektur',
-		subline: 'Wie das Ding gebaut ist',
+		subline: 'Technik und Betrieb',
 		body: 'SvelteKit auf Node, Postgres für Aggregate, MapLibre + PMTiles fürs Rendern. Static-only-Daten, kein Live-Backend, kein User-Login. Open-Source-Stack.',
 		footerUrl: '/architektur'
 	},
 	{
 		slug: 'datenschutz',
 		headline: 'Datenschutz',
-		subline: 'Was wir speichern',
+		subline: 'Gespeicherte Daten',
 		body: 'Kein Login, keine Cookies, keine personalisierte Werbung. Cookieless Analytics via Plausible-Self-Host. Search-Queries gehen anonymisiert an Photon-OSM.',
 		footerUrl: '/datenschutz'
 	},
@@ -125,14 +125,14 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 	{
 		slug: 'ueber',
 		headline: 'Über das Projekt',
-		subline: 'Wer, warum, wie',
+		subline: 'Betreiber und Hintergrund',
 		body: 'Wer navigator.berlin betreibt, warum es das Projekt gibt und wie es gebaut wird. Privat betrieben, ohne Werbung.',
 		footerUrl: '/ueber'
 	},
 	{
 		slug: 'updates',
 		headline: 'Updates',
-		subline: 'Daten · Features · Methodik',
+		subline: 'Daten, Funktionen, Methodik',
 		body: 'Wann welcher Datensatz refreshed wurde, welches Feature neu ist, welche Methodik-Änderung wir dokumentiert haben. Per RSS, Atom oder JSON-Feed abonnierbar.',
 		footerUrl: '/updates'
 	},
@@ -440,11 +440,11 @@ async function tryLoadWahlTargets(): Promise<WahlTarget[]> {
 			const title =
 				w.typ === 'bvv'
 					? `${TYP_LABELS[w.typ]} ${w.jahr}`
-					: `${TYP_LABELS[w.typ]} ${w.jahr} · ${STIMMTYP_LABELS[w.stimmtyp]}`;
+					: `${TYP_LABELS[w.typ]} ${w.jahr}, ${STIMMTYP_LABELS[w.stimmtyp]}`;
 			targets.push({
 				slug,
-				title: w.isRepeatElection ? `${title} · Wiederholung` : title,
-				subline: `Berlin gesamt · ${top.length > 0 ? 'Top-5-Parteien' : 'keine Daten'}`,
+				title: w.isRepeatElection ? `${title} (Wiederholung)` : title,
+				subline: `Berlin gesamt, ${top.length > 0 ? 'Top-5-Parteien' : 'keine Daten'}`,
 				top5: top.map((t) => ({
 					kurzname: t.parteiKurzname,
 					anteil: t.anteil,
