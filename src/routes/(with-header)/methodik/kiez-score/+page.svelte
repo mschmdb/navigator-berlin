@@ -174,7 +174,7 @@
 			{m.methodik_kiez_score_section_normalisation_heading()}
 		</h2>
 		<p class="text-base leading-body text-ink">{m.methodik_kiez_score_norm_p1()}</p>
-		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-base leading-body">
+		<dl class="definition-grid gap-x-3 gap-y-1.5 text-base leading-body">
 			<dt class="text-sm text-ink-muted">{m.methodik_kiez_score_norm_ordinal3_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_ordinal3_def()}</dd>
 			<dt class="text-sm text-ink-muted">{m.methodik_kiez_score_norm_ordinal4_term()}</dt>

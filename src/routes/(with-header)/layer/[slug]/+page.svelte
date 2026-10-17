@@ -174,7 +174,10 @@
 	class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8"
 >
 	<header class="flex flex-col gap-2">
-		<h1 data-testid="layer-detail-name" class="text-3xl font-bold text-ink">
+		<h1
+			data-testid="layer-detail-name"
+			class="text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl"
+		>
 			{detail.layerName}
 		</h1>
 		<a
@@ -231,7 +234,7 @@
 		<h2 class="text-base font-semibold text-ink">
 			{m.layer_page_source_heading()}
 		</h2>
-		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
+		<dl class="definition-grid gap-x-3 gap-y-1.5 text-sm">
 			<dt class="text-xs text-ink-subtle">{m.layer_page_provider_label()}</dt>
 			<dd class="text-ink">
 				{#if meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
@@ -274,7 +277,7 @@
 			<h2 class="text-base font-semibold text-ink">
 				{m.layer_page_values_heading()}
 			</h2>
-			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
+			<dl class="definition-grid gap-x-3 gap-y-1.5 text-sm">
 				{#if explain.unit}
 					<dt class="text-xs text-ink-subtle">{m.layer_page_unit_label()}</dt>
 					<dd class="text-sm text-ink">{explain.unit}</dd>
@@ -303,7 +306,7 @@
 					{methodology.calculation}
 				</p>
 			{/if}
-			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
+			<dl class="definition-grid gap-x-3 gap-y-1.5 text-sm">
 				{#if methodology.aggregationLevel}
 					<dt class="text-xs text-ink-subtle">{m.layer_page_aggregation_label()}</dt>
 					<dd
