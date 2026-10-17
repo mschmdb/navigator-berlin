@@ -35,7 +35,7 @@
 					data-testid="home-finder-beispiel"
 					class="rounded-full border border-rule px-3 py-1 text-sm text-ink-muted"
 				>
-					„{beispiel()}"
+					{m.home_finder_beispiel_zitat({ text: beispiel() })}
 				</li>
 			{/each}
 		</ul>

@@ -121,16 +121,16 @@ export const BUNDLE_ORDER: readonly Bundle[] = [
  * hält beide Quellen synchron.
  */
 export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
-	'A: Boundaries': 'A: Boundaries',
-	'B: Wohn-Daten': 'B: Wohn-Daten',
-	'C: Umwelt': 'C: Umwelt',
-	'D: Memorial': 'D: Memorial',
-	'E: Soziale Infrastruktur': 'E: Soziale Infrastruktur',
-	'F: Mobilität': 'F: Mobilität',
-	'G: Kiez-Score': 'G: Kiez-Score',
-	'H: Wahldaten': 'H: Wahldaten',
-	'I: Demografie': 'I: Demografie',
-	'J: Kultur': 'J: Kultur'
+	'A: Boundaries': 'Grenzen',
+	'B: Wohn-Daten': 'Wohnen',
+	'C: Umwelt': 'Umwelt',
+	'D: Memorial': 'Erinnerung',
+	'E: Soziale Infrastruktur': 'Soziale Infrastruktur',
+	'F: Mobilität': 'Mobilität',
+	'G: Kiez-Score': 'Kiez-Score',
+	'H: Wahldaten': 'Wahlen',
+	'I: Demografie': 'Demografie',
+	'J: Kultur': 'Kultur'
 };
 
 export interface LayerGroup {

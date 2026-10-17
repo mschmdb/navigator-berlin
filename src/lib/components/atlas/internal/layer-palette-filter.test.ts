@@ -128,7 +128,7 @@ describe('groupLayersByBundle', () => {
 
 	it('liefert EN-Bundle-Label mit { locale: "en" }', () => {
 		const groups = groupLayersByBundle(LAYERS, { locale: 'en' });
-		expect(groups[1].label).toBe('B: Housing data');
+		expect(groups[1].label).toBe('Housing');
 	});
 });
 
@@ -195,8 +195,8 @@ describe('waerme-orte Anzeigename (#71)', () => {
 
 describe('bundleLabel', () => {
 	it('liefert DE ohne opts, EN mit { locale: "en" }', () => {
-		expect(bundleLabel('B: Wohn-Daten')).toBe('B: Wohn-Daten');
-		expect(bundleLabel('B: Wohn-Daten', { locale: 'en' })).toBe('B: Housing data');
+		expect(bundleLabel('B: Wohn-Daten')).toBe('Wohnen');
+		expect(bundleLabel('B: Wohn-Daten', { locale: 'en' })).toBe('Housing');
 	});
 
 	// Versprochener Paritätstest (Review-Fund), analog zu LAYER_EXPLAIN_DE oben.

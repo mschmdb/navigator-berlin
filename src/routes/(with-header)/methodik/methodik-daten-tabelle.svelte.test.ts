@@ -87,8 +87,8 @@ describe('methodik-daten-tabelle.svelte · Locale (i18n C4a)', () => {
 			'Daten-Stand-Tabelle aller aktiven Layer'
 		);
 		const heads = [...table.querySelectorAll('th')].map((th) => th.textContent?.trim());
-		expect(heads).toEqual(['Layer', 'Bundle', 'Stand', 'Lizenz']);
-		expect(table.querySelector('tbody tr td:nth-child(2)')?.textContent?.trim()).toBe('C: Umwelt');
+		expect(heads).toEqual(['Layer', 'Kategorie', 'Stand', 'Lizenz']);
+		expect(table.querySelector('tbody tr td:nth-child(2)')?.textContent?.trim()).toBe('Umwelt');
 	});
 
 	it('EN: Kopf, Caption, Bundle-Label und Layer-Link unter /en', async () => {
@@ -99,9 +99,9 @@ describe('methodik-daten-tabelle.svelte · Locale (i18n C4a)', () => {
 			'Data status table of all active layers'
 		);
 		const heads = [...table.querySelectorAll('th')].map((th) => th.textContent?.trim());
-		expect(heads).toEqual(['Layer', 'Bundle', 'Last updated', 'Licence']);
+		expect(heads).toEqual(['Layer', 'Category', 'Last updated', 'Licence']);
 		expect(table.querySelector('tbody tr td:nth-child(2)')?.textContent?.trim()).toBe(
-			'C: Environment'
+			'Environment'
 		);
 		expect(table.querySelector('tbody a')?.getAttribute('href')).toBe('/en/layer/laerm-2023');
 		expect(table.querySelector('tbody a')?.textContent?.trim()).toBe('Noise pollution 2023');

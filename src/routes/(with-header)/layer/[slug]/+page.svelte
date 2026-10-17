@@ -260,7 +260,7 @@
 			</dd>
 			<dt class="text-xs text-ink-subtle">{m.layer_page_data_status_label()}</dt>
 			<dd class="text-ink">
-				{formatYearMonth(meta.sourceUpdatedAt ?? meta.fetchedAt)}
+				{formatYearMonth(meta.sourceUpdatedAt ?? meta.fetchedAt, localeOpts)}
 			</dd>
 			<dt class="text-xs text-ink-subtle">{m.layer_page_features_label()}</dt>
 			<dd class="text-xs text-ink tabular-nums">
