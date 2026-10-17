@@ -17,14 +17,14 @@ const LAYER_CLUSTERS: Readonly<Record<string, readonly ClusterKey[]>> = {
 	'tram-haltestellen': ['oepnv'],
 	'ubahn-stationen': ['oepnv'],
 	'sbahn-stationen': ['oepnv'],
-	'tram-netz': ['oepnv'],
-	'ubahn-netz': ['oepnv'],
-	'sbahn-netz': ['oepnv'],
 	'wohnlagen-2024': ['wohnen'],
 	bodenrichtwerte: ['wohnen'],
 	'zensus-bestandsmiete-2022': ['wohnen'],
 	'milieuschutz-erhaltungsmiete': ['wohnen']
 };
+
+/** Alle Layer mit FAQ. Netz-Layer (Linienverläufe) fehlen bewusst: Die Haltedichte-Fragen passen nicht. */
+export const LAYER_FAQ_SLUGS: readonly string[] = Object.keys(LAYER_CLUSTERS);
 
 export function layerFaqClusters(slug: string): readonly ClusterKey[] {
 	return LAYER_CLUSTERS[slug] ?? [];
