@@ -18,6 +18,7 @@ function ort(over: Partial<WaermeOrt> & Pick<WaermeOrt, 'id'>): WaermeOrt {
 		address: '',
 		plz: '',
 		openingHours: '',
+		hoursSource: null,
 		googleMapsUrl: '',
 		appleMapsUrl: '',
 		...over
@@ -69,6 +70,46 @@ describe('nearestWaermeOrte', () => {
 		const byId = Object.fromEntries(r.items.map((o) => [o.id, o.status]));
 		expect(byId.a).toBe('open');
 		expect(byId.b).toBeNull();
+	});
+});
+
+describe('Recherche-Zeiten (Sa 12:17)', () => {
+	const SA = new Date(2026, 9, 17, 12, 17, 0);
+	const heiland = ort({
+		id: 'way/37533771',
+		name: 'Heilandskirche',
+		openingHours: 'We 12:00-18:00; Sa 11:00-13:00',
+		hoursSource: 'recherche'
+	});
+	const schultheiss = ort({
+		id: 'way/360417478',
+		name: 'Schultheiss Quartier',
+		openingHours: 'Mo-Sa 10:00-20:00',
+		hoursSource: 'recherche'
+	});
+	const unklar = ort({ id: 'unklar', openingHours: '', hoursSource: 'unklar' });
+	const osm = ort({ id: 'osm', openingHours: 'Mo-Su 00:00-24:00', hoursSource: 'osm' });
+
+	it('zeigt Status "open" mit Quelle recherche', () => {
+		const r = nearestWaermeOrte(FROM, [heiland, schultheiss], { limit: 5, now: SA });
+		expect(r.items.map((o) => [o.id, o.status, o.hoursSource])).toEqual([
+			['way/37533771', 'open', 'recherche'],
+			['way/360417478', 'open', 'recherche']
+		]);
+	});
+
+	it('Filter "jetzt offen" behält Recherche-Orte und OSM, blendet "unklar" aus', () => {
+		const r = nearestWaermeOrte(FROM, [heiland, schultheiss, unklar, osm], {
+			limit: 10,
+			now: SA,
+			onlyOpen: true
+		});
+		expect(r.items.map((o) => o.id).sort()).toEqual(['osm', 'way/360417478', 'way/37533771']);
+	});
+
+	it('"unklar" hat keinen Status', () => {
+		const r = nearestWaermeOrte(FROM, [unklar], { limit: 5, now: SA });
+		expect(r.items[0].status).toBeNull();
 	});
 });
 

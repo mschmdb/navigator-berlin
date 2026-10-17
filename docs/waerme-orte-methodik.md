@@ -14,7 +14,7 @@ Der Datensatz `waerme-orte` listet öffentliche, beheizte Orte in Berlin, an den
 
 ## Datenherkunft und Lizenz-Trennung
 
-- **Geometrie und Basis-Tags: OpenStreetMap.** Standort, Name, Adresse, PLZ, `opening_hours`, Barrierefreiheit und Website stammen aus `static/data/waerme-orte/places-osm.json`. Lizenz ODbL 1.0, Namensnennung `https://www.openstreetmap.org/copyright`.
+- **Geometrie und Basis-Tags: OpenStreetMap.** Standort, Name, Adresse, PLZ, `opening_hours` (Fallback für den Status), Barrierefreiheit und Website stammen aus `static/data/waerme-orte/places-osm.json`. Lizenz ODbL 1.0, Namensnennung `https://www.openstreetmap.org/copyright`.
 - **Redaktionelle Anreicherung: navigator.berlin.** Winter-Öffnung, Aufenthalt ohne Konsum, Eintritt, Begründung, Quelle und Prüfdatum stammen aus eigener Recherche auf den Betreiber-Websites (`static/data/waerme-orte/enrichment.json`). Dieser Anteil ist ein eigener Datensatz und fällt nicht unter die ODbL-Angabe.
 - Join-Key beider Dateien ist `id` (`node/…`, `way/…`, `relation/…`).
 - Wir übernehmen keine Daten von netzwerkderwaerme.de oder kaeltehilfe-berlin.de. #62 verlinkt sie nur.
@@ -67,6 +67,7 @@ Je Ort ein Eintrag in `enrichment.json`:
 - `suitable`, `suitable_reason`: Eignung und Begründung
 - `winter_open`: `yes` | `limited` | `no` | `unknown`
 - `opening_hours_note`: freier Text zur Winter-Öffnung
+- `oh_recherche`: aus der Notiz abgeleiteter Wochenplan in OSM-`opening_hours`-Syntax, oder `"unklar"`. Fehlt bei Orten ohne Notiz.
 - `stay_without_purchase`: `yes` | `no` | `unknown`
 - `is_free`: `free` | `ticket` | `unknown`
 - `website`, `source_url`: Betreiber-Seite und belegende Quelle (http oder https)
@@ -76,13 +77,15 @@ Je Ort ein Eintrag in `enrichment.json`:
 
 Regeln:
 
+- Status „jetzt offen“ und Filter nutzen `oh_recherche`, sonst die OSM-`oh`. Die Karte nennt die Quelle („laut Recherche“ bzw. „laut OSM“).
+- `oh_recherche` entsteht nur bei eindeutigem Wochenplan. Einzelne Schließtage mit Datum (Feiertagsbrücken, Fortbildung) stehen als `off`-Regeln drin, wenn die Notiz sie nennt. Nur wenn die Notiz ein bestimmtes Jahr meint (Brückentage, „bis Jahresende 2026“), steht das Jahr in der Regel (`2026 Oct 03-04 off`). Wiederkehrende Tage wie `Dec 24-26 off` bleiben ohne Jahr. Gilt eine Notiz nur für Okt bis Mär oder „Winterzeit“, ergänzt `Apr-Sep unknown` die Regel, damit die Karte im Sommer keinen Status behauptet. Der Build ergänzt `; PH off`, wenn die Recherche-Zeiten keine Feiertagsregel haben und OSM `PH off` nennt. `oh_recherche` ohne `opening_hours_note` lässt die Validierung scheitern. Beim Zusammenführen von Ergebnis-Batches bleibt der alte Wert nur, wenn die Notiz gleich bleibt. Nicht eindeutige Notizen (mehrere Bereiche, widersprüchliche Quellen, „nach Gottesdienst“, „saisonal“, „nach Aushang“) bekommen `"unklar"`. Dann zeigt die Karte keinen Status und der Filter blendet den Ort aus.
 - Jede Angabe braucht `source_url` und `checked_at`. Was keine Quelle belegt, steht auf `unknown`, nie geraten.
 - Die Kühle-Orte-Recherche derselben OSM-ID dient als Ausgangspunkt. Winter-Felder prüft die Recherche trotzdem neu.
 - Wir behaupten „beheizt“ nur mit Beleg.
 
 ## Build und Recherche-Lauf
 
-- Validierung vor dem Merge: `validateEnrichment` prüft Enums, Strings, Kalenderdatum und URLs. `suitable=true` verlangt `source_url`, schließt `winter_open=no`, `is_free=ticket` und Platzhalter-Namen („(ohne Namen in OSM)“) aus. Doppelte ids und Fehler lassen den Build ohne Schreiben mit Exit 1 scheitern.
+- Validierung vor dem Merge: `validateEnrichment` prüft Enums, Strings, Kalenderdatum, URLs und `oh_recherche` (muss `"unklar"` sein oder mit dem Paket `opening_hours` parsen). `suitable=true` verlangt `source_url`, schließt `winter_open=no`, `is_free=ticket` und Platzhalter-Namen („(ohne Namen in OSM)“) aus. Doppelte ids und Fehler lassen den Build ohne Schreiben mit Exit 1 scheitern.
 - Dubletten: Nach dem Filter bleibt bei gleichem normalisiertem Namen und unter 75 m Abstand ein Eintrag (bevorzugt belegte `winter_open`, dann kleinste id). Der Build-Log zählt sie.
 
 - `pnpm data:waerme-orte` merged Snapshot und Enrichment zu `static/data/waerme-orte.geojson`, nach `id` sortiert und deterministisch. `--strict` lässt den Build bei Kandidaten ohne Enrichment scheitern.
@@ -107,6 +110,6 @@ Regeln:
 ## Grenzen
 
 - Der Datensatz ist ein Angebot auf offenen Daten, kein Behörden-Ersatz und ohne Anspruch auf Vollständigkeit.
-- OSM-Öffnungszeiten können veralten. Das Prüfdatum zeigt den Stand der Recherche.
+- Öffnungszeiten können veralten (Recherche wie OSM). Das Prüfdatum zeigt den Stand der Recherche.
 - Kein Rechtsanspruch auf Aufenthalt: Betreiber üben Hausrecht aus.
 - Notübernachtungen und Wärmestuben sind nicht Teil dieses Datensatzes.

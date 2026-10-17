@@ -45,6 +45,41 @@ function place(id: string, name = 'Ort'): CandidatePlace {
 	};
 }
 
+describe('validateEnrichment oh_recherche', () => {
+	it('akzeptiert fehlendes Feld, gültige OSM-Syntax und "unklar"', () => {
+		expect(validateEnrichment(item())).toEqual([]);
+		expect(validateEnrichment(item({ oh_recherche: 'Sa 11:00-13:00; PH off' }))).toEqual([]);
+		expect(validateEnrichment(item({ oh_recherche: 'unklar' }))).toEqual([]);
+	});
+
+	it('lehnt nicht parsbare Werte ab', () => {
+		expect(validateEnrichment(item({ oh_recherche: 'nach dem Gottesdienst' }))).toContainEqual(
+			expect.stringMatching(/oh_recherche/)
+		);
+		expect(validateEnrichment(item({ oh_recherche: '' }))).toContainEqual(
+			expect.stringMatching(/oh_recherche/)
+		);
+	});
+
+	it('lehnt Werte mit Parser-Warnung ab', () => {
+		expect(validateEnrichment(item({ oh_recherche: 'Mo PH 10:00-18:00' }))).toContainEqual(
+			expect.stringMatching(/oh_recherche/)
+		);
+	});
+
+	it('verlangt eine Notiz', () => {
+		const errors = validateEnrichment(
+			item({ oh_recherche: 'Sa 11:00-13:00', opening_hours_note: '' })
+		);
+		expect(errors).toContainEqual(expect.stringMatching(/oh_recherche ohne opening_hours_note/));
+	});
+
+	it('lehnt Nicht-Strings ab', () => {
+		const bad = item({ oh_recherche: 5 as unknown as string });
+		expect(validateEnrichment(bad)).toContainEqual(expect.stringMatching(/oh_recherche/));
+	});
+});
+
 describe('validateEnrichment', () => {
 	it('akzeptiert einen vollständigen Eintrag', () => {
 		expect(validateEnrichment(item())).toEqual([]);
@@ -133,6 +168,32 @@ describe('buildResearchBatches', () => {
 	it('sortiert deterministisch nach id', () => {
 		const batches = buildResearchBatches([place('node/2'), place('node/1')], [], {}, 10);
 		expect(batches[0].tasks.map((t) => t.id)).toEqual(['node/1', 'node/2']);
+	});
+});
+
+describe('mergeEnrichmentResults oh_recherche', () => {
+	const ids = ['node/1'];
+
+	it('übernimmt oh_recherche, wenn die Notiz gleich bleibt', () => {
+		const existing = [item({ oh_recherche: 'Mo-Fr 10:00-18:00' })];
+		const { merged, errors } = mergeEnrichmentResults(
+			existing,
+			[item({ checked_at: '2026-10-17' })],
+			ids
+		);
+		expect(errors).toEqual([]);
+		expect(merged[0].oh_recherche).toBe('Mo-Fr 10:00-18:00');
+		expect(merged[0].checked_at).toBe('2026-10-17');
+	});
+
+	it('verwirft oh_recherche, wenn sich die Notiz ändert', () => {
+		const existing = [item({ oh_recherche: 'Mo-Fr 10:00-18:00' })];
+		const { merged } = mergeEnrichmentResults(
+			existing,
+			[item({ opening_hours_note: 'Mo-Fr 11-18 Uhr' })],
+			ids
+		);
+		expect(merged[0].oh_recherche).toBeUndefined();
 	});
 });
 

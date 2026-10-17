@@ -32,6 +32,33 @@ function feature(over: Partial<WaermeOrtProps> = {}): Feature<Point, WaermeOrtPr
 	};
 }
 
+describe('featureToWaermeOrt hoursSource', () => {
+	it('nimmt Recherche-Zeiten vor OSM', () => {
+		const ort = featureToWaermeOrt(
+			feature({ oh: 'Mo-Fr 10:00-19:00', oh_recherche: 'Sa 11:00-13:00' })
+		);
+		expect(ort.openingHours).toBe('Sa 11:00-13:00');
+		expect(ort.hoursSource).toBe('recherche');
+	});
+
+	it('fällt ohne Recherche auf OSM zurück', () => {
+		const ort = featureToWaermeOrt(feature({ oh_recherche: '' }));
+		expect(ort.openingHours).toBe('Mo-Fr 10:00-19:00');
+		expect(ort.hoursSource).toBe('osm');
+	});
+
+	it('zeigt bei "unklar" keine Zeiten, auch wenn OSM welche hat', () => {
+		const ort = featureToWaermeOrt(feature({ oh_recherche: 'unklar' }));
+		expect(ort.openingHours).toBe('');
+		expect(ort.hoursSource).toBe('unklar');
+	});
+
+	it('liefert null ohne Recherche und ohne OSM-Zeiten', () => {
+		const ort = featureToWaermeOrt(feature({ oh: '', oh_recherche: undefined }));
+		expect(ort.hoursSource).toBeNull();
+	});
+});
+
 describe('featureToWaermeOrt', () => {
 	it('mappt Koordinaten und Winter-Felder', () => {
 		const ort = featureToWaermeOrt(feature());

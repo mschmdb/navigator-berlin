@@ -17,6 +17,7 @@
 		feeText,
 		reportHref,
 		statusClass,
+		statusSourceOf,
 		statusText,
 		stayText,
 		winterText
@@ -236,7 +237,7 @@
 							<span lang={cat.lang}>{cat.text}</span>
 							{#if ort.status}
 								<span data-testid="waerme-status" class={`font-medium ${statusClass(ort.status)}`}
-									>{statusText(ort.status)}</span
+									>{statusText(ort.status, statusSourceOf(ort))}</span
 								>
 							{/if}
 						</p>

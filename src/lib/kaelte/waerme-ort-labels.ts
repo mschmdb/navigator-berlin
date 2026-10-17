@@ -7,8 +7,24 @@ import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
 /** Gemeinsame Textbausteine der Warme-Orte-Liste (/kaelte und Inspector-Karte). */
 
-export function statusText(status: WaermeOrtStatus, locale: Locale = getLocale()): string {
+export type StatusSource = 'recherche' | 'osm';
+
+export function statusSourceOf(ort: Pick<WaermeOrt, 'hoursSource'>): StatusSource {
+	return ort.hoursSource === 'recherche' ? 'recherche' : 'osm';
+}
+
+export function statusText(
+	status: WaermeOrtStatus,
+	source: StatusSource,
+	locale: Locale = getLocale()
+): string {
 	const opts = { locale };
+	if (source === 'recherche') {
+		if (status === 'open') return m.kaelte_orte_status_open_recherche(undefined, opts);
+		if (status === 'closing-soon')
+			return m.kaelte_orte_status_closing_soon_recherche(undefined, opts);
+		return m.kaelte_orte_status_closed_recherche(undefined, opts);
+	}
 	if (status === 'open') return m.kaelte_orte_status_open(undefined, opts);
 	if (status === 'closing-soon') return m.kaelte_orte_status_closing_soon(undefined, opts);
 	return m.kaelte_orte_status_closed(undefined, opts);

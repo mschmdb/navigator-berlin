@@ -10,7 +10,7 @@ export type WaermeOrtStatus = 'open' | 'closing-soon' | 'closed';
 
 export interface WaermeOrtMitDistanz extends WaermeOrt {
 	distanceM: number;
-	/** Nur aus OSM-`oh`. `null`, wenn `oh` fehlt oder nicht lesbar ist. */
+	/** Aus Recherche-Zeiten, sonst OSM. `null` bei `unklar`, fehlenden oder nicht lesbaren Zeiten. */
 	status: WaermeOrtStatus | null;
 }
 
