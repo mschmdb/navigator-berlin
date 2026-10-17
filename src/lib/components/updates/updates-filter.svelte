@@ -31,7 +31,7 @@
 		{#each UPDATE_CATEGORIES as cat (cat)}
 			<ToggleGroup.Item
 				value={cat}
-				class="data-[state=on]:text-accent-strong inline-flex items-center border border-rule bg-bg-elevated px-3 py-1 font-sans text-sm text-ink hover:border-accent data-[state=on]:border-accent data-[state=on]:bg-accent-soft"
+				class="inline-flex items-center border border-rule bg-bg-elevated px-3 py-1 font-sans text-sm text-ink hover:border-accent data-[state=on]:border-accent data-[state=on]:bg-accent-soft data-[state=on]:text-accent-strong"
 				data-testid="filter-toggle"
 				data-category={cat}
 			>

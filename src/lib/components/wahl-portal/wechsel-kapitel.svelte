@@ -239,7 +239,7 @@
 				aria-expanded={showAll}
 				aria-controls="wechsel-kapitel-liste"
 				onclick={() => (showAll = !showAll)}
-				class="hover:bg-bg-muted self-start rounded border border-ink px-2.5 py-1 font-mono text-xs text-ink transition-colors"
+				class="self-start rounded border border-ink px-2.5 py-1 font-mono text-xs text-ink transition-colors hover:bg-bg-muted"
 			>
 				{showAll
 					? m.wahl_portal_wechsel_weniger_anzeigen()

@@ -61,7 +61,7 @@
 	<button
 		type="button"
 		onclick={() => sortBy(key)}
-		class="hover:text-accent-strong inline-flex items-center gap-1 font-semibold text-ink"
+		class="inline-flex items-center gap-1 font-semibold text-ink hover:text-accent-strong"
 		data-testid="bezirk-kieze-sort-{key}"
 	>
 		{label}
@@ -120,7 +120,7 @@
 						<th scope="row" class="py-2 pr-3 text-left font-normal">
 							<a
 								href={localizedHref(`/kiez/${kiez.slug}`)}
-								class="hover:text-accent-strong text-accent underline underline-offset-2"
+								class="text-accent underline underline-offset-2 hover:text-accent-strong"
 								onclick={() => trackLanding('list_link', 'bezirk')}
 								data-testid="bezirk-kieze-link"
 							>

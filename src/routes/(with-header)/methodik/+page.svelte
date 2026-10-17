@@ -127,7 +127,7 @@
 				<li>
 					<a
 						href={`#${sec.id}`}
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{sec.label}
 					</a>

@@ -244,7 +244,7 @@
 							target="_blank"
 							rel="noopener noreferrer"
 							data-testid="navi-google"
-							class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+							class="inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 						>
 							<Navigation size={11} aria-hidden="true" />
 							Google Maps
@@ -254,7 +254,7 @@
 							target="_blank"
 							rel="noopener noreferrer"
 							data-testid="navi-apple"
-							class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+							class="inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 						>
 							<Navigation size={11} aria-hidden="true" />
 							Apple Maps
@@ -308,7 +308,7 @@
 					href={editorial.primarySourceUrl}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="hover:text-accent-strong inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+					class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					<ExternalLink size={12} aria-hidden="true" />
 					{m.inspector_kuehle_orte_source_view(undefined, localeOpts)}
@@ -321,7 +321,7 @@
 				href={buildOptOutMailto()}
 				data-testid="card-opt-out"
 				aria-label={m.inspector_kuehle_orte_opt_out_aria_label(undefined, localeOpts)}
-				class="hover:text-accent-strong inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+				class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				<Mail size={12} aria-hidden="true" />
 				{m.inspector_kuehle_orte_opt_out_link(undefined, localeOpts)}

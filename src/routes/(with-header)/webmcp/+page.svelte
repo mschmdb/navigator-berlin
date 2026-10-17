@@ -188,7 +188,7 @@
 <main class="mx-auto max-w-2xl px-4 py-12" data-testid="webmcp-page">
 	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl">WebMCP</h1>
 
-	<p class="text-ink-muted mt-6 leading-relaxed">{m.webmcp_intro_p1()}</p>
+	<p class="mt-6 leading-relaxed text-ink-muted">{m.webmcp_intro_p1()}</p>
 
 	<WebmcpDiagnose />
 
@@ -268,7 +268,7 @@
 			{#each toolRows as tool (tool.name)}
 				<div>
 					<dt class="font-mono text-sm">{tool.name}</dt>
-					<dd class="text-ink-muted text-sm">{tool.desc}</dd>
+					<dd class="text-sm text-ink-muted">{tool.desc}</dd>
 				</div>
 			{/each}
 		</dl>

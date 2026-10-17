@@ -55,7 +55,7 @@
 		<a
 			href={localizedHref(explorerLink)}
 			data-testid="explorer-cta"
-			class="hover:bg-accent-strong inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated hover:bg-accent-strong focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
 		>
 			{m.kuehle_orte_page_cta_button()}
 			<ArrowRight size={18} aria-hidden="true" />

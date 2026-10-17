@@ -124,7 +124,7 @@
 			target="_blank"
 			rel="noopener noreferrer"
 			data-testid="disclaimer-source-link"
-			class="hover:text-accent-strong inline-flex items-center gap-1 text-accent not-italic underline underline-offset-2"
+			class="inline-flex items-center gap-1 text-accent not-italic underline underline-offset-2 hover:text-accent-strong"
 		>
 			<ExternalLink size={12} aria-hidden="true" />
 			<span>{m.disclaimer_quelle_ansehen(undefined, { locale: locale ?? getLocale() })}</span>

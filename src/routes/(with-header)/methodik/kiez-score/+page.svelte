@@ -273,7 +273,7 @@
 		<a
 			href={localizedHref('/methodik')}
 			data-testid="methodik-kiez-score-back-link"
-			class="hover:text-accent-strong font-mono text-sm text-accent underline underline-offset-2"
+			class="font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.methodik_kiez_score_back_link()}
 		</a>

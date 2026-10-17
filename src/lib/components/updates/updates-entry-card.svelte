@@ -48,7 +48,7 @@
 		{localized.summary}
 	</p>
 	<p class="font-mono text-xs text-ink-subtle">
-		<a href={detailHref} class="hover:text-accent-strong text-accent underline underline-offset-2">
+		<a href={detailHref} class="text-accent underline underline-offset-2 hover:text-accent-strong">
 			{m.updates_card_read_more()}
 		</a>
 	</p>

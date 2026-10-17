@@ -111,7 +111,7 @@
 			data-testid="naehe-locate"
 			disabled={phase === 'locating'}
 			onclick={locate}
-			class="hover:bg-accent-strong inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-60"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated hover:bg-accent-strong focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-60"
 		>
 			<LocateFixed size={18} aria-hidden="true" />
 			{phase === 'locating' ? m.naehe_button_locating() : m.naehe_button_locate()}
@@ -149,7 +149,7 @@
 								href={ort.googleMapsUrl}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+								class="inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 							>
 								<Navigation size={11} aria-hidden="true" /> Google Maps
 							</a>
@@ -157,7 +157,7 @@
 								href={ort.appleMapsUrl}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+								class="inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 							>
 								<Navigation size={11} aria-hidden="true" /> Apple Maps
 							</a>
@@ -171,7 +171,7 @@
 			</p>
 			<a
 				href={explorerHref}
-				class="hover:text-accent-strong inline-flex w-fit items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2"
+				class="inline-flex w-fit items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				<MapPin size={14} aria-hidden="true" />
 				{m.naehe_link_all_on_map()}
@@ -183,7 +183,7 @@
 		</p>
 		<a
 			href={explorerHref}
-			class="hover:text-accent-strong inline-flex w-fit items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2"
+			class="inline-flex w-fit items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			<MapPin size={14} aria-hidden="true" />
 			{m.naehe_link_all_on_map()}

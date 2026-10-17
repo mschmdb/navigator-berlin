@@ -36,7 +36,7 @@
 	href={mailtoUrl}
 	data-testid="error-feedback-mailto"
 	aria-label={m.error_feedback_mailto_aria_label({ layerName: ariaLayerName ?? layerName })}
-	class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-sm text-accent underline underline-offset-2"
+	class="inline-flex items-center gap-1 font-sans text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 >
 	<Mail size={14} aria-hidden="true" />
 	<span>{m.error_feedback_mailto_label()}</span>

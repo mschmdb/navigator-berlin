@@ -253,7 +253,7 @@
 				data-testid="ranking-view-kieze"
 				class="px-4 py-2 font-mono text-xs tracking-wider uppercase {view === 'kieze'
 					? 'bg-ink text-bg'
-					: 'hover:bg-bg-muted text-ink'}"
+					: 'text-ink hover:bg-bg-muted'}"
 				onclick={() => switchView('kieze')}
 			>
 				{kieze.length} Kieze
@@ -266,7 +266,7 @@
 				class="border-l border-rule px-4 py-2 font-mono text-xs tracking-wider uppercase {view ===
 				'bezirke'
 					? 'bg-ink text-bg'
-					: 'hover:bg-bg-muted text-ink'}"
+					: 'text-ink hover:bg-bg-muted'}"
 				onclick={() => switchView('bezirke')}
 			>
 				{bezirke.length} Bezirke
@@ -433,7 +433,7 @@
 			{#snippet tag(text)}
 				<a
 					href={localizedHref('/methodik/kiez-score')}
-					class="hover:text-accent-strong text-accent underline underline-offset-2">{text}</a
+					class="text-accent underline underline-offset-2 hover:text-accent-strong">{text}</a
 				>
 			{/snippet}
 		</RichText>

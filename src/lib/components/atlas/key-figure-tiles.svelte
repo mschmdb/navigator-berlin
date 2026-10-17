@@ -120,7 +120,7 @@
 						href={tile.href}
 						onclick={() => trackLanding('key_figure', kind)}
 						data-testid="key-figure-link"
-						class="hover:text-accent-strong mt-auto pt-1 text-sm text-accent underline underline-offset-2"
+						class="mt-auto pt-1 text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						<span class="sr-only">{tile.context} </span>{m.key_figure_link_visible()}
 					</a>

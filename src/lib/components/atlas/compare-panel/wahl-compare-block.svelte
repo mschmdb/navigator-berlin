@@ -318,7 +318,7 @@
 		<a
 			href={localizedMethodikHref}
 			data-testid="wahl-compare-methodik-link"
-			class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
+			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.wahl_compare_methodik_link()}
 		</a>

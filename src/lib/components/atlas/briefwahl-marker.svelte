@@ -47,7 +47,7 @@
 			onmouseenter={onMouseEnter}
 			onmouseleave={onMouseLeave}
 			onkeydown={onKeydown}
-			class="hover:bg-bg-muted inline-flex items-baseline gap-1 rounded-sm border border-rule px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink uppercase focus:ring-2 focus:ring-accent focus:outline-none"
+			class="inline-flex items-baseline gap-1 rounded-sm border border-rule px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink uppercase hover:bg-bg-muted focus:ring-2 focus:ring-accent focus:outline-none"
 			data-testid={`${testid}-trigger`}
 		>
 			<Info aria-hidden="true" class="h-3 w-3 self-center" />

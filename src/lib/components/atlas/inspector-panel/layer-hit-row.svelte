@@ -184,7 +184,7 @@
 					onclick={() => onToggleLayer?.(hit.layer)}
 					class={[
 						'inline-flex h-8 w-8 items-center justify-center rounded-sm text-ink-muted hover:bg-bg hover:text-ink',
-						isActive && 'hover:text-accent-strong text-accent'
+						isActive && 'text-accent hover:text-accent-strong'
 					]
 						.filter(Boolean)
 						.join(' ')}
@@ -248,7 +248,7 @@
 			target="_blank"
 			rel="noopener noreferrer"
 			data-testid="external-link"
-			class="hover:text-accent-strong inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+			class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			<ExternalLink size={12} aria-hidden="true" />
 			{externalLink.label}

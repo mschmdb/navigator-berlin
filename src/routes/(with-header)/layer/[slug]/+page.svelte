@@ -241,7 +241,7 @@
 					<span data-testid="layer-detail-source-link">
 						{m.layer_page_own_calculation_label()} (<a
 							href={localizedHref('/lizenzen')}
-							class="hover:text-accent-strong text-accent underline underline-offset-2"
+							class="text-accent underline underline-offset-2 hover:text-accent-strong"
 							>{m.layer_page_own_calculation_link_label()}</a
 						>)
 					</span>
@@ -251,7 +251,7 @@
 						href={meta.sourceUrl}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{shortenSource(meta.sourceUrl)}
 					</a>
@@ -389,7 +389,7 @@
 						<li>
 							<a
 								href={localizedHref(`/layer/${relSlug}`)}
-								class="hover:text-accent-strong text-accent underline underline-offset-2"
+								class="text-accent underline underline-offset-2 hover:text-accent-strong"
 							>
 								{getLayerDisplayName(relSlug, localeOpts)}
 							</a>
@@ -404,7 +404,7 @@
 				<p class="font-mono text-xs text-ink-muted">
 					<a
 						href={localizedHref('/methodik/kiez-score')}
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{m.layer_page_methodik_kiez_score_link_label()}
 					</a>
@@ -414,7 +414,7 @@
 				<p class="font-mono text-xs text-ink-muted">
 					<a
 						href={localizedHref('/methodik')}
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{m.layer_page_methodik_link_label()}
 					</a>
@@ -433,7 +433,7 @@
 			<p class="font-mono text-xs text-ink-muted">
 				<a
 					href={localizedHref('/methodik')}
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.layer_page_methodik_open_label()}
 				</a>
@@ -452,7 +452,7 @@
 		<a
 			data-testid="layer-detail-overview-link"
 			href={localizedHref('/daten')}
-			class="hover:text-accent-strong text-accent underline underline-offset-2"
+			class="text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.overview_link_all_layers()}
 		</a>
@@ -462,7 +462,7 @@
 		data-testid="layer-detail-inspector-link"
 		href={inspectorHref}
 		onclick={() => trackLanding('map_link_bottom', 'layer')}
-		class="hover:text-accent-strong inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2"
+		class="inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2 hover:text-accent-strong"
 	>
 		{m.layer_page_map_button()} <span aria-hidden="true">→</span>
 	</a>
