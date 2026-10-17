@@ -34,6 +34,52 @@ export function addressHistoryMode(input: {
 	return 'push';
 }
 
+/**
+ * Query für eine Adresswahl. Die aktuelle Adresse wird gelesen, bevor
+ * `clearKeys` sie entfernt, sonst greift der Vergleich mit der URL nie.
+ */
+export function buildAddressNavigation(input: {
+	href: string;
+	lngLat: readonly [number, number];
+	displayName?: string;
+	intent: AddressHistoryIntent;
+	lastWrittenAddress: string | null;
+	clearKeys: readonly string[];
+}): { search: string; mode: AddressHistoryMode; nextAddress: string } {
+	const url = new URL(input.href);
+	const currentAddress = normalizeAddressParam(url.searchParams.get('address'));
+	for (const key of input.clearKeys) url.searchParams.delete(key);
+	const nextAddress = formatAddressParam(input.lngLat);
+	const mode = addressHistoryMode({
+		intent: input.intent,
+		currentAddress,
+		lastWrittenAddress: input.lastWrittenAddress,
+		nextAddress
+	});
+	url.searchParams.set('address', nextAddress);
+	if (input.displayName) url.searchParams.set('q', input.displayName);
+	return { search: `?${url.searchParams.toString()}`, mode, nextAddress };
+}
+
+/**
+ * Führt Schreibvorgänge derselben Adresse zusammen, solange `navigate` läuft.
+ * Ein zweites `goto` würde das erste abbrechen und als Replace den vorigen
+ * History-Eintrag überschreiben.
+ */
+export function createAddressHistoryWriter(
+	navigate: (search: string, mode: AddressHistoryMode) => Promise<void>
+): (address: string, search: string, mode: AddressHistoryMode) => Promise<void> {
+	let inFlight: { address: string; promise: Promise<void> } | null = null;
+	return (address, search, mode) => {
+		if (inFlight && inFlight.address === address) return inFlight.promise;
+		const promise = navigate(search, mode).finally(() => {
+			if (inFlight?.promise === promise) inFlight = null;
+		});
+		inFlight = { address, promise };
+		return promise;
+	};
+}
+
 export type PopstateSelection =
 	| { kind: 'none' }
 	| { kind: 'clear' }

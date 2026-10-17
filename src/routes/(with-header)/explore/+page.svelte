@@ -40,9 +40,8 @@
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
 	import { createPinMarkerElement } from '$lib/components/atlas/internal/map-markers.js';
 	import {
-		addressHistoryMode,
-		formatAddressParam,
-		normalizeAddressParam,
+		buildAddressNavigation,
+		createAddressHistoryWriter,
 		resolvePopstateSelection,
 		type AddressHistoryIntent
 	} from '$lib/components/atlas/internal/address-history.js';
@@ -223,6 +222,11 @@
 	// Zuletzt geschriebene Adresse: zwei Aufrufe für dieselbe Wahl vor dem Ende
 	// von `goto` sollen nur einen Eintrag ergeben.
 	let lastWrittenAddress: string | null = null;
+	// Läuft `goto` für dieselbe Adresse noch, wird kein zweites ausgelöst (#91).
+	const writeAddress = createAddressHistoryWriter((search, mode) =>
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		goto(search, { replaceState: mode === 'replace', keepFocus: true, noScroll: true })
+	);
 
 	function selectRestoring(suggestion: GeocodeSuggestion): void {
 		restoringSelectionId = suggestion.id;
@@ -944,21 +948,16 @@
 
 		// Eine neue Wahl löst den Ortsfokus ab (Kontur, Karte, URL-Parameter).
 		endRegionFocus();
-		const url = new URL(window.location.href);
-		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
-		for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
-		const currentAddress = normalizeAddressParam(url.searchParams.get('address'));
-		const nextAddress = formatAddressParam(lngLat);
-		const mode = addressHistoryMode({ intent, currentAddress, lastWrittenAddress, nextAddress });
-		lastWrittenAddress = nextAddress;
-		url.searchParams.set('address', nextAddress);
-		if (displayName) url.searchParams.set('q', displayName);
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		void goto(`?${url.searchParams.toString()}`, {
-			replaceState: mode === 'replace',
-			keepFocus: true,
-			noScroll: true
+		const nav = buildAddressNavigation({
+			href: window.location.href,
+			lngLat,
+			displayName,
+			intent,
+			lastWrittenAddress,
+			clearKeys: [...ADDRESS_KEYS, ...REGION_FOCUS_KEYS]
 		});
+		lastWrittenAddress = nav.nextAddress;
+		void writeAddress(nav.nextAddress, nav.search, nav.mode);
 	}
 
 	// Back/Forward: onMount läuft nicht erneut, die Auswahl folgt der Adresse der Ziel-URL.
