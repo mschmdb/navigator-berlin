@@ -107,7 +107,7 @@
 
 {#snippet tag(text: string, name: string)}
 	{#if name === 'code'}
-		<code class="font-mono text-xs">{text}</code>
+		<code class="text-xs">{text}</code>
 	{:else if name === 'strong'}
 		<strong>{text}</strong>
 	{:else if name in EXTERNAL_LINKS}
@@ -135,9 +135,9 @@
 	data-testid="wahl-methodik-page"
 >
 	<header class="space-y-2">
-		<p class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+		<p class="text-xs text-ink-muted">
 			<a href={localizedHref('/')} class={anchorClass}>Berlin</a>
-			·
+			<span aria-hidden="true">/</span>
 			<a href={localizedHref('/methodik')} class={anchorClass}
 				>{m.methodik_wahldaten_breadcrumb_methodik()}</a
 			>
@@ -145,16 +145,13 @@
 		<h1 class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl">
 			{m.methodik_wahldaten_h1_title()}
 		</h1>
-		<p class="font-serif text-base leading-body text-ink-muted">
+		<p class="text-base leading-body text-ink-muted">
 			{m.methodik_wahldaten_intro_p1()}
 		</p>
 	</header>
 
-	<nav
-		aria-label={m.methodik_wahldaten_toc_aria_label()}
-		class="space-y-1 font-mono text-xs text-ink-muted"
-	>
-		<p class="tracking-wide uppercase">{m.methodik_wahldaten_toc_heading()}</p>
+	<nav aria-label={m.methodik_wahldaten_toc_aria_label()} class="space-y-1 text-xs text-ink-muted">
+		<p class="">{m.methodik_wahldaten_toc_heading()}</p>
 		<ol class="space-y-0.5">
 			{#each sections as sec (sec.id)}
 				<li>
@@ -249,7 +246,7 @@
 
 	<a
 		href={localizedHref('/berlin-wahlen#alle-wahlen')}
-		class="inline-block font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
+		class="inline-block text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 	>
 		{m.methodik_wahldaten_link_alle_wahlen()}
 	</a>

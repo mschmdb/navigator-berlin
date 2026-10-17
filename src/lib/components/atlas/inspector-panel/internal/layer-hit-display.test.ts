@@ -159,6 +159,16 @@ describe('getLayerHitDisplay()', () => {
 			expect(d.fallbackText).toBe('Heinrich-Heine-Schule');
 			expect(d.context).toBe('Gymnasium');
 		});
+
+		it('krankenhaeuser: context trennt Adresse und Betten mit Komma (GH-87)', () => {
+			const d = getLayerHitDisplay('krankenhaeuser-plan', {
+				kkh: 'Vivantes Klinikum',
+				gc_strasse: 'Dieffenbachstr. 1',
+				betten: 500
+			});
+			expect(d.context).toMatch(/^Dieffenbachstr\. 1, 500 /);
+			expect(d.context).not.toContain('·');
+		});
 	});
 
 	describe('Boundaries (Bezirk/Ortsteil/PLZ)', () => {

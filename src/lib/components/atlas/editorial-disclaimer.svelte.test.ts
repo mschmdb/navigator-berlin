@@ -36,11 +36,11 @@ describe('editorial-disclaimer.svelte', () => {
 		expect(el.textContent).toMatch(/zitierter Quelle|Nicht algorithmisch/);
 	});
 
-	it('nutzt Plex-Serif-Italic + text-sm + ink-muted', async () => {
+	it('nutzt Sans ohne Kursiv + text-sm + ink-muted (GH-87)', async () => {
 		render(EditorialDisclaimer, { variant: 'legal' });
 		const el = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
-		expect(el.className).toMatch(/font-serif/);
-		expect(el.className).toMatch(/italic/);
+		expect(el.className).not.toMatch(/font-serif/);
+		expect(el.className).not.toMatch(/italic/);
 		expect(el.className).toMatch(/text-sm/);
 		expect(el.className).toMatch(/text-ink-muted/);
 	});

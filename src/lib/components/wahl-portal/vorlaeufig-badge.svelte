@@ -26,9 +26,9 @@
 
 <span
 	data-testid={testid}
-	class="inline-flex items-center rounded-sm border border-state-warning px-1.5 py-0.5 font-mono text-xs font-semibold tracking-wide text-ink uppercase"
+	class="inline-flex items-center rounded-sm border border-state-warning px-1.5 py-0.5 text-xs font-semibold text-ink"
 >
-	{wahlVorlaeufigLabel()}{#if sourceUpdatedAt}&nbsp;{m.wahl_portal_vorlaeufig_stand({
+	{wahlVorlaeufigLabel()}{#if sourceUpdatedAt},&nbsp;{m.wahl_portal_vorlaeufig_stand({
 			date: formatWahlDate(sourceUpdatedAt)
 		})}{/if}
 </span>

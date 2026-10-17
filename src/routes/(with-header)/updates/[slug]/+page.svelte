@@ -87,13 +87,13 @@
 	</nav>
 
 	<header class="flex flex-col gap-3">
-		<h1 data-testid="updates-detail-title" class="font-serif text-3xl text-ink" lang={titleLang}>
+		<h1 data-testid="updates-detail-title" class="text-3xl font-bold text-ink" lang={titleLang}>
 			{localized.title}
 		</h1>
 		<div class="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
 			<time class="font-sans" datetime={entry.frontmatter.date}>{dateLabel}</time>
 			<span
-				class={`inline-flex items-center border px-2 py-0.5 font-mono text-xs ${categoryClass}`}
+				class={`inline-flex items-center border px-2 py-0.5 text-xs ${categoryClass}`}
 				data-testid="category-badge"
 			>
 				{badgeLabel}
@@ -102,7 +102,7 @@
 	</header>
 
 	<section
-		class="prose prose-lg max-w-none font-serif text-ink"
+		class="prose prose-lg max-w-none text-ink"
 		data-testid="updates-detail-body"
 		lang={bodyLang}
 	>
@@ -111,14 +111,14 @@
 
 	{#if entry.frontmatter.tags && entry.frontmatter.tags.length > 0}
 		<footer class="flex flex-col gap-2 border-t border-rule pt-4" data-testid="updates-detail-tags">
-			<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
+			<p class="text-xs text-ink-subtle">
 				{m.updates_detail_tags_heading()}
 			</p>
 			<ul class="flex flex-wrap gap-2">
 				{#each entry.frontmatter.tags as tag (tag)}
 					<li
 						lang={tagLang}
-						class="inline-flex items-center border border-rule bg-bg-elevated px-2 py-0.5 font-mono text-xs text-ink-muted"
+						class="inline-flex items-center border border-rule bg-bg-elevated px-2 py-0.5 text-xs text-ink-muted"
 					>
 						{tag}
 					</li>
@@ -127,7 +127,7 @@
 		</footer>
 	{/if}
 
-	<p class="font-mono text-xs">
+	<p class="text-xs">
 		<a
 			href={localizedHref('/updates')}
 			class="text-accent underline underline-offset-2 hover:text-accent-strong"

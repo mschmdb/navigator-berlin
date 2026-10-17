@@ -30,16 +30,15 @@
 	class="grid gap-8 md:grid-cols-[1.3fr_1fr] md:items-center md:gap-12"
 >
 	<div class="space-y-6">
-		<p class="font-mono text-xs tracking-wider text-accent uppercase">navigator.berlin · Beta</p>
-		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">{m.home_hero_headline()}</h1>
-		<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
+		<h1 class="text-4xl font-bold text-ink md:text-5xl lg:text-6xl">{m.home_hero_headline()}</h1>
+		<p class="max-w-prose text-lg leading-body text-ink-muted">
 			{m.home_hero_lead()}
 		</p>
 		<div class="flex flex-wrap gap-3 pt-2">
 			<a
 				href={localizedHref(mapHref)}
 				data-testid="home-hero-cta-map"
-				class="inline-flex min-h-(--target-min) items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+				class="inline-flex min-h-(--target-min) items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
 			>
 				<MapIcon size={16} aria-hidden="true" />
 				{m.home_hero_cta_map()}
@@ -47,7 +46,7 @@
 			<a
 				href={localizedHref(rankingHref)}
 				data-testid="home-hero-cta-ranking"
-				class="inline-flex items-center gap-2 rounded border border-rule px-4 py-2 font-mono text-sm tracking-wider text-ink uppercase hover:border-ink"
+				class="inline-flex items-center gap-2 rounded border border-rule px-4 py-2 text-sm font-medium text-ink hover:border-ink"
 			>
 				<ListOrdered size={16} aria-hidden="true" />
 				{m.home_hero_cta_ranking()}

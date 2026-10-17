@@ -114,15 +114,15 @@
 				{/if}
 			</span>
 			{#if displayA.context}
-				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayA.context}</div>
+				<div class="mt-0.5 text-xs text-ink-subtle">{displayA.context}</div>
 			{/if}
 		{:else if displayA?.fallbackText}
-			<span class="font-mono text-sm text-ink">{displayA.fallbackText}</span>
+			<span class="text-sm text-ink">{displayA.fallbackText}</span>
 			{#if displayA.context}
-				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayA.context}</div>
+				<div class="mt-0.5 text-xs text-ink-subtle">{displayA.context}</div>
 			{/if}
 		{:else}
-			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label={noDataLabel}>–</span>
+			<span role="img" class="text-sm text-ink-subtle" aria-label={noDataLabel}>–</span>
 		{/if}
 	</td>
 	<td class="py-2 align-top">
@@ -146,15 +146,15 @@
 				{/if}
 			</span>
 			{#if displayB.context}
-				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayB.context}</div>
+				<div class="mt-0.5 text-xs text-ink-subtle">{displayB.context}</div>
 			{/if}
 		{:else if displayB?.fallbackText}
-			<span class="font-mono text-sm text-ink">{displayB.fallbackText}</span>
+			<span class="text-sm text-ink">{displayB.fallbackText}</span>
 			{#if displayB.context}
-				<div class="mt-0.5 font-mono text-xs text-ink-subtle">{displayB.context}</div>
+				<div class="mt-0.5 text-xs text-ink-subtle">{displayB.context}</div>
 			{/if}
 		{:else}
-			<span role="img" class="font-mono text-sm text-ink-subtle" aria-label={noDataLabel}>–</span>
+			<span role="img" class="text-sm text-ink-subtle" aria-label={noDataLabel}>–</span>
 		{/if}
 	</td>
 </tr>
@@ -162,12 +162,15 @@
 	<tr data-testid="compare-row-delta" data-slug={slug}>
 		<td colspan="3" class="pt-0 pb-2 pl-3">
 			{#if compareResult.deltaLabel}
-				<span class="font-mono text-xs text-ink-muted" data-testid="compare-delta-label">
+				<span
+					class="font-mono text-xs text-ink-muted tabular-nums"
+					data-testid="compare-delta-label"
+				>
 					{compareResult.deltaLabel}
 				</span>
 			{/if}
 			{#if compareResult.advisory}
-				<span class="ml-2 font-serif text-xs text-ink-subtle italic" data-testid="compare-advisory">
+				<span class="ml-2 text-xs text-ink-subtle" data-testid="compare-advisory">
 					{compareResult.advisory}
 				</span>
 			{/if}

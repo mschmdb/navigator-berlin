@@ -164,10 +164,10 @@
 			<LocateFixed size={18} aria-hidden="true" />
 			{phase === 'locating' ? m.kaelte_orte_button_locating() : m.kaelte_orte_button_locate()}
 		</button>
-		<p class="font-serif text-sm text-ink-subtle">{m.kaelte_orte_hint()}</p>
+		<p class="text-sm text-ink-subtle">{m.kaelte_orte_hint()}</p>
 	{:else if phase === 'ready' && index.length === 0}
 		<p
-			class="font-serif text-sm text-ink-muted"
+			class="text-sm text-ink-muted"
 			tabindex="-1"
 			bind:this={messageEl}
 			data-testid="waerme-keine-daten"
@@ -226,7 +226,7 @@
 							<h3 class="min-w-0 font-sans text-base font-semibold text-ink">
 								<span lang={locale === 'de' ? undefined : 'de'}>{ort.name}</span>
 							</h3>
-							<span class="shrink-0 font-mono text-sm text-ink-muted tabular-nums">
+							<span class="shrink-0 text-sm text-ink-muted tabular-nums">
 								<span class="sr-only"
 									>{m.naehe_distance_aria_label({ distance: distanceText(ort.distanceM) })}</span
 								>
@@ -242,10 +242,7 @@
 							{/if}
 						</p>
 						{#if ort.address}
-							<p
-								class="font-serif text-sm text-ink-muted"
-								lang={locale === 'de' ? undefined : 'de'}
-							>
+							<p class="text-sm text-ink-muted" lang={locale === 'de' ? undefined : 'de'}>
 								{ort.address}{ort.plz ? `, ${ort.plz}` : ''}
 							</p>
 						{/if}
@@ -273,7 +270,7 @@
 								{m.kaelte_orte_ohne_quelle()}
 							{/if}
 							{#if ort.checkedAt}
-								· {checkedText(ort.checkedAt)}
+								<span class="block">{checkedText(ort.checkedAt)}</span>
 							{/if}
 						</p>
 						{#if ort.website && ort.website !== ort.sourceUrl}
@@ -322,7 +319,7 @@
 				{/each}
 			</ul>
 		{:else}
-			<p class="font-serif text-sm text-ink-muted" data-testid="waerme-empty">
+			<p class="text-sm text-ink-muted" data-testid="waerme-empty">
 				{m.kaelte_orte_empty()}
 			</p>
 		{/if}
@@ -332,7 +329,7 @@
 		</button>
 	{:else if phase === 'load-error'}
 		<p
-			class="font-serif text-sm text-ink-muted"
+			class="text-sm text-ink-muted"
 			tabindex="-1"
 			bind:this={messageEl}
 			data-testid="waerme-load-error"
@@ -344,7 +341,7 @@
 		</button>
 	{:else}
 		<p
-			class="font-serif text-sm text-ink-muted"
+			class="text-sm text-ink-muted"
 			tabindex="-1"
 			bind:this={messageEl}
 			data-testid="waerme-fallback"

@@ -101,7 +101,7 @@ describe('methodik-daten-tabelle.svelte · Locale (i18n C4a)', () => {
 		const heads = [...table.querySelectorAll('th')].map((th) => th.textContent?.trim());
 		expect(heads).toEqual(['Layer', 'Bundle', 'Last updated', 'Licence']);
 		expect(table.querySelector('tbody tr td:nth-child(2)')?.textContent?.trim()).toBe(
-			'C · Environment'
+			'C: Environment'
 		);
 		expect(table.querySelector('tbody a')?.getAttribute('href')).toBe('/en/layer/laerm-2023');
 		expect(table.querySelector('tbody a')?.textContent?.trim()).toBe('Noise pollution 2023');

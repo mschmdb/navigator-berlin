@@ -39,7 +39,7 @@
 		onclick={toggle}
 		class="flex min-h-(--target-min) w-full items-center justify-between gap-2 text-left"
 	>
-		<span data-testid="card-title" class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+		<span data-testid="card-title" class="text-xs text-ink-muted">
 			{title}
 		</span>
 		<ChevronDown

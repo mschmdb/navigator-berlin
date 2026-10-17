@@ -44,11 +44,11 @@
 		class="pointer-events-none absolute z-30 max-w-xs border border-rule bg-bg-elevated/95 px-2.5 py-1.5 text-xs text-ink shadow-lg backdrop-blur-sm"
 		style="left: {pos.x + 12}px; top: {pos.y + 12}px;"
 	>
-		<p class="font-serif text-sm font-semibold text-ink" data-testid="winner-map-tooltip-gebiet">
+		<p class="text-sm font-semibold text-ink" data-testid="winner-map-tooltip-gebiet">
 			{data.gebietName}
 		</p>
 		{#if data.hasWinner && data.partei}
-			<p class="mt-0.5 flex items-center gap-1.5 font-mono text-xs text-ink">
+			<p class="mt-0.5 flex items-center gap-1.5 text-xs text-ink">
 				<span
 					aria-hidden="true"
 					class="inline-block h-2.5 w-2.5 rounded-sm border border-rule-strong"
@@ -60,23 +60,20 @@
 				>
 			</p>
 		{:else}
-			<p class="mt-0.5 font-mono text-xs text-ink-subtle" data-testid="winner-map-tooltip-empty">
+			<p class="mt-0.5 text-xs text-ink-subtle" data-testid="winner-map-tooltip-empty">
 				{m.wahl_portal_tooltip_keine_daten()}
 			</p>
 		{/if}
 		{#if jahr !== null}
 			<p
-				class="mt-1 font-sans text-dense-meta tracking-wide text-ink-subtle uppercase"
+				class="mt-1 font-sans text-dense-meta text-ink-subtle"
 				data-testid="winner-map-tooltip-jahr"
 			>
-				{jahr}{repeatElection ? ` · ${wahlWiederholungLabel()}` : ''}
+				{jahr}{repeatElection ? `, ${wahlWiederholungLabel()}` : ''}
 			</p>
 		{/if}
 		{#if data.wechsel}
-			<p
-				class="mt-0.5 font-mono text-dense-meta text-ink-subtle"
-				data-testid="winner-map-tooltip-wechsel"
-			>
+			<p class="mt-0.5 text-dense-meta text-ink-subtle" data-testid="winner-map-tooltip-wechsel">
 				{m.wahl_portal_tooltip_wechsel_hinweis()}
 			</p>
 		{/if}

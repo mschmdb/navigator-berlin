@@ -126,18 +126,16 @@
 				data-testid="home-featured-score-placeholder"
 				aria-hidden="true"
 			>
-				<span class="font-mono text-xs tracking-wide text-ink-subtle uppercase"
-					>{m.home_featured_score_overall_label()}</span
-				>
-				<span class="font-mono text-5xl leading-none font-semibold text-ink"
+				<span class="text-xs text-ink-subtle">{m.home_featured_score_overall_label()}</span>
+				<span class="text-5xl leading-none font-bold tracking-tight text-ink tabular-nums"
 					>{Math.round(featured.composite ?? 0)}</span
 				>
-				<span class="font-mono text-xs text-ink-subtle">/ 100</span>
+				<span class="font-mono text-xs text-ink-subtle tabular-nums">/ 100</span>
 			</div>
 		{/if}
 		<a
 			href={localizedHref(featured.exploreHref)}
-			class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-1 text-xs text-accent hover:text-ink"
 		>
 			{m.home_featured_score_link_label({ name: featured.displayName })}
 			<ArrowUpRight size={14} aria-hidden="true" />

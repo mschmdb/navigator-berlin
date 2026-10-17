@@ -134,11 +134,11 @@
 		</div>
 	</div>
 
-	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">{explainEntry.short}</p>
+	<p class="mt-0.5 text-sm leading-snug text-ink-muted">{explainEntry.short}</p>
 
 	{#if !isActive}
 		<div class="mt-2.5 space-y-2" data-testid="waerme-orte-layer-off">
-			<p class="font-serif text-sm text-ink-subtle">
+			<p class="text-sm text-ink-subtle">
 				{m.inspector_waerme_orte_layer_off({ layerName }, localeOpts)}
 			</p>
 			{#if onToggleLayer}
@@ -154,15 +154,11 @@
 			{/if}
 		</div>
 	{:else if loadError}
-		<p class="mt-2.5 font-serif text-sm text-ink-subtle" data-testid="waerme-orte-load-error">
+		<p class="mt-2.5 text-sm text-ink-subtle" data-testid="waerme-orte-load-error">
 			{m.inspector_waerme_orte_load_error(undefined, localeOpts)}
 		</p>
 	{:else if !index}
-		<p
-			class="mt-2.5 font-serif text-sm text-ink-subtle italic"
-			role="status"
-			data-testid="waerme-orte-loading"
-		>
+		<p class="mt-2.5 text-sm text-ink-subtle" role="status" data-testid="waerme-orte-loading">
 			{m.inspector_waerme_orte_loading(undefined, localeOpts)}
 		</p>
 	{:else}
@@ -217,7 +213,7 @@
 							<span class="min-w-0 font-sans text-sm font-medium text-ink" lang={deLang}
 								>{ort.name}</span
 							>
-							<span class="shrink-0 font-mono text-xs text-ink-subtle tabular-nums">
+							<span class="shrink-0 text-xs text-ink-subtle tabular-nums">
 								<span class="sr-only"
 									>{m.naehe_distance_aria_label(
 										{ distance: formatDistance(ort.distanceM, localeOpts) },
@@ -228,19 +224,17 @@
 							</span>
 						</div>
 						<div class="mt-0.5 flex flex-wrap items-center gap-1">
-							<span class="font-mono text-dense-meta text-ink-muted" lang={cat.lang}
-								>{cat.text}</span
-							>
+							<span class="text-dense-meta text-ink-muted" lang={cat.lang}>{cat.text}</span>
 							{#if ort.status}
 								<span
-									class={`inline-flex items-center rounded-sm px-1 font-mono text-dense-meta font-semibold ${statusClass(ort.status)} bg-bg`}
+									class={`inline-flex items-center rounded-sm px-1 text-dense-meta font-semibold ${statusClass(ort.status)} bg-bg`}
 									data-testid="waerme-orte-status"
 									>{statusText(ort.status, statusSourceOf(ort), locale)}</span
 								>
 							{/if}
 						</div>
 						{#if ort.address}
-							<p class="mt-0.5 font-serif text-xs text-ink-subtle" lang={deLang}>
+							<p class="mt-0.5 text-xs text-ink-subtle" lang={deLang}>
 								{ort.address}{ort.plz ? `, ${ort.plz}` : ''}
 							</p>
 						{/if}
@@ -269,7 +263,7 @@
 								{m.kaelte_orte_ohne_quelle(undefined, localeOpts)}
 							{/if}
 							{#if ort.checkedAt}
-								· {checkedText(ort.checkedAt, locale)}
+								<span class="block">{checkedText(ort.checkedAt, locale)}</span>
 							{/if}
 						</p>
 						<div class="mt-1 flex flex-wrap gap-x-3 gap-y-1">
@@ -309,7 +303,7 @@
 				{/each}
 			</ul>
 		{:else}
-			<p class="mt-2.5 font-serif text-sm text-ink-subtle" data-testid="waerme-orte-empty">
+			<p class="mt-2.5 text-sm text-ink-subtle" data-testid="waerme-orte-empty">
 				{emptyText}
 			</p>
 		{/if}
@@ -321,7 +315,7 @@
 			data-testid="card-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-1 text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}
@@ -333,7 +327,7 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
-			<p class="font-serif text-xs leading-snug text-ink-muted">{explainEntry.long}</p>
+			<p class="text-xs leading-snug text-ink-muted">{explainEntry.long}</p>
 			{#if editorial?.primarySourceUrl}
 				<a
 					href={editorial.primarySourceUrl}

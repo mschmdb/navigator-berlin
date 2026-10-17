@@ -32,7 +32,7 @@
 						>
 							{item.name}
 						</a>
-						<span aria-hidden="true">·</span>
+						<span aria-hidden="true">/</span>
 					{:else}
 						<span aria-current="page" class="text-ink-muted">{item.name}</span>
 					{/if}

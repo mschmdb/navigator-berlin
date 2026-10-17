@@ -366,27 +366,19 @@
 		data-testid="winner-map"
 	>
 		{#if repeatElection}
-			<p data-testid="winner-map-wiederholung" class="font-mono text-xs text-ink-subtle">
+			<p data-testid="winner-map-wiederholung" class="text-xs text-ink-subtle">
 				{wahlWiederholungLabel()}
 			</p>
 		{/if}
 
 		{#if fallbackActive}
-			<p
-				data-testid="winner-map-fallback-hinweis"
-				role="status"
-				class="font-mono text-xs text-ink-subtle"
-			>
+			<p data-testid="winner-map-fallback-hinweis" role="status" class="text-xs text-ink-subtle">
 				{fallbackHinweisText}
 			</p>
 		{/if}
 
 		{#if mapShown && (activeWinnersStatus === 'error' || activeGeometryStatus === 'error' || !activeHasAnyWinners)}
-			<p
-				data-testid="winner-map-status-hinweis"
-				role="status"
-				class="font-mono text-xs text-ink-subtle"
-			>
+			<p data-testid="winner-map-status-hinweis" role="status" class="text-xs text-ink-subtle">
 				{activeWinnersStatus === 'error' || activeGeometryStatus === 'error'
 					? m.wahl_portal_status_hinweis_fehler()
 					: m.wahl_portal_status_hinweis_keine_ergebnisse()}
@@ -394,21 +386,21 @@
 		{/if}
 
 		{#if visibility.isErrorState}
-			<p data-testid="winner-map-error" role="alert" class="font-serif text-ink-muted">
+			<p data-testid="winner-map-error" role="alert" class="text-ink-muted">
 				{m.wahl_portal_wahldaten_error()}
 			</p>
 		{:else if visibility.isLoadingState}
-			<p data-testid="winner-map-loading" class="font-serif text-ink-muted">
+			<p data-testid="winner-map-loading" class="text-ink-muted">
 				{m.wahl_portal_winner_map_loading()}
 			</p>
 		{:else if visibility.isEmptyState}
-			<p data-testid="winner-map-empty" class="font-serif text-ink-muted">
+			<p data-testid="winner-map-empty" class="text-ink-muted">
 				{m.wahl_portal_wahl_ergebnisse_empty()}
 			</p>
 		{:else}
 			<p
 				data-testid="winner-map-takeaway"
-				class="max-w-prose font-serif text-lg leading-body text-ink tabular-nums"
+				class="max-w-prose text-lg leading-body text-ink tabular-nums"
 			>
 				{parteiTexts ? parteiTexts.takeaway : takeawayText}
 			</p>
@@ -430,7 +422,7 @@
 					<p
 						aria-live="polite"
 						data-testid="winner-map-address-hint"
-						class="mt-1 font-mono text-xs text-ink-subtle"
+						class="mt-1 text-xs text-ink-subtle"
 					>
 						{addressHighlight.hint}
 					</p>
@@ -476,10 +468,7 @@
 				/>
 			{/if}
 
-			<figcaption
-				data-testid="winner-map-aggregation-hinweis"
-				class="font-mono text-xs text-ink-subtle"
-			>
+			<figcaption data-testid="winner-map-aggregation-hinweis" class="text-xs text-ink-subtle">
 				{aggregationHinweis}
 				{m.wahl_portal_methodik_details_label()}
 				<a

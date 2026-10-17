@@ -35,11 +35,11 @@
 		class="pointer-events-none absolute z-30 max-w-xs border border-rule bg-bg-elevated/95 px-2.5 py-1.5 text-xs text-ink shadow-lg backdrop-blur-sm"
 		style="left: {pos.x + 12}px; top: {pos.y + 12}px;"
 	>
-		<p class="font-serif text-sm font-semibold text-ink" data-testid="sankey-tooltip-title">
+		<p class="text-sm font-semibold text-ink" data-testid="sankey-tooltip-title">
 			{content.title}
 		</p>
 		{#if content.detail}
-			<p class="mt-0.5 font-mono text-xs text-ink-subtle" data-testid="sankey-tooltip-detail">
+			<p class="mt-0.5 text-xs text-ink-subtle" data-testid="sankey-tooltip-detail">
 				{content.detail}
 			</p>
 		{/if}

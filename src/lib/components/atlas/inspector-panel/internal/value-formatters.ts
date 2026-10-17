@@ -100,7 +100,7 @@ function formatBrw(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	const brw = pickProp(raw, 'brw');
 	const nutzung = pickProp(raw, 'nutzung');
 	if (typeof brw !== 'number') return missingValue(opts);
-	const suffix = typeof nutzung === 'string' ? ` · ${nutzung}` : '';
+	const suffix = typeof nutzung === 'string' ? `, ${nutzung}` : '';
 	return value(`${formatCount(brw, toAtlasMessageOptions(opts))} €/m²${suffix}`, true);
 }
 
@@ -125,7 +125,7 @@ function formatUmweltatlasKategorie(
 	// hoch) wird übersetzt; ein echter offener Rohwert bleibt unverändert.
 	const harmonized = mapKategorie ? mapKategorie(kategorie) : kategorie;
 	const display = translateClosedCategory(harmonized, opts);
-	const suffix = typeof plr === 'string' ? ` · ${plr}` : '';
+	const suffix = typeof plr === 'string' ? `, ${plr}` : '';
 	return value(`${prefix}: ${display}${suffix}`);
 }
 
@@ -150,7 +150,7 @@ function formatWohnlage(raw: unknown, opts?: LocaleOptions): FormattedValue {
 				counts.push(`${c} ${translateClosedCategory(rawLabel, opts)}`);
 			}
 		}
-		const plrPart = typeof plr === 'string' ? ` · ${plr}` : '';
+		const plrPart = typeof plr === 'string' ? `, ${plr}` : '';
 		const breakdown = counts.length > 1 ? ` (${counts.join(', ')})` : '';
 		// Ganzer Satz als Message (Review-Fund: kein `${prefix} ${wert}`-
 		// Zusammenkleben), `mode` ist bereits übersetzt (geschlossene Menge).
@@ -167,11 +167,11 @@ function formatWohnlage(raw: unknown, opts?: LocaleOptions): FormattedValue {
 			typeof strasse === 'string' && typeof hnr === 'string' ? `${strasse} ${hnr}` : null;
 		const tail =
 			addr && typeof plr === 'string'
-				? ` · ${addr}, ${plr}`
+				? `, ${addr}, ${plr}`
 				: addr
-					? ` · ${addr}`
+					? `, ${addr}`
 					: typeof plr === 'string'
-						? ` · ${plr}`
+						? `, ${plr}`
 						: '';
 		const wolValue = translateClosedCategory(rawWol, opts);
 		return value(`${m.atlas_value_wohnlage({ value: wolValue }, options)}${tail}`);
@@ -184,7 +184,7 @@ function formatMilieuschutz(raw: unknown, opts?: LocaleOptions): FormattedValue 
 	const name = firstString(raw, 'gebietsname');
 	const bezirk = firstString(raw, 'bezirk');
 	if (!name) return missingValue(opts);
-	const suffix = bezirk ? ` · ${bezirk}` : '';
+	const suffix = bezirk ? `, ${bezirk}` : '';
 	return value(`${name}${suffix}`);
 }
 
@@ -193,7 +193,7 @@ function formatKita(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	const strasse = firstString(raw, 'e_strasse');
 	const hnr = firstString(raw, 'e_hnr');
 	if (!name) return missingValue(opts);
-	const addr = strasse && hnr ? ` · ${strasse} ${hnr}` : '';
+	const addr = strasse && hnr ? `, ${strasse} ${hnr}` : '';
 	return value(`${name}${addr}`);
 }
 
@@ -202,7 +202,7 @@ function formatOsmPoi(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	const name = firstString(raw, 'name');
 	const strasse = firstString(raw, 'addr:street');
 	const hnr = firstString(raw, 'addr:housenumber');
-	const addr = strasse ? ` · ${strasse}${hnr ? ' ' + hnr : ''}` : '';
+	const addr = strasse ? `, ${strasse}${hnr ? ' ' + hnr : ''}` : '';
 	if (name) return value(`${name}${addr}`);
 	const typ = firstString(raw, 'amenity', 'shop', 'tourism');
 	if (typ) return value(typ);
@@ -214,7 +214,7 @@ function formatSchule(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	const name = firstString(raw, 'schulname');
 	const art = firstString(raw, 'schulart');
 	if (!name) return missingValue(opts);
-	const suffix = art ? ` · ${art}` : '';
+	const suffix = art ? `, ${art}` : '';
 	return value(`${name}${suffix}`);
 }
 
@@ -222,7 +222,7 @@ function formatEinschulbereich(raw: unknown, opts?: LocaleOptions): FormattedVal
 	const esb = firstString(raw, 'esb');
 	const bez = firstString(raw, 'bezname');
 	if (!esb) return missingValue(opts);
-	const suffix = bez ? ` · ${bez}` : '';
+	const suffix = bez ? `, ${bez}` : '';
 	return value(`ESB ${esb}${suffix}`);
 }
 
@@ -234,9 +234,9 @@ function formatKrankenhaus(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	const options = toAtlasMessageOptions(opts);
 	const bettenPart =
 		typeof betten === 'number'
-			? ` · ${formatCount(betten, options)} ${m.atlas_value_betten(undefined, options)}`
+			? `, ${formatCount(betten, options)} ${m.atlas_value_betten(undefined, options)}`
 			: '';
-	const strPart = strasse ? ` · ${strasse}` : '';
+	const strPart = strasse ? `, ${strasse}` : '';
 	return value(`${name}${strPart}${bettenPart}`);
 }
 
@@ -245,7 +245,7 @@ function formatSportanlage(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	const flaeche = pickProp(raw, 'gesamtflaeche_standort_qm');
 	if (!name) return missingValue(opts);
 	const flPart =
-		typeof flaeche === 'number' ? ` · ${formatCount(flaeche, toAtlasMessageOptions(opts))} m²` : '';
+		typeof flaeche === 'number' ? `, ${formatCount(flaeche, toAtlasMessageOptions(opts))} m²` : '';
 	return value(`${name}${flPart}`);
 }
 
@@ -255,7 +255,7 @@ function formatGruenflaeche(raw: unknown, opts?: LocaleOptions): FormattedValue 
 	const bezirk = firstString(raw, 'bezirkname');
 	const label = name ?? objart;
 	if (!label) return missingValue(opts);
-	const suffix = bezirk ? ` · ${bezirk}` : '';
+	const suffix = bezirk ? `, ${bezirk}` : '';
 	return value(`${label}${suffix}`);
 }
 
@@ -263,7 +263,7 @@ function formatSchwimmbad(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	const name = firstString(raw, 'name_des_schwimmbads');
 	const kategorie = firstString(raw, 'badkategorie');
 	if (!name) return missingValue(opts);
-	const suffix = kategorie ? ` · ${kategorie}` : '';
+	const suffix = kategorie ? `, ${kategorie}` : '';
 	return value(`${name}${suffix}`);
 }
 
@@ -277,7 +277,7 @@ function formatFahrradstrasse(raw: unknown, opts?: LocaleOptions): FormattedValu
 	const strasse = firstString(raw, 'strasse');
 	const bezirk = firstString(raw, 'bezirk');
 	if (!strasse) return missingValue(opts);
-	const suffix = bezirk ? ` · ${bezirk}` : '';
+	const suffix = bezirk ? `, ${bezirk}` : '';
 	return value(`${strasse}${suffix}`);
 }
 
@@ -346,9 +346,9 @@ function formatUmweltgerechtigkeit(raw: unknown, opts?: LocaleOptions): Formatte
 		if (typeof v === 'string') subs.push(`${label}: ${v}`);
 	}
 	const social = pickProp(raw, 'status_ind');
-	const suffix = subs.length > 0 ? ` · ${subs.join(', ')}` : '';
+	const suffix = subs.length > 0 ? `, ${subs.join(', ')}` : '';
 	const socialPart =
-		typeof social === 'string' ? ` · ${m.atlas_value_soziales(undefined, options)}: ${social}` : '';
+		typeof social === 'string' ? `, ${m.atlas_value_soziales(undefined, options)}: ${social}` : '';
 	return value(
 		`${m.atlas_value_belastung(undefined, options)}: ${kategorie}${suffix}${socialPart}`
 	);
@@ -366,7 +366,7 @@ function formatOrtsteil(raw: unknown, opts?: LocaleOptions): FormattedValue {
 	const name = firstString(raw, 'OTEIL', 'spatial_alias');
 	const bezirk = firstString(raw, 'BEZIRK');
 	if (!name) return missingValue(opts);
-	const suffix = bezirk && bezirk !== name ? ` · ${bezirk}` : '';
+	const suffix = bezirk && bezirk !== name ? `, ${bezirk}` : '';
 	return value(`${name}${suffix}`);
 }
 
@@ -396,7 +396,7 @@ function formatMssGesamtindex(raw: unknown, opts?: LocaleOptions): FormattedValu
 	const plr = firstString(raw, 'plr_name');
 	const kom = firstString(raw, 'kom');
 	const options = toAtlasMessageOptions(opts);
-	const plrSuffix = plr ? ` · ${plr}` : '';
+	const plrSuffix = plr ? `, ${plr}` : '';
 	if (kom && kom !== 'gültig') {
 		return value(
 			`${m.atlas_value_aggregat_nicht_aussagekraeftig(undefined, options)}${plrSuffix} (${kom})`

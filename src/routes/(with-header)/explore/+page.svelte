@@ -1686,7 +1686,7 @@
 			class="fixed inset-0 z-50 flex items-center justify-center bg-bg/70 p-4"
 		>
 			<div class="w-full max-w-sm border border-rule bg-bg-elevated p-5 shadow-md">
-				<h3 id="compare-replace-title" class="font-serif text-lg text-ink">
+				<h3 id="compare-replace-title" class="text-lg font-semibold text-ink">
 					{m.compare_replace_dialog_title(undefined, localeOpts)}
 				</h3>
 				<p class="mt-2 font-sans text-sm text-ink-muted">

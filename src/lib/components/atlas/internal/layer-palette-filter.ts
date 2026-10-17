@@ -61,14 +61,14 @@ export const LAYER_EXPLAIN_DE: Record<string, string> = {
 	'tram-netz': 'Tram-Netz',
 	'sbahn-netz': 'S-Bahn-Netz',
 	// G: Kiez-Score (virtuelle Aggregat-Layer, Story 1.28)
-	'kiez-score-gesamt': 'Kiez-Score · Gesamt',
-	'kiez-score-ruhe-luft': 'Kiez-Score · Ruhe & Luft',
-	'kiez-score-gruen-hitze': 'Kiez-Score · Grün & Hitze',
-	'kiez-score-mobilitaet': 'Kiez-Score · Mobilität',
-	'kiez-score-wohnschutz': 'Kiez-Score · Wohnschutz',
-	'kiez-score-versorgung': 'Kiez-Score · Versorgung',
-	'kiez-score-kultur': 'Kiez-Score · Kultur',
-	'kiez-score-kriminalitaet': 'Kiez-Score · Erfasste Kriminalität',
+	'kiez-score-gesamt': 'Kiez-Score: Gesamt',
+	'kiez-score-ruhe-luft': 'Kiez-Score: Ruhe & Luft',
+	'kiez-score-gruen-hitze': 'Kiez-Score: Grün & Hitze',
+	'kiez-score-mobilitaet': 'Kiez-Score: Mobilität',
+	'kiez-score-wohnschutz': 'Kiez-Score: Wohnschutz',
+	'kiez-score-versorgung': 'Kiez-Score: Versorgung',
+	'kiez-score-kultur': 'Kiez-Score: Kultur',
+	'kiez-score-kriminalitaet': 'Kiez-Score: Erfasste Kriminalität',
 	// I: Demografie (Story 10.0)
 	'einwohner-dichte-2024': 'Einwohnerdichte 2024',
 	// J: Kultur (Epic 13)
@@ -121,16 +121,16 @@ export const BUNDLE_ORDER: readonly Bundle[] = [
  * hält beide Quellen synchron.
  */
 export const BUNDLE_LABEL_DE: Record<Bundle, string> = {
-	'A: Boundaries': 'A · Boundaries',
-	'B: Wohn-Daten': 'B · Wohn-Daten',
-	'C: Umwelt': 'C · Umwelt',
-	'D: Memorial': 'D · Memorial',
-	'E: Soziale Infrastruktur': 'E · Soziale Infrastruktur',
-	'F: Mobilität': 'F · Mobilität',
-	'G: Kiez-Score': 'G · Kiez-Score',
-	'H: Wahldaten': 'H · Wahldaten',
-	'I: Demografie': 'I · Demografie',
-	'J: Kultur': 'J · Kultur'
+	'A: Boundaries': 'A: Boundaries',
+	'B: Wohn-Daten': 'B: Wohn-Daten',
+	'C: Umwelt': 'C: Umwelt',
+	'D: Memorial': 'D: Memorial',
+	'E: Soziale Infrastruktur': 'E: Soziale Infrastruktur',
+	'F: Mobilität': 'F: Mobilität',
+	'G: Kiez-Score': 'G: Kiez-Score',
+	'H: Wahldaten': 'H: Wahldaten',
+	'I: Demografie': 'I: Demografie',
+	'J: Kultur': 'J: Kultur'
 };
 
 export interface LayerGroup {

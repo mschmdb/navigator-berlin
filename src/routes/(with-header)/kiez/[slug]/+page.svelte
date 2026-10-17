@@ -154,7 +154,7 @@
 		href={localizedHref('/methodik/kiez-score')}
 		class="text-accent underline underline-offset-2 hover:text-accent-strong"
 	>
-		{m.kiez_page_methodik_link_label()} →
+		{m.kiez_page_methodik_link_label()}
 	</a>
 	<OverviewLinks kind="kiez" {bezirkName} {bezirkSlug} />
 </div>

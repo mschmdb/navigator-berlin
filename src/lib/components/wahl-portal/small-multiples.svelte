@@ -199,22 +199,22 @@
 </script>
 
 {#if isError}
-	<p data-testid="small-multiples-error" role="alert" class="font-serif text-ink-muted">
+	<p data-testid="small-multiples-error" role="alert" class="text-ink-muted">
 		{m.wahl_portal_wahldaten_error()}
 	</p>
 {:else if isLoading}
-	<p data-testid="small-multiples-loading" class="font-serif text-ink-muted">
+	<p data-testid="small-multiples-loading" class="text-ink-muted">
 		{m.wahl_portal_small_multiples_loading()}
 	</p>
 {:else if isEmpty}
-	<p data-testid="small-multiples-empty" class="font-serif text-ink-muted">
+	<p data-testid="small-multiples-empty" class="text-ink-muted">
 		{m.wahl_portal_small_multiples_empty()}
 	</p>
 {:else if showInhalt}
 	<div data-testid="small-multiples" class="flex flex-col gap-6">
 		<p
 			data-testid="small-multiples-takeaway"
-			class="max-w-prose font-serif text-lg leading-body text-ink tabular-nums"
+			class="max-w-prose text-lg leading-body text-ink tabular-nums"
 		>
 			{takeawayText}
 		</p>
@@ -226,7 +226,7 @@
 						<div
 							role="status"
 							data-testid={`small-multiples-mini-${slot.partei}-error`}
-							class="flex aspect-square w-full items-center justify-center border border-rule bg-bg-muted p-2 text-center font-mono text-xs text-ink-subtle"
+							class="flex aspect-square w-full items-center justify-center border border-rule bg-bg-muted p-2 text-center text-xs text-ink-subtle"
 						>
 							{m.wahl_portal_mini_kachel_error({ partei: slot.partei })}
 						</div>
@@ -257,7 +257,7 @@
 							{/each}
 						</svg>
 					{/if}
-					<figcaption class="font-mono text-xs text-ink">
+					<figcaption class="text-xs text-ink">
 						<span class="font-semibold" style={`color: ${slot.mini?.farbe ?? ''};`}
 							>{slot.partei}</span
 						>
@@ -297,7 +297,7 @@
 			closeLabel={m.wahl_portal_data_table_close()}
 		/>
 
-		<p data-testid="small-multiples-methodik-hinweis" class="font-mono text-xs text-ink-subtle">
+		<p data-testid="small-multiples-methodik-hinweis" class="text-xs text-ink-subtle">
 			{aggregationHinweisText('kiez')}
 			{m.wahl_portal_methodik_details_label()}
 			<a
@@ -309,13 +309,14 @@
 		</p>
 
 		{#if datenstand}
-			<p
-				data-testid="small-multiples-datenstand"
-				class="font-mono text-xs text-ink-subtle tabular-nums"
-			>
+			<p data-testid="small-multiples-datenstand" class="text-xs text-ink-subtle tabular-nums">
 				{m.wahl_portal_datenstand_label({ source: sourceDisplayLabel(datenstand.source_name) })}
 				{#if datenstand.license}
-					· {m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(datenstand.license) })}
+					<span class="block"
+						>{m.wahl_portal_lizenz_suffix({
+							license: licenseDisplayLabel(datenstand.license)
+						})}</span
+					>
 				{/if}
 			</p>
 		{/if}

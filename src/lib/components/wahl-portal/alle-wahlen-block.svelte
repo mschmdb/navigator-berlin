@@ -57,24 +57,24 @@
 		const parts = [String(entry.jahr)];
 		if (entry.typ !== 'bvv') parts.push(wahlStimmtypLabel(entry.stimmtyp));
 		if (entry.isRepeatElection) parts.push(m.wahl_portal_alle_wahlen_wiederholung_suffix());
-		return parts.join(' · ');
+		return parts.join(', ');
 	}
 </script>
 
 <div id="alle-wahlen" class="flex scroll-mt-[var(--header-height,72px)] flex-col gap-3">
 	<h3 class="font-sans text-base font-semibold text-ink">{m.wahl_portal_alle_wahlen_titel()}</h3>
 	{#if groups.length === 0}
-		<p class="font-mono text-xs text-ink-muted" data-testid="alle-wahlen-empty">
+		<p class="text-xs text-ink-muted" data-testid="alle-wahlen-empty">
 			{m.wahl_portal_alle_wahlen_empty()}
 		</p>
 	{:else}
 		<div class="flex flex-col gap-4" data-testid="alle-wahlen-block">
 			{#each groups as group (group.typ)}
 				<div data-testid={`alle-wahlen-gruppe-${group.typ}`}>
-					<h4 class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+					<h4 class="text-xs font-semibold text-ink-muted">
 						{group.label}
 					</h4>
-					<ul class="flex flex-wrap gap-x-4 gap-y-2 pt-1 font-mono text-xs">
+					<ul class="flex flex-wrap gap-x-4 gap-y-2 pt-1 text-xs">
 						{#each group.entries as entry (entry.slug)}
 							<li>
 								<a

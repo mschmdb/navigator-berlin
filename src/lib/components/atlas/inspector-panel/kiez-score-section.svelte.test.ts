@@ -319,7 +319,7 @@ describe('KiezScoreSection', () => {
 			.toHaveTextContent('Quiet & air');
 		await expect
 			.element(page.getByTestId('kiez-score-methodik-link'))
-			.toHaveTextContent('Methodology · How the Kiez score is calculated');
+			.toHaveTextContent('Methodology: How the Kiez score is calculated');
 		// Review-Fund: ValueChip-severityDescriptions war zunächst nicht verdrahtet.
 		// ruhe-luft=80 → Severity "success" → EN "favourable exposure".
 		const chip = (await page.getByTestId('kiez-score-dim-ruhe-luft').element()) as HTMLElement;

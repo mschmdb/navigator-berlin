@@ -74,7 +74,7 @@ describe('berlin-wahlen/[slug]/+page.svelte: H1-Titel-Komposition (DE)', () => {
 		render(WahlDetailPage, { data });
 		await expect
 			.element(page.getByTestId('wahl-detail-title'))
-			.toHaveTextContent('Abgeordnetenhauswahl 2023 · Zweitstimme · Wiederholungswahl');
+			.toHaveTextContent('Abgeordnetenhauswahl 2023, Zweitstimme, Wiederholungswahl');
 	});
 
 	it('BVV OHNE Stimtyp-Segment: "BVV-Wahl {jahr}" (kein Stimmtyp, keine Wiederholung)', async () => {
@@ -96,7 +96,7 @@ describe('berlin-wahlen/[slug]/+page.svelte: Vorläufig-Badge (Review-Fund 23.09
 		render(WahlDetailPage, { data });
 		await expect
 			.element(page.getByTestId('wahl-detail-vorlaeufig'))
-			.toHaveTextContent('Vorläufig · Stand 21.09.2026');
+			.toHaveTextContent('Vorläufig, Stand 21.09.2026');
 	});
 
 	it('zeigt keinen Vorläufig-Badge wenn vorlaeufig=false', async () => {

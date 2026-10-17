@@ -83,12 +83,12 @@ describe('formatAddressSubline', () => {
 			bezirk: 'Wedding',
 			postcode: '13351'
 		});
-		expect(formatAddressSubline(addr)).toBe('Afrikanisches Viertel · Wedding · 13351');
+		expect(formatAddressSubline(addr)).toBe('Afrikanisches Viertel, Wedding, 13351');
 	});
 
 	it('blendet fehlende Parts aus', () => {
 		const addr = makeAddr({ bezirk: 'Wedding', postcode: '13351' });
-		expect(formatAddressSubline(addr)).toBe('Wedding · 13351');
+		expect(formatAddressSubline(addr)).toBe('Wedding, 13351');
 	});
 
 	it('liefert empty-string wenn alle Parts fehlen', () => {

@@ -28,10 +28,10 @@
 <JsonLd data={breadcrumbJsonLd} testid="impressum-breadcrumb-jsonld" />
 
 <main class="mx-auto max-w-2xl px-4 py-12">
-	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl" lang="de">Impressum</h1>
+	<h1 class="text-2xl font-bold break-words hyphens-auto sm:text-3xl" lang="de">Impressum</h1>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">Angaben gemäß § 5 DDG</h2>
+		<h2 class="text-xl font-bold">Angaben gemäß § 5 DDG</h2>
 		<address class="mt-3 leading-body not-italic">
 			Matze Schmidbauer<br />
 			Arndtstraße 34<br />
@@ -41,7 +41,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">Kontakt</h2>
+		<h2 class="text-xl font-bold">Kontakt</h2>
 		<p class="mt-3 leading-body">
 			E-Mail: <a class="text-accent underline" href={`mailto:${FEEDBACK_EMAIL}`}>{FEEDBACK_EMAIL}</a
 			>
@@ -49,7 +49,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+		<h2 class="text-xl font-bold">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
 		<address class="mt-3 leading-body not-italic">
 			Matze Schmidbauer<br />
 			Arndtstraße 34<br />
@@ -58,7 +58,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">Haftungsausschluss</h2>
+		<h2 class="text-xl font-bold">Haftungsausschluss</h2>
 		<p class="mt-3 leading-body">
 			Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für Richtigkeit,
 			Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden.
@@ -72,7 +72,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">Haftung für Links</h2>
+		<h2 class="text-xl font-bold">Haftung für Links</h2>
 		<p class="mt-3 leading-body">
 			Diese Website enthält Verlinkungen auf externe Webseiten Dritter, auf deren Inhalte kein
 			Einfluss besteht. Für die Inhalte verlinkter Seiten ist stets der jeweilige Anbieter
@@ -82,7 +82,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">Urheberrecht</h2>
+		<h2 class="text-xl font-bold">Urheberrecht</h2>
 		<p class="mt-3 leading-body">
 			Code und redaktionelle Inhalte unterliegen dem deutschen Urheberrecht. Daten-Layer unterliegen
 			den auf der <a class="text-accent underline" href="/lizenzen">Lizenzen-Seite</a>

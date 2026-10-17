@@ -44,26 +44,27 @@
 
 <article class="mx-auto max-w-3xl space-y-8 px-4 py-8" data-testid="cross-layer-templates-preview">
 	<header class="space-y-3">
-		<p class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+		<p class="text-xs text-ink-muted">
 			<a href={localizedHref('/methodik')} class="underline-offset-2 hover:text-ink hover:underline"
 				>{m.methodik_clt_breadcrumb_methodik()}</a
 			>
+			<span aria-hidden="true">/</span>
 			{m.methodik_clt_breadcrumb_stage()}
 		</p>
 		<h1 class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl">
 			{m.methodik_clt_h1_title()}
 		</h1>
-		<p class="font-serif text-base leading-body text-ink-muted">
+		<p class="text-base leading-body text-ink-muted">
 			<RichText segments={introSegments}>
 				{#snippet tag(text)}
-					<code class="font-mono text-xs">{text}</code>
+					<code class="text-xs">{text}</code>
 				{/snippet}
 			</RichText>
 		</p>
-		<p class="border-l-2 border-rule pl-2 font-serif text-sm text-ink-muted italic">
+		<p class="border-l-2 border-rule pl-2 text-sm text-ink-muted">
 			<RichText segments={styleGuideSegments}>
 				{#snippet tag(text)}
-					<code class="font-mono text-xs">{text}</code>
+					<code class="text-xs">{text}</code>
 				{/snippet}
 			</RichText>
 		</p>
@@ -76,18 +77,14 @@
 		>
 			<header class="flex flex-wrap items-baseline gap-2 border-b border-rule/40 pb-3">
 				<h2 class="font-sans text-lg font-semibold text-ink">{preview.id}</h2>
-				<span
-					class="rounded-sm border border-rule px-1.5 py-0.5 font-mono text-dense-meta tracking-wide text-ink uppercase"
-				>
+				<span class="rounded-sm border border-rule px-1.5 py-0.5 text-dense-meta text-ink">
 					Scope {preview.scope}
 				</span>
-				<span class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
+				<span class="text-dense-meta text-ink-muted">
 					Fixture: {preview.contextLabel}
 				</span>
 				{#each preview.tags as tag (tag)}
-					<span
-						class="rounded-sm bg-bg-muted px-1.5 py-0.5 font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-					>
+					<span class="rounded-sm bg-bg-muted px-1.5 py-0.5 text-dense-meta text-ink-muted">
 						{previewTagLabel(tag, locale)}
 					</span>
 				{/each}
@@ -102,7 +99,7 @@
 
 			{#if preview.rendered.missingVars.length > 0}
 				<p
-					class="border-warning border-l-2 pl-2 font-mono text-xs text-ink"
+					class="border-warning border-l-2 pl-2 text-xs text-ink"
 					data-testid={`missing-${preview.id}`}
 				>
 					{m.methodik_clt_render_skip({ missingVars: preview.rendered.missingVars.join(', ') })}
@@ -110,7 +107,7 @@
 			{/if}
 
 			{#if preview.editorialNote}
-				<details class="font-serif text-sm text-ink-muted">
+				<details class="text-sm text-ink-muted">
 					<summary class="cursor-pointer font-sans font-medium text-ink">
 						{m.methodik_clt_editorial_note_summary()}
 					</summary>
@@ -118,12 +115,12 @@
 				</details>
 			{/if}
 
-			<details class="font-mono text-xs text-ink-muted">
+			<details class="text-xs text-ink-muted">
 				<summary class="cursor-pointer font-sans font-medium text-ink">
 					{m.methodik_clt_schema_details_summary()}
 				</summary>
 				<dl class="space-y-1 pt-2">
-					<dt class="text-dense-meta tracking-wide text-ink-muted uppercase">Requires</dt>
+					<dt class="text-dense-meta text-ink-muted">Requires</dt>
 					<dd>
 						<ul class="space-y-0.5">
 							{#each preview.requires as r (r)}
@@ -131,7 +128,7 @@
 							{/each}
 						</ul>
 					</dd>
-					<dt class="pt-2 text-dense-meta tracking-wide text-ink-muted uppercase">
+					<dt class="pt-2 text-dense-meta text-ink-muted">
 						{m.methodik_clt_render_context_term()}
 					</dt>
 					<dd>
@@ -144,7 +141,7 @@
 	{/each}
 
 	<footer class="space-y-2 border-t border-rule pt-4">
-		<p class="font-mono text-xs text-ink-muted">
+		<p class="text-xs text-ink-muted">
 			{m.methodik_clt_style_guide_label()}
 			<a
 				href="https://github.com/navigatorberlin/navigator.berlin/blob/main/docs/cross-layer-templates-style-guide.md"

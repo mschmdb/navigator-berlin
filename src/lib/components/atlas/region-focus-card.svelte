@@ -61,12 +61,12 @@
 >
 	<div class="flex items-start justify-between gap-2">
 		<div class="min-w-0">
-			<p class="font-sans text-xs tracking-wide text-ink-muted uppercase">
+			<p class="font-sans text-xs text-ink-muted">
 				{kind === 'kiez'
 					? m.region_focus_card_kind_kiez(undefined, localeOpts)
 					: m.region_focus_card_kind_bezirk(undefined, localeOpts)}
 			</p>
-			<h2 class="font-serif text-lg leading-tight text-ink" data-testid="region-focus-name">
+			<h2 class="text-lg leading-tight font-semibold text-ink" data-testid="region-focus-name">
 				{name}
 			</h2>
 			{#if showSubline}
@@ -87,9 +87,9 @@
 	</div>
 	{#if scoreText}
 		<p class="font-sans text-sm text-ink" data-testid="region-focus-score">
-			<span class="font-mono">{scoreText}</span>
+			<span class="font-mono tabular-nums">{scoreText}</span>
 			{#if rankText}
-				<span class="text-ink-muted"> · {rankText}</span>
+				<span class="text-ink-muted">, {rankText}</span>
 			{/if}
 		</p>
 	{/if}

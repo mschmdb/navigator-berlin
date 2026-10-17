@@ -103,11 +103,11 @@ describe('Authority-EN-Vollständigkeit (i18n Block C2)', () => {
 // "OpenStreetMap-Contributors". Jetzt ein Locale-Textbaustein.
 describe('AUTHORITY_SUFFIX_OSM_ODBL · locale-fähig', () => {
 	it('DE bleibt unverändert (Bindestrich-Schreibweise)', () => {
-		expect(AUTHORITY_SUFFIX_OSM_ODBL.de).toBe('· OpenStreetMap-Contributors (ODbL 1.0)');
+		expect(AUTHORITY_SUFFIX_OSM_ODBL.de).toBe('OpenStreetMap-Contributors (ODbL 1.0)');
 	});
 
 	it('EN schreibt "OpenStreetMap contributors" mit Leerzeichen, nicht Bindestrich', () => {
-		expect(AUTHORITY_SUFFIX_OSM_ODBL.en).toBe('· OpenStreetMap contributors (ODbL 1.0)');
+		expect(AUTHORITY_SUFFIX_OSM_ODBL.en).toBe('OpenStreetMap contributors (ODbL 1.0)');
 		expect(AUTHORITY_SUFFIX_OSM_ODBL.en).not.toMatch(/OpenStreetMap-Contributors/);
 	});
 });

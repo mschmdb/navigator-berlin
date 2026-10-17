@@ -27,7 +27,7 @@
 	data-testid={testid}
 >
 	<figcaption class="order-1 space-y-1">
-		<p class="m-0 font-serif text-lg text-ink" data-testid="hero-map-card-title">{title}</p>
+		<p class="m-0 text-lg text-ink" data-testid="hero-map-card-title">{title}</p>
 		{#if description}
 			<div class="font-sans text-sm text-ink-muted" data-testid="hero-map-card-description">
 				{@render description()}

@@ -38,13 +38,13 @@
 		data-testid={testid}
 		data-template-id={rendered.id}
 	>
-		<p class="font-serif text-base leading-body text-ink" data-testid={`${testid}-body`}>
+		<p class="text-base leading-body text-ink" data-testid={`${testid}-body`}>
 			{rendered.body}
 		</p>
 
 		{#if sources.length > 0}
 			<ul
-				class="space-y-0.5 font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
+				class="space-y-0.5 text-dense-meta text-ink-muted"
 				data-testid={`${testid}-sources`}
 				aria-label={m.cross_layer_story_sources_aria_label()}
 			>
@@ -62,7 +62,7 @@
 							<span>{src.label}</span>
 						{/if}
 						{#if src.license}
-							· {m.cross_layer_story_license_prefix()} {src.license}
+							<span class="block">{m.cross_layer_story_license_prefix()} {src.license}</span>
 						{/if}
 					</li>
 				{/each}
@@ -73,7 +73,7 @@
 
 		<a
 			href={methodikHref}
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="inline-block text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			data-testid={`${testid}-methodik-link`}
 		>
 			{methodikLinkLabel}

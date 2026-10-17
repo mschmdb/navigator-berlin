@@ -151,7 +151,7 @@
 		</div>
 	</div>
 
-	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
+	<p class="mt-0.5 text-sm leading-snug text-ink-muted">
 		{explainEntry.short}
 	</p>
 
@@ -194,44 +194,41 @@
 					</div>
 					<div class="mt-0.5 flex flex-wrap items-center gap-1">
 						<span
-							class={`inline-flex items-center rounded-sm px-1 font-mono text-dense-meta font-semibold ${STATUS_CLASS[status.tone]}`}
+							class={`inline-flex items-center rounded-sm px-1 text-dense-meta font-semibold ${STATUS_CLASS[status.tone]}`}
 							data-testid="ort-status">{status.text}</span
 						>
-						<span class="font-mono text-dense-meta text-ink-muted">{ort.cat}</span>
+						<span class="text-dense-meta text-ink-muted">{ort.cat}</span>
 						<span
-							class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-dense-meta text-ink-muted"
+							class="inline-flex items-center rounded-sm bg-bg px-1 text-dense-meta text-ink-muted"
 						>
 							{m.inspector_kuehle_orte_cool_score({ score: String(ort.coolScore) }, localeOpts)}
 						</span>
 						{#if ort.acStatus === 'yes'}
 							<span
-								class="inline-flex items-center rounded-sm bg-umwelt-kuehle-orte/12 px-1 font-mono text-dense-meta text-umwelt-kuehle-orte-ink"
+								class="inline-flex items-center rounded-sm bg-umwelt-kuehle-orte/12 px-1 text-dense-meta text-umwelt-kuehle-orte-ink"
 							>
 								{m.inspector_kuehle_orte_klimatisiert(undefined, localeOpts)}
 							</span>
 						{/if}
 						{#if free}
 							<span
-								class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-dense-meta text-ink-muted"
+								class="inline-flex items-center rounded-sm bg-bg px-1 text-dense-meta text-ink-muted"
 								>{free}</span
 							>
 						{/if}
 						{#if summer}
 							<span
-								class={`inline-flex items-center rounded-sm px-1 font-mono text-dense-meta ${
-									summer.tone === 'warn'
-										? 'bg-state-warning/15 text-state-warning'
-										: 'bg-bg text-ink-muted'
-								}`}>{summer.text}</span
+								class={`inline-flex items-center rounded-sm px-1 text-dense-meta ${summer.tone === 'warn' ? 'bg-state-warning/15 text-state-warning' : 'bg-bg text-ink-muted'}`}
+								>{summer.text}</span
 							>
 						{/if}
 					</div>
 					{#if ort.address}
-						<p class="mt-0.5 font-serif text-xs text-ink-subtle">{ort.address}</p>
+						<p class="mt-0.5 text-xs text-ink-subtle">{ort.address}</p>
 					{/if}
 					{#if ort.openingHours}
 						<p
-							class="mt-0.5 flex items-center gap-1 font-mono text-dense-meta text-ink-muted"
+							class="mt-0.5 flex items-center gap-1 text-dense-meta text-ink-muted"
 							data-testid="ort-hours"
 						>
 							<Clock size={11} aria-hidden="true" class="shrink-0" />
@@ -264,7 +261,7 @@
 			{/each}
 		</ul>
 	{:else}
-		<p class="mt-2.5 font-serif text-sm text-ink-subtle italic" data-testid="kuehle-orte-empty">
+		<p class="mt-2.5 text-sm text-ink-subtle" data-testid="kuehle-orte-empty">
 			{#if !index}
 				{m.inspector_kuehle_orte_loading(undefined, localeOpts)}
 			{:else}
@@ -275,7 +272,7 @@
 
 	{#if nearest.length > 0}
 		<p
-			class="mt-2.5 border-t border-rule pt-2.5 font-serif text-dense-meta leading-snug text-ink-subtle"
+			class="mt-2.5 border-t border-rule pt-2.5 text-dense-meta leading-snug text-ink-subtle"
 			data-testid="kuehle-legende"
 		>
 			{m.inspector_kuehle_orte_legende(undefined, localeOpts)}
@@ -288,7 +285,7 @@
 			data-testid="card-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-1 text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}
@@ -300,7 +297,7 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
-			<p class="font-serif text-xs leading-snug text-ink-muted">
+			<p class="text-xs leading-snug text-ink-muted">
 				{explainEntry.long}
 			</p>
 			{#if editorial?.primarySourceUrl}

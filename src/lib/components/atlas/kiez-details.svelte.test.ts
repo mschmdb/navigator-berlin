@@ -214,9 +214,9 @@ describe('KiezDetails.svelte', () => {
 			const text = (
 				document.querySelector('[data-testid="kiez-steckbrief"]')?.textContent ?? ''
 			).replace(/\s+/g, ' ');
-			expect(text).toContain('Medium 60% · Low 40%');
-			expect(text).toContain('High 70% · Low 30%');
-			expect(text).toContain('Good residential area 80% · Medium residential area 20%');
+			expect(text).toContain('Medium 60%, Low 40%');
+			expect(text).toContain('High 70%, Low 30%');
+			expect(text).toContain('Good residential area 80%, Medium residential area 20%');
 			expect(text).not.toMatch(/Mittel \d+%|Schlecht \d+%/);
 		});
 
@@ -245,12 +245,12 @@ describe('KiezDetails.svelte', () => {
 			expect(table?.textContent).toMatch(/Green spaces 1,234/);
 			expect(table?.textContent).toMatch(/Playgrounds 12/);
 			// Klima/PET: übersetzte Kategorie + EN-Dezimalformat (Punkt).
-			expect(table?.textContent).toMatch(/Climate · PET/);
+			expect(table?.textContent).toMatch(/Climate: PET/);
 			expect(table?.textContent).toMatch(/24\.6 \(no heat stress\)/);
 			// ÖPNV: übersetzte Dichte + EN-Dezimalformat + Zähler.
 			expect(table?.textContent).toMatch(/Public transport density/);
 			expect(table?.textContent).toMatch(/12\.3 \(dense\)/);
-			expect(table?.textContent).toMatch(/U 3 · S 2 · Tram 5 · Bus 10/);
+			expect(table?.textContent).toMatch(/U 3, S 2, Tram 5, Bus 10/);
 			// Wohnlage: "simple"/"good", nicht "basic".
 			expect(table?.textContent).toMatch(/Residential area/);
 			expect(table?.textContent).toMatch(/good residential area/);

@@ -262,9 +262,8 @@
 		data-testid="wahl-portal-chapter-ueberblick"
 		class="flex scroll-mt-[calc(var(--header-height,72px)+5.5rem)] flex-col gap-6 pb-10"
 	>
-		<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.wahl_portal_eyebrow()}</p>
-		<h1 class="font-serif text-4xl text-ink md:text-5xl">{m.wahl_portal_h1()}</h1>
-		<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
+		<h1 class="text-4xl font-bold text-ink md:text-5xl">{m.wahl_portal_h1()}</h1>
+		<p class="max-w-prose text-lg leading-body text-ink-muted">
 			{pageDescription}
 		</p>
 
@@ -347,7 +346,7 @@
 			{#if showExtreme}
 				<SmallMultiples />
 			{:else}
-				<p data-testid="extreme-gebiete-lazy-hinweis" class="font-serif text-ink-muted">
+				<p data-testid="extreme-gebiete-lazy-hinweis" class="text-ink-muted">
 					{m.wahl_portal_lazy_hinweis()}
 				</p>
 			{/if}

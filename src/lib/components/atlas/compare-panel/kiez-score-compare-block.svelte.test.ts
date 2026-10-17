@@ -58,7 +58,7 @@ describe('kiez-score-compare-block', () => {
 			.getByTestId('compare-kiez-score-methodik-link')
 			.element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/methodik/kiez-score');
-		expect(link.textContent?.trim()).toBe('Methodik · Wie der Kiez-Score berechnet wird');
+		expect(link.textContent?.trim()).toBe('Methodik: Wie der Kiez-Score berechnet wird');
 	});
 
 	// i18n Block B3c: EN-Locale übersetzt Header, Dimension-Labels, Gesamt-Label
@@ -87,7 +87,7 @@ describe('kiez-score-compare-block', () => {
 				.getByTestId('compare-kiez-score-methodik-link')
 				.element()) as HTMLAnchorElement;
 			expect(link.getAttribute('href')).toBe('/en/methodik/kiez-score');
-			expect(link.textContent?.trim()).toBe('Methodology · How the Kiez score is calculated');
+			expect(link.textContent?.trim()).toBe('Methodology: How the Kiez score is calculated');
 		});
 
 		it('Dimension-Chip zeigt EN-Skalen-Label + EN-Severity-Text in der Aria', async () => {

@@ -201,7 +201,7 @@
 		onkeydown={onKeydown}
 	>
 		<header class="flex items-center justify-between gap-2 border-b border-rule px-4 py-3">
-			<h2 id="share-sheet-title" class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+			<h2 id="share-sheet-title" class="text-xs font-semibold text-ink-muted">
 				{m.inspector_share_title(undefined, localeOpts)}
 			</h2>
 			<button
@@ -240,10 +240,10 @@
 				>
 					{#if linkState === 'done'}
 						<Check size={18} aria-hidden="true" class="text-state-success" />
-						<span class="font-mono">{m.inspector_share_permalink_done(undefined, localeOpts)}</span>
+						<span class="">{m.inspector_share_permalink_done(undefined, localeOpts)}</span>
 					{:else}
 						<Link2 size={18} aria-hidden="true" />
-						<span class="font-mono">{m.inspector_share_permalink_idle(undefined, localeOpts)}</span>
+						<span class="">{m.inspector_share_permalink_idle(undefined, localeOpts)}</span>
 					{/if}
 				</button>
 			</li>
@@ -256,15 +256,12 @@
 				>
 					{#if llmState === 'done'}
 						<Check size={18} aria-hidden="true" class="text-state-success" />
-						<span class="font-mono">{m.inspector_share_llm_done(undefined, localeOpts)}</span>
+						<span class="">{m.inspector_share_llm_done(undefined, localeOpts)}</span>
 					{:else}
 						<Sparkles size={18} aria-hidden="true" />
-						<span class="font-mono">{m.inspector_share_llm_idle(undefined, localeOpts)}</span>
+						<span class="">{m.inspector_share_llm_idle(undefined, localeOpts)}</span>
 					{/if}
-					<span
-						data-testid="share-option-llm-tokens"
-						class="ms-auto font-mono text-xs text-ink-subtle"
-					>
+					<span data-testid="share-option-llm-tokens" class="ms-auto text-xs text-ink-subtle">
 						{tokenLabel}
 					</span>
 				</button>
@@ -277,7 +274,7 @@
 					class="flex min-h-10 w-full items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
 				>
 					<Printer size={18} aria-hidden="true" />
-					<span class="font-mono">{m.inspector_share_print(undefined, localeOpts)}</span>
+					<span class="">{m.inspector_share_print(undefined, localeOpts)}</span>
 				</button>
 			</li>
 			{#if nativeSupported}
@@ -289,7 +286,7 @@
 						class="flex min-h-10 w-full items-center gap-3 rounded px-3 py-2 text-left text-sm hover:bg-rule/30"
 					>
 						<Share2 size={18} aria-hidden="true" />
-						<span class="font-mono">{m.inspector_share_native(undefined, localeOpts)}</span>
+						<span class="">{m.inspector_share_native(undefined, localeOpts)}</span>
 					</button>
 				</li>
 			{/if}

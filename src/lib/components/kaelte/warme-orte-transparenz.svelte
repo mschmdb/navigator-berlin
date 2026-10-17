@@ -63,7 +63,7 @@
 		</span>
 	</p>
 
-	<p class="font-serif text-base leading-body text-ink-muted">
+	<p class="text-base leading-body text-ink-muted">
 		{m.kaelte_orte_transparenz_haltung()}
 	</p>
 
@@ -73,10 +73,10 @@
 				<span class="flex flex-wrap items-baseline gap-2">
 					<span class="font-sans text-sm font-medium text-ink">{quelle.name}</span>
 					{#if quelle.lizenz}
-						<span class="font-mono text-dense-meta text-ink-subtle">{quelle.lizenz}</span>
+						<span class="text-dense-meta text-ink-subtle">{quelle.lizenz}</span>
 					{/if}
 				</span>
-				<span class="font-serif text-sm text-ink-muted">{quelle.detail}</span>
+				<span class="text-sm text-ink-muted">{quelle.detail}</span>
 			</li>
 		{/each}
 	</ul>

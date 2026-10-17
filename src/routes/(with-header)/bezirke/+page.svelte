@@ -55,8 +55,8 @@
 
 <article data-testid="bezirke-overview" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-3">
-		<h1 class="font-serif text-3xl text-ink">{m.overview_bezirke_h1()}</h1>
-		<p class="font-serif text-lg leading-body text-ink-muted">
+		<h1 class="text-3xl font-bold text-ink">{m.overview_bezirke_h1()}</h1>
+		<p class="text-lg leading-body text-ink-muted">
 			{m.overview_bezirke_intro({ count: bezirkCount })}
 		</p>
 		{#if stand}
@@ -69,7 +69,7 @@
 			<li data-testid="bezirk-overview-item" class="flex flex-col gap-2 border border-rule p-4">
 				<a
 					href={localizedHref(`/bezirk/${bezirk.slug}`)}
-					class="w-fit font-serif text-xl text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="w-fit text-xl font-semibold text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{bezirk.name}
 				</a>
@@ -86,7 +86,7 @@
 						{#if bezirk.composite !== null}
 							<div class="flex gap-2">
 								<dt class="text-ink-muted">{m.meta_score_label_bezirk()}</dt>
-								<dd class="font-mono text-ink tabular-nums">
+								<dd class="text-ink tabular-nums">
 									{m.kiez_hero_score_value({ score: bezirk.composite })}
 								</dd>
 							</div>
@@ -102,7 +102,7 @@
 			href={localizedHref('/kieze')}
 			class="text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
-			{m.overview_bezirke_kieze_link()} →
+			{m.overview_bezirke_kieze_link()}
 		</a>
 	</p>
 </article>

@@ -82,7 +82,7 @@
 		data-testid="translation-disclaimer"
 		data-variant={variant}
 		lang={pageLocale}
-		class="font-mono text-xs tracking-wide text-ink-subtle uppercase"
+		class="text-xs text-ink-subtle"
 	>
 		<span>{text}</span>
 		{#if alternateLocaleHref}

@@ -61,7 +61,9 @@ describe('zeit-animation.svelte', () => {
 			onCommitJahr: vi.fn(),
 			onZurKiez: vi.fn()
 		});
-		await expect.element(page.getByTestId('zeit-animation-wiederholung')).toHaveTextContent('·R');
+		await expect
+			.element(page.getByTestId('zeit-animation-wiederholung'))
+			.toHaveTextContent('(rep.)');
 	});
 
 	it('Play-Klick setzt aria-pressed und ruft onDisplayJahr/onCommitJahr für die nächsten Jahre', async () => {

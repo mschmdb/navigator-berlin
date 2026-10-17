@@ -24,10 +24,10 @@
 	let { reiheLabel, jahreText, ebeneText }: Props = $props();
 
 	const badgeText = $derived(
-		ebeneText ? `${reiheLabel} · ${jahreText} · ${ebeneText}` : `${reiheLabel} · ${jahreText}`
+		ebeneText ? `${reiheLabel}, ${jahreText}, ${ebeneText}` : `${reiheLabel}, ${jahreText}`
 	);
 </script>
 
-<p data-testid="kapitel-kontext-badge" class="font-mono text-xs text-ink-subtle">
+<p data-testid="kapitel-kontext-badge" class="text-xs text-ink-subtle">
 	{badgeText}
 </p>

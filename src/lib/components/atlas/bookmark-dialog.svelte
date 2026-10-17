@@ -201,7 +201,7 @@
 
 {#snippet dialogBody()}
 	<header class="flex items-start justify-between gap-3 border-b border-rule px-6 pt-5 pb-4">
-		<h2 id="bookmarks-dialog-title" class="font-serif text-xl leading-tight text-ink">
+		<h2 id="bookmarks-dialog-title" class="text-xl leading-tight font-bold text-ink">
 			{m.bookmark_dialog_title()}
 		</h2>
 		<button
@@ -254,10 +254,7 @@
 
 	<div class="flex-1 overflow-y-auto">
 		{#if sortedBookmarks.length === 0}
-			<p
-				data-testid="bookmark-empty"
-				class="px-6 py-8 text-center font-serif text-sm text-ink-subtle italic"
-			>
+			<p data-testid="bookmark-empty" class="px-6 py-8 text-center text-sm text-ink-subtle">
 				{m.bookmark_empty()}
 			</p>
 		{:else}
@@ -282,18 +279,18 @@
 					type="button"
 					data-testid="bookmark-clear-all"
 					onclick={startClearAll}
-					class="font-mono text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline"
+					class="text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline"
 				>
 					{m.bookmark_clear_all_action()}
 				</button>
 			{:else if clearAllConfirming}
 				<span class="flex items-center gap-1.5">
-					<span class="font-mono text-xs text-ink">{m.bookmark_clear_all_confirm_question()}</span>
+					<span class="text-xs text-ink">{m.bookmark_clear_all_confirm_question()}</span>
 					<button
 						type="button"
 						data-testid="bookmark-clear-all-cancel"
 						onclick={cancelClearAll}
-						class="min-h-[44px] border border-rule px-2 py-1 font-mono text-xs text-ink hover:bg-bg"
+						class="min-h-[44px] border border-rule px-2 py-1 text-xs text-ink hover:bg-bg"
 					>
 						{m.bookmark_action_cancel()}
 					</button>
@@ -301,7 +298,7 @@
 						type="button"
 						data-testid="bookmark-clear-all-confirm"
 						onclick={confirmClearAll}
-						class="min-h-[44px] border border-accent bg-accent-soft px-2 py-1 font-mono text-xs text-ink hover:bg-accent hover:text-bg"
+						class="min-h-[44px] border border-accent bg-accent-soft px-2 py-1 text-xs text-ink hover:bg-accent hover:text-bg"
 					>
 						{m.bookmark_action_delete()}
 					</button>
@@ -312,11 +309,11 @@
 			<a
 				href={localizedHref('/datenschutz#bookmarks')}
 				data-testid="bookmark-privacy-link"
-				class="font-mono text-xs text-ink-subtle underline-offset-2 hover:text-ink hover:underline"
+				class="text-xs text-ink-subtle underline-offset-2 hover:text-ink hover:underline"
 			>
 				{m.bookmark_privacy_link_label()}
 			</a>
-			<span data-testid="bookmark-counter" class="font-mono text-xs text-ink-subtle">
+			<span data-testid="bookmark-counter" class="text-xs text-ink-subtle">
 				{sortedBookmarks.length}/{MAX_BOOKMARKS}
 			</span>
 		</div>
@@ -326,7 +323,7 @@
 		<div
 			data-testid="bookmark-persist-error"
 			role="status"
-			class="border-t border-rule-strong bg-severity-warning-bg px-4 py-2 font-mono text-xs text-ink"
+			class="border-t border-rule-strong bg-severity-warning-bg px-4 py-2 text-xs text-ink"
 		>
 			{m.bookmark_persist_error()}
 		</div>

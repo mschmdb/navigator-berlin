@@ -95,7 +95,7 @@
 	{#if open}
 		<div class="mt-3 overflow-auto border border-rule">
 			<table class="w-full border-collapse text-sm" data-testid="data-table">
-				<caption class="px-3 py-2 text-left font-serif text-base text-ink">{caption}</caption>
+				<caption class="px-3 py-2 text-left text-base font-semibold text-ink">{caption}</caption>
 				<thead class="bg-bg">
 					<tr>
 						{#each columns as col (col.key)}

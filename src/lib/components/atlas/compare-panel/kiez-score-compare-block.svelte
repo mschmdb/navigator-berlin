@@ -74,33 +74,19 @@
 		class="border-b border-rule px-6 py-4"
 		aria-label={m.compare_kiez_score_aria()}
 	>
-		<h3
-			class="mb-3 font-mono text-xs tracking-wide text-ink-muted uppercase"
-			data-testid="compare-kiez-score-header"
-		>
+		<h3 class="mb-3 text-xs font-semibold text-ink-muted" data-testid="compare-kiez-score-header">
 			{m.inspector_kiez_score_heading()}
 		</h3>
 		<table class="w-full border-collapse">
 			<thead>
 				<tr class="border-b border-rule-strong">
-					<th
-						scope="col"
-						class="py-1 pr-3 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
-					>
+					<th scope="col" class="py-1 pr-3 text-left text-dense-meta text-ink-subtle">
 						{m.compare_kiez_score_th_dimension()}
 					</th>
-					<th
-						scope="col"
-						data-cell="a"
-						class="py-1 pr-3 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
-					>
+					<th scope="col" data-cell="a" class="py-1 pr-3 text-left text-dense-meta text-ink-subtle">
 						A
 					</th>
-					<th
-						scope="col"
-						data-cell="b"
-						class="py-1 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
-					>
+					<th scope="col" data-cell="b" class="py-1 text-left text-dense-meta text-ink-subtle">
 						B
 					</th>
 				</tr>
@@ -119,7 +105,7 @@
 								severityDescriptions={chipSeverityDescriptions}
 							/>
 						{:else}
-							<span class="font-mono text-xs text-ink-subtle">—</span>
+							<span class="text-xs text-ink-subtle">—</span>
 						{/if}
 					</td>
 					<td data-cell="b" class="py-2">
@@ -131,7 +117,7 @@
 								severityDescriptions={chipSeverityDescriptions}
 							/>
 						{:else}
-							<span class="font-mono text-xs text-ink-subtle">—</span>
+							<span class="text-xs text-ink-subtle">—</span>
 						{/if}
 					</td>
 				</tr>
@@ -149,7 +135,7 @@
 									severityDescriptions={chipSeverityDescriptions}
 								/>
 							{:else}
-								<span class="font-mono text-xs text-ink-subtle">—</span>
+								<span class="text-xs text-ink-subtle">—</span>
 							{/if}
 						</td>
 						<td data-cell="b" class="py-2">
@@ -161,7 +147,7 @@
 									severityDescriptions={chipSeverityDescriptions}
 								/>
 							{:else}
-								<span class="font-mono text-xs text-ink-subtle">—</span>
+								<span class="text-xs text-ink-subtle">—</span>
 							{/if}
 						</td>
 					</tr>
@@ -173,7 +159,7 @@
 			<a
 				href={localizedHref(methodikHref)}
 				data-testid="compare-kiez-score-methodik-link"
-				class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="inline-flex min-h-(--target-min) items-center text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.inspector_kiez_score_methodik_link()}
 			</a>

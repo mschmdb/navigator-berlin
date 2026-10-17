@@ -61,7 +61,7 @@
 			class="w-full max-w-2xl rounded-md border border-rule-strong bg-bg-elevated p-4"
 		>
 			<div class="mb-3 flex items-center justify-between gap-3">
-				<h2 class="font-serif text-lg text-ink">{m.shell_address_search_overlay_heading()}</h2>
+				<h2 class="text-lg font-semibold text-ink">{m.shell_address_search_overlay_heading()}</h2>
 				<button
 					type="button"
 					data-testid="address-search-overlay-close"

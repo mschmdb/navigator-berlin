@@ -94,5 +94,5 @@ export function countsText(
 	return pairs
 		.filter((p): p is [string, number] => typeof p[1] === 'number' && p[1] > 0)
 		.map(([label, n]) => `${label} ${formatCount(n, { locale: opts?.locale ?? 'de' })}`)
-		.join(' · ');
+		.join(', ');
 }

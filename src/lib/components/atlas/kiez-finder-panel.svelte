@@ -455,7 +455,7 @@
 		class="sticky top-0 z-10 flex items-center gap-2 border-b border-rule bg-bg-elevated px-4 py-3"
 	>
 		<SlidersHorizontal size={16} aria-hidden="true" class="text-accent" />
-		<h2 class="flex-1 font-serif text-lg leading-tight text-ink">{m.finder_panel_title()}</h2>
+		<h2 class="flex-1 text-lg leading-tight font-semibold text-ink">{m.finder_panel_title()}</h2>
 		<button
 			type="button"
 			data-testid="finder-close"
@@ -469,15 +469,15 @@
 
 	<div class="flex-1 overflow-y-auto px-4 py-3">
 		{#if loading}
-			<p class="py-6 text-center font-mono text-xs text-ink-muted" role="status">
+			<p class="py-6 text-center text-xs text-ink-muted" role="status">
 				{m.finder_loading()}
 			</p>
 		{:else if loadFailed}
-			<p class="py-6 text-center font-mono text-xs text-ink-muted" role="alert">
+			<p class="py-6 text-center text-xs text-ink-muted" role="alert">
 				{m.finder_load_error()}
 			</p>
 		{:else}
-			<p class="mb-2 font-serif text-xs leading-snug text-ink-muted">
+			<p class="mb-2 text-xs leading-snug text-ink-muted">
 				{m.finder_intro()}
 			</p>
 
@@ -486,7 +486,7 @@
 					<div class="flex items-baseline justify-between">
 						<label for={`finder-${def.key}`} class="font-sans text-xs text-ink">{def.label()}</label
 						>
-						<span class="font-mono text-dense-meta text-ink-subtle">
+						<span class="text-dense-meta text-ink-subtle">
 							{stufenText(def.family, weights[def.key])}
 						</span>
 					</div>
@@ -515,7 +515,7 @@
 					<div class="flex items-baseline justify-between">
 						<label for={`finder-${def.key}`} class="font-sans text-xs text-ink">{def.label()}</label
 						>
-						<span class="font-mono text-dense-meta text-ink-subtle">
+						<span class="text-dense-meta text-ink-subtle">
 							{stufenText(def.family, weights[def.key])}
 						</span>
 					</div>
@@ -550,7 +550,7 @@
 							data-testid={`finder-partei-${p}`}
 							aria-pressed={partei === p}
 							onclick={() => void onParteiChange(p)}
-							class="inline-flex min-h-(--target-min) items-center rounded-sm border px-1.5 py-0.5 font-mono text-dense-meta {partei ===
+							class="inline-flex min-h-(--target-min) items-center rounded-sm border px-1.5 py-0.5 text-dense-meta {partei ===
 							p
 								? 'border-accent bg-accent text-bg'
 								: 'border-rule text-ink-muted hover:text-ink'}"
@@ -563,15 +563,15 @@
 
 			{#if top.length > 0}
 				<div class="mt-3 border-t border-rule pt-2">
-					<h3 class="mb-1 font-mono text-dense-meta tracking-wider text-ink-subtle uppercase">
+					<h3 class="mb-1 text-dense-meta font-semibold text-ink-subtle">
 						{m.finder_best_match_heading()}
 					</h3>
 					<ol data-testid="finder-top-list" class="flex flex-col gap-0.5">
 						{#each top as result (result.plrId)}
 							<li class="flex items-baseline justify-between gap-2">
-								<span class="min-w-0 truncate font-serif text-xs text-ink">
+								<span class="min-w-0 truncate text-xs text-ink">
 									{result.name}{#if result.kiez && result.kiez !== result.name}
-										<span class="text-ink-subtle">· {result.kiez}</span>
+										<span class="ml-1 text-ink-subtle">{result.kiez}</span>
 									{/if}
 								</span>
 								<span class="tabular font-mono text-xs text-ink">{Math.round(result.fit)}</span>
@@ -586,14 +586,14 @@
 					type="button"
 					data-testid="finder-reset"
 					onclick={reset}
-					class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-meta tracking-wider text-ink-muted uppercase hover:text-ink"
+					class="inline-flex min-h-(--target-min) items-center gap-1 text-dense-meta text-ink-muted hover:text-ink"
 				>
 					<RotateCcw size={11} aria-hidden="true" />
 					{m.finder_reset_label()}
 				</button>
 			</div>
 
-			<p class="mt-2 font-serif text-dense-meta leading-snug text-ink-subtle">
+			<p class="mt-2 text-dense-meta leading-snug text-ink-subtle">
 				{m.finder_footer_note()}
 				<span data-testid="finder-wahl-hinweis">{wahlHinweis}</span>
 			</p>

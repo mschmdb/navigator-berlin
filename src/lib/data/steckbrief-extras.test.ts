@@ -109,7 +109,7 @@ describe('countsText', () => {
 				['Tram', null],
 				['Bus', 12]
 			])
-		).toBe('U 3 · Bus 12');
+		).toBe('U 3, Bus 12');
 	});
 	it('leer wenn nichts > 0', () => {
 		expect(countsText([['U', 0]])).toBe('');

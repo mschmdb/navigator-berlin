@@ -119,7 +119,7 @@ describe('WahlCompareBlock i18n Block B3c (EN)', () => {
 		});
 		await expect
 			.element(page.getByTestId('wahl-compare-header'))
-			.toHaveTextContent('Voting behaviour · comparison');
+			.toHaveTextContent('Voting behaviour: comparison');
 		const typTab = (await page.getByTestId('wahl-compare-typ-tab-btw').element()) as HTMLElement;
 		expect(typTab.textContent?.trim()).toBe('Bundestag');
 	});
@@ -134,7 +134,7 @@ describe('WahlCompareBlock i18n Block B3c (EN)', () => {
 			.getByTestId('wahl-compare-methodik-link')
 			.element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/methodik/wahldaten');
-		expect(link.textContent?.trim()).toBe('Methodology · voting data');
+		expect(link.textContent?.trim()).toBe('Methodology: voting data');
 	});
 
 	it('Diff-Spalte: Titel + Richtung englisch', async () => {
@@ -212,7 +212,7 @@ describe('WahlCompareBlock i18n Block B3c (EN)', () => {
 		render(WahlCompareBlock, { resultsA: makeResults(bundleA), resultsB: makeResults(bundleB) });
 		const meta = (await page.getByTestId('wahl-compare-meta').element()) as HTMLElement;
 		expect(meta.textContent?.replace(/\s+/g, ' ').trim()).toBe(
-			'Bundestag 2025 · Level Polling district · party vote'
+			'Bundestag 2025, Level Polling district, party vote'
 		);
 		const spdA = (await page.getByTestId('wahl-compare-SPD-a').element()) as HTMLElement;
 		expect(spdA.textContent?.trim()).toBe('30.0%');
@@ -237,7 +237,7 @@ describe('WahlCompareBlock DE-Kontrolle (Review-Ergänzung)', () => {
 		render(WahlCompareBlock, { resultsA: makeResults(bundleA), resultsB: makeResults(bundleB) });
 		const meta = (await page.getByTestId('wahl-compare-meta').element()) as HTMLElement;
 		expect(meta.textContent?.replace(/\s+/g, ' ').trim()).toBe(
-			'Bundestag 2025 · Ebene Stimmbezirk · Zweitstimme'
+			'Bundestag 2025, Ebene Stimmbezirk, Zweitstimme'
 		);
 		const spdA = (await page.getByTestId('wahl-compare-SPD-a').element()) as HTMLElement;
 		expect(spdA.textContent?.trim()).toBe('30,0 %');

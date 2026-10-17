@@ -54,9 +54,9 @@
 		aria-labelledby="faq-heading"
 	>
 		{#if headingLevel === 2}
-			<h2 id="faq-heading" class="font-serif text-2xl text-ink">{m.faq_section_heading()}</h2>
+			<h2 id="faq-heading" class="text-2xl font-bold text-ink">{m.faq_section_heading()}</h2>
 		{:else}
-			<h3 id="faq-heading" class="font-serif text-xl text-ink">{m.faq_section_heading()}</h3>
+			<h3 id="faq-heading" class="text-xl font-semibold text-ink">{m.faq_section_heading()}</h3>
 		{/if}
 		<Accordion.Root
 			type="single"

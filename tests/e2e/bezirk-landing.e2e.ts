@@ -36,7 +36,7 @@ test.describe('L5: Bezirksseite mit Karte und Liste', () => {
 		await expect(card.getByTestId('bezirk-map-button')).toBeVisible();
 		const geometry = await page.evaluate((heroId) => {
 			const rect = (el: Element | null) => el?.getBoundingClientRect();
-			const eyebrow = rect(document.querySelector(`[data-testid="${heroId}"] p`));
+			const eyebrow = rect(document.querySelector(`[data-testid="${heroId}"] h1`));
 			const h1 = rect(document.querySelector(`[data-testid="${heroId}"] h1`));
 			const card = rect(document.querySelector('[data-testid="hero-map-card"]'));
 			const crumb = [...document.querySelectorAll('a')].find(

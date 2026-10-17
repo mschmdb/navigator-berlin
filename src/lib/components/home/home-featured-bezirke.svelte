@@ -16,8 +16,8 @@
 
 <section data-testid="home-featured-bezirke" class="space-y-6">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">{m.home_featured_bezirke_heading()}</h2>
-		<p class="font-serif text-base text-ink-muted">
+		<h2 class="text-2xl font-bold text-ink md:text-3xl">{m.home_featured_bezirke_heading()}</h2>
+		<p class="text-base text-ink-muted">
 			{m.home_featured_bezirke_lead()}
 		</p>
 	</header>
@@ -29,15 +29,16 @@
 					class="group flex h-full w-full flex-col gap-2 rounded border border-rule p-5 hover:border-accent"
 				>
 					<span class="flex items-center justify-between gap-2">
-						<span class="font-serif text-xl text-ink group-hover:text-accent">{b.displayName}</span>
+						<span class="text-xl font-semibold text-ink group-hover:text-accent"
+							>{b.displayName}</span
+						>
 						<ArrowUpRight
 							size={18}
 							class="text-ink-subtle group-hover:text-accent"
 							aria-hidden="true"
 						/>
 					</span>
-					<span class="font-serif text-sm leading-snug text-ink-muted"
-						>{homeFeaturedBezirkTeaser(b.slug)}</span
+					<span class="text-sm leading-snug text-ink-muted">{homeFeaturedBezirkTeaser(b.slug)}</span
 					>
 				</a>
 			</li>
@@ -45,7 +46,7 @@
 	</ul>
 	<a
 		href={localizedHref('/umwelt-infrastruktur-score?view=bezirke')}
-		class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
+		class="inline-flex min-h-(--target-min) items-center gap-1 text-xs text-accent hover:text-ink"
 	>
 		{m.home_featured_bezirke_all_link()}
 		<ArrowUpRight size={14} aria-hidden="true" />

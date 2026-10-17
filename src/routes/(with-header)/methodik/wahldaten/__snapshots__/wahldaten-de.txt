@@ -1,7 +1,7 @@
-p: Berlin · Methodik
+p: Berlin / Methodik
 a: Berlin
 a: Methodik
-h1: Methodik · Wahldaten
+h1: Methodik: Wahldaten
 p: Diese Seite dokumentiert Datenquellen, Aggregations-Strategie und bekannte Coverage-Lücken der Wahl-Daten. Werte beschreiben Stimmenanteile, keine Bewertung.
 p: Inhalt
 a: 1. Datenquellen

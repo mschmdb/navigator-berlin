@@ -4,7 +4,7 @@
 	`compact` blendet die Lead aus (Teaser steht dann unter dem Saison-Teaser).
 -->
 <script lang="ts">
-	import { ArrowRight, Snowflake } from '@lucide/svelte';
+	import { Snowflake } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
@@ -16,24 +16,11 @@
 
 <section data-testid="home-hitze-teaser" class={compact ? 'space-y-4' : 'space-y-6'}>
 	<header class="space-y-2">
-		{#if !compact}
-			<p
-				data-testid="home-hitze-teaser-eyebrow"
-				class="font-mono text-xs tracking-wider text-accent uppercase"
-			>
-				{m.home_hitze_eyebrow()}
-			</p>
-		{/if}
-		<h2
-			class={compact ? 'font-serif text-xl text-ink' : 'font-serif text-2xl text-ink md:text-3xl'}
-		>
+		<h2 class={compact ? 'text-xl font-bold text-ink' : 'text-2xl font-bold text-ink md:text-3xl'}>
 			{m.home_hitze_heading()}
 		</h2>
 		{#if !compact}
-			<p
-				data-testid="home-hitze-teaser-lead"
-				class="max-w-prose font-serif text-base text-ink-muted"
-			>
+			<p data-testid="home-hitze-teaser-lead" class="max-w-prose text-base text-ink-muted">
 				{m.home_hitze_lead()}
 			</p>
 		{/if}
@@ -43,7 +30,7 @@
 		<a
 			href={localizedHref('/hitze')}
 			data-testid="home-hitze-teaser-landing"
-			class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+			class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
 		>
 			<Snowflake size={16} aria-hidden="true" />
 			{m.home_hitze_cta_landing()}
@@ -51,10 +38,9 @@
 		<a
 			href={localizedHref(explorerLink)}
 			data-testid="home-hitze-teaser-map"
-			class="inline-flex min-h-(--target-min) items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-2 text-sm text-accent hover:text-ink"
 		>
 			{m.home_hitze_cta_map()}
-			<ArrowRight size={14} aria-hidden="true" />
 		</a>
 	</div>
 </section>

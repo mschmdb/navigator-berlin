@@ -5,7 +5,6 @@
 	dahin Brand-Card als Fallback.
 -->
 <script lang="ts">
-	import { ArrowRight } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { HOME_SCREENSHOTS, homeScreenshotAlt } from '$lib/content/screenshot-manifest.js';
@@ -30,18 +29,17 @@
 	class="grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-start md:gap-10"
 >
 	<div class="space-y-5 md:order-2">
-		<p class="font-serif text-xl leading-body text-ink md:text-2xl">
+		<p class="text-xl leading-body font-semibold text-ink md:text-2xl">
 			{m.home_hook_lead()}
 		</p>
-		<p class="font-serif text-base leading-body text-ink-muted">
+		<p class="text-base leading-body text-ink-muted">
 			{m.home_hook_body()}
 		</p>
 		<a
 			href={localizedHref(mapHref)}
-			class="inline-flex min-h-(--target-min) items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-2 text-sm text-accent hover:text-ink"
 		>
 			{m.home_hero_cta_map()}
-			<ArrowRight size={14} aria-hidden="true" />
 		</a>
 	</div>
 	<a

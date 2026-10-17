@@ -79,7 +79,7 @@
 	);
 
 	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';
-	const bodyClass = 'font-serif text-base leading-body text-ink';
+	const bodyClass = 'text-base leading-body text-ink';
 </script>
 
 {#snippet link(text: string, name: string)}
@@ -119,15 +119,15 @@
 <JsonLd data={aboutPageJsonLd} testid="ueber-aboutpage-jsonld" />
 
 <article data-testid="ueber-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
-	<h1 class="font-serif text-3xl text-ink">{m.ueber_h1()}</h1>
+	<h1 class="text-3xl font-bold text-ink">{m.ueber_h1()}</h1>
 
 	<section aria-labelledby="ueber-kurz-h" class="flex flex-col gap-3">
-		<h2 id="ueber-kurz-h" class="font-serif text-2xl text-ink">{m.ueber_kurz_h()}</h2>
+		<h2 id="ueber-kurz-h" class="text-2xl font-bold text-ink">{m.ueber_kurz_h()}</h2>
 		<p class={bodyClass}>{m.ueber_kurz_p1()}</p>
 	</section>
 
 	<section aria-labelledby="ueber-projekt-h" class="flex flex-col gap-3">
-		<h2 id="ueber-projekt-h" class="font-serif text-2xl text-ink">{m.ueber_projekt_h()}</h2>
+		<h2 id="ueber-projekt-h" class="text-2xl font-bold text-ink">{m.ueber_projekt_h()}</h2>
 		<p class={bodyClass}>{m.ueber_projekt_p1()}</p>
 		<p class={bodyClass}>
 			<RichText segments={projektP2} tag={link} />
@@ -135,7 +135,7 @@
 	</section>
 
 	<section aria-labelledby="ueber-person-h" class="flex flex-col gap-3">
-		<h2 id="ueber-person-h" class="font-serif text-2xl text-ink">{m.ueber_person_h()}</h2>
+		<h2 id="ueber-person-h" class="text-2xl font-bold text-ink">{m.ueber_person_h()}</h2>
 		<p class={bodyClass}>{m.ueber_person_p1()}</p>
 		<p class={bodyClass}>
 			<RichText segments={personP2} tag={link} />
@@ -146,7 +146,7 @@
 	</section>
 
 	<section aria-labelledby="ueber-bau-h" class="flex flex-col gap-3">
-		<h2 id="ueber-bau-h" class="font-serif text-2xl text-ink">{m.ueber_bau_h()}</h2>
+		<h2 id="ueber-bau-h" class="text-2xl font-bold text-ink">{m.ueber_bau_h()}</h2>
 		<p class={bodyClass}>{m.ueber_bau_p1()}</p>
 		<p class={bodyClass}>{m.ueber_bau_p2()}</p>
 		<p class={bodyClass}>
@@ -155,7 +155,7 @@
 	</section>
 
 	<section aria-labelledby="ueber-haltung-h" class="flex flex-col gap-3">
-		<h2 id="ueber-haltung-h" class="font-serif text-2xl text-ink">{m.ueber_haltung_h()}</h2>
+		<h2 id="ueber-haltung-h" class="text-2xl font-bold text-ink">{m.ueber_haltung_h()}</h2>
 		<ul class="{bodyClass} flex list-disc flex-col gap-2 pl-6">
 			<li>{m.ueber_haltung_finanzierung()}</li>
 			<li>{m.ueber_haltung_cookies()}</li>
@@ -168,7 +168,7 @@
 	</section>
 
 	<section aria-labelledby="ueber-daten-h" class="flex flex-col gap-3">
-		<h2 id="ueber-daten-h" class="font-serif text-2xl text-ink">{m.ueber_daten_h()}</h2>
+		<h2 id="ueber-daten-h" class="text-2xl font-bold text-ink">{m.ueber_daten_h()}</h2>
 		<p class={bodyClass}>
 			<RichText segments={datenP1} tag={link} />
 		</p>
@@ -178,7 +178,7 @@
 	</section>
 
 	<section aria-labelledby="ueber-kontakt-h" class="flex flex-col gap-3">
-		<h2 id="ueber-kontakt-h" class="font-serif text-2xl text-ink">{m.ueber_kontakt_h()}</h2>
+		<h2 id="ueber-kontakt-h" class="text-2xl font-bold text-ink">{m.ueber_kontakt_h()}</h2>
 		<p class={bodyClass}>
 			<RichText segments={kontaktP1} tag={link} />
 		</p>

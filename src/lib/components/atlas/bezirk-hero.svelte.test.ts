@@ -48,10 +48,10 @@ describe('BezirkHero.svelte', () => {
 		expect(document.querySelector('[data-testid="bezirk-hero"] h1')?.textContent).toBe('Mitte');
 	});
 
-	it('nennt „Bezirk“ als Eyebrow vor der h1', () => {
+	it('setzt kein Eyebrow über die h1 (GH-87, Leitlinie 29)', () => {
 		render(BezirkHero, { profile, kieze, outline, compositeRank: rank, einwohnerStichtag: null });
-		const eyebrow = document.querySelector('[data-testid="bezirk-hero"] p');
-		expect(eyebrow?.textContent?.trim()).toBe('Bezirk');
+		const h1 = document.querySelector('[data-testid="bezirk-hero"] h1');
+		expect(h1?.previousElementSibling).toBeNull();
 	});
 
 	it('zeigt Einwohner:innen, Fläche in km² und Stand', () => {

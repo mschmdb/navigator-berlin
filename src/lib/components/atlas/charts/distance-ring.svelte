@@ -68,14 +68,14 @@
 			x="28"
 			y="31"
 			text-anchor="middle"
-			class="fill-ink font-mono text-dense-meta"
+			class="fill-ink font-mono text-dense-meta tabular-nums"
 			aria-hidden="true">{distanceText}</text
 		>
 	</svg>
 	<div class="min-w-0">
 		<p class="font-sans text-sm text-ink">{label}</p>
 		{#if countInPolygon !== null}
-			<p data-testid="distance-ring-count" class="font-mono text-xs text-ink-subtle">
+			<p data-testid="distance-ring-count" class="font-mono text-xs text-ink-subtle tabular-nums">
 				{countInPolygon} im Gebiet
 			</p>
 		{/if}

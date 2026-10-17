@@ -148,7 +148,7 @@
 {#if visible && jahr !== null}
 	<section data-testid="wahl-compare-block" class="space-y-3">
 		<h3
-			class="border-t border-rule pt-4 font-mono text-xs tracking-wide text-ink-muted uppercase"
+			class="border-t border-rule pt-4 text-xs font-semibold text-ink-muted"
 			data-testid="wahl-compare-header"
 		>
 			{m.wahl_compare_header()}
@@ -167,7 +167,7 @@
 					aria-selected={selectedTyp === typ}
 					data-testid={`wahl-compare-typ-tab-${typ}`}
 					onclick={() => (selectedTyp = typ)}
-					class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
+					class="rounded border border-ink px-2.5 py-1 text-xs transition-colors"
 					class:bg-ink={selectedTyp === typ}
 					class:text-bg={selectedTyp === typ}
 					class:bg-bg={selectedTyp !== typ}
@@ -193,7 +193,7 @@
 						aria-checked={selectedLevel === lvl}
 						data-testid={`wahl-compare-level-${lvl}`}
 						onclick={() => (selectedLevel = lvl)}
-						class="rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
+						class="rounded border border-ink px-2 py-0.5 text-dense-label transition-colors"
 						class:bg-ink={selectedLevel === lvl}
 						class:text-bg={selectedLevel === lvl}
 						class:bg-bg={selectedLevel !== lvl}
@@ -206,13 +206,10 @@
 			</div>
 		{/if}
 
-		<p
-			data-testid="wahl-compare-meta"
-			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-		>
+		<p data-testid="wahl-compare-meta" class="text-dense-meta text-ink-muted">
 			{wahlReiheLabel(selectedTyp, localeOpts)}
-			{jahr} · {m.wahl_compare_ebene_prefix()}
-			{wahlEbeneLabel(selectedLevel, localeOpts)} · {wahlStimmtypLabel(defaultStimmtyp, localeOpts)}
+			{jahr}, {m.wahl_compare_ebene_prefix()}
+			{wahlEbeneLabel(selectedLevel, localeOpts)}, {wahlStimmtypLabel(defaultStimmtyp, localeOpts)}
 		</p>
 
 		<BriefwahlMarker
@@ -225,7 +222,7 @@
 
 		{#if sameAggregat && selectedLevel !== 'berlin'}
 			<p
-				class="border-l-2 border-ink/30 pl-2 font-serif text-xs text-ink-muted italic"
+				class="border-l-2 border-ink/30 pl-2 text-xs text-ink-muted"
 				data-testid="wahl-compare-same-aggregat"
 			>
 				{selectedLevel === 'stimmbezirk'
@@ -237,16 +234,16 @@
 		{/if}
 
 		{#if topA.length === 0 && topB.length === 0}
-			<p data-testid="wahl-compare-empty" class="font-mono text-xs text-ink-muted">
+			<p data-testid="wahl-compare-empty" class="text-xs text-ink-muted">
 				{m.wahl_compare_empty()}
 			</p>
 		{:else}
 			{@const allParteien = Array.from(
 				new Set([...topA.map((e) => e.kurzname), ...topB.map((e) => e.kurzname)])
 			)}
-			<table class="w-full font-mono text-xs" data-testid="wahl-compare-table">
+			<table class="w-full text-xs" data-testid="wahl-compare-table">
 				<thead>
-					<tr class="text-dense-meta tracking-wide text-ink-muted uppercase">
+					<tr class="text-dense-meta text-ink-muted">
 						<th class="pb-1 text-left">{m.wahl_compare_th_partei()}</th>
 						<th class="px-2 pb-1 text-right">A</th>
 						<th class="px-2 pb-1 text-right">B</th>
@@ -308,7 +305,7 @@
 				</tbody>
 			</table>
 
-			<p class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
+			<p class="text-dense-meta text-ink-muted">
 				{m.wahl_compare_footer_note()}
 			</p>
 		{/if}
@@ -318,7 +315,7 @@
 		<a
 			href={localizedMethodikHref}
 			data-testid="wahl-compare-methodik-link"
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="inline-block text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.wahl_compare_methodik_link()}
 		</a>

@@ -134,7 +134,7 @@ describe('methodik/wahldaten · EN (i18n C4b)', () => {
 	it('rendert H1, Lead und Abschnittsüberschriften auf Englisch', () => {
 		overwriteGetLocale(() => 'en');
 		render(Page);
-		expect(document.querySelector('h1')?.textContent?.trim()).toBe('Methodology · Election data');
+		expect(document.querySelector('h1')?.textContent?.trim()).toBe('Methodology: Election data');
 		const headings = [...document.querySelectorAll('h2')].map((h) => h.textContent?.trim());
 		expect(headings).toEqual([
 			'1. Data sources',

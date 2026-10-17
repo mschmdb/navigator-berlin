@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
-	import { Snowflake, ArrowRight } from '@lucide/svelte';
+	import { Snowflake } from '@lucide/svelte';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import MapEmbed from '$lib/components/atlas/map-embed.svelte';
 	import { BERLIN_OUTLINE } from '$lib/data/berlin-outline.js';
@@ -33,7 +33,7 @@
 			<Snowflake size={28} aria-hidden="true" class="shrink-0 text-umwelt-kuehle-orte" />
 			{m.kuehle_orte_page_h1_title()}
 		</h1>
-		<p class="font-serif text-lg leading-body text-ink-muted">
+		<p class="text-lg leading-body text-ink-muted">
 			{m.kuehle_orte_page_intro_p1()}
 		</p>
 	</header>
@@ -58,7 +58,6 @@
 			class="inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated hover:bg-accent-strong"
 		>
 			{m.kuehle_orte_page_cta_button()}
-			<ArrowRight size={18} aria-hidden="true" />
 		</a>
 		<p class="font-sans text-sm text-ink-subtle">
 			{m.kuehle_orte_page_cta_hint()}

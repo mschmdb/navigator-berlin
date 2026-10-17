@@ -25,8 +25,8 @@
 				></span>
 			{/each}
 		</span>
-		<span class="mt-1 block font-mono text-xs text-ink-subtle"
-			>{#each segments as seg, i (i)}{#if i > 0}{' · '}{/if}<span lang={seg.lang}
+		<span class="mt-1 block text-xs text-ink-subtle"
+			>{#each segments as seg, i (i)}{#if i > 0}{', '}{/if}<span lang={seg.lang}
 					>{seg.label} {pct(seg.share)}%</span
 				>{/each}</span
 		>

@@ -159,9 +159,9 @@ describe('BezirkDetails.svelte', () => {
 			const text = (
 				document.querySelector('[data-testid="bezirk-steckbrief"]')?.textContent ?? ''
 			).replace(/\s+/g, ' ');
-			expect(text).toContain('Medium 60% · Low 40%');
-			expect(text).toContain('High 70% · Low 30%');
-			expect(text).toContain('Good residential area 80% · Medium residential area 20%');
+			expect(text).toContain('Medium 60%, Low 40%');
+			expect(text).toContain('High 70%, Low 30%');
+			expect(text).toContain('Good residential area 80%, Medium residential area 20%');
 			expect(text).not.toMatch(/Mittel \d+%|Schlecht \d+%/);
 		});
 
@@ -176,11 +176,11 @@ describe('BezirkDetails.svelte', () => {
 			expect(table?.textContent).toMatch(/Green space provision/);
 			expect(table?.textContent).toMatch(/Green spaces 1,234/);
 			expect(table?.textContent).toMatch(/Playgrounds 12/);
-			expect(table?.textContent).toMatch(/Climate · PET/);
+			expect(table?.textContent).toMatch(/Climate: PET/);
 			expect(table?.textContent).toMatch(/24\.6 \(no heat stress\)/);
 			expect(table?.textContent).toMatch(/Public transport density/);
 			expect(table?.textContent).toMatch(/12\.3 \(dense\)/);
-			expect(table?.textContent).toMatch(/U 3 · S 2 · Tram 5 · Bus 10/);
+			expect(table?.textContent).toMatch(/U 3, S 2, Tram 5, Bus 10/);
 			expect(table?.textContent).toMatch(/good residential area/);
 			expect(table?.textContent).toMatch(/Social situation \(MSS, Berlin social monitoring\)/);
 			expect(table?.textContent).toMatch(/medium range of the Berlin distribution/);

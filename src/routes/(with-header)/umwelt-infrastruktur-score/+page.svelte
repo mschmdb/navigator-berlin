@@ -85,15 +85,15 @@
 
 <article class="mx-auto max-w-4xl space-y-10 px-4 py-10" data-testid="ranking-page">
 	<header class="space-y-4">
-		<h1 class="font-serif text-3xl text-ink md:text-4xl">{m.uis_h1_title()}</h1>
-		<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
+		<h1 class="text-3xl font-bold text-ink md:text-4xl">{m.uis_h1_title()}</h1>
+		<p class="max-w-prose text-lg leading-body text-ink-muted">
 			{m.uis_intro_p1()}
 		</p>
 	</header>
 
 	<aside
 		data-testid="ranking-editorial-disclaimer"
-		class="rounded border border-rule bg-bg-muted px-4 py-3 font-serif text-base text-ink-muted"
+		class="rounded border border-rule bg-bg-muted px-4 py-3 text-base text-ink-muted"
 		role="note"
 	>
 		{m.uis_disclaimer()}
@@ -109,7 +109,7 @@
 					{m.uis_accordion_trigger()}
 				</Accordion.Trigger>
 			</Accordion.Header>
-			<Accordion.Content class="pb-4 font-serif text-base leading-body text-ink-muted">
+			<Accordion.Content class="pb-4 text-base leading-body text-ink-muted">
 				<RichText segments={accordionSegments}>
 					{#snippet tag(text)}
 						<a class="text-accent underline" href={localizedHref('/methodik/kiez-score')}>{text}</a>
@@ -120,7 +120,7 @@
 	</Accordion.Root>
 
 	{#if data.kieze.length === 0 && data.bezirke.length === 0}
-		<p data-testid="ranking-empty" class="font-serif text-base text-ink-muted">
+		<p data-testid="ranking-empty" class="text-base text-ink-muted">
 			{m.uis_empty_state()}
 		</p>
 	{:else}

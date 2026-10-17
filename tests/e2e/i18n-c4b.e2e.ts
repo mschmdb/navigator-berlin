@@ -19,7 +19,7 @@ const PAGES = [
 	{
 		path: '/en/methodik/wahldaten',
 		dePath: '/methodik/wahldaten',
-		h1: 'Methodology · Election data',
+		h1: 'Methodology: Election data',
 		files: []
 	},
 	{

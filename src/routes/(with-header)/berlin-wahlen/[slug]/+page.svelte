@@ -46,7 +46,7 @@
 		const parts = [`${typLabel} ${data.wahl.jahr}`];
 		if (data.wahl.typ !== 'bvv') parts.push(stimmtypLabel);
 		if (data.wahl.isRepeatElection) parts.push(wahlWiederholungLabel());
-		return parts.join(' · ');
+		return parts.join(', ');
 	});
 
 	const topParty = $derived(data.berlin.find((e) => e.kurzname !== 'Sonstige'));
@@ -146,11 +146,11 @@
 
 <article class="mx-auto max-w-4xl space-y-8 px-4 py-8" data-testid="wahl-detail-page">
 	<header class="space-y-3">
-		<p class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+		<p class="text-xs text-ink-muted">
 			<a href={localizedHref('/')} class="underline-offset-2 hover:text-ink hover:underline">
 				Berlin
 			</a>
-			·
+			<span aria-hidden="true">/</span>
 			<a
 				href={localizedHref('/berlin-wahlen')}
 				class="underline-offset-2 hover:text-ink hover:underline"
@@ -173,11 +173,8 @@
 			</p>
 		{/if}
 		{#if data.wahl.isRepeatElection && data.wahl.parentSlug}
-			<p
-				class="font-mono text-xs tracking-wide text-ink-muted uppercase"
-				data-testid="wahl-detail-wiederholung"
-			>
-				{wahlWiederholungLabel()} ·
+			<p class="text-xs text-ink-muted" data-testid="wahl-detail-wiederholung">
+				{wahlWiederholungLabel()},
 				<a
 					href={localizedHref(`/berlin-wahlen/${data.wahl.parentSlug}`)}
 					class="text-accent underline underline-offset-2 hover:text-accent-strong"
@@ -186,11 +183,11 @@
 				</a>
 			</p>
 		{/if}
-		<p class="font-mono text-xs text-ink-muted" data-testid="wahl-detail-meta">
-			{m.wahl_detail_quelle_label({ source: sourceDisplayLabel(data.wahl.sourceName) })} ·
+		<p class="text-xs text-ink-muted" data-testid="wahl-detail-meta">
+			{m.wahl_detail_quelle_label({ source: sourceDisplayLabel(data.wahl.sourceName) })},
 			{m.wahl_portal_lizenz_suffix({
 				license: licenseDisplayLabel(data.wahl.license)
-			})}{#if data.wahl.sourceUpdatedAt}
+			})}{#if data.wahl.sourceUpdatedAt},
 				{m.wahl_portal_vorlaeufig_stand({ date: formatWahlDate(data.wahl.sourceUpdatedAt) })}
 			{/if}
 		</p>
@@ -201,7 +198,7 @@
 				aria-describedby={portalDeepLinkIstErststimme
 					? 'wahl-detail-portal-link-hinweis'
 					: undefined}
-				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="inline-block text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{portalDeepLinkLabel}
 			</a>
@@ -210,7 +207,7 @@
 			<p
 				id="wahl-detail-portal-link-hinweis"
 				data-testid="wahl-detail-portal-link-hinweis"
-				class="font-mono text-dense-meta text-ink-muted"
+				class="text-dense-meta text-ink-muted"
 			>
 				{m.wahl_detail_erststimme_hinweis({
 					zweitstimme: wahlStimmtypLabel('zweitstimme'),
@@ -251,12 +248,12 @@
 			</div>
 
 			<table
-				class="w-full font-mono text-xs sm:text-sm"
+				class="w-full text-xs sm:text-sm"
 				aria-label={m.wahl_detail_aria_top5_berlin({ title: wahlTitel })}
 				data-testid="wahl-detail-berlin-table"
 			>
 				<thead>
-					<tr class="text-dense-meta tracking-wide text-ink-muted uppercase">
+					<tr class="text-dense-meta text-ink-muted">
 						<th class="pb-2 text-left">{m.wahl_portal_spalte_partei()}</th>
 						<th class="pb-2 pl-2 text-right whitespace-nowrap">
 							{m.wahl_detail_spalte_stimmen()}
@@ -291,7 +288,7 @@
 				</tbody>
 			</table>
 		{:else}
-			<p class="font-mono text-sm text-ink-muted" data-testid="wahl-detail-berlin-empty">
+			<p class="text-sm text-ink-muted" data-testid="wahl-detail-berlin-empty">
 				{m.wahl_detail_berlin_empty()}
 			</p>
 		{/if}
@@ -304,10 +301,7 @@
 		withPortalChrome={false}
 	>
 		{#if data.geoSlug}
-			<p
-				class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-				data-testid="wahl-detail-choropleth-count"
-			>
+			<p class="text-dense-meta text-ink-muted" data-testid="wahl-detail-choropleth-count">
 				{m.wahl_detail_briefwahl_gruppen_count({ count: formatCount(data.winnersByUwb.length) })}
 			</p>
 		{/if}
@@ -320,7 +314,7 @@
 			/>
 		{:else}
 			<p
-				class="border-l-2 border-ink/30 pl-2 font-serif text-sm text-ink-muted italic"
+				class="border-l-2 border-ink/30 pl-2 text-sm text-ink-muted"
 				data-testid="wahl-detail-choropleth-fallback-note"
 			>
 				{m.wahl_detail_choropleth_fallback_note()}
@@ -348,7 +342,7 @@
 						{bezirk.name}
 					</a>
 					{#if bezirk.top3.length > 0}
-						<ul class="space-y-1 font-mono text-xs">
+						<ul class="space-y-1 text-xs">
 							{#each bezirk.top3 as entry (entry.kurzname)}
 								<li class="flex items-baseline gap-2">
 									<span
@@ -364,7 +358,7 @@
 							{/each}
 						</ul>
 					{:else}
-						<p class="font-mono text-xs text-ink-muted">{m.wahl_detail_bezirk_keine_daten()}</p>
+						<p class="text-xs text-ink-muted">{m.wahl_detail_bezirk_keine_daten()}</p>
 					{/if}
 				</li>
 			{/each}
@@ -375,7 +369,7 @@
 
 	<a
 		href={localizedHref('/methodik/wahldaten')}
-		class="inline-block font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
+		class="inline-block text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 		data-testid="wahl-detail-methodik-link"
 	>
 		{m.wahl_detail_methodik_link_label()}

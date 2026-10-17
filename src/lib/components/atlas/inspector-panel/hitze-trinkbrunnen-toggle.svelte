@@ -38,7 +38,7 @@
 			parts.push(m.inspector_trinkbrunnen_badge_wheelchair(undefined, localeOpts));
 		else if (b.wheelchair === 'limited')
 			parts.push(m.inspector_trinkbrunnen_badge_wheelchair_limited(undefined, localeOpts));
-		return parts.slice(0, 2).join(' · ');
+		return parts.slice(0, 2).join(', ');
 	}
 </script>
 
@@ -51,7 +51,7 @@
 		<Droplet size={15} aria-hidden="true" class="shrink-0 text-umwelt-kuehle-orte" />
 		{m.inspector_trinkbrunnen_heading(undefined, localeOpts)}
 	</h4>
-	<p class="mt-0.5 font-serif text-sm leading-snug text-ink-muted">
+	<p class="mt-0.5 text-sm leading-snug text-ink-muted">
 		{explain.short}
 	</p>
 
@@ -67,7 +67,7 @@
 				</span>
 			</div>
 			{#if badgeText}
-				<p class="mt-0.5 font-mono text-dense-meta text-ink-muted">{badgeText}</p>
+				<p class="mt-0.5 text-dense-meta text-ink-muted">{badgeText}</p>
 			{/if}
 			<div class="mt-1 flex flex-wrap gap-3">
 				<a

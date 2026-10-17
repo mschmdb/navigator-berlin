@@ -22,11 +22,8 @@
 <section data-testid="home-finder-teaser" class="grid items-center gap-8 md:grid-cols-[1fr_1.2fr]">
 	<div class="space-y-6">
 		<header class="space-y-2">
-			<p class="font-mono text-xs tracking-wider text-accent uppercase">
-				{m.home_finder_eyebrow()}
-			</p>
-			<h2 class="font-serif text-2xl text-ink md:text-3xl">{m.home_finder_heading()}</h2>
-			<p class="max-w-prose font-serif text-base text-ink-muted">
+			<h2 class="text-2xl font-bold text-ink md:text-3xl">{m.home_finder_heading()}</h2>
+			<p class="max-w-prose text-base text-ink-muted">
 				{m.home_finder_lead()}
 			</p>
 		</header>
@@ -35,7 +32,7 @@
 			{#each BEISPIELE as beispiel (beispiel)}
 				<li
 					data-testid="home-finder-beispiel"
-					class="rounded-full border border-rule px-3 py-1 font-serif text-sm text-ink-muted"
+					class="rounded-full border border-rule px-3 py-1 text-sm text-ink-muted"
 				>
 					„{beispiel()}"
 				</li>
@@ -46,14 +43,14 @@
 			<a
 				href={localizedHref('/explore?finder=1')}
 				data-testid="home-finder-teaser-cta"
-				class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+				class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
 			>
 				<SlidersHorizontal size={16} aria-hidden="true" />
 				{m.home_finder_cta()}
 			</a>
 		</div>
 
-		<p class="max-w-prose font-serif text-xs text-ink-subtle">
+		<p class="max-w-prose text-xs text-ink-subtle">
 			{m.home_finder_footnote()}
 		</p>
 	</div>

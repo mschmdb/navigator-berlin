@@ -28,14 +28,14 @@
 <JsonLd data={breadcrumbJsonLd} testid="datenschutz-breadcrumb-jsonld" />
 
 <main class="mx-auto max-w-2xl px-4 py-12">
-	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl" lang="de">
+	<h1 class="text-2xl font-bold break-words hyphens-auto sm:text-3xl" lang="de">
 		Datenschutzerklärung
 	</h1>
 
 	<p class="mt-4 text-sm text-ink-muted">Stand: 2026-05-30</p>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">1. Verantwortlich</h2>
+		<h2 class="text-xl font-bold">1. Verantwortlich</h2>
 		<address class="mt-3 leading-body not-italic">
 			Matze Schmidbauer<br />
 			Arndtstraße 34<br />
@@ -47,7 +47,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">2. Datenerhebung im Überblick</h2>
+		<h2 class="text-xl font-bold">2. Datenerhebung im Überblick</h2>
 		<p class="mt-3 leading-body">
 			Diese Website erhebt keine personenbezogenen Daten, es sei denn, Sie stellen diese freiwillig
 			zur Verfügung (z.&nbsp;B. wenn Sie per E-Mail Kontakt aufnehmen). Es gibt keine Registrierung,
@@ -56,7 +56,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">3. Cookies und Tracking</h2>
+		<h2 class="text-xl font-bold">3. Cookies und Tracking</h2>
 		<p class="mt-3 leading-body">
 			Diese Website setzt <strong>keine Tracking-Cookies</strong> und
 			<strong>keine Werbe-Cookies</strong>. Es werden keine personenbezogenen Daten an Dritte
@@ -72,7 +72,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">4. Server-Logs</h2>
+		<h2 class="text-xl font-bold">4. Server-Logs</h2>
 		<p class="mt-3 leading-body">
 			Beim Aufruf der Website werden technisch notwendige Verbindungsdaten temporär durch den
 			Reverse-Proxy (Traefik) verarbeitet (IP-Adresse, Zeitstempel, abgerufene URL, User-Agent).
@@ -88,7 +88,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">5. Reichweitenmessung (Plausible)</h2>
+		<h2 class="text-xl font-bold">5. Reichweitenmessung (Plausible)</h2>
 		<p class="mt-3 leading-body">
 			Diese Website misst Reichweite mit <a
 				class="text-accent underline"
@@ -114,7 +114,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 id="bookmarks" class="font-serif text-xl">
+		<h2 id="bookmarks" class="text-xl font-bold">
 			6. Browser-LocalStorage (Bookmarks, Präferenzen)
 		</h2>
 		<p class="mt-3 leading-body">
@@ -127,7 +127,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">7. Karten-Tiles und externe Datenquellen</h2>
+		<h2 class="text-xl font-bold">7. Karten-Tiles und externe Datenquellen</h2>
 		<p class="mt-3 leading-body">
 			Die Karten-Darstellung verwendet Vector-Tiles von <a
 				class="text-accent underline"
@@ -154,7 +154,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">8. Kontaktaufnahme per E-Mail</h2>
+		<h2 class="text-xl font-bold">8. Kontaktaufnahme per E-Mail</h2>
 		<p class="mt-3 leading-body">
 			Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben (Absender-Adresse, Inhalt) zur
 			Bearbeitung Ihrer Anfrage gespeichert. Diese Daten werden nicht ohne Ihre Einwilligung
@@ -164,7 +164,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">9. Ihre Rechte</h2>
+		<h2 class="text-xl font-bold">9. Ihre Rechte</h2>
 		<p class="mt-3 leading-body">
 			Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung
 			der Sie betreffenden personenbezogenen Daten sowie ein Beschwerderecht bei der zuständigen
@@ -174,7 +174,7 @@
 	</section>
 
 	<section class="mt-8">
-		<h2 class="font-serif text-xl">10. Änderungen dieser Erklärung</h2>
+		<h2 class="text-xl font-bold">10. Änderungen dieser Erklärung</h2>
 		<p class="mt-3 leading-body">
 			Diese Erklärung kann angepasst werden, falls sich technische oder rechtliche Rahmenbedingungen
 			ändern. Der jeweils aktuelle Stand ist oben rechts ausgewiesen.

@@ -51,7 +51,7 @@
 	}
 
 	const primaryName = $derived(extractPrimaryName(bookmark.displayName));
-	const subtext = $derived([bookmark.bezirk, bookmark.postcode].filter(Boolean).join(' · '));
+	const subtext = $derived([bookmark.bezirk, bookmark.postcode].filter(Boolean).join(', '));
 </script>
 
 <li data-testid="bookmark-row" data-bookmark-id={bookmark.id}>
@@ -62,13 +62,13 @@
 			aria-label={m.bookmark_row_confirm_group_aria()}
 			class="flex items-center justify-between gap-2 px-6 py-3"
 		>
-			<span class="font-mono text-xs text-ink">{m.bookmark_row_confirm_question()}</span>
+			<span class="text-xs text-ink">{m.bookmark_row_confirm_question()}</span>
 			<div class="flex items-center gap-1.5">
 				<button
 					type="button"
 					data-testid="bookmark-confirm-cancel"
 					onclick={cancelConfirm}
-					class="min-h-[44px] border border-rule px-3 py-1 font-mono text-xs text-ink hover:bg-bg"
+					class="min-h-[44px] border border-rule px-3 py-1 text-xs text-ink hover:bg-bg"
 				>
 					{m.bookmark_action_cancel()}
 				</button>
@@ -76,7 +76,7 @@
 					type="button"
 					data-testid="bookmark-confirm-delete"
 					onclick={confirmDelete}
-					class="min-h-[44px] border border-accent bg-accent-soft px-3 py-1 font-mono text-xs text-ink hover:bg-accent hover:text-bg"
+					class="min-h-[44px] border border-accent bg-accent-soft px-3 py-1 text-xs text-ink hover:bg-accent hover:text-bg"
 				>
 					{m.bookmark_action_delete()}
 				</button>

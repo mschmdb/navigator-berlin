@@ -11,7 +11,7 @@ describe('KapitelKontextBadge', () => {
 			ebeneText: 'Kiez-Ebene'
 		});
 		const badge = page.getByTestId('kapitel-kontext-badge');
-		await expect.element(badge).toHaveTextContent('Abgeordnetenhaus · alle Wahljahre · Kiez-Ebene');
+		await expect.element(badge).toHaveTextContent('Abgeordnetenhaus, alle Wahljahre, Kiez-Ebene');
 	});
 
 	it('folgt dem Jahres-Bezug reaktiv (Extreme-Badge nennt das Karten-Jahr)', async () => {
@@ -21,7 +21,7 @@ describe('KapitelKontextBadge', () => {
 			ebeneText: 'Kiez-Ebene'
 		});
 		const badge = page.getByTestId('kapitel-kontext-badge');
-		await expect.element(badge).toHaveTextContent('Bundestag · Wahl 2016 · Kiez-Ebene');
+		await expect.element(badge).toHaveTextContent('Bundestag, Wahl 2016, Kiez-Ebene');
 	});
 
 	it('rendert ohne Ebenen-Segment, wenn ebeneText fehlt (Review Triage Log #2: Sankey-eigener Ebenen-Toggle im Trends-Kapitel)', async () => {
@@ -31,7 +31,7 @@ describe('KapitelKontextBadge', () => {
 		});
 		const badge = page.getByTestId('kapitel-kontext-badge');
 		const el = (await badge.element()) as HTMLElement;
-		expect(el.textContent?.trim()).toBe('Abgeordnetenhaus · alle Wahljahre');
+		expect(el.textContent?.trim()).toBe('Abgeordnetenhaus, alle Wahljahre');
 	});
 
 	it('rendert als reinen Text ohne zusätzliche ARIA-Attribute (A11y-Boundary)', async () => {

@@ -19,8 +19,8 @@
 
 <section data-testid="home-quick-links" class="space-y-4">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">{m.home_quick_links_heading()}</h2>
-		<p class="font-serif text-base text-ink-muted">
+		<h2 class="text-2xl font-bold text-ink md:text-3xl">{m.home_quick_links_heading()}</h2>
+		<p class="text-base text-ink-muted">
 			{m.home_quick_links_lead()}
 		</p>
 	</header>

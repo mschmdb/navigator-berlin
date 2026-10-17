@@ -19,7 +19,7 @@
 	class="flex flex-col gap-2 border-t border-b border-rule py-3"
 	data-testid="updates-filter"
 >
-	<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
+	<p class="text-xs text-ink-subtle">
 		{m.updates_filter_heading()}
 	</p>
 	<ToggleGroup.Root

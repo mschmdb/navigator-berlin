@@ -12,7 +12,6 @@
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
-	import { ArrowRight } from '@lucide/svelte';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
 
@@ -57,14 +56,13 @@
 	<DwdKaeltewarnBanner warnings={data.warnings} />
 
 	<header class="flex flex-col gap-4">
-		<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.kaelte_eyebrow()}</p>
-		<h1 class="font-serif text-4xl text-ink md:text-5xl">{m.kaelte_h1()}</h1>
+		<h1 class="text-4xl font-bold text-ink md:text-5xl">{m.kaelte_h1()}</h1>
 	</header>
 
 	<!-- Notfall-Block vor dem Intro: 112 und erster Dienst sollen ohne Scrollen sichtbar sein. -->
 	<NotfallBlock />
 
-	<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
+	<p class="max-w-prose text-lg leading-body text-ink-muted">
 		{m.kaelte_intro()}
 	</p>
 
@@ -74,9 +72,8 @@
 		<a
 			href={localizedHref(explorerLink)}
 			data-testid="kaelte-karte-link"
-			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
 		>
-			<ArrowRight size={16} aria-hidden="true" />
 			{m.kaelte_orte_karte_link()}
 		</a>
 		<WarmeOrteTransparenz />

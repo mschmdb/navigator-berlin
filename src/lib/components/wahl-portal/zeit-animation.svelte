@@ -89,14 +89,14 @@
 		data-testid="zeit-animation-hinweis"
 		class="flex flex-wrap items-center gap-3 border border-rule bg-bg p-3"
 	>
-		<p class="font-mono text-xs text-ink-subtle">
+		<p class="text-xs text-ink-subtle">
 			{m.wahl_portal_zeit_animation_stimmbezirk_hinweis()}
 		</p>
 		<button
 			type="button"
 			data-testid="zeit-animation-zur-kiez-button"
 			onclick={onZurKiez}
-			class="rounded border border-ink bg-bg px-2.5 py-1 font-mono text-xs text-ink transition-colors hover:bg-bg-muted"
+			class="rounded border border-ink bg-bg px-2.5 py-1 text-xs text-ink transition-colors hover:bg-bg-muted"
 		>
 			{m.wahl_portal_zeit_animation_zur_kiez()}
 		</button>
@@ -155,7 +155,7 @@
 				<span
 					data-testid="zeit-animation-wiederholung"
 					aria-hidden="true"
-					class="ml-0.5 text-dense-meta text-ink-subtle"
+					class="ml-0.5 font-sans text-dense-meta text-ink-subtle"
 					title={wahlWiederholungLabel()}
 				>
 					{m.wahl_portal_wiederholung_kuerzel()}
@@ -164,7 +164,7 @@
 		</span>
 	</div>
 
-	<p data-testid="zeit-animation-wechsel-hinweis" class="font-mono text-xs text-ink-subtle">
+	<p data-testid="zeit-animation-wechsel-hinweis" class="text-xs text-ink-subtle">
 		{m.wahl_portal_zeit_animation_wechsel_hinweis()}
 	</p>
 {/if}

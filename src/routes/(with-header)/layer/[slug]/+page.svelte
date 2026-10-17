@@ -174,22 +174,19 @@
 	class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8"
 >
 	<header class="flex flex-col gap-2">
-		<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
-			{bundleGroupLabel}
-		</p>
-		<h1 data-testid="layer-detail-name" class="font-serif text-3xl text-ink">
+		<h1 data-testid="layer-detail-name" class="text-3xl font-bold text-ink">
 			{detail.layerName}
 		</h1>
 		<a
 			data-testid="layer-detail-map-button"
 			href={inspectorHref}
 			onclick={() => trackLanding('map_button', 'layer')}
-			class="mt-2 inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+			class="mt-2 inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
 		>
-			{m.layer_page_map_button()} <span aria-hidden="true">→</span>
+			{m.layer_page_map_button()}
 		</a>
 		{#if explain.long}
-			<p data-testid="layer-detail-lead" class="font-serif text-lg leading-body text-ink-muted">
+			<p data-testid="layer-detail-lead" class="text-lg leading-body text-ink-muted">
 				{explain.long}
 			</p>
 		{/if}
@@ -199,7 +196,7 @@
 		<a
 			href={localizedHref('/hitze')}
 			data-testid="layer-detail-hitze-link"
-			class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+			class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
 		>
 			{m.layer_page_hitze_cta()}
 		</a>
@@ -209,7 +206,7 @@
 		<a
 			href={localizedHref('/kaelte')}
 			data-testid="layer-detail-kaelte-link"
-			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
 		>
 			{m.layer_page_kaelte_cta()}
 		</a>
@@ -231,11 +228,11 @@
 		data-testid="layer-detail-source-card"
 		class="flex flex-col gap-2 border border-rule bg-bg-elevated p-4"
 	>
-		<h2 class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase">
+		<h2 class="font-sans text-sm font-semibold text-ink-muted">
 			{m.layer_page_source_heading()}
 		</h2>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
-			<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_provider_label()}</dt>
+			<dt class="text-xs text-ink-subtle">{m.layer_page_provider_label()}</dt>
 			<dd class="text-ink">
 				{#if meta.sourceUrl.startsWith('https://navigator.berlin/derived')}
 					<span data-testid="layer-detail-source-link">
@@ -257,31 +254,33 @@
 					</a>
 				{/if}
 			</dd>
-			<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_license_label()}</dt>
-			<dd data-testid="layer-detail-license" class="font-mono text-xs text-ink">
+			<dt class="text-xs text-ink-subtle">{m.layer_page_license_label()}</dt>
+			<dd data-testid="layer-detail-license" class="text-xs text-ink">
 				{shortenLicense(meta.license)}
 			</dd>
-			<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_data_status_label()}</dt>
+			<dt class="text-xs text-ink-subtle">{m.layer_page_data_status_label()}</dt>
 			<dd class="text-ink">
 				{formatYearMonth(meta.sourceUpdatedAt ?? meta.fetchedAt)}
 			</dd>
-			<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_features_label()}</dt>
-			<dd class="font-mono text-xs text-ink">{formatCount(meta.featureCount, localeOpts)}</dd>
+			<dt class="text-xs text-ink-subtle">{m.layer_page_features_label()}</dt>
+			<dd class="font-mono text-xs text-ink tabular-nums">
+				{formatCount(meta.featureCount, localeOpts)}
+			</dd>
 		</dl>
 	</section>
 
 	{#if explain.valueScaleExplain || explain.unit}
 		<section data-testid="layer-detail-scale" class="flex flex-col gap-2 border border-rule p-4">
-			<h2 class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase">
+			<h2 class="font-sans text-sm font-semibold text-ink-muted">
 				{m.layer_page_values_heading()}
 			</h2>
 			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 				{#if explain.unit}
-					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_unit_label()}</dt>
-					<dd class="font-mono text-sm text-ink">{explain.unit}</dd>
+					<dt class="text-xs text-ink-subtle">{m.layer_page_unit_label()}</dt>
+					<dd class="text-sm text-ink">{explain.unit}</dd>
 				{/if}
 				{#if explain.valueScaleExplain}
-					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_scale_label()}</dt>
+					<dt class="text-xs text-ink-subtle">{m.layer_page_scale_label()}</dt>
 					<dd class="text-ink">
 						{explain.valueScaleExplain}
 					</dd>
@@ -296,35 +295,32 @@
 			aria-labelledby="layer-detail-methodology-h"
 			class="flex flex-col gap-2 border border-rule p-4"
 		>
-			<h2
-				id="layer-detail-methodology-h"
-				class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
-			>
+			<h2 id="layer-detail-methodology-h" class="font-sans text-sm font-semibold text-ink-muted">
 				{m.layer_page_calculation_heading()}
 			</h2>
 			{#if methodology.calculation}
-				<p class="font-serif text-base leading-body text-ink">
+				<p class="text-base leading-body text-ink">
 					{methodology.calculation}
 				</p>
 			{/if}
 			<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 				{#if methodology.aggregationLevel}
-					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_aggregation_label()}</dt>
+					<dt class="text-xs text-ink-subtle">{m.layer_page_aggregation_label()}</dt>
 					<dd
 						lang={aggregationLevelKnown ? undefined : contentLang}
-						class={aggregationLevelKnown ? 'text-xs text-ink' : 'font-mono text-xs text-ink'}
+						class={aggregationLevelKnown ? 'text-xs text-ink' : 'text-xs text-ink'}
 					>
 						{aggregationLevelText}
 					</dd>
 				{/if}
 				{#if methodology.authority}
-					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_maintenance_label()}</dt>
+					<dt class="text-xs text-ink-subtle">{m.layer_page_maintenance_label()}</dt>
 					<dd class="text-ink">
 						{methodology.authority}
 					</dd>
 				{/if}
 				{#if methodology.updateFrequency}
-					<dt class="font-mono text-xs text-ink-subtle">{m.layer_page_update_frequency_label()}</dt>
+					<dt class="text-xs text-ink-subtle">{m.layer_page_update_frequency_label()}</dt>
 					<dd class="text-ink">
 						{methodology.updateFrequency}
 					</dd>
@@ -338,13 +334,10 @@
 				aria-labelledby="layer-detail-coverage-h"
 				class="flex flex-col gap-2 border border-rule p-4"
 			>
-				<h2
-					id="layer-detail-coverage-h"
-					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
-				>
+				<h2 id="layer-detail-coverage-h" class="font-sans text-sm font-semibold text-ink-muted">
 					{m.layer_page_coverage_gaps_heading()}
 				</h2>
-				<ul class="list-disc pl-5 font-serif text-base text-ink">
+				<ul class="list-disc pl-5 text-base text-ink">
 					{#each methodology.coverageGaps as gap (gap)}
 						<li>{gap}</li>
 					{/each}
@@ -358,13 +351,10 @@
 				aria-labelledby="layer-detail-omissions-h"
 				class="flex flex-col gap-2 border border-rule p-4"
 			>
-				<h2
-					id="layer-detail-omissions-h"
-					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
-				>
+				<h2 id="layer-detail-omissions-h" class="font-sans text-sm font-semibold text-ink-muted">
 					{m.layer_page_omissions_heading()}
 				</h2>
-				<ul class="list-disc pl-5 font-serif text-base text-ink">
+				<ul class="list-disc pl-5 text-base text-ink">
 					{#each methodology.omissions as o (o)}
 						<li>{o}</li>
 					{/each}
@@ -378,10 +368,7 @@
 				aria-labelledby="layer-detail-related-h"
 				class="flex flex-col gap-2 border border-rule p-4"
 			>
-				<h2
-					id="layer-detail-related-h"
-					class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
-				>
+				<h2 id="layer-detail-related-h" class="font-sans text-sm font-semibold text-ink-muted">
 					{m.layer_page_related_heading()}
 				</h2>
 				<ul class="flex flex-wrap gap-x-4 gap-y-1.5 text-base">
@@ -401,24 +388,22 @@
 
 		<aside data-testid="layer-detail-methodik-link" class="border border-rule bg-bg p-3">
 			{#if isKiezScore}
-				<p class="font-mono text-xs text-ink-muted">
+				<p class="text-xs text-ink-muted">
 					<a
 						href={localizedHref('/methodik/kiez-score')}
 						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{m.layer_page_methodik_kiez_score_link_label()}
-					</a>
-					{m.layer_page_methodik_kiez_score_suffix()}
+					</a>: {m.layer_page_methodik_kiez_score_suffix()}
 				</p>
 			{:else}
-				<p class="font-mono text-xs text-ink-muted">
+				<p class="text-xs text-ink-muted">
 					<a
 						href={localizedHref('/methodik')}
 						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{m.layer_page_methodik_link_label()}
-					</a>
-					{m.layer_page_methodik_suffix()}
+					</a>: {m.layer_page_methodik_suffix()}
 				</p>
 			{/if}
 		</aside>
@@ -427,10 +412,10 @@
 			data-testid="layer-detail-methodology-empty"
 			class="flex flex-col gap-2 border border-rule bg-bg p-4"
 		>
-			<p class="font-serif text-base text-ink">
+			<p class="text-base text-ink">
 				{m.layer_page_methodology_empty_text()}
 			</p>
-			<p class="font-mono text-xs text-ink-muted">
+			<p class="text-xs text-ink-muted">
 				<a
 					href={localizedHref('/methodik')}
 					class="text-accent underline underline-offset-2 hover:text-accent-strong"
@@ -464,7 +449,7 @@
 		onclick={() => trackLanding('map_link_bottom', 'layer')}
 		class="inline-flex w-fit items-center gap-1 self-start text-base font-medium text-accent underline underline-offset-2 hover:text-accent-strong"
 	>
-		{m.layer_page_map_button()} <span aria-hidden="true">→</span>
+		{m.layer_page_map_button()}
 	</a>
 
 	<FaqSection items={data.faq} pageType="layer" contentLocale={data.faqLocale} />

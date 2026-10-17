@@ -32,11 +32,11 @@
 
 <section data-testid="mauer-sektoren-detail" data-osm-sourced="true" class="flex flex-col gap-2">
 	{#if sectorName}
-		<h4 class="font-serif text-base font-semibold text-ink">
+		<h4 class="text-base font-semibold text-ink">
 			{sectorName}
 		</h4>
 	{/if}
-	<p class="font-serif text-sm text-ink-muted italic">
+	<p class="text-sm text-ink-muted">
 		{historicalNoteLabel}
 	</p>
 	<a
@@ -49,7 +49,7 @@
 		<ExternalLink size={12} aria-hidden="true" />
 		<span>{memorialLinkLabel}</span>
 	</a>
-	<p data-testid="mauer-footer" class="font-mono text-xs text-ink-subtle">
-		{sourcePrefixLabel}: {sourceLabel} · {standLabel}: {fetchedAt}
+	<p data-testid="mauer-footer" class="text-xs text-ink-subtle">
+		{sourcePrefixLabel}: {sourceLabel}, {standLabel}: {fetchedAt}
 	</p>
 </section>

@@ -13,7 +13,7 @@
 
 <p
 	data-testid="portal-datenstand"
-	class="flex flex-wrap items-baseline gap-x-2 font-mono text-dense-meta text-ink-subtle"
+	class="flex flex-wrap items-baseline gap-x-2 text-dense-meta text-ink-subtle"
 >
 	{#if status === 'loading' || status === 'idle'}
 		<span data-testid="portal-datenstand-loading">{m.wahl_portal_datenstand_laden()}</span>
@@ -21,8 +21,8 @@
 		<span data-testid="portal-datenstand-error">{m.wahl_portal_datenstand_nicht_verfuegbar()}</span>
 	{:else if minJahr !== null && maxJahr !== null}
 		<span data-testid="portal-datenstand-text">
-			{m.wahl_portal_datenstand_spanne({ min: minJahr, max: maxJahr })} ·
-			{m.wahl_label_source_bundeswahlleiterin()} ·
+			{m.wahl_portal_datenstand_spanne({ min: minJahr, max: maxJahr })},
+			{m.wahl_label_source_bundeswahlleiterin()},
 			{m.wahl_label_source_amt_fuer_statistik()}
 		</span>
 	{:else}

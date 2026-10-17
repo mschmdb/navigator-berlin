@@ -102,7 +102,7 @@
 							<span
 								data-testid={`legend-variant-${entry.slug}`}
 								data-variant={entry.variant}
-								class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
+								class="text-dense-meta text-ink-subtle"
 							>
 								{variantLabel(entry.variant)}
 							</span>
@@ -163,7 +163,7 @@
 							.map((i) => i.color)
 							.join(', ')})`}
 					></div>
-					<div class="flex justify-between font-mono text-dense-meta text-ink-subtle">
+					<div class="flex justify-between text-dense-meta text-ink-subtle">
 						{#if entry.spec.range}
 							<span>{entry.spec.range[0]}</span>
 							<span>{entry.spec.range[1]}</span>
@@ -248,7 +248,7 @@
 					>
 						<span
 							aria-hidden="true"
-							class="font-mono text-dense-meta transition-transform group-open:rotate-180"
+							class="text-dense-meta transition-transform group-open:rotate-180"
 						>
 							▾
 						</span>
@@ -262,15 +262,12 @@
 
 					<div data-testid={`legend-expand-${entry.slug}`} class="mt-1.5 flex flex-col gap-1.5">
 						{#if entry.explain.long}
-							<p class="font-serif text-xs leading-snug text-ink-muted">
+							<p class="text-xs leading-snug text-ink-muted">
 								{entry.explain.long}
 							</p>
 						{/if}
 						{#if entry.explain.valueScaleExplain}
-							<p
-								data-testid={`legend-scale-${entry.slug}`}
-								class="font-mono text-dense-meta text-ink-subtle"
-							>
+							<p data-testid={`legend-scale-${entry.slug}`} class="text-dense-meta text-ink-subtle">
 								{entry.explain.valueScaleExplain}
 							</p>
 						{/if}
@@ -305,7 +302,7 @@
 								{/if}
 								<span
 									data-testid={`legend-license-${entry.slug}`}
-									class="font-mono text-ink-subtle"
+									class="text-ink-subtle"
 									title={entry.meta.license}
 								>
 									{shortenLicense(entry.meta.license)}
@@ -329,7 +326,7 @@
 				data-testid="legend-limit-warning"
 				role="status"
 				aria-live="polite"
-				class="text-vermillion border-t border-rule pt-2 font-mono text-dense-meta leading-snug"
+				class="text-vermillion border-t border-rule pt-2 text-dense-meta leading-snug"
 			>
 				{m.atlas_legend_limit_warning(undefined, localeOpts)}
 			</p>

@@ -115,7 +115,7 @@
 	{id}
 	data-testid="editorial-disclaimer"
 	data-variant={variant}
-	class="font-serif text-sm leading-snug text-ink-muted italic"
+	class="text-sm leading-snug text-ink-muted"
 >
 	<span>{text}</span>
 	{#if sourceUrl}

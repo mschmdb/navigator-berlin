@@ -123,7 +123,7 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 		expect(newRow?.textContent).toMatch(/°C/);
 	});
 
-	it('Normalperioden in Plex-Mono dezent (AC-2 Style)', async () => {
+	it('Normalperioden dezent in Sans (AC-2 Style, GH-87)', async () => {
 		const screen = render(ClimateLongView, {
 			series: SERIES,
 			stationName: 'Berlin-Dahlem'
@@ -132,7 +132,7 @@ describe('ClimateLongView (LayerChart rewrite)', () => {
 			'[data-testid="climate-long-view-normal-old"]'
 		) as HTMLElement | null;
 		expect(oldRow).not.toBeNull();
-		expect(oldRow!.className).toMatch(/font-mono/);
+		expect(oldRow!.className).not.toMatch(/font-mono|font-serif/);
 		expect(oldRow!.className).toMatch(/text-ink-subtle/);
 	});
 

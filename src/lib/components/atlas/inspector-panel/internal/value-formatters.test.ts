@@ -66,7 +66,7 @@ describe('formatLayerValue', () => {
 		expect(
 			formatLayerValue('bodenrichtwerte', { brw: 1500, nutzung: 'W - Wohngebiet', gfz: 1.2 })
 		).toEqual({
-			text: '1.500 €/m² · W - Wohngebiet',
+			text: '1.500 €/m², W - Wohngebiet',
 			isNumeric: true,
 			isMissing: false
 		});
@@ -128,7 +128,7 @@ describe('formatLayerValue', () => {
 		expect(
 			formatLayerValue('ortsteile', { OTEIL: 'Friedrichshain', BEZIRK: 'Friedrichshain-Kreuzberg' })
 		).toEqual({
-			text: 'Friedrichshain · Friedrichshain-Kreuzberg',
+			text: 'Friedrichshain, Friedrichshain-Kreuzberg',
 			isNumeric: false,
 			isMissing: false
 		});
@@ -253,12 +253,12 @@ describe('formatLayerValue', () => {
 		it('schlecht → "Grünversorgung: gering"', () => {
 			expect(
 				formatLayerValue('gruenversorgung-2023', { kategorie: 'schlecht', plr_name: 'Pankow' })
-			).toEqual({ text: 'Grünversorgung: gering · Pankow', isNumeric: false, isMissing: false });
+			).toEqual({ text: 'Grünversorgung: gering, Pankow', isNumeric: false, isMissing: false });
 		});
 		it('gut → "Grünversorgung: hoch"', () => {
 			expect(
 				formatLayerValue('gruenversorgung-2023', { kategorie: 'gut', plr_name: 'Wilmersdorf' })
-			).toEqual({ text: 'Grünversorgung: hoch · Wilmersdorf', isNumeric: false, isMissing: false });
+			).toEqual({ text: 'Grünversorgung: hoch, Wilmersdorf', isNumeric: false, isMissing: false });
 		});
 		it('mittel → "Grünversorgung: mittel" (unverändert)', () => {
 			expect(formatLayerValue('gruenversorgung-2023', { kategorie: 'mittel' })).toEqual({
@@ -291,7 +291,7 @@ describe('formatLayerValue', () => {
 					ew: 3580
 				})
 			).toEqual({
-				text: 'Status mittel, Dynamik stabil · Stülerstraße',
+				text: 'Status mittel, Dynamik stabil, Stülerstraße',
 				isNumeric: false,
 				isMissing: false
 			});
@@ -306,7 +306,7 @@ describe('formatLayerValue', () => {
 					kom: 'gültig'
 				})
 			).toEqual({
-				text: 'Status sehr niedrig, Dynamik negativ · Beispiel',
+				text: 'Status sehr niedrig, Dynamik negativ, Beispiel',
 				isNumeric: false,
 				isMissing: false
 			});
@@ -321,7 +321,7 @@ describe('formatLayerValue', () => {
 					kom: 'ungültig (EW unter 300)'
 				})
 			).toEqual({
-				text: 'Aggregat nicht aussagekräftig · Pankower Tor (ungültig (EW unter 300))',
+				text: 'Aggregat nicht aussagekräftig, Pankower Tor (ungültig (EW unter 300))',
 				isNumeric: false,
 				isMissing: false
 			});
@@ -336,7 +336,7 @@ describe('formatLayerValue', () => {
 					kom: 'ungültig (Ausreißer)'
 				})
 			).toEqual({
-				text: 'Aggregat nicht aussagekräftig · Beispiel (ungültig (Ausreißer))',
+				text: 'Aggregat nicht aussagekräftig, Beispiel (ungültig (Ausreißer))',
 				isNumeric: false,
 				isMissing: false
 			});

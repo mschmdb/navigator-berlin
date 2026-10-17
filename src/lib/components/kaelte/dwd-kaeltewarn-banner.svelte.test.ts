@@ -31,7 +31,7 @@ describe('DwdKaeltewarnBanner', () => {
 		await expect.element(page.getByTestId('dwd-kaelte-event')).toHaveTextContent('Strenger Frost');
 		await expect
 			.element(page.getByTestId('dwd-kaelte-level'))
-			.toHaveTextContent('Warnstufe 2 · Warnung vor markantem Wetter');
+			.toHaveTextContent('Warnstufe 2, Warnung vor markantem Wetter');
 		await expect.element(page.getByText('Amtliche WARNUNG vor strengem Frost')).toBeVisible();
 		const source = page.getByTestId('dwd-kaelte-source');
 		await expect.element(source).toHaveTextContent('Quelle: Deutscher Wetterdienst');
@@ -65,7 +65,7 @@ describe('DwdKaeltewarnBanner', () => {
 		await expect.element(page.getByTestId('dwd-kaelte-event')).toHaveTextContent('Severe frost');
 		await expect
 			.element(page.getByTestId('dwd-kaelte-level'))
-			.toHaveTextContent('Warning level 2 · Warning of significant weather');
+			.toHaveTextContent('Warning level 2, Warning of significant weather');
 		await expect
 			.element(page.getByTestId('dwd-kaelte-source'))
 			.toHaveTextContent('Source: German Weather Service (DWD)');
@@ -127,7 +127,7 @@ describe('DwdKaeltewarnBanner · Farbstufe', () => {
 		expect(await tone()).toContain('state-error');
 		await expect
 			.element(page.getByTestId('dwd-kaelte-level'))
-			.toHaveTextContent('Warnstufe 4 · Warnung vor extremem Unwetter');
+			.toHaveTextContent('Warnstufe 4, Warnung vor extremem Unwetter');
 		await expect
 			.element(page.getByTestId('dwd-kaelte-event'))
 			.toHaveTextContent('Extrem starker Schneefall');

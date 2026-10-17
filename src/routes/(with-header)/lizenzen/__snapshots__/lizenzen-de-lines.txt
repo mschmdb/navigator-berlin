@@ -58,7 +58,7 @@ p: Methodik: Kiez-Score
 a: Kiez-Score
 h2: Klimadaten (DWD)
 p: Historische Sommertage- und Hitzetage-Zeitreihen von vier Wetterstationen in und um Berlin (Dahlem, Tempelhof, Buch, Schönefeld) liegen als Build-Aggregat im Hitze-Kontext.
-dt: Deutscher Wetterdienst · Climate Data Center
+dt: Deutscher Wetterdienst, Climate Data Center
 dd: Tageswerte der Stationsmessungen (daily KL, historical). Lizenz CC BY 4.0, Namensnennung Deutscher Wetterdienst.
 dd: opendata.dwd.de/climate_environment/CDC
 a: opendata.dwd.de/climate_environment/CDC
@@ -123,7 +123,7 @@ a: Satori + @resvg/resvg-js (OG-Image-Generator)
 td: MPL-2.0
 h2: Schriften
 p: IBM Plex Serif, Sans und Mono unter SIL Open Font License 1.1, geliefert via Fontsource.
-p: github.com/IBM/plex · OFL 1.1
+p: github.com/IBM/plex , OFL 1.1
 a: github.com/IBM/plex
 a: OFL 1.1
 h2: OpenStreetMap-Namensnennung

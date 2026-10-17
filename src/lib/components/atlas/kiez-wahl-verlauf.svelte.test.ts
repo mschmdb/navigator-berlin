@@ -49,7 +49,7 @@ describe('kiez-wahl-verlauf.svelte', () => {
 		const source = document.querySelector('[data-testid="kiez-wahl-verlauf-source"]');
 		const normalized = source?.textContent?.replace(/\s+/g, ' ').trim();
 		expect(normalized).toBe(
-			'Wahlbezirksstatistik (Bundeswahlleiterin + Amt für Statistik Berlin-Brandenburg) · Lizenz dl-de/by-2-0'
+			'Wahlbezirksstatistik (Bundeswahlleiterin + Amt für Statistik Berlin-Brandenburg), Lizenz dl-de/by-2-0'
 		);
 	});
 

@@ -52,7 +52,7 @@
 
 {#if rows.length > 0 && hasData}
 	<section aria-labelledby="vergleich-heading" class="space-y-4" data-testid="score-comparison">
-		<h2 id="vergleich-heading" class="font-serif text-2xl text-ink">
+		<h2 id="vergleich-heading" class="text-2xl font-bold text-ink">
 			{m.score_comparison_heading()}
 		</h2>
 		<div class="overflow-x-auto">
@@ -91,7 +91,7 @@
 								<td class="py-3 pr-4 text-right text-ink-muted">{fmt(row.bezirkMean)}</td>
 							{/if}
 							<td class="py-3 pr-4 text-right text-ink-muted">{fmt(row.berlinMedian)}</td>
-							<td class="py-3 text-left font-mono text-xs text-ink-muted">
+							<td class="py-3 text-left font-mono text-xs text-ink-muted tabular-nums">
 								{formatRank(row.rang, row.quartil, row.total, localeOpts)}
 							</td>
 						</tr>
@@ -99,7 +99,7 @@
 				</tbody>
 			</table>
 		</div>
-		<p class="font-mono text-xs text-ink-subtle">
+		<p class="text-xs text-ink-subtle">
 			{#if showBezirkColumn}
 				{m.score_comparison_legend_with_bezirk()}
 			{:else}
@@ -107,10 +107,7 @@
 			{/if}
 		</p>
 		{#if hasKriminalitaet}
-			<p
-				class="font-serif text-xs leading-snug text-ink-muted italic"
-				data-testid="kriminalitaet-footnote"
-			>
+			<p class="text-xs leading-snug text-ink-muted" data-testid="kriminalitaet-footnote">
 				{m.score_comparison_kriminalitaet_footnote()}
 				<a
 					href={localizedHref('/methodik/kiez-score')}
