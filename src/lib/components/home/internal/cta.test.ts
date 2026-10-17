@@ -11,10 +11,17 @@ describe('Startseiten-Aktionen', () => {
 		expect(ctaSecondary).toContain('min-h-(--target-min)');
 	});
 
-	it('zeigen die Sekundäraktion als Button mit sichtbarem Rahmen, ohne Umbruch', () => {
+	it('zeigen die Sekundäraktion als Button mit sichtbarem Rahmen, ab sm ohne Umbruch', () => {
 		expect(ctaSecondary).toContain('border-rule-strong');
 		expect(ctaSecondary).toContain('rounded');
-		expect(ctaSecondary).toContain('whitespace-nowrap');
+		expect(ctaSecondary).toContain('sm:whitespace-nowrap');
+	});
+
+	it('lassen lange Texte bei 320 px umbrechen statt die Seite zu verbreitern (WCAG 1.4.10)', () => {
+		for (const cta of [ctaPrimary, ctaSecondary]) {
+			expect(cta).toContain('max-w-full');
+			expect(cta.split(' ')).not.toContain('whitespace-nowrap');
+		}
 	});
 
 	it('setzt auf der Startseite keine Pfeil-Icons an Links (Leitlinie 29)', () => {
