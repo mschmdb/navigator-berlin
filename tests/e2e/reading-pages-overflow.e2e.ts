@@ -29,11 +29,12 @@ for (const viewport of VIEWPORTS) {
 				await expect(page.getByTestId('webmcp-diagnose-laedt')).toHaveCount(0);
 				const result = await page.evaluate(() => {
 					const root = document.documentElement;
-					// Inhalt in einem eigenen Scroll-Container (z. B. breite Tabelle) ist erlaubt.
+					// Ausnahme laut WCAG 1.4.10: Datentabellen in einem eigenen Scroll-Container.
+					// Abgeschnittener Text (overflow hidden/clip) zählt dagegen als Fehler.
 					const clipped = (el: Element) => {
 						for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
 							const ox = getComputedStyle(p).overflowX;
-							if (ox === 'auto' || ox === 'scroll' || ox === 'hidden' || ox === 'clip') return true;
+							if ((ox === 'auto' || ox === 'scroll') && p.querySelector('table')) return true;
 						}
 						return false;
 					};
@@ -50,3 +51,19 @@ for (const viewport of VIEWPORTS) {
 		}
 	});
 }
+
+test.describe('Definitionslisten ab sm', () => {
+	test.use({ viewport: { width: 1024, height: 800 } });
+
+	for (const path of ['/methodik', '/layer/bodenrichtwerte']) {
+		test(`${path} zeigt Begriff und Wert nebeneinander`, async ({ page }) => {
+			await page.goto(path, { waitUntil: 'networkidle' });
+			const dt = page.locator('main dl.definition-grid dt').first();
+			const dd = page.locator('main dl.definition-grid dd').first();
+			const [t, d] = [await dt.boundingBox(), await dd.boundingBox()];
+			expect(t && d).toBeTruthy();
+			expect(Math.abs(t!.y - d!.y)).toBeLessThan(4);
+			expect(d!.x).toBeGreaterThan(t!.x + t!.width);
+		});
+	}
+});
