@@ -113,65 +113,68 @@
 				</button>
 			</header>
 
-			<nav aria-label={m.shell_meta_nav_aria_label()} class="flex-1 overflow-y-auto px-5 py-4">
-				{#each groups as group (group.id)}
-					<section data-testid={`site-menu-group-${group.id}`} class="mb-5 last:mb-2">
-						<h3 class="pb-1 text-sm font-semibold text-ink">{siteMenuGroupTitle(group.id)}</h3>
-						<ul class="border-t border-rule">
-							{#each group.items as item (item.id)}
-								{@const description = siteMenuItemDescription(item.id)}
-								<li class="border-b border-rule">
+			<div data-testid="site-menu-scroll" class="min-h-0 flex-1 overflow-y-auto">
+				<nav aria-label={m.shell_meta_nav_aria_label()} class="px-5 py-4">
+					{#each groups as group (group.id)}
+						<section data-testid={`site-menu-group-${group.id}`} class="mb-5 last:mb-2">
+							<h3 class="pb-1 text-sm font-semibold text-ink">{siteMenuGroupTitle(group.id)}</h3>
+							<ul class="border-t border-rule">
+								{#each group.items as item (item.id)}
+									{@const description = siteMenuItemDescription(item.id)}
+									<li class="border-b border-rule">
+										<a
+											href={localizedHref(item.href)}
+											onclick={onClose}
+											aria-current={isCurrentMenuHref(path, item.href) ? 'page' : undefined}
+											class="site-menu-link block min-h-(--target-min) py-2.5 text-ink hover:text-accent aria-[current=page]:text-accent"
+										>
+											<span class="block text-base font-semibold">{siteMenuItemTitle(item.id)}</span
+											>
+											{#if description}
+												<span class="mt-0.5 block text-sm leading-body text-ink-muted">
+													{description}
+												</span>
+											{/if}
+										</a>
+									</li>
+								{/each}
+							</ul>
+						</section>
+					{/each}
+				</nav>
+
+				<footer class="border-t border-rule px-5 py-3">
+					<nav aria-label={m.site_menu_legal_nav_aria_label()}>
+						<ul class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-muted">
+							{#each LEGAL as link (link.id)}
+								<li>
 									<a
-										href={localizedHref(item.href)}
+										href={localizedHref(link.href)}
 										onclick={onClose}
-										aria-current={isCurrentMenuHref(path, item.href) ? 'page' : undefined}
-										class="site-menu-link block min-h-(--target-min) py-2.5 text-ink hover:text-accent aria-[current=page]:text-accent"
+										class="inline-flex min-h-(--target-min) items-center hover:text-accent"
 									>
-										<span class="block text-base font-semibold">{siteMenuItemTitle(item.id)}</span>
-										{#if description}
-											<span class="mt-0.5 block text-sm leading-body text-ink-muted">
-												{description}
-											</span>
-										{/if}
+										{metaLinkLabel(link.id)}
 									</a>
 								</li>
 							{/each}
-						</ul>
-					</section>
-				{/each}
-			</nav>
-
-			<footer class="shrink-0 border-t border-rule px-5 py-3">
-				<nav aria-label={m.site_menu_legal_nav_aria_label()}>
-					<ul class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink-muted">
-						{#each LEGAL as link (link.id)}
 							<li>
 								<a
-									href={localizedHref(link.href)}
-									onclick={onClose}
+									href={`mailto:${FEEDBACK_EMAIL}`}
 									class="inline-flex min-h-(--target-min) items-center hover:text-accent"
 								>
-									{metaLinkLabel(link.id)}
+									{m.shell_contact_label()}
 								</a>
 							</li>
-						{/each}
-						<li>
-							<a
-								href={`mailto:${FEEDBACK_EMAIL}`}
-								class="inline-flex min-h-(--target-min) items-center hover:text-accent"
-							>
-								{m.shell_contact_label()}
-							</a>
-						</li>
-					</ul>
-				</nav>
-				<div class="mt-2 flex items-center justify-between gap-3">
-					{#if langSwitcher}
-						<div class="text-sm text-ink-muted sm:hidden">{@render langSwitcher()}</div>
-					{/if}
-					<div class="ml-auto flex items-center gap-3"><SocialLinks size={16} /><MtcLogo /></div>
-				</div>
-			</footer>
+						</ul>
+					</nav>
+					<div class="mt-2 flex items-center justify-between gap-3">
+						{#if langSwitcher}
+							<div class="text-sm text-ink-muted sm:hidden">{@render langSwitcher()}</div>
+						{/if}
+						<div class="ml-auto flex items-center gap-3"><SocialLinks size={16} /><MtcLogo /></div>
+					</div>
+				</footer>
+			</div>
 		</div>
 	</div>
 {/if}
