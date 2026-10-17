@@ -169,58 +169,88 @@ describe('buildAddressNavigation', () => {
 describe('createAddressHistoryWriter', () => {
 	function deferred() {
 		let resolve!: () => void;
-		const promise = new Promise<void>((r) => (resolve = r));
-		return { promise, resolve };
+		let reject!: (e: Error) => void;
+		const promise = new Promise<void>((res, rej) => {
+			resolve = res;
+			reject = rej;
+		});
+		return { promise, resolve, reject };
 	}
 
 	it('führt zwei Schreibvorgänge derselben Adresse zusammen, solange der erste läuft', async () => {
 		const pending = deferred();
 		const calls: Array<[string, string]> = [];
-		const write = createAddressHistoryWriter((search, mode) => {
+		const writer = createAddressHistoryWriter((search, mode) => {
 			calls.push([search, mode]);
 			return pending.promise;
 		});
-		const first = write('13.40000,52.50000', '?address=13.40000,52.50000', 'push');
-		const second = write('13.40000,52.50000', '?address=13.40000,52.50000', 'replace');
+		const first = writer.write('13.40000,52.50000', '?address=13.40000,52.50000', 'push');
+		const second = writer.write('13.40000,52.50000', '?address=13.40000,52.50000', 'replace');
 		expect(second).toBe(first);
 		expect(calls).toEqual([['?address=13.40000,52.50000', 'push']]);
 		pending.resolve();
 		await first;
 	});
 
+	it('übernimmt einen geänderten Namen derselben Adresse per Replace nach dem ersten Schreiben', async () => {
+		const pending = deferred();
+		const calls: Array<[string, string]> = [];
+		const writer = createAddressHistoryWriter((search, mode) => {
+			calls.push([search, mode]);
+			return calls.length === 1 ? pending.promise : Promise.resolve();
+		});
+		void writer.write('a', '?address=a', 'push');
+		const second = writer.write('a', '?address=a&q=Name', 'replace');
+		expect(calls).toEqual([['?address=a', 'push']]);
+		pending.resolve();
+		await second;
+		expect(calls).toEqual([
+			['?address=a', 'push'],
+			['?address=a&q=Name', 'replace']
+		]);
+	});
+
 	it('schreibt nach Abschluss erneut', async () => {
 		const calls: string[] = [];
-		const write = createAddressHistoryWriter(async (_search, mode) => {
+		const writer = createAddressHistoryWriter(async (_search, mode) => {
 			calls.push(mode);
 		});
-		await write('a', '?address=a', 'push');
-		await write('a', '?address=a', 'replace');
+		await writer.write('a', '?address=a', 'push');
+		await writer.write('a', '?address=a', 'replace');
 		expect(calls).toEqual(['push', 'replace']);
 	});
 
 	it('schreibt eine andere Adresse auch während ein Vorgang läuft', () => {
 		const pending = deferred();
 		const calls: string[] = [];
-		const write = createAddressHistoryWriter((search) => {
+		const writer = createAddressHistoryWriter((search) => {
 			calls.push(search);
 			return pending.promise;
 		});
-		void write('a', '?address=a', 'push');
-		void write('b', '?address=b', 'push');
+		void writer.write('a', '?address=a', 'push');
+		void writer.write('b', '?address=b', 'push');
 		expect(calls).toEqual(['?address=a', '?address=b']);
 		pending.resolve();
 	});
 
-	it('gibt den Slot frei, wenn die Navigation fehlschlägt', async () => {
+	it('merkt sich die geschriebene Adresse', async () => {
+		const writer = createAddressHistoryWriter(async () => {});
+		expect(writer.lastWritten()).toBeNull();
+		await writer.write('a', '?address=a', 'push');
+		expect(writer.lastWritten()).toBe('a');
+	});
+
+	it('vergisst die Adresse, wenn die Navigation fehlschlägt, damit ein neuer Versuch wieder einen Eintrag anlegt', async () => {
 		let fail = true;
 		const calls: string[] = [];
-		const write = createAddressHistoryWriter(async (_s, mode) => {
+		const writer = createAddressHistoryWriter(async (_s, mode) => {
 			calls.push(mode);
 			if (fail) throw new Error('abgebrochen');
 		});
-		await expect(write('a', '?address=a', 'push')).rejects.toThrow('abgebrochen');
+		await expect(writer.write('a', '?address=a', 'push')).rejects.toThrow('abgebrochen');
+		expect(writer.lastWritten()).toBeNull();
 		fail = false;
-		await write('a', '?address=a', 'replace');
-		expect(calls).toEqual(['push', 'replace']);
+		await writer.write('a', '?address=a', 'push');
+		expect(calls).toEqual(['push', 'push']);
 	});
 });
