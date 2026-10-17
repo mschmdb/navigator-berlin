@@ -29,6 +29,14 @@ describe('site-header.svelte', () => {
 		expect(el.className).toMatch(/tracking-wide/);
 	});
 
+	it('zeigt kein Beta-Label an der Wortmarke', async () => {
+		render(SiteHeader, { geocode: async () => [] });
+		const mark = page.getByText('navigator.berlin').nth(1);
+		await expect.element(mark).toBeInTheDocument();
+		const el = (await mark.element()) as HTMLSpanElement;
+		expect(el.textContent?.trim()).toBe('navigator.berlin');
+	});
+
 	it('rendert AddressSearch (Combobox)', async () => {
 		render(SiteHeader, { geocode: async () => [] });
 		await expect.element(page.getByRole('combobox')).toBeInTheDocument();
