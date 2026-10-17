@@ -59,3 +59,30 @@ describe('buildInput Kriminalitäts-Exklusion', () => {
 		expect(hoch).toBe(ohne);
 	});
 });
+
+describe('buildInput Anzeigenamen (#96)', () => {
+	const names = {
+		kiez: new Map([['suedliche-luisenstadt', 'Südliche Luisenstadt']]),
+		bezirk: new Map([['friedrichshain-kreuzberg', 'Friedrichshain-Kreuzberg']])
+	};
+
+	it('nimmt Kiez- und Bezirksnamen aus den GeoJSON-Anzeigenamen', () => {
+		const input = buildInput(
+			'kiez',
+			{ ...area(), slug: 'suedliche-luisenstadt', bezirkSlug: 'friedrichshain-kreuzberg' },
+			names
+		);
+		expect(input.name).toBe('Südliche Luisenstadt');
+		expect(input.bezirk).toBe('Friedrichshain-Kreuzberg');
+	});
+
+	it('nimmt für Bezirksprofile den Bezirks-Anzeigenamen', () => {
+		const input = buildInput(
+			'bezirk',
+			{ ...area(), slug: 'friedrichshain-kreuzberg', bezirkSlug: null },
+			names
+		);
+		expect(input.name).toBe('Friedrichshain-Kreuzberg');
+		expect(input.bezirk).toBeNull();
+	});
+});

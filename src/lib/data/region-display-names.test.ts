@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { buildRegionDisplayNames } from './region-display-names.js';
+import {
+	buildRegionDisplayNames,
+	fallbackNameFromSlug,
+	regionDisplayName
+} from './region-display-names.js';
 
 const BEZIRKE_FC = {
 	features: [
@@ -33,5 +37,27 @@ describe('buildRegionDisplayNames', () => {
 		const { kiez } = buildRegionDisplayNames({ lorFc: LOR_FC, bezirkeFc: BEZIRKE_FC });
 		expect(kiez.get('heerstrasse-spandau')).toBe('Heerstraße');
 		expect(kiez.get('heerstrasse-mitte')).toBe('Heerstraße');
+	});
+});
+
+describe('regionDisplayName (#96)', () => {
+	const names = buildRegionDisplayNames({ lorFc: LOR_FC, bezirkeFc: BEZIRKE_FC });
+
+	it('liefert den GeoJSON-Namen für bekannte Slugs', () => {
+		expect(regionDisplayName(names, 'kiez', 'suedliche-luisenstadt')).toBe('Südliche Luisenstadt');
+		expect(regionDisplayName(names, 'bezirk', 'friedrichshain-kreuzberg')).toBe(
+			'Friedrichshain-Kreuzberg'
+		);
+	});
+
+	it('fällt für unbekannte Slugs auf die Slug-Rekonstruktion zurück', () => {
+		expect(regionDisplayName(names, 'kiez', 'unbekannter-kiez')).toBe('Unbekannter Kiez');
+		expect(regionDisplayName(names, 'bezirk', '')).toBe('');
+	});
+});
+
+describe('fallbackNameFromSlug', () => {
+	it('macht aus Slug-Teilen großgeschriebene Wörter', () => {
+		expect(fallbackNameFromSlug('pankow-zentrum')).toBe('Pankow Zentrum');
 	});
 });
