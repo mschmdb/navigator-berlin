@@ -69,6 +69,49 @@ describe('buildUebergangsGruppen', () => {
 		expect(gruppen[0].nachJahr).toBe(2023);
 	});
 
+	it('Datenlücke: Übergang über eine übersprungene Spalte trägt sein echtes Ausgangsjahr', () => {
+		const graph: SankeyGraph = {
+			...GRAPH,
+			nodes: [
+				{
+					id: 'partei:2011:SPD',
+					column: 0,
+					label: 'SPD',
+					farbe: '#000',
+					anzahl: 1,
+					jahr: 2011,
+					partei: 'SPD'
+				},
+				{
+					id: 'partei:2023:CDU',
+					column: 2,
+					label: 'CDU',
+					farbe: '#000',
+					anzahl: 1,
+					jahr: 2023,
+					partei: 'CDU'
+				}
+			],
+			links: [
+				{
+					source: 'partei:2011:SPD',
+					target: 'partei:2023:CDU',
+					value: 1,
+					von: 'SPD',
+					nach: 'CDU',
+					jahr: 2023
+				}
+			],
+			spalten: [
+				{ jahr: 2011, istWiederholung: false },
+				{ jahr: 2016, istWiederholung: false },
+				{ jahr: 2023, istWiederholung: false }
+			]
+		};
+		const gruppen = buildUebergangsGruppen(graph);
+		expect(gruppen.map((g) => [g.vonJahr, g.nachJahr])).toEqual([[2011, 2023]]);
+	});
+
 	it('Anteil fällt auf die Gesamtzahl zurück, wenn das Jahr fehlt', () => {
 		const gruppen = buildUebergangsGruppen({
 			...GRAPH,
