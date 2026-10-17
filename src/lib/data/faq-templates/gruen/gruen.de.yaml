@@ -2,24 +2,33 @@ cluster: gruen
 locale: de
 templates:
   - id: gruen-versorgung-bezirk
+    topic: gruen
     applicableTo: [bezirk]
     requires: [gruen.dominantVersorgung]
     question: 'Wie ist die Grünversorgung im Bezirk {name}?'
     answer: >-
       Im Bezirk {name} dominiert die Kategorie {gruenKategorie} für die
       wohnungsnahe Grünversorgung. {gruenErklaerung}
+      Im Grün-und-Hitze-Score erreicht {name} {gruenHitzeScore} von 100
+      ({gruenHitzeRang}), {gruenHitzeVergleich}. Der Score verbindet
+      Grünversorgung und Hitzebelastung; ein höherer Wert heißt grüner und kühler.
       Quelle: {gruenSource}, Stand {gruenStand}.
 
   - id: gruen-versorgung-kiez
+    topic: gruen
     applicableTo: [kiez]
     requires: [gruen.dominantVersorgung]
     question: 'Wie ist die Grünversorgung im Kiez {name}?'
     answer: >-
       Die wohnungsnahe Grünversorgung im Kiez {name} liegt in der Kategorie
       {gruenKategorie}. {gruenErklaerung}
+      Im Grün-und-Hitze-Score erreicht {name} {gruenHitzeScore} von 100
+      ({gruenHitzeRang}), {gruenHitzeVergleich}. Der Score verbindet
+      Grünversorgung und Hitzebelastung; ein höherer Wert heißt grüner und kühler.
       Quelle: {gruenSource}, Stand {gruenStand}.
 
   - id: gruen-anzahl-anlagen
+    topic: gruen-anlagen
     applicableTo: [bezirk]
     requires: [gruen.gruenanlagenCount]
     question: 'Wie viele öffentliche Grünanlagen liegen in {name}?'
@@ -49,12 +58,3 @@ templates:
       mit wenig Vegetation an Sommertagen messbar wärmer bleiben als Gebiete mit
       vergleichbarer Bebauung und mehr Grün. Die Klima-Kategorie auf dieser Karte
       bildet das ab.
-
-  - id: gruen-gruenhitze-einordnung
-    applicableTo: [bezirk, kiez]
-    requires: [gruen.dominantVersorgung]
-    question: 'Wie grün und kühl ist {name} im Vergleich?'
-    answer: >-
-      {name} erreicht im Grün-und-Hitze-Score {gruenHitzeScore} von 100
-      ({gruenHitzeRang}), {gruenHitzeVergleich}. Der Score verbindet
-      Grünversorgung und Hitzebelastung; ein höherer Wert heißt grüner und kühler.

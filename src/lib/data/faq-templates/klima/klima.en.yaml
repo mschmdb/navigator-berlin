@@ -2,6 +2,7 @@ cluster: klima
 locale: en
 templates:
   - id: klima-pet-bezirk
+    topic: klima
     applicableTo: [bezirk]
     requires: [klima.meanPet]
     question: 'How hot does the Bezirk {name} get in summer?'
@@ -11,6 +12,7 @@ templates:
       Source: {klimaSource}, as of {klimaStand}.
 
   - id: klima-pet-kiez
+    topic: klima
     applicableTo: [kiez]
     requires: [klima.meanPet]
     question: 'How warm does the Kiez {name} get on hot days?'

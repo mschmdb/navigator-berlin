@@ -2,20 +2,28 @@ cluster: oepnv
 locale: en
 templates:
   - id: oepnv-dichte-bezirk
+    topic: oepnv
     applicableTo: [bezirk]
     requires: [oepnv.stopsPerKm2]
     question: 'How dense is the public transport network in the Bezirk {name}?'
     answer: >-
       The Bezirk {name} has {oepnvStopsPerKm2} stops per square kilometre. The network is
-      therefore considered {oepnvDichte}. {oepnvErklaerung} Data basis: {oepnvSource}, as
-      of {oepnvStand}.
+      therefore considered {oepnvDichte}. {oepnvErklaerung}
+      {name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}),
+      {mobilitaetVergleich}. The score reflects public transport connectivity. A higher
+      value means better connectivity.
+      Data basis: {oepnvSource}, as of {oepnvStand}.
 
   - id: oepnv-dichte-kiez
+    topic: oepnv
     applicableTo: [kiez]
     requires: [oepnv.stopsPerKm2]
     question: 'How well is the Kiez {name} connected to public transport?'
     answer: >-
       The Kiez {name} has {oepnvStopsPerKm2} stops per square kilometre. {oepnvErklaerung}
+      {name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}),
+      {mobilitaetVergleich}. The score reflects public transport connectivity. A higher
+      value means better connectivity.
       Source: {oepnvSource}, as of {oepnvStand}.
 
   - id: oepnv-was-bedeutet-dichte
@@ -53,12 +61,3 @@ templates:
       Live data requires server caching and licence costs, and is often available only for
       a short time. We deliberately rely on static aggregates from open datasets that we
       can check and version.
-
-  - id: oepnv-mobilitaet-einordnung
-    applicableTo: [bezirk, kiez]
-    requires: [oepnv.stopsPerKm2]
-    question: 'How well is {name} connected to local public transport?'
-    answer: >-
-      {name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}),
-      {mobilitaetVergleich}. The score reflects public transport connectivity. A higher
-      value means better connectivity.
