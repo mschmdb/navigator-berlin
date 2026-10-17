@@ -3,7 +3,7 @@ slug: volkspark-wilmersdorf
 name: Volkspark Wilmersdorf
 pageType: kiez
 locale: en
-sourceInputHash: '520e99b9cbb7bfe7'
+sourceInputHash: '2c3e54a226d374d2'
 sourceTextHash: '3d8ba83393d217c3'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -1,9 +1,9 @@
 ---
 slug: frankfurter-allee-sued
-name: Frankfurter Allee Sued
+name: Frankfurter Allee Süd
 pageType: kiez
 locale: en
-sourceInputHash: 'ad55ee611ae6e532'
+sourceInputHash: '45ac6e153b57ec67'
 sourceTextHash: 'a11d5787eff9fec4'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

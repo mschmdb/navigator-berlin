@@ -33,6 +33,27 @@ export function cleanName(raw: string): string {
 	return raw.replace(/\s+/g, ' ').trim();
 }
 
+/**
+ * Notbehelf, wenn ein Slug in keiner Map steht: Slug-Teile großschreiben.
+ * Verliert Umlaute und Bindestriche, deshalb nur über `regionDisplayName` nutzen.
+ */
+export function fallbackNameFromSlug(slug: string): string {
+	return slug
+		.split('-')
+		.map((p) => (p.length > 0 ? p[0].toUpperCase() + p.slice(1) : p))
+		.join(' ');
+}
+
+/** Anzeigename eines Kiezes oder Bezirks; einzige Stelle mit Fallback für unbekannte Slugs. */
+export function regionDisplayName(
+	names: RegionDisplayNames,
+	type: 'kiez' | 'bezirk',
+	slug: string
+): string {
+	const map = type === 'kiez' ? names.kiez : names.bezirk;
+	return map.get(slug) ?? fallbackNameFromSlug(slug);
+}
+
 /** Route- und Anker-Slug eines Bezirks aus dem Rohnamen; einzige Ableitung für alle Seiten. */
 export function bezirkSlugFromName(raw: string): string {
 	return normalizeSlug(cleanName(raw));

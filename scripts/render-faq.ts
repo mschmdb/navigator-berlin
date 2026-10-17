@@ -45,6 +45,11 @@ import type {
 	WohnenAggregat
 } from '../src/lib/server/db/schema/aggregate-types.js';
 import { computeFaqPositions, faqPositionKey } from '../src/lib/server/faq/faq-positions.js';
+import {
+	readRegionDisplayNames,
+	regionDisplayName,
+	type RegionDisplayNames
+} from '../src/lib/data/region-display-names.js';
 import { loadAllFaqTemplates } from '../src/lib/server/faq/load-templates.js';
 import {
 	renderTemplate,
@@ -175,19 +180,13 @@ function rowToAggregate(row: {
 	};
 }
 
-function slugToDisplayName(slug: string): string {
-	return slug
-		.split('-')
-		.map((part) => (part.length > 0 ? part[0].toUpperCase() + part.slice(1) : part))
-		.join(' ');
-}
-
 async function readManifest(): Promise<Manifest> {
 	const raw = await readFile(MANIFEST_PATH, 'utf-8');
 	return JSON.parse(raw) as Manifest;
 }
 
 async function loadBezirkTargets(
+	names: RegionDisplayNames,
 	metricsBySlug: Map<string, Map<string, MetricContext>>
 ): Promise<RenderTarget[]> {
 	const rows = await getDb()
@@ -206,13 +205,14 @@ async function loadBezirkTargets(
 	return rows.map((row) => ({
 		pageType: 'bezirk' as const,
 		slug: row.slug,
-		name: slugToDisplayName(row.slug),
+		name: regionDisplayName(names, 'bezirk', row.slug),
 		aggregate: rowToAggregate(row),
 		metrics: metricsBySlug.get(row.slug)
 	}));
 }
 
 async function loadKiezTargets(
+	names: RegionDisplayNames,
 	metricsBySlug: Map<string, Map<string, MetricContext>>
 ): Promise<RenderTarget[]> {
 	const rows = await getDb()
@@ -231,7 +231,7 @@ async function loadKiezTargets(
 	return rows.map((row) => ({
 		pageType: 'kiez' as const,
 		slug: row.slug,
-		name: slugToDisplayName(row.slug),
+		name: regionDisplayName(names, 'kiez', row.slug),
 		aggregate: rowToAggregate(row),
 		metrics: metricsBySlug.get(row.slug)
 	}));
@@ -327,10 +327,14 @@ async function main(): Promise<void> {
 		process.exit(1);
 	}
 	process.stdout.write('[render-faq] Loading targets ...\n');
-	const [kiezMetrics, bezirkMetrics] = await Promise.all([loadKiezMetrics(), loadBezirkMetrics()]);
+	const [kiezMetrics, bezirkMetrics, names] = await Promise.all([
+		loadKiezMetrics(),
+		loadBezirkMetrics(),
+		readRegionDisplayNames()
+	]);
 	const [bezirks, kieze, layers] = await Promise.all([
-		loadBezirkTargets(bezirkMetrics),
-		loadKiezTargets(kiezMetrics),
+		loadBezirkTargets(names, bezirkMetrics),
+		loadKiezTargets(names, kiezMetrics),
 		loadLayerTargets()
 	]);
 	process.stdout.write(

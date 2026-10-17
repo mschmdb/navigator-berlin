@@ -3,7 +3,7 @@ slug: britz
 name: Britz
 pageType: kiez
 locale: en
-sourceInputHash: '3cf188b074f53243'
+sourceInputHash: '429433b58916f54b'
 sourceTextHash: '9c5299fa214db5a4'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

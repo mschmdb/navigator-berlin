@@ -3,7 +3,7 @@ slug: hellersdorf-nord
 name: Hellersdorf Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 744ef2b1be5f56c2
+inputHash: 7c406965b57666b7
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -1,9 +1,9 @@
 ---
 slug: malchow-wartenberg-und-falkenberg
-name: Malchow Wartenberg Und Falkenberg
+name: Malchow, Wartenberg und Falkenberg
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 0ab90dedde1444be
+inputHash: f7d0ec1867c481e2
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

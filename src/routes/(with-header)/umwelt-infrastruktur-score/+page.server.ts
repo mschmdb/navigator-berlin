@@ -2,7 +2,11 @@ import { desc, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { bezirkScore, kiezScore } from '$lib/server/db/schema/index.js';
 import type { RankingRow } from '$lib/data/ranking-types.js';
-import { readRegionDisplayNames, type RegionDisplayNames } from '$lib/data/region-display-names.js';
+import {
+	fallbackNameFromSlug,
+	readRegionDisplayNames,
+	type RegionDisplayNames
+} from '$lib/data/region-display-names.js';
 
 export const prerender = true;
 
@@ -29,13 +33,6 @@ export interface RankingPageData {
 	readonly computedAt: string | null;
 }
 
-function slugToDisplayName(slug: string): string {
-	return slug
-		.split('-')
-		.map((p) => (p.length > 0 ? p[0].toUpperCase() + p.slice(1) : p))
-		.join(' ');
-}
-
 async function loadKieze(names: RegionDisplayNames): Promise<RankingRow[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
@@ -46,10 +43,10 @@ async function loadKieze(names: RegionDisplayNames): Promise<RankingRow[]> {
 			.orderBy(desc(sql`COALESCE(${kiezScore.composite}, -1)`));
 		return rows.map((r) => ({
 			slug: r.slug,
-			displayName: names.kiez.get(r.slug) ?? slugToDisplayName(r.slug),
+			displayName: names.kiez.get(r.slug) ?? fallbackNameFromSlug(r.slug),
 			bezirkSlug: r.bezirkSlug,
 			bezirkName: r.bezirkSlug
-				? (names.bezirk.get(r.bezirkSlug) ?? slugToDisplayName(r.bezirkSlug))
+				? (names.bezirk.get(r.bezirkSlug) ?? fallbackNameFromSlug(r.bezirkSlug))
 				: null,
 			composite: typeof r.composite === 'number' ? r.composite : null,
 			ruheLuft: r.ruheLuft,
@@ -77,7 +74,7 @@ async function loadBezirke(names: RegionDisplayNames): Promise<RankingRow[]> {
 			.orderBy(desc(sql`COALESCE(${bezirkScore.composite}, -1)`));
 		return rows.map((r) => ({
 			slug: r.slug,
-			displayName: names.bezirk.get(r.slug) ?? slugToDisplayName(r.slug),
+			displayName: names.bezirk.get(r.slug) ?? fallbackNameFromSlug(r.slug),
 			bezirkSlug: null,
 			bezirkName: null,
 			composite: typeof r.composite === 'number' ? r.composite : null,

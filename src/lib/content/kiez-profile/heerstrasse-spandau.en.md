@@ -1,9 +1,9 @@
 ---
 slug: heerstrasse-spandau
-name: Heerstrasse Spandau
+name: Heerstraße
 pageType: kiez
 locale: en
-sourceInputHash: '54311a125795372a'
+sourceInputHash: '7946a778d9e33a63'
 sourceTextHash: 'b0cd32ea21643965'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

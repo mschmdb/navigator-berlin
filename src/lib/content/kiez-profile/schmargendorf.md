@@ -3,7 +3,7 @@ slug: schmargendorf
 name: Schmargendorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 96d16ce0ac82ceb6
+inputHash: 311571c0e9378d10
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

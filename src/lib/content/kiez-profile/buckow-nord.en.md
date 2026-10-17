@@ -3,7 +3,7 @@ slug: buckow-nord
 name: Buckow Nord
 pageType: kiez
 locale: en
-sourceInputHash: 'ae98b1d8fc49ec7d'
+sourceInputHash: 'b2530a87d3315ec9'
 sourceTextHash: '3074ddcf64bfb829'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

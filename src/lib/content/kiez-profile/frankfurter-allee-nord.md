@@ -3,7 +3,7 @@ slug: frankfurter-allee-nord
 name: Frankfurter Allee Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: a1bdd04c949e3cc8
+inputHash: f1c48b18b8d44704
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

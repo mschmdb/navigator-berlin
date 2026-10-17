@@ -145,3 +145,19 @@ describe('buildKiezeInBezirk Slug-Disambiguierung', () => {
 		expect(refs[0].composite).toBeNull();
 	});
 });
+
+describe('buildKiezeInBezirk Anzeigename (#96)', () => {
+	it('glättet Mehrfach-Leerzeichen aus dem Quell-GeoJSON', () => {
+		const refs = buildKiezeInBezirk({
+			lorFeatureCollection: {
+				features: [{ properties: { BZR_NAME: 'Südliche  Friedrichstadt', BEZ: '02' } }]
+			},
+			bezirkCodeToSlug: codeMap,
+			scores: new Map(),
+			bezirkSlug: 'friedrichshain-kreuzberg'
+		});
+		expect(refs).toEqual([
+			{ slug: 'suedliche-friedrichstadt', name: 'Südliche Friedrichstadt', composite: null }
+		]);
+	});
+});

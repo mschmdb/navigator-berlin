@@ -3,7 +3,7 @@ slug: britz
 name: Britz
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3cf188b074f53243
+inputHash: 429433b58916f54b
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
