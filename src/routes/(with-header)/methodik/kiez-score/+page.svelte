@@ -142,7 +142,8 @@
 		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_weights_p1()}
 		</p>
-		<table class="w-full max-w-xl font-sans text-base" aria-labelledby="gewichte-h">
+		<table class="w-full max-w-xl font-sans text-base">
+			<caption class="sr-only">{m.methodik_kiez_score_section_weights_heading()}</caption>
 			<thead>
 				<tr class="border-b border-rule">
 					<th scope="col" class="py-2 pr-4 text-left font-semibold text-ink">
@@ -173,16 +174,16 @@
 			{m.methodik_kiez_score_section_normalisation_heading()}
 		</h2>
 		<p class="text-base leading-body text-ink">{m.methodik_kiez_score_norm_p1()}</p>
-		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
-			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_ordinal3_term()}</dt>
+		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-base leading-body">
+			<dt class="text-sm text-ink-muted">{m.methodik_kiez_score_norm_ordinal3_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_ordinal3_def()}</dd>
-			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_ordinal4_term()}</dt>
+			<dt class="text-sm text-ink-muted">{m.methodik_kiez_score_norm_ordinal4_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_ordinal4_def()}</dd>
-			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_pet_term()}</dt>
+			<dt class="text-sm text-ink-muted">{m.methodik_kiez_score_norm_pet_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_pet_def()}</dd>
-			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_distance_term()}</dt>
+			<dt class="text-sm text-ink-muted">{m.methodik_kiez_score_norm_distance_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_distance_def()}</dd>
-			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_presence_term()}</dt>
+			<dt class="text-sm text-ink-muted">{m.methodik_kiez_score_norm_presence_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_presence_def()}</dd>
 		</dl>
 		<p class="text-base leading-body text-ink">{m.methodik_kiez_score_norm_p2()}</p>

@@ -33,9 +33,9 @@ li: Volksentscheide: nicht enthalten
 h2: Briefwahl-Gruppen
 p: Berlin zählt Briefstimmen in eigenen Briefwahlbezirken ohne eigene Fläche, getrennt von den Urnenwahlbezirken. Bezirk und Berlin gesamt enthalten immer alle Stimmen, weil sie über alle Stimmbezirke summieren.
 p: Auf der Karte ist deshalb die Briefwahl-Gruppe die kleinste Ebene: alle Urnenwahlbezirke eines Briefwahlbezirks plus dieser Briefwahlbezirk bilden zusammen eine Fläche (Dissolve der Urnen-Polygone), analog zur Tagesspiegel-Darstellung „Stimmbezirke 726, 727 und 7P“. Das gilt für alle Wahlen mit Stimmbezirks-Geometrie.
-p: Im Kiez-Aggregat ist die Briefwahl eine anteilige Schätzung nach Wahlberechtigten, siehe Abschnitt 4. Wahlen ohne Stimmbezirks-Geometrie zeigt die Karte nur auf Bezirks- und Berlin-Ebene, siehe Abschnitt 6.
-a: Abschnitt 4
-a: Abschnitt 6
+p: Im Kiez-Aggregat ist die Briefwahl eine anteilige Schätzung nach Wahlberechtigten, siehe Stimmbezirks-zu-Kiez-Aggregation. Wahlen ohne Stimmbezirks-Geometrie zeigt die Karte nur auf Bezirks- und Berlin-Ebene, siehe Geometrien und Coverage.
+a: Stimmbezirks-zu-Kiez-Aggregation
+a: Geometrien und Coverage
 h2: Stimmbezirks-zu-Kiez-Aggregation
 p: Stimmbezirks-Werte werden räumlich auf vier Ebenen aggregiert: Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk (12) und Berlin gesamt.
 p: Für die Kiez-Ebene wird pro Stimmbezirk der Polygon-Centroid berechnet (via turf-center) und in die enthaltene LOR-Bezirksregion gemappt (booleanPointInPolygon). Stimmbezirke außerhalb aller LOR-Polygone bleiben ungemappt und fließen nur in Bezirk + Berlin ein. Die SQL-Aggregation summiert pro Kiez und Partei aus den Roh-Stimmbezirks-Rows (siehe scripts/build-wahl-kiez-aggregat.ts).

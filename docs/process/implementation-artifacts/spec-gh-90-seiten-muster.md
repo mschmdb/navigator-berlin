@@ -37,8 +37,17 @@ Texte kürzen (#92), Score-Name (#93), Ranking-Tabelle (#94), Explore und Back (
 ## Offen
 
 - Sankey-Labels nutzen seit #86 den Dichte-Token. Auf Mobil schrumpft das SVG die Labels weiter (Eintrag in `deferred-work.md`). Das braucht einen Layout-Umbau, Labels aus dem skalierten SVG heraus.
-- Die Gewichte-Tabelle erhält ihren Namen über `aria-labelledby` statt einer `caption`, damit der DE-Text-Snapshot stabil bleibt.
 
 ## Triage-Log
 
 - Selbst-Review (Codex-Limit bis 18:54 erreicht): Methodik-Erklärtexte von 14 auf 16 px, Notfall-Zeilen einheitlich eingerückt.
+- Codex (gpt-6.1-sol), drei Linsen in einem Durchgang:
+  - Umgesetzt: `isRedundantDescription` versteckte echte Zusätze („Radverkehrsnetz 2025 mit Vorrangrouten“, „Club oder Musikspielstätte“). Jetzt gilt nur dasselbe Wort in Ein- oder Mehrzahl als Dopplung.
+  - Umgesetzt: Wahldaten-Text verwies auf „Abschnitt 4“ und „Abschnitt 6“, die es ohne Nummern nicht mehr gibt. Jetzt beim Namen.
+  - Umgesetzt: e2e `key-figures` prüfte noch das Kachel-Raster und die alte Reihenfolge.
+  - Umgesetzt: Normalisierungs- und Aggregations-Definitionen auf Methodik-Seiten von 14 auf 16 px.
+  - Umgesetzt: Gewichte-Tabelle mit `caption` (sr-only), Snapshot ergänzt.
+  - Umgesetzt: Tests für Top-3 mit fehlenden Plätzen, leerem Bezirk und EN-Spaltenköpfen.
+  - Offen gelassen: Sankey-Labels auf Mobil (Layout-Umbau, siehe Offen).
+  - Teilweise: Reihenfolge-Test der Kiez-Seite prüft Vergleich und Steckbrief im e2e, Nachbarn am Ende nur per Screenshot.
+
