@@ -41,6 +41,7 @@
 		TREND_FALLEND_DUNKEL,
 		TREND_FALLEND_HELL,
 		TREND_NEUTRAL_FARBE,
+		TREND_SCHRAFFUR_FARBEN,
 		TREND_STEIGEND_DUNKEL,
 		TREND_STEIGEND_HELL,
 		TRENDS_FILL_OPACITY,
@@ -61,9 +62,16 @@
 		readonly opacity?: number;
 	}
 
+	/** #108: dieselbe 45°-Schraffur wie die Karten-Ebene `trends-schraffur`. */
+	function istSchraffiert(farbe: string): boolean {
+		return (TREND_SCHRAFFUR_FARBEN as readonly string[]).includes(farbe);
+	}
+
 	function swatchStyle(farbe: string, opacity: number): string {
 		const [r, g, b] = blendOverBasemap(farbe, opacity);
-		return `background-color: rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)});`;
+		const fill = `background-color: rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)});`;
+		if (!istSchraffiert(farbe)) return fill;
+		return `${fill} background-image: repeating-linear-gradient(45deg, color-mix(in srgb, var(--bg-elevated) 45%, transparent) 0 2px, transparent 2px 4px);`;
 	}
 
 	/** Signierter Schwellen-Wert (z. B. `−1,0`/`+0,2`) ohne die `Pp.`/`pp`-Einheit
@@ -421,6 +429,9 @@
 				<li class="flex items-center gap-1.5">
 					<span
 						aria-hidden="true"
+						data-schraffur={toggle === 'trend' && istSchraffiert(eintrag.farbe)
+							? 'true'
+							: undefined}
 						class="inline-block h-3.5 w-3.5 rounded-sm border border-rule-strong"
 						style={swatchStyle(eintrag.farbe, eintrag.opacity ?? TRENDS_FILL_OPACITY)}
 					></span>

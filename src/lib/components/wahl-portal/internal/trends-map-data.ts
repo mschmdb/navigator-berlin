@@ -8,14 +8,10 @@
  * - Volatilität: dieselbe 3-Stufen-Strukturell-Indigo-Rampe wie die
  *   Wechsel-Häufigkeits-Karte (`WECHSEL_NEUTRAL_FARBE`/`_STUFE_1`/
  *   `_STUFE_2_PLUS`, bereits kontrastgeprüft, siehe dort).
- * - Trend: dieselbe Rampe gespiegelt für „steigend" (Indigo) + eine
- *   luminanz-identische Vermillion-Variante für „fallend" (Werte per
- *   `blendOverBasemap`/`contrastRatio`-Bisektion auf exakt dieselbe
- *   relative Luminanz wie die Indigo-Stufen gebracht -- Kontrast zwischen
- *   Nachbarstufen ist dadurch pro Konstruktion identisch zur Wechsel-Rampe,
- *   siehe `trends-map-data.test.ts`), damit Richtung (Hue) und Stärke
- *   (Helligkeit) beide ablesbar bleiben, ohne eine der beiden Richtungen an
- *   „gut/schlecht"-Rampen (`scaleGut`/`scaleLast`) zu hängen.
+ * - Trend: dieselbe Rampe für „steigend" (Indigo) + eine Vermillion-Rampe
+ *   für „fallend", gegenüber Indigo heller gestaffelt und schraffiert (#108),
+ *   damit die Richtung auch ohne Farbe ablesbar bleibt. Keine der beiden
+ *   Richtungen hängt an „gut/schlecht"-Rampen (`scaleGut`/`scaleLast`).
  */
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { m } from '$lib/paraglide/messages.js';
@@ -25,6 +21,7 @@ import {
 	type LocaleFormatOptions
 } from '$lib/i18n/format.js';
 import { formatDeltaLabel } from './ergebnis-panel-data.js';
+import { buildPatternImageData, type PatternImageSpec } from './partei-pattern-images.js';
 import {
 	WECHSEL_FARBE_STUFE_1,
 	WECHSEL_FARBE_STUFE_2_PLUS,
@@ -41,10 +38,25 @@ export const TRENDS_FILL_OPACITY = WECHSEL_FILL_OPACITY;
 export const TREND_NEUTRAL_FARBE = WECHSEL_NEUTRAL_FARBE;
 export const TREND_STEIGEND_HELL = WECHSEL_FARBE_STUFE_1;
 export const TREND_STEIGEND_DUNKEL = WECHSEL_FARBE_STUFE_2_PLUS;
-/** Luminanz-identisch zu `TREND_STEIGEND_HELL` (Vermillion-Hue statt Indigo). */
-export const TREND_FALLEND_HELL = '#B05F24';
-/** Luminanz-identisch zu `TREND_STEIGEND_DUNKEL` (Vermillion-Hue statt Indigo). */
-export const TREND_FALLEND_DUNKEL = '#321B0A';
+/**
+ * #108: „fallend“ ist auf beiden Stufen heller als „steigend“, statt
+ * luminanz-identisch. Mehr Abstand geben die ≥3:1-Stufenkontraste nicht her
+ * (Neutral → hell → dunkel), deshalb trägt zusätzlich eine Schraffur
+ * (`TREND_SCHRAFFUR_FARBEN`) die Richtung -- auch in Graustufen und Druck.
+ */
+export const TREND_FALLEND_HELL = '#C56923';
+export const TREND_FALLEND_DUNKEL = '#4C220D';
+
+/** Stufen, über die Karte und Legende die Schraffur legen. */
+export const TREND_SCHRAFFUR_FARBEN = [TREND_FALLEND_HELL, TREND_FALLEND_DUNKEL] as const;
+
+/** Farbe der Schraffur-Linien: der helle Kartengrund (Wechsel-Neutral). */
+export const TREND_SCHRAFFUR_LINIE = WECHSEL_NEUTRAL_FARBE;
+
+/** Diagonal-Tile (45°) für die MapLibre-`fill-pattern`-Ebene. */
+export function buildTrendSchraffur(): PatternImageSpec {
+	return buildPatternImageData('diagonal', TREND_SCHRAFFUR_LINIE);
+}
 
 export const VOLATILITAET_NEUTRAL_FARBE = WECHSEL_NEUTRAL_FARBE;
 export const VOLATILITAET_FARBE_STUFE_1 = WECHSEL_FARBE_STUFE_1;

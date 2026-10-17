@@ -14,6 +14,7 @@ import {
 	volatilitaetTerzileFor,
 	hatVolatilitaetsDaten,
 	TREND_NEUTRAL_FARBE,
+	TREND_SCHRAFFUR_FARBEN,
 	VOLATILITAET_NEUTRAL_FARBE,
 	type TrendsGebietInput,
 	type TrendsToggle
@@ -102,4 +103,17 @@ export function trendsFillOpacityExpression(
 	const key =
 		toggle === 'volatilitaet' ? VOLATILITAET_HAT_DATEN_KEY : trendPropKeys(aktivePartei).hatDaten;
 	return ['case', ['==', ['get', key], 1], volleDeckkraft, neutraleDeckkraft];
+}
+
+/**
+ * #108: Filter der Schraffur-Ebene. Bei Toggle `trend` trifft er genau die
+ * „fallend“-Stufen der aktiven Partei, bei `volatilitaet` nichts.
+ */
+export function trendsSchraffurFilter(toggle: TrendsToggle, aktivePartei: string): unknown[] {
+	if (toggle !== 'trend') return ['==', 1, 0];
+	return [
+		'in',
+		['get', trendPropKeys(aktivePartei).farbe],
+		['literal', [...TREND_SCHRAFFUR_FARBEN]]
+	];
 }
