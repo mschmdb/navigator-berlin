@@ -87,10 +87,7 @@ describe('resolvePopstateSelection', () => {
 
 	it('wählt die Adresse der früheren URL wieder, mit Namen aus q', () => {
 		expect(
-			resolvePopstateSelection(
-				{ lng: 13.4541, lat: 52.5126, q: 'Boxhagener Straße 12' },
-				marker
-			)
+			resolvePopstateSelection({ lng: 13.4541, lat: 52.5126, q: 'Boxhagener Straße 12' }, marker)
 		).toEqual({
 			kind: 'select',
 			lng: 13.4541,
