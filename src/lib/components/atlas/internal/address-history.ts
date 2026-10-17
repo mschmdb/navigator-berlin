@@ -63,9 +63,9 @@ export function buildAddressNavigation(input: {
 
 export interface AddressHistoryWriter {
 	write(address: string, search: string, mode: AddressHistoryMode): Promise<void>;
-	/** Zuletzt geschriebene Adresse; nach einem Fehlschlag wieder `null`. */
+	/** Zuletzt erfolgreich geschriebene Adresse. */
 	lastWritten(): string | null;
-	/** Auswahl geschlossen: die nächste Wahl derselben Adresse legt wieder einen Eintrag an. */
+	/** Auswahl geschlossen: verwirft wartende Writes, die nächste Wahl legt wieder einen Eintrag an. */
 	forget(): void;
 }
 
@@ -73,26 +73,38 @@ export interface AddressHistoryWriter {
  * Führt Schreibvorgänge derselben Adresse zusammen, solange `navigate` läuft.
  * Ein zweites `goto` würde das erste abbrechen und als Replace den vorigen
  * History-Eintrag überschreiben. Ändert sich nur der Name (`q`), folgt nach
- * dem ersten Schreiben ein Replace.
+ * dem ersten Schreiben ein Replace; scheiterte das erste, wiederholt der
+ * Nachzügler dessen Modus. Eine neuere Wahl oder `forget` verwirft Nachzügler.
  */
 export function createAddressHistoryWriter(
 	navigate: (search: string, mode: AddressHistoryMode) => Promise<void>
 ): AddressHistoryWriter {
-	let inFlight: { address: string; search: string; promise: Promise<void> } | null = null;
+	let inFlight: {
+		address: string;
+		search: string;
+		mode: AddressHistoryMode;
+		promise: Promise<void>;
+	} | null = null;
 	let lastWritten: string | null = null;
+	// Jede neue Wahl und jedes `forget` erhöht die Generation und entwertet Nachzügler.
+	let generation = 0;
 
-	function track(address: string, search: string, promise: Promise<void>): Promise<void> {
-		const tracked = promise.then(
-			() => undefined,
-			(error: unknown) => {
-				if (lastWritten === address) lastWritten = null;
-				throw error;
-			}
-		);
-		const settled = tracked.finally(() => {
-			if (inFlight?.promise === settled) inFlight = null;
-		});
-		inFlight = { address, search, promise: settled };
+	function track(
+		address: string,
+		search: string,
+		mode: AddressHistoryMode,
+		own: number,
+		run: Promise<boolean>
+	): Promise<void> {
+		const settled: Promise<void> = run
+			.then((wrote) => {
+				// Nur die aktuelle Wahl zählt; eine überholte darf `lastWritten` nicht setzen.
+				if (wrote && own === generation) lastWritten = address;
+			})
+			.finally(() => {
+				if (inFlight?.promise === settled) inFlight = null;
+			});
+		inFlight = { address, search, mode, promise: settled };
 		return settled;
 	}
 
@@ -100,20 +112,33 @@ export function createAddressHistoryWriter(
 		write(address, search, mode) {
 			if (inFlight && inFlight.address === address) {
 				if (inFlight.search === search) return inFlight.promise;
-				const prior = inFlight.promise;
-				const next = prior.then(
-					() => navigate(search, 'replace'),
-					() => navigate(search, mode)
-				);
-				lastWritten = address;
-				return track(address, search, next);
+				const prior = inFlight;
+				const own = ++generation;
+				const run = prior.promise
+					.then(
+						(): AddressHistoryMode => 'replace',
+						(): AddressHistoryMode => prior.mode
+					)
+					.then(async (effective) => {
+						if (own !== generation) return false;
+						await navigate(search, effective);
+						return true;
+					});
+				return track(address, search, prior.mode, own, run);
 			}
-			lastWritten = address;
-			return track(address, search, navigate(search, mode));
+			const own = ++generation;
+			return track(
+				address,
+				search,
+				mode,
+				own,
+				navigate(search, mode).then(() => true)
+			);
 		},
 		lastWritten: () => lastWritten,
 		forget: () => {
 			lastWritten = null;
+			++generation;
 		}
 	};
 }
