@@ -250,6 +250,8 @@
 	"wahl_detail_berlin_empty": "Keine Berlin-Aggregat-Daten für diese Wahl.",
 	"wahl_detail_choropleth_fallback_note": "Stimmbezirks-Geometrie nicht verfügbar für diese Wahl. Karte zeigt Bezirks-Aggregat.",
 	"wahl_detail_briefwahl_gruppen_count": "~{count} Briefwahl-Gruppen",
+	"wahl_detail_bezirke_col_bezirk": "Bezirk",
+	"wahl_detail_bezirke_col_platz": "Platz {platz}",
 	"wahl_detail_bezirk_keine_daten": "Keine Daten.",
 	"wahl_detail_original_wahl_link": "Original-Wahl ansehen",
 	"wahl_detail_quelle_label": "Quelle: {source}",

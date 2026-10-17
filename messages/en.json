@@ -250,6 +250,8 @@
 	"wahl_detail_berlin_empty": "No Berlin aggregate data is available for this election.",
 	"wahl_detail_choropleth_fallback_note": "Polling district geometry is not available for this election. Map shows the Bezirk aggregate.",
 	"wahl_detail_briefwahl_gruppen_count": "~{count} postal-vote groups",
+	"wahl_detail_bezirke_col_bezirk": "District",
+	"wahl_detail_bezirke_col_platz": "Rank {platz}",
 	"wahl_detail_bezirk_keine_daten": "No data.",
 	"wahl_detail_original_wahl_link": "View original election",
 	"wahl_detail_quelle_label": "Source: {source}",
