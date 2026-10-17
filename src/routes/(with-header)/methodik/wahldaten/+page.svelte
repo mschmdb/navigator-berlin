@@ -58,7 +58,6 @@
 		aggregation: '#aggregation',
 		geometrien: '#geometrien'
 	};
-	const crossLayerHref = $derived(localizedHref('/methodik/cross-layer-templates'));
 
 	const codeParams = (t: (name: string) => TagMarkers) =>
 		({ code_start: t('code').start, code_end: t('code').end }) as const;
@@ -104,12 +103,6 @@
 	const wiederholungP2 = richSegments((t) => m.methodik_wahldaten_wiederholung_p2(codeParams(t)));
 	const geometrienP2 = richSegments((t) => m.methodik_wahldaten_geometrien_p2(codeParams(t)));
 	const aliasP1 = richSegments((t) => m.methodik_wahldaten_alias_p1(codeParams(t)));
-	const crossLayerP1 = richSegments((t) =>
-		m.methodik_wahldaten_cross_layer_p1({
-			link_start: t('crossLayer').start,
-			link_end: t('crossLayer').end
-		})
-	);
 </script>
 
 {#snippet tag(text: string, name: string)}
@@ -121,8 +114,6 @@
 		<a href={EXTERNAL_LINKS[name]} rel="noopener noreferrer" class={linkClass}>{text}</a>
 	{:else if name in ANCHOR_LINKS}
 		<a href={ANCHOR_LINKS[name]} class={anchorClass}>{text}</a>
-	{:else if name === 'crossLayer'}
-		<a href={crossLayerHref} class={linkClass}>{text}</a>
 	{:else}
 		{text}
 	{/if}
@@ -253,7 +244,7 @@
 		<h2 class="font-sans text-xl font-semibold text-ink">
 			{m.methodik_wahldaten_section_cross_layer_heading()}
 		</h2>
-		<p><RichText segments={crossLayerP1} {tag} /></p>
+		<p>{m.methodik_wahldaten_cross_layer_p1()}</p>
 	</section>
 
 	<a

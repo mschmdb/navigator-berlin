@@ -102,37 +102,15 @@ test.describe('i18n Block C4a: Methodik-Seiten englisch, ohne Banner, indexierba
 		);
 	});
 
-	test('/en/methodik/cross-layer-templates: Template-Text und Fixture englisch, nur die deutsche Editorial-Note trägt lang="de"', async ({
-		page
+	// #97: Die Template-Vorschau ist ein internes Dev-Werkzeug. Der Prod-Build
+	// antwortet in beiden Sprachen mit 404. Die Render-Inhalte decken die
+	// Unit-Tests der Route ab.
+	test('/methodik/cross-layer-templates antwortet im Prod-Build mit 404 (DE und EN)', async ({
+		request
 	}) => {
-		const response = await page.goto('/en/methodik/cross-layer-templates');
-		expect(response?.status()).toBe(200);
-		await expect(page.getByTestId('translation-disclaimer')).toHaveCount(0);
-		// Die Editorial-Note hat keine EN-Fassung und bleibt deutsch (WCAG 3.1.2).
-		const germanParts = page.locator('main#main [lang="de"]');
-		await expect(germanParts).toHaveCount(1);
-		await expect(germanParts.first()).toHaveJSProperty('tagName', 'P');
-		await expect(page.getByTestId('block-wahl-trend-zeit-kiez-kiez-body')).not.toHaveAttribute(
-			'lang',
-			/.+/
-		);
-		const block = page.getByTestId('block-wahl-trend-zeit-kiez-kiez-body');
-		await expect(block).toContainText(
-			'In the Kiez Friedrichshain Nord, the party votes were distributed'
-		);
-		await expect(page.getByTestId('preview-wahl-trend-zeit-kiez-kiez')).toContainText(
-			'Fixture: Kiez Friedrichshain Nord'
-		);
-		await expect(page.getByTestId('block-wahl-trend-zeit-kiez-kiez-methodik-link')).toHaveAttribute(
-			'href',
-			'/en/methodik'
-		);
-	});
-
-	test('/methodik/cross-layer-templates (DE): Template-Text deutsch', async ({ page }) => {
-		await page.goto('/methodik/cross-layer-templates');
-		await expect(page.getByTestId('block-wahl-trend-zeit-kiez-kiez-body')).toContainText(
-			'Im Kiez Friedrichshain Nord verteilten sich die Zweitstimmen'
-		);
+		for (const path of ['/methodik/cross-layer-templates', '/en/methodik/cross-layer-templates']) {
+			const response = await request.get(path);
+			expect(response.status(), path).toBe(404);
+		}
 	});
 });

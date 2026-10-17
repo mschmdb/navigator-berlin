@@ -53,6 +53,5 @@ p: Die Build-Pipeline lädt und parsed die Roh-Daten, baut die Stimmbezirks-Laye
 h2: 8. Parteien-Aliase
 p: Parteien-Namen variieren über die Jahre (PDS → Die Linke, GRÜNE in Schreibvarianten). Eine case-insensitive Alias-Tabelle in scripts/wahlen/lib/partei-seed.ts resolvt Quell-Spalten zu kanonischen kurzname-Werten. Nicht-aufgelöste Eintragungen landen unter „Sonstige" und werden im Inspector nicht in Top-N geführt.
 h2: 9. Cross-Layer-Verknüpfung
-p: Wahl-Daten werden in Kiez-Pages (siehe Wahl-Verlauf-Block) und im Adress-Inspector mit anderen Layern (Mietspiegel-Wohnlage, Lärmkartierung, Mietspiegel-Soziale-Stufe, Kiez-Score) nebeneinander angezeigt, ohne kausale Verknüpfung oder wertendes Framing. Editorial-Richtlinien dazu im Cross-Layer-Templates-Preview (noindex, Co-Design-Stage).
-a: Cross-Layer-Templates-Preview
+p: Wahl-Daten werden in Kiez-Pages (siehe Wahl-Verlauf-Block) und im Adress-Inspector mit anderen Layern (Mietspiegel-Wohnlage, Lärmkartierung, Mietspiegel-Soziale-Stufe, Kiez-Score) nebeneinander angezeigt, ohne kausale Verknüpfung oder wertendes Framing.
 a: Alle Wahlen einzeln
