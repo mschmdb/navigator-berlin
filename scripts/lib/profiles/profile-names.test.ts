@@ -28,7 +28,8 @@ describe('Profil-Namen (#96)', async () => {
 			for (const file of profileFiles(type)) {
 				const { data } = matter(readFileSync(file, 'utf-8'));
 				const expected = map.get(String(data.slug));
-				if (expected !== undefined && data.name !== expected) wrong.push(`${data.slug}: ${data.name}`);
+				if (expected !== undefined && data.name !== expected)
+					wrong.push(`${data.slug}: ${data.name}`);
 			}
 			expect(wrong).toEqual([]);
 		});

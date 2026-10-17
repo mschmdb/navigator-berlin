@@ -18,6 +18,11 @@ import {
 	bezirkComparison
 } from '../../../src/lib/server/db/schema/index.js';
 import { hashInput, type ProfileInput, type ProfileDim } from './input.js';
+import {
+	readRegionDisplayNames,
+	regionDisplayName,
+	type RegionDisplayNames
+} from '../../../src/lib/data/region-display-names.js';
 
 export const DIMS: readonly { key: string; label: string }[] = [
 	{ key: 'ruheLuft', label: 'Ruhe & Luft' },
@@ -32,13 +37,6 @@ export const DIMS: readonly { key: string; label: string }[] = [
 	// lecken (Stigma/Redlining, ADR-019). Der Karten-Layer + Inspector reichen. Dadurch ändert
 	// sich der inputHash durch Kriminalität nicht → keine teure Regeneration (anders als 13.8).
 ];
-
-export function slugToName(slug: string): string {
-	return slug
-		.split('-')
-		.map((p) => (p.length > 0 ? p[0].toUpperCase() + p.slice(1) : p))
-		.join(' ');
-}
 
 function num(v: { value: number } | null | undefined): number | null {
 	return v && typeof v.value === 'number' ? v.value : null;
@@ -68,7 +66,11 @@ interface AreaRaw {
 	cmps: Map<string, CmpRow>;
 }
 
-export function buildInput(pageType: 'kiez' | 'bezirk', area: AreaRaw): ProfileInput {
+export function buildInput(
+	pageType: 'kiez' | 'bezirk',
+	area: AreaRaw,
+	names: RegionDisplayNames
+): ProfileInput {
 	const { slug, bezirkSlug, score, stats, ranks, cmps } = area;
 	const dims: ProfileDim[] = DIMS.map(({ key, label }) => {
 		const r = ranks.get(key);
@@ -103,8 +105,8 @@ export function buildInput(pageType: 'kiez' | 'bezirk', area: AreaRaw): ProfileI
 	return {
 		pageType,
 		slug,
-		name: slugToName(slug),
-		bezirk: bezirkSlug ? slugToName(bezirkSlug) : null,
+		name: regionDisplayName(names, pageType, slug),
+		bezirk: bezirkSlug ? regionDisplayName(names, 'bezirk', bezirkSlug) : null,
 		einwohner: null,
 		flaecheHa: null,
 		composite: {
@@ -170,10 +172,11 @@ export interface BuiltInput {
 /** Baut alle ProfileInputs (+ Hash) für die gewünschten Page-Types. */
 export async function buildAllInputs(types: readonly ('kiez' | 'bezirk')[]): Promise<BuiltInput[]> {
 	const out: BuiltInput[] = [];
+	const names = await readRegionDisplayNames();
 	for (const pageType of types) {
 		const areas = await loadAreas(pageType);
 		for (const area of areas) {
-			const input = buildInput(pageType, area);
+			const input = buildInput(pageType, area, names);
 			out.push({ pageType, slug: area.slug, name: input.name, inputHash: hashInput(input), input });
 		}
 	}

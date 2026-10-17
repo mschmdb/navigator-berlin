@@ -21,6 +21,7 @@ import { getBezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
 import { sourceName as wahlSourceName } from '$lib/data/wahl-source-name.js';
 import { buildWahlSlug } from '$lib/data/wahl-slug.js';
 import { getKiezScore } from '$lib/server/db/queries/get-kiez-score.js';
+import { readRegionDisplayNames, regionDisplayName } from '$lib/data/region-display-names.js';
 import { loadEinwohnerAggregates } from './internal/einwohner-aggregates.js';
 import { renderBezirkMarkdown } from './bezirk-renderer.js';
 import { renderKiezMarkdown } from './kiez-renderer.js';
@@ -143,13 +144,11 @@ async function collectKieze(origin: string): Promise<LlmsKiezEntry[]> {
 
 	const out: LlmsKiezEntry[] = [];
 	const einwohnerAgg = await loadEinwohnerAggregates(process.cwd());
+	const names = await readRegionDisplayNames();
 	for (const [i, row] of rows.entries()) {
 		const stats = await tryGet(() => getKiezStats(row.slug));
 		const score = await tryGet(() => getKiezScore(row.slug));
-		const name = row.slug
-			.split('-')
-			.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-			.join(' ');
+		const name = regionDisplayName(names, 'kiez', row.slug);
 		const bezirkName = BEZIRK_DISPLAY_NAMES[row.bezirkSlug] ?? row.bezirkSlug;
 		const markdown = renderKiezMarkdown({
 			slug: row.slug,

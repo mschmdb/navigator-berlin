@@ -12,6 +12,7 @@
  */
 
 import { buildKiezSlugs } from './internal/kiez-slug.js';
+import { cleanName } from './region-display-names.js';
 
 export interface KiezRef {
 	readonly slug: string;
@@ -37,7 +38,7 @@ function readKiezName(props: Record<string, unknown>): string | null {
 	const candidates = ['BZR_NAME', 'NAME', 'name'] as const;
 	for (const key of candidates) {
 		const v = props[key];
-		if (typeof v === 'string' && v.length > 0) return v;
+		if (typeof v === 'string' && v.length > 0) return cleanName(v);
 	}
 	return null;
 }

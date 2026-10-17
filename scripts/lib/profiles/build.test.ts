@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { buildInput, DIMS } from './build.js';
 import { hashInput } from './input.js';
 
+const NO_NAMES = { kiez: new Map<string, string>(), bezirk: new Map<string, string>() };
+
 /**
  * Story 14.8: Kriminalität ist Karten-Kontext, fließt bewusst NICHT in den Profil-Input
  * (Stigma-Schutz, ADR-019). Dadurch bleibt der inputHash stabil → keine Regeneration.
@@ -46,15 +48,15 @@ describe('DIMS (Profil-Grounding-Dimensionen)', () => {
 
 describe('buildInput Kriminalitäts-Exklusion', () => {
 	it('nimmt keine Kriminalitäts-Dimension in den Input', () => {
-		const input = buildInput('kiez', area({ kriminalitaet: 95 }));
+		const input = buildInput('kiez', area({ kriminalitaet: 95 }), NO_NAMES);
 		expect(input.dims.some((d) => /kriminalit/i.test(d.label))).toBe(false);
 		expect(input.dims).toHaveLength(6);
 	});
 
 	it('inputHash ist stabil gegenüber dem Kriminalitäts-Wert', () => {
-		const ohne = hashInput(buildInput('kiez', area()));
-		const niedrig = hashInput(buildInput('kiez', area({ kriminalitaet: 5 })));
-		const hoch = hashInput(buildInput('kiez', area({ kriminalitaet: 100 })));
+		const ohne = hashInput(buildInput('kiez', area(), NO_NAMES));
+		const niedrig = hashInput(buildInput('kiez', area({ kriminalitaet: 5 }), NO_NAMES));
+		const hoch = hashInput(buildInput('kiez', area({ kriminalitaet: 100 }), NO_NAMES));
 		expect(niedrig).toBe(ohne);
 		expect(hoch).toBe(ohne);
 	});
