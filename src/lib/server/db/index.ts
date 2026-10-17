@@ -22,15 +22,17 @@ export type Db = PostgresJsDatabase<typeof schema>;
  * Modul bei HMR neu aus. Mit Modul-Variablen entstand bei jedem Reload ein
  * neuer Pool (max 10), der alte blieb offen, bis Postgres keine Verbindung
  * mehr annahm. In Prod läuft das Modul einmal, dort ändert sich nichts.
+ * Nur der Pool ist global. Den Drizzle-Wrapper baut jede Modulauswertung neu,
+ * damit ein per HMR geändertes Schema sofort greift.
  */
-type DbCache = { client: Sql | null; db: Db | null };
+type DbCache = { client: Sql | null };
 
 declare global {
 	var __navigatorDbCache: DbCache | undefined;
 }
 
 function cache(): DbCache {
-	globalThis.__navigatorDbCache ??= { client: null, db: null };
+	globalThis.__navigatorDbCache ??= { client: null };
 	return globalThis.__navigatorDbCache;
 }
 
@@ -45,14 +47,16 @@ function ensureUrl(): string {
 /**
  * Liefert den Singleton-Drizzle-Client (lazy-initialisiert).
  */
+let _db: Db | null = null;
+
 export function getDb(): Db {
+	if (_db) return _db;
 	const c = cache();
-	if (c.db) return c.db;
 	if (!c.client) {
 		c.client = postgres(ensureUrl(), { max: 10, onnotice: () => {} });
 	}
-	c.db = drizzle(c.client, { schema });
-	return c.db;
+	_db = drizzle(c.client, { schema });
+	return _db;
 }
 
 /**
@@ -63,7 +67,7 @@ export async function closeDb(): Promise<void> {
 	if (c.client) {
 		const client = c.client;
 		c.client = null;
-		c.db = null;
+		_db = null;
 		await client.end();
 	}
 }
