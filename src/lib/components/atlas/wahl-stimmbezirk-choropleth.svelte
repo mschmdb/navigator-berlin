@@ -6,14 +6,23 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import { COLORS } from './internal/colors.js';
 	import { formatPercent } from '$lib/i18n/format.js';
+	import DataTableAlternative from './data-table-alternative.svelte';
+	import WinnerMapLegende from '$lib/components/wahl-portal/winner-map-legende.svelte';
+	import { buildWinnerTableColumns } from '$lib/components/wahl-portal/internal/winner-map-labels.js';
+	import {
+		patternImageId,
+		registerPartyPatterns
+	} from '$lib/components/wahl-portal/internal/partei-pattern-images.js';
+	import {
+		buildStimmbezirkZeilen,
+		stimmbezirkParteien,
+		type StimmbezirkWinner
+	} from './internal/wahl-stimmbezirk-data.js';
 
-	type WinnerEntry = {
-		/** Briefwahl-Gruppen-ID, nicht die einzelne Urnen-uwbId. */
-		readonly uwbId: string;
-		readonly parteiKurzname: string;
-		readonly farbeHex: string;
-		readonly anteil: number;
-	};
+	type WinnerEntry = StimmbezirkWinner;
+
+	/** #107: Muster-Ebene über der Farbfläche, trennt z. B. CDU und AfD auch ohne Farbe. */
+	const MUSTER_LAYER = 'wahlbezirke-muster';
 
 	type Props = {
 		geoSlug: string;
@@ -32,6 +41,28 @@
 		const m = new Map<string, WinnerEntry>();
 		for (const w of winnersByUwb) m.set(w.uwbId, w);
 		return m;
+	});
+
+	const parteien = $derived(stimmbezirkParteien(winnersByUwb));
+	const tableColumns = buildWinnerTableColumns();
+	/** Anzeigenamen je Gruppe, sobald die Geometrie (MEMBERS) geladen ist. */
+	let gruppenNamen = $state<ReadonlyMap<string, string>>(new Map());
+	const tableRows = $derived(
+		buildStimmbezirkZeilen(winnersByUwb, gruppenNamen, (id) => gruppenAnzeigeName(id, undefined))
+	);
+
+	let patternsEnabled = $state(false);
+	let musterBereit = $state(false);
+	function togglePatterns(): void {
+		patternsEnabled = !patternsEnabled;
+	}
+	$effect(() => {
+		const sichtbar = patternsEnabled;
+		if (!musterBereit) return;
+		const map = mapInstance as {
+			setLayoutProperty: (layer: string, prop: string, value: string) => void;
+		};
+		map.setLayoutProperty(MUSTER_LAYER, 'visibility', sichtbar ? 'visible' : 'none');
 	});
 
 	onMount(() => {
@@ -67,6 +98,7 @@
 			};
 			const fc = geoFc as RawFc;
 			let matched = 0;
+			const namen = new Map<string, string>();
 			for (const feature of fc.features) {
 				const props = (feature.properties ?? {}) as Record<string, unknown>;
 				const gruppeId = gruppeIdFromGeo(props, wahlSlug);
@@ -83,7 +115,13 @@
 						)
 					: null;
 				props.has_winner = winner ? 1 : 0;
+				props.pattern_id = winner ? patternImageId(winner.parteiKurzname) : null;
+				if (gruppeId && typeof props.gruppe_name === 'string')
+					namen.set(gruppeId, props.gruppe_name);
 			}
+			gruppenNamen = namen;
+			// Komponente während der Fetches abgebaut: kein Container mehr, keine Karte.
+			if (!container) return;
 			const map = new MapLibreMap({
 				container,
 				style: {
@@ -126,6 +164,22 @@
 			});
 
 			mapInstance = map;
+
+			map.on('load', () => {
+				registerPartyPatterns(map, parteien);
+				map.addLayer(
+					{
+						id: MUSTER_LAYER,
+						type: 'fill',
+						source: 'wahlbezirke',
+						filter: ['==', ['get', 'has_winner'], 1],
+						layout: { visibility: patternsEnabled ? 'visible' : 'none' },
+						paint: { 'fill-pattern': ['get', 'pattern_id'] }
+					},
+					'bezirke-outline'
+				);
+				musterBereit = true;
+			});
 
 			const bounds = new LngLatBounds();
 			for (const f of bezirkeFc.features) {
@@ -214,3 +268,13 @@
 		{m.wahl_portal_stimmbezirk_choropleth_figcaption()}
 	</figcaption>
 </figure>
+<div class="mt-3 space-y-3">
+	<WinnerMapLegende {parteien} {patternsEnabled} onTogglePatterns={togglePatterns} />
+	<DataTableAlternative
+		columns={tableColumns}
+		rows={tableRows}
+		caption={m.wahl_portal_sieger_table_caption()}
+		toggleLabel={m.wahl_portal_data_table_toggle()}
+		closeLabel={m.wahl_portal_data_table_close()}
+	/>
+</div>
