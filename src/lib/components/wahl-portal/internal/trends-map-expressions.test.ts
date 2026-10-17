@@ -5,10 +5,12 @@ import {
 	trendPropKeys,
 	trendsFillColorExpression,
 	trendsFillOpacityExpression,
+	trendsSchraffurFilter,
 	VOLATILITAET_FARBE_KEY,
 	VOLATILITAET_HAT_DATEN_KEY
 } from './trends-map-expressions.js';
 import {
+	TREND_SCHRAFFUR_FARBEN,
 	TREND_NEUTRAL_FARBE,
 	TREND_STEIGEND_DUNKEL,
 	VOLATILITAET_FARBE_STUFE_1,
@@ -91,6 +93,20 @@ describe('trendsFillColorExpression / trendsFillOpacityExpression', () => {
 			0.9,
 			0.1
 		]);
+	});
+});
+
+describe('#108 trendsSchraffurFilter', () => {
+	it('trifft bei Toggle trend nur die fallend-Stufen der aktiven Partei', () => {
+		expect(trendsSchraffurFilter('trend', 'SPD')).toEqual([
+			'in',
+			['get', trendPropKeys('SPD').farbe],
+			['literal', [...TREND_SCHRAFFUR_FARBEN]]
+		]);
+	});
+
+	it('trifft bei Toggle volatilitaet nichts', () => {
+		expect(trendsSchraffurFilter('volatilitaet', 'SPD')).toEqual(['==', 1, 0]);
 	});
 });
 
