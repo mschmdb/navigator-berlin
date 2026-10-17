@@ -200,7 +200,7 @@ describe('WarmeOrteNaehe', () => {
 		await page.getByTestId('waerme-locate').click();
 		const [heiland, unklar] = Array.from(document.querySelectorAll('[data-testid="waerme-ort"]'));
 		expect(heiland.querySelector('[data-testid="waerme-status"]')!.textContent).toBe(
-			'laut Recherche jetzt offen'
+			'laut Recherche: jetzt offen'
 		);
 		expect(unklar.querySelector('[data-testid="waerme-status"]')).toBeNull();
 	});
@@ -213,10 +213,10 @@ describe('WarmeOrteNaehe', () => {
 		await page.getByTestId('waerme-locate').click();
 		const [closed, soon] = Array.from(document.querySelectorAll('[data-testid="waerme-ort"]'));
 		const closedStatus = closed.querySelector('[data-testid="waerme-status"]')!;
-		expect(closedStatus.textContent).toBe('laut OSM geschlossen');
+		expect(closedStatus.textContent).toBe('laut OSM: geschlossen');
 		expect(closed.textContent).not.toContain('jetzt offen');
 		const soonStatus = soon.querySelector('[data-testid="waerme-status"]')!;
-		expect(soonStatus.textContent).toBe('laut OSM schließt bald');
+		expect(soonStatus.textContent).toBe('laut OSM: schließt bald');
 		expect(soonStatus.className).toContain('text-state-warning');
 		expect(soonStatus.className).not.toContain('text-state-success');
 	});
