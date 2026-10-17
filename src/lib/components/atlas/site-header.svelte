@@ -111,9 +111,7 @@
 		>
 			<PixelLogo size={64} title="navigator.berlin" />
 			<span class="hidden font-sans text-base font-light tracking-wide text-ink sm:inline">
-				navigator.berlin<span class="ml-1.5 text-sm tracking-normal text-ink-subtle"
-					>{m.shell_wordmark_beta()}</span
-				>
+				navigator.berlin
 			</span>
 		</a>
 		{#if atlasCtaHref}
