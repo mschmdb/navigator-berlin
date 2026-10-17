@@ -188,7 +188,7 @@
 <main class="mx-auto max-w-2xl px-4 py-12" data-testid="webmcp-page">
 	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl">WebMCP</h1>
 
-	<p class="text-fg-muted mt-6 leading-relaxed">{m.webmcp_intro_p1()}</p>
+	<p class="text-ink-muted mt-6 leading-relaxed">{m.webmcp_intro_p1()}</p>
 
 	<WebmcpDiagnose />
 
@@ -219,27 +219,27 @@
 		<dl class="mt-3 space-y-3 leading-relaxed">
 			<div>
 				<dt class="font-medium">Chrome 149+</dt>
-				<dd class="text-fg-muted">{@render codeOnly(chromeSegments)}</dd>
+				<dd class="text-ink-muted">{@render codeOnly(chromeSegments)}</dd>
 			</div>
 			<div>
 				<dt class="font-medium">{m.webmcp_support_chatgpt_term()}</dt>
-				<dd class="text-fg-muted">{@render codeOnly(chatgptSegments)}</dd>
+				<dd class="text-ink-muted">{@render codeOnly(chatgptSegments)}</dd>
 			</div>
 			<div>
 				<dt class="font-medium">Microsoft Edge 150+</dt>
-				<dd class="text-fg-muted">{m.webmcp_support_edge_desc()}</dd>
+				<dd class="text-ink-muted">{m.webmcp_support_edge_desc()}</dd>
 			</div>
 			<div>
 				<dt class="font-medium">Firefox</dt>
-				<dd class="text-fg-muted">{m.webmcp_support_firefox_desc()}</dd>
+				<dd class="text-ink-muted">{m.webmcp_support_firefox_desc()}</dd>
 			</div>
 			<div>
 				<dt class="font-medium">Safari</dt>
-				<dd class="text-fg-muted">{m.webmcp_support_safari_desc()}</dd>
+				<dd class="text-ink-muted">{m.webmcp_support_safari_desc()}</dd>
 			</div>
 			<div>
 				<dt class="font-medium">Polyfill</dt>
-				<dd class="text-fg-muted">{@render codeOnly(polyfillSegments)}</dd>
+				<dd class="text-ink-muted">{@render codeOnly(polyfillSegments)}</dd>
 			</div>
 		</dl>
 	</section>
@@ -268,7 +268,7 @@
 			{#each toolRows as tool (tool.name)}
 				<div>
 					<dt class="font-mono text-sm">{tool.name}</dt>
-					<dd class="text-fg-muted text-sm">{tool.desc}</dd>
+					<dd class="text-ink-muted text-sm">{tool.desc}</dd>
 				</div>
 			{/each}
 		</dl>

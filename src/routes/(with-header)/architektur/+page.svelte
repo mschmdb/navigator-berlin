@@ -128,7 +128,7 @@
 		{m.architektur_h1_title()}
 	</h1>
 
-	<p class="text-fg-muted mt-6 leading-relaxed">{m.architektur_intro_p1()}</p>
+	<p class="text-ink-muted mt-6 leading-relaxed">{m.architektur_intro_p1()}</p>
 
 	<section class="mt-10">
 		<h2 class="font-serif text-xl">Hosting</h2>

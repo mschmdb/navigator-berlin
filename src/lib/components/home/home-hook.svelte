@@ -47,7 +47,7 @@
 	<a
 		href={localizedHref(mapHref)}
 		aria-label={m.home_hero_cta_map()}
-		class="group bg-bg-soft block overflow-hidden rounded border border-rule transition-colors hover:border-ink-muted md:order-1"
+		class="group bg-bg-muted block overflow-hidden rounded border border-rule transition-colors hover:border-ink-muted md:order-1"
 	>
 		<figure>
 			<img

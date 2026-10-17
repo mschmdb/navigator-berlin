@@ -150,7 +150,7 @@
 				class="absolute inset-0 h-full w-full object-cover"
 			/>
 		{:else}
-			<div class="bg-bg-soft flex h-full items-center justify-center text-ink-muted">
+			<div class="bg-bg-muted flex h-full items-center justify-center text-ink-muted">
 				{m.map_embed_noscript({ label })}
 			</div>
 		{/if}

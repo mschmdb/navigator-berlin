@@ -56,7 +56,7 @@
 			cy="24"
 			r={RADIUS}
 			fill="none"
-			stroke="var(--bg-muted, #eee)"
+			stroke="var(--bg-muted)"
 			stroke-width="4"
 		/>
 		<circle
