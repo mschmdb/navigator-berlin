@@ -127,9 +127,7 @@ test.describe('Übersichtsseiten (S7)', () => {
 		const items = page.getByTestId('bezirk-overview-item');
 		await expect(items).toHaveCount(BEZIRK_COUNT);
 		await expect(items.filter({ hasText: 'Einwohner:innen' })).toHaveCount(BEZIRK_COUNT);
-		await expect(items.filter({ hasText: /Bezirks-Score\s*\d+ von 100/ })).toHaveCount(
-			BEZIRK_COUNT
-		);
+		await expect(items.filter({ hasText: /Kiez-Score\s*\d+ von 100/ })).toHaveCount(BEZIRK_COUNT);
 	});
 
 	test('/daten: Layer-Links entsprechen exakt den Layern mit Detailseite', async ({ page }) => {
