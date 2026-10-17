@@ -80,7 +80,10 @@ describe('KlimaPetCard', () => {
 			hit,
 			layerName: 'Gefühlte Temperatur 2022',
 			kiezName: 'Friedrichshain-Kreuzberg Nord',
-			kiezAggregate: agg(36, 24, 45)
+			kiezAggregate: agg(36, 24, 45),
+			bezirkName: 'Friedrichshain-Kreuzberg',
+			bezirkAggregate: agg(37, 22, 46),
+			berlinAggregate: agg(35.5, 20, 48)
 		});
 		const card = (await page.getByTestId('klima-pet-card').element()) as HTMLElement;
 		const dl = card.querySelector('dl') as HTMLElement;

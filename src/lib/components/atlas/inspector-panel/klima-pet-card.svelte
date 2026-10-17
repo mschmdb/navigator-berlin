@@ -170,9 +170,10 @@
 	{/if}
 
 	{#if contextRows.length > 0}
-		<dl class="mt-2 grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 text-xs">
+		<!-- Gleiches Raster wie die Kontext-Zeilen der Layer-Karte. -->
+		<dl class="mt-2 grid grid-cols-[minmax(7rem,1fr)_auto] gap-x-3 gap-y-0.5 text-xs">
 			{#each contextRows as row (row.id)}
-				<dt class="truncate text-ink-muted">{row.label}</dt>
+				<dt class="break-words text-ink-muted">{row.label}</dt>
 				<dd class="text-right text-ink tabular-nums">
 					{celsius(row.agg.median as number)}
 					<span class="ml-1 text-ink-subtle"

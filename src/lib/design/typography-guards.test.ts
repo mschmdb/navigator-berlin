@@ -78,7 +78,8 @@ describe('Typografie-Guard (GH-87)', () => {
 	it('setzt Mono auch nicht per Inline-Style', () => {
 		const hits = findHits(
 			(line, file) =>
-				!MONO_CODE_FILES.includes(file) && /font-family:\s*(monospace|var\(--font-mono\))/.test(line)
+				!MONO_CODE_FILES.includes(file) &&
+				/font-family:\s*(monospace|var\(--font-mono\))/.test(line)
 		);
 		expect(format(hits)).toBe('');
 	});
