@@ -69,6 +69,8 @@
 				props.bezirk_name = name;
 			}
 
+			// Komponente während der Fetches abgebaut: kein Container mehr, keine Karte.
+			if (!container) return;
 			const map = new Map({
 				container,
 				style: {

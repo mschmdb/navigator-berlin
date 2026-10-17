@@ -6,6 +6,10 @@
 		switch (pattern) {
 			case 'stripes':
 				return `background-image: repeating-linear-gradient(0deg, ${hex} 0 2px, transparent 2px 4px);`;
+			case 'vertical':
+				return `background-image: repeating-linear-gradient(90deg, ${hex} 0 2px, transparent 2px 4px);`;
+			case 'grid':
+				return `background-image: repeating-linear-gradient(0deg, ${hex} 0 1px, transparent 1px 4px), repeating-linear-gradient(90deg, ${hex} 0 1px, transparent 1px 4px);`;
 			case 'diagonal':
 				return `background-image: repeating-linear-gradient(45deg, ${hex} 0 2px, transparent 2px 4px);`;
 			case 'diagonal-reverse':

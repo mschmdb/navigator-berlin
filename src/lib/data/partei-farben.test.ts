@@ -31,9 +31,15 @@ describe('PARTEI_FARBEN', () => {
 
 	it('Pattern-Variants verfügbar pro Partei (Achromatopsie-Fallback)', () => {
 		for (const k of Object.keys(PARTEI_FARBEN) as ParteiKurzname[]) {
-			expect(['solid', 'stripes', 'dots', 'diagonal', 'diagonal-reverse']).toContain(
-				PARTEI_FARBEN[k].pattern
-			);
+			expect([
+				'solid',
+				'stripes',
+				'vertical',
+				'dots',
+				'grid',
+				'diagonal',
+				'diagonal-reverse'
+			]).toContain(PARTEI_FARBEN[k].pattern);
 		}
 	});
 
@@ -85,11 +91,25 @@ describe('PARTEI_FARBEN', () => {
 		expect(PARTEI_FARBEN.FDP.pattern).toBe('diagonal');
 		expect(PARTEI_FARBEN['Die Linke'].pattern).toBe('diagonal-reverse');
 		expect(PARTEI_FARBEN.FDP.pattern).not.toBe(PARTEI_FARBEN['Die Linke'].pattern);
-		// Bestands-Doppel bleiben unangetastet (Defer in deferred-work.md).
+		// #107: die Bestands-Doppel CDU/AfD und GRÜNE/BSW sind aufgelöst.
 		expect(PARTEI_FARBEN.CDU.pattern).toBe('stripes');
-		expect(PARTEI_FARBEN.AfD.pattern).toBe('stripes');
+		expect(PARTEI_FARBEN.AfD.pattern).toBe('vertical');
 		expect(PARTEI_FARBEN['GRÜNE'].pattern).toBe('dots');
-		expect(PARTEI_FARBEN.BSW.pattern).toBe('dots');
+		expect(PARTEI_FARBEN.BSW.pattern).toBe('grid');
+	});
+
+	it('#107: jede FINDER_PARTIES-Partei hat ein eigenes Muster', () => {
+		const finderParties: ParteiKurzname[] = [
+			'SPD',
+			'CDU',
+			'GRÜNE',
+			'FDP',
+			'AfD',
+			'Die Linke',
+			'BSW'
+		];
+		const patterns = finderParties.map((k) => PARTEI_FARBEN[k].pattern);
+		expect(new Set(patterns).size).toBe(finderParties.length);
 	});
 });
 
