@@ -2310,7 +2310,7 @@
 	"ueber_projekt_p1": "Berlin publishes plenty of open data, such as noise maps, climate data, land values and election results, spread across different sources and formats. navigator.berlin brings it together in one place and makes it understandable per address.",
 	"ueber_projekt_p2": "The site has been online since May 2026. In August 2026 the {taz_start}taz{taz_end} reported on the {hitze_start}Heat Navigator{hitze_end}. Since autumn 2026 the {kaelte_start}Cold Navigator{kaelte_end} has shown warm places for the winter. The {updates_start}updates{updates_end} show how things have developed.",
 	"ueber_person_h": "Who is behind it",
-	"ueber_person_p1": "I'm Matze Schmidbauer, a solutions architect from Berlin, and I run navigator.berlin.",
+	"ueber_person_p1": "I'm Matze Schmidbauer, Head of Platform & AI in Berlin, and I run navigator.berlin.",
 	"ueber_person_p2": "It's a private project; {mtc_start}mtc.berlin{mtc_end} is my employer.",
 	"ueber_person_p3": "You can find more about me on {site_start}schmidbauer.dev{site_end}, {bluesky_start}Bluesky{bluesky_end} and {linkedin_start}LinkedIn{linkedin_end}.",
 	"ueber_bau_h": "How it is built",

@@ -8,7 +8,7 @@
 export const FOUNDER_NAME = 'Matze Schmidbauer';
 export const FOUNDER_URL = 'https://schmidbauer.dev';
 export const FOUNDER_ID = `${FOUNDER_URL}/#person`;
-export const FOUNDER_JOB_TITLE = 'Solutions Architect';
+export const FOUNDER_JOB_TITLE = 'Head of Platform & AI';
 
 export const FOUNDER_PROFILE_URLS = {
 	bluesky: 'https://bsky.app/profile/schmidbauer.dev',
