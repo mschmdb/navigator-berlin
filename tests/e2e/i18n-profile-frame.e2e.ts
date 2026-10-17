@@ -142,14 +142,14 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(wahlVerlauf).not.toContainText('Bundestagswahlen');
 	});
 
-	test('Score-Rank-Link zeigt englischen Text, Klick führt auf /en/umwelt-infrastruktur-score', async ({
+	test('Score-Rank-Link zeigt englischen Text, Klick führt auf /en/kiez-score', async ({
 		page
 	}) => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 		const link = page.getByTestId('score-rank-link');
-		await expect(link).toContainText(/Rank \d+ of \d+ in the environment & infrastructure score/);
+		await expect(link).toContainText(/Rank \d+ of \d+ in the Kiez score/);
 		await link.click();
-		await expect(page).toHaveURL(/\/en\/umwelt-infrastruktur-score/);
+		await expect(page).toHaveURL(/\/en\/kiez-score/);
 	});
 
 	test('Nachbar-Kieze (statische GeoJSON-Daten): Überschrift englisch, Klick bleibt unter /en/kiez/…', async ({
@@ -274,7 +274,7 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 
 	test('Methodik-Link führt auf /en/methodik/kiez-score', async ({ page }) => {
 		await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
-		await page.getByRole('link', { name: /How the Bezirk score is calculated/ }).click();
+		await page.getByRole('link', { name: /How the Kiez score for Bezirke is calculated/ }).click();
 		await expect(page).toHaveURL(/\/en\/methodik\/kiez-score/);
 	});
 
@@ -308,7 +308,7 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 			'Bezirk Charlottenburg-Wilmersdorf: navigator.berlin-Karten-Vorschau mit Kiez-Score und Bezirks-Daten'
 		);
 
-		await page.getByRole('link', { name: /Wie der Bezirks-Score entsteht/ }).click();
+		await page.getByRole('link', { name: /Wie der Kiez-Score für Bezirke entsteht/ }).click();
 		await expect(page).toHaveURL(/\/methodik\/kiez-score/);
 		expect(page.url()).not.toMatch(/\/en\//);
 	});

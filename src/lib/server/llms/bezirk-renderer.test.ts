@@ -115,7 +115,7 @@ describe('renderBezirkMarkdown', () => {
 
 	it('includes Kiez-Score Composite + 5 Dimensionen', () => {
 		const md = renderBezirkMarkdown(baseInput);
-		expect(md).toContain('Bezirks-Score');
+		expect(md).toContain('Kiez-Score des Bezirks');
 		expect(md).toContain('62'); // composite gerundet
 		expect(md).toMatch(/Ruhe.*Luft/i);
 		expect(md).toContain('Mobilität');

@@ -12,13 +12,13 @@ describe('score-rank-link.svelte', () => {
 	it('verlinkt Kieze-View auf die Score-Übersicht', async () => {
 		render(ScoreRankLink, { rang: 12, total: 143, view: 'kieze' });
 		const link = (await page.getByTestId('score-rank-link').element()) as HTMLAnchorElement;
-		expect(link.getAttribute('href')).toBe('/umwelt-infrastruktur-score');
+		expect(link.getAttribute('href')).toBe('/kiez-score');
 	});
 
 	it('verlinkt Bezirke-View mit view-Param', async () => {
 		render(ScoreRankLink, { rang: 3, total: 12, view: 'bezirke' });
 		const link = (await page.getByTestId('score-rank-link').element()) as HTMLAnchorElement;
-		expect(link.getAttribute('href')).toBe('/umwelt-infrastruktur-score?view=bezirke');
+		expect(link.getAttribute('href')).toBe('/kiez-score?view=bezirke');
 	});
 
 	it('zeigt Rang-Text wenn rang vorhanden', async () => {
@@ -42,7 +42,7 @@ describe('score-rank-link.svelte', () => {
 			render(ScoreRankLink, { rang: 12, total: 143, view: 'kieze' });
 			const link = (await page.getByTestId('score-rank-link').element()) as HTMLAnchorElement;
 			expect(link.textContent).toContain('Rank 12 of 143');
-			expect(link.getAttribute('href')).toBe('/en/umwelt-infrastruktur-score');
+			expect(link.getAttribute('href')).toBe('/en/kiez-score');
 		});
 
 		it('zeigt englischen Fallback-Text ohne Rang', async () => {
@@ -57,7 +57,7 @@ describe('score-rank-link.svelte', () => {
 			render(ScoreRankLink, { rang: 3, total: 12, view: 'bezirke' });
 			const link = (await page.getByTestId('score-rank-link').element()) as HTMLAnchorElement;
 			const href = link.getAttribute('href') ?? '';
-			expect(href).toMatch(/^\/en\/umwelt-infrastruktur-score/);
+			expect(href).toMatch(/^\/en\/kiez-score/);
 			expect(href).toContain('view=bezirke');
 		});
 	});

@@ -36,7 +36,7 @@
 			<h2 class="text-2xl font-bold text-ink md:text-3xl">
 				{m.home_top_kieze_heading()}
 			</h2>
-			<a href={localizedHref('/umwelt-infrastruktur-score')} class={ctaSecondary}>
+			<a href={localizedHref('/kiez-score')} class={ctaSecondary}>
 				{m.home_top_kieze_ranking_link()}
 			</a>
 		</header>

@@ -46,9 +46,7 @@ test.describe('Kiez-Score Inspector-Flow', () => {
 		const link = page.getByTestId('kiez-score-methodik-link');
 		await expect(link).toHaveAttribute('href', '/methodik/kiez-score');
 		await link.click();
-		await expect(page.getByTestId('methodik-kiez-score-h1')).toContainText(
-			'Umwelt- & Infrastruktur-Score'
-		);
+		await expect(page.getByTestId('methodik-kiez-score-h1')).toContainText('Kiez-Score');
 	});
 
 	test('Quellen-Toggle expandiert Source-Liste', async ({ page }) => {

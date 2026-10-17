@@ -21,6 +21,7 @@
 
 import type { ScoreCardData } from './score-card-data.js';
 import { formatScoreValue } from './score-card-data.js';
+import { bundleDisplayName } from '../../data/bundle-display-name.js';
 
 // OG-Spec-Dimensions. Supersample im Render-Layer, hier 1× authoring.
 export const OG_WIDTH = 1200;
@@ -476,7 +477,7 @@ export function buildLayerCardVdom(params: LayerCardParams): SatoriNode {
 		params.sourceUpdatedAt && params.sourceUpdatedAt.length > 0 ? params.sourceUpdatedAt : null;
 	return canvas({
 		headline: params.layerLabel,
-		subline: params.bundleGroup,
+		subline: bundleDisplayName(params.bundleGroup),
 		mid: layerInfoRow(params),
 		footerUrl: `/layer/${params.layerSlug}`,
 		footerDate,

@@ -49,7 +49,7 @@ describe('buildBezirkMeta', () => {
 				'Friedrichshain-Kreuzberg hat 292.624 Einwohner:innen auf 20,3 km² (Stand Ende 2024).'
 			)
 		).toBe(true);
-		expect(description).toContain('Bezirks-Score 41 von 100, Platz 7 von 12 in Berlin.');
+		expect(description).toContain('Kiez-Score 41 von 100, Platz 7 von 12 in Berlin.');
 	});
 
 	it('EN: lokalisierte Zahlen', () => {
@@ -58,7 +58,7 @@ describe('buildBezirkMeta', () => {
 		expect(description).toContain(
 			'Friedrichshain-Kreuzberg has 292,624 residents across 20.3 km² (as of end of 2024).'
 		);
-		expect(description).toContain('Bezirk score 41 of 100, rank 7 of 12 in Berlin.');
+		expect(description).toContain('Kiez score 41 of 100, rank 7 of 12 in Berlin.');
 	});
 
 	it('unteres Viertel: kein Platz X', () => {
@@ -69,7 +69,7 @@ describe('buildBezirkMeta', () => {
 
 	it('ohne Quartil: kein Rang (Anti-Stigma)', () => {
 		const { description } = buildBezirkMeta({ ...input, rang: 12, quartil: null, locale: 'de' });
-		expect(description).toContain('Bezirks-Score 41 von 100.');
+		expect(description).toContain('Kiez-Score 41 von 100.');
 		expect(description).not.toContain('Platz');
 	});
 
@@ -81,7 +81,7 @@ describe('buildBezirkMeta', () => {
 
 	it('Score ohne Rang: Satz ohne Platz', () => {
 		const { description } = buildBezirkMeta({ ...base, name: 'Mitte', score: 38.4, locale: 'de' });
-		expect(description).toContain('Bezirks-Score 38 von 100.');
+		expect(description).toContain('Kiez-Score 38 von 100.');
 	});
 
 	it('fehlende Fläche: Teil entfällt', () => {

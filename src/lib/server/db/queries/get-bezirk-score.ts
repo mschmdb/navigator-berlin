@@ -6,7 +6,7 @@ import { bezirkScore } from '../schema/index.js';
 export type BezirkScore = InferSelectModel<typeof bezirkScore>;
 
 /**
- * Liefert den Bezirks-Score für einen Slug.
+ * Liefert den Kiez-Score des Bezirks für einen Slug.
  * Null-Fallback solange Story 2.9a die Tabelle noch nicht befüllt — kein Error.
  */
 export async function getBezirkScore(slug: string): Promise<BezirkScore | null> {

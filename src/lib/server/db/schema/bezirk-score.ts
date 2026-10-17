@@ -1,10 +1,10 @@
 import { pgTable, text, doublePrecision, timestamp } from 'drizzle-orm/pg-core';
 
 /**
- * Bezirks-Score-Aggregat (12 Zeilen). Schema-only in Story 2.0;
+ * Aggregat des Kiez-Scores pro Bezirk (12 Zeilen). Schema-only in Story 2.0;
  * Befüllung erfolgt in Story 2.9a (Score-Berechnung aus 1.28-PLR-Source).
  *
- * Komponenten = 5 Dimensionen aus ADR-015 (Umwelt- & Infrastruktur-Score):
+ * Komponenten = 5 Dimensionen aus ADR-015 (Kiez-Score):
  * ruhe-luft / gruen-hitze / mobilitaet / versorgung / wohnschutz.
  * Composite = gewichtetes Mittel (5 × 0.20).
  *

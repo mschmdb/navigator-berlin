@@ -11,8 +11,10 @@ import { locales, baseLocale } from '$lib/paraglide/runtime';
  * Operiert nur auf dem Pathname. Caller hängt die Original-Query wieder an.
  */
 const RENAMED_ROUTES: ReadonlyMap<string, string> = new Map([
-	// ADR-015: Ranking-Page heißt jetzt „Umwelt- & Infrastruktur-Score".
-	['/wo-lebt-es-sich-gut', '/umwelt-infrastruktur-score'],
+	// ADR-015 und GH-93: Die Ranking-Page heißt jetzt „Kiez-Score“ unter /kiez-score.
+	// Beide alten Slugs zeigen direkt auf das Ziel, ohne Redirect-Kette.
+	['/wo-lebt-es-sich-gut', '/kiez-score'],
+	['/umwelt-infrastruktur-score', '/kiez-score'],
 	// Phase-1 Score-Schema: Dimension „grün" + „hitze" zu einer Karte zusammengelegt.
 	// Alter Layer-Detail-Slug wurde umbenannt (GSC-404 2026-06-01).
 	['/layer/kiez-score-gruen', '/layer/kiez-score-gruen-hitze']
@@ -69,7 +71,7 @@ function splitLocalePrefix(pathname: string): { locale: string | null; rest: str
 
 /**
  * i18n Block A: renamed routes must redirect within their own locale, e.g.
- * `/en/wo-lebt-es-sich-gut` → `/en/umwelt-infrastruktur-score`, not onto the
+ * `/en/wo-lebt-es-sich-gut` → `/en/kiez-score`, not onto the
  * DE canonical (decision Matze 26.09.2026, I/O-matrix "Umbenannte Route EN").
  */
 export function renamedRouteRedirectTarget(pathname: string): string | null {

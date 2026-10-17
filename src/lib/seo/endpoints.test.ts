@@ -167,7 +167,7 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 			).text();
 			const urlBlock = (loc: string) =>
 				new RegExp(`<url>\\s*<loc>${loc}</loc>[\\s\\S]*?</url>`).exec(body)?.[0] ?? '';
-			for (const path of ['/', '/methodik', '/lizenzen', '/umwelt-infrastruktur-score']) {
+			for (const path of ['/', '/methodik', '/lizenzen', '/kiez-score']) {
 				const block = urlBlock(`https://navigator.berlin${path}`);
 				expect(block, path).not.toBe('');
 				expect(block, path).not.toContain('<lastmod>');

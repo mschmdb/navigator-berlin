@@ -14,7 +14,7 @@
  * - Steckbrief als Bullet-Liste (Einwohner, Fläche, Slug)
  * - Cluster-Sektionen H3 (Lärm, Luft, Grün, Klima, Wohnen, ÖPNV, Bildung, Heritage)
  * - Quellen-Attribution per Wert: `(Quelle: {layer}, Stand {date})`
- * - Bezirks-Score-Section H3 mit Composite + 5 Dimensionen
+ * - Kiez-Score-Section H3 (Bezirk) mit Composite + 5 Dimensionen
  * - FAQ-Section H3, jeweils Q als Bold + A als Absatz
  * - Keine em-dashes (Memory), kein „lebenswert"
  */
@@ -85,7 +85,7 @@ export function renderBezirkMarkdown(input: BezirkRenderInput): string {
 	}
 
 	if (input.score) {
-		renderScoreSection(input.score, 'Bezirks-Score', lines, input.origin);
+		renderScoreSection(input.score, 'Kiez-Score des Bezirks', lines, input.origin);
 	}
 
 	renderFaqSection(input.faq, lines);

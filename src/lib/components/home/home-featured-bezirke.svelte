@@ -33,7 +33,7 @@
 			</li>
 		{/each}
 	</ul>
-	<a href={localizedHref('/umwelt-infrastruktur-score?view=bezirke')} class={ctaSecondary}>
+	<a href={localizedHref('/kiez-score?view=bezirke')} class={ctaSecondary}>
 		{m.home_featured_bezirke_all_link()}
 	</a>
 </section>

@@ -336,7 +336,7 @@ describe('collectPrerenderedUrls', () => {
 		expect(locs).toContain('https://navigator.berlin/en/layer/bezirke');
 		expect(locs).toContain('https://navigator.berlin/en/bezirk/mitte');
 		expect(locs).toContain('https://navigator.berlin/en/kiez/karlshorst');
-		expect(locs).toContain('https://navigator.berlin/en/umwelt-infrastruktur-score');
+		expect(locs).toContain('https://navigator.berlin/en/kiez-score');
 		expect(locs.some((l) => l.startsWith('https://navigator.berlin/en/updates'))).toBe(true);
 		expect(locs.some((l) => /impressum|datenschutz|cross-layer-templates/.test(l))).toBe(false);
 		// Jede EN-URL ist registriert (Register-Gate).

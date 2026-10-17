@@ -171,7 +171,7 @@ function renderBildung(stats: BezirkStats, lines: string[]): void {
 }
 
 /**
- * Rendert den Umwelt- & Infrastruktur-Score (ADR-015): Composite + Ruhe & Luft /
+ * Rendert den Kiez-Score (ADR-015): Composite + Ruhe & Luft /
  * Grün & Hitze / Mobilität / Versorgung / Wohnschutz. Format identisch für Bezirk +
  * Kiez weil die Score-Tabellen denselben Shape haben. Sozialstruktur ist kein Score-Input.
  */
@@ -188,11 +188,11 @@ export interface ScoreLike {
 
 export function renderScoreSection(
 	score: ScoreLike,
-	heading: 'Bezirks-Score' | 'Kiez-Score',
+	heading: 'Kiez-Score des Bezirks' | 'Kiez-Score',
 	lines: string[],
 	origin = 'https://navigator.berlin'
 ): void {
-	lines.push(`### ${heading} (Umwelt- & Infrastruktur-Score)`);
+	lines.push(`### ${heading}`);
 	lines.push('');
 	lines.push(`- Composite: ${formatNumberDe(score.composite)}/100`);
 	if (score.ruheLuft !== null) lines.push(`- Ruhe & Luft: ${formatNumberDe(score.ruheLuft)}/100`);

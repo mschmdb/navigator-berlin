@@ -374,12 +374,23 @@ test.describe('i18n Block A: Redirects (echte hooks.server.ts-Sequenz)', () => {
 		expect(location?.startsWith('//')).toBe(false);
 	});
 
-	test('GET /en/wo-lebt-es-sich-gut: 301 auf /en/umwelt-infrastruktur-score (Umbenannte Route bleibt in Locale)', async ({
+	test('GET /en/wo-lebt-es-sich-gut: 301 auf /en/kiez-score (Umbenannte Route bleibt in Locale)', async ({
 		request
 	}) => {
 		const response = await request.get('/en/wo-lebt-es-sich-gut', { maxRedirects: 0 });
 		expect(response.status()).toBe(301);
-		expect(response.headers()['location']).toBe('/en/umwelt-infrastruktur-score');
+		expect(response.headers()['location']).toBe('/en/kiez-score');
+	});
+
+	test('GET /umwelt-infrastruktur-score und /en/…: 301 auf /kiez-score (GH-93)', async ({
+		request
+	}) => {
+		const de = await request.get('/umwelt-infrastruktur-score', { maxRedirects: 0 });
+		expect(de.status()).toBe(301);
+		expect(de.headers()['location']).toBe('/kiez-score');
+		const en = await request.get('/en/umwelt-infrastruktur-score', { maxRedirects: 0 });
+		expect(en.status()).toBe(301);
+		expect(en.headers()['location']).toBe('/en/kiez-score');
 	});
 
 	test('GET /en/kiez/alexanderplatz bleibt live (kein Redirect, en ist aktive Locale)', async ({
@@ -711,7 +722,7 @@ test.describe('i18n Block B2: Startseite /en', () => {
 		await expect(page.getByTestId('home-hero-cta-map')).toHaveAttribute('href', '/en/explore');
 		await expect(page.getByTestId('home-hero-cta-ranking')).toHaveAttribute(
 			'href',
-			'/en/umwelt-infrastruktur-score'
+			'/en/kiez-score'
 		);
 		await expect(page.getByTestId('home-wahl-card-2026-bvv')).toHaveAttribute(
 			'href',

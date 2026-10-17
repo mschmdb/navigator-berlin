@@ -19,11 +19,7 @@
 		readonly featured?: HomeFeaturedScoreData | null;
 	}
 
-	const {
-		mapHref = '/explore',
-		rankingHref = '/umwelt-infrastruktur-score',
-		featured = null
-	}: Props = $props();
+	const { mapHref = '/explore', rankingHref = '/kiez-score', featured = null }: Props = $props();
 </script>
 
 <section

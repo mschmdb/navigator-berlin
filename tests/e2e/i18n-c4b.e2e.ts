@@ -30,9 +30,9 @@ const PAGES = [
 	},
 	{ path: '/en/webmcp', dePath: '/webmcp', h1: 'WebMCP', files: MACHINE_FILES },
 	{
-		path: '/en/umwelt-infrastruktur-score',
-		dePath: '/umwelt-infrastruktur-score',
-		h1: 'Environment & infrastructure score',
+		path: '/en/kiez-score',
+		dePath: '/kiez-score',
+		h1: 'Kiez score',
 		files: []
 	}
 ] as const;
@@ -123,10 +123,8 @@ test.describe('i18n Block C4b: vier Seiten englisch, ohne Banner, indexierbar', 
 		await expect(page.locator('#wahldaten-briefwahl a[href="#aggregation"]')).toBeAttached();
 	});
 
-	test('/en/umwelt-infrastruktur-score: Rahmen englisch, Methodik-Link unter /en', async ({
-		page
-	}) => {
-		await page.goto('/en/umwelt-infrastruktur-score');
+	test('/en/kiez-score: Rahmen englisch, Methodik-Link unter /en', async ({ page }) => {
+		await page.goto('/en/kiez-score');
 		await expect(page.getByTestId('ranking-editorial-disclaimer')).toContainText(
 			'A comparison, not a verdict.'
 		);

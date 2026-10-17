@@ -13,7 +13,7 @@ const INDEXABLE_PAGES = [
 	{
 		path: '/en/methodik/kiez-score',
 		dePath: '/methodik/kiez-score',
-		h1: 'Environment & infrastructure score',
+		h1: 'Kiez score',
 		testid: 'methodik-kiez-score-h1'
 	}
 ] as const;

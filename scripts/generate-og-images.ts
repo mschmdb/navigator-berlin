@@ -67,11 +67,11 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		footerUrl: '/'
 	},
 	{
-		slug: 'umwelt-infrastruktur-score',
-		headline: 'Umwelt- & Infrastruktur-Score',
+		slug: 'kiez-score',
+		headline: 'Kiez-Score',
 		subline: 'Kiez- und Bezirks-Ranking',
 		body: '143 Berliner Kieze, 12 Bezirke. Fünf Dimensionen: Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz. Gleich gewichtet, 0 bis 100.',
-		footerUrl: '/umwelt-infrastruktur-score'
+		footerUrl: '/kiez-score'
 	},
 	{
 		slug: 'methodik',

@@ -1,5 +1,5 @@
 a: Methodik
-h1: Umwelt- & Infrastruktur-Score
+h1: Kiez-Score
 p: Fünf Dimensionen pro Planungsraum, gleich gewichtet, transparent zurückverfolgbar. Der Score misst Umwelt und Infrastruktur, nicht den sozialen Status.
 p: Inhalt
 a: Worum es geht
@@ -7,13 +7,13 @@ a: Dimensionen
 a: Gewichte
 a: Normalisierung
 a: Kiez-Score (Bezirksregion)
-a: Bezirks-Score
+a: Kiez-Score für Bezirke
 a: Lücken und Gründe
 a: Datenquellen
 a: Editorial-Verantwortung
 a: Feedback
 h2: Worum es geht
-p: Der Umwelt- & Infrastruktur-Score ist kein „Berlin-Ranking“. Die Karte zeigt sieben Dimensionen separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Fünf Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als eigenständige Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.
+p: Der Kiez-Score ist kein „Berlin-Ranking“. Die Karte zeigt sieben Dimensionen separat pro Planungsraum, der Inspector aggregiert sie für eine konkrete Adresse. Fünf Dimensionen bilden den Gesamt-Score, Kultur und erfasste Kriminalität stehen als eigenständige Kontext-Dimensionen daneben. Was zutrifft, steht dort. Was fehlt oder bewusst weggelassen ist, sagen wir auch.
 p: Aggregations-Ebene Planungsraum entspricht rund 7.500 Einwohner:innen. Wohnungs-Mikrolagen liegen darunter und tauchen im Aggregat nicht auf.
 h2: Dimensionen
 p: Ruhe & Luft
@@ -73,9 +73,9 @@ h2: Kiez-Score (Bezirksregion)
 p: Die 542 Planungsraum-Werte werden zu 143 LOR-Bezirksregionen flächen-gewichtet aggregiert. Pro Dimension wird ein gewichteter Mittelwert gebildet, wobei jeder Planungsraum mit seiner Fläche gewichtet wird. Mindestens 50 Prozent der enthaltenen Planungsräume müssen einen Wert haben, sonst bleibt die Dimension ohne Aggregat.
 p: Der Composite-Score einer Bezirksregion entsteht als ungewichtetes Mittel der nicht-null-Werte ihrer fünf Dimensionen, parallel zur Adress-Logik.
 p: LOR-Hierarchie: die ersten sechs Zeichen einer Planungsraum-ID ergeben die Bezirksregion-ID, die ersten zwei den Bezirks-Code. Property-basiertes Mapping ohne Geometrie-Test. Falls zwei Bezirksregionen denselben Namen tragen, wird der Bezirks-Slug als Suffix angehängt (z.B. heerstrasse-spandau, heerstrasse-charlottenburg-wilmersdorf).
-h2: Bezirks-Score
+h2: Kiez-Score für Bezirke
 p: Auf Bezirks-Ebene werden die 542 Planungsräume direkt flächen-gewichtet aggregiert, nicht über die Bezirksregion-Zwischenebene. Damit bleibt das Gewicht jedes Planungsraums proportional zu seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
-p: Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score: Gesamt“, hoch = besser), zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score“ gibt es nicht.
+p: Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score“, hoch = besser), zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score“ gibt es nicht.
 p: Die Scores entstehen beim Daten-Build. Der Build liest die Planungsraum-Quelle, baut die LOR-Hierarchie und berechnet die Aggregate für Bezirke und Kieze. Gleiche Eingangsdaten ergeben immer dieselben Scores.
 h2: Lücken und Gründe
 p: Sozialstruktur

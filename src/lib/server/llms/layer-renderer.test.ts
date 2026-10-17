@@ -27,6 +27,12 @@ describe('renderLayerMarkdown', () => {
 		expect(md).toContain('2023-09-15');
 	});
 
+	it('names the category without bundle letter (GH-93)', () => {
+		const md = renderLayerMarkdown(baseInput);
+		expect(md).toContain('- Kategorie: Umwelt');
+		expect(md).not.toContain('C: Umwelt');
+	});
+
 	it('includes Long-Description as methodology paragraph', () => {
 		const md = renderLayerMarkdown(baseInput);
 		expect(md).toContain('Kategorisierte Lärm-Gesamtbelastung');
