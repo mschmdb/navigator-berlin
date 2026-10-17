@@ -56,6 +56,31 @@ describe('LayerCard', () => {
 		expect(dot.className).toMatch(/bg-severity-danger(\s|$)/);
 	});
 
+	it('langer Kontext-Wert bricht nicht um, das Label gibt Platz ab', async () => {
+		// Komponententests laden kein Tailwind-CSS, darum Klassen statt Geometrie prüfen.
+		render(LayerCard, {
+			hit,
+			layerName: 'Umweltgerechtigkeit 2023',
+			contextRows: [
+				{
+					id: 'berlin',
+					label: 'Berlin',
+					text: 'meist keine starke Belastung, 34,5 %',
+					severity: 'success'
+				}
+			]
+		});
+		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+		const dl = card.querySelector('dl') as HTMLElement;
+		expect(dl.className).toMatch(/grid-cols-\[minmax\(0,1fr\)_auto\]/);
+		const dt = card.querySelector('dt') as HTMLElement;
+		expect(dt.className).toMatch(/min-w-0/);
+		expect(dt.className).not.toMatch(/\btruncate\b/);
+		const dd = card.querySelector('dd') as HTMLElement;
+		expect(dd.className).toMatch(/whitespace-nowrap/);
+		expect(dd.className).toMatch(/tabular-nums/);
+	});
+
 	it('Titel, Stufen-Badge und Auge liegen auf einer Mittelachse (GH-88)', async () => {
 		// Komponententests laden kein Tailwind-CSS, darum Klassen statt Geometrie prüfen.
 		render(LayerCard, {
