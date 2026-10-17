@@ -240,6 +240,13 @@ describe('createAddressHistoryWriter', () => {
 		expect(writer.lastWritten()).toBe('a');
 	});
 
+	it('vergisst die Adresse auf Wunsch, etwa wenn die Auswahl geschlossen wird', async () => {
+		const writer = createAddressHistoryWriter(async () => {});
+		await writer.write('a', '?address=a', 'push');
+		writer.forget();
+		expect(writer.lastWritten()).toBeNull();
+	});
+
 	it('vergisst die Adresse, wenn die Navigation fehlschlägt, damit ein neuer Versuch wieder einen Eintrag anlegt', async () => {
 		let fail = true;
 		const calls: string[] = [];
