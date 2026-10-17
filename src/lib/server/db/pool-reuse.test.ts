@@ -55,4 +55,22 @@ describe('db/index Pool über Modul-Neuauswertung (#145)', () => {
 			expect(postgresMock).toHaveBeenCalledTimes(2);
 		}
 	);
+
+	it(
+		'ein alter Modulstand baut nach closeDb() eines neueren den Wrapper neu',
+		{ timeout: 20_000 },
+		async () => {
+			const a = await import('./index.js');
+			const dbA = a.getDb();
+
+			vi.resetModules();
+			const b = await import('./index.js');
+			b.getDb();
+			await b.closeDb();
+
+			const dbA2 = a.getDb();
+			expect(dbA2).not.toBe(dbA);
+			expect(postgresMock).toHaveBeenCalledTimes(2);
+		}
+	);
 });
