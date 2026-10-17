@@ -143,8 +143,9 @@
 						<dd class="m-0 text-lg font-semibold text-ink tabular-nums sm:text-2xl">
 							{m.kiez_hero_score_value({ score: scoreValue }, localeOpts)}
 							{#if hasRank}
-								<span class="block font-sans text-xs font-normal text-ink-muted" data-testid="kiez-hero-rank"
-									>{rankText}</span
+								<span
+									class="block font-sans text-xs font-normal text-ink-muted"
+									data-testid="kiez-hero-rank">{rankText}</span
 								>
 							{/if}
 						</dd>
