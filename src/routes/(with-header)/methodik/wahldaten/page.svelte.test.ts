@@ -171,7 +171,11 @@ describe('methodik/wahldaten · EN (i18n C4b)', () => {
 		overwriteGetLocale(() => 'en');
 		render(Page);
 		const article = document.querySelector('[data-testid="wahl-methodik-page"]')!;
-		expect(internalHrefs(article)).toEqual(['/en/', '/en/methodik', '/en/berlin-wahlen#alle-wahlen']);
+		expect(internalHrefs(article)).toEqual([
+			'/en/',
+			'/en/methodik',
+			'/en/berlin-wahlen#alle-wahlen'
+		]);
 		expect(
 			document.getElementById('wahldaten-briefwahl')?.querySelector('a[href="#aggregation"]')
 		).not.toBeNull();

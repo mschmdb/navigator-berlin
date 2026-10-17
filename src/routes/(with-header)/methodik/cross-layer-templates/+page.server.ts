@@ -1,3 +1,5 @@
+import { error } from '@sveltejs/kit';
+import { dev } from '$app/environment';
 import type { PageServerLoad } from './$types';
 import { loadCrossLayerTemplates } from '$lib/server/cross-layer-templates-loader.js';
 import {
@@ -20,7 +22,9 @@ export interface PreviewEntry {
 	readonly tags: readonly string[];
 }
 
+// Internal co-design preview with fixture data. Production answers 404 (#97).
 export const load: PageServerLoad = async () => {
+	if (!dev) error(404, 'Not found');
 	const locale = getLocale();
 	const kiezFixture = buildKiezFixture(locale);
 	const bezirkFixture = buildBezirkFixture(locale);
