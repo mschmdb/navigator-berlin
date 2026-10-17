@@ -75,9 +75,19 @@ describe('Design-Fundament: Rohwerte in Komponenten', () => {
 	});
 
 	it('enthält keine Hex-Farben außerhalb von Kommentaren', () => {
-		const hits = findHits(/(?<![\w&/-])#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?\b(?![\w-])/);
-		const real = hits.filter((h) => !/href="#|id="#|#\{|\{#|aria-[a-z]+="#/.test(h.text));
+		const hex = /(?<![\w&/-])#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?\b(?![\w-])/;
+		const real = findHits(hex)
+			.filter((h) => !/href="#|id="#|#\{|\{#|aria-[a-z]+="#/.test(h.text))
+			// Fallbacks in var(--token, #hex) sind erlaubt: der Token bleibt die Quelle.
+			.filter((h) => hex.test(h.text.replace(/var\(--[\w-]+,\s*#[0-9a-fA-F]{3,6}\)/g, '')));
 		expect(format(real)).toBe('');
+	});
+
+	it('erlaubt Hex nur als var()-Fallback', () => {
+		const hex = /(?<![\w&/-])#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?\b(?![\w-])/;
+		const strip = (t: string) => t.replace(/var\(--[\w-]+,\s*#[0-9a-fA-F]{3,6}\)/g, '');
+		expect(hex.test(strip('stroke="var(--rule, #c8c6bb)"'))).toBe(false);
+		expect(hex.test(strip('class="text-[#0277BD]"'))).toBe(true);
 	});
 });
 
