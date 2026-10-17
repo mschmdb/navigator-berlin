@@ -43,6 +43,7 @@
 		key: KiezScoreDimension;
 		label: string;
 		value: number;
+		hasValue: boolean;
 		scoreText: string;
 	}
 
@@ -60,6 +61,7 @@
 				key: dim,
 				label: dimensionLabel(dim),
 				value: value ?? 0,
+				hasValue: value !== null,
 				scoreText: value !== null ? `${Math.round(value)} / 100` : noDataLabel
 			};
 			return {
@@ -77,6 +79,10 @@
 	const overallText = $derived(
 		score.overall !== undefined ? String(Math.round(score.overall)) : '—'
 	);
+
+	function legendValue(d: ArcDatum): string {
+		return d.hasValue ? String(Math.round(d.value)) : noDataLabel;
+	}
 
 	function handleArcClick(_e: MouseEvent, detail: { data: unknown }): void {
 		const d = detail.data as ArcDatum | undefined;
@@ -99,12 +105,6 @@
 			outerRadius={-12}
 			cornerRadius={4}
 			props={{ arc: { motion: 'spring' } }}
-			labels={{
-				placement: 'middle',
-				startOffset: '0%',
-				value: 'label',
-				class: 'fill-white font-sans text-dense-meta font-medium pointer-events-none'
-			}}
 			onArcClick={handleArcClick}
 			{...noCartesianChrome}
 		>
@@ -134,6 +134,22 @@
 			<span class="font-mono text-dense-meta text-ink-subtle">/ 100</span>
 		</div>
 	</div>
+
+	<!-- GH-86: Namen und Werte als Legende statt Bogen-Beschriftung, die bei 8 px abschnitt.
+	     Screenreader lesen die Tabelle darunter, darum ist die Legende aria-hidden. -->
+	<ul
+		class="mt-3 grid w-[236px] gap-1 text-dense-label text-ink"
+		data-testid="kiez-score-ring-legend"
+		aria-hidden="true"
+	>
+		{#each arcSeries as s (s.key)}
+			<li class="flex items-center gap-2">
+				<span class="size-2 shrink-0 rounded-full" style:background-color={s.color}></span>
+				<span class="min-w-0 flex-1">{s.label}</span>
+				<span class="font-mono text-ink-muted tabular-nums">{legendValue(s.data[0])}</span>
+			</li>
+		{/each}
+	</ul>
 
 	<table class="sr-only" data-testid="kiez-score-ring-table">
 		<caption>{layerName}</caption>
