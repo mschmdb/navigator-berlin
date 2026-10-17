@@ -8,7 +8,11 @@ templates:
     question: 'What is the green space provision in the Bezirk {name}?'
     answer: >-
       In the Bezirk {name}, the dominant category for green space provision near homes is
-      {gruenKategorie}. {gruenErklaerung} Source: {gruenSource}, as of {gruenStand}.
+      {gruenKategorie}. {gruenErklaerung}
+      {name} scores {gruenHitzeScore} out of 100 in the Green & heat score
+      ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green space provision
+      and heat exposure. A higher value means greener and cooler.
+      Source: {gruenSource}, as of {gruenStand}.
 
   - id: gruen-versorgung-kiez
     topic: gruen
@@ -17,7 +21,11 @@ templates:
     question: 'What is the green space provision in the Kiez {name}?'
     answer: >-
       Green space provision near homes in the Kiez {name} is in the category
-      {gruenKategorie}. {gruenErklaerung} Source: {gruenSource}, as of {gruenStand}.
+      {gruenKategorie}. {gruenErklaerung}
+      {name} scores {gruenHitzeScore} out of 100 in the Green & heat score
+      ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green space provision
+      and heat exposure. A higher value means greener and cooler.
+      Source: {gruenSource}, as of {gruenStand}.
 
   - id: gruen-anzahl-anlagen
     topic: gruen-anlagen
@@ -48,13 +56,3 @@ templates:
       evaporation. Urban climate analyses show that densely built neighbourhoods with
       little vegetation stay measurably warmer on summer days than areas with comparable
       buildings and more greenery. The climate category on this map reflects that.
-
-  - id: gruen-gruenhitze-einordnung
-    topic: gruen
-    applicableTo: [bezirk, kiez]
-    requires: [gruen.dominantVersorgung]
-    question: 'How green and cool is {name} in comparison?'
-    answer: >-
-      {name} scores {gruenHitzeScore} out of 100 in the Green & heat score
-      ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green space provision
-      and heat exposure. A higher value means greener and cooler.

@@ -268,6 +268,20 @@ function substitute(text: string, slots: Record<string, string>): string {
 	});
 }
 
+const SCORE_SLOT =
+	/\{(?:ruheLuft|gruenHitze|mobilitaet|versorgung|wohnschutz)(?:Score|Rang|Vergleich)\}/;
+
+/**
+ * #100: Score-Sätze sind ein Zusatz zur Datenantwort. Fehlen die Metriken
+ * eines Kiezes, fällt nur der Satz mit dem Score weg, nicht die ganze Antwort.
+ */
+function dropUnresolvedScoreSentences(text: string): string {
+	return text
+		.split(/(?<=\.)\s+/)
+		.filter((sentence) => !SCORE_SLOT.test(sentence))
+		.join(' ');
+}
+
 export function renderTemplate(
 	template: FaqTemplate,
 	context: TemplateContext
@@ -281,6 +295,6 @@ export function renderTemplate(
 	const slots = buildSlotMap(context);
 	return {
 		question: substitute(template.question, slots),
-		answer: substitute(template.answer, slots)
+		answer: dropUnresolvedScoreSentences(substitute(template.answer, slots))
 	};
 }
