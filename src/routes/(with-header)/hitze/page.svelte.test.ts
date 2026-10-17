@@ -36,6 +36,26 @@ describe('Hitze-Home (Spin-off-Route)', () => {
 			.toHaveAttribute('href', '/explore?layers=kuehle-orte&mode=hitze');
 	});
 
+	it('stellt „Orte in meiner Nähe“ vor den Karten-Button, wie auf /kaelte (#90)', async () => {
+		render(Page, { data: { warning: null, datasetSource: null } });
+		await expect.element(page.getByTestId('hitze-cta')).toBeInTheDocument();
+		const naehe = document.querySelector('[data-testid="in-deiner-naehe"]') as Node;
+		const cta = document.querySelector('[data-testid="hitze-cta"]') as Node;
+		expect(naehe.compareDocumentPosition(cta) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+	});
+
+	it('zeigt Kategorien und offizielle Angebote als Liste mit Linien statt Boxen (#90)', async () => {
+		render(Page, { data: { warning: null, datasetSource: null } });
+		await expect.element(page.getByTestId('hitze-cta')).toBeInTheDocument();
+		const items = document.querySelectorAll(
+			'section[aria-labelledby="orte-h"] li, section[aria-labelledby="offiziell-h"] li a'
+		);
+		expect(items.length).toBeGreaterThan(3);
+		for (const el of items) {
+			expect(el.className).not.toMatch(/\brounded\b|bg-bg-elevated|(^|\s)border(\s|$)/);
+		}
+	});
+
 	it('gerenderter Text enthält keine em-dashes (U+2014)', async () => {
 		render(Page, { data: { warning: null, datasetSource: null } });
 		const text = (await page.getByTestId('hitze-landing').element()).textContent ?? '';
