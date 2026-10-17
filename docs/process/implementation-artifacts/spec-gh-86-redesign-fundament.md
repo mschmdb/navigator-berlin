@@ -2,7 +2,7 @@
 title: 'GH-86 Redesign 1: Fundament (Dichte-Skala, Fokus, Tokens, Klickziele)'
 type: 'refactor'
 created: '2026-10-17'
-status: 'in-progress'
+status: 'in-review'
 baseline_commit: '094d7010086624128ead48febe995e2998a71516'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -71,15 +71,15 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `src/lib/design/token-guards.test.ts` -- NEU, zuerst rot: liest `src/**/*.svelte` und prüft Schriftgrößen, `focus:` und Roh-Hex nach der Matrix; dazu Parität `colors.ts` gegen `app.css` -- schützt das Fundament dauerhaft.
-- [ ] `src/app.css` -- Tokens ergänzen, `@theme inline` mappen, Fokus-Selektor erweitern -- eine Quelle für alle Werte.
-- [ ] `src/lib/components/atlas/internal/colors.ts` -- Wärme-/Kühle-Orte und Badge-Stufe angleichen -- Parität.
-- [ ] 45 Dateien mit freien Schriftgrößen -- auf Dichte-Skala nach Migrationsregel -- Untergrenze 11 px.
-- [ ] Dateien mit `leading-relaxed` -- auf `--leading-body` oder `--leading-dense` -- Leitlinie 14.
-- [ ] Fokus-Overrides und `focus:` -- entfernen bzw. umstellen -- ein Fokus-Stil.
-- [ ] Rohfarben -- auf Tokens bzw. `COLORS` -- Leitlinie 7.
-- [ ] Klickziele aus der Code Map -- Padding/min-h, Icons per ::after -- WCAG 2.2 SC 2.5.8.
-- [ ] `src/lib/components/atlas/charts/kiez-score-ring.svelte` -- Labels ≥ 11 px ohne Clipping; Component-Test ergänzen.
+- [x] `src/lib/design/token-guards.test.ts` -- NEU, zuerst rot: liest `src/**/*.svelte` und prüft Schriftgrößen, `focus:` und Roh-Hex nach der Matrix; dazu Parität `colors.ts` gegen `app.css` -- schützt das Fundament dauerhaft.
+- [x] `src/app.css` -- Tokens ergänzen, `@theme inline` mappen, Fokus-Selektor erweitern -- eine Quelle für alle Werte.
+- [x] `src/lib/components/atlas/internal/colors.ts` -- Wärme-/Kühle-Orte und Badge-Stufe angleichen -- Parität.
+- [x] 45 Dateien mit freien Schriftgrößen -- auf Dichte-Skala nach Migrationsregel -- Untergrenze 11 px.
+- [x] Dateien mit `leading-relaxed` -- auf `--leading-body` oder `--leading-dense` -- Leitlinie 14.
+- [x] Fokus-Overrides und `focus:` -- entfernen bzw. umstellen -- ein Fokus-Stil.
+- [x] Rohfarben -- auf Tokens bzw. `COLORS` -- Leitlinie 7.
+- [x] Klickziele aus der Code Map -- Padding/min-h, Icons per ::after -- WCAG 2.2 SC 2.5.8.
+- [x] `src/lib/components/atlas/charts/kiez-score-ring.svelte` -- Labels ≥ 11 px ohne Clipping; Component-Test ergänzen.
 
 **Acceptance Criteria:**
 - Given der Guard-Test, when `pnpm test:unit --run` läuft, then findet er 0 Schriftgrößen unter 11 px, 0 `focus:` und 0 Roh-Hex in Komponenten.
@@ -91,9 +91,37 @@ context:
 
 ## Implementation Notes
 
+- Effektive Review-Basis nach dem Rebase: `2b18dc44578fcc7ee570c9602e217283ad62a954` (`origin/fix/95-farb-tokens`); `baseline_commit` zeigt auf den Stand vor dem Rebase.
+- Basis: Branch auf `origin/fix/95-farb-tokens` (PR #113) rebased, weil #95 parallel `--accent-strong` und `--bg-muted` einführt und Klassen sortiert. `distance-ring` nutzt deshalb `var(--bg-muted)` aus #95.
+- Schrift: 126 Vorkommen in 46 Dateien migriert. 8 bis 10 px und nicht-interaktive 11 px → `text-dense-meta` (11 px). 11 px an Buttons, Links mit Hover und Tabellenköpfen → `text-dense-label` (12 px). SVG-Achse in `climate-long-view` von 10 auf 11.
+- `leading-relaxed` (137×, 41 Dateien) → `leading-body`. Alle Stellen sind Fließtext; `--leading-dense` ist definiert und gemappt, aber noch ungenutzt (für #88).
+- `.prose` folgt `--leading-body` (Update-Einträge lagen bei 1,78).
+- Fokus: 31 Klassenzeilen ohne Override; `focus-visible:outline-focus` (gleiche Farbe wie global) blieb an Button, Skip-Link, Suche, Karten-Controls und Sankey-Bändern. Die Überschrift in `warme-orte-naehe` (tabindex -1, programmatischer Fokus) trägt `outline-none` statt `focus:outline-none`.
+- Hex: MapLibre-Werte kommen aus `COLORS` (neu `ink`, `noData`). Kühle-Orte-Badge-Text nutzt `--umwelt-kuehle-orte-ink` (#01579b, ≥ 4,5:1 auf dem 12-%-Tint, im Guard geprüft). Wärme-Orte-Icon jetzt `#B5390A` wie der Pin.
+- Ring: Bogen-Labels entfernt, Legende unter dem Ring (12 px, Wert in Mono, `aria-hidden`, weil die sr-only-Tabelle die Daten schon trägt).
+- Klickziele: `min-h-(--target-min)` plus `inline-flex items-center` an 40+ Elementen. Icon-Buttons in dichten Zeilen und Social-Icons: `-m-1 inline-flex size-(--target-min)`; die negative Margin hält das Layout, die Trefferfläche ist messbar 24 px (statt `::after`, das `getBoundingClientRect` nicht misst). Footer-Links ohne `gap-2`, dafür 24 px hoch.
+- Neue Tests: `src/lib/design/token-guards.test.ts` (Guard, Tokens, Parität, Kontrast), `kiez-score-ring.svelte.test.ts` (Legende), `tests/e2e/target-size.e2e.ts` (5 Seiten × Desktop/Mobil), `tests/e2e/focus-ring.e2e.ts`.
+- `winner-map.svelte.test.ts` (Adress-Hinweis) ist flaky: scheitert gelegentlich unter Last, 3 von 3 Einzelläufen grün; der Diff ändert dort nur `leading-relaxed`.
+- `pnpm lint`: Prettier grün. ESLint meldet 301 bestehende Fehler (u. a. `no-navigation-without-resolve`), keiner aus diesem Diff.
+
 ## Spec Change Log
 
 ## Review Triage Log
+
+Review-Layer liefen über Codex (`gpt-6.1-sol`, read-only), weil der Fork keine Subagenten starten darf.
+
+| # | Layer | Fund | Verdict | Evidenz | Route |
+|---|---|---|---|---|---|
+| 1 | Blind + Edge | Legenden-Icons: `-m-1` bei `gap-0.5` überlappt Trefferflächen um 6 px | medium | 3 × 24 px mit −4 px Rand und 2 px Abstand überlappen rechnerisch | patch: `gap-2` |
+| 2 | Blind | Distanz-Ring: 11-px-Wert passt nicht in 32 px Innendurchmesser | medium | „1.2 km“ ≈ 40 px bei Mono 11 px | patch: Ring 56 px, Radius 22 |
+| 3 | Blind | Ring-Legende ordnet Dimensionen nur über Reihenfolge zu, Farben = Stufe | low | Reihenfolge Legende = außen nach innen, Zuordnung nicht beschriftet | defer an #88 |
+| 4 | Blind | Finder-Slider 17,6 px hoch | medium | `.finder-range { height: 1.1rem }` | patch: `height: var(--target-min)` |
+| 5 | Blind | `inspector-card`-Toggle ohne Mindesthöhe | low | `text-xs` + 16-px-Chevron ≈ 17 px | patch: `min-h-(--target-min)` |
+| 6 | Blind + Edge | Legenden-`summary` unter 24 px | medium | keine Mindesthöhe, nur Text-Zeilenhöhe | patch |
+| 7 | Blind | Ring-Test prüft Computed-Size ohne app.css | low | Client-Tests laden app.css nicht, Browser-Default 16 px besteht | patch: Klassenprüfung ergänzt |
+| 8 | Blind + Gap | Fokus-e2e deckt Finder nicht ab | medium | Gap-Layer belegt: keine Finder-Fokusprüfung | patch: Finder-Fall |
+| 9 | Blind + Gap | Klickziel-e2e misst nur Startzustand, Finder fehlt | medium | Gap-Layer belegt | patch: `/explore?finder=1` |
+| 10 | Blind | Hex-Guard überspringt ganze Zeile bei `href="#"` | low | Filter wirkt zeilenweise | patch: Fragmente entfernen, Regressionstest |
 
 ## Design Notes
 
