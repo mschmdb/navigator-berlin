@@ -72,13 +72,17 @@ describe('LayerCard', () => {
 		});
 		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
 		const dl = card.querySelector('dl') as HTMLElement;
-		expect(dl.className).toMatch(/grid-cols-\[minmax\(0,1fr\)_auto\]/);
+		// Label hat eine Mindestbreite, der Wert nimmt seine volle Breite, bevor er umbricht.
+		expect(dl.className).toMatch(/grid-cols-\[minmax\(7rem,1fr\)_auto\]/);
 		const dt = card.querySelector('dt') as HTMLElement;
-		expect(dt.className).toMatch(/min-w-0/);
 		expect(dt.className).not.toMatch(/\btruncate\b/);
 		const dd = card.querySelector('dd') as HTMLElement;
-		expect(dd.className).toMatch(/whitespace-nowrap/);
+		// Kein nowrap: auf schmalen Panels darf der Wert als letzter Ausweg umbrechen,
+		// statt im overflow-x-hidden-Panel abgeschnitten zu werden.
+		expect(dd.className).not.toMatch(/whitespace-nowrap/);
 		expect(dd.className).toMatch(/tabular-nums/);
+		// Anteil klebt am Komma: 34,5 % bricht nie allein in die nächste Zeile.
+		expect(dd.textContent).toContain('Belastung,\u00a034,5\u00a0%');
 	});
 
 	it('Titel, Stufen-Badge und Auge liegen auf einer Mittelachse (GH-88)', async () => {
