@@ -23,7 +23,7 @@ describe('updates-filter.svelte (i18n C4d)', () => {
 		render(UpdatesFilter, {});
 		expect(texts()).toEqual({
 			heading: 'Kategorien',
-			labels: ['Daten-Update', 'Feature', 'Methodik', 'Datenquelle', 'Lizenz', 'Presse'],
+			labels: ['Daten-Update', 'Funktion', 'Methodik', 'Datenquelle', 'Lizenz', 'Presse'],
 			aria: ['Update-Kategorien filtern', 'Update-Kategorien filtern']
 		});
 	});

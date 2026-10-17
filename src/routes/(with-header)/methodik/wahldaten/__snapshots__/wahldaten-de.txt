@@ -2,14 +2,14 @@ p: Berlin / Methodik
 a: Berlin
 a: Methodik
 h1: Methodik: Wahldaten
-p: Diese Seite dokumentiert Datenquellen, Aggregations-Strategie und bekannte Coverage-Lücken der Wahl-Daten. Werte beschreiben Stimmenanteile, keine Bewertung.
+p: Diese Seite dokumentiert Datenquellen, Aggregation und bekannte Lücken der Wahldaten. Die Werte zeigen Stimmenanteile.
 p: Inhalt
 a: Datenquellen
 a: Daten-Cutoff
 a: Briefwahl-Gruppen
 a: Stimmbezirks-zu-Kiez-Aggregation
 a: Wiederholungswahl 2023
-a: Geometrien + Coverage
+a: Geometrien und Abdeckung
 a: Update-Cadence
 a: Parteien-Aliase
 a: Cross-Layer-Verknüpfung
@@ -33,9 +33,9 @@ li: Volksentscheide: nicht enthalten
 h2: Briefwahl-Gruppen
 p: Berlin zählt Briefstimmen in eigenen Briefwahlbezirken ohne eigene Fläche, getrennt von den Urnenwahlbezirken. Bezirk und Berlin gesamt enthalten immer alle Stimmen, weil sie über alle Stimmbezirke summieren.
 p: Auf der Karte ist deshalb die Briefwahl-Gruppe die kleinste Ebene: alle Urnenwahlbezirke eines Briefwahlbezirks plus dieser Briefwahlbezirk bilden zusammen eine Fläche (Dissolve der Urnen-Polygone), analog zur Tagesspiegel-Darstellung „Stimmbezirke 726, 727 und 7P“. Das gilt für alle Wahlen mit Stimmbezirks-Geometrie.
-p: Im Kiez-Aggregat ist die Briefwahl eine anteilige Schätzung nach Wahlberechtigten, siehe Stimmbezirks-zu-Kiez-Aggregation. Wahlen ohne Stimmbezirks-Geometrie zeigt die Karte nur auf Bezirks- und Berlin-Ebene, siehe Geometrien und Coverage.
+p: Im Kiez-Aggregat ist die Briefwahl eine anteilige Schätzung nach Wahlberechtigten, siehe Stimmbezirks-zu-Kiez-Aggregation. Wahlen ohne Stimmbezirks-Geometrie zeigt die Karte nur auf Bezirks- und Berlin-Ebene, siehe Geometrien und Abdeckung.
 a: Stimmbezirks-zu-Kiez-Aggregation
-a: Geometrien und Coverage
+a: Geometrien und Abdeckung
 h2: Stimmbezirks-zu-Kiez-Aggregation
 p: Stimmbezirks-Werte werden räumlich auf vier Ebenen aggregiert: Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk (12) und Berlin gesamt.
 p: Für die Kiez-Ebene wird pro Stimmbezirk der Polygon-Centroid berechnet (via turf-center) und in die enthaltene LOR-Bezirksregion gemappt (booleanPointInPolygon). Stimmbezirke außerhalb aller LOR-Polygone bleiben ungemappt und fließen nur in Bezirk + Berlin ein. Die SQL-Aggregation summiert pro Kiez und Partei aus den Roh-Stimmbezirks-Rows (siehe scripts/build-wahl-kiez-aggregat.ts).
@@ -43,7 +43,7 @@ p: Briefstimmen fließen anteilig ein: Jede Urne einer Briefwahl-Gruppe erhält 
 h2: Wiederholungswahl 2023
 p: AGH 2021 + BVV 2021 wurden vom Berliner Verfassungsgerichtshof teilweise für ungültig erklärt. AGH 2023 und BVV 2023 sind die jeweiligen Wiederholungswahlen. In der Datenbank tragen sie das Flag is_repeat_election mit Verweis auf die jeweilige Original-Wahl über parent_election_id.
 p: Die Wahlbezirks-Geometrie der Wiederholungswahl ist identisch zur Original-Wahl von Sept 2021. Die separate SBB-Quelle RBS_OD_Wahllokale_AH23.zip enthält ausschließlich Wahllokal-Standorte (Punkte), nicht Wahlbezirks-Polygone; deshalb mappt navigator.berlin AGH 2023 und BVV 2023 für Choropleth + Kiez-Aggregation auf den Polygon-Layer ah21.
-h2: Geometrien + Coverage
+h2: Geometrien und Abdeckung
 p: Stimmbezirks-Polygone sind verfügbar für: BTW 2017, 2021, 2025 sowie AGH + BVV 2016, 2021 (verwendet auch für 2023-Wiederholung) und 2026. BTW 2013 sowie AGH + BVV 2011 besitzen keine publizierten Stimmbezirks-Geometrien. Diese Wahlen sind ausschließlich auf Bezirks- und Berlin-Aggregat zugänglich; das Kiez-Aggregat ist für sie leer und die Choropleth-Komponente fällt auf 12 Bezirks-Polygone zurück mit einem Inline-Hinweis.
 p: Reprojektion: ETRS89 UTM33 → WGS84 via mapshaper Node-API, Simplify visvalingam + keep-shapes damit Sliver-Polygone den Simplify-Schritt überleben.
 h2: Update-Cadence

@@ -8,7 +8,7 @@ a: Gewichte
 a: Normalisierung
 a: Kiez-Score (Bezirksregion)
 a: Bezirks-Score
-a: Was fehlt und warum
+a: Lücken und Gründe
 a: Datenquellen
 a: Editorial-Verantwortung
 a: Feedback
@@ -31,12 +31,12 @@ p: Versorgung umfasst öffentliche Daseinsvorsorge und private Alltags-Nahversor
 p: Wohnschutz
 p: Milieuschutz: Erhaltungsmiete, Milieuschutz: Städtebau
 p: Verdrängungsschutz: Liegt ein Planungsraum in einem Milieuschutzgebiet, gilt Schutz als vorhanden. Erhaltungssatzung Wohnraum oder städtebauliche Erhaltungssatzung, ODER-verknüpft. Diese Größe ist positiv eindeutig, mehr Schutz ist besser für Bewohner. Schutz-Status sagt nichts über die tatsächliche Mietentwicklung.
-p: Kultur (eigenständig, nicht im Gesamt-Score)
+p: Kultur (eigene Dimension, außerhalb des Gesamt-Scores)
 p: Museen, Galerien, Theater & Bühnen, Bibliotheken, Kinos, Soziokultur, Kunst im Stadtraum, Clubs
-p: Kultureller Zugang als log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OpenStreetMap, ODbL). Der erste Kulturort zählt stark, weitere flachen ab, das dämpft das Innen-Außen-Gefälle. Kultur ist eine eigene, sichtbare Dimension, fließt aber NICHT in den Gesamt-Score: Kulturinfrastruktur ballt sich in der Innenstadt und würde sonst jeden Außenbezirk-Gesamt-Score drücken. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.
-p: Erfasste Kriminalität (eigenständig, nicht im Gesamt-Score)
+p: Kultureller Zugang als log-gedämpfte Dichte von Bibliothek, Theater, Museum, Kino, Galerie, Soziokultur, Kunst im Stadtraum und Clubs im Umkreis (OpenStreetMap, ODbL). Der erste Kulturort zählt stark, weitere flachen ab, das dämpft das Innen-Außen-Gefälle. Kultur ist eine eigene, sichtbare Dimension außerhalb des Gesamt-Scores: Kulturinfrastruktur ballt sich in der Innenstadt und würde sonst jeden Außenbezirk-Gesamt-Score drücken. Memorial-Orte (Stolpersteine, Denkmale) zählen bewusst nicht.
+p: Erfasste Kriminalität (eigene Dimension, außerhalb des Gesamt-Scores)
 p: Kiez-Score: Erfasste Kriminalität (Kriminalitätsatlas Berlin, Polizei Berlin, dl-de-by-2.0)
-p: Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten“ ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in neutralem Indigo, NICHT im Gesamt-Score und KEIN Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher“ oder „gefährlich“.
+p: Häufigkeitszahl ausgewählter wohn-relevanter Delikte (Kieztaten, Wohnraumeinbruch, Sachbeschädigung, Straßenraub, Fahrraddiebstahl), gleichgewichtet, als 3-Jahres-Mittel 2023–2025. „Kieztaten“ ist eine Sammelkategorie der Polizei Berlin für Delikte mit engem Bezug zum Wohngebiet (u.a. Körperverletzung, Bedrohung, Raub, Sachbeschädigung an Kfz, Keller- und Wohnungseinbruch). Die Werte liegen nur je Bezirksregion vor (gröber als die fünf Planungsraum-Dimensionen) und werden auf die enthaltenen Planungsräume gespiegelt. City-Core-Orte mit Touristen- und Pendler-Verzerrung (Regierungsviertel, Alexanderplatz) werden gekappt. Eigene Kontext-Dimension in neutralem Indigo außerhalb des Gesamt-Scores, kein Sicherheits-Ranking. Die Häufigkeitszahl misst erfasste Fälle pro Einwohner, kein persönliches Risiko: Tatortprinzip, Dunkelfeld und der Einwohner-Nenner verzerren. Kein „sicher“ oder „gefährlich“.
 h2: Gewichte
 p: Persona „allgemein“ gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur und erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den Gesamt-Score (Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in Phase 2. Eigene Slider-Gewichtung kommt ebenfalls später.
 caption: Gewichte
@@ -77,7 +77,7 @@ h2: Bezirks-Score
 p: Auf Bezirks-Ebene werden die 542 Planungsräume direkt flächen-gewichtet aggregiert, nicht über die Bezirksregion-Zwischenebene. Damit bleibt das Gewicht jedes Planungsraums proportional zu seiner tatsächlichen Fläche und ist unabhängig von der LOR-Zwischengruppierung.
 p: Seit der Score-Neuordnung sind alle Composite-Dimensionen positiv eindeutig. Deshalb zeigen wir auch einen Gesamt-Choropleth auf der Karte (Layer „Kiez-Score: Gesamt“, hoch = besser), zusätzlich zu den Einzel-Dimensionen. Kultur und erfasste Kriminalität sind eigenständige Kontext-Dimensionen und fließen nicht in den Gesamt-Score. Kriminalität und das MSS-Aggregat bleiben neutrale Kontext-Layer in neutralem Indigo, ohne Rot-Grün-Sprünge. Einen stadtweiten „Berlin-Score“ gibt es nicht.
 p: Die Scores entstehen beim Daten-Build. Der Build liest die Planungsraum-Quelle, baut die LOR-Hierarchie und berechnet die Aggregate für Bezirke und Kieze. Gleiche Eingangsdaten ergeben immer dieselben Scores.
-h2: Was fehlt und warum
+h2: Lücken und Gründe
 p: Sozialstruktur
 p: Der soziale Status eines Kiezes ist kein Qualitäts-Kriterium. Würden wir ihn werten, schnitten Kieze mit niedrigem Status schlechter ab und würden stigmatisiert. Das MSS-Aggregat bleibt als neutraler Kontext sichtbar, fließt aber nicht in den Score.
 p: Bezahlbarkeit
@@ -88,7 +88,7 @@ h2: Datenquellen
 p: Berliner Umweltatlas (Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt), Monitoring Soziale Stadtentwicklung (Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen), Kriminalitätsatlas Berlin (Polizei Berlin, dl-de-by-2.0) und ÖPNV-Standorte aus OpenStreetMap (ODbL 1.0). Vollständige Liste mit Lizenz und Datenstand pro Layer: Lizenzen-Seite.
 a: Lizenzen-Seite
 h2: Editorial-Verantwortung
-p: Der Score ist statistische Lage-Beschreibung, keine Wohnungsbewertung. Wir nennen keinen Mietpreis und geben keine rechtliche Auskunft.
+p: Der Score beschreibt die statistische Lage eines Planungsraums. Mietpreise und rechtliche Auskünfte findest du bei den zuständigen Stellen.
 p: Der Score wertet keine Sozialstruktur. Ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter“. Das MSS-Aggregat zeigen wir als neutralen Kontext, nicht als Bewertung. Choropleth-Farben dafür bleiben neutral, ohne Rot-Grün-Sprünge. Einzelne Adressen können stark vom Planungsraum-Mittel abweichen.
 h2: Feedback
 p: Methodik-Korrektur, Datenfehler oder Layer-Vorschlag: per Mail.

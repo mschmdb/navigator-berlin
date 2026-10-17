@@ -69,7 +69,9 @@ describe('Text-Guards de (GH-92)', () => {
 	const messages = load('de');
 
 	it('nutzt keine englischen Fachwörter Features und Coverage', () => {
+		// methodik_clt_*: interne Template-Vorschau, nur im Dev-Build erreichbar (#97).
 		const offenders = entries(messages)
+			.filter(([key]) => !key.startsWith('methodik_clt_'))
 			.filter(([, value]) => /\b(Features?|Coverage)\b/.test(value))
 			.map(([key]) => key);
 		expect(offenders).toEqual([]);

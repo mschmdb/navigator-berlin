@@ -52,7 +52,7 @@ describe('umwelt-infrastruktur-score · EN (i18n C4b)', () => {
 		expect(article.querySelector('h1')?.textContent).toBe('Environment & infrastructure score');
 		const text = article.textContent ?? '';
 		expect(text).toContain('Berlin Kieze and Bezirke sorted by five equally weighted dimensions');
-		expect(text).toContain('A comparison, not a verdict.');
+		expect(text).toContain('What suits you depends on your own priorities.');
 		expect(text).toContain('How is the score calculated?');
 		expect(text).toContain('Full methodology: Kiez score');
 	});
@@ -122,7 +122,7 @@ describe('umwelt-infrastruktur-score · DE-Wortlaut von Aside, Accordion, Empty-
 		const norm = (el: Element | null): string =>
 			(el?.textContent ?? '').replace(/\s+/g, ' ').trim();
 		expect(norm(document.querySelector('[data-testid="ranking-editorial-disclaimer"]'))).toBe(
-			'Der Score fasst öffentliche Senats-Daten pro LOR-Bezirksregion zusammen. Was sich gut anfühlt, bemisst sich an persönlichen Prioritäten. Vergleich, nicht Urteil.'
+			'Der Score fasst öffentliche Senatsdaten pro LOR-Bezirksregion zusammen. Was für dich gut passt, hängt von deinen Prioritäten ab.'
 		);
 		const trigger = document.querySelector<HTMLElement>(
 			'[data-testid="ranking-methodik-disclosure"]'

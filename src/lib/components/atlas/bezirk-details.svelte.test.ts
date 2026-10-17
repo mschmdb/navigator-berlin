@@ -170,7 +170,7 @@ describe('BezirkDetails.svelte', () => {
 			render(BezirkDetails, { stats: statsFixtureFull, faq: [] });
 			const table = document.querySelector('[data-testid="bezirk-steckbrief"]');
 			expect(table?.textContent).toMatch(/Noise/);
-			expect(table?.textContent).toMatch(/moderate/);
+			expect(table?.textContent).toMatch(/medium/);
 			expect(table?.textContent).toMatch(/Source: Noise pollution 2023/);
 			expect(table?.textContent).toMatch(/June 2023/);
 			expect(table?.textContent).toMatch(/Green space provision/);

@@ -1,5 +1,5 @@
 h1: Architektur
-p: Open-Source-Stack, gehostet in Deutschland. Kein US-Cloud-Anbieter, kein Tracking, kein Cookie-Banner.
+p: Open-Source-Stack, gehostet in Deutschland. Die Seite setzt keine Tracker ein und braucht deshalb kein Cookie-Banner.
 h2: Hosting
 p: Server in Deutschland bei einem europäischen Anbieter. Domain ebenfalls bei einem deutschen Registrar.
 h2: Anwendung

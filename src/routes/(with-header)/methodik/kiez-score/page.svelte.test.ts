@@ -109,7 +109,7 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 			'Local amenities',
 			'Tenant protection'
 		]);
-		expect(labels[5]).toBe('Culture (standalone, not in the overall score)');
+		expect(labels[5]).toBe('Culture (own dimension, outside the overall score)');
 		const weightRows = [...document.querySelectorAll('#gewichte tbody tr th[scope="row"]')].map(
 			(td) => td.textContent?.replace(/\s+/g, ' ').trim()
 		);

@@ -44,7 +44,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		await expect(sourceCard).toContainText('Provider');
 		await expect(sourceCard).toContainText('Licence');
 		await expect(sourceCard).toContainText('Data as of');
-		await expect(sourceCard).toContainText('Features');
+		await expect(sourceCard).toContainText('Objects');
 		await expect(sourceCard).toContainText('542');
 
 		const scale = page.getByTestId('layer-detail-scale');
@@ -124,7 +124,7 @@ test.describe('i18n Block B4b: /en/layer/[slug]', () => {
 		);
 	});
 
-	test('Coverage-Lücken + „Was wir NICHT zeigen"-Überschriften UND Inhalte englisch, kein lang="de"', async ({
+	test('Lücken- und „Nicht enthalten"-Überschriften UND Inhalte englisch, kein lang="de"', async ({
 		page
 	}) => {
 		// i18n Block C2: `coverageGaps`/`omissions` sind jetzt selbst

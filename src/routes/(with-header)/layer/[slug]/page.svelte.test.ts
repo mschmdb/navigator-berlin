@@ -473,7 +473,7 @@ describe('layer-detail +page.svelte', () => {
 			expect(article.textContent).toMatch(/Provider/);
 			expect(article.textContent).toMatch(/Licence/);
 			expect(article.textContent).toMatch(/Data as of/);
-			expect(article.textContent).toMatch(/Features/);
+			expect(article.textContent).toMatch(/Objects/);
 			expect(article.textContent).toMatch(/12,345/);
 			expect(article.textContent).toMatch(/Values/);
 			expect(article.textContent).toMatch(/Scale/);
@@ -481,8 +481,8 @@ describe('layer-detail +page.svelte', () => {
 			expect(article.textContent).toMatch(/Aggregation/);
 			expect(article.textContent).toMatch(/Maintenance/);
 			expect(article.textContent).toMatch(/Update frequency/);
-			expect(article.textContent).toMatch(/Coverage gaps/);
-			expect(article.textContent).toMatch(/What we don't show/);
+			expect(article.textContent).toMatch(/Gaps in coverage/);
+			expect(article.textContent).toMatch(/Not included/);
 			expect(article.textContent).toMatch(/Related layers/);
 			expect(article.textContent).toMatch(/View on the map/);
 		});

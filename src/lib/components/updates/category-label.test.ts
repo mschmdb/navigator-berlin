@@ -6,7 +6,7 @@ describe('categoryLabel', () => {
 	it('liefert DE-Labels wie vor der Übersetzung', () => {
 		expect(UPDATE_CATEGORIES.map((c) => categoryLabel(c, 'de'))).toEqual([
 			'Daten-Update',
-			'Feature',
+			'Funktion',
 			'Methodik',
 			'Datenquelle',
 			'Lizenz',

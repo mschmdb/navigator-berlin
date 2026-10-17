@@ -54,10 +54,10 @@ describe('updates/+page.svelte · DE-Wortlaut (i18n C4d)', () => {
 		await new Promise((r) => setTimeout(r, 20));
 		expect(document.title).toBe('Updates | navigator.berlin');
 		expect(metaDescription()).toBe(
-			'Was sich an navigator.berlin verändert: neue Daten, Features und Methodik-Änderungen. Mit RSS und Atom.'
+			'Was sich an navigator.berlin verändert: neue Daten, Funktionen und Methodik-Änderungen. Mit RSS und Atom.'
 		);
 		expect(squash(root().querySelector('header')!)).toBe(
-			'Updates Daten-Refreshes, Feature-Releases und Methodik-Änderungen. Abonnieren via RSS, Atom oder JSON Feed.'
+			'Updates Daten-Updates, neue Funktionen und Methodik-Änderungen. Abonnieren via RSS, Atom oder JSON Feed.'
 		);
 		expect(squash(root().querySelector('[data-testid="updates-filter-feedback"]')!)).toBe(
 			'Alle Kategorien aktiv. 2 Einträge.'
@@ -65,7 +65,7 @@ describe('updates/+page.svelte · DE-Wortlaut (i18n C4d)', () => {
 		const list = root().querySelector('[data-testid="updates-list"]')!;
 		expect(list.getAttribute('aria-label')).toBe('Update-Einträge');
 		expect(squash(list)).toBe(
-			'15. Mai 2026 Feature Alpha Zusammenfassung Alpha. Mehr lesen1. April 2026 Feature Beta Zusammenfassung Beta. Mehr lesen'
+			'15. Mai 2026 Funktion Alpha Zusammenfassung Alpha. Mehr lesen1. April 2026 Funktion Beta Zusammenfassung Beta. Mehr lesen'
 		);
 		expect([...root().querySelectorAll('a')].map((a) => a.getAttribute('href'))).toEqual([
 			'/updates/rss.xml',
@@ -84,7 +84,7 @@ describe('updates/+page.svelte · DE-Wortlaut (i18n C4d)', () => {
 		const blog = JSON.parse(
 			document.querySelector('[data-testid="updates-index-jsonld"]')!.textContent!
 		);
-		expect(blog.description).toBe('Daten-Updates, Features, Methodik-Änderungen.');
+		expect(blog.description).toBe('Daten-Updates, neue Funktionen, Methodik-Änderungen.');
 		expect(blog.inLanguage).toBe('de-DE');
 		expect(blog.blogPost[0].headline).toBe('Alpha');
 		const crumbs = JSON.parse(
