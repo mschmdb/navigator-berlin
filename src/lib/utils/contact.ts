@@ -39,14 +39,17 @@ export interface OptOutContext {
 	name?: string;
 	/** Adresse der Einrichtung, optional vorbelegt. */
 	address?: string;
+	/** Karte, aus der ausgetragen wird. Default: kühle Orte. */
+	kind?: 'kuehle-orte' | 'waerme-orte';
 }
 
 // Story 16.4: Institutionen tragen sich per vorbereitetem Mail-Entwurf aus. Eigener Betreff/Body
 // (institutions-, nicht ortsbezogen), gemeinsam mit buildErrorReportMailto bleiben Recipient + Encoding.
 export function buildOptOutMailto(ctx: OptOutContext = {}): string {
-	const subject = m.contact_optout_subject();
+	const warm = ctx.kind === 'waerme-orte';
+	const subject = warm ? m.contact_optout_subject_waerme() : m.contact_optout_subject();
 	const lines = [
-		m.contact_optout_intro(),
+		warm ? m.contact_optout_intro_waerme() : m.contact_optout_intro(),
 		'',
 		`${m.contact_optout_name_label()} ${ctx.name ?? ''}`,
 		`${m.contact_optout_address_label()} ${ctx.address ?? ''}`,

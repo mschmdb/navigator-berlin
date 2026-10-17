@@ -41,6 +41,28 @@ describe('buildErrorReportMailto', () => {
 		expect(decoded).toContain('Beschreibung:');
 	});
 
+	it('kind „kuehle-orte“ ist der Default', () => {
+		expect(buildOptOutMailto({ kind: 'kuehle-orte' })).toBe(buildOptOutMailto());
+	});
+
+	it('kind „waerme-orte“ nennt warme Orte in Betreff und Intro', () => {
+		const url = buildOptOutMailto({ kind: 'waerme-orte' });
+		expect(url).toContain(`subject=${encodeURIComponent('Austragung warmer Ort')}`);
+		const decoded = decodeURIComponent(url.split('&body=')[1] ?? '');
+		expect(decoded).toContain('Warme-Orte-Karte');
+		expect(decoded).not.toContain('Kühle-Orte');
+	});
+
+	it('kind „waerme-orte“ ist englisch auf EN', () => {
+		overwriteGetLocale(() => 'en');
+		try {
+			const url = buildOptOutMailto({ kind: 'waerme-orte' });
+			expect(decodeURIComponent(url)).toContain('warm places map');
+		} finally {
+			overwriteGetLocale(() => 'de');
+		}
+	});
+
 	it('Newlines via %0A im Body', () => {
 		const url = buildErrorReportMailto({
 			layerSlug: 'x',

@@ -487,3 +487,11 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-71-warme-orte-explorer.md`
   summary: Zahlen in der Wärme-Orte-Methodik (677/230/227/212/97) stehen hart in `layer-methodology.ts` und Messages und driften beim nächsten Datenlauf.
   evidence: Kein Test gleicht sie mit GeoJSON oder MANIFEST ab; aus Daten ableiten.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-73-kaelte-explorer-modus.md`
+  summary: Link „Alle Layer und Daten im vollen navigator.berlin“ (Hitze und Kälte) führt auf `/explore` ohne `mode=default` und ohne Adresse; auf hitze./kaelte.navigator.berlin bleibt der reduzierte Modus aktiv.
+  evidence: Review-Fund 17.10.2026; `resolveAppMode` fällt ohne Override auf den Host zurück. Für beide Modi gemeinsam fixen.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-73-kaelte-explorer-modus.md`
+  summary: Kälte-Host `kaelte.navigator.berlin/explore` ohne Inspector-Test; Sektions-Zähler zählt im reduzierten Modus versteckte Treffer; Warme-Orte-Karte ohne Retry-Button und sichtbaren Zähler.
+  evidence: Review-Funde 17.10.2026; Zähler und fehlender Retry entsprechen dem bestehenden Hitze-Muster.

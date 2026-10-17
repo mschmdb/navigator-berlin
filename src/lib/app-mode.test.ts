@@ -13,8 +13,12 @@ describe('kaelte-Subdomain', () => {
 		expect(resolveAppMode('KAELTE.navigator.berlin')).toBe('kaelte');
 	});
 
-	it('?mode= bleibt auf hitze/default beschränkt', () => {
-		expect(resolveAppMode('navigator.berlin', 'kaelte')).toBe('default');
+	it('?mode=kaelte schaltet den Kälte-Modus auch auf der Hauptdomain ein', () => {
+		expect(resolveAppMode('navigator.berlin', 'kaelte')).toBe('kaelte');
+		expect(resolveAppMode('hitze.navigator.berlin', 'kaelte')).toBe('kaelte');
+	});
+
+	it('?mode=default überschreibt den Kälte-Host', () => {
 		expect(resolveAppMode('kaelte.navigator.berlin', 'default')).toBe('default');
 	});
 

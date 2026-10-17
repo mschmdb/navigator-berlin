@@ -3,7 +3,6 @@
 	import { LocateFixed, Navigation, Mail, ExternalLink } from '@lucide/svelte';
 	import { requestPosition, type PositionResult } from '$lib/utils/geolocation.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { buildErrorReportMailto } from '$lib/utils/contact.js';
 	import { formatDistance } from '$lib/components/atlas/inspector-panel/internal/format-distance.js';
 	import { getWaermeOrteIndex, type WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
 	import {
@@ -12,6 +11,16 @@
 		type WaermeOrtMitDistanz
 	} from '$lib/kaelte/nearest-waerme-orte.js';
 	import { categoryLabel } from '$lib/components/kuehle-orte/category-label.js';
+	import {
+		checkedText,
+		counterText,
+		feeText,
+		reportHref,
+		statusClass,
+		statusText,
+		stayText,
+		winterText
+	} from '$lib/kaelte/waerme-ort-labels.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 
@@ -66,8 +75,8 @@
 		}
 	}
 
-	function counterText(): string {
-		return m.kaelte_orte_zaehler({ shown: result.items.length, total: result.total });
+	function resultCounter(): string {
+		return counterText(result.items.length, result.total);
 	}
 
 	// Der auslösende Button verschwindet beim Phasenwechsel. Der Fokus wandert auf das neue Ziel.
@@ -87,7 +96,7 @@
 		}
 		index = loaded;
 		phase = 'ready';
-		if (loaded.length > 0) announceGlobal(counterText());
+		if (loaded.length > 0) announceGlobal(resultCounter());
 		await moveFocus();
 	}
 
@@ -114,84 +123,11 @@
 
 	function selectCategory(next: string | null): void {
 		category = next;
-		announceGlobal(counterText());
+		announceGlobal(resultCounter());
 	}
 
 	function distanceText(distanceM: number): string {
 		return formatDistance(distanceM, { locale });
-	}
-
-	function statusText(status: NonNullable<WaermeOrtMitDistanz['status']>): string {
-		switch (status) {
-			case 'open':
-				return m.kaelte_orte_status_open();
-			case 'closing-soon':
-				return m.kaelte_orte_status_closing_soon();
-			case 'closed':
-				return m.kaelte_orte_status_closed();
-		}
-	}
-
-	function statusClass(status: NonNullable<WaermeOrtMitDistanz['status']>): string {
-		if (status === 'open') return 'text-state-success';
-		if (status === 'closing-soon') return 'text-state-warning';
-		return 'text-ink-muted';
-	}
-
-	function winterText(value: WaermeOrt['winterOpen']): string {
-		switch (value) {
-			case 'yes':
-				return m.kaelte_orte_winter_yes();
-			case 'limited':
-				return m.kaelte_orte_winter_limited();
-			case 'no':
-				return m.kaelte_orte_winter_no();
-			case 'unknown':
-				return m.kaelte_orte_winter_unknown();
-		}
-	}
-
-	function stayText(value: WaermeOrt['stayWithoutPurchase']): string {
-		switch (value) {
-			case 'yes':
-				return m.kaelte_orte_stay_yes();
-			case 'no':
-				return m.kaelte_orte_stay_no();
-			case 'unknown':
-				return m.kaelte_orte_stay_unknown();
-		}
-	}
-
-	function feeText(value: WaermeOrt['isFree']): string {
-		switch (value) {
-			case 'free':
-				return m.kaelte_orte_fee_free();
-			case 'ticket':
-				return m.kaelte_orte_fee_ticket();
-			case 'unknown':
-				return m.kaelte_orte_fee_unknown();
-		}
-	}
-
-	function checkedText(iso: string): string {
-		const date = new Date(`${iso}T00:00:00Z`);
-		const formatted = Number.isNaN(date.getTime())
-			? iso
-			: new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(date);
-		return m.kaelte_orte_geprueft({ datum: formatted });
-	}
-
-	function reportHref(ort: WaermeOrt): string {
-		return buildErrorReportMailto({
-			layerSlug: 'waerme-orte',
-			layerName: `${ort.name} (${ort.id})`,
-			displayName: ort.address ? `${ort.address}, ${ort.plz}`.replace(/, $/, '') : undefined,
-			lat: ort.lat,
-			lng: ort.lng,
-			sourceUrl: ort.sourceUrl || undefined,
-			category: categoryLabel(ort.cat).text,
-			checkedAt: ort.checkedAt || undefined
-		});
 	}
 
 	const buttonClass =
@@ -273,7 +209,7 @@
 		</div>
 
 		<p class="font-sans text-sm text-ink-muted" data-testid="waerme-zaehler">
-			{counterText()}
+			{resultCounter()}
 		</p>
 
 		{#if result.items.length > 0}

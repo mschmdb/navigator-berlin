@@ -24,7 +24,7 @@
 	const pathname = '/kaelte';
 	const primaryOrigin = $derived(canonicalOrigin(origin));
 
-	const explorerLink = buildExplorerDeepLink(['waerme-orte']);
+	const explorerLink = buildExplorerDeepLink(['waerme-orte'], 'kaelte');
 	const pageTitle = $derived(buildPageTitle(m.kaelte_meta_title()));
 	const pageDescription = $derived(m.kaelte_meta_description());
 	const ogImageAbsolute = $derived(`${primaryOrigin}/og/page/kaelte.png`);

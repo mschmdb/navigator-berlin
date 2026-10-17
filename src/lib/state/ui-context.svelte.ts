@@ -8,6 +8,7 @@ import type {
 	KuehleOrt,
 	KiezScore
 } from '$lib/data';
+import type { WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
 import type { Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
 import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
 import type { DemografieScope } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
@@ -48,6 +49,10 @@ export interface UiState {
 	oepnvStopIndex: OepnvStopIndex | null;
 	/** Story 15.3-15.5: Kühle-Orte-Index für Nächste-Orte + Filter im Inspector. */
 	kuehleOrteIndex: KuehleOrt[] | null;
+	/** #73: Warme-Orte-Index für die Inspector-Card im Kälte-Modus (lazy, nur dort geladen). */
+	waermeOrteIndex: WaermeOrt[] | null;
+	/** #73: Laden des Warme-Orte-Index ist fehlgeschlagen (Card zeigt Hinweis statt Ladeanzeige). */
+	waermeOrteLoadError: boolean;
 	trinkbrunnenIndex: Trinkbrunnen[] | null;
 	/** Story 1.26: lokale Adress-Bookmarks (LocalStorage-Mirror, siehe ADR-004). */
 	bookmarks: Bookmark[];
@@ -90,6 +95,8 @@ export function createUiState(): UiState {
 		hiddenLayerSlugs: [],
 		oepnvStopIndex: null,
 		kuehleOrteIndex: null,
+		waermeOrteIndex: null,
+		waermeOrteLoadError: false,
 		trinkbrunnenIndex: null,
 		bookmarks: [],
 		bookmarksDialogOpen: false,
