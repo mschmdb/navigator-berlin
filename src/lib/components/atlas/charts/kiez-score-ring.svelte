@@ -141,14 +141,14 @@
 	<!-- GH-88: Die Ringfarbe zeigt die Stufe, nicht die Dimension. Die Zeile sagt, wie die
 	     Legende den Ringen zugeordnet ist. -->
 	<p
-		class="mt-3 w-[236px] text-dense-meta text-ink-subtle"
+		class="mt-3 w-[236px] text-left text-dense-meta text-ink-subtle"
 		data-testid="kiez-score-ring-order"
 		aria-hidden="true"
 	>
 		{m.inspector_kiez_score_ring_order()}
 	</p>
 	<ul
-		class="mt-1 grid w-[236px] gap-1 text-dense-label text-ink"
+		class="mt-1 grid w-[236px] gap-1 text-left text-dense-label text-ink"
 		data-testid="kiez-score-ring-legend"
 		aria-hidden="true"
 	>
