@@ -260,4 +260,55 @@ describe('createAddressHistoryWriter', () => {
 		await writer.write('a', '?address=a', 'push');
 		expect(calls).toEqual(['push', 'push']);
 	});
+
+	it('schreibt den Namen mit Push nach, wenn der erste Push fehlschlug', async () => {
+		const first = deferred();
+		const calls: Array<[string, string]> = [];
+		const writer = createAddressHistoryWriter((search, mode) => {
+			calls.push([search, mode]);
+			return calls.length === 1 ? first.promise : Promise.resolve();
+		});
+		const a = writer.write('a', '?address=a', 'push');
+		const named = writer.write('a', '?address=a&q=Name', 'replace');
+		first.reject(new Error('abgebrochen'));
+		await expect(a).rejects.toThrow('abgebrochen');
+		await named;
+		expect(calls).toEqual([
+			['?address=a', 'push'],
+			['?address=a&q=Name', 'push']
+		]);
+		expect(writer.lastWritten()).toBe('a');
+	});
+
+	it('verwirft einen wartenden Namens-Write, wenn inzwischen eine andere Adresse gewählt wurde', async () => {
+		const first = deferred();
+		const calls: string[] = [];
+		const writer = createAddressHistoryWriter((search) => {
+			calls.push(search);
+			return calls.length === 1 ? first.promise : Promise.resolve();
+		});
+		void writer.write('a', '?address=a', 'push');
+		const named = writer.write('a', '?address=a&q=Name', 'replace');
+		await writer.write('b', '?address=b', 'push');
+		first.resolve();
+		await named;
+		expect(calls).toEqual(['?address=a', '?address=b']);
+		expect(writer.lastWritten()).toBe('b');
+	});
+
+	it('verwirft einen wartenden Write nach forget', async () => {
+		const first = deferred();
+		const calls: string[] = [];
+		const writer = createAddressHistoryWriter((search) => {
+			calls.push(search);
+			return calls.length === 1 ? first.promise : Promise.resolve();
+		});
+		void writer.write('a', '?address=a', 'push');
+		const named = writer.write('a', '?address=a&q=Name', 'replace');
+		writer.forget();
+		first.resolve();
+		await named;
+		expect(calls).toEqual(['?address=a']);
+		expect(writer.lastWritten()).toBeNull();
+	});
 });
