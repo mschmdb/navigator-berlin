@@ -8,6 +8,7 @@
 <!-- Trenner als String-Ausdruck: Ein Komma mit Zeilenumbruch im {#if} verliert beim Kompilieren das Leerzeichen. -->
 <p data-testid="kaelte-quellen" class="font-sans text-xs text-ink-subtle">
 	{m.kaelte_quellen()}:
+	<!-- eslint-disable-next-line svelte/no-useless-mustaches -->
 	{#each quellen as quelle, i (quelle.label)}{#if i > 0}{', '}{/if}{#if quelle.url}<a
 				href={quelle.url}
 				target="_blank"
