@@ -623,7 +623,7 @@ const LAYER_METHODOLOGY_SPECS = {
 		],
 		omissions: [
 			'Keine Bewertung von Programm, Qualität oder Eintrittspreis der Einrichtung.',
-			'Stolpersteine und Denkmale zählen zur Erinnerung, nicht zur Kultur.'
+			'Stolpersteine und Denkmale fließen nicht in die Kultur-Dimension ein.'
 		],
 		relatedLayers: [
 			'kultur-museum',

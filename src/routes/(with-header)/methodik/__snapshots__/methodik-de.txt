@@ -65,7 +65,7 @@ a: Wahldaten
 a: Alle Wahlen einzeln
 h2: Kühle Orte
 p: Der Kühle-Orte-Layer zeigt Orte zum Abkühlen bei Hitze. Der Kühle-Score von 1 bis 5 folgt Typ und Bauart: 5 sehr kalt (Eishalle), 4 klimatisiert oder am Wasser, 3 kühler Massivbau wie Bibliothek oder Museum, darunter weniger kühl. Geometrie und Basis-Tags stammen aus OpenStreetMap (ODbL 1.0, Namensnennung), ergänzt um eine redaktionelle navigator.berlin-Anreicherung: Kühle-Score, Klimatisierung und Sommer-Verfügbarkeit.
-p: Klimatisierung ist selten belegbar: nur 29 von 659 Orten tragen einen belegten AC-Status, der Rest steht auf wahrscheinlich oder unbekannt. Der AC-Hinweis ist ein Indiz. Ein Rechtsanspruch auf Zugang besteht nicht.
+p: Klimatisierung ist selten belegbar: nur 29 von 659 Orten tragen einen belegten AC-Status, der Rest steht auf wahrscheinlich oder unbekannt. Der AC-Hinweis ist ein Indiz. Die Karte begründet keinen Rechtsanspruch auf Zugang.
 p: Quellen und Lizenzen
 a: Quellen und Lizenzen
 h2: Abdeckung

@@ -32,11 +32,11 @@
 		'compare-mss-aggregat':
 			'Wir zeigen die Stufe, ohne Bewertung. Niedriger Status heißt nicht „schlechter Kiez“. Daten je Planungsraum, nicht je Adresse.',
 		'kiez-score-explainer':
-			'Umwelt- & Infrastruktur-Score aus fünf Dimensionen pro Planungsraum (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz). Misst nur Größen mit eindeutiger Besser-Richtung. Sozialstruktur und Bezahlbarkeit bewusst nicht enthalten.',
+			'Mittel aus fünf Dimensionen pro Planungsraum. Zählt nur Größen mit klarer Besser-Richtung. Sozialstruktur und Bezahlbarkeit fehlen bewusst.',
 		'kriminalitaet-aggregat':
 			'Häufigkeitszahl je Bezirksregion, nicht adressgenau. Sie misst erfasste Fälle pro gemeldete Einwohner, kein persönliches Risiko. Touristen- und Pendler-Orte erscheinen überzeichnet, das Dunkelfeld bleibt unerfasst. Kein Sicherheits-Ranking, fließt nicht in den Gesamt-Score.',
 		'wahl-stimmenanteile':
-			'Daten beschreiben Stimmenanteile, keine Bewertung. Briefstimmen sind auf allen Ebenen enthalten, im Stimmbezirk über die Briefwahl-Gruppe, im Kiez anteilig nach Wahlberechtigten verteilt (Schätzung, keine amtliche Aufteilung).',
+			'Die Daten zeigen Stimmenanteile. Briefstimmen sind auf allen Ebenen enthalten: im Stimmbezirk über die Briefwahl-Gruppe, im Kiez anteilig nach Wahlberechtigten geschätzt.',
 		'cross-layer-template':
 			'Werte aus verschiedenen Layern nebeneinander gestellt, ohne kausale Verknüpfung. Aggregat-Daten pro Planungsraum, nicht pro Adresse.',
 		'brw-not-aggregatable':
@@ -44,9 +44,9 @@
 		'level-below-threshold':
 			'Auf dieser Ebene zu wenig Daten für eine belastbare Aussage. Wir zeigen lieber keinen Wert als einen irreführenden.',
 		'wahl-portal-footnote':
-			'Karten und Vergleiche auf dieser Seite sind deskriptiv, kein Ranking von Kiezen oder Bezirken. Stimmenanteile sind kein Hinweis auf künftige Wahlen.',
+			'Karten und Vergleiche auf dieser Seite beschreiben Stimmenanteile und ordnen Kieze oder Bezirke nicht in eine Rangfolge. Über künftige Wahlen sagen sie nichts aus.',
 		'wahl-portal-stimmenanteile':
-			'Daten beschreiben Stimmenanteile, keine Bewertung. Auf Kiez-Ebene ist die Briefwahl anteilig nach Wahlberechtigten geschätzt, nicht amtlich. Amtliche Werte gibt es auf Stimmbezirks-, Bezirks- und Berlin-Ebene.'
+			'Die Daten zeigen Stimmenanteile. Auf Kiez-Ebene ist die Briefwahl anteilig nach Wahlberechtigten geschätzt. Amtliche Werte gibt es auf Stimmbezirks-, Bezirks- und Berlin-Ebene.'
 	};
 </script>
 

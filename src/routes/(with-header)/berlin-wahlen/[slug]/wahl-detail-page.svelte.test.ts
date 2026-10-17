@@ -50,11 +50,13 @@ describe('berlin-wahlen/[slug]/+page.svelte: Parteinamen in Kurzform (GH-92)', (
 		};
 		render(WahlDetailPage, { data });
 		const table = (await page.getByTestId('wahl-detail-berlin-table').element()) as HTMLElement;
-		expect(table.textContent).toContain('CDU');
-		expect(table.textContent).not.toContain('Christlich Demokratische Union');
-		expect(
-			table.querySelector('[title="Christlich Demokratische Union Deutschlands"]')
-		).not.toBeNull();
+		const visible = table.querySelector('[data-testid="wahl-detail-partei-kurz"]');
+		expect(visible?.textContent?.trim()).toBe('CDU');
+		expect(visible?.getAttribute('title')).toBe('Christlich Demokratische Union Deutschlands');
+		// Codex-Review GH-92: Screenreader bekommen die Langform, nicht nur per title.
+		expect(table.querySelector('.sr-only')?.textContent).toContain(
+			'Christlich Demokratische Union Deutschlands'
+		);
 	});
 });
 

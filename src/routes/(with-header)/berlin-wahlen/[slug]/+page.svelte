@@ -271,12 +271,21 @@
 										style="background-color:{parteiColor(entry.kurzname)};"
 										aria-hidden="true"
 									></span>
-									<!-- GH-92: überall Kurzform, die Langform nur im title. -->
-									<span
-										class="text-ink"
-										title={entry.vollname !== entry.kurzname ? entry.vollname : undefined}
-										>{parteiDisplayName(entry.kurzname)}</span
-									>
+									<!-- GH-92: sichtbar die Kurzform, die Langform im title und für Screenreader. -->
+									{#if entry.vollname !== entry.kurzname}
+										<span
+											class="text-ink"
+											title={entry.vollname}
+											aria-hidden="true"
+											data-testid="wahl-detail-partei-kurz"
+											>{parteiDisplayName(entry.kurzname)}</span
+										>
+										<span class="sr-only">{entry.vollname}</span>
+									{:else}
+										<span class="text-ink" data-testid="wahl-detail-partei-kurz"
+											>{parteiDisplayName(entry.kurzname)}</span
+										>
+									{/if}
 								</span>
 							</td>
 							<td class="py-1.5 pl-2 text-right whitespace-nowrap text-ink tabular-nums">
