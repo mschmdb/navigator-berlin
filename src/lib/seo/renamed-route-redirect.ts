@@ -15,6 +15,8 @@ const RENAMED_ROUTES: ReadonlyMap<string, string> = new Map([
 	// Beide alten Slugs zeigen direkt auf das Ziel, ohne Redirect-Kette.
 	['/wo-lebt-es-sich-gut', '/kiez-score'],
 	['/umwelt-infrastruktur-score', '/kiez-score'],
+	// GH-110: Die dünne Landing /kuehle-orte doppelte /hitze und ist entfallen.
+	['/kuehle-orte', '/hitze'],
 	// Phase-1 Score-Schema: Dimension „grün" + „hitze" zu einer Karte zusammengelegt.
 	// Alter Layer-Detail-Slug wurde umbenannt (GSC-404 2026-06-01).
 	['/layer/kiez-score-gruen', '/layer/kiez-score-gruen-hitze']

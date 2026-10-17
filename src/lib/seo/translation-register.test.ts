@@ -39,7 +39,6 @@ describe('isRouteTranslated', () => {
 			{ pathname: '/kiez-score', locale: 'en' },
 			{ pathname: '/hitze', locale: 'en' },
 			{ pathname: '/kaelte', locale: 'en' },
-			{ pathname: '/kuehle-orte', locale: 'en' },
 			{ pathname: '/lizenzen', locale: 'en' },
 			{ pathname: '/kiez', locale: 'en', prefix: true },
 			{ pathname: '/bezirk', locale: 'en', prefix: true },
@@ -102,9 +101,10 @@ describe('isRouteTranslated', () => {
 		}
 	});
 
-	// Block C4c (`spec-i18n-c4c-hitze-quellen.md`): drei exakte Einträge, ohne `prefix`.
-	it('Block C4c: Hitze, Kühle Orte und Lizenzen sind exakt registriert', () => {
-		for (const path of ['/hitze', '/kaelte', '/kuehle-orte', '/lizenzen']) {
+	// Block C4c (`spec-i18n-c4c-hitze-quellen.md`): exakte Einträge, ohne `prefix`.
+	// Kühle Orte leitet seit GH-110 auf Hitze um und ist nicht mehr registriert.
+	it('Block C4c: Hitze, Kälte und Lizenzen sind exakt registriert', () => {
+		for (const path of ['/hitze', '/kaelte', '/lizenzen']) {
 			expect(isRouteTranslated(path, 'en'), path).toBe(true);
 			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
 			expect(isRouteTranslated(`${path}/unbekannt`, 'en'), `${path}/unbekannt`).toBe(false);

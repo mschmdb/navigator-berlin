@@ -90,8 +90,9 @@ export const UPDATE_FILE_PATHS: readonly string[] = Object.keys(
  * four more exact entries: `/methodik/wahldaten`, `/architektur`, `/webmcp` and
  * `/kiez-score`. WebMCP tool names, tool descriptions and the
  * manifest stay German (boundary C1/C2), the OG images stay German. Block C4c
- * (`spec-i18n-c4c-hitze-quellen.md`) adds three more exact entries: `/hitze`,
- * `/kuehle-orte` and `/lizenzen`. The DataCatalog JSON-LD on `/lizenzen` and the
+ * (`spec-i18n-c4c-hitze-quellen.md`) added exact entries for `/hitze` and
+ * `/lizenzen` (the cool-places landing it also covered redirects to `/hitze`
+ * since GH-110). The DataCatalog JSON-LD on `/lizenzen` and the
  * live DWD warning text stay German, the OG images stay German. Block C4d
  * (`spec-i18n-c4d-updates.md`) registers `/updates` with `prefix: true`: the
  * index and every `/updates/{slug}` detail page, including entries added later.
@@ -120,7 +121,6 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/kiez-score', locale: 'en' },
 	{ pathname: '/hitze', locale: 'en' },
 	{ pathname: '/kaelte', locale: 'en' },
-	{ pathname: '/kuehle-orte', locale: 'en' },
 	{ pathname: '/lizenzen', locale: 'en' },
 	{ pathname: '/kiez', locale: 'en', prefix: true },
 	{ pathname: '/bezirk', locale: 'en', prefix: true },

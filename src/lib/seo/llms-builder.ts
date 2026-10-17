@@ -120,18 +120,12 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		description: 'Karten-Inspector mit Adress-Suche und 38 Daten-Layern',
 		section: 'static'
 	});
-	out.push({
-		loc: `${ctx.origin}/kuehle-orte`,
-		name: 'Kühle Orte in Berlin',
-		description:
-			'Über 500 kühle Orte bei Hitze: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls, Trinkbrunnen, mit Adresse, Live-Status und Weg dorthin',
-		section: 'static'
-	});
+	// GH-110: Die frühere Kühle-Orte-Landing leitet auf /hitze um, die Beschreibung übernimmt ihren Inhalt.
 	out.push({
 		loc: `${ctx.origin}/hitze`,
 		name: 'Hitze-Navigator Berlin',
 		description:
-			'Landing für kühle Orte bei Hitze mit Standort-Suche, Live-DWD-Warnlage und Ein-Tap-Navigation',
+			'Über 500 kühle Orte bei Hitze: Kinos, Bibliotheken, Schwimmhallen, Museen, Malls, Trinkbrunnen. Mit Standort-Suche, Live-DWD-Warnlage und Weg dorthin',
 		section: 'static'
 	});
 	out.push({

@@ -14,7 +14,9 @@ const SKIP_DIRS = new Set(['node_modules', 'paraglide', '__snapshots__']);
 const ALLOWED_FILES = new Set([
 	'src/lib/seo/renamed-route-redirect.ts',
 	'src/lib/seo/renamed-route-redirect.test.ts',
-	'src/lib/seo/kuehle-orte-route-guard.test.ts'
+	'src/lib/seo/kuehle-orte-route-guard.test.ts',
+	// prüft den 301 selbst
+	'tests/e2e/i18n-c4c.e2e.ts'
 ]);
 
 // Relative Route: vor dem Schrägstrich steht kein Wortzeichen, Punkt, Bindestrich,
