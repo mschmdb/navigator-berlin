@@ -6,7 +6,6 @@ set -euo pipefail
 # Versions pinned for reproducibility (NFR-M1). Re-run to refresh.
 
 PLEX_SANS_VER="5.2.8"
-PLEX_SERIF_VER="5.2.7"
 PLEX_MONO_VER="5.2.7"
 PLEX_ARABIC_VER="5.2.9"
 
@@ -25,11 +24,6 @@ fetch() {
 fetch "$CDN/@fontsource-variable/ibm-plex-sans@${PLEX_SANS_VER}/files/ibm-plex-sans-latin-wght-normal.woff2"     "plex-sans-latin-var.woff2"
 fetch "$CDN/@fontsource-variable/ibm-plex-sans@${PLEX_SANS_VER}/files/ibm-plex-sans-latin-ext-wght-normal.woff2" "plex-sans-latin-ext-var.woff2"
 fetch "$CDN/@fontsource-variable/ibm-plex-sans@${PLEX_SANS_VER}/files/ibm-plex-sans-cyrillic-wght-normal.woff2"  "plex-sans-cyrillic-var.woff2"
-
-# IBM Plex Serif :Static 400, 3 subsets (Variable n/a auf npm Mai 2026)
-fetch "$CDN/@fontsource/ibm-plex-serif@${PLEX_SERIF_VER}/files/ibm-plex-serif-latin-400-normal.woff2"     "plex-serif-latin-400.woff2"
-fetch "$CDN/@fontsource/ibm-plex-serif@${PLEX_SERIF_VER}/files/ibm-plex-serif-latin-ext-400-normal.woff2" "plex-serif-latin-ext-400.woff2"
-fetch "$CDN/@fontsource/ibm-plex-serif@${PLEX_SERIF_VER}/files/ibm-plex-serif-cyrillic-400-normal.woff2"  "plex-serif-cyrillic-400.woff2"
 
 # IBM Plex Mono :Static 400, 3 subsets (Variable n/a auf npm Mai 2026)
 fetch "$CDN/@fontsource/ibm-plex-mono@${PLEX_MONO_VER}/files/ibm-plex-mono-latin-400-normal.woff2"     "plex-mono-latin-400.woff2"
