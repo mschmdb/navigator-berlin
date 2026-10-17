@@ -29,14 +29,9 @@
 			</p>
 		</header>
 
-		<ul class="flex flex-wrap gap-2" aria-label={m.home_finder_aria_label()}>
+		<ul class="space-y-1 text-base text-ink" aria-label={m.home_finder_aria_label()}>
 			{#each BEISPIELE as beispiel (beispiel)}
-				<li
-					data-testid="home-finder-beispiel"
-					class="rounded-full border border-rule px-3 py-1 text-sm text-ink-muted"
-				>
-					„{beispiel()}"
-				</li>
+				<li data-testid="home-finder-beispiel">„{beispiel()}“</li>
 			{/each}
 		</ul>
 
