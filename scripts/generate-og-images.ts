@@ -146,8 +146,8 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 	{
 		slug: 'kaelte',
 		headline: 'Kälte-Navigator Berlin',
-		subline: 'Hilfe für Menschen in der Kälte',
-		body: 'Du siehst jemanden in der Kälte? Die Nummern der Berliner Kältehilfe an einem Ort, mit Hinweis auf den gerade erreichbaren Dienst.',
+		subline: 'Warme Orte und Kältehilfe',
+		body: '227 warme Orte auf der Karte, mit Winter-Öffnung und Weg dorthin. Dazu die Nummern der Berliner Kältehilfe und welcher Dienst gerade erreichbar ist.',
 		footerUrl: '/kaelte'
 	},
 	{
