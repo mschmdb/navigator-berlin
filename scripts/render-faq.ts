@@ -51,6 +51,7 @@ import {
 	type RegionDisplayNames
 } from '../src/lib/data/region-display-names.js';
 import { loadAllFaqTemplates } from '../src/lib/server/faq/load-templates.js';
+import { templateAppliesToTarget } from '../src/lib/server/faq/layer-faq-clusters.js';
 import {
 	renderTemplate,
 	type TemplateAggregate,
@@ -270,6 +271,7 @@ async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[
 	const out: RenderedRow[] = [];
 	for (const target of targets) {
 		for (const { cluster, locale, file } of loaded) {
+			if (!templateAppliesToTarget(target, cluster)) continue;
 			for (const template of file.templates) {
 				const context: TemplateContext = {
 					pageType: target.pageType,
