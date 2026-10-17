@@ -499,3 +499,6 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-63-kaelte-launch.md`
   summary: E2E „Root (Karte) hat 0 axe-Violations“ ist flaky: axe misst Kontrast im Inspector während der Einblend-Animation (Farben #b8b7b0/#c0beb7 auf #f5f3ea).
   evidence: 17.10.2026 mehrfach rot/grün ohne Codeänderung; Fix: auf Ende der Animation warten oder `prefers-reduced-motion` im Test setzen.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-104-quellen-komma.md`
+  summary: Der Hinweis „öffnet neuen Tab“ an Kältehilfe-Quellen liegt neben dem Link statt darin und fehlt im Accessible Name.
+  evidence: `quellen-zeile.svelte` (vorher `notfall-block.svelte`) setzt das `sr-only`-Span nach `</a>`; in Link-Listen von Screenreadern fehlt der Hinweis.
