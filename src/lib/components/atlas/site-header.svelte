@@ -3,7 +3,7 @@
 	import { Layers, Bookmark, BookmarkCheck, Search, Map as MapIcon, Menu } from '@lucide/svelte';
 	import AddressSearch from './address-search.svelte';
 	import AddressSearchOverlay from './address-search-overlay.svelte';
-	import MobileMetaDrawer from './mobile-meta-drawer.svelte';
+	import SiteMenu from './site-menu.svelte';
 	import { PixelLogo } from '$lib/components/ui';
 	import { SlidersHorizontal } from '@lucide/svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
@@ -41,6 +41,8 @@
 		 * Callbacks fehlen, sodass die Landing-Header-Variante kompakt bleibt.
 		 */
 		atlasCtaHref?: string;
+		/** Aktueller Pfad (inkl. Locale-Präfix) für `aria-current` im Menü. */
+		currentPath?: string;
 	};
 
 	let {
@@ -54,7 +56,8 @@
 		currentAddressBookmarked = false,
 		onOpenBookmarks,
 		searchCollapsed = false,
-		atlasCtaHref
+		atlasCtaHref,
+		currentPath = '/'
 	}: Props = $props();
 
 	let overlayOpen = $state(false);
@@ -69,12 +72,14 @@
 		overlayOpen = false;
 	}
 
-	let drawerOpen = $state(false);
-	function openDrawer(): void {
-		drawerOpen = true;
+	let menuOpen = $state(false);
+	let menuTriggerEl: HTMLButtonElement | null = $state(null);
+	function openMenu(): void {
+		menuOpen = true;
 	}
-	function closeDrawer(): void {
-		drawerOpen = false;
+	function closeMenu(): void {
+		menuOpen = false;
+		menuTriggerEl?.focus();
 	}
 </script>
 
@@ -233,17 +238,20 @@
 		{#if langSwitcher}
 			<div class="hidden shrink-0 sm:block">{@render langSwitcher()}</div>
 		{/if}
-		<!-- Mobile-Hamburger: Drawer mit Meta-Links + LangSwitcher -->
+		<!-- Header-Menü (#138): auf allen Viewports, Label ab sm sichtbar. -->
 		<button
+			bind:this={menuTriggerEl}
 			type="button"
 			data-testid="header-menu-trigger"
-			onclick={openDrawer}
+			onclick={openMenu}
 			aria-label={m.shell_menu_trigger_aria_label()}
 			aria-haspopup="dialog"
-			aria-expanded={drawerOpen}
-			class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-rule text-ink hover:bg-bg sm:hidden"
+			aria-expanded={menuOpen}
+			aria-controls="site-menu"
+			class="inline-flex h-10 min-w-10 shrink-0 items-center justify-center gap-2 rounded-sm border border-rule px-2.5 text-sm font-medium text-ink hover:bg-bg"
 		>
 			<Menu size={18} aria-hidden="true" />
+			<span class="hidden sm:inline">{m.site_menu_trigger_label()}</span>
 		</button>
 	</div>
 </header>
@@ -255,4 +263,4 @@
 	onClose={closeOverlay}
 />
 
-<MobileMetaDrawer open={drawerOpen} onClose={closeDrawer} langSwitcher={langSwitcherDrawer} />
+<SiteMenu open={menuOpen} onClose={closeMenu} {currentPath} langSwitcher={langSwitcherDrawer} />
