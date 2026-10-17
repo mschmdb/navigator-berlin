@@ -96,7 +96,7 @@
 	     Dropdown, der Mobile-Drawer bekommt weiterhin die Linkliste
 	     (langSwitcherDrawer unten) -- site-header.svelte's `langSwitcher`-Prop
 	     rendert im Header-Slot, `langSwitcherDrawer`-Prop geht an den
-	     MobileMetaDrawer. -->
+	     Header-Menü (site-menu.svelte). -->
 	<LangSwitcher currentPath={page.url.pathname} variant="dropdown" />
 {/snippet}
 
@@ -114,6 +114,7 @@
 	onOpenBookmarks={offAtlas ? undefined : openBookmarks}
 	searchCollapsed={ui.inspectorOpen || ui.compareMode || ui.finderOpen}
 	{atlasCtaHref}
+	currentPath={page.url.pathname}
 	{langSwitcher}
 	{langSwitcherDrawer}
 />

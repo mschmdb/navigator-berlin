@@ -87,7 +87,7 @@
 {@render children()}
 
 {#if isExplore}
-	<!-- Compact-Bottom-Bar auf /explore. Mobile aus, da Header-Drawer dieselben Links hat. -->
+	<!-- Compact-Bottom-Bar auf /explore. Mobile aus, da das Header-Menü dieselben Links hat. -->
 	<div class="hidden md:block">
 		<MetaFooter variant="compact" {langSwitcher} />
 	</div>

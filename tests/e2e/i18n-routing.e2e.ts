@@ -801,7 +801,7 @@ test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht
 		await page.setViewportSize({ width: 375, height: 800 });
 		await page.goto('/en/impressum');
 		await page.getByTestId('header-menu-trigger').click();
-		const drawer = page.getByTestId('mobile-meta-drawer');
+		const drawer = page.getByTestId('site-menu');
 		await expect(drawer.getByRole('heading', { name: 'Menu' })).toBeVisible();
 		await expect(drawer.getByRole('link', { name: 'Contact' })).toBeVisible();
 	});
@@ -817,7 +817,7 @@ test.describe('i18n Block B2: Shell ist englisch auf jeder /en-Seite, auch nicht
 		await page.setViewportSize({ width: 375, height: 800 });
 		await page.goto('/en/impressum');
 		await page.getByTestId('header-menu-trigger').click();
-		const drawer = page.getByTestId('mobile-meta-drawer');
+		const drawer = page.getByTestId('site-menu');
 		const deLink = drawer.getByTestId('lang-switcher-link');
 		await expect(deLink).toBeVisible();
 		await expect(deLink).toHaveAttribute('href', /\/impressum$/);

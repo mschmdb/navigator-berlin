@@ -37,6 +37,19 @@ describe('site-header.svelte', () => {
 		expect(el.textContent?.trim()).toBe('navigator.berlin');
 	});
 
+	it('Menü-Knopf: sichtbares Label, aria-expanded und aria-controls, öffnet das Menü', async () => {
+		render(SiteHeader, { geocode: async () => [], atlasCtaHref: '/explore' });
+		const trigger = page.getByTestId('header-menu-trigger');
+		const el = (await trigger.element()) as HTMLButtonElement;
+		expect(el.textContent).toContain('Menü');
+		expect(el.className).not.toMatch(/(^|\s)sm:hidden/);
+		expect(el.getAttribute('aria-expanded')).toBe('false');
+		expect(el.getAttribute('aria-controls')).toBe('site-menu');
+		await trigger.click();
+		await expect.element(page.getByTestId('site-menu')).toBeInTheDocument();
+		expect(el.getAttribute('aria-expanded')).toBe('true');
+	});
+
 	it('rendert AddressSearch (Combobox)', async () => {
 		render(SiteHeader, { geocode: async () => [] });
 		await expect.element(page.getByRole('combobox')).toBeInTheDocument();
