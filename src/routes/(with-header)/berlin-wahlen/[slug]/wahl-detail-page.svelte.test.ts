@@ -34,6 +34,30 @@ function makeData(overrides: Partial<WahlDetailPageData['wahl']> = {}): WahlDeta
 	};
 }
 
+describe('berlin-wahlen/[slug]/+page.svelte: Parteinamen in Kurzform (GH-92)', () => {
+	it('zeigt die Kurzform, die Langform steht nur im title', async () => {
+		const data = {
+			...makeData(),
+			berlin: [
+				{
+					kurzname: 'CDU',
+					vollname: 'Christlich Demokratische Union Deutschlands',
+					farbeHex: '#000000',
+					stimmen: 100,
+					anteil: 0.3
+				}
+			]
+		};
+		render(WahlDetailPage, { data });
+		const table = (await page.getByTestId('wahl-detail-berlin-table').element()) as HTMLElement;
+		expect(table.textContent).toContain('CDU');
+		expect(table.textContent).not.toContain('Christlich Demokratische Union');
+		expect(
+			table.querySelector('[title="Christlich Demokratische Union Deutschlands"]')
+		).not.toBeNull();
+	});
+});
+
 // Review-Fund (i18n Block B): "Sonstige" ist eine Anzeige-, keine
 // Daten-Schluessel-Uebersetzung -- `data-partei`/Sortier-Key bleiben roh.
 describe('berlin-wahlen/[slug]/+page.svelte: "Sonstige" in der Berlin-Top-5-Tabelle unter en', () => {
