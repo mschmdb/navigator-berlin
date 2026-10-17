@@ -325,4 +325,31 @@ describe('renderTemplate ohne Score-Metriken (#100)', () => {
 		expect(result?.answer).toContain('Quelle: Lärmbelastung 2023');
 		expect(result?.answer).not.toContain('Ruhe-und-Luft-Score');
 	});
+
+	it('behält Score und Rang, wenn nur der Vergleich fehlt', () => {
+		const result = renderTemplate(merged, {
+			...ctx(),
+			metrics: new Map([
+				[
+					'ruheLuft',
+					{
+						value: 72,
+						rang: 12,
+						quartil: 1,
+						total: 143,
+						compareValue: null,
+						compareKind: 'berlin'
+					}
+				]
+			])
+		});
+		expect(result?.answer).not.toMatch(/\{[a-zA-Z]+\}/);
+		expect(result?.answer).toContain('Im Ruhe-und-Luft-Score erreicht Mitte 72 von 100');
+	});
+
+	it('lässt bei Namen mit Abkürzungspunkt keinen Satzrest stehen', () => {
+		const result = renderTemplate(merged, ctx({ name: 'St. Beispiel' }));
+		expect(result?.answer).not.toContain('Score erreicht');
+		expect(result?.answer).toContain('Im Bezirk St. Beispiel dominiert');
+	});
 });
