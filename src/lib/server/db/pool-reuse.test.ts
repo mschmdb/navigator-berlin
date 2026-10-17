@@ -5,9 +5,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 const postgresMock = vi.fn(() => ({ end: vi.fn(async () => {}) }));
 
 vi.mock('postgres', () => ({ default: postgresMock }));
-vi.mock('drizzle-orm/postgres-js', () => ({
-	drizzle: vi.fn((client: unknown) => ({ client }))
-}));
+const drizzleMock = vi.fn((client: unknown) => ({ client }));
+vi.mock('drizzle-orm/postgres-js', () => ({ drizzle: drizzleMock }));
 
 describe('db/index Pool über Modul-Neuauswertung (#145)', () => {
 	beforeEach(async () => {
@@ -33,7 +32,12 @@ describe('db/index Pool über Modul-Neuauswertung (#145)', () => {
 		const db2 = second.getDb();
 
 		expect(postgresMock).toHaveBeenCalledTimes(1);
-		expect(db2).toBe(db1);
+		// Gleicher Pool, aber ein frischer Drizzle-Wrapper: so greift ein
+		// per HMR geändertes Schema sofort (Codex-Review #145).
+		expect((db2 as unknown as { client: unknown }).client).toBe(
+			(db1 as unknown as { client: unknown }).client
+		);
+		expect(db2).not.toBe(db1);
 	});
 
 	it(
