@@ -43,6 +43,22 @@
 		).length;
 	});
 
+	const dimensionGroups = $derived.by(() => {
+		const dims = score?.dimensions ?? [];
+		return [
+			{
+				id: 'score',
+				label: m.inspector_kiez_score_group_score(undefined, localeOpts),
+				dims: dims.filter((d) => COMPOSITE_DIMENSIONS.includes(d.dimension))
+			},
+			{
+				id: 'context',
+				label: m.inspector_kiez_score_group_context(undefined, localeOpts),
+				dims: dims.filter((d) => !COMPOSITE_DIMENSIONS.includes(d.dimension))
+			}
+		];
+	});
+
 	let expandedDim = $state<KiezScoreDimension | null>(null);
 
 	function toggleDim(dim: KiezScoreDimension): void {
@@ -99,18 +115,28 @@
 			</div>
 		{/if}
 
-		<div class="divide-y divide-rule">
-			{#each score.dimensions as dim (dim.dimension)}
-				<KiezScoreDimensionRow
-					score={dim}
-					open={expandedDim === dim.dimension}
-					onToggle={toggleDim}
-					lang={locale}
-					isActive={activeLayerSlugs.includes(`kiez-score-${dim.dimension}`)}
-					{onToggleLayer}
-				/>
-			{/each}
-		</div>
+		<!-- GH-88: Zwei Gruppen statt Label pro Datensatz. Die Gruppe sagt, was in den Score zählt. -->
+		{#each dimensionGroups as group (group.id)}
+			{#if group.dims.length > 0}
+				<div data-testid="kiez-score-group-{group.id}">
+					<h4 class="border-b border-rule pb-1 text-dense-label font-semibold text-ink-muted">
+						{group.label}
+					</h4>
+					<div class="divide-y divide-rule">
+						{#each group.dims as dim (dim.dimension)}
+							<KiezScoreDimensionRow
+								score={dim}
+								open={expandedDim === dim.dimension}
+								onToggle={toggleDim}
+								lang={locale}
+								isActive={activeLayerSlugs.includes(`kiez-score-${dim.dimension}`)}
+								{onToggleLayer}
+							/>
+						{/each}
+					</div>
+				</div>
+			{/if}
+		{/each}
 
 		<EditorialDisclaimer variant="kiez-score-explainer" />
 		<a

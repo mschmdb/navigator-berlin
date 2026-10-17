@@ -275,7 +275,7 @@ describe('inspector-panel.svelte', () => {
 	});
 
 	describe('Story 1.18: Section-Header + Empty-Section-Toggle', () => {
-		it('Section-Header in Satzschreibung, Gewicht statt Versalien (GH-87; Story 1.31: border-t am Section-Wrapper)', async () => {
+		it('Section-Header in Satzschreibung, Gewicht statt Versalien (GH-87/88; Story 1.31: border-t am Section-Wrapper)', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -283,7 +283,7 @@ describe('inspector-panel.svelte', () => {
 				layerMeta: fullLayerMeta
 			});
 			const h = (await page.getByTestId('section-header-boundaries').element()) as HTMLElement;
-			expect(h.className).toMatch(/text-xs/);
+			expect(h.className).toMatch(/text-sm/);
 			expect(h.className).not.toMatch(/uppercase/);
 			expect(h.className).toMatch(/font-semibold/);
 			const sec = (await page.getByTestId('section-boundaries').element()) as HTMLElement;
@@ -499,7 +499,7 @@ describe('inspector-panel.svelte', () => {
 		const laermMeta = meta('laerm-2023', 'C: Umwelt');
 		const plzMeta = meta('plz', 'A: Boundaries');
 
-		it('Berlin-Kontextzeile bleibt DE roh mit Punkt-Dezimaltrennzeichen ("39.5%"), kein Komma', async () => {
+		it('Berlin-Kontextzeile DE mit Komma und Leerzeichen ("39,5 %", GH-88)', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -507,15 +507,15 @@ describe('inspector-panel.svelte', () => {
 				layerMeta: [...fullLayerMeta, bioklimaMeta]
 			});
 			await vi.waitUntil(
-				() => page.getByTestId('layer-card').query()?.textContent?.includes('39.5%') ?? false,
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('39,5 %') ?? false,
 				{ timeout: 5000, interval: 50 }
 			);
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
-			expect(card.textContent).toContain('meist mittel (39.5%)');
-			expect(card.textContent).not.toContain('39,5');
+			expect(card.textContent).toContain('meist mittel, 39,5 %');
+			expect(card.textContent).not.toContain('39.5');
 		});
 
-		it('Berlin-Kontextzeile EN übersetzt "meist" → "mostly", Zahl bleibt "39.5%"', async () => {
+		it('Berlin-Kontextzeile EN übersetzt "meist" → "mostly", Zahl "39.5%"', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -528,10 +528,10 @@ describe('inspector-panel.svelte', () => {
 				{ timeout: 5000, interval: 50 }
 			);
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
-			expect(card.textContent).toContain('mostly mittel (39.5%)');
+			expect(card.textContent).toContain('mostly mittel, 39.5%');
 		});
 
-		it('Lärm-dB-Kontextzeile (Kiez-Mittel) DE: "Lärm-Mittel (Kiez)" · "49.8 dB (L_DEN)"', async () => {
+		it('Lärm-dB-Kontextzeile (Kiez-Mittel) DE: "Lärm-Mittel (Kiez)", "49,8 dB (L_DEN)"', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -540,12 +540,12 @@ describe('inspector-panel.svelte', () => {
 				kiezLaermDb: 49.8
 			});
 			await vi.waitUntil(
-				() => page.getByTestId('layer-card').query()?.textContent?.includes('49.8 dB') ?? false,
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('49,8 dB') ?? false,
 				{ timeout: 5000, interval: 50 }
 			);
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
 			expect(card.textContent).toContain('Lärm-Mittel (Kiez)');
-			expect(card.textContent).toContain('49.8 dB (L_DEN)');
+			expect(card.textContent).toContain('49,8 dB (L_DEN)');
 		});
 
 		it('Lärm-dB-Kontextzeile EN: "Noise mean (Kiez)" · "49.8 dB (L_DEN)"', async () => {

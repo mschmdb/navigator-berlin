@@ -32,7 +32,7 @@ const poiHit: LayerHit = {
 	value: { name: 'Stolperstein Muster' },
 	source: 'https://www.stolpersteine-berlin.de',
 	updatedAt: '2024-06-01T00:00:00.000Z',
-	license: 'CC-BY'
+	license: 'CC BY 4.0'
 };
 
 function dim(dimension: KiezScore['dimensions'][number]['dimension'], value: number) {
@@ -58,10 +58,12 @@ describe('GH-88 AC1: Linien statt Karten', () => {
 	it('LayerCard hat keinen Rahmen, keinen Radius, keinen Hintergrund', async () => {
 		render(LayerCard, { hit: laermHit, layerName: 'Lärmbelastung 2023' });
 		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
-		expect(card.className).not.toMatch(/\brounded\b/);
-		expect(card.className).not.toMatch(/\bborder-rule\b(?!.*border-b)/);
-		expect(card.className).not.toMatch(/\bbg-bg-elevated\b/);
-		expect(card.className).toMatch(/\bborder-b\b/);
+		const classes = card.className.split(/\s+/);
+		expect(classes.some((c) => c.startsWith('rounded'))).toBe(false);
+		// Nur eine Trennlinie unten, kein umlaufender Rahmen.
+		expect(classes).not.toContain('border');
+		expect(classes).toContain('border-b');
+		expect(classes.some((c) => c.startsWith('bg-'))).toBe(false);
 	});
 
 	it('LayerHitRow hat keinen Radius und keine Hover-Fläche', async () => {
@@ -121,7 +123,8 @@ describe('GH-88 AC3: Quelle & Details einmal pro Gruppe', () => {
 		render(SectionSources, {
 			sectionLabel: 'Umwelt',
 			hits: [laermHit, poiHit],
-			layerNameFor: (slug: string) => (slug === 'laerm-2023' ? 'Lärmbelastung 2023' : 'Stolpersteine')
+			layerNameFor: (slug: string) =>
+				slug === 'laerm-2023' ? 'Lärmbelastung 2023' : 'Stolpersteine'
 		});
 		const toggle = page.getByTestId('section-sources-toggle');
 		await expect.element(toggle).toHaveTextContent('Quellen und Details zu Umwelt');

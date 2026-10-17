@@ -75,8 +75,7 @@
 		data-testid="value-chip-value"
 		class={['leading-none', isNumeric && 'font-mono tabular-nums'].filter(Boolean).join(' ')}
 	>
-		{value}{#if unit}
-			<span class="ml-1 text-xs">{unit}</span>
-		{/if}
+		<!-- GH-88: echtes (geschütztes) Leerzeichen statt Rand, damit der Text „60.000 €/m²" lautet. -->
+		{value}{#if unit}{' '}<span class="text-xs">{unit}</span>{/if}
 	</span>
 </span>

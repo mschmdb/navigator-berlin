@@ -13,6 +13,7 @@
 	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import { formatDecimal } from '$lib/i18n/format.js';
 	import { severityDescriptions } from './internal/value-severity-mapping.js';
+	import { formatDistance } from './internal/format-distance.js';
 	import {
 		findAllNearestStops,
 		findAllNearestStopsWithSoft,
@@ -210,7 +211,7 @@
 								data-testid="nearest-stop-distance"
 								aria-hidden="true"
 							>
-								{stop.distanceM}m
+								{formatDistance(stop.distanceM, localeOpts)}
 							</span>
 							<span data-testid="nearest-stop-chip" aria-hidden="true">
 								<ValueChip

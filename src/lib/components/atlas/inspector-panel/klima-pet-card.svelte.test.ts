@@ -114,7 +114,7 @@ describe('KlimaPetCard', () => {
 
 	// i18n Block B3a Task 3: DE hat KEINEN URL-Präfix (Boundary), vormals
 	// `/de/layer/...` (301-Umweg-Bug).
-	it('Learn-more-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
+	it('Titel-Link hat bei lang: "de" keinen /de/-Präfix', async () => {
 		render(KlimaPetCard, {
 			hit,
 			layerName: 'Gefühlte Temperatur 2022',
@@ -125,11 +125,11 @@ describe('KlimaPetCard', () => {
 			bezirkAggregate: null,
 			berlinAggregate: null
 		});
-		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('klima-pet-title-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/layer/klima-pet-2022');
 	});
 
-	it('Learn-more-Link nutzt /en/-Präfix bei lang: "en"', async () => {
+	it('Titel-Link nutzt /en/-Präfix bei lang: "en"', async () => {
 		render(KlimaPetCard, {
 			hit,
 			layerName: 'Perceived temperature 2022',
@@ -140,12 +140,12 @@ describe('KlimaPetCard', () => {
 			bezirkAggregate: null,
 			berlinAggregate: null
 		});
-		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('klima-pet-title-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/layer/klima-pet-2022');
 	});
 
 	// i18n Block B3b
-	it('lang="en": kein direkter Messwert-Hinweis + Details-Toggle + Map-Toggle-Titel englisch', async () => {
+	it('lang="en": kein direkter Messwert-Hinweis + Map-Toggle-Titel englisch', async () => {
 		render(KlimaPetCard, {
 			hit: { ...hit, value: null },
 			layerName: 'Perceived temperature 2022',
@@ -160,9 +160,7 @@ describe('KlimaPetCard', () => {
 		await expect
 			.element(page.getByTestId('pet-no-point-value'))
 			.toHaveTextContent('No direct reading at this exact point');
-		await expect
-			.element(page.getByTestId('pet-details-toggle'))
-			.toHaveTextContent('Source & details');
+		await expect.element(page.getByTestId('pet-details-toggle')).not.toBeInTheDocument();
 		const toggle = (await page.getByTestId('map-toggle').element()) as HTMLButtonElement;
 		expect(toggle.getAttribute('title')).toBe('Show on map');
 	});
@@ -194,43 +192,7 @@ describe('KlimaPetCard', () => {
 			bezirkAggregate: null,
 			berlinAggregate: null
 		});
-		const link = (await page.getByTestId('learn-more').element()) as HTMLAnchorElement;
+		const link = (await page.getByTestId('klima-pet-title-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/layer/klima-pet-2022');
-	});
-
-	// i18n Block C1: `explainEntry.long` ist jetzt selbst locale-fähig
-	// (Messages) -- kein `lang="de"`-Override mehr auf EN.
-	it('explainEntry.long zeigt EN-Text ohne lang-Attribut bei lang="en"', async () => {
-		render(KlimaPetCard, {
-			hit,
-			layerName: 'Perceived temperature 2022',
-			lang: 'en',
-			kiezName: null,
-			kiezAggregate: null,
-			bezirkName: null,
-			bezirkAggregate: null,
-			berlinAggregate: null
-		});
-		await page.getByTestId('pet-details-toggle').click();
-		const details = (await page.getByTestId('pet-details').element()) as HTMLElement;
-		const explain = details.querySelector('p');
-		expect(explain?.textContent).toMatch(/Physiological Equivalent Temperature/);
-		expect(explain?.getAttribute('lang')).toBeNull();
-	});
-
-	it('explainEntry.long hat KEIN lang-Attribut auf DE', async () => {
-		render(KlimaPetCard, {
-			hit,
-			layerName: 'Gefühlte Temperatur 2022',
-			kiezName: null,
-			kiezAggregate: null,
-			bezirkName: null,
-			bezirkAggregate: null,
-			berlinAggregate: null
-		});
-		await page.getByTestId('pet-details-toggle').click();
-		const details = (await page.getByTestId('pet-details').element()) as HTMLElement;
-		const explain = details.querySelector('p');
-		expect(explain?.getAttribute('lang')).toBeNull();
 	});
 });

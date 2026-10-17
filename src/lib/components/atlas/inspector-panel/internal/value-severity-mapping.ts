@@ -76,7 +76,8 @@ function severityFromLaermDb(raw: unknown): SeverityLevel {
 function severityFromUmweltatlasKategorie(kategorie: string): SeverityLevel {
 	const v = kategorie.toLowerCase().trim();
 	if (v === 'niedrig' || v === 'gering' || v === 'gut' || v === 'sehr niedrig') return 'success';
-	if (v === 'mittel' || v === 'mittlere belastung') return 'warning';
+	// GH-88: „mittel" ist überall neutral (gut grün, mittel neutral, schlecht orange/rot).
+	if (v === 'mittel' || v === 'mittlere belastung') return 'neutral';
 	if (v === 'hoch' || v === 'sehr hoch' || v === 'schlecht' || v === 'kritisch') return 'danger';
 	return 'neutral';
 }
@@ -89,7 +90,7 @@ function severityFromGruenversorgung(value: unknown): SeverityLevel {
 	if (!kat) return 'neutral';
 	const v = mapGruenversorgungKategorie(kat).toLowerCase().trim();
 	if (v === 'hoch' || v === 'sehr hoch') return 'success';
-	if (v === 'mittel') return 'success-soft';
+	if (v === 'mittel') return 'neutral';
 	if (v === 'gering' || v === 'sehr gering') return 'warning';
 	return 'neutral';
 }
@@ -100,7 +101,7 @@ function severityFromWohnlage(value: unknown): SeverityLevel {
 	const v = mode.toLowerCase().trim();
 	if (v === 'sehr gut' || v === 'bestlage') return 'success';
 	if (v === 'gut') return 'success-soft';
-	if (v === 'mittel') return 'success-soft';
+	if (v === 'mittel') return 'neutral';
 	if (v === 'einfach') return 'neutral';
 	return 'neutral';
 }

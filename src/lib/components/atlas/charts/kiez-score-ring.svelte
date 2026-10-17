@@ -3,6 +3,7 @@
 	import { DIMENSION_LABELS_DE, scaleFor } from '../inspector-panel/internal/kiez-score-display.js';
 	import { severityColor } from './internal/chart-palette.js';
 	import { COMPOSITE_DIMENSIONS } from '$lib/data';
+	import { m } from '$lib/paraglide/messages.js';
 	import type { KiezScore, KiezScoreDimension } from '$lib/data';
 
 	type Props = {
@@ -137,8 +138,17 @@
 
 	<!-- GH-86: Namen und Werte als Legende statt Bogen-Beschriftung, die bei 8 px abschnitt.
 	     Screenreader lesen die Tabelle darunter, darum ist die Legende aria-hidden. -->
+	<!-- GH-88: Die Ringfarbe zeigt die Stufe, nicht die Dimension. Die Zeile sagt, wie die
+	     Legende den Ringen zugeordnet ist. -->
+	<p
+		class="mt-3 w-[236px] text-dense-meta text-ink-subtle"
+		data-testid="kiez-score-ring-order"
+		aria-hidden="true"
+	>
+		{m.inspector_kiez_score_ring_order()}
+	</p>
 	<ul
-		class="mt-3 grid w-[236px] gap-1 text-dense-label text-ink"
+		class="mt-1 grid w-[236px] gap-1 text-dense-label text-ink"
 		data-testid="kiez-score-ring-legend"
 		aria-hidden="true"
 	>
