@@ -98,7 +98,7 @@
 							<span
 								data-testid={`steuerleiste-jahr-${opt.jahr}-wiederholung`}
 								aria-hidden="true"
-								class="ml-0.5 text-dense-meta text-ink-subtle"
+								class="ml-0.5 font-sans text-dense-meta text-ink-subtle"
 								title={wahlWiederholungLabel()}
 							>
 								{m.wahl_portal_wiederholung_kuerzel()}

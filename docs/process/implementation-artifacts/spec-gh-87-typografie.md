@@ -2,7 +2,7 @@
 title: 'GH-87 Redesign 2: Typografie ohne Serif, Mono nur für Zahlen'
 type: 'refactor'
 created: '2026-10-17'
-status: 'in-progress'
+status: 'in-review'
 baseline_commit: 'c7a69f1ceefe293a35f4e5e12450df5fc74ba0f2'
 route: 'dispatch'
 review_loop_iteration: 0

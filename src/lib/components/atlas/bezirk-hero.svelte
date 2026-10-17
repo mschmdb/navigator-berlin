@@ -68,7 +68,7 @@
 						<dd class="m-0 text-lg font-semibold text-ink tabular-nums sm:text-2xl">
 							{formatCount(profile.einwohner, localeOpts)}
 							{#if stand}
-								<span class="block font-sans text-xs text-ink-muted" data-testid="bezirk-stand">
+								<span class="block font-sans text-xs font-normal text-ink-muted" data-testid="bezirk-stand">
 									{stand}
 								</span>
 							{/if}
