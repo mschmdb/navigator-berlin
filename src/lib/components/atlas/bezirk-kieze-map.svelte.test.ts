@@ -28,6 +28,11 @@ const outline: RegionOutline = {
 	]
 };
 
+function titleFor(slug: string): string | undefined {
+	const link = document.querySelector(`[data-testid="bezirk-map-link"][data-slug="${slug}"]`);
+	return link?.querySelector('title')?.textContent ?? undefined;
+}
+
 function pathFor(slug: string): SVGPathElement {
 	const link = document.querySelector(`[data-testid="bezirk-map-link"][data-slug="${slug}"]`);
 	const path = link?.querySelector('path');
@@ -40,14 +45,13 @@ describe('bezirk-kieze-map.svelte', () => {
 		render(BezirkKiezeMap, { outline, kieze, bezirkName: 'Neukölln' });
 		const links = document.querySelectorAll('[data-testid="bezirk-map-link"]');
 		expect(links).toHaveLength(3);
-		expect(links[0].getAttribute('aria-label')).toBe('Reuterstraße, Kiez-Score 41');
+		expect(titleFor('reuterstrasse')).toBe('Reuterstraße, Kiez-Score 41');
 		expect(links[0].getAttribute('href')).toBe('/kiez/reuterstrasse');
 	});
 
 	it('nennt Kieze ohne Score im Namen', () => {
 		render(BezirkKiezeMap, { outline, kieze, bezirkName: 'Neukölln' });
-		const link = document.querySelector('[data-slug="ohne-score"]');
-		expect(link?.getAttribute('aria-label')).toBe('Ohne Score, ohne Kiez-Score');
+		expect(titleFor('ohne-score')).toBe('Ohne Score, ohne Kiez-Score');
 	});
 
 	it('färbt nach Klasse und grau ohne Score', () => {
@@ -58,11 +62,16 @@ describe('bezirk-kieze-map.svelte', () => {
 		expect(pathFor('ohne-score').getAttribute('fill')).toBe(NO_SCORE_FILL);
 	});
 
-	it('beschriftet die Gruppe mit dem Bezirk', () => {
+	it('benennt die Karte als ein Bild ohne Links darin und verbirgt die Grafik (#103)', () => {
 		render(BezirkKiezeMap, { outline, kieze, bezirkName: 'Neukölln' });
-		const svg = document.querySelector('[data-testid="bezirk-kieze-map"] svg');
-		expect(svg?.getAttribute('role')).toBe('img');
-		expect(svg?.getAttribute('aria-label')).toContain('Neukölln');
+		const wrapper = document.querySelector('[data-testid="bezirk-kieze-map"]');
+		const svg = wrapper?.querySelector('svg');
+		expect(svg?.getAttribute('aria-hidden')).toBe('true');
+		expect(svg?.hasAttribute('role')).toBe(false);
+		const image = wrapper?.querySelector('[role="img"]');
+		expect(image?.getAttribute('aria-label')).toContain('Neukölln');
+		expect(image?.childElementCount).toBe(0);
+		expect(image?.className).toContain('sr-only');
 	});
 
 	it('nimmt Karten-Links aus der Tab-Reihenfolge, Link bleibt für die Maus', () => {
@@ -71,6 +80,7 @@ describe('bezirk-kieze-map.svelte', () => {
 		for (const link of links) {
 			expect(link.getAttribute('tabindex')).toBe('-1');
 			expect(link.getAttribute('href')).toMatch(/^\/kiez\//);
+			expect(link.hasAttribute('aria-label')).toBe(false);
 		}
 	});
 
@@ -99,6 +109,6 @@ describe('bezirk-kieze-map.svelte', () => {
 		render(BezirkKiezeMap, { outline, kieze, bezirkName: 'Neukölln' });
 		const link = document.querySelector('[data-slug="rixdorf"]');
 		expect(link?.getAttribute('href')).toBe('/en/kiez/rixdorf');
-		expect(link?.getAttribute('aria-label')).toBe('Rixdorf, Kiez score 80');
+		expect(titleFor('rixdorf')).toBe('Rixdorf, Kiez score 80');
 	});
 });

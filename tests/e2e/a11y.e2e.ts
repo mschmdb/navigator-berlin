@@ -83,6 +83,16 @@ test('Startseite hat 0 axe-Violations und zeigt beide Saison-Teaser', async ({ p
 	expect(results.violations).toEqual([]);
 });
 
+// #103: Kiez-Links in einer role="img"-Grafik meldete axe als nested-interactive.
+test('Bezirk-Seite mit Kieze-Karte hat 0 axe-Violations', async ({ page }) => {
+	await page.goto('/bezirk/friedrichshain-kreuzberg');
+	await expect(page.getByTestId('bezirk-map-link').first()).toBeAttached();
+	const results = await new AxeBuilder({ page })
+		.withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+		.analyze();
+	expect(results.violations).toEqual([]);
+});
+
 test('Berlin-Wahlen-Portal (Story 3 Skeleton) hat 0 axe-Violations', async ({ page }) => {
 	await page.route('**/api/wahl/list', (route) => route.fulfill({ json: { elections: [] } }));
 	await page.goto('/berlin-wahlen');

@@ -89,7 +89,7 @@ test.describe('L5: Bezirksseite mit Karte und Liste', () => {
 		expect(count).toBeGreaterThan(5);
 		await expect(page.getByTestId('bezirk-kieze-link')).toHaveCount(count);
 		await expect(links.first()).toHaveAttribute('href', /^\/kiez\/[a-z0-9-]+$/);
-		await expect(links.first()).toHaveAttribute('aria-label', /Kiez-Score|ohne Kiez-Score/);
+		await expect(links.first().locator('title')).toHaveText(/Kiez-Score|ohne Kiez-Score/);
 	});
 
 	test('Liste: sortierbar per Tastatur, aria-sort wechselt', async ({ page }) => {
