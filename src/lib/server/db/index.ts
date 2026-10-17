@@ -17,8 +17,24 @@ import * as schema from './schema/index.js';
 
 export type Db = PostgresJsDatabase<typeof schema>;
 
-let _client: Sql | null = null;
-let _db: Db | null = null;
+/**
+ * Pool auf `globalThis` statt in Modul-Variablen (#145): Vite wertet dieses
+ * Modul bei HMR neu aus. Mit Modul-Variablen entstand bei jedem Reload ein
+ * neuer Pool (max 10), der alte blieb offen, bis Postgres keine Verbindung
+ * mehr annahm. In Prod läuft das Modul einmal, dort ändert sich nichts.
+ * Nur der Pool ist global. Den Drizzle-Wrapper baut jede Modulauswertung neu,
+ * damit ein per HMR geändertes Schema sofort greift.
+ */
+type DbCache = { client: Sql | null };
+
+declare global {
+	var __navigatorDbCache: DbCache | undefined;
+}
+
+function cache(): DbCache {
+	globalThis.__navigatorDbCache ??= { client: null };
+	return globalThis.__navigatorDbCache;
+}
 
 function ensureUrl(): string {
 	const url = process.env.DATABASE_URL;
@@ -31,12 +47,19 @@ function ensureUrl(): string {
 /**
  * Liefert den Singleton-Drizzle-Client (lazy-initialisiert).
  */
+let _db: Db | null = null;
+let _dbClient: Sql | null = null;
+
 export function getDb(): Db {
-	if (_db) return _db;
-	if (!_client) {
-		_client = postgres(ensureUrl(), { max: 10, onnotice: () => {} });
+	const c = cache();
+	// Wrapper gilt nur für den Pool, auf dem er gebaut wurde: Hat ein anderer
+	// Modulstand den Pool per closeDb() geschlossen, entsteht ein neuer.
+	if (_db && _dbClient === c.client) return _db;
+	if (!c.client) {
+		c.client = postgres(ensureUrl(), { max: 10, onnotice: () => {} });
 	}
-	_db = drizzle(_client, { schema });
+	_db = drizzle(c.client, { schema });
+	_dbClient = c.client;
 	return _db;
 }
 
@@ -44,10 +67,13 @@ export function getDb(): Db {
  * Test-Helper: Connection schließen (z.B. nach Migrations- oder Integration-Test).
  */
 export async function closeDb(): Promise<void> {
-	if (_client) {
-		await _client.end();
-		_client = null;
+	const c = cache();
+	if (c.client) {
+		const client = c.client;
+		c.client = null;
 		_db = null;
+		_dbClient = null;
+		await client.end();
 	}
 }
 
