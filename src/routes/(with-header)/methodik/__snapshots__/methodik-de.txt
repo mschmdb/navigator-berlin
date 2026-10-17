@@ -49,7 +49,7 @@ h2: Der Begriff Kiez
 p: Umgangssprachlich ist ein Kiez ein gefühltes Viertel, von den Bewohnern definiert, ohne feste Grenze. Auf navigator.berlin meint „Kiez" dagegen eine amtliche Einheit: die Lebensweltlich orientierte Raum-Bezirksregion (LOR-BZR, Stand 2021), 143 Stück.
 p: Wir nutzen die LOR-Bezirksregion, weil nur sie eine klare, statistisch belegte Grenze hat, an der alle Daten hängen. Dein gefühlter Kiez kann kleiner sein oder über mehrere Bezirksregionen reichen. Die Werte auf einer Kiez-Seite gelten für die ganze Bezirksregion.
 h2: Aggregat-Indizes
-p: Der Umwelt- & Infrastruktur-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und Luft, Grün und Hitze, Mobilität, Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze) und Wohnschutz (Milieuschutzgebiete). Jede Dimension bleibt separat abrufbar im Inspector und als eigener Karten-Layer. Fünf mal 20 Prozent Gewicht. Ein Gesamt-Layer aggregiert sie als Mittel.
+p: Der Kiez-Score fasst pro Planungsraum fünf Dimensionen zusammen: Ruhe und Luft, Grün und Hitze, Mobilität, Versorgung (Kitas, Schulen, Krankenhäuser, Spielplätze) und Wohnschutz (Milieuschutzgebiete). Jede Dimension bleibt separat abrufbar im Inspector und als eigener Karten-Layer. Fünf mal 20 Prozent Gewicht. Ein Gesamt-Layer aggregiert sie als Mittel.
 p: Der Score misst nur Größen mit eindeutiger Besser-Richtung für Bewohner. Sozialstruktur wertet er nicht: ein Kiez mit niedrigem Sozialstatus lebt nicht „schlechter". Bezahlbarkeit bleibt ebenfalls draußen, kontestiert und ohne belastbare Adress-Daten.
 p: Es gibt keinen einzelnen „Berlin-Score". Aggregation auf eine Zahl würde stigmatisieren und individuelle Prioritäten verschleiern. Wer Familie sucht, gewichtet anders als jemand mit Hitze-Empfindlichkeit.
 p: Vollständige Methodik: Kiez-Score
@@ -96,7 +96,7 @@ p: Kein kommerzielles Modell.
 h2: Editorial-Verantwortung
 p: Stolpersteine zeigen wir als Erinnerungs-Marker. Wir zählen sie nicht und werten sie nicht. Personen-Biografien gehören zur Primärquelle stolpersteine-berlin.de.
 p: navigator.berlin nennt keinen Mietpreis und gibt keine rechtliche Auskunft. Den gesetzlichen Wohnlagen-Mietspiegel liefert mietspiegel.berlin.de.
-p: Aggregierte Werte sind Stadtteil-Mittel, keine Wohnungs-Eigenschaften. Wir verzichten bewusst auf einen „Berlin-Score" und zeigen keine Bezirks-Rankings.
+p: Aggregierte Werte sind Stadtteil-Mittel, keine Wohnungs-Eigenschaften. Einen „Berlin-Score“ für die ganze Stadt gibt es nicht. Die Ranglisten für Kieze und Bezirke vergleichen die fünf Dimensionen.
 p: Layer-Texte schreiben wir von Hand. Ein LLM fasst keine Layer-Inhalte zusammen und erzeugt keine Personen-Biografien.
 h2: Daten-Stand
 p: Alphabetisch sortiert nach Layer-Name.

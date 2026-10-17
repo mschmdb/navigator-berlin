@@ -30,7 +30,7 @@ const data = {
 	computedAt: '2026-09-30T00:00:00.000Z'
 };
 
-describe('umwelt-infrastruktur-score · DE-Parität (i18n C4b)', () => {
+describe('kiez-score · DE-Parität (i18n C4b)', () => {
 	it('sichtbarer DE-Text entspricht dem festgehaltenen Stand', async () => {
 		render(Page, { data });
 		const article = document.querySelector('[data-testid="ranking-page"]')!;
@@ -38,7 +38,7 @@ describe('umwelt-infrastruktur-score · DE-Parität (i18n C4b)', () => {
 	});
 });
 
-describe('umwelt-infrastruktur-score · EN (i18n C4b)', () => {
+describe('kiez-score · EN (i18n C4b)', () => {
 	afterEach(() => overwriteGetLocale(() => 'de'));
 
 	function renderEn(): Element {
@@ -49,7 +49,7 @@ describe('umwelt-infrastruktur-score · EN (i18n C4b)', () => {
 
 	it('H1, Intro, Disclaimer und Accordion sind englisch', async () => {
 		const article = renderEn();
-		expect(article.querySelector('h1')?.textContent).toBe('Environment & infrastructure score');
+		expect(article.querySelector('h1')?.textContent).toBe('Kiez score');
 		const text = article.textContent ?? '';
 		expect(text).toContain('Berlin Kieze and Bezirke sorted by five equally weighted dimensions');
 		expect(text).toContain('What suits you depends on your own priorities.');
@@ -99,7 +99,7 @@ describe('umwelt-infrastruktur-score · EN (i18n C4b)', () => {
 		const dataset = JSON.parse(
 			document.querySelector('script[data-testid="ranking-dataset-jsonld"]')?.textContent ?? '{}'
 		);
-		expect(dataset.name).toBe('Environment & infrastructure score Berlin');
+		expect(dataset.name).toBe('Kiez score Berlin');
 		expect(dataset.keywords).toBe('Kiez score, Berlin, Ranking');
 		expect(dataset.creator['@type']).toBe('Organization');
 		expect(dataset.creator['@id']).toMatch(/\/#organization$/);
@@ -116,7 +116,7 @@ describe('umwelt-infrastruktur-score · EN (i18n C4b)', () => {
 	});
 });
 
-describe('umwelt-infrastruktur-score · DE-Wortlaut von Aside, Accordion, Empty-State und Meta (i18n C4b)', () => {
+describe('kiez-score · DE-Wortlaut von Aside, Accordion, Empty-State und Meta (i18n C4b)', () => {
 	it('Disclaimer, Accordion-Trigger und -Inhalt behalten den Baseline-Wortlaut', async () => {
 		render(Page, { data });
 		const norm = (el: Element | null): string =>
@@ -141,7 +141,7 @@ describe('umwelt-infrastruktur-score · DE-Wortlaut von Aside, Accordion, Empty-
 		expect(document.querySelector('[role="radiogroup"]')?.getAttribute('aria-label')).toBe(
 			'Ranking-Ansicht wechseln'
 		);
-		expect(document.title).toBe('Umwelt- & Infrastruktur-Score | navigator.berlin');
+		expect(document.title).toBe('Kiez-Score | navigator.berlin');
 	});
 
 	it('Empty-State ohne Zeilen behält den Baseline-Wortlaut', () => {
@@ -152,7 +152,7 @@ describe('umwelt-infrastruktur-score · DE-Wortlaut von Aside, Accordion, Empty-
 	});
 });
 
-describe('umwelt-infrastruktur-score · JSON-LD EN (i18n C4b)', () => {
+describe('kiez-score · JSON-LD EN (i18n C4b)', () => {
 	afterEach(() => {
 		overwriteGetLocale(() => 'de');
 	});
@@ -164,20 +164,20 @@ describe('umwelt-infrastruktur-score · JSON-LD EN (i18n C4b)', () => {
 			document.querySelector('script[data-testid="ranking-breadcrumb-jsonld"]')?.textContent ?? '{}'
 		);
 		expect(crumbs.itemListElement[0].item).toMatch(/\/en$/);
-		expect(crumbs.itemListElement[1].name).toBe('Environment & infrastructure score');
+		expect(crumbs.itemListElement[1].name).toBe('Kiez score');
 		const list =
 			document.querySelector('script[data-testid="ranking-itemlist-jsonld"]')?.textContent ?? '';
 		expect(list).toContain('/en/kiez/wedding');
 	});
 });
 
-describe('umwelt-infrastruktur-score · Dataset-JSON-LD', () => {
+describe('kiez-score · Dataset-JSON-LD', () => {
 	afterEach(() => overwriteGetLocale(() => 'de'));
 
 	it('DE: url ohne Locale-Präfix, spatialCoverage gesetzt', () => {
 		render(Page, { data });
 		const ld = readDatasetJsonLd();
-		expect(ld.url).toMatch(/\/umwelt-infrastruktur-score$/);
+		expect(ld.url).toMatch(/\/kiez-score$/);
 		expect(ld.url).not.toContain('/en/');
 		expect(ld.spatialCoverage.geo.box).toMatch(/^52\.\d+ 13\.\d+ 52\.\d+ 13\.\d+$/);
 	});
@@ -185,6 +185,6 @@ describe('umwelt-infrastruktur-score · Dataset-JSON-LD', () => {
 	it('EN: url mit /en-Präfix', () => {
 		overwriteGetLocale(() => 'en');
 		render(Page, { data });
-		expect(readDatasetJsonLd().url).toMatch(/\/en\/umwelt-infrastruktur-score$/);
+		expect(readDatasetJsonLd().url).toMatch(/\/en\/kiez-score$/);
 	});
 });

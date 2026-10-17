@@ -8,14 +8,14 @@ import Page from './+page.svelte';
  * Story 2.9a · AC-6 Methodik-Doku.
  *
  * Verifiziert dass die /methodik/kiez-score-Page um die Sections für
- * Kiez-Score (Bezirksregion) und Bezirks-Score erweitert wurde.
+ * Kiez-Score (Bezirksregion) und Kiez-Score für Bezirke erweitert wurde.
  */
 
-describe('methodik/kiez-score · Bezirks-Score-Erweiterung (Story 2.9a)', () => {
-	it('setzt den Titel ohne Marke, weil er mit Marke 60 Zeichen überschreitet', async () => {
+describe('methodik/kiez-score · Kiez-Score für Bezirke (Story 2.9a)', () => {
+	it('setzt den Titel mit Marke, weil der kurze Name unter 60 Zeichen bleibt (GH-93)', async () => {
 		render(Page, { props: {} });
 		await new Promise((r) => setTimeout(r, 20));
-		expect(document.title).toBe('Methodik des Umwelt- & Infrastruktur-Scores');
+		expect(document.title).toBe('Methodik des Kiez-Scores | navigator.berlin');
 	});
 
 	it('rendert section#kiez-score mit Bezirksregion-Aggregations-Erklärung', async () => {
@@ -89,7 +89,7 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 		render(Page, { props: {} });
 		expect(
 			document.querySelector('[data-testid="methodik-kiez-score-h1"]')?.textContent?.trim()
-		).toBe('Environment & infrastructure score');
+		).toBe('Kiez score');
 		const crumb = document.querySelector('[data-testid="methodik-kiez-score-breadcrumb"]');
 		expect(crumb?.getAttribute('aria-label')).toBe('Breadcrumb');
 		expect(crumb?.textContent).toContain('Methodology');
@@ -182,7 +182,7 @@ describe('methodik/kiez-score · EN (i18n C4a)', () => {
 			document.querySelector('script[data-testid="methodik-kiez-score-speakable-jsonld"]')
 				?.textContent ?? '{}'
 		);
-		expect(speakable.name).toBe('Methodology of the environment & infrastructure score');
+		expect(speakable.name).toBe('Methodology of the Kiez score');
 		expect(speakable.inLanguage).toBe('en-US');
 		expect(speakable.url).toMatch(/\/en\/methodik\/kiez-score$/);
 	});

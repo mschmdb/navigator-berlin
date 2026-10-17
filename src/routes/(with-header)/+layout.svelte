@@ -27,7 +27,7 @@
 	 * GH-Issue #8: Atlas-Aktionen (Such-Bar, Layer-Palette, Bookmark) sind
 	 * nur im Karten-Kontext (`/explore`) sinnvoll. Auf allen anderen Routen
 	 * (Hero-Landing, /methodik, /lizenzen, /updates, /bezirk, /kiez,
-	 * /layer/[slug], /umwelt-infrastruktur-score) zeigt der Header statt Such-Bar
+	 * /layer/[slug], /kiez-score) zeigt der Header statt Such-Bar
 	 * einen Atlas-CTA, und Layer/Bookmark-Trigger werden ausgeblendet.
 	 *
 	 * Code-review fix (i18n Block A): `page.url.pathname` trägt auf `/en/...`

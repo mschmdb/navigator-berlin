@@ -52,7 +52,7 @@ describe('region-focus-card.svelte', () => {
 		await expect
 			.element(page.getByTestId('region-focus-score'))
 			.toHaveTextContent('Platz 5 von 12');
-		await expect.element(page.getByTestId('region-focus-score')).toHaveTextContent('Bezirks-Score');
+		await expect.element(page.getByTestId('region-focus-score')).toHaveTextContent('Kiez-Score');
 		const link = (await page.getByTestId('region-focus-link').element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/bezirk/neukoelln');
 		expect(link.textContent).toContain('Zur Bezirksseite');

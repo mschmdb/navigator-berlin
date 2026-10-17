@@ -88,7 +88,7 @@ export const UPDATE_FILE_PATHS: readonly string[] = Object.keys(
  * preview), the registration only lifts the fallback banner and the German
  * `<main lang>`. Block C4b (`spec-i18n-c4b-wahl-methodik-technik.md`) adds
  * four more exact entries: `/methodik/wahldaten`, `/architektur`, `/webmcp` and
- * `/umwelt-infrastruktur-score`. WebMCP tool names, tool descriptions and the
+ * `/kiez-score`. WebMCP tool names, tool descriptions and the
  * manifest stay German (boundary C1/C2), the OG images stay German. Block C4c
  * (`spec-i18n-c4c-hitze-quellen.md`) adds three more exact entries: `/hitze`,
  * `/kuehle-orte` and `/lizenzen`. The DataCatalog JSON-LD on `/lizenzen` and the
@@ -117,7 +117,7 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 	{ pathname: '/methodik/wahldaten', locale: 'en' },
 	{ pathname: '/architektur', locale: 'en' },
 	{ pathname: '/webmcp', locale: 'en' },
-	{ pathname: '/umwelt-infrastruktur-score', locale: 'en' },
+	{ pathname: '/kiez-score', locale: 'en' },
 	{ pathname: '/hitze', locale: 'en' },
 	{ pathname: '/kaelte', locale: 'en' },
 	{ pathname: '/kuehle-orte', locale: 'en' },

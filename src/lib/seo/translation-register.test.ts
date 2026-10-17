@@ -36,7 +36,7 @@ describe('isRouteTranslated', () => {
 			{ pathname: '/methodik/wahldaten', locale: 'en' },
 			{ pathname: '/architektur', locale: 'en' },
 			{ pathname: '/webmcp', locale: 'en' },
-			{ pathname: '/umwelt-infrastruktur-score', locale: 'en' },
+			{ pathname: '/kiez-score', locale: 'en' },
 			{ pathname: '/hitze', locale: 'en' },
 			{ pathname: '/kaelte', locale: 'en' },
 			{ pathname: '/kuehle-orte', locale: 'en' },
@@ -95,12 +95,7 @@ describe('isRouteTranslated', () => {
 
 	// Block C4b (`spec-i18n-c4b-wahl-methodik-technik.md`): vier exakte Einträge, ohne `prefix`.
 	it('Block C4b: Wahldaten, Architektur, WebMCP und Score-Rangliste sind exakt registriert', () => {
-		for (const path of [
-			'/methodik/wahldaten',
-			'/architektur',
-			'/webmcp',
-			'/umwelt-infrastruktur-score'
-		]) {
+		for (const path of ['/methodik/wahldaten', '/architektur', '/webmcp', '/kiez-score']) {
 			expect(isRouteTranslated(path, 'en'), path).toBe(true);
 			expect(isRouteTranslated(`/en${path}`, 'en'), `/en${path}`).toBe(true);
 			expect(isRouteTranslated(`${path}/unbekannt`, 'en'), `${path}/unbekannt`).toBe(false);

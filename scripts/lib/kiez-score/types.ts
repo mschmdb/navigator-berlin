@@ -20,7 +20,7 @@ export const KIEZ_SCORE_DIMENSIONS: readonly KiezScoreDimension[] = [
 /**
  * Dimensionen, die in den Gesamt-/Composite-Score (computeOverallScore) einfließen.
  * Epic 13 / Option C: Kultur ist eine sichtbare, eigenständige Dimension (eigener Layer,
- * Rang, Inspector), zählt aber NICHT in den „Umwelt- & Infrastruktur-Score". Begründung:
+ * Rang, Inspector), zählt aber NICHT in den „Kiez-Score". Begründung:
  * Kultur ist innenstadt-lastig (Center-Bias) und würde als Headline-Treiber jeden
  * Außenbezirk-Gesamt-Score drücken. Präzedenz: ADR-015 (Soziale Lage genauso behandelt).
  */

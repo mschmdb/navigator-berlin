@@ -14,6 +14,7 @@
  */
 
 import { lintForBannedWords } from '$lib/seo/banned-words.js';
+import { bundleDisplayName } from '$lib/data/bundle-display-name.js';
 
 export interface LayerRenderInput {
 	readonly slug: string;
@@ -40,7 +41,7 @@ export function renderLayerMarkdown(input: LayerRenderInput): string {
 	lines.push('');
 	lines.push(`- Slug: ${input.slug}`);
 	lines.push(`- Kurz: ${input.short}`);
-	lines.push(`- Bundle: ${input.bundleGroup}`);
+	lines.push(`- Kategorie: ${bundleDisplayName(input.bundleGroup)}`);
 	lines.push(`- Lizenz: ${input.license}`);
 	lines.push(`- Stand: ${formatDate(input.sourceUpdatedAt)}`);
 	lines.push(`- Features: ${NUMBER_DE.format(input.featureCount)}`);

@@ -138,7 +138,9 @@ export function buildRegionOverview({
 		}
 		const bezirkScores = bezirke.filter((b) => b.composite !== null).length;
 		if (bezirkScores < bezirke.length) {
-			problems.push(`Nur ${bezirkScores} von ${bezirke.length} Bezirks-Scores in den Composites.`);
+			problems.push(
+				`Nur ${bezirkScores} von ${bezirke.length} Kiez-Scores für Bezirke in den Composites.`
+			);
 		}
 	}
 	if (requireEinwohner) {

@@ -1,7 +1,7 @@
 /**
  * Story 14.10: Composite-Scores pro Bezirksregion (143) + Bezirk (12) als statisches JSON
  * (`scripts/aggregate-scores.ts`). Erlaubt dem Client-Inspector, neben den Profil-Links den
- * BR-/Bezirks-Score zu zeigen, ohne die DB (kiez_score/bezirk_score) client-seitig zu brauchen.
+ * Kiez-Score für BR und Bezirk zu zeigen, ohne die DB (kiez_score/bezirk_score) client-seitig zu brauchen.
  */
 
 export interface RegionComposites {

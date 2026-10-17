@@ -307,7 +307,7 @@ export function computeKiezScore(input: ScoreInput): KiezScore {
  * Composite-Score als ungewichtetes Mittel über die COMPOSITE_DIMENSIONS mit `value !== null`.
  * Misst nur Größen mit eindeutiger Besser-Richtung (ADR-015): Sozialstruktur ist kein Input.
  * Story 13.1 (Option C): Kultur ist eigenständige Dimension, aber NICHT im Composite — sie wird
- * hier herausgefiltert, damit der „Umwelt- & Infrastruktur-Score" das Mittel der fünf bleibt.
+ * hier herausgefiltert, damit der „Kiez-Score" das Mittel der fünf bleibt.
  */
 export function computeOverallScore(dimensions: readonly DimensionScore[]): number | null {
 	const usable = dimensions.filter(

@@ -35,7 +35,7 @@ describe('/bezirke +page.svelte', () => {
 		const mitte = document.querySelectorAll('[data-testid="bezirk-overview-item"]')[0];
 		expect(mitte?.textContent).toContain('Einwohner:innen');
 		expect(mitte?.textContent).toContain('390.000');
-		expect(mitte?.textContent).toContain('Bezirks-Score');
+		expect(mitte?.textContent).toContain('Kiez-Score');
 		expect(mitte?.textContent).toContain('44 von 100');
 		expect(document.body.textContent).toContain('Stand Ende 2024');
 	});
@@ -44,7 +44,7 @@ describe('/bezirke +page.svelte', () => {
 		render(Page, { data: { bezirke, einwohnerStichtag: null } });
 		const spandau = document.querySelectorAll('[data-testid="bezirk-overview-item"]')[1];
 		expect(spandau?.querySelector('a')?.textContent?.trim()).toBe('Spandau');
-		expect(spandau?.textContent).not.toContain('Bezirks-Score');
+		expect(spandau?.textContent).not.toContain('Kiez-Score');
 		expect(spandau?.textContent).not.toContain('Einwohner');
 		expect(document.body.textContent).not.toContain('Einwohnerzahlen:');
 	});

@@ -11,8 +11,8 @@ import {
 export const prerender = true;
 
 /**
- * Ranking-Page „Umwelt- & Infrastruktur-Score" (ADR-015). Route-Slug
- * /umwelt-infrastruktur-score, alter Slug /wo-lebt-es-sich-gut 301-redirected.
+ * Ranking-Page „Kiez-Score" (ADR-015). Route-Slug
+ * /kiez-score, alter Slug /wo-lebt-es-sich-gut 301-redirected.
  *
  * Phase-1 DE-only (Memory `project_i18n_phase_1_de_only`): 1 prerendered
  * Route, EN-Variante in Phase-3-Future-Epic. Loader liefert alle 143

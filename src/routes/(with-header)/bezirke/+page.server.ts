@@ -10,7 +10,7 @@ export type BezirkeOverviewData = {
 	readonly einwohnerStichtag: string | null;
 };
 
-/** Alle Bezirke mit Einwohnerzahl und Bezirks-Score, DB-frei. */
+/** Alle Bezirke mit Einwohnerzahl und Kiez-Score, DB-frei. */
 export const load: PageServerLoad = async ({ fetch }) => {
 	const [bezirke, einwohnerStichtag] = await Promise.all([
 		loadRegionOverview(fetch, { scope: 'bezirke', withEinwohner: true }),

@@ -12,7 +12,7 @@ describe('renamedRouteRedirectTarget', () => {
 	});
 
 	it('mappt /en/umwelt-infrastruktur-score auf /en/kiez-score (#93)', () => {
-		expect(renamedRouteRedirectTarget('/en/kiez-score')).toBe('/en/kiez-score');
+		expect(renamedRouteRedirectTarget('/en/umwelt-infrastruktur-score')).toBe('/en/kiez-score');
 	});
 
 	it('toleriert Trailing-Slash', () => {
@@ -37,9 +37,7 @@ describe('renamedRouteRedirectTarget', () => {
 	// i18n Block A, I/O-Matrix "Umbenannte Route EN": redirect bleibt innerhalb
 	// der Locale, landet nicht auf dem DE-Canonical.
 	it('mappt /en/wo-lebt-es-sich-gut auf /en/kiez-score', () => {
-		expect(renamedRouteRedirectTarget('/en/wo-lebt-es-sich-gut')).toBe(
-			'/en/kiez-score'
-		);
+		expect(renamedRouteRedirectTarget('/en/wo-lebt-es-sich-gut')).toBe('/en/kiez-score');
 	});
 
 	it('mappt /en/wahl/<slug> auf /en/berlin-wahlen/<slug>', () => {
@@ -55,9 +53,7 @@ describe('renamedRouteRedirectTarget', () => {
 	// nicht verhindern (wie im Stale-Locale-Redirect bereits), Ziel wird auf
 	// die kanonische Kleinschreibung normalisiert.
 	it('erkennt /EN/... groß geschrieben und normalisiert das Ziel auf Kleinschreibung', () => {
-		expect(renamedRouteRedirectTarget('/EN/wo-lebt-es-sich-gut')).toBe(
-			'/en/kiez-score'
-		);
+		expect(renamedRouteRedirectTarget('/EN/wo-lebt-es-sich-gut')).toBe('/en/kiez-score');
 		expect(renamedRouteRedirectTarget('/En/wahl/2023-bvv')).toBe('/en/berlin-wahlen/2023-bvv');
 	});
 

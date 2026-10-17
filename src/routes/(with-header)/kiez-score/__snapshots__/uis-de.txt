@@ -1,9 +1,9 @@
-h1: Umwelt- & Infrastruktur-Score
+h1: Kiez-Score
 p: Berliner Kieze und Bezirke nach fünf gleichgewichteten Dimensionen sortiert. Der Score misst Umwelt und Infrastruktur eines Kiezes, nicht den sozialen Status. Er bündelt öffentliche Daten pro Planungsraum. Eine einzelne Adresse kann davon abweichen.
 a: Vollständige Methodik: Kiez-Score
 p: Sortiert nach Score, absteigend
 p: Seitlich scrollen, um alle Spalten zu sehen.
-caption: Umwelt- & Infrastruktur-Score
+caption: Kiez-Score
 th: Rang
 th: Kiez
 th: Bezirk

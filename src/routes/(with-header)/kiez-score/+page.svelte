@@ -27,14 +27,14 @@
 	const pathname = $derived(page.url.pathname);
 	const pageTitle = $derived(buildPageTitle(m.uis_meta_title()));
 	const pageDescription = $derived(m.uis_meta_description());
-	const ogImagePath = '/og/page/umwelt-infrastruktur-score.png';
+	const ogImagePath = '/og/page/kiez-score.png';
 	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
 
 	const datasetJsonLd = $derived(
 		buildDataset({
 			origin,
 			name: m.uis_jsonld_dataset_name(),
-			url: `${canonicalOrigin(origin)}${localizedPathname('/umwelt-infrastruktur-score', getLocale())}`,
+			url: `${canonicalOrigin(origin)}${localizedPathname('/kiez-score', getLocale())}`,
 			bbox: BEZIRKE_BBOX,
 			description: pageDescription,
 			license: 'CC BY 4.0',

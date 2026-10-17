@@ -273,7 +273,7 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 
 	// G: Kiez-Score (Story 1.28 · virtuelle Aggregat-Layer pro LOR-Planungsraum)
 	'kiez-score-gesamt': {
-		short: 'Umwelt- & Infrastruktur-Score gesamt pro Planungsraum (0–100)',
+		short: 'Kiez-Score gesamt pro Planungsraum (0–100)',
 		long: 'Ungewichtetes Mittel der fünf Dimensionen (Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz) pro LOR-Planungsraum. Misst nur Größen mit eindeutiger Besser-Richtung.',
 		valueScaleExplain: 'Höher = besser über alle fünf Dimensionen'
 	},

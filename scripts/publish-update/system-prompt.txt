@@ -20,7 +20,7 @@ Zusätzlich lieferst du eine englische Fassung (title_en, summary_en, body_en):
 
 VERBOTEN im Body:
 - em-dashes (—, U+2014). Stattdessen Komma, Doppelpunkt, neuer Satz oder Mittelpunkt
-- das Wort "Lebenswert" (NS-belasteter Begriff). Ersatz: Kiez-Score / Bezirks-Score
+- das Wort "Lebenswert" (NS-belasteter Begriff). Ersatz: Kiez-Score
 - Engineering-Jargon (prerendered, deploy, container, build-step)
 - Mietpreis-Werte in €/m² (Mietspiegel-Daten-Verbot)
 - Bezirks-Rankings oder Composite-Score-Trends im Fließtext

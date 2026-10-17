@@ -54,7 +54,7 @@ export interface MetaLinkGroup {
 }
 
 export const META_LINKS: readonly MetaLink[] = [
-	{ id: 'score', href: '/umwelt-infrastruktur-score' },
+	{ id: 'score', href: '/kiez-score' },
 	{ id: 'wahlen', href: '/berlin-wahlen' },
 	{ id: 'hitze', href: '/hitze' },
 	{ id: 'kaelte', href: '/kaelte' },
@@ -73,7 +73,7 @@ export const META_LINK_GROUPS: readonly MetaLinkGroup[] = [
 		id: 'erkunden',
 		links: [
 			{ id: 'atlas', href: '/explore' },
-			{ id: 'score', href: '/umwelt-infrastruktur-score' },
+			{ id: 'score', href: '/kiez-score' },
 			{ id: 'wahlen', href: '/berlin-wahlen' },
 			{ id: 'hitze', href: '/hitze' },
 			{ id: 'kaelte', href: '/kaelte' },

@@ -150,7 +150,7 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 	out.push({
 		loc: `${ctx.origin}/bezirke`,
 		name: 'Alle Bezirke',
-		description: `${ctx.bezirke.length > 0 ? `Alle ${ctx.bezirke.length} Bezirke` : 'Alle Bezirke'} mit Einwohnerzahl, Bezirks-Score und Link zum Steckbrief`,
+		description: `${ctx.bezirke.length > 0 ? `Alle ${ctx.bezirke.length} Bezirke` : 'Alle Bezirke'} mit Einwohnerzahl, Kiez-Score und Link zum Steckbrief`,
 		section: 'static'
 	});
 	out.push({
@@ -160,8 +160,8 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		section: 'static'
 	});
 	out.push({
-		loc: `${ctx.origin}/umwelt-infrastruktur-score`,
-		name: 'Umwelt- & Infrastruktur-Score',
+		loc: `${ctx.origin}/kiez-score`,
+		name: 'Kiez-Score',
 		description:
 			'Alle 143 Kieze und 12 Bezirke nach fünf Umwelt- und Infrastruktur-Dimensionen sortierbar',
 		section: 'static'

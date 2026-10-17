@@ -1,6 +1,6 @@
 <!--
 	Rang-Einordnung + Deep-Link zurück in die Score-Übersicht
-	(/umwelt-infrastruktur-score). Schließt die gegenseitige Verlinkung:
+	(/kiez-score). Schließt die gegenseitige Verlinkung:
 	Übersicht verlinkt runter (score-ranking-table), diese Komponente hoch.
 	Graceful ohne Rang (DB-loser Prerender): zeigt neutralen Vergleichs-Link.
 -->
@@ -20,11 +20,7 @@
 	const localeOpts = $derived({ locale: getLocale() });
 
 	const href = $derived(
-		localizedHref(
-			view === 'bezirke'
-				? '/umwelt-infrastruktur-score?view=bezirke'
-				: '/umwelt-infrastruktur-score'
-		)
+		localizedHref(view === 'bezirke' ? '/kiez-score?view=bezirke' : '/kiez-score')
 	);
 
 	const label = $derived(

@@ -136,7 +136,7 @@ describe('buildRegionOverview', () => {
 			einwohner: EINWOHNER
 		});
 		expect(withFile.problems.some((p) => p.includes('Kiez-Scores'))).toBe(true);
-		expect(withFile.problems.some((p) => p.includes('Bezirks-Scores'))).toBe(true);
+		expect(withFile.problems.some((p) => p.includes('Kiez-Scores für Bezirke'))).toBe(true);
 		const withoutFile = buildRegionOverview({
 			lorFc: LOR_FC,
 			bezirkeFc: BEZIRKE_FC,

@@ -13,7 +13,7 @@ import type { Locale } from '$lib/paraglide/runtime';
  * Build-Zeitpunkt wäre erfunden.
  */
 
-const PATH = '/umwelt-infrastruktur-score';
+const PATH = '/kiez-score';
 const PRIORITY = 0.7;
 
 export interface BuildRankingSitemapEntryInput {

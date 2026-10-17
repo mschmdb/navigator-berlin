@@ -17,6 +17,7 @@ const OLD_NAMES: RegExp[] = [
 	/Environment (&|and) infrastructure score/i,
 	/Bezirks-Score/,
 	/\bdistrict score\b/i,
+	/\bBezirk score\b/,
 	/Kiez-Score (·|:) Gesamt/,
 	/Kiez score: overall/i
 ];
@@ -49,7 +50,9 @@ describe('Score-Name (GH-93)', () => {
 	it.each(OLD_NAMES.map((re) => [re.source, re] as const))(
 		'kein alter Score-Name %s in src und messages',
 		(_label, re) => {
-			const hits = files.filter((f) => f.rel !== 'src/lib/seo/score-name.test.ts' && re.test(f.text));
+			const hits = files.filter(
+				(f) => f.rel !== 'src/lib/seo/score-name.test.ts' && re.test(f.text)
+			);
 			expect(hits.map((f) => f.rel)).toEqual([]);
 		}
 	);

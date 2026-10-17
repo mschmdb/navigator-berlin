@@ -238,7 +238,7 @@ const REGION_COMPOSITES_PATH = 'static/kiez-scores/region-composites.json';
 
 /**
  * Story 14.10: kompakte Composite-Werte pro Bezirksregion (143) + Bezirk (12) als statisches JSON,
- * damit der Client-Inspector neben den Profil-Links den BR-/Bezirks-Score zeigen kann (ohne DB).
+ * damit der Client-Inspector neben den Profil-Links den Kiez-Score für BR und Bezirk zeigen kann (ohne DB).
  */
 async function writeRegionComposites(result: {
 	kieze: readonly ScoreRow[];

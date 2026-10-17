@@ -22,7 +22,7 @@ function fixtureContext(overrides: Partial<SitemapSourceContext> = {}): SitemapS
 describe('buildRankingSitemapEntry', () => {
 	it('rendert eine Entry für die deutsche Ranking-Page mit priority 0.7 / monthly', () => {
 		const entry = buildRankingSitemapEntry({ origin: ORIGIN });
-		expect(entry.loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
+		expect(entry.loc).toBe('https://navigator.berlin/kiez-score');
 		expect(entry.changefreq).toBe('monthly');
 		expect(entry.priority).toBe(0.7);
 		expect(entry.lastmod).toBeUndefined();
@@ -32,7 +32,7 @@ describe('buildRankingSitemapEntry', () => {
 		const entry = buildRankingSitemapEntry({
 			origin: 'https://navigator.berlin/'
 		});
-		expect(entry.loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
+		expect(entry.loc).toBe('https://navigator.berlin/kiez-score');
 	});
 });
 
@@ -40,15 +40,13 @@ describe('RANKING_PAGE_SOURCE', () => {
 	it('liefert für locale=de eine Entry ohne lastmod', () => {
 		const entries = RANKING_PAGE_SOURCE(fixtureContext());
 		expect(entries).toHaveLength(1);
-		expect(entries[0].loc).toBe('https://navigator.berlin/umwelt-infrastruktur-score');
+		expect(entries[0].loc).toBe('https://navigator.berlin/kiez-score');
 		expect(entries[0].lastmod).toBeUndefined();
 		expect(entries[0]).not.toHaveProperty('lastmod');
 	});
 
 	it('i18n Block D1: liefert für locale=en die /en-URL', () => {
 		const entries = RANKING_PAGE_SOURCE(fixtureContext({ locale: 'en' }));
-		expect(entries.map((e) => e.loc)).toEqual([
-			'https://navigator.berlin/en/umwelt-infrastruktur-score'
-		]);
+		expect(entries.map((e) => e.loc)).toEqual(['https://navigator.berlin/en/kiez-score']);
 	});
 });

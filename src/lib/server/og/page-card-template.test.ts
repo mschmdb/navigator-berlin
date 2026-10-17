@@ -206,9 +206,10 @@ describe('buildLayerCardVdom', () => {
 		expect(texts.some((t) => t.includes('Lärm 2023'))).toBe(true);
 	});
 
-	it('renders Bundle-Group as sub-line', () => {
+	it('renders the bundle name without letter prefix as sub-line (GH-93)', () => {
 		const texts = collectText(buildLayerCardVdom(params));
-		expect(texts.some((t) => t.includes('C: Umwelt'))).toBe(true);
+		expect(texts).toContain('Umwelt');
+		expect(texts.some((t) => t.includes('C: Umwelt'))).toBe(false);
 	});
 
 	it('renders authority + license + stand-date as info cards', () => {
