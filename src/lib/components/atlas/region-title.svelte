@@ -15,6 +15,6 @@
 	const parts = $derived(breakAfterSlash(name));
 </script>
 
-<h1 class="region-title text-2xl font-bold text-ink sm:text-3xl md:text-4xl">
+<h1 class="region-title text-2xl font-bold text-ink sm:text-3xl">
 	{#each parts as part, i (i)}{part}{#if i < parts.length - 1}<wbr />{/if}{/each}
 </h1>

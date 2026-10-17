@@ -356,7 +356,7 @@ body.route-explore {
 .region-title {
 	overflow-wrap: anywhere;
 	hyphens: auto;
-	text-wrap: balance;
+	text-wrap: pretty;
 }
 
 /* Story 1.20 Print-CSS — Inspector als wohnungssuche-tauglicher Ausdruck */
