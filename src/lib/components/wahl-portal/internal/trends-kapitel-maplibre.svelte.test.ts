@@ -4,6 +4,8 @@ import { TrendsMapController } from './trends-kapitel-maplibre.svelte.js';
 import {
 	bakeTrendsProperties,
 	trendPropKeys,
+	trendsSchraffurFilter,
+	trendsSchraffurPatternExpression,
 	VOLATILITAET_FARBE_KEY
 } from './trends-map-expressions.js';
 import type { TrendsGebietInput } from './trends-map-data.js';
@@ -97,6 +99,31 @@ describe('TrendsMapController', () => {
 		expect(fake.setDataCalls).toHaveLength(0);
 		const colorCall = fake.paintCalls.find((c) => c.prop === 'fill-color');
 		expect(colorCall?.value).toEqual(['get', trendPropKeys('GRÜNE').farbe]);
+		const filterCall = fake.filterCalls.find((c) => c.layer === 'trends-schraffur');
+		expect(filterCall?.filter).toEqual(trendsSchraffurFilter('trend', 'GRÜNE'));
+	});
+
+	it('#108: legt eine Schraffur-Ebene für „fallend“ über die Flächen', async () => {
+		const fake = fakeMapFactory();
+		const baked = bakedFc(new Map());
+		const ctl = new TrendsMapController({
+			getFc: () => baked,
+			getToggle: () => 'trend',
+			getAktivePartei: () => 'SPD',
+			mapFactory: fake.factory
+		});
+		ctl.container = document.createElement('div');
+		ctl.ensureMap(baked);
+		await flush();
+		fake.handlers['load']?.();
+
+		const layer = fake.layers['trends-schraffur'];
+		expect(layer).toBeDefined();
+		expect(layer.type).toBe('fill');
+		expect(layer.filter).toEqual(trendsSchraffurFilter('trend', 'SPD'));
+		expect((layer.paint as Record<string, unknown>)['fill-pattern']).toEqual(
+			trendsSchraffurPatternExpression('SPD')
+		);
 	});
 
 	it('ensureMap mit neuer FC nach ready, GLEICHER Container: nur setData (Reihen-Wechsel-Refresh, Review Triage Log #15)', async () => {

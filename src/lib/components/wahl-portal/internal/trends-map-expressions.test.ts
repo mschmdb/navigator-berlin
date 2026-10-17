@@ -5,10 +5,17 @@ import {
 	trendPropKeys,
 	trendsFillColorExpression,
 	trendsFillOpacityExpression,
+	trendsSchraffurFilter,
+	trendsSchraffurPatternExpression,
+	TREND_SCHRAFFUR_ID_AUF_DUNKEL,
+	TREND_SCHRAFFUR_ID_AUF_HELL,
 	VOLATILITAET_FARBE_KEY,
 	VOLATILITAET_HAT_DATEN_KEY
 } from './trends-map-expressions.js';
+import { featureFilter } from '@maplibre/maplibre-gl-style-spec';
 import {
+	TREND_FALLEND_DUNKEL,
+	TREND_SCHRAFFUR_FARBEN,
 	TREND_NEUTRAL_FARBE,
 	TREND_STEIGEND_DUNKEL,
 	VOLATILITAET_FARBE_STUFE_1,
@@ -90,6 +97,47 @@ describe('trendsFillColorExpression / trendsFillOpacityExpression', () => {
 			['==', ['get', keys.hatDaten], 1],
 			0.9,
 			0.1
+		]);
+	});
+});
+
+describe('#108 trendsSchraffurFilter', () => {
+	it('trifft bei Toggle trend nur die fallend-Stufen der aktiven Partei', () => {
+		expect(trendsSchraffurFilter('trend', 'SPD')).toEqual([
+			'in',
+			['get', trendPropKeys('SPD').farbe],
+			['literal', [...TREND_SCHRAFFUR_FARBEN]]
+		]);
+	});
+
+	it('trifft bei Toggle volatilitaet nichts', () => {
+		expect(trendsSchraffurFilter('volatilitaet', 'SPD')).toEqual(['literal', false]);
+	});
+
+	it('beide Filter sind für MapLibre gültig und treffen das Richtige (Codex #108)', () => {
+		const key = trendPropKeys('SPD').farbe;
+		const feature = (farbe: string) => ({
+			type: 'Polygon' as const,
+			properties: { [key]: farbe },
+			geometry: [] as never
+		});
+		const zoom = { zoom: 10 };
+		const trend = featureFilter(trendsSchraffurFilter('trend', 'SPD') as never);
+		expect(trend.filter(zoom, feature(TREND_FALLEND_DUNKEL) as never)).toBe(true);
+		expect(trend.filter(zoom, feature(TREND_STEIGEND_DUNKEL) as never)).toBe(false);
+		const vola = featureFilter(trendsSchraffurFilter('volatilitaet', 'SPD') as never);
+		expect(vola.filter(zoom, feature(TREND_FALLEND_DUNKEL) as never)).toBe(false);
+	});
+});
+
+describe('#108 trendsSchraffurPatternExpression', () => {
+	it('wählt je Stufe das Muster mit kontrastierender Linie', () => {
+		expect(trendsSchraffurPatternExpression('SPD')).toEqual([
+			'match',
+			['get', trendPropKeys('SPD').farbe],
+			TREND_FALLEND_DUNKEL,
+			TREND_SCHRAFFUR_ID_AUF_DUNKEL,
+			TREND_SCHRAFFUR_ID_AUF_HELL
 		]);
 	});
 });

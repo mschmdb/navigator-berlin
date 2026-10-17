@@ -254,6 +254,25 @@ describe('trends-kapitel.svelte', () => {
 		await expect.element(legende).toHaveTextContent('Keine Daten');
 	});
 
+	it('#108: fallend-Swatches tragen dieselbe Schraffur wie die Karte, alle anderen nicht', async () => {
+		const fetchFn = fakeFetch([
+			['/api/wahl/analytik', ANALYTIK],
+			['/api/wahl/winners', { winners: [] }],
+			['MANIFEST.json', MANIFEST],
+			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
+			['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC]
+		]);
+		render(TrendsKapitelContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn });
+		await expect.element(page.getByTestId('trends-kapitel-legende')).toBeInTheDocument();
+		const schraffiert = document.querySelectorAll(
+			'[data-testid="trends-kapitel-legende"] [data-schraffur="true"]'
+		);
+		expect(schraffiert).toHaveLength(2);
+		for (const el of schraffiert) {
+			expect((el as HTMLElement).style.backgroundImage).toContain('repeating-linear-gradient');
+		}
+	});
+
 	it('EN: Trend-Legende zeigt dieselben 6 Schwellen-Labels korrekt uebersetzt/formatiert', async () => {
 		const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
 		overwriteGetLocale(() => 'en');

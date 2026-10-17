@@ -1,7 +1,7 @@
 /**
  * Trends-/Volatilitäts-Karte: eigener MapLibre-Controller (Muster
  * `WinnerMapController`, reduziert auf das hier Nötige -- kein Tooltip,
- * keine Patterns). Volatilität + Trend aller Chip-Parteien sind bereits
+ * nur die „fallend“-Schraffur aus #108). Volatilität + Trend aller Chip-Parteien sind bereits
  * gebacken (`bakeTrendsProperties`), ein Toggle-/Chip-Wechsel ist deshalb
  * NUR `setPaintProperty` (AC), niemals Destroy+Re-Init und niemals ein
  * zweiter `/api/wahl/analytik`-Request.
@@ -10,10 +10,27 @@ import bbox from '@turf/bbox';
 import {
 	trendsFillColorExpression,
 	trendsFillOpacityExpression,
+	trendsSchraffurFilter,
+	trendsSchraffurPatternExpression,
+	TREND_SCHRAFFUR_ID_AUF_DUNKEL,
+	TREND_SCHRAFFUR_ID_AUF_HELL,
 	type BakedTrendsFeatureCollection
 } from './trends-map-expressions.js';
-import { TRENDS_FILL_OPACITY, type TrendsToggle } from './trends-map-data.js';
+import {
+	buildTrendSchraffur,
+	trendSchraffurLinie,
+	TREND_FALLEND_DUNKEL,
+	TREND_FALLEND_HELL,
+	TRENDS_FILL_OPACITY,
+	type TrendsToggle
+} from './trends-map-data.js';
+import { toImageData } from './partei-pattern-images.js';
 import { paddedMaxBounds, type FitBounds } from './map-fit-constraints.js';
+
+const SCHRAFFUR_BILDER: ReadonlyArray<readonly [string, string]> = [
+	[TREND_SCHRAFFUR_ID_AUF_HELL, trendSchraffurLinie(TREND_FALLEND_HELL)],
+	[TREND_SCHRAFFUR_ID_AUF_DUNKEL, trendSchraffurLinie(TREND_FALLEND_DUNKEL)]
+];
 
 /** Deckkraft für Gebiete ohne Analytik-Daten (`*_hat_daten: 0`); exportiert,
  * damit die Legende (`trends-kapitel.svelte`, Review Triage Log #7) den
@@ -31,6 +48,9 @@ interface MapLibreMapLike {
 	addSource: (id: string, source: Record<string, unknown>) => void;
 	addLayer: (layer: Record<string, unknown>) => void;
 	setPaintProperty: (layer: string, prop: string, value: unknown) => void;
+	setFilter: (layer: string, filter: unknown) => void;
+	hasImage: (id: string) => boolean;
+	addImage: (id: string, image: ImageData) => void;
 	fitBounds: (bounds: [[number, number], [number, number]], opts?: Record<string, unknown>) => void;
 	/** Story 12: Karten-Anschlag-Grenzen nach dem initialen Fit (siehe
 	 * `map-fit-constraints.ts`). `getBounds()` liefert die nach dem Fit
@@ -129,6 +149,12 @@ export class TrendsMapController {
 			'fill-opacity',
 			trendsFillOpacityExpression(toggle, partei, TRENDS_FILL_OPACITY, NEUTRAL_OPACITY)
 		);
+		this.#map.setFilter('trends-schraffur', trendsSchraffurFilter(toggle, partei));
+		this.#map.setPaintProperty(
+			'trends-schraffur',
+			'fill-pattern',
+			trendsSchraffurPatternExpression(partei)
+		);
 	}
 
 	destroy(): void {
@@ -205,6 +231,18 @@ export class TrendsMapController {
 					NEUTRAL_OPACITY
 				),
 				'fill-outline-color': 'rgba(20,20,20,0.18)'
+			}
+		});
+		for (const [id, linie] of SCHRAFFUR_BILDER) {
+			if (!instance.hasImage(id)) instance.addImage(id, toImageData(buildTrendSchraffur(linie)));
+		}
+		instance.addLayer({
+			id: 'trends-schraffur',
+			type: 'fill',
+			source: 'trends',
+			filter: trendsSchraffurFilter(toggle, partei),
+			paint: {
+				'fill-pattern': trendsSchraffurPatternExpression(partei)
 			}
 		});
 		// Review Triage Log #2: eine leere FeatureCollection liefert aus

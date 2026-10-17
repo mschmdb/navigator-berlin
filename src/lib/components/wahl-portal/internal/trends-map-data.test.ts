@@ -1,8 +1,11 @@
 import type { FeatureCollection } from 'geojson';
 import { describe, expect, it } from 'vitest';
-import { blendOverBasemap, contrastRatio } from './wechsel-map-data.js';
+import { blendOverBasemap, contrastRatio, relativeLuminance } from './wechsel-map-data.js';
 import {
+	buildTrendSchraffur,
+	trendSchraffurLinie,
 	buildTrendsFeatureCollection,
+	TREND_SCHRAFFUR_FARBEN,
 	buildTrendsTableRows,
 	buildTrendTakeaway,
 	buildVolatilitaetTakeaway,
@@ -67,12 +70,58 @@ describe('WCAG-Kontrast der Trend-/Volatilitäts-Rampen (≥3:1 zwischen Nachbar
 		expect(contrastRatio(hell, dunkel)).toBeGreaterThanOrEqual(3);
 	});
 
-	it('Trend fallend: neutral<->hell und hell<->dunkel erreichen ≥3:1 (luminanz-identisch zu steigend)', () => {
+	it('Trend fallend: neutral<->hell und hell<->dunkel erreichen ≥3:1', () => {
 		const n = blendOverBasemap(TREND_NEUTRAL_FARBE, TRENDS_FILL_OPACITY);
 		const hell = blendOverBasemap(TREND_FALLEND_HELL, TRENDS_FILL_OPACITY);
 		const dunkel = blendOverBasemap(TREND_FALLEND_DUNKEL, TRENDS_FILL_OPACITY);
 		expect(contrastRatio(n, hell)).toBeGreaterThanOrEqual(3);
 		expect(contrastRatio(hell, dunkel)).toBeGreaterThanOrEqual(3);
+	});
+
+	it('#108: fallend ist auf beiden Stufen heller als steigend (Helligkeit gestaffelt)', () => {
+		const lum = (hex: string) => relativeLuminance(blendOverBasemap(hex, TRENDS_FILL_OPACITY));
+		expect(lum(TREND_FALLEND_HELL)).toBeGreaterThan(lum(TREND_STEIGEND_HELL));
+		expect(lum(TREND_FALLEND_DUNKEL)).toBeGreaterThan(lum(TREND_STEIGEND_DUNKEL));
+		const fd = blendOverBasemap(TREND_FALLEND_DUNKEL, TRENDS_FILL_OPACITY);
+		const sd = blendOverBasemap(TREND_STEIGEND_DUNKEL, TRENDS_FILL_OPACITY);
+		expect(contrastRatio(fd, sd)).toBeGreaterThanOrEqual(1.15);
+	});
+});
+
+describe('#108: Schraffur für „fallend“ (Richtung ohne Farbe ablesbar)', () => {
+	it('markiert genau die beiden fallend-Stufen', () => {
+		expect(TREND_SCHRAFFUR_FARBEN).toEqual([TREND_FALLEND_HELL, TREND_FALLEND_DUNKEL]);
+	});
+
+	it('Schraffur-Linie erreicht auf beiden Stufen ≥3:1 gegen die Fläche (WCAG 1.4.11, Codex #108)', () => {
+		for (const farbe of TREND_SCHRAFFUR_FARBEN) {
+			const flaeche = blendOverBasemap(farbe, TRENDS_FILL_OPACITY);
+			const linie = blendOverBasemap(trendSchraffurLinie(farbe), 1);
+			expect(contrastRatio(flaeche, linie)).toBeGreaterThanOrEqual(3);
+		}
+	});
+
+	it('mit Schraffur bleibt „stark fallend“ im Mittel dunkler als „leicht fallend“', () => {
+		const mittel = (farbe: string) => {
+			const spec = buildTrendSchraffur(trendSchraffurLinie(farbe));
+			const pixel = spec.width * spec.height;
+			let linien = 0;
+			for (let i = 0; i < pixel; i++) if (spec.data[i * 4 + 3] === 255) linien++;
+			const anteil = linien / pixel;
+			const flaeche = relativeLuminance(blendOverBasemap(farbe, TRENDS_FILL_OPACITY));
+			const linie = relativeLuminance(blendOverBasemap(trendSchraffurLinie(farbe), 1));
+			return flaeche * (1 - anteil) + linie * anteil;
+		};
+		expect(mittel(TREND_FALLEND_DUNKEL)).toBeLessThan(mittel(TREND_FALLEND_HELL));
+	});
+
+	it('baut ein kachelbares Diagonal-Tile mit sichtbaren und transparenten Pixeln', () => {
+		const spec = buildTrendSchraffur(trendSchraffurLinie(TREND_FALLEND_HELL));
+		expect(spec.width).toBe(spec.height);
+		expect(spec.data.length).toBe(spec.width * spec.height * 4);
+		const alphas = Array.from({ length: spec.width * spec.height }, (_, i) => spec.data[i * 4 + 3]);
+		expect(alphas.some((a) => a === 255)).toBe(true);
+		expect(alphas.some((a) => a === 0)).toBe(true);
 	});
 });
 
