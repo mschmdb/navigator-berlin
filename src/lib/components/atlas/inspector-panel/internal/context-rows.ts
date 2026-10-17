@@ -91,7 +91,8 @@ export function contextText(slug: string, agg: LayerAggregate, opts: LocaleOpts)
 export function contextSeverity(slug: string, agg: LayerAggregate): SeverityLevel | undefined {
 	if (!hasRatedCategories(slug)) return undefined;
 	if (agg.type !== 'ordinal-distribution' || agg.dominant === null) return undefined;
-	return getValueSeverity(slug, { kategorie: agg.dominant });
+	// Rohwert als String: Kategorie- und Wohnlage-Bewertungen lesen Strings direkt.
+	return getValueSeverity(slug, agg.dominant);
 }
 
 /**
