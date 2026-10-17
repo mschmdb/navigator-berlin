@@ -143,7 +143,7 @@
 				{@const name = names[dienst.id]()}
 				<li
 					data-testid={`kaelte-dienst-${dienst.id}`}
-					class={`flex flex-col gap-1.5 border-b border-rule py-3 ${isOpen ? 'bg-state-success/10 px-3' : ''}`}
+					class={`flex flex-col gap-1.5 border-b border-rule px-3 py-3 ${isOpen ? 'bg-state-success/10' : ''}`}
 				>
 					<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
 						<span class="font-sans text-base font-semibold text-ink">{name}</span>

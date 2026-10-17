@@ -226,7 +226,7 @@
 			{#each omissions as o (o.label)}
 				<li class="border-l-2 border-rule pl-3">
 					<p class="font-sans text-base font-semibold text-ink">{o.label}</p>
-					<p class="text-sm text-ink-muted">{o.reason}</p>
+					<p class="text-base leading-body text-ink-muted">{o.reason}</p>
 				</li>
 			{/each}
 		</ul>
