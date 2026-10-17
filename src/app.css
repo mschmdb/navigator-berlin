@@ -128,6 +128,8 @@
 
 	--bg: #eceae0;
 	--bg-elevated: #f5f3ea;
+	/* Vertiefte Fläche: Hover-Zeilen, Balken-Spuren, Platzhalter. */
+	--bg-muted: #e2dfd3;
 	--ink: #141414;
 	--ink-muted: #4a4a46;
 	--ink-subtle: #5f5f5a;
@@ -135,6 +137,8 @@
 	--rule-strong: #74726a;
 	--accent: #2a3f7c;
 	--accent-soft: #e0e4f0;
+	/* Hover-Zustand für Links und Akzent-Buttons, dunkler als --accent. */
+	--accent-strong: #1b2a55;
 	--focus: #0030c8;
 
 	--state-error: #a12626;
@@ -220,6 +224,7 @@
 @theme inline {
 	--color-bg: var(--bg);
 	--color-bg-elevated: var(--bg-elevated);
+	--color-bg-muted: var(--bg-muted);
 	--color-ink: var(--ink);
 	--color-ink-muted: var(--ink-muted);
 	--color-ink-subtle: var(--ink-subtle);
@@ -227,6 +232,7 @@
 	--color-rule-strong: var(--rule-strong);
 	--color-accent: var(--accent);
 	--color-accent-soft: var(--accent-soft);
+	--color-accent-strong: var(--accent-strong);
 	--color-focus: var(--focus);
 
 	--color-state-error: var(--state-error);
@@ -334,12 +340,14 @@ body.route-explore {
 	:root {
 		--bg: #ffffff;
 		--bg-elevated: #ffffff;
+		--bg-muted: #ffffff;
 		--ink: #000000;
 		--ink-muted: #1a1a1a;
 		--ink-subtle: #404040;
 		--rule: #b0b0b0;
 		--rule-strong: #000000;
 		--accent: #000000;
+		--accent-strong: #000000;
 		--severity-success: #000000;
 		--severity-success-bg: transparent;
 		--severity-success-soft: #000000;

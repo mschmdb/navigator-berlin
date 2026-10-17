@@ -146,7 +146,7 @@
 					type="button"
 					data-testid="waerme-orte-show-layer"
 					onclick={() => onToggleLayer?.(SLUG)}
-					class="hover:bg-accent-strong inline-flex min-h-8 items-center gap-1.5 rounded bg-accent px-3 py-1 font-sans text-xs font-semibold text-bg-elevated focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
+					class="inline-flex min-h-8 items-center gap-1.5 rounded bg-accent px-3 py-1 font-sans text-xs font-semibold text-bg-elevated hover:bg-accent-strong focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
 				>
 					<Eye size={14} aria-hidden="true" />
 					{m.inspector_waerme_orte_layer_show(undefined, localeOpts)}

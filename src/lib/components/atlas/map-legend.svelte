@@ -280,7 +280,7 @@
 									<a
 										data-testid={`legend-source-link-${entry.slug}`}
 										href={localizedHref('/methodik/kiez-score', locale)}
-										class="hover:text-accent-strong text-accent underline underline-offset-2"
+										class="text-accent underline underline-offset-2 hover:text-accent-strong"
 									>
 										{m.atlas_legend_own_calculation(undefined, localeOpts)}<span
 											class="sr-only"
@@ -298,7 +298,7 @@
 										href={entry.meta.sourceUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="hover:text-accent-strong text-accent underline underline-offset-2"
+										class="text-accent underline underline-offset-2 hover:text-accent-strong"
 									>
 										{m.atlas_legend_source(undefined, localeOpts)}
 									</a>

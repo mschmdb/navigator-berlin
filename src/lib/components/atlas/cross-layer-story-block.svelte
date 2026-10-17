@@ -73,7 +73,7 @@
 
 		<a
 			href={methodikHref}
-			class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
+			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			data-testid={`${testid}-methodik-link`}
 		>
 			{methodikLinkLabel}

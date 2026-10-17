@@ -258,7 +258,7 @@
 
 	<a
 		href={localizedHref('/berlin-wahlen#alle-wahlen')}
-		class="hover:text-accent-strong inline-block font-mono text-sm text-accent underline underline-offset-2"
+		class="inline-block font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 	>
 		{m.methodik_wahldaten_link_alle_wahlen()}
 	</a>

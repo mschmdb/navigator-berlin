@@ -255,7 +255,7 @@
 					<!-- Anteils-Balken in voller Breite unter der Zeile: die alte
 					     Inline-Variante kollabierte im schmalen Panel auf ~0px (Live-Fund
 					     Matze 20.09.: "angeschnittener Extra-Dot" bei Zeilen ohne Delta). -->
-					<span aria-hidden="true" class="bg-bg-muted ml-5 h-1.5 overflow-hidden rounded-full">
+					<span aria-hidden="true" class="ml-5 h-1.5 overflow-hidden rounded-full bg-bg-muted">
 						<span
 							class="block h-full rounded-full"
 							style:width={`${Math.min(Math.max(row.anteil * 100, 0), 100)}%`}
@@ -342,7 +342,7 @@
 							<!-- Anteils-Balken in voller Breite unter der Zeile: die alte
 							     Inline-Variante kollabierte im schmalen Panel auf ~0px (Live-Fund
 							     Matze 20.09.: "angeschnittener Extra-Dot" bei Zeilen ohne Delta). -->
-							<span aria-hidden="true" class="bg-bg-muted ml-5 h-1.5 overflow-hidden rounded-full">
+							<span aria-hidden="true" class="ml-5 h-1.5 overflow-hidden rounded-full bg-bg-muted">
 								<span
 									class="block h-full rounded-full"
 									style:width={`${Math.min(Math.max(row.anteil * 100, 0), 100)}%`}
@@ -384,7 +384,7 @@
 					<a
 						href={localizedHref('/methodik/wahldaten')}
 						data-testid="ergebnis-panel-methodik-link"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{m.wahl_portal_methodik_wahldaten_link_label()}
 					</a>
@@ -392,7 +392,7 @@
 					<a
 						href={localizedHref('/lizenzen')}
 						data-testid="ergebnis-panel-lizenzen-link"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						/lizenzen
 					</a>

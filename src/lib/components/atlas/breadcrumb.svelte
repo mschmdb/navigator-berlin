@@ -28,7 +28,7 @@
 					{#if idx < items.length - 1}
 						<a
 							href={localizedHref(item.path)}
-							class="hover:text-accent-strong text-accent underline underline-offset-2"
+							class="text-accent underline underline-offset-2 hover:text-accent-strong"
 						>
 							{item.name}
 						</a>

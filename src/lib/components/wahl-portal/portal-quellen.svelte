@@ -44,7 +44,7 @@
 				<a
 					href={localizedHref('/methodik/wahldaten')}
 					data-testid="portal-quellen-methodik-link"
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.wahl_portal_methodik_wahldaten_link_label()}
 				</a>
@@ -52,7 +52,7 @@
 				<a
 					href={localizedHref('/lizenzen')}
 					data-testid="portal-quellen-lizenzen-link"
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					/lizenzen
 				</a>

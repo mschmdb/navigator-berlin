@@ -74,7 +74,7 @@
 					href={nearest.googleMapsUrl}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+					class="inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					<Navigation size={11} aria-hidden="true" />
 					Google Maps
@@ -83,7 +83,7 @@
 					href={nearest.appleMapsUrl}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="hover:text-accent-strong inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+					class="inline-flex items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					<Navigation size={11} aria-hidden="true" />
 					Apple Maps

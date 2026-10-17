@@ -44,7 +44,7 @@
 		href="https://www.berlin-mauer.de/"
 		target="_blank"
 		rel="noopener noreferrer"
-		class="hover:text-accent-strong inline-flex w-fit items-center gap-1 text-sm text-accent underline underline-offset-2"
+		class="inline-flex w-fit items-center gap-1 text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 	>
 		<ExternalLink size={12} aria-hidden="true" />
 		<span>{memorialLinkLabel}</span>

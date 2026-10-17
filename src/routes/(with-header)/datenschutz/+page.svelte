@@ -32,7 +32,7 @@
 		Datenschutzerklärung
 	</h1>
 
-	<p class="text-fg-muted mt-4 text-sm">Stand: 2026-05-30</p>
+	<p class="mt-4 text-sm text-ink-muted">Stand: 2026-05-30</p>
 
 	<section class="mt-8">
 		<h2 class="font-serif text-xl">1. Verantwortlich</h2>

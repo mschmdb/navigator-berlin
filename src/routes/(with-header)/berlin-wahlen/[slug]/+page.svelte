@@ -180,7 +180,7 @@
 				{wahlWiederholungLabel()} ·
 				<a
 					href={localizedHref(`/berlin-wahlen/${data.wahl.parentSlug}`)}
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.wahl_detail_original_wahl_link()}
 				</a>
@@ -201,7 +201,7 @@
 				aria-describedby={portalDeepLinkIstErststimme
 					? 'wahl-detail-portal-link-hinweis'
 					: undefined}
-				class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
+				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{portalDeepLinkLabel}
 			</a>
@@ -228,7 +228,7 @@
 	>
 		{#if berlinTop5.length > 0 && totalStimmen > 0}
 			<div
-				class="bg-bg-muted relative h-8 w-full overflow-hidden rounded border border-rule"
+				class="relative h-8 w-full overflow-hidden rounded border border-rule bg-bg-muted"
 				aria-hidden="true"
 				data-testid="wahl-detail-stacked-bar"
 			>
@@ -375,7 +375,7 @@
 
 	<a
 		href={localizedHref('/methodik/wahldaten')}
-		class="hover:text-accent-strong inline-block font-mono text-sm text-accent underline underline-offset-2"
+		class="inline-block font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 		data-testid="wahl-detail-methodik-link"
 	>
 		{m.wahl_detail_methodik_link_label()}

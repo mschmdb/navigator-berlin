@@ -45,7 +45,7 @@
 				<li class="flex flex-wrap items-baseline justify-between gap-x-4">
 					<a
 						href={localizedHref(`/kiez/${entry.slug}`)}
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 						onclick={() => trackLanding(action, 'kiez')}
 						data-testid={linkTestid}
 						aria-label={linkLabel(entry)}

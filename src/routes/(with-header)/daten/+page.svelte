@@ -62,7 +62,7 @@
 			<li>
 				<a
 					href={localizedHref('/explore')}
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.overview_daten_atlas_link()} →
 				</a>
@@ -70,7 +70,7 @@
 			<li>
 				<a
 					href={localizedHref('/lizenzen')}
-					class="hover:text-accent-strong text-accent underline underline-offset-2"
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.overview_daten_lizenzen_link()} →
 				</a>
@@ -94,7 +94,7 @@
 					>
 						<a
 							href={localizedHref(`/layer/${layer.slug}`)}
-							class="hover:text-accent-strong w-fit text-accent underline underline-offset-2"
+							class="w-fit text-accent underline underline-offset-2 hover:text-accent-strong"
 						>
 							{layer.name}
 						</a>

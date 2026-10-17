@@ -75,7 +75,7 @@
 								{ name: entry.name, bezirk: entry.bezirkName, value: formatValue(entry.value) },
 								{ locale }
 							)}
-							class="hover:text-accent-strong text-accent underline underline-offset-2"
+							class="text-accent underline underline-offset-2 hover:text-accent-strong"
 						>
 							{entry.name}
 						</a>

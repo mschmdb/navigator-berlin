@@ -63,7 +63,7 @@
 		<p class="font-sans text-base">
 			<a
 				href={localizedHref('/methodik/kiez-score')}
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.kiez_page_methodik_link_label()} →
 			</a>
@@ -76,7 +76,7 @@
 				<li>
 					<a
 						href={`#${bezirkAnchorId(bezirk.slug)}`}
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{bezirk.name}
 					</a>
@@ -102,7 +102,7 @@
 					<span aria-hidden="true">·</span>
 					<a
 						href={localizedHref(`/bezirk/${bezirk.slug}`)}
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{m.overview_kieze_bezirk_link({ name: bezirk.name })}
 					</a>
@@ -116,7 +116,7 @@
 					>
 						<a
 							href={localizedHref(`/kiez/${kiez.slug}`)}
-							class="hover:text-accent-strong text-accent underline underline-offset-2"
+							class="text-accent underline underline-offset-2 hover:text-accent-strong"
 						>
 							{kiez.name}
 						</a>

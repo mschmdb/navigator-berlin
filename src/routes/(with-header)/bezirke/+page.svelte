@@ -69,7 +69,7 @@
 			<li data-testid="bezirk-overview-item" class="flex flex-col gap-2 border border-rule p-4">
 				<a
 					href={localizedHref(`/bezirk/${bezirk.slug}`)}
-					class="hover:text-accent-strong w-fit font-serif text-xl text-accent underline underline-offset-2"
+					class="w-fit font-serif text-xl text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{bezirk.name}
 				</a>
@@ -100,7 +100,7 @@
 	<p class="font-sans text-base">
 		<a
 			href={localizedHref('/kieze')}
-			class="hover:text-accent-strong text-accent underline underline-offset-2"
+			class="text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.overview_bezirke_kieze_link()} →
 		</a>

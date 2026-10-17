@@ -137,7 +137,7 @@
 	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="bezirke" />
 	<a
 		href={localizedHref('/methodik/kiez-score')}
-		class="hover:text-accent-strong text-accent underline underline-offset-2"
+		class="text-accent underline underline-offset-2 hover:text-accent-strong"
 	>
 		{m.bezirk_page_methodik_link_label()} →
 	</a>
