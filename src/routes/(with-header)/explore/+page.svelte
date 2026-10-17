@@ -42,6 +42,7 @@
 	import {
 		buildAddressNavigation,
 		createAddressHistoryWriter,
+		normalizeAddressParam,
 		resolvePopstateSelection,
 		type AddressHistoryIntent
 	} from '$lib/components/atlas/internal/address-history.js';
@@ -221,10 +222,15 @@
 	let restoringSelectionId: string | null = null;
 	// Schreibt die Adresse in die URL. Zwei Aufrufe für dieselbe Wahl vor dem Ende
 	// von `goto` ergeben nur einen Eintrag (#91).
-	const addressWriter = createAddressHistoryWriter((search, mode) =>
+	const addressWriter = createAddressHistoryWriter(async (search, mode) => {
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		goto(search, { replaceState: mode === 'replace', keepFocus: true, noScroll: true })
-	);
+		await goto(search, { replaceState: mode === 'replace', keepFocus: true, noScroll: true });
+		// `goto` erfüllt sich auch, wenn eine andere Navigation es überholt hat.
+		const target = new URLSearchParams(search).get('address');
+		return (
+			normalizeAddressParam(new URL(window.location.href).searchParams.get('address')) === target
+		);
+	});
 
 	function selectRestoring(suggestion: GeocodeSuggestion): void {
 		restoringSelectionId = suggestion.id;
