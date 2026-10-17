@@ -59,6 +59,10 @@ describe('buildContextRows: Stufe je Umfeld-Zeile (GH-88)', () => {
 		expect(berlinRow('umweltgerechtigkeit-2023', ordinal('fünffach'))[0].severity).toBe('danger');
 	});
 
+	it('Wohnlage „gut“ ist success-soft (Bewertung über wol_mode)', () => {
+		expect(berlinRow('wohnlagen-2024', ordinal('gut'))[0].severity).toBe('success-soft');
+	});
+
 	it('MSS bekommt keine Stufe (Stigma-Schutz)', () => {
 		expect(berlinRow('mss-gesamtindex-2025', ordinal('hoch'))[0].severity).toBeUndefined();
 	});
