@@ -185,7 +185,7 @@
 />
 <JsonLd data={breadcrumbJsonLd} testid="webmcp-breadcrumb-jsonld" />
 
-<main class="mx-auto max-w-2xl px-4 py-12" data-testid="webmcp-page">
+<main class="text-measure mx-auto max-w-2xl px-4 py-12" data-testid="webmcp-page">
 	<h1 class="text-2xl font-bold break-words hyphens-auto sm:text-3xl">WebMCP</h1>
 
 	<p class="mt-6 leading-body text-ink-muted">{m.webmcp_intro_p1()}</p>

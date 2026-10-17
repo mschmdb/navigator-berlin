@@ -123,7 +123,7 @@
 />
 <JsonLd data={breadcrumbJsonLd} testid="architektur-breadcrumb-jsonld" />
 
-<main class="mx-auto max-w-2xl px-4 py-12">
+<main class="text-measure mx-auto max-w-2xl px-4 py-12">
 	<h1 class="text-2xl font-bold break-words hyphens-auto sm:text-3xl">
 		{m.architektur_h1_title()}
 	</h1>

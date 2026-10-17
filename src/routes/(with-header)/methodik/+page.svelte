@@ -104,7 +104,10 @@
 <JsonLd data={jsonLd} testid="methodik-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="methodik-breadcrumb-jsonld" />
 
-<article data-testid="methodik-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
+<article
+	data-testid="methodik-page"
+	class="text-measure mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
+>
 	<header class="flex flex-col gap-2">
 		<h1 data-testid="methodik-page-title" class="text-3xl font-bold text-ink">
 			{m.methodik_h1_title()}
@@ -117,12 +120,12 @@
 	<nav
 		data-testid="methodik-toc"
 		aria-label={m.methodik_toc_aria_label()}
-		class="border border-rule bg-bg p-4"
+		class="border-y border-rule py-4"
 	>
-		<p class="mb-2 text-xs text-ink-subtle">
+		<p class="mb-2 text-sm text-ink-muted">
 			{m.methodik_toc_heading()}
 		</p>
-		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
+		<ol class="grid gap-1.5 font-sans text-base sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
 					<a

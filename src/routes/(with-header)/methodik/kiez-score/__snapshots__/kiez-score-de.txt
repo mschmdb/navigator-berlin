@@ -41,19 +41,19 @@ h2: Gewichte
 p: Persona „allgemein“ gewichtet die fünf Composite-Dimensionen gleich (je 20 Prozent). Kultur und erfasste Kriminalität sind sichtbare Kontext-Dimensionen, zählen aber nicht in den Gesamt-Score (Gewicht 0). Persona-Switcher für Familie, Single oder Senior:innen liegt in Phase 2. Eigene Slider-Gewichtung kommt ebenfalls später.
 th: Dimension
 th: Gewicht
-td: Ruhe & Luft
+th: Ruhe & Luft
 td: 0.20
-td: Grün & Hitze
+th: Grün & Hitze
 td: 0.20
-td: Mobilität
+th: Mobilität
 td: 0.20
-td: Wohnschutz
+th: Wohnschutz
 td: 0.20
-td: Versorgung
+th: Versorgung
 td: 0.20
-td: Kultur (nicht im Gesamt-Score)
+th: Kultur (nicht im Gesamt-Score)
 td: 0
-td: Erfasste Kriminalität (nicht im Gesamt-Score)
+th: Erfasste Kriminalität (nicht im Gesamt-Score)
 td: 0
 h2: Normalisierung
 p: Jeder Roh-Wert wird in eine 0-bis-100-Skala übersetzt. Höher heißt günstiger.
