@@ -34,7 +34,7 @@
 		<button
 			type="button"
 			data-testid="score-membership-link-{slug}"
-			class="inline-flex items-center gap-1 rounded-sm bg-severity-success-soft-bg px-1.5 py-0.5 font-mono text-dense-meta tracking-wide text-severity-success-soft uppercase hover:underline"
+			class="inline-flex min-h-(--target-min) items-center gap-1 rounded-sm bg-severity-success-soft-bg px-1.5 py-0.5 font-mono text-dense-meta tracking-wide text-severity-success-soft uppercase hover:underline"
 			onclick={() => onJump?.(dimension)}
 			title={m.inspector_score_membership_in_score_title({ label }, localeOpts)}
 		>

@@ -41,10 +41,16 @@
 	<h1 class="font-serif text-4xl text-ink">{heading}</h1>
 	<p class="font-serif text-lg leading-body text-ink-muted">{text}</p>
 	<nav class="flex flex-wrap gap-4 font-mono text-sm" aria-label={m.error_nav_label()}>
-		<a href={localizedHref('/')} class="underline underline-offset-4 hover:text-accent">
+		<a
+			href={localizedHref('/')}
+			class="inline-flex min-h-(--target-min) items-center underline underline-offset-4 hover:text-accent"
+		>
 			{m.error_link_home()}
 		</a>
-		<a href={localizedHref('/explore')} class="underline underline-offset-4 hover:text-accent">
+		<a
+			href={localizedHref('/explore')}
+			class="inline-flex min-h-(--target-min) items-center underline underline-offset-4 hover:text-accent"
+		>
 			{m.error_link_atlas()}
 		</a>
 	</nav>

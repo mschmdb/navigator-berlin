@@ -461,7 +461,7 @@
 			data-testid="finder-close"
 			aria-label={m.finder_close_aria()}
 			onclick={() => onClose?.()}
-			class="hover:text-vermillion p-0.5 text-ink-muted"
+			class="hover:text-vermillion -m-1 inline-flex size-(--target-min) items-center justify-center text-ink-muted"
 		>
 			<X size={14} aria-hidden="true" />
 		</button>
@@ -550,7 +550,8 @@
 							data-testid={`finder-partei-${p}`}
 							aria-pressed={partei === p}
 							onclick={() => void onParteiChange(p)}
-							class="rounded-sm border px-1.5 py-0.5 font-mono text-dense-meta {partei === p
+							class="inline-flex min-h-(--target-min) items-center rounded-sm border px-1.5 py-0.5 font-mono text-dense-meta {partei ===
+							p
 								? 'border-accent bg-accent text-bg'
 								: 'border-rule text-ink-muted hover:text-ink'}"
 						>
@@ -585,7 +586,7 @@
 					type="button"
 					data-testid="finder-reset"
 					onclick={reset}
-					class="inline-flex items-center gap-1 font-mono text-dense-meta tracking-wider text-ink-muted uppercase hover:text-ink"
+					class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-meta tracking-wider text-ink-muted uppercase hover:text-ink"
 				>
 					<RotateCcw size={11} aria-hidden="true" />
 					{m.finder_reset_label()}

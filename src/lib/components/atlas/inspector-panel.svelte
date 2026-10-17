@@ -563,7 +563,7 @@
 						aria-label={addressBookmarked
 							? m.inspector_bookmark_saved_open_list(undefined, localeOpts)
 							: m.inspector_bookmark_save(undefined, localeOpts)}
-						class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+						class="inline-flex min-h-(--target-min) items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
 					>
 						{#if inspectorSaveJustHappened}
 							<Check size={14} aria-hidden="true" />
@@ -588,7 +588,7 @@
 							data-testid="compare-trigger"
 							aria-label={m.inspector_compare_aria(undefined, localeOpts)}
 							aria-pressed={ui.compareMode}
-							class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+							class="inline-flex min-h-(--target-min) items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
 						>
 							<GitCompare size={14} aria-hidden="true" />
 							<span>{m.inspector_compare_label(undefined, localeOpts)}</span>
@@ -603,7 +603,7 @@
 							aria-expanded={shareOpen}
 							aria-controls="inspector-share-sheet"
 							data-testid="share-sheet-trigger"
-							class="inline-flex items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
+							class="inline-flex min-h-(--target-min) items-center gap-1.5 border-b border-rule-strong text-sm text-ink hover:text-ink"
 						>
 							<Share2 size={14} aria-hidden="true" />
 							<span>{m.inspector_share_trigger_label(undefined, localeOpts)}</span>
@@ -647,7 +647,7 @@
 								<div class="flex items-baseline justify-between gap-2">
 									<a
 										data-testid="inspector-kiez-link"
-										class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+										class="inline-flex min-h-(--target-min) items-center font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
 										href={kiezHref}
 									>
 										{level.kiezName
@@ -673,7 +673,7 @@
 								<div class="flex items-baseline justify-between gap-2">
 									<a
 										data-testid="inspector-bezirk-link"
-										class="font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
+										class="inline-flex min-h-(--target-min) items-center font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
 										href={bezirkHref}
 									>
 										{level.bezirkName

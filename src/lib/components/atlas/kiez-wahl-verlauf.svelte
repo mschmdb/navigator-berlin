@@ -116,7 +116,7 @@
 
 		<a
 			href={localizedHref(methodikHref)}
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			data-testid={`${testid}-methodik-link`}
 		>
 			{m.wahl_detail_methodik_link_label()}

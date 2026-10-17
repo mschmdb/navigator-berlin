@@ -116,7 +116,7 @@
 								aria-label={m.atlas_legend_promote_aria_label({ name: entry.name }, localeOpts)}
 								title={m.atlas_legend_promote_title(undefined, localeOpts)}
 								onclick={() => onPromoteLayer!(entry.slug)}
-								class="p-0.5 text-ink-muted hover:text-ink"
+								class="-m-1 inline-flex size-(--target-min) items-center justify-center text-ink-muted hover:text-ink"
 							>
 								<ArrowDownUp size={14} aria-hidden="true" />
 							</button>
@@ -130,7 +130,7 @@
 									? m.atlas_legend_show_aria_label({ name: entry.name }, localeOpts)
 									: m.atlas_legend_hide_aria_label({ name: entry.name }, localeOpts)}
 								onclick={() => onToggleHidden!(entry.slug)}
-								class="p-0.5 text-ink-muted hover:text-ink"
+								class="-m-1 inline-flex size-(--target-min) items-center justify-center text-ink-muted hover:text-ink"
 							>
 								{#if entry.hidden}
 									<EyeOff size={14} aria-hidden="true" />
@@ -145,7 +145,7 @@
 								data-testid={`legend-remove-${entry.slug}`}
 								aria-label={m.atlas_legend_remove_aria_label({ name: entry.name }, localeOpts)}
 								onclick={() => onRemove!(entry.slug)}
-								class="hover:text-vermillion p-0.5 text-ink-muted"
+								class="hover:text-vermillion -m-1 inline-flex size-(--target-min) items-center justify-center text-ink-muted"
 							>
 								<X size={14} aria-hidden="true" />
 							</button>

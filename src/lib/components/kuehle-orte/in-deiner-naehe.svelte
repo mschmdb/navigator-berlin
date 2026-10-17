@@ -139,7 +139,9 @@
 								class="inline-flex items-center rounded-sm bg-state-success/15 px-1 font-mono text-dense-meta font-semibold text-state-success"
 								>{statusText(ort.openingHours)}</span
 							>
-							<span class="font-mono text-dense-meta text-ink-muted" lang={cat.lang}>{cat.text}</span>
+							<span class="font-mono text-dense-meta text-ink-muted" lang={cat.lang}
+								>{cat.text}</span
+							>
 						</div>
 						{#if ort.address}
 							<p class="mt-0.5 font-serif text-xs text-ink-subtle">{ort.address}</p>

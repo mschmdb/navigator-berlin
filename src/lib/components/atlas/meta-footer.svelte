@@ -30,11 +30,17 @@
 		>
 			{#each META_LINKS as link (link.id)}
 				<span class="whitespace-nowrap">
-					<a href={localizedHref(link.href)} class="hover:text-accent">{metaLinkLabel(link.id)}</a>
+					<a
+						href={localizedHref(link.href)}
+						class="inline-flex min-h-(--target-min) items-center hover:text-accent"
+						>{metaLinkLabel(link.id)}</a
+					>
 					<span aria-hidden="true" class="px-1.5 text-ink-subtle/50">·</span>
 				</span>
 			{/each}
-			<a href={`mailto:${FEEDBACK_EMAIL}`} class="whitespace-nowrap hover:text-accent"
+			<a
+				href={`mailto:${FEEDBACK_EMAIL}`}
+				class="inline-flex min-h-(--target-min) items-center whitespace-nowrap hover:text-accent"
 				>{m.shell_contact_label()}</a
 			>
 			<span aria-hidden="true" class="px-2 text-ink-subtle/50">·</span>
@@ -82,17 +88,21 @@
 							<h2 class="font-mono text-dense-meta tracking-wider text-ink-subtle uppercase">
 								{metaLinkGroupTitle(group.id)}
 							</h2>
-							<ul class="flex flex-col gap-2">
+							<ul class="flex flex-col">
 								{#each group.links as link (link.id)}
 									<li>
-										<a href={localizedHref(link.href)} class="hover:text-accent"
+										<a
+											href={localizedHref(link.href)}
+											class="inline-flex min-h-(--target-min) items-center hover:text-accent"
 											>{metaLinkLabel(link.id)}</a
 										>
 									</li>
 								{/each}
 								{#if group.id === 'sonstiges'}
 									<li>
-										<a href={`mailto:${FEEDBACK_EMAIL}`} class="hover:text-accent"
+										<a
+											href={`mailto:${FEEDBACK_EMAIL}`}
+											class="inline-flex min-h-(--target-min) items-center hover:text-accent"
 											>{m.shell_contact_label()}</a
 										>
 									</li>

@@ -106,7 +106,7 @@ describe('Design-Fundament: Tokens', () => {
 		const rule = APP_CSS.match(/:where\(([^)]*)\):focus-visible/);
 		expect(rule?.[1]).toBeDefined();
 		for (const el of ['a', 'button', 'summary', 'input', 'select', 'textarea']) {
-			expect(rule![1]).toMatch(new RegExp(`(^|[ ,])${el}($|[ ,])`));
+			expect(rule![1]).toMatch(new RegExp(`(^|[\\s,])${el}($|[\\s,])`));
 		}
 	});
 });

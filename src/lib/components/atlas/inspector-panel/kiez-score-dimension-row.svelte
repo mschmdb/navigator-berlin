@@ -86,7 +86,7 @@
 				onclick={toggleSources}
 				aria-expanded={sourcesOpen}
 				data-testid="kiez-score-toggle-sources-{score.dimension}"
-				class="flex flex-1 items-center gap-2 text-left hover:text-accent"
+				class="flex min-h-(--target-min) flex-1 items-center gap-2 text-left hover:text-accent"
 			>
 				{#if sourcesOpen}
 					<ChevronDown size={14} class="shrink-0 text-ink-subtle" aria-hidden="true" />
@@ -170,7 +170,10 @@
 				</li>
 			{/each}
 			{#if score.dataStand}
-				<li class="pt-0.5 text-dense-meta text-ink-subtle" data-testid="kiez-score-stand-kriminalitaet">
+				<li
+					class="pt-0.5 text-dense-meta text-ink-subtle"
+					data-testid="kiez-score-stand-kriminalitaet"
+				>
 					{m.inspector_kiez_score_stand(
 						{ date: formatDate(score.dataStand, localeOpts) },
 						localeOpts

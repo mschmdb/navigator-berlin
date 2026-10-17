@@ -335,7 +335,7 @@
 								aria-checked={selectedJahr === jahr}
 								data-testid={`wahl-jahr-${jahr}`}
 								onclick={() => (selectedJahr = jahr)}
-								class="rounded border border-ink px-2 py-0.5 font-mono text-dense-label tabular-nums transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label tabular-nums transition-colors"
 								class:bg-ink={selectedJahr === jahr}
 								class:text-bg={selectedJahr === jahr}
 								class:bg-bg={selectedJahr !== jahr}
@@ -350,7 +350,10 @@
 					<span class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
 						{m.inspector_wahl_jahr_label(undefined, localeOpts)}
 					</span>
-					<span class="font-mono text-dense-meta text-ink tabular-nums" data-testid="wahl-jahr-static">
+					<span
+						class="font-mono text-dense-meta text-ink tabular-nums"
+						data-testid="wahl-jahr-static"
+					>
 						{jahreForTypStimmtyp[0]}
 					</span>
 				{/if}
@@ -375,7 +378,7 @@
 								aria-checked={selectedStimmtyp === st}
 								data-testid={`wahl-stimmtyp-${st}`}
 								onclick={() => (selectedStimmtyp = st)}
-								class="rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
 								class:bg-ink={selectedStimmtyp === st}
 								class:text-bg={selectedStimmtyp === st}
 								class:bg-bg={selectedStimmtyp !== st}
@@ -408,7 +411,7 @@
 								aria-checked={selectedLevel === lvl}
 								data-testid={`wahl-level-${lvl}`}
 								onclick={() => (selectedLevel = lvl)}
-								class="rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
 								class:bg-ink={selectedLevel === lvl}
 								class:text-bg={selectedLevel === lvl}
 								class:bg-bg={selectedLevel !== lvl}
@@ -621,7 +624,7 @@
 				<a
 					href={localizedHref(`/berlin-wahlen/${slug}`, locale)}
 					data-testid="wahl-detail-link"
-					class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.inspector_wahl_detail_link(undefined, localeOpts)}
 				</a>
@@ -629,7 +632,7 @@
 			<a
 				href={localizedHref(methodikHref, locale)}
 				data-testid="wahl-methodik-link"
-				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.inspector_wahl_methodik_link(undefined, localeOpts)}
 			</a>

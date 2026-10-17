@@ -38,7 +38,7 @@
 		</p>
 		<a
 			href={localizedHref(mapHref)}
-			class="inline-flex items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
 		>
 			{m.home_hero_cta_map()}
 			<ArrowRight size={14} aria-hidden="true" />

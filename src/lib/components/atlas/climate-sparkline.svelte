@@ -287,7 +287,7 @@
 			onclick={() => (detailsOpen = !detailsOpen)}
 			aria-expanded={detailsOpen}
 			data-testid="climate-sparkline-details-toggle"
-			class="mt-1 inline-flex items-center gap-1 font-mono text-dense-label tracking-wide text-ink-muted uppercase hover:text-ink"
+			class="mt-1 inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-label tracking-wide text-ink-muted uppercase hover:text-ink"
 		>
 			{detailsOpen
 				? m.inspector_climate_details_toggle_hide(undefined, localeOpts)

@@ -91,7 +91,7 @@
 				lang={locale}
 				data-testid="lang-switcher-link"
 				data-locale={locale}
-				class="underline underline-offset-2 hover:text-accent"
+				class="inline-flex min-h-(--target-min) items-center underline underline-offset-2 hover:text-accent"
 			>
 				{displayName(locale)}
 			</a>

@@ -33,7 +33,7 @@
 			<h2 class="font-serif text-2xl text-ink md:text-3xl">{m.home_updates_heading()}</h2>
 			<a
 				href={localizedHref('/updates')}
-				class="inline-flex items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
+				class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
 			>
 				{m.home_updates_all_link()}
 				<ArrowUpRight size={14} aria-hidden="true" />

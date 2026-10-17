@@ -182,7 +182,7 @@
 			<a
 				href={localizedHref('/layer/kuehle-orte')}
 				data-testid="hitze-methodik-link"
-				class="w-fit font-mono text-sm tracking-wider text-ink-muted uppercase hover:text-ink"
+				class="inline-flex min-h-(--target-min) w-fit items-center font-mono text-sm tracking-wider text-ink-muted uppercase hover:text-ink"
 			>
 				{m.hitze_methodik_link()}
 			</a>

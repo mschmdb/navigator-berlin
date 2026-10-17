@@ -228,7 +228,9 @@
 							</span>
 						</div>
 						<div class="mt-0.5 flex flex-wrap items-center gap-1">
-							<span class="font-mono text-dense-meta text-ink-muted" lang={cat.lang}>{cat.text}</span>
+							<span class="font-mono text-dense-meta text-ink-muted" lang={cat.lang}
+								>{cat.text}</span
+							>
 							{#if ort.status}
 								<span
 									class={`inline-flex items-center rounded-sm px-1 font-mono text-dense-meta font-semibold ${statusClass(ort.status)} bg-bg`}
@@ -319,7 +321,7 @@
 			data-testid="card-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}

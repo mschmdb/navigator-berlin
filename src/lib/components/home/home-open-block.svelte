@@ -35,7 +35,7 @@
 		{/each}
 	</ul>
 	<a
-		class="inline-flex font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
+		class="inline-flex min-h-(--target-min) font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
 		href={localizedHref('/lizenzen')}
 	>
 		{m.home_open_block_link()}

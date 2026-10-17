@@ -87,7 +87,7 @@
 						tabindex={checked ? 0 : -1}
 						onclick={() => !disabled && onJahrChange(opt.jahr)}
 						onkeydown={(e) => onJahrKeydown(e, i)}
-						class="rounded border border-ink px-2 py-0.5 font-mono text-xs tabular-nums transition-colors"
+						class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-xs tabular-nums transition-colors"
 						class:bg-ink={checked}
 						class:text-bg={checked}
 						class:bg-bg={!checked}

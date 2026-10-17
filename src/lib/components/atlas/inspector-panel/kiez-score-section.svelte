@@ -122,7 +122,7 @@
 		<a
 			href={localizedHref(methodikHref, locale)}
 			data-testid="kiez-score-methodik-link"
-			class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.inspector_kiez_score_methodik_link(undefined, localeOpts)}
 		</a>
