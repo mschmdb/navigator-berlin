@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ctaPrimary, ctaSecondary } from './cta';
+import { ctaPrimary, ctaSecondary, ctaSecondaryWrap } from './cta';
 
 const HOME_DIR = join(process.cwd(), 'src/lib/components/home');
 
@@ -18,10 +18,15 @@ describe('Startseiten-Aktionen', () => {
 	});
 
 	it('lassen lange Texte bei 320 px umbrechen statt die Seite zu verbreitern (WCAG 1.4.10)', () => {
-		for (const cta of [ctaPrimary, ctaSecondary]) {
+		for (const cta of [ctaPrimary, ctaSecondary, ctaSecondaryWrap]) {
 			expect(cta).toContain('max-w-full');
 			expect(cta.split(' ')).not.toContain('whitespace-nowrap');
 		}
+	});
+
+	it('lässt Aktionen mit dynamischem Namen auf jeder Breite umbrechen', () => {
+		expect(ctaSecondaryWrap).toContain('border-rule-strong');
+		expect(ctaSecondaryWrap).not.toContain('nowrap');
 	});
 
 	it('setzt auf der Startseite keine Pfeil-Icons an Links (Leitlinie 29)', () => {

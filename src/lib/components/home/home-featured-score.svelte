@@ -7,7 +7,7 @@
 	Landing bleibt statisch prerendert und schnell, der Ring kommt rein client-seitig dazu.
 -->
 <script lang="ts">
-	import { ctaSecondary } from './internal/cta.js';
+	import { ctaSecondaryWrap } from './internal/cta.js';
 	import { onMount } from 'svelte';
 	import type { Component } from 'svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -133,7 +133,7 @@
 				<span class="text-xs text-ink-subtle tabular-nums">/ 100</span>
 			</div>
 		{/if}
-		<a href={localizedHref(featured.exploreHref)} class={ctaSecondary}>
+		<a href={localizedHref(featured.exploreHref)} class={ctaSecondaryWrap}>
 			{m.home_featured_score_link_label({ name: featured.displayName })}
 		</a>
 	</div>
