@@ -5,7 +5,7 @@
  * `sankey-wahljahre.svelte` (Datei-Zeilenlimit, Boundary „Interaktion nach
  * internal/ auslagern").
  */
-import type { SankeyPositionedLink, SankeyPositionedNode } from './sankey-d3.svelte.js';
+import type { SankeyPositionedLink, SankeyPositionedNode } from './sankey-layout.js';
 import { linkKey, tooltipContentForLink, tooltipContentForNode } from './sankey-interaction.js';
 import type { SankeyTooltipContent } from './sankey-tooltip.svelte';
 
@@ -25,6 +25,9 @@ export class SankeyInteractionState {
 	tooltipPos = $state<{ x: number; y: number }>({ x: 0, y: 0 });
 	tooltipContent = $state<SankeyTooltipContent | null>(null);
 	hoveredLinkKey = $state<string | null>(null);
+	/** #127: in der Übergangs-Liste angetipptes Band. Bleibt hervorgehoben,
+	 * bis es erneut angetippt wird; Hover überlagert es nur vorübergehend. */
+	selectedLinkKey = $state<string | null>(null);
 
 	#relativePos(clientX: number, clientY: number): { x: number; y: number } {
 		const rect = this.container?.getBoundingClientRect();
@@ -66,6 +69,17 @@ export class SankeyInteractionState {
 	}
 
 	onLinkLeave(): void {
+		this.hoveredLinkKey = this.selectedLinkKey;
+		this.tooltipVisible = false;
+	}
+
+	toggleSelectedLink(key: string): void {
+		this.selectedLinkKey = this.selectedLinkKey === key ? null : key;
+		this.hoveredLinkKey = this.selectedLinkKey;
+	}
+
+	reset(): void {
+		this.selectedLinkKey = null;
 		this.hoveredLinkKey = null;
 		this.tooltipVisible = false;
 	}

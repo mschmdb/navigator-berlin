@@ -4,6 +4,7 @@ import {
 	SANKEY_NODE_PADDING,
 	SANKEY_NODE_WIDTH,
 	buildSankeyInput,
+	minColumnGap,
 	nodeLabelAnchor,
 	sankeyChartHeight,
 	sankeyLabelMargin,
@@ -64,11 +65,7 @@ function layoutWithD3(graph: SankeyGraph, width = 300, height = 200) {
 	return { nodes: toPositionedNodes(out.nodes), links: toPositionedLinks(out.links) };
 }
 
-function zweiSpalten(
-	nodes: SankeyGraphNode[],
-	links: SankeyGraphLink[],
-	total = 1
-): SankeyGraph {
+function zweiSpalten(nodes: SankeyGraphNode[], links: SankeyGraphLink[], total = 1): SankeyGraph {
 	return {
 		nodes,
 		links,
@@ -115,9 +112,7 @@ describe('buildSankeyInput', () => {
 	});
 
 	it('ist strukturiert klonbar (LayerChart ruft structuredClone auf die Daten)', () => {
-		const input = buildSankeyInput(
-			zweiSpalten([node({ id: 'partei:2016:SPD' })], [], 1)
-		);
+		const input = buildSankeyInput(zweiSpalten([node({ id: 'partei:2016:SPD' })], [], 1));
 		expect(() => structuredClone(input)).not.toThrow();
 	});
 
@@ -264,6 +259,17 @@ describe('Beschriftung und Maße', () => {
 		expect(showNodeLabel({ column: 1, columnCount: 3, columnGap: 160, height: 20 })).toBe(true);
 		// Rand-Spalten haben eigenen Rand, unabhängig vom Abstand.
 		expect(showNodeLabel({ column: 2, columnCount: 3, columnGap: 60, height: 20 })).toBe(true);
+	});
+
+	it('kleinster Spaltenabstand aus den positionierten Knoten', () => {
+		const nodes = [
+			{ column: 0, x0: 0 },
+			{ column: 0, x0: 0 },
+			{ column: 1, x0: 100 },
+			{ column: 2, x0: 180 }
+		];
+		expect(minColumnGap(nodes)).toBe(80);
+		expect(minColumnGap([{ column: 0, x0: 0 }])).toBe(Infinity);
 	});
 
 	it('Label-Rand schrumpft auf schmalen Containern, bleibt aber lesbar', () => {

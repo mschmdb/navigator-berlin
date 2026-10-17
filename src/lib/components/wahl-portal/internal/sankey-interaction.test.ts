@@ -6,7 +6,7 @@ import {
 	tooltipContentForLink,
 	tooltipContentForNode
 } from './sankey-interaction.js';
-import type { SankeyPositionedLink, SankeyPositionedNode } from './sankey-d3.svelte.js';
+import type { SankeyPositionedLink, SankeyPositionedNode } from './sankey-layout.js';
 
 function link(overrides: Partial<SankeyPositionedLink>): SankeyPositionedLink {
 	return {
@@ -17,7 +17,6 @@ function link(overrides: Partial<SankeyPositionedLink>): SankeyPositionedLink {
 		nach: 'GRÜNE',
 		jahr: 2023,
 		width: 10,
-		path: 'M0,0',
 		...overrides
 	};
 }

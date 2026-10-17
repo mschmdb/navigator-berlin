@@ -155,6 +155,8 @@
 	"wahl_portal_spalte_nach": "To",
 	"wahl_portal_spalte_jahr": "Year",
 	"wahl_portal_spalte_gebiete": "Areas",
+	"wahl_portal_sankey_liste_eintrag": "{value} areas, {anteil}",
+	"wahl_portal_sankey_liste_hinweis": "Tap to highlight the transition in the chart.",
 	"wahl_portal_sankey_table_caption": "Party transitions by year",
 	"wahl_portal_sankey_band_aria_label_singular": "{von} → {nach}: {value} area",
 	"wahl_portal_sankey_band_aria_label_plural": "{von} → {nach}: {value} areas",
