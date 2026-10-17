@@ -57,7 +57,7 @@
 					<td class="px-3 py-2">
 						<a
 							href={localizedHref(`/layer/${layer.slug}`)}
-							class="hover:text-accent-strong text-accent underline underline-offset-2"
+							class="text-accent underline underline-offset-2 hover:text-accent-strong"
 						>
 							{getLayerDisplayName(layer.slug, { locale })}
 						</a>

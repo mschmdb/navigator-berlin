@@ -209,7 +209,7 @@
 					href={externalLink.href}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="hover:text-accent-strong inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2"
+					class="inline-flex w-fit items-center gap-1 font-sans text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					<ExternalLink size={12} aria-hidden="true" />
 					{externalLink.label}

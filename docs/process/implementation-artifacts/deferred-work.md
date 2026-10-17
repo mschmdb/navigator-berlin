@@ -502,3 +502,6 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-103-bezirk-karte-a11y.md`
   summary: `winner-map.svelte.test.ts` „Adress-Auswahl: Punkt im Gebiet …“ ist instabil und findet `winner-map-address-hint` zeitweise nicht.
   evidence: Am 17.10.2026 in einem vollen `pnpm test:unit --run` und in 2 von 3 Einzelläufen rot, im dritten grün; die Datei importiert nichts aus dieser Änderung.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-104-quellen-komma.md`
+  summary: Der Hinweis „öffnet neuen Tab“ an Kältehilfe-Quellen liegt neben dem Link statt darin und fehlt im Accessible Name.
+  evidence: `quellen-zeile.svelte` (vorher `notfall-block.svelte`) setzt das `sr-only`-Span nach `</a>`; in Link-Listen von Screenreadern fehlt der Hinweis.

@@ -129,7 +129,7 @@
 				<li>
 					<a
 						href={`#${sec.id}`}
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{sec.label}
 					</a>
@@ -155,7 +155,7 @@
 						href={info.url}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong font-mono text-xs text-accent underline underline-offset-2"
+						class="font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{info.key}
 					</a>
@@ -167,7 +167,7 @@
 							{#if hasLayerDetailPage(layer)}
 								<a
 									href={localizedHref(`/layer/${layer.slug}`)}
-									class="hover:text-accent-strong text-accent underline underline-offset-2"
+									class="text-accent underline underline-offset-2 hover:text-accent-strong"
 								>
 									{getLayerDisplayName(layer.slug, { locale })}
 								</a>
@@ -206,7 +206,7 @@
 						href="https://bundeswahlleiterin.de"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						bundeswahlleiterin.de
 					</a>
@@ -224,7 +224,7 @@
 						href="https://statistik-berlin-brandenburg.de"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						statistik-berlin-brandenburg.de
 					</a>
@@ -242,7 +242,7 @@
 						href="https://www.wahlen-berlin.de"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						wahlen-berlin.de
 					</a>
@@ -253,7 +253,7 @@
 			{m.lizenzen_wahl_methodik_label()}
 			<a
 				href={localizedHref('/methodik/wahldaten')}
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.lizenzen_wahl_methodik_link()}
 			</a>
@@ -280,7 +280,7 @@
 						href="https://daten.berlin.de/datensaetze/einwohnerinnen-und-einwohner-in-berlin-in-lor-planungsraumen-am-31-12-2024"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						daten.berlin.de
 					</a>
@@ -311,7 +311,7 @@
 						href="https://www.kriminalitaetsatlas.berlin.de/"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						kriminalitaetsatlas.berlin.de
 					</a>
@@ -322,7 +322,7 @@
 			{m.lizenzen_krim_methodik_label()}
 			<a
 				href={localizedHref('/methodik/kiez-score')}
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.lizenzen_krim_methodik_link()}
 			</a>
@@ -349,7 +349,7 @@
 						href="https://opendata.dwd.de/climate_environment/CDC/"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						opendata.dwd.de/climate_environment/CDC
 					</a>
@@ -384,7 +384,7 @@
 						href="https://www.wikidata.org"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						wikidata.org
 					</a>
@@ -404,7 +404,7 @@
 						href="https://de.wikipedia.org"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						de.wikipedia.org
 					</a>
@@ -440,7 +440,7 @@
 									href={sw.url}
 									target="_blank"
 									rel="noopener noreferrer"
-									class="hover:text-accent-strong text-accent underline underline-offset-2"
+									class="text-accent underline underline-offset-2 hover:text-accent-strong"
 								>
 									{sw.name}
 								</a>
@@ -463,7 +463,7 @@
 				href="https://github.com/IBM/plex"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				github.com/IBM/plex
 			</a>
@@ -472,7 +472,7 @@
 				href="https://openfontlicense.org/"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				OFL 1.1
 			</a>
@@ -493,7 +493,7 @@
 						href="https://www.openstreetmap.org/copyright"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hover:text-accent-strong text-accent underline underline-offset-2"
+						class="text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{text}
 					</a>

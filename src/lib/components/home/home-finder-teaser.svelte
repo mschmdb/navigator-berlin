@@ -61,7 +61,7 @@
 	<a
 		href={localizedHref('/explore?finder=1')}
 		aria-label={m.home_finder_cta()}
-		class="group bg-bg-soft block overflow-hidden rounded border border-rule transition-colors hover:border-ink-muted"
+		class="group block overflow-hidden rounded border border-rule bg-bg-muted transition-colors hover:border-ink-muted"
 	>
 		<figure>
 			<img

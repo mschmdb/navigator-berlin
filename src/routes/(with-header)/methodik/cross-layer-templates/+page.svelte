@@ -86,7 +86,7 @@
 				</span>
 				{#each preview.tags as tag (tag)}
 					<span
-						class="bg-bg-muted rounded-sm px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+						class="rounded-sm bg-bg-muted px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-ink-muted uppercase"
 					>
 						{previewTagLabel(tag, locale)}
 					</span>
@@ -136,7 +136,7 @@
 					</dt>
 					<dd>
 						<pre
-							class="bg-bg-muted overflow-x-auto rounded border border-rule p-2 text-[10px]">{preview.contextJson}</pre>
+							class="overflow-x-auto rounded border border-rule bg-bg-muted p-2 text-[10px]">{preview.contextJson}</pre>
 					</dd>
 				</dl>
 			</details>
@@ -148,7 +148,7 @@
 			{m.methodik_clt_style_guide_label()}
 			<a
 				href="https://github.com/navigatorberlin/navigator.berlin/blob/main/docs/cross-layer-templates-style-guide.md"
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				docs/cross-layer-templates-style-guide.md
 			</a>

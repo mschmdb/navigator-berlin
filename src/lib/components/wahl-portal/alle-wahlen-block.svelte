@@ -80,7 +80,7 @@
 								<a
 									href={localizedHref(`/berlin-wahlen/${entry.slug}`)}
 									data-testid={`alle-wahlen-link-${entry.slug}`}
-									class="hover:text-accent-strong inline-flex min-h-6 items-center text-accent underline underline-offset-2"
+									class="inline-flex min-h-6 items-center text-accent underline underline-offset-2 hover:text-accent-strong"
 								>
 									{entryLabel(entry)}
 								</a>

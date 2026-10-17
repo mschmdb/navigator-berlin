@@ -45,7 +45,7 @@
 				<a
 					data-testid="transparenz-lizenzen-link"
 					href={localizedHref('/lizenzen')}
-					class="hover:text-accent-strong text-accent underline underline-offset-2">{text}</a
+					class="text-accent underline underline-offset-2 hover:text-accent-strong">{text}</a
 				>
 			{/snippet}
 		</RichText>
@@ -60,7 +60,7 @@
 			href={optOutUrl}
 			data-testid="kuehle-orte-opt-out"
 			aria-label={m.transparenz_optout_aria_label()}
-			class="hover:text-accent-strong inline-flex min-h-11 w-fit items-center gap-1.5 rounded font-sans text-sm text-accent underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
+			class="inline-flex min-h-11 w-fit items-center gap-1.5 rounded font-sans text-sm text-accent underline underline-offset-2 hover:text-accent-strong focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
 		>
 			<Mail size={15} aria-hidden="true" />
 			{m.transparenz_optout_link()}

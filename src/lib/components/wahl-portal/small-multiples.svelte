@@ -226,7 +226,7 @@
 						<div
 							role="status"
 							data-testid={`small-multiples-mini-${slot.partei}-error`}
-							class="bg-bg-muted flex aspect-square w-full items-center justify-center border border-rule p-2 text-center font-mono text-xs text-ink-subtle"
+							class="flex aspect-square w-full items-center justify-center border border-rule bg-bg-muted p-2 text-center font-mono text-xs text-ink-subtle"
 						>
 							{m.wahl_portal_mini_kachel_error({ partei: slot.partei })}
 						</div>
@@ -235,7 +235,7 @@
 							role="status"
 							aria-label={m.wahl_portal_mini_platzhalter_loading({ partei: slot.partei })}
 							data-testid={`small-multiples-mini-${slot.partei}-loading`}
-							class="bg-bg-muted aspect-square w-full animate-pulse border border-rule"
+							class="aspect-square w-full animate-pulse border border-rule bg-bg-muted"
 						></div>
 					{:else}
 						<svg
@@ -302,7 +302,7 @@
 			{m.wahl_portal_methodik_details_label()}
 			<a
 				href={localizedHref('/methodik/wahldaten')}
-				class="hover:text-accent-strong text-accent underline underline-offset-2"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.wahl_portal_methodik_wahldaten_link_label()}
 			</a>

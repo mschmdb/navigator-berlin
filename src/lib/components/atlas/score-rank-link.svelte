@@ -37,7 +37,7 @@
 <a
 	{href}
 	data-testid="score-rank-link"
-	class="hover:text-accent-strong text-accent underline underline-offset-2"
+	class="text-accent underline underline-offset-2 hover:text-accent-strong"
 >
 	{label}
 </a>

@@ -95,18 +95,18 @@
 			<a
 				href="/updates/rss.xml"
 				hreflang={feedLang}
-				class="hover:text-accent-strong text-accent underline underline-offset-2">RSS</a
+				class="text-accent underline underline-offset-2 hover:text-accent-strong">RSS</a
 			>,
 			<a
 				href="/updates/atom.xml"
 				hreflang={feedLang}
-				class="hover:text-accent-strong text-accent underline underline-offset-2">Atom</a
+				class="text-accent underline underline-offset-2 hover:text-accent-strong">Atom</a
 			>
 			{m.updates_index_lead_or()}
 			<a
 				href="/updates/feed.json"
 				hreflang={feedLang}
-				class="hover:text-accent-strong text-accent underline underline-offset-2">JSON Feed</a
+				class="text-accent underline underline-offset-2 hover:text-accent-strong">JSON Feed</a
 			>.
 		</p>
 	</header>

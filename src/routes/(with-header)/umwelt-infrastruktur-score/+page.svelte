@@ -93,7 +93,7 @@
 
 	<aside
 		data-testid="ranking-editorial-disclaimer"
-		class="bg-bg-soft rounded border border-rule px-4 py-3 font-serif text-base text-ink-muted"
+		class="rounded border border-rule bg-bg-muted px-4 py-3 font-serif text-base text-ink-muted"
 		role="note"
 	>
 		{m.uis_disclaimer()}

@@ -96,7 +96,7 @@
 			type="button"
 			data-testid="zeit-animation-zur-kiez-button"
 			onclick={onZurKiez}
-			class="hover:bg-bg-muted rounded border border-ink bg-bg px-2.5 py-1 font-mono text-xs text-ink transition-colors"
+			class="rounded border border-ink bg-bg px-2.5 py-1 font-mono text-xs text-ink transition-colors hover:bg-bg-muted"
 		>
 			{m.wahl_portal_zeit_animation_zur_kiez()}
 		</button>
@@ -112,7 +112,7 @@
 				data-testid="zeit-animation-play"
 				aria-label={m.wahl_portal_zeit_animation_ein_jahr_weiter()}
 				onclick={() => ctl.togglePlay()}
-				class="hover:bg-bg-muted inline-flex items-center justify-center rounded border border-ink p-1.5 text-ink transition-colors"
+				class="inline-flex items-center justify-center rounded border border-ink p-1.5 text-ink transition-colors hover:bg-bg-muted"
 			>
 				<StepForward size={16} aria-hidden="true" />
 			</button>
@@ -125,7 +125,7 @@
 					? m.wahl_portal_zeit_animation_pause()
 					: m.wahl_portal_zeit_animation_play()}
 				onclick={() => ctl.togglePlay()}
-				class="hover:bg-bg-muted inline-flex items-center justify-center rounded border border-ink p-1.5 text-ink transition-colors"
+				class="inline-flex items-center justify-center rounded border border-ink p-1.5 text-ink transition-colors hover:bg-bg-muted"
 			>
 				{#if ctl.playing}
 					<Pause size={16} aria-hidden="true" />

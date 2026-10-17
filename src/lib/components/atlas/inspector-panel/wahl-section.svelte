@@ -424,7 +424,7 @@
 
 			{#if top5.length > 0 && totalStimmen > 0}
 				<div data-testid="wahl-stacked-bar" class="space-y-2" aria-hidden="true">
-					<div class="bg-bg-muted relative h-6 w-full overflow-hidden rounded border border-rule">
+					<div class="relative h-6 w-full overflow-hidden rounded border border-rule bg-bg-muted">
 						{#each top5 as entry, i (entry.kurzname)}
 							{@const widthPct = (entry.anteil * 100).toFixed(2)}
 							{@const offsetPct = top5
@@ -621,7 +621,7 @@
 				<a
 					href={localizedHref(`/berlin-wahlen/${slug}`, locale)}
 					data-testid="wahl-detail-link"
-					class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
+					class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.inspector_wahl_detail_link(undefined, localeOpts)}
 				</a>
@@ -629,7 +629,7 @@
 			<a
 				href={localizedHref(methodikHref, locale)}
 				data-testid="wahl-methodik-link"
-				class="hover:text-accent-strong inline-block font-mono text-xs text-accent underline underline-offset-2"
+				class="inline-block font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.inspector_wahl_methodik_link(undefined, localeOpts)}
 			</a>

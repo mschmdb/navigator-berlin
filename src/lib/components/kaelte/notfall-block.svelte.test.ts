@@ -173,6 +173,18 @@ describe('NotfallBlock', () => {
 		expect(root().querySelector('time[datetime="2026-10-16"]')).not.toBeNull();
 	});
 
+	it('trennt die Quellen eines Dienstes mit Komma und Leerzeichen', async () => {
+		render(NotfallBlock, { now: ABEND_NOVEMBER });
+		const tel = document.querySelector(
+			'[data-testid="kaelte-dienst-kaeltehilfetelefon"]'
+		) as HTMLElement;
+		const kopie = tel.cloneNode(true) as HTMLElement;
+		kopie.querySelectorAll('.sr-only').forEach((n) => n.remove());
+		const text = (kopie.textContent ?? '').replace(/\s+/g, ' ');
+		expect(text).toContain('berlin.de/kaeltehilfe, GEBEWO pro');
+		expect(text).not.toMatch(/,\S/);
+	});
+
 	it('weist beim Kältebus auf den unbestätigten Betrieb hin', async () => {
 		render(NotfallBlock, { now: ABEND_NOVEMBER });
 		const bus = document.querySelector('[data-testid="kaelte-dienst-kaeltebus"]');
