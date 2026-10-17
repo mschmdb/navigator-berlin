@@ -307,13 +307,15 @@
 			{m.uis_ranking_scroll_hint()}
 		</p>
 	{/if}
-	<!-- Scrollbare Region per Tastatur erreichbar (WCAG 2.1.1), Name per aria-label. -->
+	<!-- Nur wenn die Tabelle scrollt, ist die Region per Tastatur erreichbar (WCAG 2.1.1).
+	     Ohne Überlauf wäre der Tab-Stopp nutzlos. -->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div
 		bind:this={wrapperEl}
 		class="overflow-x-auto"
 		data-testid="ranking-table-wrapper"
 		role="region"
-		tabindex="0"
+		tabindex={overflowing ? 0 : undefined}
 		aria-label={m.uis_ranking_table_region_aria()}
 		aria-describedby={overflowing ? 'ranking-scroll-hint' : undefined}
 	>

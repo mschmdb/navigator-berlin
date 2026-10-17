@@ -169,12 +169,16 @@ describe('ScoreRankingTable.svelte · GH-94 Layout und Semantik', () => {
 		expect(caption?.textContent?.trim().length).toBeGreaterThan(0);
 	});
 
-	it('Scroll-Container ist eine benannte, fokussierbare Region', async () => {
-		render(ScoreRankingTable, { kieze, bezirke });
+	it('Scroll-Container ist eine benannte Region, fokussierbar nur bei Überlauf', async () => {
+		const { container } = render(ScoreRankingTable, { kieze, bezirke });
 		const wrap = document.querySelector('[data-testid="ranking-table-wrapper"]');
 		expect(wrap?.getAttribute('role')).toBe('region');
-		expect(wrap?.getAttribute('tabindex')).toBe('0');
 		expect(wrap?.getAttribute('aria-label')?.length ?? 0).toBeGreaterThan(0);
+		container.style.width = '200px';
+		await expect.poll(() => wrap?.getAttribute('tabindex')).toBe('0');
+		// Ohne Überlauf kein zusätzlicher Tab-Stopp.
+		container.style.width = '2400px';
+		await expect.poll(() => wrap?.hasAttribute('tabindex')).toBe(false);
 	});
 
 	it('zeigt den Scroll-Hinweis nur bei Überlauf', async () => {

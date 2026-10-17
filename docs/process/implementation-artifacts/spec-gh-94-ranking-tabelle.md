@@ -2,7 +2,7 @@
 title: 'GH-94 Ranking-Tabelle passt bei 1440 px, Klickziele und Semantik'
 type: 'bugfix'
 created: '2026-10-17'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: 'b6ffccbb385dd86195a2b026f6e14859e46206a6'
@@ -60,9 +60,25 @@ Entscheidungen Matze (Issue-Kommentar 17.10.2026, gilt als abgenommene Spec): pa
 
 ## Implementation Notes
 
+- Gedrehte Labels stehen absolut im Kopf (`position: absolute`), Zahlenspalten haben 3rem Inhaltsbreite. Das letzte Label bekommt 4.75rem Platz rechts, sonst ragt „Recorded crime“ (EN) aus dem Scroll-Container.
+- Die Trennlinie vor Kultur steht nur in den Datenzeilen; im 8,5rem hohen Kopf wirkte sie zu lang.
+- Hinweis und `tabindex` hängen an einem `ResizeObserver`; ohne Überlauf kein Hinweis und kein Tab-Stopp.
+- Messung live (Dev-Server, echte Daten): Tabelle 903 px auf 864 px vorher, 864 px auf 864 px nachher bei 1440 und 1920 px, DE, EN und Bezirke. Klickziele unter 24 px: 144 von 152 vorher, 0 nachher.
+- Der Text-Snapshot enthält Caption und Hinweis, weil die Tests ohne Tailwind laufen und die Tabelle dort überläuft.
+
 ## Spec Change Log
 
 ## Review Triage Log
+
+Codex (`gpt-6.1-sol`) war wegen Nutzungslimit nicht erreichbar; die drei Linsen liefen inline.
+
+| Linse | Befund | Verdict | Route |
+|---|---|---|---|
+| Blind | Region auch ohne Überlauf fokussierbar, nutzloser Tab-Stopp auf Desktop | medium | patch: `tabindex` nur bei Überlauf, Test erweitert |
+| Edge Case | Hinweis erscheint erst nach Hydration, kleine Layout-Verschiebung auf Mobil | low | abgelehnt: eine Textzeile, nur bei Überlauf |
+| Edge Case | Ansicht Bezirke ohne Bezirk-Spalte | false | gemessen: 864 auf 864 px, kein Hinweis |
+| Edge Case | EN-Label „Recorded crime“ ragt über den Rand | high | patch: Platz rechts 4.75rem, gemessen 864 auf 864 px |
+| Verification Gap | Breite bei 1440 px nur per Screenshot-Skript belegt, kein e2e-Test | low | abgelehnt: e2e läuft nicht in der CI, Messung im PR dokumentiert |
 
 ## Verification
 
