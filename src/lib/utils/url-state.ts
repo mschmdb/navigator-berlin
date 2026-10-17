@@ -219,9 +219,11 @@ export function buildComparePermalink(
  * Story 16.1: Deep-Link von der Landing-Page in den Explorer mit vorab aktiven Layern.
  * Nutzt serializeLayers wieder, damit der `layers`-Param-Vertrag mit /explore stabil bleibt.
  */
-export function buildExplorerDeepLink(layers: readonly string[]): string {
-	if (layers.length === 0) return '/explore';
-	return `/explore?layers=${serializeLayers([...layers])}`;
+export function buildExplorerDeepLink(layers: readonly string[], mode?: string): string {
+	const params: string[] = [];
+	if (layers.length > 0) params.push(`layers=${serializeLayers([...layers])}`);
+	if (mode) params.push(`mode=${encodeURIComponent(mode)}`);
+	return params.length === 0 ? '/explore' : `/explore?${params.join('&')}`;
 }
 
 export function parseAddress(params: URLSearchParams): AddressState {

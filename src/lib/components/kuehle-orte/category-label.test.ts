@@ -18,6 +18,23 @@ const PAIRS: readonly (readonly [string, string])[] = [
 	['Gotteshaus', 'Place of worship']
 ];
 
+describe('categoryLabel mit explizitem Locale', () => {
+	afterEach(() => overwriteGetLocale(() => 'de'));
+
+	it('nutzt das übergebene Locale statt der Runtime-Locale', () => {
+		overwriteGetLocale(() => 'de');
+		expect(categoryLabel('Museum', 'en')).toEqual({ text: 'Museum' });
+		expect(categoryLabel('Bibliothek', 'en')).toEqual({ text: 'Library' });
+		expect(categoryLabel('Sauna', 'en')).toEqual({ text: 'Sauna', lang: 'de' });
+	});
+
+	it('de-Locale überschreibt eine englische Runtime-Locale', () => {
+		overwriteGetLocale(() => 'en');
+		expect(categoryLabel('Bibliothek', 'de')).toEqual({ text: 'Bibliothek' });
+		expect(categoryLabel('Sauna', 'de')).toEqual({ text: 'Sauna' });
+	});
+});
+
 describe('categoryLabel', () => {
 	afterEach(() => overwriteGetLocale(() => 'de'));
 

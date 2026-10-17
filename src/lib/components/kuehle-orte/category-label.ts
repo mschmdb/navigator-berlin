@@ -1,5 +1,5 @@
 import { m } from '$lib/paraglide/messages.js';
-import { getLocale } from '$lib/paraglide/runtime';
+import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
 export interface CategoryLabel {
 	readonly text: string;
@@ -7,25 +7,25 @@ export interface CategoryLabel {
 	readonly lang?: 'de';
 }
 
-const LABELS: Readonly<Record<string, () => string>> = {
-	Museum: () => m.naehe_cat_museum(),
-	Bibliothek: () => m.naehe_cat_bibliothek(),
-	'Mall/Center': () => m.naehe_cat_mall(),
-	Mall: () => m.naehe_cat_mall_plain(),
-	Gotteshaus: () => m.naehe_cat_gotteshaus(),
-	Kino: () => m.naehe_cat_kino(),
-	Schwimmzentrum: () => m.naehe_cat_schwimmzentrum(),
-	Kirche: () => m.naehe_cat_kirche(),
-	Kaufhaus: () => m.naehe_cat_kaufhaus(),
-	Eishalle: () => m.naehe_cat_eishalle(),
-	Bad: () => m.naehe_cat_bad(),
-	Wasserpark: () => m.naehe_cat_wasserpark(),
-	Stadtteilzentrum: () => m.naehe_cat_stadtteilzentrum()
+const LABELS: Readonly<Record<string, (locale: Locale) => string>> = {
+	Museum: (locale) => m.naehe_cat_museum(undefined, { locale }),
+	Bibliothek: (locale) => m.naehe_cat_bibliothek(undefined, { locale }),
+	'Mall/Center': (locale) => m.naehe_cat_mall(undefined, { locale }),
+	Mall: (locale) => m.naehe_cat_mall_plain(undefined, { locale }),
+	Gotteshaus: (locale) => m.naehe_cat_gotteshaus(undefined, { locale }),
+	Kino: (locale) => m.naehe_cat_kino(undefined, { locale }),
+	Schwimmzentrum: (locale) => m.naehe_cat_schwimmzentrum(undefined, { locale }),
+	Kirche: (locale) => m.naehe_cat_kirche(undefined, { locale }),
+	Kaufhaus: (locale) => m.naehe_cat_kaufhaus(undefined, { locale }),
+	Eishalle: (locale) => m.naehe_cat_eishalle(undefined, { locale }),
+	Bad: (locale) => m.naehe_cat_bad(undefined, { locale }),
+	Wasserpark: (locale) => m.naehe_cat_wasserpark(undefined, { locale }),
+	Stadtteilzentrum: (locale) => m.naehe_cat_stadtteilzentrum(undefined, { locale })
 };
 
 /** Kategorie-Rohwert (deutsch, aus den Daten) als Anzeigetext der Seiten-Locale. */
-export function categoryLabel(raw: string): CategoryLabel {
+export function categoryLabel(raw: string, locale: Locale = getLocale()): CategoryLabel {
 	const label = Object.hasOwn(LABELS, raw) ? LABELS[raw] : undefined;
-	if (label) return { text: label() };
-	return getLocale() === 'de' ? { text: raw } : { text: raw, lang: 'de' };
+	if (label) return { text: label(locale) };
+	return locale === 'de' ? { text: raw } : { text: raw, lang: 'de' };
 }

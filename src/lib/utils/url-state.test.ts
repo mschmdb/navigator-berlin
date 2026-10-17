@@ -120,6 +120,16 @@ describe('buildExplorerDeepLink', () => {
 	it('leere Liste liefert /explore ohne Query', () => {
 		expect(buildExplorerDeepLink([])).toBe('/explore');
 	});
+
+	it('hängt mode an die Layer an', () => {
+		expect(buildExplorerDeepLink(['waerme-orte'], 'kaelte')).toBe(
+			'/explore?layers=waerme-orte&mode=kaelte'
+		);
+	});
+
+	it('mode ohne Layer liefert /explore?mode=…', () => {
+		expect(buildExplorerDeepLink([], 'kaelte')).toBe('/explore?mode=kaelte');
+	});
 });
 
 describe('sortLayerSlugsByBundle', () => {

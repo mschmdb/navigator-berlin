@@ -48,7 +48,7 @@ describe('Kälte-Seite', () => {
 	it('verlinkt „auf der Karte ansehen“ auf den Explorer mit Layer waerme-orte (#71)', async () => {
 		render(Page, { data: NO_DATA });
 		const link = (await page.getByTestId('kaelte-karte-link').element()) as HTMLAnchorElement;
-		expect(link.getAttribute('href')).toBe('/explore?layers=waerme-orte');
+		expect(link.getAttribute('href')).toBe('/explore?layers=waerme-orte&mode=kaelte');
 		expect(link.textContent).toMatch(/auf der Karte ansehen/i);
 	});
 
@@ -56,7 +56,7 @@ describe('Kälte-Seite', () => {
 		overwriteGetLocale(() => 'en');
 		render(Page, { data: NO_DATA });
 		const link = (await page.getByTestId('kaelte-karte-link').element()) as HTMLAnchorElement;
-		expect(link.getAttribute('href')).toBe('/en/explore?layers=waerme-orte');
+		expect(link.getAttribute('href')).toBe('/en/explore?layers=waerme-orte&mode=kaelte');
 		expect(link.textContent).toMatch(/view on the map/i);
 	});
 

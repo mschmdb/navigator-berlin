@@ -480,6 +480,20 @@ describe('inspector-panel.svelte', () => {
 	// die Card-Singular-Labels waren ungetestet -- insbesondere ob `String(...)`
 	// am Formatter vorbei DE weiterhin roh (Punkt-Dezimaltrennzeichen aus den
 	// Aggregat-Daten, kein Komma) und EN korrekt zeigt.
+	describe('Default-Modus: waerme-orte-Treffer (#73)', () => {
+		it('rendert die Treffer-Zeile und keine Warme-Orte-Card', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('waerme-orte', 'Zentralbibliothek')],
+				layerMeta: [...fullLayerMeta, meta('waerme-orte', 'C: Umwelt')]
+			});
+			const row = (await page.getByTestId('hit-waerme-orte').element()) as HTMLElement;
+			expect(row.querySelector('[data-testid="layer-hit-row"]')).not.toBeNull();
+			expect(document.querySelector('[data-testid="waerme-orte-card"]')).toBeNull();
+		});
+	});
+
 	describe('Kontextzeilen (Aggregate) + Singular-Labels', () => {
 		const bioklimaMeta = meta('bioklima-2023', 'C: Umwelt');
 		const laermMeta = meta('laerm-2023', 'C: Umwelt');

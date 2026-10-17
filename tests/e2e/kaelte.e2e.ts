@@ -71,9 +71,9 @@ test.describe('Kälte-Navigator', () => {
 	}) => {
 		await page.goto('/kaelte');
 		const link = page.getByTestId('kaelte-karte-link');
-		await expect(link).toHaveAttribute('href', '/explore?layers=waerme-orte');
+		await expect(link).toHaveAttribute('href', '/explore?layers=waerme-orte&mode=kaelte');
 		await link.click();
-		await expect(page).toHaveURL(/\/explore\?layers=waerme-orte/);
+		await expect(page).toHaveURL(/\/explore\?layers=waerme-orte&mode=kaelte/);
 	});
 
 	test('Layer-Seite /layer/waerme-orte: 200, Quellen, Link zurück, keine Axe-Verstöße (#71)', async ({

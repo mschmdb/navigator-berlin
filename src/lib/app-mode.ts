@@ -13,7 +13,7 @@ const KAELTE_HOST_PREFIX = 'kaelte.';
  * vor Host-Erkennung. Unbekannter Override wird ignoriert (Fallback auf Host).
  */
 export function resolveAppMode(host: string | null | undefined, override?: string | null): AppMode {
-	if (override === 'hitze' || override === 'default') return override;
+	if (override === 'hitze' || override === 'kaelte' || override === 'default') return override;
 	const h = (host ?? '').toLowerCase();
 	if (h.startsWith(HITZE_HOST_PREFIX)) return 'hitze';
 	if (h.startsWith(KAELTE_HOST_PREFIX)) return 'kaelte';

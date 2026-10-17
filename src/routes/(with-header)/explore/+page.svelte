@@ -60,6 +60,8 @@
 	import { getClimateSeries } from '$lib/data/get-climate-series.js';
 	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
 	import { getKuehleOrteIndex } from '$lib/data/get-kuehle-orte-index.js';
+	import { resolveAppMode } from '$lib/app-mode';
+	import { getWaermeOrteIndex } from '$lib/data/get-waerme-orte-index.js';
 	import { getTrinkbrunnenIndex } from '$lib/data/get-trinkbrunnen-index.js';
 	import { getKiezScore } from '$lib/data/get-kiez-score.js';
 	import { getLaermDbAt } from '$lib/data/get-kiez-laerm-db.js';
@@ -961,6 +963,20 @@
 				})
 				.catch(() => {
 					ui.kuehleOrteIndex = null;
+				});
+		}
+		// Nur im Kälte-Modus: Default und Hitze laden die warmen Orte nicht.
+		const kaelteMode =
+			resolveAppMode(page.url.host, page.url.searchParams.get('mode')) === 'kaelte';
+		if (kaelteMode && !ui.waermeOrteIndex) {
+			ui.waermeOrteLoadError = false;
+			void getWaermeOrteIndex()
+				.then((idx) => {
+					ui.waermeOrteIndex = idx;
+				})
+				.catch(() => {
+					ui.waermeOrteIndex = null;
+					ui.waermeOrteLoadError = true;
 				});
 		}
 		if (!ui.trinkbrunnenIndex) {

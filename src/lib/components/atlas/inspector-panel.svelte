@@ -36,6 +36,7 @@
 	import KlimaSection from './inspector-panel/klima-section.svelte';
 	import NearestStopsCard from './inspector-panel/nearest-stops-card.svelte';
 	import KuehleOrteCard from './inspector-panel/kuehle-orte-card.svelte';
+	import WaermeOrteCard from './inspector-panel/waerme-orte-card.svelte';
 	import HitzeTrinkbrunnenToggle from './inspector-panel/hitze-trinkbrunnen-toggle.svelte';
 	import KiezScoreSection from './inspector-panel/kiez-score-section.svelte';
 	import ScoreMembershipBadge from './inspector-panel/score-membership-badge.svelte';
@@ -493,7 +494,16 @@
 		resolveAppMode(browser ? page.url.host : '', page.url.searchParams.get('mode')) === 'hitze'
 	);
 
+	// Kälte-Host (kaelte.navigator.berlin) oder ?mode=kaelte: der Inspector zeigt nur die
+	// Warme-Orte-Card (unabhängig vom Layer-Status, die Card bietet das Einblenden an).
+	const kaelteMode = $derived(
+		resolveAppMode(browser ? page.url.host : '', page.url.searchParams.get('mode')) === 'kaelte'
+	);
+	const hasWaermeOrte = $derived(kaelteMode && nearestAddressPoint !== null);
+	const reducedMode = $derived(hitzeMode || kaelteMode);
+
 	function shouldRenderSection(sectionKey: string, hitCount: number): boolean {
+		if (kaelteMode) return sectionKey === 'umwelt' && hasWaermeOrte;
 		if (hitzeMode) return sectionKey === 'umwelt' && hasKuehleOrte;
 		if (sectionKey === 'klima') return true;
 		if (sectionKey === 'mobilitaet' && hasNearestStops) return true;
@@ -619,7 +629,7 @@
 
 		{#key ui.selectedAddress?.id}
 			<div class="lc-inspector-body flex-1 space-y-4 px-6 py-4">
-				{#if !hitzeMode}
+				{#if !reducedMode}
 					<KiezScoreSection
 						score={ui.kiezScore}
 						lang={locale}
@@ -738,7 +748,17 @@
 										lang={locale}
 									/>
 								{/if}
-								{#if section.key === 'umwelt' && hasKuehleOrte}
+								{#if section.key === 'umwelt' && hasWaermeOrte}
+									<WaermeOrteCard
+										layerName={getLayerDisplayName('waerme-orte', localeOpts)}
+										address={nearestAddressPoint}
+										index={ui.waermeOrteIndex}
+										loadError={ui.waermeOrteLoadError}
+										isActive={ui.activeLayerSlugs.includes('waerme-orte')}
+										onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
+										lang={locale}
+									/>
+								{:else if section.key === 'umwelt' && hasKuehleOrte}
 									<KuehleOrteCard
 										layerName={getLayerDisplayName('kuehle-orte', localeOpts)}
 										address={nearestAddressPoint}
@@ -763,7 +783,7 @@
 										series={ui.climateSeries}
 										lang={locale}
 									/>
-								{:else if section.hits.length > 0 && !hitzeMode}
+								{:else if section.hits.length > 0 && !reducedMode}
 									<div class="space-y-2">
 										{#each section.hits as hit (hit.layer)}
 											<div data-testid="hit-{hit.layer}">
@@ -815,8 +835,11 @@
 						</section>
 					{/if}
 				{/each}
-				{#if hitzeMode}
-					<div class="border-t border-rule pt-4" data-testid="hitze-full-navigator">
+				{#if reducedMode}
+					<div
+						class="border-t border-rule pt-4"
+						data-testid={kaelteMode ? 'kaelte-full-navigator' : 'hitze-full-navigator'}
+					>
 						<a
 							href={localizedHref('/explore', locale)}
 							class="inline-flex items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2 hover:no-underline"
