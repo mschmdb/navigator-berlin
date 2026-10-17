@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { prefersReducedMotion, scrollBehavior } from '$lib/utils/reduced-motion.js';
 	import type { LayerMetadata } from '$lib/data';
 	import { getUiState, toggleLayer } from '$lib/state/ui-context.svelte.js';
 	import {
@@ -163,7 +164,7 @@
 	function jumpToDimension(dimension: string): void {
 		const row = document.querySelector<HTMLElement>(`[data-testid="kiez-score-dim-${dimension}"]`);
 		if (!row) return;
-		row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		row.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
 		const toggle = row.querySelector<HTMLButtonElement>(
 			`[data-testid="kiez-score-toggle-sources-${dimension}"]`
 		);
@@ -264,11 +265,9 @@
 	$effect(() => {
 		const target = ui.scrollToLayerSlug;
 		if (!target || !panelEl) return;
-		const reduced =
-			typeof window !== 'undefined' &&
-			window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+		const reduced = prefersReducedMotion();
 		queueMicrotask(() => {
-			scrollToLayerHitRow(panelEl ?? null, target, { reducedMotion: reduced ?? false });
+			scrollToLayerHitRow(panelEl ?? null, target, { reducedMotion: reduced });
 			ui.scrollToLayerSlug = null;
 		});
 	});

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { onDestroy, onMount, untrack } from 'svelte';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import MapLibreCanvas from '$lib/components/atlas/map-libre-canvas.svelte';
 	import MapControls from '$lib/components/atlas/map-controls.svelte';
 	import MapAttribution from '$lib/components/atlas/map-attribution.svelte';
@@ -39,6 +39,13 @@
 	import BottomSheet from '$lib/components/atlas/inspector-panel/bottom-sheet.svelte';
 	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
 	import { createPinMarkerElement } from '$lib/components/atlas/internal/map-markers.js';
+	import {
+		addressHistoryMode,
+		formatAddressParam,
+		normalizeAddressParam,
+		resolvePopstateSelection,
+		type AddressHistoryIntent
+	} from '$lib/components/atlas/internal/address-history.js';
 	import { COLORS } from '$lib/components/atlas/internal/colors.js';
 	import { announceGlobal } from '$lib/utils/aria-live.js';
 	import { trackEvent } from '$lib/utils/plausible.js';
@@ -48,6 +55,7 @@
 		type RegionFocusRequest
 	} from '$lib/utils/url-state.js';
 	import { debounce } from '$lib/utils/debounce.js';
+	import { prefersReducedMotion, scrollBehavior } from '$lib/utils/reduced-motion.js';
 	import { matchZoomForType } from '$lib/utils/zoom-mapping.js';
 	import { reverseGeocodeAddress } from '$lib/data/geocode.remote.js';
 	import { useAddressSelection } from '$lib/state/address-selection.svelte.js';
@@ -208,6 +216,19 @@
 	};
 	const LAYERS_KEY = 'layers';
 
+	// #91: Eine Adresswahl legt einen History-Eintrag an, damit Back zur vorigen
+	// Adresse führt. Default-Punkt, Einstieg per Link und Back stellen nur einen
+	// Zustand her und ersetzen den Eintrag (`restoringSelectionId`).
+	let restoringSelectionId: string | null = null;
+	// Zuletzt geschriebene Adresse: zwei Aufrufe für dieselbe Wahl vor dem Ende
+	// von `goto` sollen nur einen Eintrag ergeben.
+	let lastWrittenAddress: string | null = null;
+
+	function selectRestoring(suggestion: GeocodeSuggestion): void {
+		restoringSelectionId = suggestion.id;
+		selection.set(suggestion);
+	}
+
 	// Kein Punkt in URL: Pariser Platz als Default setzen (Reverse-Geocode für
 	// echte Subline, Fallback auf statische Suggestion).
 	function selectDefaultPoint(): void {
@@ -219,9 +240,9 @@
 				});
 				// addresstype steuert nur den Fly-Zoom: für den Default-Einstieg
 				// bewusst Übersicht statt Gebäude-Zoom.
-				selection.set({ ...(s ?? PARISER_PLATZ_FALLBACK), addresstype: 'city_district' });
+				selectRestoring({ ...(s ?? PARISER_PLATZ_FALLBACK), addresstype: 'city_district' });
 			} catch {
-				selection.set({ ...PARISER_PLATZ_FALLBACK, addresstype: 'city_district' });
+				selectRestoring({ ...PARISER_PLATZ_FALLBACK, addresstype: 'city_district' });
 			}
 		})();
 	}
@@ -358,7 +379,7 @@
 		} else if (typeof data.address?.lng === 'number' && typeof data.address?.lat === 'number') {
 			const displayName =
 				data.address.q ?? `${data.address.lat.toFixed(5)}, ${data.address.lng.toFixed(5)}`;
-			selection.set({
+			selectRestoring({
 				id: `url-${data.address.lng.toFixed(5)}-${data.address.lat.toFixed(5)}`,
 				displayName,
 				lng: data.address.lng,
@@ -883,7 +904,7 @@
 		removeUiLayer(ui, slug);
 	}
 
-	function clearMarker() {
+	function clearMarker(updateUrl = true) {
 		currentMarker?.remove();
 		currentMarker = null;
 		currentMarkerEl = null;
@@ -894,6 +915,9 @@
 		ui.selectedLayerHits = [];
 		ui.nearestStation = null;
 		ui.climateSeries = null;
+		lastWrittenAddress = null;
+		// Back auf eine URL ohne Adresse: die URL stimmt schon, nur die Auswahl räumen.
+		if (!updateUrl) return;
 		const url = new URL(window.location.href);
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
@@ -904,7 +928,11 @@
 		});
 	}
 
-	async function placeMarker(lngLat: [number, number], displayName?: string) {
+	async function placeMarker(
+		lngLat: [number, number],
+		displayName?: string,
+		intent: AddressHistoryIntent = 'user'
+	) {
 		if (!rawMap || !MarkerCtor) return;
 		currentMarker?.remove();
 		const el = createPinMarkerElement({ color: COLORS.markerPin });
@@ -919,15 +947,41 @@
 		const url = new URL(window.location.href);
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
 		for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
-		url.searchParams.set('address', `${lngLat[0].toFixed(5)},${lngLat[1].toFixed(5)}`);
+		const currentAddress = normalizeAddressParam(url.searchParams.get('address'));
+		const nextAddress = formatAddressParam(lngLat);
+		const mode = addressHistoryMode({ intent, currentAddress, lastWrittenAddress, nextAddress });
+		lastWrittenAddress = nextAddress;
+		url.searchParams.set('address', nextAddress);
 		if (displayName) url.searchParams.set('q', displayName);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
-			replaceState: true,
+			replaceState: mode === 'replace',
 			keepFocus: true,
 			noScroll: true
 		});
 	}
+
+	// Back/Forward: onMount läuft nicht erneut, die Auswahl folgt der Adresse der Ziel-URL.
+	// Ortsfokus und Finder behandeln eigene Effekte.
+	afterNavigate(({ type }) => {
+		if (type !== 'popstate') return;
+		const marker = currentMarker?.getLngLat() ?? null;
+		const next = resolvePopstateSelection(data.address ?? {}, marker);
+		if (next.kind === 'clear') {
+			clearMarker(false);
+			return;
+		}
+		if (next.kind !== 'select') return;
+		suppressedSelectionId = null;
+		selectRestoring({
+			id: `url-${next.lng.toFixed(5)}-${next.lat.toFixed(5)}`,
+			displayName: next.displayName,
+			lng: next.lng,
+			lat: next.lat,
+			type: 'point',
+			addresstype: 'point'
+		});
+	});
 
 	function pmtilesQuery(slug: string, lng: number, lat: number): Record<string, unknown> | null {
 		if (!rawMap) return null;
@@ -1208,12 +1262,6 @@
 		else mapHandle.zoomOut();
 	}
 
-	function prefersReducedMotion(): boolean {
-		return typeof window !== 'undefined' && window.matchMedia
-			? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-			: false;
-	}
-
 	type MapWithFly = {
 		flyTo: (opt: { center: [number, number]; zoom: number; essential?: boolean }) => void;
 		jumpTo: (opt: { center: [number, number]; zoom: number }) => void;
@@ -1241,8 +1289,10 @@
 		if (s.id === suppressedSelectionId) return;
 		if (!rawMap || !MarkerCtor) return;
 		suppressedSelectionId = null;
+		const intent: AddressHistoryIntent = s.id === restoringSelectionId ? 'restore' : 'user';
+		restoringSelectionId = null;
 		flyToSuggestion(s);
-		void placeMarker([s.lng, s.lat], s.displayName);
+		void placeMarker([s.lng, s.lat], s.displayName, intent);
 		const bezirkPart = s.bezirk
 			? m.atlas_route_bezirk_suffix({ bezirk: s.bezirk }, localeOpts)
 			: '';
@@ -1362,7 +1412,7 @@
 		const map = rawMap as {
 			fitBounds?: (
 				bounds: [[number, number], [number, number]],
-				opts: { padding: number; essential?: boolean }
+				opts: { padding: number; essential?: boolean; animate?: boolean }
 			) => void;
 		};
 		if (map.fitBounds) {
@@ -1375,7 +1425,7 @@
 					[minLng, minLat],
 					[maxLng, maxLat]
 				],
-				{ padding: 100, essential: true }
+				{ padding: 100, essential: true, animate: !prefersReducedMotion() }
 			);
 		}
 	});
@@ -1565,7 +1615,7 @@
 				const targetEl = document.querySelector(
 					side === 'a' ? '[data-testid="compare-address-a"]' : '[data-testid="compare-address-b"]'
 				) as HTMLElement | null;
-				targetEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				targetEl?.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
 			}}
 		/>
 		<MapLegend
