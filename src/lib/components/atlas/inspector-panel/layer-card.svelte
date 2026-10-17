@@ -164,10 +164,11 @@
 	{/if}
 
 	{#if contextRows.length > 0}
-		<dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-xs">
+		<!-- Der Wert bleibt auf einer Zeile, das Label gibt bei Platznot Breite ab und bricht um. -->
+		<dl class="mt-2 grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 text-xs">
 			{#each contextRows as row (row.id)}
-				<dt class="truncate text-ink-muted">{row.label}</dt>
-				<dd class="text-right text-ink">
+				<dt class="min-w-0 break-words text-ink-muted">{row.label}</dt>
+				<dd class="text-right whitespace-nowrap text-ink tabular-nums">
 					{#if row.severity}<span
 							data-testid="context-severity-dot"
 							data-severity={row.severity}

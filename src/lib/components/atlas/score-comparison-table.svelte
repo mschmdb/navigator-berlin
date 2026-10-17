@@ -91,7 +91,7 @@
 								<td class="py-3 pr-4 text-right text-ink-muted">{fmt(row.bezirkMean)}</td>
 							{/if}
 							<td class="py-3 pr-4 text-right text-ink-muted">{fmt(row.berlinMedian)}</td>
-							<td class="py-3 text-left font-mono text-xs text-ink-muted tabular-nums">
+							<td class="py-3 text-left text-xs text-ink-muted tabular-nums">
 								{formatRank(row.rang, row.quartil, row.total, localeOpts)}
 							</td>
 						</tr>

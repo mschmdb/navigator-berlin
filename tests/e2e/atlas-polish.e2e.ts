@@ -39,7 +39,9 @@ test.describe('Atlas Polish (Story 1.31)', () => {
 		await expect(page.getByRole('menuitem', { name: /Norden/i })).toBeVisible();
 	});
 
-	test('Bookmark-Icon zeigt tabellarische Zahl inline (kein Notification-Badge)', async ({ page }) => {
+	test('Bookmark-Icon zeigt tabellarische Zahl inline (kein Notification-Badge)', async ({
+		page
+	}) => {
 		await page.goto('/explore');
 		const badge = page.getByTestId('header-bookmark-badge');
 		const count = await badge.count();

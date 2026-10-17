@@ -48,7 +48,7 @@
 			{#each items as item, idx (item.slug)}
 				<li class="flex items-baseline justify-between gap-4 py-3">
 					<span class="flex items-baseline gap-3">
-						<span class="font-mono text-xs text-ink-subtle tabular-nums">{idx + 1}</span>
+						<span class="text-xs text-ink-subtle tabular-nums">{idx + 1}</span>
 						<a
 							class="text-base text-ink hover:text-accent"
 							href={localizedHref(`/kiez/${item.slug}`)}
@@ -59,9 +59,7 @@
 							<span class="text-xs text-ink-subtle">{item.bezirkName}</span>
 						{/if}
 					</span>
-					<span class="font-mono text-base text-ink tabular-nums"
-						>{formatScore(item.composite)}</span
-					>
+					<span class="text-base text-ink tabular-nums">{formatScore(item.composite)}</span>
 				</li>
 			{/each}
 		</ol>

@@ -62,7 +62,7 @@
 				<span class="min-w-0 truncate font-sans text-sm font-medium text-ink">
 					{m.inspector_trinkbrunnen_nearest_prefix({ name: nearest.name }, localeOpts)}
 				</span>
-				<span class="shrink-0 font-mono text-xs text-ink-subtle tabular-nums">
+				<span class="shrink-0 text-xs text-ink-subtle tabular-nums">
 					{formatDistance(nearest.distanceM, localeOpts)}
 				</span>
 			</div>

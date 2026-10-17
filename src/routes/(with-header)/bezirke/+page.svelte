@@ -78,7 +78,7 @@
 						{#if bezirk.einwohner !== null}
 							<div class="flex gap-2">
 								<dt class="text-ink-muted">{m.bezirk_hero_fact_einwohner()}</dt>
-								<dd class="font-mono text-ink tabular-nums">
+								<dd class="text-ink tabular-nums">
 									{formatCount(bezirk.einwohner, { locale })}
 								</dd>
 							</div>

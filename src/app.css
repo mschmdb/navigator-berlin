@@ -437,7 +437,8 @@ body.route-explore {
 		margin-top: 1.5rem;
 		padding-top: 0.75rem;
 		border-top: 1pt solid #000;
-		font-family: var(--font-mono);
+		font-family: var(--font-sans);
+		font-variant-numeric: tabular-nums;
 		font-size: 9pt;
 		color: #000;
 	}

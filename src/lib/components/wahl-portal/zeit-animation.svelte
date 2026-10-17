@@ -149,7 +149,7 @@
 			class="min-w-[10rem] flex-1 accent-ink"
 		/>
 
-		<span data-testid="zeit-animation-jahr" class="font-mono text-xs text-ink tabular-nums">
+		<span data-testid="zeit-animation-jahr" class="text-xs text-ink tabular-nums">
 			{activeOption?.jahr ?? ctl.displayJahr}
 			{#if activeOption?.isRepeatElection}
 				<span
