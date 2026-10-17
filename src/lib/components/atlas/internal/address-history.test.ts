@@ -352,4 +352,22 @@ describe('createAddressHistoryWriter', () => {
 		expect(calls).toEqual(['?address=a', '?address=a']);
 		first.resolve();
 	});
+
+	it('reicht einen gelandeten Push über verworfene Zwischenstände weiter', async () => {
+		const first = deferred();
+		const calls: Array<[string, string]> = [];
+		const writer = createAddressHistoryWriter((search, mode) => {
+			calls.push([search, mode]);
+			return calls.length === 1 ? first.promise : Promise.resolve(true);
+		});
+		void writer.write('a', '?address=a', 'push');
+		void writer.write('a', '?address=a&q=Eins', 'replace');
+		const last = writer.write('a', '?address=a&q=Zwei', 'replace');
+		first.resolve(true);
+		await last;
+		expect(calls).toEqual([
+			['?address=a', 'push'],
+			['?address=a&q=Zwei', 'replace']
+		]);
+	});
 });
