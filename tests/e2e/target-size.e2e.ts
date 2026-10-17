@@ -11,6 +11,7 @@ const PAGES: readonly { name: string; path: string }[] = [
 		name: 'Explore mit Inspector',
 		path: '/explore?address=13.42705,52.49755&q=Wiener%20Stra%C3%9Fe%2020'
 	},
+	{ name: 'Explore mit Kiez-Finder', path: '/explore?finder=1' },
 	{ name: 'Kiez', path: '/kiez/suedliche-luisenstadt' },
 	{ name: 'Hitze', path: '/hitze' },
 	{ name: 'Wahlen', path: '/berlin-wahlen' }
@@ -82,6 +83,9 @@ for (const vp of VIEWPORTS) {
 			test(`${p.name}: alle Block-Ziele mindestens ${MIN} px`, async ({ page }) => {
 				await page.goto(p.path);
 				await page.waitForLoadState('networkidle');
+				if (p.path.includes('finder=1')) {
+					await expect(page.getByTestId('finder-close').first()).toBeVisible();
+				}
 				const small = await smallTargets(page);
 				const report = small.map((s) => `${s.label} ${s.width}×${s.height}`).join('\n');
 				expect(report).toBe('');

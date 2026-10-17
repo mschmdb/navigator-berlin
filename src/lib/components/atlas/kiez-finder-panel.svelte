@@ -604,6 +604,6 @@
 <style>
 	.finder-range {
 		accent-color: var(--accent);
-		height: 1.1rem;
+		height: var(--target-min);
 	}
 </style>

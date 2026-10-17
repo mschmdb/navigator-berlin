@@ -56,6 +56,17 @@ function findHits(pattern: RegExp): Hit[] {
 	return hits;
 }
 
+/**
+ * Entfernt erlaubte Hex-artige Fragmente: Anker (`href="#…"`), Svelte-Blöcke (`{#if}`),
+ * und Fallbacks in `var(--token, #hex)`, bei denen der Token die Quelle bleibt.
+ */
+function stripAllowedHex(text: string): string {
+	return text
+		.replace(/var\(--[\w-]+,\s*#[0-9a-fA-F]{3,6}\)/g, '')
+		.replace(/(?:href|id|aria-[a-z]+)="#[^"]*"/g, '')
+		.replace(/\{[#:/][a-z]+/g, '');
+}
+
 const format = (hits: Hit[]) => hits.map((h) => `${h.file}:${h.line}  ${h.text}`).join('\n');
 
 describe('Design-Fundament: Rohwerte in Komponenten', () => {
@@ -76,18 +87,17 @@ describe('Design-Fundament: Rohwerte in Komponenten', () => {
 
 	it('enthält keine Hex-Farben außerhalb von Kommentaren', () => {
 		const hex = /(?<![\w&/-])#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?\b(?![\w-])/;
-		const real = findHits(hex)
-			.filter((h) => !/href="#|id="#|#\{|\{#|aria-[a-z]+="#/.test(h.text))
-			// Fallbacks in var(--token, #hex) sind erlaubt: der Token bleibt die Quelle.
-			.filter((h) => hex.test(h.text.replace(/var\(--[\w-]+,\s*#[0-9a-fA-F]{3,6}\)/g, '')));
+		const real = findHits(hex).filter((h) => hex.test(stripAllowedHex(h.text)));
 		expect(format(real)).toBe('');
 	});
 
-	it('erlaubt Hex nur als var()-Fallback', () => {
+	it('nimmt nur die erlaubten Fragmente aus, nicht die ganze Zeile', () => {
 		const hex = /(?<![\w&/-])#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?\b(?![\w-])/;
-		const strip = (t: string) => t.replace(/var\(--[\w-]+,\s*#[0-9a-fA-F]{3,6}\)/g, '');
-		expect(hex.test(strip('stroke="var(--rule, #c8c6bb)"'))).toBe(false);
-		expect(hex.test(strip('class="text-[#0277BD]"'))).toBe(true);
+		expect(hex.test(stripAllowedHex('stroke="var(--rule, #c8c6bb)"'))).toBe(false);
+		expect(hex.test(stripAllowedHex('<a href="#top" class="x">'))).toBe(false);
+		expect(hex.test(stripAllowedHex('class="text-[#0277BD]"'))).toBe(true);
+		expect(hex.test(stripAllowedHex('<a href="#top" class="text-[#0277BD]">'))).toBe(true);
+		expect(hex.test(stripAllowedHex('{#each x as y} <b style="color:#fff">'))).toBe(true);
 	});
 });
 

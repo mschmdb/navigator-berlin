@@ -62,6 +62,9 @@ describe('KiezScoreRing', () => {
 	it('zeigt die Dimensionen als Legende mit Wert statt als Bogen-Beschriftung', async () => {
 		render(KiezScoreRing, { score: makeScore(50) });
 		const legend = (await page.getByTestId('kiez-score-ring-legend').element()) as HTMLElement;
+		// Client-Tests laden app.css nicht: die Klasse belegt die Dichte-Skala, die
+		// Mindestgröße (11 px) gilt zusätzlich gegen die Browser-Defaults.
+		expect(legend.className).toContain('text-dense-label');
 		const items = legend.querySelectorAll('li');
 		expect(items).toHaveLength(5);
 		expect(items[0]!.textContent).toContain('Ruhe & Luft');

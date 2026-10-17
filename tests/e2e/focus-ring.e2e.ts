@@ -47,3 +47,18 @@ test('summary zeigt den Fokusring', async ({ page }) => {
 	});
 	expect(style).toBe(`solid 2px ${FOCUS_RGB}`);
 });
+
+test('Kiez-Finder: Schließen-Button zeigt den Fokusring', async ({ page }) => {
+	await page.goto('/explore?finder=1');
+	const close = page.getByTestId('finder-close').first();
+	await expect(close).toBeVisible();
+	await close.focus();
+	await page.keyboard.press('Shift+Tab');
+	await page.keyboard.press('Tab');
+	await expect(close).toBeFocused();
+	const style = await close.evaluate((el) => {
+		const s = getComputedStyle(el);
+		return `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor}`;
+	});
+	expect(style).toBe(`solid 2px ${FOCUS_RGB}`);
+});

@@ -22,7 +22,7 @@
 		severity = 'neutral'
 	}: Props = $props();
 
-	const RADIUS = 18;
+	const RADIUS = 22;
 	const CIRC = 2 * Math.PI * RADIUS;
 
 	const fraction = $derived(
@@ -44,29 +44,29 @@
 
 <div data-testid="distance-ring" data-severity={severity} class="flex items-center gap-3">
 	<svg
-		width="48"
-		height="48"
-		viewBox="0 0 48 48"
+		width="56"
+		height="56"
+		viewBox="0 0 56 56"
 		role="img"
 		aria-label={`${name}: nächste Distanz ${distanceText}`}
 		class="shrink-0"
 	>
-		<circle cx="24" cy="24" r={RADIUS} fill="none" stroke="var(--bg-muted)" stroke-width="4" />
+		<circle cx="28" cy="28" r={RADIUS} fill="none" stroke="var(--bg-muted)" stroke-width="4" />
 		<circle
 			data-testid="distance-ring-arc"
-			cx="24"
-			cy="24"
+			cx="28"
+			cy="28"
 			r={RADIUS}
 			fill="none"
 			stroke={strokeColor}
 			stroke-width="4"
 			stroke-linecap="round"
 			stroke-dasharray={dash}
-			transform="rotate(-90 24 24)"
+			transform="rotate(-90 28 28)"
 		/>
 		<text
-			x="24"
-			y="27"
+			x="28"
+			y="31"
 			text-anchor="middle"
 			class="fill-ink font-mono text-dense-meta"
 			aria-hidden="true">{distanceText}</text

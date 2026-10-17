@@ -108,7 +108,7 @@
 							</span>
 						{/if}
 					</div>
-					<div class="flex shrink-0 items-center gap-0.5">
+					<div class="flex shrink-0 items-center gap-2">
 						{#if onPromoteLayer && entry.variant === 'outline' && !promoteLocked}
 							<button
 								type="button"
@@ -244,7 +244,7 @@
 				<details data-testid={`legend-details-${entry.slug}`} class="group mt-1">
 					<summary
 						data-testid={`legend-summary-${entry.slug}`}
-						class="flex cursor-pointer list-none items-center gap-1 text-dense-label text-ink-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+						class="flex min-h-(--target-min) cursor-pointer list-none items-center gap-1 text-dense-label text-ink-muted hover:text-ink [&::-webkit-details-marker]:hidden"
 					>
 						<span
 							aria-hidden="true"

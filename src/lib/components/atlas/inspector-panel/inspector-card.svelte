@@ -37,7 +37,7 @@
 		aria-expanded={expanded}
 		aria-controls={regionId}
 		onclick={toggle}
-		class="flex w-full items-center justify-between gap-2 text-left"
+		class="flex min-h-(--target-min) w-full items-center justify-between gap-2 text-left"
 	>
 		<span data-testid="card-title" class="font-mono text-xs tracking-wide text-ink-muted uppercase">
 			{title}
