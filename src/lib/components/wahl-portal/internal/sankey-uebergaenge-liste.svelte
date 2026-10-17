@@ -21,7 +21,7 @@
 <section data-testid="sankey-uebergaenge-liste" class="flex flex-col gap-3">
 	<h3 class="text-sm font-semibold text-ink">{m.wahl_portal_sankey_table_caption()}</h3>
 	<p class="text-dense-meta text-ink-subtle">{m.wahl_portal_sankey_liste_hinweis()}</p>
-	{#each gruppen as gruppe (gruppe.nachJahr)}
+	{#each gruppen as gruppe (`${gruppe.vonJahr}-${gruppe.nachJahr}`)}
 		<div class="flex flex-col">
 			<h4
 				class="border-b border-rule pb-1 text-dense-meta font-semibold text-ink-muted tabular-nums"

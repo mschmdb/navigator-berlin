@@ -22,23 +22,40 @@ export interface UebergangsGruppe {
 	readonly eintraege: readonly UebergangsEintrag[];
 }
 
+/**
+ * Gruppiert die Übergänge nach echtem Quell- und Zieljahr. Bei Datenlücken
+ * überspringt ein Übergang Spalten (z. B. 2011 → 2023); das Quelljahr kommt
+ * deshalb vom Quell-Knoten, nicht von der Nachbarspalte. Fehlt der Knoten,
+ * gilt die Spalte vor dem Zieljahr.
+ */
 export function buildUebergangsGruppen(graph: SankeyGraph): UebergangsGruppe[] {
-	const gruppen: UebergangsGruppe[] = [];
-	for (let i = 1; i < graph.spalten.length; i++) {
-		const vonJahr = graph.spalten[i - 1].jahr;
-		const nachJahr = graph.spalten[i].jahr;
-		const basis = graph.gebieteMitDatenByJahr.get(nachJahr) ?? graph.totalGebiete;
-		const eintraege = graph.links
-			.filter((l) => l.jahr === nachJahr)
-			.map((l) => ({
-				key: linkKey(l),
-				von: l.von,
-				nach: l.nach,
-				value: l.value,
-				anteil: basis > 0 ? l.value / basis : 0
-			}))
-			.sort((a, b) => b.value - a.value || a.nach.localeCompare(b.nach, 'de'));
-		if (eintraege.length > 0) gruppen.push({ vonJahr, nachJahr, eintraege });
+	const jahrByNodeId = new Map(graph.nodes.map((n) => [n.id, n.jahr]));
+	const vorjahrBySpalte = new Map(
+		graph.spalten.slice(1).map((s, i) => [s.jahr, graph.spalten[i].jahr])
+	);
+	const gruppen = new Map<
+		string,
+		{ vonJahr: number; nachJahr: number; eintraege: UebergangsEintrag[] }
+	>();
+	for (const l of graph.links) {
+		const vonJahr = jahrByNodeId.get(l.source) ?? vorjahrBySpalte.get(l.jahr);
+		if (vonJahr === undefined) continue;
+		const basis = graph.gebieteMitDatenByJahr.get(l.jahr) ?? graph.totalGebiete;
+		const gruppenKey = `${vonJahr}->${l.jahr}`;
+		const gruppe = gruppen.get(gruppenKey) ?? { vonJahr, nachJahr: l.jahr, eintraege: [] };
+		gruppe.eintraege.push({
+			key: linkKey(l),
+			von: l.von,
+			nach: l.nach,
+			value: l.value,
+			anteil: basis > 0 ? l.value / basis : 0
+		});
+		gruppen.set(gruppenKey, gruppe);
 	}
-	return gruppen;
+	return [...gruppen.values()]
+		.map((g) => ({
+			...g,
+			eintraege: g.eintraege.sort((a, b) => b.value - a.value || a.nach.localeCompare(b.nach, 'de'))
+		}))
+		.sort((a, b) => a.nachJahr - b.nachJahr || a.vonJahr - b.vonJahr);
 }
