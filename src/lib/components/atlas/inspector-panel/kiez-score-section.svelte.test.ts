@@ -260,17 +260,17 @@ describe('KiezScoreSection', () => {
 	});
 
 	it('Dimensionszeile: Titel, Stufen-Badge und Auge auf einer Mittelachse (GH-88)', async () => {
+		// Komponententests laden kein Tailwind-CSS, darum Klassen statt Geometrie prüfen.
 		render(KiezScoreSection, { score: makeScore(), onToggleLayer: () => {} });
-		const row = (await page.getByTestId('kiez-score-dim-ruhe-luft').element()) as HTMLElement;
-		const center = (el: Element | null) => {
-			const r = (el as HTMLElement).getBoundingClientRect();
-			return r.top + r.height / 2;
-		};
-		const title = center(row.querySelector('[data-testid="kiez-score-toggle-sources-ruhe-luft"]'));
-		const chip = center(row.querySelector('[data-testid="value-chip"]'));
-		const toggle = center(row.querySelector('[data-testid="kiez-score-map-toggle-ruhe-luft"]'));
-		expect(Math.abs(chip - title)).toBeLessThanOrEqual(1);
-		expect(Math.abs(toggle - title)).toBeLessThanOrEqual(1);
+		const toggle = (await page
+			.getByTestId('kiez-score-map-toggle-ruhe-luft')
+			.element()) as HTMLElement;
+		expect((toggle.parentElement as HTMLElement).className).toMatch(/(^|\s)items-center(\s|$)/);
+		expect(toggle.className).toMatch(/size-\(--target-min\)/);
+		const link = (await page
+			.getByTestId('kiez-score-learn-more-ruhe-luft')
+			.element()) as HTMLElement;
+		expect(link.className).toMatch(/size-\(--target-min\)/);
 	});
 
 	it('Dimension-Map-Toggle ruft onToggleLayer mit kiez-score-{dim}', async () => {

@@ -57,26 +57,21 @@ describe('LayerCard', () => {
 	});
 
 	it('Titel, Stufen-Badge und Auge liegen auf einer Mittelachse (GH-88)', async () => {
-		const mittel: LayerHit = { ...hit, value: { ...(hit.value as object), kategorie: 'mittel' } };
+		// Komponententests laden kein Tailwind-CSS, darum Klassen statt Geometrie prüfen.
 		render(LayerCard, {
-			hit: mittel,
+			hit,
 			layerName: 'Lärmbelastung 2023',
 			contextRows: [],
 			onToggleLayer: () => {}
 		});
-		const center = async (testId: string) => {
-			const r = ((await page.getByTestId(testId).element()) as HTMLElement).getBoundingClientRect();
-			return r.top + r.height / 2;
-		};
-		const title = await center('layer-card-title-link');
-		const chip = await center('value-chip');
-		const toggle = await center('map-toggle');
-		expect(Math.abs(chip - title)).toBeLessThanOrEqual(1);
-		expect(Math.abs(toggle - title)).toBeLessThanOrEqual(1);
-		const toggleBox = (
-			(await page.getByTestId('map-toggle').element()) as HTMLElement
-		).getBoundingClientRect();
-		expect(toggleBox.height).toBeGreaterThanOrEqual(24);
+		const toggle = (await page.getByTestId('map-toggle').element()) as HTMLElement;
+		const header = toggle.parentElement as HTMLElement;
+		expect(header.className).toMatch(/(^|\s)items-center(\s|$)/);
+		const chipWrap = ((await page.getByTestId('value-chip').element()) as HTMLElement)
+			.parentElement as HTMLElement;
+		expect(chipWrap.className).not.toMatch(/(^|\s)(pt|mt|-my|-mt)-/);
+		expect(toggle.className).not.toMatch(/(^|\s)-my-/);
+		expect(toggle.className).toMatch(/size-\(--target-min\)/);
 	});
 
 	it('ohne Kontext-Zeilen: nur Chip, keine dl', async () => {
