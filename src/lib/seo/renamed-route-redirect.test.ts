@@ -15,6 +15,20 @@ describe('renamedRouteRedirectTarget', () => {
 		expect(renamedRouteRedirectTarget('/en/umwelt-infrastruktur-score')).toBe('/en/kiez-score');
 	});
 
+	it('mappt /kuehle-orte auf /hitze (#110)', () => {
+		expect(renamedRouteRedirectTarget('/kuehle-orte')).toBe('/hitze');
+		expect(renamedRouteRedirectTarget('/kuehle-orte/')).toBe('/hitze');
+	});
+
+	it('mappt /en/kuehle-orte auf /en/hitze (#110)', () => {
+		expect(renamedRouteRedirectTarget('/en/kuehle-orte')).toBe('/en/hitze');
+	});
+
+	it('lässt den Layer-Slug /layer/kuehle-orte unangetastet (#110)', () => {
+		expect(renamedRouteRedirectTarget('/layer/kuehle-orte')).toBeNull();
+		expect(renamedRouteRedirectTarget('/en/layer/kuehle-orte')).toBeNull();
+	});
+
 	it('toleriert Trailing-Slash', () => {
 		expect(renamedRouteRedirectTarget('/wo-lebt-es-sich-gut/')).toBe('/kiez-score');
 	});

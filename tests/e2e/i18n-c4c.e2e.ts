@@ -1,19 +1,18 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-// i18n Block C4c (spec-i18n-c4c-hitze-quellen.md): Hitze, Kühle Orte und Lizenzen
-// sind im Übersetzungs-Register.
+// i18n Block C4c (spec-i18n-c4c-hitze-quellen.md): Hitze und Lizenzen sind im
+// Übersetzungs-Register. Kühle Orte leitet seit GH-110 per 301 auf Hitze um.
 //
 // Hinweis: hreflang-Ziele per Pfad-Regex prüfen, nicht mit fester Origin
 // (Preview-Server liefert die Request-Origin, nicht `prerender.origin`).
 
 const PAGES = [
 	{ path: '/en/hitze', dePath: '/hitze', h1: 'Heat Navigator Berlin' },
-	{ path: '/en/kuehle-orte', dePath: '/kuehle-orte', h1: 'Cool places in Berlin' },
 	{ path: '/en/lizenzen', dePath: '/lizenzen', h1: 'Licences' }
 ] as const;
 
-test.describe('i18n Block C4c: drei Seiten englisch, ohne Banner, indexierbar', () => {
+test.describe('i18n Block C4c: Seiten englisch, ohne Banner, indexierbar', () => {
 	for (const { path, dePath, h1 } of PAGES) {
 		test(`${path}: 200, lang=en, kein Banner, kein noindex, hreflang de/en`, async ({ page }) => {
 			const response = await page.goto(path);
@@ -80,14 +79,18 @@ test.describe('i18n Block C4c: drei Seiten englisch, ohne Banner, indexierbar', 
 		);
 	});
 
-	test('/en/kuehle-orte: Rahmen englisch, Karte eingebettet', async ({ page }) => {
-		await page.goto('/en/kuehle-orte');
-		await expect(page.getByTestId('map-embed')).toBeAttached();
-		await expect(page.getByTestId('explorer-cta')).toHaveText(/Explore the map/);
-		await expect(page.getByTestId('explorer-cta')).toHaveAttribute(
-			'href',
-			'/en/explore?layers=kuehle-orte&mode=hitze'
-		);
+	test('/kuehle-orte und /en/kuehle-orte leiten per 301 auf Hitze um (GH-110)', async ({
+		page
+	}) => {
+		for (const [from, to] of [
+			['/kuehle-orte', '/hitze'],
+			['/en/kuehle-orte', '/en/hitze'],
+			['/kuehle-orte?utm_source=x', '/hitze?utm_source=x']
+		] as const) {
+			const res = await page.request.get(from, { maxRedirects: 0 });
+			expect(res.status()).toBe(301);
+			expect(res.headers()['location']).toBe(to);
+		}
 	});
 
 	test('/en/lizenzen: Kennungen unverändert, DataCatalog-JSON-LD englisch (Block D1)', async ({

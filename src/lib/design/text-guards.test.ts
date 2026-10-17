@@ -18,7 +18,7 @@ const entries = (messages: Messages) =>
 	Object.entries(messages).filter(([key]) => key !== '$schema');
 
 /** Seiten-Präfixe, deren Texte gemeinsam auf einer Seite stehen. */
-const PAGE_PREFIXES = ['home_', 'uis_', 'architektur_', 'kuehle_orte_page_', 'hitze_'];
+const PAGE_PREFIXES = ['home_', 'uis_', 'architektur_', 'hitze_'];
 const MAX_NEGATIONS_PER_PAGE = 2;
 
 const NEGATION: Record<string, RegExp> = {

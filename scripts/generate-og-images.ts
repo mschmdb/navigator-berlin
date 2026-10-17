@@ -151,13 +151,6 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		footerUrl: '/kaelte'
 	},
 	{
-		slug: 'kuehle-orte',
-		headline: 'Kühle Orte in Berlin',
-		subline: 'Abkühlung bei Hitze',
-		body: 'Wo du dich in Berlin bei Hitze abkühlen kannst: Kinos, Bibliotheken, Schwimmhallen und mehr, jeweils mit Adresse und Weg dorthin. Ein Angebot auf offenen Daten.',
-		footerUrl: '/kuehle-orte'
-	},
-	{
 		slug: 'berlin-wahlen',
 		headline: 'Berlin-Wahlen',
 		subline: 'Wahlergebnisse auf der Karte',

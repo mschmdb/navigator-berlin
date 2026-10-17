@@ -208,7 +208,8 @@ describe('buildLlmsTxt', () => {
 		const txt = buildLlmsTxt(ctx);
 		expect(txt).toContain('## Seiten');
 		expect(txt).toMatch(/-\s+\[Hitze-Navigator Berlin\]\(https:\/\/navigator\.berlin\/hitze\)/);
-		expect(txt).toMatch(/-\s+\[Kühle Orte in Berlin\]\(https:\/\/navigator\.berlin\/kuehle-orte\)/);
+		// GH-110: Die frühere Kühle-Orte-Landing leitet auf /hitze um und fehlt in der Liste.
+		expect(txt).not.toContain('Kühle Orte in Berlin');
 	});
 
 	it('listet /kaelte als statische Seite', () => {

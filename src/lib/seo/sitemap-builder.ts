@@ -148,9 +148,8 @@ export const STATIC_PAGES_SOURCE: SitemapSource = (ctx) => {
 	return [
 		page('/', 'weekly', 1.0),
 		page('/explore', 'weekly', 0.9),
-		// Kühle-Orte-Landings (Epic 16): in-Atlas + Hitze-Spin-off. Saisonale Suchintention,
-		// deshalb hohe Priorität und wöchentliche Change-Frequency.
-		page('/kuehle-orte', 'weekly', 0.8),
+		// Saison-Landings (Epic 16, Kälte): saisonale Suchintention, deshalb hohe Priorität
+		// und wöchentliche Change-Frequency. Die Kühle-Orte-Landing leitet seit GH-110 auf /hitze um.
 		page('/hitze', 'weekly', 0.8),
 		page('/kaelte', 'weekly', 0.8),
 		// S7: Übersichtsseiten mit Linklisten auf alle Kiez-, Bezirks- und Layer-Seiten.
