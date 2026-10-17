@@ -2052,6 +2052,8 @@
 	"uis_accordion_content": "We aggregate five dimensions: quiet & air, green & heat, mobility, local amenities, tenant protection. The source for each dimension is open Senate data (noise mapping, green space supply, climate atlas, public transport stops, Milieuschutz areas, POI distances). Aggregation runs from 542 LOR planning areas → 143 LOR Bezirksregionen → 12 Bezirke, each weighted by area. Each dimension carries equal weight (5 × 20%). Social structure is deliberately not scored. {link_start}Full methodology: Kiez score{link_end}.",
 	"uis_empty_state": "Score data will be released with the next build.",
 	"uis_ranking_view_aria_label": "Switch ranking view",
+	"uis_ranking_table_region_aria": "Ranking of Kieze and districts",
+	"uis_ranking_scroll_hint": "Scroll sideways to see all columns.",
 	"uis_ranking_sorted_by": "Sorted by",
 	"uis_ranking_sort_dir_high_low": "descending",
 	"uis_ranking_sort_dir_low_high": "ascending",
