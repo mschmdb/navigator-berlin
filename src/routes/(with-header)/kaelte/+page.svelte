@@ -40,14 +40,12 @@
 	);
 </script>
 
-<!-- noindex bis zum Launch (#63). Danach entfällt das Prop. -->
 <SeoHead
 	title={pageTitle}
 	description={pageDescription}
 	{pathname}
 	{origin}
 	ogImage={ogImageAbsolute}
-	noindex
 />
 <JsonLd data={breadcrumbJsonLd} testid="kaelte-breadcrumb-jsonld" />
 

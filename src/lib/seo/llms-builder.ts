@@ -135,6 +135,13 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		section: 'static'
 	});
 	out.push({
+		loc: `${ctx.origin}/kaelte`,
+		name: 'Kälte-Navigator Berlin',
+		description:
+			'Landing für Menschen in der Kälte mit den Nummern der Berliner Kältehilfe, Erreichbarkeit der Dienste und 227 warmen Orten für den Winter',
+		section: 'static'
+	});
+	out.push({
 		loc: `${ctx.origin}/kieze`,
 		name: 'Alle Kieze',
 		description: `${ctx.kieze.length > 0 ? `Alle ${ctx.kieze.length} Kieze` : 'Alle Kieze'} nach Bezirk gruppiert, mit Kiez-Score und Link zum Steckbrief`,

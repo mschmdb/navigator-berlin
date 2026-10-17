@@ -495,3 +495,7 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-73-kaelte-explorer-modus.md`
   summary: Kälte-Host `kaelte.navigator.berlin/explore` ohne Inspector-Test; Sektions-Zähler zählt im reduzierten Modus versteckte Treffer; Warme-Orte-Karte ohne Retry-Button und sichtbaren Zähler.
   evidence: Review-Funde 17.10.2026; Zähler und fehlender Retry entsprechen dem bestehenden Hitze-Muster.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-63-kaelte-launch.md`
+  summary: E2E „Root (Karte) hat 0 axe-Violations“ ist flaky: axe misst Kontrast im Inspector während der Einblend-Animation (Farben #b8b7b0/#c0beb7 auf #f5f3ea).
+  evidence: 17.10.2026 mehrfach rot/grün ohne Codeänderung; Fix: auf Ende der Animation warten oder `prefers-reduced-motion` im Test setzen.

@@ -146,6 +146,7 @@ describe('/ueber · EN', () => {
 		expect(hrefOf(el, 'Licences page')).toBe('/en/lizenzen');
 		expect(hrefOf(el, 'GitHub')).toBe('https://github.com/mschmdb/navigator-berlin');
 		expect(hrefOf(el, 'Heat Navigator')).toBe('/en/hitze');
+		expect(hrefOf(el, 'Cold Navigator')).toBe('/en/kaelte');
 	});
 
 	it('der Artikel enthält genau die Links aus UEBER_LINKS, intern mit /en', () => {

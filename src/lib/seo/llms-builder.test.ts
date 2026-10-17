@@ -211,6 +211,11 @@ describe('buildLlmsTxt', () => {
 		expect(txt).toMatch(/-\s+\[Kühle Orte in Berlin\]\(https:\/\/navigator\.berlin\/kuehle-orte\)/);
 	});
 
+	it('listet /kaelte als statische Seite', () => {
+		const txt = buildLlmsTxt(ctx);
+		expect(txt).toMatch(/-\s+\[Kälte-Navigator Berlin\]\(https:\/\/navigator\.berlin\/kaelte\)/);
+	});
+
 	it('renders each entry as bullet with markdown hyperlink + description', () => {
 		const txt = buildLlmsTxt(ctx);
 		// llmstxt.org Format: `- [name](url): description`

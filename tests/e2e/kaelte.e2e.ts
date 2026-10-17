@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-// Issues #58, #59: Kälte-Grundgerüst mit Notfall-Block. Seite ist bis zum Launch (#63) noindex.
+// Issues #58, #59: Kälte-Grundgerüst mit Notfall-Block. Seit dem Launch (#63) indexierbar.
 test.describe('Kälte-Navigator', () => {
 	test('DE: 200, h1, Notfall-Block und tel-Links', async ({ page }) => {
 		const res = await page.goto('/kaelte');
@@ -24,10 +24,10 @@ test.describe('Kälte-Navigator', () => {
 		await expect(page.getByRole('heading', { name: 'See someone out in the cold?' })).toBeVisible();
 	});
 
-	test('Canonical auf navigator.berlin-Struktur, noindex, hreflang', async ({ page }) => {
+	test('Canonical auf navigator.berlin-Struktur, indexierbar, hreflang', async ({ page }) => {
 		await page.goto('/kaelte');
 		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/kaelte$/);
-		await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
 		await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
 			'href',
 			/\/en\/kaelte$/
@@ -191,12 +191,13 @@ test.describe('Kälte-Navigator', () => {
 		await expect(page.getByTestId('kaelte-112-link')).toBeVisible();
 	});
 
-	test('Sitemaps und llms.txt führen /kaelte noch nicht', async ({ request }) => {
-		for (const path of ['/sitemap.xml', '/sitemap-de.xml', '/sitemap-en.xml']) {
+	test('Sitemaps und llms.txt führen /kaelte', async ({ request }) => {
+		const expected = { '/sitemap-de.xml': '/kaelte</loc>', '/sitemap-en.xml': '/en/kaelte</loc>' };
+		for (const [path, needle] of Object.entries(expected)) {
 			const sitemap = await request.get(path);
-			expect(await sitemap.text(), path).not.toContain('/kaelte');
+			expect(await sitemap.text(), path).toContain(needle);
 		}
 		const llms = await request.get('/llms.txt');
-		expect(await llms.text()).not.toContain('/kaelte');
+		expect(await llms.text()).toContain('/kaelte');
 	});
 });

@@ -1,6 +1,7 @@
 <!--
 	Saisonaler Hitze-Teaser auf der Home-Landing. Vererbt Link-Authority der
 	Startseite an die Kühle-Orte-Landing (/hitze) und den Layer.
+	`compact` blendet die Lead aus (Teaser steht dann unter dem Saison-Teaser).
 -->
 <script lang="ts">
 	import { ArrowRight, Snowflake } from '@lucide/svelte';
@@ -8,16 +9,34 @@
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
 
+	let { compact = false }: { compact?: boolean } = $props();
+
 	const explorerLink = `${buildExplorerDeepLink(['kuehle-orte'])}&mode=hitze`;
 </script>
 
-<section data-testid="home-hitze-teaser" class="space-y-6">
+<section data-testid="home-hitze-teaser" class={compact ? 'space-y-4' : 'space-y-6'}>
 	<header class="space-y-2">
-		<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.home_hitze_eyebrow()}</p>
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">{m.home_hitze_heading()}</h2>
-		<p class="max-w-prose font-serif text-base text-ink-muted">
-			{m.home_hitze_lead()}
-		</p>
+		{#if !compact}
+			<p
+				data-testid="home-hitze-teaser-eyebrow"
+				class="font-mono text-xs tracking-wider text-accent uppercase"
+			>
+				{m.home_hitze_eyebrow()}
+			</p>
+		{/if}
+		<h2
+			class={compact ? 'font-serif text-xl text-ink' : 'font-serif text-2xl text-ink md:text-3xl'}
+		>
+			{m.home_hitze_heading()}
+		</h2>
+		{#if !compact}
+			<p
+				data-testid="home-hitze-teaser-lead"
+				class="max-w-prose font-serif text-base text-ink-muted"
+			>
+				{m.home_hitze_lead()}
+			</p>
+		{/if}
 	</header>
 
 	<div class="flex flex-wrap items-center gap-x-6 gap-y-2">

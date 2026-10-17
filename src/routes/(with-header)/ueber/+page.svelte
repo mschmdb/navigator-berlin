@@ -30,7 +30,7 @@
 	}
 
 	const projektP2 = $derived(
-		richSegments((t) => m.ueber_projekt_p2(markerArgs(t, ['taz', 'hitze', 'updates'])))
+		richSegments((t) => m.ueber_projekt_p2(markerArgs(t, ['taz', 'hitze', 'kaelte', 'updates'])))
 	);
 	const personP2 = $derived(richSegments((t) => m.ueber_person_p2(markerArgs(t, ['mtc']))));
 	const personP3 = $derived(
