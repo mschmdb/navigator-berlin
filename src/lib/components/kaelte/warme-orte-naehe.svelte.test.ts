@@ -23,6 +23,7 @@ function ort(over: Partial<WaermeOrt> & Pick<WaermeOrt, 'id' | 'name'>): WaermeO
 		address: 'Teststr. 1',
 		plz: '10115',
 		openingHours: '',
+		hoursSource: null,
 		googleMapsUrl: 'https://www.google.com/maps/dir/?api=1&destination=52.52,13.405',
 		appleMapsUrl: 'https://maps.apple.com/?daddr=52.52,13.405',
 		...over
@@ -173,6 +174,35 @@ describe('WarmeOrteNaehe', () => {
 		await page.getByTestId('waerme-locate').click();
 		await expect.element(page.getByTestId('waerme-list')).toBeInTheDocument();
 		expect(document.activeElement).toBe(document.getElementById('waerme-naehe-h'));
+	});
+
+	it('nennt die Quelle "laut Recherche" und zeigt bei "unklar" keinen Status', async () => {
+		mount(
+			[
+				ort({
+					id: 'way/37533771',
+					name: 'Heilandskirche',
+					openingHours: 'We 12:00-18:00; Sa 11:00-13:00',
+					hoursSource: 'recherche',
+					lat: 52.5201
+				}),
+				ort({
+					id: 'node/9',
+					name: 'Unklar',
+					openingHours: '',
+					hoursSource: 'unklar',
+					openingHoursNote: 'nach dem Gottesdienst',
+					lat: 52.5202
+				})
+			],
+			{ now: new Date(2026, 9, 17, 12, 17, 0) }
+		);
+		await page.getByTestId('waerme-locate').click();
+		const [heiland, unklar] = Array.from(document.querySelectorAll('[data-testid="waerme-ort"]'));
+		expect(heiland.querySelector('[data-testid="waerme-status"]')!.textContent).toBe(
+			'laut Recherche jetzt offen'
+		);
+		expect(unklar.querySelector('[data-testid="waerme-status"]')).toBeNull();
 	});
 
 	it('zeigt closed und closing-soon mit eigenem Text und Ton', async () => {

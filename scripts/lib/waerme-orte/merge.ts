@@ -10,12 +10,23 @@ import type { OsmPlace, WaermeEnrichment } from './types.js';
  * Waisen (Enrichment ohne OSM-Kandidat) lassen den Merge abbrechen.
  */
 
+const PH_RULE = /\bPH\b/;
+const PH_OFF = /\bPH\s+off\b/;
+
+/** Ergänzt `PH off` aus OSM, wenn die Recherche-Zeiten keine Feiertagsregel nennen. */
+export function withOsmPublicHolidayOff(ohRecherche: string, osmOh: string): string {
+	if (!ohRecherche || ohRecherche === 'unklar') return ohRecherche;
+	if (PH_RULE.test(ohRecherche) || !PH_OFF.test(osmOh)) return ohRecherche;
+	return `${ohRecherche}; PH off`;
+}
+
 export interface WaermeOrtProperties {
 	id: string;
 	name: string;
 	cat: string;
 	winter_open: string;
 	opening_hours_note: string;
+	oh_recherche: string;
 	stay_without_purchase: string;
 	is_free: string;
 	website: string;
@@ -150,6 +161,7 @@ export function mergeWaermeOrte(
 				cat: e.cat,
 				winter_open: e.winter_open,
 				opening_hours_note: e.opening_hours_note,
+				oh_recherche: withOsmPublicHolidayOff(e.oh_recherche ?? '', place.oh),
 				stay_without_purchase: e.stay_without_purchase,
 				is_free: e.is_free,
 				website: e.website || place.website,

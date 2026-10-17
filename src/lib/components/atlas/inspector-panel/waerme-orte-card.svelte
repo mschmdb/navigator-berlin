@@ -12,6 +12,7 @@
 		feeText,
 		reportHref,
 		statusClass,
+		statusSourceOf,
 		statusText,
 		stayText,
 		winterText
@@ -231,7 +232,8 @@
 							{#if ort.status}
 								<span
 									class={`inline-flex items-center rounded-sm px-1 font-mono text-[10px] font-semibold ${statusClass(ort.status)} bg-bg`}
-									data-testid="waerme-orte-status">{statusText(ort.status, locale)}</span
+									data-testid="waerme-orte-status"
+									>{statusText(ort.status, statusSourceOf(ort), locale)}</span
 								>
 							{/if}
 						</div>

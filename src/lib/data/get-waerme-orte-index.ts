@@ -6,6 +6,7 @@ import type { Feature, FeatureCollection, Point } from 'geojson';
  */
 export type Tristate = 'yes' | 'no' | 'unknown';
 export type WinterOpen = 'yes' | 'limited' | 'no' | 'unknown';
+export type HoursSource = 'recherche' | 'osm' | 'unklar';
 export type EntryFee = 'free' | 'ticket' | 'unknown';
 
 export interface WaermeOrt {
@@ -25,8 +26,13 @@ export interface WaermeOrt {
 	checkedAt: string;
 	address: string;
 	plz: string;
-	/** Roher OSM-opening_hours-String, nur dieser speist den Live-Status. */
+	/**
+	 * Effektive opening_hours für den Live-Status: Recherche-Zeiten, sonst OSM.
+	 * Leer, wenn die Recherche "unklar" meldet oder keine Zeiten vorliegen.
+	 */
 	openingHours: string;
+	/** Herkunft von `openingHours`. `unklar`: Notiz ohne festen Plan. `null`: keine Zeiten. */
+	hoursSource: HoursSource | null;
 	googleMapsUrl: string;
 	appleMapsUrl: string;
 }
@@ -45,12 +51,22 @@ export type WaermeOrtProps = {
 	addr?: string;
 	plz?: string;
 	oh?: string;
+	oh_recherche?: string;
 	googleMapsUrl: string;
 	appleMapsUrl: string;
 };
 
 function oneOf<T extends string>(value: string | undefined, allowed: readonly T[], fallback: T): T {
 	return allowed.find((a) => a === value) ?? fallback;
+}
+
+function resolveHours(p: WaermeOrtProps): Pick<WaermeOrt, 'openingHours' | 'hoursSource'> {
+	const recherche = (p.oh_recherche ?? '').trim();
+	if (recherche === 'unklar') return { openingHours: '', hoursSource: 'unklar' };
+	if (recherche) return { openingHours: recherche, hoursSource: 'recherche' };
+	const osm = (p.oh ?? '').trim();
+	if (osm) return { openingHours: osm, hoursSource: 'osm' };
+	return { openingHours: '', hoursSource: null };
 }
 
 export function featureToWaermeOrt(feature: Feature<Point, WaermeOrtProps>): WaermeOrt {
@@ -71,7 +87,7 @@ export function featureToWaermeOrt(feature: Feature<Point, WaermeOrtProps>): Wae
 		checkedAt: p.checked_at ?? '',
 		address: p.addr ?? '',
 		plz: p.plz ?? '',
-		openingHours: p.oh ?? '',
+		...resolveHours(p),
 		googleMapsUrl: p.googleMapsUrl,
 		appleMapsUrl: p.appleMapsUrl
 	};

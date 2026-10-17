@@ -26,6 +26,7 @@ const BASE: WaermeOrt = {
 	address: 'Beispielstraße 1',
 	plz: '10115',
 	openingHours: '',
+	hoursSource: null,
 	googleMapsUrl: 'https://maps.google.com/?q=52.52,13.4',
 	appleMapsUrl: 'https://maps.apple.com/?q=52.52,13.4'
 };
@@ -88,6 +89,31 @@ describe('waerme-orte-card.svelte', () => {
 		const statuses = document.querySelectorAll('[data-testid="waerme-orte-status"]');
 		expect(statuses).toHaveLength(1);
 		expect(statuses[0]!.textContent).toContain('laut OSM');
+	});
+
+	it('zeigt Status „laut Recherche“ bei Recherche-Zeiten, auch auf EN', async () => {
+		vi.useFakeTimers({ toFake: ['Date'] });
+		vi.setSystemTime(new Date('2026-10-14T10:00:00Z'));
+		const index = [
+			{ ...BASE, openingHours: 'Mo-Su 00:00-24:00', hoursSource: 'recherche' as const }
+		];
+		const view = render(WaermeOrteCard, props({ index }));
+		const status = document.querySelector('[data-testid="waerme-orte-status"]')!;
+		expect(status.textContent).toBe('laut Recherche jetzt offen');
+		view.unmount();
+		overwriteGetLocale(() => 'en');
+		render(WaermeOrteCard, props({ index }));
+		expect(document.querySelector('[data-testid="waerme-orte-status"]')!.textContent).toBe(
+			'open now per research'
+		);
+	});
+
+	it('zeigt bei hoursSource „unklar“ keinen Status', async () => {
+		render(
+			WaermeOrteCard,
+			props({ index: [{ ...BASE, openingHours: '', hoursSource: 'unklar' as const }] })
+		);
+		expect(document.querySelectorAll('[data-testid="waerme-orte-status"]')).toHaveLength(0);
 	});
 
 	it('begrenzt auf 5 Orte', async () => {

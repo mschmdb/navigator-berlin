@@ -1,3 +1,4 @@
+import { isParsableOpeningHours } from '../../../src/lib/utils/opening-hours-parse.js';
 import type { OsmPlace, WaermeEnrichment } from './types.js';
 
 /**
@@ -32,6 +33,19 @@ function claimsAnything(item: WaermeEnrichment): boolean {
 		item.is_free !== 'unknown' ||
 		item.opening_hours_note.trim() !== ''
 	);
+}
+
+/** Marker für Notizen ohne festen Wochenplan (kein Status auf der Karte). */
+export const OH_RECHERCHE_UNKLAR = 'unklar';
+
+function ohRechercheError(value: unknown): string | null {
+	if (value === undefined) return null;
+	if (typeof value !== 'string') return 'oh_recherche muss ein String sein';
+	if (value === OH_RECHERCHE_UNKLAR) return null;
+	if (!isParsableOpeningHours(value)) {
+		return `oh_recherche "${value}" ist kein gültiges opening_hours`;
+	}
+	return null;
 }
 
 const PLACEHOLDER_NAME = /\(ohne Namen in OSM\)$/;
@@ -71,6 +85,11 @@ export function validateEnrichment(item: WaermeEnrichment): string[] {
 	if (typeof item.cat !== 'string' || !item.cat.trim()) errors.push('cat fehlt');
 	if (wrongType.length > 0) return errors;
 
+	const ohError = ohRechercheError(item.oh_recherche);
+	if (ohError) errors.push(ohError);
+	if (item.oh_recherche !== undefined && !item.opening_hours_note.trim()) {
+		errors.push('oh_recherche ohne opening_hours_note');
+	}
 	if (!item.name.trim()) errors.push('name fehlt');
 	if (!item.suitable_reason.trim()) errors.push('suitable_reason fehlt');
 	if (!isCalendarDate(item.checked_at ?? '')) {
@@ -164,6 +183,18 @@ export function buildResearchBatches(
 	return batches;
 }
 
+/** `oh_recherche` hängt an der Notiz: bleibt sie gleich, gilt der alte Wert, sonst entfällt er. */
+function withCoupledOhRecherche(
+	previous: WaermeEnrichment | undefined,
+	result: WaermeEnrichment
+): WaermeEnrichment {
+	const { oh_recherche: _drop, ...rest } = result;
+	void _drop;
+	const keep =
+		previous?.opening_hours_note === result.opening_hours_note ? previous.oh_recherche : undefined;
+	return keep === undefined ? rest : { ...rest, oh_recherche: keep };
+}
+
 export interface MergeResultsOutcome {
 	merged: WaermeEnrichment[];
 	errors: string[];
@@ -194,7 +225,7 @@ export function mergeEnrichmentResults(
 			errors.push(...problems.map((p) => `${result.id}: ${p}`));
 			continue;
 		}
-		byId.set(result.id, result);
+		byId.set(result.id, withCoupledOhRecherche(byId.get(result.id), result));
 	}
 
 	const merged = [...byId.values()].sort((a, b) => compareIds(a.id, b.id));

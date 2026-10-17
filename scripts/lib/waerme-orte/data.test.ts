@@ -10,4 +10,23 @@ describe('committete Wärme-Orte-Daten', () => {
 		) as WaermeEnrichment[];
 		expect(validateEnrichmentSet(items)).toEqual([]);
 	});
+
+	it('jeder geeignete, bestehende Ort mit Notiz hat oh_recherche', () => {
+		const items = JSON.parse(
+			readFileSync('static/data/waerme-orte/enrichment.json', 'utf-8')
+		) as WaermeEnrichment[];
+		const missing = items
+			.filter((i) => i.suitable && i.still_exists !== 'no' && i.opening_hours_note.trim())
+			.filter((i) => !i.oh_recherche)
+			.map((i) => i.id);
+		expect(missing).toEqual([]);
+	});
+
+	it('Orte ohne Notiz tragen kein oh_recherche', () => {
+		const items = JSON.parse(
+			readFileSync('static/data/waerme-orte/enrichment.json', 'utf-8')
+		) as WaermeEnrichment[];
+		const stray = items.filter((i) => !i.opening_hours_note.trim() && i.oh_recherche);
+		expect(stray.map((i) => i.id)).toEqual([]);
+	});
 });

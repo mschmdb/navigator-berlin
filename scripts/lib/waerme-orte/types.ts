@@ -46,6 +46,11 @@ export interface WaermeEnrichment {
 	suitable_reason: string;
 	winter_open: WinterOpen;
 	opening_hours_note: string;
+	/**
+	 * Aus `opening_hours_note` abgeleiteter Wochenplan in OSM-opening_hours-Syntax, oder
+	 * `"unklar"`, wenn die Notiz keinen festen Plan nennt. Fehlt bei Orten ohne Notiz.
+	 */
+	oh_recherche?: string;
 	stay_without_purchase: StayWithoutPurchase;
 	is_free: Admission;
 	website: string;

@@ -21,6 +21,7 @@ export function getOpeningStatus(value: string, now: Date): OpeningStatus {
 	if (!v) return 'unknown';
 	try {
 		const oh = new OpeningHours(v, BERLIN_NOMINATIM);
+		if (oh.getUnknown(now)) return 'unknown';
 		if (!oh.getState(now)) return 'closed';
 		const next = oh.getNextChange(now);
 		if (next && next.getTime() - now.getTime() <= CLOSING_SOON_MS) return 'closing-soon';

@@ -8,6 +8,7 @@ import {
 	reportHref,
 	stayText,
 	statusClass,
+	statusSourceOf,
 	statusText,
 	winterText
 } from './waerme-ort-labels.js';
@@ -30,18 +31,34 @@ const ORT: WaermeOrt = {
 	address: 'Beispielstraße 1',
 	plz: '10115',
 	openingHours: '',
+	hoursSource: null,
 	googleMapsUrl: '',
 	appleMapsUrl: ''
 };
 
+describe('statusSourceOf', () => {
+	it('mappt hoursSource auf die Label-Quelle', () => {
+		expect(statusSourceOf({ hoursSource: 'recherche' })).toBe('recherche');
+		expect(statusSourceOf({ hoursSource: 'osm' })).toBe('osm');
+		expect(statusSourceOf({ hoursSource: 'unklar' })).toBe('osm');
+		expect(statusSourceOf({ hoursSource: null })).toBe('osm');
+	});
+});
+
 describe('statusText', () => {
 	it('benennt alle Status „laut OSM“', () => {
-		expect(statusText('open', 'de')).toBe('laut OSM jetzt offen');
-		expect(statusText('closing-soon', 'de')).toBe('laut OSM schließt bald');
-		expect(statusText('closed', 'de')).toBe('laut OSM geschlossen');
+		expect(statusText('open', 'osm', 'de')).toBe('laut OSM jetzt offen');
+		expect(statusText('closing-soon', 'osm', 'de')).toBe('laut OSM schließt bald');
+		expect(statusText('closed', 'osm', 'de')).toBe('laut OSM geschlossen');
+	});
+	it('benennt alle Status „laut Recherche“', () => {
+		expect(statusText('open', 'recherche', 'de')).toBe('laut Recherche jetzt offen');
+		expect(statusText('closing-soon', 'recherche', 'de')).toBe('laut Recherche schließt bald');
+		expect(statusText('closed', 'recherche', 'de')).toBe('laut Recherche geschlossen');
 	});
 	it('übersetzt nach EN', () => {
-		expect(statusText('open', 'en')).not.toBe(statusText('open', 'de'));
+		expect(statusText('open', 'osm', 'en')).not.toBe(statusText('open', 'osm', 'de'));
+		expect(statusText('open', 'recherche', 'en')).toBe('open now per research');
 	});
 });
 

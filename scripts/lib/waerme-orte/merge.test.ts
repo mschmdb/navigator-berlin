@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mergeWaermeOrte } from './merge.js';
+import { mergeWaermeOrte, withOsmPublicHolidayOff } from './merge.js';
 import type { OsmPlace, WaermeEnrichment } from './types.js';
 
 function place(over: Partial<OsmPlace> & Pick<OsmPlace, 'id'>): OsmPlace {
@@ -35,6 +35,53 @@ function enrich(over: Partial<WaermeEnrichment> & Pick<WaermeEnrichment, 'id'>):
 		...over
 	};
 }
+
+describe('withOsmPublicHolidayOff', () => {
+	it('hängt PH off an, wenn OSM es nennt und die Recherche keine PH-Regel hat', () => {
+		expect(withOsmPublicHolidayOff('Mo-Fr 10:00-18:00', 'Mo-Fr 10:00-18:00; PH off')).toBe(
+			'Mo-Fr 10:00-18:00; PH off'
+		);
+	});
+	it('lässt Recherche-Werte mit PH-Regel, ohne OSM-PH off, leer und unklar unverändert', () => {
+		expect(withOsmPublicHolidayOff('Mo-Fr 10:00-18:00; PH 11:00-14:00', 'PH off')).toBe(
+			'Mo-Fr 10:00-18:00; PH 11:00-14:00'
+		);
+		expect(withOsmPublicHolidayOff('Mo-Fr 10:00-18:00', 'Mo-Fr 10:00-18:00')).toBe(
+			'Mo-Fr 10:00-18:00'
+		);
+		expect(withOsmPublicHolidayOff('', 'PH off')).toBe('');
+		expect(withOsmPublicHolidayOff('unklar', 'PH off')).toBe('unklar');
+	});
+});
+
+describe('mergeWaermeOrte oh_recherche', () => {
+	it('ergänzt PH off aus OSM im GeoJSON', () => {
+		const res = mergeWaermeOrte(
+			[
+				enrich({
+					id: 'node/1',
+					opening_hours_note: 'Mo-Fr 10-18',
+					oh_recherche: 'Mo-Fr 10:00-18:00'
+				})
+			],
+			[place({ id: 'node/1', oh: 'Mo-Fr 10:00-18:00; PH off' })]
+		);
+		expect(res.collection.features[0].properties.oh_recherche).toBe('Mo-Fr 10:00-18:00; PH off');
+	});
+
+	it('reicht oh_recherche durch, leer wenn nicht gesetzt', () => {
+		const res = mergeWaermeOrte(
+			[
+				enrich({ id: 'node/1', oh_recherche: 'Sa 11:00-13:00' }),
+				enrich({ id: 'node/2', name: 'Andere Bibliothek' })
+			],
+			[place({ id: 'node/1' }), place({ id: 'node/2', lat: 52.6, name: 'Andere Bibliothek' })]
+		);
+		const byId = Object.fromEntries(res.collection.features.map((f) => [f.properties.id, f]));
+		expect(byId['node/1'].properties.oh_recherche).toBe('Sa 11:00-13:00');
+		expect(byId['node/2'].properties.oh_recherche).toBe('');
+	});
+});
 
 describe('mergeWaermeOrte', () => {
 	it('joint per id, setzt [lon, lat] und hängt Navi-Links an', () => {

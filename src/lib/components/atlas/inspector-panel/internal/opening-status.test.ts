@@ -7,6 +7,12 @@ function at(h: number, m = 0): Date {
 }
 
 describe('getOpeningStatus', () => {
+	it('unknown-Regel liefert unknown statt closed', () => {
+		const rule = 'Oct-Mar Mo-Su 10:00-18:00; Apr-Sep unknown';
+		expect(getOpeningStatus(rule, at(12))).toBe('unknown');
+		expect(getOpeningStatus(rule, new Date(2026, 9, 21, 12))).toBe('open');
+	});
+
 	it('leerer Wert ist unknown', () => {
 		expect(getOpeningStatus('', at(12))).toBe('unknown');
 		expect(getOpeningStatus('   ', at(12))).toBe('unknown');
