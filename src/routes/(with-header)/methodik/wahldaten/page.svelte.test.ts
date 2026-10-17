@@ -110,12 +110,14 @@ describe('methodik/wahldaten · DE-Links (i18n C4b)', () => {
 		render(Page);
 		const article = document.querySelector('[data-testid="wahl-methodik-page"]')!;
 		const hrefs = internalHrefs(article);
-		expect(hrefs).toEqual([
-			'/',
-			'/methodik',
-			'/methodik/cross-layer-templates',
-			'/berlin-wahlen#alle-wahlen'
-		]);
+		expect(hrefs).toEqual(['/', '/methodik', '/berlin-wahlen#alle-wahlen']);
+	});
+
+	it('linkt nicht auf die interne Template-Vorschau (#97)', () => {
+		render(Page);
+		const text = document.querySelector('[data-testid="wahl-methodik-page"]')?.textContent ?? '';
+		expect(document.querySelector('a[href*="cross-layer-templates"]')).toBeNull();
+		expect(text).not.toMatch(/Cross-Layer-Templates|Co-Design|noindex/);
 	});
 
 	it('H1 trägt kein lang="de" mehr, die Seite gibt die Sprache vor', () => {
@@ -169,12 +171,7 @@ describe('methodik/wahldaten · EN (i18n C4b)', () => {
 		overwriteGetLocale(() => 'en');
 		render(Page);
 		const article = document.querySelector('[data-testid="wahl-methodik-page"]')!;
-		expect(internalHrefs(article)).toEqual([
-			'/en/',
-			'/en/methodik',
-			'/en/methodik/cross-layer-templates',
-			'/en/berlin-wahlen#alle-wahlen'
-		]);
+		expect(internalHrefs(article)).toEqual(['/en/', '/en/methodik', '/en/berlin-wahlen#alle-wahlen']);
 		expect(
 			document.getElementById('wahldaten-briefwahl')?.querySelector('a[href="#aggregation"]')
 		).not.toBeNull();
