@@ -61,8 +61,10 @@ export function trendSchraffurLinie(stufenFarbe: string): string {
 		: SCHRAFFUR_LINIE_AUF_HELL;
 }
 
-/** Abstand der 1-px-Diagonalen; teilt die Tile-Größe 16, damit das Muster nahtlos kachelt. */
-const SCHRAFFUR_PERIODE = 4;
+/** Abstand der 1-px-Diagonalen; teilt die Tile-Größe 16, damit das Muster
+ * nahtlos kachelt. Weit genug, dass die Linien die Stufen-Helligkeit kaum
+ * verschieben („stark fallend“ bleibt dunkler als „leicht fallend“). */
+const SCHRAFFUR_PERIODE = 8;
 const SCHRAFFUR_TILE = 16;
 
 /** Diagonal-Tile (45°, 1 px Linie) für die MapLibre-`fill-pattern`-Ebene. */

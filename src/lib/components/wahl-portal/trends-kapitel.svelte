@@ -73,7 +73,7 @@
 		if (!istSchraffiert(farbe)) return fill;
 		// Linienfarbe wie auf der Karte: hell auf „stark“, dunkel auf „leicht fallend“.
 		const linie = farbe === TREND_FALLEND_DUNKEL ? 'var(--bg-elevated)' : 'var(--ink)';
-		return `${fill} background-image: repeating-linear-gradient(45deg, ${linie} 0 1px, transparent 1px 3px);`;
+		return `${fill} background-image: repeating-linear-gradient(45deg, ${linie} 0 1px, transparent 1px 5px);`;
 	}
 
 	/** Signierter Schwellen-Wert (z. B. `−1,0`/`+0,2`) ohne die `Pp.`/`pp`-Einheit

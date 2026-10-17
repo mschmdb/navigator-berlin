@@ -101,6 +101,20 @@ describe('#108: Schraffur für „fallend“ (Richtung ohne Farbe ablesbar)', ()
 		}
 	});
 
+	it('mit Schraffur bleibt „stark fallend“ im Mittel dunkler als „leicht fallend“', () => {
+		const mittel = (farbe: string) => {
+			const spec = buildTrendSchraffur(trendSchraffurLinie(farbe));
+			const pixel = spec.width * spec.height;
+			let linien = 0;
+			for (let i = 0; i < pixel; i++) if (spec.data[i * 4 + 3] === 255) linien++;
+			const anteil = linien / pixel;
+			const flaeche = relativeLuminance(blendOverBasemap(farbe, TRENDS_FILL_OPACITY));
+			const linie = relativeLuminance(blendOverBasemap(trendSchraffurLinie(farbe), 1));
+			return flaeche * (1 - anteil) + linie * anteil;
+		};
+		expect(mittel(TREND_FALLEND_DUNKEL)).toBeLessThan(mittel(TREND_FALLEND_HELL));
+	});
+
 	it('baut ein kachelbares Diagonal-Tile mit sichtbaren und transparenten Pixeln', () => {
 		const spec = buildTrendSchraffur(trendSchraffurLinie(TREND_FALLEND_HELL));
 		expect(spec.width).toBe(spec.height);
