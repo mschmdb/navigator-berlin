@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LayerAggregate, LayerAggregatesFile } from '$lib/data/layer-aggregates-types.js';
-import { buildContextRows } from './context-rows.js';
+import { buildContextRows, glueShare } from './context-rows.js';
 
 const opts = { locale: 'de' as const };
 
@@ -79,5 +79,22 @@ describe('buildContextRows: Stufe je Umfeld-Zeile (GH-88)', () => {
 		const rows = berlinRow('laerm-2023', ordinal('hoch'), 56);
 		expect(rows[0].id).toBe('laerm-db');
 		expect(rows[0].severity).toBeUndefined();
+	});
+});
+
+describe('glueShare', () => {
+	it('bindet den Anteil ans Komma und das Prozentzeichen an die Zahl', () => {
+		expect(glueShare('meist keine starke Belastung, 34,5 %')).toBe(
+			'meist keine starke Belastung,\u00a034,5\u00a0%'
+		);
+	});
+
+	it('lässt Texte ohne Anteil unverändert', () => {
+		expect(glueShare('56 dB (L_DEN)')).toBe('56 dB (L_DEN)');
+		expect(glueShare('meist hoch')).toBe('meist hoch');
+	});
+
+	it('akzeptiert schon geschützte Leerzeichen', () => {
+		expect(glueShare('meist gut,\u00a066,7\u00a0%')).toBe('meist gut,\u00a066,7\u00a0%');
 	});
 });
