@@ -61,22 +61,60 @@ export function buildAddressNavigation(input: {
 	return { search: `?${url.searchParams.toString()}`, mode, nextAddress };
 }
 
+export interface AddressHistoryWriter {
+	write(address: string, search: string, mode: AddressHistoryMode): Promise<void>;
+	/** Zuletzt geschriebene Adresse; nach einem Fehlschlag wieder `null`. */
+	lastWritten(): string | null;
+	/** Auswahl geschlossen: die nächste Wahl derselben Adresse legt wieder einen Eintrag an. */
+	forget(): void;
+}
+
 /**
  * Führt Schreibvorgänge derselben Adresse zusammen, solange `navigate` läuft.
  * Ein zweites `goto` würde das erste abbrechen und als Replace den vorigen
- * History-Eintrag überschreiben.
+ * History-Eintrag überschreiben. Ändert sich nur der Name (`q`), folgt nach
+ * dem ersten Schreiben ein Replace.
  */
 export function createAddressHistoryWriter(
 	navigate: (search: string, mode: AddressHistoryMode) => Promise<void>
-): (address: string, search: string, mode: AddressHistoryMode) => Promise<void> {
-	let inFlight: { address: string; promise: Promise<void> } | null = null;
-	return (address, search, mode) => {
-		if (inFlight && inFlight.address === address) return inFlight.promise;
-		const promise = navigate(search, mode).finally(() => {
-			if (inFlight?.promise === promise) inFlight = null;
+): AddressHistoryWriter {
+	let inFlight: { address: string; search: string; promise: Promise<void> } | null = null;
+	let lastWritten: string | null = null;
+
+	function track(address: string, search: string, promise: Promise<void>): Promise<void> {
+		const tracked = promise.then(
+			() => undefined,
+			(error: unknown) => {
+				if (lastWritten === address) lastWritten = null;
+				throw error;
+			}
+		);
+		const settled = tracked.finally(() => {
+			if (inFlight?.promise === settled) inFlight = null;
 		});
-		inFlight = { address, promise };
-		return promise;
+		inFlight = { address, search, promise: settled };
+		return settled;
+	}
+
+	return {
+		write(address, search, mode) {
+			if (inFlight && inFlight.address === address) {
+				if (inFlight.search === search) return inFlight.promise;
+				const prior = inFlight.promise;
+				const next = prior.then(
+					() => navigate(search, 'replace'),
+					() => navigate(search, mode)
+				);
+				lastWritten = address;
+				return track(address, search, next);
+			}
+			lastWritten = address;
+			return track(address, search, navigate(search, mode));
+		},
+		lastWritten: () => lastWritten,
+		forget: () => {
+			lastWritten = null;
+		}
 	};
 }
 

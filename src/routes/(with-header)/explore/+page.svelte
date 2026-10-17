@@ -219,11 +219,9 @@
 	// Adresse führt. Default-Punkt, Einstieg per Link und Back stellen nur einen
 	// Zustand her und ersetzen den Eintrag (`restoringSelectionId`).
 	let restoringSelectionId: string | null = null;
-	// Zuletzt geschriebene Adresse: zwei Aufrufe für dieselbe Wahl vor dem Ende
-	// von `goto` sollen nur einen Eintrag ergeben.
-	let lastWrittenAddress: string | null = null;
-	// Läuft `goto` für dieselbe Adresse noch, wird kein zweites ausgelöst (#91).
-	const writeAddress = createAddressHistoryWriter((search, mode) =>
+	// Schreibt die Adresse in die URL. Zwei Aufrufe für dieselbe Wahl vor dem Ende
+	// von `goto` ergeben nur einen Eintrag (#91).
+	const addressWriter = createAddressHistoryWriter((search, mode) =>
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		goto(search, { replaceState: mode === 'replace', keepFocus: true, noScroll: true })
 	);
@@ -919,7 +917,7 @@
 		ui.selectedLayerHits = [];
 		ui.nearestStation = null;
 		ui.climateSeries = null;
-		lastWrittenAddress = null;
+		addressWriter.forget();
 		// Back auf eine URL ohne Adresse: die URL stimmt schon, nur die Auswahl räumen.
 		if (!updateUrl) return;
 		const url = new URL(window.location.href);
@@ -953,11 +951,10 @@
 			lngLat,
 			displayName,
 			intent,
-			lastWrittenAddress,
+			lastWrittenAddress: addressWriter.lastWritten(),
 			clearKeys: [...ADDRESS_KEYS, ...REGION_FOCUS_KEYS]
 		});
-		lastWrittenAddress = nav.nextAddress;
-		void writeAddress(nav.nextAddress, nav.search, nav.mode);
+		void addressWriter.write(nav.nextAddress, nav.search, nav.mode);
 	}
 
 	// Back/Forward: onMount läuft nicht erneut, die Auswahl folgt der Adresse der Ziel-URL.
