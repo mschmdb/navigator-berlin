@@ -18,6 +18,8 @@
 		pickDatasetDescription
 	} from '$lib/seo/index.js';
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
+	import { modeForLayer } from '$lib/app-mode.js';
+	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
 	import { buildLayerMeta, layerBenefit } from '$lib/seo/layer-meta.js';
 	import {
 		deriveTemporalCoverage,
@@ -79,7 +81,7 @@
 	const deLayerName = $derived(getLayerDisplayName(detail.slug));
 
 	const inspectorHref = $derived(
-		localizedHref(`/explore?layers=${encodeURIComponent(detail.slug)}`)
+		localizedHref(buildExplorerDeepLink([detail.slug], modeForLayer(detail.slug) ?? undefined))
 	);
 
 	// i18n Block B4b, Spec Change Log 27.09. 06:20 (Review-Fund #19): DE zeigt

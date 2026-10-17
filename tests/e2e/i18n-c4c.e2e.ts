@@ -86,7 +86,7 @@ test.describe('i18n Block C4c: drei Seiten englisch, ohne Banner, indexierbar', 
 		await expect(page.getByTestId('explorer-cta')).toHaveText(/Explore the map/);
 		await expect(page.getByTestId('explorer-cta')).toHaveAttribute(
 			'href',
-			'/en/explore?layers=kuehle-orte'
+			'/en/explore?layers=kuehle-orte&mode=hitze'
 		);
 	});
 

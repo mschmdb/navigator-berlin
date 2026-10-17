@@ -58,3 +58,60 @@ export function hitzeReroute(url: URL, override?: string | null): string | null 
 export function pageviewPathFor(url: URL): string | undefined {
 	return hitzeReroute(url) ?? kaelteReroute(url) ?? undefined;
 }
+
+const MODE_ONLY_LAYERS: Readonly<Record<string, AppMode>> = {
+	'kuehle-orte': 'hitze',
+	'waerme-orte': 'kaelte'
+};
+
+/** Modus, der den Layer freischaltet. `null`: Layer gehört keinem Modus (überall verfügbar). */
+export function modeForLayer(slug: string): AppMode | null {
+	return Object.hasOwn(MODE_ONLY_LAYERS, slug) ? MODE_ONLY_LAYERS[slug]! : null;
+}
+
+/** Kühle Orte nur im Hitze-, Warme Orte nur im Kälte-Modus, alle anderen Layer überall. */
+export function isLayerAvailableInMode(slug: string, mode: AppMode): boolean {
+	const required = modeForLayer(slug);
+	return required === null || required === mode;
+}
+
+/** Alter Link ohne `mode`: der erste Modus-Layer bestimmt den nachzuziehenden Modus. */
+export function resolveLayerModeCatchUp(slugs: readonly string[]): AppMode | null {
+	for (const slug of slugs) {
+		const mode = modeForLayer(slug);
+		if (mode) return mode;
+	}
+	return null;
+}
+
+function isAppModeValue(value: string | null | undefined): value is AppMode {
+	return value === 'hitze' || value === 'kaelte' || value === 'default';
+}
+
+export interface ExplorerEntry {
+	/** Nachzuziehender Modus (alter Link ohne gültigen `mode`), sonst `null`. */
+	catchUpMode: AppMode | null;
+	/** URL-Layer, gefiltert auf den wirksamen Modus. */
+	layers: string[];
+	/** `true`, wenn die URL angepasst werden muss (Modus ergänzt oder Layer entfernt). */
+	rewrite: boolean;
+}
+
+/** Einstiegslogik des Explorers: Modus-Nachzug und Layer-Filter für die URL-Layer. */
+export function resolveExplorerEntry(
+	urlLayers: readonly string[],
+	appMode: AppMode,
+	rawModeParam: string | null | undefined
+): ExplorerEntry {
+	const catchUpMode =
+		!isAppModeValue(rawModeParam) && appMode === 'default'
+			? resolveLayerModeCatchUp(urlLayers)
+			: null;
+	const effectiveMode = catchUpMode ?? appMode;
+	const layers = urlLayers.filter((slug) => isLayerAvailableInMode(slug, effectiveMode));
+	return {
+		catchUpMode,
+		layers,
+		rewrite: catchUpMode !== null || layers.length !== urlLayers.length
+	};
+}

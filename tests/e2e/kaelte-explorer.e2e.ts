@@ -105,14 +105,14 @@ test.describe('Kälte-Modus im Explorer (#73)', () => {
 		expect(indexRequests).toEqual([]);
 	});
 
-	test('Default-Inspector unverändert: keine Warme-Orte-Card, kein Index-Fetch', async ({
+	test('Explizites mode=default verwirft warme Orte: keine Warme-Orte-Card, kein Index-Fetch', async ({
 		page
 	}) => {
 		const indexRequests: string[] = [];
 		page.on('request', (req) => {
 			if (req.url().includes('/data/waerme-orte.geojson')) indexRequests.push(req.url());
 		});
-		await openWithAddress(page, '/explore?layers=waerme-orte');
+		await openWithAddress(page, '/explore?layers=waerme-orte&mode=default');
 		await expect(page.getByTestId('waerme-orte-card')).toHaveCount(0);
 		await expect(page.getByTestId('section-klima')).toBeVisible();
 		await page.waitForTimeout(1000);

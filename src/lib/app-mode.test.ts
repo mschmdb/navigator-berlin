@@ -4,7 +4,11 @@ import {
 	isHitzeMode,
 	hitzeReroute,
 	kaelteReroute,
-	pageviewPathFor
+	pageviewPathFor,
+	isLayerAvailableInMode,
+	modeForLayer,
+	resolveLayerModeCatchUp,
+	resolveExplorerEntry
 } from './app-mode.js';
 
 describe('kaelte-Subdomain', () => {
@@ -106,5 +110,105 @@ describe('hitzeReroute', () => {
 
 	it('Override erlaubt lokales Testen (localhost als hitze)', () => {
 		expect(hitzeReroute(new URL('http://localhost:5174/'), 'hitze')).toBe('/hitze');
+	});
+});
+
+describe('Layer-Verfügbarkeit je Modus', () => {
+	it('kuehle-orte nur im Hitze-Modus', () => {
+		expect(isLayerAvailableInMode('kuehle-orte', 'hitze')).toBe(true);
+		expect(isLayerAvailableInMode('kuehle-orte', 'default')).toBe(false);
+		expect(isLayerAvailableInMode('kuehle-orte', 'kaelte')).toBe(false);
+	});
+
+	it('waerme-orte nur im Kälte-Modus', () => {
+		expect(isLayerAvailableInMode('waerme-orte', 'kaelte')).toBe(true);
+		expect(isLayerAvailableInMode('waerme-orte', 'default')).toBe(false);
+		expect(isLayerAvailableInMode('waerme-orte', 'hitze')).toBe(false);
+	});
+
+	it('alle anderen Layer überall', () => {
+		for (const mode of ['default', 'hitze', 'kaelte'] as const) {
+			expect(isLayerAvailableInMode('laerm-den', mode)).toBe(true);
+		}
+	});
+
+	it('modeForLayer liefert den Modus nur für die beiden Orte-Layer', () => {
+		expect(modeForLayer('kuehle-orte')).toBe('hitze');
+		expect(modeForLayer('waerme-orte')).toBe('kaelte');
+		expect(modeForLayer('laerm-den')).toBeNull();
+	});
+});
+
+describe('resolveLayerModeCatchUp', () => {
+	it('zieht den Modus vom ersten passenden Layer nach', () => {
+		expect(resolveLayerModeCatchUp(['laerm-den', 'kuehle-orte'])).toBe('hitze');
+		expect(resolveLayerModeCatchUp(['waerme-orte', 'kuehle-orte'])).toBe('kaelte');
+	});
+
+	it('liefert null ohne Orte-Layer', () => {
+		expect(resolveLayerModeCatchUp(['laerm-den'])).toBeNull();
+		expect(resolveLayerModeCatchUp([])).toBeNull();
+	});
+});
+
+describe('modeForLayer Prototyp-Schlüssel', () => {
+	it('liefert null für constructor und __proto__', () => {
+		expect(modeForLayer('constructor')).toBeNull();
+		expect(modeForLayer('__proto__')).toBeNull();
+	});
+});
+
+describe('resolveExplorerEntry', () => {
+	it('zieht Hitze nach und behält andere Layer', () => {
+		expect(resolveExplorerEntry(['kuehle-orte', 'laerm-den'], 'default', null)).toEqual({
+			catchUpMode: 'hitze',
+			layers: ['kuehle-orte', 'laerm-den'],
+			rewrite: true
+		});
+	});
+
+	it('zieht Kälte nach', () => {
+		expect(resolveExplorerEntry(['waerme-orte'], 'default', null)).toEqual({
+			catchUpMode: 'kaelte',
+			layers: ['waerme-orte'],
+			rewrite: true
+		});
+	});
+
+	it('beide Layer: der erste gewinnt, der andere fällt weg', () => {
+		expect(resolveExplorerEntry(['kuehle-orte', 'waerme-orte'], 'default', null)).toEqual({
+			catchUpMode: 'hitze',
+			layers: ['kuehle-orte'],
+			rewrite: true
+		});
+	});
+
+	it('falscher expliziter Modus: Layer fällt weg, kein Nachzug', () => {
+		expect(resolveExplorerEntry(['waerme-orte'], 'hitze', 'hitze')).toEqual({
+			catchUpMode: null,
+			layers: [],
+			rewrite: true
+		});
+	});
+
+	it('explizites mode=default verhindert den Nachzug', () => {
+		expect(resolveExplorerEntry(['kuehle-orte'], 'default', 'default')).toEqual({
+			catchUpMode: null,
+			layers: [],
+			rewrite: true
+		});
+	});
+
+	it('ungültiger mode-Wert zählt als fehlend', () => {
+		expect(resolveExplorerEntry(['kuehle-orte'], 'default', 'foo').catchUpMode).toBe('hitze');
+		expect(resolveExplorerEntry(['kuehle-orte'], 'default', '').catchUpMode).toBe('hitze');
+	});
+
+	it('ohne Orte-Layer kein Rewrite', () => {
+		expect(resolveExplorerEntry(['laerm-den'], 'default', null)).toEqual({
+			catchUpMode: null,
+			layers: ['laerm-den'],
+			rewrite: false
+		});
 	});
 });
