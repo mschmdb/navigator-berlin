@@ -352,6 +352,13 @@ body.route-explore {
 	font-feature-settings: 'tnum';
 }
 
+/* #90: Lange Kiez- und Bezirksnamen umbrechen statt die Spalte neben der Lagekarte zu sprengen. */
+.region-title {
+	overflow-wrap: anywhere;
+	hyphens: auto;
+	text-wrap: balance;
+}
+
 /* Story 1.20 Print-CSS — Inspector als wohnungssuche-tauglicher Ausdruck */
 @media print {
 	html,

@@ -22,6 +22,7 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import BezirkKiezeMap from './bezirk-kieze-map.svelte';
 	import HeroMapCard from './hero-map-card.svelte';
+	import RegionTitle from './region-title.svelte';
 	import { hasRenderableOutline } from './internal/has-renderable-outline.js';
 
 	interface Props {
@@ -54,8 +55,8 @@
 
 <header class="mx-auto max-w-3xl px-4 pt-4 pb-8" data-testid="bezirk-hero">
 	<div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:items-start md:gap-6">
-		<div class="space-y-3">
-			<h1 class="text-2xl font-bold text-ink sm:text-3xl md:text-4xl">{profile.name}</h1>
+		<div class="min-w-0 space-y-3">
+			<RegionTitle name={profile.name} />
 			<dl
 				class="m-0 grid grid-cols-3 gap-x-4 gap-y-2 font-sans sm:flex sm:flex-wrap sm:gap-x-8"
 				data-testid="bezirk-facts"
