@@ -6,6 +6,7 @@
 -->
 <script lang="ts">
 	import { ctaSecondary } from './internal/cta.js';
+	import { lineItem, lineList, lineRow } from './internal/line-list.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import {
@@ -21,18 +22,11 @@
 			{m.home_featured_bezirke_lead()}
 		</p>
 	</header>
-	<ul class="grid gap-4 md:grid-cols-2">
+	<ul class="{lineList} md:grid-cols-2">
 		{#each HOME_FEATURED_BEZIRKE as b (b.slug)}
-			<li class="flex">
-				<a
-					href={localizedHref(`/bezirk/${b.slug}`)}
-					class="group flex h-full w-full flex-col gap-2 rounded border border-rule p-5 hover:border-accent"
-				>
-					<span class="flex items-center justify-between gap-2">
-						<span class="text-xl font-semibold text-ink group-hover:text-accent"
-							>{b.displayName}</span
-						>
-					</span>
+			<li class={lineItem}>
+				<a href={localizedHref(`/bezirk/${b.slug}`)} class={lineRow}>
+					<span class="text-lg font-semibold">{b.displayName}</span>
 					<span class="text-sm leading-snug text-ink-muted">{homeFeaturedBezirkTeaser(b.slug)}</span
 					>
 				</a>

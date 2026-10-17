@@ -8,6 +8,7 @@
 <script lang="ts">
 	import { Volume2, TreePine, Thermometer, Train, Home, Landmark, FileText } from '@lucide/svelte';
 	import type { Component } from 'svelte';
+	import { lineItem, lineList, lineRow } from './internal/line-list.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import {
@@ -46,19 +47,16 @@
 			{m.home_layer_teasers_lead()}
 		</p>
 	</header>
-	<ul class="grid gap-4 sm:grid-cols-2">
+	<ul class="{lineList} sm:grid-cols-2">
 		{#each HOME_LAYER_TEASERS as t (t.slug)}
 			{@const Icon = ICON_MAP[t.iconKey]}
-			<li class="rounded border border-rule p-4">
-				<a
-					href={localizedHref(`/layer/${t.slug}`)}
-					class="flex flex-col gap-2 text-ink hover:text-accent"
-				>
-					<span class="flex items-center gap-2">
+			<li class={lineItem}>
+				<a href={localizedHref(`/layer/${t.slug}`)} class={lineRow}>
+					<span class="flex items-center gap-2 font-semibold">
 						<Icon size={16} aria-hidden="true" />
-						<span class="text-xs">{homeLayerTeaserLabel(t.slug)}</span>
+						{homeLayerTeaserLabel(t.slug)}
 					</span>
-					<span class="text-base leading-snug">{homeLayerTeaserSummary(t.slug)}</span>
+					<span class="text-sm leading-snug text-ink-muted">{homeLayerTeaserSummary(t.slug)}</span>
 				</a>
 			</li>
 		{/each}

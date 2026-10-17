@@ -8,6 +8,7 @@
 -->
 <script lang="ts">
 	import { MapPin } from '@lucide/svelte';
+	import { lineItem, lineList, lineRow } from './internal/line-list.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import {
@@ -24,16 +25,16 @@
 			{m.home_quick_links_lead()}
 		</p>
 	</header>
-	<ul class="flex flex-wrap gap-2">
+	<ul class="{lineList} sm:grid-cols-2 lg:grid-cols-3">
 		{#each HOME_QUICK_LINKS as q (q.id)}
-			<li>
+			<li class={lineItem}>
 				<a
 					href={localizedHref(buildQuickLinkHref(q))}
 					data-testid={`home-quick-link-${q.id}`}
 					title={homeQuickLinkDescription(q.id)}
-					class="inline-flex items-center gap-2 rounded border border-rule px-3 py-2 font-sans text-sm text-ink hover:border-accent hover:text-accent"
+					class="{lineRow} flex-row! items-center gap-2!"
 				>
-					<MapPin size={14} aria-hidden="true" />
+					<MapPin size={14} aria-hidden="true" class="shrink-0" />
 					{q.label}
 				</a>
 			</li>

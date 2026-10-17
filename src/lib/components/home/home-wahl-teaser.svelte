@@ -6,6 +6,7 @@
 -->
 <script lang="ts">
 	import { ctaSecondary } from './internal/cta.js';
+	import { lineItem, lineList, lineRow } from './internal/line-list.js';
 	import { Vote } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
@@ -95,22 +96,20 @@
 		</p>
 	</header>
 
-	<ul class="grid gap-4 sm:grid-cols-3">
+	<ul class="{lineList} sm:grid-cols-3">
 		{#each cards as card (card.slug)}
-			<li class="rounded border border-rule p-4">
+			<li class={lineItem}>
 				<a
 					href={localizedHref(`/berlin-wahlen/${card.slug}`)}
 					data-testid={`home-wahl-card-${card.slug}`}
-					class="flex flex-col gap-2 text-ink hover:text-accent"
+					class={lineRow}
 				>
-					<span class="flex items-center gap-2">
+					<span class="flex items-center gap-2 text-sm text-ink-muted">
 						<Vote size={16} aria-hidden="true" />
-						<span class="text-xs">
-							{card.typLabel}
-						</span>
+						{card.typLabel}
 					</span>
-					<span class="text-lg leading-snug">{card.title}</span>
-					<span class="text-xs text-ink-muted">{card.note}</span>
+					<span class="text-lg leading-snug font-semibold">{card.title}</span>
+					<span class="text-sm text-ink-muted">{card.note}</span>
 				</a>
 			</li>
 		{/each}
