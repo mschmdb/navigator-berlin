@@ -61,7 +61,8 @@ describe('/ueber · DE', () => {
 		expect(text).toContain('Das Projekt ist privat finanziert');
 		expect(text).not.toContain('Ich betreibe das Projekt privat.');
 		expect(text).toContain('ohne Werbung');
-		expect(text).toContain('Solutions Architect');
+		expect(text).toContain('Head of Platform & AI');
+		expect(text).not.toContain('Solutions Architect');
 	});
 
 	it('verlinkt Methodik, Daten, Code, Talk und Profile mit sprechendem Text', () => {

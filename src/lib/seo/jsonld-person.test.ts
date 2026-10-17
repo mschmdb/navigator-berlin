@@ -13,7 +13,7 @@ describe('buildFounderPerson', () => {
 			'@id': 'https://schmidbauer.dev/#person',
 			name: 'Matze Schmidbauer',
 			url: 'https://schmidbauer.dev',
-			jobTitle: 'Solutions Architect',
+			jobTitle: 'Head of Platform & AI',
 			sameAs: [
 				'https://bsky.app/profile/schmidbauer.dev',
 				'https://www.linkedin.com/in/matzeschmidbauer/'
