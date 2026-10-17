@@ -1,16 +1,20 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { mkdtempSync } from 'node:fs';
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+
+let emptyDir: string | null = null;
 
 afterEach(() => {
 	vi.restoreAllMocks();
 	vi.resetModules();
+	if (emptyDir) rmSync(emptyDir, { recursive: true, force: true });
+	emptyDir = null;
 });
 
 describe('loadCrossLayerTemplates', () => {
 	it('liefert die Templates auch ohne src/ im Arbeitsverzeichnis (Prod-Image, #116)', async () => {
-		const emptyDir = mkdtempSync(join(tmpdir(), 'nav-runtime-'));
+		emptyDir = mkdtempSync(join(tmpdir(), 'nav-runtime-'));
 		vi.spyOn(process, 'cwd').mockReturnValue(emptyDir);
 		const { loadCrossLayerTemplates } = await import('./cross-layer-templates-loader.js');
 		const bundles = await loadCrossLayerTemplates();
