@@ -158,7 +158,7 @@
 			data-testid="pet-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle hover:text-ink"
+			class="inline-flex items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}

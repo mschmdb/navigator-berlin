@@ -66,7 +66,7 @@
 				key: dim,
 				label: dimensionLabel(dim),
 				maxValue: 100,
-				color: value !== null && scale ? severityColor(scale.severity) : 'var(--rule, #ddd)',
+				color: value !== null && scale ? severityColor(scale.severity) : 'var(--rule)',
 				data: [datum]
 			};
 		})
@@ -103,7 +103,7 @@
 				placement: 'middle',
 				startOffset: '0%',
 				value: 'label',
-				class: 'fill-white font-sans text-[8px] font-medium pointer-events-none'
+				class: 'fill-white font-sans text-dense-meta font-medium pointer-events-none'
 			}}
 			onArcClick={handleArcClick}
 			{...noCartesianChrome}
@@ -127,11 +127,11 @@
 			class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
 			aria-hidden="true"
 		>
-			<span class="font-mono text-[11px] tracking-wide text-ink-subtle uppercase"
+			<span class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 				>{overallLabel}</span
 			>
 			<span class="font-mono text-4xl leading-none font-semibold text-ink">{overallText}</span>
-			<span class="font-mono text-[10px] text-ink-subtle">/ 100</span>
+			<span class="font-mono text-dense-meta text-ink-subtle">/ 100</span>
 		</div>
 	</div>
 

@@ -164,7 +164,7 @@
 	<header class="flex flex-col gap-6">
 		<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.hitze_eyebrow()}</p>
 		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">{m.hitze_h1_title()}</h1>
-		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
 			{m.hitze_intro_p1()}
 		</p>
 		<div class="flex flex-col gap-2 pt-1">
@@ -199,7 +199,7 @@
 			{#each categories as cat (cat.name)}
 				{@const Icon = cat.icon}
 				<li class="flex items-start gap-3 rounded border border-rule bg-bg-elevated px-3 py-2.5">
-					<Icon size={20} aria-hidden="true" class="mt-0.5 shrink-0 text-[#0277BD]" />
+					<Icon size={20} aria-hidden="true" class="mt-0.5 shrink-0 text-umwelt-kuehle-orte" />
 					<span class="flex flex-col">
 						<span class="font-sans text-sm font-medium text-ink">{cat.name}</span>
 						<span class="font-serif text-sm text-ink-muted">{cat.note}</span>

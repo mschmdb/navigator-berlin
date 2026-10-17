@@ -79,7 +79,7 @@
 	);
 
 	const linkClass = 'hover:text-accent-strong text-accent underline underline-offset-2';
-	const bodyClass = 'font-serif text-base leading-relaxed text-ink';
+	const bodyClass = 'font-serif text-base leading-body text-ink';
 </script>
 
 {#snippet link(text: string, name: string)}

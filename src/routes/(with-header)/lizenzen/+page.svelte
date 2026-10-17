@@ -111,7 +111,7 @@
 		<h1 data-testid="lizenzen-page-title" class="font-serif text-3xl text-ink">
 			{m.lizenzen_h1_title()}
 		</h1>
-		<p class="font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="font-serif text-lg leading-body text-ink-muted">
 			{m.lizenzen_intro_p1()}
 		</p>
 	</header>
@@ -142,7 +142,7 @@
 		<h2 id="daten-lizenzen-h" class="font-serif text-2xl text-ink">
 			{m.lizenzen_section_daten_lizenzen()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			{datenIntro}
 		</p>
 
@@ -190,7 +190,7 @@
 
 	<section id="wahldaten" aria-labelledby="wahldaten-h" class="flex flex-col gap-3">
 		<h2 id="wahldaten-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_wahldaten()}</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			{m.lizenzen_wahl_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
@@ -264,7 +264,7 @@
 		<h2 id="demografie-h" class="font-serif text-2xl text-ink">
 			{m.lizenzen_section_demografie()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			{m.lizenzen_demografie_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
@@ -297,7 +297,7 @@
 		<h2 id="kriminalitaetsatlas-h" class="font-serif text-2xl text-ink">
 			{m.lizenzen_section_kriminalitaet()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			{m.lizenzen_krim_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
@@ -333,7 +333,7 @@
 		<h2 id="klimadaten-dwd-h" class="font-serif text-2xl text-ink">
 			{m.lizenzen_section_klimadaten()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			{m.lizenzen_klima_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
@@ -366,7 +366,7 @@
 		<h2 id="entitaets-verweise-h" class="font-serif text-2xl text-ink">
 			{m.lizenzen_section_entitaeten()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			<RichText segments={entitaetenSegments}>
 				{#snippet tag(text)}{@render codeSm(text)}{/snippet}
 			</RichText>
@@ -415,7 +415,7 @@
 
 	<section id="software" aria-labelledby="software-h" class="flex flex-col gap-3">
 		<h2 id="software-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_software()}</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			<RichText segments={softwareSegments}>
 				{#snippet tag(text)}{@render codeSm(text)}{/snippet}
 			</RichText>
@@ -455,7 +455,7 @@
 
 	<section id="schriften" aria-labelledby="schriften-h" class="flex flex-col gap-3">
 		<h2 id="schriften-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_schriften()}</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			{m.lizenzen_schriften_p1()}
 		</p>
 		<p class="font-mono text-xs text-ink-muted">
@@ -483,10 +483,10 @@
 		<h2 id="osm-namensnennung-h" class="font-serif text-2xl text-ink">
 			{m.lizenzen_section_osm()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			{m.lizenzen_osm_p1()}
 		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			<RichText segments={osmSegments}>
 				{#snippet tag(text)}
 					<a

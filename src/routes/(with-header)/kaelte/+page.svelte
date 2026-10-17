@@ -64,7 +64,7 @@
 	<!-- Notfall-Block vor dem Intro: 112 und erster Dienst sollen ohne Scrollen sichtbar sein. -->
 	<NotfallBlock />
 
-	<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
+	<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
 		{m.kaelte_intro()}
 	</p>
 
@@ -74,7 +74,7 @@
 		<a
 			href={localizedHref(explorerLink)}
 			data-testid="kaelte-karte-link"
-			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
 		>
 			<ArrowRight size={16} aria-hidden="true" />
 			{m.kaelte_orte_karte_link()}

@@ -155,7 +155,7 @@
 				<span
 					data-testid="zeit-animation-wiederholung"
 					aria-hidden="true"
-					class="ml-0.5 text-[10px] text-ink-subtle"
+					class="ml-0.5 text-dense-meta text-ink-subtle"
 					title={wahlWiederholungLabel()}
 				>
 					{m.wahl_portal_wiederholung_kuerzel()}

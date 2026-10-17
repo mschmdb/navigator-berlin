@@ -109,7 +109,7 @@
 		<h1 data-testid="methodik-page-title" class="font-serif text-3xl text-ink">
 			{m.methodik_h1_title()}
 		</h1>
-		<p class="font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="font-serif text-lg leading-body text-ink-muted">
 			{pageDescription}
 		</p>
 	</header>
@@ -140,17 +140,17 @@
 		<h2 id="mission-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_mission_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">
+		<p class="font-serif text-base leading-body text-ink">
 			{m.methodik_mission_p1({ layerCount: formatCount(layerCount) })}
 		</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_mission_p2()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_mission_p2()}</p>
 	</section>
 
 	<section id="datenarchitektur" aria-labelledby="datenarchitektur-h" class="flex flex-col gap-3">
 		<h2 id="datenarchitektur-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_architecture_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_architecture_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_architecture_p1()}</p>
 		<MethodikPipelineDiagram />
 	</section>
 
@@ -162,7 +162,7 @@
 		<h2 id="aggregations-ebenen-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_aggregation_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_aggregation_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_aggregation_p1()}</p>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 			{#each aggregationLevels as agg (agg.level)}
 				<dt class="font-mono text-xs text-ink-muted">{agg.level}</dt>
@@ -179,26 +179,26 @@
 		<h2 id="karten-darstellung-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_map_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_map_p1()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_map_p2()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_map_p3()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_map_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_map_p2()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_map_p3()}</p>
 	</section>
 
 	<section id="was-ist-kiez" aria-labelledby="was-ist-kiez-h" class="flex flex-col gap-3">
 		<h2 id="was-ist-kiez-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_kiez_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_kiez_p1()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_kiez_p2()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_kiez_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_kiez_p2()}</p>
 	</section>
 
 	<section id="cross-layer" aria-labelledby="cross-layer-h" class="flex flex-col gap-3">
 		<h2 id="cross-layer-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_cross_layer_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cross_layer_p1()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cross_layer_p2()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cross_layer_p3()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_cross_layer_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_cross_layer_p2()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_cross_layer_p3()}</p>
 		<p class="font-mono text-xs text-ink-muted">
 			<RichText segments={kiezScoreLinkSegments}>
 				{#snippet tag(text)}
@@ -211,16 +211,16 @@
 			</RichText>
 		</p>
 		<h3 class="mt-2 font-serif text-xl text-ink">{m.methodik_mss_heading()}</h3>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_mss_p1()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_mss_p2()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_mss_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_mss_p2()}</p>
 	</section>
 
 	<section id="wahldaten-section" aria-labelledby="wahldaten-section-h" class="flex flex-col gap-3">
 		<h2 id="wahldaten-section-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_election_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_election_p1()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_election_p2()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_election_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_election_p2()}</p>
 		<p class="font-mono text-xs text-ink-muted">
 			<RichText segments={electionLinkSegments}>
 				{#snippet tag(text, name)}
@@ -242,8 +242,8 @@
 		<h2 id="kuehle-orte-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_cool_places_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cool_places_p1()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_cool_places_p2()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_cool_places_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_cool_places_p2()}</p>
 		<p class="font-serif text-sm text-ink-muted">
 			<a href={localizedHref('/lizenzen')} data-testid="methodik-kuehle-orte-link" class={linkClass}
 				>{m.methodik_cool_places_sources_link()}</a
@@ -259,7 +259,7 @@
 		<h2 id="coverage-strategie-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_coverage_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_coverage_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_coverage_p1()}</p>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
 			{#each coverageReasons as reason (reason.key)}
 				<dt class="font-mono text-xs text-ink-muted">{reason.key}</dt>
@@ -286,17 +286,17 @@
 		<h2 id="editorial-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_editorial_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_editorial_p1()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_editorial_p2()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_editorial_p3()}</p>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_editorial_p4()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_editorial_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_editorial_p2()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_editorial_p3()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_editorial_p4()}</p>
 	</section>
 
 	<section id="daten-stand" aria-labelledby="daten-stand-h" class="flex flex-col gap-3">
 		<h2 id="daten-stand-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_data_status_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink-muted">
+		<p class="font-serif text-base leading-body text-ink-muted">
 			{m.methodik_data_status_intro()}
 		</p>
 		<MethodikDatenTabelle layers={visibleLayers} />
@@ -306,7 +306,7 @@
 		<h2 id="lizenzen-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_licences_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_licences_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_licences_p1()}</p>
 		<p class="font-mono text-xs text-ink-muted">
 			<RichText segments={licencesLinkSegments}>
 				{#snippet tag(text)}
@@ -320,7 +320,7 @@
 		<h2 id="feedback-h" class="font-serif text-2xl text-ink">
 			{m.methodik_section_feedback_heading()}
 		</h2>
-		<p class="font-serif text-base leading-relaxed text-ink">{m.methodik_feedback_p1()}</p>
+		<p class="font-serif text-base leading-body text-ink">{m.methodik_feedback_p1()}</p>
 		<p class="font-mono text-sm">
 			<a href={feedbackHref} class={linkClass}>
 				{FEEDBACK_EMAIL}

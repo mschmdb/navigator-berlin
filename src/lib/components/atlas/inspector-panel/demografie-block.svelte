@@ -142,7 +142,7 @@
 						: m.inspector_demografie_scope_unavailable({ label: scopeLabel(s) }, localeOpts)}
 					onclick={() => selectScope(s)}
 					onkeydown={(e) => onScopeKeydown(e, s)}
-					class="rounded border border-ink px-1 py-1 text-center font-mono text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+					class="rounded border border-ink px-1 py-1 text-center font-mono text-xs transition-colors"
 					class:bg-ink={checked}
 					class:text-bg={checked}
 					class:bg-bg={!checked}
@@ -164,7 +164,7 @@
 		</p>
 	{:else}
 		<p
-			class="mt-1 font-mono text-[11px] break-words hyphens-auto text-ink-muted"
+			class="mt-1 font-mono text-dense-meta break-words hyphens-auto text-ink-muted"
 			data-testid="demografie-bezug"
 		>
 			{bezugText}
@@ -219,7 +219,7 @@
 			data-testid="demografie-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle hover:text-ink"
+			class="inline-flex items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}

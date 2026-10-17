@@ -310,7 +310,7 @@
 			<div class="flex flex-col gap-1.5">
 				<span
 					id="trends-toggle-label"
-					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+					class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 				>
 					{m.wahl_portal_feld_ansicht()}
 				</span>
@@ -347,7 +347,7 @@
 			<div class="flex flex-col gap-1.5">
 				<span
 					id="trends-partei-label"
-					class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+					class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 				>
 					{m.wahl_portal_spalte_partei()}
 				</span>
@@ -399,7 +399,7 @@
 
 		<p
 			data-testid="trends-kapitel-takeaway"
-			class="max-w-prose font-serif text-lg leading-relaxed text-ink tabular-nums"
+			class="max-w-prose font-serif text-lg leading-body text-ink tabular-nums"
 		>
 			{takeawayText}
 		</p>

@@ -213,7 +213,7 @@
 	<div class="flex flex-col gap-1.5">
 		<span
 			id="sankey-ebene-label"
-			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 		>
 			{m.wahl_portal_sankey_ebene_label()}
 		</span>
@@ -262,7 +262,7 @@
 	{:else if showInhalt && layout}
 		<p
 			data-testid="sankey-wahljahre-takeaway"
-			class="max-w-prose font-serif text-lg leading-relaxed text-ink tabular-nums"
+			class="max-w-prose font-serif text-lg leading-body text-ink tabular-nums"
 		>
 			{takeawayText}
 		</p>
@@ -379,7 +379,7 @@
 								y={(node.y0 + node.y1) / 2}
 								text-anchor={node.column === 0 ? 'end' : 'start'}
 								dominant-baseline="middle"
-								class="fill-ink font-mono text-[10px]"
+								class="fill-ink font-mono text-dense-meta"
 								data-testid="sankey-node-label"
 							>
 								{parteiDisplayName(node.label)}
@@ -391,7 +391,7 @@
 							x={columnXByJahr.get(spalte.jahr) ?? 0}
 							y={layout.height + 18}
 							text-anchor="middle"
-							class="fill-ink font-mono text-[11px] tabular-nums"
+							class="fill-ink font-mono text-dense-meta tabular-nums"
 							data-testid="sankey-column-label"
 						>
 							{spalte.jahr}{spalte.istWiederholung

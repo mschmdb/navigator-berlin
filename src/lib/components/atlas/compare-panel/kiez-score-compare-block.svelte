@@ -85,21 +85,21 @@
 				<tr class="border-b border-rule-strong">
 					<th
 						scope="col"
-						class="py-1 pr-3 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+						class="py-1 pr-3 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 					>
 						{m.compare_kiez_score_th_dimension()}
 					</th>
 					<th
 						scope="col"
 						data-cell="a"
-						class="py-1 pr-3 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+						class="py-1 pr-3 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 					>
 						A
 					</th>
 					<th
 						scope="col"
 						data-cell="b"
-						class="py-1 text-left font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+						class="py-1 text-left font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 					>
 						B
 					</th>

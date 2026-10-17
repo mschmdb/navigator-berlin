@@ -2,7 +2,8 @@
 title: 'GH-86 Redesign 1: Fundament (Dichte-Skala, Fokus, Tokens, Klickziele)'
 type: 'refactor'
 created: '2026-10-17'
-status: 'ready-for-dev'
+status: 'in-progress'
+baseline_commit: '094d7010086624128ead48febe995e2998a71516'
 route: 'dispatch'
 review_loop_iteration: 0
 context:

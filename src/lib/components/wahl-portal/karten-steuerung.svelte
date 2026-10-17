@@ -57,7 +57,7 @@
 	<div class="flex flex-col gap-1.5">
 		<span
 			id="steuerleiste-jahr-label"
-			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 		>
 			{m.wahl_portal_spalte_jahr()}
 		</span>
@@ -101,7 +101,7 @@
 							<span
 								data-testid={`steuerleiste-jahr-${opt.jahr}-wiederholung`}
 								aria-hidden="true"
-								class="ml-0.5 text-[10px] text-ink-subtle"
+								class="ml-0.5 text-dense-meta text-ink-subtle"
 								title={wahlWiederholungLabel()}
 							>
 								{m.wahl_portal_wiederholung_kuerzel()}
@@ -116,7 +116,7 @@
 	<div class="flex flex-col gap-1.5">
 		<span
 			id="steuerleiste-ebene-label"
-			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 		>
 			{m.wahl_portal_feld_ebene()}
 		</span>

@@ -116,7 +116,7 @@
 		<a
 			href={scoreHref}
 			data-testid="bezirk-score-explain-link"
-			class="inline-block py-1 text-ink underline underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+			class="inline-block py-1 text-ink underline underline-offset-2 hover:text-accent"
 			>{m.bezirk_map_explain_link(undefined, localeOpts)}</a
 		>
 	</p>
@@ -127,7 +127,7 @@
 		href={mapHref}
 		onclick={() => trackLanding('map_button', 'bezirk')}
 		data-testid="bezirk-map-button"
-		class="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-5 py-2.5 font-sans text-base font-semibold text-bg hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+		class="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-5 py-2.5 font-sans text-base font-semibold text-bg hover:bg-ink"
 	>
 		{m.bezirk_hero_map_button({ bezirk: profile.name }, localeOpts)}
 		<ArrowRight class="size-5" aria-hidden="true" />

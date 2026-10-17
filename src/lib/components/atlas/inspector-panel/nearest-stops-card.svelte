@@ -164,7 +164,7 @@
 				{/if}
 			</div>
 			<p
-				class="mt-1 pb-2 font-mono text-[10px] leading-snug text-ink-subtle"
+				class="mt-1 pb-2 font-mono text-dense-meta leading-snug text-ink-subtle"
 				data-testid="nearest-stops-method"
 			>
 				{m.inspector_nearest_stops_method(
@@ -202,13 +202,13 @@
 								<Icon size={16} aria-hidden="true" />
 							</span>
 							<span
-								class="w-12 shrink-0 font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+								class="w-12 shrink-0 font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 							>
 								{MODUS_LABEL[modus]()}
 							</span>
 							<span class="flex-1 truncate text-sm text-ink">{stop.name}</span>
 							<span
-								class="shrink-0 font-mono text-[11px] text-ink-subtle tabular-nums"
+								class="shrink-0 font-mono text-dense-meta text-ink-subtle tabular-nums"
 								data-testid="nearest-stop-distance"
 								aria-hidden="true"
 							>

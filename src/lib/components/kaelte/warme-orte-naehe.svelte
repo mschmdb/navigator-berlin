@@ -132,11 +132,11 @@
 	}
 
 	const buttonClass =
-		'hover:bg-accent-strong inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-60';
+		'hover:bg-accent-strong inline-flex min-h-11 w-fit items-center gap-2 rounded bg-accent px-5 py-3 font-sans text-base font-semibold text-bg-elevated disabled:opacity-60';
 	const linkClass =
-		'hover:text-accent-strong inline-flex min-h-11 items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+		'hover:text-accent-strong inline-flex min-h-11 items-center gap-1.5 font-sans text-sm text-accent underline underline-offset-2';
 	const chipClass =
-		'inline-flex min-h-11 items-center rounded border px-3 py-1.5 font-sans text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+		'inline-flex min-h-11 items-center rounded border px-3 py-1.5 font-sans text-sm';
 </script>
 
 <section
@@ -148,7 +148,7 @@
 		id="waerme-naehe-h"
 		bind:this={headingEl}
 		tabindex="-1"
-		class="font-sans text-2xl font-semibold text-ink focus:outline-none"
+		class="font-sans text-2xl font-semibold text-ink outline-none"
 	>
 		{m.kaelte_orte_heading()}
 	</h2>

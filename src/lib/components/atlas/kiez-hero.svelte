@@ -99,7 +99,7 @@
 					<a
 						href={bezirkHref}
 						onclick={() => trackLanding('eyebrow_link', 'kiez')}
-						class="inline-block py-1 text-ink-subtle underline underline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+						class="inline-block py-1 text-ink-subtle underline underline-offset-2 hover:text-ink"
 						data-testid="kiez-hero-bezirk-link">{profile.bezirk}</a
 					>
 				{:else}
@@ -185,7 +185,7 @@
 		href={mapHref}
 		onclick={() => trackLanding('map_button', 'kiez')}
 		data-testid="kiez-map-button"
-		class="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-5 py-2.5 font-sans text-base font-semibold text-bg hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+		class="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-5 py-2.5 font-sans text-base font-semibold text-bg hover:bg-ink"
 	>
 		{m.kiez_hero_map_button({ kiez: profile.name }, localeOpts)}
 		<ArrowRight class="size-5" aria-hidden="true" />

@@ -234,7 +234,7 @@
 
 	function headerButtonClass(active: boolean): string {
 		const base =
-			'inline-flex items-center gap-1 whitespace-nowrap font-mono text-[11px] uppercase tracking-wider hover:text-ink';
+			'inline-flex items-center gap-1 whitespace-nowrap font-mono text-dense-label uppercase tracking-wider hover:text-ink';
 		return active ? `${base} text-ink` : `${base} text-ink-subtle`;
 	}
 </script>
@@ -283,7 +283,7 @@
 			<thead>
 				<tr class="border-b border-rule text-left align-bottom">
 					<th
-						class="py-2 pr-3 font-mono text-[11px] tracking-wider whitespace-nowrap text-ink-subtle uppercase"
+						class="py-2 pr-3 font-mono text-dense-label tracking-wider whitespace-nowrap text-ink-subtle uppercase"
 						scope="col"
 					>
 						{m.uis_ranking_col_rank()}
@@ -336,7 +336,7 @@
 					{/each}
 					<th class="score-col-th" scope="col" data-testid="ranking-col-kriminalitaet">
 						<span
-							class="score-col-rot font-mono text-[11px] tracking-wider text-ink-subtle uppercase"
+							class="score-col-rot font-mono text-dense-label tracking-wider text-ink-subtle uppercase"
 						>
 							{m.uis_ranking_col_kriminalitaet()}
 						</span>
@@ -402,7 +402,7 @@
 	</div>
 
 	<dl
-		class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 font-mono text-[11px] tracking-wider text-ink-subtle uppercase"
+		class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 font-mono text-dense-meta tracking-wider text-ink-subtle uppercase"
 		data-testid="ranking-legend"
 	>
 		<dt class="text-ink-muted">{m.uis_ranking_legend_label()}</dt>
@@ -449,16 +449,16 @@
 	 * Dunkler Ink-Text bleibt SC-1.4.3-konform auf den Tints.
 	 */
 	.score-pill-1 {
-		background-color: color-mix(in srgb, var(--scale-last-5, #8c2a14) 28%, var(--bg, #ecead0));
+		background-color: color-mix(in srgb, var(--scale-last-5) 28%, var(--bg));
 	}
 	.score-pill-2 {
-		background-color: color-mix(in srgb, var(--state-warning, #9e5520) 30%, var(--bg, #ecead0));
+		background-color: color-mix(in srgb, var(--state-warning) 30%, var(--bg));
 	}
 	.score-pill-3 {
-		background-color: color-mix(in srgb, var(--scale-gut-3, #4f7153) 32%, var(--bg, #ecead0));
+		background-color: color-mix(in srgb, var(--scale-gut-3) 32%, var(--bg));
 	}
 	.score-pill-4 {
-		background-color: color-mix(in srgb, var(--scale-gut-5, #1f5a2e) 35%, var(--bg, #ecead0));
+		background-color: color-mix(in srgb, var(--scale-gut-5) 35%, var(--bg));
 	}
 
 	/* Story 14.9: Dimensions-Spalten-Header 45° gedreht — spart horizontalen Platz, weil die

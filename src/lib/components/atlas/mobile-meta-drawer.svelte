@@ -75,7 +75,7 @@
 				<div class="flex flex-col gap-6">
 					{#each META_LINK_GROUPS as group (group.id)}
 						<div class="flex flex-col gap-2">
-							<h3 class="font-mono text-[10px] tracking-wider text-ink-subtle uppercase">
+							<h3 class="font-mono text-dense-meta tracking-wider text-ink-subtle uppercase">
 								{metaLinkGroupTitle(group.id)}
 							</h3>
 							<ul class="flex flex-col">

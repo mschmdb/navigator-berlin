@@ -68,7 +68,7 @@
 			x="24"
 			y="27"
 			text-anchor="middle"
-			class="fill-ink font-mono text-[9px]"
+			class="fill-ink font-mono text-dense-meta"
 			aria-hidden="true">{distanceText}</text
 		>
 	</svg>

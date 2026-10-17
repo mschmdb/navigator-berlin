@@ -154,7 +154,7 @@
 		<h1 class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl">
 			{m.methodik_wahldaten_h1_title()}
 		</h1>
-		<p class="font-serif text-base leading-relaxed text-ink-muted">
+		<p class="font-serif text-base leading-body text-ink-muted">
 			{m.methodik_wahldaten_intro_p1()}
 		</p>
 	</header>

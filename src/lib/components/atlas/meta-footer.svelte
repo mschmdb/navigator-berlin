@@ -22,7 +22,7 @@
 {#if variant === 'compact'}
 	<footer
 		data-testid="meta-footer"
-		class="flex min-h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-[11px] text-ink-subtle backdrop-blur-sm print:hidden"
+		class="flex min-h-10 items-center border-t border-rule/50 bg-bg/55 px-4 font-sans text-dense-meta text-ink-subtle backdrop-blur-sm print:hidden"
 	>
 		<nav
 			aria-label={m.shell_meta_nav_aria_label()}
@@ -68,7 +68,7 @@
 						/>
 						<span class="font-serif text-lg text-ink">navigator.berlin</span>
 					</a>
-					<p class="font-serif text-base leading-relaxed text-ink-muted">
+					<p class="font-serif text-base leading-body text-ink-muted">
 						{m.shell_footer_claim()}
 					</p>
 				</div>
@@ -79,7 +79,7 @@
 				>
 					{#each META_LINK_GROUPS as group (group.id)}
 						<div class="flex flex-col gap-2.5">
-							<h2 class="font-mono text-[10px] tracking-wider text-ink-subtle uppercase">
+							<h2 class="font-mono text-dense-meta tracking-wider text-ink-subtle uppercase">
 								{metaLinkGroupTitle(group.id)}
 							</h2>
 							<ul class="flex flex-col gap-2">

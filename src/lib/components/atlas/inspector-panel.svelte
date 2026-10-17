@@ -703,7 +703,7 @@
 						<h3 class="font-sans text-xs font-semibold tracking-wide text-ink-muted uppercase">
 							{m.inspector_weitere_daten_heading(undefined, localeOpts)}
 						</h3>
-						<p class="mt-1 font-serif text-[11px] leading-snug text-ink-muted italic">
+						<p class="mt-1 font-serif text-dense-meta leading-snug text-ink-muted italic">
 							{m.inspector_weitere_daten_hint(undefined, localeOpts)}
 						</p>
 					</div>

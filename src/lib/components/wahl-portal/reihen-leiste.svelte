@@ -45,7 +45,7 @@
 >
 	<span
 		id="steuerleiste-reihe-label"
-		class="shrink-0 font-mono text-[10px] tracking-wide whitespace-nowrap text-ink-muted uppercase"
+		class="shrink-0 font-mono text-dense-meta tracking-wide whitespace-nowrap text-ink-muted uppercase"
 	>
 		{m.wahl_portal_feld_wahlreihe()}
 	</span>

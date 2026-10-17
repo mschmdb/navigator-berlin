@@ -193,7 +193,7 @@
 						aria-checked={selectedLevel === lvl}
 						data-testid={`wahl-compare-level-${lvl}`}
 						onclick={() => (selectedLevel = lvl)}
-						class="rounded border border-ink px-2 py-0.5 font-mono text-[11px] transition-colors"
+						class="rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
 						class:bg-ink={selectedLevel === lvl}
 						class:text-bg={selectedLevel === lvl}
 						class:bg-bg={selectedLevel !== lvl}
@@ -208,7 +208,7 @@
 
 		<p
 			data-testid="wahl-compare-meta"
-			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 		>
 			{wahlReiheLabel(selectedTyp, localeOpts)}
 			{jahr} · {m.wahl_compare_ebene_prefix()}
@@ -246,7 +246,7 @@
 			)}
 			<table class="w-full font-mono text-xs" data-testid="wahl-compare-table">
 				<thead>
-					<tr class="text-[10px] tracking-wide text-ink-muted uppercase">
+					<tr class="text-dense-meta tracking-wide text-ink-muted uppercase">
 						<th class="pb-1 text-left">{m.wahl_compare_th_partei()}</th>
 						<th class="px-2 pb-1 text-right">A</th>
 						<th class="px-2 pb-1 text-right">B</th>
@@ -308,7 +308,7 @@
 				</tbody>
 			</table>
 
-			<p class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+			<p class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
 				{m.wahl_compare_footer_note()}
 			</p>
 		{/if}

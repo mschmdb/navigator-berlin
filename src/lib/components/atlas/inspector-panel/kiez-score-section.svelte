@@ -63,7 +63,7 @@
 			<div class="flex flex-col items-center gap-1 pb-1" data-testid="kiez-score-overall">
 				<KiezScoreRing {score} onSegmentClick={toggleDim} />
 				<span
-					class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+					class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 					data-testid="kiez-score-overall-meta"
 				>
 					{m.inspector_kiez_score_overall_meta(

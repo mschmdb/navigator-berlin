@@ -22,7 +22,7 @@
 					>{m.home_steps_label({ n: step.n })}</span
 				>
 				<p class="font-serif text-lg text-ink">{step.title()}</p>
-				<p class="font-serif text-sm leading-relaxed text-ink-muted">{step.text()}</p>
+				<p class="font-serif text-sm leading-body text-ink-muted">{step.text()}</p>
 			</li>
 		{/each}
 	</ol>

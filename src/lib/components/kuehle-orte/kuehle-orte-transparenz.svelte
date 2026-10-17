@@ -21,7 +21,7 @@
 		{m.transparenz_heading()}
 	</h2>
 
-	<p class="font-serif text-base leading-relaxed text-ink-muted">
+	<p class="font-serif text-base leading-body text-ink-muted">
 		{getKuehleOrteHaltung()}
 	</p>
 
@@ -31,7 +31,7 @@
 				<span class="flex flex-wrap items-baseline gap-2">
 					<span class="font-sans text-sm font-medium text-ink">{quelle.name}</span>
 					{#if quelle.lizenz}
-						<span class="font-mono text-[11px] text-ink-subtle">{quelle.lizenz}</span>
+						<span class="font-mono text-dense-meta text-ink-subtle">{quelle.lizenz}</span>
 					{/if}
 				</span>
 				<span class="font-serif text-sm text-ink-muted">{quelle.detail}</span>
@@ -60,7 +60,7 @@
 			href={optOutUrl}
 			data-testid="kuehle-orte-opt-out"
 			aria-label={m.transparenz_optout_aria_label()}
-			class="inline-flex min-h-11 w-fit items-center gap-1.5 rounded font-sans text-sm text-accent underline underline-offset-2 hover:text-accent-strong focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
+			class="inline-flex min-h-11 w-fit items-center gap-1.5 rounded font-sans text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			<Mail size={15} aria-hidden="true" />
 			{m.transparenz_optout_link()}

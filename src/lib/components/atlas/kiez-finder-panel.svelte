@@ -4,6 +4,7 @@
 	import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 	import { PARTEI_FARBEN, type ParteiKurzname } from '$lib/data/partei-farben.js';
 	import { trackEvent } from '$lib/utils/plausible.js';
+	import { COLORS } from './internal/colors.js';
 	import {
 		publishUserFinderState,
 		peekPendingAgentWeights,
@@ -294,7 +295,7 @@
 				paint: {
 					'fill-color': expression,
 					'fill-opacity': opacity,
-					'fill-outline-color': '#ECEAE0'
+					'fill-outline-color': COLORS.bg
 				}
 			});
 			map.moveLayer(FINDER_LAYER_ID);
@@ -460,7 +461,7 @@
 			data-testid="finder-close"
 			aria-label={m.finder_close_aria()}
 			onclick={() => onClose?.()}
-			class="hover:text-vermillion p-0.5 text-ink-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+			class="hover:text-vermillion p-0.5 text-ink-muted"
 		>
 			<X size={14} aria-hidden="true" />
 		</button>
@@ -485,7 +486,7 @@
 					<div class="flex items-baseline justify-between">
 						<label for={`finder-${def.key}`} class="font-sans text-xs text-ink">{def.label()}</label
 						>
-						<span class="font-mono text-[10px] text-ink-subtle">
+						<span class="font-mono text-dense-meta text-ink-subtle">
 							{stufenText(def.family, weights[def.key])}
 						</span>
 					</div>
@@ -514,7 +515,7 @@
 					<div class="flex items-baseline justify-between">
 						<label for={`finder-${def.key}`} class="font-sans text-xs text-ink">{def.label()}</label
 						>
-						<span class="font-mono text-[10px] text-ink-subtle">
+						<span class="font-mono text-dense-meta text-ink-subtle">
 							{stufenText(def.family, weights[def.key])}
 						</span>
 					</div>
@@ -549,7 +550,7 @@
 							data-testid={`finder-partei-${p}`}
 							aria-pressed={partei === p}
 							onclick={() => void onParteiChange(p)}
-							class="rounded-sm border px-1.5 py-0.5 font-mono text-[10px] {partei === p
+							class="rounded-sm border px-1.5 py-0.5 font-mono text-dense-meta {partei === p
 								? 'border-accent bg-accent text-bg'
 								: 'border-rule text-ink-muted hover:text-ink'}"
 						>
@@ -561,7 +562,7 @@
 
 			{#if top.length > 0}
 				<div class="mt-3 border-t border-rule pt-2">
-					<h3 class="mb-1 font-mono text-[10px] tracking-wider text-ink-subtle uppercase">
+					<h3 class="mb-1 font-mono text-dense-meta tracking-wider text-ink-subtle uppercase">
 						{m.finder_best_match_heading()}
 					</h3>
 					<ol data-testid="finder-top-list" class="flex flex-col gap-0.5">
@@ -584,14 +585,14 @@
 					type="button"
 					data-testid="finder-reset"
 					onclick={reset}
-					class="inline-flex items-center gap-1 font-mono text-[10px] tracking-wider text-ink-muted uppercase hover:text-ink"
+					class="inline-flex items-center gap-1 font-mono text-dense-meta tracking-wider text-ink-muted uppercase hover:text-ink"
 				>
 					<RotateCcw size={11} aria-hidden="true" />
 					{m.finder_reset_label()}
 				</button>
 			</div>
 
-			<p class="mt-2 font-serif text-[10px] leading-snug text-ink-subtle">
+			<p class="mt-2 font-serif text-dense-meta leading-snug text-ink-subtle">
 				{m.finder_footer_note()}
 				<span data-testid="finder-wahl-hinweis">{wahlHinweis}</span>
 			</p>
@@ -601,7 +602,7 @@
 
 <style>
 	.finder-range {
-		accent-color: var(--accent, #2a3f7c);
+		accent-color: var(--accent);
 		height: 1.1rem;
 	}
 </style>

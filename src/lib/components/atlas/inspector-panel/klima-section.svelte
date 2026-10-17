@@ -75,7 +75,7 @@
 			</h4>
 			<span class="shrink-0 font-serif text-sm text-ink-subtle italic">{station.name}</span>
 		</div>
-		<p class="font-mono text-[11px] text-ink-subtle" data-testid="klima-station-hint">
+		<p class="font-mono text-dense-meta text-ink-subtle" data-testid="klima-station-hint">
 			{m.inspector_klima_section_since({ year: String(station.firstYear) }, localeOpts)}
 		</p>
 

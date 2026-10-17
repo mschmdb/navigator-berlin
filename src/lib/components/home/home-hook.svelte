@@ -30,10 +30,10 @@
 	class="grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-start md:gap-10"
 >
 	<div class="space-y-5 md:order-2">
-		<p class="font-serif text-xl leading-relaxed text-ink md:text-2xl">
+		<p class="font-serif text-xl leading-body text-ink md:text-2xl">
 			{m.home_hook_lead()}
 		</p>
-		<p class="font-serif text-base leading-relaxed text-ink-muted">
+		<p class="font-serif text-base leading-body text-ink-muted">
 			{m.home_hook_body()}
 		</p>
 		<a

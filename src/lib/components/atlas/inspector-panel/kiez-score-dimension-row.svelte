@@ -151,7 +151,7 @@
 			class="mt-1 space-y-1 border-l border-rule pl-[22px] font-mono text-xs text-ink-muted"
 			data-testid="kiez-score-delikte-kriminalitaet"
 		>
-			<li class="text-[10px] tracking-wide text-ink-subtle uppercase">
+			<li class="text-dense-meta tracking-wide text-ink-subtle uppercase">
 				{m.inspector_kiez_score_delikt_heading(undefined, localeOpts)}
 			</li>
 			{#each krimiDelikte as d (d.key)}
@@ -170,7 +170,7 @@
 				</li>
 			{/each}
 			{#if score.dataStand}
-				<li class="pt-0.5 text-[10px] text-ink-subtle" data-testid="kiez-score-stand-kriminalitaet">
+				<li class="pt-0.5 text-dense-meta text-ink-subtle" data-testid="kiez-score-stand-kriminalitaet">
 					{m.inspector_kiez_score_stand(
 						{ date: formatDate(score.dataStand, localeOpts) },
 						localeOpts
@@ -191,8 +191,8 @@
 					<span class="min-w-0 flex-1">{getLayerDisplayName(src.layer, localeOpts)}</span>
 					<span class="shrink-0 whitespace-nowrap text-ink-subtle">
 						{src.normalizedValue === null ? '—' : `${Math.round(src.normalizedValue)}/100`}
-						<span class="ml-1 text-[10px]">·</span>
-						<span class="ml-1 text-[10px]"
+						<span class="ml-1 text-dense-meta">·</span>
+						<span class="ml-1 text-dense-meta"
 							>{m.inspector_kiez_score_weight_label(
 								{ pct: formatCount(Math.round(src.weight * 100), localeOpts) },
 								localeOpts
@@ -203,7 +203,7 @@
 			{/each}
 			{#if score.dataStand}
 				<li
-					class="pt-0.5 text-[10px] text-ink-subtle"
+					class="pt-0.5 text-dense-meta text-ink-subtle"
 					data-testid="kiez-score-stand-{score.dimension}"
 				>
 					{m.inspector_kiez_score_stand(

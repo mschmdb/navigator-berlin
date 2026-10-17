@@ -102,7 +102,7 @@
 							<span
 								data-testid={`legend-variant-${entry.slug}`}
 								data-variant={entry.variant}
-								class="font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+								class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 							>
 								{variantLabel(entry.variant)}
 							</span>
@@ -116,7 +116,7 @@
 								aria-label={m.atlas_legend_promote_aria_label({ name: entry.name }, localeOpts)}
 								title={m.atlas_legend_promote_title(undefined, localeOpts)}
 								onclick={() => onPromoteLayer!(entry.slug)}
-								class="p-0.5 text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+								class="p-0.5 text-ink-muted hover:text-ink"
 							>
 								<ArrowDownUp size={14} aria-hidden="true" />
 							</button>
@@ -130,7 +130,7 @@
 									? m.atlas_legend_show_aria_label({ name: entry.name }, localeOpts)
 									: m.atlas_legend_hide_aria_label({ name: entry.name }, localeOpts)}
 								onclick={() => onToggleHidden!(entry.slug)}
-								class="p-0.5 text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+								class="p-0.5 text-ink-muted hover:text-ink"
 							>
 								{#if entry.hidden}
 									<EyeOff size={14} aria-hidden="true" />
@@ -145,7 +145,7 @@
 								data-testid={`legend-remove-${entry.slug}`}
 								aria-label={m.atlas_legend_remove_aria_label({ name: entry.name }, localeOpts)}
 								onclick={() => onRemove!(entry.slug)}
-								class="hover:text-vermillion p-0.5 text-ink-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+								class="hover:text-vermillion p-0.5 text-ink-muted"
 							>
 								<X size={14} aria-hidden="true" />
 							</button>
@@ -163,7 +163,7 @@
 							.map((i) => i.color)
 							.join(', ')})`}
 					></div>
-					<div class="flex justify-between font-mono text-[10px] text-ink-subtle">
+					<div class="flex justify-between font-mono text-dense-meta text-ink-subtle">
 						{#if entry.spec.range}
 							<span>{entry.spec.range[0]}</span>
 							<span>{entry.spec.range[1]}</span>
@@ -244,11 +244,11 @@
 				<details data-testid={`legend-details-${entry.slug}`} class="group mt-1">
 					<summary
 						data-testid={`legend-summary-${entry.slug}`}
-						class="flex cursor-pointer list-none items-center gap-1 text-[11px] text-ink-muted hover:text-ink [&::-webkit-details-marker]:hidden"
+						class="flex cursor-pointer list-none items-center gap-1 text-dense-label text-ink-muted hover:text-ink [&::-webkit-details-marker]:hidden"
 					>
 						<span
 							aria-hidden="true"
-							class="font-mono text-[10px] transition-transform group-open:rotate-180"
+							class="font-mono text-dense-meta transition-transform group-open:rotate-180"
 						>
 							▾
 						</span>
@@ -269,13 +269,13 @@
 						{#if entry.explain.valueScaleExplain}
 							<p
 								data-testid={`legend-scale-${entry.slug}`}
-								class="font-mono text-[10px] text-ink-subtle"
+								class="font-mono text-dense-meta text-ink-subtle"
 							>
 								{entry.explain.valueScaleExplain}
 							</p>
 						{/if}
 						{#if entry.meta}
-							<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px]">
+							<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-dense-meta">
 								{#if entry.meta.sourceUrl.startsWith('https://navigator.berlin/derived') && isKiezScoreLayer(entry.slug)}
 									<a
 										data-testid={`legend-source-link-${entry.slug}`}
@@ -315,7 +315,7 @@
 						<a
 							data-testid={`legend-more-link-${entry.slug}`}
 							href={localizedHref(`/layer/${entry.slug}`, locale)}
-							class="self-start text-[11px] font-medium text-accent underline-offset-2 hover:underline"
+							class="self-start text-dense-label font-medium text-accent underline-offset-2 hover:underline"
 						>
 							{m.atlas_legend_learn_more(undefined, localeOpts)}
 						</a>
@@ -329,7 +329,7 @@
 				data-testid="legend-limit-warning"
 				role="status"
 				aria-live="polite"
-				class="text-vermillion border-t border-rule pt-2 font-mono text-[10px] leading-snug"
+				class="text-vermillion border-t border-rule pt-2 font-mono text-dense-meta leading-snug"
 			>
 				{m.atlas_legend_limit_warning(undefined, localeOpts)}
 			</p>

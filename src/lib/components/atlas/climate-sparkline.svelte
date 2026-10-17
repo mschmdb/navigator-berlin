@@ -220,7 +220,7 @@
 		data-chart-id={chartId}
 		data-focused-index={focusedIndex}
 		onkeydown={onKeydown}
-		class="climate-sparkline-figure relative block w-full focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-rule-strong"
+		class="climate-sparkline-figure relative block w-full"
 	>
 		<span id={descId} class="sr-only">{description}</span>
 		<span class="sr-only">{TITLES[metric]()}</span>
@@ -287,7 +287,7 @@
 			onclick={() => (detailsOpen = !detailsOpen)}
 			aria-expanded={detailsOpen}
 			data-testid="climate-sparkline-details-toggle"
-			class="mt-1 inline-flex items-center gap-1 font-mono text-[11px] tracking-wide text-ink-muted uppercase hover:text-ink"
+			class="mt-1 inline-flex items-center gap-1 font-mono text-dense-label tracking-wide text-ink-muted uppercase hover:text-ink"
 		>
 			{detailsOpen
 				? m.inspector_climate_details_toggle_hide(undefined, localeOpts)

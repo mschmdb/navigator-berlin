@@ -38,13 +38,13 @@
 		data-testid={testid}
 		data-template-id={rendered.id}
 	>
-		<p class="font-serif text-base leading-relaxed text-ink" data-testid={`${testid}-body`}>
+		<p class="font-serif text-base leading-body text-ink" data-testid={`${testid}-body`}>
 			{rendered.body}
 		</p>
 
 		{#if sources.length > 0}
 			<ul
-				class="space-y-0.5 font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+				class="space-y-0.5 font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 				data-testid={`${testid}-sources`}
 				aria-label={m.cross_layer_story_sources_aria_label()}
 			>

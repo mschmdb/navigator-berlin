@@ -4,6 +4,7 @@
 	import { gruppeIdFromGeo } from '$lib/data/wahl-geo-mapping.js';
 	import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
 	import { m } from '$lib/paraglide/messages.js';
+	import { COLORS } from './internal/colors.js';
 	import { formatPercent } from '$lib/i18n/format.js';
 
 	type WinnerEntry = {
@@ -72,7 +73,7 @@
 				const winner = gruppeId ? winnerMap.get(gruppeId) : null;
 				if (winner) matched++;
 				props.partei = winner?.parteiKurzname ?? null;
-				props.partei_farbe = winner ? parteiColor(winner.parteiKurzname) : '#CCCCCC';
+				props.partei_farbe = winner ? parteiColor(winner.parteiKurzname) : COLORS.noData;
 				props.anteil = winner?.anteil ?? 0;
 				props.gruppe_id = gruppeId;
 				props.gruppe_name = gruppeId
@@ -112,7 +113,7 @@
 							type: 'line',
 							source: 'bezirke',
 							paint: {
-								'line-color': '#141414',
+								'line-color': COLORS.ink,
 								'line-width': 1.4
 							}
 						}
@@ -209,7 +210,7 @@
 		aria-label={m.wahl_portal_stimmbezirk_choropleth_alt()}
 		class="h-[360px] w-full overflow-hidden rounded border border-rule sm:h-[480px] md:h-[520px]"
 	></div>
-	<figcaption class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+	<figcaption class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
 		{m.wahl_portal_stimmbezirk_choropleth_figcaption()}
 	</figcaption>
 </figure>

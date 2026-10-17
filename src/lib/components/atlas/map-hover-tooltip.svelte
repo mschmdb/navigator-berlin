@@ -104,7 +104,7 @@
 				</p>
 			{/if}
 			<p
-				class="mt-1 font-mono text-[10px] tracking-wide text-ink-subtle uppercase"
+				class="mt-1 font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
 				data-testid="poi-popover-hint"
 			>
 				{content.hint}
@@ -116,13 +116,13 @@
 			</p>
 			{#if first.shortExplain}
 				<p
-					class="font-serif text-[11px] leading-snug text-ink-muted italic"
+					class="font-serif text-dense-meta leading-snug text-ink-muted italic"
 					data-testid="hover-tooltip-explain"
 				>
 					{first.shortExplain}
 				</p>
 			{/if}
-			<p class="mt-1 font-sans text-[10px] tracking-wide text-ink-subtle uppercase">
+			<p class="mt-1 font-sans text-dense-meta tracking-wide text-ink-subtle uppercase">
 				{content.hint}
 			</p>
 		{:else}
@@ -133,7 +133,7 @@
 			<dl class="grid gap-y-1.5">
 				{#each content.rows as row (row.slug)}
 					<div data-testid="hover-tooltip-row">
-						<dt class="font-serif text-[11px] text-ink-muted">{row.layerName}</dt>
+						<dt class="font-serif text-dense-meta text-ink-muted">{row.layerName}</dt>
 						<dd
 							class="min-w-0 font-mono break-words text-ink"
 							data-testid="hover-tooltip-value-{row.slug}"
@@ -143,7 +143,7 @@
 					</div>
 				{/each}
 			</dl>
-			<p class="mt-1 font-sans text-[10px] tracking-wide text-ink-subtle uppercase">
+			<p class="mt-1 font-sans text-dense-meta tracking-wide text-ink-subtle uppercase">
 				{content.hint}
 			</p>
 		{/if}

@@ -32,7 +32,7 @@
 	<div class="space-y-6">
 		<p class="font-mono text-xs tracking-wider text-accent uppercase">navigator.berlin · Beta</p>
 		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">{m.home_hero_headline()}</h1>
-		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
 			{m.home_hero_lead()}
 		</p>
 		<div class="flex flex-wrap gap-3 pt-2">

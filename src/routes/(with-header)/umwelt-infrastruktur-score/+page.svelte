@@ -86,7 +86,7 @@
 <article class="mx-auto max-w-4xl space-y-10 px-4 py-10" data-testid="ranking-page">
 	<header class="space-y-4">
 		<h1 class="font-serif text-3xl text-ink md:text-4xl">{m.uis_h1_title()}</h1>
-		<p class="max-w-prose font-serif text-lg leading-relaxed text-ink-muted">
+		<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
 			{m.uis_intro_p1()}
 		</p>
 	</header>
@@ -109,7 +109,7 @@
 					{m.uis_accordion_trigger()}
 				</Accordion.Trigger>
 			</Accordion.Header>
-			<Accordion.Content class="pb-4 font-serif text-base leading-relaxed text-ink-muted">
+			<Accordion.Content class="pb-4 font-serif text-base leading-body text-ink-muted">
 				<RichText segments={accordionSegments}>
 					{#snippet tag(text)}
 						<a class="text-accent underline" href={localizedHref('/methodik/kiez-score')}>{text}</a>

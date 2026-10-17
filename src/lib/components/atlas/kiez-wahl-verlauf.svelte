@@ -67,7 +67,7 @@
 		<ul class="space-y-5" data-testid={`${testid}-list`}>
 			{#each rows as row (row.key)}
 				<li class="space-y-2" data-testid={`${testid}-row-${row.key}`}>
-					<p class="font-mono text-[10px] tracking-wide text-ink-muted uppercase">
+					<p class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
 						{wahlVerlaufTypLabel(row.typ)} · {wahlVerlaufStimmtypLabel(row.stimmtyp)}
 					</p>
 					<ol
@@ -80,7 +80,7 @@
 								data-testid={`${testid}-${row.key}-${cell.jahr}`}
 							>
 								<span
-									class="font-mono text-[10px] tracking-wide text-ink-muted uppercase tabular-nums"
+									class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase tabular-nums"
 								>
 									{cell.jahr}
 								</span>
@@ -102,7 +102,7 @@
 		</ul>
 
 		<p
-			class="font-mono text-[10px] tracking-wide text-ink-muted uppercase"
+			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
 			data-testid={`${testid}-source`}
 		>
 			{m.kiez_wahl_verlauf_source({

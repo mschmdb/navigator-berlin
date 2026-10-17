@@ -377,7 +377,7 @@
 			</Accordion.Header>
 			<Accordion.Content
 				data-testid="ergebnis-panel-disclosure-content"
-				class="flex flex-col gap-2 pb-3 font-serif text-sm leading-relaxed text-ink-muted"
+				class="flex flex-col gap-2 pb-3 font-serif text-sm leading-body text-ink-muted"
 			>
 				<p>{m.wahl_portal_disclosure_text()}</p>
 				<p class="font-mono text-xs text-ink-subtle">

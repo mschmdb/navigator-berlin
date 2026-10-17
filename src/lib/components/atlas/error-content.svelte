@@ -39,7 +39,7 @@
 <div data-testid="error-page" class="mx-auto flex max-w-xl flex-col gap-6 px-4 py-16">
 	<p class="font-mono text-xs tracking-wider text-accent uppercase">{status}</p>
 	<h1 class="font-serif text-4xl text-ink">{heading}</h1>
-	<p class="font-serif text-lg leading-relaxed text-ink-muted">{text}</p>
+	<p class="font-serif text-lg leading-body text-ink-muted">{text}</p>
 	<nav class="flex flex-wrap gap-4 font-mono text-sm" aria-label={m.error_nav_label()}>
 		<a href={localizedHref('/')} class="underline underline-offset-4 hover:text-accent">
 			{m.error_link_home()}

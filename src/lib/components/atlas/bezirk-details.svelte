@@ -178,7 +178,7 @@
 			data-testid="bezirk-profile"
 		>
 			{#each profileProse as para (para)}
-				<p class="font-serif text-base leading-relaxed text-ink">{para}</p>
+				<p class="font-serif text-base leading-body text-ink">{para}</p>
 			{/each}
 		</section>
 	{/if}

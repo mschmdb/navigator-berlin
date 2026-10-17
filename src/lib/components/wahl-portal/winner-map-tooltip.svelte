@@ -66,7 +66,7 @@
 		{/if}
 		{#if jahr !== null}
 			<p
-				class="mt-1 font-sans text-[10px] tracking-wide text-ink-subtle uppercase"
+				class="mt-1 font-sans text-dense-meta tracking-wide text-ink-subtle uppercase"
 				data-testid="winner-map-tooltip-jahr"
 			>
 				{jahr}{repeatElection ? ` · ${wahlWiederholungLabel()}` : ''}
@@ -74,7 +74,7 @@
 		{/if}
 		{#if data.wechsel}
 			<p
-				class="mt-0.5 font-mono text-[10px] text-ink-subtle"
+				class="mt-0.5 font-mono text-dense-meta text-ink-subtle"
 				data-testid="winner-map-tooltip-wechsel"
 			>
 				{m.wahl_portal_tooltip_wechsel_hinweis()}

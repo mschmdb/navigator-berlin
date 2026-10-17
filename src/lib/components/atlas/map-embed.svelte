@@ -15,6 +15,7 @@
 	import turfBbox from '@turf/bbox';
 	import type { Feature, MultiPolygon, Polygon } from 'geojson';
 	import { m } from '$lib/paraglide/messages.js';
+	import { COLORS } from './internal/colors.js';
 
 	interface Props {
 		readonly geometry: Polygon | MultiPolygon;
@@ -38,11 +39,11 @@
 	let mountFailed = $state(false);
 
 	const FILL_PAINT = {
-		'fill-color': '#2A3F7C',
+		'fill-color': COLORS.accent,
 		'fill-opacity': 0.18
 	} as const;
 	const LINE_PAINT = {
-		'line-color': '#2A3F7C',
+		'line-color': COLORS.accent,
 		'line-width': 2,
 		'line-opacity': 0.85
 	} as const;

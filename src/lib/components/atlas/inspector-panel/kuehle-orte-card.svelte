@@ -124,7 +124,7 @@
 >
 	<div class="flex items-start justify-between gap-2">
 		<h4 class="flex min-w-0 items-center gap-1.5 font-sans text-sm font-semibold text-ink">
-			<Snowflake size={15} aria-hidden="true" class="shrink-0 text-[#0277BD]" />
+			<Snowflake size={15} aria-hidden="true" class="shrink-0 text-umwelt-kuehle-orte" />
 			{layerName}
 		</h4>
 		<div class="flex shrink-0 items-center gap-1">
@@ -194,31 +194,31 @@
 					</div>
 					<div class="mt-0.5 flex flex-wrap items-center gap-1">
 						<span
-							class={`inline-flex items-center rounded-sm px-1 font-mono text-[10px] font-semibold ${STATUS_CLASS[status.tone]}`}
+							class={`inline-flex items-center rounded-sm px-1 font-mono text-dense-meta font-semibold ${STATUS_CLASS[status.tone]}`}
 							data-testid="ort-status">{status.text}</span
 						>
-						<span class="font-mono text-[11px] text-ink-muted">{ort.cat}</span>
+						<span class="font-mono text-dense-meta text-ink-muted">{ort.cat}</span>
 						<span
-							class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted"
+							class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-dense-meta text-ink-muted"
 						>
 							{m.inspector_kuehle_orte_cool_score({ score: String(ort.coolScore) }, localeOpts)}
 						</span>
 						{#if ort.acStatus === 'yes'}
 							<span
-								class="inline-flex items-center rounded-sm bg-[#0277BD]/12 px-1 font-mono text-[10px] text-[#0277BD]"
+								class="inline-flex items-center rounded-sm bg-umwelt-kuehle-orte/12 px-1 font-mono text-dense-meta text-umwelt-kuehle-orte-ink"
 							>
 								{m.inspector_kuehle_orte_klimatisiert(undefined, localeOpts)}
 							</span>
 						{/if}
 						{#if free}
 							<span
-								class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-[10px] text-ink-muted"
+								class="inline-flex items-center rounded-sm bg-bg px-1 font-mono text-dense-meta text-ink-muted"
 								>{free}</span
 							>
 						{/if}
 						{#if summer}
 							<span
-								class={`inline-flex items-center rounded-sm px-1 font-mono text-[10px] ${
+								class={`inline-flex items-center rounded-sm px-1 font-mono text-dense-meta ${
 									summer.tone === 'warn'
 										? 'bg-state-warning/15 text-state-warning'
 										: 'bg-bg text-ink-muted'
@@ -231,7 +231,7 @@
 					{/if}
 					{#if ort.openingHours}
 						<p
-							class="mt-0.5 flex items-center gap-1 font-mono text-[11px] text-ink-muted"
+							class="mt-0.5 flex items-center gap-1 font-mono text-dense-meta text-ink-muted"
 							data-testid="ort-hours"
 						>
 							<Clock size={11} aria-hidden="true" class="shrink-0" />
@@ -275,7 +275,7 @@
 
 	{#if nearest.length > 0}
 		<p
-			class="mt-2.5 border-t border-rule pt-2.5 font-serif text-[11px] leading-snug text-ink-subtle"
+			class="mt-2.5 border-t border-rule pt-2.5 font-serif text-dense-meta leading-snug text-ink-subtle"
 			data-testid="kuehle-legende"
 		>
 			{m.inspector_kuehle_orte_legende(undefined, localeOpts)}
@@ -288,7 +288,7 @@
 			data-testid="card-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle hover:text-ink"
+			class="inline-flex items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}
