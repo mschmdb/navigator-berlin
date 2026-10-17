@@ -18,4 +18,11 @@ describe('HomeHitzeTeaser', () => {
 		expect(link.getAttribute('href')).toContain('layers=kuehle-orte');
 		expect(link.getAttribute('href')).toContain('mode=hitze');
 	});
+
+	it('lässt die Lead in der kompakten Variante weg', async () => {
+		render(HomeHitzeTeaser, { compact: true });
+		expect(document.querySelector('[data-testid="home-hitze-teaser-lead"]')).toBeNull();
+		expect(document.querySelector('[data-testid="home-hitze-teaser-landing"]')).not.toBeNull();
+		expect(document.querySelector('[data-testid="home-hitze-teaser-eyebrow"]')).toBeNull();
+	});
 });

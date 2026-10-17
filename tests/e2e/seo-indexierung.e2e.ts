@@ -12,6 +12,42 @@ test.describe('Indexierungs-Hygiene S1', () => {
 		expect(ogUrl).toBe(canonical);
 	});
 
+	test('/kaelte: indexierbar und in sitemap.xml und llms.txt', async ({
+		page,
+		request,
+		baseURL
+	}) => {
+		const response = await page.goto('/kaelte');
+		expect(response?.headers()['x-robots-tag']).toBeUndefined();
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			'href',
+			`${baseURL}/kaelte`
+		);
+		const sitemapDe = await (await request.get('/sitemap-de.xml')).text();
+		expect(sitemapDe).toContain('/kaelte</loc>');
+		const sitemapEn = await (await request.get('/sitemap-en.xml')).text();
+		expect(sitemapEn).toContain('/en/kaelte</loc>');
+		const llms = await (await request.get('/llms.txt')).text();
+		expect(llms).toContain('/kaelte');
+	});
+
+	test('/en/kaelte: indexierbar mit Canonical auf /en/kaelte', async ({ page }) => {
+		await page.goto('/en/kaelte');
+		await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/en\/kaelte$/);
+	});
+
+	test('Startseite und Footer verlinken /kaelte', async ({ page }) => {
+		await page.goto('/');
+		await expect(page.getByTestId('home-kaelte-teaser-landing')).toHaveAttribute('href', '/kaelte');
+		await page
+			.getByRole('contentinfo')
+			.getByRole('link', { name: 'Kälte-Navigator', exact: true })
+			.click();
+		await expect(page).toHaveURL(/\/kaelte$/);
+	});
+
 	test('/en/hitze: Canonical auf /en/hitze', async ({ page, baseURL }) => {
 		await page.goto('/en/hitze');
 		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(

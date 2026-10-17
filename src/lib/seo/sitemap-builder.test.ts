@@ -182,6 +182,7 @@ describe('STATIC_PAGES_SOURCE', () => {
 			'https://navigator.berlin/explore',
 			'https://navigator.berlin/kuehle-orte',
 			'https://navigator.berlin/hitze',
+			'https://navigator.berlin/kaelte',
 			'https://navigator.berlin/kieze',
 			'https://navigator.berlin/bezirke',
 			'https://navigator.berlin/daten',
@@ -376,7 +377,7 @@ describe('collectPrerenderedUrls', () => {
 
 	it('i18n Block C4c: /hitze, /kuehle-orte und /lizenzen (DE) bekommen ihren EN-Alternate', () => {
 		const entries = collectPrerenderedUrls(ctx());
-		for (const path of ['/hitze', '/kuehle-orte', '/lizenzen']) {
+		for (const path of ['/hitze', '/kaelte', '/kuehle-orte', '/lizenzen']) {
 			const entry = entries.find((e) => e.loc === `https://navigator.berlin${path}`);
 			expect(entry?.alternates, path).toEqual([
 				{ hreflang: 'de', href: `https://navigator.berlin${path}` },

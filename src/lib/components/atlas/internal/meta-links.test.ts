@@ -44,6 +44,19 @@ describe('Datenschluessel-Kontrakt', () => {
 	});
 });
 
+describe('Kälte-Navigator im Footer (#63)', () => {
+	it('steht direkt nach Hitze in "erkunden" und verlinkt /kaelte', () => {
+		const ids = META_LINK_GROUPS.find((g) => g.id === 'erkunden')?.links.map((l) => l.id) ?? [];
+		expect(ids.indexOf('kaelte')).toBe(ids.indexOf('hitze') + 1);
+		expect(META_LINKS.find((l) => l.id === 'kaelte')?.href).toBe('/kaelte');
+	});
+
+	it('DE/EN-Labels', () => {
+		expect(metaLinkLabel('kaelte', { locale: 'de' })).toBe('Kälte-Navigator');
+		expect(metaLinkLabel('kaelte', { locale: 'en' })).toBe('Cold Navigator');
+	});
+});
+
 describe('Übersichtsseiten im Footer (S7)', () => {
 	const erkunden = META_LINK_GROUPS.find((g) => g.id === 'erkunden');
 
@@ -53,6 +66,7 @@ describe('Übersichtsseiten im Footer (S7)', () => {
 			'score',
 			'wahlen',
 			'hitze',
+			'kaelte',
 			'kieze',
 			'bezirke',
 			'daten'

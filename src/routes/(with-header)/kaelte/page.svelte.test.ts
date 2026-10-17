@@ -94,11 +94,11 @@ describe('Kälte-Seite', () => {
 		await expect.element(page.getByTestId('kaelte-112-link')).toBeInViewport();
 	});
 
-	it('setzt noindex bis zum Launch', async () => {
+	it('ist indexierbar (kein noindex)', async () => {
 		render(Page, { data: NO_DATA });
 		await new Promise((r) => setTimeout(r, 20));
 		const robots = document.head.querySelector('meta[name="robots"]');
-		expect(robots?.getAttribute('content')).toContain('noindex');
+		expect(robots?.getAttribute('content') ?? '').not.toContain('noindex');
 	});
 
 	it('Canonical zeigt auf /kaelte der Hauptdomain-Struktur', async () => {
