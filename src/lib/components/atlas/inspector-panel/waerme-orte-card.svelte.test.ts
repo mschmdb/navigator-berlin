@@ -99,12 +99,12 @@ describe('waerme-orte-card.svelte', () => {
 		];
 		const view = render(WaermeOrteCard, props({ index }));
 		const status = document.querySelector('[data-testid="waerme-orte-status"]')!;
-		expect(status.textContent).toBe('laut Recherche jetzt offen');
+		expect(status.textContent).toBe('laut Recherche: jetzt offen');
 		view.unmount();
 		overwriteGetLocale(() => 'en');
 		render(WaermeOrteCard, props({ index }));
 		expect(document.querySelector('[data-testid="waerme-orte-status"]')!.textContent).toBe(
-			'open now per research'
+			'per research: open now'
 		);
 	});
 

@@ -47,18 +47,18 @@ describe('statusSourceOf', () => {
 
 describe('statusText', () => {
 	it('benennt alle Status „laut OSM“', () => {
-		expect(statusText('open', 'osm', 'de')).toBe('laut OSM jetzt offen');
-		expect(statusText('closing-soon', 'osm', 'de')).toBe('laut OSM schließt bald');
-		expect(statusText('closed', 'osm', 'de')).toBe('laut OSM geschlossen');
+		expect(statusText('open', 'osm', 'de')).toBe('laut OSM: jetzt offen');
+		expect(statusText('closing-soon', 'osm', 'de')).toBe('laut OSM: schließt bald');
+		expect(statusText('closed', 'osm', 'de')).toBe('laut OSM: geschlossen');
 	});
 	it('benennt alle Status „laut Recherche“', () => {
-		expect(statusText('open', 'recherche', 'de')).toBe('laut Recherche jetzt offen');
-		expect(statusText('closing-soon', 'recherche', 'de')).toBe('laut Recherche schließt bald');
-		expect(statusText('closed', 'recherche', 'de')).toBe('laut Recherche geschlossen');
+		expect(statusText('open', 'recherche', 'de')).toBe('laut Recherche: jetzt offen');
+		expect(statusText('closing-soon', 'recherche', 'de')).toBe('laut Recherche: schließt bald');
+		expect(statusText('closed', 'recherche', 'de')).toBe('laut Recherche: geschlossen');
 	});
 	it('übersetzt nach EN', () => {
 		expect(statusText('open', 'osm', 'en')).not.toBe(statusText('open', 'osm', 'de'));
-		expect(statusText('open', 'recherche', 'en')).toBe('open now per research');
+		expect(statusText('open', 'recherche', 'en')).toBe('per research: open now');
 	});
 });
 
