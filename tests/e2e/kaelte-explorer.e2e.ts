@@ -64,6 +64,31 @@ test.describe('Kälte-Modus im Explorer (#73)', () => {
 		).toBeVisible();
 	});
 
+	test('Filter „jetzt offen“: Chip schaltet um, Liste oder Leertext bleibt konsistent', async ({
+		page
+	}) => {
+		await openWithAddress(page, '/explore?layers=waerme-orte&mode=kaelte');
+		const card = page.getByTestId('waerme-orte-card');
+		const chip = card.getByTestId('waerme-orte-filter-offen');
+		await expect(chip).toHaveAttribute('aria-pressed', 'false');
+		await expect(card.getByTestId('waerme-orte-item')).toHaveCount(5);
+		await chip.focus();
+		await page.keyboard.press('Enter');
+		await expect(chip).toHaveAttribute('aria-pressed', 'true');
+		// Ergebnis hängt von der Uhrzeit ab: Liste oder Leertext, nie beides.
+		const items = await card.getByTestId('waerme-orte-item').count();
+		if (items === 0) await expect(card.getByTestId('waerme-orte-empty')).toBeVisible();
+		else await expect(card.getByTestId('waerme-orte-empty')).toHaveCount(0);
+		await chip.click();
+		await expect(chip).toHaveAttribute('aria-pressed', 'false');
+		await expect(card.getByTestId('waerme-orte-item')).toHaveCount(5);
+	});
+
+	test('EN: Filter-Chip heißt „open now“', async ({ page }) => {
+		await openWithAddress(page, '/en/explore?layers=waerme-orte&mode=kaelte');
+		await expect(page.getByTestId('waerme-orte-filter-offen')).toHaveText('open now');
+	});
+
 	test('Hitze-Modus unverändert: Kühle-Orte-Card, keine warmen Orte, kein Index-Fetch', async ({
 		page
 	}) => {
