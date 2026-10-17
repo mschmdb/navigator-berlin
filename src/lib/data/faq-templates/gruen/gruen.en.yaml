@@ -2,6 +2,7 @@ cluster: gruen
 locale: en
 templates:
   - id: gruen-versorgung-bezirk
+    topic: gruen
     applicableTo: [bezirk]
     requires: [gruen.dominantVersorgung]
     question: 'What is the green space provision in the Bezirk {name}?'
@@ -10,6 +11,7 @@ templates:
       {gruenKategorie}. {gruenErklaerung} Source: {gruenSource}, as of {gruenStand}.
 
   - id: gruen-versorgung-kiez
+    topic: gruen
     applicableTo: [kiez]
     requires: [gruen.dominantVersorgung]
     question: 'What is the green space provision in the Kiez {name}?'
@@ -18,6 +20,7 @@ templates:
       {gruenKategorie}. {gruenErklaerung} Source: {gruenSource}, as of {gruenStand}.
 
   - id: gruen-anzahl-anlagen
+    topic: gruen-anlagen
     applicableTo: [bezirk]
     requires: [gruen.gruenanlagenCount]
     question: 'How many public green spaces are there in {name}?'
@@ -47,6 +50,7 @@ templates:
       buildings and more greenery. The climate category on this map reflects that.
 
   - id: gruen-gruenhitze-einordnung
+    topic: gruen
     applicableTo: [bezirk, kiez]
     requires: [gruen.dominantVersorgung]
     question: 'How green and cool is {name} in comparison?'

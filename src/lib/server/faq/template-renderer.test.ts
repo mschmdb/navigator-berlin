@@ -307,3 +307,22 @@ describe('renderTemplate EN (Block C3)', () => {
 		}
 	});
 });
+
+describe('renderTemplate ohne Score-Metriken (#100)', () => {
+	const merged: FaqTemplate = {
+		id: 'laerm-dominant-bezirk',
+		applicableTo: ['bezirk'],
+		requires: ['laerm.dominantCategory'],
+		question: 'Wie laut ist es im Bezirk {name}?',
+		answer:
+			'Im Bezirk {name} dominiert die Lärm-Klasse {laermKategorie}. Im Ruhe-und-Luft-Score erreicht {name} {ruheLuftScore} von 100 ({ruheLuftRang}), {ruheLuftVergleich}. Quelle: {laermSource}, Stand {laermStand}.'
+	};
+
+	it('lässt den Score-Satz weg, wenn Metriken fehlen, der Rest bleibt', () => {
+		const result = renderTemplate(merged, ctx());
+		expect(result?.answer).not.toMatch(/\{[a-zA-Z]+\}/);
+		expect(result?.answer).toContain('Im Bezirk Mitte dominiert die Lärm-Klasse hoch.');
+		expect(result?.answer).toContain('Quelle: Lärmbelastung 2023');
+		expect(result?.answer).not.toContain('Ruhe-und-Luft-Score');
+	});
+});

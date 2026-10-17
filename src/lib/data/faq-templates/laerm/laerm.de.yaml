@@ -2,6 +2,7 @@ cluster: laerm
 locale: de
 templates:
   - id: laerm-dominant-bezirk
+    topic: laerm
     applicableTo: [bezirk]
     requires: [laerm.dominantCategory]
     question: 'Wie laut ist es im Bezirk {name}?'
@@ -16,6 +17,7 @@ templates:
       Aggregat keine Mittelwerte enthält.
 
   - id: laerm-dominant-kiez
+    topic: laerm
     applicableTo: [kiez]
     requires: [laerm.dominantCategory]
     question: 'Wie laut ist der Kiez {name}?'
@@ -45,6 +47,7 @@ templates:
       EU-weit einheitlicher Vergleichsmaßstab.
 
   - id: laerm-wie-aktuell
+    topic: laerm-aktualitaet
     applicableTo: [bezirk, kiez]
     requires: [laerm.dominantCategory]
     question: 'Wie aktuell sind die Lärm-Daten für {name}?'
@@ -84,6 +87,7 @@ templates:
       die im Datensatz nicht enthalten ist.
 
   - id: laerm-ruheluft-einordnung
+    topic: laerm
     applicableTo: [bezirk, kiez]
     requires: [laerm.dominantCategory]
     question: 'Wie ruhig und sauber ist {name} im Vergleich?'

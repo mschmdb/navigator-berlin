@@ -2,6 +2,7 @@ cluster: laerm
 locale: en
 templates:
   - id: laerm-dominant-bezirk
+    topic: laerm
     applicableTo: [bezirk]
     requires: [laerm.dominantCategory]
     question: 'How loud is it in the Bezirk {name}?'
@@ -11,6 +12,7 @@ templates:
       LDEN, the level weighted over 24 hours.
 
   - id: laerm-dominant-kiez
+    topic: laerm
     applicableTo: [kiez]
     requires: [laerm.dominantCategory]
     question: 'How loud is the Kiez {name}?'
@@ -39,6 +41,7 @@ templates:
       the EU.
 
   - id: laerm-wie-aktuell
+    topic: laerm-aktualitaet
     applicableTo: [bezirk, kiez]
     requires: [laerm.dominantCategory]
     question: 'How up to date is the noise data for {name}?'
@@ -77,6 +80,7 @@ templates:
       so as not to suggest a precision that the dataset does not contain.
 
   - id: laerm-ruheluft-einordnung
+    topic: laerm
     applicableTo: [bezirk, kiez]
     requires: [laerm.dominantCategory]
     question: 'How quiet and clean is {name} in comparison?'

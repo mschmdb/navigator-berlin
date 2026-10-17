@@ -2,6 +2,7 @@ cluster: gruen
 locale: de
 templates:
   - id: gruen-versorgung-bezirk
+    topic: gruen
     applicableTo: [bezirk]
     requires: [gruen.dominantVersorgung]
     question: 'Wie ist die Grünversorgung im Bezirk {name}?'
@@ -11,6 +12,7 @@ templates:
       Quelle: {gruenSource}, Stand {gruenStand}.
 
   - id: gruen-versorgung-kiez
+    topic: gruen
     applicableTo: [kiez]
     requires: [gruen.dominantVersorgung]
     question: 'Wie ist die Grünversorgung im Kiez {name}?'
@@ -20,6 +22,7 @@ templates:
       Quelle: {gruenSource}, Stand {gruenStand}.
 
   - id: gruen-anzahl-anlagen
+    topic: gruen-anlagen
     applicableTo: [bezirk]
     requires: [gruen.gruenanlagenCount]
     question: 'Wie viele öffentliche Grünanlagen liegen in {name}?'
@@ -51,6 +54,7 @@ templates:
       bildet das ab.
 
   - id: gruen-gruenhitze-einordnung
+    topic: gruen
     applicableTo: [bezirk, kiez]
     requires: [gruen.dominantVersorgung]
     question: 'Wie grün und kühl ist {name} im Vergleich?'

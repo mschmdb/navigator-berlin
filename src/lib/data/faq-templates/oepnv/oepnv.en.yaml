@@ -2,6 +2,7 @@ cluster: oepnv
 locale: en
 templates:
   - id: oepnv-dichte-bezirk
+    topic: oepnv
     applicableTo: [bezirk]
     requires: [oepnv.stopsPerKm2]
     question: 'How dense is the public transport network in the Bezirk {name}?'
@@ -11,6 +12,7 @@ templates:
       of {oepnvStand}.
 
   - id: oepnv-dichte-kiez
+    topic: oepnv
     applicableTo: [kiez]
     requires: [oepnv.stopsPerKm2]
     question: 'How well is the Kiez {name} connected to public transport?'
@@ -55,6 +57,7 @@ templates:
       can check and version.
 
   - id: oepnv-mobilitaet-einordnung
+    topic: oepnv
     applicableTo: [bezirk, kiez]
     requires: [oepnv.stopsPerKm2]
     question: 'How well is {name} connected to local public transport?'

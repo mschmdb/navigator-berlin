@@ -2,6 +2,7 @@ cluster: wohnen
 locale: de
 templates:
   - id: wohnen-wohnlage-bezirk
+    topic: wohnlage
     applicableTo: [bezirk]
     requires: [wohnen.dominantWohnlage]
     question: 'Welche Wohnlage dominiert im Bezirk {name}?'
@@ -13,6 +14,7 @@ templates:
       Quelle: {wohnenSource}, Stand {wohnenStand}.
 
   - id: wohnen-wohnlage-kiez
+    topic: wohnlage
     applicableTo: [kiez]
     requires: [wohnen.dominantWohnlage]
     question: 'Welche Wohnlage dominiert im Kiez {name}?'
@@ -24,6 +26,7 @@ templates:
       Quelle: {wohnenSource}, Stand {wohnenStand}.
 
   - id: wohnen-mss-bezirk
+    topic: sozialstruktur
     applicableTo: [bezirk]
     requires: [wohnen.dominantMss]
     question: 'Wie schneidet {name} im Monitoring Soziale Stadtentwicklung ab?'
@@ -54,6 +57,7 @@ templates:
       für Räume, nicht für Einzel-Adressen.
 
   - id: wohnen-stigma-disclaimer
+    topic: wohnen-hinweis
     applicableTo: [bezirk, kiez]
     requires: []
     question: 'Bewertet navigator.berlin Wohngebiete als gut oder schlecht?'
@@ -64,6 +68,7 @@ templates:
       wir aus methodischen Gründen nicht.
 
   - id: wohnen-wohnschutz-einordnung
+    topic: wohnschutz
     applicableTo: [bezirk, kiez]
     requires: [wohnen.dominantWohnlage]
     question: 'Wie viel Wohnschutz gibt es in {name}?'

@@ -35,7 +35,12 @@ export const FaqTemplateSchema = v.object({
 	requires: v.array(v.string()),
 	question: v.pipe(v.string(), v.minLength(5)),
 	answer: v.pipe(v.string(), v.minLength(5)),
-	editorialNote: v.optional(v.string())
+	editorialNote: v.optional(v.string()),
+	/**
+	 * #100: Thema der Frage. Kiez- und Bezirks-Templates tragen eins; pro
+	 * Seitentyp und Sprache darf ein Thema nur einmal vorkommen.
+	 */
+	topic: v.optional(v.string())
 });
 export type FaqTemplate = v.InferOutput<typeof FaqTemplateSchema>;
 

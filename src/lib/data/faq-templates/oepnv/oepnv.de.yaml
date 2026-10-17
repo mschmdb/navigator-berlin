@@ -2,6 +2,7 @@ cluster: oepnv
 locale: de
 templates:
   - id: oepnv-dichte-bezirk
+    topic: oepnv
     applicableTo: [bezirk]
     requires: [oepnv.stopsPerKm2]
     question: 'Wie dicht ist das ÖPNV-Netz im Bezirk {name}?'
@@ -11,6 +12,7 @@ templates:
       Datengrundlage: {oepnvSource}, Stand {oepnvStand}.
 
   - id: oepnv-dichte-kiez
+    topic: oepnv
     applicableTo: [kiez]
     requires: [oepnv.stopsPerKm2]
     question: 'Wie ist der Kiez {name} an den ÖPNV angebunden?'
@@ -58,6 +60,7 @@ templates:
       offenen Datensätzen, die wir prüfen und versionieren können.
 
   - id: oepnv-mobilitaet-einordnung
+    topic: oepnv
     applicableTo: [bezirk, kiez]
     requires: [oepnv.stopsPerKm2]
     question: 'Wie gut ist {name} an den Nahverkehr angebunden?'
