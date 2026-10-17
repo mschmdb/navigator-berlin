@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { FeatureCollection } from 'geojson';
-import { TrendsMapController, TREND_SCHRAFFUR_ID } from './trends-kapitel-maplibre.svelte.js';
+import { TrendsMapController } from './trends-kapitel-maplibre.svelte.js';
 import {
 	bakeTrendsProperties,
 	trendPropKeys,
 	trendsSchraffurFilter,
+	trendsSchraffurPatternExpression,
 	VOLATILITAET_FARBE_KEY
 } from './trends-map-expressions.js';
 import type { TrendsGebietInput } from './trends-map-data.js';
@@ -120,7 +121,9 @@ describe('TrendsMapController', () => {
 		expect(layer).toBeDefined();
 		expect(layer.type).toBe('fill');
 		expect(layer.filter).toEqual(trendsSchraffurFilter('trend', 'SPD'));
-		expect((layer.paint as Record<string, unknown>)['fill-pattern']).toBe(TREND_SCHRAFFUR_ID);
+		expect((layer.paint as Record<string, unknown>)['fill-pattern']).toEqual(
+			trendsSchraffurPatternExpression('SPD')
+		);
 	});
 
 	it('ensureMap mit neuer FC nach ready, GLEICHER Container: nur setData (Reihen-Wechsel-Refresh, Review Triage Log #15)', async () => {

@@ -21,7 +21,7 @@ import {
 	type LocaleFormatOptions
 } from '$lib/i18n/format.js';
 import { formatDeltaLabel } from './ergebnis-panel-data.js';
-import { buildPatternImageData, type PatternImageSpec } from './partei-pattern-images.js';
+import type { PatternImageSpec } from './partei-pattern-images.js';
 import {
 	WECHSEL_FARBE_STUFE_1,
 	WECHSEL_FARBE_STUFE_2_PLUS,
@@ -50,12 +50,34 @@ export const TREND_FALLEND_DUNKEL = '#4C220D';
 /** Stufen, über die Karte und Legende die Schraffur legen. */
 export const TREND_SCHRAFFUR_FARBEN = [TREND_FALLEND_HELL, TREND_FALLEND_DUNKEL] as const;
 
-/** Farbe der Schraffur-Linien: der helle Kartengrund (Wechsel-Neutral). */
-export const TREND_SCHRAFFUR_LINIE = WECHSEL_NEUTRAL_FARBE;
+/** Dunkle Linie auf „leicht fallend“, helle auf „stark fallend“: so erreicht
+ * die Schraffur auf beiden Stufen ≥3:1 gegen die Fläche (WCAG 1.4.11). */
+const SCHRAFFUR_LINIE_AUF_HELL = '#141414';
+const SCHRAFFUR_LINIE_AUF_DUNKEL = WECHSEL_NEUTRAL_FARBE;
 
-/** Diagonal-Tile (45°) für die MapLibre-`fill-pattern`-Ebene. */
-export function buildTrendSchraffur(): PatternImageSpec {
-	return buildPatternImageData('diagonal', TREND_SCHRAFFUR_LINIE);
+export function trendSchraffurLinie(stufenFarbe: string): string {
+	return stufenFarbe === TREND_FALLEND_DUNKEL
+		? SCHRAFFUR_LINIE_AUF_DUNKEL
+		: SCHRAFFUR_LINIE_AUF_HELL;
+}
+
+/** Abstand der 1-px-Diagonalen; teilt die Tile-Größe 16, damit das Muster nahtlos kachelt. */
+const SCHRAFFUR_PERIODE = 4;
+const SCHRAFFUR_TILE = 16;
+
+/** Diagonal-Tile (45°, 1 px Linie) für die MapLibre-`fill-pattern`-Ebene. */
+export function buildTrendSchraffur(linie: string): PatternImageSpec {
+	const clean = linie.replace('#', '');
+	const rgb = [0, 2, 4].map((i) => Number.parseInt(clean.slice(i, i + 2), 16));
+	const data = new Uint8ClampedArray(SCHRAFFUR_TILE * SCHRAFFUR_TILE * 4);
+	for (let y = 0; y < SCHRAFFUR_TILE; y++) {
+		for (let x = 0; x < SCHRAFFUR_TILE; x++) {
+			if ((x + y) % SCHRAFFUR_PERIODE !== 0) continue;
+			const idx = (y * SCHRAFFUR_TILE + x) * 4;
+			data.set([rgb[0], rgb[1], rgb[2], 255], idx);
+		}
+	}
+	return { width: SCHRAFFUR_TILE, height: SCHRAFFUR_TILE, data };
 }
 
 export const VOLATILITAET_NEUTRAL_FARBE = WECHSEL_NEUTRAL_FARBE;

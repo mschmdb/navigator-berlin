@@ -13,6 +13,7 @@ import {
 	farbeForVolatilitaet,
 	volatilitaetTerzileFor,
 	hatVolatilitaetsDaten,
+	TREND_FALLEND_DUNKEL,
 	TREND_NEUTRAL_FARBE,
 	TREND_SCHRAFFUR_FARBEN,
 	VOLATILITAET_NEUTRAL_FARBE,
@@ -105,12 +106,27 @@ export function trendsFillOpacityExpression(
 	return ['case', ['==', ['get', key], 1], volleDeckkraft, neutraleDeckkraft];
 }
 
+/** #108: MapLibre-Image-IDs der beiden Schraffur-Varianten. */
+export const TREND_SCHRAFFUR_ID_AUF_HELL = 'trend-schraffur-auf-hell';
+export const TREND_SCHRAFFUR_ID_AUF_DUNKEL = 'trend-schraffur-auf-dunkel';
+
+/** `fill-pattern`: helle Linien auf „stark fallend“, dunkle auf „leicht fallend“. */
+export function trendsSchraffurPatternExpression(aktivePartei: string): unknown[] {
+	return [
+		'match',
+		['get', trendPropKeys(aktivePartei).farbe],
+		TREND_FALLEND_DUNKEL,
+		TREND_SCHRAFFUR_ID_AUF_DUNKEL,
+		TREND_SCHRAFFUR_ID_AUF_HELL
+	];
+}
+
 /**
  * #108: Filter der Schraffur-Ebene. Bei Toggle `trend` trifft er genau die
  * „fallend“-Stufen der aktiven Partei, bei `volatilitaet` nichts.
  */
 export function trendsSchraffurFilter(toggle: TrendsToggle, aktivePartei: string): unknown[] {
-	if (toggle !== 'trend') return ['==', 1, 0];
+	if (toggle !== 'trend') return ['literal', false];
 	return [
 		'in',
 		['get', trendPropKeys(aktivePartei).farbe],

@@ -11,18 +11,26 @@ import {
 	trendsFillColorExpression,
 	trendsFillOpacityExpression,
 	trendsSchraffurFilter,
+	trendsSchraffurPatternExpression,
+	TREND_SCHRAFFUR_ID_AUF_DUNKEL,
+	TREND_SCHRAFFUR_ID_AUF_HELL,
 	type BakedTrendsFeatureCollection
 } from './trends-map-expressions.js';
-import { buildTrendSchraffur, TRENDS_FILL_OPACITY, type TrendsToggle } from './trends-map-data.js';
+import {
+	buildTrendSchraffur,
+	trendSchraffurLinie,
+	TREND_FALLEND_DUNKEL,
+	TREND_FALLEND_HELL,
+	TRENDS_FILL_OPACITY,
+	type TrendsToggle
+} from './trends-map-data.js';
 import { toImageData } from './partei-pattern-images.js';
 import { paddedMaxBounds, type FitBounds } from './map-fit-constraints.js';
 
-/** #108: MapLibre-Image-ID der „fallend“-Schraffur. */
-export const TREND_SCHRAFFUR_ID = 'trend-schraffur-fallend';
-
-/** Deckkraft der Schraffur-Linien über der Fläche: sichtbar, aber die
- * Stufenfarbe bleibt lesbar. */
-const SCHRAFFUR_OPACITY = 0.45;
+const SCHRAFFUR_BILDER: ReadonlyArray<readonly [string, string]> = [
+	[TREND_SCHRAFFUR_ID_AUF_HELL, trendSchraffurLinie(TREND_FALLEND_HELL)],
+	[TREND_SCHRAFFUR_ID_AUF_DUNKEL, trendSchraffurLinie(TREND_FALLEND_DUNKEL)]
+];
 
 /** Deckkraft für Gebiete ohne Analytik-Daten (`*_hat_daten: 0`); exportiert,
  * damit die Legende (`trends-kapitel.svelte`, Review Triage Log #7) den
@@ -142,6 +150,11 @@ export class TrendsMapController {
 			trendsFillOpacityExpression(toggle, partei, TRENDS_FILL_OPACITY, NEUTRAL_OPACITY)
 		);
 		this.#map.setFilter('trends-schraffur', trendsSchraffurFilter(toggle, partei));
+		this.#map.setPaintProperty(
+			'trends-schraffur',
+			'fill-pattern',
+			trendsSchraffurPatternExpression(partei)
+		);
 	}
 
 	destroy(): void {
@@ -220,8 +233,8 @@ export class TrendsMapController {
 				'fill-outline-color': 'rgba(20,20,20,0.18)'
 			}
 		});
-		if (!instance.hasImage(TREND_SCHRAFFUR_ID)) {
-			instance.addImage(TREND_SCHRAFFUR_ID, toImageData(buildTrendSchraffur()));
+		for (const [id, linie] of SCHRAFFUR_BILDER) {
+			if (!instance.hasImage(id)) instance.addImage(id, toImageData(buildTrendSchraffur(linie)));
 		}
 		instance.addLayer({
 			id: 'trends-schraffur',
@@ -229,8 +242,7 @@ export class TrendsMapController {
 			source: 'trends',
 			filter: trendsSchraffurFilter(toggle, partei),
 			paint: {
-				'fill-pattern': TREND_SCHRAFFUR_ID,
-				'fill-opacity': SCHRAFFUR_OPACITY
+				'fill-pattern': trendsSchraffurPatternExpression(partei)
 			}
 		});
 		// Review Triage Log #2: eine leere FeatureCollection liefert aus
