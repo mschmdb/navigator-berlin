@@ -48,14 +48,18 @@ function ensureUrl(): string {
  * Liefert den Singleton-Drizzle-Client (lazy-initialisiert).
  */
 let _db: Db | null = null;
+let _dbClient: Sql | null = null;
 
 export function getDb(): Db {
-	if (_db) return _db;
 	const c = cache();
+	// Wrapper gilt nur für den Pool, auf dem er gebaut wurde: Hat ein anderer
+	// Modulstand den Pool per closeDb() geschlossen, entsteht ein neuer.
+	if (_db && _dbClient === c.client) return _db;
 	if (!c.client) {
 		c.client = postgres(ensureUrl(), { max: 10, onnotice: () => {} });
 	}
 	_db = drizzle(c.client, { schema });
+	_dbClient = c.client;
 	return _db;
 }
 
@@ -68,6 +72,7 @@ export async function closeDb(): Promise<void> {
 		const client = c.client;
 		c.client = null;
 		_db = null;
+		_dbClient = null;
 		await client.end();
 	}
 }
