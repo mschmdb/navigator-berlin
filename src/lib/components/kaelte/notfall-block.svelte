@@ -93,8 +93,8 @@
 		)
 	);
 
-	const externalLinkClass =
-		'group flex items-start gap-2 rounded border border-rule px-3 py-2.5 hover:border-ink-subtle';
+	// #90: Der Notfall-Block ist die einzige umrandete Fläche, alles darin steht auf Linien.
+	const externalLinkClass = 'group flex items-start gap-2 py-3';
 </script>
 
 <section
@@ -130,20 +130,20 @@
 		{#if !isKaelteSaison(current)}
 			<p
 				data-testid="kaelte-saison-hinweis"
-				class="flex items-start gap-2 rounded border border-rule px-3 py-2 text-sm text-ink-muted"
+				class="flex items-start gap-2 border-y border-rule py-2 text-sm text-ink-muted"
 			>
 				<Info size={16} aria-hidden="true" class="mt-0.5 shrink-0" />
 				{m.kaelte_dienste_leer_saison()}
 			</p>
 		{/if}
 
-		<ul class="flex flex-col gap-3">
+		<ul class="flex flex-col border-t border-rule">
 			{#each rows as { dienst, status } (dienst.id)}
 				{@const isOpen = status.state === 'open' && !dienst.betriebUnbestaetigt}
 				{@const name = names[dienst.id]()}
 				<li
 					data-testid={`kaelte-dienst-${dienst.id}`}
-					class={`flex flex-col gap-1.5 rounded border px-3 py-2.5 ${isOpen ? 'border-state-success bg-state-success/10' : 'border-rule'}`}
+					class={`flex flex-col gap-1.5 border-b border-rule px-3 py-3 ${isOpen ? 'bg-state-success/10' : ''}`}
 				>
 					<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
 						<span class="font-sans text-base font-semibold text-ink">{name}</span>
@@ -186,9 +186,9 @@
 
 	<div class="flex flex-col gap-3">
 		<h3 class="font-sans text-lg font-semibold text-ink">{m.kaelte_mehr_h()}</h3>
-		<ul class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+		<ul class="flex flex-col border-t border-rule">
 			{#each [{ href: KAELTEHILFE_APP_URL, title: m.kaelte_app_title(), text: m.kaelte_app_text() }, { href: KAELTEHILFE_WEGWEISER_URL, title: m.kaelte_wegweiser_title(), text: m.kaelte_wegweiser_text() }] as link (link.href)}
-				<li>
+				<li class="border-b border-rule">
 					<a href={link.href} target="_blank" rel="noopener noreferrer" class={externalLinkClass}>
 						<ExternalLink
 							size={16}

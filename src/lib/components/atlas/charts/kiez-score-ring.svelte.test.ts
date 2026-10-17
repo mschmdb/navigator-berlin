@@ -92,4 +92,12 @@ describe('KiezScoreRing', () => {
 		expect(table.textContent).toContain('Gesamt');
 		expect(table.textContent).toContain('Ruhe & Luft');
 	});
+
+	it('Legende und Reihenfolge-Zeile stehen linksbündig, auch in zentrierten Containern (#90)', async () => {
+		render(KiezScoreRing, { score: makeScore(50) });
+		const legend = (await page.getByTestId('kiez-score-ring-legend').element()) as HTMLElement;
+		const order = (await page.getByTestId('kiez-score-ring-order').element()) as HTMLElement;
+		expect(legend.className).toMatch(/\btext-left\b/);
+		expect(order.className).toMatch(/\btext-left\b/);
+	});
 });

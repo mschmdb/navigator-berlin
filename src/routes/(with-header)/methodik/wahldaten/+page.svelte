@@ -131,7 +131,7 @@
 <JsonLd data={breadcrumbs} testid="wahldaten-breadcrumb-jsonld" />
 
 <article
-	class="mx-auto prose max-w-3xl space-y-8 px-4 py-8 prose-stone"
+	class="text-measure mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
 	data-testid="wahl-methodik-page"
 >
 	<header class="space-y-2">
@@ -142,27 +142,29 @@
 				>{m.methodik_wahldaten_breadcrumb_methodik()}</a
 			>
 		</p>
-		<h1 class="font-sans text-2xl font-bold break-words hyphens-auto text-ink sm:text-3xl">
+		<h1 class="text-3xl font-bold break-words hyphens-auto text-ink">
 			{m.methodik_wahldaten_h1_title()}
 		</h1>
-		<p class="text-base leading-body text-ink-muted">
+		<p class="text-lg leading-body text-ink-muted">
 			{m.methodik_wahldaten_intro_p1()}
 		</p>
 	</header>
 
-	<nav aria-label={m.methodik_wahldaten_toc_aria_label()} class="space-y-1 text-xs text-ink-muted">
-		<p class="">{m.methodik_wahldaten_toc_heading()}</p>
-		<ol class="space-y-0.5">
+	<nav aria-label={m.methodik_wahldaten_toc_aria_label()} class="border-y border-rule py-4">
+		<p class="mb-2 text-sm text-ink-muted">{m.methodik_wahldaten_toc_heading()}</p>
+		<ol class="grid gap-1.5 font-sans text-base sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
-					<a href={`#${sec.id}`} class="inline-block py-1 {anchorClass}">{sec.label}</a>
+					<a href={`#${sec.id}`} class="inline-flex min-h-(--target-min) items-center {anchorClass}"
+						>{sec.label}</a
+					>
 				</li>
 			{/each}
 		</ol>
 	</nav>
 
-	<section id="datenquellen" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="datenquellen" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_quellen_heading()}
 		</h2>
 		<dl class="space-y-3">
@@ -175,20 +177,20 @@
 		</dl>
 	</section>
 
-	<section id="cutoff" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="cutoff" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_cutoff_heading()}
 		</h2>
 		<p>{m.methodik_wahldaten_cutoff_p1()}</p>
-		<ul class="space-y-1">
+		<ul class="list-disc space-y-1 pl-5">
 			{#each cutoffLis as segments, i (i)}
 				<li><RichText {segments} {tag} /></li>
 			{/each}
 		</ul>
 	</section>
 
-	<section id="wahldaten-briefwahl" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="wahldaten-briefwahl" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_briefwahl_heading()}
 		</h2>
 		<p>{m.methodik_wahldaten_briefwahl_p1()}</p>
@@ -196,8 +198,8 @@
 		<p><RichText segments={briefwahlP3} {tag} /></p>
 	</section>
 
-	<section id="aggregation" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="aggregation" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_aggregation_heading()}
 		</h2>
 		<p>{m.methodik_wahldaten_aggregation_p1()}</p>
@@ -205,24 +207,24 @@
 		<p><RichText segments={aggregationP3} {tag} /></p>
 	</section>
 
-	<section id="wiederholungswahl" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="wiederholungswahl" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_wiederholung_heading()}
 		</h2>
 		<p><RichText segments={wiederholungP1} {tag} /></p>
 		<p><RichText segments={wiederholungP2} {tag} /></p>
 	</section>
 
-	<section id="geometrien" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="geometrien" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_geometrien_heading()}
 		</h2>
 		<p>{m.methodik_wahldaten_geometrien_p1()}</p>
 		<p><RichText segments={geometrienP2} {tag} /></p>
 	</section>
 
-	<section id="update-cadence" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="update-cadence" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_cadence_heading()}
 		</h2>
 		<p>{m.methodik_wahldaten_cadence_p1()}</p>
@@ -230,15 +232,15 @@
 		<p>{m.methodik_wahldaten_cadence_p3()}</p>
 	</section>
 
-	<section id="parteien-alias" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="parteien-alias" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_alias_heading()}
 		</h2>
 		<p><RichText segments={aliasP1} {tag} /></p>
 	</section>
 
-	<section id="cross-layer" class="space-y-3">
-		<h2 class="font-sans text-xl font-semibold text-ink">
+	<section id="cross-layer" class="space-y-3 text-base leading-body text-ink">
+		<h2 class="text-2xl font-bold text-ink">
 			{m.methodik_wahldaten_section_cross_layer_heading()}
 		</h2>
 		<p>{m.methodik_wahldaten_cross_layer_p1()}</p>

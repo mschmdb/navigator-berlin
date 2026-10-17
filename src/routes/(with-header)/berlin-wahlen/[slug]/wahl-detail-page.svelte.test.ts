@@ -288,3 +288,38 @@ describe('berlin-wahlen/[slug]/+page.svelte: Meta-Tags (S6)', () => {
 		expect(metaDescription()).toContain('SPD mit 21,4 %');
 	});
 });
+
+describe('berlin-wahlen/[slug]/+page.svelte: Top-3 je Bezirk als Tabelle (#90)', () => {
+	const party = (kurzname: string, anteil: number) => ({
+		kurzname,
+		vollname: kurzname,
+		farbeHex: '#000000',
+		stimmen: 100,
+		anteil
+	});
+
+	it('zeigt je Bezirk eine Tabellenzeile mit Bezirk als Zeilenkopf und drei Parteien', async () => {
+		const data = {
+			...makeData(),
+			bezirke: [
+				{
+					slug: 'mitte',
+					name: 'Mitte',
+					top3: [party('SPD', 0.3), party('CDU', 0.25), party('GRÜNE', 0.2)]
+				},
+				{ slug: 'pankow', name: 'Pankow', top3: [] }
+			]
+		};
+		render(WahlDetailPage, { data });
+		await expect.element(page.getByTestId('wahl-detail-bezirke')).toBeInTheDocument();
+		const section = document.querySelector('[data-testid="wahl-detail-bezirke"]') as HTMLElement;
+		const table = section.querySelector('table') as HTMLTableElement;
+		expect(table).not.toBeNull();
+		expect(table.querySelectorAll('thead th[scope="col"]')).toHaveLength(4);
+		const mitte = table.querySelector('[data-testid="wahl-detail-bezirk-mitte"]') as HTMLElement;
+		expect(mitte.tagName).toBe('TR');
+		expect(mitte.querySelector('th[scope="row"] a')?.textContent?.trim()).toBe('Mitte');
+		expect(mitte.querySelectorAll('td')).toHaveLength(3);
+		expect(section.querySelector('.rounded.border')).toBeNull();
+	});
+});

@@ -16,6 +16,7 @@
 	DE-Fallback (Blocks C3, C5); `profileLocale`/`faqLocale` steuern `lang`.
 -->
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { KiezProfile, FaqEntry } from '$lib/data/types.js';
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { kiezStats } from '$lib/server/db/schema/index.js';
@@ -23,7 +24,6 @@
 	import FaqSection from './faq-section.svelte';
 	import KiezWahlVerlauf, { type WahlVerlaufRow } from './kiez-wahl-verlauf.svelte';
 	import ScoreComparisonTable from './score-comparison-table.svelte';
-	import { SCORE_DIMENSION_KEYS, type ComparisonDimRow } from '$lib/data/comparison-types.js';
 	import { sourceLabel } from '$lib/data/source-label.js';
 	import DistributionBar from './distribution-bar.svelte';
 	import { toSegments, countsText, type DistSegment } from '$lib/data/steckbrief-extras.js';
@@ -32,12 +32,11 @@
 	import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
 	import { describeOepnvDichte, formatStopsPerKm2 } from '$lib/data/faq-helpers/oepnv.js';
 	import { describePetKategorie, formatPet } from '$lib/data/faq-helpers/klima.js';
-	import { dimensionLabel } from './inspector-panel/internal/kiez-score-display.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { formatMonthYear } from '$lib/i18n/format.js';
-	import { COMPOSITE_DIMENSIONS, type KiezScoreDimension } from '$lib/data';
+	import type { ComparisonDimRow } from '$lib/data/comparison-types.js';
 
 	type KiezStatsRow = InferSelectModel<typeof kiezStats>;
 
@@ -52,6 +51,8 @@
 		readonly profileProse?: readonly string[];
 		/** Sprache der Profil-Absätze (C5); fehlt sie, gilt die Seiten-Locale. Weicht sie von der Seiten-Locale ab, setzt die Sektion `lang`. */
 		readonly profileLocale?: Locale;
+		/** #90: Kennzahlen stehen nach Profiltext und Vergleich, vor dem Steckbrief. */
+		readonly figures?: Snippet;
 	}
 
 	const {
@@ -63,7 +64,8 @@
 		wahlVerlauf = [],
 		comparison = [],
 		profileProse = [],
-		profileLocale
+		profileLocale,
+		figures
 	}: Props = $props();
 
 	const localeOpts = $derived({ locale: getLocale() });
@@ -177,35 +179,6 @@
 	}
 
 	const steckbrief = $derived(stats ? buildSteckbrief(stats) : []);
-
-	interface ScoreDimRow {
-		readonly key: KiezScoreDimension;
-		readonly label: string;
-		readonly value: number | null;
-	}
-
-	function formatScore(v: number | null | undefined): string {
-		if (v === null || v === undefined || !Number.isFinite(v)) return '–';
-		return Math.round(v).toString();
-	}
-
-	// Score-Summary zeigt nur die COMPOSITE_DIMENSIONS-Teilmenge (Kultur/
-	// Kriminalität fließen nicht in den Gesamt-Score, siehe Vergleichstabelle
-	// darunter). `SCORE_DIMENSION_KEYS` ist die geteilte Zuordnung camelCase ↔
-	// hyphenierter Anzeige-Schlüssel (auch in beiden `+page.server.ts`).
-	const COMPOSITE_SCORE_DIM_KEYS = SCORE_DIMENSION_KEYS.filter((d) =>
-		(COMPOSITE_DIMENSIONS as readonly string[]).includes(d.key)
-	);
-
-	const scoreDims = $derived<ScoreDimRow[]>(
-		score
-			? COMPOSITE_SCORE_DIM_KEYS.map(({ field, key }) => ({
-					key,
-					label: dimensionLabel(key, localeOpts),
-					value: (score[field as keyof KiezScore] as number | null | undefined) ?? null
-				}))
-			: []
-	);
 </script>
 
 <div class="mx-auto max-w-3xl space-y-10 px-4 pb-10" data-testid="kiez-details">
@@ -224,31 +197,21 @@
 		</section>
 	{/if}
 
-	{#if score}
-		<section aria-labelledby="kiez-score-heading" class="space-y-4" data-testid="kiez-score">
-			<h2 id="kiez-score-heading" class="text-2xl font-bold text-ink">
-				{m.profile_score_heading(undefined, localeOpts)}
-			</h2>
-			<dl class="grid grid-cols-3 gap-4 sm:grid-cols-5">
-				{#each scoreDims as dim (dim.key)}
-					<div>
-						<dt class="text-xs text-ink-subtle">
-							{dim.label}
-						</dt>
-						<dd class="text-2xl font-semibold text-ink">{formatScore(dim.value)}</dd>
-					</div>
-				{/each}
-			</dl>
-			<p class="text-sm text-ink-muted">
+	<div class="space-y-3">
+		<ScoreComparisonTable rows={comparison} showBezirkColumn={true} valueLabel="Kiez" />
+		{#if score}
+			<p class="text-sm text-ink-muted" data-testid="kiez-score-note">
 				{m.profile_score_methodik_note(undefined, localeOpts)}
-				<a class="text-accent underline" href={localizedHref('/methodik/kiez-score')}
+				<a
+					class="text-accent underline underline-offset-2 hover:text-accent-strong"
+					href={localizedHref('/methodik/kiez-score')}
 					>{m.profile_score_methodik_link_label(undefined, localeOpts)}</a
 				>.
 			</p>
-		</section>
-	{/if}
+		{/if}
+	</div>
 
-	<ScoreComparisonTable rows={comparison} showBezirkColumn={true} valueLabel="Kiez" />
+	{@render figures?.()}
 
 	<section aria-labelledby="steckbrief-heading" class="space-y-4">
 		<h2 id="steckbrief-heading" class="text-2xl font-bold text-ink">

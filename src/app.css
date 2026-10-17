@@ -99,6 +99,9 @@
 	--leading-body: 1.45;
 	--leading-dense: 1.35;
 
+	/* #90 Zeilenlänge für Leseseiten (Leitlinie 14: 45 bis 90 Zeichen). */
+	--measure: 70ch;
+
 	/* GH-86 Mindestgröße für Klickziele (WCAG 2.2 SC 2.5.8). */
 	--target-min: 24px;
 
@@ -334,6 +337,11 @@ body.route-explore {
 .prose,
 .prose :where(p, li, blockquote) {
 	line-height: var(--leading-body);
+}
+
+/* #90: Leseseiten begrenzen Fließtext auf --measure, Tabellen und Überschriften laufen breiter. */
+.text-measure :where(p, li, dd) {
+	max-inline-size: var(--measure);
 }
 
 [role='application'] {

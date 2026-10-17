@@ -88,4 +88,10 @@ describe('kiez-neighbors.svelte', () => {
 			.element()) as HTMLAnchorElement;
 		expect(link.getAttribute('href')).toBe('/en/kiez/schillerpromenade');
 	});
+
+	it('trennt Bezirk und Score mit Komma und Leerzeichen (#90)', async () => {
+		render(KiezNeighbors, { neighbors: NEIGHBORS, similar: [] });
+		const meta = document.querySelector('li span[aria-hidden="true"]');
+		expect(meta?.textContent?.replace(/\s+/g, ' ').trim()).toMatch(/^[^,]+, Kiez-Score \d+$/);
+	});
 });

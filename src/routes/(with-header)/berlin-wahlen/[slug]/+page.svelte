@@ -329,40 +329,64 @@
 		testid="wahl-detail-bezirke"
 		withPortalChrome={false}
 	>
-		<ul class="grid gap-3 sm:grid-cols-2">
-			{#each data.bezirke as bezirk (bezirk.slug)}
-				<li
-					class="space-y-2 rounded border border-rule p-3"
-					data-testid={`wahl-detail-bezirk-${bezirk.slug}`}
-				>
-					<a
-						href={localizedHref(`/bezirk/${bezirk.slug}`)}
-						class="font-sans font-semibold text-ink hover:text-accent"
-					>
-						{bezirk.name}
-					</a>
-					{#if bezirk.top3.length > 0}
-						<ul class="space-y-1 text-xs">
-							{#each bezirk.top3 as entry (entry.kurzname)}
-								<li class="flex items-baseline gap-2">
-									<span
-										class="inline-block h-2 w-2 flex-shrink-0 rounded-sm border border-ink/10"
-										style="background-color:{parteiColor(entry.kurzname)};"
-										aria-hidden="true"
-									></span>
-									<span class="truncate text-ink">{parteiDisplayName(entry.kurzname)}</span>
-									<span class="ml-auto text-ink-muted tabular-nums">
-										{formatPercent(entry.anteil)}
-									</span>
-								</li>
-							{/each}
-						</ul>
-					{:else}
-						<p class="text-xs text-ink-muted">{m.wahl_detail_bezirk_keine_daten()}</p>
-					{/if}
-				</li>
-			{/each}
-		</ul>
+		<!-- #90: zwölf gleiche Kästen werden eine Tabelle, Bezirk als Zeilenkopf. -->
+		<div class="overflow-x-auto">
+			<table class="w-full font-sans text-sm">
+				<thead>
+					<tr class="border-b border-rule text-left">
+						<th scope="col" class="py-2 pr-4 font-semibold text-ink"
+							>{m.wahl_detail_bezirke_col_bezirk()}</th
+						>
+						{#each [1, 2, 3] as platz (platz)}
+							<th scope="col" class="py-2 pr-4 font-semibold text-ink"
+								>{m.wahl_detail_bezirke_col_platz({ platz })}</th
+							>
+						{/each}
+					</tr>
+				</thead>
+				<tbody>
+					{#each data.bezirke as bezirk (bezirk.slug)}
+						<tr
+							class="border-b border-rule align-top"
+							data-testid={`wahl-detail-bezirk-${bezirk.slug}`}
+						>
+							<th scope="row" class="py-2 pr-4 text-left font-semibold">
+								<a
+									href={localizedHref(`/bezirk/${bezirk.slug}`)}
+									class="inline-flex min-h-(--target-min) items-center text-ink underline-offset-2 hover:text-accent hover:underline"
+								>
+									{bezirk.name}
+								</a>
+							</th>
+							{#if bezirk.top3.length > 0}
+								{#each [0, 1, 2] as i (i)}
+									{@const entry = bezirk.top3[i]}
+									<td class="py-2 pr-4">
+										{#if entry}
+											<span class="inline-flex items-baseline gap-2">
+												<span
+													class="inline-block h-2 w-2 flex-shrink-0 rounded-full"
+													style="background-color:{parteiColor(entry.kurzname)};"
+													aria-hidden="true"
+												></span>
+												<span class="text-ink">{parteiDisplayName(entry.kurzname)}</span>
+												<span class="text-ink-muted tabular-nums"
+													>{formatPercent(entry.anteil)}</span
+												>
+											</span>
+										{/if}
+									</td>
+								{/each}
+							{:else}
+								<td colspan="3" class="py-2 pr-4 text-ink-muted"
+									>{m.wahl_detail_bezirk_keine_daten()}</td
+								>
+							{/if}
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
 	</KapitelSection>
 
 	<EditorialDisclaimer variant="wahl-portal-stimmenanteile" />

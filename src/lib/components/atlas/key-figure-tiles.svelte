@@ -1,5 +1,5 @@
 <!--
-	L4: Kennzahl-Kacheln unter dem Hero von Kiez- und Bezirksseiten.
+	L4: Kennzahlen auf Kiez- und Bezirksseiten, seit #90 als Zeilen mit Linie statt Kacheln.
 	Je Kachel: Wert, Berlin-Wert und Link auf /explore mit dem Layer und dem Ortsfokus.
 	Neutrale Darstellung: keine Gut/Schlecht-Farben (Stigma-Lock, ADR-014).
 -->
@@ -21,9 +21,11 @@
 		readonly regionName: string;
 		readonly kind: 'kiez' | 'bezirk';
 		readonly slug: string;
+		/** false, wenn die Liste in einem Container mit eigenem Rand steht (Kiez-Seite, #90). */
+		readonly inset?: boolean;
 	}
 
-	const { figures, regionName, kind, slug }: Props = $props();
+	const { figures, regionName, kind, slug, inset = true }: Props = $props();
 
 	const locale = $derived(getLocale());
 
@@ -95,32 +97,35 @@
 	<section
 		data-testid="key-figures"
 		aria-labelledby="key-figures-h"
-		class="mx-auto flex max-w-3xl flex-col gap-3 px-4 pb-8"
+		class={inset ? 'mx-auto flex max-w-3xl flex-col gap-3 px-4 pb-8' : 'flex flex-col gap-3'}
 	>
 		<h2 id="key-figures-h" class="text-2xl font-bold text-ink">{m.key_figures_heading()}</h2>
 		<p class="font-sans text-sm text-ink-muted">{m.key_figures_intro()}</p>
-		<ul data-testid="key-figure-list" class="grid grid-cols-2 gap-3 md:grid-cols-3">
+		<ul data-testid="key-figure-list" class="flex flex-col border-t border-rule">
 			{#each tiles as tile (tile.figure.id)}
 				<li
 					data-testid="key-figure-tile"
 					data-figure={tile.figure.id}
-					class="flex flex-col gap-1 rounded-md border border-rule p-3 font-sans"
+					class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 border-b border-rule py-3 font-sans"
 				>
-					<h3 class="text-sm font-semibold text-ink">{tile.title}</h3>
-					<p data-testid="key-figure-value" class="text-2xl text-ink">
+					<h3 class="text-base font-semibold text-ink">{tile.title}</h3>
+					<p
+						data-testid="key-figure-value"
+						class="text-right text-base font-semibold text-ink tabular-nums"
+					>
 						{#if tile.valueText}
 							{tile.valueText}
 						{:else}
-							<span class="text-base text-ink-muted">{m.key_figure_value_missing()}</span>
+							<span class="font-normal text-ink-muted">{m.key_figure_value_missing()}</span>
 						{/if}
 					</p>
-					<p class="text-sm text-ink-muted">{tile.berlinText}</p>
-					<p class="text-xs text-ink-muted">{tile.note}</p>
+					<p class="text-sm text-ink-muted">{tile.note}</p>
+					<p class="text-right text-sm text-ink-muted tabular-nums">{tile.berlinText}</p>
 					<a
 						href={tile.href}
 						onclick={() => trackLanding('key_figure', kind)}
 						data-testid="key-figure-link"
-						class="mt-auto pt-1 text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="col-span-2 inline-flex min-h-(--target-min) w-fit items-center text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						<span class="sr-only">{tile.context} </span>{m.key_figure_link_visible()}
 					</a>

@@ -75,7 +75,7 @@
 
 <article
 	data-testid="methodik-kiez-score-page"
-	class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
+	class="text-measure mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
 >
 	<header class="flex flex-col gap-2">
 		<nav
@@ -97,11 +97,11 @@
 		</p>
 	</header>
 
-	<nav aria-label={m.methodik_kiez_score_toc_aria_label()} class="border border-rule bg-bg p-4">
-		<p class="mb-2 text-xs text-ink-subtle">
+	<nav aria-label={m.methodik_kiez_score_toc_aria_label()} class="border-y border-rule py-4">
+		<p class="mb-2 text-sm text-ink-muted">
 			{m.methodik_kiez_score_toc_heading()}
 		</p>
-		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
+		<ol class="grid gap-1.5 font-sans text-base sm:grid-cols-2">
 			{#each sections as sec (sec.id)}
 				<li>
 					<a href={`#${sec.id}`} class={linkClass}>
@@ -129,7 +129,7 @@
 				<li class="border-l-2 border-rule pl-3">
 					<p class="font-sans text-base font-semibold text-ink">{dim.label}</p>
 					<p class="text-xs text-ink-muted">{dim.layers}</p>
-					<p class="mt-1 text-sm text-ink">{dim.detail}</p>
+					<p class="mt-1 text-base leading-body text-ink">{dim.detail}</p>
 				</li>
 			{/each}
 		</ul>
@@ -142,26 +142,26 @@
 		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_weights_p1()}
 		</p>
-		<table class="border border-rule text-sm">
-			<thead class="bg-bg">
-				<tr>
-					<th class="px-3 py-2 text-left text-xs text-ink-muted">
+		<table class="w-full max-w-xl font-sans text-base" aria-labelledby="gewichte-h">
+			<thead>
+				<tr class="border-b border-rule">
+					<th scope="col" class="py-2 pr-4 text-left font-semibold text-ink">
 						{m.methodik_kiez_score_weights_th_dimension()}
 					</th>
-					<th class="px-3 py-2 text-left text-xs text-ink-muted">
+					<th scope="col" class="py-2 text-right font-semibold text-ink">
 						{m.methodik_kiez_score_weights_th_weight()}
 					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{#each weightRows as row (row.id)}
-					<tr>
-						<td class="px-3 py-2">
+					<tr class="border-b border-rule">
+						<th scope="row" class="py-2 pr-4 text-left font-normal text-ink">
 							{row.label}{#if row.note}<!-- eslint-disable-next-line svelte/no-useless-mustaches -->{' '}<span
 									class="text-ink-subtle">{row.note}</span
 								>{/if}
-						</td>
-						<td class="px-3 py-2">{row.weight}</td>
+						</th>
+						<td class="py-2 text-right tabular-nums">{row.weight}</td>
 					</tr>
 				{/each}
 			</tbody>
@@ -226,7 +226,7 @@
 			{#each omissions as o (o.label)}
 				<li class="border-l-2 border-rule pl-3">
 					<p class="font-sans text-base font-semibold text-ink">{o.label}</p>
-					<p class="text-sm text-ink-muted">{o.reason}</p>
+					<p class="text-base leading-body text-ink-muted">{o.reason}</p>
 				</li>
 			{/each}
 		</ul>

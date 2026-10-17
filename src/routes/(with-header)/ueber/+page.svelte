@@ -118,7 +118,10 @@
 <JsonLd data={breadcrumbJsonLd} testid="ueber-breadcrumb-jsonld" />
 <JsonLd data={aboutPageJsonLd} testid="ueber-aboutpage-jsonld" />
 
-<article data-testid="ueber-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
+<article
+	data-testid="ueber-page"
+	class="text-measure mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
+>
 	<h1 class="text-3xl font-bold text-ink">{m.ueber_h1()}</h1>
 
 	<section aria-labelledby="ueber-kurz-h" class="flex flex-col gap-3">

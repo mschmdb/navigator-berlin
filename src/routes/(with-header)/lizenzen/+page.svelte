@@ -106,7 +106,10 @@
 <JsonLd data={breadcrumbJsonLd} testid="lizenzen-breadcrumb-jsonld" />
 <JsonLd data={dataCatalogJsonLd} testid="lizenzen-datacatalog-jsonld" />
 
-<article data-testid="lizenzen-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
+<article
+	data-testid="lizenzen-page"
+	class="text-measure mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8"
+>
 	<header class="flex flex-col gap-2">
 		<h1 data-testid="lizenzen-page-title" class="text-3xl font-bold text-ink">
 			{m.lizenzen_h1_title()}
