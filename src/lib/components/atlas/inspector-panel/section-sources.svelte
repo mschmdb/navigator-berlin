@@ -27,6 +27,16 @@
 	const regionId = `section-sources-${crypto.randomUUID()}`;
 	let open = $state(false);
 
+	/** Hostname einer http(s)-Quelle, sonst null (kein Link auf leere oder interne Quellen). */
+	function sourceHost(source: string): string | null {
+		try {
+			const url = new URL(source);
+			return url.protocol === 'https:' || url.protocol === 'http:' ? url.hostname : null;
+		} catch {
+			return null;
+		}
+	}
+
 	type Variants = NonNullable<ReturnType<typeof getEditorialConfig>>['disclaimerVariants'];
 
 	function disclaimersFor(hit: LayerHit): Variants {
@@ -62,6 +72,7 @@
 					{@const explain = getLayerExplainEntry(hit.layer, localeOpts)}
 					{@const external = getLayerExternalLink(hit.layer, localeOpts)}
 					{@const editorial = getEditorialConfig(hit.layer)}
+					{@const host = sourceHost(hit.source)}
 					<li data-testid="section-sources-item" data-layer={hit.layer} class="space-y-1 py-2">
 						<a
 							href={localizedHref(`/layer/${hit.layer}`, locale)}
@@ -93,6 +104,17 @@
 							</a>
 						{/if}
 						<DataStandBanner {hit} lang={locale} />
+						{#if host}
+							<a
+								data-testid="section-sources-source-link"
+								href={hit.source}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-(--target-min) w-fit items-center text-dense-meta text-accent underline underline-offset-2 hover:text-accent-strong"
+							>
+								{m.inspector_data_stand_source_info({ hostname: host }, localeOpts)}
+							</a>
+						{/if}
 						{#each disclaimersFor(hit) as variant (variant)}
 							<EditorialDisclaimer {variant} sourceUrl={editorial?.primarySourceUrl} {locale} />
 						{/each}

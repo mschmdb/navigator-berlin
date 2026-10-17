@@ -192,7 +192,12 @@
 							</div>
 						{/each}
 					</div>
-					<SectionSources sectionLabel={section.label} {hits} layerNameFor={nameFor} {lang} />
+					<SectionSources
+						sectionLabel={section.label}
+						hits={section.hits}
+						layerNameFor={nameFor}
+						{lang}
+					/>
 				{/if}
 			</div>
 		</section>

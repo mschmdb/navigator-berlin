@@ -122,19 +122,14 @@
 
 {#if address}
 	{#if !index}
-		<div
-			class="rounded-sm border border-rule bg-bg-elevated p-3"
-			data-testid="nearest-stops-loading"
-			aria-busy="true"
-			aria-live="polite"
-		>
+		<div class="py-1" data-testid="nearest-stops-loading" aria-busy="true" aria-live="polite">
 			<p class="text-xs text-ink-subtle">
 				{m.inspector_nearest_stops_loading(undefined, localeOpts)}
 			</p>
 		</div>
 	{:else}
 		<div
-			class="rounded-sm border border-rule bg-bg-elevated p-3"
+			class="py-1"
 			data-testid="nearest-stops-card"
 			role="region"
 			aria-label={m.inspector_nearest_stops_aria_label(undefined, localeOpts)}

@@ -66,6 +66,41 @@ describe('inspector-panel.svelte', () => {
 		await expect.element(page.getByTestId('inspector-panel')).not.toBeInTheDocument();
 	});
 
+	// GH-88 AC3: Quellen, Stand und Lizenz einmal pro Sektion, im Inspector erreichbar.
+	it('GH-88: eine Quellenliste pro Sektion mit Stand, Lizenz und Quelle je Datensatz', async () => {
+		render(Harness, {
+			open: true,
+			address,
+			hits: [
+				hit('mietspiegel-wohnlage', 'gut'),
+				hit('bodenrichtwerte', 4500, { source: 'https://fbinter.stadt-berlin.de/brw' }),
+				hit('laerm-den', 60)
+			],
+			layerMeta: [...fullLayerMeta, meta('bodenrichtwerte', 'B: Wohn-Daten')]
+		});
+		const wohn = (await page.getByTestId('section-wohn').element()) as HTMLElement;
+		const toggles = wohn.querySelectorAll('[data-testid="section-sources-toggle"]');
+		expect(toggles.length).toBe(1);
+		expect(wohn.querySelector('[data-testid="card-details-toggle"]')).toBeNull();
+		(toggles[0] as HTMLButtonElement).click();
+		await vi.waitUntil(
+			() => wohn.querySelectorAll('[data-testid="section-sources-item"]').length === 2
+		);
+		const items = wohn.querySelectorAll('[data-testid="section-sources-item"]');
+		for (const item of items) {
+			expect(item.querySelector('[data-testid="data-stand-banner"]')).not.toBeNull();
+			expect(item.querySelector('[data-testid="section-sources-source-link"]')).not.toBeNull();
+		}
+		// Lizenz steht im Banner, legal-Hinweis bleibt für Mietspiegel und Bodenrichtwerte.
+		expect(items[0].textContent).toMatch(/dl-de/i);
+		const legal = wohn.querySelectorAll(
+			'[data-testid="editorial-disclaimer"][data-variant="legal"]'
+		);
+		expect(legal.length).toBe(2);
+		const umwelt = (await page.getByTestId('section-umwelt').element()) as HTMLElement;
+		expect(umwelt.querySelectorAll('[data-testid="section-sources-toggle"]').length).toBe(1);
+	});
+
 	it('rendert nicht wenn keine Adresse selektiert', async () => {
 		render(Harness, { open: true, address: null, hits: [] });
 		await expect.element(page.getByTestId('inspector-panel')).not.toBeInTheDocument();

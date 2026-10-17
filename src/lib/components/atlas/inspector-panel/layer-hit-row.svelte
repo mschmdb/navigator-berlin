@@ -96,7 +96,8 @@
 			<a
 				href={layerHref}
 				title={m.inspector_layer_hit_learn_more_aria({ layerName }, localeOpts)}
-				class="underline-offset-2 hover:underline">{layerName}</a
+				class="inline-flex min-h-(--target-min) items-center underline-offset-2 hover:underline"
+				>{layerName}</a
 			>
 		</span>
 		<div
@@ -113,22 +114,6 @@
 					compact
 					severityDescriptions={severityDescriptions(localeOpts)}
 				/>
-			{:else if rowState === 'no-coverage'}
-				<span class="text-sm text-ink-subtle" data-testid="value-no-coverage">
-					{m.inspector_layer_hit_no_coverage(undefined, localeOpts)}
-				</span>
-			{:else if rowState === 'coverage-out-of-scope'}
-				<span class="text-sm text-ink-subtle" data-testid="value-coverage-out-of-scope">
-					{m.inspector_layer_hit_coverage_out_of_scope(undefined, localeOpts)}
-				</span>
-			{:else if rowState === 'out-of-concept'}
-				<span class="text-sm text-ink-subtle" data-testid="value-out-of-concept">
-					{m.inspector_layer_hit_out_of_concept(undefined, localeOpts)}
-				</span>
-			{:else if rowState === 'seasonal'}
-				<span class="text-sm text-ink-muted" data-testid="value-seasonal">
-					{m.inspector_layer_hit_seasonal(undefined, localeOpts)}
-				</span>
 			{/if}
 
 			{#if showSeasonalActivePill}
@@ -179,6 +164,25 @@
 
 	{#if afterTitle}
 		{@render afterTitle()}
+	{/if}
+
+	<!-- GH-88 Review: Fehltexte unter dem Titel über die volle Breite (schmale Ansichten). -->
+	{#if rowState === 'no-coverage'}
+		<p class="text-sm text-ink-subtle" data-testid="value-no-coverage">
+			{m.inspector_layer_hit_no_coverage(undefined, localeOpts)}
+		</p>
+	{:else if rowState === 'coverage-out-of-scope'}
+		<p class="text-sm text-ink-subtle" data-testid="value-coverage-out-of-scope">
+			{m.inspector_layer_hit_coverage_out_of_scope(undefined, localeOpts)}
+		</p>
+	{:else if rowState === 'out-of-concept'}
+		<p class="text-sm text-ink-subtle" data-testid="value-out-of-concept">
+			{m.inspector_layer_hit_out_of_concept(undefined, localeOpts)}
+		</p>
+	{:else if rowState === 'seasonal'}
+		<p class="text-sm text-ink-muted" data-testid="value-seasonal">
+			{m.inspector_layer_hit_seasonal(undefined, localeOpts)}
+		</p>
 	{/if}
 
 	{#if rowState === 'with-value' && !display.chip && display.fallbackText}

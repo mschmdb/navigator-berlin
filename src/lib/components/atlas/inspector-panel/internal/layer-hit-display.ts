@@ -70,9 +70,17 @@ function umweltatlasDisplay(
 }
 
 function laermNumericDisplay(value: unknown, opts?: LocaleOptions): LayerHitDisplay {
-	if (typeof value === 'number') return chipOnly(String(value), true, 'dB');
+	// GH-88: dB-Werte über den gemeinsamen Formatter („57,4 dB").
+	const options = toAtlasMessageOptions(opts);
+	if (typeof value === 'number' && Number.isFinite(value)) {
+		return chipOnly(formatDecimal(value, { ...options, maximumFractionDigits: 1 }), true, 'dB');
+	}
 	if (typeof value === 'string' && value.trim() !== '' && !Number.isNaN(Number(value))) {
-		return chipOnly(value, true, 'dB');
+		return chipOnly(
+			formatDecimal(Number(value), { ...options, maximumFractionDigits: 1 }),
+			true,
+			'dB'
+		);
 	}
 	return umweltatlasDisplay(value, opts);
 }

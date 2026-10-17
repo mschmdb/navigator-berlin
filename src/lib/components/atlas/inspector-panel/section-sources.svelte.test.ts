@@ -58,6 +58,27 @@ describe('SectionSources', () => {
 		expect(toggle.getAttribute('aria-expanded')).toBe('true');
 	});
 
+	it('klappt beim zweiten Klick wieder ein', async () => {
+		await openWith([wohnlage]);
+		await page.getByTestId('section-sources-toggle').click();
+		await expect.element(page.getByTestId('section-sources-item')).not.toBeInTheDocument();
+	});
+
+	it('Quelle je Datensatz als externer Link auf hit.source', async () => {
+		await openWith([wohnlage]);
+		const link = (await page
+			.getByTestId('section-sources-source-link')
+			.element()) as HTMLAnchorElement;
+		expect(link.getAttribute('href')).toBe('https://fbinter.stadt-berlin.de/wfs');
+		expect(link.getAttribute('rel')).toMatch(/noopener/);
+		expect(link.textContent).toMatch(/fbinter\.stadt-berlin\.de/);
+	});
+
+	it('kein Quellen-Link bei leerer Quelle', async () => {
+		await openWith([{ ...wohnlage, source: '' }]);
+		await expect.element(page.getByTestId('section-sources-source-link')).not.toBeInTheDocument();
+	});
+
 	it('Datenstand je Datensatz in der Dichte-Skala', async () => {
 		await openWith([wohnlage]);
 		const banner = (await page.getByTestId('data-stand-banner').element()) as HTMLElement;
@@ -85,9 +106,26 @@ describe('SectionSources', () => {
 		expect(link.getAttribute('rel')).toMatch(/noopener/);
 	});
 
-	it('kein externer Link ohne Wert an dieser Stelle', async () => {
-		await openWith([{ ...wohnlagen2024, value: null, reason: 'coverage-out-of-scope' }]);
-		await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
+	for (const reason of ['no-coverage', 'coverage-out-of-scope', 'out-of-concept'] as const) {
+		it(`kein externer Link ohne Wert an dieser Stelle (${reason})`, async () => {
+			await openWith([{ ...wohnlagen2024, value: null, reason }]);
+			await expect.element(page.getByTestId('external-link')).not.toBeInTheDocument();
+		});
+	}
+
+	for (const layer of ['mietspiegel-wohnlage', 'wohnlagen-2024', 'bodenrichtwerte']) {
+		it(`Editorial: legal-Hinweis für ${layer}`, async () => {
+			await openWith([{ ...wohnlage, layer }]);
+			const d = (await page.getByTestId('editorial-disclaimer').element()) as HTMLElement;
+			expect(d.getAttribute('data-variant')).toBe('legal');
+		});
+	}
+
+	it('PET-Erklärung in EN ohne lang-Attribut', async () => {
+		await openWith([{ ...wohnlage, layer: 'klima-pet-2022', value: { pet14h: 33 } }], 'en');
+		const long = (await page.getByTestId('explain-long').element()) as HTMLElement;
+		expect(long.textContent).toMatch(/Physiological Equivalent Temperature/);
+		expect(long.getAttribute('lang')).toBeNull();
 	});
 
 	it('Erklärung und Skala in EN, ohne lang-Attribut', async () => {

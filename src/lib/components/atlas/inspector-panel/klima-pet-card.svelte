@@ -109,7 +109,8 @@
 				href={layerHref}
 				data-testid="klima-pet-title-link"
 				title={m.inspector_klima_pet_learn_more_aria({ layerName }, localeOpts)}
-				class="underline-offset-2 hover:underline">{layerName}</a
+				class="inline-flex min-h-(--target-min) items-center underline-offset-2 hover:underline"
+				>{layerName}</a
 			>
 		</h4>
 		{#if addressPet !== null}

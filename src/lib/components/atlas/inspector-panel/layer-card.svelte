@@ -90,11 +90,12 @@
 				href={layerHref}
 				data-testid="layer-card-title-link"
 				title={m.inspector_layer_card_learn_more_aria({ layerName }, localeOpts)}
-				class="underline-offset-2 hover:underline">{layerName}</a
+				class="inline-flex min-h-(--target-min) items-center underline-offset-2 hover:underline"
+				>{layerName}</a
 			>
 		</h4>
-		<div class="shrink-0">
-			{#if rowState === 'with-value' && display.chip}
+		{#if rowState === 'with-value' && display.chip}
+			<div class="shrink-0 pt-0.5">
 				<ValueChip
 					{severity}
 					value={display.chip.value}
@@ -104,14 +105,8 @@
 					compact
 					severityDescriptions={severityDescriptions(localeOpts)}
 				/>
-			{:else if stateText}
-				<span class="text-sm text-ink-subtle">{stateText}</span>
-			{:else if !poiName}
-				<span class="text-sm text-ink-subtle"
-					>{m.inspector_layer_card_no_data(undefined, localeOpts)}</span
-				>
-			{/if}
-		</div>
+			</div>
+		{/if}
 		{#if onToggleLayer}
 			<button
 				type="button"
@@ -136,6 +131,16 @@
 
 	{#if afterTitle}
 		{@render afterTitle()}
+	{/if}
+
+	<!-- GH-88 Review: Fehltexte unter dem Titel über die volle Breite, damit der Titel auf
+	     schmalen Ansichten nicht zusammengedrückt wird. -->
+	{#if !(rowState === 'with-value' && display.chip)}
+		{#if stateText}
+			<p class="text-sm text-ink-subtle">{stateText}</p>
+		{:else if !poiName}
+			<p class="text-sm text-ink-subtle">{m.inspector_layer_card_no_data(undefined, localeOpts)}</p>
+		{/if}
 	{/if}
 
 	{#if poiName}

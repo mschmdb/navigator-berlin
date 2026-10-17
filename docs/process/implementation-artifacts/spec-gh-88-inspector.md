@@ -38,4 +38,19 @@ Quelle: Issue #88, abgenommenes Mockup `design-proposals/inspector.html` (lokal,
 
 ## Triage-Log
 
-(folgt nach den Reviews)
+Drei Review-Layer per `codex exec --model gpt-6.1-sol` (Forks dürfen keine Subagenten starten).
+
+| Layer | Befund | Entscheidung |
+|---|---|---|
+| Blind | Status-Text und Aktionen drücken den Titel auf schmalen Ansichten zusammen | gepatcht: Fehltexte stehen unter dem Titel |
+| Blind | Titel-Links unter 24 px | gepatcht: `min-h-(--target-min)` |
+| Edge | `kuehle-orte` fehlt in den Sektions-Quellen | gepatcht: Quellenliste bekommt alle Hits der Sektion |
+| Edge | lange Fehltexte überlaufen im Bottom-Sheet | gepatcht, siehe oben |
+| Gap | Quellenliste nur isoliert getestet | gepatcht: Integrationstest im Panel (ein Toggle pro Sektion, Stand, Lizenz, Quelle, legal-Hinweise) |
+| Gap | numerische Lärmwerte ohne Formatter („57.4 dB") | gepatcht: `formatDecimal`, Test mit Rohwerten |
+| Gap | Spezial-Datensätze (Haltestellen, Klima, Bevölkerung) noch als Box | gepatcht, Guard-Test; Kühle/Warme Orte (Hitze-/Kälte-Modus) bleiben Box, außerhalb des Mockups |
+| Gap | gelöschte Tests nicht gleichwertig ersetzt | gepatcht: Einklappen, externe Links je Reason, legal für alle drei Slugs, PET-Erklärung |
+| Gap | externe Datenquelle nur als Kürzel | gepatcht: Link auf `hit.source` je Datensatz |
+| Gap | Beta-Label im Diff | verworfen: kam aus veraltetem `origin/main`, nach Rebase weg |
+
+Bewusst offen: Numerische Lärm-/PET-Schwellen (55 bis 65 dB, 30 bis 35 °C) bleiben orange, sie sind keine „mittel"-Kategorie. Die Dimensionszeilen im Score-Block behalten ihr Layer-Link-Icon.
