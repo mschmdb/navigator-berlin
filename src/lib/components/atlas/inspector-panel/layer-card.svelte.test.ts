@@ -38,6 +38,24 @@ describe('LayerCard', () => {
 		expect(card.textContent).toContain('meist mittel (66.7%)');
 	});
 
+	it('Kontext-Zeile mit Stufe: Punkt in Stufenfarbe, aria-hidden (GH-88)', async () => {
+		render(LayerCard, {
+			hit,
+			layerName: 'Lärmbelastung 2023',
+			contextRows: [
+				{ id: 'kiez', label: 'Parkviertel', text: 'meist hoch, 50 %', severity: 'danger' },
+				{ id: 'laerm-db', label: 'Lärm-Mittel (Kiez)', text: '56 dB (L_DEN)' }
+			]
+		});
+		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+		const dots = card.querySelectorAll('[data-testid="context-severity-dot"]');
+		expect(dots).toHaveLength(1);
+		const dot = dots[0] as HTMLElement;
+		expect(dot.getAttribute('aria-hidden')).toBe('true');
+		expect(dot.dataset.severity).toBe('danger');
+		expect(dot.className).toMatch(/bg-severity-danger(\s|$)/);
+	});
+
 	it('ohne Kontext-Zeilen: nur Chip, keine dl', async () => {
 		render(LayerCard, { hit, layerName: 'Lärmbelastung 2023', contextRows: [] });
 		await expect.element(page.getByTestId('value-chip')).toBeInTheDocument();

@@ -67,4 +67,13 @@ describe('Farb-Tokens', () => {
 		expect(contrastRatio(muted, rootToken(APP_CSS, 'bg-elevated'))).toBeGreaterThan(1.1);
 		expect(contrastRatio(rootToken(APP_CSS, 'ink-muted'), muted)).toBeGreaterThanOrEqual(4.5);
 	});
+	it('Stufenpunkte (Severity-Tokens) heben sich mit ≥3:1 von den Flächen ab (WCAG 1.4.11)', () => {
+		for (const level of ['success', 'success-soft', 'neutral', 'warning', 'danger']) {
+			for (const surface of ['bg', 'bg-elevated']) {
+				expect(
+					contrastRatio(rootToken(APP_CSS, `severity-${level}`), rootToken(APP_CSS, surface))
+				).toBeGreaterThanOrEqual(3);
+			}
+		}
+	});
 });
