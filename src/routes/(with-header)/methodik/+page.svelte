@@ -166,7 +166,7 @@
 			{m.methodik_section_aggregation_heading()}
 		</h2>
 		<p class="text-base leading-body text-ink">{m.methodik_aggregation_p1()}</p>
-		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-base leading-body">
+		<dl class="definition-grid gap-x-3 gap-y-1.5 text-base leading-body">
 			{#each aggregationLevels as agg (agg.level)}
 				<dt class="text-sm text-ink-muted">{agg.level}</dt>
 				<dd class="text-ink">{agg.detail}</dd>
@@ -263,7 +263,7 @@
 			{m.methodik_section_coverage_heading()}
 		</h2>
 		<p class="text-base leading-body text-ink">{m.methodik_coverage_p1()}</p>
-		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-base leading-body">
+		<dl class="definition-grid gap-x-3 gap-y-1.5 text-base leading-body">
 			{#each coverageReasons as reason (reason.key)}
 				<dt class="text-sm text-ink-muted">{reason.key}</dt>
 				<dd class="text-ink">{reason.text}</dd>

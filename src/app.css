@@ -342,6 +342,8 @@ body.route-explore {
 /* #90: Leseseiten begrenzen Fließtext auf --measure, Tabellen und Überschriften laufen breiter. */
 .text-measure :where(p, li, dd) {
 	max-inline-size: var(--measure);
+	/* #105: lange URLs und Code-Bezeichner brechen nur dann um, wenn sie sonst überlaufen. */
+	overflow-wrap: break-word;
 }
 
 [role='application'] {
@@ -357,6 +359,25 @@ body.route-explore {
 	overflow-wrap: anywhere;
 	hyphens: auto;
 	text-wrap: pretty;
+}
+
+/* #105: Definitionslisten. Mobil Begriff über Wert, ab sm zweispaltig. Die Wertspalte darf
+   schrumpfen (minmax statt 1fr), lange Bezeichner brechen um statt die Seite zu verbreitern. */
+.definition-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+}
+.definition-grid > dd {
+	margin-bottom: 0.5rem;
+	overflow-wrap: anywhere;
+}
+@media (min-width: 40rem) {
+	.definition-grid {
+		grid-template-columns: max-content minmax(0, 1fr);
+	}
+	.definition-grid > dd {
+		margin-bottom: 0;
+	}
 }
 
 /* Story 1.20 Print-CSS — Inspector als wohnungssuche-tauglicher Ausdruck */

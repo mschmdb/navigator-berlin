@@ -47,7 +47,8 @@
 	{:else if handle === null}
 		<p class="mt-4 font-mono text-sm" data-testid="webmcp-diagnose-laedt">checking…</p>
 	{:else}
-		<dl class="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 font-mono text-sm">
+		<!-- definition-grid: mobil Begriff über Wert, lange Bezeichner brechen um (#105). -->
+		<dl class="definition-grid mt-4 gap-x-6 gap-y-1 font-mono text-sm sm:gap-y-2">
 			<dt>document.modelContext</dt>
 			<dd data-testid="webmcp-diagnose-document">
 				{hatDocumentApi ? 'available' : 'not available'}
@@ -59,19 +60,19 @@
 			<dt>registered on</dt>
 			<dd data-testid="webmcp-diagnose-surface">
 				{handle.surface}.modelContext{handle.viaPolyfill
-					? ' · via @mcp-b/global polyfill'
-					: ' · native'}
+					? ' (via @mcp-b/global polyfill)'
+					: ' (native)'}
 			</dd>
 			<dt>spec version</dt>
 			<dd>{handle.specVersion}</dd>
 			<dt>tools ({handle.toolNames.length})</dt>
-			<dd data-testid="webmcp-diagnose-tools" class="break-words">
-				{handle.toolNames.join(' · ')}
+			<dd data-testid="webmcp-diagnose-tools">
+				{handle.toolNames.join(', ')}
 			</dd>
 			{#if handle.failedTools.length > 0}
 				<dt class="text-red-700">rejected ({handle.failedTools.length})</dt>
-				<dd data-testid="webmcp-diagnose-rejected" class="break-words text-red-700">
-					{handle.failedTools.map((f) => `${f.name}: ${f.reason}`).join(' · ')}
+				<dd data-testid="webmcp-diagnose-rejected" class="text-red-700">
+					{handle.failedTools.map((f) => `${f.name}: ${f.reason}`).join('; ')}
 				</dd>
 			{/if}
 		</dl>
