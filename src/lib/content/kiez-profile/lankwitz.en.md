@@ -3,7 +3,7 @@ slug: lankwitz
 name: Lankwitz
 pageType: kiez
 locale: en
-sourceInputHash: 'f74444cb5b3124e8'
+sourceInputHash: '923c96bb0123f63f'
 sourceTextHash: '3e6895655205b082'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

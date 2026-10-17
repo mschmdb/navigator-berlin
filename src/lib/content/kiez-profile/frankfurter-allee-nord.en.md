@@ -3,7 +3,7 @@ slug: frankfurter-allee-nord
 name: Frankfurter Allee Nord
 pageType: kiez
 locale: en
-sourceInputHash: 'a1bdd04c949e3cc8'
+sourceInputHash: 'f1c48b18b8d44704'
 sourceTextHash: '26a71f174f9b1332'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

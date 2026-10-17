@@ -3,7 +3,7 @@ slug: bohnsdorf
 name: Bohnsdorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 6892d05501b2adbf
+inputHash: 4ce7dc0c68ef71c2
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

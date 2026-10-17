@@ -3,7 +3,7 @@ slug: friedrichshagen
 name: Friedrichshagen
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 38df6426b0bedfe4
+inputHash: 8e65ac5975ffa568
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

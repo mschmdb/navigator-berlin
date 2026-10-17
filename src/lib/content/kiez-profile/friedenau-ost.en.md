@@ -3,7 +3,7 @@ slug: friedenau-ost
 name: Friedenau Ost
 pageType: kiez
 locale: en
-sourceInputHash: '16758570e1597354'
+sourceInputHash: '0b277919004f95bb'
 sourceTextHash: '919ca697247f7cf5'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

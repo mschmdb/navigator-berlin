@@ -3,7 +3,7 @@ slug: friedenau-ost
 name: Friedenau Ost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: '16758570e1597354'
+inputHash: 0b277919004f95bb
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

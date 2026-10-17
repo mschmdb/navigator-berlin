@@ -3,7 +3,7 @@ slug: gropiusstadt-west
 name: Gropiusstadt West
 pageType: kiez
 locale: en
-sourceInputHash: '9a9ff1d65ee5157b'
+sourceInputHash: 'efc8a65988fda24b'
 sourceTextHash: 'd698b68d699bf672'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -3,7 +3,7 @@ slug: zehlendorf-nord
 name: Zehlendorf Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3a19457d13eabd3d
+inputHash: ae1e1697639b6b64
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

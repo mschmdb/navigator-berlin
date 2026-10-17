@@ -3,7 +3,7 @@ slug: baumschulenweg
 name: Baumschulenweg
 pageType: kiez
 locale: en
-sourceInputHash: '0b51f1f522dcf3ce'
+sourceInputHash: 'da7994cd44e2ad33'
 sourceTextHash: 'cb48cfca315496be'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

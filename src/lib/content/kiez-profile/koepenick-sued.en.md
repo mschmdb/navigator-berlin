@@ -1,9 +1,9 @@
 ---
 slug: koepenick-sued
-name: Koepenick Sued
+name: Köpenick Süd
 pageType: kiez
 locale: en
-sourceInputHash: '3eed74b957c6516e'
+sourceInputHash: '00f395acbde3fb5d'
 sourceTextHash: '9a7d67e041e1c740'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

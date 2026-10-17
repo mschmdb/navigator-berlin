@@ -3,7 +3,7 @@ slug: westend
 name: Westend
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 9e90e8ac46da030a
+inputHash: fc949687b6b4a7b7
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

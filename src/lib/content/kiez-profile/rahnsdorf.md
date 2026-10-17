@@ -3,7 +3,7 @@ slug: rahnsdorf
 name: Rahnsdorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 2559f5b65a04c083
+inputHash: 632f2d716f77eeff
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

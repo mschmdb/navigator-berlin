@@ -3,7 +3,7 @@ slug: tempelhofer-vorstadt
 name: Tempelhofer Vorstadt
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: af6e995fd4652570
+inputHash: 474f0757a72c3f42
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

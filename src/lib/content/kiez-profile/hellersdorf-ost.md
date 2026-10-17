@@ -3,7 +3,7 @@ slug: hellersdorf-ost
 name: Hellersdorf Ost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: cea1057cb5acddb9
+inputHash: 9ba5eb1bb91a3409
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

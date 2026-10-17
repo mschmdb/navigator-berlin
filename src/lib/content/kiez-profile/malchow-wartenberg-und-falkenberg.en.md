@@ -1,9 +1,9 @@
 ---
 slug: malchow-wartenberg-und-falkenberg
-name: Malchow Wartenberg Und Falkenberg
+name: Malchow, Wartenberg und Falkenberg
 pageType: kiez
 locale: en
-sourceInputHash: '0ab90dedde1444be'
+sourceInputHash: 'f7d0ec1867c481e2'
 sourceTextHash: 'f0c1f7b6688afbea'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
