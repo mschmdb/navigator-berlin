@@ -674,7 +674,7 @@ function getSpec(slug: string): LayerMethodologySpec | undefined {
 function specToMethodologyDe(spec: LayerMethodologySpec): LayerMethodology {
 	const authorityBase = resolveAuthority(spec.authorityKey, 'de');
 	const authority = spec.authoritySuffix
-		? `${authorityBase} ${spec.authoritySuffix.de}`
+		? `${authorityBase}, ${spec.authoritySuffix.de}`
 		: authorityBase;
 	return {
 		calculation: spec.calculation,
@@ -742,7 +742,7 @@ function resolveMethodologyForLocale(
 ): LayerMethodology {
 	const authorityBase = resolveAuthority(spec.authorityKey, locale);
 	const authority = spec.authoritySuffix
-		? `${authorityBase} ${spec.authoritySuffix[locale]}`
+		? `${authorityBase}, ${spec.authoritySuffix[locale]}`
 		: authorityBase;
 	const msgs = LAYER_METHODOLOGY_MESSAGE[slug];
 	const options = { locale };

@@ -147,7 +147,10 @@
 
 {#if visible && jahr !== null}
 	<section data-testid="wahl-compare-block" class="space-y-3">
-		<h3 class="border-t border-rule pt-4 text-xs text-ink-muted" data-testid="wahl-compare-header">
+		<h3
+			class="border-t border-rule pt-4 text-xs font-semibold text-ink-muted"
+			data-testid="wahl-compare-header"
+		>
 			{m.wahl_compare_header()}
 		</h3>
 

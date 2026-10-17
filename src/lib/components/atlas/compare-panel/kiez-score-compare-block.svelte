@@ -74,7 +74,7 @@
 		class="border-b border-rule px-6 py-4"
 		aria-label={m.compare_kiez_score_aria()}
 	>
-		<h3 class="mb-3 text-xs text-ink-muted" data-testid="compare-kiez-score-header">
+		<h3 class="mb-3 text-xs font-semibold text-ink-muted" data-testid="compare-kiez-score-header">
 			{m.inspector_kiez_score_heading()}
 		</h3>
 		<table class="w-full border-collapse">

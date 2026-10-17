@@ -71,7 +71,7 @@
 		<div class="flex flex-col gap-4" data-testid="alle-wahlen-block">
 			{#each groups as group (group.typ)}
 				<div data-testid={`alle-wahlen-gruppe-${group.typ}`}>
-					<h4 class="text-xs text-ink-muted">
+					<h4 class="text-xs font-semibold text-ink-muted">
 						{group.label}
 					</h4>
 					<ul class="flex flex-wrap gap-x-4 gap-y-2 pt-1 text-xs">

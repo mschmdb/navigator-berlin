@@ -43,7 +43,7 @@
 			<a
 				href={localizedHref('/explore?finder=1')}
 				data-testid="home-finder-teaser-cta"
-				class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
+				class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
 			>
 				<SlidersHorizontal size={16} aria-hidden="true" />
 				{m.home_finder_cta()}

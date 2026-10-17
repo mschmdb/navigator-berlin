@@ -72,7 +72,7 @@
 		<a
 			href={localizedHref(explorerLink)}
 			data-testid="kaelte-karte-link"
-			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
+			class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
 		>
 			{m.kaelte_orte_karte_link()}
 		</a>

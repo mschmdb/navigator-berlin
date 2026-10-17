@@ -168,7 +168,8 @@
 		return 1;
 	}
 	function pillClass(value: number | null, neutral = false): string {
-		const base = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center tabular-nums';
+		const base =
+			'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
 		if (neutral) return `${base} text-ink`;
 		const bucket = scoreBucket(value);
 		if (bucket === 0) return `${base} text-ink-muted`;
@@ -181,7 +182,8 @@
 	// färben stattdessen nach Quartil der tatsächlichen Verteilung der AKTUELLEN Ansicht (kieze/bezirke):
 	// oberstes Viertel grün, unterstes rot. Passt zum „Vergleich, nicht Urteil"-Framing, ändert keine
 	// Scores. Kriminalität bleibt neutral (kein Quartil, kein Leaderboard).
-	const PILL_BASE = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center tabular-nums';
+	const PILL_BASE =
+		'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
 	function columnQuartiles(
 		rows: readonly RankingRow[],
 		key: NumericSortKey

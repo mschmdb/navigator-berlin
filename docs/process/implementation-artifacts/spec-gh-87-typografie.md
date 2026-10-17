@@ -2,7 +2,7 @@
 title: 'GH-87 Redesign 2: Typografie ohne Serif, Mono nur für Zahlen'
 type: 'refactor'
 created: '2026-10-17'
-status: 'in-review'
+status: 'done'
 baseline_commit: 'c7a69f1ceefe293a35f4e5e12450df5fc74ba0f2'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -84,3 +84,29 @@ context:
 - Given `pnpm check`, then 0 Fehler.
 
 ## Implementation Notes
+- Serif: 399 Stellen in 99 Dateien per Skript migriert. Überschriften ohne Gewicht bekamen h1/großes h2 `font-bold`, sonst `font-semibold`. Kursiv entfiel mit der Serif (Plex Sans ist nur aufrecht geladen).
+- Mono: 421 Stellen geprüft, 56 an Zahlen, Datum, Rang behalten (mit `tabular-nums`), Rest Sans. Versalien und `tracking-wide*` an Labels entfernt.
+- Eyebrows gestrichen: Startseite (Hero, Finder-, Hitze-, Kälte-Teaser), Bezirk-Hero, /hitze, /kaelte, /berlin-wahlen, Layer-Seite (Bundle-Label). Kiez-Hero „Kiez in {Bezirk}“ und Vergleich-Label bleiben als Sans-Zeile, weil sie Information bzw. einen Link tragen. „Beta“ steht als Wort hinter der Wortmarke.
+- `·`: Breadcrumbs nutzen `/`, Datenzeilen Komma, Bezeichnung plus Teil Doppelpunkt („Kiez-Score: Gesamt“, „Methodik: Wahldaten“), Lizenz und Prüfdatum stehen als eigene Zeile. Seitentitel (`*_meta_title`, `wahl-meta.ts`), OG und Druck-Fußzeile bleiben unverändert. TS-Formatter für sichtbare Zeilen (value-formatters, address-subline, poi-summary, authorities) ziehen mit; llms/Feeds/JSON-LD bleiben.
+- „→“ an Link-/Buttontexten und ArrowRight-Icons an CTAs entfernt; Fluss-Pfeile (Sankey, Pipeline, Formeln, Menüpfade) bleiben.
+- Screenshots vorher (Stand main, aus #86-Lauf) und nachher unter `/tmp/gh-87/`. Methodik-Vorher fehlt, Explore mobil konnte das Skript die Suche nicht öffnen.
+
+## Review Triage Log
+
+Review-Layer liefen über Codex (`gpt-6.1-sol`, read-only), weil der Fork keine Subagenten starten darf.
+
+| # | Layer | Fund | Verdict | Evidenz | Route |
+|---|---|---|---|---|---|
+| 1 | Blind + Edge | Große Score-Zahl uneinheitlich (Startseite Mono 600, Ring Sans 600 ohne tnum) | medium | `home-featured-score.svelte:130`, `kiez-score-ring.svelte:131` | patch: beide Sans 700 + `tabular-nums` |
+| 2 | Blind | Score-Pills verloren Mono (JS-Strings) | low | `score-ranking-table.svelte:171,184` | patch: `font-mono` zurück |
+| 3 | Blind + Edge | h3/h4 ohne Gewicht nach Versalien-Abbau | medium | 8 Überschriften, u. a. `wahl-section.svelte:262` | patch: `font-semibold` |
+| 4 | Blind + Edge | CTAs ohne Sans 500 | low | `home-hero.svelte`, Teaser, Header, Hitze, Kälte | patch: `font-medium` |
+| 5 | Blind | Vergleich-Eyebrow bleibt | false | Label benennt den Panel-Inhalt, Spec erlaubt informative Zeilen als Sans | reject |
+| 6 | Blind | Mittelpunkt im OSM-Authority-Suffix | medium | `authorities.ts:176` | patch: Suffix ohne Punkt, Komma beim Zusammensetzen |
+| 7 | Blind | `<title>` geändert entgegen Spec | medium | `wahl-meta.ts`, `*_meta_title` | patch: zurückgesetzt; H1 nutzt eigene Komposition mit Komma |
+| 8 | Blind + Edge | Mono-Guard prüft nur `tabular-nums`, nicht den Inhalt | low | Zeilen-Scan | reject: Fix bräuchte Template-Parser |
+| 9 | Blind + Edge | Uppercase-Guard übersieht `sm:uppercase` | low | Regex | patch: `:` als Präfix |
+| 10 | Blind | Visuelle Prüfung nicht dokumentiert | low | Notes leer | patch: Notes ergänzt |
+| 11 | Edge | Wahlportal-H1 nicht „Abgeordnetenhauswahl 2026, Zweitstimme“ | false | Gemeint ist die Ergebnisseite; `wahlTitel` joint mit Komma | reject |
+| 12 | Gap | A–Z/Z–A-Label nach Klick ungetestet | low | Sortierung läuft über URL-State | reject: Test bräuchte `$app/state`-Mock, Logik unverändert |
+| 13 | Gap | Krankenhaus-Kontext ohne Test | low | `layer-hit-display.ts:184` | patch: Test ergänzt |

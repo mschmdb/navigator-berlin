@@ -173,6 +173,6 @@ export function resolveAuthority(key: AuthorityKey, locale: Locale = 'de'): stri
  * OSM-Attribution-Konvention).
  */
 export const AUTHORITY_SUFFIX_OSM_ODBL: Readonly<Record<Locale, string>> = {
-	de: '· OpenStreetMap-Contributors (ODbL 1.0)',
-	en: '· OpenStreetMap contributors (ODbL 1.0)'
+	de: 'OpenStreetMap-Contributors (ODbL 1.0)',
+	en: 'OpenStreetMap contributors (ODbL 1.0)'
 };

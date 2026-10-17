@@ -30,7 +30,7 @@
 		<a
 			href={localizedHref('/kaelte')}
 			data-testid="home-kaelte-teaser-landing"
-			class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
+			class="inline-flex items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm font-medium text-bg hover:border-ink hover:bg-ink"
 		>
 			<Flame size={16} aria-hidden="true" />
 			{m.home_kaelte_cta_landing()}

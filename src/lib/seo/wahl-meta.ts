@@ -55,9 +55,9 @@ function descriptionLabel(input: WahlMetaInput): string {
 }
 
 function buildTitle(input: WahlMetaInput): string {
-	const head = headParts(input).join(', ');
+	const head = headParts(input).join(' · ');
 	const full = input.isRepeatElection
-		? `${head}, ${wahlWiederholungLabel({ locale: input.locale })}`
+		? `${head} · ${wahlWiederholungLabel({ locale: input.locale })}`
 		: head;
 	const withBrand = (core: string) => `${core} | ${BRAND}`;
 	// Weglassreihenfolge bei Überlänge: Marke, dann Wiederholungshinweis.

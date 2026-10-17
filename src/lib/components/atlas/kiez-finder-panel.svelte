@@ -563,7 +563,7 @@
 
 			{#if top.length > 0}
 				<div class="mt-3 border-t border-rule pt-2">
-					<h3 class="mb-1 text-dense-meta text-ink-subtle">
+					<h3 class="mb-1 text-dense-meta font-semibold text-ink-subtle">
 						{m.finder_best_match_heading()}
 					</h3>
 					<ol data-testid="finder-top-list" class="flex flex-col gap-0.5">

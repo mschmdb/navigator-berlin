@@ -139,7 +139,7 @@
 			aria-label={m.inspector_nearest_stops_aria_label(undefined, localeOpts)}
 		>
 			<div class="flex items-center justify-between gap-2 border-b border-rule pb-1">
-				<h3 class="text-xs text-ink-muted">
+				<h3 class="text-xs font-semibold text-ink-muted">
 					{m.inspector_nearest_stops_heading(undefined, localeOpts)}
 				</h3>
 				{#if rating}

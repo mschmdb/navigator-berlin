@@ -127,7 +127,7 @@
 				aria-hidden="true"
 			>
 				<span class="text-xs text-ink-subtle">{m.home_featured_score_overall_label()}</span>
-				<span class="font-mono text-5xl leading-none font-semibold text-ink tabular-nums"
+				<span class="text-5xl leading-none font-bold tracking-tight text-ink tabular-nums"
 					>{Math.round(featured.composite ?? 0)}</span
 				>
 				<span class="font-mono text-xs text-ink-subtle tabular-nums">/ 100</span>

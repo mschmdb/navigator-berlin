@@ -52,7 +52,7 @@
 
 {#if enabled && score}
 	<section data-testid="kiez-score-section" class="space-y-3">
-		<h3 class="text-xs text-ink-muted" data-testid="kiez-score-section-header">
+		<h3 class="text-xs font-semibold text-ink-muted" data-testid="kiez-score-section-header">
 			{m.inspector_kiez_score_heading(undefined, localeOpts)}
 		</h3>
 

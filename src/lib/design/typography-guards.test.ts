@@ -62,7 +62,7 @@ describe('Typografie-Guard (GH-87)', () => {
 	});
 
 	it('nutzt keine Versalien-Labels', () => {
-		const hits = findHits((line) => /(^|[\s"'`{])uppercase(?=[\s"'`}]|$)/.test(line));
+		const hits = findHits((line) => /(^|[\s"'`{:])uppercase(?=[\s"'`}]|$)/.test(line));
 		expect(format(hits)).toBe('');
 	});
 

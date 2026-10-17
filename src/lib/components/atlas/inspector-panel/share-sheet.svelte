@@ -201,7 +201,7 @@
 		onkeydown={onKeydown}
 	>
 		<header class="flex items-center justify-between gap-2 border-b border-rule px-4 py-3">
-			<h2 id="share-sheet-title" class="text-xs text-ink-muted">
+			<h2 id="share-sheet-title" class="text-xs font-semibold text-ink-muted">
 				{m.inspector_share_title(undefined, localeOpts)}
 			</h2>
 			<button

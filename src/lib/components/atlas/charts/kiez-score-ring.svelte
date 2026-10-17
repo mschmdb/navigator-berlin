@@ -128,7 +128,9 @@
 			aria-hidden="true"
 		>
 			<span class="text-dense-meta text-ink-subtle">{overallLabel}</span>
-			<span class="text-4xl leading-none font-semibold text-ink">{overallText}</span>
+			<span class="text-4xl leading-none font-bold tracking-tight text-ink tabular-nums"
+				>{overallText}</span
+			>
 			<span class="font-mono text-dense-meta text-ink-subtle tabular-nums">/ 100</span>
 		</div>
 	</div>
