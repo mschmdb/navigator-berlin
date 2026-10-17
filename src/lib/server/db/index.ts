@@ -17,8 +17,22 @@ import * as schema from './schema/index.js';
 
 export type Db = PostgresJsDatabase<typeof schema>;
 
-let _client: Sql | null = null;
-let _db: Db | null = null;
+/**
+ * Pool auf `globalThis` statt in Modul-Variablen (#145): Vite wertet dieses
+ * Modul bei HMR neu aus. Mit Modul-Variablen entstand bei jedem Reload ein
+ * neuer Pool (max 10), der alte blieb offen, bis Postgres keine Verbindung
+ * mehr annahm. In Prod läuft das Modul einmal, dort ändert sich nichts.
+ */
+type DbCache = { client: Sql | null; db: Db | null };
+
+declare global {
+	var __navigatorDbCache: DbCache | undefined;
+}
+
+function cache(): DbCache {
+	globalThis.__navigatorDbCache ??= { client: null, db: null };
+	return globalThis.__navigatorDbCache;
+}
 
 function ensureUrl(): string {
 	const url = process.env.DATABASE_URL;
@@ -32,22 +46,25 @@ function ensureUrl(): string {
  * Liefert den Singleton-Drizzle-Client (lazy-initialisiert).
  */
 export function getDb(): Db {
-	if (_db) return _db;
-	if (!_client) {
-		_client = postgres(ensureUrl(), { max: 10, onnotice: () => {} });
+	const c = cache();
+	if (c.db) return c.db;
+	if (!c.client) {
+		c.client = postgres(ensureUrl(), { max: 10, onnotice: () => {} });
 	}
-	_db = drizzle(_client, { schema });
-	return _db;
+	c.db = drizzle(c.client, { schema });
+	return c.db;
 }
 
 /**
  * Test-Helper: Connection schließen (z.B. nach Migrations- oder Integration-Test).
  */
 export async function closeDb(): Promise<void> {
-	if (_client) {
-		await _client.end();
-		_client = null;
-		_db = null;
+	const c = cache();
+	if (c.client) {
+		const client = c.client;
+		c.client = null;
+		c.db = null;
+		await client.end();
 	}
 }
 
