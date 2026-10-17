@@ -268,17 +268,25 @@ function substitute(text: string, slots: Record<string, string>): string {
 	});
 }
 
-const SCORE_SLOT =
-	/\{(?:ruheLuft|gruenHitze|mobilitaet|versorgung|wohnschutz)(?:Score|Rang|Vergleich)\}/;
+const SCORE_SLOT = /\{((?:ruheLuft|gruenHitze|mobilitaet|versorgung|wohnschutz)(?:Score|Rang))\}/g;
+const VERGLEICH_CLAUSE =
+	/,\s*\{((?:ruheLuft|gruenHitze|mobilitaet|versorgung|wohnschutz)Vergleich)\}/g;
 
 /**
- * #100: Score-Sätze sind ein Zusatz zur Datenantwort. Fehlen die Metriken
- * eines Kiezes, fällt nur der Satz mit dem Score weg, nicht die ganze Antwort.
+ * #100: Score-Sätze sind ein Zusatz zur Datenantwort. Läuft auf dem Template
+ * VOR der Substitution, damit Punkte in Namen („St. …“) die Satztrennung
+ * nicht stören. Fehlt nur der Vergleich, fällt nur dieser Nebensatz weg.
+ * Fehlen Score oder Rang, fällt der ganze Score-Satz weg, nicht die Antwort.
  */
-function dropUnresolvedScoreSentences(text: string): string {
-	return text
+function pruneMissingScoreParts(text: string, slots: Record<string, string>): string {
+	const withoutVergleich = text.replace(VERGLEICH_CLAUSE, (clause, key: string) =>
+		slots[key] !== undefined ? clause : ''
+	);
+	return withoutVergleich
 		.split(/(?<=\.)\s+/)
-		.filter((sentence) => !SCORE_SLOT.test(sentence))
+		.filter((sentence) =>
+			[...sentence.matchAll(SCORE_SLOT)].every((m) => slots[m[1]] !== undefined)
+		)
 		.join(' ');
 }
 
@@ -295,6 +303,6 @@ export function renderTemplate(
 	const slots = buildSlotMap(context);
 	return {
 		question: substitute(template.question, slots),
-		answer: dropUnresolvedScoreSentences(substitute(template.answer, slots))
+		answer: substitute(pruneMissingScoreParts(template.answer, slots), slots)
 	};
 }
