@@ -131,6 +131,27 @@ describe('Design-Fundament: colors.ts spiegelt app.css', () => {
 		expect(mismatches.join('\n')).toBe('');
 	});
 
+	it('Badge-Text für Kühle Orte erreicht 4,5:1 auf seinem Tint', () => {
+		const rgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+		const lum = (c: number[]) => {
+			const [r, g, b] = c.map((v) => {
+				const s = v / 255;
+				return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+			});
+			return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+		};
+		const ratio = (a: number[], b: number[]) => {
+			const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+			return (hi! + 0.05) / (lo! + 0.05);
+		};
+		const bg = rgb(cssValue('bg')!);
+		const base = rgb(cssValue('umwelt-kuehle-orte')!);
+		const ink = rgb(cssValue('umwelt-kuehle-orte-ink')!);
+		// bg-umwelt-kuehle-orte/12 über --bg
+		const tint = base.map((v, i) => Math.round(v * 0.12 + bg[i]! * 0.88));
+		expect(ratio(ink, tint)).toBeGreaterThanOrEqual(4.5);
+	});
+
 	it('führt Wärme- und Kühle-Orte als Tokens in beiden Quellen', () => {
 		expect(cssValue('umwelt-kuehle-orte')).toBe(COLORS.umweltKuehleOrte.toLowerCase());
 		expect(cssValue('umwelt-waerme-orte')).toBe(COLORS.umweltWaermeOrte.toLowerCase());
