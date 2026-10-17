@@ -502,3 +502,6 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-86-redesign-fundament.md`
   summary: Ring-Legende im Kiez-Score ordnet Dimensionen nur über die Reihenfolge den Ringen zu; #88 (Inspector nach Mockup) soll die Zuordnung sichtbar machen.
   evidence: Ringfarbe zeigt die Stufe, nicht die Dimension; mehrere Ringe können gleich gefärbt sein (Codex-Review GH-86).
+- source_spec: `docs/process/implementation-artifacts/spec-gh-86-redesign-fundament.md`
+  summary: Sankey-Labels im Wahlportal skalieren im responsiven SVG auf Mobil auf rund 4,8 px; Labels gehören aus dem skalierten SVG heraus (#90).
+  evidence: codex-review GH-86 (gpt-6.1-sol), Messung bei 390 px Viewport; bestand vor dem Diff.

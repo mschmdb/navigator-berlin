@@ -280,7 +280,7 @@
 									<a
 										data-testid={`legend-source-link-${entry.slug}`}
 										href={localizedHref('/methodik/kiez-score', locale)}
-										class="text-accent underline underline-offset-2 hover:text-accent-strong"
+										class="inline-flex min-h-(--target-min) items-center text-accent underline underline-offset-2 hover:text-accent-strong"
 									>
 										{m.atlas_legend_own_calculation(undefined, localeOpts)}<span
 											class="sr-only"
@@ -298,7 +298,7 @@
 										href={entry.meta.sourceUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="text-accent underline underline-offset-2 hover:text-accent-strong"
+										class="inline-flex min-h-(--target-min) items-center text-accent underline underline-offset-2 hover:text-accent-strong"
 									>
 										{m.atlas_legend_source(undefined, localeOpts)}
 									</a>
@@ -315,7 +315,7 @@
 						<a
 							data-testid={`legend-more-link-${entry.slug}`}
 							href={localizedHref(`/layer/${entry.slug}`, locale)}
-							class="self-start text-dense-label font-medium text-accent underline-offset-2 hover:underline"
+							class="inline-flex min-h-(--target-min) items-center self-start text-dense-label font-medium text-accent underline-offset-2 hover:underline"
 						>
 							{m.atlas_legend_learn_more(undefined, localeOpts)}
 						</a>

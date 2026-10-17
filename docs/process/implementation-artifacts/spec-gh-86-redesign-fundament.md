@@ -122,6 +122,8 @@ Review-Layer liefen über Codex (`gpt-6.1-sol`, read-only), weil der Fork keine 
 | 8 | Blind + Gap | Fokus-e2e deckt Finder nicht ab | medium | Gap-Layer belegt: keine Finder-Fokusprüfung | patch: Finder-Fall |
 | 9 | Blind + Gap | Klickziel-e2e misst nur Startzustand, Finder fehlt | medium | Gap-Layer belegt | patch: `/explore?finder=1` |
 | 10 | Blind | Hex-Guard überspringt ganze Zeile bei `href="#"` | low | Filter wirkt zeilenweise | patch: Fragmente entfernen, Regressionstest |
+| 11 | codex-review (gpt-6.1-sol) | Aufgeklappte Legende: „Mehr erfahren“ 16 px, Quellen-Link 15 px | medium | e2e mit `?layers=laerm-2023` und geöffneter Legende: rot (32×15, 92×16), nach Fix grün | patch: `min-h-(--target-min)`, e2e-Fall (nur Desktop, mobil liegt die Legende hinter einem Schalter) |
+| 12 | codex-review (gpt-6.1-sol) | Sankey-Labels skalieren im responsiven SVG auf Mobil auf ca. 4,8 px | medium | bestand schon vor dem Diff (10 bis 11 px × Skalierung); Fix braucht Umbau des Sankey-Layouts | defer an #90 (Sankey-Labels dort schon vermerkt) |
 
 ## Design Notes
 

@@ -5,13 +5,19 @@ import { expect, test, type Page } from '@playwright/test';
 
 const MIN = 24;
 
-const PAGES: readonly { name: string; path: string }[] = [
+// desktopOnly: Auf Mobil liegt die Legende hinter einem eigenen Schalter.
+const PAGES: readonly { name: string; path: string; desktopOnly?: boolean }[] = [
 	{ name: 'Startseite', path: '/' },
 	{
 		name: 'Explore mit Inspector',
 		path: '/explore?address=13.42705,52.49755&q=Wiener%20Stra%C3%9Fe%2020'
 	},
 	{ name: 'Explore mit Kiez-Finder', path: '/explore?finder=1' },
+	{
+		name: 'Explore mit aufgeklappter Legende',
+		path: '/explore?layers=laerm-2023',
+		desktopOnly: true
+	},
 	{ name: 'Kiez', path: '/kiez/suedliche-luisenstadt' },
 	{ name: 'Hitze', path: '/hitze' },
 	{ name: 'Wahlen', path: '/berlin-wahlen' }
@@ -79,12 +85,18 @@ for (const vp of VIEWPORTS) {
 	test.describe(`GH-86 Klickziele ${vp.name}`, () => {
 		test.use({ viewport: { width: vp.width, height: vp.height } });
 
-		for (const p of PAGES) {
+		for (const p of PAGES.filter((x) => !(x.desktopOnly && vp.name === 'Mobil'))) {
 			test(`${p.name}: alle Block-Ziele mindestens ${MIN} px`, async ({ page }) => {
 				await page.goto(p.path);
 				await page.waitForLoadState('networkidle');
 				if (p.path.includes('finder=1')) {
 					await expect(page.getByTestId('finder-close').first()).toBeVisible();
+				}
+				if (p.path.includes('layers=')) {
+					const summary = page.locator('[data-testid^="legend-summary-"]').first();
+					await expect(summary).toBeVisible();
+					await summary.click();
+					await expect(page.locator('[data-testid^="legend-source-link-"]').first()).toBeVisible();
 				}
 				const small = await smallTargets(page);
 				const report = small.map((s) => `${s.label} ${s.width}×${s.height}`).join('\n');
