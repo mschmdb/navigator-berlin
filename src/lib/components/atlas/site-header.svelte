@@ -193,7 +193,7 @@
 					<span
 						data-testid="header-layer-badge"
 						aria-hidden="true"
-						class="font-mono text-xs text-ink-muted tabular-nums"
+						class="text-xs text-ink-muted tabular-nums"
 					>
 						{activeLayerCount}
 					</span>
@@ -223,7 +223,7 @@
 					<span
 						data-testid="header-bookmark-badge"
 						aria-hidden="true"
-						class="font-mono text-xs text-ink-muted tabular-nums"
+						class="text-xs text-ink-muted tabular-nums"
 					>
 						{bookmarkCount}
 					</span>

@@ -185,21 +185,21 @@
 			<dt class="text-ink-muted">
 				{m.inspector_demografie_einwohner_label(undefined, localeOpts)}
 			</dt>
-			<dd class="text-right font-mono text-ink tabular-nums">
+			<dd class="text-right text-ink tabular-nums">
 				{formatCount(data.einwohner, localeOpts)}
 			</dd>
 			<dt class="break-words hyphens-auto text-ink-muted">
 				{m.inspector_demografie_kinder_0_6_label(undefined, localeOpts)}
 			</dt>
-			<dd class="text-right font-mono text-ink tabular-nums">{pct(data.anteilKinder0bis6)}</dd>
+			<dd class="text-right text-ink tabular-nums">{pct(data.anteilKinder0bis6)}</dd>
 			<dt class="break-words hyphens-auto text-ink-muted">
 				{m.inspector_demografie_kinder_6_12_label(undefined, localeOpts)}
 			</dt>
-			<dd class="text-right font-mono text-ink tabular-nums">{pct(data.anteilKinder6bis12)}</dd>
+			<dd class="text-right text-ink tabular-nums">{pct(data.anteilKinder6bis12)}</dd>
 			<dt class="break-words hyphens-auto text-ink-muted">
 				{m.inspector_demografie_senioren_label(undefined, localeOpts)}
 			</dt>
-			<dd class="text-right font-mono text-ink tabular-nums">{pct(data.anteilSenioren65plus)}</dd>
+			<dd class="text-right text-ink tabular-nums">{pct(data.anteilSenioren65plus)}</dd>
 			{#if data.jugendquotient !== null}
 				<dt class="break-words hyphens-auto text-ink-muted">
 					{m.inspector_demografie_jugendquotient_label(undefined, localeOpts)}

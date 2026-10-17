@@ -87,7 +87,7 @@
 	</div>
 	{#if scoreText}
 		<p class="font-sans text-sm text-ink" data-testid="region-focus-score">
-			<span class="font-mono tabular-nums">{scoreText}</span>
+			<span class="tabular-nums">{scoreText}</span>
 			{#if rankText}
 				<span class="text-ink-muted">, {rankText}</span>
 			{/if}

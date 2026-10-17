@@ -188,7 +188,7 @@
 				<li class="border-t border-rule pt-2 first:border-t-0 first:pt-0" data-testid="kuehle-ort">
 					<div class="flex items-baseline justify-between gap-2">
 						<span class="min-w-0 truncate font-sans text-sm font-medium text-ink">{ort.name}</span>
-						<span class="shrink-0 font-mono text-xs text-ink-subtle tabular-nums"
+						<span class="shrink-0 text-xs text-ink-subtle tabular-nums"
 							>{formatDistance(ort.distanceM, localeOpts)}</span
 						>
 					</div>

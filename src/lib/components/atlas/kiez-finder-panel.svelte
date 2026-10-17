@@ -574,7 +574,7 @@
 										<span class="ml-1 text-ink-subtle">{result.kiez}</span>
 									{/if}
 								</span>
-								<span class="tabular font-mono text-xs text-ink">{Math.round(result.fit)}</span>
+								<span class="text-xs text-ink tabular-nums">{Math.round(result.fit)}</span>
 							</li>
 						{/each}
 					</ol>

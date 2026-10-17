@@ -168,8 +168,7 @@
 		return 1;
 	}
 	function pillClass(value: number | null, neutral = false): string {
-		const base =
-			'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
+		const base = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center tabular-nums';
 		if (neutral) return `${base} text-ink`;
 		const bucket = scoreBucket(value);
 		if (bucket === 0) return `${base} text-ink-muted`;
@@ -182,8 +181,7 @@
 	// färben stattdessen nach Quartil der tatsächlichen Verteilung der AKTUELLEN Ansicht (kieze/bezirke):
 	// oberstes Viertel grün, unterstes rot. Passt zum „Vergleich, nicht Urteil"-Framing, ändert keine
 	// Scores. Kriminalität bleibt neutral (kein Quartil, kein Leaderboard).
-	const PILL_BASE =
-		'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
+	const PILL_BASE = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center tabular-nums';
 	function columnQuartiles(
 		rows: readonly RankingRow[],
 		key: NumericSortKey
@@ -339,7 +337,7 @@
 			<tbody>
 				{#each sortedRows as row, index (row.slug)}
 					<tr class="border-b border-rule align-top">
-						<td class="py-3 pr-3 font-mono text-xs text-ink-subtle tabular-nums">{index + 1}</td>
+						<td class="py-3 pr-3 text-xs text-ink-subtle tabular-nums">{index + 1}</td>
 						<th scope="row" class="py-3 pr-3 text-left font-semibold text-ink">
 							<a class="text-ink hover:text-accent hover:underline" href={detailHref(row)}>
 								{row.displayName}

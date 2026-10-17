@@ -152,7 +152,7 @@
 				new Popup({ closeButton: true, closeOnClick: true, maxWidth: '280px' })
 					.setLngLat(e.lngLat)
 					.setHTML(
-						`<div style="font-family:monospace;font-size:12px;line-height:1.4;">` +
+						`<div style="font-family:var(--font-sans);font-variant-numeric:tabular-nums;font-size:12px;line-height:1.4;">` +
 							`<div style="font-weight:600;margin-bottom:4px;">${summary.name}</div>` +
 							`<ol style="list-style:decimal;padding-left:1.2em;margin:0;">${lines}</ol>` +
 							`</div>`

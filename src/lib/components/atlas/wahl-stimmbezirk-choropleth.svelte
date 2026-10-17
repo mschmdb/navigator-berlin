@@ -166,11 +166,11 @@
 						: m.wahl_portal_choropleth_briefwahl_gruppe_fallback();
 				const anteilNum = typeof props.anteil === 'number' ? props.anteil : 0;
 				const html = partei
-					? `<div style="font-family:monospace;font-size:12px;line-height:1.4;">` +
+					? `<div style="font-family:var(--font-sans);font-variant-numeric:tabular-nums;font-size:12px;line-height:1.4;">` +
 						`<div style="font-weight:600;margin-bottom:4px;">${gruppenName}</div>` +
 						`<div>${m.wahl_portal_choropleth_staerkste_zeile({ partei: `<strong>${partei}</strong>`, pct: formatPercent(anteilNum) })}</div>` +
 						`</div>`
-					: `<div style="font-family:monospace;font-size:12px;">${gruppenName}<br/>${m.wahl_portal_keine_daten_label()}</div>`;
+					: `<div style="font-family:var(--font-sans);font-variant-numeric:tabular-nums;font-size:12px;">${gruppenName}<br/>${m.wahl_portal_keine_daten_label()}</div>`;
 				new Popup({ closeButton: true, closeOnClick: true, maxWidth: '260px' })
 					.setLngLat(e.lngLat)
 					.setHTML(html)

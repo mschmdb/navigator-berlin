@@ -130,7 +130,7 @@
 				<span class="text-5xl leading-none font-bold tracking-tight text-ink tabular-nums"
 					>{Math.round(featured.composite ?? 0)}</span
 				>
-				<span class="font-mono text-xs text-ink-subtle tabular-nums">/ 100</span>
+				<span class="text-xs text-ink-subtle tabular-nums">/ 100</span>
 			</div>
 		{/if}
 		<a

@@ -326,7 +326,7 @@
 								aria-checked={selectedJahr === jahr}
 								data-testid={`wahl-jahr-${jahr}`}
 								onclick={() => (selectedJahr = jahr)}
-								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label tabular-nums transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 text-dense-label tabular-nums transition-colors"
 								class:bg-ink={selectedJahr === jahr}
 								class:text-bg={selectedJahr === jahr}
 								class:bg-bg={selectedJahr !== jahr}
@@ -341,10 +341,7 @@
 					<span class="text-dense-meta text-ink-muted">
 						{m.inspector_wahl_jahr_label(undefined, localeOpts)}
 					</span>
-					<span
-						class="font-mono text-dense-meta text-ink tabular-nums"
-						data-testid="wahl-jahr-static"
-					>
+					<span class="text-dense-meta text-ink tabular-nums" data-testid="wahl-jahr-static">
 						{jahreForTypStimmtyp[0]}
 					</span>
 				{/if}

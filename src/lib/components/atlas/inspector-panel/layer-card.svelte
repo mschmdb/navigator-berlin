@@ -10,6 +10,7 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
+	import { glueShare } from './internal/context-rows.js';
 	import { getValueSeverity, severityDescriptions } from './internal/value-severity-mapping.js';
 	import type { ContextRow } from './internal/context-rows.js';
 	import type { SeverityLevel } from './internal/value-severity-mapping.js';
@@ -164,16 +165,18 @@
 	{/if}
 
 	{#if contextRows.length > 0}
-		<dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-xs">
+		<!-- Label hat eine Mindestbreite, der Wert nimmt seine volle Breite und bricht nur
+		     als letzter Ausweg um. Kein nowrap: das Panel schneidet horizontal ab. -->
+		<dl class="mt-2 grid grid-cols-[minmax(7rem,1fr)_auto] gap-x-3 gap-y-0.5 text-xs">
 			{#each contextRows as row (row.id)}
-				<dt class="truncate text-ink-muted">{row.label}</dt>
-				<dd class="text-right text-ink">
+				<dt class="break-words text-ink-muted">{row.label}</dt>
+				<dd class="text-right text-ink tabular-nums">
 					{#if row.severity}<span
 							data-testid="context-severity-dot"
 							data-severity={row.severity}
 							aria-hidden="true"
 							class="mr-1.5 inline-block size-2 rounded-full align-middle {DOT_CLASS[row.severity]}"
-						></span>{/if}{row.text}
+						></span>{/if}{glueShare(row.text)}
 				</dd>
 			{/each}
 		</dl>

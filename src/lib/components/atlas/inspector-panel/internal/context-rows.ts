@@ -88,6 +88,14 @@ export function contextText(slug: string, agg: LayerAggregate, opts: LocaleOpts)
 }
 
 /** Stufe einer Umfeld-Zeile aus derselben Bewertung wie das Badge des Datensatzes. */
+/**
+ * Hält den Anteil zusammen: „…, 34,5 %“ bricht nur zwischen den Wörtern davor um,
+ * nie zwischen Komma, Zahl und Prozentzeichen.
+ */
+export function glueShare(text: string): string {
+	return text.replace(/,[ \u00a0](?=\d)/g, ',\u00a0').replace(/(\d)[ \u00a0]%/g, '$1\u00a0%');
+}
+
 export function contextSeverity(slug: string, agg: LayerAggregate): SeverityLevel | undefined {
 	if (!hasRatedCategories(slug)) return undefined;
 	if (agg.type !== 'ordinal-distribution' || agg.dominant === null) return undefined;

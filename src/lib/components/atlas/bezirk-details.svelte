@@ -230,7 +230,7 @@
 									>{m.steckbrief_source_prefix({ source: row.source }, localeOpts)}</span
 								>
 							</td>
-							<td class="py-3 text-left font-mono text-xs text-ink-muted tabular-nums"
+							<td class="py-3 text-left text-xs text-ink-muted tabular-nums"
 								>{row.sourceUpdatedAt}</td
 							>
 						</tr>

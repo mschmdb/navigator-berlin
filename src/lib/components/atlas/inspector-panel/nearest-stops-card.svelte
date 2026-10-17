@@ -202,7 +202,7 @@
 							</span>
 							<span class="flex-1 truncate text-sm text-ink">{stop.name}</span>
 							<span
-								class="shrink-0 font-mono text-dense-meta text-ink-subtle tabular-nums"
+								class="shrink-0 text-dense-meta text-ink-subtle tabular-nums"
 								data-testid="nearest-stop-distance"
 								aria-hidden="true"
 							>

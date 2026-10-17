@@ -263,7 +263,7 @@
 				{formatYearMonth(meta.sourceUpdatedAt ?? meta.fetchedAt)}
 			</dd>
 			<dt class="text-xs text-ink-subtle">{m.layer_page_features_label()}</dt>
-			<dd class="font-mono text-xs text-ink tabular-nums">
+			<dd class="text-xs text-ink tabular-nums">
 				{formatCount(meta.featureCount, localeOpts)}
 			</dd>
 		</dl>

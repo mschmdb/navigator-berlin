@@ -39,13 +39,16 @@ test.describe('Atlas Polish (Story 1.31)', () => {
 		await expect(page.getByRole('menuitem', { name: /Norden/i })).toBeVisible();
 	});
 
-	test('Bookmark-Icon zeigt Mono-Zahl-Inline (kein Notification-Badge)', async ({ page }) => {
+	test('Bookmark-Icon zeigt tabellarische Zahl inline (kein Notification-Badge)', async ({
+		page
+	}) => {
 		await page.goto('/explore');
 		const badge = page.getByTestId('header-bookmark-badge');
 		const count = await badge.count();
 		if (count > 0) {
 			const cls = (await badge.getAttribute('class')) ?? '';
-			expect(cls).toMatch(/font-mono/);
+			expect(cls).toMatch(/tabular-nums/);
+			expect(cls).not.toMatch(/font-mono/);
 			expect(cls).not.toMatch(/rounded-full/);
 		}
 	});

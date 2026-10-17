@@ -162,10 +162,7 @@
 	<tr data-testid="compare-row-delta" data-slug={slug}>
 		<td colspan="3" class="pt-0 pb-2 pl-3">
 			{#if compareResult.deltaLabel}
-				<span
-					class="font-mono text-xs text-ink-muted tabular-nums"
-					data-testid="compare-delta-label"
-				>
+				<span class="text-xs text-ink-muted tabular-nums" data-testid="compare-delta-label">
 					{compareResult.deltaLabel}
 				</span>
 			{/if}

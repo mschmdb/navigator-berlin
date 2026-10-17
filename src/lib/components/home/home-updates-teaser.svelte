@@ -50,9 +50,7 @@
 							<span class="text-xs text-ink-subtle">
 								{u.categoryLabel}
 							</span>
-							<span class="font-mono text-xs text-ink-subtle tabular-nums"
-								>{formatShortDate(u.date)}</span
-							>
+							<span class="text-xs text-ink-subtle tabular-nums">{formatShortDate(u.date)}</span>
 						</span>
 						<span class="text-base font-semibold" lang={u.titleIsDeFallback ? 'de' : undefined}
 							>{u.title}</span

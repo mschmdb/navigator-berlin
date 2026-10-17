@@ -311,7 +311,7 @@
 		>
 			{m.atlas_palette_clear_all(undefined, localeOpts)}
 		</button>
-		<span data-testid="palette-active-count" class="font-mono text-xs text-ink-subtle tabular-nums">
+		<span data-testid="palette-active-count" class="text-xs text-ink-subtle tabular-nums">
 			{activeCount}
 		</span>
 	</footer>

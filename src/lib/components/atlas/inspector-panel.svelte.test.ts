@@ -542,11 +542,12 @@ describe('inspector-panel.svelte', () => {
 				layerMeta: [...fullLayerMeta, bioklimaMeta]
 			});
 			await vi.waitUntil(
-				() => page.getByTestId('layer-card').query()?.textContent?.includes('39,5 %') ?? false,
+				() => page.getByTestId('layer-card').query()?.textContent?.includes('39,5\u00a0%') ?? false,
 				{ timeout: 5000, interval: 50 }
 			);
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
-			expect(card.textContent).toContain('meist mittel, 39,5 %');
+			// glueShare bindet Anteil und Prozentzeichen mit geschützten Leerzeichen.
+			expect(card.textContent).toContain('meist mittel,\u00a039,5\u00a0%');
 			expect(card.textContent).not.toContain('39.5');
 		});
 
@@ -563,7 +564,7 @@ describe('inspector-panel.svelte', () => {
 				{ timeout: 5000, interval: 50 }
 			);
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
-			expect(card.textContent).toContain('mostly mittel, 39.5%');
+			expect(card.textContent).toContain('mostly mittel,\u00a039.5%');
 		});
 
 		it('Lärm-dB-Kontextzeile (Kiez-Mittel) DE: "Lärm-Mittel (Kiez)", "49,8 dB (L_DEN)"', async () => {

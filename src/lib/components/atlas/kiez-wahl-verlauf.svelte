@@ -79,7 +79,7 @@
 								class="flex flex-col gap-1.5 rounded border border-rule bg-bg p-2.5"
 								data-testid={`${testid}-${row.key}-${cell.jahr}`}
 							>
-								<span class="font-mono text-dense-meta text-ink-muted tabular-nums">
+								<span class="text-dense-meta text-ink-muted tabular-nums">
 									{cell.jahr}
 								</span>
 								<span class="flex items-center gap-2">

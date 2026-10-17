@@ -60,13 +60,13 @@ describe('layer-hit-row.svelte', () => {
 		expect(row.getAttribute('data-state')).toBe('outdated');
 	});
 
-	it('Numeric Wert nutzt Mono + tabular-nums im ValueChip', async () => {
+	it('Numeric Wert nutzt Sans + tabular-nums im ValueChip', async () => {
 		render(LayerHitRow, {
 			hit: { ...recentHit, layer: 'laerm-den', value: 65 },
 			layerName: 'Lärm Tag/Abend/Nacht'
 		});
 		const val = (await page.getByTestId('value-chip-value').element()) as HTMLElement;
-		expect(val.className).toMatch(/font-mono/);
+		expect(val.className).not.toMatch(/font-mono/);
 		expect(val.className).toMatch(/tabular-nums/);
 		expect(val.textContent?.trim()).toMatch(/65\s*dB/);
 	});

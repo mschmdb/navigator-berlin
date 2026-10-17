@@ -63,7 +63,7 @@
 						</a>
 					</td>
 					<td class="px-3 py-2 text-xs text-ink-muted">{bundleCell(layer)}</td>
-					<td class="px-3 py-2 font-mono text-xs text-ink tabular-nums">
+					<td class="px-3 py-2 text-xs text-ink tabular-nums">
 						{formatYearMonth(layer.sourceUpdatedAt ?? layer.fetchedAt)}
 					</td>
 					<td class="px-3 py-2 text-xs text-ink">

@@ -56,6 +56,35 @@ describe('LayerCard', () => {
 		expect(dot.className).toMatch(/bg-severity-danger(\s|$)/);
 	});
 
+	it('langer Kontext-Wert bricht nicht um, das Label gibt Platz ab', async () => {
+		// Komponententests laden kein Tailwind-CSS, darum Klassen statt Geometrie prüfen.
+		render(LayerCard, {
+			hit,
+			layerName: 'Umweltgerechtigkeit 2023',
+			contextRows: [
+				{
+					id: 'berlin',
+					label: 'Berlin',
+					text: 'meist keine starke Belastung, 34,5 %',
+					severity: 'success'
+				}
+			]
+		});
+		const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+		const dl = card.querySelector('dl') as HTMLElement;
+		// Label hat eine Mindestbreite, der Wert nimmt seine volle Breite, bevor er umbricht.
+		expect(dl.className).toMatch(/grid-cols-\[minmax\(7rem,1fr\)_auto\]/);
+		const dt = card.querySelector('dt') as HTMLElement;
+		expect(dt.className).not.toMatch(/\btruncate\b/);
+		const dd = card.querySelector('dd') as HTMLElement;
+		// Kein nowrap: auf schmalen Panels darf der Wert als letzter Ausweg umbrechen,
+		// statt im overflow-x-hidden-Panel abgeschnitten zu werden.
+		expect(dd.className).not.toMatch(/whitespace-nowrap/);
+		expect(dd.className).toMatch(/tabular-nums/);
+		// Anteil klebt am Komma: 34,5 % bricht nie allein in die nächste Zeile.
+		expect(dd.textContent).toContain('Belastung,\u00a034,5\u00a0%');
+	});
+
 	it('Titel, Stufen-Badge und Auge liegen auf einer Mittelachse (GH-88)', async () => {
 		// Komponententests laden kein Tailwind-CSS, darum Klassen statt Geometrie prüfen.
 		render(LayerCard, {

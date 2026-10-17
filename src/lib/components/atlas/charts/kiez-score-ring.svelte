@@ -132,7 +132,7 @@
 			<span class="text-4xl leading-none font-bold tracking-tight text-ink tabular-nums"
 				>{overallText}</span
 			>
-			<span class="font-mono text-dense-meta text-ink-subtle tabular-nums">/ 100</span>
+			<span class="text-dense-meta text-ink-subtle tabular-nums">/ 100</span>
 		</div>
 	</div>
 
@@ -156,7 +156,7 @@
 			<li class="flex items-center gap-2">
 				<span class="size-2 shrink-0 rounded-full" style:background-color={s.color}></span>
 				<span class="min-w-0 flex-1">{s.label}</span>
-				<span class="font-mono text-ink-muted tabular-nums">{legendValue(s.data[0])}</span>
+				<span class="text-ink-muted tabular-nums">{legendValue(s.data[0])}</span>
 			</li>
 		{/each}
 	</ul>

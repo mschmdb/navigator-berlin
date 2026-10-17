@@ -3,8 +3,8 @@ import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /*
- * Wächter für die Typografie (GH-87, Leitlinie 29). Plex Sans trägt alle Texte,
- * Mono bleibt Zahlen, Messwerten und Code vorbehalten. Keine Versalien-Labels,
+ * Wächter für die Typografie (GH-87, Leitlinie 29). Plex Sans trägt alle Texte
+ * und Zahlen (Zahlen mit tabular-nums), Mono bleibt Code vorbehalten. Keine Versalien-Labels,
  * keine Mittelpunkt-Meta-Strings, kein Pfeil an Link-Texten.
  */
 
@@ -66,13 +66,21 @@ describe('Typografie-Guard (GH-87)', () => {
 		expect(format(hits)).toBe('');
 	});
 
-	it('setzt Mono nur an Zahlen (mit tabular-nums) oder Code', () => {
+	it('setzt Mono nur an Code, Zahlen laufen in Sans mit tabular-nums', () => {
 		const hits = findHits((line, file) => {
 			if (MONO_CODE_FILES.includes(file)) return false;
 			if (!/\bfont-mono\b/.test(line)) return false;
-			if (/<(code|pre|kbd)\b/.test(line)) return false;
-			return !/\btabular(-nums)?\b/.test(line);
+			return !/<(code|pre|kbd)\b/.test(line);
 		});
+		expect(format(hits)).toBe('');
+	});
+
+	it('setzt Mono auch nicht per Inline-Style', () => {
+		const hits = findHits(
+			(line, file) =>
+				!MONO_CODE_FILES.includes(file) &&
+				/font-family:\s*(monospace|var\(--font-mono\))/.test(line)
+		);
 		expect(format(hits)).toBe('');
 	});
 

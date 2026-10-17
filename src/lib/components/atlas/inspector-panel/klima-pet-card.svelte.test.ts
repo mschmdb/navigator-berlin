@@ -75,6 +75,23 @@ describe('KlimaPetCard', () => {
 		expect(card.textContent).toContain('36');
 	});
 
+	it('Kontext-Zeilen: Label wird nicht abgeschnitten, gleiches Raster wie die Layer-Karte', async () => {
+		render(KlimaPetCard, {
+			hit,
+			layerName: 'Gefühlte Temperatur 2022',
+			kiezName: 'Friedrichshain-Kreuzberg Nord',
+			kiezAggregate: agg(36, 24, 45),
+			bezirkName: 'Friedrichshain-Kreuzberg',
+			bezirkAggregate: agg(37, 22, 46),
+			berlinAggregate: agg(35.5, 20, 48)
+		});
+		const card = (await page.getByTestId('klima-pet-card').element()) as HTMLElement;
+		const dl = card.querySelector('dl') as HTMLElement;
+		expect(dl.className).toMatch(/grid-cols-\[minmax\(7rem,1fr\)_auto\]/);
+		const dt = card.querySelector('dt') as HTMLElement;
+		expect(dt.className).not.toMatch(/\btruncate\b/);
+	});
+
 	it('kein Punkt-Messwert + Kontext da → Umfeld-Hinweis + Kontext-Zeilen', async () => {
 		const noPointHit: LayerHit = {
 			layer: 'klima-pet-2022',
