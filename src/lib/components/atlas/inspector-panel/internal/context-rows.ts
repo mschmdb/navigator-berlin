@@ -13,6 +13,11 @@ import type {
 import type { Locale } from '$lib/paraglide/runtime';
 import { getLayerDisplayName } from '../../internal/layer-palette-filter.js';
 import { formatWeightedMeanContext } from './weighted-mean-context.js';
+import {
+	getValueSeverity,
+	hasRatedCategories,
+	type SeverityLevel
+} from './value-severity-mapping.js';
 
 export type AggregateScope = 'kiez' | 'bezirk' | 'berlin';
 
@@ -20,6 +25,8 @@ export interface ContextRow {
 	id: string;
 	label: string;
 	text: string;
+	/** Stufe des dominanten Werts, nur bei Layern mit Stufenskala (Punkt in der Zeile). */
+	severity?: SeverityLevel;
 }
 
 export interface RegionKeys {
@@ -80,6 +87,13 @@ export function contextText(slug: string, agg: LayerAggregate, opts: LocaleOpts)
 	return null;
 }
 
+/** Stufe einer Umfeld-Zeile aus derselben Bewertung wie das Badge des Datensatzes. */
+export function contextSeverity(slug: string, agg: LayerAggregate): SeverityLevel | undefined {
+	if (!hasRatedCategories(slug)) return undefined;
+	if (agg.type !== 'ordinal-distribution' || agg.dominant === null) return undefined;
+	return getValueSeverity(slug, { kategorie: agg.dominant });
+}
+
 /**
  * Eine Card zeigt EINEN Wert, darum Singular-Label, obwohl der Layer-Name
  * (Karten-Legende) Plural ist.
@@ -129,7 +143,11 @@ export function buildContextRows(
 	const rows = scopes.flatMap((s) => {
 		const agg = aggregateFor(input.aggregates, slug, s.scope, input);
 		const text = agg ? contextText(slug, agg, opts) : null;
-		return text ? [{ id: s.id, label: s.label, text }] : [];
+		if (!agg || !text) return [];
+		const severity = contextSeverity(slug, agg);
+		return [
+			severity ? { id: s.id, label: s.label, text, severity } : { id: s.id, label: s.label, text }
+		];
 	});
 	if (slug === 'laerm-2023' && input.laermDb !== null) {
 		rows.unshift({

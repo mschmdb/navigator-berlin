@@ -12,7 +12,17 @@
 	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
 	import { getValueSeverity, severityDescriptions } from './internal/value-severity-mapping.js';
 	import type { ContextRow } from './internal/context-rows.js';
+	import type { SeverityLevel } from './internal/value-severity-mapping.js';
 	import ValueChip from '../value-chip.svelte';
+
+	// GH-88: Stufenpunkt in den Umfeld-Zeilen; statische Klassen, damit Tailwind sie findet.
+	const DOT_CLASS: Record<SeverityLevel, string> = {
+		success: 'bg-severity-success',
+		'success-soft': 'bg-severity-success-soft',
+		neutral: 'bg-severity-neutral',
+		warning: 'bg-severity-warning',
+		danger: 'bg-severity-danger'
+	};
 
 	type Props = {
 		hit: LayerHit;
@@ -157,7 +167,14 @@
 		<dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-xs">
 			{#each contextRows as row (row.id)}
 				<dt class="truncate text-ink-muted">{row.label}</dt>
-				<dd class="text-right text-ink">{row.text}</dd>
+				<dd class="text-right text-ink">
+					{#if row.severity}<span
+							data-testid="context-severity-dot"
+							data-severity={row.severity}
+							aria-hidden="true"
+							class="mr-1.5 inline-block size-2 rounded-full align-middle {DOT_CLASS[row.severity]}"
+						></span>{/if}{row.text}
+				</dd>
 			{/each}
 		</dl>
 	{/if}
