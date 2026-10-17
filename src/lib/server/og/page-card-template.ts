@@ -65,12 +65,10 @@ function img(src: string, style: Record<string, unknown>): SatoriNode {
 
 function brandMark(): SatoriNode {
 	return text('navigator.berlin', {
-		fontFamily: 'Plex Mono',
-		fontSize: 14,
+		fontFamily: 'Plex Sans',
+		fontSize: 18,
 		color: COLOR_ACCENT,
-		fontWeight: 600,
-		letterSpacing: 0.6,
-		textTransform: 'uppercase' as const
+		fontWeight: 600
 	});
 }
 
@@ -120,20 +118,20 @@ function titleBlock(
 ): SatoriNode {
 	return node('div', { display: 'flex', flexDirection: 'column', marginTop: 16 }, [
 		text(headline, {
-			fontFamily: 'Plex Serif',
+			fontFamily: 'Plex Sans',
 			fontSize,
 			color: COLOR_INK,
 			lineHeight: 1.02,
 			maxWidth,
-			fontWeight: 600
+			fontWeight: 700,
+			letterSpacing: -1
 		}),
 		text(subline, {
 			fontFamily: 'Plex Sans',
-			fontSize: 18,
+			fontSize: 20,
 			color: COLOR_INK_MUTED,
 			marginTop: 8,
-			textTransform: 'uppercase' as const,
-			letterSpacing: 1
+			fontWeight: 400
 		})
 	]);
 }
@@ -154,16 +152,16 @@ function footerStrip(urlPath: string, standDate: string | null): SatoriNode {
 		},
 		[
 			text(urlPath || '/', {
-				fontFamily: 'Plex Mono',
-				fontSize: 16,
+				fontFamily: 'Plex Sans',
+				fontSize: 18,
 				color: '#FFFFFF',
-				fontWeight: 500
+				fontWeight: 600
 			}),
 			text(standDate ? `Stand ${standDate}` : 'navigator.berlin', {
-				fontFamily: 'Plex Mono',
-				fontSize: 14,
+				fontFamily: 'Plex Sans',
+				fontSize: 16,
 				color: '#E8E5D8',
-				letterSpacing: 0.4
+				fontWeight: 400
 			})
 		]
 	);
@@ -188,27 +186,26 @@ function compositeHero(composite: number | null): SatoriNode {
 				},
 				[
 					text(formatScoreValue(composite), {
-						fontFamily: 'Plex Serif',
+						fontFamily: 'Plex Sans',
 						fontSize: 180,
 						color: COLOR_INK,
 						lineHeight: 0.9,
-						fontWeight: 600
+						fontWeight: 700,
+						letterSpacing: -4
 					}),
-					text('/ 100', {
-						fontFamily: 'Plex Mono',
+					text('von 100', {
+						fontFamily: 'Plex Sans',
 						fontSize: 28,
 						color: COLOR_INK_SUBTLE,
-						fontWeight: 500
+						fontWeight: 400
 					})
 				]
 			),
 			text('Kiez-Score', {
 				fontFamily: 'Plex Sans',
-				fontSize: 16,
+				fontSize: 22,
 				color: COLOR_ACCENT,
-				textTransform: 'uppercase' as const,
-				letterSpacing: 2,
-				marginTop: 4,
+				marginTop: 6,
 				fontWeight: 600
 			})
 		]
@@ -231,11 +228,9 @@ function dimBar(label: string, value: number | null): SatoriNode {
 		[
 			text(label, {
 				fontFamily: 'Plex Sans',
-				fontSize: 14,
-				color: COLOR_INK_SUBTLE,
-				textTransform: 'uppercase' as const,
-				letterSpacing: 1,
-				width: 110,
+				fontSize: 18,
+				color: COLOR_INK_MUTED,
+				width: 120,
 				fontWeight: 600
 			}),
 			node(
@@ -262,12 +257,12 @@ function dimBar(label: string, value: number | null): SatoriNode {
 				]
 			),
 			text(valueLabel, {
-				fontFamily: 'Plex Mono',
+				fontFamily: 'Plex Sans',
 				fontSize: 22,
 				color: COLOR_INK,
 				width: 48,
 				textAlign: 'right' as const,
-				fontWeight: 500
+				fontWeight: 600
 			})
 		]
 	);
@@ -385,7 +380,7 @@ export interface BezirkCardParams {
 export function buildBezirkCardVdom(params: BezirkCardParams): SatoriNode {
 	return canvas({
 		headline: params.bezirkName,
-		subline: 'Bezirk Berlin · Kiez-Score',
+		subline: 'Bezirk in Berlin, Kiez-Score',
 		mid: scoreSplitRow(params.scoreCard),
 		footerUrl: `/bezirk/${params.slug}`,
 		footerDate: params.scoreUpdatedAt ?? null,
@@ -408,7 +403,7 @@ export interface KiezCardParams {
 export function buildKiezCardVdom(params: KiezCardParams): SatoriNode {
 	return canvas({
 		headline: params.kiezName,
-		subline: `Kiez · ${params.parentBezirkName}`,
+		subline: `Kiez in ${params.parentBezirkName}`,
 		mid: scoreSplitRow(params.scoreCard),
 		footerUrl: `/kiez/${params.slug}`,
 		footerDate: params.scoreUpdatedAt ?? null,
@@ -434,14 +429,12 @@ function layerInfoCell(label: string, value: string): SatoriNode {
 	return node('div', { display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0, flex: 1 }, [
 		text(label, {
 			fontFamily: 'Plex Sans',
-			fontSize: 12,
-			color: COLOR_INK_SUBTLE,
-			textTransform: 'uppercase' as const,
-			letterSpacing: 1.2,
+			fontSize: 14,
+			color: COLOR_INK_MUTED,
 			fontWeight: 600
 		}),
 		text(value, {
-			fontFamily: 'Plex Mono',
+			fontFamily: 'Plex Sans',
 			fontSize: 18,
 			color: COLOR_INK,
 			lineHeight: 1.3,
@@ -509,7 +502,7 @@ function pageBody(body: string): SatoriNode {
 		},
 		[
 			text(body, {
-				fontFamily: 'Plex Serif',
+				fontFamily: 'Plex Sans',
 				fontSize: 24,
 				color: COLOR_INK,
 				lineHeight: 1.45
@@ -540,7 +533,7 @@ function wahlStackedBar(top5: readonly WahlCardTopParty[]): SatoriNode {
 	const total = top5.reduce((s, e) => s + e.anteil, 0);
 	if (total === 0) {
 		return text('Keine Daten', {
-			fontFamily: 'Plex Mono',
+			fontFamily: 'Plex Sans',
 			fontSize: 18,
 			color: COLOR_INK_MUTED
 		});
@@ -569,7 +562,7 @@ function wahlStackedBar(top5: readonly WahlCardTopParty[]): SatoriNode {
 		),
 		node(
 			'div',
-			{ display: 'flex', flexDirection: 'column', width: '100%', gap: 8 },
+			{ display: 'flex', flexDirection: 'column', width: '100%', gap: 4 },
 			top5.map((entry) =>
 				node(
 					'div',
@@ -594,7 +587,7 @@ function wahlStackedBar(top5: readonly WahlCardTopParty[]): SatoriNode {
 							flex: 1
 						}),
 						text(`${(entry.anteil * 100).toFixed(1).replace('.', ',')} %`, {
-							fontFamily: 'Plex Mono',
+							fontFamily: 'Plex Sans',
 							fontSize: 20,
 							color: COLOR_INK,
 							fontWeight: 600,
@@ -615,8 +608,8 @@ function wahlInfoRow(params: WahlCardParams): SatoriNode {
 			flexDirection: 'row',
 			gap: 32,
 			width: '100%',
-			paddingTop: 16,
-			marginTop: 16,
+			paddingTop: 12,
+			marginTop: 8,
 			borderTop: `2px solid ${COLOR_RULE}`
 		},
 		[
