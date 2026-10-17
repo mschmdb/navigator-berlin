@@ -2,7 +2,7 @@
 title: 'Kältehilfe-Quellen mit Leerzeichen nach dem Komma (#104)'
 type: 'bugfix'
 created: '2026-10-17'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 baseline_commit: '1be77a22c11044203102437b861925b987a5cefc'
 review_loop_iteration: 0
@@ -58,9 +58,23 @@ Spec-Checkpoint übersprungen: Matze war abwesend und hat autonomes Arbeiten erl
 
 ## Review Triage Log
 
+Reviewer liefen über Codex (`gpt-6.1-sol`), weil der ausführende Agent keine eigenen Subagenten starten durfte.
+
+| Layer | Fundstelle | Befund | Verdict | Evidenz / Route |
+|---|---|---|---|---|
+| blind | `quellen-zeile.svelte:16` | Hinweis „öffnet neuen Tab“ liegt außerhalb des `<a>`, fehlt im Accessible Name | medium | Stimmt, aber unverändert aus `notfall-block.svelte` übernommen (vorbestehend). defer |
+| blind | `quellen-zeile.svelte:10` | Leeres `quellen` erzeugt verwaistes „Quellen:“ | low | `hilfe-dienste.test.ts:27` erzwingt mindestens eine Quelle je Dienst; Fix bräuchte einen Guard. reject |
+| blind | `quellen-zeile.svelte.test.ts:13` | Kein EN-Test für die Komponente | low | Messages unverändert, Trenner sprachunabhängig. reject |
+| edge | `quellen-zeile.svelte:11` | Doppelte Labels kollidieren als `each`-Key | low | Key `quelle.label` stand schon vorher so; alle Labels je Dienst sind eindeutig. reject |
+| vgap | n/a | Keine Lücken | n/a | n/a |
+
 ## Verification
 
 **Commands:**
 - `pnpm test:unit -- --run src/lib/components/kaelte/notfall-block.svelte.test.ts` -- expected: alle Tests grün, neuer Test vorher rot
 - `pnpm check` -- expected: 0 Fehler
 - `pnpm lint` -- expected: sauber
+
+## Codex Review (gpt-6.1-sol)
+
+Verdict APPROVE, keine Befunde.
