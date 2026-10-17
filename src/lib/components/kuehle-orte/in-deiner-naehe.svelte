@@ -116,7 +116,7 @@
 			<LocateFixed size={18} aria-hidden="true" />
 			{phase === 'locating' ? m.naehe_button_locating() : m.naehe_button_locate()}
 		</button>
-		<p class="font-serif text-sm text-ink-subtle">
+		<p class="text-sm text-ink-subtle">
 			{m.naehe_hint()}
 		</p>
 	{:else if phase === 'ready'}
@@ -129,22 +129,20 @@
 							<span class="min-w-0 truncate font-sans text-sm font-medium text-ink">{ort.name}</span
 							>
 							<span
-								class="shrink-0 font-mono text-xs text-ink-subtle tabular-nums"
+								class="shrink-0 text-xs text-ink-subtle tabular-nums"
 								aria-label={m.naehe_distance_aria_label({ distance: distanceLabel(ort.distanceM) })}
 								>{distanceLabel(ort.distanceM)}</span
 							>
 						</div>
 						<div class="mt-0.5 flex flex-wrap items-center gap-1.5">
 							<span
-								class="inline-flex items-center rounded-sm bg-state-success/15 px-1 font-mono text-dense-meta font-semibold text-state-success"
+								class="inline-flex items-center rounded-sm bg-state-success/15 px-1 text-dense-meta font-semibold text-state-success"
 								>{statusText(ort.openingHours)}</span
 							>
-							<span class="font-mono text-dense-meta text-ink-muted" lang={cat.lang}
-								>{cat.text}</span
-							>
+							<span class="text-dense-meta text-ink-muted" lang={cat.lang}>{cat.text}</span>
 						</div>
 						{#if ort.address}
-							<p class="mt-0.5 font-serif text-xs text-ink-subtle">{ort.address}</p>
+							<p class="mt-0.5 text-xs text-ink-subtle">{ort.address}</p>
 						{/if}
 						<div class="mt-1 flex flex-wrap gap-3">
 							<a
@@ -168,7 +166,7 @@
 				{/each}
 			</ul>
 		{:else}
-			<p class="font-serif text-sm text-ink-muted" data-testid="naehe-empty">
+			<p class="text-sm text-ink-muted" data-testid="naehe-empty">
 				{m.naehe_empty()}
 			</p>
 			<a
@@ -180,7 +178,7 @@
 			</a>
 		{/if}
 	{:else}
-		<p class="font-serif text-sm text-ink-muted" data-testid="naehe-fallback">
+		<p class="text-sm text-ink-muted" data-testid="naehe-fallback">
 			{fallbackMessage(phase)}
 		</p>
 		<a

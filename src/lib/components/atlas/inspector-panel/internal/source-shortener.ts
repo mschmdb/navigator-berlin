@@ -6,7 +6,7 @@ const SOURCE_SHORT_BY_PREFIX: ReadonlyArray<readonly [string, string]> = [
 	['https://daten.berlin.de', 'ODIS Berlin'],
 	['https://opendata.dwd.de', 'DWD'],
 	['https://overpass-api.de', 'OpenStreetMap'],
-	['https://www.destatis.de', 'Destatis · Zensus 2022']
+	['https://www.destatis.de', 'Destatis, Zensus 2022']
 ];
 
 // Story 1.18: Ultra-kompakte Tokens für Inspector-Banner (10px Footer).

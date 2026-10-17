@@ -26,13 +26,13 @@
 	<div class="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
 		<time class="font-sans" datetime={entry.frontmatter.date}>{dateLabel}</time>
 		<span
-			class={`inline-flex items-center border px-2 py-0.5 font-mono text-xs ${categoryClass}`}
+			class={`inline-flex items-center border px-2 py-0.5 text-xs ${categoryClass}`}
 			data-testid="category-badge"
 		>
 			{badgeLabel}
 		</span>
 	</div>
-	<h2 class="font-serif text-2xl text-ink" lang={localized.titleIsDeFallback ? 'de' : undefined}>
+	<h2 class="text-2xl font-bold text-ink" lang={localized.titleIsDeFallback ? 'de' : undefined}>
 		<a
 			href={detailHref}
 			class="hover:text-accent focus-visible:text-accent"
@@ -42,12 +42,12 @@
 		</a>
 	</h2>
 	<p
-		class="font-serif text-base leading-body text-ink-muted"
+		class="text-base leading-body text-ink-muted"
 		lang={localized.summaryIsDeFallback ? 'de' : undefined}
 	>
 		{localized.summary}
 	</p>
-	<p class="font-mono text-xs text-ink-subtle">
+	<p class="text-xs text-ink-subtle">
 		<a href={detailHref} class="text-accent underline underline-offset-2 hover:text-accent-strong">
 			{m.updates_card_read_more()}
 		</a>

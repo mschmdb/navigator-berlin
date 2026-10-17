@@ -34,7 +34,7 @@
 		<button
 			type="button"
 			data-testid="score-membership-link-{slug}"
-			class="inline-flex min-h-(--target-min) items-center gap-1 rounded-sm bg-severity-success-soft-bg px-1.5 py-0.5 font-mono text-dense-meta tracking-wide text-severity-success-soft uppercase hover:underline"
+			class="inline-flex min-h-(--target-min) items-center gap-1 rounded-sm bg-severity-success-soft-bg px-1.5 py-0.5 text-dense-meta text-severity-success-soft hover:underline"
 			onclick={() => onJump?.(dimension)}
 			title={m.inspector_score_membership_in_score_title({ label }, localeOpts)}
 		>
@@ -44,17 +44,14 @@
 	{:else}
 		<span
 			data-testid="score-membership-context-{slug}"
-			class="rounded-sm bg-bg px-1.5 py-0.5 font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
+			class="rounded-sm bg-bg px-1.5 py-0.5 text-dense-meta text-ink-subtle"
 		>
 			{m.inspector_score_membership_context_only(undefined, localeOpts)}
 		</span>
 	{/if}
 </div>
 {#if note}
-	<p
-		class="mb-1 font-serif text-dense-meta leading-snug text-ink-muted italic"
-		data-testid="context-note-{slug}"
-	>
+	<p class="mb-1 text-dense-meta leading-snug text-ink-muted" data-testid="context-note-{slug}">
 		{note}
 	</p>
 {/if}

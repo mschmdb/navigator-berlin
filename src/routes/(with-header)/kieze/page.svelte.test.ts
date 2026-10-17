@@ -75,7 +75,7 @@ describe('/kieze +page.svelte', () => {
 		});
 		const h2 = [...document.querySelectorAll('h2')].map((h) => h.textContent?.trim());
 		expect(h2).toEqual(['Mitte', 'Spandau']);
-		expect(document.body.textContent).toContain('1 Kiez ');
+		expect(document.body.textContent).toContain('1 Kiez,');
 		expect(document.body.textContent).toContain('2 Kieze');
 	});
 

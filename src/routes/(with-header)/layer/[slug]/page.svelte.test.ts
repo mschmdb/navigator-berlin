@@ -192,15 +192,12 @@ describe('layer-detail +page.svelte', () => {
 		await expect.element(page.getByTestId('layer-detail-editorial')).not.toBeInTheDocument();
 	});
 
-	it('rendert Bundle-Group roh oberhalb h1 (DE-Parität, Spec Change Log 27.09.)', async () => {
-		// i18n Block B4b: DE zeigt weiter den rohen `meta.bundleGroup`-Wert aus
-		// dem Manifest, byte-identisch zum Vor-B4b-Verhalten -- nur EN läuft
-		// über `bundleLabel()`. Review-Fund #19 (Koordinator, Matze AFK).
+	it('setzt kein Bundle-Eyebrow über die h1 (GH-87, Leitlinie 29)', async () => {
 		render(Page, {
 			data: { detail: detail(), faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
 		});
-		const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
-		expect(article.textContent).toMatch(/C: Umwelt/);
+		const h1 = (await page.getByTestId('layer-detail-name').element()) as HTMLElement;
+		expect(h1.previousElementSibling).toBeNull();
 	});
 
 	it('rendert Methodology-Section „Berechnung"', async () => {
@@ -317,7 +314,7 @@ describe('layer-detail +page.svelte', () => {
 		const aggregationDd = methodologySec.querySelector('dd');
 		expect(aggregationDd?.textContent?.trim()).toBe('unbekannte-ebene');
 		expect(aggregationDd?.getAttribute('lang')).toBe('de');
-		expect(aggregationDd?.className).toMatch(/font-mono/);
+		expect(aggregationDd?.className).not.toMatch(/font-mono/);
 	});
 
 	it('blendet Sections mit leerem Inhalt aus (kein Coverage-Gaps wenn fehlt)', async () => {
@@ -454,7 +451,7 @@ describe('layer-detail +page.svelte', () => {
 	// nicht über einen `opts`-Prop -- `overwriteGetLocale` simuliert die
 	// URL-Locale von `/en/…`.
 	describe('EN locale (getLocale() = "en")', () => {
-		it('Bundle-Eyebrow, Quelle-Karte-Labels, Werte/Berechnung-Heading und Features-Zahl englisch', async () => {
+		it('Quelle-Karte-Labels, Werte/Berechnung-Heading und Features-Zahl englisch', async () => {
 			overwriteGetLocale(() => 'en');
 			const d = detail('laerm-2023', {
 				meta: makeMeta('laerm-2023', { featureCount: 12345 })
@@ -463,7 +460,6 @@ describe('layer-detail +page.svelte', () => {
 				data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
 			});
 			const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
-			expect(article.textContent).toMatch(/C · Environment/);
 			expect(article.textContent).toMatch(/Source/);
 			expect(article.textContent).toMatch(/Provider/);
 			expect(article.textContent).toMatch(/Licence/);
@@ -480,20 +476,6 @@ describe('layer-detail +page.svelte', () => {
 			expect(article.textContent).toMatch(/What we don't show/);
 			expect(article.textContent).toMatch(/Related layers/);
 			expect(article.textContent).toMatch(/View on the map/);
-		});
-
-		it('Roh-Fallback: unbekannter bundleGroup-Wert bleibt roh, auch auf EN', async () => {
-			overwriteGetLocale(() => 'en');
-			const d = detail('laerm-2023', {
-				meta: makeMeta('laerm-2023', {
-					bundleGroup: 'Z: Unbekannt' as unknown as LayerMetadata['bundleGroup']
-				})
-			});
-			render(Page, {
-				data: { detail: d, faq: [], faqLocale: 'de', ranking: null, hasKiezAggregate: false }
-			});
-			const article = (await page.getByTestId('layer-detail-page').element()) as HTMLElement;
-			expect(article.textContent).toMatch(/Z: Unbekannt/);
 		});
 
 		// i18n Block C1: `explain.*` (Lead, Skala) und alle EditorialDisclaimer-

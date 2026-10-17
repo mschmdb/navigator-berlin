@@ -109,7 +109,7 @@
 		{#if addressPet !== null}
 			<span
 				data-testid="pet-address-value"
-				class={`shrink-0 font-mono text-lg leading-none tabular-nums ${SEVERITY_TEXT[severity] ?? 'text-ink'}`}
+				class={`shrink-0 text-lg leading-none tabular-nums ${SEVERITY_TEXT[severity] ?? 'text-ink'}`}
 			>
 				{fmt(addressPet)}<span class="text-xs">°C</span>
 			</span>
@@ -133,7 +133,7 @@
 	{/if}
 
 	{#if addressPet === null && contextRows.length > 0}
-		<p data-testid="pet-no-point-value" class="mt-2 font-serif text-xs text-ink-subtle italic">
+		<p data-testid="pet-no-point-value" class="mt-2 text-xs text-ink-subtle">
 			{m.inspector_klima_pet_no_point_value(undefined, localeOpts)}
 		</p>
 	{/if}
@@ -144,8 +144,8 @@
 				<dt class="truncate text-ink-muted">{row.label}</dt>
 				<dd class="text-right font-mono text-ink tabular-nums">
 					{fmt(row.agg.median as number)}°C
-					<span class="text-ink-subtle"
-						>· {fmt(row.agg.min as number)}–{fmt(row.agg.max as number)}</span
+					<span class="ml-1 text-ink-subtle"
+						>{fmt(row.agg.min as number)}–{fmt(row.agg.max as number)}</span
 					>
 				</dd>
 			{/each}
@@ -158,7 +158,7 @@
 			data-testid="pet-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-1 text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}
@@ -201,7 +201,7 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="pet-details" class="mt-1.5 space-y-1.5">
-			<p class="font-serif text-xs leading-snug text-ink-muted">
+			<p class="text-xs leading-snug text-ink-muted">
 				{explainEntry.long}
 			</p>
 			{#if externalLink}

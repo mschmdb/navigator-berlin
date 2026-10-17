@@ -181,7 +181,7 @@ function poiKrankenhaus(value: unknown, opts?: LocaleOptions): LayerHitDisplay {
 	if (strasse) ctxParts.push(strasse);
 	if (typeof betten === 'number')
 		ctxParts.push(`${formatCount(betten, options)} ${m.atlas_value_betten(undefined, options)}`);
-	return fallback(name, ctxParts.length > 0 ? ctxParts.join(' · ') : null);
+	return fallback(name, ctxParts.length > 0 ? ctxParts.join(', ') : null);
 }
 
 function poiSportanlage(value: unknown, opts?: LocaleOptions): LayerHitDisplay {

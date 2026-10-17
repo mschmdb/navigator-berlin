@@ -35,13 +35,13 @@ export interface HomeDataSource {
 
 export const HOME_DATA_SOURCES: readonly HomeDataSource[] = [
 	{ id: 'odis-berlin', name: 'ODIS Berlin', license: 'dl-de/zero-2-0' },
-	{ id: 'senmvku-umweltatlas', name: 'SenMVKU · Umweltatlas', license: 'dl-de/zero-2-0' },
+	{ id: 'senmvku-umweltatlas', name: 'SenMVKU, Umweltatlas', license: 'dl-de/zero-2-0' },
 	{ id: 'openstreetmap', name: 'OpenStreetMap', license: 'ODbL 1.0' },
-	{ id: 'dwd-climate-data-center', name: 'DWD · Climate Data Center', license: 'CC BY 4.0' },
-	{ id: 'senstadt-mietspiegel', name: 'SenStadt · Mietspiegel', license: 'dl-de/zero-2-0' },
+	{ id: 'dwd-climate-data-center', name: 'DWD, Climate Data Center', license: 'CC BY 4.0' },
+	{ id: 'senstadt-mietspiegel', name: 'SenStadt, Mietspiegel', license: 'dl-de/zero-2-0' },
 	{
 		id: 'geoportal-berlin-fis-broker',
-		name: 'Geoportal Berlin · FIS-Broker',
+		name: 'Geoportal Berlin, FIS-Broker',
 		license: 'dl-de/zero-2-0'
 	}
 ];

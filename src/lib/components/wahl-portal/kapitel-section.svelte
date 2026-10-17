@@ -37,17 +37,14 @@
 			: 'scroll-mt-[var(--header-height,72px)]'
 	}`}
 >
-	<h2 id={`${id}-h`} class="font-serif text-2xl text-ink">{title}</h2>
+	<h2 id={`${id}-h`} class="text-2xl font-bold text-ink">{title}</h2>
 	{#if subtext}
-		<p data-testid={`${testid}-subtext`} class="max-w-prose font-serif text-base text-ink-muted">
+		<p data-testid={`${testid}-subtext`} class="max-w-prose text-base text-ink-muted">
 			{subtext}
 		</p>
 	{/if}
 	{#if takeaway}
-		<p
-			data-testid={`${testid}-takeaway`}
-			class="max-w-prose font-serif text-lg leading-body text-ink"
-		>
+		<p data-testid={`${testid}-takeaway`} class="max-w-prose text-lg leading-body text-ink">
 			{@render takeaway()}
 		</p>
 	{/if}

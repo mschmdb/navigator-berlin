@@ -41,7 +41,7 @@ const root = () => document.querySelector('[data-testid="cross-layer-templates-p
 describe('cross-layer-templates +page.svelte · DE', () => {
 	it('bleibt deutsch, der H1 trägt kein redundantes lang="de"', () => {
 		render(Page, { data: buildData('Deutscher Text.', ['a']) });
-		expect(root().querySelector('h1')?.textContent?.trim()).toBe('Cross-Layer-Templates · Preview');
+		expect(root().querySelector('h1')?.textContent?.trim()).toBe('Cross-Layer-Templates: Preview');
 		expect(root().querySelector('[lang]')).toBeNull();
 		expect(root().textContent).toContain('Render-Vorschau der 2 Templates.');
 		expect(root().textContent).toContain('Render-Skip wegen fehlender Variablen: a');
@@ -72,7 +72,7 @@ describe('cross-layer-templates +page.svelte · EN', () => {
 		expect(root().textContent).toContain('Render context');
 		expect(root().textContent).toContain('Polling district statistics');
 		expect(root().textContent).toContain('Licence dl-de/by-2-0');
-		expect(root().textContent).toContain('· Co-design stage');
+		expect(root().textContent).toContain('Co-design stage');
 	});
 
 	it('übersetzt bekannte Tags und lässt unbekannte stehen', () => {

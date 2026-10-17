@@ -54,7 +54,7 @@ describe('umwelt-infrastruktur-score · EN (i18n C4b)', () => {
 		expect(text).toContain('Berlin Kieze and Bezirke sorted by five equally weighted dimensions');
 		expect(text).toContain('A comparison, not a verdict.');
 		expect(text).toContain('How is the score calculated?');
-		expect(text).toContain('Full methodology · Kiez score');
+		expect(text).toContain('Full methodology: Kiez score');
 	});
 
 	it('Rangliste zeigt Kiez-Namen und englische Spaltenköpfe', async () => {
@@ -132,7 +132,7 @@ describe('umwelt-infrastruktur-score · DE-Wortlaut von Aside, Accordion, Empty-
 		await new Promise((r) => setTimeout(r, 100));
 		const content = document.querySelector('[data-accordion-content]');
 		expect(norm(content)).toBe(
-			'Wir aggregieren fünf Dimensionen: Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz. Quelle pro Dimension sind offene Senats-Daten (Lärmkartierung, Grünversorgung, Klima-Atlas, ÖPNV-Halte, Milieuschutzgebiete, POI-Distanzen). Die Aggregation läuft 542 LOR-Planungsräume → 143 LOR-Bezirksregionen → 12 Bezirke, jeweils flächengewichtet. Jede Dimension wird gleich gewichtet (5 × 20%). Sozialstruktur wird bewusst nicht gewertet. Vollständige Methodik · Kiez-Score.'
+			'Wir aggregieren fünf Dimensionen: Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz. Quelle pro Dimension sind offene Senats-Daten (Lärmkartierung, Grünversorgung, Klima-Atlas, ÖPNV-Halte, Milieuschutzgebiete, POI-Distanzen). Die Aggregation läuft 542 LOR-Planungsräume → 143 LOR-Bezirksregionen → 12 Bezirke, jeweils flächengewichtet. Jede Dimension wird gleich gewichtet (5 × 20%). Sozialstruktur wird bewusst nicht gewertet. Vollständige Methodik: Kiez-Score.'
 		);
 	});
 

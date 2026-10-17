@@ -127,7 +127,7 @@
 			aria-busy="true"
 			aria-live="polite"
 		>
-			<p class="font-mono text-xs text-ink-subtle">
+			<p class="text-xs text-ink-subtle">
 				{m.inspector_nearest_stops_loading(undefined, localeOpts)}
 			</p>
 		</div>
@@ -139,7 +139,7 @@
 			aria-label={m.inspector_nearest_stops_aria_label(undefined, localeOpts)}
 		>
 			<div class="flex items-center justify-between gap-2 border-b border-rule pb-1">
-				<h3 class="font-mono text-xs tracking-wide text-ink-muted uppercase">
+				<h3 class="text-xs text-ink-muted">
 					{m.inspector_nearest_stops_heading(undefined, localeOpts)}
 				</h3>
 				{#if rating}
@@ -164,7 +164,7 @@
 				{/if}
 			</div>
 			<p
-				class="mt-1 pb-2 font-mono text-dense-meta leading-snug text-ink-subtle"
+				class="mt-1 pb-2 text-dense-meta leading-snug text-ink-subtle"
 				data-testid="nearest-stops-method"
 			>
 				{m.inspector_nearest_stops_method(
@@ -173,7 +173,7 @@
 				)}
 			</p>
 			{#if entries.length === 0}
-				<p class="py-1 font-mono text-xs text-ink-subtle" data-testid="nearest-stops-empty">
+				<p class="py-1 text-xs text-ink-subtle" data-testid="nearest-stops-empty">
 					{isResidential
 						? m.inspector_nearest_stops_empty_residential(
 								{ radius: emptyStateRadiusText },
@@ -201,9 +201,7 @@
 							>
 								<Icon size={16} aria-hidden="true" />
 							</span>
-							<span
-								class="w-12 shrink-0 font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
-							>
+							<span class="w-12 shrink-0 text-dense-meta text-ink-subtle">
 								{MODUS_LABEL[modus]()}
 							</span>
 							<span class="flex-1 truncate text-sm text-ink">{stop.name}</span>

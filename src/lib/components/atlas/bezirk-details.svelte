@@ -178,7 +178,7 @@
 			data-testid="bezirk-profile"
 		>
 			{#each profileProse as para (para)}
-				<p class="font-serif text-base leading-body text-ink">{para}</p>
+				<p class="text-base leading-body text-ink">{para}</p>
 			{/each}
 		</section>
 	{/if}
@@ -186,15 +186,15 @@
 	<ScoreComparisonTable rows={comparison} showBezirkColumn={false} valueLabel="Bezirk" />
 
 	<section aria-labelledby="steckbrief-heading" class="space-y-4">
-		<h2 id="steckbrief-heading" class="font-serif text-2xl text-ink">
+		<h2 id="steckbrief-heading" class="text-2xl font-bold text-ink">
 			{m.steckbrief_heading(undefined, localeOpts)}
 		</h2>
 		{#if !stats}
-			<p class="font-serif text-base text-ink-muted">
+			<p class="text-base text-ink-muted">
 				{m.steckbrief_no_data_build(undefined, localeOpts)}
 			</p>
 		{:else if steckbrief.length === 0}
-			<p class="font-serif text-base text-ink-muted">
+			<p class="text-base text-ink-muted">
 				{m.steckbrief_no_data_empty(undefined, localeOpts)}
 			</p>
 		{:else}
@@ -216,23 +216,23 @@
 								<span>{row.value}</span>
 								{#if row.extra || (row.distribution && row.distribution.length > 0)}
 									<details class="mt-1">
-										<summary
-											class="cursor-pointer font-mono text-xs text-accent hover:text-accent-strong"
+										<summary class="cursor-pointer text-xs text-accent hover:text-accent-strong"
 											>{m.steckbrief_distribution_summary(undefined, localeOpts)}</summary
 										>
-										{#if row.extra}<span class="mt-1 block font-mono text-xs text-ink-muted"
-												>{row.extra}</span
+										{#if row.extra}<span class="mt-1 block text-xs text-ink-muted">{row.extra}</span
 											>{/if}
 										{#if row.distribution && row.distribution.length > 0}<DistributionBar
 												segments={row.distribution}
 											/>{/if}
 									</details>
 								{/if}
-								<span class="block font-mono text-xs text-ink-subtle"
+								<span class="block text-xs text-ink-subtle"
 									>{m.steckbrief_source_prefix({ source: row.source }, localeOpts)}</span
 								>
 							</td>
-							<td class="py-3 text-left font-mono text-xs text-ink-muted">{row.sourceUpdatedAt}</td>
+							<td class="py-3 text-left font-mono text-xs text-ink-muted tabular-nums"
+								>{row.sourceUpdatedAt}</td
+							>
 						</tr>
 					{/each}
 				</tbody>
@@ -244,10 +244,10 @@
 		<FaqSection items={faq} pageType="bezirk" contentLocale={faqLocale} />
 	{:else}
 		<section aria-labelledby="faq-placeholder-heading" class="space-y-3">
-			<h2 id="faq-placeholder-heading" class="font-serif text-2xl text-ink">
+			<h2 id="faq-placeholder-heading" class="text-2xl font-bold text-ink">
 				{m.faq_section_heading(undefined, localeOpts)}
 			</h2>
-			<p class="font-serif text-base text-ink-muted">
+			<p class="text-base text-ink-muted">
 				{m.profile_faq_placeholder(undefined, localeOpts)}
 			</p>
 		</section>

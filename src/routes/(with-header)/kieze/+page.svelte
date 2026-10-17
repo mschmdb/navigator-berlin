@@ -56,8 +56,8 @@
 
 <article data-testid="kieze-overview" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-3">
-		<h1 class="font-serif text-3xl text-ink">{m.overview_kieze_h1()}</h1>
-		<p class="font-serif text-lg leading-body text-ink-muted">
+		<h1 class="text-3xl font-bold text-ink">{m.overview_kieze_h1()}</h1>
+		<p class="text-lg leading-body text-ink-muted">
 			{m.overview_kieze_intro({ count: kiezCount, bezirkCount })}
 		</p>
 		<p class="font-sans text-base">
@@ -65,7 +65,7 @@
 				href={localizedHref('/methodik/kiez-score')}
 				class="text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
-				{m.kiez_page_methodik_link_label()} →
+				{m.kiez_page_methodik_link_label()}
 			</a>
 		</p>
 	</header>
@@ -92,14 +92,15 @@
 			class="flex scroll-mt-4 flex-col gap-3 border-t border-rule pt-6"
 		>
 			<header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-				<h2 id={`${bezirkAnchorId(bezirk.slug)}-h`} class="font-serif text-2xl text-ink">
+				<h2 id={`${bezirkAnchorId(bezirk.slug)}-h`} class="text-2xl font-bold text-ink">
 					{bezirk.name}
 				</h2>
 				<p class="font-sans text-sm text-ink-muted">
 					{bezirk.kieze.length === 1
 						? m.overview_kieze_bezirk_count_single()
-						: m.overview_kieze_bezirk_count_plural({ count: bezirk.kieze.length })}
-					<span aria-hidden="true">·</span>
+						: m.overview_kieze_bezirk_count_plural({ count: bezirk.kieze.length })}<span
+						aria-hidden="true">,</span
+					>
 					<a
 						href={localizedHref(`/bezirk/${bezirk.slug}`)}
 						class="text-accent underline underline-offset-2 hover:text-accent-strong"
@@ -120,7 +121,7 @@
 						>
 							{kiez.name}
 						</a>
-						<span class="font-mono text-sm text-ink-muted tabular-nums">
+						<span class="text-sm text-ink-muted tabular-nums">
 							{#if kiez.composite !== null}
 								<span aria-hidden="true">{kiez.composite}</span>
 								<span class="sr-only">{m.bezirk_kieze_score_aria({ score: kiez.composite })}</span>

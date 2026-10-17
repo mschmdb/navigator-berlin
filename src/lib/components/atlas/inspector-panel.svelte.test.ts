@@ -86,7 +86,7 @@ describe('inspector-panel.svelte', () => {
 			layerMeta: fullLayerMeta
 		});
 		const sub = (await page.getByTestId('inspector-address-subline').element()) as HTMLElement;
-		expect(sub.textContent?.trim()).toBe('Boxhagener Kiez · Friedrichshain-Kreuzberg · 10245');
+		expect(sub.textContent?.trim()).toBe('Boxhagener Kiez, Friedrichshain-Kreuzberg, 10245');
 	});
 
 	it('rendert die Sektionen in fester Reihenfolge (kein Memorial mehr, ADR-015)', async () => {
@@ -275,7 +275,7 @@ describe('inspector-panel.svelte', () => {
 	});
 
 	describe('Story 1.18: Section-Header + Empty-Section-Toggle', () => {
-		it('Section-Header nutzt uppercase + tracking-wide (Story 1.31: section-bordert-t am Section-Wrapper)', async () => {
+		it('Section-Header in Satzschreibung, Gewicht statt Versalien (GH-87; Story 1.31: border-t am Section-Wrapper)', async () => {
 			render(Harness, {
 				open: true,
 				address,
@@ -284,8 +284,8 @@ describe('inspector-panel.svelte', () => {
 			});
 			const h = (await page.getByTestId('section-header-boundaries').element()) as HTMLElement;
 			expect(h.className).toMatch(/text-xs/);
-			expect(h.className).toMatch(/uppercase/);
-			expect(h.className).toMatch(/tracking-wide/);
+			expect(h.className).not.toMatch(/uppercase/);
+			expect(h.className).toMatch(/font-semibold/);
 			const sec = (await page.getByTestId('section-boundaries').element()) as HTMLElement;
 			expect(sec.className).toMatch(/border-t/);
 		});

@@ -56,10 +56,10 @@
 		data-testid={testid}
 	>
 		<header class="space-y-1">
-			<h2 id="kiez-wahl-verlauf-heading" class="font-serif text-2xl text-ink">
+			<h2 id="kiez-wahl-verlauf-heading" class="text-2xl font-bold text-ink">
 				{m.kiez_wahl_verlauf_heading()}
 			</h2>
-			<p class="font-serif text-base text-ink-muted">
+			<p class="text-base text-ink-muted">
 				{m.kiez_wahl_verlauf_intro({ kiezName })}
 			</p>
 		</header>
@@ -67,8 +67,8 @@
 		<ul class="space-y-5" data-testid={`${testid}-list`}>
 			{#each rows as row (row.key)}
 				<li class="space-y-2" data-testid={`${testid}-row-${row.key}`}>
-					<p class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
-						{wahlVerlaufTypLabel(row.typ)} · {wahlVerlaufStimmtypLabel(row.stimmtyp)}
+					<p class="text-dense-meta text-ink-muted">
+						{wahlVerlaufTypLabel(row.typ)}, {wahlVerlaufStimmtypLabel(row.stimmtyp)}
 					</p>
 					<ol
 						class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4"
@@ -79,9 +79,7 @@
 								class="flex flex-col gap-1.5 rounded border border-rule bg-bg p-2.5"
 								data-testid={`${testid}-${row.key}-${cell.jahr}`}
 							>
-								<span
-									class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase tabular-nums"
-								>
+								<span class="font-mono text-dense-meta text-ink-muted tabular-nums">
 									{cell.jahr}
 								</span>
 								<span class="flex items-center gap-2">
@@ -101,14 +99,11 @@
 			{/each}
 		</ul>
 
-		<p
-			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-			data-testid={`${testid}-source`}
-		>
+		<p class="text-dense-meta text-ink-muted" data-testid={`${testid}-source`}>
 			{m.kiez_wahl_verlauf_source({
 				quelle1: sourceDisplayLabel('Bundeswahlleiterin', localeOpts),
 				quelle2: sourceDisplayLabel('Amt für Statistik Berlin-Brandenburg', localeOpts)
-			})} ·
+			})},
 			{m.wahl_portal_lizenz_suffix({ license: 'dl-de/by-2-0' }, localeOpts)}
 		</p>
 
@@ -116,7 +111,7 @@
 
 		<a
 			href={localizedHref(methodikHref)}
-			class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="inline-flex min-h-(--target-min) items-center text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			data-testid={`${testid}-methodik-link`}
 		>
 			{m.wahl_detail_methodik_link_label()}

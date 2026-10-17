@@ -15,7 +15,7 @@ const agh2023: WahlMetaInput = {
 describe('buildWahlMeta Titel', () => {
 	it('DE: Reihe, Jahr, Stimmart und Wiederholungswahl ohne Marke bei Überlänge', () => {
 		const { title } = buildWahlMeta(agh2023);
-		expect(title).toBe('Abgeordnetenhaus 2023 · Erststimme · Wiederholungswahl');
+		expect(title).toBe('Abgeordnetenhaus 2023, Erststimme, Wiederholungswahl');
 	});
 
 	it('DE: Marke hängt an, wenn der Titel in 60 Zeichen passt', () => {
@@ -24,7 +24,7 @@ describe('buildWahlMeta Titel', () => {
 			jahr: 2021,
 			isRepeatElection: false
 		});
-		expect(title).toBe('Abgeordnetenhaus 2021 · Erststimme | navigator.berlin');
+		expect(title).toBe('Abgeordnetenhaus 2021, Erststimme | navigator.berlin');
 	});
 
 	it('BVV hat keine Stimmart im Titel', () => {
@@ -47,11 +47,14 @@ describe('buildWahlMeta Titel', () => {
 	it('EN: lässt die Marke weg, wenn sie die Grenze sprengt', () => {
 		const { title } = buildWahlMeta({
 			...agh2023,
-			isRepeatElection: false,
+			isRepeatElection: true,
 			stimmtyp: 'zweitstimme',
 			locale: 'en'
 		});
-		expect(title).toBe('House of Representatives 2023 · party vote');
+		// Mit Kommas statt Mittelpunkten (GH-87) passt nur die Wiederholungswahl
+		// nicht mehr samt Marke in 60 Zeichen.
+		expect(title).toMatch(/^House of Representatives 2023, party vote, /);
+		expect(title).not.toContain('navigator.berlin');
 	});
 
 	it('EN: behält die Marke bei kurzem Titel', () => {
@@ -63,7 +66,7 @@ describe('buildWahlMeta Titel', () => {
 			stimmtyp: 'zweitstimme',
 			locale: 'en'
 		});
-		expect(title).toBe('Bundestag 2025 · party vote | navigator.berlin');
+		expect(title).toBe('Bundestag 2025, party vote | navigator.berlin');
 	});
 });
 

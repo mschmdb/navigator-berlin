@@ -111,7 +111,9 @@
 		>
 			<PixelLogo size={64} title="navigator.berlin" />
 			<span class="hidden font-sans text-base font-light tracking-wide text-ink sm:inline">
-				navigator.berlin
+				navigator.berlin<span class="ml-1.5 text-sm tracking-normal text-ink-subtle"
+					>{m.shell_wordmark_beta()}</span
+				>
 			</span>
 		</a>
 		{#if atlasCtaHref}
@@ -121,7 +123,7 @@
 			<a
 				href={atlasCtaHref}
 				data-testid="header-atlas-cta"
-				class="inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-accent bg-accent px-3 font-mono text-xs tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+				class="inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-accent bg-accent px-3 text-xs text-bg hover:border-ink hover:bg-ink"
 			>
 				<MapIcon size={16} aria-hidden="true" />
 				{m.shell_atlas_cta_label()}

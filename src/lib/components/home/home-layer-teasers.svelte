@@ -37,12 +37,12 @@
 
 <section data-testid="home-layer-teasers" class="space-y-6">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">
+		<h2 class="text-2xl font-bold text-ink md:text-3xl">
 			{(total === 1 ? m.home_layer_teasers_heading_singular : m.home_layer_teasers_heading_plural)({
 				count: total
 			})}
 		</h2>
-		<p class="font-serif text-base text-ink-muted">
+		<p class="text-base text-ink-muted">
 			{m.home_layer_teasers_lead()}
 		</p>
 	</header>
@@ -56,11 +56,9 @@
 				>
 					<span class="flex items-center gap-2">
 						<Icon size={16} aria-hidden="true" />
-						<span class="font-mono text-xs tracking-wider uppercase"
-							>{homeLayerTeaserLabel(t.slug)}</span
-						>
+						<span class="text-xs">{homeLayerTeaserLabel(t.slug)}</span>
 					</span>
-					<span class="font-serif text-base leading-snug">{homeLayerTeaserSummary(t.slug)}</span>
+					<span class="text-base leading-snug">{homeLayerTeaserSummary(t.slug)}</span>
 				</a>
 			</li>
 		{/each}

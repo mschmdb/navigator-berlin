@@ -144,22 +144,19 @@
 </script>
 
 {#if isError}
-	<p data-testid="wechsel-kapitel-error" role="alert" class="font-serif text-ink-muted">
+	<p data-testid="wechsel-kapitel-error" role="alert" class="text-ink-muted">
 		{m.wahl_portal_wahldaten_error()}
 	</p>
 {:else if isLoading}
-	<p data-testid="wechsel-kapitel-loading" class="font-serif text-ink-muted">
+	<p data-testid="wechsel-kapitel-loading" class="text-ink-muted">
 		{m.wahl_portal_wechsel_loading()}
 	</p>
 {:else if isEmpty}
-	<p data-testid="wechsel-kapitel-empty" class="font-serif text-ink-muted">
+	<p data-testid="wechsel-kapitel-empty" class="text-ink-muted">
 		{m.wahl_portal_wahl_ergebnisse_empty()}
 	</p>
 {:else if showInhalt}
-	<p
-		data-testid="wechsel-kapitel-takeaway"
-		class="max-w-prose font-serif text-lg leading-body text-ink"
-	>
+	<p data-testid="wechsel-kapitel-takeaway" class="max-w-prose text-lg leading-body text-ink">
 		{takeawayText}
 	</p>
 
@@ -177,7 +174,7 @@
 
 	<ul
 		data-testid="wechsel-kapitel-legende"
-		class="flex flex-wrap gap-3 border border-rule bg-bg p-3 font-mono text-xs text-ink"
+		class="flex flex-wrap gap-3 border border-rule bg-bg p-3 text-xs text-ink"
 	>
 		<li class="flex items-center gap-1.5">
 			<span
@@ -214,14 +211,14 @@
 	/>
 
 	{#if sortedEntries.length === 0}
-		<p data-testid="wechsel-kapitel-liste-empty" class="font-mono text-xs text-ink-subtle">
+		<p data-testid="wechsel-kapitel-liste-empty" class="text-xs text-ink-subtle">
 			{m.wahl_portal_wechsel_liste_empty()}
 		</p>
 	{:else}
 		<ul
 			id="wechsel-kapitel-liste"
 			data-testid="wechsel-kapitel-liste"
-			class="flex flex-col gap-1.5 font-mono text-xs text-ink"
+			class="flex flex-col gap-1.5 text-xs text-ink"
 		>
 			{#each visibleEntries as entry (`${entry.gebietSlug}-${entry.jahr}`)}
 				<li data-testid="wechsel-kapitel-eintrag">
@@ -239,7 +236,7 @@
 				aria-expanded={showAll}
 				aria-controls="wechsel-kapitel-liste"
 				onclick={() => (showAll = !showAll)}
-				class="self-start rounded border border-ink px-2.5 py-1 font-mono text-xs text-ink transition-colors hover:bg-bg-muted"
+				class="self-start rounded border border-ink px-2.5 py-1 text-xs text-ink transition-colors hover:bg-bg-muted"
 			>
 				{showAll
 					? m.wahl_portal_wechsel_weniger_anzeigen()

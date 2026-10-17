@@ -127,11 +127,9 @@
 			class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
 			aria-hidden="true"
 		>
-			<span class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
-				>{overallLabel}</span
-			>
-			<span class="font-mono text-4xl leading-none font-semibold text-ink">{overallText}</span>
-			<span class="font-mono text-dense-meta text-ink-subtle">/ 100</span>
+			<span class="text-dense-meta text-ink-subtle">{overallLabel}</span>
+			<span class="text-4xl leading-none font-semibold text-ink">{overallText}</span>
+			<span class="font-mono text-dense-meta text-ink-subtle tabular-nums">/ 100</span>
 		</div>
 	</div>
 

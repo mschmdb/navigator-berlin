@@ -59,7 +59,7 @@
 			class="fixed inset-y-0 right-0 flex w-[min(88vw,360px)] flex-col border-l border-rule-strong bg-bg-elevated"
 		>
 			<header class="flex shrink-0 items-center justify-between border-b border-rule px-5 py-4">
-				<h2 class="font-serif text-lg text-ink">{m.shell_drawer_heading()}</h2>
+				<h2 class="text-lg font-semibold text-ink">{m.shell_drawer_heading()}</h2>
 				<button
 					type="button"
 					data-testid="mobile-meta-drawer-close"
@@ -75,7 +75,7 @@
 				<div class="flex flex-col gap-6">
 					{#each META_LINK_GROUPS as group (group.id)}
 						<div class="flex flex-col gap-2">
-							<h3 class="font-mono text-dense-meta tracking-wider text-ink-subtle uppercase">
+							<h3 class="text-dense-label font-semibold text-ink-muted">
 								{metaLinkGroupTitle(group.id)}
 							</h3>
 							<ul class="flex flex-col">
@@ -84,7 +84,7 @@
 										<a
 											href={localizedHref(link.href)}
 											onclick={onClose}
-											class="block py-2 font-serif text-sm text-ink hover:text-accent"
+											class="block py-2 text-sm text-ink hover:text-accent"
 										>
 											{metaLinkLabel(link.id)}
 										</a>
@@ -95,7 +95,7 @@
 										<a
 											href={`mailto:${FEEDBACK_EMAIL}`}
 											onclick={onClose}
-											class="block py-2 font-serif text-sm text-ink hover:text-accent"
+											class="block py-2 text-sm text-ink hover:text-accent"
 										>
 											{m.shell_contact_label()}
 										</a>
@@ -109,7 +109,7 @@
 
 			<footer class="flex shrink-0 items-center justify-end border-t border-rule px-5 py-4">
 				{#if langSwitcher}
-					<div class="mr-auto font-mono text-xs text-ink-subtle">
+					<div class="mr-auto text-xs text-ink-subtle">
 						{@render langSwitcher()}
 					</div>
 				{/if}

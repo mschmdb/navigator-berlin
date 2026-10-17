@@ -55,14 +55,11 @@
 
 <div data-testid="karten-steuerung" class="flex flex-col gap-3 border border-rule bg-bg p-3">
 	<div class="flex flex-col gap-1.5">
-		<span
-			id="steuerleiste-jahr-label"
-			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-		>
+		<span id="steuerleiste-jahr-label" class="text-dense-meta text-ink-muted">
 			{m.wahl_portal_spalte_jahr()}
 		</span>
 		{#if jahrOptions.length === 0}
-			<p data-testid="steuerleiste-jahr-empty" class="font-mono text-xs text-ink-subtle">
+			<p data-testid="steuerleiste-jahr-empty" class="text-xs text-ink-subtle">
 				{m.wahl_portal_jahr_keine_optionen()}
 			</p>
 		{:else}
@@ -82,7 +79,7 @@
 						aria-checked={checked}
 						aria-disabled={disabled}
 						aria-label={opt.isRepeatElection
-							? `${opt.jahr} · ${wahlWiederholungLabel()}`
+							? `${opt.jahr}, ${wahlWiederholungLabel()}`
 							: String(opt.jahr)}
 						tabindex={checked ? 0 : -1}
 						onclick={() => !disabled && onJahrChange(opt.jahr)}
@@ -114,10 +111,7 @@
 	</div>
 
 	<div class="flex flex-col gap-1.5">
-		<span
-			id="steuerleiste-ebene-label"
-			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-		>
+		<span id="steuerleiste-ebene-label" class="text-dense-meta text-ink-muted">
 			{m.wahl_portal_feld_ebene()}
 		</span>
 		<div
@@ -138,7 +132,7 @@
 					tabindex={checked ? 0 : -1}
 					onclick={() => !disabled && onEbeneChange(value)}
 					onkeydown={(e) => onEbeneKeydown(e, i)}
-					class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
+					class="rounded border border-ink px-2.5 py-1 text-xs transition-colors"
 					class:bg-ink={checked}
 					class:text-bg={checked}
 					class:bg-bg={!checked}

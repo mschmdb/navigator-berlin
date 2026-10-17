@@ -11,7 +11,6 @@
 	Viertel; nie eine Schwäche. Ohne DB fehlen Score, Rang und Stärke.
 -->
 <script lang="ts">
-	import { ArrowRight } from '@lucide/svelte';
 	import type { KiezProfile } from '$lib/data/types.js';
 	import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
 	import type { CompositeRank } from '$lib/server/profile/composite-rank.js';
@@ -93,7 +92,7 @@
 <header class="mx-auto max-w-3xl px-4 pt-4 pb-8" data-testid="kiez-hero">
 	<div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:items-start md:gap-6">
 		<div class="space-y-3">
-			<p class="m-0 font-mono text-xs tracking-wide text-ink-subtle uppercase">
+			<p class="m-0 text-sm text-ink-muted">
 				{#if bezirkHref}
 					{m.kiez_hero_eyebrow(undefined, localeOpts)}
 					<a
@@ -106,7 +105,7 @@
 					{m.kiez_hero_eyebrow_no_bezirk(undefined, localeOpts)}
 				{/if}
 			</p>
-			<h1 class="font-serif text-2xl text-ink sm:text-3xl md:text-4xl">{profile.name}</h1>
+			<h1 class="text-2xl font-bold text-ink sm:text-3xl md:text-4xl">{profile.name}</h1>
 			<dl
 				class="m-0 grid grid-cols-2 gap-x-4 gap-y-2 font-sans sm:flex sm:flex-wrap sm:gap-x-8"
 				data-testid="kiez-facts"
@@ -116,7 +115,7 @@
 						<dt class="text-xs text-ink-muted sm:text-sm">
 							{m.kiez_hero_fact_einwohner(undefined, localeOpts)}
 						</dt>
-						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
+						<dd class="m-0 text-lg font-semibold text-ink tabular-nums sm:text-2xl">
 							{formatCount(profile.einwohner, localeOpts)}
 							{#if stand}
 								<span class="block font-sans text-xs text-ink-muted">
@@ -131,7 +130,7 @@
 						<dt class="text-xs text-ink-muted sm:text-sm">
 							{m.kiez_hero_fact_flaeche(undefined, localeOpts)}
 						</dt>
-						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
+						<dd class="m-0 text-lg font-semibold text-ink tabular-nums sm:text-2xl">
 							{m.kiez_hero_fact_flaeche_value({ km2: flaecheKm2 }, localeOpts)}
 						</dd>
 					</div>
@@ -141,7 +140,7 @@
 						<dt class="text-xs text-ink-muted sm:text-sm">
 							{m.kiez_hero_fact_score(undefined, localeOpts)}
 						</dt>
-						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
+						<dd class="m-0 text-lg font-semibold text-ink tabular-nums sm:text-2xl">
 							{m.kiez_hero_score_value({ score: scoreValue }, localeOpts)}
 							{#if hasRank}
 								<span class="block font-sans text-xs text-ink-muted" data-testid="kiez-hero-rank"
@@ -153,7 +152,7 @@
 				{/if}
 			</dl>
 			{#if strengthText}
-				<p class="m-0 pt-1 font-serif text-base text-ink" data-testid="kiez-hero-strength">
+				<p class="m-0 pt-1 text-base text-ink" data-testid="kiez-hero-strength">
 					{strengthText}
 				</p>
 			{/if}
@@ -188,6 +187,5 @@
 		class="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-5 py-2.5 font-sans text-base font-semibold text-bg hover:bg-ink"
 	>
 		{m.kiez_hero_map_button({ kiez: profile.name }, localeOpts)}
-		<ArrowRight class="size-5" aria-hidden="true" />
 	</a>
 {/snippet}

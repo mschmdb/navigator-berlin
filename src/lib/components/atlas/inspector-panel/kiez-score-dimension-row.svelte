@@ -107,10 +107,7 @@
 				severityDescriptions={severityDescriptions(localeOpts)}
 			/>
 		{:else}
-			<span
-				class="font-mono text-xs text-ink-subtle"
-				data-testid="kiez-score-missing-{score.dimension}"
-			>
+			<span class="text-xs text-ink-subtle" data-testid="kiez-score-missing-{score.dimension}">
 				{m.inspector_kiez_score_missing(undefined, localeOpts)}
 			</span>
 		{/if}
@@ -148,10 +145,10 @@
 
 	{#if krimiDelikte && sourcesOpen}
 		<ul
-			class="mt-1 space-y-1 border-l border-rule pl-[22px] font-mono text-xs text-ink-muted"
+			class="mt-1 space-y-1 border-l border-rule pl-[22px] text-xs text-ink-muted"
 			data-testid="kiez-score-delikte-kriminalitaet"
 		>
-			<li class="text-dense-meta tracking-wide text-ink-subtle uppercase">
+			<li class="text-dense-meta text-ink-subtle">
 				{m.inspector_kiez_score_delikt_heading(undefined, localeOpts)}
 			</li>
 			{#each krimiDelikte as d (d.key)}
@@ -186,7 +183,7 @@
 		</div>
 	{:else if hasSources && sourcesOpen}
 		<ul
-			class="mt-1 space-y-1 border-l border-rule pl-[22px] font-mono text-xs text-ink-muted"
+			class="mt-1 space-y-1 border-l border-rule pl-[22px] text-xs text-ink-muted"
 			data-testid="kiez-score-sources-{score.dimension}"
 		>
 			{#each score.sources as src (src.layer)}
@@ -194,7 +191,7 @@
 					<span class="min-w-0 flex-1">{getLayerDisplayName(src.layer, localeOpts)}</span>
 					<span class="shrink-0 whitespace-nowrap text-ink-subtle">
 						{src.normalizedValue === null ? '—' : `${Math.round(src.normalizedValue)}/100`}
-						<span class="ml-1 text-dense-meta">·</span>
+						<span class="text-dense-meta">,</span>
 						<span class="ml-1 text-dense-meta"
 							>{m.inspector_kiez_score_weight_label(
 								{ pct: formatCount(Math.round(src.weight * 100), localeOpts) },

@@ -101,7 +101,7 @@
 
 {#snippet dropdownTrigger()}
 	<Languages size={18} aria-hidden="true" />
-	<span aria-hidden="true" class="font-mono text-xs">{currentLocale.toUpperCase()}</span>
+	<span aria-hidden="true" class="text-xs">{currentLocale.toUpperCase()}</span>
 {/snippet}
 
 {#snippet dropdownItems()}

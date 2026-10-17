@@ -193,7 +193,7 @@
 		aria-label={m.wahl_portal_bezirk_choropleth_alt()}
 		class="h-[320px] w-full overflow-hidden rounded border border-rule sm:h-[400px]"
 	></div>
-	<figcaption class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
+	<figcaption class="text-dense-meta text-ink-muted">
 		{m.wahl_portal_bezirk_choropleth_figcaption()}
 	</figcaption>
 </figure>

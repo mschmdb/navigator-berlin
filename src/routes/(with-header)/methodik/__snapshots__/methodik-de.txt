@@ -20,14 +20,14 @@ p: navigator.berlin sammelt 3 öffentliche Berliner Geo-Datensätze und zeigt pr
 p: Die Idee: Daten lesbar machen, ohne sie zu einem „Wohn-Score" zu verdichten. Stadtteil-Statistik bleibt Stadtteil-Statistik. Was an einer Adresse zutrifft, steht im Inspector. Was nicht zutrifft, sagen wir auch.
 h2: Datenarchitektur
 p: Beim Build-Schritt fetchen wir jeden Layer von der Quelle, reprojizieren auf EPSG:4326, vereinfachen die Geometrie mit mapshaper und schreiben Hash plus Datenstand ins Manifest. Zur Laufzeit liefert ein Punkt-im-Polygon-Lookup pro Adresse die zutreffenden Werte. Keine Datenbank, kein API-Call zum Server.
-li: Source · Berliner Geoportal · OSM · DWD →
-li: fetch · WFS-Pull · Overpass-Query →
-li: reproject · EPSG:3035 → EPSG:4326 →
-li: simplify · mapshaper visvalingam · keep-shapes →
-li: hash · SHA-256 →
-li: manifest · MANIFEST.json →
-li: build · SvelteKit · prerender →
-li: edge · CDN · Hetzner
+li: Source: Berliner Geoportal, OSM, DWD →
+li: fetch: WFS-Pull, Overpass-Query →
+li: reproject: EPSG:3035 → EPSG:4326 →
+li: simplify: mapshaper visvalingam, keep-shapes →
+li: hash: SHA-256 →
+li: manifest: MANIFEST.json →
+li: build: SvelteKit, prerender →
+li: edge: CDN, Hetzner
 figcaption: Build-Pipeline: alle Schritte deterministisch, idempotent, im Source-Repo dokumentiert.
 h2: Aggregations-Ebenen
 p: Nicht jeder Wert ist adressgenau. Lärm und Luft stammen aus Stadtteil-Statistiken (LOR-Planungsraum, 542 Polygone). Bodenrichtwerte hängen am Häuserblock. Wer im Inspector einen Lärm-Wert liest, sieht den Mittelwert für den ganzen Planungsraum, nicht das eigene Schlafzimmer.
@@ -60,7 +60,7 @@ p: Niedriger Status bedeutet nicht „schlechter Kiez". Die Stufe spiegelt struk
 h2: Wahldaten
 p: Bundestags-, Abgeordnetenhaus- und BVV-Wahlen seit 2011 mit Aggregaten auf vier Ebenen: Stimmbezirk, Kiez (LOR-Bezirksregion), Bezirk und Berlin gesamt. Quellen sind Bundeswahlleiterin (BTW) und Amt für Statistik Berlin-Brandenburg (AGH + BVV). Werte beschreiben Stimmenanteile, keine Bewertung.
 p: Spezialfälle dokumentieren wir transparent: Briefwahl-Gruppen als kleinste Kartenebene (Kiez-Wert als Schätzung), Wiederholungswahlen 2023 mit Original-Wahl-Verweis, Coverage-Lücken pre-2017 ohne Stimmbezirks-Geometrie.
-p: Vollständige Methodik: Wahldaten · Alle Wahlen einzeln
+p: Vollständige Methodik: Wahldaten, Alle Wahlen einzeln
 a: Wahldaten
 a: Alle Wahlen einzeln
 h2: Kühle Orte

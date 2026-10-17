@@ -168,8 +168,7 @@
 		return 1;
 	}
 	function pillClass(value: number | null, neutral = false): string {
-		const base =
-			'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
+		const base = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center tabular-nums';
 		if (neutral) return `${base} text-ink`;
 		const bucket = scoreBucket(value);
 		if (bucket === 0) return `${base} text-ink-muted`;
@@ -182,8 +181,7 @@
 	// färben stattdessen nach Quartil der tatsächlichen Verteilung der AKTUELLEN Ansicht (kieze/bezirke):
 	// oberstes Viertel grün, unterstes rot. Passt zum „Vergleich, nicht Urteil"-Framing, ändert keine
 	// Scores. Kriminalität bleibt neutral (kein Quartil, kein Leaderboard).
-	const PILL_BASE =
-		'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center font-mono tabular-nums';
+	const PILL_BASE = 'inline-block min-w-[2.25rem] rounded px-2 py-0.5 text-center tabular-nums';
 	function columnQuartiles(
 		rows: readonly RankingRow[],
 		key: NumericSortKey
@@ -217,7 +215,7 @@
 
 	const sortDirLabel = $derived.by(() => {
 		if (sortKey === 'name' || sortKey === 'bezirk') {
-			return sortDir === 'asc' ? '· A → Z' : '· Z → A';
+			return sortDir === 'asc' ? 'A–Z' : 'Z–A';
 		}
 		return sortDir === 'desc'
 			? m.uis_ranking_sort_dir_high_low()
@@ -233,8 +231,7 @@
 	const nameColumnLabel = $derived(view === 'kieze' ? 'Kiez' : 'Bezirk');
 
 	function headerButtonClass(active: boolean): string {
-		const base =
-			'inline-flex items-center gap-1 whitespace-nowrap font-mono text-dense-label uppercase tracking-wider hover:text-ink';
+		const base = 'inline-flex items-center gap-1 whitespace-nowrap text-dense-label hover:text-ink';
 		return active ? `${base} text-ink` : `${base} text-ink-subtle`;
 	}
 </script>
@@ -251,7 +248,7 @@
 				role="radio"
 				aria-checked={view === 'kieze'}
 				data-testid="ranking-view-kieze"
-				class="px-4 py-2 font-mono text-xs tracking-wider uppercase {view === 'kieze'
+				class="px-4 py-2 text-xs {view === 'kieze'
 					? 'bg-ink text-bg'
 					: 'text-ink hover:bg-bg-muted'}"
 				onclick={() => switchView('kieze')}
@@ -263,8 +260,7 @@
 				role="radio"
 				aria-checked={view === 'bezirke'}
 				data-testid="ranking-view-bezirke"
-				class="border-l border-rule px-4 py-2 font-mono text-xs tracking-wider uppercase {view ===
-				'bezirke'
+				class="border-l border-rule px-4 py-2 text-xs {view === 'bezirke'
 					? 'bg-ink text-bg'
 					: 'text-ink hover:bg-bg-muted'}"
 				onclick={() => switchView('bezirke')}
@@ -272,9 +268,9 @@
 				{bezirke.length} Bezirke
 			</button>
 		</div>
-		<p class="font-mono text-xs text-ink-subtle">
-			{m.uis_ranking_sorted_by()} <span class="font-semibold text-ink">{columnLabel(sortKey)}</span>
-			{sortDirLabel}
+		<p class="text-xs text-ink-subtle">
+			{m.uis_ranking_sorted_by()}
+			<span class="font-semibold text-ink">{columnLabel(sortKey)}</span>, {sortDirLabel}
 		</p>
 	</div>
 
@@ -282,10 +278,7 @@
 		<table class="w-full font-sans text-sm" data-testid="ranking-table">
 			<thead>
 				<tr class="border-b border-rule text-left align-bottom">
-					<th
-						class="py-2 pr-3 font-mono text-dense-label tracking-wider whitespace-nowrap text-ink-subtle uppercase"
-						scope="col"
-					>
+					<th class="py-2 pr-3 text-dense-label whitespace-nowrap text-ink-subtle" scope="col">
 						{m.uis_ranking_col_rank()}
 					</th>
 					<th class="py-2 pr-3 align-bottom whitespace-nowrap" scope="col">
@@ -335,9 +328,7 @@
 						</th>
 					{/each}
 					<th class="score-col-th" scope="col" data-testid="ranking-col-kriminalitaet">
-						<span
-							class="score-col-rot font-mono text-dense-label tracking-wider text-ink-subtle uppercase"
-						>
+						<span class="score-col-rot text-dense-label text-ink-subtle">
 							{m.uis_ranking_col_kriminalitaet()}
 						</span>
 					</th>
@@ -346,14 +337,14 @@
 			<tbody>
 				{#each sortedRows as row, index (row.slug)}
 					<tr class="border-b border-rule align-top">
-						<td class="py-3 pr-3 font-mono text-xs text-ink-subtle">{index + 1}</td>
+						<td class="py-3 pr-3 font-mono text-xs text-ink-subtle tabular-nums">{index + 1}</td>
 						<th scope="row" class="py-3 pr-3 text-left font-semibold text-ink">
 							<a class="text-ink hover:text-accent hover:underline" href={detailHref(row)}>
 								{row.displayName}
 							</a>
 						</th>
 						{#if view === 'kieze'}
-							<td class="py-3 pr-3 font-mono text-xs text-ink-muted">
+							<td class="py-3 pr-3 text-xs text-ink-muted">
 								{row.bezirkName ?? '–'}
 							</td>
 						{/if}
@@ -402,7 +393,7 @@
 	</div>
 
 	<dl
-		class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 font-mono text-dense-meta tracking-wider text-ink-subtle uppercase"
+		class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 text-dense-meta text-ink-subtle"
 		data-testid="ranking-legend"
 	>
 		<dt class="text-ink-muted">{m.uis_ranking_legend_label()}</dt>
@@ -425,10 +416,7 @@
 		<dd class="text-ink-muted">{m.uis_ranking_legend_crime()}</dd>
 	</dl>
 
-	<p
-		class="pt-2 font-serif text-xs leading-snug text-ink-muted italic"
-		data-testid="ranking-kriminalitaet-note"
-	>
+	<p class="pt-2 text-xs leading-snug text-ink-muted" data-testid="ranking-kriminalitaet-note">
 		<RichText segments={crimeNoteSegments}>
 			{#snippet tag(text)}
 				<a

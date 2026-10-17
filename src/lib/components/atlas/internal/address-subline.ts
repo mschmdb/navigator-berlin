@@ -30,5 +30,5 @@ export function extractStreetName(addr: GeocodeSuggestion): string {
 
 export function formatAddressSubline(addr: GeocodeSuggestion): string {
 	const parts = [addr.kiez, addr.bezirk, addr.postcode].filter((p): p is string => Boolean(p));
-	return parts.join(' · ');
+	return parts.join(', ');
 }

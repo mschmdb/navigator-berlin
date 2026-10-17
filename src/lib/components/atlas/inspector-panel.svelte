@@ -527,7 +527,7 @@
 			<header class="flex items-start justify-between gap-3 border-b border-rule px-6 pt-5 pb-4">
 				<div class="min-w-0">
 					<h2
-						class="font-serif text-xl leading-tight text-ink"
+						class="text-xl leading-tight font-bold text-ink"
 						data-testid="inspector-address"
 						title={addressName}
 					>
@@ -657,7 +657,7 @@
 									{#if kiezComposite !== null}
 										<span
 											data-testid="inspector-kiez-composite"
-											class="shrink-0 font-mono text-xs text-ink-muted"
+											class="shrink-0 text-xs text-ink-muted"
 											title={m.inspector_kiez_composite_title(undefined, localeOpts)}
 										>
 											{m.inspector_score_label(
@@ -686,7 +686,7 @@
 									{#if bezirkComposite !== null}
 										<span
 											data-testid="inspector-bezirk-composite"
-											class="shrink-0 font-mono text-xs text-ink-muted"
+											class="shrink-0 text-xs text-ink-muted"
 											title={m.inspector_bezirk_composite_title(undefined, localeOpts)}
 										>
 											{m.inspector_score_label(
@@ -700,10 +700,10 @@
 						</nav>
 					{/if}
 					<div class="border-t border-rule pt-4" data-testid="weitere-daten-header">
-						<h3 class="font-sans text-xs font-semibold tracking-wide text-ink-muted uppercase">
+						<h3 class="font-sans text-xs font-semibold text-ink-muted">
 							{m.inspector_weitere_daten_heading(undefined, localeOpts)}
 						</h3>
-						<p class="mt-1 font-serif text-dense-meta leading-snug text-ink-muted italic">
+						<p class="mt-1 text-dense-meta leading-snug text-ink-muted">
 							{m.inspector_weitere_daten_hint(undefined, localeOpts)}
 						</p>
 					</div>
@@ -728,13 +728,13 @@
 							class="border-t border-rule pt-4"
 						>
 							<h3
-								class="mb-3 flex items-baseline gap-2 font-sans text-xs font-semibold tracking-wide text-ink-muted uppercase"
+								class="mb-3 flex items-baseline gap-2 font-sans text-xs font-semibold text-ink-muted"
 								data-testid={`section-header-${section.key}`}
 							>
 								<span>{section.label}</span>
 								{#if section.hits.length > 0}
 									<span
-										class="font-mono text-ink-subtle tabular-nums"
+										class="text-ink-subtle tabular-nums"
 										data-testid={`section-count-${section.key}`}>{section.hits.length}</span
 									>
 								{/if}

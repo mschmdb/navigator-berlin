@@ -97,7 +97,7 @@
 		aria-labelledby="key-figures-h"
 		class="mx-auto flex max-w-3xl flex-col gap-3 px-4 pb-8"
 	>
-		<h2 id="key-figures-h" class="font-serif text-2xl text-ink">{m.key_figures_heading()}</h2>
+		<h2 id="key-figures-h" class="text-2xl font-bold text-ink">{m.key_figures_heading()}</h2>
 		<p class="font-sans text-sm text-ink-muted">{m.key_figures_intro()}</p>
 		<ul data-testid="key-figure-list" class="grid grid-cols-2 gap-3 md:grid-cols-3">
 			{#each tiles as tile (tile.figure.id)}

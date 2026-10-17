@@ -98,9 +98,9 @@
 					severityDescriptions={severityDescriptions(localeOpts)}
 				/>
 			{:else if stateText}
-				<span class="font-serif text-sm text-ink-subtle italic">{stateText}</span>
+				<span class="text-sm text-ink-subtle">{stateText}</span>
 			{:else if !poiName}
-				<span class="font-serif text-sm text-ink-subtle italic"
+				<span class="text-sm text-ink-subtle"
 					>{m.inspector_layer_card_no_data(undefined, localeOpts)}</span
 				>
 			{/if}
@@ -132,7 +132,7 @@
 			data-testid="card-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-1 text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}
@@ -175,7 +175,7 @@
 	</div>
 	{#if detailsOpen}
 		<div data-testid="card-details" class="mt-1.5 space-y-1.5">
-			<p class="font-serif text-xs leading-snug text-ink-muted">
+			<p class="text-xs leading-snug text-ink-muted">
 				{explainEntry.long}
 			</p>
 			{#if externalLink}

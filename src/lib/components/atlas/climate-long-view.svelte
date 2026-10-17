@@ -274,7 +274,7 @@
 								<text
 									x={mx + 4}
 									y={12}
-									class="font-serif italic"
+									class=""
 									font-size="11"
 									fill="var(--ink-subtle, currentColor)"
 								>
@@ -307,21 +307,18 @@
 				{/snippet}
 			</AreaChart>
 		{/if}
-		<figcaption class="mt-1 font-mono text-xs text-ink-subtle" data-testid="chart-figcaption">
+		<figcaption class="mt-1 text-xs text-ink-subtle" data-testid="chart-figcaption">
 			<span class="block">{figcaption}</span>
 			{#if normalOldMean !== null}
 				<span
-					class="mt-0.5 block font-mono text-xs text-ink-subtle"
+					class="mt-0.5 block text-xs text-ink-subtle"
 					data-testid="climate-long-view-normal-old"
 				>
 					{m.inspector_climate_normal_old({ value: formatMean(normalOldMean) }, localeOpts)}
 				</span>
 			{/if}
 			{#if normalNewMean !== null}
-				<span
-					class="block font-mono text-xs text-ink-subtle"
-					data-testid="climate-long-view-normal-new"
-				>
+				<span class="block text-xs text-ink-subtle" data-testid="climate-long-view-normal-new">
 					{m.inspector_climate_normal_new({ value: formatMean(normalNewMean) }, localeOpts)}
 				</span>
 			{/if}

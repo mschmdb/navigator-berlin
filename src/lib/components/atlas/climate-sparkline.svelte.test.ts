@@ -255,7 +255,7 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 		expect(newRow?.textContent).toContain('11');
 	});
 
-	it('Normalperioden in Plex-Mono dezent (AC-2 Style)', async () => {
+	it('Normalperioden dezent in Sans (AC-2 Style, GH-87)', async () => {
 		const screen = render(ClimateSparkline, {
 			series: SUMMER,
 			metric: 'summer',
@@ -266,7 +266,7 @@ describe('ClimateSparkline (LayerChart rewrite)', () => {
 		) as HTMLElement | null;
 		expect(oldRow).not.toBeNull();
 		const cls = oldRow!.className;
-		expect(cls).toMatch(/font-mono/);
+		expect(cls).not.toMatch(/font-mono|font-serif/);
 		expect(cls).toMatch(/text-ink-subtle/);
 	});
 

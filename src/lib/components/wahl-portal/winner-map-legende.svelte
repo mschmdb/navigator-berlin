@@ -61,7 +61,7 @@
 
 <div data-testid="winner-map-legende" class="flex flex-col gap-3 border border-rule bg-bg p-3">
 	<div class="flex items-center justify-between gap-3">
-		<span class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
+		<span class="text-dense-meta text-ink-muted">
 			{titel}
 		</span>
 		<button
@@ -69,7 +69,7 @@
 			data-testid="winner-map-muster-toggle"
 			aria-pressed={patternsEnabled}
 			onclick={onTogglePatterns}
-			class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
+			class="rounded border border-ink px-2.5 py-1 text-xs transition-colors"
 			class:bg-ink={patternsEnabled}
 			class:text-bg={patternsEnabled}
 			class:bg-bg={!patternsEnabled}
@@ -80,7 +80,7 @@
 	</div>
 
 	{#if parteien.length === 0}
-		<p data-testid="winner-map-legende-empty" class="font-mono text-xs text-ink-subtle">
+		<p data-testid="winner-map-legende-empty" class="text-xs text-ink-subtle">
 			{m.wahl_portal_legende_keine_partei_daten()}
 		</p>
 	{:else}
@@ -96,13 +96,13 @@
 							? patternPreviewStyle(parteiPattern(partei), hex)
 							: `background-color: ${hex};`}
 					></span>
-					<span class="font-mono text-xs text-ink">{parteiDisplayName(partei)}</span>
+					<span class="text-xs text-ink">{parteiDisplayName(partei)}</span>
 				</li>
 			{/each}
 		</ul>
 	{/if}
 
-	<p data-testid="winner-map-legende-rampe" class="font-mono text-dense-meta text-ink-subtle">
+	<p data-testid="winner-map-legende-rampe" class="text-dense-meta text-ink-subtle">
 		{rampeText ?? defaultRampeText}
 	</p>
 </div>

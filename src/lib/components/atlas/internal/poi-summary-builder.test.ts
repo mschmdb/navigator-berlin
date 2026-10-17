@@ -37,7 +37,7 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 
 		it('baut Subtitle aus kostenlos + Flaschen', () => {
 			expect(getPopoverSummary('trinkbrunnen', { fee: 'no', bottle: 'yes' }).subtitle).toBe(
-				'kostenlos · Flaschen auffüllen'
+				'kostenlos, Flaschen auffüllen'
 			);
 		});
 
@@ -56,7 +56,7 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 				bottle: 'yes',
 				wheelchair: 'yes'
 			}).subtitle;
-			expect(sub).toBe('kostenlos · Flaschen auffüllen');
+			expect(sub).toBe('kostenlos, Flaschen auffüllen');
 		});
 
 		it('ohne belegte Angaben kein Subtitle', () => {
@@ -191,7 +191,7 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 		it('nimmt den Kühle-Score in den Untertitel auf', () => {
 			expect(
 				getPopoverSummary('kuehle-orte', { name: 'Madame Tussauds', cat: 'Museum', cool_score: 4 })
-			).toEqual({ title: 'Madame Tussauds', subtitle: 'Museum · Kühle 4/5' });
+			).toEqual({ title: 'Madame Tussauds', subtitle: 'Museum, Kühle 4/5' });
 		});
 		it('faellt auf Layer-Namen zurueck, wenn name fehlt', () => {
 			expect(getPopoverSummary('kuehle-orte', { cat: 'Museum' }).title).toBe('Kühle Orte');
@@ -206,33 +206,33 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 					cat: 'Bibliothek',
 					winter_open: 'yes'
 				})
-			).toEqual({ title: 'Zentralbibliothek', subtitle: 'Bibliothek · im Winter geöffnet' });
+			).toEqual({ title: 'Zentralbibliothek', subtitle: 'Bibliothek, im Winter geöffnet' });
 		});
 		it('bildet limited und no ab', () => {
 			expect(
 				getPopoverSummary('waerme-orte', { name: 'A', cat: 'Museum', winter_open: 'limited' })
 					.subtitle
-			).toBe('Museum · im Winter eingeschränkt geöffnet');
+			).toBe('Museum, im Winter eingeschränkt geöffnet');
 			expect(
 				getPopoverSummary('waerme-orte', { name: 'A', cat: 'Museum', winter_open: 'no' }).subtitle
-			).toBe('Museum · im Winter geschlossen');
+			).toBe('Museum, im Winter geschlossen');
 		});
 		it('zeigt unknown als „nicht geprüft“', () => {
 			expect(
 				getPopoverSummary('waerme-orte', { name: 'A', cat: 'Kirche', winter_open: 'unknown' })
 					.subtitle
-			).toBe('Kirche · Winter-Öffnung nicht geprüft');
+			).toBe('Kirche, Winter-Öffnung nicht geprüft');
 		});
 		it('zeigt „nicht geprüft“ auch ohne winter_open-Feld', () => {
 			expect(getPopoverSummary('waerme-orte', { name: 'A', cat: 'Mall' }).subtitle).toBe(
-				'Mall · Winter-Öffnung nicht geprüft'
+				'Mall, Winter-Öffnung nicht geprüft'
 			);
 		});
 		it('behandelt Prototyp-Keys in winter_open als „nicht geprüft“', () => {
 			for (const key of ['constructor', 'toString', '__proto__']) {
 				expect(
 					getPopoverSummary('waerme-orte', { name: 'A', cat: 'Mall', winter_open: key }).subtitle
-				).toBe('Mall · Winter-Öffnung nicht geprüft');
+				).toBe('Mall, Winter-Öffnung nicht geprüft');
 			}
 		});
 		it('ergänzt „ohne Konsum möglich“ und „Eintritt frei“ nur bei belegtem yes/free', () => {
@@ -244,7 +244,7 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 					stay_without_purchase: 'yes',
 					is_free: 'free'
 				}).subtitle
-			).toBe('Bibliothek · im Winter geöffnet · ohne Konsum möglich · Eintritt frei');
+			).toBe('Bibliothek, im Winter geöffnet, ohne Konsum möglich, Eintritt frei');
 			expect(
 				getPopoverSummary('waerme-orte', {
 					name: 'A',
@@ -253,7 +253,7 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 					stay_without_purchase: 'unknown',
 					is_free: 'ticket'
 				}).subtitle
-			).toBe('Mall · im Winter geöffnet');
+			).toBe('Mall, im Winter geöffnet');
 		});
 		it('fällt auf den Layer-Namen zurück, wenn name fehlt', () => {
 			expect(getPopoverSummary('waerme-orte', { cat: 'Museum' }).title).toBe('Warme Orte');

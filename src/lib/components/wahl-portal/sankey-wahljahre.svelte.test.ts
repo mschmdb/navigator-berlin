@@ -137,7 +137,7 @@ describe('sankey-wahljahre.svelte', () => {
 		const labels = page.getByTestId('sankey-column-label');
 		await expect.element(labels.first()).toHaveTextContent('2016');
 		await expect.element(labels.nth(1)).toHaveTextContent('2023');
-		await expect.element(labels.nth(1)).toHaveTextContent('·W');
+		await expect.element(labels.nth(1)).toHaveTextContent('(Wdh.)');
 
 		await expect.element(page.getByTestId('sankey-band')).toBeInTheDocument();
 		await expect

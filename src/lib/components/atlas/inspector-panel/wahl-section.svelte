@@ -259,10 +259,7 @@
 
 {#if featureFlags.wahlSection && results && results.wahlen.length > 0 && availableTypen.length > 0}
 	<section data-testid="wahl-section" class="space-y-3">
-		<h3
-			class="border-t border-rule pt-4 font-mono text-xs tracking-wide text-ink-muted uppercase"
-			data-testid="wahl-section-header"
-		>
+		<h3 class="border-t border-rule pt-4 text-xs text-ink-muted" data-testid="wahl-section-header">
 			{m.inspector_wahl_section_header(undefined, localeOpts)}
 		</h3>
 
@@ -279,7 +276,7 @@
 					aria-selected={selectedTyp === typ}
 					data-testid={`wahl-typ-tab-${typ}`}
 					onclick={() => (selectedTyp = typ)}
-					class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
+					class="rounded border border-ink px-2.5 py-1 text-xs transition-colors"
 					class:bg-ink={selectedTyp === typ}
 					class:text-bg={selectedTyp === typ}
 					class:bg-bg={selectedTyp !== typ}
@@ -293,21 +290,15 @@
 
 		{#if currentBundle}
 			{#if currentBundle.wahl.isRepeatElection}
-				<p
-					class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-					data-testid="wahl-wiederholung-marker"
-				>
+				<p class="text-dense-meta text-ink-muted" data-testid="wahl-wiederholung-marker">
 					{wahlWiederholungLabel(localeOpts)}
 				</p>
 			{/if}
 			{#if currentBundle.wahl.vorlaeufig}
-				<p
-					class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-					data-testid="wahl-vorlaeufig-marker"
-				>
+				<p class="text-dense-meta text-ink-muted" data-testid="wahl-vorlaeufig-marker">
 					{wahlVorlaeufigLabel(
 						localeOpts
-					)}{#if currentBundle.wahl.sourceUpdatedAt}&nbsp;{m.inspector_wahl_vorlaeufig_stand(
+					)}{#if currentBundle.wahl.sourceUpdatedAt},&nbsp;{m.inspector_wahl_vorlaeufig_stand(
 							{ date: formatWahlDate(currentBundle.wahl.sourceUpdatedAt, localeOpts) },
 							localeOpts
 						)}{/if}
@@ -316,10 +307,7 @@
 
 			<div class="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2 text-xs">
 				{#if jahreForTypStimmtyp.length > 1}
-					<span
-						id="wahl-jahr-label"
-						class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-					>
+					<span id="wahl-jahr-label" class="text-dense-meta text-ink-muted">
 						{m.inspector_wahl_jahr_label(undefined, localeOpts)}
 					</span>
 					<div
@@ -347,7 +335,7 @@
 						{/each}
 					</div>
 				{:else if jahreForTypStimmtyp.length === 1}
-					<span class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase">
+					<span class="text-dense-meta text-ink-muted">
 						{m.inspector_wahl_jahr_label(undefined, localeOpts)}
 					</span>
 					<span
@@ -359,10 +347,7 @@
 				{/if}
 
 				{#if stimmtypenForTyp.length > 1}
-					<span
-						id="wahl-stimmtyp-label"
-						class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-					>
+					<span id="wahl-stimmtyp-label" class="text-dense-meta text-ink-muted">
 						{m.inspector_wahl_stimmtyp_group_label(undefined, localeOpts)}
 					</span>
 					<div
@@ -378,7 +363,7 @@
 								aria-checked={selectedStimmtyp === st}
 								data-testid={`wahl-stimmtyp-${st}`}
 								onclick={() => (selectedStimmtyp = st)}
-								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 text-dense-label transition-colors"
 								class:bg-ink={selectedStimmtyp === st}
 								class:text-bg={selectedStimmtyp === st}
 								class:bg-bg={selectedStimmtyp !== st}
@@ -392,10 +377,7 @@
 				{/if}
 
 				{#if availableLevels.length > 1}
-					<span
-						id="wahl-level-label"
-						class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-					>
+					<span id="wahl-level-label" class="text-dense-meta text-ink-muted">
 						{m.inspector_wahl_ebene_group_label(undefined, localeOpts)}
 					</span>
 					<div
@@ -411,7 +393,7 @@
 								aria-checked={selectedLevel === lvl}
 								data-testid={`wahl-level-${lvl}`}
 								onclick={() => (selectedLevel = lvl)}
-								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 font-mono text-dense-label transition-colors"
+								class="inline-flex min-h-(--target-min) items-center rounded border border-ink px-2 py-0.5 text-dense-label transition-colors"
 								class:bg-ink={selectedLevel === lvl}
 								class:text-bg={selectedLevel === lvl}
 								class:bg-bg={selectedLevel !== lvl}
@@ -447,7 +429,7 @@
 					</div>
 					<ul class="space-y-1.5" data-testid="wahl-legend">
 						{#each top5 as entry (entry.kurzname)}
-							<li class="flex flex-col gap-0.5 font-mono text-xs">
+							<li class="flex flex-col gap-0.5 text-xs">
 								<div class="flex items-baseline gap-2">
 									<span
 										class="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-sm border border-ink/10"
@@ -543,17 +525,14 @@
 					methodikHref={localizedHref(`${methodikHref}#wahldaten-briefwahl`, locale)}
 				/>
 			{:else}
-				<p data-testid="wahl-empty" class="font-mono text-xs text-ink-subtle">
+				<p data-testid="wahl-empty" class="text-xs text-ink-subtle">
 					{m.inspector_wahl_empty(undefined, localeOpts)}
 				</p>
 			{/if}
 
 			{#if sparklineLines.length > 0}
 				<div data-testid="wahl-sparkline" class="space-y-2 border-t border-rule pt-2">
-					<p
-						class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-						data-testid="wahl-sparkline-label"
-					>
+					<p class="text-dense-meta text-ink-muted" data-testid="wahl-sparkline-label">
 						{m.inspector_wahl_sparkline_label(
 							{
 								from: String(sparklineLines[0]?.years[0] ?? ''),
@@ -565,7 +544,7 @@
 					<ul class="space-y-1" data-testid="wahl-sparkline-list">
 						{#each sparklineLines as line (line.kurzname)}
 							<li
-								class="flex items-center gap-3 font-mono text-dense-meta text-ink"
+								class="flex items-center gap-3 text-dense-meta text-ink"
 								data-testid={`wahl-sparkline-${line.kurzname}`}
 							>
 								<svg
@@ -602,7 +581,7 @@
 
 			<p
 				id={uniqueId(currentBundle) + '-meta'}
-				class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
+				class="text-dense-meta text-ink-subtle"
 				data-testid="wahl-meta"
 			>
 				{m.inspector_wahl_meta(
@@ -624,7 +603,7 @@
 				<a
 					href={localizedHref(`/berlin-wahlen/${slug}`, locale)}
 					data-testid="wahl-detail-link"
-					class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+					class="inline-flex min-h-(--target-min) items-center text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
 					{m.inspector_wahl_detail_link(undefined, localeOpts)}
 				</a>
@@ -632,7 +611,7 @@
 			<a
 				href={localizedHref(methodikHref, locale)}
 				data-testid="wahl-methodik-link"
-				class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+				class="inline-flex min-h-(--target-min) items-center text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 			>
 				{m.inspector_wahl_methodik_link(undefined, localeOpts)}
 			</a>

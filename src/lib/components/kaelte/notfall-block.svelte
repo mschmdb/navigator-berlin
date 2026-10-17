@@ -106,7 +106,7 @@
 		{m.kaelte_notfall_h()}
 	</h2>
 
-	<ol class="flex list-decimal flex-col gap-1 pl-5 font-serif text-sm text-ink md:text-base">
+	<ol class="flex list-decimal flex-col gap-1 pl-5 text-sm text-ink md:text-base">
 		<li>{m.kaelte_notfall_schritt1()}</li>
 		<li>{m.kaelte_notfall_schritt2()}</li>
 		<li>{m.kaelte_notfall_schritt3()}</li>
@@ -130,7 +130,7 @@
 		{#if !isKaelteSaison(current)}
 			<p
 				data-testid="kaelte-saison-hinweis"
-				class="flex items-start gap-2 rounded border border-rule px-3 py-2 font-serif text-sm text-ink-muted"
+				class="flex items-start gap-2 rounded border border-rule px-3 py-2 text-sm text-ink-muted"
 			>
 				<Info size={16} aria-hidden="true" class="mt-0.5 shrink-0" />
 				{m.kaelte_dienste_leer_saison()}
@@ -162,12 +162,12 @@
 					<a
 						href={`tel:${dienst.phoneTel}`}
 						aria-label={m.kaelte_anrufen_label({ name, nummer: dienst.phoneDisplay })}
-						class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent px-3 py-1.5 font-mono text-base text-accent hover:bg-accent hover:text-bg"
+						class="inline-flex min-h-11 w-fit items-center gap-2 rounded border border-accent px-3 py-1.5 text-base text-accent hover:bg-accent hover:text-bg"
 						>{dienst.phoneDisplay}</a
 					>
-					<p class="font-serif text-sm text-ink-muted">{descriptions[dienst.id]()}</p>
+					<p class="text-sm text-ink-muted">{descriptions[dienst.id]()}</p>
 					<p class="font-sans text-xs text-ink-subtle">
-						{timesText(dienst)} · {seasonText(dienst)}
+						{timesText(dienst)}, {seasonText(dienst)}
 					</p>
 					{#if dienst.betriebUnbestaetigt}
 						<p
@@ -199,7 +199,7 @@
 							<span class="font-sans text-sm font-medium text-accent"
 								>{link.title}<span class="sr-only"> {m.kaelte_new_tab_hint()}</span></span
 							>
-							<span class="font-serif text-sm text-ink-muted">{link.text}</span>
+							<span class="text-sm text-ink-muted">{link.text}</span>
 						</span>
 					</a>
 				</li>

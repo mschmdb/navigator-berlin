@@ -55,7 +55,7 @@
 			tabindex={checked ? 0 : -1}
 			onclick={() => onSelect(value)}
 			onkeydown={(e) => onKeydown(e, i)}
-			class="rounded border px-2.5 py-1 font-mono text-xs transition-colors"
+			class="rounded border px-2.5 py-1 text-xs transition-colors"
 			style={value ? `border-color: ${parteiColor(value)};` : undefined}
 			class:bg-ink={checked}
 			class:text-bg={checked}

@@ -26,7 +26,7 @@
 	>
 		<nav
 			aria-label={m.shell_meta_nav_aria_label()}
-			class="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-end gap-y-1"
+			class="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-end gap-x-4 gap-y-1"
 		>
 			{#each META_LINKS as link (link.id)}
 				<span class="whitespace-nowrap">
@@ -35,7 +35,6 @@
 						class="inline-flex min-h-(--target-min) items-center hover:text-accent"
 						>{metaLinkLabel(link.id)}</a
 					>
-					<span aria-hidden="true" class="px-1.5 text-ink-subtle/50">·</span>
 				</span>
 			{/each}
 			<a
@@ -43,7 +42,6 @@
 				class="inline-flex min-h-(--target-min) items-center whitespace-nowrap hover:text-accent"
 				>{m.shell_contact_label()}</a
 			>
-			<span aria-hidden="true" class="px-2 text-ink-subtle/50">·</span>
 			<span class="inline-flex items-center gap-2">
 				<SocialLinks size={14} class="gap-2" />
 				<MtcLogo size={14} />
@@ -72,9 +70,9 @@
 							decoding="async"
 							class="block"
 						/>
-						<span class="font-serif text-lg text-ink">navigator.berlin</span>
+						<span class="text-lg text-ink">navigator.berlin</span>
 					</a>
-					<p class="font-serif text-base leading-body text-ink-muted">
+					<p class="text-base leading-body text-ink-muted">
 						{m.shell_footer_claim()}
 					</p>
 				</div>
@@ -85,7 +83,7 @@
 				>
 					{#each META_LINK_GROUPS as group (group.id)}
 						<div class="flex flex-col gap-2.5">
-							<h2 class="font-mono text-dense-meta tracking-wider text-ink-subtle uppercase">
+							<h2 class="text-dense-label font-semibold text-ink-muted">
 								{metaLinkGroupTitle(group.id)}
 							</h2>
 							<ul class="flex flex-col">
@@ -114,7 +112,7 @@
 			</div>
 
 			<div
-				class="mt-10 flex flex-wrap items-center justify-end gap-4 border-t border-rule pt-6 font-mono text-xs text-ink-subtle"
+				class="mt-10 flex flex-wrap items-center justify-end gap-4 border-t border-rule pt-6 text-xs text-ink-subtle"
 			>
 				{#if langSwitcher}{@render langSwitcher()}{/if}
 				<div class="flex items-center gap-3">

@@ -40,7 +40,7 @@
 		<TriangleAlert size={20} aria-hidden="true" class="mt-0.5 shrink-0" />
 		<div class="flex flex-col gap-0.5">
 			<span class="font-sans text-sm font-semibold" data-testid="dwd-level">{level}</span>
-			<span class="font-serif text-sm text-ink" lang={headlineLang}>{headline}</span>
+			<span class="text-sm text-ink" lang={headlineLang}>{headline}</span>
 			<a
 				href={warning.sourceUrl}
 				target="_blank"

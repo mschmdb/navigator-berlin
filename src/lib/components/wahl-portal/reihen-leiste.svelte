@@ -45,7 +45,7 @@
 >
 	<span
 		id="steuerleiste-reihe-label"
-		class="shrink-0 font-mono text-dense-meta tracking-wide whitespace-nowrap text-ink-muted uppercase"
+		class="shrink-0 text-dense-meta whitespace-nowrap text-ink-muted"
 	>
 		{m.wahl_portal_feld_wahlreihe()}
 	</span>
@@ -67,7 +67,7 @@
 				tabindex={checked ? 0 : -1}
 				onclick={() => !disabled && onReiheChange(value)}
 				onkeydown={(e) => onReiheKeydown(e, i)}
-				class="shrink-0 rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
+				class="shrink-0 rounded border border-ink px-2.5 py-1 text-xs transition-colors"
 				class:bg-ink={checked}
 				class:text-bg={checked}
 				class:bg-bg={!checked}

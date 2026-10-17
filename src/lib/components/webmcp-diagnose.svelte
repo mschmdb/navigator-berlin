@@ -38,7 +38,7 @@
 </script>
 
 <section class="mt-10" data-testid="webmcp-diagnose">
-	<h2 class="font-serif text-xl">{m.webmcp_diagnose_heading()}</h2>
+	<h2 class="text-xl font-bold">{m.webmcp_diagnose_heading()}</h2>
 	<p class="mt-3 leading-body text-ink-muted">{m.webmcp_diagnose_intro_p1()}</p>
 	{#if fehler}
 		<p class="mt-4 font-mono text-sm text-red-700" data-testid="webmcp-diagnose-fehler">

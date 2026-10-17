@@ -92,8 +92,8 @@
 	);
 </script>
 
-{#snippet codeXs(text: string)}<code class="font-mono text-xs">{text}</code>{/snippet}
-{#snippet codeSm(text: string)}<code class="font-mono text-sm">{text}</code>{/snippet}
+{#snippet codeXs(text: string)}<code class="text-xs">{text}</code>{/snippet}
+{#snippet codeSm(text: string)}<code class="text-sm">{text}</code>{/snippet}
 
 <SeoHead
 	title={buildPageTitle(m.lizenzen_meta_title())}
@@ -108,10 +108,10 @@
 
 <article data-testid="lizenzen-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-2">
-		<h1 data-testid="lizenzen-page-title" class="font-serif text-3xl text-ink">
+		<h1 data-testid="lizenzen-page-title" class="text-3xl font-bold text-ink">
 			{m.lizenzen_h1_title()}
 		</h1>
-		<p class="font-serif text-lg leading-body text-ink-muted">
+		<p class="text-lg leading-body text-ink-muted">
 			{m.lizenzen_intro_p1()}
 		</p>
 	</header>
@@ -121,7 +121,7 @@
 		aria-label={m.lizenzen_toc_aria_label()}
 		class="border border-rule bg-bg p-4"
 	>
-		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">
+		<p class="mb-2 text-xs text-ink-subtle">
 			{m.lizenzen_toc_heading()}
 		</p>
 		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
@@ -139,10 +139,10 @@
 	</nav>
 
 	<section id="daten-lizenzen" aria-labelledby="daten-lizenzen-h" class="flex flex-col gap-4">
-		<h2 id="daten-lizenzen-h" class="font-serif text-2xl text-ink">
+		<h2 id="daten-lizenzen-h" class="text-2xl font-bold text-ink">
 			{m.lizenzen_section_daten_lizenzen()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{datenIntro}
 		</p>
 
@@ -155,12 +155,12 @@
 						href={info.url}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+						class="text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 					>
 						{info.key}
 					</a>
 				</div>
-				<p class="font-serif text-sm text-ink-muted">{info.summary}</p>
+				<p class="text-sm text-ink-muted">{info.summary}</p>
 				<ul class="flex flex-wrap gap-x-3 gap-y-1 font-sans text-sm">
 					{#each layers as layer (layer.slug)}
 						<li>
@@ -180,28 +180,28 @@
 			</div>
 		{/each}
 
-		<p class="font-serif text-sm text-ink-muted">
+		<p class="text-sm text-ink-muted">
 			{m.lizenzen_daten_laerm()}
 		</p>
-		<p data-testid="lizenzen-zensus-attribution" class="font-serif text-sm text-ink-muted">
+		<p data-testid="lizenzen-zensus-attribution" class="text-sm text-ink-muted">
 			{m.lizenzen_daten_zensus()}
 		</p>
 	</section>
 
 	<section id="wahldaten" aria-labelledby="wahldaten-h" class="flex flex-col gap-3">
-		<h2 id="wahldaten-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_wahldaten()}</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<h2 id="wahldaten-h" class="text-2xl font-bold text-ink">{m.lizenzen_section_wahldaten()}</h2>
+		<p class="text-base leading-body text-ink">
 			{m.lizenzen_wahl_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">{m.lizenzen_wahl_bwl_name()}</dt>
-				<dd class="mt-1 font-serif text-sm text-ink-muted">
+				<dd class="mt-1 text-sm text-ink-muted">
 					<RichText segments={bwlDescSegments}>
 						{#snippet tag(text)}{@render codeXs(text)}{/snippet}
 					</RichText>
 				</dd>
-				<dd class="mt-2 font-mono text-xs">
+				<dd class="mt-2 text-xs">
 					<a
 						href="https://bundeswahlleiterin.de"
 						target="_blank"
@@ -216,10 +216,10 @@
 				<dt class="font-sans text-base font-semibold text-ink">
 					{m.lizenzen_wahl_statistik_name()}
 				</dt>
-				<dd class="mt-1 font-serif text-sm text-ink-muted">
+				<dd class="mt-1 text-sm text-ink-muted">
 					{m.lizenzen_wahl_statistik_desc()}
 				</dd>
-				<dd class="mt-2 font-mono text-xs">
+				<dd class="mt-2 text-xs">
 					<a
 						href="https://statistik-berlin-brandenburg.de"
 						target="_blank"
@@ -234,10 +234,10 @@
 				<dt class="font-sans text-base font-semibold text-ink">
 					{m.lizenzen_wahl_landeswahl_name()}
 				</dt>
-				<dd class="mt-1 font-serif text-sm text-ink-muted">
+				<dd class="mt-1 text-sm text-ink-muted">
 					{m.lizenzen_wahl_landeswahl_desc()}
 				</dd>
-				<dd class="mt-2 font-mono text-xs">
+				<dd class="mt-2 text-xs">
 					<a
 						href="https://www.wahlen-berlin.de"
 						target="_blank"
@@ -249,7 +249,7 @@
 				</dd>
 			</div>
 		</dl>
-		<p class="font-mono text-xs text-ink-muted">
+		<p class="text-xs text-ink-muted">
 			{m.lizenzen_wahl_methodik_label()}
 			<a
 				href={localizedHref('/methodik/wahldaten')}
@@ -261,10 +261,10 @@
 	</section>
 
 	<section id="demografie" aria-labelledby="demografie-h" class="flex flex-col gap-3">
-		<h2 id="demografie-h" class="font-serif text-2xl text-ink">
+		<h2 id="demografie-h" class="text-2xl font-bold text-ink">
 			{m.lizenzen_section_demografie()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.lizenzen_demografie_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
@@ -272,10 +272,10 @@
 				<dt class="font-sans text-base font-semibold text-ink">
 					{m.lizenzen_demografie_name()}
 				</dt>
-				<dd class="mt-1 font-serif text-sm text-ink-muted">
+				<dd class="mt-1 text-sm text-ink-muted">
 					{m.lizenzen_demografie_desc()}
 				</dd>
-				<dd class="mt-2 font-mono text-xs">
+				<dd class="mt-2 text-xs">
 					<a
 						href="https://daten.berlin.de/datensaetze/einwohnerinnen-und-einwohner-in-berlin-in-lor-planungsraumen-am-31-12-2024"
 						target="_blank"
@@ -294,19 +294,19 @@
 		aria-labelledby="kriminalitaetsatlas-h"
 		class="flex flex-col gap-3"
 	>
-		<h2 id="kriminalitaetsatlas-h" class="font-serif text-2xl text-ink">
+		<h2 id="kriminalitaetsatlas-h" class="text-2xl font-bold text-ink">
 			{m.lizenzen_section_kriminalitaet()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.lizenzen_krim_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">{m.lizenzen_krim_name()}</dt>
-				<dd class="mt-1 font-serif text-sm text-ink-muted">
+				<dd class="mt-1 text-sm text-ink-muted">
 					{m.lizenzen_krim_desc()}
 				</dd>
-				<dd class="mt-2 font-mono text-xs">
+				<dd class="mt-2 text-xs">
 					<a
 						href="https://www.kriminalitaetsatlas.berlin.de/"
 						target="_blank"
@@ -318,7 +318,7 @@
 				</dd>
 			</div>
 		</dl>
-		<p class="font-mono text-xs text-ink-muted">
+		<p class="text-xs text-ink-muted">
 			{m.lizenzen_krim_methodik_label()}
 			<a
 				href={localizedHref('/methodik/kiez-score')}
@@ -330,10 +330,10 @@
 	</section>
 
 	<section id="klimadaten-dwd" aria-labelledby="klimadaten-dwd-h" class="flex flex-col gap-3">
-		<h2 id="klimadaten-dwd-h" class="font-serif text-2xl text-ink">
+		<h2 id="klimadaten-dwd-h" class="text-2xl font-bold text-ink">
 			{m.lizenzen_section_klimadaten()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.lizenzen_klima_p1()}
 		</p>
 		<dl class="flex flex-col gap-3">
@@ -341,10 +341,10 @@
 				<dt class="font-sans text-base font-semibold text-ink">
 					{m.lizenzen_klima_name()}
 				</dt>
-				<dd class="mt-1 font-serif text-sm text-ink-muted">
+				<dd class="mt-1 text-sm text-ink-muted">
 					{m.lizenzen_klima_desc()}
 				</dd>
-				<dd class="mt-2 font-mono text-xs">
+				<dd class="mt-2 text-xs">
 					<a
 						href="https://opendata.dwd.de/climate_environment/CDC/"
 						target="_blank"
@@ -363,10 +363,10 @@
 		aria-labelledby="entitaets-verweise-h"
 		class="flex flex-col gap-3"
 	>
-		<h2 id="entitaets-verweise-h" class="font-serif text-2xl text-ink">
+		<h2 id="entitaets-verweise-h" class="text-2xl font-bold text-ink">
 			{m.lizenzen_section_entitaeten()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			<RichText segments={entitaetenSegments}>
 				{#snippet tag(text)}{@render codeSm(text)}{/snippet}
 			</RichText>
@@ -374,12 +374,12 @@
 		<dl class="flex flex-col gap-3">
 			<div class="border border-rule p-4">
 				<dt class="font-sans text-base font-semibold text-ink">Wikidata</dt>
-				<dd class="mt-1 font-serif text-sm text-ink-muted">
+				<dd class="mt-1 text-sm text-ink-muted">
 					<RichText segments={wikidataSegments}>
 						{#snippet tag(text)}{@render codeXs(text)}{/snippet}
 					</RichText>
 				</dd>
-				<dd class="mt-2 font-mono text-xs">
+				<dd class="mt-2 text-xs">
 					<a
 						href="https://www.wikidata.org"
 						target="_blank"
@@ -394,12 +394,12 @@
 				<dt class="font-sans text-base font-semibold text-ink">
 					{m.lizenzen_entitaeten_wikipedia_name()}
 				</dt>
-				<dd class="mt-1 font-serif text-sm text-ink-muted">
+				<dd class="mt-1 text-sm text-ink-muted">
 					<RichText segments={wikipediaSegments}>
 						{#snippet tag(text)}{@render codeXs(text)}{/snippet}
 					</RichText>
 				</dd>
-				<dd class="mt-2 font-mono text-xs">
+				<dd class="mt-2 text-xs">
 					<a
 						href="https://de.wikipedia.org"
 						target="_blank"
@@ -414,8 +414,8 @@
 	</section>
 
 	<section id="software" aria-labelledby="software-h" class="flex flex-col gap-3">
-		<h2 id="software-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_software()}</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<h2 id="software-h" class="text-2xl font-bold text-ink">{m.lizenzen_section_software()}</h2>
+		<p class="text-base leading-body text-ink">
 			<RichText segments={softwareSegments}>
 				{#snippet tag(text)}{@render codeSm(text)}{/snippet}
 			</RichText>
@@ -445,7 +445,7 @@
 									{sw.name}
 								</a>
 							</td>
-							<td class="px-3 py-2 font-mono text-xs text-ink">{sw.license}</td>
+							<td class="px-3 py-2 text-xs text-ink">{sw.license}</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -454,11 +454,11 @@
 	</section>
 
 	<section id="schriften" aria-labelledby="schriften-h" class="flex flex-col gap-3">
-		<h2 id="schriften-h" class="font-serif text-2xl text-ink">{m.lizenzen_section_schriften()}</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<h2 id="schriften-h" class="text-2xl font-bold text-ink">{m.lizenzen_section_schriften()}</h2>
+		<p class="text-base leading-body text-ink">
 			{m.lizenzen_schriften_p1()}
 		</p>
-		<p class="font-mono text-xs text-ink-muted">
+		<p class="text-xs text-ink-muted">
 			<a
 				href="https://github.com/IBM/plex"
 				target="_blank"
@@ -467,7 +467,7 @@
 			>
 				github.com/IBM/plex
 			</a>
-			·
+			<span aria-hidden="true">,</span>
 			<a
 				href="https://openfontlicense.org/"
 				target="_blank"
@@ -480,13 +480,13 @@
 	</section>
 
 	<section id="osm-namensnennung" aria-labelledby="osm-namensnennung-h" class="flex flex-col gap-3">
-		<h2 id="osm-namensnennung-h" class="font-serif text-2xl text-ink">
+		<h2 id="osm-namensnennung-h" class="text-2xl font-bold text-ink">
 			{m.lizenzen_section_osm()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.lizenzen_osm_p1()}
 		</p>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			<RichText segments={osmSegments}>
 				{#snippet tag(text)}
 					<a

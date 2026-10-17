@@ -32,7 +32,7 @@
 
 <div class="overflow-auto border border-rule">
 	<table data-testid="methodik-daten-table" class="w-full border-collapse text-sm">
-		<caption class="px-3 py-2 text-left font-serif text-base text-ink">
+		<caption class="px-3 py-2 text-left text-base font-semibold text-ink">
 			{m.methodik_daten_tabelle_caption()}
 		</caption>
 		<thead class="bg-bg">
@@ -62,11 +62,11 @@
 							{getLayerDisplayName(layer.slug, { locale })}
 						</a>
 					</td>
-					<td class="px-3 py-2 font-mono text-xs text-ink-muted">{bundleCell(layer)}</td>
-					<td class="px-3 py-2 font-mono text-xs text-ink">
+					<td class="px-3 py-2 text-xs text-ink-muted">{bundleCell(layer)}</td>
+					<td class="px-3 py-2 font-mono text-xs text-ink tabular-nums">
 						{formatYearMonth(layer.sourceUpdatedAt ?? layer.fetchedAt)}
 					</td>
-					<td class="px-3 py-2 font-mono text-xs text-ink">
+					<td class="px-3 py-2 text-xs text-ink">
 						{shortenLicense(layer.license)}
 					</td>
 				</tr>

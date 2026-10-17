@@ -293,25 +293,22 @@
 </script>
 
 {#if isError}
-	<p data-testid="trends-kapitel-error" role="alert" class="font-serif text-ink-muted">
+	<p data-testid="trends-kapitel-error" role="alert" class="text-ink-muted">
 		{m.wahl_portal_wahldaten_error()}
 	</p>
 {:else if isLoading}
-	<p data-testid="trends-kapitel-loading" class="font-serif text-ink-muted">
+	<p data-testid="trends-kapitel-loading" class="text-ink-muted">
 		{m.wahl_portal_trends_loading()}
 	</p>
 {:else if isEmpty}
-	<p data-testid="trends-kapitel-empty" class="font-serif text-ink-muted">
+	<p data-testid="trends-kapitel-empty" class="text-ink-muted">
 		{m.wahl_portal_trends_empty()}
 	</p>
 {:else if showInhalt}
 	<div data-testid="trends-kapitel" class="flex flex-col gap-6">
 		<div class="flex flex-col gap-3">
 			<div class="flex flex-col gap-1.5">
-				<span
-					id="trends-toggle-label"
-					class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-				>
+				<span id="trends-toggle-label" class="text-dense-meta text-ink-muted">
 					{m.wahl_portal_feld_ansicht()}
 				</span>
 				<div
@@ -331,7 +328,7 @@
 							tabindex={checked ? 0 : -1}
 							onclick={() => (toggle = value)}
 							onkeydown={(e) => onToggleKeydown(e, i)}
-							class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
+							class="rounded border border-ink px-2.5 py-1 text-xs transition-colors"
 							class:bg-ink={checked}
 							class:text-bg={checked}
 							class:bg-bg={!checked}
@@ -345,10 +342,7 @@
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<span
-					id="trends-partei-label"
-					class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-				>
+				<span id="trends-partei-label" class="text-dense-meta text-ink-muted">
 					{m.wahl_portal_spalte_partei()}
 				</span>
 				<div
@@ -371,7 +365,7 @@
 							tabindex={checked ? 0 : -1}
 							onclick={() => !disabled && (aktivePartei = partei)}
 							onkeydown={(e) => onParteiKeydown(e, i)}
-							class="rounded border px-2.5 py-1 font-mono text-xs transition-colors"
+							class="rounded border px-2.5 py-1 text-xs transition-colors"
 							style={`border-color: ${parteiColor(partei)};`}
 							class:bg-ink={checked}
 							class:text-bg={checked}
@@ -389,7 +383,7 @@
 					<p
 						id="trends-partei-hinweis"
 						data-testid="trends-kapitel-partei-hinweis"
-						class="font-mono text-xs text-ink-subtle"
+						class="text-xs text-ink-subtle"
 					>
 						{m.wahl_portal_partei_auswahl_nur_trend()}
 					</p>
@@ -399,7 +393,7 @@
 
 		<p
 			data-testid="trends-kapitel-takeaway"
-			class="max-w-prose font-serif text-lg leading-body text-ink tabular-nums"
+			class="max-w-prose text-lg leading-body text-ink tabular-nums"
 		>
 			{takeawayText}
 		</p>
@@ -421,7 +415,7 @@
 				? 'trends-kapitel-volatilitaet-hinweis'
 				: undefined}
 			data-testid="trends-kapitel-legende"
-			class="flex flex-wrap gap-3 border border-rule bg-bg p-3 font-mono text-xs text-ink"
+			class="flex flex-wrap gap-3 border border-rule bg-bg p-3 text-xs text-ink"
 		>
 			{#each toggle === 'trend' ? TREND_LEGENDE : volatilitaetLegende as eintrag (eintrag.label)}
 				<li class="flex items-center gap-1.5">
@@ -438,24 +432,23 @@
 			<p
 				id="trends-kapitel-volatilitaet-hinweis"
 				data-testid="trends-kapitel-volatilitaet-hinweis"
-				class="font-mono text-xs text-ink-subtle"
+				class="text-xs text-ink-subtle"
 			>
 				{m.wahl_portal_volatilitaet_erklaerung()}
 			</p>
 		{/if}
 
 		{#if response}
-			<p
-				data-testid="trends-kapitel-datenstand"
-				class="font-mono text-xs text-ink-subtle tabular-nums"
-			>
+			<p data-testid="trends-kapitel-datenstand" class="text-xs text-ink-subtle tabular-nums">
 				{m.wahl_portal_datenstand_label({ source: sourceDisplayLabel(response.source_name) })}
 				{#if response.license}
-					· {m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(response.license) })}
+					<span class="block"
+						>{m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(response.license) })}</span
+					>
 				{/if}
 			</p>
 		{/if}
-		<p data-testid="trends-kapitel-coverage-hinweis" class="font-mono text-xs text-ink-subtle">
+		<p data-testid="trends-kapitel-coverage-hinweis" class="text-xs text-ink-subtle">
 			{kiezCoverageHinweisText()}
 		</p>
 

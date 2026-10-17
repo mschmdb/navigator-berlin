@@ -211,10 +211,7 @@
 
 <div class="flex flex-col gap-3" data-testid="sankey-wahljahre">
 	<div class="flex flex-col gap-1.5">
-		<span
-			id="sankey-ebene-label"
-			class="font-mono text-dense-meta tracking-wide text-ink-muted uppercase"
-		>
+		<span id="sankey-ebene-label" class="text-dense-meta text-ink-muted">
 			{m.wahl_portal_sankey_ebene_label()}
 		</span>
 		<div
@@ -234,7 +231,7 @@
 					tabindex={checked ? 0 : -1}
 					onclick={() => (ebene = value)}
 					onkeydown={(e) => onEbeneKeydown(e, i)}
-					class="rounded border border-ink px-2.5 py-1 font-mono text-xs transition-colors"
+					class="rounded border border-ink px-2.5 py-1 text-xs transition-colors"
 					class:bg-ink={checked}
 					class:text-bg={checked}
 					class:bg-bg={!checked}
@@ -248,28 +245,25 @@
 	</div>
 
 	{#if isError}
-		<p data-testid="sankey-wahljahre-error" role="alert" class="font-serif text-ink-muted">
+		<p data-testid="sankey-wahljahre-error" role="alert" class="text-ink-muted">
 			{m.wahl_portal_wahldaten_error()}
 		</p>
 	{:else if isLoading}
-		<p data-testid="sankey-wahljahre-loading" class="font-serif text-ink-muted">
+		<p data-testid="sankey-wahljahre-loading" class="text-ink-muted">
 			{m.wahl_portal_sankey_loading()}
 		</p>
 	{:else if isEmpty}
-		<p data-testid="sankey-wahljahre-empty" class="font-serif text-ink-muted">
+		<p data-testid="sankey-wahljahre-empty" class="text-ink-muted">
 			{m.wahl_portal_sankey_empty()}
 		</p>
 	{:else if showInhalt && layout}
 		<p
 			data-testid="sankey-wahljahre-takeaway"
-			class="max-w-prose font-serif text-lg leading-body text-ink tabular-nums"
+			class="max-w-prose text-lg leading-body text-ink tabular-nums"
 		>
 			{takeawayText}
 		</p>
-		<p
-			data-testid="sankey-wahljahre-erklaerung"
-			class="max-w-prose font-mono text-xs text-ink-subtle"
-		>
+		<p data-testid="sankey-wahljahre-erklaerung" class="max-w-prose text-xs text-ink-subtle">
 			{erklaerungsSatz}
 		</p>
 
@@ -379,7 +373,7 @@
 								y={(node.y0 + node.y1) / 2}
 								text-anchor={node.column === 0 ? 'end' : 'start'}
 								dominant-baseline="middle"
-								class="fill-ink font-mono text-dense-meta"
+								class="fill-ink text-dense-meta"
 								data-testid="sankey-node-label"
 							>
 								{parteiDisplayName(node.label)}
@@ -391,7 +385,7 @@
 							x={columnXByJahr.get(spalte.jahr) ?? 0}
 							y={layout.height + 18}
 							text-anchor="middle"
-							class="fill-ink font-mono text-dense-meta tabular-nums"
+							class="fill-ink text-dense-meta tabular-nums"
 							data-testid="sankey-column-label"
 						>
 							{spalte.jahr}{spalte.istWiederholung
@@ -417,24 +411,20 @@
 		/>
 
 		{#if response}
-			<p
-				data-testid="sankey-wahljahre-datenstand"
-				class="font-mono text-xs text-ink-subtle tabular-nums"
-			>
+			<p data-testid="sankey-wahljahre-datenstand" class="text-xs text-ink-subtle tabular-nums">
 				{m.wahl_portal_datenstand_label({ source: sourceDisplayLabel(response.source_name) })}
 				{#if response.license}
-					· {m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(response.license) })}
+					<span class="block"
+						>{m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(response.license) })}</span
+					>
 				{/if}
 			</p>
 		{/if}
-		<p
-			data-testid="sankey-wahljahre-footnote-wiederholung"
-			class="font-mono text-xs text-ink-subtle"
-		>
+		<p data-testid="sankey-wahljahre-footnote-wiederholung" class="text-xs text-ink-subtle">
 			{wiederholungsSatz}
 		</p>
 		{#if ebene === 'kiez' && showCoverageHinweis}
-			<p data-testid="sankey-wahljahre-footnote-coverage" class="font-mono text-xs text-ink-subtle">
+			<p data-testid="sankey-wahljahre-footnote-coverage" class="text-xs text-ink-subtle">
 				{kiezCoverageHinweisText()}
 			</p>
 		{/if}

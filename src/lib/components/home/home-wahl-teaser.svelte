@@ -5,7 +5,7 @@
 	HomeHook.
 -->
 <script lang="ts">
-	import { ArrowRight, Vote } from '@lucide/svelte';
+	import { Vote } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import {
@@ -79,7 +79,7 @@
 			slug: card.slug,
 			title: `${card.reiheOnly ? wahlReiheLabel(card.typ) : wahlTypLabel(card.typ)} ${card.jahr}`,
 			typLabel: card.vorlaeufig
-				? `${wahlStimmtypLabel(card.stimmtyp)} · ${wahlVorlaeufigLabel()}`
+				? `${wahlStimmtypLabel(card.stimmtyp)}, ${wahlVorlaeufigLabel()}`
 				: wahlStimmtypLabel(card.stimmtyp),
 			note: m.home_wahl_teaser_quelle_label({ source: sourceDisplayLabel(card.quelle) })
 		}))
@@ -88,8 +88,8 @@
 
 <section data-testid="home-wahl-teaser" class="space-y-6">
 	<header class="space-y-2">
-		<h2 class="font-serif text-2xl text-ink md:text-3xl">{m.home_wahl_heading()}</h2>
-		<p class="font-serif text-base text-ink-muted">
+		<h2 class="text-2xl font-bold text-ink md:text-3xl">{m.home_wahl_heading()}</h2>
+		<p class="text-base text-ink-muted">
 			{m.home_wahl_lead()}
 		</p>
 	</header>
@@ -104,12 +104,12 @@
 				>
 					<span class="flex items-center gap-2">
 						<Vote size={16} aria-hidden="true" />
-						<span class="font-mono text-xs tracking-wider uppercase">
+						<span class="text-xs">
 							{card.typLabel}
 						</span>
 					</span>
-					<span class="font-serif text-lg leading-snug">{card.title}</span>
-					<span class="font-mono text-xs text-ink-muted">{card.note}</span>
+					<span class="text-lg leading-snug">{card.title}</span>
+					<span class="text-xs text-ink-muted">{card.note}</span>
 				</a>
 			</li>
 		{/each}
@@ -119,17 +119,16 @@
 		<a
 			href={localizedHref('/berlin-wahlen')}
 			data-testid="home-wahl-teaser-all"
-			class="inline-flex min-h-(--target-min) items-center gap-2 font-mono text-sm tracking-wider text-accent uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-2 text-sm text-accent hover:text-ink"
 		>
 			{(wahlCount === 1 ? m.home_wahl_all_link_singular : m.home_wahl_all_link_plural)({
 				count: wahlCount
 			})}
-			<ArrowRight size={14} aria-hidden="true" />
 		</a>
 		<a
 			href={localizedHref('/methodik/wahldaten')}
 			data-testid="home-wahl-teaser-methodik"
-			class="inline-flex min-h-(--target-min) items-center font-mono text-sm tracking-wider text-ink-muted uppercase hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center text-sm text-ink-muted hover:text-ink"
 		>
 			{m.wahl_detail_methodik_link_label()}
 		</a>

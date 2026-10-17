@@ -32,7 +32,7 @@ describe('data-stand-banner.svelte (Story 1.18 Compact)', () => {
 		render(DataStandBanner, { hit: baseHit });
 		const el = (await page.getByTestId('data-stand-banner').element()) as HTMLElement;
 		expect(el.className).toMatch(/text-dense-meta/);
-		expect(el.className).toMatch(/font-mono/);
+		expect(el.className).not.toMatch(/font-mono/);
 		expect(el.className).toMatch(/text-ink-subtle/);
 	});
 
@@ -78,10 +78,11 @@ describe('data-stand-banner.svelte (Story 1.18 Compact)', () => {
 		expect(txt).toMatch(/CC BY/);
 	});
 
-	it('Trenner sind Punkte (·) zwischen Feldern', async () => {
+	it('Trenner sind Kommas zwischen Feldern (GH-87)', async () => {
 		render(DataStandBanner, { hit: baseHit });
 		const txt = (await page.getByTestId('banner-text').element()).textContent ?? '';
-		expect(txt).toMatch(/·/);
+		expect(txt).not.toMatch(/·/);
+		expect(txt).toMatch(/, /);
 	});
 
 	// i18n Block B3b

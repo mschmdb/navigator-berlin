@@ -35,7 +35,7 @@
 			return {
 				key: w.event,
 				label,
-				level: `${m.dwd_kaelte_level({ level: w.level })} · ${LEVEL_MEANINGS[w.level]()}`,
+				level: `${m.dwd_kaelte_level({ level: w.level })}, ${LEVEL_MEANINGS[w.level]()}`,
 				headline: w.headline ?? label,
 				headlineLang: w.headline !== null && getLocale() !== 'de' ? 'de' : undefined
 			};
@@ -65,12 +65,10 @@
 				{#each items as item (item.key)}
 					<li class="flex flex-col gap-0.5" data-testid="dwd-kaelte-warnung">
 						<span class="font-sans text-sm font-semibold">
-							<span data-testid="dwd-kaelte-event">{item.label}</span>
-							<span aria-hidden="true">·</span>
+							<span data-testid="dwd-kaelte-event">{item.label}</span>,
 							<span data-testid="dwd-kaelte-level">{item.level}</span>
 						</span>
-						<span class="font-serif text-sm text-ink" lang={item.headlineLang}>{item.headline}</span
-						>
+						<span class="text-sm text-ink" lang={item.headlineLang}>{item.headline}</span>
 					</li>
 				{/each}
 			</ul>

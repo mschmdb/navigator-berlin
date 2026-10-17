@@ -124,19 +124,19 @@
 <JsonLd data={breadcrumbJsonLd} testid="architektur-breadcrumb-jsonld" />
 
 <main class="mx-auto max-w-2xl px-4 py-12">
-	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl">
+	<h1 class="text-2xl font-bold break-words hyphens-auto sm:text-3xl">
 		{m.architektur_h1_title()}
 	</h1>
 
 	<p class="mt-6 leading-body text-ink-muted">{m.architektur_intro_p1()}</p>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">Hosting</h2>
+		<h2 class="text-xl font-bold">Hosting</h2>
 		<p class="mt-3 leading-body">{m.architektur_hosting_p1()}</p>
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.architektur_anwendung_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.architektur_anwendung_heading()}</h2>
 		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>
 				<RichText segments={svelteSegments}>
@@ -169,7 +169,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.architektur_quellen_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.architektur_quellen_heading()}</h2>
 		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>
 				<a
@@ -202,7 +202,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.architektur_ki_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.architektur_ki_heading()}</h2>
 		<p class="mt-3 leading-body">{m.architektur_ki_p1()}</p>
 		<p class="mt-3 leading-body">
 			<RichText segments={webmcpSegments}>
@@ -234,7 +234,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.architektur_nicht_verwendet_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.architektur_nicht_verwendet_heading()}</h2>
 		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>Cloudflare, AWS, GCP, Azure</li>
 			<li>{m.architektur_nicht_verwendet_li_tracker()}</li>

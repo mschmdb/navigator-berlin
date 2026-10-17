@@ -160,7 +160,7 @@
 </script>
 
 {#snippet code(text: string)}
-	<code class="font-mono text-sm">{text}</code>
+	<code class="text-sm">{text}</code>
 {/snippet}
 
 {#snippet externalLink(href: string, text: string)}
@@ -186,14 +186,14 @@
 <JsonLd data={breadcrumbJsonLd} testid="webmcp-breadcrumb-jsonld" />
 
 <main class="mx-auto max-w-2xl px-4 py-12" data-testid="webmcp-page">
-	<h1 class="font-serif text-2xl break-words hyphens-auto sm:text-3xl">WebMCP</h1>
+	<h1 class="text-2xl font-bold break-words hyphens-auto sm:text-3xl">WebMCP</h1>
 
 	<p class="mt-6 leading-body text-ink-muted">{m.webmcp_intro_p1()}</p>
 
 	<WebmcpDiagnose />
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.webmcp_spec_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.webmcp_spec_heading()}</h2>
 		<p class="mt-3 leading-body">
 			<RichText segments={specP1Segments}>
 				{#snippet tag(text, name)}
@@ -215,7 +215,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.webmcp_support_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.webmcp_support_heading()}</h2>
 		<dl class="mt-3 space-y-3 leading-body">
 			<div>
 				<dt class="font-medium">Chrome 149+</dt>
@@ -245,7 +245,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.webmcp_rationale_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.webmcp_rationale_heading()}</h2>
 		<p class="mt-3 leading-body">{m.webmcp_rationale_lead()}</p>
 		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>{m.webmcp_rationale_li_discovery()}</li>
@@ -256,7 +256,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.webmcp_tools_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.webmcp_tools_heading()}</h2>
 		<p class="mt-3 leading-body">
 			<RichText segments={toolsP1Segments}>
 				{#snippet tag(text)}
@@ -267,7 +267,7 @@
 		<dl class="mt-3 space-y-2 leading-body">
 			{#each toolRows as tool (tool.name)}
 				<div>
-					<dt class="font-mono text-sm">{tool.name}</dt>
+					<dt class="text-sm">{tool.name}</dt>
 					<dd class="text-sm text-ink-muted">{tool.desc}</dd>
 				</div>
 			{/each}
@@ -275,7 +275,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.webmcp_canary_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.webmcp_canary_heading()}</h2>
 		<ol class="mt-3 ml-6 list-decimal space-y-2 leading-body">
 			<li>
 				<RichText segments={step1Segments}>
@@ -297,7 +297,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.webmcp_no_canary_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.webmcp_no_canary_heading()}</h2>
 		<p class="mt-3 leading-body">{m.webmcp_no_canary_p1()}</p>
 		<p class="mt-3 leading-body">
 			<RichText segments={noCanaryP2Segments}>
@@ -314,7 +314,7 @@
 	</section>
 
 	<section class="mt-10">
-		<h2 class="font-serif text-xl">{m.webmcp_sources_heading()}</h2>
+		<h2 class="text-xl font-bold">{m.webmcp_sources_heading()}</h2>
 		<ul class="mt-3 ml-6 list-disc space-y-2 leading-body">
 			<li>
 				{@render externalLink(

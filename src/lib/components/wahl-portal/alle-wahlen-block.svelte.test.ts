@@ -81,7 +81,7 @@ describe('AlleWahlenBlock (Matze-Entscheidung 24.09., Intent-Gap „verwaiste De
 
 		const link = page.getByTestId('alle-wahlen-link-2023-agh-erststimme');
 		const el = (await link.element()) as HTMLElement;
-		expect(el.textContent?.trim()).toBe('2023 · Erststimme · Wiederholung');
+		expect(el.textContent?.trim()).toBe('2023, Erststimme, Wiederholung');
 	});
 
 	it('Review-Fund: Linkziel erfüllt WCAG-2.5.8-Mindesthöhe (min-h-6 = 24px)', async () => {

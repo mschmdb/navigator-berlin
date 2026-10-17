@@ -197,16 +197,13 @@
 
 <div class="climate-sparkline" data-testid="climate-sparkline" data-metric={metric}>
 	<h4
-		class="mb-0.5 font-serif text-sm text-ink"
+		class="mb-0.5 text-sm font-semibold text-ink"
 		data-testid="climate-sparkline-heading"
 		id={titleId}
 	>
 		{shortLabel}
 	</h4>
-	<p
-		class="mb-1 font-serif text-xs text-ink-subtle italic"
-		data-testid="climate-sparkline-definition"
-	>
+	<p class="mb-1 text-xs text-ink-subtle" data-testid="climate-sparkline-definition">
 		{DEFINITIONS[metric]()}
 	</p>
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -287,7 +284,7 @@
 			onclick={() => (detailsOpen = !detailsOpen)}
 			aria-expanded={detailsOpen}
 			data-testid="climate-sparkline-details-toggle"
-			class="mt-1 inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-label tracking-wide text-ink-muted uppercase hover:text-ink"
+			class="mt-1 inline-flex min-h-(--target-min) items-center gap-1 text-dense-label text-ink-muted hover:text-ink"
 		>
 			{detailsOpen
 				? m.inspector_climate_details_toggle_hide(undefined, localeOpts)
@@ -295,21 +292,18 @@
 		</button>
 	{/if}
 	{#if !compact || detailsOpen}
-		<div class="mt-1 font-mono text-xs text-ink-subtle" data-testid="chart-figcaption">
+		<div class="mt-1 text-xs text-ink-subtle" data-testid="chart-figcaption">
 			<span class="block">{figcaption}</span>
 			{#if normalOldMean !== null}
 				<span
-					class="mt-0.5 block font-mono text-xs text-ink-subtle"
+					class="mt-0.5 block text-xs text-ink-subtle"
 					data-testid="climate-sparkline-normal-old"
 				>
 					{m.inspector_climate_normal_old({ value: formatMean(normalOldMean) }, localeOpts)}
 				</span>
 			{/if}
 			{#if normalNewMean !== null}
-				<span
-					class="block font-mono text-xs text-ink-subtle"
-					data-testid="climate-sparkline-normal-new"
-				>
+				<span class="block text-xs text-ink-subtle" data-testid="climate-sparkline-normal-new">
 					{m.inspector_climate_normal_new({ value: formatMean(normalNewMean) }, localeOpts)}
 				</span>
 			{/if}

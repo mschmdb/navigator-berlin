@@ -52,20 +52,14 @@
 
 {#if enabled && score}
 	<section data-testid="kiez-score-section" class="space-y-3">
-		<h3
-			class="font-mono text-xs tracking-wide text-ink-muted uppercase"
-			data-testid="kiez-score-section-header"
-		>
+		<h3 class="text-xs text-ink-muted" data-testid="kiez-score-section-header">
 			{m.inspector_kiez_score_heading(undefined, localeOpts)}
 		</h3>
 
 		{#if score.overall !== undefined}
 			<div class="flex flex-col items-center gap-1 pb-1" data-testid="kiez-score-overall">
 				<KiezScoreRing {score} onSegmentClick={toggleDim} />
-				<span
-					class="font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
-					data-testid="kiez-score-overall-meta"
-				>
+				<span class="text-dense-meta text-ink-subtle" data-testid="kiez-score-overall-meta">
 					{m.inspector_kiez_score_overall_meta(
 						{ used: String(usedDimsCount), total: String(COMPOSITE_DIMENSIONS.length) },
 						localeOpts
@@ -122,7 +116,7 @@
 		<a
 			href={localizedHref(methodikHref, locale)}
 			data-testid="kiez-score-methodik-link"
-			class="inline-flex min-h-(--target-min) items-center font-mono text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="inline-flex min-h-(--target-min) items-center text-xs text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.inspector_kiez_score_methodik_link(undefined, localeOpts)}
 		</a>

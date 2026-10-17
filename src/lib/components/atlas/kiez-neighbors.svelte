@@ -39,7 +39,7 @@
 		aria-labelledby={headingId}
 		class="flex flex-col gap-3 border-t border-rule pt-6"
 	>
-		<h2 id={headingId} class="font-serif text-2xl text-ink">{title}</h2>
+		<h2 id={headingId} class="text-2xl font-bold text-ink">{title}</h2>
 		<ul class="flex flex-col gap-2 font-sans text-base">
 			{#each entries as entry (entry.slug)}
 				<li class="flex flex-wrap items-baseline justify-between gap-x-4">
@@ -53,8 +53,9 @@
 						{entry.name}
 					</a>
 					<span class="text-sm text-ink-muted" aria-hidden="true">
-						{entry.bezirkName}{#if entry.composite !== null}
-							· {m.kiez_neighbors_score({ score: entry.composite })}{/if}
+						{entry.bezirkName}{#if entry.composite !== null}, {m.kiez_neighbors_score({
+								score: entry.composite
+							})}{/if}
 					</span>
 				</li>
 			{/each}

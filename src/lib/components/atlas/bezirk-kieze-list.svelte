@@ -83,7 +83,7 @@
 		class="flex flex-col gap-3 border-t border-rule pt-6"
 	>
 		<header class="flex flex-col gap-1">
-			<h2 id="kieze-im-bezirk-h" class="font-serif text-2xl text-ink">
+			<h2 id="kieze-im-bezirk-h" class="text-2xl font-bold text-ink">
 				{m.bezirk_kieze_heading({ bezirk: bezirkName }, localeOpts)}
 			</h2>
 			<p id="kieze-im-bezirk-intro" class="font-sans text-sm text-ink-muted">
@@ -127,7 +127,7 @@
 								{kiez.name}
 							</a>
 						</th>
-						<td class="px-3 py-2 text-right font-mono text-sm text-ink-muted tabular-nums">
+						<td class="px-3 py-2 text-right text-sm text-ink-muted tabular-nums">
 							{#if typeof kiez.composite === 'number'}
 								<span aria-hidden="true">{kiez.composite}</span>
 								<span class="sr-only">

@@ -89,8 +89,8 @@
 
 <article data-testid="updates-index-page" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-2">
-		<h1 data-testid="updates-page-title" class="font-serif text-3xl text-ink">Updates</h1>
-		<p class="font-serif text-lg leading-body text-ink-muted">
+		<h1 data-testid="updates-page-title" class="text-3xl font-bold text-ink">Updates</h1>
+		<p class="text-lg leading-body text-ink-muted">
 			{m.updates_index_lead_before()}
 			<a
 				href="/updates/rss.xml"
@@ -113,11 +113,7 @@
 
 	<UpdatesFilter bind:value={filterValue} />
 
-	<p
-		class="font-mono text-xs text-ink-subtle"
-		aria-live="polite"
-		data-testid="updates-filter-feedback"
-	>
+	<p class="text-xs text-ink-subtle" aria-live="polite" data-testid="updates-filter-feedback">
 		{#if filterValue.length === 0 && filteredEntries.length === 1}
 			{m.updates_index_filter_feedback_all_one()}
 		{:else if filterValue.length === 0}
@@ -137,7 +133,7 @@
 		{#each filteredEntries as entry (entry.slug)}
 			<UpdatesEntryCard {entry} />
 		{:else}
-			<p class="font-serif text-base text-ink-muted">
+			<p class="text-base text-ink-muted">
 				{m.updates_index_empty()}
 			</p>
 		{/each}

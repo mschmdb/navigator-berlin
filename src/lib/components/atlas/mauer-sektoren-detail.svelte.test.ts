@@ -30,10 +30,10 @@ describe('mauer-sektoren-detail.svelte (Phase-2-Stub)', () => {
 		expect(link.getAttribute('target')).toBe('_blank');
 	});
 
-	it('Plex-Mono-Footer mit Stand', async () => {
+	it('Sans-Footer mit Stand (GH-87)', async () => {
 		render(MauerSektorenDetail, { fetchedAt: '2026-04-01' });
 		const f = (await page.getByTestId('mauer-footer').element()) as HTMLElement;
-		expect(f.className).toMatch(/font-mono/);
+		expect(f.className).not.toMatch(/font-mono/);
 		expect(f.textContent).toMatch(/2026-04-01/);
 	});
 });

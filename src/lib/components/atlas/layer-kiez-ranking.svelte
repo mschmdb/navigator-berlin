@@ -62,7 +62,7 @@
 
 {#snippet list(data: RankingList, heading: string, testid: string, id: string)}
 	<div data-testid={testid} class="flex flex-col gap-2">
-		<h3 {id} class="font-serif text-lg text-ink">{heading}</h3>
+		<h3 {id} class="text-lg font-semibold text-ink">{heading}</h3>
 		{#if data.entries.length > 0}
 			<ol aria-labelledby={id} class="flex flex-col gap-1.5 font-sans text-base">
 				{#each data.entries as entry (entry.slug)}
@@ -80,7 +80,7 @@
 							{entry.name}
 						</a>
 						<span class="text-sm text-ink-muted" aria-hidden="true">
-							{entry.bezirkName} · {formatValue(entry.value)}
+							{entry.bezirkName}, {formatValue(entry.value)}
 						</span>
 					</li>
 				{/each}
@@ -103,10 +103,7 @@
 	aria-labelledby="layer-kiez-ranking-h"
 	class="flex flex-col gap-4 border border-rule p-4"
 >
-	<h2
-		id="layer-kiez-ranking-h"
-		class="font-sans text-sm font-semibold tracking-wide text-ink-muted uppercase"
-	>
+	<h2 id="layer-kiez-ranking-h" class="font-sans text-sm font-semibold text-ink-muted">
 		{m.layer_ranking_heading(undefined, { locale })}
 	</h2>
 	{#if note}

@@ -104,7 +104,7 @@ test('Sticky-Reihen-Leiste bleibt nach Scroll sichtbar; Reihen-Wechsel aktualisi
 	await page.goto('/berlin-wahlen');
 
 	await expect(page.getByTestId('wahl-portal-chapter-wechsel')).toContainText(
-		'Abgeordnetenhaus · alle Wahljahre · Kiez-Ebene'
+		'Abgeordnetenhaus, alle Wahljahre, Kiez-Ebene'
 	);
 	// Story 12/Review Triage Log #11: der Sankey (mit seinem eigenen
 	// Kiez/Bezirk-Toggle) zog in ein eigenes Kapitel um -- das Trends-Kapitel
@@ -112,7 +112,7 @@ test('Sticky-Reihen-Leiste bleibt nach Scroll sichtbar; Reihen-Wechsel aktualisi
 	const trendsBadge = page
 		.getByTestId('wahl-portal-chapter-trends')
 		.getByTestId('kapitel-kontext-badge');
-	await expect(trendsBadge).toContainText('Abgeordnetenhaus · alle Wahljahre · Kiez-Ebene');
+	await expect(trendsBadge).toContainText('Abgeordnetenhaus, alle Wahljahre, Kiez-Ebene');
 
 	// Review Triage Log #4: Extreme-Badge folgt dem Karten-Jahr (Default 2023
 	// aus der agh-Fixture). Vor dem Reihen-Wechsel geprüft, weil 2021 nur zu
@@ -149,9 +149,9 @@ test('Sticky-Reihen-Leiste bleibt nach Scroll sichtbar; Reihen-Wechsel aktualisi
 	await page.getByTestId('steuerleiste-reihe-btw').click();
 	await expect(page).toHaveURL(/reihe=btw/);
 	await expect(page.getByTestId('wahl-portal-chapter-wechsel')).toContainText(
-		'Bundestag · alle Wahljahre · Kiez-Ebene'
+		'Bundestag, alle Wahljahre, Kiez-Ebene'
 	);
-	await expect(trendsBadge).toContainText('Bundestag · alle Wahljahre · Kiez-Ebene');
+	await expect(trendsBadge).toContainText('Bundestag, alle Wahljahre, Kiez-Ebene');
 	await expect(page.getByTestId('reihen-leiste')).toBeInViewport();
 	await expect(page.getByTestId('wahl-portal-chapter-methodik')).toBeInViewport();
 

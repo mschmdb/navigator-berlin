@@ -2,7 +2,6 @@
 	import { buildPageTitle } from '$lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import {
-		ArrowRight,
 		Search,
 		MapPin,
 		Navigation,
@@ -162,18 +161,16 @@
 <div data-testid="hitze-landing" class="mx-auto flex max-w-3xl flex-col gap-12 px-4 py-12">
 	<DwdHitzewarnBanner warning={data.warning} />
 	<header class="flex flex-col gap-6">
-		<p class="font-mono text-xs tracking-wider text-accent uppercase">{m.hitze_eyebrow()}</p>
-		<h1 class="font-serif text-4xl text-ink md:text-5xl lg:text-6xl">{m.hitze_h1_title()}</h1>
-		<p class="max-w-prose font-serif text-lg leading-body text-ink-muted">
+		<h1 class="text-4xl font-bold text-ink md:text-5xl lg:text-6xl">{m.hitze_h1_title()}</h1>
+		<p class="max-w-prose text-lg leading-body text-ink-muted">
 			{m.hitze_intro_p1()}
 		</p>
 		<div class="flex flex-col gap-2 pt-1">
 			<a
 				href={localizedHref(explorerLink)}
 				data-testid="hitze-cta"
-				class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 font-mono text-sm tracking-wider text-bg uppercase hover:border-ink hover:bg-ink"
+				class="inline-flex w-fit items-center gap-2 rounded border border-accent bg-accent px-4 py-2 text-sm text-bg hover:border-ink hover:bg-ink"
 			>
-				<ArrowRight size={16} aria-hidden="true" />
 				{m.hitze_cta_map()}
 			</a>
 			<p class="font-sans text-sm text-ink-subtle">
@@ -182,7 +179,7 @@
 			<a
 				href={localizedHref('/layer/kuehle-orte')}
 				data-testid="hitze-methodik-link"
-				class="inline-flex min-h-(--target-min) w-fit items-center font-mono text-sm tracking-wider text-ink-muted uppercase hover:text-ink"
+				class="inline-flex min-h-(--target-min) w-fit items-center text-sm text-ink-muted hover:text-ink"
 			>
 				{m.hitze_methodik_link()}
 			</a>
@@ -202,7 +199,7 @@
 					<Icon size={20} aria-hidden="true" class="mt-0.5 shrink-0 text-umwelt-kuehle-orte" />
 					<span class="flex flex-col">
 						<span class="font-sans text-sm font-medium text-ink">{cat.name}</span>
-						<span class="font-serif text-sm text-ink-muted">{cat.note}</span>
+						<span class="text-sm text-ink-muted">{cat.note}</span>
 					</span>
 				</li>
 			{/each}
@@ -226,7 +223,7 @@
 							<Icon size={15} aria-hidden="true" class="text-ink-muted" />
 							{step.title}
 						</span>
-						<span class="font-serif text-sm text-ink-muted">{step.text}</span>
+						<span class="text-sm text-ink-muted">{step.text}</span>
 					</span>
 				</li>
 			{/each}
@@ -237,7 +234,7 @@
 		<h2 id="offiziell-h" class="font-sans text-2xl font-semibold text-ink">
 			{m.hitze_offiziell_heading()}
 		</h2>
-		<p class="font-serif text-base text-ink-muted">
+		<p class="text-base text-ink-muted">
 			{m.hitze_offiziell_intro()}
 		</p>
 		<ul class="flex flex-col gap-3">
@@ -256,7 +253,7 @@
 						/>
 						<span class="flex flex-col">
 							<span class="font-sans text-sm font-medium text-accent">{link.title}</span>
-							<span class="font-serif text-sm text-ink-muted">{link.text}</span>
+							<span class="text-sm text-ink-muted">{link.text}</span>
 						</span>
 					</a>
 				</li>

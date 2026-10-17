@@ -8,7 +8,6 @@
 	Rang über `formatRank` (Anti-Stigma, ADR-015). Ohne DB fehlt der Rang.
 -->
 <script lang="ts">
-	import { ArrowRight } from '@lucide/svelte';
 	import type { BezirkProfile } from '$lib/data/types.js';
 	import type { KiezListEntry } from '$lib/data/bezirk-kieze-view.js';
 	import type { CompositeRank } from '$lib/server/profile/composite-rank.js';
@@ -56,10 +55,7 @@
 <header class="mx-auto max-w-3xl px-4 pt-4 pb-8" data-testid="bezirk-hero">
 	<div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:items-start md:gap-6">
 		<div class="space-y-3">
-			<p class="m-0 font-mono text-xs tracking-wide text-ink-subtle uppercase">
-				{m.bezirk_hero_eyebrow(undefined, localeOpts)}
-			</p>
-			<h1 class="font-serif text-2xl text-ink sm:text-3xl md:text-4xl">{profile.name}</h1>
+			<h1 class="text-2xl font-bold text-ink sm:text-3xl md:text-4xl">{profile.name}</h1>
 			<dl
 				class="m-0 grid grid-cols-3 gap-x-4 gap-y-2 font-sans sm:flex sm:flex-wrap sm:gap-x-8"
 				data-testid="bezirk-facts"
@@ -69,7 +65,7 @@
 						<dt class="text-xs text-ink-muted sm:text-sm">
 							{m.bezirk_hero_fact_einwohner(undefined, localeOpts)}
 						</dt>
-						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
+						<dd class="m-0 text-lg font-semibold text-ink tabular-nums sm:text-2xl">
 							{formatCount(profile.einwohner, localeOpts)}
 							{#if stand}
 								<span class="block font-sans text-xs text-ink-muted" data-testid="bezirk-stand">
@@ -84,7 +80,7 @@
 						<dt class="text-xs text-ink-muted sm:text-sm">
 							{m.bezirk_hero_fact_flaeche(undefined, localeOpts)}
 						</dt>
-						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">
+						<dd class="m-0 text-lg font-semibold text-ink tabular-nums sm:text-2xl">
 							{m.bezirk_hero_fact_flaeche_value({ km2: flaecheKm2 }, localeOpts)}
 						</dd>
 					</div>
@@ -94,7 +90,7 @@
 						<dt class="text-xs text-ink-muted sm:text-sm">
 							{m.bezirk_hero_fact_rang(undefined, localeOpts)}
 						</dt>
-						<dd class="m-0 font-serif text-lg text-ink tabular-nums sm:text-2xl">{rankText}</dd>
+						<dd class="m-0 text-lg font-semibold text-ink tabular-nums sm:text-2xl">{rankText}</dd>
 					</div>
 				{/if}
 			</dl>
@@ -130,6 +126,5 @@
 		class="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-5 py-2.5 font-sans text-base font-semibold text-bg hover:bg-ink"
 	>
 		{m.bezirk_hero_map_button({ bezirk: profile.name }, localeOpts)}
-		<ArrowRight class="size-5" aria-hidden="true" />
 	</a>
 {/snippet}

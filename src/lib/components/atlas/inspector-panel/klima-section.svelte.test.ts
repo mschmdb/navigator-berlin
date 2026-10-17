@@ -89,7 +89,7 @@ describe('KlimaSection lazy-load', () => {
 	// i18n Block B3b
 	it('lang="en": Heading + Messreihe-Hinweis englisch', async () => {
 		const screen = render(KlimaSection, { station: STATION, series: SERIES, lang: 'en' });
-		expect(screen.container.querySelector('h4')?.textContent).toContain('Climate · DWD station');
+		expect(screen.container.querySelector('h4')?.textContent).toContain('Climate: DWD station');
 		const hint = screen.container.querySelector('[data-testid="klima-station-hint"]');
 		expect(hint?.textContent).toBe('Data series since 1881');
 	});

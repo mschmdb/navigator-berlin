@@ -171,7 +171,7 @@ describe('WahlSection', () => {
 		await tab.click();
 		await expect
 			.element(page.getByTestId('wahl-vorlaeufig-marker'))
-			.toHaveTextContent('Vorläufig · Stand 21.09.2026');
+			.toHaveTextContent('Vorläufig, Stand 21.09.2026');
 	});
 
 	it('zeigt keinen Vorläufig-Marker wenn vorlaeufig=false', async () => {
@@ -345,7 +345,7 @@ describe('WahlSection', () => {
 		await expect.element(page.getByTestId('wahl-typ-tab-btw')).toHaveTextContent('Bundestag');
 		await expect
 			.element(page.getByTestId('wahl-methodik-link'))
-			.toHaveTextContent('Methodology · Election data');
+			.toHaveTextContent('Methodology: Election data');
 		const berlinPill = page.getByTestId('wahl-level-berlin');
 		await expect.element(berlinPill).toHaveTextContent('Berlin overall');
 		await expect.element(page.getByTestId('wahl-legend')).toHaveTextContent('%');
@@ -382,7 +382,7 @@ describe('WahlSection', () => {
 		await tab.click();
 		await expect
 			.element(page.getByTestId('wahl-vorlaeufig-marker'))
-			.toHaveTextContent('Provisional · as of 21 September 2026');
+			.toHaveTextContent('Provisional, as of 21 September 2026');
 	});
 
 	it('zeigt englische Quelle + Lizenz-Code unverändert in wahl-meta für lang="en"', async () => {

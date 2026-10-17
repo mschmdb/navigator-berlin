@@ -81,24 +81,24 @@
 		<nav
 			aria-label={m.methodik_kiez_score_breadcrumb_aria_label()}
 			data-testid="methodik-kiez-score-breadcrumb"
-			class="font-mono text-xs text-ink-muted"
+			class="text-xs text-ink-muted"
 		>
 			<a href={localizedHref('/methodik')} class={linkClass}
 				>{m.methodik_kiez_score_breadcrumb_methodik()}</a
 			>
-			<span aria-hidden="true">·</span>
+			<span aria-hidden="true">/</span>
 			<span>{m.methodik_kiez_score_breadcrumb_kiez_score()}</span>
 		</nav>
-		<h1 data-testid="methodik-kiez-score-h1" class="font-serif text-3xl text-ink">
+		<h1 data-testid="methodik-kiez-score-h1" class="text-3xl font-bold text-ink">
 			{m.methodik_kiez_score_h1_title()}
 		</h1>
-		<p class="font-serif text-lg leading-body text-ink-muted">
+		<p class="text-lg leading-body text-ink-muted">
 			{m.methodik_kiez_score_lead()}
 		</p>
 	</header>
 
 	<nav aria-label={m.methodik_kiez_score_toc_aria_label()} class="border border-rule bg-bg p-4">
-		<p class="mb-2 font-mono text-xs tracking-wide text-ink-subtle uppercase">
+		<p class="mb-2 text-xs text-ink-subtle">
 			{m.methodik_kiez_score_toc_heading()}
 		</p>
 		<ol class="grid gap-1.5 font-sans text-sm sm:grid-cols-2">
@@ -113,42 +113,42 @@
 	</nav>
 
 	<section id="worum" aria-labelledby="worum-h" class="flex flex-col gap-3">
-		<h2 id="worum-h" class="font-serif text-2xl text-ink">
+		<h2 id="worum-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_worum_heading()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">{m.methodik_kiez_score_worum_p1()}</p>
-		<p class="font-serif text-base leading-body text-ink">{m.methodik_kiez_score_worum_p2()}</p>
+		<p class="text-base leading-body text-ink">{m.methodik_kiez_score_worum_p1()}</p>
+		<p class="text-base leading-body text-ink">{m.methodik_kiez_score_worum_p2()}</p>
 	</section>
 
 	<section id="dimensionen" aria-labelledby="dimensionen-h" class="flex flex-col gap-3">
-		<h2 id="dimensionen-h" class="font-serif text-2xl text-ink">
+		<h2 id="dimensionen-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_dimensions_heading()}
 		</h2>
 		<ul class="flex flex-col gap-4">
 			{#each dimensions as dim (dim.id)}
 				<li class="border-l-2 border-rule pl-3">
 					<p class="font-sans text-base font-semibold text-ink">{dim.label}</p>
-					<p class="font-mono text-xs text-ink-muted">{dim.layers}</p>
-					<p class="mt-1 font-serif text-sm text-ink">{dim.detail}</p>
+					<p class="text-xs text-ink-muted">{dim.layers}</p>
+					<p class="mt-1 text-sm text-ink">{dim.detail}</p>
 				</li>
 			{/each}
 		</ul>
 	</section>
 
 	<section id="gewichte" aria-labelledby="gewichte-h" class="flex flex-col gap-3">
-		<h2 id="gewichte-h" class="font-serif text-2xl text-ink">
+		<h2 id="gewichte-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_weights_heading()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_weights_p1()}
 		</p>
 		<table class="border border-rule text-sm">
 			<thead class="bg-bg">
 				<tr>
-					<th class="px-3 py-2 text-left font-mono text-xs text-ink-muted uppercase">
+					<th class="px-3 py-2 text-left text-xs text-ink-muted">
 						{m.methodik_kiez_score_weights_th_dimension()}
 					</th>
-					<th class="px-3 py-2 text-left font-mono text-xs text-ink-muted uppercase">
+					<th class="px-3 py-2 text-left text-xs text-ink-muted">
 						{m.methodik_kiez_score_weights_th_weight()}
 					</th>
 				</tr>
@@ -161,7 +161,7 @@
 									class="text-ink-subtle">{row.note}</span
 								>{/if}
 						</td>
-						<td class="px-3 py-2 font-mono">{row.weight}</td>
+						<td class="px-3 py-2">{row.weight}</td>
 					</tr>
 				{/each}
 			</tbody>
@@ -169,74 +169,74 @@
 	</section>
 
 	<section id="normalisierung" aria-labelledby="normalisierung-h" class="flex flex-col gap-3">
-		<h2 id="normalisierung-h" class="font-serif text-2xl text-ink">
+		<h2 id="normalisierung-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_normalisation_heading()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">{m.methodik_kiez_score_norm_p1()}</p>
+		<p class="text-base leading-body text-ink">{m.methodik_kiez_score_norm_p1()}</p>
 		<dl class="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5 text-sm">
-			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_ordinal3_term()}</dt>
+			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_ordinal3_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_ordinal3_def()}</dd>
-			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_ordinal4_term()}</dt>
+			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_ordinal4_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_ordinal4_def()}</dd>
-			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_pet_term()}</dt>
+			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_pet_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_pet_def()}</dd>
-			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_distance_term()}</dt>
+			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_distance_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_distance_def()}</dd>
-			<dt class="font-mono text-xs text-ink-muted">{m.methodik_kiez_score_norm_presence_term()}</dt>
+			<dt class="text-xs text-ink-muted">{m.methodik_kiez_score_norm_presence_term()}</dt>
 			<dd class="text-ink">{m.methodik_kiez_score_norm_presence_def()}</dd>
 		</dl>
-		<p class="font-serif text-base leading-body text-ink">{m.methodik_kiez_score_norm_p2()}</p>
+		<p class="text-base leading-body text-ink">{m.methodik_kiez_score_norm_p2()}</p>
 	</section>
 
 	<section id="kiez-score" aria-labelledby="kiez-score-h" class="flex flex-col gap-3">
-		<h2 id="kiez-score-h" class="font-serif text-2xl text-ink">
+		<h2 id="kiez-score-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_kiez_score_heading()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_kiez_score_p1()}
 		</p>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_kiez_score_p2()}
 		</p>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_kiez_score_p3()}
 		</p>
 	</section>
 
 	<section id="bezirks-score" aria-labelledby="bezirks-score-h" class="flex flex-col gap-3">
-		<h2 id="bezirks-score-h" class="font-serif text-2xl text-ink">
+		<h2 id="bezirks-score-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_bezirk_score_heading()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_bezirk_score_p1()}
 		</p>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_bezirk_score_p2()}
 		</p>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_bezirk_score_pipeline()}
 		</p>
 	</section>
 
 	<section id="fehlt" aria-labelledby="fehlt-h" class="flex flex-col gap-3">
-		<h2 id="fehlt-h" class="font-serif text-2xl text-ink">
+		<h2 id="fehlt-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_missing_heading()}
 		</h2>
 		<ul class="flex flex-col gap-3">
 			{#each omissions as o (o.label)}
 				<li class="border-l-2 border-rule pl-3">
 					<p class="font-sans text-base font-semibold text-ink">{o.label}</p>
-					<p class="font-serif text-sm text-ink-muted">{o.reason}</p>
+					<p class="text-sm text-ink-muted">{o.reason}</p>
 				</li>
 			{/each}
 		</ul>
 	</section>
 
 	<section id="quellen" aria-labelledby="quellen-h" class="flex flex-col gap-3">
-		<h2 id="quellen-h" class="font-serif text-2xl text-ink">
+		<h2 id="quellen-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_sources_heading()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			<RichText segments={sourcesSegments}>
 				{#snippet tag(text)}
 					<a href={localizedHref('/lizenzen')} class={linkClass}>{text}</a>
@@ -246,25 +246,25 @@
 	</section>
 
 	<section id="editorial" aria-labelledby="editorial-h" class="flex flex-col gap-3">
-		<h2 id="editorial-h" class="font-serif text-2xl text-ink">
+		<h2 id="editorial-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_editorial_heading()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_editorial_p1()}
 		</p>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_editorial_p2()}
 		</p>
 	</section>
 
 	<section id="feedback" aria-labelledby="feedback-h" class="flex flex-col gap-3">
-		<h2 id="feedback-h" class="font-serif text-2xl text-ink">
+		<h2 id="feedback-h" class="text-2xl font-bold text-ink">
 			{m.methodik_kiez_score_section_feedback_heading()}
 		</h2>
-		<p class="font-serif text-base leading-body text-ink">
+		<p class="text-base leading-body text-ink">
 			{m.methodik_kiez_score_feedback_p1()}
 		</p>
-		<p class="font-mono text-sm">
+		<p class="text-sm">
 			<a href={feedbackHref} class={linkClass}>{FEEDBACK_EMAIL}</a>
 		</p>
 	</section>
@@ -273,7 +273,7 @@
 		<a
 			href={localizedHref('/methodik')}
 			data-testid="methodik-kiez-score-back-link"
-			class="font-mono text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
+			class="text-sm text-accent underline underline-offset-2 hover:text-accent-strong"
 		>
 			{m.methodik_kiez_score_back_link()}
 		</a>

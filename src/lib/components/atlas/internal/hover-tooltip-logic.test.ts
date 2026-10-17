@@ -171,6 +171,6 @@ describe('buildMultiHoverContent (Multi-Layer-Tooltip)', () => {
 			{ name: 'Boddinstraße' },
 			{ locale: 'en' }
 		);
-		expect(c.hint).toBe('More in the inspector →');
+		expect(c.hint).toBe('More in the inspector');
 	});
 });

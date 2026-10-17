@@ -76,7 +76,7 @@
 		class={['leading-none', isNumeric && 'font-mono tabular-nums'].filter(Boolean).join(' ')}
 	>
 		{value}{#if unit}
-			<span class="ml-1 font-mono text-xs">{unit}</span>
+			<span class="ml-1 text-xs">{unit}</span>
 		{/if}
 	</span>
 </span>

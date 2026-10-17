@@ -57,7 +57,7 @@ describe('KartenSteuerung', () => {
 		render(KartenSteuerung, baseProps());
 		await expect
 			.element(page.getByTestId('steuerleiste-jahr-2023-wiederholung'))
-			.toHaveTextContent('·R');
+			.toHaveTextContent('(rep.)');
 	});
 
 	it('Klick auf Jahr/Ebene ruft die jeweiligen Callbacks', async () => {

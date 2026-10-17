@@ -142,7 +142,7 @@
 						: m.inspector_demografie_scope_unavailable({ label: scopeLabel(s) }, localeOpts)}
 					onclick={() => selectScope(s)}
 					onkeydown={(e) => onScopeKeydown(e, s)}
-					class="rounded border border-ink px-1 py-1 text-center font-mono text-xs transition-colors"
+					class="rounded border border-ink px-1 py-1 text-center text-xs transition-colors"
 					class:bg-ink={checked}
 					class:text-bg={checked}
 					class:bg-bg={!checked}
@@ -159,22 +159,22 @@
 	{/if}
 
 	{#if data === null}
-		<p class="mt-1 font-serif text-sm text-ink-muted" data-testid="demografie-empty">
+		<p class="mt-1 text-sm text-ink-muted" data-testid="demografie-empty">
 			{m.inspector_demografie_empty(undefined, localeOpts)}
 		</p>
 	{:else}
 		<p
-			class="mt-1 font-mono text-dense-meta break-words hyphens-auto text-ink-muted"
+			class="mt-1 text-dense-meta break-words hyphens-auto text-ink-muted"
 			data-testid="demografie-bezug"
 		>
 			{bezugText}
 		</p>
-		<p class="mt-0.5 font-serif text-xs break-words hyphens-auto text-ink-subtle">
+		<p class="mt-0.5 text-xs break-words hyphens-auto text-ink-subtle">
 			{m.inspector_demografie_neutral_hint(undefined, localeOpts)}
 		</p>
 		<dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-sm">
 			<dt class="text-ink-muted">{m.inspector_demografie_dichte_label(undefined, localeOpts)}</dt>
-			<dd class="text-right font-mono text-ink">
+			<dd class="text-right text-ink">
 				{data.dichteEwKm2 === null
 					? '–'
 					: m.inspector_demografie_dichte_unit(
@@ -185,30 +185,32 @@
 			<dt class="text-ink-muted">
 				{m.inspector_demografie_einwohner_label(undefined, localeOpts)}
 			</dt>
-			<dd class="text-right font-mono text-ink">{formatCount(data.einwohner, localeOpts)}</dd>
+			<dd class="text-right font-mono text-ink tabular-nums">
+				{formatCount(data.einwohner, localeOpts)}
+			</dd>
 			<dt class="break-words hyphens-auto text-ink-muted">
 				{m.inspector_demografie_kinder_0_6_label(undefined, localeOpts)}
 			</dt>
-			<dd class="text-right font-mono text-ink">{pct(data.anteilKinder0bis6)}</dd>
+			<dd class="text-right font-mono text-ink tabular-nums">{pct(data.anteilKinder0bis6)}</dd>
 			<dt class="break-words hyphens-auto text-ink-muted">
 				{m.inspector_demografie_kinder_6_12_label(undefined, localeOpts)}
 			</dt>
-			<dd class="text-right font-mono text-ink">{pct(data.anteilKinder6bis12)}</dd>
+			<dd class="text-right font-mono text-ink tabular-nums">{pct(data.anteilKinder6bis12)}</dd>
 			<dt class="break-words hyphens-auto text-ink-muted">
 				{m.inspector_demografie_senioren_label(undefined, localeOpts)}
 			</dt>
-			<dd class="text-right font-mono text-ink">{pct(data.anteilSenioren65plus)}</dd>
+			<dd class="text-right font-mono text-ink tabular-nums">{pct(data.anteilSenioren65plus)}</dd>
 			{#if data.jugendquotient !== null}
 				<dt class="break-words hyphens-auto text-ink-muted">
 					{m.inspector_demografie_jugendquotient_label(undefined, localeOpts)}
 				</dt>
-				<dd class="text-right font-mono text-ink">{oneDecimal(data.jugendquotient)}</dd>
+				<dd class="text-right text-ink">{oneDecimal(data.jugendquotient)}</dd>
 			{/if}
 			{#if data.altenquotient !== null}
 				<dt class="break-words hyphens-auto text-ink-muted">
 					{m.inspector_demografie_altenquotient_label(undefined, localeOpts)}
 				</dt>
-				<dd class="text-right font-mono text-ink">{oneDecimal(data.altenquotient)}</dd>
+				<dd class="text-right text-ink">{oneDecimal(data.altenquotient)}</dd>
 			{/if}
 		</dl>
 	{/if}
@@ -219,7 +221,7 @@
 			data-testid="demografie-details-toggle"
 			aria-expanded={detailsOpen}
 			onclick={() => (detailsOpen = !detailsOpen)}
-			class="inline-flex min-h-(--target-min) items-center gap-1 font-mono text-dense-label text-ink-subtle hover:text-ink"
+			class="inline-flex min-h-(--target-min) items-center gap-1 text-dense-label text-ink-subtle hover:text-ink"
 		>
 			<ChevronDown
 				size={12}
@@ -263,7 +265,7 @@
 
 	{#if detailsOpen && data !== null}
 		<p
-			class="mt-1.5 font-mono text-xs break-words hyphens-auto text-ink-subtle"
+			class="mt-1.5 text-xs break-words hyphens-auto text-ink-subtle"
 			data-testid="demografie-details"
 		>
 			{m.inspector_demografie_details_text(

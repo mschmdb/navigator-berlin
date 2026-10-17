@@ -132,7 +132,7 @@
 {#snippet paletteBody()}
 	<header class="flex items-start justify-between gap-3 border-b border-rule px-4 pt-2 pb-3">
 		<div>
-			<h2 class="font-serif text-xl text-ink">{m.atlas_palette_heading(undefined, localeOpts)}</h2>
+			<h2 class="text-xl font-bold text-ink">{m.atlas_palette_heading(undefined, localeOpts)}</h2>
 			<p class="text-xs text-ink-subtle">
 				{m.atlas_palette_active_count({ active: activeCount, total: layers.length }, localeOpts)}
 			</p>
@@ -192,7 +192,7 @@
 								<span class="font-medium text-ink"
 									>{getLayerDisplayName(layer.slug, localeOpts)}</span
 								>
-								<span class="font-mono text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
+								<span class="text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
 							</button>
 						</li>
 					{/each}
@@ -232,13 +232,13 @@
 									{#if subline}
 										<span
 											data-testid={`palette-subline-${layer.slug}`}
-											class="font-serif text-xs leading-snug text-ink-subtle italic"
+											class="text-xs leading-snug text-ink-subtle"
 										>
 											{subline}
 										</span>
 									{/if}
 								</span>
-								<span class="font-mono text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
+								<span class="text-xs text-ink-subtle">{layer.bundleGroup[0]}</span>
 							</button>
 						</li>
 					{/each}
@@ -247,7 +247,7 @@
 		{/if}
 
 		{#if groups.length === 0 && hasQuery}
-			<p data-testid="palette-empty" class="py-6 text-center font-serif text-ink-subtle italic">
+			<p data-testid="palette-empty" class="py-6 text-center text-ink-subtle">
 				{m.atlas_palette_empty({ query: searchQuery }, localeOpts)}
 			</p>
 		{:else if groups.length > 0}
@@ -257,7 +257,7 @@
 					data-bundle={group.bundle}
 					class="mb-4"
 				>
-					<h3 class="mb-2 font-sans text-sm font-medium tracking-wide text-ink-muted uppercase">
+					<h3 class="mb-2 font-sans text-sm font-medium text-ink-muted">
 						{group.label}
 					</h3>
 					<ul class="space-y-1.5">
@@ -285,13 +285,13 @@
 										{#if subline}
 											<span
 												data-testid={`palette-subline-${layer.slug}`}
-												class="font-serif text-xs leading-snug text-ink-subtle italic"
+												class="text-xs leading-snug text-ink-subtle"
 											>
 												{subline}
 											</span>
 										{/if}
 									</span>
-									<span class="font-mono text-xs text-ink-subtle">{group.bundle[0]}</span>
+									<span class="text-xs text-ink-subtle">{group.bundle[0]}</span>
 								</button>
 							</li>
 						{/each}
@@ -307,11 +307,11 @@
 			data-testid="palette-clear"
 			onclick={onClearAll}
 			disabled={activeCount === 0}
-			class="font-mono text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline disabled:opacity-40"
+			class="text-xs text-ink-muted underline-offset-2 hover:text-ink hover:underline disabled:opacity-40"
 		>
 			{m.atlas_palette_clear_all(undefined, localeOpts)}
 		</button>
-		<span data-testid="palette-active-count" class="font-mono text-xs text-ink-subtle">
+		<span data-testid="palette-active-count" class="font-mono text-xs text-ink-subtle tabular-nums">
 			{activeCount}
 		</span>
 	</footer>

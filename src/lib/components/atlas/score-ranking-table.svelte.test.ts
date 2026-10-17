@@ -141,7 +141,7 @@ describe('ScoreRankingTable.svelte · EN (i18n C4b)', () => {
 	it('Spaltenköpfe, Sortierhinweis und Legende sind englisch', async () => {
 		const section = renderEn();
 		const text = section.textContent ?? '';
-		expect(text).toMatch(/Sorted by\s+Score\s+· high → low/);
+		expect(text).toMatch(/Sorted by\s+Score,\s+descending/);
 		expect(text).toContain('Rank');
 		expect(text).toContain('Tenant protection');
 		expect(text).toContain('Recorded crime');

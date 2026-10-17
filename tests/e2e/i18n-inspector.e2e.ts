@@ -67,7 +67,7 @@ test.describe('i18n Block B3b: /en/explore Inspector englisch', () => {
 		await expect(wahlHeader).toBeVisible({ timeout: 8000 });
 		await expect(wahlHeader).toContainText('Voting behaviour here');
 		await expect(page.getByTestId('wahl-methodik-link')).toContainText(
-			'Methodology · Election data'
+			'Methodology: Election data'
 		);
 		await expect(page.getByTestId('wahl-methodik-link')).toHaveAttribute(
 			'href',
@@ -111,7 +111,7 @@ test.describe('i18n Block B3b: /en/explore Inspector englisch', () => {
 		await openInspector(page, '/en/explore');
 		const klima = page.getByTestId('klima-section');
 		await expect(klima).toBeVisible({ timeout: 10000 });
-		await expect(klima).toContainText('Climate · DWD station');
+		await expect(klima).toContainText('Climate: DWD station');
 		await expect(klima).toContainText('Data series since');
 		await expect(klima.getByTestId('climate-sparkline-heading').first()).toContainText(
 			'Summer days'

@@ -95,7 +95,7 @@
 		style="left: {pos.x + 12}px; top: {pos.y + 12}px;"
 	>
 		{#if content.kind === 'poi'}
-			<p class="font-serif text-sm font-semibold text-ink" data-testid="poi-popover-title">
+			<p class="text-sm font-semibold text-ink" data-testid="poi-popover-title">
 				{first.poiTitle ?? first.layerName}
 			</p>
 			{#if first.poiSubtitle}
@@ -103,26 +103,20 @@
 					{first.poiSubtitle}
 				</p>
 			{/if}
-			<p
-				class="mt-1 font-mono text-dense-meta tracking-wide text-ink-subtle uppercase"
-				data-testid="poi-popover-hint"
-			>
+			<p class="mt-1 text-dense-meta text-ink-subtle" data-testid="poi-popover-hint">
 				{content.hint}
 			</p>
 		{:else if content.rows.length === 1}
-			<p class="font-serif text-sm font-semibold text-ink">{first.layerName}</p>
-			<p class="font-mono text-xs text-ink" data-testid="hover-tooltip-value">
+			<p class="text-sm font-semibold text-ink">{first.layerName}</p>
+			<p class="text-xs text-ink" data-testid="hover-tooltip-value">
 				{first.valueText}
 			</p>
 			{#if first.shortExplain}
-				<p
-					class="font-serif text-dense-meta leading-snug text-ink-muted italic"
-					data-testid="hover-tooltip-explain"
-				>
+				<p class="text-dense-meta leading-snug text-ink-muted" data-testid="hover-tooltip-explain">
 					{first.shortExplain}
 				</p>
 			{/if}
-			<p class="mt-1 font-sans text-dense-meta tracking-wide text-ink-subtle uppercase">
+			<p class="mt-1 font-sans text-dense-meta text-ink-subtle">
 				{content.hint}
 			</p>
 		{:else}
@@ -133,17 +127,14 @@
 			<dl class="grid gap-y-1.5">
 				{#each content.rows as row (row.slug)}
 					<div data-testid="hover-tooltip-row">
-						<dt class="font-serif text-dense-meta text-ink-muted">{row.layerName}</dt>
-						<dd
-							class="min-w-0 font-mono break-words text-ink"
-							data-testid="hover-tooltip-value-{row.slug}"
-						>
+						<dt class="text-dense-meta text-ink-muted">{row.layerName}</dt>
+						<dd class="min-w-0 break-words text-ink" data-testid="hover-tooltip-value-{row.slug}">
 							{row.valueText}
 						</dd>
 					</div>
 				{/each}
 			</dl>
-			<p class="mt-1 font-sans text-dense-meta tracking-wide text-ink-subtle uppercase">
+			<p class="mt-1 font-sans text-dense-meta text-ink-subtle">
 				{content.hint}
 			</p>
 		{/if}

@@ -241,7 +241,7 @@ describe('site-header · i18n Block B2 (Shell englisch auf /en)', () => {
 		const menuTrigger = (await page.getByTestId('header-menu-trigger').element()) as HTMLElement;
 		expect(menuTrigger.getAttribute('aria-label')).toBe('Open menu');
 		const layerTrigger = (await page.getByTestId('header-layer-trigger').element()) as HTMLElement;
-		expect(layerTrigger.getAttribute('aria-label')).toBe('2 active layers · Open palette');
+		expect(layerTrigger.getAttribute('aria-label')).toBe('2 active layers, Open palette');
 		const bookmarkTrigger = (await page
 			.getByTestId('header-bookmark-trigger')
 			.element()) as HTMLElement;
@@ -260,7 +260,7 @@ describe('site-header · i18n Block B2 (Shell englisch auf /en)', () => {
 			onOpenBookmarks: () => {}
 		});
 		const layerTrigger = (await page.getByTestId('header-layer-trigger').element()) as HTMLElement;
-		expect(layerTrigger.getAttribute('aria-label')).toBe('1 active layer · Open palette');
+		expect(layerTrigger.getAttribute('aria-label')).toBe('1 active layer, Open palette');
 		const bookmarkTrigger = (await page
 			.getByTestId('header-bookmark-trigger')
 			.element()) as HTMLElement;

@@ -24,13 +24,13 @@
 		</Accordion.Header>
 		<Accordion.Content
 			data-testid="portal-quellen-content"
-			class="flex flex-col gap-3 pb-4 font-serif text-base leading-body text-ink-muted"
+			class="flex flex-col gap-3 pb-4 text-base leading-body text-ink-muted"
 		>
 			{#if quellen.length > 0}
 				<ul class="flex flex-col gap-1.5" data-testid="portal-quellen-list">
 					{#each quellen as quelle (quelle.name + quelle.license)}
 						<li data-testid={`portal-quellen-item-${quelle.name}`}>
-							{sourceDisplayLabel(quelle.name)} ·
+							{sourceDisplayLabel(quelle.name)},
 							{m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(quelle.license) })}
 						</li>
 					{/each}
@@ -40,7 +40,7 @@
 					{m.wahl_portal_quellen_empty()}
 				</p>
 			{/if}
-			<p class="font-mono text-xs text-ink-muted">
+			<p class="text-xs text-ink-muted">
 				<a
 					href={localizedHref('/methodik/wahldaten')}
 					data-testid="portal-quellen-methodik-link"
@@ -48,7 +48,7 @@
 				>
 					{m.wahl_portal_methodik_wahldaten_link_label()}
 				</a>
-				·
+				<span aria-hidden="true">,</span>
 				<a
 					href={localizedHref('/lizenzen')}
 					data-testid="portal-quellen-lizenzen-link"

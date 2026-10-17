@@ -60,7 +60,7 @@
 			data-testid={`kapitel-nav-link-${chapter.id}`}
 			aria-current={current ? 'true' : undefined}
 			onclick={() => (activeId = chapter.id)}
-			class="shrink-0 rounded px-2.5 py-1 font-mono text-xs tracking-wide whitespace-nowrap uppercase transition-colors"
+			class="shrink-0 rounded px-2.5 py-1 text-xs whitespace-nowrap transition-colors"
 			class:bg-ink={current}
 			class:text-bg={current}
 			class:text-ink-muted={!current}

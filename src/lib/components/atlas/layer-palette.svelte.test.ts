@@ -137,11 +137,11 @@ describe('layer-palette.svelte', () => {
 		expect(subline.textContent).toMatch(/Verwaltungsbezirk/);
 	});
 
-	it('Subline nutzt Plex-Serif-Italic + ink-muted (UX-Spec)', async () => {
+	it('Subline in Sans ohne Kursiv + ink-muted (GH-87)', async () => {
 		render(Harness, { open: true, layers: LAYERS });
 		const subline = (await page.getByTestId('palette-subline-bezirke').element()) as HTMLElement;
-		expect(subline.className).toMatch(/font-serif/);
-		expect(subline.className).toMatch(/italic/);
+		expect(subline.className).not.toMatch(/font-serif/);
+		expect(subline.className).not.toMatch(/italic/);
 		expect(subline.className).toMatch(/text-ink-subtle|text-ink-muted/);
 	});
 

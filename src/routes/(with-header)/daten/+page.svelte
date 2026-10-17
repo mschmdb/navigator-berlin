@@ -54,8 +54,8 @@
 
 <article data-testid="daten-overview" class="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
 	<header class="flex flex-col gap-3">
-		<h1 class="font-serif text-3xl text-ink">{m.overview_daten_h1()}</h1>
-		<p class="font-serif text-lg leading-body text-ink-muted">
+		<h1 class="text-3xl font-bold text-ink">{m.overview_daten_h1()}</h1>
+		<p class="text-lg leading-body text-ink-muted">
 			{m.overview_daten_intro({ count: layerCount })}
 		</p>
 		<ul class="flex flex-wrap gap-x-6 gap-y-1 font-sans text-base">
@@ -64,7 +64,7 @@
 					href={localizedHref('/explore')}
 					class="text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
-					{m.overview_daten_atlas_link()} →
+					{m.overview_daten_atlas_link()}
 				</a>
 			</li>
 			<li>
@@ -72,7 +72,7 @@
 					href={localizedHref('/lizenzen')}
 					class="text-accent underline underline-offset-2 hover:text-accent-strong"
 				>
-					{m.overview_daten_lizenzen_link()} →
+					{m.overview_daten_lizenzen_link()}
 				</a>
 			</li>
 		</ul>
@@ -83,7 +83,7 @@
 			aria-labelledby={`layer-group-${index}-h`}
 			class="flex flex-col gap-3 border-t border-rule pt-6"
 		>
-			<h2 id={`layer-group-${index}-h`} class="font-serif text-2xl text-ink">
+			<h2 id={`layer-group-${index}-h`} class="text-2xl font-bold text-ink">
 				{group.label}
 			</h2>
 			<ul class="flex flex-col font-sans text-base">
@@ -99,7 +99,7 @@
 							{layer.name}
 						</a>
 						{#if layer.description}
-							<p class="font-serif text-sm text-ink-muted">{layer.description}</p>
+							<p class="text-sm text-ink-muted">{layer.description}</p>
 						{/if}
 					</li>
 				{/each}

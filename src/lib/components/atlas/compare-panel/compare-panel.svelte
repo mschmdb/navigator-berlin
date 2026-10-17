@@ -72,10 +72,10 @@
 			class="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-rule bg-bg-elevated px-6 pt-5 pb-4"
 		>
 			<div>
-				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
+				<p class="text-xs text-ink-subtle">
 					{m.compare_panel_eyebrow()}
 				</p>
-				<div class="mt-1 flex items-baseline gap-2 font-serif text-lg leading-tight text-ink">
+				<div class="mt-1 flex items-baseline gap-2 text-lg leading-tight text-ink">
 					<span data-testid="compare-address-a">{ui.selectedAddress.displayName}</span>
 					<ArrowLeftRight size={14} aria-hidden="true" class="text-ink-muted" />
 					<span data-testid="compare-address-b" class="text-ink-muted">
@@ -99,7 +99,7 @@
 				data-testid="compare-b-picker"
 				class="flex flex-col gap-3 border-b border-rule px-6 py-4"
 			>
-				<p class="font-mono text-xs tracking-wide text-ink-subtle uppercase">
+				<p class="text-xs text-ink-subtle">
 					{m.compare_pick_address_b_label()}
 				</p>
 				{#if geocode}
@@ -138,7 +138,7 @@
 		{#if ui.comparisonAddress && ui.comparisonLoading}
 			<div
 				data-testid="compare-loading"
-				class="px-6 py-6 font-mono text-sm text-ink-muted"
+				class="px-6 py-6 text-sm text-ink-muted"
 				aria-live="polite"
 			>
 				{m.compare_loading_b()}
@@ -186,7 +186,7 @@
 
 			<div class="flex-1 px-6 py-4">
 				{#if !hasAnyRows}
-					<p data-testid="compare-empty" class="py-6 font-mono text-sm text-ink-subtle">
+					<p data-testid="compare-empty" class="py-6 text-sm text-ink-subtle">
 						{m.compare_empty()}
 					</p>
 				{:else}
@@ -204,24 +204,13 @@
 						</caption>
 						<thead>
 							<tr class="border-b border-rule-strong">
-								<th
-									scope="col"
-									class="py-2 pr-3 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
-								>
+								<th scope="col" class="py-2 pr-3 text-left text-xs text-ink-muted">
 									{m.compare_th_indicator()}
 								</th>
-								<th
-									scope="col"
-									data-cell="a"
-									class="py-2 pr-3 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
-								>
+								<th scope="col" data-cell="a" class="py-2 pr-3 text-left text-xs text-ink-muted">
 									{m.compare_tab_a_label()}
 								</th>
-								<th
-									scope="col"
-									data-cell="b"
-									class="py-2 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
-								>
+								<th scope="col" data-cell="b" class="py-2 text-left text-xs text-ink-muted">
 									{m.compare_tab_b_label()}
 								</th>
 							</tr>
@@ -234,7 +223,7 @@
 										<th
 											colspan="3"
 											scope="rowgroup"
-											class="border-t border-rule pt-4 pb-1 text-left font-mono text-xs tracking-wide text-ink-muted uppercase"
+											class="border-t border-rule pt-4 pb-1 text-left text-xs text-ink-muted"
 										>
 											{section.label}
 										</th>

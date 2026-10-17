@@ -34,16 +34,16 @@ export interface AuthorityMeta {
 
 export const AUTHORITIES = {
 	odis: {
-		de: 'ODIS Berlin · Open Data Informationsstelle',
-		en: 'ODIS Berlin · Open Data Information Office'
+		de: 'ODIS Berlin, Open Data Informationsstelle',
+		en: 'ODIS Berlin, Open Data Information Office'
 	},
 	osm: {
 		de: 'OpenStreetMap-Contributors',
 		en: 'OpenStreetMap contributors'
 	},
 	'senatsvw-umwelt': {
-		de: 'Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt · Umweltatlas Berlin',
-		en: 'Senate Department for Urban Mobility, Transport, Climate Action and the Environment · Berlin Environmental Atlas (Umweltatlas)'
+		de: 'Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt, Umweltatlas Berlin',
+		en: 'Senate Department for Urban Mobility, Transport, Climate Action and the Environment, Berlin Environmental Atlas (Umweltatlas)'
 	},
 	'senatsvw-mvku': {
 		de: 'Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt (SenMVKU)',
@@ -66,48 +66,48 @@ export const AUTHORITIES = {
 		en: 'Senate Department for Urban Development Berlin'
 	},
 	'senatsvw-mietspiegel': {
-		de: 'Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen · Mietspiegel-Geschäftsstelle',
-		en: 'Senate Department for Urban Development, Building and Housing · Rent index office (Mietspiegel-Geschäftsstelle)'
+		de: 'Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen, Mietspiegel-Geschäftsstelle',
+		en: 'Senate Department for Urban Development, Building and Housing, Rent index office (Mietspiegel-Geschäftsstelle)'
 	},
 	'senatsvw-stadtentwicklung-bezirke': {
-		de: 'Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen · Bezirksämter',
-		en: 'Senate Department for Urban Development, Building and Housing · Bezirk offices (Bezirksämter)'
+		de: 'Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen, Bezirksämter',
+		en: 'Senate Department for Urban Development, Building and Housing, Bezirk offices (Bezirksämter)'
 	},
 	'senatsvw-inneres-sport': {
-		de: 'Senatsverwaltung für Inneres und Sport · Bezirksämter',
-		en: 'Senate Department for the Interior and Sport · Bezirk offices (Bezirksämter)'
+		de: 'Senatsverwaltung für Inneres und Sport, Bezirksämter',
+		en: 'Senate Department for the Interior and Sport, Bezirk offices (Bezirksämter)'
 	},
 	'bezirksamt-bauamt': {
-		de: 'Bezirksämter Berlin · Bauämter',
-		en: 'Berlin Bezirk offices (Bezirksämter) · Building authorities (Bauämter)'
+		de: 'Bezirksämter Berlin, Bauämter',
+		en: 'Berlin Bezirk offices (Bezirksämter), Building authorities (Bauämter)'
 	},
 	'bezirksamt-gruenflaeche': {
-		de: 'Bezirksämter Berlin · Grünflächenämter',
-		en: 'Berlin Bezirk offices (Bezirksämter) · Parks departments (Grünflächenämter)'
+		de: 'Bezirksämter Berlin, Grünflächenämter',
+		en: 'Berlin Bezirk offices (Bezirksämter), Parks departments (Grünflächenämter)'
 	},
 	'gutachterausschuss-grundstuecke': {
 		de: 'Geschäftsstelle des Gutachterausschusses für Grundstückswerte in Berlin',
 		en: 'Office of the Berlin Committee of Valuation Experts (Gutachterausschuss)'
 	},
 	'statistische-aemter-zensus': {
-		de: 'Statistische Ämter des Bundes und der Länder · Zensus 2022',
-		en: 'Statistical Offices of the Federation and the Länder · Census 2022'
+		de: 'Statistische Ämter des Bundes und der Länder, Zensus 2022',
+		en: 'Statistical Offices of the Federation and the Länder, Census 2022'
 	},
 	'baeder-betriebe': {
-		de: 'Berliner Bäder-Betriebe (BBB) · Bezirksämter',
-		en: 'Berliner Bäder-Betriebe (BBB) · Bezirk offices (Bezirksämter)'
+		de: 'Berliner Bäder-Betriebe (BBB), Bezirksämter',
+		en: 'Berliner Bäder-Betriebe (BBB), Bezirk offices (Bezirksämter)'
 	},
 	'wasser-betriebe': {
 		de: 'Berliner Wasserbetriebe',
 		en: 'Berliner Wasserbetriebe'
 	},
 	bvg: {
-		de: 'BVG · Berliner Verkehrsbetriebe · Halte und Netze aus OpenStreetMap',
-		en: 'BVG · Berliner Verkehrsbetriebe · Stops and networks from OpenStreetMap'
+		de: 'BVG, Berliner Verkehrsbetriebe, Halte und Netze aus OpenStreetMap',
+		en: 'BVG, Berliner Verkehrsbetriebe, Stops and networks from OpenStreetMap'
 	},
 	sbahn: {
-		de: 'S-Bahn Berlin GmbH (DB-Konzern) · Routen aus OpenStreetMap-Relationen',
-		en: 'S-Bahn Berlin GmbH (DB group) · Routes from OpenStreetMap relations'
+		de: 'S-Bahn Berlin GmbH (DB-Konzern), Routen aus OpenStreetMap-Relationen',
+		en: 'S-Bahn Berlin GmbH (DB group), Routes from OpenStreetMap relations'
 	},
 	'stolpersteine-initiativen': {
 		de: 'Stolpersteine-Initiativen Berlin',

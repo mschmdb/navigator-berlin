@@ -44,7 +44,7 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 		const wc = readString(props, 'wheelchair');
 		if (wc === 'yes') parts.push('barrierefrei');
 		else if (wc === 'limited') parts.push('teils barrierefrei');
-		const subtitle = parts.slice(0, 2).join(' · ');
+		const subtitle = parts.slice(0, 2).join(', ');
 		return subtitle ? { title: name, subtitle } : { title: name };
 	},
 	'kuehle-orte': (props, layerName) => {
@@ -55,7 +55,7 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 		const parts = [cat, score !== null ? `Kühle ${score}/5` : null].filter(
 			(x): x is string => x !== null
 		);
-		return parts.length > 0 ? { title: name, subtitle: parts.join(' · ') } : { title: name };
+		return parts.length > 0 ? { title: name, subtitle: parts.join(', ') } : { title: name };
 	},
 	'waerme-orte': (props, layerName) => {
 		const name = readString(props, 'name') ?? layerName;
@@ -70,7 +70,7 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 			readString(props, 'stay_without_purchase') === 'yes' ? 'ohne Konsum möglich' : null,
 			readString(props, 'is_free') === 'free' ? 'Eintritt frei' : null
 		];
-		return { title: name, subtitle: parts.filter((x) => x !== null).join(' · ') };
+		return { title: name, subtitle: parts.filter((x) => x !== null).join(', ') };
 	},
 	'kitas-2024': (props, layerName) => ({
 		title: readString(props, 'name') ?? layerName

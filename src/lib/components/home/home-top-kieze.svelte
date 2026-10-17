@@ -33,12 +33,12 @@
 {#if items.length > 0}
 	<section data-testid="home-top-kieze" class="space-y-6">
 		<header class="flex items-baseline justify-between gap-4">
-			<h2 class="font-serif text-2xl text-ink md:text-3xl">
+			<h2 class="text-2xl font-bold text-ink md:text-3xl">
 				{m.home_top_kieze_heading()}
 			</h2>
 			<a
 				href={localizedHref('/umwelt-infrastruktur-score')}
-				class="inline-flex items-center gap-1 font-mono text-xs tracking-wider text-accent uppercase hover:text-ink"
+				class="inline-flex items-center gap-1 text-xs text-accent hover:text-ink"
 			>
 				{m.home_top_kieze_ranking_link()}
 				<ArrowUpRight size={14} aria-hidden="true" />
@@ -48,22 +48,24 @@
 			{#each items as item, idx (item.slug)}
 				<li class="flex items-baseline justify-between gap-4 py-3">
 					<span class="flex items-baseline gap-3">
-						<span class="font-mono text-xs text-ink-subtle">{idx + 1}</span>
+						<span class="font-mono text-xs text-ink-subtle tabular-nums">{idx + 1}</span>
 						<a
-							class="font-serif text-base text-ink hover:text-accent"
+							class="text-base text-ink hover:text-accent"
 							href={localizedHref(`/kiez/${item.slug}`)}
 						>
 							{item.displayName}
 						</a>
 						{#if item.bezirkName}
-							<span class="font-mono text-xs text-ink-subtle">· {item.bezirkName}</span>
+							<span class="text-xs text-ink-subtle">{item.bezirkName}</span>
 						{/if}
 					</span>
-					<span class="font-mono text-base text-ink">{formatScore(item.composite)}</span>
+					<span class="font-mono text-base text-ink tabular-nums"
+						>{formatScore(item.composite)}</span
+					>
 				</li>
 			{/each}
 		</ol>
-		<p class="font-serif text-sm text-ink-muted">
+		<p class="text-sm text-ink-muted">
 			{m.home_top_kieze_footnote()}
 		</p>
 	</section>

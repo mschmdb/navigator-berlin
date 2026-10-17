@@ -133,22 +133,19 @@
 					{display.fallbackText}
 				</span>
 			{:else if rowState === 'no-coverage'}
-				<span class="font-serif text-sm text-ink-subtle italic" data-testid="value-no-coverage">
+				<span class="text-sm text-ink-subtle" data-testid="value-no-coverage">
 					{m.inspector_layer_hit_no_coverage(undefined, localeOpts)}
 				</span>
 			{:else if rowState === 'coverage-out-of-scope'}
-				<span
-					class="font-serif text-sm text-ink-subtle italic"
-					data-testid="value-coverage-out-of-scope"
-				>
+				<span class="text-sm text-ink-subtle" data-testid="value-coverage-out-of-scope">
 					{m.inspector_layer_hit_coverage_out_of_scope(undefined, localeOpts)}
 				</span>
 			{:else if rowState === 'out-of-concept'}
-				<span class="font-serif text-sm text-ink-subtle italic" data-testid="value-out-of-concept">
+				<span class="text-sm text-ink-subtle" data-testid="value-out-of-concept">
 					{m.inspector_layer_hit_out_of_concept(undefined, localeOpts)}
 				</span>
 			{:else if rowState === 'seasonal'}
-				<span class="font-mono text-sm text-ink-muted" data-testid="value-seasonal">
+				<span class="text-sm text-ink-muted" data-testid="value-seasonal">
 					{m.inspector_layer_hit_seasonal(undefined, localeOpts)}
 				</span>
 			{/if}
@@ -156,14 +153,14 @@
 			{#if showSeasonalActivePill}
 				<span
 					data-testid="seasonal-pill-active"
-					class="inline-flex items-center rounded-sm bg-state-success/15 px-1.5 py-0.5 font-mono text-dense-meta font-semibold tracking-wide text-state-success uppercase"
+					class="inline-flex items-center rounded-sm bg-state-success/15 px-1.5 py-0.5 text-dense-meta font-semibold text-state-success"
 				>
 					{m.inspector_layer_hit_seasonal_active_pill(undefined, localeOpts)}
 				</span>
 			{:else if showSeasonalOutOfSeasonPill}
 				<span
 					data-testid="seasonal-pill-outofseason"
-					class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 font-mono text-dense-meta font-semibold tracking-wide text-state-warning uppercase"
+					class="inline-flex items-center rounded-sm bg-state-warning/15 px-1.5 py-0.5 text-dense-meta font-semibold text-state-warning"
 				>
 					{m.inspector_layer_hit_seasonal_outofseason_pill(undefined, localeOpts)}
 				</span>
@@ -214,17 +211,17 @@
 	{/if}
 
 	{#if explain}
-		<p class="font-serif text-sm leading-snug text-ink-muted" data-testid="explain">
+		<p class="text-sm leading-snug text-ink-muted" data-testid="explain">
 			{explain}
 		</p>
 	{/if}
 	{#if hasMore}
 		{#if showMore}
-			<p data-testid="explain-long" class="font-serif text-sm leading-snug text-ink-muted">
+			<p data-testid="explain-long" class="text-sm leading-snug text-ink-muted">
 				{explainEntry.long}
 			</p>
 			{#if explainEntry.valueScaleExplain}
-				<p data-testid="explain-scale" class="font-mono text-xs text-ink-subtle">
+				<p data-testid="explain-scale" class="text-xs text-ink-subtle">
 					{explainEntry.valueScaleExplain}
 				</p>
 			{/if}

@@ -76,6 +76,17 @@ describe('Typografie-Guard (GH-87)', () => {
 		expect(format(hits)).toBe('');
 	});
 
+	it('nutzt keinen Mittelpunkt als Trenner in Templates', () => {
+		const hits = findHits(
+			(line, file) =>
+				line.includes('·') &&
+				!MONO_CODE_FILES.includes(file) &&
+				// OG-Bildtext: eigenes Medium, bleibt bei #87 unverändert.
+				!line.includes('ogImageInput')
+		);
+		expect(format(hits)).toBe('');
+	});
+
 	it('lädt keine Serif-Schrift mehr in app.css und app.html', () => {
 		const css = readFileSync(join(SRC, 'app.css'), 'utf8');
 		const html = readFileSync(join(SRC, 'app.html'), 'utf8');
@@ -95,7 +106,10 @@ const ARROW_ALLOWED: RegExp[] = [
 	/^wahl_portal_sankey_band_aria_label_/,
 	/^layer_methodology_/,
 	/^methodik_kiez_score_norm_/,
-	/^methodik_.*_calculation$/
+	/^methodik_wahldaten_geometrien_p2$/,
+	/^methodik_wahldaten_alias_p1$/,
+	/^uis_accordion_content$/,
+	/^webmcp_support_chatgpt_desc$/
 ];
 
 /** Mittelpunkte ohne sichtbaren UI-Text: Seitentitel, OG-Alt, Druck-Fußzeile. */

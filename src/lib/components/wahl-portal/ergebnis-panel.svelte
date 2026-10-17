@@ -179,27 +179,29 @@
 	data-testid="ergebnis-panel"
 	class="flex flex-col gap-4"
 >
-	<h3 id="ergebnis-panel-h" class="font-serif text-xl text-ink">
+	<h3 id="ergebnis-panel-h" class="text-xl font-semibold text-ink">
 		{m.wahl_portal_ergebnis_panel_titel()}
 	</h3>
 
 	<div data-testid="ergebnis-panel-kopf" class="flex flex-col gap-1">
-		<p class="font-serif text-base text-ink">
-			{wahlBezeichnung}
-			{#if vorlaeufigStatus?.vorlaeufig}
-				· <VorlaeufigBadge
+		<p class="text-base text-ink">
+			{wahlBezeichnung}{#if vorlaeufigStatus?.vorlaeufig},
+				<VorlaeufigBadge
 					sourceUpdatedAt={vorlaeufigStatus.sourceUpdatedAt}
 					testid="ergebnis-panel-vorlaeufig"
 				/>
-			{:else if vorlaeufigStatus !== null}
-				· {m.wahl_portal_ergebnis_endgueltig()}
+			{:else if vorlaeufigStatus !== null}, {m.wahl_portal_ergebnis_endgueltig()}
 			{/if}
 		</p>
 		{#if berlinResponse}
-			<p data-testid="ergebnis-panel-datenstand" class="font-mono text-xs text-ink-subtle">
+			<p data-testid="ergebnis-panel-datenstand" class="text-xs text-ink-subtle">
 				{m.wahl_portal_datenstand_label({ source: sourceDisplayLabel(berlinResponse.source_name) })}
 				{#if berlinResponse.license}
-					· {m.wahl_portal_lizenz_suffix({ license: licenseDisplayLabel(berlinResponse.license) })}
+					<span class="block"
+						>{m.wahl_portal_lizenz_suffix({
+							license: licenseDisplayLabel(berlinResponse.license)
+						})}</span
+					>
 				{/if}
 			</p>
 		{/if}
@@ -208,15 +210,15 @@
 	</div>
 
 	{#if berlinStatus === 'error'}
-		<p data-testid="ergebnis-panel-error" role="alert" class="font-serif text-ink-muted">
+		<p data-testid="ergebnis-panel-error" role="alert" class="text-ink-muted">
 			{m.wahl_portal_ergebnis_panel_error()}
 		</p>
 	{:else if berlinStatus !== 'loaded'}
-		<p data-testid="ergebnis-panel-loading" role="status" class="font-serif text-ink-muted">
+		<p data-testid="ergebnis-panel-loading" role="status" class="text-ink-muted">
 			{m.wahl_portal_ergebnis_panel_loading()}
 		</p>
 	{:else if !berlinPanel || berlinPanel.rows.length === 0}
-		<p data-testid="ergebnis-panel-empty" role="status" class="font-serif text-ink-muted">
+		<p data-testid="ergebnis-panel-empty" role="status" class="text-ink-muted">
 			{m.wahl_portal_ergebnis_panel_empty()}
 		</p>
 	{:else}
@@ -224,7 +226,7 @@
 			{#each berlinPanel.rows as row (row.partei)}
 				<li
 					data-testid={`ergebnis-panel-row-${row.partei}`}
-					class="flex flex-col gap-1 font-mono text-sm text-ink"
+					class="flex flex-col gap-1 text-sm text-ink"
 				>
 					<span class="flex items-center gap-2">
 						<span
@@ -266,14 +268,14 @@
 			{/each}
 		</ol>
 		{#if vorjahrText}
-			<p data-testid="ergebnis-panel-vorjahr-label" class="font-mono text-xs text-ink-subtle">
+			<p data-testid="ergebnis-panel-vorjahr-label" class="text-xs text-ink-subtle">
 				{m.wahl_portal_ergebnis_veraenderung({ vorjahrText })}
 			</p>
 		{/if}
 	{/if}
 
 	{#if anzeigeEbene === 'stimmbezirk'}
-		<p data-testid="ergebnis-panel-stimmbezirk-hinweis" class="font-mono text-xs text-ink-subtle">
+		<p data-testid="ergebnis-panel-stimmbezirk-hinweis" class="text-xs text-ink-subtle">
 			{m.wahl_portal_stimmbezirk_hinweis()}
 		</p>
 	{:else if highlightedSlug}
@@ -281,27 +283,24 @@
 			data-testid="ergebnis-panel-gebiet-block"
 			class="flex flex-col gap-2 border-t border-rule pt-4"
 		>
-			<h4 class="font-serif text-base text-ink">
+			<h4 class="text-base font-semibold text-ink">
 				{highlightedName ?? m.wahl_portal_hervorgehobenes_gebiet_default()}
 			</h4>
 			{#if gebietStatus === 'error'}
-				<p data-testid="ergebnis-panel-gebiet-error" role="alert" class="font-serif text-ink-muted">
+				<p data-testid="ergebnis-panel-gebiet-error" role="alert" class="text-ink-muted">
 					{m.wahl_portal_gebiet_error()}
 				</p>
 			{:else if gebietStatus !== 'loaded'}
-				<p data-testid="ergebnis-panel-gebiet-loading" class="font-serif text-ink-muted">
+				<p data-testid="ergebnis-panel-gebiet-loading" class="text-ink-muted">
 					{m.wahl_portal_gebiet_loading()}
 				</p>
 			{:else if !gebietPanel || gebietPanel.rows.length === 0}
-				<p data-testid="ergebnis-panel-gebiet-empty" class="font-serif text-ink-muted">
+				<p data-testid="ergebnis-panel-gebiet-empty" class="text-ink-muted">
 					{m.wahl_portal_gebiet_empty()}
 				</p>
 			{:else}
 				{#if gebietPanel.vorjahr !== null}
-					<p
-						data-testid="ergebnis-panel-gebiet-vorjahr-label"
-						class="font-mono text-xs text-ink-subtle"
-					>
+					<p data-testid="ergebnis-panel-gebiet-vorjahr-label" class="text-xs text-ink-subtle">
 						{m.wahl_portal_ergebnis_veraenderung({
 							vorjahrText: vorjahrLabel(gebietPanel.vorjahr) ?? ''
 						})}
@@ -311,7 +310,7 @@
 					{#each gebietPanel.rows as row (row.partei)}
 						<li
 							data-testid={`ergebnis-panel-gebiet-row-${row.partei}`}
-							class="flex flex-col gap-1 font-mono text-sm text-ink"
+							class="flex flex-col gap-1 text-sm text-ink"
 						>
 							<span class="flex items-center gap-2">
 								<span
@@ -377,10 +376,10 @@
 			</Accordion.Header>
 			<Accordion.Content
 				data-testid="ergebnis-panel-disclosure-content"
-				class="flex flex-col gap-2 pb-3 font-serif text-sm leading-body text-ink-muted"
+				class="flex flex-col gap-2 pb-3 text-sm leading-body text-ink-muted"
 			>
 				<p>{m.wahl_portal_disclosure_text()}</p>
-				<p class="font-mono text-xs text-ink-subtle">
+				<p class="text-xs text-ink-subtle">
 					<a
 						href={localizedHref('/methodik/wahldaten')}
 						data-testid="ergebnis-panel-methodik-link"
@@ -388,7 +387,7 @@
 					>
 						{m.wahl_portal_methodik_wahldaten_link_label()}
 					</a>
-					·
+					<span aria-hidden="true">,</span>
 					<a
 						href={localizedHref('/lizenzen')}
 						data-testid="ergebnis-panel-lizenzen-link"

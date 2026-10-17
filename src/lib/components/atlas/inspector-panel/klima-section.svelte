@@ -61,7 +61,7 @@
 </script>
 
 {#if !station || !series}
-	<p class="py-3 font-serif text-ink-subtle italic" data-testid="section-klima-empty">
+	<p class="py-3 text-ink-subtle" data-testid="section-klima-empty">
 		{m.inspector_klima_section_empty(undefined, localeOpts)}
 	</p>
 {:else}
@@ -73,14 +73,14 @@
 			<h4 class="min-w-0 font-sans text-sm font-semibold text-ink">
 				{m.inspector_klima_section_heading(undefined, localeOpts)}
 			</h4>
-			<span class="shrink-0 font-serif text-sm text-ink-subtle italic">{station.name}</span>
+			<span class="shrink-0 text-sm text-ink-subtle">{station.name}</span>
 		</div>
-		<p class="font-mono text-dense-meta text-ink-subtle" data-testid="klima-station-hint">
+		<p class="text-dense-meta text-ink-subtle" data-testid="klima-station-hint">
 			{m.inspector_klima_section_since({ year: String(station.firstYear) }, localeOpts)}
 		</p>
 
 		{#if loadError}
-			<p class="py-2 font-mono text-xs text-state-error" data-testid="klima-load-error">
+			<p class="py-2 text-xs text-state-error" data-testid="klima-load-error">
 				{m.inspector_klima_section_load_error(undefined, localeOpts)}
 			</p>
 		{:else if Sparkline === null}
@@ -88,7 +88,7 @@
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
 				<div class="h-16 animate-pulse bg-bg" aria-hidden="true"></div>
-				<span class="font-mono text-xs text-ink-subtle"
+				<span class="text-xs text-ink-subtle"
 					>{m.inspector_klima_section_loading(undefined, localeOpts)}</span
 				>
 			</div>
