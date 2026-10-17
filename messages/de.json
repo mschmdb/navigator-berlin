@@ -2052,6 +2052,8 @@
 	"uis_accordion_content": "Wir aggregieren fünf Dimensionen: Ruhe & Luft, Grün & Hitze, Mobilität, Versorgung, Wohnschutz. Quelle pro Dimension sind offene Senats-Daten (Lärmkartierung, Grünversorgung, Klima-Atlas, ÖPNV-Halte, Milieuschutzgebiete, POI-Distanzen). Die Aggregation läuft 542 LOR-Planungsräume → 143 LOR-Bezirksregionen → 12 Bezirke, jeweils flächengewichtet. Jede Dimension wird gleich gewichtet (5 × 20%). Sozialstruktur wird bewusst nicht gewertet. {link_start}Vollständige Methodik: Kiez-Score{link_end}.",
 	"uis_empty_state": "Score-Daten werden mit dem nächsten Build freigeschaltet.",
 	"uis_ranking_view_aria_label": "Ranking-Ansicht wechseln",
+	"uis_ranking_table_region_aria": "Rangliste der Kieze und Bezirke",
+	"uis_ranking_scroll_hint": "Seitlich scrollen, um alle Spalten zu sehen.",
 	"uis_ranking_sorted_by": "Sortiert nach",
 	"uis_ranking_sort_dir_high_low": "absteigend",
 	"uis_ranking_sort_dir_low_high": "aufsteigend",
