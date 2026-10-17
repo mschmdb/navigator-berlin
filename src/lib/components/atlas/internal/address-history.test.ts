@@ -2,12 +2,25 @@ import { describe, expect, it } from 'vitest';
 import {
 	addressHistoryMode,
 	formatAddressParam,
+	normalizeAddressParam,
 	resolvePopstateSelection
 } from './address-history.js';
 
 describe('formatAddressParam', () => {
 	it('rundet auf fünf Nachkommastellen wie der URL-Parameter', () => {
 		expect(formatAddressParam([13.431774, 52.498451])).toBe('13.43177,52.49845');
+	});
+});
+
+describe('normalizeAddressParam', () => {
+	it('bringt einen Deep-Link mit weniger Stellen auf das Schreibformat', () => {
+		expect(normalizeAddressParam('13.4541,52.5126')).toBe('13.45410,52.51260');
+	});
+
+	it('liefert null für fehlende oder kaputte Werte', () => {
+		expect(normalizeAddressParam(null)).toBeNull();
+		expect(normalizeAddressParam('abc')).toBeNull();
+		expect(normalizeAddressParam('13.4')).toBeNull();
 	});
 });
 

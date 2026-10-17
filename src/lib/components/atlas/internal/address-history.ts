@@ -12,6 +12,14 @@ export function formatAddressParam(lngLat: readonly [number, number]): string {
 	return `${lngLat[0].toFixed(5)},${lngLat[1].toFixed(5)}`;
 }
 
+/** Rohwert aus der URL im Schreibformat, damit ein Deep-Link mit weniger Stellen gleich zählt. */
+export function normalizeAddressParam(raw: string | null): string | null {
+	if (!raw) return null;
+	const parts = raw.split(',').map((part) => Number.parseFloat(part));
+	if (parts.length !== 2 || parts.some((n) => !Number.isFinite(n))) return null;
+	return formatAddressParam([parts[0]!, parts[1]!]);
+}
+
 export function addressHistoryMode(input: {
 	intent: AddressHistoryIntent;
 	currentAddress: string | null;

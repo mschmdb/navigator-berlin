@@ -42,6 +42,7 @@
 	import {
 		addressHistoryMode,
 		formatAddressParam,
+		normalizeAddressParam,
 		resolvePopstateSelection,
 		type AddressHistoryIntent
 	} from '$lib/components/atlas/internal/address-history.js';
@@ -946,7 +947,7 @@
 		const url = new URL(window.location.href);
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
 		for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
-		const currentAddress = url.searchParams.get('address');
+		const currentAddress = normalizeAddressParam(url.searchParams.get('address'));
 		const nextAddress = formatAddressParam(lngLat);
 		const mode = addressHistoryMode({ intent, currentAddress, lastWrittenAddress, nextAddress });
 		lastWrittenAddress = nextAddress;
