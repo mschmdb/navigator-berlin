@@ -300,14 +300,39 @@ describe('sankey-wahljahre.svelte', () => {
 		expect(winnersRequestCount).toBe(2);
 	});
 
-	it('Fehlerpfad Lazy-Load: rejectende d3-sankey-Factory zeigt den Fehler-Zustand (Review Triage Log #2)', async () => {
+	it('#127: Layout in echten Pixeln, kein viewBox-Skalieren (Labels behalten ihre Größe)', async () => {
 		const fetchFn = fakeFetch([['/api/wahl/winners', WINNERS_ZWEI_BAENDER]]);
-		const sankeyFactory = async () => {
-			throw new Error('Chunk-404');
-		};
-		render(SankeyWahljahreContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn, sankeyFactory });
-		await expect.element(page.getByTestId('sankey-wahljahre-error')).toBeInTheDocument();
-		await expect.element(page.getByTestId('sankey-wahljahre-svg')).not.toBeInTheDocument();
+		render(SankeyWahljahreContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn });
+		await expect.element(page.getByTestId('sankey-wahljahre-svg')).toBeInTheDocument();
+		const svg = (await page.getByTestId('sankey-wahljahre-svg').element()) as SVGSVGElement;
+		expect(svg.getAttribute('viewBox')).toBeNull();
+		const container = svg.closest('[data-testid="sankey-wahljahre-chart"]') as HTMLElement;
+		expect(container).not.toBeNull();
+		expect(Number(svg.getAttribute('width'))).toBeCloseTo(container.clientWidth, 0);
+		await expect
+			.element(page.getByTestId('sankey-node-label').first())
+			.toHaveClass(/text-dense-meta/);
+	});
+
+	it('#127: Übergänge als Liste, Antippen hebt das Band hervor, erneutes Antippen hebt es auf', async () => {
+		const fetchFn = fakeFetch([['/api/wahl/winners', WINNERS_ZWEI_BAENDER]]);
+		render(SankeyWahljahreContextProbe, { reihe: 'agh', wahlen: WAHLEN, fetchFn });
+		await expect.element(page.getByTestId('sankey-uebergaenge-liste')).toBeInTheDocument();
+
+		const eintraege = page.getByTestId('sankey-liste-eintrag');
+		await expect.element(eintraege.first()).toHaveTextContent('SPD → GRÜNE');
+		await expect.element(eintraege.first()).toHaveTextContent('2 Gebiete, 66,7 %');
+		await expect.element(eintraege.first()).toHaveAttribute('aria-pressed', 'false');
+
+		await eintraege.first().click();
+		await expect.element(eintraege.first()).toHaveAttribute('aria-pressed', 'true');
+		const bands = page.getByTestId('sankey-band');
+		await expect.element(bands.first()).toHaveAttribute('stroke-opacity', '0.85');
+		await expect.element(bands.nth(1)).toHaveAttribute('stroke-opacity', '0.15');
+
+		await eintraege.first().click();
+		await expect.element(eintraege.first()).toHaveAttribute('aria-pressed', 'false');
+		await expect.element(bands.nth(1)).toHaveAttribute('stroke-opacity', '0.5');
 	});
 
 	it('Zwei-Bänder-Fixture: Hover dimmt das andere Band (stroke-opacity dreistufig), pointerleave stellt zurück', async () => {
