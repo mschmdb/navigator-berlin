@@ -43,7 +43,7 @@ Setup-Stories (1.1, evtl. 4.1, 4.3) sind smoke-level. Tests existieren + lauffä
 
 ## Output-Konventionen
 
-- **Keine em-dashes** (U+2014) in UI-Strings, Docs, Code-Comments oder Commit-Messages. Ersetze durch Komma, Doppelpunkt, neuer Satz, oder Mittelpunkt (`·`). Auch en-dash (U+2013) eher vermeiden, außer in Zahlen-Ranges.
+- **Keine em-dashes** (U+2014) in UI-Strings, Docs, Code-Comments oder Commit-Messages. Ersetze durch Komma, Doppelpunkt oder neuen Satz. Kein Mittelpunkt (`·`) als Trenner in UI-Strings: Leitlinie 29, siehe #87. Auch en-dash (U+2013) eher vermeiden, außer in Zahlen-Ranges.
 
 ## Sonstige Projekt-Regeln
 
