@@ -484,6 +484,20 @@ body.route-explore {
 	}
 }
 
+/* Reduced Motion global (#91): erfasst jede CSS-Animation und jeden Übergang, auch
+   Tailwind-Utilities in Komponenten ohne eigene Regel. 0.01ms statt none, damit
+   transitionend/animationend weiter feuern. JS-Bewegung: $lib/utils/reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
 /* layerchart-Tooltip (z.B. Kiez-Score-Ring): die mitgelieferte Hintergrund-Regel nutzt
    color-mix(in oklab, light-dark(var(--color-surface-100, white), …) 90%, transparent). Diese
    Verschachtelung überlebt die prod-CSS-Minification nicht zuverlässig → Tooltip wird transparent
