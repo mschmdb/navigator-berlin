@@ -131,7 +131,7 @@ describe('hitze · DE-Wortlaut Meta und Links (i18n C4c)', () => {
 		);
 		expect(crumbs.itemListElement.map((i: { name: string }) => i.name)).toEqual([
 			'Start',
-			'Kühle Orte bei Hitze'
+			'Hitze-Navigator'
 		]);
 	});
 
@@ -223,7 +223,7 @@ describe('hitze · EN (i18n C4c)', () => {
 			document.querySelector('[data-testid="hitze-breadcrumb-jsonld"]')!.textContent!
 		);
 		const items = crumbs.itemListElement as { name: string; item: string }[];
-		expect(items.map((i) => i.name)).toEqual(['Home', 'Cool places in hot weather']);
+		expect(items.map((i) => i.name)).toEqual(['Home', 'Heat Navigator']);
 		expect(items[0]?.item).toMatch(/\/en\/?$/);
 		expect(items[1]?.item.endsWith('/en/hitze')).toBe(true);
 	});
