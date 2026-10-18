@@ -258,7 +258,7 @@
 </script>
 
 {#if featureFlags.wahlSection && results && results.wahlen.length > 0 && availableTypen.length > 0}
-	<section data-testid="wahl-section" class="space-y-3">
+	<section data-scroll-anchor="block:wahl" data-testid="wahl-section" class="space-y-3">
 		<h3
 			class="border-t border-rule pt-4 text-xs font-semibold text-ink-muted"
 			data-testid="wahl-section-header"

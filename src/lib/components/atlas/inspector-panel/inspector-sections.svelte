@@ -93,6 +93,7 @@
 		<section
 			data-testid={`section-${section.key}`}
 			data-section={section.key}
+			data-scroll-anchor="section:{section.key}"
 			class="border-t border-rule pt-4"
 		>
 			<h3
@@ -151,7 +152,7 @@
 					{@const hits = rowHits(section.hits)}
 					<div>
 						{#each hits as hit (hit.layer)}
-							<div data-testid="hit-{hit.layer}">
+							<div data-testid="hit-{hit.layer}" data-scroll-anchor="hit:{hit.layer}">
 								{#snippet membership()}
 									<ScoreMembershipBadge slug={hit.layer} {onJump} {lang} />
 								{/snippet}
