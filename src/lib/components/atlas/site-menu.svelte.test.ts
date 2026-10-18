@@ -27,7 +27,7 @@ describe('site-menu.svelte', () => {
 
 	it('zeigt die vier Gruppen', async () => {
 		render(SiteMenu, { open: true, onClose: () => {}, now: OCT, currentPath: '/' });
-		for (const name of ['Karte', 'Vergleichen', 'Saison', 'Daten und Projekt']) {
+		for (const name of ['Entdecken', 'Vergleichen', 'Saison', 'Daten und Projekt']) {
 			await expect.element(page.getByRole('heading', { name, exact: true })).toBeInTheDocument();
 		}
 	});
