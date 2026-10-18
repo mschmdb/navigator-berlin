@@ -862,6 +862,7 @@
 	"inspector_klima_section_since": "Messreihe seit {year}",
 	"inspector_klima_section_load_error": "Klima-Charts konnten nicht geladen werden.",
 	"inspector_klima_section_loading": "lädt…",
+	"inspector_block_loading": "Lädt …",
 	"inspector_climate_summer_title": "Sommertage (T_max ≥ 25°C)",
 	"inspector_climate_frost_title": "Frosttage (T_min < 0°C)",
 	"inspector_climate_hot_title": "Heiße Tage (T_max ≥ 30°C)",

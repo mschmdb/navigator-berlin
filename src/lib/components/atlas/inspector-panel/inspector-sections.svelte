@@ -17,6 +17,7 @@
 	import KlimaPetCard from './klima-pet-card.svelte';
 	import LayerCard from './layer-card.svelte';
 	import KlimaSection from './klima-section.svelte';
+	import InspectorAsyncBlock from './inspector-async-block.svelte';
 	import NearestStopsCard from './nearest-stops-card.svelte';
 	import KuehleOrteCard from './kuehle-orte-card.svelte';
 	import WaermeOrteCard from './waerme-orte-card.svelte';
@@ -147,7 +148,15 @@
 					{/if}
 				{/if}
 				{#if section.key === 'klima'}
-					<KlimaSection station={ui.nearestStation} series={ui.climateSeries} {lang} />
+					<InspectorAsyncBlock
+						busy={ui.inspectorPending.climate}
+						hasValue={ui.climateSeries !== null}
+						shape="klima"
+						testid="inspector-block-klima"
+						{lang}
+					>
+						<KlimaSection station={ui.nearestStation} series={ui.climateSeries} {lang} />
+					</InspectorAsyncBlock>
 				{:else if section.hits.length > 0 && !reducedMode}
 					{@const hits = rowHits(section.hits)}
 					<div>

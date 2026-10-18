@@ -13,7 +13,8 @@ import type {
 	LayerMetadata,
 	ClimateStation,
 	ClimateData,
-	OepnvStopIndex
+	OepnvStopIndex,
+	KiezScore
 } from '$lib/data';
 
 const address: GeocodeSuggestion = {
@@ -382,6 +383,58 @@ describe('inspector-panel.svelte', () => {
 		expect(after).toBe(before);
 		const newHeader = (await page.getByTestId('inspector-address').element()) as HTMLElement;
 		expect(newHeader.textContent).toMatch(/Andere Straße 5/);
+	});
+
+	describe('#152: Nachladen ohne Flackern', () => {
+		const score = {
+			persona: 'allgemein',
+			overall: 67,
+			dimensions: [],
+			missingDimensions: []
+		} as unknown as KiezScore;
+
+		it('erstes Öffnen ohne Altwert: Platzhalter statt leerem Block, aria-busy', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Mitte')],
+				layerMeta: fullLayerMeta,
+				pending: { score: true }
+			});
+			const block = page.getByTestId('inspector-block-score');
+			await expect.element(block).toHaveAttribute('aria-busy', 'true');
+			await expect
+				.element(block.getByTestId('inspector-skeleton'))
+				.toHaveAttribute('data-shape', 'score');
+		});
+
+		it('Adresswechsel mit Altwert: alter Block bleibt, gedimmt, kein Platzhalter', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Mitte')],
+				layerMeta: fullLayerMeta,
+				kiezScore: score,
+				pending: { score: true }
+			});
+			const block = page.getByTestId('inspector-block-score');
+			await expect.element(block).toHaveAttribute('aria-busy', 'true');
+			await expect.element(block).toHaveClass('lc-stale');
+			await expect.element(block.getByTestId('inspector-skeleton')).not.toBeInTheDocument();
+		});
+
+		it('fertig geladen: kein aria-busy, nicht gedimmt', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Mitte')],
+				layerMeta: fullLayerMeta,
+				kiezScore: score
+			});
+			const block = page.getByTestId('inspector-block-score');
+			await expect.element(block).not.toHaveAttribute('aria-busy');
+			await expect.element(block).not.toHaveClass('lc-stale');
+		});
 	});
 
 	describe('Story 1.19: NearestStopsCard in Mobilität-Section', () => {

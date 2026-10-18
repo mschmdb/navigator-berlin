@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-	IDLE_PENDING,
-	createInspectorLoads,
-	type InspectorLoadTarget
-} from './inspector-loads.js';
+import { IDLE_PENDING, createInspectorLoads, type InspectorLoadTarget } from './inspector-loads.js';
 
 function target(): InspectorLoadTarget {
 	return {
