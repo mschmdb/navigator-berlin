@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { IDLE_PENDING, createInspectorLoads, type InspectorLoadTarget } from './inspector-loads.js';
+import {
+	IDLE_PENDING,
+	createInspectorLoads,
+	settledValues,
+	type InspectorLoadTarget
+} from './inspector-loads.js';
 
 function target(): InspectorLoadTarget {
 	return {
@@ -80,5 +85,52 @@ describe('createInspectorLoads', () => {
 		expect(loads.settle(token, 'climate', () => {})).toBe(true);
 		expect(t.climateSeries).toBe(series);
 		expect(t.inspectorPending.climate).toBe(false);
+	});
+
+	it('Klima-Reihe gilt nur für die Station, deren Antwort angekommen ist', () => {
+		const t = target();
+		t.climateSeries = null;
+		const loads = createInspectorLoads(t);
+		const a = loads.begin({ keepStale: false });
+		const seriesX = { station: 'X' } as unknown as InspectorLoadTarget['climateSeries'];
+		loads.settleClimate(a, 'X', seriesX);
+		expect(loads.hasClimateFor('X')).toBe(true);
+
+		// A -> B (Station Y) lädt noch, dann C (auch Station Y): die alte Reihe ist von X.
+		loads.begin({ keepStale: true });
+		const c = loads.begin({ keepStale: true });
+		expect(t.climateSeries).toBe(seriesX);
+		expect(loads.hasClimateFor('Y')).toBe(false);
+		expect(loads.hasClimateFor('X')).toBe(true);
+
+		const seriesY = { station: 'Y' } as unknown as InspectorLoadTarget['climateSeries'];
+		expect(loads.settleClimate(c, 'Y', seriesY)).toBe(true);
+		expect(t.climateSeries).toBe(seriesY);
+		expect(loads.hasClimateFor('Y')).toBe(true);
+		expect(t.inspectorPending.climate).toBe(false);
+	});
+
+	it('vergisst die Klima-Station, wenn die Werte geleert werden', () => {
+		const t = target();
+		const loads = createInspectorLoads(t);
+		const a = loads.begin({ keepStale: false });
+		loads.settleClimate(a, 'X', {
+			station: 'X'
+		} as unknown as InspectorLoadTarget['climateSeries']);
+		loads.begin({ keepStale: false });
+		expect(loads.hasClimateFor('X')).toBe(false);
+	});
+
+	it('settledValues blendet Werte aus, die noch zur vorigen Adresse gehören', () => {
+		const t = target();
+		t.inspectorPending = { score: true, wahl: false, laerm: true, climate: false };
+		expect(settledValues(t)).toEqual({
+			kiezScore: null,
+			wahlResults: t.wahlResults,
+			kiezLaermDb: null,
+			climateSeries: t.climateSeries
+		});
+		t.inspectorPending = { ...IDLE_PENDING };
+		expect(settledValues(t).kiezScore).toBe(t.kiezScore);
 	});
 });

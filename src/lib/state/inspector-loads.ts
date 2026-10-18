@@ -35,6 +35,13 @@ export interface InspectorLoads {
 	 * Ältere Antworten verwirft sie, auch wenn sie später ankommen.
 	 */
 	settle(token: number, key: InspectorLoadKey, apply: () => void): boolean;
+	/** Wie `settle`, merkt sich zusätzlich die Wetterstation der Klima-Reihe. */
+	settleClimate(token: number, stationId: string, series: ClimateData | null): boolean;
+	/**
+	 * Die stehende Klima-Reihe gehört zu dieser Station. Nur dann darf ein
+	 * Wechsel sie ohne neue Anfrage übernehmen.
+	 */
+	hasClimateFor(stationId: string): boolean;
 	/** Beendet alle Ladezustände, laufende Antworten verfallen. */
 	cancel(): void;
 	isCurrent(token: number): boolean;
@@ -42,11 +49,20 @@ export interface InspectorLoads {
 
 export function createInspectorLoads(target: InspectorLoadTarget): InspectorLoads {
 	let generation = 0;
+	let climateStationId: string | null = null;
+
+	function settle(token: number, key: InspectorLoadKey, apply: () => void): boolean {
+		if (token !== generation) return false;
+		apply();
+		target.inspectorPending = { ...target.inspectorPending, [key]: false };
+		return true;
+	}
 
 	return {
 		begin({ keepStale }) {
 			generation += 1;
 			if (!keepStale) {
+				climateStationId = null;
 				target.kiezScore = null;
 				target.wahlResults = null;
 				target.kiezLaermDb = null;
@@ -55,11 +71,15 @@ export function createInspectorLoads(target: InspectorLoadTarget): InspectorLoad
 			target.inspectorPending = { score: true, wahl: true, laerm: true, climate: true };
 			return generation;
 		},
-		settle(token, key, apply) {
-			if (token !== generation) return false;
-			apply();
-			target.inspectorPending = { ...target.inspectorPending, [key]: false };
-			return true;
+		settle,
+		settleClimate(token, stationId, series) {
+			return settle(token, 'climate', () => {
+				target.climateSeries = series;
+				climateStationId = series ? stationId : null;
+			});
+		},
+		hasClimateFor(stationId) {
+			return target.climateSeries !== null && climateStationId === stationId;
 		},
 		cancel() {
 			generation += 1;
@@ -68,5 +88,25 @@ export function createInspectorLoads(target: InspectorLoadTarget): InspectorLoad
 		isCurrent(token) {
 			return token === generation;
 		}
+	};
+}
+
+export type SettledValues = Pick<
+	InspectorLoadTarget,
+	'kiezScore' | 'wahlResults' | 'kiezLaermDb' | 'climateSeries'
+>;
+
+/**
+ * Nur Werte, deren Antwort für die aktuelle Adresse schon da ist. Stehende
+ * Altwerte (pending) werden `null`, damit Export und Textzeilen sie nicht als
+ * aktuelle Werte ausgeben.
+ */
+export function settledValues(t: InspectorLoadTarget): SettledValues {
+	const p = t.inspectorPending;
+	return {
+		kiezScore: p.score ? null : t.kiezScore,
+		wahlResults: p.wahl ? null : t.wahlResults,
+		kiezLaermDb: p.laerm ? null : t.kiezLaermDb,
+		climateSeries: p.climate ? null : t.climateSeries
 	};
 }

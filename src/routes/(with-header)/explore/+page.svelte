@@ -1024,13 +1024,12 @@
 		}
 		// Inspector war schon offen: alte Werte stehen lassen, bis die neuen da sind.
 		const keepStale = ui.inspectorOpen && ui.selectedAddress !== null;
-		const previousStationId = ui.nearestStation?.id ?? null;
 		const token = inspectorLoads.begin({ keepStale });
 		ui.selectedAddress = suggestion;
 		ui.selectedLayerHits = hits;
 		const station = getNearestClimateStation(suggestion.lat, suggestion.lng);
 		ui.nearestStation = station;
-		if (keepStale && previousStationId === station.id && ui.climateSeries) {
+		if (keepStale && inspectorLoads.hasClimateFor(station.id)) {
 			// Gleiche Wetterstation: die Reihe gilt weiter, nichts neu zu laden.
 			inspectorLoads.settle(token, 'climate', () => {});
 		} else {
@@ -1038,13 +1037,9 @@
 			void (async () => {
 				try {
 					const data = await getClimateSeries(station.id);
-					inspectorLoads.settle(token, 'climate', () => {
-						ui.climateSeries = data;
-					});
+					inspectorLoads.settleClimate(token, station.id, data);
 				} catch {
-					inspectorLoads.settle(token, 'climate', () => {
-						ui.climateSeries = null;
-					});
+					inspectorLoads.settleClimate(token, station.id, null);
 				}
 			})();
 		}

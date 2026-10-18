@@ -637,6 +637,20 @@ describe('inspector-panel.svelte', () => {
 			expect(card.textContent).toContain('49,8 dB (L_DEN)');
 		});
 
+		it('#152: Lärm-dB der alten Adresse erscheint nicht, solange der neue Wert lädt', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('laerm-2023', { kategorie: 'gering' })],
+				layerMeta: [...fullLayerMeta, laermMeta],
+				kiezLaermDb: 49.8,
+				pending: { laerm: true }
+			});
+			await expect.element(page.getByTestId('layer-card')).toBeInTheDocument();
+			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+			expect(card.textContent).not.toContain('49,8 dB');
+		});
+
 		it('Lärm-dB-Kontextzeile EN: "Noise mean (Kiez)" · "49.8 dB (L_DEN)"', async () => {
 			render(Harness, {
 				open: true,

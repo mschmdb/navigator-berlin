@@ -1,6 +1,6 @@
 import type { UiState } from '$lib/state/ui-context.svelte.js';
 import { getDemografieByScopeAt } from '$lib/data/get-kiez-demografie.js';
-import type { DemografieByScope } from './demografie-types.js';
+import type { DemografieByScope, KiezDemografieData } from './demografie-types.js';
 
 type LevelSlugs = { readonly kiezSlug: string | null; readonly bezirkSlug: string | null };
 
@@ -8,6 +8,8 @@ export interface DemografieLoader {
 	readonly byScope: DemografieByScope | null;
 	/** #152: lädt gerade für die aktuelle Adresse; der alte Wert bleibt bis dahin stehen. */
 	readonly loading: boolean;
+	/** Profil zum gewählten Scope, sonst Standort. */
+	readonly active: KiezDemografieData | null;
 }
 
 /**
@@ -59,6 +61,9 @@ export function useDemografieLoader(ui: UiState, level: LevelSlugs): DemografieL
 		},
 		get loading() {
 			return loading;
+		},
+		get active() {
+			return byScope ? (byScope[ui.demografieScope] ?? byScope.standort) : null;
 		}
 	};
 }

@@ -27,6 +27,7 @@
 	} from './inspector-panel/internal/demografie-types.js';
 	import InspectorAsyncBlock from './inspector-panel/inspector-async-block.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
+	import { settledValues } from '$lib/state/inspector-loads.js';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import {
@@ -128,10 +129,7 @@
 	// Story 10.5 + #152: Bevölkerungsprofil pro Scope, altes Profil bleibt beim Wechsel stehen.
 	const demografie = useDemografieLoader(ui, level);
 	const demografieByScope = $derived(demografie.byScope);
-
-	const activeDemografie = $derived(
-		demografieByScope ? (demografieByScope[ui.demografieScope] ?? demografieByScope.standort) : null
-	);
+	const activeDemografie = $derived(demografie.active);
 	const demografieScopeName = $derived(
 		ui.demografieScope === 'kiez'
 			? level.kiezName
@@ -161,6 +159,9 @@
 		return numericAggregateFor(layerAggregates, slug, scope, regionKeys);
 	}
 
+	// #152: Altwerte der vorigen Adresse nicht als aktuelle Textwerte oder im Export ausgeben.
+	const settled = $derived(settledValues(ui));
+
 	function contextRowsFor(slug: string) {
 		return buildContextRows(
 			slug,
@@ -169,7 +170,7 @@
 				aggregates: layerAggregates,
 				kiezName: level.kiezName,
 				bezirkName: level.bezirkName,
-				laermDb: ui.kiezLaermDb
+				laermDb: settled.kiezLaermDb
 			},
 			localeOpts
 		);
@@ -226,13 +227,15 @@
 			generatedAt: new Date().toISOString(),
 			layerHits: enrichedHits,
 			layerMeta,
-			climate: ui.nearestStation ? { station: ui.nearestStation, series: ui.climateSeries } : null,
+			climate: ui.nearestStation
+				? { station: ui.nearestStation, series: settled.climateSeries }
+				: null,
 			oepnv: nearest ? { nearest, rating: getMobilityRating(nearest, { isResidential }) } : null,
-			kiezScore: ui.kiezScore,
-			wahl: ui.wahlResults,
-			demografie: activeDemografie,
+			kiezScore: settled.kiezScore,
+			wahl: settled.wahlResults,
+			demografie: demografie.loading ? null : activeDemografie,
 			demografieBezug: demografieBezugLabel(ui.demografieScope, demografieScopeName),
-			laermDb: ui.kiezLaermDb,
+			laermDb: settled.kiezLaermDb,
 			regional: {
 				kiezName: level.kiezName,
 				kiezSlug: level.kiezSlug,
