@@ -157,3 +157,24 @@ describe('hooks.server.ts: handleNoIndexHeaders (Indexierungs-Hygiene S1)', () =
 		expect(await headerFor('http://localhost/demokratie')).toBeNull();
 	});
 });
+
+// Prerender (Deploy-Build 18.10.): Ein prerenderter Update-Beitrag verlinkt eine
+// umbenannte Route. SvelteKit wirft beim Zugriff auf `url.search` während des
+// Prerenders; der Redirect muss trotzdem greifen, ohne Query.
+describe('hooks.server.ts: Redirect während des Prerenders', () => {
+	it('301 ohne Query, wenn url.search nicht lesbar ist', async () => {
+		const url = new URL('http://localhost/umwelt-infrastruktur-score');
+		Object.defineProperty(url, 'search', {
+			get() {
+				throw new Error('Cannot access url.search on a page with prerendering enabled');
+			}
+		});
+		const event = { url } as Parameters<typeof handleRenamedRouteRedirect>[0]['event'];
+		const response = await handleRenamedRouteRedirect({
+			event,
+			resolve: vi.fn()
+		} as unknown as Parameters<typeof handleRenamedRouteRedirect>[0]);
+		expect(response.status).toBe(301);
+		expect(response.headers.get('location')).toBe('/kiez-score');
+	});
+});

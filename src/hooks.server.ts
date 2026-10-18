@@ -7,6 +7,18 @@ import { renamedRouteRedirectTarget } from '$lib/seo/renamed-route-redirect';
 import { basePathname } from '$lib/i18n/base-path';
 
 /**
+ * Query-String für Redirects. Beim Prerender wirft SvelteKit schon beim Lesen von
+ * `url.search`; prerenderte Links tragen keine Query, also bleibt sie dann leer.
+ */
+function searchOf(url: URL): string {
+	try {
+		return url.search;
+	} catch {
+		return '';
+	}
+}
+
+/**
  * 301 stale locale prefixes (`/de/…`, `/es/…`, …) onto the prefix-less DE
  * canonical. `de` stays stale forever (the base locale never carries a URL
  * prefix under Paraglide's `['url', 'baseLocale']` strategy). `en` is the
@@ -21,7 +33,7 @@ const handleStaleLocaleRedirect: Handle = ({ event, resolve }) => {
 	if (target !== null) {
 		return new Response(null, {
 			status: 301,
-			headers: { location: target + event.url.search }
+			headers: { location: target + searchOf(event.url) }
 		});
 	}
 	return resolve(event);
@@ -42,7 +54,7 @@ export const handleRenamedRouteRedirect: Handle = ({ event, resolve }) => {
 	if (target !== null) {
 		return new Response(null, {
 			status: 301,
-			headers: { location: target + event.url.search }
+			headers: { location: target + searchOf(event.url) }
 		});
 	}
 	return resolve(event);
