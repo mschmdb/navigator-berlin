@@ -51,14 +51,17 @@ export function captureScrollAnchor(container: HTMLElement): ScrollAnchor | null
 			}) ?? null;
 	}
 	if (!picked) return null;
+	return anchorOf(container, picked);
+}
 
+/** Anker-Kette für ein bestimmtes Element: es selbst bzw. sein nächster Anker, dann die äußeren. */
+export function anchorOf(container: HTMLElement, el: Element): ScrollAnchor {
 	const chain: AnchorPoint[] = [];
-	let node: HTMLElement | null = picked;
-	while (node && node !== container) {
+	let node: HTMLElement | null = el.closest<HTMLElement>(`[${ATTR}]`);
+	while (node && node !== container && container.contains(node)) {
 		const key = node.getAttribute(ATTR);
 		if (key) chain.push({ key, offset: relativeTop(container, node) });
 		node = node.parentElement?.closest<HTMLElement>(`[${ATTR}]`) ?? null;
-		if (node && !container.contains(node)) break;
 	}
 	return chain;
 }

@@ -37,8 +37,10 @@
 	import { extractStreetName, formatAddressSubline } from './internal/address-subline.js';
 	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
 	import {
+		anchorOf,
 		captureScrollAnchor,
 		createAnchorKeeper,
+		findScrollContainer,
 		type AnchorKeeper,
 		type ScrollAnchor
 	} from './inspector-panel/internal/scroll-anchor.js';
@@ -323,10 +325,17 @@
 			else if (id && pin && pin.fromId !== id) {
 				pinTarget = null;
 				lastAnchor = null;
-				const reduced = prefersReducedMotion();
-				requestAnimationFrame(() =>
-					scrollToLayerHitRow(panelEl ?? null, pin.slug, { reducedMotion: reduced })
-				);
+				// Sofort statt smooth: Score und Wahl laden noch nach, der Keeper hält die Zeile.
+				requestAnimationFrame(() => {
+					if (!scrollToLayerHitRow(panelEl ?? null, pin.slug, { reducedMotion: true })) return;
+					const row = panelEl?.querySelector(`[data-layer="${CSS.escape(pin.slug)}"]`);
+					const container = findScrollContainer(panelEl ?? null);
+					if (!row || !container) return;
+					anchorKeeper = createAnchorKeeper(container, anchorOf(container, row), {
+						observe: panelEl?.querySelector('.lc-inspector-body') ?? null,
+						maxMs: 6000
+					});
+				});
 				return;
 			}
 			const saved = lastAnchor;
