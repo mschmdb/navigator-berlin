@@ -1,4 +1,4 @@
-The cross-layer score is now called the environment & infrastructure score. It bundles five dimensions per planning area, each with a weight of 20 per cent. The page is at [`/en/umwelt-infrastruktur-score`](/en/umwelt-infrastruktur-score). Old links redirect there with a 301.
+The cross-layer score is now called the environment & infrastructure score. It bundles five dimensions per planning area, each with a weight of 20 per cent. The page is at [`/en/kiez-score`](/en/kiez-score). Old links redirect there with a 301.
 
 ## The five dimensions
 

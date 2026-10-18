@@ -8,7 +8,7 @@ category: feature
 tags: [kiez-score, umwelt-infrastruktur-score, inspektor, karte, score]
 ---
 
-Der Cross-Layer-Score heißt jetzt Umwelt- & Infrastruktur-Score. Er bündelt fünf Dimensionen pro Planungsraum, jede mit 20 Prozent Gewicht. Die Seite liegt unter [`/umwelt-infrastruktur-score`](/umwelt-infrastruktur-score). Alte Links leiten per 301 dorthin weiter.
+Der Cross-Layer-Score heißt jetzt Umwelt- & Infrastruktur-Score. Er bündelt fünf Dimensionen pro Planungsraum, jede mit 20 Prozent Gewicht. Die Seite liegt inzwischen unter [`/kiez-score`](/kiez-score). Alte Links leiten per 301 dorthin weiter.
 
 ## Die fünf Dimensionen
 
