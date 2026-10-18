@@ -13,6 +13,7 @@ import type { Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
 import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
 import type { DemografieScope } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
 import type { Bookmark } from './bookmark-schema.js';
+import { IDLE_PENDING, type InspectorPending } from './inspector-loads.js';
 import { capPolygonSlugs } from '$lib/components/atlas/internal/layer-visibility.js';
 import {
 	saveBookmark,
@@ -76,6 +77,8 @@ export interface UiState {
 	demografieScope: DemografieScope;
 	/** Story 10.6b: Lärm-dB-Kiez-Mittel (L_DEN) für aktuelle Adresse. */
 	kiezLaermDb: number | null;
+	/** #152: welche Inspector-Blöcke nach einem Adresswechsel gerade nachladen. */
+	inspectorPending: InspectorPending;
 }
 
 export function createUiState(): UiState {
@@ -111,7 +114,8 @@ export function createUiState(): UiState {
 		wahlResults: null,
 		comparisonWahlResults: null,
 		demografieScope: 'standort',
-		kiezLaermDb: null
+		kiezLaermDb: null,
+		inspectorPending: { ...IDLE_PENDING }
 	});
 	setContext(KEY, state);
 	return state;

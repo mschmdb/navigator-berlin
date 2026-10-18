@@ -12,6 +12,13 @@ async function waitForInspector(page: Page): Promise<void> {
 	await expect(page.getByTestId('inspector-panel')).toBeVisible({ timeout: 15000 });
 }
 
+/** #152: nachladende Blöcke tragen aria-busy, bis ihre Antwort da ist. */
+async function waitForLoads(page: Page): Promise<void> {
+	await expect(page.getByTestId('inspector-panel').locator('[aria-busy="true"]')).toHaveCount(0, {
+		timeout: 20000
+	});
+}
+
 /** Oberkante des Ankers relativ zum scrollenden Vorfahren des Inspectors. */
 async function anchorOffset(page: Page, key: string): Promise<number | null> {
 	return page.evaluate((anchorKey) => {
@@ -34,6 +41,7 @@ test('Inspector hält die Leseposition, wenn der Pin auf eine neue Adresse sprin
 }) => {
 	await page.goto(`/explore?address=${FIRST.lng},${FIRST.lat}`);
 	await waitForInspector(page);
+	await waitForLoads(page);
 
 	// Lärmbelastung als Datensatz suchen und an die Oberkante scrollen.
 	const laerm = page
@@ -44,8 +52,7 @@ test('Inspector hält die Leseposition, wenn der Pin auf eine neue Adresse sprin
 	const key = await laerm.getAttribute('data-scroll-anchor');
 	if (!key) throw new Error('Anker fehlt');
 	await laerm.evaluate((el) => el.scrollIntoView({ block: 'start' }));
-	// Score, Wahl und Klima der ersten Adresse sollen geladen sein.
-	await page.waitForTimeout(2500);
+	await page.waitForTimeout(300);
 	const before = await anchorOffset(page, key);
 	expect(before).not.toBeNull();
 
@@ -57,8 +64,11 @@ test('Inspector hält die Leseposition, wenn der Pin auf eine neue Adresse sprin
 	await expect(page.getByTestId('inspector-panel')).not.toHaveAttribute('aria-label', label ?? '', {
 		timeout: 15000
 	});
+	// #152: Beim Wechsel bleiben die alten Werte stehen, kein Platzhalter blitzt auf.
+	await expect(page.getByTestId('inspector-skeleton')).toHaveCount(0);
 	// Nachladen abwarten: Score, Wahl, Demografie, Klima.
-	await page.waitForTimeout(3500);
+	await waitForLoads(page);
+	await page.waitForTimeout(300);
 
 	const after = await anchorOffset(page, key);
 	expect(after).not.toBeNull();

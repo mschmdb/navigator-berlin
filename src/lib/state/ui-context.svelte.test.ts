@@ -22,6 +22,7 @@ import {
 } from './ui-context.svelte.js';
 import type { GeocodeSuggestion, LayerHit, ClimateStation, ClimateData } from '$lib/data';
 import type { Bookmark } from './bookmark-schema.js';
+import { IDLE_PENDING } from './inspector-loads.js';
 
 function makeState(): UiState {
 	return {
@@ -56,7 +57,8 @@ function makeState(): UiState {
 		wahlResults: null,
 		comparisonWahlResults: null,
 		demografieScope: 'standort',
-		kiezLaermDb: null
+		kiezLaermDb: null,
+		inspectorPending: { ...IDLE_PENDING }
 	};
 }
 

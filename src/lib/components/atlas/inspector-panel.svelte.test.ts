@@ -13,7 +13,8 @@ import type {
 	LayerMetadata,
 	ClimateStation,
 	ClimateData,
-	OepnvStopIndex
+	OepnvStopIndex,
+	KiezScore
 } from '$lib/data';
 
 const address: GeocodeSuggestion = {
@@ -384,6 +385,58 @@ describe('inspector-panel.svelte', () => {
 		expect(newHeader.textContent).toMatch(/Andere Straße 5/);
 	});
 
+	describe('#152: Nachladen ohne Flackern', () => {
+		const score = {
+			persona: 'allgemein',
+			overall: 67,
+			dimensions: [],
+			missingDimensions: []
+		} as unknown as KiezScore;
+
+		it('erstes Öffnen ohne Altwert: Platzhalter statt leerem Block, aria-busy', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Mitte')],
+				layerMeta: fullLayerMeta,
+				pending: { score: true }
+			});
+			const block = page.getByTestId('inspector-block-score');
+			await expect.element(block).toHaveAttribute('aria-busy', 'true');
+			await expect
+				.element(block.getByTestId('inspector-skeleton'))
+				.toHaveAttribute('data-shape', 'score');
+		});
+
+		it('Adresswechsel mit Altwert: alter Block bleibt, gedimmt, kein Platzhalter', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Mitte')],
+				layerMeta: fullLayerMeta,
+				kiezScore: score,
+				pending: { score: true }
+			});
+			const block = page.getByTestId('inspector-block-score');
+			await expect.element(block).toHaveAttribute('aria-busy', 'true');
+			await expect.element(block).toHaveClass('lc-stale');
+			await expect.element(block.getByTestId('inspector-skeleton')).not.toBeInTheDocument();
+		});
+
+		it('fertig geladen: kein aria-busy, nicht gedimmt', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('bezirke', 'Mitte')],
+				layerMeta: fullLayerMeta,
+				kiezScore: score
+			});
+			const block = page.getByTestId('inspector-block-score');
+			await expect.element(block).not.toHaveAttribute('aria-busy');
+			await expect.element(block).not.toHaveClass('lc-stale');
+		});
+	});
+
 	describe('Story 1.19: NearestStopsCard in Mobilität-Section', () => {
 		const oepnvIndex: OepnvStopIndex = {
 			ubahn: [{ name: 'Frankfurter Tor', lat: 52.5159, lng: 13.4544 }],
@@ -582,6 +635,20 @@ describe('inspector-panel.svelte', () => {
 			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
 			expect(card.textContent).toContain('Lärm-Mittel (Kiez)');
 			expect(card.textContent).toContain('49,8 dB (L_DEN)');
+		});
+
+		it('#152: Lärm-dB der alten Adresse erscheint nicht, solange der neue Wert lädt', async () => {
+			render(Harness, {
+				open: true,
+				address,
+				hits: [hit('laerm-2023', { kategorie: 'gering' })],
+				layerMeta: [...fullLayerMeta, laermMeta],
+				kiezLaermDb: 49.8,
+				pending: { laerm: true }
+			});
+			await expect.element(page.getByTestId('layer-card')).toBeInTheDocument();
+			const card = (await page.getByTestId('layer-card').element()) as HTMLElement;
+			expect(card.textContent).not.toContain('49,8 dB');
 		});
 
 		it('Lärm-dB-Kontextzeile EN: "Noise mean (Kiez)" · "49.8 dB (L_DEN)"', async () => {

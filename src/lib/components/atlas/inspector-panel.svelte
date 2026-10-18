@@ -20,12 +20,14 @@
 	import KiezScoreSection from './inspector-panel/kiez-score-section.svelte';
 	import WahlSection from './inspector-panel/wahl-section.svelte';
 	import DemografieBlock from './inspector-panel/demografie-block.svelte';
-	import { getDemografieByScopeAt } from '$lib/data/get-kiez-demografie.js';
+	import { useDemografieLoader } from './inspector-panel/internal/demografie-loader.svelte.js';
 	import {
 		demografieBezugLabel,
-		type DemografieByScope,
 		type DemografieScope
 	} from './inspector-panel/internal/demografie-types.js';
+	import InspectorAsyncBlock from './inspector-panel/inspector-async-block.svelte';
+	import { featureFlags } from '$lib/data/feature-flags.js';
+	import { settledValues } from '$lib/state/inspector-loads.js';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import {
@@ -124,39 +126,10 @@
 		regionComposite(regionComposites, 'bezirk', level.kiezSlug, level.bezirkSlug)
 	);
 
-	// Story 10.5: Bevölkerungsprofil pro Scope (Standort/Kiez/Bezirk) + Umschaltung.
-	let demografieByScope = $state<DemografieByScope | null>(null);
-	$effect(() => {
-		const addr = ui.selectedAddress;
-		if (!addr) {
-			demografieByScope = null;
-			ui.demografieScope = 'standort';
-			return;
-		}
-		const { lat, lng } = addr;
-		const kiezSlug = level.kiezSlug;
-		const bezirkSlug = level.bezirkSlug;
-		const addrId = addr.id;
-		void getDemografieByScopeAt(lat, lng, kiezSlug, bezirkSlug)
-			.then((d) => {
-				if (ui.selectedAddress?.id !== addrId) return;
-				demografieByScope = d;
-				// Scope auf Standort zurücksetzen, wenn der gewählte Bezug hier keine Daten hat.
-				if (
-					(ui.demografieScope === 'kiez' && !d.kiez) ||
-					(ui.demografieScope === 'bezirk' && !d.bezirk)
-				) {
-					ui.demografieScope = 'standort';
-				}
-			})
-			.catch(() => {
-				if (ui.selectedAddress?.id === addrId) demografieByScope = null;
-			});
-	});
-
-	const activeDemografie = $derived(
-		demografieByScope ? (demografieByScope[ui.demografieScope] ?? demografieByScope.standort) : null
-	);
+	// Story 10.5 + #152: Bevölkerungsprofil pro Scope, altes Profil bleibt beim Wechsel stehen.
+	const demografie = useDemografieLoader(ui, level);
+	const demografieByScope = $derived(demografie.byScope);
+	const activeDemografie = $derived(demografie.active);
 	const demografieScopeName = $derived(
 		ui.demografieScope === 'kiez'
 			? level.kiezName
@@ -186,6 +159,9 @@
 		return numericAggregateFor(layerAggregates, slug, scope, regionKeys);
 	}
 
+	// #152: Altwerte der vorigen Adresse nicht als aktuelle Textwerte oder im Export ausgeben.
+	const settled = $derived(settledValues(ui));
+
 	function contextRowsFor(slug: string) {
 		return buildContextRows(
 			slug,
@@ -194,7 +170,7 @@
 				aggregates: layerAggregates,
 				kiezName: level.kiezName,
 				bezirkName: level.bezirkName,
-				laermDb: ui.kiezLaermDb
+				laermDb: settled.kiezLaermDb
 			},
 			localeOpts
 		);
@@ -251,13 +227,15 @@
 			generatedAt: new Date().toISOString(),
 			layerHits: enrichedHits,
 			layerMeta,
-			climate: ui.nearestStation ? { station: ui.nearestStation, series: ui.climateSeries } : null,
+			climate: ui.nearestStation
+				? { station: ui.nearestStation, series: settled.climateSeries }
+				: null,
 			oepnv: nearest ? { nearest, rating: getMobilityRating(nearest, { isResidential }) } : null,
-			kiezScore: ui.kiezScore,
-			wahl: ui.wahlResults,
-			demografie: activeDemografie,
+			kiezScore: settled.kiezScore,
+			wahl: settled.wahlResults,
+			demografie: demografie.loading ? null : activeDemografie,
 			demografieBezug: demografieBezugLabel(ui.demografieScope, demografieScopeName),
-			laermDb: ui.kiezLaermDb,
+			laermDb: settled.kiezLaermDb,
 			regional: {
 				kiezName: level.kiezName,
 				kiezSlug: level.kiezSlug,
@@ -422,37 +400,59 @@
 			{buildLlmMarkdown}
 		/>
 
-		{#key ui.selectedAddress?.id}
-			<div class="lc-inspector-body flex-1 space-y-4 px-6 py-4">
-				{#if !reducedMode}
+		<div class="lc-inspector-body flex-1 space-y-4 px-6 py-4">
+			{#if !reducedMode}
+				<InspectorAsyncBlock
+					busy={featureFlags.kiezScore && ui.inspectorPending.score}
+					hasValue={ui.kiezScore !== null}
+					shape="score"
+					testid="inspector-block-score"
+					lang={locale}
+				>
 					<KiezScoreSection
 						score={ui.kiezScore}
 						lang={locale}
 						activeLayerSlugs={ui.activeLayerSlugs}
 						onToggleLayer={(slug: string) => toggleLayer(ui, slug)}
 					/>
-					<InspectorProfileLinks
-						kiezSlug={level.kiezSlug}
-						kiezName={level.kiezName}
-						{kiezComposite}
-						bezirkSlug={level.bezirkSlug}
-						bezirkName={level.bezirkName}
-						{bezirkComposite}
-						lang={locale}
-					/>
-					<div
-						class="border-t border-rule pt-4"
-						data-testid="weitere-daten-header"
-						data-scroll-anchor="block:weitere-daten"
-					>
-						<h3 class="font-sans text-xs font-semibold text-ink-muted">
-							{m.inspector_weitere_daten_heading(undefined, localeOpts)}
-						</h3>
-						<p class="mt-1 text-dense-meta leading-snug text-ink-muted">
-							{m.inspector_weitere_daten_hint(undefined, localeOpts)}
-						</p>
-					</div>
+				</InspectorAsyncBlock>
+				<InspectorProfileLinks
+					kiezSlug={level.kiezSlug}
+					kiezName={level.kiezName}
+					{kiezComposite}
+					bezirkSlug={level.bezirkSlug}
+					bezirkName={level.bezirkName}
+					{bezirkComposite}
+					lang={locale}
+				/>
+				<div
+					class="border-t border-rule pt-4"
+					data-testid="weitere-daten-header"
+					data-scroll-anchor="block:weitere-daten"
+				>
+					<h3 class="font-sans text-xs font-semibold text-ink-muted">
+						{m.inspector_weitere_daten_heading(undefined, localeOpts)}
+					</h3>
+					<p class="mt-1 text-dense-meta leading-snug text-ink-muted">
+						{m.inspector_weitere_daten_hint(undefined, localeOpts)}
+					</p>
+				</div>
+				<InspectorAsyncBlock
+					busy={featureFlags.wahlSection && ui.inspectorPending.wahl}
+					hasValue={ui.wahlResults !== null}
+					shape="wahl"
+					testid="inspector-block-wahl"
+					lang={locale}
+				>
 					<WahlSection results={ui.wahlResults} lang={locale} />
+				</InspectorAsyncBlock>
+				<InspectorAsyncBlock
+					busy={demografie.loading}
+					hasValue={demografieByScope !== null}
+					shape="rows"
+					testid="inspector-block-demografie"
+					lang={locale}
+				>
 					<DemografieBlock
 						data={activeDemografie}
 						isActive={ui.activeLayerSlugs.includes('einwohner-dichte-2024')}
@@ -464,25 +464,25 @@
 						onScopeChange={changeDemografieScope}
 						lang={locale}
 					/>
-				{/if}
-				<InspectorSections
-					{sections}
-					lang={locale}
-					{hitzeMode}
-					{kaelteMode}
-					{hasKuehleOrte}
-					{hasWaermeOrte}
-					{hasNearestStops}
-					{isResidential}
-					addressPoint={nearestAddressPoint}
-					kiezName={level.kiezName}
-					bezirkName={level.bezirkName}
-					{contextRowsFor}
-					{numericAgg}
-					onJump={jumpToDimension}
-				/>
-			</div>
-		{/key}
+				</InspectorAsyncBlock>
+			{/if}
+			<InspectorSections
+				{sections}
+				lang={locale}
+				{hitzeMode}
+				{kaelteMode}
+				{hasKuehleOrte}
+				{hasWaermeOrte}
+				{hasNearestStops}
+				{isResidential}
+				addressPoint={nearestAddressPoint}
+				kiezName={level.kiezName}
+				bezirkName={level.bezirkName}
+				{contextRowsFor}
+				{numericAgg}
+				onJump={jumpToDimension}
+			/>
+		</div>
 
 		<div data-testid="inspector-print-meta">
 			<p>{addressName}</p>

@@ -134,6 +134,7 @@
 	import { featureLabelPoints } from '$lib/components/atlas/internal/feature-label-points.js';
 	import { dotSpecForSlug } from '$lib/components/atlas/internal/choropleth-dots.js';
 	import { PIN_LAYER_SLUGS } from '$lib/components/atlas/internal/pin-icon-mapping.js';
+	import { createInspectorLoads } from '$lib/state/inspector-loads.js';
 
 	type Viewport = {
 		center: [number, number];
@@ -146,6 +147,9 @@
 
 	const selection = useAddressSelection();
 	const ui = getUiState();
+	// #152: Score, Wahl, Lärm und Klima laden nach einem Adresswechsel nach. Bei
+	// offenem Inspector bleiben die alten Werte stehen, bis die neuen da sind.
+	const inspectorLoads = createInspectorLoads(ui);
 	const viewport = useViewport('desktop');
 	// i18n Block B3a: Karten-Oberfläche + Route folgen der URL-Locale (anders
 	// als die DE-only-Atlas-Resolver-Defaults, siehe atlas-label-options.ts).
@@ -923,6 +927,7 @@
 		ui.selectedLayerHits = [];
 		ui.nearestStation = null;
 		ui.climateSeries = null;
+		inspectorLoads.cancel();
 		addressWriter.forget();
 		// Back auf eine URL ohne Adresse: die URL stimmt schon, nur die Auswahl räumen.
 		if (!updateUrl) return;
@@ -1017,25 +1022,28 @@
 			announceGlobal(m.atlas_route_outside_berlin(undefined, localeOpts));
 			return false;
 		}
+		// Inspector war schon offen: alte Werte stehen lassen, bis die neuen da sind.
+		const keepStale = ui.inspectorOpen && ui.selectedAddress !== null;
+		const token = inspectorLoads.begin({ keepStale });
 		ui.selectedAddress = suggestion;
 		ui.selectedLayerHits = hits;
 		const station = getNearestClimateStation(suggestion.lat, suggestion.lng);
 		ui.nearestStation = station;
-		ui.climateSeries = null;
-		void (async () => {
-			try {
-				const data = await getClimateSeries(station.id);
-				if (ui.nearestStation?.id === station.id) {
-					ui.climateSeries = data;
+		if (keepStale && inspectorLoads.hasClimateFor(station.id)) {
+			// Gleiche Wetterstation: die Reihe gilt weiter, nichts neu zu laden.
+			inspectorLoads.settle(token, 'climate', () => {});
+		} else {
+			// Andere Station: die alte Reihe bleibt gedimmt stehen, bis die neue da ist.
+			void (async () => {
+				try {
+					const data = await getClimateSeries(station.id);
+					inspectorLoads.settleClimate(token, station.id, data);
+				} catch {
+					inspectorLoads.settleClimate(token, station.id, null);
 				}
-			} catch {
-				ui.climateSeries = null;
-			}
-		})();
+			})();
+		}
 		ui.inspectorOpen = true;
-		ui.kiezScore = null;
-		ui.wahlResults = null;
-		ui.kiezLaermDb = null;
 		announceGlobal(
 			m.atlas_route_announce_inspector_opened({ name: suggestion.displayName }, localeOpts)
 		);
@@ -1043,19 +1051,25 @@
 		void (async () => {
 			try {
 				const db = await getLaermDbAt(suggestion.lat, suggestion.lng);
-				if (ui.selectedAddress?.id === suggestion.id) ui.kiezLaermDb = db;
+				inspectorLoads.settle(token, 'laerm', () => {
+					ui.kiezLaermDb = db;
+				});
 			} catch {
-				if (ui.selectedAddress?.id === suggestion.id) ui.kiezLaermDb = null;
+				inspectorLoads.settle(token, 'laerm', () => {
+					ui.kiezLaermDb = null;
+				});
 			}
 		})();
 		void (async () => {
 			try {
 				const wahl = await getWahlResultsAtPoint(suggestion.lat, suggestion.lng);
-				if (ui.selectedAddress?.id === suggestion.id) {
+				inspectorLoads.settle(token, 'wahl', () => {
 					ui.wahlResults = wahl;
-				}
+				});
 			} catch {
-				if (ui.selectedAddress?.id === suggestion.id) ui.wahlResults = null;
+				inspectorLoads.settle(token, 'wahl', () => {
+					ui.wahlResults = null;
+				});
 			}
 		})();
 		if (!ui.oepnvStopIndex) {
@@ -1116,11 +1130,13 @@
 					}
 				};
 				const score = await getKiezScore(suggestion.lat, suggestion.lng, undefined, override);
-				if (ui.selectedAddress?.id === suggestion.id) {
+				inspectorLoads.settle(token, 'score', () => {
 					ui.kiezScore = score;
-				}
+				});
 			} catch {
-				if (ui.selectedAddress?.id === suggestion.id) ui.kiezScore = null;
+				inspectorLoads.settle(token, 'score', () => {
+					ui.kiezScore = null;
+				});
 			}
 		})();
 		return true;

@@ -6,8 +6,11 @@
 		LayerMetadata,
 		ClimateStation,
 		ClimateData,
-		OepnvStopIndex
+		OepnvStopIndex,
+		KiezScore
 	} from '$lib/data';
+	import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
+	import { IDLE_PENDING, type InspectorPending } from '$lib/state/inspector-loads.js';
 	import InspectorPanel from './inspector-panel.svelte';
 	import type { Locale } from '$lib/paraglide/runtime';
 
@@ -21,6 +24,10 @@
 		oepnvStopIndex?: OepnvStopIndex | null;
 		/** Story 10.6b Lärm-dB-Kiez-Mittel, für Kontextzeilen-Tests (Review-Fund). */
 		kiezLaermDb?: number | null;
+		/** #152: Ladezustand und Altwerte der nachladenden Blöcke. */
+		kiezScore?: KiezScore | null;
+		wahlResults?: WahlResultsAtPoint | null;
+		pending?: Partial<InspectorPending>;
 		lang?: Locale;
 	};
 
@@ -33,6 +40,9 @@
 		climateSeries = null,
 		oepnvStopIndex = null,
 		kiezLaermDb = null,
+		kiezScore = null,
+		wahlResults = null,
+		pending = {},
 		lang
 	}: Props = $props();
 
@@ -46,6 +56,9 @@
 		ui.climateSeries = climateSeries;
 		ui.oepnvStopIndex = oepnvStopIndex;
 		ui.kiezLaermDb = kiezLaermDb;
+		ui.kiezScore = kiezScore;
+		ui.wahlResults = wahlResults;
+		ui.inspectorPending = { ...IDLE_PENDING, ...pending };
 	});
 </script>
 

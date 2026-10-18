@@ -862,6 +862,7 @@
 	"inspector_klima_section_since": "Data series since {year}",
 	"inspector_klima_section_load_error": "Climate charts could not be loaded.",
 	"inspector_klima_section_loading": "loading…",
+	"inspector_block_loading": "Loading …",
 	"inspector_climate_summer_title": "Summer days (T_max ≥ 25°C)",
 	"inspector_climate_frost_title": "Frost days (T_min < 0°C)",
 	"inspector_climate_hot_title": "Hot days (T_max ≥ 30°C)",
