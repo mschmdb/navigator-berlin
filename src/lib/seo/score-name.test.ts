@@ -28,7 +28,8 @@ const OLD_ROUTE = /umwelt-infrastruktur-score/;
 const ROUTE_ALLOWLIST = new Set([
 	'src/lib/seo/renamed-route-redirect.ts',
 	'src/lib/seo/renamed-route-redirect.test.ts',
-	'src/lib/seo/score-name.test.ts'
+	'src/lib/seo/score-name.test.ts',
+	'src/hooks.server.test.ts'
 ]);
 
 function walk(dir: string, out: string[] = []): string[] {
