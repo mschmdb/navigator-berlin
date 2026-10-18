@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
+	anchorOf,
 	captureScrollAnchor,
 	createAnchorKeeper,
 	findScrollContainer,
@@ -74,6 +75,17 @@ describe('captureScrollAnchor', () => {
 		const anchor = captureScrollAnchor(c);
 		expect(anchor?.map((a) => a.key)).toEqual(['hit:laerm-2023', 'section:umwelt']);
 		expect(anchor?.[0].offset).toBe(-20);
+	});
+});
+
+describe('anchorOf', () => {
+	it('baut die Anker-Kette für ein gezieltes Element samt Versatz', () => {
+		const c = mount(LAYOUT);
+		c.scrollTop = 800;
+		const luft = c.querySelector<HTMLElement>('[data-scroll-anchor="hit:luft-2023"]')!;
+		const anchor = anchorOf(c, luft);
+		expect(anchor.map((a) => a.key)).toEqual(['hit:luft-2023', 'section:umwelt']);
+		expect(anchor[0].offset).toBe(100);
 	});
 });
 
