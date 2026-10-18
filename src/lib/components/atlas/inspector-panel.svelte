@@ -276,6 +276,19 @@
 	let lastAnchor: { id: string; container: HTMLElement; anchor: ScrollAnchor } | null = null;
 	let anchorKeeper: AnchorKeeper | null = null;
 	let anchorFrame = 0;
+	// Pin-Klick bei schon offenem Inspector: Ziel bis zum Adresswechsel aufheben.
+	let pinTarget: { slug: string; fromId: string | null; at: number } | null = null;
+	const PIN_TARGET_TTL_MS = 15000;
+	let panelReady = false;
+
+	$effect(() => {
+		if (!panelEl) return;
+		const frame = requestAnimationFrame(() => (panelReady = true));
+		return () => {
+			cancelAnimationFrame(frame);
+			panelReady = false;
+		};
+	});
 
 	$effect(() => {
 		if (!panelEl) return;
@@ -303,11 +316,23 @@
 		untrack(() => {
 			anchorKeeper?.stop();
 			anchorKeeper = null;
+			// Ein Klick auf einen Pin-Layer bei offenem Inspector: nach dem Wechsel gezielt
+			// zu dessen Zeile scrollen (Story 1.15) statt die alte Position zu halten.
+			const pin = pinTarget;
+			if (pin && Date.now() - pin.at > PIN_TARGET_TTL_MS) pinTarget = null;
+			else if (id && pin && pin.fromId !== id) {
+				pinTarget = null;
+				lastAnchor = null;
+				const reduced = prefersReducedMotion();
+				requestAnimationFrame(() =>
+					scrollToLayerHitRow(panelEl ?? null, pin.slug, { reducedMotion: reduced })
+				);
+				return;
+			}
 			const saved = lastAnchor;
 			if (!id || !saved || saved.id === id) return;
 			lastAnchor = null;
-			// Ein Klick auf einen Pin-Layer scrollt gezielt zu dessen Zeile (Story 1.15).
-			if (ui.scrollToLayerSlug || !saved.container.isConnected) return;
+			if (!saved.container.isConnected) return;
 			anchorKeeper = createAnchorKeeper(saved.container, saved.anchor, {
 				observe: panelEl?.querySelector('.lc-inspector-body') ?? null,
 				maxMs: 6000
@@ -321,6 +346,14 @@
 		const target = ui.scrollToLayerSlug;
 		if (!target || !panelEl) return;
 		const reduced = prefersReducedMotion();
+		untrack(() => {
+			anchorKeeper?.stop();
+			anchorKeeper = null;
+			lastAnchor = null;
+			pinTarget = panelReady
+				? { slug: target, fromId: ui.selectedAddress?.id ?? null, at: Date.now() }
+				: null;
+		});
 		queueMicrotask(() => {
 			scrollToLayerHitRow(panelEl ?? null, target, { reducedMotion: reduced });
 			ui.scrollToLayerSlug = null;

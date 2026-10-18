@@ -111,6 +111,7 @@
 	class="py-1"
 	aria-label={m.inspector_demografie_aria_label(undefined, localeOpts)}
 	data-testid="demografie-block"
+	data-scroll-anchor="block:demografie"
 >
 	<h4 class="flex min-w-0 items-center gap-2 font-sans text-sm font-semibold text-ink">
 		<Users class="size-4 shrink-0 text-ink-muted" aria-hidden="true" />

@@ -68,10 +68,13 @@ export function captureScrollAnchor(container: HTMLElement): ScrollAnchor | null
  * gemerkten Versatz steht. `false`, wenn keiner mehr existiert.
  */
 export function restoreScrollAnchor(container: HTMLElement, anchor: ScrollAnchor): boolean {
-	for (const point of anchor) {
+	for (const [index, point] of anchor.entries()) {
 		const el = container.querySelector(`[${ATTR}="${cssEscape(point.key)}"]`);
 		if (!el) continue;
-		const delta = relativeTop(container, el) - point.offset;
+		// Rückfall auf einen umschließenden Block: dessen Anfang oben zeigen, sonst
+		// schiebt der alte Versatz einen kürzeren Abschnitt ganz über die Kante.
+		const offset = index === 0 ? point.offset : Math.max(point.offset, 0);
+		const delta = relativeTop(container, el) - offset;
 		if (Math.abs(delta) >= 1) container.scrollTop += delta;
 		return true;
 	}
