@@ -37,6 +37,13 @@
 	import { extractStreetName, formatAddressSubline } from './internal/address-subline.js';
 	import { scrollToLayerHitRow } from './inspector-panel/internal/scroll-to-layer-row.js';
 	import {
+		captureScrollAnchor,
+		createAnchorKeeper,
+		type AnchorKeeper,
+		type ScrollAnchor
+	} from './inspector-panel/internal/scroll-anchor.js';
+	import { untrack } from 'svelte';
+	import {
 		findAllNearestStops,
 		findAllNearestStopsWithSoft
 	} from './inspector-panel/internal/nearest-oepnv-stop.js';
@@ -261,6 +268,54 @@
 	}
 
 	let panelEl: HTMLElement | undefined = $state();
+	// #150: Leseposition beim Adresswechsel halten. Der Inspector merkt sich bei
+	// jedem Scrollen den obersten sichtbaren Block der aktuellen Adresse. Nach dem
+	// Wechsel rückt er diesen Block wieder an dieselbe Stelle und führt ihn nach,
+	// während Score, Wahl und Klima nachladen. Gemerkt wird beim Scrollen und nicht
+	// beim Wechsel, weil die Score- und Wahl-Blöcke schon im selben Takt leer werden.
+	let lastAnchor: { id: string; container: HTMLElement; anchor: ScrollAnchor } | null = null;
+	let anchorKeeper: AnchorKeeper | null = null;
+	let anchorFrame = 0;
+
+	$effect(() => {
+		if (!panelEl) return;
+		const onScroll = (event: Event) => {
+			const target = event.target;
+			if (!(target instanceof HTMLElement) || !panelEl) return;
+			if (target !== panelEl && !target.contains(panelEl)) return;
+			cancelAnimationFrame(anchorFrame);
+			anchorFrame = requestAnimationFrame(() => {
+				const id = ui.selectedAddress?.id;
+				if (!id) return;
+				const anchor = captureScrollAnchor(target);
+				lastAnchor = anchor ? { id, container: target, anchor } : null;
+			});
+		};
+		document.addEventListener('scroll', onScroll, { capture: true, passive: true });
+		return () => {
+			document.removeEventListener('scroll', onScroll, { capture: true });
+			cancelAnimationFrame(anchorFrame);
+		};
+	});
+
+	$effect(() => {
+		const id = ui.selectedAddress?.id;
+		untrack(() => {
+			anchorKeeper?.stop();
+			anchorKeeper = null;
+			const saved = lastAnchor;
+			if (!id || !saved || saved.id === id) return;
+			lastAnchor = null;
+			// Ein Klick auf einen Pin-Layer scrollt gezielt zu dessen Zeile (Story 1.15).
+			if (ui.scrollToLayerSlug || !saved.container.isConnected) return;
+			anchorKeeper = createAnchorKeeper(saved.container, saved.anchor, {
+				observe: panelEl?.querySelector('.lc-inspector-body') ?? null,
+				maxMs: 6000
+			});
+		});
+	});
+
+	$effect(() => () => anchorKeeper?.stop());
 
 	$effect(() => {
 		const target = ui.scrollToLayerSlug;
@@ -313,7 +368,7 @@
 		data-testid="inspector-panel"
 		data-mount-id={mountId}
 		data-variant={variant}
-		class="flex h-full flex-col overflow-x-hidden overflow-y-auto bg-bg-elevated text-ink"
+		class="flex h-full flex-col overflow-x-hidden overflow-y-auto bg-bg-elevated text-ink [overflow-anchor:none]"
 	>
 		<InspectorHeader
 			{addressName}
@@ -343,7 +398,11 @@
 						{bezirkComposite}
 						lang={locale}
 					/>
-					<div class="border-t border-rule pt-4" data-testid="weitere-daten-header">
+					<div
+						class="border-t border-rule pt-4"
+						data-testid="weitere-daten-header"
+						data-scroll-anchor="block:weitere-daten"
+					>
 						<h3 class="font-sans text-xs font-semibold text-ink-muted">
 							{m.inspector_weitere_daten_heading(undefined, localeOpts)}
 						</h3>

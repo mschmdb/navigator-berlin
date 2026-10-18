@@ -93,7 +93,7 @@
 				</button>
 			</div>
 		</div>
-		<div class="flex-1 overflow-auto">
+		<div class="flex-1 overflow-auto [overflow-anchor:none]">
 			{@render children()}
 		</div>
 	</div>
