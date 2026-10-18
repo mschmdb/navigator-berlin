@@ -89,13 +89,16 @@ describe('restoreScrollAnchor', () => {
 		expect(topOf(c, 'hit:laerm-2023')).toBe(-20);
 	});
 
-	it('weicht auf den Abschnitt aus, wenn der Datensatz an der neuen Adresse fehlt', () => {
+	it('weicht auf den Abschnitt aus und zeigt dessen Anfang, wenn der Datensatz fehlt', () => {
 		const c = mount(LAYOUT);
-		c.scrollTop = 720;
+		// Tief im Abschnitt: Luft beginnt bei 900, Kante bei 950.
+		c.scrollTop = 950;
 		const anchor = captureScrollAnchor(c)!;
-		c.querySelector('[data-scroll-anchor="hit:laerm-2023"]')!.remove();
+		expect(anchor[0].key).toBe('hit:luft-2023');
+		c.querySelector('[data-scroll-anchor="hit:luft-2023"]')!.remove();
 		expect(restoreScrollAnchor(c, anchor)).toBe(true);
-		expect(topOf(c, 'section:umwelt')).toBe(-20);
+		// Der kürzere Abschnitt darf nicht über die Kante rutschen: sein Anfang steht oben.
+		expect(topOf(c, 'section:umwelt')).toBe(0);
 	});
 
 	it('meldet false, wenn keiner der Anker mehr existiert', () => {
