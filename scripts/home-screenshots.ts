@@ -75,7 +75,17 @@ const SHOTS: readonly Shot[] = [
 	},
 	{
 		name: 'finder',
-		path: HOME_PREVIEWS.finder.path
+		path: HOME_PREVIEWS.finder.path,
+		prepare: async (page) => {
+			// In die Innenstadt zoomen: Der Hero zeigt schon ganz Berlin (Matze 31.10.).
+			const zoomIn = page.getByRole('button', { name: /zoom in|hineinzoomen|vergrößern/i }).first();
+			for (let k = 0; k < 1; k++) {
+				await zoomIn.click();
+				await page.waitForTimeout(700);
+			}
+			await page.mouse.move(1300, 110);
+			await page.waitForTimeout(800);
+		}
 	},
 	{
 		name: 'wahlen',
