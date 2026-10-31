@@ -3,19 +3,11 @@
  *
  * 6 zentrale offene Daten-Anbieter mit Lizenz-Marker. Liste ist editorial,
  * NICHT auto-generiert aus dem Manifest — sie soll die wichtigsten Anbieter
- * sichtbar machen, nicht alle 44 Layer einzeln. „Alle 44 Quellen"-Link
- * verweist auf `/lizenzen` (Story 4.5).
+ * sichtbar machen, nicht alle 44 Layer einzeln.
  *
- * i18n Block B2: `name` bleibt Institutions-Eigenname (unübersetzt),
- * `license` bleibt Datenschlüssel/Badge (unübersetzt). `description` ist
- * echter UI-Text, aufgelöst über `homeDataSourceDescription()`.
+ * `name` bleibt Institutions-Eigenname (unübersetzt), `license` bleibt
+ * Datenschlüssel/Badge (unübersetzt).
  */
-import { m } from '$lib/paraglide/messages.js';
-import {
-	toMessageOptions,
-	assertUnreachable,
-	type LocaleOptions
-} from '$lib/i18n/message-options.js';
 
 export const HOME_DATA_SOURCE_IDS = [
 	'odis-berlin',
@@ -45,23 +37,3 @@ export const HOME_DATA_SOURCES: readonly HomeDataSource[] = [
 		license: 'dl-de/zero-2-0'
 	}
 ];
-
-export function homeDataSourceDescription(id: HomeDataSourceId, o?: LocaleOptions): string {
-	const options = toMessageOptions(o);
-	switch (id) {
-		case 'odis-berlin':
-			return m.home_data_source_odis_berlin_description(undefined, options);
-		case 'senmvku-umweltatlas':
-			return m.home_data_source_senmvku_umweltatlas_description(undefined, options);
-		case 'openstreetmap':
-			return m.home_data_source_openstreetmap_description(undefined, options);
-		case 'dwd-climate-data-center':
-			return m.home_data_source_dwd_climate_data_center_description(undefined, options);
-		case 'senstadt-mietspiegel':
-			return m.home_data_source_senstadt_mietspiegel_description(undefined, options);
-		case 'geoportal-berlin-fis-broker':
-			return m.home_data_source_geoportal_berlin_fis_broker_description(undefined, options);
-		default:
-			return assertUnreachable(id);
-	}
-}

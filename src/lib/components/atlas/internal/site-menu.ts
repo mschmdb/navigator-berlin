@@ -16,6 +16,7 @@ export type SiteMenuItemId =
 	| 'hitze'
 	| 'daten'
 	| 'methodik'
+	| 'stories'
 	| 'updates'
 	| 'ueber';
 
@@ -66,6 +67,7 @@ export function siteMenuGroups(now: Date): readonly SiteMenuGroup[] {
 			items: [
 				{ id: 'daten', href: '/daten', described: false },
 				{ id: 'methodik', href: '/methodik', described: false },
+				{ id: 'stories', href: '/stories', described: false },
 				{ id: 'updates', href: '/updates', described: false },
 				{ id: 'ueber', href: '/ueber', described: false }
 			]

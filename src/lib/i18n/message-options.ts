@@ -2,9 +2,8 @@
  * Geteilter Options-Typ + Helper für die kleinen, locale-abhängigen
  * Message-Resolver-Module der Startseite/Shell (i18n Block B2 Review-Fund:
  * `toOptions()` + eigenes `*Options`-Interface war 6x fast identisch
- * kopiert in `meta-links.ts`, `home-data-sources.ts`,
- * `home-featured-bezirke.ts`, `home-layer-teasers.ts`,
- * `home-quick-links.ts`, `screenshot-manifest.ts`).
+ * kopiert in `meta-links.ts`, `home-data-sources.ts`
+ * und weiteren Content-Modulen).
  *
  * `wahl-labels.ts` (Block B) bleibt bewusst unangetastet -- eigener Scope,
  * kein Teil dieser Aufräum-Runde.

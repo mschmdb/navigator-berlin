@@ -44,6 +44,7 @@ export interface BlogLeafJsonLd {
 	description: string;
 	url: string;
 	inLanguage: string;
+	image?: string;
 	publisher: OrganizationRefJsonLd;
 	blogPost: BlogPostingLeafJsonLd[];
 }

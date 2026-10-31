@@ -49,3 +49,12 @@ describe('home-updates-teaser.svelte · lang="de"-Fallback (i18n C4d)', () => {
 		expect(marked).toEqual(['Titel DE']);
 	});
 });
+
+describe('home-updates-teaser.svelte · Zeilenlänge (#171)', () => {
+	it('begrenzt jeden Eintrag auf --measure (Leitlinie 14)', () => {
+		render(HomeUpdatesTeaser, { items });
+		const links = document.querySelectorAll('[data-testid="home-updates-teaser"] li a');
+		expect(links.length).toBeGreaterThan(0);
+		for (const a of links) expect(a.className).toContain('max-w-(--measure)');
+	});
+});

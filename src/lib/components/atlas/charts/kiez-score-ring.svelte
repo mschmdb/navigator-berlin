@@ -19,6 +19,7 @@
 		overallLabel?: string;
 		noDataLabel?: string;
 		dimensionLabels?: Partial<Record<KiezScoreDimension, string>>;
+		orderLabel?: string;
 	};
 
 	let {
@@ -27,7 +28,8 @@
 		onSegmentClick,
 		overallLabel = 'Gesamt',
 		noDataLabel = 'keine Daten',
-		dimensionLabels
+		dimensionLabels,
+		orderLabel = m.inspector_kiez_score_ring_order()
 	}: Props = $props();
 
 	function dimensionLabel(dim: KiezScoreDimension): string {
@@ -145,7 +147,7 @@
 		data-testid="kiez-score-ring-order"
 		aria-hidden="true"
 	>
-		{m.inspector_kiez_score_ring_order()}
+		{orderLabel}
 	</p>
 	<ul
 		class="mt-1 grid w-[236px] gap-1 text-left text-dense-label text-ink"

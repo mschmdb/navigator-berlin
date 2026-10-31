@@ -38,6 +38,7 @@ const COLOR_ACCENT_SOFT = '#D8D5C7';
 const PAD_X = 56;
 const PAD_Y = 44;
 const FOOTER_HEIGHT = 56;
+const COMPOSITION_SIZE = 400;
 
 export interface SatoriNode {
 	type: string;
@@ -314,6 +315,8 @@ interface CanvasOptions {
 	readonly watermarkOpacity?: number;
 	readonly headlineMaxWidth?: number;
 	readonly headlineFontSize?: number;
+	/** SVG-Data-URI einer Komposition, rechts neben dem Text (Data Stories). */
+	readonly compositionDataUri?: string;
 }
 
 function canvas(opts: CanvasOptions): SatoriNode {
@@ -331,6 +334,17 @@ function canvas(opts: CanvasOptions): SatoriNode {
 	const layers: SatoriNode[] = [];
 	if (opts.watermarkDataUri) {
 		layers.push(watermark(opts.watermarkDataUri, opts.watermarkOpacity ?? 0.12));
+	}
+	if (opts.compositionDataUri) {
+		layers.push(
+			img(opts.compositionDataUri, {
+				position: 'absolute',
+				right: PAD_X,
+				top: 130,
+				width: COMPOSITION_SIZE,
+				height: COMPOSITION_SIZE
+			})
+		);
 	}
 	layers.push(
 		node(
@@ -489,16 +503,17 @@ export interface PageCardParams {
 	readonly footerDate?: string | null;
 	readonly logoDataUri?: string;
 	readonly watermarkDataUri?: string;
+	readonly compositionDataUri?: string;
 }
 
-function pageBody(body: string): SatoriNode {
+function pageBody(body: string, maxWidth = 760): SatoriNode {
 	return node(
 		'div',
 		{
 			display: 'flex',
 			flexDirection: 'column',
 			width: '100%',
-			maxWidth: 760
+			maxWidth
 		},
 		[
 			text(body, {
@@ -651,12 +666,13 @@ export function buildPageCardVdom(params: PageCardParams): SatoriNode {
 	return canvas({
 		headline: params.headline,
 		subline: params.subline,
-		mid: pageBody(params.body),
+		mid: pageBody(params.body, params.compositionDataUri ? 560 : 760),
 		footerUrl: params.footerUrl,
 		footerDate: params.footerDate ?? null,
 		logoDataUri: params.logoDataUri,
-		watermarkDataUri: params.watermarkDataUri,
+		watermarkDataUri: params.compositionDataUri ? undefined : params.watermarkDataUri,
 		watermarkOpacity: 0.14,
-		headlineMaxWidth: 760
+		headlineMaxWidth: params.compositionDataUri ? 600 : 760,
+		compositionDataUri: params.compositionDataUri
 	});
 }

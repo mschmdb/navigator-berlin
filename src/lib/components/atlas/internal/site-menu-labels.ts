@@ -41,6 +41,8 @@ export function siteMenuItemTitle(id: SiteMenuItemId): string {
 			return m.shell_meta_link_daten();
 		case 'methodik':
 			return m.shell_meta_link_methodik();
+		case 'stories':
+			return m.shell_meta_link_stories();
 		case 'updates':
 			return m.shell_meta_link_updates();
 		case 'ueber':
@@ -69,6 +71,7 @@ export function siteMenuItemDescription(id: SiteMenuItemId): string | undefined 
 			return m.site_menu_desc_hitze();
 		case 'daten':
 		case 'methodik':
+		case 'stories':
 		case 'updates':
 		case 'ueber':
 			return undefined;

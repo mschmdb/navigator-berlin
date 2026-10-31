@@ -4,6 +4,7 @@ import {
 	isHitzeMode,
 	hitzeReroute,
 	kaelteReroute,
+	storiesReroute,
 	pageviewPathFor,
 	isLayerAvailableInMode,
 	modeForLayer,
@@ -175,6 +176,14 @@ describe('resolveExplorerEntry', () => {
 		});
 	});
 
+	it('Stories-Host zieht den Modus wie default nach', () => {
+		expect(resolveExplorerEntry(['kuehle-orte', 'laerm-den'], 'stories', null)).toEqual({
+			catchUpMode: 'hitze',
+			layers: ['kuehle-orte', 'laerm-den'],
+			rewrite: true
+		});
+	});
+
 	it('beide Layer: der erste gewinnt, der andere fällt weg', () => {
 		expect(resolveExplorerEntry(['kuehle-orte', 'waerme-orte'], 'default', null)).toEqual({
 			catchUpMode: 'hitze',
@@ -210,5 +219,49 @@ describe('resolveExplorerEntry', () => {
 			layers: ['laerm-den'],
 			rewrite: false
 		});
+	});
+});
+
+describe('stories-Subdomain', () => {
+	it('erkennt stories.-Subdomain als eigenen Modus', () => {
+		expect(resolveAppMode('stories.navigator.berlin')).toBe('stories');
+		expect(resolveAppMode('STORIES.navigator.berlin')).toBe('stories');
+	});
+
+	it('?mode=stories ist kein Override, nur der Host entscheidet', () => {
+		expect(resolveAppMode('navigator.berlin', 'stories')).toBe('default');
+	});
+
+	it('storiesReroute rewritet die Wurzel auf /stories', () => {
+		expect(storiesReroute(new URL('https://stories.navigator.berlin/'))).toBe('/stories');
+	});
+
+	it('storiesReroute rewritet auch die englische Wurzel', () => {
+		expect(storiesReroute(new URL('https://stories.navigator.berlin/en'))).toBe('/stories');
+		expect(storiesReroute(new URL('https://stories.navigator.berlin/en/'))).toBe('/stories');
+		expect(storiesReroute(new URL('https://navigator.berlin/en'))).toBeNull();
+	});
+
+	it('storiesReroute lässt andere Pfade und Hosts unangetastet', () => {
+		expect(storiesReroute(new URL('https://stories.navigator.berlin/stories'))).toBeNull();
+		expect(storiesReroute(new URL('https://stories.navigator.berlin/explore'))).toBeNull();
+		expect(storiesReroute(new URL('https://navigator.berlin/'))).toBeNull();
+		expect(storiesReroute(new URL('https://kaelte.navigator.berlin/'))).toBeNull();
+	});
+
+	it('hitze- und kaelteReroute greifen nicht auf der stories-Subdomain', () => {
+		expect(hitzeReroute(new URL('https://stories.navigator.berlin/'))).toBeNull();
+		expect(kaelteReroute(new URL('https://stories.navigator.berlin/'))).toBeNull();
+	});
+
+	it('pageviewPathFor meldet die Stories-Wurzel als /stories', () => {
+		expect(pageviewPathFor(new URL('https://stories.navigator.berlin/'))).toBe('/stories');
+		expect(pageviewPathFor(new URL('https://stories.navigator.berlin/stories/x'))).toBeUndefined();
+	});
+
+	it('der Stories-Modus schaltet keine Layer frei', () => {
+		expect(isLayerAvailableInMode('kuehle-orte', 'stories')).toBe(false);
+		expect(isLayerAvailableInMode('waerme-orte', 'stories')).toBe(false);
+		expect(isLayerAvailableInMode('laerm-den', 'stories')).toBe(true);
 	});
 });

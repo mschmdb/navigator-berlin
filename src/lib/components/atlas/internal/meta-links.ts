@@ -30,6 +30,7 @@ export const META_LINK_IDS = [
 	'bezirke',
 	'daten',
 	'methodik',
+	'stories',
 	'updates',
 	'lizenzen',
 	'datenschutz',
@@ -60,6 +61,7 @@ export const META_LINKS: readonly MetaLink[] = [
 	{ id: 'kaelte', href: '/kaelte' },
 	{ id: 'ueber', href: '/ueber' },
 	{ id: 'methodik', href: '/methodik' },
+	{ id: 'stories', href: '/stories' },
 	{ id: 'updates', href: '/updates' },
 	{ id: 'lizenzen', href: '/lizenzen' },
 	{ id: 'datenschutz', href: '/datenschutz' },
@@ -95,6 +97,7 @@ export const META_LINK_GROUPS: readonly MetaLinkGroup[] = [
 	{
 		id: 'sonstiges',
 		links: [
+			{ id: 'stories', href: '/stories' },
 			{ id: 'updates', href: '/updates' },
 			{ id: 'datenschutz', href: '/datenschutz' },
 			{ id: 'impressum', href: '/impressum' }
@@ -125,6 +128,8 @@ export function metaLinkLabel(id: MetaLinkId, o?: LocaleOptions): string {
 			return m.shell_meta_link_daten(undefined, options);
 		case 'methodik':
 			return m.shell_meta_link_methodik(undefined, options);
+		case 'stories':
+			return m.shell_meta_link_stories(undefined, options);
 		case 'updates':
 			return m.shell_meta_link_updates(undefined, options);
 		case 'lizenzen':

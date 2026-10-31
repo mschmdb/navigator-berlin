@@ -11,7 +11,7 @@
  * Export, ein zusätzlicher Named-Export lässt den Build fehlschlagen
  * ("Invalid export").
  */
-import { homeUpdateCategoryLabel } from '$lib/components/updates/category-label.js';
+import { categoryLabel } from '$lib/components/updates/category-label.js';
 import type { Locale } from '$lib/paraglide/runtime';
 import type { UpdateEntry } from './types.js';
 
@@ -41,7 +41,7 @@ export function mapHomeUpdateEntry(entry: UpdateEntry, locale: Locale): HomeUpda
 		title: locale === 'de' ? entry.frontmatter.title_de : (titleEn ?? entry.frontmatter.title_de),
 		titleIsDeFallback: locale !== 'de' && !titleEn,
 		date: entry.frontmatter.date,
-		categoryLabel: homeUpdateCategoryLabel(entry.frontmatter.category, locale),
+		categoryLabel: categoryLabel(entry.frontmatter.category, locale),
 		summary:
 			locale === 'de' ? entry.frontmatter.summary_de : (summaryEn ?? entry.frontmatter.summary_de),
 		summaryIsDeFallback: locale !== 'de' && !summaryEn

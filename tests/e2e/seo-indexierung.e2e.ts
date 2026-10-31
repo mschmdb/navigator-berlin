@@ -40,7 +40,9 @@ test.describe('Indexierungs-Hygiene S1', () => {
 
 	test('Startseite und Footer verlinken /kaelte', async ({ page }) => {
 		await page.goto('/');
-		await expect(page.getByTestId('home-kaelte-teaser-landing')).toHaveAttribute('href', '/kaelte');
+		await expect(
+			page.getByTestId('home-task-klima').getByRole('link', { name: 'Kälte-Navigator' })
+		).toHaveAttribute('href', '/kaelte');
 		await page
 			.getByRole('contentinfo')
 			.getByRole('link', { name: 'Kälte-Navigator', exact: true })

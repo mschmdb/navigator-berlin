@@ -22,6 +22,7 @@
 		"fetch:einwohner": "tsx scripts/fetch-einwohner.ts",
 		"fetch:zensus-miete": "tsx scripts/fetch-zensus-miete.ts",
 		"fetch:zensus-altbau": "tsx scripts/fetch-zensus-altbau.ts",
+		"fetch:zensus-gehweite": "tsx scripts/fetch-zensus-gehweite.ts",
 		"data:pet-points": "tsx scripts/build-klima-pet-points.ts",
 		"data:kuehle-orte": "tsx scripts/build-kuehle-orte.ts",
 		"data:waerme-orte": "tsx scripts/build-waerme-orte.ts",
@@ -29,6 +30,7 @@
 		"data:kuehle-orte-fetch": "tsx scripts/fetch-static.ts kuehle-orte",
 		"data:waerme-orte-fetch": "tsx scripts/fetch-static.ts waerme-orte",
 		"data:laerm-db": "tsx scripts/build-laerm-db-lor.ts",
+		"data:stories-kennzahlen": "tsx scripts/build-stories-kennzahlen.ts",
 		"data:kriminalitaet": "tsx scripts/build-kriminalitaet-lor.ts",
 		"data:oepnv-index": "tsx scripts/build-oepnv-stop-index.ts",
 		"data:kiez-scores": "tsx scripts/build-kiez-scores.ts",
@@ -63,12 +65,14 @@
 		"publish-update": "tsx scripts/publish-update/main.ts",
 		"doc:pipelines": "tsx scripts/generate-data-flow-doc.ts",
 		"doc:story-map": "tsx scripts/generate-story-map.ts",
-		"metrics:landing": "tsx scripts/landing-metrics.ts"
+		"metrics:landing": "tsx scripts/landing-metrics.ts",
+		"screenshots": "tsx scripts/home-screenshots.ts"
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "^4.11.3",
 		"@eslint/compat": "^2.0.4",
 		"@eslint/js": "^10.0.1",
+		"@fontsource-variable/jost": "5.3.0",
 		"@fontsource/ibm-plex-mono": "^5.2.7",
 		"@fontsource/ibm-plex-sans": "^5.2.8",
 		"@inlang/paraglide-js": "^2.25.4",
@@ -87,7 +91,9 @@
 		"@types/geojson": "^7946.0.16",
 		"@types/js-yaml": "^4.0.9",
 		"@types/node": "^20",
+		"@types/pdfkit": "0.17.7",
 		"@types/rbush": "^4.0.0",
+		"@types/svg-to-pdfkit": "0.1.4",
 		"@vitest/browser-playwright": "^4.1.3",
 		"adm-zip": "^0.5.17",
 		"csv-parse": "^6.2.1",
@@ -123,6 +129,7 @@
 		"xlsx": "^0.18.5"
 	},
 	"dependencies": {
+		"@fontsource/jost": "5.3.0",
 		"@lucide/svelte": "^1.14.0",
 		"@mcp-b/global": "2.3.2",
 		"@turf/area": "^7.3.5",
@@ -144,9 +151,11 @@
 		"maplibre-gl": "^5.24.0",
 		"marked": "^14.1.4",
 		"opening_hours": "^3.13.0",
+		"pdfkit": "0.17.2",
 		"pmtiles": "^4.4.1",
 		"postgres": "^3.4.9",
 		"rbush": "^4.0.1",
+		"svg-to-pdfkit": "0.1.8",
 		"valibot": "^1.4.2"
 	},
 	"pnpm": {

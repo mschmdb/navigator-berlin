@@ -479,6 +479,15 @@
 			>
 				OFL 1.1
 			</a>
+			<span aria-hidden="true">,</span>
+			<a
+				href="https://github.com/indestructible-type/Jost"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+			>
+				github.com/indestructible-type/Jost
+			</a>
 		</p>
 	</section>
 

@@ -82,6 +82,23 @@ describe('trackLanding', () => {
 		}
 	});
 
+	it.each(['task_link', 'preview_link', 'search_example'] as const)(
+		'sendet die Startseiten-Aktion %s mit page_type home',
+		(action) => {
+			const fn = stubPlausible();
+			__setEmbeddedForTests(false);
+			try {
+				trackLanding(action, 'home');
+				expect(fn).toHaveBeenCalledWith('Landing', {
+					props: { action, page_type: 'home' },
+					interactive: false
+				});
+			} finally {
+				__setEmbeddedForTests(null);
+			}
+		}
+	);
+
 	it('bricht nicht, wenn window.plausible fehlt', () => {
 		vi.stubGlobal('window', {});
 		__setEmbeddedForTests(false);

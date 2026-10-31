@@ -51,6 +51,7 @@ Nach längerer Pause oder bei neuem Maintainer: Die operativen Recovery-Dokument
 - [editorial-review.md](./editorial-review.md) — Stil-Disziplin für Prosa
 - [never-machine-translate.md](./never-machine-translate.md) — DE-only-Lock + Auto-Translate-Bann
 - [faq-template-style-guide.md](./faq-template-style-guide.md) — FAQ-Template-Konventionen
+- [DESIGN.md](./DESIGN.md): Berlin Data Stories: Handschrift (Regeln, Paletten, Tokens)
 
 ## Skills (Claude-Code)
 

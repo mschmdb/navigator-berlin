@@ -18,7 +18,8 @@ type EventName =
 	| 'Locate'
 	| 'MapClick'
 	| 'Finder'
-	| 'Landing';
+	| 'Landing'
+	| 'Stories PDF Download';
 
 interface PlausibleFn {
 	(
@@ -94,11 +95,14 @@ export type LandingAction =
 	| 'list_link'
 	| 'map_link'
 	| 'ranking_link'
-	| 'eyebrow_link';
+	| 'eyebrow_link'
+	| 'task_link'
+	| 'preview_link'
+	| 'search_example';
 
-export type LandingPageType = 'kiez' | 'bezirk' | 'layer';
+export type LandingPageType = 'kiez' | 'bezirk' | 'layer' | 'home';
 
-/** L8: Klick auf ein Ziel der Kiez-, Bezirks- oder Layer-Seite. Keine Slugs, keine IDs. */
+/** L8: Klick auf ein Ziel der Kiez-, Bezirks-, Layer-Seite oder der Startseite. Keine Slugs, keine IDs. */
 export function trackLanding(action: LandingAction, pageType: LandingPageType): void {
 	// interactive:false hält die Session im Bounce, damit Zeiträume vor und nach L8 vergleichbar bleiben.
 	trackEvent('Landing', { action, page_type: pageType }, { interactive: false });

@@ -3,19 +3,11 @@
 	import { page } from '$app/state';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import HomeHero from '$lib/components/home/home-hero.svelte';
-	import HomeHook from '$lib/components/home/home-hook.svelte';
-	import HomeFinderTeaser from '$lib/components/home/home-finder-teaser.svelte';
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import HomeSteps from '$lib/components/home/home-steps.svelte';
-	import HomeQuickLinks from '$lib/components/home/home-quick-links.svelte';
-	import HomeLayerTeasers from '$lib/components/home/home-layer-teasers.svelte';
-	import HomeTopKieze from '$lib/components/home/home-top-kieze.svelte';
-	import HomeFeaturedBezirke from '$lib/components/home/home-featured-bezirke.svelte';
-	import HomeOpenBlock from '$lib/components/home/home-open-block.svelte';
+	import HomeSearchHero from '$lib/components/home/home-search-hero.svelte';
+	import HomeSeasonNote from '$lib/components/home/home-season-note.svelte';
+	import HomeTasks from '$lib/components/home/home-tasks.svelte';
+	import HomeTrust from '$lib/components/home/home-trust.svelte';
 	import HomeUpdatesTeaser from '$lib/components/home/home-updates-teaser.svelte';
-	import HomeWahlTeaser from '$lib/components/home/home-wahl-teaser.svelte';
-	import HomeSaisonTeasers from '$lib/components/home/home-saison-teasers.svelte';
 	import { buildWebSite } from '$lib/seo/jsonld-website.js';
 	import { buildOrganization } from '$lib/seo/jsonld-organization.js';
 	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
@@ -65,19 +57,10 @@
 <JsonLd data={websiteJsonLd} testid="website-jsonld" />
 <JsonLd data={organizationJsonLd} testid="organization-jsonld" />
 
-<article class="mx-auto max-w-5xl space-y-16 px-4 py-12" data-testid="home-landing">
-	<HomeHero featured={data.featured} />
-	{#if featureFlags.kiezFinder}
-		<HomeFinderTeaser />
-	{/if}
-	<HomeHook />
-	<HomeSteps />
-	<HomeQuickLinks />
-	<HomeWahlTeaser wahlCount={data.wahlCount} />
-	<HomeSaisonTeasers />
-	<HomeFeaturedBezirke />
-	<HomeTopKieze items={data.topKieze} />
-	<HomeLayerTeasers layerCount={data.layerCount} />
+<article class="mx-auto max-w-6xl space-y-10 px-4 py-10" data-testid="home-landing">
+	<HomeSearchHero />
+	<HomeSeasonNote />
+	<HomeTasks stories={data.stories} />
 	<HomeUpdatesTeaser items={data.updates} />
-	<HomeOpenBlock />
+	<HomeTrust />
 </article>

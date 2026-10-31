@@ -63,18 +63,18 @@ describe('mapHomeUpdateEntry', () => {
 		expect(result.summaryIsDeFallback).toBe(false);
 	});
 
-	it('categoryLabel: de bleibt der rohe Slug, en aller 6 Kategorien übersetzt', () => {
-		const cases: Array<[UpdateEntry['frontmatter']['category'], string]> = [
-			['daten-update', 'Data update'],
-			['feature', 'Feature'],
-			['methodik', 'Methodology'],
-			['datenquelle', 'Data source'],
-			['lizenz', 'Licence'],
-			['presse', 'Press']
+	it('categoryLabel: DE und EN ausgeschrieben, nie der rohe Slug (#171-Nachtrag)', () => {
+		const cases: Array<[UpdateEntry['frontmatter']['category'], string, string]> = [
+			['daten-update', 'Daten-Update', 'Data update'],
+			['feature', 'Funktion', 'Feature'],
+			['methodik', 'Methodik', 'Methodology'],
+			['datenquelle', 'Datenquelle', 'Data source'],
+			['lizenz', 'Lizenz', 'Licence'],
+			['presse', 'Presse', 'Press']
 		];
-		for (const [category, expectedEn] of cases) {
+		for (const [category, expectedDe, expectedEn] of cases) {
 			const entry = makeEntry({ category });
-			expect(mapHomeUpdateEntry(entry, 'de').categoryLabel).toBe(category);
+			expect(mapHomeUpdateEntry(entry, 'de').categoryLabel).toBe(expectedDe);
 			expect(mapHomeUpdateEntry(entry, 'en').categoryLabel).toBe(expectedEn);
 		}
 	});

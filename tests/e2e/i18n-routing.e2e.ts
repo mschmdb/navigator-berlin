@@ -686,7 +686,9 @@ test.describe('i18n Block B2: Startseite /en', () => {
 		page
 	}) => {
 		await page.goto('/en');
-		await expect(page.getByRole('heading', { level: 1 })).toHaveText('Berlin in data.');
+		await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+			'How is life at your address?'
+		);
 		// Update-Teaser ausgeschlossen: ohne `title_en`/`summary_en` zeigt er
 		// bewusst deutschen Fallback-Content mit `lang="de"` (Entscheidung 2A),
 		// das ist kein Uebersetzungs-Fehler. Entfernt aus dem LIVE-DOM (nicht
@@ -715,62 +717,51 @@ test.describe('i18n Block B2: Startseite /en', () => {
 		await expect(updates.locator('[lang="de"]')).toHaveCount(0);
 	});
 
-	test('GET /en: interne Startseiten-Links bleiben unter /en (Hero, Quick-Link, Wahl-Karte, Layer-Teaser)', async ({
-		page
-	}) => {
-		await page.goto('/en');
-		await expect(page.getByTestId('home-hero-cta-map')).toHaveAttribute('href', '/en/explore');
-		await expect(page.getByTestId('home-hero-cta-ranking')).toHaveAttribute(
-			'href',
-			'/en/kiez-score'
-		);
-		await expect(page.getByTestId('home-wahl-card-2026-bvv')).toHaveAttribute(
-			'href',
-			'/en/berlin-wahlen/2026-bvv'
-		);
-		await expect(page.getByTestId('home-wahl-teaser-all')).toHaveAttribute(
-			'href',
-			'/en/berlin-wahlen'
-		);
-		await expect(page.getByTestId('home-hitze-teaser-landing')).toHaveAttribute(
-			'href',
-			'/en/hitze'
-		);
-	});
-
-	// Review-Fund: weitere Startseiten-Sections ergänzt (Quick-Link mit
-	// unverändertem `q=`-Datenschlüssel, Layer-Teaser, Featured-Bezirk,
-	// Top-Kiez, Updates-Übersicht, Open-Block).
-	test('GET /en: Quick-Link, Layer-Teaser, Featured-Bezirk, Top-Kiez, Updates, Open-Block bleiben unter /en', async ({
+	test('GET /en: interne Startseiten-Links bleiben unter /en (Aufgaben, Beispiele, Saison, Updates, Vertrauensfuß)', async ({
 		page
 	}) => {
 		await page.goto('/en');
 
-		const quickLink = page.getByTestId('home-quick-link-pariser-platz');
-		await expect(quickLink).toHaveAttribute('href', /^\/en\/explore\?/);
-		const quickLinkHref = await quickLink.getAttribute('href');
-		// Datenschlüssel `q=` bleibt der deutsche Geocoding-Suchstring.
-		expect(quickLinkHref).toContain('q=Pariser+Platz');
-
-		const layerLink = page.getByTestId('home-layer-teasers').locator('a').first();
-		await expect(layerLink).toHaveAttribute('href', /^\/en\/layer\//);
-
-		const bezirkLink = page.getByTestId('home-featured-bezirke').locator('a').first();
-		await expect(bezirkLink).toHaveAttribute('href', /^\/en\/bezirk\//);
-
-		const kiezSection = page.getByTestId('home-top-kieze');
-		if ((await kiezSection.count()) > 0) {
-			// `.first()` allein träfe den "View ranking"-Link im Header (kommt
-			// vor der `<ol>` im DOM) statt eines Kiez-Eintrags.
-			const kiezLink = kiezSection.locator('ol a').first();
-			await expect(kiezLink).toHaveAttribute('href', /^\/en\/kiez\//);
+		const taskHrefs: Record<string, string[]> = {
+			gegend: ['/en/explore', '/en/explore?finder=1'],
+			kieze: ['/en/kieze', '/en/bezirke', '/en/kiez-score'],
+			klima: ['/en/hitze', '/en/kaelte', '/en/daten'],
+			wahlen: [
+				'/en/berlin-wahlen',
+				'/en/berlin-wahlen/2026-agh-zweitstimme',
+				'/en/berlin-wahlen/2025-btw-zweitstimme'
+			]
+		};
+		for (const [id, hrefs] of Object.entries(taskHrefs)) {
+			const links = page
+				.getByTestId(`home-task-${id}`)
+				.locator('[data-testid="home-task-links"] a');
+			await expect(links).toHaveCount(hrefs.length);
+			for (const [index, href] of hrefs.entries()) {
+				await expect(links.nth(index)).toHaveAttribute('href', href);
+			}
 		}
+
+		await expect(
+			page.getByTestId('home-task-kieze').locator('a[href="/en/bezirk/mitte"]')
+		).toHaveCount(1);
+
+		const example = page.getByTestId('home-search-examples').locator('a').first();
+		await expect(example).toHaveAttribute('href', /^\/en\/explore\?/);
+		// Datenschlüssel `q=` bleibt der deutsche Geocoding-Suchstring.
+		expect(await example.getAttribute('href')).toContain('q=Hermannplatz');
+
+		await expect(page.getByTestId('home-season-note').locator('a')).toHaveAttribute(
+			'href',
+			/^\/en\/(hitze|kaelte)$/
+		);
 
 		const updatesAllLink = page.getByRole('link', { name: 'All updates' });
 		await expect(updatesAllLink).toHaveAttribute('href', '/en/updates');
 
-		const openBlockLink = page.getByRole('link', { name: 'All sources with licence' });
-		await expect(openBlockLink).toHaveAttribute('href', '/en/lizenzen');
+		const trustLinks = page.getByTestId('home-trust').locator('nav a');
+		await expect(trustLinks.first()).toHaveAttribute('href', '/en/methodik');
+		await expect(trustLinks.last()).toHaveAttribute('href', '/en/ueber');
 	});
 });
 

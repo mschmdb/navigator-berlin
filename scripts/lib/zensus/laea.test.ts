@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { laeaToWgs84 } from './laea.js';
+import { laeaToWgs84, wgs84ToLaea } from './laea.js';
 
 describe('laeaToWgs84', () => {
 	it('projiziert eine Berliner Zelle (EPSG:3035) nach WGS84', () => {
@@ -12,5 +12,14 @@ describe('laeaToWgs84', () => {
 		const [lon, lat] = laeaToWgs84(4549850, 3270050);
 		expect(lon).toBeGreaterThan(13);
 		expect(lat).toBeGreaterThan(52);
+	});
+});
+
+describe('wgs84ToLaea', () => {
+	it('ist die Umkehrung von laeaToWgs84', () => {
+		const [lon, lat] = laeaToWgs84(4549850, 3270050);
+		const { x, y } = wgs84ToLaea(lon, lat);
+		expect(Math.abs(x - 4549850)).toBeLessThan(0.01);
+		expect(Math.abs(y - 3270050)).toBeLessThan(0.01);
 	});
 });

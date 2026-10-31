@@ -511,3 +511,41 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-104-quellen-komma.md`
   summary: Der Hinweis „öffnet neuen Tab“ an Kältehilfe-Quellen liegt neben dem Link statt darin und fehlt im Accessible Name.
   evidence: `quellen-zeile.svelte` (vorher `notfall-block.svelte`) setzt das `sr-only`-Span nach `</a>`; in Link-Listen von Screenreadern fehlt der Hinweis.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: Startseiten-Klicks (task_link, search_example) je Aufgabe/Link unterscheidbar machen und per Komponententest absichern.
+  evidence: Alle 11 Aufgaben-Links senden dieselbe Aktion; Tests prüfen nur `trackLanding` direkt.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: Startseiten-Aufgabe „Gegend prüfen“ mit ausgeschaltetem kiezFinder-Flag testen.
+  evidence: Unit- und E2E-Test prüfen nur Flag an.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: AddressSearch fängt Geocoder-Fehler nicht ab (Header und Startseite).
+  evidence: maybe-false; `address-search.svelte` nutzt try/finally ohne catch. Klären mit einem Test, der geocode rejecten lässt und auf unhandled rejection prüft.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: Screenshots `static/berlin-navigator-multilayer.webp` und `-kiez-finder.webp` nach Startseiten-Umbau prüfen und ggf. mit README-Verweisen entfernen.
+  evidence: Kein Code nutzt sie mehr, README referenziert sie noch.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: E2E-Test für die Startseiten-Suche mit echtem Geocoder/goto (DE und /en), sobald der Combobox-Hydration-Bug gelöst ist.
+  evidence: maybe-false; Unit-Test injiziert geocode/navigate. `tests/e2e/i18n-inspector.e2e.ts` dokumentiert „element was detached“ bei fill().
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: `home_page_og_alt` nutzt „·“ und den alten Slogan „Berlin in Daten“.
+  evidence: Vorbestehender String, verstößt gegen die „·“-Regel in CLAUDE.md.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-170-startseite-vorschauen.md`
+  summary: Inspector-Score-Ring auf /en zeigt deutsche Dimensionsnamen („Ruhe & Luft“, „Wohnschutz“) und „Gesamt“.
+  evidence: Sichtbar in `static/home/en/kiez-score.webp` (Aufnahme 31.10.); Liste darunter ist korrekt englisch.
+  resolved: 31.10.2026, Inspector-Section reicht übersetzte Labels an den Ring durch; EN-Vorschauen neu aufgenommen.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-171-startseite-kachel-raster.md`
+  summary: Kein Komponententest prüft, dass Task- und Bezirk-Links `trackLanding('task_link','home')` auslösen.
+  evidence: Grep über alle Tests findet `trackLanding` nur in `plausible.test.ts`; Fix: Modul in `home-tasks.svelte.test.ts` mocken.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-160-stories-handschrift.md`
+  summary: Gelb #efbd2c, Gold #b88a2e und Tönung #d4c39e liegen unter 3:1 auf Papier (WCAG 1.4.11); #163 entscheidet über Tinten-Kontur oder Ähnliches.
+  evidence: Kontrast gerechnet im Review gh-160 (1,41 / 2,52 / 1,40 zu 1); steht in `docs/DESIGN.md` unter „Offen“.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-162-stories-route.md`
+  summary: Stories-Seiten nutzen das Startseiten-OG-Bild, der Alt-Text beschreibt etwas anderes.
+  evidence: `/og/page/home.png` in Übersicht und Beitrag; eigenes Bild gehört zu #165.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-161-stories-kennzahlen.md`
+  summary: `haltestelle400mAnteil` (400 m, alle Verkehrsmittel) trennt die Kieze kaum; 53 von 143 liegen bei 99 % oder mehr. Für #163 prüfen, ob ein Wert nur für Schiene sinnvoller ist.
+  evidence: Review gh-161, ausgezählt in `static/data/stories-kennzahlen.json`.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-161-stories-kennzahlen.md`
+  summary: `gruen` ist flächengewichtet wie in den Skizzen; einwohnergewichtet wäre näher an der Bedeutung „Grünversorgung pro Einwohner“. Frage an Matze.
+  evidence: Review gh-161; große, dünn besiedelte Planungsräume dominieren sonst den Kiezwert.

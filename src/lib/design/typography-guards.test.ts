@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -150,5 +150,28 @@ describe.each(['de', 'en'])('Messages %s (GH-87)', (lang) => {
 
 	it('nutzt keinen Mittelpunkt als Meta-Trenner', () => {
 		expect(offending(messages, '·', MIDDOT_ALLOWED)).toEqual([]);
+	});
+});
+
+describe('Schriften-Assets und Lizenzhinweis', () => {
+	it('verweist jede @font-face-URL in app.css auf eine vorhandene Datei', () => {
+		const css = readFileSync(join(ROOT, 'src', 'app.css'), 'utf8');
+		const urls = [...css.matchAll(/url\('\/fonts\/([^']+)'\)/g)].map((m) => m[1]);
+		expect(urls.length).toBeGreaterThan(0);
+		for (const file of urls) {
+			expect(existsSync(join(ROOT, 'static', 'fonts', file)), file).toBe(true);
+		}
+	});
+
+	it('nennt Jost im Lizenztext (de, en) und verlinkt die Quelle', () => {
+		for (const lang of ['de', 'en']) {
+			const messages = JSON.parse(readFileSync(join(ROOT, 'messages', `${lang}.json`), 'utf8'));
+			expect(messages.lizenzen_schriften_p1).toMatch(/Jost/);
+		}
+		const page = readFileSync(
+			join(SRC, 'routes', '(with-header)', 'lizenzen', '+page.svelte'),
+			'utf8'
+		);
+		expect(page).toContain('github.com/indestructible-type/Jost');
 	});
 });
