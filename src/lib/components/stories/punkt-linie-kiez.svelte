@@ -263,7 +263,6 @@
 						onpointerleave={() => (hovered = null)}
 						class="flex min-h-(--target-min) items-center gap-3 border-b px-1 py-1"
 						style:border-color={active === r.key ? STORY_INK : 'transparent'}
-						style:font-weight={active === r.key ? 600 : 400}
 					>
 						<svg viewBox="0 0 26 26" width="26" height="26" aria-hidden="true" class="shrink-0">
 							{#if r.key === 'circle'}

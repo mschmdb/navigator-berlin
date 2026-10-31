@@ -128,6 +128,17 @@ describe('punkt-linie-kiez.svelte', () => {
 		expect((shape('square') as unknown as HTMLElement).dataset.active).toBeUndefined();
 	});
 
+	it('ändert beim Hervorheben die Schriftstärke der Legende nicht (kein Umbruch, kein Springen)', async () => {
+		render(PunktLinieKiez, { name: NAME, kennzahlen: fk });
+		const before = getComputedStyle(row('lines')).fontWeight;
+		const height = row('lines').getBoundingClientRect().height;
+		row('lines').dispatchEvent(new PointerEvent('pointerenter', { bubbles: false }));
+		await Promise.resolve();
+		expect(row('lines').dataset.active).toBe('true');
+		expect(getComputedStyle(row('lines')).fontWeight).toBe(before);
+		expect(row('lines').getBoundingClientRect().height).toBe(height);
+	});
+
 	it('hebt beim Hover über die Form die Legendenzeile hervor', async () => {
 		render(PunktLinieKiez, { name: NAME, kennzahlen: fk });
 		shape('bar')!.dispatchEvent(new PointerEvent('pointerenter', { bubbles: false }));
