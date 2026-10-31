@@ -114,3 +114,31 @@ pnpm data:layer-aggregate   # → static/layer-aggregates/layer-aggregates.json
 
 Siehe Story-Files in `docs/process/implementation-artifacts/` für Details pro
 Schritt.
+
+## Data Stories: Kennzahlen (gh-161)
+
+Beide Skripte laufen manuell, nicht in `prebuild` oder CI. Der Build braucht kein Netz.
+
+| Skript                         | Ausgabe                                                                                                                                                                                             |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm fetch:zensus-gehweite`   | `static/data/zensus-gehweite-lor.json`: Einwohner und Einwohner mit Haltestelle in 400 m Luftlinie pro Planungsraum (Zensus-2022-Gitter, 100 m). Braucht `7zz`. `-- --refresh` lädt das Archiv neu. |
+| `pnpm data:stories-kennzahlen` | `static/data/stories-kennzahlen.json`: Kennzahlen pro Kiez und Bezirk mit Quelle und Stand. Fehlende Werte bleiben `null`.                                                                          |
+
+**Reihenfolge:** Vor `data:stories-kennzahlen` müssen `static/data/einwohner-lor.json`
+(`pnpm fetch:einwohner`), `static/data/laerm-db-lor.json` (`pnpm data:laerm-db`), die Layer in
+`static/layers` (`pnpm data:fetch`, `pnpm fetch:zensus-altbau`) und
+`zensus-gehweite-lor.json` (`pnpm fetch:zensus-gehweite`) vorliegen. Fehlt eine Datei, bricht das Skript ab.
+Fehlende Joins (Planungsraum in einer Quelle nicht vorhanden, unbekannte Kategorien, Clubs ohne Point) meldet es als Warnung.
+
+**Felder:**
+
+- `hitze`, `gruen`: ordinal auf 0 bis 1 abgebildet (hitze: gering 0, mittel 0,5, hoch 1; gruen: schlecht 0, mittel 0,5, gut 1) und nach Fläche gewichtet.
+- `altbauAnteil`, `haltestelle400mAnteil`: Anteile von 0 bis 1.
+- `laermDb`: arithmetisches, nach `count` gewichtetes Mittel der L_DEN-Werte. Das ist eine Vereinfachung, kein energetisches Mittel.
+- Rundung: `bewohnerProKm2` ganzzahlig, `laermDb` eine Dezimale, Anteile vier Dezimalen.
+
+**Zwei Bevölkerungsbasen:** `bewohner` und `bewohnerProKm2` nutzen das Melderegister (Stichtag 2024-12-31).
+`haltestelle400mAnteil` nutzt das Zensus-2022-Gitter (Stichtag 2022-05-15). Die Summen unterscheiden sich.
+
+**Haltestellen-Anteil:** Luftlinie 400 m vom Zellmittelpunkt zur nächsten Haltestelle, alle Verkehrsmittel
+einschließlich Bus. Die Berechnung kennt nur Berliner Haltestellen. Zellen am Stadtrand können leicht unterschätzt sein.

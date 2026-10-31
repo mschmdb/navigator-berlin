@@ -1,0 +1,2737 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-31T14:57:04.208Z",
+  "stichtag": "2022-05-15",
+  "radiusM": 400,
+  "sources": [
+    {
+      "name": "Zensus 2022, Bevölkerungszahl im 100-m-Gitter (Destatis)",
+      "url": "https://www.destatis.de/static/DE/zensus/gitterdaten/Zensus2022_Bevoelkerungszahl.zip",
+      "stand": "2022-05-15"
+    },
+    {
+      "name": "Haltestellen U-Bahn, S-Bahn, Tram, Bus (OpenStreetMap)",
+      "url": "https://overpass-api.de/api/interpreter",
+      "file": "ubahn-stationen.1165bc26.geojson, sbahn-stationen.310a436a.geojson, tram-haltestellen.019234e8.geojson, bus-haltestellen.a5425264.geojson",
+      "stand": "2026-05-16"
+    },
+    {
+      "name": "LOR-Planungsräume 2021",
+      "url": "https://daten.odis-berlin.de/de/dataset/lor_planungsgraeume_2021/data.geojson",
+      "file": "lor-planungsraum.e35873e7.geojson",
+      "stand": "2021-01-01"
+    }
+  ],
+  "records": [
+    {
+      "plrId": "01100101",
+      "einwohner": 3130,
+      "einwohnerMitHaltestelle": 3130
+    },
+    {
+      "plrId": "01100102",
+      "einwohner": 2061,
+      "einwohnerMitHaltestelle": 2061
+    },
+    {
+      "plrId": "01100103",
+      "einwohner": 4474,
+      "einwohnerMitHaltestelle": 4474
+    },
+    {
+      "plrId": "01100104",
+      "einwohner": 5111,
+      "einwohnerMitHaltestelle": 5111
+    },
+    {
+      "plrId": "01100205",
+      "einwohner": 2722,
+      "einwohnerMitHaltestelle": 2722
+    },
+    {
+      "plrId": "01100206",
+      "einwohner": 1926,
+      "einwohnerMitHaltestelle": 1926
+    },
+    {
+      "plrId": "01100207",
+      "einwohner": 7527,
+      "einwohnerMitHaltestelle": 7527
+    },
+    {
+      "plrId": "01100308",
+      "einwohner": 7766,
+      "einwohnerMitHaltestelle": 7766
+    },
+    {
+      "plrId": "01100309",
+      "einwohner": 12468,
+      "einwohnerMitHaltestelle": 12468
+    },
+    {
+      "plrId": "01100310",
+      "einwohner": 9664,
+      "einwohnerMitHaltestelle": 9664
+    },
+    {
+      "plrId": "01100311",
+      "einwohner": 7979,
+      "einwohnerMitHaltestelle": 7979
+    },
+    {
+      "plrId": "01100312",
+      "einwohner": 8999,
+      "einwohnerMitHaltestelle": 8999
+    },
+    {
+      "plrId": "01100313",
+      "einwohner": 9553,
+      "einwohnerMitHaltestelle": 9553
+    },
+    {
+      "plrId": "01100414",
+      "einwohner": 4728,
+      "einwohnerMitHaltestelle": 4728
+    },
+    {
+      "plrId": "01100415",
+      "einwohner": 12149,
+      "einwohnerMitHaltestelle": 12149
+    },
+    {
+      "plrId": "01100416",
+      "einwohner": 12840,
+      "einwohnerMitHaltestelle": 12840
+    },
+    {
+      "plrId": "01200517",
+      "einwohner": 4233,
+      "einwohnerMitHaltestelle": 4233
+    },
+    {
+      "plrId": "01200518",
+      "einwohner": 5462,
+      "einwohnerMitHaltestelle": 5462
+    },
+    {
+      "plrId": "01200519",
+      "einwohner": 8290,
+      "einwohnerMitHaltestelle": 7679
+    },
+    {
+      "plrId": "01200520",
+      "einwohner": 8789,
+      "einwohnerMitHaltestelle": 8789
+    },
+    {
+      "plrId": "01200521",
+      "einwohner": 4022,
+      "einwohnerMitHaltestelle": 4022
+    },
+    {
+      "plrId": "01200522",
+      "einwohner": 10864,
+      "einwohnerMitHaltestelle": 10864
+    },
+    {
+      "plrId": "01200623",
+      "einwohner": 10522,
+      "einwohnerMitHaltestelle": 10522
+    },
+    {
+      "plrId": "01200624",
+      "einwohner": 5573,
+      "einwohnerMitHaltestelle": 5573
+    },
+    {
+      "plrId": "01200625",
+      "einwohner": 5807,
+      "einwohnerMitHaltestelle": 5807
+    },
+    {
+      "plrId": "01200626",
+      "einwohner": 5775,
+      "einwohnerMitHaltestelle": 5775
+    },
+    {
+      "plrId": "01200627",
+      "einwohner": 2893,
+      "einwohnerMitHaltestelle": 2893
+    },
+    {
+      "plrId": "01200628",
+      "einwohner": 3671,
+      "einwohnerMitHaltestelle": 3671
+    },
+    {
+      "plrId": "01200629",
+      "einwohner": 5319,
+      "einwohnerMitHaltestelle": 4738
+    },
+    {
+      "plrId": "01300730",
+      "einwohner": 5967,
+      "einwohnerMitHaltestelle": 5967
+    },
+    {
+      "plrId": "01300731",
+      "einwohner": 8427,
+      "einwohnerMitHaltestelle": 8427
+    },
+    {
+      "plrId": "01300732",
+      "einwohner": 9110,
+      "einwohnerMitHaltestelle": 8750
+    },
+    {
+      "plrId": "01300733",
+      "einwohner": 11214,
+      "einwohnerMitHaltestelle": 11126
+    },
+    {
+      "plrId": "01300834",
+      "einwohner": 14087,
+      "einwohnerMitHaltestelle": 14087
+    },
+    {
+      "plrId": "01300835",
+      "einwohner": 9700,
+      "einwohnerMitHaltestelle": 9700
+    },
+    {
+      "plrId": "01300836",
+      "einwohner": 14099,
+      "einwohnerMitHaltestelle": 14099
+    },
+    {
+      "plrId": "01400937",
+      "einwohner": 10728,
+      "einwohnerMitHaltestelle": 10576
+    },
+    {
+      "plrId": "01400938",
+      "einwohner": 9036,
+      "einwohnerMitHaltestelle": 9036
+    },
+    {
+      "plrId": "01400939",
+      "einwohner": 4510,
+      "einwohnerMitHaltestelle": 4510
+    },
+    {
+      "plrId": "01400940",
+      "einwohner": 6545,
+      "einwohnerMitHaltestelle": 6383
+    },
+    {
+      "plrId": "01400941",
+      "einwohner": 3148,
+      "einwohnerMitHaltestelle": 3148
+    },
+    {
+      "plrId": "01400942",
+      "einwohner": 8568,
+      "einwohnerMitHaltestelle": 8568
+    },
+    {
+      "plrId": "01401043",
+      "einwohner": 6992,
+      "einwohnerMitHaltestelle": 6992
+    },
+    {
+      "plrId": "01401044",
+      "einwohner": 8859,
+      "einwohnerMitHaltestelle": 8859
+    },
+    {
+      "plrId": "01401045",
+      "einwohner": 4985,
+      "einwohnerMitHaltestelle": 4985
+    },
+    {
+      "plrId": "01401046",
+      "einwohner": 7769,
+      "einwohnerMitHaltestelle": 7769
+    },
+    {
+      "plrId": "01401047",
+      "einwohner": 6606,
+      "einwohnerMitHaltestelle": 6606
+    },
+    {
+      "plrId": "01401048",
+      "einwohner": 8657,
+      "einwohnerMitHaltestelle": 8657
+    },
+    {
+      "plrId": "01401049",
+      "einwohner": 5083,
+      "einwohnerMitHaltestelle": 5083
+    },
+    {
+      "plrId": "02100101",
+      "einwohner": 5440,
+      "einwohnerMitHaltestelle": 5440
+    },
+    {
+      "plrId": "02100102",
+      "einwohner": 7739,
+      "einwohnerMitHaltestelle": 7739
+    },
+    {
+      "plrId": "02100103",
+      "einwohner": 4171,
+      "einwohnerMitHaltestelle": 4171
+    },
+    {
+      "plrId": "02100104",
+      "einwohner": 6196,
+      "einwohnerMitHaltestelle": 6196
+    },
+    {
+      "plrId": "02100105",
+      "einwohner": 7578,
+      "einwohnerMitHaltestelle": 7378
+    },
+    {
+      "plrId": "02100106",
+      "einwohner": 4810,
+      "einwohnerMitHaltestelle": 4689
+    },
+    {
+      "plrId": "02200207",
+      "einwohner": 1977,
+      "einwohnerMitHaltestelle": 1977
+    },
+    {
+      "plrId": "02200208",
+      "einwohner": 5936,
+      "einwohnerMitHaltestelle": 5936
+    },
+    {
+      "plrId": "02200209",
+      "einwohner": 9831,
+      "einwohnerMitHaltestelle": 9831
+    },
+    {
+      "plrId": "02200210",
+      "einwohner": 11463,
+      "einwohnerMitHaltestelle": 11463
+    },
+    {
+      "plrId": "02200211",
+      "einwohner": 12718,
+      "einwohnerMitHaltestelle": 12718
+    },
+    {
+      "plrId": "02200212",
+      "einwohner": 7635,
+      "einwohnerMitHaltestelle": 7635
+    },
+    {
+      "plrId": "02200213",
+      "einwohner": 10649,
+      "einwohnerMitHaltestelle": 10649
+    },
+    {
+      "plrId": "02300314",
+      "einwohner": 7276,
+      "einwohnerMitHaltestelle": 7276
+    },
+    {
+      "plrId": "02300315",
+      "einwohner": 7716,
+      "einwohnerMitHaltestelle": 7716
+    },
+    {
+      "plrId": "02300316",
+      "einwohner": 4075,
+      "einwohnerMitHaltestelle": 4075
+    },
+    {
+      "plrId": "02300417",
+      "einwohner": 7330,
+      "einwohnerMitHaltestelle": 7330
+    },
+    {
+      "plrId": "02300418",
+      "einwohner": 7272,
+      "einwohnerMitHaltestelle": 7272
+    },
+    {
+      "plrId": "02300419",
+      "einwohner": 8733,
+      "einwohnerMitHaltestelle": 8295
+    },
+    {
+      "plrId": "02400520",
+      "einwohner": 5860,
+      "einwohnerMitHaltestelle": 5860
+    },
+    {
+      "plrId": "02400521",
+      "einwohner": 8083,
+      "einwohnerMitHaltestelle": 8083
+    },
+    {
+      "plrId": "02400522",
+      "einwohner": 10563,
+      "einwohnerMitHaltestelle": 10368
+    },
+    {
+      "plrId": "02400623",
+      "einwohner": 11697,
+      "einwohnerMitHaltestelle": 11697
+    },
+    {
+      "plrId": "02400624",
+      "einwohner": 9508,
+      "einwohnerMitHaltestelle": 9508
+    },
+    {
+      "plrId": "02400625",
+      "einwohner": 1123,
+      "einwohnerMitHaltestelle": 1123
+    },
+    {
+      "plrId": "02500726",
+      "einwohner": 9558,
+      "einwohnerMitHaltestelle": 9558
+    },
+    {
+      "plrId": "02500727",
+      "einwohner": 6244,
+      "einwohnerMitHaltestelle": 6244
+    },
+    {
+      "plrId": "02500728",
+      "einwohner": 8944,
+      "einwohnerMitHaltestelle": 8944
+    },
+    {
+      "plrId": "02500729",
+      "einwohner": 4915,
+      "einwohnerMitHaltestelle": 4304
+    },
+    {
+      "plrId": "02500830",
+      "einwohner": 4465,
+      "einwohnerMitHaltestelle": 4465
+    },
+    {
+      "plrId": "02500831",
+      "einwohner": 6836,
+      "einwohnerMitHaltestelle": 6836
+    },
+    {
+      "plrId": "02500832",
+      "einwohner": 8443,
+      "einwohnerMitHaltestelle": 8443
+    },
+    {
+      "plrId": "02500833",
+      "einwohner": 9273,
+      "einwohnerMitHaltestelle": 9273
+    },
+    {
+      "plrId": "02500834",
+      "einwohner": 9737,
+      "einwohnerMitHaltestelle": 9737
+    },
+    {
+      "plrId": "02500835",
+      "einwohner": 7314,
+      "einwohnerMitHaltestelle": 7291
+    },
+    {
+      "plrId": "02500836",
+      "einwohner": 4545,
+      "einwohnerMitHaltestelle": 4545
+    },
+    {
+      "plrId": "03100101",
+      "einwohner": 4226,
+      "einwohnerMitHaltestelle": 2627
+    },
+    {
+      "plrId": "03100102",
+      "einwohner": 3019,
+      "einwohnerMitHaltestelle": 2816
+    },
+    {
+      "plrId": "03100103",
+      "einwohner": 9132,
+      "einwohnerMitHaltestelle": 9125
+    },
+    {
+      "plrId": "03200204",
+      "einwohner": 2031,
+      "einwohnerMitHaltestelle": 1668
+    },
+    {
+      "plrId": "03200205",
+      "einwohner": 8639,
+      "einwohnerMitHaltestelle": 8082
+    },
+    {
+      "plrId": "03200206",
+      "einwohner": 6332,
+      "einwohnerMitHaltestelle": 6306
+    },
+    {
+      "plrId": "03200207",
+      "einwohner": 10689,
+      "einwohnerMitHaltestelle": 10303
+    },
+    {
+      "plrId": "03200308",
+      "einwohner": 5328,
+      "einwohnerMitHaltestelle": 4509
+    },
+    {
+      "plrId": "03200309",
+      "einwohner": 5127,
+      "einwohnerMitHaltestelle": 3291
+    },
+    {
+      "plrId": "03200310",
+      "einwohner": 7631,
+      "einwohnerMitHaltestelle": 6492
+    },
+    {
+      "plrId": "03300411",
+      "einwohner": 10625,
+      "einwohnerMitHaltestelle": 10312
+    },
+    {
+      "plrId": "03300412",
+      "einwohner": 4995,
+      "einwohnerMitHaltestelle": 3604
+    },
+    {
+      "plrId": "03300413",
+      "einwohner": 3188,
+      "einwohnerMitHaltestelle": 2330
+    },
+    {
+      "plrId": "03300514",
+      "einwohner": 6637,
+      "einwohnerMitHaltestelle": 6014
+    },
+    {
+      "plrId": "03300515",
+      "einwohner": 72,
+      "einwohnerMitHaltestelle": 59
+    },
+    {
+      "plrId": "03300516",
+      "einwohner": 7513,
+      "einwohnerMitHaltestelle": 6332
+    },
+    {
+      "plrId": "03300517",
+      "einwohner": 1059,
+      "einwohnerMitHaltestelle": 506
+    },
+    {
+      "plrId": "03400618",
+      "einwohner": 4465,
+      "einwohnerMitHaltestelle": 4148
+    },
+    {
+      "plrId": "03400619",
+      "einwohner": 10148,
+      "einwohnerMitHaltestelle": 9856
+    },
+    {
+      "plrId": "03400620",
+      "einwohner": 3436,
+      "einwohnerMitHaltestelle": 2909
+    },
+    {
+      "plrId": "03400721",
+      "einwohner": 11408,
+      "einwohnerMitHaltestelle": 11298
+    },
+    {
+      "plrId": "03400722",
+      "einwohner": 3235,
+      "einwohnerMitHaltestelle": 2741
+    },
+    {
+      "plrId": "03400723",
+      "einwohner": 7583,
+      "einwohnerMitHaltestelle": 7583
+    },
+    {
+      "plrId": "03400724",
+      "einwohner": 7276,
+      "einwohnerMitHaltestelle": 7022
+    },
+    {
+      "plrId": "03400725",
+      "einwohner": 7322,
+      "einwohnerMitHaltestelle": 7304
+    },
+    {
+      "plrId": "03400826",
+      "einwohner": 6866,
+      "einwohnerMitHaltestelle": 6852
+    },
+    {
+      "plrId": "03400827",
+      "einwohner": 8099,
+      "einwohnerMitHaltestelle": 7369
+    },
+    {
+      "plrId": "03400828",
+      "einwohner": 4670,
+      "einwohnerMitHaltestelle": 4670
+    },
+    {
+      "plrId": "03400829",
+      "einwohner": 5818,
+      "einwohnerMitHaltestelle": 5818
+    },
+    {
+      "plrId": "03400830",
+      "einwohner": 8883,
+      "einwohnerMitHaltestelle": 8883
+    },
+    {
+      "plrId": "03400831",
+      "einwohner": 473,
+      "einwohnerMitHaltestelle": 473
+    },
+    {
+      "plrId": "03500932",
+      "einwohner": 5773,
+      "einwohnerMitHaltestelle": 5381
+    },
+    {
+      "plrId": "03500933",
+      "einwohner": 7802,
+      "einwohnerMitHaltestelle": 7802
+    },
+    {
+      "plrId": "03500934",
+      "einwohner": 10207,
+      "einwohnerMitHaltestelle": 10207
+    },
+    {
+      "plrId": "03500935",
+      "einwohner": 6164,
+      "einwohnerMitHaltestelle": 6164
+    },
+    {
+      "plrId": "03500936",
+      "einwohner": 9389,
+      "einwohnerMitHaltestelle": 8961
+    },
+    {
+      "plrId": "03501037",
+      "einwohner": 8062,
+      "einwohnerMitHaltestelle": 8002
+    },
+    {
+      "plrId": "03501038",
+      "einwohner": 7295,
+      "einwohnerMitHaltestelle": 7165
+    },
+    {
+      "plrId": "03601139",
+      "einwohner": 3333,
+      "einwohnerMitHaltestelle": 3333
+    },
+    {
+      "plrId": "03601140",
+      "einwohner": 5215,
+      "einwohnerMitHaltestelle": 4844
+    },
+    {
+      "plrId": "03601141",
+      "einwohner": 7130,
+      "einwohnerMitHaltestelle": 6553
+    },
+    {
+      "plrId": "03601142",
+      "einwohner": 11968,
+      "einwohnerMitHaltestelle": 8874
+    },
+    {
+      "plrId": "03601243",
+      "einwohner": 7599,
+      "einwohnerMitHaltestelle": 7599
+    },
+    {
+      "plrId": "03601244",
+      "einwohner": 7354,
+      "einwohnerMitHaltestelle": 7354
+    },
+    {
+      "plrId": "03601245",
+      "einwohner": 12621,
+      "einwohnerMitHaltestelle": 12621
+    },
+    {
+      "plrId": "03601346",
+      "einwohner": 4945,
+      "einwohnerMitHaltestelle": 4945
+    },
+    {
+      "plrId": "03601347",
+      "einwohner": 7601,
+      "einwohnerMitHaltestelle": 7601
+    },
+    {
+      "plrId": "03601348",
+      "einwohner": 7459,
+      "einwohnerMitHaltestelle": 7459
+    },
+    {
+      "plrId": "03601449",
+      "einwohner": 9873,
+      "einwohnerMitHaltestelle": 9873
+    },
+    {
+      "plrId": "03601450",
+      "einwohner": 3701,
+      "einwohnerMitHaltestelle": 3548
+    },
+    {
+      "plrId": "03601451",
+      "einwohner": 6357,
+      "einwohnerMitHaltestelle": 6357
+    },
+    {
+      "plrId": "03601452",
+      "einwohner": 3573,
+      "einwohnerMitHaltestelle": 3573
+    },
+    {
+      "plrId": "03601453",
+      "einwohner": 3275,
+      "einwohnerMitHaltestelle": 3275
+    },
+    {
+      "plrId": "03701554",
+      "einwohner": 10005,
+      "einwohnerMitHaltestelle": 10005
+    },
+    {
+      "plrId": "03701555",
+      "einwohner": 6944,
+      "einwohnerMitHaltestelle": 6944
+    },
+    {
+      "plrId": "03701556",
+      "einwohner": 8458,
+      "einwohnerMitHaltestelle": 8458
+    },
+    {
+      "plrId": "03701657",
+      "einwohner": 3834,
+      "einwohnerMitHaltestelle": 3834
+    },
+    {
+      "plrId": "03701658",
+      "einwohner": 7381,
+      "einwohnerMitHaltestelle": 7381
+    },
+    {
+      "plrId": "03701659",
+      "einwohner": 7533,
+      "einwohnerMitHaltestelle": 7533
+    },
+    {
+      "plrId": "03701660",
+      "einwohner": 12583,
+      "einwohnerMitHaltestelle": 12583
+    },
+    {
+      "plrId": "04100101",
+      "einwohner": 11211,
+      "einwohnerMitHaltestelle": 11178
+    },
+    {
+      "plrId": "04100102",
+      "einwohner": 6472,
+      "einwohnerMitHaltestelle": 6416
+    },
+    {
+      "plrId": "04200203",
+      "einwohner": 1429,
+      "einwohnerMitHaltestelle": 1121
+    },
+    {
+      "plrId": "04200204",
+      "einwohner": 2605,
+      "einwohnerMitHaltestelle": 2541
+    },
+    {
+      "plrId": "04200205",
+      "einwohner": 2367,
+      "einwohnerMitHaltestelle": 2338
+    },
+    {
+      "plrId": "04200206",
+      "einwohner": 2810,
+      "einwohnerMitHaltestelle": 2586
+    },
+    {
+      "plrId": "04200207",
+      "einwohner": 2975,
+      "einwohnerMitHaltestelle": 1922
+    },
+    {
+      "plrId": "04200308",
+      "einwohner": 5740,
+      "einwohnerMitHaltestelle": 5540
+    },
+    {
+      "plrId": "04200309",
+      "einwohner": 6316,
+      "einwohnerMitHaltestelle": 6316
+    },
+    {
+      "plrId": "04200310",
+      "einwohner": 7518,
+      "einwohnerMitHaltestelle": 7518
+    },
+    {
+      "plrId": "04200311",
+      "einwohner": 6596,
+      "einwohnerMitHaltestelle": 6596
+    },
+    {
+      "plrId": "04300412",
+      "einwohner": 3802,
+      "einwohnerMitHaltestelle": 3802
+    },
+    {
+      "plrId": "04300413",
+      "einwohner": 8831,
+      "einwohnerMitHaltestelle": 7786
+    },
+    {
+      "plrId": "04300414",
+      "einwohner": 11603,
+      "einwohnerMitHaltestelle": 10625
+    },
+    {
+      "plrId": "04300415",
+      "einwohner": 5478,
+      "einwohnerMitHaltestelle": 5478
+    },
+    {
+      "plrId": "04300416",
+      "einwohner": 11017,
+      "einwohnerMitHaltestelle": 10817
+    },
+    {
+      "plrId": "04300517",
+      "einwohner": 9068,
+      "einwohnerMitHaltestelle": 9068
+    },
+    {
+      "plrId": "04300518",
+      "einwohner": 5284,
+      "einwohnerMitHaltestelle": 5247
+    },
+    {
+      "plrId": "04300619",
+      "einwohner": 9057,
+      "einwohnerMitHaltestelle": 8861
+    },
+    {
+      "plrId": "04300620",
+      "einwohner": 3342,
+      "einwohnerMitHaltestelle": 3342
+    },
+    {
+      "plrId": "04300621",
+      "einwohner": 9236,
+      "einwohnerMitHaltestelle": 9236
+    },
+    {
+      "plrId": "04300622",
+      "einwohner": 4284,
+      "einwohnerMitHaltestelle": 4284
+    },
+    {
+      "plrId": "04300623",
+      "einwohner": 11497,
+      "einwohnerMitHaltestelle": 11497
+    },
+    {
+      "plrId": "04300624",
+      "einwohner": 8070,
+      "einwohnerMitHaltestelle": 8070
+    },
+    {
+      "plrId": "04400725",
+      "einwohner": 207,
+      "einwohnerMitHaltestelle": 185
+    },
+    {
+      "plrId": "04400726",
+      "einwohner": 5092,
+      "einwohnerMitHaltestelle": 5026
+    },
+    {
+      "plrId": "04400727",
+      "einwohner": 8480,
+      "einwohnerMitHaltestelle": 8480
+    },
+    {
+      "plrId": "04400728",
+      "einwohner": 2961,
+      "einwohnerMitHaltestelle": 2927
+    },
+    {
+      "plrId": "04400729",
+      "einwohner": 2667,
+      "einwohnerMitHaltestelle": 2485
+    },
+    {
+      "plrId": "04400830",
+      "einwohner": 7250,
+      "einwohnerMitHaltestelle": 6953
+    },
+    {
+      "plrId": "04400831",
+      "einwohner": 1510,
+      "einwohnerMitHaltestelle": 1510
+    },
+    {
+      "plrId": "04400832",
+      "einwohner": 6362,
+      "einwohnerMitHaltestelle": 5990
+    },
+    {
+      "plrId": "04400833",
+      "einwohner": 4040,
+      "einwohnerMitHaltestelle": 4040
+    },
+    {
+      "plrId": "04400834",
+      "einwohner": 3346,
+      "einwohnerMitHaltestelle": 3346
+    },
+    {
+      "plrId": "04400835",
+      "einwohner": 9823,
+      "einwohnerMitHaltestelle": 9823
+    },
+    {
+      "plrId": "04500936",
+      "einwohner": 5566,
+      "einwohnerMitHaltestelle": 5088
+    },
+    {
+      "plrId": "04500937",
+      "einwohner": 7231,
+      "einwohnerMitHaltestelle": 6930
+    },
+    {
+      "plrId": "04500938",
+      "einwohner": 7451,
+      "einwohnerMitHaltestelle": 7451
+    },
+    {
+      "plrId": "04500939",
+      "einwohner": 6000,
+      "einwohnerMitHaltestelle": 6000
+    },
+    {
+      "plrId": "04501040",
+      "einwohner": 5135,
+      "einwohnerMitHaltestelle": 5135
+    },
+    {
+      "plrId": "04501041",
+      "einwohner": 4846,
+      "einwohnerMitHaltestelle": 4846
+    },
+    {
+      "plrId": "04501042",
+      "einwohner": 3458,
+      "einwohnerMitHaltestelle": 3458
+    },
+    {
+      "plrId": "04501043",
+      "einwohner": 10281,
+      "einwohnerMitHaltestelle": 9016
+    },
+    {
+      "plrId": "04501044",
+      "einwohner": 5087,
+      "einwohnerMitHaltestelle": 5087
+    },
+    {
+      "plrId": "04501045",
+      "einwohner": 8548,
+      "einwohnerMitHaltestelle": 8548
+    },
+    {
+      "plrId": "04501146",
+      "einwohner": 4218,
+      "einwohnerMitHaltestelle": 4218
+    },
+    {
+      "plrId": "04501147",
+      "einwohner": 4051,
+      "einwohnerMitHaltestelle": 4051
+    },
+    {
+      "plrId": "04501148",
+      "einwohner": 4273,
+      "einwohnerMitHaltestelle": 4238
+    },
+    {
+      "plrId": "04501149",
+      "einwohner": 8713,
+      "einwohnerMitHaltestelle": 8713
+    },
+    {
+      "plrId": "04501150",
+      "einwohner": 3001,
+      "einwohnerMitHaltestelle": 3001
+    },
+    {
+      "plrId": "04501151",
+      "einwohner": 6640,
+      "einwohnerMitHaltestelle": 6640
+    },
+    {
+      "plrId": "04501152",
+      "einwohner": 7475,
+      "einwohnerMitHaltestelle": 7475
+    },
+    {
+      "plrId": "04501153",
+      "einwohner": 6920,
+      "einwohnerMitHaltestelle": 6920
+    },
+    {
+      "plrId": "05100101",
+      "einwohner": 4362,
+      "einwohnerMitHaltestelle": 3814
+    },
+    {
+      "plrId": "05100102",
+      "einwohner": 3826,
+      "einwohnerMitHaltestelle": 3424
+    },
+    {
+      "plrId": "05100103",
+      "einwohner": 5956,
+      "einwohnerMitHaltestelle": 5908
+    },
+    {
+      "plrId": "05100104",
+      "einwohner": 4914,
+      "einwohnerMitHaltestelle": 4914
+    },
+    {
+      "plrId": "05100105",
+      "einwohner": 7262,
+      "einwohnerMitHaltestelle": 7134
+    },
+    {
+      "plrId": "05100206",
+      "einwohner": 3331,
+      "einwohnerMitHaltestelle": 3326
+    },
+    {
+      "plrId": "05100207",
+      "einwohner": 2228,
+      "einwohnerMitHaltestelle": 2093
+    },
+    {
+      "plrId": "05100208",
+      "einwohner": 10342,
+      "einwohnerMitHaltestelle": 10336
+    },
+    {
+      "plrId": "05100209",
+      "einwohner": 11048,
+      "einwohnerMitHaltestelle": 10665
+    },
+    {
+      "plrId": "05100210",
+      "einwohner": 7299,
+      "einwohnerMitHaltestelle": 7299
+    },
+    {
+      "plrId": "05100211",
+      "einwohner": 5893,
+      "einwohnerMitHaltestelle": 5524
+    },
+    {
+      "plrId": "05100312",
+      "einwohner": 4104,
+      "einwohnerMitHaltestelle": 4104
+    },
+    {
+      "plrId": "05100313",
+      "einwohner": 6427,
+      "einwohnerMitHaltestelle": 5816
+    },
+    {
+      "plrId": "05100314",
+      "einwohner": 5718,
+      "einwohnerMitHaltestelle": 5718
+    },
+    {
+      "plrId": "05100315",
+      "einwohner": 6422,
+      "einwohnerMitHaltestelle": 6422
+    },
+    {
+      "plrId": "05100316",
+      "einwohner": 10077,
+      "einwohnerMitHaltestelle": 10077
+    },
+    {
+      "plrId": "05100317",
+      "einwohner": 3162,
+      "einwohnerMitHaltestelle": 3162
+    },
+    {
+      "plrId": "05200418",
+      "einwohner": 3830,
+      "einwohnerMitHaltestelle": 3684
+    },
+    {
+      "plrId": "05200419",
+      "einwohner": 1613,
+      "einwohnerMitHaltestelle": 1613
+    },
+    {
+      "plrId": "05200420",
+      "einwohner": 5694,
+      "einwohnerMitHaltestelle": 4691
+    },
+    {
+      "plrId": "05200421",
+      "einwohner": 3823,
+      "einwohnerMitHaltestelle": 3823
+    },
+    {
+      "plrId": "05200422",
+      "einwohner": 1050,
+      "einwohnerMitHaltestelle": 1050
+    },
+    {
+      "plrId": "05200423",
+      "einwohner": 6712,
+      "einwohnerMitHaltestelle": 6712
+    },
+    {
+      "plrId": "05200524",
+      "einwohner": 3110,
+      "einwohnerMitHaltestelle": 2523
+    },
+    {
+      "plrId": "05200525",
+      "einwohner": 2334,
+      "einwohnerMitHaltestelle": 1907
+    },
+    {
+      "plrId": "05200526",
+      "einwohner": 5338,
+      "einwohnerMitHaltestelle": 5338
+    },
+    {
+      "plrId": "05200527",
+      "einwohner": 10854,
+      "einwohnerMitHaltestelle": 10850
+    },
+    {
+      "plrId": "05200528",
+      "einwohner": 7154,
+      "einwohnerMitHaltestelle": 6807
+    },
+    {
+      "plrId": "05200629",
+      "einwohner": 7606,
+      "einwohnerMitHaltestelle": 7606
+    },
+    {
+      "plrId": "05200630",
+      "einwohner": 9150,
+      "einwohnerMitHaltestelle": 9150
+    },
+    {
+      "plrId": "05200631",
+      "einwohner": 8209,
+      "einwohnerMitHaltestelle": 8145
+    },
+    {
+      "plrId": "05200632",
+      "einwohner": 3709,
+      "einwohnerMitHaltestelle": 3314
+    },
+    {
+      "plrId": "05200633",
+      "einwohner": 2027,
+      "einwohnerMitHaltestelle": 2027
+    },
+    {
+      "plrId": "05200634",
+      "einwohner": 4118,
+      "einwohnerMitHaltestelle": 3490
+    },
+    {
+      "plrId": "05300735",
+      "einwohner": 3304,
+      "einwohnerMitHaltestelle": 3301
+    },
+    {
+      "plrId": "05300736",
+      "einwohner": 3641,
+      "einwohnerMitHaltestelle": 3501
+    },
+    {
+      "plrId": "05300737",
+      "einwohner": 11162,
+      "einwohnerMitHaltestelle": 11162
+    },
+    {
+      "plrId": "05300838",
+      "einwohner": 97,
+      "einwohnerMitHaltestelle": 97
+    },
+    {
+      "plrId": "05300839",
+      "einwohner": 7047,
+      "einwohnerMitHaltestelle": 5844
+    },
+    {
+      "plrId": "05300840",
+      "einwohner": 814,
+      "einwohnerMitHaltestelle": 804
+    },
+    {
+      "plrId": "05300841",
+      "einwohner": 3616,
+      "einwohnerMitHaltestelle": 3616
+    },
+    {
+      "plrId": "05400942",
+      "einwohner": 3669,
+      "einwohnerMitHaltestelle": 3109
+    },
+    {
+      "plrId": "05400943",
+      "einwohner": 9924,
+      "einwohnerMitHaltestelle": 8780
+    },
+    {
+      "plrId": "05400944",
+      "einwohner": 2232,
+      "einwohnerMitHaltestelle": 1725
+    },
+    {
+      "plrId": "05400945",
+      "einwohner": 3472,
+      "einwohnerMitHaltestelle": 3441
+    },
+    {
+      "plrId": "06100101",
+      "einwohner": 6482,
+      "einwohnerMitHaltestelle": 6457
+    },
+    {
+      "plrId": "06100102",
+      "einwohner": 7528,
+      "einwohnerMitHaltestelle": 7528
+    },
+    {
+      "plrId": "06100103",
+      "einwohner": 6332,
+      "einwohnerMitHaltestelle": 6332
+    },
+    {
+      "plrId": "06100204",
+      "einwohner": 6283,
+      "einwohnerMitHaltestelle": 6176
+    },
+    {
+      "plrId": "06100205",
+      "einwohner": 9243,
+      "einwohnerMitHaltestelle": 9198
+    },
+    {
+      "plrId": "06100206",
+      "einwohner": 7456,
+      "einwohnerMitHaltestelle": 7456
+    },
+    {
+      "plrId": "06100207",
+      "einwohner": 8267,
+      "einwohnerMitHaltestelle": 8267
+    },
+    {
+      "plrId": "06100208",
+      "einwohner": 6392,
+      "einwohnerMitHaltestelle": 6392
+    },
+    {
+      "plrId": "06100209",
+      "einwohner": 8886,
+      "einwohnerMitHaltestelle": 8886
+    },
+    {
+      "plrId": "06100210",
+      "einwohner": 4527,
+      "einwohnerMitHaltestelle": 4527
+    },
+    {
+      "plrId": "06200311",
+      "einwohner": 4701,
+      "einwohnerMitHaltestelle": 4421
+    },
+    {
+      "plrId": "06200312",
+      "einwohner": 6199,
+      "einwohnerMitHaltestelle": 4812
+    },
+    {
+      "plrId": "06200313",
+      "einwohner": 7401,
+      "einwohnerMitHaltestelle": 7401
+    },
+    {
+      "plrId": "06200314",
+      "einwohner": 6904,
+      "einwohnerMitHaltestelle": 6472
+    },
+    {
+      "plrId": "06200315",
+      "einwohner": 6264,
+      "einwohnerMitHaltestelle": 5776
+    },
+    {
+      "plrId": "06200316",
+      "einwohner": 5149,
+      "einwohnerMitHaltestelle": 5149
+    },
+    {
+      "plrId": "06200317",
+      "einwohner": 6289,
+      "einwohnerMitHaltestelle": 6033
+    },
+    {
+      "plrId": "06200418",
+      "einwohner": 74,
+      "einwohnerMitHaltestelle": 74
+    },
+    {
+      "plrId": "06200419",
+      "einwohner": 4102,
+      "einwohnerMitHaltestelle": 4102
+    },
+    {
+      "plrId": "06200420",
+      "einwohner": 6822,
+      "einwohnerMitHaltestelle": 6747
+    },
+    {
+      "plrId": "06200421",
+      "einwohner": 7905,
+      "einwohnerMitHaltestelle": 7652
+    },
+    {
+      "plrId": "06200422",
+      "einwohner": 7089,
+      "einwohnerMitHaltestelle": 7089
+    },
+    {
+      "plrId": "06200423",
+      "einwohner": 8301,
+      "einwohnerMitHaltestelle": 7660
+    },
+    {
+      "plrId": "06300524",
+      "einwohner": 5354,
+      "einwohnerMitHaltestelle": 5307
+    },
+    {
+      "plrId": "06300525",
+      "einwohner": 5678,
+      "einwohnerMitHaltestelle": 4225
+    },
+    {
+      "plrId": "06300526",
+      "einwohner": 3213,
+      "einwohnerMitHaltestelle": 3213
+    },
+    {
+      "plrId": "06300527",
+      "einwohner": 7994,
+      "einwohnerMitHaltestelle": 7974
+    },
+    {
+      "plrId": "06300528",
+      "einwohner": 10765,
+      "einwohnerMitHaltestelle": 9179
+    },
+    {
+      "plrId": "06300629",
+      "einwohner": 6287,
+      "einwohnerMitHaltestelle": 6287
+    },
+    {
+      "plrId": "06300630",
+      "einwohner": 4560,
+      "einwohnerMitHaltestelle": 4560
+    },
+    {
+      "plrId": "06300631",
+      "einwohner": 2860,
+      "einwohnerMitHaltestelle": 2860
+    },
+    {
+      "plrId": "06300632",
+      "einwohner": 12813,
+      "einwohnerMitHaltestelle": 12330
+    },
+    {
+      "plrId": "06300633",
+      "einwohner": 11916,
+      "einwohnerMitHaltestelle": 11391
+    },
+    {
+      "plrId": "06300634",
+      "einwohner": 8398,
+      "einwohnerMitHaltestelle": 8021
+    },
+    {
+      "plrId": "06400735",
+      "einwohner": 9818,
+      "einwohnerMitHaltestelle": 9036
+    },
+    {
+      "plrId": "06400736",
+      "einwohner": 4717,
+      "einwohnerMitHaltestelle": 3929
+    },
+    {
+      "plrId": "06400737",
+      "einwohner": 10890,
+      "einwohnerMitHaltestelle": 10011
+    },
+    {
+      "plrId": "06400838",
+      "einwohner": 7400,
+      "einwohnerMitHaltestelle": 4716
+    },
+    {
+      "plrId": "06400839",
+      "einwohner": 5245,
+      "einwohnerMitHaltestelle": 5109
+    },
+    {
+      "plrId": "06400840",
+      "einwohner": 7122,
+      "einwohnerMitHaltestelle": 6702
+    },
+    {
+      "plrId": "06400841",
+      "einwohner": 5581,
+      "einwohnerMitHaltestelle": 5581
+    },
+    {
+      "plrId": "06400842",
+      "einwohner": 4504,
+      "einwohnerMitHaltestelle": 4433
+    },
+    {
+      "plrId": "06400843",
+      "einwohner": 4215,
+      "einwohnerMitHaltestelle": 3759
+    },
+    {
+      "plrId": "06400844",
+      "einwohner": 7085,
+      "einwohnerMitHaltestelle": 7038
+    },
+    {
+      "plrId": "07100101",
+      "einwohner": 8297,
+      "einwohnerMitHaltestelle": 8297
+    },
+    {
+      "plrId": "07100102",
+      "einwohner": 8499,
+      "einwohnerMitHaltestelle": 8499
+    },
+    {
+      "plrId": "07100103",
+      "einwohner": 6333,
+      "einwohnerMitHaltestelle": 6333
+    },
+    {
+      "plrId": "07100204",
+      "einwohner": 9568,
+      "einwohnerMitHaltestelle": 9568
+    },
+    {
+      "plrId": "07100205",
+      "einwohner": 4990,
+      "einwohnerMitHaltestelle": 4990
+    },
+    {
+      "plrId": "07100206",
+      "einwohner": 8030,
+      "einwohnerMitHaltestelle": 7832
+    },
+    {
+      "plrId": "07200307",
+      "einwohner": 9094,
+      "einwohnerMitHaltestelle": 9094
+    },
+    {
+      "plrId": "07200308",
+      "einwohner": 10502,
+      "einwohnerMitHaltestelle": 10502
+    },
+    {
+      "plrId": "07200409",
+      "einwohner": 8332,
+      "einwohnerMitHaltestelle": 8332
+    },
+    {
+      "plrId": "07200410",
+      "einwohner": 5211,
+      "einwohnerMitHaltestelle": 5211
+    },
+    {
+      "plrId": "07200411",
+      "einwohner": 2726,
+      "einwohnerMitHaltestelle": 2726
+    },
+    {
+      "plrId": "07200412",
+      "einwohner": 1505,
+      "einwohnerMitHaltestelle": 1505
+    },
+    {
+      "plrId": "07200413",
+      "einwohner": 7367,
+      "einwohnerMitHaltestelle": 7367
+    },
+    {
+      "plrId": "07200414",
+      "einwohner": 3263,
+      "einwohnerMitHaltestelle": 3263
+    },
+    {
+      "plrId": "07300515",
+      "einwohner": 7134,
+      "einwohnerMitHaltestelle": 7134
+    },
+    {
+      "plrId": "07300516",
+      "einwohner": 8487,
+      "einwohnerMitHaltestelle": 8222
+    },
+    {
+      "plrId": "07300517",
+      "einwohner": 8960,
+      "einwohnerMitHaltestelle": 8960
+    },
+    {
+      "plrId": "07300618",
+      "einwohner": 8403,
+      "einwohnerMitHaltestelle": 8403
+    },
+    {
+      "plrId": "07300619",
+      "einwohner": 11856,
+      "einwohnerMitHaltestelle": 11462
+    },
+    {
+      "plrId": "07400720",
+      "einwohner": 10842,
+      "einwohnerMitHaltestelle": 10690
+    },
+    {
+      "plrId": "07400721",
+      "einwohner": 5001,
+      "einwohnerMitHaltestelle": 5001
+    },
+    {
+      "plrId": "07400822",
+      "einwohner": 3668,
+      "einwohnerMitHaltestelle": 3668
+    },
+    {
+      "plrId": "07400823",
+      "einwohner": 8316,
+      "einwohnerMitHaltestelle": 8316
+    },
+    {
+      "plrId": "07400824",
+      "einwohner": 6516,
+      "einwohnerMitHaltestelle": 6516
+    },
+    {
+      "plrId": "07400825",
+      "einwohner": 7201,
+      "einwohnerMitHaltestelle": 7201
+    },
+    {
+      "plrId": "07400826",
+      "einwohner": 5040,
+      "einwohnerMitHaltestelle": 5040
+    },
+    {
+      "plrId": "07400927",
+      "einwohner": 10324,
+      "einwohnerMitHaltestelle": 10212
+    },
+    {
+      "plrId": "07400928",
+      "einwohner": 3452,
+      "einwohnerMitHaltestelle": 3452
+    },
+    {
+      "plrId": "07501029",
+      "einwohner": 7858,
+      "einwohnerMitHaltestelle": 7541
+    },
+    {
+      "plrId": "07501030",
+      "einwohner": 8155,
+      "einwohnerMitHaltestelle": 7657
+    },
+    {
+      "plrId": "07501031",
+      "einwohner": 8656,
+      "einwohnerMitHaltestelle": 8656
+    },
+    {
+      "plrId": "07501032",
+      "einwohner": 5303,
+      "einwohnerMitHaltestelle": 5303
+    },
+    {
+      "plrId": "07501133",
+      "einwohner": 7627,
+      "einwohnerMitHaltestelle": 6738
+    },
+    {
+      "plrId": "07501134",
+      "einwohner": 9965,
+      "einwohnerMitHaltestelle": 8291
+    },
+    {
+      "plrId": "07501135",
+      "einwohner": 2307,
+      "einwohnerMitHaltestelle": 2307
+    },
+    {
+      "plrId": "07601236",
+      "einwohner": 9553,
+      "einwohnerMitHaltestelle": 9553
+    },
+    {
+      "plrId": "07601237",
+      "einwohner": 4519,
+      "einwohnerMitHaltestelle": 3135
+    },
+    {
+      "plrId": "07601238",
+      "einwohner": 2867,
+      "einwohnerMitHaltestelle": 2480
+    },
+    {
+      "plrId": "07601339",
+      "einwohner": 5954,
+      "einwohnerMitHaltestelle": 5954
+    },
+    {
+      "plrId": "07601340",
+      "einwohner": 5743,
+      "einwohnerMitHaltestelle": 5743
+    },
+    {
+      "plrId": "07601341",
+      "einwohner": 1945,
+      "einwohnerMitHaltestelle": 1774
+    },
+    {
+      "plrId": "07601442",
+      "einwohner": 10361,
+      "einwohnerMitHaltestelle": 7548
+    },
+    {
+      "plrId": "07601443",
+      "einwohner": 9972,
+      "einwohnerMitHaltestelle": 9086
+    },
+    {
+      "plrId": "07601544",
+      "einwohner": 8656,
+      "einwohnerMitHaltestelle": 8656
+    },
+    {
+      "plrId": "07601545",
+      "einwohner": 7782,
+      "einwohnerMitHaltestelle": 7782
+    },
+    {
+      "plrId": "07601546",
+      "einwohner": 6771,
+      "einwohnerMitHaltestelle": 6146
+    },
+    {
+      "plrId": "07601547",
+      "einwohner": 3787,
+      "einwohnerMitHaltestelle": 3435
+    },
+    {
+      "plrId": "07601548",
+      "einwohner": 2794,
+      "einwohnerMitHaltestelle": 2766
+    },
+    {
+      "plrId": "08100101",
+      "einwohner": 3448,
+      "einwohnerMitHaltestelle": 3448
+    },
+    {
+      "plrId": "08100102",
+      "einwohner": 8047,
+      "einwohnerMitHaltestelle": 7232
+    },
+    {
+      "plrId": "08100103",
+      "einwohner": 6636,
+      "einwohnerMitHaltestelle": 4292
+    },
+    {
+      "plrId": "08100104",
+      "einwohner": 6313,
+      "einwohnerMitHaltestelle": 5431
+    },
+    {
+      "plrId": "08100105",
+      "einwohner": 5352,
+      "einwohnerMitHaltestelle": 5352
+    },
+    {
+      "plrId": "08100206",
+      "einwohner": 8632,
+      "einwohnerMitHaltestelle": 8632
+    },
+    {
+      "plrId": "08100207",
+      "einwohner": 6915,
+      "einwohnerMitHaltestelle": 6915
+    },
+    {
+      "plrId": "08100208",
+      "einwohner": 10795,
+      "einwohnerMitHaltestelle": 10795
+    },
+    {
+      "plrId": "08100209",
+      "einwohner": 8610,
+      "einwohnerMitHaltestelle": 8610
+    },
+    {
+      "plrId": "08100310",
+      "einwohner": 7130,
+      "einwohnerMitHaltestelle": 7130
+    },
+    {
+      "plrId": "08100311",
+      "einwohner": 6125,
+      "einwohnerMitHaltestelle": 5872
+    },
+    {
+      "plrId": "08100312",
+      "einwohner": 11711,
+      "einwohnerMitHaltestelle": 11711
+    },
+    {
+      "plrId": "08100313",
+      "einwohner": 3784,
+      "einwohnerMitHaltestelle": 3784
+    },
+    {
+      "plrId": "08100314",
+      "einwohner": 6901,
+      "einwohnerMitHaltestelle": 6901
+    },
+    {
+      "plrId": "08100415",
+      "einwohner": 5852,
+      "einwohnerMitHaltestelle": 5852
+    },
+    {
+      "plrId": "08100416",
+      "einwohner": 6529,
+      "einwohnerMitHaltestelle": 6529
+    },
+    {
+      "plrId": "08100417",
+      "einwohner": 8816,
+      "einwohnerMitHaltestelle": 8816
+    },
+    {
+      "plrId": "08100418",
+      "einwohner": 8644,
+      "einwohnerMitHaltestelle": 8644
+    },
+    {
+      "plrId": "08100419",
+      "einwohner": 5879,
+      "einwohnerMitHaltestelle": 5879
+    },
+    {
+      "plrId": "08100520",
+      "einwohner": 4986,
+      "einwohnerMitHaltestelle": 3303
+    },
+    {
+      "plrId": "08100521",
+      "einwohner": 8937,
+      "einwohnerMitHaltestelle": 8937
+    },
+    {
+      "plrId": "08200622",
+      "einwohner": 4415,
+      "einwohnerMitHaltestelle": 4415
+    },
+    {
+      "plrId": "08200623",
+      "einwohner": 5838,
+      "einwohnerMitHaltestelle": 5834
+    },
+    {
+      "plrId": "08200624",
+      "einwohner": 7746,
+      "einwohnerMitHaltestelle": 7746
+    },
+    {
+      "plrId": "08200725",
+      "einwohner": 2444,
+      "einwohnerMitHaltestelle": 2232
+    },
+    {
+      "plrId": "08200726",
+      "einwohner": 6677,
+      "einwohnerMitHaltestelle": 6677
+    },
+    {
+      "plrId": "08200727",
+      "einwohner": 7580,
+      "einwohnerMitHaltestelle": 7567
+    },
+    {
+      "plrId": "08200728",
+      "einwohner": 1374,
+      "einwohnerMitHaltestelle": 1273
+    },
+    {
+      "plrId": "08200729",
+      "einwohner": 1903,
+      "einwohnerMitHaltestelle": 1546
+    },
+    {
+      "plrId": "08200730",
+      "einwohner": 3156,
+      "einwohnerMitHaltestelle": 2843
+    },
+    {
+      "plrId": "08200831",
+      "einwohner": 7737,
+      "einwohnerMitHaltestelle": 7080
+    },
+    {
+      "plrId": "08200832",
+      "einwohner": 10860,
+      "einwohnerMitHaltestelle": 10431
+    },
+    {
+      "plrId": "08200833",
+      "einwohner": 7848,
+      "einwohnerMitHaltestelle": 7848
+    },
+    {
+      "plrId": "08300934",
+      "einwohner": 11297,
+      "einwohnerMitHaltestelle": 11297
+    },
+    {
+      "plrId": "08300935",
+      "einwohner": 7026,
+      "einwohnerMitHaltestelle": 7026
+    },
+    {
+      "plrId": "08301036",
+      "einwohner": 6959,
+      "einwohnerMitHaltestelle": 6763
+    },
+    {
+      "plrId": "08301037",
+      "einwohner": 10231,
+      "einwohnerMitHaltestelle": 10231
+    },
+    {
+      "plrId": "08401138",
+      "einwohner": 2155,
+      "einwohnerMitHaltestelle": 2155
+    },
+    {
+      "plrId": "08401139",
+      "einwohner": 4090,
+      "einwohnerMitHaltestelle": 4090
+    },
+    {
+      "plrId": "08401140",
+      "einwohner": 2317,
+      "einwohnerMitHaltestelle": 1851
+    },
+    {
+      "plrId": "08401241",
+      "einwohner": 7936,
+      "einwohnerMitHaltestelle": 7237
+    },
+    {
+      "plrId": "08401242",
+      "einwohner": 6455,
+      "einwohnerMitHaltestelle": 5866
+    },
+    {
+      "plrId": "08401243",
+      "einwohner": 9519,
+      "einwohnerMitHaltestelle": 8734
+    },
+    {
+      "plrId": "08401244",
+      "einwohner": 7162,
+      "einwohnerMitHaltestelle": 6992
+    },
+    {
+      "plrId": "08401245",
+      "einwohner": 3417,
+      "einwohnerMitHaltestelle": 3417
+    },
+    {
+      "plrId": "08401246",
+      "einwohner": 7498,
+      "einwohnerMitHaltestelle": 7361
+    },
+    {
+      "plrId": "09100101",
+      "einwohner": 12689,
+      "einwohnerMitHaltestelle": 12689
+    },
+    {
+      "plrId": "09100202",
+      "einwohner": 4130,
+      "einwohnerMitHaltestelle": 4130
+    },
+    {
+      "plrId": "09100203",
+      "einwohner": 7073,
+      "einwohnerMitHaltestelle": 7073
+    },
+    {
+      "plrId": "09100304",
+      "einwohner": 11690,
+      "einwohnerMitHaltestelle": 11514
+    },
+    {
+      "plrId": "09100305",
+      "einwohner": 4060,
+      "einwohnerMitHaltestelle": 4060
+    },
+    {
+      "plrId": "09100306",
+      "einwohner": 2925,
+      "einwohnerMitHaltestelle": 2512
+    },
+    {
+      "plrId": "09100407",
+      "einwohner": 8514,
+      "einwohnerMitHaltestelle": 8514
+    },
+    {
+      "plrId": "09100408",
+      "einwohner": 7701,
+      "einwohnerMitHaltestelle": 7701
+    },
+    {
+      "plrId": "09100409",
+      "einwohner": 4026,
+      "einwohnerMitHaltestelle": 3708
+    },
+    {
+      "plrId": "09200510",
+      "einwohner": 7267,
+      "einwohnerMitHaltestelle": 7075
+    },
+    {
+      "plrId": "09200511",
+      "einwohner": 12982,
+      "einwohnerMitHaltestelle": 10984
+    },
+    {
+      "plrId": "09200512",
+      "einwohner": 3322,
+      "einwohnerMitHaltestelle": 3142
+    },
+    {
+      "plrId": "09200613",
+      "einwohner": 9279,
+      "einwohnerMitHaltestelle": 9279
+    },
+    {
+      "plrId": "09200614",
+      "einwohner": 3420,
+      "einwohnerMitHaltestelle": 3385
+    },
+    {
+      "plrId": "09200715",
+      "einwohner": 3118,
+      "einwohnerMitHaltestelle": 3118
+    },
+    {
+      "plrId": "09200716",
+      "einwohner": 7354,
+      "einwohnerMitHaltestelle": 5748
+    },
+    {
+      "plrId": "09200717",
+      "einwohner": 9329,
+      "einwohnerMitHaltestelle": 9086
+    },
+    {
+      "plrId": "09200818",
+      "einwohner": 3540,
+      "einwohnerMitHaltestelle": 2803
+    },
+    {
+      "plrId": "09200819",
+      "einwohner": 8214,
+      "einwohnerMitHaltestelle": 8204
+    },
+    {
+      "plrId": "09300920",
+      "einwohner": 12261,
+      "einwohnerMitHaltestelle": 11626
+    },
+    {
+      "plrId": "09300921",
+      "einwohner": 2748,
+      "einwohnerMitHaltestelle": 2748
+    },
+    {
+      "plrId": "09300922",
+      "einwohner": 5683,
+      "einwohnerMitHaltestelle": 5683
+    },
+    {
+      "plrId": "09300923",
+      "einwohner": 7889,
+      "einwohnerMitHaltestelle": 7814
+    },
+    {
+      "plrId": "09301024",
+      "einwohner": 2918,
+      "einwohnerMitHaltestelle": 2918
+    },
+    {
+      "plrId": "09301025",
+      "einwohner": 10567,
+      "einwohnerMitHaltestelle": 8507
+    },
+    {
+      "plrId": "09301126",
+      "einwohner": 7367,
+      "einwohnerMitHaltestelle": 6557
+    },
+    {
+      "plrId": "09301227",
+      "einwohner": 1852,
+      "einwohnerMitHaltestelle": 1780
+    },
+    {
+      "plrId": "09301228",
+      "einwohner": 2488,
+      "einwohnerMitHaltestelle": 1285
+    },
+    {
+      "plrId": "09401329",
+      "einwohner": 10269,
+      "einwohnerMitHaltestelle": 7672
+    },
+    {
+      "plrId": "09401330",
+      "einwohner": 1828,
+      "einwohnerMitHaltestelle": 1709
+    },
+    {
+      "plrId": "09401431",
+      "einwohner": 5253,
+      "einwohnerMitHaltestelle": 5253
+    },
+    {
+      "plrId": "09401432",
+      "einwohner": 2023,
+      "einwohnerMitHaltestelle": 1952
+    },
+    {
+      "plrId": "09401433",
+      "einwohner": 4132,
+      "einwohnerMitHaltestelle": 3875
+    },
+    {
+      "plrId": "09401534",
+      "einwohner": 7219,
+      "einwohnerMitHaltestelle": 7219
+    },
+    {
+      "plrId": "09401635",
+      "einwohner": 6724,
+      "einwohnerMitHaltestelle": 4050
+    },
+    {
+      "plrId": "09501736",
+      "einwohner": 4529,
+      "einwohnerMitHaltestelle": 4147
+    },
+    {
+      "plrId": "09501737",
+      "einwohner": 13921,
+      "einwohnerMitHaltestelle": 12418
+    },
+    {
+      "plrId": "09501838",
+      "einwohner": 10582,
+      "einwohnerMitHaltestelle": 8049
+    },
+    {
+      "plrId": "09501939",
+      "einwohner": 6232,
+      "einwohnerMitHaltestelle": 6212
+    },
+    {
+      "plrId": "09501940",
+      "einwohner": 2861,
+      "einwohnerMitHaltestelle": 2861
+    },
+    {
+      "plrId": "09501941",
+      "einwohner": 2738,
+      "einwohnerMitHaltestelle": 2533
+    },
+    {
+      "plrId": "09502042",
+      "einwohner": 3869,
+      "einwohnerMitHaltestelle": 2322
+    },
+    {
+      "plrId": "09502043",
+      "einwohner": 9048,
+      "einwohnerMitHaltestelle": 8477
+    },
+    {
+      "plrId": "10100101",
+      "einwohner": 5594,
+      "einwohnerMitHaltestelle": 5532
+    },
+    {
+      "plrId": "10100102",
+      "einwohner": 3753,
+      "einwohnerMitHaltestelle": 3753
+    },
+    {
+      "plrId": "10100103",
+      "einwohner": 7382,
+      "einwohnerMitHaltestelle": 6539
+    },
+    {
+      "plrId": "10100104",
+      "einwohner": 7467,
+      "einwohnerMitHaltestelle": 7467
+    },
+    {
+      "plrId": "10100205",
+      "einwohner": 914,
+      "einwohnerMitHaltestelle": 914
+    },
+    {
+      "plrId": "10100206",
+      "einwohner": 11048,
+      "einwohnerMitHaltestelle": 11048
+    },
+    {
+      "plrId": "10100207",
+      "einwohner": 7857,
+      "einwohnerMitHaltestelle": 7168
+    },
+    {
+      "plrId": "10100208",
+      "einwohner": 9170,
+      "einwohnerMitHaltestelle": 9170
+    },
+    {
+      "plrId": "10100209",
+      "einwohner": 7282,
+      "einwohnerMitHaltestelle": 7282
+    },
+    {
+      "plrId": "10100210",
+      "einwohner": 10328,
+      "einwohnerMitHaltestelle": 10328
+    },
+    {
+      "plrId": "10100311",
+      "einwohner": 2203,
+      "einwohnerMitHaltestelle": 2173
+    },
+    {
+      "plrId": "10100312",
+      "einwohner": 14721,
+      "einwohnerMitHaltestelle": 13063
+    },
+    {
+      "plrId": "10100313",
+      "einwohner": 4737,
+      "einwohnerMitHaltestelle": 4564
+    },
+    {
+      "plrId": "10100314",
+      "einwohner": 6239,
+      "einwohnerMitHaltestelle": 6191
+    },
+    {
+      "plrId": "10100315",
+      "einwohner": 7318,
+      "einwohnerMitHaltestelle": 7318
+    },
+    {
+      "plrId": "10100316",
+      "einwohner": 3612,
+      "einwohnerMitHaltestelle": 3479
+    },
+    {
+      "plrId": "10200417",
+      "einwohner": 6566,
+      "einwohnerMitHaltestelle": 6566
+    },
+    {
+      "plrId": "10200418",
+      "einwohner": 5936,
+      "einwohnerMitHaltestelle": 5936
+    },
+    {
+      "plrId": "10200419",
+      "einwohner": 4141,
+      "einwohnerMitHaltestelle": 4141
+    },
+    {
+      "plrId": "10200420",
+      "einwohner": 7083,
+      "einwohnerMitHaltestelle": 7063
+    },
+    {
+      "plrId": "10200421",
+      "einwohner": 1395,
+      "einwohnerMitHaltestelle": 1395
+    },
+    {
+      "plrId": "10200422",
+      "einwohner": 6190,
+      "einwohnerMitHaltestelle": 6190
+    },
+    {
+      "plrId": "10200423",
+      "einwohner": 5431,
+      "einwohnerMitHaltestelle": 4906
+    },
+    {
+      "plrId": "10200524",
+      "einwohner": 11306,
+      "einwohnerMitHaltestelle": 11228
+    },
+    {
+      "plrId": "10200525",
+      "einwohner": 4702,
+      "einwohnerMitHaltestelle": 4615
+    },
+    {
+      "plrId": "10200526",
+      "einwohner": 6012,
+      "einwohnerMitHaltestelle": 5726
+    },
+    {
+      "plrId": "10200627",
+      "einwohner": 3302,
+      "einwohnerMitHaltestelle": 3302
+    },
+    {
+      "plrId": "10200628",
+      "einwohner": 6479,
+      "einwohnerMitHaltestelle": 6479
+    },
+    {
+      "plrId": "10200629",
+      "einwohner": 8504,
+      "einwohnerMitHaltestelle": 7694
+    },
+    {
+      "plrId": "10200630",
+      "einwohner": 6129,
+      "einwohnerMitHaltestelle": 6129
+    },
+    {
+      "plrId": "10300731",
+      "einwohner": 7343,
+      "einwohnerMitHaltestelle": 6990
+    },
+    {
+      "plrId": "10300732",
+      "einwohner": 6806,
+      "einwohnerMitHaltestelle": 6554
+    },
+    {
+      "plrId": "10300733",
+      "einwohner": 4636,
+      "einwohnerMitHaltestelle": 4124
+    },
+    {
+      "plrId": "10300734",
+      "einwohner": 10054,
+      "einwohnerMitHaltestelle": 9430
+    },
+    {
+      "plrId": "10400835",
+      "einwohner": 7654,
+      "einwohnerMitHaltestelle": 7224
+    },
+    {
+      "plrId": "10400836",
+      "einwohner": 3610,
+      "einwohnerMitHaltestelle": 3250
+    },
+    {
+      "plrId": "10400837",
+      "einwohner": 7550,
+      "einwohnerMitHaltestelle": 6809
+    },
+    {
+      "plrId": "10400938",
+      "einwohner": 9892,
+      "einwohnerMitHaltestelle": 8956
+    },
+    {
+      "plrId": "10400939",
+      "einwohner": 4324,
+      "einwohnerMitHaltestelle": 4082
+    },
+    {
+      "plrId": "10400940",
+      "einwohner": 5870,
+      "einwohnerMitHaltestelle": 4042
+    },
+    {
+      "plrId": "10400941",
+      "einwohner": 9447,
+      "einwohnerMitHaltestelle": 6415
+    },
+    {
+      "plrId": "11100101",
+      "einwohner": 3737,
+      "einwohnerMitHaltestelle": 3355
+    },
+    {
+      "plrId": "11100102",
+      "einwohner": 2964,
+      "einwohnerMitHaltestelle": 2604
+    },
+    {
+      "plrId": "11100203",
+      "einwohner": 8482,
+      "einwohnerMitHaltestelle": 7270
+    },
+    {
+      "plrId": "11100204",
+      "einwohner": 7041,
+      "einwohnerMitHaltestelle": 7041
+    },
+    {
+      "plrId": "11100205",
+      "einwohner": 5320,
+      "einwohnerMitHaltestelle": 5246
+    },
+    {
+      "plrId": "11100206",
+      "einwohner": 7495,
+      "einwohnerMitHaltestelle": 7495
+    },
+    {
+      "plrId": "11100307",
+      "einwohner": 11325,
+      "einwohnerMitHaltestelle": 11325
+    },
+    {
+      "plrId": "11100308",
+      "einwohner": 8860,
+      "einwohnerMitHaltestelle": 8860
+    },
+    {
+      "plrId": "11100309",
+      "einwohner": 6432,
+      "einwohnerMitHaltestelle": 6432
+    },
+    {
+      "plrId": "11200410",
+      "einwohner": 9596,
+      "einwohnerMitHaltestelle": 9343
+    },
+    {
+      "plrId": "11200411",
+      "einwohner": 6841,
+      "einwohnerMitHaltestelle": 6841
+    },
+    {
+      "plrId": "11200512",
+      "einwohner": 4113,
+      "einwohnerMitHaltestelle": 3296
+    },
+    {
+      "plrId": "11200513",
+      "einwohner": 9378,
+      "einwohnerMitHaltestelle": 9378
+    },
+    {
+      "plrId": "11200514",
+      "einwohner": 15544,
+      "einwohnerMitHaltestelle": 15285
+    },
+    {
+      "plrId": "11200515",
+      "einwohner": 3440,
+      "einwohnerMitHaltestelle": 2778
+    },
+    {
+      "plrId": "11300616",
+      "einwohner": 5013,
+      "einwohnerMitHaltestelle": 5013
+    },
+    {
+      "plrId": "11300617",
+      "einwohner": 5369,
+      "einwohnerMitHaltestelle": 5369
+    },
+    {
+      "plrId": "11300618",
+      "einwohner": 3950,
+      "einwohnerMitHaltestelle": 3950
+    },
+    {
+      "plrId": "11300619",
+      "einwohner": 6845,
+      "einwohnerMitHaltestelle": 6845
+    },
+    {
+      "plrId": "11300620",
+      "einwohner": 10284,
+      "einwohnerMitHaltestelle": 10001
+    },
+    {
+      "plrId": "11300721",
+      "einwohner": 4679,
+      "einwohnerMitHaltestelle": 4643
+    },
+    {
+      "plrId": "11300722",
+      "einwohner": 10527,
+      "einwohnerMitHaltestelle": 10128
+    },
+    {
+      "plrId": "11300723",
+      "einwohner": 2037,
+      "einwohnerMitHaltestelle": 1780
+    },
+    {
+      "plrId": "11300724",
+      "einwohner": 4246,
+      "einwohnerMitHaltestelle": 4165
+    },
+    {
+      "plrId": "11300725",
+      "einwohner": 9354,
+      "einwohnerMitHaltestelle": 8671
+    },
+    {
+      "plrId": "11300826",
+      "einwohner": 9417,
+      "einwohnerMitHaltestelle": 6692
+    },
+    {
+      "plrId": "11400927",
+      "einwohner": 3951,
+      "einwohnerMitHaltestelle": 3533
+    },
+    {
+      "plrId": "11400928",
+      "einwohner": 1871,
+      "einwohnerMitHaltestelle": 1774
+    },
+    {
+      "plrId": "11400929",
+      "einwohner": 16500,
+      "einwohnerMitHaltestelle": 16500
+    },
+    {
+      "plrId": "11400930",
+      "einwohner": 4447,
+      "einwohnerMitHaltestelle": 4447
+    },
+    {
+      "plrId": "11400931",
+      "einwohner": 7047,
+      "einwohnerMitHaltestelle": 7047
+    },
+    {
+      "plrId": "11401032",
+      "einwohner": 7021,
+      "einwohnerMitHaltestelle": 7021
+    },
+    {
+      "plrId": "11401033",
+      "einwohner": 5889,
+      "einwohnerMitHaltestelle": 5889
+    },
+    {
+      "plrId": "11401034",
+      "einwohner": 2915,
+      "einwohnerMitHaltestelle": 2915
+    },
+    {
+      "plrId": "11401135",
+      "einwohner": 10233,
+      "einwohnerMitHaltestelle": 10228
+    },
+    {
+      "plrId": "11401136",
+      "einwohner": 7882,
+      "einwohnerMitHaltestelle": 7773
+    },
+    {
+      "plrId": "11401137",
+      "einwohner": 8275,
+      "einwohnerMitHaltestelle": 8187
+    },
+    {
+      "plrId": "11501238",
+      "einwohner": 4568,
+      "einwohnerMitHaltestelle": 4552
+    },
+    {
+      "plrId": "11501339",
+      "einwohner": 9875,
+      "einwohnerMitHaltestelle": 9633
+    },
+    {
+      "plrId": "11501340",
+      "einwohner": 10143,
+      "einwohnerMitHaltestelle": 9327
+    },
+    {
+      "plrId": "11501341",
+      "einwohner": 7458,
+      "einwohnerMitHaltestelle": 4927
+    },
+    {
+      "plrId": "12100101",
+      "einwohner": 9788,
+      "einwohnerMitHaltestelle": 9788
+    },
+    {
+      "plrId": "12100102",
+      "einwohner": 8609,
+      "einwohnerMitHaltestelle": 8609
+    },
+    {
+      "plrId": "12100103",
+      "einwohner": 7611,
+      "einwohnerMitHaltestelle": 7611
+    },
+    {
+      "plrId": "12100204",
+      "einwohner": 8569,
+      "einwohnerMitHaltestelle": 8569
+    },
+    {
+      "plrId": "12100205",
+      "einwohner": 13023,
+      "einwohnerMitHaltestelle": 13023
+    },
+    {
+      "plrId": "12100206",
+      "einwohner": 4356,
+      "einwohnerMitHaltestelle": 4356
+    },
+    {
+      "plrId": "12200307",
+      "einwohner": 2703,
+      "einwohnerMitHaltestelle": 2703
+    },
+    {
+      "plrId": "12200308",
+      "einwohner": 4882,
+      "einwohnerMitHaltestelle": 4882
+    },
+    {
+      "plrId": "12200309",
+      "einwohner": 9356,
+      "einwohnerMitHaltestelle": 9186
+    },
+    {
+      "plrId": "12200310",
+      "einwohner": 7472,
+      "einwohnerMitHaltestelle": 7472
+    },
+    {
+      "plrId": "12200411",
+      "einwohner": 319,
+      "einwohnerMitHaltestelle": 319
+    },
+    {
+      "plrId": "12200412",
+      "einwohner": 6692,
+      "einwohnerMitHaltestelle": 5364
+    },
+    {
+      "plrId": "12200413",
+      "einwohner": 7073,
+      "einwohnerMitHaltestelle": 7073
+    },
+    {
+      "plrId": "12200414",
+      "einwohner": 1407,
+      "einwohnerMitHaltestelle": 1218
+    },
+    {
+      "plrId": "12200515",
+      "einwohner": 10665,
+      "einwohnerMitHaltestelle": 7630
+    },
+    {
+      "plrId": "12400616",
+      "einwohner": 5649,
+      "einwohnerMitHaltestelle": 5125
+    },
+    {
+      "plrId": "12400617",
+      "einwohner": 6510,
+      "einwohnerMitHaltestelle": 5403
+    },
+    {
+      "plrId": "12400618",
+      "einwohner": 3650,
+      "einwohnerMitHaltestelle": 2736
+    },
+    {
+      "plrId": "12400619",
+      "einwohner": 7848,
+      "einwohnerMitHaltestelle": 4569
+    },
+    {
+      "plrId": "12400720",
+      "einwohner": 8203,
+      "einwohnerMitHaltestelle": 5739
+    },
+    {
+      "plrId": "12400721",
+      "einwohner": 7885,
+      "einwohnerMitHaltestelle": 5363
+    },
+    {
+      "plrId": "12400722",
+      "einwohner": 8390,
+      "einwohnerMitHaltestelle": 6064
+    },
+    {
+      "plrId": "12400723",
+      "einwohner": 7816,
+      "einwohnerMitHaltestelle": 7057
+    },
+    {
+      "plrId": "12500824",
+      "einwohner": 9509,
+      "einwohnerMitHaltestelle": 8864
+    },
+    {
+      "plrId": "12500825",
+      "einwohner": 6719,
+      "einwohnerMitHaltestelle": 6689
+    },
+    {
+      "plrId": "12500926",
+      "einwohner": 4965,
+      "einwohnerMitHaltestelle": 4965
+    },
+    {
+      "plrId": "12500927",
+      "einwohner": 6216,
+      "einwohnerMitHaltestelle": 5982
+    },
+    {
+      "plrId": "12500928",
+      "einwohner": 4902,
+      "einwohnerMitHaltestelle": 4782
+    },
+    {
+      "plrId": "12500929",
+      "einwohner": 4829,
+      "einwohnerMitHaltestelle": 3726
+    },
+    {
+      "plrId": "12500930",
+      "einwohner": 9177,
+      "einwohnerMitHaltestelle": 9177
+    },
+    {
+      "plrId": "12601031",
+      "einwohner": 3125,
+      "einwohnerMitHaltestelle": 3125
+    },
+    {
+      "plrId": "12601032",
+      "einwohner": 5597,
+      "einwohnerMitHaltestelle": 5597
+    },
+    {
+      "plrId": "12601133",
+      "einwohner": 10799,
+      "einwohnerMitHaltestelle": 10799
+    },
+    {
+      "plrId": "12601134",
+      "einwohner": 14549,
+      "einwohnerMitHaltestelle": 14549
+    },
+    {
+      "plrId": "12601235",
+      "einwohner": 10529,
+      "einwohnerMitHaltestelle": 10529
+    },
+    {
+      "plrId": "12601236",
+      "einwohner": 3354,
+      "einwohnerMitHaltestelle": 3354
+    }
+  ]
+}

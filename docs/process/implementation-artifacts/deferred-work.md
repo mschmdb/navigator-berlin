@@ -543,3 +543,9 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-162-stories-route.md`
   summary: Stories-Seiten nutzen das Startseiten-OG-Bild, der Alt-Text beschreibt etwas anderes.
   evidence: `/og/page/home.png` in Übersicht und Beitrag; eigenes Bild gehört zu #165.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-161-stories-kennzahlen.md`
+  summary: `haltestelle400mAnteil` (400 m, alle Verkehrsmittel) trennt die Kieze kaum; 53 von 143 liegen bei 99 % oder mehr. Für #163 prüfen, ob ein Wert nur für Schiene sinnvoller ist.
+  evidence: Review gh-161, ausgezählt in `static/data/stories-kennzahlen.json`.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-161-stories-kennzahlen.md`
+  summary: `gruen` ist flächengewichtet wie in den Skizzen; einwohnergewichtet wäre näher an der Bedeutung „Grünversorgung pro Einwohner“. Frage an Matze.
+  evidence: Review gh-161; große, dünn besiedelte Planungsräume dominieren sonst den Kiezwert.

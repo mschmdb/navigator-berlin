@@ -13,3 +13,9 @@ export function laeaToWgs84(x: number, y: number): [number, number] {
 	const [lon, lat] = proj4(EPSG_3035, EPSG_4326, [x, y]);
 	return [lon, lat];
 }
+
+/** WGS84 (lon, lat) nach ETRS89-LAEA (EPSG:3035) in Metern. */
+export function wgs84ToLaea(lon: number, lat: number): { x: number; y: number } {
+	const [x, y] = proj4(EPSG_4326, EPSG_3035, [lon, lat]);
+	return { x, y };
+}
