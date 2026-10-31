@@ -101,6 +101,23 @@
 				</li>
 			{/each}
 		</ul>
+		<p class="m-0 mt-4">
+			<a
+				data-testid="plk-pdf-all-link"
+				onclick={() =>
+					trackEvent('Stories PDF Download', {
+						serie: 'punkt-linie-kiez',
+						bezirk: 'alle',
+						sprache: locale
+					})}
+				href="/stories/punkt-linie-kiez/{locale}/alle-bezirke.pdf"
+				download="punkt-linie-kiez-alle-bezirke-{locale}.pdf"
+				class="inline-flex min-h-6 items-center border px-3 py-1 text-base font-semibold underline underline-offset-2"
+				style:border-color={STORY_INK}
+			>
+				{m.plk_pdf_all_link()}
+			</a>
+		</p>
 		<p role="status" class="sr-only">
 			{selected ? m.plk_selected_status({ name: selected.name }) : ''}
 		</p>

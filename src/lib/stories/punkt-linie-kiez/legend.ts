@@ -17,6 +17,25 @@ export interface LegendRow {
 
 const COLORS = STORY_SERIES['punkt-linie-kiez'].colors;
 
+export interface LegendShape {
+	readonly key: ShapeKey;
+	readonly label: string;
+	readonly color: string;
+}
+
+/** Die sechs Formen mit Bedeutung, ohne Werte. Das Gesamtplakat nutzt nur diese Legende. */
+export function legendShapes(locale?: Locale): LegendShape[] {
+	const o = locale ? { locale } : undefined;
+	return [
+		{ key: 'circle', label: m.plk_legend_circle({}, o), color: COLORS.kreis.hex },
+		{ key: 'square', label: m.plk_legend_square({}, o), color: COLORS.quadrat.hex },
+		{ key: 'triangle', label: m.plk_legend_triangle({}, o), color: COLORS.dreieck.hex },
+		{ key: 'bar', label: m.plk_legend_bar({}, o), color: COLORS.balken.hex },
+		{ key: 'lines', label: m.plk_legend_lines({}, o), color: STORY_INK },
+		{ key: 'donut', label: m.plk_legend_donut({}, o), color: COLORS.donut.hex }
+	];
+}
+
 /** Sechs Zeilen in fester Reihenfolge. Fehlende Werte haben keinen Ersatz. */
 export function legendRows(k: Kennzahlen, locale?: Locale): LegendRow[] {
 	const o = locale ? { locale } : undefined;

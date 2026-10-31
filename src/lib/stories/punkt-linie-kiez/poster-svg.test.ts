@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { posterSvg, POSTER_HEIGHT, POSTER_WIDTH, wrapText } from './poster-svg';
+import { overviewPosterSvg, posterSvg, POSTER_HEIGHT, POSTER_WIDTH, wrapText } from './poster-svg';
 import { compositionElements } from './composition-svg';
 import type { BezirkItem, KennzahlenQuelle } from './types';
 
@@ -47,7 +47,7 @@ describe('posterSvg', () => {
 		expect(svg).toContain('44 / 100');
 		expect(svg).toContain('49,3 dB');
 		expect(svg).toContain('navigator.berlin');
-		expect(svg).toContain('Einwohner pro Planungsraum (Stand 2024-12-31)');
+		expect(svg).toContain('Einwohner pro Planungsraum (2024-12-31)');
 		expect(svg).toContain('© OpenStreetMap-Mitwirkende');
 		expect(svg).toContain('MIT-Lizenz');
 	});
@@ -72,5 +72,118 @@ describe('posterSvg', () => {
 
 	it('enthält keine Rastergrafik', () => {
 		expect(posterSvg(item, sources, 'de')).not.toContain('<image');
+	});
+});
+
+describe('overviewPosterSvg', () => {
+	const names = [
+		'Spandau',
+		'Mitte',
+		'Pankow',
+		'Neukölln',
+		'Lichtenberg',
+		'Reinickendorf',
+		'Treptow-Köpenick',
+		'Marzahn-Hellersdorf',
+		'Steglitz-Zehlendorf',
+		'Tempelhof-Schöneberg',
+		'Friedrichshain-Kreuzberg',
+		'Charlottenburg-Wilmersdorf'
+	];
+	const bezirke: BezirkItem[] = names.map((name, i) => ({
+		slug: name.toLowerCase(),
+		name,
+		kennzahlen: { ...item.kennzahlen, slug: name.toLowerCase(), gruen: 0.2 + i * 0.05 }
+	}));
+
+	it('zeigt 12 Kompositionen mit Namen, alphabetisch sortiert', () => {
+		const svg = overviewPosterSvg(bezirke, sources, 'de');
+		expect(svg.match(/clip-path="url\(#plk-clip\)"/g)).toHaveLength(12);
+		const lower = new Set(names.map((n) => n.toLowerCase()));
+		const found = [...svg.matchAll(/<text [^>]*>([^<]+)</g)]
+			.map((x) => x[1])
+			.filter((t) => lower.has(t));
+		expect(found).toEqual(
+			[...names].sort((a, b) => a.localeCompare(b, 'de')).map((n) => n.toLowerCase())
+		);
+	});
+
+	it('setzt die Namen linksbündig unter die Kachel, mit Abstand zur nächsten Zeile', () => {
+		const svg = overviewPosterSvg(bezirke, sources, 'de');
+		const label = [
+			...svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)"[^>]*text-anchor="(\w+)"[^>]*>([^<]+)</g)
+		].find(
+			(x) =>
+				x[4] ===
+				names
+					.slice()
+					.sort((a, b) => a.localeCompare(b, 'de'))[0]!
+					.toLowerCase()
+		)!;
+		const tile = svg.match(/<g transform="translate\(([\d.]+) ([\d.]+)\) scale/)!;
+		expect(label[3]).toBe('start');
+		expect(Number(label[1])).toBeCloseTo(Number(tile[1]), 5);
+		const rows = [...svg.matchAll(/<g transform="translate\([\d.]+ ([\d.]+)\) scale/g)].map((x) =>
+			Number(x[1])
+		);
+		const nextRowTop = [...new Set(rows)].sort((a, b) => a - b)[1]!;
+		expect(nextRowTop - Number(label[2])).toBeGreaterThanOrEqual(24);
+	});
+
+	it('nutzt für jede Komposition die große Geometrie', () => {
+		const svg = overviewPosterSvg(bezirke, sources, 'de');
+		for (const b of bezirke) expect(svg).toContain(compositionElements(b.kennzahlen));
+	});
+
+	it('legt die Linien in jeder Komposition vor die Formen', () => {
+		const svg = overviewPosterSvg(bezirke, sources, 'de');
+		for (const part of svg.split('clip-path="url(#plk-clip)">').slice(1)) {
+			const comp = part.slice(0, part.indexOf('</g></g>'));
+			const lastLine = comp.lastIndexOf('<line');
+			const firstShape = comp.search(/<(circle|path)/);
+			if (lastLine >= 0 && firstShape >= 0) expect(lastLine).toBeLessThan(firstShape);
+		}
+	});
+
+	it('trägt eine Legende ohne Werte (DE)', () => {
+		const svg = overviewPosterSvg(bezirke, sources, 'de');
+		for (const label of ['kreis: grünversorgung', 'donut: clubs', 'balken: bewohner pro km²'])
+			expect(svg).toContain(label);
+		expect(svg).not.toContain('keine Daten');
+		expect(svg).not.toContain(' dB');
+		expect(svg).not.toContain('/ 100');
+	});
+
+	it('trägt Quellen, OSM, Lizenz und Marke, englisch bei lang en', () => {
+		const de = overviewPosterSvg(bezirke, sources, 'de');
+		expect(de).toContain('Einwohner pro Planungsraum (2024-12-31)');
+		expect(de).toContain('© OpenStreetMap-Mitwirkende');
+		expect(de).toContain('MIT-Lizenz');
+		expect(de).toContain('navigator.berlin');
+		const en = overviewPosterSvg(bezirke, sources, 'en');
+		expect(en).toContain('circle: green space');
+		expect(en).toContain('© OpenStreetMap contributors');
+		expect(en).toContain('MIT licence');
+	});
+
+	it('hält alle Elemente innerhalb des Blatts und nutzt keine Rastergrafik', () => {
+		const svg = overviewPosterSvg(bezirke, sources, 'de');
+		expect(svg).not.toContain('<image');
+		for (const m of svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)"/g)) {
+			expect(Number(m[1])).toBeGreaterThan(20);
+			expect(Number(m[1])).toBeLessThan(POSTER_WIDTH - 20);
+			expect(Number(m[2])).toBeLessThan(POSTER_HEIGHT - 20);
+		}
+		const tiles = [
+			...svg.matchAll(/translate\(([\d.]+) ([\d.]+)\) scale\(([\d.]+)\)"><g clip-path/g)
+		].map((m) => [Number(m[1]), Number(m[2]), Number(m[3])] as const);
+		expect(tiles).toHaveLength(12);
+		const footerLine = Number(svg.match(/<line x1="50" y1="([\d.]+)" x2="950"/)![1]);
+		for (const [x, y, s] of tiles) {
+			expect(x).toBeGreaterThanOrEqual(20);
+			expect(x + 200 * s).toBeLessThanOrEqual(POSTER_WIDTH - 20);
+			// Kachel plus Name enden über der Legende, die über der Fußlinie steht.
+			expect(y + 200 * s + 30).toBeLessThan(footerLine - 52);
+		}
 	});
 });

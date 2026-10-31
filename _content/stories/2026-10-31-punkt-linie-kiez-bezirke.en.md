@@ -19,4 +19,4 @@ Where a shape sits means nothing. Each district has a fixed seed, so Pankow alwa
 
 ## Ready to print
 
-Below the large picture you can download your district as a PDF. It's a vector file, so you can have it printed at any size. Everything is MIT licensed, and the sources are on the poster.
+Below the large picture you can download your district as a PDF. It's a vector file, so you can have it printed at any size. Everything is MIT licensed, and the sources are on the poster. Below the selection you will also find an overview poster with all 12 districts in a grid and one shared legend.
