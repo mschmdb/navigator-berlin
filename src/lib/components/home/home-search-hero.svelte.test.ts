@@ -111,4 +111,12 @@ describe('HomeSearchHero', () => {
 		expect(a.hasAttribute('tabindex')).toBe(false);
 		expect(a.hasAttribute('aria-hidden')).toBe(false);
 	});
+
+	it('Vorschaubild hat Rahmen und Radius', () => {
+		render(HomeSearchHero, { geocode });
+		const cls = document.querySelector('[data-testid="home-preview-kiez-score"]')!.classList;
+		expect(cls).toContain('rounded');
+		expect(cls).toContain('border');
+		expect(cls).toContain('border-rule');
+	});
 });

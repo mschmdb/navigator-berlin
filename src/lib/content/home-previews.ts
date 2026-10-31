@@ -22,8 +22,8 @@ export const HOME_PREVIEWS: Readonly<Record<HomePreviewName, HomePreview>> = {
 	hitze: {
 		name: 'hitze',
 		path: '/explore?layers=klima-pet-2022&address=13.4243,52.4869&q=Hermannplatz',
-		width: 1600,
-		height: 878
+		width: 1200,
+		height: 1000
 	},
 	'kiez-score': {
 		name: 'kiez-score',
@@ -40,8 +40,8 @@ export const HOME_PREVIEWS: Readonly<Record<HomePreviewName, HomePreview>> = {
 	wahlen: {
 		name: 'wahlen',
 		path: '/berlin-wahlen?jahr=2026',
-		width: 1132,
-		height: 1036
+		width: 1200,
+		height: 1000
 	}
 };
 

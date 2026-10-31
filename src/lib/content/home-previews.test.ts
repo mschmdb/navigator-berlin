@@ -15,6 +15,12 @@ describe('HOME_PREVIEWS', () => {
 		expect(p.path.startsWith('/')).toBe(true);
 	});
 
+	it('Hitze und Wahlen haben das Kachel-Format 1200x1000', () => {
+		for (const p of [HOME_PREVIEWS.hitze, HOME_PREVIEWS.wahlen]) {
+			expect({ width: p.width, height: p.height }).toEqual({ width: 1200, height: 1000 });
+		}
+	});
+
 	it('Bilddatei je Sprache unter /home/{locale}/', () => {
 		expect(homePreviewSrc(HOME_PREVIEWS.hitze, 'de')).toBe('/home/de/hitze.webp');
 		expect(homePreviewSrc(HOME_PREVIEWS.hitze, 'en')).toBe('/home/en/hitze.webp');

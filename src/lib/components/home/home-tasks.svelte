@@ -1,6 +1,6 @@
 <!--
-	Vier Aufgaben mit je zwei bis drei Direktlinks. Links als Sekundär-Buttons (`cta.ts`),
-	damit sie als Aktion erkennbar sind.
+	Vier Aufgaben als Kachel-Raster (#171, Mockup R): Gegend breit mit Bild, Hitze und
+	Wahlen halb mit Bild, Kieze breit mit Bezirksliste. Mobil einspaltig.
 -->
 <script lang="ts">
 	import { featureFlags } from '$lib/data/feature-flags.js';
@@ -8,8 +8,8 @@
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { trackLanding } from '$lib/utils/plausible.js';
-	import HomePreviewLink from './home-preview-link.svelte';
-	import { ctaSecondary } from './internal/cta.js';
+	import { HOME_BEZIRKE } from '$lib/content/home-bezirke.js';
+	import HomeTaskTile from './home-task-tile.svelte';
 
 	interface TaskLink {
 		readonly href: string;
@@ -39,16 +39,6 @@
 				: undefined
 		},
 		{
-			id: 'kieze',
-			title: m.home_task_kieze_title(),
-			text: m.home_task_kieze_text(),
-			links: [
-				{ href: '/kieze', label: m.home_task_kieze_kieze() },
-				{ href: '/bezirke', label: m.home_task_kieze_bezirke() },
-				{ href: '/kiez-score', label: m.home_task_kieze_ranking() }
-			]
-		},
-		{
 			id: 'klima',
 			title: m.home_task_klima_title(),
 			text: m.home_task_klima_text(),
@@ -69,36 +59,48 @@
 				{ href: '/berlin-wahlen/2025-btw-zweitstimme', label: m.home_task_wahlen_btw() }
 			],
 			preview: { data: HOME_PREVIEWS.wahlen, alt: m.home_preview_wahlen_alt() }
+		},
+		{
+			id: 'kieze',
+			title: m.home_task_kieze_title(),
+			text: m.home_task_kieze_text(),
+			links: [
+				{ href: '/kieze', label: m.home_task_kieze_kieze() },
+				{ href: '/bezirke', label: m.home_task_kieze_bezirke() },
+				{ href: '/kiez-score', label: m.home_task_kieze_ranking() }
+			]
 		}
 	]);
 </script>
 
-<div class="space-y-10">
+<div class="grid gap-6 md:grid-cols-12">
 	{#each tasks as task (task.id)}
-		<section data-testid={`home-task-${task.id}`} class="space-y-3">
-			<h2 class="text-2xl font-bold text-ink">{task.title}</h2>
-			<p class="max-w-(--measure) text-base text-ink-muted">{task.text}</p>
-			<ul class="flex flex-wrap gap-3">
-				{#each task.links as link (link.href)}
-					<li>
-						<a
-							href={localizedHref(link.href)}
-							onclick={() => trackLanding('task_link', 'home')}
-							class={ctaSecondary}
-						>
-							{link.label}
-						</a>
-					</li>
-				{/each}
-			</ul>
-			{#if task.preview}
-				<HomePreviewLink
-					preview={task.preview.data}
-					alt={task.preview.alt}
-					decorative
-					class="block max-w-3xl"
-				/>
-			{/if}
-		</section>
+		{#if task.id === 'kieze'}
+			<HomeTaskTile {...task} layout="wide">
+				{#snippet aside()}
+					<ul
+						aria-label={m.home_task_kieze_bezirke_list_label()}
+						class="grid grid-cols-1 gap-x-4 min-[30rem]:grid-cols-2"
+					>
+						{#each HOME_BEZIRKE as bezirk (bezirk.slug)}
+							<li>
+								<a
+									href={localizedHref(`/bezirk/${bezirk.slug}`)}
+									onclick={() => trackLanding('task_link', 'home')}
+									class="inline-flex min-h-(--target-min) items-center text-base text-ink underline underline-offset-4 hover:text-accent"
+								>
+									{bezirk.name}
+								</a>
+							</li>
+						{/each}
+					</ul>
+				{/snippet}
+			</HomeTaskTile>
+		{:else}
+			<HomeTaskTile {...task} layout={task.id === 'gegend' ? 'wide' : 'half'} />
+		{/if}
+		{#if task.id === 'gegend'}
+			<!-- Platz für den späteren Data-Stories-Teaser (#162), ohne sichtbare Fläche -->
+		{/if}
 	{/each}
 </div>

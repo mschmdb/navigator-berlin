@@ -39,7 +39,7 @@
 			{#each items as u (u.slug)}
 				<li class="py-3">
 					<a
-						class="flex flex-col gap-1 text-ink hover:text-accent"
+						class="flex max-w-(--measure) flex-col gap-1 text-ink hover:text-accent"
 						href={localizedHref(`/updates/${u.slug}`)}
 					>
 						<span class="flex items-baseline gap-3">

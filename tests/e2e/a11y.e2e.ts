@@ -79,7 +79,7 @@ test('Startseite hat 0 axe-Violations und zeigt Suche, Saisonhinweis und vier Au
 	await page.goto('/');
 	await expect(page.getByTestId('home-search-hero')).toBeVisible();
 	await expect(page.getByTestId('home-season-note')).toBeVisible();
-	await expect(page.locator('[data-testid^="home-task-"]')).toHaveCount(4);
+	await expect(page.locator('section[data-testid^="home-task-"]')).toHaveCount(4);
 	const results = await new AxeBuilder({ page })
 		.withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
 		.analyze();

@@ -534,3 +534,6 @@
   summary: Inspector-Score-Ring auf /en zeigt deutsche Dimensionsnamen („Ruhe & Luft“, „Wohnschutz“) und „Gesamt“.
   evidence: Sichtbar in `static/home/en/kiez-score.webp` (Aufnahme 31.10.); Liste darunter ist korrekt englisch.
   resolved: 31.10.2026, Inspector-Section reicht übersetzte Labels an den Ring durch; EN-Vorschauen neu aufgenommen.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-171-startseite-kachel-raster.md`
+  summary: Kein Komponententest prüft, dass Task- und Bezirk-Links `trackLanding('task_link','home')` auslösen.
+  evidence: Grep über alle Tests findet `trackLanding` nur in `plausible.test.ts`; Fix: Modul in `home-tasks.svelte.test.ts` mocken.

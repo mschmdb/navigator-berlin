@@ -733,12 +733,18 @@ test.describe('i18n Block B2: Startseite /en', () => {
 			]
 		};
 		for (const [id, hrefs] of Object.entries(taskHrefs)) {
-			const links = page.getByTestId(`home-task-${id}`).locator('ul a');
+			const links = page
+				.getByTestId(`home-task-${id}`)
+				.locator('[data-testid="home-task-links"] a');
 			await expect(links).toHaveCount(hrefs.length);
 			for (const [index, href] of hrefs.entries()) {
 				await expect(links.nth(index)).toHaveAttribute('href', href);
 			}
 		}
+
+		await expect(
+			page.getByTestId('home-task-kieze').locator('a[href="/en/bezirk/mitte"]')
+		).toHaveCount(1);
 
 		const example = page.getByTestId('home-search-examples').locator('a').first();
 		await expect(example).toHaveAttribute('href', /^\/en\/explore\?/);

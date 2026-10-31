@@ -57,11 +57,10 @@
 <JsonLd data={websiteJsonLd} testid="website-jsonld" />
 <JsonLd data={organizationJsonLd} testid="organization-jsonld" />
 
-<article class="mx-auto max-w-5xl space-y-10 px-4 py-10" data-testid="home-landing">
+<article class="mx-auto max-w-6xl space-y-10 px-4 py-10" data-testid="home-landing">
 	<HomeSearchHero />
 	<HomeSeasonNote />
 	<HomeTasks />
-	<!-- Platz für den späteren Data-Stories-Teaser -->
 	<HomeUpdatesTeaser items={data.updates} />
 	<HomeTrust />
 </article>
