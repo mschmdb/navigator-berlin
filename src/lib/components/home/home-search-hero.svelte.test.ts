@@ -18,9 +18,7 @@ describe('HomeSearchHero', () => {
 	it('EN: englischer Titel', () => {
 		overwriteGetLocale(() => 'en');
 		render(HomeSearchHero, { geocode });
-		expect(document.querySelector('h1')?.textContent).toBe(
-			'How is life at your address?'
-		);
+		expect(document.querySelector('h1')?.textContent).toBe('How is life at your address?');
 	});
 
 	it('hat drei Beispiel-Links auf /explore mit address und q', () => {

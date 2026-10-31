@@ -168,7 +168,10 @@ describe('Schriften-Assets und Lizenzhinweis', () => {
 			const messages = JSON.parse(readFileSync(join(ROOT, 'messages', `${lang}.json`), 'utf8'));
 			expect(messages.lizenzen_schriften_p1).toMatch(/Jost/);
 		}
-		const page = readFileSync(join(SRC, 'routes', '(with-header)', 'lizenzen', '+page.svelte'), 'utf8');
+		const page = readFileSync(
+			join(SRC, 'routes', '(with-header)', 'lizenzen', '+page.svelte'),
+			'utf8'
+		);
 		expect(page).toContain('github.com/indestructible-type/Jost');
 	});
 });
