@@ -344,6 +344,20 @@ describe('KiezScoreSection', () => {
 		);
 	});
 
+	// Score-Ring: Legende, Mitte und Screenreader-Tabelle folgen der Sprache.
+	it('Score-Ring zeigt englische Dimensionen, „Overall“ und „no data“ für lang="en"', async () => {
+		const score = makeScore({ overall: 64 });
+		score.dimensions[1].value = null;
+		render(KiezScoreSection, { score, lang: 'en' });
+		const ring = (await page.getByTestId('kiez-score-ring').element()) as HTMLElement;
+		const legend = ring.querySelector('[data-testid="kiez-score-ring-legend"]')?.textContent ?? '';
+		expect(legend).toContain('Quiet & air');
+		expect(legend).toContain('Tenant protection');
+		expect(legend).toContain('no data');
+		expect(ring.textContent).toContain('Overall');
+		expect(ring.textContent).not.toMatch(/Gesamt|Ruhe & Luft|Wohnschutz|keine Daten|Kiez-Score/);
+	});
+
 	it('rendert englisch über den Default-Pfad (getLocale())', async () => {
 		overwriteGetLocale(() => 'en');
 		render(KiezScoreSection, { score: makeScore() });

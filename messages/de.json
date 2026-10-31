@@ -757,6 +757,7 @@
 	"inspector_trinkbrunnen_badge_wheelchair_limited": "teils barrierefrei",
 	"inspector_trinkbrunnen_hide": "Trinkbrunnen ausblenden",
 	"inspector_trinkbrunnen_show": "Trinkbrunnen einblenden",
+	"inspector_kiez_score_ring_no_data": "keine Daten",
 	"inspector_kiez_score_heading": "Kiez-Score",
 	"inspector_kiez_score_overall_meta": "Gesamt, Mittel über {used}/{total} Dimensionen",
 	"inspector_kiez_score_map_toggle_remove_gesamt": "Gesamt-Score von Karte entfernen",

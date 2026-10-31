@@ -757,6 +757,7 @@
 	"inspector_trinkbrunnen_badge_wheelchair_limited": "partly accessible",
 	"inspector_trinkbrunnen_hide": "Hide drinking fountains",
 	"inspector_trinkbrunnen_show": "Show drinking fountains",
+	"inspector_kiez_score_ring_no_data": "no data",
 	"inspector_kiez_score_heading": "Kiez score",
 	"inspector_kiez_score_overall_meta": "Overall, mean of {used}/{total} dimensions",
 	"inspector_kiez_score_map_toggle_remove_gesamt": "Remove overall score from map",

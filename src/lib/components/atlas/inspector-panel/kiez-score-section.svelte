@@ -5,6 +5,7 @@
 	import { getLocale, type Locale } from '$lib/paraglide/runtime';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import KiezScoreDimensionRow from './kiez-score-dimension-row.svelte';
+	import { dimensionLabel } from './internal/kiez-score-display.js';
 	import KiezScoreRing from '../charts/kiez-score-ring.svelte';
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { COMPOSITE_DIMENSIONS } from '$lib/data';
@@ -59,6 +60,12 @@
 		];
 	});
 
+	const ringDimensionLabels = $derived(
+		Object.fromEntries(
+			COMPOSITE_DIMENSIONS.map((dim) => [dim, dimensionLabel(dim, localeOpts)])
+		) as Partial<Record<KiezScoreDimension, string>>
+	);
+
 	let expandedDim = $state<KiezScoreDimension | null>(null);
 
 	function toggleDim(dim: KiezScoreDimension): void {
@@ -74,7 +81,15 @@
 
 		{#if score.overall !== undefined}
 			<div class="flex flex-col items-center gap-1 pb-1" data-testid="kiez-score-overall">
-				<KiezScoreRing {score} onSegmentClick={toggleDim} />
+				<KiezScoreRing
+					{score}
+					onSegmentClick={toggleDim}
+					layerName={m.inspector_kiez_score_heading(undefined, localeOpts)}
+					overallLabel={m.atlas_value_kiez_score_overall(undefined, localeOpts)}
+					noDataLabel={m.inspector_kiez_score_ring_no_data(undefined, localeOpts)}
+					orderLabel={m.inspector_kiez_score_ring_order(undefined, localeOpts)}
+					dimensionLabels={ringDimensionLabels}
+				/>
 				<span class="text-dense-meta text-ink-subtle" data-testid="kiez-score-overall-meta">
 					{m.inspector_kiez_score_overall_meta(
 						{ used: String(usedDimsCount), total: String(COMPOSITE_DIMENSIONS.length) },

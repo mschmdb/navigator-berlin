@@ -533,3 +533,4 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-170-startseite-vorschauen.md`
   summary: Inspector-Score-Ring auf /en zeigt deutsche Dimensionsnamen („Ruhe & Luft“, „Wohnschutz“) und „Gesamt“.
   evidence: Sichtbar in `static/home/en/kiez-score.webp` (Aufnahme 31.10.); Liste darunter ist korrekt englisch.
+  resolved: 31.10.2026, Inspector-Section reicht übersetzte Labels an den Ring durch; EN-Vorschauen neu aufgenommen.
