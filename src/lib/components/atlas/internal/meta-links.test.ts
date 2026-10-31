@@ -103,3 +103,16 @@ describe('Über-Seite im Footer', () => {
 		expect(metaLinkLabel('ueber', { locale: 'en' })).toBe('About the project');
 	});
 });
+
+describe('Data Stories im Footer (#162)', () => {
+	it('steht in "sonstiges" direkt vor Updates und in der flachen Liste', () => {
+		const ids = META_LINK_GROUPS.find((g) => g.id === 'sonstiges')?.links.map((l) => l.id) ?? [];
+		expect(ids.indexOf('stories')).toBe(ids.indexOf('updates') - 1);
+		expect(META_LINKS.find((l) => l.id === 'stories')?.href).toBe('/stories');
+	});
+
+	it('Label ist in DE und EN "Data Stories"', () => {
+		expect(metaLinkLabel('stories', { locale: 'de' })).toBe('Data Stories');
+		expect(metaLinkLabel('stories', { locale: 'en' })).toBe('Data Stories');
+	});
+});

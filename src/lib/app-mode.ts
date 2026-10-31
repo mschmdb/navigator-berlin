@@ -3,10 +3,11 @@
  * Hitze-/Kühle-Orte-Angebot (Subdomain hitze.navigator.berlin). Zentrale Stelle, damit
  * kein verstreutes `if (hitze)` durch die App wandert. Kein zweites Repo, kein Fork.
  */
-export type AppMode = 'default' | 'hitze' | 'kaelte';
+export type AppMode = 'default' | 'hitze' | 'kaelte' | 'stories';
 
 const HITZE_HOST_PREFIX = 'hitze.';
 const KAELTE_HOST_PREFIX = 'kaelte.';
+const STORIES_HOST_PREFIX = 'stories.';
 
 /**
  * Bestimmt den App-Modus. Priorität: expliziter Override (Env/Query, für lokales Testen)
@@ -17,6 +18,7 @@ export function resolveAppMode(host: string | null | undefined, override?: strin
 	const h = (host ?? '').toLowerCase();
 	if (h.startsWith(HITZE_HOST_PREFIX)) return 'hitze';
 	if (h.startsWith(KAELTE_HOST_PREFIX)) return 'kaelte';
+	if (h.startsWith(STORIES_HOST_PREFIX)) return 'stories';
 	return 'default';
 }
 
@@ -30,6 +32,22 @@ export const KAELTE_ROUTE = '/kaelte';
 export function kaelteReroute(url: URL): string | null {
 	if (resolveAppMode(url.host) !== 'kaelte') return null;
 	if (url.pathname === '/') return KAELTE_ROUTE;
+	return null;
+}
+
+/** Interne Ziel-Route der Stories-Subdomain. */
+export const STORIES_ROUTE = '/stories';
+
+/**
+ * Reroute-Entscheidung für die Stories-Subdomain, analog zu {@link kaelteReroute}: rendert
+ * `/stories` an der Wurzel ohne Redirect. Kein Override, nur der Host entscheidet.
+ */
+export function storiesReroute(url: URL): string | null {
+	if (resolveAppMode(url.host) !== 'stories') return null;
+	// `/en` und `/en/` sind die englische Wurzel. Die Locale liest Paraglide aus der URL.
+	if (url.pathname === '/' || url.pathname === '/en' || url.pathname === '/en/') {
+		return STORIES_ROUTE;
+	}
 	return null;
 }
 
@@ -52,11 +70,11 @@ export function hitzeReroute(url: URL, override?: string | null): string | null 
 }
 
 /**
- * Pfad für den Plausible-Pageview. Die Subdomain-Wurzeln rendern per Reroute `/hitze` bzw.
- * `/kaelte`, die URL bleibt `/`. Gibt `undefined` zurück, wenn der echte Pfad gelten soll.
+ * Pfad für den Plausible-Pageview. Die Subdomain-Wurzeln rendern per Reroute `/hitze`,
+ * `/kaelte` bzw. `/stories`, die URL bleibt `/`. Gibt `undefined` zurück, wenn der echte Pfad gelten soll.
  */
 export function pageviewPathFor(url: URL): string | undefined {
-	return hitzeReroute(url) ?? kaelteReroute(url) ?? undefined;
+	return hitzeReroute(url) ?? kaelteReroute(url) ?? storiesReroute(url) ?? undefined;
 }
 
 const MODE_ONLY_LAYERS: Readonly<Record<string, AppMode>> = {
@@ -84,6 +102,7 @@ export function resolveLayerModeCatchUp(slugs: readonly string[]): AppMode | nul
 	return null;
 }
 
+/** Gültiger `mode`-Query-Wert. `stories` fehlt bewusst: Der Modus kommt nur über den Host. */
 function isAppModeValue(value: string | null | undefined): value is AppMode {
 	return value === 'hitze' || value === 'kaelte' || value === 'default';
 }
@@ -104,7 +123,7 @@ export function resolveExplorerEntry(
 	rawModeParam: string | null | undefined
 ): ExplorerEntry {
 	const catchUpMode =
-		!isAppModeValue(rawModeParam) && appMode === 'default'
+		!isAppModeValue(rawModeParam) && (appMode === 'default' || appMode === 'stories')
 			? resolveLayerModeCatchUp(urlLayers)
 			: null;
 	const effectiveMode = catchUpMode ?? appMode;

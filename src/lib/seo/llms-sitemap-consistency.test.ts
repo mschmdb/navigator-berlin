@@ -63,7 +63,8 @@ describe('Sitemap ↔ llms.txt URL-Konsistenz', () => {
 	it('every sitemap URL (outside feed-domains) is also exposed via llms.txt source entries', () => {
 		// /updates-Routes haben eigene LLM-Discovery via RSS/Atom/JSON-Feed (Story 2.13).
 		// llms.txt enumeriert nicht jeden Blog-Post, sondern editoriale Site-Struktur.
-		const FEED_DOMAINS = ['/updates'];
+		// Beiträge unter /stories/<slug> sind Blog-Posts, der Index /stories steht in llms.txt.
+		const FEED_DOMAINS = ['/updates', '/stories/'];
 		const isFeedRoute = (loc: string) =>
 			FEED_DOMAINS.some((prefix) => loc.startsWith(`${ctx.origin}${prefix}`));
 

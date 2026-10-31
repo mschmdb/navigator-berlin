@@ -99,6 +99,11 @@ describe('canonicalOrigin', () => {
 		expect(canonicalOrigin('https://kaelte.navigator.berlin/')).toBe('https://navigator.berlin');
 	});
 
+	it('mappt die Stories-Subdomain auf die Hauptdomain', () => {
+		expect(canonicalOrigin('https://stories.navigator.berlin')).toBe('https://navigator.berlin');
+		expect(canonicalOrigin('https://stories.navigator.berlin/')).toBe('https://navigator.berlin');
+	});
+
 	it('lässt lokale Kälte-Origins lokal', () => {
 		expect(canonicalOrigin('http://kaelte.localhost:5173')).toBe('http://kaelte.localhost:5173');
 	});

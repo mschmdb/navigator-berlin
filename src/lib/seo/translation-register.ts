@@ -47,10 +47,30 @@ export function untranslatedUpdatePaths(filePaths: readonly string[]): string[] 
 	return out.sort();
 }
 
+/**
+ * Wie {@link untranslatedUpdatePaths} für `_content/stories/`: Beiträge ohne `.en.md`
+ * bleiben DE-only (noindex, Canonical auf DE, nicht in sitemap-en).
+ */
+export function untranslatedStoryPaths(filePaths: readonly string[]): string[] {
+	const parsed = filePaths.map((p) => classifyUpdateFilename(filenameOf(p)));
+	const english = new Set<string>();
+	for (const file of parsed) if (file.kind === 'en') english.add(file.key);
+	const out: string[] = [];
+	for (const file of parsed) {
+		if (file.kind === 'de' && !english.has(file.key)) out.push(`/stories/${file.slug}`);
+	}
+	return out.sort();
+}
+
 // Nur die Dateinamen werden gelesen; die Module selbst werden nie geladen.
 /** Pfade aller Dateien unter `_content/updates/` (nur Namen, kein Inhalt). */
 export const UPDATE_FILE_PATHS: readonly string[] = Object.keys(
 	import.meta.glob('/_content/updates/*.md', { query: '?raw' })
+);
+
+/** Pfade aller Dateien unter `_content/stories/` (nur Namen, kein Inhalt). */
+export const STORY_FILE_PATHS: readonly string[] = Object.keys(
+	import.meta.glob('/_content/stories/*.md', { query: '?raw' })
 );
 
 /**
@@ -142,6 +162,13 @@ export const TRANSLATION_REGISTER: readonly TranslationRegisterEntry[] = [
 			// Einträge ohne `.en.md` bleiben DE-only (noindex, Canonical auf DE, nicht in sitemap-en).
 			...untranslatedUpdatePaths(UPDATE_FILE_PATHS)
 		]
+	},
+	{
+		pathname: '/stories',
+		locale: 'en',
+		prefix: true,
+		// Beiträge ohne `.en.md` bleiben DE-only (noindex, Canonical auf DE, nicht in sitemap-en).
+		except: untranslatedStoryPaths(STORY_FILE_PATHS)
 	}
 ];
 

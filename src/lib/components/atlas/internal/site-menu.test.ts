@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { siteMenuItemTitle, siteMenuItemDescription } from './site-menu-labels.js';
 import { siteMenuGroups, seasonOrder, isCurrentMenuHref } from './site-menu.js';
 
 describe('seasonOrder', () => {
@@ -54,6 +55,7 @@ describe('siteMenuGroups', () => {
 		expect(projekt.items.map((i) => [i.id, i.href])).toEqual([
 			['daten', '/daten'],
 			['methodik', '/methodik'],
+			['stories', '/stories'],
 			['updates', '/updates'],
 			['ueber', '/ueber']
 		]);
@@ -80,5 +82,18 @@ describe('isCurrentMenuHref', () => {
 
 	it('Startseite markiert keinen Eintrag', () => {
 		expect(isCurrentMenuHref('/', '/explore')).toBe(false);
+	});
+});
+
+describe('Data Stories im Menü', () => {
+	it('steht in der Projekt-Gruppe vor Updates', () => {
+		const projekt = siteMenuGroups(new Date(2026, 9, 31)).find((g) => g.id === 'projekt');
+		const ids = projekt?.items.map((i) => i.id) ?? [];
+		expect(ids.indexOf('stories')).toBe(ids.indexOf('updates') - 1);
+	});
+
+	it('Titel "Data Stories", kein Kurztext', () => {
+		expect(siteMenuItemTitle('stories')).toBe('Data Stories');
+		expect(siteMenuItemDescription('stories')).toBeUndefined();
 	});
 });

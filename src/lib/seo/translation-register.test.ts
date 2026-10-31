@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
 	UPDATE_FILE_PATHS,
+	STORY_FILE_PATHS,
+	untranslatedStoryPaths,
 	untranslatedUpdatePaths,
 	isRoutePartiallyTranslated,
 	isRouteTranslated,
@@ -53,7 +55,8 @@ describe('isRouteTranslated', () => {
 				prefix: true,
 				// Alle Einträge haben heute eine `.en.md`, daher keine dynamischen Ausnahmen.
 				except: ['/updates/rss.xml', '/updates/atom.xml', '/updates/feed.json']
-			}
+			},
+			{ pathname: '/stories', locale: 'en', prefix: true, except: [] }
 		]);
 		expect(isRouteTranslated('/berlin-wahlen', 'en')).toBe(true);
 		expect(isRouteTranslated('/en/berlin-wahlen', 'en')).toBe(true);
@@ -318,5 +321,38 @@ describe('untranslatedUpdatePaths', () => {
 	it('Glob findet eine bekannte DE-Datei samt .en.md-Schwester', () => {
 		expect(UPDATE_FILE_PATHS).toContain('/_content/updates/2026-05-16-launch.md');
 		expect(UPDATE_FILE_PATHS).toContain('/_content/updates/2026-05-16-launch.en.md');
+	});
+});
+
+describe('Data Stories (#162)', () => {
+	it('untranslatedStoryPaths nennt Beiträge ohne .en.md', () => {
+		expect(
+			untranslatedStoryPaths([
+				'/_content/stories/2026-10-31-a.md',
+				'/_content/stories/2026-10-31-a.en.md',
+				'/_content/stories/2026-11-01-b.md',
+				'/_content/stories/README.md'
+			])
+		).toEqual(['/stories/b']);
+	});
+
+	it('Index und übersetzter Beitrag gelten auf EN als übersetzt, ein DE-only-Beitrag nicht', () => {
+		expect(STORY_FILE_PATHS).toContain('/_content/stories/2026-10-31-berlin-data-stories.en.md');
+		expect(isRouteTranslated('/stories', 'en')).toBe(true);
+		expect(isRouteTranslated('/en/stories/berlin-data-stories', 'en')).toBe(true);
+		const register: readonly TranslationRegisterEntry[] = [
+			{
+				pathname: '/stories',
+				locale: 'en',
+				prefix: true,
+				except: untranslatedStoryPaths([
+					'/_content/stories/2026-11-01-nur-de.md',
+					'/_content/stories/2026-10-31-berlin-data-stories.md',
+					'/_content/stories/2026-10-31-berlin-data-stories.en.md'
+				])
+			}
+		];
+		expect(isRouteTranslated('/stories/nur-de', 'en', register)).toBe(false);
+		expect(isRouteTranslated('/stories/berlin-data-stories', 'en', register)).toBe(true);
 	});
 });

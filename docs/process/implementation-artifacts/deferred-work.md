@@ -540,3 +540,6 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-160-stories-handschrift.md`
   summary: Gelb #efbd2c, Gold #b88a2e und Tönung #d4c39e liegen unter 3:1 auf Papier (WCAG 1.4.11); #163 entscheidet über Tinten-Kontur oder Ähnliches.
   evidence: Kontrast gerechnet im Review gh-160 (1,41 / 2,52 / 1,40 zu 1); steht in `docs/DESIGN.md` unter „Offen“.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-162-stories-route.md`
+  summary: Stories-Seiten nutzen das Startseiten-OG-Bild, der Alt-Text beschreibt etwas anderes.
+  evidence: `/og/page/home.png` in Übersicht und Beitrag; eigenes Bild gehört zu #165.

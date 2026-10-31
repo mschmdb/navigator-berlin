@@ -16,6 +16,19 @@ describe('hooks.ts: reroute', () => {
 		expect(run('https://hitze.navigator.berlin/')).toBe('/hitze');
 	});
 
+	it('rendert /stories an der Wurzel der Stories-Subdomain', () => {
+		expect(run('https://stories.navigator.berlin/')).toBe('/stories');
+	});
+
+	it('rendert /stories auch an /en und /en/ der Stories-Subdomain', () => {
+		expect(run('https://stories.navigator.berlin/en')).toBe('/stories');
+		expect(run('https://stories.navigator.berlin/en/')).toBe('/stories');
+	});
+
+	it('delokalisiert /en/stories auf der Stories-Subdomain zu /stories', () => {
+		expect(run('https://stories.navigator.berlin/en/stories')).toBe('/stories');
+	});
+
 	it('lässt die Wurzel der Hauptdomain auf /', () => {
 		expect(run('https://navigator.berlin/')).toBe('/');
 	});
