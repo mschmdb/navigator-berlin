@@ -537,3 +537,6 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-171-startseite-kachel-raster.md`
   summary: Kein Komponententest prüft, dass Task- und Bezirk-Links `trackLanding('task_link','home')` auslösen.
   evidence: Grep über alle Tests findet `trackLanding` nur in `plausible.test.ts`; Fix: Modul in `home-tasks.svelte.test.ts` mocken.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-160-stories-handschrift.md`
+  summary: Gelb #efbd2c, Gold #b88a2e und Tönung #d4c39e liegen unter 3:1 auf Papier (WCAG 1.4.11); #163 entscheidet über Tinten-Kontur oder Ähnliches.
+  evidence: Kontrast gerechnet im Review gh-160 (1,41 / 2,52 / 1,40 zu 1); steht in `docs/DESIGN.md` unter „Offen“.
