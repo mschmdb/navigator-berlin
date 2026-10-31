@@ -2,7 +2,7 @@
 title: 'gh-170: Startseite zeigt echte App-Vorschauen'
 type: 'feature'
 created: '2026-10-31'
-status: 'in-review'
+status: 'done'
 baseline_commit: '5d3091fd45ad48b31e74a979706eb8d84916a80d'
 route: 'dispatch'
 review_loop_iteration: 0
@@ -81,8 +81,11 @@ context: ['{project-root}/CLAUDE.md']
 | 11 | BH | WebP-Dateien evtl. nicht committet | false | In 4374216 und 5d3091f committet. |
 | 12 | VG | Klick-Tracking ohne Komponententest | low | Vorbestehendes Muster, bereits in deferred-work. Abgelehnt. |
 | 13 | VG | Bildinhalt kann vom Link-Zustand abdriften | low | Gemeinsame Quelle `home-previews.ts` mindert; manuelles Skript. Abgelehnt. |
+| 14 | codex-review (31.10.) | Dekorative Bild-Links führen zu Zuständen (Finder mit Gewichten, Hitze an Adresse), die kein Textlink erreicht | low | Die Text-Links erreichen dieselben Funktionen (Finder, Hitze-Ebene); das Bild ist eine Abkürzung, keine eigene Information. Ein zweiter Tab-Stopp pro Kachel wäre der größere Schaden (Befund 4). Abgelehnt. |
 
 ## Verification
+
+Ergebnis 31.10.: Design-Prüfung im Rahmen von #171 ohne Befund zu Regeln 7, 15, 17, 23; axe 0 Verstöße. codex-review: ein Befund, abgelehnt (#14).
 
 **Commands:**
 - `pnpm vitest run src/lib/components/home src/lib/content/home-previews` -- expected: grün
