@@ -9,7 +9,7 @@ export const POSTER_WIDTH = 1000;
 export const POSTER_HEIGHT = 1250;
 
 const [THIN, THICK] = STORY_SERIES['punkt-linie-kiez'].lineWidths;
-const COMPOSITION = 640;
+const COMPOSITION = 720;
 const AVG_CHAR = 0.5;
 
 const esc = (s: string): string =>
@@ -107,6 +107,32 @@ function posterFooter(sources: readonly KennzahlenQuelle[], lang: Locale): strin
 }
 
 /**
+ * Legende in drei Spalten über die Satzbreite, gleich für Einzel- und Gesamtplakat:
+ * Zeichen, Bezeichnung, beim Einzelplakat darunter der Wert.
+ */
+function legendBlock(
+	rows: readonly (LegendShape & { readonly value?: string })[],
+	top: number,
+	withValues: boolean
+): string {
+	const left = 60;
+	const columns = 3;
+	const pitch = (POSTER_WIDTH - 2 * left) / columns;
+	const rowPitch = withValues ? 66 : 38;
+	return rows
+		.map((row, i) => {
+			const x = left + (i % columns) * pitch;
+			const y = top + Math.floor(i / columns) * rowPitch;
+			return (
+				icon(row, x, y, 1) +
+				text(row.label, x + 38, y + 20, 17) +
+				(withValues && row.value ? text(row.value, x + 38, y + 46, 22, { weight: 700 }) : '')
+			);
+		})
+		.join('');
+}
+
+/**
  * Poster 4:5 als SVG-String: Papier, Rahmen, Titel, Bezirk, die große Komposition,
  * Legende mit Werten und Fußzeile. Die Komposition kommt aus derselben Quelle wie Komponente
  * und OG-Bild. Die Sprache ist ein Argument, damit der Build beide Fassungen erzeugt.
@@ -123,19 +149,7 @@ export function posterSvg(
 	const scale = COMPOSITION / VIEW;
 	const rows = legendRows(item.kennzahlen, lang);
 
-	const legendTop = compY + COMPOSITION + 45;
-	const colWidth = (POSTER_WIDTH - 2 * left) / 2;
-	const legend = rows
-		.map((row, i) => {
-			const x = left + (i % 2) * colWidth;
-			const y = legendTop + Math.floor(i / 2) * 72;
-			return (
-				icon(row, x, y) +
-				text(row.label, x + 56, y + 14, 20) +
-				text(row.value, x + 56, y + 46, 30, { weight: 700 })
-			);
-		})
-		.join('');
+	const legend = legendBlock(rows, compY + COMPOSITION + 45, true);
 
 	return posterFrame(
 		text(m.plk_title({}, o), left, 96, 34) +
@@ -148,7 +162,7 @@ export function posterSvg(
 }
 
 /**
- * Gesamtplakat: alle Bezirke alphabetisch im Raster (3 Spalten), darunter je der
+ * Gesamtplakat: alle Bezirke alphabetisch im Raster (4 × 3), darunter je der
  * Name, und eine gemeinsame Legende ohne Werte. Die Kompositionen sind die große Geometrie,
  * verkleinert.
  */
@@ -166,8 +180,6 @@ export function overviewPosterSvg(
 	const gutter = (inner - columns * size) / (columns - 1);
 	const labelGap = 24;
 	const pitchY = size + labelGap + 34;
-	const legendColumns = 3;
-	const legendPitch = inner / legendColumns;
 	const gridTop = 125;
 	const scale = size / VIEW;
 
@@ -183,13 +195,7 @@ export function overviewPosterSvg(
 		})
 		.join('');
 
-	const legend = legendShapes(lang)
-		.map((row, i) => {
-			const x = left + (i % legendColumns) * legendPitch;
-			const y = 1002 + Math.floor(i / legendColumns) * 38;
-			return icon(row, x, y, 1) + text(row.label, x + 38, y + 20, 17);
-		})
-		.join('');
+	const legend = legendBlock(legendShapes(lang), 1002, false);
 
 	return posterFrame(
 		text(m.plk_title({}, o), left, 80, 34) +
