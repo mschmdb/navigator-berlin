@@ -3,7 +3,9 @@ import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import { entries, load } from './+page.server.js';
 
 type LoadResult = {
+	bezirkeDaten?: { bezirke: { slug: string }[]; sources: { name: string }[] };
 	entry: { slug: string; frontmatter: { title_en?: string; summary_en?: string } };
+	bodyHtmlBefore: string;
 	bodyHtml: string;
 	bodyIsDeFallback: boolean;
 };
@@ -35,9 +37,22 @@ describe('stories/[slug] load', () => {
 	it('EN rendert den englischen Body', () => {
 		overwriteGetLocale(() => 'en');
 		const result = run('berlin-data-stories');
-		expect(result.bodyHtml).toContain('The atlas shows Berlin as a map');
-		expect(result.bodyHtml).not.toContain('Der Atlas');
+		expect(result.bodyHtml).toContain('Atlas and Kiez Finder show Berlin as a map');
+		expect(result.bodyHtml).not.toContain('Im Atlas und im Kiez-Finder');
 		expect(result.bodyIsDeFallback).toBe(false);
+	});
+
+	it('teilt den Punkt-Linie-Kiez-Text am Marker: Kandinsky davor, Leseanleitung danach', () => {
+		overwriteGetLocale(() => 'de');
+		const result = run('punkt-linie-kiez-bezirke');
+		expect(result.bodyHtmlBefore).toContain('Kandinsky');
+		expect(result.bodyHtmlBefore).not.toContain('So liest du das Bild');
+		expect(result.bodyHtml).toContain('So liest du das Bild');
+		expect(result.bodyHtml).not.toContain('visual');
+	});
+
+	it('ohne Marker bleibt der Text vor dem Bild leer', () => {
+		expect(run('berlin-data-stories').bodyHtmlBefore).toBe('');
 	});
 
 	it('gibt den Markdown-Body nicht an den Client', () => {
@@ -58,5 +73,16 @@ describe('stories/[slug] load', () => {
 		expect(() => run('gibt-es-nicht')).toThrowError(
 			expect.objectContaining({ status: 404 }) as never
 		);
+	});
+
+	it('liefert für visual die Daten der 12 Bezirke ohne Kieze', () => {
+		const result = run('punkt-linie-kiez-bezirke');
+		expect(result.bezirkeDaten?.bezirke).toHaveLength(12);
+		expect(result.bezirkeDaten?.sources.length).toBeGreaterThan(0);
+		expect(JSON.stringify(result.bezirkeDaten)).not.toContain('adlershof');
+	});
+
+	it('liefert ohne visual keine Daten', () => {
+		expect(run('berlin-data-stories').bezirkeDaten).toBeUndefined();
 	});
 });

@@ -4,24 +4,28 @@ title_en: 'Berlin Data Stories: pictures from open data'
 summary: 'Neue Reihe auf navigator.berlin: Bilder mit einer Aussage, gebaut aus denselben offenen Daten wie der Atlas.'
 summary_en: 'A new series on navigator.berlin: pictures with one message, built from the same open data as the atlas.'
 date: 2026-10-31
+preview: punkt-linie-kiez-bezirke
 ---
 
-Der Atlas zeigt Berlin als Karte. Die Data Stories zeigen dieselben offenen Daten als Bilder. Jedes Bild macht genau eine Aussage, für einen Kiez oder einen Bezirk. Du musst dafür keine Karte lesen.
+Im Atlas und im Kiez-Finder zeigt navigator.berlin die Stadt als Karte: Lärm, Hitze, Grün, Wahlen, für jede Adresse. Das ist praktisch. Mir hat trotzdem etwas gefehlt. Zu vielen Daten gibt es mehr zu erzählen, als eine Karte zeigen kann.
 
-Die erste Serie heißt „Punkt, Linie, Kiez“. Sie ist in Arbeit. Ein Datum für die ersten Bilder gibt es noch nicht.
+Darum gibt es die Data Stories. Hier denke ich mir zu den Daten eigene Bilder aus. Jedes Bild erzählt eine Sache über einen Bezirk, einen Kiez oder ein Thema. Eine Karte lesen musst du dafür nicht.
+
+Den Anfang macht „Punkt, Linie, Kiez“: [die zwölf Bezirke als Kompositionen aus Formen](/stories/punkt-linie-kiez-bezirke). Danach geht es weiter, Bild für Bild, Story für Story. Erst die Bezirke, dann die Kieze, zwischendurch einzelne Themen.
+
+## Zum Ausdrucken
+
+Die Bilder gibt es als PDF. Du willst deinen Bezirk an der Wand? Lade die Datei herunter und lass sie drucken, in jeder Größe.
+
+## Frei verwendbar
+
+Code, Datenaufbereitung und Bilder stehen unter MIT-Lizenz. Du darfst alles nutzen, verändern und weitergeben. Die Quelldaten behalten ihre eigenen Lizenzen, deshalb nennt jedes Bild seine Quellen. Die Details stehen unter [Lizenzen](/lizenzen).
 
 ## Regeln für jedes Bild
 
-Für jedes Bild gilt:
-
 - Ein Bild, eine Aussage.
-- Jedes Bild hat eine Textalternative, die diese Aussage nennt.
-- Jedes Bild trägt eine Quellenzeile.
 - Eine Legende nennt Form und Bedeutung. Farbe allein trägt keine Bedeutung.
-- Alle Texte erscheinen auf Deutsch und Englisch.
+- Jedes Bild hat eine Textalternative und eine Quellenzeile.
+- Alles erscheint auf Deutsch und Englisch.
 
-## Lizenz und Quellen
-
-Code, Daten-Aufbereitung und Bilder stehen unter MIT-Lizenz. Du darfst sie weiterverwenden. Die Quelldaten behalten ihre eigenen Lizenzen und Namensnennungspflichten. Jedes Bild nennt seine Quellen, die Details stehen unter [Lizenzen](/lizenzen).
-
-Neue Beiträge erscheinen in der [Übersicht der Data Stories](/stories). Die Daten selbst erkundest du weiterhin im [Atlas](/explore).
+Neue Stories findest du in der [Übersicht](/stories).

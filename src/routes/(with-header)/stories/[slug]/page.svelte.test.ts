@@ -109,3 +109,108 @@ describe('stories/[slug]/+page.svelte · EN', () => {
 		expect((jsonLd('stories-detail-jsonld') as { inLanguage: string }).inLanguage).toBe('de-DE');
 	});
 });
+
+describe('stories/[slug]/+page.svelte · visual', () => {
+	afterEach(() => overwriteGetLocale(() => 'de'));
+
+	const visualEntry: StoryEntry = {
+		...entry,
+		frontmatter: { ...entry.frontmatter, visual: 'punkt-linie-kiez-bezirke' }
+	};
+	const bezirkeDaten = {
+		sources: [{ name: 'Quelle A' }],
+		bezirke: [
+			{
+				slug: 'mitte',
+				name: 'Mitte',
+				kennzahlen: {
+					slug: 'mitte',
+					gruen: 0.5,
+					altbauAnteil: 0.4,
+					laermDb: 50,
+					bewohnerProKm2: 3000,
+					haltestelle400mAnteil: 0.95,
+					clubs: 3
+				}
+			}
+		]
+	};
+
+	it('rendert die Auswahl vor dem Text', () => {
+		render(Page, {
+			data: {
+				entry: visualEntry,
+				bodyHtml: '<p>Text.</p>',
+				bodyIsDeFallback: false,
+				bezirkeDaten
+			} as never
+		});
+		const auswahl = root().querySelector('[data-testid="plk-auswahl"]')!;
+		const body = root().querySelector('[data-testid="stories-detail-body"]')!;
+		expect(auswahl).not.toBeNull();
+		expect(auswahl.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+	});
+
+	it('rendert Einleitung über und Rest unter der Auswahl', () => {
+		render(Page, {
+			data: {
+				entry: visualEntry,
+				bodyHtmlBefore: '<p>Einleitung.</p>',
+				bodyHtml: '<p>Rest.</p>',
+				bodyIsDeFallback: false,
+				bezirkeDaten
+			} as never
+		});
+		const intro = root().querySelector('[data-testid="stories-detail-intro"]')!;
+		const auswahl = root().querySelector('[data-testid="plk-auswahl"]')!;
+		const body = root().querySelector('[data-testid="stories-detail-body"]')!;
+		expect(intro.textContent).toContain('Einleitung.');
+		expect(intro.compareDocumentPosition(auswahl) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+		expect(auswahl.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+	});
+
+	it('nimmt bei visual das Stories-Bild für og:image und JSON-LD, sonst das Home-Bild', async () => {
+		render(Page, {
+			data: { entry: visualEntry, bodyHtml: '', bodyIsDeFallback: false, bezirkeDaten } as never
+		});
+		await new Promise((r) => setTimeout(r, 20));
+		expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toContain(
+			'/og/page/stories.png'
+		);
+		expect((jsonLd('stories-detail-jsonld') as { image: string }).image).toContain(
+			'/og/page/stories.png'
+		);
+	});
+
+	it('rendert ohne visual keine Auswahl', () => {
+		render(Page, { data: { entry, bodyHtml: '<p>Text.</p>', bodyIsDeFallback: false } as never });
+		expect(root().querySelector('[data-testid="plk-auswahl"]')).toBeNull();
+	});
+
+	it('liest ?bezirk aus der URL als Startwahl', async () => {
+		const two = {
+			...bezirkeDaten,
+			bezirke: [
+				bezirkeDaten.bezirke[0]!,
+				{ ...bezirkeDaten.bezirke[0]!, slug: 'pankow', name: 'Pankow' }
+			]
+		};
+		window.history.replaceState(null, '', '?bezirk=pankow');
+		try {
+			render(Page, {
+				data: {
+					entry: visualEntry,
+					bodyHtml: '<p>Text.</p>',
+					bodyIsDeFallback: false,
+					bezirkeDaten: two
+				} as never
+			});
+			await new Promise((r) => setTimeout(r, 30));
+			expect(
+				root().querySelector('[data-testid="plk-auswahl-gross"] figcaption')?.textContent
+			).toBe('pankow');
+		} finally {
+			window.history.replaceState(null, '', window.location.pathname);
+		}
+	});
+});

@@ -1,8 +1,20 @@
 import type { PageServerLoad } from './$types';
 import { loadStoriesFromModules } from '$lib/content/stories/load-stories.js';
+import { teaserBezirke } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
+import type { BezirkItem } from '$lib/stories/punkt-linie-kiez/types.js';
 import type { StoryEntry } from '$lib/content/stories/types.js';
 
 export const prerender = true;
+
+/** Die Miniatur zeigt einen stabilen Bezirk: den ersten alphabetisch. Fehler lassen die Miniatur weg. */
+function loadPreview(): BezirkItem | null {
+	try {
+		return teaserBezirke()[0] ?? null;
+	} catch (err) {
+		process.stderr.write(`[stories] WARN: preview unavailable (${(err as Error).message})\n`);
+		return null;
+	}
+}
 
 /**
  * Build-Time-Load aller `_content/stories/*.md`. Ein Schema-Verstoß bricht den Build.
@@ -21,5 +33,5 @@ export const load: PageServerLoad = async () => {
 		body: '',
 		hasEnglishBody: entry.bodyEn !== undefined
 	}));
-	return { entries };
+	return { entries, preview: entries.some((e) => e.frontmatter.preview) ? loadPreview() : null };
 };

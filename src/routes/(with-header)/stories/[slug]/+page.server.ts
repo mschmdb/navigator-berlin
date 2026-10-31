@@ -4,6 +4,8 @@ import { loadStoriesFromModules } from '$lib/content/stories/load-stories.js';
 import { localizeStory } from '$lib/content/stories/localize-story.js';
 import type { StoryEntry } from '$lib/content/stories/types.js';
 import { renderMarkdownBody } from '$lib/content/updates/render-markdown.js';
+import { splitAtVisual } from '$lib/content/stories/split-at-visual.js';
+import { loadBezirkeDaten } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
 
 export const prerender = true;
@@ -26,9 +28,15 @@ export const load: PageServerLoad = ({ params }) => {
 	}
 	const localized = localizeStory(entry, getLocale());
 	// Der gerenderte Body steckt in `bodyHtml`, beide Markdown-Fassungen bleiben auf dem Server.
+	// Ein Marker `<!-- visual -->` teilt den Text: davor über, danach unter der Visualisierung.
+	const parts = splitAtVisual(localized.body);
 	return {
 		entry: { slug: entry.slug, filePath: entry.filePath, frontmatter: entry.frontmatter, body: '' },
-		bodyHtml: renderMarkdownBody(localized.body),
-		bodyIsDeFallback: localized.bodyIsDeFallback
+		bodyHtmlBefore: parts.before ? renderMarkdownBody(parts.before) : '',
+		bodyHtml: renderMarkdownBody(parts.after),
+		bodyIsDeFallback: localized.bodyIsDeFallback,
+		// Nur die Bezirke gehen an den Client, die 143 Kieze bleiben auf dem Server.
+		bezirkeDaten:
+			entry.frontmatter.visual === 'punkt-linie-kiez-bezirke' ? loadBezirkeDaten() : undefined
 	};
 };

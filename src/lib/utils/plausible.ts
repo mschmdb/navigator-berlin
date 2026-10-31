@@ -18,7 +18,8 @@ type EventName =
 	| 'Locate'
 	| 'MapClick'
 	| 'Finder'
-	| 'Landing';
+	| 'Landing'
+	| 'Stories PDF Download';
 
 interface PlausibleFn {
 	(

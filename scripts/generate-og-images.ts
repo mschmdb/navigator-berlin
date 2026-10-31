@@ -42,6 +42,8 @@ import {
 } from '../src/lib/server/og/page-card-template.js';
 import { renderPageCardPng } from '../src/lib/server/og/render-page-card.js';
 import { buildScoreCardData, type ScoreCardData } from '../src/lib/server/og/score-card-data.js';
+import { compositionSvg } from '../src/lib/stories/punkt-linie-kiez/composition-svg.js';
+import { loadBezirkeDaten } from '../src/lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
 import { loadLogoDataUri } from '../src/lib/server/og/logo-loader.js';
 import { loadWatermarkDataUri } from '../src/lib/server/og/watermark-loader.js';
 
@@ -56,6 +58,8 @@ interface PageTarget {
 	readonly subline: string;
 	readonly body: string;
 	readonly footerUrl: string;
+	/** Bezirk-Slug: rendert dessen Komposition (Data Stories) neben den Text. */
+	readonly compositionBezirk?: string;
 }
 
 const PAGE_TARGETS: readonly PageTarget[] = [
@@ -149,6 +153,14 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		subline: 'Warme Orte und Kältehilfe',
 		body: '227 warme Orte auf der Karte, mit Winter-Öffnung und Weg dorthin. Dazu die Nummern der Berliner Kältehilfe und welcher Dienst gerade erreichbar ist.',
 		footerUrl: '/kaelte'
+	},
+	{
+		slug: 'stories',
+		headline: 'Berlin Data Stories',
+		subline: 'Bilder aus offenen Daten',
+		body: 'Ein Bild, eine Aussage: Sechs Formen zeigen Grünversorgung, Altbau, Lärm, Bewohner, Haltestellen und Clubs eines Bezirks.',
+		footerUrl: '/stories',
+		compositionBezirk: 'charlottenburg-wilmersdorf'
 	},
 	{
 		slug: 'berlin-wahlen',
@@ -340,6 +352,13 @@ async function renderKiez(
 	}
 }
 
+function storiesCompositionDataUri(slug: string): string {
+	const item = loadBezirkeDaten().bezirke.find((b) => b.slug === slug);
+	if (!item) throw new Error(`Bezirk ${slug} fehlt in stories-kennzahlen.json`);
+	const svg = compositionSvg(item.kennzahlen, 400);
+	return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+}
+
 async function renderPage(
 	target: PageTarget,
 	logoDataUri: string | undefined,
@@ -355,7 +374,10 @@ async function renderPage(
 			body: target.body,
 			footerUrl: target.footerUrl,
 			logoDataUri,
-			watermarkDataUri
+			watermarkDataUri,
+			compositionDataUri: target.compositionBezirk
+				? storiesCompositionDataUri(target.compositionBezirk)
+				: undefined
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });

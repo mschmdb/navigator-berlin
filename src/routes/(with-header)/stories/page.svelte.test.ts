@@ -113,3 +113,67 @@ describe('stories/+page.svelte · EN', () => {
 		expect(root().querySelector('ul')?.getAttribute('aria-label')).toBe('Posts');
 	});
 });
+
+describe('stories/+page.svelte · Vorschau', () => {
+	const withPreview: StoryEntry = {
+		...translated,
+		frontmatter: { ...translated.frontmatter, preview: 'punkt-linie-kiez-bezirke' }
+	};
+	const preview = {
+		slug: 'mitte',
+		name: 'Mitte',
+		kennzahlen: {
+			slug: 'mitte',
+			gruen: 0.5,
+			altbauAnteil: 0.4,
+			laermDb: 50,
+			bewohnerProKm2: 3000,
+			haltestelle400mAnteil: 0.95,
+			clubs: 3
+		}
+	};
+
+	it('zeigt die Miniatur nur bei Beiträgen mit preview, dekorativ und ohne zusätzlichen Tab-Stopp', () => {
+		render(Page, { data: { entries: [withPreview, deOnly], preview } as never });
+		const items = root().querySelectorAll('[data-testid="stories-entry"]');
+		const thumb = items[0]!.querySelector('[data-testid="stories-entry-preview"]')!;
+		expect(thumb).not.toBeNull();
+		expect(thumb.getAttribute('href')).toBe('/stories/neu');
+		expect(thumb.getAttribute('tabindex')).toBe('-1');
+		expect(thumb.getAttribute('aria-hidden')).toBe('true');
+		expect(thumb.querySelector('svg')).not.toBeNull();
+		expect(thumb.querySelectorAll('[tabindex]')).toHaveLength(0);
+		expect(items[1]!.querySelector('[data-testid="stories-entry-preview"]')).toBeNull();
+	});
+
+	it('zeigt ohne Vorschau-Daten keine Miniatur', () => {
+		render(Page, { data: { entries: [withPreview], preview: null } as never });
+		expect(root().querySelector('[data-testid="stories-entry-preview"]')).toBeNull();
+	});
+});
+
+describe('stories/+page.svelte · OG-Bild', () => {
+	afterEach(() => overwriteGetLocale(() => 'de'));
+
+	it('setzt das Stories-Bild mit Alt-Text und im JSON-LD', async () => {
+		render(Page, { data: { entries: [translated], preview: null } as never });
+		await new Promise((r) => setTimeout(r, 20));
+		const meta = (p: string): string | null =>
+			document.querySelector(`meta[property="${p}"]`)?.getAttribute('content') ?? null;
+		expect(meta('og:image')).toContain('/og/page/stories.png');
+		expect(meta('og:image:alt')).toContain('Komposition');
+		const ld = JSON.parse(
+			document.querySelector('[data-testid="stories-index-jsonld"]')!.textContent!
+		) as { image: string };
+		expect(ld.image).toContain('/og/page/stories.png');
+	});
+
+	it('EN: Alt-Text englisch', async () => {
+		overwriteGetLocale(() => 'en');
+		render(Page, { data: { entries: [translated], preview: null } as never });
+		await new Promise((r) => setTimeout(r, 20));
+		expect(
+			document.querySelector('meta[property="og:image:alt"]')?.getAttribute('content')
+		).toContain('composition');
+	});
+});

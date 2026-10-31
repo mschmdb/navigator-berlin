@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import { loadStoryTeaser, type StoryTeaserData } from '$lib/content/stories/story-teaser.server.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import {
 	mapHomeUpdateEntry,
@@ -26,6 +27,7 @@ const UPDATES_TEASER = 3;
 
 export interface HomePageData {
 	readonly updates: readonly HomeUpdateTeaser[];
+	readonly stories: StoryTeaserData;
 }
 
 const UPDATE_MODULES = import.meta.glob('/_content/updates/*.md', {
@@ -53,7 +55,20 @@ async function loadUpdates(locale: Locale): Promise<HomeUpdateTeaser[]> {
 	}
 }
 
+function loadStories(): StoryTeaserData {
+	try {
+		return loadStoryTeaser();
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : String(err);
+		process.stderr.write(`[home] WARN: stories teaser unavailable (${msg})\n`);
+		return { entries: [], preview: null };
+	}
+}
+
 export const load: PageServerLoad = async () => {
-	const data: HomePageData = { updates: await loadUpdates(getLocale()) };
+	const data: HomePageData = {
+		updates: await loadUpdates(getLocale()),
+		stories: loadStories()
+	};
 	return data;
 };

@@ -1,19 +1,22 @@
-The atlas shows Berlin as a map. The Data Stories show the same open data as pictures. Each picture makes exactly one point, for one Kiez or one district. You do not have to read a map for it.
+Atlas and Kiez Finder show Berlin as a map: noise, heat, green space, elections, for every address. That's handy. Still, something was missing for me. Much of the data has more to tell than a map can show.
 
-The first series is called "Punkt, Linie, Kiez". It is in progress. There is no date yet for the first pictures.
+That's what the Data Stories are for. Here I come up with my own pictures for the data. Each picture tells one thing about a district, a Kiez or a topic. You don't need to read a map.
+
+First up is "Point and Line to Kiez": [the twelve districts as compositions of shapes](/en/stories/punkt-linie-kiez-bezirke). More will follow, picture by picture, story by story. First the districts, then the Kieze, with single topics in between.
+
+## Ready to print
+
+The pictures come as PDFs. Want your district on the wall? Download the file and have it printed, at any size.
+
+## Free to use
+
+Code, data processing and pictures are MIT licensed. You may use, change and share all of it. The source data keeps its own licences, so every picture names its sources. Details are on the [licences page](/en/lizenzen).
 
 ## Rules for every picture
 
-For every picture:
-
 - One picture, one message.
-- Every picture has a text alternative that states this message.
-- Every picture carries a source line.
-- A legend names shape and meaning. Colour alone carries no meaning.
-- All texts appear in German and English.
+- A legend names shape and meaning. Colour alone never carries meaning.
+- Every picture has a text alternative and a source line.
+- Everything appears in German and English.
 
-## Licence and sources
-
-Code, data processing and pictures are under the MIT licence. You may reuse them. The source data keeps its own licences and attribution duties. Each picture names its sources, and the details are on the [licences page](/en/lizenzen).
-
-New posts appear in the [Data Stories overview](/en/stories). You still explore the data itself in the [atlas](/en/explore).
+New stories show up in the [overview](/en/stories).

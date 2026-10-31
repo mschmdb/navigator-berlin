@@ -201,3 +201,34 @@ describe('HomeTasks', () => {
 		expect(cls).not.toContain('rounded');
 	});
 });
+
+describe('HomeTasks · Data-Stories-Teaser', () => {
+	const stories = {
+		entries: [
+			{
+				slug: 'neu',
+				filePath: '/_content/stories/2026-10-31-neu.md',
+				frontmatter: { title: 'Neu', summary: 'Kurz.', date: '2026-10-31' },
+				body: ''
+			}
+		],
+		preview: null
+	};
+
+	it('zeigt den Teaser nach der Gegend-Kachel und vor Hitze, ohne die vier Aufgaben zu ändern', () => {
+		render(HomeTasks, { stories });
+		const grid = document.querySelector('[data-testid="home-task-gegend"]')!.parentElement!;
+		const order = [...grid.children].map((c) => c.getAttribute('data-testid'));
+		expect(order.slice(0, 3)).toEqual([
+			'home-task-gegend',
+			'home-stories-teaser',
+			'home-task-klima'
+		]);
+		expect(document.querySelectorAll('[data-testid^="home-task-"] h2')).toHaveLength(4);
+	});
+
+	it('lässt den Teaser ohne Beiträge weg', () => {
+		render(HomeTasks);
+		expect(document.querySelector('[data-testid="home-stories-teaser"]')).toBeNull();
+	});
+});

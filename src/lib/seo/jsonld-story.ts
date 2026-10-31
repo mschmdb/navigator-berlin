@@ -17,6 +17,14 @@ import { localeToBcp47 } from './locale-meta.js';
 
 const SECTION = 'Berlin Data Stories';
 const DEFAULT_IMAGE_PATH = '/og/page/home.png';
+export const STORIES_IMAGE_PATH = '/og/page/stories.png';
+
+/** Beiträge mit Komposition (`visual` oder `preview`) tragen das Stories-Bild. */
+export function storyImagePath(entry: StoryEntry): string {
+	return entry.frontmatter.visual || entry.frontmatter.preview
+		? STORIES_IMAGE_PATH
+		: DEFAULT_IMAGE_PATH;
+}
 
 function url(origin: string, path: string, locale: Locale): string {
 	return `${origin}${localizeHref(path, { locale })}`;
@@ -51,7 +59,7 @@ export function buildStoryPosting(input: StoryPostingInput): BlogPostingJsonLd {
 		headline: localized.title,
 		datePublished: input.entry.frontmatter.date,
 		dateModified: input.entry.frontmatter.date,
-		image: input.image ?? `${origin}${DEFAULT_IMAGE_PATH}`,
+		image: input.image ?? `${origin}${storyImagePath(input.entry)}`,
 		author: organizationRef(origin),
 		publisher: organizationRef(origin),
 		mainEntityOfPage: {
@@ -83,6 +91,7 @@ export function buildStoriesIndex(input: StoriesIndexInput): BlogJsonLd {
 		description: input.description,
 		url: url(origin, '/stories', locale),
 		inLanguage: localeToBcp47(locale),
+		image: `${origin}${STORIES_IMAGE_PATH}`,
 		publisher: organizationRef(origin),
 		blogPost: sortStoriesByDateDesc(input.entries).map((entry): BlogPostingLeafJsonLd => {
 			const { ['@context']: _ctx, ...leaf } = buildStoryPosting({ entry, origin, locale });

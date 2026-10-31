@@ -15,7 +15,7 @@ Gestaltungsregeln für die Visualisierungen aus Epic #159. Quelle: Skizzen vom 2
 
 - Eine Farbe hat innerhalb einer Serie genau eine Bedeutung. Grün zeigt Grün.
 - Pro Serie gibt es nur zwei Linienstärken (dünn, kräftig).
-- Kleine Zeichen unter 120 px (`SMALL_MARK_PX`) vereinfachen sich: ohne Haarlinien und Punkte.
+- Kleine Zeichen unter 120 px (`SMALL_MARK_PX`) vereinfachen sich: ohne Haarlinien und Punkte. Ausnahme: In "Punkt, Linie, Kiez" ist eine Miniatur die große Komposition, verkleinert (Matze 31.10.). Geometrie, Reihenfolge und Farben sind identisch, nur die Strichstärke wächst. Linien liegen immer unter allen Formen. Kein Blend-Modus.
 
 ### Palette "Punkt, Linie, Kiez"
 

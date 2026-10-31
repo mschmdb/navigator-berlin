@@ -1,6 +1,7 @@
 <!--
 	Vier Aufgaben als Kachel-Raster (#171, Mockup R): Gegend breit mit Bild, Hitze und
-	Wahlen halb mit Bild, Kieze breit mit Bezirksliste. Mobil einspaltig.
+	Wahlen halb mit Bild, Kieze breit mit Bezirksliste. Mobil einspaltig. Nach der Gegend-Kachel
+	steht der Data-Stories-Teaser (#163), wenn die Startseite Beiträge übergibt.
 -->
 <script lang="ts">
 	import { featureFlags } from '$lib/data/feature-flags.js';
@@ -9,6 +10,8 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import { trackLanding } from '$lib/utils/plausible.js';
 	import { HOME_BEZIRKE } from '$lib/content/home-bezirke.js';
+	import type { StoryTeaserData } from '$lib/content/stories/story-teaser.server.js';
+	import HomeStoriesTeaser from './home-stories-teaser.svelte';
 	import HomeTaskTile from './home-task-tile.svelte';
 
 	interface TaskLink {
@@ -22,6 +25,13 @@
 		readonly links: readonly TaskLink[];
 		readonly preview?: { readonly data: HomePreview; readonly alt: string };
 	}
+
+	interface Props {
+		/** Neueste Beiträge für den Data-Stories-Teaser. Ohne Angabe entfällt der Teaser. */
+		readonly stories?: StoryTeaserData;
+	}
+
+	const { stories = { entries: [], preview: null } }: Props = $props();
 
 	const tasks: readonly Task[] = $derived([
 		{
@@ -100,7 +110,7 @@
 			<HomeTaskTile {...task} layout={task.id === 'gegend' ? 'wide' : 'half'} />
 		{/if}
 		{#if task.id === 'gegend'}
-			<!-- Platz für den späteren Data-Stories-Teaser (#162), ohne sichtbare Fläche -->
+			<HomeStoriesTeaser {stories} />
 		{/if}
 	{/each}
 </div>

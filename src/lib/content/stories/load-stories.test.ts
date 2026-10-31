@@ -27,6 +27,33 @@ describe('loadStoriesFromModules', () => {
 		expect(entry?.bodyEn).toBe('English text.');
 	});
 
+	it('nimmt das optionale Feld visual an', () => {
+		const [entry] = loadStoriesFromModules({
+			'/_content/stories/2026-10-31-x.md': de('2026-10-31', 'visual: punkt-linie-kiez-bezirke\n')
+		});
+		expect(entry?.frontmatter.visual).toBe('punkt-linie-kiez-bezirke');
+	});
+
+	it('nimmt das optionale Feld preview an und wirft bei unbekanntem Wert', () => {
+		const [entry] = loadStoriesFromModules({
+			'/_content/stories/2026-10-31-x.md': de('2026-10-31', 'preview: punkt-linie-kiez-bezirke\n')
+		});
+		expect(entry?.frontmatter.preview).toBe('punkt-linie-kiez-bezirke');
+		expect(() =>
+			loadStoriesFromModules({
+				'/_content/stories/2026-10-31-x.md': de('2026-10-31', 'preview: unbekannt\n')
+			})
+		).toThrow(/preview/);
+	});
+
+	it('wirft bei unbekanntem visual', () => {
+		expect(() =>
+			loadStoriesFromModules({
+				'/_content/stories/2026-10-31-x.md': de('2026-10-31', 'visual: unbekannt\n')
+			})
+		).toThrow(/visual/);
+	});
+
 	it('lässt Dateien ohne Datumspräfix aus', () => {
 		expect(loadStoriesFromModules({ '/_content/stories/README.md': '# Hi' })).toEqual([]);
 	});

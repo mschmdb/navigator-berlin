@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildStoriesIndex, buildStoryPosting } from './jsonld-story.js';
+import { buildStoriesIndex, buildStoryPosting, storyImagePath } from './jsonld-story.js';
 import type { StoryEntry } from '$lib/content/stories/types.js';
 
 const ORIGIN = 'https://navigator.berlin';
@@ -85,5 +85,49 @@ describe('buildStoriesIndex', () => {
 		expect(out.url).toBe('https://navigator.berlin/stories');
 		expect(out.blogPost.map((p) => p.headline)).toEqual(['Titel', 'Nur DE']);
 		expect(out.blogPost[0]).not.toHaveProperty('@context');
+	});
+});
+
+describe('Bild der Data Stories', () => {
+	const withVisual: StoryEntry = {
+		...full,
+		frontmatter: { ...full.frontmatter, visual: 'punkt-linie-kiez-bezirke' }
+	};
+	const withPreview: StoryEntry = {
+		...full,
+		slug: 'p',
+		frontmatter: { ...full.frontmatter, preview: 'punkt-linie-kiez-bezirke' }
+	};
+
+	it('nimmt das Stories-Bild bei visual oder preview, sonst das Home-Bild', () => {
+		expect(storyImagePath(withVisual)).toBe('/og/page/stories.png');
+		expect(storyImagePath(withPreview)).toBe('/og/page/stories.png');
+		expect(storyImagePath(full)).toBe('/og/page/home.png');
+	});
+
+	it('trägt das Bild im BlogPosting, ein explizites Bild gewinnt', () => {
+		expect(buildStoryPosting({ entry: withVisual, origin: ORIGIN }).image).toBe(
+			'https://navigator.berlin/og/page/stories.png'
+		);
+		expect(buildStoryPosting({ entry: full, origin: ORIGIN }).image).toBe(
+			'https://navigator.berlin/og/page/home.png'
+		);
+		expect(buildStoryPosting({ entry: full, origin: ORIGIN, image: 'https://x/y.png' }).image).toBe(
+			'https://x/y.png'
+		);
+	});
+
+	it('trägt das Stories-Bild im Blog der Übersicht', () => {
+		const out = buildStoriesIndex({
+			entries: [withPreview, full],
+			origin: ORIGIN,
+			name: 'n',
+			description: 'd'
+		});
+		expect(out.image).toBe('https://navigator.berlin/og/page/stories.png');
+		expect(out.blogPost.map((b) => b.image)).toEqual([
+			'https://navigator.berlin/og/page/stories.png',
+			'https://navigator.berlin/og/page/home.png'
+		]);
 	});
 });

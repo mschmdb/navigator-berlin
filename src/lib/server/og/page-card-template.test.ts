@@ -3,6 +3,7 @@ import {
 	buildBezirkCardVdom,
 	buildKiezCardVdom,
 	buildLayerCardVdom,
+	buildPageCardVdom,
 	type BezirkCardParams,
 	type KiezCardParams,
 	type LayerCardParams
@@ -230,5 +231,32 @@ describe('buildLayerCardVdom', () => {
 		const dataUri = 'data:image/svg+xml;base64,LAYER_LOGO';
 		const sources = collectImgSources(buildLayerCardVdom({ ...params, logoDataUri: dataUri }));
 		expect(sources).toContain(dataUri);
+	});
+});
+
+describe('buildPageCardVdom mit Komposition', () => {
+	const base = {
+		headline: 'Berlin Data Stories',
+		subline: 'Bilder aus offenen Daten',
+		body: 'Ein Bild, eine Aussage.',
+		footerUrl: '/stories'
+	};
+
+	it('legt die Komposition als Bild neben den Text und lässt das Watermark weg', () => {
+		const uri = 'data:image/svg+xml;base64,AAAA';
+		const vdom = buildPageCardVdom({
+			...base,
+			compositionDataUri: uri,
+			watermarkDataUri: 'data:x'
+		});
+		const srcs = collectImgSources(vdom);
+		expect(srcs).toContain(uri);
+		expect(srcs).not.toContain('data:x');
+		expect(collectText(vdom)).toContain('Berlin Data Stories');
+	});
+
+	it('bleibt ohne Komposition beim bisherigen Layout', () => {
+		const vdom = buildPageCardVdom({ ...base, watermarkDataUri: 'data:x' });
+		expect(collectImgSources(vdom)).toContain('data:x');
 	});
 });

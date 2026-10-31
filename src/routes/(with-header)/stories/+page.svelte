@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import StoryEntryItem from '$lib/components/stories/story-entry.svelte';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { formatUpdateDate } from '$lib/components/updates/category-label.js';
-	import { localizeStory } from '$lib/content/stories/localize-story.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildStoriesIndex } from '$lib/seo/jsonld-story.js';
+	import { buildStoriesIndex, STORIES_IMAGE_PATH } from '$lib/seo/jsonld-story.js';
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { buildPageTitle } from '$lib/seo/page-title.js';
 
@@ -21,16 +19,7 @@
 	// Logischer Pfad: auf der Stories-Subdomain ist `page.url.pathname` die Wurzel `/`,
 	// die Canonical-URL gehört auf `/stories` (siehe `storiesReroute` in `$lib/app-mode.ts`).
 	const pathname = '/stories';
-	const ogImage = $derived(`${primaryOrigin}/og/page/home.png`);
-
-	const items = $derived(
-		data.entries.map((entry) => ({
-			entry,
-			localized: localizeStory(entry, locale),
-			href: localizedHref(`/stories/${entry.slug}`),
-			dateLabel: formatUpdateDate(entry.frontmatter.date, locale)
-		}))
-	);
+	const ogImage = $derived(`${primaryOrigin}${STORIES_IMAGE_PATH}`);
 
 	const blogJsonLd = $derived(
 		buildStoriesIndex({
@@ -58,7 +47,7 @@
 	{pathname}
 	{origin}
 	{ogImage}
-	ogImageAlt={m.stories_index_og_alt()}
+	ogImageAlt={m.stories_og_composition_alt()}
 />
 <JsonLd data={blogJsonLd} testid="stories-index-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="stories-index-breadcrumb-jsonld" />
@@ -74,40 +63,14 @@
 		<p class="text-lg leading-body text-ink-muted">{m.stories_index_lead()}</p>
 	</header>
 
-	{#if items.length > 0}
+	{#if data.entries.length > 0}
 		<ul
 			aria-label={m.stories_index_list_aria_label()}
 			class="flex flex-col gap-4"
 			data-testid="stories-list"
 		>
-			{#each items as item (item.entry.slug)}
-				<li
-					class="flex flex-col gap-3 border-l-2 border-rule bg-bg px-4 py-4"
-					data-testid="stories-entry"
-					data-slug={item.entry.slug}
-				>
-					<time class="font-sans text-sm text-ink-muted" datetime={item.entry.frontmatter.date}>
-						{item.dateLabel}
-					</time>
-					<h2
-						class="text-2xl font-bold text-ink"
-						lang={item.localized.titleIsDeFallback ? 'de' : undefined}
-					>
-						<a
-							href={item.href}
-							class="inline-flex min-h-6 items-center hover:text-accent focus-visible:text-accent"
-							data-testid="stories-entry-link"
-						>
-							{item.localized.title}
-						</a>
-					</h2>
-					<p
-						class="text-base leading-body text-ink-muted"
-						lang={item.localized.summaryIsDeFallback ? 'de' : undefined}
-					>
-						{item.localized.summary}
-					</p>
-				</li>
+			{#each data.entries as entry (entry.slug)}
+				<StoryEntryItem {entry} preview={data.preview} />
 			{/each}
 		</ul>
 	{:else}

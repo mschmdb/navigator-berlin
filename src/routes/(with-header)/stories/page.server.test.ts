@@ -9,4 +9,15 @@ describe('stories/+page.server', () => {
 		expect(result.entries.map((e) => e.slug)).toContain('berlin-data-stories');
 		expect(result.entries.every((e) => e.body === '')).toBe(true);
 	});
+
+	it('liefert die Vorschau-Daten nur als ersten Bezirk alphabetisch', async () => {
+		const result = (await (loadIndex as never as () => Promise<unknown>)()) as {
+			entries: { slug: string; frontmatter: { preview?: string } }[];
+			preview: { slug: string; name: string } | null;
+		};
+		expect(result.entries.every((e) => e.frontmatter.preview === 'punkt-linie-kiez-bezirke')).toBe(
+			true
+		);
+		expect(result.preview?.slug).toBe('charlottenburg-wilmersdorf');
+	});
 });

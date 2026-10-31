@@ -60,7 +60,7 @@
 <article class="mx-auto max-w-6xl space-y-10 px-4 py-10" data-testid="home-landing">
 	<HomeSearchHero />
 	<HomeSeasonNote />
-	<HomeTasks />
+	<HomeTasks stories={data.stories} />
 	<HomeUpdatesTeaser items={data.updates} />
 	<HomeTrust />
 </article>
