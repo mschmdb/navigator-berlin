@@ -60,11 +60,47 @@ describe('HomeTasks', () => {
 
 	it('Aufgaben-Links sind als Buttons gestaltet (Rahmen, Mindesthöhe)', () => {
 		render(HomeTasks);
-		const links = [...document.querySelectorAll('[data-testid^="home-task-"] a')];
+		const links = [...document.querySelectorAll('[data-testid^="home-task-"] ul a')];
 		expect(links.length).toBeGreaterThan(0);
 		for (const a of links) {
 			expect(a.classList.contains('border')).toBe(true);
 			expect(a.classList.contains('min-h-(--target-min)')).toBe(true);
+		}
+	});
+
+	it('zeigt Bild-Links bei gegend, klima und wahlen, nicht bei kieze', () => {
+		render(HomeTasks);
+		const img = (id: string) =>
+			document.querySelector<HTMLImageElement>(`[data-testid="home-task-${id}"] a > img`);
+		expect(img('gegend')?.getAttribute('src')).toBe('/home/de/finder.webp');
+		expect(img('klima')?.getAttribute('src')).toBe('/home/de/hitze.webp');
+		expect(img('wahlen')?.getAttribute('src')).toBe('/home/de/wahlen.webp');
+		expect(img('kieze')).toBeNull();
+		for (const id of ['gegend', 'klima', 'wahlen']) {
+			const el = img(id)!;
+			expect(el.getAttribute('loading')).toBe('lazy');
+			expect(el.getAttribute('width')).not.toBeNull();
+			expect(el.getAttribute('height')).not.toBeNull();
+			expect(el.alt.length).toBeGreaterThan(10);
+		}
+	});
+
+	it('Bild-Link führt auf den gezeigten Zustand, EN mit /en-Präfix', () => {
+		overwriteGetLocale(() => 'en');
+		render(HomeTasks);
+		const a = document.querySelector('[data-testid="home-preview-wahlen"]');
+		expect(a?.getAttribute('href')).toBe('/en/berlin-wahlen?jahr=2026');
+		expect(
+			document.querySelector<HTMLImageElement>('[data-testid="home-preview-wahlen"] img')?.alt
+		).toMatch(/election map/i);
+	});
+
+	it('Aufgaben-Bilder sind aus Tab-Reihenfolge und Accessibility-Tree genommen', () => {
+		render(HomeTasks);
+		for (const id of ['finder', 'hitze', 'wahlen']) {
+			const a = document.querySelector(`[data-testid="home-preview-${id}"]`)!;
+			expect(a.getAttribute('tabindex')).toBe('-1');
+			expect(a.getAttribute('aria-hidden')).toBe('true');
 		}
 	});
 });

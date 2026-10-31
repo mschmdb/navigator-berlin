@@ -96,6 +96,7 @@ export type LandingAction =
 	| 'ranking_link'
 	| 'eyebrow_link'
 	| 'task_link'
+	| 'preview_link'
 	| 'search_example';
 
 export type LandingPageType = 'kiez' | 'bezirk' | 'layer' | 'home';

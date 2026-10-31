@@ -4,9 +4,11 @@
 -->
 <script lang="ts">
 	import { featureFlags } from '$lib/data/feature-flags.js';
+	import { HOME_PREVIEWS, type HomePreview } from '$lib/content/home-previews.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { trackLanding } from '$lib/utils/plausible.js';
+	import HomePreviewLink from './home-preview-link.svelte';
 	import { ctaSecondary } from './internal/cta.js';
 
 	interface TaskLink {
@@ -18,6 +20,7 @@
 		readonly title: string;
 		readonly text: string;
 		readonly links: readonly TaskLink[];
+		readonly preview?: { readonly data: HomePreview; readonly alt: string };
 	}
 
 	const tasks: readonly Task[] = $derived([
@@ -30,7 +33,10 @@
 				...(featureFlags.kiezFinder
 					? [{ href: '/explore?finder=1', label: m.home_task_gegend_finder() }]
 					: [])
-			]
+			],
+			preview: featureFlags.kiezFinder
+				? { data: HOME_PREVIEWS.finder, alt: m.home_preview_finder_alt() }
+				: undefined
 		},
 		{
 			id: 'kieze',
@@ -50,7 +56,8 @@
 				{ href: '/hitze', label: m.home_task_klima_hitze() },
 				{ href: '/kaelte', label: m.home_task_klima_kaelte() },
 				{ href: '/daten', label: m.home_task_klima_ebenen() }
-			]
+			],
+			preview: { data: HOME_PREVIEWS.hitze, alt: m.home_preview_hitze_alt() }
 		},
 		{
 			id: 'wahlen',
@@ -60,7 +67,8 @@
 				{ href: '/berlin-wahlen', label: m.home_task_wahlen_alle() },
 				{ href: '/berlin-wahlen/2026-agh-zweitstimme', label: m.home_task_wahlen_agh() },
 				{ href: '/berlin-wahlen/2025-btw-zweitstimme', label: m.home_task_wahlen_btw() }
-			]
+			],
+			preview: { data: HOME_PREVIEWS.wahlen, alt: m.home_preview_wahlen_alt() }
 		}
 	]);
 </script>
@@ -83,6 +91,14 @@
 					</li>
 				{/each}
 			</ul>
+			{#if task.preview}
+				<HomePreviewLink
+					preview={task.preview.data}
+					alt={task.preview.alt}
+					decorative
+					class="block max-w-3xl"
+				/>
+			{/if}
 		</section>
 	{/each}
 </div>

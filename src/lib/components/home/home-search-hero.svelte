@@ -13,9 +13,11 @@
 		buildQuickLinkHref,
 		buildSearchTargetHref
 	} from '$lib/content/home-quick-links.js';
+	import { HOME_PREVIEWS } from '$lib/content/home-previews.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { trackLanding } from '$lib/utils/plausible.js';
+	import HomePreviewLink from './home-preview-link.svelte';
 
 	interface Props {
 		/** Injizierbar für Tests; Default = Remote-Query `geocodeAddress`. */
@@ -34,7 +36,7 @@
 	}
 </script>
 
-<section data-testid="home-search-hero" class="grid items-center gap-10">
+<section data-testid="home-search-hero" class="grid items-center gap-10 md:grid-cols-2">
 	<div class="space-y-6">
 		<h1 class="text-3xl font-bold text-ink md:text-4xl">{m.home_search_title()}</h1>
 		<p class="max-w-(--measure) text-lg leading-body text-ink-muted">{m.home_search_lead()}</p>
@@ -72,4 +74,9 @@
 			</div>
 		</div>
 	</div>
+	<HomePreviewLink
+		preview={HOME_PREVIEWS['kiez-score']}
+		alt={m.home_preview_kiez_score_alt()}
+		class="hidden md:block"
+	/>
 </section>

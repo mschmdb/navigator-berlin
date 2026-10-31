@@ -84,4 +84,31 @@ describe('HomeSearchHero', () => {
 		await userEvent.keyboard('{Enter}');
 		await vi.waitFor(() => expect(navigate).toHaveBeenCalledWith(expected));
 	});
+
+	it('zeigt das Kiez-Score-Bild als Link, nur ab md', () => {
+		render(HomeSearchHero, { geocode });
+		const a = document.querySelector('[data-testid="home-preview-kiez-score"]')!;
+		expect(a.getAttribute('href')).toMatch(/^\/explore\?layers=kiez-score-ruhe-luft/);
+		expect(a.classList.contains('hidden')).toBe(true);
+		expect(a.classList.contains('md:block')).toBe(true);
+		const img = a.querySelector('img')!;
+		expect(img.getAttribute('loading')).toBe('lazy');
+		expect(img.alt).toContain('Kiez-Score');
+	});
+
+	it('EN: Bild-Link mit /en-Präfix und englischem Alt-Text', () => {
+		overwriteGetLocale(() => 'en');
+		render(HomeSearchHero, { geocode });
+		const a = document.querySelector('[data-testid="home-preview-kiez-score"]')!;
+		expect(a.getAttribute('href')).toMatch(/^\/en\/explore\?layers=/);
+		expect(a.querySelector('img')?.getAttribute('src')).toBe('/home/en/kiez-score.webp');
+		expect(a.querySelector('img')!.alt).toMatch(/^Map of Berlin/);
+	});
+
+	it('Hero-Bild-Link bleibt fokussierbar', () => {
+		render(HomeSearchHero, { geocode });
+		const a = document.querySelector('[data-testid="home-preview-kiez-score"]')!;
+		expect(a.hasAttribute('tabindex')).toBe(false);
+		expect(a.hasAttribute('aria-hidden')).toBe(false);
+	});
 });

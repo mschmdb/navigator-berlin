@@ -530,3 +530,6 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
   summary: `home_page_og_alt` nutzt „·“ und den alten Slogan „Berlin in Daten“.
   evidence: Vorbestehender String, verstößt gegen die „·“-Regel in CLAUDE.md.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-170-startseite-vorschauen.md`
+  summary: Inspector-Score-Ring auf /en zeigt deutsche Dimensionsnamen („Ruhe & Luft“, „Wohnschutz“) und „Gesamt“.
+  evidence: Sichtbar in `static/home/en/kiez-score.webp` (Aufnahme 31.10.); Liste darunter ist korrekt englisch.

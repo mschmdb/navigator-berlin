@@ -82,7 +82,7 @@ describe('trackLanding', () => {
 		}
 	});
 
-	it.each(['task_link', 'search_example'] as const)(
+	it.each(['task_link', 'preview_link', 'search_example'] as const)(
 		'sendet die Startseiten-Aktion %s mit page_type home',
 		(action) => {
 			const fn = stubPlausible();

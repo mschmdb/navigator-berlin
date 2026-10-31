@@ -12,6 +12,7 @@ import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { chromium, type Page } from 'playwright';
 import sharp from 'sharp';
+import { HOME_PREVIEW_LOCALES, HOME_PREVIEWS } from '../src/lib/content/home-previews.js';
 
 const BASE = process.argv.includes('--base')
 	? process.argv[process.argv.indexOf('--base') + 1]
@@ -42,13 +43,14 @@ const fullMap = async () => ({
 const SHOTS: readonly Shot[] = [
 	{
 		name: 'hitze',
-		path: '/explore?layers=klima-pet-2022&address=13.4243,52.4869&q=Hermannplatz'
+		path: HOME_PREVIEWS.hitze.path
 	},
 	{
 		name: 'kiez-score',
-		path: '/explore?layers=kiez-score-ruhe-luft,kiez-score-wohnschutz&address=13.3735,52.5186&q=Regierungsviertel',
+		path: HOME_PREVIEWS['kiez-score'].path,
 		prepare: async (page) => {
-			// Ganz Berlin zeigen: nach dem Sprung zur Adresse herauszoomen.
+			// Ganz Berlin zeigen: nach dem Sprung zur Adresse herauszoomen (Matze 31.10.:
+			// dieses Bild bleibt, auch wenn der Link in der Adressansicht öffnet).
 			const zoomOut = page
 				.getByRole('button', { name: /zoom out|herauszoomen|verkleinern/i })
 				.first();
@@ -63,21 +65,11 @@ const SHOTS: readonly Shot[] = [
 	},
 	{
 		name: 'finder',
-		path: '/explore?finder=1',
-		prepare: async (page) => {
-			const sliders = page.getByRole('slider');
-			// Ruhe & Luft und Grün & Hitzeschutz auf „möglichst viel“.
-			for (const i of [0, 1]) {
-				await sliders.nth(i).focus();
-				for (let k = 0; k < 10; k++) await page.keyboard.press('ArrowRight');
-			}
-			// Fokusrahmen nicht mit aufnehmen.
-			await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-		}
+		path: HOME_PREVIEWS.finder.path
 	},
 	{
 		name: 'wahlen',
-		path: '/berlin-wahlen?jahr=2026',
+		path: HOME_PREVIEWS.wahlen.path,
 		clip: async (page) => {
 			const map = page.locator('.maplibregl-map').first();
 			await map.scrollIntoViewIfNeeded();
@@ -97,24 +89,28 @@ async function main(): Promise<void> {
 	await mkdir(OUT, { recursive: true });
 	const browser = await chromium.launch({ executablePath: CHROME, headless: false });
 	try {
-		for (const shot of SHOTS) {
-			const page = await browser.newPage({ viewport: VIEWPORT, deviceScaleFactor: 2 });
-			await page.goto(BASE + shot.path, { waitUntil: 'networkidle' });
-			await page.waitForTimeout(SETTLE_MS);
-			if ((await page.getByText('Karte konnte nicht geladen werden').count()) > 0) {
-				throw new Error(`${shot.name}: Karte nicht geladen (WebGL?)`);
+		for (const locale of HOME_PREVIEW_LOCALES) {
+			const prefix = locale === 'de' ? '' : `/${locale}`;
+			await mkdir(join(OUT, locale), { recursive: true });
+			for (const shot of SHOTS) {
+				const page = await browser.newPage({ viewport: VIEWPORT, deviceScaleFactor: 2 });
+				await page.goto(BASE + prefix + shot.path, { waitUntil: 'networkidle' });
+				await page.waitForTimeout(SETTLE_MS);
+				if ((await page.getByText('Karte konnte nicht geladen werden').count()) > 0) {
+					throw new Error(`${shot.name}: Karte nicht geladen (WebGL?)`);
+				}
+				await shot.prepare?.(page);
+				await page.waitForTimeout(1500);
+				const clip = await (shot.clip ?? fullMap)(page);
+				const png = await page.screenshot({ clip });
+				const file = join(OUT, locale, `${shot.name}.webp`);
+				await sharp(png)
+					.resize({ width: 1600, withoutEnlargement: true })
+					.webp({ quality: 82 })
+					.toFile(file);
+				console.log(`${shot.name} -> static/home/${locale}/${shot.name}.webp`);
+				await page.close();
 			}
-			await shot.prepare?.(page);
-			await page.waitForTimeout(1500);
-			const clip = await (shot.clip ?? fullMap)(page);
-			const png = await page.screenshot({ clip });
-			const file = join(OUT, `${shot.name}.webp`);
-			await sharp(png)
-				.resize({ width: 1600, withoutEnlargement: true })
-				.webp({ quality: 82 })
-				.toFile(file);
-			console.log(`${shot.name} -> static/home/${shot.name}.webp`);
-			await page.close();
 		}
 	} finally {
 		await browser.close();
