@@ -82,21 +82,26 @@ const posterFrame = (inner: string): string =>
 function posterFooter(sources: readonly KennzahlenQuelle[], lang: Locale): string {
 	const o = { locale: lang };
 	const left = 60;
+	// Quellenblock klein, aber über der Druckgrenze aus docs/DESIGN.md: 8,5 Einheiten sind
+	// bei 400 mm Breite rund 3,4 mm, also etwa 9,6 pt.
+	const size = 8.5;
+	const lineHeight = 11;
+	const width = POSTER_WIDTH - 2 * left - 240;
 	const sourceLine = `${m.plk_sources_label({}, o)}: ${[
 		...new Map(sources.map((s) => [s.name, s])).values()
 	]
-		.map((s) => (s.stand ? `${s.name} (${m.plk_stand({}, o)} ${s.stand})` : s.name))
+		.map((s) => (s.stand ? `${s.name} (${s.stand})` : s.name))
 		.join('; ')}.`;
 	const footerLines = [
-		...wrapText(sourceLine, POSTER_WIDTH - 2 * left - 240, 11),
+		...wrapText(sourceLine, width, size),
 		m.plk_osm({}, o),
-		...wrapText(m.plk_pdf_license({}, o), POSTER_WIDTH - 2 * left - 240, 11)
+		...wrapText(m.plk_pdf_license({}, o), width, size)
 	];
 	return (
 		`<line x1="${left}" y1="1085" x2="${POSTER_WIDTH - left}" y2="1085" stroke="${STORY_INK}" stroke-width="${THIN}"/>` +
 		text(m.plk_footer_brand({}, o), left, 1125, 26, { weight: 700 }) +
 		footerLines
-			.map((l, i) => text(l, POSTER_WIDTH - left, 1118 + i * 14, 11, { anchor: 'end' }))
+			.map((l, i) => text(l, POSTER_WIDTH - left, 1112 + i * lineHeight, size, { anchor: 'end' }))
 			.join('')
 	);
 }
@@ -154,29 +159,34 @@ export function overviewPosterSvg(
 ): string {
 	const o = { locale: lang };
 	const left = 60;
-	const columns = 3;
-	const size = 176;
-	const pitchX = (POSTER_WIDTH - 2 * left) / columns;
-	const pitchY = 208;
+	// 4 × 3 Kacheln über die volle Satzbreite, Name linksbündig unter der Kachel, dann Luft.
+	const columns = 4;
+	const inner = POSTER_WIDTH - 2 * left;
+	const size = 205;
+	const gutter = (inner - columns * size) / (columns - 1);
+	const labelGap = 24;
+	const pitchY = size + labelGap + 34;
+	const legendColumns = 3;
+	const legendPitch = inner / legendColumns;
 	const gridTop = 125;
 	const scale = size / VIEW;
 
 	const cells = [...bezirke]
 		.sort((a, b) => a.name.localeCompare(b.name, 'de'))
 		.map((b, i) => {
-			const x = left + (i % columns) * pitchX + (pitchX - size) / 2;
+			const x = left + (i % columns) * (size + gutter);
 			const y = gridTop + Math.floor(i / columns) * pitchY;
 			return (
 				`<g transform="translate(${x} ${y}) scale(${scale})"><g clip-path="url(#${CLIP_ID})">${compositionElements(b.kennzahlen)}</g></g>` +
-				text(b.name.toLocaleLowerCase('de'), x + size / 2, y + size + 26, 20, { anchor: 'middle' })
+				text(b.name.toLocaleLowerCase('de'), x, y + size + labelGap, 17)
 			);
 		})
 		.join('');
 
 	const legend = legendShapes(lang)
 		.map((row, i) => {
-			const x = left + (i % columns) * pitchX;
-			const y = 1002 + Math.floor(i / columns) * 38;
+			const x = left + (i % legendColumns) * legendPitch;
+			const y = 1002 + Math.floor(i / legendColumns) * 38;
 			return icon(row, x, y, 1) + text(row.label, x + 38, y + 20, 17);
 		})
 		.join('');

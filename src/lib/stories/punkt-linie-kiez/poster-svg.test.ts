@@ -47,7 +47,7 @@ describe('posterSvg', () => {
 		expect(svg).toContain('44 / 100');
 		expect(svg).toContain('49,3 dB');
 		expect(svg).toContain('navigator.berlin');
-		expect(svg).toContain('Einwohner pro Planungsraum (Stand 2024-12-31)');
+		expect(svg).toContain('Einwohner pro Planungsraum (2024-12-31)');
 		expect(svg).toContain('© OpenStreetMap-Mitwirkende');
 		expect(svg).toContain('MIT-Lizenz');
 	});
@@ -99,10 +99,35 @@ describe('overviewPosterSvg', () => {
 	it('zeigt 12 Kompositionen mit Namen, alphabetisch sortiert', () => {
 		const svg = overviewPosterSvg(bezirke, sources, 'de');
 		expect(svg.match(/clip-path="url\(#plk-clip\)"/g)).toHaveLength(12);
-		const found = [...svg.matchAll(/font-size="20"[^>]*>([^<]+)</g)].map((x) => x[1]);
+		const lower = new Set(names.map((n) => n.toLowerCase()));
+		const found = [...svg.matchAll(/<text [^>]*>([^<]+)</g)]
+			.map((x) => x[1])
+			.filter((t) => lower.has(t));
 		expect(found).toEqual(
 			[...names].sort((a, b) => a.localeCompare(b, 'de')).map((n) => n.toLowerCase())
 		);
+	});
+
+	it('setzt die Namen linksbündig unter die Kachel, mit Abstand zur nächsten Zeile', () => {
+		const svg = overviewPosterSvg(bezirke, sources, 'de');
+		const label = [
+			...svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)"[^>]*text-anchor="(\w+)"[^>]*>([^<]+)</g)
+		].find(
+			(x) =>
+				x[4] ===
+				names
+					.slice()
+					.sort((a, b) => a.localeCompare(b, 'de'))[0]!
+					.toLowerCase()
+		)!;
+		const tile = svg.match(/<g transform="translate\(([\d.]+) ([\d.]+)\) scale/)!;
+		expect(label[3]).toBe('start');
+		expect(Number(label[1])).toBeCloseTo(Number(tile[1]), 5);
+		const rows = [...svg.matchAll(/<g transform="translate\([\d.]+ ([\d.]+)\) scale/g)].map((x) =>
+			Number(x[1])
+		);
+		const nextRowTop = [...new Set(rows)].sort((a, b) => a - b)[1]!;
+		expect(nextRowTop - Number(label[2])).toBeGreaterThanOrEqual(24);
 	});
 
 	it('nutzt für jede Komposition die große Geometrie', () => {
@@ -131,7 +156,7 @@ describe('overviewPosterSvg', () => {
 
 	it('trägt Quellen, OSM, Lizenz und Marke, englisch bei lang en', () => {
 		const de = overviewPosterSvg(bezirke, sources, 'de');
-		expect(de).toContain('Einwohner pro Planungsraum (Stand 2024-12-31)');
+		expect(de).toContain('Einwohner pro Planungsraum (2024-12-31)');
 		expect(de).toContain('© OpenStreetMap-Mitwirkende');
 		expect(de).toContain('MIT-Lizenz');
 		expect(de).toContain('navigator.berlin');
