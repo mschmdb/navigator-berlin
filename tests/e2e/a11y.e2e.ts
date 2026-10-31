@@ -73,10 +73,13 @@ test('Root (Karte) hat 0 axe-Violations', async ({ page }) => {
 	expect(results.violations).toEqual([]);
 });
 
-test('Startseite hat 0 axe-Violations und zeigt beide Saison-Teaser', async ({ page }) => {
+test('Startseite hat 0 axe-Violations und zeigt Suche, Saisonhinweis und vier Aufgaben', async ({
+	page
+}) => {
 	await page.goto('/');
-	await expect(page.getByTestId('home-kaelte-teaser')).toBeVisible();
-	await expect(page.getByTestId('home-hitze-teaser')).toBeVisible();
+	await expect(page.getByTestId('home-search-hero')).toBeVisible();
+	await expect(page.getByTestId('home-season-note')).toBeVisible();
+	await expect(page.locator('[data-testid^="home-task-"]')).toHaveCount(4);
 	const results = await new AxeBuilder({ page })
 		.withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
 		.analyze();

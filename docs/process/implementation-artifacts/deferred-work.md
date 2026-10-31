@@ -511,3 +511,22 @@
 - source_spec: `docs/process/implementation-artifacts/spec-gh-104-quellen-komma.md`
   summary: Der Hinweis „öffnet neuen Tab“ an Kältehilfe-Quellen liegt neben dem Link statt darin und fehlt im Accessible Name.
   evidence: `quellen-zeile.svelte` (vorher `notfall-block.svelte`) setzt das `sr-only`-Span nach `</a>`; in Link-Listen von Screenreadern fehlt der Hinweis.
+
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: Startseiten-Klicks (task_link, search_example) je Aufgabe/Link unterscheidbar machen und per Komponententest absichern.
+  evidence: Alle 11 Aufgaben-Links senden dieselbe Aktion; Tests prüfen nur `trackLanding` direkt.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: Startseiten-Aufgabe „Gegend prüfen“ mit ausgeschaltetem kiezFinder-Flag testen.
+  evidence: Unit- und E2E-Test prüfen nur Flag an.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: AddressSearch fängt Geocoder-Fehler nicht ab (Header und Startseite).
+  evidence: maybe-false; `address-search.svelte` nutzt try/finally ohne catch. Klären mit einem Test, der geocode rejecten lässt und auf unhandled rejection prüft.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: Screenshots `static/berlin-navigator-multilayer.webp` und `-kiez-finder.webp` nach Startseiten-Umbau prüfen und ggf. mit README-Verweisen entfernen.
+  evidence: Kein Code nutzt sie mehr, README referenziert sie noch.
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: E2E-Test für die Startseiten-Suche mit echtem Geocoder/goto (DE und /en), sobald der Combobox-Hydration-Bug gelöst ist.
+  evidence: maybe-false; Unit-Test injiziert geocode/navigate. `tests/e2e/i18n-inspector.e2e.ts` dokumentiert „element was detached“ bei fill().
+- source_spec: `docs/process/implementation-artifacts/spec-gh-169-startseite-neu.md`
+  summary: `home_page_og_alt` nutzt „·“ und den alten Slogan „Berlin in Daten“.
+  evidence: Vorbestehender String, verstößt gegen die „·“-Regel in CLAUDE.md.

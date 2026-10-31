@@ -30,7 +30,7 @@
 {#if items.length > 0}
 	<section data-testid="home-updates-teaser" class="space-y-6">
 		<header class="flex flex-wrap items-center justify-between gap-4">
-			<h2 class="text-2xl font-bold text-ink md:text-3xl">{m.home_updates_heading()}</h2>
+			<h2 class="text-2xl font-bold text-ink">{m.home_updates_heading()}</h2>
 			<a href={localizedHref('/updates')} class={ctaSecondary}>
 				{m.home_updates_all_link()}
 			</a>

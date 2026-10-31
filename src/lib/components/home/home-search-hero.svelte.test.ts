@@ -1,0 +1,87 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { render } from 'vitest-browser-svelte';
+import { page, userEvent } from 'vitest/browser';
+import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import HomeSearchHero from './home-search-hero.svelte';
+
+afterEach(() => overwriteGetLocale(() => 'de'));
+
+const geocode = vi.fn(async () => []);
+
+describe('HomeSearchHero', () => {
+	it('zeigt den Fragetitel als h1 und ein Suchfeld', () => {
+		render(HomeSearchHero, { geocode });
+		expect(document.querySelector('h1')?.textContent).toBe('Wie lebt es sich an deiner Adresse?');
+		expect(document.querySelector('input[role="combobox"]')).not.toBeNull();
+	});
+
+	it('EN: englischer Titel', () => {
+		overwriteGetLocale(() => 'en');
+		render(HomeSearchHero, { geocode });
+		expect(document.querySelector('h1')?.textContent).toBe(
+			'What is it like to live at your address?'
+		);
+	});
+
+	it('hat drei Beispiel-Links auf /explore mit address und q', () => {
+		render(HomeSearchHero, { geocode });
+		const links = [...document.querySelectorAll('[data-testid="home-search-examples"] a')];
+		expect(links).toHaveLength(3);
+		expect(links.map((a) => a.textContent?.trim())).toEqual([
+			'Hermannplatz',
+			'Kollwitzplatz',
+			'Frohnau'
+		]);
+		for (const a of links) {
+			expect(a.getAttribute('href')).toMatch(/^\/explore\?address=[\d.]+%2C[\d.]+&q=/);
+		}
+	});
+
+	it('EN: Beispiel-Links mit /en-Präfix', () => {
+		overwriteGetLocale(() => 'en');
+		render(HomeSearchHero, { geocode });
+		const first = document.querySelector('[data-testid="home-search-examples"] a');
+		expect(first?.getAttribute('href')).toMatch(/^\/en\/explore\?address=/);
+	});
+
+	it('Beispiel-Links tragen die Mindest-Klickziel-Klasse', () => {
+		render(HomeSearchHero, { geocode });
+		for (const a of document.querySelectorAll('[data-testid="home-search-examples"] a')) {
+			expect(a.className).toContain('min-h-(--target-min)');
+		}
+	});
+
+	it('Kein Treffer: keine Navigation', async () => {
+		const navigate = vi.fn();
+		render(HomeSearchHero, { geocode: vi.fn(async () => []), navigate });
+		await page.getByRole('combobox').fill('xyzxyz');
+		await new Promise((r) => setTimeout(r, 400));
+		expect(navigate).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		['de', '/explore?address=13.4243%2C52.4869&q=Hermannplatz%2C+Berlin'],
+		['en', '/en/explore?address=13.4243%2C52.4869&q=Hermannplatz%2C+Berlin']
+	] as const)('Treffer (%s): navigiert zur Karte an diesem Punkt', async (locale, expected) => {
+		overwriteGetLocale(() => locale);
+		const navigate = vi.fn();
+		const suggestion = {
+			id: '1',
+			displayName: 'Hermannplatz, Berlin',
+			lat: 52.4869,
+			lng: 13.4243,
+			type: 'square',
+			addresstype: 'square'
+		};
+		render(HomeSearchHero, { geocode: vi.fn(async () => [suggestion]), navigate });
+		const input = page.getByRole('combobox');
+		await input.fill('Hermannplatz');
+		await vi.waitFor(() =>
+			expect(document.querySelector('[aria-live="polite"]')?.textContent).toMatch(/1/)
+		);
+		await userEvent.keyboard('{ArrowDown}');
+		await userEvent.keyboard('{ArrowDown}');
+		await userEvent.keyboard('{Enter}');
+		await vi.waitFor(() => expect(navigate).toHaveBeenCalledWith(expected));
+	});
+});
