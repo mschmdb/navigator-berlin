@@ -63,7 +63,8 @@
 		"publish-update": "tsx scripts/publish-update/main.ts",
 		"doc:pipelines": "tsx scripts/generate-data-flow-doc.ts",
 		"doc:story-map": "tsx scripts/generate-story-map.ts",
-		"metrics:landing": "tsx scripts/landing-metrics.ts"
+		"metrics:landing": "tsx scripts/landing-metrics.ts",
+		"screenshots": "tsx scripts/home-screenshots.ts"
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "^4.11.3",
