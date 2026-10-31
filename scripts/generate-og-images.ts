@@ -163,6 +163,14 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		compositionBezirk: 'charlottenburg-wilmersdorf'
 	},
 	{
+		slug: 'stories-en',
+		headline: 'Berlin Data Stories',
+		subline: 'Pictures from open data',
+		body: 'One picture, one message: six shapes show green space, homes built before 1949, noise, residents, transit stops and clubs of a district.',
+		footerUrl: '/en/stories',
+		compositionBezirk: 'charlottenburg-wilmersdorf'
+	},
+	{
 		slug: 'berlin-wahlen',
 		headline: 'Berlin-Wahlen',
 		subline: 'Wahlergebnisse auf der Karte',

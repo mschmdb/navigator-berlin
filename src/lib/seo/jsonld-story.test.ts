@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildStoriesIndex, buildStoryPosting, storyImagePath } from './jsonld-story.js';
+import {
+	buildStoriesIndex,
+	buildStoryPosting,
+	storiesImagePath,
+	storyImagePath
+} from './jsonld-story.js';
 import type { StoryEntry } from '$lib/content/stories/types.js';
 
 const ORIGIN = 'https://navigator.berlin';
@@ -103,6 +108,22 @@ describe('Bild der Data Stories', () => {
 		expect(storyImagePath(withVisual)).toBe('/og/page/stories.png');
 		expect(storyImagePath(withPreview)).toBe('/og/page/stories.png');
 		expect(storyImagePath(full)).toBe('/og/page/home.png');
+	});
+
+	it('nimmt auf EN das englische Stories-Bild', () => {
+		expect(storiesImagePath('en')).toBe('/og/page/stories-en.png');
+		expect(storiesImagePath('de')).toBe('/og/page/stories.png');
+		expect(storyImagePath(withVisual, 'en')).toBe('/og/page/stories-en.png');
+		expect(storyImagePath(full, 'en')).toBe('/og/page/home.png');
+		expect(
+			buildStoriesIndex({
+				entries: [withVisual],
+				origin: ORIGIN,
+				locale: 'en',
+				name: 'Berlin Data Stories',
+				description: 'x'
+			}).image
+		).toBe('https://navigator.berlin/og/page/stories-en.png');
 	});
 
 	it('trägt das Bild im BlogPosting, ein explizites Bild gewinnt', () => {

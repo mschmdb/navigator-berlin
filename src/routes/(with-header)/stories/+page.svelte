@@ -6,7 +6,7 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildStoriesIndex, STORIES_IMAGE_PATH } from '$lib/seo/jsonld-story.js';
+	import { buildStoriesIndex, storiesImagePath } from '$lib/seo/jsonld-story.js';
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { buildPageTitle } from '$lib/seo/page-title.js';
 
@@ -19,7 +19,7 @@
 	// Logischer Pfad: auf der Stories-Subdomain ist `page.url.pathname` die Wurzel `/`,
 	// die Canonical-URL gehört auf `/stories` (siehe `storiesReroute` in `$lib/app-mode.ts`).
 	const pathname = '/stories';
-	const ogImage = $derived(`${primaryOrigin}${STORIES_IMAGE_PATH}`);
+	const ogImage = $derived(`${primaryOrigin}${storiesImagePath(getLocale())}`);
 
 	const blogJsonLd = $derived(
 		buildStoriesIndex({

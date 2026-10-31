@@ -38,7 +38,7 @@
 	const titleLang = $derived(localized.titleIsDeFallback ? 'de' : undefined);
 	const bodyLang = $derived(data.bodyIsDeFallback ? 'de' : undefined);
 	const primaryOrigin = $derived(canonicalOrigin(page.url.origin));
-	const imagePath = $derived(storyImagePath(entry));
+	const imagePath = $derived(storyImagePath(entry, getLocale()));
 	const hasComposition = $derived(imagePath !== '/og/page/home.png');
 	const ogImage = $derived(`${primaryOrigin}${imagePath}`);
 
