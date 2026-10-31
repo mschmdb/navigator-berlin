@@ -152,6 +152,27 @@ describe('punkt-linie-kiez-auswahl.svelte', () => {
 		});
 	});
 
+	it('bietet unter der Auswahl das Gesamtplakat an und zählt es mit bezirk alle', () => {
+		vi.mocked(trackEvent).mockClear();
+		render(Auswahl, { bezirke, sources });
+		const a = document.querySelector<HTMLAnchorElement>('[data-testid="plk-pdf-all-link"]')!;
+		expect(a.textContent?.trim()).toBe('Alle 12 Bezirke als PDF');
+		expect(a.getAttribute('href')).toBe('/stories/punkt-linie-kiez/de/alle-bezirke.pdf');
+		expect(a.getAttribute('download')).toBe('punkt-linie-kiez-alle-bezirke-de.pdf');
+		expect(a.className).toContain('min-h-6');
+		const list = document.querySelector('[data-testid="plk-auswahl-liste"]')!;
+		expect(list.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+		const guard = (e: Event): void => e.preventDefault();
+		document.addEventListener('click', guard);
+		a.click();
+		document.removeEventListener('click', guard);
+		expect(trackEvent).toHaveBeenCalledWith('Stories PDF Download', {
+			serie: 'punkt-linie-kiez',
+			bezirk: 'alle',
+			sprache: 'de'
+		});
+	});
+
 	it('EN: englischer Linktext und en im Dateinamen', () => {
 		overwriteGetLocale(() => 'en');
 		render(Auswahl, { bezirke, sources });

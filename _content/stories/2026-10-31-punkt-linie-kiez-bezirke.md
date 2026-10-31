@@ -30,4 +30,4 @@ Wo ein Zeichen liegt, sagt nichts aus. Jeder Bezirk hat einen festen Startwert, 
 
 ## Zum Ausdrucken
 
-Unter dem großen Bild lädst du deinen Bezirk als PDF herunter. Die Datei ist ein Vektor, du kannst sie also in jeder Größe drucken lassen. Alles steht unter MIT-Lizenz, die Quellen stehen auf dem Plakat.
+Unter dem großen Bild lädst du deinen Bezirk als PDF herunter. Die Datei ist ein Vektor, du kannst sie also in jeder Größe drucken lassen. Alles steht unter MIT-Lizenz, die Quellen stehen auf dem Plakat. Unter der Auswahl liegt außerdem ein Gesamtplakat mit allen 12 Bezirken im Raster und einer gemeinsamen Legende.

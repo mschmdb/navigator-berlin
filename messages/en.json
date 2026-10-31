@@ -2438,6 +2438,7 @@
 	"plk_licenses_link": "Licences",
 	"plk_stand": "as of",
 	"stories_og_composition_alt": "Berlin Data Stories: composition of circle, square, triangle, donut, bar and lines for one district",
+	"plk_pdf_all_link": "All 12 districts as PDF",
 	"plk_pdf_link": "Download PDF",
 	"plk_pdf_license": "Picture and code are under the MIT licence. The source data keeps its own licences, details at navigator.berlin/lizenzen."
 }
