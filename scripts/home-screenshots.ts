@@ -45,8 +45,21 @@ const SHOTS: readonly Shot[] = [
 		path: '/explore?layers=klima-pet-2022&address=13.4243,52.4869&q=Hermannplatz'
 	},
 	{
-		name: 'kaelte',
-		path: '/explore?layers=waerme-orte&mode=kaelte&address=13.4243,52.4869&q=Hermannplatz'
+		name: 'kiez-score',
+		path: '/explore?layers=kiez-score-ruhe-luft,kiez-score-wohnschutz&address=13.3735,52.5186&q=Regierungsviertel',
+		prepare: async (page) => {
+			// Ganz Berlin zeigen: nach dem Sprung zur Adresse herauszoomen.
+			const zoomOut = page
+				.getByRole('button', { name: /zoom out|herauszoomen|verkleinern/i })
+				.first();
+			for (let k = 0; k < 4; k++) {
+				await zoomOut.click();
+				await page.waitForTimeout(700);
+			}
+			// Maus auf den Panel-Titel, damit kein Karten-Tooltip im Bild steht.
+			await page.mouse.move(1300, 110);
+			await page.waitForTimeout(800);
+		}
 	},
 	{
 		name: 'finder',
