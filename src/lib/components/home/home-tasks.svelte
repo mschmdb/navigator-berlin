@@ -1,13 +1,13 @@
 <!--
-	Vier Aufgaben mit je zwei bis drei Direktlinks. Gleiches Zeilenmuster wie
-	die übrigen Startseiten-Listen (`line-list`).
+	Vier Aufgaben mit je zwei bis drei Direktlinks. Links als Sekundär-Buttons (`cta.ts`),
+	damit sie als Aktion erkennbar sind.
 -->
 <script lang="ts">
 	import { featureFlags } from '$lib/data/feature-flags.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { trackLanding } from '$lib/utils/plausible.js';
-	import { lineItem, lineList, lineRow } from './internal/line-list.js';
+	import { ctaSecondary } from './internal/cta.js';
 
 	interface TaskLink {
 		readonly href: string;
@@ -70,13 +70,13 @@
 		<section data-testid={`home-task-${task.id}`} class="space-y-3">
 			<h2 class="text-2xl font-bold text-ink">{task.title}</h2>
 			<p class="max-w-(--measure) text-base text-ink-muted">{task.text}</p>
-			<ul class="{lineList} sm:grid-cols-3">
+			<ul class="flex flex-wrap gap-3">
 				{#each task.links as link (link.href)}
-					<li class={lineItem}>
+					<li>
 						<a
 							href={localizedHref(link.href)}
 							onclick={() => trackLanding('task_link', 'home')}
-							class="{lineRow} justify-center text-base font-medium"
+							class={ctaSecondary}
 						>
 							{link.label}
 						</a>

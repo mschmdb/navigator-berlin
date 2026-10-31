@@ -57,4 +57,14 @@ describe('HomeTasks', () => {
 			expect(parseWahlSlug(href.split('/').pop()!)).not.toBeNull();
 		}
 	});
+
+	it('Aufgaben-Links sind als Buttons gestaltet (Rahmen, Mindesthöhe)', () => {
+		render(HomeTasks);
+		const links = [...document.querySelectorAll('[data-testid^="home-task-"] a')];
+		expect(links.length).toBeGreaterThan(0);
+		for (const a of links) {
+			expect(a.classList.contains('border')).toBe(true);
+			expect(a.classList.contains('min-h-(--target-min)')).toBe(true);
+		}
+	});
 });
