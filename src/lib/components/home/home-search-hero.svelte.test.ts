@@ -19,7 +19,7 @@ describe('HomeSearchHero', () => {
 		overwriteGetLocale(() => 'en');
 		render(HomeSearchHero, { geocode });
 		expect(document.querySelector('h1')?.textContent).toBe(
-			'What is it like to live at your address?'
+			'How is life at your address?'
 		);
 	});
 

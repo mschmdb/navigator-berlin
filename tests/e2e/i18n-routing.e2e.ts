@@ -687,7 +687,7 @@ test.describe('i18n Block B2: Startseite /en', () => {
 	}) => {
 		await page.goto('/en');
 		await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-			'What is it like to live at your address?'
+			'How is life at your address?'
 		);
 		// Update-Teaser ausgeschlossen: ohne `title_en`/`summary_en` zeigt er
 		// bewusst deutschen Fallback-Content mit `lang="de"` (Entscheidung 2A),
