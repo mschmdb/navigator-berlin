@@ -174,13 +174,16 @@ describe('overviewPosterSvg', () => {
 			expect(Number(m[1])).toBeLessThan(POSTER_WIDTH - 20);
 			expect(Number(m[2])).toBeLessThan(POSTER_HEIGHT - 20);
 		}
-		for (const m of svg.matchAll(/translate\(([\d.]+) ([\d.]+)\) scale\(([\d.]+)\)/g)) {
-			const [x, y, s] = [Number(m[1]), Number(m[2]), Number(m[3])];
-			if (s < 1) {
-				expect(x).toBeGreaterThanOrEqual(20);
-				expect(x + 200 * s).toBeLessThanOrEqual(POSTER_WIDTH - 20);
-				expect(y + 200 * s + 30).toBeLessThan(1000);
-			}
+		const tiles = [
+			...svg.matchAll(/translate\(([\d.]+) ([\d.]+)\) scale\(([\d.]+)\)"><g clip-path/g)
+		].map((m) => [Number(m[1]), Number(m[2]), Number(m[3])] as const);
+		expect(tiles).toHaveLength(12);
+		const footerLine = Number(svg.match(/<line x1="50" y1="([\d.]+)" x2="950"/)![1]);
+		for (const [x, y, s] of tiles) {
+			expect(x).toBeGreaterThanOrEqual(20);
+			expect(x + 200 * s).toBeLessThanOrEqual(POSTER_WIDTH - 20);
+			// Kachel plus Name enden über der Legende, die über der Fußlinie steht.
+			expect(y + 200 * s + 30).toBeLessThan(footerLine - 52);
 		}
 	});
 });
