@@ -70,11 +70,14 @@ describe('getLayersAtPoint', () => {
 	});
 
 	it('Point-Layer Trinkbrunnen liefert Hit bei nahem Punkt (innerhalb 50m)', async () => {
+		// Datum in der Brunnen-Saison fixieren, sonst schlägt der Test ab November fehl.
+		vi.setSystemTime(new Date('2026-07-15T12:00:00Z'));
 		const fn = buildFetchMock();
 		const hits = await getLayersAtPoint(52.5225, 13.4025, fn as unknown as typeof fetch);
 		const brunnen = hits.find((h) => h.layer === 'trinkbrunnen');
 		expect(brunnen).toBeDefined();
 		expect(brunnen?.reason).not.toBe('seasonal');
+		vi.useRealTimers();
 	});
 
 	it('cached Result, kein Re-Fetch bei zweitem Lookup auf gleichem Punkt', async () => {

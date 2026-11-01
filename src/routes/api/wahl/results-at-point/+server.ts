@@ -10,6 +10,7 @@ import { BERLIN_BBOX } from '$lib/data/constants.js';
 import { normalizeSlug } from '$lib/data/internal/slug.js';
 import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
 import { getResultsForStimmbezirk } from '$lib/server/db/queries/wahl/get-results-for-stimmbezirk.js';
+import { kiezSlugAt } from '$lib/server/wahl/point-kiez-slug.js';
 import { getResultsForKiez } from '$lib/server/db/queries/wahl/get-results-for-kiez.js';
 import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for-bezirk.js';
 import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for-berlin.js';
@@ -150,12 +151,12 @@ async function findKiezSlug(lat: number, lng: number): Promise<string | null> {
 	if (!lorLayer) return null;
 	const fc = await loadFc(lorLayer.filename);
 	const pt = point([lng, lat]);
-	for (const feature of fc.features) {
-		if (!booleanPointInPolygon(pt, feature as Feature<Polygon | MultiPolygon>)) continue;
-		const name = (feature.properties as { BZR_NAME?: string } | null)?.BZR_NAME;
-		return name ? normalizeSlug(name) : null;
-	}
-	return null;
+	// Slug wie in der Wahl-Pipeline (doppelte Namen mit Bezirk-Suffix), sonst findet
+	// die DB die beiden Heerstraßen nicht.
+	const index = fc.features.findIndex((feature) =>
+		booleanPointInPolygon(pt, feature as Feature<Polygon | MultiPolygon>)
+	);
+	return index === -1 ? null : kiezSlugAt(fc.features, index);
 }
 
 async function buildLevelResults(
