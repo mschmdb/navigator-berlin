@@ -1,6 +1,6 @@
 ---
-title: 'Berlin Data Stories: Bilder aus offenen Daten'
-title_en: 'Berlin Data Stories: pictures from open data'
+title: 'Berlin Data Stories: Plakate und Geschichten aus offenen Daten'
+title_en: 'Berlin Data Stories: posters and stories from open data'
 summary: 'Neue Reihe auf navigator.berlin: Plakate und Geschichten aus denselben offenen Daten wie der Atlas.'
 summary_en: 'A new series on navigator.berlin: posters and stories from the same open data as the atlas.'
 date: 2026-10-31

@@ -157,16 +157,16 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 	{
 		slug: 'stories',
 		headline: 'Berlin Data Stories',
-		subline: 'Bilder aus offenen Daten',
-		body: 'Ein Bild, eine Aussage: Sechs Formen zeigen Grünversorgung, Altbau, Lärm, Bewohner, Haltestellen und Clubs eines Bezirks.',
+		subline: 'Plakate und Geschichten aus offenen Daten',
+		body: 'Bilder, Serien und interaktive Geschichten aus offenen Berliner Daten. Den Anfang macht „Punkt, Linie, Kiez“: sechs Formen pro Bezirk.',
 		footerUrl: '/stories',
 		compositionBezirk: 'charlottenburg-wilmersdorf'
 	},
 	{
 		slug: 'stories-en',
 		headline: 'Berlin Data Stories',
-		subline: 'Pictures from open data',
-		body: 'One picture, one message: six shapes show green space, homes built before 1949, noise, residents, transit stops and clubs of a district.',
+		subline: 'Posters and stories from open data',
+		body: "Pictures, series and interactive stories from Berlin's open data. First up: “Point and Line to Kiez”, six shapes per district.",
 		footerUrl: '/en/stories',
 		compositionBezirk: 'charlottenburg-wilmersdorf'
 	},

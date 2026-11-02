@@ -176,7 +176,7 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 	out.push({
 		loc: `${ctx.origin}/stories`,
 		name: 'Berlin Data Stories',
-		description: 'Bilder mit einer Aussage, gebaut aus denselben offenen Daten wie der Atlas',
+		description: 'Plakate und interaktive Geschichten aus denselben offenen Daten wie der Atlas',
 		section: 'static'
 	});
 	out.push({
