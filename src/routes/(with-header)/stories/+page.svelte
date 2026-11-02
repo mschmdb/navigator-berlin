@@ -61,6 +61,7 @@
 			{m.stories_index_h1()}
 		</h1>
 		<p class="text-lg leading-body text-ink-muted">{m.stories_index_lead()}</p>
+		<p class="text-base leading-body text-ink-muted">{m.stories_index_about()}</p>
 	</header>
 
 	{#if data.entries.length > 0}
