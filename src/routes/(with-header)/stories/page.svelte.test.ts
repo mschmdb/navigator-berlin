@@ -40,7 +40,7 @@ describe('stories/+page.svelte · DE', () => {
 		expect(squash(root().querySelector('h1'))).toBe('Berlin Data Stories');
 		const headerParagraphs = root().querySelectorAll('header p');
 		expect(squash(headerParagraphs[0])).toContain('interaktive Geschichten');
-		expect(squash(headerParagraphs[1])).toContain('Lehrbuchregel der Datenvisualisierung');
+		expect(squash(headerParagraphs[1])).toContain('genauen Zahlen dazu findest du immer im Atlas');
 		const list = root().querySelector('ul')!;
 		expect(list.querySelectorAll(':scope > li')).toHaveLength(2);
 		const links = [...list.querySelectorAll('[data-testid="stories-entry-link"]')];
