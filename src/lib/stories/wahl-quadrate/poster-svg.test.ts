@@ -146,11 +146,14 @@ describe('wallPoster', () => {
 		expect(legendY).toBeGreaterThan(bottom + 20);
 	});
 
-	it('Titel kompakt, Jahre ruhig und klein', () => {
+	it('Titel klar die größte Schrift, Untertitel und Jahre klein', () => {
 		const size = (label: string): number =>
 			Number(new RegExp(`font-size="([\\d.]+)"[^>]*>${label}<`).exec(agh.svg)![1]);
-		expect(size('Berlin in Quadraten')).toBeLessThanOrEqual(44);
+		expect(size('Berlin in Quadraten')).toBeGreaterThanOrEqual(2 * size('Lichtenberg'));
 		expect(size('2011')).toBeLessThanOrEqual(16);
+		expect(
+			size('Alle Bezirke, alle Wahlen. Abgeordnetenhaus, Zweitstimmen 2011 bis 2026')
+		).toBeLessThanOrEqual(16);
 	});
 
 	it('Außenzahlen haben eigenen Abstand zur nächsten Zeile', () => {
