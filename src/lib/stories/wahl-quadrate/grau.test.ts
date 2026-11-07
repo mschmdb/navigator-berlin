@@ -12,7 +12,8 @@ const NAMES: GreyNames = {
 	linke: 'Die Linke',
 	piraten: 'Piraten',
 	spd: 'SPD',
-	fw: 'Freie Wähler'
+	fw: 'Freie Wähler',
+	tier: 'Tierschutzpartei'
 };
 
 const base = { sonst: 0.05, fw: 0 };
@@ -48,6 +49,21 @@ describe('derive', () => {
 		expect(d.disp.rest).toBeCloseTo(0.1, 12);
 		expect(d.small).toEqual([{ key: 'fw', share: 0.07 }]);
 		expect(derive({ raw: { cdu: 0.9 }, sonst: 0.096, fw: 0.004 }, 0.05).small).toEqual([]);
+	});
+
+	it('Tierschutzpartei ist immer Grau und wird ab 0,5 % genannt', () => {
+		const d = derive({ raw: { cdu: 0.9 }, sonst: 0.03, fw: 0, tier: 0.07 }, 0.05);
+		expect(d.disp.rest).toBeCloseTo(0.1, 12);
+		expect(d.small).toEqual([{ key: 'tier', share: 0.07 }]);
+		const klein = derive({ raw: { cdu: 0.9 }, sonst: 0.096, fw: 0, tier: 0.004 }, 0.05);
+		expect(klein.small).toEqual([]);
+		expect(klein.disp.rest).toBeCloseTo(0.1, 12);
+	});
+
+	it('ohne Tierschutz-Anteil bleibt das Grau wie bisher', () => {
+		const ohne = derive({ raw: { cdu: 0.9 }, sonst: 0.1, fw: 0 }, 0.05);
+		expect(ohne.disp.rest).toBeCloseTo(0.1, 12);
+		expect(ohne.small).toEqual([]);
 	});
 
 	it('genannte Kleinparteien absteigend sortiert', () => {
@@ -105,6 +121,13 @@ describe('greyCaption', () => {
 	it('formatiert die englische Caption', () => {
 		expect(formatGreyLine(d, NAMES, 'en')).toBe(
 			'Grey 13%: FDP 4.6%, BSW 3.1% and other small parties.'
+		);
+	});
+
+	it('nennt die Tierschutzpartei in der Caption', () => {
+		const e = derive({ raw: { cdu: 0.9 }, sonst: 0.088, fw: 0, tier: 0.012 }, 0.05);
+		expect(formatGreyLine(e, NAMES, 'de')).toBe(
+			'Grau 10 %: Tierschutzpartei 1,2 % und weitere kleine Parteien.'
 		);
 	});
 

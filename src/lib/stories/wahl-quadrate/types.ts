@@ -5,9 +5,13 @@
  *
  * Kleine Parteien bleiben einzeln. Die Seite fasst sie erst beim Zeichnen zu
  * Grau zusammen, weil das Handbuch die Schwelle einstellbar macht.
+ *
+ * Reiner Typvertrag, den auch die Pipeline importiert. Schlüssel, Reihenfolge,
+ * Wahltypen und Jahre stehen in `parteien.ts`.
  */
+import type { NamedParty, WahlTyp } from './parteien';
 
-export type WahlTyp = 'agh' | 'btw';
+export type { WahlTyp };
 
 export type WahlSlug =
 	| 'agh11'
@@ -68,4 +72,16 @@ export interface StoriesWahlData {
 	bezirke: BezirkWahlen[];
 	/** Berlin gesamt als Summe der Bezirke, für die Fußnote der Gesamtansicht. */
 	berlin: Record<WahlSlug, WahlZahlen>;
+}
+
+/**
+ * Eingabe des Treemap-Kerns (`derive` in `grau.ts`) für eine Wahl in einem Gebiet.
+ * `raw` ohne Sonstige und Freie Wähler. Erzeugt von `toElectionShares`.
+ */
+export interface ElectionShares {
+	raw: Partial<Record<NamedParty, number>>;
+	sonst: number;
+	fw: number;
+	/** Tierschutzpartei. Fehlt in älteren Fixtures, dann 0. */
+	tier?: number;
 }

@@ -1,21 +1,12 @@
 import { ORDER, type NamedParty, type PartyKey } from './parteien';
+import type { ElectionShares } from './types';
 
 /** Parteien unter dieser Schwelle fallen ins Grau. Im Handbuch einstellbar. */
 export const DEFAULT_THRESHOLD = 0.05;
 /** Ab diesem Anteil nennt die Caption eine Partei im Grau beim Namen. */
 export const MIN_NAMED = 0.005;
 
-/**
- * Rohanteile einer Wahl in einem Gebiet. `raw` ohne Sonstige und Freie Wähler.
- * Lokal definiert, bis `types.ts` aus der Datenbasis (#187) steht.
- */
-export interface ElectionShares {
-	raw: Partial<Record<NamedParty, number>>;
-	sonst: number;
-	fw: number;
-}
-
-export type GreyKey = NamedParty | 'fw';
+export type GreyKey = NamedParty | 'fw' | 'tier';
 export type GreyNames = Record<GreyKey, string>;
 export type Lang = 'de' | 'en';
 
@@ -36,7 +27,8 @@ export interface Derived {
 export function derive(e: ElectionShares, thr: number = DEFAULT_THRESHOLD): Derived {
 	const disp = Object.fromEntries(ORDER.map((k) => [k, 0])) as Record<PartyKey, number>;
 	const small: SmallParty[] = [];
-	let rest = e.sonst + e.fw;
+	const tier = e.tier ?? 0;
+	let rest = e.sonst + e.fw + tier;
 	for (const k of ORDER) {
 		if (k === 'rest') continue;
 		const v = e.raw[k] ?? 0;
@@ -47,6 +39,7 @@ export function derive(e: ElectionShares, thr: number = DEFAULT_THRESHOLD): Deri
 		}
 	}
 	if (e.fw >= MIN_NAMED) small.push({ key: 'fw', share: e.fw });
+	if (tier >= MIN_NAMED) small.push({ key: 'tier', share: tier });
 	small.sort((p, q) => q.share - p.share);
 	disp.rest = rest;
 	const top = ORDER.filter((k): k is NamedParty => k !== 'rest' && disp[k] > 0)
