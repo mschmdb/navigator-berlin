@@ -179,4 +179,8 @@ describe('handbuch.svelte', () => {
 		expect(button(fig('s3'), 'By size')).toBeTruthy();
 		expect(button(fig('s5'), 'Pause')).toBeTruthy();
 	});
+	it('zeigt keine Implementierungsnotizen aus dem Komponentenkommentar', () => {
+		const { container } = render(Handbuch, props);
+		expect(container.textContent).not.toContain('runde-20-ux');
+	});
 });
