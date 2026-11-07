@@ -285,8 +285,10 @@ describe('kiez-finder-panel', () => {
 	// für das Wahlportal, der Finder bleibt bei seiner eigenen Liste.
 	it('FINDER_PARTIES entspricht den Partei-Knöpfen im Panel', async () => {
 		await renderPanel({ initialWeights: { ...neutralWeights(), partei: 1 } });
-		await vi.waitFor(() =>
-			expect(document.querySelector('[data-testid^="finder-partei-"]')).not.toBeNull()
+		// Die Knöpfe erscheinen nach dem Laden der Daten, unter Last kann das dauern.
+		await vi.waitFor(
+			() => expect(document.querySelector('[data-testid^="finder-partei-"]')).not.toBeNull(),
+			{ timeout: 5000 }
 		);
 		const knoepfe = [...document.querySelectorAll('[data-testid^="finder-partei-"]')].map((b) =>
 			b.getAttribute('data-testid')!.replace('finder-partei-', '')
