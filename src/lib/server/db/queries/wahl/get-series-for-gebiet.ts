@@ -1,4 +1,16 @@
-import { eq, and, desc, asc, inArray, sql } from 'drizzle-orm';
+import {
+	eq,
+	and,
+	desc,
+	asc,
+	inArray,
+	gte,
+	ne,
+	or,
+	sql,
+	type SQL,
+	type AnyColumn
+} from 'drizzle-orm';
 import { getDb } from '../../index.js';
 import {
 	wahl,
@@ -19,6 +31,25 @@ export type GebietSeriesRow = {
 	stimmen: number;
 };
 
+export const MIN_ANTEIL_HISTORISCH = 0.05;
+
+/**
+ * Partei-Filter der Zeitreihe: Top-N der jüngsten Wahl in allen Jahren,
+ * historisch starke Parteien nur in den älteren Wahlen.
+ */
+function parteiFilter(
+	parteiIdColumn: AnyColumn,
+	wahlIdColumn: AnyColumn,
+	topIds: readonly number[],
+	historischIds: readonly number[],
+	latestWahlId: number
+): SQL | undefined {
+	const zusatzIds = historischIds.filter((id) => !topIds.includes(id));
+	const top = inArray(parteiIdColumn, [...topIds]);
+	if (zusatzIds.length === 0) return top;
+	return or(top, and(inArray(parteiIdColumn, zusatzIds), ne(wahlIdColumn, latestWahlId)));
+}
+
 /**
  * Zeitreihe eines Gebiets (Kiez, Bezirk oder Berlin gesamt) über alle Jahre
  * einer Wahl-Reihe (typ × stimmtyp), auf die Top-N Parteien der jüngsten
@@ -30,6 +61,12 @@ export type GebietSeriesRow = {
  *
  * Story 6: `ebene: 'berlin'` ignoriert `gebietSlug` (kein Slug-Filter,
  * `wahl_aggregat_berlin` führt genau eine Row pro Wahl × Partei).
+ *
+ * #179: Zusätzlich zu den Top-N der jüngsten Wahl kommt jede Partei dazu, die
+ * in irgendeiner Wahl der Reihe im Gebiet mindestens `MIN_ANTEIL_HISTORISCH`
+ * erreicht hat (PIRATEN 2011: 8,9 % Berlin). Für die jüngste Wahl bleiben es
+ * genau die Top-N: Zusatz-Parteien liefern dort keine Row, das Panel der
+ * jüngsten Wahl ändert sich nicht.
  */
 export async function getSeriesForGebiet(
 	gebietSlug: string | null,
@@ -68,7 +105,18 @@ async function seriesFromBerlin(
 		.orderBy(desc(wahlAggregatBerlin.stimmen))
 		.limit(topN);
 	if (topParteien.length === 0) return [];
-	const parteiIds = topParteien.map((r) => r.parteiId);
+	const topIds = topParteien.map((r) => r.parteiId);
+
+	const historischParteien = await db
+		.selectDistinct({ parteiId: wahlAggregatBerlin.parteiId })
+		.from(wahlAggregatBerlin)
+		.where(
+			and(
+				inArray(wahlAggregatBerlin.wahlId, wahlIds),
+				gte(wahlAggregatBerlin.anteil, MIN_ANTEIL_HISTORISCH)
+			)
+		);
+	const historischIds = historischParteien.map((r) => r.parteiId);
 
 	return db
 		.select({
@@ -85,7 +133,13 @@ async function seriesFromBerlin(
 		.where(
 			and(
 				inArray(wahlAggregatBerlin.wahlId, wahlIds),
-				inArray(wahlAggregatBerlin.parteiId, parteiIds)
+				parteiFilter(
+					wahlAggregatBerlin.parteiId,
+					wahlAggregatBerlin.wahlId,
+					topIds,
+					historischIds,
+					latestWahlId
+				)
 			)
 		)
 		.orderBy(asc(wahl.jahr), sql`${partei.kurzname} ASC`);
@@ -117,7 +171,19 @@ async function seriesFromKiez(
 		.orderBy(desc(wahlAggregatKiez.stimmen))
 		.limit(topN);
 	if (topParteien.length === 0) return [];
-	const parteiIds = topParteien.map((r) => r.parteiId);
+	const topIds = topParteien.map((r) => r.parteiId);
+
+	const historischParteien = await db
+		.selectDistinct({ parteiId: wahlAggregatKiez.parteiId })
+		.from(wahlAggregatKiez)
+		.where(
+			and(
+				eq(wahlAggregatKiez.kiezSlug, gebietSlug),
+				inArray(wahlAggregatKiez.wahlId, wahlIds),
+				gte(wahlAggregatKiez.anteil, MIN_ANTEIL_HISTORISCH)
+			)
+		);
+	const historischIds = historischParteien.map((r) => r.parteiId);
 
 	return db
 		.select({
@@ -135,7 +201,13 @@ async function seriesFromKiez(
 			and(
 				eq(wahlAggregatKiez.kiezSlug, gebietSlug),
 				inArray(wahlAggregatKiez.wahlId, wahlIds),
-				inArray(wahlAggregatKiez.parteiId, parteiIds)
+				parteiFilter(
+					wahlAggregatKiez.parteiId,
+					wahlAggregatKiez.wahlId,
+					topIds,
+					historischIds,
+					latestWahlId
+				)
 			)
 		)
 		.orderBy(asc(wahl.jahr), sql`${partei.kurzname} ASC`);
@@ -170,7 +242,19 @@ async function seriesFromBezirk(
 		.orderBy(desc(wahlAggregatBezirk.stimmen))
 		.limit(topN);
 	if (topParteien.length === 0) return [];
-	const parteiIds = topParteien.map((r) => r.parteiId);
+	const topIds = topParteien.map((r) => r.parteiId);
+
+	const historischParteien = await db
+		.selectDistinct({ parteiId: wahlAggregatBezirk.parteiId })
+		.from(wahlAggregatBezirk)
+		.where(
+			and(
+				eq(wahlAggregatBezirk.bezirkSlug, gebietSlug),
+				inArray(wahlAggregatBezirk.wahlId, wahlIds),
+				gte(wahlAggregatBezirk.anteil, MIN_ANTEIL_HISTORISCH)
+			)
+		);
+	const historischIds = historischParteien.map((r) => r.parteiId);
 
 	return db
 		.select({
@@ -188,7 +272,13 @@ async function seriesFromBezirk(
 			and(
 				eq(wahlAggregatBezirk.bezirkSlug, gebietSlug),
 				inArray(wahlAggregatBezirk.wahlId, wahlIds),
-				inArray(wahlAggregatBezirk.parteiId, parteiIds)
+				parteiFilter(
+					wahlAggregatBezirk.parteiId,
+					wahlAggregatBezirk.wahlId,
+					topIds,
+					historischIds,
+					latestWahlId
+				)
 			)
 		)
 		.orderBy(asc(wahl.jahr), sql`${partei.kurzname} ASC`);
