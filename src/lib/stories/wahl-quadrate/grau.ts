@@ -1,19 +1,10 @@
 import { ORDER, type NamedParty, type PartyKey } from './parteien';
+import type { ElectionShares } from './types';
 
 /** Parteien unter dieser Schwelle fallen ins Grau. Im Handbuch einstellbar. */
 export const DEFAULT_THRESHOLD = 0.05;
 /** Ab diesem Anteil nennt die Caption eine Partei im Grau beim Namen. */
 export const MIN_NAMED = 0.005;
-
-/**
- * Rohanteile einer Wahl in einem Gebiet. `raw` ohne Sonstige und Freie Wähler.
- * Lokal definiert, bis `types.ts` aus der Datenbasis (#187) steht.
- */
-export interface ElectionShares {
-	raw: Partial<Record<NamedParty, number>>;
-	sonst: number;
-	fw: number;
-}
 
 export type GreyKey = NamedParty | 'fw';
 export type GreyNames = Record<GreyKey, string>;

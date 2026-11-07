@@ -4,18 +4,14 @@
  * Parameternamen folgen der Vorlage `runde-20-ux/src/wall.js` (read/write), damit
  * Links aus der Skizzenphase weiter funktionieren. Kapitel 5 bekommt eigene
  * Parameter (`bezirk`, `wahl5`), weil `wahl` dort nur AGH oder BTW kennt.
- *
- * Die Typen stehen bewusst lokal hier: `types.ts` im selben Ordner gehört dem
- * Datenbasis-Thread (#187). Nach dessen Merge können Parteischlüssel und
- * Wahltyp von dort kommen.
  */
 import { HOME_BEZIRKE } from '$lib/content/home-bezirke';
+import { JAHRE, NAMED_PARTIES, WAHL_TYPEN, type NamedParty, type WahlTyp } from './parteien';
 
-export type WahlTyp = 'agh' | 'btw';
+export type { WahlTyp };
 export type GesamtWahl = WahlTyp | 'both';
 export type GesamtSort = 'nr' | 'alpha' | 'party' | 'turnout';
 export type Reihenfolge = 'fixed' | 'size';
-export type ParteiKey = 'afd' | 'bsw' | 'cdu' | 'fdp' | 'gruene' | 'linke' | 'piraten' | 'spd';
 export type Kapitel = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface GesamtState {
@@ -27,7 +23,7 @@ export interface GesamtState {
 	readonly sort: GesamtSort;
 	/** Schwelle für das Grau in Prozent, ganzzahlig 0 bis 10. */
 	readonly schwelle: number;
-	readonly hervorheben: ParteiKey | null;
+	readonly hervorheben: NamedParty | null;
 	readonly papier: boolean;
 	readonly zahlen: boolean;
 	readonly nurGrau: boolean;
@@ -45,23 +41,8 @@ export interface QuadrateUrlState {
 	readonly kapitel: Kapitel | null;
 }
 
-const PARTEIEN: readonly ParteiKey[] = [
-	'afd',
-	'bsw',
-	'cdu',
-	'fdp',
-	'gruene',
-	'linke',
-	'piraten',
-	'spd'
-];
-const GESAMT_WAHLEN: readonly GesamtWahl[] = ['agh', 'btw', 'both'];
-const WAHL_TYPEN: readonly WahlTyp[] = ['agh', 'btw'];
+const GESAMT_WAHLEN: readonly GesamtWahl[] = [...WAHL_TYPEN, 'both'];
 const SORTS: readonly GesamtSort[] = ['nr', 'alpha', 'party', 'turnout'];
-const JAHRE: Readonly<Record<WahlTyp, readonly number[]>> = {
-	agh: [2011, 2016, 2021, 2023, 2026],
-	btw: [2013, 2017, 2021, 2025]
-};
 const JAHR_KEYS: readonly string[] = [
 	...JAHRE.agh.map((y) => `a${y}`),
 	...JAHRE.btw.map((y) => `b${y}`)
@@ -144,7 +125,7 @@ export function parseUrlState(url: URL): QuadrateUrlState {
 		bezirke: subset(BEZIRK_NRN, q.get('bz')),
 		sort: oneOf(SORTS, q.get('sort'), d.gesamt.sort),
 		schwelle: parseSchwelle(q.get('thr')),
-		hervorheben: PARTEIEN.find((p) => p === q.get('hl')) ?? null,
+		hervorheben: NAMED_PARTIES.find((p) => p === q.get('hl')) ?? null,
 		papier: q.get('paper') === '1',
 		zahlen: q.get('nums') !== '0',
 		nurGrau: q.get('ng') === '1',

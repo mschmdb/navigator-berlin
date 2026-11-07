@@ -11,13 +11,21 @@ import {
 } from './parteien';
 import type { StoriesWahlData } from './types';
 
-const data = JSON.parse(
-	readFileSync('static/data/stories-wahl.json', 'utf-8')
-) as StoriesWahlData;
+const data = JSON.parse(readFileSync('static/data/stories-wahl.json', 'utf-8')) as StoriesWahlData;
 
 describe('Parteischlüssel', () => {
 	it('Reihenfolge alphabetisch, Grau zuletzt', () => {
-		expect(ORDER).toEqual(['afd', 'bsw', 'cdu', 'fdp', 'gruene', 'linke', 'piraten', 'spd', 'rest']);
+		expect(ORDER).toEqual([
+			'afd',
+			'bsw',
+			'cdu',
+			'fdp',
+			'gruene',
+			'linke',
+			'piraten',
+			'spd',
+			'rest'
+		]);
 		expect(ORDER[REST_INDEX]).toBe('rest');
 	});
 
