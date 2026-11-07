@@ -172,20 +172,22 @@
 			>
 		{/each}
 	</svg>
-	<table class="sr-only">
-		<caption>{title}</caption>
-		<thead>
-			<tr><th scope="col">{m.bq_table_party()}</th><th scope="col">{m.bq_table_share()}</th></tr>
-		</thead>
-		<tbody>
-			{#each rows as row (row.key)}
-				<tr><th scope="row">{row.name}</th><td>{row.share}</td></tr>
-			{/each}
-			{#if turnout != null}
-				<tr><th scope="row">{m.bq_turnout()}</th><td>{pct(turnout)}</td></tr>
-			{/if}
-		</tbody>
-	</table>
+	<div class="sr-only bq-sr">
+		<table>
+			<caption>{title}</caption>
+			<thead>
+				<tr><th scope="col">{m.bq_table_party()}</th><th scope="col">{m.bq_table_share()}</th></tr>
+			</thead>
+			<tbody>
+				{#each rows as row (row.key)}
+					<tr><th scope="row">{row.name}</th><td>{row.share}</td></tr>
+				{/each}
+				{#if turnout != null}
+					<tr><th scope="row">{m.bq_turnout()}</th><td>{pct(turnout)}</td></tr>
+				{/if}
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <style>
@@ -199,5 +201,17 @@
 		height: auto;
 		aspect-ratio: 1;
 		overflow: visible;
+	}
+	/* Eigene Kopie von sr-only, damit die Komponente ohne globales CSS nichts verbreitert. */
+	.bq-sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
 	}
 </style>
