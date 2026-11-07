@@ -89,7 +89,7 @@ describe('row-transformer', () => {
 			}
 		});
 
-		it('aggregiert Sonstige-Aliase (Tierschutzpartei, PIRATEN etc.) zu "Sonstige"', async () => {
+		it('aggregiert Sonstige-Aliase (Tierschutzpartei etc.) zu "Sonstige"', async () => {
 			const { rows, headers } = await loadBerlin();
 			const transformed = transformBwlRow(rows[0], headers);
 			const erst = new Map(transformed.votes.erststimme.map((v) => [v.parteiKurzname, v.stimmen]));

@@ -58,6 +58,19 @@ describe('partei-seed', () => {
 		expect(resolveParteiKurzname('Volt Deutschland')).toBe(SONSTIGE_KURZNAME);
 	});
 
+	it('#179: PIRATEN ist eigene Partei mit Orange, gegründet 2006', () => {
+		const piraten = PARTEI_SEED.find((p) => p.kurzname === 'PIRATEN');
+		expect(piraten?.vollname).toBe('Piratenpartei Deutschland');
+		expect(piraten?.farbeHex).toBe('#FF820A');
+		expect(piraten?.firstSeenYear).toBe(2006);
+	});
+
+	it('#179: fängt die PIRATEN-Spaltennamen aller Quellen (SBB, Bundeswahlleiterin)', () => {
+		expect(resolveParteiKurzname('PIRATEN')).toBe('PIRATEN');
+		expect(resolveParteiKurzname('Piratenpartei Deutschland')).toBe('PIRATEN');
+		expect(resolveParteiKurzname('Piraten')).toBe('PIRATEN');
+	});
+
 	it('matched case-insensitive', () => {
 		expect(resolveParteiKurzname('spd')).toBe('SPD');
 		expect(resolveParteiKurzname('cdu')).toBe('CDU');
@@ -65,7 +78,6 @@ describe('partei-seed', () => {
 
 	it('unbekannte Parteien fallen auf Sonstige zurück', () => {
 		expect(resolveParteiKurzname('Tierschutzpartei')).toBe(SONSTIGE_KURZNAME);
-		expect(resolveParteiKurzname('PIRATEN')).toBe(SONSTIGE_KURZNAME);
 		expect(resolveParteiKurzname('MLPD')).toBe(SONSTIGE_KURZNAME);
 	});
 

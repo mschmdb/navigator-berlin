@@ -78,6 +78,14 @@ export const PARTEI_SEED: readonly ParteiSeed[] = [
 		aliases: [{ label: 'FREIE WÄHLER' }]
 	},
 	{
+		// #179: AGH 2011 berlinweit 8,9 %, in allen Bezirken über 5 %.
+		kurzname: 'PIRATEN',
+		vollname: 'Piratenpartei Deutschland',
+		farbeHex: '#FF820A',
+		firstSeenYear: 2006,
+		aliases: [{ label: 'PIRATEN' }, { label: 'Piratenpartei Deutschland' }, { label: 'Piraten' }]
+	},
+	{
 		kurzname: SONSTIGE_KURZNAME,
 		vollname: 'Sonstige Parteien (zusammengefasst)',
 		farbeHex: '#888888',
