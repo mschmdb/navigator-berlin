@@ -16,17 +16,24 @@ const COLS = 4;
 const ROWS = 3;
 const f = (n: number): string => (Math.round(n * 100) / 100).toString();
 
-export function ogKompositionSvg(data: StoriesWahlData, size: number): string {
+/** Anteile je Block für die zwölf Bezirke bei der Abgeordnetenhauswahl 2026, alphabetisch. */
+export function vorschauShares(data: StoriesWahlData): number[][] {
 	const wahl = wahlenOf('agh').at(-1)!;
+	return bezirkeAlphabetisch(data).map((b) =>
+		sharesOf(derive(toElectionShares(b.wahlen[wahl.slug])))
+	);
+}
+
+export function ogKompositionSvg(data: StoriesWahlData, size: number): string {
 	const colors = colorsInOrder();
 	const pad = size * 0.07;
 	const gap = size * 0.05;
 	const sq = (size - 2 * pad - (COLS - 1) * gap) / COLS;
 	const top = (size - ROWS * sq - (ROWS - 1) * gap) / 2;
-	const squares = bezirkeAlphabetisch(data).map((b, i) => {
+	const squares = vorschauShares(data).map((shares, i) => {
 		const x = pad + (i % COLS) * (sq + gap);
 		const y = top + Math.floor(i / COLS) * (sq + gap);
-		const blocks = layout(sharesOf(derive(toElectionShares(b.wahlen[wahl.slug]))));
+		const blocks = layout(shares);
 		const rects = blocks
 			.map((r, k) =>
 				r.w > 0 && r.h > 0
