@@ -69,12 +69,13 @@ describe('parteiZiel', () => {
 		expect(parteiZiel('FREIE WÄHLER')).toBe('fw');
 	});
 
-	it.each(['Tierschutzpartei', 'Sonstige', 'Die PARTEI', ''])(
-		'%s ohne Schlüssel landet in Sonstige',
-		(kurzname) => {
-			expect(parteiZiel(kurzname)).toBe('sonst');
-		}
-	);
+	it('Tierschutzpartei landet im eigenen Grau-Topf', () => {
+		expect(parteiZiel('Tierschutzpartei')).toBe('tier');
+	});
+
+	it.each(['Sonstige', 'Die PARTEI', ''])('%s ohne Schlüssel landet in Sonstige', (kurzname) => {
+		expect(parteiZiel(kurzname)).toBe('sonst');
+	});
 
 	it('Objekt-Prototyp-Namen landen nicht versehentlich bei einer Partei', () => {
 		expect(parteiZiel('toString')).toBe('sonst');
@@ -88,6 +89,6 @@ describe('parteiZiel', () => {
 			)
 		);
 		const ohneSchluessel = [...kurznamen].filter((k) => parteiZiel(k) === 'sonst').sort();
-		expect(ohneSchluessel).toEqual(['Sonstige', 'Tierschutzpartei']);
+		expect(ohneSchluessel).toEqual(['Sonstige']);
 	});
 });
