@@ -33,8 +33,12 @@ const NAME_W = 132;
 const NAME_GUTTER = 24;
 /** Bezirksnamen: größte Schrift, bei der jeder Name in höchstens zwei Zeilen passt. */
 const NAME_SIZES = [34, 32, 30, 28, 26, 24] as const;
-const YEAR_Y = 150;
-const ROWS_TOP = 162;
+/** Titel klar größer als die Bezirksnamen (34), Oberkante der Versalien auf dem Rand. */
+const TITLE_SIZE = 68;
+const TITLE_Y = MARGIN + 49;
+const SUBTITLE_Y = TITLE_Y + 25;
+const YEAR_Y = SUBTITLE_Y + 26;
+const ROWS_TOP = YEAR_Y + 12;
 /** Abstand zwischen zwei Quadraten, waagerecht wie senkrecht. */
 const GAP = 12;
 const FOOTER_TOP = POSTER_HEIGHT - MARGIN - 100;
@@ -44,7 +48,7 @@ export const GRID = {
 	left: MARGIN,
 	top: ROWS_TOP,
 	right: POSTER_WIDTH - MARGIN,
-	bottom: FOOTER_TOP - 26
+	bottom: FOOTER_TOP - 16
 } as const;
 
 export interface WallPosterInput {
@@ -160,11 +164,11 @@ export function wallPoster(input: WallPosterInput): WallPoster {
 		`<svg xmlns="http://www.w3.org/2000/svg" width="${POSTER_WIDTH}" height="${POSTER_HEIGHT}" viewBox="0 0 ${POSTER_WIDTH} ${POSTER_HEIGHT}" font-family="${esc(STORY_FONT)}" role="img" aria-label="${esc(label)}">` +
 		`<title>${esc(label)}</title>` +
 		`<rect width="${POSTER_WIDTH}" height="${POSTER_HEIGHT}" fill="${STORY_PAPER}"/>` +
-		txt(t.title, MARGIN, 98, 40, { black: true }) +
+		txt(t.title, MARGIN, TITLE_Y, TITLE_SIZE, { black: true }) +
 		txt(
 			`${t.subtitle}. ${t.typLine(t.typ[typ], wahlen[0].jahr, wahlen.at(-1)!.jahr)}`,
 			MARGIN,
-			124,
+			SUBTITLE_Y,
 			14
 		) +
 		header +
