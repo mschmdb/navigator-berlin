@@ -189,4 +189,10 @@ describe('handbuch.svelte', () => {
 		const { container } = render(Handbuch, props);
 		expect(container.textContent).not.toContain('runde-20-ux');
 	});
+	it('steht ohne eigenen Hintergrund direkt auf der Seite', () => {
+		const { container } = render(Handbuch, props);
+		const hb = container.querySelector<HTMLElement>('.hb')!;
+		expect(getComputedStyle(hb).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+		expect(getComputedStyle(hb).paddingLeft).toBe('0px');
+	});
 });
