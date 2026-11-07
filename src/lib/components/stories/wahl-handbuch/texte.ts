@@ -19,5 +19,5 @@ export function turnoutLine(turnout: number): string {
 
 /** Prozentwert, im Deutschen mit geschütztem Leerzeichen vor dem Zeichen. */
 export function percent(v: number): string {
-	return lang() === 'de' ? `${v} %` : `${v}%`;
+	return lang() === 'de' ? `${v}\u00a0%` : `${v}%`;
 }
