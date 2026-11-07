@@ -24,7 +24,7 @@ describe('wallPoster', () => {
 		expect(btw.squares).toHaveLength(12 * 4);
 	});
 
-	it('Plakatformat 1000 × 1250 auf Papier', () => {
+	it('Plakatformat auf Papier', () => {
 		expect(agh.svg).toMatch(
 			new RegExp(`^<svg [^>]*width="${POSTER_WIDTH}" height="${POSTER_HEIGHT}"`)
 		);
@@ -74,14 +74,43 @@ describe('wallPoster', () => {
 		expect(btw.svg).toContain('Bundestag: grey across Berlin: 2013 ');
 	});
 
-	it('das Raster ist das Bild: große Quadrate über die ganze Breite, keine Seitenspalte', () => {
+	it('Standard-Plakatmaß 50 × 70 cm: 1000 × 1400 Einheiten, 1 Einheit = 0,5 mm', () => {
+		expect(POSTER_WIDTH).toBe(1000);
+		expect(POSTER_HEIGHT).toBe(1400);
+	});
+
+	it('das Raster ist das Bild: Quadrate rund 40 mm, Spaltenabstand gleich Zeilenabstand', () => {
 		for (const p of [agh, btw]) {
 			const sizes = new Set(p.squares.map((q) => q.size));
 			expect(sizes.size).toBe(1);
-			expect([...sizes][0]).toBeGreaterThanOrEqual(62);
-			const right = Math.max(...p.squares.map((q) => q.x + q.size));
-			expect(right).toBeGreaterThan(POSTER_WIDTH * 0.7);
+			const size = [...sizes][0];
+			expect(size).toBeGreaterThanOrEqual(76);
+			const xs = [...new Set(p.squares.map((q) => q.x))].sort((a, b) => a - b);
+			const ys = [...new Set(p.squares.map((q) => q.y))].sort((a, b) => a - b);
+			const colGap = xs[1] - xs[0] - size;
+			const rowGap = ys[1] - ys[0] - size;
+			expect(colGap).toBeCloseTo(rowGap, 6);
+			expect(rowGap).toBeGreaterThanOrEqual(10);
 		}
+	});
+
+	it('Raster kompakt und mittig, Weißraum außen herum', () => {
+		for (const p of [agh, btw]) {
+			const right = Math.max(...p.squares.map((q) => q.x + q.size));
+			const names = Number(
+				/<text x="([\d.]+)"[^>]*>Charlottenburg-</.exec(p.svg)?.[1] ??
+					/<text x="([\d.]+)"[^>]*>Charlottenburg-Wilmersdorf</.exec(p.svg)![1]
+			);
+			expect(Math.abs(names - (POSTER_WIDTH - right))).toBeLessThanOrEqual(1);
+			expect(names).toBeGreaterThan(MARGIN);
+		}
+	});
+
+	it('Zahlen im Block nicht kleiner als 2 mm im Druck', () => {
+		for (const p of [agh, btw])
+			for (const q of p.squares)
+				for (const l of q.labels?.inside ?? [])
+					expect((l.fontSize * q.size) / 100).toBeGreaterThanOrEqual(4 - 1e-9);
 	});
 
 	it('großzügige Ränder und eine Fußzeile unter dem Raster', () => {
