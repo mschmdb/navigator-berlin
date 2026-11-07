@@ -30,10 +30,13 @@ ARG DATABASE_URL
 ARG NAVIGATOR_PHASE=production
 ARG ORIGIN=https://navigator.berlin
 ARG NOMINATIM_ENDPOINT=https://nominatim.openstreetmap.org
+# Einmaliger Voll-Refresh der Wahldaten im prebuild (scripts/check-wahl-data.ts). Ohne ARG kommt die Coolify-Variable im RUN nicht an.
+ARG WAHL_REFRESH=
 ENV DATABASE_URL=${DATABASE_URL}
 ENV NAVIGATOR_PHASE=${NAVIGATOR_PHASE}
 ENV ORIGIN=${ORIGIN}
 ENV NOMINATIM_ENDPOINT=${NOMINATIM_ENDPOINT}
+ENV WAHL_REFRESH=${WAHL_REFRESH}
 ENV NODE_ENV=production
 ENV NAVIGATOR_STRICT_BUILD=1
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
