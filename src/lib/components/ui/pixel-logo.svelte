@@ -60,7 +60,9 @@
 	});
 	const gridRows = [...rowMap].sort(([a], [b]) => a - b).map(([row, cells]) => ({ row, cells }));
 	const gridTransform = `translate(${+(inset / 2).toFixed(3)} ${+(inset / 2).toFixed(3)}) scale(${+step.toFixed(4)})`;
-	const cellId = $props.id();
+	// Präfix „l“: Die nackte ID heißt beim SSR etwa „s1“ und überdeckt Seitenanker wie #s1. Kurz, weil sie 296-mal im Logo steht.
+	const uid = $props.id();
+	const cellId = `l${uid}`;
 
 	/**
 	 * Startfarben aus dem Seed statt aus `Math.random()`. Der Server rendert damit
