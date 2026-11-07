@@ -60,6 +60,13 @@ function lookupKurzname(label: string): ParteiKurzname {
 	return LOOKUP.get(label.toLowerCase()) ?? 'Sonstige';
 }
 
+/** Token einer Partei oder `null`, wenn keins existiert (kein Sonstige-
+ * Fallback). Für Aufrufer mit eigener Fallback-Farbe, z. B. der DB-Farbe. */
+export function parteiFarbeToken(label: string): ParteiFarbe | null {
+	const kurzname = LOOKUP.get(label.toLowerCase());
+	return kurzname ? PARTEI_FARBEN[kurzname] : null;
+}
+
 export function parteiColor(label: string): string {
 	return PARTEI_FARBEN[lookupKurzname(label)].hex;
 }

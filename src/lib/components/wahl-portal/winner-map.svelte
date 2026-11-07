@@ -490,6 +490,7 @@
 			highlightedSlug={anzeigeEbene === 'stimmbezirk' ? null : addressHighlight.gebietSlug}
 			highlightedName={anzeigeEbene === 'stimmbezirk' ? null : addressHighlight.gebietName}
 			{anzeigeEbene}
+			{patternsEnabled}
 		/>
 	</aside>
 

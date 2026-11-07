@@ -11,6 +11,7 @@
 import { m } from '$lib/paraglide/messages.js';
 import { formatPercentagePointsDelta, type LocaleFormatOptions } from '$lib/i18n/format.js';
 import { formatAnteilPct } from './winner-map-data.js';
+import { parteiFarbeToken, type Pattern } from '$lib/data/partei-farben.js';
 
 /** Ein Punkt aus der Series-API-Response (`points[]`), identisch für
  * kiez/bezirk/berlin. */
@@ -30,7 +31,10 @@ export interface ErgebnisSeriesPoint {
 export interface ErgebnisPanelRow {
 	readonly rang: number;
 	readonly partei: string;
+	/** Token aus `partei-farben.ts`; DB-Farbe nur, wenn kein Token existiert (#179). */
 	readonly farbeHex: string;
+	/** Achromatopsie-Muster des Tokens, `null` ohne Token. */
+	readonly pattern: Pattern | null;
 	readonly anteil: number;
 	readonly anteilLabel: string;
 	/** `null`: keine Vorjahres-Row für diese Partei (erste Wahl der Reihe
@@ -106,10 +110,12 @@ export function buildErgebnisPanelRows(
 	const rows: ErgebnisPanelRow[] = sorted.map((p, i) => {
 		const prevAnteil = previousByPartei.get(p.partei);
 		const deltaPp = prevAnteil !== undefined ? deltaPpBetween(p.anteil, prevAnteil) : null;
+		const token = parteiFarbeToken(p.partei);
 		return {
 			rang: i + 1,
 			partei: p.partei,
-			farbeHex: p.farbe_hex,
+			farbeHex: token?.hex ?? p.farbe_hex,
+			pattern: token?.pattern ?? null,
 			anteil: p.anteil,
 			anteilLabel: formatAnteilPct(p.anteil, 1, opts),
 			deltaPp,

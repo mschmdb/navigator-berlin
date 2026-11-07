@@ -18,8 +18,10 @@
 		buildErgebnisPanelRows,
 		vorjahrLabel,
 		type ErgebnisSeriesPoint,
-		type ErgebnisPanelData
+		type ErgebnisPanelData,
+		type ErgebnisPanelRow
 	} from './internal/ergebnis-panel-data.js';
+	import { patternPreviewStyle } from './winner-map-legende.svelte';
 	import { parteiDisplayName } from './internal/winner-map-data.js';
 	import VorlaeufigBadge from './vorlaeufig-badge.svelte';
 
@@ -31,13 +33,22 @@
 		highlightedName?: string | null;
 		/** Tatsächliche Anzeige-Ebene der Karte (nach Fallback-Leiter). */
 		anzeigeEbene?: WahlPortalEbene;
+		/** Muster-Toggle der Karte (#179): Swatches zeigen dann das Partei-Muster wie die Legende. */
+		patternsEnabled?: boolean;
 	};
 	let {
 		fetchFn = fetch,
 		highlightedSlug = null,
 		highlightedName = null,
-		anzeigeEbene = 'kiez'
+		anzeigeEbene = 'kiez',
+		patternsEnabled = false
 	}: Props = $props();
+
+	function swatchStyle(row: ErgebnisPanelRow): string {
+		return patternsEnabled && row.pattern
+			? patternPreviewStyle(row.pattern, row.farbeHex)
+			: `background-color: ${row.farbeHex};`;
+	}
 
 	const portal = getWahlPortalState();
 	const stimmtyp = $derived(stimmtypForReihe(portal.reihe));
@@ -174,6 +185,18 @@
 	const vorlaeufigStatus = $derived(vorlaeufigStatusFor(portal, portal.reihe, jahr));
 </script>
 
+{#snippet swatch(row: ErgebnisPanelRow, testidPrefix: string)}
+	<span
+		aria-hidden="true"
+		data-testid={`${testidPrefix}-${row.partei}`}
+		data-pattern={row.pattern ?? undefined}
+		class="h-3 w-3 shrink-0 rounded-full"
+		class:border={patternsEnabled && row.pattern}
+		class:border-rule-strong={patternsEnabled && row.pattern}
+		style={swatchStyle(row)}
+	></span>
+{/snippet}
+
 <section
 	aria-labelledby="ergebnis-panel-h"
 	data-testid="ergebnis-panel"
@@ -229,11 +252,7 @@
 					class="flex flex-col gap-1 text-sm text-ink"
 				>
 					<span class="flex items-center gap-2">
-						<span
-							aria-hidden="true"
-							class="h-3 w-3 shrink-0 rounded-full"
-							style:background-color={row.farbeHex}
-						></span>
+						{@render swatch(row, 'ergebnis-panel-swatch')}
 						<span class="min-w-0 flex-1 truncate">{parteiDisplayName(row.partei)}</span>
 						<span
 							data-testid={`ergebnis-panel-anteil-${row.partei}`}
@@ -313,11 +332,7 @@
 							class="flex flex-col gap-1 text-sm text-ink"
 						>
 							<span class="flex items-center gap-2">
-								<span
-									aria-hidden="true"
-									class="h-3 w-3 shrink-0 rounded-full"
-									style:background-color={row.farbeHex}
-								></span>
+								{@render swatch(row, 'ergebnis-panel-gebiet-swatch')}
 								<span class="min-w-0 flex-1 truncate">{parteiDisplayName(row.partei)}</span>
 								<span
 									data-testid={`ergebnis-panel-gebiet-anteil-${row.partei}`}
