@@ -60,7 +60,9 @@ describe('Tooltip (WCAG 1.4.13)', () => {
 	});
 
 	it('bleibt sichtbar, wenn der Zeiger auf den Tooltip wechselt', async () => {
-		render(Knopf, { text: 'Grau', help: 'Alle Parteien unter 5 %.' });
+		const { container } = render(Knopf, { text: 'Grau', help: 'Alle Parteien unter 5 %.' });
+		// Platz über dem Knopf, sonst läge der Tooltip außerhalb des Fensters.
+		container.style.paddingTop = '120px';
 		const b = page.getByRole('button', { name: 'Grau' }).element();
 		const tip = tipOf(b);
 		await userEvent.hover(b);
@@ -156,16 +158,16 @@ describe('auswahl.svelte', () => {
 describe('regler.svelte', () => {
 	it('zeigt den Wert als Ausgabe und als aria-valuetext', async () => {
 		const oninput = vi.fn();
-		const fmt = (v: number): string => `${v} %`;
+		const fmt = (v: number): string => `${v}\u00a0%`;
 		render(Regler, { label: 'Schwelle', min: 0, max: 10, value: 5, format: fmt, oninput });
 		const input = page.getByLabelText('Schwelle').element() as HTMLInputElement;
 		expect(input.type).toBe('range');
-		expect(input.getAttribute('aria-valuetext')).toBe('5 %');
-		expect(document.querySelector('output')?.textContent).toBe('5 %');
+		expect(input.getAttribute('aria-valuetext')).toBe('5\u00a0%');
+		expect(document.querySelector('output')?.textContent).toBe('5\u00a0%');
 		input.focus();
 		await userEvent.keyboard('{ArrowRight}');
-		expect(input.getAttribute('aria-valuetext')).toBe('6 %');
-		expect(document.querySelector('output')?.textContent).toBe('6 %');
+		expect(input.getAttribute('aria-valuetext')).toBe('6\u00a0%');
+		expect(document.querySelector('output')?.textContent).toBe('6\u00a0%');
 		await vi.waitFor(() => expect(oninput).toHaveBeenLastCalledWith(6));
 	});
 });

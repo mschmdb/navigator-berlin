@@ -23,6 +23,17 @@ export function partyName(key: PartyKey | GreyKey): string {
 
 /** Namen für `formatGreyLine`. */
 export function greyNames(): GreyNames {
-	const keys: GreyKey[] = ['afd', 'bsw', 'cdu', 'fdp', 'gruene', 'linke', 'piraten', 'spd', 'fw', 'tier'];
+	const keys: GreyKey[] = [
+		'afd',
+		'bsw',
+		'cdu',
+		'fdp',
+		'gruene',
+		'linke',
+		'piraten',
+		'spd',
+		'fw',
+		'tier'
+	];
 	return Object.fromEntries(keys.map((k) => [k, partyName(k)])) as GreyNames;
 }

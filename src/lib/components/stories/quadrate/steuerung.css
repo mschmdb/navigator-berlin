@@ -1,0 +1,205 @@
+/*
+ * Steuerelement-System für „Berlin in Quadraten“ (#200), nach runde-20-ux/src/ui.js:
+ * Höhe 44 px, 2-px-Rand, keine Rundung, Jost 500 16 px, Label sichtbar darüber.
+ */
+.bq-ctl {
+	--bq-h: 44px;
+	--bq-bw: 2px;
+	--bq-paper: #efe6d2;
+	--bq-ink: #26221e;
+	--bq-hover: #e4d9c1;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+.bq-lab {
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 1.2;
+	color: var(--bq-ink);
+}
+.bq-btn,
+.bq-sel {
+	--bq-h: 44px;
+	--bq-bw: 2px;
+	--bq-paper: #efe6d2;
+	--bq-ink: #26221e;
+	height: var(--bq-h);
+	min-height: var(--bq-h);
+	box-sizing: border-box;
+	border: var(--bq-bw) solid var(--bq-ink);
+	border-radius: 0;
+	background-color: var(--bq-paper);
+	color: var(--bq-ink);
+	font:
+		500 16px/1 Jost,
+		system-ui,
+		sans-serif;
+	padding: 0 16px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.bq-sel {
+	appearance: none;
+	-webkit-appearance: none;
+	padding-right: 44px;
+	max-width: 100%;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2326221e' stroke-width='2'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 16px center;
+	background-size: 12px 8px;
+}
+.bq-btn:hover,
+.bq-sel:hover {
+	background-color: #e4d9c1;
+}
+.bq-btn[aria-pressed='true'] {
+	background-color: var(--bq-ink);
+	color: var(--bq-paper);
+}
+.bq-btn:focus-visible,
+.bq-sel:focus-visible,
+.bq-rng input:focus-visible {
+	outline: 3px solid var(--focus, #0030c8);
+	outline-offset: 2px;
+}
+
+.bq-seg {
+	display: flex;
+	flex-wrap: wrap;
+}
+.bq-seg > * + * {
+	margin-left: -2px;
+}
+.bq-seg .bq-btn[aria-pressed='true'],
+.bq-seg .bq-btn:focus-visible {
+	position: relative;
+	z-index: 1;
+}
+
+.bq-box {
+	width: 16px;
+	height: 16px;
+	box-sizing: border-box;
+	border: 2px solid currentColor;
+	display: inline-block;
+	position: relative;
+	flex: none;
+}
+.bq-btn[aria-pressed='true'] .bq-box::after {
+	content: '';
+	position: absolute;
+	left: 3px;
+	top: -1px;
+	width: 5px;
+	height: 9px;
+	border: solid currentColor;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}
+
+.bq-rng {
+	height: 44px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.bq-rng input {
+	width: 220px;
+	accent-color: #26221e;
+	margin: 0;
+	height: 44px;
+}
+.bq-rng output {
+	font-weight: 900;
+	font-variant-numeric: tabular-nums;
+	min-width: 4ch;
+}
+
+/* Tooltip: Hover und Fokus, bleibt beim Überfahren, Escape schließt (WCAG 1.4.13). */
+.bq-tipwrap {
+	position: relative;
+	display: inline-flex;
+}
+.bq-tip {
+	position: absolute;
+	left: 0;
+	bottom: calc(100% + 8px);
+	z-index: 20;
+	width: max-content;
+	max-width: min(280px, 80vw);
+	background: #26221e;
+	color: #efe6d2;
+	font:
+		400 14px/1.35 Jost,
+		system-ui,
+		sans-serif;
+	padding: 8px 10px;
+	display: none;
+	white-space: normal;
+	text-align: left;
+}
+/* Brücke über den Abstand, damit der Zeiger vom Element auf den Tooltip wechseln kann. */
+.bq-tip::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 100%;
+	height: 8px;
+}
+.bq-tipwrap.below > .bq-tip {
+	top: calc(100% + 8px);
+	bottom: auto;
+}
+.bq-tipwrap.below > .bq-tip::before {
+	top: auto;
+	bottom: 100%;
+}
+.bq-tipwrap:hover > .bq-tip,
+.bq-tipwrap:focus-within > .bq-tip {
+	display: block;
+}
+.bq-tipwrap.esc > .bq-tip {
+	display: none;
+}
+@media (hover: none) {
+	.bq-tipwrap > .bq-tip {
+		display: none !important;
+	}
+}
+
+@media (max-width: 640px) {
+	.bq-ctl,
+	.bq-seg {
+		width: 100%;
+	}
+	.bq-seg > * {
+		flex: 1 1 0;
+	}
+	.bq-seg .bq-btn {
+		width: 100%;
+		justify-content: center;
+		padding: 0 8px;
+	}
+	.bq-seg .bq-tipwrap {
+		display: flex;
+	}
+	.bq-sel {
+		width: 100%;
+	}
+	.bq-ctl > .bq-tipwrap,
+	.bq-ctl > .bq-tipwrap > .bq-btn,
+	.bq-ctl > .bq-btn,
+	.bq-ctl > .bq-tipwrap > .bq-rng {
+		width: 100%;
+	}
+	.bq-rng input {
+		flex: 1 1 auto;
+		width: auto;
+	}
+}
