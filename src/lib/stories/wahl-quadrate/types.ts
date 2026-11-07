@@ -82,4 +82,6 @@ export interface ElectionShares {
 	raw: Partial<Record<NamedParty, number>>;
 	sonst: number;
 	fw: number;
+	/** Tierschutzpartei. Fehlt in älteren Fixtures, dann 0. */
+	tier?: number;
 }

@@ -43,10 +43,10 @@ export function wahlSlug(typ: WahlTyp, jahr: number): WahlSlug | null {
 }
 
 /**
- * Wohin ein Pipeline-Kurzname fällt: eigene Farbe, Freie Wähler (Grau, in der
- * Caption benannt) oder Sonstige (Grau, ohne Namen).
+ * Wohin ein Pipeline-Kurzname fällt: eigene Farbe, Freie Wähler oder
+ * Tierschutzpartei (Grau, in der Caption benannt) oder Sonstige (Grau, ohne Namen).
  */
-export type ParteiZiel = NamedParty | 'fw' | 'sonst';
+export type ParteiZiel = NamedParty | 'fw' | 'tier' | 'sonst';
 
 const KURZNAME_ZIEL = new Map<string, Exclude<ParteiZiel, 'sonst'>>([
 	['AfD', 'afd'],
@@ -57,10 +57,11 @@ const KURZNAME_ZIEL = new Map<string, Exclude<ParteiZiel, 'sonst'>>([
 	['Die Linke', 'linke'],
 	['PIRATEN', 'piraten'],
 	['SPD', 'spd'],
-	['FREIE WÄHLER', 'fw']
+	['FREIE WÄHLER', 'fw'],
+	['Tierschutzpartei', 'tier']
 ]);
 
-/** Parteien ohne eigenen Schlüssel, etwa Tierschutzpartei, landen in Sonstige. */
+/** Parteien ohne eigenen Schlüssel landen in Sonstige. */
 export function parteiZiel(kurzname: string): ParteiZiel {
 	return KURZNAME_ZIEL.get(kurzname) ?? 'sonst';
 }

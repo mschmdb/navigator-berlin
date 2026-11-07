@@ -127,7 +127,7 @@ describe('greyCaption', () => {
 	it('nennt die Tierschutzpartei in der Caption', () => {
 		const e = derive({ raw: { cdu: 0.9 }, sonst: 0.088, fw: 0, tier: 0.012 }, 0.05);
 		expect(formatGreyLine(e, NAMES, 'de')).toBe(
-			'Grau 10 %: Tierschutzpartei 1,2 % und weitere kleine Parteien.'
+			'Grau 10 %: Tierschutzpartei 1,2 % und weitere kleine Parteien.'
 		);
 	});
 
