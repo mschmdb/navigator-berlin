@@ -85,17 +85,17 @@ describe('story-entry.svelte', () => {
 		expect(li.querySelector('h2 a')?.textContent?.trim()).toBe('New');
 		expect(li.querySelector('h2 a')?.getAttribute('href')).toBe('/en/stories/neu');
 	});
-	it('zeigt für „Berlin in Quadraten“ die zwölf Bezirke als Quadrate, nicht die Komposition', () => {
+	it('zeigt für „Berlin in Quadraten“ ein Quadrat, nicht die Komposition', () => {
 		const bq: StoryEntry = {
 			...entry,
 			slug: 'berlin-in-quadraten',
 			frontmatter: { ...entry.frontmatter, preview: 'berlin-in-quadraten' }
 		};
 		const share = [0.1, 0.05, 0.2, 0, 0.15, 0.3, 0, 0.1, 0.1];
-		const li = mount({ entry: bq, preview, quadrate: Array.from({ length: 12 }, () => share) });
+		const li = mount({ entry: bq, preview, quadrat: share });
 		const thumb = li.querySelector('[data-testid="stories-entry-preview"]')!;
 		expect(thumb.getAttribute('aria-hidden')).toBe('true');
-		expect(thumb.querySelectorAll('[data-testid="bq-vorschau-quadrat"]')).toHaveLength(12);
+		expect(thumb.querySelectorAll('[data-testid="bq-vorschau-quadrat"]')).toHaveLength(1);
 		expect(thumb.querySelector('[data-testid="plk-shape-circle"]')).toBeNull();
 	});
 });

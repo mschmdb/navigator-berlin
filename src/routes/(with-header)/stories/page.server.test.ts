@@ -25,13 +25,13 @@ describe('stories/+page.server', () => {
 		expect(result.preview?.slug).toBe('charlottenburg-wilmersdorf');
 	});
 
-	it('liefert die Quadrate für die Miniatur von „Berlin in Quadraten“', async () => {
+	it('liefert das Quadrat für die Miniatur von „Berlin in Quadraten“', async () => {
 		const result = (await (loadIndex as never as () => Promise<unknown>)()) as {
 			entries: { slug: string; frontmatter: { preview?: string } }[];
-			quadrate: number[][] | null;
+			quadrat: number[] | null;
 		};
 		const bq = result.entries.find((e) => e.slug === 'berlin-in-quadraten');
 		expect(bq?.frontmatter.preview).toBe('berlin-in-quadraten');
-		expect(result.quadrate).toHaveLength(12);
+		expect(result.quadrat).toHaveLength(9);
 	});
 });

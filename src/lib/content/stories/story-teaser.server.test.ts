@@ -16,7 +16,7 @@ describe('loadStoryTeaser', () => {
 		expect(loadStoryTeaser().preview?.slug).toBe('charlottenburg-wilmersdorf');
 	});
 
-	it('liefert die Quadrate für die Miniatur von „Berlin in Quadraten“', () => {
-		expect(loadStoryTeaser().quadrate).toHaveLength(12);
+	it('liefert das Quadrat für die Miniatur von „Berlin in Quadraten“', () => {
+		expect(loadStoryTeaser().quadrat).toHaveLength(9);
 	});
 });
