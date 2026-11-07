@@ -17,7 +17,7 @@ export function turnoutLine(turnout: number): string {
 	return `${m.bq_turnout()} ${formatShare(turnout, lang())}`;
 }
 
-/** „5 %“ mit geschütztem Leerzeichen im Deutschen. */
+/** Prozentwert, im Deutschen mit geschütztem Leerzeichen vor dem Zeichen. */
 export function percent(v: number): string {
 	return lang() === 'de' ? `${v} %` : `${v}%`;
 }
