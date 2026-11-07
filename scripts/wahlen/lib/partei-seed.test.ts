@@ -53,9 +53,35 @@ describe('partei-seed', () => {
 		);
 	});
 
-	it('PARTEI MENSCH KLIMA TIERSCHUTZ und Volt Deutschland fallen auf Sonstige (unter 3 %)', () => {
-		expect(resolveParteiKurzname('PARTEI MENSCH KLIMA TIERSCHUTZ')).toBe(SONSTIGE_KURZNAME);
+	it('Volt Deutschland fällt auf Sonstige (unter 3 %)', () => {
 		expect(resolveParteiKurzname('Volt Deutschland')).toBe(SONSTIGE_KURZNAME);
+	});
+
+	it('#179: Tierschutzpartei ist eigene Partei, auch unter dem Namen von 2026', () => {
+		const tsp = PARTEI_SEED.find((p) => p.kurzname === 'Tierschutzpartei');
+		expect(tsp?.vollname).toBe('PARTEI MENSCH KLIMA TIERSCHUTZ');
+		expect(tsp?.farbeHex).toBe('#00706B');
+		expect(resolveParteiKurzname('Tierschutzpartei')).toBe('Tierschutzpartei');
+		expect(resolveParteiKurzname('PARTEI MENSCH UMWELT TIERSCHUTZ')).toBe('Tierschutzpartei');
+		expect(resolveParteiKurzname('PARTEI MENSCH KLIMA TIERSCHUTZ')).toBe('Tierschutzpartei');
+	});
+
+	it('#179: andere Tierschutz-Listen bleiben Sonstige', () => {
+		expect(resolveParteiKurzname('Tierschutzallianz')).toBe(SONSTIGE_KURZNAME);
+		expect(resolveParteiKurzname('TIERSCHUTZ hier!')).toBe(SONSTIGE_KURZNAME);
+	});
+
+	it('#179: PIRATEN ist eigene Partei mit Orange, gegründet 2006', () => {
+		const piraten = PARTEI_SEED.find((p) => p.kurzname === 'PIRATEN');
+		expect(piraten?.vollname).toBe('Piratenpartei Deutschland');
+		expect(piraten?.farbeHex).toBe('#FF820A');
+		expect(piraten?.firstSeenYear).toBe(2006);
+	});
+
+	it('#179: fängt die PIRATEN-Spaltennamen aller Quellen (SBB, Bundeswahlleiterin)', () => {
+		expect(resolveParteiKurzname('PIRATEN')).toBe('PIRATEN');
+		expect(resolveParteiKurzname('Piratenpartei Deutschland')).toBe('PIRATEN');
+		expect(resolveParteiKurzname('Piraten')).toBe('PIRATEN');
 	});
 
 	it('matched case-insensitive', () => {
@@ -64,8 +90,7 @@ describe('partei-seed', () => {
 	});
 
 	it('unbekannte Parteien fallen auf Sonstige zurück', () => {
-		expect(resolveParteiKurzname('Tierschutzpartei')).toBe(SONSTIGE_KURZNAME);
-		expect(resolveParteiKurzname('PIRATEN')).toBe(SONSTIGE_KURZNAME);
+		expect(resolveParteiKurzname('Die PARTEI')).toBe(SONSTIGE_KURZNAME);
 		expect(resolveParteiKurzname('MLPD')).toBe(SONSTIGE_KURZNAME);
 	});
 

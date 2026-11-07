@@ -78,6 +78,27 @@ export const PARTEI_SEED: readonly ParteiSeed[] = [
 		aliases: [{ label: 'FREIE WÄHLER' }]
 	},
 	{
+		// #179: AGH 2011 berlinweit 8,9 %, in allen Bezirken über 5 %.
+		kurzname: 'PIRATEN',
+		vollname: 'Piratenpartei Deutschland',
+		farbeHex: '#FF820A',
+		firstSeenYear: 2006,
+		aliases: [{ label: 'PIRATEN' }, { label: 'Piratenpartei Deutschland' }, { label: 'Piraten' }]
+	},
+	{
+		// #179: BVV 2021 Marzahn-Hellersdorf 5,0 %. Seit Februar 2026 heißt die
+		// Partei MENSCH KLIMA statt MENSCH UMWELT TIERSCHUTZ.
+		kurzname: 'Tierschutzpartei',
+		vollname: 'PARTEI MENSCH KLIMA TIERSCHUTZ',
+		farbeHex: '#00706B',
+		firstSeenYear: 1993,
+		aliases: [
+			{ label: 'Tierschutzpartei' },
+			{ label: 'PARTEI MENSCH UMWELT TIERSCHUTZ' },
+			{ label: 'PARTEI MENSCH KLIMA TIERSCHUTZ' }
+		]
+	},
+	{
 		kurzname: SONSTIGE_KURZNAME,
 		vollname: 'Sonstige Parteien (zusammengefasst)',
 		farbeHex: '#888888',

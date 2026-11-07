@@ -89,15 +89,15 @@ describe('row-transformer', () => {
 			}
 		});
 
-		it('aggregiert Sonstige-Aliase (Tierschutzpartei, PIRATEN etc.) zu "Sonstige"', async () => {
+		it('aggregiert Sonstige-Aliase (Die PARTEI etc.) zu "Sonstige"', async () => {
 			const { rows, headers } = await loadBerlin();
 			const transformed = transformBwlRow(rows[0], headers);
 			const erst = new Map(transformed.votes.erststimme.map((v) => [v.parteiKurzname, v.stimmen]));
 			expect(erst.has('SPD')).toBe(true);
 			expect(erst.has('CDU')).toBe(true);
 			expect(erst.has('GRÜNE')).toBe(true);
-			// Tierschutzpartei etc. fallen in Sonstige
-			expect(erst.has('Tierschutzpartei')).toBe(false);
+			// Die PARTEI etc. fallen in Sonstige
+			expect(erst.has('Die PARTEI')).toBe(false);
 		});
 
 		it('markiert Briefwahl-Row aus Bezirksart-Spalte', async () => {
