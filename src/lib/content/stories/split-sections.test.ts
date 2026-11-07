@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitSections } from './split-sections.js';
+import { splitHeading, splitSections } from './split-sections.js';
 
 describe('splitSections', () => {
 	it('teilt am Marker in Abschnitte mit ID, Text davor ohne ID', () => {
@@ -34,5 +34,19 @@ describe('splitSections', () => {
 		expect(() => splitSections('<!-- abschnitt: s1 -->\nA\n<!-- abschnitt: s1 -->\nB')).toThrow(
 			/s1/
 		);
+	});
+});
+
+describe('splitHeading', () => {
+	it('trennt eine führende H2 vom Rest', () => {
+		expect(splitHeading('## Die Schwelle\n\nText.')).toEqual({
+			heading: 'Die Schwelle',
+			rest: 'Text.'
+		});
+	});
+
+	it('ohne führende H2 bleibt der Text ganz', () => {
+		expect(splitHeading('Text.\n\n## Später')).toEqual({ heading: null, rest: 'Text.\n\n## Später' });
+		expect(splitHeading('### Klein\nText.')).toEqual({ heading: null, rest: '### Klein\nText.' });
 	});
 });
