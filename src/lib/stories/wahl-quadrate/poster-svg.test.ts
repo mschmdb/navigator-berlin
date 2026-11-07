@@ -48,7 +48,7 @@ describe('wallPoster', () => {
 		for (const y of JAHRE.agh) expect(agh.svg).toContain(`>${y}<`);
 		expect(agh.squares[0].title).toMatch(/^Charlottenburg-Wilmersdorf/);
 		expect(agh.squares.at(-1)!.title).toMatch(/^Treptow-Köpenick/);
-		expect(agh.svg).toContain('>Tempelhof-<');
+		expect(agh.svg).toMatch(/>Tempelhof-(Schöneberg)?</);
 		expect(agh.svg).toContain('>Neukölln<');
 	});
 
@@ -114,8 +114,9 @@ describe('wallPoster', () => {
 			const size = Number(m[2]);
 			expect(size).toBeGreaterThanOrEqual(24);
 			const row = p.squares.find((q) => q.title.startsWith('Lichtenberg'))!;
-			// Oberkante der Versalien (rund 0,7 em über der Grundlinie) auf der Oberkante des Quadrats.
-			expect(Math.abs(Number(m[1]) - size * 0.7 - row.y)).toBeLessThanOrEqual(2);
+			// Oberkante der Schrift (gemessene Tinten-Box) auf der Oberkante des Quadrats.
+			const asc = fonts.black('Lichtenberg').asc * size;
+			expect(Number(m[1]) - asc).toBeCloseTo(row.y, 1);
 			const left = Math.min(...p.squares.map((q) => q.x));
 			expect(left - MARGIN).toBeGreaterThan(size * 6);
 		}
@@ -145,12 +146,11 @@ describe('wallPoster', () => {
 		expect(legendY).toBeGreaterThan(bottom + 20);
 	});
 
-	it('Titel kompakt, Jahre und Namen ruhig und klein', () => {
+	it('Titel kompakt, Jahre ruhig und klein', () => {
 		const size = (label: string): number =>
 			Number(new RegExp(`font-size="([\\d.]+)"[^>]*>${label}<`).exec(agh.svg)![1]);
 		expect(size('Berlin in Quadraten')).toBeLessThanOrEqual(44);
 		expect(size('2011')).toBeLessThanOrEqual(16);
-		expect(size('Neukölln')).toBeLessThanOrEqual(13);
 	});
 
 	it('Außenzahlen haben eigenen Abstand zur nächsten Zeile', () => {

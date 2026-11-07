@@ -2,8 +2,8 @@
  * Plakat „Berlin in Quadraten: Alle Bezirke, alle Wahlen“ (#192) als SVG, 1000 × 1400
  * Einheiten für das Standardmaß 50 × 70 cm (1 Einheit = 0,5 mm). Das Raster aus 12 Bezirken
  * × allen Wahlen eines Typs ist das Bild: Quadrate so groß, wie 12 Zeilen in der Höhe
- * zulassen, Spaltenabstand gleich Zeilenabstand. Titel, Bezirksnamen und Fußzeile teilen eine
- * linke Kante. Legende, Lesehilfe und Grau stehen klein in der Fußzeile. Jede Zahl steht im Block und ist mindestens 2 mm groß,
+ * zulassen, Spaltenabstand gleich Zeilenabstand, bündig am rechten Rand. Titel, große
+ * Bezirksnamen und Fußzeile teilen die linke Kante. Legende, Lesehilfe und Grau stehen klein in der Fußzeile. Jede Zahl steht im Block und ist mindestens 2 mm groß,
  * kleinere entfallen (die Bildschirmfassung zeigt sie).
  */
 import { m } from '$lib/paraglide/messages.js';
@@ -28,7 +28,11 @@ export const MARGIN = 64;
 const DENSITY = 1.6;
 /** 2 mm = 4 Einheiten, in Pixeln für `placeLabels`. */
 const MIN_PX = 4 * DENSITY;
+/** Mindestbreite der Namensspalte und Abstand der Namen zum Raster. */
 const NAME_W = 132;
+const NAME_GUTTER = 24;
+/** Bezirksnamen: größte Schrift, bei der jeder Name in höchstens zwei Zeilen passt. */
+const NAME_SIZES = [34, 32, 30, 28, 26, 24] as const;
 const YEAR_Y = 150;
 const ROWS_TOP = 162;
 /** Abstand zwischen zwei Quadraten, waagerecht wie senkrecht. */
@@ -115,9 +119,9 @@ export function wallPoster(input: WallPosterInput): WallPoster {
 		)
 	);
 	const step = size + GAP;
-	// Eine linke Kante mit Titel und Fußzeile, der Weißraum liegt rechts.
-	const left = GRID.left;
-	const colX = (j: number): number => left + NAME_W + j * step;
+	// Raster bündig am rechten Rand, die Namen bekommen den Platz bis zum linken Rand.
+	const gridLeft = GRID.right - (wahlen.length * step - GAP);
+	const colX = (j: number): number => gridLeft + j * step;
 	const rowY = (i: number): number => GRID.top + i * step;
 
 	const squares = bezirke.flatMap((b, i) =>
@@ -129,12 +133,26 @@ export function wallPoster(input: WallPosterInput): WallPoster {
 	const header = wahlen
 		.map((w, j) => txt(String(w.jahr), colX(j), YEAR_Y, 14, { black: true }))
 		.join('');
+	const nameW = gridLeft - NAME_GUTTER - GRID.left;
+	const fits = (fs: number): boolean =>
+		bezirke.every((b) => {
+			const lines = splitName(b.name, nameW, fs, fonts.black);
+			return (
+				lines.length <= 2 &&
+				lines.every((l) => fonts.black(l).adv * fs <= nameW) &&
+				lines.length * fs * 1.05 <= size
+			);
+		});
+	const nameSize = NAME_SIZES.find(fits) ?? NAME_SIZES.at(-1)!;
 	const names = bezirke
-		.map((b, i) =>
-			splitName(b.name, NAME_W - 16, 12, fonts.black)
-				.map((l, k) => txt(l, left, rowY(i) + 10 + k * 14, 12, { black: true }))
-				.join('')
-		)
+		.map((b, i) => {
+			const lines = splitName(b.name, nameW, nameSize, fonts.black);
+			// Oberkante der Schrift auf der Oberkante des Quadrats.
+			const top = rowY(i) + fonts.black(lines[0]).asc * nameSize;
+			return lines
+				.map((l, k) => txt(l, GRID.left, top + k * nameSize * 1.05, nameSize, { black: true }))
+				.join('');
+		})
 		.join('');
 	const label = `${t.title}. ${t.subtitle}: ${t.typ[typ]}`;
 
