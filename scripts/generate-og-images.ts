@@ -178,7 +178,7 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		slug: 'berlin-in-quadraten',
 		headline: 'Berlin in Quadraten',
 		subline: 'Alle Bezirke, alle Wahlen seit 2011',
-		body: 'Zwölf Bezirke, neun Wahlen seit 2011, jede Wahl ein Quadrat. In sechs Schritten zeige ich dir, wie du sie liest.',
+		body: 'Zwölf Bezirke, neun Wahlen seit 2011, jede Wahl ein Quadrat.',
 		footerUrl: '/stories/berlin-in-quadraten',
 		compositionSvg: () => ogKompositionSvg(loadStoriesWahl(), 400)
 	},
@@ -186,7 +186,7 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		slug: 'berlin-in-quadraten-en',
 		headline: 'Berlin in Squares',
 		subline: 'All districts, all elections since 2011',
-		body: 'Twelve districts, nine elections since 2011, one square per election. In six steps I show you how to read them.',
+		body: 'Twelve districts, nine elections since 2011, one square per election.',
 		footerUrl: '/en/stories/berlin-in-quadraten',
 		compositionSvg: () => ogKompositionSvg(loadStoriesWahl(), 400)
 	},

@@ -1,4 +1,4 @@
-Twelve districts, nine elections since 2011, one square per election. In six steps I show you how to read them. You can adjust every example yourself.
+Twelve districts, nine elections since 2011, one square per election. You can adjust every example yourself.
 
 1. [One square, one election](#s1)
 2. [The threshold](#s2)

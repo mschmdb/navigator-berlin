@@ -1,14 +1,14 @@
 ---
 title: 'Berlin in Quadraten'
 title_en: 'Berlin in Squares'
-summary: 'Zwölf Bezirke, neun Wahlen seit 2011, jede Wahl ein Quadrat. In sechs Schritten zeige ich dir, wie du sie liest.'
-summary_en: 'Twelve districts, nine elections since 2011, one square per election. In six steps I show you how to read them.'
+summary: 'Zwölf Bezirke, neun Wahlen seit 2011, jede Wahl ein Quadrat.'
+summary_en: 'Twelve districts, nine elections since 2011, one square per election.'
 date: 2026-11-07
 preview: berlin-in-quadraten
 visual: berlin-in-quadraten
 ---
 
-Zwölf Bezirke, neun Wahlen seit 2011, jede Wahl ein Quadrat. In sechs Schritten zeige ich dir, wie du sie liest. Alle Beispiele kannst du selbst einstellen.
+Zwölf Bezirke, neun Wahlen seit 2011, jede Wahl ein Quadrat. Alle Beispiele kannst du selbst einstellen.
 
 1. [Ein Quadrat, eine Wahl](#s1)
 2. [Die Schwelle](#s2)
