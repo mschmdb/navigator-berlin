@@ -195,4 +195,16 @@ describe('handbuch.svelte', () => {
 		expect(getComputedStyle(hb).backgroundColor).toBe('rgba(0, 0, 0, 0)');
 		expect(getComputedStyle(hb).paddingLeft).toBe('0px');
 	});
+	it('Kapitel 6: Plakat als PDF für Abgeordnetenhaus und Bundestag', () => {
+		render(Handbuch, props);
+		const links = [...section('s6').querySelectorAll('[data-testid="bq-plakat-link"]')];
+		expect(links.map((a) => a.getAttribute('href'))).toEqual([
+			'/stories/berlin-in-quadraten/de/alle-bezirke-agh.pdf',
+			'/stories/berlin-in-quadraten/de/alle-bezirke-btw.pdf'
+		]);
+		expect(links.map((a) => a.textContent?.trim())).toEqual([
+			'Plakat als PDF: Abgeordnetenhaus',
+			'Plakat als PDF: Bundestag'
+		]);
+	});
 });

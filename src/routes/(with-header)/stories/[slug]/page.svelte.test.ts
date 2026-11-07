@@ -248,6 +248,17 @@ describe('stories/[slug]/+page.svelte · Berlin in Quadraten', () => {
 		expect(root().querySelector('[data-testid="stories-back-link"]')).not.toBeNull();
 	});
 
+	it('nimmt das OG-Bild des Beitrags mit passendem Alt-Text', async () => {
+		render(Page, { data: data as never });
+		await new Promise((r) => setTimeout(r, 20));
+		expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toContain(
+			'/stories/berlin-in-quadraten/de/bilder/og.png'
+		);
+		expect(document.querySelector('meta[property="og:image:alt"]')?.getAttribute('content')).toBe(
+			'Berlin in Quadraten: zwölf Quadrate, eins je Bezirk, Abgeordnetenhauswahl 2026'
+		);
+	});
+
 	it('liest Bezirk und Wahl für Kapitel 5 aus der URL', async () => {
 		window.history.replaceState(null, '', '?bezirk=pankow&wahl5=btw');
 		try {

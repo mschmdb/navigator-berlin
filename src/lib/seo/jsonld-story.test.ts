@@ -110,6 +110,16 @@ describe('Bild der Data Stories', () => {
 		expect(storyImagePath(full)).toBe('/og/page/home.png');
 	});
 
+	it('Berlin in Quadraten trägt sein eigenes OG-Bild je Sprache (#192)', () => {
+		const bq: StoryEntry = {
+			...full,
+			slug: 'berlin-in-quadraten',
+			frontmatter: { ...full.frontmatter, visual: 'berlin-in-quadraten' }
+		};
+		expect(storyImagePath(bq)).toBe('/stories/berlin-in-quadraten/de/bilder/og.png');
+		expect(storyImagePath(bq, 'en')).toBe('/stories/berlin-in-quadraten/en/bilder/og.png');
+	});
+
 	it('nimmt auf EN das englische Stories-Bild', () => {
 		expect(storiesImagePath('en')).toBe('/og/page/stories-en.png');
 		expect(storiesImagePath('de')).toBe('/og/page/stories.png');
