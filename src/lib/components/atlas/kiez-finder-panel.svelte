@@ -2,7 +2,7 @@
 	import { untrack } from 'svelte';
 	import { X, RotateCcw, SlidersHorizontal } from '@lucide/svelte';
 	import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
-	import { PARTEI_FARBEN, type ParteiKurzname } from '$lib/data/partei-farben.js';
+	import type { ParteiKurzname } from '$lib/data/partei-farben.js';
 	import { trackEvent } from '$lib/utils/plausible.js';
 	import { COLORS } from './internal/colors.js';
 	import {
@@ -25,6 +25,7 @@
 	} from './internal/kiez-finder-data.js';
 	import {
 		FINDER_LAYER_ID,
+		FINDER_PARTIES,
 		FINDER_SOURCE_ID,
 		fitColorExpression,
 		fitDomain,
@@ -191,9 +192,9 @@
 	// sagt also nichts über geladene Daten aus.
 	let loadedPartei: ParteiKurzname | null = null;
 
-	const PARTEIEN = Object.keys(PARTEI_FARBEN).filter(
-		(p) => p !== 'Sonstige' && p !== 'CSU' && p !== 'FREIE WÄHLER'
-	) as ParteiKurzname[];
+	// Eigene Liste statt der Farbtabelle: Die kennt seit #179 auch Piraten und
+	// Tierschutzpartei fürs Wahlportal. Das WebMCP-Schema teilt dieselbe Liste.
+	const PARTEIEN: readonly ParteiKurzname[] = FINDER_PARTIES;
 
 	async function rebuildCollection(): Promise<void> {
 		if (!base) return;
