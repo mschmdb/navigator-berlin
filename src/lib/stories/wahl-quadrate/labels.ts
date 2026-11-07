@@ -89,7 +89,6 @@ interface Pending {
 /**
  * Setzt jede Zahl in ihren Block, gedreht oder waagerecht. Passt sie nicht mit Mindestgröße,
  * steht sie klein außerhalb mit Linie: Spalten-Blöcke unter dem Quadrat, Streifen rechts.
- * Gilt für überlappungsfreie Teilungen (`tree`, `cols`), nicht für `bands`.
  */
 export function placeLabels(
 	blocks: readonly Block[],

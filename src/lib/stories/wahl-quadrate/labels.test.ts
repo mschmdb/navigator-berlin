@@ -132,16 +132,12 @@ interface Variant {
 	order: 'fixed' | 'size';
 	paper: boolean;
 	nogrey: boolean;
-	rule: 'tree' | 'cols';
 }
 const VARIANTS: Variant[] = [];
 for (const thr of [0, 0.05])
 	for (const order of ['fixed', 'size'] as const)
 		for (const paper of [false, true])
-			for (const nogrey of [false, true])
-				VARIANTS.push({ thr, order, paper, nogrey, rule: 'tree' });
-VARIANTS.push({ thr: 0, order: 'fixed', paper: false, nogrey: false, rule: 'cols' });
-VARIANTS.push({ thr: 0.05, order: 'fixed', paper: true, nogrey: false, rule: 'cols' });
+			for (const nogrey of [false, true]) VARIANTS.push({ thr, order, paper, nogrey });
 
 function run(
 	sizePx: number,
@@ -156,7 +152,6 @@ function run(
 			const d = derive(f, v.thr);
 			const shares = sharesOf(d);
 			const blocks = layout(shares, {
-				rule: v.rule,
 				turnout: v.paper ? f.turnout : null,
 				order: orderOf(shares, v.order)
 			});

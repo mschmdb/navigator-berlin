@@ -90,56 +90,18 @@ describe('layout Nichtwähler', () => {
 	it.each(cases)(
 		'$name: Quadrat = Wahlberechtigte, Füllung links mit Breite = Beteiligung',
 		({ shares, turnout }) => {
-			for (const rule of ['tree', 'cols'] as const) {
-				const blocks = layout(shares, { rule, turnout });
-				const tot = shares.reduce((s, v) => s + v, 0);
-				blocks.forEach((b, i) => {
-					expect(area(b)).toBeCloseTo((shares[i] / tot) * turnout * SIDE * SIDE, 6);
-					expect(b.x + b.w).toBeLessThanOrEqual(SIDE * turnout + EPS);
-				});
-			}
+			const blocks = layout(shares, { turnout });
+			const tot = shares.reduce((s, v) => s + v, 0);
+			blocks.forEach((b, i) => {
+				expect(area(b)).toBeCloseTo((shares[i] / tot) * turnout * SIDE * SIDE, 6);
+				expect(b.x + b.w).toBeLessThanOrEqual(SIDE * turnout + EPS);
+			});
 		}
 	);
-
-	it('Bänder mit Nichtwählern: kleineres Quadrat unten links, Seite = Wurzel der Beteiligung', () => {
-		const blocks = layout([0.2, 0, 0.2, 0, 0.2, 0.2, 0, 0.1, 0.1], {
-			rule: 'bands',
-			turnout: 0.64
-		});
-		expect(blocks[0]).toMatchObject({ x: 0, w: 80, h: 80 });
-		expect(blocks[0].y).toBeCloseTo(20, 9);
-	});
 
 	it('lehnt Beteiligung außerhalb von 0 bis 1 ab', () => {
 		expect(() => layout(new Array(ORDER.length).fill(0.1), { turnout: 1.2 })).toThrow(RangeError);
 		expect(() => layout(new Array(ORDER.length).fill(0.1), { turnout: -0.1 })).toThrow(RangeError);
-	});
-});
-
-describe('layout Spalten und Bänder', () => {
-	it.each(cases)('$name: Spalten volle Höhe, nebeneinander, Fläche = Anteil', ({ shares }) => {
-		const blocks = layout(shares, { rule: 'cols' });
-		const tot = shares.reduce((s, v) => s + v, 0);
-		let x = 0;
-		blocks.forEach((b, i) => {
-			expect(b).toMatchObject({ y: 0, h: SIDE, col: true });
-			expect(b.x).toBeCloseTo(x, 9);
-			expect(area(b)).toBeCloseTo((shares[i] / tot) * SIDE * SIDE, 6);
-			x += b.w;
-		});
-		expect(x).toBeCloseTo(SIDE, 9);
-	});
-
-	it.each(cases)('$name: Bänder ineinander, sichtbarer Ring = Anteil', ({ shares }) => {
-		const blocks = layout(shares, { rule: 'bands' });
-		const tot = shares.reduce((s, v) => s + v, 0);
-		expect(blocks[0]).toMatchObject({ w: SIDE, h: SIDE });
-		blocks.forEach((b, i) => {
-			const inner = i + 1 < blocks.length ? area(blocks[i + 1]) : 0;
-			expect(area(b) - inner).toBeCloseTo((shares[i] / tot) * SIDE * SIDE, 6);
-			expect(b.x + b.w / 2).toBeCloseTo(SIDE / 2, 9);
-			expect(b.y + b.h / 2).toBeCloseTo(SIDE / 2, 9);
-		});
 	});
 });
 
