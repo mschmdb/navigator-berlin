@@ -8,6 +8,8 @@ type LoadResult = {
 	bodyHtmlBefore: string;
 	bodyHtml: string;
 	bodyIsDeFallback: boolean;
+	sections?: { id: string | null; heading: string | null; html: string }[];
+	handbuchDaten?: { bezirke: unknown[]; wahlen: unknown[] };
 };
 
 function run(slug: string): LoadResult {
@@ -84,5 +86,47 @@ describe('stories/[slug] load', () => {
 
 	it('liefert ohne visual keine Daten', () => {
 		expect(run('berlin-data-stories').bezirkeDaten).toBeUndefined();
+	});
+	it('Berlin in Quadraten: Abschnitte mit ID, Überschrift und Text, ohne Marker', () => {
+		overwriteGetLocale(() => 'de');
+		const { sections, bodyHtml } = run('berlin-in-quadraten');
+		expect(sections?.map((s) => s.id)).toEqual([
+			null,
+			'anlaeufe',
+			'hinschauen',
+			's1',
+			's2',
+			's3',
+			's4',
+			's5',
+			's6',
+			'quellen'
+		]);
+		const s1 = sections?.find((s) => s.id === 's1');
+		expect(s1?.heading).toBe('Ein Quadrat, eine Wahl');
+		expect(s1?.html).toContain('Friedrichshain-Kreuzberg');
+		expect(s1?.html).not.toContain('<h2');
+		expect(JSON.stringify(sections)).not.toContain('abschnitt');
+		expect(bodyHtml).toBe('');
+	});
+
+	it('Berlin in Quadraten: EN hat dieselben Abschnitte mit englischen Überschriften', () => {
+		overwriteGetLocale(() => 'de');
+		const de = run('berlin-in-quadraten').sections?.map((s) => s.id);
+		overwriteGetLocale(() => 'en');
+		const { sections } = run('berlin-in-quadraten');
+		expect(sections?.map((s) => s.id)).toEqual(de);
+		expect(sections?.find((s) => s.id === 's1')?.heading).toBe('One square, one election');
+	});
+
+	it('Berlin in Quadraten: Fußnote zu BTW 2021 steht in den Quellen (#194)', () => {
+		const quellen = run('berlin-in-quadraten').sections?.find((s) => s.id === 'quellen');
+		expect(quellen?.html).toContain('Wiederholungswahl vom Februar 2024');
+	});
+
+	it('Berlin in Quadraten: liefert die Wahldaten aller 12 Bezirke, andere Beiträge nicht', () => {
+		expect(run('berlin-in-quadraten').handbuchDaten?.bezirke).toHaveLength(12);
+		expect(run('punkt-linie-kiez-bezirke').handbuchDaten).toBeUndefined();
+		expect(run('punkt-linie-kiez-bezirke').sections).toBeUndefined();
 	});
 });
