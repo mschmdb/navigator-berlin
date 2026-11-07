@@ -1,0 +1,8 @@
+export { default as Quadrat } from './quadrat.svelte';
+export { default as Segmente } from './segmente.svelte';
+export { default as Schalter } from './schalter.svelte';
+export { default as Auswahl } from './auswahl.svelte';
+export { default as Regler } from './regler.svelte';
+export { default as Knopf } from './knopf.svelte';
+export { default as Hinweis } from './hinweis.svelte';
+export { partyName, greyNames } from './namen';
