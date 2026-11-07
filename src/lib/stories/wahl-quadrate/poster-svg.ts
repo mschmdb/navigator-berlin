@@ -1,9 +1,10 @@
 /**
- * Plakat „Berlin in Quadraten: Alle Bezirke, alle Wahlen“ (#192) als SVG, 1000 × 1250
- * Einheiten für 400 × 500 mm. Das Raster aus 12 Bezirken × allen Wahlen eines Typs ist das
- * Bild und nimmt die ganze Breite. Legende, Lesehilfe und Grau stehen klein in der Fußzeile.
- * Die Quadrate sind so groß, wie 12 Zeilen in der Höhe zulassen. Jede Zahl steht im Block,
- * damit nichts in die Nachbarzeile ragt.
+ * Plakat „Berlin in Quadraten: Alle Bezirke, alle Wahlen“ (#192) als SVG, 1000 × 1400
+ * Einheiten für das Standardmaß 50 × 70 cm (1 Einheit = 0,5 mm). Das Raster aus 12 Bezirken
+ * × allen Wahlen eines Typs ist das Bild: Quadrate so groß, wie 12 Zeilen in der Höhe
+ * zulassen, Spaltenabstand gleich Zeilenabstand, das Raster mittig. Legende, Lesehilfe und
+ * Grau stehen klein in der Fußzeile. Jede Zahl steht im Block und ist mindestens 2 mm groß,
+ * kleinere entfallen (die Bildschirmfassung zeigt sie).
  */
 import { m } from '$lib/paraglide/messages.js';
 import { STORY_FONT, STORY_INK, STORY_PAPER } from '../tokens';
@@ -19,19 +20,20 @@ import { TEXTE } from './texte';
 import type { StoriesWahlData } from './types';
 
 export const POSTER_WIDTH = 1000;
-export const POSTER_HEIGHT = 1250;
+export const POSTER_HEIGHT = 1400;
 
-/** Rand rundum, 64 Einheiten = 25,6 mm. */
+/** Rand rundum, 64 Einheiten = 32 mm. */
 export const MARGIN = 64;
 /** Pixel pro Plakateinheit für die Zahlenregeln aus `labels.ts`. */
 const DENSITY = 1.6;
+/** 2 mm = 4 Einheiten, in Pixeln für `placeLabels`. */
+const MIN_PX = 4 * DENSITY;
 const NAME_W = 132;
-const YEAR_Y = 160;
-const ROWS_TOP = 174;
-/** Abstand zwischen zwei Zeilen und zwei Spalten von Quadraten. */
-const ROW_GAP = 11;
-const COL_GAP = 24;
-const FOOTER_TOP = 1078;
+const YEAR_Y = 150;
+const ROWS_TOP = 162;
+/** Abstand zwischen zwei Quadraten, waagerecht wie senkrecht. */
+const GAP = 12;
+const FOOTER_TOP = POSTER_HEIGHT - MARGIN - 100;
 
 /** Rasterfläche: Quadrate stehen darin, die Fußzeile beginnt darunter. */
 export const GRID = {
@@ -105,12 +107,18 @@ export function wallPoster(input: WallPosterInput): WallPoster {
 	const bezirke = bezirkeAlphabetisch(data);
 	const colors = colorsInOrder();
 	const fills = fillsFor(colors);
-	const opts = { density: DENSITY, measure: fonts.black, fills, insideOnly: true };
-	const pitch = (GRID.bottom - GRID.top + ROW_GAP) / bezirke.length;
-	const colW = (GRID.right - GRID.left - NAME_W + COL_GAP) / wahlen.length;
-	const size = Math.floor(Math.min(pitch - ROW_GAP, colW - COL_GAP));
-	const colX = (j: number): number => GRID.left + NAME_W + j * colW;
-	const rowY = (i: number): number => GRID.top + i * pitch;
+	const opts = { density: DENSITY, measure: fonts.black, fills, insideOnly: true, minPx: MIN_PX };
+	const size = Math.floor(
+		Math.min(
+			(GRID.bottom - GRID.top - (bezirke.length - 1) * GAP) / bezirke.length,
+			(GRID.right - GRID.left - NAME_W - (wahlen.length - 1) * GAP) / wahlen.length
+		)
+	);
+	const step = size + GAP;
+	// Raster mittig: Namensspalte plus Quadrate, links und rechts gleich viel Rand.
+	const left = (POSTER_WIDTH - (NAME_W + wahlen.length * step - GAP)) / 2;
+	const colX = (j: number): number => left + NAME_W + j * step;
+	const rowY = (i: number): number => GRID.top + i * step;
 
 	const squares = bezirke.flatMap((b, i) =>
 		wahlen.map((w, j) =>
@@ -124,7 +132,7 @@ export function wallPoster(input: WallPosterInput): WallPoster {
 	const names = bezirke
 		.map((b, i) =>
 			splitName(b.name, NAME_W - 16, 12, fonts.black)
-				.map((l, k) => txt(l, GRID.left, rowY(i) + 10 + k * 14, 12, { black: true }))
+				.map((l, k) => txt(l, left, rowY(i) + 10 + k * 14, 12, { black: true }))
 				.join('')
 		)
 		.join('');

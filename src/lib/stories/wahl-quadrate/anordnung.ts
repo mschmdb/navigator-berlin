@@ -24,6 +24,8 @@ export interface PlaceOptions {
 	exportMode?: boolean;
 	/** Jede Zahl im Block, keine Außenbeschriftung. */
 	insideOnly?: boolean;
+	/** Mindestgröße der Zahlen in Pixeln, siehe `LabelOptions.minPx`. */
+	minPx?: number;
 }
 
 export interface PlacedSquare extends SquareSpec {
@@ -61,7 +63,8 @@ export function placeSquare(
 				measure: opts.measure,
 				fills: opts.fills,
 				exportMode: opts.exportMode,
-				insideOnly: opts.insideOnly
+				insideOnly: opts.insideOnly,
+				minPx: opts.minPx
 			})
 		: null;
 	return {

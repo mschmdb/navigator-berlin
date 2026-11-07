@@ -1,7 +1,7 @@
 import { STORY_FONT, STORY_INK, STORY_PAPER } from '../tokens';
 import type { PlacedSquare } from './anordnung';
 import type { Block } from './layout';
-import { placeLabels, type Measure } from './labels';
+import { placeLabels, type Labels, type Measure } from './labels';
 import { mixHex } from './kontrast';
 import { ORDER, REST_INDEX, type PartyKey } from './parteien';
 
@@ -39,6 +39,8 @@ export interface SquareSvgInput extends FillOptions {
 	measure?: Measure;
 	insideOnly?: boolean;
 	exportMode?: boolean;
+	/** Schon platzierte Zahlen, etwa aus `placeSquare`. Dann rechnet das SVG nicht neu. */
+	labels?: Labels | null;
 	/** Rand in viewBox-Einheiten, damit Außenbeschriftung nicht abgeschnitten wird. */
 	margin?: { top: number; right: number; bottom: number; left: number };
 }
@@ -65,13 +67,15 @@ export function squareElements(input: SquareSvgInput): string {
 	if (input.texts) {
 		if (input.measure == null || input.scale == null)
 			throw new TypeError('Zahlen brauchen measure und scale');
-		const labels = placeLabels(input.blocks, input.texts, {
-			scale: input.scale,
-			measure: input.measure,
-			fills,
-			insideOnly: input.insideOnly,
-			exportMode: input.exportMode
-		});
+		const labels =
+			input.labels ??
+			placeLabels(input.blocks, input.texts, {
+				scale: input.scale,
+				measure: input.measure,
+				fills,
+				insideOnly: input.insideOnly,
+				exportMode: input.exportMode
+			});
 		const font = `font-family="${esc(STORY_FONT)}" font-weight="900" aria-hidden="true"`;
 		for (const l of labels.inside) {
 			const rot = l.rotate ? ` rotate(${l.rotate})` : '';
@@ -116,7 +120,8 @@ export function placedSquareSvg(
 			scale: p.scale,
 			measure,
 			exportMode,
-			insideOnly: p.insideOnly
+			insideOnly: p.insideOnly,
+			labels: p.labels
 		}) +
 		`</g>`
 	);
