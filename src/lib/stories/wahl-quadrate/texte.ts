@@ -19,6 +19,7 @@ export interface BildTexte {
 	sources: string;
 	secondVotes: string;
 	ogCaption: (typ: string, jahr: number) => string;
+	pdfLink: (typ: string) => string;
 }
 
 export const TEXTE: Readonly<Record<Lang, BildTexte>> = {
@@ -39,7 +40,8 @@ export const TEXTE: Readonly<Record<Lang, BildTexte>> = {
 		others: 'Sonstige',
 		sources: 'Quellen',
 		secondVotes: 'Zweitstimmen',
-		ogCaption: (typ, jahr) => `${typ} ${jahr}, alle 12 Bezirke`
+		ogCaption: (typ, jahr) => `${typ} ${jahr}, alle 12 Bezirke`,
+		pdfLink: (typ) => `Plakat als PDF: ${typ}`
 	},
 	en: {
 		title: 'Berlin in Squares',
@@ -58,6 +60,7 @@ export const TEXTE: Readonly<Record<Lang, BildTexte>> = {
 		others: 'Others',
 		sources: 'Sources',
 		secondVotes: 'second votes',
-		ogCaption: (typ, jahr) => `${typ} ${jahr}, all 12 districts`
+		ogCaption: (typ, jahr) => `${typ} ${jahr}, all 12 districts`,
+		pdfLink: (typ) => `Poster as PDF: ${typ}`
 	}
 };
