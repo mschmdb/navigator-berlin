@@ -122,10 +122,11 @@ td: Satori + @resvg/resvg-js (OG-Image-Generator)
 a: Satori + @resvg/resvg-js (OG-Image-Generator)
 td: MPL-2.0
 h2: Schriften
-p: IBM Plex Sans, Sans Arabic und Mono unter SIL Open Font License 1.1, geliefert via Fontsource.
-p: github.com/IBM/plex , OFL 1.1
+p: IBM Plex Sans, Sans Arabic und Mono sowie Jost (Data-Stories-Visualisierungen) unter SIL Open Font License 1.1, geliefert via Fontsource.
+p: github.com/IBM/plex , OFL 1.1 , github.com/indestructible-type/Jost
 a: github.com/IBM/plex
 a: OFL 1.1
+a: github.com/indestructible-type/Jost
 h2: OpenStreetMap-Namensnennung
 p: Die ODbL-Layer (Stolpersteine, ÖPNV-Stationen, Trinkbrunnen, Kühle Orte, S-Bahn-Netz, U-Bahn-Netz, Tram-Netz, Radverkehrsnetz, Fahrradstraßen) basieren auf OpenStreetMap-Daten. Lizenz: Open Database License 1.0.
 p: © OpenStreetMap-Contributors. Daten verfügbar unter openstreetmap.org/copyright.

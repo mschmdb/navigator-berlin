@@ -13,4 +13,10 @@ describe('pixel-logo SSR', () => {
 		expect(body.match(/<use /g)).toHaveLength(296);
 		expect(body).not.toContain('--d');
 	});
+	it('vergibt keine nackte ID wie „s1“, die Seitenanker überdeckt (#190)', () => {
+		const { body } = render(PixelLogo, { props: { size: 64 } });
+		const ids = [...body.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
+		expect(ids.length).toBeGreaterThan(0);
+		for (const id of ids) expect(id).not.toMatch(/^[a-z]\d+$/);
+	});
 });

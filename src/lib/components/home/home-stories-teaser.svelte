@@ -34,7 +34,12 @@
 			class="m-0 flex list-none flex-col gap-4 p-0 md:col-span-8"
 		>
 			{#each stories.entries as entry (entry.slug)}
-				<StoryEntryItem {entry} preview={stories.preview} headingLevel={3} />
+				<StoryEntryItem
+					{entry}
+					preview={stories.preview}
+					quadrat={stories.quadrat}
+					headingLevel={3}
+				/>
 			{/each}
 		</ul>
 	</section>

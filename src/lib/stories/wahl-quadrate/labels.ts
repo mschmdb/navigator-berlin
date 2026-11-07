@@ -31,6 +31,8 @@ export interface LabelOptions {
 	insideOnly?: boolean;
 	/** Export (Plakat, Video): Mindestgröße 17 px innen und außen. */
 	exportMode?: boolean;
+	/** Eigene Mindestgröße in Pixeln, z. B. 2 mm im Druck. Kleinere Zahlen entfallen mit `insideOnly`. */
+	minPx?: number;
 }
 
 export interface Line {
@@ -99,7 +101,7 @@ export function placeLabels(
 	if (!(scale > 0)) throw new RangeError(`scale muss positiv sein: ${scale}`);
 	const io = opts.insideOnly ?? false;
 	const exp = opts.exportMode ?? false;
-	const minF = (exp ? 17 : io ? 2 : 10) / scale;
+	const minF = (opts.minPx ?? (exp ? 17 : io ? 2 : 10)) / scale;
 	const inset = Math.max(io ? 0.4 : 0.8, (io ? 1.5 : 3.5) / scale);
 	const fl = (exp ? 17 : 11) / scale;
 

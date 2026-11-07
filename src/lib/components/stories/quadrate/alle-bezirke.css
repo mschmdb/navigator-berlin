@@ -4,10 +4,11 @@
  * --bq-sq, --bq-gap und --bq-off aus `wandMasse`.
  */
 .bq-wall {
-	--bq-paper: #efe6d2;
-	--bq-ink: #26221e;
-	--bq-muted: #5b554c;
-	--bq-rule: #26221e;
+	/* Site-Tokens aus app.css: Die Ansicht steht direkt auf dem Seitenhintergrund. */
+	--bq-paper: var(--color-bg, #eceae0);
+	--bq-ink: var(--color-ink, #141414);
+	--bq-muted: var(--color-ink-muted, #4a4a46);
+	--bq-rule: var(--color-ink, #141414);
 	--bq-focus: var(--focus, #0030c8);
 	color: var(--bq-ink);
 	font-family: Jost, system-ui, sans-serif;

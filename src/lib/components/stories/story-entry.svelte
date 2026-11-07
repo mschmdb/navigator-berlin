@@ -11,16 +11,20 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import type { BezirkItem } from '$lib/stories/punkt-linie-kiez/types.js';
 	import PunktLinieKiez from './punkt-linie-kiez.svelte';
+	import QuadrateVorschau from './quadrate/vorschau.svelte';
 
 	interface Props {
 		readonly entry: StoryEntry;
 		/** Bezirk für die Miniatur. Sie erscheint nur, wenn der Beitrag `preview` setzt. */
 		readonly preview: BezirkItem | null;
+		/** Anteile des Quadrats für „Berlin in Quadraten“ (`preview: berlin-in-quadraten`). */
+		readonly quadrat?: readonly number[] | null;
 		/** Überschriftenebene: 2 auf der Übersicht, 3 unter einer Teaser-Überschrift. */
 		readonly headingLevel?: 2 | 3;
 	}
 
-	const { entry, preview, headingLevel = 2 }: Props = $props();
+	const { entry, preview, quadrat = null, headingLevel = 2 }: Props = $props();
+	const kind = $derived(entry.frontmatter.preview);
 
 	const locale = $derived(getLocale());
 	const localized = $derived(localizeStory(entry, locale));
@@ -33,7 +37,17 @@
 	data-testid="stories-entry"
 	data-slug={entry.slug}
 >
-	{#if entry.frontmatter.preview && preview}
+	{#if kind === 'berlin-in-quadraten' && quadrat}
+		<a
+			{href}
+			tabindex="-1"
+			aria-hidden="true"
+			class="block shrink-0"
+			data-testid="stories-entry-preview"
+		>
+			<QuadrateVorschau shares={quadrat} size={112} />
+		</a>
+	{:else if kind === 'punkt-linie-kiez-bezirke' && preview}
 		<a
 			{href}
 			tabindex="-1"

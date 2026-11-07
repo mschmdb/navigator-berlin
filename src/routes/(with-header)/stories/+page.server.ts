@@ -1,5 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { loadStoriesFromModules } from '$lib/content/stories/load-stories.js';
+import { quadratFor } from '$lib/content/stories/story-teaser.server.js';
 import { teaserBezirke } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
 import type { BezirkItem } from '$lib/stories/punkt-linie-kiez/types.js';
 import type { StoryEntry } from '$lib/content/stories/types.js';
@@ -36,5 +37,10 @@ export const load: PageServerLoad = async () => {
 		body: '',
 		hasEnglishBody: entry.bodyEn !== undefined
 	}));
-	return { entries, preview: entries.some((e) => e.frontmatter.preview) ? loadPreview() : null };
+	const wantsPreview = entries.some((e) => e.frontmatter.preview === 'punkt-linie-kiez-bezirke');
+	return {
+		entries,
+		preview: wantsPreview ? loadPreview() : null,
+		quadrat: quadratFor(entries)
+	};
 };

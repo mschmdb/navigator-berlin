@@ -15,4 +15,8 @@ describe('loadStoryTeaser', () => {
 	it('liefert genau einen Bezirk für die Miniatur: den ersten alphabetisch', () => {
 		expect(loadStoryTeaser().preview?.slug).toBe('charlottenburg-wilmersdorf');
 	});
+
+	it('liefert das Quadrat für die Miniatur von „Berlin in Quadraten“', () => {
+		expect(loadStoryTeaser().quadrat).toHaveLength(9);
+	});
 });

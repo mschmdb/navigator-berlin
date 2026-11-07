@@ -122,7 +122,7 @@ export function checkPage(squares: readonly PlacedSquare[]): string[] {
 		[...(p.labels?.inside ?? []), ...(p.labels?.outside ?? [])].map((l) => toPage(p, l.box));
 	squares.forEach((a, ia) => {
 		if (a.labels)
-			for (const pr of checkLabels(a.blocks, a.labels, a.scale, a.fills, false))
+			for (const pr of checkLabels(a.blocks, a.labels, a.scale, a.fills, a.insideOnly))
 				// „abgeschnitten“ misst den festen Rand der Bildschirm-Ansicht. Auf einer Seite
 				// prüft `fitSquareSize` den Platz je Zelle, Kollisionen prüft der Rest hier.
 				if (pr.kind !== 'abgeschnitten') out.push(`${a.title} b${pr.i} ${pr.kind}`);

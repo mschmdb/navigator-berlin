@@ -26,6 +26,11 @@ export function storiesImagePath(locale: Locale = baseLocale): string {
 
 /** Beiträge mit Komposition (`visual` oder `preview`) tragen das Stories-Bild. */
 export function storyImagePath(entry: StoryEntry, locale: Locale = baseLocale): string {
+	// Eigene OG-Karte im Site-Layout, erzeugt von `scripts/generate-og-images.ts`.
+	if (entry.frontmatter.visual === 'berlin-in-quadraten')
+		return locale === 'en'
+			? '/og/page/berlin-in-quadraten-en.png'
+			: '/og/page/berlin-in-quadraten.png';
 	return entry.frontmatter.visual || entry.frontmatter.preview
 		? storiesImagePath(locale)
 		: DEFAULT_IMAGE_PATH;

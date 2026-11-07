@@ -36,13 +36,14 @@ describe('renderPosterPdf', () => {
 });
 
 describe('renderWallPosterPdf (Berlin in Quadraten)', () => {
-	it('liefert ein Vektor-PDF 400 x 500 mm mit Jost Black', async () => {
+	it('liefert ein Vektor-PDF 500 x 700 mm mit Jost Black', async () => {
 		const pdf = await renderWallPosterPdf('agh', 'de');
 		expect(pdf.subarray(0, 4).toString()).toBe('%PDF');
 		const text = pdf.toString('latin1');
 		const box = /\/MediaBox \[0 0 ([\d.]+) ([\d.]+)\]/.exec(text);
-		expect(Number(box![1])).toBeCloseTo(PAGE_WIDTH_PT, 1);
-		expect(Number(box![2])).toBeCloseTo(PAGE_HEIGHT_PT, 1);
+		const mm = 72 / 25.4;
+		expect(Number(box![1])).toBeCloseTo(500 * mm, 1);
+		expect(Number(box![2])).toBeCloseTo(700 * mm, 1);
 		expect(text).toMatch(/\/BaseFont \/[A-Z]{6}\+Jost-?Black/);
 		expect(text).not.toContain('/Subtype /Image');
 	});

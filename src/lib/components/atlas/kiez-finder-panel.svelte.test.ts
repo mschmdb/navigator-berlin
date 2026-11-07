@@ -7,7 +7,6 @@ import KiezFinderPanel from './kiez-finder-panel.svelte';
 import { neutralWeights } from './internal/kiez-finder-engine.js';
 import type { FinderBaseData } from './internal/kiez-finder-data.js';
 import { FINDER_PARTIES } from '$lib/webmcp/internal/finder-schemas.js';
-import { PARTEI_FARBEN } from '$lib/data/partei-farben.js';
 import {
 	requestAgentWeights,
 	readFinderBridge,
@@ -281,13 +280,30 @@ describe('kiez-finder-panel', () => {
 		expect(panel.textContent).toContain('Zweitstimmen Abgeordnetenhaus 2026');
 	});
 
-	// Verklammert die Boundary-Duplikation: das WebMCP-Schema darf nur
-	// Parteien anbieten, die das Panel auch kennt.
-	it('FINDER_PARTIES entspricht der Panel-Parteiliste', () => {
-		const panelParteien = Object.keys(PARTEI_FARBEN).filter(
-			(p) => p !== 'Sonstige' && p !== 'CSU' && p !== 'FREIE WÄHLER'
+	// Verklammert die Boundary-Duplikation: Panel und WebMCP-Schema bieten dieselben
+	// Parteien an. Die Farbtabelle kennt mehr Parteien (#179: Piraten, Tierschutzpartei)
+	// für das Wahlportal, der Finder bleibt bei seiner eigenen Liste.
+	it('FINDER_PARTIES entspricht den Partei-Knöpfen im Panel', async () => {
+		resetFinderBridgeForTests();
+		// Mit Parteigewicht lädt das Panel Anteile, ohne Attrappe ginge das ins Netz.
+		const loadShares = async () => ({
+			shares: [],
+			vorlaeufig: false,
+			sourceUpdatedAt: null,
+			sourceName: null
+		});
+		const { result } = await renderPanel({
+			initialWeights: { ...neutralWeights(), partei: 1 },
+			loadShares
+		});
+		const root = result.container;
+		await vi.waitFor(() =>
+			expect(root.querySelector('[data-testid^="finder-partei-"]')).not.toBeNull()
 		);
-		expect([...FINDER_PARTIES].sort()).toEqual(panelParteien.sort());
+		const knoepfe = [...root.querySelectorAll('[data-testid^="finder-partei-"]')].map((b) =>
+			b.getAttribute('data-testid')!.replace('finder-partei-', '')
+		);
+		expect(knoepfe).toEqual([...FINDER_PARTIES]);
 	});
 
 	// WebMCP-Kollaboration (Challenge 2026): Panel ↔ Bridge Round-Trip.

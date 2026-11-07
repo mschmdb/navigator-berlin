@@ -44,6 +44,8 @@ import { renderPageCardPng } from '../src/lib/server/og/render-page-card.js';
 import { buildScoreCardData, type ScoreCardData } from '../src/lib/server/og/score-card-data.js';
 import { compositionSvg } from '../src/lib/stories/punkt-linie-kiez/composition-svg.js';
 import { loadBezirkeDaten } from '../src/lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
+import { ogKompositionSvg } from '../src/lib/stories/wahl-quadrate/og-komposition.js';
+import { loadStoriesWahl } from '../src/lib/server/stories/wahl-daten.js';
 import { loadLogoDataUri } from '../src/lib/server/og/logo-loader.js';
 import { loadWatermarkDataUri } from '../src/lib/server/og/watermark-loader.js';
 
@@ -60,6 +62,8 @@ interface PageTarget {
 	readonly footerUrl: string;
 	/** Bezirk-Slug: rendert dessen Komposition (Data Stories) neben den Text. */
 	readonly compositionBezirk?: string;
+	/** Eigene Komposition als SVG neben dem Text, z. B. die Quadrate von „Berlin in Quadraten“. */
+	readonly compositionSvg?: () => string;
 }
 
 const PAGE_TARGETS: readonly PageTarget[] = [
@@ -169,6 +173,22 @@ const PAGE_TARGETS: readonly PageTarget[] = [
 		body: "Pictures, series and interactive stories from Berlin's open data. First up: “Point and Line to Kiez”, six shapes per district.",
 		footerUrl: '/en/stories',
 		compositionBezirk: 'charlottenburg-wilmersdorf'
+	},
+	{
+		slug: 'berlin-in-quadraten',
+		headline: 'Berlin in Quadraten',
+		subline: 'Alle Bezirke, alle Wahlen seit 2011',
+		body: 'Zwölf Bezirke, neun Wahlen seit 2011, jede Wahl ein Quadrat.',
+		footerUrl: '/stories/berlin-in-quadraten',
+		compositionSvg: () => ogKompositionSvg(loadStoriesWahl(), 400)
+	},
+	{
+		slug: 'berlin-in-quadraten-en',
+		headline: 'Berlin in Squares',
+		subline: 'All districts, all elections since 2011',
+		body: 'Twelve districts, nine elections since 2011, one square per election.',
+		footerUrl: '/en/stories/berlin-in-quadraten',
+		compositionSvg: () => ogKompositionSvg(loadStoriesWahl(), 400)
 	},
 	{
 		slug: 'berlin-wahlen',
@@ -363,7 +383,10 @@ async function renderKiez(
 function storiesCompositionDataUri(slug: string): string {
 	const item = loadBezirkeDaten().bezirke.find((b) => b.slug === slug);
 	if (!item) throw new Error(`Bezirk ${slug} fehlt in stories-kennzahlen.json`);
-	const svg = compositionSvg(item.kennzahlen, 400);
+	return svgDataUri(compositionSvg(item.kennzahlen, 400));
+}
+
+function svgDataUri(svg: string): string {
 	return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
 }
 
@@ -383,9 +406,11 @@ async function renderPage(
 			footerUrl: target.footerUrl,
 			logoDataUri,
 			watermarkDataUri,
-			compositionDataUri: target.compositionBezirk
-				? storiesCompositionDataUri(target.compositionBezirk)
-				: undefined
+			compositionDataUri: target.compositionSvg
+				? svgDataUri(target.compositionSvg())
+				: target.compositionBezirk
+					? storiesCompositionDataUri(target.compositionBezirk)
+					: undefined
 		});
 		const png = await renderPageCardPng(vdom);
 		await mkdir(path.dirname(outputPath), { recursive: true });

@@ -18,6 +18,8 @@ import { loadStoriesWahl } from './wahl-daten.js';
 const MM = 72 / 25.4;
 export const PAGE_WIDTH_PT = 400 * MM;
 export const PAGE_HEIGHT_PT = 500 * MM;
+/** „Berlin in Quadraten“: Standard-Plakatmaß 50 x 70 cm. */
+export const WALL_PAGE_PT: readonly [number, number] = [500 * MM, 700 * MM];
 
 /** Jost, selbst gehostet über @fontsource (OFL 1.1), als statische woff-Schnitte eingebettet. */
 function font(weight: JostWeight): Buffer {
@@ -25,18 +27,19 @@ function font(weight: JostWeight): Buffer {
 }
 
 /**
- * Rendert ein Poster-SVG (1000 x 1250) als Vektor-PDF. Kein Raster: Formen und Text bleiben
+ * Rendert ein Poster-SVG als Vektor-PDF. Kein Raster: Formen und Text bleiben
  * Pfade und Schrift. svg-to-pdfkit kennt nur fett oder normal, `bold` legt den fetten Schnitt fest.
  */
 function renderSvgPdf(
 	svg: string,
 	info: { Title: string; Subject: string; Keywords: string },
 	bold: JostWeight = 700,
-	width: number = POSTER_WIDTH
+	width: number = POSTER_WIDTH,
+	page: readonly [number, number] = [PAGE_WIDTH_PT, PAGE_HEIGHT_PT]
 ): Promise<Buffer> {
 	return new Promise((resolve, reject) => {
 		const doc = new PDFDocument({
-			size: [PAGE_WIDTH_PT, PAGE_HEIGHT_PT],
+			size: [page[0], page[1]],
 			margin: 0,
 			info: { ...info, Author: 'navigator.berlin' }
 		});
@@ -46,8 +49,8 @@ function renderSvgPdf(
 		doc.on('error', reject);
 		doc.registerFont('Jost', font(400));
 		doc.registerFont('Jost-Bold', font(bold));
-		// Das SVG misst 1000 x 1250 Einheiten, die Seite 400 x 500 mm.
-		doc.scale(PAGE_WIDTH_PT / width);
+		// SVG-Breite auf Seitenbreite skalieren, das Seitenverhältnis stimmt bei beiden Plakaten.
+		doc.scale(page[0] / width);
 		SVGtoPDF(doc, svg, 0, 0, {
 			assumePt: true,
 			fontCallback: (_family: string, bold: boolean) => (bold ? 'Jost-Bold' : 'Jost')
@@ -94,6 +97,7 @@ export function renderWallPosterPdf(typ: WahlTyp, lang: Locale): Promise<Buffer>
 		svg,
 		{ Title: `${t.title}: ${t.subtitle}`, Subject: t.typ[typ], Keywords: t.typ[typ] },
 		900,
-		WALL_WIDTH
+		WALL_WIDTH,
+		WALL_PAGE_PT
 	);
 }

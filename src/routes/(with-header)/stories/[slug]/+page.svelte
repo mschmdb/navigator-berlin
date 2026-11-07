@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { replaceState } from '$app/navigation';
+	import { afterNavigate, replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import PunktLinieKiezAuswahl from '$lib/components/stories/punkt-linie-kiez-auswahl.svelte';
+	import Handbuch from '$lib/components/stories/wahl-handbuch/handbuch.svelte';
 	import SeoHead from '$lib/components/atlas/seo-head.svelte';
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import { formatUpdateDate } from '$lib/components/updates/category-label.js';
@@ -14,15 +15,40 @@
 	import { buildStoryPosting, storyImagePath } from '$lib/seo/jsonld-story.js';
 	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
 	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import {
+		DEFAULT_URL_STATE,
+		parseUrlState,
+		serializeUrlState,
+		type ZeitState
+	} from '$lib/stories/wahl-quadrate/url-state';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
 
 	// Die Seite ist prerendert. Den Query-Parameter liest erst der Client nach dem Mount.
 	let initialBezirk = $state<string | undefined>(undefined);
+	let zeit = $state<ZeitState>(DEFAULT_URL_STATE.zeit);
 	onMount(() => {
 		initialBezirk = new URLSearchParams(window.location.search).get('bezirk') ?? undefined;
+		zeit = readZeit();
 	});
+	// Kapitel 5 folgt der URL auch nach Zurück oder einem Deep-Link im selben Beitrag.
+	// Eigene Schreibvorgänge laufen über replaceState und lösen afterNavigate nicht aus.
+	afterNavigate(() => {
+		zeit = readZeit();
+	});
+
+	function readZeit(): ZeitState {
+		return parseUrlState(new URL(window.location.href)).zeit;
+	}
+
+	/** Kapitel 5 im Handbuch: Bezirk und Wahl teilbar in der URL, andere Parameter bleiben. */
+	function rememberZeit(next: ZeitState): void {
+		const url = new URL(window.location.href);
+		const state = { ...parseUrlState(url), zeit: next };
+		url.search = serializeUrlState(state, url.searchParams).search;
+		replaceState(url, page.state);
+	}
 
 	/** Hält die Wahl in der URL teilbar, ohne den Verlauf zu füllen. */
 	function rememberBezirk(slug: string): void {
@@ -41,6 +67,11 @@
 	const imagePath = $derived(storyImagePath(entry, getLocale()));
 	const hasComposition = $derived(imagePath !== '/og/page/home.png');
 	const ogImage = $derived(`${primaryOrigin}${imagePath}`);
+	const handbuch = $derived(
+		entry.frontmatter.visual === 'berlin-in-quadraten' && data.sections && data.wahlDaten
+			? { sections: data.sections, daten: data.wahlDaten }
+			: null
+	);
 
 	const jsonLd = $derived(
 		buildStoryPosting({
@@ -69,14 +100,21 @@
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	{ogImage}
-	ogImageAlt={hasComposition ? m.stories_og_composition_alt() : m.stories_index_og_alt()}
+	ogImageAlt={handbuch
+		? m.bq_hb_og_alt()
+		: hasComposition
+			? m.stories_og_composition_alt()
+			: m.stories_index_og_alt()}
 	ogType="article"
 	article={{ publishedTime: entry.frontmatter.date, section: 'Berlin Data Stories' }}
 />
 <JsonLd data={jsonLd} testid="stories-detail-jsonld" />
 <JsonLd data={breadcrumbJsonLd} testid="stories-detail-breadcrumb-jsonld" />
 
-<article data-testid="stories-detail-page" class="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8">
+<article
+	data-testid="stories-detail-page"
+	class="mx-auto flex flex-col gap-6 px-4 py-8 {handbuch ? 'max-w-[1240px]' : 'max-w-3xl'}"
+>
 	<nav aria-label={m.breadcrumb_aria_label()} class="font-sans text-sm text-ink-muted">
 		<a href={localizedHref('/')} class="inline-block min-h-6 hover:text-accent">
 			{m.stories_breadcrumb_start()}
@@ -89,46 +127,60 @@
 		<span class="text-ink" lang={titleLang}>{localized.title}</span>
 	</nav>
 
-	<header class="flex flex-col gap-3">
-		<h1 data-testid="stories-detail-title" class="text-3xl font-bold text-ink" lang={titleLang}>
-			{localized.title}
-		</h1>
-		<div class="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
-			<time class="font-sans" datetime={entry.frontmatter.date}>{dateLabel}</time>
-			{#if entry.frontmatter.series}
-				<span data-testid="stories-detail-series">
-					{m.stories_detail_series_label()}: {entry.frontmatter.series}
-				</span>
-			{/if}
-		</div>
-	</header>
+	{#if handbuch}
+		<Handbuch
+			title={localized.title}
+			date={entry.frontmatter.date}
+			{dateLabel}
+			sections={handbuch.sections}
+			daten={handbuch.daten}
+			{zeit}
+			onzeit={rememberZeit}
+			{titleLang}
+			{bodyLang}
+		/>
+	{:else}
+		<header class="flex flex-col gap-3">
+			<h1 data-testid="stories-detail-title" class="text-3xl font-bold text-ink" lang={titleLang}>
+				{localized.title}
+			</h1>
+			<div class="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
+				<time class="font-sans" datetime={entry.frontmatter.date}>{dateLabel}</time>
+				{#if entry.frontmatter.series}
+					<span data-testid="stories-detail-series">
+						{m.stories_detail_series_label()}: {entry.frontmatter.series}
+					</span>
+				{/if}
+			</div>
+		</header>
 
-	{#if data.bodyHtmlBefore}
+		{#if data.bodyHtmlBefore}
+			<section
+				class="prose prose-lg max-w-none text-ink [&_a]:py-px"
+				data-testid="stories-detail-intro"
+				lang={bodyLang}
+			>
+				{@html data.bodyHtmlBefore}
+			</section>
+		{/if}
+
+		{#if entry.frontmatter.visual === 'punkt-linie-kiez-bezirke' && data.bezirkeDaten}
+			<PunktLinieKiezAuswahl
+				initialSlug={initialBezirk}
+				onselect={rememberBezirk}
+				bezirke={data.bezirkeDaten.bezirke}
+				sources={data.bezirkeDaten.sources}
+			/>
+		{/if}
+
 		<section
 			class="prose prose-lg max-w-none text-ink [&_a]:py-px"
-			data-testid="stories-detail-intro"
+			data-testid="stories-detail-body"
 			lang={bodyLang}
 		>
-			{@html data.bodyHtmlBefore}
+			{@html data.bodyHtml}
 		</section>
 	{/if}
-
-	{#if entry.frontmatter.visual === 'punkt-linie-kiez-bezirke' && data.bezirkeDaten}
-		<PunktLinieKiezAuswahl
-			initialSlug={initialBezirk}
-			onselect={rememberBezirk}
-			bezirke={data.bezirkeDaten.bezirke}
-			sources={data.bezirkeDaten.sources}
-		/>
-	{/if}
-
-	<section
-		class="prose prose-lg max-w-none text-ink [&_a]:py-px"
-		data-testid="stories-detail-body"
-		lang={bodyLang}
-	>
-		{@html data.bodyHtml}
-	</section>
 
 	<p class="text-sm">
 		<a

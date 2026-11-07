@@ -19,13 +19,25 @@
 		type Lang
 	} from '$lib/stories/wahl-quadrate/grau';
 	import { placeLabels, shareTexts, type Labels } from '$lib/stories/wahl-quadrate/labels';
-	import { layout, orderOf, SIDE, type OrderMode } from '$lib/stories/wahl-quadrate/layout';
+	import {
+		layout,
+		orderOf,
+		SIDE,
+		type Block,
+		type OrderMode
+	} from '$lib/stories/wahl-quadrate/layout';
 	import { ORDER, type PartyKey } from '$lib/stories/wahl-quadrate/parteien';
 	import { CORNERS, fillsFor } from '$lib/stories/wahl-quadrate/svg';
 	import { STORY_FONT, STORY_INK } from '$lib/stories/tokens';
 	import type { ElectionShares } from '$lib/stories/wahl-quadrate/types';
 	import { sharedMeasure, SQUARE_FONT } from './messen';
 	import { partyName } from './namen';
+
+	interface Morph {
+		readonly from: ElectionShares;
+		readonly to: ElectionShares;
+		readonly t: number;
+	}
 
 	interface Props {
 		readonly election: ElectionShares;
@@ -46,6 +58,11 @@
 		readonly hideGrey?: boolean;
 		/** Eigene Tabelle für Bildschirmleser. Aus, wenn die Umgebung eine gemeinsame Tabelle zeigt. */
 		readonly table?: boolean;
+		/**
+		 * Übergang zwischen zwei Wahlen: Die Blöcke gleiten von `from` nach `to`, `t` 0 bis 1.
+		 * Zahlen, Name und Tabelle folgen weiter `election`.
+		 */
+		readonly morph?: Morph | null;
 	}
 
 	let {
@@ -59,7 +76,8 @@
 		insideOnly = false,
 		highlight = null,
 		hideGrey = false,
-		table = true
+		table = true,
+		morph = null
 	}: Props = $props();
 
 	let width = $state(0);
@@ -84,9 +102,23 @@
 	const result = $derived(derive(election, threshold));
 	const shares = $derived(sharesOf(result));
 	const paper = $derived(nonVoters && turnout != null);
-	const blocks = $derived(
-		layout(shares, { turnout: paper ? turnout : null, order: orderOf(shares, order) })
-	);
+	const blocksOf = (s: number[]): Block[] =>
+		layout(s, { turnout: paper ? turnout : null, order: orderOf(s, order) });
+	const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
+
+	const blocks = $derived.by((): Block[] => {
+		if (!morph) return blocksOf(shares);
+		const a = blocksOf(sharesOf(derive(morph.from, threshold)));
+		const b = blocksOf(sharesOf(derive(morph.to, threshold)));
+		const t = morph.t;
+		return a.map((r, i) => ({
+			col: r.col,
+			x: lerp(r.x, b[i].x, t),
+			y: lerp(r.y, b[i].y, t),
+			w: lerp(r.w, b[i].w, t),
+			h: lerp(r.h, b[i].h, t)
+		}));
+	});
 
 	const fills = $derived(fillsFor(colorsInOrder(), { highlight, hideGrey }));
 

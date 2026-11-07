@@ -150,4 +150,24 @@ describe('quadrat.svelte', () => {
 		expect(r[ORDER.indexOf('spd')].getAttribute('fill')).toBe(PARTY_COLORS.spd);
 		expect(r[ORDER.indexOf('cdu')].getAttribute('fill')).not.toBe(PARTY_COLORS.cdu);
 	});
+	it('gleitet mit `morph` zwischen zwei Wahlen, Zahlen und Name folgen `election`', () => {
+		const mitte16 = all.find((f) => f.bezirk === 'mitte' && f.wahl === 'agh' && f.jahr === 2016)!;
+		const geom = (props: Record<string, unknown>): number[][] => {
+			const { container } = render(Quadrat, { election: mitte11, title: TITLE, ...props });
+			return rects(container).map((r) =>
+				['x', 'y', 'width', 'height'].map((a) => Number(r.getAttribute(a)))
+			);
+		};
+		const a = geom({});
+		const b = geom({ election: mitte16 });
+		const mid = geom({ morph: { from: mitte11, to: mitte16, t: 0.5 } });
+		mid.forEach((r, i) => r.forEach((v, j) => expect(v).toBeCloseTo((a[i][j] + b[i][j]) / 2, 6)));
+
+		const { container } = render(Quadrat, {
+			election: mitte16,
+			title: 'Mitte, 2016',
+			morph: { from: mitte11, to: mitte16, t: 0.6 }
+		});
+		expect(svgOf(container).getAttribute('aria-label')).toMatch(/^Mitte, 2016: /);
+	});
 });

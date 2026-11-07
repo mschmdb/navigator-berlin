@@ -7,7 +7,7 @@ import * as v from 'valibot';
  * Optional: `title_en`, `summary_en` (Pflicht, sobald eine `.en.md` existiert), `series`, `visual`, `preview`
  * (`preview` zeigt die Miniatur in der Übersicht, `visual` benennt die Visualisierung, die die Beitragsseite vor dem Text rendert).
  */
-export const STORY_VISUALS = ['punkt-linie-kiez-bezirke'] as const;
+export const STORY_VISUALS = ['punkt-linie-kiez-bezirke', 'berlin-in-quadraten'] as const;
 export type StoryVisual = (typeof STORY_VISUALS)[number];
 
 const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;

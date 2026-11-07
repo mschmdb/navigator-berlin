@@ -1,4 +1,6 @@
+import { loadStoriesWahl } from '$lib/server/stories/wahl-daten.js';
 import { teaserBezirke } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
+import { vorschauShares } from '$lib/stories/wahl-quadrate/og-komposition.js';
 import type { BezirkItem } from '$lib/stories/punkt-linie-kiez/types.js';
 import { loadStoriesFromModules } from './load-stories.js';
 import type { StoryEntry } from './types.js';
@@ -7,6 +9,15 @@ export interface StoryTeaserData {
 	readonly entries: readonly StoryEntry[];
 	/** Bezirk für die Miniaturen. `null`, wenn kein Beitrag `preview` setzt. */
 	readonly preview: BezirkItem | null;
+	/** Anteile des Quadrats für die Miniatur von „Berlin in Quadraten“, sonst `null`. */
+	readonly quadrat?: readonly number[] | null;
+}
+
+/** Miniatur-Daten je `preview`-Wert, nur geladen, wenn ein Beitrag sie braucht. */
+export function quadratFor(entries: readonly StoryEntry[]): number[] | null {
+	return entries.some((e) => e.frontmatter.preview === 'berlin-in-quadraten')
+		? vorschauShares(loadStoriesWahl())
+		: null;
 }
 
 /** Die neuesten Beiträge für die Startseite. Nur Frontmatter geht an den Client, nie der Body. */
@@ -25,6 +36,10 @@ export function loadStoryTeaser(limit = 3): StoryTeaserData {
 			body: '',
 			hasEnglishBody: e.bodyEn !== undefined
 		}));
-	const wantsPreview = entries.some((e) => e.frontmatter.preview);
-	return { entries, preview: wantsPreview ? (teaserBezirke()[0] ?? null) : null };
+	const wantsPreview = entries.some((e) => e.frontmatter.preview === 'punkt-linie-kiez-bezirke');
+	return {
+		entries,
+		preview: wantsPreview ? (teaserBezirke()[0] ?? null) : null,
+		quadrat: quadratFor(entries)
+	};
 }
