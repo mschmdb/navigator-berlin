@@ -284,13 +284,23 @@ describe('kiez-finder-panel', () => {
 	// Parteien an. Die Farbtabelle kennt mehr Parteien (#179: Piraten, Tierschutzpartei)
 	// für das Wahlportal, der Finder bleibt bei seiner eigenen Liste.
 	it('FINDER_PARTIES entspricht den Partei-Knöpfen im Panel', async () => {
-		await renderPanel({ initialWeights: { ...neutralWeights(), partei: 1 } });
-		// Die Knöpfe erscheinen nach dem Laden der Daten, unter Last kann das dauern.
-		await vi.waitFor(
-			() => expect(document.querySelector('[data-testid^="finder-partei-"]')).not.toBeNull(),
-			{ timeout: 5000 }
+		resetFinderBridgeForTests();
+		// Mit Parteigewicht lädt das Panel Anteile, ohne Attrappe ginge das ins Netz.
+		const loadShares = async () => ({
+			shares: [],
+			vorlaeufig: false,
+			sourceUpdatedAt: null,
+			sourceName: null
+		});
+		const { result } = await renderPanel({
+			initialWeights: { ...neutralWeights(), partei: 1 },
+			loadShares
+		});
+		const root = result.container;
+		await vi.waitFor(() =>
+			expect(root.querySelector('[data-testid^="finder-partei-"]')).not.toBeNull()
 		);
-		const knoepfe = [...document.querySelectorAll('[data-testid^="finder-partei-"]')].map((b) =>
+		const knoepfe = [...root.querySelectorAll('[data-testid^="finder-partei-"]')].map((b) =>
 			b.getAttribute('data-testid')!.replace('finder-partei-', '')
 		);
 		expect(knoepfe).toEqual([...FINDER_PARTIES]);
