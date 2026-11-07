@@ -60,7 +60,10 @@ function assertPartySum(s: Summe, label: string): void {
 	}
 }
 
-export function sumByBezirk(rows: readonly ZweitstimmenRow[]): Map<string, WahlZahlen> {
+export function sumByBezirk(
+	rows: readonly ZweitstimmenRow[],
+	label = 'Wahl'
+): Map<string, WahlZahlen> {
 	const sums = new Map<string, Summe>();
 	for (const r of rows) {
 		const code = r.bezirkCode.padStart(2, '0');
@@ -76,7 +79,7 @@ export function sumByBezirk(rows: readonly ZweitstimmenRow[]): Map<string, WahlZ
 	const result = new Map<string, WahlZahlen>();
 	for (const code of [...sums.keys()].sort()) {
 		const s = sums.get(code) as Summe;
-		assertPartySum(s, `Bezirk ${code}`);
+		assertPartySum(s, `${label}, Bezirk ${code}`);
 		result.set(code, toZahlen(s));
 	}
 	return result;
@@ -105,7 +108,7 @@ export function buildStoriesWahl(input: {
 }): StoriesWahlData {
 	const codes = [...BERLIN_BEZIRK_BY_CODE.keys()].sort();
 	const perWahl = input.wahlen.map(({ meta, rows }) => {
-		const bezirke = sumByBezirk(rows);
+		const bezirke = sumByBezirk(rows, meta.slug);
 		const missing = codes.filter((c) => !bezirke.has(c));
 		if (missing.length > 0) {
 			throw new Error(`${meta.slug}: keine Daten für Bezirk ${missing.join(', ')}`);
