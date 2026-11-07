@@ -41,14 +41,18 @@
 					const slug = wahlSlug(typ, jahr);
 					const z = slug ? b.wahlen[slug] : undefined;
 					if (!z) return [];
-					const d = derive(toElectionShares(z), s.schwelle / 100);
+					const e = toElectionShares(z);
+					const d = derive(e, s.schwelle / 100);
 					return [
 						{
 							key: `${b.nr}-${jahr}`,
 							titel: m.bq_all_square_title({ district: b.name, set: typNamen[typ], year: jahr }),
-							zellen: ORDER.map((k) =>
-								d.disp[k] > 0 ? formatShare(d.disp[k], lang) : m.bq_all_table_in_grey()
-							),
+							zellen: ORDER.map((k) => {
+								if (d.disp[k] > 0) return formatShare(d.disp[k], lang);
+								// Ohne eigenen Wert in den Daten: Partei trat nicht an oder steckt in Sonstige.
+								const roh = k === 'rest' ? 0 : (e.raw[k] ?? 0);
+								return roh > 0 ? m.bq_all_table_in_grey() : m.bq_all_table_none();
+							}),
 							beteiligung: formatShare(z.wahlbeteiligung, lang)
 						}
 					];

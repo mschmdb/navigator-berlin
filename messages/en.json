@@ -2507,6 +2507,7 @@
 	"bq_all_table_caption": "{set}: second votes by district and election",
 	"bq_all_table_row": "District and election",
 	"bq_all_table_in_grey": "in grey",
+	"bq_all_table_none": "not listed separately",
 	"bq_party_afd": "AfD",
 	"bq_party_bsw": "BSW",
 	"bq_party_cdu": "CDU",

@@ -2507,6 +2507,7 @@
 	"bq_all_table_caption": "{set}: Zweitstimmen je Bezirk und Wahl",
 	"bq_all_table_row": "Bezirk und Wahl",
 	"bq_all_table_in_grey": "im Grau",
+	"bq_all_table_none": "nicht einzeln ausgewiesen",
 	"bq_party_afd": "AfD",
 	"bq_party_bsw": "BSW",
 	"bq_party_cdu": "CDU",
