@@ -3,7 +3,6 @@ import { render } from 'vitest-browser-svelte';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import type { StoryEntry } from '$lib/content/stories/types.js';
 import raw from '../../../../../static/data/stories-wahl.json';
-import { toHandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
 import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
 import Page from './+page.svelte';
 
@@ -237,7 +236,7 @@ describe('stories/[slug]/+page.svelte · Berlin in Quadraten', () => {
 			{ id: null, heading: null, html: '<p>Lead.</p>' },
 			{ id: 's5', heading: 'Ein Bezirk über die Zeit', html: '<p>Wähle.</p>' }
 		],
-		handbuchDaten: toHandbuchDaten(raw as StoriesWahlData)
+		wahlDaten: raw as StoriesWahlData
 	};
 
 	it('rendert das Handbuch statt des Textblocks, mit Breadcrumb und einem h1', () => {

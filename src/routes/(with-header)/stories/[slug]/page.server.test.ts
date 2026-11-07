@@ -9,7 +9,7 @@ type LoadResult = {
 	bodyHtml: string;
 	bodyIsDeFallback: boolean;
 	sections?: { id: string | null; heading: string | null; html: string }[];
-	handbuchDaten?: { bezirke: unknown[]; wahlen: unknown[] };
+	wahlDaten?: { bezirke: unknown[]; wahlen: unknown[]; berlin: unknown };
 };
 
 function run(slug: string): LoadResult {
@@ -125,8 +125,10 @@ describe('stories/[slug] load', () => {
 	});
 
 	it('Berlin in Quadraten: liefert die Wahldaten aller 12 Bezirke, andere Beiträge nicht', () => {
-		expect(run('berlin-in-quadraten').handbuchDaten?.bezirke).toHaveLength(12);
-		expect(run('punkt-linie-kiez-bezirke').handbuchDaten).toBeUndefined();
+		const { wahlDaten } = run('berlin-in-quadraten');
+		expect(wahlDaten?.bezirke).toHaveLength(12);
+		expect(wahlDaten?.berlin).toBeDefined();
+		expect(run('punkt-linie-kiez-bezirke').wahlDaten).toBeUndefined();
 		expect(run('punkt-linie-kiez-bezirke').sections).toBeUndefined();
 	});
 });

@@ -2,11 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import raw from '../../../../../static/data/stories-wahl.json';
-import { toHandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
 import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
 import Handbuch from './handbuch.svelte';
 
-const daten = toHandbuchDaten(raw as StoriesWahlData);
+const daten = raw as StoriesWahlData;
 const NB = ' ';
 
 const sections = [
@@ -153,11 +152,18 @@ describe('handbuch.svelte', () => {
 		expect(card.getBoundingClientRect().height).toBe(h0);
 	});
 
-	it('Kapitel 6: Überschrift, Text und Platzhalter', () => {
+	it('Kapitel 6: Überschrift, Text und die Gesamtansicht „Alle Bezirke, alle Wahlen“', () => {
 		render(Handbuch, props);
 		expect(section('s6').querySelector('h2')?.textContent).toContain('Kapitel 6');
 		expect(section('s6').textContent).toContain('T6');
-		expect(section('s6').querySelector('[data-testid="hb-alle-platzhalter"]')).not.toBeNull();
+		expect(section('s6').querySelector('.bq-wall')).not.toBeNull();
+		expect(section('s6').querySelector('[data-testid="hb-alle-platzhalter"]')).toBeNull();
+	});
+
+	it('hält die Jahreszeile der Gesamtansicht unter dem festen Seitenkopf', () => {
+		const { container } = render(Handbuch, props);
+		const hb = container.querySelector<HTMLElement>('.hb')!;
+		expect(hb.style.getPropertyValue('--bq-sticky-top')).toBe('var(--header-height, 72px)');
 	});
 
 	it('Quellen: Legende mit allen Parteien und Grau', () => {
