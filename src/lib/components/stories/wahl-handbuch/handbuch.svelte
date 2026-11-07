@@ -73,6 +73,7 @@ das Beispiel mit seinen Steuerelementen direkt darüber. -->
 		<h1 data-testid="stories-detail-title" lang={titleLang}>{title}</h1>
 		<p class="hb-date"><time datetime={date}>{dateLabel}</time></p>
 		{#if intro}
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -- Markdown aus _content, serverseitig durch sanitizeHtml -->
 			<div class="hb-lead" lang={bodyLang}>{@html intro.html}</div>
 		{/if}
 	</header>
@@ -92,6 +93,7 @@ das Beispiel mit seinen Steuerelementen direkt darüber. -->
 			{/if}
 			<div class="ch-t" class:look={s.id === 'hinschauen'} lang={bodyLang}>
 				{#if s.id === 'quellen'}<Legende />{/if}
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -- Markdown aus _content, serverseitig durch sanitizeHtml -->
 				{@html s.html}
 			</div>
 			{#if n === 1}
