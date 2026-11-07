@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { jostMeasure } from '$lib/server/stories/jost';
 import data from '../../../../static/data/stories-wahl.json';
+import { labelExtent } from './anordnung';
 import { checkPage } from './label-check';
 import { derive } from './grau';
 import { toElectionShares } from './eingabe';
 import { JAHRE, wahlSlug } from './parteien';
-import { GRID, POSTER_HEIGHT, POSTER_WIDTH, wallPoster } from './poster-svg';
+import { GRID, MARGIN, POSTER_HEIGHT, POSTER_WIDTH, wallPoster } from './poster-svg';
 import type { StoriesWahlData } from './types';
 
 const fonts = { black: jostMeasure(900), regular: jostMeasure(400) };
@@ -55,19 +56,64 @@ describe('wallPoster', () => {
 		expect(btw.svg).toContain('>Grey: all parties below 5%<');
 	});
 
-	it('Grau erklärt: Tabelle mit berlinweitem Grau je Wahl', () => {
-		expect(textOf(agh.svg)).toContain(
-			'Grau fasst alle Parteien unter 5 % und die Sonstigen zusammen.'
-		);
-		expect(agh.svg).toContain('Abgeordnetenhaus: Grau in ganz Berlin');
-		for (const jahr of JAHRE.agh) {
-			const slug = wahlSlug('agh', jahr)!;
-			const grey = Math.round(derive(toElectionShares(DATA.berlin[slug])).disp.rest * 100);
-			expect(agh.svg).toContain(`data-wahl="${slug}" data-grau="${grey}"`);
+	it('Grau erklärt: ein Satz und die berlinweiten Werte in einer Zeile der Fußzeile', () => {
+		const text = textOf(agh.svg);
+		expect(text).toContain('Grau fasst alle Parteien unter 5 % und die Sonstigen zusammen.');
+		const werte = JAHRE.agh
+			.map((jahr) => {
+				const slug = wahlSlug('agh', jahr)!;
+				const grey = Math.round(derive(toElectionShares(DATA.berlin[slug])).disp.rest * 100);
+				return `${jahr} ${grey} %`;
+			})
+			.join(', ');
+		expect(agh.svg).toContain(`>Abgeordnetenhaus: Grau in ganz Berlin: ${werte}.<`);
+		expect(btw.svg).toContain('Bundestag: grey across Berlin: 2013 ');
+	});
+
+	it('das Raster ist das Bild: große Quadrate über die ganze Breite, keine Seitenspalte', () => {
+		for (const p of [agh, btw]) {
+			const sizes = new Set(p.squares.map((q) => q.size));
+			expect(sizes.size).toBe(1);
+			expect([...sizes][0]).toBeGreaterThanOrEqual(62);
+			const right = Math.max(...p.squares.map((q) => q.x + q.size));
+			expect(right).toBeGreaterThan(POSTER_WIDTH * 0.7);
 		}
-		expect(agh.svg).toContain('FDP 1,8 %');
-		expect(agh.svg).toContain('und Sonstige');
-		expect(btw.svg).toContain('Bundestag: grey across Berlin');
+	});
+
+	it('großzügige Ränder und eine Fußzeile unter dem Raster', () => {
+		const bottom = Math.max(...agh.squares.map((q) => q.y + q.size + labelExtent(q).bottom));
+		const ys = [...agh.svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)"/g)].map((x) => ({
+			x: Number(x[1]),
+			y: Number(x[2])
+		}));
+		for (const t of ys) {
+			expect(t.x).toBeGreaterThanOrEqual(MARGIN);
+			expect(t.y).toBeLessThanOrEqual(POSTER_HEIGHT - MARGIN);
+		}
+		expect(MARGIN).toBeGreaterThanOrEqual(60);
+		const legend = agh.svg.indexOf('>Grau: alle Parteien unter 5 %<');
+		const legendY = Number(/y="([\d.]+)"[^>]*>Grau: alle Parteien unter 5 %</.exec(agh.svg)![1]);
+		expect(legend).toBeGreaterThan(0);
+		expect(legendY).toBeGreaterThan(bottom + 20);
+	});
+
+	it('Titel kompakt, Jahre und Namen ruhig und klein', () => {
+		const size = (label: string): number =>
+			Number(new RegExp(`font-size="([\\d.]+)"[^>]*>${label}<`).exec(agh.svg)![1]);
+		expect(size('Berlin in Quadraten')).toBeLessThanOrEqual(44);
+		expect(size('2011')).toBeLessThanOrEqual(16);
+		expect(size('Neukölln')).toBeLessThanOrEqual(13);
+	});
+
+	it('Außenzahlen haben eigenen Abstand zur nächsten Zeile', () => {
+		for (const p of [agh, btw]) {
+			const rows = [...new Set(p.squares.map((q) => q.y))].sort((a, b) => a - b);
+			for (const q of p.squares) {
+				const next = rows.find((y) => y > q.y);
+				if (next === undefined) continue;
+				expect(q.y + q.size + labelExtent(q).bottom + 6).toBeLessThanOrEqual(next);
+			}
+		}
 	});
 
 	it('Quellenzeile mit Lizenz und Marke', () => {
