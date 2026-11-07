@@ -94,15 +94,16 @@ describe('wallPoster', () => {
 		}
 	});
 
-	it('Raster kompakt und mittig, Weißraum außen herum', () => {
+	it('eine linke Kante: Titel, Bezirksnamen und Fußzeile auf dem Rand, Weißraum rechts', () => {
 		for (const p of [agh, btw]) {
+			const x = (label: string): number =>
+				Number(new RegExp(`<text x="([\\d.]+)"[^>]*>${label}<`).exec(p.svg)![1]);
+			const title = x(p === agh ? 'Berlin in Quadraten' : 'Berlin in Squares');
+			expect(title).toBe(MARGIN);
+			expect(x('Lichtenberg')).toBe(MARGIN);
+			expect(x('navigator.berlin')).toBe(MARGIN);
 			const right = Math.max(...p.squares.map((q) => q.x + q.size));
-			const names = Number(
-				/<text x="([\d.]+)"[^>]*>Charlottenburg-</.exec(p.svg)?.[1] ??
-					/<text x="([\d.]+)"[^>]*>Charlottenburg-Wilmersdorf</.exec(p.svg)![1]
-			);
-			expect(Math.abs(names - (POSTER_WIDTH - right))).toBeLessThanOrEqual(1);
-			expect(names).toBeGreaterThan(MARGIN);
+			expect(right).toBeLessThanOrEqual(POSTER_WIDTH - MARGIN);
 		}
 	});
 
