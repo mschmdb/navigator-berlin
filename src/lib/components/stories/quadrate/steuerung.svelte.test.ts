@@ -170,4 +170,24 @@ describe('regler.svelte', () => {
 		expect(document.querySelector('output')?.textContent).toBe('6\u00a0%');
 		await vi.waitFor(() => expect(oninput).toHaveBeenLastCalledWith(6));
 	});
+
+	it('meldet nach dem Entfernen keinen ausstehenden Wert mehr', async () => {
+		const oninput = vi.fn();
+		const fmt = (v: number): string => String(v);
+		const { unmount } = render(Regler, {
+			label: 'Schwelle',
+			min: 0,
+			max: 10,
+			value: 5,
+			format: fmt,
+			oninput
+		});
+		const input = page.getByLabelText('Schwelle').element() as HTMLInputElement;
+		// Synchron, damit der Frame sicher erst nach dem Entfernen fällig wird.
+		input.value = '6';
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		unmount();
+		await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+		expect(oninput).not.toHaveBeenCalled();
+	});
 });
