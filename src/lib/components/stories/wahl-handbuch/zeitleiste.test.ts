@@ -27,7 +27,11 @@ describe('zeitpunkt', () => {
 	});
 
 	it('springt nach der letzten Wahl zurück auf die erste', () => {
-		expect(zeitpunkt(4 * CYCLE + HOLD + MORPH * 0.9, 5)).toMatchObject({ from: 4, to: 0, shown: 0 });
+		expect(zeitpunkt(4 * CYCLE + HOLD + MORPH * 0.9, 5)).toMatchObject({
+			from: 4,
+			to: 0,
+			shown: 0
+		});
 		expect(zeitpunkt(5 * CYCLE, 5)).toEqual(zeitpunkt(0, 5));
 	});
 

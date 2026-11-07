@@ -12,7 +12,11 @@ const NB = ' ';
 const sections = [
 	{ id: null, heading: null, html: '<p>Lead.</p>' },
 	{ id: 'anlaeufe', heading: 'Zwanzig Anläufe', html: '<p>Skizzen.</p>' },
-	...[1, 2, 3, 4, 5, 6].map((n) => ({ id: `s${n}`, heading: `Kapitel ${n}`, html: `<p>T${n}</p>` })),
+	...[1, 2, 3, 4, 5, 6].map((n) => ({
+		id: `s${n}`,
+		heading: `Kapitel ${n}`,
+		html: `<p>T${n}</p>`
+	})),
 	{ id: 'quellen', heading: 'Quellen und Regeln', html: '<ul><li>Daten.</li></ul>' }
 ];
 
