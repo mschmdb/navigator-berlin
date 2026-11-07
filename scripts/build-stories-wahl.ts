@@ -61,21 +61,13 @@ export const STORIES_WAHL_SLUGS: readonly WahlSlug[] = [
 const isBezirkRow = (r: Record<string, string>) =>
 	Boolean(r.Bezirksnummer) && /^[0-9]{1,2}$/.test(r.Bezirksnummer);
 
-/**
- * AGH 2021 führt eine Spalte `aufn` (aufgenommen in Wahlbezirk, z. B. `05W331`).
- * `transformSbbRow` liest sie als Partei und macht aus `05W331` 5 Stimmen.
- * Für die Datenbasis fliegt die Spalte vor dem Transform raus.
- */
-const NICHT_PARTEI = /^aufn$/i;
-
 async function sbbRows(src: WahlSource): Promise<TransformedBwlRow[]> {
 	if (!src.sheetZweit) throw new Error(`${src.slug}: sheetZweit fehlt`);
 	const sheet = extractSheet(loadWorkbook(await fetchSbbXlsx(src.url)), src.sheetZweit);
-	const parteiHeaders = sheet.headers.filter((h) => !NICHT_PARTEI.test(h));
 	return sheet.rows
 		.map((r) => rowToObject(r, sheet.headers))
 		.filter(isBezirkRow)
-		.map((r) => transformSbbRow(r, parteiHeaders, 'zweitstimme'));
+		.map((r) => transformSbbRow(r, sheet.headers, 'zweitstimme'));
 }
 
 async function wbRows(src: WahlSource): Promise<TransformedBwlRow[]> {
