@@ -124,8 +124,8 @@
 
 <style>
 	.demo {
-		background: #efe6d2;
-		color: #26221e;
+		background: var(--bq-paper, #efe6d2);
+		color: var(--bq-ink, #26221e);
 		font-family: Jost, system-ui, sans-serif;
 		padding: 40px clamp(16px, 4vw, 72px) 120px;
 		min-height: 100vh;
