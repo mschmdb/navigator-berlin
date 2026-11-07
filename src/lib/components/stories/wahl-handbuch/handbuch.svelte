@@ -200,6 +200,18 @@
 		border-bottom: 1px solid var(--hb-ink);
 		counter-increment: hb-toc;
 	}
+	/* Breit genug: alle sechs Kapitel in einer Zeile zwischen zwei Linien. */
+	@media (min-width: 1100px) {
+		.hb-lead :global(ol) {
+			display: flex;
+			justify-content: space-between;
+			gap: var(--hb-s3);
+			border-bottom: 1px solid var(--hb-ink);
+		}
+		.hb-lead :global(li) {
+			border-bottom: 0;
+		}
+	}
 	.hb-lead :global(a) {
 		display: flex;
 		align-items: center;
