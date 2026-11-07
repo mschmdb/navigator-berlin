@@ -67,6 +67,12 @@ describe('quadrat.svelte', () => {
 		expect(rows.find((r) => r[0] === 'AfD')).toBeUndefined();
 	});
 
+	it('lässt die eigene Tabelle weg, wenn die Umgebung eine gemeinsame anbietet', () => {
+		const { container } = render(Quadrat, { election: mitte11, title: TITLE, table: false });
+		expect(container.querySelector('table')).toBeNull();
+		expect(svgOf(container).getAttribute('aria-label')).toContain(TITLE);
+	});
+
 	it('versteckt die Tabelle, ohne dass sie die Seite verbreitert', () => {
 		const { container } = render(Quadrat, { election: mitte11, title: TITLE });
 		container.style.width = '120px';

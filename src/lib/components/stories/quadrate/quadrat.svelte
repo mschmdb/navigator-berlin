@@ -44,6 +44,8 @@
 		readonly insideOnly?: boolean;
 		readonly highlight?: PartyKey | null;
 		readonly hideGrey?: boolean;
+		/** Eigene Tabelle für Bildschirmleser. Aus, wenn die Umgebung eine gemeinsame Tabelle zeigt. */
+		readonly table?: boolean;
 	}
 
 	let {
@@ -56,7 +58,8 @@
 		numbers = true,
 		insideOnly = false,
 		highlight = null,
-		hideGrey = false
+		hideGrey = false,
+		table = true
 	}: Props = $props();
 
 	let width = $state(0);
@@ -172,22 +175,25 @@
 			>
 		{/each}
 	</svg>
-	<div class="bq-sr sr-only">
-		<table>
-			<caption>{title}</caption>
-			<thead>
-				<tr><th scope="col">{m.bq_table_party()}</th><th scope="col">{m.bq_table_share()}</th></tr>
-			</thead>
-			<tbody>
-				{#each rows as row (row.key)}
-					<tr><th scope="row">{row.name}</th><td>{row.share}</td></tr>
-				{/each}
-				{#if turnout != null}
-					<tr><th scope="row">{m.bq_turnout()}</th><td>{pct(turnout)}</td></tr>
-				{/if}
-			</tbody>
-		</table>
-	</div>
+	{#if table}
+		<div class="bq-sr sr-only">
+			<table>
+				<caption>{title}</caption>
+				<thead>
+					<tr><th scope="col">{m.bq_table_party()}</th><th scope="col">{m.bq_table_share()}</th></tr
+					>
+				</thead>
+				<tbody>
+					{#each rows as row (row.key)}
+						<tr><th scope="row">{row.name}</th><td>{row.share}</td></tr>
+					{/each}
+					{#if turnout != null}
+						<tr><th scope="row">{m.bq_turnout()}</th><td>{pct(turnout)}</td></tr>
+					{/if}
+				</tbody>
+			</table>
+		</div>
+	{/if}
 </div>
 
 <style>

@@ -1,10 +1,11 @@
 <!--
-	Interne Demo (#200): Quadrat und Steuerelemente von „Berlin in Quadraten“ für die
+	Interne Demo (#200, #191): Quadrat, Steuerelemente und Gesamtansicht von „Berlin in Quadraten“ für die
 	Design-Prüfung. Kein Inhalt für Leser, /demo ist noindex.
 -->
 <script lang="ts">
 	import { MediaQuery } from 'svelte/reactivity';
 	import {
+		AlleBezirke,
 		Auswahl,
 		Knopf,
 		Quadrat,
@@ -120,6 +121,11 @@
 			</li>
 		{/each}
 	</ol>
+
+	<section class="gesamt" id="s6" aria-labelledby="t6">
+		<h2 id="t6">Alle Bezirke, alle Wahlen</h2>
+		<AlleBezirke data={stories} />
+	</section>
 </main>
 
 <style>
@@ -154,6 +160,17 @@
 	}
 	figure {
 		margin: 0;
+	}
+	.gesamt {
+		margin-top: 96px;
+		padding-top: 24px;
+		border-top: 1px solid var(--bq-ink, #26221e);
+	}
+	h2 {
+		font-weight: 900;
+		font-size: clamp(30px, 2.8vw, 38px);
+		line-height: 1.05;
+		margin: 0 0 24px;
 	}
 	figcaption {
 		margin-top: 56px;
