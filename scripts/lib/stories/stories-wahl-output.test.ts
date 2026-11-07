@@ -20,7 +20,7 @@ const SLUGS: WahlSlug[] = [
 	'btw25'
 ];
 
-/** Parteien mit eigenem Block in der Skizze (`runde-20-ux/gen.mjs`), Piraten kommen mit #179. */
+/** Parteien mit eigenem Block in der Skizze (`runde-20-ux/gen.mjs`). */
 const EIGENER_BLOCK = new Set(['AfD', 'BSW', 'CDU', 'FDP', 'GRÜNE', 'Die Linke', 'PIRATEN', 'SPD']);
 
 const anteil = (z: WahlZahlen, kurzname: string) =>
@@ -107,8 +107,9 @@ describe('static/data/stories-wahl.json', () => {
 		expect(pct(grau(out.berlin.agh23))).toBe(13.7);
 	});
 
-	it('Prüfwert Sonstige berlinweit AGH 2016, 2021, 2023, mit Piraten falls ausgewiesen', () => {
-		const sonstige = (z: WahlZahlen) => anteil(z, 'Sonstige') + anteil(z, 'PIRATEN');
+	it('Prüfwert Sonstige berlinweit AGH 2016, 2021, 2023, mit Piraten und Tierschutzpartei (#179)', () => {
+		const sonstige = (z: WahlZahlen) =>
+			anteil(z, 'Sonstige') + anteil(z, 'PIRATEN') + anteil(z, 'Tierschutzpartei');
 		expect(pct(sonstige(out.berlin.agh16))).toBe(9.2);
 		expect(pct(sonstige(out.berlin.agh21))).toBe(11.6);
 		expect(pct(sonstige(out.berlin.agh23))).toBe(8.8);
@@ -127,6 +128,10 @@ describe('static/data/stories-wahl.json', () => {
 		expect(pct(bezirk('tempelhof-schoeneberg').wahlen.btw21.wahlbeteiligung)).toBe(74.3);
 	});
 
-	// Piraten führt die Pipeline erst mit #179 als eigene Partei.
-	it.todo('Prüfwert Piraten AGH 2011 Friedrichshain-Kreuzberg ≈ 14,7 % (#179)');
+	it('Prüfwert Piraten AGH 2011 wie regeln.md (#179)', () => {
+		expect(pct(anteil(bezirk('friedrichshain-kreuzberg').wahlen.agh11, 'PIRATEN'))).toBe(14.7);
+		expect(pct(anteil(bezirk('reinickendorf').wahlen.agh11, 'PIRATEN'))).toBe(6.7);
+		expect(Math.round(anteil(out.berlin.agh11, 'PIRATEN') * 10000) / 100).toBe(8.9);
+		expect(Math.round(anteil(out.berlin.btw13, 'PIRATEN') * 10000) / 100).toBe(3.58);
+	});
 });
