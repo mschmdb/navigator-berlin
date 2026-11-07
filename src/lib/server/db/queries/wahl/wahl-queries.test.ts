@@ -177,6 +177,32 @@ describe('Wahl-Queries (Story 6.0 AC-6)', () => {
 				if (cdu2023) expect(cdu2023.anteil).toBeCloseTo(0.282, 2);
 			});
 
+			it('getSeriesForGebiet (ebene berlin) enthält Parteien mit >= 5 % in einem früheren Jahr (#179: PIRATEN 2011)', async () => {
+				const rows = await getSeriesForGebiet(null, 'berlin', 'agh', 'zweitstimme');
+				const piraten2011 = rows.find((r) => r.jahr === 2011 && r.parteiKurzname === 'PIRATEN');
+				expect(piraten2011?.anteil).toBeCloseTo(0.089, 2);
+				const piraten2026 = rows.find((r) => r.jahr === 2026 && r.parteiKurzname === 'PIRATEN');
+				expect(piraten2026).toBeUndefined();
+			});
+
+			it('getSeriesForGebiet (ebene bezirk) enthält PIRATEN 2011 in Friedrichshain-Kreuzberg (#179)', async () => {
+				const rows = await getSeriesForGebiet(
+					'friedrichshain-kreuzberg',
+					'bezirk',
+					'agh',
+					'zweitstimme'
+				);
+				const piraten2011 = rows.find((r) => r.jahr === 2011 && r.parteiKurzname === 'PIRATEN');
+				expect(piraten2011?.anteil).toBeCloseTo(0.147, 2);
+			});
+
+			it('getSeriesForGebiet lässt die Parteien der jüngsten Wahl unverändert (#179)', async () => {
+				const rows = await getSeriesForGebiet(null, 'berlin', 'agh', 'zweitstimme');
+				const latestJahr = Math.max(...rows.map((r) => r.jahr));
+				const latest = rows.filter((r) => r.jahr === latestJahr);
+				expect(latest.length).toBe(8);
+			});
+
 			it('getWinnersBulk liefert eine Row pro Jahr × Gebiet', async () => {
 				const rows = await getWinnersBulk('kiez', 'agh', 'zweitstimme');
 				expect(rows.length).toBeGreaterThan(0);
