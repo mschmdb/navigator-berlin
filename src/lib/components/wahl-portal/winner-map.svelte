@@ -432,6 +432,7 @@
 			<WinnerMapParteiTabs
 				aktivePartei={parteiMode.aktivePartei}
 				onSelect={(p) => parteiMode.select(p)}
+				zusatzParteien={parteiMode.zusatzParteien}
 			/>
 			<p class="sr-only" role="status" data-testid="winner-map-ansicht-status">
 				{ansichtAnnouncement}
@@ -491,6 +492,7 @@
 			highlightedName={anzeigeEbene === 'stimmbezirk' ? null : addressHighlight.gebietName}
 			{anzeigeEbene}
 			{patternsEnabled}
+			onBerlinRows={(rows) => parteiMode.applyBerlinRows(rows)}
 		/>
 	</aside>
 

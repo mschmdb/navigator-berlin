@@ -2,7 +2,8 @@
 	/**
 	 * Story 9 (Partei-Tabs): karten-lokales Radiogroup „Gewinner" + je ein Tab
 	 * pro `FINDER_PARTIES`-Partei (Direktive Matze: 7 Parteien, nicht „jede
-	 * Partei aus partei-farben.ts"). Kein URL-Zustand (Boundary: Tabs sind
+	 * Partei aus partei-farben.ts"). #179: plus Zusatz-Tabs für weitere Parteien
+	 * ab 5 % in der gewählten Wahl (`zusatzParteien`). Kein URL-Zustand (Boundary: Tabs sind
 	 * karten-lokal, kein Umbau der Portal-Steuerleiste), Muster
 	 * `trends-kapitel.svelte` Partei-Chips (`nextRadioIndex`-Tastatursteuerung).
 	 */
@@ -15,10 +16,12 @@
 		/** `null` = Gewinner-Tab (Bestand). */
 		aktivePartei: string | null;
 		onSelect: (partei: string | null) => void;
+		/** #179: Tabs hinter den Basis-Parteien, z. B. PIRATEN bei AGH 2011. */
+		zusatzParteien?: readonly string[];
 	};
-	let { aktivePartei, onSelect }: Props = $props();
+	let { aktivePartei, onSelect, zusatzParteien = [] }: Props = $props();
 
-	const VALUES: readonly (string | null)[] = [null, ...FINDER_PARTIES];
+	const VALUES = $derived<readonly (string | null)[]>([null, ...FINDER_PARTIES, ...zusatzParteien]);
 	let buttons: HTMLButtonElement[] = $state([]);
 
 	function testId(value: string | null): string {

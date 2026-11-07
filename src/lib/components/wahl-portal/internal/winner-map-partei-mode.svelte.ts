@@ -9,6 +9,8 @@
 import { parteiAnteilSpanne, type AnteilSpanne } from './winner-map-expressions.js';
 import { buildParteiViewTexts, type ParteiViewTexts } from './winner-map-partei-text.js';
 import { filterWinnersByJahr, type WinnerApiRow } from './winner-map-data.js';
+import { zusatzParteiTabs, type ParteiAnteil } from './zusatz-partei-tabs.js';
+import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
 
 /**
  * Review-Fund #7: ob eine geladene Winners-Response zur aktuell aktiven
@@ -32,8 +34,26 @@ export function rowsMatchAktivePartei(
 export class ParteiModeState {
 	aktivePartei = $state<string | null>(null);
 
+	/** #179: Tabs über `FINDER_PARTIES` hinaus, aus dem Berlin-Ergebnis der gewählten Wahl. */
+	zusatzParteien = $state<string[]>([]);
+
 	select(partei: string | null): void {
 		this.aktivePartei = partei;
+	}
+
+	/** Fällt auf den Gewinner-Tab zurück, wenn die aktive Partei nicht mehr
+	 * verfügbar ist. `null` = Verfügbarkeit unbekannt (Series lädt), nichts tun. */
+	syncVerfuegbar(verfuegbar: readonly string[] | null): void {
+		if (verfuegbar === null || this.aktivePartei === null) return;
+		if (!verfuegbar.includes(this.aktivePartei)) this.aktivePartei = null;
+	}
+
+	/** Berlin-Rows des gewählten Jahres aus dem Ergebnis-Panel; `null` während
+	 * des Ladens (alte Zusatz-Tabs bleiben bis zur neuen Antwort stehen). */
+	applyBerlinRows(rows: readonly ParteiAnteil[] | null): void {
+		if (rows === null) return;
+		this.zusatzParteien = zusatzParteiTabs(rows);
+		this.syncVerfuegbar([...FINDER_PARTIES, ...this.zusatzParteien]);
 	}
 
 	/** Partei-relative Anteils-Spanne über die übergebenen Rows, `null` im

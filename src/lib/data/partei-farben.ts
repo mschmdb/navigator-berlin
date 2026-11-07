@@ -52,6 +52,12 @@ export const PARTEI_FARBEN = {
 
 export type ParteiKurzname = keyof typeof PARTEI_FARBEN;
 
+/** Parteien mit eigenem Token, ohne den Sammelposten Sonstige. Picklist für
+ * partei-gefilterte Karten-Anfragen (#179, `/api/wahl/winners`). */
+export const TOKEN_PARTEIEN = (Object.keys(PARTEI_FARBEN) as ParteiKurzname[]).filter(
+	(k): k is Exclude<ParteiKurzname, 'Sonstige'> => k !== 'Sonstige'
+);
+
 const LOOKUP = new Map<string, ParteiKurzname>(
 	(Object.keys(PARTEI_FARBEN) as ParteiKurzname[]).map((k) => [k.toLowerCase(), k])
 );

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { Accordion } from 'bits-ui';
 	import { ChevronDown } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -35,13 +36,17 @@
 		anzeigeEbene?: WahlPortalEbene;
 		/** Muster-Toggle der Karte (#179): Swatches zeigen dann das Partei-Muster wie die Legende. */
 		patternsEnabled?: boolean;
+		/** #179: Berlin-Rows des gewählten Jahres für die Zusatz-Tabs der Karte;
+		 * `null` solange die Series lädt, leer bei Fehler. */
+		onBerlinRows?: (rows: readonly ErgebnisPanelRow[] | null) => void;
 	};
 	let {
 		fetchFn = fetch,
 		highlightedSlug = null,
 		highlightedName = null,
 		anzeigeEbene = 'kiez',
-		patternsEnabled = false
+		patternsEnabled = false,
+		onBerlinRows
 	}: Props = $props();
 
 	function swatchStyle(row: ErgebnisPanelRow): string {
@@ -167,6 +172,15 @@
 	const berlinPanel = $derived<ErgebnisPanelData | null>(
 		berlinResponse && jahr !== null ? buildErgebnisPanelRows(berlinResponse.points, jahr) : null
 	);
+	$effect(() => {
+		const rows =
+			berlinStatus === 'error'
+				? []
+				: berlinStatus === 'loaded'
+					? (berlinPanel?.rows ?? null)
+					: null;
+		untrack(() => onBerlinRows?.(rows));
+	});
 	const gebietPanel = $derived<ErgebnisPanelData | null>(
 		gebietResponse && jahr !== null ? buildErgebnisPanelRows(gebietResponse.points, jahr) : null
 	);
