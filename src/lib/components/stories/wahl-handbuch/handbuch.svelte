@@ -4,7 +4,7 @@
 	import { toHandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
 	import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
 	import { DEFAULT_URL_STATE, type ZeitState } from '$lib/stories/wahl-quadrate/url-state';
-	import { STORY_FONT, STORY_INK, STORY_PAPER } from '$lib/stories/tokens';
+	import { STORY_FONT } from '$lib/stories/tokens';
 	import KapitelNichtwaehler from './kapitel-nichtwaehler.svelte';
 	import KapitelReihenfolge from './kapitel-reihenfolge.svelte';
 	import KapitelSchwelle from './kapitel-schwelle.svelte';
@@ -66,13 +66,7 @@
 	Steuerelementen direkt darüber.
 -->
 
-<div
-	class="hb"
-	style:--hb-paper={STORY_PAPER}
-	style:--hb-ink={STORY_INK}
-	style:--hb-font={STORY_FONT}
-	style:--bq-sticky-top="var(--header-height, 72px)"
->
+<div class="hb" style:--hb-font={STORY_FONT} style:--bq-sticky-top="var(--header-height, 72px)">
 	<header class="hb-head">
 		<p class="hb-series">{m.stories_index_h1()}</p>
 		<h1 data-testid="stories-detail-title" lang={titleLang}>{title}</h1>
@@ -138,18 +132,18 @@
 
 <style>
 	.hb {
-		--hb-muted: #5b554c;
-		--hb-focus: #0b57d0;
+		/* Site-Tokens aus app.css: Der Beitrag steht direkt auf dem Seitenhintergrund. */
+		--hb-ink: var(--color-ink, #141414);
+		--hb-muted: var(--color-ink-muted, #4a4a46);
+		--hb-focus: var(--focus, #0030c8);
 		--hb-s1: 8px;
 		--hb-s2: 16px;
 		--hb-s3: 24px;
 		--hb-s4: 40px;
 		--hb-s5: 72px;
 		--hb-s6: 120px;
-		background: var(--hb-paper);
 		color: var(--hb-ink);
 		font: 400 17px/1.45 var(--hb-font);
-		padding: 0 clamp(16px, 5vw, 72px);
 	}
 	.hb :global(a) {
 		color: var(--hb-ink);

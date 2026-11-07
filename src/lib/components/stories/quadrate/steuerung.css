@@ -5,9 +5,9 @@
 .bq-ctl {
 	--bq-h: 44px;
 	--bq-bw: 2px;
-	--bq-paper: #efe6d2;
-	--bq-ink: #26221e;
-	--bq-hover: #e4d9c1;
+	--bq-paper: var(--color-bg, #eceae0);
+	--bq-ink: var(--color-ink, #141414);
+	--bq-hover: var(--color-bg-muted, #e2dfd3);
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
@@ -23,8 +23,8 @@
 .bq-sel {
 	--bq-h: 44px;
 	--bq-bw: 2px;
-	--bq-paper: #efe6d2;
-	--bq-ink: #26221e;
+	--bq-paper: var(--color-bg, #eceae0);
+	--bq-ink: var(--color-ink, #141414);
 	height: var(--bq-h);
 	min-height: var(--bq-h);
 	box-sizing: border-box;
@@ -55,7 +55,7 @@
 }
 .bq-btn:hover,
 .bq-sel:hover {
-	background-color: #e4d9c1;
+	background-color: var(--color-bg-muted, #e2dfd3);
 }
 .bq-btn[aria-pressed='true'] {
 	background-color: var(--bq-ink);
@@ -110,7 +110,7 @@
 }
 .bq-rng input {
 	width: 220px;
-	accent-color: #26221e;
+	accent-color: var(--color-ink, #141414);
 	margin: 0;
 	height: 44px;
 }
@@ -132,8 +132,8 @@
 	z-index: 20;
 	width: max-content;
 	max-width: min(280px, 80vw);
-	background: #26221e;
-	color: #efe6d2;
+	background: var(--color-ink, #141414);
+	color: var(--color-bg, #eceae0);
 	font:
 		400 14px/1.35 Jost,
 		system-ui,
