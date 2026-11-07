@@ -252,7 +252,7 @@ describe('stories/[slug]/+page.svelte · Berlin in Quadraten', () => {
 		render(Page, { data: data as never });
 		await new Promise((r) => setTimeout(r, 20));
 		expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toContain(
-			'/stories/berlin-in-quadraten/de/bilder/og.png'
+			'/og/page/berlin-in-quadraten.png'
 		);
 		expect(document.querySelector('meta[property="og:image:alt"]')?.getAttribute('content')).toBe(
 			'Berlin in Quadraten: zwölf Quadrate, eins je Bezirk, Abgeordnetenhauswahl 2026'
