@@ -94,16 +94,30 @@ describe('wallPoster', () => {
 		}
 	});
 
-	it('eine linke Kante: Titel, Bezirksnamen und Fußzeile auf dem Rand, Weißraum rechts', () => {
+	it('Namen bündig links wie Titel und Fußzeile, Raster bündig am rechten Rand', () => {
 		for (const p of [agh, btw]) {
 			const x = (label: string): number =>
 				Number(new RegExp(`<text x="([\\d.]+)"[^>]*>${label}<`).exec(p.svg)![1]);
-			const title = x(p === agh ? 'Berlin in Quadraten' : 'Berlin in Squares');
-			expect(title).toBe(MARGIN);
+			expect(x(p === agh ? 'Berlin in Quadraten' : 'Berlin in Squares')).toBe(MARGIN);
 			expect(x('Lichtenberg')).toBe(MARGIN);
 			expect(x('navigator.berlin')).toBe(MARGIN);
 			const right = Math.max(...p.squares.map((q) => q.x + q.size));
-			expect(right).toBeLessThanOrEqual(POSTER_WIDTH - MARGIN);
+			expect(right).toBeCloseTo(POSTER_WIDTH - MARGIN, 6);
+		}
+	});
+
+	it('Bezirksnamen groß und fett, oben bündig mit ihrem Quadrat, passen in die Namensspalte', () => {
+		for (const p of [agh, btw]) {
+			const m = new RegExp(
+				`<text x="${MARGIN}" y="([\\d.]+)" font-size="([\\d.]+)" font-weight="900"[^>]*>Lichtenberg<`
+			).exec(p.svg)!;
+			const size = Number(m[2]);
+			expect(size).toBeGreaterThanOrEqual(24);
+			const row = p.squares.find((q) => q.title.startsWith('Lichtenberg'))!;
+			// Oberkante der Versalien (rund 0,7 em über der Grundlinie) auf der Oberkante des Quadrats.
+			expect(Math.abs(Number(m[1]) - size * 0.7 - row.y)).toBeLessThanOrEqual(2);
+			const left = Math.min(...p.squares.map((q) => q.x));
+			expect(left - MARGIN).toBeGreaterThan(size * 6);
 		}
 	});
 
