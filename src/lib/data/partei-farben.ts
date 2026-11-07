@@ -52,12 +52,25 @@ export const PARTEI_FARBEN = {
 
 export type ParteiKurzname = keyof typeof PARTEI_FARBEN;
 
+/** Parteien mit eigenem Token, ohne den Sammelposten Sonstige. Picklist für
+ * partei-gefilterte Karten-Anfragen (#179, `/api/wahl/winners`). */
+export const TOKEN_PARTEIEN = (Object.keys(PARTEI_FARBEN) as ParteiKurzname[]).filter(
+	(k): k is Exclude<ParteiKurzname, 'Sonstige'> => k !== 'Sonstige'
+);
+
 const LOOKUP = new Map<string, ParteiKurzname>(
 	(Object.keys(PARTEI_FARBEN) as ParteiKurzname[]).map((k) => [k.toLowerCase(), k])
 );
 
 function lookupKurzname(label: string): ParteiKurzname {
 	return LOOKUP.get(label.toLowerCase()) ?? 'Sonstige';
+}
+
+/** Token einer Partei oder `null`, wenn keins existiert (kein Sonstige-
+ * Fallback). Für Aufrufer mit eigener Fallback-Farbe, z. B. der DB-Farbe. */
+export function parteiFarbeToken(label: string): ParteiFarbe | null {
+	const kurzname = LOOKUP.get(label.toLowerCase());
+	return kurzname ? PARTEI_FARBEN[kurzname] : null;
 }
 
 export function parteiColor(label: string): string {

@@ -636,3 +636,78 @@ describe('wahl_portal_fallback_hinweis_* Messages (Review-Fund)', () => {
 		);
 	});
 });
+
+describe('winner-map.svelte: Zusatz-Partei-Tabs (#179)', () => {
+	function wahl(jahr: number): WahlPortalListEntry {
+		return {
+			slug: `${jahr}-agh-zweitstimme`,
+			jahr,
+			typ: 'agh',
+			isRepeatElection: false,
+			sourceName: 'Amt für Statistik Berlin-Brandenburg',
+			license: 'dl-de/by-2-0',
+			vorlaeufig: false,
+			sourceUpdatedAt: null
+		};
+	}
+	function point(jahr: number, partei: string, anteil: number) {
+		return {
+			jahr,
+			partei,
+			farbe_hex: '#000000',
+			anteil,
+			stimmen: 1,
+			is_repeat_election: false,
+			parent_slug: null
+		};
+	}
+	const SERIES = {
+		points: [
+			point(2011, 'SPD', 0.283),
+			point(2011, 'PIRATEN', 0.089),
+			point(2026, 'CDU', 0.28),
+			point(2026, 'PIRATEN', 0.004)
+		],
+		license: 'dl-de/by-2-0',
+		source_name: 'Amt für Statistik Berlin-Brandenburg'
+	};
+	function winners(jahr: number) {
+		return {
+			...WINNERS_LOADED,
+			winners: [{ ...WINNERS_LOADED.winners[0], jahr }]
+		};
+	}
+	function routes(jahr: number) {
+		return fakeFetch([
+			['/api/wahl/winners', winners(jahr)],
+			['/api/wahl/series', SERIES],
+			['MANIFEST.json', MANIFEST],
+			['bezirke.aaaaaaaa.geojson', BEZIRKE_FC],
+			['lor-bezirksregion.bbbbbbbb.geojson', KIEZ_FC]
+		]);
+	}
+
+	it('AGH 2011 zeigt einen PIRATEN-Tab', async () => {
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2011,
+			wahlen: [wahl(2026), wahl(2011)],
+			fetchFn: routes(2011)
+		});
+		await expect.element(page.getByTestId('winner-map-partei-tab-PIRATEN')).toBeInTheDocument();
+	});
+
+	it('AGH 2026 zeigt keinen PIRATEN-Tab', async () => {
+		render(WinnerMapContextProbe, {
+			reihe: 'agh',
+			ebene: 'kiez',
+			jahr: 2026,
+			wahlen: [wahl(2026), wahl(2011)],
+			fetchFn: routes(2026)
+		});
+		await expect.element(page.getByTestId('ergebnis-panel-row-CDU')).toBeInTheDocument();
+		await expect.element(page.getByTestId('winner-map-partei-tab-SPD')).toBeInTheDocument();
+		await expect.element(page.getByTestId('winner-map-partei-tab-PIRATEN')).not.toBeInTheDocument();
+	});
+});

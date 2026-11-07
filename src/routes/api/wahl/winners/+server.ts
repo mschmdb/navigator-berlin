@@ -20,7 +20,8 @@
  * (löst die frühere Urnen-only-Ansicht ab, Story 17: Briefwahl-Gruppen als
  * kleinste Kartenebene).
  *
- * Partei-Param (Story 9, additiv): `partei` (Picklist = `FINDER_PARTIES`)
+ * Partei-Param (Story 9, additiv): `partei` (Picklist = `TOKEN_PARTEIEN`,
+ * alle Parteien mit Farb-Token außer Sonstige, #179; vorher `FINDER_PARTIES`)
  * schaltet von Sieger- auf Anteils-Rows EINER Partei um -- Response-Shape,
  * `license`/`source_*`-Felder und Wiederholungswahl-Mapping bleiben 1:1
  * identisch, nur die zugrunde liegende Query wechselt
@@ -44,14 +45,14 @@ import {
 } from '$lib/server/db/queries/wahl/get-partei-anteile-bulk.js';
 import { sourceName } from '$lib/data/wahl-source-name.js';
 import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
-import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { TOKEN_PARTEIEN } from '$lib/data/partei-farben.js';
 import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	typ: v.picklist(['btw', 'agh', 'bvv']),
 	stimmtyp: v.picklist(['erststimme', 'zweitstimme', 'einstimme']),
 	ebene: v.picklist(['kiez', 'bezirk', 'stimmbezirk']),
-	partei: v.optional(v.picklist([...FINDER_PARTIES]))
+	partei: v.optional(v.picklist([...TOKEN_PARTEIEN]))
 });
 
 const JahrSchema = v.pipe(v.string(), v.regex(/^\d{4}$/), v.transform(Number));
@@ -148,7 +149,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	if (!parsed.success) {
 		throw error(
 			400,
-			'typ, stimmtyp und ebene erforderlich (typ: btw|agh|bvv, ebene: kiez|bezirk|stimmbezirk, partei optional aus FINDER_PARTIES)'
+			'typ, stimmtyp und ebene erforderlich (typ: btw|agh|bvv, ebene: kiez|bezirk|stimmbezirk, partei optional, eine Partei mit Farb-Token)'
 		);
 	}
 	const { typ, stimmtyp, ebene, partei } = parsed.output;

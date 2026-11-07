@@ -3,6 +3,7 @@ import {
 	PARTEI_FARBEN,
 	parteiColor,
 	parteiPattern,
+	parteiFarbeToken,
 	contrastRatio,
 	wcagAaPasses,
 	INSPECTOR_BG,
@@ -190,5 +191,16 @@ describe('Partei-Farben WCAG-AA gegen Inspector-BG', () => {
 			const passes = wcagAaPasses(PARTEI_FARBEN[k].hex, INSPECTOR_BG, 'large');
 			expect(passes, `${k} (${PARTEI_FARBEN[k].hex}) contrast vs ${INSPECTOR_BG}`).toBe(true);
 		}
+	});
+});
+
+describe('parteiFarbeToken (#179)', () => {
+	it('liefert das Token inkl. Pattern für eine bekannte Partei, case-insensitive', () => {
+		expect(parteiFarbeToken('PIRATEN')).toEqual({ hex: '#C25E00', pattern: 'grid' });
+		expect(parteiFarbeToken('piraten')).toEqual({ hex: '#C25E00', pattern: 'grid' });
+	});
+
+	it('liefert null für eine Partei ohne Token (kein stiller Sonstige-Fallback)', () => {
+		expect(parteiFarbeToken('Die PARTEI')).toBeNull();
 	});
 });

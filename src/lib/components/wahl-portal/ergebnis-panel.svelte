@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { Accordion } from 'bits-ui';
 	import { ChevronDown } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -18,8 +19,10 @@
 		buildErgebnisPanelRows,
 		vorjahrLabel,
 		type ErgebnisSeriesPoint,
-		type ErgebnisPanelData
+		type ErgebnisPanelData,
+		type ErgebnisPanelRow
 	} from './internal/ergebnis-panel-data.js';
+	import { patternPreviewStyle } from './winner-map-legende.svelte';
 	import { parteiDisplayName } from './internal/winner-map-data.js';
 	import VorlaeufigBadge from './vorlaeufig-badge.svelte';
 
@@ -31,13 +34,26 @@
 		highlightedName?: string | null;
 		/** Tatsächliche Anzeige-Ebene der Karte (nach Fallback-Leiter). */
 		anzeigeEbene?: WahlPortalEbene;
+		/** Muster-Toggle der Karte (#179): Swatches zeigen dann das Partei-Muster wie die Legende. */
+		patternsEnabled?: boolean;
+		/** #179: Berlin-Rows des gewählten Jahres für die Zusatz-Tabs der Karte;
+		 * `null` solange die Series lädt, leer bei Fehler. */
+		onBerlinRows?: (rows: readonly ErgebnisPanelRow[] | null) => void;
 	};
 	let {
 		fetchFn = fetch,
 		highlightedSlug = null,
 		highlightedName = null,
-		anzeigeEbene = 'kiez'
+		anzeigeEbene = 'kiez',
+		patternsEnabled = false,
+		onBerlinRows
 	}: Props = $props();
+
+	function swatchStyle(row: ErgebnisPanelRow): string {
+		return patternsEnabled && row.pattern
+			? patternPreviewStyle(row.pattern, row.farbeHex)
+			: `background-color: ${row.farbeHex};`;
+	}
 
 	const portal = getWahlPortalState();
 	const stimmtyp = $derived(stimmtypForReihe(portal.reihe));
@@ -156,6 +172,15 @@
 	const berlinPanel = $derived<ErgebnisPanelData | null>(
 		berlinResponse && jahr !== null ? buildErgebnisPanelRows(berlinResponse.points, jahr) : null
 	);
+	$effect(() => {
+		const rows =
+			berlinStatus === 'error'
+				? []
+				: berlinStatus === 'loaded'
+					? (berlinPanel?.rows ?? null)
+					: null;
+		untrack(() => onBerlinRows?.(rows));
+	});
 	const gebietPanel = $derived<ErgebnisPanelData | null>(
 		gebietResponse && jahr !== null ? buildErgebnisPanelRows(gebietResponse.points, jahr) : null
 	);
@@ -173,6 +198,18 @@
 	// "vorläufig" noch "endgültig" behaupten (Review-Fund 23.09.).
 	const vorlaeufigStatus = $derived(vorlaeufigStatusFor(portal, portal.reihe, jahr));
 </script>
+
+{#snippet swatch(row: ErgebnisPanelRow, testidPrefix: string)}
+	<span
+		aria-hidden="true"
+		data-testid={`${testidPrefix}-${row.partei}`}
+		data-pattern={row.pattern ?? undefined}
+		class="h-3 w-3 shrink-0 rounded-full"
+		class:border={patternsEnabled && row.pattern}
+		class:border-rule-strong={patternsEnabled && row.pattern}
+		style={swatchStyle(row)}
+	></span>
+{/snippet}
 
 <section
 	aria-labelledby="ergebnis-panel-h"
@@ -229,11 +266,7 @@
 					class="flex flex-col gap-1 text-sm text-ink"
 				>
 					<span class="flex items-center gap-2">
-						<span
-							aria-hidden="true"
-							class="h-3 w-3 shrink-0 rounded-full"
-							style:background-color={row.farbeHex}
-						></span>
+						{@render swatch(row, 'ergebnis-panel-swatch')}
 						<span class="min-w-0 flex-1 truncate">{parteiDisplayName(row.partei)}</span>
 						<span
 							data-testid={`ergebnis-panel-anteil-${row.partei}`}
@@ -313,11 +346,7 @@
 							class="flex flex-col gap-1 text-sm text-ink"
 						>
 							<span class="flex items-center gap-2">
-								<span
-									aria-hidden="true"
-									class="h-3 w-3 shrink-0 rounded-full"
-									style:background-color={row.farbeHex}
-								></span>
+								{@render swatch(row, 'ergebnis-panel-gebiet-swatch')}
 								<span class="min-w-0 flex-1 truncate">{parteiDisplayName(row.partei)}</span>
 								<span
 									data-testid={`ergebnis-panel-gebiet-anteil-${row.partei}`}

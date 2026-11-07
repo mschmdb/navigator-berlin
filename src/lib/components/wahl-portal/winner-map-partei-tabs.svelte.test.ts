@@ -48,4 +48,35 @@ describe('winner-map-partei-tabs.svelte', () => {
 			.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
 		expect(onSelect).toHaveBeenCalledWith(FINDER_PARTIES[0]);
 	});
+
+	it('#179: rendert Zusatz-Tabs hinter den Basis-Parteien', async () => {
+		render(WinnerMapParteiTabs, {
+			aktivePartei: null,
+			onSelect: () => {},
+			zusatzParteien: ['PIRATEN']
+		});
+		const tabs = page.getByRole('radio').elements();
+		expect(tabs.length).toBe(1 + FINDER_PARTIES.length + 1);
+		expect(tabs.at(-1)?.getAttribute('data-testid')).toBe('winner-map-partei-tab-PIRATEN');
+	});
+
+	it('#179: ohne Zusatz-Parteien kein PIRATEN-Tab', async () => {
+		render(WinnerMapParteiTabs, { aktivePartei: null, onSelect: () => {}, zusatzParteien: [] });
+		await expect.element(page.getByTestId('winner-map-partei-tab-gewinner')).toBeInTheDocument();
+		await expect.element(page.getByTestId('winner-map-partei-tab-PIRATEN')).not.toBeInTheDocument();
+	});
+
+	it('#179: ArrowLeft auf "Gewinner" springt zum letzten Tab (Zusatz-Tab)', async () => {
+		const onSelect = vi.fn();
+		render(WinnerMapParteiTabs, { aktivePartei: null, onSelect, zusatzParteien: ['PIRATEN'] });
+		const gewinner = page.getByTestId('winner-map-partei-tab-gewinner');
+		await gewinner.click();
+		await gewinner
+			.element()
+			.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+		expect(onSelect).toHaveBeenLastCalledWith('PIRATEN');
+		expect(document.activeElement?.getAttribute('data-testid')).toBe(
+			'winner-map-partei-tab-PIRATEN'
+		);
+	});
 });

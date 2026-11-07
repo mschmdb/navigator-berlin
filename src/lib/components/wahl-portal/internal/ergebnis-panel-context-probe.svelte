@@ -17,6 +17,7 @@
 		highlightedSlug?: string | null;
 		highlightedName?: string | null;
 		anzeigeEbene?: WahlPortalEbene;
+		patternsEnabled?: boolean;
 	};
 
 	let {
@@ -27,7 +28,8 @@
 		fetchFn,
 		highlightedSlug = null,
 		highlightedName = null,
-		anzeigeEbene = 'kiez'
+		anzeigeEbene = 'kiez',
+		patternsEnabled = false
 	}: Props = $props();
 
 	// svelte-ignore state_referenced_locally
@@ -51,4 +53,4 @@
 	});
 </script>
 
-<ErgebnisPanel {fetchFn} {highlightedSlug} {highlightedName} {anzeigeEbene} />
+<ErgebnisPanel {fetchFn} {highlightedSlug} {highlightedName} {anzeigeEbene} {patternsEnabled} />
