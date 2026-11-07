@@ -11,6 +11,7 @@ type Fixture = ElectionShares & { bezirk: string; wahl: string; jahr: number; tu
 const all = fixtures as Fixture[];
 const mitte11 = all.find((f) => f.bezirk === 'mitte' && f.wahl === 'agh' && f.jahr === 2011)!;
 const TITLE = 'Mitte, Abgeordnetenhaus 2011';
+const NB = '\u00a0';
 
 afterEach(() => overwriteGetLocale(() => 'de'));
 
@@ -20,6 +21,9 @@ const texts = (c: HTMLElement): string[] =>
 	[...svgOf(c).querySelectorAll('text')].map((t) => t.textContent ?? '');
 const sized = async (c: HTMLElement, px: number): Promise<void> => {
 	c.style.width = `${px}px`;
+	await vi.waitFor(() => expect(svgOf(c).getBoundingClientRect().width).toBe(px));
+	// ResizeObserver meldet die Breite einen Frame später.
+	await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 	await vi.waitFor(() => expect(texts(c).length).toBeGreaterThan(0));
 };
 
@@ -33,7 +37,7 @@ describe('quadrat.svelte', () => {
 		const svg = svgOf(container);
 		expect(svg.getAttribute('role')).toBe('img');
 		expect(svg.getAttribute('aria-label')).toBe(
-			'Mitte, Abgeordnetenhaus 2011: SPD 28,7 %, Grüne 22,5 %, CDU 17,9 %. Wahlbeteiligung 55,9 %.'
+			`Mitte, Abgeordnetenhaus 2011: SPD 28,7${NB}%, Grüne 22,5${NB}%, CDU 17,9${NB}%. Wahlbeteiligung 55,9${NB}%.`
 		);
 	});
 
@@ -57,9 +61,9 @@ describe('quadrat.svelte', () => {
 		const rows = [...table.querySelectorAll('tbody tr')].map((tr) =>
 			[...tr.children].map((c) => c.textContent)
 		);
-		expect(rows).toContainEqual(['Piraten', '10,5 %']);
-		expect(rows).toContainEqual(['Grau, alle Parteien unter 5 %', '9,6 %']);
-		expect(rows).toContainEqual(['Wahlbeteiligung', '55,9 %']);
+		expect(rows).toContainEqual(['Piraten', `10,5${NB}%`]);
+		expect(rows).toContainEqual([`Grau, alle Parteien unter 5${NB}%`, `9,6${NB}%`]);
+		expect(rows).toContainEqual(['Wahlbeteiligung', `55,9${NB}%`]);
 		expect(rows.find((r) => r[0] === 'AfD')).toBeUndefined();
 	});
 
@@ -73,16 +77,19 @@ describe('quadrat.svelte', () => {
 
 	it('legt kleine Parteien nach der Schwelle ins Grau', () => {
 		const { container } = render(Quadrat, { election: mitte11, title: TITLE, threshold: 0.11 });
-		const w = (k: string): number =>
-			Number(rects(container)[ORDER.indexOf(k as (typeof ORDER)[number])].getAttribute('width'));
-		expect(w('piraten')).toBe(0);
-		expect(w('linke')).toBe(0);
+		const area = (k: (typeof ORDER)[number]): number => {
+			const r = rects(container)[ORDER.indexOf(k)];
+			return Number(r.getAttribute('width')) * Number(r.getAttribute('height'));
+		};
+		expect(area('piraten')).toBe(0);
+		expect(area('linke')).toBe(0);
+		expect(area('rest')).toBeGreaterThan(2500);
 	});
 
 	it('setzt Zahlen in die Blöcke, sobald die Breite bekannt ist', async () => {
 		const { container } = render(Quadrat, { election: mitte11, title: TITLE });
 		await sized(container, 320);
-		expect(texts(container)).toContain('29 %');
+		expect(texts(container)).toContain(`29${NB}%`);
 		for (const t of svgOf(container).querySelectorAll('text'))
 			expect(t.getAttribute('aria-hidden')).toBe('true');
 	});
@@ -103,7 +110,7 @@ describe('quadrat.svelte', () => {
 
 	it('beschriftet zu kleine Blöcke außen mit Linie', async () => {
 		const { container } = render(Quadrat, { election: mitte11, title: TITLE });
-		await sized(container, 90);
+		await sized(container, 60);
 		expect(svgOf(container).querySelectorAll('path').length).toBeGreaterThan(0);
 	});
 
