@@ -4,7 +4,9 @@ import { splitSections } from './split-sections.js';
 describe('splitSections', () => {
 	it('teilt am Marker in Abschnitte mit ID, Text davor ohne ID', () => {
 		expect(
-			splitSections('Lead.\n\n<!-- abschnitt: s1 -->\n\n## Eins\n\nText.\n<!-- abschnitt: quellen -->\nQ.')
+			splitSections(
+				'Lead.\n\n<!-- abschnitt: s1 -->\n\n## Eins\n\nText.\n<!-- abschnitt: quellen -->\nQ.'
+			)
 		).toEqual([
 			{ id: null, markdown: 'Lead.' },
 			{ id: 's1', markdown: '## Eins\n\nText.' },
