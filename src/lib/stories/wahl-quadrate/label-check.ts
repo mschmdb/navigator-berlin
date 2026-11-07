@@ -4,6 +4,7 @@
  * jede Zahl innen oder außen, nichts läuft über, keine Linie kreuzt einen fremden Block.
  */
 import type { Labels, Line } from './labels';
+import type { PlacedSquare } from './anordnung';
 import { SIDE, type Block, type Rect } from './layout';
 
 export interface Problem {
@@ -97,5 +98,44 @@ export function checkLabels(
 		for (let c = a + 1; c < labels.outside.length; c++)
 			if (overlaps(labels.outside[a].box, labels.outside[c].box, 0.5 * px))
 				out.push({ kind: `kollidiert mit b${labels.outside[c].i}`, i: labels.outside[a].i });
+	return out;
+}
+
+const toPage = (p: PlacedSquare, r: Rect): Rect => {
+	const f = p.size / SIDE;
+	return { x: p.x + r.x * f, y: p.y + r.y * f, w: r.w * f, h: r.h * f };
+};
+
+const lineToPage = (p: PlacedSquare, l: Line): Line => {
+	const f = p.size / SIDE;
+	return { x1: p.x + l.x1 * f, y1: p.y + l.y1 * f, x2: p.x + l.x2 * f, y2: p.y + l.y2 * f };
+};
+
+/**
+ * Prüft eine ganze Seite: jedes Quadrat für sich (`checkLabels`), dazu ragt keine Außenzahl
+ * und keine Linie in ein fremdes Quadrat oder über eine fremde Zahl.
+ */
+export function checkPage(squares: readonly PlacedSquare[]): string[] {
+	const out: string[] = [];
+	const frame = (p: PlacedSquare): Rect => ({ x: p.x, y: p.y, w: p.size, h: p.size });
+	const boxes = (p: PlacedSquare): Rect[] =>
+		[...(p.labels?.inside ?? []), ...(p.labels?.outside ?? [])].map((l) => toPage(p, l.box));
+	squares.forEach((a, ia) => {
+		if (a.labels)
+			for (const pr of checkLabels(a.blocks, a.labels, a.scale, a.fills, false))
+				out.push(`${a.title} b${pr.i} ${pr.kind}`);
+		const tol = 0.5 / (a.scale * (SIDE / a.size));
+		for (const l of a.labels?.outside ?? []) {
+			const box = toPage(a, l.box);
+			const line = lineToPage(a, l.line);
+			squares.forEach((b, ib) => {
+				if (ia === ib) return;
+				if (overlaps(box, frame(b), tol)) out.push(`${a.title} b${l.i} Zahl über ${b.title}`);
+				if (segmentHits(line, frame(b), tol)) out.push(`${a.title} b${l.i} Linie über ${b.title}`);
+				for (const o of boxes(b))
+					if (overlaps(box, o, tol)) out.push(`${a.title} b${l.i} kollidiert mit ${b.title}`);
+			});
+		}
+	});
 	return out;
 }
