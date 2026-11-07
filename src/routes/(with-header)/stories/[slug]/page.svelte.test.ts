@@ -255,7 +255,7 @@ describe('stories/[slug]/+page.svelte · Berlin in Quadraten', () => {
 			'/og/page/berlin-in-quadraten.png'
 		);
 		expect(document.querySelector('meta[property="og:image:alt"]')?.getAttribute('content')).toBe(
-			'Berlin in Quadraten: zwölf Quadrate, eins je Bezirk, Abgeordnetenhauswahl 2026'
+			'Berlin in Quadraten: ein Quadrat für Friedrichshain-Kreuzberg bei der Abgeordnetenhauswahl 2026'
 		);
 	});
 
