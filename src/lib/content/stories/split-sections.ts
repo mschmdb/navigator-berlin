@@ -30,3 +30,12 @@ export function splitSections(body: string): StorySection[] {
 	push(body.length);
 	return out;
 }
+
+const HEADING = /^##[ \t]+(.+?)[ \t]*(?:\r?\n|$)/;
+
+/** Trennt eine führende `## Überschrift` ab, damit die Seite sie neben den Text stellen kann. */
+export function splitHeading(markdown: string): { heading: string | null; rest: string } {
+	const match = HEADING.exec(markdown);
+	if (!match) return { heading: null, rest: markdown };
+	return { heading: match[1], rest: markdown.slice(match[0].length).trim() };
+}
