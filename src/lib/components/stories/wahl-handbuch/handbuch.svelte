@@ -151,6 +151,8 @@
 	}
 	.hb :global(a) {
 		color: var(--hb-ink);
+		text-decoration: underline;
+		text-underline-offset: 2px;
 	}
 	.hb :global(a:focus-visible) {
 		outline: 3px solid var(--hb-focus);
