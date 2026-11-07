@@ -42,6 +42,9 @@ export const PARTEI_FARBEN = {
 	// #107: Gitter statt Punkte, sonst identisch zu GRÜNE.
 	BSW: { hex: '#4A1559', pattern: 'grid' },
 	'FREIE WÄHLER': { hex: '#8A4200', pattern: 'diagonal' },
+	// #179: Piraten-Orange (#FF820A) abgedunkelt auf 3,9:1. Gitter wie BSW, beide
+	// stehen nie in derselben Wahl (Piraten relevant 2011 bis 2016, BSW ab 2024).
+	PIRATEN: { hex: '#C25E00', pattern: 'grid' },
 	Sonstige: { hex: '#525252', pattern: 'stripes' }
 } as const satisfies Record<string, ParteiFarbe>;
 
