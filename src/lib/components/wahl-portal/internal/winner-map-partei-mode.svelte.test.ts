@@ -79,3 +79,26 @@ describe('rowsMatchAktivePartei (Review-Fund #7)', () => {
 		expect(rowsMatchAktivePartei([row({ partei: 'CDU' })], 'SPD')).toBe(false);
 	});
 });
+
+describe('ParteiModeState.syncVerfuegbar (#179)', () => {
+	it('fällt auf Gewinner zurück, wenn der aktive Zusatz-Tab im neuen Jahr fehlt', () => {
+		const state = new ParteiModeState();
+		state.select('PIRATEN');
+		state.syncVerfuegbar(['SPD', 'CDU']);
+		expect(state.aktivePartei).toBeNull();
+	});
+
+	it('behält die Auswahl, solange die Partei verfügbar ist', () => {
+		const state = new ParteiModeState();
+		state.select('PIRATEN');
+		state.syncVerfuegbar(['SPD', 'PIRATEN']);
+		expect(state.aktivePartei).toBe('PIRATEN');
+	});
+
+	it('null (Verfügbarkeit unbekannt, Series lädt noch) lässt die Auswahl stehen', () => {
+		const state = new ParteiModeState();
+		state.select('PIRATEN');
+		state.syncVerfuegbar(null);
+		expect(state.aktivePartei).toBe('PIRATEN');
+	});
+});

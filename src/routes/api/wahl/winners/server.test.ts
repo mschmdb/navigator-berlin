@@ -42,6 +42,17 @@ describe('GET /api/wahl/winners', () => {
 		).rejects.toMatchObject({ status: 400 });
 	});
 
+	it('#179: akzeptiert partei=PIRATEN (Partei mit Farb-Token außerhalb FINDER_PARTIES)', async () => {
+		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=kiez&partei=PIRATEN');
+		expect(res.status).toBe(200);
+	});
+
+	it('#179: lehnt partei=Sonstige ab (Sammelposten, keine Partei-Anteile)', async () => {
+		await expect(
+			call('?typ=agh&stimmtyp=zweitstimme&ebene=kiez&partei=Sonstige')
+		).rejects.toMatchObject({ status: 400 });
+	});
+
 	it('liefert ohne Datenbank 200 mit leerer Winners-Liste für einen partei-Request', async () => {
 		const res = await call('?typ=agh&stimmtyp=zweitstimme&ebene=kiez&partei=CDU');
 		expect(res.status).toBe(200);
