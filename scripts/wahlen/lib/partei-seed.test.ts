@@ -60,6 +60,7 @@ describe('partei-seed', () => {
 	it('#179: Tierschutzpartei ist eigene Partei, auch unter dem Namen von 2026', () => {
 		const tsp = PARTEI_SEED.find((p) => p.kurzname === 'Tierschutzpartei');
 		expect(tsp?.vollname).toBe('PARTEI MENSCH KLIMA TIERSCHUTZ');
+		expect(tsp?.farbeHex).toBe('#00706B');
 		expect(resolveParteiKurzname('Tierschutzpartei')).toBe('Tierschutzpartei');
 		expect(resolveParteiKurzname('PARTEI MENSCH UMWELT TIERSCHUTZ')).toBe('Tierschutzpartei');
 		expect(resolveParteiKurzname('PARTEI MENSCH KLIMA TIERSCHUTZ')).toBe('Tierschutzpartei');

@@ -90,7 +90,7 @@ export const PARTEI_SEED: readonly ParteiSeed[] = [
 		// Partei MENSCH KLIMA statt MENSCH UMWELT TIERSCHUTZ.
 		kurzname: 'Tierschutzpartei',
 		vollname: 'PARTEI MENSCH KLIMA TIERSCHUTZ',
-		farbeHex: '#00837D',
+		farbeHex: '#00706B',
 		firstSeenYear: 1993,
 		aliases: [
 			{ label: 'Tierschutzpartei' },
