@@ -3,7 +3,9 @@ import { STORY_INK, STORY_PAPER } from '../tokens';
 
 /** Textfarbe für eine Zahl im Block: Papier oder Tinte, je nachdem, was stärker kontrastiert. */
 export function textOn(fill: string): string {
-	return contrastRatio(fill, STORY_PAPER) >= contrastRatio(fill, STORY_INK) ? STORY_PAPER : STORY_INK;
+	return contrastRatio(fill, STORY_PAPER) >= contrastRatio(fill, STORY_INK)
+		? STORY_PAPER
+		: STORY_INK;
 }
 
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -15,7 +17,11 @@ export function mixHex(a: string, b: string, u: number): string {
 	return (
 		'#' +
 		[1, 3, 5]
-			.map((i) => Math.round(ch(a, i) * (1 - u) + ch(b, i) * u).toString(16).padStart(2, '0'))
+			.map((i) =>
+				Math.round(ch(a, i) * (1 - u) + ch(b, i) * u)
+					.toString(16)
+					.padStart(2, '0')
+			)
 			.join('')
 	);
 }

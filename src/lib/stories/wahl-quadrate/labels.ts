@@ -91,7 +91,11 @@ interface Pending {
  * steht sie klein außerhalb mit Linie: Spalten-Blöcke unter dem Quadrat, Streifen rechts.
  * Gilt für überlappungsfreie Teilungen (`tree`, `cols`), nicht für `bands`.
  */
-export function placeLabels(blocks: readonly Block[], texts: readonly (string | null)[], opts: LabelOptions): Labels {
+export function placeLabels(
+	blocks: readonly Block[],
+	texts: readonly (string | null)[],
+	opts: LabelOptions
+): Labels {
 	const { scale, measure, fills } = opts;
 	if (!(scale > 0)) throw new RangeError(`scale muss positiv sein: ${scale}`);
 	const io = opts.insideOnly ?? false;
@@ -172,7 +176,8 @@ export function placeLabels(blocks: readonly Block[], texts: readonly (string | 
 		ys.push(y);
 		py = y;
 	}
-	for (let j = ys.length - 1, lim = rb - fl * 0.8; j >= 0; j--, lim = ys[j + 1] - fl * 1.4) if (ys[j] > lim) ys[j] = lim;
+	for (let j = ys.length - 1, lim = rb - fl * 0.8; j >= 0; j--, lim = ys[j + 1] - fl * 1.4)
+		if (ys[j] > lim) ys[j] = lim;
 	slabOut.forEach((c, j) => {
 		const cy = c.r.y + c.r.h / 2;
 		const x = rr + L * 1.2 + c.m.abl * fl;

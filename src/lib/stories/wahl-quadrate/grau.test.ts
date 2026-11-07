@@ -51,7 +51,10 @@ describe('derive', () => {
 	});
 
 	it('genannte Kleinparteien absteigend sortiert', () => {
-		const d = derive({ raw: { fdp: 0.02, bsw: 0.031, afd: 0.01, cdu: 0.8 }, sonst: 0.129, fw: 0.01 }, 0.05);
+		const d = derive(
+			{ raw: { fdp: 0.02, bsw: 0.031, afd: 0.01, cdu: 0.8 }, sonst: 0.129, fw: 0.01 },
+			0.05
+		);
 		expect(d.small.map((s) => s.key)).toEqual(['bsw', 'fdp', 'afd', 'fw']);
 	});
 
@@ -62,7 +65,11 @@ describe('derive', () => {
 	});
 
 	it('top: die drei größten farbigen Parteien', () => {
-		const d = derive({ raw: { spd: 0.3, cdu: 0.25, gruene: 0.2, linke: 0.15, fdp: 0.04 }, sonst: 0.06, fw: 0 });
+		const d = derive({
+			raw: { spd: 0.3, cdu: 0.25, gruene: 0.2, linke: 0.15, fdp: 0.04 },
+			sonst: 0.06,
+			fw: 0
+		});
 		expect(d.top.map((t) => t.key)).toEqual(['spd', 'cdu', 'gruene']);
 	});
 
@@ -90,11 +97,15 @@ describe('greyCaption', () => {
 	});
 
 	it('formatiert die deutsche Caption wie in der Vorgabe', () => {
-		expect(formatGreyLine(d, NAMES, 'de')).toBe('Grau 13 %: FDP 4,6 %, BSW 3,1 % und weitere kleine Parteien.');
+		expect(formatGreyLine(d, NAMES, 'de')).toBe(
+			'Grau 13 %: FDP 4,6 %, BSW 3,1 % und weitere kleine Parteien.'
+		);
 	});
 
 	it('formatiert die englische Caption', () => {
-		expect(formatGreyLine(d, NAMES, 'en')).toBe('Grey 13%: FDP 4.6%, BSW 3.1% and other small parties.');
+		expect(formatGreyLine(d, NAMES, 'en')).toBe(
+			'Grey 13%: FDP 4.6%, BSW 3.1% and other small parties.'
+		);
 	});
 
 	it('ohne genannte Parteien nur der Grauanteil', () => {

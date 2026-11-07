@@ -10,7 +10,7 @@ const overlap = (a: Block, b: Block): number =>
 	Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
 
 /** Anteile in fester Reihenfolge, Grau = alles ohne eigene Partei. */
-function sharesOf(raw: Record<string, number>, sonst: number, fw: number): number[] {
+function sharesOf(raw: Partial<Record<string, number>>, sonst: number, fw: number): number[] {
 	return ORDER.map((k) => (k === 'rest' ? sonst + fw : (raw[k] ?? 0)));
 }
 
@@ -39,7 +39,8 @@ describe('layout tree', () => {
 			expect(b.y + b.h).toBeLessThanOrEqual(SIDE + EPS);
 		}
 		for (let a = 0; a < blocks.length; a++)
-			for (let c = a + 1; c < blocks.length; c++) expect(overlap(blocks[a], blocks[c])).toBeLessThan(EPS);
+			for (let c = a + 1; c < blocks.length; c++)
+				expect(overlap(blocks[a], blocks[c])).toBeLessThan(EPS);
 	});
 
 	it('schneidet abwechselnd senkrecht und waagerecht nach Position', () => {
@@ -86,19 +87,25 @@ describe('layout tree', () => {
 });
 
 describe('layout Nichtwähler', () => {
-	it.each(cases)('$name: Quadrat = Wahlberechtigte, Füllung links mit Breite = Beteiligung', ({ shares, turnout }) => {
-		for (const rule of ['tree', 'cols'] as const) {
-			const blocks = layout(shares, { rule, turnout });
-			const tot = shares.reduce((s, v) => s + v, 0);
-			blocks.forEach((b, i) => {
-				expect(area(b)).toBeCloseTo((shares[i] / tot) * turnout * SIDE * SIDE, 6);
-				expect(b.x + b.w).toBeLessThanOrEqual(SIDE * turnout + EPS);
-			});
+	it.each(cases)(
+		'$name: Quadrat = Wahlberechtigte, Füllung links mit Breite = Beteiligung',
+		({ shares, turnout }) => {
+			for (const rule of ['tree', 'cols'] as const) {
+				const blocks = layout(shares, { rule, turnout });
+				const tot = shares.reduce((s, v) => s + v, 0);
+				blocks.forEach((b, i) => {
+					expect(area(b)).toBeCloseTo((shares[i] / tot) * turnout * SIDE * SIDE, 6);
+					expect(b.x + b.w).toBeLessThanOrEqual(SIDE * turnout + EPS);
+				});
+			}
 		}
-	});
+	);
 
 	it('Bänder mit Nichtwählern: kleineres Quadrat unten links, Seite = Wurzel der Beteiligung', () => {
-		const blocks = layout([0.2, 0, 0.2, 0, 0.2, 0.2, 0, 0.1, 0.1], { rule: 'bands', turnout: 0.64 });
+		const blocks = layout([0.2, 0, 0.2, 0, 0.2, 0.2, 0, 0.1, 0.1], {
+			rule: 'bands',
+			turnout: 0.64
+		});
 		expect(blocks[0]).toMatchObject({ x: 0, w: 80, h: 80 });
 		expect(blocks[0].y).toBeCloseTo(20, 9);
 	});
@@ -138,10 +145,14 @@ describe('layout Spalten und Bänder', () => {
 
 describe('orderOf', () => {
 	it('fest: Index-Reihenfolge', () => {
-		expect(orderOf(new Array(ORDER.length).fill(0.1), 'fixed')).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+		expect(orderOf(new Array(ORDER.length).fill(0.1), 'fixed')).toEqual([
+			0, 1, 2, 3, 4, 5, 6, 7, 8
+		]);
 	});
 
 	it('nach Größe: absteigend, bei Gleichstand nach Index, Grau immer zuletzt', () => {
-		expect(orderOf([0.1, 0, 0.3, 0.1, 0, 0.2, 0, 0.05, 0.9], 'size')).toEqual([2, 5, 0, 3, 7, 1, 4, 6, 8]);
+		expect(orderOf([0.1, 0, 0.3, 0.1, 0, 0.2, 0, 0.05, 0.9], 'size')).toEqual([
+			2, 5, 0, 3, 7, 1, 4, 6, 8
+		]);
 	});
 });
