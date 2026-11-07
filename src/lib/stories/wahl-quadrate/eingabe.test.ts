@@ -4,9 +4,7 @@ import { toElectionShares } from './eingabe';
 import { derive } from './grau';
 import type { StoriesWahlData, WahlZahlen } from './types';
 
-const data = JSON.parse(
-	readFileSync('static/data/stories-wahl.json', 'utf-8')
-) as StoriesWahlData;
+const data = JSON.parse(readFileSync('static/data/stories-wahl.json', 'utf-8')) as StoriesWahlData;
 
 function zahlen(bezirk: string, wahl: keyof StoriesWahlData['berlin']): WahlZahlen {
 	const b = data.bezirke.find((x) => x.slug === bezirk);
