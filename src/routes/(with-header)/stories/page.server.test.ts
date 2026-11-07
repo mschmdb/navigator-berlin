@@ -21,7 +21,17 @@ describe('stories/+page.server', () => {
 		};
 		const previews = result.entries.map((e) => e.frontmatter.preview).filter(Boolean);
 		expect(previews.length).toBeGreaterThan(0);
-		expect(previews.every((p) => p === 'punkt-linie-kiez-bezirke')).toBe(true);
+		expect(previews).toContain('punkt-linie-kiez-bezirke');
 		expect(result.preview?.slug).toBe('charlottenburg-wilmersdorf');
+	});
+
+	it('liefert die Quadrate für die Miniatur von „Berlin in Quadraten“', async () => {
+		const result = (await (loadIndex as never as () => Promise<unknown>)()) as {
+			entries: { slug: string; frontmatter: { preview?: string } }[];
+			quadrate: number[][] | null;
+		};
+		const bq = result.entries.find((e) => e.slug === 'berlin-in-quadraten');
+		expect(bq?.frontmatter.preview).toBe('berlin-in-quadraten');
+		expect(result.quadrate).toHaveLength(12);
 	});
 });
