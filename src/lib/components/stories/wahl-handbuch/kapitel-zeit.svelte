@@ -26,7 +26,12 @@
 
 	let { daten, zeit, onzeit }: Props = $props();
 
+	// Eigene Wahl gilt, bis von außen ein neuer Zustand kommt (Zurück, Deep-Link).
 	let gewaehlt = $state<ZeitState | null>(null);
+	$effect.pre(() => {
+		void zeit;
+		gewaehlt = null;
+	});
 	const aktuell = $derived(gewaehlt ?? zeit);
 	const bezirk = $derived(daten.bezirke.find((b) => b.slug === aktuell.bezirk) ?? daten.bezirke[0]);
 	const wahlen = $derived(daten.wahlen.filter((w) => w.typ === aktuell.wahl));

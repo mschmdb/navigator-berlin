@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { replaceState } from '$app/navigation';
+	import { afterNavigate, replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import PunktLinieKiezAuswahl from '$lib/components/stories/punkt-linie-kiez-auswahl.svelte';
@@ -30,8 +30,17 @@
 	let zeit = $state<ZeitState>(DEFAULT_URL_STATE.zeit);
 	onMount(() => {
 		initialBezirk = new URLSearchParams(window.location.search).get('bezirk') ?? undefined;
-		zeit = parseUrlState(new URL(window.location.href)).zeit;
+		zeit = readZeit();
 	});
+	// Kapitel 5 folgt der URL auch nach Zurück oder einem Deep-Link im selben Beitrag.
+	// Eigene Schreibvorgänge laufen über replaceState und lösen afterNavigate nicht aus.
+	afterNavigate(() => {
+		zeit = readZeit();
+	});
+
+	function readZeit(): ZeitState {
+		return parseUrlState(new URL(window.location.href)).zeit;
+	}
 
 	/** Kapitel 5 im Handbuch: Bezirk und Wahl teilbar in der URL, andere Parameter bleiben. */
 	function rememberZeit(next: ZeitState): void {
