@@ -45,6 +45,8 @@ export const PARTEI_FARBEN = {
 	// #179: Piraten-Orange (#FF820A) abgedunkelt auf 3,9:1. Gitter wie BSW, beide
 	// stehen nie in derselben Wahl (Piraten relevant 2011 bis 2016, BSW ab 2024).
 	PIRATEN: { hex: '#C25E00', pattern: 'grid' },
+	// #179: Petrol, 5,4:1. Gegenläufige Diagonale wie Die Linke, Farbton klar anders.
+	Tierschutzpartei: { hex: '#00706B', pattern: 'diagonal-reverse' },
 	Sonstige: { hex: '#525252', pattern: 'stripes' }
 } as const satisfies Record<string, ParteiFarbe>;
 

@@ -10,7 +10,7 @@ import {
 } from './partei-farben.js';
 
 describe('PARTEI_FARBEN', () => {
-	it('definiert alle 11 seed-Parteien', () => {
+	it('definiert alle 12 seed-Parteien', () => {
 		const required: ParteiKurzname[] = [
 			'SPD',
 			'CDU',
@@ -22,6 +22,7 @@ describe('PARTEI_FARBEN', () => {
 			'BSW',
 			'FREIE WÄHLER',
 			'PIRATEN',
+			'Tierschutzpartei',
 			'Sonstige'
 		];
 		for (const k of required) {
@@ -106,6 +107,12 @@ describe('PARTEI_FARBEN', () => {
 		expect(PARTEI_FARBEN.PIRATEN.pattern).toBe('grid');
 	});
 
+	it('#179: Tierschutzpartei ist petrol, Muster weicht von GRÜNE ab', () => {
+		expect(parteiColor('Tierschutzpartei')).toBe('#00706B');
+		expect(PARTEI_FARBEN.Tierschutzpartei.pattern).not.toBe(PARTEI_FARBEN['GRÜNE'].pattern);
+		expect(PARTEI_FARBEN.Tierschutzpartei.pattern).not.toBe(PARTEI_FARBEN.AfD.pattern);
+	});
+
 	it('#107: jede FINDER_PARTIES-Partei hat ein eigenes Muster', () => {
 		const finderParties: ParteiKurzname[] = [
 			'SPD',
@@ -128,7 +135,7 @@ describe('parteiColor', () => {
 	});
 
 	it('fallback Sonstige für unbekannte', () => {
-		expect(parteiColor('Tierschutzpartei')).toBe(PARTEI_FARBEN.Sonstige.hex);
+		expect(parteiColor('Die PARTEI')).toBe(PARTEI_FARBEN.Sonstige.hex);
 	});
 
 	it('case-insensitive lookup', () => {
