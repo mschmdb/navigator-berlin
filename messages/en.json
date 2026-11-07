@@ -2441,5 +2441,20 @@
 	"stories_og_composition_alt": "Berlin Data Stories: composition of circle, square, triangle, donut, bar and lines for one district",
 	"plk_pdf_all_link": "All 12 districts as PDF",
 	"plk_pdf_link": "Download PDF",
-	"plk_pdf_license": "Picture and code are under the MIT licence. The source data keeps its own licences, details at navigator.berlin/lizenzen."
+	"plk_pdf_license": "Picture and code are under the MIT licence. The source data keeps its own licences, details at navigator.berlin/lizenzen.",
+	"bq_party_afd": "AfD",
+	"bq_party_bsw": "BSW",
+	"bq_party_cdu": "CDU",
+	"bq_party_fdp": "FDP",
+	"bq_party_gruene": "Greens",
+	"bq_party_linke": "The Left",
+	"bq_party_piraten": "Pirates",
+	"bq_party_spd": "SPD",
+	"bq_party_rest": "Grey",
+	"bq_party_fw": "Free Voters",
+	"bq_party_tier": "Animal Protection Party",
+	"bq_table_party": "Party",
+	"bq_table_share": "Share",
+	"bq_turnout": "Turnout",
+	"bq_grey_row": "Grey, all parties below {threshold}"
 }

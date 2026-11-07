@@ -2441,5 +2441,20 @@
 	"stories_og_composition_alt": "Berlin Data Stories: Komposition aus Kreis, Quadrat, Dreieck, Donut, Balken und Linien für einen Bezirk",
 	"plk_pdf_all_link": "Alle 12 Bezirke als PDF",
 	"plk_pdf_link": "PDF herunterladen",
-	"plk_pdf_license": "Bild und Code stehen unter MIT-Lizenz. Die Quelldaten behalten ihre Lizenzen, Details unter navigator.berlin/lizenzen."
+	"plk_pdf_license": "Bild und Code stehen unter MIT-Lizenz. Die Quelldaten behalten ihre Lizenzen, Details unter navigator.berlin/lizenzen.",
+	"bq_party_afd": "AfD",
+	"bq_party_bsw": "BSW",
+	"bq_party_cdu": "CDU",
+	"bq_party_fdp": "FDP",
+	"bq_party_gruene": "Grüne",
+	"bq_party_linke": "Die Linke",
+	"bq_party_piraten": "Piraten",
+	"bq_party_spd": "SPD",
+	"bq_party_rest": "Grau",
+	"bq_party_fw": "Freie Wähler",
+	"bq_party_tier": "Tierschutzpartei",
+	"bq_table_party": "Partei",
+	"bq_table_share": "Anteil",
+	"bq_turnout": "Wahlbeteiligung",
+	"bq_grey_row": "Grau, alle Parteien unter {threshold}"
 }

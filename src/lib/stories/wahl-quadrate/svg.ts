@@ -46,7 +46,7 @@ const f3 = (n: number): string => n.toFixed(3);
 const esc = (s: string): string =>
 	s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-const CORNERS = 'M0 4V0H4M96 0H100V4M100 96V100H96M4 100H0V96';
+export const CORNERS = 'M0 4V0H4M96 0H100V4M100 96V100H96M4 100H0V96';
 
 /** Innere SVG-Elemente eines Quadrats im 100er-Raster. */
 export function squareElements(input: SquareSvgInput): string {
