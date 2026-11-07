@@ -3,6 +3,7 @@
 	`oninput` feuert höchstens einmal pro Frame, damit teure Neuberechnungen nicht stauen.
 -->
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import Hinweis from './hinweis.svelte';
 	import './steuerung.css';
 
@@ -22,6 +23,8 @@
 	const id = $props.id();
 	const text = $derived(format(value));
 	let frame = 0;
+
+	onDestroy(() => cancelAnimationFrame(frame));
 
 	function input(e: Event & { currentTarget: HTMLInputElement }): void {
 		value = Number(e.currentTarget.value);
