@@ -1,6 +1,6 @@
 ---
 title: 'Berlin in Quadraten'
-title_en: 'Berlin in squares'
+title_en: 'Berlin in Squares'
 summary: 'Zwölf Bezirke, neun Wahlen seit 2011, jede Wahl ein Quadrat. In sechs Schritten zeige ich dir, wie du sie liest.'
 summary_en: 'Twelve districts, nine elections since 2011, one square per election. In six steps I show you how to read them.'
 date: 2026-11-07

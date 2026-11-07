@@ -26,6 +26,9 @@ export function storiesImagePath(locale: Locale = baseLocale): string {
 
 /** Beiträge mit Komposition (`visual` oder `preview`) tragen das Stories-Bild. */
 export function storyImagePath(entry: StoryEntry, locale: Locale = baseLocale): string {
+	// Eigenes OG-Bild aus dem Plakat-Teil (#192), je Sprache.
+	if (entry.frontmatter.visual === 'berlin-in-quadraten')
+		return `/stories/berlin-in-quadraten/${locale}/bilder/og.png`;
 	return entry.frontmatter.visual || entry.frontmatter.preview
 		? storiesImagePath(locale)
 		: DEFAULT_IMAGE_PATH;

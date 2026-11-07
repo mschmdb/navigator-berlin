@@ -91,7 +91,11 @@
 	pathname={page.url.pathname}
 	origin={page.url.origin}
 	{ogImage}
-	ogImageAlt={hasComposition ? m.stories_og_composition_alt() : m.stories_index_og_alt()}
+	ogImageAlt={handbuch
+		? m.bq_hb_og_alt()
+		: hasComposition
+			? m.stories_og_composition_alt()
+			: m.stories_index_og_alt()}
 	ogType="article"
 	article={{ publishedTime: entry.frontmatter.date, section: 'Berlin Data Stories' }}
 />

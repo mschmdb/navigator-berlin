@@ -2532,6 +2532,7 @@
 	"bq_hb_motion_play": "Play",
 	"bq_hb_motion_help": "Stops the gliding square. The row below stays put.",
 	"bq_hb_btw21_note": "Bundestag election 2021: the data probably includes parts of the February 2024 repeat election. I'm still checking.",
+	"bq_hb_og_alt": "Berlin in Squares: twelve squares, one per district, House of Representatives election 2026",
 	"bq_hb_legend_label": "Legend",
 	"bq_hb_legend_grey": "Grey: all parties below {threshold}",
 	"bq_party_afd": "AfD",

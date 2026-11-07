@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages.js';
 	import AlleBezirke from '$lib/components/stories/quadrate/alle-bezirke.svelte';
+	import PlakatDownload from '$lib/components/stories/quadrate/plakat-download.svelte';
 	import { toHandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
 	import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
 	import { DEFAULT_URL_STATE, type ZeitState } from '$lib/stories/wahl-quadrate/url-state';
@@ -124,6 +125,11 @@
 			{:else if n === 6}
 				<div class="fig">
 					<AlleBezirke data={daten} />
+					<!-- Plakate wie bei „Punkt, Linie, Kiez“: Vektor-PDF je Sprache und Wahlart (#192). -->
+					<p class="hb-plakate">
+						<PlakatDownload typ="agh" />
+						<PlakatDownload typ="btw" />
+					</p>
 				</div>
 			{/if}
 		</section>
@@ -299,6 +305,12 @@
 		flex-wrap: wrap;
 		gap: var(--hb-s4) var(--hb-s5);
 		align-items: flex-start;
+	}
+	.hb-plakate {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--hb-s2);
+		margin: var(--hb-s4) 0 0;
 	}
 	@media (max-width: 899px) {
 		.ch {
