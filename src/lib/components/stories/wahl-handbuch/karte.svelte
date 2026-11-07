@@ -40,7 +40,7 @@
 	const grey = $derived(formatGreyLine(derive(ergebnis.e, threshold), greyNames(), lang()));
 </script>
 
-<figure class="hb-card" class:fixed>
+<figure class="hb-card" class:stable={fixed}>
 	<div class="sq">
 		<Quadrat
 			election={ergebnis.e}
@@ -94,18 +94,18 @@
 	.c2 {
 		min-height: 2.7em;
 	}
-	.fixed {
+	.stable {
 		width: 100%;
 	}
-	.fixed .who {
+	.stable .who {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-	.fixed .c1 {
+	.stable .c1 {
 		min-height: 1.35em;
 	}
-	.fixed .c2 {
+	.stable .c2 {
 		min-height: 4.05em;
 	}
 </style>
