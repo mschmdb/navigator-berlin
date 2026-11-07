@@ -3,7 +3,7 @@ import { sourceName } from '$lib/data/wahl-source-name';
 import { DEFAULT_THRESHOLD, derive, formatShare, sharesOf, type Lang } from './grau';
 import { toElectionShares } from './eingabe';
 import { shareTexts } from './labels';
-import { PARTY_NAMES } from './palette';
+import { greyNames } from '$lib/components/stories/quadrate/namen';
 import { JAHRE, wahlSlug, type WahlTyp } from './parteien';
 import type { SquareSpec } from './anordnung';
 import type { BezirkWahlen, StoriesWahlData, WahlSlug } from './types';
@@ -56,10 +56,11 @@ export function greyRows(
 	thr = DEFAULT_THRESHOLD
 ): GreyRow[] {
 	const t = TEXTE[lang];
+	const names = greyNames(lang);
 	return wahlenOf(typ).map(({ slug, jahr }) => {
 		const d = derive(toElectionShares(data.berlin[slug]), thr);
 		const big = d.small.filter((p) => p.share >= 0.01);
-		const named = big.map((p) => `${PARTY_NAMES[lang][p.key]} ${formatShare(p.share, lang)}`);
+		const named = big.map((p) => `${names[p.key]} ${formatShare(p.share, lang)}`);
 		return {
 			slug,
 			jahr,

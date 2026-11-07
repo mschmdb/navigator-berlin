@@ -3,7 +3,7 @@ import { fitSquareSize, labelExtent, placeSquare, type SquareSpec } from './anor
 import { checkPage } from './label-check';
 import { shareTexts, type Measure } from './labels';
 import { derive, sharesOf } from './grau';
-import { colorsInOrder } from './palette';
+import { colorsInOrder } from './farben';
 import fixtures from './fixtures/wahlen.json';
 
 const ADV: Record<string, number> = { '%': 0.85, '<': 0.6, ' ': 0.25 };
