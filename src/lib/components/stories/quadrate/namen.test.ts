@@ -26,4 +26,12 @@ describe('namen', () => {
 		expect(n.tier).toBe('Tierschutzpartei');
 		expect(n.fdp).toBe('FDP');
 	});
+
+	it('nimmt eine feste Sprache unabhängig vom Locale, für Plakat und Bilder auf dem Server', () => {
+		overwriteGetLocale(() => 'de');
+		expect(partyName('gruene', 'en')).toBe('Greens');
+		expect(greyNames('en').tier).toBe('Animal Protection Party');
+		overwriteGetLocale(() => 'en');
+		expect(partyName('linke', 'de')).toBe('Die Linke');
+	});
 });
