@@ -24,7 +24,10 @@
 	const text = $derived(format(value));
 	let frame = 0;
 
-	onDestroy(() => cancelAnimationFrame(frame));
+	// onDestroy läuft auch beim SSR, dort gibt es kein cancelAnimationFrame.
+	onDestroy(() => {
+		if (frame) cancelAnimationFrame(frame);
+	});
 
 	function input(e: Event & { currentTarget: HTMLInputElement }): void {
 		value = Number(e.currentTarget.value);
