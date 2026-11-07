@@ -2532,7 +2532,7 @@
 	"bq_hb_motion_play": "Abspielen",
 	"bq_hb_motion_help": "Hält das gleitende Quadrat an. Die Reihe darunter bleibt stehen.",
 	"bq_hb_btw21_note": "Bundestagswahl 2021: Die Daten enthalten vermutlich Teile der Wiederholungswahl vom Februar 2024. Ich prüfe das noch.",
-	"bq_hb_og_alt": "Berlin in Quadraten: zwölf Quadrate, eins je Bezirk, Abgeordnetenhauswahl 2026",
+	"bq_hb_og_alt": "Berlin in Quadraten: ein Quadrat für Friedrichshain-Kreuzberg bei der Abgeordnetenhauswahl 2026",
 	"bq_hb_legend_label": "Legende",
 	"bq_hb_legend_grey": "Grau: alle Parteien unter {threshold}",
 	"bq_party_afd": "AfD",
