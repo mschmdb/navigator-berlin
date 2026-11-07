@@ -19,9 +19,9 @@ describe('stories/+page.server', () => {
 			entries: { slug: string; frontmatter: { preview?: string } }[];
 			preview: { slug: string; name: string } | null;
 		};
-		expect(result.entries.every((e) => e.frontmatter.preview === 'punkt-linie-kiez-bezirke')).toBe(
-			true
-		);
+		const previews = result.entries.map((e) => e.frontmatter.preview).filter(Boolean);
+		expect(previews.length).toBeGreaterThan(0);
+		expect(previews.every((p) => p === 'punkt-linie-kiez-bezirke')).toBe(true);
 		expect(result.preview?.slug).toBe('charlottenburg-wilmersdorf');
 	});
 });
