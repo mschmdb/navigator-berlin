@@ -207,4 +207,19 @@ describe('handbuch.svelte', () => {
 			'Plakat als PDF: Bundestag'
 		]);
 	});
+
+	it('Kapitel 5: folgt einem neuen `zeit` von außen, auch nach eigener Wahl (Zurück, Deep-Link)', async () => {
+		const { rerender } = render(Handbuch, props);
+		const select = fig('s5').querySelector('select')!;
+		select.value = 'mitte';
+		select.dispatchEvent(new Event('change', { bubbles: true }));
+		await vi.waitFor(() =>
+			expect(fig('s5').querySelector('ol')?.getAttribute('aria-label')).toBe(
+				'Mitte, Abgeordnetenhaus'
+			)
+		);
+		await rerender({ ...props, zeit: { bezirk: 'pankow', wahl: 'btw' } });
+		await vi.waitFor(() => expect(fig('s5').querySelector('select')?.value).toBe('pankow'));
+		expect(fig('s5').querySelector('ol')?.children).toHaveLength(4);
+	});
 });
