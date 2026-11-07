@@ -11,7 +11,7 @@ import { bezirkeAlphabetisch, greyRows, sourceLine, squareSpec, wahlenOf } from 
 import { colorsInOrder, legendNames } from './palette';
 import type { WahlTyp } from './parteien';
 import { esc, n2, splitName, txt, wrap, type Fonts } from './satz';
-import { fillsFor, squareElements } from './svg';
+import { fillsFor, placedSquareSvg } from './svg';
 import { TEXTE } from './texte';
 import type { StoriesWahlData } from './types';
 
@@ -44,22 +44,6 @@ export interface WallPosterInput {
 export interface WallPoster {
 	svg: string;
 	squares: PlacedSquare[];
-}
-
-function squareSvg(p: PlacedSquare, colors: readonly string[], fonts: Fonts): string {
-	const f = p.size / 100;
-	return (
-		`<g transform="translate(${n2(p.x)} ${n2(p.y)}) scale(${f})">` +
-		squareElements({
-			blocks: p.blocks,
-			colors,
-			title: p.title,
-			texts: p.texts,
-			scale: p.scale,
-			measure: fonts.black
-		}) +
-		`</g>`
-	);
 }
 
 /** Lesehilfe, Legende und Grau-Tabelle in der rechten Spalte. */
@@ -176,7 +160,7 @@ export function wallPoster(input: WallPosterInput): WallPoster {
 		txt(t.typLine(t.typ[typ], wahlen[0].jahr, wahlen.at(-1)!.jahr), MARGIN, 162, 15) +
 		header +
 		names +
-		squares.map((p) => squareSvg(p, colors, fonts)).join('') +
+		squares.map((p) => placedSquareSvg(p, colors, fonts.black)).join('') +
 		sideColumn(input, thr) +
 		footer(input) +
 		`</svg>`;

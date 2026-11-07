@@ -112,7 +112,7 @@ const lineToPage = (p: PlacedSquare, l: Line): Line => {
 };
 
 /**
- * Prüft eine ganze Seite: jedes Quadrat für sich (`checkLabels`), dazu ragt keine Außenzahl
+ * Prüft eine ganze Seite: jedes Quadrat für sich (`checkLabels`, ohne Bildschirmrand), dazu ragt keine Außenzahl
  * und keine Linie in ein fremdes Quadrat oder über eine fremde Zahl.
  */
 export function checkPage(squares: readonly PlacedSquare[]): string[] {
@@ -123,7 +123,9 @@ export function checkPage(squares: readonly PlacedSquare[]): string[] {
 	squares.forEach((a, ia) => {
 		if (a.labels)
 			for (const pr of checkLabels(a.blocks, a.labels, a.scale, a.fills, false))
-				out.push(`${a.title} b${pr.i} ${pr.kind}`);
+				// „abgeschnitten“ misst den festen Rand der Bildschirm-Ansicht. Auf einer Seite
+				// prüft `fitSquareSize` den Platz je Zelle, Kollisionen prüft der Rest hier.
+				if (pr.kind !== 'abgeschnitten') out.push(`${a.title} b${pr.i} ${pr.kind}`);
 		const tol = 0.5 / (a.scale * (SIDE / a.size));
 		for (const l of a.labels?.outside ?? []) {
 			const box = toPage(a, l.box);
