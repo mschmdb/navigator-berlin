@@ -56,11 +56,12 @@
 </script>
 
 <!--
-	Handbuch „Berlin in Quadraten“ (#190). Der Text kommt als Abschnitte aus dem Markdown
-	(`<!-- abschnitt: id -->`),
-die Seite stellt je Kapitel `s1` bis `s6` das passende Beispiel darunter. Aufbau nach runde-20-ux:
-eine linke Kante, Kapitel durch eine Linie getrennt, links Nummer und Titel, rechts Text, darunter
-das Beispiel mit seinen Steuerelementen direkt darüber. -->
+	Handbuch „Berlin in Quadraten“ (#190). Der Text kommt als Abschnitte aus dem Markdown,
+	getrennt durch Marker „abschnitt: id“ im HTML-Kommentar. Die Seite stellt je Kapitel s1 bis s6
+	das passende Beispiel darunter. Aufbau nach runde-20-ux: eine linke Kante, Kapitel durch eine
+	Linie getrennt, links Nummer und Titel, rechts Text, darunter das Beispiel mit seinen
+	Steuerelementen direkt darüber.
+-->
 
 <div
 	class="hb"
