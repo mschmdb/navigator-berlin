@@ -4,6 +4,7 @@
 	bei „Punkt, Linie, Kiez“. Gedacht für die Gesamtansicht (#191) und die Beitragsseite (#190).
 -->
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { trackEvent } from '$lib/utils/plausible.js';
 	import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien.js';
@@ -17,6 +18,7 @@
 	const { typ }: Props = $props();
 	const locale = $derived(getLocale());
 	const t = $derived(TEXTE[locale]);
+	const href = $derived(resolve(`/stories/berlin-in-quadraten/${locale}/alle-bezirke-${typ}.pdf`));
 </script>
 
 <a
@@ -28,7 +30,7 @@
 			wahl: typ,
 			sprache: locale
 		})}
-	href="/stories/berlin-in-quadraten/{locale}/alle-bezirke-{typ}.pdf"
+	{href}
 	download="berlin-in-quadraten-alle-bezirke-{typ}-{locale}.pdf"
 	class="inline-flex min-h-6 items-center border px-3 py-1 text-base font-semibold underline underline-offset-2"
 	style:border-color={STORY_INK}

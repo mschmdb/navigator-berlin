@@ -93,7 +93,7 @@ describe('wallPoster', () => {
 	it('beide Sprachen ohne NaN und ohne Gedankenstriche', () => {
 		for (const p of [agh, btw, wallPoster({ data: DATA, typ: 'agh', lang: 'en', fonts })]) {
 			expect(p.svg).not.toContain('NaN');
-			expect(p.svg).not.toMatch(/[–—·]/);
+			expect(p.svg).not.toMatch(/[\u2013\u2014\u00b7]/);
 		}
 	});
 

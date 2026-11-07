@@ -18,7 +18,8 @@ function load(weight: JostWeight): Font {
 	let f = fonts.get(weight);
 	if (!f) {
 		const created = create(readFileSync(jostFile(weight)));
-		if (!('layout' in created)) throw new TypeError(`Jost ${weight}: Schriftsammlung statt Schrift`);
+		if (!('layout' in created))
+			throw new TypeError(`Jost ${weight}: Schriftsammlung statt Schrift`);
 		f = created;
 		fonts.set(weight, f);
 	}

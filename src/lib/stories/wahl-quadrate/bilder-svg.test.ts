@@ -54,7 +54,7 @@ describe('socialSvg (1080 × 1350)', () => {
 						expect(q.y + q.size + e.bottom).toBeLessThanOrEqual(SOCIAL_SIZE.height);
 					}
 					expect(s.svg).not.toContain('NaN');
-					expect(s.svg).not.toMatch(/[–—·]/);
+					expect(s.svg).not.toMatch(/[\u2013\u2014\u00b7]/);
 				}
 	});
 
