@@ -22,6 +22,8 @@ export interface PlaceOptions {
 	/** Gezeichnete Füllung je Block, siehe `fillsFor`. */
 	fills: readonly (string | null)[];
 	exportMode?: boolean;
+	/** Jede Zahl im Block, keine Außenbeschriftung. */
+	insideOnly?: boolean;
 }
 
 export interface PlacedSquare extends SquareSpec {
@@ -56,7 +58,8 @@ export function placeSquare(
 				scale,
 				measure: opts.measure,
 				fills: opts.fills,
-				exportMode: opts.exportMode
+				exportMode: opts.exportMode,
+				insideOnly: opts.insideOnly
 			})
 		: null;
 	return { ...spec, x, y, size, scale, blocks, fills: opts.fills, labels };

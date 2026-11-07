@@ -33,10 +33,14 @@ describe('wallPoster', () => {
 
 	it('Titel, Untertitel und Wahlart', () => {
 		expect(agh.svg).toContain('>Berlin in Quadraten<');
-		expect(agh.svg).toContain('>Alle Bezirke, alle Wahlen<');
+		expect(agh.svg).toContain(
+			'>Alle Bezirke, alle Wahlen. Abgeordnetenhaus, Zweitstimmen 2011 bis 2026<'
+		);
 		expect(agh.svg).toContain('Abgeordnetenhaus');
 		expect(btw.svg).toContain('>Berlin in Squares<');
-		expect(btw.svg).toContain('>All districts, all elections<');
+		expect(btw.svg).toContain(
+			'>All districts, all elections. Bundestag, second votes 2013 to 2025<'
+		);
 		expect(btw.svg).toContain('Bundestag');
 	});
 
@@ -123,11 +127,13 @@ describe('wallPoster', () => {
 		expect(textOf(btw.svg)).toContain('Bundeswahlleiterin');
 	});
 
-	it('Prozentzahlen: keine Kollision, nichts außerhalb des Rasters', () => {
+	it('Prozentzahlen: alle im Block, keine Kollision, nichts außerhalb des Rasters', () => {
 		for (const p of [agh, btw]) {
 			expect(checkPage(p.squares).slice(0, 10)).toEqual([]);
 			const outside = p.squares.flatMap((s) => s.labels?.outside ?? []);
-			expect(outside.length).toBeGreaterThan(0);
+			expect(outside).toEqual([]);
+			// Gezeichnet wird, was berechnet ist: keine Linien zu Außenzahlen im SVG.
+			expect(p.svg).not.toMatch(/<path d="M[^"]*L/);
 			for (const s of p.squares) {
 				expect(s.x).toBeGreaterThanOrEqual(GRID.left);
 				expect(s.x + s.size).toBeLessThanOrEqual(GRID.right);
