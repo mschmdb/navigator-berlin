@@ -2,7 +2,7 @@
  * Plakat „Berlin in Quadraten: Alle Bezirke, alle Wahlen“ (#192) als SVG, 1000 × 1400
  * Einheiten für das Standardmaß 50 × 70 cm (1 Einheit = 0,5 mm). Das Raster aus 12 Bezirken
  * × allen Wahlen eines Typs ist das Bild: Quadrate so groß, wie 12 Zeilen in der Höhe
- * zulassen, Spaltenabstand gleich Zeilenabstand, das Raster mittig. Legende, Lesehilfe und
+ * zulassen, Spaltenabstand gleich Zeilenabstand, eine linke Kante mit Titel und Fußzeile. Legende, Lesehilfe und
  * Grau stehen klein in der Fußzeile. Jede Zahl steht im Block und ist mindestens 2 mm groß,
  * kleinere entfallen (die Bildschirmfassung zeigt sie).
  */
@@ -115,8 +115,8 @@ export function wallPoster(input: WallPosterInput): WallPoster {
 		)
 	);
 	const step = size + GAP;
-	// Raster mittig: Namensspalte plus Quadrate, links und rechts gleich viel Rand.
-	const left = (POSTER_WIDTH - (NAME_W + wahlen.length * step - GAP)) / 2;
+	// Eine linke Kante mit Titel und Fußzeile, der Weißraum liegt rechts.
+	const left = GRID.left;
 	const colX = (j: number): number => left + NAME_W + j * step;
 	const rowY = (i: number): number => GRID.top + i * step;
 
