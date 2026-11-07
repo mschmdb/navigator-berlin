@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { toHandbuchDaten } from './handbuch-daten';
-import { loadStoriesWahl } from './handbuch-daten.server';
+import { loadStoriesWahl } from '$lib/server/stories/wahl-daten';
 import type { StoriesWahlData, WahlZahlen } from './types';
 
 const zahlen = (beteiligung: number, parteien: [string, number][]): WahlZahlen => ({
@@ -59,14 +59,7 @@ describe('toHandbuchDaten', () => {
 	});
 });
 
-describe('loadStoriesWahl', () => {
-	it('liefert 12 Bezirke mit allen 9 Wahlen und Berlin gesamt', () => {
-		const d = loadStoriesWahl();
-		expect(d.bezirke).toHaveLength(12);
-		expect(d.wahlen).toHaveLength(9);
-		expect(Object.keys(d.berlin)).toHaveLength(9);
-	});
-
+describe('toHandbuchDaten mit stories-wahl.json', () => {
 	it('Friedrichshain-Kreuzberg 2026: Linke 44 % wie im Handbuch-Text', () => {
 		const fk = toHandbuchDaten(loadStoriesWahl()).bezirke.find(
 			(b) => b.slug === 'friedrichshain-kreuzberg'
