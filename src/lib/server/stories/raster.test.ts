@@ -1,6 +1,6 @@
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
-import { svgToPng } from './raster';
+import { svgToPng, ttfName } from './raster';
 
 const PAPER = '<rect width="200" height="100" fill="#efe6d2"/>';
 const svg = (inner: string): string =>
@@ -45,5 +45,14 @@ describe('svgToPng', () => {
 				)
 			);
 		expect(await ink(900)).toBeGreaterThan((await ink(400)) * 1.3);
+	});
+});
+
+describe('ttfName', () => {
+	it('hängt den Inhalt der Quelldatei an, damit neue Jost-Versionen neu entpackt werden', () => {
+		const a = ttfName(900, Buffer.from('jost v1'));
+		expect(a).toMatch(/^jost-latin-900-normal-[0-9a-f]{16}\.ttf$/);
+		expect(ttfName(900, Buffer.from('jost v1'))).toBe(a);
+		expect(ttfName(900, Buffer.from('jost v2'))).not.toBe(a);
 	});
 });
