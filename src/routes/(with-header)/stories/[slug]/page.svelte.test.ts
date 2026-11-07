@@ -1,7 +1,10 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import type { StoryEntry } from '$lib/content/stories/types.js';
+import raw from '../../../../../static/data/stories-wahl.json';
+import { toHandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
+import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
 import Page from './+page.svelte';
 
 const entry: StoryEntry = {
@@ -209,6 +212,51 @@ describe('stories/[slug]/+page.svelte · visual', () => {
 			expect(
 				root().querySelector('[data-testid="plk-auswahl-gross"] figcaption')?.textContent
 			).toBe('pankow');
+		} finally {
+			window.history.replaceState(null, '', window.location.pathname);
+		}
+	});
+});
+
+describe('stories/[slug]/+page.svelte · Berlin in Quadraten', () => {
+	const hbEntry: StoryEntry = {
+		...entry,
+		slug: 'berlin-in-quadraten',
+		frontmatter: {
+			...entry.frontmatter,
+			title: 'Berlin in Quadraten',
+			visual: 'berlin-in-quadraten'
+		}
+	};
+	const data = {
+		entry: hbEntry,
+		bodyHtmlBefore: '',
+		bodyHtml: '',
+		bodyIsDeFallback: false,
+		sections: [
+			{ id: null, heading: null, html: '<p>Lead.</p>' },
+			{ id: 's5', heading: 'Ein Bezirk über die Zeit', html: '<p>Wähle.</p>' }
+		],
+		handbuchDaten: toHandbuchDaten(raw as StoriesWahlData)
+	};
+
+	it('rendert das Handbuch statt des Textblocks, mit Breadcrumb und einem h1', () => {
+		render(Page, { data: data as never });
+		expect(root().querySelectorAll('h1')).toHaveLength(1);
+		expect(squash(root().querySelector('nav'))).toBe('Start › Data Stories › Berlin in Quadraten');
+		expect(root().querySelector('#s5 h2')?.textContent).toContain('Ein Bezirk über die Zeit');
+		expect(root().querySelector('[data-testid="stories-detail-body"]')).toBeNull();
+		expect(root().querySelector('[data-testid="stories-back-link"]')).not.toBeNull();
+	});
+
+	it('liest Bezirk und Wahl für Kapitel 5 aus der URL', async () => {
+		window.history.replaceState(null, '', '?bezirk=pankow&wahl5=btw');
+		try {
+			render(Page, { data: data as never });
+			await vi.waitFor(() =>
+				expect(root().querySelector<HTMLSelectElement>('#s5 select')?.value).toBe('pankow')
+			);
+			expect(root().querySelector('#s5 ol')?.children).toHaveLength(4);
 		} finally {
 			window.history.replaceState(null, '', window.location.pathname);
 		}
