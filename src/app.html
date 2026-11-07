@@ -48,6 +48,14 @@
 					embedded = true;
 				}
 				if (embedded) return;
+				// Bot-Guard (07.11., #184): Bots mit erkennbarem User-Agent oder
+				// webdriver zählen nicht (Reflectionbot führt JS aus, Fake-Sessions
+				// aus Ashburn). "bot/" statt "bot", sonst fallen Cubot-Handys raus.
+				if (
+					/bot\/|crawler|spider|headless/i.test(navigator.userAgent) ||
+					navigator.webdriver === true
+				)
+					return;
 				var s = document.createElement('script');
 				s.defer = true;
 				s.dataset.domain = 'navigator.berlin';
