@@ -5,7 +5,11 @@ import { overwriteGetLocale } from '$lib/paraglide/runtime';
 import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
 import raw from '../../../../../static/data/stories-wahl.json';
 
-vi.mock('$app/navigation', () => ({ replaceState: vi.fn() }));
+const nav = vi.hoisted(() => ({ after: [] as (() => void)[] }));
+vi.mock('$app/navigation', () => ({
+	replaceState: vi.fn(),
+	afterNavigate: (fn: () => void) => nav.after.push(fn)
+}));
 vi.mock('$app/state', () => ({ page: { state: {} } }));
 
 const { default: AlleBezirke } = await import('./alle-bezirke.svelte');
@@ -18,13 +22,20 @@ const writeUrl = (href: string): void => {
 	writes.push(href);
 };
 
+const BASE = 'https://navigator.berlin/stories/berlin-in-quadraten';
+
 function mount(href = '', width = 1400) {
 	const target = document.createElement('div');
 	target.style.width = `${width}px`;
 	document.body.append(target);
-	const url = new URL(href, 'https://navigator.berlin/stories/berlin-in-quadraten');
+	let url = new URL(href, BASE);
 	const r = render(AlleBezirke, { target, props: { data, readUrl: () => url, writeUrl } });
-	return { ...r, target };
+	/** Simuliert eine Client-Navigation auf derselben Seite, etwa einen Deep-Link im Text. */
+	const navigate = (next: string): void => {
+		url = new URL(next, BASE);
+		nav.after.forEach((fn) => fn());
+	};
+	return { ...r, target, navigate };
 }
 
 const squares = (c: HTMLElement): SVGSVGElement[] => [
@@ -36,6 +47,7 @@ const status = (): string => document.querySelector('.bq-wsum[role="status"]')?.
 
 beforeEach(async () => {
 	writes = [];
+	nav.after = [];
 	await page.viewport(1440, 900);
 });
 afterEach(() => {
@@ -77,6 +89,15 @@ describe('alle-bezirke.svelte', () => {
 		expect(status()).toContain('Piraten hervorgehoben');
 		const sort = page.getByLabelText('Bezirke sortieren').element() as HTMLSelectElement;
 		expect([...sort.options].map((o) => o.text)).toContain('Nach Anteil Piraten');
+	});
+
+	it('folgt Deep-Links, die auf derselben Seite navigieren', async () => {
+		const { navigate } = mount();
+		navigate('?hl=fdp#s6');
+		await vi.waitFor(() => expect(pressed('FDP')).toBe('true'));
+		navigate('?hl=piraten#s6');
+		await vi.waitFor(() => expect(pressed('Piraten')).toBe('true'));
+		expect(pressed('FDP')).toBe('false');
 	});
 
 	it('hebt eine Partei per Klick hervor und schreibt die URL mit Kapitel', async () => {
@@ -165,6 +186,13 @@ describe('alle-bezirke.svelte', () => {
 			'Charlottenburg-Wilmersdorf, Abgeordnetenhaus 2011'
 		);
 		expect(target.querySelectorAll('.bq-quadrat table')).toHaveLength(0);
+		const cells = (row: Element): string[] => [...row.children].map((c) => c.textContent ?? '');
+		const head = cells(el.querySelector('thead tr')!);
+		const bsw = head.indexOf('BSW');
+		const fdp = head.indexOf('FDP');
+		// 2011 gab es kein BSW; die FDP lag in Charlottenburg-Wilmersdorf unter 5 %.
+		expect(cells(first)[bsw]).toBe('nicht einzeln ausgewiesen');
+		expect(cells(first)[fdp]).toBe('im Grau');
 	});
 
 	it('scrollt schmal nicht seitwärts, Namen stehen über ihrer Reihe, Zahlen nur im Block', async () => {

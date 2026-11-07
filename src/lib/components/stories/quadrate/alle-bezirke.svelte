@@ -7,7 +7,7 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { replaceState } from '$app/navigation';
+	import { afterNavigate, replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 	import { m } from '$lib/paraglide/messages.js';
 	import {
@@ -58,9 +58,13 @@
 	let box = $state<HTMLDivElement>();
 	let fade = $state(false);
 
-	onMount(() => {
+	const lesen = (): void => {
 		s = parseUrlState(readUrl()).gesamt;
-	});
+	};
+	onMount(lesen);
+	// Deep-Links im selben Beitrag (z. B. `?hl=piraten#s6`) navigieren ohne neuen Mount.
+	// Eigene Schreibvorgänge laufen über replaceState und lösen afterNavigate nicht aus.
+	afterNavigate(lesen);
 
 	function commit(next: GesamtState): void {
 		s = next;
