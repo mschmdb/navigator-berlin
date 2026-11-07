@@ -1,0 +1,6637 @@
+{
+	"schemaVersion": 1,
+	"generatedAt": "2026-11-07T11:35:12.145Z",
+	"stimmtyp": "zweitstimme",
+	"wahlen": [
+		{
+			"slug": "agh11",
+			"typ": "agh",
+			"jahr": 2011,
+			"wiederholung": false,
+			"vorlaeufig": false,
+			"quelle": "https://download.statistik-berlin-brandenburg.de/d9502c352fcd146a/fbe7434dddd2/DL_BE_AB2011.xlsx",
+			"lizenz": "dl-de/by-2.0"
+		},
+		{
+			"slug": "agh16",
+			"typ": "agh",
+			"jahr": 2016,
+			"wiederholung": false,
+			"vorlaeufig": false,
+			"quelle": "https://download.statistik-berlin-brandenburg.de/9a30c44fd09550bd/08c09bad46f6/DL_BE_EE_WB_AH2016.xlsx",
+			"lizenz": "dl-de/by-2.0"
+		},
+		{
+			"slug": "agh21",
+			"typ": "agh",
+			"jahr": 2021,
+			"wiederholung": false,
+			"vorlaeufig": false,
+			"quelle": "https://download.statistik-berlin-brandenburg.de/641b9780548f801f/c1f241717b0f/DL_BE_AGHBVV2021.xlsx",
+			"lizenz": "dl-de/by-2.0"
+		},
+		{
+			"slug": "agh23",
+			"typ": "agh",
+			"jahr": 2023,
+			"wiederholung": true,
+			"vorlaeufig": false,
+			"quelle": "https://download.statistik-berlin-brandenburg.de/c6fffa8361dd1404/a8cc1bc593d9/DL_BE_AGHBVV2023.xlsx",
+			"lizenz": "dl-de/by-2.0"
+		},
+		{
+			"slug": "agh26",
+			"typ": "agh",
+			"jahr": 2026,
+			"wiederholung": false,
+			"vorlaeufig": false,
+			"quelle": "https://www.wahlen-berlin.de/wahlen/BE2026/Afspraes/AGH/Datenexport_AGH2026_Zweitstimme_W_BE.csv",
+			"lizenz": "dl-de/by-2.0"
+		},
+		{
+			"slug": "btw13",
+			"typ": "btw",
+			"jahr": 2013,
+			"wiederholung": false,
+			"vorlaeufig": false,
+			"quelle": "https://bundeswahlleiterin.de/dam/jcr/0ad35576-0c4b-4fa5-85f5-284618b8fa25/btw13_wbz.zip",
+			"lizenz": "dl-de/by-2.0"
+		},
+		{
+			"slug": "btw17",
+			"typ": "btw",
+			"jahr": 2017,
+			"wiederholung": false,
+			"vorlaeufig": false,
+			"quelle": "https://bundeswahlleiterin.de/dam/jcr/a2eef6bd-0225-447c-9943-7af0f46c94d1/btw17_wbz.zip",
+			"lizenz": "dl-de/by-2.0"
+		},
+		{
+			"slug": "btw21",
+			"typ": "btw",
+			"jahr": 2021,
+			"wiederholung": false,
+			"vorlaeufig": false,
+			"quelle": "https://bundeswahlleiterin.de/dam/jcr/c2cd99e6-064e-4ebc-b634-f86b5c0e14b3/btw21_wbz.zip",
+			"lizenz": "dl-de/by-2.0"
+		},
+		{
+			"slug": "btw25",
+			"typ": "btw",
+			"jahr": 2025,
+			"wiederholung": false,
+			"vorlaeufig": false,
+			"quelle": "https://bundeswahlleiterin.de/dam/jcr/e79a7bd3-0607-4e87-9752-8e601e299e00/btw25_wbz.zip",
+			"lizenz": "dl-de/by-2.0"
+		}
+	],
+	"bezirke": [
+		{
+			"nr": "01",
+			"slug": "mitte",
+			"name": "Mitte",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 197148,
+					"waehlende": 110275,
+					"gueltig": 108367,
+					"wahlbeteiligung": 0.559351350254631,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 31057,
+							"anteil": 0.2865909363551635
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 24331,
+							"anteil": 0.2245240709810182
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 19348,
+							"anteil": 0.17854143789160906
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 11891,
+							"anteil": 0.10972897653344653
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 11333,
+							"anteil": 0.10457980750597506
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 7113,
+							"anteil": 0.06563806324803677
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 1880,
+							"anteil": 0.017348454787896685
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1414,
+							"anteil": 0.013048252696854208
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 204769,
+					"waehlende": 128151,
+					"gueltig": 126106,
+					"wahlbeteiligung": 0.6258320351225038,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 27172,
+							"anteil": 0.21546952563716237
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 26901,
+							"anteil": 0.2133205398632896
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 22154,
+							"anteil": 0.17567760455489825
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 17076,
+							"anteil": 0.13540989326439662
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 12480,
+							"anteil": 0.09896436331340301
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 8333,
+							"anteil": 0.0660793300873868
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 7232,
+							"anteil": 0.05734857976622841
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 2887,
+							"anteil": 0.022893438853028403
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1871,
+							"anteil": 0.014836724660206493
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 204255,
+					"waehlende": 150329,
+					"gueltig": 148699,
+					"wahlbeteiligung": 0.7359868791461653,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 39032,
+							"anteil": 0.2624899965702527
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 27895,
+							"anteil": 0.18759372961485954
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 26063,
+							"anteil": 0.17527353916300714
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 18315,
+							"anteil": 0.12316827954458336
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 15669,
+							"anteil": 0.10537394333519391
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10618,
+							"anteil": 0.07140599466035413
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7260,
+							"anteil": 0.04882346216181682
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2430,
+							"anteil": 0.016341737335153567
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 754,
+							"anteil": 0.005070646070249296
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 663,
+							"anteil": 0.004458671544529553
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 203886,
+					"waehlende": 120218,
+					"gueltig": 119268,
+					"wahlbeteiligung": 0.5896334225989033,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 32445,
+							"anteil": 0.2720344099003924
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 24133,
+							"anteil": 0.20234262333568098
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 19746,
+							"anteil": 0.16555991548445517
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 18898,
+							"anteil": 0.15844987758661166
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8323,
+							"anteil": 0.0697840158298957
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 6720,
+							"anteil": 0.05634369654894859
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6062,
+							"anteil": 0.05082670959519737
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2319,
+							"anteil": 0.019443605996579134
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 458,
+							"anteil": 0.003840091223127746
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 164,
+							"anteil": 0.0013750544991112453
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 211894,
+					"waehlende": 151564,
+					"gueltig": 150194,
+					"wahlbeteiligung": 0.7152821693865801,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 53837,
+							"anteil": 0.35844973833841565
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 27393,
+							"anteil": 0.1823841165426049
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 21164,
+							"anteil": 0.14091108832576535
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 16597,
+							"anteil": 0.11050374848529236
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 13379,
+							"anteil": 0.0890781256241927
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 6470,
+							"anteil": 0.04307761961196852
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5827,
+							"anteil": 0.03879648987309746
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3508,
+							"anteil": 0.023356458979719563
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2019,
+							"anteil": 0.013442614218943499
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 204085,
+					"waehlende": 141574,
+					"gueltig": 139400,
+					"wahlbeteiligung": 0.6937011539309601,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 36403,
+							"anteil": 0.26114060258249644
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 31544,
+							"anteil": 0.22628407460545194
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 26068,
+							"anteil": 0.18700143472022956
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 23329,
+							"anteil": 0.1673529411764706
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 6608,
+							"anteil": 0.04740315638450502
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 5443,
+							"anteil": 0.03904591104734577
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 5134,
+							"anteil": 0.036829268292682925
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4567,
+							"anteil": 0.03276183644189383
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 304,
+							"anteil": 0.0021807747489239596
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 206706,
+					"waehlende": 151412,
+					"gueltig": 149443,
+					"wahlbeteiligung": 0.7324992985206041,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 32118,
+							"anteil": 0.21491806240506414
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 27861,
+							"anteil": 0.18643228521911365
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 26788,
+							"anteil": 0.17925229017083436
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 25708,
+							"anteil": 0.17202545452112178
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 12972,
+							"anteil": 0.08680232597043688
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 12289,
+							"anteil": 0.08223202157344271
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8365,
+							"anteil": 0.055974518712820276
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1777,
+							"anteil": 0.011890821249573415
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 1229,
+							"anteil": 0.00822387130879332
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 336,
+							"anteil": 0.0022483488687994753
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 207010,
+					"waehlende": 140655,
+					"gueltig": 138799,
+					"wahlbeteiligung": 0.6794599294720062,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 42486,
+							"anteil": 0.30609730617655745
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 28881,
+							"anteil": 0.20807786799616712
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 19610,
+							"anteil": 0.14128343864148876
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 16526,
+							"anteil": 0.11906425838802873
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 11040,
+							"anteil": 0.07953947795012932
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8648,
+							"anteil": 0.06230592439426797
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7810,
+							"anteil": 0.056268416919430256
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2473,
+							"anteil": 0.01781713124734328
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 746,
+							"anteil": 0.005374678491919971
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 579,
+							"anteil": 0.0041714997946671085
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 207445,
+					"waehlende": 161865,
+					"gueltig": 160986,
+					"wahlbeteiligung": 0.7802791101255755,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 43614,
+							"anteil": 0.270917968022064
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 34920,
+							"anteil": 0.21691327196153704
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 24189,
+							"anteil": 0.15025530170325369
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 21678,
+							"anteil": 0.1346576720957102
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 14291,
+							"anteil": 0.0887716944330563
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 9794,
+							"anteil": 0.060837588361720894
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6422,
+							"anteil": 0.039891667598424704
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4223,
+							"anteil": 0.026232094716310734
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1558,
+							"anteil": 0.009677860186600077
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 297,
+							"anteil": 0.001844880921322351
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "02",
+			"slug": "friedrichshain-kreuzberg",
+			"name": "Friedrichshain-Kreuzberg",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 171249,
+					"waehlende": 106518,
+					"gueltig": 104921,
+					"wahlbeteiligung": 0.6220065518630765,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 31748,
+							"anteil": 0.3025895673887973
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 25107,
+							"anteil": 0.23929432620733695
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 15387,
+							"anteil": 0.14665319621429457
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 13590,
+							"anteil": 0.12952602434212407
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 8785,
+							"anteil": 0.08372966327046064
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 7965,
+							"anteil": 0.07591425929985418
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1296,
+							"anteil": 0.012352150665738984
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 1043,
+							"anteil": 0.009940812611393334
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 170908,
+					"waehlende": 117022,
+					"gueltig": 115605,
+					"wahlbeteiligung": 0.6847075619631615,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 32778,
+							"anteil": 0.28353444920202414
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 27016,
+							"anteil": 0.2336923143462653
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 21087,
+							"anteil": 0.18240560529388866
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 9053,
+							"anteil": 0.07830976168850828
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8376,
+							"anteil": 0.07245361359802777
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7396,
+							"anteil": 0.0639764716058994
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4517,
+							"anteil": 0.03907270446779983
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 3629,
+							"anteil": 0.03139137580554474
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1753,
+							"anteil": 0.015163703992041866
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 168102,
+					"waehlende": 132435,
+					"gueltig": 131090,
+					"wahlbeteiligung": 0.787825248955991,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 42374,
+							"anteil": 0.3232435731177054
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 30997,
+							"anteil": 0.2364558700129682
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 19766,
+							"anteil": 0.1507819055610649
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 14270,
+							"anteil": 0.10885651079411092
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 9917,
+							"anteil": 0.0756503165763979
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6241,
+							"anteil": 0.047608513235181935
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 4128,
+							"anteil": 0.03148981615683881
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2198,
+							"anteil": 0.01676710656800671
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 655,
+							"anteil": 0.004996567243878251
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 544,
+							"anteil": 0.004149820733846976
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 167015,
+					"waehlende": 107749,
+					"gueltig": 107104,
+					"wahlbeteiligung": 0.6451456456006945,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 35905,
+							"anteil": 0.3352349118613684
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 22558,
+							"anteil": 0.2106177173588288
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 15682,
+							"anteil": 0.14641843441888258
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 14317,
+							"anteil": 0.13367381236928594
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8452,
+							"anteil": 0.07891395279354646
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 3935,
+							"anteil": 0.036739991036749325
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3558,
+							"anteil": 0.03322004780400359
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2131,
+							"anteil": 0.019896549148491188
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 442,
+							"anteil": 0.00412682999701225
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 124,
+							"anteil": 0.0011577532118314908
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 171438,
+					"waehlende": 132461,
+					"gueltig": 131446,
+					"wahlbeteiligung": 0.7726466710997562,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 58144,
+							"anteil": 0.44234134169164524
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 27238,
+							"anteil": 0.20721817324224395
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 12553,
+							"anteil": 0.09549929248512697
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 11506,
+							"anteil": 0.0875340443984602
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7885,
+							"anteil": 0.05998661047122012
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5367,
+							"anteil": 0.04083045509182478
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 5027,
+							"anteil": 0.038243841577529934
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2071,
+							"anteil": 0.015755519376778295
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1655,
+							"anteil": 0.012590721665170489
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 174325,
+					"waehlende": 129367,
+					"gueltig": 127512,
+					"wahlbeteiligung": 0.7421023949519575,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 31294,
+							"anteil": 0.24542003889829977
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 30919,
+							"anteil": 0.24247913921826966
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 28361,
+							"anteil": 0.2224182822008909
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 17970,
+							"anteil": 0.1409279126670431
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 7836,
+							"anteil": 0.06145303971390928
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4868,
+							"anteil": 0.038176799046364264
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 3322,
+							"anteil": 0.026052449965493444
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2586,
+							"anteil": 0.020280444193487672
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 356,
+							"anteil": 0.0027918940962419225
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 172386,
+					"waehlende": 133173,
+					"gueltig": 131997,
+					"wahlbeteiligung": 0.7725279315025582,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 38516,
+							"anteil": 0.29179451048129884
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 28368,
+							"anteil": 0.21491397531762085
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 21042,
+							"anteil": 0.15941271392531647
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 17154,
+							"anteil": 0.12995749903406895
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9356,
+							"anteil": 0.07088039879694236
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7461,
+							"anteil": 0.05652401190936158
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7170,
+							"anteil": 0.0543194163503716
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1607,
+							"anteil": 0.012174519117858738
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 1083,
+							"anteil": 0.008204731925725585
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 240,
+							"anteil": 0.0018182231414350326
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 169836,
+					"waehlende": 122900,
+					"gueltig": 121651,
+					"wahlbeteiligung": 0.7236392755363998,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 46433,
+							"anteil": 0.3816902450452524
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 22903,
+							"anteil": 0.18826807835529508
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 21600,
+							"anteil": 0.17755711009362848
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 8673,
+							"anteil": 0.07129411184453889
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 7502,
+							"anteil": 0.06166821481122227
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6693,
+							"anteil": 0.055018043419289606
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 4720,
+							"anteil": 0.03879951665008919
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2071,
+							"anteil": 0.017024109953884474
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 543,
+							"anteil": 0.004463588462075938
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 513,
+							"anteil": 0.0042169813647236765
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 169289,
+					"waehlende": 139600,
+					"gueltig": 139018,
+					"wahlbeteiligung": 0.8246253448245309,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 46387,
+							"anteil": 0.3336762145909163
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 36883,
+							"anteil": 0.2653109669251464
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 18613,
+							"anteil": 0.1338891366585622
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 11907,
+							"anteil": 0.08565077903580831
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 8466,
+							"anteil": 0.06089858867197054
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 7887,
+							"anteil": 0.0567336603893021
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3802,
+							"anteil": 0.027348976391546417
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3622,
+							"anteil": 0.02605418003424017
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1259,
+							"anteil": 0.00905638118804759
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 192,
+							"anteil": 0.001381116114459998
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "03",
+			"slug": "pankow",
+			"name": "Pankow",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 283368,
+					"waehlende": 172207,
+					"gueltig": 169595,
+					"wahlbeteiligung": 0.6077150560402022,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 49388,
+							"anteil": 0.29121141543087947
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 32369,
+							"anteil": 0.19086057961614433
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 30354,
+							"anteil": 0.178979333117132
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 23448,
+							"anteil": 0.1382587930068693
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 17767,
+							"anteil": 0.10476134319997642
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 11749,
+							"anteil": 0.06927680650962588
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2362,
+							"anteil": 0.01392729738494649
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2158,
+							"anteil": 0.012724431734426132
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 285240,
+					"waehlende": 199403,
+					"gueltig": 196521,
+					"wahlbeteiligung": 0.6990709577899313,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 42196,
+							"anteil": 0.21471496684832664
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 39583,
+							"anteil": 0.20141867790210716
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 35145,
+							"anteil": 0.17883584960385912
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 27152,
+							"anteil": 0.13816335149933087
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 24719,
+							"anteil": 0.12578299520153063
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 11566,
+							"anteil": 0.058853761175650436
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 8667,
+							"anteil": 0.04410215702138703
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 3938,
+							"anteil": 0.02003857094152788
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3555,
+							"anteil": 0.018089669806280243
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 282096,
+					"waehlende": 221060,
+					"gueltig": 219257,
+					"wahlbeteiligung": 0.7836339402189325,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 50990,
+							"anteil": 0.23255813953488372
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 40810,
+							"anteil": 0.18612860706841744
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 40281,
+							"anteil": 0.18371591328897138
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 27784,
+							"anteil": 0.12671887328568757
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 21282,
+							"anteil": 0.09706417583019014
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 17355,
+							"anteil": 0.07915368722549337
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 13461,
+							"anteil": 0.06139370692839909
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4474,
+							"anteil": 0.020405277824653262
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1882,
+							"anteil": 0.008583534391148288
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 938,
+							"anteil": 0.004278084622155735
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 280603,
+					"waehlende": 189607,
+					"gueltig": 188364,
+					"wahlbeteiligung": 0.6757126616607805,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 42410,
+							"anteil": 0.2251491792486887
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 40499,
+							"anteil": 0.21500392856384448
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 30465,
+							"anteil": 0.1617347263808371
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 30464,
+							"anteil": 0.16172941751077702
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 17977,
+							"anteil": 0.09543755707035315
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 13583,
+							"anteil": 0.07211038202628953
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7351,
+							"anteil": 0.039025503811768704
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4431,
+							"anteil": 0.02352360323628719
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 653,
+							"anteil": 0.003466692149242955
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 531,
+							"anteil": 0.0028190100019111933
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 291490,
+					"waehlende": 230212,
+					"gueltig": 228194,
+					"wahlbeteiligung": 0.789776664722632,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 64190,
+							"anteil": 0.281295739589998
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 41038,
+							"anteil": 0.17983820784069696
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 35269,
+							"anteil": 0.15455708739055365
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 32173,
+							"anteil": 0.14098968421606178
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 24317,
+							"anteil": 0.10656283688440538
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 11351,
+							"anteil": 0.04974276273696942
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 10137,
+							"anteil": 0.04442272802965897
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4962,
+							"anteil": 0.02174465586299377
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4757,
+							"anteil": 0.020846297448662104
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 287259,
+					"waehlende": 213742,
+					"gueltig": 211002,
+					"wahlbeteiligung": 0.7440741630375376,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 53817,
+							"anteil": 0.2550544544601473
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 48121,
+							"anteil": 0.2280594496734628
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 46895,
+							"anteil": 0.2222490782077895
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 30359,
+							"anteil": 0.14388015279476024
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 9673,
+							"anteil": 0.04584316736334253
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 8543,
+							"anteil": 0.04048776788845603
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 7435,
+							"anteil": 0.03523663282812485
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 5373,
+							"anteil": 0.025464213609349674
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 786,
+							"anteil": 0.003725083174567066
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 288112,
+					"waehlende": 228615,
+					"gueltig": 226399,
+					"wahlbeteiligung": 0.7934935025267952,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 54274,
+							"anteil": 0.2397272072756505
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 43727,
+							"anteil": 0.19314131246162747
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 35534,
+							"anteil": 0.1569529900750445
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 33360,
+							"anteil": 0.14735047416287175
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 27008,
+							"anteil": 0.11929381313521703
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 15007,
+							"anteil": 0.06628562847009041
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 12668,
+							"anteil": 0.05595431075225597
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2989,
+							"anteil": 0.013202355134077448
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 1057,
+							"anteil": 0.004668748536875163
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 775,
+							"anteil": 0.0034231599962897363
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 282057,
+					"waehlende": 163969,
+					"gueltig": 162460,
+					"wahlbeteiligung": 0.5813328511612901,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 43550,
+							"anteil": 0.2680659854733473
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 25772,
+							"anteil": 0.15863597193155238
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 24971,
+							"anteil": 0.1537055275144651
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 24116,
+							"anteil": 0.1484426935861135
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 22085,
+							"anteil": 0.13594115474578358
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9371,
+							"anteil": 0.057681890926997416
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6073,
+							"anteil": 0.03738150929459559
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4549,
+							"anteil": 0.028000738643358364
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1224,
+							"anteil": 0.007534162255324387
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 749,
+							"anteil": 0.004610365628462391
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 284832,
+					"waehlende": 240341,
+					"gueltig": 239256,
+					"wahlbeteiligung": 0.8437991517806988,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 53850,
+							"anteil": 0.22507272544889156
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 48556,
+							"anteil": 0.2029457986424583
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 35607,
+							"anteil": 0.14882385394723643
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 33443,
+							"anteil": 0.13977914869428562
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 31571,
+							"anteil": 0.13195489350319323
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 17882,
+							"anteil": 0.07474002741833016
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7943,
+							"anteil": 0.03319874945664895
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6257,
+							"anteil": 0.026151904236466378
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3291,
+							"anteil": 0.013755140936904404
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 856,
+							"anteil": 0.00357775771558498
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "04",
+			"slug": "charlottenburg-wilmersdorf",
+			"name": "Charlottenburg-Wilmersdorf",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 216762,
+					"waehlende": 141120,
+					"gueltig": 138849,
+					"wahlbeteiligung": 0.6510366208099205,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 43323,
+							"anteil": 0.3120152107685327
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 39169,
+							"anteil": 0.2820978184934713
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 30142,
+							"anteil": 0.2170847467392635
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 9721,
+							"anteil": 0.07001130724744146
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5581,
+							"anteil": 0.04019474393045683
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 5015,
+							"anteil": 0.036118373196782114
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4196,
+							"anteil": 0.030219879149291678
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1702,
+							"anteil": 0.012257920474760351
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 217586,
+					"waehlende": 152279,
+					"gueltig": 150208,
+					"wahlbeteiligung": 0.6998566084214977,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 34318,
+							"anteil": 0.2284698551342139
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 30545,
+							"anteil": 0.20335135279079677
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 27822,
+							"anteil": 0.1852231572219855
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 18454,
+							"anteil": 0.1228563059224542
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 15431,
+							"anteil": 0.1027308798466127
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 13922,
+							"anteil": 0.09268481039625054
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5350,
+							"anteil": 0.03561727737537282
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2363,
+							"anteil": 0.015731518960374946
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 2003,
+							"anteil": 0.013334842351938644
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 215247,
+					"waehlende": 168907,
+					"gueltig": 166529,
+					"wahlbeteiligung": 0.7847124466310796,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 37882,
+							"anteil": 0.22747989839607516
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 37651,
+							"anteil": 0.22609275261365888
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 34936,
+							"anteil": 0.20978928595019486
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 17273,
+							"anteil": 0.1037236757561746
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 14372,
+							"anteil": 0.08630328651466111
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 12237,
+							"anteil": 0.07348269670748038
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7935,
+							"anteil": 0.047649358370013634
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2590,
+							"anteil": 0.015552846651334003
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1137,
+							"anteil": 0.006827639630334657
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 516,
+							"anteil": 0.00309855941007272
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 214149,
+					"waehlende": 142157,
+					"gueltig": 141148,
+					"wahlbeteiligung": 0.6638228523131091,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 43134,
+							"anteil": 0.30559412814917675
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 30419,
+							"anteil": 0.21551137812792245
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 29232,
+							"anteil": 0.20710176552271375
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 10834,
+							"anteil": 0.07675631252302548
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10324,
+							"anteil": 0.07314308385524414
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7439,
+							"anteil": 0.05270354521495168
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6751,
+							"anteil": 0.047829228894493724
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2397,
+							"anteil": 0.01698217473857228
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 374,
+							"anteil": 0.0026497010230396465
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 244,
+							"anteil": 0.00172868195086009
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 218378,
+					"waehlende": 166420,
+					"gueltig": 165014,
+					"wahlbeteiligung": 0.7620731026019104,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 41885,
+							"anteil": 0.25382694801653194
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 32786,
+							"anteil": 0.19868617208236877
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 29856,
+							"anteil": 0.18093010290035996
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 24494,
+							"anteil": 0.14843589028809676
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 16056,
+							"anteil": 0.09730083508065983
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6518,
+							"anteil": 0.039499678815130834
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5578,
+							"anteil": 0.03380319245639764
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 5387,
+							"anteil": 0.03264571490903802
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2454,
+							"anteil": 0.014871465451416243
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 220176,
+					"waehlende": 168597,
+					"gueltig": 166547,
+					"wahlbeteiligung": 0.7657374100719424,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 53851,
+							"anteil": 0.32333815679657996
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 45274,
+							"anteil": 0.2718391805316217
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 25129,
+							"anteil": 0.1508823335154641
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 15249,
+							"anteil": 0.09155973989324336
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10885,
+							"anteil": 0.06535692627306405
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 8026,
+							"anteil": 0.04819060085141132
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 4423,
+							"anteil": 0.02655706797480591
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3162,
+							"anteil": 0.018985631683548786
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 548,
+							"anteil": 0.0032903624802608274
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 220328,
+					"waehlende": 173125,
+					"gueltig": 171499,
+					"wahlbeteiligung": 0.7857603209759995,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 43447,
+							"anteil": 0.25333675415017
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 33585,
+							"anteil": 0.19583204566790477
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 26589,
+							"anteil": 0.15503880489099062
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 24752,
+							"anteil": 0.14432737217126632
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 20239,
+							"anteil": 0.11801234992623864
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 14299,
+							"anteil": 0.0833765794552738
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5816,
+							"anteil": 0.03391273418503898
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1716,
+							"anteil": 0.010005889247167622
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 808,
+							"anteil": 0.004711397734097575
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 248,
+							"anteil": 0.001446072571851731
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 216244,
+					"waehlende": 144852,
+					"gueltig": 143228,
+					"wahlbeteiligung": 0.6698544237065537,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 37537,
+							"anteil": 0.2620786438405898
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 31716,
+							"anteil": 0.2214371491607786
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 31193,
+							"anteil": 0.21778562850839223
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 14813,
+							"anteil": 0.10342251515066886
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 9468,
+							"anteil": 0.06610439299578295
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 9110,
+							"anteil": 0.06360488172703661
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5593,
+							"anteil": 0.039049627167872206
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2469,
+							"anteil": 0.01723824950428687
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 867,
+							"anteil": 0.006053285670399642
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 462,
+							"anteil": 0.0032256262741921973
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 215705,
+					"waehlende": 177354,
+					"gueltig": 176509,
+					"wahlbeteiligung": 0.8222062539115922,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 40105,
+							"anteil": 0.22721221014225904
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 37374,
+							"anteil": 0.21173991127931155
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 31626,
+							"anteil": 0.17917499957509248
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 26209,
+							"anteil": 0.14848534635627644
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 16600,
+							"anteil": 0.0940461959446827
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10928,
+							"anteil": 0.06191185718575257
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 7948,
+							"anteil": 0.04502886538363483
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3694,
+							"anteil": 0.020928111314437225
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1734,
+							"anteil": 0.009823861672775892
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 291,
+							"anteil": 0.0016486411457772691
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "05",
+			"slug": "spandau",
+			"name": "Spandau",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 162922,
+					"waehlende": 94533,
+					"gueltig": 92543,
+					"wahlbeteiligung": 0.5802347135439044,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 31652,
+							"anteil": 0.34202478847670814
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 29294,
+							"anteil": 0.31654474136347427
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 11538,
+							"anteil": 0.12467717709605265
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 6798,
+							"anteil": 0.07345774396766909
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6298,
+							"anteil": 0.0680548501777552
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 3454,
+							"anteil": 0.03732319030072507
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 1900,
+							"anteil": 0.020530996401672736
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1609,
+							"anteil": 0.01738651221594286
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 162760,
+					"waehlende": 103431,
+					"gueltig": 101145,
+					"wahlbeteiligung": 0.6354816908331286,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 27740,
+							"anteil": 0.27425972613574573
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 24835,
+							"anteil": 0.24553858322210687
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 16748,
+							"anteil": 0.16558406248455187
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 8779,
+							"anteil": 0.0867961836966731
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7703,
+							"anteil": 0.07615799100301547
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 6726,
+							"anteil": 0.06649859113154383
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4804,
+							"anteil": 0.04749616886647882
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2412,
+							"anteil": 0.023846952395076376
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 1398,
+							"anteil": 0.01382174106480795
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 158696,
+					"waehlende": 112059,
+					"gueltig": 109834,
+					"wahlbeteiligung": 0.7061236578111609,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 29178,
+							"anteil": 0.26565544366953764
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 28226,
+							"anteil": 0.25698781797986053
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12749,
+							"anteil": 0.11607516798077099
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 10978,
+							"anteil": 0.09995083489629805
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9452,
+							"anteil": 0.08605714077608026
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 8514,
+							"anteil": 0.07751698017007484
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 6162,
+							"anteil": 0.05610284611322541
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3240,
+							"anteil": 0.02949906222117013
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 870,
+							"anteil": 0.0079210444853142
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 465,
+							"anteil": 0.004233661707667935
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 157093,
+					"waehlende": 89377,
+					"gueltig": 88357,
+					"wahlbeteiligung": 0.5689432374453349,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 34531,
+							"anteil": 0.3908122729381939
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 19002,
+							"anteil": 0.21505936145410098
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 9712,
+							"anteil": 0.1099177201579954
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 8935,
+							"anteil": 0.10112384983645892
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4603,
+							"anteil": 0.05209547630634811
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4045,
+							"anteil": 0.04578018719512885
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 3989,
+							"anteil": 0.045146394739522616
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3038,
+							"anteil": 0.03438324071663818
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 318,
+							"anteil": 0.0035990357300496848
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 184,
+							"anteil": 0.0020824609255633395
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 159860,
+					"waehlende": 109470,
+					"gueltig": 107731,
+					"wahlbeteiligung": 0.6847866883523083,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 26295,
+							"anteil": 0.24408016262728463
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 22930,
+							"anteil": 0.21284495641922938
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 17564,
+							"anteil": 0.16303570931301112
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 16404,
+							"anteil": 0.15226814937204705
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 9679,
+							"anteil": 0.08984414885223381
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 5011,
+							"anteil": 0.046514002469112886
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3349,
+							"anteil": 0.03108668813990402
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3335,
+							"anteil": 0.030956734830271695
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3164,
+							"anteil": 0.029369447976905442
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 164984,
+					"waehlende": 115308,
+					"gueltig": 112964,
+					"wahlbeteiligung": 0.6989041361586578,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 42191,
+							"anteil": 0.3734906695938529
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 32716,
+							"anteil": 0.2896143904252682
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 10343,
+							"anteil": 0.09156014305442442
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 8737,
+							"anteil": 0.07734322439007117
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 6708,
+							"anteil": 0.05938174993803336
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4318,
+							"anteil": 0.03822456711872809
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4083,
+							"anteil": 0.03614425834779222
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 3409,
+							"anteil": 0.030177755745193158
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 459,
+							"anteil": 0.004063241386636451
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 162952,
+					"waehlende": 117918,
+					"gueltig": 115895,
+					"wahlbeteiligung": 0.7236364082674652,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 33350,
+							"anteil": 0.28776047284179646
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 26499,
+							"anteil": 0.22864661978515036
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 16556,
+							"anteil": 0.14285344492859917
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 11455,
+							"anteil": 0.098839466758704
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 10908,
+							"anteil": 0.09411967729410242
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 9244,
+							"anteil": 0.0797618534017861
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4883,
+							"anteil": 0.04213296518400276
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1921,
+							"anteil": 0.016575348375684886
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 747,
+							"anteil": 0.006445489451658829
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 332,
+							"anteil": 0.002864661978515035
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 159238,
+					"waehlende": 111246,
+					"gueltig": 108526,
+					"wahlbeteiligung": 0.6986146522814906,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 30031,
+							"anteil": 0.27671710004975764
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 24000,
+							"anteil": 0.22114516337098944
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 14857,
+							"anteil": 0.1368980705084496
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 11620,
+							"anteil": 0.10707111659878739
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10919,
+							"anteil": 0.10061183495199306
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6581,
+							"anteil": 0.06063984667268673
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 5244,
+							"anteil": 0.048320218196561196
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3860,
+							"anteil": 0.035567513775500804
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 998,
+							"anteil": 0.009195953043510311
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 416,
+							"anteil": 0.0038331828317638168
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 156335,
+					"waehlende": 118242,
+					"gueltig": 117219,
+					"wahlbeteiligung": 0.7563373524802507,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 28667,
+							"anteil": 0.24455932911899947
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 23034,
+							"anteil": 0.1965039797302485
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 21599,
+							"anteil": 0.1842619370579855
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 14331,
+							"anteil": 0.12225833695902541
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12373,
+							"anteil": 0.10555456026753342
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 6960,
+							"anteil": 0.059376039720523126
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4615,
+							"anteil": 0.03937075047560549
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 2769,
+							"anteil": 0.023622450285363295
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2493,
+							"anteil": 0.021267883192997723
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 378,
+							"anteil": 0.0032247331917180664
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "06",
+			"slug": "steglitz-zehlendorf",
+			"name": "Steglitz-Zehlendorf",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 217191,
+					"waehlende": 152018,
+					"gueltig": 149686,
+					"wahlbeteiligung": 0.6999277133951223,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 54140,
+							"anteil": 0.3616904720548348
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 37507,
+							"anteil": 0.25057119570300496
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 31536,
+							"anteil": 0.21068102561361784
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 9600,
+							"anteil": 0.0641342543724864
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6049,
+							"anteil": 0.04041126090616357
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4533,
+							"anteil": 0.030283393236508423
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 4512,
+							"anteil": 0.03014309955506861
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1809,
+							"anteil": 0.012085298558315407
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 218473,
+					"waehlende": 162844,
+					"gueltig": 160803,
+					"wahlbeteiligung": 0.7453735701894513,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 41065,
+							"anteil": 0.2553745887825476
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 34737,
+							"anteil": 0.216022089140128
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 26976,
+							"anteil": 0.16775806421521985
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 19051,
+							"anteil": 0.11847415782043867
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 17677,
+							"anteil": 0.10992954111552646
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 11152,
+							"anteil": 0.06935193995136907
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5170,
+							"anteil": 0.03215114145880363
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2733,
+							"anteil": 0.016995951568067758
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 2242,
+							"anteil": 0.013942525947898982
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 215825,
+					"waehlende": 175969,
+					"gueltig": 174337,
+					"wahlbeteiligung": 0.815331866095216,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 44265,
+							"anteil": 0.25390479358942736
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 39529,
+							"anteil": 0.22673901696140233
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 34524,
+							"anteil": 0.19803025175378722
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 19147,
+							"anteil": 0.10982751796807333
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 11985,
+							"anteil": 0.06874616403861486
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 10814,
+							"anteil": 0.06202928810292709
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 9158,
+							"anteil": 0.05253044391035753
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3030,
+							"anteil": 0.017380131584230542
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1249,
+							"anteil": 0.007164285263598662
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 636,
+							"anteil": 0.0036481068275810644
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 214308,
+					"waehlende": 152466,
+					"gueltig": 151478,
+					"wahlbeteiligung": 0.7114340108628703,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 53572,
+							"anteil": 0.35366191790226964
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 30587,
+							"anteil": 0.2019237116941074
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 27876,
+							"anteil": 0.18402672335256606
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 12043,
+							"anteil": 0.07950329420773974
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 8665,
+							"anteil": 0.057203026182019834
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 8324,
+							"anteil": 0.05495187419955373
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6852,
+							"anteil": 0.04523429144826312
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2796,
+							"anteil": 0.018458125932478645
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 442,
+							"anteil": 0.002917915472873949
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 321,
+							"anteil": 0.002119119608127913
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 217839,
+					"waehlende": 173493,
+					"gueltig": 171969,
+					"wahlbeteiligung": 0.7964276369245177,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 50916,
+							"anteil": 0.2960766184603039
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 29168,
+							"anteil": 0.1696119649471707
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 26762,
+							"anteil": 0.15562107123958388
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 26044,
+							"anteil": 0.15144590013316353
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 18832,
+							"anteil": 0.10950810901964889
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6586,
+							"anteil": 0.03829760014886404
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5832,
+							"anteil": 0.033913088986968584
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 5001,
+							"anteil": 0.029080822706418017
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2828,
+							"anteil": 0.016444824357878456
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 220007,
+					"waehlende": 175539,
+					"gueltig": 173437,
+					"wahlbeteiligung": 0.7978791583904149,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 64500,
+							"anteil": 0.3718929640157521
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 44371,
+							"anteil": 0.25583353033089823
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 23487,
+							"anteil": 0.13542093094322435
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 12426,
+							"anteil": 0.07164561195131373
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 11057,
+							"anteil": 0.06375225586235925
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 9257,
+							"anteil": 0.05337384756424523
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 4358,
+							"anteil": 0.025127279646211594
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3429,
+							"anteil": 0.019770867807907194
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 552,
+							"anteil": 0.0031827118780882973
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 221210,
+					"waehlende": 180720,
+					"gueltig": 178957,
+					"wahlbeteiligung": 0.816961258532616,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 53281,
+							"anteil": 0.29773073978665265
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 34279,
+							"anteil": 0.19154880781416764
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 25461,
+							"anteil": 0.14227440111311657
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 25361,
+							"anteil": 0.14171560765994065
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 16352,
+							"anteil": 0.0913739054633236
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 15824,
+							"anteil": 0.08842347603055482
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5570,
+							"anteil": 0.031124795341897774
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1846,
+							"anteil": 0.010315327145627162
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 651,
+							"anteil": 0.0036377453801751257
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 332,
+							"anteil": 0.0018551942645439966
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 217506,
+					"waehlende": 171803,
+					"gueltig": 169580,
+					"wahlbeteiligung": 0.7898770608626888,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 40677,
+							"anteil": 0.23986908833588866
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 39905,
+							"anteil": 0.23531666470102605
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 38460,
+							"anteil": 0.22679561269017573
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 20813,
+							"anteil": 0.12273263356527893
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 10036,
+							"anteil": 0.05918150725321382
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 8076,
+							"anteil": 0.047623540511852816
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6396,
+							"anteil": 0.03771671187640052
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3326,
+							"anteil": 0.019613161929472815
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1335,
+							"anteil": 0.007872390612100483
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 556,
+							"anteil": 0.003278688524590164
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 214757,
+					"waehlende": 181883,
+					"gueltig": 181064,
+					"wahlbeteiligung": 0.8469246636896586,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 48500,
+							"anteil": 0.2678610877921619
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 35848,
+							"anteil": 0.19798524278708082
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 32989,
+							"anteil": 0.18219524587990987
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 20722,
+							"anteil": 0.11444572085008616
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 18678,
+							"anteil": 0.10315689479962886
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10750,
+							"anteil": 0.05937127203640702
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 7070,
+							"anteil": 0.03904696681836257
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3644,
+							"anteil": 0.020125480493085317
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2207,
+							"anteil": 0.012189060221800026
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 656,
+							"anteil": 0.0036230283214774887
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "07",
+			"slug": "tempelhof-schoeneberg",
+			"name": "Tempelhof-Schöneberg",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 232529,
+					"waehlende": 149143,
+					"gueltig": 146379,
+					"wahlbeteiligung": 0.6413952668269334,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 42369,
+							"anteil": 0.28944725677863625
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 39643,
+							"anteil": 0.2708243668832278
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 33621,
+							"anteil": 0.2296845859037157
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 11360,
+							"anteil": 0.07760676053259005
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8040,
+							"anteil": 0.0549259115036993
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 5891,
+							"anteil": 0.04024484386421549
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2984,
+							"anteil": 0.020385437801870486
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2471,
+							"anteil": 0.016880836732044897
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 233874,
+					"waehlende": 161154,
+					"gueltig": 158582,
+					"wahlbeteiligung": 0.6890633417994305,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 39427,
+							"anteil": 0.24862216392781022
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 31622,
+							"anteil": 0.1994047243697267
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 29615,
+							"anteil": 0.18674881134050522
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 18097,
+							"anteil": 0.11411761738406628
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 15348,
+							"anteil": 0.09678273700672207
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 12465,
+							"anteil": 0.07860286791691365
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6747,
+							"anteil": 0.04254581226116457
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2783,
+							"anteil": 0.01754928049841722
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 2478,
+							"anteil": 0.015625985294674048
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 229605,
+					"waehlende": 176776,
+					"gueltig": 174819,
+					"wahlbeteiligung": 0.7699135471788506,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 39576,
+							"anteil": 0.22638271583752337
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 38517,
+							"anteil": 0.2203250218797728
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 36069,
+							"anteil": 0.20632196729188476
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 17034,
+							"anteil": 0.09743792150738764
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 15167,
+							"anteil": 0.086758304303308
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 12819,
+							"anteil": 0.07332726991917354
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 10207,
+							"anteil": 0.0583861021971296
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3417,
+							"anteil": 0.019545930362260395
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1324,
+							"anteil": 0.007573547497697618
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 689,
+							"anteil": 0.0039412192038622805
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 228306,
+					"waehlende": 149122,
+					"gueltig": 147896,
+					"wahlbeteiligung": 0.6531672404579818,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 45975,
+							"anteil": 0.3108603342889598
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 32098,
+							"anteil": 0.21703088656894035
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 29421,
+							"anteil": 0.19893032942067398
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 12567,
+							"anteil": 0.08497187212635907
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 9264,
+							"anteil": 0.06263861091577866
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 7951,
+							"anteil": 0.053760750797857956
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6780,
+							"anteil": 0.045843024828257695
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3013,
+							"anteil": 0.020372423865418942
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 509,
+							"anteil": 0.003441607616162709
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 318,
+							"anteil": 0.0021501595715908476
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 233351,
+					"waehlende": 176515,
+					"gueltig": 174727,
+					"wahlbeteiligung": 0.7564355841629133,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 40505,
+							"anteil": 0.2318187801541834
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 36837,
+							"anteil": 0.21082603146623016
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 30913,
+							"anteil": 0.1769217121566787
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 25235,
+							"anteil": 0.14442530347341853
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 21097,
+							"anteil": 0.12074264423929902
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 6784,
+							"anteil": 0.03882628328764301
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5280,
+							"anteil": 0.030218569539910832
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4677,
+							"anteil": 0.026767471541318744
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3399,
+							"anteil": 0.019453204141317598
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 235259,
+					"waehlende": 177205,
+					"gueltig": 174432,
+					"wahlbeteiligung": 0.7532336701252662,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 55275,
+							"anteil": 0.3168856631810677
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 47834,
+							"anteil": 0.27422720601724454
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 26941,
+							"anteil": 0.15444987158319573
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 17937,
+							"anteil": 0.10283090258668134
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7988,
+							"anteil": 0.04579434966061273
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7134,
+							"anteil": 0.04089845899834893
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 5526,
+							"anteil": 0.03167996697853605
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5038,
+							"anteil": 0.02888231517152816
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 759,
+							"anteil": 0.00435126582278481
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 235250,
+					"waehlende": 181159,
+					"gueltig": 179081,
+					"wahlbeteiligung": 0.7700701381509033,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 44721,
+							"anteil": 0.24972498478342203
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 36179,
+							"anteil": 0.20202589889491349
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 27956,
+							"anteil": 0.15610812984068662
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 23625,
+							"anteil": 0.13192354297775866
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 18569,
+							"anteil": 0.1036905087641905
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 17108,
+							"anteil": 0.09553218934448657
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 7191,
+							"anteil": 0.04015501365303969
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2180,
+							"anteil": 0.012173262378476778
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 1179,
+							"anteil": 0.006583613001937671
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 373,
+							"anteil": 0.0020828563610879995
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 231477,
+					"waehlende": 172069,
+					"gueltig": 169338,
+					"wahlbeteiligung": 0.7433524713038444,
+					"parteien": [
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 42791,
+							"anteil": 0.25269579184825613
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 41215,
+							"anteil": 0.24338896172152735
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 31751,
+							"anteil": 0.18750073816863314
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 15633,
+							"anteil": 0.09231832193600964
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 12706,
+							"anteil": 0.07503336522221829
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 10921,
+							"anteil": 0.0644923171408662
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8492,
+							"anteil": 0.050148224261536097
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3736,
+							"anteil": 0.022062384107524594
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1449,
+							"anteil": 0.00855685079545052
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 644,
+							"anteil": 0.0038030447979780085
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 229238,
+					"waehlende": 186838,
+					"gueltig": 185683,
+					"wahlbeteiligung": 0.8150393913749029,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 38864,
+							"anteil": 0.20930295180495792
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 36909,
+							"anteil": 0.1987742550475811
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 32850,
+							"anteil": 0.17691441865975885
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 32120,
+							"anteil": 0.1729829871339864
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 20986,
+							"anteil": 0.11302057808199997
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 9521,
+							"anteil": 0.05127556103682082
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7145,
+							"anteil": 0.0384795592488273
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4215,
+							"anteil": 0.022699977919357184
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2615,
+							"anteil": 0.014083141698486129
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 458,
+							"anteil": 0.0024665693682243395
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "08",
+			"slug": "neukoelln",
+			"name": "Neukölln",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 200578,
+					"waehlende": 114662,
+					"gueltig": 112084,
+					"wahlbeteiligung": 0.5716579086440188,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 30752,
+							"anteil": 0.27436565433068055
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 29888,
+							"anteil": 0.26665714999464685
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 20018,
+							"anteil": 0.17859819421148423
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 10760,
+							"anteil": 0.09599942899967881
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 10456,
+							"anteil": 0.09328717747403734
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 6320,
+							"anteil": 0.056386281717283465
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2013,
+							"anteil": 0.01795974447735627
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1877,
+							"anteil": 0.016746368794832447
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 202453,
+					"waehlende": 128007,
+					"gueltig": 125446,
+					"wahlbeteiligung": 0.6322800847604135,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 29243,
+							"anteil": 0.23311225547247422
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 22356,
+							"anteil": 0.17821213908773495
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 20308,
+							"anteil": 0.1618863893627537
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 17294,
+							"anteil": 0.13786011510929005
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 17017,
+							"anteil": 0.13565199368652647
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7209,
+							"anteil": 0.057466957894233374
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6983,
+							"anteil": 0.05566538590309775
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2609,
+							"anteil": 0.020797793472888734
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 2427,
+							"anteil": 0.01934697001100075
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 195615,
+					"waehlende": 138938,
+					"gueltig": 136938,
+					"wahlbeteiligung": 0.7102625054315875,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 37228,
+							"anteil": 0.271860257926945
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 24147,
+							"anteil": 0.1763352758182535
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 22207,
+							"anteil": 0.16216828053571689
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 19624,
+							"anteil": 0.14330572960025706
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 13066,
+							"anteil": 0.09541544348537294
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 9610,
+							"anteil": 0.07017774467277162
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 6950,
+							"anteil": 0.050752895470943055
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2789,
+							"anteil": 0.02036688136236837
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 834,
+							"anteil": 0.006090347456513167
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 483,
+							"anteil": 0.0035271436708583445
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 193111,
+					"waehlende": 111691,
+					"gueltig": 110675,
+					"wahlbeteiligung": 0.5783772027486782,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 31101,
+							"anteil": 0.281011971990061
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 23535,
+							"anteil": 0.21264964987576238
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 20509,
+							"anteil": 0.1853083352157217
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 14522,
+							"anteil": 0.13121301106844363
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 8325,
+							"anteil": 0.07522023943980122
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6362,
+							"anteil": 0.05748362322114298
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3437,
+							"anteil": 0.03105489044499661
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2374,
+							"anteil": 0.021450192003614185
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 328,
+							"anteil": 0.0029636322566071833
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 182,
+							"anteil": 0.0016444544838491078
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 196296,
+					"waehlende": 136259,
+					"gueltig": 134482,
+					"wahlbeteiligung": 0.6941506704161063,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 44392,
+							"anteil": 0.33009622105560593
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 21887,
+							"anteil": 0.16275040525869633
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 18973,
+							"anteil": 0.14108207789890098
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 17548,
+							"anteil": 0.1304858642792344
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 16621,
+							"anteil": 0.12359274847191445
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 6285,
+							"anteil": 0.04673487901726625
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3542,
+							"anteil": 0.026338097291830877
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2760,
+							"anteil": 0.020523192694933152
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2474,
+							"anteil": 0.018396514031617614
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 205635,
+					"waehlende": 140825,
+					"gueltig": 137957,
+					"wahlbeteiligung": 0.6848299170860992,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 40038,
+							"anteil": 0.2902208659219902
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 36211,
+							"anteil": 0.2624803380763571
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 19677,
+							"anteil": 0.14263139963901794
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 19156,
+							"anteil": 0.13885486057249724
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6578,
+							"anteil": 0.047681523953115826
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 5832,
+							"anteil": 0.04227404191161014
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 5654,
+							"anteil": 0.04098378480251093
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4122,
+							"anteil": 0.02987887530172445
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 689,
+							"anteil": 0.004994309821176163
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 202618,
+					"waehlende": 143553,
+					"gueltig": 141413,
+					"wahlbeteiligung": 0.7084908547118223,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 31592,
+							"anteil": 0.22340237460488074
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 27520,
+							"anteil": 0.194607285044515
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 25752,
+							"anteil": 0.18210489841810867
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 18446,
+							"anteil": 0.13044062427075304
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 15904,
+							"anteil": 0.11246490775246971
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10891,
+							"anteil": 0.07701555019694087
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 7953,
+							"anteil": 0.05623952536188328
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2171,
+							"anteil": 0.015352195342719551
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 964,
+							"anteil": 0.006816912165076761
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 220,
+							"anteil": 0.001555726842652373
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 196593,
+					"waehlende": 134004,
+					"gueltig": 131524,
+					"wahlbeteiligung": 0.6816315942073218,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 31498,
+							"anteil": 0.23948480885617834
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 29474,
+							"anteil": 0.2240959824822846
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 22400,
+							"anteil": 0.17031112192451567
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 15616,
+							"anteil": 0.11873118214166235
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 10089,
+							"anteil": 0.0767084334418053
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 9325,
+							"anteil": 0.07089960767616557
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8484,
+							"anteil": 0.06450533742891032
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3226,
+							"anteil": 0.024527842827164623
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 961,
+							"anteil": 0.007306651257565159
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 451,
+							"anteil": 0.0034290319637480613
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 192506,
+					"waehlende": 146236,
+					"gueltig": 145169,
+					"wahlbeteiligung": 0.7596438552564595,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 36686,
+							"anteil": 0.2527123559437621
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 26183,
+							"anteil": 0.18036219854101082
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 22853,
+							"anteil": 0.15742341684519423
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 22260,
+							"anteil": 0.1533385226873506
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 18874,
+							"anteil": 0.13001398370175452
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 8186,
+							"anteil": 0.05638944953812453
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4033,
+							"anteil": 0.02778141338715566
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3462,
+							"anteil": 0.02384806673601113
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2207,
+							"anteil": 0.015202970331131303
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 425,
+							"anteil": 0.0029276222885051217
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "09",
+			"slug": "treptow-koepenick",
+			"name": "Treptow-Köpenick",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 199830,
+					"waehlende": 121747,
+					"gueltig": 119336,
+					"wahlbeteiligung": 0.6092528649351949,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 34452,
+							"anteil": 0.28869745927465307
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 27408,
+							"anteil": 0.22967084534423812
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 18975,
+							"anteil": 0.15900482670778307
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12813,
+							"anteil": 0.10736910907018837
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 11401,
+							"anteil": 0.09553697124086613
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 11129,
+							"anteil": 0.09325769256552927
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1763,
+							"anteil": 0.014773412884628277
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 1395,
+							"anteil": 0.011689682912113695
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 202428,
+					"waehlende": 137914,
+					"gueltig": 135575,
+					"wahlbeteiligung": 0.6812990297784891,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 30667,
+							"anteil": 0.22619952056057532
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 27736,
+							"anteil": 0.2045804905034114
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 27720,
+							"anteil": 0.20446247464503042
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 17502,
+							"anteil": 0.1290945970864835
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12278,
+							"anteil": 0.09056241932509682
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9093,
+							"anteil": 0.06706988751613498
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 5494,
+							"anteil": 0.040523695371565555
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2855,
+							"anteil": 0.021058454729854324
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 2230,
+							"anteil": 0.016448460261847687
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 205948,
+					"waehlende": 158149,
+					"gueltig": 156264,
+					"wahlbeteiligung": 0.7679074329442384,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 33802,
+							"anteil": 0.21631341831771872
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 29168,
+							"anteil": 0.1866584754006041
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 22230,
+							"anteil": 0.14225925357088004
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 20349,
+							"anteil": 0.1302219321148825
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 18586,
+							"anteil": 0.11893974299902729
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 14812,
+							"anteil": 0.09478830696769569
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10331,
+							"anteil": 0.06611247632212154
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4263,
+							"anteil": 0.02728075564429427
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 2073,
+							"anteil": 0.013266011365381662
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 650,
+							"anteil": 0.0041596272973941535
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 205670,
+					"waehlende": 131557,
+					"gueltig": 130292,
+					"wahlbeteiligung": 0.6396508970681188,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 33911,
+							"anteil": 0.2602692413962484
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 23446,
+							"anteil": 0.17994965155189882
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 20670,
+							"anteil": 0.15864366192859117
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 18090,
+							"anteil": 0.13884198569367268
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 15930,
+							"anteil": 0.12226383814815951
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8786,
+							"anteil": 0.06743315015503638
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4790,
+							"anteil": 0.03676357719583704
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3607,
+							"anteil": 0.02768397138734535
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 650,
+							"anteil": 0.004988794400270162
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 412,
+							"anteil": 0.003162128142940472
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 212027,
+					"waehlende": 161405,
+					"gueltig": 159219,
+					"wahlbeteiligung": 0.7612473883043197,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 42343,
+							"anteil": 0.26594187879587233
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 37746,
+							"anteil": 0.23706969645582499
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 24123,
+							"anteil": 0.15150829988883235
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 16355,
+							"anteil": 0.1027201527455894
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 15596,
+							"anteil": 0.09795313373403929
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 9938,
+							"anteil": 0.0624171738297565
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6132,
+							"anteil": 0.038512991539954404
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3779,
+							"anteil": 0.02373460453840308
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3207,
+							"anteil": 0.02014206847172762
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 201629,
+					"waehlende": 148406,
+					"gueltig": 146281,
+					"wahlbeteiligung": 0.7360349949660019,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 43118,
+							"anteil": 0.29476145227336426
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 37170,
+							"anteil": 0.2540999856440686
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 31204,
+							"anteil": 0.21331546817426733
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 10787,
+							"anteil": 0.07374163425188507
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 8106,
+							"anteil": 0.05541389517435621
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6922,
+							"anteil": 0.047319884332209926
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 5176,
+							"anteil": 0.03538395280316651
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2904,
+							"anteil": 0.01985220226823716
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 894,
+							"anteil": 0.006111525078444911
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 205106,
+					"waehlende": 157111,
+					"gueltig": 155188,
+					"wahlbeteiligung": 0.765999044396556,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 39000,
+							"anteil": 0.25130809083176536
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 31372,
+							"anteil": 0.20215480578395237
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 26278,
+							"anteil": 0.16933010284300332
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 24109,
+							"anteil": 0.15535350671443668
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12168,
+							"anteil": 0.07840812433951079
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10067,
+							"anteil": 0.06486970642059953
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8291,
+							"anteil": 0.05342552259195298
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2283,
+							"anteil": 0.014711189009459493
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 843,
+							"anteil": 0.00543212104028662
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 777,
+							"anteil": 0.005006830425032863
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 206999,
+					"waehlende": 156625,
+					"gueltig": 153871,
+					"wahlbeteiligung": 0.7566461673727892,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 35690,
+							"anteil": 0.23194754047221375
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 24686,
+							"anteil": 0.16043309005595596
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 24609,
+							"anteil": 0.1599326708736539
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 20562,
+							"anteil": 0.13363141852590807
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 19322,
+							"anteil": 0.12557272000571906
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 12190,
+							"anteil": 0.07922220561379337
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9284,
+							"anteil": 0.060336255694705306
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4799,
+							"anteil": 0.03118846306321529
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 2133,
+							"anteil": 0.013862261244808964
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 596,
+							"anteil": 0.0038733744500263206
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 206841,
+					"waehlende": 169802,
+					"gueltig": 168783,
+					"wahlbeteiligung": 0.8209300863948636,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 36609,
+							"anteil": 0.21689980626010913
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 36410,
+							"anteil": 0.21572077756646107
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 25858,
+							"anteil": 0.15320263296659023
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 21403,
+							"anteil": 0.12680779462386615
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 20226,
+							"anteil": 0.11983434350615879
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 15471,
+							"anteil": 0.09166207497200547
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 4949,
+							"anteil": 0.02932167339127756
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4079,
+							"anteil": 0.024167125836132786
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3017,
+							"anteil": 0.017875022958473305
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 761,
+							"anteil": 0.004508747918925484
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "10",
+			"slug": "marzahn-hellersdorf",
+			"name": "Marzahn-Hellersdorf",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 202868,
+					"waehlende": 103502,
+					"gueltig": 101723,
+					"wahlbeteiligung": 0.5101938206124179,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 28636,
+							"anteil": 0.2815095897682923
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 27863,
+							"anteil": 0.27391052171092084
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 17780,
+							"anteil": 0.17478839593798845
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9621,
+							"anteil": 0.09458038005170906
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 8901,
+							"anteil": 0.0875023347718805
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 5732,
+							"anteil": 0.056349104922190654
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1876,
+							"anteil": 0.018442240201331065
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 1314,
+							"anteil": 0.012917432635687112
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 200519,
+					"waehlende": 122207,
+					"gueltig": 119889,
+					"wahlbeteiligung": 0.6094534682498916,
+					"parteien": [
+						{
+							"kurzname": "AfD",
+							"stimmen": 28310,
+							"anteil": 0.2361350916264211
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 28216,
+							"anteil": 0.23535103303889432
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 20761,
+							"anteil": 0.17316851420897664
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 20329,
+							"anteil": 0.16956518112587476
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9357,
+							"anteil": 0.07804719365413007
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 5346,
+							"anteil": 0.04459124690338563
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3411,
+							"anteil": 0.028451317468658508
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2586,
+							"anteil": 0.021569952205790357
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 1573,
+							"anteil": 0.013120469767868612
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 197241,
+					"waehlende": 136667,
+					"gueltig": 134841,
+					"wahlbeteiligung": 0.6928934653545662,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 28140,
+							"anteil": 0.20869023516586202
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 26545,
+							"anteil": 0.19686148871634
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 24202,
+							"anteil": 0.17948546806980073
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 21847,
+							"anteil": 0.162020453719566
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 12022,
+							"anteil": 0.08915685881890523
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 9064,
+							"anteil": 0.06721991085797346
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7015,
+							"anteil": 0.052024235951973065
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4206,
+							"anteil": 0.031192293145259974
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1198,
+							"anteil": 0.00888453808559711
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 602,
+							"anteil": 0.004464517468722421
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 196840,
+					"waehlende": 110783,
+					"gueltig": 109572,
+					"wahlbeteiligung": 0.5628073562284088,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 34847,
+							"anteil": 0.318028328405067
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 20999,
+							"anteil": 0.19164567590260284
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 17456,
+							"anteil": 0.1593107728251743
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 15832,
+							"anteil": 0.14448946811229146
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6856,
+							"anteil": 0.06257072974847588
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 6056,
+							"anteil": 0.05526959442193261
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3608,
+							"anteil": 0.03292812032271018
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3253,
+							"anteil": 0.0296882415215566
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 353,
+							"anteil": 0.003221625962837221
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 312,
+							"anteil": 0.002847442777351878
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 199770,
+					"waehlende": 139071,
+					"gueltig": 136951,
+					"wahlbeteiligung": 0.6961555789157531,
+					"parteien": [
+						{
+							"kurzname": "AfD",
+							"stimmen": 47058,
+							"anteil": 0.34361194879920554
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 27644,
+							"anteil": 0.20185321757416885
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 22402,
+							"anteil": 0.1635767537294361
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 10805,
+							"anteil": 0.07889683171353258
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 10085,
+							"anteil": 0.07363947689319537
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 7300,
+							"anteil": 0.053303736372863286
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4584,
+							"anteil": 0.03347182568948018
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4303,
+							"anteil": 0.03141999693320969
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2770,
+							"anteil": 0.020226212294908397
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 203968,
+					"waehlende": 132817,
+					"gueltig": 130732,
+					"wahlbeteiligung": 0.651165869155946,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 43026,
+							"anteil": 0.32911605421778906
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 33947,
+							"anteil": 0.25966863507022
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 25103,
+							"anteil": 0.1920187865251048
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 8319,
+							"anteil": 0.06363399932686718
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8243,
+							"anteil": 0.063052657344797
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 5068,
+							"anteil": 0.03876633112015421
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 3996,
+							"anteil": 0.030566349478322062
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2278,
+							"anteil": 0.017424960988893307
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 752,
+							"anteil": 0.0057522259278524005
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 200704,
+					"waehlende": 138992,
+					"gueltig": 136939,
+					"wahlbeteiligung": 0.6925223214285714,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 35698,
+							"anteil": 0.26068541467368683
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 29618,
+							"anteil": 0.21628608358466178
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 28620,
+							"anteil": 0.20899816706708826
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 19797,
+							"anteil": 0.14456801933707708
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7290,
+							"anteil": 0.05323538217746588
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6325,
+							"anteil": 0.046188448871395296
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 5621,
+							"anteil": 0.04104747369266608
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2378,
+							"anteil": 0.01736539627133249
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 899,
+							"anteil": 0.006564966883064722
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 693,
+							"anteil": 0.005060647441561571
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 198002,
+					"waehlende": 133719,
+					"gueltig": 130849,
+					"wahlbeteiligung": 0.675341663215523,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 29991,
+							"anteil": 0.2292031272688366
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 22665,
+							"anteil": 0.17321492712974498
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 21887,
+							"anteil": 0.16726914229378903
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 20755,
+							"anteil": 0.1586179489335035
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 11207,
+							"anteil": 0.08564834274621892
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 9372,
+							"anteil": 0.07162454432208118
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8150,
+							"anteil": 0.06228553523527119
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4990,
+							"anteil": 0.03813556083730101
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1301,
+							"anteil": 0.009942758446759242
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 531,
+							"anteil": 0.004058112786494356
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 195867,
+					"waehlende": 149493,
+					"gueltig": 148443,
+					"wahlbeteiligung": 0.7632372987792737,
+					"parteien": [
+						{
+							"kurzname": "AfD",
+							"stimmen": 46285,
+							"anteil": 0.311803183713614
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 24761,
+							"anteil": 0.16680476681285072
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 24495,
+							"anteil": 0.16501283320870638
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 16236,
+							"anteil": 0.10937531577777329
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 16161,
+							"anteil": 0.10887007134051455
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 8913,
+							"anteil": 0.06004324892382935
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3806,
+							"anteil": 0.025639471042757152
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3383,
+							"anteil": 0.022789892416617826
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3365,
+							"anteil": 0.022668633751675726
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1038,
+							"anteil": 0.006992583011661041
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "11",
+			"slug": "lichtenberg",
+			"name": "Lichtenberg",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 203709,
+					"waehlende": 108948,
+					"gueltig": 107094,
+					"wahlbeteiligung": 0.5348217309986304,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 33107,
+							"anteil": 0.3091396343399257
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 31076,
+							"anteil": 0.29017498646049267
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 13182,
+							"anteil": 0.12308812818645302
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 9941,
+							"anteil": 0.0928249948643248
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8970,
+							"anteil": 0.08375819373634377
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 8128,
+							"anteil": 0.0758959418828319
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1754,
+							"anteil": 0.016378135096270566
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 936,
+							"anteil": 0.00873998543335761
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 204711,
+					"waehlende": 128693,
+					"gueltig": 126377,
+					"wahlbeteiligung": 0.6286569847248071,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 34041,
+							"anteil": 0.26936072228332686
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 24950,
+							"anteil": 0.19742516438908977
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 24002,
+							"anteil": 0.18992379942552837
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 15223,
+							"anteil": 0.12045704519018492
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 9749,
+							"anteil": 0.07714220150818582
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9612,
+							"anteil": 0.07605814349129984
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3694,
+							"anteil": 0.02923000229472135
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2873,
+							"anteil": 0.02273356702564549
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 2233,
+							"anteil": 0.017669354392017535
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 199563,
+					"waehlende": 145072,
+					"gueltig": 142844,
+					"wahlbeteiligung": 0.7269483822151401,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 30132,
+							"anteil": 0.210943406793425
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 30044,
+							"anteil": 0.2103273501162107
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 19872,
+							"anteil": 0.13911679874548458
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 17509,
+							"anteil": 0.12257427683346868
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 16888,
+							"anteil": 0.11822687687267229
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 13830,
+							"anteil": 0.09681890733947524
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7761,
+							"anteil": 0.054331998543866035
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4287,
+							"anteil": 0.030011761082019545
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1742,
+							"anteil": 0.012195121951219513
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 779,
+							"anteil": 0.0054535017221584384
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 197377,
+					"waehlende": 117697,
+					"gueltig": 116649,
+					"wahlbeteiligung": 0.5963055472522127,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 29591,
+							"anteil": 0.25367555658428276
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 21655,
+							"anteil": 0.185642397277302
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 18958,
+							"anteil": 0.16252175329407023
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 16115,
+							"anteil": 0.13814949120866873
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 13689,
+							"anteil": 0.11735205616850551
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8144,
+							"anteil": 0.06981628646623632
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3874,
+							"anteil": 0.03321074334113452
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3526,
+							"anteil": 0.030227434440072354
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 569,
+							"anteil": 0.004877881507771176
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 528,
+							"anteil": 0.004526399711956382
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 199676,
+					"waehlende": 144598,
+					"gueltig": 142464,
+					"wahlbeteiligung": 0.7241631442937558,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 41064,
+							"anteil": 0.2882412398921833
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 34121,
+							"anteil": 0.23950612084456424
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 20214,
+							"anteil": 0.14188847708894878
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 12520,
+							"anteil": 0.08788185085354897
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12452,
+							"anteil": 0.08740453728661275
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 9966,
+							"anteil": 0.06995451482479785
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5542,
+							"anteil": 0.03890105570530099
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4102,
+							"anteil": 0.028793238993710692
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2483,
+							"anteil": 0.017428964510332434
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 205457,
+					"waehlende": 138551,
+					"gueltig": 136401,
+					"wahlbeteiligung": 0.6743552178801404,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 47158,
+							"anteil": 0.34573060314807075
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 31491,
+							"anteil": 0.2308707414168518
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 27886,
+							"anteil": 0.20444131641263627
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 7956,
+							"anteil": 0.058328018123034286
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7480,
+							"anteil": 0.054838307637040784
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6470,
+							"anteil": 0.0474336698411302
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 5072,
+							"anteil": 0.03718447811966188
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2117,
+							"anteil": 0.015520414073210607
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 771,
+							"anteil": 0.005652451228363428
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 205300,
+					"waehlende": 149116,
+					"gueltig": 147126,
+					"wahlbeteiligung": 0.7263321967851925,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 43172,
+							"anteil": 0.2934355586368147
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 27284,
+							"anteil": 0.1854464880442614
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 24603,
+							"anteil": 0.16722401207128584
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 21850,
+							"anteil": 0.14851215964547396
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 9821,
+							"anteil": 0.06675230754591303
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 8560,
+							"anteil": 0.05818142272609872
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 7745,
+							"anteil": 0.05264195315579843
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2609,
+							"anteil": 0.0177330995201392
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 958,
+							"anteil": 0.006511425580794693
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 524,
+							"anteil": 0.003561573073420062
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 200461,
+					"waehlende": 143826,
+					"gueltig": 141167,
+					"wahlbeteiligung": 0.7174762173190795,
+					"parteien": [
+						{
+							"kurzname": "SPD",
+							"stimmen": 32403,
+							"anteil": 0.2295366480834756
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 25840,
+							"anteil": 0.18304561264318148
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 21777,
+							"anteil": 0.15426409854994438
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 17916,
+							"anteil": 0.12691351378154953
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 16891,
+							"anteil": 0.11965261002925613
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 9796,
+							"anteil": 0.06939298844630827
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 9159,
+							"anteil": 0.06488060240707814
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 4823,
+							"anteil": 0.034165208582742426
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1857,
+							"anteil": 0.013154632456593963
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 705,
+							"anteil": 0.004994085019870083
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 196799,
+					"waehlende": 155397,
+					"gueltig": 154333,
+					"wahlbeteiligung": 0.7896229147505831,
+					"parteien": [
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 36204,
+							"anteil": 0.23458366000790498
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 34635,
+							"anteil": 0.22441733135492734
+						},
+						{
+							"kurzname": "CDU",
+							"stimmen": 21230,
+							"anteil": 0.1375596923535472
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 18331,
+							"anteil": 0.11877563450461016
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 16699,
+							"anteil": 0.10820109762656074
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 15613,
+							"anteil": 0.10116436536579992
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4049,
+							"anteil": 0.026235477830405682
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3877,
+							"anteil": 0.025121004581003414
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3100,
+							"anteil": 0.020086436471785037
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 595,
+							"anteil": 0.0038552999034555152
+						}
+					]
+				}
+			}
+		},
+		{
+			"nr": "12",
+			"slug": "reinickendorf",
+			"name": "Reinickendorf",
+			"wahlen": {
+				"agh11": {
+					"wahlberechtigte": 181562,
+					"waehlende": 112814,
+					"gueltig": 110608,
+					"wahlbeteiligung": 0.6213524856522841,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 42422,
+							"anteil": 0.3835346448719803
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 31066,
+							"anteil": 0.2808657601620136
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 15087,
+							"anteil": 0.13640062201649067
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 7408,
+							"anteil": 0.06697526399537104
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6637,
+							"anteil": 0.060004701287429484
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 3676,
+							"anteil": 0.03323448575148271
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 2591,
+							"anteil": 0.02342506871112397
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1721,
+							"anteil": 0.015559453204108202
+						}
+					]
+				},
+				"agh16": {
+					"wahlberechtigte": 181658,
+					"waehlende": 121371,
+					"gueltig": 118912,
+					"wahlbeteiligung": 0.6681291217562673,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 33240,
+							"anteil": 0.27953444564047364
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 26124,
+							"anteil": 0.21969187298170076
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 19169,
+							"anteil": 0.1612032427341227
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12627,
+							"anteil": 0.1061877691065662
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10502,
+							"anteil": 0.08831741119483315
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 7246,
+							"anteil": 0.06093581808396125
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 6483,
+							"anteil": 0.054519308396124865
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2227,
+							"anteil": 0.018728135091496234
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 1294,
+							"anteil": 0.010881996770721205
+						}
+					]
+				},
+				"agh21": {
+					"wahlberechtigte": 175407,
+					"waehlende": 127917,
+					"gueltig": 126212,
+					"wahlbeteiligung": 0.7292582394089175,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 35674,
+							"anteil": 0.2826514119101195
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 29698,
+							"anteil": 0.23530250689316387
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 16734,
+							"anteil": 0.13258644185972807
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 11760,
+							"anteil": 0.09317656007352708
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 10244,
+							"anteil": 0.08116502392799417
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10071,
+							"anteil": 0.07979431432827307
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 6773,
+							"anteil": 0.053663676987925076
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3204,
+							"anteil": 0.02538585871390993
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1690,
+							"anteil": 0.013390168922131018
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 364,
+							"anteil": 0.002884036383228219
+						}
+					]
+				},
+				"agh23": {
+					"wahlberechtigte": 173418,
+					"waehlende": 107134,
+					"gueltig": 106057,
+					"wahlbeteiligung": 0.6177790079461186,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 42617,
+							"anteil": 0.40183109082851676
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 21488,
+							"anteil": 0.2026080315302149
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12692,
+							"anteil": 0.11967149740234025
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 10630,
+							"anteil": 0.10022912207586486
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 5247,
+							"anteil": 0.04947339638119125
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5241,
+							"anteil": 0.049416823029125846
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 4805,
+							"anteil": 0.045305826112373535
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2685,
+							"anteil": 0.02531657504926596
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 328,
+							"anteil": 0.003092676579575134
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 324,
+							"anteil": 0.003054961011531535
+						}
+					]
+				},
+				"agh26": {
+					"wahlberechtigte": 175299,
+					"waehlende": 124876,
+					"gueltig": 123281,
+					"wahlbeteiligung": 0.7123600248717905,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 33344,
+							"anteil": 0.2704715244035983
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 23372,
+							"anteil": 0.18958314744364502
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 19878,
+							"anteil": 0.16124139161752418
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 17526,
+							"anteil": 0.14216302593262548
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 13642,
+							"anteil": 0.11065776559242706
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 5045,
+							"anteil": 0.04092276993210633
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 3793,
+							"anteil": 0.030767109286913636
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 3689,
+							"anteil": 0.029923508083159613
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2992,
+							"anteil": 0.02426975770800042
+						}
+					]
+				},
+				"btw13": {
+					"wahlberechtigte": 182934,
+					"waehlende": 133484,
+					"gueltig": 131056,
+					"wahlbeteiligung": 0.7296839297232882,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 52545,
+							"anteil": 0.4009354779636186
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 34571,
+							"anteil": 0.2637879990233183
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 11427,
+							"anteil": 0.08719173483091197
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 10394,
+							"anteil": 0.0793096081064583
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 7906,
+							"anteil": 0.06032535709925528
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 5708,
+							"anteil": 0.043553900622634596
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 4427,
+							"anteil": 0.03377945305823465
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 3417,
+							"anteil": 0.026072823831034063
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 661,
+							"anteil": 0.005043645464534245
+						}
+					]
+				},
+				"btw17": {
+					"wahlberechtigte": 182398,
+					"waehlende": 137240,
+					"gueltig": 135105,
+					"wahlbeteiligung": 0.7524205309268742,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 41912,
+							"anteil": 0.31021797860922984
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 27071,
+							"anteil": 0.20037008252840383
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 18513,
+							"anteil": 0.1370267569668036
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 15376,
+							"anteil": 0.11380777913474704
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 12305,
+							"anteil": 0.09107731024018356
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 11516,
+							"anteil": 0.08523740794197106
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5494,
+							"anteil": 0.040664668221013285
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 1938,
+							"anteil": 0.014344398800932608
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 682,
+							"anteil": 0.0050479256874282966
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 298,
+							"anteil": 0.002205691869286851
+						}
+					]
+				},
+				"btw21": {
+					"wahlberechtigte": 175195,
+					"waehlende": 114070,
+					"gueltig": 111952,
+					"wahlbeteiligung": 0.6511030565940809,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 29580,
+							"anteil": 0.264220380162927
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 25740,
+							"anteil": 0.22991996569958553
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 17477,
+							"anteil": 0.15611154780620265
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 12731,
+							"anteil": 0.1137183793054166
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 10331,
+							"anteil": 0.09228062026582821
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 5833,
+							"anteil": 0.05210268686579963
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 5067,
+							"anteil": 0.045260468772330996
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 3276,
+							"anteil": 0.02926254108903816
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 1569,
+							"anteil": 0.014014934972130914
+						},
+						{
+							"kurzname": "PIRATEN",
+							"stimmen": 348,
+							"anteil": 0.003108475060740317
+						}
+					]
+				},
+				"btw25": {
+					"wahlberechtigte": 172428,
+					"waehlende": 134126,
+					"gueltig": 133070,
+					"wahlbeteiligung": 0.7778667037836082,
+					"parteien": [
+						{
+							"kurzname": "CDU",
+							"stimmen": 35169,
+							"anteil": 0.2642894717066206
+						},
+						{
+							"kurzname": "AfD",
+							"stimmen": 23124,
+							"anteil": 0.17377320207409633
+						},
+						{
+							"kurzname": "SPD",
+							"stimmen": 22997,
+							"anteil": 0.1728188171638987
+						},
+						{
+							"kurzname": "GRÜNE",
+							"stimmen": 17074,
+							"anteil": 0.12830840910798827
+						},
+						{
+							"kurzname": "Die Linke",
+							"stimmen": 15729,
+							"anteil": 0.11820094687006838
+						},
+						{
+							"kurzname": "BSW",
+							"stimmen": 7083,
+							"anteil": 0.053227624558503044
+						},
+						{
+							"kurzname": "FDP",
+							"stimmen": 5986,
+							"anteil": 0.044983843090102955
+						},
+						{
+							"kurzname": "Sonstige",
+							"stimmen": 2915,
+							"anteil": 0.02190576388367025
+						},
+						{
+							"kurzname": "Tierschutzpartei",
+							"stimmen": 2538,
+							"anteil": 0.019072668520327647
+						},
+						{
+							"kurzname": "FREIE WÄHLER",
+							"stimmen": 455,
+							"anteil": 0.0034192530247238295
+						}
+					]
+				}
+			}
+		}
+	],
+	"berlin": {
+		"agh11": {
+			"wahlberechtigte": 2469716,
+			"waehlende": 1487487,
+			"gueltig": 1461185,
+			"wahlbeteiligung": 0.6022907087292628,
+			"parteien": [
+				{
+					"kurzname": "SPD",
+					"stimmen": 413332,
+					"anteil": 0.2828745162316887
+				},
+				{
+					"kurzname": "CDU",
+					"stimmen": 341158,
+					"anteil": 0.2334803601186708
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 257063,
+					"anteil": 0.1759277572655071
+				},
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 171050,
+					"anteil": 0.11706252117288365
+				},
+				{
+					"kurzname": "PIRATEN",
+					"stimmen": 130105,
+					"anteil": 0.08904074432737812
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 99880,
+					"anteil": 0.06835547860127225
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 26943,
+					"anteil": 0.018439143571826976
+				},
+				{
+					"kurzname": "Tierschutzpartei",
+					"stimmen": 21654,
+					"anteil": 0.01481947871077242
+				}
+			]
+		},
+		"agh16": {
+			"wahlberechtigte": 2485379,
+			"waehlende": 1662476,
+			"gueltig": 1635169,
+			"wahlbeteiligung": 0.6689024088479061,
+			"parteien": [
+				{
+					"kurzname": "SPD",
+					"stimmen": 352430,
+					"anteil": 0.21553123866707355
+				},
+				{
+					"kurzname": "CDU",
+					"stimmen": 287997,
+					"anteil": 0.17612674897824018
+				},
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 255701,
+					"anteil": 0.15637588530604482
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 248324,
+					"anteil": 0.15186442502273464
+				},
+				{
+					"kurzname": "AfD",
+					"stimmen": 231492,
+					"anteil": 0.1415706878004659
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 109500,
+					"anteil": 0.06696555524230217
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 90773,
+					"anteil": 0.0555129164019132
+				},
+				{
+					"kurzname": "Tierschutzpartei",
+					"stimmen": 30620,
+					"anteil": 0.018725893164559748
+				},
+				{
+					"kurzname": "PIRATEN",
+					"stimmen": 28332,
+					"anteil": 0.0173266494166658
+				}
+			]
+		},
+		"agh21": {
+			"wahlberechtigte": 2447600,
+			"waehlende": 1844278,
+			"gueltig": 1821664,
+			"wahlbeteiligung": 0.7535046576237947,
+			"parteien": [
+				{
+					"kurzname": "SPD",
+					"stimmen": 390329,
+					"anteil": 0.21427057898712387
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 343871,
+					"anteil": 0.18876752244102096
+				},
+				{
+					"kurzname": "CDU",
+					"stimmen": 328587,
+					"anteil": 0.1803773912203348
+				},
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 256063,
+					"anteil": 0.14056543907109104
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 164036,
+					"anteil": 0.09004734133188118
+				},
+				{
+					"kurzname": "AfD",
+					"stimmen": 145712,
+					"anteil": 0.07998840620443726
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 130201,
+					"anteil": 0.07147366363939782
+				},
+				{
+					"kurzname": "Tierschutzpartei",
+					"stimmen": 40128,
+					"anteil": 0.022028211569202663
+				},
+				{
+					"kurzname": "FREIE WÄHLER",
+					"stimmen": 15297,
+					"anteil": 0.008397267553182146
+				},
+				{
+					"kurzname": "PIRATEN",
+					"stimmen": 7440,
+					"anteil": 0.004084177982328245
+				}
+			]
+		},
+		"agh23": {
+			"wahlberechtigte": 2431776,
+			"waehlende": 1529558,
+			"gueltig": 1516860,
+			"wahlbeteiligung": 0.6289880317924019,
+			"parteien": [
+				{
+					"kurzname": "CDU",
+					"stimmen": 428228,
+					"anteil": 0.28231214482549477
+				},
+				{
+					"kurzname": "SPD",
+					"stimmen": 279017,
+					"anteil": 0.18394380496552087
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 278964,
+					"anteil": 0.18390886436454254
+				},
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 185119,
+					"anteil": 0.12204092665110822
+				},
+				{
+					"kurzname": "AfD",
+					"stimmen": 137871,
+					"anteil": 0.09089236976385427
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 91904,
+					"anteil": 0.06058832060968052
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 70416,
+					"anteil": 0.046422214311142754
+				},
+				{
+					"kurzname": "Tierschutzpartei",
+					"stimmen": 36273,
+					"anteil": 0.023913215458249277
+				},
+				{
+					"kurzname": "PIRATEN",
+					"stimmen": 5145,
+					"anteil": 0.0033918753213876035
+				},
+				{
+					"kurzname": "FREIE WÄHLER",
+					"stimmen": 3923,
+					"anteil": 0.002586263729019158
+				}
+			]
+		},
+		"agh26": {
+			"wahlberechtigte": 2487318,
+			"waehlende": 1846344,
+			"gueltig": 1825672,
+			"wahlbeteiligung": 0.7423031554469512,
+			"parteien": [
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 468391,
+					"anteil": 0.2565581331148202
+				},
+				{
+					"kurzname": "CDU",
+					"stimmen": 342746,
+					"anteil": 0.1877368990705888
+				},
+				{
+					"kurzname": "AfD",
+					"stimmen": 296718,
+					"anteil": 0.16252536052478211
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 260896,
+					"anteil": 0.14290409230135534
+				},
+				{
+					"kurzname": "SPD",
+					"stimmen": 221116,
+					"anteil": 0.12111485524234364
+				},
+				{
+					"kurzname": "BSW",
+					"stimmen": 86350,
+					"anteil": 0.047297652590388636
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 64393,
+					"anteil": 0.035270848213698844
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 46384,
+					"anteil": 0.02540653523743586
+				},
+				{
+					"kurzname": "Tierschutzpartei",
+					"stimmen": 38678,
+					"anteil": 0.021185623704586584
+				}
+			]
+		},
+		"btw13": {
+			"wahlberechtigte": 2505718,
+			"waehlende": 1815415,
+			"gueltig": 1787721,
+			"wahlbeteiligung": 0.7245089032365174,
+			"parteien": [
+				{
+					"kurzname": "CDU",
+					"stimmen": 508643,
+					"anteil": 0.2845203474143896
+				},
+				{
+					"kurzname": "SPD",
+					"stimmen": 439387,
+					"anteil": 0.24578052168095582
+				},
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 330507,
+					"anteil": 0.18487616356243508
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 220737,
+					"anteil": 0.12347396489720712
+				},
+				{
+					"kurzname": "AfD",
+					"stimmen": 88060,
+					"anteil": 0.04925824555397627
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 65222,
+					"anteil": 0.03648332150262821
+				},
+				{
+					"kurzname": "PIRATEN",
+					"stimmen": 64018,
+					"anteil": 0.03580983833607146
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 63616,
+					"anteil": 0.03558497103295201
+				},
+				{
+					"kurzname": "FREIE WÄHLER",
+					"stimmen": 7531,
+					"anteil": 0.004212626019384456
+				}
+			]
+		},
+		"btw17": {
+			"wahlberechtigte": 2503070,
+			"waehlende": 1892134,
+			"gueltig": 1869042,
+			"wahlbeteiligung": 0.7559253237024933,
+			"parteien": [
+				{
+					"kurzname": "CDU",
+					"stimmen": 424321,
+					"anteil": 0.22702593093146115
+				},
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 351170,
+					"anteil": 0.18788769861779456
+				},
+				{
+					"kurzname": "SPD",
+					"stimmen": 334253,
+					"anteil": 0.17883653764869917
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 234947,
+					"anteil": 0.12570450530271657
+				},
+				{
+					"kurzname": "AfD",
+					"stimmen": 225170,
+					"anteil": 0.12047348320690493
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 167046,
+					"anteil": 0.08937519863117041
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 90472,
+					"anteil": 0.048405546798841334
+				},
+				{
+					"kurzname": "Tierschutzpartei",
+					"stimmen": 25415,
+					"anteil": 0.013597875275140954
+				},
+				{
+					"kurzname": "PIRATEN",
+					"stimmen": 10894,
+					"anteil": 0.005828654465763744
+				},
+				{
+					"kurzname": "FREIE WÄHLER",
+					"stimmen": 5354,
+					"anteil": 0.002864569121507168
+				}
+			]
+		},
+		"btw21": {
+			"wahlberechtigte": 2460618,
+			"waehlende": 1709738,
+			"gueltig": 1682945,
+			"wahlbeteiligung": 0.6948408895651418,
+			"parteien": [
+				{
+					"kurzname": "SPD",
+					"stimmen": 374413,
+					"anteil": 0.22247488777113927
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 370735,
+					"anteil": 0.22028943310684543
+				},
+				{
+					"kurzname": "CDU",
+					"stimmen": 289140,
+					"anteil": 0.17180597108045717
+				},
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 194010,
+					"anteil": 0.11528005965732689
+				},
+				{
+					"kurzname": "AfD",
+					"stimmen": 159025,
+					"anteil": 0.09449209570128554
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 136998,
+					"anteil": 0.08140372977132349
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 93493,
+					"anteil": 0.05555321178053947
+				},
+				{
+					"kurzname": "Tierschutzpartei",
+					"stimmen": 43598,
+					"anteil": 0.025905778263698456
+				},
+				{
+					"kurzname": "FREIE WÄHLER",
+					"stimmen": 14953,
+					"anteil": 0.008885020009566563
+				},
+				{
+					"kurzname": "PIRATEN",
+					"stimmen": 6580,
+					"anteil": 0.003909812857817695
+				}
+			]
+		},
+		"btw25": {
+			"wahlberechtigte": 2442042,
+			"waehlende": 1961177,
+			"gueltig": 1949533,
+			"wahlbeteiligung": 0.8030889722617384,
+			"parteien": [
+				{
+					"kurzname": "Die Linke",
+					"stimmen": 387222,
+					"anteil": 0.1986229522660042
+				},
+				{
+					"kurzname": "CDU",
+					"stimmen": 356099,
+					"anteil": 0.18265861619167256
+				},
+				{
+					"kurzname": "GRÜNE",
+					"stimmen": 328035,
+					"anteil": 0.16826337384388979
+				},
+				{
+					"kurzname": "AfD",
+					"stimmen": 296990,
+					"anteil": 0.15233904735134005
+				},
+				{
+					"kurzname": "SPD",
+					"stimmen": 295182,
+					"anteil": 0.15141164576337
+				},
+				{
+					"kurzname": "BSW",
+					"stimmen": 129651,
+					"anteil": 0.06650361907184951
+				},
+				{
+					"kurzname": "FDP",
+					"stimmen": 74076,
+					"anteil": 0.03799679205225046
+				},
+				{
+					"kurzname": "Sonstige",
+					"stimmen": 46492,
+					"anteil": 0.023847762515433184
+				},
+				{
+					"kurzname": "Tierschutzpartei",
+					"stimmen": 29384,
+					"anteil": 0.015072327577937895
+				},
+				{
+					"kurzname": "FREIE WÄHLER",
+					"stimmen": 6402,
+					"anteil": 0.003283863366252328
+				}
+			]
+		}
+	}
+}

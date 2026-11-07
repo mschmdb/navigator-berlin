@@ -31,6 +31,7 @@
 		"data:waerme-orte-fetch": "tsx scripts/fetch-static.ts waerme-orte",
 		"data:laerm-db": "tsx scripts/build-laerm-db-lor.ts",
 		"data:stories-kennzahlen": "tsx scripts/build-stories-kennzahlen.ts",
+		"data:stories-wahl": "tsx scripts/build-stories-wahl.ts",
 		"data:kriminalitaet": "tsx scripts/build-kriminalitaet-lor.ts",
 		"data:oepnv-index": "tsx scripts/build-oepnv-stop-index.ts",
 		"data:kiez-scores": "tsx scripts/build-kiez-scores.ts",

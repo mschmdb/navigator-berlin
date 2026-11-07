@@ -54,3 +54,15 @@ describe('transformSbbRow gueltig-Slot je Stimmtyp', () => {
 		expect(t.ungueltig.erststimme).toBe(20);
 	});
 });
+
+describe('transformSbbRow Spalte aufn (AGH 2021)', () => {
+	it('zählt den Zielbezirk in `aufn` nicht als Parteistimmen', () => {
+		const headers = [...HEADERS, 'aufn'];
+		const t = transformSbbRow(
+			{ ...row({ 'Gültige Stimmen': '0', SPD: '0', CDU: '0' }), aufn: '05W331' },
+			headers,
+			'zweitstimme'
+		);
+		expect(t.votes.zweitstimme).toEqual([]);
+	});
+});

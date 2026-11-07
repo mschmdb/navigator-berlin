@@ -18,8 +18,12 @@ const AGH_WAHLKREIS_VARIANTS = [
 	'Abgeordneten-hauswahlkreis'
 ];
 
+/** AGH 2021: Zielbezirk eines zusammengelegten Wahlbezirks, z. B. `05W331`. Keine Partei. */
+const COL_AUFGENOMMEN_IN = 'aufn';
+
 const SBB_IDENTIFIER_COLS = new Set([
 	COL_STIMMART,
+	COL_AUFGENOMMEN_IN,
 	COL_ADRESSE,
 	COL_BEZIRKSNR,
 	'Bezirksname',
