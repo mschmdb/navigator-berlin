@@ -6,7 +6,7 @@ import type { StoryEntry } from '$lib/content/stories/types.js';
 import { renderMarkdownBody } from '$lib/content/updates/render-markdown.js';
 import { splitAtVisual } from '$lib/content/stories/split-at-visual.js';
 import { splitHeading, splitSections } from '$lib/content/stories/split-sections.js';
-import { loadHandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten.server.js';
+import { loadStoriesWahl } from '$lib/stories/wahl-quadrate/handbuch-daten.server.js';
 import { loadBezirkeDaten } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
 import { getLocale } from '$lib/paraglide/runtime.js';
 
@@ -46,7 +46,7 @@ export const load: PageServerLoad = ({ params }) => {
 				const { heading, rest } = splitHeading(s.markdown);
 				return { id: s.id, heading, html: rest ? renderMarkdownBody(rest) : '' };
 			}),
-			handbuchDaten: loadHandbuchDaten()
+			wahlDaten: loadStoriesWahl()
 		};
 	}
 	// Der gerenderte Body steckt in `bodyHtml`, beide Markdown-Fassungen bleiben auf dem Server.

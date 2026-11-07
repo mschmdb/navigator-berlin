@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages.js';
-	import type { HandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
+	import AlleBezirke from '$lib/components/stories/quadrate/alle-bezirke.svelte';
+	import { toHandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
+	import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
 	import { DEFAULT_URL_STATE, type ZeitState } from '$lib/stories/wahl-quadrate/url-state';
 	import { STORY_FONT, STORY_INK, STORY_PAPER } from '$lib/stories/tokens';
 	import KapitelNichtwaehler from './kapitel-nichtwaehler.svelte';
@@ -22,7 +24,7 @@
 		readonly date: string;
 		readonly dateLabel: string;
 		readonly sections: readonly HandbuchSection[];
-		readonly daten: HandbuchDaten;
+		readonly daten: StoriesWahlData;
 		/** Bezirk und Wahl in Kapitel 5, aus der URL. */
 		readonly zeit?: ZeitState;
 		readonly onzeit?: (zeit: ZeitState) => void;
@@ -45,8 +47,9 @@
 
 	const intro = $derived(sections.find((s) => s.id === null));
 	const chapters = $derived(sections.filter((s) => s.id !== null));
+	const kurz = $derived(toHandbuchDaten(daten));
 	const start = $derived(
-		daten.bezirke.find((b) => b.slug === DEFAULT_URL_STATE.zeit.bezirk) ?? daten.bezirke[0]
+		kurz.bezirke.find((b) => b.slug === DEFAULT_URL_STATE.zeit.bezirk) ?? kurz.bezirke[0]
 	);
 
 	function nummer(id: string | null): number | null {
@@ -68,6 +71,7 @@
 	style:--hb-paper={STORY_PAPER}
 	style:--hb-ink={STORY_INK}
 	style:--hb-font={STORY_FONT}
+	style:--bq-sticky-top="var(--header-height, 72px)"
 >
 	<header class="hb-head">
 		<p class="hb-series">{m.stories_index_h1()}</p>
@@ -121,13 +125,11 @@
 				</div>
 			{:else if n === 5}
 				<div class="fig" role="group" aria-label={m.bq_hb_fig_zeit()}>
-					<KapitelZeit {daten} {zeit} {onzeit} />
+					<KapitelZeit daten={kurz} {zeit} {onzeit} />
 				</div>
 			{:else if n === 6}
 				<div class="fig">
-					<p class="hb-platzhalter" data-testid="hb-alle-platzhalter">
-						{m.bq_hb_alle_platzhalter()}
-					</p>
+					<AlleBezirke data={daten} />
 				</div>
 			{/if}
 		</section>
@@ -223,7 +225,7 @@
 		column-gap: var(--hb-s4);
 		border-top: 1px solid var(--hb-ink);
 		padding: var(--hb-s4) 0 var(--hb-s6);
-		scroll-margin-top: var(--hb-s3);
+		scroll-margin-top: calc(var(--header-height, 72px) + var(--hb-s3));
 	}
 	.ch-h {
 		grid-column: 1;
@@ -303,13 +305,6 @@
 		flex-wrap: wrap;
 		gap: var(--hb-s4) var(--hb-s5);
 		align-items: flex-start;
-	}
-	.hb-platzhalter {
-		margin: 0;
-		padding: var(--hb-s4) 0;
-		border: 1px dashed var(--hb-ink);
-		text-align: center;
-		color: var(--hb-muted);
 	}
 	@media (max-width: 899px) {
 		.ch {

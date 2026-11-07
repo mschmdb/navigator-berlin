@@ -59,8 +59,8 @@
 	const hasComposition = $derived(imagePath !== '/og/page/home.png');
 	const ogImage = $derived(`${primaryOrigin}${imagePath}`);
 	const handbuch = $derived(
-		entry.frontmatter.visual === 'berlin-in-quadraten' && data.sections && data.handbuchDaten
-			? { sections: data.sections, daten: data.handbuchDaten }
+		entry.frontmatter.visual === 'berlin-in-quadraten' && data.sections && data.wahlDaten
+			? { sections: data.sections, daten: data.wahlDaten }
 			: null
 	);
 
