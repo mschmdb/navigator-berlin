@@ -5,5 +5,6 @@ export { default as Auswahl } from './auswahl.svelte';
 export { default as Regler } from './regler.svelte';
 export { default as Knopf } from './knopf.svelte';
 export { default as Hinweis } from './hinweis.svelte';
+export { default as PlakatDownload } from './plakat-download.svelte';
 export { partyName, greyNames } from './namen';
 export { default as AlleBezirke } from './alle-bezirke.svelte';

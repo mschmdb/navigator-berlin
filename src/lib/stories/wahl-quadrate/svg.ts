@@ -1,4 +1,5 @@
 import { STORY_FONT, STORY_INK, STORY_PAPER } from '../tokens';
+import type { PlacedSquare } from './anordnung';
 import type { Block } from './layout';
 import { placeLabels, type Measure } from './labels';
 import { mixHex } from './kontrast';
@@ -96,4 +97,26 @@ export function squareSvg(input: SquareSvgInput): string {
 		.map((n) => String(n))
 		.join(' ');
 	return `<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(input.title)}" viewBox="${vb}" shape-rendering="crispEdges">${squareElements(input)}</svg>`;
+}
+
+/** Ein platziertes Quadrat (`placeSquare`) als Gruppe im Seiten-SVG. */
+export function placedSquareSvg(
+	p: PlacedSquare,
+	colors: readonly string[],
+	measure: Measure,
+	exportMode = false
+): string {
+	return (
+		`<g transform="translate(${f3(p.x)} ${f3(p.y)}) scale(${p.size / 100})">` +
+		squareElements({
+			blocks: p.blocks,
+			colors,
+			title: p.title,
+			texts: p.texts,
+			scale: p.scale,
+			measure,
+			exportMode
+		}) +
+		`</g>`
+	);
 }
