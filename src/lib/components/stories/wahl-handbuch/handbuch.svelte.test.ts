@@ -143,6 +143,9 @@ describe('handbuch.svelte', () => {
 		const card = fig('s5').querySelector<HTMLElement>('[data-testid="hb-anim"]')!;
 		await frame();
 		const h0 = card.getBoundingClientRect().height;
+		expect(h0).toBeGreaterThan(300);
+		// Die Tailwind-Klasse `.fixed` setzt position: fixed. Tests laden app.css nicht, darum per Name.
+		expect(card.querySelector('.fixed')).toBeNull();
 		const select = fig('s5').querySelector('select')!;
 		select.value = 'marzahn-hellersdorf';
 		select.dispatchEvent(new Event('change', { bubbles: true }));
