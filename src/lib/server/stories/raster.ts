@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -9,6 +10,12 @@ const TTF_DIR = path.join(os.tmpdir(), 'navigator-berlin-jost');
 
 let ttfFiles: Promise<string[]> | null = null;
 
+/** Dateiname mit Inhalts-Hash: eine neue Jost-Version landet nie in einer alten Cache-Datei. */
+export function ttfName(weight: JostWeight, woff2: Buffer): string {
+	const hash = createHash('sha256').update(woff2).digest('hex').slice(0, 16);
+	return `jost-latin-${weight}-normal-${hash}.ttf`;
+}
+
 /**
  * resvg liest nur TTF/OTF. Die woff2-Schnitte aus @fontsource entpackt wawoff2 einmal pro
  * Prozess in ein Temp-Verzeichnis. Nacheinander, weil wawoff2 WASM-Speicher teilt.
@@ -19,9 +26,9 @@ function jostTtfFiles(): Promise<string[]> {
 		mkdirSync(TTF_DIR, { recursive: true });
 		const files: string[] = [];
 		for (const w of WEIGHTS) {
-			const file = path.join(TTF_DIR, `jost-latin-${w}-normal.ttf`);
+			const woff2 = readFileSync(path.join(FONT_DIR, `jost-latin-${w}-normal.woff2`));
+			const file = path.join(TTF_DIR, ttfName(w, woff2));
 			if (!existsSync(file)) {
-				const woff2 = readFileSync(path.join(FONT_DIR, `jost-latin-${w}-normal.woff2`));
 				// Erst unter eigenem Namen schreiben, dann umbenennen: parallele Builds lesen nie halbe Dateien.
 				const part = `${file}.${process.pid}.part`;
 				writeFileSync(part, Buffer.from(await decompress(woff2)));
