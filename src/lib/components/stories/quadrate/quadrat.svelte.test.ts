@@ -56,7 +56,7 @@ describe('quadrat.svelte', () => {
 			turnout: mitte11.turnout
 		});
 		const table = container.querySelector('table')!;
-		expect(table.classList.contains('sr-only')).toBe(true);
+		expect(table.closest('.sr-only')).not.toBeNull();
 		expect(table.querySelector('caption')?.textContent).toBe(TITLE);
 		const rows = [...table.querySelectorAll('tbody tr')].map((tr) =>
 			[...tr.children].map((c) => c.textContent)
@@ -65,6 +65,16 @@ describe('quadrat.svelte', () => {
 		expect(rows).toContainEqual([`Grau, alle Parteien unter 5${NB}%`, `9,6${NB}%`]);
 		expect(rows).toContainEqual(['Wahlbeteiligung', `55,9${NB}%`]);
 		expect(rows.find((r) => r[0] === 'AfD')).toBeUndefined();
+	});
+
+	it('versteckt die Tabelle, ohne dass sie die Seite verbreitert', () => {
+		const { container } = render(Quadrat, { election: mitte11, title: TITLE });
+		container.style.width = '120px';
+		const hidden = container.querySelector('table')!.closest('.sr-only')!;
+		expect(hidden.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+		// Tabellen ignorieren Breite und Überlauf am eigenen Element, der Wrapper schneidet sie ab.
+		expect(hidden.tagName).not.toBe('TABLE');
+		expect(getComputedStyle(hidden).overflow).toBe('hidden');
 	});
 
 	it('spricht Englisch, wenn die Seite englisch ist', () => {
