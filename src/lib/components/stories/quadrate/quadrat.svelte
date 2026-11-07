@@ -172,7 +172,7 @@
 			>
 		{/each}
 	</svg>
-	<div class="sr-only bq-sr">
+	<div class="bq-sr sr-only">
 		<table>
 			<caption>{title}</caption>
 			<thead>
