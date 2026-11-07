@@ -246,6 +246,7 @@ das Beispiel mit seinen Steuerelementen direkt darüber. -->
 		max-width: 60ch;
 	}
 	.ch-t :global(ul:not(.legend)) {
+		list-style: disc;
 		padding-left: 20px;
 		margin: 0;
 		font-size: 15px;
