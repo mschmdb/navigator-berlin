@@ -46,7 +46,10 @@ describe('splitHeading', () => {
 	});
 
 	it('ohne führende H2 bleibt der Text ganz', () => {
-		expect(splitHeading('Text.\n\n## Später')).toEqual({ heading: null, rest: 'Text.\n\n## Später' });
+		expect(splitHeading('Text.\n\n## Später')).toEqual({
+			heading: null,
+			rest: 'Text.\n\n## Später'
+		});
 		expect(splitHeading('### Klein\nText.')).toEqual({ heading: null, rest: '### Klein\nText.' });
 	});
 });
