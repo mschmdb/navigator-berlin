@@ -1,0 +1,1778 @@
+[
+	{
+		"bezirk": "mitte",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"spd": 0.28659093,
+			"gruene": 0.22452407,
+			"cdu": 0.17854144,
+			"linke": 0.10972898,
+			"fdp": 0.01734845,
+			"piraten": 0.10457981
+		},
+		"sonst": 0.07868631,
+		"fw": 0,
+		"turnout": 0.55935135
+	},
+	{
+		"bezirk": "mitte",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"spd": 0.21546952,
+			"gruene": 0.21332054,
+			"linke": 0.1756776,
+			"cdu": 0.13540989,
+			"afd": 0.09896436,
+			"fdp": 0.06607933,
+			"piraten": 0.02289344
+		},
+		"sonst": 0.07218531,
+		"fw": 0,
+		"turnout": 0.62583204
+	},
+	{
+		"bezirk": "mitte",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.26249,
+			"spd": 0.18759373,
+			"linke": 0.17527354,
+			"cdu": 0.12316828,
+			"fdp": 0.07140599,
+			"afd": 0.04882346
+		},
+		"sonst": 0.12617435,
+		"fw": 0.00507065,
+		"turnout": 0.73598688
+	},
+	{
+		"bezirk": "mitte",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"gruene": 0.2720344,
+			"cdu": 0.20234263,
+			"spd": 0.16555992,
+			"linke": 0.15844987,
+			"afd": 0.0563437,
+			"fdp": 0.05082671
+		},
+		"sonst": 0.09306771,
+		"fw": 0.00137505,
+		"turnout": 0.58963342
+	},
+	{
+		"bezirk": "mitte",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"linke": 0.35844973,
+			"gruene": 0.18238412,
+			"cdu": 0.14091109,
+			"spd": 0.11050375,
+			"afd": 0.08907813,
+			"bsw": 0.04307762,
+			"fdp": 0.02335646
+		},
+		"sonst": 0.05223911,
+		"fw": 0,
+		"turnout": 0.71528217
+	},
+	{
+		"bezirk": "mitte",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"spd": 0.2611406,
+			"cdu": 0.22628407,
+			"linke": 0.18700144,
+			"gruene": 0.16735294,
+			"afd": 0.03904591,
+			"fdp": 0.03682927,
+			"piraten": 0.04740316
+		},
+		"sonst": 0.03276183,
+		"fw": 0.00218077,
+		"turnout": 0.69370115
+	},
+	{
+		"bezirk": "mitte",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"linke": 0.21491806,
+			"cdu": 0.18643229,
+			"spd": 0.1792523,
+			"gruene": 0.17202546,
+			"fdp": 0.08680233,
+			"afd": 0.08223202
+		},
+		"sonst": 0.07608921,
+		"fw": 0.00224835,
+		"turnout": 0.7324993
+	},
+	{
+		"bezirk": "mitte",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.3060973,
+			"spd": 0.20807786,
+			"linke": 0.14128344,
+			"cdu": 0.11906426,
+			"fdp": 0.07953948,
+			"afd": 0.05626842
+		},
+		"sonst": 0.08429456,
+		"fw": 0.00537468,
+		"turnout": 0.67945993
+	},
+	{
+		"bezirk": "mitte",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"linke": 0.27091798,
+			"gruene": 0.21691327,
+			"spd": 0.15025531,
+			"cdu": 0.13465767,
+			"afd": 0.08877169,
+			"bsw": 0.06083759,
+			"fdp": 0.03989167
+		},
+		"sonst": 0.03590995,
+		"fw": 0.00184488,
+		"turnout": 0.78027911
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"gruene": 0.30258957,
+			"spd": 0.23929432,
+			"linke": 0.12952602,
+			"cdu": 0.08372966,
+			"fdp": 0.00994081,
+			"piraten": 0.1466532
+		},
+		"sonst": 0.08826641,
+		"fw": 0,
+		"turnout": 0.62200655
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"gruene": 0.28353444,
+			"linke": 0.23369232,
+			"spd": 0.1824056,
+			"cdu": 0.07830976,
+			"afd": 0.06397647,
+			"fdp": 0.0390727,
+			"piraten": 0.03139138
+		},
+		"sonst": 0.08761731,
+		"fw": 0,
+		"turnout": 0.68470756
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.32324356,
+			"linke": 0.23645587,
+			"spd": 0.1507819,
+			"cdu": 0.07565032,
+			"fdp": 0.04760851,
+			"afd": 0.03148982
+		},
+		"sonst": 0.13062018,
+		"fw": 0.00414982,
+		"turnout": 0.78782525
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"gruene": 0.3352349,
+			"linke": 0.21061772,
+			"spd": 0.14641844,
+			"cdu": 0.13367382,
+			"afd": 0.03673999,
+			"fdp": 0.03322005
+		},
+		"sonst": 0.10293733,
+		"fw": 0.00115775,
+		"turnout": 0.64514565
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"linke": 0.44234133,
+			"gruene": 0.20721817,
+			"spd": 0.09549929,
+			"cdu": 0.08753405,
+			"afd": 0.05998661,
+			"bsw": 0.03824384,
+			"fdp": 0.01575552
+		},
+		"sonst": 0.05342118,
+		"fw": 0,
+		"turnout": 0.77264667
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"linke": 0.24542004,
+			"spd": 0.24247915,
+			"gruene": 0.22241828,
+			"cdu": 0.14092791,
+			"afd": 0.02605245,
+			"fdp": 0.02028045,
+			"piraten": 0.06145304
+		},
+		"sonst": 0.0381768,
+		"fw": 0.00279189,
+		"turnout": 0.74210239
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"linke": 0.2917945,
+			"gruene": 0.21491398,
+			"spd": 0.15941271,
+			"cdu": 0.1299575,
+			"fdp": 0.05652401,
+			"afd": 0.05431942
+		},
+		"sonst": 0.09125965,
+		"fw": 0.00181822,
+		"turnout": 0.77252793
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.38169023,
+			"linke": 0.18826808,
+			"spd": 0.17755711,
+			"cdu": 0.07129411,
+			"fdp": 0.05501805,
+			"afd": 0.03879952
+		},
+		"sonst": 0.08315592,
+		"fw": 0.00421698,
+		"turnout": 0.72363928
+	},
+	{
+		"bezirk": "friedrichshain-kreuzberg",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"linke": 0.33367622,
+			"gruene": 0.26531097,
+			"spd": 0.13388914,
+			"cdu": 0.08565078,
+			"afd": 0.06089859,
+			"bsw": 0.05673366,
+			"fdp": 0.02605418
+		},
+		"sonst": 0.03640536,
+		"fw": 0.00138112,
+		"turnout": 0.82462534
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"spd": 0.29121143,
+			"gruene": 0.19086058,
+			"linke": 0.17897934,
+			"cdu": 0.1382588,
+			"fdp": 0.01272443,
+			"piraten": 0.10476134
+		},
+		"sonst": 0.08320411,
+		"fw": 0,
+		"turnout": 0.60771506
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"linke": 0.21471497,
+			"spd": 0.20141868,
+			"gruene": 0.17883585,
+			"afd": 0.13816336,
+			"cdu": 0.125783,
+			"fdp": 0.04410216,
+			"piraten": 0.02003857
+		},
+		"sonst": 0.07694343,
+		"fw": 0,
+		"turnout": 0.69907096
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.23255815,
+			"linke": 0.1861286,
+			"spd": 0.18371591,
+			"cdu": 0.12671888,
+			"afd": 0.07915369,
+			"fdp": 0.06139371
+		},
+		"sonst": 0.12174754,
+		"fw": 0.00858353,
+		"turnout": 0.78363394
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"gruene": 0.22514918,
+			"cdu": 0.21500392,
+			"linke": 0.16173473,
+			"spd": 0.16172941,
+			"afd": 0.09543756,
+			"fdp": 0.0390255
+		},
+		"sonst": 0.09910068,
+		"fw": 0.00281901,
+		"turnout": 0.67571266
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"linke": 0.28129575,
+			"gruene": 0.17983821,
+			"afd": 0.1545571,
+			"cdu": 0.14098969,
+			"spd": 0.10656284,
+			"bsw": 0.04974276,
+			"fdp": 0.02174466
+		},
+		"sonst": 0.06526902,
+		"fw": 0,
+		"turnout": 0.78977666
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"linke": 0.25505444,
+			"cdu": 0.22805946,
+			"spd": 0.22224908,
+			"gruene": 0.14388016,
+			"afd": 0.04584317,
+			"fdp": 0.02546421,
+			"piraten": 0.04048777
+		},
+		"sonst": 0.03523663,
+		"fw": 0.00372508,
+		"turnout": 0.74407416
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"linke": 0.23972721,
+			"cdu": 0.19314131,
+			"spd": 0.15695299,
+			"gruene": 0.14735048,
+			"afd": 0.11929382,
+			"fdp": 0.06628563
+		},
+		"sonst": 0.07382541,
+		"fw": 0.00342316,
+		"turnout": 0.7934935
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.268066,
+			"cdu": 0.15863597,
+			"spd": 0.15370552,
+			"linke": 0.1484427,
+			"afd": 0.13594115,
+			"fdp": 0.03738151
+		},
+		"sonst": 0.090293,
+		"fw": 0.00753416,
+		"turnout": 0.58133285
+	},
+	{
+		"bezirk": "pankow",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"linke": 0.22507273,
+			"gruene": 0.2029458,
+			"afd": 0.14882386,
+			"cdu": 0.13977915,
+			"spd": 0.1319549,
+			"bsw": 0.07474003,
+			"fdp": 0.03319875
+		},
+		"sonst": 0.03990705,
+		"fw": 0.00357776,
+		"turnout": 0.84379915
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"spd": 0.3120152,
+			"cdu": 0.28209782,
+			"gruene": 0.21708475,
+			"linke": 0.03611837,
+			"fdp": 0.03021988,
+			"piraten": 0.07001131
+		},
+		"sonst": 0.05245266,
+		"fw": 0,
+		"turnout": 0.65103662
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"spd": 0.22846985,
+			"cdu": 0.20335135,
+			"gruene": 0.18522316,
+			"fdp": 0.1228563,
+			"afd": 0.10273088,
+			"linke": 0.09268481,
+			"piraten": 0.01333484
+		},
+		"sonst": 0.0513488,
+		"fw": 0,
+		"turnout": 0.69985661
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.2274799,
+			"spd": 0.22609276,
+			"cdu": 0.20978929,
+			"fdp": 0.10372368,
+			"linke": 0.08630329,
+			"afd": 0.04764936
+		},
+		"sonst": 0.0921341,
+		"fw": 0.00682764,
+		"turnout": 0.78471245
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.30559412,
+			"gruene": 0.21551138,
+			"spd": 0.20710176,
+			"linke": 0.07675631,
+			"fdp": 0.07314309,
+			"afd": 0.05270354
+		},
+		"sonst": 0.0674611,
+		"fw": 0.00172868,
+		"turnout": 0.66382285
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"cdu": 0.25382695,
+			"linke": 0.19868617,
+			"gruene": 0.18093011,
+			"spd": 0.14843589,
+			"afd": 0.09730084,
+			"fdp": 0.03949968,
+			"bsw": 0.03264571
+		},
+		"sonst": 0.04867466,
+		"fw": 0,
+		"turnout": 0.7620731
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"cdu": 0.32333815,
+			"spd": 0.27183917,
+			"gruene": 0.15088233,
+			"linke": 0.09155974,
+			"fdp": 0.06535693,
+			"afd": 0.0481906,
+			"piraten": 0.02655707
+		},
+		"sonst": 0.01898563,
+		"fw": 0.00329036,
+		"turnout": 0.76573741
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"cdu": 0.25333676,
+			"spd": 0.19583204,
+			"gruene": 0.1550388,
+			"fdp": 0.14432737,
+			"linke": 0.11801235,
+			"afd": 0.08337658
+		},
+		"sonst": 0.04863002,
+		"fw": 0.00144607,
+		"turnout": 0.78576032
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.26207864,
+			"spd": 0.22143716,
+			"cdu": 0.21778563,
+			"fdp": 0.10342252,
+			"linke": 0.06610439,
+			"afd": 0.06360488
+		},
+		"sonst": 0.0595135,
+		"fw": 0.00605329,
+		"turnout": 0.66985442
+	},
+	{
+		"bezirk": "charlottenburg-wilmersdorf",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"cdu": 0.2272122,
+			"gruene": 0.21173991,
+			"spd": 0.179175,
+			"linke": 0.14848535,
+			"afd": 0.0940462,
+			"fdp": 0.06191186,
+			"bsw": 0.04502887
+		},
+		"sonst": 0.03075197,
+		"fw": 0.00164864,
+		"turnout": 0.82220625
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"cdu": 0.3420248,
+			"spd": 0.31654474,
+			"gruene": 0.12467717,
+			"linke": 0.03732319,
+			"fdp": 0.020531,
+			"piraten": 0.07345774
+		},
+		"sonst": 0.08544137,
+		"fw": 0,
+		"turnout": 0.58023471
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"spd": 0.27425972,
+			"cdu": 0.24553858,
+			"afd": 0.16558406,
+			"gruene": 0.08679619,
+			"fdp": 0.076158,
+			"linke": 0.06649859,
+			"piraten": 0.01382174
+		},
+		"sonst": 0.07134312,
+		"fw": 0,
+		"turnout": 0.63548169
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"cdu": 0.26564336,
+			"spd": 0.25697613,
+			"gruene": 0.11606988,
+			"afd": 0.09994628,
+			"fdp": 0.07751345,
+			"linke": 0.05610029
+		},
+		"sonst": 0.11982993,
+		"fw": 0.00792068,
+		"turnout": 0.70612366
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.39081228,
+			"spd": 0.21505935,
+			"afd": 0.10991772,
+			"gruene": 0.10112385,
+			"fdp": 0.04578019,
+			"linke": 0.0451464
+		},
+		"sonst": 0.09007775,
+		"fw": 0.00208246,
+		"turnout": 0.56894324
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"cdu": 0.24408016,
+			"afd": 0.21284495,
+			"linke": 0.1630357,
+			"spd": 0.15226816,
+			"gruene": 0.08984415,
+			"bsw": 0.046514,
+			"fdp": 0.03095673
+		},
+		"sonst": 0.06045613,
+		"fw": 0,
+		"turnout": 0.68478669
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"cdu": 0.37349066,
+			"spd": 0.28961438,
+			"linke": 0.09156014,
+			"gruene": 0.07734323,
+			"afd": 0.05938175,
+			"fdp": 0.03822457,
+			"piraten": 0.03017776
+		},
+		"sonst": 0.03614426,
+		"fw": 0.00406324,
+		"turnout": 0.69890414
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"cdu": 0.28776047,
+			"spd": 0.22864662,
+			"afd": 0.14285344,
+			"fdp": 0.09883947,
+			"linke": 0.09411968,
+			"gruene": 0.07976186
+		},
+		"sonst": 0.0651538,
+		"fw": 0.00286466,
+		"turnout": 0.72363641
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.2767171,
+			"cdu": 0.22114517,
+			"gruene": 0.13689807,
+			"afd": 0.10707112,
+			"fdp": 0.10061184,
+			"linke": 0.04832022
+		},
+		"sonst": 0.10004054,
+		"fw": 0.00919595,
+		"turnout": 0.69861465
+	},
+	{
+		"bezirk": "spandau",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"cdu": 0.24455933,
+			"afd": 0.19650398,
+			"spd": 0.18426193,
+			"linke": 0.12225834,
+			"gruene": 0.10555456,
+			"bsw": 0.05937604,
+			"fdp": 0.03937075
+		},
+		"sonst": 0.04489033,
+		"fw": 0.00322473,
+		"turnout": 0.75633735
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"cdu": 0.36169046,
+			"spd": 0.2505712,
+			"gruene": 0.21068102,
+			"fdp": 0.03028339,
+			"linke": 0.0301431,
+			"piraten": 0.06413425
+		},
+		"sonst": 0.05249656,
+		"fw": 0,
+		"turnout": 0.69992771
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"cdu": 0.25537458,
+			"spd": 0.21602209,
+			"gruene": 0.16775806,
+			"fdp": 0.11847416,
+			"afd": 0.10992954,
+			"linke": 0.06935194,
+			"piraten": 0.01394253
+		},
+		"sonst": 0.04914709,
+		"fw": 0,
+		"turnout": 0.74537357
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"cdu": 0.2539048,
+			"spd": 0.22673902,
+			"gruene": 0.19803025,
+			"fdp": 0.10982752,
+			"linke": 0.06202929,
+			"afd": 0.05253045
+		},
+		"sonst": 0.0897744,
+		"fw": 0.00716429,
+		"turnout": 0.81533187
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.35366192,
+			"spd": 0.20192371,
+			"gruene": 0.18402672,
+			"fdp": 0.0795033,
+			"afd": 0.05720303,
+			"linke": 0.05495187
+		},
+		"sonst": 0.06661034,
+		"fw": 0.00211912,
+		"turnout": 0.71143401
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"cdu": 0.29607663,
+			"gruene": 0.16961196,
+			"spd": 0.15562107,
+			"linke": 0.1514459,
+			"afd": 0.10950811,
+			"fdp": 0.0382976,
+			"bsw": 0.02908082
+		},
+		"sonst": 0.05035791,
+		"fw": 0,
+		"turnout": 0.79642764
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"cdu": 0.37189296,
+			"spd": 0.25583354,
+			"gruene": 0.13542093,
+			"linke": 0.07164561,
+			"fdp": 0.06375226,
+			"afd": 0.05337385,
+			"piraten": 0.02512728
+		},
+		"sonst": 0.01977087,
+		"fw": 0.00318271,
+		"turnout": 0.79787916
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"cdu": 0.29773074,
+			"spd": 0.19154881,
+			"fdp": 0.1422744,
+			"gruene": 0.1417156,
+			"linke": 0.09137391,
+			"afd": 0.08842348
+		},
+		"sonst": 0.04507787,
+		"fw": 0.00185519,
+		"turnout": 0.81696126
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.23986909,
+			"cdu": 0.23531666,
+			"gruene": 0.22679561,
+			"fdp": 0.12273263,
+			"afd": 0.05918151,
+			"linke": 0.04762354
+		},
+		"sonst": 0.06060856,
+		"fw": 0.00787239,
+		"turnout": 0.78987706
+	},
+	{
+		"bezirk": "steglitz-zehlendorf",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"cdu": 0.2678611,
+			"gruene": 0.19798525,
+			"spd": 0.18219525,
+			"linke": 0.11444572,
+			"afd": 0.10315689,
+			"fdp": 0.05937127,
+			"bsw": 0.03904697
+		},
+		"sonst": 0.03231454,
+		"fw": 0.00362303,
+		"turnout": 0.84692466
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"cdu": 0.28944725,
+			"spd": 0.27082437,
+			"gruene": 0.22968459,
+			"linke": 0.04024484,
+			"fdp": 0.02038544,
+			"piraten": 0.07760676
+		},
+		"sonst": 0.07180675,
+		"fw": 0,
+		"turnout": 0.64139527
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"spd": 0.24862216,
+			"cdu": 0.19940473,
+			"gruene": 0.18674882,
+			"afd": 0.11411762,
+			"linke": 0.09678274,
+			"fdp": 0.07860286,
+			"piraten": 0.01562599
+		},
+		"sonst": 0.06009509,
+		"fw": 0,
+		"turnout": 0.68906334
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.22638272,
+			"gruene": 0.22032502,
+			"cdu": 0.20632197,
+			"linke": 0.09743792,
+			"fdp": 0.07332727,
+			"afd": 0.0583861
+		},
+		"sonst": 0.11024545,
+		"fw": 0.00757355,
+		"turnout": 0.76991355
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.31086034,
+			"gruene": 0.21703088,
+			"spd": 0.19893032,
+			"linke": 0.08497188,
+			"afd": 0.06263861,
+			"fdp": 0.04584302
+		},
+		"sonst": 0.07757478,
+		"fw": 0.00215016,
+		"turnout": 0.65316724
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"linke": 0.23181878,
+			"cdu": 0.21082602,
+			"gruene": 0.17692171,
+			"spd": 0.1444253,
+			"afd": 0.12074264,
+			"bsw": 0.03882628,
+			"fdp": 0.02676747
+		},
+		"sonst": 0.04967177,
+		"fw": 0,
+		"turnout": 0.75643558
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"cdu": 0.31688565,
+			"spd": 0.2742272,
+			"gruene": 0.15444987,
+			"linke": 0.1028309,
+			"afd": 0.04579435,
+			"fdp": 0.04089846,
+			"piraten": 0.03167997
+		},
+		"sonst": 0.02888232,
+		"fw": 0.00435127,
+		"turnout": 0.75323367
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"cdu": 0.24972498,
+			"spd": 0.2020259,
+			"gruene": 0.15610813,
+			"linke": 0.13192354,
+			"fdp": 0.10369051,
+			"afd": 0.09553219
+		},
+		"sonst": 0.05891189,
+		"fw": 0.00208286,
+		"turnout": 0.77007014
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"gruene": 0.2526958,
+			"spd": 0.24338897,
+			"cdu": 0.18750075,
+			"fdp": 0.09231832,
+			"linke": 0.07503337,
+			"afd": 0.06449231
+		},
+		"sonst": 0.07601365,
+		"fw": 0.00855685,
+		"turnout": 0.74335247
+	},
+	{
+		"bezirk": "tempelhof-schoeneberg",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"cdu": 0.20930295,
+			"gruene": 0.19877425,
+			"spd": 0.17691442,
+			"linke": 0.17298299,
+			"afd": 0.11302058,
+			"bsw": 0.05127556,
+			"fdp": 0.03847956
+		},
+		"sonst": 0.03678312,
+		"fw": 0.00246657,
+		"turnout": 0.81503939
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"spd": 0.27436566,
+			"cdu": 0.26665714,
+			"gruene": 0.1785982,
+			"linke": 0.05638628,
+			"fdp": 0.01795974,
+			"piraten": 0.09599943
+		},
+		"sonst": 0.11003355,
+		"fw": 0,
+		"turnout": 0.57165791
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"spd": 0.23311226,
+			"cdu": 0.17821214,
+			"gruene": 0.1618864,
+			"afd": 0.13786012,
+			"linke": 0.13565199,
+			"fdp": 0.05746696,
+			"piraten": 0.01934697
+		},
+		"sonst": 0.07646318,
+		"fw": 0,
+		"turnout": 0.63228008
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.27186027,
+			"gruene": 0.17633528,
+			"cdu": 0.16216828,
+			"linke": 0.14330573,
+			"afd": 0.07017774,
+			"fdp": 0.0507529
+		},
+		"sonst": 0.11930947,
+		"fw": 0.00609035,
+		"turnout": 0.71026251
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.28101197,
+			"spd": 0.21264964,
+			"gruene": 0.18530834,
+			"linke": 0.13121301,
+			"afd": 0.07522024,
+			"fdp": 0.03105489
+		},
+		"sonst": 0.08189745,
+		"fw": 0.00164445,
+		"turnout": 0.5783772
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"linke": 0.33009622,
+			"cdu": 0.16275041,
+			"afd": 0.14108208,
+			"spd": 0.13048586,
+			"gruene": 0.12359275,
+			"bsw": 0.04673488,
+			"fdp": 0.01839651
+		},
+		"sonst": 0.04686129,
+		"fw": 0,
+		"turnout": 0.69415067
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"cdu": 0.29022086,
+			"spd": 0.26248035,
+			"linke": 0.1426314,
+			"gruene": 0.13885486,
+			"afd": 0.04227404,
+			"fdp": 0.02987888,
+			"piraten": 0.04098378
+		},
+		"sonst": 0.04768153,
+		"fw": 0.00499431,
+		"turnout": 0.68482992
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"cdu": 0.22340238,
+			"spd": 0.19460729,
+			"linke": 0.1821049,
+			"gruene": 0.13044062,
+			"afd": 0.11246491,
+			"fdp": 0.07701555
+		},
+		"sonst": 0.07840864,
+		"fw": 0.00155573,
+		"turnout": 0.70849085
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.2394848,
+			"gruene": 0.22409599,
+			"cdu": 0.17031112,
+			"linke": 0.11873119,
+			"afd": 0.07670844,
+			"fdp": 0.07089961
+		},
+		"sonst": 0.09246221,
+		"fw": 0.00730665,
+		"turnout": 0.68163159
+	},
+	{
+		"bezirk": "neukoelln",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"linke": 0.25271237,
+			"cdu": 0.1803622,
+			"spd": 0.15742342,
+			"gruene": 0.15333852,
+			"afd": 0.13001399,
+			"bsw": 0.05638945,
+			"fdp": 0.02778141
+		},
+		"sonst": 0.03905104,
+		"fw": 0.00292762,
+		"turnout": 0.75964386
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"spd": 0.28869745,
+			"linke": 0.22967085,
+			"cdu": 0.15900482,
+			"gruene": 0.10736911,
+			"fdp": 0.01168968,
+			"piraten": 0.09325769
+		},
+		"sonst": 0.11031038,
+		"fw": 0,
+		"turnout": 0.60925286
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"linke": 0.22619952,
+			"afd": 0.20458049,
+			"spd": 0.20446247,
+			"cdu": 0.1290946,
+			"gruene": 0.09056242,
+			"fdp": 0.0405237,
+			"piraten": 0.01644846
+		},
+		"sonst": 0.08812834,
+		"fw": 0,
+		"turnout": 0.68129903
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.21631342,
+			"linke": 0.18665847,
+			"cdu": 0.14225926,
+			"gruene": 0.13022193,
+			"afd": 0.11893974,
+			"fdp": 0.06611247
+		},
+		"sonst": 0.12622869,
+		"fw": 0.01326601,
+		"turnout": 0.76790743
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.26026925,
+			"spd": 0.17994966,
+			"linke": 0.15864366,
+			"afd": 0.13884199,
+			"gruene": 0.12226384,
+			"fdp": 0.03676358
+		},
+		"sonst": 0.09827925,
+		"fw": 0.00498879,
+		"turnout": 0.6396509
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"linke": 0.2659419,
+			"afd": 0.2370697,
+			"cdu": 0.1515083,
+			"spd": 0.10272016,
+			"gruene": 0.09795313,
+			"bsw": 0.06241718,
+			"fdp": 0.02014207
+		},
+		"sonst": 0.0622476,
+		"fw": 0,
+		"turnout": 0.76124739
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"linke": 0.29476145,
+			"cdu": 0.2541,
+			"spd": 0.21331547,
+			"gruene": 0.07374164,
+			"afd": 0.05541389,
+			"fdp": 0.0198522,
+			"piraten": 0.03538395
+		},
+		"sonst": 0.04731988,
+		"fw": 0.00611153,
+		"turnout": 0.73603499
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"linke": 0.25130808,
+			"cdu": 0.2021548,
+			"afd": 0.1693301,
+			"spd": 0.1553535,
+			"gruene": 0.07840812,
+			"fdp": 0.06486971
+		},
+		"sonst": 0.07356884,
+		"fw": 0.00500683,
+		"turnout": 0.76599904
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.23194754,
+			"gruene": 0.16043308,
+			"linke": 0.15993267,
+			"cdu": 0.13363142,
+			"afd": 0.12557273,
+			"fdp": 0.0792222
+		},
+		"sonst": 0.09539809,
+		"fw": 0.01386226,
+		"turnout": 0.75664617
+	},
+	{
+		"bezirk": "treptow-koepenick",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"linke": 0.21689981,
+			"afd": 0.21572077,
+			"cdu": 0.15320264,
+			"spd": 0.1268078,
+			"gruene": 0.11983434,
+			"bsw": 0.09166207,
+			"fdp": 0.02932167
+		},
+		"sonst": 0.04204215,
+		"fw": 0.00450875,
+		"turnout": 0.82093009
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"spd": 0.28150958,
+			"linke": 0.27391052,
+			"cdu": 0.1747884,
+			"gruene": 0.05634911,
+			"fdp": 0.01291743,
+			"piraten": 0.08750233
+		},
+		"sonst": 0.11302263,
+		"fw": 0,
+		"turnout": 0.51019382
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"afd": 0.2361351,
+			"linke": 0.23535103,
+			"cdu": 0.17316851,
+			"spd": 0.16956519,
+			"gruene": 0.04459125,
+			"fdp": 0.02845132,
+			"piraten": 0.01312047
+		},
+		"sonst": 0.09961715,
+		"fw": 0,
+		"turnout": 0.60945347
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"cdu": 0.20869024,
+			"spd": 0.19686149,
+			"linke": 0.17948547,
+			"afd": 0.16202046,
+			"gruene": 0.06721991,
+			"fdp": 0.05202424
+		},
+		"sonst": 0.12481367,
+		"fw": 0.00888454,
+		"turnout": 0.69289347
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.31802833,
+			"afd": 0.19164568,
+			"spd": 0.15931077,
+			"linke": 0.14448947,
+			"gruene": 0.0552696,
+			"fdp": 0.02968824
+		},
+		"sonst": 0.09872048,
+		"fw": 0.00284744,
+		"turnout": 0.56280736
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"afd": 0.34361196,
+			"linke": 0.20185322,
+			"cdu": 0.16357675,
+			"spd": 0.07889683,
+			"bsw": 0.07363948,
+			"gruene": 0.05330374,
+			"fdp": 0.02022621
+		},
+		"sonst": 0.06489182,
+		"fw": 0,
+		"turnout": 0.69615558
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"linke": 0.32911605,
+			"cdu": 0.25966865,
+			"spd": 0.19201879,
+			"afd": 0.063634,
+			"gruene": 0.03876633,
+			"fdp": 0.01742496,
+			"piraten": 0.03056635
+		},
+		"sonst": 0.06305265,
+		"fw": 0.00575223,
+		"turnout": 0.65116587
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"linke": 0.2606854,
+			"afd": 0.21628608,
+			"cdu": 0.20899817,
+			"spd": 0.14456803,
+			"fdp": 0.05323538,
+			"gruene": 0.04104747
+		},
+		"sonst": 0.06861449,
+		"fw": 0.00656497,
+		"turnout": 0.69252232
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.22920312,
+			"afd": 0.17321493,
+			"cdu": 0.16726914,
+			"linke": 0.15861794,
+			"gruene": 0.08564834,
+			"fdp": 0.07162455
+		},
+		"sonst": 0.10447921,
+		"fw": 0.00994276,
+		"turnout": 0.67534166
+	},
+	{
+		"bezirk": "marzahn-hellersdorf",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"afd": 0.3118032,
+			"linke": 0.16680476,
+			"cdu": 0.16501284,
+			"bsw": 0.10937531,
+			"spd": 0.10887007,
+			"gruene": 0.06004325,
+			"fdp": 0.02563947
+		},
+		"sonst": 0.04545853,
+		"fw": 0.00699258,
+		"turnout": 0.7632373
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"spd": 0.30913964,
+			"linke": 0.290175,
+			"cdu": 0.12308813,
+			"gruene": 0.07589594,
+			"fdp": 0.00873999,
+			"piraten": 0.09282499
+		},
+		"sonst": 0.10013633,
+		"fw": 0,
+		"turnout": 0.53482173
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"linke": 0.26936072,
+			"spd": 0.19742517,
+			"afd": 0.1899238,
+			"cdu": 0.12045705,
+			"gruene": 0.0771422,
+			"fdp": 0.02923,
+			"piraten": 0.01766935
+		},
+		"sonst": 0.09879172,
+		"fw": 0,
+		"turnout": 0.62865698
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.2109434,
+			"linke": 0.21032736,
+			"cdu": 0.1391168,
+			"gruene": 0.12257428,
+			"afd": 0.11822688,
+			"fdp": 0.054332
+		},
+		"sonst": 0.13228416,
+		"fw": 0.01219512,
+		"turnout": 0.72694838
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.25367555,
+			"linke": 0.18564239,
+			"spd": 0.16252175,
+			"afd": 0.13814948,
+			"gruene": 0.11735205,
+			"fdp": 0.03022743
+		},
+		"sonst": 0.10755343,
+		"fw": 0.00487788,
+		"turnout": 0.59630555
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"linke": 0.28824124,
+			"afd": 0.23950613,
+			"cdu": 0.14188848,
+			"spd": 0.08788185,
+			"gruene": 0.08740453,
+			"bsw": 0.06995451,
+			"fdp": 0.01742896
+		},
+		"sonst": 0.06769429,
+		"fw": 0,
+		"turnout": 0.72416314
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"linke": 0.3457306,
+			"cdu": 0.23087074,
+			"spd": 0.20444131,
+			"gruene": 0.05832802,
+			"afd": 0.05483831,
+			"fdp": 0.01552041,
+			"piraten": 0.03718448
+		},
+		"sonst": 0.04743367,
+		"fw": 0.00565245,
+		"turnout": 0.67435522
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"linke": 0.29343554,
+			"cdu": 0.18544649,
+			"afd": 0.167224,
+			"spd": 0.14851215,
+			"gruene": 0.06675231,
+			"fdp": 0.05264195
+		},
+		"sonst": 0.08242595,
+		"fw": 0.00356157,
+		"turnout": 0.7263322
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"spd": 0.22953665,
+			"linke": 0.18304561,
+			"gruene": 0.15426409,
+			"afd": 0.12691352,
+			"cdu": 0.11965261,
+			"fdp": 0.06939299
+		},
+		"sonst": 0.10403989,
+		"fw": 0.01315463,
+		"turnout": 0.71747622
+	},
+	{
+		"bezirk": "lichtenberg",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"linke": 0.23458366,
+			"afd": 0.22441733,
+			"cdu": 0.1375597,
+			"spd": 0.11877564,
+			"gruene": 0.10820109,
+			"bsw": 0.10116436,
+			"fdp": 0.02512101
+		},
+		"sonst": 0.04632191,
+		"fw": 0.0038553,
+		"turnout": 0.78962291
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "agh",
+		"jahr": 2011,
+		"raw": {
+			"cdu": 0.38353464,
+			"spd": 0.28086576,
+			"gruene": 0.13640063,
+			"linke": 0.03323448,
+			"fdp": 0.02342507,
+			"piraten": 0.06697526
+		},
+		"sonst": 0.07556415,
+		"fw": 0,
+		"turnout": 0.62135249
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "agh",
+		"jahr": 2016,
+		"raw": {
+			"cdu": 0.27953446,
+			"spd": 0.21969187,
+			"afd": 0.16120324,
+			"gruene": 0.10618777,
+			"fdp": 0.08831741,
+			"linke": 0.06093582,
+			"piraten": 0.010882
+		},
+		"sonst": 0.07324744,
+		"fw": 0,
+		"turnout": 0.66812912
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "agh",
+		"jahr": 2021,
+		"raw": {
+			"cdu": 0.28265142,
+			"spd": 0.23530251,
+			"gruene": 0.13258643,
+			"afd": 0.09317656,
+			"fdp": 0.07979432,
+			"linke": 0.05366368
+		},
+		"sonst": 0.10943492,
+		"fw": 0.01339017,
+		"turnout": 0.72925824
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "agh",
+		"jahr": 2023,
+		"raw": {
+			"cdu": 0.4018311,
+			"spd": 0.20260803,
+			"gruene": 0.11967149,
+			"afd": 0.10022912,
+			"fdp": 0.0494734,
+			"linke": 0.04530583
+		},
+		"sonst": 0.07782607,
+		"fw": 0.00305496,
+		"turnout": 0.61777901
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "agh",
+		"jahr": 2026,
+		"raw": {
+			"cdu": 0.2704715,
+			"afd": 0.18958315,
+			"linke": 0.1612414,
+			"spd": 0.14216302,
+			"gruene": 0.11065777,
+			"bsw": 0.04092277,
+			"fdp": 0.03076711
+		},
+		"sonst": 0.05419327,
+		"fw": 0,
+		"turnout": 0.71236002
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "btw",
+		"jahr": 2013,
+		"raw": {
+			"cdu": 0.40093547,
+			"spd": 0.26378798,
+			"gruene": 0.08719174,
+			"linke": 0.07930961,
+			"afd": 0.06032536,
+			"fdp": 0.0435539,
+			"piraten": 0.02607282
+		},
+		"sonst": 0.03377945,
+		"fw": 0.00504365,
+		"turnout": 0.72968393
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "btw",
+		"jahr": 2017,
+		"raw": {
+			"cdu": 0.31021798,
+			"spd": 0.20037009,
+			"afd": 0.13702676,
+			"fdp": 0.11380778,
+			"gruene": 0.09107731,
+			"linke": 0.08523741
+		},
+		"sonst": 0.06005699,
+		"fw": 0.00220569,
+		"turnout": 0.75242053
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "btw",
+		"jahr": 2021,
+		"raw": {
+			"cdu": 0.2642204,
+			"spd": 0.22991997,
+			"gruene": 0.15611155,
+			"afd": 0.11371838,
+			"fdp": 0.09228062,
+			"linke": 0.04526047
+		},
+		"sonst": 0.0844737,
+		"fw": 0.01401494,
+		"turnout": 0.65110306
+	},
+	{
+		"bezirk": "reinickendorf",
+		"wahl": "btw",
+		"jahr": 2025,
+		"raw": {
+			"cdu": 0.26428947,
+			"afd": 0.1737732,
+			"spd": 0.17281881,
+			"gruene": 0.12830842,
+			"linke": 0.11820095,
+			"bsw": 0.05322763,
+			"fdp": 0.04498384
+		},
+		"sonst": 0.04097843,
+		"fw": 0.00341925,
+		"turnout": 0.7778667
+	}
+]
