@@ -35,6 +35,8 @@ export interface PlacedSquare extends SquareSpec {
 	blocks: Block[];
 	fills: readonly (string | null)[];
 	labels: Labels | null;
+	/** Mit `insideOnly` platziert: Das SVG zeichnet keine Außenzahlen. */
+	insideOnly: boolean;
 }
 
 export interface Extent {
@@ -62,7 +64,17 @@ export function placeSquare(
 				insideOnly: opts.insideOnly
 			})
 		: null;
-	return { ...spec, x, y, size, scale, blocks, fills: opts.fills, labels };
+	return {
+		...spec,
+		x,
+		y,
+		size,
+		scale,
+		blocks,
+		fills: opts.fills,
+		labels,
+		insideOnly: opts.insideOnly ?? false
+	};
 }
 
 /** Wie weit die Außenzahlen samt Linien über das Quadrat hinausragen, in Seiteneinheiten. */

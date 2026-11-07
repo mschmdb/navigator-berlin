@@ -115,7 +115,8 @@ export function placedSquareSvg(
 			texts: p.texts,
 			scale: p.scale,
 			measure,
-			exportMode
+			exportMode,
+			insideOnly: p.insideOnly
 		}) +
 		`</g>`
 	);
