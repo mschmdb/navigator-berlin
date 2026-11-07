@@ -240,3 +240,39 @@ describe('buildErgebnisPanelRows', () => {
 		expect(wahl2023.sourceUpdatedAt).toBeNull();
 	});
 });
+
+describe('buildErgebnisPanelRows: Farb-Tokens statt DB-Farbe (#179)', () => {
+	const base = {
+		jahr: 2011,
+		stimmen: 1,
+		is_repeat_election: false,
+		parent_slug: null
+	} as const;
+
+	it('PIRATEN nutzt das Token #C25E00 mit Pattern grid statt der DB-Farbe', () => {
+		const { rows } = buildErgebnisPanelRows(
+			[{ ...base, partei: 'PIRATEN', farbe_hex: '#FF820A', anteil: 0.089 }],
+			2011
+		);
+		expect(rows[0].farbeHex).toBe('#C25E00');
+		expect(rows[0].pattern).toBe('grid');
+	});
+
+	it('CDU nutzt das Token auch bei abweichender DB-Farbe', () => {
+		const { rows } = buildErgebnisPanelRows(
+			[{ ...base, partei: 'CDU', farbe_hex: '#000000', anteil: 0.23 }],
+			2011
+		);
+		expect(rows[0].farbeHex).toBe('#1A1A1A');
+		expect(rows[0].pattern).toBe('stripes');
+	});
+
+	it('Partei ohne Token fällt auf die DB-Farbe zurück, ohne Pattern', () => {
+		const { rows } = buildErgebnisPanelRows(
+			[{ ...base, partei: 'Die PARTEI', farbe_hex: '#B5152B', anteil: 0.02 }],
+			2011
+		);
+		expect(rows[0].farbeHex).toBe('#B5152B');
+		expect(rows[0].pattern).toBeNull();
+	});
+});

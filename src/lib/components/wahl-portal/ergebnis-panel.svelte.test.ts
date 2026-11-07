@@ -546,4 +546,61 @@ describe('ergebnis-panel.svelte', () => {
 		});
 		await expect.element(page.getByTestId('ergebnis-panel-empty')).toBeInTheDocument();
 	});
+	describe('Farb-Tokens (#179)', () => {
+		const wahlen2011: WahlPortalListEntry[] = [
+			{
+				slug: '2011-agh-zweitstimme',
+				jahr: 2011,
+				typ: 'agh',
+				isRepeatElection: false,
+				sourceName: 'Amt für Statistik Berlin-Brandenburg',
+				license: 'dl-de/by-2-0',
+				vorlaeufig: false,
+				sourceUpdatedAt: null
+			}
+		];
+		const series2011 = {
+			...SERIES_BERLIN,
+			points: [
+				{
+					jahr: 2011,
+					partei: 'PIRATEN',
+					farbe_hex: '#FF820A',
+					anteil: 0.089,
+					stimmen: 130,
+					is_repeat_election: false,
+					parent_slug: null
+				}
+			]
+		};
+
+		it('PIRATEN-Swatch nutzt das Token #C25E00 statt der DB-Farbe', async () => {
+			render(ErgebnisPanelContextProbe, {
+				reihe: 'agh',
+				ebene: 'kiez',
+				jahr: 2011,
+				wahlen: wahlen2011,
+				fetchFn: fakeFetch([['/api/wahl/series', series2011]])
+			});
+			const swatch = page.getByTestId('ergebnis-panel-swatch-PIRATEN');
+			await expect.element(swatch).toHaveStyle({ backgroundColor: 'rgb(194, 94, 0)' });
+			expect(swatch.element().getAttribute('data-pattern')).toBe('grid');
+		});
+
+		it('mit aktivem Muster-Toggle zeigt der Swatch das Gitter-Pattern', async () => {
+			render(ErgebnisPanelContextProbe, {
+				reihe: 'agh',
+				ebene: 'kiez',
+				jahr: 2011,
+				wahlen: wahlen2011,
+				fetchFn: fakeFetch([['/api/wahl/series', series2011]]),
+				patternsEnabled: true
+			});
+			const swatch = page.getByTestId('ergebnis-panel-swatch-PIRATEN');
+			await expect.element(swatch).toBeInTheDocument();
+			const bg = getComputedStyle(swatch.element()).backgroundImage;
+			expect(bg).toContain('repeating-linear-gradient');
+			expect(bg).toContain('rgb(194, 94, 0)');
+		});
+	});
 });
