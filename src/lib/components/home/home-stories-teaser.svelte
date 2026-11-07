@@ -37,7 +37,7 @@
 				<StoryEntryItem
 					{entry}
 					preview={stories.preview}
-					quadrate={stories.quadrate}
+					quadrat={stories.quadrat}
 					headingLevel={3}
 				/>
 			{/each}

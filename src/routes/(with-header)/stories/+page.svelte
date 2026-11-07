@@ -71,7 +71,7 @@
 			data-testid="stories-list"
 		>
 			{#each data.entries as entry (entry.slug)}
-				<StoryEntryItem {entry} preview={data.preview} quadrate={data.quadrate} />
+				<StoryEntryItem {entry} preview={data.preview} quadrat={data.quadrat} />
 			{/each}
 		</ul>
 	{:else}

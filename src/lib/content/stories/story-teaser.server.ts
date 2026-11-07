@@ -9,12 +9,12 @@ export interface StoryTeaserData {
 	readonly entries: readonly StoryEntry[];
 	/** Bezirk für die Miniaturen. `null`, wenn kein Beitrag `preview` setzt. */
 	readonly preview: BezirkItem | null;
-	/** Anteile der zwölf Quadrate für die Miniatur von „Berlin in Quadraten“, sonst `null`. */
-	readonly quadrate?: readonly (readonly number[])[] | null;
+	/** Anteile des Quadrats für die Miniatur von „Berlin in Quadraten“, sonst `null`. */
+	readonly quadrat?: readonly number[] | null;
 }
 
 /** Miniatur-Daten je `preview`-Wert, nur geladen, wenn ein Beitrag sie braucht. */
-export function quadrateFor(entries: readonly StoryEntry[]): number[][] | null {
+export function quadratFor(entries: readonly StoryEntry[]): number[] | null {
 	return entries.some((e) => e.frontmatter.preview === 'berlin-in-quadraten')
 		? vorschauShares(loadStoriesWahl())
 		: null;
@@ -40,6 +40,6 @@ export function loadStoryTeaser(limit = 3): StoryTeaserData {
 	return {
 		entries,
 		preview: wantsPreview ? (teaserBezirke()[0] ?? null) : null,
-		quadrate: quadrateFor(entries)
+		quadrat: quadratFor(entries)
 	};
 }

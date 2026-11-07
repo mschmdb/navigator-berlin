@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { loadStoriesFromModules } from '$lib/content/stories/load-stories.js';
-import { quadrateFor } from '$lib/content/stories/story-teaser.server.js';
+import { quadratFor } from '$lib/content/stories/story-teaser.server.js';
 import { teaserBezirke } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
 import type { BezirkItem } from '$lib/stories/punkt-linie-kiez/types.js';
 import type { StoryEntry } from '$lib/content/stories/types.js';
@@ -41,6 +41,6 @@ export const load: PageServerLoad = async () => {
 	return {
 		entries,
 		preview: wantsPreview ? loadPreview() : null,
-		quadrate: quadrateFor(entries)
+		quadrat: quadratFor(entries)
 	};
 };

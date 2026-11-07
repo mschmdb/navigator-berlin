@@ -17,13 +17,13 @@
 		readonly entry: StoryEntry;
 		/** Bezirk für die Miniatur. Sie erscheint nur, wenn der Beitrag `preview` setzt. */
 		readonly preview: BezirkItem | null;
-		/** Anteile der zwölf Quadrate für „Berlin in Quadraten“ (`preview: berlin-in-quadraten`). */
-		readonly quadrate?: readonly (readonly number[])[] | null;
+		/** Anteile des Quadrats für „Berlin in Quadraten“ (`preview: berlin-in-quadraten`). */
+		readonly quadrat?: readonly number[] | null;
 		/** Überschriftenebene: 2 auf der Übersicht, 3 unter einer Teaser-Überschrift. */
 		readonly headingLevel?: 2 | 3;
 	}
 
-	const { entry, preview, quadrate = null, headingLevel = 2 }: Props = $props();
+	const { entry, preview, quadrat = null, headingLevel = 2 }: Props = $props();
 	const kind = $derived(entry.frontmatter.preview);
 
 	const locale = $derived(getLocale());
@@ -37,7 +37,7 @@
 	data-testid="stories-entry"
 	data-slug={entry.slug}
 >
-	{#if kind === 'berlin-in-quadraten' && quadrate}
+	{#if kind === 'berlin-in-quadraten' && quadrat}
 		<a
 			{href}
 			tabindex="-1"
@@ -45,7 +45,7 @@
 			class="block shrink-0"
 			data-testid="stories-entry-preview"
 		>
-			<QuadrateVorschau shares={quadrate} size={112} />
+			<QuadrateVorschau shares={quadrat} size={112} />
 		</a>
 	{:else if kind === 'punkt-linie-kiez-bezirke' && preview}
 		<a
