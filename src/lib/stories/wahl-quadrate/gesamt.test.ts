@@ -193,7 +193,8 @@ describe('grauTabelle', () => {
 
 	it('folgt der Schwelle: bei 0 % steht nur Sonstiges im Grau', () => {
 		const rows = grauTabelle(data, 'btw', with_({ schwelle: 0 }));
-		for (const r of rows) expect(r.darin.filter((p) => p.key !== 'fw' && p.key !== 'tier')).toEqual([]);
+		for (const r of rows)
+			expect(r.darin.filter((p) => p.key !== 'fw' && p.key !== 'tier')).toEqual([]);
 	});
 
 	it('lässt ausgeblendete Wahlen weg', () => {

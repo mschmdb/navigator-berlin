@@ -85,10 +85,7 @@ function bezugsSlug(s: GesamtState) {
 	return null;
 }
 
-export function sortiereBezirke(
-	bezirke: readonly BezirkWahlen[],
-	s: GesamtState
-): BezirkWahlen[] {
+export function sortiereBezirke(bezirke: readonly BezirkWahlen[], s: GesamtState): BezirkWahlen[] {
 	const out = [...bezirke];
 	const byNr = (a: BezirkWahlen, b: BezirkWahlen): number => a.nr.localeCompare(b.nr);
 	if (s.sort === 'alpha') return out.sort((a, b) => a.name.localeCompare(b.name, 'de'));
@@ -166,7 +163,10 @@ export function grauTabelle(data: StoriesWahlData, typ: WahlTyp, s: GesamtState)
 }
 
 /** Kleinster und größter Grauanteil berlinweit in ganzen Prozent, für den Hinweis bei ausgeblendetem Grau. */
-export function grauSpanne(data: StoriesWahlData, s: GesamtState): { lo: number; hi: number } | null {
+export function grauSpanne(
+	data: StoriesWahlData,
+	s: GesamtState
+): { lo: number; hi: number } | null {
 	const werte = wahlTypen(s.wahl).flatMap((typ) =>
 		grauTabelle(data, typ, s).map((r) => Math.round(r.grau * 100))
 	);
