@@ -26,7 +26,9 @@ const LABELS: Readonly<Record<string, (locale: Locale) => string>> = {
 		m.naehe_cat_tagesstaette_wohnungslose(undefined, { locale }),
 	'Tagesstätte für Frauen und FLINTA': (locale) =>
 		m.naehe_cat_tagesstaette_flinta(undefined, { locale }),
-	Wärmestube: (locale) => m.naehe_cat_waermestube(undefined, { locale })
+	Wärmestube: (locale) => m.naehe_cat_waermestube(undefined, { locale }),
+	Bahnhofsmission: (locale) => m.naehe_cat_bahnhofsmission(undefined, { locale }),
+	Suppenküche: (locale) => m.naehe_cat_suppenkueche(undefined, { locale })
 };
 
 /** Kategorie-Rohwert (deutsch, aus den Daten) als Anzeigetext der Seiten-Locale. */

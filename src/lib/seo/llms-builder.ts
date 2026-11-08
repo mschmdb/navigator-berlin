@@ -132,7 +132,7 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 		loc: `${ctx.origin}/kaelte`,
 		name: 'Kälte-Navigator Berlin',
 		description:
-			'Landing für Menschen in der Kälte mit den Nummern der Berliner Kältehilfe, Erreichbarkeit der Dienste und 227 warmen Orten für den Winter',
+			'Landing für Menschen in der Kälte mit den Nummern der Berliner Kältehilfe, Erreichbarkeit der Dienste und 252 warmen Orten für den Winter',
 		section: 'static'
 	});
 	out.push({

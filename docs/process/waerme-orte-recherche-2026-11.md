@@ -114,3 +114,90 @@ Bestand mit Zweifeln, unverändert gelassen:
 - Stadtteilbibliothek Adlershof: ab 9.11. rund 4 Wochen zu, Neueröffnung 8.12. in neuen Räumen ohne genannte Adresse.
 
 Einmalige Schließtage (12.11. Charlottenburg-Wilmersdorf und Mitte, 27.11. Marzahn-Hellersdorf, 18. bis 23.11. Erich Weinert) stehen nicht im Datensatz. Sie wären nach wenigen Tagen veraltet.
+
+## Runde 2: Bahnhofsmissionen, Suppenküchen, offene Kirchen, Wärmeräume
+
+Stand 08.11.2026. 8 Recherche-Agenten in vier Suchfeldern, Kirchen, Suppenküchen und Bezirke zusätzlich nach Bezirken geteilt. Jeden aufgenommenen Ort haben wir danach selbst an der Quelle gelesen. Die Regeln aus Runde 1 gelten weiter.
+
+- GeoJSON danach: 252 Orte (vorher 233).
+- 19 Orte neu, 1 Ort aus dem Bestand freigeschaltet (Sophienkirche), 1 Ort entfernt (Nikodemus-Kirche).
+- Neue Kategorien mit DE- und EN-Label: „Bahnhofsmission“ (Station mission), „Suppenküche“ (Soup kitchen).
+- Die 19 neuen Orte haben keinen OSM-Kandidaten, weil OSM für sie keine Öffnungszeiten führt. Sie stehen deshalb in `places-manual.json`, mit Lage des OSM-Objekts oder Nominatim-Treffer in `coord_source`.
+- Undatierte Quellen: Feste Öffnungszeiten ohne Jahresangabe auf Seiten von Betreiber, Gemeinde oder Kirchenkreis reichen als Beleg, solange keine andere Quelle widerspricht. Entscheidung Matze, 08.11.2026. Das betrifft 18 der neuen Orte: alle 15 Kirchen, die Bahnhofsmission am Hauptbahnhof, die Wohnungslosentagesstätte Schöneberg und das Café Treffpunkt. Gottesdienstzeiten zählen nicht.
+- Aufenthalt ohne Konsum und Eintritt frei nennt keine Quelle ausdrücklich. Die Felder stehen überall auf `unknown`.
+
+### Neu je Suchfeld
+
+| Suchfeld | Neu |
+| --- | --- |
+| Bahnhofsmissionen | 1 |
+| Suppenküchen, Mittagstische, Tagesstätten | 4 |
+| Kirchen mit offenen Türen | 15 (davon Sophienkirche aus dem Bestand) |
+| Wärmeräume der Bezirke und des Senats | 0 |
+
+| Ort | Adresse | Zeiten | Quelle |
+| --- | --- | --- | --- |
+| Bahnhofsmission am Hauptbahnhof | Europaplatz 1, 10557 | Aufenthalt Mo bis Fr 8:30 bis 12 und 13 bis 16:30 Uhr | berliner-stadtmission.de |
+| Suppenküche Franziskanerkloster Pankow | Wollankstraße 18, 13187 | Di bis So 9 bis 11:30 und 12:45 bis 14:30 Uhr | suppe.franziskaner.de |
+| Suppenküche Am Lietzensee | Herbartstraße 4-6, 14057 | Mo bis Mi 12 bis 13:30 Uhr (Oktober bis April) | cw-evangelisch.de, Wegweiser Bezirksamt Charlottenburg-Wilmersdorf 2026/27 |
+| Wohnungslosentagesstätte Schöneberg (Unionhilfswerk) | Gustav-Freytag-Straße 1, 10827 | Di bis So 11:30 bis 17 Uhr | unionhilfswerk.de |
+| Café Treffpunkt der Heilsarmee | Kuglerstraße 11, 10439 | Mi 8:30 bis 14, Do, Fr 14 bis 18, Sa 8:30 bis 12:30 Uhr | heilsarmee.de/prenzlauerberg |
+| Sophienkirche | Große Hamburger Straße 29/30, 10115 | täglich 14 bis 18 Uhr | gemeinde-am-weinberg.de |
+| Kapelle der Versöhnung | Bernauer Straße 4, 10115 | Di bis So 10 bis 16 Uhr | kapelle-versoehnung.de |
+| Martin-Luther-Kirche | Fuldastraße 50, 12045 | Mo bis Fr 8 bis 19 Uhr | neukoelln-evangelisch.de |
+| Genezarethkirche | Herrfurthplatz 14, 12049 | Mo bis Fr 10 bis 15 Uhr | neukoelln-evangelisch.de |
+| Hephatha-Kirche | Fritz-Reuter-Allee 135, 12359 | Mi 15:30 bis 18 Uhr | neukoelln-evangelisch.de |
+| Dorfkirche Rudow | Köpenicker Straße 185, 12355 | Mi, Sa 10 bis 12 Uhr | neukoelln-evangelisch.de |
+| Kirche Neu-Buckow | Marienfelder Chaussee 66, 12349 | Mi 14 bis 16:30 Uhr | neukoelln-evangelisch.de |
+| Wichernkirche | Wichernstraße, Ecke Schlehenweg, 13587 | täglich 8 bis 17 Uhr im Winter | spandau-evangelisch.de |
+| Dorfkirche Kladow | Alt-Kladow, 14089 | täglich 8 bis 18 Uhr | spandau-evangelisch.de |
+| Dorfkirche Gatow | Alt-Gatow 32, 14089 | Sa, So 11 bis 16 Uhr | spandau-evangelisch.de |
+| Stiftskirche im Johannesstift | Schönwalder Allee 26, 13587 | So 13:30 bis 15:30 Uhr (November bis März) | spandau-evangelisch.de |
+| St.-Nikolai-Kirche | Reformationsplatz 1, 13597 | Mo bis Sa 12 bis 14 Uhr | spandau-evangelisch.de |
+| Matthäuskirche | Schloßstraße 44a, 12165 | Mi bis So 14 bis 17 Uhr (November bis März) | matthaeus-steglitz.de |
+| Apostel-Paulus-Kirche | Grunewaldstraße 77a, 10823 | in der Regel täglich 12 bis 18 Uhr | ev-apg.de |
+| Johanneskirche Frohnau | Zeltinger Platz, 13465 | täglich 10 bis 15 Uhr in der dunklen Jahreszeit | ekg-frohnau.de |
+
+### Entfernt
+
+| id | Ort | Grund |
+| --- | --- | --- |
+| way/279765936 | Nikodemus-Kirche | Zeiten nur aus cylex.de. Gemeinde und Kirchenkreis führen sie nicht als offene Kirche. |
+
+### Verworfen
+
+- **Bahnhofsmission Zoo:** Die Quellen widersprechen sich bei den Zeiten, ob man sich aufhalten darf, steht nirgends.
+- **Bahnhofsmission Ostbahnhof:** bahnhofsmission.de meldet derzeit „Aufenthalt nicht möglich“, IN VIA nennt Mo bis So 8 bis 17 Uhr.
+- **Weitere Bahnhofsmissionen** (Lichtenberg, Südkreuz, Gesundbrunnen): keine gefunden.
+- **Suppenküche St. Marien, Bergheimer Straße 1:** Bezirksamt nennt Ende 13:30 Uhr, Betreiber 13 Uhr.
+- **Aktion Warmes Essen, Pauluskirche Zehlendorf:** Wegweiser 2025/26 verlangt einen einmaligen Nachweis der Bedürftigkeit.
+- **Suppenküche Maria Hilfe der Christen (Spandau), Mittagstisch Adventgemeinde Zehlendorf, Suppenküche Lichtenrade, Suppenküche Herz-Jesu (Zionskirche):** ohne Datum, ohne Adresse, nur Quellen aus Vorjahren oder Aufenthalt unklar.
+- **Treffpunkt Strohhalm (Treptow-Köpenick):** eigene Seite und Stiftung SPI nennen verschiedene Zeiten.
+- **Mittagstisch Lindenkirche Wilmersdorf:** Bezirk schreibt „in diesem Winter“ ohne Jahr.
+- **Offener Mittagstisch Wittenau, „Essen ist fertig“ (St. Christophorus), Kältestube St. Klara, Warmer Otto, Tagestreff Mitte (GEBEWO):** Einzelveranstaltung, Ausgabe im Freien, nur bei Frost (Januar 2026), geschlossen oder Quelle bis 2023.
+- **Kirchen ohne feste Zeiten an der Gemeindequelle:** Parochialkirche (nur berlin.de), Alt-Pankow, Pfingstkirche, Immanuelkirche, St. Hedwig, Alt-Buckow, Magdalenenkirche (nur mit Schlüssel), Kirchen in Treptow-Köpenick, Lichtenberg und Marzahn-Hellersdorf (nur Sommerzeiten oder Verzeichnisse).
+- **Kirchen mit Widerspruch oder Unklarheit:** Philipp-Melanchthon-Kirche (Kirchenkreis und Küsterei widersprechen sich), Patmos-Kirche (Mittwoch fehlt beim Kirchenkreis), Bethlehemskirche Rixdorf (Pause angedeutet), Petruskirche Lichterfelde (Kirche liegt laut OSM am Oberhofer Platz, die Quelle nennt nur Ostpreußendamm 64), Kirche im Waldkrankenhaus (Adresse nicht an der Quelle).
+- **Christophoruskirche Spandau, Dorfkirche Alt-Staaken:** nur im Advent oder im Sommer offen.
+- **Zionskirche:** Die Gemeinde öffnet „so oft wie möglich“, `oh_recherche` bleibt `unklar`.
+- **KIEZKLUBs Treptow-Köpenick, Wintertreff Allende-Center, Ort der Wärme im Humboldt Forum:** „Orte der Wärme“ nur für 2025/26 belegt, Angebot an Senioren gerichtet, nur zweimal im Monat oder Start 2026/27 ohne Zeiten.
+- **Caritas-Wärmestube Tübinger Straße, City-Station:** Widerspruch aus Runde 1 besteht weiter.
+
+### Bezirke ohne Veröffentlichung 2026/27
+
+Stand 08.11.2026. Bezirk hat noch nichts veröffentlicht:
+
+- Mitte
+- Pankow
+- Lichtenberg
+- Marzahn-Hellersdorf
+- Treptow-Köpenick
+- Spandau
+- Tempelhof-Schöneberg
+- Steglitz-Zehlendorf
+- Reinickendorf
+
+Der Senat nennt keine Orte und verweist auf den Kältehilfe-Wegweiser und die App. Übersichten 2026/27 haben Charlottenburg-Wilmersdorf, Friedrichshain-Kreuzberg und Neukölln. Sie enthalten keine Tagesorte, die nicht schon in Runde 1 standen. Ausnahme ist die Suppenküche Am Lietzensee.
+
+### Folgeaufgabe
+
+Die Zahlen im Methodik-Eintrag (`src/lib/data/layer-methodology.ts`, `messages/de.json`, `messages/en.json`) stehen fest im Text. Ein Test in `layer-methodology.test.ts` vergleicht sie mit `enrichment.json` und dem GeoJSON und schlägt nach jedem Datenlauf fehl, bis jemand sie anpasst. Sie direkt aus den Daten abzuleiten bräuchte Platzhalter in den Messages und einen Umbau des DE-Paritätstests. Das ist ein eigener Schritt.

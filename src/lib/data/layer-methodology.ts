@@ -421,16 +421,16 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'waerme-orte': {
 		calculation:
-			'Beheizte öffentliche Orte für den Winter aus OpenStreetMap, redaktionell angereichert. Die Redaktion hat 677 Kandidaten recherchiert und 230 als geeignet eingestuft. Nach Abzug von 3 Dubletten zeigt der Layer 227 Orte. Winter-Öffnung, Aufenthalt ohne Konsum und Eintritt stammen aus Belegen der Betreiber, jeweils mit Quelle und Prüfdatum. Der Status „jetzt offen“ nutzt die Recherche-Zeiten, bei Orten ohne Recherche-Zeiten die OSM-Zeiten. Nennt die Recherche keinen festen Plan, zeigt der Layer keinen Status.',
+			'Beheizte öffentliche Orte für den Winter aus OpenStreetMap, redaktionell angereichert, dazu Orte aus eigener Recherche, die der OSM-Filter nicht erfasst. Die Redaktion hat 704 Kandidaten recherchiert und 255 als geeignet eingestuft. Nach Abzug von 3 Dubletten zeigt der Layer 252 Orte, 27 davon aus eigener Recherche. Winter-Öffnung, Aufenthalt ohne Konsum und Eintritt stammen aus Belegen der Betreiber oder amtlicher Übersichten, jeweils mit Quelle und Prüfdatum. Der Status „jetzt offen“ nutzt die Recherche-Zeiten, bei Orten ohne Recherche-Zeiten die OSM-Zeiten. Nennt die Recherche keinen festen Plan, zeigt der Layer keinen Status.',
 		aggregationLevel: 'point-osm',
-		updateFrequency: 'Momentaufnahme vom 16.10.2026 (OSM-Stand 15.10.2026), Neuprüfung bei Bedarf',
+		updateFrequency: 'Momentaufnahme vom 08.11.2026 (OSM-Stand 15.10.2026), Neuprüfung bei Bedarf',
 		authorityKey: 'navigator-redaktion-osm-waerme-orte',
 		authoritySuffix: AUTHORITY_SUFFIX_OSM_ODBL,
 		coverageGaps: [
-			'Die Winter-Öffnung ist bei 212 von 227 Orten belegt, der Aufenthalt ohne Konsum bei 97. Bei den übrigen steht „nicht geprüft“. Öffnungszeiten können veralten, das Prüfdatum zeigt den Stand der Recherche. Einzelne Schließtage fehlen teils im Status.'
+			'Die Winter-Öffnung ist bei 244 von 252 Orten belegt, der Aufenthalt ohne Konsum bei 98. Bei den übrigen steht „nicht geprüft“. Feste Öffnungszeiten ohne Jahresangabe auf Seiten von Betreiber, Gemeinde oder Kirchenkreis gelten als Beleg. Öffnungszeiten können veralten, das Prüfdatum zeigt den Stand der Recherche. Einzelne Schließtage fehlen teils im Status.'
 		],
 		omissions: [
-			'Keine Notübernachtungen und Wärmestuben, kein Behörden-Ersatz, kein Rechtsanspruch auf Aufenthalt. Betreiber üben das Hausrecht aus.'
+			'Keine Notübernachtungen und Nachtcafés, freie Plätze zeigt die App der Kältehilfe. Tagesstätten, Wärmestuben, Suppenküchen, Bahnhofsmissionen und offene Kirchen sind nur mit Beleg des Betreibers oder eines Amts dabei. Kein Behörden-Ersatz, kein Rechtsanspruch auf Aufenthalt. Betreiber üben das Hausrecht aus.'
 		],
 		relatedLayers: ['kuehle-orte']
 	},

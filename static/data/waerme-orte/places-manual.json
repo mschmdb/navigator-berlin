@@ -1,5 +1,16 @@
 [
 	{
+		"id": "manual/apostel-paulus-kirche",
+		"name": "Apostel-Paulus-Kirche",
+		"cat": "Kirche",
+		"lat": 52.4891552,
+		"lon": 13.3527385,
+		"addr": "Grunewaldstraße 77a",
+		"plz": "10823",
+		"website": "https://www.ev-apg.de/",
+		"coord_source": "Lage des OSM-Objekts way/23453689 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08"
+	},
+	{
 		"id": "manual/awo-kiezcafe-petersburger-strasse",
 		"name": "AWO Kiezcafé",
 		"cat": "Tagesstätte",
@@ -11,6 +22,138 @@
 		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/9718746137 (ODbL)"
 	},
 	{
+		"id": "manual/bahnhofsmission-hauptbahnhof",
+		"name": "Bahnhofsmission am Hauptbahnhof",
+		"cat": "Bahnhofsmission",
+		"lat": 52.5249451,
+		"lon": 13.3696614,
+		"addr": "Europaplatz 1",
+		"plz": "10557",
+		"website": "https://www.berliner-stadtmission.de/bahnhofsmission/bahnhofsmission-am-hauptbahnhof",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/3856100103 (ODbL), Treffer ist der Bahnhof, die Lage der Bahnhofsmission im Gebäude nennt die Quelle nicht"
+	},
+	{
+		"id": "manual/cafe-treffpunkt-heilsarmee-prenzlauer-berg",
+		"name": "Café Treffpunkt der Heilsarmee",
+		"cat": "Tagesstätte für Wohnungslose",
+		"lat": 52.5526043,
+		"lon": 13.4167972,
+		"addr": "Kuglerstraße 11",
+		"plz": "10439",
+		"website": "https://www.heilsarmee.de/prenzlauerberg/sozialarbeit.html",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/9460247087 (ODbL)"
+	},
+	{
+		"id": "manual/dorfkirche-gatow",
+		"name": "Dorfkirche Gatow",
+		"cat": "Kirche",
+		"lat": 52.4865142,
+		"lon": 13.1816452,
+		"addr": "Alt-Gatow 32",
+		"plz": "14089",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM way/117765489 (ODbL)"
+	},
+	{
+		"id": "manual/dorfkirche-kladow",
+		"name": "Dorfkirche Kladow",
+		"cat": "Kirche",
+		"lat": 52.4528486,
+		"lon": 13.1449725,
+		"addr": "Alt-Kladow",
+		"plz": "14089",
+		"website": "",
+		"coord_source": "Lage des OSM-Objekts way/300641440 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08"
+	},
+	{
+		"id": "manual/dorfkirche-rudow",
+		"name": "Dorfkirche Rudow",
+		"cat": "Kirche",
+		"lat": 52.4184239,
+		"lon": 13.4976268,
+		"addr": "Köpenicker Straße 185",
+		"plz": "12355",
+		"website": "https://www.kirche-rudow.de",
+		"coord_source": "Lage des OSM-Objekts way/129764630 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08; OSM nennt Köpenicker Straße 175"
+	},
+	{
+		"id": "manual/genezarethkirche",
+		"name": "Genezarethkirche",
+		"cat": "Kirche",
+		"lat": 52.4770293,
+		"lon": 13.4221369,
+		"addr": "Herrfurthplatz 14",
+		"plz": "12049",
+		"website": "",
+		"coord_source": "Lage des OSM-Objekts relation/8018862 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08"
+	},
+	{
+		"id": "manual/hephatha-kirche",
+		"name": "Hephatha-Kirche",
+		"cat": "Kirche",
+		"lat": 52.4417415,
+		"lon": 13.4462498,
+		"addr": "Fritz-Reuter-Allee 135",
+		"plz": "12359",
+		"website": "",
+		"coord_source": "Lage des OSM-Objekts way/387648874 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08; OSM nennt Fritz-Reuter-Allee 130-136"
+	},
+	{
+		"id": "manual/johanneskirche-frohnau",
+		"name": "Johanneskirche Frohnau",
+		"cat": "Kirche",
+		"lat": 52.6342252,
+		"lon": 13.2920437,
+		"addr": "Zeltinger Platz",
+		"plz": "13465",
+		"website": "https://www.ekg-frohnau.de/",
+		"coord_source": "Lage des OSM-Objekts way/256699912 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08; OSM nennt Zeltinger Straße ohne Hausnummer"
+	},
+	{
+		"id": "manual/kapelle-der-versoehnung",
+		"name": "Kapelle der Versöhnung",
+		"cat": "Kirche",
+		"lat": 52.5357998,
+		"lon": 13.3918992,
+		"addr": "Bernauer Straße 4",
+		"plz": "10115",
+		"website": "https://www.kapelle-versoehnung.de",
+		"coord_source": "Lage des OSM-Objekts way/45664095 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08; OSM nennt Bernauer Straße 8, die Gemeinde Nr. 4"
+	},
+	{
+		"id": "manual/kirche-neu-buckow",
+		"name": "Kirche Neu-Buckow",
+		"cat": "Kirche",
+		"lat": 52.4182763,
+		"lon": 13.415952,
+		"addr": "Marienfelder Chaussee 66",
+		"plz": "12349",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/2854084514 (ODbL)"
+	},
+	{
+		"id": "manual/martin-luther-kirche-neukoelln",
+		"name": "Martin-Luther-Kirche",
+		"cat": "Kirche",
+		"lat": 52.4843438,
+		"lon": 13.4361,
+		"addr": "Fuldastraße 50",
+		"plz": "12045",
+		"website": "",
+		"coord_source": "Lage des OSM-Objekts way/108726674 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08"
+	},
+	{
+		"id": "manual/matthaeuskirche-steglitz",
+		"name": "Matthäuskirche",
+		"cat": "Kirche",
+		"lat": 52.4562701,
+		"lon": 13.3177466,
+		"addr": "Schloßstraße 44a",
+		"plz": "12165",
+		"website": "https://www.matthaeus-steglitz.de/",
+		"coord_source": "Lage des OSM-Objekts way/32797023 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08; OSM nennt Schloßstraße 44"
+	},
+	{
 		"id": "manual/seeling-treff",
 		"name": "Seeling Treff",
 		"cat": "Tagesstätte für Wohnungslose",
@@ -20,6 +163,50 @@
 		"plz": "14059",
 		"website": "https://gebewo.berlin/seeling-treff",
 		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/3020434644 (ODbL)"
+	},
+	{
+		"id": "manual/st-nikolai-kirche-spandau",
+		"name": "St.-Nikolai-Kirche",
+		"cat": "Kirche",
+		"lat": 52.5383629,
+		"lon": 13.2053622,
+		"addr": "Reformationsplatz 1",
+		"plz": "13597",
+		"website": "",
+		"coord_source": "Lage des OSM-Objekts way/5105798 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08"
+	},
+	{
+		"id": "manual/stiftskirche-johannesstift",
+		"name": "Stiftskirche im Johannesstift",
+		"cat": "Kirche",
+		"lat": 52.5697221,
+		"lon": 13.1954508,
+		"addr": "Schönwalder Allee 26",
+		"plz": "13587",
+		"website": "",
+		"coord_source": "Lage des OSM-Objekts way/24404055 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08"
+	},
+	{
+		"id": "manual/suppenkueche-am-lietzensee",
+		"name": "Suppenküche Am Lietzensee",
+		"cat": "Suppenküche",
+		"lat": 52.5042821,
+		"lon": 13.2873554,
+		"addr": "Herbartstraße 4-6",
+		"plz": "14057",
+		"website": "https://www.cw-evangelisch.de/hilfe-seelsorge/kaeltehilfe",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM way/24620392 (ODbL)"
+	},
+	{
+		"id": "manual/suppenkueche-franziskanerkloster-pankow",
+		"name": "Suppenküche Franziskanerkloster Pankow",
+		"cat": "Suppenküche",
+		"lat": 52.5658155,
+		"lon": 13.3949921,
+		"addr": "Wollankstraße 18",
+		"plz": "13187",
+		"website": "https://suppe.franziskaner.de/",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM way/679398641 (ODbL)"
 	},
 	{
 		"id": "manual/tagesstaette-am-wassertor",
@@ -66,6 +253,17 @@
 		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM way/47149322 (ODbL)"
 	},
 	{
+		"id": "manual/wichernkirche-spandau",
+		"name": "Wichernkirche",
+		"cat": "Kirche",
+		"lat": 52.567665,
+		"lon": 13.2062749,
+		"addr": "Wichernstraße, Ecke Schlehenweg",
+		"plz": "13587",
+		"website": "",
+		"coord_source": "Lage des OSM-Objekts way/23714037 aus places-osm.json (Snapshot, ODbL), Abgleich am 2026-11-08"
+	},
+	{
 		"id": "manual/wohnungslosentagesstaette-buergerhilfe",
 		"name": "Wohnungslosentagesstätte Bürgerhilfe",
 		"cat": "Tagesstätte für Wohnungslose",
@@ -75,6 +273,17 @@
 		"plz": "10997",
 		"website": "",
 		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM way/108522757 (ODbL)"
+	},
+	{
+		"id": "manual/wohnungslosentagesstaette-schoeneberg",
+		"name": "Wohnungslosentagesstätte Schöneberg",
+		"cat": "Tagesstätte für Wohnungslose",
+		"lat": 52.480685,
+		"lon": 13.3494685,
+		"addr": "Gustav-Freytag-Straße 1",
+		"plz": "10827",
+		"website": "https://www.unionhilfswerk.de/angebote/wohnungslosenhilfe/wohnungslosentagesstaette-schoeneberg/",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/8147270773 (ODbL)"
 	},
 	{
 		"id": "manual/zentrum-gitschiner-15",
