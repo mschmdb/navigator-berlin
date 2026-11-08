@@ -18,7 +18,8 @@ const PAIRS: readonly (readonly [string, string])[] = [
 	['Gotteshaus', 'Place of worship'],
 	['Tagesstätte', 'Day centre'],
 	['Tagesstätte für Wohnungslose', 'Day centre for homeless people'],
-	['Tagesstätte für Frauen und FLINTA', 'Day centre for women and FLINTA people']
+	['Tagesstätte für Frauen und FLINTA', 'Day centre for women and FLINTA people'],
+	['Wärmestube', 'Warming room']
 ];
 
 describe('categoryLabel mit explizitem Locale', () => {
