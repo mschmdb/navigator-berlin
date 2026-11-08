@@ -157,6 +157,24 @@ describe('Wärme-Orte-Methodik (#71)', () => {
 	it('verweist auf kuehle-orte als verwandten Layer', () => {
 		expect(getLayerMethodology('waerme-orte')?.relatedLayers).toContain('kuehle-orte');
 	});
+
+	it('omissions: Nachtcafés und Notübernachtungen draußen, Tagesorte mit Beleg drin (#61)', () => {
+		const de = getLayerMethodology('waerme-orte')?.omissions?.join(' ') ?? '';
+		const en = getLayerMethodology('waerme-orte', { locale: 'en' })?.omissions?.join(' ') ?? '';
+		expect(de).toMatch(/Keine Notübernachtungen und Nachtcafés/);
+		expect(de).toMatch(/Kältehilfe/);
+		expect(de).not.toMatch(/Keine Notübernachtungen und Wärmestuben/);
+		for (const kind of ['Tagesstätten', 'Wärmestuben', 'Suppenküchen', 'Bahnhofsmissionen']) {
+			expect(de).toContain(kind);
+		}
+		expect(de).toMatch(/offene Kirchen/);
+		expect(en).toMatch(/No emergency shelters or night cafés/);
+		expect(en).toMatch(/Kältehilfe/);
+		for (const kind of ['day centres', 'warming rooms', 'soup kitchens', 'station missions']) {
+			expect(en).toContain(kind);
+		}
+		expect(en).toMatch(/open churches/);
+	});
 });
 
 describe('Mietspiegel/Bodenrichtwerte-Methodik · keine Wertung', () => {
