@@ -109,9 +109,13 @@ Regeln:
 - Angaben ohne Quell-URL (etwa aus der Kühle-Orte-Recherche übernommen) sind auf `unknown` zurückgesetzt; ungeprüfte Zeitangaben stehen nur in `notes`.
 - Drittverzeichnisse (z. B. Kauperts) dienen nur als letzte Quelle und sind in `notes` gekennzeichnet.
 
+## Recherche-Stand 08.11.2026
+
+- Bestand für die Saison 2026/27 geprüft: 22 Orte korrigiert, 2 entfernt, 1 Tagesstätte als manueller Ort neu, 226 Orte im GeoJSON. Details, verworfene Orte und Zweifelsfälle in `docs/process/waerme-orte-recherche-2026-11.md`.
+
 ## Grenzen
 
 - Der Datensatz ist ein Angebot auf offenen Daten, kein Behörden-Ersatz und ohne Anspruch auf Vollständigkeit.
 - Öffnungszeiten können veralten (Recherche wie OSM). Das Prüfdatum zeigt den Stand der Recherche.
 - Kein Rechtsanspruch auf Aufenthalt: Betreiber üben Hausrecht aus.
-- Notübernachtungen und Wärmestuben sind nicht Teil dieses Datensatzes.
+- Notübernachtungen und Nachtcafés sind nicht Teil dieses Datensatzes, die Kältehilfe-App zeigt freie Plätze. Tagesstätten und Wärmestuben nehmen wir nur als manuelle Orte mit Trägerbeleg für die laufende Saison auf. Die Kategorie nennt die Zielgruppe.

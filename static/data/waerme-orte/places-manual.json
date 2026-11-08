@@ -1,1 +1,13 @@
-[]
+[
+	{
+		"id": "manual/seeling-treff",
+		"name": "Seeling Treff",
+		"cat": "Tagesstätte für Wohnungslose",
+		"lat": 52.5154514,
+		"lon": 13.2948707,
+		"addr": "Seelingstraße 9",
+		"plz": "14059",
+		"website": "https://gebewo.berlin/seeling-treff",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/3020434644 (ODbL)"
+	}
+]
