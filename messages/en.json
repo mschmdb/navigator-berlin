@@ -2218,6 +2218,8 @@
 	"naehe_cat_tagesstaette_wohnungslose": "Day centre for homeless people",
 	"naehe_cat_tagesstaette_flinta": "Day centre for women and FLINTA people",
 	"naehe_cat_waermestube": "Warming room",
+	"naehe_cat_bahnhofsmission": "Station mission",
+	"naehe_cat_suppenkueche": "Soup kitchen",
 	"lizenzen_daten_p1_one_license": "The {count} active geo layers fall under one licence. They are grouped by licence, with a link to the full text.",
 	"lizenzen_daten_p1_single": "The active geo layer falls under one licence, with a link to the full text.",
 	"contact_optout_subject": "Removal of a cool place",

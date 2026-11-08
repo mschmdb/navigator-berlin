@@ -2218,6 +2218,8 @@
 	"naehe_cat_tagesstaette_wohnungslose": "Tagesstätte für Wohnungslose",
 	"naehe_cat_tagesstaette_flinta": "Tagesstätte für Frauen und FLINTA",
 	"naehe_cat_waermestube": "Wärmestube",
+	"naehe_cat_bahnhofsmission": "Bahnhofsmission",
+	"naehe_cat_suppenkueche": "Suppenküche",
 	"lizenzen_daten_p1_one_license": "Die {count} aktiven Geo-Layer stehen unter einer Lizenz. Sie sind nach Lizenz gruppiert, mit Link auf den Volltext.",
 	"lizenzen_daten_p1_single": "Der aktive Geo-Layer steht unter einer Lizenz, mit Link auf den Volltext.",
 	"contact_optout_subject": "Austragung kühler Ort",
