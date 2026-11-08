@@ -421,7 +421,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'waerme-orte': {
 		calculation:
-			'Beheizte öffentliche Orte für den Winter aus OpenStreetMap, redaktionell angereichert, dazu Orte ohne OSM-Eintrag aus eigener Recherche. Die Redaktion hat 704 Kandidaten recherchiert und 255 als geeignet eingestuft. Nach Abzug von 3 Dubletten zeigt der Layer 252 Orte, 27 davon ohne OSM-Eintrag. Winter-Öffnung, Aufenthalt ohne Konsum und Eintritt stammen aus Belegen der Betreiber oder amtlicher Übersichten, jeweils mit Quelle und Prüfdatum. Der Status „jetzt offen“ nutzt die Recherche-Zeiten, bei Orten ohne Recherche-Zeiten die OSM-Zeiten. Nennt die Recherche keinen festen Plan, zeigt der Layer keinen Status.',
+			'Beheizte öffentliche Orte für den Winter aus OpenStreetMap, redaktionell angereichert, dazu Orte aus eigener Recherche, die der OSM-Filter nicht erfasst. Die Redaktion hat 704 Kandidaten recherchiert und 255 als geeignet eingestuft. Nach Abzug von 3 Dubletten zeigt der Layer 252 Orte, 27 davon aus eigener Recherche. Winter-Öffnung, Aufenthalt ohne Konsum und Eintritt stammen aus Belegen der Betreiber oder amtlicher Übersichten, jeweils mit Quelle und Prüfdatum. Der Status „jetzt offen“ nutzt die Recherche-Zeiten, bei Orten ohne Recherche-Zeiten die OSM-Zeiten. Nennt die Recherche keinen festen Plan, zeigt der Layer keinen Status.',
 		aggregationLevel: 'point-osm',
 		updateFrequency: 'Momentaufnahme vom 08.11.2026 (OSM-Stand 15.10.2026), Neuprüfung bei Bedarf',
 		authorityKey: 'navigator-redaktion-osm-waerme-orte',
