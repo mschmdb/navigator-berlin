@@ -112,10 +112,12 @@ Regeln:
 ## Recherche-Stand 08.11.2026
 
 - Bestand für die Saison 2026/27 geprüft: 22 Orte korrigiert, 2 entfernt, 8 Tagesstätten und Wärmestuben als manuelle Orte neu, 233 Orte im GeoJSON. Details, verworfene Orte und Zweifelsfälle in `docs/process/waerme-orte-recherche-2026-11.md`.
+- Runde 2: 19 manuelle Orte neu (Bahnhofsmission, Suppenküchen, Tagesstätten, offene Kirchen), Sophienkirche freigeschaltet, Nikodemus-Kirche entfernt. 704 Kandidaten recherchiert, 255 geeignet, 252 Orte im GeoJSON, 27 davon manuell. Neue Kategorien „Bahnhofsmission“ und „Suppenküche“.
 
 ## Grenzen
 
 - Der Datensatz ist ein Angebot auf offenen Daten, kein Behörden-Ersatz und ohne Anspruch auf Vollständigkeit.
 - Öffnungszeiten können veralten (Recherche wie OSM). Das Prüfdatum zeigt den Stand der Recherche.
 - Kein Rechtsanspruch auf Aufenthalt: Betreiber üben Hausrecht aus.
-- Notübernachtungen und Nachtcafés sind nicht Teil dieses Datensatzes, die Kältehilfe-App zeigt freie Plätze. Tagesstätten und Wärmestuben nehmen wir als manuelle Orte auf, wenn der Träger oder eine amtliche Übersicht von Bezirksamt oder Senat für die laufende Saison Adresse, Zeiten und Zeitraum eindeutig nennt. Aus Übersichten übernehmen wir nur die Fakten einzelner Einträge. Die Kategorie nennt die Zielgruppe.
+- Notübernachtungen und Nachtcafés sind nicht Teil dieses Datensatzes, die Kältehilfe-App zeigt freie Plätze. Tagesstätten, Wärmestuben, Suppenküchen, Bahnhofsmissionen und offene Kirchen nehmen wir als manuelle Orte auf, wenn der Träger oder eine amtliche Übersicht von Bezirksamt oder Senat Adresse und feste Zeiten eindeutig nennt. Saisonangebote brauchen den Zeitraum der laufenden Saison.
+- Feste Öffnungszeiten ohne Jahresangabe auf Seiten von Betreiber, Gemeinde oder Kirchenkreis reichen als Beleg (Entscheidung Matze, 08.11.2026), solange keine andere Quelle widerspricht. Gottesdienstzeiten zählen nicht als Öffnungszeit. Aus Übersichten übernehmen wir nur die Fakten einzelner Einträge. Die Kategorie nennt die Zielgruppe.

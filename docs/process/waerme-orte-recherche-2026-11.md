@@ -123,7 +123,7 @@ Stand 08.11.2026. 8 Recherche-Agenten in vier Suchfeldern, Kirchen, Suppenküche
 - 19 Orte neu, 1 Ort aus dem Bestand freigeschaltet (Sophienkirche), 1 Ort entfernt (Nikodemus-Kirche).
 - Neue Kategorien mit DE- und EN-Label: „Bahnhofsmission“ (Station mission), „Suppenküche“ (Soup kitchen).
 - Die 19 neuen Orte haben keinen OSM-Kandidaten, weil OSM für sie keine Öffnungszeiten führt. Sie stehen deshalb in `places-manual.json`, mit Lage des OSM-Objekts oder Nominatim-Treffer in `coord_source`.
-- Kirchen: Feste Zeiten auf der Seite der Gemeinde oder des Kirchenkreises gelten als „regelmäßig“, auch ohne Jahresangabe. Gottesdienstzeiten zählen nicht.
+- Undatierte Quellen: Feste Öffnungszeiten ohne Jahresangabe auf Seiten von Betreiber, Gemeinde oder Kirchenkreis reichen als Beleg, solange keine andere Quelle widerspricht. Entscheidung Matze, 08.11.2026. Das betrifft 18 der neuen Orte: alle 15 Kirchen, die Bahnhofsmission am Hauptbahnhof, die Wohnungslosentagesstätte Schöneberg und das Café Treffpunkt. Gottesdienstzeiten zählen nicht.
 - Aufenthalt ohne Konsum und Eintritt frei nennt keine Quelle ausdrücklich. Die Felder stehen überall auf `unknown`.
 
 ### Neu je Suchfeld
@@ -197,3 +197,7 @@ Stand 08.11.2026. Bezirk hat noch nichts veröffentlicht:
 - Reinickendorf
 
 Der Senat nennt keine Orte und verweist auf den Kältehilfe-Wegweiser und die App. Übersichten 2026/27 haben Charlottenburg-Wilmersdorf, Friedrichshain-Kreuzberg und Neukölln. Sie enthalten keine Tagesorte, die nicht schon in Runde 1 standen. Ausnahme ist die Suppenküche Am Lietzensee.
+
+### Folgeaufgabe
+
+Die Zahlen im Methodik-Eintrag (`src/lib/data/layer-methodology.ts`, `messages/de.json`, `messages/en.json`) stehen fest im Text. Ein Test in `layer-methodology.test.ts` vergleicht sie mit `enrichment.json` und dem GeoJSON und schlägt nach jedem Datenlauf fehl, bis jemand sie anpasst. Sie direkt aus den Daten abzuleiten bräuchte Platzhalter in den Messages und einen Umbau des DE-Paritätstests. Das ist ein eigener Schritt.
