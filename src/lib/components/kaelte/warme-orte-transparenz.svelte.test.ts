@@ -41,6 +41,13 @@ describe('WarmeOrteTransparenz', () => {
 		expect(text.includes('—')).toBe(false);
 	});
 
+	it('Wegweiser-Satz doppelt den App-Hinweis nicht', async () => {
+		render(WarmeOrteTransparenz);
+		const link = await page.getByTestId('waerme-wegweiser-link').element();
+		expect(link.textContent).not.toContain('Notübernachtungen');
+		expect(link.textContent).toContain('Wärmestuben');
+	});
+
 	it('Notfallzeile verlinkt die 112 als tel-Link', async () => {
 		render(WarmeOrteTransparenz);
 		await expect
@@ -54,7 +61,7 @@ describe('WarmeOrteTransparenz', () => {
 		const link = await page.getByTestId('waerme-wegweiser-link').element();
 		expect(link.querySelector('[lang="de"]')?.textContent).toBe('Kältehilfe');
 		expect(link.textContent).toContain(
-			'Find emergency shelters and warming rooms in the Kältehilfe guide.'
+			'Find warming rooms and other services in the Kältehilfe guide.'
 		);
 	});
 });
