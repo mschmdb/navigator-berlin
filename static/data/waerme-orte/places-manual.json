@@ -1,0 +1,90 @@
+[
+	{
+		"id": "manual/awo-kiezcafe-petersburger-strasse",
+		"name": "AWO Kiezcafé",
+		"cat": "Tagesstätte",
+		"lat": 52.5172728,
+		"lon": 13.4530351,
+		"addr": "Petersburger Straße 92",
+		"plz": "10247",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/9718746137 (ODbL)"
+	},
+	{
+		"id": "manual/seeling-treff",
+		"name": "Seeling Treff",
+		"cat": "Tagesstätte für Wohnungslose",
+		"lat": 52.5154514,
+		"lon": 13.2948707,
+		"addr": "Seelingstraße 9",
+		"plz": "14059",
+		"website": "https://gebewo.berlin/seeling-treff",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/3020434644 (ODbL)"
+	},
+	{
+		"id": "manual/tagesstaette-am-wassertor",
+		"name": "Tagesstätte Am Wassertor",
+		"cat": "Tagesstätte",
+		"lat": 52.4980024,
+		"lon": 13.4119949,
+		"addr": "Segitzdamm 46",
+		"plz": "10969",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/1086992982 (ODbL)"
+	},
+	{
+		"id": "manual/tee-und-waermestube-weisestrasse",
+		"name": "Tee- und Wärmestube Neukölln",
+		"cat": "Wärmestube",
+		"lat": 52.4738179,
+		"lon": 13.4252192,
+		"addr": "Weisestraße 34",
+		"plz": "12049",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/3409259305 (ODbL)"
+	},
+	{
+		"id": "manual/unterschlupf-wrangelstrasse",
+		"name": "Unterschlupf",
+		"cat": "Tagesstätte für Frauen und FLINTA",
+		"lat": 52.5017726,
+		"lon": 13.4337755,
+		"addr": "Wrangelstraße 30",
+		"plz": "10997",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM way/37535710 (ODbL)"
+	},
+	{
+		"id": "manual/waermestube-sankt-richard",
+		"name": "Wärmestube Sankt Richard",
+		"cat": "Wärmestube",
+		"lat": 52.4729199,
+		"lon": 13.4519193,
+		"addr": "Braunschweiger Straße 18",
+		"plz": "12055",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM way/47149322 (ODbL)"
+	},
+	{
+		"id": "manual/wohnungslosentagesstaette-buergerhilfe",
+		"name": "Wohnungslosentagesstätte Bürgerhilfe",
+		"cat": "Tagesstätte für Wohnungslose",
+		"lat": 52.4987524,
+		"lon": 13.4446473,
+		"addr": "Cuvrystraße 11-12",
+		"plz": "10997",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM way/108522757 (ODbL)"
+	},
+	{
+		"id": "manual/zentrum-gitschiner-15",
+		"name": "Zentrum Gitschiner 15",
+		"cat": "Tagesstätte",
+		"lat": 52.4981939,
+		"lon": 13.4006473,
+		"addr": "Gitschiner Straße 15",
+		"plz": "10969",
+		"website": "",
+		"coord_source": "Nominatim-Adresssuche am 2026-11-08, Hausnummer-Treffer OSM node/2623675787 (ODbL)"
+	}
+]

@@ -1,4 +1,5 @@
 import { isParsableOpeningHours } from '../../../src/lib/utils/opening-hours-parse.js';
+import { MANUAL_ID_PATTERN } from './manual.js';
 import type { OsmPlace, WaermeEnrichment } from './types.js';
 
 /**
@@ -72,7 +73,8 @@ export function compareIds(a: string, b: string): number {
 /** Liefert Fehlertexte, leer bei gültigem Eintrag. */
 export function validateEnrichment(item: WaermeEnrichment): string[] {
 	const errors: string[] = [];
-	if (!ID_PATTERN.test(item.id)) errors.push(`id "${item.id}" ungültig`);
+	if (!ID_PATTERN.test(item.id) && !MANUAL_ID_PATTERN.test(item.id))
+		errors.push(`id "${item.id}" ungültig`);
 	for (const [field, allowed] of Object.entries(ENUMS)) {
 		const value = item[field as keyof typeof ENUMS];
 		if (!(allowed as readonly string[]).includes(value)) {

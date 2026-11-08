@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { validateEnrichmentSet } from './enrichment.js';
-import type { WaermeEnrichment } from './types.js';
+import { validateManualPlaces } from './manual.js';
+import type { ManualPlace, WaermeEnrichment } from './types.js';
 
 describe('committete Wärme-Orte-Daten', () => {
 	it('enrichment.json besteht die Validierung ohne Fehler', () => {
@@ -28,5 +29,12 @@ describe('committete Wärme-Orte-Daten', () => {
 		) as WaermeEnrichment[];
 		const stray = items.filter((i) => !i.opening_hours_note.trim() && i.oh_recherche);
 		expect(stray.map((i) => i.id)).toEqual([]);
+	});
+
+	it('places-manual.json besteht die Validierung ohne Fehler', () => {
+		const places = JSON.parse(
+			readFileSync('static/data/waerme-orte/places-manual.json', 'utf-8')
+		) as ManualPlace[];
+		expect(validateManualPlaces(places)).toEqual([]);
 	});
 });

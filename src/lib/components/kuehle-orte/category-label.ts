@@ -20,7 +20,13 @@ const LABELS: Readonly<Record<string, (locale: Locale) => string>> = {
 	Eishalle: (locale) => m.naehe_cat_eishalle(undefined, { locale }),
 	Bad: (locale) => m.naehe_cat_bad(undefined, { locale }),
 	Wasserpark: (locale) => m.naehe_cat_wasserpark(undefined, { locale }),
-	Stadtteilzentrum: (locale) => m.naehe_cat_stadtteilzentrum(undefined, { locale })
+	Stadtteilzentrum: (locale) => m.naehe_cat_stadtteilzentrum(undefined, { locale }),
+	Tagesstätte: (locale) => m.naehe_cat_tagesstaette(undefined, { locale }),
+	'Tagesstätte für Wohnungslose': (locale) =>
+		m.naehe_cat_tagesstaette_wohnungslose(undefined, { locale }),
+	'Tagesstätte für Frauen und FLINTA': (locale) =>
+		m.naehe_cat_tagesstaette_flinta(undefined, { locale }),
+	Wärmestube: (locale) => m.naehe_cat_waermestube(undefined, { locale })
 };
 
 /** Kategorie-Rohwert (deutsch, aus den Daten) als Anzeigetext der Seiten-Locale. */

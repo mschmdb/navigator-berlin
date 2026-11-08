@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { isMainEntry } from './lib/is-main-entry.js';
 import { classifyPlace } from './lib/waerme-orte/filter.js';
+import { manualToPlace } from './lib/waerme-orte/manual.js';
 import {
 	buildResearchBatches,
 	mergeEnrichmentResults,
@@ -9,7 +10,7 @@ import {
 	type CandidatePlace,
 	type PriorKuehleEntry
 } from './lib/waerme-orte/enrichment.js';
-import type { OsmSnapshot, WaermeEnrichment } from './lib/waerme-orte/types.js';
+import type { ManualPlace, OsmSnapshot, WaermeEnrichment } from './lib/waerme-orte/types.js';
 
 /**
  * Wärme-Orte (#61): Hilfsskript für den Recherche-Lauf.
@@ -21,6 +22,7 @@ import type { OsmSnapshot, WaermeEnrichment } from './lib/waerme-orte/types.js';
 const IN_DIR = 'static/data/waerme-orte';
 const ENRICHMENT_FILE = join(IN_DIR, 'enrichment.json');
 const PLACES_FILE = join(IN_DIR, 'places-osm.json');
+const MANUAL_FILE = join(IN_DIR, 'places-manual.json');
 const KUEHLE_ENRICHMENT_FILE = 'static/data/kuehle-orte/enrichment.json';
 const DEFAULT_OUT = '/tmp/waerme-orte-batches';
 
@@ -35,6 +37,9 @@ async function loadCandidates(): Promise<CandidatePlace[]> {
 		const result = classifyPlace(place);
 		if (result.candidate) candidates.push({ ...place, cat: result.cat });
 	}
+	// Orte ohne OSM-Eintrag: Batches und Merge behandeln sie wie Kandidaten.
+	const manualPlaces = await readJson<ManualPlace[]>(MANUAL_FILE);
+	for (const manual of manualPlaces) candidates.push({ ...manualToPlace(manual), cat: manual.cat });
 	return candidates;
 }
 
