@@ -44,6 +44,11 @@ function mount(orte: WaermeOrt[], over: Record<string, unknown> = {}) {
 }
 
 describe('WarmeOrteNaehe', () => {
+	it('verweist schon vor der Ortung auf die Kältehilfe-App', async () => {
+		mount([]);
+		await expect.element(page.getByTestId('schlafplatz-hinweis')).toBeVisible();
+	});
+
 	it('zeigt nach Klick die 5 nächsten Orte mit Distanz, Kategorie, Adresse und Quelle', async () => {
 		const orte = Array.from({ length: 7 }, (_, i) =>
 			ort({ id: `node/${i}`, name: `Ort ${i}`, lat: 52.52 + i * 0.001 })

@@ -22,6 +22,7 @@
 		stayText,
 		winterText
 	} from '$lib/kaelte/waerme-ort-labels.js';
+	import SchlafplatzHinweis from './schlafplatz-hinweis.svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 
@@ -152,6 +153,8 @@
 	>
 		{m.kaelte_orte_heading()}
 	</h2>
+
+	<SchlafplatzHinweis />
 
 	{#if phase === 'idle' || phase === 'locating'}
 		<button
