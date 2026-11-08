@@ -2,7 +2,8 @@ import type { Feature, FeatureCollection, Point } from 'geojson';
 import { buildNaviLinks } from '../kuehle-orte/navi-links.js';
 import { compareIds } from './enrichment.js';
 import { classifyPlace, type ExcludeReason } from './filter.js';
-import type { OsmPlace, WaermeEnrichment } from './types.js';
+import { MANUAL_ID_PATTERN, manualToPlace } from './manual.js';
+import type { ManualPlace, OsmPlace, WaermeEnrichment } from './types.js';
 
 /**
  * Wärme-Orte (#61): Merge von OSM-Snapshot und redaktioneller Winter-Anreicherung per `id`.
@@ -105,7 +106,8 @@ function hasNumericCoords(place: OsmPlace): boolean {
 
 export function mergeWaermeOrte(
 	enrichment: WaermeEnrichment[],
-	places: OsmPlace[]
+	places: OsmPlace[],
+	manualPlaces: ManualPlace[] = []
 ): WaermeMergeResult {
 	const dropped: WaermeDroppedCounts = {
 		osmFiltered: {},
@@ -122,6 +124,13 @@ export function mergeWaermeOrte(
 		} else {
 			dropped.osmFiltered[result.reason] = (dropped.osmFiltered[result.reason] ?? 0) + 1;
 		}
+	}
+	// Orte ohne OSM-Eintrag umgehen den OSM-Filter; die belegte Recherche entscheidet.
+	for (const manual of manualPlaces) {
+		if (!MANUAL_ID_PATTERN.test(manual.id)) {
+			throw new Error(`Manueller Ort "${manual.id}" braucht eine manual/<slug>-id`);
+		}
+		candidates.set(manual.id, manualToPlace(manual));
 	}
 
 	const orphans = enrichment.filter((e) => !candidates.has(e.id)).map((e) => e.id);

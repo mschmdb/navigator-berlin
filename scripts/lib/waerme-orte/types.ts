@@ -60,3 +60,22 @@ export interface WaermeEnrichment {
 	still_exists: StillExists;
 	notes: string;
 }
+
+/**
+ * Ort ohne OSM-Eintrag (eigene Recherche, nicht ODbL), etwa eine Wärmestube eines Trägers.
+ * Steht in `places-manual.json`, Join-Key zum Enrichment ist `id` (`manual/<slug>`).
+ * Umgeht den OSM-Filter: Die Aufnahme entscheidet allein die belegte Recherche.
+ */
+export interface ManualPlace {
+	/** `manual/<slug>`, Slug aus Kleinbuchstaben, Ziffern und Bindestrichen */
+	id: string;
+	name: string;
+	cat: string;
+	lat: number;
+	lon: number;
+	addr: string;
+	plz: string;
+	website: string;
+	/** Herkunft der Koordinate, z. B. Geocoding-Dienst, Datum und Treffergenauigkeit */
+	coord_source: string;
+}

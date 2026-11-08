@@ -16,7 +16,8 @@ Der Datensatz `waerme-orte` listet öffentliche, beheizte Orte in Berlin, an den
 
 - **Geometrie und Basis-Tags: OpenStreetMap.** Standort, Name, Adresse, PLZ, `opening_hours` (Fallback für den Status), Barrierefreiheit und Website stammen aus `static/data/waerme-orte/places-osm.json`. Lizenz ODbL 1.0, Namensnennung `https://www.openstreetmap.org/copyright`.
 - **Redaktionelle Anreicherung: navigator.berlin.** Winter-Öffnung, Aufenthalt ohne Konsum, Eintritt, Begründung, Quelle und Prüfdatum stammen aus eigener Recherche auf den Betreiber-Websites (`static/data/waerme-orte/enrichment.json`). Dieser Anteil ist ein eigener Datensatz und fällt nicht unter die ODbL-Angabe.
-- Join-Key beider Dateien ist `id` (`node/…`, `way/…`, `relation/…`).
+- **Orte ohne OSM-Eintrag: navigator.berlin.** `static/data/waerme-orte/places-manual.json` nennt Orte, die OSM nicht führt oder die der OSM-Filter ausschließt (etwa Wärmestuben in Gemeinderäumen). Felder: `id` (`manual/<slug>`), `name`, `cat`, `lat`, `lon`, `addr`, `plz`, `website`, `coord_source`. `coord_source` nennt Geocoder, Abrufdatum und Treffergenauigkeit. Dieser Anteil ist eigene Recherche und fällt nicht unter die ODbL-Angabe. Jeder manuelle Ort braucht einen Enrichment-Eintrag mit Betreiber- oder Bezirksamt-Quelle.
+- Join-Key ist `id` (`node/…`, `way/…`, `relation/…`, `manual/…`).
 - Wir übernehmen keine Daten von netzwerkderwaerme.de oder kaeltehilfe-berlin.de. #62 verlinkt sie nur.
 
 ## OSM-Stand und Abrufweg
@@ -90,7 +91,8 @@ Regeln:
 
 - `pnpm data:waerme-orte` merged Snapshot und Enrichment zu `static/data/waerme-orte.geojson`, nach `id` sortiert und deterministisch. `--strict` lässt den Build bei Kandidaten ohne Enrichment scheitern.
 - Der Build filtert `suitable=false` und `still_exists=no`, zählt alle Wegfälle und hängt Navi-Links an.
-- Enrichment-Einträge ohne OSM-Kandidaten (Waisen) lassen den Build scheitern.
+- Enrichment-Einträge ohne OSM-Kandidaten oder manuellen Ort (Waisen) lassen den Build scheitern.
+- Manuelle Orte umgehen den OSM-Filter. `validateManualPlaces` prüft id-Form, Pflichtfelder, fünfstellige PLZ, `coord_source` und eine Koordinate innerhalb der Box 13.08–13.77 / 52.33–52.68. Fehler lassen den Build scheitern. `--strict` gilt auch für manuelle Orte ohne Enrichment.
 - Recherche-Hilfsskript `pnpm data:waerme-orte-research`:
   - `batches [--size 25] [--out DIR]` schreibt Aufgaben-Batches für offene Kandidaten (Standard `/tmp/waerme-orte-batches`).
   - `merge <result.json…>` validiert Ergebnis-Batches und führt sie in `enrichment.json` zusammen. Ungültige Einträge übernimmt es nicht.

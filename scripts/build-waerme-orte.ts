@@ -2,17 +2,19 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { isMainEntry } from './lib/is-main-entry.js';
 import { validateEnrichmentSet } from './lib/waerme-orte/enrichment.js';
+import { validateManualPlaces } from './lib/waerme-orte/manual.js';
 import { mergeWaermeOrte } from './lib/waerme-orte/merge.js';
-import type { OsmSnapshot, WaermeEnrichment } from './lib/waerme-orte/types.js';
+import type { ManualPlace, OsmSnapshot, WaermeEnrichment } from './lib/waerme-orte/types.js';
 
 /**
  * Wärme-Orte (#61): baut static/data/waerme-orte.geojson aus dem committeten OSM-Snapshot
- * und der Winter-Anreicherung. Kein Layer, kein MANIFEST-Eintrag (folgt in #62).
+ * plus den Orten ohne OSM-Eintrag (places-manual.json) und der Winter-Anreicherung. Kein Layer, kein MANIFEST-Eintrag (folgt in #62).
  * `--strict` lässt den Build scheitern, wenn Kandidaten ohne Enrichment bleiben.
  */
 const IN_DIR = 'static/data/waerme-orte';
 const ENRICHMENT_FILE = join(IN_DIR, 'enrichment.json');
 const PLACES_FILE = join(IN_DIR, 'places-osm.json');
+const MANUAL_FILE = join(IN_DIR, 'places-manual.json');
 const OUT_DIR = 'static/data';
 const OUT_FILE = join(OUT_DIR, 'waerme-orte.geojson');
 
@@ -24,8 +26,12 @@ async function main(): Promise<void> {
 	const strict = process.argv.includes('--strict');
 	const enrichment = await readJson<WaermeEnrichment[]>(ENRICHMENT_FILE);
 	const snapshot = await readJson<OsmSnapshot>(PLACES_FILE);
+	const manualPlaces = await readJson<ManualPlace[]>(MANUAL_FILE);
 
-	const validationErrors = validateEnrichmentSet(enrichment);
+	const validationErrors = [
+		...validateEnrichmentSet(enrichment),
+		...validateManualPlaces(manualPlaces)
+	];
 	if (validationErrors.length > 0) {
 		for (const error of validationErrors) console.error(`[waerme-orte] ${error}`);
 		console.error(
@@ -34,7 +40,11 @@ async function main(): Promise<void> {
 		process.exit(1);
 	}
 
-	const { collection, dropped, missingEnrichment } = mergeWaermeOrte(enrichment, snapshot.places);
+	const { collection, dropped, missingEnrichment } = mergeWaermeOrte(
+		enrichment,
+		snapshot.places,
+		manualPlaces
+	);
 
 	if (strict && missingEnrichment.length > 0) {
 		console.error(
