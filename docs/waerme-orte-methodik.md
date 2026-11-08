@@ -111,11 +111,11 @@ Regeln:
 
 ## Recherche-Stand 08.11.2026
 
-- Bestand für die Saison 2026/27 geprüft: 22 Orte korrigiert, 2 entfernt, 1 Tagesstätte als manueller Ort neu, 226 Orte im GeoJSON. Details, verworfene Orte und Zweifelsfälle in `docs/process/waerme-orte-recherche-2026-11.md`.
+- Bestand für die Saison 2026/27 geprüft: 22 Orte korrigiert, 2 entfernt, 8 Tagesstätten und Wärmestuben als manuelle Orte neu, 233 Orte im GeoJSON. Details, verworfene Orte und Zweifelsfälle in `docs/process/waerme-orte-recherche-2026-11.md`.
 
 ## Grenzen
 
 - Der Datensatz ist ein Angebot auf offenen Daten, kein Behörden-Ersatz und ohne Anspruch auf Vollständigkeit.
 - Öffnungszeiten können veralten (Recherche wie OSM). Das Prüfdatum zeigt den Stand der Recherche.
 - Kein Rechtsanspruch auf Aufenthalt: Betreiber üben Hausrecht aus.
-- Notübernachtungen und Nachtcafés sind nicht Teil dieses Datensatzes, die Kältehilfe-App zeigt freie Plätze. Tagesstätten und Wärmestuben nehmen wir nur als manuelle Orte mit Trägerbeleg für die laufende Saison auf. Die Kategorie nennt die Zielgruppe.
+- Notübernachtungen und Nachtcafés sind nicht Teil dieses Datensatzes, die Kältehilfe-App zeigt freie Plätze. Tagesstätten und Wärmestuben nehmen wir als manuelle Orte auf, wenn der Träger oder eine amtliche Übersicht von Bezirksamt oder Senat für die laufende Saison Adresse, Zeiten und Zeitraum eindeutig nennt. Aus Übersichten übernehmen wir nur die Fakten einzelner Einträge. Die Kategorie nennt die Zielgruppe.
