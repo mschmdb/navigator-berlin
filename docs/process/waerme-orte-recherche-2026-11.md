@@ -122,7 +122,7 @@ Stand 08.11.2026. 8 Recherche-Agenten in vier Suchfeldern, Kirchen, Suppenküche
 - GeoJSON danach: 252 Orte (vorher 233).
 - 19 Orte neu, 1 Ort aus dem Bestand freigeschaltet (Sophienkirche), 1 Ort entfernt (Nikodemus-Kirche).
 - Neue Kategorien mit DE- und EN-Label: „Bahnhofsmission“ (Station mission), „Suppenküche“ (Soup kitchen).
-- Die 18 neuen Orte haben keinen OSM-Kandidaten, weil OSM für sie keine Öffnungszeiten führt. Sie stehen deshalb in `places-manual.json`, mit Lage des OSM-Objekts oder Nominatim-Treffer in `coord_source`.
+- Die 19 neuen Orte haben keinen OSM-Kandidaten, weil OSM für sie keine Öffnungszeiten führt. Sie stehen deshalb in `places-manual.json`, mit Lage des OSM-Objekts oder Nominatim-Treffer in `coord_source`.
 - Kirchen: Feste Zeiten auf der Seite der Gemeinde oder des Kirchenkreises gelten als „regelmäßig“, auch ohne Jahresangabe. Gottesdienstzeiten zählen nicht.
 - Aufenthalt ohne Konsum und Eintritt frei nennt keine Quelle ausdrücklich. Die Felder stehen überall auf `unknown`.
 
@@ -139,7 +139,7 @@ Stand 08.11.2026. 8 Recherche-Agenten in vier Suchfeldern, Kirchen, Suppenküche
 | --- | --- | --- | --- |
 | Bahnhofsmission am Hauptbahnhof | Europaplatz 1, 10557 | Aufenthalt Mo bis Fr 8:30 bis 12 und 13 bis 16:30 Uhr | berliner-stadtmission.de |
 | Suppenküche Franziskanerkloster Pankow | Wollankstraße 18, 13187 | Di bis So 9 bis 11:30 und 12:45 bis 14:30 Uhr | suppe.franziskaner.de |
-| Suppenküche Am Lietzensee | Herbartstraße 4-6, 14057 | Mo bis Mi 12 bis 13:30 Uhr | cw-evangelisch.de, Wegweiser Bezirksamt Charlottenburg-Wilmersdorf 2026/27 |
+| Suppenküche Am Lietzensee | Herbartstraße 4-6, 14057 | Mo bis Mi 12 bis 13:30 Uhr (Oktober bis April) | cw-evangelisch.de, Wegweiser Bezirksamt Charlottenburg-Wilmersdorf 2026/27 |
 | Wohnungslosentagesstätte Schöneberg (Unionhilfswerk) | Gustav-Freytag-Straße 1, 10827 | Di bis So 11:30 bis 17 Uhr | unionhilfswerk.de |
 | Café Treffpunkt der Heilsarmee | Kuglerstraße 11, 10439 | Mi 8:30 bis 14, Do, Fr 14 bis 18, Sa 8:30 bis 12:30 Uhr | heilsarmee.de/prenzlauerberg |
 | Sophienkirche | Große Hamburger Straße 29/30, 10115 | täglich 14 bis 18 Uhr | gemeinde-am-weinberg.de |
@@ -154,7 +154,7 @@ Stand 08.11.2026. 8 Recherche-Agenten in vier Suchfeldern, Kirchen, Suppenküche
 | Dorfkirche Gatow | Alt-Gatow 32, 14089 | Sa, So 11 bis 16 Uhr | spandau-evangelisch.de |
 | Stiftskirche im Johannesstift | Schönwalder Allee 26, 13587 | So 13:30 bis 15:30 Uhr (November bis März) | spandau-evangelisch.de |
 | St.-Nikolai-Kirche | Reformationsplatz 1, 13597 | Mo bis Sa 12 bis 14 Uhr | spandau-evangelisch.de |
-| Matthäuskirche | Schloßstraße 44a, 12165 | Mi bis So 14 bis 17 Uhr | matthaeus-steglitz.de |
+| Matthäuskirche | Schloßstraße 44a, 12165 | Mi bis So 14 bis 17 Uhr (November bis März) | matthaeus-steglitz.de |
 | Apostel-Paulus-Kirche | Grunewaldstraße 77a, 10823 | in der Regel täglich 12 bis 18 Uhr | ev-apg.de |
 | Johanneskirche Frohnau | Zeltinger Platz, 13465 | täglich 10 bis 15 Uhr in der dunklen Jahreszeit | ekg-frohnau.de |
 
