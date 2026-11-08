@@ -158,6 +158,37 @@ describe('Wärme-Orte-Methodik (#71)', () => {
 		expect(getLayerMethodology('waerme-orte')?.relatedLayers).toContain('kuehle-orte');
 	});
 
+	it('Zahlen in Berechnung und Lücken stimmen mit den Daten überein, DE und EN (#61)', () => {
+		const read = (path: string) => JSON.parse(readFileSync(join(process.cwd(), path), 'utf-8'));
+		const enrichment: { suitable: boolean }[] = read('static/data/waerme-orte/enrichment.json');
+		const features: {
+			properties: { id: string; winter_open: string; stay_without_purchase: string };
+		}[] = read('static/data/waerme-orte.geojson').features;
+		const researched = enrichment.length;
+		const suitable = enrichment.filter((e) => e.suitable).length;
+		const shown = features.length;
+		const manual = features.filter((f) => f.properties.id.startsWith('manual/')).length;
+		const winter = features.filter((f) => f.properties.winter_open !== 'unknown').length;
+		const stay = features.filter((f) => f.properties.stay_without_purchase === 'yes').length;
+
+		const de = getLayerMethodology('waerme-orte');
+		const en = getLayerMethodology('waerme-orte', { locale: 'en' });
+		expect(de?.calculation).toContain(`${researched} Kandidaten`);
+		expect(de?.calculation).toContain(`${suitable} als geeignet`);
+		expect(de?.calculation).toContain(`${suitable - shown} Dubletten`);
+		expect(de?.calculation).toContain(`${shown} Orte`);
+		expect(de?.calculation).toContain(`${manual} davon`);
+		expect(de?.coverageGaps?.[0]).toContain(`bei ${winter} von ${shown} Orten`);
+		expect(de?.coverageGaps?.[0]).toContain(`ohne Konsum bei ${stay}`);
+		expect(en?.calculation).toContain(`${researched} candidates`);
+		expect(en?.calculation).toContain(`${suitable} as suitable`);
+		expect(en?.calculation).toContain(`${suitable - shown} duplicates`);
+		expect(en?.calculation).toContain(`${shown} places`);
+		expect(en?.calculation).toContain(`${manual} of them`);
+		expect(en?.coverageGaps?.[0]).toContain(`for ${winter} of ${shown} places`);
+		expect(en?.coverageGaps?.[0]).toContain(`purchase for ${stay}`);
+	});
+
 	it('omissions: Nachtcafés und Notübernachtungen draußen, Tagesorte mit Beleg drin (#61)', () => {
 		const de = getLayerMethodology('waerme-orte')?.omissions?.join(' ') ?? '';
 		const en = getLayerMethodology('waerme-orte', { locale: 'en' })?.omissions?.join(' ') ?? '';
