@@ -430,7 +430,7 @@ const LAYER_METHODOLOGY_SPECS = {
 			'Die Winter-Öffnung ist bei 212 von 227 Orten belegt, der Aufenthalt ohne Konsum bei 97. Bei den übrigen steht „nicht geprüft“. Öffnungszeiten können veralten, das Prüfdatum zeigt den Stand der Recherche. Einzelne Schließtage fehlen teils im Status.'
 		],
 		omissions: [
-			'Keine Notübernachtungen und Wärmestuben, kein Behörden-Ersatz, kein Rechtsanspruch auf Aufenthalt. Betreiber üben das Hausrecht aus.'
+			'Keine Notübernachtungen und Nachtcafés, freie Plätze zeigt die App der Kältehilfe. Tagesstätten, Wärmestuben, Suppenküchen, Bahnhofsmissionen und offene Kirchen sind nur mit Beleg des Betreibers oder eines Amts dabei. Kein Behörden-Ersatz, kein Rechtsanspruch auf Aufenthalt. Betreiber üben das Hausrecht aus.'
 		],
 		relatedLayers: ['kuehle-orte']
 	},

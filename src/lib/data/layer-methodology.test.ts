@@ -171,7 +171,7 @@ describe('Wärme-Orte-Methodik (#71)', () => {
 		expect(en).toMatch(/No emergency shelters or night cafés/);
 		expect(en).toMatch(/Kältehilfe/);
 		for (const kind of ['day centres', 'warming rooms', 'soup kitchens', 'station missions']) {
-			expect(en).toContain(kind);
+			expect(en.toLowerCase()).toContain(kind);
 		}
 		expect(en).toMatch(/open churches/);
 	});
