@@ -98,7 +98,7 @@ Neue Orte, die wir nicht aufgenommen haben:
 - **TagesTreff Weitlingstraße 11 (Lichtenberg):** keine amtliche Quelle 2026/27, Träger- und Drittquellen widersprechen sich bei den Zeiten.
 - **Nachtcafé Luisen (Gierkeplatz 2a) und Nachtcafé Neu-Westend (Eichenallee 47):** im Bezirks-Wegweiser Charlottenburg-Wilmersdorf 2026/27 belegt, aber bewusst nicht aufgenommen: Nachtcafés und Notübernachtungen haben begrenzte Plätze. Die Kältehilfe-App zeigt freie Plätze, eine Karte mit Öffnungszeiten kann das nicht. Das gilt für alle Notübernachtungen in den Bezirksübersichten.
 - **Nachtcafé Tabor, Nachthafen am Kotti:** Endzeit fehlt in der Bezirksquelle; Nachthafen nur bis Ende Dezember 2026 und für eine eng begrenzte Zielgruppe.
-- **Nachtcafé Zum Guten Hirten, Kältestube St. Klara, Tee- und Wärmestube Neukölln:** nur Verzeichnisse oder Saison 2025/26.
+- **Nachtcafé Zum Guten Hirten, Kältestube St. Klara:** nur Verzeichnisse oder Saison 2025/26.
 - **Bezirke ohne amtliche Übersicht 2026/27:** Mitte, Pankow, Lichtenberg, Marzahn-Hellersdorf, Treptow-Köpenick, Tempelhof-Schöneberg, Steglitz-Zehlendorf, Spandau, Reinickendorf (Stand 08.11.2026). Treptow-Köpenick nannte 2025/26 elf Kiezklubs als Orte der Wärme, für 2026/27 fehlt eine Meldung. Nachfassen, sobald die Bezirke veröffentlichen.
 - **Bibliotheken als Wärmeort:** Keine Bibliothek weist sich für 2026/27 ausdrücklich als Wärmeort aus.
 
