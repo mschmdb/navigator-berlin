@@ -35,7 +35,7 @@ One note first: every square lumps all parties under 5% into one grey block, tog
 
 This is Friedrichshain-Kreuzberg in the 2026 House of Representatives election. Every coloured block is a party, as big as its share of the vote.
 
-Where the blocks sit follows a rule: the first one cuts off a piece vertically, the second one horizontally, always taking turns. That gives every party its fixed place.
+Where the blocks sit follows a rule: the parties go in alphabetical order, grey last. The first one cuts off a piece vertically, the second one horizontally, always taking turns. That gives every party its fixed place.
 
 <!-- abschnitt: s2 -->
 
