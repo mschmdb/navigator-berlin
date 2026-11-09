@@ -45,7 +45,7 @@ Ein Hinweis vorab: Alle Parteien unter 5&nbsp;% fasst jedes Quadrat zu einem gra
 
 Hier siehst du Friedrichshain-Kreuzberg bei der Abgeordnetenhauswahl 2026. Jeder Farbblock ist eine Partei, so groß wie ihr Stimmanteil.
 
-Wie die Blöcke liegen, folgt einer Regel: Der erste schneidet senkrecht ein Stück ab, der zweite waagerecht, immer im Wechsel. So hat jede Partei ihren festen Platz.
+Wie die Blöcke liegen, folgt einer Regel: Die Parteien stehen alphabetisch, Grau zuletzt. Der erste Block schneidet senkrecht ein Stück ab, der zweite waagerecht, immer im Wechsel. So hat jede Partei ihren festen Platz.
 
 <!-- abschnitt: s2 -->
 
