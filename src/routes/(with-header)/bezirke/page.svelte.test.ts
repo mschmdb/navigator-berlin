@@ -51,7 +51,7 @@ describe('/bezirke +page.svelte', () => {
 
 	it('setzt Titel, Beschreibung und Breadcrumb-JSON-LD in DE', () => {
 		render(Page, { data });
-		expect(document.title).toBe('Alle 2 Bezirke Berlins mit Einwohnerzahl | navigator.berlin');
+		expect(document.title).toBe('Die 2 Berliner Bezirke mit Einwohnerzahl | navigator.berlin');
 		const description = document.querySelector('meta[name="description"]')?.getAttribute('content');
 		expect(description?.length).toBeGreaterThanOrEqual(70);
 		expect(description?.length).toBeLessThanOrEqual(155);

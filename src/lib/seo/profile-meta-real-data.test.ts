@@ -81,7 +81,7 @@ describe('Bezirke-Übersicht: Titel und Description', () => {
 			expect(description).not.toMatch(/Wahl|election/i);
 		}
 		expect(buildPageTitle(m.overview_bezirke_meta_title({ count: 12 }, { locale: 'de' }))).toBe(
-			'Alle 12 Bezirke Berlins mit Einwohnerzahl | navigator.berlin'
+			'Die 12 Berliner Bezirke mit Einwohnerzahl | navigator.berlin'
 		);
 		expect(buildPageTitle(m.overview_bezirke_meta_title({ count: 12 }, { locale: 'en' }))).toBe(
 			'All 12 Berlin districts with population | navigator.berlin'

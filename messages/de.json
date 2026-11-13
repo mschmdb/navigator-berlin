@@ -2252,7 +2252,7 @@
 	"overview_kieze_intro": "Berlin hat {count} Kieze (LOR-Bezirksregionen) in {bezirkCount} Bezirken. Die Zahl hinter dem Namen ist der Kiez-Score von 0 bis 100. Er misst Umwelt und Infrastruktur, nicht die Wohnqualität.",
 	"overview_kieze_jump_aria": "Zu einem Bezirk springen",
 	"overview_kieze_bezirk_link": "Zum Bezirk {name}",
-	"overview_bezirke_meta_title": "Alle {count} Bezirke Berlins mit Einwohnerzahl",
+	"overview_bezirke_meta_title": "Die {count} Berliner Bezirke mit Einwohnerzahl",
 	"overview_bezirke_meta_description": "Liste aller {count} Berliner Bezirke mit Einwohnerzahl und Kiez-Score. Jeder Bezirk hat eine Seite mit Mieten, Lärm, Grün, Hitze und Kiezen.",
 	"overview_bezirke_breadcrumb": "Bezirke",
 	"overview_bezirke_h1": "Alle Bezirke in Berlin",
