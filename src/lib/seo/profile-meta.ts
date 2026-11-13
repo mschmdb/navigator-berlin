@@ -5,6 +5,8 @@ import { formatCount, formatDate, formatDecimal } from '$lib/i18n/format.js';
 
 const BRAND = 'navigator.berlin';
 export const DESCRIPTION_MAX = 160;
+/** Google kürzt Snippets um 155 Zeichen; Bezirksseiten bleiben darunter. */
+export const BEZIRK_DESCRIPTION_MAX = 155;
 
 export interface ProfileMetaInput {
 	readonly name: string;
@@ -95,12 +97,15 @@ function descriptionScoreSentence(input: ProfileMetaInput, label: string): strin
 }
 
 /** Sätze in Prioritätsreihenfolge; ein Satz, der die Grenze sprengt, entfällt samt Rest. */
-export function composeDescription(sentences: readonly (string | null)[]): string {
+export function composeDescription(
+	sentences: readonly (string | null)[],
+	max: number = DESCRIPTION_MAX
+): string {
 	const present = sentences.filter((s): s is string => s !== null);
 	let result = present[0] ?? '';
 	for (const sentence of present.slice(1)) {
 		const next = `${result} ${sentence}`;
-		if (next.length > DESCRIPTION_MAX) break;
+		if (next.length > max) break;
 		result = next;
 	}
 	return result;
@@ -108,19 +113,30 @@ export function composeDescription(sentences: readonly (string | null)[]): strin
 
 export function buildBezirkMeta(input: ProfileMetaInput): ProfileMeta {
 	const opts = { locale: input.locale };
-	const allFacts = titleFacts(input, true);
-	const einwohnerOnly = titleFacts(input, false);
-	// Weglassreihenfolge bei Überlänge: Marke, Fläche, Einwohner. Der Name bleibt immer vollständig.
+	// Suchende tippen den Bezirksnamen; der Titel sagt, was die Seite dazu bietet.
+	// Weglassreihenfolge bei Überlänge: Marke, lange Zeile, kurze Zeile. Der Name bleibt immer.
+	const taglines = [
+		m.meta_title_bezirk_long(undefined, opts),
+		m.meta_title_bezirk_short(undefined, opts)
+	];
 	const candidates: string[] = [];
-	for (const facts of [allFacts, einwohnerOnly, []]) {
-		candidates.push(composeTitle(input.name, facts, true), composeTitle(input.name, facts, false));
+	for (const tagline of taglines) {
+		candidates.push(
+			composeTitle(input.name, [tagline], true),
+			composeTitle(input.name, [tagline], false)
+		);
 	}
+	candidates.push(composeTitle(input.name, [], true), input.name);
 	const title = firstFitting(candidates, PAGE_TITLE_MAX);
-	const description = composeDescription([
-		descriptionFactSentence(input),
-		descriptionScoreSentence(input, m.meta_score_label_bezirk(undefined, opts)),
-		m.meta_desc_cta_bezirk(undefined, opts)
-	]);
+	// Seiteninhalt vor Score: Der Score-Satz passt nur, wenn Fakten fehlen.
+	const description = composeDescription(
+		[
+			descriptionFactSentence(input),
+			m.meta_desc_cta_bezirk(undefined, opts),
+			descriptionScoreSentence(input, m.meta_score_label_bezirk(undefined, opts))
+		],
+		BEZIRK_DESCRIPTION_MAX
+	);
 	return { title, description };
 }
 

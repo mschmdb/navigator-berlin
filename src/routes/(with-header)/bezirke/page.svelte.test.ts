@@ -51,10 +51,10 @@ describe('/bezirke +page.svelte', () => {
 
 	it('setzt Titel, Beschreibung und Breadcrumb-JSON-LD in DE', () => {
 		render(Page, { data });
-		expect(document.title).toBe('Alle 2 Bezirke in Berlin | navigator.berlin');
+		expect(document.title).toBe('Alle 2 Bezirke Berlins mit Einwohnerzahl | navigator.berlin');
 		const description = document.querySelector('meta[name="description"]')?.getAttribute('content');
 		expect(description?.length).toBeGreaterThanOrEqual(70);
-		expect(description?.length).toBeLessThanOrEqual(160);
+		expect(description?.length).toBeLessThanOrEqual(155);
 		const items = jsonLd('bezirke-breadcrumb-jsonld').itemListElement;
 		expect(items.map((i) => i.name)).toEqual(['Berlin', 'Bezirke']);
 		expect(items[1]?.item.endsWith('/bezirke')).toBe(true);
@@ -64,6 +64,7 @@ describe('/bezirke +page.svelte', () => {
 		overwriteGetLocale(() => 'en');
 		render(Page, { data });
 		expect(document.querySelector('h1')?.textContent).toBe('All Bezirke in Berlin');
+		expect(document.title).toBe('All 2 Berlin districts with population | navigator.berlin');
 		expect(document.body.textContent).toContain('390,000');
 		expect(document.body.textContent).toContain('44 of 100');
 		expect(internalHrefs(document.body).filter((h) => !h.startsWith('/en'))).toEqual([]);

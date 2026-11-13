@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-// L3: Title und Description nennen Einwohner, Fläche, Stichtag (DE und EN).
+// L3: Description nennt Einwohner, Fläche, Stichtag; Title nennt Bezirk (DE und EN).
 
 async function description(page: Page): Promise<string> {
 	const content = await page.locator('meta[name="description"]').getAttribute('content');
@@ -9,21 +9,20 @@ async function description(page: Page): Promise<string> {
 }
 
 test.describe('L3: Bezirk-Meta mit Fakten', () => {
-	test('DE: Title mit Einwohnern und km², Description beginnt mit Antwortsatz', async ({
-		page
-	}) => {
+	test('DE: Title nennt Bezirk, Description beginnt mit Antwortsatz', async ({ page }) => {
 		await page.goto('/bezirk/friedrichshain-kreuzberg');
-		await expect(page).toHaveTitle(
-			/^Friedrichshain-Kreuzberg: [\d.]+ Einwohner:innen, \d+,\d km²$/
-		);
+		await expect(page).toHaveTitle('Friedrichshain-Kreuzberg: Bezirk in Zahlen, Kieze und Karte');
 		expect(await description(page)).toMatch(
 			/^Friedrichshain-Kreuzberg hat [\d.]+ Einwohner:innen auf \d+,\d km² \(Stand Ende \d{4}\)\./
 		);
 	});
 
-	test('EN: Zahlen englisch formatiert', async ({ page }) => {
+	test('EN: Title englisch, Zahlen englisch formatiert', async ({ page }) => {
 		await page.goto('/en/bezirk/friedrichshain-kreuzberg');
-		await expect(page).toHaveTitle(/^Friedrichshain-Kreuzberg: [\d,]+ residents, \d+\.\d km²$/);
+		await expect(page).toHaveTitle('Friedrichshain-Kreuzberg: Berlin district in numbers and map');
+		expect(await description(page)).toMatch(
+			/^Friedrichshain-Kreuzberg has [\d,]+ residents across \d+\.\d km²/
+		);
 	});
 });
 
