@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { buildBezirkMeta, buildKiezMeta, formatStichtag } from './profile-meta.js';
+import {
+	BEZIRK_DESCRIPTION_MAX,
+	buildBezirkMeta,
+	buildKiezMeta,
+	formatStichtag
+} from './profile-meta.js';
 
 const base = {
 	einwohner: 292624,
@@ -36,39 +41,83 @@ describe('buildBezirkMeta', () => {
 		quartil: 3,
 		total: 12
 	};
+	const noFacts = { einwohner: 0, flaecheHa: 0 } as const;
+	const CTA_DE = 'Mieten, Lärm, Grün, Hitze, Milieuschutz und Kieze auf der Karte.';
+	const CTA_EN = 'Rents, noise, green space, heat, Milieuschutz and Kieze on a map.';
 
-	it('DE: Title mit Einwohnern und km2', () => {
+	it('DE: Title nennt Bezirk, Zahlen, Kieze und Karte', () => {
 		const { title } = buildBezirkMeta({ ...input, locale: 'de' });
-		expect(title).toBe('Friedrichshain-Kreuzberg: 292.624 Einwohner:innen, 20,3 km²');
+		expect(title).toBe('Friedrichshain-Kreuzberg: Bezirk in Zahlen, Kieze und Karte');
 	});
 
-	it('DE: Description mit Fakt, Score, Rang', () => {
-		const { description } = buildBezirkMeta({ ...input, locale: 'de' });
-		expect(
-			description.startsWith(
-				'Friedrichshain-Kreuzberg hat 292.624 Einwohner:innen auf 20,3 km² (Stand Ende 2024).'
-			)
-		).toBe(true);
-		expect(description).toContain('Kiez-Score 41 von 100, Platz 7 von 12 in Berlin.');
+	it('EN: Title nennt Berlin district', () => {
+		const { title } = buildBezirkMeta({ ...input, locale: 'en' });
+		expect(title).toBe('Friedrichshain-Kreuzberg: Berlin district in numbers and map');
 	});
 
-	it('EN: lokalisierte Zahlen', () => {
-		const { title, description } = buildBezirkMeta({ ...input, locale: 'en' });
-		expect(title).toBe('Friedrichshain-Kreuzberg: 292,624 residents, 20.3 km²');
-		expect(description).toContain(
-			'Friedrichshain-Kreuzberg has 292,624 residents across 20.3 km² (as of end of 2024).'
+	it('kurzer Name: Marke am Ende', () => {
+		const { title } = buildBezirkMeta({ ...input, name: 'Mitte', locale: 'de' });
+		expect(title).toBe('Mitte: Bezirk in Zahlen, Kieze und Karte | navigator.berlin');
+	});
+
+	it('langer Name: kurze Zeile statt Marke', () => {
+		const name = 'Charlottenburg-Wilmersdorf';
+		expect(buildBezirkMeta({ ...input, name, locale: 'de' }).title).toBe(
+			'Charlottenburg-Wilmersdorf: Bezirk in Zahlen'
 		);
-		expect(description).toContain('Kiez score 41 of 100, rank 7 of 12 in Berlin.');
+		expect(buildBezirkMeta({ ...input, name, locale: 'en' }).title).toBe(
+			'Charlottenburg-Wilmersdorf: Berlin district in numbers'
+		);
+	});
+
+	it('DE: Description mit Fakten und Seiteninhalt', () => {
+		const { description } = buildBezirkMeta({ ...input, locale: 'de' });
+		expect(description).toBe(
+			`Friedrichshain-Kreuzberg hat 292.624 Einwohner:innen auf 20,3 km² (Stand Ende 2024). ${CTA_DE}`
+		);
+		expect(description.length).toBeLessThanOrEqual(BEZIRK_DESCRIPTION_MAX);
+	});
+
+	it('EN: lokalisierte Zahlen und Seiteninhalt', () => {
+		const { description } = buildBezirkMeta({ ...input, locale: 'en' });
+		expect(description).toBe(
+			`Friedrichshain-Kreuzberg has 292,624 residents across 20.3 km² (as of end of 2024). ${CTA_EN}`
+		);
+		expect(description.length).toBeLessThanOrEqual(BEZIRK_DESCRIPTION_MAX);
+	});
+
+	it('verspricht keine Wahlergebnisse (zeigt die Bezirksseite nicht)', () => {
+		for (const locale of ['de', 'en'] as const) {
+			const { description } = buildBezirkMeta({ ...input, ...noFacts, locale });
+			expect(description).not.toMatch(/Wahl|election/i);
+		}
+	});
+
+	it('ohne Fakten: Seiteninhalt, dann Score mit Rang', () => {
+		const { description } = buildBezirkMeta({ ...input, ...noFacts, locale: 'de' });
+		expect(description).toBe(`${CTA_DE} Kiez-Score 41 von 100, Platz 7 von 12 in Berlin.`);
 	});
 
 	it('unteres Viertel: kein Platz X', () => {
-		const { description } = buildBezirkMeta({ ...input, rang: 12, quartil: 4, locale: 'de' });
+		const { description } = buildBezirkMeta({
+			...input,
+			...noFacts,
+			rang: 12,
+			quartil: 4,
+			locale: 'de'
+		});
 		expect(description).toContain('unteres Viertel in Berlin');
 		expect(description).not.toContain('Platz');
 	});
 
 	it('ohne Quartil: kein Rang (Anti-Stigma)', () => {
-		const { description } = buildBezirkMeta({ ...input, rang: 12, quartil: null, locale: 'de' });
+		const { description } = buildBezirkMeta({
+			...input,
+			...noFacts,
+			rang: 12,
+			quartil: null,
+			locale: 'de'
+		});
 		expect(description).toContain('Kiez-Score 41 von 100.');
 		expect(description).not.toContain('Platz');
 	});
@@ -79,55 +128,23 @@ describe('buildBezirkMeta', () => {
 		expect(description).toContain('Mitte hat 292.624 Einwohner:innen');
 	});
 
-	it('Score ohne Rang: Satz ohne Platz', () => {
-		const { description } = buildBezirkMeta({ ...base, name: 'Mitte', score: 38.4, locale: 'de' });
-		expect(description).toContain('Kiez-Score 38 von 100.');
-	});
-
 	it('fehlende Fläche: Teil entfällt', () => {
-		const { title, description } = buildBezirkMeta({
-			...input,
-			flaecheHa: 0,
-			locale: 'de'
-		});
-		expect(title).toBe('Friedrichshain-Kreuzberg: 292.624 Einwohner:innen');
-		expect(description).toContain(
-			'Friedrichshain-Kreuzberg hat 292.624 Einwohner:innen (Stand Ende 2024).'
+		const { description } = buildBezirkMeta({ ...input, flaecheHa: 0, locale: 'de' });
+		expect(description).toBe(
+			`Friedrichshain-Kreuzberg hat 292.624 Einwohner:innen (Stand Ende 2024). ${CTA_DE}`
 		);
-		expect(description).not.toContain('km²');
 	});
 
 	it('fehlende Einwohner: kein "0 Einwohner:innen"', () => {
-		const { title, description } = buildBezirkMeta({ ...input, einwohner: 0, locale: 'de' });
-		expect(title).toBe('Friedrichshain-Kreuzberg: 20,3 km² | navigator.berlin');
+		const { description } = buildBezirkMeta({ ...input, einwohner: 0, locale: 'de' });
 		expect(description).not.toContain('Einwohner');
 		expect(description).toContain('Fläche von 20,3 km²');
-	});
-
-	it('keine Fakten: nur Name im Title', () => {
-		const { title } = buildBezirkMeta({ ...input, einwohner: 0, flaecheHa: 0, locale: 'de' });
-		expect(title).toBe('Friedrichshain-Kreuzberg | navigator.berlin');
 	});
 
 	it('ohne Stichtag: kein Klammerteil', () => {
 		const { description } = buildBezirkMeta({ ...input, stichtag: null, locale: 'de' });
 		expect(description).toContain('auf 20,3 km².');
 		expect(description).not.toContain('Stand');
-	});
-
-	it('längster Bezirksname: Title <= 80, Description <= 160', () => {
-		for (const locale of ['de', 'en'] as const) {
-			const { title, description } = buildBezirkMeta({
-				...input,
-				name: 'Charlottenburg-Wilmersdorf',
-				einwohner: 342332,
-				flaecheHa: 6470,
-				locale
-			});
-			expect(title.length).toBeLessThanOrEqual(80);
-			expect(description.length).toBeLessThanOrEqual(160);
-			expect(title).toContain('342');
-		}
 	});
 });
 

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { loadRankingRegions } from '$lib/server/layer-kiez-ranking-loader.js';
-import { buildBezirkMeta, buildKiezMeta } from './profile-meta.js';
-import { PAGE_TITLE_MAX } from './page-title.js';
+import { m } from '$lib/paraglide/messages.js';
+import { BEZIRK_DESCRIPTION_MAX, buildBezirkMeta, buildKiezMeta } from './profile-meta.js';
+import { buildPageTitle, PAGE_TITLE_MAX } from './page-title.js';
 
 const LOCALES = ['de', 'en'] as const;
 
@@ -50,5 +51,40 @@ describe('Titel aller Kieze und Bezirke (echte Namen)', () => {
 				expect(title.startsWith(name)).toBe(true);
 			}
 		}
+	});
+
+	it('Bezirks-Meta: Name vorn, Bezirk im Titel, Description <= 155 mit Seiteninhalt', async () => {
+		const names = new Set([...(await loadRankingRegions()).values()].map((r) => r.bezirkName));
+		for (const name of names) {
+			for (const locale of LOCALES) {
+				const { title, description } = buildBezirkMeta({ ...FACTS, name, locale });
+				expect(title.length, title).toBeLessThanOrEqual(PAGE_TITLE_MAX);
+				expect(title).toMatch(locale === 'de' ? /: Bezirk / : /: Berlin district /);
+				expect(description.startsWith(name)).toBe(true);
+				expect(description.length, description).toBeLessThanOrEqual(BEZIRK_DESCRIPTION_MAX);
+				expect(description).toMatch(locale === 'de' ? /Milieuschutz und Kieze/ : /Kieze on a map/);
+			}
+		}
+	});
+});
+
+describe('Bezirke-Übersicht: Titel und Description', () => {
+	it('DE und EN mit Marke, Titel <= 60, Description <= 155', () => {
+		for (const locale of LOCALES) {
+			const opts = { locale };
+			const title = buildPageTitle(m.overview_bezirke_meta_title({ count: 12 }, opts));
+			const description = m.overview_bezirke_meta_description({ count: 12 }, opts);
+			expect(title.endsWith(' | navigator.berlin'), title).toBe(true);
+			expect(title.length, title).toBeLessThanOrEqual(PAGE_TITLE_MAX);
+			expect(description.length, description).toBeLessThanOrEqual(BEZIRK_DESCRIPTION_MAX);
+			expect(description).toContain('12');
+			expect(description).not.toMatch(/Wahl|election/i);
+		}
+		expect(buildPageTitle(m.overview_bezirke_meta_title({ count: 12 }, { locale: 'de' }))).toBe(
+			'Die 12 Berliner Bezirke mit Einwohnerzahl | navigator.berlin'
+		);
+		expect(buildPageTitle(m.overview_bezirke_meta_title({ count: 12 }, { locale: 'en' }))).toBe(
+			'All 12 Berlin districts with population | navigator.berlin'
+		);
 	});
 });
