@@ -326,6 +326,11 @@
 - source_spec: `docs/process/implementation-artifacts/spec-i18n-c5-profile.md`
   summary: Generator-Prompt (`scripts/build-kiez-profiles.ts` SYSTEM_PROMPT) um die neutrale Grünversorgungs-Skala ergänzen (gering/mittel/hoch statt gut/schlecht) und DE-Lint-Muster dafür, sonst bringt eine Neu-Generierung „schlecht“/„gut“ zurück.
   evidence: Review C5 (Blind Hunter). Korrektur am 30.09. nur in den Texten (64 Dateien DE+EN).
+  resolved: 15.11.2026 (NAV-108), Richtung gedreht: FAQ und Profile nennen jetzt die Senats-Klassen gut/mittel/schlecht wörtlich, der Prompt verlangt das. Steckbrief, Inspector und Methodik nutzen weiter gering/mittel/hoch, siehe offener Punkt unten.
+
+- source_spec: NAV-108
+  summary: Zwei Skalen für die Grünversorgung auf derselben Seite. FAQ und Profile nennen die Senats-Klassen (gut/mittel/schlecht), Steckbrief-Wert, Inspector und Methodik die neutrale Skala (gering/mittel/hoch). Die DE-Verteilung im Steckbrief zeigt den Rohwert („Schlecht 80 %“), EN die neutrale Skala („Low 80%“).
+  evidence: `faq_helper_gruen_category_*`, `steckbrief-extras.ts::toSegments` (harmonisiert nur bei Nicht-DE), `gruenversorgung-kategorie.ts`, `layer_explain_gruenversorgung_2023_*`. Eine Skala für die ganze Seite festlegen.
 
 - source_spec: `docs/process/implementation-artifacts/spec-i18n-c5-profile.md`
   summary: Zahlen-Lint erfasst ausgeschriebene Zahlen („Rang fünf“, „rank five“) nicht.
