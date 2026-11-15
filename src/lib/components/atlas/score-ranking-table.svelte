@@ -16,6 +16,7 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import type { RankingRow } from '$lib/data/ranking-types.js';
+	import { rankForSort } from '$lib/data/ranking-rank.js';
 	import RichText from '$lib/components/rich-text.svelte';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { richSegments } from '$lib/i18n/rich-text.js';
@@ -389,9 +390,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each sortedRows as row, index (row.slug)}
+				{#each sortedRows as row (row.slug)}
 					<tr class="border-b border-rule align-top">
-						<td class="py-3 pr-3 text-xs text-ink-subtle tabular-nums">{index + 1}</td>
+						<td
+							class="py-3 pr-3 text-xs text-ink-subtle tabular-nums"
+							data-testid="ranking-cell-rank">{rankForSort(row.ranks, sortKey) ?? '–'}</td
+						>
 						<th scope="row" class="py-3 pr-3 text-left font-semibold text-ink">
 							<a
 								class="inline-flex min-h-(--target-min) items-center text-ink hover:text-accent hover:underline"
