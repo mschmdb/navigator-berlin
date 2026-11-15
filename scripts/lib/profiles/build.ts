@@ -50,6 +50,26 @@ interface RankRow {
 	rang: number | null;
 	quartil: number | null;
 	total: number;
+	/** Anzahl anderer Gebiete mit demselben Rang in dieser Metrik (0 = ungeteilt). */
+	geteiltMit?: number;
+}
+
+/** Liefert pro Metrik und Rang, wie viele andere Gebiete denselben Rang haben. */
+export function countSharedRanks(
+	rows: readonly { slug: string; metricKey: string; rang: number | null }[]
+): (metricKey: string, rang: number | null) => number {
+	const counts = new Map<string, number>();
+	for (const r of rows) {
+		if (r.rang === null) continue;
+		const key = `${r.metricKey}:${r.rang}`;
+		counts.set(key, (counts.get(key) ?? 0) + 1);
+	}
+	return (metricKey, rang) =>
+		rang === null ? 0 : Math.max(0, (counts.get(`${metricKey}:${rang}`) ?? 1) - 1);
+}
+
+function sharedField(r: RankRow | undefined): { rangGeteiltMit?: number } {
+	return r?.geteiltMit ? { rangGeteiltMit: r.geteiltMit } : {};
 }
 interface CmpRow {
 	metricKey: string;
@@ -79,6 +99,7 @@ export function buildInput(
 			label,
 			score: (score[key] as number | null) ?? null,
 			rang: r?.rang ?? null,
+			...sharedField(r),
 			total: r?.total ?? 0,
 			bezirkMean: c?.bezirkMean ?? null,
 			berlinMedian: c?.berlinMedian ?? null
@@ -112,6 +133,7 @@ export function buildInput(
 		composite: {
 			score: (score.composite as number | null) ?? null,
 			rang: compRank?.rang ?? null,
+			...sharedField(compRank),
 			total: compRank?.total ?? 0
 		},
 		dims,
@@ -133,10 +155,12 @@ async function loadAreas(pageType: 'kiez' | 'bezirk'): Promise<AreaRaw[]> {
 		db.select().from(cmpTbl)
 	]);
 	const statsBySlug = new Map(stats.map((s: Record<string, unknown>) => [s.slug as string, s]));
+	const rankRows = ranks as (RankRow & { slug: string })[];
+	const shared = countSharedRanks(rankRows);
 	const ranksBySlug = new Map<string, Map<string, RankRow>>();
-	for (const r of ranks as (RankRow & { slug: string })[]) {
+	for (const r of rankRows) {
 		const m = ranksBySlug.get(r.slug) ?? new Map();
-		m.set(r.metricKey, r);
+		m.set(r.metricKey, { ...r, geteiltMit: shared(r.metricKey, r.rang) });
 		ranksBySlug.set(r.slug, m);
 	}
 	const cmpsBySlug = new Map<string, Map<string, CmpRow>>();
