@@ -6,9 +6,8 @@
  *
  * i18n Block B4a: `opts` mit DE-Default (Boundary: geteilte Helfer ohne
  * `opts.locale` bleiben DE). `describeOepnvDichte`/`formatStopsPerKm2`
- * rendern auch direkt im Kiez-/Bezirk-Steckbrief (Client, übersetzt);
- * `oepnvErklaerungDe` bleibt ausschließlich ein Server-FAQ-Slot (bleibt
- * deutsch).
+ * rendern auch direkt im Kiez-/Bezirk-Steckbrief (Client, übersetzt).
+ * Die FAQ-Sätze stehen seit NAV-108 in `src/lib/server/faq/fact-phrases.ts`.
  */
 import { m } from '$lib/paraglide/messages.js';
 import { formatDecimal, type LocaleFormatOptions } from '$lib/i18n/format.js';
@@ -43,25 +42,6 @@ export function describeOepnvDichte(
 			return m.faq_helper_oepnv_dichte_duenn(undefined, options);
 		default:
 			return m.faq_helper_oepnv_dichte_unbekannt(undefined, options);
-	}
-}
-
-export function oepnvErklaerungDe(
-	stopsPerKm2: number | null | undefined,
-	opts?: LocaleOptions
-): string {
-	const options = toAtlasMessageOptions(opts);
-	switch (normalizeDichte(stopsPerKm2)) {
-		case 'sehr dicht':
-			return m.faq_helper_oepnv_erklaerung_sehr_dicht(undefined, options);
-		case 'dicht':
-			return m.faq_helper_oepnv_erklaerung_dicht(undefined, options);
-		case 'mittel':
-			return m.faq_helper_oepnv_erklaerung_mittel(undefined, options);
-		case 'dünn':
-			return m.faq_helper_oepnv_erklaerung_duenn(undefined, options);
-		default:
-			return m.faq_helper_oepnv_erklaerung_unbekannt(undefined, options);
 	}
 }
 
