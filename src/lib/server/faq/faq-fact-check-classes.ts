@@ -107,7 +107,7 @@ export function checkShares(
 
 const VERDICT_DE_GRUEN = /Laut Senat (überwiegend )?(gut|mittel|schlecht|gemischt)[.:]/;
 const VERDICT_EN_GRUEN =
-	/(Mostly )?(good|medium|poor|mixed|Good|Medium|Poor|Mixed), according to the Senate:/;
+	/(Mostly )?(good|medium|poor|mixed|Good|Medium|Poor|Mixed), according to the Senate[.:]/;
 
 function checkVerdict(
 	text: string,

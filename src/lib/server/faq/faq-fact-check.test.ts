@@ -160,6 +160,21 @@ describe('checkFaqAnswer: Grünversorgung', () => {
 	});
 });
 
+describe('checkFaqAnswer: EN-Grün-Urteil (Review NAV-108)', () => {
+	it('meldet ein falsches EN-Urteil im Renderer-Format mit Punkt', () => {
+		const en = { templateId: 'gruen-versorgung-kiez', locale: 'en' as const };
+		const f = {
+			aggregate: aggregate({
+				gruen: { ...aggregate().gruen, versorgungDistribution: av({ gut: 1 }) }
+			})
+		};
+		const ok =
+			'Good, according to the Senate. The whole Kiez is rated as well served with green space.';
+		expect(kinds(ok, en, f)).toEqual([]);
+		expect(kinds(ok.replace('Good,', 'Poor,'), en, f)).toContain('klasse');
+	});
+});
+
 describe('checkFaqAnswer: Klassen und Zahlen', () => {
 	it('meldet ein falsches ÖPNV-Urteil (11,9 ist „mittel“)', () => {
 		const f = { aggregate: aggregate({ oepnv: { ...aggregate().oepnv, stopsPerKm2: av(11.9) } }) };
