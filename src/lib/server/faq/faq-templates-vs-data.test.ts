@@ -201,8 +201,8 @@ describe('FAQ-Templates: belegte Fehler aus NAV-108', () => {
 			'de',
 			'gruen-versorgung-kiez'
 		);
-		expect(de).toContain('überwiegend als „schlecht“');
-		expect(de).toContain('„schlecht“ 80 %, „mittel“ 20 %');
+		expect(de).toContain('Laut Senat überwiegend schlecht');
+		expect(de).toContain('Vier Fünftel der Teilgebiete gelten als schlecht mit Grün versorgt');
 		expect(de).not.toMatch(/\bgering\b/);
 	});
 
@@ -215,8 +215,8 @@ describe('FAQ-Templates: belegte Fehler aus NAV-108', () => {
 			'de',
 			'gruen-versorgung-bezirk'
 		);
-		expect(de).toContain('„gut“ 52 %, „schlecht“ 33 %, „mittel“ 15 %');
-		expect(de).toContain('eigene Messgröße');
+		expect(de).toContain('52 Prozent der Teilgebiete gelten als gut mit Grün versorgt');
+		expect(de).toContain('Davon zu trennen ist der Grün-und-Hitze-Score');
 		const en = answer(
 			'bezirk',
 			'Neukölln',
@@ -225,8 +225,8 @@ describe('FAQ-Templates: belegte Fehler aus NAV-108', () => {
 			'en',
 			'gruen-versorgung-bezirk'
 		);
-		expect(en).toContain('“good” 52%, “poor” 33%, “medium” 15%');
-		expect(en).toContain('separate measure');
+		expect(en).toContain('52 percent of the subareas are rated as well served');
+		expect(en).toContain('a different measure');
 	});
 
 	it('MSS-Text folgt der Richtung des Status-Index', () => {
@@ -251,4 +251,95 @@ describe('FAQ-Templates: belegte Fehler aus NAV-108', () => {
 			).toEqual([]);
 		}
 	});
+});
+
+describe('FAQ-Templates: Grenzfälle (NAV-108)', () => {
+	const check = (
+		pageType: PageType,
+		agg: TemplateAggregate,
+		metrics: ReadonlyMap<string, MetricContext>,
+		field: ReadonlyMap<string, readonly number[]> | undefined,
+		locale: TemplateLocale
+	) =>
+		renderAllFor(pageType, 'Testgebiet', agg, metrics, locale).flatMap((r) =>
+			checkFaqAnswer(
+				{
+					pageType,
+					slug: 'x',
+					locale,
+					templateId: r.id,
+					answer: r.answer,
+					templateText: r.templateText
+				},
+				{ name: 'Testgebiet', aggregate: agg, metrics, field }
+			).map((f) => `${r.id}: ${f.message}`)
+		);
+
+	const tiny: TemplateAggregate = {
+		...reuterstrasse,
+		laerm: {
+			dominantCategory: av('mittel', 'laerm-2023'),
+			categoryDistribution: av({ mittel: 1 }, 'laerm-2023')
+		},
+		gruen: {
+			...reuterstrasse.gruen,
+			versorgungDistribution: av({ mittel: 1 }, 'gruenversorgung-2023')
+		},
+		oepnv: {
+			stopsPerKm2: av(1.9, 'oepnv-composite'),
+			uBahnCount: av(1, 'ubahn-stationen'),
+			sBahnCount: av(1, 'sbahn-stationen'),
+			tramCount: av(0, 'tram-haltestellen'),
+			busCount: av(0, 'bus-haltestellen')
+		}
+	};
+
+	it.each(['de', 'en'] as const)('sehr kleiner Kiez mit nur einem Teilgebiet (%s)', (locale) => {
+		expect(check('kiez', tiny, kiezMetrics, kiezField, locale)).toEqual([]);
+		const oepnv = renderAllFor('kiez', 'K', tiny, kiezMetrics, locale).find(
+			(r) => r.id === 'oepnv-dichte-kiez'
+		);
+		expect(oepnv?.answer).toMatch(
+			locale === 'de' ? /ein U-Bahnhof und ein S-Bahnhof/ : /one U-Bahn station/
+		);
+	});
+
+	it.each(['de', 'en'] as const)('Gleichstand im Rang: geteilter Platz (%s)', (locale) => {
+		const tie = new Map([
+			['mobilitaet', { ...kiezMetrics.get('mobilitaet')!, value: 30, rang: 2, geteiltMit: 1 }]
+		]);
+		const field = new Map([['mobilitaet', [40, 30, 30, 10]]]);
+		expect(check('kiez', reuterstrasse, tie, field, locale)).toEqual([]);
+		const oepnv = renderAllFor('kiez', 'K', reuterstrasse, tie, locale).find(
+			(r) => r.id === 'oepnv-dichte-kiez'
+		);
+		expect(oepnv?.answer).toContain(
+			locale === 'de' ? 'geteilter Platz 2 von 4 Kiezen' : 'joint rank 2 of 4 Kieze'
+		);
+	});
+
+	it.each(['de', 'en'] as const)(
+		'fehlende Werte: ohne Scores und ohne Zähldaten (%s)',
+		(locale) => {
+			const sparse: TemplateAggregate = {
+				...reuterstrasse,
+				oepnv: {
+					...reuterstrasse.oepnv,
+					uBahnCount: null,
+					sBahnCount: null,
+					tramCount: null,
+					busCount: null
+				},
+				klima: { meanPet: null, shareSehrHeiss: null }
+			};
+			const none = new Map<string, MetricContext>();
+			expect(check('kiez', sparse, none, undefined, locale)).toEqual([]);
+			const rows = renderAllFor('kiez', 'K', sparse, none, locale);
+			expect(rows.map((r) => r.id)).not.toContain('klima-pet-kiez');
+			expect(rows.map((r) => r.id)).not.toContain('wohnen-wohnschutz-einordnung');
+			for (const r of rows) {
+				expect(r.answer, r.id).not.toMatch(/Score|score|Das ist|That is|\{/);
+			}
+		}
+	);
 });

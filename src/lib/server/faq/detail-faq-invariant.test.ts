@@ -18,7 +18,8 @@ describe('Detail-FAQ-Invariante (Story 11.2)', () => {
 			for (const t of file.templates) {
 				const onDetail = t.applicableTo.includes('bezirk') || t.applicableTo.includes('kiez');
 				if (!onDetail) continue;
-				if (t.requires.length === 0 && !DETAIL_EXPLAINER_ALLOWLIST.has(t.id)) {
+				const hasData = t.requires.length > 0 || (t.requiresScore ?? []).length > 0;
+				if (!hasData && !DETAIL_EXPLAINER_ALLOWLIST.has(t.id)) {
 					offenders.push(t.id);
 				}
 			}

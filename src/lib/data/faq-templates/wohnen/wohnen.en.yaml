@@ -5,55 +5,53 @@ templates:
     topic: wohnlage
     applicableTo: [bezirk]
     requires: [wohnen.dominantWohnlage]
-    question: 'Which residential area type dominates in the Bezirk {name}?'
+    question: 'Which residential area type is most common in the Bezirk {name}?'
     answer: >-
-      In the Bezirk {name}, the {wohnenWohnlage} dominates according to the Berlin
-      Mietspiegel. The Wohnlage is a spatial category with three levels (simple, medium,
-      good). It summarises building and surroundings characteristics and is not an
-      assessment of the living circumstances of individual addresses. Source:
+      The {wohnenWohnlage} of the Berlin Mietspiegel is the most common. The Mietspiegel
+      sorts street sections into simple, medium and good residential areas by buildings
+      and surroundings. The rating says nothing about the people who live there. Source:
       {wohnenSource}, as of {wohnenStand}.
 
   - id: wohnen-wohnlage-kiez
     topic: wohnlage
     applicableTo: [kiez]
     requires: [wohnen.dominantWohnlage]
-    question: 'Which residential area type dominates in the Kiez {name}?'
+    question: 'Which residential area type is most common in the Kiez {name}?'
     answer: >-
-      The Kiez {name} lies mostly in the {wohnenWohnlage} of the Berlin Mietspiegel. The
-      level is a spatial category from the Mietspiegel procedure and applies to block
-      sides or rows of houses, not to individual addresses. Source: {wohnenSource}, as of
-      {wohnenStand}.
+      The {wohnenWohnlage} of the Berlin Mietspiegel is the most common. The rating applies
+      to street sections and rows of houses, not to single addresses. Source:
+      {wohnenSource}, as of {wohnenStand}.
 
   - id: wohnen-mss-bezirk
     topic: sozialstruktur
     applicableTo: [bezirk]
     requires: [wohnen.dominantMss]
-    question: 'How does {name} fare in the Monitoring Social Urban Development?'
+    question: 'Where does the Bezirk {name} stand in the Senate social monitoring?'
     answer: >-
-      The Monitoring Social Urban Development (MSS) classifies planning areas into four
-      levels based on socio-economic indicators. For {name}, the current MSS gives an
-      aggregate status. {wohnenMssBeschreibung} The index refers to the whole area, not to
-      individual households.
+      {wohnenMssBeschreibung} The Monitoring Social Urban Development sorts every planning
+      area into one of four levels by income, employment and education. The level applies
+      to whole areas, not to individual households. Source: {wohnenMssSource}, as of
+      {wohnenMssStand}.
 
   - id: wohnen-warum-keine-mietpreise
     applicableTo: [layer]
     requires: []
-    question: 'Why does navigator.berlin not show specific rents per address?'
+    question: 'Why does navigator.berlin not give a rent for my address?'
     answer: >-
-      Rents depend on year of construction, fittings, location and reference dates. The
-      Berlin Mietspiegel provides ranges per residential area and age-of-building class,
-      not point values per address. On the methodology page we link to the official
-      Mietspiegel calculator.
+      Rents depend on year of construction, fittings, location and reference date. The
+      Berlin Mietspiegel gives ranges per residential area type and building age, not
+      values for single addresses. The official value for a flat comes from
+      mietspiegel.berlin.de.
 
   - id: wohnen-was-ist-brw
     applicableTo: [layer]
     requires: []
     question: 'How do the standard land value and the Mietspiegel differ?'
     answer: >-
-      The standard land value (Bodenrichtwert) describes an average land price per square
-      metre, verified by the Berlin Committee of Valuation Experts (Gutachterausschuss).
-      The Mietspiegel describes the local comparative rents for housing. Both values apply
-      to areas, not to individual addresses.
+      The standard land value (Bodenrichtwert) is an average land price per square metre,
+      set by the Committee of Valuation Experts (Gutachterausschuss). The Mietspiegel gives
+      the usual local comparative rents for flats. Both apply to areas, not to single
+      addresses.
 
   - id: wohnen-stigma-disclaimer
     topic: wohnen-hinweis
@@ -61,17 +59,19 @@ templates:
     requires: []
     question: 'Does navigator.berlin rate residential areas as good or bad?'
     answer: >-
-      No. We reproduce categorical values from official data sources (Mietspiegel
-      Wohnlage, MSS, standard land value). These categories are descriptive, not
-      evaluative. For methodological reasons, we do not use labels such as “popular Kiez”
-      or “good Bezirk”.
+      No. We show ratings from official data, such as the Mietspiegel residential area
+      type, the social monitoring or the standard land value. These ratings describe a
+      place; they do not judge it. We do not use labels such as “popular Kiez” or “good
+      Bezirk”.
 
   - id: wohnen-wohnschutz-einordnung
     topic: wohnschutz
     applicableTo: [bezirk, kiez]
-    requires: [wohnen.dominantWohnlage]
+    requires: []
+    requiresScore: [wohnschutz]
     question: 'How much tenant protection is there in {name}?'
     answer: >-
-      {name} scores {wohnschutzScore} out of 100 in the Tenant protection score
-      ({wohnschutzRang}), {wohnschutzVergleich}. The score captures Milieuschutz coverage.
-      A higher value means more protection against displacement.
+      In the navigator.berlin Tenant protection score, {ortDer} gets {wohnschutzScore} of
+      100 points, {wohnschutzLage}. That is {wohnschutzVergleich}. The score measures how
+      much of the area is under Milieuschutz. Milieuschutz is meant to protect tenants from
+      displacement.

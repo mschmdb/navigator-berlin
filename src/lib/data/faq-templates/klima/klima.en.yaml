@@ -7,52 +7,49 @@ templates:
     requires: [klima.meanPet]
     question: 'How hot does the Bezirk {name} get in summer?'
     answer: >-
-      The mean Physiological Equivalent Temperature (PET) in the Bezirk {name} is
-      {klimaPet} degrees Celsius (classification: {klimaKategorie}). {klimaErklaerung}
-      Source: {klimaSource}, as of {klimaStand}.
+      {klimaSatz} The perceived temperature (PET) takes sun, wind and humidity into
+      account. Source: {klimaSource}, as of {klimaStand}.
 
   - id: klima-pet-kiez
     topic: klima
     applicableTo: [kiez]
     requires: [klima.meanPet]
-    question: 'How warm does the Kiez {name} get on hot days?'
+    question: 'How hot does the Kiez {name} get on hot days?'
     answer: >-
-      The mean PET in the Kiez {name} is {klimaPet} degrees Celsius. {klimaErklaerung}
-      Source: {klimaSource}, as of {klimaStand}.
+      {klimaSatz} The perceived temperature (PET) takes sun, wind and humidity into
+      account. Source: {klimaSource}, as of {klimaStand}.
 
   - id: klima-was-ist-pet
     applicableTo: [layer]
     requires: []
-    question: 'What is the Physiological Equivalent Temperature (PET)?'
+    question: 'What does PET stand for?'
     answer: >-
-      PET is a bioclimatic indicator. It states which air temperature in an enclosed room
-      would correspond to the perceived temperature outdoors. Wind, humidity and radiation
-      feed into it. The value is suited to comparing heat stress across urban areas.
+      For Physiological Equivalent Temperature, the perceived temperature. It states which
+      air temperature in a closed room the weather outside corresponds to. Wind,
+      humidity and solar radiation feed into it. This makes heat stress comparable across
+      neighbourhoods.
 
   - id: klima-was-ist-hitzetag
     applicableTo: [layer]
     requires: []
-    question: 'What counts as a hot day?'
+    question: 'When does a day count as a hot day?'
     answer: >-
-      The German Weather Service (Deutscher Wetterdienst) counts a day with a maximum
-      temperature of 30 degrees Celsius or more as a hot day. The number of hot days per
-      year in Berlin has risen markedly since the 1990s, as documented in the 1991-2020
-      climate normal period.
+      From a maximum temperature of 30 degrees, as the German Weather Service counts it.
+      Since the 1990s, the number of hot days in Berlin has risen markedly.
 
   - id: klima-normalperiode
     applicableTo: [layer]
     requires: []
-    question: 'What does climate normal period mean?'
+    question: 'What is a climate normal period for?'
     answer: >-
-      A climate normal period is a 30-year reference period that the World Meteorological
-      Organization uses to make weather averages comparable. For Berlin, we use the
-      current period 1991-2020 as the basis for comparison.
+      It is a 30-year period that the World Meteorological Organization uses to make
+      averages comparable. For Berlin, we compare with the current period 1991 to 2020.
 
   - id: klima-rolle-versiegelung
     applicableTo: [layer]
     requires: []
-    question: 'What role does surface sealing play in the urban climate?'
+    question: 'How does surface sealing affect the urban climate?'
     answer: >-
-      Asphalt and stone store heat and release it again at night. Heavily sealed
-      neighbourhoods cool down less well than neighbourhoods with vegetation or open
+      Asphalt and stone store heat during the day and release it at night. Heavily sealed
+      neighbourhoods therefore cool down less than neighbourhoods with trees, meadows or
       water. The urban climate analysis treats sealing as one factor among several.

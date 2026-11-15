@@ -5,56 +5,51 @@ templates:
     topic: wohnlage
     applicableTo: [bezirk]
     requires: [wohnen.dominantWohnlage]
-    question: 'Welche Wohnlage dominiert im Bezirk {name}?'
+    question: 'Welche Wohnlage überwiegt im Bezirk {name}?'
     answer: >-
-      Im Bezirk {name} dominiert die {wohnenWohnlage} gemäß dem Berliner
-      Mietspiegel. Die Wohnlage ist eine raumbezogene Kategorie aus drei Stufen
-      (einfach, mittel, gut). Sie fasst Bebauungs- und Umfeld-Merkmale zusammen
-      und ist keine Bewertung der Lebensumstände einzelner Adressen.
-      Quelle: {wohnenSource}, Stand {wohnenStand}.
+      Am häufigsten die {wohnenWohnlage} des Berliner Mietspiegels. Der Mietspiegel teilt
+      Straßenabschnitte nach Bebauung und Umfeld in einfache, mittlere und gute Wohnlagen
+      ein. Über die Menschen, die dort wohnen, sagt die Einstufung nichts. Quelle:
+      {wohnenSource}, Stand {wohnenStand}.
 
   - id: wohnen-wohnlage-kiez
     topic: wohnlage
     applicableTo: [kiez]
     requires: [wohnen.dominantWohnlage]
-    question: 'Welche Wohnlage dominiert im Kiez {name}?'
+    question: 'Welche Wohnlage überwiegt im Kiez {name}?'
     answer: >-
-      Der Kiez {name} liegt überwiegend in der {wohnenWohnlage} des Berliner
-      Mietspiegels. Die Stufe ist eine räumliche Kategorie aus dem Mietspiegel-
-      Verfahren und gilt jeweils für Blockseiten oder Häuserzeilen, nicht für
-      Einzeladressen.
-      Quelle: {wohnenSource}, Stand {wohnenStand}.
+      Am häufigsten die {wohnenWohnlage} des Berliner Mietspiegels. Die Einstufung gilt
+      für Straßenabschnitte und Häuserzeilen, nicht für einzelne Adressen. Quelle:
+      {wohnenSource}, Stand {wohnenStand}.
 
   - id: wohnen-mss-bezirk
     topic: sozialstruktur
     applicableTo: [bezirk]
     requires: [wohnen.dominantMss]
-    question: 'Wie schneidet {name} im Monitoring Soziale Stadtentwicklung ab?'
+    question: 'Wie steht der Bezirk {name} im Sozialmonitoring des Senats da?'
     answer: >-
-      Das Monitoring Soziale Stadtentwicklung (MSS) ordnet Planungsräume in vier
-      Stufen nach sozio-ökonomischen Indikatoren ein. Für {name} ergibt der
-      aktuelle MSS einen Aggregat-Status. {wohnenMssBeschreibung}
-      Der Index bezieht sich auf den gesamten Raum, nicht auf einzelne Haushalte.
+      {wohnenMssBeschreibung} Das Monitoring Soziale Stadtentwicklung ordnet jeden
+      Planungsraum nach Einkommen, Beschäftigung und Bildung in eine von vier Stufen ein.
+      Die Stufe gilt für ganze Gebiete, nicht für einzelne Haushalte. Quelle:
+      {wohnenMssSource}, Stand {wohnenMssStand}.
 
   - id: wohnen-warum-keine-mietpreise
     applicableTo: [layer]
     requires: []
-    question: 'Warum gibt navigator.berlin keine konkreten Mietpreise pro Adresse aus?'
+    question: 'Warum nennt navigator.berlin keine Miete für meine Adresse?'
     answer: >-
-      Mietpreise hängen von Baujahr, Ausstattung, Lage und Stichtagen ab. Der
-      Berliner Mietspiegel liefert Spannen pro Wohnlage und Baualters-Klasse,
-      keine Punktwerte pro Adresse. Wir verlinken auf der Methodik-Seite den
-      offiziellen Mietspiegel-Rechner.
+      Mieten hängen von Baujahr, Ausstattung, Lage und Stichtag ab. Der Berliner
+      Mietspiegel nennt Spannen je Wohnlage und Baualter, keine Werte für einzelne
+      Adressen. Den offiziellen Wert für eine Wohnung liefert mietspiegel.berlin.de.
 
   - id: wohnen-was-ist-brw
     applicableTo: [layer]
     requires: []
     question: 'Worin unterscheiden sich Bodenrichtwert und Mietspiegel?'
     answer: >-
-      Der Bodenrichtwert beschreibt einen durchschnittlichen Grundstückspreis pro
-      Quadratmeter, geprüft durch den Gutachterausschuss. Der Mietspiegel
-      beschreibt ortsübliche Vergleichsmieten für Wohnraum. Beide Werte gelten
-      für Räume, nicht für Einzel-Adressen.
+      Der Bodenrichtwert ist ein mittlerer Grundstückspreis pro Quadratmeter, ermittelt
+      vom Gutachterausschuss. Der Mietspiegel nennt die ortsüblichen Vergleichsmieten für
+      Wohnungen. Beide gelten für Gebiete, nicht für einzelne Adressen.
 
   - id: wohnen-stigma-disclaimer
     topic: wohnen-hinweis
@@ -62,17 +57,19 @@ templates:
     requires: []
     question: 'Bewertet navigator.berlin Wohngebiete als gut oder schlecht?'
     answer: >-
-      Nein. Wir geben kategoriale Werte aus offiziellen Datenquellen wieder
-      (Mietspiegel-Wohnlage, MSS, BRW). Diese Kategorien sind beschreibend, nicht
-      wertend. Bezeichnungen wie „beliebter Kiez" oder „guter Bezirk" verwenden
-      wir aus methodischen Gründen nicht.
+      Nein. Wir zeigen Einstufungen aus amtlichen Daten, etwa die Wohnlage im Mietspiegel,
+      das Sozialmonitoring oder den Bodenrichtwert. Diese Einstufungen beschreiben einen
+      Ort, sie werten ihn nicht. Begriffe wie „beliebter Kiez“ oder „guter Bezirk“
+      verwenden wir nicht.
 
   - id: wohnen-wohnschutz-einordnung
     topic: wohnschutz
     applicableTo: [bezirk, kiez]
-    requires: [wohnen.dominantWohnlage]
+    requires: []
+    requiresScore: [wohnschutz]
     question: 'Wie viel Wohnschutz gibt es in {name}?'
     answer: >-
-      {name} erreicht im Wohnschutz-Score {wohnschutzScore} von 100
-      ({wohnschutzRang}), {wohnschutzVergleich}. Der Score erfasst die
-      Milieuschutz-Abdeckung; ein höherer Wert heißt mehr Schutz vor Verdrängung.
+      Im Wohnschutz-Score von navigator.berlin kommt {ortDer} auf {wohnschutzScore} von
+      100 Punkten, {wohnschutzLage}. Das ist {wohnschutzVergleich}. Der Score misst, wie
+      viel des Gebiets unter Milieuschutz steht. Milieuschutz soll Mieterinnen und Mieter
+      vor Verdrängung schützen.

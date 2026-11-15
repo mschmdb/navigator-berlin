@@ -5,62 +5,55 @@ templates:
     topic: gruen
     applicableTo: [bezirk]
     requires: [gruen.versorgungDistribution]
-    question: 'Wie ist die Grünversorgung im Bezirk {name}?'
+    question: 'Wie gut ist der Bezirk {name} mit Grün versorgt?'
     answer: >-
-      Der Senat stuft die wohnungsnahe Grünversorgung im Bezirk {name}
-      {gruenEinstufung} ein. Anteile der Planungsräume: {gruenVerteilung}.
-      Die Klassen beschreiben, wie viel öffentliches Grün pro Person in
-      Wohnungsnähe liegt.
-      Der Grün-und-Hitze-Score ist eine eigene Messgröße: {name} erreicht
-      {gruenHitzeScore} von 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. Der
-      Score verbindet Grünversorgung und Hitzebelastung; ein höherer Wert heißt
-      grüner und kühler.
+      {gruenSatz} Der Senat misst dabei, wie viel öffentliches Grün pro Kopf in
+      Wohnungsnähe liegt. Davon zu trennen ist der Grün-und-Hitze-Score von
+      navigator.berlin{gruenHitzeAktiv}. Er rechnet Grün und Hitze zusammen{gruenHitzeAktiv}.
+      Dort kommt der Bezirk auf {gruenHitzeScore} von 100 Punkten, {gruenHitzeLage}. Das ist
+      {gruenHitzeVergleich}.
       Quelle: {gruenSource}, Stand {gruenStand}.
 
   - id: gruen-versorgung-kiez
     topic: gruen
     applicableTo: [kiez]
     requires: [gruen.versorgungDistribution]
-    question: 'Wie ist die Grünversorgung im Kiez {name}?'
+    question: 'Wie gut ist der Kiez {name} mit Grün versorgt?'
     answer: >-
-      Der Senat stuft die wohnungsnahe Grünversorgung im Kiez {name}
-      {gruenEinstufung} ein. Anteile der Planungsräume: {gruenVerteilung}.
-      Die Klassen beschreiben, wie viel öffentliches Grün pro Person in
-      Wohnungsnähe liegt.
-      Der Grün-und-Hitze-Score ist eine eigene Messgröße: {name} erreicht
-      {gruenHitzeScore} von 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. Der
-      Score verbindet Grünversorgung und Hitzebelastung; ein höherer Wert heißt
-      grüner und kühler.
+      {gruenSatz} Der Senat misst dabei, wie viel öffentliches Grün pro Kopf in
+      Wohnungsnähe liegt. Davon zu trennen ist der Grün-und-Hitze-Score von
+      navigator.berlin{gruenHitzeAktiv}. Er rechnet Grün und Hitze zusammen{gruenHitzeAktiv}.
+      Dort kommt der Kiez auf {gruenHitzeScore} von 100 Punkten, {gruenHitzeLage}. Das ist
+      {gruenHitzeVergleich}.
       Quelle: {gruenSource}, Stand {gruenStand}.
 
   - id: gruen-anzahl-anlagen
     topic: gruen-anlagen
     applicableTo: [bezirk]
     requires: [gruen.gruenanlagenCount]
-    question: 'Wie viele öffentliche Grünanlagen liegen in {name}?'
+    question: 'Wie viele öffentliche Grünanlagen gibt es im Bezirk {name}?'
     answer: >-
-      Im Bezirk {name} liegen {gruenanlagenCount} öffentlich gewidmete Grünanlagen
-      gemäß dem aktuellen Kataster der Senatsverwaltung. Privat-Gärten und
-      bewirtschaftete Kleingärten zählen nicht zu dieser Kategorie.
+      Der Senat zählt im Bezirk {gruenanlagenCount} öffentliche Grünanlagen. Private
+      Gärten und Kleingärten sind nicht dabei. Quelle: {gruenanlagenSource}, Stand
+      {gruenanlagenStand}.
 
   - id: gruen-was-bedeutet-versorgung
     applicableTo: [layer]
     requires: []
-    question: 'Was bedeutet wohnungsnahe Grünversorgung?'
+    question: 'Wie misst der Senat die Grünversorgung?'
     answer: >-
-      Die Senatsverwaltung berechnet pro Planungsraum, wie viele Quadratmeter
-      wohnungsnahe Grünfläche pro Einwohnerin im Einzugsbereich liegen.
-      Als Richtwert gelten 6 Quadratmeter pro Person. Je nachdem, wie weit ein
-      Planungsraum diesen Wert erreicht, stuft der Senat ihn als „gut“, „mittel“
-      oder „schlecht“ versorgt ein.
+      Der Senat rechnet für jeden Planungsraum aus, wie viel öffentliches Grün pro Kopf
+      in Wohnungsnähe liegt. Als Richtwert gelten 6 Quadratmeter pro Person. Je nachdem,
+      wie weit ein Gebiet diesen Wert erreicht, gilt es als gut, mittel oder schlecht
+      versorgt. Planungsräume sind die kleinsten Gebiete der Berliner Stadtplanung; jeder
+      Kiez besteht aus mehreren. In den Antworten zu Kiezen und Bezirken heißen sie
+      Teilgebiete.
 
   - id: gruen-rolle-hitze
     applicableTo: [layer]
     requires: []
-    question: 'Welche Rolle spielen Grünflächen für Hitze-Mitigation?'
+    question: 'Wie kühlen Grünflächen die Stadt?'
     answer: >-
-      Bäume und größere Grünflächen senken die Lufttemperatur durch Verschattung
-      und Verdunstung. Stadtklima-Analysen zeigen, dass dicht bebaute Quartiere
-      mit wenig Vegetation an Sommertagen messbar wärmer bleiben als Gebiete mit
-      vergleichbarer Bebauung und mehr Grün. Die Klima-Kategorie auf dieser Karte
-      bildet das ab.
+      Bäume und größere Grünflächen kühlen durch Schatten und Verdunstung. Dicht bebaute
+      Viertel mit wenig Grün bleiben an Sommertagen messbar wärmer als ähnlich bebaute
+      Viertel mit mehr Grün. Das zeigen die Stadtklima-Analysen.

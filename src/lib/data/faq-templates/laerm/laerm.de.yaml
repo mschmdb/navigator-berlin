@@ -4,53 +4,48 @@ templates:
   - id: laerm-dominant-bezirk
     topic: laerm
     applicableTo: [bezirk]
-    requires: [laerm.dominantCategory]
+    requires: [laerm.categoryDistribution]
     question: 'Wie laut ist es im Bezirk {name}?'
     answer: >-
-      Im Bezirk {name} dominiert die Lärm-Klasse {laermKategorie}.
-      {laermErklaerung}
-      Im Ruhe-und-Luft-Score erreicht {name} {ruheLuftScore} von 100
-      ({ruheLuftRang}), {ruheLuftVergleich}. Der Score bündelt Lärm- und
-      Luft-Belastung; ein höherer Wert heißt ruhiger und sauberer.
-      Datengrundlage: {laermSource}, Stand {laermStand}. Werte beziehen sich auf
-      LDEN, also den über 24 Stunden gewichteten Pegel.
+      {laermSatz} Gemeint ist der Verkehrslärm von Straße, Schiene und Flugzeugen,
+      gemittelt über Tag, Abend und Nacht. Der Ruhe-und-Luft-Score von navigator.berlin
+      rechnet Lärm und Luft zusammen{ruheLuftAktiv}. Dort kommt der Bezirk auf {ruheLuftScore}
+      von 100 Punkten, {ruheLuftLage}. Das ist {ruheLuftVergleich}. Quelle: {laermSource}, Stand
+      {laermStand}.
     editorialNote: >-
-      Die Berliner Lärmkartierung publiziert pro Planungsraum ordinale Pegel-Klassen
-      (niedrig, mittel, hoch). Wir geben hier keine konkreten dB-Werte aus, weil das
-      Aggregat keine Mittelwerte enthält.
+      Die Lärmkarte liefert je Planungsraum eine Klasse, keine dB-Werte. Deshalb nennt
+      die Antwort Klassen und ihre Anteile.
 
   - id: laerm-dominant-kiez
     topic: laerm
     applicableTo: [kiez]
-    requires: [laerm.dominantCategory]
-    question: 'Wie laut ist der Kiez {name}?'
+    requires: [laerm.categoryDistribution]
+    question: 'Wie laut ist es im Kiez {name}?'
     answer: >-
-      Der Kiez {name} liegt überwiegend in der Lärm-Klasse {laermKategorie}.
-      {laermErklaerung}
-      Im Ruhe-und-Luft-Score erreicht {name} {ruheLuftScore} von 100
-      ({ruheLuftRang}), {ruheLuftVergleich}. Der Score bündelt Lärm- und
-      Luft-Belastung; ein höherer Wert heißt ruhiger und sauberer.
-      Quelle: {laermSource}, Stand {laermStand}.
+      {laermSatz} Gemeint ist der Verkehrslärm von Straße, Schiene und Flugzeugen,
+      gemittelt über Tag, Abend und Nacht. Der Ruhe-und-Luft-Score von navigator.berlin
+      rechnet Lärm und Luft zusammen{ruheLuftAktiv}. Dort kommt der Kiez auf {ruheLuftScore}
+      von 100 Punkten, {ruheLuftLage}. Das ist {ruheLuftVergleich}. Quelle: {laermSource}, Stand
+      {laermStand}.
 
   - id: laerm-warum-nacht-schaedlicher
     applicableTo: [layer]
     requires: []
-    question: 'Warum gilt Nacht-Lärm als gesundheitlich relevanter?'
+    question: 'Warum zählt Lärm in der Nacht stärker?'
     answer: >-
-      Lärm in der Nacht stört Schlafphasen, in denen sich Herz-Kreislauf-System und
-      Nerven erholen. Die Weltgesundheitsorganisation empfiehlt für Nacht-Lärm
-      (LNIGHT) einen Richtwert von 40 dB. Die Berliner Lärmkartierung weist daher
-      LDEN und LNIGHT getrennt aus.
+      Nachts stört Lärm den Schlaf, und im Schlaf erholen sich Herz, Kreislauf und
+      Nerven. Die Weltgesundheitsorganisation empfiehlt für Nachtlärm (LNIGHT) einen
+      Richtwert von 40 dB. Die Berliner Lärmkartierung weist deshalb LDEN und LNIGHT
+      getrennt aus.
 
   - id: laerm-was-bedeutet-lden
     applicableTo: [layer]
     requires: []
-    question: 'Was bedeutet der Wert LDEN?'
+    question: 'Wofür steht LDEN?'
     answer: >-
-      LDEN steht für „Level Day-Evening-Night" und ist ein über 24 Stunden
-      gewichteter Lärm-Mittelwert. Abend- und Nachtpegel gehen mit Aufschlägen
-      von 5 und 10 dB ein, weil Lärm dann stärker stört. Der Wert dient als
-      EU-weit einheitlicher Vergleichsmaßstab.
+      Für „Level Day-Evening-Night“, einen Mittelwert des Lärms über 24 Stunden. Abend und
+      Nacht zählen mit 5 und 10 dB Aufschlag, weil Lärm dann mehr stört. Die EU nutzt den
+      Wert, damit sich Lärmkarten vergleichen lassen.
 
   - id: laerm-wie-aktuell
     topic: laerm-aktualitaet
@@ -58,36 +53,33 @@ templates:
     requires: [laerm.dominantCategory]
     question: 'Wie aktuell sind die Lärm-Daten für {name}?'
     answer: >-
-      Die Berliner Lärmkartierung wird im EU-Rhythmus alle fünf Jahre neu
-      gerechnet. Die in {name} ausgewiesene Klasse {laermKategorie} stammt aus
-      der Kartierung {laermStand}.
+      Die Lärmklassen haben den Stand {laermStand}. Der Senat lässt die Lärmkarte im
+      Rhythmus der EU alle fünf Jahre neu berechnen.
 
   - id: laerm-welche-quellen
     applicableTo: [layer]
     requires: []
-    question: 'Welche Lärm-Quellen fließen in die Karte ein?'
+    question: 'Welcher Lärm fließt in die Karte ein?'
     answer: >-
-      Die strategische Lärmkartierung weist Straßen-, Schienen-, Flug- und
-      Industrie-Lärm getrennt aus. Die Karte zeigt den Gesamtverkehrslärm aus
-      Straßen-, Schienen- und Flugverkehr (LDEN), zusammengefasst pro Planungsraum.
+      Die Lärmkartierung erfasst Straßen-, Schienen-, Flug- und Industrielärm getrennt.
+      Diese Karte zeigt den Verkehrslärm aus Straße, Schiene und Flugverkehr zusammen
+      (LDEN), je Planungsraum.
 
   - id: laerm-was-tun-bei-belastung
     applicableTo: [layer]
     requires: []
-    question: 'Was kann ich tun, wenn ich Lärm an meiner Adresse als belastend empfinde?'
+    question: 'An wen wende ich mich, wenn mich Lärm an meiner Adresse belastet?'
     answer: >-
-      Die Senatsverwaltung für Mobilität nimmt Hinweise zur strategischen
-      Lärmminderung im Aktionsplan auf. Beschwerden zu konkreten Quellen
-      (Baustellen, Gewerbe) gehen an das jeweils zuständige Bezirksamt oder
-      Ordnungsamt. Wir verlinken auf der Methodik-Seite die offiziellen
-      Anlaufstellen.
+      Für den Lärmaktionsplan nimmt die Senatsverwaltung für Mobilität Hinweise entgegen.
+      Beschwerden über eine konkrete Quelle, etwa eine Baustelle oder einen Betrieb, gehen
+      an das Bezirksamt oder das Ordnungsamt.
 
   - id: laerm-warum-keine-db-werte
     applicableTo: [layer]
     requires: []
-    question: 'Warum zeigt der Layer keine konkreten dB-Zahlen?'
+    question: 'Warum zeigt die Karte keine dB-Werte?'
     answer: >-
-      Die offene Berliner Datengrundlage liefert pro Planungsraum eine Pegel-Klasse
-      (zum Beispiel „mittel" oder „hoch"), keine Punktwerte. Wir geben den Wert
-      genauso wieder, wie er publiziert wird, um keine Genauigkeit zu suggerieren,
-      die im Datensatz nicht enthalten ist.
+      Die offenen Berliner Daten liefern je Planungsraum nur eine Lärmklasse, etwa
+      „mittel“ oder „hoch“, keine Messwerte. Wir zeigen die Klasse so, wie der Senat sie
+      veröffentlicht. Eine genaue Zahl würde eine Genauigkeit vortäuschen, die in den
+      Daten nicht steckt.

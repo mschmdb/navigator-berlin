@@ -5,60 +5,54 @@ templates:
     topic: oepnv
     applicableTo: [bezirk]
     requires: [oepnv.stopsPerKm2]
-    question: 'How dense is the public transport network in the Bezirk {name}?'
+    question: 'How well is the Bezirk {name} served by bus and train?'
     answer: >-
-      The Bezirk {name} has {oepnvStopsPerKm2} stops per square kilometre. The network is
-      therefore considered {oepnvDichte}. {oepnvErklaerung} {oepnvModi}
-      {name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}),
-      {mobilitaetVergleich}. The score reflects public transport connectivity. A higher
-      value means better connectivity.
-      Data basis: {oepnvSource}, as of {oepnvStand}.
+      {oepnvUrteil} There are {oepnvStopsPerKm2} stops per square kilometre.
+      {oepnvModi} In the navigator.berlin Mobility score, the Bezirk gets
+      {mobilitaetScore} of 100 points, {mobilitaetLage}. That is {mobilitaetVergleich}.
+      Source: {oepnvSource}, as of {oepnvStand}.
 
   - id: oepnv-dichte-kiez
     topic: oepnv
     applicableTo: [kiez]
     requires: [oepnv.stopsPerKm2]
-    question: 'How well is the Kiez {name} connected to public transport?'
+    question: 'How well is the Kiez {name} served by bus and train?'
     answer: >-
-      The Kiez {name} has {oepnvStopsPerKm2} stops per square kilometre. {oepnvErklaerung}
-      {oepnvModi}
-      {name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}),
-      {mobilitaetVergleich}. The score reflects public transport connectivity. A higher
-      value means better connectivity.
+      {oepnvUrteil} There are {oepnvStopsPerKm2} stops per square kilometre.
+      {oepnvModi} In the navigator.berlin Mobility score, the Kiez gets
+      {mobilitaetScore} of 100 points, {mobilitaetLage}. That is {mobilitaetVergleich}.
       Source: {oepnvSource}, as of {oepnvStand}.
 
   - id: oepnv-was-bedeutet-dichte
     applicableTo: [layer]
     requires: []
-    question: 'What does stop density per square kilometre tell you?'
+    question: 'How much does stop density tell you?'
     answer: >-
-      Stop density is a first, rough indicator of connectivity. It says nothing about
-      frequency, routes or accessibility. In Berlin, a high density often correlates with
-      inner-city locations and interchange hubs, a low density with outer-city areas.
+      It is a rough measure of how many stops lie nearby. It says nothing about
+      frequency, routes or step-free access. In Berlin, density is usually high in the
+      city centre and at interchanges, and low on the outskirts.
 
   - id: oepnv-walk-score-logik
     applicableTo: [layer]
     requires: []
-    question: 'Does the value take walking routes or accessibility into account?'
+    question: 'Are walking distances or step-free access taken into account?'
     answer: >-
-      Not at present. The value counts stops within the area boundaries and divides them
-      by the area. We are gradually extending the indicator with walking distances and
-      station categories. The methodology page documents every extension.
+      No. The value counts the stops inside the area boundary and divides them by the
+      area. How far the walk is and whether a station is step-free does not feed in.
 
   - id: oepnv-welche-modi
     applicableTo: [layer]
     requires: []
-    question: 'Which modes of transport feed into the stop density?'
+    question: 'Which modes of transport count?'
     answer: >-
-      We count U-Bahn, S-Bahn, tram and bus stops of the BVG and S-Bahn Berlin GmbH
-      together. Regional rail stations are reported additionally, because they are
-      relevant for commuting.
+      U-Bahn stations, S-Bahn stations, tram stops and bus stops, all together. Regional
+      rail stations do not count separately.
 
   - id: oepnv-warum-nicht-fahrplandaten
     applicableTo: [layer]
     requires: []
-    question: 'Why does navigator.berlin not show live timetable data?'
+    question: 'Why does navigator.berlin not show live timetables?'
     answer: >-
-      Live data requires server caching and licence costs, and is often available only for
-      a short time. We deliberately rely on static aggregates from open datasets that we
-      can check and version.
+      We work with fixed data releases from open sources that we can check and version.
+      Live timetables would need a constantly running feed, and their values would be out
+      of date within minutes.

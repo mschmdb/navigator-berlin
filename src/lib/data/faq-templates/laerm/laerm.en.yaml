@@ -4,48 +4,43 @@ templates:
   - id: laerm-dominant-bezirk
     topic: laerm
     applicableTo: [bezirk]
-    requires: [laerm.dominantCategory]
+    requires: [laerm.categoryDistribution]
     question: 'How loud is it in the Bezirk {name}?'
     answer: >-
-      In the Bezirk {name}, the dominant noise class is {laermKategorie}.
-      {laermErklaerung}
-      {name} scores {ruheLuftScore} out of 100 in the Quiet & air score ({ruheLuftRang}),
-      {ruheLuftVergleich}. The score combines noise and air pollution. A higher value
-      means quieter and cleaner.
-      Data basis: {laermSource}, as of {laermStand}. Values refer to
-      LDEN, the level weighted over 24 hours.
+      {laermSatz} This means traffic noise from roads, rail and aircraft, averaged over
+      day, evening and night. The navigator.berlin Quiet & air score combines noise and
+      air{ruheLuftAktiv}. There the Bezirk gets {ruheLuftScore} of 100 points, {ruheLuftLage}. That
+      is {ruheLuftVergleich}. Source: {laermSource}, as of {laermStand}.
 
   - id: laerm-dominant-kiez
     topic: laerm
     applicableTo: [kiez]
-    requires: [laerm.dominantCategory]
-    question: 'How loud is the Kiez {name}?'
+    requires: [laerm.categoryDistribution]
+    question: 'How loud is it in the Kiez {name}?'
     answer: >-
-      The Kiez {name} lies mostly in the noise class {laermKategorie}. {laermErklaerung}
-      {name} scores {ruheLuftScore} out of 100 in the Quiet & air score ({ruheLuftRang}),
-      {ruheLuftVergleich}. The score combines noise and air pollution. A higher value
-      means quieter and cleaner.
-      Source: {laermSource}, as of {laermStand}.
+      {laermSatz} This means traffic noise from roads, rail and aircraft, averaged over
+      day, evening and night. The navigator.berlin Quiet & air score combines noise and
+      air{ruheLuftAktiv}. There the Kiez gets {ruheLuftScore} of 100 points, {ruheLuftLage}. That
+      is {ruheLuftVergleich}. Source: {laermSource}, as of {laermStand}.
 
   - id: laerm-warum-nacht-schaedlicher
     applicableTo: [layer]
     requires: []
-    question: 'Why is night-time noise considered more relevant to health?'
+    question: 'Why does night-time noise count for more?'
     answer: >-
-      Night-time noise disturbs the sleep phases in which the cardiovascular system and
-      nerves recover. The World Health Organization recommends a guideline value of 40 dB
-      for night-time noise (LNIGHT). The Berlin noise mapping therefore reports LDEN and
+      At night, noise disturbs sleep, and during sleep the heart, circulation and nerves
+      recover. The World Health Organization recommends a guideline value of 40 dB for
+      night-time noise (LNIGHT). The Berlin noise mapping therefore reports LDEN and
       LNIGHT separately.
 
   - id: laerm-was-bedeutet-lden
     applicableTo: [layer]
     requires: []
-    question: 'What does the LDEN value mean?'
+    question: 'What does LDEN stand for?'
     answer: >-
-      LDEN stands for “Level Day-Evening-Night” and is a noise average weighted over 24
-      hours. Evening and night levels count with penalties of 5 and 10 dB, because noise
-      is more disturbing then. The value serves as a uniform comparison standard across
-      the EU.
+      For “Level Day-Evening-Night”, an average of noise over 24 hours. Evening and night
+      count with a penalty of 5 and 10 dB, because noise disturbs more then. The EU uses
+      the value so that noise maps can be compared.
 
   - id: laerm-wie-aktuell
     topic: laerm-aktualitaet
@@ -53,35 +48,32 @@ templates:
     requires: [laerm.dominantCategory]
     question: 'How up to date is the noise data for {name}?'
     answer: >-
-      The Berlin noise mapping is recalculated every five years, in line with the EU
-      cycle. The class {laermKategorie} reported for {name} comes from the {laermStand}
-      mapping.
+      The noise classes date from {laermStand}. The Senate has the noise map recalculated
+      every five years, in line with the EU cycle.
 
   - id: laerm-welche-quellen
     applicableTo: [layer]
     requires: []
-    question: 'Which noise sources feed into the map?'
+    question: 'Which noise goes into the map?'
     answer: >-
-      The strategic noise mapping shows road, rail, aircraft and industrial noise
-      separately. The map shows total traffic noise from road, rail and air traffic
-      (LDEN), combined per planning area.
+      The noise mapping records road, rail, aircraft and industrial noise separately.
+      This map shows traffic noise from roads, rail and air traffic combined (LDEN), per
+      planning area.
 
   - id: laerm-was-tun-bei-belastung
     applicableTo: [layer]
     requires: []
-    question: 'What can I do if I find the noise at my address disturbing?'
+    question: 'Who do I contact if noise at my address bothers me?'
     answer: >-
-      The Senate Department for Urban Mobility, Transport, Climate Action and the
-      Environment takes suggestions on strategic noise reduction into the action plan.
-      Complaints about specific sources (construction sites, businesses) go to the
-      responsible Bezirk office (Bezirksamt) or public order office (Ordnungsamt). On the
-      methodology page we link to the official points of contact.
+      The Senate Department for Mobility takes suggestions for the noise action plan.
+      Complaints about a specific source, such as a construction site or a business, go
+      to the Bezirk office (Bezirksamt) or the public order office (Ordnungsamt).
 
   - id: laerm-warum-keine-db-werte
     applicableTo: [layer]
     requires: []
-    question: 'Why does the layer not show specific dB figures?'
+    question: 'Why does the map not show dB values?'
     answer: >-
-      The open Berlin data provides one noise class per planning area (for example
-      “medium” or “high”), not point values. We reproduce the value exactly as published,
-      so as not to suggest a precision that the dataset does not contain.
+      The open Berlin data provides only a noise class per planning area, such as
+      “medium” or “high”, not measured values. We show the class the way the Senate
+      publishes it. An exact figure would suggest a precision the data does not have.
