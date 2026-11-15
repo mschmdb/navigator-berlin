@@ -36,6 +36,7 @@ import {
 } from '../../../src/lib/data/region-display-names.js';
 import type { PageType, TemplateLocale } from '../../../src/lib/server/faq/template-schema.js';
 import { buildLayerTargetsFromManifest } from '../../../src/lib/server/og/og-pipeline.js';
+import { buildMetricContexts } from '../../../src/lib/server/faq/place-faq.js';
 import { getLayerDisplayName } from '../../../src/lib/components/atlas/internal/layer-palette-filter.js';
 
 const REPO_ROOT = process.cwd();
@@ -63,58 +64,42 @@ export interface RenderTarget {
 	readonly metrics?: ReadonlyMap<string, MetricContext>;
 }
 
-const SCORE_DIM_KEYS = ['ruheLuft', 'gruenHitze', 'mobilitaet', 'versorgung', 'wohnschutz'];
-
-/** Rang + Vergleich je Score-Dimension pro Kiez (Story 11.3). */
+/** Rang + Vergleich je Score-Dimension pro Kiez (Story 11.3, Gleichstand NAV-108). */
 export async function loadKiezMetrics(): Promise<Map<string, Map<string, MetricContext>>> {
 	const db = getDb();
 	const [ranks, cmps] = await Promise.all([
 		db.select().from(kiezRank),
 		db.select().from(kiezComparison)
 	]);
-	const cmpBy = new Map(cmps.map((c) => [`${c.slug}|${c.metricKey}`, c]));
-	const out = new Map<string, Map<string, MetricContext>>();
-	for (const r of ranks) {
-		if (!SCORE_DIM_KEYS.includes(r.metricKey)) continue;
-		const c = cmpBy.get(`${r.slug}|${r.metricKey}`);
-		const m: MetricContext = {
-			value: c?.kiezValue ?? null,
-			rang: r.rang,
-			quartil: r.quartil,
-			total: r.total,
-			compareValue: c?.bezirkMean ?? null,
-			compareKind: 'bezirk'
-		};
-		if (!out.has(r.slug)) out.set(r.slug, new Map());
-		out.get(r.slug)!.set(r.metricKey, m);
-	}
-	return out;
+	return buildMetricContexts(
+		ranks,
+		cmps.map((c) => ({
+			slug: c.slug,
+			metricKey: c.metricKey,
+			value: c.kiezValue,
+			compareValue: c.bezirkMean
+		})),
+		'bezirk'
+	);
 }
 
-/** Rang + Vergleich je Score-Dimension pro Bezirk (Story 11.3). */
+/** Rang + Vergleich je Score-Dimension pro Bezirk (Story 11.3, Gleichstand NAV-108). */
 export async function loadBezirkMetrics(): Promise<Map<string, Map<string, MetricContext>>> {
 	const db = getDb();
 	const [ranks, cmps] = await Promise.all([
 		db.select().from(bezirkRank),
 		db.select().from(bezirkComparison)
 	]);
-	const cmpBy = new Map(cmps.map((c) => [`${c.slug}|${c.metricKey}`, c]));
-	const out = new Map<string, Map<string, MetricContext>>();
-	for (const r of ranks) {
-		if (!SCORE_DIM_KEYS.includes(r.metricKey)) continue;
-		const c = cmpBy.get(`${r.slug}|${r.metricKey}`);
-		const m: MetricContext = {
-			value: c?.bezirkValue ?? null,
-			rang: r.rang,
-			quartil: r.quartil,
-			total: r.total,
-			compareValue: c?.berlinMedian ?? null,
-			compareKind: 'berlin'
-		};
-		if (!out.has(r.slug)) out.set(r.slug, new Map());
-		out.get(r.slug)!.set(r.metricKey, m);
-	}
-	return out;
+	return buildMetricContexts(
+		ranks,
+		cmps.map((c) => ({
+			slug: c.slug,
+			metricKey: c.metricKey,
+			value: c.bezirkValue,
+			compareValue: c.berlinMedian
+		})),
+		'berlin'
+	);
 }
 
 const EMPTY_AGGREGATE: TemplateAggregate = {
