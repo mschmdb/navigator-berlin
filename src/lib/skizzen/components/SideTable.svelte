@@ -72,19 +72,23 @@
 </script>
 
 <!-- Ab sm: Tabelle mit festen Zahlenspalten -->
-<table class="hidden w-full table-fixed border-collapse text-left sm:table">
+<table
+	class="hidden w-full table-fixed border-collapse text-left [overflow-wrap:break-word] sm:table"
+>
 	<caption class="mb-2 text-left text-sm font-semibold text-ink">Weitere Werte</caption>
 	<colgroup>
 		<col />
-		<col class="w-28" />
-		{#if refHead}<col class="w-28" />{/if}
-		<col class="w-28" />
+		<col class="w-32" />
+		{#if refHead}<col class="w-32" />{/if}
+		<col class="w-32" />
 	</colgroup>
 	<thead>
 		<tr class="border-b border-rule align-bottom">
 			<th scope="col" class="pb-1.5"><span class="sr-only">Wert</span></th>
 			<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-semibold text-accent">
-				{own.name}<span class="block text-dense-label font-normal text-ink-subtle">dieser Ort</span>
+				{own.name.replaceAll('/', '/\u200b')}<span
+					class="block text-dense-label font-normal text-ink-subtle">dieser Ort</span
+				>
 			</th>
 			{#if refHead}
 				<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-normal text-ink">

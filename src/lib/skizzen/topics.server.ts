@@ -184,10 +184,21 @@ async function build(): Promise<TopicData> {
 
 	const counts = new Map<PointKey, { kiez: Map<string, number>; bezirk: Map<string, number> }>();
 	for (const key of Object.keys(POINT_LAYERS) as PointKey[]) {
+		// Ein Ort kann in zwei Layern stehen (Galerie und Soziokultur): nach OSM-ID bzw. Lage entdoppeln.
+		const seen = new Set<string>();
 		const points: [number, number][] = [];
 		for (const layer of POINT_LAYERS[key]) {
 			for (const f of (await readLayer(layer)).features) {
-				if (f.geometry?.type === 'Point') points.push(f.geometry.coordinates as [number, number]);
+				if (f.geometry?.type !== 'Point') continue;
+				const [lng, lat] = f.geometry.coordinates as [number, number];
+				const osm = f.properties?.osmId;
+				const id =
+					osm != null
+						? `osm:${f.properties?.osmType ?? ''}${osm}`
+						: `${lng.toFixed(5)},${lat.toFixed(5)}`;
+				if (seen.has(id)) continue;
+				seen.add(id);
+				points.push([lng, lat]);
 			}
 		}
 		counts.set(key, {

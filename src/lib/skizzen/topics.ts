@@ -61,9 +61,9 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 	},
 	luftHoch: {
 		label: 'Hohe Luftbelastung',
-		unit: '% der Fläche',
+		unit: '% der Teilgebiete',
 		digits: 0,
-		what: 'Anteil der Fläche mit hoher Luftbelastung, Umweltgerechtigkeitsatlas 2023',
+		what: 'Anteil der Planungsräume (Teilgebiete) mit hoher Luftbelastung, Umweltgerechtigkeitsatlas 2023',
 		source: 'Umweltatlas Berlin',
 		higher: 'mehr belastet',
 		lower: 'weniger belastet',
@@ -81,14 +81,14 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 	},
 	gruenSchlecht: {
 		label: 'Wenig Grün in Wohnungsnähe',
-		unit: '% der Fläche',
+		unit: '% der Teilgebiete',
 		digits: 0,
-		what: 'Anteil der Fläche, die laut Senat schlecht mit wohnungsnahem Grün versorgt ist',
+		what: 'Anteil der Planungsräume (Teilgebiete), die laut Senat schlecht mit wohnungsnahem Grün versorgt sind',
 		source: 'Umweltatlas Berlin, Grünversorgung 2023',
 		higher: 'schlechter versorgt',
 		lower: 'besser versorgt',
-		zeroName: 'ohne schlecht versorgte Fläche',
-		zeroMedianLabel: 'Median der Kieze mit schlecht versorgter Fläche'
+		zeroName: 'ohne schlecht versorgte Teilgebiete',
+		zeroMedianLabel: 'Median der Kieze mit schlecht versorgten Teilgebieten'
 	},
 	pet: {
 		label: 'Gefühlte Temperatur am Nachmittag',
@@ -150,7 +150,7 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		label: 'U- und S-Bahnhöfe',
 		unit: 'im Gebiet',
 		digits: 0,
-		what: 'U- und S-Bahnhöfe innerhalb der Grenzen',
+		what: 'U- und S-Bahnhöfe innerhalb der Grenzen, die Zahl hängt auch von der Größe des Gebiets ab',
 		source: 'OpenStreetMap',
 		higher: 'mehr',
 		lower: 'weniger'
@@ -168,7 +168,7 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		label: 'Apotheken',
 		unit: 'im Gebiet',
 		digits: 0,
-		what: 'Apotheken innerhalb der Grenzen',
+		what: 'Apotheken innerhalb der Grenzen, die Zahl hängt auch von der Größe des Gebiets ab',
 		source: 'OpenStreetMap',
 		higher: 'mehr',
 		lower: 'weniger'
@@ -177,7 +177,7 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		label: 'Kitas',
 		unit: 'im Gebiet',
 		digits: 0,
-		what: 'Kitas innerhalb der Grenzen',
+		what: 'Kitas innerhalb der Grenzen, die Zahl hängt auch von der Größe des Gebiets ab',
 		source: 'Senatsverwaltung für Bildung, 2024',
 		higher: 'mehr',
 		lower: 'weniger'
@@ -186,7 +186,7 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		label: 'Schulen',
 		unit: 'im Gebiet',
 		digits: 0,
-		what: 'Schulen innerhalb der Grenzen',
+		what: 'Schulen innerhalb der Grenzen, die Zahl hängt auch von der Größe des Gebiets ab',
 		source: 'Senatsverwaltung für Bildung, 2024',
 		higher: 'mehr',
 		lower: 'weniger'
@@ -195,7 +195,7 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		label: 'Kulturorte',
 		unit: 'im Gebiet',
 		digits: 0,
-		what: 'Museen, Theater, Kinos, Bibliotheken, Galerien, Clubs und soziokulturelle Zentren',
+		what: 'Museen, Theater, Kinos, Bibliotheken, Galerien, Clubs und soziokulturelle Zentren im Gebiet',
 		source: 'OpenStreetMap',
 		higher: 'mehr',
 		lower: 'weniger'
@@ -309,16 +309,16 @@ export const CHAPTERS: readonly ChapterSpec[] = [
 
 export const LABEL_SPECS: Readonly<Record<LabelId, { label: string; what: string }>> = {
 	laermKlasse: {
-		label: 'Überwiegende Lärmklasse',
-		what: 'Klasse der Lärmkarte, die den größten Teil der Fläche abdeckt'
+		label: 'Häufigste Lärmklasse',
+		what: 'Häufigste Klasse der Lärmkarte unter den Teilgebieten'
 	},
 	gruenversorgung: {
 		label: 'Grünversorgung laut Senat',
-		what: 'Überwiegende Einstufung, wie gut die Menschen mit Grün in Wohnungsnähe versorgt sind'
+		what: 'Häufigste Einstufung der Teilgebiete, wie gut die Menschen mit Grün in Wohnungsnähe versorgt sind'
 	},
 	mss: {
 		label: 'Soziale Lage',
-		what: 'Überwiegende Stufe im Monitoring Soziale Stadtentwicklung 2025 des Senats'
+		what: 'Häufigste Stufe der Teilgebiete im Monitoring Soziale Stadtentwicklung 2025 des Senats'
 	}
 };
 
@@ -398,7 +398,8 @@ export function characterPoints(
 	unitPlural: string,
 	count = 3
 ): string[] {
-	return METRICS.filter((m) => m !== 'kieztaten' && m !== 'bahnhoefe')
+	// Zählwerte hängen an der Größe des Gebiets und taugen nicht für „mehr als 92 %“.
+	return METRICS.filter((m) => m !== 'kieztaten' && METRIC_SPECS[m].unit !== 'im Gebiet')
 		.map((m: MetricId): Candidate | null => {
 			const v = own[m];
 			const xs = all.map((a) => a[m]).filter((x): x is number => x !== null);

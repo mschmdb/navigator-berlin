@@ -8,8 +8,9 @@
 	import StripChart from './StripChart.svelte';
 	import DataTable from './DataTable.svelte';
 	import SideTable from './SideTable.svelte';
-	import { niceDomain, spread, zeroAwareMedian } from '../stats';
+	import { mostCommon, niceDomain, spread, zeroAwareMedian } from '../stats';
 	import {
+		LABEL_SPECS,
 		METRIC_SPECS,
 		formatMetric,
 		formatMetricNumber,
@@ -83,6 +84,39 @@
 	const items = (rs: readonly RegionSnapshot[], m: MetricId) =>
 		rs.map((r) => ({ slug: r.slug, name: r.name, value: r.metrics[m] }));
 	const allSide = $derived([...spec.main, ...spec.side]);
+	// Textfassung für Screenreader und Tabellen-Ansicht: alle Werte, Klassen und die Kiez-Spanne.
+	const tableRows = $derived([
+		...allSide.map((m) => {
+			const b = zeroAwareMedian(values(m));
+			return [
+				METRIC_SPECS[m].label,
+				formatMetric(m, own.metrics[m]),
+				formatMetric(m, ref.metrics[m]),
+				`${formatMetric(m, b.value)}${b.zerosLeftOut > 0 ? ` * ohne ${b.zerosLeftOut} Nullwerte` : ''}`
+			];
+		}),
+		...(spec.labels ?? []).map((l) => [
+			LABEL_SPECS[l].label,
+			own.labels[l] ?? '–',
+			ref.labels[l] ?? '–',
+			`${mostCommon(regions.map((r) => r.labels[l])) ?? '–'} (häufigste Klasse)`
+		]),
+		...(kieze.length > 1
+			? spec.main.flatMap((m) => {
+					const s = spread(kieze, (k) => k.metrics[m]);
+					return s
+						? [
+								[
+									`${METRIC_SPECS[m].label}, Spanne der Kieze in ${own.name}`,
+									`${formatMetric(m, s.min.metrics[m])} (${s.min.name}) bis ${formatMetric(m, s.max.metrics[m])} (${s.max.name})`,
+									'',
+									''
+								]
+							]
+						: [];
+				})
+			: [])
+	]);
 </script>
 
 <Section id={spec.id} title={spec.title} {mode}>
@@ -162,14 +196,9 @@
 	{#snippet table(visible)}
 		<DataTable
 			{visible}
-			caption="{spec.title}: {own.name}, {refName} und Median aller {unitPlural}"
-			head={['Wert', own.name, refName, 'Median']}
-			rows={allSide.map((m) => [
-				METRIC_SPECS[m].label,
-				formatMetric(m, own.metrics[m]),
-				formatMetric(m, ref.metrics[m]),
-				formatMetric(m, zeroAwareMedian(values(m)).value)
-			])}
+			caption="{spec.title}: {own.name}, {refName} und Berlin. * Median ohne große Nullstapel, bei Klassen die häufigste Klasse."
+			head={['Wert', own.name, refName, 'Berlin, Median']}
+			rows={tableRows}
 		/>
 	{/snippet}
 	{#snippet sources()}
