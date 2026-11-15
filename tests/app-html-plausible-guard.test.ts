@@ -59,7 +59,36 @@ const UA = {
 	cubotUnderscore:
 		'Mozilla/5.0 (Linux; Android 9; CUBOT_X19 Build/PPR1.180610.011) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36',
 	cubotKingkong:
-		'Mozilla/5.0 (Linux; Android 12; KINGKONG 7 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/141.0.0.0 Mobile Safari/537.36 CUBOT'
+		'Mozilla/5.0 (Linux; Android 12; KINGKONG 7 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/141.0.0.0 Mobile Safari/537.36 CUBOT',
+	// Proxy-Scraper 14.11.2026: alte Desktop-UAs, 0 s, 100 % Absprung
+	proxyChrome118Win:
+		'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
+	proxyChrome120Mac:
+		'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+	proxyEdge119:
+		'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0',
+	proxyFirefox121Mac:
+		'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0',
+	proxyFirefox120Win:
+		'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+	chrome129Win:
+		'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+	// Echte Altgeräte: letzte Versionen für Windows 7/8.1 und alte macOS
+	chrome109Win7:
+		'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
+	chrome116OldMac:
+		'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+	firefoxEsr115Win7:
+		'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0',
+	chrome130Win:
+		'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+	firefox128Win: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0',
+	// Mobil zählt immer: alte WebViews und Android-Chrome sind echte Nutzer
+	androidOldChrome:
+		'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36',
+	androidOldSamsung:
+		'Mozilla/5.0 (Linux; Android 13; SM-A515F) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/23.0 Chrome/115.0.0.0 Mobile Safari/537.36',
+	androidOldFirefox: 'Mozilla/5.0 (Android 12; Mobile; rv:121.0) Gecko/121.0 Firefox/121.0'
 };
 
 describe('app.html Plausible-Bot-Guard (#184)', () => {
@@ -84,6 +113,30 @@ describe('app.html Plausible-Bot-Guard (#184)', () => {
 		['Cubot-Handy (Leerzeichen)', UA.cubotSpace],
 		['Cubot-Handy (Unterstrich)', UA.cubotUnderscore],
 		['Cubot-Handy (Suffix)', UA.cubotKingkong]
+	])('lädt den Tracker für %s', (_name, userAgent) => {
+		expect(loadsTracker({ userAgent })).toBe(true);
+	});
+
+	it.each([
+		['Chrome 118 Windows', UA.proxyChrome118Win],
+		['Chrome 120 macOS', UA.proxyChrome120Mac],
+		['Edge 119', UA.proxyEdge119],
+		['Firefox 121 macOS', UA.proxyFirefox121Mac],
+		['Firefox 120 Windows', UA.proxyFirefox120Win],
+		['Chrome 129 Windows (Obergrenze)', UA.chrome129Win]
+	])('lädt den Tracker nicht für veralteten Desktop-Browser: %s', (_name, userAgent) => {
+		expect(loadsTracker({ userAgent })).toBe(false);
+	});
+
+	it.each([
+		['Chrome 109 Windows 7', UA.chrome109Win7],
+		['Chrome 116 altes macOS', UA.chrome116OldMac],
+		['Firefox ESR 115 Windows 7', UA.firefoxEsr115Win7],
+		['Chrome 130 Windows', UA.chrome130Win],
+		['Firefox 128 Windows', UA.firefox128Win],
+		['Android Chrome 119', UA.androidOldChrome],
+		['Samsung Internet mit Chrome 115', UA.androidOldSamsung],
+		['Firefox 121 Android', UA.androidOldFirefox]
 	])('lädt den Tracker für %s', (_name, userAgent) => {
 		expect(loadsTracker({ userAgent })).toBe(true);
 	});
