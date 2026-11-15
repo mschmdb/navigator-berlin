@@ -8,7 +8,7 @@ templates:
     question: 'How dense is the public transport network in the Bezirk {name}?'
     answer: >-
       The Bezirk {name} has {oepnvStopsPerKm2} stops per square kilometre. The network is
-      therefore considered {oepnvDichte}. {oepnvErklaerung}
+      therefore considered {oepnvDichte}. {oepnvErklaerung} {oepnvModi}
       {name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}),
       {mobilitaetVergleich}. The score reflects public transport connectivity. A higher
       value means better connectivity.
@@ -21,6 +21,7 @@ templates:
     question: 'How well is the Kiez {name} connected to public transport?'
     answer: >-
       The Kiez {name} has {oepnvStopsPerKm2} stops per square kilometre. {oepnvErklaerung}
+      {oepnvModi}
       {name} scores {mobilitaetScore} out of 100 in the Mobility score ({mobilitaetRang}),
       {mobilitaetVergleich}. The score reflects public transport connectivity. A higher
       value means better connectivity.

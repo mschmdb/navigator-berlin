@@ -33,7 +33,12 @@ describe('mssBeschreibungDe', () => {
 	});
 	it('liefert EN mit opts.locale', () => {
 		expect(mssBeschreibungDe('mittel', { locale: 'en' })).toBe(
-			'The index is in the medium range of the Berlin distribution.'
+			'The status index is in the medium range of the Berlin distribution.'
 		);
+	});
+	it('folgt der Richtung des Status-Index: hoch heißt wenig Belastung (NAV-108)', () => {
+		expect(mssBeschreibungDe('hoch')).toMatch(/wenig sozio-ökonomische Belastung/);
+		expect(mssBeschreibungDe('niedrig')).toMatch(/überdurchschnittliche/);
+		expect(mssBeschreibungDe('sehr niedrig')).toMatch(/höchsten/);
 	});
 });

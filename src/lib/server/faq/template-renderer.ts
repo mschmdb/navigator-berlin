@@ -21,6 +21,7 @@ import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/woh
 import { describePetKategorie, formatPet, petErklaerungDe } from '$lib/data/faq-helpers/klima.js';
 import { formatRank } from '$lib/data/rank-format.js';
 import { sourceLabel } from '$lib/data/source-label.js';
+import { gruenEinstufung, gruenVerteilung, oepnvModiSatz } from './fact-phrases.js';
 
 /**
  * Story 2.5b T3: Pure-Function-Slot-Renderer.
@@ -163,16 +164,17 @@ export function formatSourceStand(iso: string, locale: TemplateLocale = 'de'): s
 }
 
 /**
- * Sammelt alle Slot-Substitutionen für ein Template. Pure Function — alle
+ * Sammelt alle Slot-Substitutionen für ein Template. Pure Function: alle
  * Slots werden deterministisch aus dem Context abgeleitet.
  *
  * Slot-Namen (DE-Phase-1):
  * - `{name}`, `{slug}`
  * - Lärm: `{laermKategorie}`, `{laermErklaerung}`, `{laermSource}`, `{laermStand}`
  * - Grün: `{gruenKategorie}`, `{gruenErklaerung}`, `{gruenanlagenCount}`,
- *   `{spielplaetzeCount}`, `{gruenSource}`, `{gruenStand}`
+ *   `{spielplaetzeCount}`, `{gruenEinstufung}`, `{gruenVerteilung}` (Senats-Klassen
+ *   mit Anteil), `{gruenSource}`, `{gruenStand}`
  * - ÖPNV: `{oepnvStopsPerKm2}`, `{oepnvDichte}`, `{oepnvErklaerung}`,
- *   `{oepnvSource}`, `{oepnvStand}`
+ *   `{oepnvModi}` (Verkehrsmittel aus den Zähldaten), `{oepnvSource}`, `{oepnvStand}`
  * - Wohnen: `{wohnenWohnlage}`, `{wohnenMssBeschreibung}`, `{wohnenSource}`,
  *   `{wohnenStand}`
  * - Klima: `{klimaPet}`, `{klimaKategorie}`, `{klimaErklaerung}`,
@@ -205,6 +207,12 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		slots.gruenSource = sourceLabel(gruen.dominantVersorgung.layer, opts);
 		slots.gruenStand = stand(gruen.dominantVersorgung.sourceUpdatedAt);
 	}
+	// NAV-108: Senats-Klassen wörtlich und mit Anteil der Planungsräume.
+	const versorgung = gruen.versorgungDistribution?.value;
+	if (versorgung && Object.keys(versorgung).length > 0) {
+		slots.gruenEinstufung = gruenEinstufung(versorgung, locale);
+		slots.gruenVerteilung = gruenVerteilung(versorgung, locale);
+	}
 	if (gruen.gruenanlagenCount && typeof gruen.gruenanlagenCount.value === 'number') {
 		slots.gruenanlagenCount = gruen.gruenanlagenCount.value.toLocaleString(NUMBER_LOCALE[locale]);
 	}
@@ -220,6 +228,19 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 		slots.oepnvSource = sourceLabel(oepnv.layer, opts);
 		slots.oepnvStand = stand(oepnv.sourceUpdatedAt);
 	}
+	// NAV-108: Verkehrsmittel nur aus den Zähldaten, nie aus festen Sätzen.
+	const o = ctx.aggregate.oepnv;
+	const count = (entry: AggregateValue<number> | null | undefined) =>
+		entry && typeof entry.value === 'number' ? entry.value : null;
+	slots.oepnvModi = oepnvModiSatz(
+		{
+			uBahnCount: count(o.uBahnCount),
+			sBahnCount: count(o.sBahnCount),
+			tramCount: count(o.tramCount),
+			busCount: count(o.busCount)
+		},
+		locale
+	);
 
 	const wohnen = ctx.aggregate.wohnen;
 	if (wohnen.dominantWohnlage) {
@@ -303,6 +324,9 @@ export function renderTemplate(
 	const slots = buildSlotMap(context);
 	return {
 		question: substitute(template.question, slots),
+		// Leere Slots (z. B. `{oepnvModi}` ohne Zähldaten) hinterlassen keine Doppel-Leerzeichen.
 		answer: substitute(pruneMissingScoreParts(template.answer, slots), slots)
+			.replace(/\s{2,}/g, ' ')
+			.trim()
 	};
 }

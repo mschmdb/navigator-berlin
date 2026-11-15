@@ -8,7 +8,7 @@ templates:
     question: 'Wie dicht ist das ÖPNV-Netz im Bezirk {name}?'
     answer: >-
       Im Bezirk {name} liegen {oepnvStopsPerKm2} Haltestellen pro Quadratkilometer.
-      Das Netz gilt damit als {oepnvDichte}. {oepnvErklaerung}
+      Das Netz gilt damit als {oepnvDichte}. {oepnvErklaerung} {oepnvModi}
       Im Mobilitäts-Score erreicht {name} {mobilitaetScore} von 100
       ({mobilitaetRang}), {mobilitaetVergleich}. Der Score bildet die
       ÖPNV-Anbindung ab; ein höherer Wert heißt besser angebunden.
@@ -21,7 +21,7 @@ templates:
     question: 'Wie ist der Kiez {name} an den ÖPNV angebunden?'
     answer: >-
       Im Kiez {name} liegen {oepnvStopsPerKm2} Halte pro Quadratkilometer.
-      {oepnvErklaerung}
+      {oepnvErklaerung} {oepnvModi}
       Im Mobilitäts-Score erreicht {name} {mobilitaetScore} von 100
       ({mobilitaetRang}), {mobilitaetVergleich}. Der Score bildet die
       ÖPNV-Anbindung ab; ein höherer Wert heißt besser angebunden.

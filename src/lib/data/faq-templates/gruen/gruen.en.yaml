@@ -4,27 +4,29 @@ templates:
   - id: gruen-versorgung-bezirk
     topic: gruen
     applicableTo: [bezirk]
-    requires: [gruen.dominantVersorgung]
+    requires: [gruen.versorgungDistribution]
     question: 'What is the green space provision in the Bezirk {name}?'
     answer: >-
-      In the Bezirk {name}, the dominant category for green space provision near homes is
-      {gruenKategorie}. {gruenErklaerung}
-      {name} scores {gruenHitzeScore} out of 100 in the Green & heat score
-      ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green space provision
-      and heat exposure. A higher value means greener and cooler.
+      The Senate rates green space provision near homes in the Bezirk {name}
+      {gruenEinstufung}. Shares of planning areas: {gruenVerteilung}. The classes
+      describe how much public green space per person lies near homes.
+      The Green & heat score is a separate measure: {name} scores {gruenHitzeScore}
+      out of 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green
+      space provision and heat exposure. A higher value means greener and cooler.
       Source: {gruenSource}, as of {gruenStand}.
 
   - id: gruen-versorgung-kiez
     topic: gruen
     applicableTo: [kiez]
-    requires: [gruen.dominantVersorgung]
+    requires: [gruen.versorgungDistribution]
     question: 'What is the green space provision in the Kiez {name}?'
     answer: >-
-      Green space provision near homes in the Kiez {name} is in the category
-      {gruenKategorie}. {gruenErklaerung}
-      {name} scores {gruenHitzeScore} out of 100 in the Green & heat score
-      ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green space provision
-      and heat exposure. A higher value means greener and cooler.
+      The Senate rates green space provision near homes in the Kiez {name}
+      {gruenEinstufung}. Shares of planning areas: {gruenVerteilung}. The classes
+      describe how much public green space per person lies near homes.
+      The Green & heat score is a separate measure: {name} scores {gruenHitzeScore}
+      out of 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green
+      space provision and heat exposure. A higher value means greener and cooler.
       Source: {gruenSource}, as of {gruenStand}.
 
   - id: gruen-anzahl-anlagen
@@ -44,8 +46,8 @@ templates:
     answer: >-
       For each planning area, the Senate Department calculates how many square metres of
       green space near homes are available per resident within the catchment area. The
-      benchmark is 6 square metres per person. Whether a planning area reaches or misses
-      this value determines the category “high”, “moderate” or “low”.
+      benchmark is 6 square metres per person. Depending on how far a planning area
+      reaches this value, the Senate rates its provision as “good”, “medium” or “poor”.
 
   - id: gruen-rolle-hitze
     applicableTo: [layer]
