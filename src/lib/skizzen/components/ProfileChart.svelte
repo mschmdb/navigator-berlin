@@ -2,6 +2,8 @@
 	import { Chart, Circle, Line, Svg, Text } from 'layerchart';
 	import ChartAxis from './ChartAxis.svelte';
 	import { scaleLinear } from 'd3-scale';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { signedPoints } from '../compare-text';
 	import { dimLabel } from '../labels';
 	import type { Dim, DimValues } from '../types';
@@ -18,7 +20,12 @@
 
 	const ROW = 44;
 	const rows = $derived(
-		dims.map((dim) => ({ dim, label: dimLabel(dim), own: own[dim], ref: refValues[dim] }))
+		dims.map((dim) => ({
+			dim,
+			label: dimLabel(dim, { locale: getLocale() }),
+			own: own[dim],
+			ref: refValues[dim]
+		}))
 	);
 	const motion = $derived(chartMotion(450));
 	const isContext = (d: Dim) => d === 'kriminalitaet';
@@ -47,7 +54,7 @@
 					ticks={[0, 25, 50, 75, 100]}
 					x={(v) => context.xScale(v)}
 					format={(v) => String(v)}
-					unit="Punkte"
+					unit={m.skizze_profile_points()}
 					top={0}
 					bottom={rows.length * ROW}
 					width={context.width}

@@ -20,16 +20,20 @@
 	import { SkizzeState, WahlCache } from '$lib/skizzen/reference-state.svelte';
 	import { signedPoints } from '$lib/skizzen/compare-text';
 	import { latestLeader } from '$lib/skizzen/wahl-summary';
-	import { CHAPTERS, characterPoints } from '$lib/skizzen/topics';
+	import { CHAPTERS, chapterText, characterPoints } from '$lib/skizzen/topics';
 	import { buildChapterFaq } from '$lib/skizzen/faq';
 	import { RATED_DIMS, type Dim } from '$lib/skizzen/types';
 	import type { WahlArt } from '$lib/skizzen/wahl-types';
-	import { dimLabel, formatInt, formatScore } from '$lib/skizzen/labels';
-	import { resolve } from '$app/paths';
+	import { dimLabel, fmtPct, formatInt, formatKm2, formatScore } from '$lib/skizzen/labels';
+	import { localHref } from '$lib/skizzen/locale';
 	import { page } from '$app/state';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+	const opts = $derived({ locale: getLocale() });
+	const unitPlural = $derived(m.skizze_units_kieze());
 
 	const name = $derived(data.profile.name);
 	const self = $derived(data.regions.find((r) => r.slug === data.profile.slug) ?? null);
@@ -44,7 +48,7 @@
 			all,
 			'median',
 			data.berlinFigures,
-			`mittlerer Kiez, Median aller ${all.length} Kieze`
+			m.skizze_berlin_note_kiez({ count: all.length })
 		)
 	);
 	const bezirk = $derived(
@@ -74,7 +78,11 @@
 	const ref = $derived(resolveReference(skizze.choice, { berlin, bezirk, regions: byslug }));
 	const kind = $derived(skizze.choice.kind);
 	const refName = $derived(
-		kind === 'berlin' ? 'Berlin-Median' : kind === 'bezirk' ? `${ref.label} gesamt` : ref.label
+		kind === 'berlin'
+			? m.skizze_ref_berlin_median()
+			: kind === 'bezirk'
+				? m.skizze_total_of({ name: ref.label })
+				: ref.label
 	);
 
 	// Gespeicherter Wettkampf-Rang (kiez_rank/bezirk_rank), nicht selbst gerechnet.
@@ -88,7 +96,9 @@
 			? characterPoints(
 					self.metrics,
 					all.map((r) => r.metrics),
-					'Kieze'
+					unitPlural,
+					3,
+					opts
 				)
 			: []
 	);
@@ -104,7 +114,7 @@
 			address: `${lng.toFixed(4)},${lat.toFixed(4)}`,
 			q: name
 		});
-		return `${resolve('/explore')}?${q.toString()}`;
+		return `${localHref('/explore', opts)}?${q.toString()}`;
 	};
 	const pick = (slug: string) => {
 		if (slug === data.profile.slug) return;
@@ -127,23 +137,47 @@
 	const wahlRef = $derived(
 		kind === 'berlin' ? data.wahl.berlin : kind === 'bezirk' ? data.wahl.bezirk : wahlCache.current
 	);
-	const wahlRefName = $derived(kind === 'berlin' ? 'ganz Berlin' : ref.label);
+	const wahlRefName = $derived(kind === 'berlin' ? m.skizze_ref_all_berlin() : ref.label);
 	const wahlOwn = $derived(data.wahl.own[wahlArt]);
 	const wahlRefPoints = $derived(wahlRef?.[wahlArt] ?? []);
 	const leader = $derived(latestLeader(wahlOwn, wahlRefPoints));
 	const years = $derived([...new Set(wahlOwn.map((p) => p.jahr))].sort());
-	const fmtPct = (v: number) => `${Math.round(v)} %`;
+	const pct = (v: number) => fmtPct(v, opts);
 
+	const headline = $derived(
+		scoreRank
+			? m.skizze_headline_kiez_ranked({
+					score: formatScore(self?.dims.composite ?? null, opts),
+					rank: scoreRank.rang,
+					total: scoreRank.total
+				})
+			: m.skizze_headline_kiez({ score: formatScore(self?.dims.composite ?? null, opts) })
+	);
+	const overview = $derived(
+		self
+			? scoreRank
+				? m.skizze_ov_kiez_ranked({
+						name,
+						score: formatScore(self.dims.composite, opts),
+						rank: scoreRank.rang,
+						total: scoreRank.total,
+						ref: refName
+					})
+				: m.skizze_ov_kiez({ name, score: formatScore(self.dims.composite, opts), ref: refName })
+			: ''
+	);
 	const profileDims: readonly Dim[] = ['composite', ...RATED_DIMS, 'kriminalitaet'];
-	const jump = [
-		...CHAPTERS.map((c) => ({ id: c.id, short: c.short })),
-		{ id: 'wahlen', short: 'Wahlen' },
-		{ id: 'nachbarn', short: 'Nachbarn' },
-		{ id: 'ueberblick', short: 'Kiez-Score' },
-		{ id: 'fragen', short: 'Fragen' }
-	];
+	const jump = $derived([
+		...CHAPTERS.map((c) => ({ id: c.id, short: chapterText(c.id, opts).short })),
+		{ id: 'wahlen', short: m.skizze_jump_wahlen() },
+		{ id: 'nachbarn', short: m.skizze_jump_nachbarn() },
+		{ id: 'ueberblick', short: m.skizze_jump_score() },
+		{ id: 'fragen', short: m.skizze_jump_fragen() }
+	]);
 </script>
 
+<!-- Links tragen den Sprachpräfix selbst (localHref), resolve() kennt ihn nicht. -->
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
 <ReferenceBar
 	berlinNote={berlin.note ?? ''}
 	bezirkLabel={bezirkName}
@@ -152,8 +186,11 @@
 	all={all
 		.filter((r) => r.slug !== data.profile.slug)
 		.map((r) => ({ slug: r.slug, name: r.name, group: r.parentName ?? '' }))
-		.sort((a, b) => a.group.localeCompare(b.group, 'de') || a.name.localeCompare(b.name, 'de'))}
-	freeLabel="Anderer Kiez"
+		.sort(
+			(a, b) =>
+				a.group.localeCompare(b.group, opts.locale) || a.name.localeCompare(b.name, opts.locale)
+		)}
+	freeLabel={m.skizze_free_kiez()}
 	choice={skizze.choice}
 	mode={skizze.mode}
 	chapters={jump}
@@ -178,7 +215,9 @@
 <main class="mx-auto max-w-6xl px-4 pb-24">
 	<header class="grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-12 lg:py-14">
 		<div class="min-w-0">
-			<p class="text-dense-label tracking-wide text-ink-subtle uppercase">Kiez in {bezirkName}</p>
+			<p class="text-dense-label tracking-wide text-ink-subtle uppercase">
+				{m.skizze_eyebrow_kiez({ bezirk: bezirkName ?? '' })}
+			</p>
 			<h1
 				class="mt-1 text-3xl leading-tight font-semibold text-balance [overflow-wrap:anywhere] text-ink lg:text-4xl"
 			>
@@ -186,9 +225,10 @@
 				{name.replaceAll('/', '/​')}
 			</h1>
 			<p class="mt-2 text-base text-ink-muted tabular-nums">
-				{formatInt(data.profile.einwohner)} Einwohnerinnen und Einwohner auf {(
-					data.profile.flaecheHa / 100
-				).toLocaleString('de-DE', { maximumFractionDigits: 1 })}&nbsp;km²
+				{m.skizze_facts_kiez({
+					inhabitants: formatInt(data.profile.einwohner, opts),
+					area: formatKm2(data.profile.flaecheHa / 100, opts)
+				})}
 			</p>
 			{#if character.length > 0}
 				<ul class="mt-5 flex flex-col gap-1.5 text-lg leading-snug text-ink">
@@ -196,17 +236,10 @@
 				</ul>
 			{/if}
 			<p class="mt-6 border-t border-rule pt-4 text-base text-ink">
-				<strong class="font-semibold"
-					>Kiez-Score {formatScore(self?.dims.composite ?? null)} von 100{scoreRank
-						? `, Platz ${scoreRank.rang} von ${scoreRank.total}`
-						: ''}.</strong
-				>
-				<span class="text-ink-muted">
-					Der Kiez-Score fasst fünf Bereiche zusammen: Ruhe und Luft, Grün und Hitze, Mobilität,
-					Versorgung und Wohnschutz. Höher ist besser.</span
-				>
-				<a class="text-accent underline" href={resolve('/methodik/kiez-score')}
-					>So entsteht der Kiez-Score</a
+				<strong class="font-semibold">{headline}</strong>
+				<span class="text-ink-muted"> {m.skizze_explainer_kiez()}</span>
+				<a class="text-accent underline" href={localHref('/methodik/kiez-score', opts)}
+					>{m.skizze_method_link()}</a
 				>
 			</p>
 		</div>
@@ -215,7 +248,7 @@
 				outline={data.outline}
 				scores={scoreMap}
 				ownSlug={data.profile.slug}
-				label="Karte der Kieze in {bezirkName}, eingefärbt nach Kiez-Score. {name} ist dunkel umrandet."
+				label={m.skizze_map_label_kiez({ bezirk: bezirkName ?? '', name })}
 			/>
 		{/if}
 	</header>
@@ -227,42 +260,44 @@
 				mode={skizze.mode}
 				regions={all}
 				own={self}
-				unitPlural="Kieze"
+				{unitPlural}
 				{ref}
 				{refName}
 				refIsLine={kind === 'bezirk'}
 				refIsBerlin={kind === 'berlin'}
 				refHeadName={ref.label}
 				refHeadSub={kind === 'bezirk'
-					? 'gesamt'
+					? m.skizze_sub_total()
 					: kind === 'nachbar'
-						? 'Nachbarkiez'
+						? m.skizze_ref_neighbor_kiez()
 						: kind === 'aehnlich'
-							? 'ähnlicher Kiez'
-							: 'Vergleichskiez'}
+							? m.skizze_sub_similar_kiez()
+							: m.skizze_sub_other_kiez()}
 				highlight={new Set(neighborSlugs)}
-				highlightLabel="Nachbarkieze"
+				highlightLabel={m.skizze_highlight_kiez()}
 				mapHref={mapHref(spec.mapLayers)}
 				onpick={pick}
 			/>
 		{/each}
 	{/if}
 
-	<Section id="wahlen" title="Wahlen seit 2016" mode={skizze.mode}>
+	<Section id="wahlen" title={m.skizze_wahl_title_kiez()} mode={skizze.mode}>
 		{#snippet text()}
 			{#if leader}
 				<p>
-					Bei der letzten Wahl {leader.jahr} lag {leader.partei} in {name} vorn, mit {fmtPct(
-						leader.anteil
-					)}.{#if leader.refAnteil !== null}&#32;In {wahlRefName} kam {leader.partei} auf {fmtPct(
-							leader.refAnteil
-						)}.{/if}
+					{m.skizze_wahl_leader({
+						jahr: leader.jahr,
+						partei: leader.partei,
+						name,
+						pct: pct(leader.anteil)
+					})}{#if leader.refAnteil !== null}{m.skizze_wahl_leader_ref({
+							ref: wahlRefName,
+							partei: leader.partei,
+							pct: pct(leader.refAnteil)
+						})}{/if}
 				</p>
 			{/if}
-			<p class="text-sm">
-				Jede Kachel ist eine Partei, alle mit derselben Skala. Ergebnisse auf Kiezebene gibt es ab
-				2016, für den Bundestag ab 2017.
-			</p>
+			<p class="text-sm">{m.skizze_wahl_hint_kiez()}</p>
 		{/snippet}
 		{#snippet controls()}<WahlSwitch bind:value={wahlArt} />{/snippet}
 		{#snippet chart()}
@@ -271,29 +306,31 @@
 					own={wahlOwn}
 					ref={wahlRefPoints}
 					ownLabel={name}
-					refLabel={ref.slug ? ref.label : `${wahlRefName}, Gesamtergebnis`}
+					refLabel={ref.slug ? ref.label : m.skizze_ref_total_result({ name: wahlRefName })}
 				/>
 			{/if}
 		{/snippet}
 		{#snippet table(visible)}
 			<DataTable
 				{visible}
-				caption="Stimmenanteile in {name} (Prozent), in Klammern {wahlRefName}"
-				head={['Partei', ...years.map(String)]}
+				caption={m.skizze_wahl_caption({ name, ref: wahlRefName })}
+				head={[m.skizze_table_party(), ...years.map(String)]}
 				rows={[...new Set(wahlOwn.map((p) => p.partei))].map((partei) => [
 					partei,
 					...years.map((j) => {
 						const o = wahlOwn.find((p) => p.partei === partei && p.jahr === j);
 						const r = wahlRefPoints.find((p) => p.partei === partei && p.jahr === j);
-						return `${o ? fmtPct(o.anteil) : '–'}${r ? ` (${fmtPct(r.anteil)})` : ''}`;
+						return `${o ? pct(o.anteil) : '–'}${r ? ` (${pct(r.anteil)})` : ''}`;
 					})
 				])}
 			/>
 		{/snippet}
 		{#snippet sources()}
 			<p>
-				Amt für Statistik Berlin-Brandenburg und Landeswahlleiterin Berlin.
-				<a class="text-accent underline" href={resolve('/methodik')}>Methodik der Wahldaten</a>.
+				{m.skizze_wahl_sources()}
+				<a class="text-accent underline" href={localHref('/methodik', opts)}
+					>{m.skizze_wahl_method_link()}</a
+				>.
 			</p>
 		{/snippet}
 	</Section>
@@ -303,23 +340,22 @@
 		aria-labelledby="nachbarn-h"
 		class="scroll-mt-28 border-t border-rule py-12"
 	>
-		<h2 id="nachbarn-h" class="text-xl font-semibold text-ink">Nachbarn und ähnliche Kieze</h2>
+		<h2 id="nachbarn-h" class="text-xl font-semibold text-ink">{m.skizze_nb_title_kiez()}</h2>
 		<p class="mt-2 mb-6 max-w-2xl text-base text-ink-muted">
-			„Vergleichen“ rechnet die ganze Seite auf diesen Kiez um. Der Name führt zu seiner eigenen
-			Seite.
+			{m.skizze_nb_intro_kiez()}
 		</p>
 		<NeighborList
 			route="/demo/kiez-skizze/[slug]"
 			oncompare={pick}
 			groups={[
 				{
-					title: 'Grenzt an',
-					hint: 'Kieze mit gemeinsamer Grenze',
+					title: m.skizze_nb_borders(),
+					hint: m.skizze_nb_borders_kiez(),
 					entries: data.neighbors.map((n) => ({ slug: n.slug, name: n.name }))
 				},
 				{
-					title: 'Ähnlich',
-					hint: 'Kieze mit ähnlichen Werten in den fünf Bereichen des Kiez-Scores',
+					title: m.skizze_nb_similar(),
+					hint: m.skizze_nb_similar_hint(),
 					entries: data.similar.map((n) => ({ slug: n.slug, name: n.name }))
 				}
 			]}
@@ -327,17 +363,10 @@
 	</section>
 
 	{#if self}
-		<Section id="ueberblick" title="Der Kiez-Score im Überblick" mode={skizze.mode}>
+		<Section id="ueberblick" title={m.skizze_ov_title()} mode={skizze.mode}>
 			{#snippet text()}
-				<p>
-					{name} erreicht {formatScore(self.dims.composite)} von 100 Punkten{scoreRank
-						? `, Platz ${scoreRank.rang} von ${scoreRank.total} Kiezen`
-						: ''}. Jede Zeile ist ein Bereich, höher ist besser. Der Ring ist {refName}.
-				</p>
-				<p class="text-sm">
-					Kultur und erfasste Kriminalität zählen nicht zum Kiez-Score. Kriminalität steht abgesetzt
-					und ohne Wertung.
-				</p>
+				<p>{overview}</p>
+				<p class="text-sm">{m.skizze_ov_note()}</p>
 			{/snippet}
 			{#snippet chart()}
 				<ProfileChart
@@ -351,12 +380,12 @@
 			{#snippet table(visible)}
 				<DataTable
 					{visible}
-					caption="Kiez-Score nach Bereichen: {name} und {refName}"
-					head={['Bereich', name, refName, 'Abstand']}
+					caption={m.skizze_ov_caption({ name, ref: refName })}
+					head={[m.skizze_table_area(), name, refName, m.skizze_table_gap()]}
 					rows={profileDims.map((d) => [
-						dimLabel(d),
-						formatScore(self.dims[d]),
-						formatScore(ref.dims[d]),
+						dimLabel(d, opts),
+						formatScore(self.dims[d], opts),
+						formatScore(ref.dims[d], opts),
 						self.dims[d] !== null && ref.dims[d] !== null
 							? signedPoints((self.dims[d] ?? 0) - (ref.dims[d] ?? 0))
 							: '–'
@@ -365,8 +394,8 @@
 			{/snippet}
 			{#snippet sources()}
 				<p>
-					<a class="text-accent underline" href={resolve('/methodik/kiez-score')}
-						>So entsteht der Kiez-Score</a
+					<a class="text-accent underline" href={localHref('/methodik/kiez-score', opts)}
+						>{m.skizze_method_link()}</a
 					>
 				</p>
 			{/snippet}
@@ -378,7 +407,8 @@
 			items={buildChapterFaq(
 				self,
 				all.map((r) => r.metrics),
-				'Kieze'
+				unitPlural,
+				opts
 			)}
 		/>
 	{/if}

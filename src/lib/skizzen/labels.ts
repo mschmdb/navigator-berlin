@@ -1,12 +1,14 @@
+import { m } from '$lib/paraglide/messages.js';
 import { dimensionLabel } from '$lib/components/atlas/inspector-panel/internal/kiez-score-display.js';
 import { SCORE_DIMENSION_KEYS } from '$lib/data/comparison-types.js';
+import { msgOpts, numberFormat, numberLocale, type LocaleOpts } from './locale';
 import type { Dim, Figure } from './types';
 
-/** Skizzen sind DE-only; Dimensionsnamen kommen trotzdem aus der einen Quelle der Seite. */
-export function dimLabel(dim: Dim): string {
-	if (dim === 'composite') return 'Gesamtwert';
+/** Dimensionsnamen kommen aus der einen Quelle der Seite, in der gewählten Sprache. */
+export function dimLabel(dim: Dim, opts?: LocaleOpts): string {
+	if (dim === 'composite') return m.skizze_composite({}, msgOpts(opts));
 	const key = SCORE_DIMENSION_KEYS.find((k) => k.field === dim)?.key;
-	return key ? dimensionLabel(key) : dim;
+	return key ? dimensionLabel(key, msgOpts(opts)) : dim;
 }
 
 export interface FigureSpec {
@@ -56,23 +58,30 @@ export const FIGURE_SPECS: Readonly<Record<Figure, FigureSpec>> = {
 	}
 };
 
-const nf = (digits: number) =>
-	new Intl.NumberFormat('de-DE', { minimumFractionDigits: digits, maximumFractionDigits: digits });
-
-export function formatFigure(figure: Figure, value: number | null): string {
-	if (value === null) return 'keine Angabe';
+export function formatFigure(figure: Figure, value: number | null, opts?: LocaleOpts): string {
+	if (value === null) return m.skizze_no_data({}, msgOpts(opts));
 	const spec = FIGURE_SPECS[figure];
-	return `${nf(spec.digits).format(value)} ${spec.unit}`;
+	return `${numberFormat(spec.digits, opts).format(value)} ${spec.unit}`;
 }
 
-export function formatScore(value: number | null): string {
-	return value === null ? 'keine Angabe' : nf(0).format(value);
+export function formatScore(value: number | null, opts?: LocaleOpts): string {
+	return value === null ? m.skizze_no_data({}, msgOpts(opts)) : numberFormat(0, opts).format(value);
 }
 
-export function formatInt(value: number): string {
-	return nf(0).format(value);
+export function formatInt(value: number, opts?: LocaleOpts): string {
+	return numberFormat(0, opts).format(value);
 }
 
-export function formatPercent(share01: number): string {
-	return `${nf(0).format(share01 * 100)} %`;
+export function formatPercent(share01: number, opts?: LocaleOpts): string {
+	return `${numberFormat(0, opts).format(share01 * 100)} %`;
+}
+
+/** Ganze Prozent aus einem Wert in 0 bis 100: „12 %“ (de), „12%“ (en). */
+export function fmtPct(value: number, opts?: LocaleOpts): string {
+	return msgOpts(opts).locale === 'en' ? `${Math.round(value)}%` : `${Math.round(value)} %`;
+}
+
+/** Fläche in km² mit einer Nachkommastelle. */
+export function formatKm2(value: number, opts?: LocaleOpts): string {
+	return new Intl.NumberFormat(numberLocale(opts), { maximumFractionDigits: 1 }).format(value);
 }

@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { localHref } from '../locale';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Entry {
 		readonly slug: string;
@@ -15,6 +17,9 @@
 	let { groups, route, oncompare }: Props = $props();
 </script>
 
+<!-- Links tragen den Sprachpräfix selbst (localHref), resolve() kennt ihn nicht. -->
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
+
 <div class="grid gap-8 sm:grid-cols-2">
 	{#each groups as g (g.title)}
 		{#if g.entries.length > 0}
@@ -25,7 +30,7 @@
 					{#each g.entries as e (e.slug)}
 						<li class="flex items-center justify-between gap-3 border-b border-rule py-1.5">
 							<a
-								href={resolve(route, { slug: e.slug })}
+								href={localHref(route.replace('[slug]', e.slug), { locale: getLocale() })}
 								class="min-w-0 truncate text-sm text-ink underline underline-offset-2 hover:text-accent"
 								>{e.name}</a
 							>
@@ -33,7 +38,9 @@
 								type="button"
 								class="min-h-7 shrink-0 rounded-full border border-rule-strong px-3 text-sm text-ink hover:border-accent focus-visible:outline-2 focus-visible:outline-focus"
 								onclick={() => oncompare(e.slug)}
-								>Vergleichen<span class="sr-only"> mit {e.name}</span></button
+								>{m.skizze_neighbor_compare()}<span class="sr-only">
+									{m.skizze_neighbor_compare_with({ name: e.name })}</span
+								></button
 							>
 						</li>
 					{/each}

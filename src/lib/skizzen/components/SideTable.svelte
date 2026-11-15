@@ -5,12 +5,15 @@
 	Kapiteln fluchten). Mobil gestapelt statt gequetscht. Große Nullstapel lässt der Median aus.
 -->
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { mostCommon, zeroAwareMedian } from '../stats';
 	import {
-		LABEL_SPECS,
-		METRIC_SPECS,
 		formatMetricValue,
 		hintFor,
+		labelText,
+		labelValueText,
+		metricText,
 		type Hint as HintData,
 		type LabelId,
 		type MetricId
@@ -29,6 +32,8 @@
 		unitPlural: string;
 	}
 	let { metrics, labels, regions, own, ref, refHead, unitPlural }: Props = $props();
+	const opts = $derived({ locale: getLocale() });
+	const classText = (v: string | null | undefined) => (v ? labelValueText(v, opts) : '–');
 
 	interface Row {
 		key: string;
@@ -41,49 +46,54 @@
 		hint: HintData | null;
 	}
 	const rows = $derived<Row[]>([
-		...metrics.map((m) => {
-			const b = zeroAwareMedian(regions.map((r) => r.metrics[m]));
+		...metrics.map((id) => {
+			const b = zeroAwareMedian(regions.map((r) => r.metrics[id]));
+			const text = metricText(id, opts);
 			return {
-				key: m,
-				label: METRIC_SPECS[m].label,
-				unit: METRIC_SPECS[m].unit,
-				what: METRIC_SPECS[m].what,
-				own: formatMetricValue(m, own.metrics[m]),
-				ref: formatMetricValue(m, ref.metrics[m]),
-				berlin: `${formatMetricValue(m, b.value)}${b.zerosLeftOut > 0 ? '¹' : ''}`,
+				key: id,
+				label: text.label,
+				unit: text.unit,
+				what: text.what,
+				own: formatMetricValue(id, own.metrics[id], opts),
+				ref: formatMetricValue(id, ref.metrics[id], opts),
+				berlin: `${formatMetricValue(id, b.value, opts)}${b.zerosLeftOut > 0 ? '¹' : ''}`,
 				hint: refHead
-					? hintFor(m, own.metrics[m], ref.metrics[m], refHead.name)
-					: hintFor(m, own.metrics[m], b.value, 'Berlin-Median')
+					? hintFor(id, own.metrics[id], ref.metrics[id], refHead.name, opts)
+					: hintFor(id, own.metrics[id], b.value, m.skizze_ref_berlin_median(), opts)
 			};
 		}),
 		...labels.map((l) => ({
 			key: l,
-			label: LABEL_SPECS[l].label,
-			unit: 'Klasse',
-			what: LABEL_SPECS[l].what,
-			own: own.labels[l] ?? '–',
-			ref: ref.labels[l] ?? '–',
-			berlin: mostCommon(regions.map((r) => r.labels[l])) ?? '–',
+			label: labelText(l, opts).label,
+			unit: m.skizze_side_class(),
+			what: labelText(l, opts).what,
+			own: classText(own.labels[l]),
+			ref: classText(ref.labels[l]),
+			berlin: classText(mostCommon(regions.map((r) => r.labels[l]))),
 			hint: null
 		}))
 	]);
 	const zeroNotes = $derived(
 		metrics
-			.map((m) => ({ m, z: zeroAwareMedian(regions.map((r) => r.metrics[m])).zerosLeftOut }))
+			.map((id) => ({ id, z: zeroAwareMedian(regions.map((r) => r.metrics[id])).zerosLeftOut }))
 			.filter((e) => e.z > 0)
-			.map(
-				(e) =>
-					`¹ ${METRIC_SPECS[e.m].label}: Median ohne die ${e.z} ${unitPlural} ${METRIC_SPECS[e.m].zeroName ?? 'mit Wert 0'}.`
-			)
+			.map((e) => {
+				const text = metricText(e.id, opts);
+				return m.skizze_side_zero_note({
+					label: text.label,
+					count: e.z,
+					units: unitPlural,
+					zeroName: text.zeroName ?? m.skizze_side_zero_default()
+				});
+			})
 	);
-	const berlinSub = 'Median, bei Klassen die häufigste';
 </script>
 
 <!-- Ab sm: Tabelle mit festen Zahlenspalten -->
 <table
 	class="hidden w-full table-fixed border-collapse text-left [overflow-wrap:break-word] sm:table"
 >
-	<caption class="mb-2 text-left text-sm font-semibold text-ink">Weitere Werte</caption>
+	<caption class="mb-2 text-left text-sm font-semibold text-ink">{m.skizze_side_caption()}</caption>
 	<colgroup>
 		<col />
 		<col class="w-40" />
@@ -92,10 +102,11 @@
 	</colgroup>
 	<thead>
 		<tr class="border-b border-rule align-bottom">
-			<th scope="col" class="pb-1.5"><span class="sr-only">Wert</span></th>
+			<th scope="col" class="pb-1.5"><span class="sr-only">{m.skizze_table_value()}</span></th>
 			<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-semibold text-accent">
 				{own.name.replaceAll('/', '/\u200b')}<span
-					class="block text-dense-label font-normal text-ink-subtle">dieser Ort</span
+					class="block text-dense-label font-normal text-ink-subtle"
+					>{m.skizze_side_this_place()}</span
 				>
 			</th>
 			{#if refHead}
@@ -104,7 +115,9 @@
 				</th>
 			{/if}
 			<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-normal text-ink">
-				Berlin<span class="block text-dense-label text-ink-subtle">{berlinSub}</span>
+				{m.skizze_side_berlin()}<span class="block text-dense-label text-ink-subtle"
+					>{m.skizze_side_berlin_sub()}</span
+				>
 			</th>
 		</tr>
 	</thead>
@@ -137,7 +150,7 @@
 
 <!-- Mobil: Zeile gestapelt, Werte darunter in gleich breiten Spalten -->
 <div class="sm:hidden">
-	<p class="mb-2 text-sm font-semibold text-ink">Weitere Werte</p>
+	<p class="mb-2 text-sm font-semibold text-ink">{m.skizze_side_caption()}</p>
 	<ul class="flex flex-col">
 		{#each rows as r (r.key)}
 			<li class="border-b border-rule py-2">
@@ -158,7 +171,7 @@
 						</div>
 					{/if}
 					<div>
-						<dt class="text-dense-label text-ink-subtle">Berlin</dt>
+						<dt class="text-dense-label text-ink-subtle">{m.skizze_side_berlin()}</dt>
 						<dd class="font-mono text-sm text-ink-muted tabular-nums">{r.berlin}</dd>
 					</div>
 				</dl>
@@ -167,6 +180,6 @@
 	</ul>
 </div>
 <div class="mt-1.5 flex flex-col gap-0.5 text-dense-label text-ink-subtle">
-	<p>Berlin: Median der {regions.length} {unitPlural}, bei Klassen die häufigste Klasse.</p>
+	<p>{m.skizze_side_footnote({ count: regions.length, units: unitPlural })}</p>
 	{#each zeroNotes as n (n)}<p>{n}</p>{/each}
 </div>

@@ -1,7 +1,11 @@
+import { m } from '$lib/paraglide/messages.js';
+import { msgOpts, type LocaleOpts } from './locale';
 import {
 	CHAPTERS,
+	chapterText,
 	formatMetric,
 	formatMetricValue,
+	labelValueText,
 	metricLead,
 	type ChapterId,
 	type LabelValues,
@@ -28,100 +32,108 @@ interface Place {
 export function buildChapterFaq(
 	own: Place,
 	all: readonly MetricValues[],
-	unitPlural: string
+	unitPlural: string,
+	opts?: LocaleOpts
 ): FaqItemWithChapter[] {
+	const o = msgOpts(opts);
 	const n = own.name;
-	const lead = (m: MetricId) =>
+	const lead = (id: MetricId) =>
 		metricLead(
-			m,
+			id,
 			n,
-			own.metrics[m],
-			all.map((a) => a[m]),
-			unitPlural
+			own.metrics[id],
+			all.map((a) => a[id]),
+			unitPlural,
+			null,
+			opts
 		);
-	const v = (m: MetricId) => formatMetric(m, own.metrics[m]);
-	const has = (m: MetricId) => own.metrics[m] !== null;
-	const label = (l: keyof LabelValues) => (own.labels[l] ? `„${own.labels[l]}“` : null);
+	const v = (id: MetricId) => formatMetric(id, own.metrics[id], opts);
+	const count = (id: MetricId) => formatMetricValue(id, own.metrics[id], opts);
+	const has = (id: MetricId) => own.metrics[id] !== null;
+	const label = (l: keyof LabelValues) => {
+		const value = own.labels[l];
+		return value ? m.skizze_quoted({ value: labelValueText(value, opts) }, o) : null;
+	};
+	const laermClass = label('laermKlasse');
+	const gruenRating = label('gruenversorgung');
+	const mss = label('mss');
 
 	const items: { chapter: ChapterId; main: MetricId; question: string; answer: string }[] = [
 		{
 			chapter: 'laerm',
 			main: 'laermDb',
-			question: `Wie laut ist es in ${n}?`,
+			question: m.skizze_faq_laerm_q({ name: n }, o),
 			answer: [
 				lead('laermDb'),
-				label('laermKlasse')
-					? `Die häufigste Klasse der Lärmkarte ist ${label('laermKlasse')}.`
-					: '',
-				'Quelle: Umweltatlas Berlin, Strategische Lärmkarte 2022.'
+				laermClass ? m.skizze_faq_laerm_class({ value: laermClass }, o) : '',
+				m.skizze_faq_laerm_source({}, o)
 			].join(' ')
 		},
 		{
 			chapter: 'gruen',
 			main: 'gruenanlagen',
-			question: `Wie grün ist ${n}?`,
+			question: m.skizze_faq_gruen_q({ name: n }, o),
 			answer: [
 				lead('gruenanlagen'),
 				has('gruenSchlecht')
-					? `Laut Senat sind ${v('gruenSchlecht')} schlecht mit Grün in Wohnungsnähe versorgt${label('gruenversorgung') ? `, die häufigste Einstufung ist ${label('gruenversorgung')}` : ''}.`
+					? gruenRating
+						? m.skizze_faq_gruen_bad_rating({ value: v('gruenSchlecht'), rating: gruenRating }, o)
+						: m.skizze_faq_gruen_bad({ value: v('gruenSchlecht') }, o)
 					: '',
-				'Quelle: Grünanlagenbestand Berlin und Umweltatlas, Grünversorgung 2023.'
+				m.skizze_faq_gruen_source({}, o)
 			].join(' ')
 		},
 		{
 			chapter: 'gruen',
 			main: 'pet',
-			question: `Wie heiß wird es in ${n} im Sommer?`,
-			answer: `${lead('pet')} Gemeint ist die gefühlte Temperatur an einem heißen Sommertag um 14 Uhr. Quelle: Umweltatlas Berlin, Klimamodell 2022.`
+			question: m.skizze_faq_pet_q({ name: n }, o),
+			answer: m.skizze_faq_pet_answer({ lead: lead('pet') }, o)
 		},
 		{
 			chapter: 'wohnen',
 			main: 'bestandsmiete',
-			question: `Was kostet Wohnen in ${n}?`,
+			question: m.skizze_faq_wohnen_q({ name: n }, o),
 			answer: [
 				lead('bestandsmiete'),
-				has('altbau') ? `Altbau: ${v('altbau')}.` : '',
-				has('milieuschutz') ? `Milieuschutz: ${v('milieuschutz')}.` : '',
-				'Quelle: Zensus 2022 und Geoportal Berlin.'
+				has('altbau') ? m.skizze_faq_wohnen_altbau({ value: v('altbau') }, o) : '',
+				has('milieuschutz') ? m.skizze_faq_wohnen_milieu({ value: v('milieuschutz') }, o) : '',
+				m.skizze_faq_wohnen_source({}, o)
 			].join(' ')
 		},
 		{
 			chapter: 'unterwegs',
 			main: 'haltestellenKm2',
-			question: `Wie gut ist ${n} an Bus und Bahn angebunden?`,
+			question: m.skizze_faq_oepnv_q({ name: n }, o),
 			answer: [
 				lead('haltestellenKm2'),
-				has('haltestelle400m')
-					? `${v('haltestelle400m')} haben höchstens 400 Meter bis zur nächsten Haltestelle.`
-					: '',
-				has('bahnhoefe')
-					? `Im Gebiet liegen ${formatMetricValue('bahnhoefe', own.metrics.bahnhoefe)} U- und S-Bahnhöfe.`
-					: '',
-				'Quelle: OpenStreetMap und Zensus 2022.'
+				has('haltestelle400m') ? m.skizze_faq_oepnv_400({ value: v('haltestelle400m') }, o) : '',
+				has('bahnhoefe') ? m.skizze_faq_oepnv_stations({ count: count('bahnhoefe') }, o) : '',
+				m.skizze_faq_oepnv_source({}, o)
 			].join(' ')
 		},
 		{
 			chapter: 'versorgung',
 			main: 'lebensmittel10k',
-			question: `Wie gut ist die Nahversorgung in ${n}?`,
+			question: m.skizze_faq_versorgung_q({ name: n }, o),
 			answer: [
 				lead('lebensmittel10k'),
 				has('apotheken') && has('kitas')
-					? `Im Gebiet liegen ${formatMetricValue('apotheken', own.metrics.apotheken)} Apotheken und ${formatMetricValue('kitas', own.metrics.kitas)} Kitas.`
+					? m.skizze_faq_versorgung_counts(
+							{ pharmacies: count('apotheken'), kitas: count('kitas') },
+							o
+						)
 					: '',
-				'Quelle: OpenStreetMap und Senatsverwaltung für Bildung.'
+				m.skizze_faq_versorgung_source({}, o)
 			].join(' ')
 		},
 		{
 			chapter: 'menschen',
 			main: 'dichte',
-			question: `Wie dicht ist ${n} besiedelt?`,
+			question: m.skizze_faq_dichte_q({ name: n }, o),
 			answer: [
 				lead('dichte'),
-				label('mss')
-					? `Im Monitoring Soziale Stadtentwicklung 2025 ist die häufigste Stufe ${label('mss')}.`
-					: '',
-				'Quelle: Amt für Statistik Berlin-Brandenburg.'
+				mss ? m.skizze_faq_dichte_mss({ value: mss }, o) : '',
+				m.skizze_faq_dichte_source({}, o)
 			].join(' ')
 		}
 	];
@@ -132,7 +144,7 @@ export function buildChapterFaq(
 			return {
 				question: i.question,
 				answer: i.answer.replace(/\s+/g, ' ').trim(),
-				chapter: c ? { id: c.id, title: c.title } : null
+				chapter: c ? { id: c.id, title: chapterText(c.id, opts).title } : null
 			};
 		});
 }

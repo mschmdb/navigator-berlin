@@ -44,4 +44,11 @@ describe('buildChapterFaq', () => {
 		);
 		expect(sparse.some((f) => f.chapter?.id === 'laerm')).toBe(false);
 	});
+	it('writes questions, answers and class values in English', () => {
+		const en = buildChapterFaq(own, others, 'Kieze', { locale: 'en' });
+		const gruen = en.find((f) => f.question === 'How green is Reuterstraße?');
+		expect(gruen?.answer).toContain('poor');
+		expect(gruen?.answer).toContain('“poor”');
+		expect(en[0].chapter?.title).toBe('Noise and air');
+	});
 });

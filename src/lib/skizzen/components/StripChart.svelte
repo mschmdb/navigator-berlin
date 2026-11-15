@@ -10,6 +10,9 @@
 	import { Chart, Circle, Line, Svg, Tooltip } from 'layerchart';
 	import { scaleLinear } from 'd3-scale';
 	import { MediaQuery } from 'svelte/reactivity';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { numberFormat } from '../locale';
 	import { dodgeLevels } from '../dodge';
 	import { median, splitsZeros, zeroShare } from '../stats';
 	import { chartMotion } from './motion.svelte';
@@ -51,7 +54,7 @@
 		items,
 		domain,
 		format,
-		axisFormat = (v: number) => new Intl.NumberFormat('de-DE').format(v),
+		axisFormat = (v: number) => numberFormat(0, { locale: getLocale() }).format(v),
 		unit = '',
 		ownSlug,
 		highlight,
@@ -59,9 +62,9 @@
 		refSlug,
 		refLine,
 		medianLabel,
-		zeroName = 'mit Wert 0',
-		zeroMedianLabel = 'Median ohne die Nullwerte',
-		unitPlural = 'Kieze',
+		zeroName = m.skizze_strip_zero_name_default(),
+		zeroMedianLabel = m.skizze_strip_zero_median_default(),
+		unitPlural = m.skizze_units_kieze(),
 		r: R = 2.9,
 		ownHint = null,
 		onpick
@@ -136,7 +139,7 @@
 	const ref = $derived(items.find((i) => i.slug === refSlug) ?? null);
 	const refIdx = $derived(byValue.findIndex((i) => i.slug === refSlug));
 	const med = $derived(median(swarmItems.map((i) => i.value)));
-	const fmt = (v: number | null) => (v === null ? 'keine Angabe' : format(v));
+	const fmt = (v: number | null) => (v === null ? m.skizze_no_data() : format(v));
 
 	const blockDots = $derived(splitZeros ? items.filter((i) => i.value === 0) : []);
 	const blockPos = (bi: number) => ({
@@ -226,7 +229,7 @@
 							r="2"
 							class="fill-[var(--rule-strong)]"
 						/>{/each}{/each}</svg
-			>{`${zeros.zeros} ${unitPlural} ${zeroName} (Block links)`}
+			>{m.skizze_strip_zero_block({ count: zeros.zeros, units: unitPlural, name: zeroName })}
 		</li>
 	{/if}
 </ul>
@@ -380,7 +383,7 @@
 						{@const d = data as StripItem}
 						<Tooltip.Header value={d.name} />
 						<Tooltip.List>
-							<Tooltip.Item label="Wert" value={fmt(d.value)} />
+							<Tooltip.Item label={m.skizze_strip_value()} value={fmt(d.value)} />
 						</Tooltip.List>
 					{/snippet}
 				</Tooltip.Root>
@@ -390,6 +393,6 @@
 </div>
 {#if overflow}
 	<p class="text-dense-label text-ink-subtle">
-		Einige Punkte überlagern sich. Die Tabelle nennt alle Werte.
+		{m.skizze_strip_overlap()}
 	</p>
 {/if}

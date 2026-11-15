@@ -4,6 +4,10 @@
  * Karte, Einstiegszeile und Überblick am Ende.
  */
 
+import { msgOpts, numberFormat, type LocaleOpts } from './locale';
+import { m } from '$lib/paraglide/messages.js';
+import { LABEL_TEXT, METRIC_TEXT, CHAPTER_TEXT, VALUE_TEXT } from './topics-text';
+
 export const METRICS = [
 	'laermDb',
 	'luftHoch',
@@ -32,19 +36,11 @@ export const LABELS = ['laermKlasse', 'mss', 'gruenversorgung'] as const;
 export type LabelId = (typeof LABELS)[number];
 export type LabelValues = Readonly<Record<LabelId, string | null>>;
 
+/** Messwert ohne Text: Texte stehen in `topics-text.ts` und kommen über `metricText`. */
 export interface MetricSpec {
-	readonly label: string;
-	readonly unit: string;
 	readonly digits: number;
-	/** Ein Satz, was gemessen wird, für Erstbesucher. */
-	readonly what: string;
-	readonly source: string;
-	/** Vergleichswörter: „lauter“ / „leiser“. Bei Kriminalität bewusst ohne Wertung. */
-	readonly higher: string;
-	readonly lower: string;
-	/** Großer Nullstapel bekommt einen eigenen Block, siehe StripChart. */
-	readonly zeroName?: string;
-	readonly zeroMedianLabel?: string;
+	/** `percent` und `count` steuern Formatierung und Auswahl, nicht die Sprache der Einheit. */
+	readonly unitKind: 'percent' | 'count' | 'other';
 	/** Auf Bezirksebene nicht vorhanden. */
 	readonly kiezOnly?: boolean;
 	/**
@@ -54,184 +50,55 @@ export interface MetricSpec {
 	readonly better?: 'higher' | 'lower';
 }
 
+export interface MetricText {
+	readonly label: string;
+	readonly unit: string;
+	/** Ein Satz, was gemessen wird, für Erstbesucher. */
+	readonly what: string;
+	readonly source: string;
+	/** Vergleichswörter: „lauter“ / „leiser“. Bei Kriminalität bewusst ohne Wertung. */
+	readonly higher: string;
+	readonly lower: string;
+	/** Großer Nullstapel bekommt einen eigenen Block, siehe StripChart. */
+	readonly zeroName?: string;
+	readonly zeroMedianLabel?: string;
+}
+
 export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
-	laermDb: {
-		label: 'Verkehrslärm',
-		unit: 'dB',
-		digits: 1,
-		what: 'Mittlerer Lärmpegel über Tag, Abend und Nacht (L_DEN), Strategische Lärmkarte 2022',
-		source: 'Umweltatlas Berlin',
-		higher: 'lauter',
-		lower: 'leiser',
-		better: 'lower'
-	},
-	luftHoch: {
-		label: 'Hohe Luftbelastung',
-		unit: '% der Teilgebiete',
-		digits: 0,
-		what: 'Anteil der Planungsräume (Teilgebiete) mit hoher Luftbelastung, Umweltgerechtigkeitsatlas 2023',
-		source: 'Umweltatlas Berlin',
-		higher: 'mehr belastet',
-		lower: 'weniger belastet',
-		zeroName: 'ohne hohe Luftbelastung',
-		zeroMedianLabel: 'Median der Kieze mit hoher Luftbelastung',
-		better: 'lower'
-	},
-	gruenanlagen: {
-		label: 'Parks und Grünanlagen',
-		unit: '% der Fläche',
-		digits: 1,
-		what: 'Anteil öffentlicher Parks und Grünanlagen an der Fläche',
-		source: 'Grünanlagenbestand Berlin',
-		higher: 'grüner',
-		lower: 'weniger grün',
-		better: 'higher'
-	},
-	gruenSchlecht: {
-		label: 'Wenig Grün in Wohnungsnähe',
-		unit: '% der Teilgebiete',
-		digits: 0,
-		what: 'Anteil der Planungsräume (Teilgebiete), die laut Senat schlecht mit wohnungsnahem Grün versorgt sind',
-		source: 'Umweltatlas Berlin, Grünversorgung 2023',
-		higher: 'schlechter versorgt',
-		lower: 'besser versorgt',
-		zeroName: 'ohne schlecht versorgte Teilgebiete',
-		zeroMedianLabel: 'Median der Kieze mit schlecht versorgten Teilgebieten',
-		better: 'lower'
-	},
-	pet: {
-		label: 'Gefühlte Temperatur am Nachmittag',
-		unit: '°C',
-		digits: 1,
-		what: 'So warm fühlt es sich an einem heißen Sommertag um 14 Uhr an, Mittel im Gebiet',
-		source: 'Umweltatlas Berlin, Klimamodell 2022',
-		higher: 'heißer',
-		lower: 'kühler',
-		better: 'lower'
-	},
-	bestandsmiete: {
-		label: 'Miete in laufenden Verträgen',
-		unit: '€/m²',
-		digits: 2,
-		what: 'Nettokaltmiete je Quadratmeter in bestehenden Mietverträgen, Zensus 2022',
-		source: 'Zensus 2022',
-		higher: 'teurer',
-		lower: 'günstiger'
-	},
-	altbau: {
-		label: 'Altbau',
-		unit: '% der Wohnungen',
-		digits: 0,
-		what: 'Anteil der Wohnungen in Häusern, die vor 1949 gebaut wurden',
-		source: 'Zensus 2022',
-		higher: 'mehr Altbau',
-		lower: 'weniger Altbau'
-	},
-	milieuschutz: {
-		label: 'Milieuschutz',
-		unit: '% der Fläche',
-		digits: 0,
-		what: 'Anteil der Fläche in Milieuschutzgebieten, wo Umbau und Umwandlung in Eigentum genehmigt werden müssen',
-		source: 'Geoportal Berlin',
-		higher: 'mehr geschützt',
-		lower: 'weniger geschützt',
-		zeroName: 'ohne Milieuschutz',
-		zeroMedianLabel: 'Median der Kieze mit Milieuschutz'
-	},
-	haltestellenKm2: {
-		label: 'Haltestellen',
-		unit: 'je km²',
-		digits: 1,
-		what: 'Haltestellen von U-Bahn, S-Bahn, Tram und Bus je Quadratkilometer',
-		source: 'OpenStreetMap',
-		higher: 'dichter angebunden',
-		lower: 'weniger dicht angebunden',
-		better: 'higher'
-	},
-	haltestelle400m: {
-		label: 'Haltestelle in 400 m',
-		unit: '% der Menschen',
-		digits: 0,
-		what: 'Anteil der Menschen, die höchstens 400 Meter bis zur nächsten Haltestelle haben',
-		source: 'Zensus 2022 und OpenStreetMap',
-		higher: 'näher dran',
-		lower: 'weiter weg',
-		better: 'higher'
-	},
-	bahnhoefe: {
-		label: 'U- und S-Bahnhöfe',
-		unit: 'im Gebiet',
-		digits: 0,
-		what: 'U- und S-Bahnhöfe innerhalb der Grenzen, die Zahl hängt auch von der Größe des Gebiets ab',
-		source: 'OpenStreetMap',
-		higher: 'mehr',
-		lower: 'weniger'
-	},
-	lebensmittel10k: {
-		label: 'Lebensmittelgeschäfte',
-		unit: 'je 10.000 Menschen',
-		digits: 1,
-		what: 'Supermärkte, Discounter und andere Lebensmittelgeschäfte je 10.000 Einwohnerinnen und Einwohner',
-		source: 'OpenStreetMap',
-		higher: 'besser versorgt',
-		lower: 'schlechter versorgt',
-		better: 'higher'
-	},
-	apotheken: {
-		label: 'Apotheken',
-		unit: 'im Gebiet',
-		digits: 0,
-		what: 'Apotheken innerhalb der Grenzen, die Zahl hängt auch von der Größe des Gebiets ab',
-		source: 'OpenStreetMap',
-		higher: 'mehr',
-		lower: 'weniger'
-	},
-	kitas: {
-		label: 'Kitas',
-		unit: 'im Gebiet',
-		digits: 0,
-		what: 'Kitas innerhalb der Grenzen, die Zahl hängt auch von der Größe des Gebiets ab',
-		source: 'Senatsverwaltung für Bildung, 2024',
-		higher: 'mehr',
-		lower: 'weniger'
-	},
-	schulen: {
-		label: 'Schulen',
-		unit: 'im Gebiet',
-		digits: 0,
-		what: 'Schulen innerhalb der Grenzen, die Zahl hängt auch von der Größe des Gebiets ab',
-		source: 'Senatsverwaltung für Bildung, 2024',
-		higher: 'mehr',
-		lower: 'weniger'
-	},
-	kulturorte: {
-		label: 'Kulturorte',
-		unit: 'im Gebiet',
-		digits: 0,
-		what: 'Museen, Theater, Kinos, Bibliotheken, Galerien, Clubs und soziokulturelle Zentren im Gebiet',
-		source: 'OpenStreetMap',
-		higher: 'mehr',
-		lower: 'weniger'
-	},
-	dichte: {
-		label: 'Einwohnerdichte',
-		unit: 'Menschen je km²',
-		digits: 0,
-		what: 'Einwohnerinnen und Einwohner je Quadratkilometer, Stand Ende 2024',
-		source: 'Amt für Statistik Berlin-Brandenburg',
-		higher: 'dichter besiedelt',
-		lower: 'weniger dicht besiedelt'
-	},
-	kriminalitaet: {
-		label: 'Erfasste Kriminalität',
-		unit: 'Fälle je 100.000 Menschen',
-		digits: 0,
-		what: 'Häufigkeitszahl je Bezirksregion, nicht adressgenau. Sie misst erfasste Fälle pro gemeldete Einwohner, kein persönliches Risiko. Touristen- und Pendler-Orte erscheinen überzeichnet, das Dunkelfeld bleibt unerfasst. Kein Sicherheits-Ranking',
-		source: 'Kriminalitätsatlas der Polizei Berlin, Mittel 2023 bis 2025',
-		higher: 'mehr erfasste Fälle',
-		lower: 'weniger erfasste Fälle'
-	}
+	laermDb: { digits: 1, unitKind: 'other', better: 'lower' },
+	luftHoch: { digits: 0, unitKind: 'percent', better: 'lower' },
+	gruenanlagen: { digits: 1, unitKind: 'percent', better: 'higher' },
+	gruenSchlecht: { digits: 0, unitKind: 'percent', better: 'lower' },
+	pet: { digits: 1, unitKind: 'other', better: 'lower' },
+	bestandsmiete: { digits: 2, unitKind: 'other' },
+	altbau: { digits: 0, unitKind: 'percent' },
+	milieuschutz: { digits: 0, unitKind: 'percent' },
+	haltestellenKm2: { digits: 1, unitKind: 'other', better: 'higher' },
+	haltestelle400m: { digits: 0, unitKind: 'percent', better: 'higher' },
+	bahnhoefe: { digits: 0, unitKind: 'count' },
+	lebensmittel10k: { digits: 1, unitKind: 'other', better: 'higher' },
+	apotheken: { digits: 0, unitKind: 'count' },
+	kitas: { digits: 0, unitKind: 'count' },
+	schulen: { digits: 0, unitKind: 'count' },
+	kulturorte: { digits: 0, unitKind: 'count' },
+	dichte: { digits: 0, unitKind: 'other' },
+	kriminalitaet: { digits: 0, unitKind: 'other' }
 };
+
+export function metricText(id: MetricId, opts?: LocaleOpts): MetricText {
+	const o = msgOpts(opts);
+	const t = METRIC_TEXT[id];
+	return {
+		label: t.label({}, o),
+		unit: t.unit({}, o),
+		what: t.what({}, o),
+		source: t.source({}, o),
+		higher: t.higher({}, o),
+		lower: t.lower({}, o),
+		zeroName: t.zeroName?.({}, o),
+		zeroMedianLabel: t.zeroMedianLabel?.({}, o)
+	};
+}
 
 export type ChapterId =
 	| 'laerm'
@@ -245,9 +112,6 @@ export type ChapterId =
 
 export interface ChapterSpec {
 	readonly id: ChapterId;
-	/** Kurzname in der Sprungleiste. */
-	readonly short: string;
-	readonly title: string;
 	/** Hauptgrafik: eine oder zwei Verteilungen. */
 	readonly main: readonly MetricId[];
 	/** Nebenwerte als kurze Tabelle. */
@@ -264,8 +128,6 @@ export interface ChapterSpec {
 export const CHAPTERS: readonly ChapterSpec[] = [
 	{
 		id: 'laerm',
-		short: 'Lärm',
-		title: 'Lärm und Luft',
 		main: ['laermDb'],
 		side: ['luftHoch'],
 		labels: ['laermKlasse'],
@@ -274,8 +136,6 @@ export const CHAPTERS: readonly ChapterSpec[] = [
 	},
 	{
 		id: 'gruen',
-		short: 'Grün',
-		title: 'Grün und Hitze',
 		main: ['gruenanlagen', 'pet'],
 		side: ['gruenSchlecht'],
 		labels: ['gruenversorgung'],
@@ -284,8 +144,6 @@ export const CHAPTERS: readonly ChapterSpec[] = [
 	},
 	{
 		id: 'wohnen',
-		short: 'Wohnen',
-		title: 'Wohnen und Miete',
 		main: ['bestandsmiete'],
 		side: ['altbau', 'milieuschutz'],
 		mapLayers: 'zensus-bestandsmiete-2022',
@@ -293,8 +151,6 @@ export const CHAPTERS: readonly ChapterSpec[] = [
 	},
 	{
 		id: 'unterwegs',
-		short: 'Unterwegs',
-		title: 'Unterwegs',
 		main: ['haltestellenKm2'],
 		side: ['haltestelle400m', 'bahnhoefe'],
 		mapLayers: 'ubahn-stationen,sbahn-stationen,tram-haltestellen,bus-haltestellen',
@@ -302,16 +158,12 @@ export const CHAPTERS: readonly ChapterSpec[] = [
 	},
 	{
 		id: 'versorgung',
-		short: 'Einkaufen',
-		title: 'Einkaufen, Kitas, Kultur',
 		main: ['lebensmittel10k'],
 		side: ['apotheken', 'kitas', 'schulen', 'kulturorte'],
 		mapLayers: 'nahversorgung-lebensmittel,nahversorgung-apotheke'
 	},
 	{
 		id: 'menschen',
-		short: 'Menschen',
-		title: 'Menschen',
 		main: ['dichte'],
 		side: ['kriminalitaet'],
 		labels: ['mss'],
@@ -320,33 +172,43 @@ export const CHAPTERS: readonly ChapterSpec[] = [
 	}
 ];
 
-export const LABEL_SPECS: Readonly<Record<LabelId, { label: string; what: string }>> = {
-	laermKlasse: {
-		label: 'Häufigste Lärmklasse',
-		what: 'Häufigste Klasse der Lärmkarte unter den Teilgebieten'
-	},
-	gruenversorgung: {
-		label: 'Grünversorgung laut Senat',
-		what: 'Häufigste Einstufung der Teilgebiete, wie gut die Menschen mit Grün in Wohnungsnähe versorgt sind'
-	},
-	mss: {
-		label: 'Soziale Lage',
-		what: 'Häufigste Stufe der Teilgebiete im Monitoring Soziale Stadtentwicklung 2025 des Senats'
-	}
-};
+export interface LabelText {
+	readonly label: string;
+	readonly what: string;
+}
 
-const nf = (digits: number) =>
-	new Intl.NumberFormat('de-DE', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+export function labelText(id: LabelId, opts?: LocaleOpts): LabelText {
+	const o = msgOpts(opts);
+	return { label: LABEL_TEXT[id].label({}, o), what: LABEL_TEXT[id].what({}, o) };
+}
 
-export function formatMetric(id: MetricId, value: number | null): string {
-	if (value === null) return 'keine Angabe';
+/** Titel und Kurzname eines Kapitels (Sprungleiste), in der gewählten Sprache. */
+export function chapterText(id: ChapterId, opts?: LocaleOpts): { short: string; title: string } {
+	const t = CHAPTER_TEXT[id];
+	const o = msgOpts(opts);
+	return t ? { short: t.short({}, o), title: t.title({}, o) } : { short: id, title: id };
+}
+
+/** Kategorie aus den Layer-Daten in Worten; Unbekanntes bleibt wie geliefert. */
+export function labelValueText(value: string, opts?: LocaleOpts): string {
+	const fn = Object.hasOwn(VALUE_TEXT, value) ? VALUE_TEXT[value] : undefined;
+	return fn ? fn({}, msgOpts(opts)) : value;
+}
+
+function unitSeparator(id: MetricId, opts?: LocaleOpts): string {
+	return METRIC_SPECS[id].unitKind === 'percent' && msgOpts(opts).locale === 'en' ? '' : '\u00a0';
+}
+
+export function formatMetric(id: MetricId, value: number | null, opts?: LocaleOpts): string {
+	if (value === null) return m.skizze_no_data({}, msgOpts(opts));
 	const spec = METRIC_SPECS[id];
-	return `${nf(spec.digits).format(value)}\u00a0${spec.unit}`;
+	const unit = METRIC_TEXT[id].unit({}, msgOpts(opts));
+	return `${numberFormat(spec.digits, opts).format(value)}${unitSeparator(id, opts)}${unit}`;
 }
 
 /** Nur die Zahl, für Achsen. */
-export function formatMetricNumber(id: MetricId, value: number): string {
-	return nf(Math.min(METRIC_SPECS[id].digits, 1)).format(value);
+export function formatMetricNumber(id: MetricId, value: number, opts?: LocaleOpts): string {
+	return numberFormat(Math.min(METRIC_SPECS[id].digits, 1), opts).format(value);
 }
 
 /**
@@ -360,39 +222,54 @@ export function metricLead(
 	others: readonly (number | null)[],
 	unitPlural: string,
 	/** Gewählter Vergleich (nicht Berlin): „1,0 dB leiser als Neukölln gesamt“. */
-	ref: { readonly name: string; readonly value: number | null } | null = null
+	ref: { readonly name: string; readonly value: number | null } | null = null,
+	opts?: LocaleOpts
 ): string {
-	if (own === null) return `Für ${name} gibt es dazu keine Angabe.`;
+	const o = msgOpts(opts);
+	if (own === null) return m.skizze_lead_none({ name }, o);
 	const spec = METRIC_SPECS[id];
+	const text = metricText(id, opts);
 	const xs = others.filter((v): v is number => v !== null);
-	const head = `${spec.label} in ${name}: ${formatMetric(id, own)}.`;
+	const head = m.skizze_lead_head(
+		{ label: text.label, name, value: formatMetric(id, own, opts) },
+		o
+	);
 	const below = xs.filter((v) => v < own).length;
 	const above = xs.filter((v) => v > own).length;
-	const pct = (n: number) => Math.round((n / xs.length) * 100);
+	const pct = (n: number) => String(Math.round((n / xs.length) * 100));
 	const field =
 		xs.length === 0 || (below === 0 && above === 0)
 			? null
 			: below >= above
-				? `${spec.higher} als in ${pct(below)} % der Berliner ${unitPlural}`
-				: `${spec.lower} als in ${pct(above)} % der Berliner ${unitPlural}`;
+				? m.skizze_lead_field({ word: text.higher, pct: pct(below), units: unitPlural }, o)
+				: m.skizze_lead_field({ word: text.lower, pct: pct(above), units: unitPlural }, o);
 	if (ref && ref.value !== null) {
 		const diff = own - ref.value;
 		const step = 10 ** -spec.digits;
 		const cmp =
 			Math.abs(diff) < step / 2
-				? `genauso viel wie ${ref.name}`
-				: `${diffText(id, Math.abs(diff))} ${diff > 0 ? spec.higher : spec.lower} als ${ref.name}`;
-		return field ? `${head} Das ist ${cmp}, insgesamt ${field}.` : `${head} Das ist ${cmp}.`;
+				? m.skizze_lead_same_as({ name: ref.name }, o)
+				: m.skizze_lead_cmp(
+						{
+							diff: diffText(id, Math.abs(diff), opts),
+							word: diff > 0 ? text.higher : text.lower,
+							name: ref.name
+						},
+						o
+					);
+		return field
+			? m.skizze_lead_cmp_field({ head, cmp, field }, o)
+			: m.skizze_lead_cmp_only({ head, cmp }, o);
 	}
-	return field ? `${head} Das ist ${field}.` : head;
+	return field ? m.skizze_lead_field_only({ head, field }, o) : head;
 }
 
 /** Abstand mit Einheit; bei Prozentwerten in Prozentpunkten. */
-function diffText(id: MetricId, abs: number): string {
+function diffText(id: MetricId, abs: number, opts?: LocaleOpts): string {
 	const spec = METRIC_SPECS[id];
-	const n = nf(spec.digits).format(abs);
-	if (spec.unit.startsWith('%')) return `${n}\u00a0Prozentpunkte`;
-	return `${n}\u00a0${spec.unit}`;
+	const n = numberFormat(spec.digits, opts).format(abs);
+	if (spec.unitKind === 'percent') return m.skizze_diff_pp({ n }, msgOpts(opts));
+	return `${n}\u00a0${METRIC_TEXT[id].unit({}, msgOpts(opts))}`;
 }
 
 /**
@@ -409,31 +286,40 @@ export function characterPoints(
 	own: MetricValues,
 	all: readonly MetricValues[],
 	unitPlural: string,
-	count = 3
+	count = 3,
+	opts?: LocaleOpts
 ): string[] {
 	// Zählwerte hängen an der Größe des Gebiets und taugen nicht für „mehr als 92 %“.
-	return METRICS.filter((m) => m !== 'kriminalitaet' && METRIC_SPECS[m].unit !== 'im Gebiet')
-		.map((m: MetricId): Candidate | null => {
-			const v = own[m];
-			const xs = all.map((a) => a[m]).filter((x): x is number => x !== null);
+	return METRICS.filter((id) => id !== 'kriminalitaet' && METRIC_SPECS[id].unitKind !== 'count')
+		.map((id: MetricId): Candidate | null => {
+			const v = own[id];
+			const xs = all.map((a) => a[id]).filter((x): x is number => x !== null);
 			if (v === null || xs.length < 3) return null;
 			const below = xs.filter((x) => x < v).length / xs.length;
 			const above = xs.filter((x) => x > v).length / xs.length;
 			const high = below >= above;
-			return { m, high, share: high ? below : above };
+			return { m: id, high, share: high ? below : above };
 		})
 		.filter((c): c is Candidate => c !== null && c.share >= 0.75)
 		.sort((a, b) => b.share - a.share)
 		.slice(0, count)
 		.map((c) => {
-			const spec = METRIC_SPECS[c.m];
-			return `${spec.label}: ${c.high ? spec.higher : spec.lower} als ${Math.round(c.share * 100)} % der Berliner ${unitPlural}`;
+			const text = metricText(c.m, opts);
+			return m.skizze_character_point(
+				{
+					label: text.label,
+					word: c.high ? text.higher : text.lower,
+					pct: String(Math.round(c.share * 100)),
+					units: unitPlural
+				},
+				msgOpts(opts)
+			);
 		});
 }
 
 /** Nur die Zahl mit den Nachkommastellen der Kennzahl, für Tabellenzellen. */
-export function formatMetricValue(id: MetricId, value: number | null): string {
-	return value === null ? '–' : nf(METRIC_SPECS[id].digits).format(value);
+export function formatMetricValue(id: MetricId, value: number | null, opts?: LocaleOpts): string {
+	return value === null ? '–' : numberFormat(METRIC_SPECS[id].digits, opts).format(value);
 }
 
 export type HintTone = 'good' | 'bad' | 'neutral';
@@ -452,16 +338,23 @@ export function hintFor(
 	id: MetricId,
 	own: number | null,
 	ref: number | null,
-	refLabel: string
+	refLabel: string,
+	opts?: LocaleOpts
 ): Hint | null {
 	if (own === null || ref === null) return null;
+	const o = msgOpts(opts);
 	const spec = METRIC_SPECS[id];
 	const step = 10 ** -spec.digits;
 	if (Math.abs(own - ref) < step / 2) {
-		return { dir: 'same', tone: 'neutral', text: `etwa wie ${refLabel}`, short: 'etwa gleich' };
+		return {
+			dir: 'same',
+			tone: 'neutral',
+			text: m.skizze_hint_same_text({ ref: refLabel }, o),
+			short: m.skizze_hint_same_short({}, o)
+		};
 	}
 	const dir = own > ref ? 'higher' : 'lower';
 	const tone: HintTone = !spec.better ? 'neutral' : spec.better === dir ? 'good' : 'bad';
-	const word = dir === 'higher' ? spec.higher : spec.lower;
-	return { dir, tone, text: `${word} als ${refLabel}`, short: word };
+	const word = metricText(id, opts)[dir];
+	return { dir, tone, text: m.skizze_hint_text({ word, ref: refLabel }, o), short: word };
 }

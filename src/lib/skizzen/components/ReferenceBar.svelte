@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { SvelteMap } from 'svelte/reactivity';
+	import { m } from '$lib/paraglide/messages.js';
 	import type { ReferenceChoice, ReferenceKind } from '../types';
 
 	export interface RefOption {
@@ -17,8 +18,8 @@
 		similar: readonly RefOption[];
 		all: readonly RefOption[];
 		freeLabel: string;
-		/** „Nachbarkiez“ oder „Nachbarbezirk“. */
-		neighborLabel?: string;
+		/** Bestimmt die Wörter „Nachbarkiez“ oder „Nachbarbezirk“. */
+		level?: 'kiez' | 'bezirk';
 		choice: ReferenceChoice;
 		mode: 'erzaehlen' | 'zahlen';
 		onchoice: (c: ReferenceChoice) => void;
@@ -33,7 +34,7 @@
 		similar,
 		all,
 		freeLabel,
-		neighborLabel = 'Nachbarkiez',
+		level = 'kiez',
 		choice,
 		mode,
 		onchoice,
@@ -46,12 +47,20 @@
 		label: string;
 		list: readonly RefOption[];
 	}
+	const neighborLabel = $derived(
+		level === 'kiez' ? m.skizze_ref_neighbor_kiez() : m.skizze_ref_neighbor_bezirk()
+	);
+	const neighborGroup = $derived(
+		level === 'kiez' ? m.skizze_ref_neighbor_kiez_group() : m.skizze_ref_neighbor_bezirk_group()
+	);
 	const kinds = $derived(
 		[
-			{ kind: 'berlin', label: 'Berlin', list: [] },
+			{ kind: 'berlin', label: m.skizze_side_berlin(), list: [] },
 			bezirkLabel ? { kind: 'bezirk', label: bezirkLabel, list: [] } : null,
 			neighbors.length > 0 ? { kind: 'nachbar', label: neighborLabel, list: neighbors } : null,
-			similar.length > 0 ? { kind: 'aehnlich', label: 'Ähnlicher Kiez', list: similar } : null,
+			similar.length > 0
+				? { kind: 'aehnlich', label: m.skizze_ref_similar_kiez(), list: similar }
+				: null,
 			{ kind: 'frei', label: freeLabel, list: all }
 		].filter((k): k is KindOption => k !== null)
 	);
@@ -87,9 +96,9 @@
 	<div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2 lg:gap-6">
 		<!-- Desktop: Voreinstellungen sichtbar, Detail-Auswahl erscheint nur, wo sie gebraucht wird -->
 		<fieldset class="hidden min-w-0 flex-1 items-center gap-3 lg:flex">
-			<legend class="sr-only">Vergleichen mit</legend>
+			<legend class="sr-only">{m.skizze_ref_compare_with()}</legend>
 			<span class="shrink-0 text-dense-label text-ink-subtle" aria-hidden="true"
-				>Vergleichen mit</span
+				>{m.skizze_ref_compare_with()}</span
 			>
 			<div class="flex flex-wrap gap-1">
 				{#each kinds as k (k.kind)}
@@ -113,7 +122,7 @@
 			</div>
 			{#if active.list.length > 0}
 				<label class="flex min-w-0 items-center gap-2 text-sm">
-					<span class="sr-only">{active.label} wählen</span>
+					<span class="sr-only">{m.skizze_ref_choose({ label: active.label })}</span>
 					<select
 						class="min-h-8 max-w-64 rounded border border-rule-strong bg-bg-elevated px-2 text-sm"
 						value={choice.slug ?? ''}
@@ -132,7 +141,7 @@
 				</label>
 				{#if active.kind === 'aehnlich'}
 					<span class="hidden truncate text-dense-label text-ink-subtle xl:inline"
-						>ähnliche Werte in allen fünf Bereichen</span
+						>{m.skizze_ref_similar_hint()}</span
 					>
 				{/if}
 			{:else if active.kind === 'berlin'}
@@ -142,7 +151,7 @@
 
 		<!-- Mobil: eine native Auswahl, der Picker des Telefons trägt die lange Liste -->
 		<label class="flex min-w-0 flex-1 items-center gap-2 lg:hidden">
-			<span class="shrink-0 text-dense-label text-ink-subtle">Vergleich</span>
+			<span class="shrink-0 text-dense-label text-ink-subtle">{m.skizze_ref_compare_short()}</span>
 			<select
 				class="min-h-9 w-full min-w-0 rounded border border-rule-strong bg-bg-elevated px-2 text-sm"
 				value={compactValue}
@@ -151,12 +160,12 @@
 				<option value="berlin:">Berlin ({berlinNote})</option>
 				{#if bezirkLabel}<option value="bezirk:">{bezirkLabel}</option>{/if}
 				{#if neighbors.length > 0}
-					<optgroup label="{neighborLabel}e">
+					<optgroup label={neighborGroup}>
 						{#each neighbors as o (o.slug)}<option value="nachbar:{o.slug}">{o.name}</option>{/each}
 					</optgroup>
 				{/if}
 				{#if similar.length > 0}
-					<optgroup label="Kieze mit ähnlichen Werten">
+					<optgroup label={m.skizze_ref_similar_group()}>
 						{#each similar as o (o.slug)}<option value="aehnlich:{o.slug}">{o.name}</option>{/each}
 					</optgroup>
 				{/if}
@@ -171,27 +180,27 @@
 		<div
 			class="flex shrink-0 rounded-full border border-rule-strong p-0.5"
 			role="group"
-			aria-label="Darstellung"
+			aria-label={m.skizze_ref_view()}
 		>
 			<button
 				type="button"
 				class="min-h-7 rounded-full px-3 text-sm aria-pressed:bg-ink aria-pressed:text-bg"
 				aria-pressed={mode === 'erzaehlen'}
-				onclick={() => onmode('erzaehlen')}>Grafiken</button
+				onclick={() => onmode('erzaehlen')}>{m.skizze_ref_charts()}</button
 			>
 			<button
 				type="button"
 				class="min-h-7 rounded-full px-3 text-sm aria-pressed:bg-ink aria-pressed:text-bg"
 				aria-pressed={mode === 'zahlen'}
 				onclick={() => onmode('zahlen')}
-				><span class="lg:hidden">Tabellen</span><span class="hidden lg:inline"
-					>Tabellen und Quellen</span
+				><span class="lg:hidden">{m.skizze_ref_tables_short()}</span><span class="hidden lg:inline"
+					>{m.skizze_ref_tables_long()}</span
 				></button
 			>
 		</div>
 	</div>
 	{#if chapters.length > 0}
-		<nav aria-label="Themen auf dieser Seite" class="border-t border-rule">
+		<nav aria-label={m.skizze_ref_nav()} class="border-t border-rule">
 			<ul class="mx-auto flex max-w-6xl [scrollbar-width:none] gap-1.5 overflow-x-auto px-4 py-1.5">
 				{#each chapters as c (c.id)}
 					<li class="shrink-0">
@@ -206,8 +215,10 @@
 		</nav>
 	{/if}
 	<p class="sr-only" aria-live="polite">
-		Vergleich mit: {active.label}{choice.slug
-			? `, ${all.find((o) => o.slug === choice.slug)?.name ?? ''}`
-			: ''}
+		{m.skizze_ref_live({
+			label:
+				active.label +
+				(choice.slug ? `, ${all.find((o) => o.slug === choice.slug)?.name ?? ''}` : '')
+		})}
 	</p>
 </div>

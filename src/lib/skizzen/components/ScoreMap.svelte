@@ -4,6 +4,7 @@
 	Tab-Stopps; die Beschreibung steht als Text daneben, die Werte in den Tabellen der Seite.
 -->
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
 	import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
 	import {
 		NO_SCORE_FILL,
@@ -38,13 +39,13 @@
 		if (plain) return id === ownSlug ? 'var(--ink)' : 'var(--bg-muted)';
 		return scoreClassFill(scores.get(id)?.composite ?? null);
 	}
-	const classes = [
-		{ fill: scoreClassFill(10), text: '0 bis 25' },
-		{ fill: scoreClassFill(30), text: '26 bis 50' },
-		{ fill: scoreClassFill(60), text: '51 bis 75' },
-		{ fill: scoreClassFill(90), text: '76 bis 100' },
-		{ fill: NO_SCORE_FILL, text: 'ohne Wert' }
-	];
+	const classes = $derived([
+		{ fill: scoreClassFill(10), text: m.skizze_map_range({ from: 0, to: 25 }) },
+		{ fill: scoreClassFill(30), text: m.skizze_map_range({ from: 26, to: 50 }) },
+		{ fill: scoreClassFill(60), text: m.skizze_map_range({ from: 51, to: 75 }) },
+		{ fill: scoreClassFill(90), text: m.skizze_map_range({ from: 76, to: 100 }) },
+		{ fill: NO_SCORE_FILL, text: m.skizze_map_no_value() }
+	]);
 </script>
 
 <figure class="m-0 flex flex-col gap-2 {cls}">
@@ -59,9 +60,12 @@
 				stroke-linejoin="round"
 				fill-rule="evenodd"
 				><title
-					>{scores.get(p.id)?.name ?? p.id}{!plain && scores.get(p.id)?.composite != null
-						? `: ${Math.round(scores.get(p.id)?.composite ?? 0)} von 100`
-						: ''}</title
+					>{!plain && scores.get(p.id)?.composite != null
+						? m.skizze_map_title_value({
+								name: scores.get(p.id)?.name ?? p.id,
+								score: Math.round(scores.get(p.id)?.composite ?? 0)
+							})
+						: (scores.get(p.id)?.name ?? p.id)}</title
 				></path
 			>
 		{/each}
@@ -69,7 +73,7 @@
 	{#if legend && !plain}
 		<figcaption>
 			<ul class="m-0 flex list-none flex-wrap gap-x-3 gap-y-1 p-0 text-dense-label text-ink-muted">
-				<li class="text-ink">Kiez-Score:</li>
+				<li class="text-ink">{m.skizze_map_legend_title()}</li>
 				{#each classes as c (c.text)}
 					<li class="inline-flex items-center gap-1.5">
 						<span

@@ -4,6 +4,7 @@
 -->
 <script lang="ts">
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 	import { buildFaqPage } from '$lib/seo/jsonld-faqpage.js';
 	import type { FaqItemWithChapter } from '../faq';
 
@@ -14,7 +15,7 @@
 {#if items.length > 0}
 	<JsonLd data={jsonLd} testid="skizze-faq-jsonld" />
 	<section id="fragen" aria-labelledby="fragen-h" class="scroll-mt-28 border-t border-rule py-12">
-		<h2 id="fragen-h" class="text-xl font-semibold text-ink">Häufige Fragen</h2>
+		<h2 id="fragen-h" class="text-xl font-semibold text-ink">{m.skizze_faq_heading()}</h2>
 		<div class="mt-4 flex max-w-3xl flex-col">
 			{#each items as item, i (i)}
 				<details class="group border-b border-rule py-3">
@@ -30,7 +31,7 @@
 					{#if item.chapter}
 						<p class="mt-1 text-sm">
 							<a class="text-accent underline" href="#{item.chapter.id}"
-								>Mehr dazu: {item.chapter.title}</a
+								>{m.skizze_faq_more({ title: item.chapter.title })}</a
 							>
 						</p>
 					{/if}

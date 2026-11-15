@@ -2,6 +2,9 @@
 	import { Chart, Circle, Spline, Svg, Text } from 'layerchart';
 	import ChartAxis from './ChartAxis.svelte';
 	import { scaleLinear } from 'd3-scale';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { fmtPct } from '../labels';
 	import { partiesOf, seriesFor } from '../wahl-summary';
 	import type { WahlPunkt } from '../wahl-types';
 	import { chartMotion } from './motion.svelte';
@@ -24,12 +27,12 @@
 		)
 	);
 	const motion = $derived(chartMotion(450));
-	const fmt = (v: number) => `${Math.round(v)} %`;
+	const fmt = (v: number) => fmtPct(v, { locale: getLocale() });
 </script>
 
 <div class="mb-3 flex flex-wrap gap-x-5 gap-y-1 text-dense-label text-ink-muted">
 	<span class="inline-flex items-center gap-1.5"
-		><span class="h-0.5 w-5 bg-ink"></span>{ownLabel} (Parteifarbe)</span
+		><span class="h-0.5 w-5 bg-ink"></span>{m.skizze_party_colour({ label: ownLabel })}</span
 	>
 	<span class="inline-flex items-center gap-1.5"
 		><span class="w-5 border-t-2 border-dashed border-ink-subtle"></span>{refLabel}</span

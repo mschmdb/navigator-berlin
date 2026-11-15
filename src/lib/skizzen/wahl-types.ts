@@ -1,11 +1,24 @@
+import { m } from '$lib/paraglide/messages.js';
+import { msgOpts, type LocaleOpts } from './locale';
+
 export type WahlArt = 'btw' | 'agh' | 'bvv';
 export type WahlEbene = 'kiez' | 'bezirk' | 'berlin';
 
-export const WAHL_ARTEN: readonly { id: WahlArt; label: string; stimmtyp: string }[] = [
-	{ id: 'btw', label: 'Bundestag', stimmtyp: 'Zweitstimme' },
-	{ id: 'agh', label: 'Abgeordnetenhaus', stimmtyp: 'Zweitstimme' },
-	{ id: 'bvv', label: 'Bezirksverordnete', stimmtyp: 'Stimme' }
-];
+export interface WahlArtText {
+	readonly id: WahlArt;
+	readonly label: string;
+	readonly stimmtyp: string;
+}
+
+/** Wahlarten mit Namen und Stimmtyp in der gewählten Sprache. */
+export function wahlArtTexts(opts?: LocaleOpts): WahlArtText[] {
+	const o = msgOpts(opts);
+	return [
+		{ id: 'btw', label: m.skizze_wahl_btw({}, o), stimmtyp: m.skizze_wahl_stimme_zweit({}, o) },
+		{ id: 'agh', label: m.skizze_wahl_agh({}, o), stimmtyp: m.skizze_wahl_stimme_zweit({}, o) },
+		{ id: 'bvv', label: m.skizze_wahl_bvv({}, o), stimmtyp: m.skizze_wahl_stimme({}, o) }
+	];
+}
 
 export interface WahlPunkt {
 	readonly jahr: number;

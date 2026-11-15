@@ -4,12 +4,13 @@
 	Der Text trägt die Aussage, die Farbe ergänzt nur (Rot-Grün-Schwäche).
 -->
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
 	import type { Hint } from '../topics';
 	let { hint, short = false }: { hint: Hint | null; short?: boolean } = $props();
 	const label = $derived(hint ? (short ? hint.short : hint.text) : '');
 	const arrow = $derived(hint?.dir === 'higher' ? '↑' : hint?.dir === 'lower' ? '↓' : '≈');
 	const toneWord = $derived(
-		hint?.tone === 'good' ? 'günstig' : hint?.tone === 'bad' ? 'ungünstig' : ''
+		hint?.tone === 'good' ? m.skizze_hint_good() : hint?.tone === 'bad' ? m.skizze_hint_bad() : ''
 	);
 </script>
 

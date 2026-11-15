@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { WAHL_ARTEN, type WahlArt } from '../wahl-types';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
+	import { wahlArtTexts, type WahlArt } from '../wahl-types';
 	let { value = $bindable() }: { value: WahlArt } = $props();
+	const arten = $derived(wahlArtTexts({ locale: getLocale() }));
 </script>
 
 <fieldset class="flex flex-wrap items-center gap-2">
-	<legend class="sr-only">Wahl</legend>
-	{#each WAHL_ARTEN as w (w.id)}
+	<legend class="sr-only">{m.skizze_wahl_legend()}</legend>
+	{#each arten as w (w.id)}
 		<label
 			class="inline-flex min-h-8 cursor-pointer items-center rounded-full border border-rule-strong px-3 text-sm text-ink
 			hover:border-accent has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-bg
