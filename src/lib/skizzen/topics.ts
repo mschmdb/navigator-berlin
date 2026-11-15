@@ -416,3 +416,8 @@ export function characterPoints(
 			return `${spec.label}: ${c.high ? spec.higher : spec.lower} als ${Math.round(c.share * 100)} % der Berliner ${unitPlural}`;
 		});
 }
+
+/** Nur die Zahl mit den Nachkommastellen der Kennzahl, für Tabellenzellen. */
+export function formatMetricValue(id: MetricId, value: number | null): string {
+	return value === null ? '–' : nf(METRIC_SPECS[id].digits).format(value);
+}

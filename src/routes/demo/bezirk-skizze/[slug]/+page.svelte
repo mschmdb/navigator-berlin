@@ -205,6 +205,8 @@
 				{refName}
 				refIsLine={false}
 				refIsBerlin={kind === 'berlin'}
+				refHeadName={ref.label}
+				refHeadSub={kind === 'nachbar' ? 'Nachbarbezirk' : 'Vergleichsbezirk'}
 				highlight={neighborSet}
 				highlightLabel="Nachbarbezirke"
 				mapHref={null}

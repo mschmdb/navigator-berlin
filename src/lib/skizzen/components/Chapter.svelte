@@ -36,6 +36,9 @@
 		highlight: ReadonlySet<string>;
 		highlightLabel: string;
 		mapHref: string | null;
+		/** Kopf der Vergleichsspalte, zweizeilig. */
+		refHeadName?: string;
+		refHeadSub?: string;
 		/** Bezirksseite: die eigenen Kieze für die Spanne. */
 		kieze?: readonly RegionSnapshot[];
 		onpick?: (slug: string) => void;
@@ -53,6 +56,8 @@
 		highlight,
 		highlightLabel,
 		mapHref,
+		refHeadName = '',
+		refHeadSub = '',
 		kieze = [],
 		onpick
 	}: Props = $props();
@@ -68,8 +73,9 @@
 			refIsBerlin ? null : { name: refName, value: ref.metrics[spec.main[0]] }
 		)
 	);
+	// Achse über alle gezeigten Werte, auch die Kieze der Spanne (sonst fallen Punkte heraus).
 	const domainOf = (m: MetricId) => {
-		const xs = values(m);
+		const xs = [...values(m), ...kieze.map((k) => k.metrics[m])];
 		const max = Math.max(...xs.filter((v): v is number => v !== null));
 		const step = max > 1000 ? 1000 : max > 100 ? 10 : max > 20 ? 5 : 1;
 		return niceDomain(xs, step);
@@ -148,8 +154,7 @@
 				{regions}
 				{own}
 				{ref}
-				{refName}
-				{refIsBerlin}
+				refHead={refIsBerlin ? null : { name: refHeadName, sub: refHeadSub }}
 				{unitPlural}
 			/>
 		</div>

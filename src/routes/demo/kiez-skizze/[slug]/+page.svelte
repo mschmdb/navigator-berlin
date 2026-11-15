@@ -222,6 +222,14 @@
 				{refName}
 				refIsLine={kind === 'bezirk'}
 				refIsBerlin={kind === 'berlin'}
+				refHeadName={ref.label}
+				refHeadSub={kind === 'bezirk'
+					? 'gesamt'
+					: kind === 'nachbar'
+						? 'Nachbarkiez'
+						: kind === 'aehnlich'
+							? 'ähnlicher Kiez'
+							: 'Vergleichskiez'}
 				highlight={new Set(neighborSlugs)}
 				highlightLabel="Nachbarkieze"
 				mapHref={mapHref(spec.mapLayers)}
