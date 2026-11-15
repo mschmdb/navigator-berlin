@@ -42,11 +42,12 @@ export function signedPoints(diff: number): string {
 	return n > 0 ? `+${n}` : `−${Math.abs(n)}`;
 }
 
-/** „Gegenüber Berlin höher bei A (+9), niedriger bei B (−7). Etwa gleich: C.“ */
+/** „Reuterstraße liegt gegenüber Berlin höher bei A (+9), niedriger bei B (−7). Etwa gleich: C.“ */
 export function compareSentence<D extends string>(
 	diffs: readonly DimDiff<D>[],
 	labelOf: (dim: D) => string,
-	refLabel: string
+	refLabel: string,
+	subject: string
 ): string {
 	if (diffs.length === 0) return '';
 	const bySize = [...diffs].sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff));
@@ -58,7 +59,8 @@ export function compareSentence<D extends string>(
 	const parts: string[] = [];
 	if (higher.length > 0) parts.push(`höher bei ${joinDe(higher)}`);
 	if (lower.length > 0) parts.push(`niedriger bei ${joinDe(lower)}`);
-	if (parts.length === 0) return `Gegenüber ${refLabel} etwa gleich bei ${joinDe(same)}.`;
-	const head = `Gegenüber ${refLabel} ${parts.join(', ')}.`;
+	if (parts.length === 0)
+		return `${subject} liegt gegenüber ${refLabel} etwa gleich bei ${joinDe(same)}.`;
+	const head = `${subject} liegt gegenüber ${refLabel} ${parts.join(', ')}.`;
 	return same.length > 0 ? `${head} Etwa gleich: ${joinDe(same)}.` : head;
 }

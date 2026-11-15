@@ -1,183 +1,350 @@
-<script lang="ts">
-	import { Chart, Circle, Line, Svg, Text, Tooltip } from 'layerchart';
-	import { scaleLinear } from 'd3-scale';
-	import { dodgeLevels, layoutLabelLanes } from '../dodge';
-	import { chartMotion } from './motion.svelte';
-
+<script lang="ts" module>
 	export interface StripItem {
 		readonly slug: string;
 		readonly name: string;
 		readonly value: number | null;
 	}
+</script>
+
+<script lang="ts">
+	import { Chart, Circle, Line, Svg, Text, Tooltip } from 'layerchart';
+	import { scaleLinear } from 'd3-scale';
+	import { dodgeLevels } from '../dodge';
+	import { median, zeroShare } from '../stats';
+	import { chartMotion } from './motion.svelte';
 
 	interface Props {
 		items: readonly StripItem[];
 		domain: readonly [number, number];
 		format: (v: number) => string;
-		/** Dieser Ort: groß, Akzent, beschriftet. */
-		ownSlug?: string | null;
-		/** Kieze des eigenen Bezirks (Bezirksseite) oder Nachbarn: dunkler als der Rest. */
-		highlight?: ReadonlySet<string>;
-		/** Namen, die als Beschriftung erscheinen, sofern Platz ist. */
-		labelSlugs?: readonly string[];
-		/** Senkrechte Linie für einen Wert ohne eigenen Punkt (Bezirk/Berlin). */
-		markers?: readonly { value: number | null; label: string; strong?: boolean }[];
-		/** Bezugspunkt als Ring, wenn er selbst ein Punkt der Verteilung ist. */
-		refSlug?: string | null;
-		neutral?: boolean;
+		/** Achsenbeschriftung ohne Einheit; die Einheit steht in der Zeilenüberschrift. */
+		axisFormat?: (v: number) => string;
+		/** Dieser Ort: Akzentblau, groß, vorn, mit senkrechter Linie. */
+		ownSlug: string | null;
+		/** Nachbarn: schwarz, ohne Dauer-Label. */
+		highlight: ReadonlySet<string>;
+		highlightLabel: string;
+		/** Vergleichsort als Punkt der Verteilung: schwarze Linie mit Ring. */
+		refSlug: string | null;
+		/** Vergleich ohne eigenen Punkt (etwa Bezirk gesamt): schwarze Linie. */
+		refLine: { readonly value: number | null; readonly label: string } | null;
+		/** Median aller Punkte, immer gestrichelt eingezeichnet. */
+		medianLabel: string;
+		/** Name des Nullstapels, etwa „ohne Milieuschutz“. */
+		zeroName?: string;
+		/** Beschriftung des Medians ohne Nullwerte, etwa „Median der Kieze mit Milieuschutz“. */
+		zeroMedianLabel?: string;
+		/** Was gezählt wird: „Kieze“ oder „Bezirke“. */
+		unitPlural?: string;
+		r?: number;
 		onpick?: (slug: string) => void;
 	}
 	let {
 		items,
 		domain,
 		format,
-		ownSlug = null,
-		highlight = new Set(),
-		labelSlugs = [],
-		markers = [],
-		refSlug = null,
-		neutral = false,
+		axisFormat = (v: number) => new Intl.NumberFormat('de-DE').format(v),
+		ownSlug,
+		highlight,
+		highlightLabel,
+		refSlug,
+		refLine,
+		medianLabel,
+		zeroName = 'mit Wert 0',
+		zeroMedianLabel = 'Median ohne die Nullwerte',
+		unitPlural = 'Kieze',
+		r: R = 2.9,
 		onpick
 	}: Props = $props();
 
-	const R = 2.9;
-	const TOP = 18;
-	const SWARM = 84;
-	const LANE = 13;
-	const height = TOP + SWARM + LANE * 2 + 16;
-	const mid = TOP + SWARM / 2;
-	const maxLevel = Math.floor((SWARM / 2 - R) / (2 * R * 0.86));
+	const OWN_R = $derived(R + 3);
+	const STEP = $derived(2 * R * 0.86);
+	const AXIS = 22;
+	const MAX_SWARM = 240;
+	const BLOCK_GAP = 6;
+	const pad = $derived(OWN_R + 2);
+	let width = $state(0);
+
+	// Großer Nullstapel (Milieuschutz): eigener Block statt eines gestauchten Turms im Schwarm.
+	const zeros = $derived(zeroShare(items.map((i) => i.value)));
+	const splitZeros = $derived(zeros.zeros >= 10 && zeros.share >= 0.2);
+	const swarmItems = $derived(splitZeros ? items.filter((i) => i.value !== 0) : items);
+	const blockRows = $derived(
+		splitZeros ? Math.max(4, Math.min(14, Math.ceil(Math.sqrt(zeros.zeros * 1.4)))) : 0
+	);
+	const blockCols = $derived(splitZeros ? Math.ceil(zeros.zeros / blockRows) : 0);
+	const blockW = $derived(splitZeros ? blockCols * BLOCK_GAP + 16 : 0);
+
+	const byValue = $derived(
+		[...swarmItems].sort((a, b) => (a.value ?? -Infinity) - (b.value ?? -Infinity))
+	);
+	const x = $derived(
+		scaleLinear()
+			.domain([domain[0], domain[1]])
+			.range([0, Math.max(10, width - blockW - 2 * pad)])
+	);
+	const xs = $derived(byValue.map((i) => (i.value === null ? null : (x(i.value) as number))));
+	// Ohne Deckel: Der Schwarm wird so hoch, wie er braucht, damit kein Punkt verschwindet.
+	const free = $derived(dodgeLevels(xs, R, Infinity));
+	const needed = $derived(Math.max(0, ...free.map((l) => Math.abs(l ?? 0))));
+	const capLevel = $derived(Math.floor((MAX_SWARM / 2 - OWN_R) / STEP));
+	const overflow = $derived(needed > capLevel);
+	const levels = $derived(overflow ? dodgeLevels(xs, R, capLevel) : free);
+	const SWARM = $derived(
+		Math.max(36, blockRows * BLOCK_GAP + 4, 2 * Math.min(needed, capLevel) * STEP + 2 * OWN_R + 6)
+	);
+	const mid = $derived(SWARM / 2);
+	const yOf = (idx: number) => mid - (levels[idx] ?? 0) * STEP;
 
 	const motion = $derived(chartMotion(450));
-	const byValue = $derived(
-		[...items].sort((a, b) => (a.value ?? -Infinity) - (b.value ?? -Infinity))
-	);
 	const own = $derived(items.find((i) => i.slug === ownSlug) ?? null);
+	const ownIdx = $derived(byValue.findIndex((i) => i.slug === ownSlug));
 	const ref = $derived(items.find((i) => i.slug === refSlug) ?? null);
+	const refIdx = $derived(byValue.findIndex((i) => i.slug === refSlug));
+	const med = $derived(median(swarmItems.map((i) => i.value)));
+	const fmt = (v: number | null) => (v === null ? 'keine Angabe' : format(v));
+
+	const blockDots = $derived(splitZeros ? items.filter((i) => i.value === 0) : []);
+	const blockPos = (bi: number) => ({
+		cx: -blockW + (Math.floor(bi / blockRows) + 0.5) * BLOCK_GAP,
+		cy: mid - (blockRows * BLOCK_GAP) / 2 + ((bi % blockRows) + 0.5) * BLOCK_GAP
+	});
+	/** Position eines Orts: im Schwarm oder im Nullblock. */
+	function posOf(item: StripItem, idx: number): { cx: number; cy: number } | null {
+		if (item.value === null) return null;
+		if (splitZeros && item.value === 0) return blockPos(blockDots.indexOf(item));
+		return idx >= 0 ? { cx: xs[idx] ?? 0, cy: yOf(idx) } : null;
+	}
+
+	// 3 bis 5 Ticks, je nach Breite: auf 390 px nie mehr Beschriftung, als Platz hat.
+	const ticks = $derived(
+		(
+			scaleLinear()
+				.domain([domain[0], domain[1]])
+				.ticks(Math.max(2, Math.min(4, Math.floor((width - blockW) / 90)))) as number[]
+		).filter((t) => t >= domain[0] && t <= domain[1])
+	);
 
 	function dotClass(slug: string): string {
-		if (slug === ownSlug)
-			return neutral ? 'fill-[var(--severity-neutral)]' : 'fill-[var(--accent)]';
 		if (highlight.has(slug)) return 'fill-[var(--ink)]';
 		return 'fill-[var(--rule-strong)] opacity-35';
 	}
 </script>
 
-<div style:height="{height}px">
-	<Chart
-		data={byValue}
-		x="value"
-		xScale={scaleLinear()}
-		xDomain={[domain[0], domain[1]]}
-		padding={{ top: 0, right: 10, bottom: 0, left: 10 }}
-	>
-		{#snippet children({ context })}
-			{@const xs = byValue.map((i) => (i.value === null ? null : context.xScale(i.value)))}
-			{@const levels = dodgeLevels(xs, R, maxLevel)}
-			{@const labelled = byValue
-				.map((item, idx) => ({ item, x: xs[idx] }))
-				.filter((e) => e.x !== null && labelSlugs.includes(e.item.slug) && e.item.slug !== ownSlug)}
-			{@const lanes = layoutLabelLanes(
-				labelled.map((e) => ({ x: (e.x ?? 0) - 3, width: e.item.name.length * 6.1 })),
-				2,
-				6
-			)}
-			<Svg>
-				<line x1={0} x2={context.width} y1={mid} y2={mid} class="stroke-[var(--rule)]" />
-				{#each markers as mk (mk.label)}
-					{#if mk.value !== null}
+<!-- Legendenzeile mit Werten: keine freien Labels im Plot, die im Schwarm untergehen -->
+<ul class="mt-1.5 mb-1 flex flex-wrap gap-x-4 gap-y-1 text-dense-label text-ink-muted tabular-nums">
+	{#if own}
+		<li class="inline-flex items-center gap-1.5 font-semibold text-accent">
+			<svg width="10" height="14" aria-hidden="true"
+				><line
+					x1="5"
+					x2="5"
+					y1="0"
+					y2="14"
+					class="stroke-[var(--accent)]"
+					stroke-width="2"
+				/><circle cx="5" cy="7" r="4.5" class="fill-[var(--accent)]" /></svg
+			>{own.name}
+			{fmt(own.value)}
+		</li>
+	{/if}
+	{#if ref}
+		<li class="inline-flex items-center gap-1.5 text-ink">
+			<span class="size-2.5 rounded-full border-2 border-ink"></span>{ref.name}
+			{fmt(ref.value)}
+		</li>
+	{:else if refLine}
+		<li class="inline-flex items-center gap-1.5 text-ink">
+			<svg width="4" height="12" aria-hidden="true"
+				><line x1="2" x2="2" y1="0" y2="12" class="stroke-[var(--ink)]" stroke-width="2" /></svg
+			>{refLine.label}
+			{fmt(refLine.value)}
+		</li>
+	{/if}
+	<li class="inline-flex items-center gap-1.5">
+		<svg width="4" height="12" aria-hidden="true"
+			><line
+				x1="2"
+				x2="2"
+				y1="0"
+				y2="12"
+				class="stroke-[var(--ink-subtle)]"
+				stroke-width="2"
+				stroke-dasharray="3 2"
+			/></svg
+		>{splitZeros ? zeroMedianLabel : medianLabel}
+		{fmt(med)}
+	</li>
+	{#if highlight.size > 0}
+		<li class="inline-flex items-center gap-1.5">
+			<span class="size-2 rounded-full bg-ink"></span>{highlightLabel}
+		</li>
+	{/if}
+	{#if splitZeros}
+		<li class="inline-flex items-center gap-1.5 text-ink">
+			<svg width="11" height="11" aria-hidden="true"
+				>{#each [0, 1] as cx (cx)}{#each [0, 1] as cy (cy)}<circle
+							cx={3 + cx * 5}
+							cy={3 + cy * 5}
+							r="2"
+							class="fill-[var(--rule-strong)]"
+						/>{/each}{/each}</svg
+			>{`${zeros.zeros} ${unitPlural} ${zeroName} (Block links)`}
+		</li>
+	{/if}
+</ul>
+
+<div bind:clientWidth={width} style:height="{SWARM + AXIS}px">
+	{#if width > 0}
+		<Chart
+			data={byValue}
+			x="value"
+			xScale={scaleLinear()}
+			xDomain={[domain[0], domain[1]]}
+			padding={{ top: 0, right: pad, bottom: 0, left: pad + blockW }}
+		>
+			{#snippet children({ context })}
+				<Svg>
+					{#if splitZeros}
+						<!-- Nullstapel als Punktraster: jeder Ort ein Punkt, nichts gestaucht -->
+						{#each blockDots as item, bi (item.slug)}
+							{@const p = blockPos(bi)}
+							{#if item.slug !== ownSlug && item.slug !== refSlug}
+								<Circle
+									cx={p.cx}
+									cy={p.cy}
+									r={2.3}
+									class="rv {dotClass(item.slug)}"
+									onpointermove={(e: PointerEvent) => context.tooltip.show(e, item)}
+									onpointerleave={() => context.tooltip.hide()}
+								/>
+							{/if}
+						{/each}
+					{/if}
+					<line x1={0} x2={context.width} y1={mid} y2={mid} class="stroke-[var(--rule)]" />
+					{#if med !== null}
 						<Line
-							x1={context.xScale(mk.value)}
-							x2={context.xScale(mk.value)}
-							y1={TOP - 2}
-							y2={TOP + SWARM + 2}
+							x1={x(med)}
+							x2={x(med)}
+							y1={2}
+							y2={SWARM - 2}
 							{motion}
-							class={mk.strong ? 'stroke-[var(--accent)]' : 'stroke-[var(--ink)]'}
-							strokeWidth={mk.strong ? 2.5 : 1.5}
-							dashArray={mk.strong ? undefined : '3 3'}
+							class="stroke-[var(--ink-subtle)]"
+							strokeWidth={1.5}
+							dashArray="3 3"
 						/>
 					{/if}
-				{/each}
-				{#each byValue as item, idx (item.slug)}
-					{#if xs[idx] !== null && item.slug !== ownSlug}
-						<Circle
-							cx={xs[idx] ?? 0}
-							cy={mid - (levels[idx] ?? 0) * 2 * R * 0.86}
-							r={R}
+					{#each byValue as item, idx (item.slug)}
+						{#if xs[idx] !== null && item.slug !== ownSlug && item.slug !== refSlug}
+							<Circle
+								cx={xs[idx] ?? 0}
+								cy={yOf(idx)}
+								r={R}
+								{motion}
+								style="--i:{idx}"
+								class="rv {dotClass(item.slug)} {onpick ? 'cursor-pointer' : ''}"
+								onpointermove={(e: PointerEvent) => context.tooltip.show(e, item)}
+								onpointerleave={() => context.tooltip.hide()}
+								onclick={() => onpick?.(item.slug)}
+							/>
+						{/if}
+					{/each}
+					{#if ref}
+						{@const p = posOf(ref, refIdx)}
+						{#if p}
+							<Line
+								x1={p.cx}
+								x2={p.cx}
+								y1={2}
+								y2={SWARM - 2}
+								{motion}
+								class="stroke-[var(--ink)]"
+								strokeWidth={1.5}
+							/>
+							<Circle
+								cx={p.cx}
+								cy={p.cy}
+								r={R + 2.5}
+								{motion}
+								class="fill-[var(--bg)] stroke-[var(--ink)]"
+								strokeWidth={2}
+								onpointermove={(e: PointerEvent) => context.tooltip.show(e, ref)}
+								onpointerleave={() => context.tooltip.hide()}
+							/>
+						{/if}
+					{:else if refLine && refLine.value !== null}
+						<Line
+							x1={x(refLine.value)}
+							x2={x(refLine.value)}
+							y1={2}
+							y2={SWARM - 2}
 							{motion}
-							style="--i:{idx}"
-							class="rv {dotClass(item.slug)} {onpick ? 'cursor-pointer' : ''}"
-							onpointermove={(e: PointerEvent) => context.tooltip.show(e, item)}
-							onpointerleave={() => context.tooltip.hide()}
-							onclick={() => onpick?.(item.slug)}
+							class="stroke-[var(--ink)]"
+							strokeWidth={1.5}
 						/>
 					{/if}
-				{/each}
-				{#if ref}
-					{@const ri = byValue.indexOf(ref)}
-					{#if xs[ri] !== null}
-						<Circle
-							cx={xs[ri] ?? 0}
-							cy={mid - (levels[ri] ?? 0) * 2 * R * 0.86}
-							r={R + 3}
-							{motion}
-							class="rv fill-none stroke-[var(--ink)]"
-							strokeWidth={2}
-						/>
+					{#if own}
+						{@const p = posOf(own, ownIdx)}
+						{#if p}
+							<!-- Linie über die ganze Höhe: die Position bleibt auch im dichten Cluster lesbar -->
+							<Line
+								x1={p.cx}
+								x2={p.cx}
+								y1={0}
+								y2={SWARM}
+								class="stroke-[var(--accent)]"
+								strokeWidth={2}
+							/>
+							<Circle
+								cx={p.cx}
+								cy={p.cy}
+								r={OWN_R}
+								class="fill-[var(--accent)] stroke-[var(--bg)]"
+								strokeWidth={2}
+								onpointermove={(e: PointerEvent) => context.tooltip.show(e, own)}
+								onpointerleave={() => context.tooltip.hide()}
+							/>
+						{/if}
 					{/if}
-				{/if}
-				{#if own && own.value !== null}
-					{@const oi = byValue.indexOf(own)}
-					{@const ox = xs[oi] ?? 0}
-					{@const oy = mid - (levels[oi] ?? 0) * 2 * R * 0.86}
-					<Circle
-						cx={ox}
-						cy={oy}
-						r={R + 2.6}
-						class="rv {dotClass(own.slug)} stroke-[var(--bg)]"
-						strokeWidth={1.5}
+					<line
+						x1={0}
+						x2={context.width}
+						y1={SWARM + 2}
+						y2={SWARM + 2}
+						class="stroke-[var(--rule-strong)]"
 					/>
-					<Text
-						x={Math.min(Math.max(ox, 40), context.width - 40)}
-						y={TOP - 6}
-						value={`${own.name} ${format(own.value)}`}
-						textAnchor="middle"
-						class="fill-[var(--accent-strong)] text-[12px] font-semibold"
-					/>
-				{/if}
-				{#each labelled as e, li (e.item.slug)}
-					{#if lanes[li] !== null}
+					{#each ticks as t (t)}
+						<line
+							x1={x(t)}
+							x2={x(t)}
+							y1={SWARM + 2}
+							y2={SWARM + 6}
+							class="stroke-[var(--rule-strong)]"
+						/>
 						<Text
-							x={(e.x ?? 0) - 3}
-							y={TOP + SWARM + 10 + (lanes[li] ?? 0) * LANE}
-							value={e.item.name}
-							class="rv fill-[var(--ink-muted)] text-[11px]"
+							x={x(t)}
+							y={SWARM + 17}
+							value={axisFormat(t)}
+							textAnchor={x(t) < 24 ? 'start' : x(t) > context.width - 24 ? 'end' : 'middle'}
+							class="fill-[var(--chart-axis-text)] text-[11px] tabular-nums"
 						/>
-					{/if}
-				{/each}
-				<Text
-					x={0}
-					y={height - 2}
-					value={format(domain[0])}
-					class="fill-[var(--chart-axis-text)] text-[11px]"
-				/>
-				<Text
-					x={context.width}
-					y={height - 2}
-					value={format(domain[1])}
-					textAnchor="end"
-					class="fill-[var(--chart-axis-text)] text-[11px]"
-				/>
-			</Svg>
-			<Tooltip.Root>
-				{#snippet children({ data })}
-					{@const d = data as (typeof byValue)[number]}
-					<Tooltip.Header value={d.name} />
-					<Tooltip.List>
-						<Tooltip.Item label="Wert" value={d.value === null ? '–' : format(d.value)} />
-					</Tooltip.List>
-				{/snippet}
-			</Tooltip.Root>
-		{/snippet}
-	</Chart>
+					{/each}
+				</Svg>
+				<Tooltip.Root>
+					{#snippet children({ data })}
+						{@const d = data as StripItem}
+						<Tooltip.Header value={d.name} />
+						<Tooltip.List>
+							<Tooltip.Item label="Wert" value={fmt(d.value)} />
+						</Tooltip.List>
+					{/snippet}
+				</Tooltip.Root>
+			{/snippet}
+		</Chart>
+	{/if}
 </div>
+{#if overflow}
+	<p class="text-dense-label text-ink-subtle">
+		Einige Punkte überlagern sich. Die Tabelle nennt alle Werte.
+	</p>
+{/if}

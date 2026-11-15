@@ -13,16 +13,22 @@ export function dodgeLevels(
 		.map((x, i) => ({ x, i }))
 		.filter((p): p is { x: number; i: number } => p.x !== null && Number.isFinite(p.x))
 		.sort((a, b) => a.x - b.x || a.i - b.i);
-	const candidates: number[] = [0];
-	for (let l = 1; l <= maxLevel; l++) candidates.push(l, -l);
+	const fits = (level: number, x: number) =>
+		(placed.get(level) ?? []).every((px) => Math.abs(px - x) >= 2 * r);
+	const firstFree = (x: number): number | undefined => {
+		if (fits(0, x)) return 0;
+		for (let l = 1; l <= maxLevel && l <= xs.length; l++) {
+			if (fits(l, x)) return l;
+			if (fits(-l, x)) return -l;
+		}
+		return undefined;
+	};
 
 	const placed = new Map<number, number[]>();
 	const out: (number | null)[] = xs.map(() => null);
 	let overflow = 0;
 	for (const { x, i } of order) {
-		const free = candidates.find((level) =>
-			(placed.get(level) ?? []).every((px) => Math.abs(px - x) >= 2 * r)
-		);
+		const free = firstFree(x);
 		const level = free ?? (overflow++ % 2 === 0 ? maxLevel : -maxLevel);
 		placed.set(level, [...(placed.get(level) ?? []), x]);
 		out[i] = level;
@@ -45,4 +51,18 @@ export function layoutLabelLanes(
 		used[lane].push({ from, to });
 		return lane;
 	});
+}
+
+/**
+ * Beschriftung über einem Punkt: mittig, am Rand nach innen. Die Kante bleibt 6 px neben
+ * dem Punkt, damit Label und Punkt sichtbar zusammengehören.
+ */
+export function pinLabel(
+	x: number,
+	width: number,
+	labelWidth: number
+): { x: number; anchor: 'start' | 'middle' | 'end' } {
+	if (x - labelWidth / 2 < 0) return { x: Math.max(0, x - 6), anchor: 'start' };
+	if (x + labelWidth / 2 > width) return { x: Math.min(width, x + 6), anchor: 'end' };
+	return { x, anchor: 'middle' };
 }

@@ -42,7 +42,7 @@
 			data.regions,
 			'median',
 			data.berlinFigures,
-			`Median aller ${data.regions.length} Kieze`
+			`mittlerer Kiez, Median aller ${data.regions.length} Kieze`
 		)
 	);
 	const bezirk = $derived(
@@ -53,7 +53,7 @@
 					data.regions.filter((r) => r.parentSlug === data.bezirkSlug),
 					'mean',
 					data.bezirkRegion.figures,
-					'Mittel seiner Kieze'
+					`Mittel der Kieze in ${bezirkName}`
 				)
 			: null
 	);
@@ -66,7 +66,23 @@
 		all: new Set(data.regions.map((r) => r.slug))
 	}));
 	const ref = $derived(resolveReference(skizze.choice, { berlin, bezirk, regions: byslug }));
-	const refName = $derived(skizze.choice.kind === 'berlin' ? 'Berlin' : ref.label);
+	const refName = $derived(
+		skizze.choice.kind === 'berlin'
+			? 'Berlin-Median'
+			: skizze.choice.kind === 'bezirk'
+				? `Mittel ${ref.label}`
+				: ref.label
+	);
+	// Im Satz: „gegenüber dem Berliner Median“, „gegenüber dem Mittel der Kieze in Neukölln“.
+	const refPhrase = $derived(
+		skizze.choice.kind === 'berlin'
+			? 'dem Berliner Median'
+			: skizze.choice.kind === 'bezirk'
+				? `dem Mittel der Kieze in ${ref.label}`
+				: ref.label
+	);
+	// Wahlen vergleichen echte Ergebnisse, keinen Median.
+	const wahlRefName = $derived(skizze.choice.kind === 'berlin' ? 'ganz Berlin' : ref.label);
 
 	// Rang aus denselben Werten wie die Verteilung (Gleichstand teilt den Platz, zählt aber mit).
 	const heroRank = $derived(
@@ -79,18 +95,15 @@
 	// --- Profil ---
 	const profileDims: readonly Dim[] = ['composite', ...RATED_DIMS, 'kriminalitaet'];
 	const ratedDiffs = $derived(self ? dimDiffs(RATED_DIMS, self.dims, ref.dims) : []);
-	const lead = $derived(compareSentence(ratedDiffs, dimLabel, refName));
+	const lead = $derived(compareSentence(ratedDiffs, dimLabel, refPhrase, data.profile.name));
 
 	// --- Verteilung ---
-	let labelNeighbors = $state(true);
 	const neighborSlugs = $derived(data.neighbors.map((n) => n.slug));
 	const refRegionSlug = $derived(ref.slug);
 	const all = $derived(data.regions);
 	const zeroWohnschutz = $derived(all.filter((r) => r.dims.wohnschutz === 0).length);
 
-	function refMarker(value: number | null) {
-		return ref.slug ? [] : [{ value, label: ref.note ? `${refName}, ${ref.note}` : refName }];
-	}
+	const wahlRefLabel = $derived(ref.slug ? refName : `${wahlRefName}, Gesamtergebnis`);
 
 	const scoreRows: StripRow[] = $derived(
 		(['composite', ...RATED_DIMS, 'kriminalitaet'] as const).map((dim) => {
@@ -108,12 +121,17 @@
 				items: all.map((r) => ({ slug: r.slug, name: r.name, value: r.dims[dim] })),
 				domain: [0, 100] as const,
 				format: (v: number) => formatScore(v),
-				markers: refMarker(ref.dims[dim]),
-				neutral: dim === 'kriminalitaet',
-				note:
-					dim === 'wohnschutz' && zeroWohnschutz > all.length / 2
-						? `${zeroWohnschutz} von ${all.length} Kiezen liegen ganz außerhalb des Milieuschutzes und haben den Wert 0. Darum liegt auch der Berlin-Median bei 0.`
-						: undefined
+				refLine:
+					skizze.choice.kind === 'bezirk'
+						? { value: ref.dims[dim], label: `Mittel der Kieze in ${ref.label}` }
+						: null,
+				...(dim === 'wohnschutz'
+					? {
+							zeroName: 'ohne Milieuschutz',
+							zeroMedianLabel: 'Median der Kieze mit Milieuschutz',
+							note: `${Math.round((zeroWohnschutz / all.length) * 100)} % der Kieze haben keinen Milieuschutz und den Wert 0.`
+						}
+					: {})
 			};
 		})
 	);
@@ -143,7 +161,7 @@
 			const spec = FIGURE_SPECS[f];
 			return {
 				key: f,
-				label: spec.label,
+				label: `${spec.label} in ${spec.unit}`,
 				meta:
 					below === null
 						? 'keine Angabe'
@@ -153,16 +171,14 @@
 				items: all.map((r) => ({ slug: r.slug, name: r.name, value: r.figures[f] })),
 				domain: niceDomain(values, f === 'bestandsmiete' || f === 'hitze' ? 1 : 10),
 				format: (v: number) => formatFigure(f, v),
-				markers: ref.slug
-					? []
-					: [
-							{
-								value: ref.figures[f],
-								label: skizze.choice.kind === 'berlin' ? 'Berlin gesamt' : `${refName} gesamt`
-							}
-						],
-				neutral: true,
-				note: spec.what
+				refLine:
+					skizze.choice.kind === 'bezirk'
+						? { value: ref.figures[f], label: `${ref.label} gesamt` }
+						: null,
+				note: spec.what,
+				...(f === 'milieuschutz'
+					? { zeroName: 'ohne Milieuschutz', zeroMedianLabel: 'Median der Kieze mit Milieuschutz' }
+					: {})
 			};
 		})
 	);
@@ -257,6 +273,13 @@
 		</div>
 		<div class="flex flex-col gap-4 text-lg leading-body text-ink">
 			<p aria-live="polite" class="text-xl leading-snug">{lead}</p>
+			<p class="text-base text-ink-muted">
+				Der Kiez-Score von navigator.berlin fasst fünf Bereiche zusammen: Ruhe und Luft, Grün und
+				Hitze, Mobilität, Versorgung und Wohnschutz. Er reicht von 0 bis 100, höher ist besser.
+				<a class="text-accent underline" href={resolve('/methodik/kiez-score')}
+					>So entsteht der Kiez-Score</a
+				>.
+			</p>
 			{#each data.prose.slice(0, 2) as p, i (i)}
 				<p class="text-base text-ink-muted">{p}</p>
 			{/each}
@@ -264,16 +287,19 @@
 	</header>
 
 	{#if self}
-		<Section id="profil" eyebrow="1 Profil" title="Wofür der Kiez steht" mode={skizze.mode}>
+		<Section id="profil" title="Die fünf Bereiche im Vergleich" mode={skizze.mode}>
 			{#snippet text()}
 				<p>
-					Jede Zeile ist eine Dimension des Kiez-Scores, 0 bis 100 Punkte. Der gefüllte Punkt ist {data
-						.profile.name}, der Ring ist {refName}{ref.note ? ` (${ref.note})` : ''}.
+					Jede Zeile ist ein Bereich des Kiez-Scores, 0 bis 100 Punkte, höher ist besser. Der
+					gefüllte Punkt ist {data.profile.name}, der Ring ist {refName}{ref.note
+						? ` (${ref.note})`
+						: ''}.
 				</p>
 				<p>Rechts steht der Abstand in Punkten. Unter 5 Punkten gilt er als etwa gleich.</p>
 				<p class="text-sm">
-					Erfasste Kriminalität steht abgesetzt: Sie zählt registrierte Fälle und sagt nichts
-					darüber, wie sicher sich ein Ort anfühlt.
+					Kultur und erfasste Kriminalität zählen nicht zum Kiez-Score. Kriminalität steht
+					abgesetzt: Sie zählt angezeigte Fälle und sagt nichts darüber, wie sicher sich ein Ort
+					anfühlt.
 				</p>
 			{/snippet}
 			{#snippet chart()}
@@ -288,8 +314,8 @@
 			{#snippet table(visible)}
 				<DataTable
 					{visible}
-					caption="Kiez-Score-Dimensionen: {data.profile.name} und {refName}"
-					head={['Dimension', data.profile.name, refName, 'Abstand']}
+					caption="Kiez-Score nach Bereichen: {data.profile.name} und {refName}"
+					head={['Bereich', data.profile.name, refName, 'Abstand']}
 					rows={profileDims.map((d) => [
 						dimLabel(d),
 						formatScore(self.dims[d]),
@@ -302,7 +328,7 @@
 			{/snippet}
 			{#snippet sources()}
 				<p>
-					Kiez-Score von navigator.berlin, Stand der Daten je Layer. <a
+					Kiez-Score von navigator.berlin, jeder Bereich mit eigenem Datenstand. <a
 						class="text-accent underline"
 						href={resolve('/methodik/kiez-score')}>So entsteht der Score</a
 					>.
@@ -312,14 +338,13 @@
 
 		<Section
 			id="verteilung"
-			eyebrow="2 Einordnung"
-			title="Wo der Kiez in Berlin steht"
+			title="Wo {data.profile.name} unter den {all.length} Kiezen steht"
 			mode={skizze.mode}
 		>
 			{#snippet text()}
 				<p>
-					Jeder Punkt ist einer der {all.length} Kieze. So sieht man, ob ein Rang knapp ist oder ob ein
-					Kiez weit vom Feld entfernt liegt.
+					Jeder Punkt ist einer der {all.length} Kieze Berlins. So sieht man, ob ein Platz knapp ist oder
+					ob ein Kiez weit vom Feld entfernt liegt.
 				</p>
 				{#if bestWorst}
 					<p>
@@ -328,27 +353,19 @@
 							.worst.rk.rang}).
 					</p>
 				{/if}
-				<p class="text-sm">Ein Klick auf einen Punkt macht diesen Kiez zum Bezugspunkt.</p>
+				<p class="text-sm">
+					Fahr mit der Maus über einen Punkt, um den Namen zu sehen. Ein Klick vergleicht mit diesem
+					Kiez.
+				</p>
 			{/snippet}
-			{#snippet controls()}
-				<label
-					class="inline-flex min-h-6 items-center gap-2 text-sm text-ink"
-					class:hidden={skizze.mode === 'zahlen'}
-				>
-					<input
-						type="checkbox"
-						bind:checked={labelNeighbors}
-						class="size-4 accent-[var(--accent)]"
-					/>
-					Nachbarkieze beschriften
-				</label>
-			{/snippet}
+
 			{#snippet chart()}
 				<StripGroup
 					rows={scoreRows}
 					ownSlug={data.profile.slug}
 					highlight={new Set(neighborSlugs)}
-					labelSlugs={labelNeighbors ? neighborSlugs : refRegionSlug ? [refRegionSlug] : []}
+					highlightLabel="Nachbarkieze"
+					medianLabel="Berlin-Median"
 					refSlug={refRegionSlug}
 					onpick={pick}
 				/>
@@ -357,7 +374,7 @@
 				<DataTable
 					{visible}
 					caption="Rang von {data.profile.name} unter {all.length} Kiezen"
-					head={['Dimension', 'Wert', 'Rang', refName]}
+					head={['Bereich', 'Wert', 'Platz', refName]}
 					rows={scoreRows.map((r) => [
 						r.label,
 						formatScore(self.dims[r.key as Dim]),
@@ -367,20 +384,23 @@
 				/>
 			{/snippet}
 			{#snippet sources()}
-				<p>Rang absteigend, gleiche Werte teilen sich den Platz.</p>
+				<p>
+					Platz 1 hat den höchsten Wert. Gleiche Werte teilen sich einen Platz, die folgenden zählen
+					weiter.
+				</p>
 			{/snippet}
 		</Section>
 
 		<Section
 			id="rohwerte"
-			eyebrow="3 Rohwerte"
-			title="Die Zahlen hinter dem Score"
+			title="Miete, Altbau, Grün, Hitze und Milieuschutz im Vergleich"
 			mode={skizze.mode}
 		>
 			{#snippet text()}
 				<p>
-					Der Score fasst zusammen. Hier stehen die gemessenen Werte in ihren echten Einheiten,
-					wieder für alle Kieze.
+					Gemessene Werte aus amtlichen Daten, in ihren echten Einheiten und wieder für alle Kieze.
+					Grünanlagen und Hitze fließen in den Bereich Grün und Hitze ein, Milieuschutz in den
+					Wohnschutz. Miete und Altbau zählen nicht zum Kiez-Score.
 				</p>
 				<p>
 					Diese Werte haben keine Richtung: Eine höhere Miete ist weder gut noch schlecht, sie ist
@@ -392,7 +412,8 @@
 					rows={figureRows}
 					ownSlug={data.profile.slug}
 					highlight={new Set(neighborSlugs)}
-					labelSlugs={refRegionSlug ? [refRegionSlug] : []}
+					highlightLabel="Nachbarkieze"
+					medianLabel="Berlin-Median"
 					refSlug={refRegionSlug}
 					onpick={pick}
 				/>
@@ -400,7 +421,7 @@
 			{#snippet table(visible)}
 				<DataTable
 					{visible}
-					caption="Rohwerte: {data.profile.name} und {refName}"
+					caption="Miete, Altbau, Grün, Hitze und Milieuschutz: {data.profile.name} und {refName}"
 					head={['Kennzahl', data.profile.name, refName, 'Einordnung']}
 					rows={figureRows.map((r) => [
 						r.label,
@@ -424,18 +445,19 @@
 		</Section>
 	{/if}
 
-	<Section id="wahlen" eyebrow="4 Wahlen" title="Wie der Kiez wählt" mode={skizze.mode}>
+	<Section id="wahlen" title="Wie {data.profile.name} wählt" mode={skizze.mode}>
 		{#snippet text()}
 			{#if leader}
 				<p>
 					Bei der letzten Wahl {leader.jahr} lag {leader.partei} vorn, mit {fmtPct(leader.anteil)}.
-					{#if leader.refAnteil !== null}In {refName} kam {leader.partei} auf {fmtPct(
+					{#if leader.refAnteil !== null}In {wahlRefName} kam {leader.partei} auf {fmtPct(
 							leader.refAnteil
 						)}.{/if}
 				</p>
 			{/if}
 			<p>
-				Jede Kachel ist eine Partei, alle mit derselben Skala. Die gestrichelte Linie zeigt {refName}.
+				Jede Kachel ist eine Partei, alle mit derselben Skala. Die gestrichelte Linie zeigt
+				{wahlRefLabel}.
 			</p>
 			{#if wahlRefPoints.length === 0 && ref.slug}
 				<p class="text-sm">
@@ -454,7 +476,7 @@
 					own={wahlOwn}
 					ref={wahlRefPoints}
 					ownLabel={data.profile.name}
-					refLabel={refName}
+					refLabel={wahlRefLabel}
 				/>
 			{:else}
 				<p class="text-ink-muted">Keine Wahldaten.</p>
@@ -463,7 +485,7 @@
 		{#snippet table(visible)}
 			<DataTable
 				{visible}
-				caption="Stimmenanteile in {data.profile.name} (Prozent), in Klammern {refName}"
+				caption="Stimmenanteile in {data.profile.name} (Prozent), in Klammern {wahlRefName}"
 				head={['Partei', ...[...new Set(wahlOwn.map((p) => p.jahr))].sort().map(String)]}
 				rows={[...new Set(wahlOwn.map((p) => p.partei))].map((partei) => [
 					partei,

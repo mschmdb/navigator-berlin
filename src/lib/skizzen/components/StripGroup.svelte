@@ -9,23 +9,38 @@
 		readonly items: readonly StripItem[];
 		readonly domain: readonly [number, number];
 		readonly format: (v: number) => string;
-		readonly markers: readonly { value: number | null; label: string; strong?: boolean }[];
-		readonly neutral?: boolean;
+		/** Bezugspunkt ohne eigenen Punkt, etwa „Neukölln gesamt“. */
+		readonly refLine: { readonly value: number | null; readonly label: string } | null;
 		readonly note?: string;
+		readonly zeroName?: string;
+		readonly zeroMedianLabel?: string;
 	}
 
 	interface Props {
 		rows: readonly StripRow[];
 		ownSlug: string | null;
-		highlight?: ReadonlySet<string>;
-		labelSlugs?: readonly string[];
+		highlight: ReadonlySet<string>;
+		highlightLabel: string;
 		refSlug: string | null;
+		medianLabel: string;
+		r?: number;
+		unitPlural?: string;
 		onpick?: (slug: string) => void;
 	}
-	let { rows, ownSlug, highlight, labelSlugs, refSlug, onpick }: Props = $props();
+	let {
+		rows,
+		ownSlug,
+		highlight,
+		highlightLabel,
+		refSlug,
+		medianLabel,
+		r,
+		unitPlural,
+		onpick
+	}: Props = $props();
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-6">
 	{#each rows as row (row.key)}
 		<div>
 			<div class="flex items-baseline justify-between gap-3 border-b border-rule pb-1">
@@ -36,15 +51,19 @@
 				items={row.items}
 				domain={row.domain}
 				format={row.format}
-				markers={row.markers}
-				neutral={row.neutral}
+				refLine={row.refLine}
 				{ownSlug}
 				{highlight}
-				{labelSlugs}
+				{highlightLabel}
 				{refSlug}
+				{medianLabel}
+				{r}
+				{unitPlural}
+				zeroName={row.zeroName}
+				zeroMedianLabel={row.zeroMedianLabel}
 				{onpick}
 			/>
-			{#if row.note}<p class="text-dense-label text-ink-subtle">{row.note}</p>{/if}
+			{#if row.note}<p class="mt-1 text-dense-label text-ink-subtle">{row.note}</p>{/if}
 		</div>
 	{/each}
 </div>

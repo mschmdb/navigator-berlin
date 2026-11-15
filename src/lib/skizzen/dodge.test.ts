@@ -60,3 +60,25 @@ describe('layoutLabelLanes', () => {
 		).toEqual([0, 1, null]);
 	});
 });
+
+import { pinLabel } from './dodge';
+
+describe('pinLabel', () => {
+	it('centers the label on the point when there is room', () => {
+		expect(pinLabel(300, 600, 100)).toEqual({ x: 300, anchor: 'middle' });
+	});
+	it('starts at the point near the left edge so the label grows inward', () => {
+		expect(pinLabel(20, 600, 100)).toEqual({ x: 14, anchor: 'start' });
+	});
+	it('ends at the point near the right edge', () => {
+		expect(pinLabel(590, 600, 100)).toEqual({ x: 596, anchor: 'end' });
+	});
+});
+
+describe('dodgeLevels without cap', () => {
+	it('stacks every point when maxLevel is Infinity', () => {
+		const levels = dodgeLevels(Array(9).fill(0), 4, Infinity) as number[];
+		expect(Math.max(...levels.map(Math.abs))).toBe(4);
+		expect(new Set(levels).size).toBe(9);
+	});
+});

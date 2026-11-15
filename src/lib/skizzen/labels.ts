@@ -4,7 +4,7 @@ import type { Dim, Figure } from './types';
 
 /** Skizzen sind DE-only; Dimensionsnamen kommen trotzdem aus der einen Quelle der Seite. */
 export function dimLabel(dim: Dim): string {
-	if (dim === 'composite') return 'Kiez-Score gesamt';
+	if (dim === 'composite') return 'Gesamtwert';
 	const key = SCORE_DIMENSION_KEYS.find((k) => k.field === dim)?.key;
 	return key ? dimensionLabel(key) : dim;
 }
@@ -24,35 +24,35 @@ export const FIGURE_SPECS: Readonly<Record<Figure, FigureSpec>> = {
 		unit: '€/m²',
 		digits: 2,
 		layer: 'zensus-bestandsmiete-2022',
-		what: 'Nettokaltmiete laufender Verträge, Zensus 2022'
+		what: 'Nettokaltmiete in laufenden Mietverträgen, Zensus 2022'
 	},
 	altbau: {
 		label: 'Altbau',
 		unit: '%',
 		digits: 0,
 		layer: 'zensus-altbau-anteil-2022',
-		what: 'Wohnungen in Gebäuden vor 1949, Zensus 2022'
+		what: 'Anteil der Wohnungen in Häusern, die vor 1949 gebaut wurden, Zensus 2022'
 	},
 	gruen: {
 		label: 'Grünanlagen',
 		unit: '%',
 		digits: 1,
 		layer: 'gruenanlagen',
-		what: 'Anteil öffentlicher Grünanlagen an der Fläche'
+		what: 'Anteil öffentlicher Parks und Grünanlagen an der Fläche'
 	},
 	hitze: {
-		label: 'Hitze am Nachmittag',
-		unit: '°C PET',
+		label: 'Gefühlte Hitze',
+		unit: '°C',
 		digits: 1,
 		layer: 'klima-pet-2022',
-		what: 'Gefühlte Temperatur (PET) an einem Sommertag, 14 Uhr, Median'
+		what: 'So warm fühlt es sich an einem heißen Sommertag um 14 Uhr an, mittlerer Wert im Gebiet'
 	},
 	milieuschutz: {
 		label: 'Milieuschutz',
 		unit: '%',
 		digits: 0,
 		layer: 'milieuschutz-erhaltungsmiete',
-		what: 'Fläche in sozialen Erhaltungsgebieten'
+		what: 'Anteil der Fläche in Milieuschutzgebieten, wo Umbau und Umwandlung in Eigentum genehmigt werden müssen'
 	}
 };
 

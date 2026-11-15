@@ -36,17 +36,17 @@ describe('compareSentence', () => {
 			{ a: 98.8, b: 90.2, c: 26.4, d: 29.9 },
 			{ a: 41.7, b: 0, c: 55.2, d: 25.9 }
 		);
-		expect(compareSentence(diffs, label, 'Berlin')).toBe(
-			'Gegenüber Berlin höher bei Wohnschutz (+90) und Kultur (+57), niedriger bei Grün & Hitze (−29). Etwa gleich: Mobilität.'
+		expect(compareSentence(diffs, label, 'dem Berliner Median', 'Reuterstraße')).toBe(
+			'Reuterstraße liegt gegenüber dem Berliner Median höher bei Wohnschutz (+90) und Kultur (+57), niedriger bei Grün & Hitze (−29). Etwa gleich: Mobilität.'
 		);
 	});
 	it('handles a reference that is equal everywhere', () => {
 		const diffs = dimDiffs(['a'], { a: 50 }, { a: 52 });
-		expect(compareSentence(diffs, label, 'Berlin')).toBe(
-			'Gegenüber Berlin etwa gleich bei Kultur.'
+		expect(compareSentence(diffs, label, 'Berlin', 'X')).toBe(
+			'X liegt gegenüber Berlin etwa gleich bei Kultur.'
 		);
 	});
 	it('returns an empty string without comparable dims', () => {
-		expect(compareSentence([], label, 'Berlin')).toBe('');
+		expect(compareSentence([], label, 'Berlin', 'X')).toBe('');
 	});
 });

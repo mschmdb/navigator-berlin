@@ -17,6 +17,8 @@
 		similar: readonly RefOption[];
 		all: readonly RefOption[];
 		freeLabel: string;
+		/** „Nachbarkiez“ oder „Nachbarbezirk“. */
+		neighborLabel?: string;
 		choice: ReferenceChoice;
 		mode: 'erzaehlen' | 'zahlen';
 		onchoice: (c: ReferenceChoice) => void;
@@ -29,6 +31,7 @@
 		similar,
 		all,
 		freeLabel,
+		neighborLabel = 'Nachbarkiez',
 		choice,
 		mode,
 		onchoice,
@@ -44,7 +47,7 @@
 		[
 			{ kind: 'berlin', label: 'Berlin', list: [] },
 			bezirkLabel ? { kind: 'bezirk', label: bezirkLabel, list: [] } : null,
-			neighbors.length > 0 ? { kind: 'nachbar', label: 'Nachbarkiez', list: neighbors } : null,
+			neighbors.length > 0 ? { kind: 'nachbar', label: neighborLabel, list: neighbors } : null,
 			similar.length > 0 ? { kind: 'aehnlich', label: 'Ähnlicher Kiez', list: similar } : null,
 			{ kind: 'frei', label: freeLabel, list: all }
 		].filter((k): k is KindOption => k !== null)
@@ -124,6 +127,11 @@
 						{/if}
 					</select>
 				</label>
+				{#if active.kind === 'aehnlich'}
+					<span class="hidden truncate text-dense-label text-ink-subtle xl:inline"
+						>ähnliche Werte in allen fünf Bereichen</span
+					>
+				{/if}
 			{:else if active.kind === 'berlin'}
 				<span class="truncate text-dense-label text-ink-subtle">{berlinNote}</span>
 			{/if}
@@ -140,12 +148,12 @@
 				<option value="berlin:">Berlin ({berlinNote})</option>
 				{#if bezirkLabel}<option value="bezirk:">{bezirkLabel}</option>{/if}
 				{#if neighbors.length > 0}
-					<optgroup label="Nachbarkieze">
+					<optgroup label="{neighborLabel}e">
 						{#each neighbors as o (o.slug)}<option value="nachbar:{o.slug}">{o.name}</option>{/each}
 					</optgroup>
 				{/if}
 				{#if similar.length > 0}
-					<optgroup label="Ähnliche Kieze">
+					<optgroup label="Kieze mit ähnlichen Werten">
 						{#each similar as o (o.slug)}<option value="aehnlich:{o.slug}">{o.name}</option>{/each}
 					</optgroup>
 				{/if}
@@ -160,27 +168,27 @@
 		<div
 			class="flex shrink-0 rounded-full border border-rule-strong p-0.5"
 			role="group"
-			aria-label="Lesart"
+			aria-label="Darstellung"
 		>
 			<button
 				type="button"
 				class="min-h-7 rounded-full px-3 text-sm aria-pressed:bg-ink aria-pressed:text-bg"
 				aria-pressed={mode === 'erzaehlen'}
-				onclick={() => onmode('erzaehlen')}>Erzählen</button
+				onclick={() => onmode('erzaehlen')}>Grafiken</button
 			>
 			<button
 				type="button"
 				class="min-h-7 rounded-full px-3 text-sm aria-pressed:bg-ink aria-pressed:text-bg"
 				aria-pressed={mode === 'zahlen'}
 				onclick={() => onmode('zahlen')}
-				><span class="lg:hidden">Zahlen</span><span class="hidden lg:inline"
-					>Zahlen und Quellen</span
+				><span class="lg:hidden">Tabellen</span><span class="hidden lg:inline"
+					>Tabellen und Quellen</span
 				></button
 			>
 		</div>
 	</div>
 	<p class="sr-only" aria-live="polite">
-		Bezugspunkt: {active.label}{choice.slug
+		Vergleich mit: {active.label}{choice.slug
 			? `, ${all.find((o) => o.slug === choice.slug)?.name ?? ''}`
 			: ''}
 	</p>

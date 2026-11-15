@@ -54,3 +54,14 @@ export function niceDomain(values: readonly (number | null)[], step: number): [n
 	if (xs.length === 0) return [0, step];
 	return [Math.floor(Math.min(...xs) / step) * step, Math.ceil(Math.max(...xs) / step) * step];
 }
+
+/** Wie viele Werte genau 0 sind. Große Nullstapel (Milieuschutz) machen den Median zu 0. */
+export function zeroShare(values: readonly (number | null)[]): {
+	zeros: number;
+	total: number;
+	share: number;
+} {
+	const xs = present(values);
+	const zeros = xs.filter((v) => v === 0).length;
+	return { zeros, total: xs.length, share: xs.length === 0 ? 0 : zeros / xs.length };
+}

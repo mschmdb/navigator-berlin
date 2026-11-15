@@ -80,3 +80,14 @@ describe('niceDomain', () => {
 		expect(niceDomain([], 5)).toEqual([0, 5]);
 	});
 });
+
+import { zeroShare } from './stats';
+
+describe('zeroShare', () => {
+	it('counts exact zeros among present values', () => {
+		expect(zeroShare([0, 0, 5, null, 3])).toEqual({ zeros: 2, total: 4, share: 0.5 });
+	});
+	it('returns share 0 without values', () => {
+		expect(zeroShare([null])).toEqual({ zeros: 0, total: 0, share: 0 });
+	});
+});
