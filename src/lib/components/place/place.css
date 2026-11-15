@@ -1,0 +1,28 @@
+/* Ruhiger Aufbau beim Scrollen. Punkte/Linien erscheinen der Reihe nach (--i). */
+.place-reveal .rv {
+	opacity: 0;
+	transition: opacity 420ms ease-out;
+	transition-delay: calc(var(--i, 0) * 4ms);
+}
+.place-reveal[data-shown] .rv {
+	opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+	.place-reveal .rv {
+		opacity: 1;
+		transition: none;
+	}
+}
+
+/* Lesehilfe: entsättigtes Salbeigrün und gedämpftes Terrakotta, nur als Zusatz zum Text. */
+:root {
+	--hint-good: #4f6f4d;
+	--hint-good-bg: #e1e8dc;
+	--hint-bad: #a3583a;
+	--hint-bad-bg: #f2e1d7;
+}
+
+/* Höhe der fixierten Kopfzeile der Seite: die Vergleichsleiste klebt darunter. */
+:root {
+	--site-header-h: 73px;
+}

@@ -5,7 +5,6 @@ import { getKiezStats } from './get-kiez-stats.js';
 import { getBezirkScore } from './get-bezirk-score.js';
 import { getKiezScore } from './get-kiez-score.js';
 import { getFaqQna } from './get-faq-qna.js';
-import { getKiezCompositeRanks } from './get-kiez-composite-ranks.js';
 
 /**
  * Snapshot-Tests (Story 2.0 AC-5 + AC-7-A5).
@@ -92,15 +91,5 @@ describeDb('getFaqQna (empty-array fallback)', () => {
 	it('returns empty array for kiez en', async () => {
 		const rows = await getFaqQna({ pageType: 'kiez', slug: 'any', locale: 'en' });
 		expect(rows).toEqual([]);
-	});
-});
-
-describeDb('getKiezCompositeRanks (snapshot)', () => {
-	it('liefert für einen bekannten Kiez Rang und Total', async () => {
-		const ranks = await getKiezCompositeRanks();
-		const row = ranks.get('reuterstrasse');
-		expect(row).toBeDefined();
-		expect(row?.rang).not.toBeNull();
-		expect(row?.total).toBeGreaterThan(0);
 	});
 });

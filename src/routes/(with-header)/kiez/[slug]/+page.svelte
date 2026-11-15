@@ -1,169 +1,448 @@
+<!--
+	Kiezseite (NAV-104/105): gegliedert nach Themen, nicht nach Score. Die Kapitel zeigen Messwerte
+	in echten Einheiten; Score-Punkte stehen nur in Karte, Einstiegszeile und Überblick am Ende.
+	Der Einstieg behält die eigene Profil-Prosa des Kiezes (eigener Text je Seite, SEO).
+-->
 <script lang="ts">
-	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import KiezHero from '$lib/components/atlas/kiez-hero.svelte';
-	import KeyFigureTiles from '$lib/components/atlas/key-figure-tiles.svelte';
-	import KiezDetails from '$lib/components/atlas/kiez-details.svelte';
-	import KiezNeighbors from '$lib/components/atlas/kiez-neighbors.svelte';
-	import OverviewLinks from '$lib/components/atlas/overview-links.svelte';
-	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
-	import ScoreRankLink from '$lib/components/atlas/score-rank-link.svelte';
-	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildKiezMeta } from '$lib/seo/profile-meta.js';
-	import { localizedPathname } from '$lib/seo/canonical.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
+	import { formatCount, formatDecimal, formatPercent } from '$lib/i18n/format.js';
+	import '$lib/components/place/place.css';
+	import RegionTitle from '$lib/components/atlas/region-title.svelte';
+	import PlaceSeo from '$lib/components/place/place-seo.svelte';
+	import ReferenceBar from '$lib/components/place/reference-bar.svelte';
+	import Section from '$lib/components/place/place-section.svelte';
+	import Chapter from '$lib/components/place/chapter.svelte';
+	import ScoreMap from '$lib/components/place/score-map.svelte';
+	import ProfileChart from '$lib/components/place/profile-chart.svelte';
+	import PartyMultiples from '$lib/components/place/party-multiples.svelte';
+	import WahlSwitch from '$lib/components/place/wahl-switch.svelte';
+	import NeighborList from '$lib/components/place/neighbor-list.svelte';
+	import FaqBlock from '$lib/components/place/place-faq.svelte';
+	import DataTable from '$lib/components/place/data-table.svelte';
+	import { aggregateProfile, resolveReference } from '$lib/place/reference';
+	import { PlaceViewState, WahlCache } from '$lib/place/reference-state.svelte';
+	import { latestLeader } from '$lib/place/wahl-summary';
+	import { CHAPTERS, chapterText } from '$lib/place/topics';
+	import { trackLanding } from '$lib/utils/plausible.js';
+	import { atlasQuery } from '$lib/place/atlas-link';
+	import { buildChapterFaq } from '$lib/place/faq';
+	import { RATED_DIMS, type Dim } from '$lib/place/types';
+	import type { WahlArt } from '$lib/place/wahl-types';
+	import { dimLabel, formatScore, signedPoints } from '$lib/place/labels';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { page } from '$app/state';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import type { PageData } from './$types';
 
-	interface Props {
-		readonly data: PageData;
-	}
+	let { data }: { data: PageData } = $props();
+	const opts = $derived({ locale: getLocale() });
+	const unitPlural = $derived(m.place_units_kieze());
 
-	const { data }: Props = $props();
-
-	const origin = $derived(page.url.origin);
-	const pathname = $derived(page.url.pathname);
-	const slug = $derived(data.profile.slug);
 	const name = $derived(data.profile.name);
-	const bezirkName = $derived(data.profile.bezirk);
-	const bezirkSlug = $derived(data.bezirkSlug);
-	const ogImagePath = $derived(`/og/kiez/${slug}.png`);
-	const ogImageAbsolute = $derived(`${origin}${ogImagePath}`);
+	const self = $derived(data.regions.find((r) => r.slug === data.profile.slug) ?? null);
+	const byslug = $derived(new Map(data.regions.map((r) => [r.slug, r])));
+	const bezirkName = $derived(data.profile.bezirk || null);
+	const all = $derived(data.regions);
 
-	const locale = $derived(getLocale());
-	const localeOpts = $derived({ locale });
-	// i18n Block D1: Place/AdministrativeArea/Breadcrumb folgen der Seiten-Locale.
-	const jsonLdLocaleInput = $derived({
-		locale,
-		propertyNames: {
-			einwohner: m.jsonld_property_einwohner(undefined, localeOpts),
-			flaecheHa: m.jsonld_property_flaeche_ha(undefined, localeOpts)
-		}
+	const berlin = $derived(
+		aggregateProfile(
+			'berlin',
+			'Berlin',
+			all,
+			'median',
+			m.place_berlin_note_kiez({ count: all.length })
+		)
+	);
+	// Bezirk als Vergleich: dieselben Werte wie auf der Bezirksseite (Score und Themen des ganzen Bezirks).
+	const bezirkProfile = $derived(
+		bezirkName && data.bezirkRegion
+			? aggregateProfile(
+					'bezirk',
+					bezirkName,
+					all.filter((r) => r.parentSlug === data.bezirkSlug),
+					'mean',
+					null,
+					{ metrics: data.bezirkRegion.metrics, labels: data.bezirkRegion.labels }
+				)
+			: null
+	);
+	const bezirk = $derived(
+		bezirkProfile && data.bezirkRegion
+			? { ...bezirkProfile, dims: data.bezirkRegion.dims }
+			: bezirkProfile
+	);
+
+	const view = new PlaceViewState(() => ({
+		self: data.profile.slug,
+		hasParent: !!data.bezirkSlug,
+		neighbors: data.neighbors.map((n) => n.slug),
+		similar: data.similar.map((n) => n.slug),
+		all: new Set(all.map((r) => r.slug))
+	}));
+	$effect(() => {
+		view.readUrl(page.url);
 	});
-
-	const meta = $derived(
-		buildKiezMeta({
-			name,
-			bezirk: bezirkName,
-			einwohner: data.profile.einwohner,
-			flaecheHa: data.profile.flaecheHa,
-			stichtag: data.einwohnerStichtag,
-			score: data.score?.composite ?? null,
-			rang: data.compositeRank.rang,
-			quartil: data.compositeRank.quartil,
-			total: data.compositeRank.total,
-			locale
-		})
-	);
-	const pageTitle = $derived(meta.title);
-	const pageDescription = $derived(meta.description);
-
-	const ogImageAlt = $derived(
-		bezirkName.length > 0
-			? m.kiez_page_og_alt_with_bezirk({ name, bezirk: bezirkName }, localeOpts)
-			: m.kiez_page_og_alt_no_bezirk({ name }, localeOpts)
+	const ref = $derived(resolveReference(view.choice, { berlin, bezirk, regions: byslug }));
+	const kind = $derived(view.choice.kind);
+	const refName = $derived(
+		kind === 'berlin'
+			? m.place_ref_berlin_median()
+			: kind === 'bezirk'
+				? m.place_total_of({ name: ref.label })
+				: ref.label
 	);
 
-	const adminAreaJsonLd = $derived(
-		buildAdministrativeArea({
-			origin,
-			name,
-			centroid: data.profile.centroid,
-			containedInPlaceName: bezirkName.length > 0 ? bezirkName : undefined,
-			containedInCity: bezirkName.length === 0,
-			containedInPlaceRef:
-				bezirkName.length > 0 && bezirkSlug
-					? { slug: bezirkSlug, urlBasePath: '/bezirk' }
-					: undefined,
-			slug,
-			urlBasePath: '/kiez',
-			einwohner: data.profile.einwohner,
-			flaecheHa: data.profile.flaecheHa,
-			...jsonLdLocaleInput
-		})
+	// Gespeicherter Wettkampf-Rang (kiez_rank/bezirk_rank), nicht selbst gerechnet.
+	const scoreRank = $derived(
+		data.compositeRank.rang !== null
+			? { rang: data.compositeRank.rang, total: data.compositeRank.total }
+			: null
 	);
+	const neighborSlugs = $derived(data.neighbors.map((n) => n.slug));
+	const scoreMap = $derived(
+		new Map(all.map((r) => [r.slug, { name: r.name, composite: r.dims.composite }]))
+	);
+	const mapHref = (layers: string | undefined) =>
+		layers
+			? `${localizedHref('/explore', opts.locale)}?${atlasQuery(layers, data.profile.centroid, name)}`
+			: null;
+	const pick = (slug: string) => {
+		if (slug === data.profile.slug) return;
+		view.setChoice({
+			kind: neighborSlugs.includes(slug)
+				? 'nachbar'
+				: data.similar.some((s) => s.slug === slug)
+					? 'aehnlich'
+					: 'frei',
+			slug
+		});
+	};
 
-	const breadcrumbItems = $derived.by(() => {
-		const items = [{ name: 'Berlin', path: '/' }];
-		if (bezirkName.length > 0 && bezirkSlug) {
-			items.push({ name: bezirkName, path: `/bezirk/${bezirkSlug}` });
-		}
-		items.push({ name, path: `/kiez/${slug}` });
-		return items;
+	// --- Wahlen ---
+	let wahlArt = $state<WahlArt>('btw');
+	const wahlCache = new WahlCache();
+	$effect(() => {
+		if (ref.slug) void wahlCache.load('kiez', ref.slug);
 	});
-	const breadcrumbJsonLd = $derived(
-		buildBreadcrumbList({
-			origin,
-			items: breadcrumbItems.map((item) => ({
-				...item,
-				path: localizedPathname(item.path, locale)
-			}))
-		})
+	const wahlRef = $derived(
+		kind === 'berlin' ? data.wahl.berlin : kind === 'bezirk' ? data.wahl.bezirk : wahlCache.current
 	);
+	const wahlRefName = $derived(kind === 'berlin' ? m.place_ref_all_berlin() : ref.label);
+	const wahlOwn = $derived(data.wahl.own[wahlArt]);
+	const wahlRefPoints = $derived(wahlRef?.[wahlArt] ?? []);
+	const leader = $derived(latestLeader(wahlOwn, wahlRefPoints));
+	const years = $derived([...new Set(wahlOwn.map((p) => p.jahr))].sort());
+	const pct = (v: number) => formatPercent(v / 100, { decimals: 0, locale: opts.locale });
+
+	const headline = $derived(
+		scoreRank
+			? m.place_headline_kiez_ranked({
+					score: formatScore(self?.dims.composite ?? null, opts),
+					rank: scoreRank.rang,
+					total: scoreRank.total
+				})
+			: m.place_headline_kiez({ score: formatScore(self?.dims.composite ?? null, opts) })
+	);
+	const overview = $derived(
+		self
+			? scoreRank
+				? m.place_ov_kiez_ranked({
+						name,
+						score: formatScore(self.dims.composite, opts),
+						rank: scoreRank.rang,
+						total: scoreRank.total,
+						ref: refName
+					})
+				: m.place_ov_kiez({ name, score: formatScore(self.dims.composite, opts), ref: refName })
+			: ''
+	);
+	const profileDims: readonly Dim[] = ['composite', ...RATED_DIMS, 'kriminalitaet'];
+	const jump = $derived([
+		...CHAPTERS.map((c) => ({ id: c.id, short: chapterText(c.id, opts).short })),
+		{ id: 'wahlen', short: m.place_jump_wahlen() },
+		{ id: 'nachbarn', short: m.place_jump_nachbarn() },
+		{ id: 'ueberblick', short: m.place_jump_score() },
+		{ id: 'fragen', short: m.place_jump_fragen() }
+	]);
 </script>
 
-<SeoHead
-	title={pageTitle}
-	description={pageDescription}
-	{origin}
-	{pathname}
-	ogImage={ogImageAbsolute}
-	{ogImageAlt}
+<!-- Links tragen den Sprachpräfix selbst (localizedHref). -->
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
+<ReferenceBar
+	berlinNote={berlin.note ?? ''}
+	bezirkLabel={bezirkName}
+	neighbors={data.neighbors.map((n) => ({ slug: n.slug, name: n.name }))}
+	similar={data.similar.map((n) => ({ slug: n.slug, name: n.name }))}
+	all={all
+		.filter((r) => r.slug !== data.profile.slug)
+		.map((r) => ({ slug: r.slug, name: r.name, group: r.parentName ?? '' }))
+		.sort(
+			(a, b) =>
+				a.group.localeCompare(b.group, opts.locale) || a.name.localeCompare(b.name, opts.locale)
+		)}
+	freeLabel={m.place_free_kiez()}
+	choice={view.choice}
+	mode={view.mode}
+	chapters={jump}
+	onchoice={(c) => view.setChoice(c)}
+	onmode={(m) => view.setMode(m)}
 />
-<JsonLd data={adminAreaJsonLd} testid="kiez-administrative-area-jsonld" />
-<JsonLd data={breadcrumbJsonLd} testid="kiez-breadcrumb-jsonld" />
 
-<div class="mx-auto max-w-3xl px-4 pt-6">
-	<Breadcrumb items={breadcrumbItems} />
-</div>
+<PlaceSeo
+	kind="kiez"
+	slug={data.profile.slug}
+	{name}
+	{bezirkName}
+	bezirkSlug={data.bezirkSlug}
+	centroid={data.profile.centroid}
+	einwohner={data.profile.einwohner}
+	flaecheHa={data.profile.flaecheHa}
+	stichtag={data.einwohnerStichtag}
+	score={self?.dims.composite ?? null}
+	rank={data.compositeRank}
+/>
 
-<article>
-	<KiezHero
-		profile={data.profile}
-		score={data.score}
-		compositeRank={data.compositeRank}
-		comparison={data.comparison}
-		outline={data.outline}
-		einwohnerStichtag={data.einwohnerStichtag}
-	/>
-	<KiezDetails
-		profile={data.profile}
-		stats={data.stats}
-		score={data.score}
-		faq={data.faq}
-		faqLocale={data.faqLocale}
-		wahlVerlauf={data.wahlVerlauf}
-		comparison={data.comparison}
-		profileProse={data.profileProse}
-		profileLocale={data.profileLocale}
-	>
-		{#snippet figures()}
-			<KeyFigureTiles
-				figures={data.keyFigures}
-				regionName={name}
-				kind="kiez"
-				{slug}
-				inset={false}
+<main class="mx-auto max-w-6xl px-4 pb-24">
+	<header class="grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-12 lg:py-14">
+		<div class="min-w-0">
+			<p class="text-dense-label tracking-wide text-ink-subtle uppercase">
+				{#if bezirkName && data.bezirkSlug}
+					{m.place_eyebrow_kiez_prefix()}
+					<a
+						class="underline underline-offset-2 hover:text-accent"
+						href={localizedHref(`/bezirk/${data.bezirkSlug}`, opts.locale)}
+						onclick={() => trackLanding('eyebrow_link', 'kiez')}>{bezirkName}</a
+					>
+				{:else}
+					{m.place_eyebrow_kiez({ bezirk: bezirkName ?? '' })}
+				{/if}
+			</p>
+			<RegionTitle {name} />
+			<p class="mt-2 text-base text-ink-muted tabular-nums">
+				{m.place_facts_kiez({
+					inhabitants: formatCount(data.profile.einwohner, opts),
+					area: formatDecimal(data.profile.flaecheHa / 100, { ...opts, maximumFractionDigits: 1 })
+				})}
+			</p>
+			<!-- Eigene Prosa je Kiez: der einzige frei formulierte Text der Seite (SEO, kein Template). -->
+			{#each data.profileProse as paragraph, i (i)}
+				<p
+					class="mt-4 max-w-[62ch] text-base leading-body text-ink {i === 0 ? 'text-lg' : ''}"
+					lang={data.profileLocale}
+				>
+					{paragraph}
+				</p>
+			{/each}
+			<p class="mt-6 border-t border-rule pt-4 text-base text-ink">
+				<strong class="font-semibold">{headline}</strong>
+				<span class="text-ink-muted"> {m.place_explainer_kiez()}</span>
+				<a class="text-accent underline" href={localizedHref('/methodik/kiez-score', opts.locale)}
+					>{m.place_method_link()}</a
+				>
+			</p>
+		</div>
+		{#if data.outline}
+			<ScoreMap
+				outline={data.outline}
+				scores={scoreMap}
+				ownSlug={data.profile.slug}
+				label={m.place_map_label_kiez({ bezirk: bezirkName ?? '', name })}
+			/>
+		{/if}
+	</header>
+
+	{#if self}
+		{#each CHAPTERS as spec (spec.id)}
+			<Chapter
+				{spec}
+				mode={view.mode}
+				regions={all}
+				own={self}
+				{unitPlural}
+				{ref}
+				{refName}
+				refIsLine={kind === 'bezirk'}
+				refIsBerlin={kind === 'berlin'}
+				refHeadName={ref.label}
+				refHeadSub={kind === 'bezirk'
+					? m.place_sub_total()
+					: kind === 'nachbar'
+						? m.place_ref_neighbor_kiez()
+						: kind === 'aehnlich'
+							? m.place_sub_similar_kiez()
+							: m.place_sub_other_kiez()}
+				highlight={new Set(neighborSlugs)}
+				highlightLabel={m.place_highlight_kiez()}
+				mapHref={mapHref(spec.mapLayers)}
+				pageType="kiez"
+				onpick={pick}
+			/>
+		{/each}
+	{/if}
+
+	<Section id="wahlen" title={m.place_wahl_title_kiez()} mode={view.mode}>
+		{#snippet text()}
+			{#if leader}
+				<p>
+					{m.place_wahl_leader({
+						jahr: leader.jahr,
+						partei: leader.partei,
+						name,
+						pct: pct(leader.anteil)
+					})}{#if leader.refAnteil !== null}{` ${m.place_wahl_leader_ref({
+							ref: wahlRefName,
+							partei: leader.partei,
+							pct: pct(leader.refAnteil)
+						})}`}{/if}
+				</p>
+			{/if}
+			<p class="text-sm">{m.place_wahl_hint_kiez()}</p>
+		{/snippet}
+		{#snippet controls()}<WahlSwitch bind:value={wahlArt} />{/snippet}
+		{#snippet chart()}
+			{#if wahlOwn.length > 0}
+				<PartyMultiples
+					own={wahlOwn}
+					ref={wahlRefPoints}
+					ownLabel={name}
+					refLabel={ref.slug ? ref.label : m.place_ref_total_result({ name: wahlRefName })}
+				/>
+			{/if}
+		{/snippet}
+		{#snippet table(visible)}
+			<DataTable
+				{visible}
+				caption={m.place_wahl_caption({ name, ref: wahlRefName })}
+				head={[m.place_table_party(), ...years.map(String)]}
+				rows={[...new Set(wahlOwn.map((p) => p.partei))].map((partei) => [
+					partei,
+					...years.map((j) => {
+						const o = wahlOwn.find((p) => p.partei === partei && p.jahr === j);
+						const r = wahlRefPoints.find((p) => p.partei === partei && p.jahr === j);
+						return `${o ? pct(o.anteil) : '–'}${r ? ` (${pct(r.anteil)})` : ''}`;
+					})
+				])}
 			/>
 		{/snippet}
-	</KiezDetails>
-	{#if data.neighbors.length > 0 || data.similar.length > 0}
-		<div class="mx-auto max-w-3xl px-4 pb-10">
-			<KiezNeighbors neighbors={data.neighbors} similar={data.similar} />
-		</div>
-	{/if}
-</article>
+		{#snippet sources()}
+			<p>
+				{m.place_wahl_sources()}
+				<a class="text-accent underline" href={localizedHref('/methodik', opts.locale)}
+					>{m.place_wahl_method_link()}</a
+				>.
+			</p>
+		{/snippet}
+	</Section>
 
-<div class="mx-auto flex max-w-3xl flex-col gap-2 px-4 pb-10 font-sans text-base">
-	<ScoreRankLink rang={data.compositeRank.rang} total={data.compositeRank.total} view="kieze" />
-	<a
-		href={localizedHref('/methodik/kiez-score')}
-		class="text-accent underline underline-offset-2 hover:text-accent-strong"
+	<section
+		id="nachbarn"
+		aria-labelledby="nachbarn-h"
+		class="scroll-mt-44 border-t border-rule py-12"
 	>
-		{m.kiez_page_methodik_link_label()}
-	</a>
-	<OverviewLinks kind="kiez" {bezirkName} {bezirkSlug} />
-</div>
+		<h2 id="nachbarn-h" class="text-xl font-semibold text-ink">{m.place_nb_title_kiez()}</h2>
+		<p class="mt-2 mb-6 max-w-2xl text-base text-ink-muted">
+			{m.place_nb_intro_kiez()}
+		</p>
+		<NeighborList
+			route="/kiez/[slug]"
+			pageType="kiez"
+			oncompare={pick}
+			groups={[
+				{
+					title: m.place_nb_borders(),
+					hint: m.place_nb_borders_kiez(),
+					action: 'neighbor',
+					entries: data.neighbors.map((n) => ({ slug: n.slug, name: n.name }))
+				},
+				{
+					title: m.place_nb_similar(),
+					hint: m.place_nb_similar_hint(),
+					action: 'similar',
+					entries: data.similar.map((n) => ({ slug: n.slug, name: n.name }))
+				}
+			]}
+		/>
+		<nav aria-label={m.place_more_nav()} class="mt-10">
+			<ul class="flex flex-col gap-1 text-base">
+				{#if bezirkName && data.bezirkSlug}
+					<li>
+						<a
+							class="inline-flex min-h-6 items-center text-accent underline"
+							href={localizedHref(`/bezirk/${data.bezirkSlug}`, opts.locale)}
+							>{m.place_more_bezirk({ bezirk: bezirkName })}</a
+						>
+					</li>
+				{/if}
+				<li>
+					<a
+						class="inline-flex min-h-6 items-center text-accent underline"
+						href={localizedHref('/kieze', opts.locale)}>{m.place_more_kieze()}</a
+					>
+				</li>
+				<li>
+					<a
+						class="inline-flex min-h-6 items-center text-accent underline"
+						href={localizedHref('/kiez-score', opts.locale)}>{m.place_more_ranking_kiez()}</a
+					>
+				</li>
+				<li>
+					<a
+						class="inline-flex min-h-6 items-center text-accent underline"
+						href={localizedHref('/berlin-wahlen', opts.locale)}>{m.place_more_wahlen()}</a
+					>
+				</li>
+			</ul>
+		</nav>
+	</section>
+
+	{#if self}
+		<Section id="ueberblick" title={m.place_ov_title()} mode={view.mode}>
+			{#snippet text()}
+				<p>{overview}</p>
+				<p class="text-sm">{m.place_ov_note()}</p>
+			{/snippet}
+			{#snippet chart()}
+				<ProfileChart
+					dims={profileDims}
+					own={self.dims}
+					ownLabel={name}
+					refValues={ref.dims}
+					refLabel={ref.note ? `${refName} (${ref.note})` : refName}
+				/>
+			{/snippet}
+			{#snippet table(visible)}
+				<DataTable
+					{visible}
+					caption={m.place_ov_caption({ name, ref: refName })}
+					head={[m.place_table_area(), name, refName, m.place_table_gap()]}
+					rows={profileDims.map((d) => [
+						dimLabel(d, opts),
+						formatScore(self.dims[d], opts),
+						formatScore(ref.dims[d], opts),
+						self.dims[d] !== null && ref.dims[d] !== null
+							? signedPoints((self.dims[d] ?? 0) - (ref.dims[d] ?? 0))
+							: '–'
+					])}
+				/>
+			{/snippet}
+			{#snippet sources()}
+				<p>
+					<a class="text-accent underline" href={localizedHref('/methodik/kiez-score', opts.locale)}
+						>{m.place_method_link()}</a
+					>
+				</p>
+			{/snippet}
+		</Section>
+	{/if}
+
+	{#if self}
+		<FaqBlock
+			items={buildChapterFaq(
+				self,
+				all.map((r) => r.metrics),
+				unitPlural,
+				opts
+			)}
+		/>
+	{/if}
+</main>
