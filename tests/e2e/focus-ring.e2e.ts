@@ -37,7 +37,7 @@ for (const path of ['/kiez/suedliche-luisenstadt', '/hitze']) {
 
 test('summary zeigt den Fokusring', async ({ page }) => {
 	await page.goto('/kiez/suedliche-luisenstadt');
-	const summary = page.locator('summary').first();
+	const summary = page.locator('summary:visible').first();
 	await summary.focus();
 	await page.keyboard.press('Shift+Tab');
 	await page.keyboard.press('Tab');

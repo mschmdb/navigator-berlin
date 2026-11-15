@@ -89,7 +89,8 @@ test('Startseite hat 0 axe-Violations und zeigt Suche, Saisonhinweis und vier Au
 // #103: Kiez-Links in einer role="img"-Grafik meldete axe als nested-interactive.
 test('Bezirk-Seite mit Kieze-Karte hat 0 axe-Violations', async ({ page }) => {
 	await page.goto('/bezirk/friedrichshain-kreuzberg');
-	await expect(page.getByTestId('bezirk-map-link').first()).toBeAttached();
+	await expect(page.locator('#nachbarn')).toBeAttached();
+	await expect(page.locator('h1')).toBeVisible();
 	const results = await new AxeBuilder({ page })
 		.withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
 		.analyze();

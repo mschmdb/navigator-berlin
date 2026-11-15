@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 // i18n Block D1 (spec-i18n-d1-register-sitemap.md): `sitemap-en.xml` listet alle
 // registrierten, indexierbaren EN-Seiten. Nicht registrierte und `noindex`-Seiten
-// fehlen. Die Steckbrief-Verteilung zeigt Kategorien in der Seiten-Locale.
+// fehlen. Die Kapitel-Tabellen zeigen Kategorien in der Seiten-Locale.
 
 test.describe('i18n Block D1: sitemap-en.xml', () => {
 	test('enthält Kiez, Bezirk, Layer, Explore und Updates, nicht /en/impressum', async ({
@@ -38,17 +38,14 @@ test.describe('i18n Block D1: sitemap-en.xml', () => {
 	});
 });
 
-test.describe('i18n Block D1: Steckbrief-Verteilung in der Seiten-Locale', () => {
-	test('/en/kiez/alexanderplatz zeigt englische Kategorien mit Prozent, keine deutschen Rohwörter', async ({
+test.describe('i18n Block D1: Kapitel-Tabellen in der Seiten-Locale', () => {
+	test('/en/kiez/alexanderplatz zeigt englische Kategorien, keine deutschen Rohwörter', async ({
 		page
 	}) => {
 		await page.goto('/en/kiez/alexanderplatz');
-		const steckbrief = page.getByTestId('kiez-steckbrief');
-		await steckbrief
-			.locator('summary')
-			.evaluateAll((els) => els.forEach((el) => el.parentElement?.setAttribute('open', '')));
-		const text = (await steckbrief.innerText()).replace(/\s+/g, ' ');
-		expect(text).toMatch(/(Low|Medium|High|Simple|Good) [^%]*\d+%/);
-		expect(text).not.toMatch(/\b(Mittel|Niedrig|Hoch|Gut|Schlecht|Einfach)\b \d+%/);
+		const chapters = page.locator('#laerm, #gruen, #menschen');
+		const text = (await chapters.allInnerTexts()).join(' ').replace(/\s+/g, ' ');
+		expect(text).toMatch(/\b(low|medium|high|very high|good|poor)\b/);
+		expect(text).not.toMatch(/\b(gering|mittel|hoch|sehr hoch|gut|schlecht)\b/i);
 	});
 });

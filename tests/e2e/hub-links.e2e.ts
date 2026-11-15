@@ -49,7 +49,7 @@ test.describe('Detailseiten verlinken die Übersichten (S8)', () => {
 		await page.goto('/en/bezirk/pankow');
 		const bezirke = page.getByTestId('overview-link-bezirke');
 		await expect(bezirke).toHaveAttribute('href', '/en/bezirke');
-		await expect(bezirke).toHaveText('All Bezirke');
+		await expect(bezirke).toHaveText('All 12 districts at a glance');
 		await expect(page.getByTestId('overview-link-kieze')).toHaveAttribute(
 			'href',
 			/^\/en\/kieze#bezirk-[a-z0-9-]+$/

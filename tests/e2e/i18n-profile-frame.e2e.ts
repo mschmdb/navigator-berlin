@@ -1,5 +1,4 @@
-import { expect, test, type Locator, type Page } from '@playwright/test';
-import { expectFaqInYamlOrder } from './faq-order';
+import { expect, test, type Page } from '@playwright/test';
 
 // i18n Block B4a (spec-i18n-b4a-kiez-bezirk-rahmen.md): Rahmen der Kiez- und
 // Bezirk-Seiten auf Englisch. Prosa (`profileProse`) und FAQ-Inhalte
@@ -9,7 +8,7 @@ import { expectFaqInYamlOrder } from './faq-order';
 //
 // Voraussetzung: `DATABASE_URL` muss auf eine befüllte Postgres-Instanz
 // zeigen (`pnpm build`s Prebuild migriert + aggregiert dagegen). Ohne DB
-// wären Steckbrief, Vergleichstabelle, FAQ und Wahl-Verlauf leer/Platzhalter
+// wären Kapitel, FAQ und Wahl-Verlauf leer/Platzhalter
 // -- die Assertions unten sind deshalb bewusst HART (kein `if (await
 // x.count())`-Guard) und verlangen echte Aggregat-Daten für die realen Slugs
 // `alexanderplatz`/`charlottenburg-wilmersdorf`.
@@ -29,19 +28,6 @@ async function metaContent(page: Page, selector: string): Promise<string> {
 	return content;
 }
 
-/**
- * Berlin-Spalte einer Vergleichstabellen-Zeile: die Spalte ist immer die
- * zweitletzte (letzte ist Rang; auf Kiez-Seiten gibt es zusätzlich eine
- * Bezirk-Ø-Spalte davor, auf Bezirk-Seiten nicht) -- Index-Suche relativ zum
- * Zeilenende bleibt für beide Seiten korrekt, ohne die Spaltenzahl fest zu
- * verdrahten.
- */
-async function berlinCellText(row: Locator): Promise<string> {
-	const cells = row.locator('td');
-	const count = await cells.count();
-	return (await cells.nth(count - 2).textContent())?.trim() ?? '';
-}
-
 // Sprachprüfung ohne Ordnung; die FAQ-Reihenfolge prüft der Test `FAQ-Folge` (`sort_order`).
 const DE_QUESTION_START =
 	/^(Wie|Was|Warum|Welche[rsmn]?|Wo|Wann|Wer|Worin|Wodurch|Berücksichtigt|Bewertet|Ist|Gibt|Wird)\b/;
@@ -53,11 +39,12 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 		await expect(page).toHaveTitle(/^Alexanderplatz \(Mitte\): [\d,]+ residents.*$/);
 
-		const hero = page.getByTestId('kiez-hero');
-		await expect(hero.locator('h1')).toBeVisible();
-		await expect(hero).toContainText('Residents');
-		await expect(hero).toContainText(/\d\.\d km²/);
-		await expect(hero).toContainText('Kiez in Mitte');
+		const main = page.locator('main#main');
+		await expect(main.locator('h1')).toBeVisible();
+		await expect(main).toContainText('Residents');
+		await expect(main).toContainText(/\d\.\d\s*km²/);
+		await expect(main).toContainText('Kiez in');
+		await expect(main.locator('header a', { hasText: 'Mitte' })).toBeVisible();
 
 		const breadcrumb = page.getByTestId('breadcrumb');
 		await expect(breadcrumb).toHaveAttribute('aria-label', 'Breadcrumb');
@@ -105,49 +92,39 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveCount(1);
 	});
 
-	test('Steckbrief, Vergleichstabelle und Wahl-Verlauf englisch; FAQ-Heading und Q&A englisch ohne lang=de', async ({
+	test('Kapitel, Wahl-Verlauf und FAQ englisch; FAQ-Heading und Q&A englisch ohne lang=de', async ({
 		page
 	}) => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
 
-		const table = page.getByTestId('kiez-steckbrief');
-		await expect(table).toContainText('Noise');
-		await expect(table).toContainText(/Source: /);
-
-		const comparison = page.getByTestId('score-comparison');
-		await expect(comparison).toContainText('In comparison');
-		await expect(comparison).toContainText(/Rank \d+ of \d+|bottom quartile/);
-		const ruheLuftRow = comparison.locator('tr', { hasText: 'Quiet & air' });
-		await expect(ruheLuftRow).toBeVisible();
-		expect(await berlinCellText(ruheLuftRow)).toMatch(/^\d+$/);
+		await expect(
+			page.locator('#laerm').getByRole('heading', { name: 'Noise and air' })
+		).toBeVisible();
+		await expect(page.locator('#ueberblick h2')).toContainText('The Kiez score at a glance');
 
 		const faqHeading = page.getByRole('heading', { name: 'Frequently asked questions' });
 		await expect(faqHeading).toBeVisible();
-		// Block C3: Q&A-Inhalte kommen aus den EN-Zeilen von `faq_qna`,
-		// ohne lang="de" am Accordion.
-		const faqSection = page.getByTestId('faq-section');
-		const enQuestions = await faqSection.locator('[data-faq-question]').allTextContents();
+		// Block C3: Q&A-Inhalte kommen in der Seiten-Locale, ohne lang="de" am Accordion.
+		const faqSection = page.locator('#fragen');
+		const enQuestions = await faqSection.locator('summary').allTextContents();
 		expect(enQuestions.length).toBeGreaterThan(0);
 		for (const q of enQuestions) expect(q).not.toMatch(DE_QUESTION_START);
 		await expect(faqSection.locator('[lang="de"]')).toHaveCount(0);
 		const faqLd = JSON.parse(
-			(await page.locator('script[data-testid="faq-jsonld"]').textContent()) ?? '{}'
+			(await page.locator('script[data-testid="place-faq-jsonld"]').textContent()) ?? '{}'
 		);
 		for (const e of faqLd.mainEntity as { name: string }[]) {
 			expect(e.name).not.toMatch(DE_QUESTION_START);
 		}
 
-		const wahlVerlauf = page.getByTestId('kiez-wahl-verlauf');
-		await expect(wahlVerlauf).toContainText('Election history here');
-		await expect(wahlVerlauf).not.toContainText('Bundestagswahlen');
+		const wahlen = page.locator('#wahlen');
+		await expect(wahlen.locator('h2')).toContainText('Elections since 2016');
+		await expect(wahlen).not.toContainText('Bundestagswahlen');
 	});
 
-	test('Score-Rank-Link zeigt englischen Text, Klick führt auf /en/kiez-score', async ({
-		page
-	}) => {
+	test('Ranking-Link zeigt englischen Text, Klick führt auf /en/kiez-score', async ({ page }) => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
-		const link = page.getByTestId('score-rank-link');
-		await expect(link).toContainText(/Rank \d+ of \d+ in the Kiez score/);
+		const link = page.getByRole('link', { name: 'Kiez score: all Kieze compared' });
 		await link.click();
 		await expect(page).toHaveURL(/\/en\/kiez-score/);
 	});
@@ -156,9 +133,9 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 		page
 	}) => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
-		const siblings = page.getByTestId('kiez-siblings-list');
-		await expect(siblings.locator('h2')).toContainText('Neighbouring Kieze');
-		await siblings.getByTestId('kiez-sibling-link').first().click();
+		const neighbors = page.locator('#nachbarn');
+		await expect(neighbors.locator('h2').first()).toContainText('Neighbours and similar Kieze');
+		await neighbors.getByTestId('place-neighbor-link').first().click();
 		await expect(page).toHaveURL(/\/en\/kiez\//);
 	});
 
@@ -171,28 +148,27 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 	// Block C5: Profil-Prosa in der Seiten-Locale, kein `lang="de"` am Profil.
 	test('Profil-Prosa englisch ohne lang="de"', async ({ page }) => {
 		await page.goto(`/en/kiez/${KIEZ_SLUG}`);
-		const profile = page.getByTestId('kiez-profile');
-		await expect(profile).toBeVisible();
-		await expect(profile).not.toHaveAttribute('lang', /.+/);
-		await expect(profile.locator('[lang]')).toHaveCount(0);
-		await expect(profile).toContainText(/\b(the|and|with|of)\b/);
-		await expect(profile).not.toContainText(/\b(und|der|die|das|mit)\b/);
+		const prose = page.locator('main#main header p[lang]');
+		await expect(prose.first()).toBeVisible();
+		await expect(page.locator('main#main [lang="de"]')).toHaveCount(0);
+		await expect(prose.first()).toHaveAttribute('lang', 'en');
+		const text = (await prose.allTextContents()).join(' ');
+		expect(text).toMatch(/\b(the|and|with|of)\b/);
+		expect(text).not.toMatch(/\b(und|der|die|das|mit)\b/);
 	});
 
 	test('DE-Kontrolle: /kiez/[slug] bleibt unverändert deutsch', async ({ page }) => {
 		const response = await page.goto(`/kiez/${KIEZ_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'de');
-		const hero = page.getByTestId('kiez-hero');
-		await expect(hero).toContainText('Einwohner:innen');
+		await expect(page.locator('main#main')).toContainText('Einwohnerinnen und Einwohner');
 		await expect(page.getByTestId('breadcrumb')).toHaveAttribute('aria-label', 'Brotkrumen');
-		const faqDe = page.getByTestId('faq-section');
-		const deQuestions = await faqDe.locator('[data-faq-question]').allTextContents();
-		expect(deQuestions.some((q) => DE_QUESTION_START.test(q))).toBe(true);
-		await expect(faqDe.locator('[lang]')).toHaveCount(0);
-		const profileDe = page.getByTestId('kiez-profile');
-		await expect(profileDe).toContainText(/\b(und|der|die|das|mit)\b/);
-		await expect(profileDe).not.toHaveAttribute('lang', /.+/);
+		const faqDe = page.locator('#fragen');
+		const deQuestions = await faqDe.locator('summary').allTextContents();
+		expect(deQuestions.some((q) => DE_QUESTION_START.test(q.replace('›', '').trim()))).toBe(true);
+		const proseDe = page.locator('main#main header p[lang]');
+		await expect(proseDe.first()).toHaveAttribute('lang', 'de');
+		expect((await proseDe.allTextContents()).join(' ')).toMatch(/\b(und|der|die|das|mit)\b/);
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
@@ -203,36 +179,27 @@ test.describe('i18n Block B4a: /en/kiez/[slug]', () => {
 			'Kiez Alexanderplatz (Mitte): navigator.berlin-Vorschau mit Kiez-Score'
 		);
 
-		const comparison = page.getByTestId('score-comparison');
-		const ruheLuftRow = comparison.locator('tr', { hasText: 'Ruhe & Luft' });
-		expect(await berlinCellText(ruheLuftRow)).toMatch(/^\d+$/);
-
-		await page.getByRole('link', { name: /Wie der Kiez-Score entsteht/ }).click();
+		await page.getByRole('link', { name: /So entsteht der Kiez-Score/ }).click();
 		await expect(page).toHaveURL(/\/methodik\/kiez-score/);
 		expect(page.url()).not.toMatch(/\/en\//);
 	});
 });
 
 test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
-	test('lang=en, Titel + Lead + Kieze-Liste + Vergleichstabelle englisch', async ({ page }) => {
+	test('lang=en, Titel + Überblick + Nachbarn englisch', async ({ page }) => {
 		const response = await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-		await expect(page).toHaveTitle(/^Charlottenburg-Wilmersdorf: [\d,]+ residents, \d+\.\d km²$/);
+		await expect(page).toHaveTitle(/^Charlottenburg-Wilmersdorf: Berlin district in numbers$/);
 
-		const hero = page.getByTestId('bezirk-hero');
-		await expect(hero.locator('h1')).toBeVisible();
-		await expect(hero).toContainText('Residents');
+		const main = page.locator('main#main');
+		await expect(main.locator('h1')).toBeVisible();
+		await expect(main).toContainText('Residents');
+		await expect(page.locator('#ueberblick h2')).toContainText('The Kiez score at a glance');
 
-		const comparison = page.getByTestId('score-comparison');
-		await expect(comparison).toContainText('In comparison');
-		await expect(comparison).not.toContainText('Bezirk-Ø');
-		const ruheLuftRow = comparison.locator('tr', { hasText: 'Quiet & air' });
-		expect(await berlinCellText(ruheLuftRow)).toMatch(/^\d+$/);
-
-		const kiezeList = page.getByTestId('bezirk-kieze-list');
-		await expect(kiezeList.locator('h2')).toContainText('Kieze in Bezirk');
-		await kiezeList.getByTestId('bezirk-kieze-link').first().click();
+		const neighbors = page.locator('#nachbarn');
+		await expect(neighbors.locator('h2').first()).toContainText('Neighbouring districts and Kieze');
+		await neighbors.locator('ul a[href*="/kiez/"]').first().click();
 		await expect(page).toHaveURL(/\/en\/kiez\//);
 	});
 
@@ -274,30 +241,30 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 
 	test('Methodik-Link führt auf /en/methodik/kiez-score', async ({ page }) => {
 		await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
-		await page.getByRole('link', { name: /How the Kiez score for Bezirke is calculated/ }).click();
+		await page.getByRole('link', { name: /How the Kiez score is calculated/ }).click();
 		await expect(page).toHaveURL(/\/en\/methodik\/kiez-score/);
 	});
 
 	// Block C5: Profil-Prosa in der Seiten-Locale, kein `lang="de"` am Profil.
 	test('Profil-Prosa englisch ohne lang="de"', async ({ page }) => {
 		await page.goto(`/en/bezirk/${BEZIRK_SLUG}`);
-		const profile = page.getByTestId('bezirk-profile');
-		await expect(profile).toBeVisible();
-		await expect(profile).not.toHaveAttribute('lang', /.+/);
-		await expect(profile.locator('[lang]')).toHaveCount(0);
-		await expect(profile).toContainText(/\b(the|and|with|of)\b/);
-		await expect(profile).not.toContainText(/\b(und|der|die|das|mit)\b/);
+		const prose = page.locator('main#main header p[lang]');
+		await expect(prose.first()).toBeVisible();
+		await expect(page.locator('main#main [lang="de"]')).toHaveCount(0);
+		await expect(prose.first()).toHaveAttribute('lang', 'en');
+		const text = (await prose.allTextContents()).join(' ');
+		expect(text).toMatch(/\b(the|and|with|of)\b/);
+		expect(text).not.toMatch(/\b(und|der|die|das|mit)\b/);
 	});
 
 	test('DE-Kontrolle: /bezirk/[slug] bleibt unverändert deutsch', async ({ page }) => {
 		const response = await page.goto(`/bezirk/${BEZIRK_SLUG}`);
 		expect(response?.status()).toBe(200);
 		await expect(page.locator('html')).toHaveAttribute('lang', 'de');
-		const kiezeList = page.getByTestId('bezirk-kieze-list');
-		await expect(kiezeList.locator('h2')).toContainText('Kieze im Bezirk');
-		const profileDe = page.getByTestId('bezirk-profile');
-		await expect(profileDe).toContainText(/\b(und|der|die|das|mit)\b/);
-		await expect(profileDe).not.toHaveAttribute('lang', /.+/);
+		await expect(page.locator('#nachbarn h2').first()).toContainText('Nachbarbezirke und Kieze');
+		const proseDe = page.locator('main#main header p[lang]');
+		await expect(proseDe.first()).toHaveAttribute('lang', 'de');
+		expect((await proseDe.allTextContents()).join(' ')).toMatch(/\b(und|der|die|das|mit)\b/);
 
 		const description = await metaContent(page, 'meta[name="description"]');
 		expect(description).toMatch(
@@ -308,21 +275,27 @@ test.describe('i18n Block B4a: /en/bezirk/[slug]', () => {
 			'Bezirk Charlottenburg-Wilmersdorf: navigator.berlin-Karten-Vorschau mit Kiez-Score und Bezirks-Daten'
 		);
 
-		await page.getByRole('link', { name: /Wie der Kiez-Score für Bezirke entsteht/ }).click();
+		await page.getByRole('link', { name: /So entsteht der Kiez-Score/ }).click();
 		await expect(page).toHaveURL(/\/methodik\/kiez-score/);
 		expect(page.url()).not.toMatch(/\/en\//);
 	});
 });
 
-test.describe('FAQ-Folge Kiez (sort_order)', () => {
-	test('DE und EN zeigen dieselben Template-IDs in YAML-Folge', async ({ page }) => {
+test.describe('FAQ-Folge Kiez', () => {
+	test('DE und EN zeigen gleich viele Fragen mit denselben Kapitel-Sprungmarken', async ({
+		page
+	}) => {
 		const read = async (path: string) => {
 			await page.goto(path);
-			return page.getByTestId('faq-section').locator('[data-faq-question]').allTextContents();
+			const hrefs = await page
+				.locator('#fragen details a[href^="#"]')
+				.evaluateAll((els) => els.map((el) => el.getAttribute('href')));
+			const count = await page.locator('#fragen summary').count();
+			return { hrefs, count };
 		};
-		const de = await expectFaqInYamlOrder(await read(`/kiez/${KIEZ_SLUG}`), 'kiez', 'de');
-		const en = await expectFaqInYamlOrder(await read(`/en/kiez/${KIEZ_SLUG}`), 'kiez', 'en');
-		expect(de.length).toBeGreaterThan(1);
+		const de = await read(`/kiez/${KIEZ_SLUG}`);
+		const en = await read(`/en/kiez/${KIEZ_SLUG}`);
+		expect(de.count).toBeGreaterThan(1);
 		expect(en).toEqual(de);
 	});
 });
@@ -345,8 +318,7 @@ for (const { kind, slug } of [
 	{ kind: 'kiez', slug: KIEZ_SLUG },
 	{ kind: 'bezirk', slug: BEZIRK_SLUG }
 ] as const) {
-	const areaTestId =
-		kind === 'kiez' ? 'kiez-administrative-area-jsonld' : 'bezirk-administrative-area-jsonld';
+	const areaTestId = 'place-administrative-area-jsonld';
 	test.describe(`i18n Block D1: ${kind} JSON-LD`, () => {
 		test(`/en/${kind}/${slug}: url auf /en, EN-Property-Namen, Breadcrumb mit /en`, async ({
 			page
@@ -359,7 +331,7 @@ for (const { kind, slug } of [
 			expect(ld['@id']).not.toContain('/en/');
 			expect(ld.additionalProperty?.map((p) => p.name)).toEqual(['Population', 'Area (ha)']);
 			if (kind === 'kiez') expect(ld.containedInPlace?.['@id']).toMatch(/\/bezirk\/[^/]+#place$/);
-			const crumbs = (await readJsonLd(page, `${kind}-breadcrumb-jsonld`)).itemListElement ?? [];
+			const crumbs = (await readJsonLd(page, 'place-breadcrumb-jsonld')).itemListElement ?? [];
 			expect(crumbs.length).toBeGreaterThan(1);
 			for (const crumb of crumbs) expect(new URL(crumb.item).pathname).toMatch(/^\/en(\/|$)/);
 		});
@@ -370,7 +342,7 @@ for (const { kind, slug } of [
 			expect(ld.url).toMatch(new RegExp(`/${kind}/${slug}$`));
 			expect(ld.url).not.toContain('/en/');
 			expect(ld.additionalProperty?.map((p) => p.name)).toEqual(['Einwohner', 'Fläche (ha)']);
-			const crumbs = (await readJsonLd(page, `${kind}-breadcrumb-jsonld`)).itemListElement ?? [];
+			const crumbs = (await readJsonLd(page, 'place-breadcrumb-jsonld')).itemListElement ?? [];
 			for (const crumb of crumbs) expect(new URL(crumb.item).pathname).not.toMatch(/^\/en(\/|$)/);
 		});
 	});
