@@ -1,7 +1,7 @@
 <!--
 	„Weitere Werte“ eines Kapitels, gemeinsame Tabelle beider Seiten.
 	Kopf zweizeilig: Name, darunter klein die Art des Werts. Einheit einmal in der Zeile,
-	Zellen nur Zahlen (Plex Mono, rechtsbündig, feste Breite, damit die Spalten zwischen den
+	Zellen nur Zahlen (Sans mit tabular-nums, rechtsbündig, feste Breite, damit die Spalten zwischen den
 	Kapiteln fluchten). Mobil gestapelt statt gequetscht. Große Nullstapel lässt der Median aus.
 -->
 <script lang="ts">
@@ -196,19 +196,16 @@
 						>{/if}
 				</th>
 				<td class="py-2 pl-3 text-right align-top">
-					<span class="font-mono text-sm whitespace-nowrap text-accent tabular-nums">{r.own}</span>
+					<span class="text-sm whitespace-nowrap text-accent tabular-nums">{r.own}</span>
 					{#if r.hint && !compact}<span class="mt-0.5 block"><Hint hint={r.hint} short /></span
 						>{:else if r.hint}<span class="block text-dense-label text-ink-subtle"
 							><span aria-hidden="true">{arrowOf(r.hint)}</span> {r.hint.short}</span
 						>{/if}
 				</td>
 				{#if refHead}
-					<td class="py-2 pl-3 text-right font-mono text-sm whitespace-nowrap tabular-nums"
-						>{r.ref}</td
-					>
+					<td class="py-2 pl-3 text-right text-sm whitespace-nowrap tabular-nums">{r.ref}</td>
 				{/if}
-				<td
-					class="py-2 pr-2 pl-3 text-right font-mono text-sm whitespace-nowrap text-ink-muted tabular-nums"
+				<td class="py-2 pr-2 pl-3 text-right text-sm whitespace-nowrap text-ink-muted tabular-nums"
 					>{r.berlin}</td
 				>
 			</tr>
@@ -235,7 +232,7 @@
 								>, {r.unit}</span
 							>{/if}</span
 					>
-					<span class="font-mono text-sm text-accent tabular-nums">{r.own}</span>
+					<span class="text-sm text-accent tabular-nums">{r.own}</span>
 				</div>
 				{#if showWhat(r)}
 					{@const w = splitWhat(whatOf(r))}

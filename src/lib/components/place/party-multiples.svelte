@@ -108,7 +108,7 @@
 								x={0}
 								y={context.yScale(yMax / 2) - 3}
 								value={fmt(yMax / 2)}
-								class="fill-[var(--ink-subtle)] text-[12px]"
+								class="fill-[var(--ink-subtle)] text-dense-label"
 							/>
 						</Svg>
 					{/snippet}

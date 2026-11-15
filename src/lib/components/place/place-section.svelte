@@ -43,7 +43,7 @@
 >
 	<div class="grid gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16">
 		<div class="lg:sticky lg:top-20 lg:self-start">
-			{#if eyebrow}<p class="text-dense-label tracking-wide text-ink-subtle uppercase">
+			{#if eyebrow}<p class="text-dense-label text-ink-subtle">
 					{eyebrow}
 				</p>{/if}
 			<h2 id={headingId} class="mt-1 text-xl leading-tight font-semibold text-ink">{title}</h2>

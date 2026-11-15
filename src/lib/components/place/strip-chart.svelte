@@ -279,7 +279,7 @@
 							y={SWARM + 9}
 							dominant-baseline="hanging"
 							text-anchor="middle"
-							class="fill-[var(--ink-subtle)] font-mono text-[12px]">0</text
+							class="fill-[var(--ink-subtle)] text-dense-label tabular-nums">0</text
 						>
 						<line
 							x1={-8}

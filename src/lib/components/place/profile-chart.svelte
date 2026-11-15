@@ -70,8 +70,9 @@
 						x={-132}
 						y={cy}
 						dominant-baseline="middle"
-						class="fill-[var(--ink)] text-[12px] {r.dim === 'composite' ? 'font-semibold' : ''}"
-						>{r.label}</text
+						class="fill-[var(--ink)] text-dense-label {r.dim === 'composite'
+							? 'font-semibold'
+							: ''}">{r.label}</text
 					>
 					{#if r.own !== null && r.ref !== null}
 						<Line
@@ -111,7 +112,7 @@
 							value={signedPoints(r.own - r.ref)}
 							textAnchor="end"
 							verticalAnchor="middle"
-							class="fill-[var(--ink-muted)] text-[12px] tabular-nums"
+							class="fill-[var(--ink-muted)] text-dense-label tabular-nums"
 						/>
 					{/if}
 				{/each}

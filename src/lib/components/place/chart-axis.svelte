@@ -1,6 +1,6 @@
 <!--
 	Gemeinsame x-Achse der Kiez- und Bezirksseiten, gebaut mit LayerChart `Axis`: keine Achslinie,
-	dezente Gitterlinien an den Ticks über die Plothöhe, Zahlen mit Abstand darunter in Plex Mono,
+	dezente Gitterlinien an den Ticks über die Plothöhe, Zahlen mit Abstand darunter (Sans, tabular-nums),
 	Einheit einmal an der letzten Zahl. Das eigene `tickLabel`-Snippet blendet Beschriftungen aus,
 	die sich berühren würden, und richtet die Ränder nach innen aus (`layoutAxisLabels`).
 -->
@@ -21,7 +21,7 @@
 
 	const context = getChartContext();
 
-	// Ca. 7,2 px je Zeichen bei 12 px Plex Mono.
+	// Ca. 7,2 px je Zeichen bei 12 px Sans mit tabular-nums, eher großzügig geschätzt.
 	const labels = $derived.by(() => {
 		const decimalSep = getLocale() === 'en' ? '.' : ',';
 		const texts = trimZeroDecimals(
@@ -54,7 +54,7 @@
 				value={l.text}
 				textAnchor={l.anchor}
 				verticalAnchor="start"
-				class="fill-[var(--ink-subtle)] font-mono text-[12px] tabular-nums"
+				class="fill-[var(--ink-subtle)] text-dense-label tabular-nums"
 			/>
 		{/if}
 	{/snippet}
@@ -65,7 +65,7 @@
 		y={context.height + 28}
 		value={`← ${ends[0]}`}
 		verticalAnchor="start"
-		class="fill-[var(--ink-subtle)] text-[12px]"
+		class="fill-[var(--ink-subtle)] text-dense-label"
 		aria-hidden="true"
 	/>
 	<Text
@@ -74,7 +74,7 @@
 		value={`${ends[1]} →`}
 		textAnchor="end"
 		verticalAnchor="start"
-		class="fill-[var(--ink-subtle)] text-[12px]"
+		class="fill-[var(--ink-subtle)] text-dense-label"
 		aria-hidden="true"
 	/>
 {/if}
