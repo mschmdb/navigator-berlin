@@ -81,11 +81,15 @@ export function splitsZeros(values: readonly (number | null)[]): boolean {
 	return z.zeros >= 10 && z.share >= 0.2;
 }
 
-export function zeroAwareMedian(values: readonly (number | null)[]): {
+export function zeroAwareMedian(
+	values: readonly (number | null)[],
+	/** Nur bei Kennzahlen, deren Nullen nichts aussagen (Milieuschutz); echte Nullen zählen mit. */
+	zeroPile = true
+): {
 	value: number | null;
 	zerosLeftOut: number;
 } {
-	if (!splitsZeros(values)) return { value: median(values), zerosLeftOut: 0 };
+	if (!zeroPile || !splitsZeros(values)) return { value: median(values), zerosLeftOut: 0 };
 	return {
 		value: median(values.filter((v) => v !== 0)),
 		zerosLeftOut: zeroShare(values).zeros

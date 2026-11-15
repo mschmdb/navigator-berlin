@@ -33,7 +33,11 @@
 	const headingId = $derived(`${id}-h`);
 </script>
 
-<section {id} aria-labelledby={headingId} class="scroll-mt-28 border-t border-rule py-16 lg:py-24">
+<section
+	{id}
+	aria-labelledby={headingId}
+	class="scroll-mt-28 border-t border-rule pt-12 pb-10 lg:pt-16 lg:pb-12"
+>
 	<div class="grid gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16">
 		<div class="lg:sticky lg:top-24 lg:self-start">
 			{#if eyebrow}<p class="text-dense-label tracking-wide text-ink-subtle uppercase">

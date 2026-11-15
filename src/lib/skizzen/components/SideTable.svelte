@@ -68,7 +68,10 @@
 	}
 	const rows = $derived<Row[]>([
 		...metrics.map((id) => {
-			const b = zeroAwareMedian(regions.map((r) => r.metrics[id]));
+			const b = zeroAwareMedian(
+				regions.map((r) => r.metrics[id]),
+				METRIC_SPECS[id].zeroPile === true
+			);
 			const text = metricText(id, opts);
 			const count = METRIC_SPECS[id].unitKind === 'count';
 			const hint = refHead
@@ -115,11 +118,24 @@
 	const showWhat = (r: { label: string; what: string }) =>
 		r.what && (!compact || r.what !== r.label);
 	const whatOf = (r: { what: string }) => r.what;
+	// Lange Pflicht-Erläuterung (Kriminalität): mobil erster Satz, der Rest zum Aufklappen.
+	const splitWhat = (w: string) => {
+		const i = w.indexOf('. ');
+		return w.length > 140 && i > 0
+			? { first: w.slice(0, i + 1), rest: w.slice(i + 2) }
+			: { first: w, rest: '' };
+	};
 	// Kompakt: Richtung nur als kurzer Text ohne Farbe, und nur bei Werten mit klarer Richtung.
 	const arrowOf = (h: HintData) => (h.dir === 'higher' ? '↑' : h.dir === 'lower' ? '↓' : '≈');
 	const zeroNotes = $derived(
 		metrics
-			.map((id) => ({ id, z: zeroAwareMedian(regions.map((r) => r.metrics[id])).zerosLeftOut }))
+			.map((id) => ({
+				id,
+				z: zeroAwareMedian(
+					regions.map((r) => r.metrics[id]),
+					METRIC_SPECS[id].zeroPile === true
+				).zerosLeftOut
+			}))
 			.filter((e) => e.z > 0)
 			.map((e) => {
 				const text = metricText(e.id, opts);
@@ -181,7 +197,7 @@
 	</thead>
 	<tbody>
 		{#each rows as r (r.key)}
-			<tr class="border-b border-rule align-top">
+			<tr class="border-b border-rule align-top last:border-b-0">
 				<th scope="row" class="py-2 pr-2 text-left text-sm font-normal text-ink">
 					{r.label}{#if showUnit(r)}<span class="text-dense-label text-ink-subtle">, {r.unit}</span
 						>{/if}
@@ -221,7 +237,7 @@
 		</p>{/if}
 	<ul class="mt-1 flex flex-col">
 		{#each rows as r (r.key)}
-			<li class="border-b border-rule py-1.5">
+			<li class="border-b border-rule py-1.5 pr-1 last:border-b-0">
 				<div class="flex items-baseline justify-between gap-3">
 					<span class="text-sm text-ink"
 						>{r.label}{#if showUnit(r)}<span class="text-dense-label text-ink-subtle"
@@ -230,7 +246,18 @@
 					>
 					<span class="font-mono text-sm text-accent tabular-nums">{r.own}</span>
 				</div>
-				{#if showWhat(r)}<p class="text-dense-label text-ink-subtle">{whatOf(r)}</p>{/if}
+				{#if showWhat(r)}
+					{@const w = splitWhat(whatOf(r))}
+					<p class="text-dense-label text-ink-subtle">{w.first}</p>
+					{#if w.rest}
+						<details class="text-dense-label text-ink-subtle">
+							<summary class="inline-flex min-h-6 cursor-pointer items-center text-accent underline"
+								>{m.skizze_side_what_more()}</summary
+							>
+							<p>{w.rest}</p>
+						</details>
+					{/if}
+				{/if}
 				<p
 					class="flex flex-wrap items-center gap-x-2 text-dense-label text-ink-subtle tabular-nums"
 				>
@@ -244,12 +271,14 @@
 		{/each}
 	</ul>
 </div>
-<div class="mt-1 flex flex-col gap-0.5 text-dense-label text-ink-subtle">
-	{#if !compact}
-		<p class="hidden sm:block">
-			{#if hasCounts}{m.skizze_side_count_note()}{/if}
-		</p>
-		<p>{m.skizze_side_typical_note({ count: regions.length, units: unitPlural })}</p>
-	{/if}
-	{#each zeroNotes as n (n)}<p>{n}</p>{/each}
-</div>
+{#if !compact || zeroNotes.length > 0}
+	<div class="mt-1 flex flex-col gap-0.5 text-dense-label text-ink-subtle">
+		{#if !compact}
+			<p class="hidden sm:block">
+				{#if hasCounts}{m.skizze_side_count_note()}{/if}
+			</p>
+			<p>{m.skizze_side_typical_note({ count: regions.length, units: unitPlural })}</p>
+		{/if}
+		{#each zeroNotes as n (n)}<p>{n}</p>{/each}
+	</div>
+{/if}

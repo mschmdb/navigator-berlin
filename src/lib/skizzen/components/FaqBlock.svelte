@@ -18,7 +18,7 @@
 		<h2 id="fragen-h" class="text-xl font-semibold text-ink">{m.skizze_faq_heading()}</h2>
 		<div class="mt-4 flex max-w-3xl flex-col">
 			{#each items as item, i (i)}
-				<details class="group border-b border-rule py-3">
+				<details class="group border-b border-rule py-3 last:border-b-0">
 					<summary
 						class="cursor-pointer list-none text-base font-medium text-ink marker:hidden focus-visible:outline-2 focus-visible:outline-focus"
 					>

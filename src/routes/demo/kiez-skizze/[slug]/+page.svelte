@@ -296,11 +296,11 @@
 						partei: leader.partei,
 						name,
 						pct: pct(leader.anteil)
-					})}{#if leader.refAnteil !== null}{m.skizze_wahl_leader_ref({
+					})}{#if leader.refAnteil !== null}{` ${m.skizze_wahl_leader_ref({
 							ref: wahlRefName,
 							partei: leader.partei,
 							pct: pct(leader.refAnteil)
-						})}{/if}
+						})}`}{/if}
 				</p>
 			{/if}
 			<p class="text-sm">{m.skizze_wahl_hint_kiez()}</p>

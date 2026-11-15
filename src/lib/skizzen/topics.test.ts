@@ -1,4 +1,8 @@
 import { describe, expect, it } from 'vitest';
+
+// 20 Werte: Prozentangaben gelten erst ab 20 Orten, darunter zählt die Seite („3 von 12“).
+const FIELD_20 = [...Array(12).fill(50), ...Array(8).fill(44)];
+const RENT_20 = [...Array(15).fill(7), ...Array(5).fill(9)];
 import {
 	CHAPTERS,
 	METRIC_SPECS,
@@ -23,18 +27,18 @@ describe('formatMetric', () => {
 
 describe('metricLead', () => {
 	it('uses the lower word when most places are higher', () => {
-		expect(metricLead('laermDb', 'Reuterstraße', 46, [46, 50, 52, 55, 44], 'Kieze')).toBe(
+		expect(metricLead('laermDb', 'Reuterstraße', 46, FIELD_20, 'Kieze')).toBe(
 			'Verkehrslärm in Reuterstraße: 46,0\u00a0dB. Das ist leiser als in 60 % der Berliner Kieze.'
 		);
 	});
 	it('uses the higher word when most places are lower', () => {
-		expect(metricLead('bestandsmiete', 'X', 9, [6, 7, 8, 9], 'Bezirke')).toBe(
+		expect(metricLead('bestandsmiete', 'X', 9, RENT_20, 'Bezirke')).toBe(
 			'Miete in laufenden Verträgen in X: 9,00\u00a0€/m². Das ist teurer als in 75 % der Berliner Bezirke.'
 		);
 	});
 	it('names the chosen comparison with the difference, then the Berlin field', () => {
 		expect(
-			metricLead('laermDb', 'Reuterstraße', 46.2, [46.2, 50, 52, 55, 44], 'Kieze', {
+			metricLead('laermDb', 'Reuterstraße', 46.2, FIELD_20, 'Kieze', {
 				name: 'Neukölln gesamt',
 				value: 47.2
 			})
@@ -46,6 +50,17 @@ describe('metricLead', () => {
 		expect(metricLead('altbau', 'X', 77, [], 'Kieze', { name: 'Rixdorf', value: 61 })).toBe(
 			'Altbau in X: 77\u00a0% der Wohnungen. Das ist 16\u00a0Prozentpunkte mehr Altbau als Rixdorf.'
 		);
+	});
+	it('counts instead of percent for the 12 Bezirke', () => {
+		expect(
+			metricLead(
+				'laermDb',
+				'Spandau',
+				46.4,
+				[46.4, 47, 48, 49, 45, 50, 51, 52, 53, 54, 55, 56],
+				'Bezirke'
+			)
+		).toBe('Verkehrslärm in Spandau: 46,4\u00a0dB. Das ist leiser als 10 von 12 Bezirken.');
 	});
 	it('says so when there is no value', () => {
 		expect(metricLead('pet', 'X', null, [1, 2], 'Kieze')).toBe('Für X gibt es dazu keine Angabe.');
@@ -73,17 +88,19 @@ describe('chapter registry', () => {
 describe('characterPoints', () => {
 	const base = Object.fromEntries(METRICS.map((m) => [m, 50])) as Record<string, number | null>;
 	const make = (o: Record<string, number | null>) => ({ ...base, ...o }) as MetricValues;
-	const all = [10, 20, 30, 40].map((v) => make({ dichte: v, altbau: v, laermDb: 50 }));
+	const all = Array.from({ length: 19 }, (_, i) => i + 10).map((v) =>
+		make({ dichte: v, altbau: v, laermDb: 50 })
+	);
 
 	it('names the most extreme metrics with direction and share', () => {
 		const own = make({ dichte: 99, altbau: 1, laermDb: 50 });
 		expect(characterPoints(own, [...all, own], 'Kieze', 2)).toEqual([
-			'Altbau: weniger Altbau als 80 % der Berliner Kieze',
-			'Einwohnerdichte: dichter besiedelt als 80 % der Berliner Kieze'
+			'Altbau: weniger Altbau als 95 % der Berliner Kieze',
+			'Einwohnerdichte: dichter besiedelt als 95 % der Berliner Kieze'
 		]);
 	});
 	it('returns nothing when the place is ordinary everywhere', () => {
-		const own = make({ dichte: 25, altbau: 25 });
+		const own = make({ dichte: 19, altbau: 19 });
 		expect(characterPoints(own, all, 'Kieze')).toEqual([]);
 	});
 });
@@ -131,7 +148,7 @@ describe('English output', () => {
 		expect(formatMetric('altbau', null, en)).toBe('no data');
 	});
 	it('builds the lead sentence in English', () => {
-		expect(metricLead('laermDb', 'Reuterstraße', 46, [46, 50, 52, 55, 44], 'Kieze', null, en)).toBe(
+		expect(metricLead('laermDb', 'Reuterstraße', 46, FIELD_20, 'Kieze', null, en)).toBe(
 			"Traffic noise in Reuterstraße: 46.0\u00a0dB. That is quieter than in 60% of Berlin's Kieze."
 		);
 		expect(metricLead('altbau', 'X', 77, [], 'Kieze', { name: 'Rixdorf', value: 61 }, en)).toBe(
@@ -150,10 +167,10 @@ describe('English output', () => {
 	it('names characteristic points in English', () => {
 		const base = Object.fromEntries(METRICS.map((m) => [m, 50])) as Record<string, number | null>;
 		const make = (o: Record<string, number | null>) => ({ ...base, ...o }) as MetricValues;
-		const all = [10, 20, 30, 40].map((v) => make({ dichte: v }));
+		const all = Array.from({ length: 19 }, (_, i) => make({ dichte: i + 10 }));
 		const own = make({ dichte: 99 });
 		expect(characterPoints(own, [...all, own], 'Kieze', 1, en)).toEqual([
-			"Population density: more densely populated than 80% of Berlin's Kieze"
+			"Population density: more densely populated than 95% of Berlin's Kieze"
 		]);
 	});
 });

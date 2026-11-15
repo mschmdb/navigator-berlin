@@ -28,7 +28,9 @@
 				<p class="text-sm text-ink-subtle">{g.hint}</p>
 				<ul class="mt-2 flex flex-col">
 					{#each g.entries as e (e.slug)}
-						<li class="flex items-center justify-between gap-3 border-b border-rule py-1.5">
+						<li
+							class="flex items-center justify-between gap-3 border-b border-rule py-1.5 last:border-b-0"
+						>
 							<a
 								href={localHref(route.replace('[slug]', e.slug), { locale: getLocale() })}
 								class="flex min-h-6 min-w-0 items-center truncate text-sm text-ink underline underline-offset-2 hover:text-accent"

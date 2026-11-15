@@ -1,5 +1,12 @@
 import { mean, median, mostCommon, zeroAwareMedian } from './stats';
-import { LABELS, METRICS, type LabelValues, type MetricValues } from './topics';
+import {
+	LABELS,
+	METRICS,
+	METRIC_SPECS,
+	type MetricId,
+	type LabelValues,
+	type MetricValues
+} from './topics';
 import {
 	DIMS,
 	type DimValues,
@@ -50,12 +57,18 @@ export function aggregateProfile(
 		DIMS.map((d) => [d, agg(regions.map((r) => r.dims[d]))])
 	) as DimValues;
 	// Median der Themenwerte ohne großen Nullstapel, wie in den Grafiken (Milieuschutz).
-	const metricAgg = (xs: (number | null)[]) =>
-		method === 'median' ? zeroAwareMedian(xs).value : mean(xs);
+	const metricAgg = (id: MetricId, xs: (number | null)[]) =>
+		method === 'median' ? zeroAwareMedian(xs, METRIC_SPECS[id].zeroPile === true).value : mean(xs);
 	const metrics =
 		own?.metrics ??
 		(Object.fromEntries(
-			METRICS.map((m) => [m, metricAgg(regions.map((r) => r.metrics?.[m] ?? null))])
+			METRICS.map((m) => [
+				m,
+				metricAgg(
+					m,
+					regions.map((r) => r.metrics?.[m] ?? null)
+				)
+			])
 		) as MetricValues);
 	const labels =
 		own?.labels ??

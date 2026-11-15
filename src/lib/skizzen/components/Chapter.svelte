@@ -14,6 +14,7 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { mostCommon, niceDomain, spread, zeroAwareMedian } from '../stats';
 	import {
+		METRIC_SPECS,
 		chapterText,
 		formatMetric,
 		formatMetricNumber,
@@ -103,7 +104,9 @@
 		hintFor(
 			id,
 			own.metrics[id],
-			refIsBerlin ? zeroAwareMedian(values(id)).value : ref.metrics[id],
+			refIsBerlin
+				? zeroAwareMedian(values(id), METRIC_SPECS[id].zeroPile === true).value
+				: ref.metrics[id],
 			refIsBerlin ? m.skizze_ref_berlin_median() : refName,
 			opts
 		);
@@ -120,7 +123,7 @@
 	// Textfassung für Screenreader und Tabellen-Ansicht: alle Werte, Klassen und die Kiez-Spanne.
 	const tableRows = $derived([
 		...allSide.map((id) => {
-			const b = zeroAwareMedian(values(id));
+			const b = zeroAwareMedian(values(id), METRIC_SPECS[id].zeroPile === true);
 			const median = fmt(id, b.value);
 			return [
 				metricText(id, opts).label,
@@ -238,6 +241,7 @@
 								zeroName={text.zeroName}
 								zeroMedianLabel={text.zeroMedianLabel}
 								{unitPlural}
+								zeroPile={METRIC_SPECS[id].zeroPile === true}
 								ownHint={compact ? null : hintOf(id)}
 								r={regions.length < 20 ? 6 : 2.9}
 								{onpick}

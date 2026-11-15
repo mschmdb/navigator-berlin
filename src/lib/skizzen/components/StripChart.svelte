@@ -48,6 +48,8 @@
 		r?: number;
 		/** Lesehilfe hinter dem eigenen Wert in der Legende. */
 		ownHint?: HintData | null;
+		/** Nullblock nur für Kennzahlen ohne Aussage in der Null (Milieuschutz). */
+		zeroPile?: boolean;
 		/** Richtungswörter unter der Achse (kompaktes Muster). */
 		ends?: readonly [string, string] | null;
 		onpick?: (slug: string) => void;
@@ -69,6 +71,7 @@
 		unitPlural = m.skizze_units_kieze(),
 		r: R = 2.9,
 		ownHint = null,
+		zeroPile = false,
 		ends = null,
 		onpick
 	}: Props = $props();
@@ -83,7 +86,7 @@
 
 	// Großer Nullstapel (Milieuschutz): eigener Block statt eines gestauchten Turms im Schwarm.
 	const zeros = $derived(zeroShare(items.map((i) => i.value)));
-	const splitZeros = $derived(splitsZeros(items.map((i) => i.value)));
+	const splitZeros = $derived(zeroPile && splitsZeros(items.map((i) => i.value)));
 	const swarmItems = $derived(splitZeros ? items.filter((i) => i.value !== 0) : items);
 	const blockRows = $derived(
 		splitZeros ? Math.max(4, Math.min(14, Math.ceil(Math.sqrt(zeros.zeros * 1.4)))) : 0

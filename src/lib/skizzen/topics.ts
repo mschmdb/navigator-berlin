@@ -48,6 +48,8 @@ export interface MetricSpec {
 	 * Ohne Wertung bleiben Miete, Altbau, Milieuschutz, Dichte, soziale Lage, Kriminalität und Zählwerte.
 	 */
 	readonly better?: 'higher' | 'lower';
+	/** Viele Nullen ohne Aussage (Milieuschutz): Nullblock und typischer Wert ohne die Nullen. Echte Nullen (kein Bahnhof) zählen normal. */
+	readonly zeroPile?: true;
 }
 
 export interface MetricText {
@@ -66,13 +68,13 @@ export interface MetricText {
 
 export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 	laermDb: { digits: 1, unitKind: 'other', better: 'lower' },
-	luftHoch: { digits: 0, unitKind: 'percent', better: 'lower' },
+	luftHoch: { digits: 0, unitKind: 'percent', better: 'lower', zeroPile: true },
 	gruenanlagen: { digits: 1, unitKind: 'percent', better: 'higher' },
-	gruenSchlecht: { digits: 0, unitKind: 'percent', better: 'lower' },
+	gruenSchlecht: { digits: 0, unitKind: 'percent', better: 'lower', zeroPile: true },
 	pet: { digits: 1, unitKind: 'other', better: 'lower' },
 	bestandsmiete: { digits: 2, unitKind: 'other' },
 	altbau: { digits: 0, unitKind: 'percent' },
-	milieuschutz: { digits: 0, unitKind: 'percent' },
+	milieuschutz: { digits: 0, unitKind: 'percent', zeroPile: true },
 	haltestellenKm2: { digits: 1, unitKind: 'other', better: 'higher' },
 	haltestelle400m: { digits: 0, unitKind: 'percent', better: 'higher' },
 	bahnhoefe: { digits: 0, unitKind: 'count' },
@@ -215,6 +217,14 @@ export function formatMetricNumber(id: MetricId, value: number, opts?: LocaleOpt
  * Zwei Sätze je Kapitel: Wert und Lage unter allen Orten, dann der Vergleich.
  * „Verkehrslärm in Reuterstraße: 46,2 dB. Das ist leiser als in 80 % der Berliner Kieze.“
  */
+/** „als 11 von 12 Bezirken“: Dativ Plural im Deutschen, im Englischen unverändert. */
+function dativePlural(units: string, opts?: LocaleOpts): string {
+	return msgOpts(opts).locale === 'en' || units.endsWith('n') ? units : `${units}n`;
+}
+
+/** Unter dieser Zahl von Orten sagt eine Anzahl mehr als ein Prozentwert. */
+const SMALL_SET = 20;
+
 export function metricLead(
 	id: MetricId,
 	name: string,
@@ -237,12 +247,20 @@ export function metricLead(
 	const below = xs.filter((v) => v < own).length;
 	const above = xs.filter((v) => v > own).length;
 	const pct = (n: number) => String(Math.round((n / xs.length) * 100));
+	// Bei wenigen Orten (12 Bezirke) Anzahl statt Prozent: „leiser als 11 von 12 Bezirken“.
+	const fieldOf = (word: string, n: number) =>
+		xs.length < SMALL_SET
+			? m.skizze_lead_field_count(
+					{ word, n: String(n), total: String(xs.length), units: dativePlural(unitPlural, opts) },
+					o
+				)
+			: m.skizze_lead_field({ word, pct: pct(n), units: unitPlural }, o);
 	const field =
 		xs.length === 0 || (below === 0 && above === 0)
 			? null
 			: below >= above
-				? m.skizze_lead_field({ word: text.higher, pct: pct(below), units: unitPlural }, o)
-				: m.skizze_lead_field({ word: text.lower, pct: pct(above), units: unitPlural }, o);
+				? fieldOf(text.higher, below)
+				: fieldOf(text.lower, above);
 	if (ref && ref.value !== null) {
 		const diff = own - ref.value;
 		const step = 10 ** -spec.digits;
@@ -280,6 +298,8 @@ interface Candidate {
 	readonly m: MetricId;
 	readonly high: boolean;
 	readonly share: number;
+	readonly n: number;
+	readonly total: number;
 }
 
 export function characterPoints(
@@ -295,16 +315,29 @@ export function characterPoints(
 			const v = own[id];
 			const xs = all.map((a) => a[id]).filter((x): x is number => x !== null);
 			if (v === null || xs.length < 3) return null;
-			const below = xs.filter((x) => x < v).length / xs.length;
-			const above = xs.filter((x) => x > v).length / xs.length;
-			const high = below >= above;
-			return { m: id, high, share: high ? below : above };
+			const nBelow = xs.filter((x) => x < v).length;
+			const nAbove = xs.filter((x) => x > v).length;
+			const high = nBelow >= nAbove;
+			const n = high ? nBelow : nAbove;
+			return { m: id, high, share: n / xs.length, n, total: xs.length };
 		})
 		.filter((c): c is Candidate => c !== null && c.share >= 0.75)
 		.sort((a, b) => b.share - a.share)
 		.slice(0, count)
 		.map((c) => {
 			const text = metricText(c.m, opts);
+			if (c.total < SMALL_SET) {
+				return m.skizze_character_point_count(
+					{
+						label: text.label,
+						word: c.high ? text.higher : text.lower,
+						n: String(c.n),
+						total: String(c.total),
+						units: dativePlural(unitPlural, opts)
+					},
+					msgOpts(opts)
+				);
+			}
 			return m.skizze_character_point(
 				{
 					label: text.label,
