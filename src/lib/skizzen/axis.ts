@@ -1,7 +1,16 @@
-/** Bei lauter ganzen Ticks „14“ statt „14,0“. */
-export function trimZeroDecimals(texts: readonly string[], ticks: readonly number[]): string[] {
+/**
+ * Bei lauter ganzen Ticks „14“ statt „14,0“. Nur das Dezimalzeichen der Sprache zählt,
+ * sonst würde aus „10.000“ (Tausenderpunkt) eine „10“.
+ */
+export function trimZeroDecimals(
+	texts: readonly string[],
+	ticks: readonly number[],
+	decimalSep: string
+): string[] {
 	if (!ticks.every((t) => Number.isInteger(t))) return [...texts];
-	return texts.map((t) => t.replace(/[.,]0+(?=\D*$)/, ''));
+	const sep = decimalSep.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const re = new RegExp(`${sep}0+(?=\\D*$)`);
+	return texts.map((t) => t.replace(re, ''));
 }
 
 export interface AxisLabel {

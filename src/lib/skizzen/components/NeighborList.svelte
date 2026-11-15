@@ -31,7 +31,7 @@
 						<li class="flex items-center justify-between gap-3 border-b border-rule py-1.5">
 							<a
 								href={localHref(route.replace('[slug]', e.slug), { locale: getLocale() })}
-								class="min-w-0 truncate text-sm text-ink underline underline-offset-2 hover:text-accent"
+								class="flex min-h-6 min-w-0 items-center truncate text-sm text-ink underline underline-offset-2 hover:text-accent"
 								>{e.name}</a
 							>
 							<button

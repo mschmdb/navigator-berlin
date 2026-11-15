@@ -2645,7 +2645,7 @@
 	"skizze_m_dichte_higher": "more densely populated",
 	"skizze_m_dichte_lower": "less densely populated",
 	"skizze_m_kriminalitaet_label": "Recorded crime",
-	"skizze_m_kriminalitaet_unit": "cases per 100,000 people",
+	"skizze_m_kriminalitaet_unit": "index, weighted cases per 100,000 people",
 	"skizze_m_kriminalitaet_what": "Frequency rate per planning region (Bezirksregion), not per address. It counts recorded cases per registered resident and does not show personal risk. Places with many tourists or commuters look worse than they are, and unreported crime is not counted. Not a safety ranking",
 	"skizze_m_kriminalitaet_source": "Berlin Police crime atlas, average 2023 to 2025",
 	"skizze_m_kriminalitaet_higher": "more recorded cases",

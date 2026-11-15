@@ -51,7 +51,8 @@
 			m.skizze_berlin_note_kiez({ count: all.length })
 		)
 	);
-	const bezirk = $derived(
+	// Bezirk als Vergleich: dieselben Werte wie auf der Bezirksseite (Score und Themen des ganzen Bezirks).
+	const bezirkProfile = $derived(
 		bezirkName && data.bezirkRegion
 			? aggregateProfile(
 					'bezirk',
@@ -63,6 +64,11 @@
 					{ metrics: data.bezirkRegion.metrics, labels: data.bezirkRegion.labels }
 				)
 			: null
+	);
+	const bezirk = $derived(
+		bezirkProfile && data.bezirkRegion
+			? { ...bezirkProfile, dims: data.bezirkRegion.dims }
+			: bezirkProfile
 	);
 
 	const skizze = new SkizzeState(() => ({

@@ -4,6 +4,7 @@
 	Erste und letzte Beschriftung stehen nach innen, damit nichts angeschnitten wird.
 -->
 <script lang="ts">
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { layoutAxisLabels, trimZeroDecimals } from '../axis';
 
 	interface Props {
@@ -21,9 +22,11 @@
 
 	// Ca. 6,3 px je Zeichen bei 10,5 px Plex Mono.
 	const labels = $derived.by(() => {
+		const decimalSep = getLocale() === 'en' ? '.' : ',';
 		const texts = trimZeroDecimals(
 			ticks.map((t) => format(t)),
-			ticks
+			ticks,
+			decimalSep
 		).map((t, i) => (i === ticks.length - 1 && unit ? `${t}\u00a0${unit}` : t));
 		return layoutAxisLabels(
 			texts,

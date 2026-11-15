@@ -2645,7 +2645,7 @@
 	"skizze_m_dichte_higher": "dichter besiedelt",
 	"skizze_m_dichte_lower": "weniger dicht besiedelt",
 	"skizze_m_kriminalitaet_label": "Erfasste Kriminalität",
-	"skizze_m_kriminalitaet_unit": "Fälle je 100.000 Menschen",
+	"skizze_m_kriminalitaet_unit": "Index, gewichtete Fälle je 100.000 Menschen",
 	"skizze_m_kriminalitaet_what": "Häufigkeitszahl je Bezirksregion, nicht adressgenau. Sie misst erfasste Fälle pro gemeldete Einwohner, kein persönliches Risiko. Touristen- und Pendler-Orte erscheinen überzeichnet, das Dunkelfeld bleibt unerfasst. Kein Sicherheits-Ranking",
 	"skizze_m_kriminalitaet_source": "Kriminalitätsatlas der Polizei Berlin, Mittel 2023 bis 2025",
 	"skizze_m_kriminalitaet_higher": "mehr erfasste Fälle",

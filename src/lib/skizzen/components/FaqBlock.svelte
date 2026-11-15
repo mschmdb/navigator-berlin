@@ -30,8 +30,9 @@
 					<p class="mt-2 text-base leading-body text-ink-muted">{item.answer}</p>
 					{#if item.chapter}
 						<p class="mt-1 text-sm">
-							<a class="text-accent underline" href="#{item.chapter.id}"
-								>{m.skizze_faq_more({ title: item.chapter.title })}</a
+							<a
+								class="inline-flex min-h-6 items-center text-accent underline"
+								href="#{item.chapter.id}">{m.skizze_faq_more({ title: item.chapter.title })}</a
 							>
 						</p>
 					{/if}

@@ -333,7 +333,7 @@
 			{#each [...data.kieze].sort( (a, b) => a.name.localeCompare(b.name, opts.locale) ) as k (k.slug)}
 				<li>
 					<a
-						class="text-sm text-ink underline underline-offset-2 hover:text-accent"
+						class="inline-flex min-h-6 items-center text-sm text-ink underline underline-offset-2 hover:text-accent"
 						href={localHref(`/demo/kiez-skizze/${k.slug}`, opts)}>{k.name}</a
 					>
 				</li>

@@ -162,7 +162,11 @@
 		</p>
 		{#if mapHref}
 			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-			<p><a class="text-accent underline" href={mapHref}>{m.skizze_chapter_on_map()}</a></p>
+			<p>
+				<a class="inline-flex min-h-6 items-center text-accent underline" href={mapHref}
+					>{m.skizze_chapter_on_map()}</a
+				>
+			</p>
 		{/if}
 	{/snippet}
 	{#snippet chart()}
