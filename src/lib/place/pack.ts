@@ -3,7 +3,7 @@
  * für Verteilungen und Vergleiche. Statt 143 Objekte mit wiederholten Schlüsseln und Namen
  * gehen Spalten über die Leitung: ein Array je Kennzahl, Namen und Texte nur einmal.
  */
-import { LABELS, METRICS, type LabelValues, type MetricValues } from './topics';
+import { LABELS, METRICS, METRIC_SPECS, type LabelValues, type MetricValues } from './topics';
 import { DIMS, type DimValues, type RegionSnapshot } from './types';
 import type { WahlArt, WahlBundle, WahlPunkt } from './wahl-types';
 
@@ -14,7 +14,9 @@ export interface PackedRegions {
 	readonly parent: readonly number[];
 	readonly parents: readonly { readonly slug: string; readonly name: string }[];
 	readonly dims: readonly (readonly (number | null)[])[];
+	/** Ganze Zahlen: Wert mal 10^exps[k] (höchstens Nachkommastellen + 2, siehe `compactMetrics`). */
 	readonly metrics: readonly (readonly (number | null)[])[];
+	readonly exps: readonly number[];
 	/** Index in `texts`, -1 ohne Wert. */
 	readonly labels: readonly (readonly number[])[];
 	readonly texts: readonly string[];
@@ -38,9 +40,25 @@ function indexer<T>(key: (v: T) => string) {
 	};
 }
 
+/** Kleinste Zehnerpotenz, mit der alle Werte ganze Zahlen werden (höchstens Nachkommastellen + 2). */
+function scaleFor(id: (typeof METRICS)[number], values: readonly (number | null)[]): number {
+	const max = METRIC_SPECS[id].digits + 2;
+	for (let e = 0; e < max; e++) {
+		const f = 10 ** e;
+		if (values.every((v) => v === null || Math.abs(Math.round(v * f) - v * f) < 1e-6)) return e;
+	}
+	return max;
+}
+
 export function packRegions(regions: readonly RegionSnapshot[]): PackedRegions {
 	const parents = indexer<{ slug: string; name: string }>((p) => p.slug);
 	const texts = indexer<string>((t) => t);
+	const exps = METRICS.map((id) =>
+		scaleFor(
+			id,
+			regions.map((r) => r.metrics[id])
+		)
+	);
 	return {
 		slugs: regions.map((r) => r.slug),
 		names: regions.map((r) => r.name),
@@ -48,8 +66,20 @@ export function packRegions(regions: readonly RegionSnapshot[]): PackedRegions {
 			r.parentSlug === null ? -1 : parents.index({ slug: r.parentSlug, name: r.parentName ?? '' })
 		),
 		parents: parents.items,
-		dims: DIMS.map((d) => regions.map((r) => r.dims[d])),
-		metrics: METRICS.map((id) => regions.map((r) => r.metrics[id])),
+		// Score-Punkte mit einer Nachkommastelle, als ganze Zehntel.
+		dims: DIMS.map((d) =>
+			regions.map((r) => {
+				const v = r.dims[d];
+				return v === null ? null : Math.round(v * 10);
+			})
+		),
+		metrics: METRICS.map((id, k) =>
+			regions.map((r) => {
+				const v = r.metrics[id];
+				return v === null ? null : Math.round(v * 10 ** exps[k]);
+			})
+		),
+		exps,
 		labels: LABELS.map((l) =>
 			regions.map((r) => (r.labels[l] === null ? -1 : texts.index(r.labels[l])))
 		),
@@ -65,8 +95,18 @@ export function unpackRegions(p: PackedRegions): RegionSnapshot[] {
 			name: p.names[i],
 			parentSlug: parent?.slug ?? null,
 			parentName: parent?.name ?? null,
-			dims: Object.fromEntries(DIMS.map((d, k) => [d, p.dims[k][i]])) as DimValues,
-			metrics: Object.fromEntries(METRICS.map((id, k) => [id, p.metrics[k][i]])) as MetricValues,
+			dims: Object.fromEntries(
+				DIMS.map((d, k) => {
+					const v = p.dims[k][i];
+					return [d, v === null ? null : v / 10];
+				})
+			) as DimValues,
+			metrics: Object.fromEntries(
+				METRICS.map((id, k) => {
+					const v = p.metrics[k][i];
+					return [id, v === null ? null : v / 10 ** p.exps[k]];
+				})
+			) as MetricValues,
 			labels: Object.fromEntries(
 				LABELS.map((l, k) => [l, p.labels[k][i] >= 0 ? p.texts[p.labels[k][i]] : null])
 			) as LabelValues

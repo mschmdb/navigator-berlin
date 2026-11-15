@@ -125,28 +125,8 @@
 	const classOf = (v: string | null | undefined) => (v ? labelValueText(v, opts) : '–');
 	const mainText = $derived(metricText(spec.main[0], opts));
 	// Textfassung für Screenreader und Tabellen-Ansicht: alle Werte, Klassen und die Kiez-Spanne.
-	const tableRows = $derived([
-		...allSide.map((id) => {
-			const b = zeroAwareMedian(values(id), METRIC_SPECS[id].zeroPile === true);
-			const median = fmt(id, b.value);
-			return [
-				metricText(id, opts).label,
-				fmt(id, own.metrics[id]),
-				fmt(id, ref.metrics[id]),
-				b.zerosLeftOut > 0
-					? m.place_chapter_zero_values({ value: median, count: b.zerosLeftOut })
-					: median
-			];
-		}),
-		...(spec.labels ?? []).map((l) => [
-			labelText(l, opts).label,
-			classOf(own.labels[l]),
-			classOf(ref.labels[l]),
-			m.place_chapter_most_common({
-				value: classOf(mostCommon(regions.map((r) => r.labels[l])))
-			})
-		]),
-		...(kieze.length > 1
+	const spreadRows = $derived(
+		kieze.length > 1
 			? spec.main.flatMap((id) => {
 					const s = spread(kieze, (k) => k.metrics[id]);
 					return s
@@ -168,7 +148,33 @@
 							]
 						: [];
 				})
-			: [])
+			: []
+	);
+	// Nur für Screenreader (Lesart „Erzählen“): die Nebenwerte stehen schon in der SideTable.
+	const srRows = $derived([...spec.main.map((id) => metricRow(id)), ...spreadRows]);
+	const metricRow = (id: MetricId) => {
+		const b = zeroAwareMedian(values(id), METRIC_SPECS[id].zeroPile === true);
+		const median = fmt(id, b.value);
+		return [
+			metricText(id, opts).label,
+			fmt(id, own.metrics[id]),
+			fmt(id, ref.metrics[id]),
+			b.zerosLeftOut > 0
+				? m.place_chapter_zero_values({ value: median, count: b.zerosLeftOut })
+				: median
+		];
+	};
+	const tableRows = $derived([
+		...allSide.map(metricRow),
+		...(spec.labels ?? []).map((l) => [
+			labelText(l, opts).label,
+			classOf(own.labels[l]),
+			classOf(ref.labels[l]),
+			m.place_chapter_most_common({
+				value: classOf(mostCommon(regions.map((r) => r.labels[l])))
+			})
+		]),
+		...spreadRows
 	]);
 </script>
 
@@ -313,7 +319,7 @@
 			{visible}
 			caption={m.place_chapter_caption({ title, own: own.name, ref: refName })}
 			head={[m.place_table_value(), own.name, refName, m.place_table_berlin_median()]}
-			rows={tableRows}
+			rows={visible ? tableRows : srRows}
 		/>
 	{/snippet}
 	{#snippet sources()}

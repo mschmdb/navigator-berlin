@@ -30,6 +30,17 @@ describe('packRegions', () => {
 		expect(json.match(/Bezirk x/g)).toHaveLength(1);
 		expect(json.match(/stufe 0/g)).toHaveLength(1);
 	});
+	it('stores metric values as whole numbers with the smallest exact scale', () => {
+		const r = region('a', null, 1);
+		const packed = packRegions([
+			{ ...r, metrics: { ...r.metrics, pet: 33.874, laermDb: 47.7 } },
+			{ ...r, slug: 'b', metrics: { ...r.metrics, pet: 30, laermDb: 46 } }
+		]);
+		expect(packed.metrics[METRICS.indexOf('pet')]).toEqual([33874, 30000]);
+		expect(packed.metrics[METRICS.indexOf('laermDb')]).toEqual([477, 460]);
+		expect(unpackRegions(packed)[0].metrics.pet).toBe(33.874);
+		expect(unpackRegions(packed)[1].metrics.laermDb).toBe(46);
+	});
 	it('is much smaller than the plain list', () => {
 		const many = Array.from({ length: 143 }, (_, i) => region(`kiez-${i}`, `b${i % 12}`, i));
 		expect(JSON.stringify(packRegions(many)).length).toBeLessThan(
