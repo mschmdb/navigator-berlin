@@ -65,3 +65,29 @@ export function zeroShare(values: readonly (number | null)[]): {
 	const zeros = xs.filter((v) => v === 0).length;
 	return { zeros, total: xs.length, share: xs.length === 0 ? 0 : zeros / xs.length };
 }
+
+/** Häufigste Kategorie, etwa die überwiegende Lärmklasse unter allen Kiezen. */
+export function mostCommon(labels: readonly (string | null)[]): string | null {
+	const counts = new Map<string, number>();
+	for (const l of labels) if (l !== null) counts.set(l, (counts.get(l) ?? 0) + 1);
+	let best: string | null = null;
+	for (const [l, n] of counts) if (best === null || n > (counts.get(best) ?? 0)) best = l;
+	return best;
+}
+
+/** Ab 10 Nullwerten und 20 % Anteil bekommen Nullwerte einen eigenen Block, der Median lässt sie aus. */
+export function splitsZeros(values: readonly (number | null)[]): boolean {
+	const z = zeroShare(values);
+	return z.zeros >= 10 && z.share >= 0.2;
+}
+
+export function zeroAwareMedian(values: readonly (number | null)[]): {
+	value: number | null;
+	zerosLeftOut: number;
+} {
+	if (!splitsZeros(values)) return { value: median(values), zerosLeftOut: 0 };
+	return {
+		value: median(values.filter((v) => v !== 0)),
+		zerosLeftOut: zeroShare(values).zeros
+	};
+}

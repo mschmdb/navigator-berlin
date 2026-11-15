@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Axis, Chart, Circle, Grid, Line, Svg, Text } from 'layerchart';
+	import { Chart, Circle, Line, Svg, Text } from 'layerchart';
+	import ChartAxis from './ChartAxis.svelte';
 	import { scaleLinear } from 'd3-scale';
 	import { signedPoints } from '../compare-text';
 	import { dimLabel } from '../labels';
@@ -32,21 +33,24 @@
 		><span class="size-3 rounded-full border-2 border-ink bg-bg"></span>{refLabel}</span
 	>
 </div>
-<div style:height="{rows.length * ROW + 28}px">
+<div style:height="{rows.length * ROW + 36}px">
 	<Chart
 		data={rows}
 		x="own"
 		xScale={scaleLinear()}
 		xDomain={[0, 100]}
-		padding={{ top: 4, right: 44, bottom: 24, left: 132 }}
+		padding={{ top: 4, right: 44, bottom: 28, left: 132 }}
 	>
 		{#snippet children({ context })}
 			<Svg>
-				<Grid x xTicks={[0, 25, 50, 75, 100]} classes={{ line: 'stroke-[var(--chart-grid)]' }} />
-				<Axis
-					placement="bottom"
+				<ChartAxis
 					ticks={[0, 25, 50, 75, 100]}
-					classes={{ tickLabel: 'fill-[var(--chart-axis-text)] text-[11px]' }}
+					x={(v) => context.xScale(v)}
+					format={(v) => String(v)}
+					unit="Punkte"
+					top={0}
+					bottom={rows.length * ROW}
+					width={context.width}
 				/>
 				{#each rows as r, i (r.dim)}
 					{@const cy = i * ROW + ROW / 2}

@@ -1,4 +1,5 @@
-import { mean, median } from './stats';
+import { mean, median, mostCommon, zeroAwareMedian } from './stats';
+import { LABELS, METRICS, type LabelValues, type MetricValues } from './topics';
 import {
 	DIMS,
 	type DimValues,
@@ -40,17 +41,41 @@ export function aggregateProfile(
 	regions: readonly RegionSnapshot[],
 	method: 'median' | 'mean',
 	figures: FigureValues,
-	note: string | null = null
+	note: string | null = null,
+	/** Eigene Themenwerte eines Gebiets (Bezirk), statt Median oder Mittel seiner Kieze. */
+	own: { metrics: MetricValues; labels: LabelValues } | null = null
 ): ReferenceProfile {
 	const agg = method === 'median' ? median : mean;
 	const dims = Object.fromEntries(
 		DIMS.map((d) => [d, agg(regions.map((r) => r.dims[d]))])
 	) as DimValues;
-	return { id, label, note, slug: null, dims, figures };
+	// Median der Themenwerte ohne großen Nullstapel, wie in den Grafiken (Milieuschutz).
+	const metricAgg = (xs: (number | null)[]) =>
+		method === 'median' ? zeroAwareMedian(xs).value : mean(xs);
+	const metrics =
+		own?.metrics ??
+		(Object.fromEntries(
+			METRICS.map((m) => [m, metricAgg(regions.map((r) => r.metrics?.[m] ?? null))])
+		) as MetricValues);
+	const labels =
+		own?.labels ??
+		(Object.fromEntries(
+			LABELS.map((l) => [l, mostCommon(regions.map((r) => r.labels?.[l] ?? null))])
+		) as LabelValues);
+	return { id, label, note, slug: null, dims, figures, metrics, labels };
 }
 
 export function regionProfile(r: RegionSnapshot): ReferenceProfile {
-	return { id: r.slug, label: r.name, note: null, slug: r.slug, dims: r.dims, figures: r.figures };
+	return {
+		id: r.slug,
+		label: r.name,
+		note: null,
+		slug: r.slug,
+		dims: r.dims,
+		figures: r.figures,
+		metrics: r.metrics,
+		labels: r.labels
+	};
 }
 
 export function resolveReference(

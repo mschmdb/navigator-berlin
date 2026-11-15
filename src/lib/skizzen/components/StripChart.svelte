@@ -7,11 +7,12 @@
 </script>
 
 <script lang="ts">
-	import { Chart, Circle, Line, Svg, Text, Tooltip } from 'layerchart';
+	import { Chart, Circle, Line, Svg, Tooltip } from 'layerchart';
 	import { scaleLinear } from 'd3-scale';
 	import { dodgeLevels } from '../dodge';
-	import { median, zeroShare } from '../stats';
+	import { median, splitsZeros, zeroShare } from '../stats';
 	import { chartMotion } from './motion.svelte';
+	import ChartAxis from './ChartAxis.svelte';
 
 	interface Props {
 		items: readonly StripItem[];
@@ -19,6 +20,8 @@
 		format: (v: number) => string;
 		/** Achsenbeschriftung ohne Einheit; die Einheit steht in der Zeilenüberschrift. */
 		axisFormat?: (v: number) => string;
+		/** Einheit an der letzten Achsenzahl. */
+		unit?: string;
 		/** Dieser Ort: Akzentblau, groß, vorn, mit senkrechter Linie. */
 		ownSlug: string | null;
 		/** Nachbarn: schwarz, ohne Dauer-Label. */
@@ -44,6 +47,7 @@
 		domain,
 		format,
 		axisFormat = (v: number) => new Intl.NumberFormat('de-DE').format(v),
+		unit = '',
 		ownSlug,
 		highlight,
 		highlightLabel,
@@ -59,7 +63,7 @@
 
 	const OWN_R = $derived(R + 3);
 	const STEP = $derived(2 * R * 0.86);
-	const AXIS = 22;
+	const AXIS = 26;
 	const MAX_SWARM = 240;
 	const BLOCK_GAP = 6;
 	const pad = $derived(OWN_R + 2);
@@ -67,7 +71,7 @@
 
 	// Großer Nullstapel (Milieuschutz): eigener Block statt eines gestauchten Turms im Schwarm.
 	const zeros = $derived(zeroShare(items.map((i) => i.value)));
-	const splitZeros = $derived(zeros.zeros >= 10 && zeros.share >= 0.2);
+	const splitZeros = $derived(splitsZeros(items.map((i) => i.value)));
 	const swarmItems = $derived(splitZeros ? items.filter((i) => i.value !== 0) : items);
 	const blockRows = $derived(
 		splitZeros ? Math.max(4, Math.min(14, Math.ceil(Math.sqrt(zeros.zeros * 1.4)))) : 0
@@ -221,7 +225,23 @@
 							{/if}
 						{/each}
 					{/if}
-					<line x1={0} x2={context.width} y1={mid} y2={mid} class="stroke-[var(--rule)]" />
+					{#if splitZeros}
+						<text
+							x={-blockW + (blockCols * BLOCK_GAP) / 2}
+							y={SWARM + 9}
+							dominant-baseline="hanging"
+							text-anchor="middle"
+							class="fill-[var(--ink-subtle)] font-mono text-[10.5px]">0</text
+						>
+						<line
+							x1={-8}
+							x2={-8}
+							y1={4}
+							y2={SWARM - 4}
+							class="stroke-[var(--rule-strong)]"
+							stroke-dasharray="1 3"
+						/>
+					{/if}
 					{#if med !== null}
 						<Line
 							x1={x(med)}
@@ -306,29 +326,15 @@
 							/>
 						{/if}
 					{/if}
-					<line
-						x1={0}
-						x2={context.width}
-						y1={SWARM + 2}
-						y2={SWARM + 2}
-						class="stroke-[var(--rule-strong)]"
+					<ChartAxis
+						{ticks}
+						{x}
+						format={axisFormat}
+						{unit}
+						top={0}
+						bottom={SWARM}
+						width={context.width}
 					/>
-					{#each ticks as t (t)}
-						<line
-							x1={x(t)}
-							x2={x(t)}
-							y1={SWARM + 2}
-							y2={SWARM + 6}
-							class="stroke-[var(--rule-strong)]"
-						/>
-						<Text
-							x={x(t)}
-							y={SWARM + 17}
-							value={axisFormat(t)}
-							textAnchor={x(t) < 24 ? 'start' : x(t) > context.width - 24 ? 'end' : 'middle'}
-							class="fill-[var(--chart-axis-text)] text-[11px] tabular-nums"
-						/>
-					{/each}
 				</Svg>
 				<Tooltip.Root>
 					{#snippet children({ data })}

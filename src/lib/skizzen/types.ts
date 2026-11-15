@@ -1,3 +1,5 @@
+import type { LabelValues, MetricValues } from './topics';
+
 /**
  * Skizze Kiez-/Bezirksseiten 11/2026 (Wegwerf-Prototyp, /demo/*-skizze).
  * Eine Region ist ein Kiez oder ein Bezirk, mit Score-Dimensionen und Rohwerten.
@@ -38,6 +40,9 @@ export interface RegionSnapshot {
 	readonly parentName: string | null;
 	readonly dims: DimValues;
 	readonly figures: FigureValues;
+	/** Themenwerte in echten Einheiten (Kapitel). */
+	readonly metrics: MetricValues;
+	readonly labels: LabelValues;
 }
 
 export type ReferenceKind = 'berlin' | 'bezirk' | 'nachbar' | 'aehnlich' | 'frei';
@@ -57,4 +62,6 @@ export interface ReferenceProfile {
 	readonly slug: string | null;
 	readonly dims: DimValues;
 	readonly figures: FigureValues;
+	readonly metrics: MetricValues;
+	readonly labels: LabelValues;
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Axis, Chart, Circle, Spline, Svg, Text } from 'layerchart';
+	import { Chart, Circle, Spline, Svg, Text } from 'layerchart';
+	import ChartAxis from './ChartAxis.svelte';
 	import { scaleLinear } from 'd3-scale';
 	import { partiesOf, seriesFor } from '../wahl-summary';
 	import type { WahlPunkt } from '../wahl-types';
@@ -44,7 +45,7 @@
 				<span class="font-semibold text-ink">{partei}</span>
 				<span class="text-ink-muted tabular-nums">{fmt(last.anteil)}</span>
 			</p>
-			<div class="h-28">
+			<div class="h-32">
 				<Chart
 					data={s}
 					x="jahr"
@@ -52,7 +53,7 @@
 					xScale={scaleLinear()}
 					xDomain={[years[0], years[years.length - 1]]}
 					yDomain={[0, yMax]}
-					padding={{ top: 6, right: 6, bottom: 18, left: 6 }}
+					padding={{ top: 6, right: 8, bottom: 24, left: 8 }}
 				>
 					{#snippet children({ context })}
 						<Svg>
@@ -61,7 +62,7 @@
 								x2={context.width}
 								y1={context.height}
 								y2={context.height}
-								class="stroke-[var(--rule-strong)]"
+								class="stroke-[var(--rule)]"
 							/>
 							<line
 								x1={0}
@@ -98,12 +99,13 @@
 									class="rv"
 								/>
 							{/each}
-							<Axis
-								placement="bottom"
+							<ChartAxis
 								ticks={years}
-								format={(v: number) => `’${String(v).slice(2)}`}
-								tickLength={0}
-								classes={{ tickLabel: 'fill-[var(--chart-axis-text)] text-[10.5px]' }}
+								x={(v) => context.xScale(v)}
+								format={(v) => `’${String(v).slice(2)}`}
+								top={0}
+								bottom={context.height}
+								width={context.width}
 							/>
 							<Text
 								x={0}

@@ -6,6 +6,10 @@ import {
 	serializeReference
 } from './reference';
 import type { RegionSnapshot } from './types';
+import { LABELS, METRICS, type LabelValues, type MetricValues } from './topics';
+
+const noMetrics = Object.fromEntries(METRICS.map((m) => [m, null])) as MetricValues;
+const noLabels = Object.fromEntries(LABELS.map((l) => [l, null])) as LabelValues;
 
 function region(slug: string, composite: number | null, parentSlug = 'neukoelln'): RegionSnapshot {
 	return {
@@ -29,7 +33,9 @@ function region(slug: string, composite: number | null, parentSlug = 'neukoelln'
 			gruen: null,
 			hitze: null,
 			milieuschutz: null
-		}
+		},
+		metrics: { ...noMetrics, laermDb: composite },
+		labels: noLabels
 	};
 }
 
@@ -88,6 +94,15 @@ describe('aggregateProfile', () => {
 		expect(med.dims.composite).toBe(20);
 		expect(med.figures.bestandsmiete).toBe(7.66);
 		expect(aggregateProfile('bezirk', 'Neukölln', rs, 'mean', figures).dims.composite).toBe(30);
+		expect(med.metrics.laermDb).toBe(20);
+	});
+	it('takes the own metrics of a Bezirk instead of the Kiez median when given', () => {
+		const rs = [region('a', 10), region('b', 20)];
+		const own = { metrics: { ...noMetrics, laermDb: 55 }, labels: { ...noLabels, mss: 'mittel' } };
+		const p = aggregateProfile('bezirk', 'N', rs, 'mean', region('a', 1).figures, null, own);
+		expect(p.metrics.laermDb).toBe(55);
+		expect(p.labels.mss).toBe('mittel');
+		expect(p.dims.composite).toBe(15);
 	});
 });
 

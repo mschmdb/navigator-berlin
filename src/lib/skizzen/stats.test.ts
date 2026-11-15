@@ -91,3 +91,25 @@ describe('zeroShare', () => {
 		expect(zeroShare([null])).toEqual({ zeros: 0, total: 0, share: 0 });
 	});
 });
+
+import { mostCommon, splitsZeros, zeroAwareMedian } from './stats';
+
+describe('mostCommon', () => {
+	it('returns the most frequent label, ties by first appearance', () => {
+		expect(mostCommon(['mittel', 'gut', 'mittel', null])).toBe('mittel');
+		expect(mostCommon(['gut', 'mittel'])).toBe('gut');
+		expect(mostCommon([null])).toBeNull();
+	});
+});
+
+describe('zeroAwareMedian', () => {
+	it('leaves out a large zero pile and reports how many', () => {
+		const xs = [...Array(12).fill(0), 10, 20, 30];
+		expect(splitsZeros(xs)).toBe(true);
+		expect(zeroAwareMedian(xs)).toEqual({ value: 20, zerosLeftOut: 12 });
+	});
+	it('keeps zeros when they are few', () => {
+		expect(splitsZeros([0, 1, 2, 3])).toBe(false);
+		expect(zeroAwareMedian([0, 1, 2, 3])).toEqual({ value: 1.5, zerosLeftOut: 0 });
+	});
+});

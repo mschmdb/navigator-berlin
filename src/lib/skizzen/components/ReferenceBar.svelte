@@ -23,6 +23,8 @@
 		mode: 'erzaehlen' | 'zahlen';
 		onchoice: (c: ReferenceChoice) => void;
 		onmode: (m: 'erzaehlen' | 'zahlen') => void;
+		/** Sprungleiste zu den Kapiteln. */
+		chapters?: readonly { id: string; short: string }[];
 	}
 	let {
 		berlinNote,
@@ -35,7 +37,8 @@
 		choice,
 		mode,
 		onchoice,
-		onmode
+		onmode,
+		chapters = []
 	}: Props = $props();
 
 	interface KindOption {
@@ -187,6 +190,21 @@
 			>
 		</div>
 	</div>
+	{#if chapters.length > 0}
+		<nav aria-label="Themen auf dieser Seite" class="border-t border-rule">
+			<ul class="mx-auto flex max-w-6xl [scrollbar-width:none] gap-1.5 overflow-x-auto px-4 py-1.5">
+				{#each chapters as c (c.id)}
+					<li class="shrink-0">
+						<a
+							href="#{c.id}"
+							class="inline-flex min-h-7 items-center rounded-full bg-bg-elevated px-3 text-sm text-ink underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-focus"
+							>{c.short}</a
+						>
+					</li>
+				{/each}
+			</ul>
+		</nav>
+	{/if}
 	<p class="sr-only" aria-live="polite">
 		Vergleich mit: {active.label}{choice.slug
 			? `, ${all.find((o) => o.slug === choice.slug)?.name ?? ''}`

@@ -2,7 +2,14 @@ import { readRegionDisplayNames, regionDisplayName } from '$lib/data/region-disp
 import { buildKeyFigures } from '$lib/data/region-key-figures.js';
 import type { LayerAggregatesFile } from '$lib/data/layer-aggregates-types.js';
 import { readLayerAggregatesFile } from '$lib/server/profile/meta-sources.js';
+import { loadTopicData } from './topics.server';
+import { LABELS, METRICS, type LabelValues, type MetricValues } from './topics';
 import { FIGURES, type DimValues, type FigureValues, type RegionSnapshot } from './types';
+
+const EMPTY_TOPICS = {
+	metrics: Object.fromEntries(METRICS.map((m) => [m, null])) as MetricValues,
+	labels: Object.fromEntries(LABELS.map((l) => [l, null])) as LabelValues
+};
 
 type ScoreRow = Readonly<Record<keyof DimValues, number | null>> & { readonly slug: string };
 
@@ -37,11 +44,12 @@ export async function readBerlinFigures(): Promise<FigureValues> {
 /** Alle 143 Kieze mit Score-Dimensionen und Rohwerten. Leer ohne DB. */
 export async function loadKiezRegions(): Promise<RegionSnapshot[]> {
 	if (!process.env.DATABASE_URL) return [];
-	const [{ getDb }, { kiezScore }, names, file] = await Promise.all([
+	const [{ getDb }, { kiezScore }, names, file, topics] = await Promise.all([
 		import('$lib/server/db/index.js'),
 		import('$lib/server/db/schema/index.js'),
 		readRegionDisplayNames(),
-		readLayerAggregatesFile()
+		readLayerAggregatesFile(),
+		loadTopicData()
 	]);
 	const rows = await getDb().select().from(kiezScore);
 	return rows.map((row) => ({
@@ -50,18 +58,20 @@ export async function loadKiezRegions(): Promise<RegionSnapshot[]> {
 		parentSlug: row.bezirkSlug,
 		parentName: regionDisplayName(names, 'bezirk', row.bezirkSlug),
 		dims: dimsOf(row),
-		figures: figuresFor(file, { kind: 'kiez', slug: row.slug, bezirkSlug: row.bezirkSlug })
+		figures: figuresFor(file, { kind: 'kiez', slug: row.slug, bezirkSlug: row.bezirkSlug }),
+		...(topics.kiez.get(row.slug) ?? EMPTY_TOPICS)
 	}));
 }
 
 /** Alle 12 Bezirke. Leer ohne DB. */
 export async function loadBezirkRegions(): Promise<RegionSnapshot[]> {
 	if (!process.env.DATABASE_URL) return [];
-	const [{ getDb }, { bezirkScore }, names, file] = await Promise.all([
+	const [{ getDb }, { bezirkScore }, names, file, topics] = await Promise.all([
 		import('$lib/server/db/index.js'),
 		import('$lib/server/db/schema/index.js'),
 		readRegionDisplayNames(),
-		readLayerAggregatesFile()
+		readLayerAggregatesFile(),
+		loadTopicData()
 	]);
 	const rows = await getDb().select().from(bezirkScore);
 	return rows.map((row) => ({
@@ -70,6 +80,7 @@ export async function loadBezirkRegions(): Promise<RegionSnapshot[]> {
 		parentSlug: null,
 		parentName: null,
 		dims: dimsOf(row),
-		figures: figuresFor(file, { kind: 'bezirk', slug: row.slug })
+		figures: figuresFor(file, { kind: 'bezirk', slug: row.slug }),
+		...(topics.bezirk.get(row.slug) ?? EMPTY_TOPICS)
 	}));
 }

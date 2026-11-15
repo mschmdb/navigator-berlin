@@ -9,20 +9,26 @@ import {
 } from '$lib/skizzen/load-regions.server';
 import { loadWahlBundle } from '$lib/skizzen/wahl.server';
 import { neighborBezirke } from '$lib/skizzen/bezirk-neighbors';
-import { getKiezNeighborLists } from '$lib/server/kiez-neighbors-index.js';
-import { bezirkSlugFromName } from '$lib/data/region-display-names.js';
-import { median } from '$lib/skizzen/stats';
-import { DIMS, type Dim } from '$lib/skizzen/types';
+import { getKiezNeighborLists, readLayer } from '$lib/server/kiez-neighbors-index.js';
+import { buildRegionOutline, type OutlineRegion } from '$lib/seo/region-outline-svg.js';
+import { loadFaqByChapter } from '$lib/skizzen/faq.server';
+import { bezirkSlugFromName, cleanName } from '$lib/data/region-display-names.js';
 import type { PageServerLoad } from './$types';
 
 export const prerender = false;
 
-/** Berlin-Median aller Kieze je Dimension: Bezug für die Kiezliste des Bezirks. */
-function kiezMedians(all: Awaited<ReturnType<typeof loadKiezRegions>>) {
-	return Object.fromEntries(DIMS.map((d) => [d, median(all.map((k) => k.dims[d]))])) as Record<
-		Dim,
-		number | null
-	>;
+/** Alle 12 Bezirke als Umriss: der eigene Bezirk klein in der Berlin-Karte. */
+async function berlinOutline() {
+	const fc = await readLayer('bezirke');
+	const regions: OutlineRegion[] = [];
+	for (const f of fc.features) {
+		const n = f.properties?.Gemeinde_name;
+		const g = f.geometry as OutlineRegion['geometry'] | null | undefined;
+		if (typeof n === 'string' && g && (g.type === 'Polygon' || g.type === 'MultiPolygon')) {
+			regions.push({ id: bezirkSlugFromName(cleanName(n)), geometry: g });
+		}
+	}
+	return buildRegionOutline(regions);
 }
 
 export const load: PageServerLoad = async (event) => {
@@ -30,12 +36,14 @@ export const load: PageServerLoad = async (event) => {
 		event as unknown as Parameters<typeof bezirkPageLoad>[0]
 	)) as BezirkPageData;
 	const slug = event.params.slug;
-	const [kieze, bezirke, berlinFigures, wahlOwn, wahlBerlin] = await Promise.all([
+	const [kieze, bezirke, berlinFigures, wahlOwn, wahlBerlin, faq, berlinMap] = await Promise.all([
 		loadKiezRegions(),
 		loadBezirkRegions(),
 		readBerlinFigures(),
 		loadWahlBundle('bezirk', slug),
-		loadWahlBundle('berlin', null)
+		loadWahlBundle('berlin', null),
+		loadFaqByChapter('bezirk', slug),
+		berlinOutline()
 	]);
 	const ownKieze = kieze.filter((k) => k.parentSlug === slug);
 	const lists = new Map(
@@ -58,8 +66,10 @@ export const load: PageServerLoad = async (event) => {
 			flaecheHa: base.profile.flaecheHa
 		},
 		prose: base.profileProse,
+		outline: base.kiezeView.outline,
+		berlinMap,
+		faq,
 		kieze: ownKieze,
-		kiezMedians: kiezMedians(kieze),
 		neighborSlugs,
 		bezirke,
 		berlinFigures,
