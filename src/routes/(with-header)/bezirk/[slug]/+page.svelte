@@ -174,7 +174,7 @@
 	rank={data.compositeRank}
 />
 
-<main class="mx-auto max-w-6xl px-4 pb-24">
+<article class="mx-auto max-w-6xl px-4 pb-24">
 	<header class="grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-12 lg:py-14">
 		<div class="min-w-0">
 			<p class="text-dense-label tracking-wide text-ink-subtle uppercase">
@@ -420,4 +420,4 @@
 			chapter: { id: f.chapter, title: chapterText(f.chapter, opts).title }
 		}))}
 	/>
-</main>
+</article>
