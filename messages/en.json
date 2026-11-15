@@ -2891,5 +2891,7 @@
 	"place_m_haltestellenkm2_sentence": "{name} has {n} stops per square kilometre.",
 	"place_m_lebensmittel10k_sentence": "{name} has {n} food shops per 10,000 residents.",
 	"place_m_dichte_sentence": "{name} has {n} residents per square kilometre.",
-	"place_ref_berlin_median_text": "the Berlin median"
+	"place_ref_berlin_median_text": "the Berlin median",
+	"overview_topic_ranking_kieze": "Sort the Kieze by noise, green space, mobility or another area",
+	"overview_topic_ranking_bezirke": "Sort the districts by noise, green space, mobility or another area"
 }

@@ -68,6 +68,14 @@
 				{m.kiez_page_methodik_link_label()}
 			</a>
 		</p>
+		<p class="font-sans text-base">
+			<a
+				href={localizedHref('/kiez-score')}
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+			>
+				{m.overview_topic_ranking_kieze()}
+			</a>
+		</p>
 	</header>
 
 	<nav aria-label={m.overview_kieze_jump_aria()} class="border border-rule bg-bg p-4">

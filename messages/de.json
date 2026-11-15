@@ -2891,5 +2891,7 @@
 	"place_m_haltestellenkm2_sentence": "In {name} gibt es {n} Haltestellen je Quadratkilometer.",
 	"place_m_lebensmittel10k_sentence": "In {name} kommen {n} Lebensmittelgeschäfte auf 10.000 Menschen.",
 	"place_m_dichte_sentence": "In {name} leben {n} Menschen je Quadratkilometer.",
-	"place_ref_berlin_median_text": "der Berliner Median"
+	"place_ref_berlin_median_text": "der Berliner Median",
+	"overview_topic_ranking_kieze": "Kieze nach Lärm, Grün, Mobilität oder einem anderen Bereich sortieren",
+	"overview_topic_ranking_bezirke": "Bezirke nach Lärm, Grün, Mobilität oder einem anderen Bereich sortieren"
 }
