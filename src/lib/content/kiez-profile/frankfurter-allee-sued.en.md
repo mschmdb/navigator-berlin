@@ -4,11 +4,11 @@ name: Frankfurter Allee Süd
 pageType: kiez
 locale: en
 sourceInputHash: '45ac6e153b57ec67'
-sourceTextHash: 'a11d5787eff9fec4'
+sourceTextHash: 'aecd9f5d2dcda24e'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
-Local amenities carry this area, with rank 14 of 143 and around 75 points, clearly above the Lichtenberg average. Culture is strong, at around 81 points and rank 28, above the Berlin median. The overall score of around 40 gives rank 68.
+Local amenities carry this area, with rank 15 of 143 and around 75 points, clearly above the Lichtenberg average. Culture is strong, at around 81 points and rank 37, above the Berlin median. The overall score of around 40 gives rank 88.
 
 Green & heat is weak, at around 35 points and below the median. The perceived temperature is about 37 degrees. Mobility stays thin, with only around 2 public transport stops per square kilometre. Noise is high.

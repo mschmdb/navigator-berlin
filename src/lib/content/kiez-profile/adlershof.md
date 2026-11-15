@@ -7,6 +7,6 @@ inputHash: 70e43b70c38d48b0
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
-Adlershof erreicht bei der Mobilität 34,4 und liegt damit über dem Berliner Median und über dem Bezirksschnitt. Die Haltestellendichte erreicht rund 10 pro Quadratkilometer. Beim Gesamtscore erreicht der Kiez 40,4 und Rang 64 von 143. Die Lärmklasse gilt als mittel.
+Adlershof erreicht bei der Mobilität 34,4 und liegt damit über dem Berliner Median und über dem Bezirksschnitt. Die Haltestellendichte erreicht rund 10 pro Quadratkilometer. Beim Gesamtscore erreicht der Kiez 40,4 und Rang 79 von 143. Die Lärmklasse gilt als mittel.
 
 Bei Ruhe und Luft liegt der Kiez mit 65,1 über dem Berliner Median, doch unter dem Bezirksschnitt. Die Versorgung liegt mit 54,2 über dem Berliner Median. Grün und Hitze liegen mit 48,2 unter dem Berliner Median. An heißen Tagen steigt die gefühlte Temperatur auf rund 38 Grad. Die Kultur erreicht 56,6 und zählt getrennt vom Gesamtscore.
