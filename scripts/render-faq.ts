@@ -19,240 +19,20 @@
  */
 
 import 'dotenv/config';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { sql } from 'drizzle-orm';
 import { getDb, closeDb } from '../src/lib/server/db/index.js';
-import {
-	faqQna,
-	bezirkStats,
-	kiezStats,
-	kiezRank,
-	bezirkRank,
-	kiezComparison,
-	bezirkComparison
-} from '../src/lib/server/db/schema/index.js';
-import type { MetricContext } from '../src/lib/server/faq/template-renderer.js';
-import type {
-	AggregateValue,
-	BildungAggregat,
-	GruenAggregat,
-	HeritageAggregat,
-	KlimaAggregat,
-	LaermAggregat,
-	LuftAggregat,
-	OepnvAggregat,
-	WohnenAggregat
-} from '../src/lib/server/db/schema/aggregate-types.js';
+import { faqQna } from '../src/lib/server/db/schema/index.js';
 import { computeFaqPositions, faqPositionKey } from '../src/lib/server/faq/faq-positions.js';
-import {
-	readRegionDisplayNames,
-	regionDisplayName,
-	type RegionDisplayNames
-} from '../src/lib/data/region-display-names.js';
 import { loadAllFaqTemplates } from '../src/lib/server/faq/load-templates.js';
 import { templateAppliesToTarget } from '../src/lib/server/faq/layer-faq-clusters.js';
-import {
-	renderTemplate,
-	type TemplateAggregate,
-	type TemplateContext
-} from '../src/lib/server/faq/template-renderer.js';
+import { renderTemplate, type TemplateContext } from '../src/lib/server/faq/template-renderer.js';
 import type {
 	ClusterKey,
 	PageType,
 	TemplateLocale
 } from '../src/lib/server/faq/template-schema.js';
-import { buildLayerTargetsFromManifest } from '../src/lib/server/og/og-pipeline.js';
-import { getLayerDisplayName } from '../src/lib/components/atlas/internal/layer-palette-filter.js';
-
-const REPO_ROOT = process.cwd();
-const MANIFEST_PATH = join(REPO_ROOT, 'static/layers/MANIFEST.json');
-
-interface ManifestLayer {
-	readonly slug: string;
-	readonly bundleGroup: string;
-	readonly license: string;
-	readonly sourceUpdatedAt?: string;
-	readonly sourceUrl: string;
-	readonly filename: string;
-}
-interface Manifest {
-	readonly layers: readonly ManifestLayer[];
-}
-
-interface RenderTarget {
-	readonly pageType: PageType;
-	readonly slug: string;
-	readonly name: string;
-	/** Locale-spezifische Namen (Layer). Fehlt die Locale, gilt `name`. */
-	readonly localizedName?: Readonly<Partial<Record<TemplateLocale, string>>>;
-	readonly aggregate: TemplateAggregate;
-	readonly metrics?: ReadonlyMap<string, MetricContext>;
-}
-
-const SCORE_DIM_KEYS = ['ruheLuft', 'gruenHitze', 'mobilitaet', 'versorgung', 'wohnschutz'];
-
-/** Rang + Vergleich je Score-Dimension pro Kiez (Story 11.3). */
-async function loadKiezMetrics(): Promise<Map<string, Map<string, MetricContext>>> {
-	const db = getDb();
-	const [ranks, cmps] = await Promise.all([
-		db.select().from(kiezRank),
-		db.select().from(kiezComparison)
-	]);
-	const cmpBy = new Map(cmps.map((c) => [`${c.slug}|${c.metricKey}`, c]));
-	const out = new Map<string, Map<string, MetricContext>>();
-	for (const r of ranks) {
-		if (!SCORE_DIM_KEYS.includes(r.metricKey)) continue;
-		const c = cmpBy.get(`${r.slug}|${r.metricKey}`);
-		const m: MetricContext = {
-			value: c?.kiezValue ?? null,
-			rang: r.rang,
-			quartil: r.quartil,
-			total: r.total,
-			compareValue: c?.bezirkMean ?? null,
-			compareKind: 'bezirk'
-		};
-		if (!out.has(r.slug)) out.set(r.slug, new Map());
-		out.get(r.slug)!.set(r.metricKey, m);
-	}
-	return out;
-}
-
-/** Rang + Vergleich je Score-Dimension pro Bezirk (Story 11.3). */
-async function loadBezirkMetrics(): Promise<Map<string, Map<string, MetricContext>>> {
-	const db = getDb();
-	const [ranks, cmps] = await Promise.all([
-		db.select().from(bezirkRank),
-		db.select().from(bezirkComparison)
-	]);
-	const cmpBy = new Map(cmps.map((c) => [`${c.slug}|${c.metricKey}`, c]));
-	const out = new Map<string, Map<string, MetricContext>>();
-	for (const r of ranks) {
-		if (!SCORE_DIM_KEYS.includes(r.metricKey)) continue;
-		const c = cmpBy.get(`${r.slug}|${r.metricKey}`);
-		const m: MetricContext = {
-			value: c?.bezirkValue ?? null,
-			rang: r.rang,
-			quartil: r.quartil,
-			total: r.total,
-			compareValue: c?.berlinMedian ?? null,
-			compareKind: 'berlin'
-		};
-		if (!out.has(r.slug)) out.set(r.slug, new Map());
-		out.get(r.slug)!.set(r.metricKey, m);
-	}
-	return out;
-}
-
-const EMPTY_AGGREGATE: TemplateAggregate = {
-	laerm: { dominantCategory: null, categoryDistribution: null } as LaermAggregat,
-	luft: { dominantCategory: null, categoryDistribution: null } as LuftAggregat,
-	gruen: {
-		dominantVersorgung: null,
-		gruenanlagenCount: null,
-		spielplaetzeCount: null
-	} as unknown as GruenAggregat,
-	klima: { meanPet: null, hotDays: null } as unknown as KlimaAggregat,
-	wohnen: { dominantWohnlage: null, dominantMss: null } as unknown as WohnenAggregat,
-	oepnv: { stopsPerKm2: null } as unknown as OepnvAggregat,
-	bildung: {} as BildungAggregat,
-	heritage: {} as HeritageAggregat
-};
-
-function rowToAggregate(row: {
-	laerm: LaermAggregat;
-	luft: LuftAggregat;
-	gruen: GruenAggregat;
-	klima: KlimaAggregat;
-	wohnen: WohnenAggregat;
-	oepnv: OepnvAggregat;
-	bildung: BildungAggregat;
-	heritage: HeritageAggregat;
-}): TemplateAggregate {
-	return {
-		laerm: row.laerm,
-		luft: row.luft,
-		gruen: row.gruen,
-		klima: row.klima,
-		wohnen: row.wohnen,
-		oepnv: row.oepnv,
-		bildung: row.bildung,
-		heritage: row.heritage
-	};
-}
-
-async function readManifest(): Promise<Manifest> {
-	const raw = await readFile(MANIFEST_PATH, 'utf-8');
-	return JSON.parse(raw) as Manifest;
-}
-
-async function loadBezirkTargets(
-	names: RegionDisplayNames,
-	metricsBySlug: Map<string, Map<string, MetricContext>>
-): Promise<RenderTarget[]> {
-	const rows = await getDb()
-		.select({
-			slug: bezirkStats.slug,
-			laerm: bezirkStats.laerm,
-			luft: bezirkStats.luft,
-			gruen: bezirkStats.gruen,
-			klima: bezirkStats.klima,
-			wohnen: bezirkStats.wohnen,
-			oepnv: bezirkStats.oepnv,
-			bildung: bezirkStats.bildung,
-			heritage: bezirkStats.heritage
-		})
-		.from(bezirkStats);
-	return rows.map((row) => ({
-		pageType: 'bezirk' as const,
-		slug: row.slug,
-		name: regionDisplayName(names, 'bezirk', row.slug),
-		aggregate: rowToAggregate(row),
-		metrics: metricsBySlug.get(row.slug)
-	}));
-}
-
-async function loadKiezTargets(
-	names: RegionDisplayNames,
-	metricsBySlug: Map<string, Map<string, MetricContext>>
-): Promise<RenderTarget[]> {
-	const rows = await getDb()
-		.select({
-			slug: kiezStats.slug,
-			laerm: kiezStats.laerm,
-			luft: kiezStats.luft,
-			gruen: kiezStats.gruen,
-			klima: kiezStats.klima,
-			wohnen: kiezStats.wohnen,
-			oepnv: kiezStats.oepnv,
-			bildung: kiezStats.bildung,
-			heritage: kiezStats.heritage
-		})
-		.from(kiezStats);
-	return rows.map((row) => ({
-		pageType: 'kiez' as const,
-		slug: row.slug,
-		name: regionDisplayName(names, 'kiez', row.slug),
-		aggregate: rowToAggregate(row),
-		metrics: metricsBySlug.get(row.slug)
-	}));
-}
-
-async function loadLayerTargets(): Promise<RenderTarget[]> {
-	const manifest = await readManifest();
-	const layerTargets = buildLayerTargetsFromManifest(manifest.layers);
-	return layerTargets.map((t) => {
-		const en = getLayerDisplayName(t.slug, { locale: 'en' });
-		return {
-			pageType: 'layer' as const,
-			slug: t.slug,
-			name: t.label,
-			// getLayerDisplayName liefert für unbekannte Slugs den Roh-Slug.
-			localizedName: { en: en !== t.slug ? en : t.label },
-			aggregate: EMPTY_AGGREGATE
-		};
-	});
-}
+import { checkFaqAnswer } from '../src/lib/server/faq/faq-fact-check.js';
+import { loadAllTargets, scoreField, type RenderTarget } from './lib/faq/targets.js';
 
 interface RenderedRow {
 	readonly pageType: PageType;
@@ -263,6 +43,7 @@ interface RenderedRow {
 	readonly question: string;
 	readonly answer: string;
 	readonly sortOrder: number;
+	readonly templateText: string;
 }
 
 async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[]> {
@@ -295,7 +76,8 @@ async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[
 					templateId: template.id,
 					question: rendered.question,
 					answer: rendered.answer,
-					sortOrder
+					sortOrder,
+					templateText: template.answer
 				});
 			}
 		}
@@ -323,28 +105,59 @@ async function upsertRows(rows: readonly RenderedRow[]): Promise<void> {
 	}
 }
 
+/**
+ * NAV-108: Jede Antwort muss zu den Quelldaten passen, sonst schreibt der
+ * Generator nichts. Prüft Verkehrsmittel, Klassen, Zahlen, Scores und Ränge.
+ */
+function assertFaqMatchesData(
+	rows: readonly RenderedRow[],
+	targets: readonly RenderTarget[]
+): void {
+	const byKey = new Map(targets.map((t) => [`${t.pageType}|${t.slug}`, t]));
+	const fields = new Map<PageType, Map<string, number[]>>([
+		['kiez', scoreField(targets.filter((t) => t.pageType === 'kiez'))],
+		['bezirk', scoreField(targets.filter((t) => t.pageType === 'bezirk'))]
+	]);
+	const problems: string[] = [];
+	for (const row of rows) {
+		const target = byKey.get(`${row.pageType}|${row.slug}`);
+		if (!target) continue;
+		const findings = checkFaqAnswer(row, {
+			name: target.localizedName?.[row.locale] ?? target.name,
+			aggregate: target.aggregate,
+			metrics: target.metrics,
+			field: fields.get(row.pageType)
+		});
+		for (const f of findings) {
+			problems.push(
+				`${row.pageType}/${row.slug} ${row.locale} ${row.templateId} [${f.kind}] ${f.message}`
+			);
+		}
+	}
+	if (problems.length > 0) {
+		throw new Error(
+			`${problems.length} FAQ-Antworten widersprechen den Daten:\n${problems.join('\n')}`
+		);
+	}
+}
+
 async function main(): Promise<void> {
 	if (!process.env.DATABASE_URL) {
-		process.stderr.write('[render-faq] DATABASE_URL fehlt — abort.\n');
+		process.stderr.write('[render-faq] DATABASE_URL fehlt, Abbruch.\n');
 		process.exit(1);
 	}
 	process.stdout.write('[render-faq] Loading targets ...\n');
-	const [kiezMetrics, bezirkMetrics, names] = await Promise.all([
-		loadKiezMetrics(),
-		loadBezirkMetrics(),
-		readRegionDisplayNames()
-	]);
-	const [bezirks, kieze, layers] = await Promise.all([
-		loadBezirkTargets(names, bezirkMetrics),
-		loadKiezTargets(names, kiezMetrics),
-		loadLayerTargets()
-	]);
+	const { bezirks, kieze, layers } = await loadAllTargets();
 	process.stdout.write(
 		`[render-faq] Targets: bezirk=${bezirks.length} kiez=${kieze.length} layer=${layers.length}\n`
 	);
 
-	const rendered = await renderAll([...bezirks, ...kieze, ...layers]);
-	process.stdout.write(`[render-faq] Rendered ${rendered.length} Q&As. Upserting ...\n`);
+	const targets = [...bezirks, ...kieze, ...layers];
+	const rendered = await renderAll(targets);
+	assertFaqMatchesData(rendered, targets);
+	process.stdout.write(
+		`[render-faq] Rendered ${rendered.length} Q&As, Datenprüfung ok. Upserting ...\n`
+	);
 	await upsertRows(rendered);
 	process.stdout.write('[render-faq] Done.\n');
 	await closeDb();
