@@ -1,31 +1,27 @@
 <!--
-	Umriss-Karte zur Orientierung: Gebiete nach Kiez-Score eingefärbt (Klassen und Farben des
-	Score-Layers), der eigene Ort mit dicker Kontur obenauf. Die Karte ist ein Bild ohne
-	Tab-Stopps; die Beschreibung steht als Text daneben, die Werte in den Tabellen der Seite.
+	Umriss-Karte zur Orientierung: Gebiete nach Kiez-Score eingefärbt, der eigene Ort mit dicker
+	Kontur obenauf. Die Karte ist eine statische SVG-Datei (`/karte/…`, siehe maps.server.ts),
+	eingebunden als Bild mit Alternativtext; die Werte stehen in den Tabellen der Seite.
 -->
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages.js';
-	import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
 	import { NO_SCORE_FILL } from '$lib/components/atlas/internal/score-class-color.js';
-	import { PLACE_MAP_FILLS, placeMapFill } from '$lib/place/map-classes';
+	import { PLACE_MAP_FILLS } from '$lib/place/map-classes';
+	import type { MapImage } from '$lib/place/types';
 
 	interface Props {
-		outline: RegionOutline;
-		/** Score je Gebiet; fehlt er, bleibt das Gebiet grau. */
-		scores: ReadonlyMap<string, { name: string; composite: number | null }>;
-		ownSlug: string | null;
+		/** Statische SVG-Datei (`/karte/…`), Breite und Höhe gegen Layoutsprünge. */
+		image: MapImage;
 		/** Name des eigenen Orts für die Legende („Reuterstraße: dick umrandet“). */
 		ownName?: string | null;
-		/** Ohne Score-Farben: alle Gebiete hell, nur der eigene dunkel (Lage-Kärtchen). */
+		/** Lage-Kärtchen ohne Score-Farben und ohne Legende. */
 		plain?: boolean;
 		label: string;
 		legend?: boolean;
 		class?: string;
 	}
 	let {
-		outline,
-		scores,
-		ownSlug,
+		image,
 		ownName = null,
 		plain = false,
 		label,
@@ -33,13 +29,6 @@
 		class: cls = ''
 	}: Props = $props();
 
-	const paths = $derived(
-		[...outline.paths].sort((a, b) => Number(a.id === ownSlug) - Number(b.id === ownSlug))
-	);
-	function fill(id: string): string {
-		if (plain) return id === ownSlug ? 'var(--ink)' : 'var(--bg-muted)';
-		return placeMapFill(scores.get(id)?.composite ?? null);
-	}
 	const RANGES = [
 		[0, 25],
 		[26, 50],
@@ -55,27 +44,14 @@
 </script>
 
 <figure class="m-0 flex flex-col gap-2 {cls}">
-	<svg viewBox={outline.viewBox} role="img" aria-label={label} class="block h-auto max-h-72 w-full">
-		{#each paths as p (p.id)}
-			{@const own = p.id === ownSlug}
-			<path
-				d={p.d}
-				fill={fill(p.id)}
-				stroke={own ? 'var(--ink)' : '#ffffff'}
-				stroke-width={own ? 4 : 1.2}
-				stroke-linejoin="round"
-				fill-rule="evenodd"
-				><title
-					>{!plain && scores.get(p.id)?.composite != null
-						? m.place_map_title_value({
-								name: scores.get(p.id)?.name ?? p.id,
-								score: Math.round(scores.get(p.id)?.composite ?? 0)
-							})
-						: (scores.get(p.id)?.name ?? p.id)}</title
-				></path
-			>
-		{/each}
-	</svg>
+	<img
+		src={image.src}
+		width={image.width}
+		height={image.height}
+		alt={label}
+		decoding="async"
+		class="block h-auto max-h-72 w-full object-contain object-left"
+	/>
 	{#if legend && !plain}
 		<!-- Zahlenbereich direkt unter jedem Feld, die Helligkeit stuft deutlich ab: lesbar ohne Farbe. -->
 		<figcaption class="flex flex-col gap-1.5 text-dense-label text-ink-muted">
@@ -90,7 +66,7 @@
 				{/each}
 			</ol>
 			<ul class="m-0 flex list-none flex-wrap gap-x-4 gap-y-1 p-0">
-				{#if ownName && ownSlug}
+				{#if ownName}
 					<li class="inline-flex items-center gap-1.5">
 						<span class="inline-block size-3 border-[3px] border-ink"></span>{ownName}: {m.place_map_own_outline()}
 					</li>

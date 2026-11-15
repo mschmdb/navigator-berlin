@@ -59,3 +59,10 @@ export interface ReferenceProfile {
 	readonly metrics: MetricValues;
 	readonly labels: LabelValues;
 }
+
+/** Umriss-Karte als statische SVG-Datei (`/karte/[kind]/[slug].svg`). */
+export interface MapImage {
+	readonly src: string;
+	readonly width: number;
+	readonly height: number;
+}

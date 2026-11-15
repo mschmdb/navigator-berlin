@@ -30,6 +30,7 @@
 	import type { WahlArt } from '$lib/place/wahl-types';
 	import { dimLabel, formatScore, signedPoints } from '$lib/place/labels';
 	import { bezirkAnchorId } from '$lib/data/region-overview.js';
+	import { unpackRegions, unpackWahl } from '$lib/place/pack';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { page } from '$app/state';
 	import { m } from '$lib/paraglide/messages.js';
@@ -41,10 +42,17 @@
 	const unitPlural = $derived(m.place_units_kieze());
 
 	const name = $derived(data.profile.name);
-	const self = $derived(data.regions.find((r) => r.slug === data.profile.slug) ?? null);
-	const byslug = $derived(new Map(data.regions.map((r) => [r.slug, r])));
+	// Die Seitendaten kommen spaltenweise gepackt, ausgepackt wird einmal im Browser.
+	const regions = $derived(unpackRegions(data.regions));
+	const wahlData = $derived({
+		own: unpackWahl(data.wahl.own),
+		berlin: unpackWahl(data.wahl.berlin),
+		bezirk: data.wahl.bezirk ? unpackWahl(data.wahl.bezirk) : null
+	});
+	const self = $derived(regions.find((r) => r.slug === data.profile.slug) ?? null);
+	const byslug = $derived(new Map(regions.map((r) => [r.slug, r])));
 	const bezirkName = $derived(data.profile.bezirk || null);
-	const all = $derived(data.regions);
+	const all = $derived(regions);
 
 	const berlin = $derived(
 		aggregateProfile(
@@ -103,9 +111,6 @@
 			: null
 	);
 	const neighborSlugs = $derived(data.neighbors.map((n) => n.slug));
-	const scoreMap = $derived(
-		new Map(all.map((r) => [r.slug, { name: r.name, composite: r.dims.composite }]))
-	);
 	const mapHref = (layers: string | undefined) =>
 		layers
 			? `${localizedHref('/explore', opts.locale)}?${atlasQuery(layers, data.profile.centroid, name)}`
@@ -129,10 +134,10 @@
 		if (ref.slug) void wahlCache.load('kiez', ref.slug);
 	});
 	const wahlRef = $derived(
-		kind === 'berlin' ? data.wahl.berlin : kind === 'bezirk' ? data.wahl.bezirk : wahlCache.current
+		kind === 'berlin' ? wahlData.berlin : kind === 'bezirk' ? wahlData.bezirk : wahlCache.current
 	);
 	const wahlRefName = $derived(kind === 'berlin' ? m.place_ref_all_berlin() : ref.label);
-	const wahlOwn = $derived(data.wahl.own[wahlArt]);
+	const wahlOwn = $derived(wahlData.own[wahlArt]);
 	const wahlRefPoints = $derived(wahlRef?.[wahlArt] ?? []);
 	const wahlLead = $derived(
 		wahlSentences(wahlFacts(wahlOwn, wahlRefPoints), {
@@ -254,11 +259,9 @@
 				>
 			</p>
 		</div>
-		{#if data.outline}
+		{#if data.map}
 			<ScoreMap
-				outline={data.outline}
-				scores={scoreMap}
-				ownSlug={data.profile.slug}
+				image={data.map}
 				ownName={name}
 				label={m.place_map_label_kiez({ bezirk: bezirkName ?? '', name })}
 			/>

@@ -30,6 +30,7 @@
 	import type { WahlArt } from '$lib/place/wahl-types';
 	import { dimLabel, formatScore, signedPoints } from '$lib/place/labels';
 	import { bezirkAnchorId } from '$lib/data/region-overview.js';
+	import { unpackRegions, unpackWahl } from '$lib/place/pack';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { page } from '$app/state';
 	import { m } from '$lib/paraglide/messages.js';
@@ -41,7 +42,13 @@
 	const unitPlural = $derived(m.place_units_bezirke());
 
 	const name = $derived(data.profile.name);
-	const bezirke = $derived(data.bezirke);
+	// Die Seitendaten kommen spaltenweise gepackt, ausgepackt wird einmal im Browser.
+	const bezirke = $derived(unpackRegions(data.bezirke));
+	const kieze = $derived(unpackRegions(data.kieze));
+	const wahlData = $derived({
+		own: unpackWahl(data.wahl.own),
+		berlin: unpackWahl(data.wahl.berlin)
+	});
 	const self = $derived(bezirke.find((b) => b.slug === data.profile.slug) ?? null);
 	const byslug = $derived(new Map(bezirke.map((b) => [b.slug, b])));
 	const neighborSet = $derived(new Set(data.neighborSlugs));
@@ -60,7 +67,7 @@
 		hasParent: false,
 		neighbors: data.neighborSlugs,
 		similar: [],
-		all: new Set(data.bezirke.map((b) => b.slug))
+		all: new Set(bezirke.map((b) => b.slug))
 	}));
 	$effect(() => {
 		view.readUrl(page.url);
@@ -77,12 +84,6 @@
 			? { rang: data.compositeRank.rang, total: data.compositeRank.total }
 			: null
 	);
-	const kiezScores = $derived(
-		new Map(data.kieze.map((k) => [k.slug, { name: k.name, composite: k.dims.composite }]))
-	);
-	const bezirkNames = $derived(
-		new Map(bezirke.map((b) => [b.slug, { name: b.name, composite: b.dims.composite }]))
-	);
 	const pick = (slug: string) => {
 		if (slug === data.profile.slug) return;
 		view.setChoice({ kind: neighborSet.has(slug) ? 'nachbar' : 'frei', slug });
@@ -94,9 +95,9 @@
 	$effect(() => {
 		if (ref.slug) void wahlCache.load('bezirk', ref.slug);
 	});
-	const wahlRef = $derived(kind === 'berlin' ? data.wahl.berlin : wahlCache.current);
+	const wahlRef = $derived(kind === 'berlin' ? wahlData.berlin : wahlCache.current);
 	const wahlRefName = $derived(kind === 'berlin' ? m.place_ref_all_berlin() : ref.label);
-	const wahlOwn = $derived(data.wahl.own[wahlArt]);
+	const wahlOwn = $derived(wahlData.own[wahlArt]);
 	const wahlRefPoints = $derived(wahlRef?.[wahlArt] ?? []);
 	const wahlLead = $derived(
 		wahlSentences(wahlFacts(wahlOwn, wahlRefPoints), {
@@ -185,7 +186,7 @@
 				{m.place_facts_bezirk({
 					inhabitants: formatCount(data.profile.einwohner, opts),
 					area: formatCount(Math.round(data.profile.flaecheHa / 100), opts),
-					count: data.kieze.length
+					count: kieze.length
 				})}
 			</p>
 			<!-- Eigene Prosa je Bezirk: der einzige frei formulierte Text der Seite (SEO, kein Template). -->
@@ -207,24 +208,15 @@
 			</p>
 		</div>
 		<div class="flex flex-col gap-4">
-			{#if data.outline}
+			{#if data.map}
 				<ScoreMap
-					outline={data.outline}
-					scores={kiezScores}
-					ownSlug={null}
-					label={m.place_map_label_bezirk({ count: data.kieze.length, name })}
+					image={data.map}
+					label={m.place_map_label_bezirk({ count: kieze.length, name })}
 				/>
 			{/if}
-			{#if data.berlinMap}
+			{#if data.locationMap}
 				<div class="flex items-center gap-3">
-					<ScoreMap
-						outline={data.berlinMap}
-						scores={bezirkNames}
-						ownSlug={data.profile.slug}
-						plain
-						label={m.place_map_location({ name })}
-						class="w-24 shrink-0"
-					/>
+					<ScoreMap image={data.locationMap} plain label="" class="w-24 shrink-0" />
 					<p class="text-sm text-ink-muted">{m.place_map_location({ name })}</p>
 				</div>
 			{/if}
@@ -251,7 +243,7 @@
 					? `${localizedHref('/explore', opts.locale)}?${atlasQuery(spec.mapLayers, data.profile.centroid, name)}`
 					: null}
 				pageType="bezirk"
-				kieze={data.kieze}
+				{kieze}
 				onpick={pick}
 			/>
 		{/each}
@@ -335,10 +327,10 @@
 			]}
 		/>
 		<h3 class="mt-8 text-base font-semibold text-ink">
-			{m.place_nb_kieze_in({ count: data.kieze.length, name })}
+			{m.place_nb_kieze_in({ count: kieze.length, name })}
 		</h3>
 		<ul class="mt-2 grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
-			{#each [...data.kieze].sort( (a, b) => a.name.localeCompare(b.name, opts.locale) ) as k (k.slug)}
+			{#each [...kieze].sort((a, b) => a.name.localeCompare(b.name, opts.locale)) as k (k.slug)}
 				<li>
 					<a
 						class="inline-flex min-h-6 items-center text-sm text-ink underline underline-offset-2 hover:text-accent"

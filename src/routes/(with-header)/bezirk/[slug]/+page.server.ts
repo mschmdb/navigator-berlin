@@ -5,16 +5,12 @@ import { m } from '$lib/paraglide/messages.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
 import { readBezirkComposite, readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
 import { toCompositeRank, type CompositeRank } from '$lib/server/profile/composite-rank.js';
-import { buildBezirkKiezeView } from '$lib/data/bezirk-kieze-view.js';
-import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
 import { loadBezirkRegions, loadKiezRegions } from '$lib/place/load-regions.server';
-import {
-	loadNeighborBezirkSlugs,
-	readBerlinBezirkeOutline
-} from '$lib/place/bezirk-context.server';
+import { loadNeighborBezirkSlugs } from '$lib/place/bezirk-context.server';
 import { loadWahlBundle } from '$lib/place/wahl.server';
-import type { RegionSnapshot } from '$lib/place/types';
-import type { WahlBundle } from '$lib/place/wahl-types';
+import { mapImage } from '$lib/place/maps.server';
+import type { MapImage } from '$lib/place/types';
+import { packRegions, packWahl, type PackedRegions, type PackedWahl } from '$lib/place/pack';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
 export const prerender = true;
@@ -40,36 +36,6 @@ async function tryLoadBezirkRank(slug: string) {
 	}
 }
 
-/** Umriss der Kieze des Bezirks für die Karte im Einstieg (Farben kommen aus den Scores). */
-async function tryLoadKiezeOutline(bezirkSlug: string): Promise<RegionOutline | null> {
-	try {
-		const { readLayer } = await import('$lib/server/kiez-neighbors-index.js');
-		const { normalizeSlug } = await import('$lib/data/internal/slug.js');
-		const [lorFc, bezirkeFc] = await Promise.all([
-			readLayer('lor-bezirksregion'),
-			readLayer('bezirke')
-		]);
-		const bezirkCodeToSlug = new Map<string, string>();
-		for (const f of bezirkeFc.features) {
-			const p = f.properties ?? {};
-			if (typeof p.Schluessel_gesamt === 'string' && typeof p.Gemeinde_name === 'string') {
-				bezirkCodeToSlug.set(p.Schluessel_gesamt.slice(-2), normalizeSlug(p.Gemeinde_name));
-			}
-		}
-		return buildBezirkKiezeView({
-			lorFeatureCollection: lorFc,
-			bezirkCodeToSlug,
-			scores: new Map(),
-			ranks: new Map(),
-			bezirkSlug
-		}).outline;
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[bezirk-page] WARN: kieze outline failed (${msg})\n`);
-		return null;
-	}
-}
-
 export interface BezirkPageData {
 	readonly profile: {
 		readonly slug: string;
@@ -83,14 +49,15 @@ export interface BezirkPageData {
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
 	readonly compositeRank: CompositeRank;
-	readonly outline: RegionOutline | null;
-	readonly berlinMap: RegionOutline | null;
+	/** Karte der Kieze im Bezirk und Lage in Berlin, je als SVG-Datei. */
+	readonly map: MapImage | null;
+	readonly locationMap: MapImage | null;
 	/** Die Kieze dieses Bezirks mit Themenwerten (Spanne je Kapitel). */
-	readonly kieze: readonly RegionSnapshot[];
+	readonly kieze: PackedRegions;
 	readonly neighborSlugs: readonly string[];
 	/** Alle 12 Bezirke. */
-	readonly bezirke: readonly RegionSnapshot[];
-	readonly wahl: { readonly own: WahlBundle; readonly berlin: WahlBundle };
+	readonly bezirke: PackedRegions;
+	readonly wahl: { readonly own: PackedWahl; readonly berlin: PackedWahl };
 }
 
 export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPageData> => {
@@ -107,8 +74,8 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPag
 		prose,
 		einwohnerStichtag,
 		bezirkComposite,
-		outline,
-		berlinMap,
+		map,
+		locationMap,
 		kieze,
 		bezirke,
 		wahlOwn,
@@ -118,8 +85,8 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPag
 		getLocalizedProfile('bezirk', slug, getLocale()),
 		readEinwohnerStichtag(),
 		readBezirkComposite(slug),
-		tryLoadKiezeOutline(slug),
-		readBerlinBezirkeOutline(),
+		mapImage('bezirk', slug, slug),
+		mapImage('lage', slug, slug),
 		loadKiezRegions(),
 		loadBezirkRegions(),
 		loadWahlBundle('bezirk', slug),
@@ -144,11 +111,11 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPag
 		profileProse: prose.paragraphs,
 		profileLocale: prose.locale,
 		compositeRank: toCompositeRank(rank),
-		outline,
-		berlinMap,
-		kieze: ownKieze,
+		map,
+		locationMap,
+		kieze: packRegions(ownKieze),
 		neighborSlugs,
-		bezirke,
-		wahl: { own: wahlOwn, berlin: wahlBerlin }
+		bezirke: packRegions(bezirke),
+		wahl: { own: packWahl(wahlOwn), berlin: packWahl(wahlBerlin) }
 	};
 };
