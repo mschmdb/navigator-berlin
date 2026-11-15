@@ -7,6 +7,7 @@
 	import { formatCount, formatDecimal, formatPercent } from '$lib/i18n/format.js';
 	import '$lib/components/place/place.css';
 	import RegionTitle from '$lib/components/atlas/region-title.svelte';
+	import NoJsFallback from '$lib/components/place/no-js-fallback.svelte';
 	import PlaceSeo from '$lib/components/place/place-seo.svelte';
 	import ReferenceBar from '$lib/components/place/reference-bar.svelte';
 	import Section from '$lib/components/place/place-section.svelte';
@@ -198,6 +199,7 @@
 	onmode={(m) => view.setMode(m)}
 />
 
+<NoJsFallback />
 <PlaceSeo
 	kind="kiez"
 	slug={data.profile.slug}

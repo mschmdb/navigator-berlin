@@ -9,7 +9,7 @@
 	let { caption, head, rows, visible }: Props = $props();
 </script>
 
-<div class={visible ? 'overflow-x-auto' : 'sr-only'}>
+<div class={visible ? 'overflow-x-auto' : 'sr-only'} data-place-table>
 	<table class="w-full border-collapse text-left text-dense-value tabular-nums">
 		<caption class="mb-2 text-left text-dense-label text-ink-subtle">{caption}</caption>
 		<thead>
