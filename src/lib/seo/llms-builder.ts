@@ -79,8 +79,8 @@ export interface LlmsSourceEntry {
 
 const SECTION_DEFAULTS: Record<LlmsSourceEntry['section'], string> = {
 	methodik: 'Methodik-Erklärung',
-	bezirk: 'Bezirks-Steckbrief mit Cross-Layer-Daten',
-	kiez: 'Kiez-Steckbrief (LOR-Bezirksregion)',
+	bezirk: 'Bezirksseite nach Themen: Lärm, Grün, Wohnen, Mobilität, Versorgung, Menschen, Wahlen, im Vergleich mit Berlin',
+	kiez: 'Kiezseite (LOR-Bezirksregion) nach Themen: Lärm, Grün, Wohnen, Mobilität, Versorgung, Menschen, Wahlen, im Vergleich mit Berlin',
 	layer: 'Daten-Layer',
 	static: 'Statische Seite',
 	lizenzen: 'Lizenz + Quellen pro Layer',
@@ -138,13 +138,13 @@ export function collectLlmsSourceEntries(ctx: LlmsSourceContext): LlmsSourceEntr
 	out.push({
 		loc: `${ctx.origin}/kieze`,
 		name: 'Alle Kieze',
-		description: `${ctx.kieze.length > 0 ? `Alle ${ctx.kieze.length} Kieze` : 'Alle Kieze'} nach Bezirk gruppiert, mit Kiez-Score und Link zum Steckbrief`,
+		description: `${ctx.kieze.length > 0 ? `Alle ${ctx.kieze.length} Kieze` : 'Alle Kieze'} nach Bezirk gruppiert, mit Kiez-Score und Link zur Kiezseite`,
 		section: 'static'
 	});
 	out.push({
 		loc: `${ctx.origin}/bezirke`,
 		name: 'Alle Bezirke',
-		description: `${ctx.bezirke.length > 0 ? `Alle ${ctx.bezirke.length} Bezirke` : 'Alle Bezirke'} mit Einwohnerzahl, Kiez-Score und Link zum Steckbrief`,
+		description: `${ctx.bezirke.length > 0 ? `Alle ${ctx.bezirke.length} Bezirke` : 'Alle Bezirke'} mit Einwohnerzahl, Kiez-Score und Link zur Bezirksseite`,
 		section: 'static'
 	});
 	out.push({
