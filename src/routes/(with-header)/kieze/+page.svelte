@@ -89,7 +89,7 @@
 		<section
 			id={bezirkAnchorId(bezirk.slug)}
 			aria-labelledby={`${bezirkAnchorId(bezirk.slug)}-h`}
-			class="flex scroll-mt-4 flex-col gap-3 border-t border-rule pt-6"
+			class="flex scroll-mt-24 flex-col gap-3 border-t border-rule pt-6"
 		>
 			<header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
 				<h2 id={`${bezirkAnchorId(bezirk.slug)}-h`} class="text-2xl font-bold text-ink">

@@ -335,3 +335,24 @@ export function hintFor(
 	const word = metricText(id, opts)[dir];
 	return { dir, tone, text: m.place_hint_text({ word, ref: refLabel }, o), short: word };
 }
+
+/**
+ * Kapitel-Anker je Score-Bereich, für Sprünge aus der Rangtabelle (`/kiez-score`): Wer nach
+ * „Grün & Hitze“ sortiert, landet im Kapitel Grün und Hitze. Die Anker sind stabil.
+ */
+export const DIM_CHAPTER_ANCHOR: Readonly<Record<string, string>> = {
+	composite: 'ueberblick',
+	ruheLuft: 'laerm',
+	gruenHitze: 'gruen',
+	mobilitaet: 'unterwegs',
+	versorgung: 'versorgung',
+	wohnschutz: 'wohnen',
+	kultur: 'versorgung',
+	kriminalitaet: 'menschen'
+};
+
+/** Anker für eine Sortierung der Rangtabelle; ohne passenden Bereich kein Anker. */
+export function chapterAnchorForSort(sortKey: string): string {
+	const id = DIM_CHAPTER_ANCHOR[sortKey];
+	return id && sortKey !== 'composite' ? `#${id}` : '';
+}

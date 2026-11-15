@@ -143,3 +143,26 @@ describe('English output', () => {
 		expect(labelValueText('unbekannt', en)).toBe('unbekannt');
 	});
 });
+
+import { CHAPTERS as ALL_CHAPTERS, DIM_CHAPTER_ANCHOR, chapterAnchorForSort } from './topics';
+
+describe('chapterAnchorForSort', () => {
+	it('jumps into the matching chapter for a sorted area', () => {
+		expect(chapterAnchorForSort('gruenHitze')).toBe('#gruen');
+		expect(chapterAnchorForSort('ruheLuft')).toBe('#laerm');
+	});
+	it('adds no anchor for the default sort, names or unknown keys', () => {
+		expect(chapterAnchorForSort('composite')).toBe('');
+		expect(chapterAnchorForSort('name')).toBe('');
+	});
+	it('only points at anchors that exist on the pages', () => {
+		const ids = new Set([
+			...ALL_CHAPTERS.map((c) => c.id),
+			'ueberblick',
+			'wahlen',
+			'nachbarn',
+			'fragen'
+		]);
+		for (const a of Object.values(DIM_CHAPTER_ANCHOR)) expect(ids.has(a)).toBe(true);
+	});
+});
