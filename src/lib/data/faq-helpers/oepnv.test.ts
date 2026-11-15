@@ -22,12 +22,19 @@ describe('describeOepnvDichte', () => {
 
 describe('oepnvErklaerungDe', () => {
 	it('bleibt DE ohne opts (Server-FAQ-Boundary)', () => {
-		expect(oepnvErklaerungDe(25)).toMatch(/innerstädtischer Bezirke/);
+		expect(oepnvErklaerungDe(25)).toMatch(/innerstädtischer Lagen/);
 	});
 	it('liefert EN mit opts.locale', () => {
 		expect(oepnvErklaerungDe(25, { locale: 'en' })).toBe(
-			'That matches the level of inner-city Bezirke, with tram and bus stops within short walking distance.'
+			'That matches the level of inner-city areas, with stops within short walking distance.'
 		);
+	});
+	it('nennt keine Verkehrsmittel, die Zähldaten liefern sie (NAV-108)', () => {
+		for (const value of [25, 15, 8, 2]) {
+			for (const locale of ['de', 'en'] as const) {
+				expect(oepnvErklaerungDe(value, { locale })).not.toMatch(/tram|bus|U-|S-/i);
+			}
+		}
 	});
 });
 

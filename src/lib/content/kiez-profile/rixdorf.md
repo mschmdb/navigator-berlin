@@ -9,4 +9,4 @@ generatedAt: '2026-06-07T12:00:00.000Z'
 
 Rixdorf steht beim Wohnschutz weit vorn. Der Score von rund 79 bringt Rang 11 von 143. Kulturell ist das Gebiet stark, rund 85 Punkte und Rang 28 von 143, klar über Bezirk und Berliner Median. Die Versorgung fällt mit rund 70 ebenfalls stark aus.
 
-Grün und Hitze bilden die Schwachstelle. Der Score von rund 25 reicht nur für Rang 135 von 143, weit unter dem Berliner Median. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad. Die Grünversorgung fällt gering aus. Die Haltestellendichte liegt bei rund 18 pro Quadratkilometer. Der Gesamtscore von 52 platziert Rixdorf auf Rang 21 von 143.
+Grün und Hitze bilden die Schwachstelle. Der Score von rund 25 reicht nur für Rang 135 von 143, weit unter dem Berliner Median. An heißen Tagen liegt die gefühlte Temperatur bei rund 36 Grad. Der Senat stuft die Grünversorgung als schlecht ein. Die Haltestellendichte liegt bei rund 18 pro Quadratkilometer. Der Gesamtscore von 52 platziert Rixdorf auf Rang 21 von 143.

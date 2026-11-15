@@ -4,27 +4,33 @@ templates:
   - id: gruen-versorgung-bezirk
     topic: gruen
     applicableTo: [bezirk]
-    requires: [gruen.dominantVersorgung]
+    requires: [gruen.versorgungDistribution]
     question: 'Wie ist die Grünversorgung im Bezirk {name}?'
     answer: >-
-      Im Bezirk {name} dominiert die Kategorie {gruenKategorie} für die
-      wohnungsnahe Grünversorgung. {gruenErklaerung}
-      Im Grün-und-Hitze-Score erreicht {name} {gruenHitzeScore} von 100
-      ({gruenHitzeRang}), {gruenHitzeVergleich}. Der Score verbindet
-      Grünversorgung und Hitzebelastung; ein höherer Wert heißt grüner und kühler.
+      Der Senat stuft die wohnungsnahe Grünversorgung im Bezirk {name}
+      {gruenEinstufung} ein. Anteile der Planungsräume: {gruenVerteilung}.
+      Die Klassen beschreiben, wie viel öffentliches Grün pro Person in
+      Wohnungsnähe liegt.
+      Der Grün-und-Hitze-Score ist eine eigene Messgröße: {name} erreicht
+      {gruenHitzeScore} von 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. Der
+      Score verbindet Grünversorgung und Hitzebelastung; ein höherer Wert heißt
+      grüner und kühler.
       Quelle: {gruenSource}, Stand {gruenStand}.
 
   - id: gruen-versorgung-kiez
     topic: gruen
     applicableTo: [kiez]
-    requires: [gruen.dominantVersorgung]
+    requires: [gruen.versorgungDistribution]
     question: 'Wie ist die Grünversorgung im Kiez {name}?'
     answer: >-
-      Die wohnungsnahe Grünversorgung im Kiez {name} liegt in der Kategorie
-      {gruenKategorie}. {gruenErklaerung}
-      Im Grün-und-Hitze-Score erreicht {name} {gruenHitzeScore} von 100
-      ({gruenHitzeRang}), {gruenHitzeVergleich}. Der Score verbindet
-      Grünversorgung und Hitzebelastung; ein höherer Wert heißt grüner und kühler.
+      Der Senat stuft die wohnungsnahe Grünversorgung im Kiez {name}
+      {gruenEinstufung} ein. Anteile der Planungsräume: {gruenVerteilung}.
+      Die Klassen beschreiben, wie viel öffentliches Grün pro Person in
+      Wohnungsnähe liegt.
+      Der Grün-und-Hitze-Score ist eine eigene Messgröße: {name} erreicht
+      {gruenHitzeScore} von 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. Der
+      Score verbindet Grünversorgung und Hitzebelastung; ein höherer Wert heißt
+      grüner und kühler.
       Quelle: {gruenSource}, Stand {gruenStand}.
 
   - id: gruen-anzahl-anlagen
@@ -44,9 +50,9 @@ templates:
     answer: >-
       Die Senatsverwaltung berechnet pro Planungsraum, wie viele Quadratmeter
       wohnungsnahe Grünfläche pro Einwohnerin im Einzugsbereich liegen.
-      Als Richtwert gelten 6 Quadratmeter pro Person. Erreicht oder verfehlt ein
-      Planungsraum diesen Wert, ergibt sich die Kategorie „hoch", „mittel" oder
-      „gering".
+      Als Richtwert gelten 6 Quadratmeter pro Person. Je nachdem, wie weit ein
+      Planungsraum diesen Wert erreicht, stuft der Senat ihn als „gut“, „mittel“
+      oder „schlecht“ versorgt ein.
 
   - id: gruen-rolle-hitze
     applicableTo: [layer]

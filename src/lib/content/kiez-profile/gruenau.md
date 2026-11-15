@@ -7,6 +7,6 @@ inputHash: 014f1ecb486e7603
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
-Grünau überzeugt bei Ruhe und Luft. Der Score von rund 90 bedeutet Rang 18 von 143. Das Grün kommt auf rund 62 Punkte, über dem Berliner Median. An heißen Tagen bleibt die gefühlte Temperatur mit rund 32 Grad moderat. Die Grünversorgung fällt hoch aus.
+Grünau überzeugt bei Ruhe und Luft. Der Score von rund 90 bedeutet Rang 18 von 143. Das Grün kommt auf rund 62 Punkte, über dem Berliner Median. An heißen Tagen bleibt die gefühlte Temperatur mit rund 32 Grad moderat. Der Senat stuft die Grünversorgung als gut ein.
 
 Anbindung und Versorgung ziehen das Bild nach unten. Der Mobilitäts-Score von 10 bedeutet den letzten Platz. Die Versorgung kommt auf rund 16 Punkte, Rang 138. Die Haltestellendichte erreicht nur rund 3 Halte pro Quadratkilometer. Insgesamt steht Grünau auf Rang 129.

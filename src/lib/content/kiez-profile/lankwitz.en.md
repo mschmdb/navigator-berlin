@@ -4,11 +4,11 @@ name: Lankwitz
 pageType: kiez
 locale: en
 sourceInputHash: '85000f962d6ce9d4'
-sourceTextHash: '3e6895655205b082'
+sourceTextHash: 'd8b538890f8ae9f8'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
-Lankwitz is quiet and green. Quiet & air reaches a score of 71.3 and is above the Berlin median. Green & heat reaches 62 and also exceeds the median. On hot days the perceived temperature is around 36 degrees. Green space provision is rated high.
+Lankwitz is quiet and green. Quiet & air reaches a score of 71.3 and is above the Berlin median. Green & heat reaches 62 and also exceeds the median. On hot days the perceived temperature is around 36 degrees. The Senate rates green space provision mostly as good.
 
 Mobility is the clear weakness. The score of 17.9 is below the Berlin median. Stop density reaches only around 11 stops per square kilometre. Local amenities are 54, slightly above the Bezirk average. Overall, the area has an overall score of 41, in the middle of the 143 Kieze.

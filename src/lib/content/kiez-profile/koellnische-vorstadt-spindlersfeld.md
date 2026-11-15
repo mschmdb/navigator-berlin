@@ -7,6 +7,6 @@ inputHash: e84acae938765930
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
-Köllnische Vorstadt/Spindlersfeld liegt grün und mittelmäßig versorgt. Der Grün-und-Hitze-Score von 58,4 liegt über dem Berliner Median. Der Mobilitätsscore von 26,3 liegt nahe am Median. Die Haltestellendichte liegt bei rund 17 pro Quadratkilometer. Die Grünversorgung gilt als hoch, die Lärmbelastung als mittel.
+Köllnische Vorstadt/Spindlersfeld liegt grün und mittelmäßig versorgt. Der Grün-und-Hitze-Score von 58,4 liegt über dem Berliner Median. Der Mobilitätsscore von 26,3 liegt nahe am Median. Die Haltestellendichte liegt bei rund 17 pro Quadratkilometer. Der Senat stuft die Grünversorgung überwiegend als gut ein, die Lärmbelastung gilt als mittel.
 
 Ruhe und Luft fallen schwächer aus. Der Score von 56,4 reicht für Rang 93 von 143, unter dem Bezirksschnitt. Die Versorgung liegt mit 46,4 unter dem Berliner Median. Die gefühlte Temperatur an heißen Tagen liegt bei rund 36 Grad. Der Gesamtscore von 37,5 platziert den Kiez auf Rang 114 von 143.

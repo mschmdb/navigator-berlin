@@ -54,6 +54,7 @@
 		"lint:cleartext": "tsx scripts/lint-cleartext-artifacts.ts",
 		"lint:cross-layer-templates": "tsx scripts/lint-cross-layer-templates.ts",
 		"data:faq": "tsx scripts/render-faq.ts",
+		"data:faq:check": "tsx scripts/check-faq.ts",
 		"i18n:compile": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide --strategy url baseLocale --silent",
 		"webmcp:manifest": "tsx scripts/build-webmcp-manifest.ts",
 		"og:images": "tsx scripts/generate-og-images.ts",

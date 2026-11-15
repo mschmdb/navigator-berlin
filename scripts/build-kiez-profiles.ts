@@ -55,7 +55,10 @@ Kennzahlen-Bedeutung (so und nicht anders benennen):
 - Kultur misst Kulturorte in Reichweite. Verknüpfe Kultur im Text NIE mit dem Gesamt-Score (nicht "hebt/senkt den Gesamt-Score"). Schreibe AUCH KEINE Meta-Hinweise wie "zählt eigenständig", "eigene Dimension" oder "nicht im Gesamt-Score" in den Profiltext, das ist Methodik, kein Profil.
 - Wenn Kultur unter den zwei höchsten ODER zwei niedrigsten Dimensionen liegt, erwähne sie natürlich mit Wert und qualitativer Einordnung (z.B. "kulturell stark, Rang X von N" mit N = total oder "wenig Kultur in Reichweite"). Sonst nur, wenn sie etwas aussagt.
 - petGrad ist die mittlere gefühlte Temperatur (PET) an heißen Tagen in Grad Celsius. Nenne sie "gefühlte Temperatur", NICHT "Oberflächentemperatur" oder "Lufttemperatur".
-- oepnvStopsProKm2 ist die Haltestellendichte pro Quadratkilometer.
+- oepnvStopsProKm2 ist die Haltestellendichte pro Quadratkilometer. Für die Haltestellendichte vergibst du keine eigene Klasse (nicht "sehr hoch", nicht "dicht"), nenne nur die Zahl.
+- Verkehrsmittel (U-Bahn, S-Bahn, Tram, Bus) nennst du nur, wenn der Input dafür Halte zählt (uBahnHalte, sBahnHalte, tramHalte, busHalte größer 0).
+- gruenversorgung ist die Einstufung des Senats (Stufen gut/mittel/schlecht). Übernimm das Wort und nenne den Senat, zum Beispiel "Der Senat stuft die Grünversorgung als gut ein". Benenne die Stufe nicht um (nicht "hoch" oder "gering").
+- gruenHitze ist ein Score, nicht die Grünversorgung. Schreib "Grün & Hitze", kein bloßes „Grün“ als Kurzform für den Score.
 - laermKlasse und wohnlage sind Kategorien (niedrig/mittel/hoch bzw. einfach/mittel/gut).
 - mss ist der Index "Monitoring Soziale Stadtentwicklung" (Sozialstruktur, Stufen niedrig/mittel/hoch). Das ist NICHT Milieuschutz und NICHT der Wohnschutz. Nenne ihn höchstens "soziale Lage" und nur, wenn nötig.
 

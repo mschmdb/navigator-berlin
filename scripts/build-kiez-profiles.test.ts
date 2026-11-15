@@ -15,3 +15,17 @@ describe('SYSTEM_PROMPT Ränge', () => {
 		expect(SYSTEM_PROMPT).not.toMatch(/von 143/);
 	});
 });
+
+describe('SYSTEM_PROMPT Grün und ÖPNV (NAV-108)', () => {
+	it('verlangt die Senats-Klassen der Grünversorgung wörtlich', () => {
+		expect(SYSTEM_PROMPT).toMatch(/gruenversorgung[^\n]*gut\/mittel\/schlecht/);
+		expect(SYSTEM_PROMPT).toMatch(/Der Senat stuft die Grünversorgung als/);
+	});
+	it('trennt Grünversorgung und Grün-&-Hitze-Score', () => {
+		expect(SYSTEM_PROMPT).toMatch(/kein bloßes „Grün“/);
+	});
+	it('verbietet eigene Klassen für die Haltestellendichte und erfundene Verkehrsmittel', () => {
+		expect(SYSTEM_PROMPT).toMatch(/Haltestellendichte[^\n]*keine eigene Klasse/);
+		expect(SYSTEM_PROMPT).toMatch(/Verkehrsmittel[^\n]*nur[^\n]*Halte/);
+	});
+});
