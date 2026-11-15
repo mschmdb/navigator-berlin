@@ -8,6 +8,8 @@ import { toCompositeRank, type CompositeRank } from '$lib/server/profile/composi
 import { loadBezirkRegions, loadKiezRegions } from '$lib/place/load-regions.server';
 import { loadNeighborBezirkSlugs } from '$lib/place/bezirk-context.server';
 import { loadWahlBundle } from '$lib/place/wahl.server';
+import { loadPageFaq } from '$lib/place/faq.server';
+import type { PageFaqItem } from '$lib/place/faq-items';
 import { mapImage } from '$lib/place/maps.server';
 import type { MapImage } from '$lib/place/types';
 import { packRegions, packWahl, type PackedRegions, type PackedWahl } from '$lib/place/pack';
@@ -46,6 +48,8 @@ export interface BezirkPageData {
 	};
 	readonly einwohnerStichtag: string | null;
 	readonly bezirkComposite: number | null;
+	/** Geprüfte FAQ aus `renderPlaceFaq` (dieselbe Quelle wie faq_qna). */
+	readonly faq: readonly PageFaqItem[];
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
 	readonly compositeRank: CompositeRank;
@@ -72,6 +76,7 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPag
 	const [
 		rank,
 		prose,
+		faq,
 		einwohnerStichtag,
 		bezirkComposite,
 		map,
@@ -83,6 +88,7 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPag
 	] = await Promise.all([
 		tryLoadBezirkRank(slug),
 		getLocalizedProfile('bezirk', slug, getLocale()),
+		loadPageFaq('bezirk', slug, profile.name, getLocale() as 'de' | 'en'),
 		readEinwohnerStichtag(),
 		readBezirkComposite(slug),
 		mapImage('bezirk', slug, slug),
@@ -108,6 +114,7 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPag
 		},
 		einwohnerStichtag,
 		bezirkComposite,
+		faq,
 		profileProse: prose.paragraphs,
 		profileLocale: prose.locale,
 		compositeRank: toCompositeRank(rank),

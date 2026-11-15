@@ -10,6 +10,8 @@ import { getKiezNeighborLists } from '$lib/server/kiez-neighbors-index.js';
 import { bezirkSlugFromName } from '$lib/data/region-display-names.js';
 import { loadBezirkRegions, loadKiezRegions } from '$lib/place/load-regions.server';
 import { loadWahlBundle } from '$lib/place/wahl.server';
+import { loadPageFaq } from '$lib/place/faq.server';
+import type { PageFaqItem } from '$lib/place/faq-items';
 import type { MapImage, RegionSnapshot } from '$lib/place/types';
 import { mapImage } from '$lib/place/maps.server';
 import { packRegions, packWahl, type PackedRegions, type PackedWahl } from '$lib/place/pack';
@@ -53,6 +55,8 @@ export interface KiezPageData {
 	readonly map: MapImage | null;
 	readonly neighbors: readonly NeighborEntry[];
 	readonly similar: readonly NeighborEntry[];
+	/** Geprüfte FAQ aus `renderPlaceFaq` (dieselbe Quelle wie faq_qna). */
+	readonly faq: readonly PageFaqItem[];
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
 	readonly compositeRank: CompositeRank;
@@ -83,6 +87,7 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<KiezPageD
 		neighborLists,
 		rank,
 		prose,
+		faq,
 		einwohnerStichtag,
 		regions,
 		bezirke,
@@ -94,6 +99,7 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<KiezPageD
 		getKiezNeighborLists(slug),
 		tryLoadKiezRank(slug),
 		getLocalizedProfile('kiez', slug, getLocale()),
+		loadPageFaq('kiez', slug, profile.name, getLocale() as 'de' | 'en'),
 		readEinwohnerStichtag(),
 		loadKiezRegions(),
 		loadBezirkRegions(),
@@ -114,6 +120,7 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<KiezPageD
 		map,
 		neighbors: neighborLists.neighbors,
 		similar: neighborLists.similar,
+		faq,
 		profileProse: prose.paragraphs,
 		profileLocale: prose.locale,
 		compositeRank: toCompositeRank(rank),

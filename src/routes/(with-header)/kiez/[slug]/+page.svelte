@@ -25,7 +25,6 @@
 	import { CHAPTERS, chapterText } from '$lib/place/topics';
 	import { trackLanding } from '$lib/utils/plausible.js';
 	import { atlasQuery } from '$lib/place/atlas-link';
-	import { buildChapterFaq } from '$lib/place/faq';
 	import { RATED_DIMS, type Dim } from '$lib/place/types';
 	import type { WahlArt } from '$lib/place/wahl-types';
 	import { dimLabel, formatScore, signedPoints } from '$lib/place/labels';
@@ -464,14 +463,10 @@
 		</Section>
 	{/if}
 
-	{#if self}
-		<FaqBlock
-			items={buildChapterFaq(
-				self,
-				all.map((r) => r.metrics),
-				unitPlural,
-				opts
-			)}
-		/>
-	{/if}
+	<FaqBlock
+		items={data.faq.map((f) => ({
+			...f,
+			chapter: { id: f.chapter, title: chapterText(f.chapter, opts).title }
+		}))}
+	/>
 </main>
