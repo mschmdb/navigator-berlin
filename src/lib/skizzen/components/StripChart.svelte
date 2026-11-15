@@ -9,6 +9,7 @@
 <script lang="ts">
 	import { Chart, Circle, Line, Svg, Tooltip } from 'layerchart';
 	import { scaleLinear } from 'd3-scale';
+	import { MediaQuery } from 'svelte/reactivity';
 	import { dodgeLevels } from '../dodge';
 	import { median, splitsZeros, zeroShare } from '../stats';
 	import { chartMotion } from './motion.svelte';
@@ -93,15 +94,39 @@
 			.range([0, Math.max(10, width - blockW - 2 * pad)])
 	);
 	const xs = $derived(byValue.map((i) => (i.value === null ? null : (x(i.value) as number))));
-	// Ohne Deckel: Der Schwarm wird so hoch, wie er braucht, damit kein Punkt verschwindet.
-	const free = $derived(dodgeLevels(xs, R, Infinity));
-	const needed = $derived(Math.max(0, ...free.map((l) => Math.abs(l ?? 0))));
-	const capLevel = $derived(Math.floor((MAX_SWARM / 2 - OWN_R) / STEP));
-	const overflow = $derived(needed > capLevel);
-	const levels = $derived(overflow ? dodgeLevels(xs, R, capLevel) : free);
-	const SWARM = $derived(
-		Math.max(36, blockRows * BLOCK_GAP + 4, 2 * Math.min(needed, capLevel) * STEP + 2 * OWN_R + 6)
-	);
+
+	/*
+	 * Kein Layout-Sprung: Die Höhe hängt nur an der Breitenstufe (Handy, Tablet, Desktop), nicht an
+	 * der gemessenen Breite. Der Server kennt alle drei Höhen und setzt sie per CSS; der Browser
+	 * rechnet die Ebenen für dieselbe Stufe. Ohne Deckel, damit kein Punkt verschwindet.
+	 */
+	const BUCKETS = [340, 560, 720] as const;
+	function layoutFor(plotWidth: number) {
+		const sx = scaleLinear()
+			.domain([domain[0], domain[1]])
+			.range([0, Math.max(10, plotWidth - blockW - 2 * pad)]);
+		const lx = byValue.map((i) => (i.value === null ? null : (sx(i.value) as number)));
+		const free = dodgeLevels(lx, R, Infinity);
+		const needed = Math.max(0, ...free.map((l) => Math.abs(l ?? 0)));
+		const capLevel = Math.floor((MAX_SWARM / 2 - OWN_R) / STEP);
+		const overflow = needed > capLevel;
+		return {
+			levels: overflow ? dodgeLevels(lx, R, capLevel) : free,
+			overflow,
+			swarm: Math.max(
+				36,
+				blockRows * BLOCK_GAP + 4,
+				2 * Math.min(needed, capLevel) * STEP + 2 * OWN_R + 6
+			)
+		};
+	}
+	const layouts = $derived(BUCKETS.map((w) => layoutFor(w)));
+	const wide = new MediaQuery('(min-width: 1024px)');
+	const mid640 = new MediaQuery('(min-width: 640px)');
+	const layout = $derived(layouts[wide.current ? 2 : mid640.current ? 1 : 0]);
+	const levels = $derived(layout.levels);
+	const overflow = $derived(layout.overflow);
+	const SWARM = $derived(layout.swarm);
 	const mid = $derived(SWARM / 2);
 	const yOf = (idx: number) => mid - (levels[idx] ?? 0) * STEP;
 
@@ -206,7 +231,13 @@
 	{/if}
 </ul>
 
-<div bind:clientWidth={width} style:height="{SWARM + AXIS}px">
+<div
+	bind:clientWidth={width}
+	class="h-[var(--h0)] sm:h-[var(--h1)] lg:h-[var(--h2)]"
+	style:--h0="{layouts[0].swarm + AXIS}px"
+	style:--h1="{layouts[1].swarm + AXIS}px"
+	style:--h2="{layouts[2].swarm + AXIS}px"
+>
 	{#if width > 0}
 		<Chart
 			data={byValue}

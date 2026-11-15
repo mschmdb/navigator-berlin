@@ -4,6 +4,8 @@
 	Erste und letzte Beschriftung stehen nach innen, damit nichts angeschnitten wird.
 -->
 <script lang="ts">
+	import { layoutAxisLabels, trimZeroDecimals } from '../axis';
+
 	interface Props {
 		ticks: readonly number[];
 		x: (v: number) => number;
@@ -17,19 +19,24 @@
 	}
 	let { ticks, x, format, unit = '', top, bottom, width }: Props = $props();
 
-	const label = (t: number, i: number) =>
-		`${format(t)}${i === ticks.length - 1 && unit ? `\u00a0${unit}` : ''}`;
-	/** Nach innen ausrichten, sobald die Beschriftung über den Rand ragen würde (ca. 6,3 px je Zeichen). */
-	function anchor(t: number, i: number): 'start' | 'middle' | 'end' {
-		const half = (label(t, i).length * 6.3) / 2;
-		if (x(t) - half < 0) return 'start';
-		if (x(t) + half > width) return 'end';
-		return 'middle';
-	}
+	// Ca. 6,3 px je Zeichen bei 10,5 px Plex Mono.
+	const labels = $derived.by(() => {
+		const texts = trimZeroDecimals(
+			ticks.map((t) => format(t)),
+			ticks
+		).map((t, i) => (i === ticks.length - 1 && unit ? `${t}\u00a0${unit}` : t));
+		return layoutAxisLabels(
+			texts,
+			ticks.map((t) => x(t)),
+			width,
+			6.3
+		);
+	});
 </script>
 
 <g aria-hidden="true">
 	{#each ticks as t, i (t)}
+		{@const l = labels[i]}
 		<line
 			x1={x(t)}
 			x2={x(t)}
@@ -39,12 +46,14 @@
 			stroke-width="1"
 			opacity="0.7"
 		/>
-		<text
-			x={x(t)}
-			y={bottom + 9}
-			dominant-baseline="hanging"
-			text-anchor={anchor(t, i)}
-			class="fill-[var(--ink-subtle)] font-mono text-[10.5px] tabular-nums">{label(t, i)}</text
-		>
+		{#if l.visible}
+			<text
+				x={l.x}
+				y={bottom + 9}
+				dominant-baseline="hanging"
+				text-anchor={l.anchor}
+				class="fill-[var(--ink-subtle)] font-mono text-[10.5px] tabular-nums">{l.text}</text
+			>
+		{/if}
 	{/each}
 </g>
