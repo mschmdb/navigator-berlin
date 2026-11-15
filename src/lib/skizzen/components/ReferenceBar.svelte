@@ -157,7 +157,7 @@
 				value={compactValue}
 				onchange={(e) => pickCompact(e.currentTarget.value)}
 			>
-				<option value="berlin:">Berlin ({berlinNote})</option>
+				<option value="berlin:">Berlin</option>
 				{#if bezirkLabel}<option value="bezirk:">{bezirkLabel}</option>{/if}
 				{#if neighbors.length > 0}
 					<optgroup label={neighborGroup}>
