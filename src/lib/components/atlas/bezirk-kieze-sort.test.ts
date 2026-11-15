@@ -29,6 +29,20 @@ describe('sortKiezEntries', () => {
 		expect(out.map((k) => k.name)).toEqual(['Ärger', 'Cäcilie', 'Zora', 'Berta', 'Anna']);
 	});
 
+	it('löst gleichen gerundeten Score über den Rang auf, nicht über den Namen', () => {
+		const ranked = (name: string, rang: number): KiezListEntry => ({
+			...e(name, 57),
+			rang,
+			quartil: 1,
+			total: 143
+		});
+		const tied = [ranked('Alpha', 9), ranked('Beta', 7), e('Gamma', 57)];
+		const desc = sortKiezEntries(tied, { key: 'score', direction: 'desc' });
+		expect(desc.map((k) => k.name)).toEqual(['Beta', 'Alpha', 'Gamma']);
+		const asc = sortKiezEntries(tied, { key: 'score', direction: 'asc' });
+		expect(asc.map((k) => k.name)).toEqual(['Alpha', 'Beta', 'Gamma']);
+	});
+
 	it('sortiert Namen deutsch alphabetisch', () => {
 		const out = sortKiezEntries(entries, { key: 'name', direction: 'asc' });
 		expect(out.map((k) => k.name)).toEqual(['Anna', 'Ärger', 'Berta', 'Cäcilie', 'Zora']);

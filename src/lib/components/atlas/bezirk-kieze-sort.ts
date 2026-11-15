@@ -28,6 +28,17 @@ export function initialSortState(hasScores: boolean): KiezSortState {
 
 const byName = (a: KiezListEntry, b: KiezListEntry): number => a.name.localeCompare(b.name, 'de');
 
+/**
+ * Der angezeigte Score ist gerundet. Bei gleichem Score entscheidet der Rang aus dem
+ * ungerundeten Wert (kleiner = besser), Kieze ohne Rang stehen dahinter.
+ */
+function byRang(a: KiezListEntry, b: KiezListEntry, sign: number): number {
+	if (a.rang === null && b.rang === null) return 0;
+	if (a.rang === null) return 1;
+	if (b.rang === null) return -1;
+	return -sign * (a.rang - b.rang);
+}
+
 /** Sortiert eine Kopie. Kieze ohne Score stehen bei Score-Sortierung immer am Ende. */
 export function sortKiezEntries(
 	entries: readonly KiezListEntry[],
@@ -39,7 +50,7 @@ export function sortKiezEntries(
 		if (a.composite === null && b.composite === null) return byName(a, b);
 		if (a.composite === null) return 1;
 		if (b.composite === null) return -1;
-		return sign * (a.composite - b.composite) || byName(a, b);
+		return sign * (a.composite - b.composite) || byRang(a, b, sign) || byName(a, b);
 	});
 }
 
