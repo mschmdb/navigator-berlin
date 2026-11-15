@@ -11,7 +11,6 @@ import { loadWahlBundle } from '$lib/skizzen/wahl.server';
 import { neighborBezirke } from '$lib/skizzen/bezirk-neighbors';
 import { getKiezNeighborLists, readLayer } from '$lib/server/kiez-neighbors-index.js';
 import { buildRegionOutline, type OutlineRegion } from '$lib/seo/region-outline-svg.js';
-import { loadFaqByChapter } from '$lib/skizzen/faq.server';
 import { bezirkSlugFromName, cleanName } from '$lib/data/region-display-names.js';
 import type { PageServerLoad } from './$types';
 
@@ -36,13 +35,12 @@ export const load: PageServerLoad = async (event) => {
 		event as unknown as Parameters<typeof bezirkPageLoad>[0]
 	)) as BezirkPageData;
 	const slug = event.params.slug;
-	const [kieze, bezirke, berlinFigures, wahlOwn, wahlBerlin, faq, berlinMap] = await Promise.all([
+	const [kieze, bezirke, berlinFigures, wahlOwn, wahlBerlin, berlinMap] = await Promise.all([
 		loadKiezRegions(),
 		loadBezirkRegions(),
 		readBerlinFigures(),
 		loadWahlBundle('bezirk', slug),
 		loadWahlBundle('berlin', null),
-		loadFaqByChapter('bezirk', slug),
 		berlinOutline()
 	]);
 	const ownKieze = kieze.filter((k) => k.parentSlug === slug);
@@ -66,9 +64,9 @@ export const load: PageServerLoad = async (event) => {
 			flaecheHa: base.profile.flaecheHa
 		},
 		prose: base.profileProse,
+		compositeRank: base.compositeRank,
 		outline: base.kiezeView.outline,
 		berlinMap,
-		faq,
 		kieze: ownKieze,
 		neighborSlugs,
 		bezirke,

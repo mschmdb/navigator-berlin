@@ -22,7 +22,7 @@ export const METRICS = [
 	'schulen',
 	'kulturorte',
 	'dichte',
-	'kieztaten'
+	'kriminalitaet'
 ] as const;
 export type MetricId = (typeof METRICS)[number];
 export type MetricValues = Readonly<Record<MetricId, number | null>>;
@@ -222,12 +222,12 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		higher: 'dichter besiedelt',
 		lower: 'weniger dicht besiedelt'
 	},
-	kieztaten: {
-		label: 'Erfasste Kieztaten',
-		unit: 'je 100.000 Menschen',
+	kriminalitaet: {
+		label: 'Erfasste Kriminalität',
+		unit: 'Fälle je 100.000 Menschen',
 		digits: 0,
-		what: 'Von der Polizei erfasste Kieztaten je 100.000 Einwohner, Mittel 2023 bis 2025. Wo viele Menschen unterwegs sind, aber wenige wohnen, fällt die Zahl hoch aus',
-		source: 'Kriminalitätsatlas der Polizei Berlin',
+		what: 'Häufigkeitszahl je Bezirksregion, nicht adressgenau. Sie misst erfasste Fälle pro gemeldete Einwohner, kein persönliches Risiko. Touristen- und Pendler-Orte erscheinen überzeichnet, das Dunkelfeld bleibt unerfasst. Kein Sicherheits-Ranking',
+		source: 'Kriminalitätsatlas der Polizei Berlin, Mittel 2023 bis 2025',
 		higher: 'mehr erfasste Fälle',
 		lower: 'weniger erfasste Fälle'
 	}
@@ -313,7 +313,7 @@ export const CHAPTERS: readonly ChapterSpec[] = [
 		short: 'Menschen',
 		title: 'Menschen',
 		main: ['dichte'],
-		side: ['kieztaten'],
+		side: ['kriminalitaet'],
 		labels: ['mss'],
 		mapLayers: 'einwohner-dichte-2024',
 		neutral: true
@@ -412,7 +412,7 @@ export function characterPoints(
 	count = 3
 ): string[] {
 	// Zählwerte hängen an der Größe des Gebiets und taugen nicht für „mehr als 92 %“.
-	return METRICS.filter((m) => m !== 'kieztaten' && METRIC_SPECS[m].unit !== 'im Gebiet')
+	return METRICS.filter((m) => m !== 'kriminalitaet' && METRIC_SPECS[m].unit !== 'im Gebiet')
 		.map((m: MetricId): Candidate | null => {
 			const v = own[m];
 			const xs = all.map((a) => a[m]).filter((x): x is number => x !== null);

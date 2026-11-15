@@ -99,7 +99,7 @@ describe('hintFor', () => {
 			short: 'teurer'
 		});
 		expect(hintFor('dichte', 26000, 6000, 'X')?.tone).toBe('neutral');
-		expect(hintFor('kieztaten', 4000, 3000, 'X')?.tone).toBe('neutral');
+		expect(hintFor('kriminalitaet', 4000, 3000, 'X')?.tone).toBe('neutral');
 	});
 	it('says roughly equal below the display precision', () => {
 		expect(hintFor('laermDb', 46.21, 46.24, 'X')).toEqual({

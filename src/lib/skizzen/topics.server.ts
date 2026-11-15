@@ -150,7 +150,7 @@ async function build(): Promise<TopicData> {
 			bezirke: StoryRow[];
 		}>,
 		readJson('static/data/kriminalitaet-lor.json') as Promise<{
-			records: { bzrId: string; delikteHz: { kieztaten?: number } }[];
+			records: { bzrId: string; index?: number }[];
 		}>,
 		loadStats()
 	]);
@@ -209,7 +209,7 @@ async function build(): Promise<TopicData> {
 
 	const hzByBzr = new Map<string, number>();
 	for (const r of krimi.records) {
-		const v = r.delikteHz?.kieztaten;
+		const v = r.index;
 		if (typeof v === 'number' && !hzByBzr.has(r.bzrId)) hzByBzr.set(r.bzrId, v);
 	}
 
@@ -222,7 +222,7 @@ async function build(): Promise<TopicData> {
 		level: 'kiez' | 'bezirk',
 		slug: string,
 		bezirkSlug: string | null,
-		kieztaten: number | null
+		kriminalitaet: number | null
 	): { metrics: MetricValues; labels: LabelValues } {
 		const agg = (layer: string) => aggregateLookup(file, layer, level, slug, bezirkSlug);
 		const story = level === 'kiez' ? storyKiez.get(slug) : storyBezirk.get(slug);
@@ -250,7 +250,7 @@ async function build(): Promise<TopicData> {
 			schulen: c('schulen'),
 			kulturorte: c('kulturorte'),
 			dichte: story?.bewohnerProKm2 ?? null,
-			kieztaten
+			kriminalitaet
 		};
 		const labels: Record<(typeof LABELS)[number], string | null> = {
 			laermKlasse: dominant(agg('laerm-2023')),

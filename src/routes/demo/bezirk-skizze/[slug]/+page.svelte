@@ -18,9 +18,9 @@
 	import { aggregateProfile, resolveReference } from '$lib/skizzen/reference';
 	import { SkizzeState, WahlCache } from '$lib/skizzen/reference-state.svelte';
 	import { signedPoints } from '$lib/skizzen/compare-text';
-	import { rankOf } from '$lib/skizzen/stats';
 	import { latestLeader } from '$lib/skizzen/wahl-summary';
 	import { CHAPTERS, characterPoints } from '$lib/skizzen/topics';
+	import { buildChapterFaq } from '$lib/skizzen/faq';
 	import { RATED_DIMS, type Dim } from '$lib/skizzen/types';
 	import type { WahlArt } from '$lib/skizzen/wahl-types';
 	import { dimLabel, formatInt, formatScore } from '$lib/skizzen/labels';
@@ -60,11 +60,11 @@
 	const kind = $derived(skizze.choice.kind);
 	const refName = $derived(kind === 'berlin' ? 'Berlin-Median' : ref.label);
 
+	// Gespeicherter Wettkampf-Rang (kiez_rank/bezirk_rank), nicht selbst gerechnet.
 	const scoreRank = $derived(
-		rankOf(
-			self?.dims.composite ?? null,
-			bezirke.map((b) => b.dims.composite)
-		)
+		data.compositeRank.rang !== null
+			? { rang: data.compositeRank.rang, total: data.compositeRank.total }
+			: null
 	);
 	const character = $derived(
 		self
@@ -347,5 +347,13 @@
 		</Section>
 	{/if}
 
-	<FaqBlock items={data.faq} />
+	{#if self}
+		<FaqBlock
+			items={buildChapterFaq(
+				self,
+				bezirke.map((r) => r.metrics),
+				'Bezirke'
+			)}
+		/>
+	{/if}
 </main>

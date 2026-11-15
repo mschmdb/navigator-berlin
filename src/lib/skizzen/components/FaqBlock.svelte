@@ -5,12 +5,8 @@
 <script lang="ts">
 	import JsonLd from '$lib/components/atlas/json-ld.svelte';
 	import { buildFaqPage } from '$lib/seo/jsonld-faqpage.js';
+	import type { FaqItemWithChapter } from '../faq';
 
-	export interface FaqItemWithChapter {
-		readonly question: string;
-		readonly answer: string;
-		readonly chapter: { readonly id: string; readonly title: string } | null;
-	}
 	let { items }: { items: readonly FaqItemWithChapter[] } = $props();
 	const jsonLd = $derived(buildFaqPage({ items }));
 </script>
