@@ -9,6 +9,7 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { mostCommon, zeroAwareMedian } from '../stats';
 	import {
+		METRIC_SPECS,
 		formatMetricValue,
 		hintFor,
 		labelText,
@@ -32,6 +33,10 @@
 		unitPlural: string;
 	}
 	let { metrics, labels, regions, own, ref, refHead, unitPlural }: Props = $props();
+	// Ebene aus der Zahl der Orte: 143 Kieze oder 12 Bezirke.
+	const typical = $derived(
+		regions.length > 20 ? m.skizze_side_typical_kiez() : m.skizze_side_typical_bezirk()
+	);
 	const opts = $derived({ locale: getLocale() });
 	const classText = (v: string | null | undefined) => (v ? labelValueText(v, opts) : '–');
 
@@ -44,22 +49,32 @@
 		ref: string;
 		berlin: string;
 		hint: HintData | null;
+		/** Zählwert ohne Wertung: Hinweis zur Gebietsgröße steht einmal über der Gruppe. */
+		count: boolean;
 	}
 	const rows = $derived<Row[]>([
 		...metrics.map((id) => {
 			const b = zeroAwareMedian(regions.map((r) => r.metrics[id]));
 			const text = metricText(id, opts);
+			const count = METRIC_SPECS[id].unitKind === 'count';
+			const hint = refHead
+				? hintFor(id, own.metrics[id], ref.metrics[id], refHead.name, opts)
+				: hintFor(id, own.metrics[id], b.value, m.skizze_ref_berlin_median(), opts);
 			return {
 				key: id,
+				count,
 				label: text.label,
-				unit: text.unit,
-				what: text.what,
+				unit: count ? '' : text.unit,
+				what: count ? (id === 'kulturorte' ? m.skizze_m_kulturorte_short() : '') : text.what,
 				own: formatMetricValue(id, own.metrics[id], opts),
-				ref: formatMetricValue(id, ref.metrics[id], opts),
+				// Zählwert eines ganzen Bezirks neben einem Kiez sagt nichts: dann kein Vergleichswert.
+				ref:
+					count && ref.slug === null && regions.length > 20
+						? '–'
+						: formatMetricValue(id, ref.metrics[id], opts),
 				berlin: `${formatMetricValue(id, b.value, opts)}${b.zerosLeftOut > 0 ? '¹' : ''}`,
-				hint: refHead
-					? hintFor(id, own.metrics[id], ref.metrics[id], refHead.name, opts)
-					: hintFor(id, own.metrics[id], b.value, m.skizze_ref_berlin_median(), opts)
+				// Lesehilfe nur, wo sie etwas sagt: Zählwerte und neutrale Werte ohne Badge.
+				hint: hint && hint.tone !== 'neutral' ? hint : null
 			};
 		}),
 		...labels.map((l) => ({
@@ -70,9 +85,11 @@
 			own: classText(own.labels[l]),
 			ref: classText(ref.labels[l]),
 			berlin: classText(mostCommon(regions.map((r) => r.labels[l]))),
-			hint: null
+			hint: null,
+			count: false
 		}))
 	]);
+	const hasCounts = $derived(rows.some((r) => r.count));
 	const zeroNotes = $derived(
 		metrics
 			.map((id) => ({ id, z: zeroAwareMedian(regions.map((r) => r.metrics[id])).zerosLeftOut }))
@@ -115,8 +132,7 @@
 				</th>
 			{/if}
 			<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-normal text-ink">
-				{m.skizze_side_berlin()}<span class="block text-dense-label text-ink-subtle"
-					>{m.skizze_side_berlin_sub()}</span
+				{m.skizze_side_berlin()}<span class="block text-dense-label text-ink-subtle">{typical}</span
 				>
 			</th>
 		</tr>
@@ -125,8 +141,8 @@
 		{#each rows as r (r.key)}
 			<tr class="border-b border-rule align-top">
 				<th scope="row" class="py-2 pr-2 text-left text-sm font-normal text-ink">
-					{r.label}<span class="font-mono text-dense-label text-ink-subtle">, {r.unit}</span>
-					<span class="block text-dense-label text-ink-subtle">{r.what}</span>
+					{r.label}{#if r.unit}<span class="text-dense-label text-ink-subtle">, {r.unit}</span>{/if}
+					{#if r.what}<span class="block text-dense-label text-ink-subtle">{r.what}</span>{/if}
 				</th>
 				<td class="py-2 pl-3 text-right align-top">
 					<span class="block font-mono text-sm whitespace-nowrap text-accent tabular-nums"
@@ -148,38 +164,36 @@
 	</tbody>
 </table>
 
-<!-- Mobil: Zeile gestapelt, Werte darunter in gleich breiten Spalten -->
+<!-- Mobil: eine Zeile je Wert in natürlicher Sprache, Vergleich klein darunter -->
 <div class="sm:hidden">
-	<p class="mb-2 text-sm font-semibold text-ink">{m.skizze_side_caption()}</p>
-	<ul class="flex flex-col">
+	<p class="text-sm font-semibold text-ink">{m.skizze_side_caption()}</p>
+	{#if hasCounts}<p class="text-dense-label text-ink-subtle">{m.skizze_side_count_note()}</p>{/if}
+	<ul class="mt-1 flex flex-col">
 		{#each rows as r (r.key)}
-			<li class="border-b border-rule py-2">
-				<p class="text-sm text-ink">
-					{r.label}<span class="font-mono text-dense-label text-ink-subtle">, {r.unit}</span>
+			<li class="border-b border-rule py-1.5">
+				<div class="flex items-baseline justify-between gap-3">
+					<span class="text-sm text-ink"
+						>{r.label}{#if r.unit}<span class="text-dense-label text-ink-subtle">, {r.unit}</span
+							>{/if}</span
+					>
+					<span class="font-mono text-sm text-accent tabular-nums">{r.own}</span>
+				</div>
+				{#if r.what}<p class="text-dense-label text-ink-subtle">{r.what}</p>{/if}
+				<p
+					class="flex flex-wrap items-center gap-x-2 text-dense-label text-ink-subtle tabular-nums"
+				>
+					{#if refHead}<span>{refHead.name}: {r.ref}</span>{/if}
+					<span>{typical}: {r.berlin}</span>
+					{#if r.hint}<Hint hint={r.hint} short />{/if}
 				</p>
-				<p class="text-dense-label text-ink-subtle">{r.what}</p>
-				<dl class="mt-1.5 grid {refHead ? 'grid-cols-3' : 'grid-cols-2'} gap-2">
-					<div>
-						<dt class="truncate text-dense-label text-accent">{own.name}</dt>
-						<dd class="font-mono text-sm text-accent tabular-nums">{r.own}</dd>
-						{#if r.hint}<dd class="mt-0.5"><Hint hint={r.hint} short /></dd>{/if}
-					</div>
-					{#if refHead}
-						<div>
-							<dt class="truncate text-dense-label text-ink-subtle">{refHead.name}</dt>
-							<dd class="font-mono text-sm tabular-nums">{r.ref}</dd>
-						</div>
-					{/if}
-					<div>
-						<dt class="text-dense-label text-ink-subtle">{m.skizze_side_berlin()}</dt>
-						<dd class="font-mono text-sm text-ink-muted tabular-nums">{r.berlin}</dd>
-					</div>
-				</dl>
 			</li>
 		{/each}
 	</ul>
 </div>
-<div class="mt-1.5 flex flex-col gap-0.5 text-dense-label text-ink-subtle">
-	<p>{m.skizze_side_footnote({ count: regions.length, units: unitPlural })}</p>
+<div class="mt-1 flex flex-col gap-0.5 text-dense-label text-ink-subtle">
+	<p class="hidden sm:block">
+		{#if hasCounts}{m.skizze_side_count_note()}{/if}
+	</p>
+	<p>{m.skizze_side_typical_note({ count: regions.length, units: unitPlural })}</p>
 	{#each zeroNotes as n (n)}<p>{n}</p>{/each}
 </div>

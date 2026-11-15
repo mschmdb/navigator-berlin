@@ -2845,5 +2845,10 @@
 	"skizze_ov_bezirk_ranked": "{name} erreicht {score} von 100 Punkten, Platz {rank} von {total} Bezirken. Jede Zeile ist ein Bereich, höher ist besser. Der Ring ist {ref}.",
 	"skizze_ov_note": "Kultur und erfasste Kriminalität zählen nicht zum Kiez-Score. Kriminalität steht abgesetzt und ohne Wertung.",
 	"skizze_ov_caption": "Kiez-Score nach Bereichen: {name} und {ref}",
-	"skizze_composite": "Gesamtwert"
+	"skizze_composite": "Gesamtwert",
+	"skizze_side_typical_kiez": "typischer Kiez",
+	"skizze_side_typical_bezirk": "typischer Bezirk",
+	"skizze_side_count_note": "Anzahl im Gebiet. Größere Gebiete haben oft mehr.",
+	"skizze_side_typical_note": "Typisch heißt: Median der {count} {units}, bei Klassen die häufigste Klasse.",
+	"skizze_m_kulturorte_short": "Museen, Theater, Kinos, Bibliotheken, Galerien, Clubs, Soziokultur"
 }

@@ -2845,5 +2845,10 @@
 	"skizze_ov_bezirk_ranked": "{name} scores {score} out of 100 points, rank {rank} of {total} districts. Each row is one area, higher is better. The ring is {ref}.",
 	"skizze_ov_note": "Culture and recorded crime do not count towards the Kiez score. Crime is shown separately and without a rating.",
 	"skizze_ov_caption": "Kiez score by area: {name} and {ref}",
-	"skizze_composite": "Overall score"
+	"skizze_composite": "Overall score",
+	"skizze_side_typical_kiez": "typical Kiez",
+	"skizze_side_typical_bezirk": "typical district",
+	"skizze_side_count_note": "Number within the area. Larger areas often have more.",
+	"skizze_side_typical_note": "Typical means the median of the {count} {units}; for classes, the most common class.",
+	"skizze_m_kulturorte_short": "Museums, theatres, cinemas, libraries, galleries, clubs, community arts centres"
 }
