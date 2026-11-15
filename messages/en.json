@@ -2574,7 +2574,7 @@
 	"skizze_m_pet_lower": "cooler",
 	"skizze_m_bestandsmiete_label": "Rent in existing contracts",
 	"skizze_m_bestandsmiete_unit": "€/m²",
-	"skizze_m_bestandsmiete_what": "Net rent per square metre in existing rental contracts, Census 2022",
+	"skizze_m_bestandsmiete_what": "Net rent per square metre in existing rental contracts",
 	"skizze_m_bestandsmiete_source": "Census 2022",
 	"skizze_m_bestandsmiete_higher": "more expensive",
 	"skizze_m_bestandsmiete_lower": "cheaper",

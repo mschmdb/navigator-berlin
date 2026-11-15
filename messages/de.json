@@ -2574,7 +2574,7 @@
 	"skizze_m_pet_lower": "kühler",
 	"skizze_m_bestandsmiete_label": "Miete in laufenden Verträgen",
 	"skizze_m_bestandsmiete_unit": "€/m²",
-	"skizze_m_bestandsmiete_what": "Nettokaltmiete je Quadratmeter in bestehenden Mietverträgen, Zensus 2022",
+	"skizze_m_bestandsmiete_what": "Nettokaltmiete je Quadratmeter in bestehenden Mietverträgen",
 	"skizze_m_bestandsmiete_source": "Zensus 2022",
 	"skizze_m_bestandsmiete_higher": "teurer",
 	"skizze_m_bestandsmiete_lower": "günstiger",
