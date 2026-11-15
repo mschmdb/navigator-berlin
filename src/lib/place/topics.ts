@@ -353,3 +353,19 @@ export function chapterAnchorForSort(sortKey: string): string {
 	const id = DIM_CHAPTER_ANCHOR[sortKey];
 	return id && sortKey !== 'composite' ? `#${id}` : '';
 }
+
+/**
+ * Kürzt Messwerte auf zwei Stellen mehr als angezeigt. Ränge und Lagesätze bleiben exakt,
+ * die Seitendaten (143 Kieze je Seite) werden deutlich kleiner.
+ */
+export function compactMetrics(metrics: MetricValues): MetricValues {
+	const out: Record<MetricId, number | null> = { ...metrics };
+	for (const id of METRICS) {
+		const v = out[id];
+		if (v !== null) {
+			const f = 10 ** (METRIC_SPECS[id].digits + 2);
+			out[id] = Math.round(v * f) / f;
+		}
+	}
+	return out;
+}

@@ -12,6 +12,8 @@
 		/** Einstellungen, die nur in diesem Abschnitt gelten. */
 		controls?: Snippet;
 		chart: Snippet;
+		/** Nach der Grafik, immer für Screenreader sichtbar (Tabellen mit Aufklappern). */
+		afterChart?: Snippet;
 		/** Tabelle: in „Erzählen“ für Screenreader, in „Zahlen“ sichtbar statt der Grafik. */
 		table: Snippet<[boolean]>;
 		sources?: Snippet;
@@ -26,6 +28,7 @@
 		text,
 		controls,
 		chart,
+		afterChart,
 		table,
 		sources,
 		interactive = false
@@ -61,6 +64,9 @@
 				<div class="place-reveal" {@attach reveal} aria-hidden={interactive ? undefined : 'true'}>
 					{@render chart()}
 				</div>
+				{#if afterChart}
+					<div class="mt-8">{@render afterChart()}</div>
+				{/if}
 			{/if}
 			{@render table(mode === 'zahlen')}
 		</div>

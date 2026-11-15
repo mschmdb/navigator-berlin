@@ -293,18 +293,20 @@
 					</div>
 				{/each}
 			</div>
-
-			<SideTable
-				metrics={spec.side}
-				labels={spec.labels ?? []}
-				{regions}
-				{own}
-				{ref}
-				refHead={refIsBerlin ? null : { name: refHeadName, sub: refHeadSub }}
-				{unitPlural}
-				{compact}
-			/>
 		</div>
+	{/snippet}
+	{#snippet afterChart()}
+		<!-- Außerhalb der aria-hidden-Grafik: die Tabelle hat fokussierbare Aufklapper. -->
+		<SideTable
+			metrics={spec.side}
+			labels={spec.labels ?? []}
+			{regions}
+			{own}
+			{ref}
+			refHead={refIsBerlin ? null : { name: refHeadName, sub: refHeadSub }}
+			{unitPlural}
+			{compact}
+		/>
 	{/snippet}
 	{#snippet table(visible)}
 		<DataTable

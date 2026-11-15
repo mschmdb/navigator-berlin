@@ -5,7 +5,7 @@
  *
  *   pnpm tsx scripts/check-place-links.ts http://localhost:5173
  */
-import { anchorIds, internalLinks, orphans, type InternalLink } from './lib/place-links/links.js';
+import { anchorIds, internalLinks, orphans, slugsFromSitemap } from './lib/place-links/links.js';
 
 const base = (process.argv[2] ?? 'http://localhost:5173').replace(/\/$/, '');
 const CONCURRENCY = 8;
@@ -31,27 +31,18 @@ async function pool<T>(items: readonly T[], fn: (item: T) => Promise<void>): Pro
 	);
 }
 
-function slugsFrom(links: readonly InternalLink[], prefix: string): string[] {
-	return [
-		...new Set(
-			links.filter((l) => l.path.startsWith(prefix)).map((l) => l.path.slice(prefix.length))
-		)
-	].filter((s) => s && !s.includes('/'));
-}
-
 async function main(): Promise<void> {
 	const errors: string[] = [];
 	for (const lang of ['', '/en']) {
 		const overviews = [`${lang}/kieze`, `${lang}/bezirke`, `${lang}/kiez-score`, lang || '/'];
 		for (const o of overviews) await fetchPage(o);
-		const kiezSlugs = slugsFrom(
-			internalLinks(pages.get(`${lang}/kieze`)?.html ?? '', `${lang}/kieze`),
-			`${lang}/kiez/`
-		);
-		const bezirkSlugs = slugsFrom(
-			internalLinks(pages.get(`${lang}/bezirke`)?.html ?? '', `${lang}/bezirke`),
-			`${lang}/bezirk/`
-		);
+		// Verzeichnis aus der Sitemap: so fällt auch ein Kiez auf, der in der Übersicht fehlt.
+		const sitemap = await (await fetch(`${base}/sitemap-${lang ? 'en' : 'de'}.xml`)).text();
+		const kiezSlugs = slugsFromSitemap(sitemap, `${lang}/kiez/`);
+		const bezirkSlugs = slugsFromSitemap(sitemap, `${lang}/bezirk/`);
+		if (kiezSlugs.length === 0 || bezirkSlugs.length === 0) {
+			errors.push(`sitemap-${lang ? 'en' : 'de'}.xml: keine Kiez- oder Bezirksseiten gefunden`);
+		}
 		const detailPages = [
 			...kiezSlugs.map((s) => `${lang}/kiez/${s}`),
 			...bezirkSlugs.map((s) => `${lang}/bezirk/${s}`)

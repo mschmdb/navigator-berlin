@@ -16,7 +16,8 @@ export async function loadWahlSeries(
 			jahr: r.jahr,
 			partei: r.parteiKurzname,
 			farbe: r.farbeHex,
-			anteil: r.anteil * 100
+			// Zwei Nachkommastellen reichen für Anzeige und Gleichstand, halten die Seitendaten klein.
+			anteil: Math.round(r.anteil * 10000) / 100
 		}));
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);

@@ -2893,5 +2893,7 @@
 	"place_m_dichte_sentence": "In {name} leben {n} Menschen je Quadratkilometer.",
 	"place_ref_berlin_median_text": "der Berliner Median",
 	"overview_topic_ranking_kieze": "Kieze nach Lärm, Grün, Mobilität oder einem anderen Bereich sortieren",
-	"overview_topic_ranking_bezirke": "Bezirke nach Lärm, Grün, Mobilität oder einem anderen Bereich sortieren"
+	"overview_topic_ranking_bezirke": "Bezirke nach Lärm, Grün, Mobilität oder einem anderen Bereich sortieren",
+	"place_wahl_ref_failed": "Die Wahldaten für {ref} ließen sich nicht laden.",
+	"place_wahl_retry": "Erneut laden"
 }

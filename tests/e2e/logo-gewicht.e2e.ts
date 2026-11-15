@@ -1,11 +1,15 @@
 import { expect, test } from '@playwright/test';
 
-const BEZIRK_URL = '/bezirk/treptow-koepenick';
-/** Vorher 206 KB HTML, Ziel mindestens 60 KB weniger. */
+/**
+ * Misst das Logo-Gewicht auf einer Seite mit stabilem Inhalt. Die Bezirksseiten tragen seit
+ * NAV-105 Kapiteldaten und Grafiken, ihr Umfang sagt nichts mehr über das Logo.
+ */
+const BEZIRK_URL = '/bezirke';
+/** Vorher 206 KB HTML auf der alten Bezirksseite, Ziel mindestens 60 KB weniger. */
 const MAX_HTML_BYTES = 146 * 1024;
 
 test.describe('Pixel-Logo Gewicht', () => {
-	test('Bezirksseite liefert höchstens 146 KB HTML', async ({ request }) => {
+	test('Übersichtsseite liefert höchstens 146 KB HTML', async ({ request }) => {
 		const response = await request.get(BEZIRK_URL);
 		expect(response.ok()).toBe(true);
 		const body = await response.body();

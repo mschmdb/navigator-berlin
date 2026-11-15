@@ -50,3 +50,14 @@ describe('orphans', () => {
 		]);
 	});
 });
+
+import { slugsFromSitemap } from './links';
+
+describe('slugsFromSitemap', () => {
+	it('reads the place slugs from <loc> entries, not from alternates', () => {
+		const xml = `<url><loc>https://x/kiez/a</loc><xhtml:link href="https://x/en/kiez/a"/></url>
+			<url><loc>https://x/kiez/b</loc></url><url><loc>https://x/kieze</loc></url>`;
+		expect(slugsFromSitemap(xml, '/kiez/')).toEqual(['a', 'b']);
+		expect(slugsFromSitemap(xml, '/en/kiez/')).toEqual([]);
+	});
+});

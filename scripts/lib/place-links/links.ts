@@ -59,3 +59,16 @@ export function orphans(
 	}
 	return out;
 }
+
+/** Slugs aus den `<loc>`-Einträgen einer Sitemap: das Verzeichnis aller Seiten, unabhängig von den Übersichten. */
+export function slugsFromSitemap(xml: string, prefix: string): string[] {
+	const out: string[] = [];
+	for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+		const path = new URL(m[1]).pathname;
+		if (path.startsWith(prefix)) {
+			const slug = path.slice(prefix.length);
+			if (slug && !slug.includes('/')) out.push(slug);
+		}
+	}
+	return out;
+}

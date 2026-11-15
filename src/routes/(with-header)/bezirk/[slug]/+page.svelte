@@ -259,6 +259,17 @@
 			{#if wahlLead.length > 0}
 				<p>{wahlLead.join(' ')}</p>
 			{/if}
+			{#if wahlCache.failed && ref.slug}
+				<p role="status" class="text-sm text-ink">
+					{m.place_wahl_ref_failed({ ref: ref.label })}
+					<button
+						type="button"
+						class="ml-1 min-h-6 text-accent underline"
+						onclick={() => ref.slug && wahlCache.load('bezirk', ref.slug)}
+						>{m.place_wahl_retry()}</button
+					>
+				</p>
+			{/if}
 			<p class="text-sm">{m.place_wahl_hint_bezirk()}</p>
 		{/snippet}
 		{#snippet controls()}<WahlSwitch bind:value={wahlArt} />{/snippet}

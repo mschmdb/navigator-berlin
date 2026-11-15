@@ -190,3 +190,14 @@ describe('chapterAnchorForSort', () => {
 		for (const a of Object.values(DIM_CHAPTER_ANCHOR)) expect(ids.has(a)).toBe(true);
 	});
 });
+
+import { compactMetrics } from './topics';
+
+describe('compactMetrics', () => {
+	it('keeps two digits more than shown, so ranks stay exact but the page data stays small', () => {
+		const out = compactMetrics({ pet: 33.87428571428571, dichte: 13417.4, altbau: null } as never);
+		expect(out.pet).toBe(33.874);
+		expect(out.dichte).toBe(13417.4);
+		expect(out.altbau).toBeNull();
+	});
+});

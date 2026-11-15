@@ -5,7 +5,7 @@ import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.j
 import { bezirkSlugFromName, cleanName } from '$lib/data/region-display-names.js';
 import type { LayerAggregate, LayerAggregatesFile } from '$lib/data/layer-aggregates-types.js';
 import { readLayerAggregatesFile } from '$lib/server/profile/meta-sources.js';
-import { LABELS, METRICS, type LabelValues, type MetricValues } from './topics';
+import { LABELS, METRICS, compactMetrics, type LabelValues, type MetricValues } from './topics';
 
 /**
  * Themenwerte je Kiez und Bezirk aus vorhandenen Quellen: Layer-Aggregate, Story-Kennzahlen,
@@ -265,7 +265,7 @@ async function build(): Promise<TopicData> {
 			mss: dominant(agg('mss-gesamtindex-2025')),
 			gruenversorgung: dominant(agg('gruenversorgung-2023'))
 		};
-		return { metrics, labels };
+		return { metrics: compactMetrics(metrics), labels };
 	}
 
 	const kiez = new Map<string, { metrics: MetricValues; labels: LabelValues }>();
