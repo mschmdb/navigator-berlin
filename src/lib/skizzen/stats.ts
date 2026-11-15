@@ -25,7 +25,10 @@ export function rankOf(
 	return { rang: xs.filter((v) => v > value).length + 1, total: xs.length };
 }
 
-export function countBelow(value: number | null, values: readonly (number | null)[]): number | null {
+export function countBelow(
+	value: number | null,
+	values: readonly (number | null)[]
+): number | null {
 	if (value === null || !Number.isFinite(value)) return null;
 	return present(values).filter((v) => v < value).length;
 }
@@ -43,4 +46,11 @@ export function spread<T>(
 	const lo = withValue[0];
 	const hi = withValue[withValue.length - 1];
 	return { min: lo.item, max: hi.item, range: hi.v - lo.v };
+}
+
+/** Achsenbereich, auf `step` nach außen gerundet. */
+export function niceDomain(values: readonly (number | null)[], step: number): [number, number] {
+	const xs = present(values);
+	if (xs.length === 0) return [0, step];
+	return [Math.floor(Math.min(...xs) / step) * step, Math.ceil(Math.max(...xs) / step) * step];
 }

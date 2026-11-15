@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { aggregateProfile, parseReference, resolveReference, serializeReference } from './reference';
+import {
+	aggregateProfile,
+	parseReference,
+	resolveReference,
+	serializeReference
+} from './reference';
 import type { RegionSnapshot } from './types';
 
 function region(slug: string, composite: number | null, parentSlug = 'neukoelln'): RegionSnapshot {
@@ -18,7 +23,13 @@ function region(slug: string, composite: number | null, parentSlug = 'neukoelln'
 			kultur: null,
 			kriminalitaet: null
 		},
-		figures: { bestandsmiete: composite, altbau: null, gruen: null, hitze: null, milieuschutz: null }
+		figures: {
+			bestandsmiete: composite,
+			altbau: null,
+			gruen: null,
+			hitze: null,
+			milieuschutz: null
+		}
 	};
 }
 
@@ -37,7 +48,10 @@ describe('parseReference', () => {
 	});
 	it('reads bezirk only when the region has a parent', () => {
 		expect(parseReference('bezirk', ctx)).toEqual({ kind: 'bezirk', slug: null });
-		expect(parseReference('bezirk', { ...ctx, hasParent: false })).toEqual({ kind: 'berlin', slug: null });
+		expect(parseReference('bezirk', { ...ctx, hasParent: false })).toEqual({
+			kind: 'berlin',
+			slug: null
+		});
 	});
 	it('classifies a slug as neighbor, similar or free choice', () => {
 		expect(parseReference('rixdorf', ctx)).toEqual({ kind: 'nachbar', slug: 'rixdorf' });
@@ -78,13 +92,29 @@ describe('aggregateProfile', () => {
 });
 
 describe('resolveReference', () => {
-	const berlin = aggregateProfile('berlin', 'Berlin', [region('a', 40)], 'median', region('a', 1).figures);
-	const bezirk = aggregateProfile('bezirk', 'Neukölln', [region('a', 45)], 'mean', region('a', 1).figures);
+	const berlin = aggregateProfile(
+		'berlin',
+		'Berlin',
+		[region('a', 40)],
+		'median',
+		region('a', 1).figures
+	);
+	const bezirk = aggregateProfile(
+		'bezirk',
+		'Neukölln',
+		[region('a', 45)],
+		'mean',
+		region('a', 1).figures
+	);
 	const regions = new Map([['rixdorf', region('rixdorf', 52)]]);
 
 	it('returns the aggregate profiles for berlin and bezirk', () => {
-		expect(resolveReference({ kind: 'berlin', slug: null }, { berlin, bezirk, regions })).toBe(berlin);
-		expect(resolveReference({ kind: 'bezirk', slug: null }, { berlin, bezirk, regions })).toBe(bezirk);
+		expect(resolveReference({ kind: 'berlin', slug: null }, { berlin, bezirk, regions })).toBe(
+			berlin
+		);
+		expect(resolveReference({ kind: 'bezirk', slug: null }, { berlin, bezirk, regions })).toBe(
+			bezirk
+		);
 	});
 	it('returns a region profile for a slug reference', () => {
 		const ref = resolveReference({ kind: 'nachbar', slug: 'rixdorf' }, { berlin, bezirk, regions });
@@ -94,6 +124,8 @@ describe('resolveReference', () => {
 	});
 	it('falls back to berlin for unknown slugs or missing bezirk', () => {
 		expect(resolveReference({ kind: 'frei', slug: 'x' }, { berlin, bezirk, regions })).toBe(berlin);
-		expect(resolveReference({ kind: 'bezirk', slug: null }, { berlin, bezirk: null, regions })).toBe(berlin);
+		expect(
+			resolveReference({ kind: 'bezirk', slug: null }, { berlin, bezirk: null, regions })
+		).toBe(berlin);
 	});
 });

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { classifyDiff, compareSentence, dimDiffs, joinDe } from './compare-text';
 
-const label = (d: string) => ({ a: 'Kultur', b: 'Wohnschutz', c: 'Grün & Hitze', d: 'Mobilität' })[d] ?? d;
+const label = (d: string) =>
+	({ a: 'Kultur', b: 'Wohnschutz', c: 'Grün & Hitze', d: 'Mobilität' })[d] ?? d;
 
 describe('joinDe', () => {
 	it('joins with commas and "und"', () => {
@@ -41,7 +42,9 @@ describe('compareSentence', () => {
 	});
 	it('handles a reference that is equal everywhere', () => {
 		const diffs = dimDiffs(['a'], { a: 50 }, { a: 52 });
-		expect(compareSentence(diffs, label, 'Berlin')).toBe('Gegenüber Berlin etwa gleich bei Kultur.');
+		expect(compareSentence(diffs, label, 'Berlin')).toBe(
+			'Gegenüber Berlin etwa gleich bei Kultur.'
+		);
 	});
 	it('returns an empty string without comparable dims', () => {
 		expect(compareSentence([], label, 'Berlin')).toBe('');

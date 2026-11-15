@@ -14,3 +14,5 @@ export interface WahlPunkt {
 	/** Anteil in Prozent (0-100). */
 	readonly anteil: number;
 }
+
+export type WahlBundle = Readonly<Record<WahlArt, readonly WahlPunkt[]>>;

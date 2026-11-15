@@ -68,3 +68,15 @@ describe('spread', () => {
 		expect(spread([{ v: 1 }], (i) => i.v)).toBeNull();
 	});
 });
+
+import { niceDomain } from './stats';
+
+describe('niceDomain', () => {
+	it('rounds outward to the step', () => {
+		expect(niceDomain([6.2, 9.8, null], 1)).toEqual([6, 10]);
+		expect(niceDomain([0, 87.3], 10)).toEqual([0, 90]);
+	});
+	it('falls back to [0, step] without values', () => {
+		expect(niceDomain([], 5)).toEqual([0, 5]);
+	});
+});
